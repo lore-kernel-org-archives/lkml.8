@@ -2,122 +2,96 @@ Return-Path: <SRS0=aGSP=5L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F129C43331
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 12:32:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BCB8C2D0E5
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 12:34:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C8A6520409
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 12:32:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="zb7KlrP8";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="WJfAQVpN"
+	by mail.kernel.org (Postfix) with ESMTP id 0C09F20409
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 12:34:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728257AbgCZMcT (ORCPT
+        id S1728230AbgCZMe6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 08:32:19 -0400
-Received: from wnew2-smtp.messagingengine.com ([64.147.123.27]:50123 "EHLO
-        wnew2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727781AbgCZMcT (ORCPT
+        Thu, 26 Mar 2020 08:34:58 -0400
+Received: from mout.kundenserver.de ([217.72.192.73]:36769 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727560AbgCZMe5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 08:32:19 -0400
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailnew.west.internal (Postfix) with ESMTP id A3DFD5F2;
-        Thu, 26 Mar 2020 08:32:17 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute4.internal (MEProxy); Thu, 26 Mar 2020 08:32:18 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm2; bh=6LPzcEpZCIWZe3NWzXCtwyC1WRy
-        8GtF3+kzmi9vHqJQ=; b=zb7KlrP8//mqZlUFFm7OBjbNUhlJFsIf7jHIp5WCwfg
-        MS+GkFN0EISqpDyMhYQAyF+aNL4pMNP8Kg7ONpLcbU9BKNZein7FMmkfL3FMG5iW
-        SQCdvNeg7UBXpa3cQdQsi52ewJIPVGL190r95PPenn4cgVKBzrACrLcKpN+bZNdD
-        9/QQPVc7TRkRMXdY05CjqKubjESLuW1iLr6Nf4sSULpPdcnCwoq//ivebdmICYAL
-        skKjE4+9pcU3Vrl9YLSzb9mvQ1Xk/ejQCXQdqJhE7edBlChBEWd5rT865FWMuEk3
-        CKw3xcpmqCK3hJfhcgQE1xsos/lWYHvg4omCk+V0fxA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=6LPzcE
-        pZCIWZe3NWzXCtwyC1WRy8GtF3+kzmi9vHqJQ=; b=WJfAQVpNlaQNhVBwxd8UTF
-        EbWip3j8NfDKAGFnYE05SwPsqzzSi4vwHjwartVxM9VJBE6eLGEuICJ9mkcd6Dkw
-        BAHrumVa+ZvsUPzc7DJQ1uZj3ZUOQTswuWllUM6YT6e23cS3y5yLSyysdIFugdm1
-        cHdqWfXIGUS7dGb/Nc8KR3zlBWY9sGRHwL6uGt6xjPs4yh4Nd9dERHqUrMuu9hSI
-        vi8Xp6LU780FF+uZ7+lGkDrylz5gab8H5yL91CsUkpcn/IENNetSn8Q7Zc2RQ8NH
-        ikcvw1xwqb99NggfGG6jo8Ll4EZJApptAszMFZ24w1e4D/RYLbpyuMcEjJwqfdbg
-        ==
-X-ME-Sender: <xms:zqB8XrAWJcSwPfZVp6bYg9IM-S2U54bu9TvbF9mca1PT0kVPpmluog>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrudehiedggeduucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhvffukfhfgggtuggjsehgtderredttddvnecuhfhrohhmpeforgigihhm
-    vgcutfhiphgrrhguuceomhgrgihimhgvsegtvghrnhhordhtvggthheqnecukfhppeeltd
-    drkeelrdeikedrjeeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghi
-    lhhfrhhomhepmhgrgihimhgvsegtvghrnhhordhtvggthh
-X-ME-Proxy: <xmx:zqB8XtFypG5HVZuotwPN2jMDykCJ0tHvzAI4Hsf6oYQJlEBAtPf2xw>
-    <xmx:zqB8Xt3ypyYOjbZu74dbyJmZ72Q9UgwiNU8MnOrzCaXUI1XV2IaoOQ>
-    <xmx:zqB8XmI5RTOQW0-uz3PGClzN0TBsn2LehT4swIaI5z1mxx0ermf69g>
-    <xmx:0aB8Xsk7c8LvaMObwbm2BlgtSeu8vUYSUcgPkYdz76sSGEh2glMbdJE2j3c>
-Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 0DB52328005A;
-        Thu, 26 Mar 2020 08:32:13 -0400 (EDT)
-Date:   Thu, 26 Mar 2020 13:32:12 +0100
-From:   Maxime Ripard <maxime@cerno.tech>
-To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Cc:     Eric Anholt <eric@anholt.net>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        linux-rpi-kernel@lists.infradead.org, f.fainelli@gmail.com,
-        Stefan Wahren <stefan.wahren@i2se.com>,
-        Dave Stevenson <dave.stevenson@raspberrypi.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] drm/vc4: Fix HDMI mode validation
-Message-ID: <20200326123212.q6fl23fnjg7o7yyp@gilmour.lan>
-References: <20200326122001.22215-1-nsaenzjulienne@suse.de>
+        Thu, 26 Mar 2020 08:34:57 -0400
+Received: from mail-qk1-f177.google.com ([209.85.222.177]) by
+ mrelayeu.kundenserver.de (mreue108 [212.227.15.145]) with ESMTPSA (Nemesis)
+ id 1M42b8-1jHRiq0SAa-0002fd; Thu, 26 Mar 2020 13:34:56 +0100
+Received: by mail-qk1-f177.google.com with SMTP id o10so6062795qki.10;
+        Thu, 26 Mar 2020 05:34:55 -0700 (PDT)
+X-Gm-Message-State: ANhLgQ37zGZcl98Gc2SIQ6fkcbA/6mx4u9Zy3PjSLIeQ7kRPFF6IxiK1
+        ikAGpn1LEvgEl08ZEBnmv0ibLrICAyT9k+k6JoI=
+X-Google-Smtp-Source: ADFU+vtOuL2BPcbttit4yBDNaP/8ddvWjjqH2/iCEGaAFs+JlAfjGtlSfNwtuRaUS5t2LeQ5UcEPn2VK+SRr7Phk8Ls=
+X-Received: by 2002:a37:6455:: with SMTP id y82mr7853725qkb.286.1585226094723;
+ Thu, 26 Mar 2020 05:34:54 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="vddfs4mx3yibhlne"
-Content-Disposition: inline
-In-Reply-To: <20200326122001.22215-1-nsaenzjulienne@suse.de>
+References: <1585205326-25326-1-git-send-email-srinath.mannam@broadcom.com> <1585205326-25326-3-git-send-email-srinath.mannam@broadcom.com>
+In-Reply-To: <1585205326-25326-3-git-send-email-srinath.mannam@broadcom.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Thu, 26 Mar 2020 13:34:38 +0100
+X-Gmail-Original-Message-ID: <CAK8P3a0MP9xhmDgyN4TJ5_jzagVTO1hKVgNFs6R4NA6WoKBFJA@mail.gmail.com>
+Message-ID: <CAK8P3a0MP9xhmDgyN4TJ5_jzagVTO1hKVgNFs6R4NA6WoKBFJA@mail.gmail.com>
+Subject: Re: [PATCH v5 2/6] PCI: iproc: Add INTx support with better modeling
+To:     Srinath Mannam <srinath.mannam@broadcom.com>
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Ray Jui <rjui@broadcom.com>, Rob Herring <robh+dt@kernel.org>,
+        Andrew Murray <andrew.murray@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        DTML <devicetree@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Ray Jui <ray.jui@broadcom.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:oYUCtX8DTgQxERAtlNDulhmkpSBttP5J1/eh+AMQi+rJfTPHmkw
+ cBGP/+l2RLTL/DTiQWJf8xGZasPqeCxGAdmVOSmDynykO8VEW/cszpYELRci8AebHTnIu0z
+ uROJf5qy2pdrhuZjKSxLvlzndJM+Nvf81xhwMfLHnswRDq1oTOUcVWlcApENXNtdWvWWi99
+ /tLAMz1ygq1C1rkPT+nyQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:InMNIBg92dc=:n4uoIGacY1pz95Nvg6mpdF
+ ly1ounx6BdQfgYCf9lNo+FzMNFv1VEBOrAH4OVRsqNZHjlbU3sqXW6SHiYj7nv6MuSQ7zTyV/
+ ZaUMIr6QTEaQsW8XsA6GYnEAEjmGPgcpXPqC4mIq7Tb1g8ca1CC1C56wEWqbvS24H1oMAKCj2
+ jpJJzfbry+anvQaHkEcNauGHs/7BIEDhxfYd9Vi+lTFiBybfsGo4OBoQWDjCUZTHq/LDd6hUw
+ 3Klovw/febGLo2wFs5aBKX+vTctr+pw+H1N3lvmv7/iClB0u4t2uQ2mxqUxRDMFfxpUGWpy4f
+ wznjZbSnUn3AYOB88n1lnvmhqC1VVQrx5annTrTYnBlB6tVlTzrhHW3ogeEJV1VarUG+V8bFQ
+ uaLu3VZLtaf2N8/wGapf6shWj88Bm+F7ymK2H4XBXUGITpx4guCGN2n1pmCk+EfobFgy86xcU
+ XDErhJAaFAvQu/KojJaCgoMB7Fh9zkzSR8666AVLI0v1pwpHjmm3txJWko21NgbIkPFi0YyyS
+ gJbgvpaYpNDRiUuNx+vMps2rdi4LHzWMabgpENr46PycHWIj7ewBF2YPho2rgza0UqEid0ZHj
+ YfwgI8a0WZME3bB86BsZBrTE/oGFnxGR4o2KtFB0Ir8x97HrO0+SSF31oFrrdlwkx7U1+xM32
+ EdVD9vrJphLcPgTUt0IXzvOCCyX/u+AfP5lYX+jUDojIxBvDV3r455/d+w6sF5ZbbII2+7fdG
+ yD9fjiKyOpU8JmWr3PPIxgZ6zDQT92Bo+wvM1VBFtusWx2/kUK+4vr869tzr9f9vbd52pbgef
+ wsHzHpFLW53D0my2EyFfRw7b/sFquBbKSw5WVguTkEz/jjYMME=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Mar 26, 2020 at 7:49 AM Srinath Mannam
+<srinath.mannam@broadcom.com> wrote:
+> -static void iproc_pcie_enable(struct iproc_pcie *pcie)
+> +static void iproc_pcie_mask_irq(struct irq_data *d)
+>  {
+> +       struct iproc_pcie *pcie = irq_data_get_irq_chip_data(d);
+> +       u32 val;
+> +       unsigned long flags;
+> +
+> +       spin_lock_irqsave(&pcie->intx_lock, flags);
+> +       val =  iproc_pcie_read_reg(pcie, IPROC_PCIE_INTX_EN);
+> +       val &= ~(BIT(irqd_to_hwirq(d)));
+> +       iproc_pcie_write_reg(pcie, IPROC_PCIE_INTX_EN, val);
+> +       spin_unlock_irqrestore(&pcie->intx_lock, flags);
+> +}
 
---vddfs4mx3yibhlne
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+I think these need to use a raw spinlock, or you get problems with
+PREEMPT_RT
 
-On Thu, Mar 26, 2020 at 01:20:01PM +0100, Nicolas Saenz Julienne wrote:
-> Current mode validation impedes setting up some video modes which should
-> be supported otherwise. Namely 1920x1200@60Hz.
->
-> Fix this by lowering the minimum HDMI state machine clock to pixel clock
-> ratio allowed.
->
-> Fixes: 32e823c63e90 ("drm/vc4: Reject HDMI modes with too high of clocks")
-> Reported-by: Stefan Wahren <stefan.wahren@i2se.com>
-> Suggested-by: Dave Stevenson <dave.stevenson@raspberrypi.com>
-> Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-
-Reviewed-by: Maxime Ripard <mripard@kernel.org>
-
-Maxime
-
---vddfs4mx3yibhlne
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXnygxwAKCRDj7w1vZxhR
-xfOfAP0XYlKMR4DO967bRlehb2c975Ko9zqxfY2QFxSGl8gB6QD/VsLjZcdU5pOT
-uncl3gohPDbB7bP6wYIzKtG3hicnwQA=
-=Tn00
------END PGP SIGNATURE-----
-
---vddfs4mx3yibhlne--
+     Arnd
