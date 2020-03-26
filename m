@@ -2,382 +2,158 @@ Return-Path: <SRS0=aGSP=5L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75E70C2D0E8
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 15:03:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE3B1C2D0E8
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 15:04:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 397DE2076A
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 15:03:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585235009;
-	bh=MXb6XpOGxQbM85Tau7YPsMBsvxzHK2pdQHLoMHX0Hk8=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=fnxu44FyJ+iKN9U+Kqu6JqRyVftnBWRVZFP4akYxIcjManFY4ozebUG406Y1zffqL
-	 pXdPJtyTg3cnksXKRrlHcruFxBzx4pdFcp1UGCMzPhcSiC+GDxXyGgbRAWsOSbS0iX
-	 Cvg0HbcGPaLFsNneq60YTEKAIacmgEbYRJdUxF1c=
+	by mail.kernel.org (Postfix) with ESMTP id C2A4D2076A
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 15:04:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727982AbgCZPD2 (ORCPT
+        id S1727456AbgCZPEQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 11:03:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60182 "EHLO mail.kernel.org"
+        Thu, 26 Mar 2020 11:04:16 -0400
+Received: from mx2.suse.de ([195.135.220.15]:34716 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726296AbgCZPD1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 11:03:27 -0400
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4B3E620737;
-        Thu, 26 Mar 2020 15:03:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585235006;
-        bh=MXb6XpOGxQbM85Tau7YPsMBsvxzHK2pdQHLoMHX0Hk8=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=WnrG1f96fK/Q2kTcF1HR5jYEl3PzNRDsh6/eLtav6aWLx2sc1tKvW8RJYDLXSTCIK
-         0WAaQdMsCHLjhpOr0ZnF7SRqrZ5sIMtJwCAkMTohTOj/UAf6wNsbu34Hf8VT3p9tvt
-         n6bauRnP+vUVU/5VAyvtW5i84Kt6c0KcYc0mJt4Q=
-Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1jHU2W-00FuQU-Jw; Thu, 26 Mar 2020 15:03:24 +0000
+        id S1727495AbgCZPEQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Mar 2020 11:04:16 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id F0DA9AC4A;
+        Thu, 26 Mar 2020 15:04:13 +0000 (UTC)
+Date:   Thu, 26 Mar 2020 16:04:13 +0100 (CET)
+From:   Miroslav Benes <mbenes@suse.cz>
+To:     Peter Zijlstra <peterz@infradead.org>
+cc:     tglx@linutronix.de, jpoimboe@redhat.com,
+        linux-kernel@vger.kernel.org, x86@kernel.org, mhiramat@kernel.org
+Subject: Re: [PATCH v4 01/13] objtool: Remove CFI save/restore special case
+In-Reply-To: <alpine.LSU.2.21.2003261537380.17254@pobox.suse.cz>
+Message-ID: <alpine.LSU.2.21.2003261602110.17254@pobox.suse.cz>
+References: <20200325174525.772641599@infradead.org> <20200325174605.369570202@infradead.org> <20200326113049.GD20696@hirez.programming.kicks-ass.net> <20200326125844.GD20760@hirez.programming.kicks-ass.net>
+ <alpine.LSU.2.21.2003261537380.17254@pobox.suse.cz>
+User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Thu, 26 Mar 2020 15:03:24 +0000
-From:   Marc Zyngier <maz@kernel.org>
-To:     Srinath Mannam <srinath.mannam@broadcom.com>
-Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Ray Jui <rjui@broadcom.com>, Rob Herring <robh+dt@kernel.org>,
-        Andrew Murray <andrew.murray@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>, devicetree@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Ray Jui <ray.jui@broadcom.com>,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v5 2/6] PCI: iproc: Add INTx support with better modeling
-In-Reply-To: <1585205326-25326-3-git-send-email-srinath.mannam@broadcom.com>
-References: <1585205326-25326-1-git-send-email-srinath.mannam@broadcom.com>
- <1585205326-25326-3-git-send-email-srinath.mannam@broadcom.com>
-Message-ID: <e50c9dbf8b584696c8da54f7688e5faa@misterjones.org>
-X-Sender: maz@kernel.org
-User-Agent: Roundcube Webmail/1.3.10
-X-SA-Exim-Connect-IP: 51.254.78.96
-X-SA-Exim-Rcpt-To: srinath.mannam@broadcom.com, lorenzo.pieralisi@arm.com, bhelgaas@google.com, f.fainelli@gmail.com, rjui@broadcom.com, robh+dt@kernel.org, andrew.murray@arm.com, mark.rutland@arm.com, andy.shevchenko@gmail.com, arnd@arndb.de, devicetree@vger.kernel.org, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, ray.jui@broadcom.com, bcm-kernel-feedback-list@broadcom.com, linux-arm-kernel@lists.infradead.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-03-26 06:48, Srinath Mannam wrote:
-> From: Ray Jui <ray.jui@broadcom.com>
+On Thu, 26 Mar 2020, Miroslav Benes wrote:
+
+> On Thu, 26 Mar 2020, Peter Zijlstra wrote:
 > 
-> Add PCIe legacy interrupt INTx support to the iProc PCIe driver by
-> modeling it with its own IRQ domain. All 4 interrupts INTA, INTB, INTC,
-> INTD share the same interrupt line connected to the GIC in the system,
-> while the status of each INTx can be obtained through the INTX CSR
-> register.
+> > On Thu, Mar 26, 2020 at 12:30:50PM +0100, Peter Zijlstra wrote:
+> > 
+> > > There is a special case in the UNWIND_HINT_RESTORE code. When, upon
+> > > looking for the UNWIND_HINT_SAVE instruction to restore from, it finds
+> > > the instruction hasn't been visited yet, it normally issues a WARN,
+> > > except when this HINT_SAVE instruction is the first instruction of
+> > > this branch.
+> > > 
+> > > The reason for this special case comes apparent when we remove it;
+> > > code like:
+> > > 
+> > > 	if (cond) {
+> > > 		UNWIND_HINT_SAVE
+> > > 		// do stuff
+> > > 		UNWIND_HINT_RESTORE
+> > > 	}
+> > > 	// more stuff
+> > > 
+> > > will now trigger the warning. This is because UNWIND_HINT_RESTORE is
+> > > just a label, and there is nothing keeping it inside the (extended)
+> > > basic block covered by @cond. It will attach itself to the first
+> > > instruction of 'more stuff' and we'll hit it outside of the @cond,
+> > > confusing things.
+> > > 
+> > > I don't much like this special case, it confuses things and will come
+> > > apart horribly if/when the annotation needs to support nesting.
+> > > Instead extend the affected code to at least form an extended basic
+> > > block.
+> > > 
+> > > In particular, of the 2 users of this annotation: ftrace_regs_caller()
+> > > and sync_core(), only the latter suffers this problem. Extend it's
+> > > code sequence with a NOP to make it an extended basic block.
+> > > 
+> > > This isn't ideal either; stuffing code with NOPs just to make
+> > > annotations work is certainly sub-optimal, but given that sync_core()
+> > > is stupid expensive in any case, one extra nop isn't going to be a
+> > > problem here.
+> > 
+> > So instr_begin() / instr_end() have this exact problem, but worse. Those
+> > actually do nest and I've ran into the following situation:
+> > 
+> > 	if (cond1) {
+> > 		instr_begin();
+> > 		// code1
+> > 		instr_end();
+> > 	}
+> > 	// code
+> > 
+> > 	if (cond2) {
+> > 		instr_begin();
+> > 		// code2
+> > 		instr_end();
+> > 	}
+> > 	// tail
+> > 
+> > Where objtool then finds the path: !cond1, cond2, which ends up at code2
+> > with 0, instead of 1.
+> > 
+> > I've also seen:
+> > 
+> > 	if (cond) {
+> > 		instr_begin();
+> > 		// code1
+> > 		instr_end();
+> > 	}
+> > 	instr_begin();
+> > 	// code2
+> > 	instr_end();
+> > 
+> > Where instr_end() and instr_begin() merge onto the same instruction of
+> > code2 as a 0, and again code2 will issue a false warning.
+> > 
+> > You can also not make objtool lift the end marker to the previous
+> > instruction, because then:
+> > 
+> > 	if (cond1) {
+> > 		instr_begin();
+> > 		if (cond2) {
+> > 			// code2
+> > 		}
+> > 		instr_end();
+> > 	}
+> > 
+> > Suffers the reverse problem, instr_end() becomes part of the @cond2
+> > block and cond1 grows a path that misses it entirely.
 > 
-> Signed-off-by: Ray Jui <ray.jui@broadcom.com>
-> Signed-off-by: Srinath Mannam <srinath.mannam@broadcom.com>
-> Reviewed-by: Andrew Murray <andrew.murray@arm.com>
-> ---
->  drivers/pci/controller/pcie-iproc.c | 147 
-> +++++++++++++++++++++++++++++++++++-
->  drivers/pci/controller/pcie-iproc.h |   8 ++
->  2 files changed, 153 insertions(+), 2 deletions(-)
+> One could argue that this is really nasty and the correct way should be
 > 
-> diff --git a/drivers/pci/controller/pcie-iproc.c
-> b/drivers/pci/controller/pcie-iproc.c
-> index 0a468c7..62d8f43 100644
-> --- a/drivers/pci/controller/pcie-iproc.c
-> +++ b/drivers/pci/controller/pcie-iproc.c
-> @@ -14,6 +14,7 @@
->  #include <linux/delay.h>
->  #include <linux/interrupt.h>
->  #include <linux/irqchip/arm-gic-v3.h>
-> +#include <linux/irqchip/chained_irq.h>
->  #include <linux/platform_device.h>
->  #include <linux/of_address.h>
->  #include <linux/of_pci.h>
-> @@ -270,6 +271,7 @@ enum iproc_pcie_reg {
+> 	if (cond1) {
+> 		if (cond2) {
+> 			instr_begin();
+> 			// code2
+> 			instr_end();
+> 		}
+> 	}
 > 
->  	/* enable INTx */
->  	IPROC_PCIE_INTX_EN,
-> +	IPROC_PCIE_INTX_CSR,
-> 
->  	/* outbound address mapping */
->  	IPROC_PCIE_OARR0,
-> @@ -314,6 +316,7 @@ static const u16 iproc_pcie_reg_paxb_bcma[] = {
->  	[IPROC_PCIE_CFG_ADDR]		= 0x1f8,
->  	[IPROC_PCIE_CFG_DATA]		= 0x1fc,
->  	[IPROC_PCIE_INTX_EN]		= 0x330,
-> +	[IPROC_PCIE_INTX_CSR]		= 0x334,
->  	[IPROC_PCIE_LINK_STATUS]	= 0xf0c,
->  };
-> 
-> @@ -325,6 +328,7 @@ static const u16 iproc_pcie_reg_paxb[] = {
->  	[IPROC_PCIE_CFG_ADDR]		= 0x1f8,
->  	[IPROC_PCIE_CFG_DATA]		= 0x1fc,
->  	[IPROC_PCIE_INTX_EN]		= 0x330,
-> +	[IPROC_PCIE_INTX_CSR]		= 0x334,
->  	[IPROC_PCIE_OARR0]		= 0xd20,
->  	[IPROC_PCIE_OMAP0]		= 0xd40,
->  	[IPROC_PCIE_OARR1]		= 0xd28,
-> @@ -341,6 +345,7 @@ static const u16 iproc_pcie_reg_paxb_v2[] = {
->  	[IPROC_PCIE_CFG_ADDR]		= 0x1f8,
->  	[IPROC_PCIE_CFG_DATA]		= 0x1fc,
->  	[IPROC_PCIE_INTX_EN]		= 0x330,
-> +	[IPROC_PCIE_INTX_CSR]		= 0x334,
->  	[IPROC_PCIE_OARR0]		= 0xd20,
->  	[IPROC_PCIE_OMAP0]		= 0xd40,
->  	[IPROC_PCIE_OARR1]		= 0xd28,
-> @@ -846,9 +851,142 @@ static int iproc_pcie_check_link(struct 
-> iproc_pcie *pcie)
->  	return link_is_active ? 0 : -ENODEV;
->  }
-> 
-> -static void iproc_pcie_enable(struct iproc_pcie *pcie)
-> +static void iproc_pcie_mask_irq(struct irq_data *d)
->  {
-> +	struct iproc_pcie *pcie = irq_data_get_irq_chip_data(d);
-> +	u32 val;
-> +	unsigned long flags;
-> +
-> +	spin_lock_irqsave(&pcie->intx_lock, flags);
+> Then it should work if instr_begin() marks the next instruction and 
+> instr_end() marks the previous one, no? There is a corner case when code2 
+> is exactly one instruction, so instr counting would have to be updated.
 
-As Arnd already noticed, this needs to be defined as  a raw spinlock.
+	if (cond1) {
+		instr_begin()
+		if (cond2) {
+			// code2
+		}
+		// code1
+		instr_end();
+	}
 
-> +	val =  iproc_pcie_read_reg(pcie, IPROC_PCIE_INTX_EN);
-> +	val &= ~(BIT(irqd_to_hwirq(d)));
-> +	iproc_pcie_write_reg(pcie, IPROC_PCIE_INTX_EN, val);
-> +	spin_unlock_irqrestore(&pcie->intx_lock, flags);
-> +}
-> +
-> +static void iproc_pcie_unmask_irq(struct irq_data *d)
-> +{
-> +	struct iproc_pcie *pcie = irq_data_get_irq_chip_data(d);
-> +	u32 val;
-> +	unsigned long flags;
-> +
-> +	spin_lock_irqsave(&pcie->intx_lock, flags);
-> +	val =  iproc_pcie_read_reg(pcie, IPROC_PCIE_INTX_EN);
-> +	val |= (BIT(irqd_to_hwirq(d)));
-> +	iproc_pcie_write_reg(pcie, IPROC_PCIE_INTX_EN, val);
-> +	spin_unlock_irqrestore(&pcie->intx_lock, flags);
-> +}
-> +
-> +static struct irq_chip iproc_pcie_irq_chip = {
-> +	.name = "pcie-iproc-intc",
-> +	.irq_enable = iproc_pcie_unmask_irq,
-> +	.irq_disable = iproc_pcie_mask_irq,
+is a counter example though, so I take it back.
 
-No. Either the enable/disable callbacks are different from unmask/mask,
-or they don't exist.
-
-- A disabled interrupt is free to loose pending interrupts
-- A masked interrupt doesn't loose interrupts.
-
-I'm pretty sure yours is the latter.
-
-> +	.irq_mask = iproc_pcie_mask_irq,
-> +	.irq_unmask = iproc_pcie_unmask_irq,
-> +};
-> +
-> +static int iproc_pcie_intx_map(struct irq_domain *domain, unsigned int 
-> irq,
-> +			       irq_hw_number_t hwirq)
-> +{
-> +	irq_set_chip_and_handler(irq, &iproc_pcie_irq_chip, 
-> handle_level_irq);
-> +	irq_set_chip_data(irq, domain->host_data);
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct irq_domain_ops intx_domain_ops = {
-> +	.map = iproc_pcie_intx_map,
-> +};
-> +
-> +static void iproc_pcie_isr(struct irq_desc *desc)
-> +{
-> +	struct irq_chip *chip = irq_desc_get_chip(desc);
-> +	struct iproc_pcie *pcie;
-> +	struct device *dev;
-> +	unsigned long status;
-> +	u32 bit, virq;
-> +
-> +	chained_irq_enter(chip, desc);
-> +	pcie = irq_desc_get_handler_data(desc);
-> +	dev = pcie->dev;
-> +
-> +	/* go through INTx A, B, C, D until all interrupts are handled */
-> +	do {
-> +		status = iproc_pcie_read_reg(pcie, IPROC_PCIE_INTX_CSR);
-> +		for_each_set_bit(bit, &status, PCI_NUM_INTX) {
-> +			virq = irq_find_mapping(pcie->irq_domain, bit);
-> +			if (virq)
-> +				generic_handle_irq(virq);
-> +			else
-> +				dev_err(dev, "unexpected INTx%u\n", bit);
-
-I'd rather you avoid this kind of unlimited console screaming in 
-interrupt
-context. Either ratelimit it, or even better turn it into a debug 
-statement.
-
-> +		}
-> +	} while ((status & SYS_RC_INTX_MASK) != 0);
-> +
-> +	chained_irq_exit(chip, desc);
-> +}
-> +
-> +static int iproc_pcie_intx_enable(struct iproc_pcie *pcie)
-> +{
-> +	struct device *dev = pcie->dev;
-> +	struct device_node *node;
-> +	int ret;
-> +
-> +	/*
-> +	 * BCMA devices do not map INTx the same way as platform devices. All
-> +	 * BCMA needs below line to enable INTx
-> +	 */
->  	iproc_pcie_write_reg(pcie, IPROC_PCIE_INTX_EN, SYS_RC_INTX_MASK);
-> +
-> +	node = of_get_compatible_child(dev->of_node, "brcm,iproc-intc");
-> +	if (node)
-> +		pcie->irq = of_irq_get(node, 0);
-> +
-> +	if (!node || pcie->irq <= 0)
-> +		return 0;
-> +
-> +	spin_lock_init(&pcie->intx_lock);
-> +
-> +	/* set IRQ handler */
-> +	irq_set_chained_handler_and_data(pcie->irq, iproc_pcie_isr, pcie);
-
-Please do this last, once the domain is allocated (you leave a window 
-where
-a screaming interrupt can fire here).
-
-> +
-> +	/* add IRQ domain for INTx */
-> +	pcie->irq_domain = irq_domain_add_linear(node, PCI_NUM_INTX,
-> +						 &intx_domain_ops, pcie);
-> +	if (!pcie->irq_domain) {
-> +		dev_err(dev, "failed to add INTx IRQ domain\n");
-> +		ret = -ENOMEM;
-> +		goto err_rm_handler_data;
-> +	}
-> +
-> +	return 0;
-> +
-> +err_rm_handler_data:
-> +	of_node_put(node);
-> +	irq_set_chained_handler_and_data(pcie->irq, NULL, NULL);
-> +
-> +	return ret;
-> +}
-> +
-> +static void iproc_pcie_intx_disable(struct iproc_pcie *pcie)
-> +{
-> +	uint32_t offset, virq;
-> +	unsigned long flags;
-> +
-> +	spin_lock_irqsave(&pcie->intx_lock, flags);
-> +	iproc_pcie_write_reg(pcie, IPROC_PCIE_INTX_EN, 0x0);
-> +	spin_unlock_irqrestore(&pcie->intx_lock, flags);
-
-What's the reason for this lock/unlock? What are you racing against?
-
-> +
-> +	if (pcie->irq <= 0)
-> +		return;
-> +
-> +	for (offset = 0; offset < PCI_NUM_INTX; offset++) {
-> +		virq = irq_find_mapping(pcie->irq_domain, offset);
-> +		if (virq)
-> +			irq_dispose_mapping(virq);
-> +	}
-> +
-> +	irq_domain_remove(pcie->irq_domain);
-> +	irq_set_chained_handler_and_data(pcie->irq, NULL, NULL);
-
-The other way around: first you disconnect the interrupt, then you
-free the data that the interrupt can make use of.
-
->  }
-> 
->  static inline bool iproc_pcie_ob_is_valid(struct iproc_pcie *pcie,
-> @@ -1518,7 +1656,11 @@ int iproc_pcie_setup(struct iproc_pcie *pcie,
-> struct list_head *res)
->  		goto err_power_off_phy;
->  	}
-> 
-> -	iproc_pcie_enable(pcie);
-> +	ret = iproc_pcie_intx_enable(pcie);
-> +	if (ret) {
-> +		dev_err(dev, "failed to enable INTx\n");
-> +		goto err_power_off_phy;
-> +	}
-> 
->  	if (IS_ENABLED(CONFIG_PCI_MSI))
->  		if (iproc_pcie_msi_enable(pcie))
-> @@ -1562,6 +1704,7 @@ int iproc_pcie_remove(struct iproc_pcie *pcie)
->  	pci_remove_root_bus(pcie->root_bus);
-> 
->  	iproc_pcie_msi_disable(pcie);
-> +	iproc_pcie_intx_disable(pcie);
-> 
->  	phy_power_off(pcie->phy);
->  	phy_exit(pcie->phy);
-> diff --git a/drivers/pci/controller/pcie-iproc.h
-> b/drivers/pci/controller/pcie-iproc.h
-> index 4f03ea5..787bfba 100644
-> --- a/drivers/pci/controller/pcie-iproc.h
-> +++ b/drivers/pci/controller/pcie-iproc.h
-> @@ -74,9 +74,13 @@ struct iproc_msi;
->   * @ib: inbound mapping related parameters
->   * @ib_map: outbound mapping region related parameters
->   *
-> + * @irq: interrupt line wired to the generic GIC for INTx
-> + * @irq_domain: IRQ domain for INTx
-> + *
->   * @need_msi_steer: indicates additional configuration of the iProc 
-> PCIe
->   * controller is required to steer MSI writes to external interrupt 
-> controller
->   * @msi: MSI data
-> + * @intx_lock: spinlock to protect access to INTx related registers
->   */
->  struct iproc_pcie {
->  	struct device *dev;
-> @@ -102,8 +106,12 @@ struct iproc_pcie {
->  	struct iproc_pcie_ib ib;
->  	const struct iproc_pcie_ib_map *ib_map;
-> 
-> +	int irq;
-> +	struct irq_domain *irq_domain;
-> +
->  	bool need_msi_steer;
->  	struct iproc_msi *msi;
-> +	spinlock_t intx_lock;
->  };
-> 
->  int iproc_pcie_setup(struct iproc_pcie *pcie, struct list_head *res);
-
-Thanks,
-
-         M.
--- 
-Jazz is not dead. It just smells funny...
+M
