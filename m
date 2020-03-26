@@ -2,100 +2,179 @@ Return-Path: <SRS0=aGSP=5L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D195FC43331
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 18:28:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6F28C43331
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 18:30:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A695B20719
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 18:28:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB9912070A
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 18:30:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="I+G+8vAi"
+	dkim=pass (2048-bit key) header.d=ndufresne-ca.20150623.gappssmtp.com header.i=@ndufresne-ca.20150623.gappssmtp.com header.b="iB7rqAN6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728417AbgCZS2e (ORCPT
+        id S1728460AbgCZSaG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 14:28:34 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:39986 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727792AbgCZS2e (ORCPT
+        Thu, 26 Mar 2020 14:30:06 -0400
+Received: from mail-qv1-f65.google.com ([209.85.219.65]:32823 "EHLO
+        mail-qv1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727446AbgCZSaG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 14:28:34 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Transfer-Encoding
-        :Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
-        Sender:Reply-To:Content-ID:Content-Description;
-        bh=mchJhWy78UOAMgl1C3IsTG+i6Njh78XReHFvvDrBBYI=; b=I+G+8vAiultIOC5GApAmNq0dsd
-        S5djnLy/8+F9ob6Bo9Glu4BwoJne3D7OMuWPqXCm2tWWygSn3ojNOtwfkMqB7P09tvRdibdAe8XGE
-        Ug1xN0wYsEyIMSFRuWnwBgIG0nOKLAW/OuLhpW3RFNacrqWXX2XYjNtqklIze9ibQHCGx85zYmChT
-        his8KsXMsge+Xk4mRYbkcPizS4oDFX9xYLdG/uIMY2glCLYJOqad2NmEWuibrbDiCc7aKiHov8dAh
-        +rz6xMapLhRZAXl7zsVufGDBeurhLf0J6RxJzmOrO3gAfV3QghpRdsqA5On9k+Q1121sIDyq7QdR5
-        URqA+kgg==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=worktop.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jHXEw-0007XV-Gb; Thu, 26 Mar 2020 18:28:26 +0000
-Received: by worktop.programming.kicks-ass.net (Postfix, from userid 1000)
-        id DF411983531; Thu, 26 Mar 2020 19:28:23 +0100 (CET)
-Date:   Thu, 26 Mar 2020 19:28:23 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Nadav Amit <namit@vmware.com>
-Cc:     x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        "rostedt@goodmis.org" <rostedt@goodmis.org>,
-        "mhiramat@kernel.org" <mhiramat@kernel.org>,
-        "bristot@redhat.com" <bristot@redhat.com>,
-        "jbaron@akamai.com" <jbaron@akamai.com>,
-        "torvalds@linux-foundation.org" <torvalds@linux-foundation.org>,
-        tglx <tglx@linutronix.de>, "mingo@kernel.org" <mingo@kernel.org>,
-        "hpa@zytor.com" <hpa@zytor.com>, Andy Lutomirski <luto@kernel.org>,
-        "ard.biesheuvel@linaro.org" <ard.biesheuvel@linaro.org>,
-        "jpoimboe@redhat.com" <jpoimboe@redhat.com>
-Subject: Re: [RESEND][PATCH v3 06/17] static_call: Add basic static call
- infrastructure
-Message-ID: <20200326182823.GB2452@worktop.programming.kicks-ass.net>
-References: <20200324135603.483964896@infradead.org>
- <20200324142245.632535759@infradead.org>
- <12A30BA0-18DA-4748-B82F-6008179CC88C@vmware.com>
- <20200326170128.GQ20713@hirez.programming.kicks-ass.net>
- <9D47A4CA-39AD-4408-879B-677BE9D891B7@vmware.com>
+        Thu, 26 Mar 2020 14:30:06 -0400
+Received: by mail-qv1-f65.google.com with SMTP id p19so3582556qve.0
+        for <linux-kernel@vger.kernel.org>; Thu, 26 Mar 2020 11:30:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ndufresne-ca.20150623.gappssmtp.com; s=20150623;
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :user-agent:mime-version:content-transfer-encoding;
+        bh=L9DrCA/EQHd8jdwveo8WB0n14bq7yGLSzZRVaNtKOrs=;
+        b=iB7rqAN6jeIbSZfKYuy8sMd7TSkM3YjZagIPsTb7Y89qtMEwT3aZ6XjqnYy+hmH/Z+
+         oyhSxv4YgXavcDrKegi5kkVIaU7Z24Zd8FMe7pKWSl58bgrA3gRNNpWd0TFV/Vorwsex
+         ei2qmtjpLBVAJ2UqNogppLnOkIkrnEaU8HDYG3dscfdBS3upd3h3KfsfeRrvNtVFwj2f
+         IOnim0aOPoBnGNl55M+CK9ShbujuVgjx9wDDZEmsl7D3A/uCrTqh51lYO+8bh+THXJ1R
+         4i98KCClqxK0YVegzHEvzR4Ukp5FPPMyRvh58TlJanklRmsBB784Kw4Z6lv7wSX3D04k
+         T3Ug==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:user-agent:mime-version:content-transfer-encoding;
+        bh=L9DrCA/EQHd8jdwveo8WB0n14bq7yGLSzZRVaNtKOrs=;
+        b=lfkfCehrfcnD9/wLTWniR+43d3wQLnI+JiB5fIXU2rQQ9T1++2DbobBdUcvCGBfSz2
+         yn4ECxHUx3n0l0Tg0NYvQGuzoYHgB0XuW0Bu1Pzzg3wTs0lEmOkzk6KgAn47wr2q2hB4
+         IuJHTE4aiwu7k92JS9+RFT3vTDqRHxr+iU0b/RucXT1x1n2Ph005/Lda+vuyFS5rkd0A
+         PmZSxBPThVe1UZVZvW6XmoHtsQlghI+jPcfd7zIogzGgEYufuIGw2Jt6hPczMskQk/E2
+         iwyG49fNIXNmPdBiAuaxgbGh+xeVaKjQ6Jo+x/jmv59aasuzL63i4sSOtxckEHwHXZMi
+         61ng==
+X-Gm-Message-State: ANhLgQ0qknCpzqoFd78L4mGrKT9DZq7pF0MMTEzhjSZSG1dhnoKLpWXO
+        jqg06JJou5uPEb16mjKU7KjcQA==
+X-Google-Smtp-Source: ADFU+vt6K8GAQVwSKHIYexBPxdvx1dHoDAis8RLP4ledoNV32sheix2hQWb8suQQAoBCFpRvETYj5Q==
+X-Received: by 2002:ad4:4bc3:: with SMTP id l3mr9280133qvw.79.1585247404992;
+        Thu, 26 Mar 2020 11:30:04 -0700 (PDT)
+Received: from nicolas-tpx395.localdomain (marriott-chateau-champlain-montreal.sites.intello.com. [66.171.169.34])
+        by smtp.gmail.com with ESMTPSA id l7sm1917676qkb.47.2020.03.26.11.30.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 26 Mar 2020 11:30:03 -0700 (PDT)
+Message-ID: <3fb1dcdbbf54051d9a8fee1d1498583c3a79cecd.camel@ndufresne.ca>
+Subject: Re: [PATCH v2 3/8] hantro: Use v4l2_m2m_buf_done_and_job_finish
+From:   Nicolas Dufresne <nicolas@ndufresne.ca>
+To:     Ezequiel Garcia <ezequiel@collabora.com>,
+        Hans Verkuil <hverkuil@xs4all.nl>, linux-media@vger.kernel.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     Tomasz Figa <tfiga@chromium.org>, kernel@collabora.com,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Alexandre Courbot <acourbot@chromium.org>,
+        Jeffrey Kardatzke <jkardatzke@chromium.org>,
+        Rob Herring <robh@kernel.org>
+Date:   Thu, 26 Mar 2020 14:30:01 -0400
+In-Reply-To: <648c8411353071a7e1ffd3576d268b01177ab678.camel@collabora.com>
+References: <20200318132108.21873-1-ezequiel@collabora.com>
+                 <20200318132108.21873-4-ezequiel@collabora.com>
+                 <13b1efe1-8b52-070b-cf11-b230bd405d3e@xs4all.nl>
+                 <0a8f6d97e6869ff694aedd67a3176217a885c938.camel@ndufresne.ca>
+                 <50d764ec-1c15-99bd-192b-9aa6ae5bf368@xs4all.nl>
+         <648c8411353071a7e1ffd3576d268b01177ab678.camel@collabora.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <9D47A4CA-39AD-4408-879B-677BE9D891B7@vmware.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 26, 2020 at 06:09:07PM +0000, Nadav Amit wrote:
+Le mercredi 25 mars 2020 à 17:30 -0300, Ezequiel Garcia a écrit :
+>    1. On Wed, 2020-03-25 at 16:28 +0100, Hans Verkuil wrote:
+> > On 3/25/20 3:02 PM, Nicolas Dufresne wrote:
+> > > Le mercredi 25 mars 2020 à 09:22 +0100, Hans Verkuil a écrit :
+> > > > On 3/18/20 2:21 PM, Ezequiel Garcia wrote:
+> > > > > Let the core sort out the nuances of returning buffers
+> > > > > to userspace, by using the v4l2_m2m_buf_done_and_job_finish
+> > > > > helper.
+> > > > > 
+> > > > > This change also removes usage of buffer sequence fields,
+> > > > > which shouldn't have any meaning for stateless decoders.
+> > > > 
+> > > > Uh, why remove this? For one, doesn't this cause fails in v4l2-compliance?
+> > > > Also, while I agree that it is not terribly useful, it doesn't hurt, does it?
+> > > > 
+> > > > And the V4L2 spec makes no exception for stateless codecs with respect to the
+> > > > sequence field.
+> > > > 
+> > > > Nacked-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+> > > 
+> > > The spec also does not say what it means either. As an example, you
+> > > have spec for ALTERNATE interlacing mode that changes the meaning of
+> > > the sequence, but not for alternate H264 fields (which cannot be part
+> > > of the format, since this changes often). We also don't have spec for
+> > > the the sequence behaviour while using HOLD features.
+> > 
+> > I hate it that the spec changes the sequence meaning for FIELD_ALTERNATE,
+> > I always thought that that made drivers unnecessarily complicated. Unfortunately,
+> > this is something we inherited.
+> > 
+> > Currently the spec says for sequence:
+> > 
+> > "Set by the driver, counting the frames (not fields!) in sequence. This field is set
+> >  for both input and output devices."
+> > 
+> > The only thing missing here is that it should say that for compressed formats this
+> > counts the buffers, since one buffer with compressed data may not have a one-to-one
+> > mapping with frames.
 
-> I think that the kernel underutilizes the pure attribute in general.
-> Building it with "-Wsuggest-attribute=pure” results in many warnings.
-> Function pointers such kvm_x86_ops.get_XXX() could have been candidates to
-> use the “pure” attribute.
+That's also why I think it's programatically useless in that case, there is no
+logic for which input/output can be related unless you know what the framing is.
+
+> > 
+> > This description for 'sequence' was never updated when compressed data formats were
+> > added, so it is a bit out of date.
+> > 
+> > > I'm worried we are falling into the test driven trap, were people
+> > > implement features to satisfy a test, while the added complexity don't
+> > > really make sense. Shouldn't we change our approach and opt-out
+> > > features for new type of HW, so that we can keep the drivers code
+> > > saner?
+> > 
+> > Why wasn't the existing code in this patch sane? Sure, we can change the spec, but
+> > then 1) all existing drivers need to be updated as well, and 2) v4l2-compliance needs
+> > to be changed to test specifically for this class of drivers and ensure that for those
+> > the sequence field is set to 0. Not to mention introducing an exception in the uAPI
+> > where the sequence field suddenly isn't used anymore.
+> > 
+> > Frankly, I would prefer that the whole sequence handling is moved to videobuf2-v4l2.c.
+> > It really doesn't belong in drivers, with the exception of incrementing the sequence
+> > counter in case of dropped frames.
+> > 
+> > I think I suggested it when vb2 was being designed, but at the time the preference
+> > was to keep it in the driver. Long time ago, though.
+> > 
 > 
-> The syntax is what you would expect:
+> Do you think we could try to move this to the core?
+
+I'm also happy as long as drivers stop having to implement this generic
+statistic. Note, that only applies to existing m2m, we still need that counter
+to detect driver side frame drops in CAPTURE only devices (like UVC cameras).
+
 > 
->   static void __attribute__((pure))(*ptr)(void);
+> I might be able find some time to try that.
+> 
+> > And another reason why I want to keep it: I find it actually useful to see a running
+> > counter: it helps keeping track of how many buffers you've processed since you started
+> > streaming.
+> > 
+> 
+> +1
+> 
+> > Finally, the removal of the sequence counter simply does not belong in this patch.
+> > 
+> 
+> Agreed, no complaints on my side.
+> 
+> I am actually happy about this feedback.
+> 
+> Thanks,
+> Ezequiel
+> 
 > 
 
-Well, I didn't in fact expect that, because an attribute is not a
-type qualifier.
-
-> However, you have a point, gcc does not appear to respect “pure” for
-> function pointers and emits a warning it is ignored. GCC apparently only
-> respects “const”. In contrast clang appears to respect the pure attribute
-> for function pointers.
-
-Still, we can probably make it happen for static_call(), since it is a
-direct call to the trampoline, all we need to do is make sure the
-trampoline is declared pure.
-
-It does however mean that static_call() inherits all the dangers and
-pit-falls of function pointers with some extra on top. It will be
-impossible to validate this stuff.
-
-That is, you can static_call_update() with a pointer to a !pure function
-and you get to keep the pieces.
