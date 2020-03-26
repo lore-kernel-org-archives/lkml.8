@@ -2,608 +2,708 @@ Return-Path: <SRS0=aGSP=5L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18C04C43331
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 14:31:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF019C43331
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 14:32:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C69592073E
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 14:31:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A699320714
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 14:32:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="G1N+m2Ix"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="CJvK1zNQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727996AbgCZOb2 (ORCPT
+        id S1728173AbgCZOcH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 10:31:28 -0400
-Received: from us-smtp-delivery-74.mimecast.com ([216.205.24.74]:27272 "EHLO
-        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726296AbgCZOb2 (ORCPT
+        Thu, 26 Mar 2020 10:32:07 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:34996 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727612AbgCZOcG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 10:31:28 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1585233085;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=3hHlgqWBGTYF+EP7OJv8CgOvjntab1ZGJc7fSi3pD38=;
-        b=G1N+m2IxiJFjrEefNK4tskQ8gjpj4emxdKZ8Z2kHajpuzGM6JsDdhhuaA89Y7j8eYa8wRo
-        p+USfx10Ar9sm0pRXVsAZV+DrjcHg3dnTIE2jUKg1QdXg74KThCSrOJwIpOgOlv+WzbbUj
-        lSXhYmWSGVh3Nfok3+3EeYUuPO7u2ZA=
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
- [209.85.221.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-449-T5k_DyrqOS6qUU24bhKu9w-1; Thu, 26 Mar 2020 10:31:24 -0400
-X-MC-Unique: T5k_DyrqOS6qUU24bhKu9w-1
-Received: by mail-wr1-f71.google.com with SMTP id i18so3100847wrx.17
-        for <linux-kernel@vger.kernel.org>; Thu, 26 Mar 2020 07:31:24 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=3hHlgqWBGTYF+EP7OJv8CgOvjntab1ZGJc7fSi3pD38=;
-        b=n+PdX9tmbhiUrZNmhBCQsMJyOPOuVV2qBU9XsQb+Fg+k3t36NocLHs3NmA9FG6jDgx
-         euhIeyM5dtRB58sDwarhhrk32849v1ARTIcvVK0WOqqTQoSO1+33kIHVAdoy0eqzo/Tb
-         7z/Cd1C1bhT4STK8pJN6o0SmaCDjJ3h2reYLHXOXOk+j1lKQlBY7pf9fvVDkH247dgXa
-         BpvyH7/BeJeFIhUt22U6OOKtJh+BFvLn3Q0UGHVDcScxFEv2GDR88SJHTQIDevUjQn7g
-         WlnHHB3LvzJDK7S9JFfleL0Bweuc3OEUcrI/SQePdxqm1lQgKxiIIF1y7onYdr7xIjua
-         3AWw==
-X-Gm-Message-State: ANhLgQ23Rv+Os69zIPHObCcvzFdUCKTq6omjHnTkmB5dgbMKhnQEqWwg
-        DxKppUZXn32k5yIWVv8c+JRrFvh7/doDDfmY7A+5yeUn544OM5QTVsgVxH3z352lHys46knnnz6
-        USJP3GA4Dp/e3731iflZnMujz
-X-Received: by 2002:a1c:a552:: with SMTP id o79mr217094wme.87.1585233082772;
-        Thu, 26 Mar 2020 07:31:22 -0700 (PDT)
-X-Google-Smtp-Source: ADFU+vtnYnQFi5DhVEgwMpR/bpn4ML5NB0wBTt4PmvgHKIZ2naWHhDzcdlzTqPNOhCyhHsZre2gFaw==
-X-Received: by 2002:a1c:a552:: with SMTP id o79mr217059wme.87.1585233082299;
-        Thu, 26 Mar 2020 07:31:22 -0700 (PDT)
-Received: from vitty.brq.redhat.com (g-server-2.ign.cz. [91.219.240.2])
-        by smtp.gmail.com with ESMTPSA id u13sm3904511wru.88.2020.03.26.07.31.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 26 Mar 2020 07:31:21 -0700 (PDT)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     "Andrea Parri \(Microsoft\)" <parri.andrea@gmail.com>,
-        linux-kernel@vger.kernel.org
-Cc:     "K . Y . Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>, linux-hyperv@vger.kernel.org,
-        Michael Kelley <mikelley@microsoft.com>,
-        Dexuan Cui <decui@microsoft.com>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        "Andrea Parri \(Microsoft\)" <parri.andrea@gmail.com>
-Subject: Re: [RFC PATCH 03/11] Drivers: hv: vmbus: Replace the per-CPU channel lists with a global array of channels
-In-Reply-To: <20200325225505.23998-4-parri.andrea@gmail.com>
-References: <20200325225505.23998-1-parri.andrea@gmail.com> <20200325225505.23998-4-parri.andrea@gmail.com>
-Date:   Thu, 26 Mar 2020 15:31:20 +0100
-Message-ID: <87y2rn4287.fsf@vitty.brq.redhat.com>
-MIME-Version: 1.0
-Content-Type: text/plain
+        Thu, 26 Mar 2020 10:32:06 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02QETShI147584;
+        Thu, 26 Mar 2020 14:31:59 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id : in-reply-to : references; s=corp-2020-01-29;
+ bh=CCyybZrTj5kVaqqW0VKYzWaok0RCGocvqm1rXnboB0c=;
+ b=CJvK1zNQJlNkqo/tfK+6Xj/jgA9sNOYgXVanykqLp1IVESdfSY68/qhMcH9fbV+vtSWZ
+ p5QFss/7K7NPlccJB6Pv0OUh9ZKHeRa/AK+y357qqayglP35a9FhZ5h8uD1QexEake+/
+ hUHSdpNy7D7dOO9UO5FvJKw8WF3U+tedXcl//pG3FjGABQQ/ZaaaYKx3JQOUYav42fzi
+ 9UF4N5ozXuUen02ju1gJ0rzGifWede5l24yy20Ya47TIGuZZxY/JhIgcix5nl7zQ51qr
+ J+ZdU82AaZ8Qedcg77MQA/LFv0Hc8nFP3voqhW3A4j8phcHAq2iXoZcieDMUil9vFiDj ig== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2130.oracle.com with ESMTP id 2ywabrg5e8-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 26 Mar 2020 14:31:59 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02QESptg116471;
+        Thu, 26 Mar 2020 14:31:59 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by userp3030.oracle.com with ESMTP id 2yxw4trp2b-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 26 Mar 2020 14:31:58 +0000
+Received: from abhmp0019.oracle.com (abhmp0019.oracle.com [141.146.116.25])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 02QEVvT8023983;
+        Thu, 26 Mar 2020 14:31:57 GMT
+Received: from localhost.uk.oracle.com (/10.175.198.205)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 26 Mar 2020 07:31:57 -0700
+From:   Alan Maguire <alan.maguire@oracle.com>
+To:     brendanhiggins@google.com, frowand.list@gmail.com,
+        gregkh@linuxfoundation.org, shuah@kernel.org,
+        linux-kselftest@vger.kernel.org
+Cc:     corbet@lwn.net, linux-kernel@vger.kernel.org,
+        kunit-dev@googlegroups.com, linux-doc@vger.kernel.org
+Subject: [PATCH v8 kunit-next 1/4] kunit: add debugfs /sys/kernel/debug/kunit/<suite>/results display
+Date:   Thu, 26 Mar 2020 14:25:07 +0000
+Message-Id: <1585232710-322-2-git-send-email-alan.maguire@oracle.com>
+X-Mailer: git-send-email 1.8.3.1
+In-Reply-To: <1585232710-322-1-git-send-email-alan.maguire@oracle.com>
+References: <1585232710-322-1-git-send-email-alan.maguire@oracle.com>
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9571 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 suspectscore=2
+ spamscore=0 mlxlogscore=999 adultscore=0 phishscore=0 mlxscore=0
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2003260112
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9571 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 suspectscore=2
+ lowpriorityscore=0 malwarescore=0 phishscore=0 priorityscore=1501
+ clxscore=1015 adultscore=0 mlxscore=0 mlxlogscore=999 bulkscore=0
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2003260112
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-"Andrea Parri (Microsoft)" <parri.andrea@gmail.com> writes:
+add debugfs support for displaying kunit test suite results; this is
+especially useful for module-loaded tests to allow disentangling of
+test result display from other dmesg events.  debugfs support is
+provided if CONFIG_KUNIT_DEBUGFS=y.
 
-> When Hyper-V sends an interrupt to the guest, the guest has to figure
-> out which channel the interrupt is associated with.  Hyper-V sets a bit
-> in a memory page that is shared with the guest, indicating a particular
-> "relid" that the interrupt is associated with.  The current Linux code
-> then uses a set of per-CPU linked lists to map a given "relid" to a
-> pointer to a channel structure.
->
-> This design introduces a synchronization problem if the CPU that Hyper-V
-> will interrupt for a certain channel is changed.  If the interrupt comes
-> on the "old CPU" and the channel was already moved to the per-CPU list
-> of the "new CPU", then the relid -> channel mapping will fail and the
-> interrupt is dropped.  Similarly, if the interrupt comes on the new CPU
-> but the channel was not moved to the per-CPU list of the new CPU, then
-> the mapping will fail and the interrupt is dropped.
->
-> Relids are integers ranging from 0 to 2047.  The mapping from relids to
-> channel structures can be done by setting up an array with 2048 entries,
-> each entry being a pointer to a channel structure (hence total size ~16K
-> bytes, which is not a problem).  The array is global, so there are no
-> per-CPU linked lists to update.   The array can be searched and updated
-> by simply loading and storing the array at the specified index.  With no
-> per-CPU data structures, the above mentioned synchronization problem is
-> avoided and the relid2channel() function gets simpler.
->
-> Suggested-by: Michael Kelley <mikelley@microsoft.com>
-> Signed-off-by: Andrea Parri (Microsoft) <parri.andrea@gmail.com>
-> ---
->  drivers/hv/channel_mgmt.c | 158 ++++++++++++++++++++++----------------
->  drivers/hv/connection.c   |  38 +++------
->  drivers/hv/hv.c           |   2 -
->  drivers/hv/hyperv_vmbus.h |  14 ++--
->  drivers/hv/vmbus_drv.c    |  48 +++++++-----
->  include/linux/hyperv.h    |   5 --
->  6 files changed, 139 insertions(+), 126 deletions(-)
->
-> diff --git a/drivers/hv/channel_mgmt.c b/drivers/hv/channel_mgmt.c
-> index 1191f3d76d111..9b1449c839575 100644
-> --- a/drivers/hv/channel_mgmt.c
-> +++ b/drivers/hv/channel_mgmt.c
-> @@ -319,7 +319,6 @@ static struct vmbus_channel *alloc_channel(void)
->  	init_completion(&channel->rescind_event);
->  
->  	INIT_LIST_HEAD(&channel->sc_list);
-> -	INIT_LIST_HEAD(&channel->percpu_list);
->  
->  	tasklet_init(&channel->callback_event,
->  		     vmbus_on_event, (unsigned long)channel);
-> @@ -340,23 +339,28 @@ static void free_channel(struct vmbus_channel *channel)
->  	kobject_put(&channel->kobj);
->  }
->  
-> -static void percpu_channel_enq(void *arg)
-> +void vmbus_channel_map_relid(struct vmbus_channel *channel)
->  {
-> -	struct vmbus_channel *channel = arg;
-> -	struct hv_per_cpu_context *hv_cpu
-> -		= this_cpu_ptr(hv_context.cpu_context);
-> -
-> -	list_add_tail_rcu(&channel->percpu_list, &hv_cpu->chan_list);
-> +	if (WARN_ON(channel->offermsg.child_relid >= MAX_CHANNEL_RELIDS))
-> +		return;
-> +	/*
-> +	 * Pairs with the READ_ONCE() in vmbus_chan_sched().  Guarantees
-> +	 * that vmbus_chan_sched() will find up-to-date data.
-> +	 */
-> +	smp_store_release(
-> +		&vmbus_connection.channels[channel->offermsg.child_relid],
-> +		channel);
->  }
->  
-> -static void percpu_channel_deq(void *arg)
-> +void vmbus_channel_unmap_relid(struct vmbus_channel *channel)
->  {
-> -	struct vmbus_channel *channel = arg;
-> -
-> -	list_del_rcu(&channel->percpu_list);
-> +	if (WARN_ON(channel->offermsg.child_relid >= MAX_CHANNEL_RELIDS))
-> +		return;
-> +	WRITE_ONCE(
-> +		vmbus_connection.channels[channel->offermsg.child_relid],
-> +		NULL);
+As well as printk()ing messages, we append them to a per-test log.
 
-I don't think this smp_store_release()/WRITE_ONCE() fanciness gives you
-anything. Basically, without proper synchronization with a lock there is
-no such constructions which will give you any additional guarantee on
-top of just doing X=1. E.g. smp_store_release() is just 
-  barrier();
-  *p = v;
-if I'm not mistaken. Nobody tells you when *some other CPU* will see the
-update - 'eventually' is your best guess. Here, you're only setting one
-pointer.
+Signed-off-by: Alan Maguire <alan.maguire@oracle.com>
+Reviewed-by: Brendan Higgins <brendanhiggins@google.com>
+Reviewed-by: Frank Rowand <frank.rowand@sony.com>
+---
+ include/kunit/test.h   |  54 +++++++++++++++---
+ lib/kunit/Kconfig      |   8 +++
+ lib/kunit/Makefile     |   4 ++
+ lib/kunit/debugfs.c    | 116 ++++++++++++++++++++++++++++++++++++++
+ lib/kunit/debugfs.h    |  30 ++++++++++
+ lib/kunit/kunit-test.c |   4 +-
+ lib/kunit/test.c       | 147 ++++++++++++++++++++++++++++++++++++++-----------
+ 7 files changed, 322 insertions(+), 41 deletions(-)
+ create mode 100644 lib/kunit/debugfs.c
+ create mode 100644 lib/kunit/debugfs.h
 
-Percpu structures have an advantage: we (almost) never access them from
-different CPUs so just doing updates atomically (and writing 64bit
-pointer on x86_64 is atomic) is OK.
-
-I haven't looked at all possible scenarios but I'd suggest protecting
-this array with a spinlock (in case we can have simultaneous accesses
-from different CPUs and care about the result, of course).
-
->  }
->  
-> -
->  static void vmbus_release_relid(u32 relid)
->  {
->  	struct vmbus_channel_relid_released msg;
-> @@ -376,17 +380,25 @@ void hv_process_channel_removal(struct vmbus_channel *channel)
->  	struct vmbus_channel *primary_channel;
->  	unsigned long flags;
->  
-> -	BUG_ON(!mutex_is_locked(&vmbus_connection.channel_mutex));
-> +	lockdep_assert_held(&vmbus_connection.channel_mutex);
->  	BUG_ON(!channel->rescind);
->  
-> -	if (channel->target_cpu != get_cpu()) {
-> -		put_cpu();
-> -		smp_call_function_single(channel->target_cpu,
-> -					 percpu_channel_deq, channel, true);
-> -	} else {
-> -		percpu_channel_deq(channel);
-> -		put_cpu();
-> -	}
-> +	/*
-> +	 * hv_process_channel_removal() could find INVALID_RELID only for
-> +	 * hv_sock channels.  See the inline comments in vmbus_onoffer().
-> +	 */
-> +	WARN_ON(channel->offermsg.child_relid == INVALID_RELID &&
-> +		!is_hvsock_channel(channel));
-> +
-> +	/*
-> +	 * Upon suspend, an in-use hv_sock channel is removed from the array of
-> +	 * channels and the relid is invalidated.  After hibernation, when the
-> +	 * user-space appplication destroys the channel, it's unnecessary and
-> +	 * unsafe to remove the channel from the array of channels.  See also
-> +	 * the inline comments before the call of vmbus_release_relid() below.
-> +	 */
-> +	if (channel->offermsg.child_relid != INVALID_RELID)
-> +		vmbus_channel_unmap_relid(channel);
->  
->  	if (channel->primary_channel == NULL) {
->  		list_del(&channel->listentry);
-> @@ -447,16 +459,6 @@ static void vmbus_add_channel_work(struct work_struct *work)
->  
->  	init_vp_index(newchannel, dev_type);
->  
-> -	if (newchannel->target_cpu != get_cpu()) {
-> -		put_cpu();
-> -		smp_call_function_single(newchannel->target_cpu,
-> -					 percpu_channel_enq,
-> -					 newchannel, true);
-> -	} else {
-> -		percpu_channel_enq(newchannel);
-> -		put_cpu();
-> -	}
-> -
->  	/*
->  	 * This state is used to indicate a successful open
->  	 * so that when we do close the channel normally, we
-> @@ -523,17 +525,10 @@ static void vmbus_add_channel_work(struct work_struct *work)
->  		spin_unlock_irqrestore(&primary_channel->lock, flags);
->  	}
->  
-> -	mutex_unlock(&vmbus_connection.channel_mutex);
-> +	/* vmbus_process_offer() has mapped the channel. */
-> +	vmbus_channel_unmap_relid(newchannel);
->  
-> -	if (newchannel->target_cpu != get_cpu()) {
-> -		put_cpu();
-> -		smp_call_function_single(newchannel->target_cpu,
-> -					 percpu_channel_deq,
-> -					 newchannel, true);
-> -	} else {
-> -		percpu_channel_deq(newchannel);
-> -		put_cpu();
-> -	}
-> +	mutex_unlock(&vmbus_connection.channel_mutex);
->  
->  	vmbus_release_relid(newchannel->offermsg.child_relid);
->  
-> @@ -599,6 +594,8 @@ static void vmbus_process_offer(struct vmbus_channel *newchannel)
->  		spin_unlock_irqrestore(&channel->lock, flags);
->  	}
->  
-> +	vmbus_channel_map_relid(newchannel);
-> +
->  	mutex_unlock(&vmbus_connection.channel_mutex);
->  
->  	/*
-> @@ -937,8 +934,6 @@ static void vmbus_onoffer(struct vmbus_channel_message_header *hdr)
->  	oldchannel = find_primary_channel_by_offer(offer);
->  
->  	if (oldchannel != NULL) {
-> -		atomic_dec(&vmbus_connection.offer_in_progress);
-> -
->  		/*
->  		 * We're resuming from hibernation: all the sub-channel and
->  		 * hv_sock channels we had before the hibernation should have
-> @@ -946,36 +941,65 @@ static void vmbus_onoffer(struct vmbus_channel_message_header *hdr)
->  		 * primary channel that we had before the hibernation.
->  		 */
->  
-> +		/*
-> +		 * { Initially: channel relid = INVALID_RELID,
-> +		 *		channels[valid_relid] = NULL }
-> +		 *
-> +		 * CPU1					CPU2
-> +		 *
-> +		 * [vmbus_onoffer()]			[vmbus_device_release()]
-> +		 *
-> +		 * LOCK channel_mutex			LOCK channel_mutex
-> +		 * STORE channel relid = valid_relid	LOAD r1 = channel relid
-> +		 * MAP_RELID channel			if (r1 != INVALID_RELID)
-> +		 * UNLOCK channel_mutex			  UNMAP_RELID channel
-> +		 *					UNLOCK channel_mutex
-> +		 *
-> +		 * Forbids: r1 == valid_relid &&
-> +		 * 		channels[valid_relid] == channel
-> +		 *
-> +		 * Note.  r1 can be INVALID_RELID only for an hv_sock channel.
-> +		 * None of the hv_sock channels which were present before the
-> +		 * suspend are re-offered upon the resume.  See the WARN_ON()
-> +		 * in hv_process_channel_removal().
-> +		 */
-> +		mutex_lock(&vmbus_connection.channel_mutex);
-> +
-> +		atomic_dec(&vmbus_connection.offer_in_progress);
-> +
->  		WARN_ON(oldchannel->offermsg.child_relid != INVALID_RELID);
->  		/* Fix up the relid. */
->  		oldchannel->offermsg.child_relid = offer->child_relid;
->  
->  		offer_sz = sizeof(*offer);
-> -		if (memcmp(offer, &oldchannel->offermsg, offer_sz) == 0) {
-> -			check_ready_for_resume_event();
-> -			return;
-> +		if (memcmp(offer, &oldchannel->offermsg, offer_sz) != 0) {
-> +			/*
-> +			 * This is not an error, since the host can also change
-> +			 * the other field(s) of the offer, e.g. on WS RS5
-> +			 * (Build 17763), the offer->connection_id of the
-> +			 * Mellanox VF vmbus device can change when the host
-> +			 * reoffers the device upon resume.
-> +			 */
-> +			pr_debug("vmbus offer changed: relid=%d\n",
-> +				 offer->child_relid);
-> +
-> +			print_hex_dump_debug("Old vmbus offer: ",
-> +					     DUMP_PREFIX_OFFSET, 16, 4,
-> +					     &oldchannel->offermsg, offer_sz,
-> +					     false);
-> +			print_hex_dump_debug("New vmbus offer: ",
-> +					     DUMP_PREFIX_OFFSET, 16, 4,
-> +					     offer, offer_sz, false);
-> +
-> +			/* Fix up the old channel. */
-> +			vmbus_setup_channel_state(oldchannel, offer);
->  		}
->  
-> -		/*
-> -		 * This is not an error, since the host can also change the
-> -		 * other field(s) of the offer, e.g. on WS RS5 (Build 17763),
-> -		 * the offer->connection_id of the Mellanox VF vmbus device
-> -		 * can change when the host reoffers the device upon resume.
-> -		 */
-> -		pr_debug("vmbus offer changed: relid=%d\n",
-> -			 offer->child_relid);
-> -
-> -		print_hex_dump_debug("Old vmbus offer: ", DUMP_PREFIX_OFFSET,
-> -				     16, 4, &oldchannel->offermsg, offer_sz,
-> -				     false);
-> -		print_hex_dump_debug("New vmbus offer: ", DUMP_PREFIX_OFFSET,
-> -				     16, 4, offer, offer_sz, false);
-> -
-> -		/* Fix up the old channel. */
-> -		vmbus_setup_channel_state(oldchannel, offer);
-> -
-> +		/* Add the channel back to the array of channels. */
-> +		vmbus_channel_map_relid(oldchannel);
->  		check_ready_for_resume_event();
->  
-> +		mutex_unlock(&vmbus_connection.channel_mutex);
->  		return;
->  	}
->  
-> @@ -1033,14 +1057,14 @@ static void vmbus_onoffer_rescind(struct vmbus_channel_message_header *hdr)
->  	 *
->  	 * CPU1				CPU2
->  	 *
-> -	 * [vmbus_process_offer()]	[vmbus_onoffer_rescind()]
-> +	 * [vmbus_onoffer()]		[vmbus_onoffer_rescind()]
->  	 *
->  	 * LOCK channel_mutex		WAIT_ON offer_in_progress == 0
->  	 * DECREMENT offer_in_progress	LOCK channel_mutex
-> -	 * INSERT chn_list		SEARCH chn_list
-> +	 * STORE channels[]		LOAD channels[]
->  	 * UNLOCK channel_mutex		UNLOCK channel_mutex
->  	 *
-> -	 * Forbids: CPU2's SEARCH from *not* seeing CPU1's INSERT
-> +	 * Forbids: CPU2's LOAD from *not* seeing CPU1's STORE
->  	 */
->  
->  	while (atomic_read(&vmbus_connection.offer_in_progress) != 0) {
-> diff --git a/drivers/hv/connection.c b/drivers/hv/connection.c
-> index f4bd306d2cef9..11170d9a2e1a5 100644
-> --- a/drivers/hv/connection.c
-> +++ b/drivers/hv/connection.c
-> @@ -248,6 +248,14 @@ int vmbus_connect(void)
->  	pr_info("Vmbus version:%d.%d\n",
->  		version >> 16, version & 0xFFFF);
->  
-> +	vmbus_connection.channels = kcalloc(MAX_CHANNEL_RELIDS,
-> +					    sizeof(struct vmbus_channel *),
-> +					    GFP_KERNEL);
-> +	if (vmbus_connection.channels == NULL) {
-> +		ret = -ENOMEM;
-> +		goto cleanup;
-> +	}
-> +
->  	kfree(msginfo);
->  	return 0;
->  
-> @@ -295,33 +303,9 @@ void vmbus_disconnect(void)
->   */
->  struct vmbus_channel *relid2channel(u32 relid)
->  {
-> -	struct vmbus_channel *channel;
-> -	struct vmbus_channel *found_channel  = NULL;
-> -	struct list_head *cur, *tmp;
-> -	struct vmbus_channel *cur_sc;
-> -
-> -	BUG_ON(!mutex_is_locked(&vmbus_connection.channel_mutex));
-> -
-> -	list_for_each_entry(channel, &vmbus_connection.chn_list, listentry) {
-> -		if (channel->offermsg.child_relid == relid) {
-> -			found_channel = channel;
-> -			break;
-> -		} else if (!list_empty(&channel->sc_list)) {
-> -			/*
-> -			 * Deal with sub-channels.
-> -			 */
-> -			list_for_each_safe(cur, tmp, &channel->sc_list) {
-> -				cur_sc = list_entry(cur, struct vmbus_channel,
-> -							sc_list);
-> -				if (cur_sc->offermsg.child_relid == relid) {
-> -					found_channel = cur_sc;
-> -					break;
-> -				}
-> -			}
-> -		}
-> -	}
-> -
-> -	return found_channel;
-> +	if (WARN_ON(relid >= MAX_CHANNEL_RELIDS))
-> +		return NULL;
-> +	return READ_ONCE(vmbus_connection.channels[relid]);
->  }
->  
->  /*
-> diff --git a/drivers/hv/hv.c b/drivers/hv/hv.c
-> index e2b3310454640..17bf1f229152b 100644
-> --- a/drivers/hv/hv.c
-> +++ b/drivers/hv/hv.c
-> @@ -117,8 +117,6 @@ int hv_synic_alloc(void)
->  			pr_err("Unable to allocate post msg page\n");
->  			goto err;
->  		}
-> -
-> -		INIT_LIST_HEAD(&hv_cpu->chan_list);
->  	}
->  
->  	return 0;
-> diff --git a/drivers/hv/hyperv_vmbus.h b/drivers/hv/hyperv_vmbus.h
-> index 67fb1edcbf527..2216cd5e8e8bf 100644
-> --- a/drivers/hv/hyperv_vmbus.h
-> +++ b/drivers/hv/hyperv_vmbus.h
-> @@ -132,12 +132,6 @@ struct hv_per_cpu_context {
->  	 * basis.
->  	 */
->  	struct tasklet_struct msg_dpc;
-> -
-> -	/*
-> -	 * To optimize the mapping of relid to channel, maintain
-> -	 * per-cpu list of the channels based on their CPU affinity.
-> -	 */
-> -	struct list_head chan_list;
->  };
->  
->  struct hv_context {
-> @@ -202,6 +196,8 @@ int hv_ringbuffer_read(struct vmbus_channel *channel,
->  /* TODO: Need to make this configurable */
->  #define MAX_NUM_CHANNELS_SUPPORTED	256
->  
-> +#define MAX_CHANNEL_RELIDS					\
-> +	max(MAX_NUM_CHANNELS_SUPPORTED, HV_EVENT_FLAGS_COUNT)
->  
->  enum vmbus_connect_state {
->  	DISCONNECTED,
-> @@ -251,6 +247,9 @@ struct vmbus_connection {
->  	struct list_head chn_list;
->  	struct mutex channel_mutex;
->  
-> +	/* Array of channels */
-> +	struct vmbus_channel **channels;
-> +
->  	/*
->  	 * An offer message is handled first on the work_queue, and then
->  	 * is further handled on handle_primary_chan_wq or
-> @@ -337,6 +336,9 @@ int vmbus_add_channel_kobj(struct hv_device *device_obj,
->  
->  void vmbus_remove_channel_attr_group(struct vmbus_channel *channel);
->  
-> +void vmbus_channel_map_relid(struct vmbus_channel *channel);
-> +void vmbus_channel_unmap_relid(struct vmbus_channel *channel);
-> +
->  struct vmbus_channel *relid2channel(u32 relid);
->  
->  void vmbus_free_channels(void);
-> diff --git a/drivers/hv/vmbus_drv.c b/drivers/hv/vmbus_drv.c
-> index 903b1ec6a259e..301e3f484bb1a 100644
-> --- a/drivers/hv/vmbus_drv.c
-> +++ b/drivers/hv/vmbus_drv.c
-> @@ -1198,33 +1198,39 @@ static void vmbus_chan_sched(struct hv_per_cpu_context *hv_cpu)
->  		if (relid == 0)
->  			continue;
->  
-> +		/*
-> +		 * Pairs with the kfree_rcu() in vmbus_chan_release().
-> +		 * Guarantees that the channel data structure doesn't
-> +		 * get freed while the channel pointer below is being
-> +		 * dereferenced.
-> +		 */
->  		rcu_read_lock();
->  
->  		/* Find channel based on relid */
-> -		list_for_each_entry_rcu(channel, &hv_cpu->chan_list, percpu_list) {
-> -			if (channel->offermsg.child_relid != relid)
-> -				continue;
-> +		channel = relid2channel(relid);
-> +		if (channel == NULL)
-> +			goto sched_unlock_rcu;
->  
-> -			if (channel->rescind)
-> -				continue;
-> +		if (channel->rescind)
-> +			goto sched_unlock_rcu;
->  
-> -			trace_vmbus_chan_sched(channel);
-> +		trace_vmbus_chan_sched(channel);
->  
-> -			++channel->interrupts;
-> +		++channel->interrupts;
->  
-> -			switch (channel->callback_mode) {
-> -			case HV_CALL_ISR:
-> -				vmbus_channel_isr(channel);
-> -				break;
-> +		switch (channel->callback_mode) {
-> +		case HV_CALL_ISR:
-> +			vmbus_channel_isr(channel);
-> +			break;
->  
-> -			case HV_CALL_BATCHED:
-> -				hv_begin_read(&channel->inbound);
-> -				/* fallthrough */
-> -			case HV_CALL_DIRECT:
-> -				tasklet_schedule(&channel->callback_event);
-> -			}
-> +		case HV_CALL_BATCHED:
-> +			hv_begin_read(&channel->inbound);
-> +			fallthrough;
-> +		case HV_CALL_DIRECT:
-> +			tasklet_schedule(&channel->callback_event);
->  		}
->  
-> +sched_unlock_rcu:
->  		rcu_read_unlock();
->  	}
->  }
-> @@ -2208,9 +2214,12 @@ static int vmbus_bus_suspend(struct device *dev)
->  
->  	list_for_each_entry(channel, &vmbus_connection.chn_list, listentry) {
->  		/*
-> -		 * Invalidate the field. Upon resume, vmbus_onoffer() will fix
-> -		 * up the field, and the other fields (if necessary).
-> +		 * Remove the channel from the array of channels and invalidate
-> +		 * the channel's relid.  Upon resume, vmbus_onoffer() will fix
-> +		 * up the relid (and other fields, if necessary) and add the
-> +		 * channel back to the array.
->  		 */
-> +		vmbus_channel_unmap_relid(channel);
->  		channel->offermsg.child_relid = INVALID_RELID;
->  
->  		if (is_hvsock_channel(channel)) {
-> @@ -2450,6 +2459,7 @@ static void __exit vmbus_exit(void)
->  	hv_debug_rm_all_dir();
->  
->  	vmbus_free_channels();
-> +	kfree(vmbus_connection.channels);
->  
->  	if (ms_hyperv.misc_features & HV_FEATURE_GUEST_CRASH_MSR_AVAILABLE) {
->  		kmsg_dump_unregister(&hv_kmsg_dumper);
-> diff --git a/include/linux/hyperv.h b/include/linux/hyperv.h
-> index 692c89ccf5dfd..6c794fd5c903e 100644
-> --- a/include/linux/hyperv.h
-> +++ b/include/linux/hyperv.h
-> @@ -854,11 +854,6 @@ struct vmbus_channel {
->  	 * Support per-channel state for use by vmbus drivers.
->  	 */
->  	void *per_channel_state;
-> -	/*
-> -	 * To support per-cpu lookup mapping of relid to channel,
-> -	 * link up channels based on their CPU affinity.
-> -	 */
-> -	struct list_head percpu_list;
->  
->  	/*
->  	 * Defer freeing channel until after all cpu's have
-
+diff --git a/include/kunit/test.h b/include/kunit/test.h
+index 2dfb550..f7b2ed4c 100644
+--- a/include/kunit/test.h
++++ b/include/kunit/test.h
+@@ -81,6 +81,9 @@ struct kunit_resource {
+ 
+ struct kunit;
+ 
++/* Size of log associated with test. */
++#define KUNIT_LOG_SIZE	512
++
+ /**
+  * struct kunit_case - represents an individual test case.
+  *
+@@ -123,8 +126,14 @@ struct kunit_case {
+ 
+ 	/* private: internal use only. */
+ 	bool success;
++	char *log;
+ };
+ 
++static inline char *kunit_status_to_string(bool status)
++{
++	return status ? "ok" : "not ok";
++}
++
+ /**
+  * KUNIT_CASE - A helper for creating a &struct kunit_case
+  *
+@@ -157,6 +166,10 @@ struct kunit_suite {
+ 	int (*init)(struct kunit *test);
+ 	void (*exit)(struct kunit *test);
+ 	struct kunit_case *test_cases;
++
++	/* private - internal use only */
++	struct dentry *debugfs;
++	char *log;
+ };
+ 
+ /**
+@@ -175,6 +188,7 @@ struct kunit {
+ 
+ 	/* private: internal use only. */
+ 	const char *name; /* Read only after initialization! */
++	char *log; /* Points at case log after initialization */
+ 	struct kunit_try_catch try_catch;
+ 	/*
+ 	 * success starts as true, and may only be set to false during a
+@@ -193,10 +207,19 @@ struct kunit {
+ 	struct list_head resources; /* Protected by lock. */
+ };
+ 
+-void kunit_init_test(struct kunit *test, const char *name);
++void kunit_init_test(struct kunit *test, const char *name, char *log);
+ 
+ int kunit_run_tests(struct kunit_suite *suite);
+ 
++size_t kunit_suite_num_test_cases(struct kunit_suite *suite);
++
++unsigned int kunit_test_case_num(struct kunit_suite *suite,
++				 struct kunit_case *test_case);
++
++int __kunit_test_suites_init(struct kunit_suite **suites);
++
++void __kunit_test_suites_exit(struct kunit_suite **suites);
++
+ /**
+  * kunit_test_suites() - used to register one or more &struct kunit_suite
+  *			 with KUnit.
+@@ -226,20 +249,22 @@ struct kunit {
+ 	static struct kunit_suite *suites[] = { __VA_ARGS__, NULL};	\
+ 	static int kunit_test_suites_init(void)				\
+ 	{								\
+-		unsigned int i;						\
+-		for (i = 0; suites[i] != NULL; i++)			\
+-			kunit_run_tests(suites[i]);			\
+-		return 0;						\
++		return __kunit_test_suites_init(suites);		\
+ 	}								\
+ 	late_initcall(kunit_test_suites_init);				\
+ 	static void __exit kunit_test_suites_exit(void)			\
+ 	{								\
+-		return;							\
++		return __kunit_test_suites_exit(suites);		\
+ 	}								\
+ 	module_exit(kunit_test_suites_exit)
+ 
+ #define kunit_test_suite(suite)	kunit_test_suites(&suite)
+ 
++#define kunit_suite_for_each_test_case(suite, test_case)		\
++	for (test_case = suite->test_cases; test_case->run_case; test_case++)
++
++bool kunit_suite_has_succeeded(struct kunit_suite *suite);
++
+ /*
+  * Like kunit_alloc_resource() below, but returns the struct kunit_resource
+  * object that contains the allocation. This is mostly for testing purposes.
+@@ -356,8 +381,21 @@ static inline void *kunit_kzalloc(struct kunit *test, size_t size, gfp_t gfp)
+ 
+ void kunit_cleanup(struct kunit *test);
+ 
+-#define kunit_printk(lvl, test, fmt, ...) \
+-	printk(lvl "\t# %s: " fmt, (test)->name, ##__VA_ARGS__)
++void kunit_log_append(char *log, const char *fmt, ...);
++
++/*
++ * printk and log to per-test or per-suite log buffer.  Logging only done
++ * if CONFIG_KUNIT_DEBUGFS is 'y'; if it is 'n', no log is allocated/used.
++ */
++#define kunit_log(lvl, test_or_suite, fmt, ...)				\
++	do {								\
++		printk(lvl fmt, ##__VA_ARGS__);				\
++		kunit_log_append((test_or_suite)->log,	fmt "\n",	\
++				 ##__VA_ARGS__);			\
++	} while (0)
++
++#define kunit_printk(lvl, test, fmt, ...)				\
++	kunit_log(lvl, test, "\t# %s: " fmt, (test)->name, ##__VA_ARGS__)
+ 
+ /**
+  * kunit_info() - Prints an INFO level message associated with @test.
+diff --git a/lib/kunit/Kconfig b/lib/kunit/Kconfig
+index 065aa16..95d12e3 100644
+--- a/lib/kunit/Kconfig
++++ b/lib/kunit/Kconfig
+@@ -14,6 +14,14 @@ menuconfig KUNIT
+ 
+ if KUNIT
+ 
++config KUNIT_DEBUGFS
++	bool "KUnit - Enable /sys/kernel/debug/kunit debugfs representation"
++	help
++	  Enable debugfs representation for kunit.  Currently this consists
++	  of /sys/kernel/debug/kunit/<test_suite>/results files for each
++	  test suite, which allow users to see results of the last test suite
++	  run that occurred.
++
+ config KUNIT_TEST
+ 	tristate "KUnit test for KUnit"
+ 	help
+diff --git a/lib/kunit/Makefile b/lib/kunit/Makefile
+index fab5564..724b943 100644
+--- a/lib/kunit/Makefile
++++ b/lib/kunit/Makefile
+@@ -5,6 +5,10 @@ kunit-objs +=				test.o \
+ 					assert.o \
+ 					try-catch.o
+ 
++ifeq ($(CONFIG_KUNIT_DEBUGFS),y)
++kunit-objs +=				debugfs.o
++endif
++
+ obj-$(CONFIG_KUNIT_TEST) +=		kunit-test.o
+ 
+ # string-stream-test compiles built-in only.
+diff --git a/lib/kunit/debugfs.c b/lib/kunit/debugfs.c
+new file mode 100644
+index 0000000..9214c49
+--- /dev/null
++++ b/lib/kunit/debugfs.c
+@@ -0,0 +1,116 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Copyright (c) 2020, Oracle and/or its affiliates.
++ *    Author: Alan Maguire <alan.maguire@oracle.com>
++ */
++
++#include <linux/debugfs.h>
++#include <linux/module.h>
++
++#include <kunit/test.h>
++
++#include "string-stream.h"
++
++#define KUNIT_DEBUGFS_ROOT             "kunit"
++#define KUNIT_DEBUGFS_RESULTS          "results"
++
++/*
++ * Create a debugfs representation of test suites:
++ *
++ * Path						Semantics
++ * /sys/kernel/debug/kunit/<testsuite>/results	Show results of last run for
++ *						testsuite
++ *
++ */
++
++static struct dentry *debugfs_rootdir;
++
++void kunit_debugfs_cleanup(void)
++{
++	debugfs_remove_recursive(debugfs_rootdir);
++}
++
++void kunit_debugfs_init(void)
++{
++	if (!debugfs_rootdir)
++		debugfs_rootdir = debugfs_create_dir(KUNIT_DEBUGFS_ROOT, NULL);
++}
++
++static void debugfs_print_result(struct seq_file *seq,
++				 struct kunit_suite *suite,
++				 struct kunit_case *test_case)
++{
++	if (!test_case || !test_case->log)
++		return;
++
++	seq_printf(seq, "%s", test_case->log);
++}
++
++/*
++ * /sys/kernel/debug/kunit/<testsuite>/results shows all results for testsuite.
++ */
++static int debugfs_print_results(struct seq_file *seq, void *v)
++{
++	struct kunit_suite *suite = (struct kunit_suite *)seq->private;
++	bool success = kunit_suite_has_succeeded(suite);
++	struct kunit_case *test_case;
++
++	if (!suite || !suite->log)
++		return 0;
++
++	seq_printf(seq, "%s", suite->log);
++
++	kunit_suite_for_each_test_case(suite, test_case)
++		debugfs_print_result(seq, suite, test_case);
++
++	seq_printf(seq, "%s %d - %s\n",
++		   kunit_status_to_string(success), 1, suite->name);
++	return 0;
++}
++
++static int debugfs_release(struct inode *inode, struct file *file)
++{
++	return single_release(inode, file);
++}
++
++static int debugfs_results_open(struct inode *inode, struct file *file)
++{
++	struct kunit_suite *suite;
++
++	suite = (struct kunit_suite *)inode->i_private;
++
++	return single_open(file, debugfs_print_results, suite);
++}
++
++static const struct file_operations debugfs_results_fops = {
++	.open = debugfs_results_open,
++	.read = seq_read,
++	.llseek = seq_lseek,
++	.release = debugfs_release,
++};
++
++void kunit_debugfs_create_suite(struct kunit_suite *suite)
++{
++	struct kunit_case *test_case;
++
++	/* Allocate logs before creating debugfs representation. */
++	suite->log = kzalloc(KUNIT_LOG_SIZE, GFP_KERNEL);
++	kunit_suite_for_each_test_case(suite, test_case)
++		test_case->log = kzalloc(KUNIT_LOG_SIZE, GFP_KERNEL);
++
++	suite->debugfs = debugfs_create_dir(suite->name, debugfs_rootdir);
++
++	debugfs_create_file(KUNIT_DEBUGFS_RESULTS, S_IFREG | 0444,
++			    suite->debugfs,
++			    suite, &debugfs_results_fops);
++}
++
++void kunit_debugfs_destroy_suite(struct kunit_suite *suite)
++{
++	struct kunit_case *test_case;
++
++	debugfs_remove_recursive(suite->debugfs);
++	kfree(suite->log);
++	kunit_suite_for_each_test_case(suite, test_case)
++		kfree(test_case->log);
++}
+diff --git a/lib/kunit/debugfs.h b/lib/kunit/debugfs.h
+new file mode 100644
+index 0000000..dcc7d75
+--- /dev/null
++++ b/lib/kunit/debugfs.h
+@@ -0,0 +1,30 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * Copyright (C) 2020, Oracle and/or its affiliates.
++ */
++
++#ifndef _KUNIT_DEBUGFS_H
++#define _KUNIT_DEBUGFS_H
++
++#include <kunit/test.h>
++
++#ifdef CONFIG_KUNIT_DEBUGFS
++
++void kunit_debugfs_create_suite(struct kunit_suite *suite);
++void kunit_debugfs_destroy_suite(struct kunit_suite *suite);
++void kunit_debugfs_init(void);
++void kunit_debugfs_cleanup(void);
++
++#else
++
++static inline void kunit_debugfs_create_suite(struct kunit_suite *suite) { }
++
++static inline void kunit_debugfs_destroy_suite(struct kunit_suite *suite) { }
++
++static inline void kunit_debugfs_init(void) { }
++
++static inline void kunit_debugfs_cleanup(void) { }
++
++#endif /* CONFIG_KUNIT_DEBUGFS */
++
++#endif /* _KUNIT_DEBUGFS_H */
+diff --git a/lib/kunit/kunit-test.c b/lib/kunit/kunit-test.c
+index ccb8d2e..aceb5bf 100644
+--- a/lib/kunit/kunit-test.c
++++ b/lib/kunit/kunit-test.c
+@@ -134,7 +134,7 @@ static void kunit_resource_test_init_resources(struct kunit *test)
+ {
+ 	struct kunit_test_resource_context *ctx = test->priv;
+ 
+-	kunit_init_test(&ctx->test, "testing_test_init_test");
++	kunit_init_test(&ctx->test, "testing_test_init_test", NULL);
+ 
+ 	KUNIT_EXPECT_TRUE(test, list_empty(&ctx->test.resources));
+ }
+@@ -301,7 +301,7 @@ static int kunit_resource_test_init(struct kunit *test)
+ 
+ 	test->priv = ctx;
+ 
+-	kunit_init_test(&ctx->test, "test_test_context");
++	kunit_init_test(&ctx->test, "test_test_context", NULL);
+ 
+ 	return 0;
+ }
+diff --git a/lib/kunit/test.c b/lib/kunit/test.c
+index 9242f93..a3fa21f 100644
+--- a/lib/kunit/test.c
++++ b/lib/kunit/test.c
+@@ -10,6 +10,7 @@
+ #include <linux/kernel.h>
+ #include <linux/sched/debug.h>
+ 
++#include "debugfs.h"
+ #include "string-stream.h"
+ #include "try-catch-impl.h"
+ 
+@@ -28,73 +29,116 @@ static void kunit_print_tap_version(void)
+ 	}
+ }
+ 
+-static size_t kunit_test_cases_len(struct kunit_case *test_cases)
++/*
++ * Append formatted message to log, size of which is limited to
++ * KUNIT_LOG_SIZE bytes (including null terminating byte).
++ */
++void kunit_log_append(char *log, const char *fmt, ...)
++{
++	char line[KUNIT_LOG_SIZE];
++	va_list args;
++	int len_left;
++
++	if (!log)
++		return;
++
++	len_left = KUNIT_LOG_SIZE - strlen(log) - 1;
++	if (len_left <= 0)
++		return;
++
++	va_start(args, fmt);
++	vsnprintf(line, sizeof(line), fmt, args);
++	va_end(args);
++
++	strncat(log, line, len_left);
++}
++EXPORT_SYMBOL_GPL(kunit_log_append);
++
++size_t kunit_suite_num_test_cases(struct kunit_suite *suite)
+ {
+ 	struct kunit_case *test_case;
+ 	size_t len = 0;
+ 
+-	for (test_case = test_cases; test_case->run_case; test_case++)
++	kunit_suite_for_each_test_case(suite, test_case)
+ 		len++;
+ 
+ 	return len;
+ }
++EXPORT_SYMBOL_GPL(kunit_suite_num_test_cases);
+ 
+ static void kunit_print_subtest_start(struct kunit_suite *suite)
+ {
+ 	kunit_print_tap_version();
+-	pr_info("\t# Subtest: %s\n", suite->name);
+-	pr_info("\t1..%zd\n", kunit_test_cases_len(suite->test_cases));
++	kunit_log(KERN_INFO, suite, "\t# Subtest: %s", suite->name);
++	kunit_log(KERN_INFO, suite, "\t1..%zd",
++		  kunit_suite_num_test_cases(suite));
+ }
+ 
+-static void kunit_print_ok_not_ok(bool should_indent,
++static void kunit_print_ok_not_ok(void *test_or_suite,
++				  bool is_test,
+ 				  bool is_ok,
+ 				  size_t test_number,
+ 				  const char *description)
+ {
+-	const char *indent, *ok_not_ok;
+-
+-	if (should_indent)
+-		indent = "\t";
+-	else
+-		indent = "";
++	struct kunit_suite *suite = is_test ? NULL : test_or_suite;
++	struct kunit *test = is_test ? test_or_suite : NULL;
+ 
+-	if (is_ok)
+-		ok_not_ok = "ok";
++	/*
++	 * We do not log the test suite results as doing so would
++	 * mean debugfs display would consist of the test suite
++	 * description and status prior to individual test results.
++	 * Hence directly printk the suite status, and we will
++	 * separately seq_printf() the suite status for the debugfs
++	 * representation.
++	 */
++	if (suite)
++		pr_info("%s %zd - %s",
++			kunit_status_to_string(is_ok),
++			test_number, description);
+ 	else
+-		ok_not_ok = "not ok";
+-
+-	pr_info("%s%s %zd - %s\n", indent, ok_not_ok, test_number, description);
++		kunit_log(KERN_INFO, test, "\t%s %zd - %s",
++			  kunit_status_to_string(is_ok),
++			  test_number, description);
+ }
+ 
+-static bool kunit_suite_has_succeeded(struct kunit_suite *suite)
++bool kunit_suite_has_succeeded(struct kunit_suite *suite)
+ {
+ 	const struct kunit_case *test_case;
+ 
+-	for (test_case = suite->test_cases; test_case->run_case; test_case++)
++	kunit_suite_for_each_test_case(suite, test_case) {
+ 		if (!test_case->success)
+ 			return false;
++	}
+ 
+ 	return true;
+ }
++EXPORT_SYMBOL_GPL(kunit_suite_has_succeeded);
+ 
+ static void kunit_print_subtest_end(struct kunit_suite *suite)
+ {
+ 	static size_t kunit_suite_counter = 1;
+ 
+-	kunit_print_ok_not_ok(false,
++	kunit_print_ok_not_ok((void *)suite, false,
+ 			      kunit_suite_has_succeeded(suite),
+ 			      kunit_suite_counter++,
+ 			      suite->name);
+ }
+ 
+-static void kunit_print_test_case_ok_not_ok(struct kunit_case *test_case,
+-					    size_t test_number)
++unsigned int kunit_test_case_num(struct kunit_suite *suite,
++				 struct kunit_case *test_case)
+ {
+-	kunit_print_ok_not_ok(true,
+-			      test_case->success,
+-			      test_number,
+-			      test_case->name);
++	struct kunit_case *tc;
++	unsigned int i = 1;
++
++	kunit_suite_for_each_test_case(suite, tc) {
++		if (tc == test_case)
++			return i;
++		i++;
++	}
++
++	return 0;
+ }
++EXPORT_SYMBOL_GPL(kunit_test_case_num);
+ 
+ static void kunit_print_string_stream(struct kunit *test,
+ 				      struct string_stream *stream)
+@@ -102,6 +146,9 @@ static void kunit_print_string_stream(struct kunit *test,
+ 	struct string_stream_fragment *fragment;
+ 	char *buf;
+ 
++	if (string_stream_is_empty(stream))
++		return;
++
+ 	buf = string_stream_get_string(stream);
+ 	if (!buf) {
+ 		kunit_err(test,
+@@ -175,11 +222,14 @@ void kunit_do_assertion(struct kunit *test,
+ }
+ EXPORT_SYMBOL_GPL(kunit_do_assertion);
+ 
+-void kunit_init_test(struct kunit *test, const char *name)
++void kunit_init_test(struct kunit *test, const char *name, char *log)
+ {
+ 	spin_lock_init(&test->lock);
+ 	INIT_LIST_HEAD(&test->resources);
+ 	test->name = name;
++	test->log = log;
++	if (test->log)
++		test->log[0] = '\0';
+ 	test->success = true;
+ }
+ EXPORT_SYMBOL_GPL(kunit_init_test);
+@@ -290,7 +340,7 @@ static void kunit_run_case_catch_errors(struct kunit_suite *suite,
+ 	struct kunit_try_catch *try_catch;
+ 	struct kunit test;
+ 
+-	kunit_init_test(&test, test_case->name);
++	kunit_init_test(&test, test_case->name, test_case->log);
+ 	try_catch = &test.try_catch;
+ 
+ 	kunit_try_catch_init(try_catch,
+@@ -303,19 +353,20 @@ static void kunit_run_case_catch_errors(struct kunit_suite *suite,
+ 	kunit_try_catch_run(try_catch, &context);
+ 
+ 	test_case->success = test.success;
++
++	kunit_print_ok_not_ok(&test, true, test_case->success,
++			      kunit_test_case_num(suite, test_case),
++			      test_case->name);
+ }
+ 
+ int kunit_run_tests(struct kunit_suite *suite)
+ {
+ 	struct kunit_case *test_case;
+-	size_t test_case_count = 1;
+ 
+ 	kunit_print_subtest_start(suite);
+ 
+-	for (test_case = suite->test_cases; test_case->run_case; test_case++) {
++	kunit_suite_for_each_test_case(suite, test_case)
+ 		kunit_run_case_catch_errors(suite, test_case);
+-		kunit_print_test_case_ok_not_ok(test_case, test_case_count++);
+-	}
+ 
+ 	kunit_print_subtest_end(suite);
+ 
+@@ -323,6 +374,37 @@ int kunit_run_tests(struct kunit_suite *suite)
+ }
+ EXPORT_SYMBOL_GPL(kunit_run_tests);
+ 
++static void kunit_init_suite(struct kunit_suite *suite)
++{
++	kunit_debugfs_create_suite(suite);
++}
++
++int __kunit_test_suites_init(struct kunit_suite **suites)
++{
++	unsigned int i;
++
++	for (i = 0; suites[i] != NULL; i++) {
++		kunit_init_suite(suites[i]);
++		kunit_run_tests(suites[i]);
++	}
++	return 0;
++}
++EXPORT_SYMBOL_GPL(__kunit_test_suites_init);
++
++static void kunit_exit_suite(struct kunit_suite *suite)
++{
++	kunit_debugfs_destroy_suite(suite);
++}
++
++void __kunit_test_suites_exit(struct kunit_suite **suites)
++{
++	unsigned int i;
++
++	for (i = 0; suites[i] != NULL; i++)
++		kunit_exit_suite(suites[i]);
++}
++EXPORT_SYMBOL_GPL(__kunit_test_suites_exit);
++
+ struct kunit_resource *kunit_alloc_and_get_resource(struct kunit *test,
+ 						    kunit_resource_init_t init,
+ 						    kunit_resource_free_t free,
+@@ -489,12 +571,15 @@ void kunit_cleanup(struct kunit *test)
+ 
+ static int __init kunit_init(void)
+ {
++	kunit_debugfs_init();
++
+ 	return 0;
+ }
+ late_initcall(kunit_init);
+ 
+ static void __exit kunit_exit(void)
+ {
++	kunit_debugfs_cleanup();
+ }
+ module_exit(kunit_exit);
+ 
 -- 
-Vitaly
+1.8.3.1
 
