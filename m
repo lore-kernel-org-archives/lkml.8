@@ -2,217 +2,54 @@ Return-Path: <SRS0=aGSP=5L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92B9CC43331
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 09:56:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01CFEC2D0E8
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 09:57:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 693DD20714
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 09:56:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D927A2070A
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 09:57:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727821AbgCZJ4e (ORCPT
+        id S1727857AbgCZJ5Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 05:56:34 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:21886 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726270AbgCZJ4d (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 05:56:33 -0400
-Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02Q9Y3BE014784
-        for <linux-kernel@vger.kernel.org>; Thu, 26 Mar 2020 05:56:32 -0400
-Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2yxw7fr2t3-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 26 Mar 2020 05:56:32 -0400
-Received: from localhost
-        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <aneesh.kumar@linux.ibm.com>;
-        Thu, 26 Mar 2020 09:56:24 -0000
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
-        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 26 Mar 2020 09:56:20 -0000
-Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 02Q9uPYS48038068
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 26 Mar 2020 09:56:25 GMT
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 3752211C058;
-        Thu, 26 Mar 2020 09:56:25 +0000 (GMT)
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 9525111C050;
-        Thu, 26 Mar 2020 09:56:23 +0000 (GMT)
-Received: from [9.199.60.66] (unknown [9.199.60.66])
-        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu, 26 Mar 2020 09:56:23 +0000 (GMT)
-Subject: Re: [PATCH] mm/sparse: Fix kernel crash with pfn_section_valid check
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     linux-mm@kvack.org, akpm@linux-foundation.org,
-        linux-kernel@vger.kernel.org, mpe@ellerman.id.au,
-        linuxppc-dev@lists.ozlabs.org, Baoquan He <bhe@redhat.com>,
-        Sachin Sant <sachinp@linux.vnet.ibm.com>
-References: <20200325031914.107660-1-aneesh.kumar@linux.ibm.com>
- <20200326094023.GG27965@dhcp22.suse.cz>
-From:   "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
-Date:   Thu, 26 Mar 2020 15:26:22 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Thu, 26 Mar 2020 05:57:25 -0400
+Received: from verein.lst.de ([213.95.11.211]:44894 "EHLO verein.lst.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726540AbgCZJ5Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Mar 2020 05:57:25 -0400
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id CCABA68BFE; Thu, 26 Mar 2020 10:57:22 +0100 (CET)
+Date:   Thu, 26 Mar 2020 10:57:22 +0100
+From:   Christoph Hellwig <hch@lst.de>
+To:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Cc:     Jens Axboe <axboe@kernel.dk>,
+        Michael Schmitz <schmitzmic@gmail.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Christoph Hellwig <hch@lst.de>, linux-ide@vger.kernel.org,
+        linux-m68k@lists.linux-m68k.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 20/27] ata: move sata_link_hardreset() to
+ libata-sata.c
+Message-ID: <20200326095722.GN9596@lst.de>
+References: <20200317144333.2904-1-b.zolnierkie@samsung.com> <CGME20200317144350eucas1p157dd88ee3f766ec4fd209172635369aa@eucas1p1.samsung.com> <20200317144333.2904-21-b.zolnierkie@samsung.com>
 MIME-Version: 1.0
-In-Reply-To: <20200326094023.GG27965@dhcp22.suse.cz>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-x-cbid: 20032609-0020-0000-0000-000003BBB371
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20032609-0021-0000-0000-000022143D43
-Message-Id: <6ef554a6-313d-2b17-cee0-14078ed225f6@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.645
- definitions=2020-03-25_15:2020-03-24,2020-03-25 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
- lowpriorityscore=0 malwarescore=0 spamscore=0 adultscore=0 mlxlogscore=999
- mlxscore=0 suspectscore=2 bulkscore=0 priorityscore=1501 phishscore=0
- clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2003260066
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200317144333.2904-21-b.zolnierkie@samsung.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/26/20 3:10 PM, Michal Hocko wrote:
-> On Wed 25-03-20 08:49:14, Aneesh Kumar K.V wrote:
->> Fixes the below crash
->>
->> BUG: Kernel NULL pointer dereference on read at 0x00000000
->> Faulting instruction address: 0xc000000000c3447c
->> Oops: Kernel access of bad area, sig: 11 [#1]
->> LE PAGE_SIZE=64K MMU=Hash SMP NR_CPUS=2048 NUMA pSeries
->> CPU: 11 PID: 7519 Comm: lt-ndctl Not tainted 5.6.0-rc7-autotest #1
->> ...
->> NIP [c000000000c3447c] vmemmap_populated+0x98/0xc0
->> LR [c000000000088354] vmemmap_free+0x144/0x320
->> Call Trace:
->>   section_deactivate+0x220/0x240
+On Tue, Mar 17, 2020 at 03:43:26PM +0100, Bartlomiej Zolnierkiewicz wrote:
+> * move sata_link_hardreset() to libata-sata.c
 > 
-> It would be great to match this to the specific source code.
-
-The crash is due to NULL dereference at
-
-test_bit(idx, ms->usage->subsection_map); due to ms->usage = NULL;
-
-that is explained in later part of the commit.
+> * add static inline for CONFIG_SATA_HOST=n case
 > 
->>   __remove_pages+0x118/0x170
->>   arch_remove_memory+0x3c/0x150
->>   memunmap_pages+0x1cc/0x2f0
->>   devm_action_release+0x30/0x50
->>   release_nodes+0x2f8/0x3e0
->>   device_release_driver_internal+0x168/0x270
->>   unbind_store+0x130/0x170
->>   drv_attr_store+0x44/0x60
->>   sysfs_kf_write+0x68/0x80
->>   kernfs_fop_write+0x100/0x290
->>   __vfs_write+0x3c/0x70
->>   vfs_write+0xcc/0x240
->>   ksys_write+0x7c/0x140
->>   system_call+0x5c/0x68
->>
->> With commit: d41e2f3bd546 ("mm/hotplug: fix hot remove failure in SPARSEMEM|!VMEMMAP case")
->> section_mem_map is set to NULL after depopulate_section_mem(). This
->> was done so that pfn_page() can work correctly with kernel config that disables
->> SPARSEMEM_VMEMMAP. With that config pfn_to_page does
->>
->> 	__section_mem_map_addr(__sec) + __pfn;
->> where
->>
->> static inline struct page *__section_mem_map_addr(struct mem_section *section)
->> {
->> 	unsigned long map = section->section_mem_map;
->> 	map &= SECTION_MAP_MASK;
->> 	return (struct page *)map;
->> }
->>
->> Now with SPASEMEM_VMEMAP enabled, mem_section->usage->subsection_map is used to
->> check the pfn validity (pfn_valid()). Since section_deactivate release
->> mem_section->usage if a section is fully deactivated, pfn_valid() check after
->> a subsection_deactivate cause a kernel crash.
->>
->> static inline int pfn_valid(unsigned long pfn)
->> {
->> ...
->> 	return early_section(ms) || pfn_section_valid(ms, pfn);
->> }
->>
->> where
->>
->> static inline int pfn_section_valid(struct mem_section *ms, unsigned long pfn)
->> {
-> 
->> 	int idx = subsection_map_index(pfn);
->>
->> 	return test_bit(idx, ms->usage->subsection_map);
->> }
->>
->> Avoid this by clearing SECTION_HAS_MEM_MAP when mem_section->usage is freed.
-> 
-> I am sorry, I haven't noticed that during the review of the commit
-> mentioned above. This is all subtle as hell, I have to say.
-> 
-> Why do we have to free usage before deactivaing section memmap? Now that
-> we have a late section_mem_map reset shouldn't we tear down the usage in
-> the same branch?
-> 
+> * make sata_set_spd_needed() static
 
-We still need to make the section invalid before we call into 
-depopulate_section_memmap(). Because architecture like powerpc can share 
-vmemmap area across sections (16MB mapping of vmemmap area) and we use 
-vmemmap_popluated() to make that decision.
+Looks good:
 
-
-
->> Fixes: d41e2f3bd546 ("mm/hotplug: fix hot remove failure in SPARSEMEM|!VMEMMAP case")
->> Cc: Baoquan He <bhe@redhat.com>
->> Reported-by: Sachin Sant <sachinp@linux.vnet.ibm.com>
->> Signed-off-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
->> ---
->>   mm/sparse.c | 2 ++
->>   1 file changed, 2 insertions(+)
->>
->> diff --git a/mm/sparse.c b/mm/sparse.c
->> index aadb7298dcef..3012d1f3771a 100644
->> --- a/mm/sparse.c
->> +++ b/mm/sparse.c
->> @@ -781,6 +781,8 @@ static void section_deactivate(unsigned long pfn, unsigned long nr_pages,
->>   			ms->usage = NULL;
->>   		}
->>   		memmap = sparse_decode_mem_map(ms->section_mem_map, section_nr);
->> +		/* Mark the section invalid */
->> +		ms->section_mem_map &= ~SECTION_HAS_MEM_MAP;
-> 
-> Btw. this comment is not really helping at all.
-
-That is marking the section invalid so that
-
-static inline int valid_section(struct mem_section *section)
-{
-	return (section && (section->section_mem_map & SECTION_HAS_MEM_MAP));
-}
-
-
-returns false.
-
-> 		/*
-> 		 * section->usage is gone and VMEMMAP's pfn_valid depens
-> 		 * on it (see pfn_section_valid)
-> 		 */
->>   	}
->>   
->>   	if (section_is_early && memmap)
->> -- 
->> 2.25.1
->>
-> 
-
+Reviewed-by: Christoph Hellwig <hch@lst.de>
