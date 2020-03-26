@@ -2,114 +2,109 @@ Return-Path: <SRS0=aGSP=5L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0961C2D0E8
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 23:19:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54973C43331
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 23:19:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9768E20663
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 23:19:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1704B20663
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 23:19:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="k0a14mZg"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="vhY5OV6S"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727600AbgCZXTY (ORCPT
+        id S1727593AbgCZXTs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 19:19:24 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:44737 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726496AbgCZXTY (ORCPT
+        Thu, 26 Mar 2020 19:19:48 -0400
+Received: from gateway21.websitewelcome.com ([192.185.46.113]:21493 "EHLO
+        gateway21.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726359AbgCZXTs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 19:19:24 -0400
-Received: by mail-oi1-f195.google.com with SMTP id v134so7171169oie.11
-        for <linux-kernel@vger.kernel.org>; Thu, 26 Mar 2020 16:19:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=DyEvk8/M51KdB0k3RzKZQ+MYI/+9ypxdlmp1SmMW2Ys=;
-        b=k0a14mZgV+qsmJefk5FW0WRpIXFp3Y2EY5YAXRsG57WFGA+UdtZN7wHpop1fJtXTMI
-         6/tMIZ/jAGytCf64CNKgJUw78FNtPwoQqbB7Tuq08ARRQkVN6ZboVhRQWbLF19iwUVWh
-         zobNxHzENu4otHX5v99SiEu0jD11Qm7SIKIzbIE83xBD9fvW7cnZ2T+JJwkY7LLzoaoe
-         Gd7fpjSgUlpLzzZotvx8jLvoPPu2HNpcEQhd4dUDCYAD7hasysOUJDBDus1bZWfK6XnY
-         k9fAuO5LJM5zHkC7z4TqspyMbuhlFhKeauoWfHRh/SLU+Rro9R3Bx60u38w2UeH3OzLi
-         fFhg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=DyEvk8/M51KdB0k3RzKZQ+MYI/+9ypxdlmp1SmMW2Ys=;
-        b=UTUpQgLTswl7IPNQ0Osr7+1ZP+dS55XqgTjrCFShtEC2ZuIWk3mdzW0JrTXF0z1Jbc
-         9ax4b0DP3/vm26M+fKV6FxJRVb2zEqmkS8OVU60ID2GonQUoZf+PrM2nP0gBc3eeRJlW
-         ZC8XRWDrLS5sjWV7rKowwEvs7cNefH8yr3jLrfpUtL8b1QVGeIq+NswwjFmnEygBmDXB
-         WDoguN8mg5zfUohVaZ2BUp2gE9N0+IkBHeNnT+4AcwUTmfzYKqpMjOCjQd7FOdRwkdU0
-         sSdL5f+lJxPXu2Nb4Eu1ZDE9UI0yYfynIdGFdBy8kFlhxeT77l6Cbig7dE39G7Y/eAMW
-         e5hQ==
-X-Gm-Message-State: ANhLgQ3BX1UMv0BdFQLKCjt7hKhJzbhaDZCCdhGzlfaOo0aePOmXy0bH
-        FFW4aW5vw4Lcg+4kWdlh7vK27VQJA0+hUE3SQSK7kg==
-X-Google-Smtp-Source: ADFU+vsY8jjGNXiVRkPBLoE+CsoFXHwivXDHyvQUE2PxawFxjxYVp25D+Qgv+5hGqwQU/PsArkHMMzI8xKPxOHDQXVg=
-X-Received: by 2002:aca:682:: with SMTP id 124mr2145796oig.69.1585264763192;
- Thu, 26 Mar 2020 16:19:23 -0700 (PDT)
+        Thu, 26 Mar 2020 19:19:48 -0400
+Received: from cm17.websitewelcome.com (cm17.websitewelcome.com [100.42.49.20])
+        by gateway21.websitewelcome.com (Postfix) with ESMTP id 9862B400CB9B4
+        for <linux-kernel@vger.kernel.org>; Thu, 26 Mar 2020 18:19:47 -0500 (CDT)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id HbmtjOdpNAGTXHbmtjnLw2; Thu, 26 Mar 2020 18:19:47 -0500
+X-Authority-Reason: nr=8
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
+        Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=s6LutiGk2IllAHlFGyWkD3z+bSbaKNTGXhQLNtAMbZU=; b=vhY5OV6SGw7bbrYBQQiQ1VOo6t
+        LaHxWYVqHGcs4E5mi2Pm0j3mh6gFjFJ34zpsRPdsP7PdQh7rcA9B7EYeOqpLw3KNqfjUn3AOkWV2s
+        rY2wq3isOFZ/QljsGc4u2BEeS10NRAUC2Ifp6+xDl2fBwExWYDH0dhSR+zXPQyWQASUu6J0i+al37
+        HV30V73m3NU7wSD2fGwJCjGdtOklBUlApXzMNK8n8DONiB9RVJuEhyoOIo95sRzvRQ3cV/T8m0e7B
+        GsFQoxQRU2N+dRn52UkPTrdLY49AlWjLczB/L/MmN1crfOPhirYh7a1fOiCGkvAyCOWsC5dhbgkQj
+        h/dI3OcQ==;
+Received: from cablelink-189-218-116-241.hosts.intercable.net ([189.218.116.241]:33582 helo=embeddedor)
+        by gator4166.hostgator.com with esmtpa (Exim 4.92)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1jHbmr-0012KV-NP; Thu, 26 Mar 2020 18:19:45 -0500
+Date:   Thu, 26 Mar 2020 18:23:22 -0500
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+To:     Geert Uytterhoeven <geert@linux-m68k.org>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Cc:     linux-m68k@lists.linux-m68k.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 0/2][next] m68k: amiga: config: Use flexible-array member and
+ mark expected switch fall-through
+Message-ID: <cover.1585264062.git.gustavo@embeddedor.com>
 MIME-Version: 1.0
-References: <20200326224459.105170-1-john.stultz@linaro.org>
-In-Reply-To: <20200326224459.105170-1-john.stultz@linaro.org>
-From:   Saravana Kannan <saravanak@google.com>
-Date:   Thu, 26 Mar 2020 16:18:47 -0700
-Message-ID: <CAGETcx-YynYi803j+O+vBmKNd=xVMX+OSwytOGYu9pURDzg8Zw@mail.gmail.com>
-Subject: Re: [PATCH v3 0/3] Allow for rpmpd/rpmh/rpmhpd drivers to be loaded
- as permenent modules
-To:     John Stultz <john.stultz@linaro.org>
-Cc:     lkml <linux-kernel@vger.kernel.org>, Todd Kjos <tkjos@google.com>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        linux-arm-msm@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 189.218.116.241
+X-Source-L: No
+X-Exim-ID: 1jHbmr-0012KV-NP
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: cablelink-189-218-116-241.hosts.intercable.net (embeddedor) [189.218.116.241]:33582
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 3
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 26, 2020 at 3:45 PM John Stultz <john.stultz@linaro.org> wrote:
->
-> This series simply allows the qcom rpmpd, rpmh and rpmhpd
-> drivers to be configured and loaded as permement modules.
->
-> This means the modules can be loaded, but not unloaded.
->
-> While maybe not ideal, this is an improvement over requiring the
-> drivers to be built in.
->
-> Feedback on this series would be welcome!
->
-> thanks
-> -john
->
-> New in v3:
-> * Added similar change to rpmh and rpmhpd drivers.
->
-> Cc: Todd Kjos <tkjos@google.com>
-> Cc: Saravana Kannan <saravanak@google.com>
-> Cc: Andy Gross <agross@kernel.org>
-> Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
-> Cc: Rajendra Nayak <rnayak@codeaurora.org>
-> Cc: linux-arm-msm@vger.kernel.org
->
-> John Stultz (3):
->   soc: qcom: rpmpd: Allow RPMPD driver to be loaded as a module
->   soc: qcom: rpmh: Allow RPMH driver to be loaded as a module
->   soc: qcom: rpmhpd: Allow RPMHPD driver to be loaded as a module
->
->  drivers/soc/qcom/Kconfig    | 8 ++++----
->  drivers/soc/qcom/rpmh-rsc.c | 6 ++++++
->  drivers/soc/qcom/rpmhpd.c   | 5 +++++
->  drivers/soc/qcom/rpmpd.c    | 6 ++++++
->  4 files changed, 21 insertions(+), 4 deletions(-)
+mark expected switch fall-through
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Cc: linux-m68k@lists.linux-m68k.org, linux-kernel@vger.kernel.org
 
-The whole series looks ok to me.
-Acked-by: Saravana Kannan <saravanak@google.com>
-for the whole series.
+Hi,
 
--Saravana
+This series aims to replace a zero-length array with a flexible-array
+member and mark a switch case where we are expecting to fall through.
+
+This also coverts some /* fall through */ comments to the new
+pseudo-keyword fallthrough;
+
+Building: allmodconfig m68k
+
+Thanks
+
+Gustavo A. R. Silva (2):
+  [next] m68k: amiga: config: Replace zero-length array with
+    flexible-array member
+  [next] m68k: amiga: config: Mark expected switch fall-through
+
+ arch/m68k/amiga/config.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
+
+-- 
+2.26.0
+
