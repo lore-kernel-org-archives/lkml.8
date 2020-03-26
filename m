@@ -2,123 +2,171 @@ Return-Path: <SRS0=aGSP=5L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A240C2D0E8
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 10:41:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6486C2D0E5
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 10:41:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2376D20748
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 10:41:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585219274;
-	bh=TGhiOgIo8mu4ICaKE4XoCYAUUeJUBx2f8IkX5r2oMkA=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=dnMZ0K4q7qeJwCvqmEpfiQuc0z+pN8DaXUsddHH9IMfksQg0sNRPzC41s+jKMqSt8
-	 IHqONADH+oCGFOZpkBtR667VYFfwoc5AQQNPEfvWaiMTOmEiMyca3JMZsSS7LzaQzu
-	 C8El4jpua+caqar0eDPCIVaPSM2zHplIzpHOtD50=
+	by mail.kernel.org (Postfix) with ESMTP id B417820714
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 10:41:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727989AbgCZKlN (ORCPT
+        id S1728002AbgCZKlg convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 06:41:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35050 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727743AbgCZKlN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 06:41:13 -0400
-Received: from mail-io1-f49.google.com (mail-io1-f49.google.com [209.85.166.49])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 29D4F20748;
-        Thu, 26 Mar 2020 10:41:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585219272;
-        bh=TGhiOgIo8mu4ICaKE4XoCYAUUeJUBx2f8IkX5r2oMkA=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=APt9412EG6wRy1czJx85YKYi/77Br/aABhgUQO3nGf/vDkRVqLIfDl6jLQYSfyfNW
-         O3OwE4IhxLrPPw/wzFm4tBsxa9Xu22sqiP82eg7UYJKv58fRVJZRR2sPdUmca75qIN
-         8eBTaKdVyC4UxFO9HZG/3NMoURPoMbPHQKBUU+PQ=
-Received: by mail-io1-f49.google.com with SMTP id q128so5479441iof.9;
-        Thu, 26 Mar 2020 03:41:12 -0700 (PDT)
-X-Gm-Message-State: ANhLgQ2+jvHKyLeipfsbWUaqDG8pYBccKf9OFjxW/WSB/HbR7mWXSHmp
-        e5+ertWdW1G+09W+Td1g5Y1ZmkA0fnjS3kaSN5Q=
-X-Google-Smtp-Source: ADFU+vtXWAa8jEzHaRrDYuVCckhd0577w1oqJr9NSevD47d3S/fZkMCLTNr83zkkYPdG023H5yPt0TxIk3pZEp2hC9U=
-X-Received: by 2002:a5d:8b57:: with SMTP id c23mr449328iot.161.1585219271544;
- Thu, 26 Mar 2020 03:41:11 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200319192855.29876-1-nivedita@alum.mit.edu> <20200320020028.1936003-1-nivedita@alum.mit.edu>
- <CAKv+Gu8-iK-FQrgCY6YGXyg155chMPJQZeQr-i_xQbqoQ57F0g@mail.gmail.com>
- <20200325221007.GA290267@rani.riverdale.lan> <CAMj1kXHPmtYgoUViF4baVHfy178ef8u57wJgqcZVagGTAuP3iQ@mail.gmail.com>
-In-Reply-To: <CAMj1kXHPmtYgoUViF4baVHfy178ef8u57wJgqcZVagGTAuP3iQ@mail.gmail.com>
-From:   Ard Biesheuvel <ardb@kernel.org>
-Date:   Thu, 26 Mar 2020 11:41:00 +0100
-X-Gmail-Original-Message-ID: <CAMj1kXFBB4RmokpM7nqm3jPQofDhfC89QuEurz6OwNPureVK8g@mail.gmail.com>
-Message-ID: <CAMj1kXFBB4RmokpM7nqm3jPQofDhfC89QuEurz6OwNPureVK8g@mail.gmail.com>
-Subject: Re: [PATCH v2 00/14] efi/gop: Refactoring + mode-setting feature
-To:     Arvind Sankar <nivedita@alum.mit.edu>
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        linux-efi <linux-efi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Thu, 26 Mar 2020 06:41:36 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:34698 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727560AbgCZKlf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Mar 2020 06:41:35 -0400
+Received: from mail-pg1-f198.google.com ([209.85.215.198])
+        by youngberry.canonical.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <kai.heng.feng@canonical.com>)
+        id 1jHPx7-00047x-8J
+        for linux-kernel@vger.kernel.org; Thu, 26 Mar 2020 10:41:33 +0000
+Received: by mail-pg1-f198.google.com with SMTP id 185so4360935pgc.22
+        for <linux-kernel@vger.kernel.org>; Thu, 26 Mar 2020 03:41:33 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=UeRJQevSUHXBRlf/4ze6OiB+Fx/GsXnxWvYb+Xd4brE=;
+        b=NikCLABUC157DpTI09kr5MLHqNu4f580OM7SQQOIgVOedIYYclUzev2FHBbxRAQmib
+         qY9NPnCaA7APOEKlmLazHqSn3viBTTAGgoV346RyEgms4KcoMBiMfQNiE8I0EgqYM4+9
+         hr8on9QnPATnFIT/VQBHhpeNdUFtuhBW+ehwsd22YX2RVvtcgt2UAXKr1niOmt3OIVZe
+         r2ZgwBYYd7AXBBFxIDl1rUsaeBw6mdDOghjWt2/54QK1Y9yMzO6N+VU9cZ3kn7a07gZ0
+         /pG+FBpifG1b8ifLQG94Ou9G/LmIjEDt0Dspl5sE0xobI4fmnYeAAa1+cy2S/he8nexH
+         iy+g==
+X-Gm-Message-State: ANhLgQ02Hpr/vEAdGdY8XplI/auHN2h3cuRePQmRH4cQwnLFug+62KWU
+        vyZAg07AZX4nyHijj8dNpQ7d3GnhYJDooPK3b0h2qPQe9j8Fs2DRyPUuOv4gYkw0nXGJab/ENHm
+        HOuPDSdavU0AVaTch7LvuU1Tifjv3FdZ4hMZ3QAPFQA==
+X-Received: by 2002:a17:90a:1784:: with SMTP id q4mr2309535pja.174.1585219291696;
+        Thu, 26 Mar 2020 03:41:31 -0700 (PDT)
+X-Google-Smtp-Source: ADFU+vvtvJeTgPnEHGqTVNs/nJiX7tpC4tKYPn4puM7/6xSliRABW/x4XN6hP9XhPfgKgJi/+xPhqw==
+X-Received: by 2002:a17:90a:1784:: with SMTP id q4mr2309504pja.174.1585219291245;
+        Thu, 26 Mar 2020 03:41:31 -0700 (PDT)
+Received: from [192.168.1.208] (220-133-187-190.HINET-IP.hinet.net. [220.133.187.190])
+        by smtp.gmail.com with ESMTPSA id mm18sm1341970pjb.39.2020.03.26.03.41.29
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 26 Mar 2020 03:41:30 -0700 (PDT)
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 13.0 \(3608.60.0.2.5\))
+Subject: Re: [PATCH] igb: Use a sperate mutex insead of rtnl_lock()
+From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
+In-Reply-To: <20200326103926.20888-1-kai.heng.feng@canonical.com>
+Date:   Thu, 26 Mar 2020 18:41:28 +0800
+Cc:     "Brown, Aaron F" <aaron.f.brown@intel.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        "moderated list:INTEL ETHERNET DRIVERS" 
+        <intel-wired-lan@lists.osuosl.org>,
+        "open list:NETWORKING DRIVERS" <netdev@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Content-Transfer-Encoding: 8BIT
+Message-Id: <EEE6C808-A7FC-42B6-8FA7-3958EE4C0BBC@canonical.com>
+References: <20200326103926.20888-1-kai.heng.feng@canonical.com>
+To:     "Kirsher, Jeffrey T" <jeffrey.t.kirsher@intel.com>
+X-Mailer: Apple Mail (2.3608.60.0.2.5)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 26 Mar 2020 at 00:36, Ard Biesheuvel <ardb@kernel.org> wrote:
->
-> On Wed, 25 Mar 2020 at 23:10, Arvind Sankar <nivedita@alum.mit.edu> wrote:
-> >
-> > On Wed, Mar 25, 2020 at 05:41:43PM +0100, Ard Biesheuvel wrote:
-> > > On Fri, 20 Mar 2020 at 03:00, Arvind Sankar <nivedita@alum.mit.edu> wrote:
-> > > >
-> > > > This series is against tip:efi/core.
-> > > >
-> > > > Patches 1-9 are small cleanups and refactoring of the code in
-> > > > libstub/gop.c.
-> > > >
-> > > > The rest of the patches add the ability to use a command-line option to
-> > > > switch the gop's display mode.
-> > > >
-> > > > The options supported are:
-> > > > video=efifb:mode=n
-> > > >         Choose a specific mode number
-> > > > video=efifb:<xres>x<yres>[-(rgb|bgr|<bpp>)]
-> > > >         Specify mode by resolution and optionally color depth
-> > > > video=efifb:auto
-> > > >         Let the EFI stub choose the highest resolution mode available.
-> > > >
-> > > > The mode-setting additions increase code size of gop.o by about 3k on
-> > > > x86-64 with EFI_MIXED enabled.
-> > > >
-> > > > Changes in v2 (HT lkp@intel.com):
-> > > > - Fix __efistub_global attribute to be after the variable.
-> > > >   (NB: bunch of other places should ideally be fixed, those I guess
-> > > >   don't matter as they are scalars?)
-> > > > - Silence -Wmaybe-uninitialized warning in set_mode function.
-> > > >
-> > >
-> > > These look good to me. The only question I have is whether it would be
-> > > possible to use the existing next_arg() and parse_option_str()
-> > > functions to replace some of the open code parsing that goes on in
-> > > patches 11 - 14.
-> > >
-> >
-> > I don't think so -- next_arg is for parsing space-separated param=value
-> > pairs, so efi_parse_options can use it, but it doesn't work for the
-> > comma-separated options we'll have within the value.
-> >
-> > parse_option_str would only work for the "auto" option, but it scans the
-> > entire option string and just returns whether it was there or not, so it
-> > wouldn't be too useful either, since we have to check for the other
-> > possibilities anyway.
-> >
-> > It would be nice to have a more generic library for cmdline parsing,
-> > there are a lot of places that have to open-code option parsing like
-> > this.
-> >
+Hi,
 
-OK, I have queued these up now in the EFI next branch, but this will
-obviously have to wait for v5.8
+> On Mar 26, 2020, at 18:39, Kai-Heng Feng <kai.heng.feng@canonical.com> wrote:
+> 
+> Commit 9474933caf21 ("igb: close/suspend race in netif_device_detach")
+> fixed race condition between close and power management ops by using
+> rtnl_lock().
+> 
+> This fix is a preparation for next patch, to prevent a dead lock under
+> rtnl_lock() when calling runtime resume routine.
+> 
+> However, we can't use device_lock() in igb_close() because when module
+> is getting removed, the lock is already held for igb_remove(), and
+> igb_close() gets called during unregistering the netdev, hence causing a
+> deadlock. So let's introduce a new mutex so we don't cause a deadlock
+> with driver core or netdev core.
+> 
+> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
 
-Thanks
+Please drop "igb: Use device_lock() insead of rtnl_lock()" and use this one instead.
+Thanks!
+
+Kai-Heng
+
+> ---
+> drivers/net/ethernet/intel/igb/igb_main.c | 19 +++++++++++++------
+> 1 file changed, 13 insertions(+), 6 deletions(-)
+> 
+> diff --git a/drivers/net/ethernet/intel/igb/igb_main.c b/drivers/net/ethernet/intel/igb/igb_main.c
+> index b46bff8fe056..dc7ed5dd216b 100644
+> --- a/drivers/net/ethernet/intel/igb/igb_main.c
+> +++ b/drivers/net/ethernet/intel/igb/igb_main.c
+> @@ -288,6 +288,8 @@ static const struct igb_reg_info igb_reg_info_tbl[] = {
+> 	{}
+> };
+> 
+> +static DEFINE_MUTEX(igb_mutex);
+> +
+> /* igb_regdump - register printout routine */
+> static void igb_regdump(struct e1000_hw *hw, struct igb_reg_info *reginfo)
+> {
+> @@ -4026,9 +4028,14 @@ static int __igb_close(struct net_device *netdev, bool suspending)
+> 
+> int igb_close(struct net_device *netdev)
+> {
+> +	int err = 0;
+> +
+> +	mutex_lock(&igb_mutex);
+> 	if (netif_device_present(netdev) || netdev->dismantle)
+> -		return __igb_close(netdev, false);
+> -	return 0;
+> +		err = __igb_close(netdev, false);
+> +	mutex_unlock(&igb_mutex);
+> +
+> +	return err;
+> }
+> 
+> /**
+> @@ -8760,7 +8767,7 @@ static int __igb_shutdown(struct pci_dev *pdev, bool *enable_wake,
+> 	u32 wufc = runtime ? E1000_WUFC_LNKC : adapter->wol;
+> 	bool wake;
+> 
+> -	rtnl_lock();
+> +	mutex_lock(&igb_mutex);
+> 	netif_device_detach(netdev);
+> 
+> 	if (netif_running(netdev))
+> @@ -8769,7 +8776,7 @@ static int __igb_shutdown(struct pci_dev *pdev, bool *enable_wake,
+> 	igb_ptp_suspend(adapter);
+> 
+> 	igb_clear_interrupt_scheme(adapter);
+> -	rtnl_unlock();
+> +	mutex_unlock(&igb_mutex);
+> 
+> 	status = rd32(E1000_STATUS);
+> 	if (status & E1000_STATUS_LU)
+> @@ -8897,13 +8904,13 @@ static int __maybe_unused igb_resume(struct device *dev)
+> 
+> 	wr32(E1000_WUS, ~0);
+> 
+> -	rtnl_lock();
+> +	mutex_lock(&igb_mutex);
+> 	if (!err && netif_running(netdev))
+> 		err = __igb_open(netdev, true);
+> 
+> 	if (!err)
+> 		netif_device_attach(netdev);
+> -	rtnl_unlock();
+> +	mutex_unlock(&igb_mutex);
+> 
+> 	return err;
+> }
+> -- 
+> 2.17.1
+> 
+
