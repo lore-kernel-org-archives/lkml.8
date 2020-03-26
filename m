@@ -5,101 +5,109 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C2F6C2D0E5
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 16:54:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 544C2C2D0EC
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 16:55:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D78C22073E
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 16:54:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B32A20719
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 16:55:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585241680;
-	bh=hKRfq2cDQC9ua7Qwa1meSraG6Wfm9X7jz1qe4JpiiIc=;
+	s=default; t=1585241716;
+	bh=Z02nSro/JDr/Xe0RL39y4bLRknVewK6idBPzS5dmr/Q=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=VKV4INwRk3Tt12LXdWfeRLMyhrtP7N/MTjF4kgZ0btkmHwx54DdXXucgX5tTuIUMk
-	 91T5WL4sEFom8KmPLeDLVM1Aa1Ehu/UrqEZzCdEsQXKLYw7MhGW1Q/JNwGBJgdAaKk
-	 YiBvMveLJmBAR6BeetafVByh9KA6fdOMzr9E3OG8=
+	b=qwuNa6YILUJv0MI62brMs+U/rQxpyDdH/I4bNvJKM4pTJTnDnDtsqC1g/ZgKO+9K2
+	 07WT/EzgE+BpmObRMi42yBYyKiP6ZdFWWzv3ubNgC91RXT47QyHAfgNEqHQpCVPtJ1
+	 ls0EBcHJNLtx8+Lk6zgaF+4M9vNf6HCECbti0Urg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728088AbgCZQyk (ORCPT
+        id S1727897AbgCZQzP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 12:54:40 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:39536 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726163AbgCZQyj (ORCPT
+        Thu, 26 Mar 2020 12:55:15 -0400
+Received: from mail-il1-f194.google.com ([209.85.166.194]:35188 "EHLO
+        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726163AbgCZQzP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 12:54:39 -0400
-Received: by mail-io1-f66.google.com with SMTP id c19so6788855ioo.6;
-        Thu, 26 Mar 2020 09:54:37 -0700 (PDT)
+        Thu, 26 Mar 2020 12:55:15 -0400
+Received: by mail-il1-f194.google.com with SMTP id 7so6046387ill.2;
+        Thu, 26 Mar 2020 09:55:14 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=fxdkmv3rlaPbwnsIsqBG6/Y/pJQsCxLU/Fzk50NhJJc=;
-        b=TOI57OlxKo6SrQulJsTkwIWmaEa4bkFxF0v7jSlU5wIY1PoZ4qCxfC0VJn/Kv32FxL
-         ha2JEfdaFT3/m6RztJlaTg6UVn1FRXOaaIMWLoyUvTAAr+SsSAVQGDCpY6XMq+p6gPku
-         BFR3xjTQOZnyQ/UsiNpyChK6i+FYZcwDM4dxZ0uzXLb2xkH6fuW31vCIm5zYNU2r/onz
-         /I5vO49l3ODoSppuisg3jYH1MQtO8gTGei7sZ34lOi4mdCA89BA6mG51z36pv9R3wc3g
-         Zqrg1YsibiLwLb38M1TkT0KDajYE296iIy0Yu7JFb+glSrp6/NYTNCP9v7wx3ytS49HM
-         X9yg==
-X-Gm-Message-State: ANhLgQ0DUMRFdkVxL0fqs6YEMHoLwPqCFRoo93ylGndkJtN44162okP7
-        w88jMnEjCELa7lz4J1HzvA==
-X-Google-Smtp-Source: ADFU+vuO1x11b+eItaisRygLwgmQjoZPmeoCqAv0nxDAmHAK8LsIIIpHg61uNH7cbhjdQGbjuNKgmQ==
-X-Received: by 2002:a6b:8d4c:: with SMTP id p73mr8471676iod.14.1585241677102;
-        Thu, 26 Mar 2020 09:54:37 -0700 (PDT)
+        bh=vVdQEQ7sYzGEqjW9g4tDgsuflsduuCDMUset/5YfDPE=;
+        b=XTzXyIWgzXLJGJ0ywM+eCk2ZrJ40+3oYEGyCc12nUsxtrezfXbgzUtW/qSl0ZENm72
+         9l6NTU1iDb5Jlsrg3f6ILWFWb7D5pzF9ocCcdcn4X+vT/iN+9xdP7hGTF8oUIjGS93b0
+         8h3ZNrhvOkBAOjk903bBhVSVLgQf6+VoXEIhgZHfXGfVQAIO0HZe0yG5bMQGz7x7cnc1
+         DqEG67FD8V2POY32zvLtGNf+gpcghXuQ95D9gqSJIB7woVKjhZOYqLcBCnJtRhnbQYHv
+         8Pp+U8M5DDYNQBLRDQwy7Q0zlkWa+rLwBXyjQS2OxXlmBFss0F+rhbq0GYcuhSEhJ+Es
+         U3mQ==
+X-Gm-Message-State: ANhLgQ3f6dfKUlPh1yRq8yeYu+QEcsEZvQN77BseuK9P3XYv4Cch01Z0
+        CTm3Y2DCOlyNZUwMNftKeA==
+X-Google-Smtp-Source: ADFU+vsYLSSDAWb+PFaYg/iNpnKHWjxEl8YuPbb4mV1g+BY74zuyxxL1mGYiXVbV73u6V8GgemDOLQ==
+X-Received: by 2002:a92:8410:: with SMTP id l16mr9701669ild.288.1585241713894;
+        Thu, 26 Mar 2020 09:55:13 -0700 (PDT)
 Received: from rob-hp-laptop ([64.188.179.250])
-        by smtp.gmail.com with ESMTPSA id f74sm969012ilh.77.2020.03.26.09.54.35
+        by smtp.gmail.com with ESMTPSA id u5sm754957ion.51.2020.03.26.09.55.12
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 26 Mar 2020 09:54:36 -0700 (PDT)
-Received: (nullmailer pid 10911 invoked by uid 1000);
-        Thu, 26 Mar 2020 16:54:35 -0000
-Date:   Thu, 26 Mar 2020 10:54:35 -0600
+        Thu, 26 Mar 2020 09:55:12 -0700 (PDT)
+Received: (nullmailer pid 11967 invoked by uid 1000);
+        Thu, 26 Mar 2020 16:55:11 -0000
+Date:   Thu, 26 Mar 2020 10:55:11 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Suman Anna <s-anna@ti.com>
-Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Lokesh Vutla <lokeshvutla@ti.com>,
-        linux-remoteproc@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Suman Anna <s-anna@ti.com>
-Subject: Re: [PATCH 1/3] dt-bindings: remoteproc: Add bindings for C66x DSPs
- on TI K3 SoCs
-Message-ID: <20200326165435.GA10370@bogus>
-References: <20200325201839.15896-1-s-anna@ti.com>
- <20200325201839.15896-2-s-anna@ti.com>
+To:     Ezequiel Garcia <ezequiel@collabora.com>
+Cc:     linux-media@vger.kernel.org, linux-rockchip@lists.infradead.org,
+        linux-kernel@vger.kernel.org, Tomasz Figa <tfiga@chromium.org>,
+        Nicolas Dufresne <nicolas@ndufresne.ca>, kernel@collabora.com,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Hans Verkuil <hverkuil@xs4all.nl>,
+        Alexandre Courbot <acourbot@chromium.org>,
+        Jeffrey Kardatzke <jkardatzke@chromium.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org,
+        Ezequiel Garcia <ezequiel@collabora.com>
+Subject: Re: [PATCH v3 7/7] dt-bindings: rockchip-vpu: Convert bindings to
+ json-schema
+Message-ID: <20200326165511.GA11084@bogus>
+References: <20200325213439.16509-1-ezequiel@collabora.com>
+ <20200325213439.16509-8-ezequiel@collabora.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200325201839.15896-2-s-anna@ti.com>
+In-Reply-To: <20200325213439.16509-8-ezequiel@collabora.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 25 Mar 2020 15:18:37 -0500, Suman Anna wrote:
-> Some Texas Instruments K3 family of SoCs have one of more Digital Signal
-> Processor (DSP) subsystems that are comprised of either a TMS320C66x
-> CorePac and/or a next-generation TMS320C71x CorePac processor subsystem.
-> Add the device tree bindings document for the C66x DSP devices on these
-> SoCs. The added example illustrates the DT nodes for the first C66x DSP
-> device present on the K3 J721E family of SoCs.
+On Wed, 25 Mar 2020 18:34:38 -0300, Ezequiel Garcia wrote:
+> Convert Rockchip VPU (Hantro IP block) codec driver documentation to
+> json-schema.
 > 
-> Signed-off-by: Suman Anna <s-anna@ti.com>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: Rob Herring <robh@kernel.org>
+> Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
 > ---
->  .../bindings/remoteproc/ti,k3-dsp-rproc.yaml  | 180 ++++++++++++++++++
->  1 file changed, 180 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/remoteproc/ti,k3-dsp-rproc.yaml
+>  .../bindings/media/rockchip-vpu.txt           | 43 ----------
+>  .../bindings/media/rockchip-vpu.yaml          | 82 +++++++++++++++++++
+>  MAINTAINERS                                   |  2 +-
+>  3 files changed, 83 insertions(+), 44 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/media/rockchip-vpu.txt
+>  create mode 100644 Documentation/devicetree/bindings/media/rockchip-vpu.yaml
 > 
 
 My bot found errors running 'make dt_binding_check' on your patch:
 
-Documentation/devicetree/bindings/remoteproc/ti,k3-dsp-rproc.example.dts:23.13-20: Warning (ranges_format): /example-0/reserved-memory:ranges: empty "ranges" property but its #address-cells (2) differs from /example-0 (1)
-Documentation/devicetree/bindings/remoteproc/ti,k3-dsp-rproc.example.dts:23.13-20: Warning (ranges_format): /example-0/reserved-memory:ranges: empty "ranges" property but its #size-cells (2) differs from /example-0 (1)
-Documentation/devicetree/bindings/remoteproc/ti,k3-dsp-rproc.example.dts:42.13-43.72: Warning (ranges_format): /example-0/interconnect@100000:ranges: "ranges" property has invalid length (48 bytes) (parent #address-cells == 1, child #address-cells == 2, #size-cells == 2)
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/remoteproc/ti,k3-dsp-rproc.example.dt.yaml: interconnect@100000: $nodename:0: 'interconnect@100000' does not match '^(bus|soc|axi|ahb|apb)(@[0-9a-f]+)?$'
+Error: Documentation/devicetree/bindings/media/rockchip-vpu.example.dts:28.41-42 syntax error
+FATAL ERROR: Unable to parse input tree
+scripts/Makefile.lib:311: recipe for target 'Documentation/devicetree/bindings/media/rockchip-vpu.example.dt.yaml' failed
+make[1]: *** [Documentation/devicetree/bindings/media/rockchip-vpu.example.dt.yaml] Error 1
+make[1]: *** Waiting for unfinished jobs....
+Makefile:1262: recipe for target 'dt_binding_check' failed
+make: *** [dt_binding_check] Error 2
 
-See https://patchwork.ozlabs.org/patch/1261640
+See https://patchwork.ozlabs.org/patch/1261669
 
 If you already ran 'make dt_binding_check' and didn't see the above
 error(s), then make sure dt-schema is up to date:
