@@ -2,171 +2,85 @@ Return-Path: <SRS0=aGSP=5L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F252C43331
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 07:11:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E20DC2D0E7
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 07:13:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 053C920719
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 07:11:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CFBE620719
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 07:13:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="kTsk5R+3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727685AbgCZHLn (ORCPT
+        id S1726359AbgCZHNn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 03:11:43 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:33160 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726014AbgCZHLm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 03:11:42 -0400
-Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 5CE04B5CB84A1637917B;
-        Thu, 26 Mar 2020 15:11:34 +0800 (CST)
-Received: from [127.0.0.1] (10.173.220.25) by DGGEMS403-HUB.china.huawei.com
- (10.3.19.203) with Microsoft SMTP Server id 14.3.487.0; Thu, 26 Mar 2020
- 15:11:25 +0800
-Subject: Re: [RFC PATCH v4 5/6] arm64: tlb: Use translation level hint in
- vm_flags
-To:     Marc Zyngier <maz@kernel.org>
-CC:     <will@kernel.org>, <mark.rutland@arm.com>,
-        <catalin.marinas@arm.com>, <aneesh.kumar@linux.ibm.com>,
-        <akpm@linux-foundation.org>, <npiggin@gmail.com>,
-        <peterz@infradead.org>, <arnd@arndb.de>, <rostedt@goodmis.org>,
-        <suzuki.poulose@arm.com>, <tglx@linutronix.de>,
-        <yuzhao@google.com>, <Dave.Martin@arm.com>, <steven.price@arm.com>,
-        <broonie@kernel.org>, <guohanjun@huawei.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <linux-arch@vger.kernel.org>,
-        <linux-mm@kvack.org>, <arm@kernel.org>, <xiexiangyou@huawei.com>,
-        <prime.zeng@hisilicon.com>, <zhangshaokun@hisilicon.com>
-References: <20200324134534.1570-1-yezhenyu2@huawei.com>
- <20200324134534.1570-6-yezhenyu2@huawei.com> <20200324144514.340c78d9@why>
- <986be927-02c6-3cc2-ca39-30ccad60eae0@huawei.com>
- <2f4cb3ef52c5589b388225e487651a2b@kernel.org>
-From:   Zhenyu Ye <yezhenyu2@huawei.com>
-Message-ID: <6e2fece0-a7d7-a470-6911-5891fd09a140@huawei.com>
-Date:   Thu, 26 Mar 2020 15:11:23 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        Thu, 26 Mar 2020 03:13:43 -0400
+Received: from mail-yb1-f194.google.com ([209.85.219.194]:39340 "EHLO
+        mail-yb1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726210AbgCZHNn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Mar 2020 03:13:43 -0400
+Received: by mail-yb1-f194.google.com with SMTP id h205so2675041ybg.6
+        for <linux-kernel@vger.kernel.org>; Thu, 26 Mar 2020 00:13:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=/EfpWk2gjYks28Q9lQqlYhUWnyVRPjiMZTzILRdTCmI=;
+        b=kTsk5R+3s2jjT/cNpqLndfsa53KK2VPznNXf4BUCijYKTZ+n6Bk71eU6wBM9AqNk+A
+         p2Q2Y1zGG7DJvC+04ZpkmKgA4IykLIGtP+F/1CDyK18mZDwuGFoXwhdO5w0yhjNAQzFg
+         IhNHRjQh4QSA4UezVik4l5zh2cObIapq16mftQiDUVlq7BFQh93OoW6I2wjJzDRTAo9s
+         zjSWjFACYYlZKQ1u9P4qEJr5sUZ3WcHLnvSfIi2gRA/ieyURxE+7fZZKHbS0Y9u+eX96
+         uD9aivwNqgfnQWerQjV+4J+LVh47jDdbuvHXhHQRaEO+UMkAiei4wKGY+nS4/TAikPxs
+         kS+w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=/EfpWk2gjYks28Q9lQqlYhUWnyVRPjiMZTzILRdTCmI=;
+        b=SYYkkhpXcn7LqI3zEwgWYG1abSI7TXBcyGxoBizHCeQG7qhWsmaypYiIQ7Ma72pK/U
+         ekx2/NPkcnb7qzZIqzvuRFV84rGg+5BNF3uHNwpFPot6wMjnOecCakTj65iepKuf5O87
+         EQTmF5RiJNhb4+i+4921JRymvQ1N/Bi9UoGyx4+7qXnMsLgr1NpD775ci3ucNo4EGDJR
+         X8tFRalvSAcBV3iZMFa8YoDuLHxuv0LxL1wMOO6EmJAncOS2+lM2dtmD5q8cwqsNbZ2/
+         t5UmYY3ZZZa7edlLb4Mi47sTkv8RYRG74ykeWxKPTKQF6CiysDkyG31xWZvah6UdiToc
+         l5EQ==
+X-Gm-Message-State: ANhLgQ1Ct9FMfhtN1NLr9u3MbiX75dW9Wb84FsMiwmPBBq2eWuTg85U8
+        ZzjiWufvrR26N7ZYjlDlvb0W2jYGAIoKsa49K0XVdw==
+X-Google-Smtp-Source: ADFU+vs4DO6gF5y/6tIg6PHfoLUqho+VIZuvoBei7dkaRV4YZD9MLunpKhDyaNzHOTOuX8kFDRVl4OWktr5fM9w78SI=
+X-Received: by 2002:a25:4e02:: with SMTP id c2mr11654345ybb.504.1585206821977;
+ Thu, 26 Mar 2020 00:13:41 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <2f4cb3ef52c5589b388225e487651a2b@kernel.org>
+References: <20200326070236.235835-1-walken@google.com>
+In-Reply-To: <20200326070236.235835-1-walken@google.com>
+From:   Michel Lespinasse <walken@google.com>
+Date:   Thu, 26 Mar 2020 00:13:29 -0700
+Message-ID: <CANN689HCH9xE3GfQ4qxVrFckJAoXPTwjWDHNanwrT3UR3Yi0Bw@mail.gmail.com>
+Subject: Re: [PATCH 0/8] Add a new mmap locking API wrapping mmap_sem calls
+To:     Andrew Morton <akpm@linux-foundation.org>,
+        linux-mm <linux-mm@kvack.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Laurent Dufour <ldufour@linux.ibm.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Matthew Wilcox <willy@infradead.org>,
+        Liam Howlett <Liam.Howlett@oracle.com>,
+        Jerome Glisse <jglisse@redhat.com>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        David Rientjes <rientjes@google.com>,
+        Hugh Dickins <hughd@google.com>, Ying Han <yinghan@google.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.173.220.25]
-X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Marc,
+On Thu, Mar 26, 2020 at 12:02 AM Michel Lespinasse <walken@google.com> wrote:
+> I think it would be feasible to apply them in the next merge cycle if
+> given sufficient approval.
 
-On 2020/3/25 22:13, Marc Zyngier wrote:
->>>>
->>>> +inline unsigned int get_vma_level(struct vm_area_struct *vma)
->>>> +{
->>>> +    unsigned int level = 0;
->>>> +    if (vma->vm_flags & VM_LEVEL_PUD)
->>>> +        level = 1;
->>>> +    else if (vma->vm_flags & VM_LEVEL_PMD)
->>>> +        level = 2;
->>>> +    else if (vma->vm_flags & VM_LEVEL_PTE)
->>>> +        level = 3;
->>>> +
->>>> +    vma->vm_flags &= ~(VM_LEVEL_PUD | VM_LEVEL_PMD | VM_LEVEL_PTE);
->>>> +    return level;
->>>> +}
->>>> +
->>>>  void set_swapper_pgd(pgd_t *pgdp, pgd_t pgd)
->>>>  {
->>>>      pgd_t *fixmap_pgdp;
->>>
->>>
->>> If feels bizarre a TLBI is now a destructive operation: you've lost the
->>> flags by having cleared them. Even if that's not really a problem in
->>> practice (you issue TLBI because you've unmapped the VMA), it remains
->>> that the act of invalidating TLBs isn't expected to change a kernel
->>> structure (and I'm not even thinking about potential races here).
->>
->> I cleared vm_flags here just out of caution, because every TLBI flush
->> action should set vm_flags themself. As I know, the TLB_LEVEL of an vma
->> will only be changed by transparent hugepage collapse and merge when
->> the page is not mapped, so there may not have potential races.
->>
->> But you are right that TLBI should't change a kernel structure.
->> I will remove the clear action and add some notices here.
-> 
-> More than that. You are changing the VMA flags at TLBI time already,
-> when calling get_vma_level(). That is already unacceptable -- I don't
-> think (and Peter will certainly correct me if I'm wrong) that you
-> are allowed to change the flags on that code path, as you probably
-> don't hold the write_lock.
->
-
-Thanks for your review.  I will avoid this problem in next version.
-
->>> If anything, I feel this should be based around the mmu_gather
->>> structure, which already tracks the right level of information and
->>> additionally knows about the P4D level which is missing in your patches
->>> (even if arm64 is so far limited to 4 levels).
->>>
->>> Thanks,
->>>
->>>     M.
->>>
->>
->> mmu_gather structure has tracked the level information, but we can only
->> use the info in the tlb_flush interface. If we want to use the info in
->> flush_tlb_range, we may should have to add a parameter to this interface,
->> such as:
->>
->>     flush_tlb_range(vma, start, end, flags);
->>
->> However, the flush_tlb_range is a common interface to all architectures,
->> I'm not sure if this is feasible because this feature is only supported
->> by ARM64 currently.
-> 
-> You could always build an on-stack mmu_gather structure and pass it down
-> to the TLB invalidation helpers.
-> 
-> And frankly, you are not going to be able to fit such a change in the
-> way Linux deals with TLBs by adding hacks at the periphery. You'll need
-> to change some of the core abstractions.
-> 
-> Finally, as Peter mentioned separately, there is Power9 which has similar
-> instructions, and could make use of it too. So that's yet another reason
-> to stop hacking at the arch level.
-> 
-
-OK, I will try to add struct mmu_gather to flush_tlb_range, such as:
-
-	void flush_tlb_range(struct mmu_gather *tlb,
-			     struct vm_area_struct *vma,
-			     unsigned long start, unsigned long end);
-
-This will involve all architectures, I will do it carefully.
-
->>
->> Or can we ignore the flush_tlb_range and only set the TTL field in
->> tlb_flush?  Waiting for your suggestion...
-> 
-> You could, but you could also ignore TTL altogether (what's the point
-> in only having half of it?). See my suggestion above.
-> 
->> For P4D level, the TTL field is limited to 4 bit(2 for translation granule
->> and 2 for page table level), so we can no longer afford more levels :).
-> 
-> You clearly didn't read the bit that said "even if arm64 is so far limited
-> to 4 levels". But again, this is Linux, a multi-architecture kernel, and
-> not an arm64-special. Changes you make have to work for all architectures,
-> and be extensible enough for future changes.
-> 
-
-Using the struct mmu_gather to pass the TTL value will not have
-this problem :).
-
-
-Thanks,
-Zhenyu
-
-
+Reading this part back, maybe it sounds more pushy than I intended.
+What I meant is that I think the code is ready to be submitted through
+the normal channels, whatever release that lands it into.
