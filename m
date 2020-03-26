@@ -2,133 +2,115 @@ Return-Path: <SRS0=aGSP=5L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.7 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71E85C2D0E8
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 08:24:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66AA7C2D0E8
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 08:31:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 54B5A2070A
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 08:24:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 43BB520772
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 08:31:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727801AbgCZIYP (ORCPT
+        id S1727612AbgCZIbF convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 04:24:15 -0400
-Received: from mga11.intel.com ([192.55.52.93]:57886 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727682AbgCZIYO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 04:24:14 -0400
-IronPort-SDR: S10lxP/O15Up24keMPS3juuvsFWH+ZQjuOsTnwKwpKIg/ZeiUoR0MZXdF9aimJlXJnLIJ5IzGc
- EFL0Wc77VUYg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Mar 2020 01:24:14 -0700
-IronPort-SDR: 5SWx7LobP7Xk7vAZTAJX2qluD5fcl2KfCQrXaLbWi5S2WCQNBYGo4s5/hFX18gOYhnHfbYeuqC
- pMs/3FbeTOdQ==
-X-IronPort-AV: E=Sophos;i="5.72,307,1580803200"; 
-   d="scan'208";a="393901243"
-Received: from mschuste-mobl3.ger.corp.intel.com (HELO localhost) ([10.252.32.130])
-  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Mar 2020 01:24:07 -0700
-From:   Jani Nikula <jani.nikula@linux.intel.com>
-To:     Masahiro Yamada <masahiroy@kernel.org>,
-        linux-kbuild@vger.kernel.org
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        "Jason A . Donenfeld" <Jason@zx2c4.com>,
-        clang-built-linux@googlegroups.com,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        David Airlie <airlied@linux.ie>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        dri-devel@lists.freedesktop.org, intel-gfx@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 09/16] drm/i915: remove always-defined CONFIG_AS_MOVNTDQA
-In-Reply-To: <20200326080104.27286-10-masahiroy@kernel.org>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-References: <20200326080104.27286-1-masahiroy@kernel.org> <20200326080104.27286-10-masahiroy@kernel.org>
-Date:   Thu, 26 Mar 2020 10:24:04 +0200
-Message-ID: <87ftdvikwr.fsf@intel.com>
+        Thu, 26 Mar 2020 04:31:05 -0400
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:34240 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726259AbgCZIbE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Mar 2020 04:31:04 -0400
+Received: by mail-qt1-f195.google.com with SMTP id 10so4591412qtp.1;
+        Thu, 26 Mar 2020 01:31:04 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=1uL6T0AlsEjbmQmM6hXpAIWUikHWCOqgCwWrHStOPM4=;
+        b=JH3O4DFcQPzWFJmBjC/6CSDEMrX1UAowmp4PKE4vqLdFoiKqXriar8u53ExFjXN7wR
+         KapHDumX8ckM5BRYaqLwhT0TzsOvgmkbaJJAJEcpRtaqROujK51FlxjgO/7p8jXaNvWg
+         Pi/r326GHl07uzTo8ZESydPHPwEsKwt2HdD05EQhsNIkUI4BtNNfYXmJr4JPPqvmS0/V
+         JpSbD06R1HVaJXdAMws0Qxhq3bao/4/K9MR1wjGNlCGD+vGApDevKPIXkxXg1oBNVIPN
+         AWSIyWgxpFOxz9+vqGZ6YJQ1Dtemiusnr95jTXYnCaXCmDJx4DD7x1O0Aqj0TONMmsTW
+         rnCQ==
+X-Gm-Message-State: ANhLgQ2fvmi7DBGwwJWpnv8fq30xkfcNcUlKbTndNi9CcuiFKlqTOJv6
+        suub27wH7GWmXgk2evrxJLaWQOvh3b0U0F0M4ic=
+X-Google-Smtp-Source: ADFU+vvrb2nktbpRKwccTTwusZLhub3zTLR2A0M333GepHEiS4/SHtpcUDWp6ciSQJVRM0eIRQ3W5cCMQVXrKGlpkc4=
+X-Received: by 2002:ac8:7449:: with SMTP id h9mr7109717qtr.386.1585211464008;
+ Thu, 26 Mar 2020 01:31:04 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <20200322095527.397716-1-syq@debian.org> <827f0ae8-2e97-5eeb-387d-275d8aac98ad@gmail.com>
+In-Reply-To: <827f0ae8-2e97-5eeb-387d-275d8aac98ad@gmail.com>
+From:   YunQiang Su <syq@debian.org>
+Date:   Thu, 26 Mar 2020 16:30:52 +0800
+Message-ID: <CAKcpw6XsJVYP=4k+fjSF+JLM_J7ab9sV7nYFwUduzvNvWPzmBw@mail.gmail.com>
+Subject: Re: [PATCH v2] getauxval.3: MIPS, AT_BASE_PLATFORM passes ISA level
+To:     "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com>
+Cc:     linux-mips <linux-mips@vger.kernel.org>, linux-man@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 26 Mar 2020, Masahiro Yamada <masahiroy@kernel.org> wrote:
-> CONFIG_AS_MOVNTDQA was introduced by commit 0b1de5d58e19 ("drm/i915:
-> Use SSE4.1 movntdqa to accelerate reads from WC memory").
+Michael Kerrisk (man-pages) <mtk.manpages@gmail.com> 于2020年3月26日周四 下午4:12写道：
 >
-> We raise the minimal supported binutils version from time to time.
-> The last bump was commit 1fb12b35e5ff ("kbuild: Raise the minimum
-> required binutils version to 2.21").
+> Hello YunQiang Su
 >
-> I confirmed the code in $(call as-instr,...) can be assembled by the
-> binutils 2.21 assembler and also by LLVM integrated assembler.
+> On 3/22/20 10:55 AM, YunQiang Su wrote:
+> > Since Linux 5.7, on MIPS, we use AT_BASE_PLATFORM to pass ISA level.
+> > The values may be:
+> >   mips2, mips3, mips4, mips5,
+> >   mips32, mips32r2, mips32r6,
+> >   mips64, mips64r2, mips64r6.
+> >
+> > This behavior is different with PowerPC.
 >
-> Remove CONFIG_AS_MOVNTDQA, which is always defined.
->
-> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
-> Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+> Thank you for the patch. I see that this is scheduled for
+> Linux 5.7 (for which the merge window is not yet open).
+> How certain is it that the feature will land in 5.7?
 
-Ack for merging this via whichever tree you see fit; please let me know
-if you want me to pick this up via drm-intel.
+It is in mips-next and linux-next now.
 
-BR,
-Jani.
-
-
-> ---
 >
-> Changes in v2: None
+> Thanks,
 >
->  drivers/gpu/drm/i915/Makefile      | 3 ---
->  drivers/gpu/drm/i915/i915_memcpy.c | 5 -----
->  2 files changed, 8 deletions(-)
+> Michael
 >
-> diff --git a/drivers/gpu/drm/i915/Makefile b/drivers/gpu/drm/i915/Makefile
-> index a1f2411aa21b..e559e53fc634 100644
-> --- a/drivers/gpu/drm/i915/Makefile
-> +++ b/drivers/gpu/drm/i915/Makefile
-> @@ -28,9 +28,6 @@ subdir-ccflags-$(CONFIG_DRM_I915_WERROR) += -Werror
->  CFLAGS_i915_pci.o = $(call cc-disable-warning, override-init)
->  CFLAGS_display/intel_fbdev.o = $(call cc-disable-warning, override-init)
->  
-> -subdir-ccflags-y += \
-> -	$(call as-instr,movntdqa (%eax)$(comma)%xmm0,-DCONFIG_AS_MOVNTDQA)
-> -
->  subdir-ccflags-y += -I$(srctree)/$(src)
->  
->  # Please keep these build lists sorted!
-> diff --git a/drivers/gpu/drm/i915/i915_memcpy.c b/drivers/gpu/drm/i915/i915_memcpy.c
-> index fdd550405fd3..7b3b83bd5ab8 100644
-> --- a/drivers/gpu/drm/i915/i915_memcpy.c
-> +++ b/drivers/gpu/drm/i915/i915_memcpy.c
-> @@ -35,7 +35,6 @@
->  
->  static DEFINE_STATIC_KEY_FALSE(has_movntdqa);
->  
-> -#ifdef CONFIG_AS_MOVNTDQA
->  static void __memcpy_ntdqa(void *dst, const void *src, unsigned long len)
->  {
->  	kernel_fpu_begin();
-> @@ -93,10 +92,6 @@ static void __memcpy_ntdqu(void *dst, const void *src, unsigned long len)
->  
->  	kernel_fpu_end();
->  }
-> -#else
-> -static void __memcpy_ntdqa(void *dst, const void *src, unsigned long len) {}
-> -static void __memcpy_ntdqu(void *dst, const void *src, unsigned long len) {}
-> -#endif
->  
->  /**
->   * i915_memcpy_from_wc: perform an accelerated *aligned* read from WC
-
--- 
-Jani Nikula, Intel Open Source Graphics Center
+> > https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/?id=e585b768da111f2c2d413de6214e83bbdfee8f22
+> > Signed-off-by: YunQiang Su <syq@debian.org>
+> >
+> > ----
+> > v1 -> v2: fix typo
+> > ---
+> >  man3/getauxval.3 | 7 ++++---
+> >  1 file changed, 4 insertions(+), 3 deletions(-)
+> >
+> > diff --git a/man3/getauxval.3 b/man3/getauxval.3
+> > index 456371c6a..bcc116dd2 100644
+> > --- a/man3/getauxval.3
+> > +++ b/man3/getauxval.3
+> > @@ -60,9 +60,10 @@ values are present on all architectures.
+> >  The base address of the program interpreter (usually, the dynamic linker).
+> >  .TP
+> >  .BR AT_BASE_PLATFORM
+> > -A pointer to a string identifying the real platform; may differ from
+> > -.BR AT_PLATFORM
+> > -(PowerPC only).
+> > +A pointer to a string (PowerPC and MIPS only).
+> > +On PowerPC, this identifies the real platform; may differ from
+> > +.BR AT_PLATFORM "."
+> > +On MIPS, this identifies the ISA level (Since 5.7).
+> >  .TP
+> >  .BR AT_CLKTCK
+> >  The frequency with which
+> >
+>
+>
+> --
+> Michael Kerrisk
+> Linux man-pages maintainer; http://www.kernel.org/doc/man-pages/
+> Linux/UNIX System Programming Training: http://man7.org/training/
