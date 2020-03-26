@@ -2,112 +2,59 @@ Return-Path: <SRS0=aGSP=5L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C693C2D0E9
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 19:37:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E89BC43331
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 19:37:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 41B1620714
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 19:37:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585251455;
-	bh=qEHsrN11ohqiwc3w7pswmwYjwT/mpS1pcmrPpb6z3sg=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=d2fnH0Zz7k/zBfJPGQYhFv9WWU29S5GOn6/zAyUwkLByathE1yIc4ilNGODiPae/8
-	 1iF2kfvtIwGgEpA66fmn5tAYtkdXcN7j3vfRV36EcG82hXClMRVWBIaCxFbff6U9KL
-	 2snix6Q+Cxj+spm3hmkRc9rvQzcdYZHV301Y+ryo=
+	by mail.kernel.org (Postfix) with ESMTP id 66DA220714
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 19:37:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728606AbgCZThe (ORCPT
+        id S1728620AbgCZThy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 15:37:34 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:46980 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726067AbgCZThe (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 15:37:34 -0400
-Received: by mail-oi1-f195.google.com with SMTP id q204so6600566oia.13;
-        Thu, 26 Mar 2020 12:37:33 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=OQejYhkmJ8jpMQwP4np5/qfbpLG+c7Y/YgNN9D4Afuk=;
-        b=bOKPLVf2Kxy+k9BiM2WIBR6i8oY2iE5Q98V9vwGLgMgDErNKZALvT0YzWkDH4pALms
-         ildQnzfzIczfdpFModRwSOsYR0G3kqfECg0AIAh5EDZ8ZksElT2JEK+XsloEkC43vPnP
-         PDrgurzbsddgI8bdoQ0HRb/ZKxqN7LLuJzyRpsZBoZJXoXH8ovF3h3AC5I7IMsl1elnE
-         DYzXuPV8mLU+LyNRSaK7g++2Inrxg/GFlxxS7S76x1ecTsHvEr2ML2GAU2aHvTHQQ/3J
-         wfP2C9QlLkwxmV2Vlbm5opTuy3odHTZFQZnlvQewIkUITHzfHXyZJdlmpvmpq/Equw8o
-         ytGQ==
-X-Gm-Message-State: ANhLgQ3+f3LKHT5UQKWm4OJTxyL0VU3+hfJhvHT2IRG8wY9/4UxwL8Mx
-        UKAlwZmUNFw/sfZ/+IA1c6RlT9pZ/k9Hus9D2t0=
-X-Google-Smtp-Source: ADFU+vvEZ/iZqdJiCJri8T3uuYRSdtllmwAZLQvwiAy+tAT0vyGcMSRRnwD384RTgRhlUh8bZass889rIRaKdFwVuXY=
-X-Received: by 2002:aca:f07:: with SMTP id 7mr1415179oip.68.1585251453248;
- Thu, 26 Mar 2020 12:37:33 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200326144630.15011-1-daniel.lezcano@linaro.org>
- <CAJZ5v0iDuv0doOzFd140A17fhLKsdgZXbc_XMOuhUeDt70Jz+g@mail.gmail.com> <bb21941a-69ff-36fe-05dd-8f3eb63326dc@linaro.org>
-In-Reply-To: <bb21941a-69ff-36fe-05dd-8f3eb63326dc@linaro.org>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Thu, 26 Mar 2020 20:37:21 +0100
-Message-ID: <CAJZ5v0ghHFJCfG5vxE=O6+bD4neyvyF2WD6ASGptBaptm2-5Ow@mail.gmail.com>
-Subject: Re: [PATCH] powercap/drivers/idle_inject: Specify idle state max latency
-To:     Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        "open list:POWER MANAGEMENT CORE" <linux-pm@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Thu, 26 Mar 2020 15:37:54 -0400
+Received: from mail.sysgo.com ([176.9.12.79]:47370 "EHLO mail.sysgo.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726067AbgCZThy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Mar 2020 15:37:54 -0400
+X-Greylist: delayed 469 seconds by postgrey-1.27 at vger.kernel.org; Thu, 26 Mar 2020 15:37:53 EDT
+From:   David Engraf <david.engraf@sysgo.com>
+To:     masahiroy@kernel.org, michal.lkml@markovi.net
+Cc:     linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
+        David Engraf <david.engraf@sysgo.com>
+Subject: [PATCH] kbuild: add outputmakefile to no-dot-config-targets
+Date:   Thu, 26 Mar 2020 20:29:33 +0100
+Message-Id: <20200326192933.14091-1-david.engraf@sysgo.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 26, 2020 at 8:20 PM Daniel Lezcano
-<daniel.lezcano@linaro.org> wrote:
->
-> On 26/03/2020 20:14, Rafael J. Wysocki wrote:
-> > On Thu, Mar 26, 2020 at 3:48 PM Daniel Lezcano
-> > <daniel.lezcano@linaro.org> wrote:
-> >>
-> >> Currently the idle injection framework uses the play_idle()
-> >> function which puts the current CPU in an idle state. The idle
-> >> state is the deepest one, as specified by the latency constraint
-> >> when calling the subsequent play_idle_precise() function with the
-> >> INT_MAX.
-> >>
-> >> The idle_injection is used by the cpuidle_cooling device which
-> >> computes the idle / run duration to mitigate the temperature by
-> >> injecting idle cycles. The cooling device has no control on the
-> >> depth of the idle state.
-> >>
-> >> Allow finer control of the idle injection mechanism by allowing
-> >> to specify the latency for the idle state. Thus the cooling
-> >> device has the ability to have a guarantee on the exit latency of
-> >> the idle states it is injecting.
-> >>
-> >> Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org> ---
-> >> drivers/powercap/idle_inject.c | 27 ++++++++++++++++++++++++++-
-> >> include/linux/idle_inject.h    |  6 ++++++ 2 files changed, 32
-> >> insertions(+), 1 deletion(-)
->
-> [ ... ]
->
-> >> + +void idle_inject_set_latency(struct idle_inject_device
-> >> *ii_dev, +                            unsigned int latency_ns);
-> >> + +unsigned int idle_inject_get_latency(struct idle_inject_device
-> >> *ii_dev); + #endif /* __IDLE_INJECT_H__ */ --
-> >
-> > I would like to see a user of idle_inject_get_latency() before this
-> > goes in.
->
-> Do you mean a user for the set/get or the get only? If the latter,
-> there is no user yet I just added it to have an usual get/set helpers,
-> if that hurts, I can resend by removing it. If the former, there is a
-> patch I'm about to send which depends on the 'set'.
+The target outputmakefile is used to generate a Makefile
+for out-of-tree builds and does not depend on the kernel
+configuration.
 
-So I wouldn't add the "get" thing at all if it has no users.
+Signed-off-by: David Engraf <david.engraf@sysgo.com>
+---
+ Makefile | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Also it would be better to send this patch along with the other one
-depending on it.
+diff --git a/Makefile b/Makefile
+index e56bf7ef182d..45be0e5b0cef 100644
+--- a/Makefile
++++ b/Makefile
+@@ -255,7 +255,7 @@ clean-targets := %clean mrproper cleandocs
+ no-dot-config-targets := $(clean-targets) \
+ 			 cscope gtags TAGS tags help% %docs check% coccicheck \
+ 			 $(version_h) headers headers_% archheaders archscripts \
+-			 %asm-generic kernelversion %src-pkg
++			 %asm-generic kernelversion %src-pkg outputmakefile
+ no-sync-config-targets := $(no-dot-config-targets) install %install \
+ 			   kernelrelease
+ single-targets := %.a %.i %.ko %.lds %.ll %.lst %.mod %.o %.s %.symtypes %/
+-- 
+2.17.1
+
