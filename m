@@ -2,68 +2,85 @@ Return-Path: <SRS0=aGSP=5L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=no
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BAD52C43331
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 18:27:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7B4EC2D0EC
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 18:27:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9537420719
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 18:27:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="bZymhhX+"
+	by mail.kernel.org (Postfix) with ESMTP id A7F6120719
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 18:27:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728078AbgCZS1T (ORCPT
+        id S1728376AbgCZS1v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 14:27:19 -0400
-Received: from linux.microsoft.com ([13.77.154.182]:57122 "EHLO
-        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727907AbgCZS1S (ORCPT
+        Thu, 26 Mar 2020 14:27:51 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:51770 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727879AbgCZS1v (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 14:27:18 -0400
-Received: from [192.168.0.109] (c-73-42-176-67.hsd1.wa.comcast.net [73.42.176.67])
-        by linux.microsoft.com (Postfix) with ESMTPSA id 87EE220B4737;
-        Thu, 26 Mar 2020 11:27:17 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 87EE220B4737
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1585247237;
-        bh=o38dnb32CGjX8brBUo5ZouRpDyVR7JANEbmWnk2DbUU=;
-        h=Subject:To:References:From:Date:In-Reply-To:From;
-        b=bZymhhX+VPOoHNwMoJgxan6I7+DGZTBmGuKMza4vKzlWiWCfLq8FrRpPUkpFz9P58
-         5rAHHCrvJdAQTRuKPiD5Jsxaq7DxHoW5OcbjdlWKJoAy4vUW771WwG2DXiTGGH1Qfd
-         5LiULj+UfirXnyVf22yPVBW5pNe+XxmEvP0jDfyY=
-Subject: Re: [Outreachy kernel] [PATCH] staging: rtl8723bs: hal: Compress
- return logic
-To:     Simran Singhal <singhalsimran0@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
-        outreachy-kernel@googlegroups.com
-References: <20200325214312.GA1936@simran-Inspiron-5558>
-From:   Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
-Message-ID: <27ca4063-f34b-030d-f593-1d9a4f3c1165@linux.microsoft.com>
-Date:   Thu, 26 Mar 2020 11:27:12 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Thu, 26 Mar 2020 14:27:51 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: eballetbo)
+        with ESMTPSA id 89B7F297957
+From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Collabora Kernel ML <kernel@collabora.com>, matthias.bgg@gmail.com,
+        drinkcat@chromium.org, hsinyi@chromium.org,
+        Anders Roxell <anders.roxell@linaro.org>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org
+Subject: [PATCH] soc: mediatek: mtk-mmsys: Export ddp_dis/connect symbols
+Date:   Thu, 26 Mar 2020 19:27:42 +0100
+Message-Id: <20200326182742.487026-1-enric.balletbo@collabora.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-In-Reply-To: <20200325214312.GA1936@simran-Inspiron-5558>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/25/20 2:43 PM, Simran Singhal wrote:
+When building on arm64 with allmodconfig or CONFIG_DRM_MEDIATEK=m we see
+the following error.
 
-> Simplify function returns by merging assignment and return into
-> one command line.
+  ERROR: modpost: "mtk_mmsys_ddp_disconnect"
+  [drivers/gpu/drm/mediatek/mediatek-drm.ko] undefined!
+  ERROR: modpost: "mtk_mmsys_ddp_connect"
+  [drivers/gpu/drm/mediatek/mediatek-drm.ko] undefined!
 
-"Simplify function returns by merging assignment and return into one line".
+Export mtk_mmsys_ddp_connect and mtk_mmsys_ddp_disconnect symbols to be
+able to be used for other modules.
 
-You could change the subject also to "Simplify function return logic".
+Fixes: 396c3fccaf03 ("soc / drm: mediatek: Move routing control to mmsys device")
+Reported-by: Anders Roxell <anders.roxell@linaro.org>
+Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+---
 
-thanks,
-  -lakshmi
+ drivers/soc/mediatek/mtk-mmsys.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/drivers/soc/mediatek/mtk-mmsys.c b/drivers/soc/mediatek/mtk-mmsys.c
+index 32a92ec447c5..05e322c9c301 100644
+--- a/drivers/soc/mediatek/mtk-mmsys.c
++++ b/drivers/soc/mediatek/mtk-mmsys.c
+@@ -259,6 +259,7 @@ void mtk_mmsys_ddp_connect(struct device *dev,
+ 		writel_relaxed(reg, config_regs + addr);
+ 	}
+ }
++EXPORT_SYMBOL_GPL(mtk_mmsys_ddp_connect);
+ 
+ void mtk_mmsys_ddp_disconnect(struct device *dev,
+ 			      enum mtk_ddp_comp_id cur,
+@@ -279,6 +280,7 @@ void mtk_mmsys_ddp_disconnect(struct device *dev,
+ 		writel_relaxed(reg, config_regs + addr);
+ 	}
+ }
++EXPORT_SYMBOL_GPL(mtk_mmsys_ddp_disconnect);
+ 
+ static int mtk_mmsys_probe(struct platform_device *pdev)
+ {
+-- 
+2.25.1
+
