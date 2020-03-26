@@ -2,105 +2,127 @@ Return-Path: <SRS0=aGSP=5L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B58DC43331
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 09:20:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91B91C2D0E8
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 09:22:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0EAAC20B80
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 09:20:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="h3+XMO4b"
+	by mail.kernel.org (Postfix) with ESMTP id 6B67D20719
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 09:22:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585214540;
+	bh=Md3LoPRM1sFBRqfmLmGzEg9ac5p0ij8EM9OgKtPgV9c=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=k+9AuDeLcpNaoa7WGnIl78v+4souBjzSzXDIs7GHhvQ8TKigNvOm6FJ7WnlTaq0P/
+	 UtAIDEffTb0jsMTtPO58xvLUoaCPVi6zTeEkdsPGjnbdqfy2uY+9cAazHQrGkpP5vG
+	 QiN9hZv/Kfba6Munuv21ShYwXMFNOhNxR4wufnzI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727763AbgCZJUp (ORCPT
+        id S1727732AbgCZJWT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 05:20:45 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:43159 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726298AbgCZJUp (ORCPT
+        Thu, 26 Mar 2020 05:22:19 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:52544 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726298AbgCZJWS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 05:20:45 -0400
-Received: by mail-wr1-f68.google.com with SMTP id m11so875945wrx.10
-        for <linux-kernel@vger.kernel.org>; Thu, 26 Mar 2020 02:20:43 -0700 (PDT)
+        Thu, 26 Mar 2020 05:22:18 -0400
+Received: by mail-wm1-f68.google.com with SMTP id z18so5647108wmk.2;
+        Thu, 26 Mar 2020 02:22:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=XiFCSIEFbCtqD4+HIYFwBoWm8BPO7pJ1HJRJcTm4S98=;
-        b=h3+XMO4b1m3gWVXbv756Fxbc4CvIBdECygkaD4INk1GOYA5GEKpLWfnhqt8WIMaq1A
-         6JTMUUa0Mjqg2W7WTRjYoClo8Xn03jPlyxK4GkQP6NRQ84+oSjjb9XWmjHlgIF7X06aQ
-         Moujtz1baHzCi/hx7u0ON1iV8jhWwswC6IVlHzHUqM4SV61RnHJM2X3jSCeMF2RjWmf0
-         9rS9WDukmZBTYtOjTEZU9WfDONk1lgWeWuhb6tlivVKu3edZ8dYdn3f/MNZe1J1oLN6q
-         Rqo5bCl7JT50OJnlF6p46hgcboQ38j6kf8Th6B0Fji6WlIk+pA8Mve0snY/tltO/cA6t
-         7D1g==
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=FlDn5DLuAGFwOKbYCG6SBICMqVpoIS+lwTO53ZZDDjM=;
+        b=dnfFO30O8b3RHtisdF7O/LiOdkh/dGOet8uunkTrexLbVqPR+mk8mHCwRsw6tk7KLv
+         auq6wGbDAz0TCaH7hgT3AOV6cKXX7hHNpWE2HuusvvM73PietjLjxDKuuZOqmmQ//Ul1
+         jYXRonD3rZ/o40owKe3SUybXM+MEcOCrLrATCzJzVb4iH9/w+oTVltDAY8WDD19GP6PY
+         kt8GSCVtHsjJMZn/k+DnyW9lAo7OQxFDDTquFzauPzkbafYzNtb5rBgX6k+HHYeA7Wcz
+         y/Okk0gWNzvBzqlIHdWGI8cXCcwSCT7YlgNWhkUmWaXaLmi4gTEtwgXiUp4cqAD5niQM
+         w4Zg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=XiFCSIEFbCtqD4+HIYFwBoWm8BPO7pJ1HJRJcTm4S98=;
-        b=rk3NbIpQgGlP9hqZ235hzb2HBxbdrGW9COzcGAO0F6bQZPFLTCZ8ayWY9YDZhH64+A
-         gb0OnEcxpj53GNuqjLf5sDkPp1vnSeOXNWpL6T6cOOjN/chTfs3SLbFWA6EWs4xTLSTv
-         W8ZYTE/ELnGifWgYAbqei5t0R8+8NJACchvtBYkMeMxz9eceAnEO3BGtrEH19OeUv5ac
-         g/mW+6lOqECjPI1MER03pXEaZSzgaZXc7XE3LdszuHYM7Oab1rU08LgKw9C4m9bqPOiu
-         b6UhHxSFRIX79Tn+N/JuorjpS9X80ng77N0pwa6dJb0eUwY8eOaSqqIBtSPItaxIvqk2
-         jBzg==
-X-Gm-Message-State: ANhLgQ1N4OEAbDAP75YLS87AaAgLmMkDKcKIEwc5BDec7URe9m4Y7QIU
-        63JRAVvFDxe3cvOoCtyjGWNTog==
-X-Google-Smtp-Source: ADFU+vtL5ZXVm9XL43jJOUQKaE0UOa87H6ANr1gFusr26vHNsN1W8MzjEBq1RtpaNlMx0KNWkHMqOg==
-X-Received: by 2002:a5d:460f:: with SMTP id t15mr8204254wrq.413.1585214443280;
-        Thu, 26 Mar 2020 02:20:43 -0700 (PDT)
-Received: from dell ([2.27.35.213])
-        by smtp.gmail.com with ESMTPSA id w66sm2690193wma.38.2020.03.26.02.20.42
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=FlDn5DLuAGFwOKbYCG6SBICMqVpoIS+lwTO53ZZDDjM=;
+        b=grMH9n698ZdWvEoEyVsOTtjHzDS0mcQYMbqetBKMr79Ca1xn66q5zAk6u94q+gbY6c
+         kUZ6ePJpl9lmdxNNToFhnvow1tbQLyxxpYIhGTMAsLWcg/nYY9Ssyr97/0B0GFBBAwL2
+         msqGWz4O68TxC5dHiuX3hBMtW120e40G0MS79J5HoKjAW/QQUFjqpDzlo++SOCDp6/zF
+         /mJiv+WwXTlLPCDSS74FbU1pzW996sHE/ix3RxKv0Mh7hnD/oSgYyxKoiEKF7a9jtiFi
+         v1p1K37D6kO6tDBbe697HxYojGzRvxFQVN4Mccb2heY05dRt2Yehh5QHn8SUzSSYPge6
+         kvow==
+X-Gm-Message-State: ANhLgQ3jzLLn4ePZXj/tfHB+DXqj+pNK9REJHTijkb9MdEE1rLxkERWK
+        +A9R5ZacDwAD8xRUlhmUFqIbcShY
+X-Google-Smtp-Source: ADFU+vt9VB3BsFSpXR1BzUyvHfDJQ1tQSyYFNyjRyc3JUCaQ6kAKCPhCNBUEuy6J5/CKiAsmakOtXw==
+X-Received: by 2002:a05:600c:20a:: with SMTP id 10mr2201122wmi.135.1585214536655;
+        Thu, 26 Mar 2020 02:22:16 -0700 (PDT)
+Received: from gmail.com (54033286.catv.pool.telekom.hu. [84.3.50.134])
+        by smtp.gmail.com with ESMTPSA id l8sm2728757wmj.2.2020.03.26.02.22.15
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 26 Mar 2020 02:20:42 -0700 (PDT)
-Date:   Thu, 26 Mar 2020 09:21:32 +0000
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Jarkko Nikula <jarkko.nikula@linux.intel.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>
-Subject: Re: [PATCH] mfd: intel-lpss: Fix Intel Elkhart Lake LPSS I2C input
- clock
-Message-ID: <20200326092132.GB603801@dell>
-References: <20200316143224.234432-1-jarkko.nikula@linux.intel.com>
+        Thu, 26 Mar 2020 02:22:16 -0700 (PDT)
+Date:   Thu, 26 Mar 2020 10:22:13 +0100
+From:   Ingo Molnar <mingo@kernel.org>
+To:     "Jason A. Donenfeld" <Jason@zx2c4.com>
+Cc:     Masahiro Yamada <masahiroy@kernel.org>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "H . Peter Anvin" <hpa@zytor.com>, X86 ML <x86@kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@linux.ie>,
+        "David S. Miller" <davem@davemloft.net>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Ingo Molnar <mingo@redhat.com>,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Jim Kukunas <james.t.kukunas@linux.intel.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        NeilBrown <neilb@suse.de>, Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        Yuanhan Liu <yuanhan.liu@linux.intel.com>,
+        dri-devel@lists.freedesktop.org, intel-gfx@lists.freedesktop.org,
+        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
+        linux-doc@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 00/16] x86, crypto: remove always-defined CONFIG_AS_*
+ and cosolidate Kconfig/Makefiles
+Message-ID: <20200326092213.GA100918@gmail.com>
+References: <20200326080104.27286-1-masahiroy@kernel.org>
+ <CAHmME9pnAvgErYkcvvdakvfMY8ZGKfwHHNYzpVtJ913Tgp16CQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200316143224.234432-1-jarkko.nikula@linux.intel.com>
+In-Reply-To: <CAHmME9pnAvgErYkcvvdakvfMY8ZGKfwHHNYzpVtJ913Tgp16CQ@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 16 Mar 2020, Jarkko Nikula wrote:
 
-> Intel Elkhart Lake LPSS I2C has 100 MHz input clock instead of 133 MHz
-> that was our preliminary information. This will result slower I2C bus
-> clock when driver calculates its timing parameters in case ACPI tables
-> don't provide them.
-> 
-> Slower I2C bus clock is allowed but let's fix this to match with
-> reality.
-> 
-> While at it, keep the same default I2C device properties as Intel
-> Broxton since it is not known do they need any update.
-> 
-> Signed-off-by: Jarkko Nikula <jarkko.nikula@linux.intel.com>
-> ---
-> For normal development cycle.
-> ---
->  drivers/mfd/intel-lpss-pci.c | 21 +++++++++++++--------
->  1 file changed, 13 insertions(+), 8 deletions(-)
+* Jason A. Donenfeld <Jason@zx2c4.com> wrote:
 
-Applied, thanks.
+> Very little has changed from last time, and this whole series still
+> looks good to me. I think I already ack'd most packages, but in case
+> it helps:
+> 
+> Reviewed-by: Jason A. Donenfeld <Jason@zx2c4.com>
 
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+Acked-by: Ingo Molnar <mingo@kernel.org>
+
+> Since this touches a lot of stuff, it might be best to get it in as 
+> early as possible during the merge window, as I imagine new code being 
+> added is going to want to be touching those makefiles too.
+
+I'd argue the opposite: please merge this later in the merge window, to 
+not disrupt the vast body of other stuff that has already been lined up 
+and has been tested, and to give time for these new bits to get tested 
+some more.
+
+Also, please get it into -next ASAP, today would be ideal for test 
+coverage ...
+
+Thanks,
+
+	Ingo
