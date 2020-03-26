@@ -2,78 +2,215 @@ Return-Path: <SRS0=aGSP=5L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37BD3C43331
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 19:14:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F656C2D0E9
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 19:14:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 072A62070A
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 19:14:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="FJsueFtQ"
+	by mail.kernel.org (Postfix) with ESMTP id 1855D2070A
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 19:14:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728533AbgCZTOQ (ORCPT
+        id S1728590AbgCZTOS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 15:14:16 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:44624 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726067AbgCZTOQ (ORCPT
+        Thu, 26 Mar 2020 15:14:18 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:52240 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726359AbgCZTOR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 15:14:16 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=OuLpqFnqFDxEEO4sWNfxqmccRQkxk3DQeTo8ggfuiO4=; b=FJsueFtQNP4ma3mKBsUnC3tLbx
-        EWNix8TB2fDfTL2OneTxC1ZRAJAemhRNEkPewt7pRnUfv79yrfLqLQArOfBn1SqIefiO4BuOrsHDZ
-        Qkcajx+Qjeqry1LhpIuDv4CpfMpeVTBIWybdRTDjTQXyS778Eb7VfKo8dpVnp6n/q9ZJni5ky/I3d
-        rVmhhOgkyHz8VjUAGmW0xSTwKpa/hs96qxaz1mzVEoJIGizdfF1vDlxYXbBC1xe69lUSyf5nwCdBV
-        HM8BKGAdGr2uTKyWe/xCL/IxYXDJ0kiHjjFMrj2owAcsWPtrtGNyu4b4OvJX9QFhF1Y8oerjQGgcw
-        vRriEG/A==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=worktop.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jHXx2-0001js-Bb; Thu, 26 Mar 2020 19:14:00 +0000
-Received: by worktop.programming.kicks-ass.net (Postfix, from userid 1000)
-        id C76FE983531; Thu, 26 Mar 2020 20:13:56 +0100 (CET)
-Date:   Thu, 26 Mar 2020 20:13:56 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Nadav Amit <namit@vmware.com>
-Cc:     x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        "rostedt@goodmis.org" <rostedt@goodmis.org>,
-        "mhiramat@kernel.org" <mhiramat@kernel.org>,
-        "bristot@redhat.com" <bristot@redhat.com>,
-        "jbaron@akamai.com" <jbaron@akamai.com>,
-        "torvalds@linux-foundation.org" <torvalds@linux-foundation.org>,
-        tglx <tglx@linutronix.de>, "mingo@kernel.org" <mingo@kernel.org>,
-        "hpa@zytor.com" <hpa@zytor.com>, Andy Lutomirski <luto@kernel.org>,
-        "ard.biesheuvel@linaro.org" <ard.biesheuvel@linaro.org>,
-        "jpoimboe@redhat.com" <jpoimboe@redhat.com>
-Subject: Re: [RESEND][PATCH v3 06/17] static_call: Add basic static call
- infrastructure
-Message-ID: <20200326191356.GC2452@worktop.programming.kicks-ass.net>
-References: <20200324135603.483964896@infradead.org>
- <20200324142245.632535759@infradead.org>
- <12A30BA0-18DA-4748-B82F-6008179CC88C@vmware.com>
- <20200326170128.GQ20713@hirez.programming.kicks-ass.net>
- <9D47A4CA-39AD-4408-879B-677BE9D891B7@vmware.com>
- <20200326182823.GB2452@worktop.programming.kicks-ass.net>
- <313E79F2-E277-4C66-97C8-40B545B58370@vmware.com>
+        Thu, 26 Mar 2020 15:14:17 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: ezequiel)
+        with ESMTPSA id 530B4297A10
+From:   Ezequiel Garcia <ezequiel@collabora.com>
+To:     linux-media@vger.kernel.org, linux-rockchip@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Cc:     Tomasz Figa <tfiga@chromium.org>,
+        Nicolas Dufresne <nicolas@ndufresne.ca>, kernel@collabora.com,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Hans Verkuil <hverkuil@xs4all.nl>,
+        Alexandre Courbot <acourbot@chromium.org>,
+        Jeffrey Kardatzke <jkardatzke@chromium.org>,
+        Rob Herring <robh@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org,
+        Ezequiel Garcia <ezequiel@collabora.com>
+Subject: [PATCH v4] dt-bindings: rockchip-vpu: Convert bindings to json-schema
+Date:   Thu, 26 Mar 2020 16:13:43 -0300
+Message-Id: <20200326191343.1989-1-ezequiel@collabora.com>
+X-Mailer: git-send-email 2.26.0.rc2
+In-Reply-To: <20200325213439.16509-8-ezequiel@collabora.com>
+References: <20200325213439.16509-8-ezequiel@collabora.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <313E79F2-E277-4C66-97C8-40B545B58370@vmware.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 26, 2020 at 07:02:33PM +0000, Nadav Amit wrote:
-> On another note - it may be beneficial to see if the infrastructure that you
-> built can accommodate notifier-chains. It is not the most painful point, but
-> it would be nice to deal with those as well. Since many of those are changed
-> asynchronously, I am not sure it is the easiest thing to do.
+Convert Rockchip VPU (Hantro IP block) codec driver documentation to
+json-schema.
 
-You mean, like patch 12 does?
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Rob Herring <robh@kernel.org>
+Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
+---
+v4:
+* Fix issues pointed out by Rob,
+  and make sure now dt_binding_check passes.
+
+ .../bindings/media/rockchip-vpu.txt           | 43 -----------
+ .../bindings/media/rockchip-vpu.yaml          | 74 +++++++++++++++++++
+ MAINTAINERS                                   |  2 +-
+ 3 files changed, 75 insertions(+), 44 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/media/rockchip-vpu.txt
+ create mode 100644 Documentation/devicetree/bindings/media/rockchip-vpu.yaml
+
+diff --git a/Documentation/devicetree/bindings/media/rockchip-vpu.txt b/Documentation/devicetree/bindings/media/rockchip-vpu.txt
+deleted file mode 100644
+index 339252d9c515..000000000000
+--- a/Documentation/devicetree/bindings/media/rockchip-vpu.txt
++++ /dev/null
+@@ -1,43 +0,0 @@
+-device-tree bindings for rockchip VPU codec
+-
+-Rockchip (Video Processing Unit) present in various Rockchip platforms,
+-such as RK3288, RK3328 and RK3399.
+-
+-Required properties:
+-- compatible: value should be one of the following
+-		"rockchip,rk3288-vpu";
+-		"rockchip,rk3328-vpu";
+-		"rockchip,rk3399-vpu";
+-- interrupts: encoding and decoding interrupt specifiers
+-- interrupt-names: should be
+-		"vepu", "vdpu" on RK3288 and RK3399,
+-		"vdpu" on RK3328.
+-- clocks: phandle to VPU aclk, hclk clocks
+-- clock-names: should be "aclk" and "hclk"
+-- power-domains: phandle to power domain node
+-- iommus: phandle to a iommu node
+-
+-Example:
+-SoC-specific DT entry:
+-	vpu: video-codec@ff9a0000 {
+-		compatible = "rockchip,rk3288-vpu";
+-		reg = <0x0 0xff9a0000 0x0 0x800>;
+-		interrupts = <GIC_SPI 9 IRQ_TYPE_LEVEL_HIGH>,
+-			     <GIC_SPI 10 IRQ_TYPE_LEVEL_HIGH>;
+-		interrupt-names = "vepu", "vdpu";
+-		clocks = <&cru ACLK_VCODEC>, <&cru HCLK_VCODEC>;
+-		clock-names = "aclk", "hclk";
+-		power-domains = <&power RK3288_PD_VIDEO>;
+-		iommus = <&vpu_mmu>;
+-	};
+-
+-	vpu: video-codec@ff350000 {
+-		compatible = "rockchip,rk3328-vpu";
+-		reg = <0x0 0xff350000 0x0 0x800>;
+-		interrupts = <GIC_SPI 9 IRQ_TYPE_LEVEL_HIGH>;
+-		interrupt-names = "vdpu";
+-		clocks = <&cru ACLK_VPU>, <&cru HCLK_VPU>;
+-		clock-names = "aclk", "hclk";
+-		power-domains = <&power RK3328_PD_VPU>;
+-		iommus = <&vpu_mmu>;
+-	};
+diff --git a/Documentation/devicetree/bindings/media/rockchip-vpu.yaml b/Documentation/devicetree/bindings/media/rockchip-vpu.yaml
+new file mode 100644
+index 000000000000..d7a42e6f9bcf
+--- /dev/null
++++ b/Documentation/devicetree/bindings/media/rockchip-vpu.yaml
+@@ -0,0 +1,74 @@
++# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
++
++%YAML 1.2
++---
++$id: "http://devicetree.org/schemas/media/rockchip-vpu.yaml#"
++$schema: "http://devicetree.org/meta-schemas/core.yaml#"
++
++title: Hantro G1 VPU codecs implemented on Rockchip SoCs
++
++maintainers:
++  - Ezequiel Garcia <ezequiel@collabora.com>
++
++description:
++  Hantro G1 video encode and decode accelerators present on Rockchip SoCs.
++
++properties:
++  compatible:
++    enum:
++      - rockchip,rk3288-vpu
++      - rockchip,rk3328-vpu
++      - rockchip,rk3399-vpu
++
++  reg:
++    maxItems: 1
++
++  interrupts:
++    maxItems: 2
++
++  interrupt-names:
++    items:
++      - const: vepu
++      - const: vdpu
++
++  clocks:
++    maxItems: 2
++
++  clock-names:
++    items:
++      - const: aclk
++      - const: hclk
++
++  power-domains:
++    maxItems: 1
++
++  iommus:
++    maxItems: 1
++
++required:
++  - compatible
++  - reg
++  - interrupts
++  - interrupt-names
++  - clocks
++  - clock-names
++
++additionalProperties: false
++
++examples:
++  - |
++        #include <dt-bindings/clock/rk3288-cru.h>
++        #include <dt-bindings/interrupt-controller/arm-gic.h>
++        #include <dt-bindings/power/rk3288-power.h>
++
++        vpu: video-codec@ff9a0000 {
++                compatible = "rockchip,rk3288-vpu";
++                reg = <0x0 0xff9a0000 0x0 0x800>;
++                interrupts = <GIC_SPI 9 IRQ_TYPE_LEVEL_HIGH>,
++                             <GIC_SPI 10 IRQ_TYPE_LEVEL_HIGH>;
++                interrupt-names = "vepu", "vdpu";
++                clocks = <&cru ACLK_VCODEC>, <&cru HCLK_VCODEC>;
++                clock-names = "aclk", "hclk";
++                power-domains = <&power RK3288_PD_VIDEO>;
++                iommus = <&vpu_mmu>;
++        };
+diff --git a/MAINTAINERS b/MAINTAINERS
+index d66ac41ef587..2b8b3e7f3df3 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -14320,7 +14320,7 @@ L:	linux-rockchip@lists.infradead.org
+ S:	Maintained
+ F:	drivers/staging/media/hantro/
+ F:	Documentation/devicetree/bindings/media/nxp,imx8mq-vpu.yaml
+-F:	Documentation/devicetree/bindings/media/rockchip-vpu.txt
++F:	Documentation/devicetree/bindings/media/rockchip-vpu.yaml
+ 
+ ROCKER DRIVER
+ M:	Jiri Pirko <jiri@resnulli.us>
+-- 
+2.26.0.rc2
+
