@@ -7,40 +7,40 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B975DC43331
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 08:16:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35793C2D0E8
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 08:16:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C6032070A
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 08:16:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1958E2078E
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 08:16:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727977AbgCZIQo (ORCPT
+        id S1727751AbgCZIQD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 04:16:44 -0400
+        Thu, 26 Mar 2020 04:16:03 -0400
 Received: from mga02.intel.com ([134.134.136.20]:27555 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727720AbgCZIQH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 04:16:07 -0400
-IronPort-SDR: c8+IotzP46zru/jIdpNKZRftejIUGoHKnDH6a0bllLW3uJ8dd2dEa/Y0BNptH+aKn4ufb/QeC0
- GZp4EGGHHnUQ==
+        id S1726298AbgCZIQB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Mar 2020 04:16:01 -0400
+IronPort-SDR: 7hAwDOgrA1G5ibx2L4iUCSktXmCxth0PjDxWwIdWdRjOCMjgJOcT7b1+LDz0YKUDZ03vKD6f2o
+ NwTZ1UYNzWsQ==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Mar 2020 01:16:06 -0700
-IronPort-SDR: 0ypeViXOAy7AWiW53RxQz6EIqHZXcNNgha9coXGdKSPPPtOdoXe6re9DjWL063ZBuLwTrVgV37
- Ij58ojRj9bhg==
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Mar 2020 01:16:01 -0700
+IronPort-SDR: IA7xC5rvkLfqXy48PyIvj6KCU4/as/vZVGHY6Bv09oSS6ekYciXQsbso7y3t2LtymVgt7585iN
+ 3/aBjsuFPNBA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.72,307,1580803200"; 
-   d="scan'208";a="393898876"
+   d="scan'208";a="393898816"
 Received: from local-michael-cet-test.sh.intel.com ([10.239.159.128])
-  by orsmga004.jf.intel.com with ESMTP; 26 Mar 2020 01:16:04 -0700
+  by orsmga004.jf.intel.com with ESMTP; 26 Mar 2020 01:15:57 -0700
 From:   Yang Weijiang <weijiang.yang@intel.com>
 To:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
         pbonzini@redhat.com, sean.j.christopherson@intel.com,
         jmattson@google.com
 Cc:     yu.c.zhang@linux.intel.com, Yang Weijiang <weijiang.yang@intel.com>
-Subject: [PATCH v11 4/9] KVM: VMX: Check CET dependencies on CR settings
-Date:   Thu, 26 Mar 2020 16:18:41 +0800
-Message-Id: <20200326081847.5870-5-weijiang.yang@intel.com>
+Subject: [PATCH v11 1/9] KVM: VMX: Introduce CET VMX fields and flags
+Date:   Thu, 26 Mar 2020 16:18:38 +0800
+Message-Id: <20200326081847.5870-2-weijiang.yang@intel.com>
 X-Mailer: git-send-email 2.17.2
 In-Reply-To: <20200326081847.5870-1-weijiang.yang@intel.com>
 References: <20200326081847.5870-1-weijiang.yang@intel.com>
@@ -49,57 +49,148 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-CR4.CET is master control bit for CET function.
-There're mutual constrains between CR0.WP and CR4.CET, so need
-to check the dependent bit while changing the control registers.
+CET(Control-flow Enforcement Technology) is a CPU feature
+used to prevent Return/Jump-Oriented Programming(ROP/JOP)
+attacks. It provides the following sub-features to defend
+against ROP/JOP style control-flow subversion attacks:
 
-Note:
-1)The processor does not allow CR4.CET to be set if CR0.WP = 0,
-  similarly, it does not allow CR0.WP to be cleared while
-  CR4.CET = 1. In either case, KVM would inject #GP to guest.
+Shadow Stack (SHSTK):
+  A second stack for program which is used exclusively for
+  control transfer operations.
 
-2)SHSTK and IBT features share one control MSR:
-  MSR_IA32_{U,S}_CET, which means it's difficult to hide
-  one feature from another in the case of SHSTK != IBT,
-  after discussed in community, it's agreed to allow guest
-  control two features independently as it won't introduce
-  security hole.
+Indirect Branch Tracking (IBT):
+  Code branching protection to defend against jump/call oriented
+  programming.
 
+Several new CET MSRs are defined in kernel to support CET:
+  MSR_IA32_{U,S}_CET: Controls the CET settings for user
+                      mode and kernel mode respectively.
+
+  MSR_IA32_PL{0,1,2,3}_SSP: Stores shadow stack pointers for
+                            CPL-0,1,2,3 protection respectively.
+
+  MSR_IA32_INT_SSP_TAB: Stores base address of shadow stack
+                        pointer table.
+
+Two XSAVES state bits are introduced for CET:
+  IA32_XSS:[bit 11]: Control saving/restoring user mode CET states
+  IA32_XSS:[bit 12]: Control saving/restoring kernel mode CET states.
+
+Six VMCS fields are introduced for CET:
+  {HOST,GUEST}_S_CET: Stores CET settings for kernel mode.
+  {HOST,GUEST}_SSP: Stores shadow stack pointer of current task/thread.
+  {HOST,GUEST}_INTR_SSP_TABLE: Stores base address of shadow stack pointer
+                               table.
+
+If VM_EXIT_LOAD_HOST_CET_STATE = 1, the host CET states are restored
+from below VMCS fields at VM-Exit:
+  HOST_S_CET
+  HOST_SSP
+  HOST_INTR_SSP_TABLE
+
+If VM_ENTRY_LOAD_GUEST_CET_STATE = 1, the guest CET states are loaded
+from below VMCS fields at VM-Entry:
+  GUEST_S_CET
+  GUEST_SSP
+  GUEST_INTR_SSP_TABLE
+
+Co-developed-by: Zhang Yi Z <yi.z.zhang@linux.intel.com>
+Signed-off-by: Zhang Yi Z <yi.z.zhang@linux.intel.com>
 Signed-off-by: Yang Weijiang <weijiang.yang@intel.com>
 ---
- arch/x86/kvm/vmx/vmx.c | 4 ++++
- arch/x86/kvm/x86.c     | 3 +++
- 2 files changed, 7 insertions(+)
+ arch/x86/include/asm/vmx.h      | 8 ++++++++
+ arch/x86/include/uapi/asm/kvm.h | 1 +
+ arch/x86/kvm/x86.c              | 4 ++++
+ arch/x86/kvm/x86.h              | 2 +-
+ 4 files changed, 14 insertions(+), 1 deletion(-)
 
-diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index bd7cd175fd81..87f101750746 100644
---- a/arch/x86/kvm/vmx/vmx.c
-+++ b/arch/x86/kvm/vmx/vmx.c
-@@ -3089,6 +3089,10 @@ int vmx_set_cr4(struct kvm_vcpu *vcpu, unsigned long cr4)
- 			return 1;
- 	}
+diff --git a/arch/x86/include/asm/vmx.h b/arch/x86/include/asm/vmx.h
+index 5e090d1f03f8..e938bc6c37aa 100644
+--- a/arch/x86/include/asm/vmx.h
++++ b/arch/x86/include/asm/vmx.h
+@@ -94,6 +94,7 @@
+ #define VM_EXIT_CLEAR_BNDCFGS                   0x00800000
+ #define VM_EXIT_PT_CONCEAL_PIP			0x01000000
+ #define VM_EXIT_CLEAR_IA32_RTIT_CTL		0x02000000
++#define VM_EXIT_LOAD_HOST_CET_STATE             0x10000000
  
-+	if ((cr4 & X86_CR4_CET) && (!is_cet_supported(vcpu) ||
-+	    !(kvm_read_cr0(vcpu) & X86_CR0_WP)))
-+		return 1;
-+
- 	if (vmx->nested.vmxon && !nested_cr4_valid(vcpu, cr4))
- 		return 1;
+ #define VM_EXIT_ALWAYSON_WITHOUT_TRUE_MSR	0x00036dff
  
+@@ -107,6 +108,7 @@
+ #define VM_ENTRY_LOAD_BNDCFGS                   0x00010000
+ #define VM_ENTRY_PT_CONCEAL_PIP			0x00020000
+ #define VM_ENTRY_LOAD_IA32_RTIT_CTL		0x00040000
++#define VM_ENTRY_LOAD_GUEST_CET_STATE           0x00100000
+ 
+ #define VM_ENTRY_ALWAYSON_WITHOUT_TRUE_MSR	0x000011ff
+ 
+@@ -328,6 +330,9 @@ enum vmcs_field {
+ 	GUEST_PENDING_DBG_EXCEPTIONS    = 0x00006822,
+ 	GUEST_SYSENTER_ESP              = 0x00006824,
+ 	GUEST_SYSENTER_EIP              = 0x00006826,
++	GUEST_S_CET                     = 0x00006828,
++	GUEST_SSP                       = 0x0000682a,
++	GUEST_INTR_SSP_TABLE            = 0x0000682c,
+ 	HOST_CR0                        = 0x00006c00,
+ 	HOST_CR3                        = 0x00006c02,
+ 	HOST_CR4                        = 0x00006c04,
+@@ -340,6 +345,9 @@ enum vmcs_field {
+ 	HOST_IA32_SYSENTER_EIP          = 0x00006c12,
+ 	HOST_RSP                        = 0x00006c14,
+ 	HOST_RIP                        = 0x00006c16,
++	HOST_S_CET                      = 0x00006c18,
++	HOST_SSP                        = 0x00006c1a,
++	HOST_INTR_SSP_TABLE             = 0x00006c1c
+ };
+ 
+ /*
+diff --git a/arch/x86/include/uapi/asm/kvm.h b/arch/x86/include/uapi/asm/kvm.h
+index 3f3f780c8c65..78e5c4266270 100644
+--- a/arch/x86/include/uapi/asm/kvm.h
++++ b/arch/x86/include/uapi/asm/kvm.h
+@@ -31,6 +31,7 @@
+ #define MC_VECTOR 18
+ #define XM_VECTOR 19
+ #define VE_VECTOR 20
++#define CP_VECTOR 21
+ 
+ /* Select x86 specific features in <linux/kvm.h> */
+ #define __KVM_HAVE_PIT
 diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index 830afe5038d1..90acdbbb8a5a 100644
+index 40c6768942ae..830afe5038d1 100644
 --- a/arch/x86/kvm/x86.c
 +++ b/arch/x86/kvm/x86.c
-@@ -804,6 +804,9 @@ int kvm_set_cr0(struct kvm_vcpu *vcpu, unsigned long cr0)
- 	if (!(cr0 & X86_CR0_PG) && kvm_read_cr4_bits(vcpu, X86_CR4_PCIDE))
- 		return 1;
+@@ -186,6 +186,9 @@ static struct kvm_shared_msrs __percpu *shared_msrs;
+ 				| XFEATURE_MASK_BNDCSR | XFEATURE_MASK_AVX512 \
+ 				| XFEATURE_MASK_PKRU)
  
-+	if (!(cr0 & X86_CR0_WP) && kvm_read_cr4_bits(vcpu, X86_CR4_CET))
-+		return 1;
++#define KVM_SUPPORTED_XSS	(XFEATURE_MASK_CET_USER | \
++				 XFEATURE_MASK_CET_KERNEL)
 +
- 	kvm_x86_ops->set_cr0(vcpu, cr0);
+ u64 __read_mostly host_efer;
+ EXPORT_SYMBOL_GPL(host_efer);
  
- 	if ((cr0 ^ old_cr0) & X86_CR0_PG) {
+@@ -402,6 +405,7 @@ static int exception_class(int vector)
+ 	case NP_VECTOR:
+ 	case SS_VECTOR:
+ 	case GP_VECTOR:
++	case CP_VECTOR:
+ 		return EXCPT_CONTRIBUTORY;
+ 	default:
+ 		break;
+diff --git a/arch/x86/kvm/x86.h b/arch/x86/kvm/x86.h
+index c1954e216b41..8f0baa6fa72f 100644
+--- a/arch/x86/kvm/x86.h
++++ b/arch/x86/kvm/x86.h
+@@ -115,7 +115,7 @@ static inline bool x86_exception_has_error_code(unsigned int vector)
+ {
+ 	static u32 exception_has_error_code = BIT(DF_VECTOR) | BIT(TS_VECTOR) |
+ 			BIT(NP_VECTOR) | BIT(SS_VECTOR) | BIT(GP_VECTOR) |
+-			BIT(PF_VECTOR) | BIT(AC_VECTOR);
++			BIT(PF_VECTOR) | BIT(AC_VECTOR) | BIT(CP_VECTOR);
+ 
+ 	return (1U << vector) & exception_has_error_code;
+ }
 -- 
 2.17.2
 
