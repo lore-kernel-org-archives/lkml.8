@@ -2,197 +2,173 @@ Return-Path: <SRS0=aGSP=5L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C19AC43331
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 02:40:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A87BDC2D0EA
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 02:40:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 54E352073E
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 02:40:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585190444;
-	bh=B/0A+EakHUoxJZZH8Zsz0E0Jrwx9AZ5KMhmmm4tWgAU=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=IdmdQnggmoPIp4DTMrDMFbyAbgXWn8kvfJP3XG7Je0NnTfMZ/vfo3mdszyeEjtVgb
-	 +qpoMckoWhlvmyLb9GmjwbqnWF70V2Ww+6Uhg11QXX0ugQm4tKm49hTZJHvP2IZyt/
-	 pXG9o+S3PQN0Zd3z2AUYFFRUr16G+hm0inkZaxQE=
+	by mail.kernel.org (Postfix) with ESMTP id 769B32076A
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 02:40:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="s58FkVK2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727719AbgCZCkk (ORCPT
+        id S1727768AbgCZCks (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 22:40:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59496 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727560AbgCZCkj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 22:40:39 -0400
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F23B020714;
-        Thu, 26 Mar 2020 02:40:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585190438;
-        bh=B/0A+EakHUoxJZZH8Zsz0E0Jrwx9AZ5KMhmmm4tWgAU=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=hlvpwsdFfUlivcRX+rgOky3Qzz9W6+h3DS6rDIiFCMTcOVT/UZK7XAVPOw5xlfZmc
-         U4gWvMk+HY610Ebp67p0IXeEOlLqhqArE8W38Bn1Pstxz2UMd+wQaxLwVqwPtOGuCa
-         LHixNahpVcBZT1S+4QWNrSt9INUA9VsBP8hxz+k8=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id C134335226B0; Wed, 25 Mar 2020 19:40:37 -0700 (PDT)
-Date:   Wed, 25 Mar 2020 19:40:37 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        LKML <linux-kernel@vger.kernel.org>,
+        Wed, 25 Mar 2020 22:40:48 -0400
+Received: from mail-qv1-f65.google.com ([209.85.219.65]:44999 "EHLO
+        mail-qv1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727560AbgCZCks (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Mar 2020 22:40:48 -0400
+Received: by mail-qv1-f65.google.com with SMTP id ef12so191815qvb.11;
+        Wed, 25 Mar 2020 19:40:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=idGta4luNVSKS6GW2+ESu4EKkWBs8WP4Ue5RLpisqic=;
+        b=s58FkVK2VS5nIUEpx35Dg+XpAtamo8rZb+W7VG0G/DfjqjVvXf7y/UecHk/tLag54N
+         vf5IVrJhKPMQRau3Dr/COlsOVXtXxcoBfRLv0HlxwvE3icS7lil46z1vahQz9GDaafPS
+         ak4W7KtRR0fS5oRTsfHO9+BI0ofWOm0YuSYs/pRvjpDPwVGAKvXiJ25ZcyJPZDrCiIeM
+         xCx/gcH9VtBJWU+ahIaNsQvA3KEpOii8p0iUOvyc5gRUWHzG7cpf3M5xpMyyHRdu3xyx
+         2/QU3KYVzFeV87lbYwtX51BaieZIfyVCWmnoR+jHabH/MFhzUz2lt37DLgDCcWBDwqru
+         L4LA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=idGta4luNVSKS6GW2+ESu4EKkWBs8WP4Ue5RLpisqic=;
+        b=PfOfe6uvsgOue+ozZGHYVtkFfDccbQt/b0e6g9ma/4LxY/p/q2GxZse8ThR+wpvpt7
+         tPNSY5jhbSsKF6qAOl0cbVkNmNRAL6QW2VZnMCgu83jarhv9rng/SLNKcjlVz5XNar0S
+         vnsi73vRXC+/q9j9HiRCpMQdts3OUysWCplgHC1STYdx1czKXpRQ+Okvkp9VNFM/Jnbs
+         MJTYeLROIucizw6XzJDjyfVf++C4hzxztfNQKFXWaZ9lJ+RFWyvC224vmsD2hU2TulGY
+         bnyOFHqHQPplxvrzMSj7kp+ygaeYWakZp5vKdJG5BYillhIRdIpC2gaItDbsY9OLujI5
+         8z1w==
+X-Gm-Message-State: ANhLgQ38WmO8J5ea98IvLOmkUkRJDctM8TORAIuzN2WQAO5t4BFQ1yQ0
+        z/hdh/oaFxNXNR+OX8rFNV8=
+X-Google-Smtp-Source: ADFU+vsNgnyfhpljlUm/dd7r6QFg2qIKSawuCXxyyfiCk8QkTD9A9rzxOdk6a6c4CI+6pvQeypDvRw==
+X-Received: by 2002:a05:6214:205:: with SMTP id i5mr6096054qvt.223.1585190446959;
+        Wed, 25 Mar 2020 19:40:46 -0700 (PDT)
+Received: from auth1-smtp.messagingengine.com (auth1-smtp.messagingengine.com. [66.111.4.227])
+        by smtp.gmail.com with ESMTPSA id l45sm707146qtb.8.2020.03.25.19.40.45
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 25 Mar 2020 19:40:46 -0700 (PDT)
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+        by mailauth.nyi.internal (Postfix) with ESMTP id 6617127C0054;
+        Wed, 25 Mar 2020 22:40:45 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute3.internal (MEProxy); Wed, 25 Mar 2020 22:40:45 -0400
+X-ME-Sender: <xms:KxZ8XuzYz1XdCG71TvFXZcDBhEMaq9mdUMlLldpu_OyE2ZaVSJelhQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrudehhedggeejucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhephffvufffkffoggfgsedtkeertdertddtnecuhfhrohhmpeeuohhquhhnucfh
+    vghnghcuoegsohhquhhnrdhfvghnghesghhmrghilhdrtghomheqnecuffhomhgrihhnpe
+    hkvghrnhgvlhdrohhrghdpihhnrhhirgdrfhhrnecukfhppeehvddrudehhedrudduuddr
+    jedunecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepsg
+    hoqhhunhdomhgvshhmthhprghuthhhphgvrhhsohhnrghlihhthidqieelvdeghedtieeg
+    qddujeejkeehheehvddqsghoqhhunhdrfhgvnhhgpeepghhmrghilhdrtghomhesfhhigi
+    hmvgdrnhgrmhgv
+X-ME-Proxy: <xmx:KxZ8XqsrYAPpxlYTwLZDAk6zNoXWHSmlILR9YSbu6of4qAOBUHGIsA>
+    <xmx:KxZ8Xlx9kDc2ZAydTrQCeAvmwF5VnMmcoypos-NOSRDlcabCfF0pTg>
+    <xmx:KxZ8XidfLuidvEfXmH14XIedyjYDDAiynzuXmHdAzbAaviKdWLg5-A>
+    <xmx:LRZ8Xpzo-nfrkR_oI-YGuRPbLxM8WKrPUepKcZxEb5CSq9Lriy5R4PUvcRY>
+Received: from localhost (unknown [52.155.111.71])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 24BC33280063;
+        Wed, 25 Mar 2020 22:40:42 -0400 (EDT)
+From:   Boqun Feng <boqun.feng@gmail.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Alan Stern <stern@rowland.harvard.edu>,
+        Andrea Parri <parri.andrea@gmail.com>,
+        Will Deacon <will@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Sebastian Siewior <bigeasy@linutronix.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Davidlohr Bueso <dave@stgolabs.net>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        David Howells <dhowells@redhat.com>,
+        Jade Alglave <j.alglave@ucl.ac.uk>,
+        Luc Maranget <luc.maranget@inria.fr>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Akira Yokosawa <akiyks@gmail.com>,
+        Daniel Lustig <dlustig@nvidia.com>,
         Jonathan Corbet <corbet@lwn.net>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Kurt Schwemmer <kurt.schwemmer@microsemi.com>,
-        linux-pci@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Felipe Balbi <balbi@kernel.org>, linux-usb@vger.kernel.org,
-        Kalle Valo <kvalo@codeaurora.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         "David S. Miller" <davem@davemloft.net>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        platform-driver-x86@vger.kernel.org,
-        Zhang Rui <rui.zhang@intel.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        linux-pm@vger.kernel.org, Len Brown <lenb@kernel.org>,
-        linux-acpi@vger.kernel.org, kbuild test robot <lkp@intel.com>,
-        Nick Hu <nickhu@andestech.com>,
-        Greentime Hu <green.hu@gmail.com>,
-        Vincent Chen <deanbo422@gmail.com>,
-        Guo Ren <guoren@kernel.org>, linux-csky@vger.kernel.org,
-        Brian Cain <bcain@codeaurora.org>,
-        linux-hexagon@vger.kernel.org, Tony Luck <tony.luck@intel.com>,
-        Fenghua Yu <fenghua.yu@intel.com>, linux-ia64@vger.kernel.org,
-        Michal Simek <monstr@monstr.eu>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Geoff Levand <geoff@infradead.org>,
-        linuxppc-dev@lists.ozlabs.org, Davidlohr Bueso <dbueso@suse.de>
-Subject: Re: [PATCH v2] Documentation/locking/locktypes: minor copy editor
- fixes
-Message-ID: <20200326024037.GJ19865@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20200323025501.GE3199@paulmck-ThinkPad-P72>
- <87r1xhz6qp.fsf@nanos.tec.linutronix.de>
- <20200325002811.GO19865@paulmck-ThinkPad-P72>
- <87wo78y5yy.fsf@nanos.tec.linutronix.de>
- <ac615f36-0b44-408d-aeab-d76e4241add4@infradead.org>
+        Rob Herring <robh@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        linux-arch@vger.kernel.org, linux-doc@vger.kernel.org
+Subject: [PATCH v4 0/4] Documentation/litmus-tests: Add litmus tests for atomic APIs
+Date:   Thu, 26 Mar 2020 10:40:18 +0800
+Message-Id: <20200326024022.7566-1-boqun.feng@gmail.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ac615f36-0b44-408d-aeab-d76e4241add4@infradead.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 25, 2020 at 09:58:14AM -0700, Randy Dunlap wrote:
-> From: Randy Dunlap <rdunlap@infradead.org>
-> 
-> Minor editorial fixes:
-> - add some hyphens in multi-word adjectives
-> - add some periods for consistency
-> - add "'" for possessive CPU's
-> - capitalize IRQ when it's an acronym and not part of a function name
-> 
-> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-> Cc: Paul McKenney <paulmck@kernel.org>
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Sebastian Siewior <bigeasy@linutronix.de>
-> Cc: Joel Fernandes <joel@joelfernandes.org>
-> Cc: Ingo Molnar <mingo@kernel.org>
-> Cc: Peter Zijlstra <peterz@infradead.org>
+A recent discussion raises up the requirement for having test cases for
+atomic APIs:
 
-Some nits below, but with or without those suggested changes:
+	https://lore.kernel.org/lkml/20200213085849.GL14897@hirez.programming.kicks-ass.net/
 
-Reviewed-by: Paul E. McKenney <paulmck@kernel.org>
+, and since we already have a way to generate a test module from a
+litmus test with klitmus[1]. It makes sense that we add more litmus
+tests for atomic APIs. And based on the previous discussion, I create a
+new directory Documentation/atomic-tests and put these litmus tests
+here.
 
-> ---
->  Documentation/locking/locktypes.rst |   16 ++++++++--------
->  1 file changed, 8 insertions(+), 8 deletions(-)
-> 
-> --- linux-next-20200325.orig/Documentation/locking/locktypes.rst
-> +++ linux-next-20200325/Documentation/locking/locktypes.rst
-> @@ -84,7 +84,7 @@ rtmutex
->  
->  RT-mutexes are mutexes with support for priority inheritance (PI).
->  
-> -PI has limitations on non PREEMPT_RT enabled kernels due to preemption and
-> +PI has limitations on non-PREEMPT_RT-enabled kernels due to preemption and
+This patchset starts the work by adding the litmus tests which are
+already used in atomic_t.txt, and also improve the atomic_t.txt to make
+it consistent with the litmus tests.
 
-Or just drop the " enabled".
+Previous version:
+v1: https://lore.kernel.org/linux-doc/20200214040132.91934-1-boqun.feng@gmail.com/
+v2: https://lore.kernel.org/lkml/20200219062627.104736-1-boqun.feng@gmail.com/
+v3: https://lore.kernel.org/linux-doc/20200227004049.6853-1-boqun.feng@gmail.com/
 
->  interrupt disabled sections.
->  
->  PI clearly cannot preempt preemption-disabled or interrupt-disabled
-> @@ -150,7 +150,7 @@ kernel configuration including PREEMPT_R
->  
->  raw_spinlock_t is a strict spinning lock implementation in all kernels,
->  including PREEMPT_RT kernels.  Use raw_spinlock_t only in real critical
-> -core code, low level interrupt handling and places where disabling
-> +core code, low-level interrupt handling and places where disabling
->  preemption or interrupts is required, for example, to safely access
->  hardware state.  raw_spinlock_t can sometimes also be used when the
->  critical section is tiny, thus avoiding RT-mutex overhead.
-> @@ -160,20 +160,20 @@ spinlock_t
->  
->  The semantics of spinlock_t change with the state of PREEMPT_RT.
->  
-> -On a non PREEMPT_RT enabled kernel spinlock_t is mapped to raw_spinlock_t
-> +On a non-PREEMPT_RT-enabled kernel spinlock_t is mapped to raw_spinlock_t
+Changes since v3:
 
-Ditto.
+*	Merge two patches on atomic-set litmus test into one as per
+	Alan. (Alan, you have acked only one of the two patches, so I
+	don't add you acked-by for the combined patch).
 
->  and has exactly the same semantics.
->  
->  spinlock_t and PREEMPT_RT
->  -------------------------
->  
-> -On a PREEMPT_RT enabled kernel spinlock_t is mapped to a separate
-> +On a PREEMPT_RT-enabled kernel spinlock_t is mapped to a separate
+*	Move the atomic litmus tests into litmus-tests/atomic to align
+	with Joel's recent patches on RCU litmus tests.
 
-And here as well.
+I think we still haven't reach to a conclusion for the difference of
+atomic_add_unless() in herdtools, and I'm currently reading the source
+code of herd to resovle this. This is just an updated version to resolve
+ealier comments and react on Joel's RCU litmus tests.
 
->  implementation based on rt_mutex which changes the semantics:
->  
-> - - Preemption is not disabled
-> + - Preemption is not disabled.
->  
->   - The hard interrupt related suffixes for spin_lock / spin_unlock
-> -   operations (_irq, _irqsave / _irqrestore) do not affect the CPUs
-> -   interrupt disabled state
-> +   operations (_irq, _irqsave / _irqrestore) do not affect the CPU's
-> +   interrupt disabled state.
->  
->   - The soft interrupt related suffix (_bh()) still disables softirq
->     handlers.
-> @@ -279,7 +279,7 @@ fully preemptible context.  Instead, use
->  spin_lock_irqsave() and their unlock counterparts.  In cases where the
->  interrupt disabling and locking must remain separate, PREEMPT_RT offers a
->  local_lock mechanism.  Acquiring the local_lock pins the task to a CPU,
-> -allowing things like per-CPU irq-disabled locks to be acquired.  However,
-> +allowing things like per-CPU IRQ-disabled locks to be acquired.  However,
+Regards,
+Boqun
 
-Quite a bit of text in the kernel uses "irq", lower case.  Another
-option is to spell out "interrupt".
+[1]: http://diy.inria.fr/doc/litmus.html#klitmus
 
->  this approach should be used only where absolutely necessary.
->  
->  
-> 
+Boqun Feng (4):
+  tools/memory-model: Add an exception for limitations on _unless()
+    family
+  Documentation/litmus-tests: Introduce atomic directory
+  Documentation/litmus-tests/atomic: Add a test for atomic_set()
+  Documentation/litmus-tests/atomic: Add a test for
+    smp_mb__after_atomic()
+
+ Documentation/atomic_t.txt                    | 24 +++++++-------
+ ...ter_atomic-is-stronger-than-acquire.litmus | 32 +++++++++++++++++++
+ ...c-RMW-ops-are-atomic-WRT-atomic_set.litmus | 24 ++++++++++++++
+ Documentation/litmus-tests/atomic/README      | 16 ++++++++++
+ tools/memory-model/README                     | 10 ++++--
+ 5 files changed, 91 insertions(+), 15 deletions(-)
+ create mode 100644 Documentation/litmus-tests/atomic/Atomic-RMW+mb__after_atomic-is-stronger-than-acquire.litmus
+ create mode 100644 Documentation/litmus-tests/atomic/Atomic-RMW-ops-are-atomic-WRT-atomic_set.litmus
+ create mode 100644 Documentation/litmus-tests/atomic/README
+
+-- 
+2.25.1
+
