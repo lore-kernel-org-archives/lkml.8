@@ -2,179 +2,120 @@ Return-Path: <SRS0=aGSP=5L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBC3CC43331
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 14:23:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F02A0C2D0E8
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 14:23:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 990D0206F8
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 14:23:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D0E1B206F8
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 14:23:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727953AbgCZOXW (ORCPT
+        id S1727991AbgCZOXw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 10:23:22 -0400
-Received: from netrider.rowland.org ([192.131.102.5]:45575 "HELO
-        netrider.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with SMTP id S1727989AbgCZOXW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 10:23:22 -0400
-Received: (qmail 6696 invoked by uid 500); 26 Mar 2020 10:23:21 -0400
-Received: from localhost (sendmail-bs@127.0.0.1)
-  by localhost with SMTP; 26 Mar 2020 10:23:21 -0400
-Date:   Thu, 26 Mar 2020 10:23:21 -0400 (EDT)
-From:   Alan Stern <stern@rowland.harvard.edu>
-X-X-Sender: stern@netrider.rowland.org
-To:     Boqun Feng <boqun.feng@gmail.com>
-cc:     linux-kernel@vger.kernel.org,
-        Andrea Parri <parri.andrea@gmail.com>,
-        Will Deacon <will@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        David Howells <dhowells@redhat.com>,
-        Jade Alglave <j.alglave@ucl.ac.uk>,
-        Luc Maranget <luc.maranget@inria.fr>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Akira Yokosawa <akiyks@gmail.com>,
-        Daniel Lustig <dlustig@nvidia.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Rob Herring <robh@kernel.org>,
+        Thu, 26 Mar 2020 10:23:52 -0400
+Received: from mga17.intel.com ([192.55.52.151]:20673 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727869AbgCZOXw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Mar 2020 10:23:52 -0400
+IronPort-SDR: V0OKcmgpwP/pm9ybSEtswjlXlaHLMcFnWJ9I/r1d98RDV0rInFcCc8x8pwCSd7tSOVNYBBbVHe
+ LJ1LkCADYgdQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Mar 2020 07:23:52 -0700
+IronPort-SDR: DimBgg8sUOWeCGBgqUZj9R2clPDodmlm9rZiNKMrLL1pxw1LeFXbUuozHmbhQTCfV3CMJHQYBN
+ K49CAPxNv3hw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,308,1580803200"; 
+   d="scan'208";a="265882920"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga002.jf.intel.com with ESMTP; 26 Mar 2020 07:23:48 -0700
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1jHTQE-00D99J-Dv; Thu, 26 Mar 2020 16:23:50 +0200
+Date:   Thu, 26 Mar 2020 16:23:50 +0200
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Grant Likely <grant.likely@arm.com>
+Cc:     Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Saravana Kannan <saravanak@google.com>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Artem Bityutskiy <artem.bityutskiy@linux.intel.com>,
+        Felipe Balbi <balbi@kernel.org>,
+        Mark Brown <broonie@kernel.org>, Ferry Toth <fntoth@gmail.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        <linux-arch@vger.kernel.org>, <linux-doc@vger.kernel.org>
-Subject: Re: [PATCH v4 3/4] Documentation/litmus-tests/atomic: Add a test
- for atomic_set()
-In-Reply-To: <20200326024022.7566-4-boqun.feng@gmail.com>
-Message-ID: <Pine.LNX.4.44L0.2003261023010.5714-100000@netrider.rowland.org>
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Android Kernel Team <kernel-team@android.com>,
+        nd <nd@arm.com>
+Subject: Re: [PATCH v3] driver core: Break infinite loop when deferred probe
+ can't be satisfied
+Message-ID: <20200326142350.GW1922688@smile.fi.intel.com>
+References: <20200324175719.62496-1-andriy.shevchenko@linux.intel.com>
+ <20200325032901.29551-1-saravanak@google.com>
+ <20200325125120.GX1922688@smile.fi.intel.com>
+ <CAGETcx_TGw24UqX7pXZePyskrao6zwnKTq8mBk9g_7jokqAqkA@mail.gmail.com>
+ <CAJZ5v0jB1hqzYK8ezjf1_1yMCudNXNS-CsrUJQcmL4W5mBD6fQ@mail.gmail.com>
+ <ca661616-f5bf-d92f-9173-172792797b16@ti.com>
+ <20200326120323.GR1922688@smile.fi.intel.com>
+ <6c04af00-adc8-6be2-b7fd-b4a875524563@arm.com>
 MIME-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <6c04af00-adc8-6be2-b7fd-b4a875524563@arm.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 26 Mar 2020, Boqun Feng wrote:
+On Thu, Mar 26, 2020 at 01:45:50PM +0000, Grant Likely wrote:
+> On 26/03/2020 12:03, Andy Shevchenko wrote:
+> > On Thu, Mar 26, 2020 at 11:45:18AM +0200, Peter Ujfalusi wrote:
+> > > On 26/03/2020 10.39, Rafael J. Wysocki wrote:
+> > > > On Wed, Mar 25, 2020 at 11:09 PM Saravana Kannan <saravanak@google.com> wrote:
+> > > > > On Wed, Mar 25, 2020 at 5:51 AM Andy Shevchenko
+> > > > > <andriy.shevchenko@linux.intel.com> wrote:
+> > 
+> > ...
+> > 
+> > > > OK, so the situation right now is that commit 58b116bce136 has
+> > > > introduced a regression and so it needs to be fixed or reverted.  The
+> > > > cases that were previously broken and were unbroken by that commit
+> > > > don't matter here, so you cannot argue that they would be "broken".
+> > > 
+> > > commit 58b116bce136 is from 2014 and the whole ULPI support for dwc3
+> > > came in a year later.
+> > > While I agree that 58b116bce136 fail to handle came a year later, but
+> > > technically it did not introduced a regression.
+> > > 
+> > > The revert on the other hand is going to introduce a regression as
+> > > things were working fine since 2014. Not sure why the dwc3 issue got
+> > > this long to be noticed as the 58b116bce136 was already in kernel when
+> > > the ULPI support was added...
+> > 
+> > I dare to say that is luck based on people's laziness to figure out the root
+> > cause. As I pointed out in email to Saravana the issue is not limited to USB
+> > case and, if my memory doesn't trick me out, I suffered from it approximately
+> > in ~2014-2015 with pin control tables.
+> 
+> I've not been involved in this for a very long time, but from our past
+> conversations and the description that is given here I still feel that this
+> problem is a design bug on the dwc3 driver dependencies rather than a
+> failure with driver core. dwc3 is doing something rather convoluted and it
+> would be worth reevaluating how probe failures are unwound on that
+> particular driver stack.
 
-> We already use a litmus test in atomic_t.txt to describe the behavior of
-> an atomic_set() with the an atomic RMW, so add it into atomic-tests
-> directory to make it easily accessible for anyone who cares about the
-> semantics of our atomic APIs.
-> 
-> Besides currently the litmus test "atomic-set" in atomic_t.txt has a few
-> things to be improved:
-> 
-> 1)	The CPU/Processor numbers "P1,P2" are not only inconsistent with
-> 	the rest of the document, which uses "CPU0" and "CPU1", but also
-> 	unacceptable by the herd tool, which requires processors start
-> 	at "P0".
-> 
-> 2)	The initialization block uses a "atomic_set()", which is OK, but
-> 	it's better to use ATOMIC_INIT() to make clear this is an
-> 	initialization.
-> 
-> 3)	The return value of atomic_add_unless() is discarded
-> 	inexplicitly, which is OK for C language, but it will be helpful
-> 	to the herd tool if we use a void cast to make the discard
-> 	explicit.
-> 
-> 4)	The name and the paragraph describing the test need to be more
-> 	accurate and aligned with our wording in LKMM.
-> 
-> Therefore fix these in both atomic_t.txt and the new added litmus test.
-> 
-> Signed-off-by: Boqun Feng <boqun.feng@gmail.com>
-> Acked-by: Andrea Parri <parri.andrea@gmail.com>
-> ---
+I disagree. Have you chance to look into another example I gave to Saravana?
 
-Acked-by: Alan Stern <stern@rowland.harvard.edu>
+The unbalanced increment is fragile per se, because you can't guarantee that
+it will be no unsynchronization between probed successfully (unrelated!) and
+deferred drivers.
 
->  Documentation/atomic_t.txt                    | 14 +++++------
->  ...c-RMW-ops-are-atomic-WRT-atomic_set.litmus | 24 +++++++++++++++++++
->  Documentation/litmus-tests/atomic/README      |  7 ++++++
->  3 files changed, 38 insertions(+), 7 deletions(-)
->  create mode 100644 Documentation/litmus-tests/atomic/Atomic-RMW-ops-are-atomic-WRT-atomic_set.litmus
-> 
-> diff --git a/Documentation/atomic_t.txt b/Documentation/atomic_t.txt
-> index 0ab747e0d5ac..67d1d99f8589 100644
-> --- a/Documentation/atomic_t.txt
-> +++ b/Documentation/atomic_t.txt
-> @@ -85,21 +85,21 @@ smp_store_release() respectively. Therefore, if you find yourself only using
->  the Non-RMW operations of atomic_t, you do not in fact need atomic_t at all
->  and are doing it wrong.
->  
-> -A subtle detail of atomic_set{}() is that it should be observable to the RMW
-> -ops. That is:
-> +A note for the implementation of atomic_set{}() is that it must not break the
-> +atomicity of the RMW ops. That is:
->  
-> -  C atomic-set
-> +  C Atomic-RMW-ops-are-atomic-WRT-atomic_set
->  
->    {
-> -    atomic_set(v, 1);
-> +    atomic_t v = ATOMIC_INIT(1);
->    }
->  
-> -  P1(atomic_t *v)
-> +  P0(atomic_t *v)
->    {
-> -    atomic_add_unless(v, 1, 0);
-> +    (void)atomic_add_unless(v, 1, 0);
->    }
->  
-> -  P2(atomic_t *v)
-> +  P1(atomic_t *v)
->    {
->      atomic_set(v, 0);
->    }
-> diff --git a/Documentation/litmus-tests/atomic/Atomic-RMW-ops-are-atomic-WRT-atomic_set.litmus b/Documentation/litmus-tests/atomic/Atomic-RMW-ops-are-atomic-WRT-atomic_set.litmus
-> new file mode 100644
-> index 000000000000..49385314d911
-> --- /dev/null
-> +++ b/Documentation/litmus-tests/atomic/Atomic-RMW-ops-are-atomic-WRT-atomic_set.litmus
-> @@ -0,0 +1,24 @@
-> +C Atomic-RMW-ops-are-atomic-WRT-atomic_set
-> +
-> +(*
-> + * Result: Never
-> + *
-> + * Test that atomic_set() cannot break the atomicity of atomic RMWs.
-> + *)
-> +
-> +{
-> +	atomic_t v = ATOMIC_INIT(1);
-> +}
-> +
-> +P0(atomic_t *v)
-> +{
-> +	(void)atomic_add_unless(v, 1, 0);
-> +}
-> +
-> +P1(atomic_t *v)
-> +{
-> +	atomic_set(v, 0);
-> +}
-> +
-> +exists
-> +(v=2)
-> diff --git a/Documentation/litmus-tests/atomic/README b/Documentation/litmus-tests/atomic/README
-> index ae61201a4271..a1b72410b539 100644
-> --- a/Documentation/litmus-tests/atomic/README
-> +++ b/Documentation/litmus-tests/atomic/README
-> @@ -2,3 +2,10 @@ This directory contains litmus tests that are typical to describe the semantics
->  of our atomic APIs. For more information about how to "run" a litmus test or
->  how to generate a kernel test module based on a litmus test, please see
->  tools/memory-model/README.
-> +
-> +============
-> +LITMUS TESTS
-> +============
-> +
-> +Atomic-RMW-ops-are-atomic-WRT-atomic_set.litmus
-> +	Test that atomic_set() cannot break the atomicity of atomic RMWs.
-> 
+-- 
+With Best Regards,
+Andy Shevchenko
+
 
