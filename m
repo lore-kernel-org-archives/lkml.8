@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 259AAC2D0E7
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 23:29:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E2ABC43331
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 23:29:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF2AE20663
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 23:29:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E9C3720838
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 23:29:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585265360;
-	bh=mydvpf9JQotGF33zrvwujih4d2LyJw0bPk+qpk20hdk=;
+	s=default; t=1585265365;
+	bh=ZRHdGGkfhDo9JmWaKIaBpioaKTS8YGwYZySmOSLLH3M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CarNj/gGjrm1tZf4rgmU1cpmenTUhHdYK4W1CiE5gPnb4cQk6M5eTEIhHLL/GSMoN
-	 iTUFVNJBrWD11zKZqxiu6EdRT9fGRd/mcg3ZQHgjKDJov4+gDxnmMjhn7sX+diSvAO
-	 bpHcPnUewAVpXxQNRVxEaSJ1iAUeQ9XQIs2QaF3Q=
+	b=GJeEDzWMJO3hVKZG2nGA2fmwPSULRovUfF8lrdj0t61D9yPw/wZoPT7QvDsa8635P
+	 Lk72JY2d+7rp0HCBXxIq3JyYhhPJEmsE0FaY6HFlgBjLQMXF9vmZSs6b2mEc/q6q9F
+	 H/M7klA0rgeBhASjK7OVm9v14P5gvqcZS/M0RHAk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727820AbgCZXYS (ORCPT
+        id S1727958AbgCZX3X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 19:24:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43408 "EHLO mail.kernel.org"
+        Thu, 26 Mar 2020 19:29:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43490 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727736AbgCZXYJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 19:24:09 -0400
+        id S1727763AbgCZXYL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Mar 2020 19:24:11 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9C78E2083E;
-        Thu, 26 Mar 2020 23:24:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F2E712073E;
+        Thu, 26 Mar 2020 23:24:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585265048;
-        bh=mydvpf9JQotGF33zrvwujih4d2LyJw0bPk+qpk20hdk=;
+        s=default; t=1585265050;
+        bh=ZRHdGGkfhDo9JmWaKIaBpioaKTS8YGwYZySmOSLLH3M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=c6xobrK9aevBeXV6bHsOJFQT0BFhKGI1CsuzoI6H1+VuchCSW2uuW9+028ZRdnly7
-         l/b5k3qFcOZelMxM225CV+0oS6XpVRZfZKsNSLFENAOh6aEomgoAilsl8m0YKKNeeE
-         wVT4Dfy70X3ozJ0EhXhzgME782DR6Ouqb7vpdfI0=
+        b=lpWCw+o3Lzyeb3v2W7qUHZmwt0w866oJoEhrkq7wpkZuT3d7Bl+MsvSVw1PNF6Uv4
+         YQd7OiJ9Upg8hep94K7HC+UKHmjmRkuoQMpZE9MKwHQxIJKv66tjWU69OAb4VfkfI9
+         k6b88arYbbDfNFfkDZdnluhjvWx5p/ydTf5aC8qU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Mario Kleiner <mario.kleiner.de@gmail.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.5 09/28] drm/amd/display: Add link_rate quirk for Apple 15" MBP 2017
-Date:   Thu, 26 Mar 2020 19:23:38 -0400
-Message-Id: <20200326232357.7516-9-sashal@kernel.org>
+Cc:     Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.5 11/28] initramfs: restore default compression behavior
+Date:   Thu, 26 Mar 2020 19:23:40 -0400
+Message-Id: <20200326232357.7516-11-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200326232357.7516-1-sashal@kernel.org>
 References: <20200326232357.7516-1-sashal@kernel.org>
@@ -60,65 +59,77 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mario Kleiner <mario.kleiner.de@gmail.com>
+From: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
 
-[ Upstream commit dec9de2ada523b344eb2428abfedf9d6cd0a0029 ]
+[ Upstream commit 785d74ec3bbf26ac7f6e92e6e96a259aec0f107a ]
 
-This fixes a problem found on the MacBookPro 2017 Retina panel:
+Even though INITRAMFS_SOURCE kconfig option isn't set in most of
+defconfigs it is used (set) extensively by various build systems.
+Commit f26661e12765 ("initramfs: make initramfs compression choice
+non-optional") has changed default compression mode. Previously we
+compress initramfs using available compression algorithm. Now
+we don't use any compression at all by default.
+It significantly increases the image size in case of build system
+chooses embedded initramfs. Initially I faced with this issue while
+using buildroot.
 
-The panel reports 10 bpc color depth in its EDID, and the
-firmware chooses link settings at boot which support enough
-bandwidth for 10 bpc (324000 kbit/sec aka LINK_RATE_RBR2
-aka 0xc), but the DP_MAX_LINK_RATE dpcd register only reports
-2.7 Gbps (multiplier value 0xa) as possible, in direct
-contradiction of what the firmware successfully set up.
+As of today it's not possible to set preferred compression mode
+in target defconfig as this option depends on INITRAMFS_SOURCE
+being set. Modification of all build systems either doesn't look
+like good option.
 
-This restricts the panel to 8 bpc, not providing the full
-color depth of the panel on Linux <= 5.5. Additionally, commit
-'4a8ca46bae8a ("drm/amd/display: Default max bpc to 16 for eDP")'
-introduced into Linux 5.6-rc1 will unclamp panel depth to
-its full 10 bpc, thereby requiring a eDP bandwidth for all
-modes that exceeds the bandwidth available and causes all modes
-to fail validation -> No modes for the laptop panel -> failure
-to set any mode -> Panel goes dark.
+Let's instead rewrite initramfs compression mode choices list
+the way that "INITRAMFS_COMPRESSION_NONE" will be the last option
+in the list. In that case it will be chosen only if all other
+options (which implements any compression) are not available.
 
-This patch adds a quirk specific to the MBP 2017 15" Retina
-panel to override reported max link rate to the correct maximum
-of 0xc = LINK_RATE_RBR2 to fix the darkness and reduced display
-precision.
-
-Please apply for Linux 5.6+ to avoid regressing Apple MBP panel
-support.
-
-Signed-off-by: Mario Kleiner <mario.kleiner.de@gmail.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Signed-off-by: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
+Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/display/dc/core/dc_link_dp.c | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+ usr/Kconfig | 22 +++++++++++-----------
+ 1 file changed, 11 insertions(+), 11 deletions(-)
 
-diff --git a/drivers/gpu/drm/amd/display/dc/core/dc_link_dp.c b/drivers/gpu/drm/amd/display/dc/core/dc_link_dp.c
-index 504055fc70e89..6f2b3ec17e7f0 100644
---- a/drivers/gpu/drm/amd/display/dc/core/dc_link_dp.c
-+++ b/drivers/gpu/drm/amd/display/dc/core/dc_link_dp.c
-@@ -2909,6 +2909,17 @@ static bool retrieve_link_cap(struct dc_link *link)
- 		sink_id.ieee_device_id,
- 		sizeof(sink_id.ieee_device_id));
+diff --git a/usr/Kconfig b/usr/Kconfig
+index a6b68503d1774..a80cc79722745 100644
+--- a/usr/Kconfig
++++ b/usr/Kconfig
+@@ -131,17 +131,6 @@ choice
  
-+	/* Quirk Apple MBP 2017 15" Retina panel: Wrong DP_MAX_LINK_RATE */
-+	{
-+		uint8_t str_mbp_2017[] = { 101, 68, 21, 101, 98, 97 };
+ 	  If in doubt, select 'None'
+ 
+-config INITRAMFS_COMPRESSION_NONE
+-	bool "None"
+-	help
+-	  Do not compress the built-in initramfs at all. This may sound wasteful
+-	  in space, but, you should be aware that the built-in initramfs will be
+-	  compressed at a later stage anyways along with the rest of the kernel,
+-	  on those architectures that support this. However, not compressing the
+-	  initramfs may lead to slightly higher memory consumption during a
+-	  short time at boot, while both the cpio image and the unpacked
+-	  filesystem image will be present in memory simultaneously
+-
+ config INITRAMFS_COMPRESSION_GZIP
+ 	bool "Gzip"
+ 	depends on RD_GZIP
+@@ -214,6 +203,17 @@ config INITRAMFS_COMPRESSION_LZ4
+ 	  If you choose this, keep in mind that most distros don't provide lz4
+ 	  by default which could cause a build failure.
+ 
++config INITRAMFS_COMPRESSION_NONE
++	bool "None"
++	help
++	  Do not compress the built-in initramfs at all. This may sound wasteful
++	  in space, but, you should be aware that the built-in initramfs will be
++	  compressed at a later stage anyways along with the rest of the kernel,
++	  on those architectures that support this. However, not compressing the
++	  initramfs may lead to slightly higher memory consumption during a
++	  short time at boot, while both the cpio image and the unpacked
++	  filesystem image will be present in memory simultaneously
 +
-+		if ((link->dpcd_caps.sink_dev_id == 0x0010fa) &&
-+		    !memcmp(link->dpcd_caps.sink_dev_id_str, str_mbp_2017,
-+			    sizeof(str_mbp_2017))) {
-+			link->reported_link_cap.link_rate = 0x0c;
-+		}
-+	}
-+
- 	core_link_read_dpcd(
- 		link,
- 		DP_SINK_HW_REVISION_START,
+ endchoice
+ 
+ config INITRAMFS_COMPRESSION
 -- 
 2.20.1
 
