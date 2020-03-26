@@ -2,211 +2,117 @@ Return-Path: <SRS0=aGSP=5L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74367C2D0E8
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 06:35:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D8EFC2D0E7
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 06:37:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 489B620714
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 06:35:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 10D8520714
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 06:37:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="OXLPvTnw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727661AbgCZGfb (ORCPT
+        id S1727639AbgCZGhB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 02:35:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35332 "EHLO mail.kernel.org"
+        Thu, 26 Mar 2020 02:37:01 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:50029 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726260AbgCZGfa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 02:35:30 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1726014AbgCZGhB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Mar 2020 02:37:01 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4CEEF20714;
-        Thu, 26 Mar 2020 06:35:27 +0000 (UTC)
-Date:   Thu, 26 Mar 2020 07:35:24 +0100
-From:   Greg KH <greg@kroah.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Kelsey Skunberg <skunberg.kelsey@gmail.com>,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        Kelsey Skunberg <kelsey.skunberg@gmail.com>,
-        rbilovol@cisco.com, stable <stable@vger.kernel.org>,
-        ddutile@redhat.com, ruslan.bilovol@gmail.com,
-        linux-kernel-mentees@lists.linuxfoundation.org, bodong@mellanox.com
-Subject: Re: [Linux-kernel-mentees] [PATCH v2] PCI: sysfs: Change bus_rescan
- and dev_rescan to rescan
-Message-ID: <20200326063524.GA922107@kroah.com>
-References: <20200325151708.32612-1-skunberg.kelsey@gmail.com>
- <20200325221033.GA88141@google.com>
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 48nwJB0yJFz9sSH;
+        Thu, 26 Mar 2020 17:36:57 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1585204618;
+        bh=AVMi9zNmzZTPMq/e9Qj767J1YMAyuM/Z5EjCyw0SljQ=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=OXLPvTnwslbBC6TjRctA7OG1AjwUh0uccXCiWpX9Fh/ByfpI8dK1z3m3zv6kNcwDr
+         1pKvuR3wN4V0/qStTJ2wxyCDDrLll6TC0XnUkHk86wV+uHhscSPqms1gl5gZtQSKN1
+         1mOjVldqVaE+2Ggq7DXx+WiTRm63vLGMmaOSwxDSK/wCxt8KvwkF6rpLiHbOYnlYhX
+         VM7QqVskZqCFta5DamnyIz5ESzIX9PHDNLhdtfZ2pNF8BIzsq8yHLVHo0woSxZD/o6
+         k4IpYLw4JQNUNPxw3n+Bnp3eT3OfT2Eqz+iLxl8uWEt2oK3lY9AVS6uiBo9cAMARNm
+         bdhYCVHhnqqsg==
+Date:   Thu, 26 Mar 2020 17:36:56 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Marc Zyngier <marc.zyngier@arm.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Mubin Sayyed <mubin.usman.sayyed@xilinx.com>
+Subject: Re: linux-next: build failure after merge of the irqchip tree
+Message-ID: <20200326173656.691628e8@canb.auug.org.au>
+In-Reply-To: <20200323175946.7ad497ea@canb.auug.org.au>
+References: <20200323175946.7ad497ea@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200325221033.GA88141@google.com>
+Content-Type: multipart/signed; boundary="Sig_/913JVVRB1tgs/aeh7Xd7+Y8";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 25, 2020 at 05:10:33PM -0500, Bjorn Helgaas wrote:
-> Hi Kelsey,
-> 
-> On Wed, Mar 25, 2020 at 09:17:08AM -0600, Kelsey Skunberg wrote:
-> > From: Kelsey Skunberg <kelsey.skunberg@gmail.com>
-> > 
-> > rename device attribute name arguments 'bus_rescan' and 'dev_rescan' to 'rescan'
-> > to avoid breaking userspace applications.
-> > 
-> > The attribute argument names were changed in the following commits:
-> > 8bdfa145f582 ("PCI: sysfs: Define device attributes with DEVICE_ATTR*()")
-> > 4e2b79436e4f ("PCI: sysfs: Change DEVICE_ATTR() to DEVICE_ATTR_WO()")
-> > 
-> > Revert the names used for attributes back to the names used before the above
-> > patches were applied. This also requires to change DEVICE_ATTR_WO() to
-> > DEVICE_ATTR() and __ATTR().
-> > 
-> > Note when using DEVICE_ATTR() the attribute is automatically named
-> > dev_attr_<name>.attr. To avoid duplicated names between attributes, use
-> > __ATTR() instead of DEVICE_ATTR() to a assign a custom attribute name for
-> > dev_rescan.
-> > 
-> > change bus_rescan_store() to dev_bus_rescan_store() to complete matching the
-> > names used before the mentioned patches were applied.
-> > 
-> > Fixes: 8bdfa145f582 ("PCI: sysfs: Define device attributes with DEVICE_ATTR*()")
-> > Fixes: 4e2b79436e4f ("PCI: sysfs: Change DEVICE_ATTR() to DEVICE_ATTR_WO()")
-> > 
-> > Cc: stable <stable@vger.kernel.org>
-> > Signed-off-by: Kelsey Skunberg <kelsey.skunberg@gmail.com>
-> > Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> > ---
-> > 
-> > v2 updates: 
-> > 	commit log updated to include 'Fixes: *' and Cc: stable to aid commit
-> > 	being backported properly.
-> > 
-> >  drivers/pci/pci-sysfs.c | 17 ++++++++++-------
-> >  1 file changed, 10 insertions(+), 7 deletions(-)
-> > 
-> > diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
-> > index 13f766db0684..667e13d597ff 100644
-> > --- a/drivers/pci/pci-sysfs.c
-> > +++ b/drivers/pci/pci-sysfs.c
-> > @@ -464,7 +464,10 @@ static ssize_t dev_rescan_store(struct device *dev,
-> >  	}
-> >  	return count;
-> >  }
-> > -static DEVICE_ATTR_WO(dev_rescan);
-> > +static struct device_attribute dev_rescan_attr = __ATTR(rescan,
-> > +							0220, NULL,
-> > +							dev_rescan_store);
-> > +
-> >  
-> >  static ssize_t remove_store(struct device *dev, struct device_attribute *attr,
-> >  			    const char *buf, size_t count)
-> > @@ -481,9 +484,9 @@ static ssize_t remove_store(struct device *dev, struct device_attribute *attr,
-> >  static DEVICE_ATTR_IGNORE_LOCKDEP(remove, 0220, NULL,
-> >  				  remove_store);
-> >  
-> > -static ssize_t bus_rescan_store(struct device *dev,
-> > -				struct device_attribute *attr,
-> > -				const char *buf, size_t count)
-> > +static ssize_t dev_bus_rescan_store(struct device *dev,
-> > +				    struct device_attribute *attr,
-> > +				    const char *buf, size_t count)
-> >  {
-> >  	unsigned long val;
-> >  	struct pci_bus *bus = to_pci_bus(dev);
-> > @@ -501,7 +504,7 @@ static ssize_t bus_rescan_store(struct device *dev,
-> >  	}
-> >  	return count;
-> >  }
-> > -static DEVICE_ATTR_WO(bus_rescan);
-> > +static DEVICE_ATTR(rescan, 0220, NULL, dev_bus_rescan_store);
-> >  
-> >  #if defined(CONFIG_PM) && defined(CONFIG_ACPI)
-> >  static ssize_t d3cold_allowed_store(struct device *dev,
-> > @@ -641,7 +644,7 @@ static struct attribute *pcie_dev_attrs[] = {
-> >  };
-> >  
-> >  static struct attribute *pcibus_attrs[] = {
-> > -	&dev_attr_bus_rescan.attr,
-> > +	&dev_attr_rescan.attr,
-> >  	&dev_attr_cpuaffinity.attr,
-> >  	&dev_attr_cpulistaffinity.attr,
-> >  	NULL,
-> > @@ -1487,7 +1490,7 @@ static umode_t pci_dev_attrs_are_visible(struct kobject *kobj,
-> >  
-> >  static struct attribute *pci_dev_hp_attrs[] = {
-> >  	&dev_attr_remove.attr,
-> > -	&dev_attr_dev_rescan.attr,
-> > +	&dev_rescan_attr.attr,
-> >  	NULL,
-> >  };
-> 
-> Thanks for taking care of this!  Two questions:
-> 
-> 1) You supplied permissions of 0220, but DEVICE_ATTR_WO()
-> uses__ATTR_WO(), which uses 0200.  Shouldn't we keep 0200?
-> 
-> 2) I think the use of __ATTR() for the device side and DEVICE_ATTR()
-> for the bus side is confusing.  Couldn't we accomplish the same thing
-> with a patch like the following (compiled but not tested)?
-> 
-> Bjorn
-> 
-> 
-> commit 06094b3fd9f1 ("PCI: sysfs: Revert "rescan" file renames")
-> Author: Kelsey Skunberg <kelsey.skunberg@gmail.com>
-> Date:   Wed Mar 25 09:17:08 2020 -0600
-> 
->     PCI: sysfs: Revert "rescan" file renames
->     
->     We changed these sysfs filenames:
->     
->       .../pci_bus/<domain:bus>/rescan  ->  .../pci_bus/<domain:bus>/bus_rescan
->       .../<domain:bus:dev.fn>/rescan   ->  .../<domain:bus:dev.fn>/dev_rescan
->     
->     and Ruslan reported [1] that this broke a userspace application.
->     
->     Revert these name changes so both files are named "rescan" again.
->     
->     The argument to DEVICE_ATTR_WO() determines both the struct
->     device_attribute name and the .store() function name.  We have to
->     use __ATTR() so we can specify different .store() functions for
->     the two "rescan" files.
->     
->     [1] https://lore.kernel.org/r/CAB=otbSYozS-ZfxB0nCiNnxcbqxwrHOSYxJJtDKa63KzXbXgpw@mail.gmail.com
->     
->     [bhelgaas: commit log]
->     Fixes: 8bdfa145f582 ("PCI: sysfs: Define device attributes with DEVICE_ATTR*()")
->     Fixes: 4e2b79436e4f ("PCI: sysfs: Change DEVICE_ATTR() to DEVICE_ATTR_WO()")
->     Link: https://lore.kernel.org/r/20200325151708.32612-1-skunberg.kelsey@gmail.com
->     Signed-off-by: Kelsey Skunberg <kelsey.skunberg@gmail.com>
->     Cc: stable@vger.kernel.org	# v5.4+
-> 
-> diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
-> index 13f766db0684..bf025a2c296d 100644
-> --- a/drivers/pci/pci-sysfs.c
-> +++ b/drivers/pci/pci-sysfs.c
-> @@ -464,7 +464,8 @@ static ssize_t dev_rescan_store(struct device *dev,
->  	}
->  	return count;
->  }
-> -static DEVICE_ATTR_WO(dev_rescan);
-> +static struct device_attribute dev_attr_dev_rescan = __ATTR(rescan, 0200, NULL,
-> +							    dev_rescan_store);
+--Sig_/913JVVRB1tgs/aeh7Xd7+Y8
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Oops, this should just be DEVICE_ATTR(), no need for __ATTR() as this
-isn't a kobject-only file.
+Hi all,
 
-So how about:
+On Mon, 23 Mar 2020 17:59:46 +1100 Stephen Rothwell <sfr@canb.auug.org.au> =
+wrote:
+>
+> After merging the irqchip tree, today's linux-next build (powerpc
+> ppc44x_defconfig) failed like this:
+>=20
+> drivers/irqchip/irq-xilinx-intc.c: In function 'xil_intc_handle_irq':
+> drivers/irqchip/irq-xilinx-intc.c:176:10: error: implicit declaration of =
+function 'handle_domain_irq'; did you mean 'handle_bad_irq'? [-Werror=3Dimp=
+licit-function-declaration]
+>   176 |    ret =3D handle_domain_irq(irqc->root_domain, hwirq, regs);
+>       |          ^~~~~~~~~~~~~~~~~
+>       |          handle_bad_irq
+> drivers/irqchip/irq-xilinx-intc.c: In function 'xilinx_intc_of_init':
+> drivers/irqchip/irq-xilinx-intc.c:253:3: error: implicit declaration of f=
+unction 'set_handle_irq'; did you mean 'generic_handle_irq'? [-Werror=3Dimp=
+licit-function-declaration]
+>   253 |   set_handle_irq(xil_intc_handle_irq);
+>       |   ^~~~~~~~~~~~~~
+>       |   generic_handle_irq
+>=20
+> Caused by commit
+>=20
+>   a0789993bf82 ("irqchip/xilinx: Enable generic irq multi handler")
+>=20
+> I have reverted that commit (and commit
+>=20
+>   9c2d4f525c00 ("irqchip/xilinx: Do not call irq_set_default_host()")
+>=20
+> that conflicted with the other revert).
 
-static DEVICE_ATTR(rescan, 0200, NULL, dev_rescan_store);
+I am still getting these errors.
 
-Much smaller :)
+--=20
+Cheers,
+Stephen Rothwell
 
-Sorry I missed that in the original review.
+--Sig_/913JVVRB1tgs/aeh7Xd7+Y8
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
-thanks,
+-----BEGIN PGP SIGNATURE-----
 
-greg k-h
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl58TYgACgkQAVBC80lX
+0Gy1fwf+KrhnaPWcFTJnh+ks0wV74Ujj1CSP/c/ilu5V5SpaQtP4+oZdXZ9gkQ92
+J8elsP7jWnIsh4s6IkaICGLmNY2/J/h60hpB8BkLlK9mpWEsGJ9NtdvG9An76aBo
+EJ0vzhcoLB5O4SA9W1XR4pq5Itjlf+CBRM31jesCYtLbUhJHNS4Jm6aX2DNlecKg
+jQUQ9qpTyOH+F0TGbMfMEzTkz+9m2z4KFRimJC/3IdddGwZ0L/0Od+VrHxByO2CZ
+1kPghYA8NmZPBsqjnfz0KDJbolfw+17M9dbeSJaebqtVyWBoBMfGYlLsLMaLRL4x
+zXLTi9k08k+8vsApwNcyYbgwTWDGXA==
+=0OpA
+-----END PGP SIGNATURE-----
+
+--Sig_/913JVVRB1tgs/aeh7Xd7+Y8--
