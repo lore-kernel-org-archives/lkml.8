@@ -2,46 +2,46 @@ Return-Path: <SRS0=aGSP=5L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0
+X-Spam-Status: No, score=-11.7 required=3.0
 	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74A19C2D0E5
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 10:08:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 192C7C43331
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 10:08:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F99521924
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 10:08:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA53F20775
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 10:08:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728024AbgCZKIt (ORCPT
+        id S1728047AbgCZKIv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 06:08:49 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:50236 "EHLO
+        Thu, 26 Mar 2020 06:08:51 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:50240 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727983AbgCZKIr (ORCPT
+        with ESMTP id S1728001AbgCZKIu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 06:08:47 -0400
+        Thu, 26 Mar 2020 06:08:50 -0400
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1jHPRK-00048E-8g; Thu, 26 Mar 2020 11:08:42 +0100
+        id 1jHPRL-00048e-7F; Thu, 26 Mar 2020 11:08:43 +0100
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id D19F11C0470;
-        Thu, 26 Mar 2020 11:08:36 +0100 (CET)
-Date:   Thu, 26 Mar 2020 10:08:36 -0000
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id CE4461C0478;
+        Thu, 26 Mar 2020 11:08:37 +0100 (CET)
+Date:   Thu, 26 Mar 2020 10:08:37 -0000
 From:   "tip-bot2 for Peter Zijlstra" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: core/objtool] objtool: Add a statistics mode
-Cc:     "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Miroslav Benes <mbenes@suse.cz>,
-        Josh Poimboeuf <jpoimboe@redhat.com>, x86 <x86@kernel.org>,
+Subject: [tip: core/objtool] x86/kexec: Make relocate_kernel_64.S objtool clean
+Cc:     Josh Poimboeuf <jpoimboe@redhat.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Miroslav Benes <mbenes@suse.cz>, x86 <x86@kernel.org>,
         LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200324160924.321381240@infradead.org>
-References: <20200324160924.321381240@infradead.org>
+In-Reply-To: <20200324160924.202621656@infradead.org>
+References: <20200324160924.202621656@infradead.org>
 MIME-Version: 1.0
-Message-ID: <158521731644.28353.18368440874745073752.tip-bot2@tip-bot2>
+Message-ID: <158521731743.28353.7607166027983057055.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -57,154 +57,90 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the core/objtool branch of tip:
 
-Commit-ID:     1e11f3fdc326d7466e43185ea943b6156143387c
-Gitweb:        https://git.kernel.org/tip/1e11f3fdc326d7466e43185ea943b6156143387c
+Commit-ID:     36cc552055a5f95bab479533b4ebbad6a6cea0e1
+Gitweb:        https://git.kernel.org/tip/36cc552055a5f95bab479533b4ebbad6a6cea0e1
 Author:        Peter Zijlstra <peterz@infradead.org>
-AuthorDate:    Thu, 12 Mar 2020 09:26:29 +01:00
+AuthorDate:    Tue, 24 Mar 2020 15:35:42 +01:00
 Committer:     Peter Zijlstra <peterz@infradead.org>
 CommitterDate: Wed, 25 Mar 2020 18:28:28 +01:00
 
-objtool: Add a statistics mode
+x86/kexec: Make relocate_kernel_64.S objtool clean
 
-Have it print a few numbers which can be used to size the hashtables.
+Having fixed the biggest objtool issue in this file; fix up the rest
+and remove the exception.
 
+Suggested-by: Josh Poimboeuf <jpoimboe@redhat.com>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 Reviewed-by: Miroslav Benes <mbenes@suse.cz>
 Acked-by: Josh Poimboeuf <jpoimboe@redhat.com>
-Link: https://lkml.kernel.org/r/20200324160924.321381240@infradead.org
+Link: https://lkml.kernel.org/r/20200324160924.202621656@infradead.org
 ---
- tools/objtool/builtin-check.c |  3 ++-
- tools/objtool/builtin.h       |  2 +-
- tools/objtool/check.c         |  5 +++++
- tools/objtool/elf.c           | 18 +++++++++++++++++-
- 4 files changed, 25 insertions(+), 3 deletions(-)
+ arch/x86/kernel/Makefile             | 1 -
+ arch/x86/kernel/relocate_kernel_64.S | 7 +++++++
+ 2 files changed, 7 insertions(+), 1 deletion(-)
 
-diff --git a/tools/objtool/builtin-check.c b/tools/objtool/builtin-check.c
-index c807984..10fbe75 100644
---- a/tools/objtool/builtin-check.c
-+++ b/tools/objtool/builtin-check.c
-@@ -17,7 +17,7 @@
- #include "builtin.h"
- #include "check.h"
+diff --git a/arch/x86/kernel/Makefile b/arch/x86/kernel/Makefile
+index 9b294c1..8be5926 100644
+--- a/arch/x86/kernel/Makefile
++++ b/arch/x86/kernel/Makefile
+@@ -28,7 +28,6 @@ KASAN_SANITIZE_dumpstack_$(BITS).o			:= n
+ KASAN_SANITIZE_stacktrace.o				:= n
+ KASAN_SANITIZE_paravirt.o				:= n
  
--bool no_fp, no_unreachable, retpoline, module, backtrace, uaccess;
-+bool no_fp, no_unreachable, retpoline, module, backtrace, uaccess, stats;
+-OBJECT_FILES_NON_STANDARD_relocate_kernel_$(BITS).o	:= y
+ OBJECT_FILES_NON_STANDARD_test_nx.o			:= y
+ OBJECT_FILES_NON_STANDARD_paravirt_patch.o		:= y
  
- static const char * const check_usage[] = {
- 	"objtool check [<options>] file.o",
-@@ -31,6 +31,7 @@ const struct option check_options[] = {
- 	OPT_BOOLEAN('m', "module", &module, "Indicates the object will be part of a kernel module"),
- 	OPT_BOOLEAN('b', "backtrace", &backtrace, "unwind on error"),
- 	OPT_BOOLEAN('a', "uaccess", &uaccess, "enable uaccess checking"),
-+	OPT_BOOLEAN('s', "stats", &stats, "print statistics"),
- 	OPT_END(),
- };
+diff --git a/arch/x86/kernel/relocate_kernel_64.S b/arch/x86/kernel/relocate_kernel_64.S
+index cc5c8b9..a4d9a26 100644
+--- a/arch/x86/kernel/relocate_kernel_64.S
++++ b/arch/x86/kernel/relocate_kernel_64.S
+@@ -9,6 +9,8 @@
+ #include <asm/kexec.h>
+ #include <asm/processor-flags.h>
+ #include <asm/pgtable_types.h>
++#include <asm/nospec-branch.h>
++#include <asm/unwind_hints.h>
  
-diff --git a/tools/objtool/builtin.h b/tools/objtool/builtin.h
-index a32736f..0b90790 100644
---- a/tools/objtool/builtin.h
-+++ b/tools/objtool/builtin.h
-@@ -8,7 +8,7 @@
- #include <subcmd/parse-options.h>
+ /*
+  * Must be relocatable PIC code callable as a C function
+@@ -39,6 +41,7 @@
+ 	.align PAGE_SIZE
+ 	.code64
+ SYM_CODE_START_NOALIGN(relocate_kernel)
++	UNWIND_HINT_EMPTY
+ 	/*
+ 	 * %rdi indirection_page
+ 	 * %rsi page_list
+@@ -105,6 +108,7 @@ SYM_CODE_START_NOALIGN(relocate_kernel)
+ SYM_CODE_END(relocate_kernel)
  
- extern const struct option check_options[];
--extern bool no_fp, no_unreachable, retpoline, module, backtrace, uaccess;
-+extern bool no_fp, no_unreachable, retpoline, module, backtrace, uaccess, stats;
+ SYM_CODE_START_LOCAL_NOALIGN(identity_mapped)
++	UNWIND_HINT_EMPTY
+ 	/* set return address to 0 if not preserving context */
+ 	pushq	$0
+ 	/* store the start address on the stack */
+@@ -192,6 +196,7 @@ SYM_CODE_START_LOCAL_NOALIGN(identity_mapped)
+ 1:
+ 	popq	%rdx
+ 	leaq	PAGE_SIZE(%r10), %rsp
++	ANNOTATE_RETPOLINE_SAFE
+ 	call	*%rdx
  
- extern int cmd_check(int argc, const char **argv);
- extern int cmd_orc(int argc, const char **argv);
-diff --git a/tools/objtool/check.c b/tools/objtool/check.c
-index 43f7d3c..6df1bae 100644
---- a/tools/objtool/check.c
-+++ b/tools/objtool/check.c
-@@ -239,6 +239,7 @@ static int decode_instructions(struct objtool_file *file)
- 	struct symbol *func;
- 	unsigned long offset;
- 	struct instruction *insn;
-+	unsigned long nr_insns = 0;
- 	int ret;
+ 	/* get the re-entry point of the peer system */
+@@ -209,6 +214,7 @@ SYM_CODE_START_LOCAL_NOALIGN(identity_mapped)
+ SYM_CODE_END(identity_mapped)
  
- 	for_each_sec(file, sec) {
-@@ -274,6 +275,7 @@ static int decode_instructions(struct objtool_file *file)
+ SYM_CODE_START_LOCAL_NOALIGN(virtual_mapped)
++	UNWIND_HINT_EMPTY
+ 	movq	RSP(%r8), %rsp
+ 	movq	CR4(%r8), %rax
+ 	movq	%rax, %cr4
+@@ -230,6 +236,7 @@ SYM_CODE_END(virtual_mapped)
  
- 			hash_add(file->insn_hash, &insn->hash, insn->offset);
- 			list_add_tail(&insn->list, &file->insn_list);
-+			nr_insns++;
- 		}
- 
- 		list_for_each_entry(func, &sec->symbol_list, list) {
-@@ -291,6 +293,9 @@ static int decode_instructions(struct objtool_file *file)
- 		}
- 	}
- 
-+	if (stats)
-+		printf("nr_insns: %lu\n", nr_insns);
-+
- 	return 0;
- 
- err:
-diff --git a/tools/objtool/elf.c b/tools/objtool/elf.c
-index b188b3e..ff29306 100644
---- a/tools/objtool/elf.c
-+++ b/tools/objtool/elf.c
-@@ -15,6 +15,7 @@
- #include <string.h>
- #include <unistd.h>
- #include <errno.h>
-+#include "builtin.h"
- 
- #include "elf.h"
- #include "warn.h"
-@@ -202,6 +203,9 @@ static int read_sections(struct elf *elf)
- 		sec->len = sec->sh.sh_size;
- 	}
- 
-+	if (stats)
-+		printf("nr_sections: %lu\n", (unsigned long)sections_nr);
-+
- 	/* sanity check, one more call to elf_nextscn() should return NULL */
- 	if (elf_nextscn(elf->elf, s)) {
- 		WARN("section entry mismatch");
-@@ -299,6 +303,9 @@ static int read_symbols(struct elf *elf)
- 		hash_add(elf->symbol_hash, &sym->hash, sym->idx);
- 	}
- 
-+	if (stats)
-+		printf("nr_symbols: %lu\n", (unsigned long)symbols_nr);
-+
- 	/* Create parent/child links for any cold subfunctions */
- 	list_for_each_entry(sec, &elf->sections, list) {
- 		list_for_each_entry(sym, &sec->symbol_list, list) {
-@@ -360,6 +367,7 @@ static int read_relas(struct elf *elf)
- 	struct rela *rela;
- 	int i;
- 	unsigned int symndx;
-+	unsigned long nr_rela, max_rela = 0, tot_rela = 0;
- 
- 	list_for_each_entry(sec, &elf->sections, list) {
- 		if (sec->sh.sh_type != SHT_RELA)
-@@ -374,6 +382,7 @@ static int read_relas(struct elf *elf)
- 
- 		sec->base->rela = sec;
- 
-+		nr_rela = 0;
- 		for (i = 0; i < sec->sh.sh_size / sec->sh.sh_entsize; i++) {
- 			rela = malloc(sizeof(*rela));
- 			if (!rela) {
-@@ -401,8 +410,15 @@ static int read_relas(struct elf *elf)
- 
- 			list_add_tail(&rela->list, &sec->rela_list);
- 			hash_add(sec->rela_hash, &rela->hash, rela->offset);
--
-+			nr_rela++;
- 		}
-+		max_rela = max(max_rela, nr_rela);
-+		tot_rela += nr_rela;
-+	}
-+
-+	if (stats) {
-+		printf("max_rela: %lu\n", max_rela);
-+		printf("tot_rela: %lu\n", tot_rela);
- 	}
- 
- 	return 0;
+ 	/* Do the copies */
+ SYM_CODE_START_LOCAL_NOALIGN(swap_pages)
++	UNWIND_HINT_EMPTY
+ 	movq	%rdi, %rcx 	/* Put the page_list in %rcx */
+ 	xorl	%edi, %edi
+ 	xorl	%esi, %esi
