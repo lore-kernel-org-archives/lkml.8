@@ -2,518 +2,196 @@ Return-Path: <SRS0=aGSP=5L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7550C43331
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 11:50:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46018C2D0E8
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 11:51:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A35A22070A
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 11:50:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ld2nwTE4"
+	by mail.kernel.org (Postfix) with ESMTP id 1ED7B2070A
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 11:51:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585223484;
+	bh=aq4QLDizm5z7XgE90omYxZwQkaswl8l1jr6TALu8Phc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ooyUS2C5ObwxDV1E2tYt447Gu2TglY7AqQnMfad50WKJjkeaDgib8Zp0me88uaU1J
+	 NDKBn3+6cvZDDR0OHCwhmLzjI+lKonoP2HiwtZFDFV+ogpUUzp4Hny7DDKWwQgIrRp
+	 K16GDdZkmZRIuFWde1+zLZcvgJFuJkg3S36SZfzo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728185AbgCZLu3 (ORCPT
+        id S1728190AbgCZLvX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 07:50:29 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:40044 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728144AbgCZLu3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 07:50:29 -0400
-Received: by mail-pg1-f196.google.com with SMTP id t24so2736633pgj.7
-        for <linux-kernel@vger.kernel.org>; Thu, 26 Mar 2020 04:50:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=eahJs5G9Mdp7rh5p/I+k7vqH+FYkCW5jQz7h0JzvSYE=;
-        b=ld2nwTE4rMisCwbNHb7yUIP2doQ7eYTtqakpMDUOWRL/3+bVkTn4LgPD3M4NsPc8O2
-         U+LO9YmBiZT4owUtv4ids8kH8liDKBfo8YI3c8LHjcZv3+lz0PBtPKmFpb4vc0pdWS4c
-         u7x0ozSNUV0Xsp9a8TkKhVhCVAxhTFSwUOULGhEA3bznCA4Ru8IDhFZuFs4NdDGLiipJ
-         akXN84GrcHH9gkLN/jJcVtqFl9SbwFJdziIgKTlDq5fdBt/y7ypE64QswcY78DSzndDf
-         WbuqnkRuGtuhqXnJ5KkaEcfXb7xIOXvRKQy2Mpog6yGNSdvg/R0PUKwJNaF/LWeg/yHU
-         unFg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=eahJs5G9Mdp7rh5p/I+k7vqH+FYkCW5jQz7h0JzvSYE=;
-        b=b1MQn2xfUMPbXF25ehMT4nMuUbUK30ADLEzlbQAkO/cRRFthJEl2/i5bpFWN0GQ/SZ
-         9NQg7jvZDstnrPmhkR8A/4aYIrDP3QIEUe95kZkxrqNya3XDRcj0W6YW5Eeol8GGC5Ri
-         TNGCCBhj1rjOSFtC+DNRPR0TWUcXmvAxPSeYqYpV0t/SNh4QfreYpNc5fogM2jyxPVs/
-         Ur9PuI0yTwRw6Y4kC5hlPL/uQc1TXyMu6yruE8BgbpjMKhlH5oytx2Vqxzr/1e55nL+P
-         rsGdX6LBBbrwYkyZ58XuSBPYmaLKSUlMum3RLrwQOExH4m6HYaEQ7qUfn5LhN24YEANJ
-         C/aQ==
-X-Gm-Message-State: ANhLgQ1i/Ec9MKEkEGbvWehkJ4oWymIU4DAbXrehS13HlI2mMlqayHi1
-        XalyE0piiJ8deC8W1TsUYLMDyQ==
-X-Google-Smtp-Source: ADFU+vvprQ2//Xmt7vRhZyfPWsz4Wn3K6tH3zXOpvAnyFCnbpAFAq5YL7JRvr/M6BzqtQxC5bbcgxg==
-X-Received: by 2002:a63:8048:: with SMTP id j69mr8254402pgd.410.1585223426833;
-        Thu, 26 Mar 2020 04:50:26 -0700 (PDT)
-Received: from localhost ([122.171.118.46])
-        by smtp.gmail.com with ESMTPSA id 6sm1494245pfx.69.2020.03.26.04.50.25
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 26 Mar 2020 04:50:25 -0700 (PDT)
-Date:   Thu, 26 Mar 2020 17:20:23 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Sumit Gupta <sumitg@nvidia.com>
-Cc:     rjw@rjwysocki.net, catalin.marinas@arm.com, will@kernel.org,
-        thierry.reding@gmail.com, jonathanh@nvidia.com, talho@nvidia.com,
-        linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        bbasu@nvidia.com, mperttunen@nvidia.com
-Subject: Re: [TEGRA194_CPUFREQ Patch 2/3] cpufreq: Add Tegra194 cpufreq driver
-Message-ID: <20200326115023.xy3n5bl7uetuw7mx@vireshk-i7>
-References: <1575394348-17649-1-git-send-email-sumitg@nvidia.com>
- <1575394348-17649-2-git-send-email-sumitg@nvidia.com>
+        Thu, 26 Mar 2020 07:51:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57368 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727994AbgCZLvX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Mar 2020 07:51:23 -0400
+Received: from localhost (unknown [106.201.104.212])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id AC56820409;
+        Thu, 26 Mar 2020 11:51:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1585223481;
+        bh=aq4QLDizm5z7XgE90omYxZwQkaswl8l1jr6TALu8Phc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=UGPLyM704qblOPPjpT5K1M9Ecn5EpP5jWs9XYImiwvu6cBkvOQ2a0dbCnY2tSgKOJ
+         +pZty14fMTVBnluwP4QxTP+Gdi5NZDwfQur5zWwLlOMc89X77XaBYHPsetP2zZL6CF
+         ZIX+fVfVPbfxuFWo4yRBKpNUBTqmGXO16tqtyoug=
+Date:   Thu, 26 Mar 2020 17:21:17 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Mathias Nyman <mathias.nyman@linux.intel.com>
+Cc:     Mathias Nyman <mathias.nyman@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-arm-msm@vger.kernel.org,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Christian Lamparter <chunkeey@googlemail.com>,
+        John Stultz <john.stultz@linaro.org>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Andreas =?iso-8859-1?Q?B=F6hler?= <dev@aboehler.at>,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v8 3/5] usb: xhci: Add support for Renesas controller
+ with memory
+Message-ID: <20200326115117.GZ72691@vkoul-mobl>
+References: <20200323170601.419809-1-vkoul@kernel.org>
+ <20200323170601.419809-4-vkoul@kernel.org>
+ <6ea778a7-6d58-6dae-bd65-3a63a945fb97@linux.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1575394348-17649-2-git-send-email-sumitg@nvidia.com>
-User-Agent: NeoMutt/20180716-391-311a52
+In-Reply-To: <6ea778a7-6d58-6dae-bd65-3a63a945fb97@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 03-12-19, 23:02, Sumit Gupta wrote:
-> diff --git a/drivers/cpufreq/tegra194-cpufreq.c b/drivers/cpufreq/tegra194-cpufreq.c
-> new file mode 100644
-> index 0000000..9df12f4
-> --- /dev/null
-> +++ b/drivers/cpufreq/tegra194-cpufreq.c
-> @@ -0,0 +1,423 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright (c) 2019, NVIDIA CORPORATION. All rights reserved
-> + */
-> +
-> +#include <linux/cpu.h>
-> +#include <linux/cpufreq.h>
-> +#include <linux/delay.h>
-> +#include <linux/dma-mapping.h>
-> +#include <linux/module.h>
-> +#include <linux/of.h>
-> +#include <linux/of_platform.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/slab.h>
-> +
-> +#include <asm/smp_plat.h>
-> +
-> +#include <soc/tegra/bpmp.h>
-> +#include <soc/tegra/bpmp-abi.h>
-> +
-> +#define KHZ                     1000
-> +#define REF_CLK_MHZ             408 /* 408 MHz */
-> +#define US_DELAY                2000
-> +#define US_DELAY_MIN            2
-> +#define CPUFREQ_TBL_STEP_HZ     (50 * KHZ * KHZ)
-> +#define MAX_CNT                 ~0U
-> +
-> +/* cpufreq transisition latency */
-> +#define TEGRA_CPUFREQ_TRANSITION_LATENCY (300 * 1000) /* unit in nanoseconds */
-> +
-> +enum cluster {
-> +	CLUSTER0,
-> +	CLUSTER1,
-> +	CLUSTER2,
-> +	CLUSTER3,
+On 26-03-20, 13:29, Mathias Nyman wrote:
+> Hi Vinod
+> 
+> On 23.3.2020 19.05, Vinod Koul wrote:
+> > Some rensas controller like uPD720201 and uPD720202 need firmware to be
+> > loaded. Add these devices in table and invoke renesas firmware loader
+> > functions to check and load the firmware into device memory when
+> > required.
+> > 
+> > Signed-off-by: Vinod Koul <vkoul@kernel.org>
+> > ---
+> >  drivers/usb/host/xhci-pci-renesas.c |  1 +
+> >  drivers/usb/host/xhci-pci.c         | 29 ++++++++++++++++++++++++++++-
+> >  drivers/usb/host/xhci-pci.h         |  3 +++
+> >  3 files changed, 32 insertions(+), 1 deletion(-)
+> > 
+> 
+> It's unfortunate if firmware loading couldn't be initiated in a PCI fixup hook
+> for this Renesas controller. What was the reason it failed?
+> 
+> Nicolas Saenz Julienne just submitted a solution like that for Raspberry Pi 4
+> where firmware loading is initiated in pci-quirks.c quirk_usb_early_handoff()
+> 
+> https://lore.kernel.org/lkml/20200324182812.20420-1-nsaenzjulienne@suse.de
+> 
+> Is he doing something different than what was done for the Renesas controller?
 
-All these have same CPUs ? Or big little kind of stuff ? How come they
-have different frequency tables ?
+I tried and everytime ended up not getting firmware. Though I did not
+investigate a lot. Christian seemed to have tested sometime back as
+well.
 
-> +	MAX_CLUSTERS,
-> +};
-> +
-> +struct tegra194_cpufreq_data {
-> +	void __iomem *regs;
-> +	size_t num_clusters;
-> +	struct cpufreq_frequency_table **tables;
-> +};
-> +
-> +static DEFINE_MUTEX(cpufreq_lock);
-> +
-> +struct tegra_cpu_ctr {
-> +	u32 cpu;
-> +	u32 delay;
-> +	u32 coreclk_cnt, last_coreclk_cnt;
-> +	u32 refclk_cnt, last_refclk_cnt;
-> +};
-> +
-> +static struct workqueue_struct *read_counters_wq;
-> +struct read_counters_work {
-> +	struct work_struct work;
-> +	struct tegra_cpu_ctr c;
-> +};
-> +
-> +static enum cluster get_cpu_cluster(u8 cpu)
-> +{
-> +	return MPIDR_AFFINITY_LEVEL(cpu_logical_map(cpu), 1);
-> +}
-> +
-> +/*
-> + * Read per-core Read-only system register NVFREQ_FEEDBACK_EL1.
-> + * The register provides frequency feedback information to
-> + * determine the average actual frequency a core has run at over
-> + * a period of time.
-> + *	[31:0] PLLP counter: Counts at fixed frequency (408 MHz)
-> + *	[63:32] Core clock counter: counts on every core clock cycle
-> + *			where the core is architecturally clocking
-> + */
-> +static u64 read_freq_feedback(void)
-> +{
-> +	u64 val = 0;
-> +
-> +	asm volatile("mrs %0, s3_0_c15_c0_5" : "=r" (val) : );
-> +
-> +	return val;
-> +}
-> +
-> +u16 map_freq_to_ndiv(struct mrq_cpu_ndiv_limits_response *nltbl, u32 freq)
-> +{
-> +	return DIV_ROUND_UP(freq * nltbl->pdiv * nltbl->mdiv,
-> +			    nltbl->ref_clk_hz / KHZ);
-> +}
-> +
-> +static inline u32 map_ndiv_to_freq(struct mrq_cpu_ndiv_limits_response
-> +				   *nltbl, u16 ndiv)
-> +{
-> +	return nltbl->ref_clk_hz / KHZ * ndiv / (nltbl->pdiv * nltbl->mdiv);
-> +}
-> +
-> +static void tegra_read_counters(struct work_struct *work)
-> +{
-> +	struct read_counters_work *read_counters_work;
-> +	struct tegra_cpu_ctr *c;
-> +	u64 val;
-> +
-> +	/*
-> +	 * ref_clk_counter(32 bit counter) runs on constant clk,
-> +	 * pll_p(408MHz).
-> +	 * It will take = 2 ^ 32 / 408 MHz to overflow ref clk counter
-> +	 *              = 10526880 usec = 10.527 sec to overflow
-> +	 *
-> +	 * Like wise core_clk_counter(32 bit counter) runs on core clock.
-> +	 * It's synchronized to crab_clk (cpu_crab_clk) which runs at
-> +	 * freq of cluster. Assuming max cluster clock ~2000MHz,
-> +	 * It will take = 2 ^ 32 / 2000 MHz to overflow core clk counter
-> +	 *              = ~2.147 sec to overflow
-> +	 */
-> +	read_counters_work = container_of(work, struct read_counters_work,
-> +					  work);
-> +	c = &read_counters_work->c;
-> +
-> +	val = read_freq_feedback();
-> +	c->last_refclk_cnt = lower_32_bits(val);
-> +	c->last_coreclk_cnt = upper_32_bits(val);
-> +	udelay(c->delay);
-> +	val = read_freq_feedback();
-> +	c->refclk_cnt = lower_32_bits(val);
-> +	c->coreclk_cnt = upper_32_bits(val);
-> +}
-> +
-> +/*
-> + * Return instantaneous cpu speed
-> + * Instantaneous freq is calculated as -
-> + * -Takes sample on every query of getting the freq.
-> + *	- Read core and ref clock counters;
-> + *	- Delay for X us
-> + *	- Read above cycle counters again
-> + *	- Calculates freq by subtracting current and previous counters
-> + *	  divided by the delay time or eqv. of ref_clk_counter in delta time
-> + *	- Return Kcycles/second, freq in KHz
-> + *
-> + *	delta time period = x sec
-> + *			  = delta ref_clk_counter / (408 * 10^6) sec
-> + *	freq in Hz = cycles/sec
-> + *		   = (delta cycles / x sec
-> + *		   = (delta cycles * 408 * 10^6) / delta ref_clk_counter
-> + *	in KHz	   = (delta cycles * 408 * 10^3) / delta ref_clk_counter
-> + *
-> + * @cpu - logical cpu whose freq to be updated
-> + * Returns freq in KHz on success, 0 if cpu is offline
-> + */
-> +static unsigned int tegra194_get_speed_common(u32 cpu, u32 delay)
-> +{
-> +	struct read_counters_work read_counters_work;
-> +	struct tegra_cpu_ctr c;
-> +	u32 delta_refcnt;
-> +	u32 delta_ccnt;
-> +	u32 rate_mhz;
-> +
-> +	read_counters_work.c.cpu = cpu;
-> +	read_counters_work.c.delay = delay;
-> +	INIT_WORK_ONSTACK(&read_counters_work.work, tegra_read_counters);
-> +	queue_work_on(cpu, read_counters_wq, &read_counters_work.work);
-> +	flush_work(&read_counters_work.work);
+Another problem is that we dont get driver_data in the quirk and there
+didnt seem a way to find the firmware name.
 
-Why can't this be done in current context ?
+> > diff --git a/drivers/usb/host/xhci-pci-renesas.c b/drivers/usb/host/xhci-pci-renesas.c
+> > index c588277ac9b8..d413d53df94b 100644
+> > --- a/drivers/usb/host/xhci-pci-renesas.c
+> > +++ b/drivers/usb/host/xhci-pci-renesas.c
+> > @@ -336,6 +336,7 @@ static void renesas_fw_callback(const struct firmware *fw,
+> >  		goto cleanup;
+> >  	}
+> >  
+> > +	xhci_pci_probe(pdev, ctx->id);
+> >  	return;
+> 
+> I haven't looked into this but instead of calling xhci_pci_probe() here in the async fw
+> loading callback could we just return -EPROBE_DEFER until firmware is loaded when
+> xhci_pci_probe() is originally called?
 
-> +	c = read_counters_work.c;
-> +
-> +	if (c.coreclk_cnt < c.last_coreclk_cnt)
-> +		delta_ccnt = c.coreclk_cnt + (MAX_CNT - c.last_coreclk_cnt);
-> +	else
-> +		delta_ccnt = c.coreclk_cnt - c.last_coreclk_cnt;
-> +	if (!delta_ccnt)
-> +		return 0;
-> +
-> +	/* ref clock is 32 bits */
-> +	if (c.refclk_cnt < c.last_refclk_cnt)
-> +		delta_refcnt = c.refclk_cnt + (MAX_CNT - c.last_refclk_cnt);
-> +	else
-> +		delta_refcnt = c.refclk_cnt - c.last_refclk_cnt;
-> +	if (!delta_refcnt) {
-> +		pr_debug("cpufreq: %d is idle, delta_refcnt: 0\n", cpu);
-> +		return 0;
-> +	}
-> +	rate_mhz = ((unsigned long)(delta_ccnt * REF_CLK_MHZ)) / delta_refcnt;
-> +
-> +	return (rate_mhz * KHZ); /* in KHz */
-> +}
-> +
-> +static unsigned int tegra194_get_speed(u32 cpu)
-> +{
-> +	return tegra194_get_speed_common(cpu, US_DELAY);
-> +}
-> +
-> +static unsigned int tegra194_fast_get_speed(u32 cpu)
-> +{
-> +	return tegra194_get_speed_common(cpu, US_DELAY_MIN);
+Hmm, initially my thinking was how to tell device core to probe again,
+and then digging up I saw wait_for_device_probe() which can be used, let
+me try that
 
-Why is this required specially here ? Why can't you work with normal
-delay ?
+> >  cleanup:
+> > diff --git a/drivers/usb/host/xhci-pci.c b/drivers/usb/host/xhci-pci.c
+> > index a19752178216..7e63658542ac 100644
+> > --- a/drivers/usb/host/xhci-pci.c
+> > +++ b/drivers/usb/host/xhci-pci.c
+> > @@ -15,6 +15,7 @@
+> >  
+> >  #include "xhci.h"
+> >  #include "xhci-trace.h"
+> > +#include "xhci-pci.h"
+> >  
+> >  #define SSIC_PORT_NUM		2
+> >  #define SSIC_PORT_CFG2		0x880c
+> > @@ -312,11 +313,25 @@ static int xhci_pci_setup(struct usb_hcd *hcd)
+> >   * We need to register our own PCI probe function (instead of the USB core's
+> >   * function) in order to create a second roothub under xHCI.
+> >   */
+> > -static int xhci_pci_probe(struct pci_dev *dev, const struct pci_device_id *id)
+> > +int xhci_pci_probe(struct pci_dev *dev, const struct pci_device_id *id)
+> >  {
+> >  	int retval;
+> >  	struct xhci_hcd *xhci;
+> >  	struct usb_hcd *hcd;
+> > +	char *renesas_fw;
+> > +
+> > +	renesas_fw = (char *)id->driver_data;
+> 
+> driver_data is useful for other things than just renesas firmware loading.
+> Heikki suggested a long time ago to use it for passing the quirk flags as well, which
+> makes sense.
+> 
+> We probably need a structure, something like
+> 
+> struct xhci_driver_data = {
+> 	u64 quirks;
+> 	const char *firmware;
+> };
+> 
+> > +	if (renesas_fw) {
+> > +		retval = renesas_xhci_pci_probe(dev, id);
+> > +		switch (retval) {
+> > +		case 0: /* fw check success, continue */
+> > +			break;
+> > +		case 1: /* fw will be loaded by async load */
+> > +			return 0;
+> > +		default: /* error */
+> > +			return retval;
+> > +		}
+> > +	}
+> >  
+> 
+> If returning -EPROBE_DEFER until firmware is loaded is an option then we would prevent probe
+> from returning success while the renesas controller is still loading firmware.
+> 
+> So we would end up with something like this:
+> (we can add a quirk flag for renesas firmware loading)
+> 
+> int xhci_pci_probe(..)
+> {
+> 	...
+> 	struct xhci_driver_data *data = id->driver_data;
+> 	if (data && data->quirks & XHCI_RENESAS_FW_QUIRK) { 
+> 		if (!xhci_renesas_fw_ready(...))
+> 			return -EPROBE_DEFER
+> 	}
+> }
+> 
+> xhci_renesas_fw_ready() would need to initiate firmware loading unless
+> firmware is already running or loading.
+> 
+> Would that work for you?
 
-> +}
-> +
-> +static int tegra194_cpufreq_init(struct cpufreq_policy *policy)
-> +{
-> +	struct tegra194_cpufreq_data *data = cpufreq_get_driver_data();
-> +	int cluster = get_cpu_cluster(policy->cpu);
-> +
-> +	if (cluster >= data->num_clusters)
-> +		return -EINVAL;
-> +
-> +	policy->cur = tegra194_fast_get_speed(policy->cpu); /* boot freq */
-> +
-> +	/* set same policy for all cpus */
-> +	cpumask_copy(policy->cpus, cpu_possible_mask);
-
-You are copying cpu_possible_mask mask here, and so this routine will
-get called only once.
-
-I still don't understand the logic behind clusters and frequency
-tables.
-
-> +
-> +	policy->freq_table = data->tables[cluster];
-> +	policy->cpuinfo.transition_latency = TEGRA_CPUFREQ_TRANSITION_LATENCY;
-> +
-> +	return 0;
-> +}
-> +
-> +static void set_cpu_ndiv(void *data)
-> +{
-> +	struct cpufreq_frequency_table *tbl = data;
-> +	u64 ndiv_val = (u64)tbl->driver_data;
-> +
-> +	asm volatile("msr s3_0_c15_c0_4, %0" : : "r" (ndiv_val));
-> +}
-> +
-> +static int tegra194_cpufreq_set_target(struct cpufreq_policy *policy,
-> +				       unsigned int index)
-> +{
-> +	struct cpufreq_frequency_table *tbl = policy->freq_table + index;
-> +	static struct cpufreq_freqs freqs;
-> +
-> +	mutex_lock(&cpufreq_lock);
-
-No need of lock here.
-
-> +	freqs.old = policy->cur;
-> +	freqs.new = tbl->frequency;
-> +
-> +	cpufreq_freq_transition_begin(policy, &freqs);
-> +	on_each_cpu_mask(policy->cpus, set_cpu_ndiv, tbl, true);
-
-When CPUs share clock line, why is this required for every CPU ?
-
-> +	cpufreq_freq_transition_end(policy, &freqs, 0);
-> +
-> +	mutex_unlock(&cpufreq_lock);
-> +
-> +	return 0;
-> +}
-> +
-> +static struct cpufreq_driver tegra194_cpufreq_driver = {
-> +	.name = "tegra194",
-> +	.flags = CPUFREQ_STICKY | CPUFREQ_CONST_LOOPS |
-> +		CPUFREQ_NEED_INITIAL_FREQ_CHECK | CPUFREQ_ASYNC_NOTIFICATION,
-
-Why Async here ? I am really confused if I am not able to understand
-the driver or you :)
-
-> +	.verify = cpufreq_generic_frequency_table_verify,
-> +	.target_index = tegra194_cpufreq_set_target,
-> +	.get = tegra194_get_speed,
-> +	.init = tegra194_cpufreq_init,
-> +	.attr = cpufreq_generic_attr,
-> +};
-> +
-> +static void tegra194_cpufreq_free_resources(void)
-> +{
-> +	flush_workqueue(read_counters_wq);
-> +	destroy_workqueue(read_counters_wq);
-> +}
-> +
-> +static struct cpufreq_frequency_table *init_freq_table
-
-Don't break line here, rather break after above *.
-
-> +		(struct platform_device *pdev, struct tegra_bpmp *bpmp,
-> +		 unsigned int cluster_id)
-> +{
-> +	struct cpufreq_frequency_table *opp_table;
-
-Please name it freq_table :)
-
-> +	struct mrq_cpu_ndiv_limits_response resp;
-> +	unsigned int num_freqs, ndiv, delta_ndiv;
-> +	struct mrq_cpu_ndiv_limits_request req;
-> +	struct tegra_bpmp_message msg;
-> +	u16 freq_table_step_size;
-> +	int err, index;
-> +
-> +	memset(&req, 0, sizeof(req));
-> +	req.cluster_id = cluster_id;
-> +
-> +	memset(&msg, 0, sizeof(msg));
-> +	msg.mrq = MRQ_CPU_NDIV_LIMITS;
-> +	msg.tx.data = &req;
-> +	msg.tx.size = sizeof(req);
-> +	msg.rx.data = &resp;
-> +	msg.rx.size = sizeof(resp);
-> +
-> +	err = tegra_bpmp_transfer(bpmp, &msg);
-> +	if (err)
-> +		return ERR_PTR(err);
-> +
-> +	/*
-> +	 * Make sure frequency table step is a multiple of mdiv to match
-> +	 * vhint table granularity.
-> +	 */
-> +	freq_table_step_size = resp.mdiv *
-> +			DIV_ROUND_UP(CPUFREQ_TBL_STEP_HZ, resp.ref_clk_hz);
-> +
-> +	dev_dbg(&pdev->dev, "cluster %d: frequency table step size: %d\n",
-> +		cluster_id, freq_table_step_size);
-> +
-> +	delta_ndiv = resp.ndiv_max - resp.ndiv_min;
-> +
-> +	if (unlikely(delta_ndiv == 0))
-> +		num_freqs = 1;
-> +	else
-> +		/* We store both ndiv_min and ndiv_max hence the +1 */
-> +		num_freqs = delta_ndiv / freq_table_step_size + 1;
-> +
-> +	num_freqs += (delta_ndiv % freq_table_step_size) ? 1 : 0;
-> +
-> +	opp_table = devm_kcalloc(&pdev->dev, num_freqs + 1, sizeof(*opp_table),
-> +				 GFP_KERNEL);
-> +	if (!opp_table)
-> +		return ERR_PTR(-ENOMEM);
-> +
-> +	for (index = 0, ndiv = resp.ndiv_min;
-> +			ndiv < resp.ndiv_max;
-> +			index++, ndiv += freq_table_step_size) {
-> +		opp_table[index].driver_data = ndiv;
-> +		opp_table[index].frequency = map_ndiv_to_freq(&resp, ndiv);
-> +	}
-> +
-> +	opp_table[index].driver_data = resp.ndiv_max;
-> +	opp_table[index++].frequency = map_ndiv_to_freq(&resp, resp.ndiv_max);
-> +	opp_table[index].frequency = CPUFREQ_TABLE_END;
-> +
-> +	return opp_table;
-> +}
-> +
-> +static int tegra194_cpufreq_probe(struct platform_device *pdev)
-> +{
-> +	struct tegra194_cpufreq_data *data;
-> +	struct tegra_bpmp *bpmp;
-> +	int err, i;
-> +
-> +	data = devm_kzalloc(&pdev->dev, sizeof(*data), GFP_KERNEL);
-> +	if (!data)
-> +		return -ENOMEM;
-> +
-> +	data->num_clusters = MAX_CLUSTERS;
-> +	data->tables = devm_kcalloc(&pdev->dev, data->num_clusters,
-> +				    sizeof(*data->tables), GFP_KERNEL);
-> +	if (!data->tables)
-> +		return -ENOMEM;
-> +
-> +	platform_set_drvdata(pdev, data);
-> +
-> +	read_counters_wq = alloc_workqueue("read_counters_wq", __WQ_LEGACY, 1);
-> +	if (!read_counters_wq) {
-> +		dev_err(&pdev->dev, "fail to create_workqueue\n");
-> +		return -EINVAL;
-> +	}
-> +
-> +	bpmp = of_tegra_bpmp_get();
-> +	if (IS_ERR(bpmp)) {
-> +		err = PTR_ERR(bpmp);
-> +		goto err_free_res;
-> +	}
-> +
-> +	for (i = 0; i < data->num_clusters; i++) {
-> +		data->tables[i] = init_freq_table(pdev, bpmp, i);
-> +		if (IS_ERR(data->tables[i])) {
-> +			err = PTR_ERR(data->tables[i]);
-> +			goto put_bpmp;
-> +		}
-> +	}
-> +
-> +	tegra_bpmp_put(bpmp);
-> +
-> +	tegra194_cpufreq_driver.driver_data = data;
-> +
-> +	err = cpufreq_register_driver(&tegra194_cpufreq_driver);
-> +	if (err)
-> +		goto err_free_res;
-> +
-> +	return err;
-> +
-> +put_bpmp:
-> +	tegra_bpmp_put(bpmp);
-> +err_free_res:
-> +	tegra194_cpufreq_free_resources();
-> +	return err;
-> +}
-> +
-> +static int tegra194_cpufreq_remove(struct platform_device *pdev)
-> +{
-> +	cpufreq_unregister_driver(&tegra194_cpufreq_driver);
-> +	tegra194_cpufreq_free_resources();
-> +
-> +	return 0;
-> +}
-> +
-> +static struct platform_driver tegra194_cpufreq_platform_driver = {
-> +	.driver = {
-> +		.name = "tegra194-cpufreq",
-> +	},
-> +	.probe = tegra194_cpufreq_probe,
-> +	.remove = tegra194_cpufreq_remove,
-> +};
-> +
-> +static int __init tegra_cpufreq_init(void)
-
-I seem to be forgetting this, but should we use __init with modules or
-not ?
+I think yes that should work, let me try that..
 
 -- 
-viresh
+~Vinod
