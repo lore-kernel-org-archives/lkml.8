@@ -2,150 +2,105 @@ Return-Path: <SRS0=aGSP=5L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E034C2D0E5
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 15:24:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F65AC43331
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 15:24:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 569AD20748
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 15:24:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6FB3320748
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 15:24:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="QJhesD4w"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gRmLOlrA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728041AbgCZPYE (ORCPT
+        id S1728113AbgCZPYT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 11:24:04 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:59027 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726296AbgCZPYE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 11:24:04 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 48p80G6F1Wz9txjy;
-        Thu, 26 Mar 2020 16:23:58 +0100 (CET)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=QJhesD4w; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id NWGJWPMaCs17; Thu, 26 Mar 2020 16:23:58 +0100 (CET)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 48p80G4yWsz9txhw;
-        Thu, 26 Mar 2020 16:23:58 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1585236238; bh=CZedNiiqJ0UJZqFGucqz7RH9S4VZ89sV2dm5t35m/bE=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=QJhesD4wQa2bJoneY1MwenUCwgUwqSk2wALQ4yKJw1XPxljgbdfEt2iVUC9DtiB+7
-         Qp03KQsLcMtvm5iloRRcoXG4f/w4u0Ph+bkyIf3LO/PICDIkvttB2JptzPRNVcj3XJ
-         QgjL01MGEvkgL+EWDjA6KH2h4clUrwIDk63DVcjQ=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 2ED0F8B7AB;
-        Thu, 26 Mar 2020 16:24:00 +0100 (CET)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id H0WwrU9lWfFS; Thu, 26 Mar 2020 16:24:00 +0100 (CET)
-Received: from [192.168.4.90] (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 343758B756;
-        Thu, 26 Mar 2020 16:23:58 +0100 (CET)
-Subject: Re: [PATCH V2 0/3] mm/debug: Add more arch page table helper tests
-To:     Anshuman Khandual <anshuman.khandual@arm.com>, linux-mm@kvack.org
-Cc:     Jonathan Corbet <corbet@lwn.net>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Vineet Gupta <vgupta@synopsys.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "Kirill A . Shutemov" <kirill@shutemov.name>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        linux-snps-arc@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        linux-riscv@lists.infradead.org, x86@kernel.org,
-        linux-doc@vger.kernel.org, linux-arch@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <1585027375-9997-1-git-send-email-anshuman.khandual@arm.com>
- <2bb4badc-2b7a-e15d-a99b-b1bd38c9d9bf@arm.com>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Message-ID: <a46d18ed-8911-1ec3-c32f-58b6e0d959d7@c-s.fr>
-Date:   Thu, 26 Mar 2020 16:23:58 +0100
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Thu, 26 Mar 2020 11:24:19 -0400
+Received: from us-smtp-delivery-74.mimecast.com ([216.205.24.74]:20293 "EHLO
+        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726296AbgCZPYT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Mar 2020 11:24:19 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1585236257;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=YdGaHErKXgEwjwVvT/7qOUW9k9MHjlnqc5eXCmmHhD0=;
+        b=gRmLOlrAOjF6bI8BYYBVUfyYsqT4R6frWAgaGVYf4S6KRHS4eVGPpvkI61AqlcRfG50WKX
+        XV3Xj3k5XrR4/VuTZinTzEWpo8nXfZ4qv09A/w2XmWJp3oFm+Gd24cbEf4QQDrxsmAFnx2
+        qKKeqof4cNYazsCenxbIaaMGgrLU8P4=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-305-bks26o97PL-5hfP-8EpW8Q-1; Thu, 26 Mar 2020 11:24:10 -0400
+X-MC-Unique: bks26o97PL-5hfP-8EpW8Q-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 47770800D48;
+        Thu, 26 Mar 2020 15:24:09 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-113-126.rdu2.redhat.com [10.10.113.126])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 5C1BE5DA7B;
+        Thu, 26 Mar 2020 15:24:08 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+Subject: [PATCH] afs: Fix unpinned address list during probing
+From:   David Howells <dhowells@redhat.com>
+To:     torvalds@linux-foundation.org
+Cc:     Marc Dionne <marc.dionne@auristor.com>,
+        linux-afs@lists.infradead.org, linux-kernel@vger.kernel.org
+Date:   Thu, 26 Mar 2020 15:24:07 +0000
+Message-ID: <158523624758.896230.14212353217852133608.stgit@warthog.procyon.org.uk>
+User-Agent: StGit/0.21
 MIME-Version: 1.0
-In-Reply-To: <2bb4badc-2b7a-e15d-a99b-b1bd38c9d9bf@arm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: fr
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+When it's probing all of a fileserver's interfaces to find which one is
+best to use, afs_do_probe_fileserver() takes a lock on the server record
+and notes the pointer to the address list.  It doesn't, however, pin the
+address list, so as soon as it drops the lock, there's nothing to stop the
+address list from being freed under us.
 
+Fix this by taking a ref on the address list inside the locked section and
+dropping it at the end of the function.
 
-Le 26/03/2020 à 03:23, Anshuman Khandual a écrit :
-> 
-> 
-> On 03/24/2020 10:52 AM, Anshuman Khandual wrote:
->> This series adds more arch page table helper tests. The new tests here are
->> either related to core memory functions and advanced arch pgtable helpers.
->> This also creates a documentation file enlisting all expected semantics as
->> suggested by Mike Rapoport (https://lkml.org/lkml/2020/1/30/40).
->>
->> This series has been tested on arm64 and x86 platforms.
-> 
-> If folks can test these patches out on remaining ARCH_HAS_DEBUG_VM_PGTABLE
-> enabled platforms i.e s390, arc, powerpc (32 and 64), that will be really
-> appreciated. Thank you.
-> 
+Fixes: 3bf0fb6f33dd ("afs: Probe multiple fileservers simultaneously")
+Signed-off-by: David Howells <dhowells@redhat.com>
+Reviewed-by: Marc Dionne <marc.dionne@auristor.com>
+---
 
-On powerpc 8xx (PPC32), I get:
+ fs/afs/fs_probe.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
-[   53.338368] debug_vm_pgtable: debug_vm_pgtable: Validating 
-architecture page table helpers
-[   53.347403] ------------[ cut here ]------------
-[   53.351832] WARNING: CPU: 0 PID: 1 at mm/debug_vm_pgtable.c:647 
-debug_vm_pgtable+0x280/0x3f4
-[   53.360140] CPU: 0 PID: 1 Comm: swapper Not tainted 
-5.6.0-rc7-s3k-dev-01090-g92710e99881f #3544
-[   53.368718] NIP:  c0777c04 LR: c0777bb8 CTR: 00000000
-[   53.373720] REGS: c9023df0 TRAP: 0700   Not tainted 
-(5.6.0-rc7-s3k-dev-01090-g92710e99881f)
-[   53.382042] MSR:  00029032 <EE,ME,IR,DR,RI>  CR: 22000222  XER: 20000000
-[   53.388667]
-[   53.388667] GPR00: c0777bb8 c9023ea8 c6120000 00000001 1e410000 
-00000000 00000000 007641c9
-[   53.388667] GPR08: 00000000 00000001 00000000 ffffffff 82000222 
-00000000 c00039b8 00000000
-[   53.388667] GPR16: 00000000 00000000 00000000 fffffff0 065fc000 
-1e410000 c6600000 000001e4
-[   53.388667] GPR24: 000001d9 c062d14c c65fc000 c642d448 000006c9 
-00000000 c65f8000 c65fc040
-[   53.423400] NIP [c0777c04] debug_vm_pgtable+0x280/0x3f4
-[   53.428559] LR [c0777bb8] debug_vm_pgtable+0x234/0x3f4
-[   53.433593] Call Trace:
-[   53.436048] [c9023ea8] [c0777bb8] debug_vm_pgtable+0x234/0x3f4 
-(unreliable)
-[   53.442936] [c9023f28] [c00039e0] kernel_init+0x28/0x124
-[   53.448184] [c9023f38] [c000f174] ret_from_kernel_thread+0x14/0x1c
-[   53.454245] Instruction dump:
-[   53.457180] 41a20008 4bea3ed9 62890021 7d36b92e 7d36b82e 71290fd0 
-3149ffff 7d2a4910
-[   53.464838] 0f090000 5789077e 3149ffff 7d2a4910 <0f090000> 38c00000 
-38a00000 38800000
-[   53.472671] ---[ end trace fd5dd92744dc0065 ]---
-[   53.519778] Freeing unused kernel memory: 608K
+diff --git a/fs/afs/fs_probe.c b/fs/afs/fs_probe.c
+index cfe62b154f68..e1b9ed679045 100644
+--- a/fs/afs/fs_probe.c
++++ b/fs/afs/fs_probe.c
+@@ -145,6 +145,7 @@ static int afs_do_probe_fileserver(struct afs_net *net,
+ 	read_lock(&server->fs_lock);
+ 	ac.alist = rcu_dereference_protected(server->addresses,
+ 					     lockdep_is_held(&server->fs_lock));
++	afs_get_addrlist(ac.alist);
+ 	read_unlock(&server->fs_lock);
+ 
+ 	atomic_set(&server->probe_outstanding, ac.alist->nr_addrs);
+@@ -163,6 +164,7 @@ static int afs_do_probe_fileserver(struct afs_net *net,
+ 
+ 	if (!in_progress)
+ 		afs_fs_probe_done(server);
++	afs_put_addrlist(ac.alist);
+ 	return in_progress;
+ }
+ 
+
 
