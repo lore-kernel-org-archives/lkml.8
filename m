@@ -2,92 +2,63 @@ Return-Path: <SRS0=aGSP=5L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9381CC2D0E9
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 20:46:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA2D7C2D0E5
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 20:47:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6680C2070A
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 20:46:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="GBtBK3BM"
+	by mail.kernel.org (Postfix) with ESMTP id 990412070A
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 20:47:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727443AbgCZUqT (ORCPT
+        id S1727791AbgCZUrt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 16:46:19 -0400
-Received: from frisell.zx2c4.com ([192.95.5.64]:55227 "EHLO frisell.zx2c4.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726034AbgCZUqT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 16:46:19 -0400
-Received: by frisell.zx2c4.com (ZX2C4 Mail Server) with ESMTP id 47980eb8;
-        Thu, 26 Mar 2020 20:38:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=zx2c4.com; h=mime-version
-        :references:in-reply-to:from:date:message-id:subject:to:cc
-        :content-type; s=mail; bh=CGWgvRHoerDqIX2HYCZh8ogjklM=; b=GBtBK3
-        BM2+T4Ws/EMMmKx8xvhiALt29uM1uW06kXm0UO5HEOi/oX/4uMSMuhmHx3CDbfUm
-        pOKstqAfjRFNInrLfIdLa/VU+DUH++J3XBnMA6ZuRat0YL9IrIaB3IOVuN61o9JN
-        SUJu1V8K12yus5RxdGfSo5lP9YUw13A2NzySstKJQKkJrh/yFRfTfhP59J87jlNj
-        txM2LCLNLVxYcwcPgkAdBuJvINRW8AdY1B3EEADHC/6TjfEOjXe6k3HL3itbwiiN
-        N34waeT/X6NafeE+6DjKW+K7vb5rssHXmmoZlmDF1rLumFai7ZPbHjVfSnC+oLP2
-        SdpMndirMIef9UkQ==
-Received: by frisell.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id 9e0ddec9 (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256:NO);
-        Thu, 26 Mar 2020 20:38:51 +0000 (UTC)
-Received: by mail-io1-f47.google.com with SMTP id m15so7614691iob.5;
-        Thu, 26 Mar 2020 13:46:16 -0700 (PDT)
-X-Gm-Message-State: ANhLgQ1uW/EDSqc7juyVByB0cEu/+IMyOehdcuekgoQe5Fuo+pcYMmmh
-        4J7ACSEdrr9K9ge+cEJRIifJILXxeEURQbU1WbI=
-X-Google-Smtp-Source: ADFU+vsT1lxBNZU6tEYaINxARGEDLm5sHLmSYnbnU2+V88Os9Y74T/ah4HXpvKNpS1pgTAFg8rIzXNts4PyzMfoHxm4=
-X-Received: by 2002:a02:2714:: with SMTP id g20mr9513089jaa.95.1585255574785;
- Thu, 26 Mar 2020 13:46:14 -0700 (PDT)
+        Thu, 26 Mar 2020 16:47:49 -0400
+Received: from relay7-d.mail.gandi.net ([217.70.183.200]:53325 "EHLO
+        relay7-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726363AbgCZUrt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Mar 2020 16:47:49 -0400
+X-Originating-IP: 86.202.105.35
+Received: from localhost (lfbn-lyo-1-9-35.w86-202.abo.wanadoo.fr [86.202.105.35])
+        (Authenticated sender: alexandre.belloni@bootlin.com)
+        by relay7-d.mail.gandi.net (Postfix) with ESMTPSA id 87C2720007;
+        Thu, 26 Mar 2020 20:47:46 +0000 (UTC)
+Date:   Thu, 26 Mar 2020 21:47:46 +0100
+From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
+To:     Eugene Syromiatnikov <esyr@redhat.com>
+Cc:     linux-rtc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        "Dmitry V. Levin" <ldv@altlinux.org>
+Subject: Re: [PATCH] rtc: make definitions in include/uapi/linux/rtc.h
+ actually useful for user space
+Message-ID: <20200326204746.GA593483@piout.net>
+References: <20200324041209.GA30727@asgard.redhat.com>
 MIME-Version: 1.0
-References: <20200326080104.27286-1-masahiroy@kernel.org> <CAHmME9pnAvgErYkcvvdakvfMY8ZGKfwHHNYzpVtJ913Tgp16CQ@mail.gmail.com>
- <20200326092213.GA100918@gmail.com> <CAK7LNAQ7-wpm+g=cXeJ01vGrO1nVjfP-ornKm=SXoDEn4x+DjQ@mail.gmail.com>
-In-Reply-To: <CAK7LNAQ7-wpm+g=cXeJ01vGrO1nVjfP-ornKm=SXoDEn4x+DjQ@mail.gmail.com>
-From:   "Jason A. Donenfeld" <Jason@zx2c4.com>
-Date:   Thu, 26 Mar 2020 14:46:03 -0600
-X-Gmail-Original-Message-ID: <CAHmME9qnWWYV+eWVmx2yoADB9oecZKj=UgLkdSHe_=MnxedtSQ@mail.gmail.com>
-Message-ID: <CAHmME9qnWWYV+eWVmx2yoADB9oecZKj=UgLkdSHe_=MnxedtSQ@mail.gmail.com>
-Subject: Re: [PATCH v2 00/16] x86, crypto: remove always-defined CONFIG_AS_*
- and cosolidate Kconfig/Makefiles
-To:     Masahiro Yamada <masahiroy@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>
-Cc:     Ingo Molnar <mingo@kernel.org>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "H . Peter Anvin" <hpa@zytor.com>, X86 ML <x86@kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        David Airlie <airlied@linux.ie>,
-        "David S. Miller" <davem@davemloft.net>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Ingo Molnar <mingo@redhat.com>,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Jim Kukunas <james.t.kukunas@linux.intel.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        NeilBrown <neilb@suse.de>, Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        Yuanhan Liu <yuanhan.liu@linux.intel.com>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        intel-gfx@lists.freedesktop.org,
-        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200324041209.GA30727@asgard.redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 26, 2020 at 2:44 PM Masahiro Yamada <masahiroy@kernel.org> wrote:
-> I collected more Reviewed-by and Acked-by,
-> then pushed this series to
->
-> git://git.kernel.org/pub/scm/linux/kernel/git/masahiroy/linux-kbuild.git
-> kbuild-asinstr
+On 24/03/2020 05:12:09+0100, Eugene Syromiatnikov wrote:
+> BIT() macro is not defined in UAPI headers; there is, however, similarly
+> defined _BITUL() macro present in include/uapi/linux/const.h; use it
+> instead and include <linux/const.h> and <linux/ioctl.h> in order to make
+> the definitions provided in the header useful.
+> 
+> Fixes: 3431ca4837bf ("rtc: define RTC_VL_READ values")
+> Signed-off-by: Eugene Syromiatnikov <esyr@redhat.com>
+> ---
+>  include/uapi/linux/rtc.h | 11 +++++++----
+>  1 file changed, 7 insertions(+), 4 deletions(-)
+> 
+Applied, thanks.
 
-But not the version of the penultimate patch that Nick ack'd....
+-- 
+Alexandre Belloni, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
