@@ -7,58 +7,58 @@ X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
 	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01774C43331
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 16:33:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDCEBC2D0E5
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 16:33:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CBC6A21D81
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 16:33:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95B5A21D81
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 16:33:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="QlyYPdUE"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="jZb2CWvT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728600AbgCZQdO (ORCPT
+        id S1728616AbgCZQdW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 12:33:14 -0400
-Received: from mail-wm1-f74.google.com ([209.85.128.74]:54292 "EHLO
+        Thu, 26 Mar 2020 12:33:22 -0400
+Received: from mail-wm1-f74.google.com ([209.85.128.74]:41990 "EHLO
         mail-wm1-f74.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727752AbgCZQdO (ORCPT
+        with ESMTP id S1727677AbgCZQdW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 12:33:14 -0400
-Received: by mail-wm1-f74.google.com with SMTP id t22so2408778wmt.4
-        for <linux-kernel@vger.kernel.org>; Thu, 26 Mar 2020 09:33:12 -0700 (PDT)
+        Thu, 26 Mar 2020 12:33:22 -0400
+Received: by mail-wm1-f74.google.com with SMTP id v184so2694977wme.7
+        for <linux-kernel@vger.kernel.org>; Thu, 26 Mar 2020 09:33:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=cj1yXAqU8AkYqnSowOMnKDwXe28Nmz4NKXcTv1E5rr8=;
-        b=QlyYPdUEjthYFChxgCVdTAxTBsSjtTEujh8fKUyVe2X1M4qIaDAIIGpHdB3HEuhn8O
-         QEHyMF0kfFNraTl/rH78GO9+Ome/PyBhr0br3HrVEZ1FPPb8WWaI50wDtJOyiz3DL/eY
-         5f5b7/Fm9M/hKVDEMkK2nYbOYR2Tp5CpPa9azj8zpoXjyXMOTGjAf/ata6fYlw+vdMXg
-         lTUrS96iVX9uKMVnqLc6Fn3RtkI0rAVGhJWje4JdlfDWrgXURBOnllcC/ZyjlGS3aFlD
-         Cm/8BXBTIPSl22F9vQxx0Dxngmircdao+AmRW3bnMOsux8FVfdbIWZ18ERPGH609bz/o
-         1lVQ==
+        bh=BTSoe6DkYNZH5BddOxOmXTzuoelDRmUvluUlJbA7LXg=;
+        b=jZb2CWvTWONnA3PrlR7yLTBu8UbvXrO1vido/kl4jzRrxuEXNocipKzkyP6sYmrVL7
+         SGqEPC7daMGhqW/pyxZWMAHCBWkeNdKjdN+jdv9pHQgR5FLcGcAfInOWY56u+nReDLhj
+         hIefxLH3t0J9z1+hWxQFKs/uBokZvWEsJW+FAvtL/0+7K5KtU5UdwD2/WacHcJAhqFZE
+         AaemQCe58Jfk/DfyhxiyGErBRcty5bwPhk2Z5v2xE1qq3rq0SCmjBHR5bJ8rxDokHd/Z
+         IMZgdyYl37Ogb7qKde9uLESdCenT9mnJN8bF9VPy7HwlmEy1aIydVIK0mSNpWDQgYqTy
+         nM3w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=cj1yXAqU8AkYqnSowOMnKDwXe28Nmz4NKXcTv1E5rr8=;
-        b=NdjHYWD7OPa2iVWzQsaZSczQpYIqsWHFNpXkjiA0VXEq9FExO1Fzu8Y1tUC64cFfni
-         KrdFBnJDZv4Av7rLdLiV2H3fcI0cmrloDLtwx4Uqjve8cP66MEPzcE8xjWDDWRH5YDY6
-         MAdHPj0bDSqt4nmpmaay1xUHJfGXV4WhbxlzcktI3+/KNObGxiVmykZZNri5RHClh02u
-         RSG/yQHstUu5irempsYnPp/XxdbMaKosYmPk6POW/L/Mz8bh8a86OwizgaAIFI7/f26A
-         3/lmn/H3Fdl/jnAU5NxtxbJ437gfsPZmb3XioRj1oX0R/2jxQXKoP5mw6p1YzlKBnqbs
-         c86w==
-X-Gm-Message-State: ANhLgQ3EGP+aoSvRak4GN/iIA5ikC0+VcON4MxMndz2wAR5iOyvXWVxT
-        UpxAu3+uqgdeEOA8mFfVer9E7weTAg==
-X-Google-Smtp-Source: ADFU+vt4y7onh9o9+kAT94HkWd8Pf04QxJp3qnGSHOe6xI1l+AZna1QGr4UpTELU485gJTHK1dqLBpbWxA==
-X-Received: by 2002:adf:ea03:: with SMTP id q3mr9842558wrm.267.1585240391265;
- Thu, 26 Mar 2020 09:33:11 -0700 (PDT)
-Date:   Thu, 26 Mar 2020 17:32:44 +0100
+        bh=BTSoe6DkYNZH5BddOxOmXTzuoelDRmUvluUlJbA7LXg=;
+        b=axkK6H9DmSMZfVeXkzCHYhAtvMB8ioyrksm1Gdp1DI0PWSrqE1ltnsEAVUz+gkqDxc
+         gMnTp4Qg6+LNipnTLCxRQSDoLL3jxFomlm3xbwwku2ikZRWi3bst2/k5nug0ZE0Z91Z4
+         IoJ6H/8QRedK5qofpsNpdZFIribEUafEoBUHJDt3iRpQloRSEuC2OXQkFdg0lAiDMOq1
+         UVotEK7vbHNJfdbPAZF51Rqnh6+jFIDkTqCcqv4oDwKlewmUcd65x9I28mtQxwkpp/cz
+         SLlKZsNbd65fy3KQPRqZxy459e3lnPxhj2vD6qc184Y5HS48cgIGXjj+G3EIirqfcf1/
+         Ct/Q==
+X-Gm-Message-State: ANhLgQ1wowWTeIc7O2BnY8fKGo1uaQcIbmiP/8EWpYA5MErI7Sbc9YgT
+        kEDI94Pq4eaMiBaCqY/+m8PLU7SE5w==
+X-Google-Smtp-Source: ADFU+vsJmGK3ZN6sdJ9iuiL2QlTUBnd8nY2ARCzRymwmFRKW8OOF6mbRMeVz+JGdJazZFXSGI73vH/RRgw==
+X-Received: by 2002:adf:d849:: with SMTP id k9mr10175956wrl.108.1585240395876;
+ Thu, 26 Mar 2020 09:33:15 -0700 (PDT)
+Date:   Thu, 26 Mar 2020 17:32:45 +0100
 In-Reply-To: <20200326163245.119670-1-jannh@google.com>
-Message-Id: <20200326163245.119670-2-jannh@google.com>
+Message-Id: <20200326163245.119670-3-jannh@google.com>
 Mime-Version: 1.0
 References: <20200326163245.119670-1-jannh@google.com>
 X-Mailer: git-send-email 2.25.1.696.g5e7596f4ac-goog
-Subject: [PATCH 1/2] irq_work: Reinitialize list heads for secondary CPUs
+Subject: [PATCH 2/2] printk: Reinitialize klogd percpu state for secondary CPUs
 From:   Jann Horn <jannh@google.com>
 To:     Peter Zijlstra <peterz@infradead.org>,
         Petr Mladek <pmladek@suse.com>,
@@ -75,53 +75,54 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 When printk_deferred() is used before percpu initialization, it will queue
-up lazy IRQ work on the boot CPU; percpu initialization then copies the
-work list head to all secondary CPUs. To ensure that the secondary CPUs
-don't re-execute the boot CPU's work and whatever its ->next pointer leads
-to, zero out the secondary CPUs' work list heads before bringing up SMP.
+up wake_up_klogd_work and set printk_pending on the boot CPU; percpu
+initialization then copies the the pending work's state and the
+printk_pending flag to all secondary CPUs. The end result is that e.g.
+if you run "dmesg -w" when the system is up, it won't notice new printk
+messages.
+To ensure that the secondary CPUs don't think that they already have
+pending printk work, reset the secondary CPUs' work items and
+printk_pending state.
 
 Signed-off-by: Jann Horn <jannh@google.com>
 ---
- kernel/irq_work.c | 22 ++++++++++++++++++++++
- 1 file changed, 22 insertions(+)
+ kernel/printk/printk.c | 23 +++++++++++++++++++++++
+ 1 file changed, 23 insertions(+)
 
-diff --git a/kernel/irq_work.c b/kernel/irq_work.c
-index 828cc30774bc..903e5be9aebf 100644
---- a/kernel/irq_work.c
-+++ b/kernel/irq_work.c
-@@ -152,6 +152,7 @@ static void irq_work_run_list(struct llist_head *list)
- 		 * while we are in the middle of the func.
- 		 */
- 		flags = atomic_fetch_andnot(IRQ_WORK_PENDING, &work->flags);
-+		WARN_ON_ONCE((flags & IRQ_WORK_PENDING) == 0);
+diff --git a/kernel/printk/printk.c b/kernel/printk/printk.c
+index fada22dc4ab6..e531407188f1 100644
+--- a/kernel/printk/printk.c
++++ b/kernel/printk/printk.c
+@@ -2964,6 +2964,29 @@ static DEFINE_PER_CPU(struct irq_work, wake_up_klogd_work) = {
+ 	.flags = ATOMIC_INIT(IRQ_WORK_LAZY),
+ };
  
- 		work->func(work);
- 		/*
-@@ -195,3 +196,24 @@ void irq_work_sync(struct irq_work *work)
- 		cpu_relax();
- }
- EXPORT_SYMBOL_GPL(irq_work_sync);
-+
 +/*
-+ * If we queued up IRQ work before fully initializing the percpu subsystem, e.g.
-+ * via printk_deferred(), the head pointer of the boot CPU will have been copied
-+ * over to all the other CPUs.
-+ * To fix that, manually initialize the list heads of all secondary processors
++ * If we called defer_console_output() before fully initializing the percpu
++ * subsystem, e.g. via printk_deferred(), the irq_work flags and the
++ * printk_pending flag may have been copied from the boot CPU to the others
++ * while work was pending.
++ * To fix that, manually reset the percpu data for all secondary processors
 + * before bringing up SMP.
 + */
-+static int __init irq_work_percpu_fixup(void)
++static int __init klogd_percpu_fixup(void)
 +{
 +	int cpu;
 +
 +	for_each_possible_cpu(cpu) {
 +		if (cpu == smp_processor_id())
 +			continue;
-+		per_cpu(raised_list.first, cpu) = NULL;
-+		per_cpu(lazy_list.first, cpu) = NULL;
++		atomic_set(&per_cpu(wake_up_klogd_work.flags, cpu),
++			   IRQ_WORK_LAZY);
++		per_cpu(printk_pending, cpu) = 0;
 +	}
 +	return 0;
 +}
-+early_initcall(irq_work_percpu_fixup)
++early_initcall(klogd_percpu_fixup)
++
+ void wake_up_klogd(void)
+ {
+ 	preempt_disable();
 -- 
 2.25.1.696.g5e7596f4ac-goog
 
