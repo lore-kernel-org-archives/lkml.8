@@ -2,110 +2,151 @@ Return-Path: <SRS0=aGSP=5L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3152C43331
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 16:27:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D47B4C43331
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 16:27:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 75B9620787
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 16:27:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A657F221F5
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 16:27:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="0HnG5uLo"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="O+HVkvBE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727666AbgCZQ1F (ORCPT
+        id S1728550AbgCZQ14 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 12:27:05 -0400
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:37333 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726330AbgCZQ1F (ORCPT
+        Thu, 26 Mar 2020 12:27:56 -0400
+Received: from mail-il1-f194.google.com ([209.85.166.194]:41059 "EHLO
+        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726175AbgCZQ14 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 12:27:05 -0400
-Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02QGNFlJ025185;
-        Thu, 26 Mar 2020 17:26:55 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : references : in-reply-to : content-type : content-id
- : content-transfer-encoding : mime-version; s=STMicroelectronics;
- bh=1xKLuh0CMGGeFs0L/qRqkwlJw3iv6JDUdN6d2APZlR0=;
- b=0HnG5uLoeEsbI+fFw2vsqkwtWLxAo/KD2pzJPg1na3rYU9vLfKQQ1Ip0pXY9NCwdyku+
- Q31RwCI4B2X/GlZkoDdkduJbdqsHjy/42Qxbg3ogxPDA+U7vf786hhrgLJT8jLLdmNN7
- bDcJDsVxgDzdkqARlQX12b1gkTJRaasnd5dKlK5q29JE135Jl+ZecwDjsT//zNH6KC5y
- wuIxewifITzYpJUobLNUA7f1vl96y3YhGJsEIbyhCeaoTDTL1IkXvpeA6k4uwqZYVzz4
- soC/I8nIaFYynYxe+ziVLCFBbMf5Haf87V1UtPUuWUnsCj04KufyQ4jhbla9EYZr+cRS fA== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2yw9k0ctc2-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 26 Mar 2020 17:26:55 +0100
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 0F8A210002A;
-        Thu, 26 Mar 2020 17:26:48 +0100 (CET)
-Received: from Webmail-eu.st.com (sfhdag3node1.st.com [10.75.127.7])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id EB6C52B9067;
-        Thu, 26 Mar 2020 17:26:47 +0100 (CET)
-Received: from SFHDAG3NODE3.st.com (10.75.127.9) by SFHDAG3NODE1.st.com
- (10.75.127.7) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 26 Mar
- 2020 17:26:47 +0100
-Received: from SFHDAG3NODE3.st.com ([fe80::3507:b372:7648:476]) by
- SFHDAG3NODE3.st.com ([fe80::3507:b372:7648:476%20]) with mapi id
- 15.00.1347.000; Thu, 26 Mar 2020 17:26:47 +0100
-From:   Benjamin GAIGNARD <benjamin.gaignard@st.com>
-To:     Neil Armstrong <narmstrong@baylibre.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-CC:     "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-amlogic@lists.infradead.org" 
-        <linux-amlogic@lists.infradead.org>,
-        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] dt-bindings: usb: dwc2: fix bindings for
- amlogic,meson-gxbb-usb
-Thread-Topic: [PATCH] dt-bindings: usb: dwc2: fix bindings for
- amlogic,meson-gxbb-usb
-Thread-Index: AQHWA4kfrKmvM7C2NESne7Y0qff0Aqha/tkA
-Date:   Thu, 26 Mar 2020 16:26:47 +0000
-Message-ID: <e7820b83-670d-f619-c5fa-8c97379a6471@st.com>
-References: <20200326161046.12111-1-narmstrong@baylibre.com>
-In-Reply-To: <20200326161046.12111-1-narmstrong@baylibre.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.75.127.51]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <8C128BFFBE124340B62493BB8102458F@st.com>
-Content-Transfer-Encoding: base64
+        Thu, 26 Mar 2020 12:27:56 -0400
+Received: by mail-il1-f194.google.com with SMTP id t6so2322624ilj.8;
+        Thu, 26 Mar 2020 09:27:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=2MvgnsSQhFJOcyx9F2ihbJOXdLnu/MGIqeeUoB2SLbM=;
+        b=O+HVkvBErHFx61kmKWqwDVr9mM9NwxkP5CgHZkz8KKBG51hrYlwuKP26qg84OHsxVB
+         0Csn9hEqw5zUtxAZ8hXbKJYonAGgMiW0oSwLVoWbnfKE7nmgDQTWRrmKkq0R3soBo1O6
+         YA2xpd7O25TSRoBEZeQ7E95N53qbjw3fE5HCjUUKmtAeNikCAx8lmf4WzXJgNMiGFSJx
+         c4+Rvjrk3GX2GNNId3q5hbOuLfTBkYt3mx/jzzQjOjWhqiNfneAMWR968ENRiKCvdJgC
+         Lt4zrBYpUJM4uD/0sBT0Ucf0edmhAvR21jjC3t8qlxejtaMgYo1HetQF0xoeZiEQ/Df3
+         Sgmw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=2MvgnsSQhFJOcyx9F2ihbJOXdLnu/MGIqeeUoB2SLbM=;
+        b=MNkjxv5kWyr3Pe1Cl//9zeE5kC6LSuxM1nh5bRaOuSeBBVr/vqmMbCsj2KZUXtHdHF
+         YsBnURRnnaoMhi4z++vAqr7EhE9pNcxcjmuEZYGp3X0PIbIThkxWgacIy8m28BpXqVlr
+         DP8UHztCbTQy8iJ8x2u6maFqsLmj19r8izkXyt2PQ3KM+ABOQE42XoEXfoJQnwiFBzI+
+         TS2l/tfu2k3oXmwf4RjNb/xVKFe/ojQjfuy3VuIdS20ZNi5JA5St29peQ22y5BcL6oUi
+         Cd2CXMy5b4fAWsyJRqiQtNSAj40GMkWuclxDy9yQyqtSZjaBVzs5xMOkaZPJ6yCNz2Ip
+         carw==
+X-Gm-Message-State: ANhLgQ0zlqfs3WFGsjO5UaFGySfNHjyxCMqpCdNfy1/KZ3Qyz1H8GLDV
+        9b8FJ9wfXpc515nlRFL5olRAZ4L+DNGRK5P19gQj6u2sw90=
+X-Google-Smtp-Source: ADFU+vs3UUxKJvBojeAzB/v9NDT0zXbWaHLGTU3p4w5iPWYt+V3DgoqWyKdwP6CKCFaA8gpJqDpqts+2JawxmNNR4DE=
+X-Received: by 2002:a92:3955:: with SMTP id g82mr9646493ila.237.1585240073233;
+ Thu, 26 Mar 2020 09:27:53 -0700 (PDT)
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.645
- definitions=2020-03-26_08:2020-03-26,2020-03-26 signatures=0
+References: <20200326103926.20888-1-kai.heng.feng@canonical.com>
+In-Reply-To: <20200326103926.20888-1-kai.heng.feng@canonical.com>
+From:   Alexander Duyck <alexander.duyck@gmail.com>
+Date:   Thu, 26 Mar 2020 09:27:42 -0700
+Message-ID: <CAKgT0UfFnXcSSsXvxk8+xiZvyzDh+8V-9bCT-z5U+MEVoAVKLw@mail.gmail.com>
+Subject: Re: [Intel-wired-lan] [PATCH] igb: Use a sperate mutex insead of rtnl_lock()
+To:     Kai-Heng Feng <kai.heng.feng@canonical.com>
+Cc:     Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
+        "open list:NETWORKING DRIVERS" <netdev@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        "moderated list:INTEL ETHERNET DRIVERS" 
+        <intel-wired-lan@lists.osuosl.org>,
+        "David S. Miller" <davem@davemloft.net>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQoNCk9uIDMvMjYvMjAgNToxMCBQTSwgTmVpbCBBcm1zdHJvbmcgd3JvdGU6DQo+IFRoZSBhbWxv
-Z2ljLG1lc29uLWd4YmItdXNiIGNvbXBhdGlibGUgbmVlZHMgc25wcyxkd2MyIGFzd2VsbCBsaWtl
-IG90aGVyDQo+IEFtbG9naWMgU29DLg0KPg0KPiBGaXhlczogZjNjYTc0NWQ4YTBlICgiZHQtYmlu
-ZGluZ3M6IHVzYjogQ29udmVydCBEV0MyIGJpbmRpbmdzIHRvIGpzb24tc2NoZW1hIikNCj4gU2ln
-bmVkLW9mZi1ieTogTmVpbCBBcm1zdHJvbmcgPG5hcm1zdHJvbmdAYmF5bGlicmUuY29tPg0KUmV2
-aWV3ZWQtYnk6IEJlbmphbWluIEdhaWduYXJkIDxiZW5qYW1pbi5nYWlnbmFyZEBzdC5jb20+DQo+
-IC0tLQ0KPiAgIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy91c2IvZHdjMi55YW1s
-IHwgNCArKystDQo+ICAgMSBmaWxlIGNoYW5nZWQsIDMgaW5zZXJ0aW9ucygrKSwgMSBkZWxldGlv
-bigtKQ0KPg0KPiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdz
-L3VzYi9kd2MyLnlhbWwgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvdXNiL2R3
-YzIueWFtbA0KPiBpbmRleCA3MWNmN2JhMzIyMzcuLmI3YjlkZGNiYzYzNyAxMDA2NDQNCj4gLS0t
-IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3VzYi9kd2MyLnlhbWwNCj4gKysr
-IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3VzYi9kd2MyLnlhbWwNCj4gQEAg
-LTQ5LDcgKzQ5LDkgQEAgcHJvcGVydGllczoNCj4gICAgICAgICAtIGl0ZW1zOg0KPiAgICAgICAg
-ICAgICAtIGNvbnN0OiBhbWxvZ2ljLG1lc29uOGItdXNiDQo+ICAgICAgICAgICAgIC0gY29uc3Q6
-IHNucHMsZHdjMg0KPiAtICAgICAgLSBjb25zdDogYW1sb2dpYyxtZXNvbi1neGJiLXVzYg0KPiAr
-ICAgICAgLSBpdGVtczoNCj4gKyAgICAgICAgICAtIGNvbnN0OiBhbWxvZ2ljLG1lc29uLWd4YmIt
-dXNiDQo+ICsgICAgICAgICAgLSBjb25zdDogc25wcyxkd2MyDQo+ICAgICAgICAgLSBpdGVtczoN
-Cj4gICAgICAgICAgICAgLSBjb25zdDogYW1sb2dpYyxtZXNvbi1nMTJhLXVzYg0KPiAgICAgICAg
-ICAgICAtIGNvbnN0OiBzbnBzLGR3YzINCg==
+On Thu, Mar 26, 2020 at 3:39 AM Kai-Heng Feng
+<kai.heng.feng@canonical.com> wrote:
+>
+> Commit 9474933caf21 ("igb: close/suspend race in netif_device_detach")
+> fixed race condition between close and power management ops by using
+> rtnl_lock().
+>
+> This fix is a preparation for next patch, to prevent a dead lock under
+> rtnl_lock() when calling runtime resume routine.
+>
+> However, we can't use device_lock() in igb_close() because when module
+> is getting removed, the lock is already held for igb_remove(), and
+> igb_close() gets called during unregistering the netdev, hence causing a
+> deadlock. So let's introduce a new mutex so we don't cause a deadlock
+> with driver core or netdev core.
+>
+> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+
+So this description doesn't make much sense to me. You describe the
+use of the device_lock() in igb_close() but it isn't used there. In
+addition it seems like you are arbitrarily moving code that was
+wrapped in the rtnl_lock out of it. I'm not entirely sure that is safe
+since there are calls within many of these functions that assume the
+rtnl_lock is held and changing that is likely going to introduce more
+issues.
+
+
+
+> ---
+>  drivers/net/ethernet/intel/igb/igb_main.c | 19 +++++++++++++------
+>  1 file changed, 13 insertions(+), 6 deletions(-)
+>
+> diff --git a/drivers/net/ethernet/intel/igb/igb_main.c b/drivers/net/ethernet/intel/igb/igb_main.c
+> index b46bff8fe056..dc7ed5dd216b 100644
+> --- a/drivers/net/ethernet/intel/igb/igb_main.c
+> +++ b/drivers/net/ethernet/intel/igb/igb_main.c
+> @@ -288,6 +288,8 @@ static const struct igb_reg_info igb_reg_info_tbl[] = {
+>         {}
+>  };
+>
+> +static DEFINE_MUTEX(igb_mutex);
+> +
+>  /* igb_regdump - register printout routine */
+>  static void igb_regdump(struct e1000_hw *hw, struct igb_reg_info *reginfo)
+>  {
+> @@ -4026,9 +4028,14 @@ static int __igb_close(struct net_device *netdev, bool suspending)
+>
+>  int igb_close(struct net_device *netdev)
+>  {
+> +       int err = 0;
+> +
+> +       mutex_lock(&igb_mutex);
+>         if (netif_device_present(netdev) || netdev->dismantle)
+> -               return __igb_close(netdev, false);
+> -       return 0;
+> +               err = __igb_close(netdev, false);
+> +       mutex_unlock(&igb_mutex);
+> +
+> +       return err;
+>  }
+>
+
+Okay, so I am guessing the problem has something to do with the
+addition of the netdev->dismantle test here and the fact that it is
+bypassing the present check for the hotplug remove case?
+
+So it looks like nobody ever really reviewed commit 888f22931478
+("igb: Free IRQs when device is hotplugged"). What I would recommend
+is reverting it and instead we fix the remaining pieces that need to
+be addressed in igb so it more closely matches what we have in e1000e
+after commit a7023819404a ("e1000e: Use rtnl_lock to prevent race
+conditions between net and pci/pm"). From what I can tell the only
+pieces that are really missing is to update igb_io_error_detected so
+that in addition to igb_down it will call igb_free_irq, and then in
+addition we should be wrapping most of the code in that function with
+an rtnl_lock since it is detaching a device and making modifications
+to it.
