@@ -6,90 +6,62 @@ X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F011C43331
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 18:51:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09F97C2D0ED
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 18:53:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B5D720714
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 18:51:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D8F592076A
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 18:53:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727995AbgCZSvc (ORCPT
+        id S1728286AbgCZSxd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 14:51:32 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:51490 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726340AbgCZSva (ORCPT
+        Thu, 26 Mar 2020 14:53:33 -0400
+Received: from shards.monkeyblade.net ([23.128.96.9]:52714 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726340AbgCZSxc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 14:51:30 -0400
-Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1jHXb3-000058-2K; Thu, 26 Mar 2020 19:51:17 +0100
-Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
-        id 57C9410069D; Thu, 26 Mar 2020 19:51:16 +0100 (CET)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Xiaoyao Li <xiaoyao.li@intel.com>, Ingo Molnar <mingo@redhat.com>,
-        Borislav Petkov <bp@alien8.de>, hpa@zytor.com,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     x86@kernel.org, kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Tony Luck <tony.luck@intel.com>
-Subject: Re: [PATCH v6 8/8] kvm: vmx: virtualize split lock detection
-In-Reply-To: <e58484ac-e355-299d-131c-6e8c12b0b1d0@intel.com>
-References: <20200324151859.31068-1-xiaoyao.li@intel.com> <20200324151859.31068-9-xiaoyao.li@intel.com> <87eethz2p6.fsf@nanos.tec.linutronix.de> <88b01989-25cd-90af-bfe8-c236bd5d1dbf@intel.com> <87d08zxtgl.fsf@nanos.tec.linutronix.de> <1d98bddd-a6a4-2fcc-476b-c9b19f65c6b6@intel.com> <87a743xj0n.fsf@nanos.tec.linutronix.de> <e58484ac-e355-299d-131c-6e8c12b0b1d0@intel.com>
-Date:   Thu, 26 Mar 2020 19:51:16 +0100
-Message-ID: <877dz7x84b.fsf@nanos.tec.linutronix.de>
-MIME-Version: 1.0
-Content-Type: text/plain
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+        Thu, 26 Mar 2020 14:53:32 -0400
+Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 335FF15CBC23B;
+        Thu, 26 Mar 2020 11:53:31 -0700 (PDT)
+Date:   Thu, 26 Mar 2020 11:53:30 -0700 (PDT)
+Message-Id: <20200326.115330.2250343131621391364.davem@davemloft.net>
+To:     florinel.iordache@nxp.com
+Cc:     netdev@vger.kernel.org, andrew@lunn.ch, f.fainelli@gmail.com,
+        hkallweit1@gmail.com, linux@armlinux.org.uk,
+        devicetree@vger.kernel.org, linux-doc@vger.kernel.org,
+        robh+dt@kernel.org, mark.rutland@arm.com, kuba@kernel.org,
+        corbet@lwn.net, shawnguo@kernel.org, leoyang.li@nxp.com,
+        madalin.bucur@oss.nxp.com, ioana.ciornei@nxp.com,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next 6/9] net: phy: add backplane kr driver support
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <1585230682-24417-7-git-send-email-florinel.iordache@nxp.com>
+References: <1585230682-24417-1-git-send-email-florinel.iordache@nxp.com>
+        <1585230682-24417-7-git-send-email-florinel.iordache@nxp.com>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Thu, 26 Mar 2020 11:53:32 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Xiaoyao Li <xiaoyao.li@intel.com> writes:
-> On 3/26/2020 10:55 PM, Thomas Gleixner wrote:
->> Xiaoyao Li <xiaoyao.li@intel.com> writes:
->>> On 3/26/2020 7:10 PM, Thomas Gleixner wrote:
->>> If the host has it disabled, !split_lock_detect_on() is true, it skips
->>> following check due to ||
->>>
->>> if (!boot_cpu_has(X86_FEATURE_SPLIT_LOCK)) {
->>> 	inject #AC back to guest
-> and 	return 1;
->
->> 
->> That'd be a regular #AC, right?
->
-> Yes.
->
->>> } else {
->>> 	if (guest_alignment_check_enabled() || guest_sld_on())
->>> 		inject #AC back to guest
-> and 		return 1;
->
->> Here is clearly an else path missing.
->
-> the else path is fall through.
->
-> i.e. calling handle_user_split_lock().
->
-> If cannot handle, it falls through to report #AC to user space (QEMU)
->
->>> }
->> 
->
-> If there is no problem with the above. So what's the problem of the 
-> original?
+From: Florinel Iordache <florinel.iordache@nxp.com>
+Date: Thu, 26 Mar 2020 15:51:19 +0200
 
-Probably my inability to decipher the convoluted condition.
+> +static void kr_reset_master_lane(struct kr_lane_info *krln)
+> +{
+> +	struct phy_device *bpphy = krln->bpphy;
+> +	struct backplane_phy_info *bp_phy = bpphy->priv;
+> +	const struct lane_io_ops *lane_ops = krln->bp_phy->bp_dev.lane_ops;
 
-Thanks,
+Please use reverse christmas tree ordering for local variables.
 
-        tglx
+Please audit your entire submission for this issue.
+
+Thank you.
