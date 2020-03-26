@@ -2,101 +2,150 @@ Return-Path: <SRS0=aGSP=5L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C0A3C2D0E8
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 08:47:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB3B4C2D0E8
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 08:47:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 64A4E2082D
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 08:47:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B2CC320772
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 08:47:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="K2/UIb0S"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="A/5OM9YH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727683AbgCZIrE (ORCPT
+        id S1727707AbgCZIrj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 04:47:04 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:37519 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726210AbgCZIrD (ORCPT
+        Thu, 26 Mar 2020 04:47:39 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:47039 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726210AbgCZIrj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 04:47:03 -0400
-Received: by mail-wm1-f66.google.com with SMTP id d1so6016916wmb.2
-        for <linux-kernel@vger.kernel.org>; Thu, 26 Mar 2020 01:47:01 -0700 (PDT)
+        Thu, 26 Mar 2020 04:47:39 -0400
+Received: by mail-pf1-f196.google.com with SMTP id q3so2415018pff.13;
+        Thu, 26 Mar 2020 01:47:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=aHsFOW/hRqJNBE26Z5Tub2WJh8U/eUTrSdlnpK42LdU=;
-        b=K2/UIb0SKVqYqh8r2H12voDOpO0H039juj10pbN91ol+gT5TlMsO16CcYLXW5nGseJ
-         RjUw2ZVwtcpGz7ANIAb1H97nQmPvCo8HSDgLq/NnXnORWtAJkjOIiSoh6ABZLwtYh89v
-         3eDGJar5Rr3Tp4MwKnxEVqN3tKmSx2W9eM8vPJRTp1t+mHDFTHJ/Y4dF4GmpV8f/Tq8W
-         Y38RAZ768onB+G84eIZq6aqlARVB/DwRHPThxtlSoCYl7b6flYWsi2L1KwQFtdnidpQg
-         qT4+uviao1LrO4aQl3lwIV7naNh3UI4h5KEK8e7SGsWqxFV8V57QyEaKtuFB0Y9pwbm6
-         vIlw==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=whiWChTFsfnQGZzkK5gxsAgqaOCwfe+IFi0g4TDqkZE=;
+        b=A/5OM9YHg5A3e4gJXOFsnHuE4ZBQxA1O8JnzpcNhOnhcLDHPnbSIUHPYmAjpxQvNNa
+         3OzAQhmLAAe+CnD5LNxAXoHz8I9WCzZG/695HvuJ4BZQa8MM3dMG8YKV6MTW/ae9L8/I
+         Zz6PG4iZphmlej+y8kGyTVHwfdx9fOGbOPEiVpPva3LtrPVxTva0HsSJ4QQjj7FnBhce
+         fk3fO2zVVyGZzPVV2Y+WlniuzJyf3rJm62GY4E8mtKnkkrpWZmdKWsnB9zVlsQggJCTE
+         JHEAdNamHDw0Hulhs4tqQiY6JcXKNndUF88b30yJvALHFhQsXRyQUuCj8/NZNEO1ja2L
+         2CDQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=aHsFOW/hRqJNBE26Z5Tub2WJh8U/eUTrSdlnpK42LdU=;
-        b=Y24+anRNDVrkHDbM8hS7k7Mrgxy7/kSNfRwcivyAxU1CYU8UIKovuxSPn77phFkbCT
-         PCb4kG5BSowa/YcBJjaDiuUuSHri9lo//4ZbJdihog9Lb7P0051Xu4wYOsuw5ceM68vx
-         I1hW5aGZ7k3MHxXvwqbT/DlmQkdFmczvgjcgOxE3jhsblDPmaNnsSbtcsavYJ20enEYJ
-         FntESc7oktzZfdJ+gi2OsHheaFAbWBIbYOq1DdhMw1EAvhYHMThfu6aWtBQvYRrASw7c
-         MnEcrn3FT8bxtVTsRx1yl2ujyeq8U9WH2Iswp/Tl39FesvtVMRrUMoQ30TLz6QfDPTDB
-         nmfA==
-X-Gm-Message-State: ANhLgQ08g5kd0uNevw/992ZEuTkvHAE3j00dSEaMCr18pFGwcbVgbHMC
-        /9xn41lQoX3pWQwcNnePdeVsKB0v
-X-Google-Smtp-Source: ADFU+vtf+5fVBQiQHUFA4G1j/8ab61fwr3VH/WIprGNCGY1eVEd78rWMvs31OrRFnqCyzgrVsyRzDw==
-X-Received: by 2002:a1c:9904:: with SMTP id b4mr1995516wme.34.1585212420392;
-        Thu, 26 Mar 2020 01:47:00 -0700 (PDT)
-Received: from [192.168.178.22] (dslb-002-204-140-180.002.204.pools.vodafone-ip.de. [2.204.140.180])
-        by smtp.gmail.com with ESMTPSA id s131sm2527282wmf.35.2020.03.26.01.46.59
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 26 Mar 2020 01:46:59 -0700 (PDT)
-Subject: Re: [PATCH] staging: rtl8188eu: cleanup long line in odm.c
-To:     Joe Perches <joe@perches.com>, gregkh@linuxfoundation.org
-Cc:     Larry.Finger@lwfinger.net, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org
-References: <20200325215940.9225-1-straube.linux@gmail.com>
- <9b369028adca4105c376094db569637cf8bb1fa2.camel@perches.com>
-From:   Michael Straube <straube.linux@gmail.com>
-Message-ID: <147371c7-54f9-3d17-b497-24044aa5c654@gmail.com>
-Date:   Thu, 26 Mar 2020 09:45:44 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=whiWChTFsfnQGZzkK5gxsAgqaOCwfe+IFi0g4TDqkZE=;
+        b=JgNLdQqkBqoQx/dbN/8D6LnoArBttDNoqGkhwKp0+a+mOy+h5F9iD/SclldCtUe6MT
+         hJHpzAAWqNkDuh2CYePxteVs/QMKBFZPUT5EkCRrjxHYl35P42+hBnL4NdtyUTuyTawn
+         9YNIvVIn6WAH44loGA0DZz3DJ53paTc1zu2pGCI9mkOUKNk0IIw9lff33Sclc9Lb0JmO
+         iESkR/g3NZXo3jvOnqJmd2i2vuQJcKczN7n6SXEXYCTd1emOjuyUktvg0uysYvH/208X
+         yk4G+/VioURyh38P8arz2C8bcrQtw9Y274hEY7+OhNr9r8AfygWWXY2iipz8T7Gxs55S
+         MHIA==
+X-Gm-Message-State: ANhLgQ1uJNJbpHJBoiYFrtbcV/JiQC11SlCmefLC2na78OvB1JwjFMfV
+        /OA2OSBvdDE7UKFRAffzSIgMly6E3Q4d6dhM1anurV+Gdbk=
+X-Google-Smtp-Source: ADFU+vug1s5Q4N6TWUCRKkji7YrspUMD8lEQtk0wCt2aPF77oMCeqPUaEfYgB0tUJ34jS7bID8+9oUEFoulOLRYNtfk=
+X-Received: by 2002:aa7:8149:: with SMTP id d9mr7709873pfn.170.1585212458493;
+ Thu, 26 Mar 2020 01:47:38 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <9b369028adca4105c376094db569637cf8bb1fa2.camel@perches.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200326150523.02c4ec48@canb.auug.org.au>
+In-Reply-To: <20200326150523.02c4ec48@canb.auug.org.au>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Thu, 26 Mar 2020 10:47:26 +0200
+Message-ID: <CAHp75VdCf7HRy2BBHw9---p+-eSt0cN1jRaL9D4U_7MpmG5cWw@mail.gmail.com>
+Subject: Re: linux-next: manual merge of the drivers-x86 tree with the tip tree
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     Darren Hart <dvhart@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@elte.hu>, "H. Peter Anvin" <hpa@zytor.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Gayatri Kammela <gayatri.kammela@intel.com>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Borislav Petkov <bp@suse.de>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Mar 26, 2020 at 6:05 AM Stephen Rothwell <sfr@canb.auug.org.au> wrote:
+>
+> Hi all,
+>
+> Today's linux-next merge of the drivers-x86 tree got a conflict in:
+>
+>   drivers/platform/x86/intel_pmc_core.c
+>
+> between commit:
+>
+>   a69b3b1d4cf0 ("platform/x86: Convert to new CPU match macros")
+>
+> from the tip tree and commit:
+>
+>   16292bed9c56 ("platform/x86: intel_pmc_core: Add Atom based Jasper Lake (JSL) platform support")
+>
+> from the drivers-x86 tree.
+>
+> I fixed it up (see below) and can carry the fix as necessary. This
+> is now fixed as far as linux-next is concerned, but any non trivial
+> conflicts should be mentioned to your upstream maintainer when your tree
+> is submitted for merging.  You may also want to consider cooperating
+> with the maintainer of the conflicting tree to minimise any particularly
+> complex conflicts.
+>
+
+Looks correct to me, i.e. new macro for code in PDx86.
+Thank you, Stephen!
+
+> --
+> Cheers,
+> Stephen Rothwell
+>
+> diff --cc drivers/platform/x86/intel_pmc_core.c
+> index 3df33ff50faa,d265cd5b1f45..000000000000
+> --- a/drivers/platform/x86/intel_pmc_core.c
+> +++ b/drivers/platform/x86/intel_pmc_core.c
+> @@@ -871,18 -1144,19 +1144,19 @@@ static inline void pmc_core_dbgfs_unreg
+>   #endif /* CONFIG_DEBUG_FS */
+>
+>   static const struct x86_cpu_id intel_pmc_core_ids[] = {
+>  -      INTEL_CPU_FAM6(SKYLAKE_L, spt_reg_map),
+>  -      INTEL_CPU_FAM6(SKYLAKE, spt_reg_map),
+>  -      INTEL_CPU_FAM6(KABYLAKE_L, spt_reg_map),
+>  -      INTEL_CPU_FAM6(KABYLAKE, spt_reg_map),
+>  -      INTEL_CPU_FAM6(CANNONLAKE_L, cnp_reg_map),
+>  -      INTEL_CPU_FAM6(ICELAKE_L, icl_reg_map),
+>  -      INTEL_CPU_FAM6(ICELAKE_NNPI, icl_reg_map),
+>  -      INTEL_CPU_FAM6(COMETLAKE, cnp_reg_map),
+>  -      INTEL_CPU_FAM6(COMETLAKE_L, cnp_reg_map),
+>  -      INTEL_CPU_FAM6(TIGERLAKE_L, tgl_reg_map),
+>  -      INTEL_CPU_FAM6(TIGERLAKE, tgl_reg_map),
+>  -      INTEL_CPU_FAM6(ATOM_TREMONT, tgl_reg_map),
+>  -      INTEL_CPU_FAM6(ATOM_TREMONT_L, tgl_reg_map),
+>  +      X86_MATCH_INTEL_FAM6_MODEL(SKYLAKE_L,           &spt_reg_map),
+>  +      X86_MATCH_INTEL_FAM6_MODEL(SKYLAKE,             &spt_reg_map),
+>  +      X86_MATCH_INTEL_FAM6_MODEL(KABYLAKE_L,          &spt_reg_map),
+>  +      X86_MATCH_INTEL_FAM6_MODEL(KABYLAKE,            &spt_reg_map),
+>  +      X86_MATCH_INTEL_FAM6_MODEL(CANNONLAKE_L,        &cnp_reg_map),
+>  +      X86_MATCH_INTEL_FAM6_MODEL(ICELAKE_L,           &icl_reg_map),
+>  +      X86_MATCH_INTEL_FAM6_MODEL(ICELAKE_NNPI,        &icl_reg_map),
+>  +      X86_MATCH_INTEL_FAM6_MODEL(COMETLAKE,           &cnp_reg_map),
+>  +      X86_MATCH_INTEL_FAM6_MODEL(COMETLAKE_L,         &cnp_reg_map),
+>  +      X86_MATCH_INTEL_FAM6_MODEL(TIGERLAKE_L,         &tgl_reg_map),
+>  +      X86_MATCH_INTEL_FAM6_MODEL(TIGERLAKE,           &tgl_reg_map),
+>  +      X86_MATCH_INTEL_FAM6_MODEL(ATOM_TREMONT,        &tgl_reg_map),
+> ++      X86_MATCH_INTEL_FAM6_MODEL(ATOM_TREMONT_L,      &tgl_reg_map),
+>         {}
+>   };
+>
 
 
-On 2020-03-26 01:08, Joe Perches wrote:
-> On Wed, 2020-03-25 at 22:59 +0100, Michael Straube wrote:
->> Cleanup line over 80 characters by removing unnecessary parentheses.
-> []
->> diff --git a/drivers/staging/rtl8188eu/hal/odm.c b/drivers/staging/rtl8188eu/hal/odm.c
-> []
->> @@ -590,7 +590,7 @@ void odm_CCKPacketDetectionThresh(struct odm_dm_struct *pDM_Odm)
->>   	if (pDM_Odm->bLinked) {
->>   		if (pDM_Odm->RSSI_Min > 25) {
->>   			CurCCK_CCAThres = 0xcd;
->> -		} else if ((pDM_Odm->RSSI_Min <= 25) && (pDM_Odm->RSSI_Min > 10)) {
->> +		} else if (pDM_Odm->RSSI_Min <= 25 && pDM_Odm->RSSI_Min > 10) {
-> 
-> The test above this already guarantees pDM_Odm->RSSI_Min <= 25
-> so the block could be written just
-> 
-> 		} else if (pDM->RSSI_Min > 10) {
-> 
-
-Ah, yes. Thank you. :)
+-- 
+With Best Regards,
+Andy Shevchenko
