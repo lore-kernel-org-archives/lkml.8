@@ -2,174 +2,211 @@ Return-Path: <SRS0=aGSP=5L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1944BC43331
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 19:04:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65C04C43331
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 19:04:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D3AF520719
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 19:04:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2770E20658
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 19:04:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="nCDGqnin";
-	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="Qm/HpHeW"
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="VekhExwx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728535AbgCZTEK (ORCPT
+        id S1728541AbgCZTEi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 15:04:10 -0400
-Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:35408 "EHLO
-        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726340AbgCZTEK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 15:04:10 -0400
-Received: from pps.filterd (m0109333.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02QIxSk9007134;
-        Thu, 26 Mar 2020 12:03:57 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : references : in-reply-to : content-type : content-id
- : content-transfer-encoding : mime-version; s=facebook;
- bh=fTgITLvZTBoYemsG7+Me3v7p1AJ7bXuNQFeAH9vvroU=;
- b=nCDGqninh+xNJWSgH/jW0kV3CCo9qZr3nEfllZ9Nh1aBSXyyY2UqYfEZN+g2CB7WQHIx
- 9edA2ul85ZVf4kjKUUKTkBlFn1EsM65UwLQPjEzNPez85C+V5uMfzOSGjmh39HdF+yBB
- wua8zz6VuVtRqWBgdDyy2/mlGW1lqtVJNl4= 
-Received: from mail.thefacebook.com ([163.114.132.120])
-        by mx0a-00082601.pphosted.com with ESMTP id 300td72kn0-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-        Thu, 26 Mar 2020 12:03:57 -0700
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (100.104.98.9) by
- o365-in.thefacebook.com (100.104.94.198) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1847.3; Thu, 26 Mar 2020 12:03:56 -0700
+        Thu, 26 Mar 2020 15:04:38 -0400
+Received: from mail-bn8nam12on2059.outbound.protection.outlook.com ([40.107.237.59]:23069
+        "EHLO NAM12-BN8-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726340AbgCZTEh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Mar 2020 15:04:37 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=LCxwKaLYKTYiZ5ddE8AAuO1U+QZsJTBUCy7aNYQtPx06x9LgfkaMmgStSV93+WfUdznETHxCwqfazQdjQlwH7sJI0r32gUaq4TFX7Zoz2WvfJcSnB9orFeyGpkcLmnVxVJ6e4sAMq4JrRTTUWGtYVcKna+yRiHkzganQvKHGX7pRuADK7SvX9IE99uI7uwnbbGhN/vyP2mnWkJzzNpL8eeachNNd/y63R6FBdwYO0T/kVV4t7xk9J0/lzisa5VF2xXE1nxaZVtpZjzUShB6jtFT5uja/Tq+l6MkmMIW1R236GciqrbSASjRFZXDaWvjTL4T1/KKdTqT5GTXogogUaw==
+ b=KjlcS2EzzYjPtbI2hg0BWZNzdsb9PLd49GBc29+2/ZIDiTiZrHAcMbz+x7wMtgYDC40A4iQxZEBnk8VYMHIzCzNGBK+aYLAow0wsvdPQG2XdYJJ20BUQz/3yYUJOAasMXqosAIhrCKkFFhV+jSvlRyystui9ZCDgw85vw+GUv6oIC5kZmVxSSM3gNWpuwjLW2o2SPpkAF2zu5xAD93g2ywzUWmFP+MIHjO3bpLxoUIvdE6kJqg+iXXVpzdDzcfrp+VcL7WIfl6r6Pne5pGJaTxJkO6DQh273wcsUinqIwGrLnu3uAc4fDO/HgBqGxsxAQZfZfgPaUI+MA52cstXSbw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=fTgITLvZTBoYemsG7+Me3v7p1AJ7bXuNQFeAH9vvroU=;
- b=n8cXBhwxUnrjKYMs39bdl8ewpK3QkDT7F3TiIn/nCzOoJ1K8OJZm4c1uitWLqsXEqmB23Ww6qWEpEPpsXv3htbZlROjN4vuxwjnxYRqjoHp0pOqTmLFSNTvfc/mn8ygEo6db8yEJ0r6N4prPdFffQqEmEXT1dauUL8oWG0JzJI0gTmFY1d80ZfPaFc8ow/46PZNEvIO4NvXgK1QVAgIOpga9nOeaHtYPzC2/2504XIHpDBzRIMYvro+Ykhx2Evc6/47LZl3pY0v7jOMU3nO9wnEL204CC4vM31nCDAU6sF4ixBBtn1U2yMtuyF+1fglBi6gUumrgqMxBxdO146D7Uw==
+ bh=nUpAv5P5yNcgovAa+1hKp9pfypfULpomYaiK5MOZRNc=;
+ b=PxVYubq+jJcMtRlJQ8x12vj2wvUBJwQEFZ5WG+tiMd4TsNislsBpNXFbido185wBdLR810ccCRaL/38C1IJtZR0Hu8dz/dz9AkZGv0RJc8tJuCMQHFWR2HXdxOx+R/J0W5zPiHf47qgBkkUJDT+59yzhACTRx/+J5xOZ8oWtEtpFc1Lw1cIbDOtT8t/jAyxbbCPhPlwYXc6QShD7H/cqxR1kbr0T/Eg0phVZab7BG3xd3Lq7SCbPa17tZZogd7r1pAHftpamIKTDQUz60a5dkJ5GMHfgSEZVGVv5qheWuM+lAQeVE4nh4N6OLrQ2BF9l2xjr7MF168Sic/uK18sLPA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
- header.d=fb.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
- s=selector2-fb-onmicrosoft-com;
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=fTgITLvZTBoYemsG7+Me3v7p1AJ7bXuNQFeAH9vvroU=;
- b=Qm/HpHeWXCfKrWgWk/QwwlOM2btjJW/iaxrUa7yOEF+psP5WltQ+Z7z3p4R2nXjI0ZFYb3fQjANLxLatdo0419JaGgWVR2zWy/P3gdBPTFFcBoKxw1k1gpcKrLVjaAWhYGi26SDCJJcIBLvC9+uATmj5/PrzgVxr7NQjRMy/hRM=
-Received: from MW3PR15MB3753.namprd15.prod.outlook.com (2603:10b6:303:50::17)
- by MW3PR15MB3868.namprd15.prod.outlook.com (2603:10b6:303:40::19) with
+ bh=nUpAv5P5yNcgovAa+1hKp9pfypfULpomYaiK5MOZRNc=;
+ b=VekhExwxUYmFYvIdvFREROZtWo076QBU5+EcC1GRMltquXcJZAB/EPrylhHiveCO7g2AX2A7ubBbhHe6TsFqm49LKOi3yvnlB8qUsh+G/SAUGe+tVR8PDATgHCQNLI8psdGePPj8a8ZqaWbg3f5KlXJLT1HfhLNZwGHoiofgBLE=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=kim.phillips@amd.com; 
+Received: from SN6PR12MB2845.namprd12.prod.outlook.com (2603:10b6:805:75::33)
+ by SN6PR12MB2685.namprd12.prod.outlook.com (2603:10b6:805:67::33) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2856.19; Thu, 26 Mar
- 2020 19:03:55 +0000
-Received: from MW3PR15MB3753.namprd15.prod.outlook.com
- ([fe80::3517:e69:6e78:4f7c]) by MW3PR15MB3753.namprd15.prod.outlook.com
- ([fe80::3517:e69:6e78:4f7c%7]) with mapi id 15.20.2856.019; Thu, 26 Mar 2020
- 19:03:54 +0000
-From:   Nick Terrell <terrelln@fb.com>
-To:     Petr Malat <oss@malat.biz>
-CC:     Nick Terrell <nickrterrell@gmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Chris Mason <clm@fb.com>,
-        "linux-kbuild@vger.kernel.org" <linux-kbuild@vger.kernel.org>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        Kees Cook <keescook@chromium.org>,
-        Kernel Team <Kernel-team@fb.com>,
-        Adam Borowski <kilobyte@angband.pl>,
-        Patrick Williams <patrickw3@fb.com>,
-        Michael van der Westhuizen <rmikey@fb.com>,
-        "mingo@kernel.org" <mingo@kernel.org>,
-        Patrick Williams <patrick@stwcx.xyz>
-Subject: Re: [PATCH v3 3/8] lib: add zstd support to decompress
-Thread-Topic: [PATCH v3 3/8] lib: add zstd support to decompress
-Thread-Index: AQHWAt/m23+sZPjy5kGvzHRfaAnHI6hbFrwAgAAmGgA=
-Date:   Thu, 26 Mar 2020 19:03:54 +0000
-Message-ID: <611A224B-1CB3-4283-9783-87C184C8983A@fb.com>
-References: <20200325195849.407900-1-nickrterrell@gmail.com>
- <20200325195849.407900-4-nickrterrell@gmail.com>
- <20200326164732.GA17157@ntb.petris.klfree.czf>
-In-Reply-To: <20200326164732.GA17157@ntb.petris.klfree.czf>
-Accept-Language: en-US
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2835.22; Thu, 26 Mar
+ 2020 19:04:33 +0000
+Received: from SN6PR12MB2845.namprd12.prod.outlook.com
+ ([fe80::dd6f:a575:af8e:4f1b]) by SN6PR12MB2845.namprd12.prod.outlook.com
+ ([fe80::dd6f:a575:af8e:4f1b%7]) with mapi id 15.20.2835.023; Thu, 26 Mar 2020
+ 19:04:33 +0000
+From:   Kim Phillips <kim.phillips@amd.com>
+Subject: Re: [PATCH] perf script: add flamegraph.py script
+To:     Andreas Gerstmayr <agerstmayr@redhat.com>,
+        linux-perf-users@vger.kernel.org
+Cc:     Martin Spier <mspier@netflix.com>,
+        Brendan Gregg <bgregg@netflix.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-kernel@vger.kernel.org
+References: <20200320151355.66302-1-agerstmayr@redhat.com>
+ <7176b535-f95b-bf6d-c181-6ccb91425f96@amd.com>
+ <21c81775-876a-4dd2-f52f-42645963350f@redhat.com>
+Message-ID: <05e0d633-54b4-fb3b-3d08-8963271017ea@amd.com>
+Date:   Thu, 26 Mar 2020 14:04:30 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
+In-Reply-To: <21c81775-876a-4dd2-f52f-42645963350f@redhat.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [67.188.225.242]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 9111a387-4f1f-494c-33de-08d7d1b86e3d
-x-ms-traffictypediagnostic: MW3PR15MB3868:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <MW3PR15MB3868BCDCAA8C66FE97C83C21ABCF0@MW3PR15MB3868.namprd15.prod.outlook.com>
-x-fb-source: Internal
-x-ms-oob-tlc-oobclassifiers: OLM:6430;
-x-forefront-prvs: 0354B4BED2
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(376002)(346002)(136003)(366004)(396003)(39860400002)(6486002)(186003)(2616005)(316002)(8676002)(36756003)(26005)(5660300002)(6916009)(54906003)(66946007)(66446008)(66556008)(4326008)(478600001)(8936002)(64756008)(66476007)(6506007)(6512007)(53546011)(33656002)(81156014)(81166006)(86362001)(71200400001)(76116006)(2906002)(966005)(7416002)(91956017)(343044003);DIR:OUT;SFP:1102;SCL:1;SRVR:MW3PR15MB3868;H:MW3PR15MB3753.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;
-received-spf: None (protection.outlook.com: fb.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: du1w0pmHUVD7Q7wFudnKiT61KN3JcOS0Vq29wtfYVSsSeR7jnS+7nSdi2OxLIBkfQAKZ4ExYffS09X6H+H01Yrp3i7ttIGeqvFgKq8sbuG9VFY6kCgSP0NiLaqfevppzkmgqRVZDoQHghkeBsCdycOb1+WJUPZBjByZD1Sn5g2B6coRrtKzWMC3+C5N3qBy5Avzb0mHeG1diX1PaKdubieaFrqzVrTUM483ix+LfFuIgfeiS+BpkVcL+J3kMUNczIfJE7eFxMpX8UGvOobf1bB6vmw8OwUmUdAXTEtIQEGRk+lPGRGZAntpcq1nem8T72opFxmoY3PFDWpogQIMns7z/7U02sSAKCtq+mX00vl3610r7+jqr2rn9mCbL2HKzEh6AVMLy4WWVggFwBf+57Gtuv0dAFnVTAsk0/cXFIwforRfm6GhcDeJT/pHuE2wKts4TF+8j9syVkaiLNqNKKMr4J+g6G3jm9sbHcA6LILOWgZKpmUB9ErR7rBkjKRdcUX8YwPFkoHR2JuNpD/vmT46q2S7c1BDqZpSiqgh2zrkXvOKh8Fiud910tSnVNebtT4ltM05luLGZiYwOfUnoBw==
-x-ms-exchange-antispam-messagedata: ij4BOZ8JsNnzz1LK8dnMQtqSWUmqz9T3Mb9KlV9Ziawf9V7OhfTXAwCCeVk1XsluT/s9Ucyam/EVUK9RlbNEP7oRI6YjlF5/qn5XOJ2FitHNitOq2O8MmJdS0+mz9LYvQurtsUevmpUfZFv9/cWOZw==
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <A5CFD1D6E92BBA48B087E0108739BEE5@namprd15.prod.outlook.com>
-Content-Transfer-Encoding: base64
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: BN8PR16CA0007.namprd16.prod.outlook.com
+ (2603:10b6:408:4c::20) To SN6PR12MB2845.namprd12.prod.outlook.com
+ (2603:10b6:805:75::33)
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9111a387-4f1f-494c-33de-08d7d1b86e3d
-X-MS-Exchange-CrossTenant-originalarrivaltime: 26 Mar 2020 19:03:54.8065
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from [172.31.4.194] (165.204.84.11) by BN8PR16CA0007.namprd16.prod.outlook.com (2603:10b6:408:4c::20) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2856.19 via Frontend Transport; Thu, 26 Mar 2020 19:04:31 +0000
+X-Originating-IP: [165.204.84.11]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 84eca86b-563a-4dd8-66b8-08d7d1b88515
+X-MS-TrafficTypeDiagnostic: SN6PR12MB2685:
+X-Microsoft-Antispam-PRVS: <SN6PR12MB2685DB9F312FE307343B768087CF0@SN6PR12MB2685.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:10000;
+X-Forefront-PRVS: 0354B4BED2
+X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(366004)(136003)(376002)(39860400002)(346002)(6486002)(2616005)(81156014)(956004)(26005)(186003)(66556008)(36756003)(53546011)(16526019)(66946007)(8676002)(81166006)(52116002)(66476007)(8936002)(966005)(31686004)(44832011)(16576012)(86362001)(4326008)(478600001)(31696002)(316002)(5660300002)(7416002)(2906002)(54906003);DIR:OUT;SFP:1101;SCL:1;SRVR:SN6PR12MB2685;H:SN6PR12MB2845.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;
+Received-SPF: None (protection.outlook.com: amd.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: Ef2/eYHZG1ulmO3Ch9uTWn6GtdaeO15lOzM8unKVyzWA3xSia5efq00qTxBusVv9LalpiL9szUuHRVybDIwCVLYT3+saXgpl5mhn9OLyAgLL46V+SwzQ3POQSnmFZq6fEW9i6KWRIRouWAvR4+Ogl0GZBsweQiW0PnPGoB1NgNBbJbjq1wZJ6gTqeaCIGqh1bet7RbRrtRwwwD7fjVd7y0U4Qcuuf+4AH9pte7VCppmUt4/125tvsq+x/G3hPIaz5huWuCUxoU0eKhmRVUIXgoCNFi+NeyU7AVwFxIotVKD+9HWOl2uifgyawJweNdhVJ2Z1MfTRMZIIOjnAhM87SNCzgZ1fo8WyFWB7b8szgskMCyruyVvhEWoMorHuDRQt12TKVL2hv/W/b5eXXqhb+W/MlwTC/raZnM9PzzyKnhRbklK/KrSZiskccSm7lDH/d6M89+nlyJgUBvPqKom5HJqVGlVYBn/IsYPVOmIGxQeVmvNS/zE008i+zs6Z78apK0zc94+OIZZmZQoxKcTioQ==
+X-MS-Exchange-AntiSpam-MessageData: AYjDArO/D9y4i4+ULDKZo9gADBy6/8yhWJM6o2VGY4kog+IYXjaNvRUywBQo8ADuLIvdmwcQmXDGQLsbxquS1G7cbGCvRUHQ68EF0J9sUkuSS9citYTTw0cenFWV9LFdiNz/8u7xMS74x7/7vDfUpQ==
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 84eca86b-563a-4dd8-66b8-08d7d1b88515
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Mar 2020 19:04:33.5063
  (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: Dz0+OltmX02JHWdGeCgc8Fa7WGPOLp7or/qHmmFgHAMwleLtPVDkLXe3frA10tHX
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW3PR15MB3868
-X-OriginatorOrg: fb.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.645
- definitions=2020-03-26_11:2020-03-26,2020-03-26 signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 mlxlogscore=787
- mlxscore=0 lowpriorityscore=0 suspectscore=0 phishscore=0 bulkscore=0
- malwarescore=0 impostorscore=0 clxscore=1015 priorityscore=1501
- spamscore=0 adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2003260142
-X-FB-Internal: deliver
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 7eyNXyxgeNXVqRRUMx0flSl2L3UdYb7IC84piwPdm1w5H0H+1VZRYikDwk+NOgB124x4j2mzp7P9y5MSbHyMTQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR12MB2685
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiBPbiBNYXIgMjYsIDIwMjAsIGF0IDk6NDcgQU0sIFBldHIgTWFsYXQgPG9zc0BtYWxhdC5iaXo+
-IHdyb3RlOg0KPiANCj4gSGkhDQo+IE9uIFdlZCwgTWFyIDI1LCAyMDIwIGF0IDEyOjU4OjQ0UE0g
-LTA3MDAsIE5pY2sgVGVycmVsbCB3cm90ZToNCj4+IEZyb206IE5pY2sgVGVycmVsbCA8dGVycmVs
-bG5AZmIuY29tPg0KPj4gKiBBZGQgdW56c3RkKCkgYW5kIHRoZSB6c3RkIGRlY29tcHJlc3MgaW50
-ZXJmYWNlLg0KPiBIZXJlIEkgZG8gbm90IHVuZGVyc3RhbmQgd2h5IHlvdSBsaW1pdCB0aGUgd2lu
-ZG93IHNpemUgdG8gOE1CIGV2ZW4gd2hlbg0KPiB5b3UgcmVhZCBhIGxhcmdlciB2YWx1ZSBmcm9t
-IHRoZSBoZWFkZXIuIEkgZG8gbm90IHNlZSBhIHJlYXNvbiB3aHkgdGhlcmUNCj4gc2hvdWxkIGJl
-IHN1Y2ggYSBsaW1pdGF0aW9uIGF0IHRoZSBmaXJzdCBwbGFjZSBhbmQgaWYgdGhlcmUgc2hvdWxk
-IGJlLA0KPiB3aHkgaXQgZGlmZmVycyBmcm9tIFpTVERfV0lORE9XTE9HX01BWC4NCg0KV2hlbiB3
-ZSBhcmUgZG9pbmcgc3RyZWFtaW5nIGRlY29tcHJlc3Npb24gKGVpdGhlciBmbHVzaCBvciBmaWxs
-IGlzIHByb3ZpZGVkKQ0Kd2UgaGF2ZSB0byBhbGxvY2F0ZSBtZW1vcnkgcHJvcG9ydGlvbmFsIHRv
-IHRoZSB3aW5kb3cgc2l6ZS4gV2Ugd2FudCB0bw0KYm91bmQgdGhhdCBtZW1vcnkgc28gd2UgZG9u
-4oCZdCBhY2NpZGVudGFsbHkgYWxsb2NhdGUgdG9vIG11Y2ggbWVtb3J5Lg0KV2hlbiB3ZSBhcmUg
-ZG9pbmcgYSBzaW5nbGUtcGFzcyBkZWNvbXByZXNzaW9uIChuZWl0aGVyIGZsdXNoIG5vciBmaWxs
-DQphcmUgcHJvdmlkZWQpIHRoZSB3aW5kb3cgc2l6ZSBkb2VzbuKAmXQgbWF0dGVyLCBhbmQgd2Ug
-b25seSBoYXZlIHRvIGFsbG9jYXRlDQphIGZpeGVkIGFtb3VudCBvZiBtZW1vcnkgfjE5MiBLQi4N
-Cg0KVGhlIHpzdGQgc3BlYyBbMF0gc3BlY2lmaWVzIHRoYXQgYWxsIGRlY29kZXJzIHNob3VsZCBh
-bGxvdyB3aW5kb3cgc2l6ZXMNCnVwIHRvIDggTUIuIEFkZGl0aW9uYWxseSwgdGhlIHpzdGQgQ0xJ
-IHdvbuKAmXQgcHJvZHVjZSB3aW5kb3cgc2l6ZXMgZ3JlYXRlcg0KdGhhbiA4IE1CIGJ5IGRlZmF1
-bHQuIFRoZSB3aW5kb3cgc2l6ZSBpcyBjb250cm9sbGVkIGJ5IHRoZSBjb21wcmVzc2lvbg0KbGV2
-ZWwsIGFuZCBjYW4gYmUgZXhwbGljaXRseSBzZXQuDQoNCkkgd291bGQgZXhwZWN0IGxhcmdlciB3
-aW5kb3cgc2l6ZXMgdG8gYmUgYmVuZWZpY2lhbCBmb3IgY29tcHJlc3Npb24gcmF0aW8sDQp0aG91
-Z2ggdGhlcmUgaXMgZGVtaXNpbmcgcmV0dXJucy4gSSB3b3VsZCBleHBlY3QgdGhhdCBmb3Iga2Vy
-bmVsIGltYWdlDQpjb21wcmVzc2lvbiBsYXJnZXIgd2luZG93IHNpemVzIGFyZSBiZW5lZmljaWFs
-LCBzaW5jZSBpdCBpcyBkZWNvbXByZXNzZWQNCndpdGggYSBzaW5nbGUgcGFzcy4gRm9yIGluaXRy
-YW1mcyBkZWNvbXByZXNzaW9uLCBJIHdvdWxkIGV4cGVjdCB0aGF0IGxpbWl0aW5nDQp0aGUgd2lu
-ZG93IHNpemUgY291bGQgaGVscCBkZWNvbXByZXNzaW9uIHNwZWVkLCBzaW5jZSBpdCB1c2VzIHN0
-cmVhbWluZw0KY29tcHJlc3Npb24sIHNvIHVuenN0ZCgpIGhhcyB0byBhbGxvY2F0ZSBhIGJ1ZmZl
-ciBvZiB3aW5kb3cgc2l6ZSBieXRlcy4NCg0KPiBJIHJlbW92ZWQgdGhhdCBsaW1pdGF0aW9uIHRv
-IGJlIGFibGUgdG8gdGVzdCBpdCBpbiBteSBlbnZpcm9ubWVudCBhbmQgSQ0KPiBmb3VuZCB0aGUg
-cGVyZm9ybWFuY2UgaXMgd29yc3QgdGhhbiB3aXRoIG15IHBhdGNoIGJ5IHJvdWdobHkgMjAlIChv
-bg0KPiBpNy0zNTIwTSksIHdoaWNoIGlzIGEgbWFqb3IgZHJhd2JhY2sgY29uc2lkZXJpbmcgdGhl
-IG1haW4gbW90aXZhdGlvbg0KPiB0byB1c2UgenN0ZCBpcyB0aGUgZGVjb21wcmVzc2lvbiBzcGVl
-ZC4gSSB3aWxsIHRlc3Qgb24gYXJtIGFzIHdlbGwgYW5kDQo+IHNoYXJlIHRoZSByZXN1bHQgdG9t
-b3Jyb3cuDQo+ICBQZXRyDQoNCldoYXQgZG8geW91IG1lYW4gYnkgdGhhdD8gQ2FuIHlvdSBzaGFy
-ZSB3aXRoIG1lIHRoZSB0ZXN0IHlvdSByYW4/DQpJcyB0aGlzIGZvciBrZXJuZWwgZGVjb21wcmVz
-c2lvbiBvciBpbml0cmFtZnMgZGVjb21wcmVzc2lvbj8NCg0KQmVzdCwNCk5pY2sNCg0KWzBdIGh0
-dHBzOi8vdG9vbHMuaWV0Zi5vcmcvaHRtbC9yZmM4NDc4I3NlY3Rpb24tMy4xLjEuMS4y
+On 3/24/20 2:05 PM, Andreas Gerstmayr wrote:
+> On 24.03.20 17:16, Kim Phillips wrote:
+>> On Ubuntu 19.10, where python 2.7 is still the default, I get:
+>>
+>> $ perf script report flamegraph
+>>    File "/usr/libexec/perf-core/scripts/python/flamegraph.py", line 46
+>>      print(f"Flame Graph template {self.args.template} does not " +
+>>                                                                 ^
+>> SyntaxError: invalid syntax
+>> Error running python script /usr/libexec/perf-core/scripts/python/flamegraph.py
+>>
+>> Installing libpython3-dev doesn't help.
+> 
+> Hmm, I was hoping that I can drop support for Python 2 in 2020 ;) (it's officially EOL since Jan 1, 2020)
+> 
+> The Ubuntu 18.04 release notes mention that "Python 2 is no longer installed by default. Python 3 has been updated to 3.6. This is the last LTS release to include Python 2 in main." (https://wiki.ubuntu.com/BionicBeaver/ReleaseNotes) - so imho it should be fine to drop Python 2 support.
+> 
+> I tested it with a Ubuntu VM, and by default the Python bindings aren't enabled in perf (see https://bugs.launchpad.net/ubuntu/+source/linux/+bug/1707875).
+> 
+> But you can compile perf and select Python 3:
+> 
+> $ make -j2 PYTHON=python3
+> 
+> in the perf source directory (libpython3-dev must be installed).
+> 
+> 
+> Does this work for you?
+
+Not on Ubuntu 18.04.4 LTS, but it does on 19.10.
+
+On 19.10 however, when specifying dwarf on the record, e.g.:
+
+sudo perf record -a -g -C2,4 --call-graph=dwarf -- sleep 10
+
+I now get a SIGSEGV when executing perf script report flamegraph.
+
+Here's a trace:
+
+#0  0x000055555590a9b2 in regs_map (regs=0x7fffffffbfc8, mask=16715775, 
+    bf=0x7fffffffba60 "", size=512) at util/scripting-engines/trace-event-python.c:696
+#1  0x000055555590ab03 in set_regs_in_dict (dict=0x7ffff61dd500, sample=0x7fffffffbf20, 
+    evsel=0x555555d7a700) at util/scripting-engines/trace-event-python.c:718
+#2  0x000055555590af1f in get_perf_sample_dict (sample=0x7fffffffbf20, 
+    evsel=0x555555d7a700, al=0x7fffffffbdd0, callchain=0x7ffff625b780)
+    at util/scripting-engines/trace-event-python.c:787
+#3  0x000055555590ce3e in python_process_general_event (sample=0x7fffffffbf20, 
+    evsel=0x555555d7a700, al=0x7fffffffbdd0)
+    at util/scripting-engines/trace-event-python.c:1301
+#4  0x000055555590cf94 in python_process_event (event=0x7ffff60b0a48, 
+    sample=0x7fffffffbf20, evsel=0x555555d7a700, al=0x7fffffffbdd0)
+    at util/scripting-engines/trace-event-python.c:1328
+#5  0x000055555577375c in process_sample_event (tool=0x7fffffffcf30, 
+    event=0x7ffff60b0a48, sample=0x7fffffffbf20, evsel=0x555555d7a700, 
+    machine=0x555555d73168) at builtin-script.c:2072
+#6  0x000055555585f3d9 in perf_evlist__deliver_sample (evlist=0x555555d79c60, 
+    tool=0x7fffffffcf30, event=0x7ffff60b0a48, sample=0x7fffffffbf20, 
+    evsel=0x555555d7a700, machine=0x555555d73168) at util/session.c:1389
+#7  0x000055555585f588 in machines__deliver_event (machines=0x555555d73168, 
+    evlist=0x555555d79c60, event=0x7ffff60b0a48, sample=0x7fffffffbf20, 
+    tool=0x7fffffffcf30, file_offset=3037768) at util/session.c:1426
+#8  0x000055555585fa32 in perf_session__deliver_event (session=0x555555d72fe0, 
+    event=0x7ffff60b0a48, tool=0x7fffffffcf30, file_offset=3037768)
+    at util/session.c:1499
+#9  0x000055555585bf5e in ordered_events__deliver_event (oe=0x555555d79b20, 
+    event=0x555556446588) at util/session.c:183
+#10 0x0000555555864010 in do_flush (oe=0x555555d79b20, show_progress=false)
+    at util/ordered-events.c:244
+#11 0x000055555586435f in __ordered_events__flush (oe=0x555555d79b20, 
+    how=OE_FLUSH__ROUND, timestamp=0) at util/ordered-events.c:323
+#12 0x0000555555864447 in ordered_events__flush (oe=0x555555d79b20, how=OE_FLUSH__ROUND)
+    at util/ordered-events.c:341
+#13 0x000055555585e2b1 in process_finished_round (tool=0x7fffffffcf30, 
+    event=0x7ffff60ec040, oe=0x555555d79b20) at util/session.c:997
+#14 0x000055555585fcea in perf_session__process_user_event (session=0x555555d72fe0, 
+    event=0x7ffff60ec040, file_offset=3280960) at util/session.c:1546
+#15 0x000055555586055d in perf_session__process_event (session=0x555555d72fe0, 
+    event=0x7ffff60ec040, file_offset=3280960) at util/session.c:1706
+#16 0x0000555555861973 in process_simple (session=0x555555d72fe0, event=0x7ffff60ec040, 
+    file_offset=3280960) at util/session.c:2202
+#17 0x0000555555861792 in reader__process_events (rd=0x7fffffffcd70, 
+    session=0x555555d72fe0, prog=0x7fffffffcd90) at util/session.c:2168
+#18 0x0000555555861a68 in __perf_session__process_events (session=0x555555d72fe0)
+    at util/session.c:2225
+#19 0x0000555555861b9d in perf_session__process_events (session=0x555555d72fe0)
+    at util/session.c:2258
+#20 0x0000555555774d02 in __cmd_script (script=0x7fffffffcf30) at builtin-script.c:2557
+#21 0x0000555555779988 in cmd_script (argc=0, argv=0x7fffffffebd0)
+    at builtin-script.c:3926
+#22 0x00005555557f2a93 in run_builtin (p=0x555555bb44d8 <commands+408>, argc=4, 
+    argv=0x7fffffffebd0) at perf.c:312
+#23 0x00005555557f2d18 in handle_internal_command (argc=4, argv=0x7fffffffebd0)
+    at perf.c:364
+#24 0x00005555557f2e6b in run_argv (argcp=0x7fffffffea2c, argv=0x7fffffffea20)
+    at perf.c:408
+#25 0x00005555557f326e in main (argc=4, argv=0x7fffffffebd0) at perf.c:538
+
+This is on today's acme's perf/urgent branch.
+
+Thanks,
+
+Kim
