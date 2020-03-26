@@ -2,203 +2,101 @@ Return-Path: <SRS0=aGSP=5L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9980FC43331
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 17:05:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EAA49C43331
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 17:06:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 644BF20714
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 17:05:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BolFconV"
+	by mail.kernel.org (Postfix) with ESMTP id CB48E20714
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 17:06:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728061AbgCZRF2 (ORCPT
+        id S1728141AbgCZRG3 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 13:05:28 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:41265 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726954AbgCZRF1 (ORCPT
+        Thu, 26 Mar 2020 13:06:29 -0400
+Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:50242 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726267AbgCZRG3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 13:05:27 -0400
-Received: by mail-wr1-f68.google.com with SMTP id h9so8731787wrc.8;
-        Thu, 26 Mar 2020 10:05:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=/SwPVZPHnsnHsjMmVKbjcflPz+h1SoF07T1yIdW0tjk=;
-        b=BolFconVuR8kKU7pZSf5B2FXry7FPPFhSF8LOywidHC7WuNSwOAVblUZPlX67eMcKa
-         fi11YKZ2E27OPO2SjK9xeDEox2ek0tmfO1oSBqLzxnRSceRP/ZMm/OScgiHPXKEf/mmH
-         CvmZJlKjOIEVnw/EAeYq7JT4xyX0XVjqmK0kIjMS2ZsiBNP0bCn5kFK+1BZVmuz3Cy1Z
-         akMBT86QyM2X8qNiFJGADXH7+lrQH9gch3BklQM5LRDXV85N7eJd4lsOUOPrkouiv/Di
-         o7hEa57KFHG6Xq0E3LBVBdKzKwKYKvJ5QRY1bvU6MY/B91Dqk9VcPBBf1AW4vOLs4QZN
-         dw1w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=/SwPVZPHnsnHsjMmVKbjcflPz+h1SoF07T1yIdW0tjk=;
-        b=nU9Syz1wskuWIKlOhe70m8dPbXeqMqAdY2IsIT4YcR6oh+ZFDOoL869HyVk0MImUbe
-         DiSdAL6GW0o9xw+DDXTZ+TPF+n3UlK6sIvmESozXZSgrIYHwbkwZxe0+ruaStvSbQ0H0
-         otEsMuGiCT7BLc1byNIY+7xlbcK7/3My599MLoQHbECyxN9s+wVY4ubZltyP2fiR+OV0
-         XCg4PDvbyABkEr68u3++WDlc6NZuhERLaafp6JW0VQ8M+K+6jqnYSI4233wtJoRmgr7R
-         qQrmnabTe6IF54rAExDanTa0oiVStCMO5uFjbNlY0cEYkk1SWKo3icLuzRJE/z0P/oXY
-         FtxQ==
-X-Gm-Message-State: ANhLgQ258P3+rORfI6AS8FvlDX6TF4rQBAtij6F3+B5JjoG0SkUIoo5h
-        tH1acAfZadS5u/7qoBEG80lFxG45hLvRnpfP
-X-Google-Smtp-Source: ADFU+vtZf+Rru0HdqckcezlKcjYIY+mDjzCxKZNmaVnzmQHiwUybydBAAYpK9IZAXgxvNYPQ79j+fw==
-X-Received: by 2002:adf:9b9d:: with SMTP id d29mr10274434wrc.294.1585242324532;
-        Thu, 26 Mar 2020 10:05:24 -0700 (PDT)
-Received: from andrea ([86.61.236.197])
-        by smtp.gmail.com with ESMTPSA id o9sm4484102wrx.48.2020.03.26.10.05.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 26 Mar 2020 10:05:24 -0700 (PDT)
-Date:   Thu, 26 Mar 2020 18:05:18 +0100
-From:   Andrea Parri <parri.andrea@gmail.com>
-To:     Vitaly Kuznetsov <vkuznets@redhat.com>
-Cc:     linux-kernel@vger.kernel.org,
-        "K . Y . Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>, linux-hyperv@vger.kernel.org,
-        Michael Kelley <mikelley@microsoft.com>,
-        Dexuan Cui <decui@microsoft.com>,
-        Boqun Feng <boqun.feng@gmail.com>
-Subject: Re: [RFC PATCH 03/11] Drivers: hv: vmbus: Replace the per-CPU
- channel lists with a global array of channels
-Message-ID: <20200326170518.GA14314@andrea>
-References: <20200325225505.23998-1-parri.andrea@gmail.com>
- <20200325225505.23998-4-parri.andrea@gmail.com>
- <87y2rn4287.fsf@vitty.brq.redhat.com>
+        Thu, 26 Mar 2020 13:06:29 -0400
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-128-BbCZWy8OPy-iM7dSdlzdMw-1; Thu, 26 Mar 2020 17:06:25 +0000
+X-MC-Unique: BbCZWy8OPy-iM7dSdlzdMw-1
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
+ Server (TLS) id 15.0.1347.2; Thu, 26 Mar 2020 17:06:25 +0000
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Thu, 26 Mar 2020 17:06:25 +0000
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Jessica Yu' <jeyu@kernel.org>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "'Linus Torvalds'" <torvalds@linux-foundation.org>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Matthias Maennich <maennich@google.com>
+Subject: RE: modpost Module.symver handling is broken in 5.6.0-rc7
+Thread-Topic: modpost Module.symver handling is broken in 5.6.0-rc7
+Thread-Index: AdYDiqOPE71nee/CTfS3aDSZbkO5JwABAkKAAABe9DA=
+Date:   Thu, 26 Mar 2020 17:06:25 +0000
+Message-ID: <90b763cc306140499fddf8e3185e26f5@AcuMS.aculab.com>
+References: <931818529b1d4d13a08d30ddace22733@AcuMS.aculab.com>
+ <20200326165036.GA22172@linux-8ccs>
+In-Reply-To: <20200326165036.GA22172@linux-8ccs>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87y2rn4287.fsf@vitty.brq.redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: aculab.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 26, 2020 at 03:31:20PM +0100, Vitaly Kuznetsov wrote:
-> "Andrea Parri (Microsoft)" <parri.andrea@gmail.com> writes:
-> 
-> > When Hyper-V sends an interrupt to the guest, the guest has to figure
-> > out which channel the interrupt is associated with.  Hyper-V sets a bit
-> > in a memory page that is shared with the guest, indicating a particular
-> > "relid" that the interrupt is associated with.  The current Linux code
-> > then uses a set of per-CPU linked lists to map a given "relid" to a
-> > pointer to a channel structure.
+From: Jessica Yu
+> Sent: 26 March 2020 16:51
+> +++ David Laight [26/03/20 16:25 +0000]:
+> >Something is currently broken in modpost.
+> >I'm guessing it is down to the recent patch that moved the
+> >namespace back to the end of the line.
 > >
-> > This design introduces a synchronization problem if the CPU that Hyper-V
-> > will interrupt for a certain channel is changed.  If the interrupt comes
-> > on the "old CPU" and the channel was already moved to the per-CPU list
-> > of the "new CPU", then the relid -> channel mapping will fail and the
-> > interrupt is dropped.  Similarly, if the interrupt comes on the new CPU
-> > but the channel was not moved to the per-CPU list of the new CPU, then
-> > the mapping will fail and the interrupt is dropped.
+> >I'm building 2 'out of tree' modules that have a symbol dependency.
+> >When I build the 2nd module I get ERROR "symbol" undefined message.
 > >
-> > Relids are integers ranging from 0 to 2047.  The mapping from relids to
-> > channel structures can be done by setting up an array with 2048 entries,
-> > each entry being a pointer to a channel structure (hence total size ~16K
-> > bytes, which is not a problem).  The array is global, so there are no
-> > per-CPU linked lists to update.   The array can be searched and updated
-> > by simply loading and storing the array at the specified index.  With no
-> > per-CPU data structures, the above mentioned synchronization problem is
-> > avoided and the relid2channel() function gets simpler.
+> >If I flip the order of the fields in Module.symver to the older order
+> >and link with modpost from 5.4.0-rc7 (which I happen to have lurking)
+> >it all works fine.
 > >
-> > Suggested-by: Michael Kelley <mikelley@microsoft.com>
-> > Signed-off-by: Andrea Parri (Microsoft) <parri.andrea@gmail.com>
-> > ---
-> >  drivers/hv/channel_mgmt.c | 158 ++++++++++++++++++++++----------------
-> >  drivers/hv/connection.c   |  38 +++------
-> >  drivers/hv/hv.c           |   2 -
-> >  drivers/hv/hyperv_vmbus.h |  14 ++--
-> >  drivers/hv/vmbus_drv.c    |  48 +++++++-----
-> >  include/linux/hyperv.h    |   5 --
-> >  6 files changed, 139 insertions(+), 126 deletions(-)
+> >Note that I'm using a named namespace, not the default one
+> >that is the full path of the module.
 > >
-> > diff --git a/drivers/hv/channel_mgmt.c b/drivers/hv/channel_mgmt.c
-> > index 1191f3d76d111..9b1449c839575 100644
-> > --- a/drivers/hv/channel_mgmt.c
-> > +++ b/drivers/hv/channel_mgmt.c
-> > @@ -319,7 +319,6 @@ static struct vmbus_channel *alloc_channel(void)
-> >  	init_completion(&channel->rescind_event);
-> >  
-> >  	INIT_LIST_HEAD(&channel->sc_list);
-> > -	INIT_LIST_HEAD(&channel->percpu_list);
-> >  
-> >  	tasklet_init(&channel->callback_event,
-> >  		     vmbus_on_event, (unsigned long)channel);
-> > @@ -340,23 +339,28 @@ static void free_channel(struct vmbus_channel *channel)
-> >  	kobject_put(&channel->kobj);
-> >  }
-> >  
-> > -static void percpu_channel_enq(void *arg)
-> > +void vmbus_channel_map_relid(struct vmbus_channel *channel)
-> >  {
-> > -	struct vmbus_channel *channel = arg;
-> > -	struct hv_per_cpu_context *hv_cpu
-> > -		= this_cpu_ptr(hv_context.cpu_context);
-> > -
-> > -	list_add_tail_rcu(&channel->percpu_list, &hv_cpu->chan_list);
-> > +	if (WARN_ON(channel->offermsg.child_relid >= MAX_CHANNEL_RELIDS))
-> > +		return;
-> > +	/*
-> > +	 * Pairs with the READ_ONCE() in vmbus_chan_sched().  Guarantees
-> > +	 * that vmbus_chan_sched() will find up-to-date data.
-> > +	 */
-> > +	smp_store_release(
-> > +		&vmbus_connection.channels[channel->offermsg.child_relid],
-> > +		channel);
-> >  }
-> >  
-> > -static void percpu_channel_deq(void *arg)
-> > +void vmbus_channel_unmap_relid(struct vmbus_channel *channel)
-> >  {
-> > -	struct vmbus_channel *channel = arg;
-> > -
-> > -	list_del_rcu(&channel->percpu_list);
-> > +	if (WARN_ON(channel->offermsg.child_relid >= MAX_CHANNEL_RELIDS))
-> > +		return;
-> > +	WRITE_ONCE(
-> > +		vmbus_connection.channels[channel->offermsg.child_relid],
-> > +		NULL);
+> >I'll dig in a little further.
 > 
-> I don't think this smp_store_release()/WRITE_ONCE() fanciness gives you
-> anything. Basically, without proper synchronization with a lock there is
-> no such constructions which will give you any additional guarantee on
-> top of just doing X=1. E.g. smp_store_release() is just 
->   barrier();
->   *p = v;
-> if I'm not mistaken. Nobody tells you when *some other CPU* will see the
-> update - 'eventually' is your best guess. Here, you're only setting one
-> pointer.
+> [ Adding more people to CC ]
 > 
-> Percpu structures have an advantage: we (almost) never access them from
-> different CPUs so just doing updates atomically (and writing 64bit
-> pointer on x86_64 is atomic) is OK.
+> Hi David,
 > 
-> I haven't looked at all possible scenarios but I'd suggest protecting
-> this array with a spinlock (in case we can have simultaneous accesses
-> from different CPUs and care about the result, of course).
+> Could you provide some more details about how I can reproduce the
+> issue? As I understand it, you have two out-of-tree modules, and one
+> has a symbol dependency on the second? Pasting the modpost error
+> messages helps too.
 
-The smp_store_release()+READ_ONCE() pair should guarantee that any store
-to the channel fields performed before (in program order) the "mapping"
-of the channel are visible to the CPU which observes that mapping; this
-guarantee is expected to hold for all architectures.
+Ok, I've found out what broke it.
+Was actually the removal of the code that parsed Module.symvers
+from the current directory (which happened for 5.5.0-rc0).
 
-Notice that this apporach follows the current/upstream code, cf. the
-rcu_assign_pointer() in list_add_tail_rcu() and notice that (both before
-and after this series) vmbus_chan_sched() accesses the channel array
-without any mutex/lock held.
+Took some digging and printfs in modpost to find what wasn't happening.
 
-I'd be inclined to stick to the current code (unless more turns out to
-be required).  Thoughts?
+	David
 
-Thanks,
-  Andrea
+-
+Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
+Registration No: 1397386 (Wales)
+
