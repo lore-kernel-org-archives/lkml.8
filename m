@@ -2,100 +2,173 @@ Return-Path: <SRS0=aGSP=5L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06810C43331
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 14:48:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BAF83C2D0E8
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 14:48:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D0BF120775
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 14:48:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 904E12076A
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 14:48:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="CzKLV+U8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728091AbgCZOsm (ORCPT
+        id S1728231AbgCZOsu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 10:48:42 -0400
-Received: from retiisi.org.uk ([95.216.213.190]:35070 "EHLO
-        hillosipuli.retiisi.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726270AbgCZOsl (ORCPT
+        Thu, 26 Mar 2020 10:48:50 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:42756 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728120AbgCZOsu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 10:48:41 -0400
-Received: from valkosipuli.localdomain (valkosipuli.retiisi.org.uk [IPv6:2a01:4f9:c010:4572::80:2])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by hillosipuli.retiisi.org.uk (Postfix) with ESMTPS id D0130634C90;
-        Thu, 26 Mar 2020 16:48:21 +0200 (EET)
-Received: from sailus by valkosipuli.localdomain with local (Exim 4.92)
-        (envelope-from <sakari.ailus@retiisi.org.uk>)
-        id 1jHTnw-0000iH-Up; Thu, 26 Mar 2020 16:48:20 +0200
-Date:   Thu, 26 Mar 2020 16:48:20 +0200
-From:   Sakari Ailus <sakari.ailus@iki.fi>
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>
-Cc:     thierry.reding@gmail.com, jonathanh@nvidia.com, frankc@nvidia.com,
-        hverkuil@xs4all.nl, helen.koike@collabora.com, digetx@gmail.com,
-        sboyd@kernel.org, linux-media@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH v5 6/9] media: tegra: Add Tegra210 Video input driver
-Message-ID: <20200326144820.GB2394@valkosipuli.retiisi.org.uk>
-References: <1584985955-19101-1-git-send-email-skomatineni@nvidia.com>
- <1584985955-19101-7-git-send-email-skomatineni@nvidia.com>
- <20200325110358.GB853@valkosipuli.retiisi.org.uk>
- <a219aeb2-3d00-016e-eed9-503a9fbd0d13@nvidia.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <a219aeb2-3d00-016e-eed9-503a9fbd0d13@nvidia.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Thu, 26 Mar 2020 10:48:50 -0400
+Received: by mail-wr1-f65.google.com with SMTP id h15so8122561wrx.9
+        for <linux-kernel@vger.kernel.org>; Thu, 26 Mar 2020 07:48:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=VjZPz6gNRy+HKuPVRsIUCX6v0qqfQqCeDyDKuH2Fc6Y=;
+        b=CzKLV+U8excn0ZlDehTqAqC8OpRyele35n2KY/KR4YH8uoGXziz1qrZLlnBFq23u0V
+         tkHzDpeX7fqdUgIEXkQYEYTaUSQsU5cFZN95e6K0ihzluBJLu1xyELeMklqxJeHSY28d
+         7tVmAYlshj6kQ4zlg/GhBbm9rI6BIwV8k0EjIctT8RrmoEFl3r69eUnVlImvI75HP6uy
+         Tj0W/v5N7T106VOztY4NSn9F0SQbk1gO6YOkNpd3vV+rOFviGkHGtV/2hsqDe3+hs6t8
+         Xb+5bg1VCwEpreZ6JWkRkt8lJPxFoTG58wdTdeCisROBa1M2K5ZDI/Ah/QUYJSzl8s9J
+         G2DA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=VjZPz6gNRy+HKuPVRsIUCX6v0qqfQqCeDyDKuH2Fc6Y=;
+        b=aytSQWUnbVOrDv3TZ2r5/y3Zj/QdlUhlyjpWNedzTxjYGaMfimnd+MD1SHXSZ7a+nW
+         3mWZAVqoIwWjDWE50yYQGgJl8AttlSwrUM2UprE7oWaKPX1G509uf6ERsf+hROK5U4HD
+         2F/+9F4FFsE48Uruco8j97ozNBX+GwXlXqICwvyJpZl+nTR/btpLltrLR1l14Pt+nDCD
+         OkwJ9wPE8snXS61XaLiraWuVFoECbju31/dJrt/ZsBZItnOKQkKqrbJdlU88YjREEZPM
+         ROSy/mKpxOA2bSH2GFzYPUFqRi7/M1UAOaIwLfESaJzVafkwFh8YCGUfnn/G+EZ+W2zB
+         zr/Q==
+X-Gm-Message-State: ANhLgQ0Zaf4WX+2+ps3rpqWjHQxXF86KYtqbt1MJ7wQI0aNyYfr/6re/
+        Oy0F/7kaYfiYmpYK1jqE6j+Luw==
+X-Google-Smtp-Source: ADFU+vvsIUVbNG7cb7Biho+bWS/MelZlhfzehAM+r/hladbvposUqs123z5VJYVN/eodv8UaEPw2jg==
+X-Received: by 2002:adf:f50d:: with SMTP id q13mr10092175wro.374.1585234127462;
+        Thu, 26 Mar 2020 07:48:47 -0700 (PDT)
+Received: from localhost.localdomain ([2a01:e34:ed2f:f020:c0b:a340:75e5:7701])
+        by smtp.gmail.com with ESMTPSA id v8sm3980984wrw.2.2020.03.26.07.48.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 26 Mar 2020 07:48:46 -0700 (PDT)
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+To:     rafael@kernel.org
+Cc:     daniel.lezcano@linaro.org, "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        linux-pm@vger.kernel.org (open list:POWER MANAGEMENT CORE),
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH] powercap/drivers/idle_inject: Specify idle state max latency
+Date:   Thu, 26 Mar 2020 15:46:25 +0100
+Message-Id: <20200326144630.15011-1-daniel.lezcano@linaro.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Sowjanya,
+Currently the idle injection framework uses the play_idle() function
+which puts the current CPU in an idle state. The idle state is the
+deepest one, as specified by the latency constraint when calling the
+subsequent play_idle_precise() function with the INT_MAX.
 
-On Wed, Mar 25, 2020 at 11:30:18PM -0700, Sowjanya Komatineni wrote:
-> 
-> On 3/25/20 4:03 AM, Sakari Ailus wrote:
-> > > +static int tegra_channel_enum_input(struct file *file, void *fh,
-> > > +                                 struct v4l2_input *inp)
-> > > +{
-> > > +     /* currently driver supports internal TPG only */
-> > > +     if (inp->index)
-> > > +             return -EINVAL;
-> > > +
-> > > +     inp->type = V4L2_INPUT_TYPE_CAMERA;
-> > > +     strscpy(inp->name, "Tegra TPG", sizeof(inp->name));
-> > > +
-> > > +     return 0;
-> > > +}
-> > > +
-> > > +static int tegra_channel_g_input(struct file *file, void *priv,
-> > > +                              unsigned int *i)
-> > > +{
-> > > +     *i = 0;
-> > > +     return 0;
-> > > +}
-> > > +
-> > > +static int tegra_channel_s_input(struct file *file, void *priv,
-> > > +                              unsigned int input)
-> > > +{
-> > > +     if (input > 0)
-> > > +             return -EINVAL;
-> > > +
-> > > +     return 0;
-> > > +}
-> > Please see patchset on topic "v4l2-dev/ioctl: Add V4L2_CAP_IO_MC" on
-> > linux-media; it's relevant here, too.
-> 
-> Can update in v6 to add device caps V4L2_CAP_IO_MC and remove enum/g/s_input
-> ioctls.
-> 
-> But, I don't see this patch "v4l2-dev/ioctl: Add V4L2_CAP_IO_MC" on latest
-> linux-next
+The idle_injection is used by the cpuidle_cooling device which
+computes the idle / run duration to mitigate the temperature by
+injecting idle cycles. The cooling device has no control on the depth
+of the idle state.
 
-It's not merged yet but likely will be very soon.
+Allow finer control of the idle injection mechanism by allowing to
+specify the latency for the idle state. Thus the cooling device has
+the ability to have a guarantee on the exit latency of the idle states
+it is injecting.
 
+Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+---
+ drivers/powercap/idle_inject.c | 27 ++++++++++++++++++++++++++-
+ include/linux/idle_inject.h    |  6 ++++++
+ 2 files changed, 32 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/powercap/idle_inject.c b/drivers/powercap/idle_inject.c
+index cd1270614cc6..15e6f9b8023f 100644
+--- a/drivers/powercap/idle_inject.c
++++ b/drivers/powercap/idle_inject.c
+@@ -61,12 +61,14 @@ struct idle_inject_thread {
+  * @timer: idle injection period timer
+  * @idle_duration_us: duration of CPU idle time to inject
+  * @run_duration_us: duration of CPU run time to allow
++ * @latency_us: max allowed latency
+  * @cpumask: mask of CPUs affected by idle injection
+  */
+ struct idle_inject_device {
+ 	struct hrtimer timer;
+ 	unsigned int idle_duration_us;
+ 	unsigned int run_duration_us;
++	unsigned int latency_us;
+ 	unsigned long int cpumask[0];
+ };
+ 
+@@ -138,7 +140,8 @@ static void idle_inject_fn(unsigned int cpu)
+ 	 */
+ 	iit->should_run = 0;
+ 
+-	play_idle(READ_ONCE(ii_dev->idle_duration_us));
++	play_idle_precise(READ_ONCE(ii_dev->idle_duration_us) * NSEC_PER_USEC,
++			  READ_ONCE(ii_dev->latency_us) * NSEC_PER_USEC);
+ }
+ 
+ /**
+@@ -169,6 +172,27 @@ void idle_inject_get_duration(struct idle_inject_device *ii_dev,
+ 	*idle_duration_us = READ_ONCE(ii_dev->idle_duration_us);
+ }
+ 
++/**
++ * idle_inject_set_latency - set the maximum latency allowed
++ * @latency_us: set the latency requirement for the idle state
++ */
++void idle_inject_set_latency(struct idle_inject_device *ii_dev,
++			     unsigned int latency_us)
++{
++	WRITE_ONCE(ii_dev->latency_us, latency_us);
++}
++
++/**
++ * idle_inject_get_latency - get the allowed latency
++ *
++ * Return: an unsigned int corresponding to the latency requirement
++ * for the idle state
++ */
++unsigned int idle_inject_get_latency(struct idle_inject_device *ii_dev)
++{
++	return READ_ONCE(ii_dev->latency_us);
++}
++
+ /**
+  * idle_inject_start - start idle injections
+  * @ii_dev: idle injection control device structure
+@@ -297,6 +321,7 @@ struct idle_inject_device *idle_inject_register(struct cpumask *cpumask)
+ 	cpumask_copy(to_cpumask(ii_dev->cpumask), cpumask);
+ 	hrtimer_init(&ii_dev->timer, CLOCK_MONOTONIC, HRTIMER_MODE_REL);
+ 	ii_dev->timer.function = idle_inject_timer_fn;
++	ii_dev->latency_us = UINT_MAX;
+ 
+ 	for_each_cpu(cpu, to_cpumask(ii_dev->cpumask)) {
+ 
+diff --git a/include/linux/idle_inject.h b/include/linux/idle_inject.h
+index a445cd1a36c5..b573fee589b9 100644
+--- a/include/linux/idle_inject.h
++++ b/include/linux/idle_inject.h
+@@ -26,4 +26,10 @@ void idle_inject_set_duration(struct idle_inject_device *ii_dev,
+ void idle_inject_get_duration(struct idle_inject_device *ii_dev,
+ 				 unsigned int *run_duration_us,
+ 				 unsigned int *idle_duration_us);
++
++void idle_inject_set_latency(struct idle_inject_device *ii_dev,
++			     unsigned int latency_ns);
++
++unsigned int idle_inject_get_latency(struct idle_inject_device *ii_dev);
++
+ #endif /* __IDLE_INJECT_H__ */
 -- 
-Sakari Ailus
+2.17.1
+
