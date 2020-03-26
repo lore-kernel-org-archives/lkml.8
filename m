@@ -2,71 +2,157 @@ Return-Path: <SRS0=aGSP=5L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C543BC43331
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 21:11:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D4FFC43331
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 21:11:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A229920719
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 21:11:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6EEC820722
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 21:11:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="D+Zaouzy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728187AbgCZVL2 (ORCPT
+        id S1728191AbgCZVLd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 17:11:28 -0400
-Received: from sauhun.de ([88.99.104.3]:54484 "EHLO pokefinder.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727923AbgCZVKJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 17:10:09 -0400
-Received: from localhost (p54B3331F.dip0.t-ipconnect.de [84.179.51.31])
-        by pokefinder.org (Postfix) with ESMTPSA id 9C14D2C1F98;
-        Thu, 26 Mar 2020 22:10:07 +0100 (CET)
-From:   Wolfram Sang <wsa+renesas@sang-engineering.com>
-To:     linux-i2c@vger.kernel.org
-Cc:     Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Russell King <linux@armlinux.org.uk>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 4/6] drm/i2c/tda998x: convert to use i2c_new_client_device()
-Date:   Thu, 26 Mar 2020 22:10:02 +0100
-Message-Id: <20200326211005.13301-5-wsa+renesas@sang-engineering.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200326211005.13301-1-wsa+renesas@sang-engineering.com>
-References: <20200326211005.13301-1-wsa+renesas@sang-engineering.com>
+        Thu, 26 Mar 2020 17:11:33 -0400
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:35796 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727923AbgCZVLa (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Mar 2020 17:11:30 -0400
+Received: by mail-qt1-f194.google.com with SMTP id e14so6866476qts.2;
+        Thu, 26 Mar 2020 14:11:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=eLfTtrwRje07AWDZpn09mSkvQBzmIq1oo7oviI8+vjc=;
+        b=D+ZaouzyWVkeh/tg2dxEGWI7lSrEKuZRVvZEJXqhdsJYjYF6RuDFv+iCeZNu/uR1aB
+         CtuCXafg+nGox7cQ22IfUNRqiqD2eys6MR6PcJco/tRujHNvGWBS4fSUoRF9/kL/oYw4
+         VDfuB/0+7kue2+2XiOc3MM1dY6qw7aCEpUM4WdjrlYxx5NYU4tB18mqE8MRZY18mggsM
+         /6XpUUS3xzqb1KwBbccYiHZt6XfJw+YeAXDw/p6pMMNMEGv8McwmCEOZIXZfMT6RYy5m
+         L/NIp3AGqJGLx0WsdICv803j7LLROT+dOBSWJHdyrpiHI8JRgKICreGaE87pUK5LG9jH
+         bs0w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=eLfTtrwRje07AWDZpn09mSkvQBzmIq1oo7oviI8+vjc=;
+        b=p4A3nCjWjoATPcqAW4SZYeuXcEEemboz77ULo5fc5HhUhcntON2GB1mySVeSSDU2Xw
+         +SPODOVv1npvTnS7LG/eqdcaGXbxInaelmFRriTNZL4s4JRWoNexWIMPQa9Z7kETkYnz
+         o5c9WOvuYPRCiYcjwkr8rEvSEvr9qpVN55ACOQ8asjIa2BUt0u2uSwGJ2/7mUTVOg9kf
+         RLCnsMLoYzpZWT2Tj2wNrqqMoWRTWOj3kn8eQnSDQdp0RVSxqgpTzsTjO00lS6af0aeN
+         Il/IX6OnHqPGlFbbFkMtWlcPkbuR6T0veNo9yAlXAW8XRdCvueskWkD9A3LuNbkNcD9R
+         J95g==
+X-Gm-Message-State: ANhLgQ3sTCZHxgh4vMu67HNcEUMdvpjgjm8b+v+daH3dkcNHKRp8MwXQ
+        YkwrW67YPvS6e1i8HqrqVJE=
+X-Google-Smtp-Source: ADFU+vs6AAzUK+4IaRXZ1AG8R7BkDnAFC5dJItM6fwqni4Beovp97N9ZLkmWZO6gAlfW3FDMLlFXJA==
+X-Received: by 2002:aed:21c5:: with SMTP id m5mr10717014qtc.42.1585257088466;
+        Thu, 26 Mar 2020 14:11:28 -0700 (PDT)
+Received: from ?IPv6:2601:282:803:7700:69d5:d817:1ef6:d239? ([2601:282:803:7700:69d5:d817:1ef6:d239])
+        by smtp.googlemail.com with ESMTPSA id h138sm2144030qke.86.2020.03.26.14.11.26
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 26 Mar 2020 14:11:27 -0700 (PDT)
+Subject: Re: [PATCH] kernel/taskstats: fix wrong nla type for
+ {cgroup,task}stats policy
+To:     Johannes Berg <johannes@sipsolutions.net>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Yafang Shao <laoar.shao@gmail.com>
+Cc:     bsingharora@gmail.com, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org, "David S.Miller" <davem@davemloft.net>
+References: <1585191042-9935-1-git-send-email-laoar.shao@gmail.com>
+ <20200326130808.ccbacd6cba99a40326936fea@linux-foundation.org>
+ <b879b50324b502cbd3f8439182d63532518d7315.camel@sipsolutions.net>
+From:   David Ahern <dsahern@gmail.com>
+Message-ID: <ed7c4063-8b45-9fc8-5b92-a903d9da4054@gmail.com>
+Date:   Thu, 26 Mar 2020 15:11:21 -0600
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
+ Gecko/20100101 Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <b879b50324b502cbd3f8439182d63532518d7315.camel@sipsolutions.net>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Move away from the deprecated API and return the shiny new ERRPTR where
-useful.
+On 3/26/20 2:28 PM, Johannes Berg wrote:
+> 
+> And looking at this ... well, that code is completely wrong?
+> 
+> E.g.
+> 
+>                 rc = send_cmd(nl_sd, id, mypid, TASKSTATS_CMD_GET,
+>                               cmd_type, &tid, sizeof(__u32));
+> 
+> (cmd_type is one of TASKSTATS_CMD_ATTR_TGID, TASKSTATS_CMD_ATTR_PID)
+> 
+> or it might do
+> 
+>                 rc = send_cmd(nl_sd, id, mypid, CGROUPSTATS_CMD_GET,
+>                               CGROUPSTATS_CMD_ATTR_FD, &cfd, sizeof(__u32));
+> 
+> so clearly it wants to produce a u32 attribute.
+> 
+> But then
+> 
+> static int send_cmd(int sd, __u16 nlmsg_type, __u32 nlmsg_pid,
+>              __u8 genl_cmd, __u16 nla_type,
+>              void *nla_data, int nla_len)
+> {
+> ...
+> 
+>         na = (struct nlattr *) GENLMSG_DATA(&msg);
+> 
+> // this is still fine
+> 
+>         na->nla_type = nla_type;
+> 
+> // this is also fine
+> 
+>         na->nla_len = nla_len + 1 + NLA_HDRLEN;
+> 
+> // but this??? the nla_len of a netlink attribute should just be
+> // the len ... what's NLA_HDRLEN doing here? this isn't nested
+> // here we end up just reserving 1+NLA_HDRLEN too much space
+> 
+>         memcpy(NLA_DATA(na), nla_data, nla_len);
+> 
+> // but then it anyway only fills the first nla_len bytes, which
+> // is just like a regular attribute.
+> 
+>         msg.n.nlmsg_len += NLMSG_ALIGN(na->nla_len);
+> // note that this is also wrong - it should be 
+> // += NLA_ALIGN(NLA_HDRLEN + nla_len)
+> 
+> 
+> 
+> So really I think what happened here is precisely what we wanted -
+> David's kernel patch caught the broken userspace tool.
 
-Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
----
- drivers/gpu/drm/i2c/tda998x_drv.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+agreed. The tool needs to be fixed, not the kernel policy.
 
-diff --git a/drivers/gpu/drm/i2c/tda998x_drv.c b/drivers/gpu/drm/i2c/tda998x_drv.c
-index c3332209f27a..d9a548d0273c 100644
---- a/drivers/gpu/drm/i2c/tda998x_drv.c
-+++ b/drivers/gpu/drm/i2c/tda998x_drv.c
-@@ -1949,9 +1949,9 @@ static int tda998x_create(struct device *dev)
- 	cec_info.platform_data = &priv->cec_glue;
- 	cec_info.irq = client->irq;
- 
--	priv->cec = i2c_new_device(client->adapter, &cec_info);
--	if (!priv->cec) {
--		ret = -ENODEV;
-+	priv->cec = i2c_new_client_device(client->adapter, &cec_info);
-+	if (IS_ERR(priv->cec)) {
-+		ret = PTR_ERR(priv->cec);
- 		goto fail;
- 	}
- 
--- 
-2.20.1
+I do not get the error message with this change as Johannes points out
+above:
+
+diff --git a/tools/accounting/getdelays.c b/tools/accounting/getdelays.c
+index 8cb504d30384..e90fd133df0e 100644
+--- a/tools/accounting/getdelays.c
++++ b/tools/accounting/getdelays.c
+@@ -136,7 +136,7 @@ static int send_cmd(int sd, __u16 nlmsg_type, __u32
+nlmsg_pid,
+        msg.g.version = 0x1;
+        na = (struct nlattr *) GENLMSG_DATA(&msg);
+        na->nla_type = nla_type;
+-       na->nla_len = nla_len + 1 + NLA_HDRLEN;
++       na->nla_len = nla_len + NLA_HDRLEN;
+        memcpy(NLA_DATA(na), nla_data, nla_len);
+        msg.n.nlmsg_len += NLMSG_ALIGN(na->nla_len);
 
