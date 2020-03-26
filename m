@@ -2,26 +2,26 @@ Return-Path: <SRS0=aGSP=5L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-6.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69CF5C2D0E8
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 15:09:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30031C43331
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 15:09:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B2E520787
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 15:09:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 056692076A
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 15:09:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728474AbgCZPJI (ORCPT
+        id S1727857AbgCZPJG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 11:09:08 -0400
-Received: from 8bytes.org ([81.169.241.247]:55856 "EHLO theia.8bytes.org"
+        Thu, 26 Mar 2020 11:09:06 -0400
+Received: from 8bytes.org ([81.169.241.247]:55834 "EHLO theia.8bytes.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728203AbgCZPIx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728243AbgCZPIx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 26 Mar 2020 11:08:53 -0400
 Received: by theia.8bytes.org (Postfix, from userid 1000)
-        id DC0B9936; Thu, 26 Mar 2020 16:08:47 +0100 (CET)
+        id 68E209B2; Thu, 26 Mar 2020 16:08:48 +0100 (CET)
 From:   Joerg Roedel <joro@8bytes.org>
 To:     iommu@lists.linux-foundation.org
 Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
@@ -38,9 +38,9 @@ Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
         Bjorn Andersson <bjorn.andersson@linaro.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Joerg Roedel <jroedel@suse.de>
-Subject: [PATCH v4 11/16] iommu/arm-smmu: Use accessor functions for iommu private data
-Date:   Thu, 26 Mar 2020 16:08:36 +0100
-Message-Id: <20200326150841.10083-12-joro@8bytes.org>
+Subject: [PATCH v4 13/16] iommu/mediatek: Use accessor functions for iommu private data
+Date:   Thu, 26 Mar 2020 16:08:38 +0100
+Message-Id: <20200326150841.10083-14-joro@8bytes.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200326150841.10083-1-joro@8bytes.org>
 References: <20200326150841.10083-1-joro@8bytes.org>
@@ -51,88 +51,145 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Joerg Roedel <jroedel@suse.de>
 
-Make use of dev_iommu_priv_set/get() functions and simplify the code
-where possible with this change.
+Make use of dev_iommu_priv_set/get() functions.
 
-Tested-by: Will Deacon <will@kernel.org> # arm-smmu
+Reviewed-by: Jean-Philippe Brucker <jean-philippe@linaro.org>
 Signed-off-by: Joerg Roedel <jroedel@suse.de>
 ---
- drivers/iommu/arm-smmu.c | 17 +++++++++--------
- 1 file changed, 9 insertions(+), 8 deletions(-)
+ drivers/iommu/mtk_iommu.c    | 13 ++++++-------
+ drivers/iommu/mtk_iommu_v1.c | 14 +++++++-------
+ 2 files changed, 13 insertions(+), 14 deletions(-)
 
-diff --git a/drivers/iommu/arm-smmu.c b/drivers/iommu/arm-smmu.c
-index 3cef2bfd6f3e..a6a5796e9c41 100644
---- a/drivers/iommu/arm-smmu.c
-+++ b/drivers/iommu/arm-smmu.c
-@@ -1059,7 +1059,7 @@ static bool arm_smmu_free_sme(struct arm_smmu_device *smmu, int idx)
- static int arm_smmu_master_alloc_smes(struct device *dev)
+diff --git a/drivers/iommu/mtk_iommu.c b/drivers/iommu/mtk_iommu.c
+index 95945f467c03..5f4d6df59cf6 100644
+--- a/drivers/iommu/mtk_iommu.c
++++ b/drivers/iommu/mtk_iommu.c
+@@ -358,8 +358,8 @@ static void mtk_iommu_domain_free(struct iommu_domain *domain)
+ static int mtk_iommu_attach_device(struct iommu_domain *domain,
+ 				   struct device *dev)
  {
- 	struct iommu_fwspec *fwspec = dev_iommu_fwspec_get(dev);
--	struct arm_smmu_master_cfg *cfg = fwspec->iommu_priv;
-+	struct arm_smmu_master_cfg *cfg = dev_iommu_priv_get(dev);
- 	struct arm_smmu_device *smmu = cfg->smmu;
- 	struct arm_smmu_smr *smrs = smmu->smrs;
- 	struct iommu_group *group;
-@@ -1159,11 +1159,11 @@ static int arm_smmu_domain_add_master(struct arm_smmu_domain *smmu_domain,
++	struct mtk_iommu_data *data = dev_iommu_priv_get(dev);
+ 	struct mtk_iommu_domain *dom = to_mtk_domain(domain);
+-	struct mtk_iommu_data *data = dev_iommu_fwspec_get(dev)->iommu_priv;
  
- static int arm_smmu_attach_dev(struct iommu_domain *domain, struct device *dev)
- {
--	int ret;
--	struct iommu_fwspec *fwspec = dev_iommu_fwspec_get(dev);
- 	struct arm_smmu_domain *smmu_domain = to_smmu_domain(domain);
-+	struct iommu_fwspec *fwspec = dev_iommu_fwspec_get(dev);
- 	struct arm_smmu_master_cfg *cfg;
- 	struct arm_smmu_device *smmu;
-+	int ret;
- 
- 	if (!fwspec || fwspec->ops != &arm_smmu_ops) {
- 		dev_err(dev, "cannot attach to SMMU, is it on the same bus?\n");
-@@ -1177,7 +1177,7 @@ static int arm_smmu_attach_dev(struct iommu_domain *domain, struct device *dev)
- 	 * domains, just say no (but more politely than by dereferencing NULL).
- 	 * This should be at least a WARN_ON once that's sorted.
- 	 */
--	cfg = fwspec->iommu_priv;
-+	cfg = dev_iommu_priv_get(dev);
- 	if (!cfg)
+ 	if (!data)
  		return -ENODEV;
+@@ -378,7 +378,7 @@ static int mtk_iommu_attach_device(struct iommu_domain *domain,
+ static void mtk_iommu_detach_device(struct iommu_domain *domain,
+ 				    struct device *dev)
+ {
+-	struct mtk_iommu_data *data = dev_iommu_fwspec_get(dev)->iommu_priv;
++	struct mtk_iommu_data *data = dev_iommu_priv_get(dev);
  
-@@ -1430,7 +1430,7 @@ static int arm_smmu_add_device(struct device *dev)
- 		goto out_free;
+ 	if (!data)
+ 		return;
+@@ -450,7 +450,7 @@ static int mtk_iommu_add_device(struct device *dev)
+ 	if (!fwspec || fwspec->ops != &mtk_iommu_ops)
+ 		return -ENODEV; /* Not a iommu client device */
  
- 	cfg->smmu = smmu;
--	fwspec->iommu_priv = cfg;
-+	dev_iommu_priv_set(dev, cfg);
- 	while (i--)
- 		cfg->smendx[i] = INVALID_SMENDX;
+-	data = fwspec->iommu_priv;
++	data = dev_iommu_priv_get(dev);
+ 	iommu_device_link(&data->iommu, dev);
  
-@@ -1468,7 +1468,7 @@ static void arm_smmu_remove_device(struct device *dev)
- 	if (!fwspec || fwspec->ops != &arm_smmu_ops)
+ 	group = iommu_group_get_for_dev(dev);
+@@ -469,7 +469,7 @@ static void mtk_iommu_remove_device(struct device *dev)
+ 	if (!fwspec || fwspec->ops != &mtk_iommu_ops)
  		return;
  
--	cfg  = fwspec->iommu_priv;
-+	cfg  = dev_iommu_priv_get(dev);
- 	smmu = cfg->smmu;
+-	data = fwspec->iommu_priv;
++	data = dev_iommu_priv_get(dev);
+ 	iommu_device_unlink(&data->iommu, dev);
  
- 	ret = arm_smmu_rpm_get(smmu);
-@@ -1480,15 +1480,16 @@ static void arm_smmu_remove_device(struct device *dev)
- 
- 	arm_smmu_rpm_put(smmu);
- 
-+	dev_iommu_priv_set(dev, NULL);
  	iommu_group_remove_device(dev);
--	kfree(fwspec->iommu_priv);
-+	kfree(cfg);
- 	iommu_fwspec_free(dev);
- }
+@@ -496,7 +496,6 @@ static struct iommu_group *mtk_iommu_device_group(struct device *dev)
  
- static struct iommu_group *arm_smmu_device_group(struct device *dev)
+ static int mtk_iommu_of_xlate(struct device *dev, struct of_phandle_args *args)
  {
-+	struct arm_smmu_master_cfg *cfg = dev_iommu_priv_get(dev);
- 	struct iommu_fwspec *fwspec = dev_iommu_fwspec_get(dev);
--	struct arm_smmu_master_cfg *cfg = fwspec->iommu_priv;
- 	struct arm_smmu_device *smmu = cfg->smmu;
- 	struct iommu_group *group = NULL;
- 	int i, idx;
+-	struct iommu_fwspec *fwspec = dev_iommu_fwspec_get(dev);
+ 	struct platform_device *m4updev;
+ 
+ 	if (args->args_count != 1) {
+@@ -505,13 +504,13 @@ static int mtk_iommu_of_xlate(struct device *dev, struct of_phandle_args *args)
+ 		return -EINVAL;
+ 	}
+ 
+-	if (!fwspec->iommu_priv) {
++	if (!dev_iommu_priv_get(dev)) {
+ 		/* Get the m4u device */
+ 		m4updev = of_find_device_by_node(args->np);
+ 		if (WARN_ON(!m4updev))
+ 			return -EINVAL;
+ 
+-		fwspec->iommu_priv = platform_get_drvdata(m4updev);
++		dev_iommu_priv_set(dev, platform_get_drvdata(m4updev));
+ 	}
+ 
+ 	return iommu_fwspec_add_ids(dev, args->args, 1);
+diff --git a/drivers/iommu/mtk_iommu_v1.c b/drivers/iommu/mtk_iommu_v1.c
+index e93b94ecac45..a31be05601c9 100644
+--- a/drivers/iommu/mtk_iommu_v1.c
++++ b/drivers/iommu/mtk_iommu_v1.c
+@@ -263,8 +263,8 @@ static void mtk_iommu_domain_free(struct iommu_domain *domain)
+ static int mtk_iommu_attach_device(struct iommu_domain *domain,
+ 				   struct device *dev)
+ {
++	struct mtk_iommu_data *data = dev_iommu_priv_get(dev);
+ 	struct mtk_iommu_domain *dom = to_mtk_domain(domain);
+-	struct mtk_iommu_data *data = dev_iommu_fwspec_get(dev)->iommu_priv;
+ 	int ret;
+ 
+ 	if (!data)
+@@ -286,7 +286,7 @@ static int mtk_iommu_attach_device(struct iommu_domain *domain,
+ static void mtk_iommu_detach_device(struct iommu_domain *domain,
+ 				    struct device *dev)
+ {
+-	struct mtk_iommu_data *data = dev_iommu_fwspec_get(dev)->iommu_priv;
++	struct mtk_iommu_data *data = dev_iommu_priv_get(dev);
+ 
+ 	if (!data)
+ 		return;
+@@ -387,20 +387,20 @@ static int mtk_iommu_create_mapping(struct device *dev,
+ 		return -EINVAL;
+ 	}
+ 
+-	if (!fwspec->iommu_priv) {
++	if (!dev_iommu_priv_get(dev)) {
+ 		/* Get the m4u device */
+ 		m4updev = of_find_device_by_node(args->np);
+ 		if (WARN_ON(!m4updev))
+ 			return -EINVAL;
+ 
+-		fwspec->iommu_priv = platform_get_drvdata(m4updev);
++		dev_iommu_priv_set(dev, platform_get_drvdata(m4updev));
+ 	}
+ 
+ 	ret = iommu_fwspec_add_ids(dev, args->args, 1);
+ 	if (ret)
+ 		return ret;
+ 
+-	data = fwspec->iommu_priv;
++	data = dev_iommu_priv_get(dev);
+ 	m4udev = data->dev;
+ 	mtk_mapping = m4udev->archdata.iommu;
+ 	if (!mtk_mapping) {
+@@ -459,7 +459,7 @@ static int mtk_iommu_add_device(struct device *dev)
+ 	if (err)
+ 		return err;
+ 
+-	data = fwspec->iommu_priv;
++	data = dev_iommu_priv_get(dev);
+ 	mtk_mapping = data->dev->archdata.iommu;
+ 	err = arm_iommu_attach_device(dev, mtk_mapping);
+ 	if (err) {
+@@ -478,7 +478,7 @@ static void mtk_iommu_remove_device(struct device *dev)
+ 	if (!fwspec || fwspec->ops != &mtk_iommu_ops)
+ 		return;
+ 
+-	data = fwspec->iommu_priv;
++	data = dev_iommu_priv_get(dev);
+ 	iommu_device_unlink(&data->iommu, dev);
+ 
+ 	iommu_group_remove_device(dev);
 -- 
 2.17.1
 
