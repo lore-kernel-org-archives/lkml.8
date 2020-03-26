@@ -2,266 +2,74 @@ Return-Path: <SRS0=aGSP=5L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7786FC43331
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 09:00:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B31AC43331
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 09:02:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4E2A62078E
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 09:00:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 47E852070A
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 09:02:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727705AbgCZJAe (ORCPT
+        id S1727720AbgCZJCA convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 05:00:34 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:36592 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726210AbgCZJAd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 05:00:33 -0400
-Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 901C1AF1DC8E9FC703B3;
-        Thu, 26 Mar 2020 17:00:21 +0800 (CST)
-Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
- (10.3.19.206) with Microsoft SMTP Server (TLS) id 14.3.487.0; Thu, 26 Mar
- 2020 17:00:18 +0800
-Subject: Re: [PATCH] f2fs: fix long latency due to discard during umount
-To:     Sahitya Tummala <stummala@codeaurora.org>,
-        Jaegeuk Kim <jaegeuk@kernel.org>,
-        <linux-f2fs-devel@lists.sourceforge.net>
-CC:     <linux-kernel@vger.kernel.org>
-References: <1584506689-5041-1-git-send-email-stummala@codeaurora.org>
-From:   Chao Yu <yuchao0@huawei.com>
-Message-ID: <29d4adc4-482d-3d92-1470-3405989ea231@huawei.com>
-Date:   Thu, 26 Mar 2020 17:00:18 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
-MIME-Version: 1.0
-In-Reply-To: <1584506689-5041-1-git-send-email-stummala@codeaurora.org>
-Content-Type: text/plain; charset="windows-1252"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.134.22.195]
-X-CFilter-Loop: Reflected
+        Thu, 26 Mar 2020 05:02:00 -0400
+Received: from coyote.holtmann.net ([212.227.132.17]:38318 "EHLO
+        mail.holtmann.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726210AbgCZJB7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Mar 2020 05:01:59 -0400
+Received: from marcel-macbook.fritz.box (p4FEFC5A7.dip0.t-ipconnect.de [79.239.197.167])
+        by mail.holtmann.org (Postfix) with ESMTPSA id 23B15CECDB;
+        Thu, 26 Mar 2020 10:11:29 +0100 (CET)
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
+Subject: Re: [PATCH v3 1/2] Bluetooth: btusb: Indicate Microsoft vendor
+ extension for Intel 9460/9560 and 9160/9260
+From:   Marcel Holtmann <marcel@holtmann.org>
+In-Reply-To: <20200326005931.v3.1.I0e975833a6789e8acc74be7756cd54afde6ba98c@changeid>
+Date:   Thu, 26 Mar 2020 10:01:56 +0100
+Cc:     Bluetooth Kernel Mailing List <linux-bluetooth@vger.kernel.org>,
+        Alain Michaud <alainm@chromium.org>,
+        Luiz Augusto von Dentz <luiz.von.dentz@intel.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Johan Hedberg <johan.hedberg@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>, netdev@vger.kernel.org
+Content-Transfer-Encoding: 8BIT
+Message-Id: <ADF19483-721C-4263-8CA8-CF4587E79BA4@holtmann.org>
+References: <20200326075938.65053-1-mcchou@chromium.org>
+ <20200326005931.v3.1.I0e975833a6789e8acc74be7756cd54afde6ba98c@changeid>
+To:     Miao-chen Chou <mcchou@chromium.org>
+X-Mailer: Apple Mail (2.3608.80.23.2.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Sahitya,
+Hi Miao-chen,
 
-On 2020/3/18 12:44, Sahitya Tummala wrote:
-> F2FS already has a default timeout of 5 secs for discards that
-> can be issued during umount, but it can take more than the 5 sec
-> timeout if the underlying UFS device queue is already full and there
-> are no more available free tags to be used. In that case, submit_bio()
-> will wait for the already queued discard requests to complete to get
-> a free tag, which can potentially take way more than 5 sec.
+> This adds a bit mask of driver_info for Microsoft vendor extension and
+> indicates the support for Intel 9460/9560 and 9160/9260. See
+> https://docs.microsoft.com/en-us/windows-hardware/drivers/bluetooth/
+> microsoft-defined-bluetooth-hci-commands-and-events for more information
+> about the extension. This was verified with Intel ThunderPeak BT controller
+> where msft_vnd_ext_opcode is 0xFC1E.
 > 
-> Fix this by submitting the discard requests with REQ_NOWAIT
-> flags during umount. This will return -EAGAIN for UFS queue/tag full
-> scenario without waiting in the context of submit_bio(). The FS can
-> then handle these requests by retrying again within the stipulated
-> discard timeout period to avoid long latencies.
-> 
-> Signed-off-by: Sahitya Tummala <stummala@codeaurora.org>
+> Signed-off-by: Miao-chen Chou <mcchou@chromium.org>
 > ---
-> v2:
-> - Handle the case where a dc can have multiple bios associated with it
 > 
->  fs/f2fs/f2fs.h    |  1 +
->  fs/f2fs/segment.c | 83 ++++++++++++++++++++++++++++++++++++++++++++++++-------
->  2 files changed, 74 insertions(+), 10 deletions(-)
-> 
-> diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
-> index 12a197e..67b8dcc 100644
-> --- a/fs/f2fs/f2fs.h
-> +++ b/fs/f2fs/f2fs.h
-> @@ -340,6 +340,7 @@ struct discard_cmd_control {
->  	struct list_head pend_list[MAX_PLIST_NUM];/* store pending entries */
->  	struct list_head wait_list;		/* store on-flushing entries */
->  	struct list_head fstrim_list;		/* in-flight discard from fstrim */
-> +	struct list_head retry_list;		/* list of cmds to retry */
->  	wait_queue_head_t discard_wait_queue;	/* waiting queue for wake-up */
->  	unsigned int discard_wake;		/* to wake up discard thread */
->  	struct mutex cmd_lock;
-> diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
-> index fb3e531..4162c76 100644
-> --- a/fs/f2fs/segment.c
-> +++ b/fs/f2fs/segment.c
-> @@ -1029,13 +1029,16 @@ static void f2fs_submit_discard_endio(struct bio *bio)
->  	struct discard_cmd *dc = (struct discard_cmd *)bio->bi_private;
->  	unsigned long flags;
->  
-> -	dc->error = blk_status_to_errno(bio->bi_status);
-> -
->  	spin_lock_irqsave(&dc->lock, flags);
-> +	if (!dc->error)
-> +		dc->error = blk_status_to_errno(bio->bi_status);
-> +
->  	dc->bio_ref--;
-> -	if (!dc->bio_ref && dc->state == D_SUBMIT) {
-> -		dc->state = D_DONE;
-> -		complete_all(&dc->wait);
-> +	if (!dc->bio_ref) {
-> +		if (dc->error || dc->state == D_SUBMIT) {
-> +			dc->state = D_DONE;
-> +			complete_all(&dc->wait);
-> +		}
->  	}
->  	spin_unlock_irqrestore(&dc->lock, flags);
->  	bio_put(bio);
-> @@ -1124,10 +1127,13 @@ static int __submit_discard_cmd(struct f2fs_sb_info *sbi,
->  	struct discard_cmd_control *dcc = SM_I(sbi)->dcc_info;
->  	struct list_head *wait_list = (dpolicy->type == DPOLICY_FSTRIM) ?
->  					&(dcc->fstrim_list) : &(dcc->wait_list);
-> -	int flag = dpolicy->sync ? REQ_SYNC : 0;
-> -	block_t lstart, start, len, total_len;
-> +	int flag;
-> +	block_t lstart, start, len, total_len, orig_len;
->  	int err = 0;
->  
-> +	flag = dpolicy->sync ? REQ_SYNC : 0;
-> +	flag |= dpolicy->type == DPOLICY_UMOUNT ? REQ_NOWAIT : 0;
-> +
->  	if (dc->state != D_PREP)
->  		return 0;
->  
-> @@ -1139,7 +1145,7 @@ static int __submit_discard_cmd(struct f2fs_sb_info *sbi,
->  	lstart = dc->lstart;
->  	start = dc->start;
->  	len = dc->len;
-> -	total_len = len;
-> +	orig_len = total_len = len;
->  
->  	dc->len = 0;
->  
-> @@ -1203,6 +1209,14 @@ static int __submit_discard_cmd(struct f2fs_sb_info *sbi,
->  		bio->bi_end_io = f2fs_submit_discard_endio;
->  		bio->bi_opf |= flag;
->  		submit_bio(bio);
-> +		if (flag & REQ_NOWAIT) {
-> +			if (dc->error == -EAGAIN) {
-> +				dc->len = orig_len;
-> +				list_move(&dc->list, &dcc->retry_list);
-> +				err = dc->error;
+> Changes in v3:
+> - Create net/bluetooth/msft.c with struct msft_vnd_ext defined internally
+> and change the hdev->msft_ext field to void*.
+> - Define and expose msft_vnd_ext_set_opcode() for btusb use.
+> - Init hdev->msft_ext in hci_alloc_dev() and deinit it in hci_free_dev().
 
-I encounter lots of dmesg, which should be printed by __remove_discard_cmd()
+so I spent some cycles on thinking about on how we can have this nice and cleanly without putting too much into the core stack or hci_dev. I took your patches and converted them a little bit into how I would do it. Please have a look.
 
-F2FS-fs (dm-0): Issue discard(23552, 23552, 2) failed, ret: -11
+Regards
 
-This should happen only if we didn't handle all discard in 5 seconds during
-umount.
+Marcel
 
-So I doubt we failed to move dc to retry_list, because after submit_bio(),
-end_io() is not called synchronously as the bio was just pluged?
-
-Thanks,
-
-> +				break;
-> +			}
-> +		}
->  
->  		atomic_inc(&dcc->issued_discard);
->  
-> @@ -1463,6 +1477,40 @@ static unsigned int __issue_discard_cmd_orderly(struct f2fs_sb_info *sbi,
->  	return issued;
->  }
->  
-> +static bool __should_discard_retry(struct f2fs_sb_info *sbi,
-> +		struct discard_policy *dpolicy)
-> +{
-> +	struct discard_cmd_control *dcc = SM_I(sbi)->dcc_info;
-> +	struct discard_cmd *dc, *tmp;
-> +	bool retry = false;
-> +	unsigned long flags;
-> +
-> +	if (dpolicy->type != DPOLICY_UMOUNT)
-> +		f2fs_bug_on(sbi, 1);
-> +
-> +	mutex_lock(&dcc->cmd_lock);
-> +	list_for_each_entry_safe(dc, tmp, &(dcc->retry_list), list) {
-> +		if (dpolicy->timeout != 0 &&
-> +			f2fs_time_over(sbi, dpolicy->timeout)) {
-> +			retry = false;
-> +			break;
-> +		}
-> +
-> +		spin_lock_irqsave(&dc->lock, flags);
-> +		if (!dc->bio_ref) {
-> +			dc->state = D_PREP;
-> +			dc->error = 0;
-> +			reinit_completion(&dc->wait);
-> +			__relocate_discard_cmd(dcc, dc);
-> +			retry = true;
-> +		}
-> +		spin_unlock_irqrestore(&dc->lock, flags);
-> +	}
-> +	mutex_unlock(&dcc->cmd_lock);
-> +
-> +	return retry;
-> +}
-> +
->  static int __issue_discard_cmd(struct f2fs_sb_info *sbi,
->  					struct discard_policy *dpolicy)
->  {
-> @@ -1470,12 +1518,13 @@ static int __issue_discard_cmd(struct f2fs_sb_info *sbi,
->  	struct list_head *pend_list;
->  	struct discard_cmd *dc, *tmp;
->  	struct blk_plug plug;
-> -	int i, issued = 0;
-> +	int i, err, issued = 0;
->  	bool io_interrupted = false;
->  
->  	if (dpolicy->timeout != 0)
->  		f2fs_update_time(sbi, dpolicy->timeout);
->  
-> +retry:
->  	for (i = MAX_PLIST_NUM - 1; i >= 0; i--) {
->  		if (dpolicy->timeout != 0 &&
->  				f2fs_time_over(sbi, dpolicy->timeout))
-> @@ -1509,7 +1558,10 @@ static int __issue_discard_cmd(struct f2fs_sb_info *sbi,
->  				break;
->  			}
->  
-> -			__submit_discard_cmd(sbi, dpolicy, dc, &issued);
-> +			err = __submit_discard_cmd(sbi, dpolicy, dc, &issued);
-> +			if (err == -EAGAIN)
-> +				congestion_wait(BLK_RW_ASYNC,
-> +						DEFAULT_IO_TIMEOUT);
->  
->  			if (issued >= dpolicy->max_requests)
->  				break;
-> @@ -1522,6 +1574,10 @@ static int __issue_discard_cmd(struct f2fs_sb_info *sbi,
->  			break;
->  	}
->  
-> +	if (!list_empty(&dcc->retry_list) &&
-> +		__should_discard_retry(sbi, dpolicy))
-> +		goto retry;
-> +
->  	if (!issued && io_interrupted)
->  		issued = -1;
->  
-> @@ -1613,6 +1669,12 @@ static unsigned int __wait_discard_cmd_range(struct f2fs_sb_info *sbi,
->  		goto next;
->  	}
->  
-> +	if (dpolicy->type == DPOLICY_UMOUNT &&
-> +		!list_empty(&dcc->retry_list)) {
-> +		wait_list = &dcc->retry_list;
-> +		goto next;
-> +	}
-> +
->  	return trimmed;
->  }
->  
-> @@ -2051,6 +2113,7 @@ static int create_discard_cmd_control(struct f2fs_sb_info *sbi)
->  	for (i = 0; i < MAX_PLIST_NUM; i++)
->  		INIT_LIST_HEAD(&dcc->pend_list[i]);
->  	INIT_LIST_HEAD(&dcc->wait_list);
-> +	INIT_LIST_HEAD(&dcc->retry_list);
->  	INIT_LIST_HEAD(&dcc->fstrim_list);
->  	mutex_init(&dcc->cmd_lock);
->  	atomic_set(&dcc->issued_discard, 0);
-> 
