@@ -2,112 +2,173 @@ Return-Path: <SRS0=aGSP=5L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 353FBC43331
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 17:52:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EDF0C43331
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 17:52:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1653F2070A
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 17:52:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 54A7D2070A
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 17:52:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727920AbgCZRwP convert rfc822-to-8bit (ORCPT
+        id S1728214AbgCZRw3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 13:52:15 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:18030 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726359AbgCZRwP (ORCPT
+        Thu, 26 Mar 2020 13:52:29 -0400
+Received: from mout.kundenserver.de ([212.227.17.24]:38361 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727541AbgCZRw2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 13:52:15 -0400
-Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02QHYGfT057213
-        for <linux-kernel@vger.kernel.org>; Thu, 26 Mar 2020 13:52:14 -0400
-Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2ywf3hyjry-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 26 Mar 2020 13:52:14 -0400
-Received: from localhost
-        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <naveen.n.rao@linux.ibm.com>;
-        Thu, 26 Mar 2020 17:52:05 -0000
-Received: from b06avi18626390.portsmouth.uk.ibm.com (9.149.26.192)
-        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 26 Mar 2020 17:52:01 -0000
-Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
-        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 02QHp4bB40960332
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 26 Mar 2020 17:51:04 GMT
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 1A4B111C04C;
-        Thu, 26 Mar 2020 17:52:07 +0000 (GMT)
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 77A4911C04A;
-        Thu, 26 Mar 2020 17:52:06 +0000 (GMT)
-Received: from localhost (unknown [9.85.123.131])
-        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu, 26 Mar 2020 17:52:06 +0000 (GMT)
-Date:   Thu, 26 Mar 2020 23:22:03 +0530
-From:   "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>
-Subject: Re: [PATCH] powerpc/64: Fix section mismatch warnings.
-To:     Allison Randal <allison@lohutok.net>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Michal Suchanek <msuchanek@suse.de>,
-        Paul Mackerras <paulus@samba.org>,
-        Russell Currey <ruscur@russell.cc>,
-        Thomas Gleixner <tglx@linutronix.de>
-References: <20200326163742.28990-1-msuchanek@suse.de>
-In-Reply-To: <20200326163742.28990-1-msuchanek@suse.de>
+        Thu, 26 Mar 2020 13:52:28 -0400
+Received: from [192.168.1.183] ([37.4.249.171]) by mrelayeu.kundenserver.de
+ (mreue107 [212.227.15.183]) with ESMTPSA (Nemesis) id
+ 1MJW5G-1ixeLQ2O40-00JoTP; Thu, 26 Mar 2020 18:52:16 +0100
+Subject: Re: [PATCH] drm/vc4: Fix HDMI mode validation
+To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Eric Anholt <eric@anholt.net>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>
+Cc:     maxime@cerno.tech, linux-rpi-kernel@lists.infradead.org,
+        f.fainelli@gmail.com,
+        Dave Stevenson <dave.stevenson@raspberrypi.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+References: <20200326122001.22215-1-nsaenzjulienne@suse.de>
+ <c4b3e083-ac6e-b321-f0eb-f20e8ec3b1a6@i2se.com>
+ <486b5c63e5b9bd81051500c0c310e68af16956c4.camel@suse.de>
+From:   Stefan Wahren <stefan.wahren@i2se.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=stefan.wahren@i2se.com; keydata=
+ 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 AQ==
+Message-ID: <096467b2-e617-4353-ce8c-33312bd553da@i2se.com>
+Date:   Thu, 26 Mar 2020 18:52:15 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-User-Agent: astroid/v0.15-13-gb675b421
- (https://github.com/astroidmail/astroid)
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8BIT
-X-TM-AS-GCONF: 00
-x-cbid: 20032617-0020-0000-0000-000003BBEB2E
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20032617-0021-0000-0000-000022147A36
-Message-Id: <1585245057.hh0vutz28g.naveen@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.645
- definitions=2020-03-26_08:2020-03-26,2020-03-26 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 phishscore=0
- priorityscore=1501 adultscore=0 mlxscore=0 mlxlogscore=587 impostorscore=0
- bulkscore=0 lowpriorityscore=0 malwarescore=0 spamscore=0 suspectscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2003260131
+In-Reply-To: <486b5c63e5b9bd81051500c0c310e68af16956c4.camel@suse.de>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Provags-ID: V03:K1:/dw4OxKu77CHBXgp2rsR6+DCGOJdgmDlUFJLI91y4YoNeJtp3/I
+ dXC+CAT9xFZLt67e/gZQ4SoMDn3Lk5NBlYMEDkfmX2gfP7aCoDN+f6FWFDKPYyPtoI1722U
+ Ldl1ETnpGUv53vyrjWxr8101C8difqptTvOAc1XX6nmc5D7Y2dBOeCUr3eDTE3S5SukMmxD
+ Gm7L7y2LUwHINx3uVgIjQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:AijSonU/UGo=:dHvzR77kshW/cUguLtQMC9
+ ckaUihqsT6Keup+cYIRmwNHzXlv1OjKz2Va8eogi7Ag+SQopIEd/S/xRF7E3Y1KOI/xdrIH2w
+ W2fBZGpcjsihH4+g2rBx5PagcT6m/JFp/AYH7QPsmKDH2to6tTkdb1bUy3ODcpaybogJo0rsu
+ X8VPw64ZNI2ZtJOm6MgMYUq7GOgKmLswwEsbLrCbaXbwpWUlcveNEaLsev9n8hqTVk776QgaD
+ xjcd+vFlSC6LFpA7GV1o2jcZcWOJM+r6KmnyoweiDvqbJD7L1bfeycqmIiUCnyexUhKkgSUro
+ KjfVJ56prL4D8rz6nUpCV5D8Bysq25BcUF/Oj8SvjvWHji6VcNIFUJwzXDrxAUviMY0x/WAHb
+ hKx0X14+rzrgQjU+lhGB1p1u69ar+XD80K/ada2u7+VOTuENPdr4Z8bIJWQe3OIkTglRYC9x8
+ m/tm4ND6jxJq8Sfg7qe3pmT8UkgvMZQgGCkinUjc2lm6VtpfATDZ6O3CdDYxm9oMedYXrviIh
+ qybpPyIbqLgKkyAXDnYiKvWckIsEeNLgLAueUMiebVT6REyRv4mr+xuIlTJU9Ypj6qLIn9abL
+ 85mS1ZZVzWZ7aqieEH1x8fFc6WQ0kPKFJ/YmW/+pKVh4qBPl+cqGn5Qa2JdnHq8OxwWWbjSsT
+ eGq6bXpLnTXQkfIrNnNrI0F6KFyQpPlCVjJcnj62NUD0f7AgeonAl4W708dPVHdw0E0t4pEUB
+ 2yIp/wU3kcS6J8gfvky0LNnh4kGDUNpSqIlvNAbXl8sMWzhgfUvT7cyQFP96qzp6oR8XpWmcH
+ AfoUy3yF2oeiVRuOC2EyGh7pdXBgBq/OzdmSZlN6MC6eenx0arVEfp3cN+pEqQmQP/I02r/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Michal Suchanek wrote:
-> Fixes the following warnings:
-> 
-> WARNING: vmlinux.o(.text+0x2d24): Section mismatch in reference from the variable __boot_from_prom to the function .init.text:prom_init()
-> The function __boot_from_prom() references
-> the function __init prom_init().
-> This is often because __boot_from_prom lacks a __init
-> annotation or the annotation of prom_init is wrong.
-> 
-> WARNING: vmlinux.o(.text+0x2fd0): Section mismatch in reference from the variable start_here_common to the function .init.text:start_kernel()
-> The function start_here_common() references
-> the function __init start_kernel().
-> This is often because start_here_common lacks a __init
-> annotation or the annotation of start_kernel is wrong.
-> 
-> Signed-off-by: Michal Suchanek <msuchanek@suse.de>
-> ---
->  arch/powerpc/kernel/head_64.S | 4 ++++
->  1 file changed, 4 insertions(+)
+Am 26.03.20 um 18:36 schrieb Nicolas Saenz Julienne:
+> On Thu, 2020-03-26 at 18:19 +0100, Stefan Wahren wrote:
+>> Am 26.03.20 um 13:20 schrieb Nicolas Saenz Julienne:
+>>> Current mode validation impedes setting up some video modes which should
+>>> be supported otherwise. Namely 1920x1200@60Hz.
+>>>
+>>> Fix this by lowering the minimum HDMI state machine clock to pixel clock
+>>> ratio allowed.
+>>>
+>>> Fixes: 32e823c63e90 ("drm/vc4: Reject HDMI modes with too high of clocks")
+>>> Reported-by: Stefan Wahren <stefan.wahren@i2se.com>
+>>> Suggested-by: Dave Stevenson <dave.stevenson@raspberrypi.com>
+>>> Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+>>> ---
+>>>  drivers/gpu/drm/vc4/vc4_hdmi.c | 20 ++++++++++++++++----
+>>>  1 file changed, 16 insertions(+), 4 deletions(-)
+>>>
+>>> diff --git a/drivers/gpu/drm/vc4/vc4_hdmi.c b/drivers/gpu/drm/vc4/vc4_hdmi.c
+>>> index cea18dc15f77..340719238753 100644
+>>> --- a/drivers/gpu/drm/vc4/vc4_hdmi.c
+>>> +++ b/drivers/gpu/drm/vc4/vc4_hdmi.c
+>>> @@ -681,11 +681,23 @@ static enum drm_mode_status
+>>>  vc4_hdmi_encoder_mode_valid(struct drm_encoder *crtc,
+>>>  			    const struct drm_display_mode *mode)
+>>>  {
+>>> -	/* HSM clock must be 108% of the pixel clock.  Additionally,
+>>> -	 * the AXI clock needs to be at least 25% of pixel clock, but
+>>> -	 * HSM ends up being the limiting factor.
+>>> +	/*
+>>> +	 * As stated in RPi's vc4 firmware "HDMI state machine (HSM) clock must
+>>> +	 * be faster than pixel clock, infinitesimally faster, tested in
+>>> +	 * simulation. Otherwise, exact value is unimportant for HDMI
+>>> +	 * operation." This conflicts with bcm2835's vc4 documentation, which
+>>> +	 * states HSM's clock has to be at least 108% of the pixel clock.
+>>> +	 *
+>>> +	 * Real life tests reveal that vc4's firmware statement holds up, and
+>>> +	 * users are able to use pixel clocks closer to HSM's, namely for
+>>> +	 * 1920x1200@60Hz. So it was decided to have leave a 1% margin between
+>>> +	 * both clocks. Which, for RPi0-3 implies a maximum pixel clock of
+>> s/RPi0-3/bcm2835/ ?
+> Well as Dave Stevenson stated on the previous thread[1], it's the firmware that
+> sets up the HSM limitation. IIUC technically both HSM and pixel clocks could be
+> increased. Hence this being more of a RPi limitation than the chip itself.
+>
+> "Whilst the firmware would appear to use a fixed HSM clock on Pi0-3, I
+> don't anticipate there being any issue with varying it. It looks like
+> there was the expectation of it being variable in the past, but
+> someone has refactored it and either accidentally or deliberately
+> given up on the idea."
 
-Michael committed a similar patch just earlier today:
-https://git.kernel.org/pub/scm/linux/kernel/git/powerpc/linux.git/commit/?id=6eeb9b3b9ce588f14a697737a30d0702b5a20293
+Okay thanks for the explanation again
 
+So i'm fine this patch
 
-- Naveen
-
+>
+> Regards,
+> Nicolas
+>
+> [1] https://www.spinics.net/lists/arm-kernel/msg794591.html
+>
