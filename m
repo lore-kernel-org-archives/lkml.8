@@ -2,89 +2,147 @@ Return-Path: <SRS0=aGSP=5L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5050EC2D0E8
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 14:36:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64209C2D0E5
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 14:37:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 27EA7206F8
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 14:36:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 381CE206F8
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 14:37:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Hj+GXptt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727826AbgCZOgY (ORCPT
+        id S1727973AbgCZOhY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 10:36:24 -0400
-Received: from inva020.nxp.com ([92.121.34.13]:42162 "EHLO inva020.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726270AbgCZOgX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 10:36:23 -0400
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 1A3221A0A03;
-        Thu, 26 Mar 2020 15:36:22 +0100 (CET)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 5FD9F1A03E3;
-        Thu, 26 Mar 2020 15:36:16 +0100 (CET)
-Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 2CDCE402E2;
-        Thu, 26 Mar 2020 22:36:09 +0800 (SGT)
-From:   Anson Huang <Anson.Huang@nxp.com>
-To:     rui.zhang@intel.com, daniel.lezcano@linaro.org,
-        amit.kucheria@verdurent.com, shawnguo@kernel.org,
-        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
-        linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Cc:     Linux-imx@nxp.com
-Subject: [PATCH V2] thermal: imx: Add missing of_node_put()
-Date:   Thu, 26 Mar 2020 22:29:05 +0800
-Message-Id: <1585232945-23368-1-git-send-email-Anson.Huang@nxp.com>
-X-Mailer: git-send-email 2.7.4
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Thu, 26 Mar 2020 10:37:24 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:33179 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726270AbgCZOhY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Mar 2020 10:37:24 -0400
+Received: by mail-pf1-f196.google.com with SMTP id j1so2880714pfe.0;
+        Thu, 26 Mar 2020 07:37:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=xcJ9A36qE7fmwILM0GIjQcoBryZ8cQtpU3R/gSX0bfw=;
+        b=Hj+GXpttQEF8xznQ2rVTuxma2i7jZmuN8GRAQn6sIWhgC4o4xDnW7wFusMuV8o2LbI
+         bay9pVfypJf/YhGlOzXqqT5xjCRnkIuIUkIZnegDauwEobqVXXbuuS6POybxMyvZl4be
+         ScLmbSsGBuJNWfiM60rxOUXURna7W/yXDmnthc8oqsqvzSiMWXGv5fUcrpvpz4bC+Oev
+         oLhZEwB8u4qNCz/t8D0bfjrMv3fhzNvzjiAwry9NZO8dtYlB/srOL0h6f9GJB6O/d1jZ
+         3OQ77yfP4NQ6Z7AlwktCS3ZTyeQpDKHnMBqewIgpL00cuSh78Ut0k9iYl0hOdolwR6P2
+         xZdw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=xcJ9A36qE7fmwILM0GIjQcoBryZ8cQtpU3R/gSX0bfw=;
+        b=d88pJOOfcCfvIuQNqp/3JuPV7vJgkxEzbvtJ9fiWMi9bPBYybTN47l2P3+/pgMrysG
+         zjTMdhCDb/NT12iwadTOzoOYqwYQud4fipuyViRIfxYcDawBTEkrWsWlnEeQS2631glb
+         MbG63iaTt4VU38zwI2FUxasN/fTYW1S6uL7elyIYrrkRN3vW/3/xNhT4yulqdvgQMPjb
+         PNpP/aK1dqqCE7lgr7+yj6zC+ztuV49ZYtY614iabZjqxcbo75q9zYRnICYpBql94FH5
+         erVjcb1Pouh+L2rcDGUJvf4RoXQyppUZLSxUdpiO2+X8Yqeru82RmG/rXWcPKNOQX0k6
+         XGtw==
+X-Gm-Message-State: ANhLgQ2lfDYYciacU0YJ+6y+kB6FOCeBhlSGA8/2PakTCiWnhBvfF1ca
+        ROBa9h41SKXd9K9tlm6n8GiOAHdmIlcfHALUxwM=
+X-Google-Smtp-Source: ADFU+vsONeD2TN2CDHUgnVhWVwIcnrhd9OmNhte1Zfml9aKMC9gE+W9zgd27TYvKJYDgdxOIM0foGkFZx1J2fO3yIo0=
+X-Received: by 2002:aa7:8149:: with SMTP id d9mr9058526pfn.170.1585233442792;
+ Thu, 26 Mar 2020 07:37:22 -0700 (PDT)
+MIME-Version: 1.0
+References: <1585205326-25326-1-git-send-email-srinath.mannam@broadcom.com> <1585205326-25326-3-git-send-email-srinath.mannam@broadcom.com>
+In-Reply-To: <1585205326-25326-3-git-send-email-srinath.mannam@broadcom.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Thu, 26 Mar 2020 16:37:15 +0200
+Message-ID: <CAHp75VfUCwcXN_OF-tq1wuiCFdicMMEpJpWNccQT=6cv0DNnWQ@mail.gmail.com>
+Subject: Re: [PATCH v5 2/6] PCI: iproc: Add INTx support with better modeling
+To:     Srinath Mannam <srinath.mannam@broadcom.com>
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Ray Jui <rjui@broadcom.com>, Rob Herring <robh+dt@kernel.org>,
+        Andrew Murray <andrew.murray@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
+        linux-pci@vger.kernel.org, devicetree <devicetree@vger.kernel.org>,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Ray Jui <ray.jui@broadcom.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-After finishing using cpu node got from of_get_cpu_node(), of_node_put()
-needs to be called.
+On Thu, Mar 26, 2020 at 8:49 AM Srinath Mannam
+<srinath.mannam@broadcom.com> wrote:
+>
+> From: Ray Jui <ray.jui@broadcom.com>
+>
+> Add PCIe legacy interrupt INTx support to the iProc PCIe driver by
+> modeling it with its own IRQ domain. All 4 interrupts INTA, INTB, INTC,
+> INTD share the same interrupt line connected to the GIC in the system,
+> while the status of each INTx can be obtained through the INTX CSR
+> register.
 
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
----
-Changes since V1:
-	- improve the logic, no need to use got.
----
- drivers/thermal/imx_thermal.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+...
+> +       val &= ~(BIT(irqd_to_hwirq(d)));
 
-diff --git a/drivers/thermal/imx_thermal.c b/drivers/thermal/imx_thermal.c
-index e761c9b..1b84ea6 100644
---- a/drivers/thermal/imx_thermal.c
-+++ b/drivers/thermal/imx_thermal.c
-@@ -649,7 +649,7 @@ MODULE_DEVICE_TABLE(of, of_imx_thermal_match);
- static int imx_thermal_register_legacy_cooling(struct imx_thermal_data *data)
- {
- 	struct device_node *np;
--	int ret;
-+	int ret = 0;
- 
- 	data->policy = cpufreq_cpu_get(0);
- 	if (!data->policy) {
-@@ -664,11 +664,12 @@ static int imx_thermal_register_legacy_cooling(struct imx_thermal_data *data)
- 		if (IS_ERR(data->cdev)) {
- 			ret = PTR_ERR(data->cdev);
- 			cpufreq_cpu_put(data->policy);
--			return ret;
- 		}
- 	}
- 
--	return 0;
-+	of_node_put(np);
-+
-+	return ret;
- }
- 
- static void imx_thermal_unregister_legacy_cooling(struct imx_thermal_data *data)
+Too many parentheses.
+
+...
+
+> +       val |= (BIT(irqd_to_hwirq(d)));
+
+Ditto.
+
+...
+
+> +       /* go through INTx A, B, C, D until all interrupts are handled */
+> +       do {
+> +               status = iproc_pcie_read_reg(pcie, IPROC_PCIE_INTX_CSR);
+> +               for_each_set_bit(bit, &status, PCI_NUM_INTX) {
+> +                       virq = irq_find_mapping(pcie->irq_domain, bit);
+> +                       if (virq)
+> +                               generic_handle_irq(virq);
+
+> +                       else
+> +                               dev_err(dev, "unexpected INTx%u\n", bit);
+
+Any guarantee it will be no storm of undesired messages here?
+
+> +               }
+
+> +       } while ((status & SYS_RC_INTX_MASK) != 0);
+
+' != 0' part is not needed.
+
+If there an interrupt storm the handler will never end, right?
+Is it the idea by design?
+
+...
+
+> +       node = of_get_compatible_child(dev->of_node, "brcm,iproc-intc");
+> +       if (node)
+> +               pcie->irq = of_irq_get(node, 0);
+> +
+> +       if (!node || pcie->irq <= 0)
+> +               return 0;
+
+Perhaps
+       node = of_get_compatible_child(dev->of_node, "brcm,iproc-intc");
+       if (!node)
+               return 0;
+
+       pcie->irq = of_irq_get(node, 0);
+       if (pcie->irq <= 0)
+              return 0;
+?
+
 -- 
-2.7.4
-
+With Best Regards,
+Andy Shevchenko
