@@ -2,194 +2,147 @@ Return-Path: <SRS0=aGSP=5L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35143C43331
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 14:02:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A44EEC43331
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 14:03:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0600F2073E
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 14:02:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LA+JEdnZ"
+	by mail.kernel.org (Postfix) with ESMTP id 6C3022073E
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 14:03:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728178AbgCZOCy (ORCPT
+        id S1728179AbgCZODO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 10:02:54 -0400
-Received: from us-smtp-delivery-74.mimecast.com ([216.205.24.74]:22714 "EHLO
-        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728150AbgCZOCx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 10:02:53 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1585231372;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=Qv2sf5ZLe8MVzng446R1oQxVfhG/+fRJUSulJ/I8CAY=;
-        b=LA+JEdnZmyY+0TxZTGtHbXun8OIRyMSH2HRpsZO7NIhOfePIv7g9dTTrIFQr3ZIhbJm76W
-        ErqJkAV2niLi0FM/VfpnrP5JEJ8kQ9MoYZrR8yluYBKJHbaf5N7BILWsI5Ux2uqDsAnlol
-        QDM9Pm6tx3Wk/1QnQXYlep3u3Xvmrdg=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-73--arHbIcBN72L2BWl7WU7HA-1; Thu, 26 Mar 2020 10:02:51 -0400
-X-MC-Unique: -arHbIcBN72L2BWl7WU7HA-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Thu, 26 Mar 2020 10:03:14 -0400
+Received: from mga18.intel.com ([134.134.136.126]:21527 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727738AbgCZODO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Mar 2020 10:03:14 -0400
+IronPort-SDR: I97fcWokmN/hogqLRjM58bWJ4LcZsjay+skELlvk51d9ptb9ha835dYJpBZWzRd5/xTOFUOC3W
+ qxhvIIQEokLw==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Mar 2020 07:03:13 -0700
+IronPort-SDR: 2xMnfKiNNIribQHyU99+kqBuFzEPshilBpp4VmLjGKBP0/Yb9ogFvu8RtCBDvmiHzPKA1aWgxt
+ JemivmV5wg7w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,308,1580803200"; 
+   d="scan'208";a="271181383"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga004.fm.intel.com with ESMTP; 26 Mar 2020 07:03:11 -0700
+Received: from [10.254.68.166] (kliang2-mobl.ccr.corp.intel.com [10.254.68.166])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E842B107ACC7;
-        Thu, 26 Mar 2020 14:02:47 +0000 (UTC)
-Received: from jason-ThinkPad-X1-Carbon-6th.redhat.com (ovpn-12-19.pek2.redhat.com [10.72.12.19])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 766D460BF3;
-        Thu, 26 Mar 2020 14:02:28 +0000 (UTC)
-From:   Jason Wang <jasowang@redhat.com>
-To:     mst@redhat.com, linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org
-Cc:     jgg@mellanox.com, maxime.coquelin@redhat.com,
-        cunming.liang@intel.com, zhihong.wang@intel.com,
-        rob.miller@broadcom.com, xiao.w.wang@intel.com,
-        lingshan.zhu@intel.com, eperezma@redhat.com, lulu@redhat.com,
-        parav@mellanox.com, kevin.tian@intel.com, stefanha@redhat.com,
-        rdunlap@infradead.org, hch@infradead.org, aadam@redhat.com,
-        jiri@mellanox.com, shahafs@mellanox.com, hanand@xilinx.com,
-        mhabets@solarflare.com, gdawar@xilinx.com, saugatm@xilinx.com,
-        vmireyno@marvell.com, zhangweining@ruijie.com.cn,
-        Jason Wang <jasowang@redhat.com>
-Subject: [PATCH V9 2/9] vhost: allow per device message handler
-Date:   Thu, 26 Mar 2020 22:01:18 +0800
-Message-Id: <20200326140125.19794-3-jasowang@redhat.com>
-In-Reply-To: <20200326140125.19794-1-jasowang@redhat.com>
-References: <20200326140125.19794-1-jasowang@redhat.com>
+        by linux.intel.com (Postfix) with ESMTPS id 3CC085803E3;
+        Thu, 26 Mar 2020 07:03:09 -0700 (PDT)
+Subject: Re: [PATCH v1 01/11] perf/x86/core: Support KVM to assign a dedicated
+ counter for guest PEBS
+From:   "Liang, Kan" <kan.liang@linux.intel.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Luwei Kang <luwei.kang@intel.com>, x86@kernel.org,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        mingo@redhat.com, acme@kernel.org, mark.rutland@arm.com,
+        alexander.shishkin@linux.intel.com, jolsa@redhat.com,
+        namhyung@kernel.org, tglx@linutronix.de, bp@alien8.de,
+        hpa@zytor.com, pbonzini@redhat.com,
+        sean.j.christopherson@intel.com, vkuznets@redhat.com,
+        wanpengli@tencent.com, jmattson@google.com, joro@8bytes.org,
+        pawan.kumar.gupta@linux.intel.com, ak@linux.intel.com,
+        thomas.lendacky@amd.com, fenghua.yu@intel.com,
+        like.xu@linux.intel.com
+References: <1583431025-19802-1-git-send-email-luwei.kang@intel.com>
+ <1583431025-19802-2-git-send-email-luwei.kang@intel.com>
+ <20200306135317.GD12561@hirez.programming.kicks-ass.net>
+ <b72cb68e-1a0a-eeff-21b4-ce412e939cfd@linux.intel.com>
+ <20200309100443.GG12561@hirez.programming.kicks-ass.net>
+ <97ce1ba4-d75a-8db2-ea2f-7d334942b4e6@linux.intel.com>
+ <20200309150526.GI12561@hirez.programming.kicks-ass.net>
+ <45a1a575-9363-f778-b5f5-bcdf28d3e34b@linux.intel.com>
+Message-ID: <e4a97965-5e57-56c5-1610-b84cf349e466@linux.intel.com>
+Date:   Thu, 26 Mar 2020 10:03:07 -0400
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <45a1a575-9363-f778-b5f5-bcdf28d3e34b@linux.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch allow device to register its own message handler during
-vhost_dev_init(). vDPA device will use it to implement its own DMA
-mapping logic.
+Hi Peter,
 
-Signed-off-by: Jason Wang <jasowang@redhat.com>
----
- drivers/vhost/net.c   |  3 ++-
- drivers/vhost/scsi.c  |  2 +-
- drivers/vhost/vhost.c | 12 ++++++++++--
- drivers/vhost/vhost.h |  6 +++++-
- drivers/vhost/vsock.c |  2 +-
- 5 files changed, 19 insertions(+), 6 deletions(-)
+On 3/9/2020 3:28 PM, Liang, Kan wrote:
+> 
+> 
+> On 3/9/2020 11:05 AM, Peter Zijlstra wrote:
+>>> In the new proposal, KVM user is treated the same as other host 
+>>> events with
+>>> event constraint. The scheduler is free to choose whether or not to 
+>>> assign a
+>>> counter for it.
+>> That's what it does, I understand that. I'm saying that that is creating
+>> artificial contention.
+>>
+>>
+>> Why is this needed anyway? Can't we force the guest to flush and then
+>> move it over to a new counter?
+>
 
-diff --git a/drivers/vhost/net.c b/drivers/vhost/net.c
-index e158159671fa..c8ab8d83b530 100644
---- a/drivers/vhost/net.c
-+++ b/drivers/vhost/net.c
-@@ -1324,7 +1324,8 @@ static int vhost_net_open(struct inode *inode, stru=
-ct file *f)
- 	}
- 	vhost_dev_init(dev, vqs, VHOST_NET_VQ_MAX,
- 		       UIO_MAXIOV + VHOST_NET_BATCH,
--		       VHOST_NET_PKT_WEIGHT, VHOST_NET_WEIGHT);
-+		       VHOST_NET_PKT_WEIGHT, VHOST_NET_WEIGHT,
-+		       NULL);
-=20
- 	vhost_poll_init(n->poll + VHOST_NET_VQ_TX, handle_tx_net, EPOLLOUT, dev=
-);
- 	vhost_poll_init(n->poll + VHOST_NET_VQ_RX, handle_rx_net, EPOLLIN, dev)=
-;
-diff --git a/drivers/vhost/scsi.c b/drivers/vhost/scsi.c
-index 0b949a14bce3..7653667a8cdc 100644
---- a/drivers/vhost/scsi.c
-+++ b/drivers/vhost/scsi.c
-@@ -1628,7 +1628,7 @@ static int vhost_scsi_open(struct inode *inode, str=
-uct file *f)
- 		vs->vqs[i].vq.handle_kick =3D vhost_scsi_handle_kick;
- 	}
- 	vhost_dev_init(&vs->dev, vqs, VHOST_SCSI_MAX_VQ, UIO_MAXIOV,
--		       VHOST_SCSI_WEIGHT, 0);
-+		       VHOST_SCSI_WEIGHT, 0, NULL);
-=20
- 	vhost_scsi_init_inflight(vs, NULL);
-=20
-diff --git a/drivers/vhost/vhost.c b/drivers/vhost/vhost.c
-index f44340b41494..8e9e2341e40a 100644
---- a/drivers/vhost/vhost.c
-+++ b/drivers/vhost/vhost.c
-@@ -457,7 +457,9 @@ static size_t vhost_get_desc_size(struct vhost_virtqu=
-eue *vq,
-=20
- void vhost_dev_init(struct vhost_dev *dev,
- 		    struct vhost_virtqueue **vqs, int nvqs,
--		    int iov_limit, int weight, int byte_weight)
-+		    int iov_limit, int weight, int byte_weight,
-+		    int (*msg_handler)(struct vhost_dev *dev,
-+				       struct vhost_iotlb_msg *msg))
- {
- 	struct vhost_virtqueue *vq;
- 	int i;
-@@ -473,6 +475,7 @@ void vhost_dev_init(struct vhost_dev *dev,
- 	dev->iov_limit =3D iov_limit;
- 	dev->weight =3D weight;
- 	dev->byte_weight =3D byte_weight;
-+	dev->msg_handler =3D msg_handler;
- 	init_llist_head(&dev->work_list);
- 	init_waitqueue_head(&dev->wait);
- 	INIT_LIST_HEAD(&dev->read_list);
-@@ -1178,7 +1181,12 @@ ssize_t vhost_chr_write_iter(struct vhost_dev *dev=
-,
- 		ret =3D -EINVAL;
- 		goto done;
- 	}
--	if (vhost_process_iotlb_msg(dev, &msg)) {
-+
-+	if (dev->msg_handler)
-+		ret =3D dev->msg_handler(dev, &msg);
-+	else
-+		ret =3D vhost_process_iotlb_msg(dev, &msg);
-+	if (ret) {
- 		ret =3D -EFAULT;
- 		goto done;
- 	}
-diff --git a/drivers/vhost/vhost.h b/drivers/vhost/vhost.h
-index a123fd70847e..f9d1a03dd153 100644
---- a/drivers/vhost/vhost.h
-+++ b/drivers/vhost/vhost.h
-@@ -174,11 +174,15 @@ struct vhost_dev {
- 	int weight;
- 	int byte_weight;
- 	u64 kcov_handle;
-+	int (*msg_handler)(struct vhost_dev *dev,
-+			   struct vhost_iotlb_msg *msg);
- };
-=20
- bool vhost_exceeds_weight(struct vhost_virtqueue *vq, int pkts, int tota=
-l_len);
- void vhost_dev_init(struct vhost_dev *, struct vhost_virtqueue **vqs,
--		    int nvqs, int iov_limit, int weight, int byte_weight);
-+		    int nvqs, int iov_limit, int weight, int byte_weight,
-+		    int (*msg_handler)(struct vhost_dev *dev,
-+				       struct vhost_iotlb_msg *msg));
- long vhost_dev_set_owner(struct vhost_dev *dev);
- bool vhost_dev_has_owner(struct vhost_dev *dev);
- long vhost_dev_check_owner(struct vhost_dev *);
-diff --git a/drivers/vhost/vsock.c b/drivers/vhost/vsock.c
-index c2d7d57e98cf..97669484a3f6 100644
---- a/drivers/vhost/vsock.c
-+++ b/drivers/vhost/vsock.c
-@@ -621,7 +621,7 @@ static int vhost_vsock_dev_open(struct inode *inode, =
-struct file *file)
-=20
- 	vhost_dev_init(&vsock->dev, vqs, ARRAY_SIZE(vsock->vqs),
- 		       UIO_MAXIOV, VHOST_VSOCK_PKT_WEIGHT,
--		       VHOST_VSOCK_WEIGHT);
-+		       VHOST_VSOCK_WEIGHT, NULL);
-=20
- 	file->private_data =3D vsock;
- 	spin_lock_init(&vsock->send_pkt_list_lock);
---=20
-2.20.1
+Current perf scheduling is pure software behavior. KVM only traps the 
+MSR access. It’s impossible for KVM to impact the guest’s scheduling 
+with current implementation.
 
+To address the concern regarding to 'artificial contention', we have two 
+proposals.
+Could you please take a look, and share your thoughts?
+
+Proposal 1:
+Reject the guest request, if host has to use the counter which occupied 
+by guest. At the meantime, host prints a warning.
+I still think the contention should rarely happen in practical.
+Personally, I prefer this proposal.
+
+
+Proposal 2:
+Add HW advisor for the scheduler in guest.
+Starts from Architectural Perfmon Version 4, IA32_PERF_GLOBAL_INUSE MSR 
+is introduced. It provides an “InUse” bit for each programmable 
+performance counter and fixed counter in the processor.
+
+In perf, the scheduler will read the MSR and mask the “in used” 
+counters. I think we can use X86_FEATURE_HYPERVISOR to limit the check 
+in guest. For non-virtualization usage and host, nothing changed for 
+scheduler.
+
+But there is still a problem for this proposal. Host may request a 
+counter later, which has been used by guest.
+We can only do multiplexing or grab the counter just like proposal 1.
+
+
+What do you think?
+
+Thanks,
+Kan
+
+> KVM only traps the MSR access. There is no MSR access during the 
+> scheduling in guest.
+> KVM/host only knows the request counter, when guest tries to enable the 
+> counter. It's too late for guest to start over.
+> 
+> Regarding to the artificial contention, as my understanding, it should 
+> rarely happen in practical.
+> Cloud vendors have to explicitly set pebs option in qemu to enable PEBS 
+> support for guest. They knows the environment well. They can avoid the 
+> contention. (We may implement some patches for qemu/KVM later to 
+> temporarily disable PEBS in runtime if they require.)
+> 
+> For now, I think we may print a warning when both host and guest require 
+> the same counter. Host can get a clue from the warning.
+> 
+> Thanks,
+> Kan
