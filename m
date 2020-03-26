@@ -2,161 +2,88 @@ Return-Path: <SRS0=aGSP=5L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,TVD_SPACE_RATIO,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26857C2D0ED
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 20:39:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41DE9C43331
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 20:40:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED8912070A
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 20:39:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="P3ZSGEna"
+	by mail.kernel.org (Postfix) with ESMTP id 10F8A20719
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 20:40:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585255228;
+	bh=OpsX0BVVX/MbLcpNYEOALd6pH4ONA6HFN2w5pBSQwds=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=2kp0493YzH+t0QMjAMig2uaoTzZFs3QS/2p5r1Y9mvGVhlZ4yhdTyuavii54//JxN
+	 10jPo8izIbQPjiFdErdBv7FCZbcI0rQVgg06nYv43lj7i1Li8kAlkDjYVq4gE73NMQ
+	 gaP6IY32m2hkv/8S+ybphGwa+idCd2r0m956IBdk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727749AbgCZUj1 (ORCPT
+        id S1727683AbgCZUk0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 16:39:27 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:39763 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726281AbgCZUj0 (ORCPT
+        Thu, 26 Mar 2020 16:40:26 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:34820 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726034AbgCZUk0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 16:39:26 -0400
-Received: by mail-pf1-f196.google.com with SMTP id d25so3368756pfn.6;
-        Thu, 26 Mar 2020 13:39:26 -0700 (PDT)
+        Thu, 26 Mar 2020 16:40:26 -0400
+Received: by mail-io1-f67.google.com with SMTP id o3so1996932ioh.2
+        for <linux-kernel@vger.kernel.org>; Thu, 26 Mar 2020 13:40:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=kDuX70eaE4bpaQOBetGsOvBGL0lcD6ef/WORyaEM/DY=;
-        b=P3ZSGEnasP9Vd9NR++xJJn9TcarGJpf2QxI/3hYJzy6upZ5YFETkC484KAfoVTDp9P
-         Cyg2176D7HUI1qET4rEus3zBDgm8RGnhUXwIjwjF9RAOtEcEVwcglCcCWfbdScyjzsHk
-         L+M40MwXapN2869LMYHD92duBE8B6ZKNMg+jyvrD3cC+VFZ4FuLoH7vUhEe2GnEadd9F
-         FYy9VCwb8z/LLqX6pyfeHHc2v2WTk5jVK/mDnctYRI5pI6fyQNBqXZd07NWFEfl646GY
-         a+HPNM2wNyOmaqDyF6S8iUuMlRn9k8BkdF3/7XBizg9XM18GZA11Bmwkdt7n2UAiI3sm
-         Fo+g==
+        d=linuxfoundation.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=3JEJetyWGJGy96lwMPJU0+igkVS0ypH4j2FzDTChyzo=;
+        b=OEQdDJNZshED1yhUmt5ICPHbOvz75t/WmRQvfBEC6zByHW51O8a3KtxO/w7s6QAOet
+         W++49YIusYUfjHTX+VTJ2XZbdk4On+5Vq9JYoqDC0fpqw1X13KU2qLvQgtylWoTD93rp
+         zBoSMaEWm6CebkVgTW7P8i96T+r67AFimKd9A=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=kDuX70eaE4bpaQOBetGsOvBGL0lcD6ef/WORyaEM/DY=;
-        b=Mu2fCDnrUeS51Ryoi/2L2kbzeY2RTNE12E9iB0rqLsquAe4X7jcBg5MU1fxe/tjL6k
-         Ii1n86zjBaW+tOnOFEnw+jHgkcjgsAoLRWq38Wg8OVoBkAoyUV221Xkl1FMSSXjlAGDR
-         fbn5mRHLYw76XXL0T6beS8n+jLvNxijMBrSxr+Uz5cvaY50jEZmn4WJq/4K0Y/BTkBi3
-         eXedKyUIuLq62bycEslCcqE5lI7XVCfYyvJvqyqhcW8o3cd0pkmGxljls8S7QX2hV/8S
-         fzQ6gv9qKaEz2+hANGe3SeE3NzZRe0wBLXi8OH7aI1wX6faTevgfsKsaoB+fSObDDtB/
-         E5Jw==
-X-Gm-Message-State: ANhLgQ2zGos+OqfpZA7fDou5HRc2vmOjvah98po/H//cXVsgoDTFOtWA
-        MW2BYCXayWXlKPOpljIV8mYGQXtdJq9dRKZR0zw=
-X-Google-Smtp-Source: ADFU+vseCrYQg2Np8AbAbPVezLGYO74LTgQmzZkFkbF9bNUI8/WX6SgHn1q3eW8b6RvqMANQ7c7Ve38oDo6UJLrwOM4=
-X-Received: by 2002:a05:6a00:2b4:: with SMTP id q20mr11130153pfs.36.1585255165429;
- Thu, 26 Mar 2020 13:39:25 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=3JEJetyWGJGy96lwMPJU0+igkVS0ypH4j2FzDTChyzo=;
+        b=KikK85O69xAjqIamxrRTcL38+FZPr4fbrYQZ5kWuLKBY+PX1rbOvZiNPGNXL3g1WDH
+         gVhH0vYOCBI89Hn8uo9wCZAJcq38bidt8+QCuiLN7F/1gyJeEDAEwKoGrFM0S7Ot9TlX
+         e6ak+NPyJxsxhAVowqXXV3jtcvlQSxo8F2Z3SwieJicJ61CIo/FLgV/nPmQ70FBZ1NaG
+         8gP9r8LnN3jeWoiKxoL1yzX2f24jRNCUQifApG7dgUdoRRxCkI2eCBjsd5ZhiA+uHknu
+         ambBsbEcyzwAq5rBi+h8QRej8FVbH9U3J0b91023aI8Rn0Wzkii38jhgv52805K9Hevk
+         Xu9Q==
+X-Gm-Message-State: ANhLgQ3OxPIrtYoUrzq24T7/oI2jNZO6clu+RTz1N+4s0NLSYLlkwxYW
+        zD4o1u1jlngqVHvlE7Sdiq3acfCxE+I=
+X-Google-Smtp-Source: ADFU+vtndZILVdRreeVQOFlhfRs/W6kdhD+6FFbZev/31X3NYUyOGdRTkbAHlJfz780pL2N0E6LkJA==
+X-Received: by 2002:a02:9988:: with SMTP id a8mr3335550jal.3.1585255223957;
+        Thu, 26 Mar 2020 13:40:23 -0700 (PDT)
+Received: from shuah-t480s.internal (c-24-9-64-241.hsd1.co.comcast.net. [24.9.64.241])
+        by smtp.gmail.com with ESMTPSA id b6sm900867iok.19.2020.03.26.13.40.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 26 Mar 2020 13:40:22 -0700 (PDT)
+From:   Shuah Khan <skhan@linuxfoundation.org>
+To:     federico.vaga@vaga.pv.it, mchehab@kernel.org, corbet@lwn.net
+Cc:     Shuah Khan <skhan@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] tools: fault-injection: Make failcmd.sh executable
+Date:   Thu, 26 Mar 2020 14:40:18 -0600
+Message-Id: <20200326204018.31862-1-skhan@linuxfoundation.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-References: <20200326155118.8224-1-i.mikhaylov@yadro.com> <20200326155118.8224-3-i.mikhaylov@yadro.com>
-In-Reply-To: <20200326155118.8224-3-i.mikhaylov@yadro.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Thu, 26 Mar 2020 22:39:13 +0200
-Message-ID: <CAHp75VfL726QwyR4eJL1HCVLvyQ5W0tJfbEJ+mhmsRWHkB8=6w@mail.gmail.com>
-Subject: Re: [PATCH v3 2/2] iio: proximity: Add driver support for vcnl3020
- proximity sensor
-To:     Ivan Mikhaylov <i.mikhaylov@yadro.com>
-Cc:     Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        linux-iio <linux-iio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 26, 2020 at 5:51 PM Ivan Mikhaylov <i.mikhaylov@yadro.com> wrote:
->
-> Proximity sensor driver based on light/vcnl4000.c code.
-> For now supports only the single on-demand measurement.
->
-> The VCNL3020 is a fully integrated proximity sensor. Fully
-> integrated means that the infrared emitter is included in the
-> package. It has 16-bit resolution. It includes a signal
-> processing IC and features standard I2C communication
-> interface. It features an interrupt function.
+Make failcmd.sh executable.
 
-Thank you for an update, my (only minors) comments below.
-After addressing them,
+Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
+---
+ tools/testing/fault-injection/failcmd.sh | 0
+ 1 file changed, 0 insertions(+), 0 deletions(-)
+ mode change 100644 => 100755 tools/testing/fault-injection/failcmd.sh
 
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-
-(Don't forget to fix DTS schema as Rob's bot pointed out)
-
-...
-
-> +#define VCNL_ON_DEMAND_TIMEOUT 100000 /* on-demand measurement timeout in us */
-
-This also should have _US suffix, and thus comment is not necessary.
-
-> +#define VCNL_POLL_US           20000
-
-...
-
-> +       if (reg == VCNL3020_PROD_ID) {
-> +               data->rev = reg;
-> +               mutex_init(&data->lock);
-> +       } else {
-> +               dev_err(data->dev,
-> +                       "Product id (%x) did not match vcnl3020 (%x)", reg,
-> +                       VCNL3020_PROD_ID);
-> +               return -ENODEV;
-> +       }
-
-I would recommend to use standard pattern, i.e.
-  if (reg != ...) {
-    ...error handling...
-  }
-
-in this case else branch becomes a mainstream code in the function.
-
-...
-
-> +       rc = regmap_write(data->regmap, VCNL_LED_CURRENT, led_current);
-> +       if (rc) {
-> +               dev_err(data->dev, "Error (%d) setting LED current", rc);
-> +       }
-
-Now curly braces are redundant.
-
-> +       return rc;
-
-...
-
-> +       rc = regmap_read(data->regmap, VCNL_PS_RESULT_HI, &reg);
-> +       if (rc)
-> +               goto err_unlock;
-
-> +       *val = reg << 8;
-
-This actually breaks the principle of not touching output buffers /
-variables in case of error.
-
-Perhaps
-
-    unsigned int hi, lo;
-
-instead of / along with reg?
-
-> +       dev_dbg(data->dev, "result high byte 0x%x", rc);
-> +
-> +       rc = regmap_read(data->regmap, VCNL_PS_RESULT_LO, &reg);
-> +       if (rc)
-> +               goto err_unlock;
-> +       *val |= reg;
-> +       dev_dbg(data->dev, "result low byte 0x%x", rc);
-
+diff --git a/tools/testing/fault-injection/failcmd.sh b/tools/testing/fault-injection/failcmd.sh
+old mode 100644
+new mode 100755
 -- 
-With Best Regards,
-Andy Shevchenko
+2.20.1
+
