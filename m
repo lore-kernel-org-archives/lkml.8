@@ -2,214 +2,136 @@ Return-Path: <SRS0=aGSP=5L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D10C5C43331
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 09:35:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EF3FC2D0E8
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 09:35:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9DBA22073E
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 09:35:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="E3/yCzqe"
+	by mail.kernel.org (Postfix) with ESMTP id 6D67E20714
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 09:35:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727934AbgCZJfg (ORCPT
+        id S1727942AbgCZJf6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 05:35:36 -0400
-Received: from us-smtp-delivery-74.mimecast.com ([63.128.21.74]:36671 "EHLO
-        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727873AbgCZJfY (ORCPT
+        Thu, 26 Mar 2020 05:35:58 -0400
+Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:9324 "EHLO
+        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727911AbgCZJf6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 05:35:24 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1585215323;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:in-reply-to:in-reply-to:references:references;
-        bh=m/avxIP9KlrNmDBgwKdf8OcnP23o4V4eI0nLWWAsZqw=;
-        b=E3/yCzqeogSn8127qfiX4un2Ab03VCVF8erHOUPo8x53qlOjPxqD1j2+4PD/PsCSBu60Lk
-        By5S50LFXywA68ucOeTn8NPjGuaruqBjrVXyUmzSLf4ts10cv2gKaugPmDd9u95+IR8Ekz
-        d+l9le3ShrISfk0FrnXhjRnjid8TM+I=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-30-IOMi7zyVOYy1nC_VcSIAFg-1; Thu, 26 Mar 2020 05:35:19 -0400
-X-MC-Unique: IOMi7zyVOYy1nC_VcSIAFg-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8378D100550D;
-        Thu, 26 Mar 2020 09:35:18 +0000 (UTC)
-Received: from virtlab701.virt.lab.eng.bos.redhat.com (virtlab701.virt.lab.eng.bos.redhat.com [10.19.152.228])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id D14129CA3;
-        Thu, 26 Mar 2020 09:35:17 +0000 (UTC)
-From:   Paolo Bonzini <pbonzini@redhat.com>
-To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-Cc:     Junaid Shahid <junaids@google.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>
-Subject: [PATCH 1/3] KVM: x86: introduce kvm_mmu_invalidate_gva
-Date:   Thu, 26 Mar 2020 05:35:14 -0400
-Message-Id: <20200326093516.24215-2-pbonzini@redhat.com>
-In-Reply-To: <20200326093516.24215-1-pbonzini@redhat.com>
-References: <20200326093516.24215-1-pbonzini@redhat.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+        Thu, 26 Mar 2020 05:35:58 -0400
+Received: from pps.filterd (m0167088.ppops.net [127.0.0.1])
+        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02Q9PJJ9002741;
+        Thu, 26 Mar 2020 05:30:46 -0400
+Received: from nwd2mta3.analog.com ([137.71.173.56])
+        by mx0a-00128a01.pphosted.com with ESMTP id 2ywcs68gnb-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 26 Mar 2020 05:30:45 -0400
+Received: from SCSQMBX10.ad.analog.com (scsqmbx10.ad.analog.com [10.77.17.5])
+        by nwd2mta3.analog.com (8.14.7/8.14.7) with ESMTP id 02Q9UiYU013848
+        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=FAIL);
+        Thu, 26 Mar 2020 05:30:44 -0400
+Received: from SCSQMBX10.ad.analog.com (10.77.17.5) by SCSQMBX10.ad.analog.com
+ (10.77.17.5) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1779.2; Thu, 26 Mar
+ 2020 02:30:42 -0700
+Received: from zeus.spd.analog.com (10.64.82.11) by SCSQMBX10.ad.analog.com
+ (10.77.17.5) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
+ Transport; Thu, 26 Mar 2020 02:30:42 -0700
+Received: from localhost.localdomain ([10.48.65.12])
+        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 02Q9Uchj022178;
+        Thu, 26 Mar 2020 05:30:39 -0400
+From:   Alexandru Ardelean <alexandru.ardelean@analog.com>
+To:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+CC:     <jic23@kernel.org>, <lars@metafoo.de>, <knaack.h@gmx.de>,
+        <pmeerw@pmeerw.net>,
+        Alexandru Ardelean <alexandru.ardelean@analog.com>
+Subject: [PATCH v3] iio: buffer: Don't allow buffers without any channels enabled to be activated
+Date:   Thu, 26 Mar 2020 11:30:12 +0200
+Message-ID: <20200326093012.10758-1-alexandru.ardelean@analog.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200320104031.31701-1-alexandru.ardelean@analog.com>
+References: <20200320104031.31701-1-alexandru.ardelean@analog.com>
+MIME-Version: 1.0
+Content-Type: text/plain
+X-ADIRoutedOnPrem: True
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.645
+ definitions=2020-03-25_15:2020-03-24,2020-03-25 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ bulkscore=0 adultscore=0 phishscore=0 priorityscore=1501 impostorscore=0
+ malwarescore=0 clxscore=1015 suspectscore=0 spamscore=0 mlxlogscore=999
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2003260070
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Wrap the combination of mmu->invlpg and kvm_x86_ops->tlb_flush_gva
-into a new function.  This function also lets us specify the host PGD to
-invalidate and also the MMU, both of which will be useful in fixing and
-simplifying kvm_inject_emulated_page_fault.
+From: Lars-Peter Clausen <lars@metafoo.de>
 
-A nested guest's MMU however has g_context->invlpg == NULL.  Instead of
-setting it to nonpaging_invlpg, make kvm_mmu_invalidate_gva the only
-entry point to mmu->invlpg and make a NULL invlpg pointer equivalent
-to nonpaging_invlpg, saving a retpoline.
+Before activating a buffer make sure that at least one channel is enabled.
+Activating a buffer with 0 channels enabled doesn't make too much sense and
+disallowing this case makes sure that individual driver don't have to add
+special case code to handle it.
 
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+Currently, without this patch enabling a buffer is possible and no error is
+produced. With this patch -EINVAL is returned.
+
+An example of execution with this patch and some instrumented print-code:
+   root@analog:~# cd /sys/bus/iio/devices/iio\:device3/buffer
+   root@analog:/sys/bus/iio/devices/iio:device3/buffer# echo 1 > enable
+   0: iio_verify_update 748 indio_dev->masklength 2 *insert_buffer->scan_mask 00000000
+   1: iio_verify_update 753
+   2:__iio_update_buffers 1115 ret -22
+   3: iio_buffer_store_enable 1241 ret -22
+   -bash: echo: write error: Invalid argument
+1, 2 & 3 are exit-error paths. 0 the first print in iio_verify_update()
+rergardless of error path.
+
+Without this patch (and same instrumented print-code):
+   root@analog:~# cd /sys/bus/iio/devices/iio\:device3/buffer
+   root@analog:/sys/bus/iio/devices/iio:device3/buffer# echo 1 > enable
+   0: iio_verify_update 748 indio_dev->masklength 2 *insert_buffer->scan_mask 00000000
+   root@analog:/sys/bus/iio/devices/iio:device3/buffer#
+Buffer is enabled with no error.
+
+Fixes: 84b36ce5f79c0 ("staging:iio: Add support for multiple buffers")
+Signed-off-by: Lars-Peter Clausen <lars@metafoo.de>
+Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
 ---
- arch/x86/include/asm/kvm_host.h |  2 +
- arch/x86/kvm/mmu/mmu.c          | 71 +++++++++++++++++++++------------
- 2 files changed, 47 insertions(+), 26 deletions(-)
 
-diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
-index 328b1765ff76..f6a1ece1bb4a 100644
---- a/arch/x86/include/asm/kvm_host.h
-+++ b/arch/x86/include/asm/kvm_host.h
-@@ -1506,6 +1506,8 @@ int kvm_emulate_hypercall(struct kvm_vcpu *vcpu);
- int kvm_mmu_page_fault(struct kvm_vcpu *vcpu, gpa_t cr2_or_gpa, u64 error_code,
- 		       void *insn, int insn_len);
- void kvm_mmu_invlpg(struct kvm_vcpu *vcpu, gva_t gva);
-+void kvm_mmu_invalidate_gva(struct kvm_vcpu *vcpu, struct kvm_mmu *mmu,
-+		            gva_t gva, unsigned long root_hpa);
- void kvm_mmu_invpcid_gva(struct kvm_vcpu *vcpu, gva_t gva, unsigned long pcid);
- void kvm_mmu_new_cr3(struct kvm_vcpu *vcpu, gpa_t new_cr3, bool skip_tlb_flush);
+Changelog v2 -> v3:
+* actually added Fixes tag; seems I forgot it in v2
+  hopefully the tag is the good one; if needed, it can be
+  dropped; this has been around for ~8 years; no idea if it's worth
+  backporting
+
+Changelog v1 -> v2:
+* moved check in iio_verify_update()
+* added dev_dbg() message; should help some folks understand the message
+* documented steps to reproduce
+
+ drivers/iio/industrialio-buffer.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
+
+diff --git a/drivers/iio/industrialio-buffer.c b/drivers/iio/industrialio-buffer.c
+index 5ff34ce8b6a2..e6fa1a4e135d 100644
+--- a/drivers/iio/industrialio-buffer.c
++++ b/drivers/iio/industrialio-buffer.c
+@@ -686,6 +686,13 @@ static int iio_verify_update(struct iio_dev *indio_dev,
+ 	bool scan_timestamp;
+ 	unsigned int modes;
  
-diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
-index 560e85ebdf22..e26c9a583e75 100644
---- a/arch/x86/kvm/mmu/mmu.c
-+++ b/arch/x86/kvm/mmu/mmu.c
-@@ -2153,10 +2153,6 @@ static int nonpaging_sync_page(struct kvm_vcpu *vcpu,
- 	return 0;
- }
- 
--static void nonpaging_invlpg(struct kvm_vcpu *vcpu, gva_t gva, hpa_t root)
--{
--}
--
- static void nonpaging_update_pte(struct kvm_vcpu *vcpu,
- 				 struct kvm_mmu_page *sp, u64 *spte,
- 				 const void *pte)
-@@ -4237,7 +4233,7 @@ static void nonpaging_init_context(struct kvm_vcpu *vcpu,
- 	context->page_fault = nonpaging_page_fault;
- 	context->gva_to_gpa = nonpaging_gva_to_gpa;
- 	context->sync_page = nonpaging_sync_page;
--	context->invlpg = nonpaging_invlpg;
-+	context->invlpg = NULL;
- 	context->update_pte = nonpaging_update_pte;
- 	context->root_level = 0;
- 	context->shadow_root_level = PT32E_ROOT_LEVEL;
-@@ -4928,7 +4924,7 @@ static void init_kvm_tdp_mmu(struct kvm_vcpu *vcpu)
- 	context->mmu_role.as_u64 = new_role.as_u64;
- 	context->page_fault = kvm_tdp_page_fault;
- 	context->sync_page = nonpaging_sync_page;
--	context->invlpg = nonpaging_invlpg;
-+	context->invlpg = NULL;
- 	context->update_pte = nonpaging_update_pte;
- 	context->shadow_root_level = kvm_x86_ops->get_tdp_level(vcpu);
- 	context->direct_map = true;
-@@ -5096,6 +5092,12 @@ static void init_kvm_nested_mmu(struct kvm_vcpu *vcpu)
- 	g_context->get_pdptr         = kvm_pdptr_read;
- 	g_context->inject_page_fault = kvm_inject_page_fault;
- 
-+	/*
-+	 * L2 page tables are never shadowed, so there is no need to sync
-+	 * SPTEs.
-+	 */
-+	g_context->invlpg            = NULL;
-+
- 	/*
- 	 * Note that arch.mmu->gva_to_gpa translates l2_gpa to l1_gpa using
- 	 * L1's nested page tables (e.g. EPT12). The nested translation
-@@ -5497,37 +5499,54 @@ int kvm_mmu_page_fault(struct kvm_vcpu *vcpu, gpa_t cr2_or_gpa, u64 error_code,
- }
- EXPORT_SYMBOL_GPL(kvm_mmu_page_fault);
- 
--void kvm_mmu_invlpg(struct kvm_vcpu *vcpu, gva_t gva)
-+void kvm_mmu_invalidate_gva(struct kvm_vcpu *vcpu, struct kvm_mmu *mmu,
-+		            gva_t gva, unsigned long root_hpa)
- {
--	struct kvm_mmu *mmu = vcpu->arch.mmu;
- 	int i;
- 
--	/* INVLPG on a * non-canonical address is a NOP according to the SDM.  */
--	if (is_noncanonical_address(gva, vcpu))
-+	/* It's actually a GPA for vcpu->arch.guest_mmu.  */
-+	if (mmu != &vcpu->arch.guest_mmu) {
-+		/* INVLPG on a non-canonical address is a NOP according to the SDM.  */
-+		if (is_noncanonical_address(gva, vcpu))
-+			return;
-+
-+		kvm_x86_ops->tlb_flush_gva(vcpu, gva);
++	if (insert_buffer &&
++	    bitmap_empty(insert_buffer->scan_mask, indio_dev->masklength)) {
++		dev_dbg(&indio_dev->dev,
++			"At least one scan element must be enabled first\n");
++		return -EINVAL;
 +	}
 +
-+	if (!mmu->invlpg)
- 		return;
+ 	memset(config, 0, sizeof(*config));
+ 	config->watermark = ~0;
  
--	mmu->invlpg(vcpu, gva, mmu->root_hpa);
-+	if (root_hpa == INVALID_PAGE) {
-+		mmu->invlpg(vcpu, gva, mmu->root_hpa);
- 
--	/*
--	 * INVLPG is required to invalidate any global mappings for the VA,
--	 * irrespective of PCID. Since it would take us roughly similar amount
--	 * of work to determine whether any of the prev_root mappings of the VA
--	 * is marked global, or to just sync it blindly, so we might as well
--	 * just always sync it.
--	 *
--	 * Mappings not reachable via the current cr3 or the prev_roots will be
--	 * synced when switching to that cr3, so nothing needs to be done here
--	 * for them.
--	 */
--	for (i = 0; i < KVM_MMU_NUM_PREV_ROOTS; i++)
--		if (VALID_PAGE(mmu->prev_roots[i].hpa))
--			mmu->invlpg(vcpu, gva, mmu->prev_roots[i].hpa);
-+		/*
-+		 * INVLPG is required to invalidate any global mappings for the VA,
-+		 * irrespective of PCID. Since it would take us roughly similar amount
-+		 * of work to determine whether any of the prev_root mappings of the VA
-+		 * is marked global, or to just sync it blindly, so we might as well
-+		 * just always sync it.
-+		 *
-+		 * Mappings not reachable via the current cr3 or the prev_roots will be
-+		 * synced when switching to that cr3, so nothing needs to be done here
-+		 * for them.
-+		 */
-+		for (i = 0; i < KVM_MMU_NUM_PREV_ROOTS; i++)
-+			if (VALID_PAGE(mmu->prev_roots[i].hpa))
-+				mmu->invlpg(vcpu, gva, mmu->prev_roots[i].hpa);
-+	} else {
-+		mmu->invlpg(vcpu, gva, root_hpa);
-+	}
-+}
-+EXPORT_SYMBOL_GPL(kvm_mmu_invalidate_gva);
- 
--	kvm_x86_ops->tlb_flush_gva(vcpu, gva);
-+void kvm_mmu_invlpg(struct kvm_vcpu *vcpu, gva_t gva)
-+{
-+	kvm_mmu_invalidate_gva(vcpu, vcpu->arch.mmu, gva, INVALID_PAGE);
- 	++vcpu->stat.invlpg;
- }
- EXPORT_SYMBOL_GPL(kvm_mmu_invlpg);
- 
-+
- void kvm_mmu_invpcid_gva(struct kvm_vcpu *vcpu, gva_t gva, unsigned long pcid)
- {
- 	struct kvm_mmu *mmu = vcpu->arch.mmu;
 -- 
-2.18.2
-
+2.17.1
 
