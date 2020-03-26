@@ -2,142 +2,142 @@ Return-Path: <SRS0=aGSP=5L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01DE7C43331
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 23:27:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2DECC43331
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 23:28:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE5F0208E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 23:27:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585265278;
-	bh=WWPBWH6R7vqAyfkKB/N+fKzsFhjvBeypNxeA9gpyPj0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=i/pJ5DPrIK8nZbHRKeTcWb+V33If+F7zY4u7BRvGL0hoL2Qjo0M/Cvq+8tHqIbZmM
-	 SnaNkHeGdx23rkU8wzp9FIgIrhuCnZvTANSRsJuq8Wi16eS6SzYvqKUviSaKR68VIQ
-	 mi+D0t44cb+YUCnAm9JHpvwz5zQOVEAbMo7aUSpk=
+	by mail.kernel.org (Postfix) with ESMTP id 825BB208FE
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 23:28:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728140AbgCZX15 (ORCPT
+        id S1728215AbgCZX2E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 19:27:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44914 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728014AbgCZXYq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 19:24:46 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4E5492077D;
-        Thu, 26 Mar 2020 23:24:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585265085;
-        bh=WWPBWH6R7vqAyfkKB/N+fKzsFhjvBeypNxeA9gpyPj0=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oh2RZPL4T1tk78dyNGAGoaeV9dV0BPCBBew4f9lXwinYNSOjv0po6l9udntf4fZVG
-         /cA4pOh5RcSDYCxyqd9LUQ6+cnimg2FzLy8VY+nA9Sq81i9QM+xyskkAbrDakueARj
-         P2b2PDJV42yfl6M8TOXaQRrktGKtmTbEoYW+8OOM=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Len Brown <len.brown@intel.com>, Sasha Levin <sashal@kernel.org>,
-        linux-pm@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 12/19] tools/power turbostat: Fix missing SYS_LPI counter on some Chromebooks
-Date:   Thu, 26 Mar 2020 19:24:24 -0400
-Message-Id: <20200326232431.7816-12-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200326232431.7816-1-sashal@kernel.org>
-References: <20200326232431.7816-1-sashal@kernel.org>
+        Thu, 26 Mar 2020 19:28:04 -0400
+Received: from smtprelay0110.hostedemail.com ([216.40.44.110]:41350 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728106AbgCZX17 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Mar 2020 19:27:59 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay04.hostedemail.com (Postfix) with ESMTP id 95D65180A7355;
+        Thu, 26 Mar 2020 23:27:58 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: food14_286f5c524e222
+X-Filterd-Recvd-Size: 5098
+Received: from XPS-9350.home (unknown [47.151.136.130])
+        (Authenticated sender: joe@perches.com)
+        by omf14.hostedemail.com (Postfix) with ESMTPA;
+        Thu, 26 Mar 2020 23:27:57 +0000 (UTC)
+Message-ID: <5aa5aad6fb1678230c260337dc066cd449a2bf32.camel@perches.com>
+Subject: [PATCH] MAINTAINERS: List the section entries in the preferred order
+From:   Joe Perches <joe@perches.com>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Andy Shevchenko <andriy.shevchenko@intel.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Date:   Thu, 26 Mar 2020 16:26:06 -0700
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.34.1-2 
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Len Brown <len.brown@intel.com>
+The MAINTAINERS file header has never shown a preferred order for the
+section entries but scripts/parse-maintainers.pl added a preferred
+order with commit 61f741645a35 ("parse-maintainers: Add section pattern
+sorting")
 
-[ Upstream commit 1f81c5efc020314b2db30d77efe228b7e117750d ]
+Commit 5cdbec108fd2 ("parse-maintainers: Do not sort section content by
+default") changed the preferred order to be a bit more sensible.
 
-Some Chromebook BIOS' do not export an ACPI LPIT, which is how
-Linux finds the residency counter for CPU and SYSTEM low power states,
-that is exports in /sys/devices/system/cpu/cpuidle/*residency_us
+Update the MAINTAINERS section description block to use this preferred
+section entry ordering.
 
-When these sysfs attributes are missing, check the debugfs attrubte
-from the pmc_core driver, which accesses the same counter value.
+Add a slightly better description for the N: entry too.
 
-Signed-off-by: Len Brown <len.brown@intel.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Joe Perches <joe@perches.com>
 ---
- tools/power/x86/turbostat/turbostat.c | 23 ++++++++++++++---------
- 1 file changed, 14 insertions(+), 9 deletions(-)
+ MAINTAINERS | 35 ++++++++++++++++++-----------------
+ 1 file changed, 18 insertions(+), 17 deletions(-)
 
-diff --git a/tools/power/x86/turbostat/turbostat.c b/tools/power/x86/turbostat/turbostat.c
-index 78507cd479bb4..17e82eaf5c4f4 100644
---- a/tools/power/x86/turbostat/turbostat.c
-+++ b/tools/power/x86/turbostat/turbostat.c
-@@ -304,6 +304,10 @@ int *irqs_per_cpu;		/* indexed by cpu_num */
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 5060aa..ae4db4a 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -77,21 +77,13 @@ Tips for patch submitters
  
- void setup_all_buffers(void);
+ 8.	Happy hacking.
  
-+char *sys_lpi_file;
-+char *sys_lpi_file_sysfs = "/sys/devices/system/cpu/cpuidle/low_power_idle_system_residency_us";
-+char *sys_lpi_file_debugfs = "/sys/kernel/debug/pmc_core/slp_s0_residency_usec";
-+
- int cpu_is_not_present(int cpu)
- {
- 	return !CPU_ISSET_S(cpu, cpu_present_setsize, cpu_present_set);
-@@ -2916,8 +2920,6 @@ int snapshot_gfx_mhz(void)
-  *
-  * record snapshot of
-  * /sys/devices/system/cpu/cpuidle/low_power_idle_cpu_residency_us
-- *
-- * return 1 if config change requires a restart, else return 0
-  */
- int snapshot_cpu_lpi_us(void)
- {
-@@ -2941,17 +2943,14 @@ int snapshot_cpu_lpi_us(void)
- /*
-  * snapshot_sys_lpi()
-  *
-- * record snapshot of
-- * /sys/devices/system/cpu/cpuidle/low_power_idle_system_residency_us
-- *
-- * return 1 if config change requires a restart, else return 0
-+ * record snapshot of sys_lpi_file
-  */
- int snapshot_sys_lpi_us(void)
- {
- 	FILE *fp;
- 	int retval;
+-Descriptions of section entries
+--------------------------------
++Descriptions of section entries and preferred order
++---------------------------------------------------
  
--	fp = fopen_or_die("/sys/devices/system/cpu/cpuidle/low_power_idle_system_residency_us", "r");
-+	fp = fopen_or_die(sys_lpi_file, "r");
- 
- 	retval = fscanf(fp, "%lld", &cpuidle_cur_sys_lpi_us);
- 	if (retval != 1) {
-@@ -4907,10 +4906,16 @@ void process_cpuid()
- 	else
- 		BIC_NOT_PRESENT(BIC_CPU_LPI);
- 
--	if (!access("/sys/devices/system/cpu/cpuidle/low_power_idle_system_residency_us", R_OK))
-+	if (!access(sys_lpi_file_sysfs, R_OK)) {
-+		sys_lpi_file = sys_lpi_file_sysfs;
- 		BIC_PRESENT(BIC_SYS_LPI);
--	else
-+	} else if (!access(sys_lpi_file_debugfs, R_OK)) {
-+		sys_lpi_file = sys_lpi_file_debugfs;
-+		BIC_PRESENT(BIC_SYS_LPI);
-+	} else {
-+		sys_lpi_file_sysfs = NULL;
- 		BIC_NOT_PRESENT(BIC_SYS_LPI);
-+	}
- 
- 	if (!quiet)
- 		decode_misc_feature_control();
--- 
-2.20.1
+ 	M: *Mail* patches to: FullName <address@domain>
+ 	R: Designated *Reviewer*: FullName <address@domain>
+ 	   These reviewers should be CCed on patches.
+ 	L: *Mailing list* that is relevant to this area
+-	W: *Web-page* with status/info
+-	B: URI for where to file *bugs*. A web-page with detailed bug
+-	   filing info, a direct bug tracker link, or a mailto: URI.
+-	C: URI for *chat* protocol, server and channel where developers
+-	   usually hang out, for example irc://server/channel.
+-	Q: *Patchwork* web based patch tracking system site
+-	T: *SCM* tree type and location.
+-	   Type is one of: git, hg, quilt, stgit, topgit
+ 	S: *Status*, one of the following:
+ 	   Supported:	Someone is actually paid to look after this.
+ 	   Maintained:	Someone actually looks after it.
+@@ -102,30 +94,39 @@ Descriptions of section entries
+ 	   Obsolete:	Old code. Something tagged obsolete generally means
+ 			it has been replaced by a better system and you
+ 			should be using that.
++	W: *Web-page* with status/info
++	Q: *Patchwork* web based patch tracking system site
++	B: URI for where to file *bugs*. A web-page with detailed bug
++	   filing info, a direct bug tracker link, or a mailto: URI.
++	C: URI for *chat* protocol, server and channel where developers
++	   usually hang out, for example irc://server/channel.
+ 	P: Subsystem Profile document for more details submitting
+ 	   patches to the given subsystem. This is either an in-tree file,
+ 	   or a URI. See Documentation/maintainer/maintainer-entry-profile.rst
+ 	   for details.
++	T: *SCM* tree type and location.
++	   Type is one of: git, hg, quilt, stgit, topgit
+ 	F: *Files* and directories wildcard patterns.
+ 	   A trailing slash includes all files and subdirectory files.
+ 	   F:	drivers/net/	all files in and below drivers/net
+ 	   F:	drivers/net/*	all files in drivers/net, but not below
+ 	   F:	*/net/*		all files in "any top level directory"/net
+ 	   One pattern per line.  Multiple F: lines acceptable.
++	X: *Excluded* files and directories that are NOT maintained, same
++	   rules as F:. Files exclusions are tested before file matches.
++	   Can be useful for excluding a specific subdirectory, for instance:
++	   F:	net/
++	   X:	net/ipv6/
++	   matches all files in and below net excluding net/ipv6/
+ 	N: Files and directories *Regex* patterns.
+-	   N:	[^a-z]tegra	all files whose path contains the word tegra
++	   N:	[^a-z]tegra	all files whose path contains tegra
++	                        (not including files like integrator)
+ 	   One pattern per line.  Multiple N: lines acceptable.
+ 	   scripts/get_maintainer.pl has different behavior for files that
+ 	   match F: pattern and matches of N: patterns.  By default,
+ 	   get_maintainer will not look at git log history when an F: pattern
+ 	   match occurs.  When an N: match occurs, git log history is used
+ 	   to also notify the people that have git commit signatures.
+-	X: *Excluded* files and directories that are NOT maintained, same
+-	   rules as F:. Files exclusions are tested before file matches.
+-	   Can be useful for excluding a specific subdirectory, for instance:
+-	   F:	net/
+-	   X:	net/ipv6/
+-	   matches all files in and below net excluding net/ipv6/
+ 	K: *Content regex* (perl extended) pattern match in a patch or file.
+ 	   For instance:
+ 	   K: of_get_profile
+
 
