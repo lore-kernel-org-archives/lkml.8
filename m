@@ -2,126 +2,184 @@ Return-Path: <SRS0=aGSP=5L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FC2AC43331
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 00:07:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BF19C43331
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 00:08:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A07720714
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 00:07:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E433B20714
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 00:08:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="u5H7mQvM"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="SBVg/zWs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727595AbgCZAHb (ORCPT
+        id S1727639AbgCZAIC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 20:07:31 -0400
-Received: from ozlabs.org ([203.11.71.1]:36159 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727498AbgCZAHa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 20:07:30 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 48nlfl0q1gz9sRf;
-        Thu, 26 Mar 2020 11:07:26 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1585181247;
-        bh=keFlslcJaRKofY7rCRgd9PqhxN1VT7bn4dRi+eink6Q=;
-        h=Date:From:To:Cc:Subject:From;
-        b=u5H7mQvME0/LhV28sahCWQsdPqO66ApJF46LerxHE2TEEqTAeGHV8gNNWSkbSg1ie
-         lr0tMuccAimUYshoe2krVlb5EbAeG7xi7xCgXAc8h3hnSsccLanRFsBkWEBbzZlewb
-         EnjS7xu0KzLGWcJu8iqMjaKHu4Vy7AcSN8AzMOi8aREcqT2XvdR5bmRtQUCrtcR2nk
-         yCv31Eg6RK4sc+A41ggN5o1ue3ojOs0zxmo17kmV1rlweikRESb4L+uS6ZT8tooYfE
-         M/EVBpKfqPlBZ2GNAUbpLq969nsh2WUlm6Fi0ZLRewO89K3BGZy3tRylAfdRYEZc5p
-         9/i/LQun+WZ3Q==
-Date:   Thu, 26 Mar 2020 11:07:25 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     David Miller <davem@davemloft.net>,
-        Networking <netdev@vger.kernel.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Hangbin Liu <liuhangbin@gmail.com>,
-        Kuniyuki Iwashima <kuniyu@amazon.co.jp>
-Subject: linux-next: manual merge of the net-next tree with the net tree
-Message-ID: <20200326110725.37b1e636@canb.auug.org.au>
+        Wed, 25 Mar 2020 20:08:02 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:38144 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727498AbgCZAIC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Mar 2020 20:08:02 -0400
+Received: by mail-pf1-f196.google.com with SMTP id c21so1228793pfo.5
+        for <linux-kernel@vger.kernel.org>; Wed, 25 Mar 2020 17:08:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=D0CV0Uku18oFuW+TPNfaEyxgPkTMYFP8ObQ3tAgtOsc=;
+        b=SBVg/zWsk52JKcc+nEzqXNzg7w+HdPM+lrL+HI2UtDuTis6PRGJW94M/+n13O7YFJ6
+         MkyiHnm+qz/wx068nDs7rRLD8Mxv0/d1wvd4ydeatxtcR8oeIo1jgdzPJWoBiWLOMy5D
+         Sr7aD48oUo1BGco1e4RkKs/cV4d8PChb5tGcmIVWLw4+gCx6zjSNiIkgcushvn7efvzG
+         2NB35CZPdE1L9jj/4rXITMdF2rI03jjFSk5pQtNPgT9t6zFYfBB69DlnPNvdf0FaIVyh
+         RdJT+9KPjhHtw68UyMFICMBQNtihr9TcRKOx34/0Fr0tHKLMzLfslUmpoZ/zH8vX9jx/
+         Av0w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=D0CV0Uku18oFuW+TPNfaEyxgPkTMYFP8ObQ3tAgtOsc=;
+        b=tPrDqs+Pds6UznKJL8ojCtsCwFzxwLb9ViwQaShBaOkXgFLxYz5xzK160fiQbWuA8U
+         SD8v0pfs74Hn0y1lTHglId6ED2Y5pjo+jX1U/vj9H9HjDTzNG2te6eyKi7AxdXryrT0V
+         802thM/1zA2ZVmXjynbEJwgrjss47xfJJtdJrDm269LQVfveuEiOQM16ZP1aMNC+qgtj
+         OV/+ABGBb2RT3FqYHnmWc6GPPO9QCMsOokrqei3tDDFSwLdjHoKKlTWluOdiIyFYODpo
+         wmMkvUERarR59jQZ0Fg9XnvhI+DTwpHvYgY9i1rvUlGNQXkCri1zK8NyKInlcRZuohVb
+         Qu0A==
+X-Gm-Message-State: ANhLgQ2C3wVkzKE8eBkqsqFG8q9C4ennaW5TwqxQQF3E3n+nqNve+Tuj
+        xMDpfvnzoaTAT8VlzYfZHSkhCQ==
+X-Google-Smtp-Source: ADFU+vuIfUjtKDwe+/9IZoHaEyu52b65Fllav4Sg62s59kUgWWdWFkYrl4HvkTVxCVFhPIOx9IDLGA==
+X-Received: by 2002:a62:2e42:: with SMTP id u63mr6197087pfu.69.1585181280449;
+        Wed, 25 Mar 2020 17:08:00 -0700 (PDT)
+Received: from minitux (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id u12sm227537pfm.165.2020.03.25.17.07.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 25 Mar 2020 17:07:59 -0700 (PDT)
+Date:   Wed, 25 Mar 2020 17:07:57 -0700
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Andy Gross <agross@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        DTML <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] arm64: dts: qcom: sdm845-mtp: Relocate remoteproc
+ firmware
+Message-ID: <20200326000757.GF119913@minitux>
+References: <20200302020757.551483-1-bjorn.andersson@linaro.org>
+ <CAK8P3a1QZbpYV8juTb31-CXQMVF==qFjJdRd064Md_rw5V7Vnw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/AzVdnvS/5ABMom621vxy99V";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAK8P3a1QZbpYV8juTb31-CXQMVF==qFjJdRd064Md_rw5V7Vnw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/AzVdnvS/5ABMom621vxy99V
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Wed 25 Mar 14:13 PDT 2020, Arnd Bergmann wrote:
 
-Hi all,
+> On Mon, Mar 2, 2020 at 3:09 AM Bjorn Andersson
+> <bjorn.andersson@linaro.org> wrote:
+> >
+> > Update the firmware-name of the remoteproc nodes to mimic the firmware
+> > structure on other 845 devices.
+> >
+> > Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> > ---
+> >  arch/arm64/boot/dts/qcom/sdm845-mtp.dts | 7 +++++++
+> >  1 file changed, 7 insertions(+)
+> 
+> Hi Bjorn,
+> 
+> Sorry for the late reply, I only came across this one while going
+> through the pull requests
+> that we had failed to pick up earlier.
+> 
+> I really dislike the idea of hardcoding a firmware name in the
+> devicetree, we had long
+> discussions about this a few years ago and basically concluded that the firmware
+> name needs to be generated by the driver after identifying the hardware itself.
+> 
 
-Today's linux-next merge of the net-next tree got a conflict in:
+I remember this discussion and generally I share your view, but after
+postponing this problem for years we've not managed to come up with a
+solution for our problem.
 
-  tools/testing/selftests/net/Makefile
+> The problem is that the firmware generally needs to match both the device driver
+> and the hardware, so when there is a firmware update that changes the behavior
+> (intentionally or not) in a way the driver needs to know about, then
+> the driver should
+> be able to request a particular firmware file based on information
+> that the owner
+> of the dtb may not have.
+> 
 
-between commit:
+There are three variables in play here:
 
-  919a23e9d6cc ("selftests/net: add missing tests to Makefile")
+1) Large feature differences, e.g. does your modem Hexagon have
+associated RF hardware, or is it WiFi only. Or other similar things,
+which does affect DeviceTree anyways (memory maps, audio routing etc)
 
-from the net tree and commit:
+2) Purely software versions of the firmware. Generally no impact on
+remoteproc level or the immediate layers above, bug fixes etc.
 
-  7f204a7de8b0 ("selftests: net: Add SO_REUSEADDR test to check if 4-tuples=
- are fully utilized.")
+3) Vendor specific signatures. All these files are signed with vendor
+specific private keys.
 
-from the net-next tree.
 
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
+None of these affects how we describe the hardware, so we did choose to
+use a compatible per platform and remoteproc, e.g. qcom,sdm845-mss-pil
+will handle the modem core on all SDM845 devices, regardless of the
+firmware implementing WiFi only or it's a devboard or a product with
+strict signature validation.
 
---=20
-Cheers,
-Stephen Rothwell
+We could add another property in the DT node to denote if the modem RF
+hardware is present and have the sdm845-mss-pil compatible result in a
+selection of qcom/sdm845/modem.mbn vs qcom/sdm845/modem_nm.mbn. This
+would handle 1) above.
 
-diff --cc tools/testing/selftests/net/Makefile
-index 4c1bd03ffa1c,48063fd69924..000000000000
---- a/tools/testing/selftests/net/Makefile
-+++ b/tools/testing/selftests/net/Makefile
-@@@ -11,9 -11,8 +11,10 @@@ TEST_PROGS +=3D udpgso_bench.sh fib_rule_
-  TEST_PROGS +=3D udpgro_bench.sh udpgro.sh test_vxlan_under_vrf.sh reusepo=
-rt_addr_any.sh
-  TEST_PROGS +=3D test_vxlan_fdb_changelink.sh so_txtime.sh ipv6_flowlabel.=
-sh
-  TEST_PROGS +=3D tcp_fastopen_backup_key.sh fcnal-test.sh l2tp.sh tracerou=
-te.sh
- -TEST_PROGS +=3D fin_ack_lat.sh
- +TEST_PROGS +=3D fin_ack_lat.sh fib_nexthop_multiprefix.sh fib_nexthops.sh
- +TEST_PROGS +=3D altnames.sh icmp_redirect.sh ip6_gre_headroom.sh
- +TEST_PROGS +=3D route_localnet.sh
-+ TEST_PROGS +=3D reuseaddr_ports_exhausted.sh
-  TEST_PROGS_EXTENDED :=3D in_netns.sh
-  TEST_GEN_FILES =3D  socket nettest
-  TEST_GEN_FILES +=3D psock_fanout psock_tpacket msg_zerocopy reuseport_add=
-r_any
 
---Sig_/AzVdnvS/5ABMom621vxy99V
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+But this doesn't solve 3) and my Lenovo Yoga C630 will refuse to load
+these files, as they are not signed by Lenovo.
 
------BEGIN PGP SIGNATURE-----
+For years we've toyed with the idea of building the necessary firmware
+path based on e.g. information from DMI (which not all boards has) or
+somehow tokenizing the machine compatible. But nothing sane has come out
+of these attempts/ideas.
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl578j0ACgkQAVBC80lX
-0GxLAwf+LDXAAlbFQJbPpQBxl2YhP9wzxhfQED180RaiXp3167dE5ubFlqkXz6W6
-M+ptm06I9Any+a5l13LkKm3I3A3Y+AEwjyQQzZaoKZtlfduahRB5JaTrzlP6jLTa
-kxt/bosF9kwKWgrL5p3GSjGN3qkIEBlwui2XbmZwCpOtH4zlPojDLxSHhalNeCsD
-kh4UgN/tMhZEnjcqjcS85eY1uuaNaz3yvRjpB5v+W7jWyyVQsZ35EaPIAJwo2BMc
-o7LreYonkNtKjBtQKuIKO8IJ5iyyzLgDs2VHL8qg9Fqhjmcg1IckduCZHyXk+AtS
-92iBUcQjpXAWvxQce8tI0Uf7sqsa9g==
-=JHqU
------END PGP SIGNATURE-----
+So after years of not being able to send these files to linux-firmware,
+without breaking some other board we decided to just describe these
+variations using firmware-name.
 
---Sig_/AzVdnvS/5ABMom621vxy99V--
+So this solves 1) and 3) in a straight forward way, and so far in all
+cases we've handled 2) by upgrading (until now, our fork of)
+linux-firmware.
+
+But I don't have any suggestions for how to solve the case where kernel
+version X and X+1 _needs_ different versions of the firmware.
+
+
+Lastly, most variations in firmware features are discoverable by the
+higher layers, but for the cases where the remoteproc driver itself is
+affected we're looking at changes to the memory map, clocks, regulators,
+power domains - problems that has to be resolved in DT anyways. 
+
+Which is the reason why several companies are looking at passing
+dynamically loaded DT snippets with their remoteproc firmware.
+
+> I'm holding off on the pull request for today, maybe there is something we can
+> still do about it before the merge window.
+> 
+
+The binding addition was merged in 5.1, with Rob's r-b, in 5.5 we used
+these properties for the Lenovo Yoga C630 and in 5.6 we merged the
+equivalent change for the Dragonboard 845c.
+
+If there is a solution that allow us to move away from firmware-name in
+DT I'm interested and would like to see us migrate towards it, but the
+only thing this particular change does is to make the SDM845 MTP find
+the right files in linux-firmware, using the already existing binding
+and implementation.
+
+Regards,
+Bjorn
