@@ -2,91 +2,108 @@ Return-Path: <SRS0=aGSP=5L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1FE6C43331
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 22:44:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E22EDC43331
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 22:45:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 676B220714
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 22:44:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B40532073E
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 22:45:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="lUgyuUjL"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="N33IqX9p"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727655AbgCZWof (ORCPT
+        id S1727701AbgCZWpE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 18:44:35 -0400
-Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:54707 "EHLO
-        gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726296AbgCZWof (ORCPT
+        Thu, 26 Mar 2020 18:45:04 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:46569 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726296AbgCZWpE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 18:44:35 -0400
-Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 85ACB80237;
-        Fri, 27 Mar 2020 11:44:30 +1300 (NZDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
-        s=mail181024; t=1585262670;
-        bh=2Fu1F56pMbp3D0/7E20eRcBYY0hMFJhwaYQkwhroZrI=;
-        h=From:To:Cc:Subject:Date;
-        b=lUgyuUjL+nbCWsbxquejet2dDMzcwOwoPAzlVc4hupHxy4xdAJzW3/lw+BscH1JbU
-         nb2FOTNMZbAAq/viRyeH9x5MlyjsVkqoV3zmsT3OwKxMZ9FgSPmSQZXVAFbPCOYZfk
-         Qs9PIOF1pLjXBa07dMw3VUNMkDAKjXs99AQ+Rpw4e0kyb1ez1Q69lwR2hw7Zc7el3D
-         icbk5pF9VXAz1BOU7rOGnmE3y/18YVsNVF6d7cLhW9IerGZXrJe1GmR0CQjDRxXORr
-         8ytDoca9W48WOUmzsY/Hp3JxZIn+knj1GIX985icIkD+4XALPoIKYtFzGsq5Zgo8bH
-         84f90qhbmojZQ==
-Received: from smtp (Not Verified[10.32.16.33]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
-        id <B5e7d304a0000>; Fri, 27 Mar 2020 11:44:28 +1300
-Received: from chrisp-dl.ws.atlnz.lc (chrisp-dl.ws.atlnz.lc [10.33.22.20])
-        by smtp (Postfix) with ESMTP id DFD1E13EEB7;
-        Fri, 27 Mar 2020 11:44:27 +1300 (NZDT)
-Received: by chrisp-dl.ws.atlnz.lc (Postfix, from userid 1030)
-        id 07E7928006C; Fri, 27 Mar 2020 11:44:28 +1300 (NZDT)
-From:   Chris Packham <chris.packham@alliedtelesis.co.nz>
-To:     wsa@the-dreams.de, allison@lohutok.net, info@metux.net,
-        linus.walleij@linaro.org, tglx@linutronix.de
-Cc:     linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Chris Packham <chris.packham@alliedtelesis.co.nz>
-Subject: [PATCH] i2c: pca-platform: Use platform_irq_get_optional
-Date:   Fri, 27 Mar 2020 11:44:22 +1300
-Message-Id: <20200326224422.31063-1-chris.packham@alliedtelesis.co.nz>
-X-Mailer: git-send-email 2.25.1
-MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-x-atlnz-ls: pat
+        Thu, 26 Mar 2020 18:45:04 -0400
+Received: by mail-pf1-f195.google.com with SMTP id q3so3500620pff.13
+        for <linux-kernel@vger.kernel.org>; Thu, 26 Mar 2020 15:45:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=QCWn7QB+wZCv5c30k8RVCk7/lqCrOfd18UirhMPYmK4=;
+        b=N33IqX9pR8IFxSujO89nN5pUaaCA4nBX1A1ln3UpDVDEWRFfxJaRnsPX0avq5hvOOb
+         2ofJ0IBBH8t/FwzZU06c9vEIQcKf77XddzomwMPb+6JZrk9YELbqADfpE9DgebGdsfXX
+         TEUkabHNL/Xf9KeDlhDNIsYiWxHpnUwyc6MZWIrseiXmmZkLH8Djn5RLV8veQBEa+Njn
+         byOEf1yy3BkvYdzEBO6w0ebhXyxDA1qjB/rqCrdy2Y4gssPJTBegM+ZrCV04m0yL+sxC
+         huhkDJBxyIr+XyucI/372wcf3Lyltczi9mNO4Ot7erYGL5w3pdhCbuRLh9B8JXVL4Gh8
+         L8GA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=QCWn7QB+wZCv5c30k8RVCk7/lqCrOfd18UirhMPYmK4=;
+        b=dMCLtGyJXz5PkOpidfNIX+1IxrEEd/bDGsROBjedNUvznStNeeu1x14jyLFtSu4fkg
+         9UyktJAiAV8LjbCg8Ma/Gzzz9OfqSFh3h35tZfcpWFwQMOGP4Vufxc7oatWJUW71QSjp
+         UYhZEhra/nt+pt7z3Be3JDT93su0tqMh7nYAxOstWM1RjZLh1+GqBRsxWRM4fAGlZssm
+         8kIaQ/oDRIN5IvZgi7mYwB9Mp4TNEQJYHGwHU0jrYJs8Ax+BhsPJ62JhqB/k+b0ByiRJ
+         d8gjtzjv5ht38kFBX6sLZMHqLCejUleI91EdsFOqhc1HU4fa3AIAPf2sBTNRRHsxAMzV
+         Vqjw==
+X-Gm-Message-State: ANhLgQ1rWigVg9qx4BNdNTiS+NowYxyqGoYv3dRQ7qBvEh/fs7ckeF9S
+        2EEVbotxU6XIc/yFdkgjAlUrYnyLlTw=
+X-Google-Smtp-Source: ADFU+vsRcEOs5dU6hbt47BGmrCU7JkCeeC2o1Umpy1nTagcIknKtZ13Kjd+KJ8ISVJMUMbzoNajxTQ==
+X-Received: by 2002:aa7:9a8e:: with SMTP id w14mr11328537pfi.113.1585262702882;
+        Thu, 26 Mar 2020 15:45:02 -0700 (PDT)
+Received: from localhost.localdomain ([2601:1c2:680:1319:692:26ff:feda:3a81])
+        by smtp.gmail.com with ESMTPSA id g10sm2592788pfk.90.2020.03.26.15.45.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 26 Mar 2020 15:45:02 -0700 (PDT)
+From:   John Stultz <john.stultz@linaro.org>
+To:     lkml <linux-kernel@vger.kernel.org>
+Cc:     John Stultz <john.stultz@linaro.org>, Todd Kjos <tkjos@google.com>,
+        Saravana Kannan <saravanak@google.com>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        linux-arm-msm@vger.kernel.org
+Subject: [PATCH v3 0/3] Allow for rpmpd/rpmh/rpmhpd drivers to be loaded as permenent modules
+Date:   Thu, 26 Mar 2020 22:44:56 +0000
+Message-Id: <20200326224459.105170-1-john.stultz@linaro.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The interrupt is not required so use platform_irq_get_optional() to
-avoid error messages like
+This series simply allows the qcom rpmpd, rpmh and rpmhpd
+drivers to be configured and loaded as permement modules.
 
-  i2c-pca-platform 22080000.i2c: IRQ index 0 not found
+This means the modules can be loaded, but not unloaded.
 
-Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
----
- drivers/i2c/busses/i2c-pca-platform.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+While maybe not ideal, this is an improvement over requiring the
+drivers to be built in.
 
-diff --git a/drivers/i2c/busses/i2c-pca-platform.c b/drivers/i2c/busses/i=
-2c-pca-platform.c
-index a7a81846d5b1..635dd697ac0b 100644
---- a/drivers/i2c/busses/i2c-pca-platform.c
-+++ b/drivers/i2c/busses/i2c-pca-platform.c
-@@ -140,7 +140,7 @@ static int i2c_pca_pf_probe(struct platform_device *p=
-dev)
- 	int ret =3D 0;
- 	int irq;
-=20
--	irq =3D platform_get_irq(pdev, 0);
-+	irq =3D platform_get_irq_optional(pdev, 0);
- 	/* If irq is 0, we do polling. */
- 	if (irq < 0)
- 		irq =3D 0;
---=20
-2.25.1
+Feedback on this series would be welcome!
+
+thanks
+-john
+
+New in v3:
+* Added similar change to rpmh and rpmhpd drivers.
+
+Cc: Todd Kjos <tkjos@google.com>
+Cc: Saravana Kannan <saravanak@google.com>
+Cc: Andy Gross <agross@kernel.org>
+Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: Rajendra Nayak <rnayak@codeaurora.org>
+Cc: linux-arm-msm@vger.kernel.org
+
+John Stultz (3):
+  soc: qcom: rpmpd: Allow RPMPD driver to be loaded as a module
+  soc: qcom: rpmh: Allow RPMH driver to be loaded as a module
+  soc: qcom: rpmhpd: Allow RPMHPD driver to be loaded as a module
+
+ drivers/soc/qcom/Kconfig    | 8 ++++----
+ drivers/soc/qcom/rpmh-rsc.c | 6 ++++++
+ drivers/soc/qcom/rpmhpd.c   | 5 +++++
+ drivers/soc/qcom/rpmpd.c    | 6 ++++++
+ 4 files changed, 21 insertions(+), 4 deletions(-)
+
+-- 
+2.17.1
 
