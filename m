@@ -2,187 +2,93 @@ Return-Path: <SRS0=aGSP=5L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=FREEMAIL_FORGED_FROMDOMAIN,
+	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC69BC43331
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 11:41:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F65DC43331
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 11:45:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C0A62076A
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 11:41:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 410A12070A
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 11:45:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728158AbgCZLlj (ORCPT
+        id S1728128AbgCZLpK convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 07:41:39 -0400
-Received: from mx3.molgen.mpg.de ([141.14.17.11]:43797 "EHLO mx1.molgen.mpg.de"
+        Thu, 26 Mar 2020 07:45:10 -0400
+Received: from mail-oln040092071108.outbound.protection.outlook.com ([40.92.71.108]:13131
+        "EHLO EUR03-DB5-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727994AbgCZLlj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 07:41:39 -0400
-Received: from [192.168.0.2] (ip5f5af065.dynamic.kabel-deutschland.de [95.90.240.101])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: pmenzel)
-        by mx.molgen.mpg.de (Postfix) with ESMTPSA id 8FCEC206442F6;
-        Thu, 26 Mar 2020 12:41:36 +0100 (CET)
-Subject: Re: [Intel-wired-lan] [PATCH] e1000e: bump up timeout to wait when ME
- un-configure ULP mode
-To:     Kai-Heng Feng <kai.heng.feng@canonical.com>
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        intel-wired-lan@lists.osuosl.org,
-        David Miller <davem@davemloft.net>,
-        Rex Tsai <rex.tsai@intel.com>
-References: <20200323191639.48826-1-aaron.ma@canonical.com>
- <EC4F7F0B-90F8-4325-B170-84C65D8BBBB8@canonical.com>
- <2c765c59-556e-266b-4d0d-a4602db94476@intel.com>
- <899895bc-fb88-a97d-a629-b514ceda296d@canonical.com>
- <750ad0ad-816a-5896-de2f-7e034d2a2508@intel.com>
- <f9dc1980-fa8b-7df9-6460-b0944c7ebc43@molgen.mpg.de>
- <60A8493D-811B-4AD5-A8D3-82054B562A8C@canonical.com>
-From:   Paul Menzel <pmenzel@molgen.mpg.de>
-Message-ID: <3895cb4d-cc9d-238a-0776-a1fd3a490664@molgen.mpg.de>
-Date:   Thu, 26 Mar 2020 12:41:36 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        id S1727948AbgCZLpJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Mar 2020 07:45:09 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=guKjNLNOzhaR8zmHUXmJmFOpTjVVJHKLlyCcURoIa07CiqMBGoYZfs3lyJtNaewojiLzz4dZIZQB5EZ8UKwd2Ss9PcYnW6+xoiWRmc8Dzq4Rw24vBCqIPDtDDXNunBlnNMdYbfweb8cY9ju/DbAH+SHxHYxGv4F5cUfDMBscE3x17zwHvBdtVLm/2LQB+pL3cjRGqFaC48+MMb2sjTAUphH2C/pNIKHW8WgrzxSR5ZG8RqgD5HCkvFJvjh+xRIZawDX86XIxkrH8rOZm0dTbGrP1a7FutJFwWPpU53Bxl5OnZFtMSkm9xF4n41aYCdoNXqXNOqJ3xU3Zi4vs6u+i6w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ubZ0J+6WJ4jMurRddyNk8osUo5OHq/ij8Qb25ZoaKi4=;
+ b=B8P87RpRU9yPcHThyuxCf6KmQoU382HJ0wB0I93cLwI5tpMk4QtXKrJ2Xt+nF7vm9kU8KLyzdOFPG3tEq8KdyuvQUC8q/neOqCDmZ3UVT6D6EnZqTRR8o+C4xEeowG4lDVdw0vSwOzQblOIAf+Ku01YmcL2tVJhxAzZbmPZJJubExH2JC/xvSYXooe7MV55CvKRIWNtD4edjsRTglns7Y5jrNBwsLEG0EJs4kgwCsb/D38+eByQ94sVNe9yg9p5TqFPv/x4ii/psU4PBy2qdXcMrXCj0punW4Rn2zLF/eYSX7pQB8VT64c0e9nhBGnTLwpbJ/Wc7DQ7qMyG6tJc49w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+Received: from DB5EUR03FT011.eop-EUR03.prod.protection.outlook.com
+ (2a01:111:e400:7e0a::47) by
+ DB5EUR03HT217.eop-EUR03.prod.protection.outlook.com (2a01:111:e400:7e0a::221)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2856.17; Thu, 26 Mar
+ 2020 11:45:07 +0000
+Received: from PR1PR05MB5546.eurprd05.prod.outlook.com (10.152.20.55) by
+ DB5EUR03FT011.mail.protection.outlook.com (10.152.20.95) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2856.17 via Frontend Transport; Thu, 26 Mar 2020 11:45:07 +0000
+Received: from PR1PR05MB5546.eurprd05.prod.outlook.com
+ ([fe80::558c:f4bc:44ce:6add]) by PR1PR05MB5546.eurprd05.prod.outlook.com
+ ([fe80::558c:f4bc:44ce:6add%7]) with mapi id 15.20.2835.023; Thu, 26 Mar 2020
+ 11:45:07 +0000
+From:   outlook user <Pingo-Power@hotmail.fr>
+To:     LKML <linux-kernel@vger.kernel.org>
+Subject: ScreenPad diplay
+Thread-Topic: ScreenPad diplay
+Thread-Index: AQHWA2JAGSO8/iYYv0mN949P/Zm2CKhawG/g
+Date:   Thu, 26 Mar 2020 11:45:07 +0000
+Message-ID: <PR1PR05MB554664CE22000F934D6A5C0397CF0@PR1PR05MB5546.eurprd05.prod.outlook.com>
+References: <PR1PR05MB55466D0D588E939CC540423A97CF0@PR1PR05MB5546.eurprd05.prod.outlook.com>
+In-Reply-To: <PR1PR05MB55466D0D588E939CC540423A97CF0@PR1PR05MB5546.eurprd05.prod.outlook.com>
+Accept-Language: fr-FR, en-US
+Content-Language: fr-FR
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-incomingtopheadermarker: OriginalChecksum:66FACCD22849A9C44744A328B12558187F469C02D6C74F0CAAE4BBB42C12907D;UpperCasedChecksum:CF98F2CC4DC45552E8EA5E781DC427E17871E557F2A8113A3CB2D31311286981;SizeAsReceived:6869;Count:45
+x-ms-exchange-messagesentrepresentingtype: 1
+x-tmn:  [JXbT2XcAehuIt6f7BKLg68Z8CpS4/K34]
+x-ms-publictraffictype: Email
+x-incomingheadercount: 45
+x-eopattributedmessage: 0
+x-ms-office365-filtering-correlation-id: 385b2bca-9497-4e1a-3b43-08d7d17b21ec
+x-ms-traffictypediagnostic: DB5EUR03HT217:
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 594TJ0SjQNOASPZjNzpyVZ5jN2AR2QEx7mrLoSSADZf2UrGyeWpI64QJCGnI7fP2lNiULdHf5SRyjV5X76+Ahyo2GjmS9tPS07FoyP8Mz9fO3b3JiiJSNpdBCvFK3ITOiKjMvqndTb7Ujd4HS42J3Qt/ZXB4DBGaPPD1SP306Z47I195H2Jjq8QdEYhh2Z+m
+x-ms-exchange-antispam-messagedata: +hWdnBbUcw73A3Q1tn4eDRSZmleYNqH+6/vQJiwrYv6OrVe4Z9t071DRDA/khwq6IpAKmXUwmG205xNi3RvNivWMeWByNJObWQ8sBFc7e9+FcSmWyYeCZrJ7S3NI9b+LJ0+tX6NcYRkgDxitzKoSlQ==
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-In-Reply-To: <60A8493D-811B-4AD5-A8D3-82054B562A8C@canonical.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-Network-Message-Id: 385b2bca-9497-4e1a-3b43-08d7d17b21ec
+X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-originalarrivaltime: 26 Mar 2020 11:45:07.5927
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Internet
+X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB5EUR03HT217
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Dear Kai-Heng,
+I'm not on the mailing list, I want to receive a carbon copy of each reply to this topic
 
+When I run the system on Intel APU, Xrandr say that I've only eDP-1 (connected) (my main screen) and HDMI-1 (disconnected) (the HDMI port of my computer). The KDE UI stills seems to detects somethings because he pops up the equivalent of "Super+P" pop-up in
+ Windows (the one who asks you where you want to diplay your desktop). But here, only the HDMI port and main screen works, not the ScreenPad, I don't know where to find logs of why the display manager pops up
 
-Am 26.03.20 um 12:29 schrieb Kai-Heng Feng:
-
->> On Mar 25, 2020, at 23:49, Paul Menzel <pmenzel@molgen.mpg.de> wrote:
-
->> Am 25.03.20 um 14:58 schrieb Neftin, Sasha:
->>> On 3/25/2020 08:43, Aaron Ma wrote:
->>
->>>> On 3/25/20 2:36 PM, Neftin, Sasha wrote:
->>>>> On 3/25/2020 06:17, Kai-Heng Feng wrote:
->>
->>>>>>> On Mar 24, 2020, at 03:16, Aaron Ma <aaron.ma@canonical.com> wrote:
->>>>>>>
->>>>>>> ME takes 2+ seconds to un-configure ULP mode done after resume
->>>>>>> from s2idle on some ThinkPad laptops.
->>>>>>> Without enough wait, reset and re-init will fail with error.
->>>>>>
->>>>>> Thanks, this patch solves the issue. We can drop the DMI quirk in
->>>>>> favor of this patch.
->>>>>>
->>>>>>> Fixes: f15bb6dde738cc8fa0 ("e1000e: Add support for S0ix")
->>>>>>> BugLink: https://bugs.launchpad.net/bugs/1865570
->>>>>>> Signed-off-by: Aaron Ma <aaron.ma@canonical.com>
->>>>>>> ---
->>>>>>> drivers/net/ethernet/intel/e1000e/ich8lan.c | 4 ++--
->>>>>>> 1 file changed, 2 insertions(+), 2 deletions(-)
->>>>>>>
->>>>>>> diff --git a/drivers/net/ethernet/intel/e1000e/ich8lan.c
->>>>>>> b/drivers/net/ethernet/intel/e1000e/ich8lan.c
->>>>>>> index b4135c50e905..147b15a2f8b3 100644
->>>>>>> --- a/drivers/net/ethernet/intel/e1000e/ich8lan.c
->>>>>>> +++ b/drivers/net/ethernet/intel/e1000e/ich8lan.c
->>>>>>> @@ -1240,9 +1240,9 @@ static s32 e1000_disable_ulp_lpt_lp(struct
->>>>>>> e1000_hw *hw, bool force)
->>>>>>>               ew32(H2ME, mac_reg);
->>>>>>>           }
->>>>>>>
->>>>>>> -        /* Poll up to 300msec for ME to clear ULP_CFG_DONE. */
->>>>>>> +        /* Poll up to 2.5sec for ME to clear ULP_CFG_DONE. */
->>>>>>>           while (er32(FWSM) & E1000_FWSM_ULP_CFG_DONE) {
->>>>>>> -            if (i++ == 30) {
->>>>>>> +            if (i++ == 250) {
->>>>>>>                   ret_val = -E1000_ERR_PHY;
->>>>>>>                   goto out;
->>>>>>>               }
->>>>>>
->>>>>> The return value was not caught by the caller, so the error ends up
->>>>>> unnoticed.
->>>>>> Maybe let the caller check the return value of
->>>>>> e1000_disable_ulp_lpt_lp()?
->>
->>>>> I a bit confused. In our previous conversation you told ME not running.
->>>>> let me shimming in. Increasing delay won't be solve the problem and just
->>>>> mask it. We need to understand why ME take too much time. What is
->>>>> problem with this specific system?
->>>>> So, basically no ME system should works for you.
->>>>
->>>> Some laptops ME work that's why only reproduce issue on some laptops.
->>>> In this issue i219 is controlled by ME.
->>>
->>> Who can explain - why ME required too much time on this system?
->>> Probably need work with ME/BIOS vendor and understand it.
->>> Delay will just mask the real problem - we need to find root cause.
->>>> Quirk is only for 1 model type. But issue is reproduced by more models.
->>>> So it won't work.
->>
->> (Where is Aaron’s reply? It wasn’t delivered to me yet.)
->>
->> As this is clearly a regression, please revert the commit for now,
->> and then find a way to correctly implement S0ix support. Linux’
->> regression policy demands that as no fix has been found since
->> v5.5-rc1. Changing Intel ME settings, even if it would work around
->> the issue, is not an acceptable solution. Delaying the resume time
->> is also not a solution.
-> 
-> The s0ix patch can reduce power consumption, finally makes S2idle an
-> acceptable sleep method. So I'd say it's a fix, albeit a regression
-> was introduced.
-> 
->> Regarding Intel Management Engine, only Intel knows what it does
->> and what the error is, as the ME firmware is proprietary and
->> closed.
->> 
->> Lastly, there is no way to fully disable the Intel Management
->> Engine. The HAP stuff claims to stop the Intel ME execution, but
->> nobody knows, if it’s successful.
->> 
->> Aaron, Kai-Hang, can you send the revert?
-> 
-> I consider that as an important fix for s2idle, I don't think
-> reverting is appropriate.
-
-If there is a fix with no other regression, I agree. But there has not 
-been one, so please revert. It doesn’t matter if the commit introducing 
-the regression fixes something else. It gets too complicated to decide, 
-which regression is worth it or not. The Linux kernel guarantees its 
-users, they can update any time without breaking user space (in this 
-case suspend/resume).  Please read Linus’ several messages about that. 
-His message [1] exactly addresses your arguments.
-
-> Yeah, HELL NO!
-> 
-> Guess what? You're wrong. YOU ARE MISSING THE #1 KERNEL RULE.
-> 
-> We do not regress, and we do not regress exactly because your are 100% wrong.
-> 
-> And the reason you state for your opinion is in fact exactly *WHY* you
-> are wrong.
-> 
-> Your "good reasons" are pure and utter garbage.
-> 
-> The whole point of "we do not regress" is so that people can upgrade
-> the kernel and never have to worry about it.
-> 
->> Kernel had a bug which has been fixed
-> 
-> That is *ENTIRELY* immaterial.
-> 
-> Guys, whether something was buggy or not DOES NOT MATTER.
-
-So, please (also Intel developers), please adhere to this rule, and 
-revert the commit.
-
-
-Kind regards,
-
-Paul
-
-
-[1]: https://lkml.org/lkml/2018/8/3/621
+When I run it on nVidia GPU (optimus-manager to switch), the ScreenPad goes on, on a black screen. Xrandr lists eDP-1 (same), HDMI-0 (connected) and HDMI-1 (not connected). I guess here that HDMI-0 should be the ScreenPad. But I don't know how to display something
+ on it, or even manipulate the display. If i change resolution it doesn't changes anything on the ScreenPad, not even a flickering
