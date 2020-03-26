@@ -2,150 +2,105 @@ Return-Path: <SRS0=aGSP=5L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C339C2D0E9
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 09:20:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B58DC43331
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 09:20:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 022052078E
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 09:20:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585214428;
-	bh=wL1jZg8S4ctlkUEx2PHFLxJesRX2RGiZ2xoKk6QxdfY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=rv8OimBm6IW63oKOcDNu6p1H3c3BA80ocRifIGdMsc971W/HJeh8drytQsny0ewze
-	 fPIWjsF4snLc8AoJSnPYWIOA8wqXCtrZrAEFsis3+kQfSa/7mrB5vN5U4epntHUPzQ
-	 ydrqwB4UWi57evS4TpnAsFJnH48qFMc4BeRwG2SA=
+	by mail.kernel.org (Postfix) with ESMTP id 0EAAC20B80
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 09:20:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="h3+XMO4b"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727718AbgCZJU1 (ORCPT
+        id S1727763AbgCZJUp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 05:20:27 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:50987 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726298AbgCZJU0 (ORCPT
+        Thu, 26 Mar 2020 05:20:45 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:43159 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726298AbgCZJUp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 05:20:26 -0400
-Received: by mail-wm1-f67.google.com with SMTP id d198so5664251wmd.0;
-        Thu, 26 Mar 2020 02:20:23 -0700 (PDT)
+        Thu, 26 Mar 2020 05:20:45 -0400
+Received: by mail-wr1-f68.google.com with SMTP id m11so875945wrx.10
+        for <linux-kernel@vger.kernel.org>; Thu, 26 Mar 2020 02:20:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=QMCowoi/JCe2v265QDbm4p0VWyPtNcTvLQEymboWLVk=;
-        b=RX5mdPiGXyfiPKfLphcwrDBi/peU3SRPc7ZGMrTb/Lqfw5UgtRSTdH91h+70066QSC
-         pP/ZHueo0A+c2VE90+X8dHKj3RlwOXug4g/YAbDWlmKY39FtPZUup4CBm3d3ZB4WSKjR
-         0Huosrm//+PuSEoUBMz87vDYm1X12Mc+oGDi7+6T1B67NT8uWqaZaiJ3FcOHvTmVvv6S
-         eZ2W1Tvhym1i2jFVx2NsZrf7q1CPuiwf72Cu0d8tW+Puw87y8oVvdM83FKXgxpa9mT7b
-         af7m9ubE+9gkC/qaffhOvx4OugsY5bB0Kao9ZPWQ8vc6qWAwB58n97v5dvbVrwPS6VaA
-         bR1A==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=XiFCSIEFbCtqD4+HIYFwBoWm8BPO7pJ1HJRJcTm4S98=;
+        b=h3+XMO4b1m3gWVXbv756Fxbc4CvIBdECygkaD4INk1GOYA5GEKpLWfnhqt8WIMaq1A
+         6JTMUUa0Mjqg2W7WTRjYoClo8Xn03jPlyxK4GkQP6NRQ84+oSjjb9XWmjHlgIF7X06aQ
+         Moujtz1baHzCi/hx7u0ON1iV8jhWwswC6IVlHzHUqM4SV61RnHJM2X3jSCeMF2RjWmf0
+         9rS9WDukmZBTYtOjTEZU9WfDONk1lgWeWuhb6tlivVKu3edZ8dYdn3f/MNZe1J1oLN6q
+         Rqo5bCl7JT50OJnlF6p46hgcboQ38j6kf8Th6B0Fji6WlIk+pA8Mve0snY/tltO/cA6t
+         7D1g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=QMCowoi/JCe2v265QDbm4p0VWyPtNcTvLQEymboWLVk=;
-        b=Mjqdzk9LlAj1wGKzOqFY2GMcEuCixWD4ZsMofPQRf1DzzErhIlDmeANYE47K5CWtmy
-         py7ncbwl5foNWDLzzUcoq/gXUSoEjlOjzzHUK+UVN7w+Q7MjvWnwcyf4/UVOkjwNEZgD
-         5I7PnpMitZhcxD4g/qlAQskDZ9WYGN4SPU/5jvttwmmLMFTACh0lfDcihdS4fFRMtcUD
-         Y+uxTA6ygk5jVTrta8yOYJj6OnkOWkDFcaSbC1ugRyHrE8N1mZ6M7e3ayDt3US1nC5YF
-         La/thjW9jqPcvuYkPvfvGrCQ6kBRS+Nvlv51AtxmWjL40D9jPOJiaxFuwzx4vDJhG7GG
-         Agmw==
-X-Gm-Message-State: ANhLgQ3JNh8buySiUi/LjCAno+VR4rQnNWQCNtxSOzPqZM/yZFTjz3z7
-        o3R+XSyyJkjx/C2VkwVzKMo=
-X-Google-Smtp-Source: ADFU+vuo5kkY6YJNmSthEGmulf1OSYWdFlZ4mkUhgBR28ala97SVa+B34f0Sizj5koNYygjLIKM3Ew==
-X-Received: by 2002:a1c:a950:: with SMTP id s77mr2082562wme.176.1585214422984;
-        Thu, 26 Mar 2020 02:20:22 -0700 (PDT)
-Received: from gmail.com (54033286.catv.pool.telekom.hu. [84.3.50.134])
-        by smtp.gmail.com with ESMTPSA id v26sm2742597wra.7.2020.03.26.02.20.21
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=XiFCSIEFbCtqD4+HIYFwBoWm8BPO7pJ1HJRJcTm4S98=;
+        b=rk3NbIpQgGlP9hqZ235hzb2HBxbdrGW9COzcGAO0F6bQZPFLTCZ8ayWY9YDZhH64+A
+         gb0OnEcxpj53GNuqjLf5sDkPp1vnSeOXNWpL6T6cOOjN/chTfs3SLbFWA6EWs4xTLSTv
+         W8ZYTE/ELnGifWgYAbqei5t0R8+8NJACchvtBYkMeMxz9eceAnEO3BGtrEH19OeUv5ac
+         g/mW+6lOqECjPI1MER03pXEaZSzgaZXc7XE3LdszuHYM7Oab1rU08LgKw9C4m9bqPOiu
+         b6UhHxSFRIX79Tn+N/JuorjpS9X80ng77N0pwa6dJb0eUwY8eOaSqqIBtSPItaxIvqk2
+         jBzg==
+X-Gm-Message-State: ANhLgQ1N4OEAbDAP75YLS87AaAgLmMkDKcKIEwc5BDec7URe9m4Y7QIU
+        63JRAVvFDxe3cvOoCtyjGWNTog==
+X-Google-Smtp-Source: ADFU+vtL5ZXVm9XL43jJOUQKaE0UOa87H6ANr1gFusr26vHNsN1W8MzjEBq1RtpaNlMx0KNWkHMqOg==
+X-Received: by 2002:a5d:460f:: with SMTP id t15mr8204254wrq.413.1585214443280;
+        Thu, 26 Mar 2020 02:20:43 -0700 (PDT)
+Received: from dell ([2.27.35.213])
+        by smtp.gmail.com with ESMTPSA id w66sm2690193wma.38.2020.03.26.02.20.42
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 26 Mar 2020 02:20:22 -0700 (PDT)
-Date:   Thu, 26 Mar 2020 10:20:19 +0100
-From:   Ingo Molnar <mingo@kernel.org>
-To:     Masahiro Yamada <masahiroy@kernel.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Kees Cook <keescook@chromium.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "H . Peter Anvin" <hpa@zytor.com>, X86 ML <x86@kernel.org>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        David Airlie <airlied@linux.ie>,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Jim Kukunas <james.t.kukunas@linux.intel.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        NeilBrown <neilb@suse.de>, Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        Yuanhan Liu <yuanhan.liu@linux.intel.com>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        intel-gfx@lists.freedesktop.org,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>
-Subject: Re: [PATCH 00/16] x86, crypto: remove always-defined CONFIG_AS_* and
- cosolidate Kconfig/Makefiles
-Message-ID: <20200326092019.GA100058@gmail.com>
-References: <20200324084821.29944-1-masahiroy@kernel.org>
- <20200325045940.GA24974@gmail.com>
- <CAK7LNAQvgT=OWVuBVrvgdZ7AAkoaV_K_Y+w9bOFxRPw_1TOSUA@mail.gmail.com>
+        Thu, 26 Mar 2020 02:20:42 -0700 (PDT)
+Date:   Thu, 26 Mar 2020 09:21:32 +0000
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Jarkko Nikula <jarkko.nikula@linux.intel.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>
+Subject: Re: [PATCH] mfd: intel-lpss: Fix Intel Elkhart Lake LPSS I2C input
+ clock
+Message-ID: <20200326092132.GB603801@dell>
+References: <20200316143224.234432-1-jarkko.nikula@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <CAK7LNAQvgT=OWVuBVrvgdZ7AAkoaV_K_Y+w9bOFxRPw_1TOSUA@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200316143224.234432-1-jarkko.nikula@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, 16 Mar 2020, Jarkko Nikula wrote:
 
-* Masahiro Yamada <masahiroy@kernel.org> wrote:
-
-> > LGTM. I've got these four from Jason A. Donenfeld queued up in
-> > tip:WIP.x86/asm:
-> >
-> >  bd5b1283e41c: ("crypto: Curve25519 - do not pollute dispatcher based on assembler")
-> >  829f32d78588: ("crypto: X86 - rework configuration, based on Kconfig")
-> >  95ef9f80ed63: ("x86/build: Probe assembler from Kconfig instead of Kbuild")
-> >  1651e700664b: ("x86: Fix bitops.h warning with a moved cast")
-> >
-> > I suppose these might interact (maybe even conflict), and are topically
-> > related.
-> >
-> > Would you like to pull these into the kbuild tree? You can find them in:
-> >
-> >    git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git WIP.x86/asm
-> >
-> > Thanks,
-> >
-> >         Ingo
+> Intel Elkhart Lake LPSS I2C has 100 MHz input clock instead of 133 MHz
+> that was our preliminary information. This will result slower I2C bus
+> clock when driver calculates its timing parameters in case ACPI tables
+> don't provide them.
 > 
+> Slower I2C bus clock is allowed but let's fix this to match with
+> reality.
 > 
-> I did not know that these had already landed in tip tree.
+> While at it, keep the same default I2C device properties as Intel
+> Broxton since it is not known do they need any update.
 > 
-> They are immature version.
-> (In fact CONFIG_AS_CFI and AS_ADX are false-negative
-> if GCC that defaults to 32-bit is used.)
-> 
-> Can you simply discard the WIP.x86/asm branch,
-> and only reapply
-> 1651e700664b: ("x86: Fix bitops.h warning with a moved cast")
-> 
-> ?
+> Signed-off-by: Jarkko Nikula <jarkko.nikula@linux.intel.com>
+> ---
+> For normal development cycle.
+> ---
+>  drivers/mfd/intel-lpss-pci.c | 21 +++++++++++++--------
+>  1 file changed, 13 insertions(+), 8 deletions(-)
 
-Sure, done!
+Applied, thanks.
 
-In case you need any x86 maintainer acks for your series:
-
-  Acked-by: Ingo Molnar <mingo@kernel.org>
-
-Thanks,
-
-	Ingo
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
