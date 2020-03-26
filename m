@@ -2,150 +2,622 @@ Return-Path: <SRS0=aGSP=5L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 521F8C43331
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 01:32:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5544EC2D0E7
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 01:37:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 222BC2073E
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 01:32:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585186321;
-	bh=4xTfullO5VLxDedU6xpT8Tve12vpn0mxm08+kaIPBrE=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=le0cgMv2RQg5FVXDFupZy0M5llK/fKyiX8RThSKEHAYys2WroU3VGQhDTdMvj4owt
-	 WMn4BqmCQGHrgsD+IBHctrGR5cW3+PXmlMQ4308DDg0R8SnXjrKRi56JXnaQRwJK5U
-	 KGJ+DFlio652JYv5PeCzwOBYBmprFgDXoK3hdZYE=
+	by mail.kernel.org (Postfix) with ESMTP id 0800820848
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 01:37:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="R8PPCRRl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727661AbgCZBcA (ORCPT
+        id S1727612AbgCZBhY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 21:32:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54854 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727561AbgCZBb7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 21:31:59 -0400
-Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D59AA20719;
-        Thu, 26 Mar 2020 01:31:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585186318;
-        bh=4xTfullO5VLxDedU6xpT8Tve12vpn0mxm08+kaIPBrE=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=YXQQplg9DN+lwKhz9fKK/S6DpHuHDIN0HMHBZAGcaP6ugTJRtmOjKCD4eUz/3CKZ7
-         jbyKdAmvsATalTg+SaAuKY2Z99mtUtiU6OqajLDH3u0NuYZQ/UHNsiqd+OnxxoqjNG
-         FOB6SFLLuBZWB+rIwlr+gMAxJn/RYS0Gx5PItatw=
-Date:   Thu, 26 Mar 2020 10:31:53 +0900
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     Mingbo Zhang <whensungoes@gmail.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     x86@kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] x86: perf: insn: Tweak opcode map for Intel CET
- instructions
-Message-Id: <20200326103153.de709903f26fee0918414bd2@kernel.org>
-In-Reply-To: <20200303045033.6137-1-whensungoes@gmail.com>
-References: <20200303045033.6137-1-whensungoes@gmail.com>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Wed, 25 Mar 2020 21:37:24 -0400
+Received: from mail-yb1-f194.google.com ([209.85.219.194]:33295 "EHLO
+        mail-yb1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727561AbgCZBhY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Mar 2020 21:37:24 -0400
+Received: by mail-yb1-f194.google.com with SMTP id p196so2370969ybc.0;
+        Wed, 25 Mar 2020 18:37:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=+oeVl/ocqyHUrrVsGhZKg48CUn8g139JjTuAqMFOtqY=;
+        b=R8PPCRRljUG5kdnQ4d6PetnY1O0xFKm3F+f/H8r5qNSbj0aE6Ix6LzhVt+bkE906Rt
+         lyesnSY/ZYg2AYH79l3psd1y5nRZ2tg2QJNehyy13U2dM4+QdqSJUMXn9o+D/y9YTqQE
+         9HdtA66ZrA7MRqBKmzYbUeHB3uUQqazi/CU0Dy0NW+VqSvQuxHedb+ySWDv8b1xKwU0c
+         NegBi8PgxDUp+RusWSGYtEdxSjZjqD6fF5U7aUe86RunrExz+sdEmpMXhcV1CDPHJLoN
+         k5JWn4HxxJuWaQ401Ujm23WBdwlfG+IrnrE4ZP0Ea3SAyB59e7cofk+SqWDH/GeUi7yY
+         KpTw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=+oeVl/ocqyHUrrVsGhZKg48CUn8g139JjTuAqMFOtqY=;
+        b=C2kZCwd5JdV55wOD+/b3HoWL3s+j6sasHuZCzAVoWyl6WXxT4rDBLyAXw7M+TxpR1j
+         82vbb9Qgvl2fjjF0l+SWUTjLt/2b2C8ZgBqvr2GawFvl97RSOkj/0wNg8UfWiApiRJcO
+         Z0ROwe9cmhaCMcA+tQdSXG8RQuhUC0pa3J7as2DWk4GezAWhlktfDyeD/dK6CgJEIbbN
+         wIhfXFoKb01aRz/MqgH935aT7YFB62W9vR6+vItujJ46Xx3B2uB+lmnwwIz/fTDQtLDp
+         Vt+ojMH7s8X7RPeGMUflrCBqlcae9924UZ1g1+7rzpFoKjn1FQyQDIRtVUIIUltnOZgC
+         FHDA==
+X-Gm-Message-State: ANhLgQ3vnjvpXY5qgpOUCEOFbNVrzMNCoE4Q0mguxpHgsFdxlF+4rKfa
+        8F2HSYnMTj1BU8hdQtE3pcPXJdV6v2qPPFunLkI=
+X-Google-Smtp-Source: ADFU+vuRxcVQqrNQ1rcgp2AHTCcu8O+sIFjAV0TJJufwUjtHxTvgNICylpCPd5Cti6OXMGvLNOu3h+pL6p4pG8OD2ow=
+X-Received: by 2002:a25:abad:: with SMTP id v42mr9906078ybi.375.1585186641634;
+ Wed, 25 Mar 2020 18:37:21 -0700 (PDT)
+MIME-Version: 1.0
+References: <1585159997-115196-1-git-send-email-longli@linuxonhyperv.com>
+ <CAKywueQWcjWP7FNG0y-gGOSV5S1kSKJfWpspwXVzY9S2oHh+zQ@mail.gmail.com> <BN8PR21MB1155747496EDA5197AA3240DCECE0@BN8PR21MB1155.namprd21.prod.outlook.com>
+In-Reply-To: <BN8PR21MB1155747496EDA5197AA3240DCECE0@BN8PR21MB1155.namprd21.prod.outlook.com>
+From:   Steve French <smfrench@gmail.com>
+Date:   Wed, 25 Mar 2020 20:37:10 -0500
+Message-ID: <CAH2r5ms5uPQtvkhCrDyL=gq3o_jQJXGkp-dCRO61YWis_v3EGA@mail.gmail.com>
+Subject: Re: [PATCH] cifs: Remove locking in smb2_verify_signature() when
+ calculating SMB2/SMB3 signature on receiving packets
+To:     Long Li <longli@microsoft.com>
+Cc:     Pavel Shilovsky <piastryyy@gmail.com>,
+        Steve French <sfrench@samba.org>,
+        linux-cifs <linux-cifs@vger.kernel.org>,
+        samba-technical <samba-technical@lists.samba.org>,
+        Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Wonder if we should add a separate documentation patch to cifsglob.h
+to extend the descriptions of what the various locks and semaphores
+are supposed to protect to include what you noticed?  See below
 
-On Mon,  2 Mar 2020 23:50:30 -0500
-Mingbo Zhang <whensungoes@gmail.com> wrote:
+ *  Locking notes.  All updates to global variables and lists should be
+ *                  protected by spinlocks or semaphores.
+ *
+ *  Spinlocks
+ *  ---------
+ *  GlobalMid_Lock protects:
+ *      list operations on pending_mid_q and oplockQ
+ *      updates to XID counters, multiplex id  and SMB sequence numbers
+ *      list operations on global DnotifyReqList
+ *  tcp_ses_lock protects:
+ *      list operations on tcp and SMB session lists
+ *  tcon->open_file_lock protects the list of open files hanging off the tc=
+on
+ *  inode->open_file_lock protects the openFileList hanging off the inode
+ *  cfile->file_info_lock protects counters and fields in cifs file struct
+ *  f_owner.lock protects certain per file struct operations
+ *  mapping->page_lock protects certain per page operations
+ *
+ *  Note that the cifs_tcon.open_file_lock should be taken before
+ *  not after the cifsInodeInfo.open_file_lock
+ *
+ *  Semaphores
+ *  ----------
+ *  sesSem     operations on smb session
+ *  tconSem    operations on tree connection
+ *  fh_sem      file handle reconnection operations
 
-> Intel CET instructions are not described in the Intel SDM. When trying to
-> get the instruction length, the following instructions get wrong (missing
-> ModR/M byte).
-> 
-> RDSSPD r32
-> RSDDPQ r64
-> ENDBR32
-> ENDBR64
-> WRSSD r/m32, r32
-> WRSSQ r/m64, r64
-> 
-> RDSSPD/Q and ENDBR32/64 use the same opcode (f3 0f 1e) slot, which is
-> described in SDM as Reserved-NOP with no encoding characters, and got an
-> empty slot in the opcode map. WRSSD/Q (0f 38 f6) also got an empty slot.
-> 
+On Wed, Mar 25, 2020 at 6:30 PM Long Li <longli@microsoft.com> wrote:
+>
+> >Subject: Re: [PATCH] cifs: Remove locking in smb2_verify_signature() whe=
+n
+> >calculating SMB2/SMB3 signature on receiving packets
+> >
+> >=D1=81=D1=80, 25 =D0=BC=D0=B0=D1=80. 2020 =D0=B3. =D0=B2 11:15, <longli@=
+linuxonhyperv.com>:
+> >>
+> >> From: Long Li <longli@microsoft.com>
+> >>
+> >> On the sending and receiving paths, CIFS uses the same cypto data
+> >> structures to calculate SMB2/SMB3 packet signatures. A lock on the
+> >> receiving path is necessary to control shared access to crypto data
+> >> structures. This lock degrades performance because it races with the
+> >sending path.
+> >>
+> >> Define separate crypto data structures for sending and receiving paths
+> >> and remove this lock.
+> >>
+> >> Signed-off-by: Long Li <longli@microsoft.com>
+> >> ---
+> >>  fs/cifs/cifsencrypt.c   |  29 +++++----
+> >>  fs/cifs/cifsglob.h      |  21 +++++--
+> >>  fs/cifs/smb2proto.h     |   4 +-
+> >>  fs/cifs/smb2transport.c | 130
+> >> +++++++++++++++++++++++++---------------
+> >>  4 files changed, 119 insertions(+), 65 deletions(-)
+> >>
+> >> diff --git a/fs/cifs/cifsencrypt.c b/fs/cifs/cifsencrypt.c index
+> >> 97b7497c13ef..222e8d13302c 100644
+> >> --- a/fs/cifs/cifsencrypt.c
+> >> +++ b/fs/cifs/cifsencrypt.c
+> >> @@ -804,16 +804,27 @@ calc_seckey(struct cifs_ses *ses)  void
+> >> cifs_crypto_secmech_release(struct TCP_Server_Info *server)  {
+> >> -       if (server->secmech.cmacaes) {
+> >> -               crypto_free_shash(server->secmech.cmacaes);
+> >> -               server->secmech.cmacaes =3D NULL;
+> >> -       }
+> >> +       int i;
+> >> +
+> >> +       for (i =3D CIFS_SECMECH_DIR_IN; i < CIFS_SECMECH_DIR_MAX; i++)=
+ {
+> >> +               if (server->secmech.cmacaes[i]) {
+> >> +                       crypto_free_shash(server->secmech.cmacaes[i]);
+> >> +                       server->secmech.cmacaes[i] =3D NULL;
+> >> +               }
+> >>
+> >> -       if (server->secmech.hmacsha256) {
+> >> -               crypto_free_shash(server->secmech.hmacsha256);
+> >> -               server->secmech.hmacsha256 =3D NULL;
+> >> +               if (server->secmech.hmacsha256[i]) {
+> >> +                       crypto_free_shash(server->secmech.hmacsha256[i=
+]);
+> >> +                       server->secmech.hmacsha256[i] =3D NULL;
+> >> +               }
+> >> +
+> >> +               kfree(server->secmech.sdesccmacaes[i]);
+> >> +               server->secmech.sdesccmacaes[i] =3D NULL;
+> >> +
+> >> +               kfree(server->secmech.sdeschmacsha256[i]);
+> >> +               server->secmech.sdeschmacsha256[i] =3D NULL;
+> >>         }
+> >>
+> >> +
+> >>         if (server->secmech.md5) {
+> >>                 crypto_free_shash(server->secmech.md5);
+> >>                 server->secmech.md5 =3D NULL; @@ -839,10 +850,6 @@
+> >> cifs_crypto_secmech_release(struct TCP_Server_Info *server)
+> >>                 server->secmech.ccmaesdecrypt =3D NULL;
+> >>         }
+> >>
+> >> -       kfree(server->secmech.sdesccmacaes);
+> >> -       server->secmech.sdesccmacaes =3D NULL;
+> >> -       kfree(server->secmech.sdeschmacsha256);
+> >> -       server->secmech.sdeschmacsha256 =3D NULL;
+> >>         kfree(server->secmech.sdeschmacmd5);
+> >>         server->secmech.sdeschmacmd5 =3D NULL;
+> >>         kfree(server->secmech.sdescmd5); diff --git
+> >> a/fs/cifs/cifsglob.h b/fs/cifs/cifsglob.h index
+> >> 0d956360e984..e31a902ebadc 100644
+> >> --- a/fs/cifs/cifsglob.h
+> >> +++ b/fs/cifs/cifsglob.h
+> >> @@ -137,17 +137,27 @@ struct sdesc {
+> >>         char ctx[];
+> >>  };
+> >>
+> >> +enum {
+> >> +       CIFS_SECMECH_DIR_IN =3D 0,
+> >> +       CIFS_SECMECH_DIR_OUT,
+> >> +       CIFS_SECMECH_DIR_MAX
+> >> +};
+> >> +
+> >>  /* crypto hashing related structure/fields, not specific to a sec
+> >> mech */  struct cifs_secmech {
+> >>         struct crypto_shash *hmacmd5; /* hmac-md5 hash function */
+> >>         struct crypto_shash *md5; /* md5 hash function */
+> >> -       struct crypto_shash *hmacsha256; /* hmac-sha256 hash function =
+*/
+> >> -       struct crypto_shash *cmacaes; /* block-cipher based MAC functi=
+on */
+> >> +       /* hmac-sha256 hash functions */
+> >> +       struct crypto_shash *hmacsha256[CIFS_SECMECH_DIR_MAX];
+> >> +       /* block-cipher based MAC function */
+> >> +       struct crypto_shash *cmacaes[CIFS_SECMECH_DIR_MAX];
+> >>         struct crypto_shash *sha512; /* sha512 hash function */
+> >>         struct sdesc *sdeschmacmd5;  /* ctxt to generate ntlmv2 hash, =
+CR1 */
+> >>         struct sdesc *sdescmd5; /* ctxt to generate cifs/smb signature=
+ */
+> >> -       struct sdesc *sdeschmacsha256;  /* ctxt to generate smb2 signa=
+ture */
+> >> -       struct sdesc *sdesccmacaes;  /* ctxt to generate smb3 signatur=
+e */
+> >> +       /* ctxt to generate smb2 signature */
+> >> +       struct sdesc *sdeschmacsha256[CIFS_SECMECH_DIR_MAX];
+> >> +       /* ctxt to generate smb3 signature */
+> >> +       struct sdesc *sdesccmacaes[CIFS_SECMECH_DIR_MAX];
+> >>         struct sdesc *sdescsha512; /* ctxt to generate smb3.11 signing=
+ key */
+> >>         struct crypto_aead *ccmaesencrypt; /* smb3 encryption aead */
+> >>         struct crypto_aead *ccmaesdecrypt; /* smb3 decryption aead */
+> >> @@ -426,7 +436,8 @@ struct smb_version_operations {
+> >>         /* generate new lease key */
+> >>         void (*new_lease_key)(struct cifs_fid *);
+> >>         int (*generate_signingkey)(struct cifs_ses *);
+> >> -       int (*calc_signature)(struct smb_rqst *, struct TCP_Server_Inf=
+o *);
+> >> +       int (*calc_signature)(struct smb_rqst *, struct TCP_Server_Inf=
+o *,
+> >> +                             int direction);
+> >>         int (*set_integrity)(const unsigned int, struct cifs_tcon *tco=
+n,
+> >>                              struct cifsFileInfo *src_file);
+> >>         int (*enum_snapshots)(const unsigned int xid, struct cifs_tcon
+> >> *tcon, diff --git a/fs/cifs/smb2proto.h b/fs/cifs/smb2proto.h index
+> >> 4d1ff7b66fdc..f5edd6ea3639 100644
+> >> --- a/fs/cifs/smb2proto.h
+> >> +++ b/fs/cifs/smb2proto.h
+> >> @@ -55,9 +55,9 @@ extern struct cifs_ses *smb2_find_smb_ses(struct
+> >> TCP_Server_Info *server,  extern struct cifs_tcon
+> >*smb2_find_smb_tcon(struct TCP_Server_Info *server,
+> >>                                                 __u64 ses_id, __u32
+> >> tid);  extern int smb2_calc_signature(struct smb_rqst *rqst,
+> >> -                               struct TCP_Server_Info *server);
+> >> +                               struct TCP_Server_Info *server, int
+> >> + direction);
+> >>  extern int smb3_calc_signature(struct smb_rqst *rqst,
+> >> -                               struct TCP_Server_Info *server);
+> >> +                               struct TCP_Server_Info *server, int
+> >> + direction);
+> >>  extern void smb2_echo_request(struct work_struct *work);  extern
+> >> __le32 smb2_get_lease_state(struct cifsInodeInfo *cinode);  extern
+> >> bool smb2_is_valid_oplock_break(char *buffer, diff --git
+> >> a/fs/cifs/smb2transport.c b/fs/cifs/smb2transport.c index
+> >> 08b703b7a15e..c8ba40d8fedf 100644
+> >> --- a/fs/cifs/smb2transport.c
+> >> +++ b/fs/cifs/smb2transport.c
+> >> @@ -43,30 +43,51 @@
+> >>  static int
+> >>  smb2_crypto_shash_allocate(struct TCP_Server_Info *server)  {
+> >> -       return cifs_alloc_hash("hmac(sha256)",
+> >> -                              &server->secmech.hmacsha256,
+> >> -                              &server->secmech.sdeschmacsha256);
+> >> +       int i, rc;
+> >> +
+> >> +       for (i =3D CIFS_SECMECH_DIR_IN; i < CIFS_SECMECH_DIR_MAX; i++)=
+ {
+> >> +               rc =3D cifs_alloc_hash("hmac(sha256)",
+> >> +                              &server->secmech.hmacsha256[i],
+> >> +                              &server->secmech.sdeschmacsha256[i]);
+> >> +               if (rc)
+> >> +                       goto fail;
+> >> +       }
+> >> +       return 0;
+> >> +
+> >> +fail:
+> >> +       for (i =3D CIFS_SECMECH_DIR_IN; i < CIFS_SECMECH_DIR_MAX; i++)
+> >> +               cifs_free_hash(
+> >> +                      &server->secmech.hmacsha256[i],
+> >> +                      &server->secmech.sdeschmacsha256[i]);
+> >> +       return rc;
+> >>  }
+> >>
+> >>  static int
+> >>  smb3_crypto_shash_allocate(struct TCP_Server_Info *server)  {
+> >>         struct cifs_secmech *p =3D &server->secmech;
+> >> -       int rc;
+> >> +       int i, rc;
+> >>
+> >> -       rc =3D cifs_alloc_hash("hmac(sha256)",
+> >> -                            &p->hmacsha256,
+> >> -                            &p->sdeschmacsha256);
+> >> -       if (rc)
+> >> -               goto err;
+> >> +       for (i =3D CIFS_SECMECH_DIR_IN; i < CIFS_SECMECH_DIR_MAX; i++)=
+ {
+> >> +               rc =3D cifs_alloc_hash("hmac(sha256)",
+> >> +                            &p->hmacsha256[i],
+> >> +                            &p->sdeschmacsha256[i]);
+> >> +               if (rc)
+> >> +                       goto fail;
+> >>
+> >> -       rc =3D cifs_alloc_hash("cmac(aes)", &p->cmacaes, &p->sdesccmac=
+aes);
+> >> -       if (rc)
+> >> -               goto err;
+> >> +               rc =3D cifs_alloc_hash("cmac(aes)",
+> >> +                       &p->cmacaes[i], &p->sdesccmacaes[i]);
+> >>
+> >> +               if (rc)
+> >> +                       goto fail;
+> >> +       }
+> >>         return 0;
+> >> -err:
+> >> -       cifs_free_hash(&p->hmacsha256, &p->sdeschmacsha256);
+> >> +
+> >> +fail:
+> >> +       for (i =3D CIFS_SECMECH_DIR_IN; i < CIFS_SECMECH_DIR_MAX; i++)=
+ {
+> >> +               cifs_free_hash(&p->hmacsha256[i], &p->sdeschmacsha256[=
+i]);
+> >> +               cifs_free_hash(&p->cmacaes[i], &p->sdesccmacaes[i]);
+> >> +       }
+> >>         return rc;
+> >>  }
+> >>
+> >> @@ -74,27 +95,32 @@ int
+> >>  smb311_crypto_shash_allocate(struct TCP_Server_Info *server)
+> >>  {
+> >>         struct cifs_secmech *p =3D &server->secmech;
+> >> -       int rc =3D 0;
+> >> +       int i, rc =3D 0;
+> >>
+> >> -       rc =3D cifs_alloc_hash("hmac(sha256)",
+> >> -                            &p->hmacsha256,
+> >> -                            &p->sdeschmacsha256);
+> >> -       if (rc)
+> >> -               return rc;
+> >> +       for (i =3D CIFS_SECMECH_DIR_IN; i < CIFS_SECMECH_DIR_MAX; i++)=
+ {
+> >> +               rc =3D cifs_alloc_hash("hmac(sha256)",
+> >> +                            &p->hmacsha256[i],
+> >> +                            &p->sdeschmacsha256[i]);
+> >> +               if (rc)
+> >> +                       goto fail;
+> >>
+> >> -       rc =3D cifs_alloc_hash("cmac(aes)", &p->cmacaes, &p->sdesccmac=
+aes);
+> >> -       if (rc)
+> >> -               goto err;
+> >> +               rc =3D cifs_alloc_hash("cmac(aes)",
+> >> +                       &p->cmacaes[i], &p->sdesccmacaes[i]);
+> >> +               if (rc)
+> >> +                       goto fail;
+> >> +       }
+> >>
+> >>         rc =3D cifs_alloc_hash("sha512", &p->sha512, &p->sdescsha512);
+> >>         if (rc)
+> >> -               goto err;
+> >> +               goto fail;
+> >>
+> >>         return 0;
+> >>
+> >> -err:
+> >> -       cifs_free_hash(&p->cmacaes, &p->sdesccmacaes);
+> >> -       cifs_free_hash(&p->hmacsha256, &p->sdeschmacsha256);
+> >> +fail:
+> >> +       for (i =3D CIFS_SECMECH_DIR_IN; i < CIFS_SECMECH_DIR_MAX; i++)=
+ {
+> >> +               cifs_free_hash(&p->hmacsha256[i], &p->sdeschmacsha256[=
+i]);
+> >> +               cifs_free_hash(&p->cmacaes[i], &p->sdesccmacaes[i]);
+> >> +       }
+> >>         return rc;
+> >>  }
+> >>
+> >> @@ -219,7 +245,8 @@ smb2_find_smb_tcon(struct TCP_Server_Info
+> >*server, __u64 ses_id, __u32  tid)
+> >>  }
+> >>
+> >>  int
+> >> -smb2_calc_signature(struct smb_rqst *rqst, struct TCP_Server_Info
+> >*server)
+> >> +smb2_calc_signature(struct smb_rqst *rqst, struct TCP_Server_Info
+> >*server,
+> >> +                   int direction)
+> >>  {
+> >>         int rc;
+> >>         unsigned char smb2_signature[SMB2_HMACSHA256_SIZE];
+> >> @@ -229,6 +256,7 @@ smb2_calc_signature(struct smb_rqst *rqst, struct
+> >TCP_Server_Info *server)
+> >>         struct cifs_ses *ses;
+> >>         struct shash_desc *shash;
+> >>         struct smb_rqst drqst;
+> >> +       struct crypto_shash *hmacsha256;
+> >>
+> >>         ses =3D smb2_find_smb_ses(server, shdr->SessionId);
+> >>         if (!ses) {
+> >> @@ -245,14 +273,16 @@ smb2_calc_signature(struct smb_rqst *rqst, struc=
+t
+> >TCP_Server_Info *server)
+> >>                 return rc;
+> >>         }
+> >>
+> >> -       rc =3D crypto_shash_setkey(server->secmech.hmacsha256,
+> >> +       hmacsha256 =3D server->secmech.hmacsha256[direction];
+> >> +
+> >> +       rc =3D crypto_shash_setkey(hmacsha256,
+> >>                                  ses->auth_key.response, SMB2_NTLMV2_S=
+ESSKEY_SIZE);
+> >>         if (rc) {
+> >>                 cifs_server_dbg(VFS, "%s: Could not update with respon=
+se\n",
+> >__func__);
+> >>                 return rc;
+> >>         }
+> >>
+> >> -       shash =3D &server->secmech.sdeschmacsha256->shash;
+> >> +       shash =3D &server->secmech.sdeschmacsha256[direction]->shash;
+> >>         rc =3D crypto_shash_init(shash);
+> >>         if (rc) {
+> >>                 cifs_server_dbg(VFS, "%s: Could not init sha256", __fu=
+nc__);
+> >> @@ -296,6 +326,8 @@ static int generate_key(struct cifs_ses *ses, stru=
+ct
+> >kvec label,
+> >>         unsigned char prfhash[SMB2_HMACSHA256_SIZE];
+> >>         unsigned char *hashptr =3D prfhash;
+> >>         struct TCP_Server_Info *server =3D ses->server;
+> >> +       struct crypto_shash *hmacsha256;
+> >> +       struct sdesc *sdeschmacsha256;
+> >>
+> >>         memset(prfhash, 0x0, SMB2_HMACSHA256_SIZE);
+> >>         memset(key, 0x0, key_size);
+> >> @@ -306,55 +338,58 @@ static int generate_key(struct cifs_ses *ses, st=
+ruct
+> >kvec label,
+> >>                 goto smb3signkey_ret;
+> >>         }
+> >>
+> >> -       rc =3D crypto_shash_setkey(server->secmech.hmacsha256,
+> >> +       hmacsha256 =3D server-
+> >>secmech.hmacsha256[CIFS_SECMECH_DIR_OUT];
+> >> +       sdeschmacsha256 =3D server-
+> >>secmech.sdeschmacsha256[CIFS_SECMECH_DIR_OUT];
+> >> +
+> >> +       rc =3D crypto_shash_setkey(hmacsha256,
+> >>                 ses->auth_key.response, SMB2_NTLMV2_SESSKEY_SIZE);
+> >>         if (rc) {
+> >>                 cifs_server_dbg(VFS, "%s: Could not set with session k=
+ey\n",
+> >__func__);
+> >>                 goto smb3signkey_ret;
+> >>         }
+> >>
+> >> -       rc =3D crypto_shash_init(&server->secmech.sdeschmacsha256->sha=
+sh);
+> >> +       rc =3D crypto_shash_init(&sdeschmacsha256->shash);
+> >>         if (rc) {
+> >>                 cifs_server_dbg(VFS, "%s: Could not init sign hmac\n",=
+ __func__);
+> >>                 goto smb3signkey_ret;
+> >>         }
+> >>
+> >> -       rc =3D crypto_shash_update(&server->secmech.sdeschmacsha256-
+> >>shash,
+> >> +       rc =3D crypto_shash_update(&sdeschmacsha256->shash,
+> >>                                 i, 4);
+> >>         if (rc) {
+> >>                 cifs_server_dbg(VFS, "%s: Could not update with n\n", =
+__func__);
+> >>                 goto smb3signkey_ret;
+> >>         }
+> >>
+> >> -       rc =3D crypto_shash_update(&server->secmech.sdeschmacsha256-
+> >>shash,
+> >> +       rc =3D crypto_shash_update(&sdeschmacsha256->shash,
+> >>                                 label.iov_base, label.iov_len);
+> >>         if (rc) {
+> >>                 cifs_server_dbg(VFS, "%s: Could not update with label\=
+n",
+> >__func__);
+> >>                 goto smb3signkey_ret;
+> >>         }
+> >>
+> >> -       rc =3D crypto_shash_update(&server->secmech.sdeschmacsha256-
+> >>shash,
+> >> +       rc =3D crypto_shash_update(&sdeschmacsha256->shash,
+> >>                                 &zero, 1);
+> >>         if (rc) {
+> >>                 cifs_server_dbg(VFS, "%s: Could not update with zero\n=
+",
+> >__func__);
+> >>                 goto smb3signkey_ret;
+> >>         }
+> >>
+> >> -       rc =3D crypto_shash_update(&server->secmech.sdeschmacsha256-
+> >>shash,
+> >> +       rc =3D crypto_shash_update(&sdeschmacsha256->shash,
+> >>                                 context.iov_base, context.iov_len);
+> >>         if (rc) {
+> >>                 cifs_server_dbg(VFS, "%s: Could not update with contex=
+t\n",
+> >__func__);
+> >>                 goto smb3signkey_ret;
+> >>         }
+> >>
+> >> -       rc =3D crypto_shash_update(&server->secmech.sdeschmacsha256-
+> >>shash,
+> >> +       rc =3D crypto_shash_update(&sdeschmacsha256->shash,
+> >>                                 L, 4);
+> >>         if (rc) {
+> >>                 cifs_server_dbg(VFS, "%s: Could not update with L\n", =
+__func__);
+> >>                 goto smb3signkey_ret;
+> >>         }
+> >>
+> >> -       rc =3D crypto_shash_final(&server->secmech.sdeschmacsha256->sh=
+ash,
+> >> +       rc =3D crypto_shash_final(&sdeschmacsha256->shash,
+> >>                                 hashptr);
+> >>         if (rc) {
+> >>                 cifs_server_dbg(VFS, "%s: Could not generate sha256 ha=
+sh\n",
+> >__func__);
+> >> @@ -504,16 +539,18 @@ generate_smb311signingkey(struct cifs_ses *ses)
+> >>  }
+> >>
+> >>  int
+> >> -smb3_calc_signature(struct smb_rqst *rqst, struct TCP_Server_Info
+> >*server)
+> >> +smb3_calc_signature(struct smb_rqst *rqst, struct TCP_Server_Info
+> >*server,
+> >> +                   int direction)
+> >>  {
+> >>         int rc;
+> >>         unsigned char smb3_signature[SMB2_CMACAES_SIZE];
+> >>         unsigned char *sigptr =3D smb3_signature;
+> >>         struct kvec *iov =3D rqst->rq_iov;
+> >>         struct smb2_sync_hdr *shdr =3D (struct smb2_sync_hdr *)iov[0].=
+iov_base;
+> >> -       struct shash_desc *shash =3D &server->secmech.sdesccmacaes->sh=
+ash;
+> >> +       struct shash_desc *shash;
+> >>         struct smb_rqst drqst;
+> >>         u8 key[SMB3_SIGN_KEY_SIZE];
+> >> +       struct crypto_shash *cmacaes;
+> >>
+> >>         rc =3D smb2_get_sign_key(shdr->SessionId, server, key);
+> >>         if (rc)
+> >> @@ -522,8 +559,10 @@ smb3_calc_signature(struct smb_rqst *rqst, struct
+> >TCP_Server_Info *server)
+> >>         memset(smb3_signature, 0x0, SMB2_CMACAES_SIZE);
+> >>         memset(shdr->Signature, 0x0, SMB2_SIGNATURE_SIZE);
+> >>
+> >> -       rc =3D crypto_shash_setkey(server->secmech.cmacaes,
+> >> -                                key, SMB2_CMACAES_SIZE);
+> >> +       cmacaes =3D server->secmech.cmacaes[direction];
+> >> +       shash =3D &server->secmech.sdesccmacaes[direction]->shash;
+> >> +
+> >> +       rc =3D crypto_shash_setkey(cmacaes, key, SMB2_CMACAES_SIZE);
+> >>         if (rc) {
+> >>                 cifs_server_dbg(VFS, "%s: Could not set key for cmac a=
+es\n",
+> >__func__);
+> >>                 return rc;
+> >> @@ -593,8 +632,7 @@ smb2_sign_rqst(struct smb_rqst *rqst, struct
+> >TCP_Server_Info *server)
+> >>                 return 0;
+> >>         }
+> >>
+> >> -       rc =3D server->ops->calc_signature(rqst, server);
+> >> -
+> >> +       rc =3D server->ops->calc_signature(rqst, server,
+> >CIFS_SECMECH_DIR_OUT);
+> >>         return rc;
+> >>  }
+> >>
+> >> @@ -631,9 +669,7 @@ smb2_verify_signature(struct smb_rqst *rqst, struc=
+t
+> >TCP_Server_Info *server)
+> >>
+> >>         memset(shdr->Signature, 0, SMB2_SIGNATURE_SIZE);
+> >>
+> >> -       mutex_lock(&server->srv_mutex);
+> >> -       rc =3D server->ops->calc_signature(rqst, server);
+> >> -       mutex_unlock(&server->srv_mutex);
+> >> +       rc =3D server->ops->calc_signature(rqst, server, CIFS_SECMECH_=
+DIR_IN);
+> >
+> >Multiple threads may be calling smb2_verify_signature from
+> >smb2_check_receive in separate threads (see compound_send_recv). What
+> >will prevent races on crypto data structures once the mutex around
+> >calc_signature is removed?
+>
+> It's my bad I will fix it. In this case we need another mutex for the rec=
+eiving paths. I was looking at smb2_writev_callback() and smb2_readv_callba=
+ck(), they are called from cifsd and also use this mutex. This mutex does t=
+he most damage in those two callback functions as it may block the receivin=
+g thread.
+>
+> Thanks,
+> Long
+>
+> >
+> >--
+> >Best regards,
+> >Pavel Shilovsky
 
-This looks good to me. BTW, wouldn't we need to add decode test cases to perf?
-
-Acked-by: Masami Hiramatsu <mhiramat@kernel.org>
-
-Thank you,
-
-> Signed-off-by: Mingbo Zhang <whensungoes@gmail.com>
-> ---
->  arch/x86/lib/x86-opcode-map.txt       | 4 ++--
->  tools/arch/x86/lib/x86-opcode-map.txt | 4 ++--
->  2 files changed, 4 insertions(+), 4 deletions(-)
-> 
-> diff --git a/arch/x86/lib/x86-opcode-map.txt b/arch/x86/lib/x86-opcode-map.txt
-> index 53adc1762ec0..0e3434c882d4 100644
-> --- a/arch/x86/lib/x86-opcode-map.txt
-> +++ b/arch/x86/lib/x86-opcode-map.txt
-> @@ -366,7 +366,7 @@ AVXcode: 1
->  1b: BNDCN Gv,Ev (F2) | BNDMOV Ev,Gv (66) | BNDMK Gv,Ev (F3) | BNDSTX Ev,Gv
->  1c: Grp20 (1A),(1C)
->  1d:
-> -1e:
-> +1e: NOP Gy,Gy
->  1f: NOP Ev
->  # 0x0f 0x20-0x2f
->  20: MOV Rd,Cd
-> @@ -804,7 +804,7 @@ f1: MOVBE My,Gy | MOVBE Mw,Gw (66) | CRC32 Gd,Ey (F2) | CRC32 Gd,Ew (66&F2)
->  f2: ANDN Gy,By,Ey (v)
->  f3: Grp17 (1A)
->  f5: BZHI Gy,Ey,By (v) | PEXT Gy,By,Ey (F3),(v) | PDEP Gy,By,Ey (F2),(v)
-> -f6: ADCX Gy,Ey (66) | ADOX Gy,Ey (F3) | MULX By,Gy,rDX,Ey (F2),(v)
-> +f6: NOP Ey,Gy | ADCX Gy,Ey (66) | ADOX Gy,Ey (F3) | MULX By,Gy,rDX,Ey (F2),(v)
->  f7: BEXTR Gy,Ey,By (v) | SHLX Gy,Ey,By (66),(v) | SARX Gy,Ey,By (F3),(v) | SHRX Gy,Ey,By (F2),(v)
->  f8: MOVDIR64B Gv,Mdqq (66) | ENQCMD Gv,Mdqq (F2) | ENQCMDS Gv,Mdqq (F3)
->  f9: MOVDIRI My,Gy
-> diff --git a/tools/arch/x86/lib/x86-opcode-map.txt b/tools/arch/x86/lib/x86-opcode-map.txt
-> index 53adc1762ec0..0e3434c882d4 100644
-> --- a/tools/arch/x86/lib/x86-opcode-map.txt
-> +++ b/tools/arch/x86/lib/x86-opcode-map.txt
-> @@ -366,7 +366,7 @@ AVXcode: 1
->  1b: BNDCN Gv,Ev (F2) | BNDMOV Ev,Gv (66) | BNDMK Gv,Ev (F3) | BNDSTX Ev,Gv
->  1c: Grp20 (1A),(1C)
->  1d:
-> -1e:
-> +1e: NOP Gy,Gy
->  1f: NOP Ev
->  # 0x0f 0x20-0x2f
->  20: MOV Rd,Cd
-> @@ -804,7 +804,7 @@ f1: MOVBE My,Gy | MOVBE Mw,Gw (66) | CRC32 Gd,Ey (F2) | CRC32 Gd,Ew (66&F2)
->  f2: ANDN Gy,By,Ey (v)
->  f3: Grp17 (1A)
->  f5: BZHI Gy,Ey,By (v) | PEXT Gy,By,Ey (F3),(v) | PDEP Gy,By,Ey (F2),(v)
-> -f6: ADCX Gy,Ey (66) | ADOX Gy,Ey (F3) | MULX By,Gy,rDX,Ey (F2),(v)
-> +f6: NOP Ey,Gy | ADCX Gy,Ey (66) | ADOX Gy,Ey (F3) | MULX By,Gy,rDX,Ey (F2),(v)
->  f7: BEXTR Gy,Ey,By (v) | SHLX Gy,Ey,By (66),(v) | SARX Gy,Ey,By (F3),(v) | SHRX Gy,Ey,By (F2),(v)
->  f8: MOVDIR64B Gv,Mdqq (66) | ENQCMD Gv,Mdqq (F2) | ENQCMDS Gv,Mdqq (F3)
->  f9: MOVDIRI My,Gy
-> -- 
-> 2.25.1
-> 
 
 
--- 
-Masami Hiramatsu <mhiramat@kernel.org>
+--=20
+Thanks,
+
+Steve
