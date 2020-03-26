@@ -4,52 +4,57 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08D24C43331
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 23:27:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7644CC43331
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 23:27:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C9FE32166E
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 23:27:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 446FA20409
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 23:27:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585265236;
-	bh=/goPzz2R3pqZymlF12iwtFtxFrNXV6WN8JXwYotH5fY=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=b97cFAVlFNJY4MW4skfALsFDEMci5UtAoW8kVf1sJaCsz4W5tP3IOM0FhLVg4uWXu
-	 4F+doNYdR/pknNApdFYYXavR7aBoqZjtT3sJxrU/nJaNqMBof0WShl7HNSapHLS1qK
-	 EZdPBve893smSjYMuoaYxLjgeU9B5UznFGO2Iptc=
+	s=default; t=1585265239;
+	bh=TOlzQZqFBlXXk6vVW3nEQ7OnPHurudRh2uEU+6f1lvY=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=DJIiKJiXFpXTJu1ssQdhmReAUgh3kKxVJAHOn+0lhhqoMWevxJN5ydDLbUkpYE7XE
+	 CA06C6huh2pjC4pArlfz8ebHLiuaUr+QXJu8cAKgzHS1OAruUjpAMhxIOvceBPh/vi
+	 a6EzTWY/RIGlm/CFhBoQcD2fu5Smn/9V2xqE3nkY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728160AbgCZXZC (ORCPT
+        id S1728309AbgCZX1S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 19:25:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45318 "EHLO mail.kernel.org"
+        Thu, 26 Mar 2020 19:27:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45488 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728129AbgCZXY5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 19:24:57 -0400
+        id S1728159AbgCZXZC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Mar 2020 19:25:02 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4602E2077D;
-        Thu, 26 Mar 2020 23:24:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E6ACD21707;
+        Thu, 26 Mar 2020 23:25:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585265097;
-        bh=/goPzz2R3pqZymlF12iwtFtxFrNXV6WN8JXwYotH5fY=;
-        h=From:To:Cc:Subject:Date:From;
-        b=HVS9j65FglQZBxsF/3PRA2w19iqcjP5ar1Yr+ODJaUhU/MWIAeyKB4JlxB/7jQa6h
-         5X65W5D9A/+LK57wUyNZvNn+PFnzrlxfFU7NqxjQX7s+dLFfJnzO0cLcQEzqieIWZt
-         ODcix2TbMvGTTy+mp7alc7BlWzVZ9KEya21wOWDE=
+        s=default; t=1585265101;
+        bh=TOlzQZqFBlXXk6vVW3nEQ7OnPHurudRh2uEU+6f1lvY=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=G1ijmhJ07r5cQ5V+GQ/wAvyxZcHh6HIAZhwPkrjdwomjNwkjWkzbHD7sH5Jcj7xW6
+         Puy0dGqRpoLXBJndQ31urDnH5tP08XE+2qoeioayuuKYd1QiNKFDSIF3TKwhC20rxw
+         M+5RJT+d1eUk+uHgxlYP4evFJegW3AdbJgeFEMAE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jernej Skrabec <jernej.skrabec@siol.net>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+Cc:     Gerd Hoffmann <kraxel@redhat.com>,
+        =?UTF-8?q?Marek=20Marczykowski-G=C3=B3recki?= 
+        <marmarek@invisiblethingslab.com>, Sam Ravnborg <sam@ravnborg.org>,
         Sasha Levin <sashal@kernel.org>,
+        virtualization@lists.linux-foundation.org,
         dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 4.19 01/15] drm/bridge: dw-hdmi: fix AVI frame colorimetry
-Date:   Thu, 26 Mar 2020 19:24:41 -0400
-Message-Id: <20200326232455.8029-1-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 05/15] drm/bochs: downgrade pci_request_region failure from error to warning
+Date:   Thu, 26 Mar 2020 19:24:45 -0400
+Message-Id: <20200326232455.8029-5-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200326232455.8029-1-sashal@kernel.org>
+References: <20200326232455.8029-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -58,81 +63,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jernej Skrabec <jernej.skrabec@siol.net>
+From: Gerd Hoffmann <kraxel@redhat.com>
 
-[ Upstream commit e8dca30f7118461d47e1c3510d0e31b277439151 ]
+[ Upstream commit 8c34cd1a7f089dc03933289c5d4a4d1489549828 ]
 
-CTA-861-F explicitly states that for RGB colorspace colorimetry should
-be set to "none". Fix that.
+Shutdown of firmware framebuffer has a bunch of problems.  Because
+of this the framebuffer region might still be reserved even after
+drm_fb_helper_remove_conflicting_pci_framebuffers() returned.
 
-Acked-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Fixes: def23aa7e982 ("drm: bridge: dw-hdmi: Switch to V4L bus format and encodings")
-Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
-Link: https://patchwork.freedesktop.org/patch/msgid/20200304232512.51616-2-jernej.skrabec@siol.net
+Don't consider pci_request_region() failure for the framebuffer
+region as fatal error to workaround this issue.
+
+Reported-by: Marek Marczykowski-Górecki <marmarek@invisiblethingslab.com>
+Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
+Acked-by: Sam Ravnborg <sam@ravnborg.org>
+Link: http://patchwork.freedesktop.org/patch/msgid/20200313084152.2734-1-kraxel@redhat.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/bridge/synopsys/dw-hdmi.c | 46 +++++++++++++----------
- 1 file changed, 26 insertions(+), 20 deletions(-)
+ drivers/gpu/drm/bochs/bochs_hw.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
-index 2a0a1654d3ce5..6930452a712a8 100644
---- a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
-+++ b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
-@@ -1364,28 +1364,34 @@ static void hdmi_config_AVI(struct dw_hdmi *hdmi, struct drm_display_mode *mode)
- 		frame.colorspace = HDMI_COLORSPACE_RGB;
- 
- 	/* Set up colorimetry */
--	switch (hdmi->hdmi_data.enc_out_encoding) {
--	case V4L2_YCBCR_ENC_601:
--		if (hdmi->hdmi_data.enc_in_encoding == V4L2_YCBCR_ENC_XV601)
--			frame.colorimetry = HDMI_COLORIMETRY_EXTENDED;
--		else
-+	if (!hdmi_bus_fmt_is_rgb(hdmi->hdmi_data.enc_out_bus_format)) {
-+		switch (hdmi->hdmi_data.enc_out_encoding) {
-+		case V4L2_YCBCR_ENC_601:
-+			if (hdmi->hdmi_data.enc_in_encoding == V4L2_YCBCR_ENC_XV601)
-+				frame.colorimetry = HDMI_COLORIMETRY_EXTENDED;
-+			else
-+				frame.colorimetry = HDMI_COLORIMETRY_ITU_601;
-+			frame.extended_colorimetry =
-+					HDMI_EXTENDED_COLORIMETRY_XV_YCC_601;
-+			break;
-+		case V4L2_YCBCR_ENC_709:
-+			if (hdmi->hdmi_data.enc_in_encoding == V4L2_YCBCR_ENC_XV709)
-+				frame.colorimetry = HDMI_COLORIMETRY_EXTENDED;
-+			else
-+				frame.colorimetry = HDMI_COLORIMETRY_ITU_709;
-+			frame.extended_colorimetry =
-+					HDMI_EXTENDED_COLORIMETRY_XV_YCC_709;
-+			break;
-+		default: /* Carries no data */
- 			frame.colorimetry = HDMI_COLORIMETRY_ITU_601;
-+			frame.extended_colorimetry =
-+					HDMI_EXTENDED_COLORIMETRY_XV_YCC_601;
-+			break;
-+		}
-+	} else {
-+		frame.colorimetry = HDMI_COLORIMETRY_NONE;
- 		frame.extended_colorimetry =
--				HDMI_EXTENDED_COLORIMETRY_XV_YCC_601;
--		break;
--	case V4L2_YCBCR_ENC_709:
--		if (hdmi->hdmi_data.enc_in_encoding == V4L2_YCBCR_ENC_XV709)
--			frame.colorimetry = HDMI_COLORIMETRY_EXTENDED;
--		else
--			frame.colorimetry = HDMI_COLORIMETRY_ITU_709;
--		frame.extended_colorimetry =
--				HDMI_EXTENDED_COLORIMETRY_XV_YCC_709;
--		break;
--	default: /* Carries no data */
--		frame.colorimetry = HDMI_COLORIMETRY_ITU_601;
--		frame.extended_colorimetry =
--				HDMI_EXTENDED_COLORIMETRY_XV_YCC_601;
--		break;
-+			HDMI_EXTENDED_COLORIMETRY_XV_YCC_601;
+diff --git a/drivers/gpu/drm/bochs/bochs_hw.c b/drivers/gpu/drm/bochs/bochs_hw.c
+index a39b0343c197d..401c218567af9 100644
+--- a/drivers/gpu/drm/bochs/bochs_hw.c
++++ b/drivers/gpu/drm/bochs/bochs_hw.c
+@@ -97,10 +97,8 @@ int bochs_hw_init(struct drm_device *dev, uint32_t flags)
+ 		size = min(size, mem);
  	}
  
- 	frame.scan_mode = HDMI_SCAN_MODE_NONE;
+-	if (pci_request_region(pdev, 0, "bochs-drm") != 0) {
+-		DRM_ERROR("Cannot request framebuffer\n");
+-		return -EBUSY;
+-	}
++	if (pci_request_region(pdev, 0, "bochs-drm") != 0)
++		DRM_WARN("Cannot request framebuffer, boot fb still active?\n");
+ 
+ 	bochs->fb_map = ioremap(addr, size);
+ 	if (bochs->fb_map == NULL) {
 -- 
 2.20.1
 
