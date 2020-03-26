@@ -2,116 +2,107 @@ Return-Path: <SRS0=aGSP=5L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E545C43331
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 23:26:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 083AEC2D0E7
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 23:26:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E41C020409
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 23:26:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585265180;
-	bh=tzwsrdvVyAJdGHaVeJ3Phb6uQrzA0a9TgoPhr6ftxq4=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=iSESl4mOXr33gBMIpdjQRU25eXCncHWio0d2hapZSJhqQLRZCFaHxivXM69YtdHtj
-	 kE2UPF8cltiJP19Mv9gQHi5VDeA37FZxOyEo6KjLY1ldHn1zwZXuBS/PKiTV7nleMe
-	 ohs8nqFo0Pf3Lolm0DP8Ht+Zp80vBeM7XjwOFc3A=
+	by mail.kernel.org (Postfix) with ESMTP id D406A20774
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 23:26:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="ue1h1Ngs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728479AbgCZX0S (ORCPT
+        id S1728110AbgCZX0U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Thu, 26 Mar 2020 19:26:20 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:45954 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728475AbgCZX0S (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 26 Mar 2020 19:26:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46356 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728304AbgCZXZY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 19:25:24 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 77A4420774;
-        Thu, 26 Mar 2020 23:25:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585265124;
-        bh=tzwsrdvVyAJdGHaVeJ3Phb6uQrzA0a9TgoPhr6ftxq4=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ufmlXkXCGnXicHRqsFsn5EqCIg9L0E8vWaUVqIBK7R0LmfbHNmd50s6ARxNzqRgk5
-         R2+vV9a7qTw5DewkKVYlB19WSusx6vyCSSrkD6RmUl7Yd0y26czaHosqYS9myfVOZg
-         tLzDnKGA+OwP80LmCr6eNVQ7qpAYAqKZsv/nl+A0=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Takashi Iwai <tiwai@suse.de>,
-        syzbot+cce32521ee0a824c21f7@syzkaller.appspotmail.com,
-        Sasha Levin <sashal@kernel.org>, alsa-devel@alsa-project.org
-Subject: [PATCH AUTOSEL 4.14 09/10] ALSA: line6: Fix endless MIDI read loop
-Date:   Thu, 26 Mar 2020 19:25:12 -0400
-Message-Id: <20200326232513.8212-9-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200326232513.8212-1-sashal@kernel.org>
-References: <20200326232513.8212-1-sashal@kernel.org>
+Received: by mail-ed1-f67.google.com with SMTP id u59so8971852edc.12;
+        Thu, 26 Mar 2020 16:26:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=googlemail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=WqZyECE7b3l+/W5cG6aN6aQ7OERbPPJKLPh37gMr4P8=;
+        b=ue1h1NgsTbotQg6qMgEzUEGsjz11gWWWp2SUopj+TH8eOOBmYryxsfc281mZqrloEv
+         P76dythInNUEfdLKgr7SgCfjmFg6sE925yUai/7kD6iygiYW41tOLyueWqE41PZp/QQL
+         FrX5esvWQpq4u2MT/46hJXxhdRYrB5LZG3OXoJRY8UAsN3fhBfF+Mmj+NBCYmBlhXkiB
+         ee9g1chV624ys8iJxZOeJyLMD2lsOpr6uT72VNd2zFkDdFIzEQU1YJ3iJvKiaWZUvhxd
+         8ctYZYkWyFiCfSr/Sev5oQ62jff2k4N93aiamR/xOeC6EwLqNDKHb5/vZDTffrPQMHeA
+         j5uQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=WqZyECE7b3l+/W5cG6aN6aQ7OERbPPJKLPh37gMr4P8=;
+        b=U3mjb2viczXn5UNIInSpTrD1qs9k91EIacNeAUJkp7WtX4zntiHRY6l3t52ujvc8OV
+         orhdResRTti+Qqyf45272qh2ch7IVbvN+DMIwPKn9CDGSLXhUDdLKlbayUCFChHZgbct
+         4FC0Mr9PjGKiVIBRo1UG4eJdUBRbk5yP5pCmV69T/cnW3WhNEjGDgVSi1RQBdYUEnXpt
+         txwEXPs63Tu9wzIzTfbn9Vw37av0HQK233xppehjKikuPaCsQGZvhUN6D+6w6gTswAB2
+         SqBuvdy2WMriX0glb0YCQVOOODOSfxDsj98DT4oMXIWwzMzxPPVFfWvNm5teWMhAJtvY
+         BM5A==
+X-Gm-Message-State: ANhLgQ35dGKMmUkpazLY+aEyggg9KqzaaaJtrySX00jDM/Nuc6MpTQpv
+        PsDIjdzDbPDHJXKtNWgVTO3JjSypHR2I8RfhKsc=
+X-Google-Smtp-Source: ADFU+vszUtR++CH3qXXBapVjGUYTUgP4+oCVQrrF3dM3CXErGyDOKMkYURV1D0IJSRdLQ53DbhvctfJOG7ec6N875qg=
+X-Received: by 2002:a17:906:491:: with SMTP id f17mr162602eja.30.1585265176806;
+ Thu, 26 Mar 2020 16:26:16 -0700 (PDT)
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+References: <20200326134507.4808-1-narmstrong@baylibre.com> <20200326134507.4808-8-narmstrong@baylibre.com>
+In-Reply-To: <20200326134507.4808-8-narmstrong@baylibre.com>
+From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Date:   Fri, 27 Mar 2020 00:26:06 +0100
+Message-ID: <CAFBinCBhk+XvjGODBaNH7tzCfGktYdmk1wED8UC6cYmS3ucbig@mail.gmail.com>
+Subject: Re: [PATCH v2 07/14] usb: dwc3: meson-g12a: refactor usb init
+To:     Neil Armstrong <narmstrong@baylibre.com>
+Cc:     kishon@ti.com, balbi@kernel.org, khilman@baylibre.com,
+        linux-amlogic@lists.infradead.org, linux-usb@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Iwai <tiwai@suse.de>
+Hi Neil,
 
-[ Upstream commit d683469b3c93d7e2afd39e6e1970f24700eb7a68 ]
+On Thu, Mar 26, 2020 at 2:45 PM Neil Armstrong <narmstrong@baylibre.com> wrote:
+[...]
+> -static int dwc3_meson_g12a_usb2_init(struct dwc3_meson_g12a *priv)
+> +static int dwc3_meson_g12a_usb2_init(struct dwc3_meson_g12a *priv,
+> +                                    enum phy_mode mode)
+>  {
+>         int i, ret;
+>
+> -       if (priv->otg_mode == USB_DR_MODE_PERIPHERAL)
+> -               priv->otg_phy_mode = PHY_MODE_USB_DEVICE;
+> -       else
+> -               priv->otg_phy_mode = PHY_MODE_USB_HOST;
+> -
+>         for (i = 0; i < priv->drvdata->num_phys; ++i) {
+>                 if (!priv->phys[i])
+>                         continue;
+> @@ -284,9 +286,10 @@ static void dwc3_meson_g12a_usb3_init(struct dwc3_meson_g12a *priv)
+>                         FIELD_PREP(USB_R1_P30_PCS_TX_SWING_FULL_MASK, 127));
+>  }
+There is something strange with dwc3_meson_g12a_usb2_init.
+enum phy_mode mode is added here but it's not used inside this function
 
-The MIDI input event parser of the LINE6 driver may enter into an
-endless loop when the unexpected data sequence is given, as it tries
-to continue the secondary bytes without termination.  Also, when the
-input data is too short, the parser returns a negative error, while
-the caller doesn't handle it properly.  This would lead to the
-unexpected behavior as well.
+I also think that we should not pass enum phy_mode to
+dwc3_meson_g12a_usb_otg_apply_mode
+I'm aware that the original function used enum phy_mode inside but
+this doesn't seem right:
+we're not configuring a PHY there
+instead we're setting up the OTG switch so I think we should use enum
+usb_role instead
 
-This patch addresses those issues by checking the return value
-correctly and handling the one-byte event in the parser properly.
-
-The bug was reported by syzkaller.
-
-Reported-by: syzbot+cce32521ee0a824c21f7@syzkaller.appspotmail.com
-Cc: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/000000000000033087059f8f8fa3@google.com
-Link: https://lore.kernel.org/r/20200309095922.30269-1-tiwai@suse.de
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- sound/usb/line6/driver.c  | 2 +-
- sound/usb/line6/midibuf.c | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/sound/usb/line6/driver.c b/sound/usb/line6/driver.c
-index b223de3defc4f..bf4eacc53a7d2 100644
---- a/sound/usb/line6/driver.c
-+++ b/sound/usb/line6/driver.c
-@@ -313,7 +313,7 @@ static void line6_data_received(struct urb *urb)
- 				line6_midibuf_read(mb, line6->buffer_message,
- 						LINE6_MIDI_MESSAGE_MAXLEN);
- 
--			if (done == 0)
-+			if (done <= 0)
- 				break;
- 
- 			line6->message_length = done;
-diff --git a/sound/usb/line6/midibuf.c b/sound/usb/line6/midibuf.c
-index 36a610ba342ec..c931d48801ebe 100644
---- a/sound/usb/line6/midibuf.c
-+++ b/sound/usb/line6/midibuf.c
-@@ -163,7 +163,7 @@ int line6_midibuf_read(struct midi_buffer *this, unsigned char *data,
- 			int midi_length_prev =
- 			    midibuf_message_length(this->command_prev);
- 
--			if (midi_length_prev > 0) {
-+			if (midi_length_prev > 1) {
- 				midi_length = midi_length_prev - 1;
- 				repeat = 1;
- 			} else
--- 
-2.20.1
-
+[...]
+not part of this patch but should be:
+there's a still a direct call to dwc3_meson_g12a_usb_init() in
+dwc3_meson_g12a_resume()
+I think that needs to be changed to priv->drvdata->usb_init(priv); as well
