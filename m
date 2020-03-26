@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B6C5C2D0E7
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 23:27:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56CFAC43331
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 23:27:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 247FE20774
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 23:27:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E84620409
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 23:27:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585265248;
-	bh=Y25GVBK9+D3VXi1+RSyrgN73g8LYhaxniIkwT/AEKxg=;
+	s=default; t=1585265251;
+	bh=SZawdQI40sboV8ru38/GjGrBnwBOqz+ZRaoetvhWniA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rdD3nHeeUJtGUsBcFVVmkkkDRNDtydXWHj3LTFbGOGKGr80lRFL6+/YPKy/YrENUv
-	 Dsb9HxpyPFeT+sHgUoviE1UX9+ARt6KgAR1HMWqoKbQs4cdtzpKFYzL2hPk7Fm1l/E
-	 iVwtsAMCqsvV521wN1Gn2eML7Fuudhj3xXWosKIY=
+	b=QCtOjEUtigERP0LRbsGsVBLpHzoqw61OV8mtYleZIA44wsnKpSAeCF+Y3roM0nQlp
+	 WGxI6AIEjA7r6qcbT2TN3IpHb1jjhQ/HKRZBRN6GeZifQ0XBDyyoZsqYIWeiuIS+uf
+	 hBCUSQk34aIRjQq2B6VkR/bk/YsCgttUSsfEdFso=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728132AbgCZXY5 (ORCPT
+        id S1728117AbgCZXY4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 19:24:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45136 "EHLO mail.kernel.org"
+        Thu, 26 Mar 2020 19:24:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45114 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728005AbgCZXYx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 19:24:53 -0400
+        id S1728077AbgCZXYv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Mar 2020 19:24:51 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B40DB21582;
-        Thu, 26 Mar 2020 23:24:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9EEA1214DB;
+        Thu, 26 Mar 2020 23:24:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585265092;
-        bh=Y25GVBK9+D3VXi1+RSyrgN73g8LYhaxniIkwT/AEKxg=;
+        s=default; t=1585265091;
+        bh=SZawdQI40sboV8ru38/GjGrBnwBOqz+ZRaoetvhWniA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=F3izkWvEgp+y8vcU4U8RC3xcJN6z/cmfFT1yIDwYf5tdr2mlYBUxYqDF5Ir2X+Z/N
-         0bPmVDwjq4Mp3e7fQrwTs24jVhGWOcg12FVFrvyvD7jr1J5ATmOfVZEraW2rwdk6M4
-         Xil/2ynVgZMTm9n1ILaknfEf16QDEHa/DssjxGNM=
+        b=uNzul4YfIkk0voVpuBA1nWn0qPZaNzQNu/mGMH62uYLTQ9cStQzW77HUw75NGQJYe
+         bBj4psvtkR9katyVofDR4MSBxetyk3bX12Kvgc75Sp1RQd7sIaEGaye1sqwPouNlyA
+         pfSQyHbNWG+eP2krL/JR7NwzA9xHKxBkcMucFIj0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Eric Biggers <ebiggers@google.com>,
-        syzbot+8da9175e28eadcb203ce@syzkaller.appspotmail.com,
-        Jiri Slaby <jslaby@suse.cz>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.4 18/19] tty: fix compat TIOCGSERIAL leaking uninitialized memory
-Date:   Thu, 26 Mar 2020 19:24:30 -0400
-Message-Id: <20200326232431.7816-18-sashal@kernel.org>
+Cc:     Takashi Iwai <tiwai@suse.de>,
+        syzbot+2a59ee7a9831b264f45e@syzkaller.appspotmail.com,
+        Sasha Levin <sashal@kernel.org>, alsa-devel@alsa-project.org
+Subject: [PATCH AUTOSEL 5.4 17/19] ALSA: pcm: oss: Remove WARNING from snd_pcm_plug_alloc() checks
+Date:   Thu, 26 Mar 2020 19:24:29 -0400
+Message-Id: <20200326232431.7816-17-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200326232431.7816-1-sashal@kernel.org>
 References: <20200326232431.7816-1-sashal@kernel.org>
@@ -61,47 +59,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Biggers <ebiggers@google.com>
+From: Takashi Iwai <tiwai@suse.de>
 
-[ Upstream commit 17329563a97df3ba474eca5037c1336e46e14ff8 ]
+[ Upstream commit 5461e0530c222129dfc941058be114b5cbc00837 ]
 
-Commit 77654350306a ("take compat TIOC[SG]SERIAL treatment into
-tty_compat_ioctl()") changed the compat version of TIOCGSERIAL to start
-copying a whole 'serial_struct32' to userspace rather than individual
-fields, but failed to initialize all padding and fields -- namely the
-hole after the 'iomem_reg_shift' field, and the 'reserved' field.
+The return value checks in snd_pcm_plug_alloc() are covered with
+snd_BUG_ON() macro that may trigger a kernel WARNING depending on the
+kconfig.  But since the error condition can be triggered by a weird
+user space parameter passed to OSS layer, we shouldn't give the kernel
+stack trace just for that.  As it's a normal error condition, let's
+remove snd_BUG_ON() macro usage there.
 
-Fix this by initializing the struct to zero.
-
-[v2: use sizeof, and convert the adjacent line for consistency.]
-
-Reported-by: syzbot+8da9175e28eadcb203ce@syzkaller.appspotmail.com
-Fixes: 77654350306a ("take compat TIOC[SG]SERIAL treatment into tty_compat_ioctl()")
-Cc: <stable@vger.kernel.org> # v4.20+
-Signed-off-by: Eric Biggers <ebiggers@google.com>
-Acked-by: Jiri Slaby <jslaby@suse.cz>
-Link: https://lore.kernel.org/r/20200224182044.234553-2-ebiggers@kernel.org
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Reported-by: syzbot+2a59ee7a9831b264f45e@syzkaller.appspotmail.com
+Cc: <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20200312155730.7520-1-tiwai@suse.de
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/tty/tty_io.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ sound/core/oss/pcm_plugin.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/tty/tty_io.c b/drivers/tty/tty_io.c
-index 802c1210558f2..d4c7f663efe99 100644
---- a/drivers/tty/tty_io.c
-+++ b/drivers/tty/tty_io.c
-@@ -2731,7 +2731,9 @@ static int compat_tty_tiocgserial(struct tty_struct *tty,
- 	struct serial_struct32 v32;
- 	struct serial_struct v;
- 	int err;
--	memset(&v, 0, sizeof(struct serial_struct));
-+
-+	memset(&v, 0, sizeof(v));
-+	memset(&v32, 0, sizeof(v32));
- 
- 	if (!tty->ops->set_serial)
- 		return -ENOTTY;
+diff --git a/sound/core/oss/pcm_plugin.c b/sound/core/oss/pcm_plugin.c
+index 9b588c6a6f099..732bbede7ebfd 100644
+--- a/sound/core/oss/pcm_plugin.c
++++ b/sound/core/oss/pcm_plugin.c
+@@ -111,7 +111,7 @@ int snd_pcm_plug_alloc(struct snd_pcm_substream *plug, snd_pcm_uframes_t frames)
+ 		while (plugin->next) {
+ 			if (plugin->dst_frames)
+ 				frames = plugin->dst_frames(plugin, frames);
+-			if (snd_BUG_ON((snd_pcm_sframes_t)frames <= 0))
++			if ((snd_pcm_sframes_t)frames <= 0)
+ 				return -ENXIO;
+ 			plugin = plugin->next;
+ 			err = snd_pcm_plugin_alloc(plugin, frames);
+@@ -123,7 +123,7 @@ int snd_pcm_plug_alloc(struct snd_pcm_substream *plug, snd_pcm_uframes_t frames)
+ 		while (plugin->prev) {
+ 			if (plugin->src_frames)
+ 				frames = plugin->src_frames(plugin, frames);
+-			if (snd_BUG_ON((snd_pcm_sframes_t)frames <= 0))
++			if ((snd_pcm_sframes_t)frames <= 0)
+ 				return -ENXIO;
+ 			plugin = plugin->prev;
+ 			err = snd_pcm_plugin_alloc(plugin, frames);
 -- 
 2.20.1
 
