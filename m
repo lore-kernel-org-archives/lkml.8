@@ -2,121 +2,282 @@ Return-Path: <SRS0=aGSP=5L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1FB8C43331
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 21:34:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54DA1C2D0E5
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 21:43:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6ED5720774
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 21:34:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F0A320658
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 21:43:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nCHvi1Li"
+	dkim=pass (2048-bit key) header.d=atishpatra.org header.i=@atishpatra.org header.b="OjCourkV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727354AbgCZVet (ORCPT
+        id S1727444AbgCZVng (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 17:34:49 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:33940 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726067AbgCZVet (ORCPT
+        Thu, 26 Mar 2020 17:43:36 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:36173 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726270AbgCZVng (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 17:34:49 -0400
-Received: by mail-ot1-f66.google.com with SMTP id j16so7632515otl.1
-        for <linux-kernel@vger.kernel.org>; Thu, 26 Mar 2020 14:34:48 -0700 (PDT)
+        Thu, 26 Mar 2020 17:43:36 -0400
+Received: by mail-wm1-f65.google.com with SMTP id g62so9680456wme.1
+        for <linux-kernel@vger.kernel.org>; Thu, 26 Mar 2020 14:43:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=L7KjE8BYPTcZLDCq97CWYYuDqmaiTRHZ/8n160jP2as=;
-        b=nCHvi1Li6nSC3/MTflGTFbq3zzKLbQfrKrJVdNTR5ttDdWG9uyOi1b/HOeNc97o/L6
-         /3/NdGHtRrVlU7L07XCvOppt4NuwkrG40M5kWbY+XlHt1UvRwo4w7C94sDaZ/cbq2MTv
-         PZoVEykvipXRECpY/7qLcKogxXa4mTw+tZ2D9u4l760s1toTobReOvf5Pz5h3Xj8fqmE
-         21FZeu6Lh7M8e4aItk+1MevDMxiESHgQaC8o86wj+sq5aDMkGVuqFPmG+7r/4GVXDKEb
-         yqgMcTC+5G6nwqQGowaRIkJC4XBbRoPk1QG1GfkL6KTQZbzGbNj0CrUzETXrJf3J3O6/
-         73FQ==
+        d=atishpatra.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=f1NDn439r2NKX2oz5ZXFZ71Km/k0SiSxc8ZOwV4UNkM=;
+        b=OjCourkV/MTqGFeOswaVFQKQOplgKPa1zgys4mGBsxi9hAycFeq4i7NQjVeYvQYYIl
+         Z5C2H5mjphkQ+Nzq2zlU7T2vv8LZ/NSe84Rr6iRA3IieJSPTBIV+JoDOcG6K4wpyQoRZ
+         J/de/gJN5I9LMtrwEK6Or+ioTpGm8lNkGQ4HCR0llDNYMPMqWxVKs6jmh/+jHxnwzP7L
+         cw0COxWs9e/U1bP2id4ENhz6rqKaqFx/0xAWfHGEsXqI5cEg9y5EHkmEHrW3QMCSlPzM
+         2ssLLxfTvxst3538bmc6yz2LSgwjSFKx6gc+tyKcSTosPXYfo5Ni3KfomzX3a+kPJ9d1
+         9MEw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=L7KjE8BYPTcZLDCq97CWYYuDqmaiTRHZ/8n160jP2as=;
-        b=ACCdtUsGP5lKiyuiaO7zbgx2WkhVmjnW63wo0m8Q/KzO1nYtGQOt0eNuG3ITEWTx/9
-         KMR+NM2oJIrRIhNM+JVic2rIEP6t1sZVgZ31kZJnTgCCykSp84CQgIp5WS4d6Q8O7E9R
-         MjJqQRQnSvEAL3PTiDCGC8X3H416R6Vxkwd3DUUPm2kENO6G0aFtdcK8HDT4ir0jNanp
-         Ezp00QaIjm6CAYwJtc0tmnj7okuAh+fYQv8gLLFa+6xZL046KJkXd6dERLBeGWf5KT2h
-         QWFXLhaoBCqbyNYTRHUW5E0x6MnGeJQs1Ayue1CU+i4LYpOIF6EVDXACeXaTmtwE/UYh
-         nbcw==
-X-Gm-Message-State: ANhLgQ1qbYIGmx3+ESavlJoFpF+bGVSMVyyUs1Fh6Hlc2DmW8hso4SIz
-        PDdUi9+4+1Bf295bq0C/790=
-X-Google-Smtp-Source: ADFU+vuPRb29E6lOeJhUVOOagNs1ZZX6ktUsoJcvTDvicoNKKUMPZKBPv5wTN71n4OQm8h6lPbapWw==
-X-Received: by 2002:a05:6830:1e93:: with SMTP id n19mr8519892otr.153.1585258487962;
-        Thu, 26 Mar 2020 14:34:47 -0700 (PDT)
-Received: from ubuntu-m2-xlarge-x86 ([2604:1380:4111:8b00::1])
-        by smtp.gmail.com with ESMTPSA id v21sm935358oic.4.2020.03.26.14.34.46
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 26 Mar 2020 14:34:47 -0700 (PDT)
-Date:   Thu, 26 Mar 2020 14:34:44 -0700
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
-        clang-built-linux@googlegroups.com,
-        Nick Desaulniers <ndesaulniers@google.com>
-Subject: Re: [PATCH v2] tracing: Use address-of operator on section symbols
-Message-ID: <20200326213444.GA390@ubuntu-m2-xlarge-x86>
-References: <20200220051011.26113-1-natechancellor@gmail.com>
- <20200319020004.GB8292@ubuntu-m2-xlarge-x86>
- <20200319103312.070b4246@gandalf.local.home>
- <20200326194652.GA29213@ubuntu-m2-xlarge-x86>
- <20200326173152.06ef57d5@gandalf.local.home>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=f1NDn439r2NKX2oz5ZXFZ71Km/k0SiSxc8ZOwV4UNkM=;
+        b=uJk4Rq4QJYgAbYAmIq2aU+LvRKXfx1RrPZB7nR7tGIYCPfRyOPPwyl+VMprJLzbFWd
+         wlSUXjKFzDQsZF0bqhTH3f+JhfUeqgNIu8XA+wEG6DWdN03qRhoIt8mycEFhSTvPe8zQ
+         RDtFkQUW8ru6wFkGXbVXr5FdZv03Uw0oZxLRIvBoWnAjFwIkMuWJphuEq8rfCbRJBxQK
+         +iJwJMOo4NcEiLysuNaLtURvVVNava1CCMs9CTyHnY3knuFTYi4RQifsvGvM5qP35xpn
+         79wMSEiX1qj9yQN0A/AgvmyIItMNEhENi7Hzn1fz1MoGPElP8+McasQWlnKQfLXDjS3l
+         w66A==
+X-Gm-Message-State: ANhLgQ2InrRspQeOCLrFpsXdYwj/NjAcgHhlKp57mJyqdQ4dlNJkFlCJ
+        4YZ4+3gZRsxf5Nif/oV1pwfLWXgdCC3a2HtFD9Cs
+X-Google-Smtp-Source: ADFU+vtd+d+BeyjdXRco3BnmIUGbwN18p+gYCa+hvrOkYjQFzeB/QMBSlWf+/g2wWZKCyOEOqWoJhGQRRup/idE8gng=
+X-Received: by 2002:adf:e807:: with SMTP id o7mr12050229wrm.77.1585259011235;
+ Thu, 26 Mar 2020 14:43:31 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200326173152.06ef57d5@gandalf.local.home>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20200224193436.26860-1-atish.patra@wdc.com> <mhng-a36eb560-2fbf-4fba-8416-8181a2c8ad5b@palmerdabbelt-glaptop1>
+ <CAEn-LTo=GP5OMZiaBi8BL1etLcGrCyofQrtQ4-JOo5zcpCLu8A@mail.gmail.com> <CAEn-LTokKZXgoNgDi2e5XW2WgL5O+e5UVs7wX2ndqecCdPnN4g@mail.gmail.com>
+In-Reply-To: <CAEn-LTokKZXgoNgDi2e5XW2WgL5O+e5UVs7wX2ndqecCdPnN4g@mail.gmail.com>
+From:   Atish Patra <atishp@atishpatra.org>
+Date:   Thu, 26 Mar 2020 14:43:20 -0700
+Message-ID: <CAOnJCUL4BcAFXd6HyOW_eq6mm7PWFNW6yP1srkvTO+=W67AJ-A@mail.gmail.com>
+Subject: Re: [PATCH] RISC-V: Move all address space definition macros to one place
+To:     David Abdurachmanov <david.abdurachmanov@gmail.com>
+Cc:     Palmer Dabbelt <palmerdabbelt@google.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Nick Hu <nickhu@andestech.com>,
+        Bjorn Topel <bjorn.topel@gmail.com>,
+        Anup Patel <Anup.Patel@wdc.com>,
+        "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>,
+        stable@vger.kernel.org, Mike Rapoport <rppt@linux.ibm.com>,
+        Atish Patra <Atish.Patra@wdc.com>,
+        linux-riscv <linux-riscv@lists.infradead.org>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Greentime Hu <greentime.hu@sifive.com>,
+        Thomas Gleixner <tglx@linutronix.de>, akpm@linux-foundation.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 26, 2020 at 05:31:52PM -0400, Steven Rostedt wrote:
-> On Thu, 26 Mar 2020 12:46:52 -0700
-> Nathan Chancellor <natechancellor@gmail.com> wrote:
-> 
-> > On Thu, Mar 19, 2020 at 10:33:12AM -0400, Steven Rostedt wrote:
-> > > On Wed, 18 Mar 2020 19:00:04 -0700
-> > > Nathan Chancellor <natechancellor@gmail.com> wrote:
-> > >   
-> > > > Gentle ping for review/acceptance.  
-> > > 
-> > > Hmm, my local patchwork had this patch rejected. I'll go and apply it, run
-> > > some tests and see if it works. Perhaps I meant to reject v1 and
-> > > accidentally rejected v2 :-/
-> > > 
-> > > Thanks for the ping!
-> > > 
-> > > -- Steve  
-> > 
-> > Hi Steve,
-> > 
-> > Did you ever get around to running any tests? If so, were there any
-> > issues? This warning is one of two remaining across several different
-> > configurations so I sent the patch to turn on the warning and I want
-> > to make sure this gets picked up at some point:
-> > 
-> > https://lore.kernel.org/lkml/20200326194155.29107-1-natechancellor@gmail.com/
-> > 
-> > If you have not had time, totally fine, I just want to make sure it does
-> > not fall through the cracks again :)
-> > 
-> 
-> I have applied it to my queue. But the code I have in with it failed my
-> tests, and I'm just about to kick off another round (I believe I fixed
-> everything). And hopefully if it all passes, I can get it out to my
-> linux-next branch by tomorrow.
-> 
-> -- Steve
+On Mon, Mar 23, 2020 at 3:32 AM David Abdurachmanov
+<david.abdurachmanov@gmail.com> wrote:
+>
+> On Sat, Mar 21, 2020 at 10:29 PM David Abdurachmanov
+> <david.abdurachmanov@gmail.com> wrote:
+> >
+> > On Fri, Mar 6, 2020 at 2:20 AM Palmer Dabbelt <palmerdabbelt@google.com=
+> wrote:
+> > >
+> > > On Mon, 24 Feb 2020 11:34:36 PST (-0800), Atish Patra wrote:
+> > > > If both CONFIG_KASAN and CONFIG_SPARSEMEM_VMEMMAP are set, we get t=
+he
+> > > > following compilation error.
+> > > >
+> > > > ---------------------------------------------------------------
+> > > > ./arch/riscv/include/asm/pgtable-64.h: In function =E2=80=98pud_pag=
+e=E2=80=99:
+> > > > ./include/asm-generic/memory_model.h:54:29: error: =E2=80=98vmemmap=
+=E2=80=99 undeclared
+> > > > (first use in this function); did you mean =E2=80=98mem_map=E2=80=
+=99?
+> > > >  #define __pfn_to_page(pfn) (vmemmap + (pfn))
+> > > >                              ^~~~~~~
+> > > > ./include/asm-generic/memory_model.h:82:21: note: in expansion of
+> > > > macro =E2=80=98__pfn_to_page=E2=80=99
+> > > >
+> > > >  #define pfn_to_page __pfn_to_page
+> > > >                      ^~~~~~~~~~~~~
+> > > > ./arch/riscv/include/asm/pgtable-64.h:70:9: note: in expansion of m=
+acro
+> > > > =E2=80=98pfn_to_page=E2=80=99
+> > > >   return pfn_to_page(pud_val(pud) >> _PAGE_PFN_SHIFT);
+> > > > ---------------------------------------------------------------
+> > > >
+> > > > Fix the compliation errors by moving all the address space definiti=
+on
+> > > > macros before including pgtable-64.h.
+> > > >
+> > > > Cc: stable@vger.kernel.org
+> > > > Fixes: 8ad8b72721d0 (riscv: Add KASAN support)
+> > > >
+> > > > Signed-off-by: Atish Patra <atish.patra@wdc.com>
+> > > > ---
+> > > >  arch/riscv/include/asm/pgtable.h | 78 +++++++++++++++++-----------=
+----
+> > > >  1 file changed, 41 insertions(+), 37 deletions(-)
+> > > >
+> > > > diff --git a/arch/riscv/include/asm/pgtable.h b/arch/riscv/include/=
+asm/pgtable.h
+> > > > index 453afb0a570a..4f6ee48a42e8 100644
+> > > > --- a/arch/riscv/include/asm/pgtable.h
+> > > > +++ b/arch/riscv/include/asm/pgtable.h
+> > > > @@ -19,6 +19,47 @@
+> > > >  #include <asm/tlbflush.h>
+> > > >  #include <linux/mm_types.h>
+> > > >
+> > > > +#ifdef CONFIG_MMU
+> > > > +
+> > > > +#define VMALLOC_SIZE     (KERN_VIRT_SIZE >> 1)
+> > > > +#define VMALLOC_END      (PAGE_OFFSET - 1)
+> > > > +#define VMALLOC_START    (PAGE_OFFSET - VMALLOC_SIZE)
+> > > > +
+> > > > +#define BPF_JIT_REGION_SIZE  (SZ_128M)
+> > > > +#define BPF_JIT_REGION_START (PAGE_OFFSET - BPF_JIT_REGION_SIZE)
+> > > > +#define BPF_JIT_REGION_END   (VMALLOC_END)
+> > > > +
+> > > > +/*
+> > > > + * Roughly size the vmemmap space to be large enough to fit enough
+> > > > + * struct pages to map half the virtual address space. Then
+> > > > + * position vmemmap directly below the VMALLOC region.
+> > > > + */
+> > > > +#define VMEMMAP_SHIFT \
+> > > > +     (CONFIG_VA_BITS - PAGE_SHIFT - 1 + STRUCT_PAGE_MAX_SHIFT)
+> > > > +#define VMEMMAP_SIZE BIT(VMEMMAP_SHIFT)
+> > > > +#define VMEMMAP_END  (VMALLOC_START - 1)
+> > > > +#define VMEMMAP_START        (VMALLOC_START - VMEMMAP_SIZE)
+> > > > +
+> > > > +/*
+> > > > + * Define vmemmap for pfn_to_page & page_to_pfn calls. Needed if k=
+ernel
+> > > > + * is configured with CONFIG_SPARSEMEM_VMEMMAP enabled.
+> > > > + */
+> > > > +#define vmemmap              ((struct page *)VMEMMAP_START)
+> > > > +
+> > > > +#define PCI_IO_SIZE      SZ_16M
+> > > > +#define PCI_IO_END       VMEMMAP_START
+> > > > +#define PCI_IO_START     (PCI_IO_END - PCI_IO_SIZE)
+> > > > +
+> > > > +#define FIXADDR_TOP      PCI_IO_START
+> > > > +#ifdef CONFIG_64BIT
+> > > > +#define FIXADDR_SIZE     PMD_SIZE
+> > > > +#else
+> > > > +#define FIXADDR_SIZE     PGDIR_SIZE
+> > > > +#endif
+> > > > +#define FIXADDR_START    (FIXADDR_TOP - FIXADDR_SIZE)
+> > > > +
+> > > > +#endif
+> > > > +
+> > > >  #ifdef CONFIG_64BIT
+> > > >  #include <asm/pgtable-64.h>
+> > > >  #else
+> > > > @@ -90,31 +131,6 @@ extern pgd_t swapper_pg_dir[];
+> > > >  #define __S110       PAGE_SHARED_EXEC
+> > > >  #define __S111       PAGE_SHARED_EXEC
+> > > >
+> > > > -#define VMALLOC_SIZE     (KERN_VIRT_SIZE >> 1)
+> > > > -#define VMALLOC_END      (PAGE_OFFSET - 1)
+> > > > -#define VMALLOC_START    (PAGE_OFFSET - VMALLOC_SIZE)
+> > > > -
+> > > > -#define BPF_JIT_REGION_SIZE  (SZ_128M)
+> > > > -#define BPF_JIT_REGION_START (PAGE_OFFSET - BPF_JIT_REGION_SIZE)
+> > > > -#define BPF_JIT_REGION_END   (VMALLOC_END)
+> > > > -
+> > > > -/*
+> > > > - * Roughly size the vmemmap space to be large enough to fit enough
+> > > > - * struct pages to map half the virtual address space. Then
+> > > > - * position vmemmap directly below the VMALLOC region.
+> > > > - */
+> > > > -#define VMEMMAP_SHIFT \
+> > > > -     (CONFIG_VA_BITS - PAGE_SHIFT - 1 + STRUCT_PAGE_MAX_SHIFT)
+> > > > -#define VMEMMAP_SIZE BIT(VMEMMAP_SHIFT)
+> > > > -#define VMEMMAP_END  (VMALLOC_START - 1)
+> > > > -#define VMEMMAP_START        (VMALLOC_START - VMEMMAP_SIZE)
+> > > > -
+> > > > -/*
+> > > > - * Define vmemmap for pfn_to_page & page_to_pfn calls. Needed if k=
+ernel
+> > > > - * is configured with CONFIG_SPARSEMEM_VMEMMAP enabled.
+> > > > - */
+> > > > -#define vmemmap              ((struct page *)VMEMMAP_START)
+> > > > -
+> > > >  static inline int pmd_present(pmd_t pmd)
+> > > >  {
+> > > >       return (pmd_val(pmd) & (_PAGE_PRESENT | _PAGE_PROT_NONE));
+> > > > @@ -452,18 +468,6 @@ static inline int ptep_clear_flush_young(struc=
+t vm_area_struct *vma,
+> > > >  #define __pte_to_swp_entry(pte)      ((swp_entry_t) { pte_val(pte)=
+ })
+> > > >  #define __swp_entry_to_pte(x)        ((pte_t) { (x).val })
+> > > >
+> > > > -#define PCI_IO_SIZE      SZ_16M
+> > > > -#define PCI_IO_END       VMEMMAP_START
+> > > > -#define PCI_IO_START     (PCI_IO_END - PCI_IO_SIZE)
+> > > > -
+> > > > -#define FIXADDR_TOP      PCI_IO_START
+> > > > -#ifdef CONFIG_64BIT
+> > > > -#define FIXADDR_SIZE     PMD_SIZE
+> > > > -#else
+> > > > -#define FIXADDR_SIZE     PGDIR_SIZE
+> > > > -#endif
+> > > > -#define FIXADDR_START    (FIXADDR_TOP - FIXADDR_SIZE)
+> > > > -
+> > > >  /*
+> > > >   * Task size is 0x4000000000 for RV64 or 0x9fc00000 for RV32.
+> > > >   * Note that PGDIR_SIZE must evenly divide TASK_SIZE.
+> > >
+> > > While this isn't technically a fix, I'm inclined to target it for the=
+ RCs just
+> > > to avoid conflicts.  I've put it on for-next now so the builders have=
+ some time
+> > > to chew on things, as I don't want to put in a non-fix too quickly.
+> >
+> > I hit the same issue in Fedora/RISCV while building kernel-5.6.0-0.rc6,=
+ and
+> > we don't have KASAN selected. We do have CONFIG_SPARSEMEM_VMEMMAP
+> > selected.
+> >
 
-Awesome, thank you for the quick reply and keeping me in the loop!
+Yes. I just verified that. CONFIG_SPARSEMEM_VMEMMAP is enough to
+trigger the build error.
+The code that raises the compilation error is added by kasan patchset,
+but it is not dependent upon kasan.
 
-Nathan
+--- a/arch/riscv/include/asm/pgtable-64.h
++++ b/arch/riscv/include/asm/pgtable-64.h
+@@ -58,6 +58,11 @@ static inline unsigned long pud_page_vaddr(pud_t pud)
+        return (unsigned long)pfn_to_virt(pud_val(pud) >> _PAGE_PFN_SHIFT);
+ }
+
++static inline struct page *pud_page(pud_t pud)
++{
++       return pfn_to_page(pud_val(pud) >> _PAGE_PFN_SHIFT);
++}
++
+
+@palmer: I am not sure if it is too late for an RC-fix. If not, can
+you send it as an RC-fix ?
+
+Let me know if you want me to respin the patch editing the commit text.
+
+> > I will try this patch tomorrow.
+> >
+> Confirmed to solve my build errors with kernel in Fedora/RISCV.
+>
+> david
+>
+
+
+--=20
+Regards,
+Atish
