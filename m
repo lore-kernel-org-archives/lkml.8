@@ -2,176 +2,138 @@ Return-Path: <SRS0=aGSP=5L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D62BC2D0E5
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 17:36:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6287C43331
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 17:36:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F95D20722
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 17:36:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lPhMtOCL"
+	by mail.kernel.org (Postfix) with ESMTP id 8945220719
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 17:36:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727906AbgCZRgN (ORCPT
+        id S1727966AbgCZRg0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 13:36:13 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:40906 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726067AbgCZRgN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 13:36:13 -0400
-Received: by mail-ed1-f65.google.com with SMTP id w26so7832390edu.7;
-        Thu, 26 Mar 2020 10:36:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=8+Ugwyc8ML4peI25E2t3UFApnbL9Vw/SvVb5J6/qvFg=;
-        b=lPhMtOCLbROjP2BLncSQ9jCvAf5x53CJgO1FmY67FXg9UduaalPhxePkOSGGXtqTK9
-         z0WTnfs5jhx76mvR2fBXM8pJTy/vfl5CkIWoBaypUI+aRsMoctrlFT6gT9QlAShOFgnJ
-         OhO5lpz0bAsPTpWpObd39j1AxBxVB27cegmgA79Qt25nDojzSsvzXrlT7AVhsGJO3usb
-         v5oEj21GAfemq4xyeQyW6eKyJyWggVhoryC5SX/ealeEiniEmAfv0rAcm1G+50RHQjsG
-         JL2Dauenw6nvMUnF7Y5l67J1GOsQVlc7tdzjQpnUkhpKWVepZ93bUDDJLDbL0HNKA20/
-         C0/g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=8+Ugwyc8ML4peI25E2t3UFApnbL9Vw/SvVb5J6/qvFg=;
-        b=lhdRqVfm+XFTW+W5/MeVGmZR94S0pr/ubSdgZRAepyA5CCLhYD6z71REH7m1WCoiuO
-         GTEnrNKDIubAFWzQeVj84bHvMdbkaCraFEIfGp3BVxpvxFEMA15KA2+o6DGjZX3tlyeD
-         PoWYxG/pHpbJmNqs+J8zrfO1yRaW0uceixJPtctd5IBDKk3BtlJC7/er6f1SYiisOTt+
-         Pn/mFMrOmz9f/lA8WpOR3DuK1MFL3U88kxaPrgm1TnH4s9Y79GR3AqLXvc+lMth7QQeZ
-         Fl5LLnwH3/YTY3Eu5ooTJgKnxEZfp4WVF/Vq84HCMwcX3YngX1W0q/UhvyPZccNfGJxP
-         /W1Q==
-X-Gm-Message-State: ANhLgQ2V0UXkawr5INrWgtsQ8AS+FQJfS7VMQ+GxCHG195gLZjx1syy/
-        ibyUJWJf/Ucpl/oLPkAcZRc=
-X-Google-Smtp-Source: ADFU+vsrsA/iixmQ2Wh7lUtLnt+k2r/AoPzphAGrjbVY1iT6R8i2W1Zt6miMmd2Qs7O9ItaLYWsZtg==
-X-Received: by 2002:a17:906:fd7:: with SMTP id c23mr9080221ejk.312.1585244170431;
-        Thu, 26 Mar 2020 10:36:10 -0700 (PDT)
-Received: from Ansuel-XPS.localdomain ([79.53.232.203])
-        by smtp.googlemail.com with ESMTPSA id d11sm375409ejd.2.2020.03.26.10.36.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 26 Mar 2020 10:36:09 -0700 (PDT)
-From:   Ansuel Smith <ansuelsmth@gmail.com>
-To:     Andy Gross <agross@kernel.org>
-Cc:     Ajay Kishore <akisho@codeaurora.org>,
-        Ansuel Smith <ansuelsmth@gmail.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v2] pinctrl: qcom: use scm_call to route GPIO irq to Apps
-Date:   Thu, 26 Mar 2020 18:35:24 +0100
-Message-Id: <20200326173524.15236-1-ansuelsmth@gmail.com>
-X-Mailer: git-send-email 2.25.1
+        Thu, 26 Mar 2020 13:36:26 -0400
+Received: from mx2.suse.de ([195.135.220.15]:59870 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726067AbgCZRg0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Mar 2020 13:36:26 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id B6691AF40;
+        Thu, 26 Mar 2020 17:36:23 +0000 (UTC)
+Message-ID: <486b5c63e5b9bd81051500c0c310e68af16956c4.camel@suse.de>
+Subject: Re: [PATCH] drm/vc4: Fix HDMI mode validation
+From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+To:     Stefan Wahren <stefan.wahren@i2se.com>,
+        Eric Anholt <eric@anholt.net>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>
+Cc:     maxime@cerno.tech, linux-rpi-kernel@lists.infradead.org,
+        f.fainelli@gmail.com,
+        Dave Stevenson <dave.stevenson@raspberrypi.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Date:   Thu, 26 Mar 2020 18:36:20 +0100
+In-Reply-To: <c4b3e083-ac6e-b321-f0eb-f20e8ec3b1a6@i2se.com>
+References: <20200326122001.22215-1-nsaenzjulienne@suse.de>
+         <c4b3e083-ac6e-b321-f0eb-f20e8ec3b1a6@i2se.com>
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-WLjDMV1ZcTszpN+SQxBm"
+User-Agent: Evolution 3.34.4 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ajay Kishore <akisho@codeaurora.org>
 
-For IPQ806x targets, TZ protects the registers that are used to
-configure the routing of interrupts to a target processor.
-To resolve this, this patch uses scm call to route GPIO interrupts
-to application processor. Also the scm call interface is changed.
+--=-WLjDMV1ZcTszpN+SQxBm
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Ajay Kishore <akisho@codeaurora.org>
-Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
----
-v2:
-* Move static varibale in msm_pinctrl struct
-* Revert '4b024225c4a8 ("pinctrl: use devm_platform_ioremap_resource() to simplify code")'
-  to get base_reg addr
+On Thu, 2020-03-26 at 18:19 +0100, Stefan Wahren wrote:
+> Am 26.03.20 um 13:20 schrieb Nicolas Saenz Julienne:
+> > Current mode validation impedes setting up some video modes which shoul=
+d
+> > be supported otherwise. Namely 1920x1200@60Hz.
+> >=20
+> > Fix this by lowering the minimum HDMI state machine clock to pixel cloc=
+k
+> > ratio allowed.
+> >=20
+> > Fixes: 32e823c63e90 ("drm/vc4: Reject HDMI modes with too high of clock=
+s")
+> > Reported-by: Stefan Wahren <stefan.wahren@i2se.com>
+> > Suggested-by: Dave Stevenson <dave.stevenson@raspberrypi.com>
+> > Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+> > ---
+> >  drivers/gpu/drm/vc4/vc4_hdmi.c | 20 ++++++++++++++++----
+> >  1 file changed, 16 insertions(+), 4 deletions(-)
+> >=20
+> > diff --git a/drivers/gpu/drm/vc4/vc4_hdmi.c b/drivers/gpu/drm/vc4/vc4_h=
+dmi.c
+> > index cea18dc15f77..340719238753 100644
+> > --- a/drivers/gpu/drm/vc4/vc4_hdmi.c
+> > +++ b/drivers/gpu/drm/vc4/vc4_hdmi.c
+> > @@ -681,11 +681,23 @@ static enum drm_mode_status
+> >  vc4_hdmi_encoder_mode_valid(struct drm_encoder *crtc,
+> >  			    const struct drm_display_mode *mode)
+> >  {
+> > -	/* HSM clock must be 108% of the pixel clock.  Additionally,
+> > -	 * the AXI clock needs to be at least 25% of pixel clock, but
+> > -	 * HSM ends up being the limiting factor.
+> > +	/*
+> > +	 * As stated in RPi's vc4 firmware "HDMI state machine (HSM) clock mu=
+st
+> > +	 * be faster than pixel clock, infinitesimally faster, tested in
+> > +	 * simulation. Otherwise, exact value is unimportant for HDMI
+> > +	 * operation." This conflicts with bcm2835's vc4 documentation, which
+> > +	 * states HSM's clock has to be at least 108% of the pixel clock.
+> > +	 *
+> > +	 * Real life tests reveal that vc4's firmware statement holds up, and
+> > +	 * users are able to use pixel clocks closer to HSM's, namely for
+> > +	 * 1920x1200@60Hz. So it was decided to have leave a 1% margin betwee=
+n
+> > +	 * both clocks. Which, for RPi0-3 implies a maximum pixel clock of
+>=20
+> s/RPi0-3/bcm2835/ ?
 
- drivers/pinctrl/qcom/pinctrl-msm.c | 37 ++++++++++++++++++++++++++----
- 1 file changed, 32 insertions(+), 5 deletions(-)
+Well as Dave Stevenson stated on the previous thread[1], it's the firmware =
+that
+sets up the HSM limitation. IIUC technically both HSM and pixel clocks coul=
+d be
+increased. Hence this being more of a RPi limitation than the chip itself.
 
-diff --git a/drivers/pinctrl/qcom/pinctrl-msm.c b/drivers/pinctrl/qcom/pinctrl-msm.c
-index 9a8daa256a32..9627ebd41ff9 100644
---- a/drivers/pinctrl/qcom/pinctrl-msm.c
-+++ b/drivers/pinctrl/qcom/pinctrl-msm.c
-@@ -22,6 +22,8 @@
- #include <linux/reboot.h>
- #include <linux/pm.h>
- #include <linux/log2.h>
-+#include <linux/qcom_scm.h>
-+#include <linux/io.h>
- 
- #include <linux/soc/qcom/irq.h>
- 
-@@ -60,6 +62,9 @@ struct msm_pinctrl {
- 	struct irq_chip irq_chip;
- 	int irq;
- 
-+	int route_to_apps;
-+	u32 base_reg;
-+
- 	raw_spinlock_t lock;
- 
- 	DECLARE_BITMAP(dual_edge_irqs, MAX_NR_GPIO);
-@@ -883,10 +888,27 @@ static int msm_gpio_irq_set_type(struct irq_data *d, unsigned int type)
- 		clear_bit(d->hwirq, pctrl->dual_edge_irqs);
- 
- 	/* Route interrupts to application cpu */
--	val = msm_readl_intr_target(pctrl, g);
--	val &= ~(7 << g->intr_target_bit);
--	val |= g->intr_target_kpss_val << g->intr_target_bit;
--	msm_writel_intr_target(val, pctrl, g);
-+	if (pctrl->route_to_apps && pctrl->base_reg) {
-+		u32 addr = pctrl->base_reg + g->intr_target_reg;
-+		int ret;
-+
-+		qcom_scm_io_readl(addr, &val);
-+
-+		val &= ~(7 << g->intr_target_bit);
-+		val |= g->intr_target_kpss_val << g->intr_target_bit;
-+
-+		ret = qcom_scm_io_writel(addr, val);
-+		if (ret)
-+			dev_err(pctrl->dev,
-+				"Failed routing %lu interrupt to Apps proc",
-+				d->hwirq);
-+		}
-+	} else {
-+		val = msm_readl_intr_target(pctrl, g);
-+		val &= ~(7 << g->intr_target_bit);
-+		val |= g->intr_target_kpss_val << g->intr_target_bit;
-+		msm_writel_intr_target(val, pctrl, g);
-+	}
- 
- 	/* Update configuration for gpio.
- 	 * RAW_STATUS_EN is left on for all gpio irqs. Due to the
-@@ -1241,6 +1263,8 @@ int msm_pinctrl_probe(struct platform_device *pdev,
- 	pctrl->dev = &pdev->dev;
- 	pctrl->soc = soc_data;
- 	pctrl->chip = msm_gpio_template;
-+	pctrl->route_to_apps = of_device_is_compatible(pctrl->dev->of_node,
-+					"qcom,ipq8064-pinctrl");
- 
- 	raw_spin_lock_init(&pctrl->lock);
- 
-@@ -1253,9 +1277,12 @@ int msm_pinctrl_probe(struct platform_device *pdev,
- 				return PTR_ERR(pctrl->regs[i]);
- 		}
- 	} else {
--		pctrl->regs[0] = devm_platform_ioremap_resource(pdev, 0);
-+		res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+		pctrl->regs[0] = devm_ioremap_resource(&pdev->dev, res);
- 		if (IS_ERR(pctrl->regs[0]))
- 			return PTR_ERR(pctrl->regs[0]);
-+		else
-+			pctrl->base_reg = res->start;
- 	}
- 
- 	msm_pinctrl_setup_pm_reset(pctrl);
--- 
-2.25.1
+"Whilst the firmware would appear to use a fixed HSM clock on Pi0-3, I
+don't anticipate there being any issue with varying it. It looks like
+there was the expectation of it being variable in the past, but
+someone has refactored it and either accidentally or deliberately
+given up on the idea."
+
+Regards,
+Nicolas
+
+[1] https://www.spinics.net/lists/arm-kernel/msg794591.html
+
+
+--=-WLjDMV1ZcTszpN+SQxBm
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl586BQACgkQlfZmHno8
+x/7xnQf6AuxYHKRPr2+3HAcUcMvGEUsg4+CG33ixIOsZSzYB4i53R8AaNPUXuT49
+DgINWf1HDprPNcucqW0YHLK1MuOHLr037rJaEi8U7niiYwf1NhCowZarMRZsdng0
+uDBenGjN+AfeI303kAU/U5oPK+5R013lkXTpi+KKGeAmdsg0cWCnCXvQj4eA2PrT
+MJ67v2ageDmRvuA/OJ+N2+tpz7raOs08ErzH5kYW8OUIllpTpIQSNr8Vn1JJZgF9
+FjyvhPl4PNuNaUaTQm/Hi+TMH3tW51q5q9ZWPkBikHpyGmUbIaEBqNV0ZEuDAXDR
+LUhSe29/+lSxhq7Hvo7FH29Yz183Tw==
+=RSrf
+-----END PGP SIGNATURE-----
+
+--=-WLjDMV1ZcTszpN+SQxBm--
 
