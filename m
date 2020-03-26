@@ -4,53 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2419C2D0E7
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 23:27:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B6C5C2D0E7
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 23:27:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 76C7B20409
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 23:27:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 247FE20774
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 23:27:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585265245;
-	bh=64g/FuVY4FkADB9UpvuwvHmWfRLDc5mR7iw725sbOe8=;
+	s=default; t=1585265248;
+	bh=Y25GVBK9+D3VXi1+RSyrgN73g8LYhaxniIkwT/AEKxg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zPNTjEWP4xtq7XxRZk4C6ibmrP7nCF8tMysfE9uR6c2Z2+la9Bf/BD4OHMb5vs+Ti
-	 zUCblNijOzX9Lpt9zYDCL7raj+9vLx/3iybqd2bLKV6QKet4zHREuADADTFfzvVzoj
-	 ihO1EmKua0eccMKoLS5oP3xpL9Ny+a9oihfrnVg0=
+	b=rdD3nHeeUJtGUsBcFVVmkkkDRNDtydXWHj3LTFbGOGKGr80lRFL6+/YPKy/YrENUv
+	 Dsb9HxpyPFeT+sHgUoviE1UX9+ARt6KgAR1HMWqoKbQs4cdtzpKFYzL2hPk7Fm1l/E
+	 iVwtsAMCqsvV521wN1Gn2eML7Fuudhj3xXWosKIY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728417AbgCZX1X (ORCPT
+        id S1728132AbgCZXY5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 19:27:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45454 "EHLO mail.kernel.org"
+        Thu, 26 Mar 2020 19:24:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45136 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728153AbgCZXZB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 19:25:01 -0400
+        id S1728005AbgCZXYx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Mar 2020 19:24:53 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BC17E2083E;
-        Thu, 26 Mar 2020 23:24:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B40DB21582;
+        Thu, 26 Mar 2020 23:24:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585265100;
-        bh=64g/FuVY4FkADB9UpvuwvHmWfRLDc5mR7iw725sbOe8=;
+        s=default; t=1585265092;
+        bh=Y25GVBK9+D3VXi1+RSyrgN73g8LYhaxniIkwT/AEKxg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tcSGkmKzns7w2uSE4BzIaZmhIvnPjTVuKbdpaNoIwf4yoiazGt7CunDyCOmMK+Nrz
-         G7kckm9Zi6g3+HnX5ntqoHdiBF3OrwDugCDYN57uMoqblxMI821nOCYTTTspWtMuCT
-         DlyUg0+G0b2Qeh6loM/19+nsjZqW7SiGCZ7u8VBI=
+        b=F3izkWvEgp+y8vcU4U8RC3xcJN6z/cmfFT1yIDwYf5tdr2mlYBUxYqDF5Ir2X+Z/N
+         0bPmVDwjq4Mp3e7fQrwTs24jVhGWOcg12FVFrvyvD7jr1J5ATmOfVZEraW2rwdk6M4
+         Xil/2ynVgZMTm9n1ILaknfEf16QDEHa/DssjxGNM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Mario Kleiner <mario.kleiner.de@gmail.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 4.19 04/15] drm/amd/display: Add link_rate quirk for Apple 15" MBP 2017
-Date:   Thu, 26 Mar 2020 19:24:44 -0400
-Message-Id: <20200326232455.8029-4-sashal@kernel.org>
+Cc:     Eric Biggers <ebiggers@google.com>,
+        syzbot+8da9175e28eadcb203ce@syzkaller.appspotmail.com,
+        Jiri Slaby <jslaby@suse.cz>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 18/19] tty: fix compat TIOCGSERIAL leaking uninitialized memory
+Date:   Thu, 26 Mar 2020 19:24:30 -0400
+Message-Id: <20200326232431.7816-18-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200326232455.8029-1-sashal@kernel.org>
-References: <20200326232455.8029-1-sashal@kernel.org>
+In-Reply-To: <20200326232431.7816-1-sashal@kernel.org>
+References: <20200326232431.7816-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -60,65 +61,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mario Kleiner <mario.kleiner.de@gmail.com>
+From: Eric Biggers <ebiggers@google.com>
 
-[ Upstream commit dec9de2ada523b344eb2428abfedf9d6cd0a0029 ]
+[ Upstream commit 17329563a97df3ba474eca5037c1336e46e14ff8 ]
 
-This fixes a problem found on the MacBookPro 2017 Retina panel:
+Commit 77654350306a ("take compat TIOC[SG]SERIAL treatment into
+tty_compat_ioctl()") changed the compat version of TIOCGSERIAL to start
+copying a whole 'serial_struct32' to userspace rather than individual
+fields, but failed to initialize all padding and fields -- namely the
+hole after the 'iomem_reg_shift' field, and the 'reserved' field.
 
-The panel reports 10 bpc color depth in its EDID, and the
-firmware chooses link settings at boot which support enough
-bandwidth for 10 bpc (324000 kbit/sec aka LINK_RATE_RBR2
-aka 0xc), but the DP_MAX_LINK_RATE dpcd register only reports
-2.7 Gbps (multiplier value 0xa) as possible, in direct
-contradiction of what the firmware successfully set up.
+Fix this by initializing the struct to zero.
 
-This restricts the panel to 8 bpc, not providing the full
-color depth of the panel on Linux <= 5.5. Additionally, commit
-'4a8ca46bae8a ("drm/amd/display: Default max bpc to 16 for eDP")'
-introduced into Linux 5.6-rc1 will unclamp panel depth to
-its full 10 bpc, thereby requiring a eDP bandwidth for all
-modes that exceeds the bandwidth available and causes all modes
-to fail validation -> No modes for the laptop panel -> failure
-to set any mode -> Panel goes dark.
+[v2: use sizeof, and convert the adjacent line for consistency.]
 
-This patch adds a quirk specific to the MBP 2017 15" Retina
-panel to override reported max link rate to the correct maximum
-of 0xc = LINK_RATE_RBR2 to fix the darkness and reduced display
-precision.
-
-Please apply for Linux 5.6+ to avoid regressing Apple MBP panel
-support.
-
-Signed-off-by: Mario Kleiner <mario.kleiner.de@gmail.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Reported-by: syzbot+8da9175e28eadcb203ce@syzkaller.appspotmail.com
+Fixes: 77654350306a ("take compat TIOC[SG]SERIAL treatment into tty_compat_ioctl()")
+Cc: <stable@vger.kernel.org> # v4.20+
+Signed-off-by: Eric Biggers <ebiggers@google.com>
+Acked-by: Jiri Slaby <jslaby@suse.cz>
+Link: https://lore.kernel.org/r/20200224182044.234553-2-ebiggers@kernel.org
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/display/dc/core/dc_link_dp.c | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+ drivers/tty/tty_io.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/amd/display/dc/core/dc_link_dp.c b/drivers/gpu/drm/amd/display/dc/core/dc_link_dp.c
-index 122249da03ab7..a4928854a3de5 100644
---- a/drivers/gpu/drm/amd/display/dc/core/dc_link_dp.c
-+++ b/drivers/gpu/drm/amd/display/dc/core/dc_link_dp.c
-@@ -2440,6 +2440,17 @@ static bool retrieve_link_cap(struct dc_link *link)
- 		sink_id.ieee_device_id,
- 		sizeof(sink_id.ieee_device_id));
+diff --git a/drivers/tty/tty_io.c b/drivers/tty/tty_io.c
+index 802c1210558f2..d4c7f663efe99 100644
+--- a/drivers/tty/tty_io.c
++++ b/drivers/tty/tty_io.c
+@@ -2731,7 +2731,9 @@ static int compat_tty_tiocgserial(struct tty_struct *tty,
+ 	struct serial_struct32 v32;
+ 	struct serial_struct v;
+ 	int err;
+-	memset(&v, 0, sizeof(struct serial_struct));
++
++	memset(&v, 0, sizeof(v));
++	memset(&v32, 0, sizeof(v32));
  
-+	/* Quirk Apple MBP 2017 15" Retina panel: Wrong DP_MAX_LINK_RATE */
-+	{
-+		uint8_t str_mbp_2017[] = { 101, 68, 21, 101, 98, 97 };
-+
-+		if ((link->dpcd_caps.sink_dev_id == 0x0010fa) &&
-+		    !memcmp(link->dpcd_caps.sink_dev_id_str, str_mbp_2017,
-+			    sizeof(str_mbp_2017))) {
-+			link->reported_link_cap.link_rate = 0x0c;
-+		}
-+	}
-+
- 	core_link_read_dpcd(
- 		link,
- 		DP_SINK_HW_REVISION_START,
+ 	if (!tty->ops->set_serial)
+ 		return -ENOTTY;
 -- 
 2.20.1
 
