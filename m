@@ -2,93 +2,126 @@ Return-Path: <SRS0=aGSP=5L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1184C43331
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 09:35:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94460C2D0E7
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 09:35:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8EEB52073E
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 09:35:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B12C2073E
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 09:35:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZSbUP9Bf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727847AbgCZJfL (ORCPT
+        id S1727890AbgCZJfY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 05:35:11 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:12197 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726540AbgCZJfL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 05:35:11 -0400
-Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 7644EDB1CEFD789CD5B1;
-        Thu, 26 Mar 2020 17:35:08 +0800 (CST)
-Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
- (10.3.19.204) with Microsoft SMTP Server (TLS) id 14.3.487.0; Thu, 26 Mar
- 2020 17:35:04 +0800
-Subject: Re: [PATCH RFC] f2fs: don't inline compressed inode
-To:     Jaegeuk Kim <jaegeuk@kernel.org>
-CC:     <linux-f2fs-devel@lists.sourceforge.net>,
-        <linux-kernel@vger.kernel.org>, <chao@kernel.org>
-References: <20200325092754.63411-1-yuchao0@huawei.com>
- <20200325155806.GC65658@google.com>
-From:   Chao Yu <yuchao0@huawei.com>
-Message-ID: <87d715d0-a5c4-7b54-95bb-9b627d163271@huawei.com>
-Date:   Thu, 26 Mar 2020 17:35:03 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
-MIME-Version: 1.0
-In-Reply-To: <20200325155806.GC65658@google.com>
-Content-Type: text/plain; charset="windows-1252"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.134.22.195]
-X-CFilter-Loop: Reflected
+        Thu, 26 Mar 2020 05:35:24 -0400
+Received: from us-smtp-delivery-74.mimecast.com ([63.128.21.74]:35071 "EHLO
+        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727855AbgCZJfX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Mar 2020 05:35:23 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1585215322;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:in-reply-to:in-reply-to:references:references;
+        bh=1O6NIR68kH3OijxL9QZfbmw0zgfeuNupKwN4iXBrHhI=;
+        b=ZSbUP9Bf7JjbkIz71Y9dUpu8DBmyq88Ely9JNm/VBaaSc+EPFYs9CKqF9RgYDMX2FfqixE
+        XLORGKp6ti8P9G7FfUMysfCMtaYFw1Vp2jWoulrrN8RsViV3+M/v87Ekd25rv+KigvLidP
+        8CPvH8K+5F+vSiDy+/mHtpD+WrW5Bko=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-394-NOKHm7gRMPK9MB14xIIOdg-1; Thu, 26 Mar 2020 05:35:20 -0400
+X-MC-Unique: NOKHm7gRMPK9MB14xIIOdg-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 51F988010E8;
+        Thu, 26 Mar 2020 09:35:19 +0000 (UTC)
+Received: from virtlab701.virt.lab.eng.bos.redhat.com (virtlab701.virt.lab.eng.bos.redhat.com [10.19.152.228])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id A82FB9CA3;
+        Thu, 26 Mar 2020 09:35:18 +0000 (UTC)
+From:   Paolo Bonzini <pbonzini@redhat.com>
+To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Cc:     Junaid Shahid <junaids@google.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>
+Subject: [PATCH 2/3] KVM: x86: cleanup kvm_inject_emulated_page_fault
+Date:   Thu, 26 Mar 2020 05:35:15 -0400
+Message-Id: <20200326093516.24215-3-pbonzini@redhat.com>
+In-Reply-To: <20200326093516.24215-1-pbonzini@redhat.com>
+References: <20200326093516.24215-1-pbonzini@redhat.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/3/25 23:58, Jaegeuk Kim wrote:
-> On 03/25, Chao Yu wrote:
->> f2fs_may_inline_data() only check compressed flag on current inode
->> rather than on parent inode, however at this time compressed flag
->> has not been inherited yet.
-> 
-> When write() or other allocation happens, it'll be reset.
+To reconstruct the kvm_mmu to be used for page fault injection, we
+can simply use fault->nested_page_fault.  This matches how
+fault->nested_page_fault is assigned in the first place by
+FNAME(walk_addr_generic).
 
-Yeah, all tests are fine w/o this RFC patch, anyway, will let you know if
-I find something incompatible.
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+---
+ arch/x86/kvm/mmu/mmu.c         | 6 ------
+ arch/x86/kvm/mmu/paging_tmpl.h | 2 +-
+ arch/x86/kvm/x86.c             | 7 +++----
+ 3 files changed, 4 insertions(+), 11 deletions(-)
 
-Thanks,
+diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
+index e26c9a583e75..6250e31ac617 100644
+--- a/arch/x86/kvm/mmu/mmu.c
++++ b/arch/x86/kvm/mmu/mmu.c
+@@ -4353,12 +4353,6 @@ static unsigned long get_cr3(struct kvm_vcpu *vcpu)
+ 	return kvm_read_cr3(vcpu);
+ }
+ 
+-static void inject_page_fault(struct kvm_vcpu *vcpu,
+-			      struct x86_exception *fault)
+-{
+-	vcpu->arch.mmu->inject_page_fault(vcpu, fault);
+-}
+-
+ static bool sync_mmio_spte(struct kvm_vcpu *vcpu, u64 *sptep, gfn_t gfn,
+ 			   unsigned int access, int *nr_present)
+ {
+diff --git a/arch/x86/kvm/mmu/paging_tmpl.h b/arch/x86/kvm/mmu/paging_tmpl.h
+index 1ddbfff64ccc..ae646acf6703 100644
+--- a/arch/x86/kvm/mmu/paging_tmpl.h
++++ b/arch/x86/kvm/mmu/paging_tmpl.h
+@@ -812,7 +812,7 @@ static int FNAME(page_fault)(struct kvm_vcpu *vcpu, gpa_t addr, u32 error_code,
+ 	if (!r) {
+ 		pgprintk("%s: guest page fault\n", __func__);
+ 		if (!prefault)
+-			inject_page_fault(vcpu, &walker.fault);
++			kvm_inject_emulated_page_fault(vcpu, &walker.fault);
+ 
+ 		return RET_PF_RETRY;
+ 	}
+diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+index 64ed6e6e2b56..522905523bf0 100644
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -614,12 +614,11 @@ EXPORT_SYMBOL_GPL(kvm_inject_page_fault);
+ bool kvm_inject_emulated_page_fault(struct kvm_vcpu *vcpu,
+ 				    struct x86_exception *fault)
+ {
++	struct kvm_mmu *fault_mmu;
+ 	WARN_ON_ONCE(fault->vector != PF_VECTOR);
+ 
+-	if (mmu_is_nested(vcpu) && !fault->nested_page_fault)
+-		vcpu->arch.nested_mmu.inject_page_fault(vcpu, fault);
+-	else
+-		vcpu->arch.mmu->inject_page_fault(vcpu, fault);
++	fault_mmu = fault->nested_page_fault ? vcpu->arch.mmu : vcpu->arch.walk_mmu;
++	fault_mmu->inject_page_fault(vcpu, fault);
+ 
+ 	return fault->nested_page_fault;
+ }
+-- 
+2.18.2
 
-> 
->>
->> Signed-off-by: Chao Yu <yuchao0@huawei.com>
->> ---
->>
->> Jaegeuk,
->>
->> I'm not sure about this, whether inline_data flag can be compatible with
->> compress flag, thoughts?
->>
->>  fs/f2fs/namei.c | 3 ++-
->>  1 file changed, 2 insertions(+), 1 deletion(-)
->>
->> diff --git a/fs/f2fs/namei.c b/fs/f2fs/namei.c
->> index f54119da2217..3807d1b4c4bc 100644
->> --- a/fs/f2fs/namei.c
->> +++ b/fs/f2fs/namei.c
->> @@ -86,7 +86,8 @@ static struct inode *f2fs_new_inode(struct inode *dir, umode_t mode)
->>  	if (test_opt(sbi, INLINE_XATTR))
->>  		set_inode_flag(inode, FI_INLINE_XATTR);
->>  
->> -	if (test_opt(sbi, INLINE_DATA) && f2fs_may_inline_data(inode))
->> +	if (test_opt(sbi, INLINE_DATA) && f2fs_may_inline_data(inode) &&
->> +					!f2fs_compressed_file(dir))
->>  		set_inode_flag(inode, FI_INLINE_DATA);
->>  	if (f2fs_may_inline_dentry(inode))
->>  		set_inode_flag(inode, FI_INLINE_DENTRY);
->> -- 
->> 2.18.0.rc1
-> .
-> 
+
