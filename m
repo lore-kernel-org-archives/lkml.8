@@ -2,63 +2,104 @@ Return-Path: <SRS0=aGSP=5L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29955C43331
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 11:33:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 449AEC2D0E8
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 11:34:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 04A382073E
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 11:33:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 279212070A
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 11:34:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728143AbgCZLdx (ORCPT
+        id S1728186AbgCZLeR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 07:33:53 -0400
-Received: from foss.arm.com ([217.140.110.172]:59462 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727953AbgCZLdx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 07:33:53 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 221407FA;
-        Thu, 26 Mar 2020 04:33:53 -0700 (PDT)
-Received: from mbp (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 48D713F71F;
-        Thu, 26 Mar 2020 04:33:52 -0700 (PDT)
-Date:   Thu, 26 Mar 2020 11:33:49 +0000
-From:   Catalin Marinas <catalin.marinas@arm.com>
-To:     Will Deacon <will@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        kernel-team@android.com,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: Re: [PATCH] mm/mremap: Add comment explaining the untagging
- behaviour of mremap()
-Message-ID: <20200326113349.GB26987@mbp>
-References: <20200325111347.32553-1-will@kernel.org>
+        Thu, 26 Mar 2020 07:34:17 -0400
+Received: from mail-io1-f72.google.com ([209.85.166.72]:50666 "EHLO
+        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728147AbgCZLeQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Mar 2020 07:34:16 -0400
+Received: by mail-io1-f72.google.com with SMTP id s2so4901895iot.17
+        for <linux-kernel@vger.kernel.org>; Thu, 26 Mar 2020 04:34:16 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=C6y3mIPzLR73ufsopJWEkr5Zr1g0mPoX0sCzPuo9kgE=;
+        b=WfYaqWm9sc3YP4iR3Nj8tG/E3ICnHy/g4naQkcTfpjMBRfzeKv7OjX29M1yXOdLakq
+         v2BX7c0+132cASjTAjuqYedpl1OBGGMAZ3gFj7hDWYCaWp7eJ5SWrz/148Taq21Su4fB
+         kKowK4KTn1a380U5UEz+sOOFqBBE6W+vCqCMu5SJD0ATxGcEJbrFeklSHzMj/quyWfdA
+         dX4lqVaC0nKhzfdfIsqsRPRG3c30um2p0z6GQRjS9GJVT3TMwPSGHzjRuvwcz9ky3xBB
+         M/syJX/HtplG54CmLe3z8XmwRC3VhrtQT77sJJtIbeXir+JRg8QBZDLafQ0x5Q0WM2J6
+         U4uw==
+X-Gm-Message-State: ANhLgQ2N4wrJ3Gc6Z5ZKgib+vKn/wlIEi99/8IfkT2mP1x8KO69FpA2z
+        wO7I7SkxLbZDWtzal5+QGBOrf/oajicu0OK7Ls23AaMYkr+H
+X-Google-Smtp-Source: ADFU+vtl0vK645d3im2PLzaqrxJeMAlY9qjUChu1B+bIlwDJN2zTknUFKGOjQ/cSY3xTK6hM6rc6/WQj07FZ/qJB73caM2aXesCV
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200325111347.32553-1-will@kernel.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Received: by 2002:a5d:970e:: with SMTP id h14mr7083406iol.201.1585222455723;
+ Thu, 26 Mar 2020 04:34:15 -0700 (PDT)
+Date:   Thu, 26 Mar 2020 04:34:15 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000005d13df05a1c05dfb@google.com>
+Subject: KASAN: slab-out-of-bounds Write in ath9k_htc_rx_msg
+From:   syzbot <syzbot+694d40a36a6452d77f36@syzkaller.appspotmail.com>
+To:     andreyknvl@google.com, ath9k-devel@qca.qualcomm.com,
+        davem@davemloft.net, kvalo@codeaurora.org,
+        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 25, 2020 at 11:13:46AM +0000, Will Deacon wrote:
-> Commit dcde237319e6 ("mm: Avoid creating virtual address aliases in
-> brk()/mmap()/mremap()") changed mremap() so that only the 'old' address
-> is untagged, leaving the 'new' address in the form it was passed from
-> userspace. This prevents the unexpected creation of aliasing virtual
-> mappings in userspace, but looks a bit odd when you read the code.
-> 
-> Add a comment justifying the untagging behaviour in mremap().
-> 
-> Cc: Catalin Marinas <catalin.marinas@arm.com>
-> Reported-by: Linus Torvalds <torvalds@linux-foundation.org>
-> Signed-off-by: Will Deacon <will@kernel.org>
+Hello,
 
-I queued this patch via the arm64 tree (for 5.7-rc1). Thanks.
+syzbot found the following crash on:
 
--- 
-Catalin
+HEAD commit:    e17994d1 usb: core: kcov: collect coverage from usb comple..
+git tree:       https://github.com/google/kasan.git usb-fuzzer
+console output: https://syzkaller.appspot.com/x/log.txt?x=1409ca5be00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=5d64370c438bc60
+dashboard link: https://syzkaller.appspot.com/bug?extid=694d40a36a6452d77f36
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=122d48f3e00000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=122511e5e00000
+
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+694d40a36a6452d77f36@syzkaller.appspotmail.com
+
+==================================================================
+BUG: KASAN: slab-out-of-bounds in htc_process_conn_rsp drivers/net/wireless/ath/ath9k/htc_hst.c:131 [inline]
+BUG: KASAN: slab-out-of-bounds in ath9k_htc_rx_msg+0xa25/0xaf0 drivers/net/wireless/ath/ath9k/htc_hst.c:443
+Write of size 2 at addr ffff8881ced8a7f0 by task swapper/0/0
+
+CPU: 0 PID: 0 Comm: swapper/0 Not tainted 5.6.0-rc5-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ <IRQ>
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0xef/0x16e lib/dump_stack.c:118
+ print_address_description.constprop.0.cold+0xd3/0x314 mm/kasan/report.c:374
+ __kasan_report.cold+0x37/0x77 mm/kasan/report.c:506
+ kasan_report+0xe/0x20 mm/kasan/common.c:641
+ htc_process_conn_rsp drivers/net/wireless/ath/ath9k/htc_hst.c:131 [inline]
+ ath9k_htc_rx_msg+0xa25/0xaf0 drivers/net/wireless/ath/ath9k/htc_hst.c:443
+ ath9k_hif_usb_reg_in_cb+0x1ba/0x630 drivers/net/wireless/ath/ath9k/hif_usb.c:718
+ __usb_hcd_giveback_urb+0x29a/0x550 drivers/usb/core/hcd.c:1650
+ usb_hcd_giveback_urb+0x368/0x420 drivers/usb/core/hcd.c:1716
+ dummy_timer+0x1258/0x32ae drivers/usb/gadget/udc/dummy_hcd.c:1966
+
+
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
