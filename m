@@ -2,336 +2,337 @@ Return-Path: <SRS0=aGSP=5L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFFDDC2D0E5
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 19:56:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B678C43331
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 19:57:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C23C0206E6
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 19:56:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED806206E6
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 19:57:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="BujfbLdP"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="hi6vwbex"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728569AbgCZT4N (ORCPT
+        id S1728613AbgCZT5Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 15:56:13 -0400
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:35958 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727612AbgCZT4N (ORCPT
+        Thu, 26 Mar 2020 15:57:24 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:41882 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727612AbgCZT5Y (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 15:56:13 -0400
-Received: by mail-oi1-f196.google.com with SMTP id k18so6724407oib.3
-        for <linux-kernel@vger.kernel.org>; Thu, 26 Mar 2020 12:56:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=v7QzDUhfwhoGkLZ3zOdU9l1vGMKm29JvohHiM8YvFao=;
-        b=BujfbLdPFBmzFoZbb00nCNM0ZruUKmCKibDCfwIAlqWJtdycm4MywllZGQGIHWKq7B
-         fcclCvY3YwQvgvNkzQsGDtzbD9eGUV6q1es4smHMC/mIYSfGtHYFJ2dw1vD+E//eNEG1
-         HiwDbnis+MgYiUlA8yoBU1rADvjJtgTgumyaWDHPBlouI939SiRloAq9uJN5eQ3mdB6p
-         x+4EckDe1RF6WXRLO9PwkYpUqrITHPlskET+DScWgmW0RQSbX5i24PGXm1jcDp12KzQx
-         iNu9V22UQ3WEY4yHQpeSRcDH3W88TUOdQxT2yzPeewuWYgpBv1PwTLDKR5liNqTTBGM3
-         c19w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=v7QzDUhfwhoGkLZ3zOdU9l1vGMKm29JvohHiM8YvFao=;
-        b=nToYuaG0Z7OaypHqdF6DLTxGnlm9CtC9CIlJ0D6Eu1UXGVfzkyYIORCn5z0eo/fUFc
-         aBDJG+MiOOpWTj8rwGvUy4/GLtZqR+O0PrQLpYVibg1WyeKwn9oHPqARAvpiiJU3nk+4
-         CcPmyhb8auF8KQmiinZxF2YcMttwOg8kBB/KVmMzPpZmTlk6xCJp+PC8J070MUb58VlY
-         nnHCRGFPDzsRFsK/mNx6WRCORsH8NsxY83nDAJYyObx+nmyVtoj/7Z7wUzlGVUWplgWl
-         1qLYpUZN+Nf6j0Il+R1pyevLprGenUPeO7tgwnHX3+EVAe6NCDnM03/U2SGEYZcNWwJc
-         JEeg==
-X-Gm-Message-State: ANhLgQ3dmX2iCoPFjebZxq0TtlRnj00HgFZZwS/lT/1dXJpnuXs3etfb
-        WuesLpnM5uZrQbPCis6ZDtq87ISFeVoYFGMx1aYGqQ==
-X-Google-Smtp-Source: ADFU+vuWVAeBxu9vm7NWou8KbIUNngFj9VIP9GdvfAIZd/0l2EIzprBFVrvbFEzn6tBQH/wl8pa9nO0qss/DHbpFyJc=
-X-Received: by 2002:aca:849:: with SMTP id 70mr1553894oii.30.1585252571292;
- Thu, 26 Mar 2020 12:56:11 -0700 (PDT)
+        Thu, 26 Mar 2020 15:57:24 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=npXztQNsueHlShWJd1lOnCg5QbqP/9CD5NFcbhBoQwQ=; b=hi6vwbexGa7OxE3FSXG0Ir++zO
+        jCSpro7RRA6yK0bIRcAhkB7OlbPG58vBocYxwn5RFQqminyMEVfCHZw3pvXE3pMBI9dangfXgXQBw
+        V9s4dFfca+mC2hDJ/EP4Phi0l+svuhjenaOK3+ZB5Zf8x36GywqIh977G3q+j+xy1COPAiDM6bfb6
+        fCyYDf1B2+r/ubKEH5LY4ZQeYVntusBrk7/jXJjcF6rslCbUSTC5oMhUJbWuUTLPNCG+M6hdje7CF
+        gdZ8d4a5c4TIypERmQTPbKuHC8CX/pLsqos2yfzXCbDcYlsIXCGoVAcV7FXm549cBNmpByGosnpuJ
+        srn4aalQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=worktop.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jHYcz-00075z-1S; Thu, 26 Mar 2020 19:57:21 +0000
+Received: by worktop.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 41579983531; Thu, 26 Mar 2020 20:57:18 +0100 (CET)
+Date:   Thu, 26 Mar 2020 20:57:18 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Josh Poimboeuf <jpoimboe@redhat.com>
+Cc:     tglx@linutronix.de, linux-kernel@vger.kernel.org, x86@kernel.org,
+        mhiramat@kernel.org, mbenes@suse.cz
+Subject: Re: [PATCH v4 01/13] objtool: Remove CFI save/restore special case
+Message-ID: <20200326195718.GD2452@worktop.programming.kicks-ass.net>
+References: <20200325174525.772641599@infradead.org>
+ <20200325174605.369570202@infradead.org>
+ <20200326113049.GD20696@hirez.programming.kicks-ass.net>
+ <20200326135620.tlmof5fa7p5wct62@treble>
+ <20200326154938.GO20713@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-References: <20200324175719.62496-1-andriy.shevchenko@linux.intel.com>
- <20200325032901.29551-1-saravanak@google.com> <20200325125120.GX1922688@smile.fi.intel.com>
- <CAGETcx_TGw24UqX7pXZePyskrao6zwnKTq8mBk9g_7jokqAqkA@mail.gmail.com> <20200326115431.GP1922688@smile.fi.intel.com>
-In-Reply-To: <20200326115431.GP1922688@smile.fi.intel.com>
-From:   Saravana Kannan <saravanak@google.com>
-Date:   Thu, 26 Mar 2020 12:55:34 -0700
-Message-ID: <CAGETcx_3+YH_LmNUCAAk1OaXk6noHEXxcE+ckkoBqKJJhtpDjQ@mail.gmail.com>
-Subject: Re: [PATCH v3] driver core: Break infinite loop when deferred probe
- can't be satisfied
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Andrzej Hajda <a.hajda@samsung.com>,
-        Artem Bityutskiy <artem.bityutskiy@linux.intel.com>,
-        Felipe Balbi <balbi@kernel.org>,
-        Mark Brown <broonie@kernel.org>, Ferry Toth <fntoth@gmail.com>,
-        grant.likely@arm.com,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Android Kernel Team <kernel-team@android.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200326154938.GO20713@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 26, 2020 at 4:54 AM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
->
-> On Wed, Mar 25, 2020 at 03:08:29PM -0700, Saravana Kannan wrote:
-> > On Wed, Mar 25, 2020 at 5:51 AM Andy Shevchenko
-> > <andriy.shevchenko@linux.intel.com> wrote:
-> > > On Tue, Mar 24, 2020 at 08:29:01PM -0700, Saravana Kannan wrote:
-> > > > On Tue, Mar 24, 2020 at 5:38 AM Andy Shevchenko <andriy.shevchenko@linux.intel.com> wrote:
-> > > > > Consider the following scenario.
-> > > > >
-> > > > > The main driver of USB OTG controller (dwc3-pci), which has the following
-> > > > > functional dependencies on certain platform:
-> > > > > - ULPI (tusb1210)
-> > > > > - extcon (tested with extcon-intel-mrfld)
-> > > > >
-> > > > > Note, that first driver, tusb1210, is available at the moment of
-> > > > > dwc3-pci probing, while extcon-intel-mrfld is built as a module and
-> > > > > won't appear till user space does something about it.
-> > > > >
-> > > > > This is depicted by kernel configuration excerpt:
-> > > > >
-> > > > >     CONFIG_PHY_TUSB1210=y
-> > > > >     CONFIG_USB_DWC3=y
-> > > > >     CONFIG_USB_DWC3_ULPI=y
-> > > > >     CONFIG_USB_DWC3_DUAL_ROLE=y
-> > > > >     CONFIG_USB_DWC3_PCI=y
-> > > > >     CONFIG_EXTCON_INTEL_MRFLD=m
-> > > > >
-> > > > > In the Buildroot environment the modules are probed by alphabetical ordering
-> > > > > of their modaliases. The latter comes to the case when USB OTG driver will be
-> > > > > probed first followed by extcon one.
-> > > > >
-> > > > > So, if the platform anticipates extcon device to be appeared, in the above case
-> > > > > we will get deferred probe of USB OTG, because of ordering.
-> > > > >
-> > > > > Since current implementation, done by the commit 58b116bce136 ("drivercore:
-> > > > > deferral race condition fix") counts the amount of triggered deferred probe,
-> > > > > we never advance the situation -- the change makes it to be an infinite loop.
-> > > >
-> > > > Hi Andy,
-> > > >
-> > > > I'm trying to understand this sequence of steps. Sorry if the questions
-> > > > are stupid -- I'm not very familiar with USB/PCI stuff.
-> > >
-> > > Thank you for looking into this. My answer below.
-> > >
-> > > As a first thing I would like to tell that there is another example of bad
-> > > behaviour of deferred probe with no relation to USB. The proposed change also
-> > > fixes that one (however, less possible to find in real life).
-> >
-> > Unless I see what the other issue is, I can't speak for the unknown.
->
-> Okay, let's talk about other case (actually it's the one which I had noticed
-> approximately at the time when culprit patch made the kernel).
->
-> For some debugging purposes I have been using pin control table in board code.
->
-> Since I would like to boot kernel on different systems I have some tables for
-> non-existing pin control device. Pin control framework returns -EPROBE_DEFER
-> when trying to probe device with attached table for wrong pin control. This is
-> fine, the problem is that *any* successfully probed device, which happens in
-> the deferred probe initcall will desynchronize existing counter. As a result ->
-> infinite loop. For the record, I didn't realize and didn't investigate that
-> time the issue and now I can confirm that this is a culprit which is fixed by
-> this patch.
->
-> > > > > ---8<---8<---
-> > > > >
-> > > > > [   22.187127] driver_deferred_probe_trigger <<< 1
-> > > > >
-> > > > > ...here is the late initcall triggers deferred probe...
-> > > > >
-> > > > > [   22.191725] platform dwc3.0.auto: deferred_probe_work_func in deferred list
-> > > > >
-> > > > > ...dwc3.0.auto is the only device in the deferred list...
-> > > >
-> > > > Ok, dwc3.0.auto is the only unprobed device at this point?
-> > >
-> > > Correct.
-> > >
-> > > > > [   22.198727] platform dwc3.0.auto: deferred_probe_work_func 1 <<< counter 1
-> > > > >
-> > > > > ...the counter before mutex is unlocked is kept the same...
-> > > > >
-> > > > > [   22.205663] platform dwc3.0.auto: Retrying from deferred list
-> > > > >
-> > > > > ...mutes has been unlocked, we try to re-probe the driver...
-> > > > >
-> > > > > [   22.211487] bus: 'platform': driver_probe_device: matched device dwc3.0.auto with driver dwc3
-> > > > > [   22.220060] bus: 'platform': really_probe: probing driver dwc3 with device dwc3.0.auto
-> > > > > [   22.238735] bus: 'ulpi': driver_probe_device: matched device dwc3.0.auto.ulpi with driver tusb1210
-> > > > > [   22.247743] bus: 'ulpi': really_probe: probing driver tusb1210 with device dwc3.0.auto.ulpi
-> > > > > [   22.256292] driver: 'tusb1210': driver_bound: bound to device 'dwc3.0.auto.ulpi'
-> > > > > [   22.263723] driver_deferred_probe_trigger <<< 2
-> > > > >
-> > > > > ...the dwc3.0.auto probes ULPI, we got successful bound and bumped counter...
-> > > > >
-> > > > > [   22.268304] bus: 'ulpi': really_probe: bound device dwc3.0.auto.ulpi to driver tusb1210
-> > > >
-> > > > So where did this dwc3.0.auto.ulpi come from?
-> > >
-> > > > Looks like the device is created by dwc3_probe() through this call flow:
-> > > > dwc3_probe() -> dwc3_core_init() -> dwc3_core_ulpi_init() ->
-> > > > dwc3_ulpi_init() -> ulpi_register_interface() -> ulpi_register()
-> > >
-> > > Correct.
-> > >
-> > > > > [   22.276697] platform dwc3.0.auto: Driver dwc3 requests probe deferral
-> > > >
-> > > > Can you please point me to which code patch actually caused the probe
-> > > > deferral?
-> > >
-> > > Sure, it's in drd.c.
-> > >
-> > > if (device_property_read_string(dev, "linux,extcon-name", &name) == 0) {
-> > >   edev = extcon_get_extcon_dev(name);
-> > >   if (!edev)
-> > >     return ERR_PTR(-EPROBE_DEFER);
-> > >   return edev;
-> > > }
-> >
-> > Thanks for the confirmations and pointers. I assume
-> > "linux,extcon-name" is a property that's obtained from ACPI? Because I
-> > couldn't find a relevant reference to it elsewhere in the kernel.
->
-> Yes.
->
-> > > > > ...but extcon driver is still missing...
-> > > > >
-> > > > > [   22.283174] platform dwc3.0.auto: Added to deferred list
-> > > > > [   22.288513] platform dwc3.0.auto: driver_deferred_probe_add_trigger local counter: 1 new counter 2
-> > > >
-> > > > I'm not fully aware of all the USB implications, but if extcon is
-> > > > needed, why can't that check be done before we add and probe the ulpi
-> > > > device? That'll avoid this whole "fake" probing and avoid the counter
-> > > > increase. And avoid the need for this patch that's touching the code
-> > > > code that's already a bit delicate.
-> > >
-> > > > Also, with my limited experience with all the possible drivers in the
-> > > > kernel, it's weird that the ulpi device is added and probed before we
-> > > > make sure the parent device (dwc3.0.auto) can actually probe
-> > > > successfully.
-> > >
-> > > As I said above the deferred probe trigger has flaw on its own.
-> >
-> > Definitely agree. I'm not saying deferred probe is perfect.
-> >
-> > > Even if we fix for USB case, there is (and probably will be) others.
-> > >
-> > > > Most of the platform device code I've seen in systems with OF (device
-> > > > tree) add the child devices towards the end of the parent's probe
-> > > > function.
->
-> I realized also that your fix won't work if we change extcon to be compiled in
-> and ULPI to be a module. So, any driver with two or more strict dependencies
-> one of which is satisfied and one is not will end up in this infinite loop.
->
-> > > > > ...and since we had a successful probe, we got counter mismatch...
-> > > > >
-> > > > > [   22.297490] driver_deferred_probe_trigger <<< 3
-> > > > > [   22.302074] platform dwc3.0.auto: deferred_probe_work_func 2 <<< counter 3
-> > > > >
-> > > > > ...at the end we have a new counter and loop repeats again, see 22.198727...
-> > > > >
-> > > > > ---8<---8<---
-> > > > >
-> > > > > Revert of the commit helps, but it is probably not helpful for the initially
-> > > > > found regression. Artem Bityutskiy suggested to use counter of the successful
-> > > > > probes instead. This fixes above mentioned case and shouldn't prevent driver
-> > > > > to reprobe deferred ones.
-> > > > >
-> > > > > Under "successful probe" we understand the state when a driver of the certain
-> > > > > device is being kept bound after deferred probe trigger cycle. For instance,
-> > > > > in the above mentioned case probing of tusb1210 is not successful because dwc3
-> > > > > driver unbinds device dwc3.0.auto.ulpi. The atomic_dec() call is used to keep
-> > > > > track of this. The amount of bindings is always great than or equal to the
-> > > > > amount of unbindings as guaranteed by design of the driver binding mechanism.
-> > > >
-> > > > The unbindings count can increase for other unrelated drivers unbinding
-> > > > too. Wouldn't it? Seems a bit fragile and racy in a fashion similar to
-> > > > the issue the original patch was trying to fix.
-> > >
-> > > Yes, it's (unlikely) possible (*), but it will give one more iteration per such
-> > > case. It's definitely better than infinite loop. Do you agree?
-> >
-> > Sorry I wasn't being clear (I was in a rush). I'm saying this patch
-> > can reintroduce the bug where the deferred probe isn't triggered when
-> > it should be.
->
-> I don't think so. If I'm not mistaken we still have one more cycle to trigger probe.
->
-> > Let's take a simple execution flow.
-> >
-> > probe_okay is at 10.
-> >
-> > Thread-A
-> >   really_probe(Device-A)
-> >     local_probe_okay_count = 10
-> >     Device-A probe function is running...
-> >
-> > Thread-B
-> >   really_probe(Device-B)
-> >     Device-B probes successfully.
-> >     probe_okay incremented to 11
->
-> And probe trigger task is called. It goes to the loop because counters are not the same.
+On Thu, Mar 26, 2020 at 04:49:38PM +0100, Peter Zijlstra wrote:
+> > The 'insn == first' check isn't ideal, but at least it works (I think?).
+> 
+> It works, yes, for exactly this one case.
 
-Good point. But Device-A is still not in any of the deferred probed
-lists at this point AFAICU. So even the retriggered iteration can
-complete before Device-A is back on the deferred probe list?
+How's this? Ignore the ignore_cfi bits, that's a 'failed' experiment.
 
->
-> > Thread-C
-> >   Device-C (which had bound earlier) is unbound (say module is
-> > unloaded or a million other reasons).
-> >   probe_okay is decremented to 10.
->
->
-> > Thread-A continues
-> >   Device-A probe function returns -EPROBE_DEFER
-> >   driver_deferred_probe_add_trigger() doesn't do anything because
-> >     local_probe_okay_count == probe_okay
-> >   But Device-A might have deferred probe waiting on Device-B.
-> >   Device-A never probes.
->
-> See above.
+---
+ arch/x86/include/asm/orc_types.h       |   2 +
+ arch/x86/include/asm/processor.h       |   6 +-
+ arch/x86/include/asm/unwind_hints.h    |   4 ++
+ tools/arch/x86/include/asm/orc_types.h |   2 +
+ tools/objtool/check.c                  | 109 +++++++++++++++++++--------------
+ tools/objtool/check.h                  |   3 +-
+ 6 files changed, 75 insertions(+), 51 deletions(-)
 
-I think the key to fixing the original issue that commit 58b116bce136
-fixes is to make sure the thread that has a device getting deferred is
-the one that re-triggers the deferred probe if it sees another device
-having probed successfully.
+diff --git a/arch/x86/include/asm/orc_types.h b/arch/x86/include/asm/orc_types.h
+index 6e060907c163..82b5c685341a 100644
+--- a/arch/x86/include/asm/orc_types.h
++++ b/arch/x86/include/asm/orc_types.h
+@@ -60,6 +60,8 @@
+ #define ORC_TYPE_REGS_IRET		2
+ #define UNWIND_HINT_TYPE_SAVE		3
+ #define UNWIND_HINT_TYPE_RESTORE	4
++#define UNWIND_HINT_TYPE_IGNORE		5
++#define UNWIND_HINT_TYPE_IRET_CONT	6
 
-> > > *) It means during probe you have _intensive_ removing, of course you may keep
-> > > kernel busy with iterations, but it has no practical sense. DoS attacks more
-> > > effective in different ways.
-> >
-> > I wasn't worried about DoS attacks. More of a functional correctness
-> > issue what I explained above.
-> >
-> > Anyway, if your issue and similar issues can be handles in driver core
-> > in a clean way without breaking other cases, I don't have any problem
-> > with that. Just that, I think the current solution breaks other cases.
->
-> > As an alternate solution, assuming "linux,extcon-name" is coming
-> > from some firmware, you might want to look into the fw_devlink
-> > feature.
->
-> Let's forget about USB. Don't be fixed on it. It one of the particular case out
-> of others. I'm not going to comment USB particularities, sorry. It seems to me
-> as not related.
+ #ifndef __ASSEMBLY__
+ /*
+diff --git a/arch/x86/include/asm/processor.h b/arch/x86/include/asm/processor.h
+index 94789db550df..45c74cbc0a83 100644
+--- a/arch/x86/include/asm/processor.h
++++ b/arch/x86/include/asm/processor.h
+@@ -728,8 +728,8 @@ static inline void sync_core(void)
+ 	unsigned int tmp;
 
-Ok, but just FYI, fw_devlink helps a lot with avoiding deferred probe
-issues. Has helped a ton with Android on ARM.
+ 	asm volatile (
+-		UNWIND_HINT_SAVE
+ 		"mov %%ss, %0\n\t"
++		UNWIND_HINT_SAVE
+ 		"pushq %q0\n\t"
+ 		"pushq %%rsp\n\t"
+ 		"addq $8, (%%rsp)\n\t"
+@@ -737,9 +737,9 @@ static inline void sync_core(void)
+ 		"mov %%cs, %0\n\t"
+ 		"pushq %q0\n\t"
+ 		"pushq $1f\n\t"
++		UNWIND_HINT_IRET_CONT
+ 		"iretq\n\t"
+-		UNWIND_HINT_RESTORE
+-		"1:"
++		"1:\n\t"
+ 		: "=&r" (tmp), ASM_CALL_CONSTRAINT : : "cc", "memory");
+ #endif
+ }
+diff --git a/arch/x86/include/asm/unwind_hints.h b/arch/x86/include/asm/unwind_hints.h
+index f5e2eb12cb71..d8a07749c323 100644
+--- a/arch/x86/include/asm/unwind_hints.h
++++ b/arch/x86/include/asm/unwind_hints.h
+@@ -112,6 +112,10 @@
 
--Saravana
+ #define UNWIND_HINT_RESTORE UNWIND_HINT(0, 0, UNWIND_HINT_TYPE_RESTORE, 0)
+
++#define UNWIND_HINT_IGNORE UNWIND_HINT(0, 0, UNWIND_HINT_TYPE_IGNORE, 0)
++
++#define UNWIND_HINT_IRET_CONT UNWIND_HINT(0, 0, UNWIND_HINT_TYPE_IRET_CONT, 0)
++
+ #endif /* __ASSEMBLY__ */
+
+ #endif /* _ASM_X86_UNWIND_HINTS_H */
+diff --git a/tools/arch/x86/include/asm/orc_types.h b/tools/arch/x86/include/asm/orc_types.h
+index 6e060907c163..82b5c685341a 100644
+--- a/tools/arch/x86/include/asm/orc_types.h
++++ b/tools/arch/x86/include/asm/orc_types.h
+@@ -60,6 +60,8 @@
+ #define ORC_TYPE_REGS_IRET		2
+ #define UNWIND_HINT_TYPE_SAVE		3
+ #define UNWIND_HINT_TYPE_RESTORE	4
++#define UNWIND_HINT_TYPE_IGNORE		5
++#define UNWIND_HINT_TYPE_IRET_CONT	6
+
+ #ifndef __ASSEMBLY__
+ /*
+diff --git a/tools/objtool/check.c b/tools/objtool/check.c
+index e637a4a38d2a..03bac6cb313c 100644
+--- a/tools/objtool/check.c
++++ b/tools/objtool/check.c
+@@ -1259,14 +1259,25 @@ static int read_unwind_hints(struct objtool_file *file)
+
+ 		cfa = &insn->state.cfa;
+
+-		if (hint->type == UNWIND_HINT_TYPE_SAVE) {
++		switch (hint->type) {
++		case UNWIND_HINT_TYPE_SAVE:
+ 			insn->save = true;
+ 			continue;
+
+-		} else if (hint->type == UNWIND_HINT_TYPE_RESTORE) {
++		case UNWIND_HINT_TYPE_RESTORE:
+ 			insn->restore = true;
+-			insn->hint = true;
+ 			continue;
++
++		case UNWIND_HINT_TYPE_IGNORE:
++			insn->ignore_cfi = true;
++			continue;
++
++		case UNWIND_HINT_TYPE_IRET_CONT:
++			insn->iret_cont = true;
++			continue;
++
++		default:
++			break;
+ 		}
+
+ 		insn->hint = true;
+@@ -1558,6 +1569,9 @@ static int update_insn_state(struct instruction *insn, struct insn_state *state)
+ 	struct cfi_reg *cfa = &state->cfa;
+ 	struct cfi_reg *regs = state->regs;
+
++	if (insn->ignore_cfi)
++		return 0;
++
+ 	/* stack operations don't make sense with an undefined CFA */
+ 	if (cfa->base == CFI_UNDEFINED) {
+ 		if (insn->func) {
+@@ -1993,6 +2007,37 @@ static int validate_sibling_call(struct instruction *insn, struct insn_state *st
+ 	return validate_call(insn, state);
+ }
+
++static int insn_hint_restore(struct objtool_file *file, struct section *sec,
++			     struct symbol *func, struct instruction *insn,
++			     struct insn_state *state)
++{
++	struct instruction *save_insn, *i;
++
++	i = insn;
++	save_insn = NULL;
++	func_for_each_insn_continue_reverse(file, func, i) {
++		if (i->save) {
++			save_insn = i;
++			break;
++		}
++	}
++
++	if (!save_insn) {
++		WARN_FUNC("no corresponding CFI save for CFI restore",
++			  sec, insn->offset);
++		return 1;
++	}
++
++	if (!save_insn->visited) {
++		WARN_FUNC("objtool isn't smart enough to handle this CFI save/restore combo",
++			  sec, insn->offset);
++		return 1;
++	}
++
++	*state = save_insn->state;
++	return 0;
++}
++
+ /*
+  * Follow the branch starting at the given instruction, and recursively follow
+  * any other branches (jumps).  Meanwhile, track the frame pointer state at
+@@ -2000,15 +2045,14 @@ static int validate_sibling_call(struct instruction *insn, struct insn_state *st
+  * tools/objtool/Documentation/stack-validation.txt.
+  */
+ static int validate_branch(struct objtool_file *file, struct symbol *func,
+-			   struct instruction *first, struct insn_state state)
++			   struct instruction *insn, struct insn_state state)
+ {
++	struct instruction *next_insn;
+ 	struct alternative *alt;
+-	struct instruction *insn, *next_insn;
+ 	struct section *sec;
+ 	u8 visited;
+ 	int ret;
+
+-	insn = first;
+ 	sec = insn->sec;
+
+ 	if (insn->alt_group && list_empty(&insn->alts)) {
+@@ -2034,7 +2078,7 @@ static int validate_branch(struct objtool_file *file, struct symbol *func,
+
+ 		visited = 1 << state.uaccess;
+ 		if (insn->visited) {
+-			if (!insn->hint && !insn_state_match(insn, &state))
++			if ((!insn->hint && !insn->restore) && !insn_state_match(insn, &state))
+ 				return 1;
+
+ 			if (insn->visited & visited)
+@@ -2042,47 +2086,12 @@ static int validate_branch(struct objtool_file *file, struct symbol *func,
+ 		}
+
+ 		if (insn->hint) {
+-			if (insn->restore) {
+-				struct instruction *save_insn, *i;
+-
+-				i = insn;
+-				save_insn = NULL;
+-				func_for_each_insn_continue_reverse(file, func, i) {
+-					if (i->save) {
+-						save_insn = i;
+-						break;
+-					}
+-				}
+-
+-				if (!save_insn) {
+-					WARN_FUNC("no corresponding CFI save for CFI restore",
+-						  sec, insn->offset);
+-					return 1;
+-				}
+-
+-				if (!save_insn->visited) {
+-					/*
+-					 * Oops, no state to copy yet.
+-					 * Hopefully we can reach this
+-					 * instruction from another branch
+-					 * after the save insn has been
+-					 * visited.
+-					 */
+-					if (insn == first)
+-						return 0;
+-
+-					WARN_FUNC("objtool isn't smart enough to handle this CFI save/restore combo",
+-						  sec, insn->offset);
+-					return 1;
+-				}
+-
+-				insn->state = save_insn->state;
+-			}
+-
+ 			state = insn->state;
+-
+-		} else
++		} else {
++			if (insn->restore)
++				insn_hint_restore(file, sec, func, insn, &state);
+ 			insn->state = state;
++		}
+
+ 		insn->visited |= visited;
+
+@@ -2191,11 +2200,17 @@ static int validate_branch(struct objtool_file *file, struct symbol *func,
+ 			break;
+
+ 		case INSN_CONTEXT_SWITCH:
+-			if (func && (!next_insn || !next_insn->hint)) {
++			if (insn->iret_cont) {
++				insn_hint_restore(file, sec, func, insn, &state);
++				break;
++			}
++
++			if (func) {
+ 				WARN_FUNC("unsupported instruction in callable function",
+ 					  sec, insn->offset);
+ 				return 1;
+ 			}
++
+ 			return 0;
+
+ 		case INSN_STACK:
+diff --git a/tools/objtool/check.h b/tools/objtool/check.h
+index 6d875ca6fce0..f2b6172e119b 100644
+--- a/tools/objtool/check.h
++++ b/tools/objtool/check.h
+@@ -33,7 +33,8 @@ struct instruction {
+ 	unsigned int len;
+ 	enum insn_type type;
+ 	unsigned long immediate;
+-	bool alt_group, dead_end, ignore, hint, save, restore, ignore_alts;
++	bool alt_group, dead_end, ignore, ignore_alts;
++	bool hint, save, restore, ignore_cfi, iret_cont;
+ 	bool retpoline_safe;
+ 	u8 visited;
+ 	struct symbol *call_dest;
+
