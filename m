@@ -2,63 +2,126 @@ Return-Path: <SRS0=aGSP=5L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA2D7C2D0E5
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 20:47:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AC54C2D0E9
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 20:48:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 990412070A
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 20:47:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 328502073E
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 20:48:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585255691;
+	bh=6RKen0ioTy65oeuJuXAtJ6M2BJxU8YbCxuM+rKEX6NY=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=ehklZM0j2jJnTM7HHYGlvV7S0OyCJUlp+4ST85DA0Fgz99sQlFlShhGNi1fI2fTdU
+	 P1YVlVFDJHBOrCWRDajyhfjbGEtDs9iKa3U64t2XtL57kXGt0oqmhcpOMiBG+dUvjJ
+	 TA49kTWWa9XLHjxF27oSrszZ7RHE5YGxP6kLWmS4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727791AbgCZUrt (ORCPT
+        id S1727674AbgCZUsK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 16:47:49 -0400
-Received: from relay7-d.mail.gandi.net ([217.70.183.200]:53325 "EHLO
-        relay7-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726363AbgCZUrt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 16:47:49 -0400
-X-Originating-IP: 86.202.105.35
-Received: from localhost (lfbn-lyo-1-9-35.w86-202.abo.wanadoo.fr [86.202.105.35])
-        (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay7-d.mail.gandi.net (Postfix) with ESMTPSA id 87C2720007;
-        Thu, 26 Mar 2020 20:47:46 +0000 (UTC)
-Date:   Thu, 26 Mar 2020 21:47:46 +0100
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     Eugene Syromiatnikov <esyr@redhat.com>
-Cc:     linux-rtc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        "Dmitry V. Levin" <ldv@altlinux.org>
-Subject: Re: [PATCH] rtc: make definitions in include/uapi/linux/rtc.h
- actually useful for user space
-Message-ID: <20200326204746.GA593483@piout.net>
-References: <20200324041209.GA30727@asgard.redhat.com>
+        Thu, 26 Mar 2020 16:48:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53104 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726347AbgCZUsJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Mar 2020 16:48:09 -0400
+Received: from localhost (mobile-166-175-186-165.mycingular.net [166.175.186.165])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B60FF2070A;
+        Thu, 26 Mar 2020 20:48:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1585255689;
+        bh=6RKen0ioTy65oeuJuXAtJ6M2BJxU8YbCxuM+rKEX6NY=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=vkbsDVHff3CZYPxtxcc0HH1/CZg3CSmvig9OJyTv8xuiWi01uIYoBe5p1UK/juO07
+         W2cirk8UdPTFG/Fx2mEs/VvE9am3rbh8UJYQ7Dufa7Y1+2lSDW8ps9HN3qv87cQc1I
+         XwxIrq10sk/x+sVNQpLiRH+unIfFfgKFXSCP8zwc=
+Date:   Thu, 26 Mar 2020 15:48:07 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Ray Jui <ray.jui@broadcom.com>
+Cc:     Srinath Mannam <srinath.mannam@broadcom.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Ray Jui <rjui@broadcom.com>,
+        Andrew Murray <andrew.murray@arm.com>,
+        bcm-kernel-feedback-list@broadcom.com, linux-pci@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Bharat Gooty <bharat.gooty@broadcom.com>
+Subject: Re: [PATCH 1/3] PCI: iproc: fix out of bound array access
+Message-ID: <20200326204807.GA87784@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200324041209.GA30727@asgard.redhat.com>
+In-Reply-To: <4a836faf-645d-a1ab-d525-738a318758a0@broadcom.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 24/03/2020 05:12:09+0100, Eugene Syromiatnikov wrote:
-> BIT() macro is not defined in UAPI headers; there is, however, similarly
-> defined _BITUL() macro present in include/uapi/linux/const.h; use it
-> instead and include <linux/const.h> and <linux/ioctl.h> in order to make
-> the definitions provided in the header useful.
+On Thu, Mar 26, 2020 at 01:27:36PM -0700, Ray Jui wrote:
+> On 3/26/2020 12:48 PM, Bjorn Helgaas wrote:
+> > ...
+> > It's outside the scope of this patch, but I'm not really a fan of the
+> > pcie->reg_offsets[] scheme this driver uses to deal with these
+> > differences.  There usually seems to be *something* that keeps the
+> > driver from referencing registers that don't exist, but it doesn't
+> > seem like the mechanism is very consistent or robust:
+> > 
+> >   - IPROC_PCIE_LINK_STATUS is implemented by PAXB but not PAXC.
+> >     iproc_pcie_check_link() avoids using it if "ep_is_internal", which
+> >     is set for PAXC and PAXC_V2.  Not an obvious connection.
+> > 
+> >   - IPROC_PCIE_CLK_CTRL is implemented for PAXB and PAXC_V1, but not
+> >     PAXC_V2.  iproc_pcie_perst_ctrl() avoids using it ep_is_internal",
+> >     so it *doesn't* use it for PAXC_V1, which does implement it.
+> >     Maybe a bug, maybe intentional; I can't tell.
+> > 
+> >   - IPROC_PCIE_INTX_EN is only implemented by PAXB (not PAXC), but
+> >     AFAICT, we always call iproc_pcie_enable() and rely on
+> >     iproc_pcie_write_reg() silently drop the write to it on PAXC.
+> > 
+> >   - IPROC_PCIE_OARR0 is implemented by PAXB and PAXB_V2 and used by
+> >     iproc_pcie_map_ranges(), which is called if "need_ob_cfg", which
+> >     is set if there's a "brcm,pcie-ob" DT property.  No clear
+> >     connection to PAXB.
+> > 
+> > I think it would be more readable if we used a single variant
+> > identifier consistently, e.g., the "pcie->type" already used in
+> > iproc_pcie_msi_steer(), or maybe a set of variant-specific function
+> > pointers as pcie-qcom.c does.
 > 
-> Fixes: 3431ca4837bf ("rtc: define RTC_VL_READ values")
-> Signed-off-by: Eugene Syromiatnikov <esyr@redhat.com>
-> ---
->  include/uapi/linux/rtc.h | 11 +++++++----
->  1 file changed, 7 insertions(+), 4 deletions(-)
+> It is not possible to use a single variant identifier consistently,
+> i.e., 'pcie->type'. Many of these features are controller revision
+> specific, and certain revisions of the controllers may all have a
+> certain feature, while other revisions of the controllers do not. In
+> addition, there are overlap in features across different controllers.
 > 
-Applied, thanks.
+> IMO, it makes sense to have feature specific flags or booleans, and have
+> those features enabled or disabled based on 'pcie->type', which is what
+> the current driver does, but like you pointed out, what the driver
+> failed is to do this consistently.
 
--- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+There are several drivers that have the same problem of dealing with
+different revisions of hardware.  It would be nice to do it in a
+consistent style, whatever that is.
+
+> The IPROC_PCIE_INTX_EN example you pointed out is a good example. I
+> agree with you that we shouldn't rely on iproc_pcie_write_reg to
+> silently drop the operation for PAXC. We should add code to make it
+> explictly obvious that legacy interrupt is not supported in all PAXC
+> controllers.
+> 
+> pcie->pcie->reg_offsets[] scheme was not intended to be used to silently
+> drop register access that are activated based on features. It's a
+> mistake that should be fixed if some code in the driver is done that
+> way, as you pointed out.
+
+That's actually why I dug into this a bit -- the
+iproc_pcie_reg_is_invalid() case is really a design-time error, so it
+seemed like there should be a WARN() there instead of silently
+returning 0 or ignoring a write.
+
+Bjorn
