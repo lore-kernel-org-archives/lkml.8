@@ -2,113 +2,75 @@ Return-Path: <SRS0=aGSP=5L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBB7CC2D0E7
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 03:12:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 121CFC43331
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 03:16:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E2E220719
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 03:12:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="sWVEJ8+M"
+	by mail.kernel.org (Postfix) with ESMTP id D4C1620772
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 03:16:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727685AbgCZDMj (ORCPT
+        id S1727689AbgCZDQc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 23:12:39 -0400
-Received: from ozlabs.org ([203.11.71.1]:47611 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727560AbgCZDMj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 23:12:39 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 48nqmN4jLvz9sRN;
-        Thu, 26 Mar 2020 14:12:36 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1585192357;
-        bh=jPJIgISpy2X3pF2DFOmrsppQA/UlqAULA6IP+aQG/Nk=;
-        h=Date:From:To:Cc:Subject:From;
-        b=sWVEJ8+MguWCCp0xDbXwlVuTZA3YkRD5occ9xZnF02gOk0a6/kqbRVHWwLKhYyZM6
-         fZ3/V1fGbGmx2vZ3ldSrN07qFoP/VZWUjHUGvbIjCNI4AAv/P9hOY0xQr2bjre/EIR
-         YtK3ZSi/i937o/x4F0JZtNBZW++DriVlyYO+8S1cXZqYb2Dc1VA0SF9ONu85M12zHr
-         m+NpRcw/2bQtRQiEy6fggkXd9zpT4aSnec4NMro/YHzvKsmhoW1HugcbupukxsENYA
-         tVHFz1xLlHOkFM/0oC4tX8xq+C5VdgZbRikR3xGSiFkpzdFJBJlQ/380UQctn6F0ak
-         kioVPXm8cqHyQ==
-Date:   Thu, 26 Mar 2020 14:12:35 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     "Paul E. McKenney" <paulmck@kernel.org>, Greg KH <greg@kroah.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Masahiro Yamada <masahiroy@kernel.org>
-Subject: linux-next: manual merge of the rcu tree with the spdx tree
-Message-ID: <20200326141235.718118af@canb.auug.org.au>
+        Wed, 25 Mar 2020 23:16:32 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:12135 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727575AbgCZDQc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Mar 2020 23:16:32 -0400
+Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 0A5A44BFD47746ECFF9B;
+        Thu, 26 Mar 2020 11:16:29 +0800 (CST)
+Received: from localhost (10.173.223.234) by DGGEMS404-HUB.china.huawei.com
+ (10.3.19.204) with Microsoft SMTP Server id 14.3.487.0; Thu, 26 Mar 2020
+ 11:16:22 +0800
+From:   YueHaibing <yuehaibing@huawei.com>
+To:     <ast@kernel.org>, <daniel@iogearbox.net>, <kafai@fb.com>,
+        <songliubraving@fb.com>, <yhs@fb.com>, <andriin@fb.com>,
+        <davem@davemloft.net>, <kuba@kernel.org>, <hawk@kernel.org>,
+        <john.fastabend@gmail.com>
+CC:     <netdev@vger.kernel.org>, <bpf@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH bpf-next] bpf: remove unused vairable 'bpf_xdp_link_lops'
+Date:   Thu, 26 Mar 2020 11:16:13 +0800
+Message-ID: <20200326031613.19372-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/U_+XevE1.C7d7GyvaOaxPfM";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain
+X-Originating-IP: [10.173.223.234]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/U_+XevE1.C7d7GyvaOaxPfM
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+kernel/bpf/syscall.c:2263:34: warning: 'bpf_xdp_link_lops' defined but not used [-Wunused-const-variable=]
+ static const struct bpf_link_ops bpf_xdp_link_lops;
+                                  ^~~~~~~~~~~~~~~~~
 
-Hi all,
+commit 70ed506c3bbc ("bpf: Introduce pinnable bpf_link abstraction")
+involded this unused variable, remove it.
 
-Today's linux-next merge of the rcu tree got a conflict in:
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+---
+ kernel/bpf/syscall.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-  tools/memory-model/litmus-tests/.gitignore
+diff --git a/kernel/bpf/syscall.c b/kernel/bpf/syscall.c
+index 85567a6ea5f9..7774e55c9881 100644
+--- a/kernel/bpf/syscall.c
++++ b/kernel/bpf/syscall.c
+@@ -2252,7 +2252,6 @@ static int bpf_link_release(struct inode *inode, struct file *filp)
+ #ifdef CONFIG_PROC_FS
+ static const struct bpf_link_ops bpf_raw_tp_lops;
+ static const struct bpf_link_ops bpf_tracing_link_lops;
+-static const struct bpf_link_ops bpf_xdp_link_lops;
+ 
+ static void bpf_link_show_fdinfo(struct seq_file *m, struct file *filp)
+ {
+-- 
+2.17.1
 
-between commit:
 
-  d198b34f3855 (".gitignore: add SPDX License Identifier")
-
-from the spdx tree and commits:
-
-  5381fb2b70e9 ("tools/memory-model: Move from .AArch64.litmus.out to .litm=
-us.AArch.out")
-  dafa02882066 ("tools/memory-model: Keep assembly-language litmus tests")
-
-from the rcu tree.
-
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
-diff --cc tools/memory-model/litmus-tests/.gitignore
-index c492a1ddad91,848e62d2a9b3..000000000000
---- a/tools/memory-model/litmus-tests/.gitignore
-+++ b/tools/memory-model/litmus-tests/.gitignore
-@@@ -1,2 -1,1 +1,2 @@@
- +# SPDX-License-Identifier: GPL-2.0-only
-- *.litmus.out
-+ *.litmus.*
-
---Sig_/U_+XevE1.C7d7GyvaOaxPfM
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl58HaMACgkQAVBC80lX
-0GxutQf+PIavlvoaIc3NpddYuBxx4kcfCL+BIPFbTQc+UwlswmgPCSTVE+bHLYW1
-Zx3C24FnD7MEq4bgmv2apfRItJ+Nuj3t4wjQZjV/EBne3JKlERAKUHMB+Pmp32BO
-Reo/eB/BKYK2kwV0Mc1kEaPRY1l/PytWeFFVE/ZRjCxUnC+GGNqoaxRy2SZrLnvQ
-vTwoSFIftLP2BH7iy//M5EvUNIXVPzz33Tbm85YNDqy1+oUp8YxO6iZQ54F86Lk+
-bNttKwCSTIjCUsdWOvvoBEOC3/4pH1VMMHxiTTribjHuhEsJnuNbWIBfWU9uyUKh
-qs0fPnPkxveQG6d6ecK/bjemuRn6xg==
-=wqDK
------END PGP SIGNATURE-----
-
---Sig_/U_+XevE1.C7d7GyvaOaxPfM--
