@@ -2,114 +2,251 @@ Return-Path: <SRS0=aGSP=5L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D952EC43331
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 16:58:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D90C7C2D0E5
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 16:59:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B01EB20719
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 16:58:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A73412073E
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 16:59:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585241886;
-	bh=zgGTy2wBEludJkWdHzz8qHDYr5ncygsF68vdD3uqArQ=;
+	s=default; t=1585241985;
+	bh=BmW7FxFVukavIOrW+jQGBgKkYkX/kfC7K9PYVROC7RU=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=pgVL+K3dDe0zRYOiPpvPMLm1dRgxKTNyZKYmowq+NW9yiygkgC0Qh5rFbwJTCiULT
-	 m4nqUGKjarHl6qzwdSeBpW8Xk1ig3aEpBAB9iozKbNy+4o1jinmrYOXCio/zs/dmyI
-	 98qF0jjraxE68zWTOLb5QnbpTLEy1jXQR+/zMnXs=
+	b=k9viSxtBPjxJb1OUu+wKqipiZUhrCyYQ1MnfTt9CKMOTdzaVi03Yd5SZVpF61t++T
+	 ONhDFVMtyVlX+ZHGQTP9q+XspceJuIPiK8UOKOG4dqrp0YYRvfCCTQK1QgoAo0MBU4
+	 hGf2kgp6aIFTSd0NTZrIn3pLZAPTRKdlOmFf+UTk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727547AbgCZQ6F (ORCPT
+        id S1727750AbgCZQ7o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 12:58:05 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:46339 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725994AbgCZQ6F (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 12:58:05 -0400
-Received: by mail-lj1-f196.google.com with SMTP id v16so7114161ljk.13
-        for <linux-kernel@vger.kernel.org>; Thu, 26 Mar 2020 09:58:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=bfUkhBFRLFwePrsRa48kFE9ampgS1I4KqeLZEsewsfI=;
-        b=QanaqOqz+yuymxm+3w42k8DN3GP1JG+w+QCwpzCUzMsRQbQEJy2otQKTO3Zrug3nS/
-         ji+I1auUM2U9F8Hv54+LMMeT0UrZCMm/X25ChNwfSjDjTWPXM44JFhWpdanFMUq9yz5w
-         j8osn2Hb38FF3cZG1b6JYRzF60WKLe6TpL6Kg=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=bfUkhBFRLFwePrsRa48kFE9ampgS1I4KqeLZEsewsfI=;
-        b=J1SFCIKawZJwMN4+/dLXQJ1dACmlCSgvvWC2rohQZW1aa/zvXStwMQrXsAj9cQLVot
-         uNJD3LTT3274W3HFyvGqeknj41IWw8yjRE6rNBdy0aPhv8NmJkvTxcaG8IWkn4IDba//
-         /SsKlJC6K21U0LqxL8hN7zv5FUjsfs1k8JZYoz37yraNl6/l9/ZdJ8uzEBocy/SwzQd5
-         JZRGkk2ng1nRnaNubGps7SRBAuurCTp9HVCrAqjEIEG/ZFawgoZpbOTnkM2h1V3RNiqy
-         sd0ClqsUq6S5H1tK4dqCrDhHo0ZT4xZWv/iv5RZzg9xzjh9G2EzLTCMHsvoUndPDR7nm
-         SIYQ==
-X-Gm-Message-State: ANhLgQ0JqOCYUdph1Uvo7tqP510iOhu7QQCSskW41lO0cxGdguU28OPi
-        sjIyAGaqXAIm/+d4FBdutMzwAgEr8R4=
-X-Google-Smtp-Source: APiQypLLWHdJe/jX0D4wf+OxQL8tGQLj4ucOq7rKIqeciTvRrWp1JdptziyJkfQdPzvMUZKpSDn7EA==
-X-Received: by 2002:a2e:9194:: with SMTP id f20mr5994347ljg.33.1585241882591;
-        Thu, 26 Mar 2020 09:58:02 -0700 (PDT)
-Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com. [209.85.167.49])
-        by smtp.gmail.com with ESMTPSA id t144sm1877627lff.94.2020.03.26.09.58.01
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 26 Mar 2020 09:58:01 -0700 (PDT)
-Received: by mail-lf1-f49.google.com with SMTP id q5so5456425lfb.13
-        for <linux-kernel@vger.kernel.org>; Thu, 26 Mar 2020 09:58:01 -0700 (PDT)
-X-Received: by 2002:a05:6512:10cf:: with SMTP id k15mr6681163lfg.142.1585241881094;
- Thu, 26 Mar 2020 09:58:01 -0700 (PDT)
+        Thu, 26 Mar 2020 12:59:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59208 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726163AbgCZQ7o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Mar 2020 12:59:44 -0400
+Received: from mail-qt1-f177.google.com (mail-qt1-f177.google.com [209.85.160.177])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id DABEF20714;
+        Thu, 26 Mar 2020 16:59:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1585241983;
+        bh=BmW7FxFVukavIOrW+jQGBgKkYkX/kfC7K9PYVROC7RU=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=FjeyKBikzyrKjMdNGQGxhejsOWXOhRprOD5gF/BoikJcFabZVTQCw6otkmwTz8mXn
+         4dI4JlWs/UMa/N3D+pudD7bRGuQY876yXtM7MDAvLRyZ1pKSMvDiBCg7e93wvj3bo/
+         vss/IGZrluz0sLCPNoFapuP4DAQQL+Ku+P9hbpTY=
+Received: by mail-qt1-f177.google.com with SMTP id z12so5996917qtq.5;
+        Thu, 26 Mar 2020 09:59:42 -0700 (PDT)
+X-Gm-Message-State: ANhLgQ0Fhc2qOQ0gxyiEfWKrELIITL29T76NK4IiPNY0aKrkNuVQcG8y
+        K96l2dnAaYWxIv+y5xew/h1OfVqbKv74n+Xo6Q==
+X-Google-Smtp-Source: ADFU+vs3QmARN1t+P26l8fJv4eGuhB4B2N/8wI4lIJEQdYu1/Emm4XyORuYHclEyIIdiycs4GS6s5QFchoTZ1Y8aNwU=
+X-Received: by 2002:ac8:59:: with SMTP id i25mr9336327qtg.110.1585241981963;
+ Thu, 26 Mar 2020 09:59:41 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200326055723.GL11705@shao2-debian>
-In-Reply-To: <20200326055723.GL11705@shao2-debian>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Thu, 26 Mar 2020 09:57:45 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wi2c3UcK4fjUR2nM-7iUOAyQijq9ETfQHaN0WwFh2Bm9A@mail.gmail.com>
-Message-ID: <CAHk-=wi2c3UcK4fjUR2nM-7iUOAyQijq9ETfQHaN0WwFh2Bm9A@mail.gmail.com>
-Subject: Re: [mm] fd4d9c7d0c: stress-ng.switch.ops_per_sec -30.5% regression
-To:     kernel test robot <rong.a.chen@intel.com>
-Cc:     Jann Horn <jannh@google.com>, LKML <linux-kernel@vger.kernel.org>,
-        lkp@lists.01.org
+References: <20200325213439.16509-1-ezequiel@collabora.com> <20200325213439.16509-8-ezequiel@collabora.com>
+In-Reply-To: <20200325213439.16509-8-ezequiel@collabora.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Thu, 26 Mar 2020 10:59:30 -0600
+X-Gmail-Original-Message-ID: <CAL_Jsq+oBsDoDVpRUeW6z-92_wYbA1CHvJnSX-ALk3igbMmJJg@mail.gmail.com>
+Message-ID: <CAL_Jsq+oBsDoDVpRUeW6z-92_wYbA1CHvJnSX-ALk3igbMmJJg@mail.gmail.com>
+Subject: Re: [PATCH v3 7/7] dt-bindings: rockchip-vpu: Convert bindings to json-schema
+To:     Ezequiel Garcia <ezequiel@collabora.com>
+Cc:     Linux Media Mailing List <linux-media@vger.kernel.org>,
+        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Tomasz Figa <tfiga@chromium.org>,
+        Nicolas Dufresne <nicolas@ndufresne.ca>,
+        Collabora Kernel ML <kernel@collabora.com>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Hans Verkuil <hverkuil@xs4all.nl>,
+        Alexandre Courbot <acourbot@chromium.org>,
+        Jeffrey Kardatzke <jkardatzke@chromium.org>,
+        Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 25, 2020 at 10:57 PM kernel test robot
-<rong.a.chen@intel.com> wrote:
+On Wed, Mar 25, 2020 at 3:35 PM Ezequiel Garcia <ezequiel@collabora.com> wrote:
 >
-> FYI, we noticed a -30.5% regression of stress-ng.switch.ops_per_sec due to commit:
+> Convert Rockchip VPU (Hantro IP block) codec driver documentation to
+> json-schema.
 >
-> commit: fd4d9c7d0c71866ec0c2825189ebd2ce35bd95b8 ("mm: slub: add missing TID bump in kmem_cache_alloc_bulk()")
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: Rob Herring <robh@kernel.org>
+> Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
+> ---
+>  .../bindings/media/rockchip-vpu.txt           | 43 ----------
+>  .../bindings/media/rockchip-vpu.yaml          | 82 +++++++++++++++++++
+>  MAINTAINERS                                   |  2 +-
+>  3 files changed, 83 insertions(+), 44 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/media/rockchip-vpu.txt
+>  create mode 100644 Documentation/devicetree/bindings/media/rockchip-vpu.yaml
+>
+> diff --git a/Documentation/devicetree/bindings/media/rockchip-vpu.txt b/Documentation/devicetree/bindings/media/rockchip-vpu.txt
+> deleted file mode 100644
+> index 339252d9c515..000000000000
+> --- a/Documentation/devicetree/bindings/media/rockchip-vpu.txt
+> +++ /dev/null
+> @@ -1,43 +0,0 @@
+> -device-tree bindings for rockchip VPU codec
+> -
+> -Rockchip (Video Processing Unit) present in various Rockchip platforms,
+> -such as RK3288, RK3328 and RK3399.
+> -
+> -Required properties:
+> -- compatible: value should be one of the following
+> -               "rockchip,rk3288-vpu";
+> -               "rockchip,rk3328-vpu";
+> -               "rockchip,rk3399-vpu";
+> -- interrupts: encoding and decoding interrupt specifiers
+> -- interrupt-names: should be
+> -               "vepu", "vdpu" on RK3288 and RK3399,
+> -               "vdpu" on RK3328.
+> -- clocks: phandle to VPU aclk, hclk clocks
+> -- clock-names: should be "aclk" and "hclk"
+> -- power-domains: phandle to power domain node
+> -- iommus: phandle to a iommu node
+> -
+> -Example:
+> -SoC-specific DT entry:
+> -       vpu: video-codec@ff9a0000 {
+> -               compatible = "rockchip,rk3288-vpu";
+> -               reg = <0x0 0xff9a0000 0x0 0x800>;
+> -               interrupts = <GIC_SPI 9 IRQ_TYPE_LEVEL_HIGH>,
+> -                            <GIC_SPI 10 IRQ_TYPE_LEVEL_HIGH>;
+> -               interrupt-names = "vepu", "vdpu";
+> -               clocks = <&cru ACLK_VCODEC>, <&cru HCLK_VCODEC>;
+> -               clock-names = "aclk", "hclk";
+> -               power-domains = <&power RK3288_PD_VIDEO>;
+> -               iommus = <&vpu_mmu>;
+> -       };
+> -
+> -       vpu: video-codec@ff350000 {
+> -               compatible = "rockchip,rk3328-vpu";
+> -               reg = <0x0 0xff350000 0x0 0x800>;
+> -               interrupts = <GIC_SPI 9 IRQ_TYPE_LEVEL_HIGH>;
+> -               interrupt-names = "vdpu";
+> -               clocks = <&cru ACLK_VPU>, <&cru HCLK_VPU>;
+> -               clock-names = "aclk", "hclk";
+> -               power-domains = <&power RK3328_PD_VPU>;
+> -               iommus = <&vpu_mmu>;
+> -       };
+> diff --git a/Documentation/devicetree/bindings/media/rockchip-vpu.yaml b/Documentation/devicetree/bindings/media/rockchip-vpu.yaml
+> new file mode 100644
+> index 000000000000..a0c45e05cf03
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/media/rockchip-vpu.yaml
+> @@ -0,0 +1,82 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> +
+> +%YAML 1.2
+> +---
+> +$id: "http://devicetree.org/schemas/media/rockchip-vpu.yaml#"
+> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
+> +
+> +title: Hantro G1 VPU codecs implemented on Rockchip SoCs
+> +
+> +maintainers:
+> +  - Ezequiel Garcia <ezequiel@collabora.com>
+> +
+> +description:
+> +  Hantro G1 video encode and decode accelerators present on Rockchip SoCs.
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - rockchip,rk3288-vpu
+> +      - rockchip,rk3328-vpu
+> +      - rockchip,rk3399-vpu
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  interrupts:
+> +    maxItems: 2
+> +
+> +  interrupt-names:
+> +    items:
+> +      - const: vepu
+> +      - const: vdpu
+> +
+> +  clocks:
+> +    maxItems: 2
+> +
+> +  clock-names:
+> +    items:
+> +      - const: aclk
+> +      - const: hclk
+> +
+> +  power-domains:
+> +    maxItems: 1
+> +
+> +  iommus:
+> +    maxItems: 1
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - interrupts
+> +  - interrupt-names
+> +  - clocks
+> +  - clock-names
 
-This looks odd.
+Add:
 
-I would not expect the update of c->tid to have that noticeable an
-impact, even on a big machine that might be close to some scaling
-limit.
+additionalProperties: false
 
-It doesn't add any expensive atomic ops, and while it _could_ make a
-percpu cacheline dirty, I think that cacheline should already be dirty
-anyway under any load where this is noticeable. Plus this should be a
-relatively cold path anyway.
+> +
+> +examples:
+> +  - |
+> +        #include <dt-bindings/clock/rk3288-cru.h>
+> +        #include <dt-bindings/interrupt-controller/arm-gic.h>
+> +
+> +        vpu: video-codec@ff9a0000 {
+> +                compatible = "rockchip,rk3288-vpu";
+> +                reg = <0x0 0xff9a0000 0x0 0x800>;
+> +                interrupts = <GIC_SPI 9 IRQ_TYPE_LEVEL_HIGH>,
+> +                             <GIC_SPI 10 IRQ_TYPE_LEVEL_HIGH>;
+> +                interrupt-names = "vepu", "vdpu";
+> +                clocks = <&cru ACLK_VCODEC>, <&cru HCLK_VCODEC>;
+> +                clock-names = "aclk", "hclk";
+> +                power-domains = <&power RK3288_PD_VIDEO>;
 
-So mind humoring me, and double-check that regression?
+Header for this define?
 
-Of course, it might be another "just magic cache placement" detail
-where code moved enough to make a difference.
-
-Or maybe it really ends up causing new tid mismatches and we end up
-failing the fast path in slub as a result. But looking at the stats
-that changed in your message doesn't make me go "yeah, that looks like
-a slub difference".
-
-So before we look more at this, I'd like to make sure that the
-regression is actually real, and not noise.
-
-Please?
-
-             Linus
+> +                iommus = <&vpu_mmu>;
+> +        };
+> +
+> +        vpu: video-codec@ff350000 {
+> +                compatible = "rockchip,rk3328-vpu";
+> +                reg = <0x0 0xff350000 0x0 0x800>;
+> +                interrupts = <GIC_SPI 9 IRQ_TYPE_LEVEL_HIGH>;
+> +                interrupt-names = "vdpu";
+> +                clocks = <&cru ACLK_VPU>, <&cru HCLK_VPU>;
+> +                clock-names = "aclk", "hclk";
+> +                power-domains = <&power RK3328_PD_VPU>;
+> +                iommus = <&vpu_mmu>;
+> +        };
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index d66ac41ef587..2b8b3e7f3df3 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -14320,7 +14320,7 @@ L:      linux-rockchip@lists.infradead.org
+>  S:     Maintained
+>  F:     drivers/staging/media/hantro/
+>  F:     Documentation/devicetree/bindings/media/nxp,imx8mq-vpu.yaml
+> -F:     Documentation/devicetree/bindings/media/rockchip-vpu.txt
+> +F:     Documentation/devicetree/bindings/media/rockchip-vpu.yaml
+>
+>  ROCKER DRIVER
+>  M:     Jiri Pirko <jiri@resnulli.us>
+> --
+> 2.26.0.rc2
+>
