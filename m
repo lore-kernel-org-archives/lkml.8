@@ -2,77 +2,106 @@ Return-Path: <SRS0=aGSP=5L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42C80C43331
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 15:09:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29F5EC2D0E5
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 15:12:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 27340206F8
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 15:09:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EDD1720737
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 15:12:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585235530;
+	bh=gNmb1UwpI1bot54AGT9LmV+Ay1kJtk9PvnEvdt7OJfc=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=FexopPA1gIvcptC1IwJu3jzjvKzoxSy+S2995RJGKFiP/f3R8cdF1BbSKvdWv+Id8
+	 vNeRkfUYSsUk+QUOFq41fGioxTIqJeKvH5Ilq4k4Uj+hBQnnAUBZznWn+NqSsw2GFN
+	 KBHBh9b5D/O1qavW8BujKYNbNH5dJF5rWji+YFTs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728573AbgCZPJq (ORCPT
+        id S1727787AbgCZPMJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 11:09:46 -0400
-Received: from 8bytes.org ([81.169.241.247]:55878 "EHLO theia.8bytes.org"
+        Thu, 26 Mar 2020 11:12:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37542 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728071AbgCZPIv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 11:08:51 -0400
-Received: by theia.8bytes.org (Postfix, from userid 1000)
-        id 498025ED; Thu, 26 Mar 2020 16:08:46 +0100 (CET)
-From:   Joerg Roedel <joro@8bytes.org>
-To:     iommu@lists.linux-foundation.org
-Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-mediatek@lists.infradead.org, guohanjun@huawei.com,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
-        Will Deacon <will@kernel.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jean-Philippe Brucker <jean-philippe@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Joerg Roedel <jroedel@suse.de>
-Subject: [PATCH v4 04/16] iommu/tegra-gart: Remove direct access of dev->iommu_fwspec
-Date:   Thu, 26 Mar 2020 16:08:29 +0100
-Message-Id: <20200326150841.10083-5-joro@8bytes.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200326150841.10083-1-joro@8bytes.org>
-References: <20200326150841.10083-1-joro@8bytes.org>
+        id S1726496AbgCZPMI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Mar 2020 11:12:08 -0400
+Received: from localhost (mobile-166-175-186-165.mycingular.net [166.175.186.165])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9991E206F8;
+        Thu, 26 Mar 2020 15:12:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1585235528;
+        bh=gNmb1UwpI1bot54AGT9LmV+Ay1kJtk9PvnEvdt7OJfc=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=HswQ9GU3pelOso6U3R+842+f+BEsJtKi+asi1ius/Kpn2ivVMGAkMxQdfx4AdmRWL
+         OXIpK3kwBDOOPY60j6YQgGoDi/R1l/B3W2qIVR2ZIZhJqacpgQuvx/Hur4AJIK+DoY
+         froEyzgClLoLaQL8Y/qmAtHqp2GIHJ1KQZMKnUFw=
+Date:   Thu, 26 Mar 2020 10:12:05 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Srinath Mannam <srinath.mannam@broadcom.com>
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Ray Jui <rjui@broadcom.com>,
+        Andrew Murray <andrew.murray@arm.com>,
+        bcm-kernel-feedback-list@broadcom.com, linux-pci@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 3/3] PCI: iproc: Display PCIe Link information
+Message-ID: <20200326151205.GA6837@google.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1585206447-1363-4-git-send-email-srinath.mannam@broadcom.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Joerg Roedel <jroedel@suse.de>
+On Thu, Mar 26, 2020 at 12:37:27PM +0530, Srinath Mannam wrote:
+> Add more comprehensive information to show PCIe link speed and link
+> width to the console.
+> 
+> Signed-off-by: Srinath Mannam <srinath.mannam@broadcom.com>
+> ---
+>  drivers/pci/controller/pcie-iproc.c | 11 ++++++++++-
+>  1 file changed, 10 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/pci/controller/pcie-iproc.c b/drivers/pci/controller/pcie-iproc.c
+> index e7f0d58..ed41357 100644
+> --- a/drivers/pci/controller/pcie-iproc.c
+> +++ b/drivers/pci/controller/pcie-iproc.c
+> @@ -823,6 +823,8 @@ static int iproc_pcie_check_link(struct iproc_pcie *pcie)
+>  #define PCI_TARGET_LINK_SPEED_MASK	0xf
+>  #define PCI_TARGET_LINK_SPEED_GEN2	0x2
+>  #define PCI_TARGET_LINK_SPEED_GEN1	0x1
+> +#define PCI_TARGET_LINK_WIDTH_MASK	0x3f
+> +#define PCI_TARGET_LINK_WIDTH_OFFSET	0x4
+>  		iproc_pci_raw_config_read32(pcie, 0,
+>  					    IPROC_PCI_EXP_CAP + PCI_EXP_LNKCTL2,
+>  					    4, &link_ctrl);
+> @@ -843,7 +845,14 @@ static int iproc_pcie_check_link(struct iproc_pcie *pcie)
+>  		}
+>  	}
+>  
+> -	dev_info(dev, "link: %s\n", link_is_active ? "UP" : "DOWN");
+> +	if (link_is_active) {
+> +		dev_info(dev, "link UP @ Speed Gen-%d and width-x%d\n",
+> +			 link_status & PCI_TARGET_LINK_SPEED_MASK,
+> +			 (link_status >> PCI_TARGET_LINK_WIDTH_OFFSET) &
+> +			 PCI_TARGET_LINK_WIDTH_MASK);
 
-Use the accessor functions instead of directly dereferencing
-dev->iommu_fwspec.
+Can you use pcie_print_link_status() or some variant here instead of
+rolling your own?
 
-Reviewed-by: Jean-Philippe Brucker <jean-philippe@linaro.org>
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
----
- drivers/iommu/tegra-gart.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/iommu/tegra-gart.c b/drivers/iommu/tegra-gart.c
-index 3fb7ba72507d..db6559e8336f 100644
---- a/drivers/iommu/tegra-gart.c
-+++ b/drivers/iommu/tegra-gart.c
-@@ -247,7 +247,7 @@ static int gart_iommu_add_device(struct device *dev)
- {
- 	struct iommu_group *group;
- 
--	if (!dev->iommu_fwspec)
-+	if (!dev_iommu_fwspec_get(dev))
- 		return -ENODEV;
- 
- 	group = iommu_group_get_for_dev(dev);
--- 
-2.17.1
-
+> +	} else {
+> +		dev_info(dev, "link DOWN\n");
+> +	}
+>  
+>  	return link_is_active ? 0 : -ENODEV;
+>  }
+> -- 
+> 2.7.4
+> 
