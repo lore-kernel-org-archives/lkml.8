@@ -2,213 +2,55 @@ Return-Path: <SRS0=aGSP=5L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07A46C2D0E9
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 09:47:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FD36C2D0E7
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 09:48:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DD4852073E
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 09:47:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 424FA2070A
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 09:48:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727848AbgCZJr4 convert rfc822-to-8bit (ORCPT
+        id S1727883AbgCZJsx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 05:47:56 -0400
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2606 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726292AbgCZJrz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 05:47:55 -0400
-Received: from lhreml705-cah.china.huawei.com (unknown [172.18.7.107])
-        by Forcepoint Email with ESMTP id 94680B43317A3F13F0F7;
-        Thu, 26 Mar 2020 09:47:53 +0000 (GMT)
-Received: from lhreml711-chm.china.huawei.com (10.201.108.62) by
- lhreml705-cah.china.huawei.com (10.201.108.46) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Thu, 26 Mar 2020 09:47:52 +0000
-Received: from lhreml715-chm.china.huawei.com (10.201.108.66) by
- lhreml711-chm.china.huawei.com (10.201.108.62) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Thu, 26 Mar 2020 09:47:52 +0000
-Received: from lhreml715-chm.china.huawei.com ([10.201.108.66]) by
- lhreml715-chm.china.huawei.com ([10.201.108.66]) with mapi id 15.01.1713.004;
- Thu, 26 Mar 2020 09:47:52 +0000
-From:   Shiju Jose <shiju.jose@huawei.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-CC:     "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "rjw@rjwysocki.net" <rjw@rjwysocki.net>,
-        "lenb@kernel.org" <lenb@kernel.org>, "bp@alien8.de" <bp@alien8.de>,
-        "james.morse@arm.com" <james.morse@arm.com>,
-        "tony.luck@intel.com" <tony.luck@intel.com>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "zhangliguang@linux.alibaba.com" <zhangliguang@linux.alibaba.com>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        Linuxarm <linuxarm@huawei.com>,
-        Jonathan Cameron <jonathan.cameron@huawei.com>,
-        tanxiaofei <tanxiaofei@huawei.com>,
-        yangyicong <yangyicong@huawei.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>
-Subject: RE: [PATCH v5 2/2] PCI: HIP: Add handling of HiSilicon HIP PCIe
- controller errors
-Thread-Topic: [PATCH v5 2/2] PCI: HIP: Add handling of HiSilicon HIP PCIe
- controller errors
-Thread-Index: AQHWAsv5Pa1C0kaXt0i5HExQ9lFwB6haoF/g
-Date:   Thu, 26 Mar 2020 09:47:52 +0000
-Message-ID: <d1f2f313ea8e45689b5818489759faac@huawei.com>
-References: <24330bd8-afaa-d7ac-594c-f9fda4242400@huawei.com>
- <20200325173639.GA484@google.com>
-In-Reply-To: <20200325173639.GA484@google.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.47.27.105]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        Thu, 26 Mar 2020 05:48:53 -0400
+Received: from verein.lst.de ([213.95.11.211]:44818 "EHLO verein.lst.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727699AbgCZJsx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Mar 2020 05:48:53 -0400
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id 17CFB68BFE; Thu, 26 Mar 2020 10:48:50 +0100 (CET)
+Date:   Thu, 26 Mar 2020 10:48:49 +0100
+From:   Christoph Hellwig <hch@lst.de>
+To:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Cc:     Jens Axboe <axboe@kernel.dk>,
+        Michael Schmitz <schmitzmic@gmail.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Christoph Hellwig <hch@lst.de>, linux-ide@vger.kernel.org,
+        linux-m68k@lists.linux-m68k.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 08/27] ata: optimize ata_scsi_rbuf[] size
+Message-ID: <20200326094849.GD9596@lst.de>
+References: <20200317144333.2904-1-b.zolnierkie@samsung.com> <CGME20200317144345eucas1p1e67d48caa8629fedb301e776e34dc0c1@eucas1p1.samsung.com> <20200317144333.2904-9-b.zolnierkie@samsung.com>
 MIME-Version: 1.0
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200317144333.2904-9-b.zolnierkie@samsung.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Bjorn,
+On Tue, Mar 17, 2020 at 03:43:14PM +0100, Bartlomiej Zolnierkiewicz wrote:
+> Currently the maximum required size of the ata_scsi_rbuf[] is
+> 576 bytes in ata_scsiop_inq_89() so modify ATA_SCSI_RBUF_SIZE
+> define accordingly.
 
-Thanks for the feedbacks.
+Looks good,
 
->-----Original Message-----
->From: Bjorn Helgaas [mailto:helgaas@kernel.org]
->Sent: 25 March 2020 17:37
->To: Shiju Jose <shiju.jose@huawei.com>
->Cc: linux-acpi@vger.kernel.org; linux-pci@vger.kernel.org; linux-
->kernel@vger.kernel.org; rjw@rjwysocki.net; lenb@kernel.org; bp@alien8.de;
->james.morse@arm.com; tony.luck@intel.com; gregkh@linuxfoundation.org;
->zhangliguang@linux.alibaba.com; tglx@linutronix.de; Linuxarm
-><linuxarm@huawei.com>; Jonathan Cameron
-><jonathan.cameron@huawei.com>; tanxiaofei <tanxiaofei@huawei.com>;
->yangyicong <yangyicong@huawei.com>; Dan Carpenter
-><dan.carpenter@oracle.com>
->Subject: Re: [PATCH v5 2/2] PCI: HIP: Add handling of HiSilicon HIP PCIe
->controller errors
->
->[+cc Dan]
->
->On Wed, Mar 25, 2020 at 01:55:18PM +0000, Shiju Jose wrote:
->> The HiSilicon HIP PCIe controller is capable of handling errors on
->> root port and perform port reset separately at each root port.
->>
->> This patch add error handling driver for HIP PCIe controller to log
->> and report recoverable errors. Perform root port reset and restore
->> link status after the recovery.
->>
->> Following are some of the PCIe controller's recoverable errors 1.
->> completion transmission timeout error.
->> 2. CRS retry counter over the threshold error.
->> 3. ECC 2 bit errors
->> 4. AXI bresponse/rresponse errors etc.
->>
->> Also fix the following Smatch warning:
->> warn: should '((((1))) << (9 + i))' be a 64 bit type?
->> if (err->val_bits & BIT(HISI_PCIE_LOCAL_VALID_ERR_MISC + i))
->>      ^^^ This should be BIT_ULL() because it goes up to 9 + 32.
->> Reported-by: kbuild test robot <lkp@intel.com>
->> Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
->
->I'm glad you did this fix, and thanks for acknowledging Dan, but I don't think it's
->necessary to mention it in the commit log here because it won't really be useful
->in the future.  It's only relevant when comparing the unmerged versions of this
->series, e.g., v4 compared to v3.
-Sure. We will delete this.
+Reviewed-by: Christoph Hellwig <hch@lst.de>
 
->
->If we were fixing something that's already been merged upstream, we should
->absolutely include this, but since this hasn't been merged yet Dan's report is
->basically the same as other review comments, which we normally just address
->and mention in the change history in the [0/n] cover letter (as you're already
->doing, thanks for that!).
-
->
->Also, I think it's nice to CC: anybody who has commented on previous versions
->of the patch series, so I added Dan to the CC: list here.
->That way he can chime in if we're not addressing his report correctly.
->
->> Signed-off-by: Yicong Yang <yangyicong@hisilicon.com>
->> Signed-off-by: Shiju Jose <shiju.jose@huawei.com>
->> --
->> drivers/pci/controller/Kconfig           |   8 +
->> drivers/pci/controller/Makefile          |   1 +
->> drivers/pci/controller/pcie-hisi-error.c | 336
->> +++++++++++++++++++++++++++++++
->> 3 files changed, 345 insertions(+)
->> create mode 100644 drivers/pci/controller/pcie-hisi-error.c
->
->As I mentioned in the other message, I think this file should be
->drivers/pci/controller/dwc/pcie-hisi-error.c so it's right next to pcie-hisi.c.  If
->there's some reason it needs to be here instead, please mention that in the
->commit log.
->
->> ---
->>  drivers/pci/controller/Kconfig           |   8 +
->>  drivers/pci/controller/Makefile          |   1 +
->>  drivers/pci/controller/pcie-hisi-error.c | 357
->> +++++++++++++++++++++++
->>  3 files changed, 366 insertions(+)
->>  create mode 100644 drivers/pci/controller/pcie-hisi-error.c
->
->> +struct hisi_pcie_err_data {
->> +	u64   val_bits;
->> +	u8    version;
->> +	u8    soc_id;
->> +	u8    socket_id;
->> +	u8    nimbus_id;
->> +	u8    sub_module_id;
->> +	u8    core_id;
->> +	u8    port_id;
->> +	u8    err_severity;
->> +	u16   err_type;
->> +	u8    reserv[2];
->> +	u32   err_misc[HISI_PCIE_ERR_MISC_REGS];
->> +};
->> +
->> +struct hisi_pcie_err_info {
->> +	struct hisi_pcie_err_data err_data;
->> +	struct platform_device *pdev;
->> +};
->> +
->> +struct hisi_pcie_err_private {
->> +	struct notifier_block nb;
->> +	struct platform_device *pdev;
->> +};
->
->Either align all the struct members or none of them.  Currently
->hisi_pcie_err_data is aligned but hisi_pcie_err_info and hisi_pcie_err_private
->are not.
-We will align the structures. 
-
->
->> +	/* Call the ACPI handle to reset root port */
->
->Superfluous comment.
-We will remove this comment.
- 
->
->> +	s = acpi_evaluate_integer(handle, "RST", &arg_list, &data);
->> +	if (ACPI_FAILURE(s)) {
->> +		dev_err(dev, "No RST method\n");
->> +		return -EIO;
->> +	}
->
->> +static void hisi_pcie_handle_one_error(const struct
->> +hisi_pcie_err_data
->> *err,
->> +				    struct platform_device *pdev)
->
->Align "struct platform_device ..." under "const struct hisi_pcie_err_data ...".
-sure.
-
->
->Bjorn
-
-Thanks,
-Shiju
+Btw, I wonder if we should switch this to a dynamic allocation, as
+a lot of people are more concerned about kernel size footprint vs
+dynamic allocations.
