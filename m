@@ -2,198 +2,172 @@ Return-Path: <SRS0=aGSP=5L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,LOTS_OF_MONEY,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44776C2D0E7
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 02:02:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB029C2D0E9
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 02:02:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0B63A2073E
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 02:02:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E23820737
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 02:02:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="A470PTWm"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=micronovasrl.com header.i=@micronovasrl.com header.b="gyaVhkVV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727685AbgCZCCT (ORCPT
+        id S1727698AbgCZCCn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 22:02:19 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:37489 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727561AbgCZCCS (ORCPT
+        Wed, 25 Mar 2020 22:02:43 -0400
+Received: from mail.micronovasrl.com ([212.103.203.10]:56352 "EHLO
+        mail.micronovasrl.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727561AbgCZCCn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 22:02:18 -0400
-Received: by mail-io1-f67.google.com with SMTP id q9so4508262iod.4;
-        Wed, 25 Mar 2020 19:02:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=4xp15kfS5NUhuffpTH0eDvjkAD1zDSgezpo7dNfleWM=;
-        b=A470PTWmd3GEYYQ4A9YPKgbChJGyiY4F/5V6tcTy0Ga8tbBdJSYPz/yC1fvPflKC8t
-         WT1IfvFT5UA8wR63Th2NKqY/PfnKZBL2AlVbiXDux3dX32OD+3x48cmCev8maPRSMctw
-         fpJ2WGSxh3ZXObrhTsnQjWHPAF7jDOWQon21L1ZpOloI/0Aw7A7OxyIAFk6q9OCaypmO
-         asZ8yswb5cUYK7ryzf6JBnfJ3G3zJWWwcZnMccr2dxbWr5hbvukhmq+Jj9Usat4VM6xk
-         LZyyXwmJTzoZjDhXYwz4nKOePITfEIm/WUbVlGg86nkknSWbaIs5H5iqcDmYuBmLO+F7
-         UoXg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=4xp15kfS5NUhuffpTH0eDvjkAD1zDSgezpo7dNfleWM=;
-        b=pra/aJfty1EJRUqmW7F2zQSUGN4zZZjBPXk03d9/LvoQkv5AhDYoskiSlkGyucDvE0
-         hNwkTmP65A/QdhbnMLwx7B5Pml2uBa7LNHxb2+KwPeYt9dLuOJnaFMG0qjYG9F07PQlN
-         hU3SNcOU2ylopVuzxFD3jxx2eypv9xX/b4nUK3YHSWmZLEOmDT30SaeKFlsb4ZDs79Y7
-         q5PKsH9HzyisxPtpZ+qr5v4eaAP41DlV7V2e1ianWd1I9CaTUzBp8Q+Lqwzv5/w871HV
-         0hh08srYPXzL6GmDU9awMvZNyDQgartF1sI51gkLDkjr5HniLrL9G4eCPtTr5aAPvQwp
-         eA9Q==
-X-Gm-Message-State: ANhLgQ35tko9PXHfiWIxhRy3bi89uxKtVZyKZ+CYw0vZnD26d4lyM7Bc
-        uLSY0ncxDejqUeovzaWDt/anRiStbxFM/zuVMyw=
-X-Google-Smtp-Source: ADFU+vucW6te80eivq0ZUfTKnqSxSc1+eL3rS9tLJ0yst4sgacQvScGP8hbBJX3hkuA0Xv/JiphAaGlq1hTtVpSHdco=
-X-Received: by 2002:a05:6638:a99:: with SMTP id 25mr5874582jas.37.1585188137103;
- Wed, 25 Mar 2020 19:02:17 -0700 (PDT)
+        Wed, 25 Mar 2020 22:02:43 -0400
+Received: from mail.micronovasrl.com (mail.micronovasrl.com [127.0.0.1])
+        by mail.micronovasrl.com (Postfix) with ESMTP id 35826B02EC8
+        for <linux-kernel@vger.kernel.org>; Thu, 26 Mar 2020 03:02:41 +0100 (CET)
+Authentication-Results: mail.micronovasrl.com (amavisd-new); dkim=pass
+        reason="pass (just generated, assumed good)" header.d=micronovasrl.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=micronovasrl.com;
+         h=content-transfer-encoding:content-language:content-type
+        :content-type:in-reply-to:mime-version:user-agent:date:date
+        :message-id:from:from:references:to:subject:subject; s=dkim; t=
+        1585188160; x=1586052161; bh=dN/heXYHaTVt9oKxd/kcQsTKZ2AS/ViFWmy
+        ++nUgKTc=; b=gyaVhkVVoF1dOQwG5ciV1RHXB2e780qpTqkeqKX2gaA3CipiGnR
+        PxSh+83ZZIqfE4YNHjv2/h8zQpdb7D10ddxfV80w4NeLGvljU+qxYRELR5dLwBq/
+        2Xv852WSlJTDpqV5ClnYySDBXimM2SCpuX60rW8hWP9HNVhkYSKZvYEY=
+X-Virus-Scanned: Debian amavisd-new at mail.micronovasrl.com
+Received: from mail.micronovasrl.com ([127.0.0.1])
+        by mail.micronovasrl.com (mail.micronovasrl.com [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id M4hM8gzsMFKh for <linux-kernel@vger.kernel.org>;
+        Thu, 26 Mar 2020 03:02:40 +0100 (CET)
+Received: from [10.212.134.200] (unknown [192.168.123.254])
+        by mail.micronovasrl.com (Postfix) with ESMTPSA id A4912B02E4E;
+        Thu, 26 Mar 2020 03:02:39 +0100 (CET)
+Subject: Re: [PATCH v2 4/7] serial: 8250: Handle implementations not having
+ TEMT interrupt using em485
+To:     =?UTF-8?Q?Heiko_St=c3=bcbner?= <heiko@sntech.de>
+Cc:     gregkh@linuxfoundation.org, jslaby@suse.com,
+        andriy.shevchenko@linux.intel.com, matwey.kornilov@gmail.com,
+        linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org,
+        lukas@wunner.de, christoph.muellner@theobroma-systems.com
+References: <20200325231422.1502366-1-heiko@sntech.de>
+ <20200325231422.1502366-5-heiko@sntech.de>
+ <3a5df648-b054-3338-f7a4-4c01783eabf6@micronovasrl.com>
+ <12195570.sTQbgxCmNy@diego>
+From:   Giulio Benetti <giulio.benetti@micronovasrl.com>
+Message-ID: <ac74f702-9444-f660-974b-85a006805070@micronovasrl.com>
+Date:   Thu, 26 Mar 2020 03:02:39 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-References: <1585164614-123696-1-git-send-email-longli@linuxonhyperv.com>
-In-Reply-To: <1585164614-123696-1-git-send-email-longli@linuxonhyperv.com>
-From:   ronnie sahlberg <ronniesahlberg@gmail.com>
-Date:   Thu, 26 Mar 2020 12:02:05 +1000
-Message-ID: <CAN05THTH8-pK9uw77COWSUQ_knztT1o1Ms0b=2PPvmBJd=ovUw@mail.gmail.com>
-Subject: Re: [PATCH] cifs: smbd: Calculate the correct maximum packet size for
- segmented SMBDirect send/receive
-To:     Long Li <longli@microsoft.com>
-Cc:     Steve French <sfrench@samba.org>,
-        linux-cifs <linux-cifs@vger.kernel.org>,
-        "samba-technical@lists.samba.org" <samba-technical@lists.samba.org>,
-        LKML <linux-kernel@vger.kernel.org>, longli@linuxonhyperv.com
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <12195570.sTQbgxCmNy@diego>
+Content-Type: text/plain; charset=iso-8859-15; format=flowed
+Content-Language: it
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Long Li,
+Hi Heiko,
 
-Mostly looks good  but the magic constant 49 I think is wrong.
-49 is the structure size of the read/write request header
-but for these sizes, if they are odd it just means that the header contain a
-variable sized blob.
-I.e. the size is 48 bytes (for the fixed part of the header) + a variable part
-which in this case are the ChannelInfo blobs.
+Il 26/03/2020 01:05, Heiko Stübner ha scritto:
+> Hi Giulio,
+> 
+> Am Donnerstag, 26. März 2020, 00:47:38 CET schrieb Giulio Benetti:
+>> very cleaner way to handle TEMT as a capability!
+>> And I've found one thing...
+>>
+>> Il 26/03/2020 00:14, Heiko Stuebner ha scritto:
+>>> From: Giulio Benetti <giulio.benetti@micronovasrl.com>
+>>>
+>>> Some 8250 ports have a TEMT interrupt but it's not a part of the 8250
+>>> standard, instead only available on some implementations.
+>>>
+>>> The current em485 implementation does not work on ports without it.
+>>> The only chance to make it work is to loop-read on LSR register.
+>>>
+>>> So add UART_CAP_TEMT to mark 8250 uarts having this interrupt,
+>>> update all current em485 users with that capability and make
+>>> the stop_tx function loop-read on uarts not having it.
+>>>
+>>> Signed-off-by: Giulio Benetti <giulio.benetti@micronovasrl.com>
+>>> [moved to use added UART_CAP_TEMT, use readx_poll_timeout]
+>>> Signed-off-by: Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
+>>> ---
+>>>    drivers/tty/serial/8250/8250.h            |  1 +
+>>>    drivers/tty/serial/8250/8250_bcm2835aux.c |  2 +-
+>>>    drivers/tty/serial/8250/8250_of.c         |  2 ++
+>>>    drivers/tty/serial/8250/8250_omap.c       |  2 +-
+>>>    drivers/tty/serial/8250/8250_port.c       | 25 +++++++++++++++++++----
+>>>    5 files changed, 26 insertions(+), 6 deletions(-)
+>>>
+>>> diff --git a/drivers/tty/serial/8250/8250.h b/drivers/tty/serial/8250/8250.h
+>>> index 52bb21205bb6..770eb00db497 100644
+>>> --- a/drivers/tty/serial/8250/8250.h
+>>> +++ b/drivers/tty/serial/8250/8250.h
+>>> @@ -82,6 +82,7 @@ struct serial8250_config {
+>>>    #define UART_CAP_MINI	(1 << 17)	/* Mini UART on BCM283X family lacks:
+>>>    					 * STOP PARITY EPAR SPAR WLEN5 WLEN6
+>>>    					 */
+>>> +#define UART_CAP_TEMT	(1 << 18)	/* UART has TEMT interrupt */
+>>>    
+>>>    #define UART_BUG_QUOT	(1 << 0)	/* UART has buggy quot LSB */
+>>>    #define UART_BUG_TXEN	(1 << 1)	/* UART has buggy TX IIR status */
+>>> diff --git a/drivers/tty/serial/8250/8250_bcm2835aux.c b/drivers/tty/serial/8250/8250_bcm2835aux.c
+>>> index 12d03e678295..3881242424ca 100644
+>>> --- a/drivers/tty/serial/8250/8250_bcm2835aux.c
+>>> +++ b/drivers/tty/serial/8250/8250_bcm2835aux.c
+>>> @@ -91,7 +91,7 @@ static int bcm2835aux_serial_probe(struct platform_device *pdev)
+>>>    		return -ENOMEM;
+>>>    
+>>>    	/* initialize data */
+>>> -	up.capabilities = UART_CAP_FIFO | UART_CAP_MINI;
+>>> +	up.capabilities = UART_CAP_FIFO | UART_CAP_MINI | UART_CAP_TEMT;
+>>>    	up.port.dev = &pdev->dev;
+>>>    	up.port.regshift = 2;
+>>>    	up.port.type = PORT_16550;
+>>> diff --git a/drivers/tty/serial/8250/8250_of.c b/drivers/tty/serial/8250/8250_of.c
+>>> index 65e9045dafe6..841f6fcb2878 100644
+>>> --- a/drivers/tty/serial/8250/8250_of.c
+>>> +++ b/drivers/tty/serial/8250/8250_of.c
+>>> @@ -225,6 +225,8 @@ static int of_platform_serial_probe(struct platform_device *ofdev)
+>>>    			&port8250.overrun_backoff_time_ms) != 0)
+>>>    		port8250.overrun_backoff_time_ms = 0;
+>>>    
+>>> +	port8250.capabilities |= UART_CAP_TEMT;
+>>> +
+>>
+>> Shouldn't this be NOT UART_CAP_TEMT set by default? On all other
+>> vendor specific files you enable it, I think here you shouldn't enable
+>> it too by default. Right?
+> 
+> 8250_of does use the em485 emulation - see of_platform_serial_setup()
+> So I did go by the lazy assumption that any 8250 driver using rs485
+> before my series always used the interrupt driver code path, so
+> implicitly required to have the TEMT interrupt.
+> 
+> Of course, you're right that with the 8250_of maybe not all variants
+> actually do have this interrupt, so falling back to the polling here might
+> be safer.
 
-So we should probably add to smb2pdu.h a
-#define MAX_SMB2_READWRITE_RESPONSE_SIZE 48
-and use this in the calculations. Then we need to add the maximum size
-we will use for ChannelInfo.
+Probably here it's worth introducing a dt boolean property like
+"temt-capability", then you set or not UART_CAP_TEMT according to its 
+presence in dts. This way all cases are covered and we can act 
+completely through dts files.
 
-Maybe we should have a define also for the MAX_SMB2_CHANNEL_INFO_SIZE
+What about that?
 
-regards
-ronnie sahlberg
+Best regards
+-- 
+Giulio Benetti
+CTO
 
-On Thu, Mar 26, 2020 at 5:31 AM longli--- via samba-technical
-<samba-technical@lists.samba.org> wrote:
->
-> From: Long Li <longli@microsoft.com>
->
-> The packet size needs to take account of SMB2 header size and possible
-> encryption header size. This is only done when signing is used and it is for
-> RDMA send/receive, not read/write.
->
-> Also remove the dead SMBD code in smb2_negotiate_r(w)size.
->
-> Signed-off-by: Long Li <longli@microsoft.com>
-> ---
->  fs/cifs/smb2ops.c   | 38 ++++++++++++++++----------------------
->  fs/cifs/smbdirect.c |  3 +--
->  2 files changed, 17 insertions(+), 24 deletions(-)
->
-> diff --git a/fs/cifs/smb2ops.c b/fs/cifs/smb2ops.c
-> index 4c0922596467..9043d34eef43 100644
-> --- a/fs/cifs/smb2ops.c
-> +++ b/fs/cifs/smb2ops.c
-> @@ -332,16 +332,6 @@ smb2_negotiate_wsize(struct cifs_tcon *tcon, struct smb_vol *volume_info)
->         /* start with specified wsize, or default */
->         wsize = volume_info->wsize ? volume_info->wsize : CIFS_DEFAULT_IOSIZE;
->         wsize = min_t(unsigned int, wsize, server->max_write);
-> -#ifdef CONFIG_CIFS_SMB_DIRECT
-> -       if (server->rdma) {
-> -               if (server->sign)
-> -                       wsize = min_t(unsigned int,
-> -                               wsize, server->smbd_conn->max_fragmented_send_size);
-> -               else
-> -                       wsize = min_t(unsigned int,
-> -                               wsize, server->smbd_conn->max_readwrite_size);
-> -       }
-> -#endif
->         if (!(server->capabilities & SMB2_GLOBAL_CAP_LARGE_MTU))
->                 wsize = min_t(unsigned int, wsize, SMB2_MAX_BUFFER_SIZE);
->
-> @@ -360,8 +350,15 @@ smb3_negotiate_wsize(struct cifs_tcon *tcon, struct smb_vol *volume_info)
->  #ifdef CONFIG_CIFS_SMB_DIRECT
->         if (server->rdma) {
->                 if (server->sign)
-> +                       /*
-> +                        * Account for SMB2 data transfer packet header
-> +                        * SMB2_READ/SMB2_WRITE (49) and possible encryption
-> +                        * headers
-> +                        */
->                         wsize = min_t(unsigned int,
-> -                               wsize, server->smbd_conn->max_fragmented_send_size);
-> +                               wsize,
-> +                               server->smbd_conn->max_fragmented_send_size -
-> +                                       49 - sizeof(struct smb2_transform_hdr));
->                 else
->                         wsize = min_t(unsigned int,
->                                 wsize, server->smbd_conn->max_readwrite_size);
-> @@ -382,16 +379,6 @@ smb2_negotiate_rsize(struct cifs_tcon *tcon, struct smb_vol *volume_info)
->         /* start with specified rsize, or default */
->         rsize = volume_info->rsize ? volume_info->rsize : CIFS_DEFAULT_IOSIZE;
->         rsize = min_t(unsigned int, rsize, server->max_read);
-> -#ifdef CONFIG_CIFS_SMB_DIRECT
-> -       if (server->rdma) {
-> -               if (server->sign)
-> -                       rsize = min_t(unsigned int,
-> -                               rsize, server->smbd_conn->max_fragmented_recv_size);
-> -               else
-> -                       rsize = min_t(unsigned int,
-> -                               rsize, server->smbd_conn->max_readwrite_size);
-> -       }
-> -#endif
->
->         if (!(server->capabilities & SMB2_GLOBAL_CAP_LARGE_MTU))
->                 rsize = min_t(unsigned int, rsize, SMB2_MAX_BUFFER_SIZE);
-> @@ -411,8 +398,15 @@ smb3_negotiate_rsize(struct cifs_tcon *tcon, struct smb_vol *volume_info)
->  #ifdef CONFIG_CIFS_SMB_DIRECT
->         if (server->rdma) {
->                 if (server->sign)
-> +                       /*
-> +                        * Account for SMB2 data transfer packet header
-> +                        * SMB2_READ/SMB2_WRITE (49) and possible encryption
-> +                        * headers
-> +                        */
->                         rsize = min_t(unsigned int,
-> -                               rsize, server->smbd_conn->max_fragmented_recv_size);
-> +                               rsize,
-> +                               server->smbd_conn->max_fragmented_recv_size -
-> +                                       49 - sizeof(struct smb2_transform_hdr));
->                 else
->                         rsize = min_t(unsigned int,
->                                 rsize, server->smbd_conn->max_readwrite_size);
-> diff --git a/fs/cifs/smbdirect.c b/fs/cifs/smbdirect.c
-> index eb1e40af9f3a..0327b575ab87 100644
-> --- a/fs/cifs/smbdirect.c
-> +++ b/fs/cifs/smbdirect.c
-> @@ -2097,8 +2097,7 @@ int smbd_send(struct TCP_Server_Info *server,
->         for (i = 0; i < num_rqst; i++)
->                 remaining_data_length += smb_rqst_len(server, &rqst_array[i]);
->
-> -       if (remaining_data_length + sizeof(struct smbd_data_transfer) >
-> -               info->max_fragmented_send_size) {
-> +       if (remaining_data_length > info->max_fragmented_send_size) {
->                 log_write(ERR, "payload size %d > max size %d\n",
->                         remaining_data_length, info->max_fragmented_send_size);
->                 rc = -EINVAL;
-> --
-> 2.17.1
->
->
+MICRONOVA SRL
+Sede: Via A. Niedda 3 - 35010 Vigonza (PD)
+Tel. 049/8931563 - Fax 049/8931346
+Cod.Fiscale - P.IVA 02663420285
+Capitale Sociale ¤ 26.000 i.v.
+Iscritta al Reg. Imprese di Padova N. 02663420285
+Numero R.E.A. 258642
