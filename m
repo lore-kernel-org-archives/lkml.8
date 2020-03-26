@@ -7,113 +7,81 @@ X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8300FC43331
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 13:56:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E32EC43331
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 13:56:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 528BF20774
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 13:56:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D9E6A20774
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 13:56:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TjLLHa83"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="L+7GuzXj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727769AbgCZN4D (ORCPT
+        id S1727817AbgCZN4G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 09:56:03 -0400
-Received: from us-smtp-delivery-74.mimecast.com ([63.128.21.74]:52329 "EHLO
+        Thu, 26 Mar 2020 09:56:06 -0400
+Received: from us-smtp-delivery-74.mimecast.com ([216.205.24.74]:56405 "EHLO
         us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727729AbgCZN4D (ORCPT
+        by vger.kernel.org with ESMTP id S1727729AbgCZN4F (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 09:56:03 -0400
+        Thu, 26 Mar 2020 09:56:05 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1585230961;
+        s=mimecast20190719; t=1585230964;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=jIfxtdzpS5t10KKUyUF+gPYz0Cv5B7oYa30VIS8PJ1g=;
-        b=TjLLHa838masgwD7WBNk9VJdrXqdlnLlJNJGoO88lYoQWqGkJ8NaZFxBQeu6fnvWwtq8eV
-        XA1r8Mnst15egY5Cj2Z+YxaJ6aOdhkTXo/lppf/VjU7HkLHALUxfG0W9jH7mMNaxs3205U
-        dqc+sIYGjtqg8GBOs6xSZeDBqO2zPA4=
+        bh=88eUjflRcwmSSWvPRfQg+6bwWoJ2678bQo929jibops=;
+        b=L+7GuzXj+9xi1SVBg+NxFkZnx+qFxcmr3rK5+x5urGqzSy6LDC0zMA+lf7i7Rf7suvvBiw
+        b+/5PPOYTO2nuCZwky5vMw5Fv7dObhi303utA7pO0jHJBv6xHtjaBiWpxvpBL6UYL7kN3+
+        tJStMnaK4wbAUXUvmf2S1XnVSBvK2sQ=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-78-ppGoIymzNYKwsIc8GmZasw-1; Thu, 26 Mar 2020 09:55:55 -0400
-X-MC-Unique: ppGoIymzNYKwsIc8GmZasw-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+ us-mta-175-AAWCI-RUNIWn_WJ9EQ3guA-1; Thu, 26 Mar 2020 09:56:00 -0400
+X-MC-Unique: AAWCI-RUNIWn_WJ9EQ3guA-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id EDAD6801A1B;
-        Thu, 26 Mar 2020 13:55:52 +0000 (UTC)
-Received: from sandy.ghostprotocols.net (unknown [10.3.128.25])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 4B6AB5C241;
-        Thu, 26 Mar 2020 13:55:52 +0000 (UTC)
-Received: by sandy.ghostprotocols.net (Postfix, from userid 1000)
-        id 18300160; Thu, 26 Mar 2020 10:55:48 -0300 (BRT)
-Date:   Thu, 26 Mar 2020 10:55:47 -0300
-From:   Arnaldo Carvalho de Melo <acme@redhat.com>
-To:     Adrian Hunter <adrian.hunter@intel.com>
-Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
-        Mingbo Zhang <whensungoes@gmail.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>, x86@kernel.org,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, Andi Kleen <ak@linux.intel.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] x86: perf: insn: Tweak opcode map for Intel CET
- instructions
-Message-ID: <20200326135547.GA20397@redhat.com>
-References: <20200303045033.6137-1-whensungoes@gmail.com>
- <20200326103153.de709903f26fee0918414bd2@kernel.org>
- <bac567dd-9810-4919-365e-b3dfb54a6c4b@intel.com>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 840648010FD;
+        Thu, 26 Mar 2020 13:55:57 +0000 (UTC)
+Received: from localhost (ovpn-12-117.pek2.redhat.com [10.72.12.117])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 97151CDBC4;
+        Thu, 26 Mar 2020 13:55:56 +0000 (UTC)
+Date:   Thu, 26 Mar 2020 21:55:53 +0800
+From:   Baoquan He <bhe@redhat.com>
+To:     Markus Elfring <Markus.Elfring@web.de>
+Cc:     Michel Lespinasse <walken@google.com>,
+        Coccinelle <cocci@systeme.lip6.fr>, linux-mm@kvack.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        David Rientjes <rientjes@google.com>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Hugh Dickins <hughd@google.com>,
+        Jerome Glisse <jglisse@redhat.com>,
+        Laurent Dufour <ldufour@linux.ibm.com>,
+        Liam Howlett <Liam.Howlett@oracle.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Ying Han <yinghan@google.com>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 4/8] mmap locking API: convert mmap_sem call sites missed
+ by coccinelle
+Message-ID: <20200326135553.GM3039@MiWiFi-R3L-srv>
+References: <02c6dfa8-0e13-d1d7-e335-ad8f1a3ecb1f@web.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <bac567dd-9810-4919-365e-b3dfb54a6c4b@intel.com>
-X-Url:  http://acmel.wordpress.com
-User-Agent: Mutt/1.5.20 (2009-12-10)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+In-Reply-To: <02c6dfa8-0e13-d1d7-e335-ad8f1a3ecb1f@web.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Thu, Mar 26, 2020 at 07:09:45AM +0200, Adrian Hunter escreveu:
-> On 26/03/20 3:31 am, Masami Hiramatsu wrote:
-> > Hi,
-> > 
-> > On Mon,  2 Mar 2020 23:50:30 -0500
-> > Mingbo Zhang <whensungoes@gmail.com> wrote:
-> > 
-> >> Intel CET instructions are not described in the Intel SDM. When trying to
-> >> get the instruction length, the following instructions get wrong (missing
-> >> ModR/M byte).
-> >>
-> >> RDSSPD r32
-> >> RSDDPQ r64
-> >> ENDBR32
-> >> ENDBR64
-> >> WRSSD r/m32, r32
-> >> WRSSQ r/m64, r64
-> >>
-> >> RDSSPD/Q and ENDBR32/64 use the same opcode (f3 0f 1e) slot, which is
-> >> described in SDM as Reserved-NOP with no encoding characters, and got an
-> >> empty slot in the opcode map. WRSSD/Q (0f 38 f6) also got an empty slot.
-> >>
-> > 
-> > This looks good to me. BTW, wouldn't we need to add decode test cases to perf?
-> > 
-> > Acked-by: Masami Hiramatsu <mhiramat@kernel.org>
-> > 
-> > Thank you,
-> > 
+On 03/26/20 at 02:41pm, Markus Elfring wrote:
+> > Convert the last few remaining mmap_sem rwsem calls to use the new
+> > mmap locking API. These were missed by coccinelle for some reason
 > 
-> We have correct patches that you ack'ed for CET here:
-> 
-> 	https://lore.kernel.org/lkml/20200204171425.28073-1-yu-cheng.yu@intel.com/
-> 
-> But they have not yet been applied.
-> 
-> Sorry for the confusion.
+> I find such a software situation unfortunate.
+> Should the transformation approach be clarified any further?
 
-I'll collect them, thanks for pointing this out.
-
-- Arnaldo
+Should be this one:
+Documentation/dev-tools/coccinelle.rst
 
