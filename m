@@ -2,98 +2,128 @@ Return-Path: <SRS0=aGSP=5L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1388C2D0E5
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 18:31:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B91FCC2D0E5
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 18:34:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 987642073E
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 18:31:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E36520722
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 18:34:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="LtzmbQSW"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="D5KANnoU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728490AbgCZSbX (ORCPT
+        id S1727977AbgCZSeV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 14:31:23 -0400
-Received: from mail-vs1-f68.google.com ([209.85.217.68]:35832 "EHLO
-        mail-vs1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727751AbgCZSbX (ORCPT
+        Thu, 26 Mar 2020 14:34:21 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:34896 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727446AbgCZSeV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 14:31:23 -0400
-Received: by mail-vs1-f68.google.com with SMTP id u11so4577579vsg.2
-        for <linux-kernel@vger.kernel.org>; Thu, 26 Mar 2020 11:31:22 -0700 (PDT)
+        Thu, 26 Mar 2020 14:34:21 -0400
+Received: by mail-oi1-f195.google.com with SMTP id t25so6470034oij.2
+        for <linux-kernel@vger.kernel.org>; Thu, 26 Mar 2020 11:34:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
+        d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=pFD2geY/p5iC2VmMRUkKBQnxSUg98rzcJbPJ8Ag8rBY=;
-        b=LtzmbQSWi7E8xrMVFZUuf3+ZY3zKzZyjFkbR5rMsSufZB1jjjmP7JnP/DRAB6g/GCa
-         3au0hWHYh202QGgie7YzjX4sl1PiqzVViyQljvphZEmGuRU85N38r3uy6rlkcIsPHIZw
-         BPSL+KenIgtH7flGoOkYGdbW0ieQ9fpPcYktY=
+        bh=zvcRbO8JiiH8TflCF3JYY64FRuv850T5VBR+zKWVaAo=;
+        b=D5KANnoUgA813LQvHjIp5rAoPhY2gTJup4nP+xGLb5FNmM7+8RNwum/ue1O95T+xWb
+         5Ktbnl2iWEXVoCU3oOQg1rH6QozCfngfrmRO501JFNyUSHuo2dqvZagSkuCv/ZkCcdDy
+         9SNPpYOLAEHYsE4N1CYsv1lw2JsDmzr3bO5CAhprXa6CHmJ/wgf3TslEjhp5iWSPZbla
+         6EGwewp3bw3kVgK1ceZl6cCzyM58RIqxXE7Ece2gV1Bkyopg2Mdv5j42z6O1C0vGsEb+
+         xUlK8kqOpBq79qowMpVYE7dI2KBF+1Bmk+h2mEbeqaCTkXHdCSEol6R1AyJ6SpC3NLmt
+         slKg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=pFD2geY/p5iC2VmMRUkKBQnxSUg98rzcJbPJ8Ag8rBY=;
-        b=IuNxY7AWra2LE368PuYO6lx61NRxzEVlhYoqNezgEuuDwcqIna++vG/hknFhDu0Xh2
-         1HcIzDOGW6UQ2HI7ny5xBfB4KnEaeV5GmvtstTEh7RrPpG8sP76lwyAtdz5LFCbIxope
-         nLjMd99FJ2t6SKLxm7+TBdawSExZwiXZzhz2nNIUxByHScNM5TWMompzKTOuu25nsyt4
-         KjyJE6vIE6HBctKxjB+RnWefl6dtYoynSpDt7dWiowAaTJZZsx7y/O2SmS2TNcdZ26sH
-         Q2oODFbNn/NYBFg1u+ihWvJWfmc9KrB98rCE6nuR1BwZWuQP85JVit3Nw2JjfTA5yNFw
-         1hXQ==
-X-Gm-Message-State: ANhLgQ1oNR8o+XUNEZ1KD4/PNHUq59+F5TF4uVMIHKHGpxbwj3/r3Qc5
-        OzIoVmmtQggE/DsJ438Hye6inA3Yj9k=
-X-Google-Smtp-Source: ADFU+vvtX0XEQ74gfoHyJxmuYQSZpgBCrQJ5nTxXfcoKg3MQaQ5Oonzflt9llK+3zieiU6/Cp/E5BA==
-X-Received: by 2002:a67:907:: with SMTP id 7mr8006294vsj.42.1585247482129;
-        Thu, 26 Mar 2020 11:31:22 -0700 (PDT)
-Received: from mail-vs1-f43.google.com (mail-vs1-f43.google.com. [209.85.217.43])
-        by smtp.gmail.com with ESMTPSA id z79sm1346700vkd.35.2020.03.26.11.31.21
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 26 Mar 2020 11:31:21 -0700 (PDT)
-Received: by mail-vs1-f43.google.com with SMTP id y138so4564324vsy.0
-        for <linux-kernel@vger.kernel.org>; Thu, 26 Mar 2020 11:31:21 -0700 (PDT)
-X-Received: by 2002:a67:694f:: with SMTP id e76mr7497123vsc.73.1585247480800;
- Thu, 26 Mar 2020 11:31:20 -0700 (PDT)
+        bh=zvcRbO8JiiH8TflCF3JYY64FRuv850T5VBR+zKWVaAo=;
+        b=rEfutk6FXlKeIUyZqAFojiPIEcrfNIwcpOcEyXyV0dE/e4WACWiuiTcdR8qD5rHOGe
+         dZcyTKMAuMj1zLvnoxwfyQHm6JJLPG/ijBhgiWv1t7/332YuCOVgm664PHyQZ+7wh3ZY
+         /6UqutLCgQ7BE3roIxOwXBbqvnnXavyukdHw3woOcACP2JCud6t6cnLZM6IHXVQ7TyFp
+         fZeldq6R8R3+BVGm6VQENTmfRoganKtZsQllDGeWezGfp7dfo3yCtHOOaWVOACbV1B3g
+         FBnOPj8WUadcwvq/CnIbZa84FJLdDmnvehg7JZKDgYNxrXouB7Kj7GsggAfRN9gVp3AX
+         N6oQ==
+X-Gm-Message-State: ANhLgQ16rNNYEqVKsg5XN36GYeXd3bfv+zECV11GN9Bue5H7KD8iVM8Z
+        pPU2sdxAtas9odK4XFYhiHU5/cHVlltf/Ld0zZrkrg==
+X-Google-Smtp-Source: ADFU+vuhr19j1Gh9BuMJvyrUH94cq/bHJXqm/DeIzQEZemccehjW6KDkcmRhHiQOfwXBWmMBVCeLo1LvtVagEPcJ2FU=
+X-Received: by 2002:aca:f541:: with SMTP id t62mr1218807oih.172.1585247660202;
+ Thu, 26 Mar 2020 11:34:20 -0700 (PDT)
 MIME-Version: 1.0
-References: <1585244270-637-1-git-send-email-mkshah@codeaurora.org> <1585244270-637-4-git-send-email-mkshah@codeaurora.org>
-In-Reply-To: <1585244270-637-4-git-send-email-mkshah@codeaurora.org>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Thu, 26 Mar 2020 11:31:09 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=Xwhz=N5dd5u2pYxKXyv5_PKhSZ5xZdvo+YXdk8THz_Wg@mail.gmail.com>
-Message-ID: <CAD=FV=Xwhz=N5dd5u2pYxKXyv5_PKhSZ5xZdvo+YXdk8THz_Wg@mail.gmail.com>
-Subject: Re: [PATCH v14 3/6] soc: qcom: rpmh: Invalidate SLEEP and WAKE TCSes
- before flushing new data
-To:     Maulik Shah <mkshah@codeaurora.org>
-Cc:     Stephen Boyd <swboyd@chromium.org>,
-        Evan Green <evgreen@chromium.org>,
+References: <1584973502-14775-1-git-send-email-ppvk@codeaurora.org> <c17d8842-0e1d-0014-b909-3114952b350b@codeaurora.org>
+In-Reply-To: <c17d8842-0e1d-0014-b909-3114952b350b@codeaurora.org>
+From:   Saravana Kannan <saravanak@google.com>
+Date:   Thu, 26 Mar 2020 11:33:44 -0700
+Message-ID: <CAGETcx_GD4K9CKyUtJEHKtAjHFKdfrepT0ZdA9WfRoUCF+QKPg@mail.gmail.com>
+Subject: Re: [RFC v6 0/2] Add SDHC interconnect bandwidth scaling
+To:     Rajendra Nayak <rnayak@codeaurora.org>
+Cc:     Pradeep P V K <ppvk@codeaurora.org>,
         Bjorn Andersson <bjorn.andersson@linaro.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Andy Gross <agross@kernel.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        Lina Iyer <ilina@codeaurora.org>, lsrao@codeaurora.org
+        adrian.hunter@intel.com, Rob Herring <robh+dt@kernel.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>, asutoshd@codeaurora.org,
+        stummala@codeaurora.org, sayalil@codeaurora.org,
+        rampraka@codeaurora.org, vbadigan@codeaurora.org,
+        Stephen Boyd <sboyd@kernel.org>,
+        Georgi Djakov <georgi.djakov@linaro.org>, mka@chromium.org,
+        linux-mmc@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        linux-arm-msm@vger.kernel.org,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, Andy Gross <agross@kernel.org>,
+        linux-mmc-owner@vger.kernel.org,
+        Viresh Kumar <viresh.kumar@linaro.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-On Thu, Mar 26, 2020 at 10:38 AM Maulik Shah <mkshah@codeaurora.org> wrote:
+On Thu, Mar 26, 2020 at 2:22 AM Rajendra Nayak <rnayak@codeaurora.org> wrote:
 >
->  /**
-> - * rpmh_invalidate: Invalidate all sleep and active sets
-> - * sets.
-> + * rpmh_invalidate: Invalidate sleep and active sets in batch_cache
+> Adding Viresh and Saravana,
+>
+> On 3/23/2020 7:55 PM, Pradeep P V K wrote:
+> > Add interconnect bandwidths for SDHC driver using OPP framework that
+> > is required by SDHC driver based on the clock frequency and bus width
+> > of the card. Otherwise, the system clocks may run at minimum clock
+> > speed and thus affecting the performance.
+> >
+> > This change is based on
+> > [RFC] mmc: host: sdhci-msm: Use the interconnect API
+> > (https://lkml.org/lkml/2018/10/11/499) and
+> >
+> > [PATCH v6] Introduce Bandwidth OPPs for interconnects
+> > (https://lkml.org/lkml/2019/12/6/740)
+>
+> Pradeep, since your series seems to depend on the above proposed bw bindings,
+> can you post the DT changes for the platform that you are testing these
+> patches on?
+>
+> Please note that the above series is currently deadlocked [1][2] with no clear path
+> forward for now, so looking at how you plan to use this might throw some light onto
+> the requirements
+>
+> [1] https://lkml.org/lkml/2020/1/14/511
+> [2] https://lkml.org/lkml/2020/3/20/106
 
-s/and active/and wake/
+Sorry, not deadlocked. Just kinda busy. For [1] I believe I agreed
+with Viresh later on. I'll respond to [2] soon.
 
-...with that, feel free to add my Reviewed-by tag.
+-Saravana
 
--Doug
+>
+> >
+> > Pradeep P V K (2):
+> >    mmc: sdhci-msm: Add interconnect bus bandwidth scaling support
+> >    dt-bindings: mmc: sdhci-msm: Add interconnect BW scaling strings
+> >
+> >   .../devicetree/bindings/mmc/sdhci-msm.txt          |  18 ++
+> >   drivers/mmc/host/sdhci-msm.c                       | 240 ++++++++++++++++++++-
+> >   2 files changed, 254 insertions(+), 4 deletions(-)
+> >
+>
+> --
+> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+> of Code Aurora Forum, hosted by The Linux Foundation
