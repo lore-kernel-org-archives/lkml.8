@@ -2,130 +2,160 @@ Return-Path: <SRS0=aGSP=5L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D99CDC43331
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 11:46:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9A59C43331
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 11:46:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA65520409
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 11:46:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8376F20409
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 11:46:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="scJE1cpf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728154AbgCZLqB (ORCPT
+        id S1728168AbgCZLqt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 07:46:01 -0400
-Received: from mx2.suse.de ([195.135.220.15]:55924 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727994AbgCZLqB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 07:46:01 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 618D9AD9F;
-        Thu, 26 Mar 2020 11:45:58 +0000 (UTC)
-Subject: Re: [PATCH v7 2/2] tty: add rpmsg driver
-To:     Arnaud POULIQUEN <arnaud.pouliquen@st.com>,
-        Ohad Ben-Cohen <ohad@wizery.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org, linux-remoteproc@vger.kernel.org,
-        Mathieu Poirier <mathieu.poirier@linaro.org>
-Cc:     Suman Anna <s-anna@ti.com>,
-        Fabien DESSENNE <fabien.dessenne@st.com>,
-        linux-stm32@st-md-mailman.stormreply.com,
-        xiang xiao <xiaoxiang781216@gmail.com>
-References: <20200324170407.16470-1-arnaud.pouliquen@st.com>
- <20200324170407.16470-3-arnaud.pouliquen@st.com>
- <e458f805-c746-c88e-98f4-d874a7552933@suse.cz>
- <1e4ce821-dd9b-bb04-774b-58a255834cf5@st.com>
- <ec061c30-eace-1df9-fa7b-71a61e5710a2@suse.cz>
- <2512639d-424f-9647-4dbd-3b3459465888@st.com>
-From:   Jiri Slaby <jslaby@suse.cz>
-Autocrypt: addr=jslaby@suse.cz; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <3e666fa0-2f4d-9958-887e-8830049ccbe8@suse.cz>
-Date:   Thu, 26 Mar 2020 12:45:57 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
-MIME-Version: 1.0
-In-Reply-To: <2512639d-424f-9647-4dbd-3b3459465888@st.com>
-Content-Type: text/plain; charset=iso-8859-2
+        Thu, 26 Mar 2020 07:46:49 -0400
+Received: from mail-db8eur05on2045.outbound.protection.outlook.com ([40.107.20.45]:23905
+        "EHLO EUR05-DB8-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727970AbgCZLqt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Mar 2020 07:46:49 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Bjz3zNmsWlTEqnb/EBtrM1aLX3eQI3cydPq6M3scmfJcYRyvQJCupgkSMLEtQBfSv/yJ117XoLH4y41JRUPmAF8HIeDz8r4GLU/vhAzEwXqoXvdIvYKWfTarg1rz6DWLibX5XoN+qvrHF5F+o4TqOU6IColCH/Qd85GvxKS9mUH1zfJTOPdt3qNOdbIygQ1nDnM2h2++bQ6QTuPpa/Ea593vtk6p2T1a/gHT02jG4dRsfDvtEHeY/nOpsjRD01P4M1Xf6hAqg5mIOkKmRTUG3eaE9DNxhBUGrNOF6vsXC6qI3iD4firIU7GLVball1ge3Ax01nwFJKBTGUglvGogeQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=mBPw6vdnMsiwIaCr9J7hxVgHYJt6zmC3nffZOvDowp4=;
+ b=PREiaBodv1xcJfAxwoQa0AcLc75wNStcRAyDPz3ce3MQfve/jjh0Uhtsvwgq+HfM5z+jaiXUAsz/IRNDpyHAoM2TA6ifFgu/indZMCizYGZNODeflAwTwI9J/DZoGf7kAJ7/zQgA0wylSEIH5bHH7EIAD0ECF1buQ8k7TIX+QpTX3zpOnCh553eC1BM1Obe8yYcuk8BuFUk6MugKjMr4ru5E3WVhTywD/5ieA6xmgwWLtljcABcvhghO4aadi2qzG6RcY79E90jABBDncP6B0LE6IGZgqLNsOrEg0fZCBVRTrx8R8Jqz53K/Bx25Ay96s2KkXXdVTqF6T7xz/6EPAw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=mBPw6vdnMsiwIaCr9J7hxVgHYJt6zmC3nffZOvDowp4=;
+ b=scJE1cpfXgQOTeNngtYOvKBua3ARmVKEXesSOr9pq489vhFpW4NhCT7oYWW0k6QDR5R/qD/hfWufeil3Tsl/hrbA4s3sAz0XjWhbcupEzwGwO2L5CU+qEBcopN6yUW2t90PXtiL0aN8tYyLXX/E03kDx+b49JWAfxx/+Qt5ZwiM=
+Received: from AM7PR04MB7157.eurprd04.prod.outlook.com (52.135.57.84) by
+ AM7PR04MB6853.eurprd04.prod.outlook.com (10.141.172.210) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2835.22; Thu, 26 Mar 2020 11:46:42 +0000
+Received: from AM7PR04MB7157.eurprd04.prod.outlook.com
+ ([fe80::902c:71:6377:4273]) by AM7PR04MB7157.eurprd04.prod.outlook.com
+ ([fe80::902c:71:6377:4273%5]) with mapi id 15.20.2835.023; Thu, 26 Mar 2020
+ 11:46:42 +0000
+From:   Peter Chen <peter.chen@nxp.com>
+To:     Colin King <colin.king@canonical.com>
+CC:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sekhar Nori <nsekhar@ti.com>, Roger Quadros <rogerq@ti.com>,
+        Felipe Balbi <felipe.balbi@linux.intel.com>,
+        Pawel Laszczak <pawell@cadence.com>,
+        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
+        "kernel-janitors@vger.kernel.org" <kernel-janitors@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] usb: cdns3: make signed 1 bit bitfields unsigned
+Thread-Topic: [PATCH] usb: cdns3: make signed 1 bit bitfields unsigned
+Thread-Index: AQHWAqQFXOczHDS/p0iYhU6YMSQfIqhaw0CA
+Date:   Thu, 26 Mar 2020 11:46:42 +0000
+Message-ID: <20200326114703.GC23632@b29397-desktop>
+References: <20200325125041.94769-1-colin.king@canonical.com>
+In-Reply-To: <20200325125041.94769-1-colin.king@canonical.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=peter.chen@nxp.com; 
+x-originating-ip: [119.31.174.66]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: f893a442-286b-4d5a-6fb2-08d7d17b5a83
+x-ms-traffictypediagnostic: AM7PR04MB6853:
+x-microsoft-antispam-prvs: <AM7PR04MB6853E8043741DED5534299C88BCF0@AM7PR04MB6853.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:352;
+x-forefront-prvs: 0354B4BED2
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(7916004)(396003)(136003)(346002)(366004)(376002)(39860400002)(76116006)(53546011)(6916009)(6506007)(33656002)(86362001)(5660300002)(316002)(2906002)(478600001)(26005)(1076003)(71200400001)(8676002)(66556008)(66946007)(186003)(6486002)(8936002)(33716001)(81156014)(81166006)(44832011)(66446008)(66476007)(54906003)(9686003)(4326008)(64756008)(91956017)(6512007);DIR:OUT;SFP:1101;SCL:1;SRVR:AM7PR04MB6853;H:AM7PR04MB7157.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: g+9EuTN77OGaVWktdIOOJ9kS0W4aS+jRpPfXN4QUZ4f9VviJJDlgge9jV4BOP0+mBFGGqfzz8xY6KbAT9CNSH3AK7vqKmrvkQTxeaUhP0h9AfNQLYKeyAUECk1pUil1EuFwOBHyQN+P6JYVSa5oxPCHVawmEFSNfQi+6/VjsuxYM3cl6FkJM9u8rHRzpeMG4L6Ib+qp7ymNHCNBsUYo0KVCNbDzPNw4FcJRWeZdSwoArzs7GJxRQIhf7gCpDCYOk9XX/5Pc3igrCa/NjSCImAissJjLNkV7vIdPHFVJ3kf0kXESPKgz1Gv9POpZ67qpNQfhtJPDxLUCyxMEET9lEPQOVn1taMHh2a7NIJYGItWqCHYXXinzyeu4pEUYB4SxJdYfrTKvRTbNwmAJHvYwMpdwfNLAsNcIxsa27alVJAX8XaF2H3R+V3a4urEQsbyD0
+x-ms-exchange-antispam-messagedata: FFXQl1VD4ne2da2+AYtvNpbnJ5fD9sbp6f5aFmv0voNq+/TGlqxEshhNuHuVmCgrNrr+sA4Ei2kAk1OFq0iOj7jsI4wiOpFvI8MkTdajU6QreBOoZxCfCRkDDNBGJ3TDW+rRmmPODR8PLbp7vmwxYw==
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <C4712C137F84924F9E05ABE16AEEDF66@eurprd04.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: f893a442-286b-4d5a-6fb2-08d7d17b5a83
+X-MS-Exchange-CrossTenant-originalarrivaltime: 26 Mar 2020 11:46:42.5173
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 5se5mloSlSgbqNOPV12Wz7XOn2URI/J1PyACocPMT3mjfspJun7pyKPVMtFoi7/as37eaL9yAIz7NNu6HpJLGw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM7PR04MB6853
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 26. 03. 20, 12:40, Arnaud POULIQUEN wrote:
->>>>> +	/*
->>>>> +	 * Try to send the message to remote processor, if failed return 0 as
->>>>> +	 * no data sent
->>>>> +	 */
->>>>> +	ret = rpmsg_trysendto(cport->d_ept, tmpbuf, msg_size, cport->data_dst);
->>>>
->>>> data of rpmsg_trysendto is not const. OK, you seem you need to change
->>>> that first, I see no blocker for that.
->>>
->>> I created a temporary buffer to ensure that buffer to sent does not exceed the 
->>> MTU size.
->>> But perhaps this is an useless protection as the rpmsg_tty_write_room already
->>> return the MTU value, and so the 'len' variable can not be higher that value
->>> returned by the write_room?
->>
->> You still can limit it by msg_size without cloning the buffer, right?
-> you are right, but in this case i need to cast the buff to suppress compilation
-> warning on const and I don't know if all compilers will accept this...
->  
-> pbuf = (u8 *)buf;
-> ret = rpmsg_trysendto(cport->d_ept, pbuf, msg_size, cport->data_dst);
+On 20-03-25 12:50:41, Colin King wrote:
+> From: Colin Ian King <colin.king@canonical.com>
+>=20
+> The signed 1 bit bitfields should be unsigned, so make them unsigned.
+>=20
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+> ---
+>  drivers/usb/cdns3/cdns3-ti.c | 4 ++--
+>  drivers/usb/cdns3/gadget.h   | 6 +++---
+>  2 files changed, 5 insertions(+), 5 deletions(-)
+>=20
+> diff --git a/drivers/usb/cdns3/cdns3-ti.c b/drivers/usb/cdns3/cdns3-ti.c
+> index c6a79ca15858..5685ba11480b 100644
+> --- a/drivers/usb/cdns3/cdns3-ti.c
+> +++ b/drivers/usb/cdns3/cdns3-ti.c
+> @@ -52,8 +52,8 @@ enum modestrap_mode { USBSS_MODESTRAP_MODE_NONE,
+>  struct cdns_ti {
+>  	struct device *dev;
+>  	void __iomem *usbss;
+> -	int usb2_only:1;
+> -	int vbus_divider:1;
+> +	unsigned usb2_only:1;
+> +	unsigned vbus_divider:1;
+>  	struct clk *usb2_refclk;
+>  	struct clk *lpm_clk;
+>  };
+> diff --git a/drivers/usb/cdns3/gadget.h b/drivers/usb/cdns3/gadget.h
+> index f003a7801872..bf2828e4df2c 100644
+> --- a/drivers/usb/cdns3/gadget.h
+> +++ b/drivers/usb/cdns3/gadget.h
+> @@ -1199,7 +1199,7 @@ struct cdns3_aligned_buf {
+>  	void			*buf;
+>  	dma_addr_t		dma;
+>  	u32			size;
+> -	int			in_use:1;
+> +	unsigned		in_use:1;
+>  	struct list_head	list;
+>  };
+> =20
+> @@ -1308,8 +1308,8 @@ struct cdns3_device {
+>  	unsigned			u2_allowed:1;
+>  	unsigned			is_selfpowered:1;
+>  	unsigned			setup_pending:1;
+> -	int				hw_configured_flag:1;
+> -	int				wake_up_flag:1;
+> +	unsigned			hw_configured_flag:1;
+> +	unsigned			wake_up_flag:1;
+>  	unsigned			status_completion_no_call:1;
+>  	unsigned			using_streams:1;
+>  	int				out_mem_is_allocated;
+> --=20
 
-No, don't do that. Read my first message again; in particular:
+Reviewed-by: Peter Chen <peter.chen@nxp.com>
 
-> data of rpmsg_trysendto is not const. OK, you seem you need to change
-> that first, I see no blocker for that.
+--=20
 
-thanks,
--- 
-js
-suse labs
+Thanks,
+Peter Chen=
