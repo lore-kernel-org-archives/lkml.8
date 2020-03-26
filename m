@@ -2,236 +2,168 @@ Return-Path: <SRS0=aGSP=5L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CDA6C43331
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 17:48:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08F1BC43331
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 17:49:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F41172070A
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 17:48:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CEFC52070A
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 17:49:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="Zq8FyuU3"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="tWtR8S5N"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727805AbgCZRsN (ORCPT
+        id S1727347AbgCZRtt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 13:48:13 -0400
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:38127 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726260AbgCZRsM (ORCPT
+        Thu, 26 Mar 2020 13:49:49 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:43931 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726067AbgCZRtt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 13:48:12 -0400
-Received: by mail-qk1-f193.google.com with SMTP id h14so7681878qke.5
-        for <linux-kernel@vger.kernel.org>; Thu, 26 Mar 2020 10:48:11 -0700 (PDT)
+        Thu, 26 Mar 2020 13:49:49 -0400
+Received: by mail-pf1-f195.google.com with SMTP id f206so3136717pfa.10
+        for <linux-kernel@vger.kernel.org>; Thu, 26 Mar 2020 10:49:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=UdzathrvJR4jBf7F/I3MbOudIL3YUZaxVWJlak5sKcI=;
-        b=Zq8FyuU39YhoJErv0PWz7r1nc08kY94S4Pdlabi/HURBH1p9dBfba425PKa6v6PJt4
-         XLf5dZyquYrfHb65FM714FJxb8ic4esiZd7TyupZxVLWtDwLCoDccyynFMyHKAXDeanz
-         9hxh9Ql69QhiCe6h73hTyuDc4B6omXS46zWl90iyiGO043QfH9HI1QHjhy87e7PaFooI
-         5pDnjU/yFJCMk/5XqSXOrFNojvlSnIjoMOgYGyTOrl0yMqMYrBxyW2oFAwNAxaeLqJ7D
-         K/TGMi2M7DHzPcD+yotcBKb9oUVF9+rl5iXT6BLiqcV9hIRQftTMcp6Nl05JheKB8kE2
-         tFGg==
+         :cc;
+        bh=6CVzG402jrx7Vd35GjafKVyfM1rK8OmiRNaJdvsplVw=;
+        b=tWtR8S5N8i7CSQpF75RdTJqrclnkHBzrTkFsobGRb5RvayOAGjvnYX7e5Jiwqi0e1F
+         DKsr/8FXlyN5QwtNU4WQSgxvFGKXvhyqrMRf553H7qvySX3rnhOEDf1jKoQ20GfJd1KM
+         +iyCLvH1gfZ2Tm2oCepNd1p1bbogOtYTwlphX7TlRWHddaosKgrnT1nZ7yd2QGWQwM4M
+         XDjLh7Bt17MbXDtsbJwohlH0UBjKCZA3XfKHLZhpz+PC4wDm5fCmef8szKKgaqNRJOcb
+         43xnlOZIpPevDHpbw/2hB79ebTG3VmXhu6iPZJFMEIYyOwlOEKTUb/9tSL9d1OjP2S2G
+         +YWQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=UdzathrvJR4jBf7F/I3MbOudIL3YUZaxVWJlak5sKcI=;
-        b=RuFuHsHOXsaXMKc9igM5+G1bjetoLG9sN6010QTNYIAlS+Un6inoXxQBfQblIE0wqH
-         kCn3mtn3QazIfM1ZOSfJyhrdOz5gYx39kXk1lu8R+fE2laXmgrKQg7ZaYtJIStjEORmR
-         0cu28T3gnRfXZOh1Hq1k4bJh32FNHQW0W+BhzYb2ivDLI+zCqfwCM6ACkXWXgudr6ThT
-         JjYVJ24oH0e9MYD2/DAAkR5Y2l6NeUj0J5+CcaF8Dy9He9oPGlMxSOyfHcCh3mFyU60X
-         ZCsB62AYixgkF9xG/3F6yMrKwjaMqhNaimNBsUNquZdgDe3gIuT1a+btOrk/mMRkyXAP
-         gVhQ==
-X-Gm-Message-State: ANhLgQ1fMBVfH+AkT13pqItD3Ob62ApLgNaMQCEbHKKKKg7BLhHWuNWb
-        5ESHx6pcf8YrtPJxQgx7kDuPTaGPw1uSxMfKBFWZLg==
-X-Google-Smtp-Source: ADFU+vvJ8xbBOuqKCiv4VZmIKjFDD2oxqXeZaKqzly9zC2/bbQwsZwdxkNyXRYptfnRBVx4mUyxlC+TgKOkjCe+cJJk=
-X-Received: by 2002:a37:3c9:: with SMTP id 192mr9514408qkd.330.1585244891403;
- Thu, 26 Mar 2020 10:48:11 -0700 (PDT)
+         :message-id:subject:to:cc;
+        bh=6CVzG402jrx7Vd35GjafKVyfM1rK8OmiRNaJdvsplVw=;
+        b=mppVjAuH+H48lDVqFKJ0B9HFL7ZdswhypskjVX79rssNLU7kGjNr03G+X3iLBpd9ec
+         zSYO7BNmQtthEbi+H4n95ahKAYAWC/Qa88duF1OIOpzeb2Sg3T70SuOz41WNifQ9qQ52
+         FVuPbXtYe246FJGaohp/z8EC2waUL74632Aoq925VOo5wMkz0RFdVZNsDDa38iiRqnX5
+         D0sIkqEBcq/M2J/fIJgjvYabTzr8xWJ4M+KjCOK/BVWfv9JQQirecfIfyqDTn6DbURxE
+         f/UDXUGAi0cEPKxvY1x06IWlgWxzI3jMb/UBZ2jGORp5PKlvzJttAedB23jFy+AaAaAG
+         uAzg==
+X-Gm-Message-State: ANhLgQ0EPzd0gTi9jbrIEDL27P5FEx/GPg3lCLMQuES/2nqR8PTJigyf
+        Q2fNTPVgCx4nCfxgThmyYEx5a6j+m+HwQmucoKRvJg==
+X-Google-Smtp-Source: ADFU+vv5oWbBE0yh4vdP3Fh5MNHR5ig5PyKcuy01rreCKcHqUoWvJwRpjYTpYiMFUB1ttRrBSIrAQ0fA6ehNlAbQaXA=
+X-Received: by 2002:a05:6a00:42:: with SMTP id i2mr10055970pfk.108.1585244987994;
+ Thu, 26 Mar 2020 10:49:47 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200326131721.6404-1-brgl@bgdev.pl> <c71a132d-dc33-0b8a-29e0-9cf93056ef52@gmail.com>
-In-Reply-To: <c71a132d-dc33-0b8a-29e0-9cf93056ef52@gmail.com>
-From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Thu, 26 Mar 2020 18:48:00 +0100
-Message-ID: <CAMpxmJWLbUR5ojGi3vdMw-vrG3ias9yUE+ycrhZ8m=EL-GrreQ@mail.gmail.com>
-Subject: Re: [PATCH] net: core: provide devm_register_netdev()
-To:     Heiner Kallweit <hkallweit1@gmail.com>
-Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
-        "David S . Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>
+References: <20200326080104.27286-1-masahiroy@kernel.org> <20200326080104.27286-11-masahiroy@kernel.org>
+In-Reply-To: <20200326080104.27286-11-masahiroy@kernel.org>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Thu, 26 Mar 2020 10:49:35 -0700
+Message-ID: <CAKwvOdk=MCePWHD=Kj3K7fD0y8TBZfiFLB0X+gnhPUd=RnrH6A@mail.gmail.com>
+Subject: Re: [PATCH v2 10/16] x86: probe assembler capabilities via kconfig
+ instead of makefile
+To:     Masahiro Yamada <masahiroy@kernel.org>
+Cc:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        "Jason A . Donenfeld" <Jason@zx2c4.com>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-czw., 26 mar 2020 o 18:39 Heiner Kallweit <hkallweit1@gmail.com> napisa=C5=
-=82(a):
+On Thu, Mar 26, 2020 at 1:02 AM Masahiro Yamada <masahiroy@kernel.org> wrote:
 >
-> On 26.03.2020 14:17, Bartosz Golaszewski wrote:
-> > From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> >
-> > Create a new source file for networking devres helpers and provide
-> > devm_register_netdev() - a managed variant of register_netdev().
-> >
-> > Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> > ---
-> > I'm writing a new ethernet driver and I realized there's no devres
-> > variant for register_netdev(). Since this is the only function I need
-> > to get rid of the remove() callback, I thought I'll just go ahead and
-> > add it and send it even before the driver to make it available to other
-> > drivers.
-> >
+> From: "Jason A. Donenfeld" <Jason@zx2c4.com>
 >
-> Such a new functionality typically is accepted as part of series adding
-> at least one user only. Therefore best submit it together with the new
-> network driver.
->
+> Doing this probing inside of the Makefiles means we have a maze of
+> ifdefs inside the source code and child Makefiles that need to make
+> proper decisions on this too. Instead, we do it at Kconfig time, like
+> many other compiler and assembler options, which allows us to set up the
+> dependencies normally for full compilation units. In the process, the
+> ADX test changes to use %eax instead of %r10 so that it's valid in both
+> 32-bit and 64-bit mode.
 
-Sure, will do.
-
-> >  .../driver-api/driver-model/devres.rst        |  3 ++
-> >  include/linux/netdevice.h                     |  1 +
-> >  net/core/Makefile                             |  2 +-
-> >  net/core/devres.c                             | 41 +++++++++++++++++++
-> >  4 files changed, 46 insertions(+), 1 deletion(-)
-> >  create mode 100644 net/core/devres.c
-> >
-> > diff --git a/Documentation/driver-api/driver-model/devres.rst b/Documen=
-tation/driver-api/driver-model/devres.rst
-> > index 46c13780994c..11a03b65196e 100644
-> > --- a/Documentation/driver-api/driver-model/devres.rst
-> > +++ b/Documentation/driver-api/driver-model/devres.rst
-> > @@ -372,6 +372,9 @@ MUX
-> >    devm_mux_chip_register()
-> >    devm_mux_control_get()
-> >
-> > +NET
-> > +  devm_register_netdev()
-> > +
-> >  PER-CPU MEM
-> >    devm_alloc_percpu()
-> >    devm_free_percpu()
-> > diff --git a/include/linux/netdevice.h b/include/linux/netdevice.h
-> > index 6c3f7032e8d9..710a7bcfc3dc 100644
-> > --- a/include/linux/netdevice.h
-> > +++ b/include/linux/netdevice.h
-> > @@ -4196,6 +4196,7 @@ struct net_device *alloc_netdev_mqs(int sizeof_pr=
-iv, const char *name,
-> >                        count)
-> >
-> >  int register_netdev(struct net_device *dev);
-> > +int devm_register_netdev(struct device *dev, struct net_device *ndev);
-> >  void unregister_netdev(struct net_device *dev);
-> >
-> >  /* General hardware address lists handling functions */
-> > diff --git a/net/core/Makefile b/net/core/Makefile
-> > index 3e2c378e5f31..f530894068d2 100644
-> > --- a/net/core/Makefile
-> > +++ b/net/core/Makefile
-> > @@ -8,7 +8,7 @@ obj-y :=3D sock.o request_sock.o skbuff.o datagram.o st=
-ream.o scm.o \
-> >
-> >  obj-$(CONFIG_SYSCTL) +=3D sysctl_net_core.o
-> >
-> > -obj-y                     +=3D dev.o dev_addr_lists.o dst.o netevent.o=
- \
-> > +obj-y                     +=3D dev.o devres.o dev_addr_lists.o dst.o n=
-etevent.o \
-> >                       neighbour.o rtnetlink.o utils.o link_watch.o filt=
-er.o \
-> >                       sock_diag.o dev_ioctl.o tso.o sock_reuseport.o \
-> >                       fib_notifier.o xdp.o flow_offload.o
-> > diff --git a/net/core/devres.c b/net/core/devres.c
-> > new file mode 100644
-> > index 000000000000..3c080abd1935
-> > --- /dev/null
-> > +++ b/net/core/devres.c
->
-> Why a new source file and not just add the function to net/core/dev.c?
->
-
-This is a common approach in most sub-systems to have a dedicated
-devres.c source file for managed helpers. Eventually we could move
-devm_alloc_etherdev() here as well.
+Does KConfig generate -D<foo> flags for KBUILD_CFLAGS and KBUILD_AFLAGS?
+Looks like lib/raid6/test/Makefile also generates some of these?
 
 >
-> > @@ -0,0 +1,41 @@
-> > +// SPDX-License-Identifier: GPL-2.0-only
-> > +/*
-> > + * Copyright (C) 2020 BayLibre SAS
-> > + * Author: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> > + */
-> > +
-> > +#include <linux/device.h>
-> > +#include <linux/netdevice.h>
-> > +
-> > +struct netdevice_devres {
-> > +     struct net_device *ndev;
-> > +};
-> > +
+> Signed-off-by: Jason A. Donenfeld <Jason@zx2c4.com>
+> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+> ---
 >
-> Adding such a struct isn't strictly needed.
+> Changes in v2: None
+>
+>  arch/x86/Kconfig           |  2 ++
+>  arch/x86/Kconfig.assembler | 17 +++++++++++++++++
+>  arch/x86/Makefile          | 10 ----------
+>  3 files changed, 19 insertions(+), 10 deletions(-)
+>  create mode 100644 arch/x86/Kconfig.assembler
+>
+> diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+> index beea77046f9b..707673227837 100644
+> --- a/arch/x86/Kconfig
+> +++ b/arch/x86/Kconfig
+> @@ -2935,3 +2935,5 @@ config HAVE_ATOMIC_IOMAP
+>  source "drivers/firmware/Kconfig"
+>
+>  source "arch/x86/kvm/Kconfig"
+> +
+> +source "arch/x86/Kconfig.assembler"
+> diff --git a/arch/x86/Kconfig.assembler b/arch/x86/Kconfig.assembler
+> new file mode 100644
+> index 000000000000..91230bf11a14
+> --- /dev/null
+> +++ b/arch/x86/Kconfig.assembler
+> @@ -0,0 +1,17 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +# Copyright (C) 2020 Jason A. Donenfeld <Jason@zx2c4.com>. All Rights Reserved.
+> +
+> +config AS_AVX2
+> +       def_bool $(as-instr,vpbroadcastb %xmm0$(comma)%ymm1)
+> +
+> +config AS_AVX512
+> +       def_bool $(as-instr,vpmovm2b %k1$(comma)%zmm5)
+> +
+> +config AS_SHA1_NI
+> +       def_bool $(as-instr,sha1msg1 %xmm0$(comma)%xmm1)
+> +
+> +config AS_SHA256_NI
+> +       def_bool $(as-instr,sha256msg1 %xmm0$(comma)%xmm1)
+> +
+> +config AS_ADX
+> +       def_bool $(as-instr,adox %eax$(comma)%eax)
+> diff --git a/arch/x86/Makefile b/arch/x86/Makefile
+> index f32ef7b8d5ca..b65ec63c7db7 100644
+> --- a/arch/x86/Makefile
+> +++ b/arch/x86/Makefile
+> @@ -177,16 +177,6 @@ ifeq ($(ACCUMULATE_OUTGOING_ARGS), 1)
+>         KBUILD_CFLAGS += $(call cc-option,-maccumulate-outgoing-args,)
+>  endif
+>
+> -# does binutils support specific instructions?
+> -avx2_instr :=$(call as-instr,vpbroadcastb %xmm0$(comma)%ymm1,-DCONFIG_AS_AVX2=1)
+> -avx512_instr :=$(call as-instr,vpmovm2b %k1$(comma)%zmm5,-DCONFIG_AS_AVX512=1)
+> -sha1_ni_instr :=$(call as-instr,sha1msg1 %xmm0$(comma)%xmm1,-DCONFIG_AS_SHA1_NI=1)
+> -sha256_ni_instr :=$(call as-instr,sha256msg1 %xmm0$(comma)%xmm1,-DCONFIG_AS_SHA256_NI=1)
+> -adx_instr := $(call as-instr,adox %r10$(comma)%r10,-DCONFIG_AS_ADX=1)
+> -
+> -KBUILD_AFLAGS += $(avx2_instr) $(avx512_instr) $(sha1_ni_instr) $(sha256_ni_instr) $(adx_instr)
+> -KBUILD_CFLAGS += $(avx2_instr) $(avx512_instr) $(sha1_ni_instr) $(sha256_ni_instr) $(adx_instr)
+> -
+>  KBUILD_LDFLAGS := -m elf_$(UTS_MACHINE)
+>
+>  #
+> --
+> 2.17.1
 >
 
-I believe it's better in terms of readability.
 
-> > +static void devm_netdev_release(struct device *dev, void *res)
-> > +{
-> > +     struct netdevice_devres *this =3D res;
-> > +
-> > +     unregister_netdev(this->ndev);
-> > +}
-> > +
-> > +int devm_register_netdev(struct device *dev, struct net_device *ndev)
-> > +{
->
-> In this function you'd need to consider the dependency on a previous
-> call to devm_alloc_etherdev(). If the netdevice is allocated non-managed,
-> then free_netdev() would be called whilst the netdevice is still
-> registered, what would trigger a BUG_ON(). Therefore devm_register_netdev=
-()
-> should return an error if the netdevice was allocated non-managed.
-> The mentioned scenario would result from a severe programming error
-> of course, but there are less experienced driver authors and the net core
-> should deal gently with wrong API usage.
->
-
-Thank you for bringing this to my attention, I wasn't aware of that.
-I'll rework this.
-
-Best regards,
-Bartosz
-
-> An example how this could be done you can find in the PCI subsystem,
-> see pcim_release() and related functions like pcim_enable() and
-> pcim_set_mwi().
->
-> > +     struct netdevice_devres *devres;
-> > +     int ret;
-> > +
-> > +     devres =3D devres_alloc(devm_netdev_release, sizeof(*devres), GFP=
-_KERNEL);
-> > +     if (!devres)
-> > +             return -ENOMEM;
-> > +
-> > +     ret =3D register_netdev(ndev);
-> > +     if (ret) {
-> > +             devres_free(devres);
-> > +             return ret;
-> > +     }
-> > +
-> > +     devres->ndev =3D ndev;
-> > +     devres_add(dev, devres);
-> > +
-> > +     return 0;
-> > +}
-> > +EXPORT_SYMBOL(devm_register_netdev);
-> >
->
+-- 
+Thanks,
+~Nick Desaulniers
