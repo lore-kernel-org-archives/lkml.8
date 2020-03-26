@@ -2,151 +2,168 @@ Return-Path: <SRS0=aGSP=5L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4CFAC43331
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 17:19:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19EFFC43331
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 17:19:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7EE8E20775
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 17:19:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Vk72SUbH"
+	by mail.kernel.org (Postfix) with ESMTP id E408B20409
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 17:19:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728142AbgCZRTA (ORCPT
+        id S1728256AbgCZRTU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 13:19:00 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:43264 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726163AbgCZRS7 (ORCPT
+        Thu, 26 Mar 2020 13:19:20 -0400
+Received: from mail-io1-f72.google.com ([209.85.166.72]:33102 "EHLO
+        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726163AbgCZRTT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 13:18:59 -0400
-Received: by mail-pg1-f193.google.com with SMTP id u12so3192770pgb.10
-        for <linux-kernel@vger.kernel.org>; Thu, 26 Mar 2020 10:18:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=0r/SurdDSCSAHVti9CZwgq0zi7acyKoJlvToplzgYwo=;
-        b=Vk72SUbH0AvbkhQ5XzcwGL7Voe73IZEF73e/9vZHeWg3ayRXD7y/T9U7Uh5KWQjjP8
-         CngWsDMtAPuLWsVlmB7aXos16mH3SNU0M8VlXfCMvp/8Bx9WCHkMBqDmkU0TZ7L01CCW
-         e/AUEQ1wJPERfVcLRtO1/uNX+Ay7mqmrzOVwtTg97qIX6gAwTaUXjesu1tEQ/zlL9/rk
-         1cmlxmMeuk46R2/U46OrkAlX4oM9FUMXLbvQnIGajbNyi8POyK6bFhuk1yWjrqUn7rqr
-         ODl5/33x6szSqlJdysIchhk/nbfRB0LxnzH2MWIHVjMQ4woLENNRFnDJkF0NI40SjDXK
-         iXZg==
+        Thu, 26 Mar 2020 13:19:19 -0400
+Received: by mail-io1-f72.google.com with SMTP id w25so5897784iom.0
+        for <linux-kernel@vger.kernel.org>; Thu, 26 Mar 2020 10:19:16 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=0r/SurdDSCSAHVti9CZwgq0zi7acyKoJlvToplzgYwo=;
-        b=kQVphSg6t/bbd2nBzYOZLbeJqUNDCEnI1f5HsWf68DE//PL+FB2M83uS8bsezhk88i
-         dj0LOj33ETnsdNRhny1z0sGCX5LLQcEw473VZLjwgXcSX5WsEV5GwS56Aw+PMpex19Wa
-         hWNOutEDzBVkQ19mK576m1AMZSKd169GwNJIYj5IIiUmyjaq2XSk9IofIBLtb7Jb4n7f
-         q6ElVKk6oEfCYg8Q7BHXy/mSs3dLjnRDX75s784k8IhE2u2QFapI1PV17MBB/jPdDpPb
-         RK/46wlJFEiu26HCAmc6gDD0Cu8GruNTkxU46FiXhnDQWOnUmlbDQ2ogA74wPtb+5lFH
-         HAhA==
-X-Gm-Message-State: ANhLgQ0gjTashibggpb4GD4uTwqoYN2c8aRtE9MqY07ikR3eR3cEuROa
-        6p6UkDakW9YAObsjX8Wnj2Vcc2/sr8026I5nOJ9xQg==
-X-Google-Smtp-Source: ADFU+vte/68TxLOoZDxjEk01TZmRSfqPyyu5ylgPkQx+VuS/XaqbzT6xAtlusN5AxnwbvbOL7dGPmztB+EKwgHNkl2Y=
-X-Received: by 2002:a63:a34d:: with SMTP id v13mr9360167pgn.10.1585243137461;
- Thu, 26 Mar 2020 10:18:57 -0700 (PDT)
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=89AASuIsuhq2TDnjrU3eDHxKk/9xmva/NohKkxqdSAA=;
+        b=U6ZaXiZozEHC3Th/WP3aCaEVuSLQBBjDwCXdUioDRNko5hlMHu6XuLDi986l48wa83
+         YehOekaHyRxWBtUyc7jlLt70ndVtU4l8/gLi1bD5m4kkmeXSM3QcJupURezMXGSEl+2S
+         5VmQsrLHABHBdVSanqnA4fyIPX63tfpjdq0eU3Ixg+vEAu1S3gdCy4vMHPyAcf1WRHL7
+         bAp75N+cbJ5P3thMnj1Aev/lCVoIBpq9nsi/s+oph5MUu2rAg5/NTlOLu/6U7rKS5pBM
+         5Qxqq2tG08H0qrOoR5g43NUKEzEODBsOY6gjqmNz905udVxfHMRNGrmlpjv+9elyq+4J
+         +nPw==
+X-Gm-Message-State: ANhLgQ2tEs65uVDdJbsmz0md0gGupGRaQwRRs1WatYe0uzVlyY0Tzc5L
+        uYyOc8DqBXfjXHXTD1Tses+of/8dGnwu323Wk7rlX44LGTGO
+X-Google-Smtp-Source: ADFU+vtgCXMrV1x/q2M3+wuvcIE1En+W91TuXhXYhJ2UHktcg8B/cDWeG3d/eunelo+KoKiVVOL84bsHeOR9XFS3l5pv3/hObVKD
 MIME-Version: 1.0
-References: <20200323114207.222412-1-courbet@google.com> <20200326123841.134068-1-courbet@google.com>
-In-Reply-To: <20200326123841.134068-1-courbet@google.com>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Thu, 26 Mar 2020 10:18:45 -0700
-Message-ID: <CAKwvOdk0N96DOZCUob0b=0DuAxYFq7-3Ft=RToi7EC8vOAhQZw@mail.gmail.com>
-Subject: Re: [PATCH] x86: Alias memset to __builtin_memset.
-To:     Clement Courbet <courbet@google.com>
-Cc:     Nathan Chancellor <natechancellor@gmail.com>,
-        Kees Cook <keescook@chromium.org>,
-        Joe Perches <joe@perches.com>,
-        Bernd Petrovitsch <bernd@petrovitsch.priv.at>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        Segher Boessenkool <segher@kernel.crashing.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Allison Randal <allison@lohutok.net>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>
+X-Received: by 2002:a92:dcc6:: with SMTP id b6mr7549715ilr.113.1585243156443;
+ Thu, 26 Mar 2020 10:19:16 -0700 (PDT)
+Date:   Thu, 26 Mar 2020 10:19:16 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <00000000000038f92e05a1c52f43@google.com>
+Subject: KMSAN: kernel-infoleak in copyout (2)
+From:   syzbot <syzbot+fa5414772d5c445dac3c@syzkaller.appspotmail.com>
+To:     davem@davemloft.net, edumazet@google.com, glider@google.com,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        pabeni@redhat.com, syzkaller-bugs@googlegroups.com,
+        yuehaibing@huawei.com
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 26, 2020 at 5:38 AM Clement Courbet <courbet@google.com> wrote:
->
-> I discussed with the original authors who added freestanding to our
-> build. It turns out that it was added globally but this was just to
-> to workaround powerpc not compiling under clang, but they felt the
-> fix was appropriate globally.
->
-> Now Nick has dug up https://lkml.org/lkml/2019/8/29/1300, which
-> advises against freestanding. Also, I've did some research and
-> discovered that the original reason for using freestanding for
-> powerpc has been fixed here:
-> https://lore.kernel.org/linuxppc-dev/20191119045712.39633-3-natechancellor@gmail.com/
->
-> I'm going to remove -ffreestanding from downstream, so we don't really need
-> this anymore, sorry for waisting people's time.
->
-> I wonder if the freestanding fix from the aforementioned patch is really needed
-> though. I think that clang is actually right to point out the issue.
-> I don't see any reason why setjmp()/longjmp() are declared as taking longs
-> rather than ints. The implementation looks like it only ever propagates the
-> value (in longjmp) or sets it to 1 (in setjmp), and we only ever call longjmp
-> with integer parameters. But I'm not a PowerPC expert, so I might
-> be misreading the code.
->
->
-> So it seems that we could just remove freestanding altogether and rewrite the
-> code to:
->
-> diff --git a/arch/powerpc/include/asm/setjmp.h b/arch/powerpc/include/asm/setjmp.h
-> index 279d03a1eec6..7941ae68fe21 100644
-> --- a/arch/powerpc/include/asm/setjmp.h
-> +++ b/arch/powerpc/include/asm/setjmp.h
-> @@ -12,7 +12,9 @@
->
->  #define JMP_BUF_LEN    23
-> -extern long setjmp(long *);
-> -extern void longjmp(long *, long);
-> +typedef long * jmp_buf;
-> +
-> +extern int setjmp(jmp_buf);
-> +extern void longjmp(jmp_buf, int);
->
-> I'm happy to send a patch for this, and get rid of more -ffreestanding.
-> Opinions ?
+Hello,
 
-Yes, I think the above diff and additionally cleaning up
--ffreestanding from arch/powerpc/kernel/Makefile and
-arch/powerpc/xmon/Makefile would be a much better approach.  If that's
-good enough to fix the warning, I kind of can't believe we didn't spot
-that in the original code review!
+syzbot found the following crash on:
 
-Actually, the god awful warning was:
-./arch/powerpc/include/asm/setjmp.h:10:13: error: declaration of
-built-in function 'setjmp' requires the declaration of the 'jmp_buf'
-type, commonly provided in the header <setjmp.h>.
-[-Werror,-Wincomplete-setjmp-declaration]
-extern long setjmp(long *) __attribute__((returns_twice));
-            ^
-So jmp_buf was missing, wasn't used, but also the long vs int confusion.
+HEAD commit:    686a4f77 kmsan: don't compile memmove
+git tree:       https://github.com/google/kmsan.git master
+console output: https://syzkaller.appspot.com/x/log.txt?x=13235a31e00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=e10654781bc1f11c
+dashboard link: https://syzkaller.appspot.com/bug?extid=fa5414772d5c445dac3c
+compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=164789e9e00000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1014a229e00000
 
-I tested the above diff, all calls to setjmp under arch/powerpc/ just
-compare the return value against 0.  Callers of longjmp just pass 1
-for the final parameter. So the above changes should be no functional
-change.
--- 
-Thanks,
-~Nick Desaulniers
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+fa5414772d5c445dac3c@syzkaller.appspotmail.com
+
+=====================================================
+BUG: KMSAN: kernel-infoleak in kmsan_copy_to_user+0x81/0x90 mm/kmsan/kmsan_hooks.c:253
+CPU: 1 PID: 11522 Comm: syz-executor835 Not tainted 5.5.0-rc5-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x1c9/0x220 lib/dump_stack.c:118
+ kmsan_report+0xf7/0x1e0 mm/kmsan/kmsan_report.c:118
+ kmsan_internal_check_memory+0x238/0x3d0 mm/kmsan/kmsan.c:423
+ kmsan_copy_to_user+0x81/0x90 mm/kmsan/kmsan_hooks.c:253
+ copyout+0x15a/0x1e0 lib/iov_iter.c:145
+ _copy_to_iter+0x34e/0x2420 lib/iov_iter.c:633
+ copy_to_iter include/linux/uio.h:138 [inline]
+ simple_copy_to_iter+0xd7/0x130 net/core/datagram.c:515
+ __skb_datagram_iter+0x25f/0xfc0 net/core/datagram.c:423
+ skb_copy_datagram_iter+0x292/0x2b0 net/core/datagram.c:529
+ tun_put_user drivers/net/tun.c:2144 [inline]
+ tun_do_read+0x2471/0x2df0 drivers/net/tun.c:2228
+ tun_chr_read_iter+0x229/0x460 drivers/net/tun.c:2247
+ call_read_iter include/linux/fs.h:1896 [inline]
+ new_sync_read fs/read_write.c:414 [inline]
+ __vfs_read+0xa64/0xc80 fs/read_write.c:427
+ vfs_read+0x346/0x6a0 fs/read_write.c:461
+ ksys_read+0x267/0x450 fs/read_write.c:587
+ __do_sys_read fs/read_write.c:597 [inline]
+ __se_sys_read+0x92/0xb0 fs/read_write.c:595
+ __x64_sys_read+0x4a/0x70 fs/read_write.c:595
+ do_syscall_64+0xb8/0x160 arch/x86/entry/common.c:296
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
+RIP: 0033:0x403f40
+Code: 01 f0 ff ff 0f 83 a0 0d 00 00 c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 44 00 00 83 3d 6d a0 2d 00 00 75 14 b8 00 00 00 00 0f 05 <48> 3d 01 f0 ff ff 0f 83 74 0d 00 00 c3 48 83 ec 08 e8 da 02 00 00
+RSP: 002b:00007ffe8e33e1d8 EFLAGS: 00000246 ORIG_RAX: 0000000000000000
+RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 0000000000403f40
+RDX: 00000000000003e8 RSI: 00007ffe8e33e1e0 RDI: 00000000000000f0
+RBP: 000000000002640f R08: 0000000000000000 R09: 0000000000000004
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
+R13: 00000000004051d0 R14: 0000000000000000 R15: 0000000000000000
+
+Uninit was stored to memory at:
+ kmsan_save_stack_with_flags mm/kmsan/kmsan.c:144 [inline]
+ kmsan_internal_chain_origin+0xad/0x130 mm/kmsan/kmsan.c:310
+ kmsan_memcpy_memmove_metadata+0x272/0x2e0 mm/kmsan/kmsan.c:247
+ kmsan_memcpy_metadata+0xb/0x10 mm/kmsan/kmsan.c:267
+ __msan_memcpy+0x43/0x50 mm/kmsan/kmsan_instr.c:116
+ pskb_expand_head+0x38b/0x1b00 net/core/skbuff.c:1637
+ __skb_cow include/linux/skbuff.h:3120 [inline]
+ skb_cow_head include/linux/skbuff.h:3154 [inline]
+ batadv_skb_head_push+0x234/0x350 net/batman-adv/soft-interface.c:74
+ batadv_send_skb_packet+0x1a7/0x8c0 net/batman-adv/send.c:86
+ batadv_send_broadcast_skb+0x76/0x90 net/batman-adv/send.c:127
+ batadv_iv_ogm_send_to_if net/batman-adv/bat_iv_ogm.c:393 [inline]
+ batadv_iv_ogm_emit net/batman-adv/bat_iv_ogm.c:419 [inline]
+ batadv_iv_send_outstanding_bat_ogm_packet+0x97e/0xd50 net/batman-adv/bat_iv_ogm.c:1706
+ process_one_work+0x1552/0x1ef0 kernel/workqueue.c:2264
+ worker_thread+0xef6/0x2450 kernel/workqueue.c:2410
+ kthread+0x4b5/0x4f0 kernel/kthread.c:256
+ ret_from_fork+0x35/0x40 arch/x86/entry/entry_64.S:353
+
+Uninit was created at:
+ kmsan_save_stack_with_flags+0x3c/0x90 mm/kmsan/kmsan.c:144
+ kmsan_internal_alloc_meta_for_pages mm/kmsan/kmsan_shadow.c:307 [inline]
+ kmsan_alloc_page+0x12a/0x310 mm/kmsan/kmsan_shadow.c:336
+ __alloc_pages_nodemask+0x57f2/0x5f60 mm/page_alloc.c:4800
+ __alloc_pages include/linux/gfp.h:498 [inline]
+ __alloc_pages_node include/linux/gfp.h:511 [inline]
+ alloc_pages_node include/linux/gfp.h:525 [inline]
+ __page_frag_cache_refill mm/page_alloc.c:4875 [inline]
+ page_frag_alloc+0x3ae/0x910 mm/page_alloc.c:4905
+ __netdev_alloc_skb+0x703/0xbb0 net/core/skbuff.c:455
+ __netdev_alloc_skb_ip_align include/linux/skbuff.h:2801 [inline]
+ netdev_alloc_skb_ip_align include/linux/skbuff.h:2811 [inline]
+ batadv_iv_ogm_aggregate_new net/batman-adv/bat_iv_ogm.c:558 [inline]
+ batadv_iv_ogm_queue_add+0x10da/0x1900 net/batman-adv/bat_iv_ogm.c:670
+ batadv_iv_ogm_schedule_buff net/batman-adv/bat_iv_ogm.c:845 [inline]
+ batadv_iv_ogm_schedule+0x107b/0x13c0 net/batman-adv/bat_iv_ogm.c:865
+ batadv_iv_send_outstanding_bat_ogm_packet+0xbae/0xd50 net/batman-adv/bat_iv_ogm.c:1718
+ process_one_work+0x1552/0x1ef0 kernel/workqueue.c:2264
+ worker_thread+0xef6/0x2450 kernel/workqueue.c:2410
+ kthread+0x4b5/0x4f0 kernel/kthread.c:256
+ ret_from_fork+0x35/0x40 arch/x86/entry/entry_64.S:353
+
+Bytes 52-53 of 146 are uninitialized
+Memory access of size 146 starts at ffff9ecbf8eb0c40
+Data copied to user address 00007ffe8e33e1e0
+=====================================================
+
+
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
