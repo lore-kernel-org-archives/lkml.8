@@ -2,88 +2,109 @@ Return-Path: <SRS0=aGSP=5L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8BDEC2D0E8
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 08:18:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1ED33C43331
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 08:21:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A1C862070A
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 08:18:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="boOyqsmC"
+	by mail.kernel.org (Postfix) with ESMTP id E83382070A
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 08:21:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585210896;
+	bh=I/HXWFRBajYMYlrJ1h/82iUEqdu35M990EWm2pbNP2U=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Ed1Kf5l4Z8Tk4TrJw1ECSXLGyShhyrONIv4pWeM+ye6bFvc9QXQv3kXxh0GBvD/N6
+	 0OLCXReSAwABSEwciwMsG6BWgViX04AeJmSgliHZKb+o7rZk7K79S0e5H5Lti5hEY3
+	 wmcO2AIITEL+S+h84EsvBuMqH2Qr2+C7h0hDlyjs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727906AbgCZISK (ORCPT
+        id S1727708AbgCZIVe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 04:18:10 -0400
-Received: from frisell.zx2c4.com ([192.95.5.64]:35275 "EHLO frisell.zx2c4.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727821AbgCZISJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 04:18:09 -0400
-Received: by frisell.zx2c4.com (ZX2C4 Mail Server) with ESMTP id 293077ea;
-        Thu, 26 Mar 2020 08:10:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=zx2c4.com; h=mime-version
-        :references:in-reply-to:from:date:message-id:subject:to:cc
-        :content-type; s=mail; bh=z54i3Rpd8bQwLDnVNFV/yezuxLU=; b=boOyqs
-        mCdG+80LeYcjASWpkQ1zMThj2uZPRyQj63aULJ1eho1PEeJxY053blYBVEDv/+X7
-        OBQ/dBvu36pqu+6GHtzv5FnIDYJ8+m+UpNZddescE9+TJew8ZdyolfWdn7qCgNwm
-        hCDQQZZIBJP70J+3MGGaus93N2IUKDn1UavfBtBSFRk4AtjJCPc/vVInIjmHn4rp
-        9nXPZ9Perj3Rk83uKKf3OPmeCafWNMnHZ2UW709Lpc/xjEXipaADr7IcjmiVm9Er
-        qA90IZHHNfiJD+f6KrFTRwRM8Vhig7u1XfQF2UZX5KM4Hl2qhbUe96EyxkSi5RwR
-        yE1MyvOm+wrsj6Vw==
-Received: by frisell.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id f22236e6 (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256:NO);
-        Thu, 26 Mar 2020 08:10:45 +0000 (UTC)
-Received: by mail-io1-xd36.google.com with SMTP id k9so5139001iov.7;
-        Thu, 26 Mar 2020 01:18:06 -0700 (PDT)
-X-Gm-Message-State: ANhLgQ3XXTfJD2Ff639k67Y0c3BAp/U3FUB4V5ieGUaWa70y8GQopE/p
-        x7aUHw6BxH3iMuvq1jZNZ1glMxnQZEqeTiVu7ag=
-X-Google-Smtp-Source: ADFU+vsTJTCXcFJHQUwui8dbQzcKfWOUCgQIPLG0bwuItksw1ry6Mg259oUoldQgsVo9bcGoroXnNzuIzCxg8dcm+jA=
-X-Received: by 2002:a02:2a4a:: with SMTP id w71mr6759564jaw.75.1585210385536;
- Thu, 26 Mar 2020 01:13:05 -0700 (PDT)
+        Thu, 26 Mar 2020 04:21:34 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:42221 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726298AbgCZIVe (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Mar 2020 04:21:34 -0400
+Received: by mail-lj1-f194.google.com with SMTP id q19so5397501ljp.9;
+        Thu, 26 Mar 2020 01:21:32 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=sVJJ788lIqUmQp6fGdmkgrlONPOf+ggU84FOgzg9/88=;
+        b=JLyiIyboVwYWfFbcZZ7l/1pG5RtnQl55SL3K3wqGYoVhqQUGyfFPp4Dzwx6l3ve1zc
+         JwQWriiW3DyxXRClKsBPIBvg2fKfV9Z4kFG32n4jVQNSneqSBjHiB0QcuDqdGPD/7fFk
+         +xMz9mJcCMwShCPOc/7wcf6GgM1bRGGItxDs9FcVe5Qxl/azGm4K9Mc5oaoqYsMFDEnG
+         ee/uPhzb3oXIFNm2X2jiK2IxBVarRBc93rcYuNzwnNWM5x2xsKnbiGPE9FEXl1MJSoix
+         npEEu0XESu8Nnzegf8wgwtDA/uo+/6BP9XJrnWu6/1V9RSTzYi/fCXqkCSs0z6V76N4u
+         wtLw==
+X-Gm-Message-State: ANhLgQ35mX3i8T3qcipFn3SDoPxkFqVGAYH4vMgmd7S9hGFHB4202UL6
+        n2QVhch8GlrZQFOR9xsylcw=
+X-Google-Smtp-Source: APiQypLBnbJYCvGqm5enSf75eI08oi9ZIns0qhRhRYtBj5kbfS2AMBxutadqhiln0ePQP2Vfz6Qa7g==
+X-Received: by 2002:a2e:9e8d:: with SMTP id f13mr4381812ljk.171.1585210891760;
+        Thu, 26 Mar 2020 01:21:31 -0700 (PDT)
+Received: from xi.terra (c-12aae455.07-184-6d6c6d4.bbcust.telenor.se. [85.228.170.18])
+        by smtp.gmail.com with ESMTPSA id j6sm966296lfb.13.2020.03.26.01.21.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 26 Mar 2020 01:21:30 -0700 (PDT)
+Received: from johan by xi.terra with local (Exim 4.92.3)
+        (envelope-from <johan@kernel.org>)
+        id 1jHNlN-0002pX-UA; Thu, 26 Mar 2020 09:21:17 +0100
+Date:   Thu, 26 Mar 2020 09:21:17 +0100
+From:   Johan Hovold <johan@kernel.org>
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     Qiujun Huang <hqjagain@gmail.com>, johan@kernel.org,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+        anenbupt@gmail.com
+Subject: Re: [PATCH] USB: io_edgeport: fix  slab-out-of-bounds Read in
+ edge_interrupt_callback
+Message-ID: <20200326082117.GC4899@localhost>
+References: <1585122757-4528-1-git-send-email-hqjagain@gmail.com>
+ <20200326081433.GA979574@kroah.com>
 MIME-Version: 1.0
-References: <20200326080104.27286-1-masahiroy@kernel.org>
-In-Reply-To: <20200326080104.27286-1-masahiroy@kernel.org>
-From:   "Jason A. Donenfeld" <Jason@zx2c4.com>
-Date:   Thu, 26 Mar 2020 02:12:54 -0600
-X-Gmail-Original-Message-ID: <CAHmME9pnAvgErYkcvvdakvfMY8ZGKfwHHNYzpVtJ913Tgp16CQ@mail.gmail.com>
-Message-ID: <CAHmME9pnAvgErYkcvvdakvfMY8ZGKfwHHNYzpVtJ913Tgp16CQ@mail.gmail.com>
-Subject: Re: [PATCH v2 00/16] x86, crypto: remove always-defined CONFIG_AS_*
- and cosolidate Kconfig/Makefiles
-To:     Masahiro Yamada <masahiroy@kernel.org>
-Cc:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "H . Peter Anvin" <hpa@zytor.com>, X86 ML <x86@kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        David Airlie <airlied@linux.ie>,
-        "David S. Miller" <davem@davemloft.net>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Ingo Molnar <mingo@redhat.com>,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Jim Kukunas <james.t.kukunas@linux.intel.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        NeilBrown <neilb@suse.de>, Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        Yuanhan Liu <yuanhan.liu@linux.intel.com>,
-        dri-devel@lists.freedesktop.org, intel-gfx@lists.freedesktop.org,
-        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
-        linux-doc@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200326081433.GA979574@kroah.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Very little has changed from last time, and this whole series still
-looks good to me. I think I already ack'd most packages, but in case
-it helps:
+On Thu, Mar 26, 2020 at 09:14:33AM +0100, Greg Kroah-Hartman wrote:
+> On Wed, Mar 25, 2020 at 03:52:37PM +0800, Qiujun Huang wrote:
+> > The boundary condition should be (length - 1) as we access data[position+1].
+> > 
+> > Reported-and-tested-by: syzbot+37ba33391ad5f3935bbd@syzkaller.appspotmail.com
+> > Signed-off-by: Qiujun Huang <hqjagain@gmail.com>
+> > ---
+> >  drivers/usb/serial/io_edgeport.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > 
+> > diff --git a/drivers/usb/serial/io_edgeport.c b/drivers/usb/serial/io_edgeport.c
+> > index 5737add..4cca0b8 100644
+> > --- a/drivers/usb/serial/io_edgeport.c
+> > +++ b/drivers/usb/serial/io_edgeport.c
+> > @@ -710,7 +710,7 @@ static void edge_interrupt_callback(struct urb *urb)
+> >  		/* grab the txcredits for the ports if available */
+> >  		position = 2;
+> >  		portNumber = 0;
+> > -		while ((position < length) &&
+> > +		while ((position < length - 1) &&
+> >  				(portNumber < edge_serial->serial->num_ports)) {
+> >  			txCredits = data[position] | (data[position+1] << 8);
+> >  			if (txCredits) {
+> > -- 
+> > 1.8.3.1
+> > 
+> 
+> Johan, any objection from me taking this in my tree now?
 
-Reviewed-by: Jason A. Donenfeld <Jason@zx2c4.com>
+Just let me take a look at it first.
 
-Since this touches a lot of stuff, it might be best to get it in as
-early as possible during the merge window, as I imagine new code being
-added is going to want to be touching those makefiles too.
+Are sending another PR to Linus for 5.6? Otherwise I can include this
+in my 5.7 PR to you. Will try to get it to you today.
+
+Johan
