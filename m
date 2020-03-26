@@ -2,316 +2,130 @@ Return-Path: <SRS0=aGSP=5L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 454B2C2D0ED
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 07:09:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25207C43331
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 07:10:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0DFCE20772
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 07:09:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF91F20719
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 07:10:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Wguo4yhy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727898AbgCZHJl (ORCPT
+        id S1727697AbgCZHKT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 03:09:41 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:40596 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727705AbgCZHJg (ORCPT
+        Thu, 26 Mar 2020 03:10:19 -0400
+Received: from us-smtp-delivery-74.mimecast.com ([63.128.21.74]:33559 "EHLO
+        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726338AbgCZHKT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 03:09:36 -0400
-Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02Q73bmb108048
-        for <linux-kernel@vger.kernel.org>; Thu, 26 Mar 2020 03:09:35 -0400
-Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2ywd2u0eg8-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 26 Mar 2020 03:09:34 -0400
-Received: from localhost
-        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <psampat@linux.ibm.com>;
-        Thu, 26 Mar 2020 07:09:29 -0000
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
-        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 26 Mar 2020 07:09:26 -0000
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 02Q79TZ444040418
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 26 Mar 2020 07:09:29 GMT
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 1F025A4064;
-        Thu, 26 Mar 2020 07:09:29 +0000 (GMT)
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 473A8A405B;
-        Thu, 26 Mar 2020 07:09:27 +0000 (GMT)
-Received: from pratiks-thinkpad.ibmuc.com (unknown [9.199.35.246])
-        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu, 26 Mar 2020 07:09:27 +0000 (GMT)
-From:   Pratik Rajesh Sampat <psampat@linux.ibm.com>
-To:     skiboot@lists.ozlabs.org, oohall@gmail.com,
-        linux-kernel@vger.kernel.org, linuxppc-dev@ozlabs.org,
-        mpe@ellerman.id.au, ego@linux.vnet.ibm.com, linuxram@us.ibm.com,
-        psampat@linux.ibm.com, pratik.r.sampat@gmail.com
-Subject: [PATCH v6 4/4] Advertise the self-save and self-restore attributes in the device tree
-Date:   Thu, 26 Mar 2020 12:39:17 +0530
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200326070917.12744-1-psampat@linux.ibm.com>
-References: <20200326070917.12744-1-psampat@linux.ibm.com>
+        Thu, 26 Mar 2020 03:10:19 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1585206618;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=H8Cw3DLh+iXs54zjqQfuZxMBQva4d9GTteg9CmCE+Ho=;
+        b=Wguo4yhyvKwELK68RLUfkhcbTYUBRRFOeCMwwgtREfN3LqcX2aUGYlTXrwvhqSSPi8WyIU
+        EwI+8IVRMMTlLF9HDWHleYx0lPbCjbblbk6pyRiV6DTh6b1aaVMNPz62DEcE1OPufAdnVg
+        PYkFs3lv0529MqMOj0bGNF5ntyWi7SI=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-354-otfINWqYO9CpmEvG1Hr9IQ-1; Thu, 26 Mar 2020 03:10:16 -0400
+X-MC-Unique: otfINWqYO9CpmEvG1Hr9IQ-1
+Received: by mail-wr1-f72.google.com with SMTP id c8so692386wru.20
+        for <linux-kernel@vger.kernel.org>; Thu, 26 Mar 2020 00:10:16 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=H8Cw3DLh+iXs54zjqQfuZxMBQva4d9GTteg9CmCE+Ho=;
+        b=NF8wgjWNJqmOCbLUUXwFc37L8cARYEYfttUQeY1NbIpZiIpQmNH2jv8flz4wLnea8T
+         R4pxmob/qypPeUvYPhVIZKqtyG3N6ycq5UaThOSHso4mVyvGkIAYHobvR8ZcVoeKW8Qu
+         Hc4k/533qaZ3dPpU4Yvx+JVGcyoVsYI7tdnFI0W1F56n+Tp4f5JvxRGgytZFgi5BcRbk
+         IIdy+VG4ZXBc90y6ji4Qcw47qg5KpA8MfwyTwVm4ZLegIaN0Oz0xpIaNwwCXyj9k6tf5
+         teG0NnJoEnRvTPdhqWQF9ZDF1rw1wyVuhpxDS5sWvzDRc6Cdyt7ss23E/LV+ls1yy1cM
+         CXMw==
+X-Gm-Message-State: ANhLgQ1Em9hWroPezHzGB4Db4XxwNwPKH+ghhZJaJtwun58wP5z/YT8q
+        KnaApQdQ9gFu2OYLHq/C5rnjS/zuKDk34GdDEs8VxApebkpSD6yeGN3OQPfESOnMbx1jNRwcwAs
+        T2SsthCPLqa3F+S83ho664R52
+X-Received: by 2002:a5d:4e03:: with SMTP id p3mr7455129wrt.408.1585206614577;
+        Thu, 26 Mar 2020 00:10:14 -0700 (PDT)
+X-Google-Smtp-Source: ADFU+vv1gHKjELwCfzDpvvpY8bDWo2p7o6gD/1dLi9S0i1LgXWtQ35bOWK+dgA1kgl5Qn2fUPD9HnQ==
+X-Received: by 2002:a5d:4e03:: with SMTP id p3mr7455094wrt.408.1585206614278;
+        Thu, 26 Mar 2020 00:10:14 -0700 (PDT)
+Received: from redhat.com (bzq-79-182-20-254.red.bezeqint.net. [79.182.20.254])
+        by smtp.gmail.com with ESMTPSA id y16sm2272355wrp.78.2020.03.26.00.10.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 26 Mar 2020 00:10:13 -0700 (PDT)
+Date:   Thu, 26 Mar 2020 03:10:10 -0400
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     David Hildenbrand <david@redhat.com>
+Cc:     Hui Zhu <teawater@gmail.com>, jasowang@redhat.com,
+        akpm@linux-foundation.org, pagupta@redhat.com,
+        mojha@codeaurora.org, namit@vmware.com,
+        virtualization@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org, qemu-devel@nongnu.org,
+        Hui Zhu <teawaterz@linux.alibaba.com>,
+        Alexander Duyck <alexander.h.duyck@linux.intel.com>
+Subject: Re: [RFC for Linux] virtio_balloon: Add VIRTIO_BALLOON_F_THP_ORDER
+ to handle THP spilt issue
+Message-ID: <20200326030833-mutt-send-email-mst@kernel.org>
+References: <1583999395-9131-1-git-send-email-teawater@gmail.com>
+ <3e1373f4-6ade-c651-ddde-6f04e78382f9@redhat.com>
+ <20200312043859-mutt-send-email-mst@kernel.org>
+ <45756694-560d-0276-d39e-cc2fd1c4e3a7@redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 20032607-0008-0000-0000-000003647BE7
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20032607-0009-0000-0000-00004A85EE45
-Message-Id: <20200326070917.12744-5-psampat@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.645
- definitions=2020-03-25_15:2020-03-24,2020-03-25 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
- lowpriorityscore=0 suspectscore=2 spamscore=0 mlxscore=0 adultscore=0
- priorityscore=1501 malwarescore=0 phishscore=0 mlxlogscore=999 bulkscore=0
- clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2003260043
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <45756694-560d-0276-d39e-cc2fd1c4e3a7@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Support for self save and self restore interface is advertised in the
-device tree, along with the list of SPRs it supports for each.
+On Thu, Mar 12, 2020 at 09:51:25AM +0100, David Hildenbrand wrote:
+> On 12.03.20 09:47, Michael S. Tsirkin wrote:
+> > On Thu, Mar 12, 2020 at 09:37:32AM +0100, David Hildenbrand wrote:
+> >> 2. You are essentially stealing THPs in the guest. So the fastest
+> >> mapping (THP in guest and host) is gone. The guest won't be able to make
+> >> use of THP where it previously was able to. I can imagine this implies a
+> >> performance degradation for some workloads. This needs a proper
+> >> performance evaluation.
+> > 
+> > I think the problem is more with the alloc_pages API.
+> > That gives you exactly the given order, and if there's
+> > a larger chunk available, it will split it up.
+> > 
+> > But for balloon - I suspect lots of other users,
+> > we do not want to stress the system but if a large
+> > chunk is available anyway, then we could handle
+> > that more optimally by getting it all in one go.
+> > 
+> > 
+> > So if we want to address this, IMHO this calls for a new API.
+> > Along the lines of
+> > 
+> > 	struct page *alloc_page_range(gfp_t gfp, unsigned int min_order,
+> > 					unsigned int max_order, unsigned int *order)
+> > 
+> > the idea would then be to return at a number of pages in the given
+> > range.
+> > 
+> > What do you think? Want to try implementing that?
+> 
+> You can just start with the highest order and decrement the order until
+> your allocation succeeds using alloc_pages(), which would be enough for
+> a first version. At least I don't see the immediate need for a new
+> kernel API.
 
-The Special Purpose Register identification is encoded in a 2048 bitmask
-structure, where each bit signifies the identification key of that SPR
-which is consistent with that of the POWER architecture set for that
-register.
+Well there's still a chance of splitting a big page if one
+becomes available meanwhile. But OK.
 
-Signed-off-by: Pratik Rajesh Sampat <psampat@linux.ibm.com>
----
- .../ibm,opal/power-mgt/self-restore.rst       |  27 ++++
- .../ibm,opal/power-mgt/self-save.rst          |  27 ++++
- hw/slw.c                                      | 116 ++++++++++++++++++
- include/skiboot.h                             |   1 +
- 4 files changed, 171 insertions(+)
- create mode 100644 doc/device-tree/ibm,opal/power-mgt/self-restore.rst
- create mode 100644 doc/device-tree/ibm,opal/power-mgt/self-save.rst
-
-diff --git a/doc/device-tree/ibm,opal/power-mgt/self-restore.rst b/doc/device-tree/ibm,opal/power-mgt/self-restore.rst
-new file mode 100644
-index 00000000..2a2269f7
---- /dev/null
-+++ b/doc/device-tree/ibm,opal/power-mgt/self-restore.rst
-@@ -0,0 +1,27 @@
-+ibm,opal/power-mgt/self-restore device tree entries
-+===================================================
-+
-+This node exports the bitmask representing the special purpose registers that
-+the self-restore API currently supports.
-+
-+Example:
-+
-+.. code-block:: dts
-+
-+  self-restore {
-+        sprn-bitmask = <0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x42010000 0x0 0x0
-+                        0x20000 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0
-+                        0x0 0x0 0x100000 0x900000 0x0 0x0 0x530000 0x0 0x0 0x0
-+                        0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0
-+                        0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0
-+                        0x0 0x10000>;
-+        phandle = <0x1c7>;
-+  };
-+
-+sprn-bitmask
-+------------
-+
-+This property is a bitmask of of all the existing SPRs and if the SPR is
-+supported, the corresponding bit of the SPR number is set to 1.
-+The representation of the bits are left-right, i.e the MSB of the first
-+doubleword represants the 0th bit.
-diff --git a/doc/device-tree/ibm,opal/power-mgt/self-save.rst b/doc/device-tree/ibm,opal/power-mgt/self-save.rst
-new file mode 100644
-index 00000000..c367720e
---- /dev/null
-+++ b/doc/device-tree/ibm,opal/power-mgt/self-save.rst
-@@ -0,0 +1,27 @@
-+ibm,opal/power-mgt/self-save device tree entries
-+===================================================
-+
-+This node exports the bitmask representing the special purpose registers that
-+the self-save API currently supports.
-+
-+Example:
-+
-+.. code-block:: dts
-+
-+  self-save {
-+        sprn-bitmask = <0x0 0x0 0x0 0x0 0x100000 0x0 0x0 0x0 0x42010000 0x0 0x0
-+                        0x20000 0x0 0x0 0x0 0x10000 0x0 0x0 0x0 0x0 0x0 0x0 0x0
-+                        0x0 0x0 0x0 0x100000 0x840000 0x0 0x0 0x0 0x0 0x0 0x0
-+                        0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0
-+                        0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0
-+                        0x0 0x10000>;
-+        phandle = <0x1c8>;
-+  };
-+
-+sprn-bitmask
-+------------
-+
-+This property is a bitmask of of all the existing SPRs and if the SPR is
-+supported, the corresponding bit of the SPR number is set to 1.
-+The representation of the bits are left-right, i.e the MSB of the first
-+doubleword represants the 0th bit.
-diff --git a/hw/slw.c b/hw/slw.c
-index 6a09cc2c..9d1fe2c5 100644
---- a/hw/slw.c
-+++ b/hw/slw.c
-@@ -29,6 +29,7 @@
- #include <sbe_xip_image.h>
- 
- static uint32_t slw_saved_reset[0x100];
-+#define SPR_BITMAP_LENGTH	2048
- 
- static bool slw_current_le = false;
- 
-@@ -750,6 +751,119 @@ static void slw_late_init_p9(struct proc_chip *chip)
- 	}
- }
- 
-+/* Add device tree properties to determine self-save | restore */
-+void add_cpu_self_save_restore_properties(void)
-+{
-+	struct dt_node *self_restore, *self_save, *power_mgt;
-+	uint64_t *self_save_mask, *self_restore_mask;
-+	bool self_save_supported = true;
-+	uint64_t compVector = -1;
-+	struct proc_chip *chip;
-+	int i, rc;
-+
-+	const uint64_t self_restore_regs[] = {
-+		P8_SPR_HRMOR,
-+		P8_SPR_HMEER,
-+		P8_SPR_PMICR,
-+		P8_SPR_PMCR,
-+		P8_SPR_HID0,
-+		P8_SPR_HID1,
-+		P8_SPR_HID4,
-+		P8_SPR_HID5,
-+		P8_SPR_HSPRG0,
-+		P8_SPR_LPCR,
-+		P8_MSR_MSR
-+	};
-+
-+	const uint64_t self_save_regs[] = {
-+		P9_STOP_SPR_DAWR,
-+		P9_STOP_SPR_HSPRG0,
-+		P9_STOP_SPR_LDBAR,
-+		P9_STOP_SPR_LPCR,
-+		P9_STOP_SPR_PSSCR,
-+		P9_STOP_SPR_MSR,
-+		P9_STOP_SPR_HRMOR,
-+		P9_STOP_SPR_HMEER,
-+		P9_STOP_SPR_PMCR,
-+		P9_STOP_SPR_PTCR
-+	};
-+
-+	chip = next_chip(NULL);
-+	assert(chip);
-+	rc = proc_stop_api_discover_capability((void *) chip->homer_base,
-+					       &compVector);
-+	if (rc == STOP_SAVE_ARG_INVALID_IMG) {
-+		prlog(PR_DEBUG, "HOMER BASE INVALID\n");
-+		return;
-+	} else if (rc == STOP_SAVE_API_IMG_INCOMPATIBLE) {
-+		prlog(PR_DEBUG, "STOP API running incompatible versions\n");
-+		if ((compVector & SELF_RESTORE_VER_MISMATCH) == 0) {
-+			prlog(PR_DEBUG, "Self-save API unsupported\n");
-+			self_save_supported = false;
-+		}
-+	}
-+
-+	power_mgt = dt_find_by_path(dt_root, "/ibm,opal/power-mgt");
-+	if (!power_mgt) {
-+		prerror("OCC: dt node /ibm,opal/power-mgt not found\n");
-+		return;
-+	}
-+
-+	self_restore = dt_new(power_mgt, "self-restore");
-+	if (!self_restore) {
-+		prerror("OCC: Failed to create self restore node");
-+		return;
-+	}
-+
-+	self_restore_mask = zalloc(SPR_BITMAP_LENGTH / 8);
-+	if (!self_restore_mask)
-+		return;
-+
-+	for (i = 0; i < ARRAY_SIZE(self_restore_regs); i++) {
-+		int bitmask_idx = self_restore_regs[i] / 64;
-+		uint64_t bitmask_pos = self_restore_regs[i] % 64;
-+		self_restore_mask[bitmask_idx] |= 1ul << bitmask_pos;
-+	}
-+
-+	for (i = 0; i < (SPR_BITMAP_LENGTH / 64); i++) {
-+		self_restore_mask[i] = cpu_to_be64(self_restore_mask[i]);
-+	}
-+
-+	dt_add_property(self_restore, "sprn-bitmask", self_restore_mask,
-+			SPR_BITMAP_LENGTH / 8);
-+	dt_add_property_string(self_restore, "compatible",
-+			       "ibm,opal-self-restore");
-+	free(self_restore_mask);
-+
-+	if (proc_gen != proc_gen_p9 || !self_save_supported)
-+		return;
-+
-+	self_save = dt_new(power_mgt, "self-save");
-+	if (!self_save) {
-+		prerror("OCC: Failed to create self save node");
-+		return;
-+	}
-+
-+	self_save_mask = zalloc(SPR_BITMAP_LENGTH / 8);
-+	if (!self_save_mask)
-+		return;
-+
-+	for (i = 0; i < ARRAY_SIZE(self_save_regs); i++) {
-+		int bitmask_idx = self_save_regs[i] / 64;
-+		uint64_t bitmask_pos = self_save_regs[i] % 64;
-+		self_save_mask[bitmask_idx] |= 1ul << bitmask_pos;
-+	}
-+
-+	for (i = 0; i < (SPR_BITMAP_LENGTH / 64); i++) {
-+		self_save_mask[i] = cpu_to_be64(self_save_mask[i]);
-+	}
-+
-+	dt_add_property(self_save, "sprn-bitmask", self_save_mask,
-+			SPR_BITMAP_LENGTH / 8);
-+	dt_add_property_string(self_save, "compatible", "ibm,opal-self-save");
-+	free(self_save_mask);
-+}
-+
- /* Add device tree properties to describe idle states */
- void add_cpu_idle_state_properties(void)
- {
-@@ -1563,4 +1677,6 @@ void slw_init(void)
- 		}
- 	}
- 	add_cpu_idle_state_properties();
-+	if (has_deep_states)
-+		add_cpu_self_save_restore_properties();
- }
-diff --git a/include/skiboot.h b/include/skiboot.h
-index 9ced240e..d3631dea 100644
---- a/include/skiboot.h
-+++ b/include/skiboot.h
-@@ -209,6 +209,7 @@ extern void early_uart_init(void);
- extern void homer_init(void);
- extern void slw_init(void);
- extern void add_cpu_idle_state_properties(void);
-+extern void add_cpu_self_save_restore_properties(void);
- extern void lpc_rtc_init(void);
- 
- /* flash support */
--- 
-2.24.1
+> -- 
+> Thanks,
+> 
+> David / dhildenb
 
