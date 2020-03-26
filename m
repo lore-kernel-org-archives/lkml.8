@@ -2,147 +2,980 @@ Return-Path: <SRS0=aGSP=5L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A44EEC43331
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 14:03:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B60AC43331
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 14:03:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C3022073E
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 14:03:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A5932073E
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 14:03:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fCIPrp0k"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728179AbgCZODO (ORCPT
+        id S1728224AbgCZODT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 10:03:14 -0400
-Received: from mga18.intel.com ([134.134.136.126]:21527 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727738AbgCZODO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 10:03:14 -0400
-IronPort-SDR: I97fcWokmN/hogqLRjM58bWJ4LcZsjay+skELlvk51d9ptb9ha835dYJpBZWzRd5/xTOFUOC3W
- qxhvIIQEokLw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Mar 2020 07:03:13 -0700
-IronPort-SDR: 2xMnfKiNNIribQHyU99+kqBuFzEPshilBpp4VmLjGKBP0/Yb9ogFvu8RtCBDvmiHzPKA1aWgxt
- JemivmV5wg7w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,308,1580803200"; 
-   d="scan'208";a="271181383"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga004.fm.intel.com with ESMTP; 26 Mar 2020 07:03:11 -0700
-Received: from [10.254.68.166] (kliang2-mobl.ccr.corp.intel.com [10.254.68.166])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        Thu, 26 Mar 2020 10:03:19 -0400
+Received: from us-smtp-delivery-74.mimecast.com ([63.128.21.74]:43585 "EHLO
+        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728200AbgCZODS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Mar 2020 10:03:18 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1585231396;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=dSL0wjijVrYEZDDJ2onQj9ynBTFoz5VXYC2NOe1umXU=;
+        b=fCIPrp0kBKDbLX0hR8u8++5S5l7QNmtkF+pwr0MfrzD4YMNrCe3eIKg0nJ2eLxwBYddhXe
+        rMcPDmEtvnCdxSxVgnyZj9zXNrjYG0ir5ReJo74DwdCt/nGHS69ZAbbgsoZggftkNIAJiG
+        3moWs3VqlCeGEcWiuqBW9Ic2TYHG5vY=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-182-k5C_NDYMOQC-ht0CrmAB2w-1; Thu, 26 Mar 2020 10:03:10 -0400
+X-MC-Unique: k5C_NDYMOQC-ht0CrmAB2w-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by linux.intel.com (Postfix) with ESMTPS id 3CC085803E3;
-        Thu, 26 Mar 2020 07:03:09 -0700 (PDT)
-Subject: Re: [PATCH v1 01/11] perf/x86/core: Support KVM to assign a dedicated
- counter for guest PEBS
-From:   "Liang, Kan" <kan.liang@linux.intel.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Luwei Kang <luwei.kang@intel.com>, x86@kernel.org,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        mingo@redhat.com, acme@kernel.org, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, jolsa@redhat.com,
-        namhyung@kernel.org, tglx@linutronix.de, bp@alien8.de,
-        hpa@zytor.com, pbonzini@redhat.com,
-        sean.j.christopherson@intel.com, vkuznets@redhat.com,
-        wanpengli@tencent.com, jmattson@google.com, joro@8bytes.org,
-        pawan.kumar.gupta@linux.intel.com, ak@linux.intel.com,
-        thomas.lendacky@amd.com, fenghua.yu@intel.com,
-        like.xu@linux.intel.com
-References: <1583431025-19802-1-git-send-email-luwei.kang@intel.com>
- <1583431025-19802-2-git-send-email-luwei.kang@intel.com>
- <20200306135317.GD12561@hirez.programming.kicks-ass.net>
- <b72cb68e-1a0a-eeff-21b4-ce412e939cfd@linux.intel.com>
- <20200309100443.GG12561@hirez.programming.kicks-ass.net>
- <97ce1ba4-d75a-8db2-ea2f-7d334942b4e6@linux.intel.com>
- <20200309150526.GI12561@hirez.programming.kicks-ass.net>
- <45a1a575-9363-f778-b5f5-bcdf28d3e34b@linux.intel.com>
-Message-ID: <e4a97965-5e57-56c5-1610-b84cf349e466@linux.intel.com>
-Date:   Thu, 26 Mar 2020 10:03:07 -0400
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 4B6551137842;
+        Thu, 26 Mar 2020 14:03:07 +0000 (UTC)
+Received: from jason-ThinkPad-X1-Carbon-6th.redhat.com (ovpn-12-19.pek2.redhat.com [10.72.12.19])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 59FD860BF3;
+        Thu, 26 Mar 2020 14:02:48 +0000 (UTC)
+From:   Jason Wang <jasowang@redhat.com>
+To:     mst@redhat.com, linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org
+Cc:     jgg@mellanox.com, maxime.coquelin@redhat.com,
+        cunming.liang@intel.com, zhihong.wang@intel.com,
+        rob.miller@broadcom.com, xiao.w.wang@intel.com,
+        lingshan.zhu@intel.com, eperezma@redhat.com, lulu@redhat.com,
+        parav@mellanox.com, kevin.tian@intel.com, stefanha@redhat.com,
+        rdunlap@infradead.org, hch@infradead.org, aadam@redhat.com,
+        jiri@mellanox.com, shahafs@mellanox.com, hanand@xilinx.com,
+        mhabets@solarflare.com, gdawar@xilinx.com, saugatm@xilinx.com,
+        vmireyno@marvell.com, zhangweining@ruijie.com.cn,
+        Jason Wang <jasowang@redhat.com>
+Subject: [PATCH V9 3/9] vhost: factor out IOTLB
+Date:   Thu, 26 Mar 2020 22:01:19 +0800
+Message-Id: <20200326140125.19794-4-jasowang@redhat.com>
+In-Reply-To: <20200326140125.19794-1-jasowang@redhat.com>
+References: <20200326140125.19794-1-jasowang@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <45a1a575-9363-f778-b5f5-bcdf28d3e34b@linux.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Peter,
+This patch factors out IOTLB into a dedicated module in order to be
+reused by other modules like vringh. User may choose to enable the
+automatic retiring by specifying VHOST_IOTLB_FLAG_RETIRE flag to fit
+for the case of vhost device IOTLB implementation.
 
-On 3/9/2020 3:28 PM, Liang, Kan wrote:
-> 
-> 
-> On 3/9/2020 11:05 AM, Peter Zijlstra wrote:
->>> In the new proposal, KVM user is treated the same as other host 
->>> events with
->>> event constraint. The scheduler is free to choose whether or not to 
->>> assign a
->>> counter for it.
->> That's what it does, I understand that. I'm saying that that is creating
->> artificial contention.
->>
->>
->> Why is this needed anyway? Can't we force the guest to flush and then
->> move it over to a new counter?
->
+Signed-off-by: Jason Wang <jasowang@redhat.com>
+---
+ MAINTAINERS                 |   1 +
+ drivers/vhost/Kconfig       |   9 ++
+ drivers/vhost/Makefile      |   3 +
+ drivers/vhost/iotlb.c       | 177 +++++++++++++++++++++++++++++
+ drivers/vhost/net.c         |   2 +-
+ drivers/vhost/vhost.c       | 221 +++++++++++-------------------------
+ drivers/vhost/vhost.h       |  39 ++-----
+ include/linux/vhost_iotlb.h |  47 ++++++++
+ 8 files changed, 318 insertions(+), 181 deletions(-)
+ create mode 100644 drivers/vhost/iotlb.c
+ create mode 100644 include/linux/vhost_iotlb.h
 
-Current perf scheduling is pure software behavior. KVM only traps the 
-MSR access. It’s impossible for KVM to impact the guest’s scheduling 
-with current implementation.
+diff --git a/MAINTAINERS b/MAINTAINERS
+index c74e4ea714a5..0fb645b5a7df 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -17768,6 +17768,7 @@ T:	git git://git.kernel.org/pub/scm/linux/kernel/=
+git/mst/vhost.git
+ S:	Maintained
+ F:	drivers/vhost/
+ F:	include/uapi/linux/vhost.h
++F:	include/linux/vhost_iotlb.h
+=20
+ VIRTIO INPUT DRIVER
+ M:	Gerd Hoffmann <kraxel@redhat.com>
+diff --git a/drivers/vhost/Kconfig b/drivers/vhost/Kconfig
+index 4aef10a54cd1..2f6c2105b953 100644
+--- a/drivers/vhost/Kconfig
++++ b/drivers/vhost/Kconfig
+@@ -1,4 +1,9 @@
+ # SPDX-License-Identifier: GPL-2.0-only
++config VHOST_IOTLB
++	tristate
++	help
++	  Generic IOTLB implementation for vhost and vringh.
++
+ config VHOST_RING
+ 	tristate
+ 	help
+@@ -7,9 +12,11 @@ config VHOST_RING
+=20
+ menuconfig VHOST
+ 	tristate "Host kernel accelerator for virtio (VHOST)"
++	select VHOST_IOTLB
+ 	help
+ 	  This option is selected by any driver which needs to access
+ 	  the core of vhost.
++
+ if VHOST
+=20
+ config VHOST_NET
+@@ -58,4 +65,6 @@ config VHOST_CROSS_ENDIAN_LEGACY
+ 	  adds some overhead, it is disabled by default.
+=20
+ 	  If unsure, say "N".
++
+ endif
++
+diff --git a/drivers/vhost/Makefile b/drivers/vhost/Makefile
+index 6c6df24f770c..fb831002bcf0 100644
+--- a/drivers/vhost/Makefile
++++ b/drivers/vhost/Makefile
+@@ -11,3 +11,6 @@ vhost_vsock-y :=3D vsock.o
+ obj-$(CONFIG_VHOST_RING) +=3D vringh.o
+=20
+ obj-$(CONFIG_VHOST)	+=3D vhost.o
++
++obj-$(CONFIG_VHOST_IOTLB) +=3D vhost_iotlb.o
++vhost_iotlb-y :=3D iotlb.o
+diff --git a/drivers/vhost/iotlb.c b/drivers/vhost/iotlb.c
+new file mode 100644
+index 000000000000..1f0ca6e44410
+--- /dev/null
++++ b/drivers/vhost/iotlb.c
+@@ -0,0 +1,177 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/* Copyright (C) 2020 Red Hat, Inc.
++ * Author: Jason Wang <jasowang@redhat.com>
++ *
++ * IOTLB implementation for vhost.
++ */
++#include <linux/slab.h>
++#include <linux/vhost_iotlb.h>
++#include <linux/module.h>
++
++#define MOD_VERSION  "0.1"
++#define MOD_DESC     "VHOST IOTLB"
++#define MOD_AUTHOR   "Jason Wang <jasowang@redhat.com>"
++#define MOD_LICENSE  "GPL v2"
++
++#define START(map) ((map)->start)
++#define LAST(map) ((map)->last)
++
++INTERVAL_TREE_DEFINE(struct vhost_iotlb_map,
++		     rb, __u64, __subtree_last,
++		     START, LAST, static inline, vhost_iotlb_itree);
++
++/**
++ * vhost_iotlb_map_free - remove a map node and free it
++ * @iotlb: the IOTLB
++ * @map: the map that want to be remove and freed
++ */
++void vhost_iotlb_map_free(struct vhost_iotlb *iotlb,
++			  struct vhost_iotlb_map *map)
++{
++	vhost_iotlb_itree_remove(map, &iotlb->root);
++	list_del(&map->link);
++	kfree(map);
++	iotlb->nmaps--;
++}
++EXPORT_SYMBOL_GPL(vhost_iotlb_map_free);
++
++/**
++ * vhost_iotlb_add_range - add a new range to vhost IOTLB
++ * @iotlb: the IOTLB
++ * @start: start of the IOVA range
++ * @last: last of IOVA range
++ * @addr: the address that is mapped to @start
++ * @perm: access permission of this range
++ *
++ * Returns an error last is smaller than start or memory allocation
++ * fails
++ */
++int vhost_iotlb_add_range(struct vhost_iotlb *iotlb,
++			  u64 start, u64 last,
++			  u64 addr, unsigned int perm)
++{
++	struct vhost_iotlb_map *map;
++
++	if (last < start)
++		return -EFAULT;
++
++	if (iotlb->limit &&
++	    iotlb->nmaps =3D=3D iotlb->limit &&
++	    iotlb->flags & VHOST_IOTLB_FLAG_RETIRE) {
++		map =3D list_first_entry(&iotlb->list, typeof(*map), link);
++		vhost_iotlb_map_free(iotlb, map);
++	}
++
++	map =3D kmalloc(sizeof(*map), GFP_ATOMIC);
++	if (!map)
++		return -ENOMEM;
++
++	map->start =3D start;
++	map->size =3D last - start + 1;
++	map->last =3D last;
++	map->addr =3D addr;
++	map->perm =3D perm;
++
++	iotlb->nmaps++;
++	vhost_iotlb_itree_insert(map, &iotlb->root);
++
++	INIT_LIST_HEAD(&map->link);
++	list_add_tail(&map->link, &iotlb->list);
++
++	return 0;
++}
++EXPORT_SYMBOL_GPL(vhost_iotlb_add_range);
++
++/**
++ * vring_iotlb_del_range - delete overlapped ranges from vhost IOTLB
++ * @iotlb: the IOTLB
++ * @start: start of the IOVA range
++ * @last: last of IOVA range
++ */
++void vhost_iotlb_del_range(struct vhost_iotlb *iotlb, u64 start, u64 las=
+t)
++{
++	struct vhost_iotlb_map *map;
++
++	while ((map =3D vhost_iotlb_itree_iter_first(&iotlb->root,
++						   start, last)))
++		vhost_iotlb_map_free(iotlb, map);
++}
++EXPORT_SYMBOL_GPL(vhost_iotlb_del_range);
++
++/**
++ * vhost_iotlb_alloc - add a new vhost IOTLB
++ * @limit: maximum number of IOTLB entries
++ * @flags: VHOST_IOTLB_FLAG_XXX
++ *
++ * Returns an error is memory allocation fails
++ */
++struct vhost_iotlb *vhost_iotlb_alloc(unsigned int limit, unsigned int f=
+lags)
++{
++	struct vhost_iotlb *iotlb =3D kzalloc(sizeof(*iotlb), GFP_KERNEL);
++
++	if (!iotlb)
++		return NULL;
++
++	iotlb->root =3D RB_ROOT_CACHED;
++	iotlb->limit =3D limit;
++	iotlb->nmaps =3D 0;
++	iotlb->flags =3D flags;
++	INIT_LIST_HEAD(&iotlb->list);
++
++	return iotlb;
++}
++EXPORT_SYMBOL_GPL(vhost_iotlb_alloc);
++
++/**
++ * vhost_iotlb_reset - reset vhost IOTLB (free all IOTLB entries)
++ * @iotlb: the IOTLB to be reset
++ */
++void vhost_iotlb_reset(struct vhost_iotlb *iotlb)
++{
++	vhost_iotlb_del_range(iotlb, 0ULL, 0ULL - 1);
++}
++EXPORT_SYMBOL_GPL(vhost_iotlb_reset);
++
++/**
++ * vhost_iotlb_free - reset and free vhost IOTLB
++ * @iotlb: the IOTLB to be freed
++ */
++void vhost_iotlb_free(struct vhost_iotlb *iotlb)
++{
++	if (iotlb) {
++		vhost_iotlb_reset(iotlb);
++		kfree(iotlb);
++	}
++}
++EXPORT_SYMBOL_GPL(vhost_iotlb_free);
++
++/**
++ * vhost_iotlb_itree_first - return the first overlapped range
++ * @iotlb: the IOTLB
++ * @start: start of IOVA range
++ * @end: end of IOVA range
++ */
++struct vhost_iotlb_map *
++vhost_iotlb_itree_first(struct vhost_iotlb *iotlb, u64 start, u64 last)
++{
++	return vhost_iotlb_itree_iter_first(&iotlb->root, start, last);
++}
++EXPORT_SYMBOL_GPL(vhost_iotlb_itree_first);
++
++/**
++ * vhost_iotlb_itree_first - return the next overlapped range
++ * @iotlb: the IOTLB
++ * @start: start of IOVA range
++ * @end: end of IOVA range
++ */
++struct vhost_iotlb_map *
++vhost_iotlb_itree_next(struct vhost_iotlb_map *map, u64 start, u64 last)
++{
++	return vhost_iotlb_itree_iter_next(map, start, last);
++}
++EXPORT_SYMBOL_GPL(vhost_iotlb_itree_next);
++
++MODULE_VERSION(MOD_VERSION);
++MODULE_DESCRIPTION(MOD_DESC);
++MODULE_AUTHOR(MOD_AUTHOR);
++MODULE_LICENSE(MOD_LICENSE);
+diff --git a/drivers/vhost/net.c b/drivers/vhost/net.c
+index c8ab8d83b530..c7298b192ab4 100644
+--- a/drivers/vhost/net.c
++++ b/drivers/vhost/net.c
+@@ -1595,7 +1595,7 @@ static long vhost_net_reset_owner(struct vhost_net =
+*n)
+ 	struct socket *tx_sock =3D NULL;
+ 	struct socket *rx_sock =3D NULL;
+ 	long err;
+-	struct vhost_umem *umem;
++	struct vhost_iotlb *umem;
+=20
+ 	mutex_lock(&n->dev.mutex);
+ 	err =3D vhost_dev_check_owner(&n->dev);
+diff --git a/drivers/vhost/vhost.c b/drivers/vhost/vhost.c
+index 8e9e2341e40a..d450e16c5c25 100644
+--- a/drivers/vhost/vhost.c
++++ b/drivers/vhost/vhost.c
+@@ -50,10 +50,6 @@ enum {
+ #define vhost_used_event(vq) ((__virtio16 __user *)&vq->avail->ring[vq->=
+num])
+ #define vhost_avail_event(vq) ((__virtio16 __user *)&vq->used->ring[vq->=
+num])
+=20
+-INTERVAL_TREE_DEFINE(struct vhost_umem_node,
+-		     rb, __u64, __subtree_last,
+-		     START, LAST, static inline, vhost_umem_interval_tree);
+-
+ #ifdef CONFIG_VHOST_CROSS_ENDIAN_LEGACY
+ static void vhost_disable_cross_endian(struct vhost_virtqueue *vq)
+ {
+@@ -584,21 +580,25 @@ long vhost_dev_set_owner(struct vhost_dev *dev)
+ }
+ EXPORT_SYMBOL_GPL(vhost_dev_set_owner);
+=20
+-struct vhost_umem *vhost_dev_reset_owner_prepare(void)
++static struct vhost_iotlb *iotlb_alloc(void)
++{
++	return vhost_iotlb_alloc(max_iotlb_entries,
++				 VHOST_IOTLB_FLAG_RETIRE);
++}
++
++struct vhost_iotlb *vhost_dev_reset_owner_prepare(void)
+ {
+-	return kvzalloc(sizeof(struct vhost_umem), GFP_KERNEL);
++	return iotlb_alloc();
+ }
+ EXPORT_SYMBOL_GPL(vhost_dev_reset_owner_prepare);
+=20
+ /* Caller should have device mutex */
+-void vhost_dev_reset_owner(struct vhost_dev *dev, struct vhost_umem *ume=
+m)
++void vhost_dev_reset_owner(struct vhost_dev *dev, struct vhost_iotlb *um=
+em)
+ {
+ 	int i;
+=20
+ 	vhost_dev_cleanup(dev);
+=20
+-	/* Restore memory to default empty mapping. */
+-	INIT_LIST_HEAD(&umem->umem_list);
+ 	dev->umem =3D umem;
+ 	/* We don't need VQ locks below since vhost_dev_cleanup makes sure
+ 	 * VQs aren't running.
+@@ -621,28 +621,6 @@ void vhost_dev_stop(struct vhost_dev *dev)
+ }
+ EXPORT_SYMBOL_GPL(vhost_dev_stop);
+=20
+-static void vhost_umem_free(struct vhost_umem *umem,
+-			    struct vhost_umem_node *node)
+-{
+-	vhost_umem_interval_tree_remove(node, &umem->umem_tree);
+-	list_del(&node->link);
+-	kfree(node);
+-	umem->numem--;
+-}
+-
+-static void vhost_umem_clean(struct vhost_umem *umem)
+-{
+-	struct vhost_umem_node *node, *tmp;
+-
+-	if (!umem)
+-		return;
+-
+-	list_for_each_entry_safe(node, tmp, &umem->umem_list, link)
+-		vhost_umem_free(umem, node);
+-
+-	kvfree(umem);
+-}
+-
+ static void vhost_clear_msg(struct vhost_dev *dev)
+ {
+ 	struct vhost_msg_node *node, *n;
+@@ -680,9 +658,9 @@ void vhost_dev_cleanup(struct vhost_dev *dev)
+ 		eventfd_ctx_put(dev->log_ctx);
+ 	dev->log_ctx =3D NULL;
+ 	/* No one will access memory at this point */
+-	vhost_umem_clean(dev->umem);
++	vhost_iotlb_free(dev->umem);
+ 	dev->umem =3D NULL;
+-	vhost_umem_clean(dev->iotlb);
++	vhost_iotlb_free(dev->iotlb);
+ 	dev->iotlb =3D NULL;
+ 	vhost_clear_msg(dev);
+ 	wake_up_interruptible_poll(&dev->wait, EPOLLIN | EPOLLRDNORM);
+@@ -718,27 +696,26 @@ static bool vhost_overflow(u64 uaddr, u64 size)
+ }
+=20
+ /* Caller should have vq mutex and device mutex. */
+-static bool vq_memory_access_ok(void __user *log_base, struct vhost_umem=
+ *umem,
++static bool vq_memory_access_ok(void __user *log_base, struct vhost_iotl=
+b *umem,
+ 				int log_all)
+ {
+-	struct vhost_umem_node *node;
++	struct vhost_iotlb_map *map;
+=20
+ 	if (!umem)
+ 		return false;
+=20
+-	list_for_each_entry(node, &umem->umem_list, link) {
+-		unsigned long a =3D node->userspace_addr;
++	list_for_each_entry(map, &umem->list, link) {
++		unsigned long a =3D map->addr;
+=20
+-		if (vhost_overflow(node->userspace_addr, node->size))
++		if (vhost_overflow(map->addr, map->size))
+ 			return false;
+=20
+=20
+-		if (!access_ok((void __user *)a,
+-				    node->size))
++		if (!access_ok((void __user *)a, map->size))
+ 			return false;
+ 		else if (log_all && !log_access_ok(log_base,
+-						   node->start,
+-						   node->size))
++						   map->start,
++						   map->size))
+ 			return false;
+ 	}
+ 	return true;
+@@ -748,17 +725,17 @@ static inline void __user *vhost_vq_meta_fetch(stru=
+ct vhost_virtqueue *vq,
+ 					       u64 addr, unsigned int size,
+ 					       int type)
+ {
+-	const struct vhost_umem_node *node =3D vq->meta_iotlb[type];
++	const struct vhost_iotlb_map *map =3D vq->meta_iotlb[type];
+=20
+-	if (!node)
++	if (!map)
+ 		return NULL;
+=20
+-	return (void *)(uintptr_t)(node->userspace_addr + addr - node->start);
++	return (void *)(uintptr_t)(map->addr + addr - map->start);
+ }
+=20
+ /* Can we switch to this memory table? */
+ /* Caller should have device mutex but not vq mutex */
+-static bool memory_access_ok(struct vhost_dev *d, struct vhost_umem *ume=
+m,
++static bool memory_access_ok(struct vhost_dev *d, struct vhost_iotlb *um=
+em,
+ 			     int log_all)
+ {
+ 	int i;
+@@ -1023,47 +1000,6 @@ static inline int vhost_get_desc(struct vhost_virt=
+queue *vq,
+ 	return vhost_copy_from_user(vq, desc, vq->desc + idx, sizeof(*desc));
+ }
+=20
+-static int vhost_new_umem_range(struct vhost_umem *umem,
+-				u64 start, u64 size, u64 end,
+-				u64 userspace_addr, int perm)
+-{
+-	struct vhost_umem_node *tmp, *node;
+-
+-	if (!size)
+-		return -EFAULT;
+-
+-	node =3D kmalloc(sizeof(*node), GFP_ATOMIC);
+-	if (!node)
+-		return -ENOMEM;
+-
+-	if (umem->numem =3D=3D max_iotlb_entries) {
+-		tmp =3D list_first_entry(&umem->umem_list, typeof(*tmp), link);
+-		vhost_umem_free(umem, tmp);
+-	}
+-
+-	node->start =3D start;
+-	node->size =3D size;
+-	node->last =3D end;
+-	node->userspace_addr =3D userspace_addr;
+-	node->perm =3D perm;
+-	INIT_LIST_HEAD(&node->link);
+-	list_add_tail(&node->link, &umem->umem_list);
+-	vhost_umem_interval_tree_insert(node, &umem->umem_tree);
+-	umem->numem++;
+-
+-	return 0;
+-}
+-
+-static void vhost_del_umem_range(struct vhost_umem *umem,
+-				 u64 start, u64 end)
+-{
+-	struct vhost_umem_node *node;
+-
+-	while ((node =3D vhost_umem_interval_tree_iter_first(&umem->umem_tree,
+-							   start, end)))
+-		vhost_umem_free(umem, node);
+-}
+-
+ static void vhost_iotlb_notify_vq(struct vhost_dev *d,
+ 				  struct vhost_iotlb_msg *msg)
+ {
+@@ -1120,9 +1056,9 @@ static int vhost_process_iotlb_msg(struct vhost_dev=
+ *dev,
+ 			break;
+ 		}
+ 		vhost_vq_meta_reset(dev);
+-		if (vhost_new_umem_range(dev->iotlb, msg->iova, msg->size,
+-					 msg->iova + msg->size - 1,
+-					 msg->uaddr, msg->perm)) {
++		if (vhost_iotlb_add_range(dev->iotlb, msg->iova,
++					  msg->iova + msg->size - 1,
++					  msg->uaddr, msg->perm)) {
+ 			ret =3D -ENOMEM;
+ 			break;
+ 		}
+@@ -1134,8 +1070,8 @@ static int vhost_process_iotlb_msg(struct vhost_dev=
+ *dev,
+ 			break;
+ 		}
+ 		vhost_vq_meta_reset(dev);
+-		vhost_del_umem_range(dev->iotlb, msg->iova,
+-				     msg->iova + msg->size - 1);
++		vhost_iotlb_del_range(dev->iotlb, msg->iova,
++				      msg->iova + msg->size - 1);
+ 		break;
+ 	default:
+ 		ret =3D -EINVAL;
+@@ -1319,44 +1255,42 @@ static bool vq_access_ok(struct vhost_virtqueue *=
+vq, unsigned int num,
+ }
+=20
+ static void vhost_vq_meta_update(struct vhost_virtqueue *vq,
+-				 const struct vhost_umem_node *node,
++				 const struct vhost_iotlb_map *map,
+ 				 int type)
+ {
+ 	int access =3D (type =3D=3D VHOST_ADDR_USED) ?
+ 		     VHOST_ACCESS_WO : VHOST_ACCESS_RO;
+=20
+-	if (likely(node->perm & access))
+-		vq->meta_iotlb[type] =3D node;
++	if (likely(map->perm & access))
++		vq->meta_iotlb[type] =3D map;
+ }
+=20
+ static bool iotlb_access_ok(struct vhost_virtqueue *vq,
+ 			    int access, u64 addr, u64 len, int type)
+ {
+-	const struct vhost_umem_node *node;
+-	struct vhost_umem *umem =3D vq->iotlb;
++	const struct vhost_iotlb_map *map;
++	struct vhost_iotlb *umem =3D vq->iotlb;
+ 	u64 s =3D 0, size, orig_addr =3D addr, last =3D addr + len - 1;
+=20
+ 	if (vhost_vq_meta_fetch(vq, addr, len, type))
+ 		return true;
+=20
+ 	while (len > s) {
+-		node =3D vhost_umem_interval_tree_iter_first(&umem->umem_tree,
+-							   addr,
+-							   last);
+-		if (node =3D=3D NULL || node->start > addr) {
++		map =3D vhost_iotlb_itree_first(umem, addr, last);
++		if (map =3D=3D NULL || map->start > addr) {
+ 			vhost_iotlb_miss(vq, addr, access);
+ 			return false;
+-		} else if (!(node->perm & access)) {
++		} else if (!(map->perm & access)) {
+ 			/* Report the possible access violation by
+ 			 * request another translation from userspace.
+ 			 */
+ 			return false;
+ 		}
+=20
+-		size =3D node->size - addr + node->start;
++		size =3D map->size - addr + map->start;
+=20
+ 		if (orig_addr =3D=3D addr && size >=3D len)
+-			vhost_vq_meta_update(vq, node, type);
++			vhost_vq_meta_update(vq, map, type);
+=20
+ 		s +=3D size;
+ 		addr +=3D size;
+@@ -1372,12 +1306,12 @@ int vq_meta_prefetch(struct vhost_virtqueue *vq)
+ 	if (!vq->iotlb)
+ 		return 1;
+=20
+-	return iotlb_access_ok(vq, VHOST_ACCESS_RO, (u64)(uintptr_t)vq->desc,
++	return iotlb_access_ok(vq, VHOST_MAP_RO, (u64)(uintptr_t)vq->desc,
+ 			       vhost_get_desc_size(vq, num), VHOST_ADDR_DESC) &&
+-	       iotlb_access_ok(vq, VHOST_ACCESS_RO, (u64)(uintptr_t)vq->avail,
++	       iotlb_access_ok(vq, VHOST_MAP_RO, (u64)(uintptr_t)vq->avail,
+ 			       vhost_get_avail_size(vq, num),
+ 			       VHOST_ADDR_AVAIL) &&
+-	       iotlb_access_ok(vq, VHOST_ACCESS_WO, (u64)(uintptr_t)vq->used,
++	       iotlb_access_ok(vq, VHOST_MAP_WO, (u64)(uintptr_t)vq->used,
+ 			       vhost_get_used_size(vq, num), VHOST_ADDR_USED);
+ }
+ EXPORT_SYMBOL_GPL(vq_meta_prefetch);
+@@ -1416,25 +1350,11 @@ bool vhost_vq_access_ok(struct vhost_virtqueue *v=
+q)
+ }
+ EXPORT_SYMBOL_GPL(vhost_vq_access_ok);
+=20
+-static struct vhost_umem *vhost_umem_alloc(void)
+-{
+-	struct vhost_umem *umem =3D kvzalloc(sizeof(*umem), GFP_KERNEL);
+-
+-	if (!umem)
+-		return NULL;
+-
+-	umem->umem_tree =3D RB_ROOT_CACHED;
+-	umem->numem =3D 0;
+-	INIT_LIST_HEAD(&umem->umem_list);
+-
+-	return umem;
+-}
+-
+ static long vhost_set_memory(struct vhost_dev *d, struct vhost_memory __=
+user *m)
+ {
+ 	struct vhost_memory mem, *newmem;
+ 	struct vhost_memory_region *region;
+-	struct vhost_umem *newumem, *oldumem;
++	struct vhost_iotlb *newumem, *oldumem;
+ 	unsigned long size =3D offsetof(struct vhost_memory, regions);
+ 	int i;
+=20
+@@ -1456,7 +1376,7 @@ static long vhost_set_memory(struct vhost_dev *d, s=
+truct vhost_memory __user *m)
+ 		return -EFAULT;
+ 	}
+=20
+-	newumem =3D vhost_umem_alloc();
++	newumem =3D iotlb_alloc();
+ 	if (!newumem) {
+ 		kvfree(newmem);
+ 		return -ENOMEM;
+@@ -1465,13 +1385,12 @@ static long vhost_set_memory(struct vhost_dev *d,=
+ struct vhost_memory __user *m)
+ 	for (region =3D newmem->regions;
+ 	     region < newmem->regions + mem.nregions;
+ 	     region++) {
+-		if (vhost_new_umem_range(newumem,
+-					 region->guest_phys_addr,
+-					 region->memory_size,
+-					 region->guest_phys_addr +
+-					 region->memory_size - 1,
+-					 region->userspace_addr,
+-					 VHOST_ACCESS_RW))
++		if (vhost_iotlb_add_range(newumem,
++					  region->guest_phys_addr,
++					  region->guest_phys_addr +
++					  region->memory_size - 1,
++					  region->userspace_addr,
++					  VHOST_MAP_RW))
+ 			goto err;
+ 	}
+=20
+@@ -1489,11 +1408,11 @@ static long vhost_set_memory(struct vhost_dev *d,=
+ struct vhost_memory __user *m)
+ 	}
+=20
+ 	kvfree(newmem);
+-	vhost_umem_clean(oldumem);
++	vhost_iotlb_free(oldumem);
+ 	return 0;
+=20
+ err:
+-	vhost_umem_clean(newumem);
++	vhost_iotlb_free(newumem);
+ 	kvfree(newmem);
+ 	return -EFAULT;
+ }
+@@ -1734,10 +1653,10 @@ EXPORT_SYMBOL_GPL(vhost_vring_ioctl);
+=20
+ int vhost_init_device_iotlb(struct vhost_dev *d, bool enabled)
+ {
+-	struct vhost_umem *niotlb, *oiotlb;
++	struct vhost_iotlb *niotlb, *oiotlb;
+ 	int i;
+=20
+-	niotlb =3D vhost_umem_alloc();
++	niotlb =3D iotlb_alloc();
+ 	if (!niotlb)
+ 		return -ENOMEM;
+=20
+@@ -1753,7 +1672,7 @@ int vhost_init_device_iotlb(struct vhost_dev *d, bo=
+ol enabled)
+ 		mutex_unlock(&vq->mutex);
+ 	}
+=20
+-	vhost_umem_clean(oiotlb);
++	vhost_iotlb_free(oiotlb);
+=20
+ 	return 0;
+ }
+@@ -1883,8 +1802,8 @@ static int log_write(void __user *log_base,
+=20
+ static int log_write_hva(struct vhost_virtqueue *vq, u64 hva, u64 len)
+ {
+-	struct vhost_umem *umem =3D vq->umem;
+-	struct vhost_umem_node *u;
++	struct vhost_iotlb *umem =3D vq->umem;
++	struct vhost_iotlb_map *u;
+ 	u64 start, end, l, min;
+ 	int r;
+ 	bool hit =3D false;
+@@ -1894,16 +1813,15 @@ static int log_write_hva(struct vhost_virtqueue *=
+vq, u64 hva, u64 len)
+ 		/* More than one GPAs can be mapped into a single HVA. So
+ 		 * iterate all possible umems here to be safe.
+ 		 */
+-		list_for_each_entry(u, &umem->umem_list, link) {
+-			if (u->userspace_addr > hva - 1 + len ||
+-			    u->userspace_addr - 1 + u->size < hva)
++		list_for_each_entry(u, &umem->list, link) {
++			if (u->addr > hva - 1 + len ||
++			    u->addr - 1 + u->size < hva)
+ 				continue;
+-			start =3D max(u->userspace_addr, hva);
+-			end =3D min(u->userspace_addr - 1 + u->size,
+-				  hva - 1 + len);
++			start =3D max(u->addr, hva);
++			end =3D min(u->addr - 1 + u->size, hva - 1 + len);
+ 			l =3D end - start + 1;
+ 			r =3D log_write(vq->log_base,
+-				      u->start + start - u->userspace_addr,
++				      u->start + start - u->addr,
+ 				      l);
+ 			if (r < 0)
+ 				return r;
+@@ -2054,9 +1972,9 @@ EXPORT_SYMBOL_GPL(vhost_vq_init_access);
+ static int translate_desc(struct vhost_virtqueue *vq, u64 addr, u32 len,
+ 			  struct iovec iov[], int iov_size, int access)
+ {
+-	const struct vhost_umem_node *node;
++	const struct vhost_iotlb_map *map;
+ 	struct vhost_dev *dev =3D vq->dev;
+-	struct vhost_umem *umem =3D dev->iotlb ? dev->iotlb : dev->umem;
++	struct vhost_iotlb *umem =3D dev->iotlb ? dev->iotlb : dev->umem;
+ 	struct iovec *_iov;
+ 	u64 s =3D 0;
+ 	int ret =3D 0;
+@@ -2068,25 +1986,24 @@ static int translate_desc(struct vhost_virtqueue =
+*vq, u64 addr, u32 len,
+ 			break;
+ 		}
+=20
+-		node =3D vhost_umem_interval_tree_iter_first(&umem->umem_tree,
+-							addr, addr + len - 1);
+-		if (node =3D=3D NULL || node->start > addr) {
++		map =3D vhost_iotlb_itree_first(umem, addr, addr + len - 1);
++		if (map =3D=3D NULL || map->start > addr) {
+ 			if (umem !=3D dev->iotlb) {
+ 				ret =3D -EFAULT;
+ 				break;
+ 			}
+ 			ret =3D -EAGAIN;
+ 			break;
+-		} else if (!(node->perm & access)) {
++		} else if (!(map->perm & access)) {
+ 			ret =3D -EPERM;
+ 			break;
+ 		}
+=20
+ 		_iov =3D iov + ret;
+-		size =3D node->size - addr + node->start;
++		size =3D map->size - addr + map->start;
+ 		_iov->iov_len =3D min((u64)len - s, size);
+ 		_iov->iov_base =3D (void __user *)(unsigned long)
+-			(node->userspace_addr + addr - node->start);
++				 (map->addr + addr - map->start);
+ 		s +=3D size;
+ 		addr +=3D size;
+ 		++ret;
+diff --git a/drivers/vhost/vhost.h b/drivers/vhost/vhost.h
+index f9d1a03dd153..181382185bbc 100644
+--- a/drivers/vhost/vhost.h
++++ b/drivers/vhost/vhost.h
+@@ -12,6 +12,7 @@
+ #include <linux/virtio_config.h>
+ #include <linux/virtio_ring.h>
+ #include <linux/atomic.h>
++#include <linux/vhost_iotlb.h>
+=20
+ struct vhost_work;
+ typedef void (*vhost_work_fn_t)(struct vhost_work *work);
+@@ -52,27 +53,6 @@ struct vhost_log {
+ 	u64 len;
+ };
+=20
+-#define START(node) ((node)->start)
+-#define LAST(node) ((node)->last)
+-
+-struct vhost_umem_node {
+-	struct rb_node rb;
+-	struct list_head link;
+-	__u64 start;
+-	__u64 last;
+-	__u64 size;
+-	__u64 userspace_addr;
+-	__u32 perm;
+-	__u32 flags_padding;
+-	__u64 __subtree_last;
+-};
+-
+-struct vhost_umem {
+-	struct rb_root_cached umem_tree;
+-	struct list_head umem_list;
+-	int numem;
+-};
+-
+ enum vhost_uaddr_type {
+ 	VHOST_ADDR_DESC =3D 0,
+ 	VHOST_ADDR_AVAIL =3D 1,
+@@ -90,7 +70,7 @@ struct vhost_virtqueue {
+ 	struct vring_desc __user *desc;
+ 	struct vring_avail __user *avail;
+ 	struct vring_used __user *used;
+-	const struct vhost_umem_node *meta_iotlb[VHOST_NUM_ADDRS];
++	const struct vhost_iotlb_map *meta_iotlb[VHOST_NUM_ADDRS];
+ 	struct file *kick;
+ 	struct eventfd_ctx *call_ctx;
+ 	struct eventfd_ctx *error_ctx;
+@@ -128,8 +108,8 @@ struct vhost_virtqueue {
+ 	struct iovec *indirect;
+ 	struct vring_used_elem *heads;
+ 	/* Protected by virtqueue mutex. */
+-	struct vhost_umem *umem;
+-	struct vhost_umem *iotlb;
++	struct vhost_iotlb *umem;
++	struct vhost_iotlb *iotlb;
+ 	void *private_data;
+ 	u64 acked_features;
+ 	u64 acked_backend_features;
+@@ -164,8 +144,8 @@ struct vhost_dev {
+ 	struct eventfd_ctx *log_ctx;
+ 	struct llist_head work_list;
+ 	struct task_struct *worker;
+-	struct vhost_umem *umem;
+-	struct vhost_umem *iotlb;
++	struct vhost_iotlb *umem;
++	struct vhost_iotlb *iotlb;
+ 	spinlock_t iotlb_lock;
+ 	struct list_head read_list;
+ 	struct list_head pending_list;
+@@ -186,8 +166,8 @@ void vhost_dev_init(struct vhost_dev *, struct vhost_=
+virtqueue **vqs,
+ long vhost_dev_set_owner(struct vhost_dev *dev);
+ bool vhost_dev_has_owner(struct vhost_dev *dev);
+ long vhost_dev_check_owner(struct vhost_dev *);
+-struct vhost_umem *vhost_dev_reset_owner_prepare(void);
+-void vhost_dev_reset_owner(struct vhost_dev *, struct vhost_umem *);
++struct vhost_iotlb *vhost_dev_reset_owner_prepare(void);
++void vhost_dev_reset_owner(struct vhost_dev *dev, struct vhost_iotlb *io=
+tlb);
+ void vhost_dev_cleanup(struct vhost_dev *);
+ void vhost_dev_stop(struct vhost_dev *);
+ long vhost_dev_ioctl(struct vhost_dev *, unsigned int ioctl, void __user=
+ *argp);
+@@ -233,6 +213,9 @@ ssize_t vhost_chr_write_iter(struct vhost_dev *dev,
+ 			     struct iov_iter *from);
+ int vhost_init_device_iotlb(struct vhost_dev *d, bool enabled);
+=20
++void vhost_iotlb_map_free(struct vhost_iotlb *iotlb,
++			  struct vhost_iotlb_map *map);
++
+ #define vq_err(vq, fmt, ...) do {                                  \
+ 		pr_debug(pr_fmt(fmt), ##__VA_ARGS__);       \
+ 		if ((vq)->error_ctx)                               \
+diff --git a/include/linux/vhost_iotlb.h b/include/linux/vhost_iotlb.h
+new file mode 100644
+index 000000000000..6b09b786a762
+--- /dev/null
++++ b/include/linux/vhost_iotlb.h
+@@ -0,0 +1,47 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#ifndef _LINUX_VHOST_IOTLB_H
++#define _LINUX_VHOST_IOTLB_H
++
++#include <linux/interval_tree_generic.h>
++
++struct vhost_iotlb_map {
++	struct rb_node rb;
++	struct list_head link;
++	u64 start;
++	u64 last;
++	u64 size;
++	u64 addr;
++#define VHOST_MAP_RO 0x1
++#define VHOST_MAP_WO 0x2
++#define VHOST_MAP_RW 0x3
++	u32 perm;
++	u32 flags_padding;
++	u64 __subtree_last;
++};
++
++#define VHOST_IOTLB_FLAG_RETIRE 0x1
++
++struct vhost_iotlb {
++	struct rb_root_cached root;
++	struct list_head list;
++	unsigned int limit;
++	unsigned int nmaps;
++	unsigned int flags;
++};
++
++int vhost_iotlb_add_range(struct vhost_iotlb *iotlb, u64 start, u64 last=
+,
++			  u64 addr, unsigned int perm);
++void vhost_iotlb_del_range(struct vhost_iotlb *iotlb, u64 start, u64 las=
+t);
++
++struct vhost_iotlb *vhost_iotlb_alloc(unsigned int limit, unsigned int f=
+lags);
++void vhost_iotlb_free(struct vhost_iotlb *iotlb);
++void vhost_iotlb_reset(struct vhost_iotlb *iotlb);
++
++struct vhost_iotlb_map *
++vhost_iotlb_itree_first(struct vhost_iotlb *iotlb, u64 start, u64 last);
++struct vhost_iotlb_map *
++vhost_iotlb_itree_next(struct vhost_iotlb_map *map, u64 start, u64 last)=
+;
++
++void vhost_iotlb_map_free(struct vhost_iotlb *iotlb,
++			  struct vhost_iotlb_map *map);
++#endif
+--=20
+2.20.1
 
-To address the concern regarding to 'artificial contention', we have two 
-proposals.
-Could you please take a look, and share your thoughts?
-
-Proposal 1:
-Reject the guest request, if host has to use the counter which occupied 
-by guest. At the meantime, host prints a warning.
-I still think the contention should rarely happen in practical.
-Personally, I prefer this proposal.
-
-
-Proposal 2:
-Add HW advisor for the scheduler in guest.
-Starts from Architectural Perfmon Version 4, IA32_PERF_GLOBAL_INUSE MSR 
-is introduced. It provides an “InUse” bit for each programmable 
-performance counter and fixed counter in the processor.
-
-In perf, the scheduler will read the MSR and mask the “in used” 
-counters. I think we can use X86_FEATURE_HYPERVISOR to limit the check 
-in guest. For non-virtualization usage and host, nothing changed for 
-scheduler.
-
-But there is still a problem for this proposal. Host may request a 
-counter later, which has been used by guest.
-We can only do multiplexing or grab the counter just like proposal 1.
-
-
-What do you think?
-
-Thanks,
-Kan
-
-> KVM only traps the MSR access. There is no MSR access during the 
-> scheduling in guest.
-> KVM/host only knows the request counter, when guest tries to enable the 
-> counter. It's too late for guest to start over.
-> 
-> Regarding to the artificial contention, as my understanding, it should 
-> rarely happen in practical.
-> Cloud vendors have to explicitly set pebs option in qemu to enable PEBS 
-> support for guest. They knows the environment well. They can avoid the 
-> contention. (We may implement some patches for qemu/KVM later to 
-> temporarily disable PEBS in runtime if they require.)
-> 
-> For now, I think we may print a warning when both host and guest require 
-> the same counter. Host can get a clue from the warning.
-> 
-> Thanks,
-> Kan
