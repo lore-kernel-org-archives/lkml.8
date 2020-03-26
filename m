@@ -2,77 +2,122 @@ Return-Path: <SRS0=aGSP=5L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 127B4C43331
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 08:16:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4098C43331
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 08:16:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E64732070A
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 08:16:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE2112070A
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 08:16:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727947AbgCZIQa (ORCPT
+        id S1727958AbgCZIQm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 04:16:30 -0400
-Received: from smtprelay0038.hostedemail.com ([216.40.44.38]:39990 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727919AbgCZIQY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 04:16:24 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay08.hostedemail.com (Postfix) with ESMTP id 74954182CED5B;
-        Thu, 26 Mar 2020 08:16:22 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: cart64_548b3b72c1009
-X-Filterd-Recvd-Size: 1972
-Received: from XPS-9350.home (unknown [47.151.136.130])
-        (Authenticated sender: joe@perches.com)
-        by omf09.hostedemail.com (Postfix) with ESMTPA;
-        Thu, 26 Mar 2020 08:16:20 +0000 (UTC)
-Message-ID: <0cb96a93000c02e4c4816c64492afef10bc76fd9.camel@perches.com>
-Subject: Re: [PATCH v3 1/2] Bluetooth: btusb: Indicate Microsoft vendor
- extension for Intel 9460/9560 and 9160/9260
-From:   Joe Perches <joe@perches.com>
-To:     Miao-chen Chou <mcchou@chromium.org>,
-        Bluetooth Kernel Mailing List 
-        <linux-bluetooth@vger.kernel.org>
-Cc:     Marcel Holtmann <marcel@holtmann.org>,
-        Alain Michaud <alainm@chromium.org>,
-        Luiz Augusto von Dentz <luiz.von.dentz@intel.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Johan Hedberg <johan.hedberg@gmail.com>,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org
-Date:   Thu, 26 Mar 2020 01:14:29 -0700
-In-Reply-To: <20200326005931.v3.1.I0e975833a6789e8acc74be7756cd54afde6ba98c@changeid>
-References: <20200326075938.65053-1-mcchou@chromium.org>
-         <20200326005931.v3.1.I0e975833a6789e8acc74be7756cd54afde6ba98c@changeid>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.34.1-2 
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Thu, 26 Mar 2020 04:16:42 -0400
+Received: from mga02.intel.com ([134.134.136.20]:27564 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727833AbgCZIQL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Mar 2020 04:16:11 -0400
+IronPort-SDR: FlTTE1Do/tXmIABAkvsBL8eR8P4Yhy4sQ0TC5u0yaOQ/aNzssgUCPrE7pwt9KtPvItFJNPF4Uw
+ Tsz/2w7+XDCA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Mar 2020 01:16:11 -0700
+IronPort-SDR: tombEY8YSCf8Hctysket833Q/0KP9Bt8c2wxV9La3XyFXmHABh6MukijicTIGRd5IrFimA+lTo
+ AVF5o3mA89Vg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,307,1580803200"; 
+   d="scan'208";a="393898924"
+Received: from local-michael-cet-test.sh.intel.com ([10.239.159.128])
+  by orsmga004.jf.intel.com with ESMTP; 26 Mar 2020 01:16:09 -0700
+From:   Yang Weijiang <weijiang.yang@intel.com>
+To:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        pbonzini@redhat.com, sean.j.christopherson@intel.com,
+        jmattson@google.com
+Cc:     yu.c.zhang@linux.intel.com, Yang Weijiang <weijiang.yang@intel.com>
+Subject: [PATCH v11 6/9] KVM: X86: Load guest fpu state when access MSRs managed by XSAVES
+Date:   Thu, 26 Mar 2020 16:18:43 +0800
+Message-Id: <20200326081847.5870-7-weijiang.yang@intel.com>
+X-Mailer: git-send-email 2.17.2
+In-Reply-To: <20200326081847.5870-1-weijiang.yang@intel.com>
+References: <20200326081847.5870-1-weijiang.yang@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2020-03-26 at 00:59 -0700, Miao-chen Chou wrote:
-> This adds a bit mask of driver_info for Microsoft vendor extension and
-> indicates the support for Intel 9460/9560 and 9160/9260. See
-> https://docs.microsoft.com/en-us/windows-hardware/drivers/bluetooth/
-> microsoft-defined-bluetooth-hci-commands-and-events for more information
-> about the extension. This was verified with Intel ThunderPeak BT controller
-> where msft_vnd_ext_opcode is 0xFC1E.
-[]
-> diff --git a/include/net/bluetooth/hci_core.h b/include/net/bluetooth/hci_core.h
-[]
-> @@ -414,6 +414,8 @@ struct hci_dev {
->  	void			*smp_data;
->  	void			*smp_bredr_data;
->  
-> +	void			*msft_ext;
+From: Sean Christopherson <sean.j.christopherson@intel.com>
 
-Why should this be a void * and not a msft_vnd_ext * ?
+A handful of CET MSRs are not context switched through "traditional"
+methods, e.g. VMCS or manual switching, but rather are passed through
+to the guest and are saved and restored by XSAVES/XRSTORS, i.e. in the
+guest's FPU state.
 
+Load the guest's FPU state if userspace is accessing MSRs whose values
+are managed by XSAVES so that the MSR helper, e.g. vmx_{get,set}_msr(),
+can simply do {RD,WR}MSR to access the guest's value.
+
+Note that guest_cpuid_has() is not queried as host userspace is allowed
+to access MSRs that have not been exposed to the guest, e.g. it might do
+KVM_SET_MSRS prior to KVM_SET_CPUID2.
+
+Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+Co-developed-by: Yang Weijiang <weijiang.yang@intel.com>
+Signed-off-by: Yang Weijiang <weijiang.yang@intel.com>
+---
+ arch/x86/kvm/x86.c | 19 ++++++++++++++++++-
+ 1 file changed, 18 insertions(+), 1 deletion(-)
+
+diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+index 51ecb496d47d..9654d779bdab 100644
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -109,6 +109,8 @@ static void enter_smm(struct kvm_vcpu *vcpu);
+ static void __kvm_set_rflags(struct kvm_vcpu *vcpu, unsigned long rflags);
+ static void store_regs(struct kvm_vcpu *vcpu);
+ static int sync_regs(struct kvm_vcpu *vcpu);
++static void kvm_load_guest_fpu(struct kvm_vcpu *vcpu);
++static void kvm_put_guest_fpu(struct kvm_vcpu *vcpu);
+ 
+ struct kvm_x86_ops *kvm_x86_ops __read_mostly;
+ EXPORT_SYMBOL_GPL(kvm_x86_ops);
+@@ -3249,6 +3251,12 @@ int kvm_get_msr_common(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
+ }
+ EXPORT_SYMBOL_GPL(kvm_get_msr_common);
+ 
++static bool is_xsaves_msr(u32 index)
++{
++	return index == MSR_IA32_U_CET ||
++	       (index >= MSR_IA32_PL0_SSP && index <= MSR_IA32_PL3_SSP);
++}
++
+ /*
+  * Read or write a bunch of msrs. All parameters are kernel addresses.
+  *
+@@ -3259,11 +3267,20 @@ static int __msr_io(struct kvm_vcpu *vcpu, struct kvm_msrs *msrs,
+ 		    int (*do_msr)(struct kvm_vcpu *vcpu,
+ 				  unsigned index, u64 *data))
+ {
++	bool fpu_loaded = false;
+ 	int i;
+ 
+-	for (i = 0; i < msrs->nmsrs; ++i)
++	for (i = 0; i < msrs->nmsrs; ++i) {
++		if (vcpu && !fpu_loaded && supported_xss &&
++		    is_xsaves_msr(entries[i].index)) {
++			kvm_load_guest_fpu(vcpu);
++			fpu_loaded = true;
++		}
+ 		if (do_msr(vcpu, entries[i].index, &entries[i].data))
+ 			break;
++	}
++	if (fpu_loaded)
++		kvm_put_guest_fpu(vcpu);
+ 
+ 	return i;
+ }
+-- 
+2.17.2
 
