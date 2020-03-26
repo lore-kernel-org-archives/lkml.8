@@ -2,155 +2,90 @@ Return-Path: <SRS0=aGSP=5L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5D55C2D0E8
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 23:55:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C333C2D0E8
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 23:56:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9697420714
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 23:55:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 344BD20714
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 23:56:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=apertussolutions.com header.i=dpsmith@apertussolutions.com header.b="RctuE4s9"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="N+e3K4Tv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727495AbgCZXzf (ORCPT
+        id S1727607AbgCZX4m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 19:55:35 -0400
-Received: from sender4-of-o51.zoho.com ([136.143.188.51]:21175 "EHLO
-        sender4-of-o51.zoho.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726359AbgCZXze (ORCPT
+        Thu, 26 Mar 2020 19:56:42 -0400
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:34774 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726359AbgCZX4m (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 19:55:34 -0400
-ARC-Seal: i=1; a=rsa-sha256; t=1585266914; cv=none; 
-        d=zohomail.com; s=zohoarc; 
-        b=KZrkNpXebfUaekI+dNCmYKw6tAtHJO4O/lvIVrupaGBq7J6fkYN+WhlwU9A7W357Qeh877gnx+Ax4OKxFCUc8AD5RkDveIuMpr/LLn+elermZlnKJNnn44ztd/tm7indiVBm3k054LllnPOCZ9aVBjpQwWGKovSaJCwbCOSQltc=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-        t=1585266914; h=Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:To; 
-        bh=98AFnfaneY2CA2/XDvmxHsgX3TWxJ+b6tmqlt+SeVLo=; 
-        b=lIYbs4Fw/ErPy02RG+ew3RN/BhOj1QLgyFQvIvzJ3IHQuR2+Vir8VO9gEm1b+ZAiEHEB11+2/hVGmn1j4b9Z5JTlFrh8YMAv7iIymXl6tdpBCfuKOnjkgyxuPklqFlvjtSeHYWV44zrRgFmxQVX8zQqDVd67QGlUqj3wGCc1lZM=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-        dkim=pass  header.i=apertussolutions.com;
-        spf=pass  smtp.mailfrom=dpsmith@apertussolutions.com;
-        dmarc=pass header.from=<dpsmith@apertussolutions.com> header.from=<dpsmith@apertussolutions.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1585266914;
-        s=zoho; d=apertussolutions.com; i=dpsmith@apertussolutions.com;
-        h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:In-Reply-To:Content-Type:Content-Transfer-Encoding;
-        bh=98AFnfaneY2CA2/XDvmxHsgX3TWxJ+b6tmqlt+SeVLo=;
-        b=RctuE4s9VpUO/juJO2tPPvXs9K9J9Air0qnqg9f+o1iJLiu7sg4nKISSdPTZZuEr
-        spxK5KRBJJ+i7+5Q3I7MYaceJ0N7oEXJuMZdEDzhBit2YWhgLae7nT0ZG+t4OenUjFv
-        Dolofr3k4xnGQVufvoVCKgzavYxTODzYKGAPrV0Q=
-Received: from [10.10.1.24] (c-73-129-47-101.hsd1.md.comcast.net [73.129.47.101]) by mx.zohomail.com
-        with SMTPS id 1585266912730797.4012476636767; Thu, 26 Mar 2020 16:55:12 -0700 (PDT)
-Subject: Re: [RFC PATCH 00/12] x86: Trenchboot secure late launch Linux kernel
- support
-To:     Matthew Garrett <mjg59@google.com>
-Cc:     Ross Philipson <ross.philipson@oracle.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        linux-doc@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, trenchboot-devel@googlegroups.com
-References: <20200325194317.526492-1-ross.philipson@oracle.com>
- <CACdnJut56WuqO=uLff0qy1Jp=C6f_sRxLpRBsrzb6byBsFYdCg@mail.gmail.com>
- <bacbc25a-c724-d2fd-40bd-065799cd6195@apertussolutions.com>
- <CACdnJusRATYv3Une5r14KHJVEg5COVW9B_BNViUXjavSxZ6d5A@mail.gmail.com>
- <8199b81d-7230-44d9-bddf-92af562fe6b1@apertussolutions.com>
- <CACdnJuvxSaF96PkCiDp5u+599+bU5SnXRgLyWetaOKa0+1UqAg@mail.gmail.com>
-From:   "Daniel P. Smith" <dpsmith@apertussolutions.com>
-Autocrypt: addr=dpsmith@apertussolutions.com; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <f64bc672-0c6e-d3f5-4b6c-4e60186d720c@apertussolutions.com>
-Date:   Thu, 26 Mar 2020 19:55:05 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Thu, 26 Mar 2020 19:56:42 -0400
+Received: by mail-qk1-f193.google.com with SMTP id i6so9135386qke.1;
+        Thu, 26 Mar 2020 16:56:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=sD9cv/e/jx5JHSt1rnho9FXARIJYPMfW1ypvOFyaY9s=;
+        b=N+e3K4TvDyaZ4Dj3m/utvfySSSdAIElHH8I6frjCUQ8/IE6J328+51GyH8jujFQut4
+         HAff1kN88iXqRe/wHMTy+l4o22hXNQqDzbO/92qbXZ7Szd+fbSHwmsmsYcGz42WqS/Mf
+         xV52WnXtW6O9A5DNp+5GLNYaN5YQ8kZ8qnVrtkhLwEjKpztozDYgIbSJTTfJGVeFOUHf
+         DKiAmoypGikmU0z0PMzshLhfGGGrj3sSXvxiSK8uYMSbLE2QP3PCPtGp8riE45C+2bsN
+         RlPMoMAxAvvOBt/+Pzds1dgnRJyy2qTle/1siuV4vl1Gd7GcmkIAOBDeNKpvnvPJuBnG
+         HvCA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=sD9cv/e/jx5JHSt1rnho9FXARIJYPMfW1ypvOFyaY9s=;
+        b=lMu5Jnia1rYV2a90CDPeUteuZ4H5CS8Zbh7DohU9eGS76BE7pRHxPWGNrouG5BfBrx
+         /s3ln9SpGOoaRYknZDYQXzyncGsdgFxwZIqMJbnSJjyMgcOtqogl1ooNkz9zgcCNidql
+         xR28tfk+yzEQgu6lfXVUk48rbhtEqMygM5Ty7/PMt3MY5S8dGkxjYFLHliT/1NpbtClM
+         gjk86f6eF/LFxy8t/xSwcJyIqVLwFRYgH83xa1xitpfJzLcRdeb0+GBx75aiNsuBtcKL
+         wt2E2FYUWYLCCpAnkhuWzMbK7zGjI6wD+8RwEzeOyveeRx0YGAch7OjxUsIB/lfCGRoB
+         sxsQ==
+X-Gm-Message-State: ANhLgQ18mIV5N5vwPMgKxlKZ28wrm1FWTOXk8h6OWKsdbobJD2om5NdE
+        SGnKcYgUtOi+EiyPeX7BZPw=
+X-Google-Smtp-Source: ADFU+vtbe3D/qiE2OVFodOIkccs0SBYWk0CMSYd6+UEbXddisShf9BqeySwyFWPU/wSD3O9cpYT0VQ==
+X-Received: by 2002:a05:620a:22b1:: with SMTP id p17mr11774955qkh.396.1585267000525;
+        Thu, 26 Mar 2020 16:56:40 -0700 (PDT)
+Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
+        by smtp.gmail.com with ESMTPSA id p1sm2524807qkf.73.2020.03.26.16.56.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 26 Mar 2020 16:56:40 -0700 (PDT)
+From:   Arvind Sankar <nivedita@alum.mit.edu>
+X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
+Date:   Thu, 26 Mar 2020 19:56:38 -0400
+To:     Ard Biesheuvel <ardb@kernel.org>
+Cc:     Arvind Sankar <nivedita@alum.mit.edu>,
+        Hans de Goede <hdegoede@redhat.com>,
+        linux-efi <linux-efi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 00/14] efi/gop: Refactoring + mode-setting feature
+Message-ID: <20200326235637.GA2364023@rani.riverdale.lan>
+References: <20200319192855.29876-1-nivedita@alum.mit.edu>
+ <20200320020028.1936003-1-nivedita@alum.mit.edu>
+ <CAKv+Gu8-iK-FQrgCY6YGXyg155chMPJQZeQr-i_xQbqoQ57F0g@mail.gmail.com>
+ <20200325221007.GA290267@rani.riverdale.lan>
+ <CAMj1kXHPmtYgoUViF4baVHfy178ef8u57wJgqcZVagGTAuP3iQ@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <CACdnJuvxSaF96PkCiDp5u+599+bU5SnXRgLyWetaOKa0+1UqAg@mail.gmail.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-ZohoMailClient: External
+Content-Disposition: inline
+In-Reply-To: <CAMj1kXHPmtYgoUViF4baVHfy178ef8u57wJgqcZVagGTAuP3iQ@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/26/20 6:41 PM, Matthew Garrett wrote:
-> On Thu, Mar 26, 2020 at 3:37 PM Daniel P. Smith
-> <dpsmith@apertussolutions.com> wrote:
->> On 3/26/20 4:54 PM, Matthew Garrett wrote:
->>> PCs depend on the availability of EFI runtime services - it's not
->>> possible to just assert that they're untrusted and so unsupported. The
->>> TPM code is part of boot services which (based on your design) are
->>> unavailable at this point, so I agree that you need your own
->>> implementation.
->>>
->>
->> I appreciate this has been a heated area of debate, but with all due
->> respect that might be a slight over statement w.r.t. dependency on
->> runtime services and not what I was saying about the trustworthiness of
->> UEFI. If I have a UEFI platform, I trust EFI to boot the system but that
->> does not mean I have to trust it to measure my OS kernel or manage the
->> running system. Secure Launch provides a means to start a measurement
->> trust chain starting with CPU taking the first measurement and then I
->> can do things like disabling runtime services in the kernel or do crazy
->> things like using the dynamic launch to switch to a minimal temporary
->> kernel that can do high trust operations such as interfacing with
->> entities outside your trust boundary, e.g. runtime services.
+On Thu, Mar 26, 2020 at 12:36:25AM +0100, Ard Biesheuvel wrote:
 > 
-> I understand. However, it is *necessary* for EFI runtime services to
-> be available somehow, and this design needs to make that possible.
-> Either EFI runtime services need to be considered part of the TCB, or
-> we need a mechanism to re-verify the state of the system after making
-> an EFI call (such as Andy's suggestion).
-> 
+> Yes, -ffreestanding implies -fno-builtin, which means that the
+> compiler cannot assume it knows (and can optimize away) the behavior
+> of strlen(), memset(), etc.
 
-Yes if you are on UEFI you will eventually need to deal with RS during
-the system's lifetime, unless you don't want to patch your firmware
-which I won't comment on what kind of idea that is. And yes I have been
-chatting with a few people in the LinuxBoot community about re-verifying
-the RS. The answer seemed to be that it might be possible but it doesn't
-look like it will be trivial.
+Yes exactly. Do you foresee any problems with removing it?
 
->> Please understand I really do not want my own implementation. I tried to
->> see if we could just #include in the minimal needed parts from the
->> in-tree TPM driver but could not find a clean way to do so. Perhaps
->> there might be a future opportunity to collaborate with the TPM driver
->> maintainers to refactor in a way that we can just reuse instead of
->> reimplement.
-> 
-> I think it's reasonable to assert that boot services can't be part of
-> the TCB in this case, and as a result you're justified in not using
-> the firmware's TPM implementation. However, we still need a solution
-> for access to runtime services.
-> 
-
+Thanks.
