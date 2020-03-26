@@ -2,103 +2,205 @@ Return-Path: <SRS0=aGSP=5L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47BB0C43331
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 16:07:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16C40C43331
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 16:07:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 156072076A
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 16:07:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="215vA/Au"
+	by mail.kernel.org (Postfix) with ESMTP id E5A2C2076A
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 16:07:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728454AbgCZQHG (ORCPT
+        id S1728536AbgCZQHi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 12:07:06 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:57152 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726296AbgCZQHF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 12:07:05 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=FsDiwlASoZZdDT3N6KqjBazor5NikxhCT9Uq7utc1xE=; b=215vA/Au9ukZn1clgQ0ownTRzr
-        etYRrycPvW0fAGoRwAxMd4hEDsakZ2YVhISMu7ZThRwiXW/qS9gZKKqbQvjmlajDtp19EbJdKAcGA
-        uAR35e4gY5y43JiH8OXjL28QH37xhNo3qBlC3kMffYkhV97DLuOh5YcZeTClDMzn+C+uUUoLgDr3c
-        m7FtZx5JI+P+xP14jMIdK8OQfD/1dOXgGjmX5LuaVES8i2qnI0RZmVr0JI3fOt44Gn9PTpUz/hC6b
-        REjVQFNv02ybQ5Xbq7PFJiaR9g54WDwDEjc7R9obKfa8If6k3+HIgy+P2xobD0dlLkn4XCgKDHxx+
-        Ch5LvwpA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jHV1w-0005io-9f; Thu, 26 Mar 2020 16:06:52 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 96D663010C1;
-        Thu, 26 Mar 2020 17:06:50 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 7CD2A29C75A60; Thu, 26 Mar 2020 17:06:50 +0100 (CET)
-Date:   Thu, 26 Mar 2020 17:06:50 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     x86@kernel.org
-Cc:     linux-kernel@vger.kernel.org, rostedt@goodmis.org,
-        mhiramat@kernel.org, bristot@redhat.com, jbaron@akamai.com,
-        torvalds@linux-foundation.org, tglx@linutronix.de,
-        mingo@kernel.org, namit@vmware.com, hpa@zytor.com, luto@kernel.org,
-        ard.biesheuvel@linaro.org, jpoimboe@redhat.com
-Subject: Re: [RESEND][PATCH v3 10/17] x86/static_call: Add inline static call
- implementation for x86-64
-Message-ID: <20200326160650.GP20713@hirez.programming.kicks-ass.net>
-References: <20200324135603.483964896@infradead.org>
- <20200324142245.880990363@infradead.org>
+        Thu, 26 Mar 2020 12:07:38 -0400
+Received: from mga18.intel.com ([134.134.136.126]:30493 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726296AbgCZQHh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Mar 2020 12:07:37 -0400
+IronPort-SDR: FGBz2xMdMIi+o/OCF5qQySPSeZ12Gg8g3cRRzWIL73yfO7JzcX6ze28KenGVvCk3/iCGD6KS0B
+ Srmhc1ms8Alw==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Mar 2020 09:07:14 -0700
+IronPort-SDR: 60DD6ASrQKnWWSECPVfEjeSbkN5gTk45rYzmuNG77KnGiv+UN8YRKtQ5Dvi3vOf2aRMLVgoo4/
+ Iv+gAKAm3bpA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,309,1580803200"; 
+   d="scan'208";a="358191585"
+Received: from sjchrist-coffee.jf.intel.com ([10.54.74.202])
+  by fmsmga001.fm.intel.com with ESMTP; 26 Mar 2020 09:07:14 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] KVM: VMX: Add a trampoline to fix VMREAD error handling
+Date:   Thu, 26 Mar 2020 09:07:12 -0700
+Message-Id: <20200326160712.28803-1-sean.j.christopherson@intel.com>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200324142245.880990363@infradead.org>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 24, 2020 at 02:56:13PM +0100, Peter Zijlstra wrote:
-> From: Josh Poimboeuf <jpoimboe@redhat.com>
-> 
-> Add the inline static call implementation for x86-64. The generated code
-> is identical to the out-of-line case, except we move the trampoline into
-> it's own section.
-> 
-> Then objtool uses the trampoline section to detect all the call sites,
-> which it writes into the .static_call_sites section.
-> 
-> During boot (and module init), the call sites are patched to call
-> directly into the destination function.  The temporary trampoline is
-> then no longer used.
+Add a hand coded assembly trampoline to preserve volatile registers
+across vmread_error(), and to handle the calling convention differences
+between 64-bit and 32-bit due to asmlinkage on vmread_error().  Pass
+@field and @fault on the stack when invoking the trampoline to avoid
+clobbering volatile registers in the context of the inline assembly.
 
-> +static int read_static_call_tramps(struct objtool_file *file)
-> +{
-> +	struct section *sec, *sc_sec = find_section_by_name(file->elf, ".static_call.text");
-> +	struct symbol *func;
-> +
-> +	for_each_sec(file, sec) {
-> +		list_for_each_entry(func, &sec->symbol_list, list) {
-> +			if (func->sec == sc_sec)
-> +				func->static_call_tramp = true;
-> +		}
-> +	}
-> +
-> +	return 0;
-> +}
+Calling vmread_error() directly from inline assembly is partially broken
+on 64-bit, and completely broken on 32-bit.  On 64-bit, it will clobber
+%rdi and %rsi (used to pass @field and @fault) and any volatile regs
+written by vmread_error().  On 32-bit, asmlinkage means vmread_error()
+expects the parameters to be passed on the stack, not via regs.
 
-While talking Boris through this stuff, I just realized that if you use
-a static_call object defined in another translation-unit, IOW. the:
+Opportunistically zero out the result in the trampoline to save a few
+bytes of code for every VMREAD.  A happy side effect of the trampoline
+is that the inline code footprint is reduced by three bytes on 64-bit
+due to PUSH/POP being more efficent (in terms of opcode bytes) than MOV.
 
-	STATIC_CALL_TRAMP(name)(...);
+Fixes: 6e2020977e3e6 ("KVM: VMX: Add error handling to VMREAD helper")
+Cc: stable@vger.kernel.org
+Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+---
 
-call is an external call, the above objtool rule will not detect it and
-it'll stay using the trampoline...
+Becuase there just isn't enough custom assembly in VMX :-)
 
-Back to using a naming prefix I suppose.
+Simply reverting isn't a great option because we'd lose error reporting
+for VMREAD failure, i.e. it'd return garbage with no other indication that
+something went awry.
+
+Tested all paths (fail, fault w/o rebooting, fault w/ rebooting) on both
+64-bit and 32-bit.
+
+ arch/x86/kvm/vmx/ops.h     | 28 +++++++++++++-----
+ arch/x86/kvm/vmx/vmenter.S | 58 ++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 79 insertions(+), 7 deletions(-)
+
+diff --git a/arch/x86/kvm/vmx/ops.h b/arch/x86/kvm/vmx/ops.h
+index 45eaedee2ac0..09b0937d56b1 100644
+--- a/arch/x86/kvm/vmx/ops.h
++++ b/arch/x86/kvm/vmx/ops.h
+@@ -12,7 +12,8 @@
+ 
+ #define __ex(x) __kvm_handle_fault_on_reboot(x)
+ 
+-asmlinkage void vmread_error(unsigned long field, bool fault);
++__attribute__((regparm(0))) void vmread_error_trampoline(unsigned long field,
++							 bool fault);
+ void vmwrite_error(unsigned long field, unsigned long value);
+ void vmclear_error(struct vmcs *vmcs, u64 phys_addr);
+ void vmptrld_error(struct vmcs *vmcs, u64 phys_addr);
+@@ -70,15 +71,28 @@ static __always_inline unsigned long __vmcs_readl(unsigned long field)
+ 	asm volatile("1: vmread %2, %1\n\t"
+ 		     ".byte 0x3e\n\t" /* branch taken hint */
+ 		     "ja 3f\n\t"
+-		     "mov %2, %%" _ASM_ARG1 "\n\t"
+-		     "xor %%" _ASM_ARG2 ", %%" _ASM_ARG2 "\n\t"
+-		     "2: call vmread_error\n\t"
+-		     "xor %k1, %k1\n\t"
++
++		     /*
++		      * VMREAD failed.  Push '0' for @fault, push the failing
++		      * @field, and bounce through the trampoline to preserve
++		      * volatile registers.
++		      */
++		     "push $0\n\t"
++		     "push %2\n\t"
++		     "2:call vmread_error_trampoline\n\t"
++
++		     /*
++		      * Unwind the stack.  Note, the trampoline zeros out the
++		      * memory for @fault so that the result is '0' on error.
++		      */
++		     "pop %2\n\t"
++		     "pop %1\n\t"
+ 		     "3:\n\t"
+ 
++		     /* VMREAD faulted.  As above, except push '1' for @fault. */
+ 		     ".pushsection .fixup, \"ax\"\n\t"
+-		     "4: mov %2, %%" _ASM_ARG1 "\n\t"
+-		     "mov $1, %%" _ASM_ARG2 "\n\t"
++		     "4: push $1\n\t"
++		     "push %2\n\t"
+ 		     "jmp 2b\n\t"
+ 		     ".popsection\n\t"
+ 		     _ASM_EXTABLE(1b, 4b)
+diff --git a/arch/x86/kvm/vmx/vmenter.S b/arch/x86/kvm/vmx/vmenter.S
+index 81ada2ce99e7..861ae40e7144 100644
+--- a/arch/x86/kvm/vmx/vmenter.S
++++ b/arch/x86/kvm/vmx/vmenter.S
+@@ -234,3 +234,61 @@ SYM_FUNC_START(__vmx_vcpu_run)
+ 2:	mov $1, %eax
+ 	jmp 1b
+ SYM_FUNC_END(__vmx_vcpu_run)
++
++/**
++ * vmread_error_trampoline - Trampoline from inline asm to vmread_error()
++ * @field:	VMCS field encoding that failed
++ * @fault:	%true if the VMREAD faulted, %false if it failed
++
++ * Save and restore volatile registers across a call to vmread_error().  Note,
++ * all parameters are passed on the stack.
++ */
++SYM_FUNC_START(vmread_error_trampoline)
++	push %_ASM_BP
++	mov  %_ASM_SP, %_ASM_BP
++
++	push %_ASM_AX
++	push %_ASM_CX
++	push %_ASM_DX
++#ifdef CONFIG_X86_64
++	push %rdi
++	push %rsi
++	push %r8
++	push %r9
++	push %r10
++	push %r11
++#endif
++#ifdef CONFIG_X86_64
++	/* Load @field and @fault to arg1 and arg2 respectively. */
++	mov 3*WORD_SIZE(%rbp), %_ASM_ARG2
++	mov 2*WORD_SIZE(%rbp), %_ASM_ARG1
++#else
++	/* Parameters are passed on the stack for 32-bit (see asmlinkage). */
++	push 3*WORD_SIZE(%ebp)
++	push 2*WORD_SIZE(%ebp)
++#endif
++
++	call vmread_error
++
++#ifndef CONFIG_X86_64
++	add $8, %esp
++#endif
++
++	/* Zero out @fault, which will be popped into the result register. */
++	_ASM_MOV $0, 3*WORD_SIZE(%_ASM_BP)
++
++#ifdef CONFIG_X86_64
++	pop %r11
++	pop %r10
++	pop %r9
++	pop %r8
++	pop %rsi
++	pop %rdi
++#endif
++	pop %_ASM_DX
++	pop %_ASM_CX
++	pop %_ASM_AX
++	pop %_ASM_BP
++
++	ret
++SYM_FUNC_END(vmread_error_trampoline)
+-- 
+2.24.1
+
