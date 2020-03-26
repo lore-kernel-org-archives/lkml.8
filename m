@@ -2,114 +2,245 @@ Return-Path: <SRS0=aGSP=5L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F3AFC43331
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 21:26:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C041DC2D0E9
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 21:27:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 01C1920714
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 21:26:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8893620714
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 21:27:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="R1ZbV8ZH"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BH+pMBLV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727122AbgCZV0q (ORCPT
+        id S1727549AbgCZV1K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 17:26:46 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:46667 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726067AbgCZV0q (ORCPT
+        Thu, 26 Mar 2020 17:27:10 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:43697 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726067AbgCZV1K (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 17:26:46 -0400
-Received: by mail-lj1-f195.google.com with SMTP id r7so398021ljg.13
-        for <linux-kernel@vger.kernel.org>; Thu, 26 Mar 2020 14:26:42 -0700 (PDT)
+        Thu, 26 Mar 2020 17:27:10 -0400
+Received: by mail-pf1-f194.google.com with SMTP id f206so3425856pfa.10;
+        Thu, 26 Mar 2020 14:27:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=K6HhQ5CXYnVrjzdCb0GiH9KRJ8oDBIqHlDAtHtGoEj0=;
-        b=R1ZbV8ZHF2uNrvQMw6yLPcZXYX/L1Bi1ZDegFPmpGCQZQxDo4xJstG1+5lxSGccQjM
-         DtHC3HQ/jx2YMTytcd6ultwEU/i0RlVnZivmFm9vimqHtelawlsMju+sVKJ7lHhUFclt
-         CAT0JwPBKGwAs7QH0zYIR8ngkUu1HqQt+JNM8LA/bSlIAM7ldYL3U3TWwGQQsnl/Hel9
-         6kj0OiO6KeusAjhbIL7po4EZAoa2QzUuNNDHmg7OdxCfj5w04nJlHikrm/4rjGHXVBbt
-         BztQyx2aUzDzf8VaHiOVqUzXyYasFaATNZCxsfBVkbIyEnDecxq0KQKBEI2iK76fHmnY
-         Nh5Q==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=atzCXrrFjj2ubJLyaQL33TZVkzc/684qlpDQkAgpr+Y=;
+        b=BH+pMBLVwLvDOujw8Wx0UntU90jOTEQ6Zs10qYxLzPGwVpM/cLw9JEfTvd975olj1y
+         zrSwqx5diNTHuNEuqTGjucX0e9E7NzEdwX2eERxjch4vKtewxQBqNdLpgqiIH2KCS3cF
+         +8kGVlcQfKVeFZILXyme5LG3xF1RUSt5UWRl9PVL1KDDrxB5hemkZo3f2Z73XJxDc+1L
+         JhySK730Nhbn5ut3/1zcHRodB1PyjZGUC+hC+Ocd0KXOT77tGO3rjr47NgHmuzVtZMZZ
+         hjcpb2qVoEzF62N9YMDXsHdXfHwNDLVQlSlzOyMxsaGkJGumnjVgwIUIVDjUCjEZclYA
+         yj2w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=K6HhQ5CXYnVrjzdCb0GiH9KRJ8oDBIqHlDAtHtGoEj0=;
-        b=ICeRPZKjIzMPYGdAJEDOFoXv0q3U0+PBH2+d7pQhv4g6cyXvKBxuSHEWzBRavWrEaZ
-         s5ZAJEt7U8F+jpXVWZL2VH6F4+ZGlU0Ocup66yCs7Bu/1iSajZ/2W4PEf8vTFJDh9016
-         Pl8gIt6WtwTeFGWJpmJfPuEPwQOjk7b2wOl7kXxH5L/LSFrZfBzHJ3cJbLZvd4DQuMAe
-         TmrAoElcjqPpkLkod6FqDYvAWpX5KOIS3umpejDCDo5q7IkZgmnZWF29xaxfL6O7Ovng
-         DlcuhvmAs9mX+/etE8FlHse8rPQvnWiooW4q1iJwqyQCOHjDpRIrFPccaJNuWXO12EE8
-         ak+A==
-X-Gm-Message-State: AGi0PuYGd7uwv9VxqNcF6JQ75kyA8N6VMKM/2d8cv1eqv5ACQ8NTdswm
-        xg2Qc/OIppmLk4Tsk/o2a1ff8Hym/c3gXKysp9lKTA==
-X-Google-Smtp-Source: APiQypLsy28BzQ4YoJJE2i0gYrneALBvsp4MxQ5uVCHUPAjFEGFTMqFCGi01B7eAtiikChneeDns42u4uM1vGmEAXuk=
-X-Received: by 2002:a2e:9c48:: with SMTP id t8mr568502ljj.168.1585258002139;
- Thu, 26 Mar 2020 14:26:42 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200324135328.5796-1-geert+renesas@glider.be>
- <20200324135653.6676-1-geert+renesas@glider.be> <20200324135653.6676-5-geert+renesas@glider.be>
-In-Reply-To: <20200324135653.6676-5-geert+renesas@glider.be>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 26 Mar 2020 22:26:30 +0100
-Message-ID: <CACRpkdZuQrPqFPyoop9pv6MVwqwz_C6ZNKMxWqSFXdAMkhbsvQ@mail.gmail.com>
-Subject: Re: [PATCH v6 5/8] gpiolib: Introduce gpiod_set_config()
-To:     Geert Uytterhoeven <geert+renesas@glider.be>
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Harish Jenny K N <harish_kandiga@mentor.com>,
-        Eugeniu Rosca <erosca@de.adit-jv.com>,
-        Alexander Graf <graf@amazon.com>,
-        Peter Maydell <peter.maydell@linaro.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Phil Reid <preid@electromag.com.au>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        Christoffer Dall <christoffer.dall@arm.com>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=atzCXrrFjj2ubJLyaQL33TZVkzc/684qlpDQkAgpr+Y=;
+        b=MNju2wjrob0xH+4I4geD9H9u7JoN2cQPtLr0lDRq/TWXw9XSnoGShiLT+3TKDslbPP
+         omwPBpDXRjRykVSKUq99JSZ7OA32FGV+o1Z5VoiPp3Kh0QmHmsrLF6wqWB1PpqahEnoM
+         rQqtg8n96LhwMG2T6egdurcUHSYzP3MoD6OSuL6bZL21dRfqkOOTpSpLtfWDbhCvm9oc
+         xsPlvU+Qx5RaLw3IeT3pEO5jfkzCzIc9zellJ02vm52n5aUZ6FvdT0XLrfwRXfGY+ZTS
+         cPHbsAj6eSdcfQsZoZiMmJwzYhbSCWGZPWvSeLBJcPPyego1ZtrV2Bf4wHRyJ8Noomxt
+         19WA==
+X-Gm-Message-State: ANhLgQ05j5RQ345gDnX+Jp3grwxTIlrCx5LC1ceM/4LMBHWZvmRmbJBd
+        s9phDsI9Mor2cdiSg0fHxqA=
+X-Google-Smtp-Source: ADFU+vtcHF1HaTi5i3fGgGxyPVPOVW6A4n02mzw7SrTcycZINqW9FTsKBRVMJgTYQXn8HfVGU/2b1w==
+X-Received: by 2002:a63:7409:: with SMTP id p9mr10470856pgc.206.1585258028572;
+        Thu, 26 Mar 2020 14:27:08 -0700 (PDT)
+Received: from dtor-ws ([2620:15c:202:201:3c2a:73a9:c2cf:7f45])
+        by smtp.gmail.com with ESMTPSA id a127sm2434878pfa.111.2020.03.26.14.27.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 26 Mar 2020 14:27:07 -0700 (PDT)
+Date:   Thu, 26 Mar 2020 14:27:05 -0700
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To:     Rajat Jain <rajatja@google.com>
+Cc:     dtor@google.com, Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        QEMU Developers <qemu-devel@nongnu.org>
-Content-Type: text/plain; charset="UTF-8"
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Enrico Weigelt <info@metux.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Allison Randal <allison@lohutok.net>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Stephen Boyd <swboyd@chromium.org>,
+        linux-input@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, furquan@google.com,
+        dlaurie@google.com, bleung@google.com, zentaro@google.com,
+        dbehr@google.com, rajatxjain@gmail.com
+Subject: Re: [PATCH v2 2/5] Input: atkbd: Expose function row physical map to
+ userspace
+Message-ID: <20200326212705.GJ75430@dtor-ws>
+References: <20200324123518.239768-1-rajatja@google.com>
+ <20200324123518.239768-2-rajatja@google.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200324123518.239768-2-rajatja@google.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 24, 2020 at 2:57 PM Geert Uytterhoeven
-<geert+renesas@glider.be> wrote:
-
-> The GPIO Aggregator will need a method to forward a .set_config() call
-> to its parent gpiochip.  This requires obtaining the gpio_chip and
-> offset for a given gpio_desc.  While gpiod_to_chip() is public,
-> gpio_chip_hwgpio() is not, so there is currently no method to obtain the
-> needed GPIO offset parameter.
->
-> Hence introduce a public gpiod_set_config() helper, which invokes the
-> .set_config() callback through a gpio_desc pointer, like is done for
-> most other gpio_chip callbacks.
->
-> Rewrite the existing gpiod_set_debounce() helper as a wrapper around
-> gpiod_set_config(), to avoid duplication.
->
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+On Tue, Mar 24, 2020 at 05:35:15AM -0700, Rajat Jain wrote:
+> Certain keyboards have their top-row keys intended
+> for actions such as "Browser back", "Browser Refresh", "Fullscreen"
+> etc as their primary mode, thus they will send physical codes for those
+> actions. Further, they don't have a dedicated "Fn" key so don't have
+> the capability to generate function key codes (e.g. F1, F2 etc..).
+> However in this case, if userspace still wants to "synthesize" those
+> function keys using the top row action keys, it needs to know the
+> physical position of the top row keys. (Essentially a mapping between
+> usage codes and a physical location in the top row).
+> 
+> This patch enhances the atkbd driver to receive such a mapping from the
+> firmware / device tree, and expose it to userspace in the form of
+> a function-row-physmap attribute. The attribute would be a space
+> separated ordered list of physical codes, for the keys in the function
+> row, in left-to-right order.
+> 
+> The attribute will only be present if the kernel knows about such
+> mapping, otherwise the attribute shall not be visible.
+> 
+> Signed-off-by: Rajat Jain <rajatja@google.com>
 > ---
-> v6:
->   - New.
+> v2: Remove the Change-Id from the commit log
+> 
+>  drivers/input/keyboard/atkbd.c | 59 ++++++++++++++++++++++++++++++++++
+>  1 file changed, 59 insertions(+)
+> 
+> diff --git a/drivers/input/keyboard/atkbd.c b/drivers/input/keyboard/atkbd.c
+> index 7e3eae54c1926..7623eebef2593 100644
+> --- a/drivers/input/keyboard/atkbd.c
+> +++ b/drivers/input/keyboard/atkbd.c
+> @@ -24,6 +24,7 @@
+>  #include <linux/libps2.h>
+>  #include <linux/mutex.h>
+>  #include <linux/dmi.h>
+> +#include <linux/property.h>
+>  
+>  #define DRIVER_DESC	"AT and PS/2 keyboard driver"
+>  
+> @@ -63,6 +64,8 @@ static bool atkbd_terminal;
+>  module_param_named(terminal, atkbd_terminal, bool, 0);
+>  MODULE_PARM_DESC(terminal, "Enable break codes on an IBM Terminal keyboard connected via AT/PS2");
+>  
+> +#define MAX_FUNCTION_ROW_KEYS	24
+> +
+>  /*
+>   * Scancode to keycode tables. These are just the default setting, and
+>   * are loadable via a userland utility.
+> @@ -230,6 +233,9 @@ struct atkbd {
+>  
+>  	/* Serializes reconnect(), attr->set() and event work */
+>  	struct mutex mutex;
+> +
+> +	u16 function_row_physmap[MAX_FUNCTION_ROW_KEYS];
+> +	int num_function_row_keys;
+>  };
+>  
+>  /*
+> @@ -283,6 +289,7 @@ static struct device_attribute atkbd_attr_##_name =				\
+>  	__ATTR(_name, S_IRUGO, atkbd_do_show_##_name, NULL);
+>  
+>  ATKBD_DEFINE_RO_ATTR(err_count);
+> +ATKBD_DEFINE_RO_ATTR(function_row_physmap);
+>  
+>  static struct attribute *atkbd_attributes[] = {
+>  	&atkbd_attr_extra.attr,
+> @@ -292,11 +299,42 @@ static struct attribute *atkbd_attributes[] = {
+>  	&atkbd_attr_softrepeat.attr,
+>  	&atkbd_attr_softraw.attr,
+>  	&atkbd_attr_err_count.attr,
+> +	&atkbd_attr_function_row_physmap.attr,
+>  	NULL
+>  };
+>  
+> +static ssize_t atkbd_show_function_row_physmap(struct atkbd *atkbd, char *buf)
+> +{
+> +	ssize_t size = 0;
+> +	int i;
+> +
+> +	if (!atkbd->num_function_row_keys)
+> +		return 0;
+> +
+> +	for (i = 0; i < atkbd->num_function_row_keys; i++)
+> +		size += sprintf(buf + size, "%02X ",
+> +				atkbd->function_row_physmap[i]);
+> +	size += sprintf(buf + size, "\n");
+> +	return size;
+> +}
+> +
+> +static umode_t atkbd_attr_is_visible(struct kobject *kobj,
+> +				struct attribute *attr, int i)
+> +{
+> +	struct device *dev = container_of(kobj, struct device, kobj);
+> +	struct serio *serio = to_serio_port(dev);
+> +	struct atkbd *atkbd = serio_get_drvdata(serio);
+> +
+> +	if (attr == &atkbd_attr_function_row_physmap.attr &&
+> +	    !atkbd->num_function_row_keys)
+> +		return 0;
+> +
+> +	return attr->mode;
+> +}
+> +
+>  static struct attribute_group atkbd_attribute_group = {
+>  	.attrs	= atkbd_attributes,
+> +	.is_visible = atkbd_attr_is_visible,
+>  };
+>  
+>  static const unsigned int xl_table[] = {
+> @@ -1121,6 +1159,25 @@ static void atkbd_set_device_attrs(struct atkbd *atkbd)
+>  	}
+>  }
+>  
+> +static void atkbd_parse_fwnode_data(struct serio *serio)
+> +{
+> +	struct atkbd *atkbd = serio_get_drvdata(serio);
+> +	struct device *dev = &serio->dev;
+> +	int n;
+> +
+> +	if (!dev_fwnode(dev))
+> +		return;
 
-This is nice, I tried to actually just apply this (you also sent some
-two cleanups that I tried to apply) byt Yue's cleanup patch
-commit d18fddff061d2796525e6d4a958cb3d30aed8efd
-"gpiolib: Remove duplicated function gpio_do_set_config()"
-makes none of them apply :/
+I do not think we need this guard.
 
-Yours,
-Linus Walleij
+> +
+> +	/* Parse "function-row-physmap" property */
+> +	n = device_property_count_u16(dev, "function-row-physmap");
+> +	if (n > 0 && n <= MAX_FUNCTION_ROW_KEYS &&
+> +	    !device_property_read_u16_array(dev, "function-row-physmap",
+> +					    atkbd->function_row_physmap, n)) {
+> +		atkbd->num_function_row_keys = n;
+> +		dev_info(dev, "FW reported %d function-row key locations\n", n);
+
+dev_dbg().
+
+> +	}
+> +}
+> +
+>  /*
+>   * atkbd_connect() is called when the serio module finds an interface
+>   * that isn't handled yet by an appropriate device driver. We check if
+> @@ -1184,6 +1241,8 @@ static int atkbd_connect(struct serio *serio, struct serio_driver *drv)
+>  		atkbd->id = 0xab00;
+>  	}
+>  
+> +	atkbd_parse_fwnode_data(serio);
+> +
+>  	atkbd_set_keycode_table(atkbd);
+>  	atkbd_set_device_attrs(atkbd);
+>  
+> -- 
+> 2.25.1.696.g5e7596f4ac-goog
+> 
+
+-- 
+Dmitry
