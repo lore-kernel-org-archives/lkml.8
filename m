@@ -2,118 +2,107 @@ Return-Path: <SRS0=aGSP=5L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D5C9C43331
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 17:55:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A89EC2D0EC
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 17:56:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 76BB42070A
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 17:55:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 641122070A
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 17:56:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RhQmfK7z"
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="dN59iMRi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728268AbgCZRzp (ORCPT
+        id S1727832AbgCZR4r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 13:55:45 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:54377 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726359AbgCZRzp (ORCPT
+        Thu, 26 Mar 2020 13:56:47 -0400
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:43186 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726363AbgCZR4r (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 13:55:45 -0400
-Received: by mail-wm1-f67.google.com with SMTP id c81so7494480wmd.4;
-        Thu, 26 Mar 2020 10:55:43 -0700 (PDT)
+        Thu, 26 Mar 2020 13:56:47 -0400
+Received: by mail-qt1-f194.google.com with SMTP id a5so6177097qtw.10
+        for <linux-kernel@vger.kernel.org>; Thu, 26 Mar 2020 10:56:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=ziepe.ca; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=8l2oRnDlBMb0gXsLvGjz4aRGCAhqoB1hZgrGjPsa2To=;
-        b=RhQmfK7zxsQz9efFQMf3Mgar0VVI4KEnYZVN24ZrLsHIMhWb+dRvc8+mZqQmF1LwqO
-         DpYAPanXRGJSF+ymGAJZAyu+H1jY+mVs1Ste/CgMEux+jM8JmvEikda59HDUR8CVpYTy
-         q2J9IQh2HJAGqgxWU1EVZ+CRu1rMtU3TiNFOdjeDfwuqMYY+JebAU3yd+x2APX8aeGwK
-         Kn0jY19MNPeLE3h9aLAxZMYOHZMBwUMSOJq9q3lDooQtyaQ5VxqCFHwGwjFEn/IO7WRM
-         qPJgDo5buaIoEj4MUshrYNO2xbk469eB83cRM35NUwBLbzT0t6iA6lx41Z7XBjuFdNGI
-         Ymqw==
+        bh=7EsDrc+uddu8fCsgx5Mn3RBL0Ax2XMgO8dGY0tetl+Y=;
+        b=dN59iMRichhjpk+p6gNGfCh3Bi5b5fdJo6VsVQp+5jIxncTt09nOeGlvC2364R1UQK
+         28qDEEWtHtLMtsY7Y93uuCwhCsMFEZV8Q9u0MUU3iAo3vwGlKwfSDLcUB52qs4yRathi
+         f9CO+e8/8mB5y2D2IAfLdwNEebeGksyBOiEk7Quhwoxe3UekgeHM2XCeTmCHEGDlXhB1
+         1Nynj+0GmlvBMCiMrms/ZgfEFlti0bXyE8d9aW/nG1x8JYcAMKbpRQKvyAwByOSrwzmz
+         vXf0fTlaPEAJt/c09cexX/WpT1IXFxdToO1zkaR1Th4f68+xwHvNkGmigYnCNClbCcjn
+         7isA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=8l2oRnDlBMb0gXsLvGjz4aRGCAhqoB1hZgrGjPsa2To=;
-        b=JEO64nfeATFcSLk2q5aIk/QGRyKqobSuF3J29u/H5vQ+OQjye2ra6jCIyoDDcNBFLJ
-         JKtAjTMOJj2JfgCIuXlmeAdnhXq1aflptYACJ7x4LlDX4pkBb/GJKQssmFfaOZjsn6Fb
-         3powiKcS7gb1SSF8ic0A4XJen+O4cENKFCQ/3W3EloLQ9CMHUBGSSpdtzllvOlQM+8Qr
-         X7r/7PUuaQE+84xbM40XzX7Ywe0lZm1AD/x4hcB0bMqmHfih2rbasDVwwUQiSHo4L+RW
-         Jbg+zp1i4qPtHLNXt0XRv9Vj0PdDvJXjRDZfOz8+d4d9OC17YHHveRdG2Wvc53u0+pd7
-         857Q==
-X-Gm-Message-State: ANhLgQ3kS6DJXvqIIzU9kPQWAckQDJYfqhrtoHvwAnM2CY1xD0+gfKnH
-        I3449745MP1fnJL3xcOw9i4=
-X-Google-Smtp-Source: ADFU+vvQYAns/H4naOtzD0AQEl0lguuS8ZgJ+3MxwcxBvnyytUVJtfuzo3jqR3eODXmd0fraia5JTA==
-X-Received: by 2002:a7b:c1da:: with SMTP id a26mr1177478wmj.91.1585245342367;
-        Thu, 26 Mar 2020 10:55:42 -0700 (PDT)
-Received: from andrea ([86.61.236.197])
-        by smtp.gmail.com with ESMTPSA id w9sm5014104wrk.18.2020.03.26.10.55.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 26 Mar 2020 10:55:41 -0700 (PDT)
-Date:   Thu, 26 Mar 2020 18:55:31 +0100
-From:   Andrea Parri <parri.andrea@gmail.com>
-To:     Stephen Hemminger <stephen@networkplumber.org>
-Cc:     linux-kernel@vger.kernel.org,
-        "K . Y . Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>, linux-hyperv@vger.kernel.org,
-        Michael Kelley <mikelley@microsoft.com>,
-        Dexuan Cui <decui@microsoft.com>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org
-Subject: Re: [RFC PATCH 04/11] hv_netvsc: Disable NAPI before closing the
- VMBus channel
-Message-ID: <20200326175531.GA20523@andrea>
-References: <20200325225505.23998-1-parri.andrea@gmail.com>
- <20200325225505.23998-5-parri.andrea@gmail.com>
- <20200326082636.1d777921@hermes.lan>
+        bh=7EsDrc+uddu8fCsgx5Mn3RBL0Ax2XMgO8dGY0tetl+Y=;
+        b=TqfSSiGsFijEALqa5jKi4EbADgtKGEjzHo5YvVzIcpxtRUDwH8d0fMz76suOePwxFa
+         cfJFV67lhW0zSWI+ZIauQoblZ525CjLo0EYgRncBi42UWIaqmyr2j6UYq7DXjMuQYhsH
+         oSNgOKW6mLFsPLBv5+np5sImyPy16g+YQlQMb4tYcXXhnv2YJ2T/uYWXXTxA8uk5uPVD
+         gOe9aI5k5LRPT6bJN4JIgnsm/NeW+qaa5lHq7rEuMj7ypZ4qZMR2zc6hd5261+Zrebvq
+         r8IA+y9ilNgI4gCN/Qiy1bNC19xmiSSKNOD6QNsAokbwTPAm1qVFjCoQCd0PHR62AoWt
+         HIzA==
+X-Gm-Message-State: ANhLgQ2SrWE+IoMO9vJLzO4daqwOmIi7me0dCU6+p2e/dloaw5KZhEQD
+        XVxjLgW6aeCS5W1K/UDQd52wfQ==
+X-Google-Smtp-Source: ADFU+vtFO1P1ti9pC4GHPpqv/P5o9gR83oARQuqK/vl3mHn0NLf/EG76XzbmagOVQWV+0D9RO7eeeQ==
+X-Received: by 2002:ac8:7c92:: with SMTP id y18mr9687720qtv.189.1585245405416;
+        Thu, 26 Mar 2020 10:56:45 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-142-68-57-212.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.57.212])
+        by smtp.gmail.com with ESMTPSA id 68sm1880572qkh.75.2020.03.26.10.56.44
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 26 Mar 2020 10:56:44 -0700 (PDT)
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1jHWkG-0002Yj-45; Thu, 26 Mar 2020 14:56:44 -0300
+Date:   Thu, 26 Mar 2020 14:56:44 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Michel Lespinasse <walken@google.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        linux-mm <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Laurent Dufour <ldufour@linux.ibm.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Matthew Wilcox <willy@infradead.org>,
+        Liam Howlett <Liam.Howlett@oracle.com>,
+        Jerome Glisse <jglisse@redhat.com>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        David Rientjes <rientjes@google.com>,
+        Hugh Dickins <hughd@google.com>, Ying Han <yinghan@google.com>
+Subject: Re: [PATCH 1/8] mmap locking API: initial implementation as rwsem
+ wrappers
+Message-ID: <20200326175644.GN20941@ziepe.ca>
+References: <20200326070236.235835-1-walken@google.com>
+ <20200326070236.235835-2-walken@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200326082636.1d777921@hermes.lan>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200326070236.235835-2-walken@google.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 26, 2020 at 08:26:36AM -0700, Stephen Hemminger wrote:
-> On Wed, 25 Mar 2020 23:54:58 +0100
-> "Andrea Parri (Microsoft)" <parri.andrea@gmail.com> wrote:
-> 
-> > vmbus_chan_sched() might call the netvsc driver callback function that
-> > ends up scheduling NAPI work.  This "work" can access the channel ring
-> > buffer, so we must ensure that any such work is completed and that the
-> > ring buffer is no longer being accessed before freeing the ring buffer
-> > data structure in the channel closure path.  To this end, disable NAPI
-> > before calling vmbus_close() in netvsc_device_remove().
-> > 
-> > Suggested-by: Michael Kelley <mikelley@microsoft.com>
-> > Signed-off-by: Andrea Parri (Microsoft) <parri.andrea@gmail.com>
-> > Cc: "David S. Miller" <davem@davemloft.net>
-> > Cc: <netdev@vger.kernel.org>
-> 
-> Do you have a test that reproduces this issue?
+On Thu, Mar 26, 2020 at 12:02:29AM -0700, Michel Lespinasse wrote:
 
-I don't (or I'm not aware of such a test).
+> +static inline bool mmap_is_locked(struct mm_struct *mm)
+> +{
+> +	return rwsem_is_locked(&mm->mmap_sem) != 0;
+> +}
 
+I've been wondering if the various VM_BUG(rwsem_is_locked()) would be
+better as lockdep expressions? Certainly when lockdep is enabled it
+should be preferred, IMHO.
 
-> 
-> The netvsc device is somewhat unique in that it needs NAPI
-> enabled on the primary channel to interact with the host.
-> Therefore it can't call napi_disable in the normal dev->stop() place.
-> 
-> Acked-by: Stephen Hemminger <stephen@networkplumber.org>
+So, I think if inlines are to be introduced this should be something
+similar to netdev's ASSERT_RTNL which seems to have worked well.
 
-Thanks!
+Maybe ASSERT_MMAP_SEM_READ/WRITE/HELD() and do the VM_BUG or
+lockdep_is_held as appropriate?
 
-  Andrea
+Jason
