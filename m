@@ -2,80 +2,133 @@ Return-Path: <SRS0=aGSP=5L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2486BC43331
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 03:25:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F32DFC43331
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 03:25:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 025CB2074D
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 03:25:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C4BE32074D
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 03:25:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=soleen.com header.i=@soleen.com header.b="YNFNHzcL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727998AbgCZDZK (ORCPT
+        id S1728041AbgCZDZR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 23:25:10 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:12136 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727575AbgCZDZJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 23:25:09 -0400
-Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 691EF89FE8A41A3FB5A4;
-        Thu, 26 Mar 2020 11:25:07 +0800 (CST)
-Received: from localhost (10.173.223.234) by DGGEMS414-HUB.china.huawei.com
- (10.3.19.214) with Microsoft SMTP Server id 14.3.487.0; Thu, 26 Mar 2020
- 11:24:58 +0800
-From:   YueHaibing <yuehaibing@huawei.com>
-To:     <j@w1.fi>, <kvalo@codeaurora.org>, <davem@davemloft.net>,
-        <yuehaibing@huawei.com>, <andriy.shevchenko@linux.intel.com>,
-        <sfr@canb.auug.org.au>, <akpm@linux-foundation.org>,
-        <adobriyan@gmail.com>
-CC:     <linux-wireless@vger.kernel.org>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH] hostap: Convert prism2_download_aux_dump_proc_fops to prism2_download_aux_dump_proc_ops
-Date:   Thu, 26 Mar 2020 11:24:32 +0800
-Message-ID: <20200326032432.20384-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.10.2.windows.1
-MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.173.223.234]
-X-CFilter-Loop: Reflected
+        Wed, 25 Mar 2020 23:25:17 -0400
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:46297 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727766AbgCZDYd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Mar 2020 23:24:33 -0400
+Received: by mail-qk1-f195.google.com with SMTP id u4so5057153qkj.13
+        for <linux-kernel@vger.kernel.org>; Wed, 25 Mar 2020 20:24:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=soleen.com; s=google;
+        h=from:to:subject:date:message-id:in-reply-to:references;
+        bh=BKhAx6BebFw/oEITnjoM5nL1ibAHOPqPAiH4c9gaYa8=;
+        b=YNFNHzcL8opCZWUO6XnLzhdlsu4Yy+Rizy9yCWVbFy3ZRpvtcZv2puWnEOvUC3b1Vt
+         XHs+hMfat0AMwYaJFwe1RjtrQM1/uslxPjzHvIs14d1/5BioLW/YL75JijXhWEBD/9yF
+         5sEve9b8u+au7l1RKRTggSnH7moh6udjbiEcmw0ePceWaMVwexeB6yeHT0HIof6DX8JL
+         fQtTMoJKaZnvMyOB2sU5splZqi4JPAZcRlyG/7Pf29MOG3wsql0XOZOoGU/cimjTj6y2
+         2DVjOG87kdt+O93WALQb53VWLj/tVNY4j/j+Wlv7R+JedlxC22BoesYGUjxdDwJ3uBn7
+         zG/Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
+         :references;
+        bh=BKhAx6BebFw/oEITnjoM5nL1ibAHOPqPAiH4c9gaYa8=;
+        b=F1Y3kg5XYIUDjQ97k9oCMYASC+10ecS4yluNAzZWhQDCNWRqjkZiBsAvLkPgUsMeEm
+         A8ibVOlk8GCHOJf59wtp4w5B8ZaaOtU+jnoIWRKRdX56ZEfuma0yMJgD9tkrUxkKnItA
+         VEjf7W96D7UCczMxjqscvmmrk57Gv7WNpXePSDk9KoEtAbP1kQq0APHF0cAKekdChC0d
+         6S0UZmCGCgxr/5hl6x9XHJTw43YuwCk09GV/W3KaeUcmP8uvZestd85IY/AgZrOS7Rk0
+         XQ5URGQHG9mT0tXszT/fhWnXSq+JBNRun7n7LME7yKk1xZif54rXrqc+HQ34HvsWU6pa
+         vvxA==
+X-Gm-Message-State: ANhLgQ3U+ozrYiNydl1V2/xacrI45ECKHIoEIadkdpj3VWeDK7CXJiL8
+        m7Atu4t+vsNVZAdFt1f1CRE9Lg==
+X-Google-Smtp-Source: ADFU+vsaZX4t6NPWbuLtjOb6I822H6afCjwQpAn6wOnDl28ywTXqmlBMj7nd/Y69a1G7LrS1oIl+Zw==
+X-Received: by 2002:a37:a543:: with SMTP id o64mr6053234qke.460.1585193072231;
+        Wed, 25 Mar 2020 20:24:32 -0700 (PDT)
+Received: from localhost.localdomain (c-73-69-118-222.hsd1.nh.comcast.net. [73.69.118.222])
+        by smtp.gmail.com with ESMTPSA id u4sm620034qka.35.2020.03.25.20.24.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 25 Mar 2020 20:24:31 -0700 (PDT)
+From:   Pavel Tatashin <pasha.tatashin@soleen.com>
+To:     pasha.tatashin@soleen.com, jmorris@namei.org, sashal@kernel.org,
+        ebiederm@xmission.com, kexec@lists.infradead.org,
+        linux-kernel@vger.kernel.org, corbet@lwn.net,
+        catalin.marinas@arm.com, will@kernel.org,
+        linux-arm-kernel@lists.infradead.org, maz@kernel.org,
+        james.morse@arm.com, vladimir.murzin@arm.com,
+        matthias.bgg@gmail.com, bhsharma@redhat.com, linux-mm@kvack.org,
+        mark.rutland@arm.com, steve.capper@arm.com, rfontana@redhat.com,
+        tglx@linutronix.de, selindag@gmail.com
+Subject: [PATCH v9 06/18] arm64: mm: Always update TCR_EL1 from __cpu_set_tcr_t0sz()
+Date:   Wed, 25 Mar 2020 23:24:08 -0400
+Message-Id: <20200326032420.27220-7-pasha.tatashin@soleen.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200326032420.27220-1-pasha.tatashin@soleen.com>
+References: <20200326032420.27220-1-pasha.tatashin@soleen.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-commit 97a32539b956 ("proc: convert everything to "struct proc_ops"")
-forget do this convering for prism2_download_aux_dump_proc_fops.
+From: James Morse <james.morse@arm.com>
 
-Fixes: 97a32539b956 ("proc: convert everything to "struct proc_ops"")
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Because only the idmap sets a non-standard T0SZ, __cpu_set_tcr_t0sz()
+can check for platforms that need to do this using
+__cpu_uses_extended_idmap() before doing its work.
+
+The idmap is only built with enough levels, (and T0SZ bits) to map
+its single page.
+
+To allow hibernate, and then kexec to idmap their single page copy
+routines, __cpu_set_tcr_t0sz() needs to consider additional users,
+who may need a different number of levels/T0SZ-bits to the idmap.
+(i.e. VA_BITS may be enough for the idmap, but not hibernate/kexec)
+
+Always read TCR_EL1, and check whether any work needs doing for
+this request. __cpu_uses_extended_idmap() remains as it is used
+by KVM, whose idmap is also part of the kernel image.
+
+This mostly affects the cpuidle path, where we now get an extra
+system register read .
+
+CC: Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>
+CC: Sudeep Holla <sudeep.holla@arm.com>
+Signed-off-by: James Morse <james.morse@arm.com>
+Signed-off-by: Pavel Tatashin <pasha.tatashin@soleen.com>
 ---
- drivers/net/wireless/intersil/hostap/hostap_download.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ arch/arm64/include/asm/mmu_context.h | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/net/wireless/intersil/hostap/hostap_download.c b/drivers/net/wireless/intersil/hostap/hostap_download.c
-index 8722000b6c27..7c6a5a6d1d45 100644
---- a/drivers/net/wireless/intersil/hostap/hostap_download.c
-+++ b/drivers/net/wireless/intersil/hostap/hostap_download.c
-@@ -232,11 +232,11 @@ static int prism2_download_aux_dump_proc_open(struct inode *inode, struct file *
- 	return ret;
+diff --git a/arch/arm64/include/asm/mmu_context.h b/arch/arm64/include/asm/mmu_context.h
+index 3827ff4040a3..09ecbfd0ad2e 100644
+--- a/arch/arm64/include/asm/mmu_context.h
++++ b/arch/arm64/include/asm/mmu_context.h
+@@ -79,16 +79,15 @@ static inline bool __cpu_uses_extended_idmap_level(void)
  }
  
--static const struct file_operations prism2_download_aux_dump_proc_fops = {
--	.open		= prism2_download_aux_dump_proc_open,
--	.read		= seq_read,
--	.llseek		= seq_lseek,
--	.release	= seq_release_private,
-+static const struct proc_ops prism2_download_aux_dump_proc_ops = {
-+	.proc_open		= prism2_download_aux_dump_proc_open,
-+	.proc_read		= seq_read,
-+	.proc_lseek		= seq_lseek,
-+	.proc_release		= seq_release_private,
- };
+ /*
+- * Set TCR.T0SZ to its default value (based on VA_BITS)
++ * Ensure TCR.T0SZ is set to the provided value.
+  */
+ static inline void __cpu_set_tcr_t0sz(unsigned long t0sz)
+ {
+-	unsigned long tcr;
++	unsigned long tcr = read_sysreg(tcr_el1);
  
+-	if (!__cpu_uses_extended_idmap())
++	if ((tcr & TCR_T0SZ_MASK) >> TCR_T0SZ_OFFSET == t0sz)
+ 		return;
  
+-	tcr = read_sysreg(tcr_el1);
+ 	tcr &= ~TCR_T0SZ_MASK;
+ 	tcr |= t0sz << TCR_T0SZ_OFFSET;
+ 	write_sysreg(tcr, tcr_el1);
 -- 
 2.17.1
-
 
