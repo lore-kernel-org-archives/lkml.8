@@ -2,194 +2,518 @@ Return-Path: <SRS0=aGSP=5L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3456C43331
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 11:49:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7550C43331
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 11:50:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7062720409
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 11:49:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A35A22070A
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 11:50:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="UFVpWXee"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ld2nwTE4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728169AbgCZLtg (ORCPT
+        id S1728185AbgCZLu3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 07:49:36 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:37788 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727970AbgCZLtg (ORCPT
+        Thu, 26 Mar 2020 07:50:29 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:40044 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728144AbgCZLu3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 07:49:36 -0400
-Received: by mail-pf1-f194.google.com with SMTP id h72so2645723pfe.4
-        for <linux-kernel@vger.kernel.org>; Thu, 26 Mar 2020 04:49:35 -0700 (PDT)
+        Thu, 26 Mar 2020 07:50:29 -0400
+Received: by mail-pg1-f196.google.com with SMTP id t24so2736633pgj.7
+        for <linux-kernel@vger.kernel.org>; Thu, 26 Mar 2020 04:50:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=hEatEacjftOwz4doHq3a+8v1BhjzNMpi1Byas/pc+5I=;
-        b=UFVpWXeegMNBLmm2JpHMvGP+cw9UTIr2VBmcMUJkKOtmZ2IVwshdQP+iO/6qo1Oes4
-         rSDwteO4ZCCMEPAC+DzQc3jsVmizSUV0NQZBz63rdT5uuqbakt6LgCb5DnTYOCeHmwRe
-         18psF9S4NFh54amrK61wOsuO5vdxmnK3dPMTtM1x3Q0hjUvIVDyo5ppQ8pfuHCkYw5OV
-         700EiXeOM5TjTT5a/xO9x0yzKIXOVya+4+TXZneKKn4AnERD4BN8IP6xXZ+k7iAWQwSl
-         5tgo27Dgz90OYrLtMNwqbNC0L8qkzdg0qELvAM7JLYKblL0JQLoBzfZZawhcRaTyy1zb
-         toGA==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=eahJs5G9Mdp7rh5p/I+k7vqH+FYkCW5jQz7h0JzvSYE=;
+        b=ld2nwTE4rMisCwbNHb7yUIP2doQ7eYTtqakpMDUOWRL/3+bVkTn4LgPD3M4NsPc8O2
+         U+LO9YmBiZT4owUtv4ids8kH8liDKBfo8YI3c8LHjcZv3+lz0PBtPKmFpb4vc0pdWS4c
+         u7x0ozSNUV0Xsp9a8TkKhVhCVAxhTFSwUOULGhEA3bznCA4Ru8IDhFZuFs4NdDGLiipJ
+         akXN84GrcHH9gkLN/jJcVtqFl9SbwFJdziIgKTlDq5fdBt/y7ypE64QswcY78DSzndDf
+         WbuqnkRuGtuhqXnJ5KkaEcfXb7xIOXvRKQy2Mpog6yGNSdvg/R0PUKwJNaF/LWeg/yHU
+         unFg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=hEatEacjftOwz4doHq3a+8v1BhjzNMpi1Byas/pc+5I=;
-        b=rVy4SCaipkl/twxQucIWq2TSeQRRmmsn1ZPV7b6bmpDJM6uGt241Tv87EoW75/G+sO
-         8CD2taOvQFjeC+qUPMSrtPrZR1tRJKJDDAYjz3gJEmEj5k5S+14wofnZ4xWHDX6ZPZNm
-         ks981ad73kjlMMJwY9fwP/DFdHGT7XshK/+m8qst1LJ1kkNJj6FY+gJW442s7jK9kDER
-         ScS2HT3AHF5P+S8grzA10wO70k+JRRjCA/SIVALB5mupOxykSVV7dZpLzJXrnVVYS5a6
-         3etT4httKJ/0ggRdZ/mj1qDEaPTxsrhcxcF+5VO5ak8PrYd3ii8r8TtNm8lBZNGlvF7g
-         Q0Ew==
-X-Gm-Message-State: ANhLgQ09JQ0WaohuqbuDmc3frbyA4hrhCfBWZgYWex42aRiUC7HNQ3eZ
-        EHxlSaY4XxRsuED4G6AZ+K5U2MM+sFmP4Urdjoy1ww==
-X-Google-Smtp-Source: ADFU+vtL1ylpr6mkN2liOKuWC9LsnbbWZTmeEPaaf1PjfeJ5Vow+Wvh6/KDTtqvBQb2BMsD8+pqcY0V0qXXHDczMfnQ=
-X-Received: by 2002:a63:a062:: with SMTP id u34mr8214742pgn.286.1585223374630;
- Thu, 26 Mar 2020 04:49:34 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=eahJs5G9Mdp7rh5p/I+k7vqH+FYkCW5jQz7h0JzvSYE=;
+        b=b1MQn2xfUMPbXF25ehMT4nMuUbUK30ADLEzlbQAkO/cRRFthJEl2/i5bpFWN0GQ/SZ
+         9NQg7jvZDstnrPmhkR8A/4aYIrDP3QIEUe95kZkxrqNya3XDRcj0W6YW5Eeol8GGC5Ri
+         TNGCCBhj1rjOSFtC+DNRPR0TWUcXmvAxPSeYqYpV0t/SNh4QfreYpNc5fogM2jyxPVs/
+         Ur9PuI0yTwRw6Y4kC5hlPL/uQc1TXyMu6yruE8BgbpjMKhlH5oytx2Vqxzr/1e55nL+P
+         rsGdX6LBBbrwYkyZ58XuSBPYmaLKSUlMum3RLrwQOExH4m6HYaEQ7qUfn5LhN24YEANJ
+         C/aQ==
+X-Gm-Message-State: ANhLgQ1i/Ec9MKEkEGbvWehkJ4oWymIU4DAbXrehS13HlI2mMlqayHi1
+        XalyE0piiJ8deC8W1TsUYLMDyQ==
+X-Google-Smtp-Source: ADFU+vvprQ2//Xmt7vRhZyfPWsz4Wn3K6tH3zXOpvAnyFCnbpAFAq5YL7JRvr/M6BzqtQxC5bbcgxg==
+X-Received: by 2002:a63:8048:: with SMTP id j69mr8254402pgd.410.1585223426833;
+        Thu, 26 Mar 2020 04:50:26 -0700 (PDT)
+Received: from localhost ([122.171.118.46])
+        by smtp.gmail.com with ESMTPSA id 6sm1494245pfx.69.2020.03.26.04.50.25
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 26 Mar 2020 04:50:25 -0700 (PDT)
+Date:   Thu, 26 Mar 2020 17:20:23 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Sumit Gupta <sumitg@nvidia.com>
+Cc:     rjw@rjwysocki.net, catalin.marinas@arm.com, will@kernel.org,
+        thierry.reding@gmail.com, jonathanh@nvidia.com, talho@nvidia.com,
+        linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        bbasu@nvidia.com, mperttunen@nvidia.com
+Subject: Re: [TEGRA194_CPUFREQ Patch 2/3] cpufreq: Add Tegra194 cpufreq driver
+Message-ID: <20200326115023.xy3n5bl7uetuw7mx@vireshk-i7>
+References: <1575394348-17649-1-git-send-email-sumitg@nvidia.com>
+ <1575394348-17649-2-git-send-email-sumitg@nvidia.com>
 MIME-Version: 1.0
-References: <0000000000006678a105a184ecb7@google.com> <CADG63jCCECPjZWmJfhn9RyJwFvDK3SYQTb8X2GPkrGumAuRfJA@mail.gmail.com>
- <CAAeHK+xi8zjUb8Laigmy7eKHU-36nhXdW_dCXp_MB1nPaLBW4g@mail.gmail.com> <CADG63jCnB=uLLYwDnPteaRbAC__WKKDZCBo8Xru6uhLTGd30rA@mail.gmail.com>
-In-Reply-To: <CADG63jCnB=uLLYwDnPteaRbAC__WKKDZCBo8Xru6uhLTGd30rA@mail.gmail.com>
-From:   Andrey Konovalov <andreyknvl@google.com>
-Date:   Thu, 26 Mar 2020 12:49:23 +0100
-Message-ID: <CAAeHK+wn0s90vDV2XgLHdUdVSQBK5aMuqeU5W5An7KncGpJ=9A@mail.gmail.com>
-Subject: Re: KASAN: use-after-free Read in hfa384x_usbin_callback
-To:     Qiujun Huang <anenbupt@gmail.com>
-Cc:     syzbot <syzbot+a57b24d359dc5577634a@syzkaller.appspotmail.com>,
-        devel@driverdev.osuosl.org, Greg KH <gregkh@linuxfoundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        USB list <linux-usb@vger.kernel.org>, nishkadg.linux@gmail.com,
-        osdevtc@gmail.com, syzkaller-bugs <syzkaller-bugs@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1575394348-17649-2-git-send-email-sumitg@nvidia.com>
+User-Agent: NeoMutt/20180716-391-311a52
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-OK, then there's probably no need to test this one, if the other one
-was fixed by your patch.
+On 03-12-19, 23:02, Sumit Gupta wrote:
+> diff --git a/drivers/cpufreq/tegra194-cpufreq.c b/drivers/cpufreq/tegra194-cpufreq.c
+> new file mode 100644
+> index 0000000..9df12f4
+> --- /dev/null
+> +++ b/drivers/cpufreq/tegra194-cpufreq.c
+> @@ -0,0 +1,423 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright (c) 2019, NVIDIA CORPORATION. All rights reserved
+> + */
+> +
+> +#include <linux/cpu.h>
+> +#include <linux/cpufreq.h>
+> +#include <linux/delay.h>
+> +#include <linux/dma-mapping.h>
+> +#include <linux/module.h>
+> +#include <linux/of.h>
+> +#include <linux/of_platform.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/slab.h>
+> +
+> +#include <asm/smp_plat.h>
+> +
+> +#include <soc/tegra/bpmp.h>
+> +#include <soc/tegra/bpmp-abi.h>
+> +
+> +#define KHZ                     1000
+> +#define REF_CLK_MHZ             408 /* 408 MHz */
+> +#define US_DELAY                2000
+> +#define US_DELAY_MIN            2
+> +#define CPUFREQ_TBL_STEP_HZ     (50 * KHZ * KHZ)
+> +#define MAX_CNT                 ~0U
+> +
+> +/* cpufreq transisition latency */
+> +#define TEGRA_CPUFREQ_TRANSITION_LATENCY (300 * 1000) /* unit in nanoseconds */
+> +
+> +enum cluster {
+> +	CLUSTER0,
+> +	CLUSTER1,
+> +	CLUSTER2,
+> +	CLUSTER3,
 
-On Thu, Mar 26, 2020 at 12:48 PM Qiujun Huang <anenbupt@gmail.com> wrote:
->
-> Yes, they have the same root cause.
->
-> On Thu, Mar 26, 2020 at 6:45 PM Andrey Konovalov <andreyknvl@google.com> wrote:
-> >
-> > On Thu, Mar 26, 2020 at 3:52 AM Qiujun Huang <anenbupt@gmail.com> wrote:
-> > >
-> > > #syz test: https://github.com/google/kasan.git e17994d1
-> >
-> > Hi Qiujun,
-> >
-> > I've already duped this bug to "KASAN: slab-out-of-bounds Read in
-> > hfa384x_usbin_callback" since I had assumed they have the same root
-> > cause. Are those bugs different? We can undup if needed.
-> >
-> > Thanks!
-> >
-> > >
-> > > On Mon, Mar 23, 2020 at 8:39 PM syzbot
-> > > <syzbot+a57b24d359dc5577634a@syzkaller.appspotmail.com> wrote:
-> > > >
-> > > > Hello,
-> > > >
-> > > > syzbot found the following crash on:
-> > > >
-> > > > HEAD commit:    e17994d1 usb: core: kcov: collect coverage from usb comple..
-> > > > git tree:       https://github.com/google/kasan.git usb-fuzzer
-> > > > console output: https://syzkaller.appspot.com/x/log.txt?x=15217373e00000
-> > > > kernel config:  https://syzkaller.appspot.com/x/.config?x=5d64370c438bc60
-> > > > dashboard link: https://syzkaller.appspot.com/bug?extid=a57b24d359dc5577634a
-> > > > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> > > > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=14a720ade00000
-> > > > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1467b755e00000
-> > > >
-> > > > IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> > > > Reported-by: syzbot+a57b24d359dc5577634a@syzkaller.appspotmail.com
-> > > >
-> > > > ==================================================================
-> > > > BUG: KASAN: use-after-free in memcpy include/linux/string.h:381 [inline]
-> > > > BUG: KASAN: use-after-free in skb_put_data include/linux/skbuff.h:2284 [inline]
-> > > > BUG: KASAN: use-after-free in hfa384x_int_rxmonitor drivers/staging/wlan-ng/hfa384x_usb.c:3412 [inline]
-> > > > BUG: KASAN: use-after-free in hfa384x_usbin_rx drivers/staging/wlan-ng/hfa384x_usb.c:3312 [inline]
-> > > > BUG: KASAN: use-after-free in hfa384x_usbin_callback+0x1993/0x2360 drivers/staging/wlan-ng/hfa384x_usb.c:3026
-> > > > Read of size 34945 at addr ffff8881cda9f33c by task swapper/0/0
-> > > >
-> > > > CPU: 0 PID: 0 Comm: swapper/0 Not tainted 5.6.0-rc5-syzkaller #0
-> > > > Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-> > > > Call Trace:
-> > > >  <IRQ>
-> > > >  __dump_stack lib/dump_stack.c:77 [inline]
-> > > >  dump_stack+0xef/0x16e lib/dump_stack.c:118
-> > > >  print_address_description.constprop.0.cold+0xd3/0x314 mm/kasan/report.c:374
-> > > >  __kasan_report.cold+0x37/0x77 mm/kasan/report.c:506
-> > > >  kasan_report+0xe/0x20 mm/kasan/common.c:641
-> > > >  check_memory_region_inline mm/kasan/generic.c:185 [inline]
-> > > >  check_memory_region+0x152/0x1c0 mm/kasan/generic.c:192
-> > > >  memcpy+0x20/0x50 mm/kasan/common.c:127
-> > > >  memcpy include/linux/string.h:381 [inline]
-> > > >  skb_put_data include/linux/skbuff.h:2284 [inline]
-> > > >  hfa384x_int_rxmonitor drivers/staging/wlan-ng/hfa384x_usb.c:3412 [inline]
-> > > >  hfa384x_usbin_rx drivers/staging/wlan-ng/hfa384x_usb.c:3312 [inline]
-> > > >  hfa384x_usbin_callback+0x1993/0x2360 drivers/staging/wlan-ng/hfa384x_usb.c:3026
-> > > >  __usb_hcd_giveback_urb+0x29a/0x550 drivers/usb/core/hcd.c:1650
-> > > >  usb_hcd_giveback_urb+0x368/0x420 drivers/usb/core/hcd.c:1716
-> > > >  dummy_timer+0x1258/0x32ae drivers/usb/gadget/udc/dummy_hcd.c:1966
-> > > >  call_timer_fn+0x195/0x6f0 kernel/time/timer.c:1404
-> > > >  expire_timers kernel/time/timer.c:1449 [inline]
-> > > >  __run_timers kernel/time/timer.c:1773 [inline]
-> > > >  __run_timers kernel/time/timer.c:1740 [inline]
-> > > >  run_timer_softirq+0x5f9/0x1500 kernel/time/timer.c:1786
-> > > >  __do_softirq+0x21e/0x950 kernel/softirq.c:292
-> > > >  invoke_softirq kernel/softirq.c:373 [inline]
-> > > >  irq_exit+0x178/0x1a0 kernel/softirq.c:413
-> > > >  exiting_irq arch/x86/include/asm/apic.h:546 [inline]
-> > > >  smp_apic_timer_interrupt+0x141/0x540 arch/x86/kernel/apic/apic.c:1146
-> > > >  apic_timer_interrupt+0xf/0x20 arch/x86/entry/entry_64.S:829
-> > > >  </IRQ>
-> > > > RIP: 0010:default_idle+0x28/0x300 arch/x86/kernel/process.c:696
-> > > > Code: cc cc 41 56 41 55 65 44 8b 2d 44 77 72 7a 41 54 55 53 0f 1f 44 00 00 e8 b6 62 b5 fb e9 07 00 00 00 0f 00 2d ea 0c 53 00 fb f4 <65> 44 8b 2d 20 77 72 7a 0f 1f 44 00 00 5b 5d 41 5c 41 5d 41 5e c3
-> > > > RSP: 0018:ffffffff87007d80 EFLAGS: 00000246 ORIG_RAX: ffffffffffffff13
-> > > > RAX: 0000000000000007 RBX: ffffffff8702cc40 RCX: 0000000000000000
-> > > > RDX: 0000000000000000 RSI: 0000000000000006 RDI: ffffffff8702d48c
-> > > > RBP: fffffbfff0e05988 R08: ffffffff8702cc40 R09: 0000000000000000
-> > > > R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000000
-> > > > R13: 0000000000000000 R14: ffffffff87e607c0 R15: 0000000000000000
-> > > >  cpuidle_idle_call kernel/sched/idle.c:154 [inline]
-> > > >  do_idle+0x3e0/0x500 kernel/sched/idle.c:269
-> > > >  cpu_startup_entry+0x14/0x20 kernel/sched/idle.c:361
-> > > >  start_kernel+0xe16/0xe5a init/main.c:998
-> > > >  secondary_startup_64+0xb6/0xc0 arch/x86/kernel/head_64.S:242
-> > > >
-> > > > The buggy address belongs to the page:
-> > > > page:ffffea000736a600 refcount:32769 mapcount:0 mapping:0000000000000000 index:0x0 compound_mapcount: 0
-> > > > flags: 0x200000000010000(head)
-> > > > raw: 0200000000010000 dead000000000100 dead000000000122 0000000000000000
-> > > > raw: 0000000000000000 0000000000000000 00008001ffffffff 0000000000000000
-> > > > page dumped because: kasan: bad access detected
-> > > >
-> > > > Memory state around the buggy address:
-> > > >  ffff8881cda9ff00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-> > > >  ffff8881cda9ff80: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-> > > > >ffff8881cdaa0000: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-> > > >                    ^
-> > > >  ffff8881cdaa0080: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-> > > >  ffff8881cdaa0100: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-> > > > ==================================================================
-> > > >
-> > > >
-> > > > ---
-> > > > This bug is generated by a bot. It may contain errors.
-> > > > See https://goo.gl/tpsmEJ for more information about syzbot.
-> > > > syzbot engineers can be reached at syzkaller@googlegroups.com.
-> > > >
-> > > > syzbot will keep track of this bug report. See:
-> > > > https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-> > > > syzbot can test patches for this bug, for details see:
-> > > > https://goo.gl/tpsmEJ#testing-patches
+All these have same CPUs ? Or big little kind of stuff ? How come they
+have different frequency tables ?
+
+> +	MAX_CLUSTERS,
+> +};
+> +
+> +struct tegra194_cpufreq_data {
+> +	void __iomem *regs;
+> +	size_t num_clusters;
+> +	struct cpufreq_frequency_table **tables;
+> +};
+> +
+> +static DEFINE_MUTEX(cpufreq_lock);
+> +
+> +struct tegra_cpu_ctr {
+> +	u32 cpu;
+> +	u32 delay;
+> +	u32 coreclk_cnt, last_coreclk_cnt;
+> +	u32 refclk_cnt, last_refclk_cnt;
+> +};
+> +
+> +static struct workqueue_struct *read_counters_wq;
+> +struct read_counters_work {
+> +	struct work_struct work;
+> +	struct tegra_cpu_ctr c;
+> +};
+> +
+> +static enum cluster get_cpu_cluster(u8 cpu)
+> +{
+> +	return MPIDR_AFFINITY_LEVEL(cpu_logical_map(cpu), 1);
+> +}
+> +
+> +/*
+> + * Read per-core Read-only system register NVFREQ_FEEDBACK_EL1.
+> + * The register provides frequency feedback information to
+> + * determine the average actual frequency a core has run at over
+> + * a period of time.
+> + *	[31:0] PLLP counter: Counts at fixed frequency (408 MHz)
+> + *	[63:32] Core clock counter: counts on every core clock cycle
+> + *			where the core is architecturally clocking
+> + */
+> +static u64 read_freq_feedback(void)
+> +{
+> +	u64 val = 0;
+> +
+> +	asm volatile("mrs %0, s3_0_c15_c0_5" : "=r" (val) : );
+> +
+> +	return val;
+> +}
+> +
+> +u16 map_freq_to_ndiv(struct mrq_cpu_ndiv_limits_response *nltbl, u32 freq)
+> +{
+> +	return DIV_ROUND_UP(freq * nltbl->pdiv * nltbl->mdiv,
+> +			    nltbl->ref_clk_hz / KHZ);
+> +}
+> +
+> +static inline u32 map_ndiv_to_freq(struct mrq_cpu_ndiv_limits_response
+> +				   *nltbl, u16 ndiv)
+> +{
+> +	return nltbl->ref_clk_hz / KHZ * ndiv / (nltbl->pdiv * nltbl->mdiv);
+> +}
+> +
+> +static void tegra_read_counters(struct work_struct *work)
+> +{
+> +	struct read_counters_work *read_counters_work;
+> +	struct tegra_cpu_ctr *c;
+> +	u64 val;
+> +
+> +	/*
+> +	 * ref_clk_counter(32 bit counter) runs on constant clk,
+> +	 * pll_p(408MHz).
+> +	 * It will take = 2 ^ 32 / 408 MHz to overflow ref clk counter
+> +	 *              = 10526880 usec = 10.527 sec to overflow
+> +	 *
+> +	 * Like wise core_clk_counter(32 bit counter) runs on core clock.
+> +	 * It's synchronized to crab_clk (cpu_crab_clk) which runs at
+> +	 * freq of cluster. Assuming max cluster clock ~2000MHz,
+> +	 * It will take = 2 ^ 32 / 2000 MHz to overflow core clk counter
+> +	 *              = ~2.147 sec to overflow
+> +	 */
+> +	read_counters_work = container_of(work, struct read_counters_work,
+> +					  work);
+> +	c = &read_counters_work->c;
+> +
+> +	val = read_freq_feedback();
+> +	c->last_refclk_cnt = lower_32_bits(val);
+> +	c->last_coreclk_cnt = upper_32_bits(val);
+> +	udelay(c->delay);
+> +	val = read_freq_feedback();
+> +	c->refclk_cnt = lower_32_bits(val);
+> +	c->coreclk_cnt = upper_32_bits(val);
+> +}
+> +
+> +/*
+> + * Return instantaneous cpu speed
+> + * Instantaneous freq is calculated as -
+> + * -Takes sample on every query of getting the freq.
+> + *	- Read core and ref clock counters;
+> + *	- Delay for X us
+> + *	- Read above cycle counters again
+> + *	- Calculates freq by subtracting current and previous counters
+> + *	  divided by the delay time or eqv. of ref_clk_counter in delta time
+> + *	- Return Kcycles/second, freq in KHz
+> + *
+> + *	delta time period = x sec
+> + *			  = delta ref_clk_counter / (408 * 10^6) sec
+> + *	freq in Hz = cycles/sec
+> + *		   = (delta cycles / x sec
+> + *		   = (delta cycles * 408 * 10^6) / delta ref_clk_counter
+> + *	in KHz	   = (delta cycles * 408 * 10^3) / delta ref_clk_counter
+> + *
+> + * @cpu - logical cpu whose freq to be updated
+> + * Returns freq in KHz on success, 0 if cpu is offline
+> + */
+> +static unsigned int tegra194_get_speed_common(u32 cpu, u32 delay)
+> +{
+> +	struct read_counters_work read_counters_work;
+> +	struct tegra_cpu_ctr c;
+> +	u32 delta_refcnt;
+> +	u32 delta_ccnt;
+> +	u32 rate_mhz;
+> +
+> +	read_counters_work.c.cpu = cpu;
+> +	read_counters_work.c.delay = delay;
+> +	INIT_WORK_ONSTACK(&read_counters_work.work, tegra_read_counters);
+> +	queue_work_on(cpu, read_counters_wq, &read_counters_work.work);
+> +	flush_work(&read_counters_work.work);
+
+Why can't this be done in current context ?
+
+> +	c = read_counters_work.c;
+> +
+> +	if (c.coreclk_cnt < c.last_coreclk_cnt)
+> +		delta_ccnt = c.coreclk_cnt + (MAX_CNT - c.last_coreclk_cnt);
+> +	else
+> +		delta_ccnt = c.coreclk_cnt - c.last_coreclk_cnt;
+> +	if (!delta_ccnt)
+> +		return 0;
+> +
+> +	/* ref clock is 32 bits */
+> +	if (c.refclk_cnt < c.last_refclk_cnt)
+> +		delta_refcnt = c.refclk_cnt + (MAX_CNT - c.last_refclk_cnt);
+> +	else
+> +		delta_refcnt = c.refclk_cnt - c.last_refclk_cnt;
+> +	if (!delta_refcnt) {
+> +		pr_debug("cpufreq: %d is idle, delta_refcnt: 0\n", cpu);
+> +		return 0;
+> +	}
+> +	rate_mhz = ((unsigned long)(delta_ccnt * REF_CLK_MHZ)) / delta_refcnt;
+> +
+> +	return (rate_mhz * KHZ); /* in KHz */
+> +}
+> +
+> +static unsigned int tegra194_get_speed(u32 cpu)
+> +{
+> +	return tegra194_get_speed_common(cpu, US_DELAY);
+> +}
+> +
+> +static unsigned int tegra194_fast_get_speed(u32 cpu)
+> +{
+> +	return tegra194_get_speed_common(cpu, US_DELAY_MIN);
+
+Why is this required specially here ? Why can't you work with normal
+delay ?
+
+> +}
+> +
+> +static int tegra194_cpufreq_init(struct cpufreq_policy *policy)
+> +{
+> +	struct tegra194_cpufreq_data *data = cpufreq_get_driver_data();
+> +	int cluster = get_cpu_cluster(policy->cpu);
+> +
+> +	if (cluster >= data->num_clusters)
+> +		return -EINVAL;
+> +
+> +	policy->cur = tegra194_fast_get_speed(policy->cpu); /* boot freq */
+> +
+> +	/* set same policy for all cpus */
+> +	cpumask_copy(policy->cpus, cpu_possible_mask);
+
+You are copying cpu_possible_mask mask here, and so this routine will
+get called only once.
+
+I still don't understand the logic behind clusters and frequency
+tables.
+
+> +
+> +	policy->freq_table = data->tables[cluster];
+> +	policy->cpuinfo.transition_latency = TEGRA_CPUFREQ_TRANSITION_LATENCY;
+> +
+> +	return 0;
+> +}
+> +
+> +static void set_cpu_ndiv(void *data)
+> +{
+> +	struct cpufreq_frequency_table *tbl = data;
+> +	u64 ndiv_val = (u64)tbl->driver_data;
+> +
+> +	asm volatile("msr s3_0_c15_c0_4, %0" : : "r" (ndiv_val));
+> +}
+> +
+> +static int tegra194_cpufreq_set_target(struct cpufreq_policy *policy,
+> +				       unsigned int index)
+> +{
+> +	struct cpufreq_frequency_table *tbl = policy->freq_table + index;
+> +	static struct cpufreq_freqs freqs;
+> +
+> +	mutex_lock(&cpufreq_lock);
+
+No need of lock here.
+
+> +	freqs.old = policy->cur;
+> +	freqs.new = tbl->frequency;
+> +
+> +	cpufreq_freq_transition_begin(policy, &freqs);
+> +	on_each_cpu_mask(policy->cpus, set_cpu_ndiv, tbl, true);
+
+When CPUs share clock line, why is this required for every CPU ?
+
+> +	cpufreq_freq_transition_end(policy, &freqs, 0);
+> +
+> +	mutex_unlock(&cpufreq_lock);
+> +
+> +	return 0;
+> +}
+> +
+> +static struct cpufreq_driver tegra194_cpufreq_driver = {
+> +	.name = "tegra194",
+> +	.flags = CPUFREQ_STICKY | CPUFREQ_CONST_LOOPS |
+> +		CPUFREQ_NEED_INITIAL_FREQ_CHECK | CPUFREQ_ASYNC_NOTIFICATION,
+
+Why Async here ? I am really confused if I am not able to understand
+the driver or you :)
+
+> +	.verify = cpufreq_generic_frequency_table_verify,
+> +	.target_index = tegra194_cpufreq_set_target,
+> +	.get = tegra194_get_speed,
+> +	.init = tegra194_cpufreq_init,
+> +	.attr = cpufreq_generic_attr,
+> +};
+> +
+> +static void tegra194_cpufreq_free_resources(void)
+> +{
+> +	flush_workqueue(read_counters_wq);
+> +	destroy_workqueue(read_counters_wq);
+> +}
+> +
+> +static struct cpufreq_frequency_table *init_freq_table
+
+Don't break line here, rather break after above *.
+
+> +		(struct platform_device *pdev, struct tegra_bpmp *bpmp,
+> +		 unsigned int cluster_id)
+> +{
+> +	struct cpufreq_frequency_table *opp_table;
+
+Please name it freq_table :)
+
+> +	struct mrq_cpu_ndiv_limits_response resp;
+> +	unsigned int num_freqs, ndiv, delta_ndiv;
+> +	struct mrq_cpu_ndiv_limits_request req;
+> +	struct tegra_bpmp_message msg;
+> +	u16 freq_table_step_size;
+> +	int err, index;
+> +
+> +	memset(&req, 0, sizeof(req));
+> +	req.cluster_id = cluster_id;
+> +
+> +	memset(&msg, 0, sizeof(msg));
+> +	msg.mrq = MRQ_CPU_NDIV_LIMITS;
+> +	msg.tx.data = &req;
+> +	msg.tx.size = sizeof(req);
+> +	msg.rx.data = &resp;
+> +	msg.rx.size = sizeof(resp);
+> +
+> +	err = tegra_bpmp_transfer(bpmp, &msg);
+> +	if (err)
+> +		return ERR_PTR(err);
+> +
+> +	/*
+> +	 * Make sure frequency table step is a multiple of mdiv to match
+> +	 * vhint table granularity.
+> +	 */
+> +	freq_table_step_size = resp.mdiv *
+> +			DIV_ROUND_UP(CPUFREQ_TBL_STEP_HZ, resp.ref_clk_hz);
+> +
+> +	dev_dbg(&pdev->dev, "cluster %d: frequency table step size: %d\n",
+> +		cluster_id, freq_table_step_size);
+> +
+> +	delta_ndiv = resp.ndiv_max - resp.ndiv_min;
+> +
+> +	if (unlikely(delta_ndiv == 0))
+> +		num_freqs = 1;
+> +	else
+> +		/* We store both ndiv_min and ndiv_max hence the +1 */
+> +		num_freqs = delta_ndiv / freq_table_step_size + 1;
+> +
+> +	num_freqs += (delta_ndiv % freq_table_step_size) ? 1 : 0;
+> +
+> +	opp_table = devm_kcalloc(&pdev->dev, num_freqs + 1, sizeof(*opp_table),
+> +				 GFP_KERNEL);
+> +	if (!opp_table)
+> +		return ERR_PTR(-ENOMEM);
+> +
+> +	for (index = 0, ndiv = resp.ndiv_min;
+> +			ndiv < resp.ndiv_max;
+> +			index++, ndiv += freq_table_step_size) {
+> +		opp_table[index].driver_data = ndiv;
+> +		opp_table[index].frequency = map_ndiv_to_freq(&resp, ndiv);
+> +	}
+> +
+> +	opp_table[index].driver_data = resp.ndiv_max;
+> +	opp_table[index++].frequency = map_ndiv_to_freq(&resp, resp.ndiv_max);
+> +	opp_table[index].frequency = CPUFREQ_TABLE_END;
+> +
+> +	return opp_table;
+> +}
+> +
+> +static int tegra194_cpufreq_probe(struct platform_device *pdev)
+> +{
+> +	struct tegra194_cpufreq_data *data;
+> +	struct tegra_bpmp *bpmp;
+> +	int err, i;
+> +
+> +	data = devm_kzalloc(&pdev->dev, sizeof(*data), GFP_KERNEL);
+> +	if (!data)
+> +		return -ENOMEM;
+> +
+> +	data->num_clusters = MAX_CLUSTERS;
+> +	data->tables = devm_kcalloc(&pdev->dev, data->num_clusters,
+> +				    sizeof(*data->tables), GFP_KERNEL);
+> +	if (!data->tables)
+> +		return -ENOMEM;
+> +
+> +	platform_set_drvdata(pdev, data);
+> +
+> +	read_counters_wq = alloc_workqueue("read_counters_wq", __WQ_LEGACY, 1);
+> +	if (!read_counters_wq) {
+> +		dev_err(&pdev->dev, "fail to create_workqueue\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	bpmp = of_tegra_bpmp_get();
+> +	if (IS_ERR(bpmp)) {
+> +		err = PTR_ERR(bpmp);
+> +		goto err_free_res;
+> +	}
+> +
+> +	for (i = 0; i < data->num_clusters; i++) {
+> +		data->tables[i] = init_freq_table(pdev, bpmp, i);
+> +		if (IS_ERR(data->tables[i])) {
+> +			err = PTR_ERR(data->tables[i]);
+> +			goto put_bpmp;
+> +		}
+> +	}
+> +
+> +	tegra_bpmp_put(bpmp);
+> +
+> +	tegra194_cpufreq_driver.driver_data = data;
+> +
+> +	err = cpufreq_register_driver(&tegra194_cpufreq_driver);
+> +	if (err)
+> +		goto err_free_res;
+> +
+> +	return err;
+> +
+> +put_bpmp:
+> +	tegra_bpmp_put(bpmp);
+> +err_free_res:
+> +	tegra194_cpufreq_free_resources();
+> +	return err;
+> +}
+> +
+> +static int tegra194_cpufreq_remove(struct platform_device *pdev)
+> +{
+> +	cpufreq_unregister_driver(&tegra194_cpufreq_driver);
+> +	tegra194_cpufreq_free_resources();
+> +
+> +	return 0;
+> +}
+> +
+> +static struct platform_driver tegra194_cpufreq_platform_driver = {
+> +	.driver = {
+> +		.name = "tegra194-cpufreq",
+> +	},
+> +	.probe = tegra194_cpufreq_probe,
+> +	.remove = tegra194_cpufreq_remove,
+> +};
+> +
+> +static int __init tegra_cpufreq_init(void)
+
+I seem to be forgetting this, but should we use __init with modules or
+not ?
+
+-- 
+viresh
