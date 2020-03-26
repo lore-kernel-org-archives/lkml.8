@@ -2,224 +2,130 @@ Return-Path: <SRS0=aGSP=5L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17AF1C43331
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 14:16:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76357C2D0E5
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 14:17:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D7252206F8
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 14:16:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 470DB20737
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 14:17:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NFhbFZ9g"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="pwpUmBWd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727685AbgCZOQa (ORCPT
+        id S1727925AbgCZORL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 10:16:30 -0400
-Received: from us-smtp-delivery-74.mimecast.com ([63.128.21.74]:38622 "EHLO
-        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727770AbgCZOQa (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 10:16:30 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1585232189;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=f7w6Vl0XLJbOpxQoLSR8Ve0OMcQclxwBm4RvSOfYO9M=;
-        b=NFhbFZ9gvMEZVrRdWu4X2nvftN9i3SkJd+AaGFJqnxPB5VBIh9isWt206uoED7rty6JLhq
-        ZGOMwUNvtzpbp4NESZKKSz3dSziB1zItFo07DqvHhbNxtYqSagWOAPLt5qa5qd945H3eCQ
-        a/fZ02Dv8MVY0HEdU/ykcD5FwQmSMq4=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-284-wrR2ZpgVOkuBifS17cd2eg-1; Thu, 26 Mar 2020 10:16:27 -0400
-X-MC-Unique: wrR2ZpgVOkuBifS17cd2eg-1
-Received: by mail-wm1-f70.google.com with SMTP id t22so2220415wmt.4
-        for <linux-kernel@vger.kernel.org>; Thu, 26 Mar 2020 07:16:27 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=f7w6Vl0XLJbOpxQoLSR8Ve0OMcQclxwBm4RvSOfYO9M=;
-        b=FwB+0D6X9l3bTn+aMWO6Fybk2drSSpR9P4bIYKSZUo8gvvbOoLZVLFfdgouvAhaI0d
-         aNFy028jDW+480c6Qp2gDzEUDoBIMVtLy5mKuW4zJ0qJMk82SFO8cSgtqUEwSrq9c+C5
-         JijTd1aMtKkPU1e3fJQjVkxNCEu8Bxq1z+576gZu4z8k/cL4ZsyQVgK5T84YirhY/lWM
-         n8NcCw0mcsnw14tRqj3WX9fNjg/+tEQ5e45NTlGZQsArFkAEPHsU6cyzIKfR9CALOYK7
-         AgnNLmGnNeRAC1DX1AVU9gdIYH4gZoy/bYw0Pl0J6hlm+/Nn4x6ZKJXykJB+jLhfLVdm
-         HXAA==
-X-Gm-Message-State: ANhLgQ1bHK8MYZAseWKJE8300aG+wY0hTsk7PowAvpNXEYoXpT+TFYx1
-        v9pBDytis20ZjQu+lI6tLwImyUim6IaOHzUT4vnMiUk3YxiHmdhgWNj8KZs/OtdjuKM7MptD6tB
-        fMc7WGgqs7XKt5FPoz6LrepKw
-X-Received: by 2002:adf:f38e:: with SMTP id m14mr9878035wro.54.1585232184432;
-        Thu, 26 Mar 2020 07:16:24 -0700 (PDT)
-X-Google-Smtp-Source: ADFU+vugg3n0UD8IZObgwEpfCYiaBcBTNKjAKcrVHB0t/Zjgb+Mx2WmcTJRMpi9ejxcFBZCS/EPK9g==
-X-Received: by 2002:adf:f38e:: with SMTP id m14mr9878006wro.54.1585232184109;
-        Thu, 26 Mar 2020 07:16:24 -0700 (PDT)
-Received: from vitty.brq.redhat.com (g-server-2.ign.cz. [91.219.240.2])
-        by smtp.gmail.com with ESMTPSA id b15sm3702502wru.70.2020.03.26.07.16.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 26 Mar 2020 07:16:23 -0700 (PDT)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     "Andrea Parri \(Microsoft\)" <parri.andrea@gmail.com>,
-        Dexuan Cui <decui@microsoft.com>
-Cc:     "K . Y . Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>, linux-hyperv@vger.kernel.org,
-        Michael Kelley <mikelley@microsoft.com>,
-        Boqun Feng <boqun.feng@gmail.com>, linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH 02/11] Drivers: hv: vmbus: Don't bind the offer&rescind works to a specific CPU
-In-Reply-To: <20200325225505.23998-3-parri.andrea@gmail.com>
-References: <20200325225505.23998-1-parri.andrea@gmail.com> <20200325225505.23998-3-parri.andrea@gmail.com>
-Date:   Thu, 26 Mar 2020 15:16:21 +0100
-Message-ID: <871rpf5hhm.fsf@vitty.brq.redhat.com>
+        Thu, 26 Mar 2020 10:17:11 -0400
+Received: from mail-eopbgr80080.outbound.protection.outlook.com ([40.107.8.80]:9447
+        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727751AbgCZORL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Mar 2020 10:17:11 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=bjlQa9HgI+twreTv1Hv6oJmaNjbki1o2sjaxpm9de3dHOHNHO8hiHXZLXr6iPUWUSWmqcteY0WpnOJzDmgYVpVeRDP+Q5Unl/Za6dEm64C4KLnWDSKZqDwFoZE0K5w80I5pi3yaalRMmMNbkHoQJ0Cqr3j8Y24MsYROpJtpa2GIABlWz5ogKALfykt4OIsh7DlXTeSRIghzaSpkI5MukH0DWt4jIqXPx9GNNrpqfh+GsAsO8jTqdMgFh8+Cg1kOqLK0F75j9Sgf9JIMe0d3WtRBuie5Q3F78OsOF+rzoPYUIz3k3nL2OERpLKVtoNJOh1UaxL03j23wwAHvsXKmkrQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=1xRMCs5XdbSctT6VGReAGpgj7mfw20McXX7MyGgey5c=;
+ b=Z5UWfAPuenbdb/E2l0YmqgigiAxXQZXSYrisQtU22Gyu93/yrmLGD4mh9WBnrCzXy6KkCkM5HoUR6/Z2ridw1zUNu7u44MSnsaUOok2VniI7ly+wqLuL7cMSdT2nT47VoaepSuGt5MlfTuRw2biHYIHBnQwGicoQ71uVa812kHh4R3/A7yQEhaMtWPh8WkBJiclnlgBmUx9A24uEnogwE5844tl727T9yqokz8Ug+x8/N7DvQDb4Y7hx5CXW+C2c0+wCAyZeW0pZcqB0FYH+3E5YW7ihfGPjEOReHQhKu/8KJeP7FrzD86dB7v+BS21mj4sVsBS5M0i89aJbgEEUPw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=1xRMCs5XdbSctT6VGReAGpgj7mfw20McXX7MyGgey5c=;
+ b=pwpUmBWd1E60RkmOcXNYhJEPM1fneMG6ZMadb7VbVSMwtMQmE4y1wg0rSB1rwYyjtCqUUQMNLapmdU/SmGhdg3HXrpGBUo4NdbSWiPSMSk7p4HktaLzn+DuKFcplV9fji0g/L7YodWOKvSC01nnF5MnbMTaBHoggT62jOT/MpsQ=
+Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com (52.134.72.18) by
+ DB3PR0402MB3865.eurprd04.prod.outlook.com (52.134.73.19) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2835.22; Thu, 26 Mar 2020 14:17:05 +0000
+Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com
+ ([fe80::3143:c46:62e4:8a8b]) by DB3PR0402MB3916.eurprd04.prod.outlook.com
+ ([fe80::3143:c46:62e4:8a8b%7]) with mapi id 15.20.2835.023; Thu, 26 Mar 2020
+ 14:17:05 +0000
+From:   Anson Huang <anson.huang@nxp.com>
+To:     Daniel Lezcano <daniel.lezcano@linaro.org>,
+        "rui.zhang@intel.com" <rui.zhang@intel.com>,
+        "amit.kucheria@verdurent.com" <amit.kucheria@verdurent.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+CC:     dl-linux-imx <linux-imx@nxp.com>
+Subject: RE: [PATCH] thermal: imx: Add missing of_node_put()
+Thread-Topic: [PATCH] thermal: imx: Add missing of_node_put()
+Thread-Index: AQHWAzBAgRLyKlHtTk2Dsujd2fCjGqha6SaAgAABlyA=
+Date:   Thu, 26 Mar 2020 14:17:05 +0000
+Message-ID: <DB3PR0402MB3916F370C524F3F8CE590167F5CF0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+References: <1585200445-16461-1-git-send-email-Anson.Huang@nxp.com>
+ <8325cde9-02f3-b913-b020-4c98d19936f4@linaro.org>
+In-Reply-To: <8325cde9-02f3-b913-b020-4c98d19936f4@linaro.org>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=anson.huang@nxp.com; 
+x-originating-ip: [119.31.174.68]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: ba938f9a-0f00-4771-59fb-08d7d1905c86
+x-ms-traffictypediagnostic: DB3PR0402MB3865:|DB3PR0402MB3865:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DB3PR0402MB3865D6D42F57C637AFD29BBDF5CF0@DB3PR0402MB3865.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:1923;
+x-forefront-prvs: 0354B4BED2
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(396003)(376002)(346002)(366004)(39860400002)(2906002)(66556008)(66476007)(66446008)(55016002)(8676002)(316002)(64756008)(66946007)(5660300002)(86362001)(7416002)(71200400001)(9686003)(110136005)(7696005)(33656002)(52536014)(26005)(81166006)(44832011)(478600001)(4326008)(76116006)(53546011)(81156014)(8936002)(6506007)(186003)(921003)(1121003);DIR:OUT;SFP:1101;SCL:1;SRVR:DB3PR0402MB3865;H:DB3PR0402MB3916.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: qSWLBoj/p6fNgEdU3KD7xRMF16qBlT+xNQkHhuae6EvlAvTEXzi6xZ8iT8K/SvYP71Q3aQco2MCmUdegW0nLQCoZlZPnGQ667GO3BqIlyafUHD9qmjSAlzKmXx82axKBF9qgQcn0F/3J0wJyssVhYSon0OZZ5Sj8cuvKM4Jpm3i5ofO7flgJTnKKRZOXgaTWgkrmYV70UpSrLVSzLUN0LJvLVb0lt2FD+1JkfzAZtM4cctco31K/qrDZIKDaQej4dTAXe2evut4b9DiQuCDSPDZILro7tKeRtcVbjTppUsUiSpLZHuklntis6TJGgnho0ZpjdYad1c0wl7a0IMmdUvXL/C+2Ig5iPrHlWNDRC6DNBN1eN2Sxt2d0pBPuoOp2WdCVrB1+RQmzc8avZgDdEujwDGwrEeeOZxwmvsHqafRokjGHyOgTguI8Kqv7t7WYm3GasKn0d6mHYgQZOPPWyOwUyeA+KqGpiMv14pQqsZKnrka0SY9d64bf0kxoudqW
+x-ms-exchange-antispam-messagedata: gE/0lHS7dG4g/Pamo49kCnc32z8NiJAq1jqQJ71iYRS122shG4KV32FCvtYQnocMXlwJmaVidBjAUIa/9xIDMIW1JLLSJMJiM8U5VmamuEfn1XgYffs4aqTfDwAqvjddIuHWYMAujFW71ejNw6k62A==
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: ba938f9a-0f00-4771-59fb-08d7d1905c86
+X-MS-Exchange-CrossTenant-originalarrivaltime: 26 Mar 2020 14:17:05.1840
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: PdiKLiBjDF0tPqWcat0h528FQDWxOa7XzkFRdS2vDhi9MUjAyRLFuQrWtjGggFYdqgZwb+5Qf36hHBV22s0i2A==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB3PR0402MB3865
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-"Andrea Parri (Microsoft)" <parri.andrea@gmail.com> writes:
-
-> The offer and rescind works are currently scheduled on the so called
-> "connect CPU".  However, this is not really needed: we can synchronize
-> the works by relying on the usage of the offer_in_progress counter and
-> of the channel_mutex mutex.  This synchronization is already in place.
-> So, remove this unnecessary "bind to the connect CPU" constraint and
-> update the inline comments accordingly.
->
-> Suggested-by: Dexuan Cui <decui@microsoft.com>
-> Signed-off-by: Andrea Parri (Microsoft) <parri.andrea@gmail.com>
-> ---
->  drivers/hv/channel_mgmt.c | 21 ++++++++++++++++-----
->  drivers/hv/vmbus_drv.c    | 39 ++++++++++++++++++++++++++++-----------
->  2 files changed, 44 insertions(+), 16 deletions(-)
->
-> diff --git a/drivers/hv/channel_mgmt.c b/drivers/hv/channel_mgmt.c
-> index 0370364169c4e..1191f3d76d111 100644
-> --- a/drivers/hv/channel_mgmt.c
-> +++ b/drivers/hv/channel_mgmt.c
-> @@ -1025,11 +1025,22 @@ static void vmbus_onoffer_rescind(struct vmbus_channel_message_header *hdr)
->  	 * offer comes in first and then the rescind.
->  	 * Since we process these events in work elements,
->  	 * and with preemption, we may end up processing
-> -	 * the events out of order. Given that we handle these
-> -	 * work elements on the same CPU, this is possible only
-> -	 * in the case of preemption. In any case wait here
-> -	 * until the offer processing has moved beyond the
-> -	 * point where the channel is discoverable.
-> +	 * the events out of order.  We rely on the synchronization
-> +	 * provided by offer_in_progress and by channel_mutex for
-> +	 * ordering these events:
-> +	 *
-> +	 * { Initially: offer_in_progress = 1 }
-> +	 *
-> +	 * CPU1				CPU2
-> +	 *
-> +	 * [vmbus_process_offer()]	[vmbus_onoffer_rescind()]
-> +	 *
-> +	 * LOCK channel_mutex		WAIT_ON offer_in_progress == 0
-> +	 * DECREMENT offer_in_progress	LOCK channel_mutex
-> +	 * INSERT chn_list		SEARCH chn_list
-> +	 * UNLOCK channel_mutex		UNLOCK channel_mutex
-> +	 *
-> +	 * Forbids: CPU2's SEARCH from *not* seeing CPU1's INSERT
-
-WAIT_ON offer_in_progress == 0
-LOCK channel_mutex
-
-seems to be racy: what happens if offer_in_progress increments after we
-read it but before we managed to aquire channel_mutex?
-
-I think this shold be changed to
-
-LOCK channel_mutex
-CHECK offer_in_progress == 0
-EQUAL? GOTO proceed with rescind handling
-NOT EQUAL? 
- WHILE offer_in_progress) != 0 {
- UNLOCK channel_mutex 
- MSLEEP(1)
- LOCK channel_mutex
-}
-proceed with rescind handling:
-...
-UNLOCK channel_mutex
-
->  	 */
->  
->  	while (atomic_read(&vmbus_connection.offer_in_progress) != 0) {
-> diff --git a/drivers/hv/vmbus_drv.c b/drivers/hv/vmbus_drv.c
-> index 7600615e13754..903b1ec6a259e 100644
-> --- a/drivers/hv/vmbus_drv.c
-> +++ b/drivers/hv/vmbus_drv.c
-> @@ -1048,8 +1048,9 @@ void vmbus_on_msg_dpc(unsigned long data)
->  		/*
->  		 * The host can generate a rescind message while we
->  		 * may still be handling the original offer. We deal with
-> -		 * this condition by ensuring the processing is done on the
-> -		 * same CPU.
-> +		 * this condition by relying on the synchronization provided
-> +		 * by offer_in_progress and by channel_mutex.  See also the
-> +		 * inline comments in vmbus_onoffer_rescind().
->  		 */
->  		switch (hdr->msgtype) {
->  		case CHANNELMSG_RESCIND_CHANNELOFFER:
-> @@ -1071,16 +1072,34 @@ void vmbus_on_msg_dpc(unsigned long data)
->  			 * work queue: the RESCIND handler can not start to
->  			 * run before the OFFER handler finishes.
->  			 */
-> -			schedule_work_on(VMBUS_CONNECT_CPU,
-> -					 &ctx->work);
-> +			schedule_work(&ctx->work);
->  			break;
->  
->  		case CHANNELMSG_OFFERCHANNEL:
-> +			/*
-> +			 * The host sends the offer message of a given channel
-> +			 * before sending the rescind message of the same
-> +			 * channel.  These messages are sent to the guest's
-> +			 * connect CPU; the guest then starts processing them
-> +			 * in the tasklet handler on this CPU:
-> +			 *
-> +			 * VMBUS_CONNECT_CPU
-> +			 *
-> +			 * [vmbus_on_msg_dpc()]
-> +			 * atomic_inc()  // CHANNELMSG_OFFERCHANNEL
-> +			 * queue_work()
-> +			 * ...
-> +			 * [vmbus_on_msg_dpc()]
-> +			 * schedule_work()  // CHANNELMSG_RESCIND_CHANNELOFFER
-> +			 *
-> +			 * We rely on the memory-ordering properties of the
-> +			 * queue_work() and schedule_work() primitives, which
-> +			 * guarantee that the atomic increment will be visible
-> +			 * to the CPUs which will execute the offer & rescind
-> +			 * works by the time these works will start execution.
-> +			 */
->  			atomic_inc(&vmbus_connection.offer_in_progress);
-> -			queue_work_on(VMBUS_CONNECT_CPU,
-> -				      vmbus_connection.work_queue,
-> -				      &ctx->work);
-> -			break;
-> +			fallthrough;
->  
->  		default:
->  			queue_work(vmbus_connection.work_queue, &ctx->work);
-> @@ -1124,9 +1143,7 @@ static void vmbus_force_channel_rescinded(struct vmbus_channel *channel)
->  
->  	INIT_WORK(&ctx->work, vmbus_onmessage_work);
->  
-> -	queue_work_on(VMBUS_CONNECT_CPU,
-> -		      vmbus_connection.work_queue,
-> -		      &ctx->work);
-> +	queue_work(vmbus_connection.work_queue, &ctx->work);
->  }
->  #endif /* CONFIG_PM_SLEEP */
-
--- 
-Vitaly
-
+SGksIERhbmllbA0KDQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0hdIHRoZXJtYWw6IGlteDogQWRkIG1p
+c3Npbmcgb2Zfbm9kZV9wdXQoKQ0KPiANCj4gT24gMjYvMDMvMjAyMCAwNjoyNywgQW5zb24gSHVh
+bmcgd3JvdGU6DQo+ID4gQWZ0ZXIgZmluaXNoaW5nIHVzaW5nIGNwdSBub2RlIGdvdCBmcm9tIG9m
+X2dldF9jcHVfbm9kZSgpLA0KPiA+IG9mX25vZGVfcHV0KCkgbmVlZHMgdG8gYmUgY2FsbGVkLg0K
+PiA+DQo+ID4gU2lnbmVkLW9mZi1ieTogQW5zb24gSHVhbmcgPEFuc29uLkh1YW5nQG54cC5jb20+
+IC0tLQ0KPiA+IGRyaXZlcnMvdGhlcm1hbC9pbXhfdGhlcm1hbC5jIHwgMTAgKysrKysrKy0tLSAx
+IGZpbGUgY2hhbmdlZCwgNw0KPiA+IGluc2VydGlvbnMoKyksIDMgZGVsZXRpb25zKC0pDQo+ID4N
+Cj4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy90aGVybWFsL2lteF90aGVybWFsLmMNCj4gPiBiL2Ry
+aXZlcnMvdGhlcm1hbC9pbXhfdGhlcm1hbC5jIGluZGV4IGU3NjFjOWIuLmY3Yjk3MGQgMTAwNjQ0
+IC0tLQ0KPiA+IGEvZHJpdmVycy90aGVybWFsL2lteF90aGVybWFsLmMgKysrIGIvZHJpdmVycy90
+aGVybWFsL2lteF90aGVybWFsLmMNCj4gQEANCj4gPiAtNjQ5LDcgKzY0OSw3IEBAIE1PRFVMRV9E
+RVZJQ0VfVEFCTEUob2YsIG9mX2lteF90aGVybWFsX21hdGNoKTsNCj4gc3RhdGljDQo+ID4gaW50
+IGlteF90aGVybWFsX3JlZ2lzdGVyX2xlZ2FjeV9jb29saW5nKHN0cnVjdCBpbXhfdGhlcm1hbF9k
+YXRhICpkYXRhKQ0KPiA+IHsgc3RydWN0IGRldmljZV9ub2RlICpucDsgLQlpbnQgcmV0OyArCWlu
+dCByZXQgPSAwOw0KPiA+DQo+ID4gZGF0YS0+cG9saWN5ID0gY3B1ZnJlcV9jcHVfZ2V0KDApOyBp
+ZiAoIWRhdGEtPnBvbGljeSkgeyBAQCAtNjY0LDExDQo+ID4gKzY2NCwxNSBAQCBzdGF0aWMgaW50
+IGlteF90aGVybWFsX3JlZ2lzdGVyX2xlZ2FjeV9jb29saW5nKHN0cnVjdA0KPiA+IGlteF90aGVy
+bWFsX2RhdGEgKmRhdGEpIGlmIChJU19FUlIoZGF0YS0+Y2RldikpIHsgcmV0ID0NCj4gPiBQVFJf
+RVJSKGRhdGEtPmNkZXYpOyBjcHVmcmVxX2NwdV9wdXQoZGF0YS0+cG9saWN5KTsgLQ0KPiAJcmV0
+dXJuDQo+ID4gcmV0OyArCQkJZ290byBwdXRfbm9kZTsgfSB9DQo+ID4NCj4gPiAtCXJldHVybiAw
+OyArcHV0X25vZGU6ICsJaWYgKG5wKSArCQlvZl9ub2RlX3B1dChucCk7DQo+IA0KPiBvZl9ub2Rl
+X3B1dCgpIGlzIGFscmVhZHkgY2hlY2tpbmcgaWYgJ25wJyBpcyBOVUxMLg0KDQpPSywgSSB3aWxs
+IHJlbW92ZSB0aGUgY2hlY2tpbmcgb2YgaWYgJ25wJyBpcyBOVUxMLg0KDQpUaGFua3MsDQpBbnNv
+bg0K
