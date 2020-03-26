@@ -2,354 +2,401 @@ Return-Path: <SRS0=aGSP=5L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBE2BC43331
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 07:09:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B12EC43331
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 07:09:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6CD9020719
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 07:09:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E268B2078E
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 07:09:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727677AbgCZHJ1 (ORCPT
+        id S1727771AbgCZHJc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 03:09:27 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:37862 "EHLO
+        Thu, 26 Mar 2020 03:09:32 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:2594 "EHLO
         mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726138AbgCZHJ1 (ORCPT
+        by vger.kernel.org with ESMTP id S1726138AbgCZHJa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 03:09:27 -0400
-Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02Q72uMN092608
-        for <linux-kernel@vger.kernel.org>; Thu, 26 Mar 2020 03:09:25 -0400
-Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2ywf2k4pth-1
+        Thu, 26 Mar 2020 03:09:30 -0400
+Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02Q73sfa110468
+        for <linux-kernel@vger.kernel.org>; Thu, 26 Mar 2020 03:09:29 -0400
+Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 300qp1g5ne-1
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 26 Mar 2020 03:09:25 -0400
+        for <linux-kernel@vger.kernel.org>; Thu, 26 Mar 2020 03:09:29 -0400
 Received: from localhost
-        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
         for <linux-kernel@vger.kernel.org> from <psampat@linux.ibm.com>;
-        Thu, 26 Mar 2020 07:09:19 -0000
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
-        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        Thu, 26 Mar 2020 07:09:27 -0000
+Received: from b06avi18626390.portsmouth.uk.ibm.com (9.149.26.192)
+        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
         (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 26 Mar 2020 07:09:16 -0000
+        Thu, 26 Mar 2020 07:09:25 -0000
 Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 02Q79KB561800498
+        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 02Q78MsA5702010
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 26 Mar 2020 07:09:20 GMT
+        Thu, 26 Mar 2020 07:08:22 GMT
 Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id EA3C4A4054;
-        Thu, 26 Mar 2020 07:09:19 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id C8154A4060;
+        Thu, 26 Mar 2020 07:09:24 +0000 (GMT)
 Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 25D2FA405C;
-        Thu, 26 Mar 2020 07:09:18 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id A0D2BA4054;
+        Thu, 26 Mar 2020 07:09:22 +0000 (GMT)
 Received: from pratiks-thinkpad.ibmuc.com (unknown [9.199.35.246])
         by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu, 26 Mar 2020 07:09:17 +0000 (GMT)
+        Thu, 26 Mar 2020 07:09:22 +0000 (GMT)
 From:   Pratik Rajesh Sampat <psampat@linux.ibm.com>
 To:     skiboot@lists.ozlabs.org, oohall@gmail.com,
         linux-kernel@vger.kernel.org, linuxppc-dev@ozlabs.org,
         mpe@ellerman.id.au, ego@linux.vnet.ibm.com, linuxram@us.ibm.com,
         psampat@linux.ibm.com, pratik.r.sampat@gmail.com
-Subject: [PATCH v6 0/4] Support for Self Save API in OPAL
-Date:   Thu, 26 Mar 2020 12:39:13 +0530
+Subject: [PATCH v6 2/4] Self save API integration
+Date:   Thu, 26 Mar 2020 12:39:15 +0530
 X-Mailer: git-send-email 2.24.1
+In-Reply-To: <20200326070917.12744-1-psampat@linux.ibm.com>
+References: <20200326070917.12744-1-psampat@linux.ibm.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
-x-cbid: 20032607-4275-0000-0000-000003B397D3
+x-cbid: 20032607-0028-0000-0000-000003EC09F9
 X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20032607-4276-0000-0000-000038C8D83B
-Message-Id: <20200326070917.12744-1-psampat@linux.ibm.com>
+x-cbparentid: 20032607-0029-0000-0000-000024B17A23
+Message-Id: <20200326070917.12744-3-psampat@linux.ibm.com>
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.645
  definitions=2020-03-25_15:2020-03-24,2020-03-25 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=18 impostorscore=0
- suspectscore=0 adultscore=0 priorityscore=1501 spamscore=0 phishscore=0
- malwarescore=0 mlxlogscore=999 clxscore=1015 mlxscore=0
- lowpriorityscore=18 classifier=spam adjust=0 reason=mlx scancount=1
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 lowpriorityscore=0 mlxscore=0 suspectscore=0
+ spamscore=0 clxscore=1015 malwarescore=0 bulkscore=0 priorityscore=1501
+ phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.12.0-2003020000 definitions=main-2003260043
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-v5:https://lists.ozlabs.org/pipermail/skiboot/2020-March/016538.html
-Changelog
-v5 --> v6
-Updated background, motivation and illuminated potential design choices
+The commit makes the self save API available outside the firmware by defining
+an OPAL wrapper.
+This wrapper has a similar interface to that of self restore and expects the
+cpu pir, SPR number, minus the value of that SPR to be passed in its
+paramters and returns OPAL_SUCCESS on success.
+The commit also documents both the self-save and the self-restore API
+calls along with their working and usage.
 
-Background
-==========
-
-The power management framework on POWER systems include core idle
-states that lose context. Deep idle states namely "winkle" on POWER8
-and "stop4" and "stop5" on POWER9 can be entered by a CPU to save
-different levels of power, as a consequence of which all the
-hypervisor resources such as SPRs and SCOMs are lost.
-
-For most SPRs, saving and restoration of content for SPRs and SCOMs
-is handled by the hypervisor kernel prior to entering an post exit
-from an idle state respectively. However, there is a small set of
-critical SPRs and XSCOMs that are expected to contain sane values even
-before the control is transferred to the hypervisor kernel at system
-reset vector.
-
-For this purpose, microcode firmware provides a mechanism to restore
-values on certain SPRs. The communication mechanism between the
-hypervisor kernel and the microcode is a standard interface called
-sleep-winkle-engine (SLW) on Power8 and Stop-API on Power9 which is
-abstracted by OPAL calls from the hypervisor kernel. The Stop-API
-provides an interface known as the self-restore API, to which the SPR
-number and a predefined value to be restored on wake-up from a deep
-stop state is supplied.
-
-
-Motivation to introduce a new Stop-API
-======================================
-
-The self-restore API expects not just the SPR number but also the
-value with which the SPR is restored. This is good for those SPRs such
-as HSPRG0 whose values do not change at runtime, since for them, the
-kernel can invoke the self-restore API at boot time once the values of
-these SPRs are determined.
-
-However, there are use-cases where-in the value to be saved cannot be
-known or cannot be updated in the layer it currently is.
-The shortcomings and the new use-cases which cannot be served by the
-existing self-restore API, serves as motivation for a new API:
-
-Shortcoming1:
-------------
-In a special wakeup scenario, SPRs such as PSSCR, whose values can
-change at runtime, are compelled to make the self-restore API call
-every time before entering a deep-idle state rendering it to be
-prohibitively expensive
-
-Shortcoming2:
-------------
-The value of LPCR is dynamic based on if the CPU is entered a stop
-state during cpu idle versus cpu hotplug.
-Today, an additional self-restore call is made before entering
-CPU-Hotplug to clear the PECE1 bit in stop-API so that if we are
-woken up by a special wakeup on an offlined CPU, we go back to stop
-with the the bit cleared.
-There is a overhead of an extra call
-
-New Use-case:
--------------
-In the case where the hypervisor is running on an
-ultravisor environment, the boot time is too late in the cycle to make
-the self-restore API calls, as these cannot be invoked from an
-non-secure context anymore
-
-To address these shortcomings, the firmware provides another API known
-as the self-save API. The self-save API only takes the SPR number as a
-parameter and will ensure that on wakeup from a deep-stop state the
-SPR is restored with the value that it contained prior to entering the
-deep-stop.
-
-Contrast between self-save and self-restore APIs
-================================================
-
-		  Before entering
-                  deep idle     |---------------|
-                  ------------> | HCODE A       |                
-                  |             |---------------|
-   |---------|    |
-   |   CPU   |----|
-   |---------|    |             
-                  |             |---------------|
-                  |------------>| HCODE B       |
-                  On waking up  |---------------|
-                from deep idle
-
-
-
-
-When a self-restore API is invoked, the HCODE inserts instructions
-into "HCODE B" region of the above figure to restore the content of
-the SPR to the said value. The "HCODE B" region gets executed soon
-after the CPU wakes up from a deep idle state, thus executing the
-inserted instructions, thereby restoring the contents of the SPRs to
-the required values.
-
-When a self-save API is invoked, the HCODE inserts instructions into
-the "HCODE A" region of the above figure to save the content of the
-SPR into some location in memory. It also inserts instructions into
-the "HCODE B" region to restore the content of the SPR to the
-corresponding value saved in the memory by the instructions in "HCODE
-A" region.
-
-Thus, in contrast with self-restore, the self-save API *does not* need
-a value to be passed to it, since it ensures that the value of SPR
-before entering deep stop is saved, and subsequently the same value is
-restored.
-
-Self-save and self-restore are complementary features since,
-self-restore can help in restoring a different value in the SPR on
-wakeup from a deep-idle state than what it had before entering the
-deep idle state. This was used in POWER8 for HSPRG0 to distinguish a
-wakeup from Winkle vs Fastsleep.
-
-Limitations of self-save
-========================
-Ideally all SPRs should be available for self-save, but HID0 is very
-tricky to implement in microcode due to various endianess quirks.
-Couple of implementation schemes were buggy and hence HID0 was left
-out to be self-restore only.
-
-The fallout of this limitation is as follows:
-
-* In Non PEF environment, no issue. Linux will use self-restore for
-  HID0 as it does today and no functional impact.
-
-* In PEF environment, the HID0 restore value is decided by OPAL during
-  boot and it is setup for LE hypervisor with radix MMU. This is the
-  default and current working configuration of a PEF environment.
-  However if there is a change, then HV Linux will try to change the
-  HID0 value to something different than what OPAL decided, at which
-  time deep-stop states will be disabled under this new PEF
-  environment.
-
-A simple and workable design is achieved by scoping the power
-management deep-stop state support only to a known default PEF
-environment. Any deviation will affect *only* deep stop-state support
-(stop4,5) in that environment and not have any functional impediment
-to the environment itself.
-
-In future, if there is a need to support changing of HID0 to various
-values under PEF environment and support deep-stop states, it can be
-worked out via an ultravisor call or improve the microcode design to
-include HID0 in self-save.  These future scheme would be an extension
-and does not break or make the current implementation scheme
-redundant.
-
-Design Choices
-==============
-
-Presenting the design choices in front of us:
-
-Design-Choice 1:
-----------------
-Only expose one of self-save or self-restore for all the SPRs. Prefer
-Self-save
-
-Pros:
-   - Simplifies the design heavily, since the Kernel can unambiguously
-   make one API call for all the SPRs on discovering the presence of
-   the API type.
-
-Cons:
-    - Breaks backward compatibility if OPAL always chooses to expose
-      only the self-save API as the older kernels assume the existence
-      of self-restore.
-
-    - The set of SPRs supported by self-save and self-restore are not
-      identical. Eg: HID0 is not supported by self-save API. PSSCR
-      support via self-restore is not robust during special-wakeup.
-
-    - As discussed above, self-save and self-restore are
-      complementary. Thus OPAL apriory choosing one over the other for
-      all SPRs takes away the flexibility from the kernel.
-
-
-Design-Choice 2:
-----------------
-Expose two arrays of SPRs: One set of SPRs that are supported by
-self-save. Another set of SPRs supported by self-restore. These two
-sets do not intersect. Further, if an SPR is supported by both
-self-save and self-restore APIs, expose it only via self-save.
-
-Pros:
-     - For an SPR the choice for the kernel is unambiguous.
-
-Cons:
-    - Breaks backward compatibility if OPAL always chooses to expose
-      the legacy SPRs only via the self-save API as the older kernels
-      assume the existence of self-restore.
-
-    - By making the decision early on, we take away the flexibility
-       from the kernel to use an API of its choice for an SPR.
-
-
-Design-Choice 3
----------------
-Expose two arrays of SPRs. One set of SPRs that are supported by
-self-save API. Another set of SPRs supported by self-restore API. Let
-the kernel choose which API to invoke. Even if it wants to always
-prefer self-save over self-restore, let that be kernel's choice.
-
-Pros:
-     - Keeps the design flexible to allow the kernel to take a
-       decision based on its functional and performance requirements.
-       Thus, the kernel for instance can make a choice to invoke
-       self-restore API (when available) for SPRs whose values do not
-       evolve at runtime, and invoke the self-save API (when
-       available)
-       for SPRs whose values will change during runtime.
-
-     - Design is backward compatible with older kernels.
-
-Cons:
-     - The Kernel code will have additional complexity for parsing two
-     lists of SPRs and making a choice w.r.t invocation of a specific
-     stop-api.
-
-
-
-Patches Organization
-====================
-Design choice 3 has been chosen as an implementation to demonstrate in
-this patch series.
-
-Patch 1:
-Commit adds support calling into the self save firmware API.
-Also adds abstraction for making platform agnostic calls.
-
-Patch 2:
-Commit adds wrappers for the Self Save API for which an OPAL call can
-be made.
-
-Patch 3:
-Commit adds API to determine the version of the STOP API. This helps
-to identify support for self save in the firmware
-
-Patch 4:
-Commit adds device tree attributes to advertise self save and self
-restore functionality along with the register set as a bitmask
-currently supported in the firmware. It also uses the versioning API
-to determine support for the self-save feature as a whole.
-
-Pratik Rajesh Sampat (2):
-  Self save API integration
-  Advertise the self-save and self-restore attributes in the device tree
-
-Prem Shanker Jha (2):
-  Self Save: Introducing Support for SPR Self Save
-  API to verify the STOP API and image compatibility
-
- .../ibm,opal/power-mgt/self-restore.rst       |  27 +
- .../ibm,opal/power-mgt/self-save.rst          |  27 +
- doc/opal-api/opal-slw-self-save-reg-181.rst   |  49 +
- doc/opal-api/opal-slw-set-reg-100.rst         |   5 +
- doc/power-management.rst                      |  44 +
- hw/slw.c                                      | 205 ++++
- include/opal-api.h                            |   3 +-
- include/p9_stop_api.H                         | 122 ++-
- include/skiboot.h                             |   4 +
- libpore/p9_cpu_reg_restore_instruction.H      |  11 +-
- libpore/p9_hcd_memmap_base.H                  |   7 +
- libpore/p9_stop_api.C                         | 964 ++++++++++--------
- libpore/p9_stop_api.H                         | 141 ++-
- libpore/p9_stop_data_struct.H                 |   4 +-
- libpore/p9_stop_util.H                        |  27 +-
- 15 files changed, 1208 insertions(+), 432 deletions(-)
- create mode 100644 doc/device-tree/ibm,opal/power-mgt/self-restore.rst
- create mode 100644 doc/device-tree/ibm,opal/power-mgt/self-save.rst
+Signed-off-by: Pratik Rajesh Sampat <psampat@linux.ibm.com>
+---
+ doc/opal-api/opal-slw-self-save-reg-181.rst | 49 ++++++++++++
+ doc/opal-api/opal-slw-set-reg-100.rst       |  5 ++
+ doc/power-management.rst                    | 44 ++++++++++
+ hw/slw.c                                    | 89 +++++++++++++++++++++
+ include/opal-api.h                          |  3 +-
+ include/p9_stop_api.H                       | 17 ++++
+ include/skiboot.h                           |  3 +
+ 7 files changed, 209 insertions(+), 1 deletion(-)
  create mode 100644 doc/opal-api/opal-slw-self-save-reg-181.rst
 
+diff --git a/doc/opal-api/opal-slw-self-save-reg-181.rst b/doc/opal-api/opal-slw-self-save-reg-181.rst
+new file mode 100644
+index 00000000..5aa4c930
+--- /dev/null
++++ b/doc/opal-api/opal-slw-self-save-reg-181.rst
+@@ -0,0 +1,49 @@
++.. OPAL_SLW_SELF_SAVE_REG:
++
++OPAL_SLW_SELF_SAVE_REG
++======================
++
++.. code-block:: c
++
++   #define OPAL_SLW_SELF_SAVE_REG			181
++
++   int64_t opal_slw_self_save_reg(uint64_t cpu_pir, uint64_t sprn);
++
++:ref:`OPAL_SLW_SELF_SAVE_REG` is used to inform low-level firmware to save
++the current contents of the SPR before entering a state of loss and
++also restore the content back on waking up from a deep stop state.
++
++An OPAL call `OPAL_SLW_SET_REG` exists which is similar in function as
++saving and restoring the SPR, with one difference being that the value of the
++SPR must also be supplied in the parameters.
++Complete reference: doc/opal-api/opal-slw-set-reg-100.rst
++
++Parameters
++----------
++
++``uint64_t cpu_pir``
++  This parameter specifies the pir of the cpu for which the call is being made.
++``uint64_t sprn``
++  This parameter specifies the spr number as mentioned in p9_stop_api.H
++  The list of SPRs supported is as follows. This list is suppiled through the
++  device tree:
++	P9_STOP_SPR_DAWR,
++	P9_STOP_SPR_HSPRG0,
++	P9_STOP_SPR_LDBAR,
++	P9_STOP_SPR_LPCR,
++	P9_STOP_SPR_PSSCR,
++	P9_STOP_SPR_MSR,
++	P9_STOP_SPR_HRMOR,
++	P9_STOP_SPR_HMEER,
++	P9_STOP_SPR_PMCR,
++	P9_STOP_SPR_PTCR
++
++Returns
++-------
++
++:ref:`OPAL_UNSUPPORTED`
++  If spr restore is not supported by pore engine.
++:ref:`OPAL_PARAMETER`
++  Invalid handle for the pir/chip
++:ref:`OPAL_SUCCESS`
++  On success
+diff --git a/doc/opal-api/opal-slw-set-reg-100.rst b/doc/opal-api/opal-slw-set-reg-100.rst
+index 2e8f1bd6..ee3e68ce 100644
+--- a/doc/opal-api/opal-slw-set-reg-100.rst
++++ b/doc/opal-api/opal-slw-set-reg-100.rst
+@@ -21,6 +21,11 @@ In Power 9, it uses p9_stop_save_cpureg(), api provided by self restore code,
+ to inform the spr with their corresponding values with which they
+ must be restored.
+ 
++An OPAL call `OPAL_SLW_SELF_SAVE_REG` exists which is similar in function
++saving and restoring the SPR, with one difference being that the value of the
++SPR doesn't need to be passed in the parameters, only with the SPR number
++the firmware can identify, save and restore the values for the same.
++Complete reference: doc/opal-api/opal-slw-self-save-reg-181.rst
+ 
+ Parameters
+ ----------
+diff --git a/doc/power-management.rst b/doc/power-management.rst
+index 76491a71..992a18d0 100644
+--- a/doc/power-management.rst
++++ b/doc/power-management.rst
+@@ -15,3 +15,47 @@ On boot, specific stop states can be disabled via setting a mask. For example,
+ to disable all but stop 0,1,2, use ~0xE0000000. ::
+ 
+   nvram -p ibm,skiboot --update-config opal-stop-state-disable-mask=0x1FFFFFFF
++
++Saving and restoring Special Purpose Registers(SPRs)
++----------------------------------------------------
++
++When a CPU wakes up from a deep stop state which can result in
++hypervisor state loss, all the SPRs are lost. The Linux Kernel expects
++a small set of SPRs to contain an expected value when the CPU wakes up
++from such a deep stop state. The microcode firmware provides the
++following two APIs, collectively known as the stop-APIs, to allow the
++kernel/OPAL to specify this set of SPRs and the value that they need
++to be restored with on waking up from a deep stop state.
++
++Self-restore:
++int64_t opal_slw_set_reg(uint64_t cpu_pir, uint64_t sprn, uint64_t val);
++The SPR number and the value of the that SPR must be restored with on
++wakeup from the deep-stop state must be specified. When this call is
++made, the microcode inserts instruction into the HOMER region to
++restore the content of the SPR to the specified value on wakeup from a
++deep-stop state. These instructions are executed by the CPU as soon as
++it wakes up from a deep stop state. The call is to be made once per
++SPR.
++
++Self-Save:
++int64_t opal_slw_self_save_reg(uint64_t cpu_pir, uint64_t sprn);
++Only the SPR number needs to be specified. When this call is made, the
++microcode inserts instructions into the HOMER region to save the
++current value of the SPR before the CPU goes to a deep stop state, and
++restores the value back when the CPU wakes up from a deep stop state.
++These instructions are correspondingly executed just before and after
++the CPU goes/comes out of a deep stop state. This call can be made
++once per SPR.
++
++The key difference between self-save and self-restore is the
++use-case. If the Kernel expects the SPR to contain a particular value
++on waking up from a deep-stop state, that wasn't the value of that SPR
++before entering deep stop-state, then self-restore is preferable.
++When deep stop states are to be supported in an Ultravisor
++environment, since HOMER is in a secure region, the stop-api cannot
++update the HOMER if invoked from a context when the OPAL/Kernel is
++executing without the ultravisor privilege. In this scenario, at the
++time of early OPAL boot, while OPAL has ultravisor privileges, it can
++make the self-save stop-api call for all the supported SPRs, so that
++the microcode in the HOMER will always save and restore all the
++supported SPRs during entry/exit from a deep stop state.
+diff --git a/hw/slw.c b/hw/slw.c
+index beb129a8..6a09cc2c 100644
+--- a/hw/slw.c
++++ b/hw/slw.c
+@@ -35,6 +35,43 @@ static bool slw_current_le = false;
+ enum wakeup_engine_states wakeup_engine_state = WAKEUP_ENGINE_NOT_PRESENT;
+ bool has_deep_states = false;
+ 
++/**
++ * The struct and SPR list is partially consistent with libpore/p9_stop_api.c
++ */
++/**
++ * @brief summarizes attributes associated with a SPR register.
++ */
++typedef struct
++{
++    uint32_t iv_sprId;
++    bool     iv_isThreadScope;
++    uint32_t iv_saveMaskPos;
++
++} StopSprReg_t;
++
++/**
++ * @brief a true in the table below means register is of scope thread
++ * whereas a false meanse register is of scope core.
++ * The number is the bit position on a uint32_t mask
++ */
++
++static const StopSprReg_t g_sprRegister[] =
++{
++	{ P9_STOP_SPR_DAWR,      true,  1   },
++	{ P9_STOP_SPR_HSPRG0,    true,  3   },
++	{ P9_STOP_SPR_LDBAR,     true,  4,  },
++	{ P9_STOP_SPR_LPCR,      true,  5   },
++	{ P9_STOP_SPR_PSSCR,     true,  6   },
++	{ P9_STOP_SPR_MSR,       true,  7   },
++	{ P9_STOP_SPR_HRMOR,     false, 255 },
++	{ P9_STOP_SPR_HID,       false, 21  },
++	{ P9_STOP_SPR_HMEER,     false, 22  },
++	{ P9_STOP_SPR_PMCR,      false, 23  },
++	{ P9_STOP_SPR_PTCR,      false, 24  },
++};
++
++static const uint32_t MAX_SPR_SUPPORTED	= ARRAY_SIZE(g_sprRegister);
++
+ DEFINE_LOG_ENTRY(OPAL_RC_SLW_INIT, OPAL_PLATFORM_ERR_EVT, OPAL_SLW,
+ 		 OPAL_PLATFORM_FIRMWARE, OPAL_PREDICTIVE_ERR_GENERAL,
+ 		 OPAL_NA);
+@@ -1446,6 +1483,58 @@ int64_t opal_slw_set_reg(uint64_t cpu_pir, uint64_t sprn, uint64_t val)
+ 
+ opal_call(OPAL_SLW_SET_REG, opal_slw_set_reg, 3);
+ 
++int64_t opal_slw_self_save_reg(uint64_t cpu_pir, uint64_t sprn)
++{
++	struct cpu_thread * c = find_cpu_by_pir(cpu_pir);
++	uint32_t save_reg_vector = 0;
++	struct proc_chip * chip;
++	int rc;
++	int index;
++
++	if (!c) {
++		prlog(PR_DEBUG, "SLW: Unknown thread with pir %x\n",
++		      (u32) cpu_pir);
++		return OPAL_PARAMETER;
++	}
++
++	chip = get_chip(c->chip_id);
++	if (!chip) {
++		prlog(PR_DEBUG, "SLW: Unknown chip for thread with pir %x\n",
++		      (u32) cpu_pir);
++		return OPAL_PARAMETER;
++	}
++	if (proc_gen != proc_gen_p9 || !has_deep_states) {
++		prlog(PR_DEBUG, "SLW: Does not support deep states\n");
++		return OPAL_UNSUPPORTED;
++	}
++	if (wakeup_engine_state != WAKEUP_ENGINE_PRESENT) {
++		log_simple_error(&e_info(OPAL_RC_SLW_REG),
++			"SLW: wakeup_engine in bad state=%d chip=%x\n",
++			wakeup_engine_state, chip->id);
++		return OPAL_INTERNAL_ERROR;
++	}
++	for (index = 0; index < MAX_SPR_SUPPORTED; ++index) {
++		if (sprn == (CpuReg_t) g_sprRegister[index].iv_sprId) {
++			save_reg_vector = PPC_BIT32(
++				g_sprRegister[index].iv_saveMaskPos);
++			break;
++		}
++	}
++	if (save_reg_vector == 0)
++		return OPAL_INTERNAL_ERROR;
++	rc = p9_stop_save_cpureg_control((void *) chip->homer_base,
++						cpu_pir, save_reg_vector);
++
++	if (rc) {
++		log_simple_error(&e_info(OPAL_RC_SLW_REG),
++			"SLW: Failed to save vector %x for CPU %x\n",
++			save_reg_vector, c->pir);
++		return OPAL_INTERNAL_ERROR;
++	}
++	return OPAL_SUCCESS;
++}
++opal_call(OPAL_SLW_SELF_SAVE_REG, opal_slw_self_save_reg, 2);
++
+ void slw_init(void)
+ {
+ 	struct proc_chip *chip;
+diff --git a/include/opal-api.h b/include/opal-api.h
+index e90cab1e..1607a89b 100644
+--- a/include/opal-api.h
++++ b/include/opal-api.h
+@@ -227,7 +227,8 @@
+ #define OPAL_SECVAR_ENQUEUE_UPDATE		178
+ #define OPAL_PHB_SET_OPTION			179
+ #define OPAL_PHB_GET_OPTION			180
+-#define OPAL_LAST				180
++#define OPAL_SLW_SELF_SAVE_REG			181
++#define OPAL_LAST				181
+ 
+ #define QUIESCE_HOLD			1 /* Spin all calls at entry */
+ #define QUIESCE_REJECT			2 /* Fail all calls with OPAL_BUSY */
+diff --git a/include/p9_stop_api.H b/include/p9_stop_api.H
+index 9d3bc1e5..c304f70f 100644
+--- a/include/p9_stop_api.H
++++ b/include/p9_stop_api.H
+@@ -34,6 +34,8 @@
+ ///
+ /// @file   p9_stop_api.H
+ /// @brief  describes STOP API which  create/manipulate STOP image.
++///         This header need not be consistent, however is a subset of the
++///         libpore/p9_stop_api.H counterpart
+ ///
+ // *HWP HW Owner    :  Greg Still <stillgs@us.ibm.com>
+ // *HWP FW Owner    :  Prem Shanker Jha <premjha2@in.ibm.com>
+@@ -58,6 +60,7 @@ typedef enum
+     P9_STOP_SPR_HRMOR   =    313,   // core register
+     P9_STOP_SPR_LPCR    =    318,   // thread register
+     P9_STOP_SPR_HMEER   =    337,   // core register
++    P9_STOP_SPR_PTCR    =    464,   // core register
+     P9_STOP_SPR_LDBAR   =    850,   // thread register
+     P9_STOP_SPR_PSSCR   =    855,   // thread register
+     P9_STOP_SPR_PMCR    =    884,   // core register
+@@ -230,6 +233,20 @@ StopReturnCode_t p9_stop_save_scom( void* const   i_pImage,
+                                     const ScomOperation_t i_operation,
+                                     const ScomSection_t i_section );
+ 
++/**
++ * @brief       Facilitates self save and restore of a list of SPRs of a thread.
++ * @param[in]   i_pImage        points to the start of HOMER image of P9 chip.
++ * @param[in]   i_pir           PIR associated with thread
++ * @param[in]   i_saveRegVector bit vector representing SPRs that needs to be restored.
++ * @return      STOP_SAVE_SUCCESS if API succeeds, error code otherwise.
++ * @note        SPR save vector is a bit vector. For each SPR supported,
++ *              there is an associated bit position in the bit vector.Refer
++ *              to definition of SprBitPositionList_t to determine bit position
++ *              associated with a particular SPR.
++ */
++StopReturnCode_t
++p9_stop_save_cpureg_control( void* i_pImage, const uint64_t i_pir,
++                             const uint32_t  i_saveRegVector );
+ #ifdef __cplusplus
+ } // extern "C"
+ };  // namespace stopImageSection ends
+diff --git a/include/skiboot.h b/include/skiboot.h
+index 30ff500c..9ced240e 100644
+--- a/include/skiboot.h
++++ b/include/skiboot.h
+@@ -306,6 +306,9 @@ extern void nx_p9_rng_late_init(void);
+ /* SLW reinit function for switching core settings */
+ extern int64_t slw_reinit(uint64_t flags);
+ 
++/* Self save SPR before entering the stop state */
++extern int64_t opal_slw_self_save_reg(uint64_t cpu_pir, uint64_t sprn);
++
+ /* Patch SPR in SLW image */
+ extern int64_t opal_slw_set_reg(uint64_t cpu_pir, uint64_t sprn, uint64_t val);
+ 
 -- 
 2.24.1
 
