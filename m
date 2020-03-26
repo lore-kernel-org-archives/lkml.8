@@ -2,103 +2,177 @@ Return-Path: <SRS0=aGSP=5L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5810EC2D0EC
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 17:16:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F578C2D0EC
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 17:16:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F91120737
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 17:16:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qUQfHuNs"
+	by mail.kernel.org (Postfix) with ESMTP id 422412074D
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 17:16:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727883AbgCZRQn (ORCPT
+        id S1728119AbgCZRQu convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 13:16:43 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:34416 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726267AbgCZRQm (ORCPT
+        Thu, 26 Mar 2020 13:16:50 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:49902 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727920AbgCZRQr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 13:16:42 -0400
-Received: by mail-ed1-f65.google.com with SMTP id i24so7784113eds.1
-        for <linux-kernel@vger.kernel.org>; Thu, 26 Mar 2020 10:16:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=h4Bafici+74bpF8/r43zm3/RopJlj6eRGLXVN/i+YAg=;
-        b=qUQfHuNsWF6kO67FxUkLRz1M4ZFMCKjyrWxyDnE7r/Isct3HcfF2g8z3i2KR9arNjt
-         CpgVwwczRA74FnXG3R3V+Hc2blucW5GbCvG+HrpFYo+QoZCHfeiK9V6IdZVKknJo68Pb
-         9i5FIhLcGzaNgey/mIOBGYk9eTRDHwtDC6GPXK6X9xQ1rVgoqc6mXnE3COOJdA0rv5gU
-         WSpd9l7bOT1awZi7+RyWXmvYEILyBN2Z81CgGIi3HUSg5t0osLBoVMZmFHuIeeDXUyiW
-         rH36ZQBdOuD4rMKMdkbjXJHaVhbd1zEwiRTJxinPePp+a0pAeFzTSoA28ae1PjM9mBvc
-         eR8A==
+        Thu, 26 Mar 2020 13:16:47 -0400
+Received: from mail-pj1-f69.google.com ([209.85.216.69])
+        by youngberry.canonical.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <kai.heng.feng@canonical.com>)
+        id 1jHW7Y-0002zN-Ry
+        for linux-kernel@vger.kernel.org; Thu, 26 Mar 2020 17:16:45 +0000
+Received: by mail-pj1-f69.google.com with SMTP id z5so5030429pjq.9
+        for <linux-kernel@vger.kernel.org>; Thu, 26 Mar 2020 10:16:44 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=h4Bafici+74bpF8/r43zm3/RopJlj6eRGLXVN/i+YAg=;
-        b=jDeZSBUFIPrfPKUbOY4wQ6m1brFGvZe4b0CLVHr5LwNmSno/v/MACctrqOaoQh38IG
-         QS8LPBovZnoCzr7B/utuZZgzpb3syFgO0fiRAEr3qoAl+I4bESB9INF2maOpw7FWNyCb
-         BmVg2F0MYtciUHw6qIiWjsGlngpxoDi2enwyZ0V390cP7JD6ZXEddXYhLtqtTU03iGQP
-         CG1cWrEgniRX3Qg0djyOHGAOBonbDYykXdZNeU7yowGqzewNV/T9rtr+vwIMnXevB5BC
-         tOglU+n+DMVAx2oCVtXi248D1fMg1OeABNEVvdA1K8M2CAI5QG9SfVlUYs8RlhX2bbOF
-         BjCA==
-X-Gm-Message-State: ANhLgQ2oMxm4f5WM/nNc5OzREpjFsiKJg7CLt+29/a5zlOrOKhwABGQU
-        iWZsXp6pOqCBU7sQGMqAkln1Qn0+9vVrulAl4jtPyA==
-X-Google-Smtp-Source: ADFU+vvXOq3qtuPx24TK/wg4PIU6jSvq4+J/DaUbhlRxbosamCkpUbgMonGFEWLs123uOLU63ziMY8FIUgjT8Nr5Itc=
-X-Received: by 2002:a50:8d02:: with SMTP id s2mr9395936eds.81.1585242999701;
- Thu, 26 Mar 2020 10:16:39 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200320175910.180266-1-yonghyun@google.com> <20200323111404.GA4554@infradead.org>
- <CAEauFbww3X2WZuOvMbnhOD2ONBjqR-JS2BrxWPO=HqzXVcKakw@mail.gmail.com> <20200326093807.GB12078@infradead.org>
-In-Reply-To: <20200326093807.GB12078@infradead.org>
-From:   Yonghyun Hwang <yonghyun@google.com>
-Date:   Thu, 26 Mar 2020 10:16:26 -0700
-Message-ID: <CAEauFbz_ACeQtn-=fmyhcrh4Ljctuij=3t908qjo_nehwKbXXQ@mail.gmail.com>
-Subject: Re: [PATCH] vfio-mdev: support mediated device creation in kernel
-To:     Christoph Hellwig <hch@infradead.org>
-Cc:     Kirti Wankhede <kwankhede@nvidia.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Cornelia Huck <cohuck@redhat.com>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Havard Skinnemoen <hskinnemoen@google.com>,
-        Moritz Fischer <mdf@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=dqfMGNuGJlDejAz9mJaTfol96HG948oTLjPcdkSSNds=;
+        b=sPauk8MshEMUA6IPjkUjOCcvuk+NQP8tEOTot+PUDyOE9dZrkr4BLaafuJlWhUKqtk
+         bBjRoh5wzPiVzmfiPK+YZ0JLe7tVBAHCOnNUFhIrCYehmf0Ae8YSLE+MLeFKhq5xO/SP
+         1CTt0lLLph9uOgTE9oo43CF/Hrhs2nUrExiK+PSd8Dc57Zo0nV3k90o/3HD6iyQl/eaB
+         dlegXMcA44gjJMnUR3NEMepVcLrejgxonhWK0CTrmpiesXux6aA3B0LV+oD40cvEgpq0
+         M9M7SoU4e3hgFxSyram+mlVW5tQb+AmHA6ZxX7pnE6mBarb+10oOcxfOUzUeAk9TmHXd
+         znPw==
+X-Gm-Message-State: ANhLgQ1Ng7XQhNMdq2wFDtqJwJZ3Ia5WnHUY7V4EbW9sEi223GpiUCe7
+        l820GL2fUlU80SKPzz/qU/ivqND82erDpapxBjm3ZUpxKoUA5Z8BMZwPDusf9YWcVI/GGbEtreN
+        eI5cDaVM6QZhzX7z9Y6yX0U3sL2v8NO1AtKzCm8dXWg==
+X-Received: by 2002:a63:8948:: with SMTP id v69mr9362895pgd.318.1585243003071;
+        Thu, 26 Mar 2020 10:16:43 -0700 (PDT)
+X-Google-Smtp-Source: ADFU+vswShhL/EpTuaoi1tKEpPiSR0ktuhOQpRbacspfuWfDowPWsafFEAU3XqSauf9zfbjWpcjqHQ==
+X-Received: by 2002:a63:8948:: with SMTP id v69mr9362862pgd.318.1585243002685;
+        Thu, 26 Mar 2020 10:16:42 -0700 (PDT)
+Received: from [192.168.1.208] (220-133-187-190.HINET-IP.hinet.net. [220.133.187.190])
+        by smtp.gmail.com with ESMTPSA id f69sm2157271pfa.124.2020.03.26.10.16.40
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 26 Mar 2020 10:16:42 -0700 (PDT)
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 13.0 \(3608.60.0.2.5\))
+Subject: Re: [Intel-wired-lan] [PATCH] igb: Use a sperate mutex insead of
+ rtnl_lock()
+From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
+In-Reply-To: <CAKgT0UfFnXcSSsXvxk8+xiZvyzDh+8V-9bCT-z5U+MEVoAVKLw@mail.gmail.com>
+Date:   Fri, 27 Mar 2020 01:16:39 +0800
+Cc:     Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
+        "open list:NETWORKING DRIVERS" <netdev@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        "moderated list:INTEL ETHERNET DRIVERS" 
+        <intel-wired-lan@lists.osuosl.org>,
+        "David S. Miller" <davem@davemloft.net>
+Content-Transfer-Encoding: 8BIT
+Message-Id: <98E86E5A-4EE9-4CB5-81CF-49C3E74C3AE6@canonical.com>
+References: <20200326103926.20888-1-kai.heng.feng@canonical.com>
+ <CAKgT0UfFnXcSSsXvxk8+xiZvyzDh+8V-9bCT-z5U+MEVoAVKLw@mail.gmail.com>
+To:     Alexander Duyck <alexander.duyck@gmail.com>
+X-Mailer: Apple Mail (2.3608.60.0.2.5)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 26, 2020 at 2:38 AM Christoph Hellwig <hch@infradead.org> wrote:
->
-> On Mon, Mar 23, 2020 at 02:33:11PM -0700, Yonghyun Hwang wrote:
-> > On Mon, Mar 23, 2020 at 4:14 AM Christoph Hellwig <hch@infradead.org> wrote:
-> > >
-> > > On Fri, Mar 20, 2020 at 10:59:10AM -0700, Yonghyun Hwang wrote:
-> > > > To enable a mediated device, a device driver registers its device to VFIO
-> > > > MDev framework. Once the mediated device gets enabled, UUID gets fed onto
-> > > > the sysfs attribute, "create", to create the mediated device. This
-> > > > additional step happens after boot-up gets complete. If the driver knows
-> > > > how many mediated devices need to be created during probing time, the
-> > > > additional step becomes cumbersome. This commit implements a new function
-> > > > to allow the driver to create a mediated device in kernel.
-> > >
-> > > Please send this along with your proposed user so that we can understand
-> > > the use.  Without that new exports have no chance of going in anyway.
-> >
-> > My driver is still under development. Do you recommend me to implement
-> > an example code for the new exports and re-submit the commit?
->
-> Hell no.  The point is that we don't add new APIs unless we have
-> actual users (not example code!).  And as Alex mentioned the use case
-> is rather questionable anyway, so without a user that actually shows a
-> good use case which would remove those doubts it is a complete no-go.
+Hi Alexander,
 
-I see. Thank you for your clarification. (I got confused with the use
-case.) I hope you can understand email communication results in some
-confusion from time to time, which is especially true for kernel
-newbie like me.
+> On Mar 27, 2020, at 00:27, Alexander Duyck <alexander.duyck@gmail.com> wrote:
+> 
+> On Thu, Mar 26, 2020 at 3:39 AM Kai-Heng Feng
+> <kai.heng.feng@canonical.com <mailto:kai.heng.feng@canonical.com>> wrote:
+>> 
+>> Commit 9474933caf21 ("igb: close/suspend race in netif_device_detach")
+>> fixed race condition between close and power management ops by using
+>> rtnl_lock().
+>> 
+>> This fix is a preparation for next patch, to prevent a dead lock under
+>> rtnl_lock() when calling runtime resume routine.
+>> 
+>> However, we can't use device_lock() in igb_close() because when module
+>> is getting removed, the lock is already held for igb_remove(), and
+>> igb_close() gets called during unregistering the netdev, hence causing a
+>> deadlock. So let's introduce a new mutex so we don't cause a deadlock
+>> with driver core or netdev core.
+>> 
+>> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+> 
+> So this description doesn't make much sense to me. You describe the
+> use of the device_lock() in igb_close() but it isn't used there.
+
+Sorry I forgot to add a revision number.
+It was used by previous version and Aaron found a regression when device_lock() is used.
+
+> In addition it seems like you are arbitrarily moving code that was
+> wrapped in the rtnl_lock out of it. I'm not entirely sure that is safe
+> since there are calls within many of these functions that assume the
+> rtnl_lock is held and changing that is likely going to introduce more
+> issues.
+
+The reason why rtnl lock needs to be removed is because of the following patch:
+https://lore.kernel.org/lkml/20200207101005.4454-2-kai.heng.feng@canonical.com/
+
+Ethtools helpers already held rtnl_lock, so to prevent a deadlock, my idea is to use another lock to solve what "igb: close/suspend race in netif_device_detach" originally tried to fix.
+
+> 
+> 
+> 
+>> ---
+>> drivers/net/ethernet/intel/igb/igb_main.c | 19 +++++++++++++------
+>> 1 file changed, 13 insertions(+), 6 deletions(-)
+>> 
+>> diff --git a/drivers/net/ethernet/intel/igb/igb_main.c b/drivers/net/ethernet/intel/igb/igb_main.c
+>> index b46bff8fe056..dc7ed5dd216b 100644
+>> --- a/drivers/net/ethernet/intel/igb/igb_main.c
+>> +++ b/drivers/net/ethernet/intel/igb/igb_main.c
+>> @@ -288,6 +288,8 @@ static const struct igb_reg_info igb_reg_info_tbl[] = {
+>>        {}
+>> };
+>> 
+>> +static DEFINE_MUTEX(igb_mutex);
+>> +
+>> /* igb_regdump - register printout routine */
+>> static void igb_regdump(struct e1000_hw *hw, struct igb_reg_info *reginfo)
+>> {
+>> @@ -4026,9 +4028,14 @@ static int __igb_close(struct net_device *netdev, bool suspending)
+>> 
+>> int igb_close(struct net_device *netdev)
+>> {
+>> +       int err = 0;
+>> +
+>> +       mutex_lock(&igb_mutex);
+>>        if (netif_device_present(netdev) || netdev->dismantle)
+>> -               return __igb_close(netdev, false);
+>> -       return 0;
+>> +               err = __igb_close(netdev, false);
+>> +       mutex_unlock(&igb_mutex);
+>> +
+>> +       return err;
+>> }
+>> 
+> 
+> Okay, so I am guessing the problem has something to do with the
+> addition of the netdev->dismantle test here and the fact that it is
+> bypassing the present check for the hotplug remove case?
+
+Please see the rationale above.
+
+> 
+> So it looks like nobody ever really reviewed commit 888f22931478
+> ("igb: Free IRQs when device is hotplugged"). What I would recommend
+> is reverting it and instead we fix the remaining pieces that need to
+> be addressed in igb so it more closely matches what we have in e1000e
+> after commit a7023819404a ("e1000e: Use rtnl_lock to prevent race
+> conditions between net and pci/pm"). From what I can tell the only
+> pieces that are really missing is to update igb_io_error_detected so
+> that in addition to igb_down it will call igb_free_irq, and then in
+> addition we should be wrapping most of the code in that function with
+> an rtnl_lock since it is detaching a device and making modifications
+> to it.
+
+In addition to that, igb_shutdown() indirectly calls igb_close() when netdev unregistering the device.
+
+My "only scratch the surface" approach is because I don't have a reproducer for commit "igb: close/suspend race in netif_device_detach", and I am afraid of breaking it.
+
+Kai-Heng
