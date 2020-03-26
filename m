@@ -2,190 +2,171 @@ Return-Path: <SRS0=aGSP=5L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 469CAC43331
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 01:57:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA93BC43331
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 01:58:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 179BB20714
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 01:57:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9945C20772
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 01:58:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585187893;
+	bh=TMOO7VsQlxZk4nfg/cWiZR8CxMNUJ70TyQJHVereHMY=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=YwsE02PF/h/l7TExCY6Mqu1sZpx2rIj74AdSlHutAeV+VnArXNkLeM6UTOPMaTrFP
+	 4QTZjva3YX4LfZsjW+RiJVKVVcx8WH68OdMVNA1MFY74A727sKCFJ/ySpjR2ujA1Vg
+	 Fv6aGwd8zQhF17twgO/RzaR8hUlkc0jHPsKWLrnI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727729AbgCZB5x (ORCPT
+        id S1727736AbgCZB6M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 21:57:53 -0400
-Received: from labrats.qualcomm.com ([199.106.110.90]:22961 "EHLO
-        labrats.qualcomm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727595AbgCZB5x (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 21:57:53 -0400
-IronPort-SDR: yZMJ6JjWQeGjfBCABy+Mg6DVJ764FG52ODPBJkbYnHraKNtEFvS856oOvJZjeH2dcWncTAr2Ep
- GTZ6cjf7NqfdT3wvzW8ZtkkUgC/sAFNoo/pdj6QwbakHh94+gF6oo/5Lvxb8J0O/RrXL5jqKAq
- 4lU/7nXepRcyFB37dofXjLc2egmEUxP+wu54a2gQIf3mzTZJ6r0t1YbRWSNfPiGBroXK/wdN5F
- 7QX4Rc7ld2tRUxzCXcYavUsz1lpjWwERRiG493Pwi3f8YBe7tRjMuMTu9KCLX284WWqgWJGaM4
- 0Sc=
-X-IronPort-AV: E=Sophos;i="5.72,303,1580803200"; 
-   d="scan'208";a="28615552"
-Received: from unknown (HELO ironmsg05-sd.qualcomm.com) ([10.53.140.145])
-  by labrats.qualcomm.com with ESMTP; 25 Mar 2020 02:25:00 -0700
-Received: from pacamara-linux.qualcomm.com ([192.168.140.135])
-  by ironmsg05-sd.qualcomm.com with ESMTP; 25 Mar 2020 02:24:59 -0700
-Received: by pacamara-linux.qualcomm.com (Postfix, from userid 359480)
-        id A873A3A9C; Wed, 25 Mar 2020 02:24:59 -0700 (PDT)
-From:   Can Guo <cang@codeaurora.org>
-To:     asutoshd@codeaurora.org, nguyenb@codeaurora.org,
-        hongwus@codeaurora.org, rnayak@codeaurora.org,
-        linux-scsi@vger.kernel.org, kernel-team@android.com,
-        saravanak@google.com, salyzyn@google.com, cang@codeaurora.org
-Cc:     Alim Akhtar <alim.akhtar@samsung.com>,
-        Avri Altman <avri.altman@wdc.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Stanley Chu <stanley.chu@mediatek.com>,
-        Bean Huo <beanhuo@micron.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        Venkat Gopalakrishnan <venkatg@codeaurora.org>,
-        Tomas Winkler <tomas.winkler@intel.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        linux-kernel@vger.kernel.org (open list),
-        linux-arm-kernel@lists.infradead.org (moderated list:ARM/Mediatek SoC
-        support),
-        linux-mediatek@lists.infradead.org (moderated list:ARM/Mediatek SoC
-        support)
-Subject: [PATCH v5 2/2] scsi: ufs: Do not rely on prefetched data
-Date:   Wed, 25 Mar 2020 02:23:39 -0700
-Message-Id: <1585128220-26128-3-git-send-email-cang@codeaurora.org>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1585128220-26128-1-git-send-email-cang@codeaurora.org>
-References: <1585128220-26128-1-git-send-email-cang@codeaurora.org>
+        Wed, 25 Mar 2020 21:58:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38078 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727585AbgCZB6M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Mar 2020 21:58:12 -0400
+Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 062C020714;
+        Thu, 26 Mar 2020 01:58:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1585187891;
+        bh=TMOO7VsQlxZk4nfg/cWiZR8CxMNUJ70TyQJHVereHMY=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=DAnV8aQLc3WN+j9ahySa0ijX+ycikZJg70i2pxw7CwnZEfGnosLL9nu0Fc48wbipH
+         /hkYkTFh+5ueUo0ZMrH6yMPziUJsmUfbHaZDzaTgJ8FIImWWJGWx/akPSMtwrwDAec
+         WNv9rcfHwy9VZN/IChz9u1eTpKjptOiFCABeoOz0=
+Date:   Thu, 26 Mar 2020 10:58:05 +0900
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Adrian Hunter <adrian.hunter@intel.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Leo Yan <leo.yan@linaro.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@redhat.com>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH V4 05/13] perf/x86: Add perf text poke events for
+ kprobes
+Message-Id: <20200326105805.0723cd10325ad301de061743@kernel.org>
+In-Reply-To: <20200324122150.GN20696@hirez.programming.kicks-ass.net>
+References: <20200304090633.420-1-adrian.hunter@intel.com>
+        <20200304090633.420-6-adrian.hunter@intel.com>
+        <20200324122150.GN20696@hirez.programming.kicks-ass.net>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We were setting bActiveICCLevel attribute for UFS device only once but
-type of this attribute has changed from persistent to volatile since UFS
-device specification v2.1. This attribute is set to the default value after
-power cycle or hardware reset event. It isn't safe to rely on prefetched
-data (only used for bActiveICCLevel attribute now). Hence this change
-removes the code related to data prefetching and set this parameter on
-every attempt to probe the UFS device.
+On Tue, 24 Mar 2020 13:21:50 +0100
+Peter Zijlstra <peterz@infradead.org> wrote:
 
-Signed-off-by: Can Guo <cang@codeaurora.org>
-Reviewed-by: Stanley Chu <stanley.chu@mediatek.com>
-Tested-by: Stanley Chu <stanley.chu@mediatek.com>
-Reviewed-by: Avri Altman <avri.altman@wdc.com>
----
- drivers/scsi/ufs/ufshcd.c | 26 +++++++++++++++-----------
- drivers/scsi/ufs/ufshcd.h | 11 -----------
- 2 files changed, 15 insertions(+), 22 deletions(-)
+> We optimize only after having already installed a regular probe, that
+> is, what we're actually doing here is replacing INT3 with a JMP.d32. But
+> the above will make it appear as if we're replacing the original text
+> with a JMP.d32. Which doesn't make sense, since we've already poked an
+> INT3 there and that poke will have had a corresponding
+> perf_event_text_poke(), right? (except you didn't, see below)
+> 
+> At this point we'll already have constructed the optprobe trampoline,
+> which contains however much of the original instruction (in whole) as
+> will be overwritten by our 5 byte JMP.d32. And IIUC, we'll have a
+> perf_event_text_poke() event for the whole of that already -- except I
+> can't find that in the patches (again, see below).
 
-diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
-index 9c26f82..b747c17 100644
---- a/drivers/scsi/ufs/ufshcd.c
-+++ b/drivers/scsi/ufs/ufshcd.c
-@@ -6458,11 +6458,12 @@ static u32 ufshcd_find_max_sup_active_icc_level(struct ufs_hba *hba,
- 	return icc_level;
- }
- 
--static void ufshcd_init_icc_levels(struct ufs_hba *hba)
-+static void ufshcd_set_active_icc_lvl(struct ufs_hba *hba)
- {
- 	int ret;
- 	int buff_len = hba->desc_size.pwr_desc;
- 	u8 *desc_buf;
-+	u32 icc_level;
- 
- 	desc_buf = kmalloc(buff_len, GFP_KERNEL);
- 	if (!desc_buf)
-@@ -6477,20 +6478,17 @@ static void ufshcd_init_icc_levels(struct ufs_hba *hba)
- 		goto out;
- 	}
- 
--	hba->init_prefetch_data.icc_level =
--			ufshcd_find_max_sup_active_icc_level(hba,
--			desc_buf, buff_len);
--	dev_dbg(hba->dev, "%s: setting icc_level 0x%x",
--			__func__, hba->init_prefetch_data.icc_level);
-+	icc_level = ufshcd_find_max_sup_active_icc_level(hba, desc_buf,
-+							 buff_len);
-+	dev_dbg(hba->dev, "%s: setting icc_level 0x%x", __func__, icc_level);
- 
- 	ret = ufshcd_query_attr_retry(hba, UPIU_QUERY_OPCODE_WRITE_ATTR,
--		QUERY_ATTR_IDN_ACTIVE_ICC_LVL, 0, 0,
--		&hba->init_prefetch_data.icc_level);
-+		QUERY_ATTR_IDN_ACTIVE_ICC_LVL, 0, 0, &icc_level);
- 
- 	if (ret)
- 		dev_err(hba->dev,
- 			"%s: Failed configuring bActiveICCLevel = %d ret = %d",
--			__func__, hba->init_prefetch_data.icc_level , ret);
-+			__func__, icc_level, ret);
- 
- out:
- 	kfree(desc_buf);
-@@ -6996,8 +6994,6 @@ static int ufshcd_add_lus(struct ufs_hba *hba)
- {
- 	int ret;
- 
--	ufshcd_init_icc_levels(hba);
--
- 	/* Add required well known logical units to scsi mid layer */
- 	ret = ufshcd_scsi_add_wlus(hba);
- 	if (ret)
-@@ -7095,6 +7091,14 @@ static int ufshcd_probe_hba(struct ufs_hba *hba, bool async)
- 		}
- 	}
- 
-+	/*
-+	 * bActiveICCLevel is volatile for UFS device (as per latest v2.1 spec)
-+	 * and for removable UFS card as well, hence always set the parameter.
-+	 * Note: Error handler may issue the device reset hence resetting
-+	 * bActiveICCLevel as well so it is always safe to set this here.
-+	 */
-+	ufshcd_set_active_icc_lvl(hba);
-+
- 	/* set the state as operational after switching to desired gear */
- 	hba->ufshcd_state = UFSHCD_STATE_OPERATIONAL;
- 
-diff --git a/drivers/scsi/ufs/ufshcd.h b/drivers/scsi/ufs/ufshcd.h
-index d45a044..5652d39 100644
---- a/drivers/scsi/ufs/ufshcd.h
-+++ b/drivers/scsi/ufs/ufshcd.h
-@@ -404,15 +404,6 @@ struct ufs_clk_scaling {
- 	bool is_suspended;
- };
- 
--/**
-- * struct ufs_init_prefetch - contains data that is pre-fetched once during
-- * initialization
-- * @icc_level: icc level which was read during initialization
-- */
--struct ufs_init_prefetch {
--	u32 icc_level;
--};
--
- #define UFS_ERR_REG_HIST_LENGTH 8
- /**
-  * struct ufs_err_reg_hist - keeps history of errors
-@@ -544,7 +535,6 @@ enum ufshcd_quirks {
-  * @intr_mask: Interrupt Mask Bits
-  * @ee_ctrl_mask: Exception event control mask
-  * @is_powered: flag to check if HBA is powered
-- * @init_prefetch_data: data pre-fetched during initialization
-  * @eh_work: Worker to handle UFS errors that require s/w attention
-  * @eeh_work: Worker to handle exception events
-  * @errors: HBA errors
-@@ -632,7 +622,6 @@ struct ufs_hba {
- 	u32 intr_mask;
- 	u16 ee_ctrl_mask;
- 	bool is_powered;
--	struct ufs_init_prefetch init_prefetch_data;
- 
- 	/* Work Queues */
- 	struct work_struct eh_work;
+Thanks Peter to point it out.
+
+> 
+> > @@ -454,9 +463,16 @@ void arch_optimize_kprobes(struct list_head *oplist)
+> >   */
+> >  void arch_unoptimize_kprobe(struct optimized_kprobe *op)
+> >  {
+> > +	u8 old[POKE_MAX_OPCODE_SIZE];
+> > +	u8 new[POKE_MAX_OPCODE_SIZE] = { op->kp.opcode, };
+> > +	size_t len = INT3_INSN_SIZE + DISP32_SIZE;
+> > +
+> > +	memcpy(old, op->kp.addr, len);
+> >  	arch_arm_kprobe(&op->kp);
+> >  	text_poke(op->kp.addr + INT3_INSN_SIZE,
+> >  		  op->optinsn.copied_insn, DISP32_SIZE);
+> > +	memcpy(new + INT3_INSN_SIZE, op->optinsn.copied_insn, DISP32_SIZE);
+> 
+> And then this is 'wrong' too. You've not written the original
+> instruction, you've just written an INT3.
+> 
+> > +	perf_event_text_poke(op->kp.addr, old, len, new, len);
+> >  	text_poke_sync();
+> >  }
+> 
+> 
+> So how about something like the below, with it you'll get 6 text_poke
+> events:
+> 
+> 1:  old0 -> INT3
+> 
+>   // kprobe active
+> 
+> 2:  NULL -> optprobe_trampoline
+> 3:  INT3,old1,old2,old3,old4 -> JMP32
+> 
+>   // optprobe active
+> 
+> 4:  JMP32 -> INT3,old1,old2,old3,old4
+> 5:  optprobe_trampoline -> NULL
+> 
+>   // kprobe active
+> 
+> 6:  INT3 -> old0
+> 
+> 
+> 
+> Masami, did I get this all right?
+
+Yes, you understand correctly. And there is also boosted kprobe
+which runs probe.ainsn.insn directly and jump back to old place.
+I guess it will also disturb Intel PT.
+
+0:  NULL -> probe.ainsn.insn (if ainsn.boostable && !kp.post_handler)
+
+> 1:  old0 -> INT3
+> 
+  // boosted kprobe active
+> 
+> 2:  NULL -> optprobe_trampoline
+> 3:  INT3,old1,old2,old3,old4 -> JMP32
+> 
+>   // optprobe active
+> 
+> 4:  JMP32 -> INT3,old1,old2,old3,old4
+
+   // optprobe disabled and kprobe active (this sometimes goes back to 3)
+
+> 5:  optprobe_trampoline -> NULL
+> 
+  // boosted kprobe active
+> 
+> 6:  INT3 -> old0
+
+7:  probe.ainsn.insn -> NULL (if ainsn.boostable && !kp.post_handler)
+
+So you'll get 8 events in max.
+
+Adrian, would you also need to trace the buffer which is used for
+single stepping? If so, as you did, we need to trace p->ainsn.insn
+always.
+
+Thank you,
+
 -- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, a Linux Foundation Collaborative Project.
-
+Masami Hiramatsu <mhiramat@kernel.org>
