@@ -2,204 +2,190 @@ Return-Path: <SRS0=aGSP=5L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DBA4C43331
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 01:07:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93A2AC43331
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 01:20:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1097B20714
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 01:07:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D2FC20737
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 01:20:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CozEn1aI"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uQVVv0Vr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727590AbgCZBHS (ORCPT
+        id S1727593AbgCZBUu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 21:07:18 -0400
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:35751 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727539AbgCZBHR (ORCPT
+        Wed, 25 Mar 2020 21:20:50 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:34561 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727556AbgCZBUt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 21:07:17 -0400
-Received: by mail-qk1-f193.google.com with SMTP id k13so4871003qki.2
-        for <linux-kernel@vger.kernel.org>; Wed, 25 Mar 2020 18:07:15 -0700 (PDT)
+        Wed, 25 Mar 2020 21:20:49 -0400
+Received: by mail-pg1-f193.google.com with SMTP id d37so1543761pgl.1
+        for <linux-kernel@vger.kernel.org>; Wed, 25 Mar 2020 18:20:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:user-agent:in-reply-to:references:mime-version
-         :content-transfer-encoding:subject:to:cc:from:message-id;
-        bh=Z3DRv1LbJKsu5QnAvVeRAna8E9OdvLwBSsN4EhmOw9c=;
-        b=CozEn1aIAvFY4NdMaDQtx0dKvQqOZMqlyEcIBkvkjGNgv8cN3N0ZNGXAr96an7nobk
-         Q7Mv1rsgGEtwJ8D35fF54BbT205t2B80K9zXD3HfNgjWx+THMTCK7YIMjlUtDcRgILFZ
-         0W7f7s3hRQw+Hp9N9tVe6L0LK/axle+dzmjVD0VFvHoOSEc/WsuVeBXUTUDnr1snCy54
-         A1dw/JYZKzR7fagPcKl7U4mJd1lXCNPlZAeMXfyX7TCklEf6k6SwQAicYsjATWHqIYre
-         MZPF57Ow5CPOb6xvmKvn0G7ELISViBzRhxfNELJz7XdZUJMTROhFMLonbdWB5/DwveXL
-         BmjQ==
+        h=date:from:to:cc:subject:message-id:mail-followup-to:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=e8XheT6kfmvd0PF/NNKtOa37EvHLdf90VhV5aTaHxDc=;
+        b=uQVVv0VrCW4ziaRkImKz/hIt4IQAbpYDUj8SyLZUhEyE/AtUxPknfqxRPAuv8Rc2tG
+         0grQAgGFdeJOU+tGOFhzaUgyn1ylHmLbuoY6lE0oHROReIP4f/1Yx3EXbhcK4Az6b3Ny
+         0mKRcbkAM7+hraI5HStz2znb+nAXfEnDz1onzggyROflfKJxPj102Hx4d3v0e2143vhJ
+         MVC2IBXGt9JHvBLA1Gg8D+zVSE9NceaapiXRuUBQyghhZ0tqsvX0YUCvctLnA8pT7rOY
+         wyNZ4t05Ia9TELcuBcM0Irpk3bavXiMqZOk1rJM9xUNXYp3FBWPauZY6bzHkeaaEHCvI
+         5zeg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:user-agent:in-reply-to:references
-         :mime-version:content-transfer-encoding:subject:to:cc:from
-         :message-id;
-        bh=Z3DRv1LbJKsu5QnAvVeRAna8E9OdvLwBSsN4EhmOw9c=;
-        b=MWTo0Zn6AcaM1B6XJcMZ8P2PSLP6ssJ6Vs0XSlSE6Dr81H952SrXntMbOyd1GwNE5c
-         vUI6he1i1IdQZ95ryMzY0mCrejg438xSpJDkEyO4PNwS935hDKlowi0KLFJbzXiHz/ve
-         dJ/YFGbNbd3z3mu9iV+V9qTXNp7OwwTGB7oMt7mx0opqIzpSclvZnONQ/65g0qz6BCXI
-         iT8PjppZyjoeTahmc9CuTqlwCb6cPasqUZk6/G60mFy/LK31UCutTogPFgyNeHuu8btg
-         VgExdTvbg6SoiE7bQgqAomSlZnKhETZ5hnzKeqOkG6YEgyO3uQtYu6Y8SXDWKUZ7Fx28
-         kzzw==
-X-Gm-Message-State: ANhLgQ0imZgBLKFtxXGpAJhPpVNMsFXW/V8Nkzrl6cfrU9lgME75eYIr
-        DukQyTVHW155vXM8Kia+z1U=
-X-Google-Smtp-Source: ADFU+vtnnpjUkyfbRLSHObeZYgjQMxqqyTlgTu8EP9dvSqFKx6khu8fUx7ig1c0rm6Mzkwwsk0Eqag==
-X-Received: by 2002:a37:bd6:: with SMTP id 205mr5518136qkl.159.1585184834502;
-        Wed, 25 Mar 2020 18:07:14 -0700 (PDT)
-Received: from [192.168.86.185] ([179.97.37.151])
-        by smtp.gmail.com with ESMTPSA id y17sm531560qth.59.2020.03.25.18.07.08
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 25 Mar 2020 18:07:13 -0700 (PDT)
-Date:   Wed, 25 Mar 2020 22:06:02 -0300
-User-Agent: K-9 Mail for Android
-In-Reply-To: <CAGn10uXpBUnSx8fsL79oMzX5bRLyhqckvxXTLg5JxDARsjFpDw@mail.gmail.com>
-References: <1581618066-187262-1-git-send-email-zhe.he@windriver.com> <20200216222148.GA161771@krava> <8cc46abf-208d-4aa4-8d0d-4922106bee6e@windriver.com> <20200325133012.GC14102@kernel.org> <CAGn10uVQdP32PNqyBm_dCxvRisj5tw4GU1f8j6Rq=Q6bmjmaAw@mail.gmail.com> <20200325192640.GI14102@kernel.org> <CAGn10uXpBUnSx8fsL79oMzX5bRLyhqckvxXTLg5JxDARsjFpDw@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH 1/2] perf: Be compatible with all python versions when fetching ldflags
-To:     Sam Lunt <samueljlunt@gmail.com>
-CC:     He Zhe <zhe.he@windriver.com>, Jiri Olsa <jolsa@redhat.com>,
-        peterz@infradead.org, mingo@redhat.com, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, namhyung@kernel.org,
+        h=x-gm-message-state:date:from:to:cc:subject:message-id
+         :mail-followup-to:references:mime-version:content-disposition
+         :in-reply-to;
+        bh=e8XheT6kfmvd0PF/NNKtOa37EvHLdf90VhV5aTaHxDc=;
+        b=puSjF8kui1o5IrkwnTneCthFZ41rtt4WjtdI9mNXQFTZpEaLqw10tDx88k/x/MVbX1
+         akjAndfUh/luMXhKfg3679GkZ3COcN1u3GM6g4sk0IYwuDjbTpVXi4nBm4GtCNvudPcr
+         5xOSTAAN3diFVYP1992cCRdTggv48P+/AN1BwL99qS3c1FYvKZ62zKFimhk0uyVIeG9J
+         ntBkKYwh8Lbi+VBQxI4pYYBKVvvlcI+siQ6fTZk5h9gqRhA8IcK7FMpD2/gn+yfBRLLw
+         XfRw45vMhksPNatPWWU1bhiTd0lxh4we+zJgjOjaor2jAD1BFsL+zYeIz5vSm+i0/rSh
+         lAHw==
+X-Gm-Message-State: ANhLgQ2ZVtgiNsQaK1dZ8/Flaxq7AAN0pJaVp94RPnQvrUy+ir/+A9kn
+        YwmTFg5WAHHIGEEpJ+LcPCih+8P14dM=
+X-Google-Smtp-Source: ADFU+vuCLIPA717y5MwUpounWw8Gjzi1rcFZKVGs5t95fanGcoIdtlldzPcDBvaggALQlzMqCaR70w==
+X-Received: by 2002:a63:e56:: with SMTP id 22mr5872162pgo.173.1585185647901;
+        Wed, 25 Mar 2020 18:20:47 -0700 (PDT)
+Received: from ArchLinux ([103.231.91.35])
+        by smtp.gmail.com with ESMTPSA id 93sm362950pjo.43.2020.03.25.18.20.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 25 Mar 2020 18:20:46 -0700 (PDT)
+Date:   Thu, 26 Mar 2020 06:50:36 +0530
+From:   Bhaskar Chowdhury <unixbhaskar@gmail.com>
+To:     Thorsten Leemhuis <linux@leemhuis.info>
+Cc:     rdunlap@infradead.org, joe@perches.com,
         linux-kernel@vger.kernel.org
-From:   Arnaldo Melo <arnaldo.melo@gmail.com>
-Message-ID: <D0DBFE8F-632A-446E-941A-980A511C26FD@gmail.com>
+Subject: Re: [PATCH V2] : kernel-chktaint : Fixed space ,cosmetic change
+Message-ID: <20200326012036.GA985@ArchLinux>
+Mail-Followup-To: Bhaskar Chowdhury <unixbhaskar@gmail.com>,
+        Thorsten Leemhuis <linux@leemhuis.info>, rdunlap@infradead.org,
+        joe@perches.com, linux-kernel@vger.kernel.org
+References: <20200324225917.26104-1-unixbhaskar@gmail.com>
+ <3ca78f7a-4431-b345-85e4-eb07fa8a4038@leemhuis.info>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="y0ulUmNC+osPPQO6"
+Content-Disposition: inline
+In-Reply-To: <3ca78f7a-4431-b345-85e4-eb07fa8a4038@leemhuis.info>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
+--y0ulUmNC+osPPQO6
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On March 25, 2020 5:31:15 PM GMT-03:00, Sam Lunt <samueljlunt@gmail=2Ecom>=
- wrote:
->On Wed, Mar 25, 2020 at 2:26 PM Arnaldo Carvalho de Melo
-><arnaldo=2Emelo@gmail=2Ecom> wrote:
->>
->> Em Wed, Mar 25, 2020 at 09:40:34AM -0500, Sam Lunt escreveu:
->> > On Wed, Mar 25, 2020 at 8:30 AM Arnaldo Carvalho de Melo
->> > <arnaldo=2Emelo@gmail=2Ecom> wrote:
->> > >
->> > > Em Mon, Feb 17, 2020 at 10:24:27AM +0800, He Zhe escreveu:
->> > > >
->> > > >
->> > > > On 2/17/20 6:22 AM, Jiri Olsa wrote:
->> > > > > On Fri, Feb 14, 2020 at 02:21:05AM +0800,
->zhe=2Ehe@windriver=2Ecom wrote:
->> > > > >> From: He Zhe <zhe=2Ehe@windriver=2Ecom>
->> > > > >>
->> > > > >> Since Python v3=2E8=2E0, with the following commit
->> > > > >> 0a8e57248b91 ("bpo-36721: Add --embed option to
->python-config (GH-13500)"),
->> > > > > we got similar change recently=2E=2E might have not been picked
->up yet
->> > > > >
->> > > > > =20
->https://lore=2Ekernel=2Eorg/lkml/20200131181123=2Etmamivhq4b7uqasr@gmail=
-=2Ecom/
->> > > >
->> > > > Thanks for pointing out=2E
->> > >
->> > > So, just with your patch:
->> > >
->> > > [acme@five perf]$ rm -rf /tmp/build/perf ; mkdir -p
->/tmp/build/perf
->> > > [acme@five perf]$ make PYTHON=3Dpython3 -C tools/perf
->O=3D/tmp/build/perf install-bin |& grep python
->> > > =2E=2E=2E                     libpython: [ OFF ]
->> > > Makefile=2Econfig:750: No 'Python=2Eh' (for Python 2=2Ex support) w=
-as
->found: disables Python support - please install python-devel/python-dev
->> > >   CC       /tmp/build/perf/tests/python-use=2Eo
->> > > [acme@five perf]$
->> > >
->> > > [acme@five perf]$ rpm -q python2-devel python3-devel python-devel
->> > > package python2-devel is not installed
->> > > python3-devel-3=2E7=2E6-2=2Efc31=2Ex86_64
->> > > package python-devel is not installed
->> > > [acme@five perf]$
->> > >
->> > > [acme@five perf]$ cat
->/tmp/build/perf/feature/test-libpython=2Emake=2Eoutput
->> > > /bin/sh: --configdir: command not found
->> > > [acme@five perf]$ cat /tmp/build/perf/feature/test-libpython
->> > > test-libpython=2Emake=2Eoutput        =20
->test-libpython-version=2Emake=2Eoutput
->> > > [acme@five perf]$ cat
->/tmp/build/perf/feature/test-libpython-version=2Emake=2Eoutput
->> > > /bin/sh: --configdir: command not found
->> > > [acme@five perf]$
->> > >
->> > >
->> > > Without your patch:
->> > >
->> > > [acme@five perf]$ rm -rf /tmp/build/perf ; mkdir -p
->/tmp/build/perf
->> > > [acme@five perf]$ make PYTHON=3Dpython3 -C tools/perf
->O=3D/tmp/build/perf install-bin |& grep python
->> > > =2E=2E=2E                     libpython: [ on  ]
->> > >   GEN      /tmp/build/perf/python/perf=2Eso
->> > >   MKDIR    /tmp/build/perf/scripts/python/Perf-Trace-Util/
->> > >   CC     =20
->/tmp/build/perf/scripts/python/Perf-Trace-Util/Context=2Eo
->> > >   LD     =20
->/tmp/build/perf/scripts/python/Perf-Trace-Util/perf-in=2Eo
->> > >   CC       /tmp/build/perf/tests/python-use=2Eo
->> > >   CC     =20
->/tmp/build/perf/util/scripting-engines/trace-event-python=2Eo
->> > >   INSTALL  python-scripts
->> > > [acme@five perf]$
->> > >
->> > > [acme@five perf]$ ldd /tmp/build/perf/perf |& grep python
->> > >         libpython3=2E7m=2Eso=2E1=2E0 =3D> /lib64/libpython3=2E7m=2E=
-so=2E1=2E0
->(0x00007f11dd1ee000)
->> > > [acme@five perf]$ perf -vv |& grep -i python
->> > >              libpython: [ on  ]  # HAVE_LIBPYTHON_SUPPORT
->> > > [acme@five perf]$
->> > >
->> > > What am I missing?
->> >
->> > It looks like you are using python3=2E7, but the change in behavior
->for
->> > python-config happened in version 3=2E8
->>
->> Humm, but shouldn't this continue to work with python3=2E7?
+On 12:23 Wed 25 Mar 2020, Thorsten Leemhuis wrote:
+>Lo! Thx for taking a look at this, but it seems a few small details need
+>to be improved before this can be applied. A few general issues first:
 >
->Oh, my mistake, I didn't read the output carefully=2E It should
->obviously still work with old versions, yes=2E I actually submitted a
->similar patch, and it seemed to work when I used python 3=2E7=2E I wonder
->if the issue is the "||" operator in the subshell=2E
+>* your patch v2 is afaics on top of the first patch; when doing further
+>revisions please merge all your changes into one patch so everything you
+>want to do can be done in one commit (and people that see this mail
+>out-of-context can easily gasp what this is all about).
 >
->https://lore=2Ekernel=2Eorg/lkml/20200131181123=2Etmamivhq4b7uqasr@gmail=
-=2Ecom/
-
-
-I'm aware of your path, even for confused by your comment here, will it tr=
-y it tomorrow
-
+>* tools/debugging/kernel-chktaint was added via the docs tree, thus I
+>think it's best if this change takes the same route, so please CC the
+>docs maintainer Jonathan Corbet <corbet@lwn.net>
+> and linux-doc@vger.kernel.org
+> =E2=80=93 I might be wrong with that line of thought, but Jonathan will k=
+now
+>for sure.
 >
+>Am 24.03.20 um 23:59 schrieb Bhaskar Chowdhury:
+>> Space bwtween
 >
->> - Arnaldo
->>
->> > > [acme@five perf]$ cat /etc/redhat-release
->> > > Fedora release 31 (Thirty One)
->> > > [acme@five perf]$
->> > >
->> > > - Arnaldo
->>
->> --
->>
->> - Arnaldo
+>Typo
+>
+>> the words is fixed at the bottom of the file,sentence
+>
+>Missing space after the comma.
+>
+>> starting with "Documentation....."
+>>=20
+>> Signed-off-by: Bhaskar Chowdhury <unixbhaskar@gmail.com>
+>> ---
+>>  tools/debugging/kernel-chktaint | 2 +-
+>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>=20
+>> diff --git a/tools/debugging/kernel-chktaint b/tools/debugging/kernel-ch=
+ktaint
+>> index 74fd3282aa1b..1af06bc0e667 100755
+>> --- a/tools/debugging/kernel-chktaint
+>> +++ b/tools/debugging/kernel-chktaint
+>> @@ -198,6 +198,6 @@ fi
+>>  echo "Raw taint value as int/string: $taint/'$out'"
+>
+>This used to be the last time. Did you move it upwards on purpose?
+>
+>>  echo
+>
+>If you add a blank line here you IMHO might want to add one above the
+>""Raw taint value" as well.
+>
+>>  echo "For a more detailed explanation of the various taint flags see be=
+low pointers:"
+>> -echo "1) Documentation/admin-guide/tainted-kernels.rst in  the Linux ke=
+rnel sources"
+>> +echo "1) Documentation/admin-guide/tainted-kernels.rst in the Linux ker=
+nel sources"
+>>  echo "2)  https://kernel.org/doc/html/latest/admin-guide/tainted-kernel=
+s.html"
+>There are two spaces here as well: "2)  https".
+>
+>And I for one dislike the "1)" "2)" style, as in the end it's the same
+>file in different locations. How about a text like this instead:
+>
+>```
+>For a more detailed explanation of the various taint flags see
+>Documentation/admin-guide/tainted-kernels.rst in the Linux sources which
+>is also available online as rendered webpage at
+>https://kernel.org/doc/html/latest/admin-guide/tainted-kernels.html"
+>```
+>
+>Feel free to improve on that, it's just a suggestion. I for one wonder
+>if this cosmetic change is worth all of this, but no worries.
+>
+>Note, you also want to change tainted-kernels.rst, as in once place it
+>shows the output of this tool (which is one more reason to route this
+>via the docs tree).
+>
+>Ciao, Thorsten
 
---=20
-Sent from my Android device with K-9 Mail=2E Please excuse my brevity=2E
+Thanks a bunch, Thorsten ....I think we all should forget about this
+event altogether ...this is not worth a single second of our time
+=2E..honestly...
+
+crapping it ...let it be what it is ..in fact it is looks good in
+present form . Too many round to gain too little...nope...
+
+Sorry for trouble.=20
+
+~Bhaskar
+
+--y0ulUmNC+osPPQO6
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEEnwF+nWawchZUPOuwsjqdtxFLKRUFAl58A2EACgkQsjqdtxFL
+KRUAzQf/ewfABqBDF1hGgWdnJt7NJdZ6GcA+r8PhGjSUCCXwtw3h1TzppTmx1p3g
+tXRgiGCAAYmvnMQ3wCACoAPBHRMG+gNoRDcV34v4LekHjl1re7ZLBmntikW53SJR
+gP/cw6uRLixk53x0xF+eeeTnLcqPO99J/AgksVSOKoMh4DVpTo25aEjISo6ScVKl
+U6SbTC1jBAdlfFOJQ8uiibi3TnJeJD+7ihvXFksEtDp7ooEPUFcjOd4Q0OI9nE4h
+nVH2peBrLpQ5SzkCN778/fAnMAjSAXtckRd6iwB9efsawTtcZ6jmUdHUHR8clpKN
+ZfW3GwhdN8OCqRNwN/oPfdXSFRRgSQ==
+=l59c
+-----END PGP SIGNATURE-----
+
+--y0ulUmNC+osPPQO6--
