@@ -2,94 +2,109 @@ Return-Path: <SRS0=aGSP=5L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70F93C43331
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 21:12:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FD68C2D0E5
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 21:13:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 403D820719
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 21:12:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95C8520719
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 21:13:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585257183;
+	bh=1HvFts9rQeuRzYxOlzyu9ed5O5MaRtckzVZ9rEw49+E=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=uiQzOCYaWh/pTn897UC10nZ4e13Q0VK2s0Qq7HYW3dm3lbqFpPxwrtTehWptuwqjx
+	 2F6eAHHFGSNMZ5yfpHv7vs5i2SXpzERY35B1zUxrwBuUQSR6hgYQnCtL0q+KvOWhHJ
+	 Pni4EzUVCCCkQ2LJV3OnLPFLGpsvPh0qQy2CPD6E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727983AbgCZVMq (ORCPT
+        id S1728057AbgCZVNC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 17:12:46 -0400
-Received: from sauhun.de ([88.99.104.3]:54276 "EHLO pokefinder.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726330AbgCZVJv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 17:09:51 -0400
-Received: from localhost (p54B3331F.dip0.t-ipconnect.de [84.179.51.31])
-        by pokefinder.org (Postfix) with ESMTPSA id E43FD2C1F87;
-        Thu, 26 Mar 2020 22:09:48 +0100 (CET)
-From:   Wolfram Sang <wsa+renesas@sang-engineering.com>
-To:     linux-i2c@vger.kernel.org
-Cc:     Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 1/6] media: pci: cx88: convert to use i2c_new_client_device()
-Date:   Thu, 26 Mar 2020 22:09:41 +0100
-Message-Id: <20200326210947.12747-2-wsa+renesas@sang-engineering.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200326210947.12747-1-wsa+renesas@sang-engineering.com>
-References: <20200326210947.12747-1-wsa+renesas@sang-engineering.com>
+        Thu, 26 Mar 2020 17:13:02 -0400
+Received: from conssluserg-04.nifty.com ([210.131.2.83]:20175 "EHLO
+        conssluserg-04.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727884AbgCZVNB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Mar 2020 17:13:01 -0400
+Received: from mail-ua1-f43.google.com (mail-ua1-f43.google.com [209.85.222.43]) (authenticated)
+        by conssluserg-04.nifty.com with ESMTP id 02QLCux3029921;
+        Fri, 27 Mar 2020 06:12:56 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-04.nifty.com 02QLCux3029921
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1585257177;
+        bh=yUWTDQTSG+CELwmMJY3M4PyyjvvHxAi5WzaSE/lWqWs=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=02ax5uD7o97ywHVTM+BzqvV5KxZq7HYns7pOohZvn/H/gS5KFk5dbFbsxwdf2UO4S
+         1vqgsJtvu7G6cL6QxIOeeAfB7udsm/QfTFmvxTfuFM4wBO/O48Zk7DfzdkY6eJcLqZ
+         IYWMLO9qD356FZlV4oG/s8OoRqthhbrehJW26Vcszqfnjt/CzHVWfnd/4452UUWixv
+         BUNH6/d9yw/4kHTvTVnv/QzWGiv0H4p/k0G64hu8GCyt6Nv0WvyS4X5BxKhmC981/N
+         xLS1cNma8U/X2FiQX7Cf+UbsbUdRi74RlEOVV/aDPSaYzz5d/uHwb4vaz8fAJ8XJJ5
+         UsXN64bnn8b1A==
+X-Nifty-SrcIP: [209.85.222.43]
+Received: by mail-ua1-f43.google.com with SMTP id m18so2713958uap.9;
+        Thu, 26 Mar 2020 14:12:56 -0700 (PDT)
+X-Gm-Message-State: ANhLgQ1wJy6VNHDmUTF4zoy/Xjou+tK3TCuHIiyX+EJFSOELlH8aBnQ6
+        NSvXwmg20K8b+nlWxqc+Wf3RfcAIpcVyzrNXBhE=
+X-Google-Smtp-Source: ADFU+vt/pF+IMJk2I2eYB42/QwdxfxYfeO3mcmt/FNF9nUsRTsBXsBiH5xt4Zbky0X6BnYqInbOxR2tZvNrmVUvbcYI=
+X-Received: by 2002:a9f:28c5:: with SMTP id d63mr8552249uad.25.1585257175580;
+ Thu, 26 Mar 2020 14:12:55 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200326080104.27286-1-masahiroy@kernel.org> <CAHmME9pnAvgErYkcvvdakvfMY8ZGKfwHHNYzpVtJ913Tgp16CQ@mail.gmail.com>
+ <20200326092213.GA100918@gmail.com> <CAK7LNAQ7-wpm+g=cXeJ01vGrO1nVjfP-ornKm=SXoDEn4x+DjQ@mail.gmail.com>
+ <CAHmME9qnWWYV+eWVmx2yoADB9oecZKj=UgLkdSHe_=MnxedtSQ@mail.gmail.com>
+In-Reply-To: <CAHmME9qnWWYV+eWVmx2yoADB9oecZKj=UgLkdSHe_=MnxedtSQ@mail.gmail.com>
+From:   Masahiro Yamada <masahiroy@kernel.org>
+Date:   Fri, 27 Mar 2020 06:12:19 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAQNx0TxWGCzNM-2JqfEJuyDKnLMcqJv8Be_9_Ty5wv5Lg@mail.gmail.com>
+Message-ID: <CAK7LNAQNx0TxWGCzNM-2JqfEJuyDKnLMcqJv8Be_9_Ty5wv5Lg@mail.gmail.com>
+Subject: Re: [PATCH v2 00/16] x86, crypto: remove always-defined CONFIG_AS_*
+ and cosolidate Kconfig/Makefiles
+To:     "Jason A. Donenfeld" <Jason@zx2c4.com>
+Cc:     Nick Desaulniers <ndesaulniers@google.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "H . Peter Anvin" <hpa@zytor.com>, X86 ML <x86@kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@linux.ie>,
+        "David S. Miller" <davem@davemloft.net>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Ingo Molnar <mingo@redhat.com>,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Jim Kukunas <james.t.kukunas@linux.intel.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        NeilBrown <neilb@suse.de>, Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        Yuanhan Liu <yuanhan.liu@linux.intel.com>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        intel-gfx@lists.freedesktop.org,
+        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Move away from the deprecated API and make use of the fact that
-unregistering devices is NULL- and ERR_PTR-safe.
+On Fri, Mar 27, 2020 at 5:46 AM Jason A. Donenfeld <Jason@zx2c4.com> wrote:
+>
+> On Thu, Mar 26, 2020 at 2:44 PM Masahiro Yamada <masahiroy@kernel.org> wrote:
+> > I collected more Reviewed-by and Acked-by,
+> > then pushed this series to
+> >
+> > git://git.kernel.org/pub/scm/linux/kernel/git/masahiroy/linux-kbuild.git
+> > kbuild-asinstr
+>
+> But not the version of the penultimate patch that Nick ack'd....
 
-Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
----
- drivers/media/pci/cx88/cx88-core.c  | 3 +--
- drivers/media/pci/cx88/cx88-input.c | 2 +-
- drivers/media/pci/cx88/cx88-video.c | 2 +-
- 3 files changed, 3 insertions(+), 4 deletions(-)
+Dropped Nick's Reviewed-by.
 
-diff --git a/drivers/media/pci/cx88/cx88-core.c b/drivers/media/pci/cx88/cx88-core.c
-index dcadf78657d6..48c8a3429542 100644
---- a/drivers/media/pci/cx88/cx88-core.c
-+++ b/drivers/media/pci/cx88/cx88-core.c
-@@ -1070,8 +1070,7 @@ void cx88_core_put(struct cx88_core *core, struct pci_dev *pci)
- 	mutex_lock(&devlist);
- 	cx88_ir_fini(core);
- 	if (core->i2c_rc == 0) {
--		if (core->i2c_rtc)
--			i2c_unregister_device(core->i2c_rtc);
-+		i2c_unregister_device(core->i2c_rtc);
- 		i2c_del_adapter(&core->i2c_adap);
- 	}
- 	list_del(&core->devlist);
-diff --git a/drivers/media/pci/cx88/cx88-input.c b/drivers/media/pci/cx88/cx88-input.c
-index c7c2acd55266..7e0fed9cd200 100644
---- a/drivers/media/pci/cx88/cx88-input.c
-+++ b/drivers/media/pci/cx88/cx88-input.c
-@@ -638,7 +638,7 @@ void cx88_i2c_init_ir(struct cx88_core *core)
- 				   I2C_SMBUS_READ, 0,
- 				   I2C_SMBUS_QUICK, NULL) >= 0) {
- 			info.addr = *addrp;
--			i2c_new_device(&core->i2c_adap, &info);
-+			i2c_new_client_device(&core->i2c_adap, &info);
- 			break;
- 		}
- 	}
-diff --git a/drivers/media/pci/cx88/cx88-video.c b/drivers/media/pci/cx88/cx88-video.c
-index 6aabc45aa93c..ba0e9660a047 100644
---- a/drivers/media/pci/cx88/cx88-video.c
-+++ b/drivers/media/pci/cx88/cx88-video.c
-@@ -1385,7 +1385,7 @@ static int cx8800_initdev(struct pci_dev *pci_dev,
- 		};
- 
- 		request_module("rtc-isl1208");
--		core->i2c_rtc = i2c_new_device(&core->i2c_adap, &rtc_info);
-+		core->i2c_rtc = i2c_new_client_device(&core->i2c_adap, &rtc_info);
- 	}
- 		/* fall-through */
- 	case CX88_BOARD_DVICO_FUSIONHDTV_5_PCI_NANO:
+
 -- 
-2.20.1
-
+Best Regards
+Masahiro Yamada
