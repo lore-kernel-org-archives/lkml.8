@@ -7,54 +7,52 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7644CC43331
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 23:27:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69E4BC43331
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 23:27:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 446FA20409
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 23:27:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 36F4B20774
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 23:27:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585265239;
-	bh=TOlzQZqFBlXXk6vVW3nEQ7OnPHurudRh2uEU+6f1lvY=;
+	s=default; t=1585265241;
+	bh=jfT/vt+aedy9qZ+p0lGN1nj1vzPO6uDTNZJwx++fvUU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DJIiKJiXFpXTJu1ssQdhmReAUgh3kKxVJAHOn+0lhhqoMWevxJN5ydDLbUkpYE7XE
-	 CA06C6huh2pjC4pArlfz8ebHLiuaUr+QXJu8cAKgzHS1OAruUjpAMhxIOvceBPh/vi
-	 a6EzTWY/RIGlm/CFhBoQcD2fu5Smn/9V2xqE3nkY=
+	b=l9zRCsGv7Ht0xaJy0lIH7MGgo9MmlumzP90gBjNbL8Uqaw+VuutP8yrYOefWeJLTq
+	 hjE8v505fO40zGaWNWAfu0yW9V9NzyId16hXXzX0hiw4lS3MD62z0JlyMIur05goKP
+	 A5FoGQWqVtXumcF0AqRVb0hro1dhZX9rCpHY6wqs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728309AbgCZX1S (ORCPT
+        id S1728148AbgCZXY7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 19:27:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45488 "EHLO mail.kernel.org"
+        Thu, 26 Mar 2020 19:24:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45190 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728159AbgCZXZC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 19:25:02 -0400
+        id S1728056AbgCZXYy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Mar 2020 19:24:54 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E6ACD21707;
-        Thu, 26 Mar 2020 23:25:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DDF7D2083E;
+        Thu, 26 Mar 2020 23:24:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585265101;
-        bh=TOlzQZqFBlXXk6vVW3nEQ7OnPHurudRh2uEU+6f1lvY=;
+        s=default; t=1585265093;
+        bh=jfT/vt+aedy9qZ+p0lGN1nj1vzPO6uDTNZJwx++fvUU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=G1ijmhJ07r5cQ5V+GQ/wAvyxZcHh6HIAZhwPkrjdwomjNwkjWkzbHD7sH5Jcj7xW6
-         Puy0dGqRpoLXBJndQ31urDnH5tP08XE+2qoeioayuuKYd1QiNKFDSIF3TKwhC20rxw
-         M+5RJT+d1eUk+uHgxlYP4evFJegW3AdbJgeFEMAE=
+        b=KMycbxlHsSAYM8jLUf6+ENf0EJ2yvf87HTg2kRKjlDhhvUVD/loT8exg49KkFuJdO
+         Ur8jZggT0GYrFq+vxztdvn5LKBWCbcbhj6KzTpKucDCGalOngkFBuTuCcaJ2MkqE2v
+         QaR9kFd+r1zKzw//yfV8tt+Cc6NvykHLlv1qjvcU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Gerd Hoffmann <kraxel@redhat.com>,
-        =?UTF-8?q?Marek=20Marczykowski-G=C3=B3recki?= 
-        <marmarek@invisiblethingslab.com>, Sam Ravnborg <sam@ravnborg.org>,
+Cc:     Qiujun Huang <hqjagain@gmail.com>,
+        syzbot+05835159fe322770fe3d@syzkaller.appspotmail.com,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
         Sasha Levin <sashal@kernel.org>,
-        virtualization@lists.linux-foundation.org,
         dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 4.19 05/15] drm/bochs: downgrade pci_request_region failure from error to warning
-Date:   Thu, 26 Mar 2020 19:24:45 -0400
-Message-Id: <20200326232455.8029-5-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 19/19] drm/lease: fix WARNING in idr_destroy
+Date:   Thu, 26 Mar 2020 19:24:31 -0400
+Message-Id: <20200326232431.7816-19-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200326232455.8029-1-sashal@kernel.org>
-References: <20200326232455.8029-1-sashal@kernel.org>
+In-Reply-To: <20200326232431.7816-1-sashal@kernel.org>
+References: <20200326232431.7816-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -63,43 +61,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Gerd Hoffmann <kraxel@redhat.com>
+From: Qiujun Huang <hqjagain@gmail.com>
 
-[ Upstream commit 8c34cd1a7f089dc03933289c5d4a4d1489549828 ]
+[ Upstream commit b216a8e7908cd750550c0480cf7d2b3a37f06954 ]
 
-Shutdown of firmware framebuffer has a bunch of problems.  Because
-of this the framebuffer region might still be reserved even after
-drm_fb_helper_remove_conflicting_pci_framebuffers() returned.
+drm_lease_create takes ownership of leases. And leases will be released
+by drm_master_put.
 
-Don't consider pci_request_region() failure for the framebuffer
-region as fatal error to workaround this issue.
+drm_master_put
+    ->drm_master_destroy
+            ->idr_destroy
 
-Reported-by: Marek Marczykowski-Górecki <marmarek@invisiblethingslab.com>
-Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
-Acked-by: Sam Ravnborg <sam@ravnborg.org>
-Link: http://patchwork.freedesktop.org/patch/msgid/20200313084152.2734-1-kraxel@redhat.com
+So we needn't call idr_destroy again.
+
+Reported-and-tested-by: syzbot+05835159fe322770fe3d@syzkaller.appspotmail.com
+Signed-off-by: Qiujun Huang <hqjagain@gmail.com>
+Cc: stable@vger.kernel.org
+Signed-off-by: Daniel Vetter <daniel.vetter@ffwll.ch>
+Link: https://patchwork.freedesktop.org/patch/msgid/1584518030-4173-1-git-send-email-hqjagain@gmail.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/bochs/bochs_hw.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+ drivers/gpu/drm/drm_lease.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/bochs/bochs_hw.c b/drivers/gpu/drm/bochs/bochs_hw.c
-index a39b0343c197d..401c218567af9 100644
---- a/drivers/gpu/drm/bochs/bochs_hw.c
-+++ b/drivers/gpu/drm/bochs/bochs_hw.c
-@@ -97,10 +97,8 @@ int bochs_hw_init(struct drm_device *dev, uint32_t flags)
- 		size = min(size, mem);
+diff --git a/drivers/gpu/drm/drm_lease.c b/drivers/gpu/drm/drm_lease.c
+index b481cafdde280..825abe38201ac 100644
+--- a/drivers/gpu/drm/drm_lease.c
++++ b/drivers/gpu/drm/drm_lease.c
+@@ -542,10 +542,12 @@ int drm_mode_create_lease_ioctl(struct drm_device *dev,
  	}
  
--	if (pci_request_region(pdev, 0, "bochs-drm") != 0) {
--		DRM_ERROR("Cannot request framebuffer\n");
--		return -EBUSY;
--	}
-+	if (pci_request_region(pdev, 0, "bochs-drm") != 0)
-+		DRM_WARN("Cannot request framebuffer, boot fb still active?\n");
+ 	DRM_DEBUG_LEASE("Creating lease\n");
++	/* lessee will take the ownership of leases */
+ 	lessee = drm_lease_create(lessor, &leases);
  
- 	bochs->fb_map = ioremap(addr, size);
- 	if (bochs->fb_map == NULL) {
+ 	if (IS_ERR(lessee)) {
+ 		ret = PTR_ERR(lessee);
++		idr_destroy(&leases);
+ 		goto out_leases;
+ 	}
+ 
+@@ -580,7 +582,6 @@ int drm_mode_create_lease_ioctl(struct drm_device *dev,
+ 
+ out_leases:
+ 	put_unused_fd(fd);
+-	idr_destroy(&leases);
+ 
+ 	DRM_DEBUG_LEASE("drm_mode_create_lease_ioctl failed: %d\n", ret);
+ 	return ret;
 -- 
 2.20.1
 
