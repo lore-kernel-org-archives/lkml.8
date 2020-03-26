@@ -4,44 +4,44 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 730F4C43331
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 05:58:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FCC6C2D0E7
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 05:58:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 47EF620772
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 05:58:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D627220719
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 05:58:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585202308;
-	bh=OhekPoJuC9vwRp78NfmnSRFuigvA7fJX+5w6f1PSSFs=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=H/70098MjoM6ip35coXtsjrXZQOBvXT4H5AzmE+7rOPDr5xXFnBV4k58EU92TuSnl
-	 y/kEP3BgNf9dH3l/TEvLeUqGfpU0loFQ9sIBsvlEdtKo5QjFPHlZ5XveuajQ6YjTVa
-	 tBNEZ+Y85IVsxDtRYJbcTTrSn+Ong25jkQH6M0z0=
+	s=default; t=1585202315;
+	bh=o3C43cCmxhVVIujfOfkksVDSV83ihuHzzL8LeVgYIJo=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=M6jfIFmJCnwTd6V748UgjKpDGKXk84StJ/94Kwbcw43M+BpR/4CfDC1bzpjt7f26k
+	 NTr3gVLxpZScKQhONt3Ax6C2ifc1KIJmX8N56k4kfCwv2IECPTsVdeqr1xxDDbdRPg
+	 wsTiVYdAtWGvdBufmYWXA9EO5LGfvQupWKDygI8k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727677AbgCZF60 (ORCPT
+        id S1727738AbgCZF6b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 01:58:26 -0400
-Received: from conuserg-10.nifty.com ([210.131.2.77]:47754 "EHLO
+        Thu, 26 Mar 2020 01:58:31 -0400
+Received: from conuserg-10.nifty.com ([210.131.2.77]:47768 "EHLO
         conuserg-10.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725854AbgCZF60 (ORCPT
+        with ESMTP id S1727575AbgCZF61 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 01:58:26 -0400
+        Thu, 26 Mar 2020 01:58:27 -0400
 Received: from pug.e01.socionext.com (p14092-ipngnfx01kyoto.kyoto.ocn.ne.jp [153.142.97.92]) (authenticated)
-        by conuserg-10.nifty.com with ESMTP id 02Q5ve96008573;
-        Thu, 26 Mar 2020 14:57:41 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-10.nifty.com 02Q5ve96008573
+        by conuserg-10.nifty.com with ESMTP id 02Q5ve94008573;
+        Thu, 26 Mar 2020 14:57:40 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-10.nifty.com 02Q5ve94008573
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1585202262;
-        bh=RjmAIJifJD5EjYLBPngifFMr8SyoOw1VRH4zJbCaW44=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0npEybbV/z2lQiHwEs9TcPf5+poHUosRxXgwWfTNlY0D593Lc5sxgg3TW8bgnxjmY
-         7hX43Es4EaTmdEOf4fzkcusWx/1+rz6MrwYd6v+Sgx5BafCADuzRTM9ELLBUC7o/V0
-         p0CChm95KUAbSKBF8tUVnBi2vopRnHPeWX6kc4ikco8XHPW2fuRYfqS5ef6B5L67yx
-         l82dEkMArUHtg2RAAgAAkB68/UWwxidScmcuTX1Jrgch3QVGFzcj0jzOKZLW6EaLJB
-         DWXLqcaQCOUX5TqMRC+xe0gQ8t3tlF3zs+s5tPdGhdAB4j9vo6qHcv2R1J7YOvSgkh
-         mP0gwu3qrBwjA==
+        s=dec2015msa; t=1585202260;
+        bh=dX+mdRt8kcID48UqORTUMY5bdsGeWZDwRFh1lk4J+OY=;
+        h=From:To:Cc:Subject:Date:From;
+        b=F+31nJQ4Cgf4gt9L3lAD0yTyZM6taU0HcwCkPUB81lu7qxiTtqk/tHtzkh/wAtjZ4
+         CF28DzVLBwEyskREvoR6rtnBx8mXTZBWq+C9GQPOET0lsVnrdIJzYYc7Mwy+J3+vPo
+         sAe7ySOYigImr3dYkXpLC7r2oa/fL48HjVwRCcUpTzCz38C5MBUGNEXpnrPl3LwCC/
+         wL+xhmfmA5VZEaIah5/GJP6AKqawr2QSCcnmWc7MOcELsG4uxWzU6MWRniddWyukwu
+         X8J5qiPn7XDM2rl5fMOAHkZSs1ow+LvVLFtQl7+EVuosUu0MJqcGIPwcOFq9Xax6en
+         epHo20x8scgLw==
 X-Nifty-SrcIP: [153.142.97.92]
 From:   Masahiro Yamada <masahiroy@kernel.org>
 To:     linux-kbuild@vger.kernel.org
@@ -50,73 +50,84 @@ Cc:     clang-built-linux@googlegroups.com,
         Masahiro Yamada <masahiroy@kernel.org>,
         "David S. Miller" <davem@davemloft.net>,
         linux-kernel@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH v2 3/4] net: wan: wanxl: refactor the firmware rebuild rule
-Date:   Thu, 26 Mar 2020 14:57:17 +0900
-Message-Id: <20200326055719.16755-3-masahiroy@kernel.org>
+Subject: [PATCH v2 1/4] net: wan: wanxl: use allow to pass CROSS_COMPILE_M68k for rebuilding firmware
+Date:   Thu, 26 Mar 2020 14:57:15 +0900
+Message-Id: <20200326055719.16755-1-masahiroy@kernel.org>
 X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200326055719.16755-1-masahiroy@kernel.org>
-References: <20200326055719.16755-1-masahiroy@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Split the big recipe into 3 stages, compile, link, and hexdump.
+As far as I understood from the Kconfig help text, this build rule is
+used to rebuild the driver firmware, which runs on an old m68k-based
+chip. So, you need m68k tools for the firmware rebuild.
 
-After this commit, the build log with CONFIG_WANXL_BUILD_FIRMWARE
-will look like this:
+wanxl.c is a PCI driver, but CONFIG_M68K does not select CONFIG_HAVE_PCI.
+So, you cannot enable CONFIG_WANXL_BUILD_FIRMWARE for ARCH=m68k. In other
+words, ifeq ($(ARCH),m68k) is false here.
 
-  M68KAS  drivers/net/wan/wanxlfw.o
-  M68KLD  drivers/net/wan/wanxlfw.bin
-  BLDFW   drivers/net/wan/wanxlfw.inc
-  CC [M]  drivers/net/wan/wanxl.o
+I am keeping the dead code for now, but rebuilding the firmware requires
+'as68k' and 'ld68k', which I do not have in hand.
 
+Instead, the kernel.org m68k GCC [1] successfully built it.
+
+Allowing a user to pass in CROSS_COMPILE_M68K= is handier.
+
+[1] https://mirrors.edge.kernel.org/pub/tools/crosstool/files/bin/x86_64/9.2.0/x86_64-gcc-9.2.0-nolibc-m68k-linux.tar.xz
+
+Suggested-by: Geert Uytterhoeven <geert@linux-m68k.org>
 Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
 ---
 
-Changes in v2: None
+Changes in v2:
+  - New patch
 
- drivers/net/wan/Makefile | 29 +++++++++++++++++++----------
- 1 file changed, 19 insertions(+), 10 deletions(-)
+ drivers/net/wan/Kconfig  |  2 +-
+ drivers/net/wan/Makefile | 12 ++++++------
+ 2 files changed, 7 insertions(+), 7 deletions(-)
 
+diff --git a/drivers/net/wan/Kconfig b/drivers/net/wan/Kconfig
+index 4530840e15ef..dbc0e3f7a3e2 100644
+--- a/drivers/net/wan/Kconfig
++++ b/drivers/net/wan/Kconfig
+@@ -200,7 +200,7 @@ config WANXL_BUILD_FIRMWARE
+ 	depends on WANXL && !PREVENT_FIRMWARE_BUILD
+ 	help
+ 	  Allows you to rebuild firmware run by the QUICC processor.
+-	  It requires as68k, ld68k and hexdump programs.
++	  It requires m68k toolchains and hexdump programs.
+ 
+ 	  You should never need this option, say N.
+ 
 diff --git a/drivers/net/wan/Makefile b/drivers/net/wan/Makefile
-index cf7a0a65aae8..380271a011e4 100644
+index 701f5d2fe3b6..995277c657a1 100644
 --- a/drivers/net/wan/Makefile
 +++ b/drivers/net/wan/Makefile
-@@ -47,14 +47,23 @@ else
-   M68KLD = $(CROSS_COMPILE_M68K)ld
+@@ -40,17 +40,17 @@ $(obj)/wanxl.o:	$(obj)/wanxlfw.inc
+ 
+ ifeq ($(CONFIG_WANXL_BUILD_FIRMWARE),y)
+ ifeq ($(ARCH),m68k)
+-  AS68K = $(AS)
+-  LD68K = $(LD)
++  M68KAS = $(AS)
++  M68KLD = $(LD)
+ else
+-  AS68K = as68k
+-  LD68K = ld68k
++  M68KAS = $(CROSS_COMPILE_M68K)as
++  M68KLD = $(CROSS_COMPILE_M68K)ld
  endif
  
--quiet_cmd_build_wanxlfw = BLD FW  $@
--      cmd_build_wanxlfw = \
--	$(M68KCC) -D__ASSEMBLY__ -Wp,-MD,$(depfile) -I$(srctree)/include/uapi -c -o $(obj)/wanxlfw.o $<; \
--	$(M68KLD) --oformat binary -Ttext 0x1000 $(obj)/wanxlfw.o -o $(obj)/wanxlfw.bin; \
--	hexdump -ve '"\n" 16/1 "0x%02X,"' $(obj)/wanxlfw.bin | sed 's/0x  ,//g;1s/^/static const u8 firmware[]={/;$$s/,$$/\n};\n/' >$(obj)/wanxlfw.inc; \
--	rm -f $(obj)/wanxlfw.bin $(obj)/wanxlfw.o
--
--$(obj)/wanxlfw.inc:	$(src)/wanxlfw.S
--	$(call if_changed_dep,build_wanxlfw)
--targets += wanxlfw.inc
-+quiet_cmd_build_wanxlfw = BLDFW   $@
-+      cmd_build_wanxlfw = hexdump -ve '"\n" 16/1 "0x%02X,"' $< | \
-+	sed 's/0x  ,//g;1s/^/static const u8 firmware[]={/;$$s/,$$/\n};\n/' > $@
-+
-+$(obj)/wanxlfw.inc: $(obj)/wanxlfw.bin FORCE
-+	$(call if_changed,build_wanxlfw)
-+
-+quiet_cmd_m68kld_bin_o = M68KLD  $@
-+      cmd_m68kld_bin_o = $(M68KLD) --oformat binary -Ttext 0x1000 $< -o $@
-+
-+$(obj)/wanxlfw.bin: $(obj)/wanxlfw.o FORCE
-+	$(call if_changed,m68kld_bin_o)
-+
-+quiet_cmd_m68kas_o_S = M68KAS  $@
-+      cmd_m68kas_o_S = $(M68KCC) -D__ASSEMBLY__ -Wp,-MD,$(depfile) -I$(srctree)/include/uapi -c -o $@ $<
-+
-+$(obj)/wanxlfw.o: $(src)/wanxlfw.S FORCE
-+	$(call if_changed_dep,m68kas_o_S)
- endif
-+targets += wanxlfw.inc wanxlfw.bin wanxlfw.o
+ quiet_cmd_build_wanxlfw = BLD FW  $@
+       cmd_build_wanxlfw = \
+-	$(CPP) -D__ASSEMBLY__ -Wp,-MD,$(depfile) -I$(srctree)/include/uapi $< | $(AS68K) -m68360 -o $(obj)/wanxlfw.o; \
+-	$(LD68K) --oformat binary -Ttext 0x1000 $(obj)/wanxlfw.o -o $(obj)/wanxlfw.bin; \
++	$(CPP) -D__ASSEMBLY__ -Wp,-MD,$(depfile) -I$(srctree)/include/uapi $< | $(M68KAS) -m68360 -o $(obj)/wanxlfw.o; \
++	$(M68KLD) --oformat binary -Ttext 0x1000 $(obj)/wanxlfw.o -o $(obj)/wanxlfw.bin; \
+ 	hexdump -ve '"\n" 16/1 "0x%02X,"' $(obj)/wanxlfw.bin | sed 's/0x  ,//g;1s/^/static const u8 firmware[]={/;$$s/,$$/\n};\n/' >$(obj)/wanxlfw.inc; \
+ 	rm -f $(obj)/wanxlfw.bin $(obj)/wanxlfw.o
+ 
 -- 
 2.17.1
 
