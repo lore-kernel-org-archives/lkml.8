@@ -2,322 +2,198 @@ Return-Path: <SRS0=aGSP=5L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE1ACC43331
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 21:19:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1CE3C2D0E9
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 21:20:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B7B8F20714
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 21:19:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9268520714
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 21:20:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="lLCWTSx5"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fFXkt+Gp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727795AbgCZVTO (ORCPT
+        id S1727600AbgCZVUb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 17:19:14 -0400
-Received: from mail-vk1-f194.google.com ([209.85.221.194]:35417 "EHLO
-        mail-vk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727726AbgCZVTN (ORCPT
+        Thu, 26 Mar 2020 17:20:31 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:40215 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726034AbgCZVUb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 17:19:13 -0400
-Received: by mail-vk1-f194.google.com with SMTP id f17so1914721vkk.2
-        for <linux-kernel@vger.kernel.org>; Thu, 26 Mar 2020 14:19:12 -0700 (PDT)
+        Thu, 26 Mar 2020 17:20:31 -0400
+Received: by mail-pl1-f194.google.com with SMTP id h11so2641051plk.7;
+        Thu, 26 Mar 2020 14:20:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=HLvF4D/A+305Z0Ss7OvyVOW8EKybx8dnVL63yLJQoSs=;
-        b=lLCWTSx5UqSh1z9NnVQzYiYoMn4TP35oA4HiiZ2zg+gz1uWvA+MYB28BWMVb+myRlf
-         yBDUSkf7M1bBlypo1Dyzj+oCK+e2sSTUs/746Hrfro3PhrXSHp+6Zqf8eO+3EisjzJVa
-         zPwknJn2VhJeTHZuqGhS4nOxlhXGCopNoSS6Q=
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=F06HbeSH13tmadHlPUIc7xXdfNMkCGhMtH9KYmxotOo=;
+        b=fFXkt+Gpe6pkYw3lf/GxaJSJkpn4BKdnzu1mu2Isq1MGEjXJQS8bylMaTL2gGLrQ8t
+         9F2r6+1vMvJhOJTjPXIeqAcs5Ac5Lsovkeo1A1GTNZiF0hWyxA/KFxuwS7fR6s9xyspz
+         84imtN9++lafe4Uy+PElkTLr8pfN6JnVBK2XCqdEsV9TUqgkX3DMp6usRRNfx2zezEnY
+         gctqpCK2DMnGwvsA5gDpnplEC0jFp60GHaA+13Z2uOFEaZWfXdpU/FYmFVnjXxma0F3E
+         954bjAp4ZJK8uP0qOvPt5IbaednqLHCudk/R2Au3E4PR3/leBlJyNKfI6Yuqt/aMYpIE
+         PxQw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=HLvF4D/A+305Z0Ss7OvyVOW8EKybx8dnVL63yLJQoSs=;
-        b=JJrmNCl0rhjWLeTZXSFu994s6+ZTrc6QlB9mSjE57vADtLX3DZe4FJgHjNMvCl3pvo
-         SFzTQILeDdGXPfKdcHO6dKhCdoLYUgrWSKGrwtAvQbgWXYCkEqyPVaFbjbegOaFytrWP
-         rf+BV/nalocnGx/aSLBA4FQjQF3STwybTsWqIGGfSuVe/LzFGY6ClTUEzHZncmo72zrn
-         09vGk6APnn42SeyhWs0zdn77CyUhgu4tB9LRbLT9NP9HfEy2zcyt9sboln91P1pjOMsg
-         x8MpMiZm+6rf1uPX5hdOJwllYYZJUigI3s2oDYViSVS6/lUq6ck98HH08/cujcydnc6C
-         o9cQ==
-X-Gm-Message-State: ANhLgQ3AzLN8R0eH+oUZr9XWPgR0yA27hi9aext8pqcnNJ80mNCbjYSa
-        jCEDv0wTx2W6UftHWR9OCC1o4V2kEG0=
-X-Google-Smtp-Source: ADFU+vtrHDEzcsalK/R3cREyGSV6Vb+xFpQSCUD0OL4qcdrkY5Z71+5ATfp4m7Yq2vi30z8Eoiv3OA==
-X-Received: by 2002:a1f:6182:: with SMTP id v124mr8629948vkb.48.1585257550901;
-        Thu, 26 Mar 2020 14:19:10 -0700 (PDT)
-Received: from mail-vs1-f47.google.com (mail-vs1-f47.google.com. [209.85.217.47])
-        by smtp.gmail.com with ESMTPSA id o24sm1770809vsl.11.2020.03.26.14.19.09
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 26 Mar 2020 14:19:10 -0700 (PDT)
-Received: by mail-vs1-f47.google.com with SMTP id b5so4934831vsb.1
-        for <linux-kernel@vger.kernel.org>; Thu, 26 Mar 2020 14:19:09 -0700 (PDT)
-X-Received: by 2002:a05:6102:3204:: with SMTP id r4mr8703099vsf.109.1585257549044;
- Thu, 26 Mar 2020 14:19:09 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=F06HbeSH13tmadHlPUIc7xXdfNMkCGhMtH9KYmxotOo=;
+        b=IIS3MjmxGpxHi63hPSZW0wWK0Wht+mlRMgqenH6GyiI1ZBkI5S/AzAzWFaS0IwY+Qg
+         /IrpvLhqYO/7AmTwksz6XSoidc7F/Wowuw4of33uYw9SgpKfWeDf+3+UD0u/af9pic/y
+         rnMLDJ6Fur+t5q6ohdJ8Vd/El/zR2Ty+mck9W6vJcLRhqxKhgJ+n7GdOzFbmRWQGeN3j
+         VLA8jeM48JXfH5jASwvoyV8N++3/9tpWaMzOANX/fzG3xIlFJnUaI1HGn1zN0dTEpoeL
+         C/nvul6vE9m3YoD6fsJal3YfPZ69m5s0DkYWiUZdqIqH/KZCSjEEUA8q1XlIcezTSMAt
+         dmnQ==
+X-Gm-Message-State: ANhLgQ3V7uIttdqUP8BFRV2Rb2twzNWtmOXs3JI8n33eMksX6tHsS6cA
+        B2BBwxFB0fYeIHGuEq1EETU=
+X-Google-Smtp-Source: ADFU+vuzHEY5RAvOBEGDiHAwZbUDL/4CVJq+nw/xgu0Uz80a4eVgLhD86cf6SdnIoqsN/YpUvM2yKw==
+X-Received: by 2002:a17:902:6b86:: with SMTP id p6mr10119027plk.150.1585257628839;
+        Thu, 26 Mar 2020 14:20:28 -0700 (PDT)
+Received: from dtor-ws ([2620:15c:202:201:3c2a:73a9:c2cf:7f45])
+        by smtp.gmail.com with ESMTPSA id p4sm2422722pfg.163.2020.03.26.14.20.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 26 Mar 2020 14:20:28 -0700 (PDT)
+Date:   Thu, 26 Mar 2020 14:20:25 -0700
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To:     Rajat Jain <rajatja@google.com>
+Cc:     dtor@google.com, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Enrico Weigelt <info@metux.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Allison Randal <allison@lohutok.net>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Stephen Boyd <swboyd@chromium.org>,
+        linux-input@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, furquan@google.com,
+        dlaurie@google.com, bleung@google.com, zentaro@google.com,
+        dbehr@google.com, rajatxjain@gmail.com
+Subject: Re: [PATCH v2 4/5] Input: atkbd: Receive and use physcode->keycode
+ mapping from FW
+Message-ID: <20200326212025.GH75430@dtor-ws>
+References: <20200324123518.239768-1-rajatja@google.com>
+ <20200324123518.239768-4-rajatja@google.com>
 MIME-Version: 1.0
-References: <1585244270-637-1-git-send-email-mkshah@codeaurora.org> <1585244270-637-5-git-send-email-mkshah@codeaurora.org>
-In-Reply-To: <1585244270-637-5-git-send-email-mkshah@codeaurora.org>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Thu, 26 Mar 2020 14:18:55 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=UQAbqitmYR7=5+AAL8pqy2imzEWf8BTkBoD6mthAwpKw@mail.gmail.com>
-Message-ID: <CAD=FV=UQAbqitmYR7=5+AAL8pqy2imzEWf8BTkBoD6mthAwpKw@mail.gmail.com>
-Subject: Re: [PATCH v14 4/6] soc: qcom: rpmh: Invoke rpmh_flush() for dirty caches
-To:     Maulik Shah <mkshah@codeaurora.org>
-Cc:     Stephen Boyd <swboyd@chromium.org>,
-        Evan Green <evgreen@chromium.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Andy Gross <agross@kernel.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        Lina Iyer <ilina@codeaurora.org>, lsrao@codeaurora.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200324123518.239768-4-rajatja@google.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Hi Rajat,
 
-On Thu, Mar 26, 2020 at 10:38 AM Maulik Shah <mkshah@codeaurora.org> wrote:
->
-> Add changes to invoke rpmh flush() from cpu pm notification.
-> This is done when last cpu is entering power collapse and
+On Tue, Mar 24, 2020 at 05:35:17AM -0700, Rajat Jain wrote:
+> Allow the firmware to specify the mapping between the physical
+> code and the linux keycode. This takes the form of a "keymap"
+> property which is an array of u32 values, each value specifying
+> mapping for a key.
+> 
+> Signed-off-by: Rajat Jain <rajatja@google.com>
+> ---
+> v2: Remove the Change-Id from the commit log
+> 
+>  drivers/input/keyboard/atkbd.c | 39 ++++++++++++++++++++++++++++++++--
+>  1 file changed, 37 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/input/keyboard/atkbd.c b/drivers/input/keyboard/atkbd.c
+> index 7623eebef2593..c8017a5707581 100644
+> --- a/drivers/input/keyboard/atkbd.c
+> +++ b/drivers/input/keyboard/atkbd.c
+> @@ -66,6 +66,9 @@ MODULE_PARM_DESC(terminal, "Enable break codes on an IBM Terminal keyboard conne
+>  
+>  #define MAX_FUNCTION_ROW_KEYS	24
+>  
+> +#define PHYSCODE(keymap)	((keymap >> 16) & 0xFFFF)
+> +#define KEYCODE(keymap)		(keymap & 0xFFFF)
+> +
+>  /*
+>   * Scancode to keycode tables. These are just the default setting, and
+>   * are loadable via a userland utility.
+> @@ -236,6 +239,9 @@ struct atkbd {
+>  
+>  	u16 function_row_physmap[MAX_FUNCTION_ROW_KEYS];
+>  	int num_function_row_keys;
+> +
+> +	unsigned short fw_keymap[ATKBD_KEYMAP_SIZE];
+> +	bool use_fw_keymap;
 
-s/when last/when the last/
+Why do we need to keep firmware-provided keymap in atkbd instance? It is
+not going anywhere and can be accessed via device_property_* API
+whenever we decide to refresh the keymap.
 
-> controller is not busy.
+>  };
+>  
+>  /*
+> @@ -1045,7 +1051,10 @@ static void atkbd_set_keycode_table(struct atkbd *atkbd)
+>  	memset(atkbd->keycode, 0, sizeof(atkbd->keycode));
+>  	bitmap_zero(atkbd->force_release_mask, ATKBD_KEYMAP_SIZE);
+>  
+> -	if (atkbd->translated) {
+> +	if (atkbd->use_fw_keymap) {
+> +		memcpy(atkbd->keycode, atkbd->fw_keymap,
+> +		       sizeof(atkbd->keycode));
+> +	} else if (atkbd->translated) {
+>  		for (i = 0; i < 128; i++) {
+>  			scancode = atkbd_unxlate_table[i];
+>  			atkbd->keycode[i] = atkbd_set2_keycode[scancode];
+> @@ -1163,7 +1172,9 @@ static void atkbd_parse_fwnode_data(struct serio *serio)
+>  {
+>  	struct atkbd *atkbd = serio_get_drvdata(serio);
+>  	struct device *dev = &serio->dev;
+> -	int n;
+> +	int i, n;
+> +	u32 *ptr;
+> +	u16 physcode, keycode;
+>  
+>  	if (!dev_fwnode(dev))
+>  		return;
+> @@ -1176,6 +1187,30 @@ static void atkbd_parse_fwnode_data(struct serio *serio)
+>  		atkbd->num_function_row_keys = n;
+>  		dev_info(dev, "FW reported %d function-row key locations\n", n);
+>  	}
+> +
+> +	/* Parse "keymap" property */
+> +	n = device_property_count_u32(dev, "keymap");
+> +	if (n > 0 && n <= ATKBD_KEYMAP_SIZE) {
+> +
+> +		ptr = kcalloc(n, sizeof(u32), GFP_KERNEL);
+> +		if (!ptr)
+> +			return;
+> +
+> +		if (device_property_read_u32_array(dev, "keymap", ptr, n)) {
+> +			dev_err(dev, "problem parsing FW keymap property\n");
+> +			kfree(ptr);
+> +			return;
+> +		}
+> +
+> +		for (i = 0; i < n; i++) {
+> +			physcode = PHYSCODE(ptr[i]);
+> +			keycode = KEYCODE(ptr[i]);
+> +			atkbd->fw_keymap[physcode] = keycode;
+> +		}
+> +		dev_info(dev, "Using FW keymap (%d keys)\n", n);
 
-A few overall comments:
+This should be dev_dbg().
 
-* CPU_PM certainly seems interesting and I wasn't aware of it.
-
-* Your series is predicated on nobody calling any of the RPMH
-functions after the last CPU enters low power mode with CPU_PM_ENTER
-and before some CPU calls CPU_PM_EXIT.  Is it worth adding a check for
-that to the code?  This is super important for the 'zero-active-TCS'
-case but even for the 'some-active-TCS' it's still important that
-nobody tries to update the sleep/wake values after you flush.
-
-* I think your series is focused on idle, right?  What about
-suspend/resume?  You need a flush before suspend, right?  Do you need
-to register for something to handle suspend, or do the pm callbacks
-all get called for full system suspend?  If so, how late do they get
-called?
-
-
-> Controller that do have 'HW solver' mode do not need to register
-
-s/Controller/Controllers
-
-
-> @@ -85,22 +85,30 @@ struct rpmh_ctrlr {
->   * Resource State Coordinator controller (RSC)
->   *
->   * @name:       controller identifier
-> + * @base:       start address of the RSC's DRV registers
->   * @tcs_base:   start address of the TCS registers in this controller
->   * @id:         instance id in the controller (Direct Resource Voter)
->   * @num_tcs:    number of TCSes in this DRV
-> + * @rsc_pm:     CPU PM notifier for controller
-> + * @cpus_in_pc: CPU mask for cpus in idle power collapse
-
-Name "cpus_entered_pm" to match Linux naming?  Also the comment should
-clearly say that this is only used in non-solver mode.
-
-
->   * @tcs:        TCS groups
->   * @tcs_in_use: s/w state of the TCS
->   * @lock:       synchronize state of the controller
-> + * @pm_lock:    synchronize during PM notifications
-
-Comment should say that this is only for non-solver mode.
-
-
-> @@ -521,6 +527,71 @@ int rpmh_rsc_write_ctrl_data(struct rsc_drv *drv, const struct tcs_request *msg)
->         return tcs_ctrl_write(drv, msg);
+> +		atkbd->use_fw_keymap = true;
+> +		kfree(ptr);
+> +	}
 >  }
->
-> +/**
-> + * rpmh_rsc_ctrlr_is_busy: Check if any of the AMCs are busy.
-> + *
-> + * @drv: The controller
-> + *
-> + * Returns True if the TCSes are engaged in handling requests, False otherwise.
+>  
+>  /*
+> -- 
+> 2.25.1.696.g5e7596f4ac-goog
+> 
 
-This is almost, but not quite in kernel-doc syntax.  Why not make it
-match the example in "Documentation/doc-guide/kernel-doc.rst"?
-Specifically trying to follow that style:
+Thanks.
 
- * rpmh_rsc_ctrlr_is_busy() - Check if any of the AMCs are busy.
- * @drv: The controller
- *
- * Return: true if TCSes are engaged in handling requests; else false
-
-
-> +static bool rpmh_rsc_ctrlr_is_busy(struct rsc_drv *drv)
-> +{
-> +       int m;
-> +       struct tcs_group *tcs = get_tcs_of_type(drv, ACTIVE_TCS);
-> +
-> +       /**
-
-nit: why double star in "/**"?  That's for kerneldoc comments.  I
-don't think it makes sense here...
-
-
-> +        * If we made an active request on a RSC that does not have a
-> +        * dedicated TCS for active state use, then re-purposed wake TCSes
-> +        * should be checked for not busy
-> +        */
-> +       if (!tcs->num_tcs)
-> +               tcs = get_tcs_of_type(drv, WAKE_TCS);
-> +
-> +       for (m = tcs->offset; m < tcs->offset + tcs->num_tcs; m++) {
-> +               if (!tcs_is_free(drv, m))
-
-As per my documentation patch, tcs_is_free():
-
- * Must be called with the drv->lock held or the tcs_lock for the TCS being
- * tested.
-
-...I think you're OK calling without the lock since you're running on
-the last CPU (and you're blocking any other CPUs from coming online)
-and interrupts are disabled, but please document.
-
-
-> +static int rpmh_rsc_cpu_pm_callback(struct notifier_block *nfb,
-> +                                   unsigned long action, void *v)
-> +{
-> +       struct rsc_drv *drv = container_of(nfb, struct rsc_drv, rsc_pm);
-> +       unsigned long flags;
-> +       int ret = NOTIFY_OK;
-> +
-> +       spin_lock_irqsave(&drv->pm_lock, flags);
-
-nit: you can get away with just spin_lock().  cpu_pm_enter() is
-documented to be called with interrupts already disabled so the
-"irqsave" and "irqrestore" is useless.
-
-
-> +       switch (action) {
-> +       case CPU_PM_ENTER:
-> +               cpumask_set_cpu(raw_smp_processor_id(), &drv->cpus_in_pc);
-> +
-> +               if (!cpumask_equal(&drv->cpus_in_pc, cpu_online_mask))
-
-Is it ever possible to offline a CPU after doing "CPU_PM_ENTER" on it?
- If so you'll never be "equal" to the online mask again.  This seems
-safer:
-
-!cpumask_subset(cpu_online_mask, &drv->cpus_in_pc)
-
-
-> +                       goto exit;
-> +               break;
-> +       case CPU_PM_ENTER_FAILED:
-> +       case CPU_PM_EXIT:
-> +               cpumask_clear_cpu(raw_smp_processor_id(), &drv->cpus_in_pc);
-> +               goto exit;
-> +       }
-> +
-> +       ret = rpmh_rsc_ctrlr_is_busy(drv);
-> +       if (ret) {
-> +               ret = NOTIFY_BAD;
-> +               goto exit;
-> +       }
-
-Are you sure you can't just skip the call to rpmh_rsc_ctrlr_is_busy()?
- Specifically, I'm not sure why you need to block until the last
-active mode transaction is done.
-
-a) If the active mode transaction was on its own TCS, I'd hope that
-the RPMH hardware would know to let the active transitions happen
-before triggering the sleep (please confirm)
-
-b) If the active mode transaction was borrowing the wake TCS the flush
-should notice and return NOTIFY_BAD anyway.
-
-Oh!  ...but looking closer at case b) points out a problem anyway.
-You need to go into rpmh_flush() and stop having it loop on 'while
-(ret == -EAGAIN)".  As per my documentation series (please review)
-when -EAGAIN is returned it's important that the caller enable
-interrupts for a little while before trying again.  You're not doing
-that here.  Maybe if you fix it then you can get rid of your special
-case rpmh_rsc_ctrlr_is_busy()?
-
-
-> +       ret = rpmh_flush(&drv->client);
-
-Back when RPMH first landed we had a whole argument about whether it
-should be one file or two.  Given that it's currently two files, I
-think the abstraction is that rpmh-rsc generally doesn't call into
-rpmh except for the very special rpmh_tx_done().
-
-...so seems like the whole pm_callback should move into rpmh.c and not
-in rpmh-rsc.c?
-
-
-> @@ -533,21 +604,20 @@ static int rpmh_probe_tcs_config(struct platform_device *pdev,
->         int i, ret, n, st = 0;
->         struct tcs_group *tcs;
->         struct resource *res;
-> -       void __iomem *base;
->         char drv_id[10] = {0};
->
->         snprintf(drv_id, ARRAY_SIZE(drv_id), "drv-%d", drv->id);
->         res = platform_get_resource_byname(pdev, IORESOURCE_MEM, drv_id);
-> -       base = devm_ioremap_resource(&pdev->dev, res);
-> -       if (IS_ERR(base))
-> -               return PTR_ERR(base);
-> +       drv->base = devm_ioremap_resource(&pdev->dev, res);
-> +       if (IS_ERR(drv->base))
-> +               return PTR_ERR(drv->base);
-
-I don't understand this part of the change.  Why move "base" into the
-driver data.  It's not needed after probe.  Please undo this.  If you
-really feel like base needs to be separate please move to its own
-patch.
-
-
-> @@ -663,6 +734,20 @@ static int rpmh_rsc_probe(struct platform_device *pdev)
->         if (ret)
->                 return ret;
->
-> +       /*
-> +        * CPU PM notification are not required for controllers that support
-> +        * 'HW solver' mode where they can be in autonomous mode executing low
-> +        * power mode to power down.
-> +        */
-> +       solver_config = readl_relaxed(drv->base + DRV_SOLVER_CONFIG);
-> +       solver_config &= DRV_HW_SOLVER_MASK << DRV_HW_SOLVER_SHIFT;
-> +       solver_config = solver_config >> DRV_HW_SOLVER_SHIFT;
-> +       if (!solver_config) {
-> +               drv->rsc_pm.notifier_call = rpmh_rsc_cpu_pm_callback;
-> +               cpu_pm_register_notifier(&drv->rsc_pm);
-> +               spin_lock_init(&drv->pm_lock);
-
-nit: init the spin lock before registering instead of after.
-
-
->   * @ctrlr: controller making request to flush cached data
->   *
-> - * Return: -EBUSY if the controller is busy, probably waiting on a response
-> - * to a RPMH request sent earlier.
-> + * Return: 0 on success, error number otherwise.
->   *
-> - * This function is always called from the sleep code from the last CPU
-> - * that is powering down the entire system. Since no other RPMH API would be
-> - * executing at this time, it is safe to run lockless.
-> + * This function can either be called from sleep code on the last CPU
-> + * (thus no spinlock needed) or with the ctrlr->cache_lock already held.
-
-Now you can remove the "or with the ctrlr->cache_lock already held"
-since it's no longer true.
-
-
--Doug
+-- 
+Dmitry
