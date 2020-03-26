@@ -2,105 +2,71 @@ Return-Path: <SRS0=aGSP=5L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B77BFC2D0ED
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 16:54:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B747C43331
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 16:54:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 904AC20719
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 16:54:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585241655;
-	bh=2Sg0tSwXVBMFqh06X4jP5osQnnHtEH+Q9guXtHaimsw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=PCy+S1EKayLf1Qx1GRDYUNI8PQc9Rwr6kfkYXgDWjuKOEIpbk6vtuz8ScS1sx+pqc
-	 bwIZucOrNPe6V3p56XZPML0wWq9jInq860EEOUs8BzMDpH1WnhmS5LpR6iDUsl+O0S
-	 TE/rTz085YX+S5U080cG6x3qN+vEeoDua//yHMc0=
+	by mail.kernel.org (Postfix) with ESMTP id 3BD802073E
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 16:54:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727860AbgCZQyO (ORCPT
+        id S1728055AbgCZQyc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 12:54:14 -0400
-Received: from mail-il1-f196.google.com ([209.85.166.196]:35053 "EHLO
-        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726163AbgCZQyO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 12:54:14 -0400
-Received: by mail-il1-f196.google.com with SMTP id 7so6042682ill.2;
-        Thu, 26 Mar 2020 09:54:13 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=ZwfR/fBPdMpotJWfH8l3kCi597eNk1DfLb7u1dTx3Wo=;
-        b=rmSebLGqA4T0J1zIFyyHLLlSkpdY9FVpDAEYioo0koWdvLpiVeNVZz8zdFapb726n2
-         sJQP0eKqOSDPwqsTiiX0Y4Ma+4SPdHdywpVNIaBe5tT7mvX+baiLf9TsMcCCEJXAhqsp
-         2nR6GghDaCgXdPwxPumEfVKjl/o3hxa/43nrx4BpO7of85gf9pQhzzAYfNVtvwDVfp2T
-         uuMbpA7y8BIicOmZusXY1TSGNozViZuIl2OfQ8dOmMLNx33dEq4hXI2v0HyVEn/T354M
-         xUN4Cr3HcomdorqKO7sRywulIT0/9QQsGalvaXoNo8uCQ+2j52YXc7iyxNIyidPveh7Q
-         CVHQ==
-X-Gm-Message-State: ANhLgQ0CCDorW5SFy88QVebsupCJ0F5DLTguQbJizy123x97WEVBOavA
-        4h+IH8+D7vcdMvN0OIWjCKgP6/s=
-X-Google-Smtp-Source: ADFU+vuXmK4F1Qp+e2kTN3c5xoaJcMADkXSaoy0ZVFhuFIcjEmWwOSP/F/DFYq1+Y8iOgkk9dgNCyg==
-X-Received: by 2002:a92:48cb:: with SMTP id j72mr9631300ilg.162.1585241653028;
-        Thu, 26 Mar 2020 09:54:13 -0700 (PDT)
-Received: from rob-hp-laptop ([64.188.179.250])
-        by smtp.gmail.com with ESMTPSA id n5sm774947iop.23.2020.03.26.09.54.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 26 Mar 2020 09:54:12 -0700 (PDT)
-Received: (nullmailer pid 10167 invoked by uid 1000);
-        Thu, 26 Mar 2020 16:54:10 -0000
-Date:   Thu, 26 Mar 2020 10:54:10 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Ivan Mikhaylov <i.mikhaylov@yadro.com>
-Cc:     Ivan Mikhaylov <i.mikhaylov@yadro.com>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH v2 1/2] iio: proximity: provide device tree binding
- document
-Message-ID: <20200326165410.GA2305@bogus>
-References: <20200325151211.19949-1-i.mikhaylov@yadro.com>
- <20200325151211.19949-2-i.mikhaylov@yadro.com>
+        Thu, 26 Mar 2020 12:54:32 -0400
+Received: from mx2.suse.de ([195.135.220.15]:44322 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726954AbgCZQyb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Mar 2020 12:54:31 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 9B509ADF1;
+        Thu, 26 Mar 2020 16:54:29 +0000 (UTC)
+Received: by ds.suse.cz (Postfix, from userid 10065)
+        id 350BDDA730; Thu, 26 Mar 2020 17:53:56 +0100 (CET)
+Date:   Thu, 26 Mar 2020 17:53:56 +0100
+From:   David Sterba <dsterba@suse.cz>
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, linux-btrfs@vger.kernel.org,
+        linux-erofs@lists.ozlabs.org, linux-ext4@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net, cluster-devel@redhat.com,
+        ocfs2-devel@oss.oracle.com, linux-xfs@vger.kernel.org,
+        William Kucharski <william.kucharski@oracle.com>
+Subject: Re: [PATCH v10 17/25] btrfs: Convert from readpages to readahead
+Message-ID: <20200326165356.GI5920@twin.jikos.cz>
+Reply-To: dsterba@suse.cz
+Mail-Followup-To: dsterba@suse.cz, Matthew Wilcox <willy@infradead.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, linux-btrfs@vger.kernel.org,
+        linux-erofs@lists.ozlabs.org, linux-ext4@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net, cluster-devel@redhat.com,
+        ocfs2-devel@oss.oracle.com, linux-xfs@vger.kernel.org,
+        William Kucharski <william.kucharski@oracle.com>
+References: <20200323202259.13363-1-willy@infradead.org>
+ <20200323202259.13363-18-willy@infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200325151211.19949-2-i.mikhaylov@yadro.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200323202259.13363-18-willy@infradead.org>
+User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 25 Mar 2020 18:12:10 +0300, Ivan Mikhaylov wrote:
-> Mostly standard i2c driver with some additional led-current option
-> for vcnl3020.
+On Mon, Mar 23, 2020 at 01:22:51PM -0700, Matthew Wilcox wrote:
+> From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
 > 
-> Signed-off-by: Ivan Mikhaylov <i.mikhaylov@yadro.com>
-> ---
->  .../bindings/iio/proximity/vcnl3020.yaml      | 47 +++++++++++++++++++
->  1 file changed, 47 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/proximity/vcnl3020.yaml
+> Implement the new readahead method in btrfs using the new
+> readahead_page_batch() function.
 > 
+> Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
+> Reviewed-by: William Kucharski <william.kucharski@oracle.com>
 
-My bot found errors running 'make dt_binding_check' on your patch:
+Sorry for late reply,
 
-Documentation/devicetree/bindings/iio/proximity/vcnl3020.example.dts:19.12-25: Warning (reg_format): /example-0/iio-proximity@13:reg: property has invalid length (4 bytes) (#address-cells == 1, #size-cells == 1)
-Documentation/devicetree/bindings/iio/proximity/vcnl3020.example.dt.yaml: Warning (pci_device_bus_num): Failed prerequisite 'reg_format'
-Documentation/devicetree/bindings/iio/proximity/vcnl3020.example.dt.yaml: Warning (i2c_bus_reg): Failed prerequisite 'reg_format'
-Documentation/devicetree/bindings/iio/proximity/vcnl3020.example.dt.yaml: Warning (spi_bus_reg): Failed prerequisite 'reg_format'
-
-See https://patchwork.ozlabs.org/patch/1261460
-
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure dt-schema is up to date:
-
-pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
-
-Please check and re-submit.
+Reviewed-by: David Sterba <dsterba@suse.com>
