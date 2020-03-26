@@ -2,114 +2,118 @@ Return-Path: <SRS0=aGSP=5L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39F71C43331
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 19:57:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ECE5AC2D0E9
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 19:58:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1070E20714
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 19:57:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BmWaLXH+"
+	by mail.kernel.org (Postfix) with ESMTP id C21A320714
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 19:58:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585252692;
+	bh=Iy1Vo9XDp/0w9tjBUq/6qFzyHr6inT+v6uL1ZbBtUtk=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=Oy/Xxpw1GVSsBetscazjsJSOS14eICUySEgyU0md/IaxRqHzJPO4GUbsD3ewslKmr
+	 wXV5Ypxa3O8pYgfBbsWZE0woSWTwrFh0yiQWGSPglIh/oYu+q5U+3xA88I2o5zaJVp
+	 q9R7E8jCj4AeWZ3jK0tohfhJd4Q1SOZQJtm1cYBI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728649AbgCZT5b (ORCPT
+        id S1728670AbgCZT6L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 15:57:31 -0400
-Received: from us-smtp-delivery-74.mimecast.com ([216.205.24.74]:31220 "EHLO
-        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727446AbgCZT5b (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 15:57:31 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1585252649;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=+HcwVk5VdvJ1LeKecVY6pFDWmsucvzIVlRkfrm9XQWo=;
-        b=BmWaLXH+/vRVPPM6LB3TVTtZosaMA9utLxpyFd/A6iZjyIPIUUOj49OLi5sFurI9HG9R1s
-        O0sbqeYtLkK+1zUV687FPdHD8DZP80y8PYIZ9TQxrxJIDBxJdmRZH1g6nyQN+br7wndZhE
-        /g/+3gC8fFlWSzilH9HezckX5msoe4s=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-383-UpZU49OxOLqsAvXMWVVkzA-1; Thu, 26 Mar 2020 15:57:27 -0400
-X-MC-Unique: UpZU49OxOLqsAvXMWVVkzA-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Thu, 26 Mar 2020 15:58:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34184 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727446AbgCZT6L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Mar 2020 15:58:11 -0400
+Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E40EC8017CC;
-        Thu, 26 Mar 2020 19:57:19 +0000 (UTC)
-Received: from llong.remote.csb (ovpn-117-112.rdu2.redhat.com [10.10.117.112])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 06A669CA3;
-        Thu, 26 Mar 2020 19:57:11 +0000 (UTC)
-Subject: Re: [PATCH RFC] cpuset: Make cpusets get restored on hotplug
-To:     Joel Fernandes <joel@joelfernandes.org>, Tejun Heo <tj@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, Dmitry Shmidt <dimitrysh@google.com>,
-        Amit Pundir <amit.pundir@linaro.org>, kernel-team@android.com,
-        jsbarnes@google.com, sonnyrao@google.com, vpillai@digitalocean.com,
-        peterz@infradead.org, Guenter Roeck <groeck@chromium.org>,
-        Greg Kerr <kerrnel@google.com>, cgroups@vger.kernel.org,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Li Zefan <lizefan@huawei.com>
-References: <20200326191623.129285-1-joel@joelfernandes.org>
- <20200326192035.GO162390@mtj.duckdns.org>
- <20200326194448.GA133524@google.com>
-From:   Waiman Long <longman@redhat.com>
-Organization: Red Hat
-Message-ID: <972a5c1b-6721-ac20-cec5-617af67e617d@redhat.com>
-Date:   Thu, 26 Mar 2020 15:57:11 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
-MIME-Version: 1.0
-In-Reply-To: <20200326194448.GA133524@google.com>
-Content-Type: text/plain; charset=windows-1252
+        by mail.kernel.org (Postfix) with ESMTPSA id 5784D206E6;
+        Thu, 26 Mar 2020 19:58:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1585252690;
+        bh=Iy1Vo9XDp/0w9tjBUq/6qFzyHr6inT+v6uL1ZbBtUtk=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=uMpnCJ5tcvu2lcbi9CrLyaFTqKO8nrKkLodw/67tQDB4pUcH1IUlEbljKZgJj/2Pk
+         FuhR9hX/G2PewXCK81qSP/9ZNj1s0HHUH6nT4vYnJ74R4ne0m5SkPmpm9+Q3EvodUb
+         xaH56cb6xSHmcHIyH2Y6gUx2FeM/JXExhebkYQU4=
+Date:   Thu, 26 Mar 2020 12:58:09 -0700
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     Rafael Aquini <aquini@redhat.com>,
+        Shakeel Butt <shakeelb@google.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-kselftest@vger.kernel.org, shuah@kernel.org,
+        Eric B Munson <emunson@akamai.com>
+Subject: Re: [PATCH] tools/testing/selftests/vm/mlock2-tests: fix mlock2
+ false-negative errors
+Message-Id: <20200326125809.64d92920bcd481cf15207855@linux-foundation.org>
+In-Reply-To: <20200326064909.GB27965@dhcp22.suse.cz>
+References: <20200323144240.GB23364@optiplex-lnx>
+        <20200323145106.GM7524@dhcp22.suse.cz>
+        <20200323150259.GD23364@optiplex-lnx>
+        <20200323151256.GP7524@dhcp22.suse.cz>
+        <20200323154159.GF23364@optiplex-lnx>
+        <20200323155111.GQ7524@dhcp22.suse.cz>
+        <20200323155449.GG23364@optiplex-lnx>
+        <20200324154218.GS19542@dhcp22.suse.cz>
+        <20200324154910.GM23364@optiplex-lnx>
+        <20200325174949.95d8a9de61c6a30a7e0f4582@linux-foundation.org>
+        <20200326064909.GB27965@dhcp22.suse.cz>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/26/20 3:44 PM, Joel Fernandes wrote:
-> Hi Tejun,
->
-> On Thu, Mar 26, 2020 at 03:20:35PM -0400, Tejun Heo wrote:
->> On Thu, Mar 26, 2020 at 03:16:23PM -0400, Joel Fernandes (Google) wrote:
->>> This deliberately changes the behavior of the per-cpuset
->>> cpus file to not be effected by hotplug. When a cpu is offlined,
->>> it will be removed from the cpuset/cpus file. When a cpu is onlined,
->>> if the cpuset originally requested that that cpu was part of the cpuset,
->>> that cpu will be restored to the cpuset. The cpus files still
->>> have to be hierachical, but the ranges no longer have to be out of
->>> the currently online cpus, just the physically present cpus.
->> This is already the behavior on cgroup2 and I don't think we want to
->> introduce this big a behavior change to cgroup1 cpuset at this point.
-> It is not really that big a change. Please go over the patch, we are not
-> changing anything with how ->cpus_allowed works and interacts with the rest
-> of the system and the scheduler. We have just introduced a new mask to keep
-> track of which CPUs were requested without them being affected by hotplug. On
-> CPU onlining, we restore the state of ->cpus_allowed as not be affected by
-> hotplug.
->
-> There's 3 companies that have this issue so that should tell you something.
-> We don't want to carry this patch forever. Many people consider the hotplug
-> behavior to be completely broken.
->
-I think Tejun is concerned about a change in the default behavior of
-cpuset v1.
+On Thu, 26 Mar 2020 07:49:09 +0100 Michal Hocko <mhocko@kernel.org> wrote:
 
-There is a special v2 mode for cpuset that is enabled by the mount
-option "cpuset_v2_mode". This causes the cpuset v1 to adopt some of the
-v2 behavior. I introduced this v2 mode a while back to address, I think,
-a similar concern. Could you try that to see if it is able to address
-your problem? If not, you can make some code adjustment within the
-framework of the v2 mode. As long as it is an opt-in, I think we are
-open to further change.
+> On Wed 25-03-20 17:49:49, Andrew Morton wrote:
+> > On Tue, 24 Mar 2020 11:49:10 -0400 Rafael Aquini <aquini@redhat.com> wrote:
+> > 
+> > > Thanks Michal!
+> > > 
+> > >  
+> > > Acked-by: Rafael Aquini <aquini@redhat.com>
+> > 
+> > I'll add
+> > Fixes: 9c4e6b1a7027f ("mm, mlock, vmscan: no more skipping pagevecs")
+> 
+> Wouldn't be this misleading? It would suggest that this commit is
+> somehow incorrect. I would consider b3b0d09c7a23 ("selftests: vm: add
+> tests for lock on fault") to be a better fit.
 
-Cheers,
-Longman
+Yes, it's a bit misleading.
+
+Or maybe not.  b3b0d09c7a23 was merged in 2015 and worked OK (afaik)
+until 9c4e6b1a7027f came along in 2020.  So arguably, 2020's
+9c4e6b1a7027f was correct but incomplete, since it failed to repair the
+impact upon the test code.
+
+I don't think that kernels prior to 2020's 9c4e6b1a7027f require this
+change(?), so we only need to backport this into 5.6.x, which is what
+my proposed Fixes: and cc:stable expresses.
+
+> > and cc:stable to this.  Any kernel which has 9c4e6b1a7027f will benefit
+> > from this change.
+> 
+> OK, makes sense with
+> Cc: stable # with 9c4e6b1a7027f applied
+>  
+> > We're getting quite late in the cycle now so I think I'll hold off
+> > merging this up until post-5.7-rc1.  It will still get into the stable
+> > trees, but a bit later.
+> 
+> No problem. Nothing really urget. Coincidentaly we've just had a report
+> from our partner about this very specific test failure for our
+> enterprise kernel as well.
+
+I assume that your kernel has 2020's 9c4e6b1a7027f?
+
+> I will just backport the patch as it seems
+> nobody really objects to it.
 
