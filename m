@@ -2,115 +2,96 @@ Return-Path: <SRS0=aGSP=5L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0DC6C2D0E8
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 14:32:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 351ECC2D0E5
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 14:32:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B7DD92073E
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 14:32:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="t9E6Huvs"
+	by mail.kernel.org (Postfix) with ESMTP id 04BAB20714
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 14:32:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585233162;
+	bh=2unZXsfXGiiwQhWbjl1kP114RQvv7sM/ehc4It/7EfI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=cAFpKv3xN6WKk+YZ0nTIsKP0IHkNLa/Bbk4Hp/ejESsTLq7I9g2ejVvqQWuajLrwl
+	 pO4xBklIpGW5OXIByeTjrJIk0/s+bbOhIt+vHB+XGOahzdjTNRtWEQmj219AzAcndL
+	 weQK4Jhx3dGQt8iesHGlnQZaG8KOB7Xn6YF3I1eg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728324AbgCZOcY (ORCPT
+        id S1728359AbgCZOcl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 10:32:24 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:51178 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726296AbgCZOcY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 10:32:24 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02QET77b005362;
-        Thu, 26 Mar 2020 14:32:15 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references; s=corp-2020-01-29;
- bh=FAXjI9acl3BvhqBVLHwTP8ZVKrXH638AdGx3om6kJNQ=;
- b=t9E6Huvstyz8STIUPEnc9UwPHsnn4KcIAfs9xFb/XSxy5CTk1RWl/Mg7Q+rQ3PY8lkBy
- HIwyE2P7psHnwTy2TAZiXNEJOaaMvW5ryn8/ViLoeT2PawEl2QCjoilfXbWhhYYPUyQ6
- XETCBpu0l4IpmJ+EsoWMb3FPqzkfB048oFFKNUH8Kuknhlwbh6wKU72G/2guoRS0hUZ7
- mAnSnYRY1sQp3ILeVMBc6rQkGCLVLBi6gNlRAViuAkHZzROinEXyGQwXswASFZBBFuvG
- SF06/2+mV83/+uYZn+iZcIUy067Hpe5gjcA7oHiohoaJgHR/GxlbAE8BBLFiv1c4bfHr iA== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by aserp2120.oracle.com with ESMTP id 2ywavmg4es-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 26 Mar 2020 14:32:15 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02QEQbsw162134;
-        Thu, 26 Mar 2020 14:32:15 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3020.oracle.com with ESMTP id 30073dk1av-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 26 Mar 2020 14:32:15 +0000
-Received: from abhmp0019.oracle.com (abhmp0019.oracle.com [141.146.116.25])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 02QEWEUQ012449;
-        Thu, 26 Mar 2020 14:32:14 GMT
-Received: from localhost.uk.oracle.com (/10.175.198.205)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 26 Mar 2020 07:32:13 -0700
-From:   Alan Maguire <alan.maguire@oracle.com>
-To:     brendanhiggins@google.com, frowand.list@gmail.com,
-        gregkh@linuxfoundation.org, shuah@kernel.org,
-        linux-kselftest@vger.kernel.org
-Cc:     corbet@lwn.net, linux-kernel@vger.kernel.org,
-        kunit-dev@googlegroups.com, linux-doc@vger.kernel.org
-Subject: [PATCH v8 kunit-next 4/4] kunit: update documentation to describe debugfs representation
-Date:   Thu, 26 Mar 2020 14:25:10 +0000
-Message-Id: <1585232710-322-5-git-send-email-alan.maguire@oracle.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1585232710-322-1-git-send-email-alan.maguire@oracle.com>
-References: <1585232710-322-1-git-send-email-alan.maguire@oracle.com>
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9571 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 adultscore=0
- suspectscore=0 mlxscore=0 phishscore=0 bulkscore=0 spamscore=0
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2003260112
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9571 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 malwarescore=0
- priorityscore=1501 mlxscore=0 bulkscore=0 clxscore=1015 impostorscore=0
- phishscore=0 suspectscore=0 mlxlogscore=999 spamscore=0 lowpriorityscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2003260112
+        Thu, 26 Mar 2020 10:32:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42630 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727944AbgCZOck (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Mar 2020 10:32:40 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5ED042073E;
+        Thu, 26 Mar 2020 14:32:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1585233158;
+        bh=2unZXsfXGiiwQhWbjl1kP114RQvv7sM/ehc4It/7EfI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=iP1jZIWDDtdVjpcWzS6bxigS02fS6kEKL1j+a4h8tVzbngrPYZixeAIuDwj8ScSyO
+         vqYVzznYonRgx5V5CeExlKr2pgebxEgQ0Cg3Fkvdq2llY7UbFAM+DeMTax9nJadNOS
+         0doJMQqMbOhkJ3OeZ6TNH1yj0BxSStkdr8vFjLP0=
+Date:   Thu, 26 Mar 2020 15:32:36 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Leonard Crestez <leonard.crestez@nxp.com>
+Cc:     Michael Walle <michael@walle.cc>,
+        "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Jiri Slaby <jslaby@suse.com>, Andy Duan <fugang.duan@nxp.com>
+Subject: Re: [PATCH v2 1/2] tty: serial: fsl_lpuart: move dma_request_chan()
+Message-ID: <20200326143236.GA1372760@kroah.com>
+References: <20200325090658.25967-1-michael@walle.cc>
+ <VI1PR04MB69417B19A6FFF0AA22585884EECE0@VI1PR04MB6941.eurprd04.prod.outlook.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <VI1PR04MB69417B19A6FFF0AA22585884EECE0@VI1PR04MB6941.eurprd04.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Documentation should describe debugfs layout and semantics.
+On Wed, Mar 25, 2020 at 06:05:16PM +0000, Leonard Crestez wrote:
+> On 2020-03-25 11:07 AM, Michael Walle wrote:
+> > Move dma_request_chan() out of the atomic context. First this call
+> > should not be in the atomic context at all and second the
+> > dev_info_once() may cause a hang because because the console takes this
+> > spinlock, too.
+> > 
+> > Fixes: 159381df1442f ("tty: serial: fsl_lpuart: fix DMA operation when using IOMMU")
+> > Reported-by: Leonard Crestez <leonard.crestez@nxp.com>
+> > Signed-off-by: Michael Walle <michael@walle.cc>
+> > ---
+> > changes since v1:
+> >   - instead of just moving the dev_info_once() out of the spinlock protected
+> >     section, move the whole dma_request_chan(). Thanks Andy!
+> > 
+> > I've tested this on my board. Andy, Leonard, can you double check it? For
+> > all which are not aware, this deadlock happens only if you have the kernel
+> > console output on the lpuart, so if someone wants to test it, make sure you
+> > have something like console=ttyLP0,115200.
+> > 
+> >   drivers/tty/serial/fsl_lpuart.c | 36 +++++++++++++++++++++------------
+> >   1 file changed, 23 insertions(+), 13 deletions(-)
+> 
+> Tested-by: Leonard Crestez <leonard.crestez@nxp.com>
+> 
+> Since the original commit only made it into next it might make sense to 
+> squash the commits in the tty tree.
+> 
+> This way future bisections won't get stuck on a boot failure.
 
-Signed-off-by: Alan Maguire <alan.maguire@oracle.com>
-Reviewed-by: Brendan Higgins <brendanhiggins@google.com>
-Reviewed-by: Frank Rowand <frank.rowand@sony.com>
----
- Documentation/dev-tools/kunit/usage.rst | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+My tree does not rebase, sorry.  And neither should any other public git
+tree without really really good reasons.
 
-diff --git a/Documentation/dev-tools/kunit/usage.rst b/Documentation/dev-tools/kunit/usage.rst
-index 607758a..473a236 100644
---- a/Documentation/dev-tools/kunit/usage.rst
-+++ b/Documentation/dev-tools/kunit/usage.rst
-@@ -591,3 +591,17 @@ able to run one test case per invocation.
- 
- .. TODO(brendanhiggins@google.com): Add an actual example of an architecture
-    dependent KUnit test.
-+
-+KUnit debugfs representation
-+============================
-+When kunit test suites are initialized, they create an associated directory
-+in /sys/kernel/debug/kunit/<test-suite>.  The directory contains one file
-+
-+- results: "cat results" displays results of each test case and the results
-+  of the entire suite for the last test run.
-+
-+The debugfs representation is primarily of use when kunit test suites are
-+run in a native environment, either as modules or builtin.  Having a way
-+to display results like this is valuable as otherwise results can be
-+intermixed with other events in dmesg output.  The maximum size of each
-+results file is KUNIT_LOG_SIZE bytes (defined in include/kunit/test.h).
--- 
-1.8.3.1
+thanks,
 
+greg k-h
