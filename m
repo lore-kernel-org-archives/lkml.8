@@ -2,146 +2,148 @@ Return-Path: <SRS0=aGSP=5L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33F7BC43331
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 19:38:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40F25C43331
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 19:39:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EAB1920719
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 19:38:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1333520719
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 19:39:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="JPx1PEc5"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ae4waGDS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728407AbgCZTiq (ORCPT
+        id S1728629AbgCZTj0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 15:38:46 -0400
-Received: from mout.gmx.net ([212.227.15.18]:33791 "EHLO mout.gmx.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726340AbgCZTiq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 15:38:46 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1585251514;
-        bh=nIDDfq+abaAHQYUdKZ8Szi95vJE1wabuhvaK9tddpb8=;
-        h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
-        b=JPx1PEc54q6qkFcBInrqKWb080RTe8zqI7V8Jyf0uTmnyTE4QNP0ERKPtQfqIbQFa
-         AjOvcFDLBeU5TR5/zY86dLlnRM1ky+dzW7qGZplsJ2CzkGtYTe8nWFRFOy1odh0vi9
-         1wgt/6n/dvlsG4GkbHDG3ZIwHWygFYFLq3FwREvY=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from localhost.localdomain ([82.19.195.159]) by mail.gmx.com
- (mrgmx004 [212.227.17.184]) with ESMTPSA (Nemesis) id
- 1MOA3P-1itAv23I0f-00Oam8; Thu, 26 Mar 2020 20:38:33 +0100
-From:   Alex Dewar <alex.dewar@gmx.co.uk>
-Cc:     alex.dewar@gmx.co.uk, Hannes Reinecke <hare@suse.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] scsi: aic7xxx: aic97xx: Remove FreeBSD-specific code
-Date:   Thu, 26 Mar 2020 19:38:17 +0000
-Message-Id: <20200326193817.12568-1-alex.dewar@gmx.co.uk>
-X-Mailer: git-send-email 2.26.0
+        Thu, 26 Mar 2020 15:39:26 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:54103 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728236AbgCZTjZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Mar 2020 15:39:25 -0400
+Received: by mail-wm1-f66.google.com with SMTP id b12so8019395wmj.3
+        for <linux-kernel@vger.kernel.org>; Thu, 26 Mar 2020 12:39:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=krcVqiMkQPdhe4hMOEoqIQl0MN9jc0hPZ4AdMO9emGc=;
+        b=ae4waGDSfrW9e13opPTyj3EkP01ZIr9H99lNvLUCbfhdmjAkVIUtf8myeSBASMioQ6
+         5sCM+aSj8GGGtOOkAKA2sF1svVbQ++wWd19/SurEr9i3eRmKckpaJhNNdJcmhr+X+2S/
+         4ey4IIauUMub88gCWUR3ECmD1rDjjStPObuGw=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=krcVqiMkQPdhe4hMOEoqIQl0MN9jc0hPZ4AdMO9emGc=;
+        b=Lj/1CLkbrMc+pWjDq+pdd+51JB3rCGDBeCJ6WcbllF1iQKXXRQN5s11woP+JpAGey6
+         wDJsRPG0Hoz6G6AEJcdfFd+Tw2kRmUa1rnUHkpr4I6x+l4ta2obqt4qb5DyiS5ZjjiFp
+         Dhfe0csExvmZSqq0nPC8PgPKbVpKk36X+hL1WcvDdDVeS3Sel/j2Mor1AOzH9PMlZpHh
+         rn7Z0AE5RxcaGFR8h7j6ruBV22DXI6+V4/t9KB9ny33T274sxhJE4FN/o5zM3TonbHfe
+         jCrkkPCVDYZWywGW34sFFN7l0aui8paTjOWApXktt788Uq69tTuBty2jXMB5mlBHb3Go
+         RWzA==
+X-Gm-Message-State: ANhLgQ2/JmCr28EClr08aXXuiGG/e5CiIMfpy1V8RxJYVZ27HstJpKZn
+        Z2kjtkNDHiiSkBa5dZv6s42bL/LDzrI=
+X-Google-Smtp-Source: ADFU+vuZM/wrLQkZhph4tN0p0oWmZhN1XoQuxypzKDgxWIL5L41sJf8NBc/Sk7/A4MmAvbLnE6Xgqw==
+X-Received: by 2002:a1c:5604:: with SMTP id k4mr1483516wmb.57.1585251564109;
+        Thu, 26 Mar 2020 12:39:24 -0700 (PDT)
+Received: from chromium.org (77-56-209-237.dclient.hispeed.ch. [77.56.209.237])
+        by smtp.gmail.com with ESMTPSA id w7sm4886527wrr.60.2020.03.26.12.39.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 26 Mar 2020 12:39:23 -0700 (PDT)
+From:   KP Singh <kpsingh@chromium.org>
+X-Google-Original-From: KP Singh <kpsingh>
+Date:   Thu, 26 Mar 2020 20:39:21 +0100
+To:     Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        bpf <bpf@vger.kernel.org>, linux-security-module@vger.kernel.org,
+        Brendan Jackman <jackmanb@google.com>,
+        Florent Revest <revest@google.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        James Morris <jmorris@namei.org>,
+        Kees Cook <keescook@chromium.org>,
+        Paul Turner <pjt@google.com>, Jann Horn <jannh@google.com>,
+        Florent Revest <revest@chromium.org>,
+        Brendan Jackman <jackmanb@chromium.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH bpf-next v7 4/8] bpf: lsm: Implement attach, detach and
+ execution
+Message-ID: <20200326193921.GA15273@chromium.org>
+References: <20200326142823.26277-1-kpsingh@chromium.org>
+ <20200326142823.26277-5-kpsingh@chromium.org>
+ <CAEf4BzaS8xLLrbaWgWbWSEVfc3YBPURQhZxe=zR06B021jH5BA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:EoKMGVgPqbm/NudaV7nK++v76WAKtvCJBuKOB1zX72dFD34r6O1
- +YVbeQuCCDao2oBEV+B/nMqxaHkxGqtB3DcnO/GovLlWmTG3Zl0a0ZcW6s8T/mW9Mip+rNE
- VWMXhEe6+Jymb4fXULwNHdFX2qkeFYxv4b2u/Uw6dCDrfMZ02GOxsKq9JH5es4BDWNa6uQo
- W3MP4YwZmiah9WxkNAOvQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:/VWNwnjenT4=:hnj19P/M1lK5/XCAcRQQvf
- Zb4lLrtIXHElMj7Ih5uqZrFlp2Np4HsXskBmm2McYdJ+yiCBn4dq6qIQOSRm9nL29GKgrNDvB
- RgkW5s+D5zfm7mnf/osiLmMpM0oO4lEgyHRNHNuDCKwTGwPUudiuvSAE6czetjCgKH4lQMfbN
- Ui0BWhWV5ZN+kA/7sBhy+a9PSwxEEm6Ce1dLPwEjF/XzF+rS9j/S2Q4zr/YCqNcU0odLaK5+U
- Y6I34ej01AsKaKJiwnJmavS+DlVThPYR6CdvPRmAgB754O5apAsUGupPgkU/LiNdaO7L5/1F0
- 6jtYr7/LKTFANKx4derX9E1LC1RXIAX2mLZCaMFAPeJgxxw7S7mmihNobR68K9TKTps6V5y7M
- B62Q5SHvt+IIgqLb/5iIJYe6JiuHyoseE6erN9B/XN3sTMgZLBg2bj3oLLcoGclAvu5qsP59Q
- 3tkOgTBwI8R7Vm4GNg5Um44SRn57qw43VS5WuwoUmDOBPHEyuGE6iHatsGBikFOH+TlhI4tnB
- vSZ+3Yj0Be9cjpYaIMR5D3/qQxjnmDAEgf+XaJYZzjNt9NLbYmsQmiUxPBTj/hCPgKqWkjECA
- HPg6nr2yDTLlyXquXhCUQC6xjRnfgKym+eubXzzqP6v6phhXyaqvIJH2gcFqLeIoxnx9osOhG
- lEfBwOmoCxNm1TGOMP0/rDfHHQguSEP7N0Vv06aY2oxFo1lpRmAFjP5U32V6M9Sbwhr6Ec+Aj
- nZtk+qPhynFYLNN+pN8vRTo70m0uurySeVmIV6PtFzLKAyweIMQXdEBIopizRYOg7f0HZPjnO
- mQU/Xf2wx0s8HJ5ENLeE6Ui0bj4BwMqjIxy7zjGsl4vnPoiKOZYcwrGbT7xC+K5qVqAHQBHP7
- XV0Yj79QRoPkw1GXzkgsLysCb6z0BpDjrquxIgaBOtRQDoPVstW51oCwdQLZcoTIiGWRBgg7t
- tzWsy8P0CT0WYF3H4h6lvF7bQU2QfxPDggFJOh3ENLSNTQHc2uZCVUIkXKCxYC0qHI4fudlwZ
- Birfm2mqrBXuAKPjodGJx78DvbLCqX7s/Snbqj+oLoBwxLomcYzYXttlzDZfyYa6HrLSooYtd
- /b18v8hXCbPkU+xjnHPEB4k+h/6jpwiUxtX4RRxLc+DBHHh03E6NeLK3oZlMvOyPARxS0TO6R
- nnWro31Pfk0gAOKG8gSoWsVCOlInYPokDWWsTqQFkrSvTwcUTA82vMJYph0pT8GbwmItR/wQn
- UnuC0xBFYmNQvKwfe
-To:     unlisted-recipients:; (no To-header on input)
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAEf4BzaS8xLLrbaWgWbWSEVfc3YBPURQhZxe=zR06B021jH5BA@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The file aic79xx_core.c still contains some FreeBSD-specific code/macro
-guards, although cross-compatibility was in theory removed with
-commit cca6cb8ad7a8 ("scsi: aic7xxx: Fix build using bare-metal
-toolchain"). Remove it.
+On 26-Mär 12:12, Andrii Nakryiko wrote:
+> On Thu, Mar 26, 2020 at 7:29 AM KP Singh <kpsingh@chromium.org> wrote:
+> >
+> > From: KP Singh <kpsingh@google.com>
+> >
+> > JITed BPF programs are dynamically attached to the LSM hooks
+> > using BPF trampolines. The trampoline prologue generates code to handle
+> > conversion of the signature of the hook to the appropriate BPF context.
+> >
+> > The allocated trampoline programs are attached to the nop functions
+> > initialized as LSM hooks.
+> >
+> > BPF_PROG_TYPE_LSM programs must have a GPL compatible license and
+> > and need CAP_SYS_ADMIN (required for loading eBPF programs).
+> >
+> > Upon attachment:
+> >
+> > * A BPF fexit trampoline is used for LSM hooks with a void return type.
+> > * A BPF fmod_ret trampoline is used for LSM hooks which return an
+> >   int. The attached programs can override the return value of the
+> >   bpf LSM hook to indicate a MAC Policy decision.
+> >
+> > Signed-off-by: KP Singh <kpsingh@google.com>
+> > Reviewed-by: Brendan Jackman <jackmanb@google.com>
+> > Reviewed-by: Florent Revest <revest@google.com>
+> > ---
+> 
+> Acked-by: Andrii Nakryiko <andriin@fb.com>
+> 
+> 
+> >  include/linux/bpf_lsm.h | 11 ++++++++
+> >  kernel/bpf/bpf_lsm.c    | 28 ++++++++++++++++++++
+> >  kernel/bpf/btf.c        |  9 ++++++-
+> >  kernel/bpf/syscall.c    | 57 ++++++++++++++++++++++++++++-------------
+> >  kernel/bpf/trampoline.c | 17 +++++++++---
+> >  kernel/bpf/verifier.c   | 19 +++++++++++---
+> >  6 files changed, 114 insertions(+), 27 deletions(-)
+> >
+> 
+> [...]
+> 
+> > @@ -2479,6 +2496,10 @@ static int bpf_raw_tracepoint_open(const union bpf_attr *attr)
+> >                 }
+> >                 buf[sizeof(buf) - 1] = 0;
+> >                 tp_name = buf;
+> > +               break;
+> > +       default:
+> > +                       err = -EINVAL;
+> > +                       goto out_put_prog;
+> >         }
+> 
+> is indentation off here or it's my email client?
 
-Signed-off-by: Alex Dewar <alex.dewar@gmx.co.uk>
-=2D--
- drivers/scsi/aic7xxx/aic79xx_core.c | 22 +---------------------
- 1 file changed, 1 insertion(+), 21 deletions(-)
+You're mail client is fine :) It's me.
 
-diff --git a/drivers/scsi/aic7xxx/aic79xx_core.c b/drivers/scsi/aic7xxx/ai=
-c79xx_core.c
-index 7e5044bf05c0..a336a458c978 100644
-=2D-- a/drivers/scsi/aic7xxx/aic79xx_core.c
-+++ b/drivers/scsi/aic7xxx/aic79xx_core.c
-@@ -3107,19 +3107,6 @@ ahd_handle_nonpkt_busfree(struct ahd_softc *ahd)
- 			printerror =3D 0;
- 		} else if (ahd_sent_msg(ahd, AHDMSG_1B,
- 					MSG_BUS_DEV_RESET, TRUE)) {
--#ifdef __FreeBSD__
--			/*
--			 * Don't mark the user's request for this BDR
--			 * as completing with CAM_BDR_SENT.  CAM3
--			 * specifies CAM_REQ_CMP.
--			 */
--			if (scb !=3D NULL
--			 && scb->io_ctx->ccb_h.func_code=3D=3D XPT_RESET_DEV
--			 && ahd_match_scb(ahd, scb, target, 'A',
--					  CAM_LUN_WILDCARD, SCB_LIST_NULL,
--					  ROLE_INITIATOR))
--				ahd_set_transaction_status(scb, CAM_REQ_CMP);
--#endif
- 			ahd_handle_devreset(ahd, &devinfo, CAM_LUN_WILDCARD,
- 					    CAM_BDR_SENT, "Bus Device Reset",
- 					    /*verbose_level*/0);
-@@ -6067,22 +6054,17 @@ ahd_alloc(void *platform_arg, char *name)
- {
- 	struct  ahd_softc *ahd;
+- KP
 
--#ifndef	__FreeBSD__
- 	ahd =3D kmalloc(sizeof(*ahd), GFP_ATOMIC);
- 	if (!ahd) {
- 		printk("aic7xxx: cannot malloc softc!\n");
- 		kfree(name);
- 		return NULL;
- 	}
--#else
--	ahd =3D device_get_softc((device_t)platform_arg);
--#endif
-+
- 	memset(ahd, 0, sizeof(*ahd));
- 	ahd->seep_config =3D kmalloc(sizeof(*ahd->seep_config), GFP_ATOMIC);
- 	if (ahd->seep_config =3D=3D NULL) {
--#ifndef	__FreeBSD__
- 		kfree(ahd);
--#endif
- 		kfree(name);
- 		return (NULL);
- 	}
-@@ -6206,9 +6188,7 @@ ahd_free(struct ahd_softc *ahd)
- 		kfree(ahd->seep_config);
- 	if (ahd->saved_stack !=3D NULL)
- 		kfree(ahd->saved_stack);
--#ifndef __FreeBSD__
- 	kfree(ahd);
--#endif
- 	return;
- }
-
-=2D-
-2.26.0
-
+> 
+> [...]
