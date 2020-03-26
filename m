@@ -2,118 +2,107 @@ Return-Path: <SRS0=aGSP=5L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECE5AC2D0E9
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 19:58:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76E96C43331
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 19:58:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C21A320714
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 19:58:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585252692;
-	bh=Iy1Vo9XDp/0w9tjBUq/6qFzyHr6inT+v6uL1ZbBtUtk=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=Oy/Xxpw1GVSsBetscazjsJSOS14eICUySEgyU0md/IaxRqHzJPO4GUbsD3ewslKmr
-	 wXV5Ypxa3O8pYgfBbsWZE0woSWTwrFh0yiQWGSPglIh/oYu+q5U+3xA88I2o5zaJVp
-	 q9R7E8jCj4AeWZ3jK0tohfhJd4Q1SOZQJtm1cYBI=
+	by mail.kernel.org (Postfix) with ESMTP id 463BC206E6
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 19:58:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="PcUVhKbS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728670AbgCZT6L (ORCPT
+        id S1728682AbgCZT6V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 15:58:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34184 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727446AbgCZT6L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 15:58:11 -0400
-Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5784D206E6;
-        Thu, 26 Mar 2020 19:58:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585252690;
-        bh=Iy1Vo9XDp/0w9tjBUq/6qFzyHr6inT+v6uL1ZbBtUtk=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=uMpnCJ5tcvu2lcbi9CrLyaFTqKO8nrKkLodw/67tQDB4pUcH1IUlEbljKZgJj/2Pk
-         FuhR9hX/G2PewXCK81qSP/9ZNj1s0HHUH6nT4vYnJ74R4ne0m5SkPmpm9+Q3EvodUb
-         xaH56cb6xSHmcHIyH2Y6gUx2FeM/JXExhebkYQU4=
-Date:   Thu, 26 Mar 2020 12:58:09 -0700
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     Rafael Aquini <aquini@redhat.com>,
-        Shakeel Butt <shakeelb@google.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-kselftest@vger.kernel.org, shuah@kernel.org,
-        Eric B Munson <emunson@akamai.com>
-Subject: Re: [PATCH] tools/testing/selftests/vm/mlock2-tests: fix mlock2
- false-negative errors
-Message-Id: <20200326125809.64d92920bcd481cf15207855@linux-foundation.org>
-In-Reply-To: <20200326064909.GB27965@dhcp22.suse.cz>
-References: <20200323144240.GB23364@optiplex-lnx>
-        <20200323145106.GM7524@dhcp22.suse.cz>
-        <20200323150259.GD23364@optiplex-lnx>
-        <20200323151256.GP7524@dhcp22.suse.cz>
-        <20200323154159.GF23364@optiplex-lnx>
-        <20200323155111.GQ7524@dhcp22.suse.cz>
-        <20200323155449.GG23364@optiplex-lnx>
-        <20200324154218.GS19542@dhcp22.suse.cz>
-        <20200324154910.GM23364@optiplex-lnx>
-        <20200325174949.95d8a9de61c6a30a7e0f4582@linux-foundation.org>
-        <20200326064909.GB27965@dhcp22.suse.cz>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Thu, 26 Mar 2020 15:58:21 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:37271 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727446AbgCZT6U (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Mar 2020 15:58:20 -0400
+Received: by mail-pf1-f195.google.com with SMTP id h72so3335870pfe.4
+        for <linux-kernel@vger.kernel.org>; Thu, 26 Mar 2020 12:58:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=OTZW/xLJ1BGsM+V9a0Wd+8MrhnBqRKDutU8ctncjlHo=;
+        b=PcUVhKbSFbaawYyYC8+zR2qy1gp/S0ozs7s298FEoX75NUCNOTOxZpUwkL/2BUIKbU
+         1UuJ46D+uHnscvV5NwwYd2RvxJVn1lErDXqA54/Vlor6COuKu6nGflBx5lrs48i7/ZtN
+         MDbZWsbZGH13AgWUH7a3rjhfQdyNBesbopTiYcTHUKsDsB1EB38myZ9ZCY0wgMvH9VOK
+         OBUFs2yI+vQmfSglrQOEMCEe26acxGIhqKOE3iQE1MkeNugqOljlZIvptYte5zZ3ns2O
+         6rZC9FL6Pj9kl42VVhXVFVkdkqfXF7y4ikn8FRIvNTv5uvQg+PZ1lwoNMskxyzJQuqQ6
+         Y7Tw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=OTZW/xLJ1BGsM+V9a0Wd+8MrhnBqRKDutU8ctncjlHo=;
+        b=RhKKKGX9BOBwMNexrKH2cg0Ib9cKExR1PWQ+1/B3Iyq4HVE6KyIh9WMAht9Hrx7Lc7
+         HACKg7ySMZlD5JJ2ap10a3e20B5/XOX+Q9M0Kjs0iAOzNtzr7zg76H+vNp3bR2YGW4zP
+         JEbZDpsoWidx+fvJgMih8d9XewI2KlD/9mAwl3J6PvT05dw1sCPQmzlk6yvrh4SiJWt+
+         xl8+Xp2Pqu6krRLOpQaLNWg52tB98XM4X84TMWYLvTHOJzbv08czM6Xu2qUNvJaZHXpN
+         3Xivka/wEGTn4k6GGdV5a/yk/GeSO8OsDr94iTlTeHwt7B4jKdf6g16rbPuA7EOYtDMs
+         18cg==
+X-Gm-Message-State: ANhLgQ3bqr+4yvd/+h2ujpMospozWajwshse/lVLrrZwbTGAlmTjI/Si
+        usbVxCbGXa5BMjeTFj1acXBlABn0Gk9PwzXEyLq4eg==
+X-Google-Smtp-Source: ADFU+vv9iYKelWkUk09S1YsFIpTByaYuAZxyhNxkqT/sKiyO5bU/yo1RpcYkW97YrXfQw4yo3szrTepwkZwCv6bwvZA=
+X-Received: by 2002:a63:4453:: with SMTP id t19mr9656195pgk.381.1585252699540;
+ Thu, 26 Mar 2020 12:58:19 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200326080104.27286-1-masahiroy@kernel.org> <20200326080104.27286-16-masahiroy@kernel.org>
+ <CAKwvOdnG4F6+Ndfj+=BoV6OidJjWS_dYtjvyCEJ6nyxkSQc3rg@mail.gmail.com> <CAHmME9p_N2cpMt20Gf1kWTRnj36nwrceFxEui2MU0kFu3WOdww@mail.gmail.com>
+In-Reply-To: <CAHmME9p_N2cpMt20Gf1kWTRnj36nwrceFxEui2MU0kFu3WOdww@mail.gmail.com>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Thu, 26 Mar 2020 12:58:06 -0700
+Message-ID: <CAKwvOdmLWqVq_EQk2S4FUSUCU7yoppYD4oiL+P7taWoDTyrb9w@mail.gmail.com>
+Subject: Re: [PATCH v2 15/16] x86: update AS_* macros to binutils >=2.23,
+ supporting ADX and AVX2
+To:     "Jason A. Donenfeld" <Jason@zx2c4.com>
+Cc:     Masahiro Yamada <masahiroy@kernel.org>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Ingo Molnar <mingo@redhat.com>,
+        "open list:HARDWARE RANDOM NUMBER GENERATOR CORE" 
+        <linux-crypto@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 26 Mar 2020 07:49:09 +0100 Michal Hocko <mhocko@kernel.org> wrote:
+On Thu, Mar 26, 2020 at 12:48 PM Jason A. Donenfeld <Jason@zx2c4.com> wrote:
+>
+> On Thu, Mar 26, 2020 at 11:55 AM Nick Desaulniers
+> <ndesaulniers@google.com> wrote:
+> > I see four checks for CONFIG_AS_AVX2 in:
+> > net/netfilter/nft_set_pipapo.c
+> > net/netfilter/nf_tables_api.c
+> > net/netfilter/Makefile
+> > net/netfilter/nft_set_pipapo_avx2.h
+>
+> That code isn't in Linus' tree right now is it? Does it make sense for
 
-> On Wed 25-03-20 17:49:49, Andrew Morton wrote:
-> > On Tue, 24 Mar 2020 11:49:10 -0400 Rafael Aquini <aquini@redhat.com> wrote:
-> > 
-> > > Thanks Michal!
-> > > 
-> > >  
-> > > Acked-by: Rafael Aquini <aquini@redhat.com>
-> > 
-> > I'll add
-> > Fixes: 9c4e6b1a7027f ("mm, mlock, vmscan: no more skipping pagevecs")
-> 
-> Wouldn't be this misleading? It would suggest that this commit is
-> somehow incorrect. I would consider b3b0d09c7a23 ("selftests: vm: add
-> tests for lock on fault") to be a better fit.
+Indeed, it seems I was grepping in my checkout of -next.
 
-Yes, it's a bit misleading.
+> us to see which subsystem trees (crypto, netfilter, raid, etc) are
+> submitted to 5.7? Or would you rather this patchset be rebased now on
+> next?
 
-Or maybe not.  b3b0d09c7a23 was merged in 2015 and worked OK (afaik)
-until 9c4e6b1a7027f came along in 2020.  So arguably, 2020's
-9c4e6b1a7027f was correct but incomplete, since it failed to repair the
-impact upon the test code.
+I think rebasing on -next is the way to go.  I usually generate my
+patches off of that, though some trees that don't feed into -next are
+technically further ahead.
 
-I don't think that kernels prior to 2020's 9c4e6b1a7027f require this
-change(?), so we only need to backport this into 5.6.x, which is what
-my proposed Fixes: and cc:stable expresses.
-
-> > and cc:stable to this.  Any kernel which has 9c4e6b1a7027f will benefit
-> > from this change.
-> 
-> OK, makes sense with
-> Cc: stable # with 9c4e6b1a7027f applied
->  
-> > We're getting quite late in the cycle now so I think I'll hold off
-> > merging this up until post-5.7-rc1.  It will still get into the stable
-> > trees, but a bit later.
-> 
-> No problem. Nothing really urget. Coincidentaly we've just had a report
-> from our partner about this very specific test failure for our
-> enterprise kernel as well.
-
-I assume that your kernel has 2020's 9c4e6b1a7027f?
-
-> I will just backport the patch as it seems
-> nobody really objects to it.
-
+-- 
+Thanks,
+~Nick Desaulniers
