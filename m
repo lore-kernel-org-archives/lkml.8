@@ -7,76 +7,76 @@ X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC67DC2D0E5
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 21:44:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E66CAC43331
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 21:46:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B026420774
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 21:44:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B6A0420719
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 21:46:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="AITiKiJV"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="KDrb3yRV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727682AbgCZVox (ORCPT
+        id S1727655AbgCZVqb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 17:44:53 -0400
-Received: from mail-vk1-f193.google.com ([209.85.221.193]:36983 "EHLO
-        mail-vk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726067AbgCZVox (ORCPT
+        Thu, 26 Mar 2020 17:46:31 -0400
+Received: from mail-ua1-f65.google.com ([209.85.222.65]:45223 "EHLO
+        mail-ua1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726296AbgCZVqb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 17:44:53 -0400
-Received: by mail-vk1-f193.google.com with SMTP id o124so2149909vkc.4
-        for <linux-kernel@vger.kernel.org>; Thu, 26 Mar 2020 14:44:52 -0700 (PDT)
+        Thu, 26 Mar 2020 17:46:31 -0400
+Received: by mail-ua1-f65.google.com with SMTP id 9so2737581uav.12
+        for <linux-kernel@vger.kernel.org>; Thu, 26 Mar 2020 14:46:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=Ly3DexEg+nhnocqoA+VfvZ4RxhvbGJ/QEwcAEp/nd6s=;
-        b=AITiKiJVhyAukyfkPH5ZHE8lTqi4itL+XpJ3XEX3e8XYsSsJyz+guiAWR+jemSfeeV
-         xTekmYS2ECnZld3Pv6e1FG35/CgqJl1m/thoo25QBTuHNIJaowBPhQZYwdG4dGLqIi0p
-         l9kErkRJCrVUFNh1JJAumbWL1xyyFy+sHAjig=
+        bh=/WxmZx0thKIzAyntPIgPikT7TZr1mNakTInFwraNuk4=;
+        b=KDrb3yRVSq1dleHX3HBy6uXNJmWiXJ3KffLvnbRDCHJgT6iuka8borub++gqor4QxA
+         /HC0APK4hDXxNmFPIvnkB3tjOpo8s2sEv6A6Asuc2UfMyHKLtp3ZAxB8fMiF7bnTIrsk
+         c3F41vwvHgVGxvF9siKeLwYgfC8MUTgLeg4w8=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=Ly3DexEg+nhnocqoA+VfvZ4RxhvbGJ/QEwcAEp/nd6s=;
-        b=RBlj0YoXe6ivl9iQGF8wtfjrcGV4Ec6euuIme46gsY4QQmNuq7pQ2e3q0C1Z8cbyCw
-         D3AY3CExm4xNFqDKl+SAQGYIB7SKVyUqlwTWcQD/Phq63oa3v5yWbWIspy6LNt27sq2d
-         uK5Vv+HRXwxWrO0rHmZoRJ8XtIarzdxklp8iG5e69xsrliLD2rFc1GJhkYHJP5ofEhLs
-         Ud3iyMa895CRhkHpACTsy3YHK+otBeMvP/oYGXLTTHBjP4cdJxfqOEcTDGjnDj8Ftfhv
-         T1s0EAbAlSPobj65v9D05FclAQhitvJ/9AJz+yp8TbORDN8r5u+VXh6CaakQyqUm56ZH
-         vSXQ==
-X-Gm-Message-State: ANhLgQ2aGpXb4gaIhzIxs/N587xaczTsnMumPhkOEtmkLQASpQeXLulN
-        mTDkgxmYyTtBxTWcYuqMnF1cU20z+fo=
-X-Google-Smtp-Source: ADFU+vulVgdfGYiJxZ89tpxY92QNzzz1zFMs/2qQzHaWSAwrULBUSDpZw82sJv7qotHIxoJg3D0QHQ==
-X-Received: by 2002:a1f:6e44:: with SMTP id j65mr9345468vkc.60.1585259091610;
-        Thu, 26 Mar 2020 14:44:51 -0700 (PDT)
-Received: from mail-vs1-f45.google.com (mail-vs1-f45.google.com. [209.85.217.45])
-        by smtp.gmail.com with ESMTPSA id x4sm1715777vsh.18.2020.03.26.14.44.50
+        bh=/WxmZx0thKIzAyntPIgPikT7TZr1mNakTInFwraNuk4=;
+        b=XzeBc6uEhOyIILbdsJKebSWsX+x4kpylT47IYYceMTHxt76MVI+3lusvqSnGpCZW3k
+         56UdHnpz5LsFXis0vD3G8TWZzxMGGTy7FngIYY13e9h9H7AAj4/Jd2aoBE/L1KmQPikp
+         ZHN/yId8c4AgU4h1blNKzBsXduCQv3fdUoHBX3lpF1yI2SeIZjNl2IZYW7m9pYx9yT1m
+         /Q2BdW/gVVbMJlwUxgXlXvBPQGwhMmlTy1Fs34bCWEVFOMzmqyKX3plUg0kXl+DZECa0
+         2h/JmQFqd143cHFuMJnuN4rPNA9vGO9RdekOyzjwpZUfgKsOxE693pudxTnBeQkTpox/
+         rzhA==
+X-Gm-Message-State: ANhLgQ3bMcfK/Nfi3WVRurgo/Sxy9nL94Od4Z2cZXUBuX+Q12Mw68AWS
+        r7dCKk01bcJOOKGpFVVTECNox5Rhct8=
+X-Google-Smtp-Source: ADFU+vsIpTE/ob4lf4WdGLPlhzYKuiTb1nB5xkGpDZb3SE71gEKLMKHdCCSMJt5BYCMXjASi7+KvTw==
+X-Received: by 2002:a9f:2204:: with SMTP id 4mr8462480uad.87.1585259189837;
+        Thu, 26 Mar 2020 14:46:29 -0700 (PDT)
+Received: from mail-ua1-f46.google.com (mail-ua1-f46.google.com. [209.85.222.46])
+        by smtp.gmail.com with ESMTPSA id x63sm1580880vkc.33.2020.03.26.14.46.28
         for <linux-kernel@vger.kernel.org>
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 26 Mar 2020 14:44:50 -0700 (PDT)
-Received: by mail-vs1-f45.google.com with SMTP id a63so4922415vsa.8
-        for <linux-kernel@vger.kernel.org>; Thu, 26 Mar 2020 14:44:50 -0700 (PDT)
-X-Received: by 2002:a67:2b07:: with SMTP id r7mr9673008vsr.169.1585259089569;
- Thu, 26 Mar 2020 14:44:49 -0700 (PDT)
+        Thu, 26 Mar 2020 14:46:28 -0700 (PDT)
+Received: by mail-ua1-f46.google.com with SMTP id h35so2755497uae.5
+        for <linux-kernel@vger.kernel.org>; Thu, 26 Mar 2020 14:46:28 -0700 (PDT)
+X-Received: by 2002:a9f:21b8:: with SMTP id 53mr3898828uac.8.1585259188027;
+ Thu, 26 Mar 2020 14:46:28 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200311231348.129254-1-dianders@chromium.org> <20200311161104.RFT.v2.8.I07c1f70e0e8f2dc0004bd38970b4e258acdc773e@changeid>
-In-Reply-To: <20200311161104.RFT.v2.8.I07c1f70e0e8f2dc0004bd38970b4e258acdc773e@changeid>
+References: <1585244270-637-1-git-send-email-mkshah@codeaurora.org> <1585244270-637-7-git-send-email-mkshah@codeaurora.org>
+In-Reply-To: <1585244270-637-7-git-send-email-mkshah@codeaurora.org>
 From:   Doug Anderson <dianders@chromium.org>
-Date:   Thu, 26 Mar 2020 14:44:37 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=Xp1o68HnC2-hMnffDDsi+jjgc9pNrdNuypjQZbS5K4nQ@mail.gmail.com>
-Message-ID: <CAD=FV=Xp1o68HnC2-hMnffDDsi+jjgc9pNrdNuypjQZbS5K4nQ@mail.gmail.com>
-Subject: Re: [RFT PATCH v2 08/10] drivers: qcom: rpmh-rsc: spin_lock_irqsave()
- for tcs_invalidate()
-To:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Maulik Shah <mkshah@codeaurora.org>
-Cc:     Matthias Kaehlcke <mka@chromium.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
+Date:   Thu, 26 Mar 2020 14:46:15 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=Vbo3JC6mBJXq+q+DQPC_bbNtn3bbScG5N8wzJZm87YuA@mail.gmail.com>
+Message-ID: <CAD=FV=Vbo3JC6mBJXq+q+DQPC_bbNtn3bbScG5N8wzJZm87YuA@mail.gmail.com>
+Subject: Re: [PATCH v14 6/6] soc: qcom: rpmh-rsc: Allow using free WAKE TCS
+ for active request
+To:     Maulik Shah <mkshah@codeaurora.org>
+Cc:     Stephen Boyd <swboyd@chromium.org>,
         Evan Green <evgreen@chromium.org>,
-        Lina Iyer <ilina@codeaurora.org>,
-        Stephen Boyd <swboyd@chromium.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        LKML <linux-kernel@vger.kernel.org>,
         linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
+        Andy Gross <agross@kernel.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        Lina Iyer <ilina@codeaurora.org>, lsrao@codeaurora.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -85,65 +85,82 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 Hi,
 
-On Wed, Mar 11, 2020 at 4:14 PM Douglas Anderson <dianders@chromium.org> wrote:
+On Thu, Mar 26, 2020 at 10:38 AM Maulik Shah <mkshah@codeaurora.org> wrote:
 >
-> Auditing tcs_invalidate() made me worried.  Specifically I saw that it
-> used spin_lock(), not spin_lock_irqsave().  That always worries me.
+> When there are more than one WAKE TCS available and there is no dedicated
+> ACTIVE TCS available, invalidating all WAKE TCSes and waiting for current
+> transfer to complete in first WAKE TCS blocks using another free WAKE TCS
+> to complete current request.
 >
-> As I understand it, using spin_lock() is only valid in these
-> situations:
+> Remove rpmh_rsc_invalidate() to happen from tcs_write() when WAKE TCSes
+> is re-purposed to be used for Active mode. Clear only currently used
+> WAKE TCS's register configuration.
 >
-> a) You know you are running in the interrupt handler (and all other
->    users of the lock use the "irqsave" variant).
-> b) You know that nobody using the lock is ever running in the
->    interrupt handler.
-> c) You know that someone else has always disabled interrupts before
->    your code runs and thus the "irqsave" variant is pointless.
+> Mark the caches as dirty so next time when rpmh_flush() is invoked it
+> can invalidate and program cached sleep and wake sets again.
 >
-> From auditing the driver we look OK.  ...except that there is one
-> further corner case.  If sometimes your code is called with IRQs
-> disabled and sometimes it's not you will get in trouble if someone
-> ever boots your board with "nosmp" (AKA in uniprocessor mode).  In
-> such a case if someone else has the lock (without disabling
-> interrupts) and they get swapped out then your code (with interrupts
-> disabled) might loop forever waiting for the spinlock.
->
-> It's just safer to use the irqsave version, so let's do that.  In
-> future patches I believe tcs_invalidate() will always be called with
-> interrupts off anyway.
->
-> Signed-off-by: Douglas Anderson <dianders@chromium.org>
+> Fixes: 2de4b8d33eab (drivers: qcom: rpmh-rsc: allow active requests from wake TCS)
+> Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
 > ---
->
-> Changes in v2: None
->
->  drivers/soc/qcom/rpmh-rsc.c | 5 +++--
->  1 file changed, 3 insertions(+), 2 deletions(-)
+>  drivers/soc/qcom/rpmh-rsc.c | 29 +++++++++++++++++++----------
+>  1 file changed, 19 insertions(+), 10 deletions(-)
 >
 > diff --git a/drivers/soc/qcom/rpmh-rsc.c b/drivers/soc/qcom/rpmh-rsc.c
-> index ba489d18c20e..c82c734788b1 100644
+> index 8fa70b4..c0513af 100644
 > --- a/drivers/soc/qcom/rpmh-rsc.c
 > +++ b/drivers/soc/qcom/rpmh-rsc.c
-> @@ -218,9 +218,10 @@ static bool tcs_is_free(struct rsc_drv *drv, int tcs_id)
->  static int tcs_invalidate(struct rsc_drv *drv, int type)
+> @@ -154,8 +154,9 @@ int rpmh_rsc_invalidate(struct rsc_drv *drv)
+>  static struct tcs_group *get_tcs_for_msg(struct rsc_drv *drv,
+>                                          const struct tcs_request *msg)
 >  {
->         int m;
+> -       int type, ret;
+> +       int type;
+>         struct tcs_group *tcs;
 > +       unsigned long flags;
->         struct tcs_group *tcs = &drv->tcs[type];
 >
-> -       spin_lock(&tcs->lock);
-> +       spin_lock_irqsave(&tcs->lock, flags);
->         if (bitmap_empty(tcs->slots, MAX_TCS_SLOTS)) {
->                 spin_unlock(&tcs->lock);
+>         switch (msg->state) {
+>         case RPMH_ACTIVE_ONLY_STATE:
+> @@ -175,18 +176,18 @@ static struct tcs_group *get_tcs_for_msg(struct rsc_drv *drv,
+>          * If we are making an active request on a RSC that does not have a
+>          * dedicated TCS for active state use, then re-purpose a wake TCS to
+>          * send active votes.
+> -        * NOTE: The driver must be aware that this RSC does not have a
+> -        * dedicated AMC, and therefore would invalidate the sleep and wake
+> -        * TCSes before making an active state request.
+> +        *
+> +        * NOTE: Mark caches as dirty here since existing data in wake TCS will
+> +        * be lost. rpmh_flush() will processed for dirty caches to restore
+> +        * data.
+>          */
+>         tcs = get_tcs_of_type(drv, type);
+>         if (msg->state == RPMH_ACTIVE_ONLY_STATE && !tcs->num_tcs) {
+>                 tcs = get_tcs_of_type(drv, WAKE_TCS);
+> -               if (tcs->num_tcs) {
+> -                       ret = rpmh_rsc_invalidate(drv);
+> -                       if (ret)
+> -                               return ERR_PTR(ret);
+> -               }
+> +
+> +               spin_lock_irqsave(&drv->client.cache_lock, flags);
+> +               drv->client.dirty = true;
+> +               spin_unlock_irqrestore(&drv->client.cache_lock, flags);
 
-Noticed a bug while doing a code review of:
+This seems like a huge abstraction violation.  Why can't rpmh_write()
+/ rpmh_write_async() / rpmh_write_batch() just always unconditionally
+mark the cache dirty?  Are there really lots of cases when those calls
+are made and they do nothing?
 
-https://lkml.kernel.org/r/1585244270-637-7-git-send-email-mkshah@codeaurora.org
 
-...specifically my patch forgets to change the error case to
-spin_unlock_irqrestore().  ...but perhaps if that other patch lands
-when we can just remove the spinlocks from this function...  I'll post
-more in my reply to that other patch.
+Other than that this patch seems sane to me and addresses one of the
+comments I had in:
 
+https://lore.kernel.org/r/CAD=FV=XmBQb8yfx14T-tMQ68F-h=3UHog744b3X3JZViu15+4g@mail.gmail.com
+
+...interestingly after your patch I guess now I guess tcs_invalidate()
+no longer needs spinlocks since it's only ever called from PM code on
+the last CPU.  ...if you agree, I can always do it in my cleanup
+series.  See:
+
+https://lore.kernel.org/r/CAD=FV=Xp1o68HnC2-hMnffDDsi+jjgc9pNrdNuypjQZbS5K4nQ@mail.gmail.com
 
 -Doug
