@@ -2,100 +2,83 @@ Return-Path: <SRS0=aGSP=5L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 799AEC43331
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 19:20:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72ED8C43331
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 19:24:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4AA1D2070A
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 19:20:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585250442;
-	bh=lJs005HVe3co0zjtx6aIR9DvenF9LtHMYQsTt8U2Elw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=dUmygZGYiGLSdRtZp1rJEz9adipQPQoieLO1bDR1Iy8g5jdElfKf8Cd9f3dRYQ0t8
-	 pK2W5CDeYA/G/3rKKVgUNfSchsYse4Ccx/wJnqrAQfWQM7kizEOXvJ0Fd7kWaw6+cu
-	 cTVpFkDu8tazP0vah7xCse5b1TPamNAxoUTqFOoY=
+	by mail.kernel.org (Postfix) with ESMTP id 324CF2070A
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 19:24:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="N4P2EUYl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728472AbgCZTUl (ORCPT
+        id S1727345AbgCZTYP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 15:20:41 -0400
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:47082 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726067AbgCZTUk (ORCPT
+        Thu, 26 Mar 2020 15:24:15 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:26603 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726067AbgCZTYO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 15:20:40 -0400
-Received: by mail-qk1-f194.google.com with SMTP id u4so8049721qkj.13;
-        Thu, 26 Mar 2020 12:20:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=BshxP40VVzwMKYJQVOlxQ7cvaL9xzYOkqdrLAsauMpo=;
-        b=c20H/cNu1p8GBlF+mPsYbUh0rXL1H1AWe/ycm2VlcgEK65RBZQUQlnCR/ZCQQsD1K1
-         +Eew8NDPAtsfuRrpiipXtIJx7olzpXEAHnH8S2hPh8lobGAMro4Qdjqd/LMLw/Ote73l
-         SwhEfIIRGs6JQOEYNVnK3CsC7lNZ2gM/RM9o3qDLuATA7GcnGnxS5L5kopZxYXw1HJt6
-         8gC5IhTabVdSWE6IGVSn9jzjguGE1t62zXlN3zPGs1TY2gMDyiLuiWT9/GYedbHZGDqB
-         TZCSr3w0/jJpxXKukQ9LUz5TucI9EYGjvlrwGWAvs5teC779vvVK8kCKIoj4u2JHd9tY
-         sUAA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to;
-        bh=BshxP40VVzwMKYJQVOlxQ7cvaL9xzYOkqdrLAsauMpo=;
-        b=JslQ4PTCwHe8Yw9wYpRUW5H/31Aa9poSt0SPjbof6nRld8GgK1KLTpqNcuDpioUPq0
-         Hk7RFzXJ8QkNi5Abgm5sgfiZSSnZmdhrgVNEJNB4cgFKhpFez0PX/d5gwDMOHxRjoAqn
-         G3eEC9ql6wsVizpK1VcgJKGmA+FlQmGmytSYuo4NJMlSRbM/8jjIr9LBLqYVfhh9vTWJ
-         WOfSRk6FGpf8p1nzOks64QmdRaJkA1IO8xqaY7419WeAohoeYmMoSlH8wk/gpsoZKGsA
-         g52DWqb/I2yZ1nxgC+R2bHxYAnv0/1SUxptzkJ9NHl/jQT3lV2wAzAC5eQrpwSMsutUT
-         bFeQ==
-X-Gm-Message-State: ANhLgQ2Q+cgGN3CbPU1euneaCco+s/jITAxGQSlCDyfqlh1mnX2VaATA
-        PNoKw1pFM6co1wWWUqljlyA=
-X-Google-Smtp-Source: ADFU+vtedxdPndItEm/+/U0dOWfZkCzogEf0Rosyqrgj3YaDSDXRWTyCODUB+KtNSPMKhttNMenckg==
-X-Received: by 2002:a37:a50d:: with SMTP id o13mr9754025qke.37.1585250438033;
-        Thu, 26 Mar 2020 12:20:38 -0700 (PDT)
-Received: from localhost ([2620:10d:c091:480::d3b8])
-        by smtp.gmail.com with ESMTPSA id i4sm1234609qkh.27.2020.03.26.12.20.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 26 Mar 2020 12:20:37 -0700 (PDT)
-Date:   Thu, 26 Mar 2020 15:20:35 -0400
-From:   Tejun Heo <tj@kernel.org>
-To:     "Joel Fernandes (Google)" <joel@joelfernandes.org>
-Cc:     linux-kernel@vger.kernel.org, Dmitry Shmidt <dimitrysh@google.com>,
-        Amit Pundir <amit.pundir@linaro.org>, kernel-team@android.com,
-        jsbarnes@google.com, sonnyrao@google.com, vpillai@digitalocean.com,
-        peterz@infradead.org, Guenter Roeck <groeck@chromium.org>,
-        Waiman Long <longman@redhat.com>,
-        Greg Kerr <kerrnel@google.com>, cgroups@vger.kernel.org,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Li Zefan <lizefan@huawei.com>
-Subject: Re: [PATCH RFC] cpuset: Make cpusets get restored on hotplug
-Message-ID: <20200326192035.GO162390@mtj.duckdns.org>
-References: <20200326191623.129285-1-joel@joelfernandes.org>
+        Thu, 26 Mar 2020 15:24:14 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1585250654; h=Date: Message-Id: Cc: To: References:
+ In-Reply-To: From: Subject: Content-Transfer-Encoding: MIME-Version:
+ Content-Type: Sender; bh=BMGoGHSXOZ233X67YkN/RH91FjPrQ4uEb9ABNdJUj+I=;
+ b=N4P2EUYlLeCLHvNLoX6nMMrUHjVpr/puSt+q3D3Wv/TOGGNVeVRW0suSvOaG8XV4aFP/79tH
+ piWuNiBeOf2Wfh0P7WkrIuX2Mv+kCLxVX2xazNeT9j8mMZq4JyBekSHPNu7jqZCIM3kTM2VG
+ kVJ1zTWe2EJmJJQWL/NwEoz91EY=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e7d0150.7f7026ef9e68-smtp-out-n04;
+ Thu, 26 Mar 2020 19:24:00 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 21025C433BA; Thu, 26 Mar 2020 19:24:00 +0000 (UTC)
+Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: kvalo)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id B7A75C433D2;
+        Thu, 26 Mar 2020 19:23:55 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org B7A75C433D2
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200326191623.129285-1-joel@joelfernandes.org>
+Content-Transfer-Encoding: 7bit
+Subject: Re: [PATCH] hostap: convert to struct proc_ops
+From:   Kalle Valo <kvalo@codeaurora.org>
+In-Reply-To: <20200326032432.20384-1-yuehaibing@huawei.com>
+References: <20200326032432.20384-1-yuehaibing@huawei.com>
+To:     YueHaibing <yuehaibing@huawei.com>
+Cc:     <j@w1.fi>, <davem@davemloft.net>, <yuehaibing@huawei.com>,
+        <andriy.shevchenko@linux.intel.com>, <sfr@canb.auug.org.au>,
+        <akpm@linux-foundation.org>, <adobriyan@gmail.com>,
+        <linux-wireless@vger.kernel.org>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+User-Agent: pwcli/0.0.0-git (https://github.com/kvalo/pwcli/) Python/2.7.12
+Message-Id: <20200326192400.21025C433BA@smtp.codeaurora.org>
+Date:   Thu, 26 Mar 2020 19:24:00 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 26, 2020 at 03:16:23PM -0400, Joel Fernandes (Google) wrote:
-> This deliberately changes the behavior of the per-cpuset
-> cpus file to not be effected by hotplug. When a cpu is offlined,
-> it will be removed from the cpuset/cpus file. When a cpu is onlined,
-> if the cpuset originally requested that that cpu was part of the cpuset,
-> that cpu will be restored to the cpuset. The cpus files still
-> have to be hierachical, but the ranges no longer have to be out of
-> the currently online cpus, just the physically present cpus.
+YueHaibing <yuehaibing@huawei.com> wrote:
 
-This is already the behavior on cgroup2 and I don't think we want to
-introduce this big a behavior change to cgroup1 cpuset at this point.
+> commit 97a32539b956 ("proc: convert everything to "struct proc_ops"")
+> forget do this convering for prism2_download_aux_dump_proc_fops.
+> 
+> Fixes: 97a32539b956 ("proc: convert everything to "struct proc_ops"")
+> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 
-Thanks.
+Patch applied to wireless-drivers-next.git, thanks.
+
+3af4da165f48 hostap: convert to struct proc_ops
 
 -- 
-tejun
+https://patchwork.kernel.org/patch/11459139/
+
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
