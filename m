@@ -2,71 +2,96 @@ Return-Path: <SRS0=aGSP=5L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08188C43331
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 07:14:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30863C2D0E7
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 07:15:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DBDCE20714
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 07:14:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 02C3420772
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 07:15:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727590AbgCZHOh (ORCPT
+        id S1727611AbgCZHPu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 03:14:37 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:12137 "EHLO huawei.com"
+        Thu, 26 Mar 2020 03:15:50 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:36782 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726014AbgCZHOh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 03:14:37 -0400
-Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id B8AB893BEE20643D0650;
-        Thu, 26 Mar 2020 15:14:32 +0800 (CST)
-Received: from localhost (10.173.223.234) by DGGEMS412-HUB.china.huawei.com
- (10.3.19.212) with Microsoft SMTP Server id 14.3.487.0; Thu, 26 Mar 2020
- 15:14:23 +0800
-From:   YueHaibing <yuehaibing@huawei.com>
-To:     <leoyang.li@nxp.com>, <balbi@kernel.org>,
-        <gregkh@linuxfoundation.org>
-CC:     <linux-usb@vger.kernel.org>, <linuxppc-dev@lists.ozlabs.org>,
-        <linux-kernel@vger.kernel.org>, YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH -next] usb: gadget: fsl: remove unused variable 'driver_desc'
-Date:   Thu, 26 Mar 2020 15:14:19 +0800
-Message-ID: <20200326071419.19240-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.10.2.windows.1
+        id S1726014AbgCZHPt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Mar 2020 03:15:49 -0400
+Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id C2F379D56FD4517F2B7F;
+        Thu, 26 Mar 2020 15:15:38 +0800 (CST)
+Received: from [127.0.0.1] (10.173.220.25) by DGGEMS402-HUB.china.huawei.com
+ (10.3.19.202) with Microsoft SMTP Server id 14.3.487.0; Thu, 26 Mar 2020
+ 15:15:29 +0800
+Subject: Re: [RFC PATCH v4 0/6] arm64: tlb: add support for TTL feature
+To:     Peter Zijlstra <peterz@infradead.org>
+CC:     <mark.rutland@arm.com>, <catalin.marinas@arm.com>,
+        <linux-mm@kvack.org>, <guohanjun@huawei.com>, <will@kernel.org>,
+        <linux-arch@vger.kernel.org>, <yuzhao@google.com>,
+        <maz@kernel.org>, <steven.price@arm.com>, <arm@kernel.org>,
+        <Dave.Martin@arm.com>, <arnd@arndb.de>, <suzuki.poulose@arm.com>,
+        <npiggin@gmail.com>, <zhangshaokun@hisilicon.com>,
+        <broonie@kernel.org>, <rostedt@goodmis.org>,
+        <prime.zeng@hisilicon.com>, <tglx@linutronix.de>,
+        <linux-arm-kernel@lists.infradead.org>, <xiexiangyou@huawei.com>,
+        <linux-kernel@vger.kernel.org>, <aneesh.kumar@linux.ibm.com>,
+        <akpm@linux-foundation.org>
+References: <20200324134534.1570-1-yezhenyu2@huawei.com>
+ <20200324150155.GH20713@hirez.programming.kicks-ass.net>
+ <fb06ba92-a3ce-6925-e914-167a85837f27@huawei.com>
+ <20200325133201.GI20713@hirez.programming.kicks-ass.net>
+From:   Zhenyu Ye <yezhenyu2@huawei.com>
+Message-ID: <43164360-8204-89c6-0d4d-c38b1aa09642@huawei.com>
+Date:   Thu, 26 Mar 2020 15:15:27 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.173.223.234]
+In-Reply-To: <20200325133201.GI20713@hirez.programming.kicks-ass.net>
+Content-Type: text/plain; charset="gbk"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.173.220.25]
 X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-drivers/usb/gadget/udc/fsl_udc_core.c:56:19:
- warning: 'driver_desc' defined but not used [-Wunused-const-variable=]
+On 2020/3/25 21:32, Peter Zijlstra wrote:
+> On Wed, Mar 25, 2020 at 12:49:45PM +0800, Zhenyu Ye wrote:
+>> Hi Peter,
+>>
+>> On 2020/3/24 23:01, Peter Zijlstra wrote:
+>>> On Tue, Mar 24, 2020 at 09:45:28PM +0800, Zhenyu Ye wrote:
+>>>> In order to reduce the cost of TLB invalidation, the ARMv8.4 TTL
+>>>> feature allows TLBs to be issued with a level allowing for quicker
+>>>> invalidation.  This series provide support for this feature. 
+>>>>
+>>>> Patch 1 and Patch 2 was provided by Marc on his NV series[1] patches,
+>>>> which detect the TTL feature and add __tlbi_level interface.
+>>>
+>>> I realy hate how it makes vma->vm_flags more important for tlbi.
+>>>
+>>
+>> Thanks for your review.
+>>
+>> The tlbi interfaces only have two parameters: vma and addr. If we
+>> try to not use vma->vm_flags, we may should have to add a parameter
+>> to some of these interfaces(such as flush_tlb_range), which are
+>> common to all architectures.
+>>
+>> I'm not sure if this is feasible, because this feature is only
+>> supported by ARM64 currently.
+> 
+> Power (p9-radix) also has level dependent invalidation instructions, so
+> at the very least you can hook them up as well.
+> 
+> .
+>
 
-It is never used, so remove it.
+Thanks, I will push my next version soon.
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
----
- drivers/usb/gadget/udc/fsl_udc_core.c | 1 -
- 1 file changed, 1 deletion(-)
-
-diff --git a/drivers/usb/gadget/udc/fsl_udc_core.c b/drivers/usb/gadget/udc/fsl_udc_core.c
-index ec6eda426223..febabde62f71 100644
---- a/drivers/usb/gadget/udc/fsl_udc_core.c
-+++ b/drivers/usb/gadget/udc/fsl_udc_core.c
-@@ -53,7 +53,6 @@
- #define	DMA_ADDR_INVALID	(~(dma_addr_t)0)
- 
- static const char driver_name[] = "fsl-usb2-udc";
--static const char driver_desc[] = DRIVER_DESC;
- 
- static struct usb_dr_device __iomem *dr_regs;
- 
--- 
-2.17.1
-
+Zhenyu
+.
 
