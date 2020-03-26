@@ -2,113 +2,753 @@ Return-Path: <SRS0=aGSP=5L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2414AC2D0E7
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 06:58:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5358FC43331
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 07:00:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F07A3206F8
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 06:58:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585205915;
-	bh=Wxs/L042TvA9G7QIWmTuoRJnT4kYIm/JUigAMPyMrhg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=cy0XI7aw6DchJE6wvBzGo5+j+XmWmcFeiBTO8wgISQuyqo2thXD1CvbzmvT47sFTd
-	 3a3bGwAAmGEaVdFEXizQNogL6Um369TnLff/75VeBncvAvFWtU20uBNWLbe8QXnA/h
-	 Ed76wWHUaEag10SFZiE8DUDACrmAo8DXwr5dk+Kc=
+	by mail.kernel.org (Postfix) with ESMTP id 08D7420772
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 07:00:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=brainfault-org.20150623.gappssmtp.com header.i=@brainfault-org.20150623.gappssmtp.com header.b="ow89nQsp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726422AbgCZG6d (ORCPT
+        id S1726354AbgCZHAc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 02:58:33 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:38673 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726210AbgCZG6d (ORCPT
+        Thu, 26 Mar 2020 03:00:32 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:42884 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726210AbgCZHAc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 02:58:33 -0400
-Received: by mail-wm1-f66.google.com with SMTP id l20so5736698wmi.3;
-        Wed, 25 Mar 2020 23:58:32 -0700 (PDT)
+        Thu, 26 Mar 2020 03:00:32 -0400
+Received: by mail-wr1-f65.google.com with SMTP id h15so6347515wrx.9
+        for <linux-kernel@vger.kernel.org>; Thu, 26 Mar 2020 00:00:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=brainfault-org.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=q/xkFoCAYLU7f3D82f4XkZiAztS0MWlDC4HDwI0hRKA=;
+        b=ow89nQsp/kYZBw8WgCb/JDYZqhU0nW8Olo9MvUC7Bs8ciAinQm2XzbNLjAqr9epn0H
+         LBZB2bsJABxEK34JYobs/sIvn0XG7E4cM5FYBLJ9VU72FfraitpdzLbHtBOs8uKKwhYs
+         JSpKZVbmieP+3lNJBlfbhgMF9BhetWXnb9V5ArROZKP3gIxqF78aoGZ4v8mkkV0YwnJK
+         oT0XUWyB4sPi563K0DddUpDFySkx7v/uk+NF/mX43EMTpC/OgXpdUOVIb9ARDiGhojdu
+         OoAZgrdwo0H6GwCk7NB9VPi9SPBrCBATLCUugYAmDQTYcaQFMfrAB2MqkjF8fq3STZQd
+         Oxow==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=WNr+H+i2h9AKUcba1Al2JvL3xo1ZLSPUjZ6Kc7JA57I=;
-        b=mcTEka9QZb3w7GpSOEdHosHRbAQrkNe7V9Eqx4ZdXFYyU4JV1ABrewrMYDQbnlGXso
-         V+BNGJg9avKZz+3HuqS1U3SJEKg2AbK53JU4xzY0sNbJn+Fsg3mpjFqqQw5IMYkCGYFH
-         0ABTVZEQCN2uCsxc/JVj+ZyS8LYSyG9Hx5T9tEoHhKhS1ujytgkhkxy+Pdmlur7auW/p
-         uGQpIcwoI44+IWax6W6B2MsdcWwF5sFkEx/6IT9lnoWKbWWLossWYjNzSm4fblo4ZnA4
-         d4S4t8APyYxg0jlptcNq2xyArryLcK7Ul61pBxJS4kmSCGN/q+xrqUt5QhOMcb/6bB56
-         8U4A==
-X-Gm-Message-State: ANhLgQ2Ldutvin8sOVdl0nO6s+BiWFjB45CmDhIIVQf2+tKDeGTwR8Af
-        an5TpotypDvH/iylAyz6eus=
-X-Google-Smtp-Source: ADFU+vscvykjE0LsujRNMqBRjiwR5Fy2NQHMrSKyT3k1ZjEPNd/kX6YIOUXuoXPIPKLQTlTuYWhhxg==
-X-Received: by 2002:a1c:b7c2:: with SMTP id h185mr1554055wmf.67.1585205911614;
-        Wed, 25 Mar 2020 23:58:31 -0700 (PDT)
-Received: from localhost (ip-37-188-135-150.eurotel.cz. [37.188.135.150])
-        by smtp.gmail.com with ESMTPSA id a192sm2287562wme.5.2020.03.25.23.58.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 25 Mar 2020 23:58:30 -0700 (PDT)
-Date:   Thu, 26 Mar 2020 07:58:29 +0100
-From:   Michal Hocko <mhocko@kernel.org>
-To:     "Eric W. Biederman" <ebiederm@xmission.com>
-Cc:     Vlastimil Babka <vbabka@suse.cz>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Iurii Zaikin <yzaikin@google.com>,
-        linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
-        linux-mm@kvack.org, Ivan Teterevkov <ivan.teterevkov@nutanix.com>,
-        David Rientjes <rientjes@google.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        "Guilherme G . Piccoli" <gpiccoli@canonical.com>
-Subject: Re: [RFC v2 1/2] kernel/sysctl: support setting sysctl parameters
- from kernel command line
-Message-ID: <20200326065829.GC27965@dhcp22.suse.cz>
-References: <20200325120345.12946-1-vbabka@suse.cz>
- <874kuc5b5z.fsf@x220.int.ebiederm.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=q/xkFoCAYLU7f3D82f4XkZiAztS0MWlDC4HDwI0hRKA=;
+        b=GYXTh6KftHbYJjKPu2IhMuzm5lXCfGfOVoWwfvuEDeseqruZfB+XflJxF4Gzj8zyNP
+         uYmwfL+oXgKwaAnJackPFOpTaD2UW8FPwZBT4oSdL9LA+m6ujBGOGiB9ltPxEWbFw3zL
+         Hmmwtc5HUSNlxhPrFxJr7IzY2CTispWnCG57zfBpA8LaWqqiEDOJy4Ghv5wU+PRVpf22
+         M04oYNPWbYVt//jhU5v3XDe/iPsrvCj4R5ooGPBaqRKZ2QSdBKJQqTR8wvVWXN4OS2UV
+         uJhfOCjTshBHK0nbxHPnBPiWiZW0MjKG6tHhz9p7GGg/XNTFgxS3u9muWjR1uPPl+mG2
+         2Bxg==
+X-Gm-Message-State: ANhLgQ2BGVA5PmIbVPOF59BHC6f+07OyMvULx0Cg0Pbs1gQOaNvJkofF
+        iEKXwmz34vrI6Fs8WLSM+47Epvs+r1d7xb8TpOzFh/v8BLI=
+X-Google-Smtp-Source: ADFU+vuzRLE1Ukgq6m6MOz3xhEmtLiTI75YuSChFgC4RsVpUPnYtvx8EHrBKEybLFzzwlQ+DbTa9DHCmG0J8XoZO9cI=
+X-Received: by 2002:adf:f3c5:: with SMTP id g5mr7609668wrp.230.1585206027046;
+ Thu, 26 Mar 2020 00:00:27 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <874kuc5b5z.fsf@x220.int.ebiederm.org>
+References: <20200322110028.18279-1-alex@ghiti.fr> <20200322110028.18279-5-alex@ghiti.fr>
+In-Reply-To: <20200322110028.18279-5-alex@ghiti.fr>
+From:   Anup Patel <anup@brainfault.org>
+Date:   Thu, 26 Mar 2020 12:30:15 +0530
+Message-ID: <CAAhSdy3BR-jU8tshU58VA3bZ_Ui_Rbyvo86eHNeAZ1CeWGU=bQ@mail.gmail.com>
+Subject: Re: [RFC PATCH 4/7] riscv: Implement sv48 support
+To:     Alexandre Ghiti <alex@ghiti.fr>
+Cc:     Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Zong Li <zong.li@sifive.com>, Christoph Hellwig <hch@lst.de>,
+        linux-riscv <linux-riscv@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 25-03-20 17:20:40, Eric W. Biederman wrote:
-> Vlastimil Babka <vbabka@suse.cz> writes:
-[...]
-> > +	if (strncmp(param, "sysctl.", sizeof("sysctl.") - 1))
-> > +		return 0;
-> 
-> Is there any way we can use a slash separated path.  I know
-> in practice there are not any sysctl names that don't have
-> a '.' in them but why should we artifically limit ourselves?
+On Sun, Mar 22, 2020 at 4:34 PM Alexandre Ghiti <alex@ghiti.fr> wrote:
+>
+> By adding a new 4th level of page table, give the possibility to 64bit
+> kernel to address 2^48 bytes of virtual address: in practice, that roughly
+> offers ~160TB of virtual address space to userspace and allows up to 64TB
+> of physical memory.
+>
+> By default, the kernel will try to boot with a 4-level page table. If the
+> underlying hardware does not support it, we will automatically fallback to
+> a standard 3-level page table by folding the new PUD level into PGDIR
+> level.
+>
+> Early page table preparation is too early in the boot process to use any
+> device-tree entry, then in order to detect HW capabilities at runtime, we
+> use SATP feature that ignores writes with an unsupported mode. The current
+> mode used by the kernel is then made available through cpuinfo.
 
-Because this is the normal userspace interface? Why should it be any
-different from calling sysctl?
-[...]
+Overall the patch look fine but I don't agree with the strategy of detecting
+SV48 mode in relocate() of head.S.
 
-> Further it will be faster to lookup the sysctls using the code from
-> proc_sysctl.c as it constructs an rbtree of all of the entries in
-> a directory.  The code might as well take advantage of that for large
-> directories.
+Instead of this, I suggest that we have a separate PATCH before this
+PATCH which just adds satp_mode global variable.
 
-Sounds like a good fit for a follow up patch to me. Let's make this
-as simple as possible for the initial version. But up to Vlastimil of
-course.
+This PATCH can detect-n-update both satp_mode and pgtable_l4_enabled
+variables in setup_vm() (i.e. C sources) before setting up initial page
+tables. This way we can avoid adding setup_vm_fold_pud() function and
+in-future we will not require any changes in head.S when a new page table
+format shows-up to support 64K pages. The means MMU mode detection
+will always be restricted to setup_vm() in mm/init.c.
 
-[...]
+To achieve Sv48 mode detection in C sources, we just need one 4KB
+page for PGD (e.g. trampoline_pg_dir). To detect Sv48, we create flat
+identity mapping directly in PGD assuming Sv48 is available and try
+enabling Sv48. If Sv48 is enabled successfully then reading back SATP
+CSR will show mode as Sv48 otherwise mode will not be set.
 
-> Hmm.  There is a big gotcha in here and I think it should be mentioned.
-> This code only works because no one has done set_fs(KERNEL_DS).  Which
-> means this only works with strings that are kernel addresses essentially
-> by mistake.  A big fat comment documenting why it is safe to pass in
-> kernel addresses to a function that takes a "char __user*" pointer
-> would be very good.
+As an example, refer __detect_pgtbl_mode() function of Xvisor at
+https://github.com/avpatel/xvisor-next/blob/master/arch/riscv/cpu/generic/cpu_mmu_initial_pgtbl.c
 
-Agreed
+Regards,
+Anup
 
--- 
-Michal Hocko
-SUSE Labs
+>
+> Signed-off-by: Alexandre Ghiti <alex@ghiti.fr>
+> ---
+>  arch/riscv/Kconfig                  |   6 +-
+>  arch/riscv/include/asm/csr.h        |   3 +-
+>  arch/riscv/include/asm/fixmap.h     |   1 +
+>  arch/riscv/include/asm/page.h       |  15 +++-
+>  arch/riscv/include/asm/pgalloc.h    |  36 ++++++++
+>  arch/riscv/include/asm/pgtable-64.h |  98 ++++++++++++++++++++-
+>  arch/riscv/include/asm/pgtable.h    |   5 +-
+>  arch/riscv/kernel/head.S            |  37 ++++++--
+>  arch/riscv/mm/context.c             |   4 +-
+>  arch/riscv/mm/init.c                | 128 +++++++++++++++++++++++++---
+>  10 files changed, 302 insertions(+), 31 deletions(-)
+>
+> diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
+> index a475c78e66bc..79560e94cc7c 100644
+> --- a/arch/riscv/Kconfig
+> +++ b/arch/riscv/Kconfig
+> @@ -66,6 +66,7 @@ config RISCV
+>         select ARCH_HAS_GCOV_PROFILE_ALL
+>         select HAVE_COPY_THREAD_TLS
+>         select HAVE_ARCH_KASAN if MMU && 64BIT
+> +       select RELOCATABLE if 64BIT
+>
+>  config ARCH_MMAP_RND_BITS_MIN
+>         default 18 if 64BIT
+> @@ -104,7 +105,7 @@ config PAGE_OFFSET
+>         default 0xC0000000 if 32BIT && MAXPHYSMEM_2GB
+>         default 0x80000000 if 64BIT && !MMU
+>         default 0xffffffff80000000 if 64BIT && MAXPHYSMEM_2GB
+> -       default 0xffffffe000000000 if 64BIT && !MAXPHYSMEM_2GB
+> +       default 0xffffc00000000000 if 64BIT && !MAXPHYSMEM_2GB
+>
+>  config ARCH_FLATMEM_ENABLE
+>         def_bool y
+> @@ -148,8 +149,11 @@ config GENERIC_HWEIGHT
+>  config FIX_EARLYCON_MEM
+>         def_bool MMU
+>
+> +# On a 64BIT relocatable kernel, the 4-level page table is at runtime folded
+> +# on a 3-level page table when sv48 is not supported.
+>  config PGTABLE_LEVELS
+>         int
+> +       default 4 if 64BIT && RELOCATABLE
+>         default 3 if 64BIT
+>         default 2
+>
+> diff --git a/arch/riscv/include/asm/csr.h b/arch/riscv/include/asm/csr.h
+> index 435b65532e29..3828d55af85e 100644
+> --- a/arch/riscv/include/asm/csr.h
+> +++ b/arch/riscv/include/asm/csr.h
+> @@ -40,11 +40,10 @@
+>  #ifndef CONFIG_64BIT
+>  #define SATP_PPN       _AC(0x003FFFFF, UL)
+>  #define SATP_MODE_32   _AC(0x80000000, UL)
+> -#define SATP_MODE      SATP_MODE_32
+>  #else
+>  #define SATP_PPN       _AC(0x00000FFFFFFFFFFF, UL)
+>  #define SATP_MODE_39   _AC(0x8000000000000000, UL)
+> -#define SATP_MODE      SATP_MODE_39
+> +#define SATP_MODE_48   _AC(0x9000000000000000, UL)
+>  #endif
+>
+>  /* Exception cause high bit - is an interrupt if set */
+> diff --git a/arch/riscv/include/asm/fixmap.h b/arch/riscv/include/asm/fixmap.h
+> index 42d2c42f3cc9..26e7799c5675 100644
+> --- a/arch/riscv/include/asm/fixmap.h
+> +++ b/arch/riscv/include/asm/fixmap.h
+> @@ -27,6 +27,7 @@ enum fixed_addresses {
+>         FIX_FDT = FIX_FDT_END + FIX_FDT_SIZE / PAGE_SIZE - 1,
+>         FIX_PTE,
+>         FIX_PMD,
+> +       FIX_PUD,
+>         FIX_EARLYCON_MEM_BASE,
+>         __end_of_fixed_addresses
+>  };
+> diff --git a/arch/riscv/include/asm/page.h b/arch/riscv/include/asm/page.h
+> index 691f2f9ded2f..f1a26a0690ef 100644
+> --- a/arch/riscv/include/asm/page.h
+> +++ b/arch/riscv/include/asm/page.h
+> @@ -32,11 +32,19 @@
+>   * physical memory (aligned on a page boundary).
+>   */
+>  #ifdef CONFIG_RELOCATABLE
+> -extern unsigned long kernel_virt_addr;
+>  #define PAGE_OFFSET            kernel_virt_addr
+> +
+> +#ifdef CONFIG_64BIT
+> +/*
+> + * By default, CONFIG_PAGE_OFFSET value corresponds to SV48 address space so
+> + * define the PAGE_OFFSET value for SV39.
+> + */
+> +#define PAGE_OFFSET_L3         0xffffffe000000000
+> +#define PAGE_OFFSET_L4         _AC(CONFIG_PAGE_OFFSET, UL)
+> +#endif /* CONFIG_64BIT */
+>  #else
+>  #define PAGE_OFFSET            _AC(CONFIG_PAGE_OFFSET, UL)
+> -#endif
+> +#endif /* CONFIG_RELOCATABLE */
+>
+>  #define KERN_VIRT_SIZE         -PAGE_OFFSET
+>
+> @@ -104,6 +112,9 @@ extern unsigned long pfn_base;
+>
+>  extern unsigned long max_low_pfn;
+>  extern unsigned long min_low_pfn;
+> +#ifdef CONFIG_RELOCATABLE
+> +extern unsigned long kernel_virt_addr;
+> +#endif
+>
+>  #define __pa_to_va_nodebug(x)  ((void *)((unsigned long) (x) + va_pa_offset))
+>  #define __va_to_pa_nodebug(x)  ((unsigned long)(x) - va_pa_offset)
+> diff --git a/arch/riscv/include/asm/pgalloc.h b/arch/riscv/include/asm/pgalloc.h
+> index 3f601ee8233f..540eaa5a8658 100644
+> --- a/arch/riscv/include/asm/pgalloc.h
+> +++ b/arch/riscv/include/asm/pgalloc.h
+> @@ -36,6 +36,42 @@ static inline void pud_populate(struct mm_struct *mm, pud_t *pud, pmd_t *pmd)
+>
+>         set_pud(pud, __pud((pfn << _PAGE_PFN_SHIFT) | _PAGE_TABLE));
+>  }
+> +
+> +static inline void p4d_populate(struct mm_struct *mm, p4d_t *p4d, pud_t *pud)
+> +{
+> +       if (pgtable_l4_enabled) {
+> +               unsigned long pfn = virt_to_pfn(pud);
+> +
+> +               set_p4d(p4d, __p4d((pfn << _PAGE_PFN_SHIFT) | _PAGE_TABLE));
+> +       }
+> +}
+> +
+> +static inline void p4d_populate_safe(struct mm_struct *mm, p4d_t *p4d,
+> +                                    pud_t *pud)
+> +{
+> +       if (pgtable_l4_enabled) {
+> +               unsigned long pfn = virt_to_pfn(pud);
+> +
+> +               set_p4d_safe(p4d,
+> +                            __p4d((pfn << _PAGE_PFN_SHIFT) | _PAGE_TABLE));
+> +       }
+> +}
+> +
+> +static inline pud_t *pud_alloc_one(struct mm_struct *mm, unsigned long addr)
+> +{
+> +       if (pgtable_l4_enabled)
+> +               return (pud_t *)__get_free_page(
+> +                               GFP_KERNEL | __GFP_RETRY_MAYFAIL | __GFP_ZERO);
+> +       return NULL;
+> +}
+> +
+> +static inline void pud_free(struct mm_struct *mm, pud_t *pud)
+> +{
+> +       if (pgtable_l4_enabled)
+> +               free_page((unsigned long)pud);
+> +}
+> +
+> +#define __pud_free_tlb(tlb, pud, addr)  pud_free((tlb)->mm, pud)
+>  #endif /* __PAGETABLE_PMD_FOLDED */
+>
+>  #define pmd_pgtable(pmd)       pmd_page(pmd)
+> diff --git a/arch/riscv/include/asm/pgtable-64.h b/arch/riscv/include/asm/pgtable-64.h
+> index b15f70a1fdfa..cc4ffbe778f3 100644
+> --- a/arch/riscv/include/asm/pgtable-64.h
+> +++ b/arch/riscv/include/asm/pgtable-64.h
+> @@ -8,16 +8,32 @@
+>
+>  #include <linux/const.h>
+>
+> -#define PGDIR_SHIFT     30
+> +extern bool pgtable_l4_enabled;
+> +
+> +#define PGDIR_SHIFT     (pgtable_l4_enabled ? 39 : 30)
+>  /* Size of region mapped by a page global directory */
+>  #define PGDIR_SIZE      (_AC(1, UL) << PGDIR_SHIFT)
+>  #define PGDIR_MASK      (~(PGDIR_SIZE - 1))
+>
+> +/* pud is folded into pgd in case of 3-level page table */
+> +#define PUD_SHIFT      30
+> +#define PUD_SIZE       (_AC(1, UL) << PUD_SHIFT)
+> +#define PUD_MASK       (~(PUD_SIZE - 1))
+> +
+>  #define PMD_SHIFT       21
+>  /* Size of region mapped by a page middle directory */
+>  #define PMD_SIZE        (_AC(1, UL) << PMD_SHIFT)
+>  #define PMD_MASK        (~(PMD_SIZE - 1))
+>
+> +/* Page Upper Directory entry */
+> +typedef struct {
+> +       unsigned long pud;
+> +} pud_t;
+> +
+> +#define pud_val(x)      ((x).pud)
+> +#define __pud(x)        ((pud_t) { (x) })
+> +#define PTRS_PER_PUD    (PAGE_SIZE / sizeof(pud_t))
+> +
+>  /* Page Middle Directory entry */
+>  typedef struct {
+>         unsigned long pmd;
+> @@ -25,7 +41,6 @@ typedef struct {
+>
+>  #define pmd_val(x)      ((x).pmd)
+>  #define __pmd(x)        ((pmd_t) { (x) })
+> -
+>  #define PTRS_PER_PMD    (PAGE_SIZE / sizeof(pmd_t))
+>
+>  static inline int pud_present(pud_t pud)
+> @@ -60,6 +75,16 @@ static inline void pud_clear(pud_t *pudp)
+>         set_pud(pudp, __pud(0));
+>  }
+>
+> +static inline pud_t pfn_pud(unsigned long pfn, pgprot_t prot)
+> +{
+> +       return __pud((pfn << _PAGE_PFN_SHIFT) | pgprot_val(prot));
+> +}
+> +
+> +static inline unsigned long _pud_pfn(pud_t pud)
+> +{
+> +       return pud_val(pud) >> _PAGE_PFN_SHIFT;
+> +}
+> +
+>  static inline unsigned long pud_page_vaddr(pud_t pud)
+>  {
+>         return (unsigned long)pfn_to_virt(pud_val(pud) >> _PAGE_PFN_SHIFT);
+> @@ -70,6 +95,15 @@ static inline struct page *pud_page(pud_t pud)
+>         return pfn_to_page(pud_val(pud) >> _PAGE_PFN_SHIFT);
+>  }
+>
+> +#define mm_pud_folded  mm_pud_folded
+> +static inline bool mm_pud_folded(struct mm_struct *mm)
+> +{
+> +       if (pgtable_l4_enabled)
+> +               return false;
+> +
+> +       return true;
+> +}
+> +
+>  #define pmd_index(addr) (((addr) >> PMD_SHIFT) & (PTRS_PER_PMD - 1))
+>
+>  static inline pmd_t *pmd_offset(pud_t *pud, unsigned long addr)
+> @@ -90,4 +124,64 @@ static inline unsigned long _pmd_pfn(pmd_t pmd)
+>  #define pmd_ERROR(e) \
+>         pr_err("%s:%d: bad pmd %016lx.\n", __FILE__, __LINE__, pmd_val(e))
+>
+> +#define pud_ERROR(e)   \
+> +       pr_err("%s:%d: bad pud %016lx.\n", __FILE__, __LINE__, pud_val(e))
+> +
+> +static inline void set_p4d(p4d_t *p4dp, p4d_t p4d)
+> +{
+> +       if (pgtable_l4_enabled)
+> +               *p4dp = p4d;
+> +       else
+> +               set_pud((pud_t *)p4dp, (pud_t){ p4d_val(p4d) });
+> +}
+> +
+> +static inline int p4d_none(p4d_t p4d)
+> +{
+> +       if (pgtable_l4_enabled)
+> +               return (p4d_val(p4d) == 0);
+> +
+> +       return 0;
+> +}
+> +
+> +static inline int p4d_present(p4d_t p4d)
+> +{
+> +       if (pgtable_l4_enabled)
+> +               return (p4d_val(p4d) & _PAGE_PRESENT);
+> +
+> +       return 1;
+> +}
+> +
+> +static inline int p4d_bad(p4d_t p4d)
+> +{
+> +       if (pgtable_l4_enabled)
+> +               return !p4d_present(p4d);
+> +
+> +       return 0;
+> +}
+> +
+> +static inline void p4d_clear(p4d_t *p4d)
+> +{
+> +       if (pgtable_l4_enabled)
+> +               set_p4d(p4d, __p4d(0));
+> +}
+> +
+> +static inline unsigned long p4d_page_vaddr(p4d_t p4d)
+> +{
+> +       if (pgtable_l4_enabled)
+> +               return (unsigned long)pfn_to_virt(
+> +                               p4d_val(p4d) >> _PAGE_PFN_SHIFT);
+> +
+> +       return pud_page_vaddr((pud_t) { p4d_val(p4d) });
+> +}
+> +
+> +#define pud_index(addr) (((addr) >> PUD_SHIFT) & (PTRS_PER_PUD - 1))
+> +
+> +static inline pud_t *pud_offset(p4d_t *p4d, unsigned long address)
+> +{
+> +       if (pgtable_l4_enabled)
+> +               return (pud_t *)p4d_page_vaddr(*p4d) + pud_index(address);
+> +
+> +       return (pud_t *)p4d;
+> +}
+> +
+>  #endif /* _ASM_RISCV_PGTABLE_64_H */
+> diff --git a/arch/riscv/include/asm/pgtable.h b/arch/riscv/include/asm/pgtable.h
+> index dce401eed1d3..06361db3f486 100644
+> --- a/arch/riscv/include/asm/pgtable.h
+> +++ b/arch/riscv/include/asm/pgtable.h
+> @@ -13,8 +13,7 @@
+>
+>  #ifndef __ASSEMBLY__
+>
+> -/* Page Upper Directory not used in RISC-V */
+> -#include <asm-generic/pgtable-nopud.h>
+> +#include <asm-generic/pgtable-nop4d.h>
+>  #include <asm/page.h>
+>  #include <asm/tlbflush.h>
+>  #include <linux/mm_types.h>
+> @@ -27,7 +26,7 @@
+>
+>  #ifdef CONFIG_MMU
+>  #ifdef CONFIG_64BIT
+> -#define VA_BITS                39
+> +#define VA_BITS                (pgtable_l4_enabled ? 48 : 39)
+>  #define PA_BITS                56
+>  #else
+>  #define VA_BITS                32
+> diff --git a/arch/riscv/kernel/head.S b/arch/riscv/kernel/head.S
+> index 1c2fbefb8786..22617bd7477f 100644
+> --- a/arch/riscv/kernel/head.S
+> +++ b/arch/riscv/kernel/head.S
+> @@ -113,6 +113,8 @@ clear_bss_done:
+>         call setup_vm
+>  #ifdef CONFIG_MMU
+>         la a0, early_pg_dir
+> +       la a1, satp_mode
+> +       REG_L a1, (a1)
+>         call relocate
+>  #endif /* CONFIG_MMU */
+>
+> @@ -131,24 +133,28 @@ clear_bss_done:
+>  #ifdef CONFIG_MMU
+>  relocate:
+>  #ifdef CONFIG_RELOCATABLE
+> -       /* Relocate return address */
+> -       la a1, kernel_virt_addr
+> -       REG_L a1, 0(a1)
+> +       /*
+> +        * Relocate return address but save it in case 4-level page table is
+> +        * not supported.
+> +        */
+> +       mv s1, ra
+> +       la a3, kernel_virt_addr
+> +       REG_L a3, 0(a3)
+>  #else
+> -       li a1, PAGE_OFFSET
+> +       li a3, PAGE_OFFSET
+>  #endif
+>         la a2, _start
+> -       sub a1, a1, a2
+> -       add ra, ra, a1
+> +       sub a3, a3, a2
+> +       add ra, ra, a3
+>
+>         /* Point stvec to virtual address of intruction after satp write */
+>         la a2, 1f
+> -       add a2, a2, a1
+> +       add a2, a2, a3
+>         csrw CSR_TVEC, a2
+>
+> +       /* First try with a 4-level page table */
+>         /* Compute satp for kernel page tables, but don't load it yet */
+>         srl a2, a0, PAGE_SHIFT
+> -       li a1, SATP_MODE
+>         or a2, a2, a1
+>
+>         /*
+> @@ -162,6 +168,19 @@ relocate:
+>         or a0, a0, a1
+>         sfence.vma
+>         csrw CSR_SATP, a0
+> +#if defined(CONFIG_RELOCATABLE) && defined(CONFIG_64BIT)
+> +       /*
+> +        * If we fall through here, that means the HW does not support SV48.
+> +        * We need a 3-level page table then simply fold pud into pgd level
+> +        * and finally jump back to relocate with 3-level parameters.
+> +        */
+> +       call setup_vm_fold_pud
+> +
+> +       la a0, early_pg_dir
+> +       li a1, SATP_MODE_39
+> +       mv ra, s1
+> +       tail relocate
+> +#endif
+>  .align 2
+>  1:
+>         /* Set trap vector to spin forever to help debug */
+> @@ -213,6 +232,8 @@ relocate:
+>  #ifdef CONFIG_MMU
+>         /* Enable virtual memory and relocate to virtual address */
+>         la a0, swapper_pg_dir
+> +       la a1, satp_mode
+> +       REG_L a1, (a1)
+>         call relocate
+>  #endif
+>
+> diff --git a/arch/riscv/mm/context.c b/arch/riscv/mm/context.c
+> index 613ec81a8979..152b423c02ea 100644
+> --- a/arch/riscv/mm/context.c
+> +++ b/arch/riscv/mm/context.c
+> @@ -9,6 +9,8 @@
+>  #include <asm/cacheflush.h>
+>  #include <asm/mmu_context.h>
+>
+> +extern uint64_t satp_mode;
+> +
+>  /*
+>   * When necessary, performs a deferred icache flush for the given MM context,
+>   * on the local CPU.  RISC-V has no direct mechanism for instruction cache
+> @@ -59,7 +61,7 @@ void switch_mm(struct mm_struct *prev, struct mm_struct *next,
+>         cpumask_set_cpu(cpu, mm_cpumask(next));
+>
+>  #ifdef CONFIG_MMU
+> -       csr_write(CSR_SATP, virt_to_pfn(next->pgd) | SATP_MODE);
+> +       csr_write(CSR_SATP, virt_to_pfn(next->pgd) | satp_mode);
+>         local_flush_tlb_all();
+>  #endif
+>
+> diff --git a/arch/riscv/mm/init.c b/arch/riscv/mm/init.c
+> index 18bbb426848e..ad96667d2ab6 100644
+> --- a/arch/riscv/mm/init.c
+> +++ b/arch/riscv/mm/init.c
+> @@ -24,6 +24,17 @@
+>
+>  #include "../kernel/head.h"
+>
+> +#ifdef CONFIG_64BIT
+> +uint64_t satp_mode = IS_ENABLED(CONFIG_MAXPHYSMEM_2GB) ?
+> +                               SATP_MODE_39 : SATP_MODE_48;
+> +bool pgtable_l4_enabled = IS_ENABLED(CONFIG_MAXPHYSMEM_2GB) ? false : true;
+> +#else
+> +uint64_t satp_mode = SATP_MODE_32;
+> +bool pgtable_l4_enabled = false;
+> +#endif
+> +EXPORT_SYMBOL(pgtable_l4_enabled);
+> +EXPORT_SYMBOL(satp_mode);
+> +
+>  unsigned long empty_zero_page[PAGE_SIZE / sizeof(unsigned long)]
+>                                                         __page_aligned_bss;
+>  EXPORT_SYMBOL(empty_zero_page);
+> @@ -245,9 +256,12 @@ static void __init create_pte_mapping(pte_t *ptep,
+>
+>  #ifndef __PAGETABLE_PMD_FOLDED
+>
+> +pud_t trampoline_pud[PTRS_PER_PUD] __page_aligned_bss;
+>  pmd_t trampoline_pmd[PTRS_PER_PMD] __page_aligned_bss;
+> +pud_t fixmap_pud[PTRS_PER_PUD] __page_aligned_bss;
+>  pmd_t fixmap_pmd[PTRS_PER_PMD] __page_aligned_bss;
+>  pmd_t early_pmd[PTRS_PER_PMD] __initdata __aligned(PAGE_SIZE);
+> +pud_t early_pud[PTRS_PER_PUD] __initdata __aligned(PAGE_SIZE);
+>
+>  static pmd_t *__init get_pmd_virt(phys_addr_t pa)
+>  {
+> @@ -264,7 +278,8 @@ static phys_addr_t __init alloc_pmd(uintptr_t va)
+>         if (mmu_enabled)
+>                 return memblock_phys_alloc(PAGE_SIZE, PAGE_SIZE);
+>
+> -       BUG_ON((va - PAGE_OFFSET) >> PGDIR_SHIFT);
+> +       /* Only one PMD is available for early mapping */
+> +       BUG_ON((va - PAGE_OFFSET) >> PUD_SHIFT);
+>
+>         return (uintptr_t)early_pmd;
+>  }
+> @@ -296,19 +311,70 @@ static void __init create_pmd_mapping(pmd_t *pmdp,
+>         create_pte_mapping(ptep, va, pa, sz, prot);
+>  }
+>
+> -#define pgd_next_t             pmd_t
+> -#define alloc_pgd_next(__va)   alloc_pmd(__va)
+> -#define get_pgd_next_virt(__pa)        get_pmd_virt(__pa)
+> +static pud_t *__init get_pud_virt(phys_addr_t pa)
+> +{
+> +       if (mmu_enabled) {
+> +               clear_fixmap(FIX_PUD);
+> +               return (pud_t *)set_fixmap_offset(FIX_PUD, pa);
+> +       } else {
+> +               return (pud_t *)((uintptr_t)pa);
+> +       }
+> +}
+> +
+> +static phys_addr_t __init alloc_pud(uintptr_t va)
+> +{
+> +       if (mmu_enabled)
+> +               return memblock_phys_alloc(PAGE_SIZE, PAGE_SIZE);
+> +
+> +       /* Only one PUD is available for early mapping */
+> +       BUG_ON((va - PAGE_OFFSET) >> PGDIR_SHIFT);
+> +
+> +       return (uintptr_t)early_pud;
+> +}
+> +
+> +static void __init create_pud_mapping(pud_t *pudp,
+> +                                     uintptr_t va, phys_addr_t pa,
+> +                                     phys_addr_t sz, pgprot_t prot)
+> +{
+> +       pmd_t *nextp;
+> +       phys_addr_t next_phys;
+> +       uintptr_t pud_index = pud_index(va);
+> +
+> +       if (sz == PUD_SIZE) {
+> +               if (pud_val(pudp[pud_index]) == 0)
+> +                       pudp[pud_index] = pfn_pud(PFN_DOWN(pa), prot);
+> +               return;
+> +       }
+> +
+> +       if (pud_val(pudp[pud_index]) == 0) {
+> +               next_phys = alloc_pmd(va);
+> +               pudp[pud_index] = pfn_pud(PFN_DOWN(next_phys), PAGE_TABLE);
+> +               nextp = get_pmd_virt(next_phys);
+> +               memset(nextp, 0, PAGE_SIZE);
+> +       } else {
+> +               next_phys = PFN_PHYS(_pud_pfn(pudp[pud_index]));
+> +               nextp = get_pmd_virt(next_phys);
+> +       }
+> +
+> +       create_pmd_mapping(nextp, va, pa, sz, prot);
+> +}
+> +
+> +#define pgd_next_t             pud_t
+> +#define alloc_pgd_next(__va)   alloc_pud(__va)
+> +#define get_pgd_next_virt(__pa)        get_pud_virt(__pa)
+>  #define create_pgd_next_mapping(__nextp, __va, __pa, __sz, __prot)     \
+> -       create_pmd_mapping(__nextp, __va, __pa, __sz, __prot)
+> -#define fixmap_pgd_next                fixmap_pmd
+> +       create_pud_mapping(__nextp, __va, __pa, __sz, __prot)
+> +#define fixmap_pgd_next                (pgtable_l4_enabled ?                   \
+> +                       (uintptr_t)fixmap_pud : (uintptr_t)fixmap_pmd)
+> +#define trampoline_pgd_next    (pgtable_l4_enabled ?                   \
+> +                       (uintptr_t)trampoline_pud : (uintptr_t)trampoline_pmd)
+>  #else
+>  #define pgd_next_t             pte_t
+>  #define alloc_pgd_next(__va)   alloc_pte(__va)
+>  #define get_pgd_next_virt(__pa)        get_pte_virt(__pa)
+>  #define create_pgd_next_mapping(__nextp, __va, __pa, __sz, __prot)     \
+>         create_pte_mapping(__nextp, __va, __pa, __sz, __prot)
+> -#define fixmap_pgd_next                fixmap_pte
+> +#define fixmap_pgd_next                ((uintptr_t)fixmap_pte)
+>  #endif
+>
+>  static void __init create_pgd_mapping(pgd_t *pgdp,
+> @@ -319,6 +385,13 @@ static void __init create_pgd_mapping(pgd_t *pgdp,
+>         phys_addr_t next_phys;
+>         uintptr_t pgd_index = pgd_index(va);
+>
+> +#ifndef __PAGETABLE_PMD_FOLDED
+> +       if (!pgtable_l4_enabled) {
+> +               create_pud_mapping((pud_t *)pgdp, va, pa, sz, prot);
+> +               return;
+> +       }
+> +#endif
+> +
+>         if (sz == PGDIR_SIZE) {
+>                 if (pgd_val(pgdp[pgd_index]) == 0)
+>                         pgdp[pgd_index] = pfn_pgd(PFN_DOWN(pa), prot);
+> @@ -449,15 +522,22 @@ asmlinkage void __init setup_vm(uintptr_t dtb_pa)
+>
+>         /* Setup early PGD for fixmap */
+>         create_pgd_mapping(early_pg_dir, FIXADDR_START,
+> -                          (uintptr_t)fixmap_pgd_next, PGDIR_SIZE, PAGE_TABLE);
+> +                          fixmap_pgd_next, PGDIR_SIZE, PAGE_TABLE);
+>
+>  #ifndef __PAGETABLE_PMD_FOLDED
+> -       /* Setup fixmap PMD */
+> +       /* Setup fixmap PUD and PMD */
+> +       if (pgtable_l4_enabled)
+> +               create_pud_mapping(fixmap_pud, FIXADDR_START,
+> +                          (uintptr_t)fixmap_pmd, PUD_SIZE, PAGE_TABLE);
+>         create_pmd_mapping(fixmap_pmd, FIXADDR_START,
+>                            (uintptr_t)fixmap_pte, PMD_SIZE, PAGE_TABLE);
+> +
+>         /* Setup trampoline PGD and PMD */
+>         create_pgd_mapping(trampoline_pg_dir, PAGE_OFFSET,
+> -                          (uintptr_t)trampoline_pmd, PGDIR_SIZE, PAGE_TABLE);
+> +                          trampoline_pgd_next, PGDIR_SIZE, PAGE_TABLE);
+> +       if (pgtable_l4_enabled)
+> +               create_pud_mapping(trampoline_pud, PAGE_OFFSET,
+> +                          (uintptr_t)trampoline_pmd, PUD_SIZE, PAGE_TABLE);
+>         create_pmd_mapping(trampoline_pmd, PAGE_OFFSET,
+>                            load_pa, PMD_SIZE, PAGE_KERNEL_EXEC);
+>  #else
+> @@ -490,6 +570,29 @@ asmlinkage void __init setup_vm(uintptr_t dtb_pa)
+>         dtb_early_pa = dtb_pa;
+>  }
+>
+> +#if defined(CONFIG_RELOCATABLE) && defined(CONFIG_64BIT)
+> +/*
+> + * This function is called only if the current kernel is 64bit and the HW
+> + * does not support sv48.
+> + */
+> +asmlinkage __init void setup_vm_fold_pud(void)
+> +{
+> +       pgtable_l4_enabled = false;
+> +       kernel_virt_addr = PAGE_OFFSET_L3;
+> +       satp_mode = SATP_MODE_39;
+> +
+> +       /*
+> +        * PTE/PMD levels do not need to be cleared as they are common between
+> +        * 3- and 4-level page tables: the 30 least significant bits
+> +        * (2 * 9 + 12) are common.
+> +        */
+> +       memset(trampoline_pg_dir, 0, sizeof(pgd_t) * PTRS_PER_PGD);
+> +       memset(early_pg_dir, 0, sizeof(pgd_t) * PTRS_PER_PGD);
+> +
+> +       setup_vm(dtb_early_pa);
+> +}
+> +#endif
+> +
+>  static void __init setup_vm_final(void)
+>  {
+>         uintptr_t va, map_size;
+> @@ -525,12 +628,13 @@ static void __init setup_vm_final(void)
+>                 }
+>         }
+>
+> -       /* Clear fixmap PTE and PMD mappings */
+> +       /* Clear fixmap page table mappings */
+>         clear_fixmap(FIX_PTE);
+>         clear_fixmap(FIX_PMD);
+> +       clear_fixmap(FIX_PUD);
+>
+>         /* Move to swapper page table */
+> -       csr_write(CSR_SATP, PFN_DOWN(__pa_symbol(swapper_pg_dir)) | SATP_MODE);
+> +       csr_write(CSR_SATP, PFN_DOWN(__pa_symbol(swapper_pg_dir)) | satp_mode);
+>         local_flush_tlb_all();
+>  }
+>  #else
+> --
+> 2.20.1
+>
