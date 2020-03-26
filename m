@@ -6,22 +6,22 @@ X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E316AC2D0E9
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 09:59:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44538C2D0E9
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 10:00:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C5C2E2070A
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 09:59:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 266252070A
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 10:00:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727924AbgCZJ7G (ORCPT
+        id S1727831AbgCZKAH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 05:59:06 -0400
-Received: from verein.lst.de ([213.95.11.211]:44909 "EHLO verein.lst.de"
+        Thu, 26 Mar 2020 06:00:07 -0400
+Received: from verein.lst.de ([213.95.11.211]:44920 "EHLO verein.lst.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727787AbgCZJ7F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 05:59:05 -0400
+        id S1726354AbgCZKAG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Mar 2020 06:00:06 -0400
 Received: by verein.lst.de (Postfix, from userid 2407)
-        id E93D368BFE; Thu, 26 Mar 2020 10:59:03 +0100 (CET)
-Date:   Thu, 26 Mar 2020 10:59:03 +0100
+        id 7B70468BFE; Thu, 26 Mar 2020 11:00:04 +0100 (CET)
+Date:   Thu, 26 Mar 2020 11:00:03 +0100
 From:   Christoph Hellwig <hch@lst.de>
 To:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
 Cc:     Jens Axboe <axboe@kernel.dk>,
@@ -29,33 +29,34 @@ Cc:     Jens Axboe <axboe@kernel.dk>,
         Geert Uytterhoeven <geert@linux-m68k.org>,
         Christoph Hellwig <hch@lst.de>, linux-ide@vger.kernel.org,
         linux-m68k@lists.linux-m68k.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 23/27] ata: start separating SATA specific code from
- libata-scsi.c
-Message-ID: <20200326095903.GQ9596@lst.de>
-References: <20200317144333.2904-1-b.zolnierkie@samsung.com> <CGME20200317144352eucas1p1ddb279cb52e2ae6f5189878912581162@eucas1p1.samsung.com> <20200317144333.2904-24-b.zolnierkie@samsung.com>
+Subject: Re: [PATCH v4 24/27] ata: move ata_sas_*() to libata-sata.c
+Message-ID: <20200326100003.GR9596@lst.de>
+References: <20200317144333.2904-1-b.zolnierkie@samsung.com> <CGME20200317144353eucas1p163ca190ee937e771b4a583408500070a@eucas1p1.samsung.com> <20200317144333.2904-25-b.zolnierkie@samsung.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200317144333.2904-24-b.zolnierkie@samsung.com>
+In-Reply-To: <20200317144333.2904-25-b.zolnierkie@samsung.com>
 User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 17, 2020 at 03:43:29PM +0100, Bartlomiej Zolnierkiewicz wrote:
-> Start separating SATA specific code from libata-scsi.c:
+On Tue, Mar 17, 2020 at 03:43:30PM +0100, Bartlomiej Zolnierkiewicz wrote:
+> * un-inline:
+>   - ata_scsi_dump_cdb()
+>   - __ata_scsi_queuecmd()
 > 
-> * un-static ata_scsi_find_dev()
+> * un-static:
+>   - ata_scsi_sdev_config()
+>   - ata_scsi_dev_config()
+>   - ata_scsi_dump_cdb()
+>   - __ata_scsi_queuecmd()
 > 
-> * move following code to libata-sata.c:
->   - SATA only sysfs device attributes handling
->   - __ata_change_queue_depth()
->   - ata_scsi_change_queue_depth()
+> * move ata_sas_*() to libata-sata.c:
 > 
-> * cover with CONFIG_SATA_HOST ifdef SATA only sysfs device
->   attributes handling code and ATA_SHT_NCQ() macro in
->   <linux/libata.h>
+> * add static inlines for CONFIG_SATA_HOST=n case for
+>   ata_sas_{allocate,free}_tag()
 
 Looks good,
 
