@@ -2,114 +2,123 @@ Return-Path: <SRS0=aGSP=5L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2776C2D0E7
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 06:49:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CCE7C2D0EE
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 06:49:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C846B206F8
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 06:49:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585205354;
-	bh=REwFVQjfEy9jtZuC2k6P8S+hQqioo1Lem7N5OdAZsRo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=r21CK0SVmFCl/CNC3byy7KNN6+W0DYZvevHmkhqzUGmwpJNt/LCh8wtZ1IFGYH4bE
-	 qjMCd1XXjowdzUe1jxqN3XJdx5nKpO1gVQGk+PCyYK9LS7W02Wvn35H8WR8dvDVawk
-	 pjhA2RQWI9UIzNYZWZPJjw1QZdbUMyxYNBnuVVIw=
+	by mail.kernel.org (Postfix) with ESMTP id D66C8206F8
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 06:49:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="H2n3m3sR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727699AbgCZGtN (ORCPT
+        id S1727751AbgCZGtR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 02:49:13 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:43716 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726014AbgCZGtN (ORCPT
+        Thu, 26 Mar 2020 02:49:17 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:37572 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727721AbgCZGtQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 02:49:13 -0400
-Received: by mail-wr1-f66.google.com with SMTP id m11so448595wrx.10;
-        Wed, 25 Mar 2020 23:49:12 -0700 (PDT)
+        Thu, 26 Mar 2020 02:49:16 -0400
+Received: by mail-wm1-f67.google.com with SMTP id d1so5742120wmb.2
+        for <linux-kernel@vger.kernel.org>; Wed, 25 Mar 2020 23:49:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=m/woP8JE+Q/g0ZO0DRvUNOSB5SWwhTVz0tFdoKMPxxo=;
+        b=H2n3m3sRF0tHj/MR1yFPyawxFUsyiDdjYI76xB/dYLngYzS5i9nRuIe6/TKuYr9K3b
+         9XSVkH0w1gt5DG4rjqA7+RLeLVQO7jNxj6vCMLCFjjKy8E7CFj6W8kZKHkYqc7e8gM2i
+         +SVTaotuowDSxAaMHR26QnJ+MFR8PwkRSQuxo=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=Y4psBKXqPtMQHGDD9G3/UVc0Xd+VFzRe3hFm6IS58p0=;
-        b=UjoPC7uF3WBBdKIXcCFujcbJEaFfpjqCfAPOApPz3XC90/gvtt708FrkoU8hDY++vp
-         ORaBgcBQrUTPbrQMG4rIyylpegm3CVdAHpZrEoS9zYBhaCnUedkpxjLiN/mhl8ih/MnS
-         eUcDHKsHowTcSq2xFxAsG3H39hpKX+Jcqjht39cX54o6OBudmZ6IHGIqAZWZKxydqIar
-         85BmoSS91BGjSdk0vM0wGT5wrEQamLTu0ekfSJyC+3QbrHlFCmLpmvuqgki1tVc8tNpj
-         0oSbAVSvV3iZoYDvn4A6gndz1lgLYYvxdnKoZIlWsTK7BK7r0nJAlpvaZ+C4QYQM4vps
-         rIsw==
-X-Gm-Message-State: ANhLgQ2OeyyHI99GpwG6MrtU/6zLjBCGCZUAG1OUg55T3uEw82Mrq9hS
-        lPWXmulcO89Utv/ZaG9FuLg=
-X-Google-Smtp-Source: ADFU+vsYkHP2H+pALnVpF91T9GwcryXmAjyQiSJ+3+DZsC6TZ76dyL1pE5MKqrHwjbWOtc1EcQMwTQ==
-X-Received: by 2002:adf:fac7:: with SMTP id a7mr7803851wrs.191.1585205351825;
-        Wed, 25 Mar 2020 23:49:11 -0700 (PDT)
-Received: from localhost (ip-37-188-135-150.eurotel.cz. [37.188.135.150])
-        by smtp.gmail.com with ESMTPSA id g2sm2247830wrs.42.2020.03.25.23.49.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 25 Mar 2020 23:49:10 -0700 (PDT)
-Date:   Thu, 26 Mar 2020 07:49:09 +0100
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Rafael Aquini <aquini@redhat.com>,
-        Shakeel Butt <shakeelb@google.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-kselftest@vger.kernel.org, shuah@kernel.org,
-        Eric B Munson <emunson@akamai.com>
-Subject: Re: [PATCH] tools/testing/selftests/vm/mlock2-tests: fix mlock2
- false-negative errors
-Message-ID: <20200326064909.GB27965@dhcp22.suse.cz>
-References: <20200323144240.GB23364@optiplex-lnx>
- <20200323145106.GM7524@dhcp22.suse.cz>
- <20200323150259.GD23364@optiplex-lnx>
- <20200323151256.GP7524@dhcp22.suse.cz>
- <20200323154159.GF23364@optiplex-lnx>
- <20200323155111.GQ7524@dhcp22.suse.cz>
- <20200323155449.GG23364@optiplex-lnx>
- <20200324154218.GS19542@dhcp22.suse.cz>
- <20200324154910.GM23364@optiplex-lnx>
- <20200325174949.95d8a9de61c6a30a7e0f4582@linux-foundation.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200325174949.95d8a9de61c6a30a7e0f4582@linux-foundation.org>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=m/woP8JE+Q/g0ZO0DRvUNOSB5SWwhTVz0tFdoKMPxxo=;
+        b=UU9vqCokmCjG1vg1eSRzvcx2GI88P1HLom8ydXgMtUObVobJoghNl7KjhJRn7d1qXM
+         KVta803udZuUxwBenBxpZ6aiqjg+sZlLx/gDN9O7OnYao5I2p+Qv/eJ/xImxz22ZdY7I
+         TeZH46r4R1urH31VxaNQWSSJsA9bpSHZkiQhbIJ96E2uEwLVuGkg4Skq/xp+Nkczg0Uf
+         osxJTAZjGtnqEdfP1IYCSx/2072COZM4hM1BWmRQs/StgYDPpcN8LpXWhd7pc8x5LeJb
+         iTTrh4iELcgw2CqLvdTOCYs05btdMJRd0ZI/FIhpLYJt3sugujUwQwi84mCUi2+Af+d0
+         KdhQ==
+X-Gm-Message-State: ANhLgQ2oMyFtbXm1rh6JfXDvb441963Sa2npJzCUxE9XfO56xIIhJJNX
+        dcZTK8KFGFpAYHn6boIPBinUEw==
+X-Google-Smtp-Source: ADFU+vvHarE2WZIQBKwJVOAl77q3js1Qw/P3PaTTHhN6tLddp/9YVShnhfUTAlEsbjewgdKGGOeB2Q==
+X-Received: by 2002:a1c:63c4:: with SMTP id x187mr1490010wmb.124.1585205354813;
+        Wed, 25 Mar 2020 23:49:14 -0700 (PDT)
+Received: from mannams-OptiPlex-7010.dhcp.broadcom.net ([192.19.234.250])
+        by smtp.gmail.com with ESMTPSA id v21sm2069137wmj.8.2020.03.25.23.49.09
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Wed, 25 Mar 2020 23:49:13 -0700 (PDT)
+From:   Srinath Mannam <srinath.mannam@broadcom.com>
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Ray Jui <rjui@broadcom.com>, Rob Herring <robh+dt@kernel.org>,
+        Andrew Murray <andrew.murray@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>
+Cc:     bcm-kernel-feedback-list@broadcom.com, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org,
+        Srinath Mannam <srinath.mannam@broadcom.com>
+Subject: [PATCH v5 0/6] PAXB INTx support with proper model
+Date:   Thu, 26 Mar 2020 12:18:40 +0530
+Message-Id: <1585205326-25326-1-git-send-email-srinath.mannam@broadcom.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 25-03-20 17:49:49, Andrew Morton wrote:
-> On Tue, 24 Mar 2020 11:49:10 -0400 Rafael Aquini <aquini@redhat.com> wrote:
-> 
-> > Thanks Michal!
-> > 
-> >  
-> > Acked-by: Rafael Aquini <aquini@redhat.com>
-> 
-> I'll add
-> Fixes: 9c4e6b1a7027f ("mm, mlock, vmscan: no more skipping pagevecs")
+This patch series adds PCIe legacy interrupt (INTx) support to the iProc
+PCIe driver by modeling it with its own IRQ domain. All 4 interrupts INTA,
+INTB, INTC, INTD share the same interrupt line connected to the GIC
+in the system. This is now modeled by using its own IRQ domain.
 
-Wouldn't be this misleading? It would suggest that this commit is
-somehow incorrect. I would consider b3b0d09c7a23 ("selftests: vm: add
-tests for lock on fault") to be a better fit.
+Also update all relevant devicetree files to adapt to the new model.
 
-> and cc:stable to this.  Any kernel which has 9c4e6b1a7027f will benefit
-> from this change.
+This patch set is based on Linux-5.5-rc1.
 
-OK, makes sense with
-Cc: stable # with 9c4e6b1a7027f applied
- 
-> We're getting quite late in the cycle now so I think I'll hold off
-> merging this up until post-5.7-rc1.  It will still get into the stable
-> trees, but a bit later.
+Changes from v4:
+  - Addressed Lorenzo's comments
+    - Add iProc irq chip descriptor in the place of dummy irq chip to
+      provide mask/un-mask and enable/disable handlers to configure
+      individual INTx.
 
-No problem. Nothing really urget. Coincidentaly we've just had a report
-from our partner about this very specific test failure for our
-enterprise kernel as well. I will just backport the patch as it seems
-nobody really objects to it.
+Changes from v3:
+  - Addressed Andrew Murray's comments
+  - Add change to dispose VIRQ when disabling INTx
 
-Thanks!
+Changes from v2:
+  - Addressed Lorenzo's comments
+    - Corrected INTx to PIN mapping.
+
+Changes from v1:
+  - Addressed Rob, Lorenzo, Arnd's comments
+    - Used child node for interrupt controller.
+  - Addressed Andy Shevchenko's comments
+    - Replaced while loop with do-while.
+
+Ray Jui (6):
+  dt-bindings: pci: Update iProc PCI binding for INTx support
+  PCI: iproc: Add INTx support with better modeling
+  arm: dts: Change PCIe INTx mapping for Cygnus
+  arm: dts: Change PCIe INTx mapping for NSP
+  arm: dts: Change PCIe INTx mapping for HR2
+  arm64: dts: Change PCIe INTx mapping for NS2
+
+ .../devicetree/bindings/pci/brcm,iproc-pcie.txt    |  48 ++++++-
+ arch/arm/boot/dts/bcm-cygnus.dtsi                  |  30 ++++-
+ arch/arm/boot/dts/bcm-hr2.dtsi                     |  30 ++++-
+ arch/arm/boot/dts/bcm-nsp.dtsi                     |  45 ++++++-
+ arch/arm64/boot/dts/broadcom/northstar2/ns2.dtsi   |  28 +++-
+ drivers/pci/controller/pcie-iproc.c                | 147 ++++++++++++++++++++-
+ drivers/pci/controller/pcie-iproc.h                |   8 ++
+ 7 files changed, 309 insertions(+), 27 deletions(-)
+
 -- 
-Michal Hocko
-SUSE Labs
+2.7.4
+
