@@ -2,78 +2,70 @@ Return-Path: <SRS0=aGSP=5L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 430CAC43331
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 10:14:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4D89C43331
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 10:15:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0E05920748
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 10:14:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 91CC72073E
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 10:15:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727800AbgCZKOq (ORCPT
+        id S1727898AbgCZKPg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 06:14:46 -0400
-Received: from smtp25.cstnet.cn ([159.226.251.25]:50680 "EHLO cstnet.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726298AbgCZKOp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 06:14:45 -0400
-Received: from ubuntu.localdomain (unknown [223.104.3.202])
-        by APP-05 (Coremail) with SMTP id zQCowACXnW2GgHxeO1BvAA--.21050S2;
-        Thu, 26 Mar 2020 18:14:31 +0800 (CST)
-From:   Xu Wang <vulab@iscas.ac.cn>
-To:     shshaikh@marvell.com, manishc@marvell.com,
-        GR-Linux-NIC-Dev@marvell.com, davem@davemloft.net
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] qlcnic: Fix bad kzalloc null test
-Date:   Thu, 26 Mar 2020 18:14:29 +0800
-Message-Id: <20200326101429.18876-1-vulab@iscas.ac.cn>
-X-Mailer: git-send-email 2.17.1
-X-CM-TRANSID: zQCowACXnW2GgHxeO1BvAA--.21050S2
-X-Coremail-Antispam: 1UD129KBjvdXoW7XF45KF4rGw4xXryxur4UJwb_yoWftwc_KF
-        4Ivw1xXan8J3s0gw47Kr13J342va4DW3Z5Aw4Igay5Jw1DAF45Zr92kryfAw1xW3y5uF98
-        GF13J3y3Aws7AjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-        9fnUUIcSsGvfJTRUUUbFAYjsxI4VWDJwAYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I
-        6I8E6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM2
-        8CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVW5JVW7JwA2z4x0Y4vE2Ix0
-        cI8IcVCY1x0267AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIE14v26F4UJVW0owA2z4x0Y4vEx4
-        A2jsIEc7CjxVAFwI0_Cr1j6rxdM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI
-        64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8Jw
-        Am72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82IYc2Ij64vIr41l4I8I
-        3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxV
-        WUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAF
-        wI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcI
-        k0rVWrZr1j6s0DMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_
-        Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8v_M3UUUUU==
-X-Originating-IP: [223.104.3.202]
-X-CM-SenderInfo: pyxotu46lvutnvoduhdfq/1tbiBgQHA10TesnOWwAAsu
+        Thu, 26 Mar 2020 06:15:36 -0400
+Received: from foss.arm.com ([217.140.110.172]:58676 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726292AbgCZKPg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Mar 2020 06:15:36 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id AEF877FA;
+        Thu, 26 Mar 2020 03:15:35 -0700 (PDT)
+Received: from e107158-lin (e107158-lin.cambridge.arm.com [10.1.195.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id AF3B13F52E;
+        Thu, 26 Mar 2020 03:15:34 -0700 (PDT)
+Date:   Thu, 26 Mar 2020 10:15:32 +0000
+From:   Qais Yousef <qais.yousef@arm.com>
+To:     Tejun Heo <tj@kernel.org>
+Cc:     Qian Cai <cai@lca.pw>, Prateek Sood <prsood@codeaurora.org>,
+        Li Zefan <lizefan@huawei.com>, cgroups@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>
+Subject: Re: Deadlock due to "cpuset: Make cpuset hotplug synchronous"
+Message-ID: <20200326101529.xh763j5frq2r7mqv@e107158-lin>
+References: <F0388D99-84D7-453B-9B6B-EEFF0E7BE4CC@lca.pw>
+ <20200325191922.GM162390@mtj.duckdns.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200325191922.GM162390@mtj.duckdns.org>
+User-Agent: NeoMutt/20171215
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In qlcnic_83xx_get_reset_instruction_template, the variable
-of null test is bad, so correct it.
+On 03/25/20 15:19, Tejun Heo wrote:
+> On Wed, Mar 25, 2020 at 03:16:56PM -0400, Qian Cai wrote:
+> > The linux-next commit a49e4629b5ed (“cpuset: Make cpuset hotplug synchronous”)
+> > introduced real deadlocks with CPU hotplug as showed in the lockdep splat, since it is
+> > now making a relation from cpu_hotplug_lock —> cgroup_mutex.
+> 
+> Prateek, can you please take a look? Given that the merge window is just around
+> the corner, we might have to revert and retry later if it can't be resolved
+> quickly.
 
-Signed-off-by: Xu Wang <vulab@iscas.ac.cn>
----
- drivers/net/ethernet/qlogic/qlcnic/qlcnic_83xx_init.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+I've ran cpuset_hotplug and cpuhotplug LTP tests using next-20200325 but
+couldn't reproduce it.
 
-diff --git a/drivers/net/ethernet/qlogic/qlcnic/qlcnic_83xx_init.c b/drivers/net/ethernet/qlogic/qlcnic/qlcnic_83xx_init.c
-index 07f9067affc6..cda5b0a9e948 100644
---- a/drivers/net/ethernet/qlogic/qlcnic/qlcnic_83xx_init.c
-+++ b/drivers/net/ethernet/qlogic/qlcnic/qlcnic_83xx_init.c
-@@ -1720,7 +1720,7 @@ static int qlcnic_83xx_get_reset_instruction_template(struct qlcnic_adapter *p_d
- 
- 	ahw->reset.seq_error = 0;
- 	ahw->reset.buff = kzalloc(QLC_83XX_RESTART_TEMPLATE_SIZE, GFP_KERNEL);
--	if (p_dev->ahw->reset.buff == NULL)
-+	if (ahw->reset.buff == NULL)
- 		return -ENOMEM;
- 
- 	p_buff = p_dev->ahw->reset.buff;
--- 
-2.17.1
+Hopefully that can be fixed, but if you had to revert it, do you mind picking
+this instead to fix the LTP issue I encountered before?
 
+	https://lore.kernel.org/lkml/20200211141554.24181-1-qais.yousef@arm.com/
+
+Thanks!
+
+--
+Qais Yousef
