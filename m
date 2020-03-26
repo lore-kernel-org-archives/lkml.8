@@ -2,245 +2,199 @@ Return-Path: <SRS0=aGSP=5L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C041DC2D0E9
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 21:27:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DD67C2D0E9
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 21:27:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8893620714
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 21:27:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A21C20722
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 21:27:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BH+pMBLV"
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="j73KYCHr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727549AbgCZV1K (ORCPT
+        id S1727685AbgCZV1b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 17:27:10 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:43697 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726067AbgCZV1K (ORCPT
+        Thu, 26 Mar 2020 17:27:31 -0400
+Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:24750 "EHLO
+        mx0b-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726067AbgCZV1b (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 17:27:10 -0400
-Received: by mail-pf1-f194.google.com with SMTP id f206so3425856pfa.10;
-        Thu, 26 Mar 2020 14:27:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=atzCXrrFjj2ubJLyaQL33TZVkzc/684qlpDQkAgpr+Y=;
-        b=BH+pMBLVwLvDOujw8Wx0UntU90jOTEQ6Zs10qYxLzPGwVpM/cLw9JEfTvd975olj1y
-         zrSwqx5diNTHuNEuqTGjucX0e9E7NzEdwX2eERxjch4vKtewxQBqNdLpgqiIH2KCS3cF
-         +8kGVlcQfKVeFZILXyme5LG3xF1RUSt5UWRl9PVL1KDDrxB5hemkZo3f2Z73XJxDc+1L
-         JhySK730Nhbn5ut3/1zcHRodB1PyjZGUC+hC+Ocd0KXOT77tGO3rjr47NgHmuzVtZMZZ
-         hjcpb2qVoEzF62N9YMDXsHdXfHwNDLVQlSlzOyMxsaGkJGumnjVgwIUIVDjUCjEZclYA
-         yj2w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=atzCXrrFjj2ubJLyaQL33TZVkzc/684qlpDQkAgpr+Y=;
-        b=MNju2wjrob0xH+4I4geD9H9u7JoN2cQPtLr0lDRq/TWXw9XSnoGShiLT+3TKDslbPP
-         omwPBpDXRjRykVSKUq99JSZ7OA32FGV+o1Z5VoiPp3Kh0QmHmsrLF6wqWB1PpqahEnoM
-         rQqtg8n96LhwMG2T6egdurcUHSYzP3MoD6OSuL6bZL21dRfqkOOTpSpLtfWDbhCvm9oc
-         xsPlvU+Qx5RaLw3IeT3pEO5jfkzCzIc9zellJ02vm52n5aUZ6FvdT0XLrfwRXfGY+ZTS
-         cPHbsAj6eSdcfQsZoZiMmJwzYhbSCWGZPWvSeLBJcPPyego1ZtrV2Bf4wHRyJ8Noomxt
-         19WA==
-X-Gm-Message-State: ANhLgQ05j5RQ345gDnX+Jp3grwxTIlrCx5LC1ceM/4LMBHWZvmRmbJBd
-        s9phDsI9Mor2cdiSg0fHxqA=
-X-Google-Smtp-Source: ADFU+vtcHF1HaTi5i3fGgGxyPVPOVW6A4n02mzw7SrTcycZINqW9FTsKBRVMJgTYQXn8HfVGU/2b1w==
-X-Received: by 2002:a63:7409:: with SMTP id p9mr10470856pgc.206.1585258028572;
-        Thu, 26 Mar 2020 14:27:08 -0700 (PDT)
-Received: from dtor-ws ([2620:15c:202:201:3c2a:73a9:c2cf:7f45])
-        by smtp.gmail.com with ESMTPSA id a127sm2434878pfa.111.2020.03.26.14.27.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 26 Mar 2020 14:27:07 -0700 (PDT)
-Date:   Thu, 26 Mar 2020 14:27:05 -0700
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     Rajat Jain <rajatja@google.com>
-Cc:     dtor@google.com, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Enrico Weigelt <info@metux.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Allison Randal <allison@lohutok.net>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Stephen Boyd <swboyd@chromium.org>,
-        linux-input@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, furquan@google.com,
-        dlaurie@google.com, bleung@google.com, zentaro@google.com,
-        dbehr@google.com, rajatxjain@gmail.com
-Subject: Re: [PATCH v2 2/5] Input: atkbd: Expose function row physical map to
- userspace
-Message-ID: <20200326212705.GJ75430@dtor-ws>
-References: <20200324123518.239768-1-rajatja@google.com>
- <20200324123518.239768-2-rajatja@google.com>
+        Thu, 26 Mar 2020 17:27:31 -0400
+Received: from pps.filterd (m0148460.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02QLOexU006760
+        for <linux-kernel@vger.kernel.org>; Thu, 26 Mar 2020 14:27:29 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-type; s=facebook;
+ bh=n2ZLoVczZwXZSDy2Sw/zbfhEovYQe+QGpRr6SKE1WEk=;
+ b=j73KYCHrEVh6DBE6aW2il4AGa+1HKi8qanbULlL30bN9w/AQJrBFvRv88luY+LgcwmDZ
+ vPwrnBwHv448xNM8FfMU5Yb+YvxA5lN83umcLDeriPtB+WSeLuNxLxTfGmqIDiTCddGj
+ uV4dcSIzUxKhY4jU2gACYROaz7uTogsaPE0= 
+Received: from mail.thefacebook.com ([163.114.132.120])
+        by mx0a-00082601.pphosted.com with ESMTP id 300gjdfacu-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Thu, 26 Mar 2020 14:27:29 -0700
+Received: from intmgw004.08.frc2.facebook.com (2620:10d:c085:208::11) by
+ mail.thefacebook.com (2620:10d:c085:11d::5) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1847.3; Thu, 26 Mar 2020 14:27:28 -0700
+Received: by devbig020.ftw1.facebook.com (Postfix, from userid 179119)
+        id 870A658C1E71; Thu, 26 Mar 2020 14:27:26 -0700 (PDT)
+Smtp-Origin-Hostprefix: devbig
+From:   Aslan Bakirov <aslan@fb.com>
+Smtp-Origin-Hostname: devbig020.ftw1.facebook.com
+To:     <akpm@linux-foundation.org>
+CC:     <linux-kernel@vger.kernel.org>, <linux-mm@kvack.org>,
+        <kernel-team@fb.com>, <riel@surriel.com>, <guro@fb.com>,
+        <mhocko@kernel.org>, <hannes@cmpxchg.org>,
+        Aslan Bakirov <aslan@fb.com>
+Smtp-Origin-Cluster: ftw1c07
+Subject: [PATCH 1/2] mm: cma: NUMA node interface
+Date:   Thu, 26 Mar 2020 14:27:17 -0700
+Message-ID: <20200326212718.3798742-1-aslan@fb.com>
+X-Mailer: git-send-email 2.17.1
+X-FB-Internal: Safe
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200324123518.239768-2-rajatja@google.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.645
+ definitions=2020-03-26_13:2020-03-26,2020-03-26 signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 clxscore=1011
+ priorityscore=1501 mlxscore=0 spamscore=0 impostorscore=0 adultscore=0
+ bulkscore=0 suspectscore=1 lowpriorityscore=0 malwarescore=0 phishscore=0
+ mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2003260156
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 24, 2020 at 05:35:15AM -0700, Rajat Jain wrote:
-> Certain keyboards have their top-row keys intended
-> for actions such as "Browser back", "Browser Refresh", "Fullscreen"
-> etc as their primary mode, thus they will send physical codes for those
-> actions. Further, they don't have a dedicated "Fn" key so don't have
-> the capability to generate function key codes (e.g. F1, F2 etc..).
-> However in this case, if userspace still wants to "synthesize" those
-> function keys using the top row action keys, it needs to know the
-> physical position of the top row keys. (Essentially a mapping between
-> usage codes and a physical location in the top row).
-> 
-> This patch enhances the atkbd driver to receive such a mapping from the
-> firmware / device tree, and expose it to userspace in the form of
-> a function-row-physmap attribute. The attribute would be a space
-> separated ordered list of physical codes, for the keys in the function
-> row, in left-to-right order.
-> 
-> The attribute will only be present if the kernel knows about such
-> mapping, otherwise the attribute shall not be visible.
-> 
-> Signed-off-by: Rajat Jain <rajatja@google.com>
-> ---
-> v2: Remove the Change-Id from the commit log
-> 
->  drivers/input/keyboard/atkbd.c | 59 ++++++++++++++++++++++++++++++++++
->  1 file changed, 59 insertions(+)
-> 
-> diff --git a/drivers/input/keyboard/atkbd.c b/drivers/input/keyboard/atkbd.c
-> index 7e3eae54c1926..7623eebef2593 100644
-> --- a/drivers/input/keyboard/atkbd.c
-> +++ b/drivers/input/keyboard/atkbd.c
-> @@ -24,6 +24,7 @@
->  #include <linux/libps2.h>
->  #include <linux/mutex.h>
->  #include <linux/dmi.h>
-> +#include <linux/property.h>
->  
->  #define DRIVER_DESC	"AT and PS/2 keyboard driver"
->  
-> @@ -63,6 +64,8 @@ static bool atkbd_terminal;
->  module_param_named(terminal, atkbd_terminal, bool, 0);
->  MODULE_PARM_DESC(terminal, "Enable break codes on an IBM Terminal keyboard connected via AT/PS2");
->  
-> +#define MAX_FUNCTION_ROW_KEYS	24
-> +
->  /*
->   * Scancode to keycode tables. These are just the default setting, and
->   * are loadable via a userland utility.
-> @@ -230,6 +233,9 @@ struct atkbd {
->  
->  	/* Serializes reconnect(), attr->set() and event work */
->  	struct mutex mutex;
-> +
-> +	u16 function_row_physmap[MAX_FUNCTION_ROW_KEYS];
-> +	int num_function_row_keys;
->  };
->  
->  /*
-> @@ -283,6 +289,7 @@ static struct device_attribute atkbd_attr_##_name =				\
->  	__ATTR(_name, S_IRUGO, atkbd_do_show_##_name, NULL);
->  
->  ATKBD_DEFINE_RO_ATTR(err_count);
-> +ATKBD_DEFINE_RO_ATTR(function_row_physmap);
->  
->  static struct attribute *atkbd_attributes[] = {
->  	&atkbd_attr_extra.attr,
-> @@ -292,11 +299,42 @@ static struct attribute *atkbd_attributes[] = {
->  	&atkbd_attr_softrepeat.attr,
->  	&atkbd_attr_softraw.attr,
->  	&atkbd_attr_err_count.attr,
-> +	&atkbd_attr_function_row_physmap.attr,
->  	NULL
->  };
->  
-> +static ssize_t atkbd_show_function_row_physmap(struct atkbd *atkbd, char *buf)
-> +{
-> +	ssize_t size = 0;
-> +	int i;
-> +
-> +	if (!atkbd->num_function_row_keys)
-> +		return 0;
-> +
-> +	for (i = 0; i < atkbd->num_function_row_keys; i++)
-> +		size += sprintf(buf + size, "%02X ",
-> +				atkbd->function_row_physmap[i]);
-> +	size += sprintf(buf + size, "\n");
-> +	return size;
-> +}
-> +
-> +static umode_t atkbd_attr_is_visible(struct kobject *kobj,
-> +				struct attribute *attr, int i)
-> +{
-> +	struct device *dev = container_of(kobj, struct device, kobj);
-> +	struct serio *serio = to_serio_port(dev);
-> +	struct atkbd *atkbd = serio_get_drvdata(serio);
-> +
-> +	if (attr == &atkbd_attr_function_row_physmap.attr &&
-> +	    !atkbd->num_function_row_keys)
-> +		return 0;
-> +
-> +	return attr->mode;
-> +}
-> +
->  static struct attribute_group atkbd_attribute_group = {
->  	.attrs	= atkbd_attributes,
-> +	.is_visible = atkbd_attr_is_visible,
->  };
->  
->  static const unsigned int xl_table[] = {
-> @@ -1121,6 +1159,25 @@ static void atkbd_set_device_attrs(struct atkbd *atkbd)
->  	}
->  }
->  
-> +static void atkbd_parse_fwnode_data(struct serio *serio)
-> +{
-> +	struct atkbd *atkbd = serio_get_drvdata(serio);
-> +	struct device *dev = &serio->dev;
-> +	int n;
-> +
-> +	if (!dev_fwnode(dev))
-> +		return;
+I've noticed that there is no interfaces exposed by CMA which would let me
+to declare contigous memory on particular NUMA node.
 
-I do not think we need this guard.
+This patchset adds the ability to try to allocate contiguous memory on
+specific node.
 
-> +
-> +	/* Parse "function-row-physmap" property */
-> +	n = device_property_count_u16(dev, "function-row-physmap");
-> +	if (n > 0 && n <= MAX_FUNCTION_ROW_KEYS &&
-> +	    !device_property_read_u16_array(dev, "function-row-physmap",
-> +					    atkbd->function_row_physmap, n)) {
-> +		atkbd->num_function_row_keys = n;
-> +		dev_info(dev, "FW reported %d function-row key locations\n", n);
+Implement a new method for declaring contigous memory on particular node
+and keep cma_declare_contiguous() as a wrapper.
 
-dev_dbg().
+Signed-off-by: Aslan Bakirov <aslan@fb.com>
+---
+ include/linux/cma.h      | 14 ++++++++++++--
+ include/linux/memblock.h |  3 +++
+ mm/cma.c                 | 15 ++++++++-------
+ mm/memblock.c            |  2 +-
+ 4 files changed, 24 insertions(+), 10 deletions(-)
 
-> +	}
-> +}
-> +
->  /*
->   * atkbd_connect() is called when the serio module finds an interface
->   * that isn't handled yet by an appropriate device driver. We check if
-> @@ -1184,6 +1241,8 @@ static int atkbd_connect(struct serio *serio, struct serio_driver *drv)
->  		atkbd->id = 0xab00;
->  	}
->  
-> +	atkbd_parse_fwnode_data(serio);
-> +
->  	atkbd_set_keycode_table(atkbd);
->  	atkbd_set_device_attrs(atkbd);
->  
-> -- 
-> 2.25.1.696.g5e7596f4ac-goog
-> 
-
+diff --git a/include/linux/cma.h b/include/linux/cma.h
+index 190184b5ff32..9512229744e0 100644
+--- a/include/linux/cma.h
++++ b/include/linux/cma.h
+@@ -24,10 +24,20 @@ extern phys_addr_t cma_get_base(const struct cma *cma);
+ extern unsigned long cma_get_size(const struct cma *cma);
+ extern const char *cma_get_name(const struct cma *cma);
+ 
+-extern int __init cma_declare_contiguous(phys_addr_t base,
++extern int __init cma_declare_contiguous_nid(phys_addr_t base,
+ 			phys_addr_t size, phys_addr_t limit,
+ 			phys_addr_t alignment, unsigned int order_per_bit,
+-			bool fixed, const char *name, struct cma **res_cma);
++			bool fixed, const char *name, struct cma **res_cma,
++			int nid);
++static inline int __init cma_declare_contiguous(phys_addr_t base,
++			phys_addr_t size, phys_addr_t limit,
++			phys_addr_t alignment, unsigned int order_per_bit,
++			bool fixed, const char *name, struct cma **res_cma)
++			{
++				return cma_declare_contiguous_nid(base, size,
++						limit, alignment, order_per_bit,
++						fixed, name, res_cma, NUMA_NO_NODE);
++			}
+ extern int cma_init_reserved_mem(phys_addr_t base, phys_addr_t size,
+ 					unsigned int order_per_bit,
+ 					const char *name,
+diff --git a/include/linux/memblock.h b/include/linux/memblock.h
+index 079d17d96410..f5878ed25e6e 100644
+--- a/include/linux/memblock.h
++++ b/include/linux/memblock.h
+@@ -348,6 +348,9 @@ static inline int memblock_get_region_node(const struct memblock_region *r)
+ 
+ phys_addr_t memblock_phys_alloc_range(phys_addr_t size, phys_addr_t align,
+ 				      phys_addr_t start, phys_addr_t end);
++phys_addr_t memblock_alloc_range_nid(phys_addr_t size,
++					  phys_addr_t align, phys_addr_t start,
++					  phys_addr_t end, int nid, bool exact_nid);
+ phys_addr_t memblock_phys_alloc_try_nid(phys_addr_t size, phys_addr_t align, int nid);
+ 
+ static inline phys_addr_t memblock_phys_alloc(phys_addr_t size,
+diff --git a/mm/cma.c b/mm/cma.c
+index be55d1988c67..2300669b4253 100644
+--- a/mm/cma.c
++++ b/mm/cma.c
+@@ -220,7 +220,7 @@ int __init cma_init_reserved_mem(phys_addr_t base, phys_addr_t size,
+ }
+ 
+ /**
+- * cma_declare_contiguous() - reserve custom contiguous area
++ * cma_declare_contiguous_nid() - reserve custom contiguous area
+  * @base: Base address of the reserved area optional, use 0 for any
+  * @size: Size of the reserved area (in bytes),
+  * @limit: End address of the reserved memory (optional, 0 for any).
+@@ -229,6 +229,7 @@ int __init cma_init_reserved_mem(phys_addr_t base, phys_addr_t size,
+  * @fixed: hint about where to place the reserved area
+  * @name: The name of the area. See function cma_init_reserved_mem()
+  * @res_cma: Pointer to store the created cma region.
++ * @nid: nid of the free area to find, %NUMA_NO_NODE for any node
+  *
+  * This function reserves memory from early allocator. It should be
+  * called by arch specific code once the early allocator (memblock or bootmem)
+@@ -238,10 +239,10 @@ int __init cma_init_reserved_mem(phys_addr_t base, phys_addr_t size,
+  * If @fixed is true, reserve contiguous area at exactly @base.  If false,
+  * reserve in range from @base to @limit.
+  */
+-int __init cma_declare_contiguous(phys_addr_t base,
++int __init cma_declare_contiguous_nid(phys_addr_t base,
+ 			phys_addr_t size, phys_addr_t limit,
+ 			phys_addr_t alignment, unsigned int order_per_bit,
+-			bool fixed, const char *name, struct cma **res_cma)
++			bool fixed, const char *name, struct cma **res_cma, int nid)
+ {
+ 	phys_addr_t memblock_end = memblock_end_of_DRAM();
+ 	phys_addr_t highmem_start;
+@@ -336,14 +337,14 @@ int __init cma_declare_contiguous(phys_addr_t base,
+ 		 * memory in case of failure.
+ 		 */
+ 		if (base < highmem_start && limit > highmem_start) {
+-			addr = memblock_phys_alloc_range(size, alignment,
+-							 highmem_start, limit);
++			addr = memblock_alloc_range_nid(size, alignment,
++							 highmem_start, limit, nid, false);
+ 			limit = highmem_start;
+ 		}
+ 
+ 		if (!addr) {
+-			addr = memblock_phys_alloc_range(size, alignment, base,
+-							 limit);
++			addr = memblock_alloc_range_nid(size, alignment, base,
++							 limit, nid, false);
+ 			if (!addr) {
+ 				ret = -ENOMEM;
+ 				goto err;
+diff --git a/mm/memblock.c b/mm/memblock.c
+index 4d06bbaded0f..c79ba6f9920c 100644
+--- a/mm/memblock.c
++++ b/mm/memblock.c
+@@ -1349,7 +1349,7 @@ __next_mem_pfn_range_in_zone(u64 *idx, struct zone *zone,
+  * Return:
+  * Physical address of allocated memory block on success, %0 on failure.
+  */
+-static phys_addr_t __init memblock_alloc_range_nid(phys_addr_t size,
++phys_addr_t __init memblock_alloc_range_nid(phys_addr_t size,
+ 					phys_addr_t align, phys_addr_t start,
+ 					phys_addr_t end, int nid,
+ 					bool exact_nid)
 -- 
-Dmitry
+2.17.1
+
