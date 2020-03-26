@@ -2,96 +2,159 @@ Return-Path: <SRS0=aGSP=5L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A6F9C43331
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 16:47:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE6BBC43331
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 16:47:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1F1262073E
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 16:47:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=malat-biz.20150623.gappssmtp.com header.i=@malat-biz.20150623.gappssmtp.com header.b="GIr3jiVd"
+	by mail.kernel.org (Postfix) with ESMTP id C410C212CC
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 16:47:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727443AbgCZQrr (ORCPT
+        id S1727797AbgCZQrv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 12:47:47 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:45408 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726163AbgCZQrq (ORCPT
+        Thu, 26 Mar 2020 12:47:51 -0400
+Received: from smtprelay0003.hostedemail.com ([216.40.44.3]:41814 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726267AbgCZQru (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 12:47:46 -0400
-Received: by mail-wr1-f65.google.com with SMTP id t7so8607995wrw.12
-        for <linux-kernel@vger.kernel.org>; Thu, 26 Mar 2020 09:47:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=malat-biz.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=kYmZ7W7spXJCoSjpaQQC+a9kzIPwWZNW6wR0y26VyYE=;
-        b=GIr3jiVdrqj3bn59MVLn4TI9NEimaDRJDtviwTb1yGhBa4MRpNqFrbqzMF1fYfGVyo
-         zyjFWXtmLjvyFM+kTu2YAvkZCtbSAZ/SpplHv2w7uu3gpFdPI3hOY3FlpoVSJooIiuS2
-         rgN04v4rRUDOgRrktidIM0Dxy9Jbe0qXePkvXL2Oz3dTVTT5ya2XFOsaxZZ0D1N9rFaz
-         b+5CKnM4F5wcg2ovEo5pLcgNAuvq2RydWfGPN26aWoYYA72NoHbBVWJRY+9ZOVOho4uj
-         td34p19/XoQpGn8MFPanfE+Ke1/KARSmsW3CUfSFAbRg8xFvHbRjIND5iX4+KvJ0k6qV
-         9o9A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=kYmZ7W7spXJCoSjpaQQC+a9kzIPwWZNW6wR0y26VyYE=;
-        b=GPoU7AAN+dV8sHsbSAosT0mZq1D+UQ2gFtKj39mdFkfufZoN3ugo5aIWKkuiJ4tGgH
-         mSqR8VQpZ5JkgRBXPgc3XGQN3QaeSbzxb8RuuBke9I4py9U8oSPsXgIzPpJQanIfuDXZ
-         0ZeUhvdTjmUyR5cwEGN58YB1FTZvuERcBOA9dqE2GWvxwHPDvUtBjxArzM2rnMDoslfA
-         nrXi5KBazPZsWSM8ad9wQl/FrDIxpN+L+3xn1NpQPuJSg69jLw2ucN/YLPxfHqmHVYju
-         yRPYdPPR2sRf/nF8I9I6D7hIZL+9UdIhR6XyMBnHTGoJuk3GOH85Xx1puDLhY007QSF6
-         JIDQ==
-X-Gm-Message-State: ANhLgQ228m/Z+nV/IOrxDTA+kApmCuziSDoyeImMjrUxfFFRVTxYPPkl
-        SHmzSkvnUwPm+tzGklPzcF2JHw==
-X-Google-Smtp-Source: ADFU+vuRzdEN8e+GgVOpVQoXZAfKd/+Jvd09vBvkB4h9XjIMrTsmDS1awfgMR59e60AKC7QqAgFC2w==
-X-Received: by 2002:adf:f104:: with SMTP id r4mr9875048wro.375.1585241263872;
-        Thu, 26 Mar 2020 09:47:43 -0700 (PDT)
-Received: from ntb.petris.klfree.czf (p5B36386E.dip0.t-ipconnect.de. [91.54.56.110])
-        by smtp.gmail.com with ESMTPSA id e5sm4130732wru.92.2020.03.26.09.47.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 26 Mar 2020 09:47:43 -0700 (PDT)
-Date:   Thu, 26 Mar 2020 17:47:32 +0100
-From:   Petr Malat <oss@malat.biz>
-To:     Nick Terrell <nickrterrell@gmail.com>
-Cc:     Nick Terrell <terrelln@fb.com>, linux-kernel@vger.kernel.org,
-        Chris Mason <clm@fb.com>, linux-kbuild@vger.kernel.org,
-        x86@kernel.org, gregkh@linuxfoundation.org,
-        Kees Cook <keescook@chromium.org>,
-        Kernel Team <Kernel-team@fb.com>,
-        Adam Borowski <kilobyte@angband.pl>,
-        Patrick Williams <patrickw3@fb.com>, rmikey@fb.com,
-        mingo@kernel.org, Patrick Williams <patrick@stwcx.xyz>
-Subject: Re: [PATCH v3 3/8] lib: add zstd support to decompress
-Message-ID: <20200326164732.GA17157@ntb.petris.klfree.czf>
-References: <20200325195849.407900-1-nickrterrell@gmail.com>
- <20200325195849.407900-4-nickrterrell@gmail.com>
+        Thu, 26 Mar 2020 12:47:50 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay05.hostedemail.com (Postfix) with ESMTP id 1BFC818029121;
+        Thu, 26 Mar 2020 16:47:48 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: moon13_26d3129e62d05
+X-Filterd-Recvd-Size: 4910
+Received: from XPS-9350.home (unknown [47.151.136.130])
+        (Authenticated sender: joe@perches.com)
+        by omf08.hostedemail.com (Postfix) with ESMTPA;
+        Thu, 26 Mar 2020 16:47:46 +0000 (UTC)
+Message-ID: <00d11cf766237d9c12c2a06458962c4bae84fa78.camel@perches.com>
+Subject: Re: [PATCH] parse-maintainers: Do not sort section content by
+ default
+From:   Joe Perches <joe@perches.com>
+To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        Lukas Bulwahn <lukas.bulwahn@gmail.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, kernel-janitors@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Date:   Thu, 26 Mar 2020 09:45:55 -0700
+In-Reply-To: <4d5291fa3fb4962b1fa55e8fd9ef421ef0c1b1e5.camel@perches.com>
+References: <20200304072950.10532-1-lukas.bulwahn@gmail.com>
+         <20200304131035.731a3947@lwn.net>
+         <alpine.DEB.2.21.2003042145340.2698@felia>
+         <e43f0cf0117fbfa8fe8c7e62538fd47a24b4657a.camel@perches.com>
+         <alpine.DEB.2.21.2003062214500.5521@felia>
+         <20200307110154.719572e4@onda.lan>
+         <0d5503e1d864f2588e756ae590ff8935e11bf9d6.camel@perches.com>
+         <4d5291fa3fb4962b1fa55e8fd9ef421ef0c1b1e5.camel@perches.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.34.1-2 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200325195849.407900-4-nickrterrell@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi!
-On Wed, Mar 25, 2020 at 12:58:44PM -0700, Nick Terrell wrote:
-> From: Nick Terrell <terrelln@fb.com>
-> * Add unzstd() and the zstd decompress interface.
-Here I do not understand why you limit the window size to 8MB even when
-you read a larger value from the header. I do not see a reason why there
-should be such a limitation at the first place and if there should be,
-why it differs from ZSTD_WINDOWLOG_MAX.
+On Sat, 2020-03-07 at 18:59 -0800, Joe Perches wrote:
+> Add an --order switch to control section reordering.
+> Default for --order is off.
 
-I removed that limitation to be able to test it in my environment and I
-found the performance is worst than with my patch by roughly 20% (on
-i7-3520M), which is a major drawback considering the main motivation
-to use zstd is the decompression speed. I will test on arm as well and
-share the result tomorrow.
-  Petr
+> Change the default ordering to a slightly more sensible:
+> 
+> M:  Person acting as a maintainer
+> R:  Person acting as a patch reviewer
+> L:  Mailing list where patches should be sent
+> S:  Maintenance status
+> W:  URI for general information
+> Q:  URI for patchwork tracking
+> B:  URI for bug tracking/submission
+> C:  URI for chat
+> P:  URI or file for subsystem specific coding styles
+> T:  SCM tree type and location
+> F:  File and directory pattern
+> X:  File and directory exclusion pattern
+> N:  File glob
+> K:  Keyword - patch content regex
+
+Linus? ping?
+
+> Signed-off-by: Joe Perches <joe@perches.com>
+> ---
+>  scripts/parse-maintainers.pl | 31 +++++++++++++++++++++++++++----
+>  1 file changed, 27 insertions(+), 4 deletions(-)
+> 
+> diff --git a/scripts/parse-maintainers.pl b/scripts/parse-maintainers.pl
+> index 255cef1..2ca4eb3 100644
+> --- a/scripts/parse-maintainers.pl
+> +++ b/scripts/parse-maintainers.pl
+> @@ -8,13 +8,14 @@ my $input_file = "MAINTAINERS";
+>  my $output_file = "MAINTAINERS.new";
+>  my $output_section = "SECTION.new";
+>  my $help = 0;
+> -
+> +my $order = 0;
+>  my $P = $0;
+>  
+>  if (!GetOptions(
+>  		'input=s' => \$input_file,
+>  		'output=s' => \$output_file,
+>  		'section=s' => \$output_section,
+> +		'order!' => \$order,
+>  		'h|help|usage' => \$help,
+>  	    )) {
+>      die "$P: invalid argument - use --help if necessary\n";
+> @@ -32,6 +33,22 @@ usage: $P [options] <pattern matching regexes>
+>    --input => MAINTAINERS file to read (default: MAINTAINERS)
+>    --output => sorted MAINTAINERS file to write (default: MAINTAINERS.new)
+>    --section => new sorted MAINTAINERS file to write to (default: SECTION.new)
+> +  --order => Use the preferred section content output ordering (default: 0)
+> +    Preferred ordering of section output is:
+> +      M:  Person acting as a maintainer
+> +      R:  Person acting as a patch reviewer
+> +      L:  Mailing list where patches should be sent
+> +      S:  Maintenance status
+> +      W:  URI for general information
+> +      Q:  URI for patchwork tracking
+> +      B:  URI for bug tracking/submission
+> +      C:  URI for chat
+> +      P:  URI or file for subsystem specific coding styles
+> +      T:  SCM tree type and location
+> +      F:  File and directory pattern
+> +      X:  File and directory exclusion pattern
+> +      N:  File glob
+> +      K:  Keyword - patch content regex
+>  
+>  If <pattern match regexes> exist, then the sections that match the
+>  regexes are not written to the output file but are written to the
+> @@ -56,7 +73,7 @@ sub by_category($$) {
+>  
+>  sub by_pattern($$) {
+>      my ($a, $b) = @_;
+> -    my $preferred_order = 'MRPLSWTQBCFXNK';
+> +    my $preferred_order = 'MRLSWQBCPTFXNK';
+>  
+>      my $a1 = uc(substr($a, 0, 1));
+>      my $b1 = uc(substr($b, 0, 1));
+> @@ -105,8 +122,14 @@ sub alpha_output {
+>  		print $file $separator;
+>  	    }
+>  	    print $file $key . "\n";
+> -	    foreach my $pattern (sort by_pattern split('\n', %$hashref{$key})) {
+> -		print $file ($pattern . "\n");
+> +	    if ($order) {
+> +		foreach my $pattern (sort by_pattern split('\n', %$hashref{$key})) {
+> +		    print $file ($pattern . "\n");
+> +		}
+> +	    } else {
+> +		foreach my $pattern (split('\n', %$hashref{$key})) {
+> +		    print $file ($pattern . "\n");
+> +		}
+>  	    }
+>  	}
+>      }
+> 
+
