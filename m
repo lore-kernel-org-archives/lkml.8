@@ -2,117 +2,85 @@ Return-Path: <SRS0=aGSP=5L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5AA5C43331
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 06:14:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02537C43331
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 06:15:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A68D20719
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 06:14:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585203291;
-	bh=7c5n9jt/GaQRnXeV7n2t6tHgDo5fVZBpNyCb2VjN6Q8=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=yXqrOrtWVA0rwpkeKsBPgtwhKKwbqS6tPmtiLgwjDg5/Dg3iwDWlVVADWiFyd6glj
-	 7cCZ9u9M3V18JxnBfc7gApEBeNel3UFD8yZD7j2fJjbq11mWBMb+cFhNASZPk5q7h7
-	 tHQbTkpDboZK+MrHiFTHcs4fj5zrgVP6cVlpPeDs=
+	by mail.kernel.org (Postfix) with ESMTP id D173F20772
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 06:15:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=piap.pl header.i=@piap.pl header.b="iMNGF6WY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727661AbgCZGOu (ORCPT
+        id S1727683AbgCZGPN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 02:14:50 -0400
-Received: from conssluserg-02.nifty.com ([210.131.2.81]:62855 "EHLO
-        conssluserg-02.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726213AbgCZGOu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 02:14:50 -0400
-Received: from mail-vk1-f181.google.com (mail-vk1-f181.google.com [209.85.221.181]) (authenticated)
-        by conssluserg-02.nifty.com with ESMTP id 02Q6ERNC010464;
-        Thu, 26 Mar 2020 15:14:27 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-02.nifty.com 02Q6ERNC010464
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1585203268;
-        bh=9JvGFXDbXf0WHwUuU/6/XuO+PW6RcH+NvJKjNlcv4ZM=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=De9gZQ+3D+HbdIRAHlgDjfw4T2JvNYMxXm9IlpEJy1cYv/ooP/3e8iMk2RZdOc2x4
-         mLD92alU8mMLzIEt/ceThq8ZNHs6RiiEaszrxCC0LcLDXGGVc+0Wcd5VO+es2m5EXl
-         Ci71pbZZQzNnfaOHVNB2RkH8dighd+JP4B48cHPkTaq5iPnYTFuZjtAQWfPj56/bC3
-         xN6/rnG9V2/ZBgoyJUJA7zXkWMI8alq+0W94adSNYqQLmln/ZTnMGDK8dpFBdsFqaw
-         USQF4J4/ArsRS/f29dOdyzBGHm+B5qynMmscRX6HBi3iqHLtW9q26/HvbQagwftIlX
-         neFkPfwtjpvRw==
-X-Nifty-SrcIP: [209.85.221.181]
-Received: by mail-vk1-f181.google.com with SMTP id p123so1400484vkg.1;
-        Wed, 25 Mar 2020 23:14:27 -0700 (PDT)
-X-Gm-Message-State: ANhLgQ285ry1bZZ69SW2N9QpArMN5/EL0PGSwfCVbX0GmSjJGrT8HMRB
-        B6fGqXGNyh1cZv6vnco4qvEJ+ELM8Wfl9CoF9bQ=
-X-Google-Smtp-Source: ADFU+vtR1PkThEG5fof0BkpvSUODBLIJyFZ5IQflhtz2NMxdF8WuPUa/n0iZ8kRCvUgyaSGgVqW4CH7K0FGWSteFi80=
-X-Received: by 2002:a1f:3649:: with SMTP id d70mr3829330vka.12.1585203266653;
- Wed, 25 Mar 2020 23:14:26 -0700 (PDT)
+        Thu, 26 Mar 2020 02:15:13 -0400
+Received: from ni.piap.pl ([195.187.100.5]:52966 "EHLO ni.piap.pl"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726138AbgCZGPN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Mar 2020 02:15:13 -0400
+X-Greylist: delayed 392 seconds by postgrey-1.27 at vger.kernel.org; Thu, 26 Mar 2020 02:15:12 EDT
+Received: from t19.piap.pl (OSB1819.piap.pl [10.0.9.19])
+        (using TLSv1.2 with cipher AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ni.piap.pl (Postfix) with ESMTPSA id D5531441EC3;
+        Thu, 26 Mar 2020 07:08:35 +0100 (CET)
+DKIM-Filter: OpenDKIM Filter v2.11.0 ni.piap.pl D5531441EC3
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=piap.pl; s=mail;
+        t=1585202916; bh=clbKiLn6qUATsS6QO/fUtOXJXjf33KFTkCDMmyg02uo=;
+        h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
+        b=iMNGF6WY331i4QFJdjveDasWP1Hd62KJpkcDJOlPrBkYPAQrC+vnXjbe133okFxbp
+         H2MxtXbpUrITB5OuZLtd+QNjKlR+T9eiTVHH1zHbMoZeQEpHekNtG8lfmhicQaLYv3
+         OK76HTmXZ7SePtnbguhSuGkUa0KEdFdUIxEno7E8=
+From:   khalasa@piap.pl (Krzysztof =?utf-8?Q?Ha=C5=82asa?=)
+To:     Martin Schiller <ms@dev.tdt.de>
+Cc:     Jakub Kicinski <kubakici@wp.pl>, khc@pm.waw.pl,
+        davem@davemloft.net, linux-x25@vger.kernel.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] wan/hdlc_x25: make lapb params configurable
+References: <20200113124551.2570-1-ms@dev.tdt.de>
+        <20200113055316.4e811276@cakuba>
+        <83f60f76a0cf602c73361ccdb34cc640@dev.tdt.de>
+        <20200114045149.4e97f0ac@cakuba>
+        <3b439730f93e29c9e823126b74c2fbd3@dev.tdt.de>
+Date:   Thu, 26 Mar 2020 07:08:34 +0100
+In-Reply-To: <3b439730f93e29c9e823126b74c2fbd3@dev.tdt.de> (Martin Schiller's
+        message of "Tue, 14 Jan 2020 14:33:51 +0100")
+Message-ID: <m3v9mr8x7h.fsf@t19.piap.pl>
 MIME-Version: 1.0
-References: <20200324161539.7538-1-masahiroy@kernel.org> <20200324161539.7538-3-masahiroy@kernel.org>
- <CAKwvOdkjiyyt8Ju2j2O4cm1sB34rb_FTgjCRzEiXM6KL4muO_w@mail.gmail.com> <CAKwvOdmWqAUhL5DRg9oQPXzFtogK-0Q-VZ=FWf=Cjm-RJgR4sw@mail.gmail.com>
-In-Reply-To: <CAKwvOdmWqAUhL5DRg9oQPXzFtogK-0Q-VZ=FWf=Cjm-RJgR4sw@mail.gmail.com>
-From:   Masahiro Yamada <masahiroy@kernel.org>
-Date:   Thu, 26 Mar 2020 15:13:50 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAS+3gq-uL6HF=o2NbZ2udkr+dqAhsvs-XxFs0M9wShJbw@mail.gmail.com>
-Message-ID: <CAK7LNAS+3gq-uL6HF=o2NbZ2udkr+dqAhsvs-XxFs0M9wShJbw@mail.gmail.com>
-Subject: Re: [PATCH 3/3] kbuild: remove AS variable
-To:     Nick Desaulniers <ndesaulniers@google.com>
-Cc:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        Network Development <netdev@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        clang-built-linux <clang-built-linux@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+X-KLMS-Rule-ID: 4
+X-KLMS-Message-Action: skipped
+X-KLMS-AntiSpam-Status: not scanned, whitelist
+X-KLMS-AntiPhishing: not scanned, whitelist
+X-KLMS-AntiVirus: Kaspersky Security 8.0 for Linux Mail Server, version 8.0.1.721, not scanned, whitelist
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Nick,
+Hi,
 
+I overlooked this mail, sorry.
 
-On Wed, Mar 25, 2020 at 4:59 AM Nick Desaulniers
-<ndesaulniers@google.com> wrote:
+Martin Schiller <ms@dev.tdt.de> writes:
+
+> sethdlc validates the GENERIC_HDLC_VERSION at compile time.
 >
-> On Tue, Mar 24, 2020 at 12:38 PM Nick Desaulniers
-> <ndesaulniers@google.com> wrote:
-> > consistent in this regard (and not using the compiler as the driver),
+> https://mirrors.edge.kernel.org/pub/linux/utils/net/hdlc/
 >
-> Ah, the preprocessor; we need to preprocess the .S files, .s files are
-> fine (though we have .lds.S files that are not `-x
-> assembler-with-cpp`)
+> Another question:
+> Where do I have to send my patch for sethdlc to?
 
+I guess you have to put your own version somewhere. I don't have access
+to hdlc directory at kernel.org anymore, this stuff (sync serial with
+HDLC) is no longer in use around here.
+--=20
+Krzysztof Halasa
 
-Right, there is no '*.s' source file in the kernel tree.
-
-If we want to de-couple $(AS), we must the compilation
-before the assemble stage   ( $(CC) -S ), but
-doing so does not buy us.
-
-So, $(CC) always works as the front-end
-for compiling both .c and .S files.
-
-
-You can see the internal database by
-'make --print-data-base'.
-
-I see the following for  *.S -> *.o rule.
-
-# default
-COMPILE.S = $(CC) $(ASFLAGS) $(CPPFLAGS) $(TARGET_MACH) -c
-
-
-So, using $(CC) is the right thing.
-
-
-Even if we keep AS, we cannot do like AS=llvm-as
-since llvm-as is a different kind of tool
-that processes LLVM assembly (.ll) .
-
-
--- 
-Best Regards
-Masahiro Yamada
+=C5=81UKASIEWICZ Research Network
+Industrial Research Institute for Automation and Measurements PIAP
+Al. Jerozolimskie 202, 02-486 Warsaw, Poland
