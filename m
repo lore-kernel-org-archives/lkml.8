@@ -2,165 +2,150 @@ Return-Path: <SRS0=aGSP=5L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFE67C43331
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 09:17:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C339C2D0E9
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 09:20:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B462420719
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 09:17:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="ckeM8v59"
+	by mail.kernel.org (Postfix) with ESMTP id 022052078E
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 09:20:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585214428;
+	bh=wL1jZg8S4ctlkUEx2PHFLxJesRX2RGiZ2xoKk6QxdfY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=rv8OimBm6IW63oKOcDNu6p1H3c3BA80ocRifIGdMsc971W/HJeh8drytQsny0ewze
+	 fPIWjsF4snLc8AoJSnPYWIOA8wqXCtrZrAEFsis3+kQfSa/7mrB5vN5U4epntHUPzQ
+	 ydrqwB4UWi57evS4TpnAsFJnH48qFMc4BeRwG2SA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727722AbgCZJRj (ORCPT
+        id S1727718AbgCZJU1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 05:17:39 -0400
-Received: from mailout2.samsung.com ([203.254.224.25]:19949 "EHLO
-        mailout2.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726590AbgCZJRj (ORCPT
+        Thu, 26 Mar 2020 05:20:27 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:50987 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726298AbgCZJU0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 05:17:39 -0400
-Received: from epcas2p3.samsung.com (unknown [182.195.41.55])
-        by mailout2.samsung.com (KnoxPortal) with ESMTP id 20200326091736epoutp02b76c7f49ced30b59b730171fee6ec3a2~-z-e6q2ND1730017300epoutp02T
-        for <linux-kernel@vger.kernel.org>; Thu, 26 Mar 2020 09:17:36 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20200326091736epoutp02b76c7f49ced30b59b730171fee6ec3a2~-z-e6q2ND1730017300epoutp02T
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1585214256;
-        bh=onuYfqDYIOCuYPJgDNR7ttwIKwGYq/9ECZgsogSZ2n0=;
-        h=From:To:Cc:Subject:Date:References:From;
-        b=ckeM8v59cRn1tB2Kznx1rRKhO7g2SmZwqNfQi+iJ1KSgZc34l102E9YBNGNo5uL0x
-         wvIZmQuiiGs85oMgX6ajZ16M1fTNeJwUHbXCTfCGa+ZRyz6fyJS2xOr+xv/nlGYDPg
-         HXvFWUUYCj2YgoHFCd0O/usRQQsfjOYr30RCLryg=
-Received: from epsnrtp4.localdomain (unknown [182.195.42.165]) by
-        epcas2p4.samsung.com (KnoxPortal) with ESMTP id
-        20200326091736epcas2p4512b097c588a20a997677fd7654d5681~-z-ej2Rv22126021260epcas2p4I;
-        Thu, 26 Mar 2020 09:17:36 +0000 (GMT)
-Received: from epsmges2p2.samsung.com (unknown [182.195.40.186]) by
-        epsnrtp4.localdomain (Postfix) with ESMTP id 48nzsV2RNZzMqYkf; Thu, 26 Mar
-        2020 09:17:34 +0000 (GMT)
-Received: from epcas2p2.samsung.com ( [182.195.41.54]) by
-        epsmges2p2.samsung.com (Symantec Messaging Gateway) with SMTP id
-        B5.17.04142.C237C7E5; Thu, 26 Mar 2020 18:17:32 +0900 (KST)
-Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-        epcas2p2.samsung.com (KnoxPortal) with ESMTPA id
-        20200326091732epcas2p2be24b70dca0039b10b828e8b9102f6bf~-z-a2xUAt1413814138epcas2p2P;
-        Thu, 26 Mar 2020 09:17:32 +0000 (GMT)
-Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
-        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20200326091732epsmtrp2d6626bb580590dbc1055f468101fa012~-z-a1sK_71240612406epsmtrp2c;
-        Thu, 26 Mar 2020 09:17:32 +0000 (GMT)
-X-AuditID: b6c32a46-3e1ff7000000102e-29-5e7c732ce5db
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-        epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        BF.F7.04158.C237C7E5; Thu, 26 Mar 2020 18:17:32 +0900 (KST)
-Received: from KEI.dsn.sec.samsung.com (unknown [12.36.155.227]) by
-        epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20200326091732epsmtip2773add7b7a4f68e550b3e8f207f07426~-z-ar8gQM2849628496epsmtip2e;
-        Thu, 26 Mar 2020 09:17:32 +0000 (GMT)
-From:   Seungchul Kim <sc377.kim@samsung.com>
-To:     Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc:     linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Seungchul Kim <sc377.kim@samsung.com>
-Subject: [PATCH] media: v4l2-fh: define v4l2_fh struct regardless of
- condition
-Date:   Thu, 26 Mar 2020 18:09:46 +0900
-Message-Id: <1585213786-39068-1-git-send-email-sc377.kim@samsung.com>
-X-Mailer: git-send-email 2.7.4
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrMKsWRmVeSWpSXmKPExsWy7bCmma5OcU2cwdxZBhaXd81hs+jZsJXV
-        YtmmP0wW0+5MYHRg8di0qpPNo2/LKkaPz5vkApijcmwyUhNTUosUUvOS81My89JtlbyD453j
-        Tc0MDHUNLS3MlRTyEnNTbZVcfAJ03TJzgLYpKZQl5pQChQISi4uV9O1sivJLS1IVMvKLS2yV
-        UgtScgoMDQv0ihNzi0vz0vWS83OtDA0MjEyBKhNyMq51rWcraOKvWDhjA0sD42GeLkZODgkB
-        E4mvjb/Yuxi5OIQEdjBK3L/xiRUkISTwiVHi2hxXiMQ3RokNN68xwXS8fHkdqmMvo8TsdeeY
-        IDq+MkqcW58NYrMJaEtcXT2PGcQWEdCTeL75IguIzSyQJjH3RgtYvbBAgMSZrvtsIDaLgKrE
-        xqO3GUFsXgFXiUWrXrJDLJOTuHmukxlkmYTAQ1aJA48/QCVcJA7/3cwMYQtLvDq+BSouJfH5
-        3V42CLtc4sOjrUwQzR2MEk1f70AljCVmPWsH2sYBdJGmxPpd+iCmhICyxJFbUHfySXQc/ssO
-        EeaV6GgTgmhUllj9tx9qq6TE/r8noGHiIXHs5WZoMMRKTG+bzjaBUXYWwvwFjIyrGMVSC4pz
-        01OLjQqMkONoEyM4AWm57WBccs7nEKMAB6MSD+8Gy+o4IdbEsuLK3EOMEhzMSiK8TyNr4oR4
-        UxIrq1KL8uOLSnNSiw8xmgIDbyKzlGhyPjA55pXEG5oamZkZWJpamJoZWSiJ827ivhkjJJCe
-        WJKanZpakFoE08fEwSnVwLj2me2mY/GreN7MOlFz5MLnpvjOCVuCDi9Z29rCmHF5wnHf41Gx
-        p1InKJ4s+Mbg6SL7awGL8Cm1yQ05iWV5M33TnQRkG9RZ7epV3Hbu2Vn1kd+7xE9upW4US+T9
-        NzFc/84ZrX1bHB/JZuj2eUKaIsPZjZ+iay+q1Wbv4E53MdzVlvRr0eqHi5RYijMSDbWYi4oT
-        ATtKgDxWAwAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrEJMWRmVeSWpSXmKPExsWy7bCSvK5OcU2cwf0nghaXd81hs+jZsJXV
-        YtmmP0wW0+5MYHRg8di0qpPNo2/LKkaPz5vkApijuGxSUnMyy1KL9O0SuDKuda1nK2jir1g4
-        YwNLA+Nhni5GTg4JAROJly+vs3cxcnEICexmlPjR8RnI4QBKSEq0HC6AqBGWuN9yhBWi5jOj
-        xPVZs9lAEmwC2hJXV89jBrFFBPQknm++yAJiMwtkSJzceowdxBYW8JOYfqYDrJ5FQFVi49Hb
-        jCA2r4CrxKJVL9khFshJ3DzXyTyBkWcBI8MqRsnUguLc9NxiwwKjvNRyveLE3OLSvHS95Pzc
-        TYzgkNDS2sF44kT8IUYBDkYlHt4I8+o4IdbEsuLK3EOMEhzMSiK8TyNr4oR4UxIrq1KL8uOL
-        SnNSiw8xSnOwKInzyucfixQSSE8sSc1OTS1ILYLJMnFwSjUwln15yOjsvCXo6SVJ5TOryx58
-        s5YUFzc5mrQq/sayJCMGRt9Z4Xa3JDSywtYcvfvLxLBDpvKafoHns51iBmubq9ylF904uH3z
-        pRlJORu3lvyVOf/lwtSHpQt9/301XJ1o+TXfTH+GXkDUiRUXrpnnHVW9td7tVJJeD2/9VT2d
-        2ndmG5XPnr4rp8RSnJFoqMVcVJwIAFvxPeAFAgAA
-X-CMS-MailID: 20200326091732epcas2p2be24b70dca0039b10b828e8b9102f6bf
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: AUTO_CONFIDENTIAL
-CMS-TYPE: 102P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20200326091732epcas2p2be24b70dca0039b10b828e8b9102f6bf
-References: <CGME20200326091732epcas2p2be24b70dca0039b10b828e8b9102f6bf@epcas2p2.samsung.com>
+        Thu, 26 Mar 2020 05:20:26 -0400
+Received: by mail-wm1-f67.google.com with SMTP id d198so5664251wmd.0;
+        Thu, 26 Mar 2020 02:20:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=QMCowoi/JCe2v265QDbm4p0VWyPtNcTvLQEymboWLVk=;
+        b=RX5mdPiGXyfiPKfLphcwrDBi/peU3SRPc7ZGMrTb/Lqfw5UgtRSTdH91h+70066QSC
+         pP/ZHueo0A+c2VE90+X8dHKj3RlwOXug4g/YAbDWlmKY39FtPZUup4CBm3d3ZB4WSKjR
+         0Huosrm//+PuSEoUBMz87vDYm1X12Mc+oGDi7+6T1B67NT8uWqaZaiJ3FcOHvTmVvv6S
+         eZ2W1Tvhym1i2jFVx2NsZrf7q1CPuiwf72Cu0d8tW+Puw87y8oVvdM83FKXgxpa9mT7b
+         af7m9ubE+9gkC/qaffhOvx4OugsY5bB0Kao9ZPWQ8vc6qWAwB58n97v5dvbVrwPS6VaA
+         bR1A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=QMCowoi/JCe2v265QDbm4p0VWyPtNcTvLQEymboWLVk=;
+        b=Mjqdzk9LlAj1wGKzOqFY2GMcEuCixWD4ZsMofPQRf1DzzErhIlDmeANYE47K5CWtmy
+         py7ncbwl5foNWDLzzUcoq/gXUSoEjlOjzzHUK+UVN7w+Q7MjvWnwcyf4/UVOkjwNEZgD
+         5I7PnpMitZhcxD4g/qlAQskDZ9WYGN4SPU/5jvttwmmLMFTACh0lfDcihdS4fFRMtcUD
+         Y+uxTA6ygk5jVTrta8yOYJj6OnkOWkDFcaSbC1ugRyHrE8N1mZ6M7e3ayDt3US1nC5YF
+         La/thjW9jqPcvuYkPvfvGrCQ6kBRS+Nvlv51AtxmWjL40D9jPOJiaxFuwzx4vDJhG7GG
+         Agmw==
+X-Gm-Message-State: ANhLgQ3JNh8buySiUi/LjCAno+VR4rQnNWQCNtxSOzPqZM/yZFTjz3z7
+        o3R+XSyyJkjx/C2VkwVzKMo=
+X-Google-Smtp-Source: ADFU+vuo5kkY6YJNmSthEGmulf1OSYWdFlZ4mkUhgBR28ala97SVa+B34f0Sizj5koNYygjLIKM3Ew==
+X-Received: by 2002:a1c:a950:: with SMTP id s77mr2082562wme.176.1585214422984;
+        Thu, 26 Mar 2020 02:20:22 -0700 (PDT)
+Received: from gmail.com (54033286.catv.pool.telekom.hu. [84.3.50.134])
+        by smtp.gmail.com with ESMTPSA id v26sm2742597wra.7.2020.03.26.02.20.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 26 Mar 2020 02:20:22 -0700 (PDT)
+Date:   Thu, 26 Mar 2020 10:20:19 +0100
+From:   Ingo Molnar <mingo@kernel.org>
+To:     Masahiro Yamada <masahiroy@kernel.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Kees Cook <keescook@chromium.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "H . Peter Anvin" <hpa@zytor.com>, X86 ML <x86@kernel.org>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@linux.ie>,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Jim Kukunas <james.t.kukunas@linux.intel.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        NeilBrown <neilb@suse.de>, Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        Yuanhan Liu <yuanhan.liu@linux.intel.com>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        intel-gfx@lists.freedesktop.org,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>
+Subject: Re: [PATCH 00/16] x86, crypto: remove always-defined CONFIG_AS_* and
+ cosolidate Kconfig/Makefiles
+Message-ID: <20200326092019.GA100058@gmail.com>
+References: <20200324084821.29944-1-masahiroy@kernel.org>
+ <20200325045940.GA24974@gmail.com>
+ <CAK7LNAQvgT=OWVuBVrvgdZ7AAkoaV_K_Y+w9bOFxRPw_1TOSUA@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAK7LNAQvgT=OWVuBVrvgdZ7AAkoaV_K_Y+w9bOFxRPw_1TOSUA@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-v4l2_fh struct define differently by CONFIG_V4L2_MEM2MEM_DEV.
-If some vendors use CONFIG_V4L2_MEM2MEM_DEV by module,
-it can make the mismatch of v4l2_fh sturct.
 
-By the mismatch, the following error occurs.
-===============================
-[    7.533506] v4l2_mem2mem: disagrees about version of symbol video_devdata
-[    7.533594] v4l2_mem2mem: Unknown symbol video_devdata (err -22)
-[    7.535319] v4l2_mem2mem: disagrees about version of symbol v4l2_event_pending
-[    7.542532] v4l2_mem2mem: Unknown symbol v4l2_event_pending (err -22)
-===============================
+* Masahiro Yamada <masahiroy@kernel.org> wrote:
 
-So v4l2_fh struct is modified to does not have dependency
-for CONFIG_V4L2_MEM2MEM_DEV.
+> > LGTM. I've got these four from Jason A. Donenfeld queued up in
+> > tip:WIP.x86/asm:
+> >
+> >  bd5b1283e41c: ("crypto: Curve25519 - do not pollute dispatcher based on assembler")
+> >  829f32d78588: ("crypto: X86 - rework configuration, based on Kconfig")
+> >  95ef9f80ed63: ("x86/build: Probe assembler from Kconfig instead of Kbuild")
+> >  1651e700664b: ("x86: Fix bitops.h warning with a moved cast")
+> >
+> > I suppose these might interact (maybe even conflict), and are topically
+> > related.
+> >
+> > Would you like to pull these into the kbuild tree? You can find them in:
+> >
+> >    git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git WIP.x86/asm
+> >
+> > Thanks,
+> >
+> >         Ingo
+> 
+> 
+> I did not know that these had already landed in tip tree.
+> 
+> They are immature version.
+> (In fact CONFIG_AS_CFI and AS_ADX are false-negative
+> if GCC that defaults to 32-bit is used.)
+> 
+> Can you simply discard the WIP.x86/asm branch,
+> and only reapply
+> 1651e700664b: ("x86: Fix bitops.h warning with a moved cast")
+> 
+> ?
 
-Signed-off-by: Seungchul Kim <sc377.kim@samsung.com>
----
- drivers/media/v4l2-core/v4l2-ioctl.c | 2 --
- include/media/v4l2-fh.h              | 2 --
- 2 files changed, 4 deletions(-)
+Sure, done!
 
-diff --git a/drivers/media/v4l2-core/v4l2-ioctl.c b/drivers/media/v4l2-core/v4l2-ioctl.c
-index fbcc7a2..befafcd 100644
---- a/drivers/media/v4l2-core/v4l2-ioctl.c
-+++ b/drivers/media/v4l2-core/v4l2-ioctl.c
-@@ -2800,13 +2800,11 @@ static struct mutex *v4l2_ioctl_get_lock(struct video_device *vdev,
- {
- 	if (_IOC_NR(cmd) >= V4L2_IOCTLS)
- 		return vdev->lock;
--#if IS_ENABLED(CONFIG_V4L2_MEM2MEM_DEV)
- 	if (vfh && vfh->m2m_ctx &&
- 	    (v4l2_ioctls[_IOC_NR(cmd)].flags & INFO_FL_QUEUE)) {
- 		if (vfh->m2m_ctx->q_lock)
- 			return vfh->m2m_ctx->q_lock;
- 	}
--#endif
- 	if (vdev->queue && vdev->queue->lock &&
- 			(v4l2_ioctls[_IOC_NR(cmd)].flags & INFO_FL_QUEUE))
- 		return vdev->queue->lock;
-diff --git a/include/media/v4l2-fh.h b/include/media/v4l2-fh.h
-index 53b4dbb..b5b3e00 100644
---- a/include/media/v4l2-fh.h
-+++ b/include/media/v4l2-fh.h
-@@ -53,9 +53,7 @@ struct v4l2_fh {
- 	unsigned int		navailable;
- 	u32			sequence;
- 
--#if IS_ENABLED(CONFIG_V4L2_MEM2MEM_DEV)
- 	struct v4l2_m2m_ctx	*m2m_ctx;
--#endif
- };
- 
- /**
--- 
-2.7.4
+In case you need any x86 maintainer acks for your series:
 
+  Acked-by: Ingo Molnar <mingo@kernel.org>
+
+Thanks,
+
+	Ingo
