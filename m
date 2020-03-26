@@ -2,259 +2,162 @@ Return-Path: <SRS0=aGSP=5L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57E72C43331
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 17:38:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AA2AC43331
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 17:38:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 313FF20719
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 17:38:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EBF5320719
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 17:38:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="VWWraiMZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728002AbgCZRiA convert rfc822-to-8bit (ORCPT
+        id S1728438AbgCZRiN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 13:38:00 -0400
-Received: from zimbra2.kalray.eu ([92.103.151.219]:51498 "EHLO
-        zimbra2.kalray.eu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726163AbgCZRh7 (ORCPT
+        Thu, 26 Mar 2020 13:38:13 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:12070 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726163AbgCZRiN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 13:37:59 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by zimbra2.kalray.eu (Postfix) with ESMTP id 71C3927E043E;
-        Thu, 26 Mar 2020 18:37:58 +0100 (CET)
-Received: from zimbra2.kalray.eu ([127.0.0.1])
-        by localhost (zimbra2.kalray.eu [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id spkmu2Ax8Y4I; Thu, 26 Mar 2020 18:37:58 +0100 (CET)
-Received: from localhost (localhost [127.0.0.1])
-        by zimbra2.kalray.eu (Postfix) with ESMTP id 0053C27E0A11;
-        Thu, 26 Mar 2020 18:37:57 +0100 (CET)
-X-Virus-Scanned: amavisd-new at zimbra2.kalray.eu
-Received: from zimbra2.kalray.eu ([127.0.0.1])
-        by localhost (zimbra2.kalray.eu [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id CerupkUqSsv7; Thu, 26 Mar 2020 18:37:57 +0100 (CET)
-Received: from zimbra2.kalray.eu (localhost [127.0.0.1])
-        by zimbra2.kalray.eu (Postfix) with ESMTP id DA0F827E043E;
-        Thu, 26 Mar 2020 18:37:57 +0100 (CET)
-Date:   Thu, 26 Mar 2020 18:37:57 +0100 (CET)
-From:   =?utf-8?Q?Cl=C3=A9ment?= Leger <cleger@kalrayinc.com>
-To:     Rishabh Bhatnagar <rishabhb@codeaurora.org>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-remoteproc <linux-remoteproc@vger.kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Ohad Ben-Cohen <ohad@wizery.com>, psodagud@codeaurora.org,
-        tsoni@codeaurora.org, sidgup@codeaurora.org
-Message-ID: <1233159221.12306373.1585244277714.JavaMail.zimbra@kalray.eu>
-In-Reply-To: <1585241440-7572-2-git-send-email-rishabhb@codeaurora.org>
-References: <1585241440-7572-1-git-send-email-rishabhb@codeaurora.org> <1585241440-7572-2-git-send-email-rishabhb@codeaurora.org>
-Subject: Re: [PATCH 1/2] remoteproc: Add userspace char device driver
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
-X-Originating-IP: [192.168.40.202]
-X-Mailer: Zimbra 8.8.15_GA_3895 (ZimbraWebClient - GC80 (Linux)/8.8.15_GA_3895)
-Thread-Topic: remoteproc: Add userspace char device driver
-Thread-Index: sALBqN+bhswvmd/pt74gPjg/0ba/6g==
+        Thu, 26 Mar 2020 13:38:13 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1585244292; h=Message-Id: Date: Subject: Cc: To: From:
+ Sender; bh=olwq/tt1NVcJbMaU8qh8Fy028waGW9o2ny/LjvxmEng=; b=VWWraiMZ/O2+/sWVz6a6UMjO7putqVWkmRGteHx6cg4DJWziYkcWspRLqHBquws60AfPtzzC
+ 0g3fSnCmcne4W6w87QdKgTwfiOfvHS51aK31P9CjvgBEZMwJ4vgI28HIvkNo0XE3NVjtegQ+
+ BS0OJytLPamrmXmsxWdVDdScAQU=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e7ce883.7f3ae0140f10-smtp-out-n03;
+ Thu, 26 Mar 2020 17:38:11 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id C51D3C43636; Thu, 26 Mar 2020 17:38:11 +0000 (UTC)
+Received: from mkshah-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: mkshah)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 36E29C433D2;
+        Thu, 26 Mar 2020 17:38:06 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 36E29C433D2
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=mkshah@codeaurora.org
+From:   Maulik Shah <mkshah@codeaurora.org>
+To:     swboyd@chromium.org, evgreen@chromium.org, dianders@chromium.org,
+        bjorn.andersson@linaro.org
+Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        agross@kernel.org, mka@chromium.org, rnayak@codeaurora.org,
+        ilina@codeaurora.org, lsrao@codeaurora.org,
+        Maulik Shah <mkshah@codeaurora.org>
+Subject: [PATCH v14 0/6] Invoke rpmh_flush for non OSI targets
+Date:   Thu, 26 Mar 2020 23:07:44 +0530
+Message-Id: <1585244270-637-1-git-send-email-mkshah@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Rishabh,
+Changes in v14:
+- Address Doug's comments on change 3 from v13
+- Drop new APIs for start and end transaction from change 4 in v13
+- Update change 4 to use cpu pm notifications instead
+- Add [5] as change 5 to enable use of WAKE TCS when ACTIVE TCS count is 0
+- Add change 6 to Allow multiple WAKE TCS to be used as ACTIVE TCSes
+- First 4 changes can be merged even without change 5 and 6.
 
-While being interesting to have a such a userspace interface, I have
-some remarks.
+Changes in v13:
+- Address Stephen's comment to maintain COMPILE_TEST
+- Address Doug's comments and add new APIs for start and end transaction
 
------ On 26 Mar, 2020, at 17:50, Rishabh Bhatnagar rishabhb@codeaurora.org wrote:
+Changes in v12:
+- Kconfig change to remove COMPILE_TEST was dropped in v11, reinclude it.
 
-> Add the driver for creating the character device interface for
-> userspace applications. The character device interface can be used
-> in order to boot up and shutdown the remote processor.
-> This might be helpful for remote processors that are booted by
-> userspace applications and need to shutdown when the application
-> crahes/shutsdown.
-> 
-> Change-Id: If23c8986272bb7c943eb76665f127ff706f12394
-> Signed-off-by: Rishabh Bhatnagar <rishabhb@codeaurora.org>
-> ---
-> drivers/remoteproc/Makefile               |  1 +
-> drivers/remoteproc/remoteproc_internal.h  |  6 +++
-> drivers/remoteproc/remoteproc_userspace.c | 90 +++++++++++++++++++++++++++++++
-> include/linux/remoteproc.h                |  2 +
-> 4 files changed, 99 insertions(+)
-> create mode 100644 drivers/remoteproc/remoteproc_userspace.c
-> 
-> diff --git a/drivers/remoteproc/Makefile b/drivers/remoteproc/Makefile
-> index e30a1b1..facb3fa 100644
-> --- a/drivers/remoteproc/Makefile
-> +++ b/drivers/remoteproc/Makefile
-> @@ -7,6 +7,7 @@ obj-$(CONFIG_REMOTEPROC)		+= remoteproc.o
-> remoteproc-y				:= remoteproc_core.o
-> remoteproc-y				+= remoteproc_debugfs.o
-> remoteproc-y				+= remoteproc_sysfs.o
-> +remoteproc-y				+= remoteproc_userspace.o
-> remoteproc-y				+= remoteproc_virtio.o
-> remoteproc-y				+= remoteproc_elf_loader.o
-> obj-$(CONFIG_IMX_REMOTEPROC)		+= imx_rproc.o
-> diff --git a/drivers/remoteproc/remoteproc_internal.h
-> b/drivers/remoteproc/remoteproc_internal.h
-> index 493ef92..97513ba 100644
-> --- a/drivers/remoteproc/remoteproc_internal.h
-> +++ b/drivers/remoteproc/remoteproc_internal.h
-> @@ -47,6 +47,9 @@ struct dentry *rproc_create_trace_file(const char *name,
-> struct rproc *rproc,
-> int rproc_init_sysfs(void);
-> void rproc_exit_sysfs(void);
-> 
-> +void rproc_init_cdev(void);
-> +void rproc_exit_cdev(void);
-> +
-> void rproc_free_vring(struct rproc_vring *rvring);
-> int rproc_alloc_vring(struct rproc_vdev *rvdev, int i);
-> 
-> @@ -63,6 +66,9 @@ struct resource_table *rproc_elf_find_loaded_rsc_table(struct
-> rproc *rproc,
-> struct rproc_mem_entry *
-> rproc_find_carveout_by_name(struct rproc *rproc, const char *name, ...);
-> 
-> +/* from remoteproc_userspace.c */
-> +int rproc_char_device_add(struct rproc *rproc);
-> +
-> static inline
-> int rproc_fw_sanity_check(struct rproc *rproc, const struct firmware *fw)
-> {
-> diff --git a/drivers/remoteproc/remoteproc_userspace.c
-> b/drivers/remoteproc/remoteproc_userspace.c
-> new file mode 100644
-> index 0000000..2ef7679
-> --- /dev/null
-> +++ b/drivers/remoteproc/remoteproc_userspace.c
-> @@ -0,0 +1,90 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +/*
-> + * Character device interface driver for Remoteproc framework.
-> + *
-> + * Copyright (c) 2020, The Linux Foundation. All rights reserved.
-> + */
-> +
-> +#include <linux/module.h>
-> +#include <linux/fs.h>
-> +#include <linux/cdev.h>
-> +#include <linux/mutex.h>
-> +#include <linux/remoteproc.h>
-> +
-> +#include "remoteproc_internal.h"
-> +
-> +#define NUM_RPROC_DEVICES	64
-> +static dev_t rproc_cdev;
-> +static DEFINE_IDA(cdev_minor_ida);
-> +
-> +static int rproc_open(struct inode *inode, struct file *file)
-> +{
-> +	struct rproc *rproc;
-> +
-> +	rproc = container_of(inode->i_cdev, struct rproc, char_dev);
-> +	if (!rproc)
-> +		return -EINVAL;
-> +
-> +	return rproc_boot(rproc);
-> +}
+Changes in v11:
+- Address Doug's comments on change 2 and 3
+- Include change to invalidate TCSes before flush from [4]
 
-What happens if multiple user open this chardev ? Apparently,
-rproc_boot returns 0 if already powered_up, so the next user won't know
-what is the state of the rproc.
-Exclusive access could probably be a good idea.
+Changes in v10:
+- Address Evan's comments to update commit message on change 2
+- Add Evan's Reviewed by on change 2
+- Remove comment from rpmh_flush() related to last CPU invoking it
+- Rebase all changes on top of next-20200302
 
-> +
-> +static int rproc_release(struct inode *inode, struct file *file)
-> +{
-> +	struct rproc *rproc;
-> +
-> +	rproc = container_of(inode->i_cdev, struct rproc, char_dev);
-> +	if (!rproc)
-> +		return -EINVAL;
-> +
-> +	rproc_shutdown(rproc);
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct file_operations rproc_fops = {
-> +	.open = rproc_open,
-> +	.release = rproc_release,
-> +};
-> +
-> +int rproc_char_device_add(struct rproc *rproc)
-> +{
-> +	int ret, minor;
-> +	dev_t cdevt;
-> +
-> +	minor = ida_simple_get(&cdev_minor_ida, 0, NUM_RPROC_DEVICES,
-> +			GFP_KERNEL);
-> +	if (minor < 0) {
-> +	pr_err("%s: No more minor numbers left! rc:%d\n", __func__,
-> +							minor);
-> +		return -ENODEV;
-> +	}
+Changes in v9:
+- Keep rpmh_flush() to invoke from within cache_lock
+- Remove comments related to only last cpu invoking rpmh_flush()
 
-How can you make the link between the chardev and the device instance ?
-In our case, we have several remoteproc instances and thus we will end
-up having multiple chardev.
+Changes in v8:
+- Address Stephen's comments on changes 2 and 3
+- Add Reviewed by from Stephen on change 1
 
-Regards,
+Changes in v7:
+- Address Srinivas's comments to update commit text
+- Add Reviewed by from Srinivas
 
-Clément
+Changes in v6:
+- Drop 1 & 2 changes from v5 as they already landed in maintainer tree
+- Drop 3 & 4 changes from v5 as no user at present for power domain in rsc
+- Rename subject to appropriate since power domain changes are dropped
+- Rebase other changes on top of next-20200221
 
-> +
-> +	cdev_init(&rproc->char_dev, &rproc_fops);
-> +	rproc->char_dev.owner = THIS_MODULE;
-> +
-> +	cdevt = MKDEV(MAJOR(rproc_cdev), minor);
-> +	ret = cdev_add(&rproc->char_dev, cdevt, 1);
-> +	if (ret < 0)
-> +		ida_simple_remove(&cdev_minor_ida, minor);
-> +
-> +	rproc->dev.devt = cdevt;
-> +
-> +	return ret;
-> +}
-> +
-> +void __init rproc_init_cdev(void)
-> +{
-> +	int ret;
-> +
-> +	ret = alloc_chrdev_region(&rproc_cdev, 0, NUM_RPROC_DEVICES, "rproc");
-> +	if (ret < 0) {
-> +		pr_err("Failed to alloc rproc_cdev region, err %d\n", ret);
-> +		return;
-> +	}
-> +}
-> +
-> +void __exit rproc_exit_cdev(void)
-> +{
-> +	unregister_chrdev_region(MKDEV(MAJOR(rproc_cdev), 0),
-> +				NUM_RPROC_DEVICES);
-> +}
-> diff --git a/include/linux/remoteproc.h b/include/linux/remoteproc.h
-> index 16ad666..c4ca796 100644
-> --- a/include/linux/remoteproc.h
-> +++ b/include/linux/remoteproc.h
-> @@ -37,6 +37,7 @@
-> 
-> #include <linux/types.h>
-> #include <linux/mutex.h>
-> +#include <linux/cdev.h>
-> #include <linux/virtio.h>
-> #include <linux/completion.h>
-> #include <linux/idr.h>
-> @@ -514,6 +515,7 @@ struct rproc {
-> 	bool auto_boot;
-> 	struct list_head dump_segments;
-> 	int nb_vdev;
-> +	struct cdev char_dev;
-> };
-> 
-> /**
-> --
-> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-> a Linux Foundation Collaborative Project
+Changes in v5:
+- Add Rob's Acked by on dt-bindings change
+- Drop firmware psci change
+- Update cpuidle stats in dtsi to follow PC mode
+- Include change to update dirty flag when data is updated from [4]
+- Add change to invoke rpmh_flush when caches are dirty
+
+Changes in v4:
+- Add change to allow hierarchical topology in PC mode
+- Drop hierarchical domain idle states converter from v3
+- Address Merge sc7180 dtsi change to add low power modes
+
+Changes in v3:
+- Address Rob's comment on dt property value
+- Address Stephen's comments on rpmh-rsc driver change
+- Include sc7180 cpuidle low power mode changes from [1]
+- Include hierarchical domain idle states converter change from [2]
+
+Changes in v2:
+- Add Stephen's Reviewed-By to the first three patches
+- Addressed Stephen's comments on fourth patch
+- Include changes to connect rpmh domain to cpuidle and genpds
+
+Resource State Coordinator (RSC) is responsible for powering off/lowering
+the requirements from CPU subsystem for the associated hardware like buses,
+clocks, and regulators when all CPUs and cluster is powered down.
+
+RSC power domain uses last-man activities provided by genpd framework based
+on Ulf Hansoon's patch series[3], when the cluster of CPUs enter deepest
+idle states. As a part of domain poweroff, RSC can lower resource state
+requirements by flushing the cached sleep and wake state votes for various
+resources.
+
+[1] https://patchwork.kernel.org/patch/11218965
+[2] https://patchwork.kernel.org/patch/10941671
+[3] https://patchwork.kernel.org/project/linux-arm-msm/list/?series=222355
+[4] https://patchwork.kernel.org/project/linux-arm-msm/list/?series=236503
+[5] https://patchwork.kernel.org/patch/10818129
+
+Maulik Shah (5):
+  arm64: dts: qcom: sc7180: Add cpuidle low power states
+  soc: qcom: rpmh: Update dirty flag only when data changes
+  soc: qcom: rpmh: Invalidate SLEEP and WAKE TCSes before flushing new
+    data
+  soc: qcom: rpmh: Invoke rpmh_flush() for dirty caches
+  soc: qcom: rpmh-rsc: Allow using free WAKE TCS for active request
+
+Raju P.L.S.S.S.N (1):
+  soc: qcom: rpmh-rsc: Clear active mode configuration for wake TCS
+
+ arch/arm64/boot/dts/qcom/sc7180.dtsi |  78 ++++++++++++++
+ drivers/soc/qcom/rpmh-internal.h     |   8 ++
+ drivers/soc/qcom/rpmh-rsc.c          | 203 ++++++++++++++++++++++++++++-------
+ drivers/soc/qcom/rpmh.c              |  71 ++++++------
+ 4 files changed, 280 insertions(+), 80 deletions(-)
+
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
