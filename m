@@ -2,96 +2,129 @@ Return-Path: <SRS0=aGSP=5L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92111C2D0E8
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 11:07:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1277DC43331
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 11:08:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 74ECF20409
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 11:07:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E178F20409
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 11:08:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728045AbgCZLHh (ORCPT
+        id S1728066AbgCZLIw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 07:07:37 -0400
-Received: from mout.kundenserver.de ([212.227.126.134]:38767 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727560AbgCZLHh (ORCPT
+        Thu, 26 Mar 2020 07:08:52 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:50368 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727688AbgCZLIv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 07:07:37 -0400
-Received: from mail-qk1-f182.google.com ([209.85.222.182]) by
- mrelayeu.kundenserver.de (mreue009 [212.227.15.129]) with ESMTPSA (Nemesis)
- id 1N2V8Z-1jNhhA3NJH-013wQI; Thu, 26 Mar 2020 12:07:36 +0100
-Received: by mail-qk1-f182.google.com with SMTP id q188so5863667qke.8;
-        Thu, 26 Mar 2020 04:07:35 -0700 (PDT)
-X-Gm-Message-State: ANhLgQ2oj/kyk3THVH7gxkjwDWcC+sb9lKEmkT8YfuICxKJ/v5Hiy4BP
-        DgfLiXKczZvKpIUCgmC0zckDDyQgcqTC+WPhLrs=
-X-Google-Smtp-Source: ADFU+vtGA4H8mWbkDm6gpTVbfvnOBJmqFtB227gJd/fzaEEWWXK9KVIZa3FUqSbrkQ+QzfbwJV3lxH63RATvQa45OLc=
-X-Received: by 2002:a37:6285:: with SMTP id w127mr7344230qkb.138.1585220854524;
- Thu, 26 Mar 2020 04:07:34 -0700 (PDT)
+        Thu, 26 Mar 2020 07:08:51 -0400
+Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1jHQNH-0005bA-Jj; Thu, 26 Mar 2020 12:08:35 +0100
+Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
+        id 0775710069D; Thu, 26 Mar 2020 12:08:35 +0100 (CET)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Xiaoyao Li <xiaoyao.li@intel.com>, Ingo Molnar <mingo@redhat.com>,
+        Borislav Petkov <bp@alien8.de>, hpa@zytor.com,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     x86@kernel.org, kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Arvind Sankar <nivedita@alum.mit.edu>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Tony Luck <tony.luck@intel.com>
+Subject: Re: [PATCH v6 8/8] kvm: vmx: virtualize split lock detection
+In-Reply-To: <9a9c0817-9ebb-524f-44df-176a15ea3fca@intel.com>
+References: <20200324151859.31068-1-xiaoyao.li@intel.com> <20200324151859.31068-9-xiaoyao.li@intel.com> <87eethz2p6.fsf@nanos.tec.linutronix.de> <6d3e7e03-d304-8ec0-b00d-050b1c12140d@intel.com> <87369xyzvk.fsf@nanos.tec.linutronix.de> <9a9c0817-9ebb-524f-44df-176a15ea3fca@intel.com>
+Date:   Thu, 26 Mar 2020 12:08:34 +0100
+Message-ID: <87ftdvxtjh.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-References: <20200325113407.26996-1-ulf.hansson@linaro.org> <20200325113407.26996-3-ulf.hansson@linaro.org>
-In-Reply-To: <20200325113407.26996-3-ulf.hansson@linaro.org>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Thu, 26 Mar 2020 12:07:18 +0100
-X-Gmail-Original-Message-ID: <CAK8P3a39JrMrYrNeLCr-R6y-ivkVqRkxey_Z7R4N3++MA_qqCg@mail.gmail.com>
-Message-ID: <CAK8P3a39JrMrYrNeLCr-R6y-ivkVqRkxey_Z7R4N3++MA_qqCg@mail.gmail.com>
-Subject: Re: [PATCH 2/2] amba: Initialize dma_parms for amba devices
-To:     Ulf Hansson <ulf.hansson@linaro.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Christoph Hellwig <hch@lst.de>,
-        Russell King <linux@armlinux.org.uk>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Vinod Koul <vkoul@kernel.org>, Haibo Chen <haibo.chen@nxp.com>,
-        Ludovic Barre <ludovic.barre@st.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        dmaengine@vger.kernel.org, "# 3.4.x" <stable@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:so40XTW2CTC1HkSymfhx3VW0SvDDnr2OiAQD99FzniBB8rp8Hoh
- eYk8A4SikJYNsUZnKxZATfC+qbxnFqgxxdz4YynLKJPZFAvFmmbl9jI0mkwoDi7zA2RB1eY
- 0Irc8U10Vd0x5c+Jx1qkwqFgpbXYcqZyNE3NeS6dDEfIO/AteCc7qoKGj4wHIijNCx+Im8Q
- hqjsK8IMP/44wZNSFgPVQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:5PfRy+YWNrY=:pm0+ufywHfccSZzfh5UJ0B
- MxzGYSVAB+K69Sd64I5xnPRT+53rJQrDX4GG+ukHHZEu17ki90OMmE2Ccs+TG4IfZhgFQItHG
- YDxYo3irD5Zn6hKNTwIfguhnnq3ON+l8H7VkVUKGbcSVs4zO2vRVQJyz41HL0QnlUdVmioavR
- rzorTdECBJFvaXkT2HbENTxya5AoGLr7WVTIKyQ4OchgAxnxEs7Aw5peEQDu+uEfQ3G4CCs98
- PGlrWFiW3X5jii9dfBrL5tTdHtsUNhQNQhtMcvOyv5vezDyRN5HDZyAcL3Y37TPfKM1RX11G3
- crkaQpKcEdbuVn1kG6RWi6Czzjh2NGUSTdtARdRAi5miWQqcstoh7IvU2tct+L9fyTtfIAfdb
- cQ6Xg8VymcKqeNHlYpat9WkCDl8lOXo0ED7V4cvyURiqZX5xmz1mNkipFa5+ebpEdZcdRxtsJ
- s1K19JhB7v9Oay1wzgWZGysCSs/duNmogTjKJeQDovIpu7hoyl7oaS9rnnW8cr4h8IZacqfC7
- eP1f9LVyzoNkCOoBaWBYuZ8WRk/RfjmqZsP/v0+qzlo7oNecJs8lxwwf09PydOpLJKhoSbrNM
- 8yZYvBTY5ZlAinELkM7QODt0DR69NpjGXzTF+XKGohNktImtoeHiBOzs6NdnmU/p6dlTSydqE
- 7q5UnJgUS4jPbcSWKg1L5/x9AJBXjsi7NaFDB5mcawUGICPR/PmHwnhK9F3ANjqZu8bcC31v0
- THa/iRdt2+RSdGtTHkAUUvYVLhnxWWwJRFxM5wI+1l+Is10AeH2Gbok76auE47oi/FRtyONtT
- TVDWDlrXk3Et0Cpg4TCK/oBFyfGSciIybmLPdhIT74JsohOOXA=
+Content-Type: text/plain
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 25, 2020 at 12:34 PM Ulf Hansson <ulf.hansson@linaro.org> wrote:
->
-> It's currently the amba driver's responsibility to initialize the pointer,
-> dma_parms, for its corresponding struct device. The benefit with this
-> approach allows us to avoid the initialization and to not waste memory for
-> the struct device_dma_parameters, as this can be decided on a case by case
-> basis.
->
-> However, it has turned out that this approach is not very practical. Not
-> only does it lead to open coding, but also to real errors. In principle
-> callers of dma_set_max_seg_size() doesn't check the error code, but just
-> assumes it succeeds.
->
-> For these reasons, let's do the initialization from the common amba bus at
-> the device registration point. This also follows the way the PCI devices
-> are being managed, see pci_device_add().
->
-> Suggested-by: Christoph Hellwig <hch@lst.de>
-> Cc: Russell King <linux@armlinux.org.uk>
-> Cc: <stable@vger.kernel.org>
-> Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+Xiaoyao Li <xiaoyao.li@intel.com> writes:
+> On 3/25/2020 9:41 AM, Thomas Gleixner wrote:
+>> If you really want to address that scenario, then why are you needing
+>> any of those completely backwards interfaces at all?
+>> 
+>> Just because your KVM exception trap uses the host handling function
+>> which sets TIF_SLD?
+>>   
+> Yes. just because KVM use the host handling function.
 
-Acked-by: Arnd Bergmann <arnd@arndb.de>
+> If you disallow me to touch codes out of kvm. It can be achieved with
+
+Who said you cannot touch code outside of KVM? 
+
+> Obviously re-use TIF_SLD flag to automatically switch MSR_TEST_CTRL.SLD 
+> bit when switch to/from vcpu thread is better.
+
+What's better about that?
+
+TIF_SLD has very well defined semantics. It's used to denote that the
+SLD bit needs to be cleared for the task when its scheduled in.
+
+So now you overload it by clearing it magically and claim that this is
+better.
+
+vCPU-thread
+
+   user space (qemu)
+     triggers #AC
+       -> exception
+           set TIF_SLD
+
+   iotctl()
+     vcpu_run()
+       -> clear TIF_SLD
+
+It's not better, it's simply wrong and inconsistent.
+
+> And to virtualize SLD feature as full as possible for guest, we have to 
+> implement the backwards interface. If you really don't want that 
+> interface, we have to write code directly in kvm to modify TIF_SLD flag 
+> and MSR_TEST_CTRL.SLD bit.
+
+Wrong again. KVM has absolutely no business in fiddling with TIF_SLD and
+the function to flip the SLD bit is simply sld_update_msr(bool on) which
+does not need any KVMism at all.
+
+There are two options to handle SLD for KVM:
+
+   1) Follow strictly the host rules
+
+      If user space or guest triggered #AC then TIF_SLD is set and that
+      task is excluded from ever setting SLD again.
+
+   2) Track KVM guest state separately
+
+      vcpu_run()
+        if (current_has(TIF_SLD) && guest_sld_on())
+          sld_update_msr(true);
+        else if (!current_has(TIF_SLD) && !guest_sld_on())
+          sld_update_msr(false);
+        vmenter()
+          ....
+        vmexit()
+        if (current_has(TIF_SLD) && guest_sld_on())
+          sld_update_msr(false);
+        else if (!current_has(TIF_SLD) && !guest_sld_on())
+          sld_update_msr(true);
+
+      If the guest triggers #AC then this solely affects guest state
+      and does not fiddle with TIF_SLD.
+
+Thanks,
+
+        tglx
