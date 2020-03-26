@@ -2,161 +2,378 @@ Return-Path: <SRS0=aGSP=5L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2400AC43331
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 20:55:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC574C2D0E9
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 20:56:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE4CD2070A
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 20:55:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5CD112070A
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 20:56:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="F851KLD/"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="d6ksKOlg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727636AbgCZUzU (ORCPT
+        id S1727670AbgCZU4L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 16:55:20 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:37641 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726034AbgCZUzU (ORCPT
+        Thu, 26 Mar 2020 16:56:11 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:34323 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726260AbgCZU4K (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 16:55:20 -0400
-Received: by mail-io1-f68.google.com with SMTP id q9so7644234iod.4;
-        Thu, 26 Mar 2020 13:55:19 -0700 (PDT)
+        Thu, 26 Mar 2020 16:56:10 -0400
+Received: by mail-wm1-f66.google.com with SMTP id 26so8453953wmk.1
+        for <linux-kernel@vger.kernel.org>; Thu, 26 Mar 2020 13:56:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=tARXV4zRsb3hlr19d3d5crPq290pTsOZH+FqO6859YE=;
-        b=F851KLD/PngBFC3+D8zfF4GUIKki3kvDxOK2i9jhvVwKExaqiC3WmMQ81XYEgaVNWc
-         gmUuFe1dFltI398KtXOk1T9sfwfFHOqd1PiaEemFKcJerb+hC8RWhgPW66frhxQcEWoS
-         U62TQN5kgq9P0g+1ZR3Gw+eaSJtEyKcs7XOXMbpZQzzd4zT478N8kobe5Jnc3DSXNdxf
-         J1SWG6l0pSFkiDfDNKv3OH9+NEJTafrwmGlXgvrXhSMpzDklclRjQ5Iokr3SWJG79UsX
-         Y2TrYNwNYjNH8zZTjHQs+qyMaArx4L/wJ6oa/aofFKaotvufZJ9dJM51UH3U4I7jNDE+
-         v01Q==
+        d=chromium.org; s=google;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=rwP6omks5Bq+LZp/QxgHU372BSlee6s0/LxcH04vRKs=;
+        b=d6ksKOlgjbYjHrVyYgr77zwbHRp74js8GAmnFUAI8mm/lTiINEMzxp7PaJXycUlOTU
+         Uw1xjwoet+9XZXNdqC1mbPWkMasfasXrMXkRoHUQjmtBUg30B8ixojhM0HPEy+61M79Z
+         qW98UrwAc73NokYHzWtTDFvcBKJZ1PdzlbetU=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=tARXV4zRsb3hlr19d3d5crPq290pTsOZH+FqO6859YE=;
-        b=cQ2HdyO5XcUlNAzcsN9e9mcy3GzeVPUMUSHvGCGl9sOguq970BdtdbqtPZrwqY6UqW
-         6OYfl9YUGaumN8MS2SmKjtFgtOUJ5439N4jPp576xuBrqaQxbKEe62hkJ0eMH3AW8lC3
-         dr1ASmCXdGjlwp3U6LfvNG+e3/Q8XDf8O5roxGzGf9tOwEd0enMky6jHhmpvVmIr6yeV
-         xo1FtdR8vDnWbc7274TIL6DMPmAGBnNqfBvrMy8AJpvIKsRFwKZz0cu9oQeOMU6SWJId
-         JJeKtZ3DO1n1zOalgamXtcXhMReL7i1PNDossU37Gws2d2FocCg1pFIGzt98kMFxWxTa
-         XRqw==
-X-Gm-Message-State: ANhLgQ2W/M5DzmmI0TAuYZD8jTGQBZ4tBxp3sRx8QHQTTya5yw2bIyST
-        LelpSPcht1WI6kJGD96v3SJz2ZGl1A8tvgyqfj0=
-X-Google-Smtp-Source: ADFU+vvEhVdAi6cy8FMfdw2tGKtXdnM6Kv2N332jUL3j9MI30fugJLCa0/14G/rkL4JHbHM/gpb7MHKPCl9j+Z9jbyk=
-X-Received: by 2002:a5d:84d0:: with SMTP id z16mr9395501ior.88.1585256118641;
- Thu, 26 Mar 2020 13:55:18 -0700 (PDT)
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=rwP6omks5Bq+LZp/QxgHU372BSlee6s0/LxcH04vRKs=;
+        b=gqt9PzzMrFCWKIlIIa9ywxY+loGY8Z31dhZLktHoc8uooWYyXX7WcjSuW3R0wIZcKA
+         Gh2fZkiwuYdmvVVfg7Yf6h1zfikqsPaYVsTbL9vU3t6ZDj1e5jbAqS7HiIdcCZ/SPRGN
+         7gsgz3Aes6oLIUVxqYcsSxkzYkSAXkRVxneGOr8IWgfXLhCdWL+o8yyFoKS4qcEUhRgY
+         d8pJjjul3E3QaXwe98B22lQ+Mt7JlkR5d2rkMUStl3G8ueAEpg9Q7K4OqSir270+n/dz
+         IRD4XzVXmOKWDtKhKPql43m0DRH0aPqkt17oGYNDOXhEFjpYVV8kM7SrJbFNRBZeMa5/
+         9yTg==
+X-Gm-Message-State: ANhLgQ1gBhxqLp25PfuAgpcUrnEuRO+51Kv1/UDIi7wTIjuHOjRJYCxl
+        e1s1Ptcpx13LhIKhDZKgP/9rVQ==
+X-Google-Smtp-Source: ADFU+vvJZFuES+hj74DJVNA+Egz9nA9OgldTpa60/W1NvhpyzxaZwZox17cgsEQKdYnkbSyR8a7Nvw==
+X-Received: by 2002:adf:e492:: with SMTP id i18mr6162954wrm.316.1585256167215;
+        Thu, 26 Mar 2020 13:56:07 -0700 (PDT)
+Received: from chromium.org (77-56-209-237.dclient.hispeed.ch. [77.56.209.237])
+        by smtp.gmail.com with ESMTPSA id 127sm5388422wmd.38.2020.03.26.13.56.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 26 Mar 2020 13:56:06 -0700 (PDT)
+From:   KP Singh <kpsingh@chromium.org>
+X-Google-Original-From: KP Singh <kpsingh>
+Date:   Thu, 26 Mar 2020 21:56:04 +0100
+To:     Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        bpf <bpf@vger.kernel.org>, linux-security-module@vger.kernel.org,
+        Brendan Jackman <jackmanb@google.com>,
+        Florent Revest <revest@google.com>,
+        Thomas Garnier <thgarnie@google.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        James Morris <jmorris@namei.org>,
+        Kees Cook <keescook@chromium.org>,
+        Paul Turner <pjt@google.com>, Jann Horn <jannh@google.com>,
+        Florent Revest <revest@chromium.org>,
+        Brendan Jackman <jackmanb@chromium.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH bpf-next v7 8/8] bpf: lsm: Add Documentation
+Message-ID: <20200326205604.GC15273@chromium.org>
+References: <20200326142823.26277-1-kpsingh@chromium.org>
+ <20200326142823.26277-9-kpsingh@chromium.org>
+ <CAEf4BzZ=qCNVbGqRfkgS-rfsODQaAzjQOErN8U9RH4Eu-HuD8Q@mail.gmail.com>
 MIME-Version: 1.0
-References: <20200326103926.20888-1-kai.heng.feng@canonical.com>
- <CAKgT0UfFnXcSSsXvxk8+xiZvyzDh+8V-9bCT-z5U+MEVoAVKLw@mail.gmail.com> <98E86E5A-4EE9-4CB5-81CF-49C3E74C3AE6@canonical.com>
-In-Reply-To: <98E86E5A-4EE9-4CB5-81CF-49C3E74C3AE6@canonical.com>
-From:   Alexander Duyck <alexander.duyck@gmail.com>
-Date:   Thu, 26 Mar 2020 13:55:07 -0700
-Message-ID: <CAKgT0UcigwjL10i4FReJqQip7zYgU4F5BEk1T-K824vPRRCmuQ@mail.gmail.com>
-Subject: Re: [Intel-wired-lan] [PATCH] igb: Use a sperate mutex insead of rtnl_lock()
-To:     Kai-Heng Feng <kai.heng.feng@canonical.com>
-Cc:     Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
-        "open list:NETWORKING DRIVERS" <netdev@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        "moderated list:INTEL ETHERNET DRIVERS" 
-        <intel-wired-lan@lists.osuosl.org>,
-        "David S. Miller" <davem@davemloft.net>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAEf4BzZ=qCNVbGqRfkgS-rfsODQaAzjQOErN8U9RH4Eu-HuD8Q@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 26, 2020 at 10:16 AM Kai-Heng Feng
-<kai.heng.feng@canonical.com> wrote:
->
-> Hi Alexander,
->
-> > On Mar 27, 2020, at 00:27, Alexander Duyck <alexander.duyck@gmail.com> wrote:
+Thanks for the reviews!
+
+On 26-Mär 12:31, Andrii Nakryiko wrote:
+> On Thu, Mar 26, 2020 at 7:29 AM KP Singh <kpsingh@chromium.org> wrote:
 > >
-> > On Thu, Mar 26, 2020 at 3:39 AM Kai-Heng Feng
-> > <kai.heng.feng@canonical.com <mailto:kai.heng.feng@canonical.com>> wrote:
-> >>
-> >> Commit 9474933caf21 ("igb: close/suspend race in netif_device_detach")
-> >> fixed race condition between close and power management ops by using
-> >> rtnl_lock().
-> >>
-> >> This fix is a preparation for next patch, to prevent a dead lock under
-> >> rtnl_lock() when calling runtime resume routine.
-> >>
-> >> However, we can't use device_lock() in igb_close() because when module
-> >> is getting removed, the lock is already held for igb_remove(), and
-> >> igb_close() gets called during unregistering the netdev, hence causing a
-> >> deadlock. So let's introduce a new mutex so we don't cause a deadlock
-> >> with driver core or netdev core.
-> >>
-> >> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+> > From: KP Singh <kpsingh@google.com>
 > >
-> > So this description doesn't make much sense to me. You describe the
-> > use of the device_lock() in igb_close() but it isn't used there.
->
-> Sorry I forgot to add a revision number.
-> It was used by previous version and Aaron found a regression when device_lock() is used.
->
-> > In addition it seems like you are arbitrarily moving code that was
-> > wrapped in the rtnl_lock out of it. I'm not entirely sure that is safe
-> > since there are calls within many of these functions that assume the
-> > rtnl_lock is held and changing that is likely going to introduce more
-> > issues.
->
-> The reason why rtnl lock needs to be removed is because of the following patch:
-> https://lore.kernel.org/lkml/20200207101005.4454-2-kai.heng.feng@canonical.com/
->
-> Ethtools helpers already held rtnl_lock, so to prevent a deadlock, my idea is to use another lock to solve what "igb: close/suspend race in netif_device_detach" originally tried to fix.
-
-No offense, but that is a horrible reason to be removing the
-rtnl_lock. It basically makes things worse since it is guaranteeing
-the device can be in flux while you are trying to record the state of
-the device.
-
-Wouldn't it make more sense to check for pm_runtime_suspended and if
-the interface is down and simply report SPEED_UNKNOWN rather than
-trying to instrument the driver so that you can force it out of the
-power management state to report statistics for an interface that we
-know is already down?
-
+> > Document how eBPF programs (BPF_PROG_TYPE_LSM) can be loaded and
+> > attached (BPF_LSM_MAC) to the LSM hooks.
 > >
-> > So it looks like nobody ever really reviewed commit 888f22931478
-> > ("igb: Free IRQs when device is hotplugged"). What I would recommend
-> > is reverting it and instead we fix the remaining pieces that need to
-> > be addressed in igb so it more closely matches what we have in e1000e
-> > after commit a7023819404a ("e1000e: Use rtnl_lock to prevent race
-> > conditions between net and pci/pm"). From what I can tell the only
-> > pieces that are really missing is to update igb_io_error_detected so
-> > that in addition to igb_down it will call igb_free_irq, and then in
-> > addition we should be wrapping most of the code in that function with
-> > an rtnl_lock since it is detaching a device and making modifications
-> > to it.
->
-> In addition to that, igb_shutdown() indirectly calls igb_close() when netdev unregistering the device.
+> > Signed-off-by: KP Singh <kpsingh@google.com>
+> > Reviewed-by: Brendan Jackman <jackmanb@google.com>
+> > Reviewed-by: Florent Revest <revest@google.com>
+> > Reviewed-by: Thomas Garnier <thgarnie@google.com>
+> > ---
+> 
+> This needs another pass and re-reading, has a bunch of outdated info :)
 
-Yes, that is how it is supposed to be. We are modifying core state of
-the netdevice and should only do so while holding the rtnl_lock.
+Indeed :)
 
-> My "only scratch the surface" approach is because I don't have a reproducer for commit "igb: close/suspend race in netif_device_detach", and I am afraid of breaking it.
->
-> Kai-Heng
+> 
+> >  Documentation/bpf/bpf_lsm.rst | 150 ++++++++++++++++++++++++++++++++++
+> >  Documentation/bpf/index.rst   |   1 +
+> >  2 files changed, 151 insertions(+)
+> >  create mode 100644 Documentation/bpf/bpf_lsm.rst
+> >
+> > diff --git a/Documentation/bpf/bpf_lsm.rst b/Documentation/bpf/bpf_lsm.rst
+> > new file mode 100644
+> > index 000000000000..2a2c3b4a74d4
+> > --- /dev/null
+> > +++ b/Documentation/bpf/bpf_lsm.rst
+> > @@ -0,0 +1,150 @@
+> > +.. SPDX-License-Identifier: GPL-2.0+
+> > +.. Copyright (C) 2020 Google LLC.
+> > +
+> > +================
+> > +LSM BPF Programs
+> > +================
+> > +
+> > +These BPF programs allow runtime instrumentation of the LSM hooks by privileged
+> > +users to implement system-wide MAC (Mandatory Access Control) and Audit
+> > +policies using eBPF. Since these program end up modifying the MAC policies of
+> > +the system, they require both ``CAP_MAC_ADMIN`` and also require
+> > +``CAP_SYS_ADMIN`` for the loading of BPF programs.
+> > +
+> > +Structure
+> > +---------
+> > +
+> > +The example shows an eBPF program that can be attached to the ``file_mprotect``
+> > +LSM hook:
+> > +
+> > +.. c:function:: int file_mprotect(struct vm_area_struct *vma, unsigned long reqprot, unsigned long prot);
+> > +
+> > +Other LSM hooks which can be instrumented can be found in
+> > +``include/linux/lsm_hooks.h``.
+> > +
+> > +eBPF programs that use :doc:`/bpf/btf` do not need to include kernel headers
+> > +for accessing information from the attached eBPF program's context. They can
+> > +simply declare the structures in the eBPF program and only specify the fields
+> > +that need to be accessed.
+> > +
+> > +.. code-block:: c
+> > +
+> > +       struct mm_struct {
+> > +               unsigned long start_brk, brk, start_stack;
+> > +       } __attribute__((preserve_access_index));
+> > +
+> > +       struct vm_area_struct {
+> > +               unsigned long start_brk, brk, start_stack;
+> > +               unsigned long vm_start, vm_end;
+> > +               struct mm_struct *vm_mm;
+> > +       } __attribute__((preserve_access_index));
+> > +
+> > +
+> > +.. note:: Only the size and the names of the fields must match the type in the
+> > +         kernel and the order of the fields is irrelevant.
+> 
+> type should match/be compatible as well?
 
-This is taking things in the wrong direction. My advice is if you
-cannot get reliable link information when the device is in a
-pm_runtime_suspended state would be to simply test for that and report
-the value out. Again, you can take a look at e1000e since it already
-appears to be doing all this in e1000e_get_link_ksettings. We don't
-need to have the drivers diverge from each other in solutions for
-this. It is much easier to maintain if they can all be making use of
-the same approach.
+I changed it to simply be:
 
-Thanks.
+.. note:: The order of the fields is irrelevant.
 
-- Alex
+> 
+> > +
+> > +This can be further simplified (if one has access to the BTF information at
+> > +build time) by generating the ``vmlinux.h`` with:
+> > +
+> > +.. code-block:: console
+> > +
+> > +        # bpftool dump file <path-to-btf-vmlinux> format c > vmlinux.h
+> > +
+> 
+> bpftool btf *dump* file
+
+Done.
+
+> 
+> > +.. note:: ``path-to-btf-vmlinux`` can be ``/sys/kernel/btf/vmlinux`` if the
+> > +         build environment matches the environment the BPF programs are
+> > +         deployed in.
+> > +
+> > +The ``vmlinux.h`` can then simply be included in the BPF programs without
+> > +requiring the definition of the types.
+> > +
+> > +The eBPF programs can be declared using the``BPF_PROG``
+> > +macros defined in `tools/lib/bpf/bpf_tracing.h`_. In this
+> > +example:
+> > +
+> > +       * ``"lsm/file_mprotect"`` indicates the LSM hook that the program must
+> > +         be attached to
+> > +       * ``mprotect_audit`` is the name of the eBPF program
+> > +
+> > +.. code-block:: c
+> > +
+> > +        SEC("lsm/file_mprotect")
+> > +        int BPF_PROG(mprotect_audit, struct vm_area_struct *vma,
+> > +                     unsigned long reqprot, unsigned long prot, int ret)
+> > +       {
+> > +                /* Ret is the return value from the previous BPF program
+> > +                 * or 0 if it's the first hook.
+> > +                 */
+> > +                if (ret != 0)
+> > +                        return ret;
+> > +
+> > +               int is_heap;
+> > +
+> > +               is_heap = (vma->vm_start >= vma->vm_mm->start_brk &&
+> > +                          vma->vm_end <= vma->vm_mm->brk);
+> > +
+> > +               /* Return an -EPERM or write information to the perf events buffer
+> > +                * for auditing
+> > +                */
+> 
+> return missing?
+
+Fixed.
+
+> 
+> > +       }
+> > +
+> > +The ``__attribute__((preserve_access_index))`` is a clang feature that allows
+> > +the BPF verifier to update the offsets for the access at runtime using the
+> > +:doc:`/bpf/btf` information. Since the BPF verifier is aware of the types, it
+> > +also validates all the accesses made to the various types in the eBPF program.
+> > +
+> > +Loading
+> > +-------
+> > +
+> > +eBPF programs can be loaded with the :manpage:`bpf(2)` syscall's
+> > +``BPF_PROG_LOAD`` operation or more simply by using the the libbpf helper
+> > +``bpf_prog_load_xattr``:
+> > +
+> > +
+> > +.. code-block:: c
+> > +
+> > +       struct bpf_prog_load_attr attr = {
+> > +               .file = "./prog.o",
+> > +       };
+> > +       struct bpf_object *prog_obj;
+> > +       struct bpf_program *prog;
+> > +       int prog_fd;
+> > +
+> > +       bpf_prog_load_xattr(&attr, &prog_obj, &prog_fd);
+> 
+> Can you please update this to not use deprecated/legacy APIs. Please
+> suggest bpf_object__open/bpf_object__load  and/or BPF skeleton as an
+> example.
+
+
+Simplified and modernized this section as:
+
+
+Loading
+-------
+
+eBPF programs can be loaded with the :manpage:`bpf(2)` syscall's
+``BPF_PROG_LOAD`` operation:
+
+.. code-block:: c
+
+	struct bpf_object *obj;
+
+	obj = bpf_object__open("./my_prog.o");
+	bpf_object__load(obj);
+
+This can be simplified by using a skeleton header generated by ``bpftool``:
+
+.. code-block:: console
+
+	# bpftool gen skeleton my_prog.o > my_prog.skel.h
+
+and the program can be loaded by including ``my_prog.skel.h`` and using
+the generated helper, ``my_prog__open_and_load``.
+
+Attachment to LSM Hooks
+-----------------------
+
+The LSM allows attachment of eBPF programs as LSM hooks using :manpage:`bpf(2)`
+syscall's ``BPF_RAW_TRACEPOINT_OPEN`` operation or more simply by
+using the libbpf helper ``bpf_program__attach_lsm``.
+
+The program can be detached from the LSM hook by *destroying* the ``link``
+link returned by ``bpf_program__attach_lsm`` using ``bpf_link__destroy``.
+
+One can also use the helpers generated in ``my_prog.skel.h`` i.e.
+``my_prog__attach`` for attachment and ``my_prog__destroy`` for cleaning up.
+
+</end>
+
+If this looks okay, I will send a v8 with this updated and other
+fixes.
+
+- KP
+
+> 
+> > +
+> > +Attachment to LSM Hooks
+> > +-----------------------
+> > +
+> > +The LSM allows attachment of eBPF programs as LSM hooks using :manpage:`bpf(2)`
+> > +syscall's ``BPF_PROG_ATTACH`` operation or more simply by
+> 
+> BPF_PROG_ATTACH is incorrect, it's RAW_TRACEPOINT_OPEN, isn't it?
+
+Correct, updated. Thanks!
+
+> 
+> > +using the libbpf helper ``bpf_program__attach_lsm``. In the code shown below
+> > +``prog`` is the eBPF program loaded using ``BPF_PROG_LOAD``:
+> > +
+> > +.. code-block:: c
+> > +
+> > +       struct bpf_link *link;
+> > +
+> > +       link = bpf_program__attach_lsm(prog);
+> > +
+> > +The program can be detached from the LSM hook by *destroying* the ``link``
+> > +link returned by ``bpf_program__attach_lsm``:
+> > +
+> > +.. code-block:: c
+> > +
+> > +       link->destroy();
+> 
+> that's not how it works in C ;)
+
+Oops, I incorrectly picked it up from link->destroy(link); and wrote
+something stupid.
+
+> 
+> bpf_link__destroy(link);
+
+Updated in the snippet posted above.
+
+- KP
+
+> 
+> > +
+> > +Examples
+> > +--------
+> > +
+> > +An example eBPF programs can be found in
+> > +`tools/testing/selftests/bpf/progs/lsm.c`_ and the corresponding
+> > +userspace code in `tools/testing/selftests/bpf/prog_tests/test_lsm.c`_
+> > +
+> > +.. Links
+> > +.. _tools/lib/bpf/bpf_tracing.h:
+> > +   https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/tree/tools/lib/bpf/bpf_tracing.h
+> > +.. _tools/testing/selftests/bpf/progs/lsm.c:
+> > +   https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/tree/tools/testing/selftests/bpf/progs/lsm.c
+> > +.. _tools/testing/selftests/bpf/progs/lsm_void_hook.c:
+> > +   https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/tree/tools/testing/selftests/bpf/progs/lsm_void_hook.c
+> > +.. _tools/testing/selftests/bpf/prog_tests/test_lsm.c:
+> > +   https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/tree/tools/testing/selftests/bpf/prog_tests/test_lsm.c
+> > diff --git a/Documentation/bpf/index.rst b/Documentation/bpf/index.rst
+> > index 7be43c5f2dcf..f99677f3572f 100644
+> > --- a/Documentation/bpf/index.rst
+> > +++ b/Documentation/bpf/index.rst
+> > @@ -45,6 +45,7 @@ Program types
+> >     prog_cgroup_sockopt
+> >     prog_cgroup_sysctl
+> >     prog_flow_dissector
+> > +   bpf_lsm
+> >
+> >
+> >  Testing and debugging BPF
+> > --
+> > 2.20.1
+> >
