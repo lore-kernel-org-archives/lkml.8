@@ -2,169 +2,106 @@ Return-Path: <SRS0=aGSP=5L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B40FCC43331
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 15:15:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EDF6C43331
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 15:16:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 83A142073E
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 15:15:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 758F22073E
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 15:16:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="JS+pLv9f"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="Z2wYiDyF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728014AbgCZPP2 (ORCPT
+        id S1727999AbgCZPQt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 11:15:28 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:45030 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727431AbgCZPP2 (ORCPT
+        Thu, 26 Mar 2020 11:16:49 -0400
+Received: from mail-pj1-f65.google.com ([209.85.216.65]:54576 "EHLO
+        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727502AbgCZPQt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 11:15:28 -0400
-Received: by mail-wr1-f65.google.com with SMTP id m17so8214377wrw.11
-        for <linux-kernel@vger.kernel.org>; Thu, 26 Mar 2020 08:15:27 -0700 (PDT)
+        Thu, 26 Mar 2020 11:16:49 -0400
+Received: by mail-pj1-f65.google.com with SMTP id np9so2590464pjb.4
+        for <linux-kernel@vger.kernel.org>; Thu, 26 Mar 2020 08:16:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=h4U844jPltBTNlYGJyCJI7cYyBDxAP1w1W8i3jCDF+o=;
-        b=JS+pLv9fDBxaQfEl9AuZOvc6smAsjUyx44iUyuGoFgU/xI8ifgOiBmPf7q+EwOTzsM
-         EpXbcerCl5zWUljBtjDrQNU+ZkQAqFlRHQHz/Sgm25kEXUNlFEgVkhizg/8hxJzJdDAS
-         PYQbRcOI/8QO2YFg5KUYQWS6bgtNNhEfLsNFoYlSDT/OZl1Fx0zqAvWcc1Oz+/2RdmCh
-         tbr6FAb7vhDHxKCfJZbU9sdwiG2jW86S1ndXd03uQjedW5jf3J76rCtzEGNUVFf9lyrB
-         C5yF1EG2fkF7H4k4v/BRBp9E0hbz/YxHTs14FPCO/ijpTZfmiGnA+hkp0L+Dj3YF5Fhz
-         nzYQ==
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=wYPpm/roqn+t+5JwnWeUfdJW3sGbPaRDzYCBTuCQby4=;
+        b=Z2wYiDyFq+4kYFEy1ZL0i6gxvSpUpfAJmOXyCbqhKg+PdPvlSUr3ali/GljgK/Y/ZO
+         r1lE/mqPo5Lh3fepBdj1tRSHRumc5SJSeaGHIQ56MIMlijSzSdT+IHejkr8PEGyu1fMC
+         8ELfNIDF/fbI5SEeMO0/SDbx/7Q+0xS2AbvSXseYolyb5kZOhWi20hUwBKONH5YJk3L0
+         EcFNsSrEYhwMVeqyM2Pkl0IMon2MeA4R9F6OxqbgesIBzlOZTzqedR9li1D0qUa4vV0Z
+         f0FJOSYZ6XY1EwH1AZh5KO5QOZQ8+Xt/IKb11SPCZDhUgxzDDM5IDautzEdEILRygdmx
+         eoEQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=h4U844jPltBTNlYGJyCJI7cYyBDxAP1w1W8i3jCDF+o=;
-        b=DBaXB6bVn13dk0tD5W95DElriX54QvC4MIks2v3kELEAdZEWIbxbrW5yhqYt4MIg0u
-         phfW/8ahYlUReXzNm0wDqRIwxlkNiD8bYMbsyVeJYuz+Vwk2yMh2Otjs+oC8Sao5FcQm
-         owBt+hf52a6u8Ld+ZeqcGktyDhE0hcaE2WZtEycKz8KcFypZcX06mC9E2cPh9IaqpkLC
-         lPBHPOApevtE2tHQSM/dNGTChtlot7sRcGfzuKk9Rw2oP8gGE6Kuj5wb3wG79+YPc3eY
-         W0vx8Py2vNjIR6WPV7BF/ODA9knKEvLqT9Pq5wd8acHOJxlSeUhudZ4l5al6ld0CxGot
-         7qbQ==
-X-Gm-Message-State: ANhLgQ3No63NpQ6iK8KaCzZGhrvL1uKuum6H/VtOpDht6xjOaOgx3XT7
-        3gv6CMH8nzervOz/OfX4kELvdLVXCsAj4Jode5lk2g==
-X-Google-Smtp-Source: ADFU+vuDPVK8YAR70/g3YIqHaMwtOomcLHlX/P94KVdu/G2/oJGtgeTYOw+ZOJ/sbGEWuQqyqRyKHRotaEG256Qbo1A=
-X-Received: by 2002:adf:efc9:: with SMTP id i9mr9415479wrp.23.1585235726390;
- Thu, 26 Mar 2020 08:15:26 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=wYPpm/roqn+t+5JwnWeUfdJW3sGbPaRDzYCBTuCQby4=;
+        b=nA3Uy1dURcFNdrbz99WtZbiLTOKHtJhUyZew3OB4yRDkTSYjRKGws3kNUCeQUOkHHL
+         cGrKZuz4ZdUScvLUckiLV1zqO5kMfdLKw2Ru1szD+H3C/3Q5Gwz0/TzqNbE7qCMRCYNl
+         9BjJ8Hbj20QztVMZmEy5sEvXvELHIPzP2F43jCzvsYEztgb4qJ2Z2AWPnsdhrGhV/MTB
+         4d2rtTx0BCQFot3kLqk8EJA86daclkUu9KMLYl8dfhKrCJwoNHMXJRTlbrVOUeZuak4+
+         Ng5BDMJO+0j7ORCJK+9ONjMPu5RwrIl6WLMprnyRpwnWijmLuIq6E5I3+Upb1SzV4lSe
+         6oZw==
+X-Gm-Message-State: ANhLgQ29l3atWgB1Sk7Y67wOaCHdAjgelCYrQfkBhsKVN30c3Pte7fXY
+        zP8duichVnDF2BCLSmgu2DAAcPwAZa2AUg==
+X-Google-Smtp-Source: ADFU+vvSwDGZ3vi5MYUbHEhhi1yLLSyC9+GawkQSsKQc/4RZYnNcX1X8a7E9gp+ST4kC/Xk11Sw3Gw==
+X-Received: by 2002:a17:90a:ab0a:: with SMTP id m10mr466536pjq.173.1585235805719;
+        Thu, 26 Mar 2020 08:16:45 -0700 (PDT)
+Received: from [192.168.1.188] ([66.219.217.145])
+        by smtp.gmail.com with ESMTPSA id b3sm1878746pgs.69.2020.03.26.08.16.42
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 26 Mar 2020 08:16:44 -0700 (PDT)
+Subject: Re: [PATCH v4 00/27] ata: optimize core code size on PATA only setups
+To:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Cc:     Michael Schmitz <schmitzmic@gmail.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Christoph Hellwig <hch@lst.de>, linux-ide@vger.kernel.org,
+        linux-m68k@lists.linux-m68k.org, linux-kernel@vger.kernel.org
+References: <CGME20200317144340eucas1p1f6f7a6fbd27cbfeaab2ea97fbccb2836@eucas1p1.samsung.com>
+ <20200317144333.2904-1-b.zolnierkie@samsung.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <3ec639bd-f307-df95-857c-d613a375c7fc@kernel.dk>
+Date:   Thu, 26 Mar 2020 09:16:41 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-References: <20200319164227.87419-1-trishalfonso@google.com>
- <20200319164227.87419-4-trishalfonso@google.com> <CACT4Y+YHPfP3LP04=Zc4NgyhH8FMJ9m-eU_VPjmk5SmGWo_fTg@mail.gmail.com>
- <CAKFsvU+N=8=VmKVdNdf6os26z+vVD=vR=TL5GJtLQhR9FxOJUQ@mail.gmail.com> <CACT4Y+ZGcZhbkcAVVfKP1gUs7mg=LrSwBqhqpUozSX8Fof6ANA@mail.gmail.com>
-In-Reply-To: <CACT4Y+ZGcZhbkcAVVfKP1gUs7mg=LrSwBqhqpUozSX8Fof6ANA@mail.gmail.com>
-From:   Patricia Alfonso <trishalfonso@google.com>
-Date:   Thu, 26 Mar 2020 08:15:14 -0700
-Message-ID: <CAKFsvUK-9QU7SfKLoL0w75VgSOneO8DWciHTDYMfU8aD98Unbw@mail.gmail.com>
-Subject: Re: [RFC PATCH v2 3/3] KASAN: Port KASAN Tests to KUnit
-To:     Dmitry Vyukov <dvyukov@google.com>
-Cc:     David Gow <davidgow@google.com>,
-        Brendan Higgins <brendanhiggins@google.com>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        kunit-dev@googlegroups.com,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200317144333.2904-1-b.zolnierkie@samsung.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 26, 2020 at 2:12 AM Dmitry Vyukov <dvyukov@google.com> wrote:
->
-> On Tue, Mar 24, 2020 at 4:05 PM Patricia Alfonso
-> <trishalfonso@google.com> wrote:
-> >
-> > On Tue, Mar 24, 2020 at 4:25 AM Dmitry Vyukov <dvyukov@google.com> wrot=
-e:
-> > >
-> > > On Thu, Mar 19, 2020 at 5:42 PM 'Patricia Alfonso' via kasan-dev
-> > > <kasan-dev@googlegroups.com> wrote:
-> > > >
-> > > > Transfer all previous tests for KASAN to KUnit so they can be run
-> > > > more easily. Using kunit_tool, developers can run these tests with =
-their
-> > > > other KUnit tests and see "pass" or "fail" with the appropriate KAS=
-AN
-> > > > report instead of needing to parse each KASAN report to test KASAN
-> > > > functionalities. All KASAN reports are still printed to dmesg.
-> > > >
-> > > > Stack tests do not work in UML so those tests are protected inside =
-an
-> > > > "#if IS_ENABLED(CONFIG_KASAN_STACK)" so this only runs if stack
-> > > > instrumentation is enabled.
-> > > >
-> > > > copy_user_test cannot be run in KUnit so there is a separate test f=
-ile
-> > > > for those tests, which can be run as before as a module.
-> > >
-> > > Hi Patricia,
-> > >
-> > > FWIW I've got some conflicts applying this patch on latest linux-next
-> > > next-20200324. There are some changes to the tests in mm tree I think=
-.
-> > >
-> > > Which tree will this go through? I would be nice to resolve these
-> > > conflicts somehow, but I am not sure how. Maybe the kasan tests
-> > > changes are merged upstream next windows, and then rebase this?
-> > >
-> > > Also, how can I apply this for testing? I assume this is based on som=
-e
-> > > kunit branch? which one?
-> > >
-> > Hmm... okay, that sounds like a problem. I will have to look into the
-> > conflicts. I'm not sure which tree this will go through upstream; I
-> > expect someone will tell me which is best when the time comes. This is
-> > based on the kunit branch in the kunit documentation here:
-> > https://git.kernel.org/pub/scm/linux/kernel/git/shuah/linux-kselftest.g=
-it/log/?h=3Dkunit
->
-> I've checked out:
->
-> commit 0476e69f39377192d638c459d11400c6e9a6ffb0 (HEAD, kselftest/kunit)
-> Date:   Mon Mar 23 12:04:59 2020 -0700
->
-> But the build still fails for me:
->
-> mm/kasan/report.c: In function =E2=80=98kasan_update_kunit_status=E2=80=
-=99:
-> mm/kasan/report.c:466:6: error: implicit declaration of function
-> =E2=80=98kunit_find_named_resource=E2=80=99 [-Werror=3Dimplicit-function-=
-declar]
->   466 |  if (kunit_find_named_resource(cur_test, "kasan_data")) {
->       |      ^~~~~~~~~~~~~~~~~~~~~~~~~
-> mm/kasan/report.c:467:12: warning: assignment to =E2=80=98struct
-> kunit_resource *=E2=80=99 from =E2=80=98int=E2=80=99 makes pointer from i=
-nteger without a cas]
->   467 |   resource =3D kunit_find_named_resource(cur_test, "kasan_data");
->       |            ^
-> mm/kasan/report.c:468:24: error: =E2=80=98struct kunit_resource=E2=80=99 =
-has no member
-> named =E2=80=98data=E2=80=99
->   468 |   kasan_data =3D resource->data;
->       |                        ^~
->
-> What am I doing wrong?
+On 3/17/20 8:43 AM, Bartlomiej Zolnierkiewicz wrote:
+> Hi,
+> 
+> There have been reports in the past of libata core code size
+> being a problem in migration from deprecated IDE subsystem on
+> legacy PATA only systems, i.e.:
+> 
+> https://lore.kernel.org/linux-ide/db2838b7-4862-785b-3a1d-3bf09811340a@gmail.com/
+> 
+> This patchset re-organizes libata core code to exclude SATA
+> specific code from being built for PATA only setups.
+> 
+> The end result is up to 24% (by 23949 bytes, from 101769 bytes to
+> 77820 bytes) smaller libata core code size (as measured for m68k
+> arch using modified atari_defconfig) on affected setups.
+> 
+> I've tested this patchset using pata_falcon driver under ARAnyM
+> emulator.
 
-This patchset relies on another RFC patchset from Alan:
-https://lore.kernel.org/linux-kselftest/1583251361-12748-1-git-send-email-a=
-lan.maguire@oracle.com/T/#t
+Bart, I'd like to get this into 5.7, can you rebase on current
+for-5.7/libata? As you know, I dropped the dprintk series, and it's
+now throwing rejects.
 
-I thought I linked it in the commit message but it may only be in the
-commit message for part 2/3. It should work with Alan's patchset, but
-let me know if you have any trouble.
+-- 
+Jens Axboe
 
---
-Best,
-Patricia
