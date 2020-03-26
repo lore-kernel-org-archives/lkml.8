@@ -2,125 +2,104 @@ Return-Path: <SRS0=aGSP=5L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B02B7C43331
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 16:37:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C332FC2D0E5
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 16:37:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 853912078E
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 16:37:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=dabbelt-com.20150623.gappssmtp.com header.i=@dabbelt-com.20150623.gappssmtp.com header.b="DqAELuZE"
+	by mail.kernel.org (Postfix) with ESMTP id A508F2083E
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 16:37:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727916AbgCZQhs (ORCPT
+        id S1728144AbgCZQhy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 12:37:48 -0400
-Received: from mail-pj1-f67.google.com ([209.85.216.67]:36841 "EHLO
-        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727502AbgCZQhs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 12:37:48 -0400
-Received: by mail-pj1-f67.google.com with SMTP id nu11so2631796pjb.1
-        for <linux-kernel@vger.kernel.org>; Thu, 26 Mar 2020 09:37:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=dabbelt-com.20150623.gappssmtp.com; s=20150623;
-        h=date:subject:in-reply-to:cc:from:to:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Z52Q+C+NI5sRvzCwNZXwgTHsc/eFf849vvv2BFT3moo=;
-        b=DqAELuZErWTZ9hBELLMJ53oDN2Sud960uYRXs/thckf6EyZUJQdCpntPZ6YiACA6UE
-         Z+zCiJTaK/dRm8nt5AoEc7YoZ5imYsqSlKYoSpqCPMovTb0u1k15+TbbzLhdajQ8qzhW
-         OWqkLfZiJbn/ZbhDQGa5fg8J4mkBd2U6uIPDZ0o2huMMiFXD5eJAnGIuqz3DGKfFExWi
-         JzaoAb3syFAjg4Ltucnzc4IBecoILolIB6T2fW9YHLlPPSjYSY/SHZEd8WQAaJUSfB2u
-         FOwPTq3FOp2ZK8SjreYNkEhj3iqF/scAGPPJugkbCXYt5q/kwcrWUOwH68ZYKAIUdpse
-         qc+w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:subject:in-reply-to:cc:from:to:message-id
-         :mime-version:content-transfer-encoding;
-        bh=Z52Q+C+NI5sRvzCwNZXwgTHsc/eFf849vvv2BFT3moo=;
-        b=U6hSMXScneh4mcFIxqnc1uoAbNILnfrNH4wBBJBTW4i2XQGE+VVzag7FEwN4lh7JUo
-         lKieN6ySYplV/bCYkNFuctPxc4qQ4W6GRT+7Eoesx5X3DyaCAFRhUZNb9iNtVShkhsiq
-         YePsO/YJ6kXcmPF6wNLALAqjNHc+4iCD0/UOlai/4Oa1G3v7EcMYnswUdE/EsgG44sZF
-         yejuyxvo74Wo3qBVs/0xYt1Nvrb76DMt2I0hlQxNOdOBtvO8Grp8vUvvmzLb98g8A2zn
-         h7oyI9JKCdrGjNw0iafUyGjyjT8XaR+3NcYd9mkg0XeU3Le9Bxy0a8TErIUGM7J3TPWn
-         yodA==
-X-Gm-Message-State: ANhLgQ3xlNVM4Wi/erMiKTz5CYdX7oga9rfWA4sSjAlVU556zSsIIHHi
-        tJ/iirXpiBkIa3uN+N2Qf2lg4Q==
-X-Google-Smtp-Source: ADFU+vtpKTz44UaLjK5rWW1p85dRlUFtlNTouBjZDGVUSoB5dNYxtvMdL9b/q3M0sgc1U6XZSte2wQ==
-X-Received: by 2002:a17:902:6b48:: with SMTP id g8mr8800403plt.149.1585240665030;
-        Thu, 26 Mar 2020 09:37:45 -0700 (PDT)
-Received: from localhost (c-67-161-15-180.hsd1.ca.comcast.net. [67.161.15.180])
-        by smtp.gmail.com with ESMTPSA id t60sm2053163pjb.9.2020.03.26.09.37.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 26 Mar 2020 09:37:43 -0700 (PDT)
-Date:   Thu, 26 Mar 2020 09:37:43 -0700 (PDT)
-X-Google-Original-Date: Thu, 26 Mar 2020 09:37:16 PDT (-0700)
-Subject:     Re: [PATCH v7 08/13] pwm: sifive: Use 64-bit division macros for period and duty cycle
-In-Reply-To: <4212f82b8711b2b33f0e71142526d5a7575564e9.1583782035.git.gurus@codeaurora.org>
-CC:     linux-pwm@vger.kernel.org, thierry.reding@gmail.com,
-        uwe@kleine-koenig.org, subbaram@codeaurora.org,
-        linux-kernel@vger.kernel.org, gurus@codeaurora.org,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        linux-riscv@lists.infradead.org, yash.shah@sifive.com,
-        Atish Patra <Atish.Patra@wdc.com>
-From:   Palmer Dabbelt <palmer@dabbelt.com>
-To:     gurus@codeaurora.org
-Message-ID: <mhng-29ba8348-64c8-4113-ac65-1e81c0a1da70@palmerdabbelt-glaptop1>
-Mime-Version: 1.0 (MHng)
-Content-Type: text/plain; charset=utf-8; format=flowed
+        Thu, 26 Mar 2020 12:37:54 -0400
+Received: from mx2.suse.de ([195.135.220.15]:37648 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727502AbgCZQhy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Mar 2020 12:37:54 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id BD63FACCE;
+        Thu, 26 Mar 2020 16:37:48 +0000 (UTC)
+From:   Michal Suchanek <msuchanek@suse.de>
+To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Allison Randal <allison@lohutok.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Russell Currey <ruscur@russell.cc>,
+        Michal Suchanek <msuchanek@suse.de>,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] powerpc/64: Fix section mismatch warnings.
+Date:   Thu, 26 Mar 2020 17:37:42 +0100
+Message-Id: <20200326163742.28990-1-msuchanek@suse.de>
+X-Mailer: git-send-email 2.23.0
+MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 09 Mar 2020 12:35:11 PDT (-0700), gurus@codeaurora.org wrote:
-> Because period and duty cycle are defined in the PWM framework structs
-> as ints with units of nanoseconds, the maximum time duration that can be
-> set is limited to ~2.147 seconds. Redefining them as u64 values will
-> enable larger time durations to be set.
->
-> As a first step, prepare drivers to handle the switch to u64 period and
-> duty_cycle by replacing division operations involving pwm period and duty cycle
-> with their 64-bit equivalents as appropriate. The actual switch to u64 period
-> and duty_cycle follows as a separate patch.
->
-> Where the dividend is 64-bit but the divisor is 32-bit, use *_ULL
-> macros:
-> - DIV_ROUND_UP_ULL
-> - DIV_ROUND_CLOSEST_ULL
-> - div_u64
->
-> Where the divisor is 64-bit (dividend may be 32-bit or 64-bit), use
-> DIV64_* macros:
-> - DIV64_U64_ROUND_CLOSEST
-> - div64_u64
->
-> Cc: Palmer Dabbelt <palmer@dabbelt.com>
-> Cc: Paul Walmsley <paul.walmsley@sifive.com>
-> Cc: linux-riscv@lists.infradead.org
-> Cc: Yash Shah <yash.shah@sifive.com>
-> Cc: Atish Patra <atish.patra@wdc.com>
->
-> Signed-off-by: Guru Das Srinagesh <gurus@codeaurora.org>
-> ---
->  drivers/pwm/pwm-sifive.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/pwm/pwm-sifive.c b/drivers/pwm/pwm-sifive.c
-> index cc63f9b..62de0bb 100644
-> --- a/drivers/pwm/pwm-sifive.c
-> +++ b/drivers/pwm/pwm-sifive.c
-> @@ -181,7 +181,7 @@ static int pwm_sifive_apply(struct pwm_chip *chip, struct pwm_device *pwm,
->  	 * consecutively
->  	 */
->  	num = (u64)duty_cycle * (1U << PWM_SIFIVE_CMPWIDTH);
-> -	frac = DIV_ROUND_CLOSEST_ULL(num, state->period);
-> +	frac = DIV64_U64_ROUND_CLOSEST(num, state->period);
->  	/* The hardware cannot generate a 100% duty cycle */
->  	frac = min(frac, (1U << PWM_SIFIVE_CMPWIDTH) - 1);
+Fixes the following warnings:
 
-Acked-by: Palmer Dabbelt <palmerdabbelt@google.com>
+WARNING: vmlinux.o(.text+0x2d24): Section mismatch in reference from the variable __boot_from_prom to the function .init.text:prom_init()
+The function __boot_from_prom() references
+the function __init prom_init().
+This is often because __boot_from_prom lacks a __init
+annotation or the annotation of prom_init is wrong.
+
+WARNING: vmlinux.o(.text+0x2fd0): Section mismatch in reference from the variable start_here_common to the function .init.text:start_kernel()
+The function start_here_common() references
+the function __init start_kernel().
+This is often because start_here_common lacks a __init
+annotation or the annotation of start_kernel is wrong.
+
+Signed-off-by: Michal Suchanek <msuchanek@suse.de>
+---
+ arch/powerpc/kernel/head_64.S | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/arch/powerpc/kernel/head_64.S b/arch/powerpc/kernel/head_64.S
+index ad79fddb974d..4afb82f1b7c7 100644
+--- a/arch/powerpc/kernel/head_64.S
++++ b/arch/powerpc/kernel/head_64.S
+@@ -537,6 +537,7 @@ __start_initialization_multiplatform:
+ 	b	__after_prom_start
+ #endif /* CONFIG_PPC_BOOK3E */
+ 
++__REF
+ __boot_from_prom:
+ #ifdef CONFIG_PPC_OF_BOOT_TRAMPOLINE
+ 	/* Save parameters */
+@@ -574,6 +575,7 @@ __boot_from_prom:
+ 	/* We never return. We also hit that trap if trying to boot
+ 	 * from OF while CONFIG_PPC_OF_BOOT_TRAMPOLINE isn't selected */
+ 	trap
++	.previous
+ 
+ __after_prom_start:
+ #ifdef CONFIG_RELOCATABLE
+@@ -980,6 +982,7 @@ start_here_multiplatform:
+ 	.previous
+ 	/* This is where all platforms converge execution */
+ 
++__REF
+ start_here_common:
+ 	/* relocation is on at this point */
+ 	std	r1,PACAKSAVE(r13)
+@@ -1001,6 +1004,7 @@ start_here_common:
+ 	/* Not reached */
+ 	trap
+ 	EMIT_BUG_ENTRY 0b, __FILE__, __LINE__, 0
++	.previous
+ 
+ /*
+  * We put a few things here that have to be page-aligned.
+-- 
+2.16.4
+
