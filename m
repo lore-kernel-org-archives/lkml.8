@@ -6,57 +6,70 @@ X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2565C43331
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 12:07:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CB45C43331
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 12:07:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 92E4020714
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 12:07:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 63DAE2073E
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 12:07:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728343AbgCZMHB (ORCPT
+        id S1728358AbgCZMHI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 08:07:01 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:60721 "EHLO ozlabs.org"
+        Thu, 26 Mar 2020 08:07:08 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:56527 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728329AbgCZMG6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 08:06:58 -0400
+        id S1728330AbgCZMHG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Mar 2020 08:07:06 -0400
 Received: by ozlabs.org (Postfix, from userid 1034)
-        id 48p3cw3lcxz9sT3; Thu, 26 Mar 2020 23:06:55 +1100 (AEDT)
+        id 48p3d34sgtz9sRY; Thu, 26 Mar 2020 23:07:02 +1100 (AEDT)
 X-powerpc-patch-notification: thanks
-X-powerpc-patch-commit: 850507f30c38dff21ed557cb98ab16db26c32bbc
-In-Reply-To: <20200318060004.10685-1-po-hsu.lin@canonical.com>
-To:     Po-Hsu Lin <po-hsu.lin@canonical.com>,
-        linux-kselftest@vger.kernel.org
+X-powerpc-patch-commit: af6cf95c4d003fccd6c2ecc99a598fb854b537e7
+In-Reply-To: <20200323222729.15365-1-natechancellor@gmail.com>
+To:     Nathan Chancellor <natechancellor@gmail.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>
 From:   Michael Ellerman <patch-notifications@ellerman.id.au>
-Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        paulus@samba.org, shuah@kernel.org
-Subject: Re: [PATCHv2] selftests/powerpc: Turn off timeout setting for benchmarks, dscr, signal, tm
-Message-Id: <48p3cw3lcxz9sT3@ozlabs.org>
-Date:   Thu, 26 Mar 2020 23:06:55 +1100 (AEDT)
+Cc:     Ilie Halip <ilie.halip@gmail.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        linuxppc-dev@lists.ozlabs.org
+Subject: Re: [PATCH] powerpc/maple: Fix declaration made after definition
+Message-Id: <48p3d34sgtz9sRY@ozlabs.org>
+Date:   Thu, 26 Mar 2020 23:07:02 +1100 (AEDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2020-03-18 at 06:00:04 UTC, Po-Hsu Lin wrote:
-> Some specific tests in powerpc can take longer than the default 45
-> seconds that added in commit 852c8cbf34d3 ("selftests/kselftest/runner.sh:
-> Add 45 second timeout per test") to run, the following test result was
-> collected across 2 Power8 nodes and 1 Power9 node in our pool:
->   powerpc/benchmarks/futex_bench - 52s
->   powerpc/dscr/dscr_sysfs_test - 116s
->   powerpc/signal/signal_fuzzer - 88s
->   powerpc/tm/tm_unavailable_test - 168s
->   powerpc/tm/tm-poison - 240s
+On Mon, 2020-03-23 at 22:27:29 UTC, Nathan Chancellor wrote:
+> When building ppc64 defconfig, Clang errors (trimmed for brevity):
 > 
-> Thus they will fail with TIMEOUT error. Disable the timeout setting
-> for these sub-tests to allow them finish properly.
+> arch/powerpc/platforms/maple/setup.c:365:1: error: attribute declaration
+> must precede definition [-Werror,-Wignored-attributes]
+> machine_device_initcall(maple, maple_cpc925_edac_setup);
+> ^
 > 
-> https://bugs.launchpad.net/bugs/1864642
-> Fixes: 852c8cbf34d3 ("selftests/kselftest/runner.sh: Add 45 second timeout per test")
-> Signed-off-by: Po-Hsu Lin <po-hsu.lin@canonical.com>
+> machine_device_initcall expands to __define_machine_initcall, which in
+> turn has the macro machine_is used in it, which declares mach_##name
+> with an __attribute__((weak)). define_machine actually defines
+> mach_##name, which in this file happens before the declaration, hence
+> the warning.
+> 
+> To fix this, move define_machine after machine_device_initcall so that
+> the declaration occurs before the definition, which matches how
+> machine_device_initcall and define_machine work throughout arch/powerpc.
+> 
+> While we're here, remove some spaces before tabs.
+> 
+> Fixes: 8f101a051ef0 ("edac: cpc925 MC platform device setup")
+> Link: https://godbolt.org/z/kDoYSA
+> Link: https://github.com/ClangBuiltLinux/linux/issues/662
+> Reported-by: Nick Desaulniers <ndesaulniers@google.com>
+> Suggested-by: Ilie Halip <ilie.halip@gmail.com>
+> Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
 
 Applied to powerpc next, thanks.
 
-https://git.kernel.org/powerpc/c/850507f30c38dff21ed557cb98ab16db26c32bbc
+https://git.kernel.org/powerpc/c/af6cf95c4d003fccd6c2ecc99a598fb854b537e7
 
 cheers
