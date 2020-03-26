@@ -2,218 +2,340 @@ Return-Path: <SRS0=aGSP=5L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A1B5C43331
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 07:07:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A3A6C43331
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 07:07:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3716D20719
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 07:07:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E2BC420719
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 07:07:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727661AbgCZHG6 convert rfc822-to-8bit (ORCPT
+        id S1727708AbgCZHHM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 03:06:58 -0400
-Received: from out30-45.freemail.mail.aliyun.com ([115.124.30.45]:37610 "EHLO
-        out30-45.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726138AbgCZHG6 (ORCPT
+        Thu, 26 Mar 2020 03:07:12 -0400
+Received: from alexa-out-blr-01.qualcomm.com ([103.229.18.197]:44937 "EHLO
+        alexa-out-blr-01.qualcomm.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726210AbgCZHHM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 03:06:58 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R121e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e01419;MF=teawaterz@linux.alibaba.com;NM=1;PH=DS;RN=13;SR=0;TI=SMTPD_---0TtfYrM9_1585206379;
-Received: from 127.0.0.1(mailfrom:teawaterz@linux.alibaba.com fp:SMTPD_---0TtfYrM9_1585206379)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Thu, 26 Mar 2020 15:06:24 +0800
-Content-Type: text/plain;
-        charset=utf-8
-Mime-Version: 1.0 (Mac OS X Mail 13.0 \(3608.60.0.2.5\))
-Subject: Re: [PATCH for QEMU v2] virtio-balloon: Add option cont-pages to set
- VIRTIO_BALLOON_VQ_INFLATE_CONT
-From:   teawater <teawaterz@linux.alibaba.com>
-In-Reply-To: <1584893097-12317-2-git-send-email-teawater@gmail.com>
-Date:   Thu, 26 Mar 2020 15:06:18 +0800
-Cc:     "Michael S. Tsirkin" <mst@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        mojha@codeaurora.org, pagupta@redhat.com, aquini@redhat.com,
-        namit@vmware.com, david@redhat.com,
-        virtualization@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        qemu-devel@nongnu.org
-Content-Transfer-Encoding: 8BIT
-Message-Id: <575FA585-343A-4246-830B-C1CB3153B7E0@linux.alibaba.com>
-References: <1584893097-12317-1-git-send-email-teawater@gmail.com>
- <1584893097-12317-2-git-send-email-teawater@gmail.com>
-To:     Hui Zhu <teawater@gmail.com>
-X-Mailer: Apple Mail (2.3608.60.0.2.5)
+        Thu, 26 Mar 2020 03:07:12 -0400
+Received: from ironmsg01-blr.qualcomm.com ([10.86.208.130])
+  by alexa-out-blr-01.qualcomm.com with ESMTP/TLS/AES256-SHA; 26 Mar 2020 12:37:08 +0530
+Received: from c-sanm-linux.qualcomm.com ([10.206.25.31])
+  by ironmsg01-blr.qualcomm.com with ESMTP; 26 Mar 2020 12:37:07 +0530
+Received: by c-sanm-linux.qualcomm.com (Postfix, from userid 2343233)
+        id 8A47E19BD; Thu, 26 Mar 2020 12:37:06 +0530 (IST)
+From:   Sandeep Maheswaram <sanm@codeaurora.org>
+To:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Felipe Balbi <balbi@kernel.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Doug Anderson <dianders@chromium.org>,
+        Matthias Kaehlcke <mka@chromium.org>
+Cc:     linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Manu Gautam <mgautam@codeaurora.org>,
+        Sandeep Maheswaram <sanm@codeaurora.org>
+Subject: [PATCH v5 1/2] dt-bindings: usb: qcom,dwc3: Convert USB DWC3 bindings
+Date:   Thu, 26 Mar 2020 12:36:07 +0530
+Message-Id: <1585206368-685-2-git-send-email-sanm@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1585206368-685-1-git-send-email-sanm@codeaurora.org>
+References: <1585206368-685-1-git-send-email-sanm@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Ping.
+Convert USB DWC3 bindings to DT schema format using json-schema.
 
-Thanks,
-Hui
+Signed-off-by: Sandeep Maheswaram <sanm@codeaurora.org>
+---
+ .../devicetree/bindings/usb/qcom,dwc3.txt          | 104 --------------
+ .../devicetree/bindings/usb/qcom,dwc3.yaml         | 158 +++++++++++++++++++++
+ 2 files changed, 158 insertions(+), 104 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/usb/qcom,dwc3.txt
+ create mode 100644 Documentation/devicetree/bindings/usb/qcom,dwc3.yaml
 
-> 2020年3月23日 00:04，Hui Zhu <teawater@gmail.com> 写道：
-> 
-> If the guest kernel has many fragmentation pages, use virtio_balloon
-> will split THP of QEMU when it calls MADV_DONTNEED madvise to release
-> the balloon pages.
-> Set option cont-pages to on will open flags VIRTIO_BALLOON_VQ_INFLATE_CONT
-> and set continuous pages order to THP order.
-> Then It will get continuous pages PFN from VQ icvq use use madvise
-> MADV_DONTNEED release the THP page.
-> This will handle the THP split issue.
-> 
-> Signed-off-by: Hui Zhu <teawaterz@linux.alibaba.com>
-> ---
-> hw/virtio/virtio-balloon.c                      | 32 +++++++++++++++++++++----
-> include/hw/virtio/virtio-balloon.h              |  4 +++-
-> include/standard-headers/linux/virtio_balloon.h |  4 ++++
-> 3 files changed, 35 insertions(+), 5 deletions(-)
-> 
-> diff --git a/hw/virtio/virtio-balloon.c b/hw/virtio/virtio-balloon.c
-> index a4729f7..88bdaca 100644
-> --- a/hw/virtio/virtio-balloon.c
-> +++ b/hw/virtio/virtio-balloon.c
-> @@ -34,6 +34,7 @@
-> #include "hw/virtio/virtio-access.h"
-> 
-> #define BALLOON_PAGE_SIZE  (1 << VIRTIO_BALLOON_PFN_SHIFT)
-> +#define CONT_PAGES_ORDER   9
-> 
-> typedef struct PartiallyBalloonedPage {
->     ram_addr_t base_gpa;
-> @@ -65,7 +66,8 @@ static bool virtio_balloon_pbp_matches(PartiallyBalloonedPage *pbp,
-> 
-> static void balloon_inflate_page(VirtIOBalloon *balloon,
->                                  MemoryRegion *mr, hwaddr mr_offset,
-> -                                 PartiallyBalloonedPage *pbp)
-> +                                 PartiallyBalloonedPage *pbp, 
-> +                                 bool is_cont_pages)
-> {
->     void *addr = memory_region_get_ram_ptr(mr) + mr_offset;
->     ram_addr_t rb_offset, rb_aligned_offset, base_gpa;
-> @@ -76,6 +78,13 @@ static void balloon_inflate_page(VirtIOBalloon *balloon,
->     /* XXX is there a better way to get to the RAMBlock than via a
->      * host address? */
->     rb = qemu_ram_block_from_host(addr, false, &rb_offset);
-> +
-> +    if (is_cont_pages) {
-> +        ram_block_discard_range(rb, rb_offset,
-> +                                BALLOON_PAGE_SIZE << CONT_PAGES_ORDER);
-> +        return;
-> +    }
-> +
->     rb_page_size = qemu_ram_pagesize(rb);
-> 
->     if (rb_page_size == BALLOON_PAGE_SIZE) {
-> @@ -361,9 +370,10 @@ static void virtio_balloon_handle_output(VirtIODevice *vdev, VirtQueue *vq)
->             trace_virtio_balloon_handle_output(memory_region_name(section.mr),
->                                                pa);
->             if (!qemu_balloon_is_inhibited()) {
-> -                if (vq == s->ivq) {
-> +                if (vq == s->ivq || vq == s->icvq) {
->                     balloon_inflate_page(s, section.mr,
-> -                                         section.offset_within_region, &pbp);
-> +                                         section.offset_within_region, &pbp,
-> +                                         vq == s->icvq);
->                 } else if (vq == s->dvq) {
->                     balloon_deflate_page(s, section.mr, section.offset_within_region);
->                 } else {
-> @@ -618,9 +628,12 @@ static size_t virtio_balloon_config_size(VirtIOBalloon *s)
->     if (s->qemu_4_0_config_size) {
->         return sizeof(struct virtio_balloon_config);
->     }
-> -    if (virtio_has_feature(features, VIRTIO_BALLOON_F_PAGE_POISON)) {
-> +    if (virtio_has_feature(s->host_features, VIRTIO_BALLOON_F_CONT_PAGES)) {
->         return sizeof(struct virtio_balloon_config);
->     }
-> +    if (virtio_has_feature(features, VIRTIO_BALLOON_F_PAGE_POISON)) {
-> +        return offsetof(struct virtio_balloon_config, pages_order);
-> +    }
->     if (virtio_has_feature(features, VIRTIO_BALLOON_F_FREE_PAGE_HINT)) {
->         return offsetof(struct virtio_balloon_config, poison_val);
->     }
-> @@ -646,6 +659,10 @@ static void virtio_balloon_get_config(VirtIODevice *vdev, uint8_t *config_data)
->                        cpu_to_le32(VIRTIO_BALLOON_CMD_ID_DONE);
->     }
-> 
-> +    if (virtio_has_feature(dev->host_features, VIRTIO_BALLOON_F_CONT_PAGES)) {
-> +        config.pages_order = cpu_to_le32(CONT_PAGES_ORDER);
-> +    }
-> +
->     trace_virtio_balloon_get_config(config.num_pages, config.actual);
->     memcpy(config_data, &config, virtio_balloon_config_size(dev));
-> }
-> @@ -816,6 +833,11 @@ static void virtio_balloon_device_realize(DeviceState *dev, Error **errp)
->             virtio_error(vdev, "iothread is missing");
->         }
->     }
-> +
-> +    if (virtio_has_feature(s->host_features, VIRTIO_BALLOON_F_CONT_PAGES)) {
-> +        s->icvq = virtio_add_queue(vdev, 128, virtio_balloon_handle_output);
-> +    }
-> +
->     reset_stats(s);
-> }
-> 
-> @@ -916,6 +938,8 @@ static Property virtio_balloon_properties[] = {
->                     VIRTIO_BALLOON_F_DEFLATE_ON_OOM, false),
->     DEFINE_PROP_BIT("free-page-hint", VirtIOBalloon, host_features,
->                     VIRTIO_BALLOON_F_FREE_PAGE_HINT, false),
-> +    DEFINE_PROP_BIT("cont-pages", VirtIOBalloon, host_features,
-> +                    VIRTIO_BALLOON_F_CONT_PAGES, false),
->     /* QEMU 4.0 accidentally changed the config size even when free-page-hint
->      * is disabled, resulting in QEMU 3.1 migration incompatibility.  This
->      * property retains this quirk for QEMU 4.1 machine types.
-> diff --git a/include/hw/virtio/virtio-balloon.h b/include/hw/virtio/virtio-balloon.h
-> index d1c968d..61d2419 100644
-> --- a/include/hw/virtio/virtio-balloon.h
-> +++ b/include/hw/virtio/virtio-balloon.h
-> @@ -42,7 +42,7 @@ enum virtio_balloon_free_page_report_status {
-> 
-> typedef struct VirtIOBalloon {
->     VirtIODevice parent_obj;
-> -    VirtQueue *ivq, *dvq, *svq, *free_page_vq;
-> +    VirtQueue *ivq, *dvq, *svq, *free_page_vq, *icvq;
->     uint32_t free_page_report_status;
->     uint32_t num_pages;
->     uint32_t actual;
-> @@ -70,6 +70,8 @@ typedef struct VirtIOBalloon {
->     uint32_t host_features;
-> 
->     bool qemu_4_0_config_size;
-> +
-> +    uint32_t pages_order;
-> } VirtIOBalloon;
-> 
-> #endif
-> diff --git a/include/standard-headers/linux/virtio_balloon.h b/include/standard-headers/linux/virtio_balloon.h
-> index 9375ca2..ee18be7 100644
-> --- a/include/standard-headers/linux/virtio_balloon.h
-> +++ b/include/standard-headers/linux/virtio_balloon.h
-> @@ -36,6 +36,8 @@
-> #define VIRTIO_BALLOON_F_DEFLATE_ON_OOM	2 /* Deflate balloon on OOM */
-> #define VIRTIO_BALLOON_F_FREE_PAGE_HINT	3 /* VQ to report free pages */
-> #define VIRTIO_BALLOON_F_PAGE_POISON	4 /* Guest is using page poisoning */
-> +#define VIRTIO_BALLOON_F_CONT_PAGES	5 /* VQ to report continuous pages */
-> +
-> 
-> /* Size of a PFN in the balloon interface. */
-> #define VIRTIO_BALLOON_PFN_SHIFT 12
-> @@ -51,6 +53,8 @@ struct virtio_balloon_config {
-> 	uint32_t free_page_report_cmd_id;
-> 	/* Stores PAGE_POISON if page poisoning is in use */
-> 	uint32_t poison_val;
-> +	/* Pages order if VIRTIO_BALLOON_F_CONT_PAGES is set */
-> +	uint32_t pages_order;
-> };
-> 
-> #define VIRTIO_BALLOON_S_SWAP_IN  0   /* Amount of memory swapped in */
-> -- 
-> 2.7.4
-> 
+diff --git a/Documentation/devicetree/bindings/usb/qcom,dwc3.txt b/Documentation/devicetree/bindings/usb/qcom,dwc3.txt
+deleted file mode 100644
+index cb695aa..0000000
+--- a/Documentation/devicetree/bindings/usb/qcom,dwc3.txt
++++ /dev/null
+@@ -1,104 +0,0 @@
+-Qualcomm SuperSpeed DWC3 USB SoC controller
+-
+-Required properties:
+-- compatible:		Compatible list, contains
+-			"qcom,dwc3"
+-			"qcom,msm8996-dwc3" for msm8996 SOC.
+-			"qcom,msm8998-dwc3" for msm8998 SOC.
+-			"qcom,sdm845-dwc3" for sdm845 SOC.
+-- reg:			Offset and length of register set for QSCRATCH wrapper
+-- power-domains:	specifies a phandle to PM domain provider node
+-- clocks:		A list of phandle + clock-specifier pairs for the
+-				clocks listed in clock-names
+-- clock-names:		Should contain the following:
+-  "core"		Master/Core clock, have to be >= 125 MHz for SS
+-				operation and >= 60MHz for HS operation
+-  "mock_utmi"		Mock utmi clock needed for ITP/SOF generation in
+-				host mode. Its frequency should be 19.2MHz.
+-  "sleep"		Sleep clock, used for wakeup when USB3 core goes
+-				into low power mode (U3).
+-
+-Optional clocks:
+-  "iface"		System bus AXI clock.
+-			Not present on "qcom,msm8996-dwc3" compatible.
+-  "cfg_noc"		System Config NOC clock.
+-			Not present on "qcom,msm8996-dwc3" compatible.
+-- assigned-clocks:	Should be:
+-				MOCK_UTMI_CLK
+-				MASTER_CLK
+-- assigned-clock-rates: Should be:
+-                                19.2Mhz (192000000) for MOCK_UTMI_CLK
+-                                >=125Mhz (125000000) for MASTER_CLK in SS mode
+-                                >=60Mhz (60000000) for MASTER_CLK in HS mode
+-
+-Optional properties:
+-- resets:		Phandle to reset control that resets core and wrapper.
+-- interrupts:		specifies interrupts from controller wrapper used
+-			to wakeup from low power/susepnd state.	Must contain
+-			one or more entry for interrupt-names property
+-- interrupt-names:	Must include the following entries:
+-			- "hs_phy_irq": The interrupt that is asserted when a
+-			   wakeup event is received on USB2 bus
+-			- "ss_phy_irq": The interrupt that is asserted when a
+-			   wakeup event is received on USB3 bus
+-			- "dm_hs_phy_irq" and "dp_hs_phy_irq": Separate
+-			   interrupts for any wakeup event on DM and DP lines
+-- qcom,select-utmi-as-pipe-clk: if present, disable USB3 pipe_clk requirement.
+-				Used when dwc3 operates without SSPHY and only
+-				HS/FS/LS modes are supported.
+-
+-Required child node:
+-A child node must exist to represent the core DWC3 IP block. The name of
+-the node is not important. The content of the node is defined in dwc3.txt.
+-
+-Phy documentation is provided in the following places:
+-Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt   - USB3 QMP PHY
+-Documentation/devicetree/bindings/phy/qcom-qusb2-phy.txt - USB2 QUSB2 PHY
+-
+-Example device nodes:
+-
+-		hs_phy: phy@100f8800 {
+-			compatible = "qcom,qusb2-v2-phy";
+-			...
+-		};
+-
+-		ss_phy: phy@100f8830 {
+-			compatible = "qcom,qmp-v3-usb3-phy";
+-			...
+-		};
+-
+-		usb3_0: usb30@a6f8800 {
+-			compatible = "qcom,dwc3";
+-			reg = <0xa6f8800 0x400>;
+-			#address-cells = <1>;
+-			#size-cells = <1>;
+-			ranges;
+-
+-			interrupts = <0 131 0>, <0 486 0>, <0 488 0>, <0 489 0>;
+-			interrupt-names = "hs_phy_irq", "ss_phy_irq",
+-				  "dm_hs_phy_irq", "dp_hs_phy_irq";
+-
+-			clocks = <&gcc GCC_USB30_PRIM_MASTER_CLK>,
+-				<&gcc GCC_USB30_PRIM_MOCK_UTMI_CLK>,
+-				<&gcc GCC_USB30_PRIM_SLEEP_CLK>;
+-			clock-names = "core", "mock_utmi", "sleep";
+-
+-			assigned-clocks = <&gcc GCC_USB30_PRIM_MOCK_UTMI_CLK>,
+-					  <&gcc GCC_USB30_PRIM_MASTER_CLK>;
+-			assigned-clock-rates = <19200000>, <133000000>;
+-
+-			resets = <&gcc GCC_USB30_PRIM_BCR>;
+-			reset-names = "core_reset";
+-			power-domains = <&gcc USB30_PRIM_GDSC>;
+-			qcom,select-utmi-as-pipe-clk;
+-
+-			dwc3@10000000 {
+-				compatible = "snps,dwc3";
+-				reg = <0x10000000 0xcd00>;
+-				interrupts = <0 205 0x4>;
+-				phys = <&hs_phy>, <&ss_phy>;
+-				phy-names = "usb2-phy", "usb3-phy";
+-				dr_mode = "host";
+-			};
+-		};
+-
+diff --git a/Documentation/devicetree/bindings/usb/qcom,dwc3.yaml b/Documentation/devicetree/bindings/usb/qcom,dwc3.yaml
+new file mode 100644
+index 0000000..0f69475
+--- /dev/null
++++ b/Documentation/devicetree/bindings/usb/qcom,dwc3.yaml
+@@ -0,0 +1,158 @@
++# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
++
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Qualcomm SuperSpeed DWC3 USB SoC controller
++
++maintainers:
++  - Manu Gautam <mgautam@codeaurora.org>
++
++properties:
++  compatible:
++    items:
++      - enum:
++          - qcom,msm8996-dwc3
++          - qcom,msm8998-dwc3
++          - qcom,sdm845-dwc3
++      - const: qcom,dwc3
++
++  reg:
++    description: Offset and length of register set for QSCRATCH wrapper
++    maxItems: 1
++
++  "#address-cells":
++    enum: [ 1, 2 ]
++
++  "#size-cells":
++    enum: [ 1, 2 ]
++
++  power-domains:
++    description: specifies a phandle to PM domain provider node
++    maxItems: 1
++
++  clocks:
++    description:
++      A list of phandle and clock-specifier pairs for the clocks
++      listed in clock-names.
++    items:
++      - description: System Config NOC clock.
++      - description: Master/Core clock, has to be >= 125 MHz
++          for SS operation and >= 60MHz for HS operation.
++      - description: System bus AXI clock.
++      - description: Mock utmi clock needed for ITP/SOF generation
++          in host mode. Its frequency should be 19.2MHz.
++      - description: Sleep clock, used for wakeup when
++          USB3 core goes into low power mode (U3).
++
++  clock-names:
++    items:
++      - const: cfg_noc
++      - const: core
++      - const: iface
++      - const: mock_utmi
++      - const: sleep
++
++  assigned-clocks:
++    items:
++      - description: Phandle and clock specifier of MOCK_UTMI_CLK.
++      - description: Phandle and clock specifoer of MASTER_CLK.
++
++  assigned-clock-rates:
++    maxItems: 2
++    items:
++      - description: Must be 19.2MHz (19200000).
++      - description: Must be >= 60 MHz in HS mode, >= 125 MHz in SS mode.
++
++  resets:
++    maxItems: 1
++
++  interrupts:
++    items:
++      - description: The interrupt that is asserted
++          when a wakeup event is received on USB2 bus.
++      - description: The interrupt that is asserted
++          when a wakeup event is received on USB3 bus.
++      - description: Wakeup event on DM line.
++      - description: Wakeup event on DP line.
++
++  interrupt-names:
++    items:
++      - const: hs_phy_irq
++      - const: ss_phy_irq
++      - const: dm_hs_phy_irq
++      - const: dp_hs_phy_irq
++
++  qcom,select-utmi-as-pipe-clk:
++    description:
++      If present, disable USB3 pipe_clk requirement.
++      Used when dwc3 operates without SSPHY and only
++      HS/FS/LS modes are supported.
++    type: boolean
++
++# Required child node:
++
++patternProperties:
++  "^dwc3@[0-9a-f]+$":
++    type: object
++    description:
++      A child node must exist to represent the core DWC3 IP block
++      The content of the node is defined in dwc3.txt.
++
++required:
++  - compatible
++  - reg
++  - "#address-cells"
++  - "#size-cells"
++  - power-domains
++  - clocks
++  - clock-names
++
++examples:
++  - |
++    #include <dt-bindings/clock/qcom,gcc-sdm845.h>
++    #include <dt-bindings/interrupt-controller/arm-gic.h>
++    #include <dt-bindings/interrupt-controller/irq.h>
++    usb@a6f8800 {
++        compatible = "qcom,sdm845-dwc3", "qcom,dwc3";
++        reg = <0 0x0a6f8800 0 0x400>;
++
++        #address-cells = <2>;
++        #size-cells = <2>;
++
++        clocks = <&gcc GCC_CFG_NOC_USB3_PRIM_AXI_CLK>,
++                 <&gcc GCC_USB30_PRIM_MASTER_CLK>,
++                 <&gcc GCC_AGGRE_USB3_PRIM_AXI_CLK>,
++                 <&gcc GCC_USB30_PRIM_MOCK_UTMI_CLK>,
++                 <&gcc GCC_USB30_PRIM_SLEEP_CLK>;
++        clock-names = "cfg_noc", "core", "iface", "mock_utmi",
++                      "sleep";
++
++        assigned-clocks = <&gcc GCC_USB30_PRIM_MOCK_UTMI_CLK>,
++                          <&gcc GCC_USB30_PRIM_MASTER_CLK>;
++        assigned-clock-rates = <19200000>, <150000000>;
++
++        interrupts = <GIC_SPI 131 IRQ_TYPE_LEVEL_HIGH>,
++                     <GIC_SPI 486 IRQ_TYPE_LEVEL_HIGH>,
++                     <GIC_SPI 488 IRQ_TYPE_LEVEL_HIGH>,
++                     <GIC_SPI 489 IRQ_TYPE_LEVEL_HIGH>;
++        interrupt-names = "hs_phy_irq", "ss_phy_irq",
++                          "dm_hs_phy_irq", "dp_hs_phy_irq";
++
++        power-domains = <&gcc USB30_PRIM_GDSC>;
++
++        resets = <&gcc GCC_USB30_PRIM_BCR>;
++
++        dwc3@a600000 {
++            compatible = "snps,dwc3";
++            reg = <0 0x0a600000 0 0xcd00>;
++            interrupts = <GIC_SPI 133 IRQ_TYPE_LEVEL_HIGH>;
++            iommus = <&apps_smmu 0x740 0>;
++            snps,dis_u2_susphy_quirk;
++            snps,dis_enblslpm_quirk;
++            phys = <&usb_1_hsphy>, <&usb_1_ssphy>;
++            phy-names = "usb2-phy", "usb3-phy";
++        };
++    };
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
 
