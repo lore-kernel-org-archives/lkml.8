@@ -2,94 +2,135 @@ Return-Path: <SRS0=aGSP=5L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9AC2C43331
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 09:29:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06034C2D0E7
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 09:30:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A57B020748
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 09:29:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="olbIXlgR"
+	by mail.kernel.org (Postfix) with ESMTP id D5A3421556
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 09:30:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727876AbgCZJ36 (ORCPT
+        id S1727889AbgCZJaI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 05:29:58 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:39720 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726540AbgCZJ36 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 05:29:58 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=dG5pPHs14OBzWSVcRXLG0d0hpdMtIjiZ05XYggJN7Nw=; b=olbIXlgRMRYIuRBimP12omMlMf
-        qniCU91DEn3QcBZif8E9ZHHXEHuxyEImoFcq421j3RYxfsEGB4HIt4ACQMQ4A52je9dlbLNu+l9R2
-        DCZGhCnkyzbZKJdgbvSkRV5SR3Z76Zm71qw/x2GRBhrZ5B+iV4mAktYlQmLh6fbv+zN2SDyeJyiAr
-        TMy9g1dH4+NmPyjVbAg/uKUnOvvBCDTSvrPPPmCgESua3nLpqouFCD4kGGDuSYC+U3fPKzTxmbCvM
-        c6TPM73XIQ/CTiAQ0ucsBmDkG6gRa81JKCjhoMNeOHD3XAEpMwKBj4ZiWY77jkfq4kZk/3kctdhWI
-        liblYJtA==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jHOpT-0001iz-SO; Thu, 26 Mar 2020 09:29:35 +0000
-Date:   Thu, 26 Mar 2020 02:29:35 -0700
-From:   Christoph Hellwig <hch@infradead.org>
-To:     "Martin K. Petersen" <martin.petersen@oracle.com>
-Cc:     Christoph Hellwig <hch@infradead.org>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Kirill Tkhai <ktkhai@virtuozzo.com>, axboe@kernel.dk,
-        bob.liu@oracle.com, agk@redhat.com, snitzer@redhat.com,
-        dm-devel@redhat.com, song@kernel.org, tytso@mit.edu,
-        adilger.kernel@dilger.ca, Chaitanya.Kulkarni@wdc.com,
-        ming.lei@redhat.com, osandov@fb.com, jthumshirn@suse.de,
-        minwoo.im.dev@gmail.com, damien.lemoal@wdc.com,
-        andrea.parri@amarulasolutions.com, hare@suse.com, tj@kernel.org,
-        ajay.joshi@wdc.com, sagi@grimberg.me, dsterba@suse.com,
-        bvanassche@acm.org, dhowells@redhat.com, asml.silence@gmail.com,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v7 0/6] block: Introduce REQ_ALLOCATE flag for
- REQ_OP_WRITE_ZEROES
-Message-ID: <20200326092935.GA6478@infradead.org>
-References: <158157930219.111879.12072477040351921368.stgit@localhost.localdomain>
- <e2b7cbab-d91f-fd7b-de6f-a671caa6f5eb@virtuozzo.com>
- <69c0b8a4-656f-98c4-eb55-2fd1184f5fc9@virtuozzo.com>
- <67d63190-c16f-cd26-6b67-641c8943dc3d@virtuozzo.com>
- <20200319102819.GA26418@infradead.org>
- <yq1tv2k8pjn.fsf@oracle.com>
- <20200325162656.GJ29351@magnolia>
- <20200325163223.GA27156@infradead.org>
- <yq1d090jqlm.fsf@oracle.com>
+        Thu, 26 Mar 2020 05:30:08 -0400
+Received: from mx2.suse.de ([195.135.220.15]:48234 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726354AbgCZJaI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Mar 2020 05:30:08 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 3DF79AD08;
+        Thu, 26 Mar 2020 09:30:04 +0000 (UTC)
+Subject: Re: [RFC v2 1/2] kernel/sysctl: support setting sysctl parameters
+ from kernel command line
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Luis Chamberlain <mcgrof@kernel.org>,
+        Iurii Zaikin <yzaikin@google.com>,
+        linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
+        linux-mm@kvack.org, Ivan Teterevkov <ivan.teterevkov@nutanix.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        "Eric W . Biederman" <ebiederm@xmission.com>,
+        "Guilherme G . Piccoli" <gpiccoli@canonical.com>
+References: <20200325120345.12946-1-vbabka@suse.cz>
+ <202003251404.12A69348@keescook>
+From:   Vlastimil Babka <vbabka@suse.cz>
+Message-ID: <f250814f-2c04-7bbf-035d-1dedcb260335@suse.cz>
+Date:   Thu, 26 Mar 2020 10:30:02 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <yq1d090jqlm.fsf@oracle.com>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+In-Reply-To: <202003251404.12A69348@keescook>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 25, 2020 at 01:23:33PM -0400, Martin K. Petersen wrote:
+On 3/25/20 10:21 PM, Kees Cook wrote:
+>> --- a/init/main.c
+>> +++ b/init/main.c
+>> @@ -1345,6 +1345,25 @@ void __weak free_initmem(void)
+>>  	free_initmem_default(POISON_FREE_INITMEM);
+>>  }
+>>  
+>> +static void do_sysctl_args(void)
+>> +{
+>> +#ifdef CONFIG_SYSCTL
+>> +	size_t len = strlen(saved_command_line) + 1;
+>> +	char *command_line;
+>> +
+>> +	command_line = kzalloc(len, GFP_KERNEL);
+>> +	if (!command_line)
+>> +		panic("%s: Failed to allocate %zu bytes\n", __func__, len);
+>> +
+>> +	strcpy(command_line, saved_command_line);
 > 
-> Christoph,
+> No need to open-code this:
 > 
-> > I am very much against that for the following reason:
-> >
-> >  - the current REQ_OP_DISCARD is purely a hint, and implementations can
-> >    (and do) choose to ignore it
-> >
-> >  - REQ_OP_WRITE_ZEROES is an actual data integrity operation with
-> >    everything that entails
+> 	char *command_line;
 > 
-> If you want to keep emphasis on the "integrity operation" instead of the
-> provisioning aspect, would you expect REQ_ALLOCATE (which may or may not
-> zero blocks) to be considered a deterministic operation or a
-> non-deterministic one? Should this depend on whether the device
-> guarantees zeroing when provisioning blocks or not?
+> 	command_line = kstrdup(saved_command_line, GFP_KERNEL);
+> 	if (!command_line)
+> 		panic("%s: Failed to allocate %zu bytes\n", __func__, len);
+> 
 
-That's why I don't like the whole flags game very much.  I'd rather
-have REQ_OP_WRITE_ZEROES as the integrity operation that gurantees
-zeroing, and a REQ_ALLOCATE that doesn't guarantee zeroing, just some
-deterministic state of the blocks.
+Ah, right. I admit I basically copy_pasted some other parse_args user.
+
+>> diff --git a/kernel/sysctl.c b/kernel/sysctl.c
+>> index ad5b88a53c5a..18c7f5606d55 100644
+>> --- a/kernel/sysctl.c
+>> +++ b/kernel/sysctl.c
+>> @@ -1980,6 +1980,68 @@ int __init sysctl_init(void)
+>>  	return 0;
+>>  }
+>>  
+>> +/* Set sysctl value passed on kernel command line. */
+>> +int process_sysctl_arg(char *param, char *val,
+>> +			       const char *unused, void *arg)
+>> +{
+>> +	size_t count;
+>> +	char *remaining;
+>> +	int err;
+>> +	loff_t ppos = 0;
+>> +	struct ctl_table *ctl, *found = NULL;
+>> +
+>> +	if (strncmp(param, "sysctl.", sizeof("sysctl.") - 1))
+>> +		return 0;
+>> +
+>> +	param += sizeof("sysctl.") - 1;
+>> +
+>> +	remaining = param;
+>> +	ctl = &sysctl_base_table[0];
+>> +
+>> +	while(ctl->procname != 0) {
+>> +		int len = strlen(ctl->procname);
+>> +		if (strncmp(remaining, ctl->procname, len)) {
+>> +			ctl++;
+>> +			continue;
+>> +		}
+> 
+> I think you need to validate that "len" is within "remaining" here
+> first.
+
+My reasoning was that if remaining terminates too early, the null byte would be
+different from non-null byte in ctl->procname and thus strncmp will return it as
+different?
+And the reason I used len in strncmp there is only so it doesn't compare the
+terminating null, because remaning can continue with ".foo" instead.
+
+>> +		if (ctl->child) {
+>> +			if (remaining[len] == '.') {
+>> +				remaining += len + 1;
+> 
+> And that "len + 1" is still valid.
+
+And since we passed strncmp(..., len), remaining[len] might be null byte, but
+then we can still compare it with '.'.
+
+But C strings are full of landmines.
