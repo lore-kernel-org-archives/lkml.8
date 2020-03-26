@@ -2,107 +2,129 @@ Return-Path: <SRS0=aGSP=5L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 083AEC2D0E7
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 23:26:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B74FC43331
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 23:26:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D406A20774
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 23:26:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="ue1h1Ngs"
+	by mail.kernel.org (Postfix) with ESMTP id 12E5A20409
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 23:26:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585265188;
+	bh=W0Nkmr1pxbEzsY8D6fArEYRWcqQZNP6Afga//UVAqKg=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=rdu+XyHyjnPB8dlbLiY9k9++LIV+tPHwf1bp67Xi2rytagZi3LwH+Dg3IhD+UgQoy
+	 GlBJVcVJEq1/CUOjbWruqomhYswbtIYjzUAMhWN0QWnQLoOhsqym4kaNd+vTyMqP/S
+	 4EA5KXEfW4M7MQ3PW0PgXYEr0EBwf5xm3Ig7q424=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728110AbgCZX0U (ORCPT
+        id S1728475AbgCZX01 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 19:26:20 -0400
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:45954 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728475AbgCZX0S (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 19:26:18 -0400
-Received: by mail-ed1-f67.google.com with SMTP id u59so8971852edc.12;
-        Thu, 26 Mar 2020 16:26:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=WqZyECE7b3l+/W5cG6aN6aQ7OERbPPJKLPh37gMr4P8=;
-        b=ue1h1NgsTbotQg6qMgEzUEGsjz11gWWWp2SUopj+TH8eOOBmYryxsfc281mZqrloEv
-         P76dythInNUEfdLKgr7SgCfjmFg6sE925yUai/7kD6iygiYW41tOLyueWqE41PZp/QQL
-         FrX5esvWQpq4u2MT/46hJXxhdRYrB5LZG3OXoJRY8UAsN3fhBfF+Mmj+NBCYmBlhXkiB
-         ee9g1chV624ys8iJxZOeJyLMD2lsOpr6uT72VNd2zFkDdFIzEQU1YJ3iJvKiaWZUvhxd
-         8ctYZYkWyFiCfSr/Sev5oQ62jff2k4N93aiamR/xOeC6EwLqNDKHb5/vZDTffrPQMHeA
-         j5uQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=WqZyECE7b3l+/W5cG6aN6aQ7OERbPPJKLPh37gMr4P8=;
-        b=U3mjb2viczXn5UNIInSpTrD1qs9k91EIacNeAUJkp7WtX4zntiHRY6l3t52ujvc8OV
-         orhdResRTti+Qqyf45272qh2ch7IVbvN+DMIwPKn9CDGSLXhUDdLKlbayUCFChHZgbct
-         4FC0Mr9PjGKiVIBRo1UG4eJdUBRbk5yP5pCmV69T/cnW3WhNEjGDgVSi1RQBdYUEnXpt
-         txwEXPs63Tu9wzIzTfbn9Vw37av0HQK233xppehjKikuPaCsQGZvhUN6D+6w6gTswAB2
-         SqBuvdy2WMriX0glb0YCQVOOODOSfxDsj98DT4oMXIWwzMzxPPVFfWvNm5teWMhAJtvY
-         BM5A==
-X-Gm-Message-State: ANhLgQ35dGKMmUkpazLY+aEyggg9KqzaaaJtrySX00jDM/Nuc6MpTQpv
-        PsDIjdzDbPDHJXKtNWgVTO3JjSypHR2I8RfhKsc=
-X-Google-Smtp-Source: ADFU+vszUtR++CH3qXXBapVjGUYTUgP4+oCVQrrF3dM3CXErGyDOKMkYURV1D0IJSRdLQ53DbhvctfJOG7ec6N875qg=
-X-Received: by 2002:a17:906:491:: with SMTP id f17mr162602eja.30.1585265176806;
- Thu, 26 Mar 2020 16:26:16 -0700 (PDT)
+        Thu, 26 Mar 2020 19:26:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46290 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727722AbgCZXZX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Mar 2020 19:25:23 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5F40F2082D;
+        Thu, 26 Mar 2020 23:25:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1585265123;
+        bh=W0Nkmr1pxbEzsY8D6fArEYRWcqQZNP6Afga//UVAqKg=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=GwK6BAXiHZfGIPv2xx9MbO/Z0dua/kECw5gtC7evPFhGqm7erhMgKRslhe55MNpmB
+         ZfSYwSmax4hJNSZ2aNbmNCtz7DwLW2vsiepTQ8k2Z8nNwqe8POoHE4lEfulNEB57vf
+         Mx2vtMO2VuYPtroXrbcxqQsQy98GaCKHWv55gVzw=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Takashi Iwai <tiwai@suse.de>,
+        syzbot+e1fe9f44fb8ecf4fb5dd@syzkaller.appspotmail.com,
+        Sasha Levin <sashal@kernel.org>, alsa-devel@alsa-project.org
+Subject: [PATCH AUTOSEL 4.14 08/10] ALSA: pcm: oss: Avoid plugin buffer overflow
+Date:   Thu, 26 Mar 2020 19:25:11 -0400
+Message-Id: <20200326232513.8212-8-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200326232513.8212-1-sashal@kernel.org>
+References: <20200326232513.8212-1-sashal@kernel.org>
 MIME-Version: 1.0
-References: <20200326134507.4808-1-narmstrong@baylibre.com> <20200326134507.4808-8-narmstrong@baylibre.com>
-In-Reply-To: <20200326134507.4808-8-narmstrong@baylibre.com>
-From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Date:   Fri, 27 Mar 2020 00:26:06 +0100
-Message-ID: <CAFBinCBhk+XvjGODBaNH7tzCfGktYdmk1wED8UC6cYmS3ucbig@mail.gmail.com>
-Subject: Re: [PATCH v2 07/14] usb: dwc3: meson-g12a: refactor usb init
-To:     Neil Armstrong <narmstrong@baylibre.com>
-Cc:     kishon@ti.com, balbi@kernel.org, khilman@baylibre.com,
-        linux-amlogic@lists.infradead.org, linux-usb@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Neil,
+From: Takashi Iwai <tiwai@suse.de>
 
-On Thu, Mar 26, 2020 at 2:45 PM Neil Armstrong <narmstrong@baylibre.com> wrote:
-[...]
-> -static int dwc3_meson_g12a_usb2_init(struct dwc3_meson_g12a *priv)
-> +static int dwc3_meson_g12a_usb2_init(struct dwc3_meson_g12a *priv,
-> +                                    enum phy_mode mode)
->  {
->         int i, ret;
->
-> -       if (priv->otg_mode == USB_DR_MODE_PERIPHERAL)
-> -               priv->otg_phy_mode = PHY_MODE_USB_DEVICE;
-> -       else
-> -               priv->otg_phy_mode = PHY_MODE_USB_HOST;
-> -
->         for (i = 0; i < priv->drvdata->num_phys; ++i) {
->                 if (!priv->phys[i])
->                         continue;
-> @@ -284,9 +286,10 @@ static void dwc3_meson_g12a_usb3_init(struct dwc3_meson_g12a *priv)
->                         FIELD_PREP(USB_R1_P30_PCS_TX_SWING_FULL_MASK, 127));
->  }
-There is something strange with dwc3_meson_g12a_usb2_init.
-enum phy_mode mode is added here but it's not used inside this function
+[ Upstream commit f2ecf903ef06eb1bbbfa969db9889643d487e73a ]
 
-I also think that we should not pass enum phy_mode to
-dwc3_meson_g12a_usb_otg_apply_mode
-I'm aware that the original function used enum phy_mode inside but
-this doesn't seem right:
-we're not configuring a PHY there
-instead we're setting up the OTG switch so I think we should use enum
-usb_role instead
+Each OSS PCM plugins allocate its internal buffer per pre-calculation
+of the max buffer size through the chain of plugins (calling
+src_frames and dst_frames callbacks).  This works for most plugins,
+but the rate plugin might behave incorrectly.  The calculation in the
+rate plugin involves with the fractional position, i.e. it may vary
+depending on the input position.  Since the buffer size
+pre-calculation is always done with the offset zero, it may return a
+shorter size than it might be; this may result in the out-of-bound
+access as spotted by fuzzer.
 
-[...]
-not part of this patch but should be:
-there's a still a direct call to dwc3_meson_g12a_usb_init() in
-dwc3_meson_g12a_resume()
-I think that needs to be changed to priv->drvdata->usb_init(priv); as well
+This patch addresses those possible buffer overflow accesses by simply
+setting the upper limit per the given buffer size for each plugin
+before src_frames() and after dst_frames() calls.
+
+Reported-by: syzbot+e1fe9f44fb8ecf4fb5dd@syzkaller.appspotmail.com
+Cc: <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/000000000000b25ea005a02bcf21@google.com
+Link: https://lore.kernel.org/r/20200309082148.19855-1-tiwai@suse.de
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ sound/core/oss/pcm_plugin.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
+
+diff --git a/sound/core/oss/pcm_plugin.c b/sound/core/oss/pcm_plugin.c
+index b8ab46b8298de..6583eb411f82a 100644
+--- a/sound/core/oss/pcm_plugin.c
++++ b/sound/core/oss/pcm_plugin.c
+@@ -209,6 +209,8 @@ snd_pcm_sframes_t snd_pcm_plug_client_size(struct snd_pcm_substream *plug, snd_p
+ 	if (stream == SNDRV_PCM_STREAM_PLAYBACK) {
+ 		plugin = snd_pcm_plug_last(plug);
+ 		while (plugin && drv_frames > 0) {
++			if (drv_frames > plugin->buf_frames)
++				drv_frames = plugin->buf_frames;
+ 			plugin_prev = plugin->prev;
+ 			if (plugin->src_frames)
+ 				drv_frames = plugin->src_frames(plugin, drv_frames);
+@@ -220,6 +222,8 @@ snd_pcm_sframes_t snd_pcm_plug_client_size(struct snd_pcm_substream *plug, snd_p
+ 			plugin_next = plugin->next;
+ 			if (plugin->dst_frames)
+ 				drv_frames = plugin->dst_frames(plugin, drv_frames);
++			if (drv_frames > plugin->buf_frames)
++				drv_frames = plugin->buf_frames;
+ 			plugin = plugin_next;
+ 		}
+ 	} else
+@@ -248,11 +252,15 @@ snd_pcm_sframes_t snd_pcm_plug_slave_size(struct snd_pcm_substream *plug, snd_pc
+ 				if (frames < 0)
+ 					return frames;
+ 			}
++			if (frames > plugin->buf_frames)
++				frames = plugin->buf_frames;
+ 			plugin = plugin_next;
+ 		}
+ 	} else if (stream == SNDRV_PCM_STREAM_CAPTURE) {
+ 		plugin = snd_pcm_plug_last(plug);
+ 		while (plugin) {
++			if (frames > plugin->buf_frames)
++				frames = plugin->buf_frames;
+ 			plugin_prev = plugin->prev;
+ 			if (plugin->src_frames) {
+ 				frames = plugin->src_frames(plugin, frames);
+-- 
+2.20.1
+
