@@ -4,54 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 717F0C2D0E7
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 23:26:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F355C43331
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 23:26:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3478F2137B
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 23:26:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3FB4320409
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 23:26:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585265196;
-	bh=aNSHcua1XTIF74Vi29aBOPrd7BwZnA2GSBzI9V1vbaM=;
+	s=default; t=1585265198;
+	bh=XMf7QVap6ODLiVJo0XE8+jiJoxTHwXWjdNCTTv0ulBk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oNtMQSRmdu8uH75ZSah3+Cm/8AFlFT3x0AK+31EHgm1S6ybUyzdhFKOcWmi5K6Jg3
-	 4tqBUxJBg0Ks/S+G1yON8iY2AAak7vKqdIGxF3dW7GMulyjD8/4ZVvjQ4eUAlAR1uS
-	 yRyetGzmN4GzavAt4TKOdeKPm7pM68m65B39NrKs=
+	b=iRWk+r6g+e7mEC85DLbWq+JcYHTau+StAa6HmU4kaOXtYJZupANMGGROwLE20nuQ6
+	 V0+OTySUa+LGeB+pJ1npToDWXTYFc1fJruE2aAkrkNL0tb4hO9yCVRX68enGJIyqVw
+	 aLKp4Gz1sOj5ZvPMpjIyqjCE07Tr1K3mmbDcXxoY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728265AbgCZXZT (ORCPT
+        id S1728200AbgCZX0g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 19:25:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45934 "EHLO mail.kernel.org"
+        Thu, 26 Mar 2020 19:26:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46146 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728245AbgCZXZN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 19:25:13 -0400
+        id S1728243AbgCZXZT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Mar 2020 19:25:19 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D8EB32083E;
-        Thu, 26 Mar 2020 23:25:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1FA4B20409;
+        Thu, 26 Mar 2020 23:25:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585265112;
-        bh=aNSHcua1XTIF74Vi29aBOPrd7BwZnA2GSBzI9V1vbaM=;
+        s=default; t=1585265118;
+        bh=XMf7QVap6ODLiVJo0XE8+jiJoxTHwXWjdNCTTv0ulBk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bz7BfNS0ISge/Mm3ccsV0SLIQTtM8oLnqhlnVwe1qjXlljAzf8bPjEkNajxrX2hPE
-         6VQYeTtx8jLviH4UjUfmiIcCA7B3tXbPPrRRCCqsthRSknqpXU02W+vCv21BSk8oQN
-         ipMEG8MWfFn9nGduDHcDGxYGVWeMj7slri9Oln5c=
+        b=gEwPuxhcl8PKPlLDiWGnHAUFwc+PB4hr0GNFD+RYrRglV/wLI3knX2KPNw1EpqtrA
+         EiYkSMjjgSUtTf3C/aRf/75QDr4btTSPuxnqPvEUQ24VROfjBvzloriduCILx5Vh3J
+         sDm88Jjni4sESTNzJ0ChEnSaZ96PZOryWSWA1+60=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Qiujun Huang <hqjagain@gmail.com>,
-        syzbot+05835159fe322770fe3d@syzkaller.appspotmail.com,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Sasha Levin <sashal@kernel.org>,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 4.19 15/15] drm/lease: fix WARNING in idr_destroy
-Date:   Thu, 26 Mar 2020 19:24:55 -0400
-Message-Id: <20200326232455.8029-15-sashal@kernel.org>
+Cc:     Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 04/10] initramfs: restore default compression behavior
+Date:   Thu, 26 Mar 2020 19:25:07 -0400
+Message-Id: <20200326232513.8212-4-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200326232455.8029-1-sashal@kernel.org>
-References: <20200326232455.8029-1-sashal@kernel.org>
+In-Reply-To: <20200326232513.8212-1-sashal@kernel.org>
+References: <20200326232513.8212-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -61,54 +59,77 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qiujun Huang <hqjagain@gmail.com>
+From: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
 
-[ Upstream commit b216a8e7908cd750550c0480cf7d2b3a37f06954 ]
+[ Upstream commit 785d74ec3bbf26ac7f6e92e6e96a259aec0f107a ]
 
-drm_lease_create takes ownership of leases. And leases will be released
-by drm_master_put.
+Even though INITRAMFS_SOURCE kconfig option isn't set in most of
+defconfigs it is used (set) extensively by various build systems.
+Commit f26661e12765 ("initramfs: make initramfs compression choice
+non-optional") has changed default compression mode. Previously we
+compress initramfs using available compression algorithm. Now
+we don't use any compression at all by default.
+It significantly increases the image size in case of build system
+chooses embedded initramfs. Initially I faced with this issue while
+using buildroot.
 
-drm_master_put
-    ->drm_master_destroy
-            ->idr_destroy
+As of today it's not possible to set preferred compression mode
+in target defconfig as this option depends on INITRAMFS_SOURCE
+being set. Modification of all build systems either doesn't look
+like good option.
 
-So we needn't call idr_destroy again.
+Let's instead rewrite initramfs compression mode choices list
+the way that "INITRAMFS_COMPRESSION_NONE" will be the last option
+in the list. In that case it will be chosen only if all other
+options (which implements any compression) are not available.
 
-Reported-and-tested-by: syzbot+05835159fe322770fe3d@syzkaller.appspotmail.com
-Signed-off-by: Qiujun Huang <hqjagain@gmail.com>
-Cc: stable@vger.kernel.org
-Signed-off-by: Daniel Vetter <daniel.vetter@ffwll.ch>
-Link: https://patchwork.freedesktop.org/patch/msgid/1584518030-4173-1-git-send-email-hqjagain@gmail.com
+Signed-off-by: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
+Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/drm_lease.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ usr/Kconfig | 22 +++++++++++-----------
+ 1 file changed, 11 insertions(+), 11 deletions(-)
 
-diff --git a/drivers/gpu/drm/drm_lease.c b/drivers/gpu/drm/drm_lease.c
-index 086f2adc541b0..19e9935c2e436 100644
---- a/drivers/gpu/drm/drm_lease.c
-+++ b/drivers/gpu/drm/drm_lease.c
-@@ -545,10 +545,12 @@ int drm_mode_create_lease_ioctl(struct drm_device *dev,
- 	}
+diff --git a/usr/Kconfig b/usr/Kconfig
+index 43658b8a975e5..8b4826de1189f 100644
+--- a/usr/Kconfig
++++ b/usr/Kconfig
+@@ -131,17 +131,6 @@ choice
  
- 	DRM_DEBUG_LEASE("Creating lease\n");
-+	/* lessee will take the ownership of leases */
- 	lessee = drm_lease_create(lessor, &leases);
+ 	  If in doubt, select 'None'
  
- 	if (IS_ERR(lessee)) {
- 		ret = PTR_ERR(lessee);
-+		idr_destroy(&leases);
- 		goto out_leases;
- 	}
+-config INITRAMFS_COMPRESSION_NONE
+-	bool "None"
+-	help
+-	  Do not compress the built-in initramfs at all. This may sound wasteful
+-	  in space, but, you should be aware that the built-in initramfs will be
+-	  compressed at a later stage anyways along with the rest of the kernel,
+-	  on those architectures that support this. However, not compressing the
+-	  initramfs may lead to slightly higher memory consumption during a
+-	  short time at boot, while both the cpio image and the unpacked
+-	  filesystem image will be present in memory simultaneously
+-
+ config INITRAMFS_COMPRESSION_GZIP
+ 	bool "Gzip"
+ 	depends on RD_GZIP
+@@ -214,6 +203,17 @@ config INITRAMFS_COMPRESSION_LZ4
+ 	  If you choose this, keep in mind that most distros don't provide lz4
+ 	  by default which could cause a build failure.
  
-@@ -583,7 +585,6 @@ int drm_mode_create_lease_ioctl(struct drm_device *dev,
++config INITRAMFS_COMPRESSION_NONE
++	bool "None"
++	help
++	  Do not compress the built-in initramfs at all. This may sound wasteful
++	  in space, but, you should be aware that the built-in initramfs will be
++	  compressed at a later stage anyways along with the rest of the kernel,
++	  on those architectures that support this. However, not compressing the
++	  initramfs may lead to slightly higher memory consumption during a
++	  short time at boot, while both the cpio image and the unpacked
++	  filesystem image will be present in memory simultaneously
++
+ endchoice
  
- out_leases:
- 	put_unused_fd(fd);
--	idr_destroy(&leases);
- 
- 	DRM_DEBUG_LEASE("drm_mode_create_lease_ioctl failed: %d\n", ret);
- 	return ret;
+ config INITRAMFS_COMPRESSION
 -- 
 2.20.1
 
