@@ -6,82 +6,82 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	HK_RANDOM_FROM,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EEFE2C2D0EA
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 03:25:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F617C43331
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 03:25:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C6A6420746
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 03:25:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A91820737
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 03:25:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728099AbgCZDZk (ORCPT
+        id S1728108AbgCZDZo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 23:25:40 -0400
+        Wed, 25 Mar 2020 23:25:44 -0400
 Received: from mga18.intel.com ([134.134.136.126]:53303 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727655AbgCZDZb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 23:25:31 -0400
-IronPort-SDR: A0ca+m0uqk9CJSzqnYPy6jmOuyV3xfxzkHJ1fPWbxxVjBOo++XfBqmPbPq0iJfsmkH63Oc/0lr
- m8r2mBIHAuZg==
+        id S1728071AbgCZDZc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Mar 2020 23:25:32 -0400
+IronPort-SDR: 2ZvOUvFipgrtC/+/70ki8SQTCD2EciENnR1DkuLtrmxuJkLUe2ZZIelbXkoam92TicHItSBPgI
+ oSHgj8ykiqJQ==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Mar 2020 20:25:30 -0700
-IronPort-SDR: QUWJw+k2SY1p2euzekEuWODO1srN4VcPBN5w3SVYTpBm5hdqfTmPNWSMrZB6PcwIzxiMLBhgGB
- 6bFumWCvIg/w==
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Mar 2020 20:25:32 -0700
+IronPort-SDR: SMMRikgTPE1BcG7jtXIb5vkDyaUwV+cFjknm+8Pef9Wx1N2s5y6KaUmgAuJjGnWo4Z1wP4+mWG
+ cRwc21N7b/sg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.72,306,1580803200"; 
-   d="scan'208";a="446842817"
+   d="scan'208";a="446842824"
 Received: from lxy-clx-4s.sh.intel.com ([10.239.43.39])
-  by fmsmga005.fm.intel.com with ESMTP; 25 Mar 2020 20:25:29 -0700
+  by fmsmga005.fm.intel.com with ESMTP; 25 Mar 2020 20:25:30 -0700
 From:   Xiaoyao Li <xiaoyao.li@intel.com>
 To:     Paolo Bonzini <pbonzini@redhat.com>, Shuah Khan <shuah@kernel.org>
 Cc:     kvm@vger.kernel.org, linux-kselftest@vger.kernel.org,
         linux-kernel@vger.kernel.org, Xiaoyao Li <xiaoyao.li@intel.com>
-Subject: [RFC v3 1/3] kvm: selftests: Fix no directory error when OUTPUT specified
-Date:   Thu, 26 Mar 2020 11:07:48 +0800
-Message-Id: <20200326030750.173972-2-xiaoyao.li@intel.com>
+Subject: [RFC v3 2/3] kvm: selftests: Use the right INSTALL_HDR_PATH when OUTPUT specified and MAKELEVEL is 0
+Date:   Thu, 26 Mar 2020 11:07:49 +0800
+Message-Id: <20200326030750.173972-3-xiaoyao.li@intel.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200326030750.173972-1-xiaoyao.li@intel.com>
 References: <20200326030750.173972-1-xiaoyao.li@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When build kvm selftests to an specified directory with
+Assume linux headers exist in linux_src/usr works with OUTPUT specified
+currently, even though headers are installed to $(OUTPUT)/usr based on
+lib.mk. Because there are building output in linux_src/usr when
+"make headers_install" to prepare headers and they are not cleaned.
 
-	make OUTPUT=/home/lxy/kvm-selftests
-
-it encouters following error：
-
-  /usr/bin/ld: cannot open output file
-  /home/lxy/kvm-selftests/x86_64/cr4_cpuid_sync_test: No such file or
-  directory
-  collect2: error: ld returned 1 exit status
-  make: *** [../lib.mk:141:
-  /home/lxy/kvm-selftests/x86_64/cr4_cpuid_sync_test] Error 1
-
-Use "mkdir -p" to create the directory to fix this issue.
+Assign the correct path to INSTALL_HDR_PATH is always not bad.
 
 Signed-off-by: Xiaoyao Li <xiaoyao.li@intel.com>
 ---
- tools/testing/selftests/kvm/Makefile | 1 +
- 1 file changed, 1 insertion(+)
+ tools/testing/selftests/kvm/Makefile | 10 +++++++++-
+ 1 file changed, 9 insertions(+), 1 deletion(-)
 
 diff --git a/tools/testing/selftests/kvm/Makefile b/tools/testing/selftests/kvm/Makefile
-index 67abc1dd50ee..91b41092def6 100644
+index 91b41092def6..6a95878b2ab7 100644
 --- a/tools/testing/selftests/kvm/Makefile
 +++ b/tools/testing/selftests/kvm/Makefile
-@@ -65,6 +65,7 @@ LDFLAGS += -pthread $(no-pie-option) $(pgste-option)
- # After inclusion, $(OUTPUT) is defined and
- # $(TEST_GEN_PROGS) starts with $(OUTPUT)/
- include ../lib.mk
-+x := $(shell mkdir -p $(sort $(dir $(TEST_GEN_PROGS))))
+@@ -43,7 +43,15 @@ TEST_GEN_PROGS_s390x += kvm_create_max_vcpus
+ TEST_GEN_PROGS += $(TEST_GEN_PROGS_$(UNAME_M))
+ LIBKVM += $(LIBKVM_$(UNAME_M))
  
- STATIC_LIBS := $(OUTPUT)/libkvm.a
- LIBKVM_OBJ := $(patsubst %.c, $(OUTPUT)/%.o, $(LIBKVM))
+-INSTALL_HDR_PATH = $(top_srcdir)/usr
++ifeq (0,$(MAKELEVEL))
++    ifneq ($(OUTPUT),)
++	INSTALL_HDR_PATH := $(OUTPUT)/usr
++    else
++	INSTALL_HDR_PATH := $(top_srcdir)/usr
++    endif
++else
++	INSTALL_HDR_PATH := $(top_srcdir)/usr
++endif
+ LINUX_HDR_PATH = $(INSTALL_HDR_PATH)/include/
+ LINUX_TOOL_INCLUDE = $(top_srcdir)/tools/include
+ LINUX_TOOL_ARCH_INCLUDE = $(top_srcdir)/tools/arch/x86/include
 -- 
 2.20.1
 
