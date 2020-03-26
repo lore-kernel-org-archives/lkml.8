@@ -2,106 +2,111 @@ Return-Path: <SRS0=aGSP=5L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87909C43331
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 00:13:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D061EC43331
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 00:14:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 61D2D20714
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 00:13:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9FC6720719
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 00:14:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RlP8ohqH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727550AbgCZANB (ORCPT
+        id S1727590AbgCZAOV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 20:13:01 -0400
-Received: from inva020.nxp.com ([92.121.34.13]:40076 "EHLO inva020.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727498AbgCZANA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 20:13:00 -0400
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id CB6CF1A072D;
-        Thu, 26 Mar 2020 01:12:58 +0100 (CET)
-Received: from smtp.na-rdc02.nxp.com (usphx01srsp001v.us-phx01.nxp.com [134.27.49.11])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 9232D1A0728;
-        Thu, 26 Mar 2020 01:12:58 +0100 (CET)
-Received: from right.am.freescale.net (right.am.freescale.net [10.81.116.70])
-        by usphx01srsp001v.us-phx01.nxp.com (Postfix) with ESMTP id D006D4040F;
-        Wed, 25 Mar 2020 17:12:57 -0700 (MST)
-From:   Li Yang <leoyang.li@nxp.com>
-List-Id: <soc.lore.kernel.org>
-To:     arm@kernel.org, soc@kernel.org
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        shawnguo@kernel.org
-Subject: [GIT PULL] soc/fsl drivers changes for next(v5.7)
-Date:   Wed, 25 Mar 2020 19:12:57 -0500
-Message-Id: <20200326001257.22696-1-leoyang.li@nxp.com>
-X-Mailer: git-send-email 2.25.1.377.g2d2118b
+        Wed, 25 Mar 2020 20:14:21 -0400
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:44682 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727498AbgCZAOV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Mar 2020 20:14:21 -0400
+Received: by mail-qt1-f194.google.com with SMTP id x16so3874232qts.11;
+        Wed, 25 Mar 2020 17:14:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=S7Sc2duj77D7JUnGMQoCkHU904ydcBEnNRzF9FLm+YI=;
+        b=RlP8ohqHvEQkTK5kGgiSBl6WH15PaVWtiHB0v1Iv/6+Vfb7Eka28N35XydaiEqMzR/
+         jyu0O0ohpyMxX4ljdq7uAa05nGe/pUIyNc9EcCYEbxQw9WHup+M3MJlOoqNaH7GaJ2yj
+         IIL3xL3riXneubS0jgb8qcUWmvFUyfQDfxyG8dEmm56J0BIvzPHd9zdvAocR0scnEneT
+         ytPm34ox8nq05DzF6Ndfs7FOgsEZUd5mtuxinmQv/6KP2RC9XOVR3AE081hTqJaNTNcC
+         SwPCUuoNv6teuL1fTt1fk5V6SCKAiCa9FQmkBJahwk8h5XoEJOdj7j1iApionCMf+WdI
+         VOZA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=S7Sc2duj77D7JUnGMQoCkHU904ydcBEnNRzF9FLm+YI=;
+        b=JeN73LHIHRj/Ot6qfymUEkqFZCOq8Z1sowgVqkWna2PPHAmrKStznoh/YpIYlkJSEy
+         VjZ3FlXTUoYGJCp2XW0y/3Ucf8FcHOiu2Lgmc5sfhsCndulgvXEW8en3PmEbg6aRamhH
+         bUlIsgeu5qLOXapdShMfOWdJi+bFEIpApoFoA9xf98gxDLKsqbKyaO/ghEkWzyMF1Sz/
+         FMpgp0dO4TAfy3PcIfjw++ON2iRpQFYauLKunrXR8n7CxP8rC1lhVb6jfMMmk0NuBe2C
+         yoektX9YOA4PeaZ1IcESiZ731A9cxAdUrM3he/rt7n512ftSRZAP8TGS4jFNkBOnBNqM
+         PwmA==
+X-Gm-Message-State: ANhLgQ2Lyeh0qNteFNqizwUPyRW6B6J3lys4fjq5+SoSdnBpzk2Z7EKo
+        q524Aw5g0AXLlLhDtTjM4zU=
+X-Google-Smtp-Source: ADFU+vvK1RIyUK2HbSXkLR4unarSaVy6joaX5gpk8/f4lhxjrE6nMTj7npVg5cJ/aI0GxF+KKR9pDQ==
+X-Received: by 2002:ac8:568b:: with SMTP id h11mr4420271qta.105.1585181659543;
+        Wed, 25 Mar 2020 17:14:19 -0700 (PDT)
+Received: from localhost.localdomain ([2001:1284:f028:d8e3:b319:cf5:7776:b4d9])
+        by smtp.gmail.com with ESMTPSA id 82sm340437qkd.62.2020.03.25.17.14.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 25 Mar 2020 17:14:18 -0700 (PDT)
+Received: by localhost.localdomain (Postfix, from userid 1000)
+        id 4C55BC5CE4; Wed, 25 Mar 2020 21:14:16 -0300 (-03)
+Date:   Wed, 25 Mar 2020 21:14:16 -0300
+From:   Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
+To:     Qiujun Huang <hqjagain@gmail.com>
+Cc:     davem@davemloft.net, vyasevich@gmail.com, nhorman@tuxdriver.com,
+        kuba@kernel.org, linux-sctp@vger.kernel.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        anenbupt@gmail.com
+Subject: Re: [PATCH v4] sctp: fix refcount bug in sctp_wfree
+Message-ID: <20200326001416.GH3756@localhost.localdomain>
+References: <20200322090425.6253-1-hqjagain@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Virus-Scanned: ClamAV using ClamSMTP
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200322090425.6253-1-hqjagain@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi soc maintainers,
+On Sun, Mar 22, 2020 at 05:04:25PM +0800, Qiujun Huang wrote:
+> sctp_sock_migrate should iterate over the datamsgs to modify
+> all trunks(skbs) to newsk. For this, out_msg_list is added to
 
-Please merge the following new changes for soc/fsl drivers.
+s/trunks/chunks/
 
-Regards,
-Leo
+> sctp_outq to maintain datamsgs list.
 
-The following changes since commit bb6d3fb354c5ee8d6bde2d576eb7220ea09862b9:
+It is an interesting approach. It speeds up the migration, yes, but it
+will also use more memory per datamsg, for an operation that, when
+performed, the socket is usually calm.
 
-  Linux 5.6-rc1 (2020-02-09 16:08:48 -0800)
+It's also another list to be handled, and I'm not seeing the patch
+here move the datamsg itself now to the new outq. It would need
+something along these lines:
+sctp_sock_migrate()
+{
+...
+        /* Move any messages in the old socket's receive queue that are for the
+         * peeled off association to the new socket's receive queue.
+         */
+        sctp_skb_for_each(skb, &oldsk->sk_receive_queue, tmp) {
+                event = sctp_skb2event(skb);
+...
+                /* Walk through the pd_lobby, looking for skbs that
+                 * need moved to the new socket.
+                 */
+                sctp_skb_for_each(skb, &oldsp->pd_lobby, tmp) {
+                        event = sctp_skb2event(skb);
 
-are available in the Git repository at:
+That said, I don't think it's worth this new list.
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/leo/linux.git tags/soc-fsl-next-v5.7
-
-for you to fetch changes up to 461c3ac0dc46ba7fc09628aadf63c81253c4c3de:
-
-  soc: fsl: qe: fix sparse warnings for ucc_slow.c (2020-03-24 19:09:40 -0500)
-
-----------------------------------------------------------------
-NXP/FSL SoC driver updates for v5.7
-
-DPAA2 DPIO driver performance optimization
-- Add and use QMAN multiple enqueue interface
-- Use function pointer indirection to replace checks in hotpath
-
-QUICC Engine drivers
-- Fix sparse warnings and exposed endian issues
-
-----------------------------------------------------------------
-Colin Ian King (1):
-      soc: fsl: dpio: fix dereference of pointer p before null check
-
-Li Yang (7):
-      soc: fsl: qe: fix sparse warnings for qe.c
-      soc: fsl: qe: fix sparse warning for qe_common.c
-      soc: fsl: qe: fix sparse warnings for ucc.c
-      soc: fsl: qe: fix sparse warnings for qe_ic.c
-      soc: fsl: qe: fix sparse warnings for ucc_fast.c
-      soc: fsl: qe: ucc_slow: remove 0 assignment for kzalloc'ed structure
-      soc: fsl: qe: fix sparse warnings for ucc_slow.c
-
-Youri Querry (3):
-      soc: fsl: dpio: Adding QMAN multiple enqueue interface
-      soc: fsl: dpio: QMAN performance improvement with function pointer indirection
-      soc: fsl: dpio: Replace QMAN array mode with ring mode enqueue
-
- drivers/soc/fsl/dpio/dpio-service.c |  69 +++-
- drivers/soc/fsl/dpio/qbman-portal.c | 767 ++++++++++++++++++++++++++++++++----
- drivers/soc/fsl/dpio/qbman-portal.h | 158 +++++++-
- drivers/soc/fsl/qe/qe.c             |   4 +-
- drivers/soc/fsl/qe/qe_common.c      |   2 +-
- drivers/soc/fsl/qe/qe_ic.c          |   2 +-
- drivers/soc/fsl/qe/ucc.c            |   2 +-
- drivers/soc/fsl/qe/ucc_slow.c       |  33 +-
- include/soc/fsl/dpaa2-io.h          |   6 +-
- include/soc/fsl/qe/ucc_fast.h       |   6 +-
- include/soc/fsl/qe/ucc_slow.h       |  13 +-
- 11 files changed, 935 insertions(+), 127 deletions(-)
+  Marcelo
