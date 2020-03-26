@@ -2,107 +2,145 @@ Return-Path: <SRS0=aGSP=5L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58864C2D0E8
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 13:39:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4A10C2D0E5
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 13:41:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2CA1220775
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 13:39:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585229961;
-	bh=jea/qgHJAyGW6iWFXmvupsFjst79mZBXkmaFhSc/Y5Y=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=0pCOrt1xF4f7i9aW3aCtPZR6I4n785kRJz00S78GLqiXlL2dSt17NarQh7FmcNdMB
-	 hyxVz57xTXabmin8RbXI17ZqqHuO/HKE2koJAA+vy6iLnCNhWgz5dz+A2IuvYdiQeK
-	 fAolG57JSYUoyKLnpBVaC0dOEZTjTPKO2MR68ekQ=
+	by mail.kernel.org (Postfix) with ESMTP id 9CCDB2076A
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 13:41:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="POqSritt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727706AbgCZNjU (ORCPT
+        id S1727682AbgCZNlG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 09:39:20 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:39313 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725994AbgCZNjU (ORCPT
+        Thu, 26 Mar 2020 09:41:06 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:46064 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725994AbgCZNlG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 09:39:20 -0400
-Received: by mail-wr1-f68.google.com with SMTP id p10so7832473wrt.6;
-        Thu, 26 Mar 2020 06:39:18 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=19Pztl4eD0UX0aRRYwPGEQuItPKM8kfOdpcItRtfgXE=;
-        b=hRlHoyGy8kDiWVnPBKxURkaL2L6SV+ZOF7aFTlt6HAMDc4lpmQBa+Vb3s9p+CaVDJJ
-         mTmkh/i+ZJKTMKxLxqQqUxLPxQ3YOtOt12C4E3nYIuDq8dxDcwkLYVP/y4QzNkQdGQ7V
-         birRYr/08BDowOUnKTfBlrfZISo2lHnGVCwifT2fw+ATX2AlFEGqaeA9+VarjYIhgmG4
-         3d8Z7dzk5N6hl+bHXJ2tkfmUJFccEIClwFGv8JllbAC1ndAtuiTdGJsK4fpM6T1/JMBC
-         kf1xyJ2Ujr/A7g3R4xzHdF7CoY8skKzdux23/pymFUWrPb5gSLjtOBsW0addwPRWhEnh
-         721w==
-X-Gm-Message-State: ANhLgQ0PLxRlofV487m4oD+F0sZa5gTTgwck316e/ObuZXydLBurdyL3
-        XB2aMZOHiqR2yjxD/MDZBjQ=
-X-Google-Smtp-Source: ADFU+vtk9zmWZvzCHwkqppRQIVeYZ6TTx2b4k3bygVqfm3s1Ky3k2UREkOWABI0nEj77sewyC1P8pw==
-X-Received: by 2002:a05:6000:100f:: with SMTP id a15mr9083191wrx.382.1585229958157;
-        Thu, 26 Mar 2020 06:39:18 -0700 (PDT)
-Received: from localhost (ip-37-188-135-150.eurotel.cz. [37.188.135.150])
-        by smtp.gmail.com with ESMTPSA id 195sm3660380wmb.8.2020.03.26.06.39.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 26 Mar 2020 06:39:17 -0700 (PDT)
-Date:   Thu, 26 Mar 2020 14:39:15 +0100
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Christian Brauner <christian.brauner@ubuntu.com>
-Cc:     "Eric W. Biederman" <ebiederm@xmission.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Iurii Zaikin <yzaikin@google.com>,
-        linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
-        linux-mm@kvack.org, Ivan Teterevkov <ivan.teterevkov@nutanix.com>,
-        David Rientjes <rientjes@google.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        "Guilherme G . Piccoli" <gpiccoli@canonical.com>
-Subject: Re: [RFC v2 1/2] kernel/sysctl: support setting sysctl parameters
- from kernel command line
-Message-ID: <20200326133915.GQ27965@dhcp22.suse.cz>
-References: <20200325120345.12946-1-vbabka@suse.cz>
- <874kuc5b5z.fsf@x220.int.ebiederm.org>
- <20200326065829.GC27965@dhcp22.suse.cz>
- <20200326133041.a3zit3gzdqmphane@wittgenstein>
+        Thu, 26 Mar 2020 09:41:06 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02QDdON6026557;
+        Thu, 26 Mar 2020 13:40:24 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ content-transfer-encoding : in-reply-to; s=corp-2020-01-29;
+ bh=47kOGG+bdoJaXnP8m/osKaGZ0uajF8a3MGNKMsop3vY=;
+ b=POqSrittxnwjNutlDxb96joCHnJG44Uwn0rAnWaPePWcbKl24WTa/fHu8MBJbYxX/DUI
+ 1Lgrt4Gy6uxnHBYL0Gm3CfnKJCAnlnKAAZcjgmKYbiTcXy6T91ziidi0vYCGLM1S8wCy
+ KKpWPeiXFX5tZ+Z8R0DeA/NGhu6u9SJJK681d4nzOCTO0rDrsYOc2IdwViUO263hlfxS
+ UnGr2W57gQ3+rYanhvGnx8N5+fe+ny+8YNBDQPgKeh/7A345gyVLVMQI7+F9GbPyMVub
+ gXLxxklYBHLI5p2QUrWpzSYpviHg6mPJbJVfRNhgsIyOLgl67JL/4RtTn6gJaxAMxdmS mQ== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2130.oracle.com with ESMTP id 2ywabrfun5-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 26 Mar 2020 13:40:24 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02QDVgiS000938;
+        Thu, 26 Mar 2020 13:40:23 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by userp3020.oracle.com with ESMTP id 3003gkvkmb-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 26 Mar 2020 13:40:23 +0000
+Received: from abhmp0015.oracle.com (abhmp0015.oracle.com [141.146.116.21])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 02QDeHrF000682;
+        Thu, 26 Mar 2020 13:40:18 GMT
+Received: from tomti.i.net-space.pl (/10.175.206.254)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 26 Mar 2020 06:40:17 -0700
+Date:   Thu, 26 Mar 2020 14:40:11 +0100
+From:   Daniel Kiper <daniel.kiper@oracle.com>
+To:     Matthew Garrett <mjg59@google.com>
+Cc:     Ross Philipson <ross.philipson@oracle.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        linux-doc@vger.kernel.org, dpsmith@apertussolutions.com,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        trenchboot-devel@googlegroups.com, ardb@kernel.org,
+        leif@nuviainc.com, eric.snowberg@oracle.com, piotr.krol@3mdeb.com,
+        krystian.hebel@3mdeb.com, michal.zygowski@3mdeb.com,
+        james.bottomley@hansenpartnership.com, andrew.cooper3@citrix.com
+Subject: Re: [RFC PATCH 00/12] x86: Trenchboot secure late launch Linux
+ kernel support
+Message-ID: <20200326134011.c4dswiq2g7eln3qd@tomti.i.net-space.pl>
+References: <20200325194317.526492-1-ross.philipson@oracle.com>
+ <CACdnJut56WuqO=uLff0qy1Jp=C6f_sRxLpRBsrzb6byBsFYdCg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200326133041.a3zit3gzdqmphane@wittgenstein>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CACdnJut56WuqO=uLff0qy1Jp=C6f_sRxLpRBsrzb6byBsFYdCg@mail.gmail.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9571 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 mlxlogscore=999 bulkscore=0
+ phishscore=0 adultscore=0 spamscore=0 malwarescore=0 suspectscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2003260104
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9571 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 suspectscore=0
+ lowpriorityscore=0 malwarescore=0 phishscore=0 priorityscore=1501
+ clxscore=1011 adultscore=0 mlxscore=0 mlxlogscore=999 bulkscore=0
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2003260104
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu 26-03-20 14:30:41, Christian Brauner wrote:
-> On Thu, Mar 26, 2020 at 07:58:29AM +0100, Michal Hocko wrote:
-> > On Wed 25-03-20 17:20:40, Eric W. Biederman wrote:
-> > > Vlastimil Babka <vbabka@suse.cz> writes:
-> > [...]
-> > > > +	if (strncmp(param, "sysctl.", sizeof("sysctl.") - 1))
-> > > > +		return 0;
-> > > 
-> > > Is there any way we can use a slash separated path.  I know
-> > > in practice there are not any sysctl names that don't have
-> > > a '.' in them but why should we artifically limit ourselves?
-> > 
-> > Because this is the normal userspace interface? Why should it be any
-> > different from calling sysctl?
-> > [...]
-> 
-> Imho, we should use ".". Kernel developers aren't the ones setting
-> these options, admins are and if I think back to the times doing that as
-> a job at uni I'd be very confused if I learned that I get to set sysctl
-> options through the kernel command but need to use yet another format
-> than what I usually do to set those from the shell. Consistency is most
-> of the times to be preferred imho.
+Hey,
 
-Absolutely agreed! Even if sysctl can consume / instead of ., which was a
-news to me btw, the majority of the usage is with `.'
--- 
-Michal Hocko
-SUSE Labs
+CC-in Ard, Leif, Eric, Piotr, Krystian, Michał, James and Andrew...
+
+On Wed, Mar 25, 2020 at 01:29:03PM -0700, 'Matthew Garrett' via trenchboot-devel wrote:
+> On Wed, Mar 25, 2020 at 12:43 PM Ross Philipson
+> <ross.philipson@oracle.com> wrote:
+> > To enable the kernel to be launched by GETSEC or SKINIT, a stub must be
+> > built into the setup section of the compressed kernel to handle the
+> > specific state that the late launch process leaves the BSP. This is a
+> > lot like the EFI stub that is found in the same area. Also this stub
+> > must measure everything that is going to be used as early as possible.
+> > This stub code and subsequent code must also deal with the specific
+> > state that the late launch leaves the APs in.
+>
+> How does this integrate with the EFI entry point? That's the expected
+
+It does not. We do not want and need to tie secure launch with UEFI.
+
+> entry point on most modern x86.
+
+Yeah, most but not all...
+
+> What's calling ExitBootServices() in
+
+Currently it is a bootloader, the GRUB which I am working on... OK, this
+is not perfect but if we want to call ExitBootServices() from the kernel
+then we have to move all pre-launch code from the bootloader to the
+kernel. Not nice because then everybody who wants to implement secure
+launch in different kernel, hypervisor, etc. has to re-implement whole
+pre-launch code again.
+
+> this flow, and does the secure launch have to occur after it? It'd be
+
+Yes, it does.
+
+> a lot easier if you could still use the firmware's TPM code rather
+> than carrying yet another copy.
+
+I think any post-launch code in the kernel should not call anything from
+the gap. And UEFI belongs to the gap. OK, we can potentially re-use UEFI
+TPM code in the pre-launch phase but I am not convinced that we should
+(I am looking at it right now). And this leads us to other question
+which pops up here and there. How to call UEFI runtime services, e.g. to
+modify UEFI variables, update firmware, etc., from MLE or even from the
+OS started from MLE? In my opinion it is not safe to call anything from
+the gap after secure launch. However, on the other hand we have to give
+an option to change the boot order or update the firmware. So, how to
+do that? I do not have an easy answer yet...
+
+Daniel
