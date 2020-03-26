@@ -2,111 +2,207 @@ Return-Path: <SRS0=aGSP=5L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68A37C43331
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 16:39:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7164AC2D0EC
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 16:39:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 472062078E
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 16:39:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4010D20B80
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 16:39:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585240798;
+	bh=F/dIeupcxdCS7dIXcWdTk19MO9lZaAgHPKDgAdnU3EQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ZtnfFN2O/6XLiMrWO4iqRChG3YA/1c9dWijlgkmYdYPVPWyCXcm3wGuH+BtT+XtDT
+	 KYwiUGMVup46jB70eBfiHmbEUBbfZKOf4bMn2spzMwmt6V8yRTv3uY6NPuncDTzsn+
+	 9648pmS8SmpYGcuj3mQVUth9JjUCuZBLaDmgZOOQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728570AbgCZQi7 (ORCPT
+        id S1727843AbgCZQj5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 12:38:59 -0400
-Received: from mga18.intel.com ([134.134.136.126]:32663 "EHLO mga18.intel.com"
+        Thu, 26 Mar 2020 12:39:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51928 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727677AbgCZQi6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 12:38:58 -0400
-IronPort-SDR: CUG/gTmwJiNJB8jUdADp7XLfPtxKDzV+2l1oUWuZ6Jq0/WbESkYkLSrf3B5fOurAict4yMI3Rk
- 0OAje6PQIynQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Mar 2020 09:38:58 -0700
-IronPort-SDR: 5qAPNHMPSfUJ2crJnR1N0kbPgi0WNOKmtBXLIv/QW9b1irnPu+DsZbog/yh3hn+zQuOdOnAb5L
- +QiA/Z+IxVng==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,309,1580803200"; 
-   d="scan'208";a="326618818"
-Received: from jacob-builder.jf.intel.com (HELO jacob-builder) ([10.7.199.155])
-  by orsmga001.jf.intel.com with ESMTP; 26 Mar 2020 09:38:58 -0700
-Date:   Thu, 26 Mar 2020 09:44:42 -0700
-From:   Jacob Pan <jacob.jun.pan@linux.intel.com>
-To:     Christoph Hellwig <hch@infradead.org>
-Cc:     Joerg Roedel <joro@8bytes.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        iommu@lists.linux-foundation.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Jean-Philippe Brucker <jean-philippe@linaro.com>,
-        "Tian, Kevin" <kevin.tian@intel.com>,
-        Raj Ashok <ashok.raj@intel.com>, jacob.jun.pan@linux.intel.com
-Subject: Re: [PATCH v2 1/3] iommu/uapi: Define uapi version and capabilities
-Message-ID: <20200326094442.5be042ce@jacob-builder>
-In-Reply-To: <20200326092316.GA31648@infradead.org>
-References: <1585178227-17061-1-git-send-email-jacob.jun.pan@linux.intel.com>
-        <1585178227-17061-2-git-send-email-jacob.jun.pan@linux.intel.com>
-        <20200326092316.GA31648@infradead.org>
-Organization: OTC
-X-Mailer: Claws Mail 3.13.2 (GTK+ 2.24.30; x86_64-pc-linux-gnu)
+        id S1726163AbgCZQj4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Mar 2020 12:39:56 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9857C2074D;
+        Thu, 26 Mar 2020 16:39:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1585240796;
+        bh=F/dIeupcxdCS7dIXcWdTk19MO9lZaAgHPKDgAdnU3EQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ynjS7UJsbFp+ImmPiZ/4Lh6jzznxyHOtKu4GqQjCm9GNM8wxOz6gVvoVAbIwk6izT
+         Ja90wzfCDphRmI2Oa4nd4JkMljtFS3GdLGlT0p7Otzeb2/wZ4cT4M64/EjYPnSXleN
+         Dn9ObfLA8NYLAK1JY5LeL/IzDQofzdCo2WkRThxM=
+Date:   Thu, 26 Mar 2020 17:39:53 +0100
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Grant Likely <grant.likely@arm.com>,
+        Saravana Kannan <saravanak@google.com>, a.hajda@samsung.com,
+        artem.bityutskiy@linux.intel.com, balbi@kernel.org,
+        broonie@kernel.org, fntoth@gmail.com, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org, peter.ujfalusi@ti.com, rafael@kernel.org,
+        kernel-team@android.com, nd <nd@arm.com>
+Subject: Re: [PATCH v3] driver core: Break infinite loop when deferred probe
+ can't be satisfied
+Message-ID: <20200326163953.GA1551380@kroah.com>
+References: <20200324175719.62496-1-andriy.shevchenko@linux.intel.com>
+ <20200325032901.29551-1-saravanak@google.com>
+ <20200325125120.GX1922688@smile.fi.intel.com>
+ <295d25de-f01e-26de-02d6-1ac0c149d828@arm.com>
+ <20200326163110.GD1922688@smile.fi.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200326163110.GD1922688@smile.fi.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Christoph,
-
-Thanks for the review. Please see my comments inline.
-
-On Thu, 26 Mar 2020 02:23:16 -0700
-Christoph Hellwig <hch@infradead.org> wrote:
-
-> On Wed, Mar 25, 2020 at 04:17:05PM -0700, Jacob Pan wrote:
-> > Having a single UAPI version to govern the user-kernel data
-> > structures makes compatibility check straightforward. On the
-> > contrary, supporting combinations of multiple versions of the data
-> > can be a nightmare to maintain.
+On Thu, Mar 26, 2020 at 06:31:10PM +0200, Andy Shevchenko wrote:
+> On Thu, Mar 26, 2020 at 03:01:22PM +0000, Grant Likely wrote:
+> > On 25/03/2020 12:51, Andy Shevchenko wrote:
+> > > On Tue, Mar 24, 2020 at 08:29:01PM -0700, Saravana Kannan wrote:
+> > > > On Tue, Mar 24, 2020 at 5:38 AM Andy Shevchenko <andriy.shevchenko@linux.intel.com> wrote:
+> > > > > Consider the following scenario.
+> > > > > 
+> > > > > The main driver of USB OTG controller (dwc3-pci), which has the following
+> > > > > functional dependencies on certain platform:
+> > > > > - ULPI (tusb1210)
+> > > > > - extcon (tested with extcon-intel-mrfld)
+> > > > > 
+> > > > > Note, that first driver, tusb1210, is available at the moment of
+> > > > > dwc3-pci probing, while extcon-intel-mrfld is built as a module and
+> > > > > won't appear till user space does something about it.
+> > > > > 
+> > > > > This is depicted by kernel configuration excerpt:
+> > > > > 
+> > > > > 	CONFIG_PHY_TUSB1210=y
+> > > > > 	CONFIG_USB_DWC3=y
+> > > > > 	CONFIG_USB_DWC3_ULPI=y
+> > > > > 	CONFIG_USB_DWC3_DUAL_ROLE=y
+> > > > > 	CONFIG_USB_DWC3_PCI=y
+> > > > > 	CONFIG_EXTCON_INTEL_MRFLD=m
+> > > > > 
+> > > > > In the Buildroot environment the modules are probed by alphabetical ordering
+> > > > > of their modaliases. The latter comes to the case when USB OTG driver will be
+> > > > > probed first followed by extcon one.
+> > > > > 
+> > > > > So, if the platform anticipates extcon device to be appeared, in the above case
+> > > > > we will get deferred probe of USB OTG, because of ordering.
+> > > > > 
+> > > > > Since current implementation, done by the commit 58b116bce136 ("drivercore:
+> > > > > deferral race condition fix") counts the amount of triggered deferred probe,
+> > > > > we never advance the situation -- the change makes it to be an infinite loop.
+> > > > 
+> > > > Hi Andy,
+> > > > 
+> > > > I'm trying to understand this sequence of steps. Sorry if the questions
+> > > > are stupid -- I'm not very familiar with USB/PCI stuff.
+> > > 
+> > > Thank you for looking into this. My answer below.
+> > > 
+> > > As a first thing I would like to tell that there is another example of bad
+> > > behaviour of deferred probe with no relation to USB. The proposed change also
+> > > fixes that one (however, less possible to find in real life).
+> > > 
+> > > > > ---8<---8<---
+> > > > > 
+> > > > > [   22.187127] driver_deferred_probe_trigger <<< 1
+> > > > > 
+> > > > > ...here is the late initcall triggers deferred probe...
+> > > > > 
+> > > > > [   22.191725] platform dwc3.0.auto: deferred_probe_work_func in deferred list
+> > > > > 
+> > > > > ...dwc3.0.auto is the only device in the deferred list...
+> > > > 
+> > > > Ok, dwc3.0.auto is the only unprobed device at this point?
+> > > 
+> > > Correct.
+> > > 
+> > > > > [   22.198727] platform dwc3.0.auto: deferred_probe_work_func 1 <<< counter 1
+> > > > > 
+> > > > > ...the counter before mutex is unlocked is kept the same...
+> > > > > 
+> > > > > [   22.205663] platform dwc3.0.auto: Retrying from deferred list
+> > > > > 
+> > > > > ...mutes has been unlocked, we try to re-probe the driver...
+> > > > > 
+> > > > > [   22.211487] bus: 'platform': driver_probe_device: matched device dwc3.0.auto with driver dwc3
+> > > > > [   22.220060] bus: 'platform': really_probe: probing driver dwc3 with device dwc3.0.auto
+> > > > > [   22.238735] bus: 'ulpi': driver_probe_device: matched device dwc3.0.auto.ulpi with driver tusb1210
+> > > > > [   22.247743] bus: 'ulpi': really_probe: probing driver tusb1210 with device dwc3.0.auto.ulpi
+> > > > > [   22.256292] driver: 'tusb1210': driver_bound: bound to device 'dwc3.0.auto.ulpi'
+> > > > > [   22.263723] driver_deferred_probe_trigger <<< 2
+> > > > > 
+> > > > > ...the dwc3.0.auto probes ULPI, we got successful bound and bumped counter...
+> > > > > 
+> > > > > [   22.268304] bus: 'ulpi': really_probe: bound device dwc3.0.auto.ulpi to driver tusb1210
+> > > > 
+> > > > So where did this dwc3.0.auto.ulpi come from?
+> > > 
+> > > > Looks like the device is created by dwc3_probe() through this call flow:
+> > > > dwc3_probe() -> dwc3_core_init() -> dwc3_core_ulpi_init() ->
+> > > > dwc3_ulpi_init() -> ulpi_register_interface() -> ulpi_register()
+> > > 
+> > > Correct.
+> > > 
+> > > > > [   22.276697] platform dwc3.0.auto: Driver dwc3 requests probe deferral
+> > > > 
+> > > > Can you please point me to which code patch actually caused the probe
+> > > > deferral?
+> > > 
+> > > Sure, it's in drd.c.
+> > > 
+> > > if (device_property_read_string(dev, "linux,extcon-name", &name) == 0) {
+> > >    edev = extcon_get_extcon_dev(name);
+> > >    if (!edev)
+> > >      return ERR_PTR(-EPROBE_DEFER);
+> > >    return edev;
+> > > }
+> > > 
+> > > > > ...but extcon driver is still missing...
+> > > > > 
+> > > > > [   22.283174] platform dwc3.0.auto: Added to deferred list
+> > > > > [   22.288513] platform dwc3.0.auto: driver_deferred_probe_add_trigger local counter: 1 new counter 2
+> > > > 
+> > > > I'm not fully aware of all the USB implications, but if extcon is
+> > > > needed, why can't that check be done before we add and probe the ulpi
+> > > > device? That'll avoid this whole "fake" probing and avoid the counter
+> > > > increase. And avoid the need for this patch that's touching the code
+> > > > code that's already a bit delicate.
+> > > 
+> > > > Also, with my limited experience with all the possible drivers in the
+> > > > kernel, it's weird that the ulpi device is added and probed before we
+> > > > make sure the parent device (dwc3.0.auto) can actually probe
+> > > > successfully.
+> > > 
+> > > As I said above the deferred probe trigger has flaw on its own.
+> > > Even if we fix for USB case, there is (and probably will be) others.
 > > 
-> > This patch defines a unified UAPI version to be used for
-> > compatibility checks between user and kernel.  
+> > Right here is the driver design bug. A driver's probe() hook should *not*
+> > return -EPROBE_DEFER after already creating child devices which may have
+> > already been probed.
 > 
-> This is bullshit.  Version numbers don't scale and we've avoided them
-> everywhere.  You need need flags specifying specific behavior.
-> 
-We have flags or the equivalent in each UAPI structures. The flags
-are used for checking validity of extensions as well. And you are right
-we can use them for checking specific behavior.
+> Any documentation statement for this requirement?
 
-So we have two options here:
-1. Have a overall version for a quick compatibility check while
-starting a VM. If not compatible, we will stop guest SVA entirely.
+There shouldn't be.  If you return ANY error from a probe function, your
+driver is essencially "dead" when it comes to that device, and it had
+better have cleaned up after itself.
 
-2. Let each API calls check its own capabilities/flags at runtime. It
-may fail later on and lead to more complex error handling.
-For example, guest starts with SVA support, allocate a PASID, bind
-guest PASID works great. Then when IO page fault happens, it try to do
-page request service and found out certain flags are not compatible.
-This case is more complex to handle.
+That includes defering probe, that's not "special" here at all.
 
-I am guessing your proposal is #2. right?
+> By the way, I may imagine other mechanisms that probe the driver on other CPU
+> at the same time (let's consider parallel modprobes). The current code has a
+> flaw with that.
 
-Overall, we don;t expect much change to the UAPI other than adding some
-vendor specific part of the union. Is the scalability concern based on
-frequent changes?
+That can't happen, the driver core prevents that.
 
-> > +#define IOMMU_UAPI_VERSION	1
-> > +static inline int iommu_get_uapi_version(void)
-> > +{
-> > +	return IOMMU_UAPI_VERSION;
-> > +}  
-> 
-> Also inline functions like this in UAPI headers that actually get
-> included by userspace programs simply don't work.
+thanks,
 
-I will remove that, user can just use IOMMU_UAPI_VERSION directly.
+greg k-h
