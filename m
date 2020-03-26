@@ -2,127 +2,126 @@ Return-Path: <SRS0=aGSP=5L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D544FC2D0E8
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 00:05:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FC2AC43331
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 00:07:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B785A20714
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 00:05:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A07720714
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 00:07:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="u5H7mQvM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727590AbgCZAF0 convert rfc822-to-8bit (ORCPT
+        id S1727595AbgCZAHb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 20:05:26 -0400
-Received: from gloria.sntech.de ([185.11.138.130]:40446 "EHLO gloria.sntech.de"
+        Wed, 25 Mar 2020 20:07:31 -0400
+Received: from ozlabs.org ([203.11.71.1]:36159 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727530AbgCZAFZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 20:05:25 -0400
-Received: from ip5f5a5d2f.dynamic.kabel-deutschland.de ([95.90.93.47] helo=diego.localnet)
-        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <heiko@sntech.de>)
-        id 1jHG1N-00087A-Lp; Thu, 26 Mar 2020 01:05:17 +0100
-From:   Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
-To:     Giulio Benetti <giulio.benetti@micronovasrl.com>
-Cc:     gregkh@linuxfoundation.org, jslaby@suse.com,
-        andriy.shevchenko@linux.intel.com, matwey.kornilov@gmail.com,
-        linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org,
-        lukas@wunner.de, christoph.muellner@theobroma-systems.com
-Subject: Re: [PATCH v2 4/7] serial: 8250: Handle implementations not having TEMT interrupt using em485
-Date:   Thu, 26 Mar 2020 01:05:17 +0100
-Message-ID: <12195570.sTQbgxCmNy@diego>
-In-Reply-To: <3a5df648-b054-3338-f7a4-4c01783eabf6@micronovasrl.com>
-References: <20200325231422.1502366-1-heiko@sntech.de> <20200325231422.1502366-5-heiko@sntech.de> <3a5df648-b054-3338-f7a4-4c01783eabf6@micronovasrl.com>
+        id S1727498AbgCZAHa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Mar 2020 20:07:30 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 48nlfl0q1gz9sRf;
+        Thu, 26 Mar 2020 11:07:26 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1585181247;
+        bh=keFlslcJaRKofY7rCRgd9PqhxN1VT7bn4dRi+eink6Q=;
+        h=Date:From:To:Cc:Subject:From;
+        b=u5H7mQvME0/LhV28sahCWQsdPqO66ApJF46LerxHE2TEEqTAeGHV8gNNWSkbSg1ie
+         lr0tMuccAimUYshoe2krVlb5EbAeG7xi7xCgXAc8h3hnSsccLanRFsBkWEBbzZlewb
+         EnjS7xu0KzLGWcJu8iqMjaKHu4Vy7AcSN8AzMOi8aREcqT2XvdR5bmRtQUCrtcR2nk
+         yCv31Eg6RK4sc+A41ggN5o1ue3ojOs0zxmo17kmV1rlweikRESb4L+uS6ZT8tooYfE
+         M/EVBpKfqPlBZ2GNAUbpLq969nsh2WUlm6Fi0ZLRewO89K3BGZy3tRylAfdRYEZc5p
+         9/i/LQun+WZ3Q==
+Date:   Thu, 26 Mar 2020 11:07:25 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     David Miller <davem@davemloft.net>,
+        Networking <netdev@vger.kernel.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Hangbin Liu <liuhangbin@gmail.com>,
+        Kuniyuki Iwashima <kuniyu@amazon.co.jp>
+Subject: linux-next: manual merge of the net-next tree with the net tree
+Message-ID: <20200326110725.37b1e636@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8BIT
-Content-Type: text/plain; charset="iso-8859-1"
+Content-Type: multipart/signed; boundary="Sig_/AzVdnvS/5ABMom621vxy99V";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Giulio,
+--Sig_/AzVdnvS/5ABMom621vxy99V
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Am Donnerstag, 26. März 2020, 00:47:38 CET schrieb Giulio Benetti:
-> very cleaner way to handle TEMT as a capability!
-> And I've found one thing...
-> 
-> Il 26/03/2020 00:14, Heiko Stuebner ha scritto:
-> > From: Giulio Benetti <giulio.benetti@micronovasrl.com>
-> > 
-> > Some 8250 ports have a TEMT interrupt but it's not a part of the 8250
-> > standard, instead only available on some implementations.
-> > 
-> > The current em485 implementation does not work on ports without it.
-> > The only chance to make it work is to loop-read on LSR register.
-> > 
-> > So add UART_CAP_TEMT to mark 8250 uarts having this interrupt,
-> > update all current em485 users with that capability and make
-> > the stop_tx function loop-read on uarts not having it.
-> > 
-> > Signed-off-by: Giulio Benetti <giulio.benetti@micronovasrl.com>
-> > [moved to use added UART_CAP_TEMT, use readx_poll_timeout]
-> > Signed-off-by: Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
-> > ---
-> >   drivers/tty/serial/8250/8250.h            |  1 +
-> >   drivers/tty/serial/8250/8250_bcm2835aux.c |  2 +-
-> >   drivers/tty/serial/8250/8250_of.c         |  2 ++
-> >   drivers/tty/serial/8250/8250_omap.c       |  2 +-
-> >   drivers/tty/serial/8250/8250_port.c       | 25 +++++++++++++++++++----
-> >   5 files changed, 26 insertions(+), 6 deletions(-)
-> > 
-> > diff --git a/drivers/tty/serial/8250/8250.h b/drivers/tty/serial/8250/8250.h
-> > index 52bb21205bb6..770eb00db497 100644
-> > --- a/drivers/tty/serial/8250/8250.h
-> > +++ b/drivers/tty/serial/8250/8250.h
-> > @@ -82,6 +82,7 @@ struct serial8250_config {
-> >   #define UART_CAP_MINI	(1 << 17)	/* Mini UART on BCM283X family lacks:
-> >   					 * STOP PARITY EPAR SPAR WLEN5 WLEN6
-> >   					 */
-> > +#define UART_CAP_TEMT	(1 << 18)	/* UART has TEMT interrupt */
-> >   
-> >   #define UART_BUG_QUOT	(1 << 0)	/* UART has buggy quot LSB */
-> >   #define UART_BUG_TXEN	(1 << 1)	/* UART has buggy TX IIR status */
-> > diff --git a/drivers/tty/serial/8250/8250_bcm2835aux.c b/drivers/tty/serial/8250/8250_bcm2835aux.c
-> > index 12d03e678295..3881242424ca 100644
-> > --- a/drivers/tty/serial/8250/8250_bcm2835aux.c
-> > +++ b/drivers/tty/serial/8250/8250_bcm2835aux.c
-> > @@ -91,7 +91,7 @@ static int bcm2835aux_serial_probe(struct platform_device *pdev)
-> >   		return -ENOMEM;
-> >   
-> >   	/* initialize data */
-> > -	up.capabilities = UART_CAP_FIFO | UART_CAP_MINI;
-> > +	up.capabilities = UART_CAP_FIFO | UART_CAP_MINI | UART_CAP_TEMT;
-> >   	up.port.dev = &pdev->dev;
-> >   	up.port.regshift = 2;
-> >   	up.port.type = PORT_16550;
-> > diff --git a/drivers/tty/serial/8250/8250_of.c b/drivers/tty/serial/8250/8250_of.c
-> > index 65e9045dafe6..841f6fcb2878 100644
-> > --- a/drivers/tty/serial/8250/8250_of.c
-> > +++ b/drivers/tty/serial/8250/8250_of.c
-> > @@ -225,6 +225,8 @@ static int of_platform_serial_probe(struct platform_device *ofdev)
-> >   			&port8250.overrun_backoff_time_ms) != 0)
-> >   		port8250.overrun_backoff_time_ms = 0;
-> >   
-> > +	port8250.capabilities |= UART_CAP_TEMT;
-> > +
-> 
-> Shouldn't this be NOT UART_CAP_TEMT set by default? On all other
-> vendor specific files you enable it, I think here you shouldn't enable
-> it too by default. Right?
+Hi all,
 
-8250_of does use the em485 emulation - see of_platform_serial_setup()
-So I did go by the lazy assumption that any 8250 driver using rs485
-before my series always used the interrupt driver code path, so
-implicitly required to have the TEMT interrupt.
+Today's linux-next merge of the net-next tree got a conflict in:
 
-Of course, you're right that with the 8250_of maybe not all variants
-actually do have this interrupt, so falling back to the polling here might
-be safer.
+  tools/testing/selftests/net/Makefile
 
+between commit:
 
-Heiko
+  919a23e9d6cc ("selftests/net: add missing tests to Makefile")
 
+from the net tree and commit:
 
+  7f204a7de8b0 ("selftests: net: Add SO_REUSEADDR test to check if 4-tuples=
+ are fully utilized.")
+
+from the net-next tree.
+
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+diff --cc tools/testing/selftests/net/Makefile
+index 4c1bd03ffa1c,48063fd69924..000000000000
+--- a/tools/testing/selftests/net/Makefile
++++ b/tools/testing/selftests/net/Makefile
+@@@ -11,9 -11,8 +11,10 @@@ TEST_PROGS +=3D udpgso_bench.sh fib_rule_
+  TEST_PROGS +=3D udpgro_bench.sh udpgro.sh test_vxlan_under_vrf.sh reusepo=
+rt_addr_any.sh
+  TEST_PROGS +=3D test_vxlan_fdb_changelink.sh so_txtime.sh ipv6_flowlabel.=
+sh
+  TEST_PROGS +=3D tcp_fastopen_backup_key.sh fcnal-test.sh l2tp.sh tracerou=
+te.sh
+ -TEST_PROGS +=3D fin_ack_lat.sh
+ +TEST_PROGS +=3D fin_ack_lat.sh fib_nexthop_multiprefix.sh fib_nexthops.sh
+ +TEST_PROGS +=3D altnames.sh icmp_redirect.sh ip6_gre_headroom.sh
+ +TEST_PROGS +=3D route_localnet.sh
++ TEST_PROGS +=3D reuseaddr_ports_exhausted.sh
+  TEST_PROGS_EXTENDED :=3D in_netns.sh
+  TEST_GEN_FILES =3D  socket nettest
+  TEST_GEN_FILES +=3D psock_fanout psock_tpacket msg_zerocopy reuseport_add=
+r_any
+
+--Sig_/AzVdnvS/5ABMom621vxy99V
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl578j0ACgkQAVBC80lX
+0GxLAwf+LDXAAlbFQJbPpQBxl2YhP9wzxhfQED180RaiXp3167dE5ubFlqkXz6W6
+M+ptm06I9Any+a5l13LkKm3I3A3Y+AEwjyQQzZaoKZtlfduahRB5JaTrzlP6jLTa
+kxt/bosF9kwKWgrL5p3GSjGN3qkIEBlwui2XbmZwCpOtH4zlPojDLxSHhalNeCsD
+kh4UgN/tMhZEnjcqjcS85eY1uuaNaz3yvRjpB5v+W7jWyyVQsZ35EaPIAJwo2BMc
+o7LreYonkNtKjBtQKuIKO8IJ5iyyzLgDs2VHL8qg9Fqhjmcg1IckduCZHyXk+AtS
+92iBUcQjpXAWvxQce8tI0Uf7sqsa9g==
+=JHqU
+-----END PGP SIGNATURE-----
+
+--Sig_/AzVdnvS/5ABMom621vxy99V--
