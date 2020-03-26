@@ -2,131 +2,114 @@ Return-Path: <SRS0=aGSP=5L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0979C43331
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 06:49:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2776C2D0E7
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 06:49:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9AE602078E
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 06:49:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C846B206F8
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 06:49:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585205354;
+	bh=REwFVQjfEy9jtZuC2k6P8S+hQqioo1Lem7N5OdAZsRo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=r21CK0SVmFCl/CNC3byy7KNN6+W0DYZvevHmkhqzUGmwpJNt/LCh8wtZ1IFGYH4bE
+	 qjMCd1XXjowdzUe1jxqN3XJdx5nKpO1gVQGk+PCyYK9LS7W02Wvn35H8WR8dvDVawk
+	 pjhA2RQWI9UIzNYZWZPJjw1QZdbUMyxYNBnuVVIw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727683AbgCZGtD (ORCPT
+        id S1727699AbgCZGtN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 02:49:03 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:34342 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726336AbgCZGtD (ORCPT
+        Thu, 26 Mar 2020 02:49:13 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:43716 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726014AbgCZGtN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 02:49:03 -0400
-Received: by mail-lj1-f194.google.com with SMTP id p10so5001377ljn.1
-        for <linux-kernel@vger.kernel.org>; Wed, 25 Mar 2020 23:49:01 -0700 (PDT)
+        Thu, 26 Mar 2020 02:49:13 -0400
+Received: by mail-wr1-f66.google.com with SMTP id m11so448595wrx.10;
+        Wed, 25 Mar 2020 23:49:12 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=Qff2i+ym4gPPOxDRIQh2n3v3vk/CiXzDCHZe7pXja70=;
-        b=B0bE+b2zub9Ed3e3JG/LOUjcK8vJWV6A8vAZEzG4VNYTrYdEkkjtpQFepRt7k0nfk+
-         NedFMEqbx0FoYKBB7f5v1zn1wCebqrGMJFNGP3Eetu1xDu7aHOZK4HOsW3QlqGXs8yn/
-         +LF2dIE3uCrgSHTCnt26IF63zdmfQ7j+jfptFQlXUuEEEfO+9k+kifLs+tD3VtCh0nYe
-         oaY/wfcTuGyoQL/2u7lwGe+L1S7bOE3Rp7UQh0aELM8tKX2hfxFNR5YCRNUM/ZcWLlaR
-         dT13eid23FeMvVS4ubmnERWvoXm/uAqQmWuHc9Mwoh0JSFWnIVkcUNaUu19u7oIjNlwV
-         UIdw==
-X-Gm-Message-State: AGi0Pua7aw2VAWsjSVnz1nqV6m0MN5yuDItEgJlcXp2EWFHAjbiL/jU+
-        cFRVBg32r8Vd6UM4Oj3THYs=
-X-Google-Smtp-Source: APiQypKKxRrK0zPIQAUsRUDBdyMW5BiKcxteWRsyZwoU7v2j5uIMayk8EvSsxhEjzSWaGXGXuvFmvA==
-X-Received: by 2002:a2e:9706:: with SMTP id r6mr550239lji.183.1585205340626;
-        Wed, 25 Mar 2020 23:49:00 -0700 (PDT)
-Received: from localhost.localdomain (dc7t7ryyyyyyyyyyyyybt-3.rev.dnainternet.fi. [2001:14ba:16e1:b700::3])
-        by smtp.gmail.com with ESMTPSA id x23sm854496ljd.23.2020.03.25.23.48.59
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=Y4psBKXqPtMQHGDD9G3/UVc0Xd+VFzRe3hFm6IS58p0=;
+        b=UjoPC7uF3WBBdKIXcCFujcbJEaFfpjqCfAPOApPz3XC90/gvtt708FrkoU8hDY++vp
+         ORaBgcBQrUTPbrQMG4rIyylpegm3CVdAHpZrEoS9zYBhaCnUedkpxjLiN/mhl8ih/MnS
+         eUcDHKsHowTcSq2xFxAsG3H39hpKX+Jcqjht39cX54o6OBudmZ6IHGIqAZWZKxydqIar
+         85BmoSS91BGjSdk0vM0wGT5wrEQamLTu0ekfSJyC+3QbrHlFCmLpmvuqgki1tVc8tNpj
+         0oSbAVSvV3iZoYDvn4A6gndz1lgLYYvxdnKoZIlWsTK7BK7r0nJAlpvaZ+C4QYQM4vps
+         rIsw==
+X-Gm-Message-State: ANhLgQ2OeyyHI99GpwG6MrtU/6zLjBCGCZUAG1OUg55T3uEw82Mrq9hS
+        lPWXmulcO89Utv/ZaG9FuLg=
+X-Google-Smtp-Source: ADFU+vsYkHP2H+pALnVpF91T9GwcryXmAjyQiSJ+3+DZsC6TZ76dyL1pE5MKqrHwjbWOtc1EcQMwTQ==
+X-Received: by 2002:adf:fac7:: with SMTP id a7mr7803851wrs.191.1585205351825;
+        Wed, 25 Mar 2020 23:49:11 -0700 (PDT)
+Received: from localhost (ip-37-188-135-150.eurotel.cz. [37.188.135.150])
+        by smtp.gmail.com with ESMTPSA id g2sm2247830wrs.42.2020.03.25.23.49.10
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 25 Mar 2020 23:49:00 -0700 (PDT)
-Date:   Thu, 26 Mar 2020 08:48:52 +0200
-From:   Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-To:     matti.vaittinen@fi.rohmeurope.com, mazziesaccount@gmail.com
-Cc:     Lee Jones <lee.jones@linaro.org>, linux-kernel@vger.kernel.org
-Subject: [PATCH] mfd: rohm-bdXXX - switch to use i2c probe_new
-Message-ID: <20200326064852.GA23265@localhost.localdomain>
+        Wed, 25 Mar 2020 23:49:10 -0700 (PDT)
+Date:   Thu, 26 Mar 2020 07:49:09 +0100
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Rafael Aquini <aquini@redhat.com>,
+        Shakeel Butt <shakeelb@google.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-kselftest@vger.kernel.org, shuah@kernel.org,
+        Eric B Munson <emunson@akamai.com>
+Subject: Re: [PATCH] tools/testing/selftests/vm/mlock2-tests: fix mlock2
+ false-negative errors
+Message-ID: <20200326064909.GB27965@dhcp22.suse.cz>
+References: <20200323144240.GB23364@optiplex-lnx>
+ <20200323145106.GM7524@dhcp22.suse.cz>
+ <20200323150259.GD23364@optiplex-lnx>
+ <20200323151256.GP7524@dhcp22.suse.cz>
+ <20200323154159.GF23364@optiplex-lnx>
+ <20200323155111.GQ7524@dhcp22.suse.cz>
+ <20200323155449.GG23364@optiplex-lnx>
+ <20200324154218.GS19542@dhcp22.suse.cz>
+ <20200324154910.GM23364@optiplex-lnx>
+ <20200325174949.95d8a9de61c6a30a7e0f4582@linux-foundation.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <20200325174949.95d8a9de61c6a30a7e0f4582@linux-foundation.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-ROHM BD70528 and BD718x7 drivers do not utilize the I2C id.
-Do the trivial conversion and make them to use probe_new
-instead of probe.
+On Wed 25-03-20 17:49:49, Andrew Morton wrote:
+> On Tue, 24 Mar 2020 11:49:10 -0400 Rafael Aquini <aquini@redhat.com> wrote:
+> 
+> > Thanks Michal!
+> > 
+> >  
+> > Acked-by: Rafael Aquini <aquini@redhat.com>
+> 
+> I'll add
+> Fixes: 9c4e6b1a7027f ("mm, mlock, vmscan: no more skipping pagevecs")
 
-Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
----
- drivers/mfd/rohm-bd70528.c | 5 ++---
- drivers/mfd/rohm-bd718x7.c | 5 ++---
- 2 files changed, 4 insertions(+), 6 deletions(-)
+Wouldn't be this misleading? It would suggest that this commit is
+somehow incorrect. I would consider b3b0d09c7a23 ("selftests: vm: add
+tests for lock on fault") to be a better fit.
 
-diff --git a/drivers/mfd/rohm-bd70528.c b/drivers/mfd/rohm-bd70528.c
-index 5c44d3b77b3e..179584d10109 100644
---- a/drivers/mfd/rohm-bd70528.c
-+++ b/drivers/mfd/rohm-bd70528.c
-@@ -216,8 +216,7 @@ static struct regmap_irq_chip bd70528_irq_chip = {
- 	.irq_reg_stride = 1,
- };
- 
--static int bd70528_i2c_probe(struct i2c_client *i2c,
--			     const struct i2c_device_id *id)
-+static int bd70528_i2c_probe(struct i2c_client *i2c)
- {
- 	struct bd70528_data *bd70528;
- 	struct regmap_irq_chip_data *irq_data;
-@@ -304,7 +303,7 @@ static struct i2c_driver bd70528_drv = {
- 		.name = "rohm-bd70528",
- 		.of_match_table = bd70528_of_match,
- 	},
--	.probe = &bd70528_i2c_probe,
-+	.probe_new = &bd70528_i2c_probe,
- };
- 
- module_i2c_driver(bd70528_drv);
-diff --git a/drivers/mfd/rohm-bd718x7.c b/drivers/mfd/rohm-bd718x7.c
-index c32c1b6c98fa..e621e1a82222 100644
---- a/drivers/mfd/rohm-bd718x7.c
-+++ b/drivers/mfd/rohm-bd718x7.c
-@@ -129,8 +129,7 @@ static int bd718xx_init_press_duration(struct bd718xx *bd718xx)
- 	return 0;
- }
- 
--static int bd718xx_i2c_probe(struct i2c_client *i2c,
--			    const struct i2c_device_id *id)
-+static int bd718xx_i2c_probe(struct i2c_client *i2c)
- {
- 	struct bd718xx *bd718xx;
- 	int ret;
-@@ -226,7 +225,7 @@ static struct i2c_driver bd718xx_i2c_driver = {
- 		.name = "rohm-bd718x7",
- 		.of_match_table = bd718xx_of_match,
- 	},
--	.probe = bd718xx_i2c_probe,
-+	.probe_new = bd718xx_i2c_probe,
- };
- 
- static int __init bd718xx_i2c_init(void)
+> and cc:stable to this.  Any kernel which has 9c4e6b1a7027f will benefit
+> from this change.
 
-base-commit: 16fbf79b0f83bc752cee8589279f1ebfe57b3b6e
+OK, makes sense with
+Cc: stable # with 9c4e6b1a7027f applied
+ 
+> We're getting quite late in the cycle now so I think I'll hold off
+> merging this up until post-5.7-rc1.  It will still get into the stable
+> trees, but a bit later.
+
+No problem. Nothing really urget. Coincidentaly we've just had a report
+from our partner about this very specific test failure for our
+enterprise kernel as well. I will just backport the patch as it seems
+nobody really objects to it.
+
+Thanks!
 -- 
-2.21.0
-
-
--- 
-Matti Vaittinen, Linux device drivers
-ROHM Semiconductors, Finland SWDC
-Kiviharjunlenkki 1E
-90220 OULU
-FINLAND
-
-~~~ "I don't think so," said Rene Descartes. Just then he vanished ~~~
-Simon says - in Latin please.
-~~~ "non cogito me" dixit Rene Descarte, deinde evanescavit ~~~
-Thanks to Simon Glass for the translation =] 
+Michal Hocko
+SUSE Labs
