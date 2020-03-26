@@ -2,120 +2,228 @@ Return-Path: <SRS0=aGSP=5L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.7 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF623C2D0E8
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 11:38:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35031C43331
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 11:40:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B75C420748
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 11:38:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DQZmDaLx"
+	by mail.kernel.org (Postfix) with ESMTP id 12D1320787
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 11:40:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728089AbgCZLir (ORCPT
+        id S1728102AbgCZLkR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 07:38:47 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:46366 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727560AbgCZLir (ORCPT
+        Thu, 26 Mar 2020 07:40:17 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:50457 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727900AbgCZLkQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 07:38:47 -0400
-Received: by mail-pl1-f195.google.com with SMTP id s23so2001509plq.13;
-        Thu, 26 Mar 2020 04:38:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to;
-        bh=R0qU1vfFJtq/8uG9IZGBPMdQ0ZUew1mrKKw6hutamAQ=;
-        b=DQZmDaLxybbCIR7OhJBlYkbfh0VC2lyHZ20SSGUBLSGqUYDxLQ8242wwrhvmMIkb+S
-         kauniwR17uUed8TQ9jHasiNY9F0hFIQ+iOXlw+Z3KaBoTjCoZBiR8qmIhLhgn0N/zuzM
-         22Gb5fG2swp7zD4zWaEa3wgW3PwSj369qegoLcBMjvsICPfjheRv0y8uxvwVUSBIG5Bg
-         +OF0emN61e/tbswYEZI3gzkS/0ortnuXK/NQ29CCygBvb3JByEMDtFdtk+d7akr6J7KW
-         7kSiz9I257CjR4R0WzKrrxKa8jSsmeOkN6bk6alieSvYuWHfQGIt4IjoxeM4+Q3z0DVJ
-         WLlQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to;
-        bh=R0qU1vfFJtq/8uG9IZGBPMdQ0ZUew1mrKKw6hutamAQ=;
-        b=TG35DA6Wx5F5ZDnGSnHiyIHmAe6axhVHm4TejRPLdvSt0tcrhp07F2Cfpr1zmZB2FH
-         Kdk/2XM1nL8hQp8cAL5YRNumKmBHcZuEu8Zf7Cy5+6OAWCRNCrHe1ToyJ2qBkXca1Gzj
-         EtX6nzLepdy1cshC1yK8T3sD9lfvCtXq832SGx1JXCbofXyEHtNTgEOIO1yHVwJiaSGJ
-         DSiF6WI4Ni0vIVS7cBrupayecRK1VecImxJt7l/i3PgKCeiNAyfEidislz343s1Wo0Bh
-         VFy+jF4dBAVI+omT0Ba2EDQ8ApOlS4SZADJbd7XSgQboC3pbkrBKFxc56f9p/9TN0OTM
-         6Rgg==
-X-Gm-Message-State: ANhLgQ2iXmVKSyzbbp0TT14nu1JJsl5Wqmz8uBv9tR4yeiRiMuD1y5l/
-        iRex1yXMl3NwXZvJoBZ6ZldW3jol22FS+1kBz9o=
-X-Google-Smtp-Source: ADFU+vvCH5BmVxfLH5Lsgo06YaFz8cXJ4Ew5KtuIz1eSdJLbu86yn4cADJqPrChVHtpWYi3ypBWuWoz1w1lJOmB4knk=
-X-Received: by 2002:a17:902:5acb:: with SMTP id g11mr317572plm.18.1585222725777;
- Thu, 26 Mar 2020 04:38:45 -0700 (PDT)
+        Thu, 26 Mar 2020 07:40:16 -0400
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1jHQrp-0006UF-Vp; Thu, 26 Mar 2020 12:40:10 +0100
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 830511C0470;
+        Thu, 26 Mar 2020 12:40:09 +0100 (CET)
+Date:   Thu, 26 Mar 2020 11:40:09 -0000
+From:   "tip-bot2 for Yu-cheng Yu" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/misc] x86/insn: Add Control-flow Enforcement (CET)
+ instructions to the opcode map
+Cc:     "Yu-cheng Yu" <yu-cheng.yu@intel.com>,
+        Borislav Petkov <bp@suse.de>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>, x86 <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <20200204171425.28073-2-yu-cheng.yu@intel.com>
+References: <20200204171425.28073-2-yu-cheng.yu@intel.com>
 MIME-Version: 1.0
-References: <1585161361-3408-1-git-send-email-alain.volmat@st.com>
- <1585161361-3408-3-git-send-email-alain.volmat@st.com> <CAHp75VdPCWdpGo=2n9g0ivti-g2m4jZ=cG4BKHBLk8BVDzaCyg@mail.gmail.com>
- <20200326101219.GA21190@gnbcxd0016.gnb.st.com>
-In-Reply-To: <20200326101219.GA21190@gnbcxd0016.gnb.st.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Thu, 26 Mar 2020 13:38:38 +0200
-Message-ID: <CAHp75Vc896RpnrX6+yb0LfXVroLJO5XX6Gt5V4BJZjdFYOXYnQ@mail.gmail.com>
-Subject: Re: [PATCH 2/2] i2c: i2c-stm32f7: allows for any bus frequency
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Pierre Yves MORDRET <pierre-yves.mordret@st.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre TORGUE <alexandre.torgue@st.com>,
-        linux-i2c <linux-i2c@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        "linux-stm32@st-md-mailman.stormreply.com" 
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Fabrice GASNIER <fabrice.gasnier@st.com>
-Content-Type: text/plain; charset="UTF-8"
+Message-ID: <158522280919.28353.13352431577449123346.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 26, 2020 at 12:12 PM Alain Volmat <alain.volmat@st.com> wrote:
-> On Wed, Mar 25, 2020 at 06:53:45PM +0000, Andy Shevchenko wrote:
-> > On Wed, Mar 25, 2020 at 8:38 PM Alain Volmat <alain.volmat@st.com> wrote:
+The following commit has been merged into the x86/misc branch of tip:
 
-...
+Commit-ID:     5790921bc18b1eb5c0c61371e31114fd4c4b0154
+Gitweb:        https://git.kernel.org/tip/5790921bc18b1eb5c0c61371e31114fd4c4b0154
+Author:        Yu-cheng Yu <yu-cheng.yu@intel.com>
+AuthorDate:    Tue, 04 Feb 2020 09:14:24 -08:00
+Committer:     Borislav Petkov <bp@suse.de>
+CommitterDate: Thu, 26 Mar 2020 12:21:40 +01:00
 
-> > > +       int i;
-> > > +
-> > > +       for (i = ARRAY_SIZE(i2c_specs) - 1; i >= 0; i--)
-> >
-> >
-> > Perhaps
-> >
-> >        int i = ARRAY_SIZE(i2c_specs);
-> >
-> >        while(i--)
-> >
-> > ?
->
-> I propose the following code to make it a bit easier to read/understand:
->
-> static u32 get_lower_rate(u32 rate)
-> {
->         int i = ARRAY_SIZE(i2c_specs);
->
->         while (i--)
->                 if (i2c_specs[i].rate < rate)
->                         break;
->
->         return i2c_specs[i].rate;
-> }
->
-> If you agree with that I'll push a v2.
+x86/insn: Add Control-flow Enforcement (CET) instructions to the opcode map
 
-No objections.
+Add the following CET instructions to the opcode map:
 
--- 
-With Best Regards,
-Andy Shevchenko
+INCSSP:
+    Increment Shadow Stack pointer (SSP).
+
+RDSSP:
+    Read SSP into a GPR.
+
+SAVEPREVSSP:
+    Use "previous ssp" token at top of current Shadow Stack (SHSTK) to
+    create a "restore token" on the previous (outgoing) SHSTK.
+
+RSTORSSP:
+    Restore from a "restore token" to SSP.
+
+WRSS:
+    Write to kernel-mode SHSTK (kernel-mode instruction).
+
+WRUSS:
+    Write to user-mode SHSTK (kernel-mode instruction).
+
+SETSSBSY:
+    Verify the "supervisor token" pointed by MSR_IA32_PL0_SSP, set the
+    token busy, and set then Shadow Stack pointer(SSP) to the value of
+    MSR_IA32_PL0_SSP.
+
+CLRSSBSY:
+    Verify the "supervisor token" and clear its busy bit.
+
+ENDBR64/ENDBR32:
+    Mark a valid 64/32 bit control transfer endpoint.
+
+Detailed information of CET instructions can be found in Intel Software
+Developer's Manual.
+
+Signed-off-by: Yu-cheng Yu <yu-cheng.yu@intel.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Reviewed-by: Adrian Hunter <adrian.hunter@intel.com>
+Reviewed-by: Tony Luck <tony.luck@intel.com>
+Acked-by: Masami Hiramatsu <mhiramat@kernel.org>
+Link: https://lkml.kernel.org/r/20200204171425.28073-2-yu-cheng.yu@intel.com
+---
+ arch/x86/lib/x86-opcode-map.txt       | 17 +++++++++++------
+ tools/arch/x86/lib/x86-opcode-map.txt | 17 +++++++++++------
+ 2 files changed, 22 insertions(+), 12 deletions(-)
+
+diff --git a/arch/x86/lib/x86-opcode-map.txt b/arch/x86/lib/x86-opcode-map.txt
+index 53adc17..ec31f5b 100644
+--- a/arch/x86/lib/x86-opcode-map.txt
++++ b/arch/x86/lib/x86-opcode-map.txt
+@@ -366,7 +366,7 @@ AVXcode: 1
+ 1b: BNDCN Gv,Ev (F2) | BNDMOV Ev,Gv (66) | BNDMK Gv,Ev (F3) | BNDSTX Ev,Gv
+ 1c: Grp20 (1A),(1C)
+ 1d:
+-1e:
++1e: Grp21 (1A)
+ 1f: NOP Ev
+ # 0x0f 0x20-0x2f
+ 20: MOV Rd,Cd
+@@ -803,8 +803,8 @@ f0: MOVBE Gy,My | MOVBE Gw,Mw (66) | CRC32 Gd,Eb (F2) | CRC32 Gd,Eb (66&F2)
+ f1: MOVBE My,Gy | MOVBE Mw,Gw (66) | CRC32 Gd,Ey (F2) | CRC32 Gd,Ew (66&F2)
+ f2: ANDN Gy,By,Ey (v)
+ f3: Grp17 (1A)
+-f5: BZHI Gy,Ey,By (v) | PEXT Gy,By,Ey (F3),(v) | PDEP Gy,By,Ey (F2),(v)
+-f6: ADCX Gy,Ey (66) | ADOX Gy,Ey (F3) | MULX By,Gy,rDX,Ey (F2),(v)
++f5: BZHI Gy,Ey,By (v) | PEXT Gy,By,Ey (F3),(v) | PDEP Gy,By,Ey (F2),(v) | WRUSSD/Q My,Gy (66)
++f6: ADCX Gy,Ey (66) | ADOX Gy,Ey (F3) | MULX By,Gy,rDX,Ey (F2),(v) | WRSSD/Q My,Gy
+ f7: BEXTR Gy,Ey,By (v) | SHLX Gy,Ey,By (66),(v) | SARX Gy,Ey,By (F3),(v) | SHRX Gy,Ey,By (F2),(v)
+ f8: MOVDIR64B Gv,Mdqq (66) | ENQCMD Gv,Mdqq (F2) | ENQCMDS Gv,Mdqq (F3)
+ f9: MOVDIRI My,Gy
+@@ -970,7 +970,7 @@ GrpTable: Grp7
+ 2: LGDT Ms | XGETBV (000),(11B) | XSETBV (001),(11B) | VMFUNC (100),(11B) | XEND (101)(11B) | XTEST (110)(11B) | ENCLU (111),(11B)
+ 3: LIDT Ms
+ 4: SMSW Mw/Rv
+-5: rdpkru (110),(11B) | wrpkru (111),(11B)
++5: rdpkru (110),(11B) | wrpkru (111),(11B) | SAVEPREVSSP (F3),(010),(11B) | RSTORSSP Mq (F3) | SETSSBSY (F3),(000),(11B)
+ 6: LMSW Ew
+ 7: INVLPG Mb | SWAPGS (o64),(000),(11B) | RDTSCP (001),(11B)
+ EndTable
+@@ -1041,8 +1041,8 @@ GrpTable: Grp15
+ 2: vldmxcsr Md (v1) | WRFSBASE Ry (F3),(11B)
+ 3: vstmxcsr Md (v1) | WRGSBASE Ry (F3),(11B)
+ 4: XSAVE | ptwrite Ey (F3),(11B)
+-5: XRSTOR | lfence (11B)
+-6: XSAVEOPT | clwb (66) | mfence (11B) | TPAUSE Rd (66),(11B) | UMONITOR Rv (F3),(11B) | UMWAIT Rd (F2),(11B)
++5: XRSTOR | lfence (11B) | INCSSPD/Q Ry (F3),(11B)
++6: XSAVEOPT | clwb (66) | mfence (11B) | TPAUSE Rd (66),(11B) | UMONITOR Rv (F3),(11B) | UMWAIT Rd (F2),(11B) | CLRSSBSY Mq (F3)
+ 7: clflush | clflushopt (66) | sfence (11B)
+ EndTable
+ 
+@@ -1077,6 +1077,11 @@ GrpTable: Grp20
+ 0: cldemote Mb
+ EndTable
+ 
++GrpTable: Grp21
++1: RDSSPD/Q Ry (F3),(11B)
++7: ENDBR64 (F3),(010),(11B) | ENDBR32 (F3),(011),(11B)
++EndTable
++
+ # AMD's Prefetch Group
+ GrpTable: GrpP
+ 0: PREFETCH
+diff --git a/tools/arch/x86/lib/x86-opcode-map.txt b/tools/arch/x86/lib/x86-opcode-map.txt
+index 53adc17..ec31f5b 100644
+--- a/tools/arch/x86/lib/x86-opcode-map.txt
++++ b/tools/arch/x86/lib/x86-opcode-map.txt
+@@ -366,7 +366,7 @@ AVXcode: 1
+ 1b: BNDCN Gv,Ev (F2) | BNDMOV Ev,Gv (66) | BNDMK Gv,Ev (F3) | BNDSTX Ev,Gv
+ 1c: Grp20 (1A),(1C)
+ 1d:
+-1e:
++1e: Grp21 (1A)
+ 1f: NOP Ev
+ # 0x0f 0x20-0x2f
+ 20: MOV Rd,Cd
+@@ -803,8 +803,8 @@ f0: MOVBE Gy,My | MOVBE Gw,Mw (66) | CRC32 Gd,Eb (F2) | CRC32 Gd,Eb (66&F2)
+ f1: MOVBE My,Gy | MOVBE Mw,Gw (66) | CRC32 Gd,Ey (F2) | CRC32 Gd,Ew (66&F2)
+ f2: ANDN Gy,By,Ey (v)
+ f3: Grp17 (1A)
+-f5: BZHI Gy,Ey,By (v) | PEXT Gy,By,Ey (F3),(v) | PDEP Gy,By,Ey (F2),(v)
+-f6: ADCX Gy,Ey (66) | ADOX Gy,Ey (F3) | MULX By,Gy,rDX,Ey (F2),(v)
++f5: BZHI Gy,Ey,By (v) | PEXT Gy,By,Ey (F3),(v) | PDEP Gy,By,Ey (F2),(v) | WRUSSD/Q My,Gy (66)
++f6: ADCX Gy,Ey (66) | ADOX Gy,Ey (F3) | MULX By,Gy,rDX,Ey (F2),(v) | WRSSD/Q My,Gy
+ f7: BEXTR Gy,Ey,By (v) | SHLX Gy,Ey,By (66),(v) | SARX Gy,Ey,By (F3),(v) | SHRX Gy,Ey,By (F2),(v)
+ f8: MOVDIR64B Gv,Mdqq (66) | ENQCMD Gv,Mdqq (F2) | ENQCMDS Gv,Mdqq (F3)
+ f9: MOVDIRI My,Gy
+@@ -970,7 +970,7 @@ GrpTable: Grp7
+ 2: LGDT Ms | XGETBV (000),(11B) | XSETBV (001),(11B) | VMFUNC (100),(11B) | XEND (101)(11B) | XTEST (110)(11B) | ENCLU (111),(11B)
+ 3: LIDT Ms
+ 4: SMSW Mw/Rv
+-5: rdpkru (110),(11B) | wrpkru (111),(11B)
++5: rdpkru (110),(11B) | wrpkru (111),(11B) | SAVEPREVSSP (F3),(010),(11B) | RSTORSSP Mq (F3) | SETSSBSY (F3),(000),(11B)
+ 6: LMSW Ew
+ 7: INVLPG Mb | SWAPGS (o64),(000),(11B) | RDTSCP (001),(11B)
+ EndTable
+@@ -1041,8 +1041,8 @@ GrpTable: Grp15
+ 2: vldmxcsr Md (v1) | WRFSBASE Ry (F3),(11B)
+ 3: vstmxcsr Md (v1) | WRGSBASE Ry (F3),(11B)
+ 4: XSAVE | ptwrite Ey (F3),(11B)
+-5: XRSTOR | lfence (11B)
+-6: XSAVEOPT | clwb (66) | mfence (11B) | TPAUSE Rd (66),(11B) | UMONITOR Rv (F3),(11B) | UMWAIT Rd (F2),(11B)
++5: XRSTOR | lfence (11B) | INCSSPD/Q Ry (F3),(11B)
++6: XSAVEOPT | clwb (66) | mfence (11B) | TPAUSE Rd (66),(11B) | UMONITOR Rv (F3),(11B) | UMWAIT Rd (F2),(11B) | CLRSSBSY Mq (F3)
+ 7: clflush | clflushopt (66) | sfence (11B)
+ EndTable
+ 
+@@ -1077,6 +1077,11 @@ GrpTable: Grp20
+ 0: cldemote Mb
+ EndTable
+ 
++GrpTable: Grp21
++1: RDSSPD/Q Ry (F3),(11B)
++7: ENDBR64 (F3),(010),(11B) | ENDBR32 (F3),(011),(11B)
++EndTable
++
+ # AMD's Prefetch Group
+ GrpTable: GrpP
+ 0: PREFETCH
