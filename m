@@ -2,385 +2,183 @@ Return-Path: <SRS0=aGSP=5L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19938C43331
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 12:29:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 374D9C2D0E5
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 12:30:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D310120409
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 12:29:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 12BD120409
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 12:30:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728250AbgCZM3j (ORCPT
+        id S1728258AbgCZMah (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 08:29:39 -0400
-Received: from mga14.intel.com ([192.55.52.115]:50361 "EHLO mga14.intel.com"
+        Thu, 26 Mar 2020 08:30:37 -0400
+Received: from inva020.nxp.com ([92.121.34.13]:48680 "EHLO inva020.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727781AbgCZM3i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 08:29:38 -0400
-IronPort-SDR: EKfYOFoLlcbadGB+vReduWqx3ZDl8m6gBuLL39v0AtKwjMW3BXr0MPpjcfaYDHvUaflX85vC0u
- H7vVW8X4WB1Q==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Mar 2020 05:29:36 -0700
-IronPort-SDR: WXfIezKREiHJ8vc/KlC5KD3gtUDQCJG2dwiSAA0nSxkYW7GBs1lO9tl9Dz/MQoi9mPcYLwvyc1
- rQxJi24IBTfw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,308,1580803200"; 
-   d="scan'208";a="446990097"
-Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
-  by fmsmga005.fm.intel.com with ESMTP; 26 Mar 2020 05:29:34 -0700
-Received: from kbuild by lkp-server01 with local (Exim 4.89)
-        (envelope-from <lkp@intel.com>)
-        id 1jHRdd-0007Fe-Du; Thu, 26 Mar 2020 20:29:33 +0800
-Date:   Thu, 26 Mar 2020 20:28:56 +0800
-From:   kbuild test robot <lkp@intel.com>
-To:     Colin King <colin.king@canonical.com>
-Cc:     kbuild-all@lists.01.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sekhar Nori <nsekhar@ti.com>, Roger Quadros <rogerq@ti.com>,
-        Felipe Balbi <felipe.balbi@linux.intel.com>,
-        Pawel Laszczak <pawell@cadence.com>, linux-usb@vger.kernel.org,
-        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] usb: cdns3: make signed 1 bit bitfields unsigned
-Message-ID: <202003262011.LfBZcKPw%lkp@intel.com>
-References: <20200325125041.94769-1-colin.king@canonical.com>
+        id S1727781AbgCZMag (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Mar 2020 08:30:36 -0400
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 0302F1A09B1;
+        Thu, 26 Mar 2020 13:30:34 +0100 (CET)
+Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id E970B1A090A;
+        Thu, 26 Mar 2020 13:30:33 +0100 (CET)
+Received: from localhost (fsr-ub1664-175.ea.freescale.net [10.171.82.40])
+        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id CA67320564;
+        Thu, 26 Mar 2020 13:30:33 +0100 (CET)
+Date:   Thu, 26 Mar 2020 14:30:33 +0200
+From:   Abel Vesa <abel.vesa@nxp.com>
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     Rob Herring <robh@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        Fabio Estevam <fabio.estevam@nxp.com>,
+        Mike Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Anson Huang <anson.huang@nxp.com>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        Peng Fan <peng.fan@nxp.com>, Jacky Bai <ping.bai@nxp.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-clk@vger.kernel.org
+Subject: Re: [RFC 01/11] mfd: Add i.MX generic mix support
+Message-ID: <20200326123033.vi7l5mixgre2caon@fsr-ub1664-175>
+References: <1583226206-19758-1-git-send-email-abel.vesa@nxp.com>
+ <1583226206-19758-2-git-send-email-abel.vesa@nxp.com>
+ <20200326110306.GE603801@dell>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200325125041.94769-1-colin.king@canonical.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200326110306.GE603801@dell>
+User-Agent: NeoMutt/20180622
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Colin,
+On 20-03-26 11:03:06, Lee Jones wrote:
+> On Tue, 03 Mar 2020, Abel Vesa wrote:
+> 
+> > Some of the i.MX SoCs have a IP for interfacing the dedicated IPs with
+> > clocks, resets and interrupts, plus some other specific control registers.
+> > To allow the functionality to be split between drivers, this MFD driver is
+> > added that has only two purposes: register the devices and map the entire
+> > register addresses. Everything else is left to the dedicated drivers that will
+> > bind to the registered devices.
+> > 
+> > Signed-off-by: Abel Vesa <abel.vesa@nxp.com>
+> > ---
+> >  drivers/mfd/Kconfig   | 11 +++++++++++
+> >  drivers/mfd/Makefile  |  1 +
+> >  drivers/mfd/imx-mix.c | 48 ++++++++++++++++++++++++++++++++++++++++++++++++
+> >  3 files changed, 60 insertions(+)
+> >  create mode 100644 drivers/mfd/imx-mix.c
+> > 
+> > diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
+> > index 3c547ed..3c89288 100644
+> > --- a/drivers/mfd/Kconfig
+> > +++ b/drivers/mfd/Kconfig
+> > @@ -460,6 +460,17 @@ config MFD_MX25_TSADC
+> >  	  i.MX25 processors. They consist of a conversion queue for general
+> >  	  purpose ADC and a queue for Touchscreens.
+> >  
+> > +config MFD_IMX_MIX
+> > +	tristate "NXP i.MX Generic Mix Control Driver"
+> > +	depends on OF || COMPILE_TEST
+> > +	help
+> > +	  Enable generic mixes support. On some i.MX platforms, there are
+> > +	  devices that are a mix of multiple functionalities like reset
+> > +	  controllers, clock controllers and some others. In order to split
+> > +	  those functionalities between the right drivers, this MFD populates
+> > +	  with virtual devices based on what's found in the devicetree node,
+> > +	  leaving the rest of the behavior control to the dedicated driver.
+> > +
+> >  config MFD_HI6421_PMIC
+> >  	tristate "HiSilicon Hi6421 PMU/Codec IC"
+> >  	depends on OF
+> > diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
+> > index f935d10..5b2ae5d 100644
+> > --- a/drivers/mfd/Makefile
+> > +++ b/drivers/mfd/Makefile
+> > @@ -113,6 +113,7 @@ obj-$(CONFIG_MFD_TWL4030_AUDIO)	+= twl4030-audio.o
+> >  obj-$(CONFIG_TWL6040_CORE)	+= twl6040.o
+> >  
+> >  obj-$(CONFIG_MFD_MX25_TSADC)	+= fsl-imx25-tsadc.o
+> > +obj-$(CONFIG_MFD_IMX_MIX)	+= imx-mix.o
+> >  
+> >  obj-$(CONFIG_MFD_MC13XXX)	+= mc13xxx-core.o
+> >  obj-$(CONFIG_MFD_MC13XXX_SPI)	+= mc13xxx-spi.o
+> > diff --git a/drivers/mfd/imx-mix.c b/drivers/mfd/imx-mix.c
+> > new file mode 100644
+> > index 00000000..d3f8c71
+> > --- /dev/null
+> > +++ b/drivers/mfd/imx-mix.c
+> > @@ -0,0 +1,48 @@
+> > +// SPDX-License-Identifier: GPL-2.0
+> > +/*
+> > + * Copyright 2019 NXP.
+> > + */
+> > +
+> > +#include <linux/clk.h>
+> > +#include <linux/clk-provider.h>
+> > +#include <linux/err.h>
+> > +#include <linux/io.h>
+> > +#include <linux/module.h>
+> > +#include <linux/of_address.h>
+> > +#include <linux/spinlock.h>
+> > +#include <linux/types.h>
+> > +#include <linux/platform_device.h>
+> > +#include <linux/of_platform.h>
+> > +
+> > +#include <linux/mfd/core.h>
+> > +
+> > +static int imx_audiomix_probe(struct platform_device *pdev)
+> > +{
+> > +	struct device *dev = &pdev->dev;
+> > +	struct resource *res;
+> > +	void __iomem *base;
+> > +
+> > +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> > +	base = devm_ioremap_resource(dev, res);
+> > +	if (IS_ERR(base))
+> > +		return PTR_ERR(base);
+> > +
+> > +	dev_set_drvdata(dev, base);
+> > +
+> > +	return devm_of_platform_populate(dev);
+> > +}
+> > +
+> > +static const struct of_device_id imx_audiomix_of_match[] = {
+> > +	{ .compatible = "fsl,imx8mp-audiomix" },
+> > +	{ /* Sentinel */ },
+> > +};
+> > +MODULE_DEVICE_TABLE(of, imx_audiomix_of_match);
+> 
+> This needs DT binding documentation.
+> 
+> Do the sub-device memory ranges overlap?
+> 
 
-Thank you for the patch! Perhaps something to improve:
+Yes, they do.
 
-[auto build test WARNING on usb/usb-testing]
-[also build test WARNING on v5.6-rc7 next-20200326]
-[if your patch is applied to the wrong git tree, please drop us a note to help
-improve the system. BTW, we also suggest to use '--base' option to specify the
-base tree in git format-patch, please see https://stackoverflow.com/a/37406982]
+Resent another version of this series yesterday.
 
-url:    https://github.com/0day-ci/linux/commits/Colin-King/usb-cdns3-make-signed-1-bit-bitfields-unsigned/20200326-075855
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/gregkh/usb.git usb-testing
-reproduce:
-        # apt-get install sparse
-        # sparse version: v0.6.1-187-gbff9b106-dirty
-        make ARCH=x86_64 allmodconfig
-        make C=1 CF='-fdiagnostic-prefix -D__CHECK_ENDIAN__'
-
-If you fix the issue, kindly add following tag
-Reported-by: kbuild test robot <lkp@intel.com>
-
-
-sparse warnings: (new ones prefixed by >>)
-
->> drivers/usb/cdns3/drd.c:43:42: sparse: sparse: incorrect type in argument 1 (different address spaces) @@    expected void const volatile [noderef] <asn:2> *addr @@    got [noderef] <asn:2> *addr @@
->> drivers/usb/cdns3/drd.c:43:42: sparse:    expected void const volatile [noderef] <asn:2> *addr
->> drivers/usb/cdns3/drd.c:43:42: sparse:    got restricted __le32 *
->> drivers/usb/cdns3/drd.c:45:42: sparse: sparse: incorrect type in argument 2 (different address spaces) @@    expected void volatile [noderef] <asn:2> *addr @@    got [noderef] <asn:2> *addr @@
->> drivers/usb/cdns3/drd.c:45:42: sparse:    expected void volatile [noderef] <asn:2> *addr
-   drivers/usb/cdns3/drd.c:45:42: sparse:    got restricted __le32 *
-   drivers/usb/cdns3/drd.c:47:42: sparse: sparse: incorrect type in argument 1 (different address spaces) @@    expected void const volatile [noderef] <asn:2> *addr @@    got [noderef] <asn:2> *addr @@
-   drivers/usb/cdns3/drd.c:47:42: sparse:    expected void const volatile [noderef] <asn:2> *addr
-   drivers/usb/cdns3/drd.c:47:42: sparse:    got restricted __le32 *
-   drivers/usb/cdns3/drd.c:49:42: sparse: sparse: incorrect type in argument 2 (different address spaces) @@    expected void volatile [noderef] <asn:2> *addr @@    got [noderef] <asn:2> *addr @@
-   drivers/usb/cdns3/drd.c:49:42: sparse:    expected void volatile [noderef] <asn:2> *addr
-   drivers/usb/cdns3/drd.c:49:42: sparse:    got restricted __le32 *
-   drivers/usb/cdns3/drd.c:71:25: sparse: sparse: incorrect type in argument 1 (different address spaces) @@    expected void const volatile [noderef] <asn:2> *addr @@    got [noderef] <asn:2> *addr @@
-   drivers/usb/cdns3/drd.c:71:25: sparse:    expected void const volatile [noderef] <asn:2> *addr
-   drivers/usb/cdns3/drd.c:71:25: sparse:    got restricted __le32 *
-   drivers/usb/cdns3/drd.c:81:30: sparse: sparse: incorrect type in argument 1 (different address spaces) @@    expected void const volatile [noderef] <asn:2> *addr @@    got [noderef] <asn:2> *addr @@
-   drivers/usb/cdns3/drd.c:81:30: sparse:    expected void const volatile [noderef] <asn:2> *addr
-   drivers/usb/cdns3/drd.c:81:30: sparse:    got restricted __le32 *
-   drivers/usb/cdns3/drd.c:114:24: sparse: sparse: incorrect type in argument 2 (different address spaces) @@    expected void volatile [noderef] <asn:2> *addr @@    got [noderef] <asn:2> *addr @@
-   drivers/usb/cdns3/drd.c:114:24: sparse:    expected void volatile [noderef] <asn:2> *addr
-   drivers/usb/cdns3/drd.c:114:24: sparse:    got restricted __le32 *
-   drivers/usb/cdns3/drd.c:124:48: sparse: sparse: incorrect type in argument 2 (different address spaces) @@    expected void volatile [noderef] <asn:2> *addr @@    got [noderef] <asn:2> *addr @@
-   drivers/usb/cdns3/drd.c:124:48: sparse:    expected void volatile [noderef] <asn:2> *addr
-   drivers/usb/cdns3/drd.c:124:48: sparse:    got restricted __le32 *
-   drivers/usb/cdns3/drd.c:141:56: sparse: sparse: incorrect type in argument 2 (different address spaces) @@    expected void volatile [noderef] <asn:2> *addr @@    got [noderef] <asn:2> *addr @@
-   drivers/usb/cdns3/drd.c:141:56: sparse:    expected void volatile [noderef] <asn:2> *addr
-   drivers/usb/cdns3/drd.c:141:56: sparse:    got restricted __le32 *
-   drivers/usb/cdns3/drd.c:144:23: sparse: sparse: incorrect type in argument 1 (different address spaces) @@    expected void const volatile [noderef] <asn:2> *addr @@    got [noderef] <asn:2> *addr @@
-   drivers/usb/cdns3/drd.c:144:23: sparse:    expected void const volatile [noderef] <asn:2> *addr
-   drivers/usb/cdns3/drd.c:144:23: sparse:    got restricted __le32 *
-   drivers/usb/cdns3/drd.c:144:23: sparse: sparse: incorrect type in argument 1 (different address spaces) @@    expected void const volatile [noderef] <asn:2> *addr @@    got [noderef] <asn:2> *addr @@
-   drivers/usb/cdns3/drd.c:144:23: sparse:    expected void const volatile [noderef] <asn:2> *addr
-   drivers/usb/cdns3/drd.c:144:23: sparse:    got restricted __le32 *
-   drivers/usb/cdns3/drd.c:154:29: sparse: sparse: incorrect type in argument 2 (different address spaces) @@    expected void volatile [noderef] <asn:2> *addr @@    got [noderef] <asn:2> *addr @@
-   drivers/usb/cdns3/drd.c:154:29: sparse:    expected void volatile [noderef] <asn:2> *addr
-   drivers/usb/cdns3/drd.c:154:29: sparse:    got restricted __le32 *
-   drivers/usb/cdns3/drd.c:156:17: sparse: sparse: incorrect type in argument 1 (different address spaces) @@    expected void const volatile [noderef] <asn:2> *addr @@    got [noderef] <asn:2> *addr @@
-   drivers/usb/cdns3/drd.c:156:17: sparse:    expected void const volatile [noderef] <asn:2> *addr
-   drivers/usb/cdns3/drd.c:156:17: sparse:    got restricted __le32 *
-   drivers/usb/cdns3/drd.c:156:17: sparse: sparse: incorrect type in argument 1 (different address spaces) @@    expected void const volatile [noderef] <asn:2> *addr @@    got [noderef] <asn:2> *addr @@
-   drivers/usb/cdns3/drd.c:156:17: sparse:    expected void const volatile [noderef] <asn:2> *addr
-   drivers/usb/cdns3/drd.c:156:17: sparse:    got restricted __le32 *
-   drivers/usb/cdns3/drd.c:178:55: sparse: sparse: incorrect type in argument 2 (different address spaces) @@    expected void volatile [noderef] <asn:2> *addr @@    got [noderef] <asn:2> *addr @@
-   drivers/usb/cdns3/drd.c:178:55: sparse:    expected void volatile [noderef] <asn:2> *addr
-   drivers/usb/cdns3/drd.c:178:55: sparse:    got restricted __le32 *
-   drivers/usb/cdns3/drd.c:182:23: sparse: sparse: incorrect type in argument 1 (different address spaces) @@    expected void const volatile [noderef] <asn:2> *addr @@    got [noderef] <asn:2> *addr @@
-   drivers/usb/cdns3/drd.c:182:23: sparse:    expected void const volatile [noderef] <asn:2> *addr
-   drivers/usb/cdns3/drd.c:182:23: sparse:    got restricted __le32 *
-   drivers/usb/cdns3/drd.c:182:23: sparse: sparse: incorrect type in argument 1 (different address spaces) @@    expected void const volatile [noderef] <asn:2> *addr @@    got [noderef] <asn:2> *addr @@
-   drivers/usb/cdns3/drd.c:182:23: sparse:    expected void const volatile [noderef] <asn:2> *addr
-   drivers/usb/cdns3/drd.c:182:23: sparse:    got restricted __le32 *
-   drivers/usb/cdns3/drd.c:197:29: sparse: sparse: incorrect type in argument 2 (different address spaces) @@    expected void volatile [noderef] <asn:2> *addr @@    got [noderef] <asn:2> *addr @@
-   drivers/usb/cdns3/drd.c:197:29: sparse:    expected void volatile [noderef] <asn:2> *addr
-   drivers/usb/cdns3/drd.c:197:29: sparse:    got restricted __le32 *
-   drivers/usb/cdns3/drd.c:199:17: sparse: sparse: incorrect type in argument 1 (different address spaces) @@    expected void const volatile [noderef] <asn:2> *addr @@    got [noderef] <asn:2> *addr @@
-   drivers/usb/cdns3/drd.c:199:17: sparse:    expected void const volatile [noderef] <asn:2> *addr
-   drivers/usb/cdns3/drd.c:199:17: sparse:    got restricted __le32 *
-   drivers/usb/cdns3/drd.c:199:17: sparse: sparse: incorrect type in argument 1 (different address spaces) @@    expected void const volatile [noderef] <asn:2> *addr @@    got [noderef] <asn:2> *addr @@
-   drivers/usb/cdns3/drd.c:199:17: sparse:    expected void const volatile [noderef] <asn:2> *addr
-   drivers/usb/cdns3/drd.c:199:17: sparse:    got restricted __le32 *
-   drivers/usb/cdns3/drd.c:219:25: sparse: sparse: incorrect type in argument 2 (different address spaces) @@    expected void volatile [noderef] <asn:2> *addr @@    got [noderef] <asn:2> *addr @@
-   drivers/usb/cdns3/drd.c:219:25: sparse:    expected void volatile [noderef] <asn:2> *addr
-   drivers/usb/cdns3/drd.c:219:25: sparse:    got restricted __le32 *
-   drivers/usb/cdns3/drd.c:284:26: sparse: sparse: incorrect type in argument 1 (different address spaces) @@    expected void const volatile [noderef] <asn:2> *addr @@    got [noderef] <asn:2> *addr @@
-   drivers/usb/cdns3/drd.c:284:26: sparse:    expected void const volatile [noderef] <asn:2> *addr
-   drivers/usb/cdns3/drd.c:284:26: sparse:    got restricted __le32 *
-   drivers/usb/cdns3/drd.c:303:25: sparse: sparse: incorrect type in argument 2 (different address spaces) @@    expected void volatile [noderef] <asn:2> *addr @@    got [noderef] <asn:2> *addr @@
-   drivers/usb/cdns3/drd.c:303:25: sparse:    expected void volatile [noderef] <asn:2> *addr
-   drivers/usb/cdns3/drd.c:303:25: sparse:    got restricted __le32 *
->> drivers/usb/cdns3/drd.c:326:27: sparse: sparse: incorrect type in assignment (different address spaces) @@    expected struct cdns3_otg_legacy_regs *otg_v0_regs @@    got void struct cdns3_otg_legacy_regs *otg_v0_regs @@
->> drivers/usb/cdns3/drd.c:326:27: sparse:    expected struct cdns3_otg_legacy_regs *otg_v0_regs
->> drivers/usb/cdns3/drd.c:326:27: sparse:    got void [noderef] <asn:2> *[assigned] regs
-   drivers/usb/cdns3/drd.c:327:25: sparse: sparse: incorrect type in argument 1 (different address spaces) @@    expected void const volatile [noderef] <asn:2> *addr @@    got [noderef] <asn:2> *addr @@
-   drivers/usb/cdns3/drd.c:327:25: sparse:    expected void const volatile [noderef] <asn:2> *addr
-   drivers/usb/cdns3/drd.c:327:25: sparse:    got restricted __le32 *
->> drivers/usb/cdns3/drd.c:330:32: sparse: sparse: incorrect type in assignment (different address spaces) @@    expected struct cdns3_otg_common_regs *otg_regs @@    got void struct cdns3_otg_common_regs *otg_regs @@
->> drivers/usb/cdns3/drd.c:330:32: sparse:    expected struct cdns3_otg_common_regs *otg_regs
-   drivers/usb/cdns3/drd.c:330:32: sparse:    got void [noderef] <asn:2> *[assigned] regs
-   drivers/usb/cdns3/drd.c:331:32: sparse: sparse: incorrect type in argument 2 (different address spaces) @@    expected void volatile [noderef] <asn:2> *addr @@    got [noderef] <asn:2> *addr @@
-   drivers/usb/cdns3/drd.c:331:32: sparse:    expected void volatile [noderef] <asn:2> *addr
-   drivers/usb/cdns3/drd.c:331:32: sparse:    got restricted __le32 *
-   drivers/usb/cdns3/drd.c:332:17: sparse: sparse: incorrect type in argument 1 (different address spaces) @@    expected void const volatile [noderef] <asn:2> *addr @@    got [noderef] <asn:2> *addr @@
-   drivers/usb/cdns3/drd.c:332:17: sparse:    expected void const volatile [noderef] <asn:2> *addr
-   drivers/usb/cdns3/drd.c:332:17: sparse:    got restricted __le32 *
->> drivers/usb/cdns3/drd.c:336:35: sparse: sparse: incorrect type in assignment (different address spaces) @@    expected struct cdns3_otg_regs *otg_v1_regs @@    got void [noderestruct cdns3_otg_regs *otg_v1_regs @@
->> drivers/usb/cdns3/drd.c:336:35: sparse:    expected struct cdns3_otg_regs *otg_v1_regs
-   drivers/usb/cdns3/drd.c:336:35: sparse:    got void [noderef] <asn:2> *[assigned] regs
-   drivers/usb/cdns3/drd.c:339:32: sparse: sparse: incorrect type in argument 2 (different address spaces) @@    expected void volatile [noderef] <asn:2> *addr @@    got [noderef] <asn:2> *addr @@
-   drivers/usb/cdns3/drd.c:339:32: sparse:    expected void volatile [noderef] <asn:2> *addr
-   drivers/usb/cdns3/drd.c:339:32: sparse:    got restricted __le32 *
-   drivers/usb/cdns3/drd.c:340:17: sparse: sparse: incorrect type in argument 1 (different address spaces) @@    expected void const volatile [noderef] <asn:2> *addr @@    got [noderef] <asn:2> *addr @@
-   drivers/usb/cdns3/drd.c:340:17: sparse:    expected void const volatile [noderef] <asn:2> *addr
-   drivers/usb/cdns3/drd.c:340:17: sparse:    got restricted __le32 *
-   drivers/usb/cdns3/drd.c:340:17: sparse: sparse: incorrect type in argument 1 (different address spaces) @@    expected void const volatile [noderef] <asn:2> *addr @@    got [noderef] <asn:2> *addr @@
-   drivers/usb/cdns3/drd.c:340:17: sparse:    expected void const volatile [noderef] <asn:2> *addr
-   drivers/usb/cdns3/drd.c:340:17: sparse:    got restricted __le32 *
-   drivers/usb/cdns3/drd.c:345:17: sparse: sparse: incorrect type in argument 1 (different address spaces) @@    expected void const volatile [noderef] <asn:2> *addr @@    got [noderef] <asn:2> *addr @@
-   drivers/usb/cdns3/drd.c:345:17: sparse:    expected void const volatile [noderef] <asn:2> *addr
-   drivers/usb/cdns3/drd.c:345:17: sparse:    got restricted __le32 *
-   drivers/usb/cdns3/drd.c:368:28: sparse: sparse: incorrect type in argument 1 (different address spaces) @@    expected void const volatile [noderef] <asn:2> *addr @@    got [noderef] <asn:2> *addr @@
-   drivers/usb/cdns3/drd.c:368:28: sparse:    expected void const volatile [noderef] <asn:2> *addr
-   drivers/usb/cdns3/drd.c:368:28: sparse:    got restricted __le32 *
---
->> drivers/usb/cdns3/gadget.c:1157:35: sparse: sparse: incorrect type in assignment (different base types) @@    expected restricted __le32 [usertype] control @@    got 2 [usertype] control @@
->> drivers/usb/cdns3/gadget.c:1157:35: sparse:    expected restricted __le32 [usertype] control
->> drivers/usb/cdns3/gadget.c:1157:35: sparse:    got unsigned long
->> drivers/usb/cdns3/gadget.c:1173:29: sparse: sparse: incorrect type in assignment (different base types) @@    expected restricted __le32 [usertype] buffer @@    got __le32 [usertype] buffer @@
->> drivers/usb/cdns3/gadget.c:1173:29: sparse:    expected restricted __le32 [usertype] buffer
->> drivers/usb/cdns3/gadget.c:1173:29: sparse:    got unsigned long long
->> drivers/usb/cdns3/gadget.c:1188:29: sparse: sparse: incorrect type in assignment (different base types) @@    expected restricted __le32 [usertype] length @@    got 2 [usertype] length @@
->> drivers/usb/cdns3/gadget.c:1188:29: sparse:    expected restricted __le32 [usertype] length
-   drivers/usb/cdns3/gadget.c:1188:29: sparse:    got unsigned long
->> drivers/usb/cdns3/gadget.c:1191:37: sparse: sparse: invalid assignment: |=
->> drivers/usb/cdns3/gadget.c:1191:37: sparse:    left side has type restricted __le32
->> drivers/usb/cdns3/gadget.c:1191:37: sparse:    right side has type unsigned long
->> drivers/usb/cdns3/gadget.c:1213:38: sparse: sparse: incorrect type in assignment (different base types) @@    expected restricted __le32 [usertype] control @@    got unsignrestricted __le32 [usertype] control @@
-   drivers/usb/cdns3/gadget.c:1213:38: sparse:    expected restricted __le32 [usertype] control
->> drivers/usb/cdns3/gadget.c:1213:38: sparse:    got unsigned int [assigned] [usertype] control
-   drivers/usb/cdns3/gadget.c:1215:48: sparse: sparse: incorrect type in assignment (different base types) @@    expected restricted __le32 [usertype] control @@    got unsignrestricted __le32 [usertype] control @@
-   drivers/usb/cdns3/gadget.c:1215:48: sparse:    expected restricted __le32 [usertype] control
-   drivers/usb/cdns3/gadget.c:1215:48: sparse:    got unsigned int [assigned] [usertype] control
-   drivers/usb/cdns3/gadget.c:1229:30: sparse: sparse: invalid assignment: |=
-   drivers/usb/cdns3/gadget.c:1229:30: sparse:    left side has type restricted __le32
-   drivers/usb/cdns3/gadget.c:1229:30: sparse:    right side has type unsigned long
->> drivers/usb/cdns3/gadget.c:1255:36: sparse: sparse: restricted __le32 degrades to integer
-   drivers/usb/cdns3/gadget.c:1255:30: sparse: sparse: incorrect type in assignment (different base types) @@    expected restricted __le32 [usertype] control @@    got  [usertype] control @@
-   drivers/usb/cdns3/gadget.c:1255:30: sparse:    expected restricted __le32 [usertype] control
->> drivers/usb/cdns3/gadget.c:1255:30: sparse:    got unsigned int
-   drivers/usb/cdns3/gadget.c:1010:29: sparse: sparse: incorrect type in assignment (different base types) @@    expected restricted __le32 [usertype] buffer @@    got __le32 [usertype] buffer @@
-   drivers/usb/cdns3/gadget.c:1010:29: sparse:    expected restricted __le32 [usertype] buffer
-   drivers/usb/cdns3/gadget.c:1010:29: sparse:    got unsigned long long
-   drivers/usb/cdns3/gadget.c:1013:29: sparse: sparse: incorrect type in assignment (different base types) @@    expected restricted __le32 [usertype] buffer @@    got __le32 [usertype] buffer @@
-   drivers/usb/cdns3/gadget.c:1013:29: sparse:    expected restricted __le32 [usertype] buffer
-   drivers/usb/cdns3/gadget.c:1013:29: sparse:    got unsigned long long
-   drivers/usb/cdns3/gadget.c:1019:21: sparse: sparse: incorrect type in assignment (different base types) @@    expected restricted __le32 [usertype] length @@    got 2 [usertype] length @@
-   drivers/usb/cdns3/gadget.c:1019:21: sparse:    expected restricted __le32 [usertype] length
-   drivers/usb/cdns3/gadget.c:1019:21: sparse:    got unsigned long
-   drivers/usb/cdns3/gadget.c:1029:37: sparse: sparse: invalid assignment: |=
-   drivers/usb/cdns3/gadget.c:1029:37: sparse:    left side has type restricted __le32
-   drivers/usb/cdns3/gadget.c:1029:37: sparse:    right side has type unsigned long
-   drivers/usb/cdns3/gadget.c:1033:22: sparse: sparse: incorrect type in assignment (different base types) @@    expected restricted __le32 [usertype] control @@    got unsignrestricted __le32 [usertype] control @@
-   drivers/usb/cdns3/gadget.c:1033:22: sparse:    expected restricted __le32 [usertype] control
-   drivers/usb/cdns3/gadget.c:1033:22: sparse:    got unsigned int [assigned] [usertype] control
->> drivers/usb/cdns3/gadget.c:85:6: sparse: sparse: symbol 'cdns3_clear_register_bit' was not declared. Should it be static?
->> drivers/usb/cdns3/gadget.c:140:26: sparse: sparse: symbol 'cdns3_next_align_buf' was not declared. Should it be static?
->> drivers/usb/cdns3/gadget.c:151:22: sparse: sparse: symbol 'cdns3_next_priv_request' was not declared. Should it be static?
->> drivers/usb/cdns3/gadget.c:193:5: sparse: sparse: symbol 'cdns3_ring_size' was not declared. Should it be static?
-   drivers/usb/cdns3/gadget.c:263:34: sparse: sparse: incorrect type in assignment (different base types) @@    expected restricted __le32 [usertype] buffer @@    got __le32 [usertype] buffer @@
-   drivers/usb/cdns3/gadget.c:263:34: sparse:    expected restricted __le32 [usertype] buffer
-   drivers/usb/cdns3/gadget.c:263:34: sparse:    got unsigned long long
-   drivers/usb/cdns3/gadget.c:264:35: sparse: sparse: incorrect type in assignment (different base types) @@    expected restricted __le32 [usertype] control @@    got 2 [usertype] control @@
-   drivers/usb/cdns3/gadget.c:264:35: sparse:    expected restricted __le32 [usertype] control
-   drivers/usb/cdns3/gadget.c:264:35: sparse:    got unsigned long
->> drivers/usb/cdns3/gadget.c:348:6: sparse: sparse: symbol 'cdns3_move_deq_to_next_trb' was not declared. Should it be static?
->> drivers/usb/cdns3/gadget.c:514:20: sparse: sparse: symbol 'cdns3_wa2_gadget_giveback' was not declared. Should it be static?
->> drivers/usb/cdns3/gadget.c:554:5: sparse: sparse: symbol 'cdns3_wa2_gadget_ep_queue' was not declared. Should it be static?
-   drivers/usb/cdns3/gadget.c:849:49: sparse: sparse: restricted __le32 degrades to integer
-   drivers/usb/cdns3/gadget.c:848:51: sparse: sparse: incorrect type in assignment (different base types) @@    expected restricted __le32 [usertype] control @@    got  [usertype] control @@
-   drivers/usb/cdns3/gadget.c:848:51: sparse:    expected restricted __le32 [usertype] control
-   drivers/usb/cdns3/gadget.c:848:51: sparse:    got unsigned int
-   drivers/usb/cdns3/gadget.c:852:49: sparse: sparse: restricted __le32 degrades to integer
-   drivers/usb/cdns3/gadget.c:851:51: sparse: sparse: incorrect type in assignment (different base types) @@    expected restricted __le32 [usertype] control @@    got  [usertype] control @@
-   drivers/usb/cdns3/gadget.c:851:51: sparse:    expected restricted __le32 [usertype] control
-   drivers/usb/cdns3/gadget.c:851:51: sparse:    got unsigned int
->> drivers/usb/cdns3/gadget.c:839:6: sparse: sparse: symbol 'cdns3_wa1_restore_cycle_bit' was not declared. Should it be static?
-   drivers/usb/cdns3/gadget.c:1393:17: sparse: sparse: restricted __le32 degrades to integer
-   drivers/usb/cdns3/gadget.c:1442:21: sparse: sparse: restricted __le32 degrades to integer
->> drivers/usb/cdns3/gadget.c:1574:35: sparse: sparse: dubious: x | !y
->> drivers/usb/cdns3/gadget.c:1907:6: sparse: sparse: symbol 'cdns3_stream_ep_reconfig' was not declared. Should it be static?
->> drivers/usb/cdns3/gadget.c:1928:6: sparse: sparse: symbol 'cdns3_configure_dmult' was not declared. Should it be static?
-   drivers/usb/cdns3/gadget.c:2552:34: sparse: sparse: incorrect type in assignment (different base types) @@    expected restricted __le32 [usertype] buffer @@    got __le32 [usertype] buffer @@
-   drivers/usb/cdns3/gadget.c:2552:34: sparse:    expected restricted __le32 [usertype] buffer
-   drivers/usb/cdns3/gadget.c:2552:34: sparse:    got unsigned long long
-   drivers/usb/cdns3/gadget.c:2554:46: sparse: sparse: restricted __le32 degrades to integer
-   drivers/usb/cdns3/gadget.c:2554:35: sparse: sparse: incorrect type in assignment (different base types) @@    expected restricted __le32 [usertype] control @@    got 2 [usertype] control @@
-   drivers/usb/cdns3/gadget.c:2554:35: sparse:    expected restricted __le32 [usertype] control
-   drivers/usb/cdns3/gadget.c:2554:35: sparse:    got unsigned long
-   drivers/usb/cdns3/gadget.c:2610:43: sparse: sparse: restricted __le32 degrades to integer
-   drivers/usb/cdns3/gadget.c:2610:38: sparse: sparse: incorrect type in assignment (different base types) @@    expected restricted __le32 [usertype] control @@    got 2 [usertype] control @@
-   drivers/usb/cdns3/gadget.c:2610:38: sparse:    expected restricted __le32 [usertype] control
-   drivers/usb/cdns3/gadget.c:2610:38: sparse:    got unsigned long
-   drivers/usb/cdns3/gadget.c:2625:43: sparse: sparse: restricted __le32 degrades to integer
-   drivers/usb/cdns3/gadget.c:2625:38: sparse: sparse: incorrect type in assignment (different base types) @@    expected restricted __le32 [usertype] control @@    got 2 [usertype] control @@
-   drivers/usb/cdns3/gadget.c:2625:38: sparse:    expected restricted __le32 [usertype] control
-   drivers/usb/cdns3/gadget.c:2625:38: sparse:    got unsigned long
---
->> drivers/usb/cdns3/ep0.c:40:37: sparse: sparse: incorrect type in assignment (different base types) @@    expected restricted __le32 [usertype] buffer @@    got __le32 [usertype] buffer @@
->> drivers/usb/cdns3/ep0.c:40:37: sparse:    expected restricted __le32 [usertype] buffer
->> drivers/usb/cdns3/ep0.c:40:37: sparse:    got unsigned long long
->> drivers/usb/cdns3/ep0.c:41:37: sparse: sparse: incorrect type in assignment (different base types) @@    expected restricted __le32 [usertype] length @@    got 2 [usertype] length @@
->> drivers/usb/cdns3/ep0.c:41:37: sparse:    expected restricted __le32 [usertype] length
->> drivers/usb/cdns3/ep0.c:41:37: sparse:    got unsigned long
->> drivers/usb/cdns3/ep0.c:44:46: sparse: sparse: incorrect type in assignment (different base types) @@    expected restricted __le32 [usertype] control @@    got 2 [usertype] control @@
->> drivers/usb/cdns3/ep0.c:44:46: sparse:    expected restricted __le32 [usertype] control
-   drivers/usb/cdns3/ep0.c:44:46: sparse:    got unsigned long
-   drivers/usb/cdns3/ep0.c:45:45: sparse: sparse: incorrect type in assignment (different base types) @@    expected restricted __le32 [usertype] buffer @@    got __le32 [usertype] buffer @@
-   drivers/usb/cdns3/ep0.c:45:45: sparse:    expected restricted __le32 [usertype] buffer
-   drivers/usb/cdns3/ep0.c:45:45: sparse:    got unsigned long long
-   drivers/usb/cdns3/ep0.c:46:45: sparse: sparse: incorrect type in assignment (different base types) @@    expected restricted __le32 [usertype] length @@    got 2 [usertype] length @@
-   drivers/usb/cdns3/ep0.c:46:45: sparse:    expected restricted __le32 [usertype] length
-   drivers/usb/cdns3/ep0.c:46:45: sparse:    got unsigned long
-   drivers/usb/cdns3/ep0.c:47:46: sparse: sparse: incorrect type in assignment (different base types) @@    expected restricted __le32 [usertype] control @@    got 2 [usertype] control @@
-   drivers/usb/cdns3/ep0.c:47:46: sparse:    expected restricted __le32 [usertype] control
-   drivers/usb/cdns3/ep0.c:47:46: sparse:    got unsigned long
-   drivers/usb/cdns3/ep0.c:50:46: sparse: sparse: incorrect type in assignment (different base types) @@    expected restricted __le32 [usertype] control @@    got 2 [usertype] control @@
-   drivers/usb/cdns3/ep0.c:50:46: sparse:    expected restricted __le32 [usertype] control
-   drivers/usb/cdns3/ep0.c:50:46: sparse:    got unsigned long
->> drivers/usb/cdns3/ep0.c:267:52: sparse: sparse: incorrect type in argument 1 (different base types) @@    expected unsigned char [usertype] ep_addr @@    got restunsigned char [usertype] ep_addr @@
->> drivers/usb/cdns3/ep0.c:267:52: sparse:    expected unsigned char [usertype] ep_addr
->> drivers/usb/cdns3/ep0.c:267:52: sparse:    got restricted __le16 [usertype] wIndex
->> drivers/usb/cdns3/ep0.c:271:47: sparse: sparse: incorrect type in argument 2 (different base types) @@    expected unsigned int [usertype] ep @@    got restrunsigned int [usertype] ep @@
->> drivers/usb/cdns3/ep0.c:271:47: sparse:    expected unsigned int [usertype] ep
-   drivers/usb/cdns3/ep0.c:271:47: sparse:    got restricted __le16 [usertype] wIndex
->> drivers/usb/cdns3/ep0.c:387:19: sparse: sparse: restricted __le16 degrades to integer
-   drivers/usb/cdns3/ep0.c:390:44: sparse: sparse: incorrect type in argument 1 (different base types) @@    expected unsigned char [usertype] ep_addr @@    got restunsigned char [usertype] ep_addr @@
-   drivers/usb/cdns3/ep0.c:390:44: sparse:    expected unsigned char [usertype] ep_addr
-   drivers/usb/cdns3/ep0.c:390:44: sparse:    got restricted __le16 [usertype] wIndex
-   drivers/usb/cdns3/ep0.c:393:39: sparse: sparse: incorrect type in argument 2 (different base types) @@    expected unsigned int [usertype] ep @@    got restrunsigned int [usertype] ep @@
-   drivers/usb/cdns3/ep0.c:393:39: sparse:    expected unsigned int [usertype] ep
-   drivers/usb/cdns3/ep0.c:393:39: sparse:    got restricted __le16 [usertype] wIndex
-   drivers/usb/cdns3/ep0.c:454:21: sparse: sparse: restricted __le16 degrades to integer
->> drivers/usb/cdns3/ep0.c:478:31: sparse: sparse: incorrect type in assignment (different base types) @@    expected unsigned short [usertype] isoch_delay @@    got resunsigned short [usertype] isoch_delay @@
->> drivers/usb/cdns3/ep0.c:478:31: sparse:    expected unsigned short [usertype] isoch_delay
->> drivers/usb/cdns3/ep0.c:478:31: sparse:    got restricted __le16 [usertype] wValue
---
->> drivers/usb/cdns3/./trace.h:392:1: sparse: sparse: incorrect type in assignment (different base types) @@    expected unsigned int [usertype] buffer @@    got restrunsigned int [usertype] buffer @@
->> drivers/usb/cdns3/./trace.h:392:1: sparse:    expected unsigned int [usertype] buffer
->> drivers/usb/cdns3/./trace.h:392:1: sparse:    got restricted __le32 [usertype] buffer
->> drivers/usb/cdns3/./trace.h:392:1: sparse: sparse: incorrect type in assignment (different base types) @@    expected unsigned int [usertype] length @@    got restrunsigned int [usertype] length @@
->> drivers/usb/cdns3/./trace.h:392:1: sparse:    expected unsigned int [usertype] length
->> drivers/usb/cdns3/./trace.h:392:1: sparse:    got restricted __le32 [usertype] length
->> drivers/usb/cdns3/./trace.h:392:1: sparse: sparse: incorrect type in assignment (different base types) @@    expected unsigned int [usertype] control @@    got restrunsigned int [usertype] control @@
->> drivers/usb/cdns3/./trace.h:392:1: sparse:    expected unsigned int [usertype] control
->> drivers/usb/cdns3/./trace.h:392:1: sparse:    got restricted __le32 [usertype] control
->> drivers/usb/cdns3/./trace.h:392:1: sparse: sparse: incorrect type in assignment (different base types) @@    expected unsigned int [usertype] buffer @@    got restrunsigned int [usertype] buffer @@
->> drivers/usb/cdns3/./trace.h:392:1: sparse:    expected unsigned int [usertype] buffer
->> drivers/usb/cdns3/./trace.h:392:1: sparse:    got restricted __le32 [usertype] buffer
->> drivers/usb/cdns3/./trace.h:392:1: sparse: sparse: incorrect type in assignment (different base types) @@    expected unsigned int [usertype] length @@    got restrunsigned int [usertype] length @@
->> drivers/usb/cdns3/./trace.h:392:1: sparse:    expected unsigned int [usertype] length
->> drivers/usb/cdns3/./trace.h:392:1: sparse:    got restricted __le32 [usertype] length
->> drivers/usb/cdns3/./trace.h:392:1: sparse: sparse: incorrect type in assignment (different base types) @@    expected unsigned int [usertype] control @@    got restrunsigned int [usertype] control @@
->> drivers/usb/cdns3/./trace.h:392:1: sparse:    expected unsigned int [usertype] control
->> drivers/usb/cdns3/./trace.h:392:1: sparse:    got restricted __le32 [usertype] control
-
-Please review and possibly fold the followup patch.
-
-vim +43 drivers/usb/cdns3/drd.c
-
-7733f6c32e36ff Pawel Laszczak 2019-08-26  22  
-7733f6c32e36ff Pawel Laszczak 2019-08-26  23  /**
-7733f6c32e36ff Pawel Laszczak 2019-08-26  24   * cdns3_set_mode - change mode of OTG Core
-7733f6c32e36ff Pawel Laszczak 2019-08-26  25   * @cdns: pointer to context structure
-7733f6c32e36ff Pawel Laszczak 2019-08-26  26   * @mode: selected mode from cdns_role
-7733f6c32e36ff Pawel Laszczak 2019-08-26  27   *
-7733f6c32e36ff Pawel Laszczak 2019-08-26  28   * Returns 0 on success otherwise negative errno
-7733f6c32e36ff Pawel Laszczak 2019-08-26  29   */
-7733f6c32e36ff Pawel Laszczak 2019-08-26  30  int cdns3_set_mode(struct cdns3 *cdns, enum usb_dr_mode mode)
-7733f6c32e36ff Pawel Laszczak 2019-08-26  31  {
-7733f6c32e36ff Pawel Laszczak 2019-08-26  32  	int ret = 0;
-7733f6c32e36ff Pawel Laszczak 2019-08-26  33  	u32 reg;
-7733f6c32e36ff Pawel Laszczak 2019-08-26  34  
-7733f6c32e36ff Pawel Laszczak 2019-08-26  35  	switch (mode) {
-7733f6c32e36ff Pawel Laszczak 2019-08-26  36  	case USB_DR_MODE_PERIPHERAL:
-7733f6c32e36ff Pawel Laszczak 2019-08-26  37  		break;
-7733f6c32e36ff Pawel Laszczak 2019-08-26  38  	case USB_DR_MODE_HOST:
-7733f6c32e36ff Pawel Laszczak 2019-08-26  39  		break;
-7733f6c32e36ff Pawel Laszczak 2019-08-26  40  	case USB_DR_MODE_OTG:
-7733f6c32e36ff Pawel Laszczak 2019-08-26  41  		dev_dbg(cdns->dev, "Set controller to OTG mode\n");
-7733f6c32e36ff Pawel Laszczak 2019-08-26  42  		if (cdns->version == CDNS3_CONTROLLER_V1) {
-7733f6c32e36ff Pawel Laszczak 2019-08-26 @43  			reg = readl(&cdns->otg_v1_regs->override);
-7733f6c32e36ff Pawel Laszczak 2019-08-26  44  			reg |= OVERRIDE_IDPULLUP;
-7733f6c32e36ff Pawel Laszczak 2019-08-26 @45  			writel(reg, &cdns->otg_v1_regs->override);
-7733f6c32e36ff Pawel Laszczak 2019-08-26  46  		} else {
-7733f6c32e36ff Pawel Laszczak 2019-08-26  47  			reg = readl(&cdns->otg_v0_regs->ctrl1);
-7733f6c32e36ff Pawel Laszczak 2019-08-26  48  			reg |= OVERRIDE_IDPULLUP_V0;
-7733f6c32e36ff Pawel Laszczak 2019-08-26  49  			writel(reg, &cdns->otg_v0_regs->ctrl1);
-7733f6c32e36ff Pawel Laszczak 2019-08-26  50  		}
-7733f6c32e36ff Pawel Laszczak 2019-08-26  51  
-7733f6c32e36ff Pawel Laszczak 2019-08-26  52  		/*
-7733f6c32e36ff Pawel Laszczak 2019-08-26  53  		 * Hardware specification says: "ID_VALUE must be valid within
-7733f6c32e36ff Pawel Laszczak 2019-08-26  54  		 * 50ms after idpullup is set to '1" so driver must wait
-7733f6c32e36ff Pawel Laszczak 2019-08-26  55  		 * 50ms before reading this pin.
-7733f6c32e36ff Pawel Laszczak 2019-08-26  56  		 */
-7733f6c32e36ff Pawel Laszczak 2019-08-26  57  		usleep_range(50000, 60000);
-7733f6c32e36ff Pawel Laszczak 2019-08-26  58  		break;
-7733f6c32e36ff Pawel Laszczak 2019-08-26  59  	default:
-7733f6c32e36ff Pawel Laszczak 2019-08-26  60  		dev_err(cdns->dev, "Unsupported mode of operation %d\n", mode);
-7733f6c32e36ff Pawel Laszczak 2019-08-26  61  		return -EINVAL;
-7733f6c32e36ff Pawel Laszczak 2019-08-26  62  	}
-7733f6c32e36ff Pawel Laszczak 2019-08-26  63  
-7733f6c32e36ff Pawel Laszczak 2019-08-26  64  	return ret;
-7733f6c32e36ff Pawel Laszczak 2019-08-26  65  }
-7733f6c32e36ff Pawel Laszczak 2019-08-26  66  
-
-:::::: The code at line 43 was first introduced by commit
-:::::: 7733f6c32e36ff9d7adadf40001039bf219b1cbe usb: cdns3: Add Cadence USB3 DRD Driver
-
-:::::: TO: Pawel Laszczak <pawell@cadence.com>
-:::::: CC: Felipe Balbi <felipe.balbi@linux.intel.com>
-
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+> > +static struct platform_driver imx_audiomix_driver = {
+> > +	.probe = imx_audiomix_probe,
+> > +	.driver = {
+> > +		.name = "imx-audiomix",
+> > +		.of_match_table = of_match_ptr(imx_audiomix_of_match),
+> > +	},
+> > +};
+> > +module_platform_driver(imx_audiomix_driver);
+> 
+> -- 
+> Lee Jones [李琼斯]
+> Linaro Services Technical Lead
+> Linaro.org │ Open source software for ARM SoCs
+> Follow Linaro: Facebook | Twitter | Blog
