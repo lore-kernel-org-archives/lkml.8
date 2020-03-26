@@ -2,83 +2,105 @@ Return-Path: <SRS0=aGSP=5L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C709AC43331
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 18:22:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C51EEC2D0E5
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 18:27:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9BF0220719
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 18:22:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F47B20722
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 18:27:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="HUtCop/N"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Vl5W6+ba"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728353AbgCZSWq (ORCPT
+        id S1727865AbgCZS1R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 14:22:46 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:40298 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728202AbgCZSWp (ORCPT
+        Thu, 26 Mar 2020 14:27:17 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:39171 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727192AbgCZS1R (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 14:22:45 -0400
-Received: by mail-ot1-f66.google.com with SMTP id r19so1088649otn.7
-        for <linux-kernel@vger.kernel.org>; Thu, 26 Mar 2020 11:22:45 -0700 (PDT)
+        Thu, 26 Mar 2020 14:27:17 -0400
+Received: by mail-pf1-f195.google.com with SMTP id d25so3198863pfn.6;
+        Thu, 26 Mar 2020 11:27:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=DxL0ioGFfMwjynlJlfLLWjyZe5fDeVy9kFRmHMW+Zn4=;
-        b=HUtCop/N6lNjtvAtGQl3Qm5p2bBQhIlBLItjnkXj5ZKpT5PppcECix1JfOr48DRO4N
-         iavXL5M/GEeqb3r7Rq1msl0BQpyCkLqK3Ve3pqzIdC6/icFLJOyCL9QRML8kWvfUN11K
-         Vkiskx8LkX2OP9kr+Cz/F9EvejTbX1PmtkMqV46iwKlukQuniFRu6D4dWMNtzALmN4UO
-         J1LRjHyLjfvSqMiX3w0CJ1TIfV6fo6HEMGexJE7SVUYm2AJB+o+ujQdi1DIL73voh0rn
-         xuEeof8e+1XOjoagT1sxjmbw2ll+A+tolU0hhsZx2FK5/sjirw0gamQH41k21r31Ku5p
-         uXLw==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=F8LTRwA29y3BtOwQYRxfFD8Xx4MT6yu8bUXU9YPsEy4=;
+        b=Vl5W6+baQ71vuipLENFdXPlrY8qYR2Hc2S/JEmCK85BcTvYLM6PojE9XAiDHgZeq1G
+         +DckwGV1Tp7JRjufUtrMz7gtdatX3/EIUq17DVzFvYDHG7b/pYXbU/HC0N0ObR+sQfJr
+         TVzaJUvTjk5s99CJAjIUJLe8foFN3UrsstNQDfyMCoPj1WjvcfmBFiLwPDSLmBLgpKvA
+         003xJ6IQSYiGU+y15+TNNpaXaviAGnB9rXErnM0ZpWiEpiJJtnTGyk78Rf+CxZanzWNn
+         DIyvrrx1MU3JMorkVCOBtjfx/QiLtvIbf2kpDRHhEqh3KR/zGUVXuYUayXb/LWtibh9g
+         BJbQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=DxL0ioGFfMwjynlJlfLLWjyZe5fDeVy9kFRmHMW+Zn4=;
-        b=Nac8BBLAJMqARiJ6obtfvTLBQ7zPBhgvqCzkt8SuKg602CoWA79P4uL3NBfA+2IBO9
-         w9RbudbXA2HPwMnx1qcmHEeg49xloYmKYTpkWREU08/Orcsektv9qEp4sjvrdLqdsK9+
-         7DnIFJipnJAn4habuPSwwM/fjB8C/8V7Fj9BD1ZsJaBWAht7VLVpYiq6Q2nw7O4sY5CF
-         T4poM49U8urFIGVKDMvImLw4dAe3wnAfw8YdjN5izY08n2C0U1sAdfjbcDnggCVBaz7p
-         uRP2Qg7yh/3Y5MgsYPzeJYjEUp9zBkMetpsd6jZafCISB3UIQeaCDbYH3GcYHT5wvMfa
-         WCfA==
-X-Gm-Message-State: ANhLgQ37LfRKMmZhNNdi9xjhDAMl5SztkHRIvBw6OYLkU2cvQ0k/LjQw
-        GWL16WkwG2EA7NEDGtIS6a7aGfqpdgk/ZMbpaudRlVAG
-X-Google-Smtp-Source: ADFU+vtksZIIqekjFEA7AN+kJkboACCxTSymovsuMEtWozINteGk0Gs4LbaZXL36DLqPAcNR1Tpr+XMZlCKK2XGsTF0=
-X-Received: by 2002:a4a:b507:: with SMTP id r7mr6304216ooo.70.1585246964628;
- Thu, 26 Mar 2020 11:22:44 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=F8LTRwA29y3BtOwQYRxfFD8Xx4MT6yu8bUXU9YPsEy4=;
+        b=TeT3/obi7o9aXNF9rtqky1AbzQ2Dvcza3+i5u6l0dYZlirF1QALadvBbR3s8rNl18O
+         txOVEY5g45XkX5Kn07jLPjqpGaCnBjeQtEQsinfWL9ID8yRt8oOGZmNb5Wt/9gltSLX6
+         96KqZxOeVZhnFtQTth8iXrst61JLSgQ4fjk6qBbm6cC9Fp48ap3fQPn5jCNYXCaI2NVj
+         88ZklR4o7bFut7CvJqs5S3Gd6FXom/7QhLkV1vaafn0WGNGwr/9pRI/C5td/9+Ty9/Gh
+         mLO0Usk8IWu8NfjYS5gsyzyBQ8snBhQmwxcWg0upA7XD+SsNBcDx1CvqMUhp2eVvnWC7
+         cWFw==
+X-Gm-Message-State: ANhLgQ3wrSTsMdpviaT4q7m6t9rRPHzp27IRj3SqOgonKxTtcwbt52CA
+        X5Q2E4ccoYFIb2Kw9Jk6EMbFwi1r
+X-Google-Smtp-Source: ADFU+vspeI4zcrvbm0Ljq1Q1jwR+7dUgFtJYp1FS4CCntlvNJ4Ude4apmzuG7s1t1Uo8uP9pVhqldg==
+X-Received: by 2002:a63:1210:: with SMTP id h16mr9829963pgl.408.1585247234601;
+        Thu, 26 Mar 2020 11:27:14 -0700 (PDT)
+Received: from dtor-ws ([2620:15c:202:201:3c2a:73a9:c2cf:7f45])
+        by smtp.gmail.com with ESMTPSA id t3sm2196744pfl.26.2020.03.26.11.27.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 26 Mar 2020 11:27:13 -0700 (PDT)
+Date:   Thu, 26 Mar 2020 11:27:11 -0700
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To:     linux-input@vger.kernel.org
+Cc:     Rajat Jain <rajatja@google.com>, Harry Cutts <hcutts@chromium.org>,
+        Mathew King <mathewk@chromium.org>,
+        Hans de Goede <hdegoede@redhat.com>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] Input: move the new KEY_SELECTIVE_SCREENSHOT keycode
+Message-ID: <20200326182711.GA259753@dtor-ws>
 MIME-Version: 1.0
-References: <20200326172457.205493-1-saravanak@google.com>
-In-Reply-To: <20200326172457.205493-1-saravanak@google.com>
-From:   John Stultz <john.stultz@linaro.org>
-Date:   Thu, 26 Mar 2020 11:22:32 -0700
-Message-ID: <CALAqxLV6CQkJXdtBD5vUOvLYCe10sEUPa4RS9PuGB2=e4-80rQ@mail.gmail.com>
-Subject: Re: [PATCH v2] slimbus: core: Set fwnode for a device when setting of_node
-To:     Saravana Kannan <saravanak@google.com>
-Cc:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Android Kernel Team <kernel-team@android.com>,
-        Linux-ALSA <alsa-devel@alsa-project.org>,
-        lkml <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 26, 2020 at 10:25 AM Saravana Kannan <saravanak@google.com> wrote:
->
-> When setting the of_node for a newly created device, also set the
-> fwnode. This allows fw_devlink feature to work for slimbus devices.
->
-> Signed-off-by: Saravana Kannan <saravanak@google.com>
+We should try to keep keycodes sequential unless there is a reason to leave
+a gap in numbering, so let's move it from 0x280 to 0x27a while we still
+can.
 
-Tested-by: John Stultz <john.stultz@linaro.org>
+Fixes: 3b059da9835c ("Input: allocate keycode for Selective Screenshot key")
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+---
+ include/uapi/linux/input-event-codes.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-thanks!
--john
+diff --git a/include/uapi/linux/input-event-codes.h b/include/uapi/linux/input-event-codes.h
+index 008be2609ce1..6923dc7e0298 100644
+--- a/include/uapi/linux/input-event-codes.h
++++ b/include/uapi/linux/input-event-codes.h
+@@ -653,7 +653,7 @@
+ #define KEY_PRIVACY_SCREEN_TOGGLE	0x279
+ 
+ /* Select an area of screen to be copied */
+-#define KEY_SELECTIVE_SCREENSHOT	0x280
++#define KEY_SELECTIVE_SCREENSHOT	0x27a
+ 
+ /*
+  * Some keyboards have keys which do not have a defined meaning, these keys
+-- 
+2.26.0.rc2.310.g2932bb562d-goog
+
+
+-- 
+Dmitry
