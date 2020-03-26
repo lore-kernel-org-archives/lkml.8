@@ -2,127 +2,91 @@ Return-Path: <SRS0=aGSP=5L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_2
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4A1DC43331
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 08:17:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39903C43331
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 08:17:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 93EA020772
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 08:17:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CBF722070A
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 08:17:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="OC7eHg5/"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="ZSxbNEfk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727991AbgCZIRC (ORCPT
+        id S1727792AbgCZIRT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 04:17:02 -0400
-Received: from lb3-smtp-cloud7.xs4all.net ([194.109.24.31]:41681 "EHLO
-        lb3-smtp-cloud7.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727821AbgCZIRB (ORCPT
+        Thu, 26 Mar 2020 04:17:19 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:5186 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727682AbgCZIRT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 04:17:01 -0400
-Received: from [192.168.2.10] ([46.9.234.233])
-        by smtp-cloud7.xs4all.net with ESMTPA
-        id HNh9jRVkrLu1fHNhCj2KAP; Thu, 26 Mar 2020 09:16:59 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
-        t=1585210619; bh=IdHvLiex0OKHR3v/yq/bT44NRwc/GzOlOdVvGMv56YU=;
-        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
-         Subject;
-        b=OC7eHg5//Kl6DYiIEwTog6H6Wi+FwYyD1qoYfbF1JoIdul10J/0Nh+t/EvgB9LTT0
-         EBmCECyQ+Sp3F2xkGxsd6wp3gVFoFQTivqRYQsRcNPO8DwEFRj1cHr6JFeW76xhJlY
-         so1URjc8OLI9vxMTdehbernUtK6P/s+OJsS11Dy233sGX2QAY5h8AYVP3Ymu3gbRkK
-         4puTFTKL0heL4HmGxl5hovkPgrvPjDqkPMtv1NxJavCmwO6+/lhungAx48lWiho41O
-         8gNbHc1ow5tEYxz0SDO+zxMLOmqEmBlagepzzJisjl+6e2fJIs47tsbV01A1lLb/+r
-         MZyI8SCH7+nJw==
-Subject: Re: [PATCH] media: v4l2-fh: define v4l2_fh struct regardless of
- condition
-To:     Seungchul Kim <sc377.kim@samsung.com>, mchehab@kernel.org
-Cc:     linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <CGME20200323023045epcas2p12007502edd2a65efcccb00eb899d5532@epcas2p1.samsung.com>
- <000601d600bb$0e2d4320$2a87c960$@samsung.com>
- <1a0ad24c-e577-e6d2-32ca-514a645b008f@xs4all.nl>
- <007b01d60316$7e554690$7affd3b0$@samsung.com>
-From:   Hans Verkuil <hverkuil@xs4all.nl>
-Message-ID: <3e38fc75-f555-7d91-2561-9c95f76694d1@xs4all.nl>
-Date:   Thu, 26 Mar 2020 09:16:55 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Thu, 26 Mar 2020 04:17:19 -0400
+X-UUID: 8c21512c61704ae4a13ac9883f90b28b-20200326
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=TUh0oyKKWlFuiaOE7fmc1z5kxisyWDAyryXR2g5CLqg=;
+        b=ZSxbNEfk+E6+9b+mtfqZnBwGGFQR00xv7n/73tjl5DCwvKyO1JRIBr6Aump8Q3sEXInsOmEQcS/qgAaVLPVtys+A2IijjwDaQB1TrUSBaODJlCx1fCwPIJUqezfTVbGy39LRXUb5l/sa4PrPykaZdp5ED4GXAp89Tloed+Snjyo=;
+X-UUID: 8c21512c61704ae4a13ac9883f90b28b-20200326
+Received: from mtkcas07.mediatek.inc [(172.21.101.84)] by mailgw02.mediatek.com
+        (envelope-from <stanley.chu@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 1873759620; Thu, 26 Mar 2020 16:17:15 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by
+ mtkmbs06n1.mediatek.inc (172.21.101.129) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Thu, 26 Mar 2020 16:17:13 +0800
+Received: from [172.21.84.99] (172.21.84.99) by mtkcas07.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Thu, 26 Mar 2020 16:17:14 +0800
+Message-ID: <1585210634.4609.1.camel@mtksdccf07>
+Subject: Re: [PATCH v4 1/1] scsi: ufs: Enable block layer runtime PM for
+ well-known logical units
+From:   Stanley Chu <stanley.chu@mediatek.com>
+To:     Can Guo <cang@codeaurora.org>
+CC:     <asutoshd@codeaurora.org>, <nguyenb@codeaurora.org>,
+        <hongwus@codeaurora.org>, <rnayak@codeaurora.org>,
+        <linux-scsi@vger.kernel.org>, <kernel-team@android.com>,
+        <saravanak@google.com>, <salyzyn@google.com>,
+        "Alim Akhtar" <alim.akhtar@samsung.com>,
+        Avri Altman <avri.altman@wdc.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Bean Huo <beanhuo@micron.com>,
+        "Bart Van Assche" <bvanassche@acm.org>,
+        Venkat Gopalakrishnan <venkatg@codeaurora.org>,
+        Tomas Winkler <tomas.winkler@intel.com>,
+        "open list" <linux-kernel@vger.kernel.org>
+Date:   Thu, 26 Mar 2020 16:17:14 +0800
+In-Reply-To: <1585185003-31156-1-git-send-email-cang@codeaurora.org>
+References: <1585185003-31156-1-git-send-email-cang@codeaurora.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.2.3-0ubuntu6 
 MIME-Version: 1.0
-In-Reply-To: <007b01d60316$7e554690$7affd3b0$@samsung.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfMtHPk9IgeYpRmxlKLFIYSoByU7M3rcWzdealPyxlyt1KNs8SKdEEiW0sYY+3yHUViqvjEQzXM6c6hoUNXQAY7ZGub+nezIKIhYlQxA7TsGY8vX86CmS
- VT6VPkfj9SfLhTFPwUAMkqCxRc6OzHRWSJ9SWOFSS6nyWOO0gNhABCtGecZeQtb4cNQmo3BN67VS5Fa1rbA/4d7pyMrDOyEpGAKwo42ee1HVSOLdt0yzpHu1
- hbJVxPRbOPoyMqekQdcYgWQ3oX3/yzHTl6850R2t/SRdXM+wTPfKRWYg2icgvHY1
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/26/20 3:30 AM, Seungchul Kim wrote:
-> On 3/25/20 5:54 PM, Hans Verkuil wrote:
->> On 3/23/20 3:30 AM, Seungchul Kim wrote:
->>> v4l2_fh struct define differently by CONFIG_V4L2_MEM2MEM_DEV.
->>> If some vendors use CONFIG_V4L2_MEM2MEM_DEV by module, it can make the
->>> mismatch of v4l2_fh sturct.
->>>
->>> By the mismatch, the following error occurs.
->>> ===============================
->>> [    7.533506] v4l2_mem2mem: disagrees about version of symbol
->> video_devdata
->>> [    7.533594] v4l2_mem2mem: Unknown symbol video_devdata (err -22)
->>> [    7.535319] v4l2_mem2mem: disagrees about version of symbol
->>> v4l2_event_pending
->>> [    7.542532] v4l2_mem2mem: Unknown symbol v4l2_event_pending (err -22)
->>> ===============================
->>>
->>> So v4l2_fh struct is modified to does not have dependency for
->>> CONFIG_V4L2_MEM2MEM_DEV.
->>>
->>> Signed-off-by: Seungchul Kim <sc377.kim@samsung.com>
->>> ---
->>>  include/media/v4l2-fh.h | 2 --
->>>  1 file changed, 2 deletions(-)
->>>
->>> diff --git a/include/media/v4l2-fh.h b/include/media/v4l2-fh.h index
->>> 53b4dbb..b5b3e00 100644
->>> --- a/include/media/v4l2-fh.h
->>> +++ b/include/media/v4l2-fh.h
->>> @@ -53,9 +53,7 @@ struct v4l2_fh {
->>>  	unsigned int		navailable;
->>>  	u32			sequence;
->>>
->>> -#if IS_ENABLED(CONFIG_V4L2_MEM2MEM_DEV)
->>>  	struct v4l2_m2m_ctx	*m2m_ctx;
->>> -#endif
->>
->> This is a good change, but please also remove the same #if from
->> v4l2_ioctl_get_lock() in drivers/media/v4l2-core/v4l2-ioctl.c. That is now
->> no longer needed there either and without removing that those vendor
->> drivers would be using the wrong lock.
->>
->> Regards,
->>
->> 	Hans
-> 
-> Thank you for your comment. I worried about the same thing with you.
-> But vfh->m2m_ctx on v4l2_ioctl_get_lock() is always null
-> without CONFIG_V4L2_MEM2MEM_DEV, because m2m_ctx of v4l2-fh
-> is initialized only in v4l2_mem2mem.c.
-> Therefore it doesn't have a problem using an wrong lock
-> regardless of modification, so I did not fix it.
+SGkgQ2FuLA0KDQpPbiBXZWQsIDIwMjAtMDMtMjUgYXQgMTg6MDkgLTA3MDAsIENhbiBHdW8gd3Jv
+dGU6DQo+IEJsb2NrIGxheWVyIFJQTSBpcyBlbmFibGVkIGZvciB0aGUgZ2VuZXJuYWwgVUZTIFND
+U0kgZGV2aWNlcyB3aGVuIHRoZXkgYXJlDQo+IHByb2JlZCBieSB0aGVpciBkcml2ZXIuIEhvd2V2
+ZXIgYmxvY2sgbGF5ZXIgUlBNIGlzIG5vdCBlbmFibGVkIGZvciBVRlMNCj4gd2VsbC1rbm93biBT
+Q1NJIGRldmljZXMuDQo+IA0KPiBBcyBVRlMgU0NTSSBkZXZpY2VzIGhhdmUgdGhlaXIgY29ycmVz
+cG9uZGluZyBCU0cgY2hhciBkZXZpY2VzLCBhY2Nlc3NpbmcNCj4gYSBCU0cgY2hhciBkZXZpY2Ug
+dmlhIElPQ1RMIG1heSBzZW5kIHJlcXVlc3RzIHRvIGl0cyBjb3JyZXNwb25kaW5nIFNDU0kNCj4g
+ZGV2aWNlIHRocm91Z2ggaXRzIHJlcXVlc3QgcXVldWUuIElmIEJTRyBJT0NUTCBzZW5kcyBhIHJl
+cXVlc3QgdG8gYQ0KPiB3ZWxsLWtub3duIFNDU0kgZGV2aWNlIHdoZW4gaGJhIGlzIG5vdCBydW50
+aW1lIGFjdGl2ZSwgZHVlIHRvIGJsb2NrIGxheWVyDQo+IFJQTSBpcyBub3QgZWFuYmxlZCBmb3Ig
+dGhlIHdlbGwta25vd24gU0NTSSBkZXZpY2VzLCBoYmEsIHdoaWNoIGlzIGF0IHRoZQ0KPiB0b3Ag
+b2YgYSBzY3NpIGRldmljZSdzIHBhcmVudCBjaGFpbiwgc2hhbGwgbm90IGJlIHJlc3VtZWQsIHRo
+ZW4gdW5leHBlY3RlZA0KPiBlcnJvciB3b3VsZCBoYXBwZW4uDQo+IA0KPiBUaGlzIGNoYW5nZSBl
+bmFibGVzIGJsb2NrIGxheWVyIFJQTSBmb3IgdGhlIHdlbGwta25vd24gU0NTSSBkZXZpY2VzLCBz
+bw0KPiB0aGF0IGJsb2NrIGxheWVyIGNhbiBoYW5kbGUgUlBNIGZvciB0aGUgd2VsbC1rbm93biBT
+Q1NJIGRldmljZXMganVzdCBsaWtlDQo+IGZvciB0aGUgZ2VuZXJhbCBTQ1NJIGRldmljZXMuDQo+
+IA0KPiBTaWduZWQtb2ZmLWJ5OiBDYW4gR3VvIDxjYW5nQGNvZGVhdXJvcmEub3JnPg0KPiBSZXZp
+ZXdlZC1ieTogQXZyaSBBbHRtYW4gPGF2cmkuYWx0bWFuQHdkYy5jb20+DQoNCkxvb2tzIGdvb2Qh
+DQpUaGFua3MgdG8gbWFrZSBSUE0gZm9yIFVGUyBjb21wbGV0ZWQhDQoNClJldmlld2VkLWJ5OiBT
+dGFubGV5IENodSA8c3RhbmxleS5jaHVAbWVkaWF0ZWsuY29tPg0KDQo=
 
-It is: if your out-of-tree driver sets CONFIG_V4L2_MEM2MEM_DEV, then
-I assume it will set vfh->m2m_ctx, and so the v4l2 core should also
-return the right lock for that out-of-tree driver.
-
-But in any case, if m2m_ctx is always part of v4l2-fh.h, then that
-#if in v4l2-ioctl.c has become pointless and should be removed in any
-case.
-
-Regards,
-
-	Hans
