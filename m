@@ -2,116 +2,112 @@ Return-Path: <SRS0=aGSP=5L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5830AC43331
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 09:29:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29E08C2D0E8
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 09:29:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2521C20714
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 09:29:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="hMamO+S9"
+	by mail.kernel.org (Postfix) with ESMTP id 0207C2078E
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 09:29:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585214982;
+	bh=UoGc8pPRQVbuOM6FxhZbGGEF/HGWRxriugGNyAa0F30=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=1gAuL2UIoWVfp6AjedPatJL3HuAP8ReDXtmWtOSUtLG6uZuftFl+UC7YFzdbKgI4A
+	 /oBFqwwMI3VpQAeWdce00ArSKaH5/tl9FQkDGA9+uln2trg6JbSbH3f0siO4zhMhnI
+	 reV6VxYD6OKxPYEhTPYxWI3pN8+WzuOEwmt6xc90=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727771AbgCZJ3d (ORCPT
+        id S1727829AbgCZJ3l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 05:29:33 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:46421 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726292AbgCZJ3c (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 05:29:32 -0400
-Received: by mail-wr1-f65.google.com with SMTP id j17so6739879wru.13
-        for <linux-kernel@vger.kernel.org>; Thu, 26 Mar 2020 02:29:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=UBGWriIek5v0PtwSr6maLDwCqpBsKEE/T0ObkYjazh4=;
-        b=hMamO+S9uSMmYirEaLH+WfXFn5+pTev8UTI/BfQPluXmQLkA/kXVl5thwb0WHj3NXG
-         OVUFYKndO40SrzZ6qK0V1tbFuUPkiPiUTqaTM/B5UMOIiVgJgKXJwiVU4h1AC4jIkytq
-         e+IGBbozBs8D/xONjMpQFLUbMQjP9CiBRVTVcY/L9/PdE8Q13bleCYZaDi6uX4en4sOd
-         TdaKqyIEHYjQidJ2rJPX9MnUKBhwZjJ51Y8XxXjEwiwE7rZUBs7+pqWNoR4mIKy7T6F0
-         le773exPPJCMvTvSy95qNOzkWpG6DtKzDwXVWRc1SfC7amIWxhAXvlhQMD0ndTHOsSfr
-         KVkg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=UBGWriIek5v0PtwSr6maLDwCqpBsKEE/T0ObkYjazh4=;
-        b=tsTgOcWy9NX6n1KF0mAKbaikJ1mTfRGhMhpmlIy4XvPx+H9EA/J9pYHnTN1R7PcWkk
-         PdUp4uvx7Ryq2F93P1Q5Gti/DqFZCCbDxVdp5WE/XbUx/H2RE7ZkokP+ZQ4WD+Fg7JLk
-         HHlF8uKOj5NnhWm59LddD5S7vQMqdWzMl4cogMtP68FWNzWxmbwX3BsEI66EJ6c5LrMm
-         cR3BN2eNy8tecfNU9sS3vut1ittuG6AyeRwv30dgj8r989C02vmetkSIQ6ap7xwAsKkx
-         leT9OgjCJvWEFWTlY986WPTMrXDtKX9tQ6CpdKWtRh4NpSPuXeNy2arJCCkryyFpneuU
-         /yig==
-X-Gm-Message-State: ANhLgQ16BwFuJeDsDhCQ1Nxad06TL7A2bySfPnXvnk5BLlVoOORmWAZy
-        0McrQf4lGd4hX0i8kkxz8XXvhQ==
-X-Google-Smtp-Source: ADFU+vvnwukm7zzP15OgKy56b6O0Cc4OinBoGIg9TVhQc2hJN41CAQsnoNiB9+V2WiGJ2qvxwOfKzw==
-X-Received: by 2002:a5d:6ac8:: with SMTP id u8mr8786646wrw.53.1585214970465;
-        Thu, 26 Mar 2020 02:29:30 -0700 (PDT)
-Received: from dell ([2.27.35.213])
-        by smtp.gmail.com with ESMTPSA id h26sm2598633wmb.19.2020.03.26.02.29.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 26 Mar 2020 02:29:29 -0700 (PDT)
-Date:   Thu, 26 Mar 2020 09:30:19 +0000
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Collabora Kernel ML <kernel@collabora.com>,
-        Andrzej Hajda <a.hajda@samsung.com>, icenowy@aosc.io,
-        anarsoul@gmail.com, Neil Armstrong <narmstrong@baylibre.com>,
-        matthias.bgg@gmail.com, drinkcat@chromium.org, hsinyi@chromium.org,
-        megous@megous.com
-Subject: Re: [PATCH v4 2/4] mfd: anx7688: Add driver for Analogix ANX7688 chip
-Message-ID: <20200326093019.GC603801@dell>
-References: <20200318070730.4012371-1-enric.balletbo@collabora.com>
- <20200318070730.4012371-2-enric.balletbo@collabora.com>
+        Thu, 26 Mar 2020 05:29:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57548 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726292AbgCZJ3k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Mar 2020 05:29:40 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B534320714;
+        Thu, 26 Mar 2020 09:29:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1585214980;
+        bh=UoGc8pPRQVbuOM6FxhZbGGEF/HGWRxriugGNyAa0F30=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=kHI7WdxeMAgK6glxwYzwiGGTtCyrbaQCRXUVjpnZCpQWY4ZGP0LLZnW/0x1Bl+MGy
+         aWvVPfizsEoHkQMxI+9Mb4rSMD0lY+VQoiAtViUL7I+3iYyhrhmqxoe9Q0QCIlD3A9
+         nYhGSerbYpKxB0NuW0mnczLup4F4f3t4QC8+FjHI=
+Date:   Thu, 26 Mar 2020 10:29:36 +0100
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Johan Hovold <johan@kernel.org>
+Cc:     Qiujun Huang <hqjagain@gmail.com>, linux-usb@vger.kernel.org,
+        linux-kernel@vger.kernel.org, anenbupt@gmail.com
+Subject: Re: [PATCH] USB: io_edgeport: fix  slab-out-of-bounds Read in
+ edge_interrupt_callback
+Message-ID: <20200326092936.GA994882@kroah.com>
+References: <1585122757-4528-1-git-send-email-hqjagain@gmail.com>
+ <20200326081433.GA979574@kroah.com>
+ <20200326082117.GC4899@localhost>
+ <20200326091326.GD4899@localhost>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200318070730.4012371-2-enric.balletbo@collabora.com>
+In-Reply-To: <20200326091326.GD4899@localhost>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 18 Mar 2020, Enric Balletbo i Serra wrote:
-
-> The ANX7688 chip is a Type-C Port Controller, HDMI to DP converter and
-> USB-C mux between USB 3.0 lanes and the DP output.
+On Thu, Mar 26, 2020 at 10:13:26AM +0100, Johan Hovold wrote:
+> On Thu, Mar 26, 2020 at 09:21:17AM +0100, Johan Hovold wrote:
+> > On Thu, Mar 26, 2020 at 09:14:33AM +0100, Greg Kroah-Hartman wrote:
+> > > On Wed, Mar 25, 2020 at 03:52:37PM +0800, Qiujun Huang wrote:
+> > > > The boundary condition should be (length - 1) as we access data[position+1].
+> > > > 
+> > > > Reported-and-tested-by: syzbot+37ba33391ad5f3935bbd@syzkaller.appspotmail.com
+> > > > Signed-off-by: Qiujun Huang <hqjagain@gmail.com>
+> > > > ---
+> > > >  drivers/usb/serial/io_edgeport.c | 2 +-
+> > > >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > > > 
+> > > > diff --git a/drivers/usb/serial/io_edgeport.c b/drivers/usb/serial/io_edgeport.c
+> > > > index 5737add..4cca0b8 100644
+> > > > --- a/drivers/usb/serial/io_edgeport.c
+> > > > +++ b/drivers/usb/serial/io_edgeport.c
+> > > > @@ -710,7 +710,7 @@ static void edge_interrupt_callback(struct urb *urb)
+> > > >  		/* grab the txcredits for the ports if available */
+> > > >  		position = 2;
+> > > >  		portNumber = 0;
+> > > > -		while ((position < length) &&
+> > > > +		while ((position < length - 1) &&
+> > > >  				(portNumber < edge_serial->serial->num_ports)) {
+> > > >  			txCredits = data[position] | (data[position+1] << 8);
+> > > >  			if (txCredits) {
+> > > > -- 
+> > > > 1.8.3.1
+> > > > 
+> > > 
+> > > Johan, any objection from me taking this in my tree now?
+> > 
+> > Just let me take a look at it first.
+> >
+> > Are sending another PR to Linus for 5.6? Otherwise I can include this
+> > in my 5.7 PR to you. Will try to get it to you today.
 > 
-> For our use case a big part of the chip, like power supplies, control
-> gpios and usb-c parts are managed by an Embedded Controller, hence,
-> this is its simplest form of it. Other users of this chip might
-> introduce new functionalities as per their requirements.
-
-Hmm... So first impressions is that this 'driver' doesn't really do
-anything useful other than checking the running model.  I think you're
-better off using "simple-mfd" and doing the ID check inside the
-useful/functional child device driver(s).
-
-> Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
-> ---
+> This issue predates git so I'd add
 > 
-> Changes in v4: None
-> Changes in v3: None
-> Changes in v2: None
+> Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+> Cc: stable <stable@vger.kernel.org>
+> Acked-by: Johan Hovold <johan@kernel.org>
 > 
->  drivers/mfd/Kconfig         | 11 +++++
->  drivers/mfd/Makefile        |  1 +
->  drivers/mfd/anx7688.c       | 87 +++++++++++++++++++++++++++++++++++++
->  include/linux/mfd/anx7688.h | 39 +++++++++++++++++
->  4 files changed, 138 insertions(+)
->  create mode 100644 drivers/mfd/anx7688.c
->  create mode 100644 include/linux/mfd/anx7688.h
+> if you want to take it yourself. Just let me know, otherwise I'll
+> include in my PR.
 
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+I'm not sending anything to Linus for 5.6, so putting it in your 5.7 PR
+is fine.
+
+thanks,
+
+greg k-h
