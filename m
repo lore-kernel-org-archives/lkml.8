@@ -2,103 +2,141 @@ Return-Path: <SRS0=aGSP=5L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CF19C2D0ED
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 23:54:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35F5BC2D0E7
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 23:54:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3B2CA20774
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 23:54:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 09B2820714
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 23:54:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="dK4sZYvD"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="INFMJGFc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727612AbgCZXy2 (ORCPT
+        id S1727707AbgCZXyd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 19:54:28 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:46760 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726067AbgCZXy1 (ORCPT
+        Thu, 26 Mar 2020 19:54:33 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:38488 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726067AbgCZXyc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 19:54:27 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description;
-        bh=aynR0UVS1u6v72AstwmjORHZT9G2O0P+jTJ7R4PmUNo=; b=dK4sZYvDkNLevoDdXkS4/oyhiU
-        F8qajT/Y0c1KSxptgyjGLpiU8BSyPOG7u9i0XBd9reLVgCeE/oNACNqF3+f7tBcl05BU7hhD2fBmn
-        U9Y4h1hg5yBKmahrnpRMQZllYKE2dPj3pIfr7SBvecMZmhRnfhnCe/pM6fj0AFHXwoJ4QFQGoe79A
-        BpWBgGgxt5fo0OXTHk9ISPwAK9hSkXMzQJUBSk/UxFuVuZNXRUeD1Hnbi8dboIKKVcDZEs52xgv0r
-        G5TpVblEuGgkKr674wrV7JQKEJ3UxccIoCcGhDsq7B31oHmLUUwS57DffTYS2oRlInV7M9Q51DbId
-        MhvsvZ4w==;
-Received: from [2601:1c0:6280:3f0::19c2]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jHcKN-0004g2-7K; Thu, 26 Mar 2020 23:54:23 +0000
-Subject: Re: [PATCH v15 09/10] samples/landlock: Add a sandbox manager example
-To:     =?UTF-8?Q?Micka=c3=abl_Sala=c3=bcn?= <mic@digikod.net>,
-        linux-kernel@vger.kernel.org
-Cc:     Al Viro <viro@zeniv.linux.org.uk>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        James Morris <jmorris@namei.org>, Jann Horn <jann@thejh.net>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>,
-        Michael Kerrisk <mtk.manpages@gmail.com>,
-        =?UTF-8?Q?Micka=c3=abl_Sala=c3=bcn?= <mickael.salaun@ssi.gouv.fr>,
-        "Serge E . Hallyn" <serge@hallyn.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Vincent Dagonneau <vincent.dagonneau@ssi.gouv.fr>,
-        kernel-hardening@lists.openwall.com, linux-api@vger.kernel.org,
-        linux-arch@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        linux-security-module@vger.kernel.org, x86@kernel.org
-References: <20200326202731.693608-1-mic@digikod.net>
- <20200326202731.693608-10-mic@digikod.net>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <11634607-2fdb-1868-03d0-94096763766f@infradead.org>
-Date:   Thu, 26 Mar 2020 16:54:21 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Thu, 26 Mar 2020 19:54:32 -0400
+Received: by mail-pg1-f196.google.com with SMTP id x7so3705602pgh.5;
+        Thu, 26 Mar 2020 16:54:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=7CVUJ19v0pY389uYsPOimGpmTd+8zgk3ZoECLlak5lM=;
+        b=INFMJGFcMVQGmxapcKuRntC2Hu7Scihi/K2WIqPinYkE7x1TAkiXXc/d9BNnWaPns4
+         L5Yjl1/AowBiF15atWfviywBhgO0UTCApRKD1MEGRqOaNjJrO5D5tVfDDz4cE2trvw7l
+         bVlE0Rmf+Rh4whilo56Bl9iTZHvA/Je7qZtsq+R12rNvESruWl2DpeWOyGkOP8bTUtJl
+         /o2zXLz1MMGyJ7Kxl3bLSSodp3GyaoJKNprYHm99xSQEbaB3llKIkqNDETYReSsVx9nE
+         FnvPXwu9d7nsGvcDwKRbA8+6i5NN5ibUQbL2vPleW6nU335BCJvH52SJ0grrfZk7KwSi
+         8EvQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=7CVUJ19v0pY389uYsPOimGpmTd+8zgk3ZoECLlak5lM=;
+        b=WODTFPEOQnnMYBo9VCxkSA5i0evU3VthziUjDUZg9HUk6iR90FQZScpW/IQHZg/z6p
+         Pr+D5TiiAZGmq4ptlNOjqwfDdh5iUHFowZumTujom0Z15ApS+6iqYrg9CuLa7I+KIS9o
+         wnl1SzQOmmmK/jKI/AjZBKhNC7uL7BJJm+G4e2oe1uaGpRaU/8zGJM/cKRiB0WcXvn2M
+         NB0+m//El3bn13q+8lnbdSmGXB6ZVqHNtec2HhrZmRH0sGL/YoNh40THmareWlau5xUB
+         yIKGCD6Gv/MwyQxM5HbMNs3iX3exjExLe4wMya74QdS2YmT3DNTTxo5tVtJAyGjvshGq
+         8bkg==
+X-Gm-Message-State: ANhLgQ15N5sneQW/xMREsldks7Ms6CIYwaNux0ZMcDi5czpyLJ3LUibf
+        frirDRhqZOvZR3fBpx5MXok=
+X-Google-Smtp-Source: ADFU+vtHItp+nWzngvwdD8m8gR416+z5AIiqRHKH0JSJZuOyBE5OslhJKwILx7T9X+o7ZOXp/Dq6XA==
+X-Received: by 2002:a63:1517:: with SMTP id v23mr10800809pgl.89.1585266871010;
+        Thu, 26 Mar 2020 16:54:31 -0700 (PDT)
+Received: from ast-mbp ([2620:10d:c090:400::5:c7d9])
+        by smtp.gmail.com with ESMTPSA id p70sm2417463pjp.47.2020.03.26.16.54.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 26 Mar 2020 16:54:30 -0700 (PDT)
+Date:   Thu, 26 Mar 2020 16:54:26 -0700
+From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
+To:     Jean-Philippe Menil <jpmenil@gmail.com>
+Cc:     yhs@fb.com, kernel-janitors@vger.kernel.org,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>, netdev@vger.kernel.org,
+        bpf@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] bpf: fix build warning - missing prototype
+Message-ID: <20200326235426.ei6ae2z5ek6uq3tt@ast-mbp>
+References: <7c27e51f-6a64-7374-b705-450cad42146c@fb.com>
+ <20200324072231.5780-1-jpmenil@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200326202731.693608-10-mic@digikod.net>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200324072231.5780-1-jpmenil@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-On 3/26/20 1:27 PM, Mickaël Salaün wrote:
-> diff --git a/samples/Kconfig b/samples/Kconfig
-> index 9d236c346de5..b54408c5bd86 100644
-> --- a/samples/Kconfig
-> +++ b/samples/Kconfig
-> @@ -120,6 +120,13 @@ config SAMPLE_HIDRAW
->  	bool "hidraw sample"
->  	depends on HEADERS_INSTALL
+On Tue, Mar 24, 2020 at 08:22:31AM +0100, Jean-Philippe Menil wrote:
+> Fix build warnings when building net/bpf/test_run.o with W=1 due
+> to missing prototype for bpf_fentry_test{1..6}.
+> 
+> Declare prototypes in order to silence warnings.
+> 
+> Signed-off-by: Jean-Philippe Menil <jpmenil@gmail.com>
+> ---
+>  net/bpf/test_run.c | 6 ++++++
+>  1 file changed, 6 insertions(+)
+> 
+> diff --git a/net/bpf/test_run.c b/net/bpf/test_run.c
+> index d555c0d8657d..cdf87fb0b6eb 100644
+> --- a/net/bpf/test_run.c
+> +++ b/net/bpf/test_run.c
+> @@ -113,31 +113,37 @@ static int bpf_test_finish(const union bpf_attr *kattr,
+>   * architecture dependent calling conventions. 7+ can be supported in the
+>   * future.
+>   */
+> +int noinline bpf_fentry_test1(int a);
+>  int noinline bpf_fentry_test1(int a)
+>  {
+>  	return a + 1;
+>  }
 >  
-> +config SAMPLE_LANDLOCK
-> +	bool "Build Landlock sample code"
-> +	select HEADERS_INSTALL
+> +int noinline bpf_fentry_test2(int a, u64 b);
+>  int noinline bpf_fentry_test2(int a, u64 b)
+>  {
+>  	return a + b;
+>  }
+>  
+> +int noinline bpf_fentry_test3(char a, int b, u64 c);
+>  int noinline bpf_fentry_test3(char a, int b, u64 c)
+>  {
+>  	return a + b + c;
+>  }
+>  
+> +int noinline bpf_fentry_test4(void *a, char b, int c, u64 d);
+>  int noinline bpf_fentry_test4(void *a, char b, int c, u64 d)
+>  {
+>  	return (long)a + b + c + d;
+>  }
+>  
+> +int noinline bpf_fentry_test5(u64 a, void *b, short c, int d, u64 e);
+>  int noinline bpf_fentry_test5(u64 a, void *b, short c, int d, u64 e)
+>  {
+>  	return a + (long)b + c + d + e;
+>  }
+>  
+> +int noinline bpf_fentry_test6(u64 a, void *b, short c, int d, void *e, u64 f);
+>  int noinline bpf_fentry_test6(u64 a, void *b, short c, int d, void *e, u64 f)
 
-I think that this should be like all of the other users of HEADERS_INSTALL
-and depend on that instead of select-ing it.
-
-> +	help
-> +	  Build a simple Landlock sandbox manager able to launch a process
-> +	  restricted by a user-defined filesystem access-control security policy.
-> +
->  config SAMPLE_PIDFD
->  	bool "pidfd sample"
->  	depends on HEADERS_INSTALL
-
-thanks.
--- 
-~Randy
-
+That's a bit too much of "watery water".
+Have you considered
+__diag_push();
+__diag_ignore(GCC, "-Wwhatever specific flag will shut up this warn")
+__diag_pop();
+approach ?
+It will be self documenting as well.
