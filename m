@@ -2,145 +2,305 @@ Return-Path: <SRS0=aGSP=5L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20F6DC43331
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 02:06:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D71E7C43331
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 02:12:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E5E1B20737
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 02:06:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="jpWMLrec"
+	by mail.kernel.org (Postfix) with ESMTP id A74FD20737
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 02:12:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727689AbgCZCGd (ORCPT
+        id S1727661AbgCZCMl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 22:06:33 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:43353 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727564AbgCZCGd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 22:06:33 -0400
-Received: by mail-pf1-f195.google.com with SMTP id f206so1998140pfa.10
-        for <linux-kernel@vger.kernel.org>; Wed, 25 Mar 2020 19:06:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=uYQlUOBpCvYvOWq81vYWj8BjX92aUfuzlVBqw9QmtNs=;
-        b=jpWMLrecHH6IEFQVM8Dz7CE3drKGde9Flq7g8WENLKiy05FJ5Ox+VdyQQ7/eor7Ho8
-         5O8yPvQ5luFXcgN+uNHZe9jlbmNbgXaSP8WwBxByjm7OBtPMMW2Pruno0EQcHVNqmPxp
-         CNl9i/InueSAqWKYyo+Oy1EumDxQdm1VuEdis=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=uYQlUOBpCvYvOWq81vYWj8BjX92aUfuzlVBqw9QmtNs=;
-        b=VkbT0Da/tLByxHvp0Y7GPt3rJHVLoIePV1HuuUEYF0VBwon1IQllPCVReTKXr15F1r
-         ggYt3ySxW1apOFww7Z3lGOW5lqon+DO83nzVSeAGQ2mRXl6epaMb3ULvZaGoVpQZo5HC
-         m/zcdbDrED/s4ZL90JuHosUWjOXcXf0hTGfVLXckYa1Y1/hwtpmgTvKCdevpunnvHeVK
-         MsF+fVW7xYap7ZbaTOCDHSHgq+hRo09dSKmvybg0dYFuhrFzYhBLyUJlLqHlWmrbcCmg
-         OlfC62eM7FbymtmFMXv09LdEoStUXo5sgTEuq8IIImKwpadXRd7FtwgERxvjRjXZi/Ct
-         ZREA==
-X-Gm-Message-State: ANhLgQ1FYmR28ijGBw+01p4Gbi6kSnuArA6t9okkwUeHARpJiPpPXIsM
-        UN0AdUDZOc7dM+RxEXiqAFTnsQ==
-X-Google-Smtp-Source: ADFU+vtyHMwnZ0WOXPD0etbF8ofWdyYnDBq3cVX0KeXPYvpmhLbSGzBIQYI/Sqa44z3LYzft4soCUw==
-X-Received: by 2002:a63:2989:: with SMTP id p131mr6064326pgp.281.1585188392313;
-        Wed, 25 Mar 2020 19:06:32 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id j12sm375955pgs.0.2020.03.25.19.06.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 25 Mar 2020 19:06:31 -0700 (PDT)
-Date:   Wed, 25 Mar 2020 19:06:30 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Masahiro Yamada <masahiroy@kernel.org>
-Cc:     linux-kbuild@vger.kernel.org, kernel-hardening@lists.openwall.com,
-        Emese Revfy <re.emese@gmail.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] kbuild: add -Wall to KBUILD_HOSTCXXFLAGS
-Message-ID: <202003251906.973AD868@keescook>
-References: <20200325031433.28223-1-masahiroy@kernel.org>
- <20200325031433.28223-2-masahiroy@kernel.org>
+        Wed, 25 Mar 2020 22:12:41 -0400
+Received: from mga14.intel.com ([192.55.52.115]:15386 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727560AbgCZCMl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Mar 2020 22:12:41 -0400
+IronPort-SDR: xNnx5/Kg62OXFyqtHJs2MiopOA6R7/ol0K22jZRSzvaRbMP3yoJBV2zvvRPKvAmcTjRe2OW+cK
+ PMC4Hmdxd+JQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Mar 2020 19:12:40 -0700
+IronPort-SDR: zqkx0+f/2/EY+63IZ2XidSntJ6hpqgyVyvr7HQgHtVL6PvIemjVyU5bwMxC73QHGcYIXxGJKRW
+ vfxvAvNYgKAA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,306,1580803200"; 
+   d="scan'208";a="238675450"
+Received: from taoli1-mobl.ccr.corp.intel.com (HELO [10.254.215.75]) ([10.254.215.75])
+  by fmsmga007.fm.intel.com with ESMTP; 25 Mar 2020 19:12:37 -0700
+Cc:     baolu.lu@linux.intel.com, Yi Liu <yi.l.liu@intel.com>,
+        "Tian, Kevin" <kevin.tian@intel.com>,
+        Raj Ashok <ashok.raj@intel.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Eric Auger <eric.auger@redhat.com>
+Subject: Re: [PATCH 03/10] iommu/ioasid: Introduce per set allocation APIs
+To:     Jacob Pan <jacob.jun.pan@linux.intel.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        iommu@lists.linux-foundation.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Jean-Philippe Brucker <jean-philippe@linaro.com>
+References: <1585158931-1825-1-git-send-email-jacob.jun.pan@linux.intel.com>
+ <1585158931-1825-4-git-send-email-jacob.jun.pan@linux.intel.com>
+From:   Lu Baolu <baolu.lu@linux.intel.com>
+Message-ID: <8abd6586-e110-1487-034b-c59e4275cae9@linux.intel.com>
+Date:   Thu, 26 Mar 2020 10:12:36 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200325031433.28223-2-masahiroy@kernel.org>
+In-Reply-To: <1585158931-1825-4-git-send-email-jacob.jun.pan@linux.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 25, 2020 at 12:14:32PM +0900, Masahiro Yamada wrote:
-> Add -Wall to catch more warnings for C++ host programs.
+On 2020/3/26 1:55, Jacob Pan wrote:
+> IOASID set defines a group of IDs that share the same token. The
+> ioasid_set concept helps to do permission checking among users as in the
+> current code.
 > 
-> When I submitted the previous version, the 0-day bot reported
-> -Wc++11-compat warnings for old GCC:
+> With guest SVA usage, each VM has its own IOASID set. More
+> functionalities are needed:
+> 1. Enforce quota, each guest may be assigned limited quota such that one
+> guest cannot abuse all the system resource.
+> 2. Stores IOASID mapping between guest and host IOASIDs
+> 3. Per set operations, e.g. free the entire set
 > 
->   HOSTCXX -fPIC scripts/gcc-plugins/latent_entropy_plugin.o
-> In file included from /usr/lib/gcc/x86_64-linux-gnu/4.8/plugin/include/tm.h:28:0,
->                  from scripts/gcc-plugins/gcc-common.h:15,
->                  from scripts/gcc-plugins/latent_entropy_plugin.c:78:
-> /usr/lib/gcc/x86_64-linux-gnu/4.8/plugin/include/config/elfos.h:102:21: warning: C++11 requires a space between string literal and macro [-Wc++11-compat]
->     fprintf ((FILE), "%s"HOST_WIDE_INT_PRINT_UNSIGNED"\n",\
->                      ^
-> /usr/lib/gcc/x86_64-linux-gnu/4.8/plugin/include/config/elfos.h:170:24: warning: C++11 requires a space between string literal and macro [-Wc++11-compat]
->        fprintf ((FILE), ","HOST_WIDE_INT_PRINT_UNSIGNED",%u\n",  \
->                         ^
-> In file included from /usr/lib/gcc/x86_64-linux-gnu/4.8/plugin/include/tm.h:42:0,
->                  from scripts/gcc-plugins/gcc-common.h:15,
->                  from scripts/gcc-plugins/latent_entropy_plugin.c:78:
-> /usr/lib/gcc/x86_64-linux-gnu/4.8/plugin/include/defaults.h:126:24: warning: C++11 requires a space between string literal and macro [-Wc++11-compat]
->        fprintf ((FILE), ","HOST_WIDE_INT_PRINT_UNSIGNED",%u\n",  \
->                         ^
+> For each ioasid_set token, a unique set ID is assigned. This makes
+> reference of the set and data lookup much easier to implement.
 > 
-> The source of the warnings is in the plugin headers, so we have no
-> control of it. I just suppressed them by adding -Wno-c++11-compat to
-> scripts/gcc-plugins/Makefile.
-> 
-> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
-
-Acked-by: Kees Cook <keescook@chromium.org>
-
--Kees
-
+> Signed-off-by: Liu Yi L <yi.l.liu@intel.com>
+> Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
 > ---
+>   drivers/iommu/ioasid.c | 147 +++++++++++++++++++++++++++++++++++++++++++++++++
+>   include/linux/ioasid.h |  13 +++++
+>   2 files changed, 160 insertions(+)
 > 
->  Makefile                     | 2 +-
->  scripts/gcc-plugins/Makefile | 2 +-
->  2 files changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/Makefile b/Makefile
-> index 3b57ccab367b..593d8f1bbe90 100644
-> --- a/Makefile
-> +++ b/Makefile
-> @@ -400,7 +400,7 @@ HOSTCXX      = g++
->  KBUILD_HOSTCFLAGS   := -Wall -Wmissing-prototypes -Wstrict-prototypes -O2 \
->  		-fomit-frame-pointer -std=gnu89 $(HOST_LFS_CFLAGS) \
->  		$(HOSTCFLAGS)
-> -KBUILD_HOSTCXXFLAGS := -O2 $(HOST_LFS_CFLAGS) $(HOSTCXXFLAGS)
-> +KBUILD_HOSTCXXFLAGS := -Wall -O2 $(HOST_LFS_CFLAGS) $(HOSTCXXFLAGS)
->  KBUILD_HOSTLDFLAGS  := $(HOST_LFS_LDFLAGS) $(HOSTLDFLAGS)
->  KBUILD_HOSTLDLIBS   := $(HOST_LFS_LIBS) $(HOSTLDLIBS)
->  
-> diff --git a/scripts/gcc-plugins/Makefile b/scripts/gcc-plugins/Makefile
-> index f2ee8bd7abc6..efff00959a9c 100644
-> --- a/scripts/gcc-plugins/Makefile
-> +++ b/scripts/gcc-plugins/Makefile
-> @@ -10,7 +10,7 @@ else
->    HOSTLIBS := hostcxxlibs
->    HOST_EXTRACXXFLAGS += -I$(GCC_PLUGINS_DIR)/include -I$(src) -std=gnu++98 -fno-rtti
->    HOST_EXTRACXXFLAGS += -fno-exceptions -fasynchronous-unwind-tables -ggdb
-> -  HOST_EXTRACXXFLAGS += -Wno-narrowing -Wno-unused-variable
-> +  HOST_EXTRACXXFLAGS += -Wno-narrowing -Wno-unused-variable -Wno-c++11-compat
->    export HOST_EXTRACXXFLAGS
->  endif
->  
-> -- 
-> 2.17.1
-> 
+> diff --git a/drivers/iommu/ioasid.c b/drivers/iommu/ioasid.c
+> index 4026e52855b9..27ee57f7079b 100644
+> --- a/drivers/iommu/ioasid.c
+> +++ b/drivers/iommu/ioasid.c
+> @@ -10,6 +10,25 @@
+>   #include <linux/spinlock.h>
+>   #include <linux/xarray.h>
+>   
+> +static DEFINE_XARRAY_ALLOC(ioasid_sets);
+> +/**
+> + * struct ioasid_set_data - Meta data about ioasid_set
+> + *
+> + * @token:	Unique to identify an IOASID set
+> + * @xa:		XArray to store subset ID and IOASID mapping
+> + * @size:	Max number of IOASIDs can be allocated within the set
+> + * @nr_ioasids	Number of IOASIDs allocated in the set
+> + * @sid		ID of the set
+> + */
+> +struct ioasid_set_data {
+> +	struct ioasid_set *token;
+> +	struct xarray xa;
+> +	int size;
+> +	int nr_ioasids;
+> +	int sid;
+> +	struct rcu_head rcu;
+> +};
+> +
+>   struct ioasid_data {
+>   	ioasid_t id;
+>   	struct ioasid_set *set;
+> @@ -388,6 +407,111 @@ void ioasid_free(ioasid_t ioasid)
+>   EXPORT_SYMBOL_GPL(ioasid_free);
+>   
+>   /**
+> + * ioasid_alloc_set - Allocate a set of IOASIDs
+> + * @token:	Unique token of the IOASID set
+> + * @quota:	Quota allowed in this set
+> + * @sid:	IOASID set ID to be assigned
+> + *
+> + * Return 0 upon success. Token will be stored internally for lookup,
+> + * IOASID allocation within the set and other per set operations will use
+> + * the @sid assigned.
+> + *
+> + */
+> +int ioasid_alloc_set(struct ioasid_set *token, ioasid_t quota, int *sid)
+> +{
+> +	struct ioasid_set_data *sdata;
+> +	ioasid_t id;
+> +	int ret = 0;
+> +
+> +	if (quota > ioasid_capacity_avail) {
+> +		pr_warn("Out of IOASID capacity! ask %d, avail %d\n",
+> +			quota, ioasid_capacity_avail);
+> +		return -ENOSPC;
+> +	}
+> +
+> +	sdata = kzalloc(sizeof(*sdata), GFP_KERNEL);
+> +	if (!sdata)
+> +		return -ENOMEM;
+> +
+> +	spin_lock(&ioasid_allocator_lock);
+> +
+> +	ret = xa_alloc(&ioasid_sets, &id, sdata,
+> +		       XA_LIMIT(0, ioasid_capacity_avail - quota),
+> +		       GFP_KERNEL);
+> +	if (ret) {
+> +		kfree(sdata);
+> +		goto error;
+> +	}
+> +
+> +	sdata->token = token;
+> +	sdata->size = quota;
+> +	sdata->sid = id;
+> +
+> +	/*
+> +	 * Set Xarray is used to store IDs within the set, get ready for
+> +	 * sub-set ID and system-wide IOASID allocation results.
+> +	 */
+> +	xa_init_flags(&sdata->xa, XA_FLAGS_ALLOC);
+> +
+> +	ioasid_capacity_avail -= quota;
+> +	*sid = id;
+> +
+> +error:
+> +	spin_unlock(&ioasid_allocator_lock);
+> +
+> +	return ret;
+> +}
+> +EXPORT_SYMBOL_GPL(ioasid_alloc_set);
+> +
+> +/**
+> + * ioasid_free_set - Free all IOASIDs within the set
+> + *
+> + * @sid:		The IOASID set ID to be freed
+> + * @destroy_set:	Whether to keep the set for further allocation.
+> + *			If true, the set will be destroyed.
+> + *
+> + * All IOASIDs allocated within the set will be freed upon return.
+> + */
+> +void ioasid_free_set(int sid, bool destroy_set)
+> +{
+> +	struct ioasid_set_data *sdata;
+> +	struct ioasid_data *entry;
+> +	unsigned long index;
+> +
+> +	spin_lock(&ioasid_allocator_lock);
+> +	sdata = xa_load(&ioasid_sets, sid);
+> +	if (!sdata) {
+> +		pr_err("No IOASID set found to free %d\n", sid);
+> +		goto done_unlock;
+> +	}
+> +
+> +	if (xa_empty(&sdata->xa)) {
+> +		pr_warn("No IOASIDs in the set %d\n", sdata->sid);
+> +		goto done_destroy;
+> +	}
+> +
+> +	/* Just a place holder for now */
+> +	xa_for_each(&sdata->xa, index, entry) {
+> +		/* Free from per sub-set pool */
+> +		xa_erase(&sdata->xa, index);
+> +	}
+> +
+> +done_destroy:
+> +	if (destroy_set) {
+> +		xa_erase(&ioasid_sets, sid);
+> +
+> +		/* Return the quota back to system pool */
+> +		ioasid_capacity_avail += sdata->size;
+> +		kfree_rcu(sdata, rcu);
+> +	}
+> +
+> +done_unlock:
+> +	spin_unlock(&ioasid_allocator_lock);
+> +}
+> +EXPORT_SYMBOL_GPL(ioasid_free_set);
+> +
+> +
+> +/**
+>    * ioasid_find - Find IOASID data
+>    * @set: the IOASID set
+>    * @ioasid: the IOASID to find
+> @@ -431,6 +555,29 @@ void *ioasid_find(struct ioasid_set *set, ioasid_t ioasid,
+>   }
+>   EXPORT_SYMBOL_GPL(ioasid_find);
+>   
+> +/**
+> + * ioasid_find_sid - Retrieve IOASID set ID from an ioasid
+> + *                   Caller must hold a reference to the set.
+> + *
+> + * @ioasid: IOASID associated with the set
+> + *
+> + * Return IOASID set ID or error
+> + */
+> +int ioasid_find_sid(ioasid_t ioasid)
+> +{
+> +	struct ioasid_data *ioasid_data;
+> +	int ret = 0;
+> +
+> +	spin_lock(&ioasid_allocator_lock);
+> +	ioasid_data = xa_load(&active_allocator->xa, ioasid);
+> +	ret = (ioasid_data) ? ioasid_data->sdata->sid : -ENOENT;
+> +
+> +	spin_unlock(&ioasid_allocator_lock);
+> +
+> +	return ret;
+> +}
+> +EXPORT_SYMBOL_GPL(ioasid_find_sid);
+> +
+>   MODULE_AUTHOR("Jean-Philippe Brucker <jean-philippe.brucker@arm.com>");
+>   MODULE_AUTHOR("Jacob Pan <jacob.jun.pan@linux.intel.com>");
+>   MODULE_DESCRIPTION("IO Address Space ID (IOASID) allocator");
+> diff --git a/include/linux/ioasid.h b/include/linux/ioasid.h
+> index 9711fa0dc357..be158e03c034 100644
+> --- a/include/linux/ioasid.h
+> +++ b/include/linux/ioasid.h
+> @@ -41,6 +41,9 @@ int ioasid_register_allocator(struct ioasid_allocator_ops *allocator);
+>   void ioasid_unregister_allocator(struct ioasid_allocator_ops *allocator);
+>   int ioasid_set_data(ioasid_t ioasid, void *data);
+>   void ioasid_install_capacity(ioasid_t total);
+> +int ioasid_alloc_set(struct ioasid_set *token, ioasid_t quota, int *sid);
+> +void ioasid_free_set(int sid, bool destroy_set);
+> +int ioasid_find_sid(ioasid_t ioasid);
+>   #else /* !CONFIG_IOASID */
+>   static inline ioasid_t ioasid_alloc(struct ioasid_set *set, ioasid_t min,
+>   				    ioasid_t max, void *private)
+> @@ -52,6 +55,15 @@ static inline void ioasid_free(ioasid_t ioasid)
+>   {
+>   }
+>   
+> +static inline int ioasid_alloc_set(struct ioasid_set *token, ioasid_t quota, int *sid)
+> +{
+> +	return -ENOTSUPP;
+> +}
+> +
+> +static inline void ioasid_free_set(int sid, bool destroy_set)
+> +{
+> +}
+> +
 
--- 
-Kees Cook
+static inline int ioasid_find_sid(ioasid_t ioasid)
+{
+	return INVALID_IOASID;
+}
+
+Best regards,
+baolu
+
+>   static inline void *ioasid_find(struct ioasid_set *set, ioasid_t ioasid,
+>   				bool (*getter)(void *))
+>   {
+> @@ -75,5 +87,6 @@ static inline int ioasid_set_data(ioasid_t ioasid, void *data)
+>   static inline void ioasid_install_capacity(ioasid_t total)
+>   {
+>   }
+> +
+>   #endif /* CONFIG_IOASID */
+>   #endif /* __LINUX_IOASID_H */
+> 
