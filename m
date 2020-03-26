@@ -8,62 +8,62 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D11E5C43331
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 01:47:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3537BC43331
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 01:47:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A349920714
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 01:47:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE03220714
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 01:47:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BDHKuu2J"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nM+vPiUZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727711AbgCZBrQ (ORCPT
+        id S1727697AbgCZBrQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Wed, 25 Mar 2020 21:47:16 -0400
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:43098 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727666AbgCZBrP (ORCPT
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:37175 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727561AbgCZBrP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 25 Mar 2020 21:47:15 -0400
-Received: by mail-qt1-f195.google.com with SMTP id a5so4031527qtw.10;
-        Wed, 25 Mar 2020 18:47:13 -0700 (PDT)
+Received: by mail-qk1-f196.google.com with SMTP id x3so4938641qki.4;
+        Wed, 25 Mar 2020 18:47:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=jQGw0+wDMXMHQyn5mWxU49obk4+l4lWYazhtCW7XAW0=;
-        b=BDHKuu2J7gseVH6tcFkPiJy/T9pX4UY/j7J/Kzl04VRhmw8t4V4127gNflvrDVF7QW
-         P/rMOa7l4cBB/LgaUwJRCNJJeSaQyBZAVZaoGsv1pc0NIUHPiYqo8ayet57dAY1VP7rb
-         jrN5aPY6HxPwVtg9a+pN+Hx0wHoeB22sQGSH7oFKup2f/3VErdn4QXso0Wou4/zjGApM
-         77/rJSOp8FPjZ0shGuIZMjox+5TArDkj32ofc7d1+I+iusgKR+PpWB8IMEQq5KUElbAD
-         UE1vhEhBLjXxMErAp81ELvHjlUlFBTVi2xJ/dVDPD5AfGhHoem1a6l7bU/5LJey4AZC6
-         G6iA==
+        bh=5wd/zw98nuWqyLvhS++Ejmu/Z/A9wzpD5MWi9/URyhg=;
+        b=nM+vPiUZo+ZJ+zg9ad54B1xME/CHKQOdSKXxe+WTl9fH4QMqfoob+QrnnD3wucPibP
+         Ggx4x0QhlyKKKbpcMKhdU3ndrzZ2kli4ocNSSwpbIh0kS3cyeCH3FhR+xAPjY4OlNlIa
+         EkVmUE684w9HOs9oty2GP9YHbsuWeQOdqeIFC6W+JJp2BCV/9YQpZcadewZWV/B2SVZ+
+         6dMCW/oaMoGNcr+lIGbGVFDYBOXnmNH8cb7DG8uvzYw9ONUPXAOrmHMzg2xBWOE6jp9Z
+         rQLQVUwvIRfhd1mqzjTfN2o/QVVvCFuGgUC4i7VC89HvN4ktwVeKGfvW424mbRSIlTSh
+         PACw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=jQGw0+wDMXMHQyn5mWxU49obk4+l4lWYazhtCW7XAW0=;
-        b=mlg6+61NTCAEpCS7MSb960iMrmcZRbzhdyPp42vnxPmUgCH8xDFARNxBkcM2Due76B
-         AIo6wJ9KiE0xWNk5PYoOfZfbAgQzJJCc7/4eDfkqw4yr2OWdeICCnx/z7+Rf70vK7CJH
-         mm58jf9QZrawZq81NIiN9pk4Nv6bHpVlzwdqQYNay3B2jv2ATpVwZzYqNy+FfxRksc8k
-         8s0CZUenJ4CxebimwpL+8gUZFJx+j4SNtJFkgCwdBrFIomNdHQ7pAg3NaKmFLoHsp/FT
-         RSlcMpuwurW5DcDg/s88KXjJocvotZomBFVyu9d+yuNTqTrqneW9VsG3SpsZ+/2yC/ev
-         Z99w==
-X-Gm-Message-State: ANhLgQ0ueNLCDzesqZpzvc+bJTUzRWG05XtfCwSnSXjHeVw94zUSIZx9
-        gTL6xYRB7rtKc51i6IFvTH0=
-X-Google-Smtp-Source: ADFU+vsnsYEHvnFA+FQgJGsj0JkfKg/uHMLKYKuSHMYm/4fcjbU4Lrxo7XIWXCfRqO1XIPW4vObP5w==
-X-Received: by 2002:ac8:3550:: with SMTP id z16mr5882265qtb.217.1585187232801;
-        Wed, 25 Mar 2020 18:47:12 -0700 (PDT)
+        bh=5wd/zw98nuWqyLvhS++Ejmu/Z/A9wzpD5MWi9/URyhg=;
+        b=JD9aJcsQWDLbUX+MGGm8ljmBqAC1yzHYxUj0sgNCJLLzJRFEYZLGuKBDljB6Zt1Min
+         zW8NBHhpqRsW28WZ9uJVrjzltQbMnCUxAKs1nzUdeJobRY4JQz1F3HT09Zr3+545p5mG
+         XTJvlxUgvkV8ycqvC9fcrkwAAS8AWLj3uK6tpvKBHt/6zt6GSS2bEK5p0rqsvxEsfdoM
+         SzgeVR4y8M7h3tb1snBgr2QbbC/dBMD6+eXWxZ+7XCF/abIE4gwzf1F6gugg4Rbq45uv
+         r250xksE8Ws//o0D2RZeVMy6pcLeDdEmOhuMKNltc6clwHeJBNz+8zcqzr5MZxBZKcte
+         2mmw==
+X-Gm-Message-State: ANhLgQ363caNDjEULqwQtyAhDGGrQfL21DugCW3txhCc3esiOpysM+BX
+        b+f3BXC5wWY1gOWOLEfLxkM=
+X-Google-Smtp-Source: ADFU+vs7JO1GzICkH0QesQ7atv64SQuGCyLZDOzXAUUEsEVpAMu19Xa6XMT3NFOuOX7f8n1lawo6QA==
+X-Received: by 2002:a37:4644:: with SMTP id t65mr4550054qka.239.1585187233634;
+        Wed, 25 Mar 2020 18:47:13 -0700 (PDT)
 Received: from localhost.localdomain (c-73-88-245-53.hsd1.tn.comcast.net. [73.88.245.53])
-        by smtp.gmail.com with ESMTPSA id h129sm463552qkf.54.2020.03.25.18.47.11
+        by smtp.gmail.com with ESMTPSA id h129sm463552qkf.54.2020.03.25.18.47.12
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Wed, 25 Mar 2020 18:47:12 -0700 (PDT)
+        Wed, 25 Mar 2020 18:47:13 -0700 (PDT)
 From:   frowand.list@gmail.com
 To:     Rob Herring <robh+dt@kernel.org>, pantelis.antoniou@konsulko.com
 Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         Geert Uytterhoeven <geert+renesas@glider.be>,
         Alan Tull <atull@kernel.org>
-Subject: [PATCH 1/2] of: gpio unittest kfree() wrong object
-Date:   Wed, 25 Mar 2020 20:45:30 -0500
-Message-Id: <1585187131-21642-2-git-send-email-frowand.list@gmail.com>
+Subject: [PATCH 2/2] of: some unittest overlays not untracked
+Date:   Wed, 25 Mar 2020 20:45:31 -0500
+Message-Id: <1585187131-21642-3-git-send-email-frowand.list@gmail.com>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <1585187131-21642-1-git-send-email-frowand.list@gmail.com>
 References: <1585187131-21642-1-git-send-email-frowand.list@gmail.com>
@@ -75,33 +75,129 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 From: Frank Rowand <frank.rowand@sony.com>
 
 kernel test robot reported "WARNING: held lock freed!" triggered by
-unittest_gpio_remove().  unittest_gpio_remove() was unexpectedly
-called due to an error in overlay tracking.  The remove had not
-been tested because the gpio overlay removal tests have not been
-implemented.
+unittest_gpio_remove(), which should not have been called because
+the related gpio overlay was not tracked.  Another overlay that
+was tracked had previously used the same id as the gpio overlay
+but had not been untracked when the overlay was removed.  Thus the
+clean up function of_unittest_destroy_tracked_overlays() incorrectly
+attempted to remove the reused overlay id.
 
-kfree() gdev instead of pdev.
+Patch contents:
 
-Fixes: f4056e705b2e ("of: unittest: add overlay gpio test to catch gpio hog problem")
+  - Create tracking related helper functions
+  - Change BUG() to WARN_ON() for overlay id related issues
+  - Add some additional error checking for valid overlay id values
+  - Add the missing overlay untrack
+  - update comment on expectation that overlay ids are assigned in
+    sequence
+
+Fixes: 492a22aceb75 ("of: unittest: overlay: Keep track of created overlays")
 Reported-by: kernel test robot <lkp@intel.com>
 Signed-off-by: Frank Rowand <frank.rowand@sony.com>
 ---
- drivers/of/unittest.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/of/unittest.c | 30 +++++++++++++++++++++++-------
+ 1 file changed, 23 insertions(+), 7 deletions(-)
 
 diff --git a/drivers/of/unittest.c b/drivers/of/unittest.c
-index 96ae8a762a9e..25911ad1ce99 100644
+index 25911ad1ce99..27f538f859a6 100644
 --- a/drivers/of/unittest.c
 +++ b/drivers/of/unittest.c
-@@ -122,7 +122,7 @@ static int unittest_gpio_remove(struct platform_device *pdev)
- 		gpiochip_remove(&gdev->chip);
+@@ -1689,19 +1689,27 @@ static const char *overlay_name_from_nr(int nr)
  
- 	platform_set_drvdata(pdev, NULL);
--	kfree(pdev);
-+	kfree(gdev);
+ static const char *bus_path = "/testcase-data/overlay-node/test-bus";
  
- 	return 0;
+-/* it is guaranteed that overlay ids are assigned in sequence */
++/* FIXME: it is NOT guaranteed that overlay ids are assigned in sequence */
++
+ #define MAX_UNITTEST_OVERLAYS	256
+ static unsigned long overlay_id_bits[BITS_TO_LONGS(MAX_UNITTEST_OVERLAYS)];
+ static int overlay_first_id = -1;
+ 
++static long of_unittest_overlay_tracked(int id)
++{
++	if (WARN_ON(id >= MAX_UNITTEST_OVERLAYS))
++		return 0;
++	return overlay_id_bits[BIT_WORD(id)] & BIT_MASK(id);
++}
++
+ static void of_unittest_track_overlay(int id)
+ {
+ 	if (overlay_first_id < 0)
+ 		overlay_first_id = id;
+ 	id -= overlay_first_id;
+ 
+-	/* we shouldn't need that many */
+-	BUG_ON(id >= MAX_UNITTEST_OVERLAYS);
++	if (WARN_ON(id >= MAX_UNITTEST_OVERLAYS))
++		return;
+ 	overlay_id_bits[BIT_WORD(id)] |= BIT_MASK(id);
  }
+ 
+@@ -1710,7 +1718,8 @@ static void of_unittest_untrack_overlay(int id)
+ 	if (overlay_first_id < 0)
+ 		return;
+ 	id -= overlay_first_id;
+-	BUG_ON(id >= MAX_UNITTEST_OVERLAYS);
++	if (WARN_ON(id >= MAX_UNITTEST_OVERLAYS))
++		return;
+ 	overlay_id_bits[BIT_WORD(id)] &= ~BIT_MASK(id);
+ }
+ 
+@@ -1726,7 +1735,7 @@ static void of_unittest_destroy_tracked_overlays(void)
+ 		defers = 0;
+ 		/* remove in reverse order */
+ 		for (id = MAX_UNITTEST_OVERLAYS - 1; id >= 0; id--) {
+-			if (!(overlay_id_bits[BIT_WORD(id)] & BIT_MASK(id)))
++			if (!of_unittest_overlay_tracked(id))
+ 				continue;
+ 
+ 			ovcs_id = id + overlay_first_id;
+@@ -1743,7 +1752,7 @@ static void of_unittest_destroy_tracked_overlays(void)
+ 				continue;
+ 			}
+ 
+-			overlay_id_bits[BIT_WORD(id)] &= ~BIT_MASK(id);
++			of_unittest_untrack_overlay(id);
+ 		}
+ 	} while (defers > 0);
+ }
+@@ -1804,7 +1813,7 @@ static int __init of_unittest_apply_revert_overlay_check(int overlay_nr,
+ 		int unittest_nr, int before, int after,
+ 		enum overlay_type ovtype)
+ {
+-	int ret, ovcs_id;
++	int ret, ovcs_id, save_id;
+ 
+ 	/* unittest device must be in before state */
+ 	if (of_unittest_device_exists(unittest_nr, ovtype) != before) {
+@@ -1832,6 +1841,7 @@ static int __init of_unittest_apply_revert_overlay_check(int overlay_nr,
+ 		return -EINVAL;
+ 	}
+ 
++	save_id = ovcs_id;
+ 	ret = of_overlay_remove(&ovcs_id);
+ 	if (ret != 0) {
+ 		unittest(0, "%s failed to be destroyed @\"%s\"\n",
+@@ -1839,6 +1849,7 @@ static int __init of_unittest_apply_revert_overlay_check(int overlay_nr,
+ 				unittest_path(unittest_nr, ovtype));
+ 		return ret;
+ 	}
++	of_unittest_untrack_overlay(save_id);
+ 
+ 	/* unittest device must be again in before state */
+ 	if (of_unittest_device_exists(unittest_nr, PDEV_OVERLAY) != before) {
+@@ -2528,6 +2539,11 @@ static void __init of_unittest_overlay_gpio(void)
+ 	 * Similar to installing a driver as a module, the
+ 	 * driver is registered after applying the overlays.
+ 	 *
++	 * The overlays are applied by overlay_data_apply()
++	 * instead of of_unittest_apply_overlay() so that they
++	 * will not be tracked.  Thus they will not be removed
++	 * by of_unittest_destroy_tracked_overlays().
++	 *
+ 	 * - apply overlay_gpio_01
+ 	 * - apply overlay_gpio_02a
+ 	 * - apply overlay_gpio_02b
 -- 
 Frank Rowand <frank.rowand@sony.com>
 
