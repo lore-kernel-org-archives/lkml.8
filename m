@@ -2,133 +2,250 @@ Return-Path: <SRS0=aGSP=5L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69C9CC43331
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 22:05:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49C5BC43331
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 22:06:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 411AC20714
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 22:05:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0FCC720719
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 22:06:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585260374;
+	bh=WdY/DM4Q5srCmWYCGqaxdKrarkgIB5A5+x1t8gIT+UY=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=kz4gqkoyYmkFMfhb8J6FN2kLU/kgscUvUlfX6M89lXrHrGMW2W/ej9SVa4LgCBNvq
+	 SOIgdqX0z0roGsjsrwl2zFzBPA4+7lbtDtLlC5NjBIW12JAKgLsyRHFCbvIvM5FbYu
+	 hYpxBxJqO76uEHk2VMy0xp6e4e9EiHFSQT6GxdBM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727650AbgCZWFk (ORCPT
+        id S1727560AbgCZWGM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 18:05:40 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:51048 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726363AbgCZWFk (ORCPT
+        Thu, 26 Mar 2020 18:06:12 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:42756 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726281AbgCZWGM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 18:05:40 -0400
-Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02QM4pYo003294;
-        Thu, 26 Mar 2020 18:05:22 -0400
-Received: from ppma02dal.us.ibm.com (a.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.10])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 300jeununj-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 26 Mar 2020 18:05:22 -0400
-Received: from pps.filterd (ppma02dal.us.ibm.com [127.0.0.1])
-        by ppma02dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 02QM3AUC020255;
-        Thu, 26 Mar 2020 22:05:21 GMT
-Received: from b01cxnp22036.gho.pok.ibm.com (b01cxnp22036.gho.pok.ibm.com [9.57.198.26])
-        by ppma02dal.us.ibm.com with ESMTP id 2ywaw2ra6v-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 26 Mar 2020 22:05:20 +0000
-Received: from b01ledav006.gho.pok.ibm.com (b01ledav006.gho.pok.ibm.com [9.57.199.111])
-        by b01cxnp22036.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 02QM5KIb11076308
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 26 Mar 2020 22:05:20 GMT
-Received: from b01ledav006.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 18E20AC311;
-        Thu, 26 Mar 2020 22:05:20 +0000 (GMT)
-Received: from b01ledav006.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 6BCBDAC2E7;
-        Thu, 26 Mar 2020 22:05:11 +0000 (GMT)
-Received: from LeoBras (unknown [9.85.162.45])
-        by b01ledav006.gho.pok.ibm.com (Postfix) with ESMTP;
-        Thu, 26 Mar 2020 22:05:10 +0000 (GMT)
-Message-ID: <f86aa1672b447bd09a214bc8682a70934dcee82f.camel@linux.ibm.com>
-Subject: Re: [RFC PATCH 1/1] ppc/smp: Replace unnecessary 'while' by 'if'
-From:   Leonardo Bras <leonardo@linux.ibm.com>
-To:     Paul Mackerras <paulus@ozlabs.org>
-Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Allison Randal <allison@lohutok.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Date:   Thu, 26 Mar 2020 19:05:03 -0300
-In-Reply-To: <20200326214005.GB9894@blackberry>
-References: <20200326203752.497029-1-leonardo@linux.ibm.com>
-         <20200326214005.GB9894@blackberry>
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-GTdlyedGwk3mGYQKKQZt"
-User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
+        Thu, 26 Mar 2020 18:06:12 -0400
+Received: by mail-io1-f68.google.com with SMTP id q128so7777297iof.9
+        for <linux-kernel@vger.kernel.org>; Thu, 26 Mar 2020 15:06:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linuxfoundation.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=eXMKLFOuig/lrxP0VVUXkgc9/EArNxSzfnhMuffijjs=;
+        b=V6ann6QcT5OZrlVlQ0m0HfuOpK+HG2vAx0XRSxqnqYUZAFEPnOdrYGOHu9JYcYM2JO
+         X/qOaM/Gx+gE/Nqog3CUZS7+XCufCbSbYGRq9Pa0vyuMCmWi8fNWSyzgokLTsSCDtRAq
+         KYwWzyi94K8pM32rWZTtD7jK4LxEB+3yn73lI=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=eXMKLFOuig/lrxP0VVUXkgc9/EArNxSzfnhMuffijjs=;
+        b=GiRuZzklk38haNoc+NeS5wkQWAFHunO5xKiKR0qojZoEJ7GPeO1z9LQ2A7sfDn9NuF
+         IcM9XxDjEQ4IBJO30SpSPg2VTGwbQfqe6kMWlm+11bpvQ/19iJ9T6YkLXTZMe8kO8lsX
+         aPAKiENiKP1ctpoo/5O3BMvycleK5q6yVgPIDOX9nYLDjzCmLuGyndBzZihxcNACbX2h
+         7H9gtsiYpJJzT4/ETu62b80fxWmLNCgXfpf6ZEkNkAcslqBJiPZr2NX/I2gi4UrYPje0
+         wnZs/123s+OLPv9oZ/01CPcpebuGD+gIwaLeHAN688kL5rsQOLanG6vJ8GZsW/QozVGl
+         lTcw==
+X-Gm-Message-State: ANhLgQ1w1QS3Q6T+nZQFq5a9o+bXvJOjY28B0Un+7i0z5FQkPb3OYy3W
+        4PJEhE9DH1czzh1274pC2Z4VZVISDvA=
+X-Google-Smtp-Source: ADFU+vvn0CBUAeH84a65C1q/ml3yPgrErF0qDzQEnjfnEEbzAdMPg5OeiGiOxOKeStzxa+QblkUkdw==
+X-Received: by 2002:a02:2a4a:: with SMTP id w71mr10005605jaw.75.1585260370579;
+        Thu, 26 Mar 2020 15:06:10 -0700 (PDT)
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net. [24.9.64.241])
+        by smtp.gmail.com with ESMTPSA id u5sm942481ion.51.2020.03.26.15.06.09
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 26 Mar 2020 15:06:10 -0700 (PDT)
+Subject: Re: [PATCH v2 3/3] media: vimc: deb: Add support for {RGB,BGR,GBR}888
+ bus formats on source pad
+To:     =?UTF-8?B?TsOtY29sYXMgRi4gUi4gQS4gUHJhZG8=?= 
+        <nfraprado@protonmail.com>, linux-media@vger.kernel.org
+Cc:     Helen Koike <helen.koike@collabora.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Hans Verkuil <hverkuil@xs4all.nl>,
+        linux-kernel@vger.kernel.org, lkcamp@lists.libreplanetbr.org,
+        Shuah Khan <skhan@linuxfoundation.org>
+References: <20200326214730.2449707-1-nfraprado@protonmail.com>
+ <20200326214730.2449707-4-nfraprado@protonmail.com>
+From:   Shuah Khan <skhan@linuxfoundation.org>
+Message-ID: <b5bc6ab8-274a-adc7-9d86-a91a1efb8805@linuxfoundation.org>
+Date:   Thu, 26 Mar 2020 16:06:08 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.645
- definitions=2020-03-26_13:2020-03-26,2020-03-26 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 malwarescore=0
- adultscore=0 phishscore=0 suspectscore=0 mlxlogscore=838 bulkscore=0
- lowpriorityscore=0 priorityscore=1501 impostorscore=0 spamscore=0
- clxscore=1011 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2003260160
+In-Reply-To: <20200326214730.2449707-4-nfraprado@protonmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 3/26/20 3:47 PM, Nícolas F. R. A. Prado wrote:
+> Add support for RGB888_*, BGR888_* and GBR888_* media bus formats on
+> the source pad of debayer subdevices.
+> 
+> Co-developed-by: Vitor Massaru Iha <vitor@massaru.org>
+> Signed-off-by: Vitor Massaru Iha <vitor@massaru.org>
+> Signed-off-by: Nícolas F. R. A. Prado <nfraprado@protonmail.com>
+> ---
+> 
+> Changes in v2:
+> - Change commit message to reflect v2 changes
+> - Rename variables
+> - Fix array formatting
+> - Add vimc_deb_is_src_code_valid function
+> - Add other BGR888 and RGB888 formats to debayer source pad supported
+>    formats
+> 
+>   drivers/media/platform/vimc/vimc-debayer.c | 61 +++++++++++++++++-----
+>   1 file changed, 49 insertions(+), 12 deletions(-)
+> 
+> diff --git a/drivers/media/platform/vimc/vimc-debayer.c b/drivers/media/platform/vimc/vimc-debayer.c
+> index baf6bf9f65b5..33a9bea770bc 100644
+> --- a/drivers/media/platform/vimc/vimc-debayer.c
+> +++ b/drivers/media/platform/vimc/vimc-debayer.c
+> @@ -51,6 +51,19 @@ static const struct v4l2_mbus_framefmt sink_fmt_default = {
+>   	.colorspace = V4L2_COLORSPACE_DEFAULT,
+>   };
+>   
+> +static const u32 vimc_deb_src_mbus_codes[] = {
+> +	MEDIA_BUS_FMT_GBR888_1X24,
+> +	MEDIA_BUS_FMT_BGR888_1X24,
+> +	MEDIA_BUS_FMT_BGR888_3X8,
+> +	MEDIA_BUS_FMT_RGB888_1X24,
+> +	MEDIA_BUS_FMT_RGB888_2X12_BE,
+> +	MEDIA_BUS_FMT_RGB888_2X12_LE,
+> +	MEDIA_BUS_FMT_RGB888_3X8,
+> +	MEDIA_BUS_FMT_RGB888_1X7X4_SPWG,
+> +	MEDIA_BUS_FMT_RGB888_1X7X4_JEIDA,
+> +	MEDIA_BUS_FMT_RGB888_1X32_PADHI,
+> +};
+> +
+>   static const struct vimc_deb_pix_map vimc_deb_pix_map_list[] = {
+>   	{
+>   		.code = MEDIA_BUS_FMT_SBGGR8_1X8,
+> @@ -125,6 +138,17 @@ static const struct vimc_deb_pix_map *vimc_deb_pix_map_by_code(u32 code)
+>   	return NULL;
+>   }
+>   
+> +static int vimc_deb_is_src_code_invalid(u32 code)
+> +{
+> +	unsigned int i;
+> +
+> +	for (i = 0; i < ARRAY_SIZE(vimc_deb_src_mbus_codes); i++)
+> +		if (vimc_deb_src_mbus_codes[i] == code)
+> +			return 0;
+> +
+> +	return -EINVAL;
+> +}
+> +
+>   static int vimc_deb_init_cfg(struct v4l2_subdev *sd,
+>   			     struct v4l2_subdev_pad_config *cfg)
+>   {
+> @@ -148,14 +172,11 @@ static int vimc_deb_enum_mbus_code(struct v4l2_subdev *sd,
+>   				   struct v4l2_subdev_pad_config *cfg,
+>   				   struct v4l2_subdev_mbus_code_enum *code)
+>   {
+> -	/* We only support one format for source pads */
+>   	if (VIMC_IS_SRC(code->pad)) {
+> -		struct vimc_deb_device *vdeb = v4l2_get_subdevdata(sd);
+> -
+> -		if (code->index)
+> +		if (code->index >= ARRAY_SIZE(vimc_deb_src_mbus_codes))
+>   			return -EINVAL;
+>   
+> -		code->code = vdeb->src_code;
+> +		code->code = vimc_deb_src_mbus_codes[code->index];
+>   	} else {
+>   		if (code->index >= ARRAY_SIZE(vimc_deb_pix_map_list))
+>   			return -EINVAL;
+> @@ -170,8 +191,6 @@ static int vimc_deb_enum_frame_size(struct v4l2_subdev *sd,
+>   				    struct v4l2_subdev_pad_config *cfg,
+>   				    struct v4l2_subdev_frame_size_enum *fse)
+>   {
+> -	struct vimc_deb_device *vdeb = v4l2_get_subdevdata(sd);
+> -
+>   	if (fse->index)
+>   		return -EINVAL;
+>   
+> @@ -181,7 +200,7 @@ static int vimc_deb_enum_frame_size(struct v4l2_subdev *sd,
+>   
+>   		if (!vpix)
+>   			return -EINVAL;
+> -	} else if (fse->code != vdeb->src_code) {
+> +	} else if (vimc_deb_is_src_code_invalid(fse->code)) {
+>   		return -EINVAL;
+>   	}
+>   
+> @@ -237,6 +256,7 @@ static int vimc_deb_set_fmt(struct v4l2_subdev *sd,
+>   {
+>   	struct vimc_deb_device *vdeb = v4l2_get_subdevdata(sd);
+>   	struct v4l2_mbus_framefmt *sink_fmt;
+> +	u32 *src_code;
+>   
+>   	if (fmt->which == V4L2_SUBDEV_FORMAT_ACTIVE) {
+>   		/* Do not change the format while stream is on */
+> @@ -244,8 +264,10 @@ static int vimc_deb_set_fmt(struct v4l2_subdev *sd,
+>   			return -EBUSY;
+>   
+>   		sink_fmt = &vdeb->sink_fmt;
+> +		src_code = &vdeb->src_code;
+>   	} else {
+>   		sink_fmt = v4l2_subdev_get_try_format(sd, cfg, 0);
+> +		src_code = &v4l2_subdev_get_try_format(sd, cfg, 1)->code;
+>   	}
+>   
+>   	/*
+> @@ -253,9 +275,14 @@ static int vimc_deb_set_fmt(struct v4l2_subdev *sd,
+>   	 * it is propagated from the sink
+>   	 */
+>   	if (VIMC_IS_SRC(fmt->pad)) {
+> +		u32 code = fmt->format.code;
+> +
+>   		fmt->format = *sink_fmt;
+> -		/* TODO: Add support for other formats */
+> -		fmt->format.code = vdeb->src_code;
+> +
+> +		if (!vimc_deb_is_src_code_invalid(code))
+> +			*src_code = code;
+> +
+> +		fmt->format.code = *src_code;
+>   	} else {
+>   		/* Set the new format in the sink pad */
+>   		vimc_deb_adjust_sink_fmt(&fmt->format);
+> @@ -291,11 +318,21 @@ static void vimc_deb_set_rgb_mbus_fmt_rgb888_1x24(struct vimc_deb_device *vdeb,
+>   						  unsigned int col,
+>   						  unsigned int rgb[3])
 
---=-GTdlyedGwk3mGYQKKQZt
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Change this to pass a pointer and size.
 
-On Fri, 2020-03-27 at 08:40 +1100, Paul Mackerras wrote:
-> On Thu, Mar 26, 2020 at 05:37:52PM -0300, Leonardo Bras wrote:
-> > spin_until_cond() will wait until nmi_ipi_busy =3D=3D false, and
-> > nmi_ipi_lock_start() does not seem to change nmi_ipi_busy, so there is
-> > no way this while will ever repeat.
-> >=20
-> > Replace this 'while' by an 'if', so it does not look like it can repeat=
-.
->=20
-> Nack, it can repeat.  The scenario is that cpu A is in this code,
-> inside spin_until_cond(); cpu B has previously set nmi_ipi_busy, and
-> cpu C is also waiting for nmi_ipi_busy to be cleared, like cpu A.
-> When cpu B clears nmi_ipi_busy, both cpu A and cpu C will see that and
-> will race inside nmi_ipi_lock_start().  One of them, say cpu C, will
-> take the lock and proceed to set nmi_ipi_busy and then call
-> nmi_ipi_unlock().  Then the other cpu (cpu A) will then take the lock
-> and return from nmi_ipi_lock_start() and find nmi_ipi_busy =3D=3D true.
-> At that point it needs to go through the while loop body once more.
->=20
-> Paul.
+>   {
+> +	const struct vimc_pix_map *vpix;
+>   	unsigned int i, index;
+>   
+> +	vpix = vimc_pix_map_by_code(vdeb->src_code);
+>   	index = VIMC_FRAME_INDEX(lin, col, vdeb->sink_fmt.width, 3);
+> -	for (i = 0; i < 3; i++)
+> -		vdeb->src_frame[index + i] = rgb[i];
+> +	for (i = 0; i < 3; i++) {
+> +		switch (vpix->pixelformat) {
+> +		case V4L2_PIX_FMT_RGB24:
+> +			vdeb->src_frame[index + i] = rgb[i];
+> +			break;
+> +		case V4L2_PIX_FMT_BGR24:
+> +			vdeb->src_frame[index + i] = rgb[2-i];
+> +			break;
+> +		}
+> +	}
+>   }
+>   
+>   static int vimc_deb_s_stream(struct v4l2_subdev *sd, int enable)
+> 
 
-Ok, got it.
-
-Thanks for explaining Paul!
-
---=-GTdlyedGwk3mGYQKKQZt
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEMdeUgIzgjf6YmUyOlQYWtz9SttQFAl59JxAACgkQlQYWtz9S
-ttTSdRAAttveHAUp1FuyI8cjRY3YA64LGrCYQ/GJZfAZljGAMyg78+BO1orF0p7b
-n+wYBDvQzqmLMgL5fUxeHG+CQzPX7unA/9n+rn7y4j+BVZbupjLHOnPXswoDda3Y
-Ycs5eFcEJ2d5Fs0psXJs/aOVtF6cd8uKNzdpk0tVGM3VMkoB509DtJqdkjY96n1g
-Oi7+eDKF+yUNIxmOjEeTaJwR9fSrzLRJhdnLLpOmR0/42QvOcGeh8q3p2qtCyfgo
-H6qEXVCq5E1nYLGuvJskD46vaRRXGZ29myCPzFDTUpaP5JMH36sUw4Ei6UjNgz8x
-DhXNqoqSKQ4/mP91fMXgfyBGER2l4f4dTn1fmkXRC6IAt49XIFzRTVHf7GxS3i2z
-jHQQHrkWmCnFeRjzbGZDZUeNU/XmNMXKponwH7Q2KvPmtiaG9YDsPnB5cKGfFyKN
-uOGH0fjq1yHDq3O4epERX+o+2qTxKcEUQOakkQ4chpJ6eC/EgM2KPEwadZdZ1BAf
-DQM4nCzsPQP+zptJO+LjJqDjZ1JXBwoeJYfPJBfB8pAw8VgvIXcnXVfHwoSH7WGf
-1JRmT583BLGzc3cqD89kyzZ2NbL+XEGNTWcEAEHzg6Nf+2t4AQQY3T7U4Cluj2Fl
-cXrBonqlCQPiR7ShKkwkYgQ7ZuYeuV1JdKsDjVXy85WBnxcAugI=
-=iE5j
------END PGP SIGNATURE-----
-
---=-GTdlyedGwk3mGYQKKQZt--
-
+thanks,
+-- Shuah
