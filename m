@@ -2,121 +2,211 @@ Return-Path: <SRS0=aGSP=5L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26EA3C2D0EE
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 13:28:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09177C2D0E8
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 13:29:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F20102073E
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 13:28:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OmakIFQf"
+	by mail.kernel.org (Postfix) with ESMTP id D5E3B20737
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 13:29:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727703AbgCZN2a (ORCPT
+        id S1727650AbgCZN3y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 09:28:30 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:36567 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727547AbgCZN2a (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 09:28:30 -0400
-Received: by mail-pl1-f194.google.com with SMTP id g2so2129819plo.3
-        for <linux-kernel@vger.kernel.org>; Thu, 26 Mar 2020 06:28:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=9VMBXAMCwL7qm/FeM98BMJBlfVZIr+3WQNOcgxok4qo=;
-        b=OmakIFQfxCrQNfd8PVzCQSci2n6MNA7igCtPFOFRNTpd5G1xLmXqSri+roMLEcbbpm
-         wcGG2/KlQKEL4Y4uNNLJ9eWMmVGrt2TL7ymP7PvOnI60QX9GEFMRaPOVOFWhQDi13/Ek
-         fdk9qkgfiZMG5u8RdMKGWbP0emmHEwEWFlZbIVOFdt1Cmc8jQGZXdzgaC03xkNRcDRcU
-         JzKun+rZD4iThoE1OhE406GpUQbLhZopSRbtmeZyZoXXT8YVa9207fBrayLquQHQ8KnD
-         9X6na/wlphZyexHgf4kx9Lebgy9a6Z7jhWhXcbF6zFFh6y71Wllrq1tJcNbwSrYrFWSs
-         l54g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=9VMBXAMCwL7qm/FeM98BMJBlfVZIr+3WQNOcgxok4qo=;
-        b=jIr+Tb1yNsdyyHHMvRmWsqL9AVWlEgCq+E3BQoiwejJlSjalil+unebhZYXALoyVR0
-         DtCfno2o0lZY5S/ieawoiUDw1dEnoeKDFcQStjrdGeoa97Hj/20Wu0XDC3MWemm/eXXp
-         HmRNMz09Z0xdM0PuPsiZZyilO8MKdriEIQKZExEPkocfq5mXJnxmXycriLT61GcgLVuT
-         cHBMmZ29r8ocY19TiPSIHyQcHmjPgavF4x/17f9L724zZO+zFh5nKKhSLMgpjC3wO05T
-         KBvcqOLZIWiYlTUvFEGouYO9cB3AdkolvEvSKb3zRxwnU1pNfZCQCnOAIc/Y0fHSV5lW
-         Y6tw==
-X-Gm-Message-State: ANhLgQ3R178wzfdI+n0Ek25+QDfimZFzEhQeGrgqcSBFPHQ0LuQw1zo4
-        7Lvnyh/pBOU3FiUShEPNf3Q=
-X-Google-Smtp-Source: ADFU+vtdj9jQbRa6FPxuUgqBp9Kg1xU6xet7VwDUriXEGjEXcCqo1jZ5IHInQG8rzICrdN7XUcTqUg==
-X-Received: by 2002:a17:902:aa4c:: with SMTP id c12mr8508293plr.168.1585229309170;
-        Thu, 26 Mar 2020 06:28:29 -0700 (PDT)
-Received: from simran-Inspiron-5558 ([2405:205:1208:56c8:8124:5e4b:ea06:7595])
-        by smtp.gmail.com with ESMTPSA id q19sm1672840pgn.93.2020.03.26.06.28.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 26 Mar 2020 06:28:28 -0700 (PDT)
-Date:   Thu, 26 Mar 2020 18:58:23 +0530
-From:   Simran Singhal <singhalsimran0@gmail.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
-        outreachy-kernel <outreachy-kernel@googlegroups.com>
-Subject: [PATCH] staging: rtl8723bs: hal: Remove NULL check before kfree
-Message-ID: <20200326132823.GA18625@simran-Inspiron-5558>
+        Thu, 26 Mar 2020 09:29:54 -0400
+Received: from mx2.suse.de ([195.135.220.15]:43694 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726318AbgCZN3x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Mar 2020 09:29:53 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 297B4AC77;
+        Thu, 26 Mar 2020 13:29:51 +0000 (UTC)
+Subject: Re: [RFC v2 1/2] kernel/sysctl: support setting sysctl parameters
+ from kernel command line
+To:     "Eric W. Biederman" <ebiederm@xmission.com>
+Cc:     Luis Chamberlain <mcgrof@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Iurii Zaikin <yzaikin@google.com>,
+        linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
+        linux-mm@kvack.org, Ivan Teterevkov <ivan.teterevkov@nutanix.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        "Guilherme G . Piccoli" <gpiccoli@canonical.com>
+References: <20200325120345.12946-1-vbabka@suse.cz>
+ <874kuc5b5z.fsf@x220.int.ebiederm.org>
+From:   Vlastimil Babka <vbabka@suse.cz>
+Message-ID: <a551765c-829c-187a-efe5-31caab1d3ac1@suse.cz>
+Date:   Thu, 26 Mar 2020 14:29:50 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <874kuc5b5z.fsf@x220.int.ebiederm.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-NULL check before kfree is unnecessary so remove it.
+On 3/25/20 11:20 PM, Eric W. Biederman wrote:
+> Vlastimil Babka <vbabka@suse.cz> writes:
+>> --- a/kernel/sysctl.c
+>> +++ b/kernel/sysctl.c
+>> @@ -1980,6 +1980,68 @@ int __init sysctl_init(void)
+>>  	return 0;
+>>  }
+>>  
+>> +/* Set sysctl value passed on kernel command line. */
+>> +int process_sysctl_arg(char *param, char *val,
+>> +			       const char *unused, void *arg)
+>> +{
+>> +	size_t count;
+>> +	char *remaining;
+>> +	int err;
+>> +	loff_t ppos = 0;
+>> +	struct ctl_table *ctl, *found = NULL;
+>> +
+>> +	if (strncmp(param, "sysctl.", sizeof("sysctl.") - 1))
+>> +		return 0;
+> 
+> Is there any way we can use a slash separated path.  I know
 
-The following Coccinelle script was used to detect this:
-@@ expression E; @@
-- if (E != NULL) { kfree(E); }
-+ kfree(E);
-@@ expression E; @@
-- if (E != NULL) { kfree(E); E = NULL; }
-+ kfree(E);
-+ E = NULL;
+We could, but as others explained, people and tools are used to the dot
+separation, so I think the only sensible options are supporting only dot, or
+both dot and slash.
 
-Signed-off-by: Simran Singhal <singhalsimran0@gmail.com>
----
- drivers/staging/rtl8723bs/hal/rtl8723bs_recv.c | 12 ++++--------
- 1 file changed, 4 insertions(+), 8 deletions(-)
+> in practice there are not any sysctl names that don't have
+> a '.' in them but why should we artifically limit ourselves?
 
-diff --git a/drivers/staging/rtl8723bs/hal/rtl8723bs_recv.c b/drivers/staging/rtl8723bs/hal/rtl8723bs_recv.c
-index 1e8b61443408..cf68193a167f 100644
---- a/drivers/staging/rtl8723bs/hal/rtl8723bs_recv.c
-+++ b/drivers/staging/rtl8723bs/hal/rtl8723bs_recv.c
-@@ -480,10 +480,8 @@ s32 rtl8723bs_init_recv_priv(struct adapter *padapter)
- 		precvpriv->precv_buf = NULL;
- 	}
- 
--	if (precvpriv->pallocated_recv_buf) {
--		kfree(precvpriv->pallocated_recv_buf);
--		precvpriv->pallocated_recv_buf = NULL;
--	}
-+	kfree(precvpriv->pallocated_recv_buf);
-+	precvpriv->pallocated_recv_buf = NULL;
- 
- exit:
- 	return res;
-@@ -518,8 +516,6 @@ void rtl8723bs_free_recv_priv(struct adapter *padapter)
- 		precvpriv->precv_buf = NULL;
- 	}
- 
--	if (precvpriv->pallocated_recv_buf) {
--		kfree(precvpriv->pallocated_recv_buf);
--		precvpriv->pallocated_recv_buf = NULL;
--	}
-+	kfree(precvpriv->pallocated_recv_buf);
-+	precvpriv->pallocated_recv_buf = NULL;
- }
--- 
-2.17.1
+Existing tools would probably break (or perhaps sysctl(8) is smarter than I
+think, dunno).
+
+> I guess as long as we don't mind not being able to set sysctls
+> that have a '.' in them it doesn't matter.
+
+Right.
+
+>> +
+>> +	param += sizeof("sysctl.") - 1;
+>> +
+>> +	remaining = param;
+>> +	ctl = &sysctl_base_table[0];
+>> +
+>> +	while(ctl->procname != 0) {
+>               ^^^^^^^^^^^^^^^^^^
+> 
+> Please either test "while(ctl->procname)" or
+> "while(ctl->procname != NULL)" testing against 0 makes it look like
+> procname is an integer.  The style in the kernel is to test against
+> NULL, to make it clear when something is a pointer.
+
+OK
+
+>> +		int len = strlen(ctl->procname);
+> 
+> You should have done "strchr(remaining)" and figured out if there is
+> another '.' and only compared up to that dot.  Probably skipping this
+> entry entirely if the two lengths don't match.
+
+That's also possible, but AFAICS my code works as intended, as I explained in a
+reply to Kees, and also below:
+
+>> +		if (strncmp(remaining, ctl->procname, len)) {
+>> +			ctl++;
+>> +			continue;
+>> +		}
+>> +		if (ctl->child) {
+>> +			if (remaining[len] == '.') {
+>> +				remaining += len + 1;
+>> +				ctl = ctl->child;
+>> +				continue;
+>> +			}
+>> +		} else {
+>> +			if (remaining[len] == '\0') {
+>> +				found = ctl;
+>> +				break;
+>> +			}
+>> +		}
+>> +		ctl++;
+> 
+> There should be exactly one match for a name a table.
+> If you get here the code should break, not continue on.
+
+If there existed e.g. both "vm.swap" and "vm.swappiness" options and user passed
+"vm.swappiness=10", but the "swap" ctl entry was encountered first, it will
+succeed the strncmp(), but then realize "swap" was just a prefix of what user
+specified (remaining[len] is not '\0') and hence continue serching for other
+matches.
+
+>> +	}
+>> +
+>> +	if (!found) {
+>> +		pr_warn("Unknown sysctl param '%s' on command line", param);
+>> +		return 0;
+>> +	}
+>> +
+>> +	if (!(found->mode & 0200)) {
+>> +		pr_warn("Cannot set sysctl '%s=%s' from command line - not writable",
+>> +			param, val);
+>> +		return 0;
+>> +	}
+>> +
+>> +	count = strlen(val);
+>> +	err = found->proc_handler(found, 1, val, &count, &ppos);
+>> +
+>> +	if (err)
+>> +		pr_warn("Error %d setting sysctl '%s=%s' from command line",
+>> +			err, param, val);
+>> +
+>> +	pr_debug("Set sysctl '%s=%s' from command line", param, val);
+>> +
+>> +	return 0;
+>> +}
+> 
+> You really should be able to have this code live in
+> fs/proc/proc_sysctl.c and utilize lookup_entry.
+> 
+> That should give you the ability to lookup any sysctl.  If
+> kernel/sysctl.c is compiled into the kernel proc_sysctl.c is compiled
+> into the kernel.  Systems that don't select CONFIG_PROC_SYSCTL won't
+> have any sysctl tables installed at all so they do not make sense to
+> consider or design for.
+
+I see. In fact one reason why I tried to avoid the proc stuff was your commit
+61a47c1ad3a4 ("sysctl: Remove the sysctl system call") and this part:
+
+> As this removes one of the few uses of the internal kernel mount
+> of proc I hope this allows for even more simplifications of the
+> proc filesystem.
+
+But if you now suggest using the kernel mount then sure, it I don't object make
+the code simpler and handle all sysctls.
+
+> Further it will be faster to lookup the sysctls using the code from
+> proc_sysctl.c as it constructs an rbtree of all of the entries in
+> a directory.  The code might as well take advantage of that for large
+> directories.
+> 
+> Arguably the main sysctl tables in kernel/sysctl.c should be split up so
+> that things are more localized and there is less global state exported
+> throughout the kernel.  I certainly don't want to discourage anyone from
+> doing that just so their sysctl can be used on the command line.
+
+Fair point.
+
+> Hmm.  There is a big gotcha in here and I think it should be mentioned.
+> This code only works because no one has done set_fs(KERNEL_DS).  Which
+> means this only works with strings that are kernel addresses essentially
+> by mistake.  A big fat comment documenting why it is safe to pass in
+> kernel addresses to a function that takes a "char __user*" pointer
+> would be very good.
+
+Thanks, didn't realize that.
+
+> Eric
+> 
 
