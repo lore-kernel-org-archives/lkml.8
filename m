@@ -2,132 +2,88 @@ Return-Path: <SRS0=aGSP=5L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 617EBC43331
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 05:32:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45105C2D0E7
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 05:34:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4154F206E6
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 05:32:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1BB90206E6
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 05:34:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727682AbgCZFcz (ORCPT
+        id S1726267AbgCZFeo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 01:32:55 -0400
-Received: from icp-osb-irony-out5.external.iinet.net.au ([203.59.1.221]:30174
-        "EHLO icp-osb-irony-out5.external.iinet.net.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727600AbgCZFcy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 01:32:54 -0400
-X-SMTP-MATCH: 0
-X-IronPort-Anti-Spam-Filtered: true
-X-IronPort-Anti-Spam-Result: =?us-ascii?q?A2A8BQBuO3xe/4G50HZmHAEBAQEBBwE?=
- =?us-ascii?q?BEQEEBAEBgWoEAQELAQGBdjGBYRIqhBqPZoESOIlniimHJAoBAQEBAQEBAQE?=
- =?us-ascii?q?bGQECBAEBhEQCgigkNwYOAhABAQEFAQEBAQEFAwFthQpYQgEMAYUUBiMEUhA?=
- =?us-ascii?q?YDQIYDgICRxAGE4V+JK4gfzMaAopOgQ4qAYwuGnmBB4FEA4E2c3OBBAGGV4J?=
- =?us-ascii?q?eBI1wgwOHDUWBAJcQgkaNMolXHY87A4whLaZbhg4jgVhNLgqDJ1AYjkKOPTc?=
- =?us-ascii?q?wgQYBAYQZiSVfAQE?=
-X-IPAS-Result: =?us-ascii?q?A2A8BQBuO3xe/4G50HZmHAEBAQEBBwEBEQEEBAEBgWoEA?=
- =?us-ascii?q?QELAQGBdjGBYRIqhBqPZoESOIlniimHJAoBAQEBAQEBAQEbGQECBAEBhEQCg?=
- =?us-ascii?q?igkNwYOAhABAQEFAQEBAQEFAwFthQpYQgEMAYUUBiMEUhAYDQIYDgICRxAGE?=
- =?us-ascii?q?4V+JK4gfzMaAopOgQ4qAYwuGnmBB4FEA4E2c3OBBAGGV4JeBI1wgwOHDUWBA?=
- =?us-ascii?q?JcQgkaNMolXHY87A4whLaZbhg4jgVhNLgqDJ1AYjkKOPTcwgQYBAYQZiSVfA?=
- =?us-ascii?q?QE?=
-X-IronPort-AV: E=Sophos;i="5.72,307,1580745600"; 
-   d="scan'208";a="304456561"
-Received: from unknown (HELO mickey.themaw.net) ([118.208.185.129])
-  by icp-osb-irony-out5.iinet.net.au with ESMTP; 26 Mar 2020 13:23:30 +0800
-Subject: [PATCH 3/4] vfs: check for autofs expiring dentry in
- follow_automount()
-From:   Ian Kent <raven@themaw.net>
-To:     Al Viro <viro@ZenIV.linux.org.uk>
-Cc:     autofs mailing list <autofs@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Kernel Mailing List <linux-kernel@vger.kernel.org>
-Date:   Thu, 26 Mar 2020 13:23:29 +0800
-Message-ID: <158520020932.5325.1998880625163566595.stgit@mickey.themaw.net>
-In-Reply-To: <158520019862.5325.7856909810909592388.stgit@mickey.themaw.net>
-References: <158520019862.5325.7856909810909592388.stgit@mickey.themaw.net>
-User-Agent: StGit/unknown-version
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+        Thu, 26 Mar 2020 01:34:44 -0400
+Received: from inva020.nxp.com ([92.121.34.13]:45978 "EHLO inva020.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725819AbgCZFeo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Mar 2020 01:34:44 -0400
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 328CE1A0809;
+        Thu, 26 Mar 2020 06:34:40 +0100 (CET)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 76FA41A0813;
+        Thu, 26 Mar 2020 06:34:34 +0100 (CET)
+Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 4451A40294;
+        Thu, 26 Mar 2020 13:34:27 +0800 (SGT)
+From:   Anson Huang <Anson.Huang@nxp.com>
+To:     rui.zhang@intel.com, daniel.lezcano@linaro.org,
+        amit.kucheria@verdurent.com, shawnguo@kernel.org,
+        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
+        linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Cc:     Linux-imx@nxp.com
+Subject: [PATCH] thermal: imx: Add missing of_node_put()
+Date:   Thu, 26 Mar 2020 13:27:25 +0800
+Message-Id: <1585200445-16461-1-git-send-email-Anson.Huang@nxp.com>
+X-Mailer: git-send-email 2.7.4
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-follow_automount() checks if a stat family system call path walk is
-being done on a positive dentry and and returns -EISDIR to indicate
-the dentry should be used as is without attempting an automount.
+After finishing using cpu node got from of_get_cpu_node(), of_node_put()
+needs to be called.
 
-But if autofs is expiring the dentry at the time it should be
-remounted following the expire.
-
-There are two cases, in the case of a "nobrowse" indirect autofs
-mount it would have been mounted on lookup anyway. In the case of
-a "browse" indirect or direct autofs mount re-mounting it will
-maintain the mount which is what user space would be expected.
-
-This will defer expiration of the mount which might lead to mounts
-unexpectedly remaining mounted under heavy stat activity but there's
-no other choice in order to maintain consistency for user space.
-
-Signed-off-by: Ian Kent <raven@themaw.net>
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 ---
- fs/autofs/root.c |   10 +++++++++-
- fs/namei.c       |   13 +++++++++++--
- 2 files changed, 20 insertions(+), 3 deletions(-)
+ drivers/thermal/imx_thermal.c | 10 +++++++---
+ 1 file changed, 7 insertions(+), 3 deletions(-)
 
-diff --git a/fs/autofs/root.c b/fs/autofs/root.c
-index a1c9c32e104f..308cc49aca1d 100644
---- a/fs/autofs/root.c
-+++ b/fs/autofs/root.c
-@@ -406,9 +406,17 @@ static int autofs_d_manage(const struct path *path, bool rcu_walk)
+diff --git a/drivers/thermal/imx_thermal.c b/drivers/thermal/imx_thermal.c
+index e761c9b..f7b970d 100644
+--- a/drivers/thermal/imx_thermal.c
++++ b/drivers/thermal/imx_thermal.c
+@@ -649,7 +649,7 @@ MODULE_DEVICE_TABLE(of, of_imx_thermal_match);
+ static int imx_thermal_register_legacy_cooling(struct imx_thermal_data *data)
+ {
+ 	struct device_node *np;
+-	int ret;
++	int ret = 0;
  
- 	/* Check for (possible) pending expire */
- 	if (ino->flags & AUTOFS_INF_WANT_EXPIRE) {
-+		/* dentry possibly going to be picked for expire,
-+		 * proceed to ref-walk mode.
-+		 */
- 		if (rcu_walk)
- 			return -ECHILD;
--		return 0;
-+
-+		/* ref-walk mode, return 1 so follow_automount()
-+		 * can to wait on the expire outcome and possibly
-+		 * attempt a re-mount.
-+		 */
-+		return 1;
+ 	data->policy = cpufreq_cpu_get(0);
+ 	if (!data->policy) {
+@@ -664,11 +664,15 @@ static int imx_thermal_register_legacy_cooling(struct imx_thermal_data *data)
+ 		if (IS_ERR(data->cdev)) {
+ 			ret = PTR_ERR(data->cdev);
+ 			cpufreq_cpu_put(data->policy);
+-			return ret;
++			goto put_node;
+ 		}
  	}
  
- 	/*
-diff --git a/fs/namei.c b/fs/namei.c
-index db6565c99825..34a03928d32d 100644
---- a/fs/namei.c
-+++ b/fs/namei.c
-@@ -1227,11 +1227,20 @@ static int follow_automount(struct path *path, struct nameidata *nd,
- 	 * mounted directory.  Also, autofs may mark negative dentries
- 	 * as being automount points.  These will need the attentions
- 	 * of the daemon to instantiate them before they can be used.
-+	 *
-+	 * Also if ->d_manage() returns 1 the dentry transit needs
-+	 * managing, for autofs it tells us the dentry might be expired,
-+	 * so proceed to ->d_automount().
- 	 */
- 	if (!(nd->flags & (LOOKUP_PARENT | LOOKUP_DIRECTORY |
- 			   LOOKUP_OPEN | LOOKUP_CREATE | LOOKUP_AUTOMOUNT)) &&
--	    path->dentry->d_inode)
--		return -EISDIR;
-+	    path->dentry->d_inode) {
-+		if (path->dentry->d_flags & DCACHE_MANAGE_TRANSIT) {
-+			if (!path->dentry->d_op->d_manage(path, false))
-+				return -EISDIR;
-+		} else
-+			return -EISDIR;
-+	}
+-	return 0;
++put_node:
++	if (np)
++		of_node_put(np);
++
++	return ret;
+ }
  
- 	nd->total_link_count++;
- 	if (nd->total_link_count >= 40)
+ static void imx_thermal_unregister_legacy_cooling(struct imx_thermal_data *data)
+-- 
+2.7.4
 
