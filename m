@@ -2,143 +2,109 @@ Return-Path: <SRS0=aGSP=5L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A131C43331
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 18:09:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1927C43331
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 18:11:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 70B3C20722
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 18:09:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E59220722
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 18:11:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="oxTllWop"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="juuAq0BV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728445AbgCZSJx (ORCPT
+        id S1727707AbgCZSLo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 14:09:53 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:40438 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726267AbgCZSJx (ORCPT
+        Thu, 26 Mar 2020 14:11:44 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:41091 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726163AbgCZSLn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 14:09:53 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 02QI9fkO005199;
-        Thu, 26 Mar 2020 13:09:41 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1585246181;
-        bh=p3uCdd3lNgStEmVbRoGU3tYob5tHrXuUe3dGhywOrXc=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=oxTllWopocVS+boJ3JwFLjfj7+B7KNkWnWw8YgaE1/SQv0c0QnjdnCkH705FazV7R
-         TzUrv+kqFB8IHVRP6nI68IeE5MeJJd5ArtvJbBzzK862KXr7G1Wgeo25yevhkuoeQP
-         UXyQy2H94/jn8WXIcWpg0S8Jz07hnbU0N1hAX+HQ=
-Received: from DLEE105.ent.ti.com (dlee105.ent.ti.com [157.170.170.35])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 02QI9fj9094474
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 26 Mar 2020 13:09:41 -0500
-Received: from DLEE102.ent.ti.com (157.170.170.32) by DLEE105.ent.ti.com
- (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 26
- Mar 2020 13:09:41 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE102.ent.ti.com
- (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Thu, 26 Mar 2020 13:09:41 -0500
-Received: from [10.250.86.212] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 02QI9eb5072144;
-        Thu, 26 Mar 2020 13:09:41 -0500
-Subject: Re: [PATCH 3/7] dt-bindings: remoteproc: Add bindings for R5F
- subsystem on TI K3 SoCs
-To:     Rob Herring <robh@kernel.org>
-CC:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Lokesh Vutla <lokeshvutla@ti.com>,
-        <linux-remoteproc@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20200324201819.23095-1-s-anna@ti.com>
- <20200324201819.23095-4-s-anna@ti.com> <20200326162802.GA32328@bogus>
-From:   Suman Anna <s-anna@ti.com>
-Message-ID: <90bae05e-dd47-5b71-07a7-5c3efd929143@ti.com>
-Date:   Thu, 26 Mar 2020 13:09:40 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Thu, 26 Mar 2020 14:11:43 -0400
+Received: by mail-ot1-f67.google.com with SMTP id f52so6868482otf.8
+        for <linux-kernel@vger.kernel.org>; Thu, 26 Mar 2020 11:11:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=7YhlPOmXcGnG8hY5/n4Rc4Ud1PlJc6DCiH3w8bH9jgA=;
+        b=juuAq0BVbd9bZbja9OFkt7uNZXVWqyGIDfbiA3QRhbibaBlkPutZInslij8oo0cC0t
+         ywFcJzot4Q3vZj5qBfeu58YWsGT/mzOPj8rSzcOfv6vvSMJqh22XMu96Zmo0WkQvHDG6
+         TqdSLzSm9UmHL0hJB6GxoatccMY3Ds5gvfmFdXRhl7ZGW+W5ZVSGv2zNSHYok8x8hZfw
+         Tmv/MBNch+h93NadU3AF4FafTacqqnVsgNj762ZXGc3xXvk8I7hwMvPK8Hr8KZy+x1/V
+         jSx3HBBtEPwU7QEGj70SpMHfqO6rsFKFuDuUvYJXSwfSjkmiRJmBHAdMNMbH3etGoyLM
+         VWpw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=7YhlPOmXcGnG8hY5/n4Rc4Ud1PlJc6DCiH3w8bH9jgA=;
+        b=qbutjE9FAplAONe8zxxtM5EOFMsWsdbXNLFCrQO2yx2W2n9Lb7UFeRY21QjVTG1glI
+         RLK+HBUGUpjyGF7sJS/4E5WlfGCyo+QOU5xfUEN+5e3KWQMrGLQ+NFqFVFTxl3t/PnS1
+         JnpmlEeFw9+B5X8DisiLInNSm/a5Mm+3Jz3XhIxMUxWV1iPYiKdozWqYkhOsW738GavE
+         Ey4RdXRcNzbM9J6xOCzo+T4AEtLXWKqv9QtT3sqHEqmxog8YlaIYfEd60KKwggftrWEa
+         hDo4LuyvkJ+PLnL4arMd3DK5ky1vVxNm/ywgWjlAqs12KlpXpraTKK+OvSdYxIrtkxSA
+         yWOg==
+X-Gm-Message-State: ANhLgQ3Sb7yvV0d7QzVh9RWh3c/8SNpHEryNa/6LzZ4Cm3VlFTP4z6lH
+        g6rvnzCt+CKjtczbCqDO7H44hCVvvVBu/HpE1R65xQ==
+X-Google-Smtp-Source: ADFU+vtnsrY0SvGGuyhyEDxG4HlKNc11UYt2YYt5XneIx9ZfoBUvmFOwrbpnjLWdDdtsGrZaES/vzsQyDppgAcomc0E=
+X-Received: by 2002:a4a:e217:: with SMTP id b23mr5959513oot.91.1585246302559;
+ Thu, 26 Mar 2020 11:11:42 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200326162802.GA32328@bogus>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <20200326172457.205493-1-saravanak@google.com>
+In-Reply-To: <20200326172457.205493-1-saravanak@google.com>
+From:   Saravana Kannan <saravanak@google.com>
+Date:   Thu, 26 Mar 2020 11:11:06 -0700
+Message-ID: <CAGETcx8YWthXcUrs8ii=O_MO8pepjpwcqzCshe0Dd8uhUUL79A@mail.gmail.com>
+Subject: Re: [PATCH v2] slimbus: core: Set fwnode for a device when setting of_node
+To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc:     John Stultz <john.stultz@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Android Kernel Team <kernel-team@android.com>,
+        alsa-devel@alsa-project.org, LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Rob,
+On Thu, Mar 26, 2020 at 10:25 AM Saravana Kannan <saravanak@google.com> wrote:
+>
+> When setting the of_node for a newly created device, also set the
+> fwnode. This allows fw_devlink feature to work for slimbus devices.
+>
+> Signed-off-by: Saravana Kannan <saravanak@google.com>
+> ---
+>  drivers/slimbus/core.c | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/slimbus/core.c b/drivers/slimbus/core.c
+> index 526e3215d8fe..44228a5b246d 100644
+> --- a/drivers/slimbus/core.c
+> +++ b/drivers/slimbus/core.c
+> @@ -163,8 +163,10 @@ static int slim_add_device(struct slim_controller *ctrl,
+>         INIT_LIST_HEAD(&sbdev->stream_list);
+>         spin_lock_init(&sbdev->stream_list_lock);
+>
+> -       if (node)
+> +       if (node) {
+>                 sbdev->dev.of_node = of_node_get(node);
+> +               sbdev->dev.fwnode = of_fwnode_handle(node);
+> +       }
+>
+>         dev_set_name(&sbdev->dev, "%x:%x:%x:%x",
+>                                   sbdev->e_addr.manf_id,
+> --
 
-On 3/26/20 11:28 AM, Rob Herring wrote:
-> On Tue, 24 Mar 2020 15:18:15 -0500, Suman Anna wrote:
->> The Texas Instruments K3 family of SoCs have one or more dual-core
->> Arm Cortex R5F processor subsystems/clusters (R5FSS). The clusters
->> can be split between multiple voltage domains as well. Add the device
->> tree bindings document for these R5F subsystem devices. These R5F
->> processors do not have an MMU, and so require fixed memory carveout
->> regions matching the firmware image addresses. The nodes require more
->> than one memory region, with the first memory region used for DMA
->> allocations at runtime. The remaining memory regions are reserved
->> and are used for the loading and running of the R5F remote processors.
->> The R5F processors can also optionally use any internal on-chip SRAM
->> memories either for executing code or using it as fast-access data.
->>
->> The added example illustrates the DT nodes for the single R5FSS device
->> present on K3 AM65x family of SoCs.
->>
->> Signed-off-by: Suman Anna <s-anna@ti.com>
->> ---
->> Hi Rob,
->>
->> The dt_bindings_check seems to throw couple of warnings around the
->> usage of ranges because the tooling is adding the #address-cells
->> and #size-cells of 1 by default, whereas our actual code uses 2.
->> No issues are found with dtbs_check.
->>
->> regards
->> Suman
->>
->>  .../bindings/remoteproc/ti,k3-r5f-rproc.yaml  | 338 ++++++++++++++++++
->>  1 file changed, 338 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/remoteproc/ti,k3-r5f-rproc.yaml
->>
-> 
-> My bot found errors running 'make dt_binding_check' on your patch:
-> 
-> Documentation/devicetree/bindings/remoteproc/ti,k3-r5f-rproc.example.dts:23.13-20: Warning (ranges_format): /example-0/reserved-memory:ranges: empty "ranges" property but its #address-cells (2) differs from /example-0 (1)
-> Documentation/devicetree/bindings/remoteproc/ti,k3-r5f-rproc.example.dts:23.13-20: Warning (ranges_format): /example-0/reserved-memory:ranges: empty "ranges" property but its #size-cells (2) differs from /example-0 (1)
-> Documentation/devicetree/bindings/remoteproc/ti,k3-r5f-rproc.example.dts:54.13-56.72: Warning (ranges_format): /example-0/interconnect@100000:ranges: "ranges" property has invalid length (72 bytes) (parent #address-cells == 1, child #address-cells == 2, #size-cells == 2)
+Hi Srinivas,
 
-I only saw these, because the generated example dts is using cell values
-of 1. I tried adding them using 2 in my example, but then it complains
-about duplicate properties. I do not know how to fix these though. Same
-with the K3 DSP bindings patches as well.
+Btw, I sent another patch that's on top of this patch.
+https://lore.kernel.org/lkml/20200326173457.29233-1-saravanak@google.com/T/#u
 
-> /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/remoteproc/ti,k3-r5f-rproc.example.dt.yaml: interconnect@100000: $nodename:0: 'interconnect@100000' does not match '^(bus|soc|axi|ahb|apb)(@[0-9a-f]+)?$'
-> /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/remoteproc/ti,k3-r5f-rproc.example.dt.yaml: interconnect@28380000: $nodename:0: 'interconnect@28380000' does not match '^(bus|soc|axi|ahb|apb)(@[0-9a-f]+)?$'
-> /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/remoteproc/ti,k3-r5f-rproc.example.dt.yaml: mcu-ram@41c00000: 'r5f-sram@0' does not match any of the regexes: '^([a-z]*-)?sram(-section)?@[a-f0-9]+$', 'pinctrl-[0-9]+'
-> /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/remoteproc/ti,k3-r5f-rproc.example.dt.yaml: mcu-ram@41c00000: $nodename:0: 'mcu-ram@41c00000' does not match '^sram(@.*)?'
+That fixes of_node_get() handling. Didn't notice it before I sent this
+patch. Otherwise would have made it a series. Sorry about the trouble.
 
-These node names are already upstream. Do I just update the example or
-the upstream dts also needs fixing?
-
-> 
-> See https://patchwork.ozlabs.org/patch/1260966
-> 
-> If you already ran 'make dt_binding_check' and didn't see the above
-> error(s), then make sure dt-schema is up to date:
-> 
-> pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
-
-Thanks, will upgrade my dt-schema.
-
-regards
-Suman
+Thanks,
+Saravana
