@@ -6,55 +6,58 @@ X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F91BC2D0E9
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 20:51:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7297BC2D0E5
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 20:51:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE4E02070A
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 20:51:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 38EC82070A
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 20:51:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=apertussolutions.com header.i=dpsmith@apertussolutions.com header.b="mdJeEgi7"
+	dkim=pass (1024-bit key) header.d=apertussolutions.com header.i=dpsmith@apertussolutions.com header.b="asnUUpYH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727650AbgCZUvD (ORCPT
+        id S1727655AbgCZUvX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 16:51:03 -0400
-Received: from sender4-of-o51.zoho.com ([136.143.188.51]:21150 "EHLO
+        Thu, 26 Mar 2020 16:51:23 -0400
+Received: from sender4-of-o51.zoho.com ([136.143.188.51]:21164 "EHLO
         sender4-of-o51.zoho.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726422AbgCZUvC (ORCPT
+        with ESMTP id S1726260AbgCZUvX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 16:51:02 -0400
-ARC-Seal: i=1; a=rsa-sha256; t=1585255833; cv=none; 
+        Thu, 26 Mar 2020 16:51:23 -0400
+ARC-Seal: i=1; a=rsa-sha256; t=1585255846; cv=none; 
         d=zohomail.com; s=zohoarc; 
-        b=HdeXMevfOIcsbuowu41x8Yr2L9uaB6M/xb4QdjgKqwbXa9sQcutx/elAdHpNvqq5aCJ7Z70X3ooYW6Hj4FAOlKwTPpHf85sCU40sA4+35QWPTXx69Ssjtx2FvekWJSjhgMZn15/n4spypvAUbKrR0nIa8XwnymXDio7+yS221N0=
+        b=goDa1uetFfJ/Wyf+q+JO9pKMxOsRxrD6LZ/iHPrzmwpd/EgpmR+JgqKXH3LccSKPqq5Zz0wEhQeFKrb47Cm5P9GUL4mbar/sx9Vjnxc/mYBY5vufmk6ql6IsM6WMmRdXnKimekJqqgN24rXRV4WozULkciWAVJ67MBFRpQy0Ws4=
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-        t=1585255833; h=Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:To; 
-        bh=tCEEChtqaTQC6wwZW6TB4bgghKsc5x69oKkMslX1HKE=; 
-        b=lf/Tco9I1L75zEfRm6envwaFIieccoygEzITqLUSm5tr+sD5NHjfRcbKRQ1ub2Ofr7sRIUWlRTnfknn7pYPBrfiDYF0ojaSIaqtzmza8XYJtN19UJzelqMtKWKsbDXPbYFWrpCPcCr/6l6/C3oTMkS/NH4ac+RbIU7DvA0FbVyk=
+        t=1585255846; h=Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:To; 
+        bh=aa4K/ZRFPJeoEuPOg/NZttGCne1mt+XFCAyeIhYYMt4=; 
+        b=SuEwoErdmvWfQpOFaNn0vRkKfdo2l2rca21Ielq7RyVwDGTJ0Iu9VZbxuByRMCQ5PE+cf4qth/jc1ZHTWepi8Tp913Ah70Zgxg1dHaYJCI1TDrLSMms82DewR+bDgaF6YhClGYJLXLXSr81+viyDTgEI8tFvReOp+4x1baO5OqU=
 ARC-Authentication-Results: i=1; mx.zohomail.com;
         dkim=pass  header.i=apertussolutions.com;
         spf=pass  smtp.mailfrom=dpsmith@apertussolutions.com;
         dmarc=pass header.from=<dpsmith@apertussolutions.com> header.from=<dpsmith@apertussolutions.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1585255833;
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1585255846;
         s=zoho; d=apertussolutions.com; i=dpsmith@apertussolutions.com;
         h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:In-Reply-To:Content-Type:Content-Transfer-Encoding;
-        bh=tCEEChtqaTQC6wwZW6TB4bgghKsc5x69oKkMslX1HKE=;
-        b=mdJeEgi7rHkiWipHS/sFroK97XTMRhOp8btgzH3pSN1eblcUz4ait9UEcAdqj05K
-        g5CAMCMgTLXx8LfysIZNrqnHcW5Txr19Xvn4fNpdPOXKZMVsy8FuhaZTuEgNhnFuK39
-        j4IxyAbH4YCUYUReNeeaAMANqFhx4wEda3LTvPTg=
+        bh=aa4K/ZRFPJeoEuPOg/NZttGCne1mt+XFCAyeIhYYMt4=;
+        b=asnUUpYHkDeALYCSzwdZFlnSzF8ikd3wUpiGeebw/2TnzDKDPi9WoliJRN6DebXV
+        p/rnVo28DcxyuU22ZRWxV+34kAmk70P13/KF/z6ZpqhIFZ/DAbTCox1brRnYq4x85TU
+        DqD07h22L/3GtZcbCRyvaIbfRz5utf1xHvTiqitA=
 Received: from [10.10.1.24] (c-73-129-47-101.hsd1.md.comcast.net [73.129.47.101]) by mx.zohomail.com
-        with SMTPS id 1585255832320978.2395265047164; Thu, 26 Mar 2020 13:50:32 -0700 (PDT)
+        with SMTPS id 1585255844877600.7985414883151; Thu, 26 Mar 2020 13:50:44 -0700 (PDT)
 Subject: Re: [RFC PATCH 00/12] x86: Trenchboot secure late launch Linux kernel
  support
-To:     Matthew Garrett <mjg59@google.com>,
-        Ross Philipson <ross.philipson@oracle.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+To:     Andy Lutomirski <luto@kernel.org>,
+        Matthew Garrett <mjg59@google.com>
+Cc:     Ross Philipson <ross.philipson@oracle.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
         the arch/x86 maintainers <x86@kernel.org>,
-        linux-doc@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
         Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
         "H. Peter Anvin" <hpa@zytor.com>, trenchboot-devel@googlegroups.com
 References: <20200325194317.526492-1-ross.philipson@oracle.com>
  <CACdnJut56WuqO=uLff0qy1Jp=C6f_sRxLpRBsrzb6byBsFYdCg@mail.gmail.com>
+ <CALCETrUshiLMHyf4DShgDRtCvnzUVyRQgmgCiudvhuhw05cDxg@mail.gmail.com>
 From:   "Daniel P. Smith" <dpsmith@apertussolutions.com>
-Message-ID: <bacbc25a-c724-d2fd-40bd-065799cd6195@apertussolutions.com>
+Message-ID: <6bb09673-292e-b056-3755-ffc51a1d6b59@apertussolutions.com>
 Autocrypt: addr=dpsmith@apertussolutions.com; prefer-encrypt=mutual; keydata=
  mQMuBFYrueARCACPWL3r2bCSI6TrkIE/aRzj4ksFYPzLkJbWLZGBRlv7HQLvs6i/K4y/b4fs
  JDq5eL4e9BdfdnZm/b+K+Gweyc0Px2poDWwKVTFFRgxKWq9R7McwNnvuZ4nyXJBVn7PTEn/Z
@@ -86,11 +89,11 @@ Autocrypt: addr=dpsmith@apertussolutions.com; prefer-encrypt=mutual; keydata=
  ke943EIUts9CmFAHt8cNPYOPRd20pPu4VFNBuT4fv9Ys0iv0XGCEP+sos7/pgJ3gV3pCOric
  p15jV4OIYQQYEQgACQUCViu54AIbDAAKCRBTc6WbYpR8Khu7AP9NJrBUn94C/3PeNbtQlEGZ
  NV46Mx5HF0P27lH3sFpNrwD/dVdZ5PCnHQYBZ287ZxVfVr4Zuxjo5yJbRjT93Hl0vMY=
-Date:   Thu, 26 Mar 2020 16:50:25 -0400
+Date:   Thu, 26 Mar 2020 16:50:43 -0400
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.6.0
 MIME-Version: 1.0
-In-Reply-To: <CACdnJut56WuqO=uLff0qy1Jp=C6f_sRxLpRBsrzb6byBsFYdCg@mail.gmail.com>
+In-Reply-To: <CALCETrUshiLMHyf4DShgDRtCvnzUVyRQgmgCiudvhuhw05cDxg@mail.gmail.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: quoted-printable
@@ -100,47 +103,73 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/25/20 4:29 PM, Matthew Garrett wrote:
-> On Wed, Mar 25, 2020 at 12:43 PM Ross Philipson
-> <ross.philipson@oracle.com> wrote:
->> To enable the kernel to be launched by GETSEC or SKINIT, a stub must be
->> built into the setup section of the compressed kernel to handle the
->> specific state that the late launch process leaves the BSP. This is a
->> lot like the EFI stub that is found in the same area. Also this stub
->> must measure everything that is going to be used as early as possible.
->> This stub code and subsequent code must also deal with the specific
->> state that the late launch leaves the APs in.
+On 3/25/20 6:51 PM, Andy Lutomirski wrote:
+> On Wed, Mar 25, 2020 at 1:29 PM Matthew Garrett <mjg59@google.com> wrote:
+>>
+>> On Wed, Mar 25, 2020 at 12:43 PM Ross Philipson
+>> <ross.philipson@oracle.com> wrote:
+>>> To enable the kernel to be launched by GETSEC or SKINIT, a stub must be
+>>> built into the setup section of the compressed kernel to handle the
+>>> specific state that the late launch process leaves the BSP. This is a
+>>> lot like the EFI stub that is found in the same area. Also this stub
+>>> must measure everything that is going to be used as early as possible.
+>>> This stub code and subsequent code must also deal with the specific
+>>> state that the late launch leaves the APs in.
+>>
+>> How does this integrate with the EFI entry point? That's the expected
+>> entry point on most modern x86. What's calling ExitBootServices() in
+>> this flow, and does the secure launch have to occur after it? It'd be
+>> a lot easier if you could still use the firmware's TPM code rather
+>> than carrying yet another copy.
 >=20
-> How does this integrate with the EFI entry point? That's the expected
-> entry point on most modern x86. What's calling ExitBootServices() in
-> this flow, and does the secure launch have to occur after it? It'd be
-> a lot easier if you could still use the firmware's TPM code rather
-> than carrying yet another copy.
+> I was wondering why the bootloader was involved at all.  In other
+> words, could you instead hand off control to the kernel just like
+> normal and have the kernel itself (in normal code, the EFI stub, or
+> wherever it makes sense) do the DRTM launch all by itself?  This would
+> avoid needing to patch bootloaders, to implement this specially for
+> QEMU -kernel, to get the exact right buy-in from all the cloud
+> vendors, etc.  It would also give you more flexibility to evolve
+> exactly what configuration maps to exactly what PCRs in the future.
+>=20
 
+Partly this is driven by the fact that one of the goals for the
+TrenchBoot project is about more universal/unified, cross open source
+project adoption of Dynamic Launch. Another aspect is that initiating a
+Dynamic Launch requires additional file(s) to be loaded, the platform to
+be put into a quiescent state, and the invocation of the SENTER/SKINIT
+instruction can be thought of as a soft reset of the CPU that on Intel
+even results in the CPU being in a different mode (SMX) which has a
+subtle change to its behavior. In the TCG Dynamic Launch design, the
+component responsible for this loading, preparing, and Dynamic Launch
+Instruction invocation is referred to as the Preamble and IMHO the best
+time for dealing with such a disruptive behavior caused by invoking the
+instruction is at the boot boundary. It also makes for a good transition
+point to enable switching between kernels in control of the system
+whereby the integrity will be establish by the hardware instead of the
+kernel (UEFI, GRUB, Linux, etc.) that loaded it. I think what helps
+address your concern is that one of the next items on the roadmap is to
+extend kexec to be able to perform the Preamble. As I just mentioned,
+this provides a clean way to transition for one Linux kernel that may or
+may not have been started via a Dynamic Launch could relaunch itself,
+launch a new Linux kernel, or even launch a non-Linux kernel that is
+Dynamic Launch aware.
 
-It is not part of the EFI entry point as we are not entering the kernel
-from EFI but I will address that further in my response to Andy. The
-expectation is that if you are on an UEFI platform then EBS should have
-already been called. With respect to using the firmware's TPM code, one
-of the purposes of a TCG Dynamic Launch is to remove the firmware from
-the code being trusted in making the integrity measurement of the
-kernel. I trust the firmware to initialize the hardware because I have
-to and it does give a trust chain, aka the SRTM, that can attest to what
-was used during that process. When the OS kernel is being started that
-trust chain has become weak (or even broken). I want a new trust chain
-that can provide better footing for asserting the integrity of the
-kernel and this is what Dynamic Launch gives us. I would like to think I
-did a fair job explaining this at LSS last fall[1][2] and would
-recommend those that are curious to review the slides/watch the
-presentation.
+As for controlling which PCRs are used, the ability to control that is
+actually quite limited. The CPU will always put its first measurement
+into PCR 17 and then next set of measurement will differ depending on
+whether you are on Intel or AMD. With Intel, the Intel provided binary
+blob called the ACM has a fixed measurement policy it uses to place
+measurements into PCRs 17 and 18. On AMD they left their ACM equivalent
+as an exercise for the implementer (for which we have one in
+development) which give us control over the measurements that it takes.
+Then you have to consider the properties of the DRTM PCRs, 17-22, where
+PCRs 17, 18, and 19 are the only ones that cannot be reset after the
+DRTM event. Where as PCRs 20, 21, 22 can be reset by Locality 2, the
+highest locality for which the kernel will be able to request/access.
+
+I hope this helps and if you have any other questions concerns I would
+be glad to answer them.
 
 V/r,
 Daniel P. Smith
-
-[1]
-https://lssna19.sched.com/event/RHb0/trenchboot-how-to-nicely-boot-system-w=
-ith-intel-txt-and-amd-svm-daniel-kiper-oracle-daniel-smith-apertus-solution=
-s
-[2] https://youtu.be/DbpCU9iSi4g
-
 
