@@ -2,112 +2,178 @@ Return-Path: <SRS0=aGSP=5L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E99FFC43331
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 00:28:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C828FC2D0E7
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 00:36:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A9EED20719
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 00:28:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C8162082E
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 00:36:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UnIsEK0k"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Ac9RTNti"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727575AbgCZA2J (ORCPT
+        id S1727575AbgCZAgp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 20:28:09 -0400
-Received: from us-smtp-delivery-74.mimecast.com ([63.128.21.74]:49364 "EHLO
-        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727537AbgCZA2J (ORCPT
+        Wed, 25 Mar 2020 20:36:45 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:39429 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727537AbgCZAgp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 20:28:09 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1585182488;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=SDXVjwabGcLnnuvHuXD+2C6fjzzt3JFDASzYAhuMkEg=;
-        b=UnIsEK0kpVT2PVwowl+OmW0hNq3NIMNXRpP75dX+eGFs3NtXGl/vSDtHlJeT6LFY0Rp0Xt
-        XDrNx6wFtEpZdJYoX9a4LzFBUJY3bRIOt1np2ve21xWtTvywVzfEGgyHiKZ4V07nnxeerO
-        /OD4tuZ3rU3ZzOhBBXN9r8lWB/u+LKg=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-314-o9laSwEnPfCue4lp289TLQ-1; Wed, 25 Mar 2020 20:28:06 -0400
-X-MC-Unique: o9laSwEnPfCue4lp289TLQ-1
-Received: by mail-wm1-f71.google.com with SMTP id f207so1688542wme.6
-        for <linux-kernel@vger.kernel.org>; Wed, 25 Mar 2020 17:28:06 -0700 (PDT)
+        Wed, 25 Mar 2020 20:36:45 -0400
+Received: by mail-pf1-f196.google.com with SMTP id d25so1905503pfn.6
+        for <linux-kernel@vger.kernel.org>; Wed, 25 Mar 2020 17:36:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=Ru7Xg8oyZNAOPgD4TDit2eFp41YNY/vd+RoiLDWH7AM=;
+        b=Ac9RTNtiGmUz73N34b35nfes/bBdr3vlwfZxKjhL95F8rCEqK8UT3pzhYn9RASR30g
+         hW3hIeZMy9TuCGS3K7ooXw5ZzbKirrmDoqKSsZKMpeA/kA1U/o13cvhtgO38tLz/uCJx
+         15aUZmVzwF3l44aKu5/jg76hOlzcanvSnBSkWW73wY0viiHTKRty+6W4DBvqsl+BO0og
+         MVcWXPUoGkRecR2d4c1Mi+68SYFg9qf6u0Muz1xqZ2zwve4aJhS4Mnew8lcRznl/6YUo
+         7BRxb6zFXP71xEt5JQnf7AAg7wK0gqargU6q4dXY7zeiUEa5Yg9qIzH2FXWTDXpZvACN
+         J9NQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=SDXVjwabGcLnnuvHuXD+2C6fjzzt3JFDASzYAhuMkEg=;
-        b=uF4PvESbpmAKJMSW+SgEu2PMJfw0VqdEvMxv8Ls87z9cwQhe9nHdLzoy2oHZHWAyvb
-         ZwIUgKjt7ItH9sMm4oIvSih9QTC6hO7IBjgZUfLJp7GurmjmjybCrxzoOCUjtKNBELm7
-         KxKH/IOFfbEO+ecGPMNqaT8NWZlIe4cOVGc9bcf1zSsywomrQy44SMLIoMuKDVJi3x0m
-         QkakRTEOgzqJljo43zQNH+7POhBx0Xu3urcoKfxsU5h6MJM0CeZB5R1qq5E03QS1m6iB
-         HnroXaXge9uCuD/u/x45GCrn4TFCH/XVwMQxRniJgqLsDmJMtr0wdpQ6otclYGTl+/oj
-         QIpQ==
-X-Gm-Message-State: ANhLgQ3mqwE66K0uif+Zl+ZdIfA9BdjTNsZL53kujsfAZPlbn8HF9WKF
-        ZgliLK+4EEYEn3ccGYAX5sThEM5+Ftw73KrRFeVJSZAQlj2V9OQLPIOy4k7ps9KDt7RgptY1zsQ
-        PwbmXFUw4BFPZuIdvyqLLnhDY
-X-Received: by 2002:a1c:cc0a:: with SMTP id h10mr186281wmb.127.1585182485154;
-        Wed, 25 Mar 2020 17:28:05 -0700 (PDT)
-X-Google-Smtp-Source: ADFU+vtAeCtfvyg1e/6on18f0iRgwGs0bFCeegTp5Koi0KhHlOdFq4kOD9JbFWu4AHOeYtV60i0H1Q==
-X-Received: by 2002:a1c:cc0a:: with SMTP id h10mr186264wmb.127.1585182484845;
-        Wed, 25 Mar 2020 17:28:04 -0700 (PDT)
-Received: from ?IPv6:2001:b07:6468:f312:e4f4:3c00:2b79:d6dc? ([2001:b07:6468:f312:e4f4:3c00:2b79:d6dc])
-        by smtp.gmail.com with ESMTPSA id b82sm972243wmb.46.2020.03.25.17.28.03
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 25 Mar 2020 17:28:04 -0700 (PDT)
-Subject: Re: [PATCH] KVM: LAPIC: Also cancel preemption timer when disarm
- LAPIC timer
-To:     Wanpeng Li <kernellwp@gmail.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>, kvm <kvm@vger.kernel.org>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>
-References: <1585031530-19823-1-git-send-email-wanpengli@tencent.com>
- <708f1914-be5e-91a0-2fdf-8d34b78ca7da@redhat.com>
- <CANRm+CwGT4oU_CcpRcDhS992htXdP4rcO6QqkA1CyryUJbE6Ug@mail.gmail.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <5582f554-5ae9-4cb9-d8e9-f1ff57fca35c@redhat.com>
-Date:   Thu, 26 Mar 2020 01:28:03 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=Ru7Xg8oyZNAOPgD4TDit2eFp41YNY/vd+RoiLDWH7AM=;
+        b=swDm13s6ZuVuMloFy/dTcH7PYNsgp2HaWRfwSa/LGmZeShRyebJn4Hf7TlYBtpMtC2
+         0LsJ98reKPzh2u/jaQqzf3oFhsdGmvW7FF9reynfWozjJx2ctSS+DLJvLWZxqhhu1Bgz
+         PSubKiuK7j/j9kOglo+hWFCPP2E468kcvqBY4JNDw7hDbeV2b7elNkTpMrikQ1M3BwW6
+         s7U+gjRZ0syhHs8jWAwiTP5prm0BuBIsVFCyDoVHsA0kdA3rbXj9JYBYsWtnjafOc4U8
+         l3l10toPG8eKKLcnkJKmoa+nKwhRxwhUXnrCdb8ED+AVGFqr1oNpNxbUpjzqqXXAbX91
+         8HeQ==
+X-Gm-Message-State: ANhLgQ2C8fCGQ5yAeEmEjAgncHFEE4iwnaKl5xqarP/Hq/dzzFKzx4Ck
+        FoyyOfU/woIwSUxn649mUsaLQA==
+X-Google-Smtp-Source: ADFU+vuQ00w/IlwtTGRW/NqKJ7itCRhCZTwZmHq9FxET/6XEhNyLBVYxZZmcySH+nXeOAmRDGbAj7w==
+X-Received: by 2002:a63:68f:: with SMTP id 137mr5929568pgg.348.1585183003888;
+        Wed, 25 Mar 2020 17:36:43 -0700 (PDT)
+Received: from minitux (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id g7sm338358pjl.17.2020.03.25.17.36.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 25 Mar 2020 17:36:43 -0700 (PDT)
+Date:   Wed, 25 Mar 2020 17:36:40 -0700
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>, Andy Gross <agross@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        DTML <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] arm64: dts: qcom: sdm845-mtp: Relocate remoteproc
+ firmware
+Message-ID: <20200326003640.GG119913@minitux>
+References: <20200302020757.551483-1-bjorn.andersson@linaro.org>
+ <CAK8P3a1QZbpYV8juTb31-CXQMVF==qFjJdRd064Md_rw5V7Vnw@mail.gmail.com>
+ <CAOCk7NpuC3J2EoOrkYQjjqc-DpTgYBdEwQk762v-7L7eki3RPg@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <CANRm+CwGT4oU_CcpRcDhS992htXdP4rcO6QqkA1CyryUJbE6Ug@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAOCk7NpuC3J2EoOrkYQjjqc-DpTgYBdEwQk762v-7L7eki3RPg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 26/03/20 01:20, Wanpeng Li wrote:
->> There are a few other occurrences of hrtimer_cancel, and all of them
->> probably have a similar issue.  What about adding a cancel_apic_timer
-> Other places are a little different, here we just disarm the timer,
-> other places we will restart the timer just after the disarm except
-> the vCPU reset (fixed in commit 95c065400a1 (KVM: VMX: Stop the
-> preemption timer during vCPU reset)), the restart will override
-> vmx->hv_deadline_tsc. What do you think? I can do it if introduce
-> cancel_apic_timer() is still better.
+On Wed 25 Mar 14:54 PDT 2020, Jeffrey Hugo wrote:
 
-At least start_apic_timer() would benefit from adding hrtimer_cancel(),
-removing it from kvm_set_lapic_tscdeadline_msr and kvm_lapic_reg_write.
- But you're right that it doesn't benefit from a cancel_apic_timer(),
-because ultimately they either update the preemption timer or cancel it
-in start_sw_timer.  So I'll apply your patch and send a cleanup myself
-for start_apic_timer.
+> On Wed, Mar 25, 2020 at 3:13 PM Arnd Bergmann <arnd@arndb.de> wrote:
+> >
+> > On Mon, Mar 2, 2020 at 3:09 AM Bjorn Andersson
+> > <bjorn.andersson@linaro.org> wrote:
+> > >
+> > > Update the firmware-name of the remoteproc nodes to mimic the firmware
+> > > structure on other 845 devices.
+> > >
+> > > Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> > > ---
+> > >  arch/arm64/boot/dts/qcom/sdm845-mtp.dts | 7 +++++++
+> > >  1 file changed, 7 insertions(+)
+> >
+> > Hi Bjorn,
+> >
+> > Sorry for the late reply, I only came across this one while going
+> > through the pull requests
+> > that we had failed to pick up earlier.
+> >
+> > I really dislike the idea of hardcoding a firmware name in the
+> > devicetree, we had long
+> > discussions about this a few years ago and basically concluded that the firmware
+> > name needs to be generated by the driver after identifying the hardware itself.
+> >
+> > The problem is that the firmware generally needs to match both the device driver
+> > and the hardware, so when there is a firmware update that changes the behavior
+> > (intentionally or not) in a way the driver needs to know about, then
+> > the driver should
+> > be able to request a particular firmware file based on information
+> > that the owner
+> > of the dtb may not have.
+> 
+> Interesting, this intersects some work I plan on doing.
+> 
+> What level information did this discussion assume that the device
+> driver had?  Do you have a reference to the discussion handy?
+> 
+> Please correct me if I am wrong, but this seems to assume that for
+> device X, there is one firmware at a specific version that the driver
+> is then knowledgeable about, and the driver can query the device
+> hardware in some way to determine what is appropriate.  It seems like
+> this assumption is believed to hold true, no matter what system X is
+> included in.
+> 
+> I think we have the problem where likely impossible that the driver
+> will know what firmware is valid.
+> 
+> Qualcomm, for better or worse, has a signing process for their images.
+> This establishes a root a trust which is enforced by hardware.  For
+> example, the Modem subsystem (the part of the SoC that talks to cell
+> towers and such) will not run an image which is not properly signed.
+> The valid signature is burned into the chip.
+> 
+> "Surely there is one signed image for a particular modem on a specific SoC?"
+> Sadly, no.  The OEM is allowed to provide their own key.  This may be
+> a key which is specific to the device (Ie the Brand XYZ Model 123
+> phone).  Therefore, that device will only run the firmware that
+> contains that OEM's signature, even if the actual code happens to be
+> identical to what every other OEM has.
+> 
 
-Thanks,
+And generally your XYZ 123 might come in different SKUs that might or
+might not vary in software and hardware features; so for some products
+the driver should know that it can use the "generic" XYZ 123 firmware
+and in others it needs to know that it should be looking for the XYZ 123
+firmware for, say, the Japanese market (different hardware).
 
-Paolo
+> For some SoCs which go into multiple products, there seem to be
+> several OEMs which are willing to allow the firmware to be included in
+> the linux-firmware project.  Therefore, it is likely that there will
+> be multiple copies of the Modem image for the 845 SoC (for example) in
+> /lib/firmware.  In this case, it seems like your recommendation is
+> that the driver should somehow detect that it is running on device 123
+> and not device 456, and therefore be able to request the device 123
+> specific firmware.
+> 
 
+And in the past I've worked on products where product 123, 456 and 789
+had the same firmware, but on some particular market all three used a
+market-specific firmware and in some cases two of them existed in a WiFi
+only variant.
+
+> I don't know how the device driver is supposed to make that
+> determination, and its my opinion that the driver shouldn't be.  Other
+> than the need to have the correct firmware, which is tied to the
+> specific device, I'm not aware of an instance where a driver cares
+> about anything more than the hardware revision of the block it drives.
+
+Looking at the particular problem it's not the revision of the hardware
+block(s) that the remoteproc interacts with that determines any of this.
+
+E.g. the modem subsystem is the same on Dragonboard845c with WiFi-only
+as it is on the Lenovo Yoga C630 with or without LTE - but we still need
+some mechanism to determine which of the 3 firmware files to pick.
+
+Regards,
+Bjorn
