@@ -2,185 +2,156 @@ Return-Path: <SRS0=aGSP=5L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 694D7C43331
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 05:42:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B72B0C2D0EC
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 05:42:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3AFCD2078E
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 05:42:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8EFA7206E6
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 05:42:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Gav9O9yd"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xN/aZFC3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727639AbgCZFmI (ORCPT
+        id S1727707AbgCZFmi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 01:42:08 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:45416 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726338AbgCZFmH (ORCPT
+        Thu, 26 Mar 2020 01:42:38 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:41746 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727682AbgCZFmi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 01:42:07 -0400
-Received: by mail-pg1-f195.google.com with SMTP id o26so2316756pgc.12
-        for <linux-kernel@vger.kernel.org>; Wed, 25 Mar 2020 22:42:06 -0700 (PDT)
+        Thu, 26 Mar 2020 01:42:38 -0400
+Received: by mail-pf1-f193.google.com with SMTP id z65so2229349pfz.8
+        for <linux-kernel@vger.kernel.org>; Wed, 25 Mar 2020 22:42:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=GAtp02xkzcXTpQVd6eNZ6e9QAobCmX4PQ/bu6ncX+V8=;
-        b=Gav9O9ydwdK++YUnd3IMS6cNflMzwIphGTaGQJBtPJx+iXD2x0HBVJYtMggTQZlnZQ
-         Ed4lwh6OvbtumiMpLwpLntyFkFWb5GcSirNrgYv+WvnzvT2M7wrqEPqo4DP/ASZGd0/Q
-         ix5lqjduBOwfPM7cxgUisfwdbx9i2xAAmPklA=
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=lJBGxRctjvtRkYzCqhBiWXNr6fl3LKIu3bPffT4P37Q=;
+        b=xN/aZFC3ywkctbct64T9SINp67QHK9DwBCHBXcBs0FP40E5s+s9fCTok4tvNQCqDE+
+         L0HFx9UYuKYsHC5iz5cIrIYQCB/b9ETHQmgipbTr9oUNgSA/215Y3WoY6y+Uz92fPbSe
+         XrBwg14hsA3gUwlFIJub6Ocyn/qadeRov99TL3mNE3jLPT0wo1gaXP0XskUvd+pCmrvW
+         Tv4s9ChbrZ77NxWYJhGUQkbU+8kkUKJ0TleFtzpqxx7sEGDldoLR0V34KZlW2deIaF6k
+         01wKAVnPQC0gM161neggvyqFe7HM28zTxM1mwd/YDCy4CsVV1MCJ943ffx9E4NNb1ZUC
+         cn4Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=GAtp02xkzcXTpQVd6eNZ6e9QAobCmX4PQ/bu6ncX+V8=;
-        b=Os0YgJ/DKHwgYQVaHzH1jbl9CUP2SUrtnhG5VvrcC5U1K0vZf1uMJS8s7JC3TtWVLL
-         zFQQLX+9LX7F8HnY0Hyj2wq+Ki0xforLtDH+57It4pEoTv/sRoMeNfor0hAu1A7e/I+f
-         ADwZdB7+4wLILWPJT8V0ddEZUlbmoAdsl04RH2wK+MZECSf+pnkklXe+mtYLGl8Q0PwV
-         p4eL/+U6DEd3kd2VaglOohdqvIEUEIGMTDMyWHjjnDT5OvxWeR4+/XPU+QWEO1x81T6v
-         pJUjdQpjZFxcTRTMvcK3XC5vC3ItKLbCYWbJq/CkVO/OL+nwLFRotpPsCGcPHBDdflR0
-         gScQ==
-X-Gm-Message-State: ANhLgQ0yLGhgNGjSMrZBQshT5ipbhxXco/qylaU/2RqqL9Lkw/82Z4CJ
-        KPZEXC6ZJATtYYlFcXcB8aIL4Q==
-X-Google-Smtp-Source: ADFU+vsZgMeDCxKHPHjGYbZhk8LncJ1ytMqCvgZsIcf8XqiYbTF3nFfv9g0EuUyt27Crks0bIfsmHg==
-X-Received: by 2002:a62:ce8a:: with SMTP id y132mr7013942pfg.163.1585201326283;
-        Wed, 25 Mar 2020 22:42:06 -0700 (PDT)
-Received: from apsdesk.mtv.corp.google.com ([2620:15c:202:1:e09a:8d06:a338:aafb])
-        by smtp.gmail.com with ESMTPSA id b3sm710855pgs.69.2020.03.25.22.42.05
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=lJBGxRctjvtRkYzCqhBiWXNr6fl3LKIu3bPffT4P37Q=;
+        b=HBzMy1FnzqRGwovT72cZYR9v4/tx4JZ++94xHx9xIMueSeVPktfaLIa4GRSkZVOK8Z
+         K37NSOEmadcQGMnXJSYkMq+Lyztp7mltUYYUdq1phxobr/vQ81xdNn6jxqVqxPPGyR4i
+         vJ3TGqc9gH4IBoLkE62044XJODGQyfGMWlOlEIIm7t9eVPDWrXRoOgUBfSFdtnTn5Hdy
+         DtHZVyUwvuvOaFMxFuT+460LWc/PNjOiJz2zqZ5Lxq+k5/ihRUE3GUGdYsaqKqW0eE5v
+         TznwG+nbQI0DsyLA9ZaKBgs9wAovlgbAmsCYXSO5z/5eoHq6NArLOoDoIifSGYhGDhIY
+         1v7g==
+X-Gm-Message-State: ANhLgQ0o2cv9nY+mkK3rY8uvabUUFVXZ2R8CbxY/xLy4X3Lgyopd+TWV
+        TedkVPm675Pskn0ZkzwFAMg7Nu9L/yQ=
+X-Google-Smtp-Source: ADFU+vv9QFRgclZ54bBY7BJnL7ZL1CHe2/kxdDOsKldUA/e7jUAzRpU6ZAtzDKz3uD4UzX/kxliB3w==
+X-Received: by 2002:a63:602:: with SMTP id 2mr6651318pgg.356.1585201357185;
+        Wed, 25 Mar 2020 22:42:37 -0700 (PDT)
+Received: from builder (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id y9sm751518pfo.135.2020.03.25.22.42.35
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 25 Mar 2020 22:42:05 -0700 (PDT)
-From:   Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
-To:     marcel@holtmann.org
-Cc:     linux-bluetooth@vger.kernel.org,
-        chromeos-bluetooth-upstreaming@chromium.org,
-        Abhishek Pandit-Subedi <abhishekpandit@chromium.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Johan Hedberg <johan.hedberg@gmail.com>,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Jakub Kicinski <kuba@kernel.org>
-Subject: [PATCH 1/1] Bluetooth: Update add_device with wakeable actions
-Date:   Wed, 25 Mar 2020 22:39:17 -0700
-Message-Id: <20200325223803.1.I196e4af9cde6c6e6aa7102906722cb9df8c80a7b@changeid>
-X-Mailer: git-send-email 2.25.1.696.g5e7596f4ac-goog
-In-Reply-To: <20200326053917.65024-1-abhishekpandit@chromium.org>
-References: <20200326053917.65024-1-abhishekpandit@chromium.org>
+        Wed, 25 Mar 2020 22:42:36 -0700 (PDT)
+Date:   Wed, 25 Mar 2020 22:42:34 -0700
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Suman Anna <s-anna@ti.com>
+Cc:     Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Lokesh Vutla <lokeshvutla@ti.com>,
+        linux-remoteproc@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/7] remoteproc: use a local copy for the name field
+Message-ID: <20200326054234.GA59436@builder>
+References: <20200324201819.23095-1-s-anna@ti.com>
+ <20200324201819.23095-3-s-anna@ti.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200324201819.23095-3-s-anna@ti.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add new actions to add_device to allow it to set or unset a device as
-wakeable. When the set wakeable and unset wakeable actions are used, the
-autoconnect property is not updated and the device is not added to the
-whitelist (if BR/EDR).
+On Tue 24 Mar 13:18 PDT 2020, Suman Anna wrote:
 
-Signed-off-by: Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
----
+> The current name field used in the remoteproc structure is simply
+> a pointer to a name field supplied during the rproc_alloc() call.
+> The pointer passed in by remoteproc drivers during registration is
+> typically a dev_name pointer, but it is possible that the pointer
+> will no longer remain valid if the devices themselves were created
+> at runtime like in the case of of_platform_populate(), and were
+> deleted upon any failures within the respective remoteproc driver
+> probe function.
+> 
+> So, allocate and maintain a local copy for this name field to
+> keep it agnostic of the logic used in the remoteproc drivers.
+> 
+> Signed-off-by: Suman Anna <s-anna@ti.com>
+> ---
+>  drivers/remoteproc/remoteproc_core.c | 9 ++++++++-
+>  include/linux/remoteproc.h           | 2 +-
+>  2 files changed, 9 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/remoteproc/remoteproc_core.c b/drivers/remoteproc/remoteproc_core.c
+> index aca6d022901a..6e0b91fa6f11 100644
+> --- a/drivers/remoteproc/remoteproc_core.c
+> +++ b/drivers/remoteproc/remoteproc_core.c
+> @@ -1989,6 +1989,7 @@ static void rproc_type_release(struct device *dev)
+>  
+>  	kfree(rproc->firmware);
+>  	kfree(rproc->ops);
+> +	kfree(rproc->name);
+>  	kfree(rproc);
+>  }
+>  
+> @@ -2061,7 +2062,13 @@ struct rproc *rproc_alloc(struct device *dev, const char *name,
+>  	}
+>  
+>  	rproc->firmware = p;
+> -	rproc->name = name;
+> +	rproc->name = kstrdup(name, GFP_KERNEL);
 
- net/bluetooth/mgmt.c | 56 ++++++++++++++++++++++++++++++++++++--------
- 1 file changed, 46 insertions(+), 10 deletions(-)
+Let's use kstrdup_const() instead here (and kfree_const() instead of
+kfree()), so that the cases where we are passed a constant we won't
+create a duplicate on the heap.
 
-diff --git a/net/bluetooth/mgmt.c b/net/bluetooth/mgmt.c
-index 6552003a170e..8688673542b3 100644
---- a/net/bluetooth/mgmt.c
-+++ b/net/bluetooth/mgmt.c
-@@ -5775,6 +5775,7 @@ static int add_device(struct sock *sk, struct hci_dev *hdev,
- 		      void *data, u16 len)
- {
- 	struct mgmt_cp_add_device *cp = data;
-+	struct hci_conn_params *params;
- 	u8 auto_conn, addr_type;
- 	int err;
- 
-@@ -5786,7 +5787,7 @@ static int add_device(struct sock *sk, struct hci_dev *hdev,
- 					 MGMT_STATUS_INVALID_PARAMS,
- 					 &cp->addr, sizeof(cp->addr));
- 
--	if (cp->action != 0x00 && cp->action != 0x01 && cp->action != 0x02)
-+	if (cp->action > 0x04)
- 		return mgmt_cmd_complete(sk, hdev->id, MGMT_OP_ADD_DEVICE,
- 					 MGMT_STATUS_INVALID_PARAMS,
- 					 &cp->addr, sizeof(cp->addr));
-@@ -5794,8 +5795,35 @@ static int add_device(struct sock *sk, struct hci_dev *hdev,
- 	hci_dev_lock(hdev);
- 
- 	if (cp->addr.type == BDADDR_BREDR) {
--		/* Only incoming connections action is supported for now */
--		if (cp->action != 0x01) {
-+		switch (cp->action) {
-+		case 0x3:
-+			/* Set wakeable */
-+			err = hci_bdaddr_list_add(&hdev->wakeable,
-+						  &cp->addr.bdaddr,
-+						  cp->addr.type);
-+			if (err && err != -EEXIST)
-+				goto unlock;
-+			break;
-+		case 0x4:
-+			/* Remove wakeable */
-+			err = hci_bdaddr_list_del(&hdev->wakeable,
-+						  &cp->addr.bdaddr,
-+						  cp->addr.type);
-+			if (err)
-+				goto unlock;
-+
-+			break;
-+		case 0x1:
-+			/* Allow incoming connection */
-+			err = hci_bdaddr_list_add(&hdev->whitelist,
-+						  &cp->addr.bdaddr,
-+						  cp->addr.type);
-+			if (err && err != -EEXIST)
-+				goto unlock;
-+
-+			hci_req_update_scan(hdev);
-+			break;
-+		default:
- 			err = mgmt_cmd_complete(sk, hdev->id,
- 						MGMT_OP_ADD_DEVICE,
- 						MGMT_STATUS_INVALID_PARAMS,
-@@ -5803,13 +5831,6 @@ static int add_device(struct sock *sk, struct hci_dev *hdev,
- 			goto unlock;
- 		}
- 
--		err = hci_bdaddr_list_add(&hdev->whitelist, &cp->addr.bdaddr,
--					  cp->addr.type);
--		if (err)
--			goto unlock;
--
--		hci_req_update_scan(hdev);
--
- 		goto added;
- 	}
- 
-@@ -5834,6 +5855,21 @@ static int add_device(struct sock *sk, struct hci_dev *hdev,
- 		goto unlock;
- 	}
- 
-+	/* Only allow wakeable property to be set/unset on existing device */
-+	if (cp->action == 0x03 || cp->action == 0x04) {
-+		params = hci_conn_params_lookup(hdev, &cp->addr.bdaddr,
-+						addr_type);
-+		if (!params) {
-+			err = mgmt_cmd_complete(sk, hdev->id,
-+						MGMT_OP_ADD_DEVICE,
-+						MGMT_STATUS_FAILED, &cp->addr,
-+						sizeof(cp->addr));
-+		}
-+
-+		params->wakeable = cp->action == 0x03;
-+		goto added;
-+	}
-+
- 	/* If the connection parameters don't exist for this device,
- 	 * they will be created and configured with defaults.
- 	 */
--- 
-2.25.1.696.g5e7596f4ac-goog
+And the "name" in struct rproc can remain const.
 
+> +	if (!rproc->name) {
+> +		kfree(p);
+> +		kfree(rproc->ops);
+> +		kfree(rproc);
+> +		return NULL;
+
+Perhaps we can rearrange the hunks here slightly and get to a point
+where we can rely on the release function earlier?
+
+Regards,
+Bjorn
+
+> +	}
+>  	rproc->priv = &rproc[1];
+>  	rproc->auto_boot = true;
+>  	rproc->elf_class = ELFCLASS32;
+> diff --git a/include/linux/remoteproc.h b/include/linux/remoteproc.h
+> index ddce7a7775d1..77788a4bb94e 100644
+> --- a/include/linux/remoteproc.h
+> +++ b/include/linux/remoteproc.h
+> @@ -490,7 +490,7 @@ struct rproc_dump_segment {
+>  struct rproc {
+>  	struct list_head node;
+>  	struct iommu_domain *domain;
+> -	const char *name;
+> +	char *name;
+>  	char *firmware;
+>  	void *priv;
+>  	struct rproc_ops *ops;
+> -- 
+> 2.23.0
+> 
