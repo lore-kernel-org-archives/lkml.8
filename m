@@ -7,63 +7,63 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DB67C43331
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 16:09:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B266C2D0E5
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 16:09:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 16EC72076A
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 16:09:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D5D312076A
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 16:09:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="wHdLPElF"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="cZR32ujl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728575AbgCZQJH (ORCPT
+        id S1728551AbgCZQJH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Thu, 26 Mar 2020 12:09:07 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:36407 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727056AbgCZQJF (ORCPT
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:53259 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727779AbgCZQJE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 12:09:05 -0400
-Received: by mail-wr1-f67.google.com with SMTP id 31so8498065wrs.3
-        for <linux-kernel@vger.kernel.org>; Thu, 26 Mar 2020 09:09:04 -0700 (PDT)
+        Thu, 26 Mar 2020 12:09:04 -0400
+Received: by mail-wm1-f67.google.com with SMTP id b12so7068339wmj.3
+        for <linux-kernel@vger.kernel.org>; Thu, 26 Mar 2020 09:09:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=pZI4mFYIeUBqyaD+rgbp/dHgudUJiutQ+jywlmvsJi4=;
-        b=wHdLPElFbWZX4QzH1H99ZzwKFnHC8E+AE/ASH6YVsojyJt+o9b2frATNFHTv5wWxiY
-         svFX3mxxPsXUCxQOiIOhNSFwU1euEqEmQP/tN9msQ/0diAtr2aPEenOzeeOU69qqnYlD
-         60BD+1FC/gwXeBM2bIX2LSxcnMVm6LCT+fMFNQu4Fm/aaUBwks2FZeEZS3qNmL9l0ihH
-         FX0s6PgP6fMY9AXJN5NfVXYLhx+P14L5IcNUbpvnH0oWNkHpZEdiPiQqfU8B7AYuRXsu
-         uur6JlE0s19UUy6x2o8EZBRfLLlZ7DuxRxbmdekEh4WoEf4Sng1lNX0FxlbiBs+a9bga
-         ULHQ==
+        bh=VC7vCEcb96NN2X+1RtHiNHbQQNd8PYk2Ufc78Q16YW0=;
+        b=cZR32ujlzrt8nUTq/gEyjjkJGk+dPyP8jr5UHD4ls3MRy4lbAmaRqbCN7tlou/2no1
+         JETsTqOyEGxkwRCFNOADjJEfIVz3k9pwZTXPaPd4F+50Dabej/sUfPhxhLdQLR0Oe46O
+         UFnrlYKd86NJJ+1xYrWV6VoLRA07JelX49Gb1bTyngekW71boQFi49dkbNm/Cwu0C6gF
+         G8MRp0rUvLMQYmklI0DSIQMQcuErKgZ1NzRxmSJtaAJesQ2ZX9WnkiGN8vO2I0hAirlh
+         Geb+3fvYOOp90SslSoRL63PkOVDdx8bxdApTh5m+fihST6gFtkOprJQgZoXywZqXLeQp
+         tBAg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=pZI4mFYIeUBqyaD+rgbp/dHgudUJiutQ+jywlmvsJi4=;
-        b=GfRSAAKIyVf8oUWLa5OTHUwQ//VUqUDketbvoFQYPQbuV0Iq3lDuCDBek2g0TR8zf+
-         0vcbVuKGe/e4xKBll4YCXO/ElPe0HBmDnJdFptHNNziAvi/8LUPZP2/Hfgr2qSBb28Js
-         zzGSTl5daQybyoWXjjySr6H5R7DMz/gh5VgYchU+uJNSch9nUydVl8721xI88gFh0ZnT
-         LNwLUpxMVDAT4vWKMm91rusSUUxrqmG9oJhvmuqfCuo2HJi076SJO3HMj+8esPov/zHF
-         7ZGwvyEgzbeWArc3vMyUWmLM2VYDLFobcLyCaYm76V4ObIccxCnGZbg1OfShLwR7bD59
-         95og==
-X-Gm-Message-State: ANhLgQ37eh5/cDBlGQOeoT/OqoKaK62Y2EWBdpUnWjyEH1BuWQ0N/Sdw
-        cLi1qA+B+Nn1RM5MWY/af6CxQQ==
-X-Google-Smtp-Source: ADFU+vviie4DwJ//1lgb8NoEiaThjzKQPQnFgaGF/UDsdQxDgsRx38hfv7RxV8qwxxrIMh0gu4KH7w==
-X-Received: by 2002:a05:6000:100f:: with SMTP id a15mr9738134wrx.382.1585238943970;
-        Thu, 26 Mar 2020 09:09:03 -0700 (PDT)
+        bh=VC7vCEcb96NN2X+1RtHiNHbQQNd8PYk2Ufc78Q16YW0=;
+        b=SlMM6b/4SB1Pqh4YbKGikqKjY23Pm8YttqVuoNXC8Z41o3LFAiJI17jTeK5/IE8SI4
+         bhdtqk1noX8hj+OIbGKHiqT9ARXj+eOkV4mBlvuvQj5RRDmAf/XumZ/0OeVKiWhKtqSg
+         F2TXt+5JDc/gYvk4DggD1/nihhvoqV9irIadf6qfsCLvBQ8TAkbZ24JlgcVp6wJxzsB3
+         VVqTVcueYvaItz7fwo7WSsLm+JcTWKMzfB9Ngxlhl7DiacWJDZLkIPS1/1QK82Eu7F8y
+         fsXzVH4SiFfNSAC0WDU1ePIoLedn3RJHYm2q2hCD+MDr3NLAZdnUmJbhAlQhzrut9aTB
+         GwXA==
+X-Gm-Message-State: ANhLgQ3CR8Gq7DTK4mlrEeSFoSPXluKabjQC7biEldTElOb5EXaF4Yg8
+        b/v6g+1wVvrhN72ONVSM3SOhO0+UMxIeTQ==
+X-Google-Smtp-Source: ADFU+vvs4kfivC/L5cN2+Rsomorx8j0QPCI1Qh8T4ckH7E9bvg+e8mxFZQeR285mqAeF3KF8/kF9GA==
+X-Received: by 2002:a1c:23d5:: with SMTP id j204mr672257wmj.59.1585238942853;
+        Thu, 26 Mar 2020 09:09:02 -0700 (PDT)
 Received: from bender.baylibre.local ([2a01:e35:2ec0:82b0:5c5f:613e:f775:b6a2])
-        by smtp.gmail.com with ESMTPSA id z188sm4093511wme.46.2020.03.26.09.09.02
+        by smtp.gmail.com with ESMTPSA id z188sm4093511wme.46.2020.03.26.09.09.01
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 26 Mar 2020 09:09:03 -0700 (PDT)
+        Thu, 26 Mar 2020 09:09:02 -0700 (PDT)
 From:   Neil Armstrong <narmstrong@baylibre.com>
 To:     khilman@baylibre.com
 Cc:     linux-amlogic@lists.infradead.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         Neil Armstrong <narmstrong@baylibre.com>
-Subject: [PATCH 2/2] arm64: dts: meson-g12-common: fix dwc2 clock names
-Date:   Thu, 26 Mar 2020 17:08:57 +0100
-Message-Id: <20200326160857.11929-3-narmstrong@baylibre.com>
+Subject: [PATCH 1/2] arm64: dts: meson-g12b-ugoos-am6: fix usb vbus-supply
+Date:   Thu, 26 Mar 2020 17:08:56 +0100
+Message-Id: <20200326160857.11929-2-narmstrong@baylibre.com>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20200326160857.11929-1-narmstrong@baylibre.com>
 References: <20200326160857.11929-1-narmstrong@baylibre.com>
@@ -74,27 +74,28 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use the correct dwc2 clock name.
+The USB supply used the wrong property, fixing:
+meson-g12b-ugoos-am6.dt.yaml: usb@ffe09000: 'vbus-regulator' does not match any of the regexes: '^usb@[0-9a-f]+$', 'pinctrl-[0-9]+'
 
-Fixes: 9baf7d6be730 ("arm64: dts: meson: g12a: Add G12A USB nodes")
+Fixes: 2cd2310fca4c ("arm64: dts: meson-g12b-ugoos-am6: add initial device-tree")
 Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
 ---
- arch/arm64/boot/dts/amlogic/meson-g12-common.dtsi | 2 +-
+ arch/arm64/boot/dts/amlogic/meson-g12b-ugoos-am6.dts | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-g12-common.dtsi b/arch/arm64/boot/dts/amlogic/meson-g12-common.dtsi
-index 0882ea215b88..c0aef7d69117 100644
---- a/arch/arm64/boot/dts/amlogic/meson-g12-common.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-g12-common.dtsi
-@@ -2319,7 +2319,7 @@
- 				reg = <0x0 0xff400000 0x0 0x40000>;
- 				interrupts = <GIC_SPI 31 IRQ_TYPE_LEVEL_HIGH>;
- 				clocks = <&clkc CLKID_USB1_DDR_BRIDGE>;
--				clock-names = "ddr";
-+				clock-names = "otg";
- 				phys = <&usb2_phy1>;
- 				phy-names = "usb2-phy";
- 				dr_mode = "peripheral";
+diff --git a/arch/arm64/boot/dts/amlogic/meson-g12b-ugoos-am6.dts b/arch/arm64/boot/dts/amlogic/meson-g12b-ugoos-am6.dts
+index 325e448eb09c..06c5430eb92d 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-g12b-ugoos-am6.dts
++++ b/arch/arm64/boot/dts/amlogic/meson-g12b-ugoos-am6.dts
+@@ -545,7 +545,7 @@
+ &usb {
+ 	status = "okay";
+ 	dr_mode = "host";
+-	vbus-regulator = <&usb_pwr_en>;
++	vbus-supply = <&usb_pwr_en>;
+ };
+ 
+ &usb2_phy0 {
 -- 
 2.22.0
 
