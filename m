@@ -7,41 +7,41 @@ X-Spam-Status: No, score=-11.7 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34844C43331
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 10:09:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48790C43331
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 10:09:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0EBF920748
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 10:09:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2350C2070A
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 10:09:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728123AbgCZKJT (ORCPT
+        id S1726270AbgCZKJ0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 06:09:19 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:50189 "EHLO
+        Thu, 26 Mar 2020 06:09:26 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:50196 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727729AbgCZKIm (ORCPT
+        with ESMTP id S1727773AbgCZKIm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 26 Mar 2020 06:08:42 -0400
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1jHPRD-00046v-Uw; Thu, 26 Mar 2020 11:08:36 +0100
+        id 1jHPRE-00047J-AV; Thu, 26 Mar 2020 11:08:36 +0100
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 013CF1C0440;
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id DEBB51C0478;
         Thu, 26 Mar 2020 11:08:35 +0100 (CET)
-Date:   Thu, 26 Mar 2020 10:08:34 -0000
+Date:   Thu, 26 Mar 2020 10:08:35 -0000
 From:   "tip-bot2 for Peter Zijlstra" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: core/objtool] objtool: Rename find_containing_func()
+Subject: [tip: core/objtool] objtool: Optimize find_section_by_name()
 Cc:     "Peter Zijlstra (Intel)" <peterz@infradead.org>,
         Miroslav Benes <mbenes@suse.cz>,
         Josh Poimboeuf <jpoimboe@redhat.com>, x86 <x86@kernel.org>,
         LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200324160924.558470724@infradead.org>
-References: <20200324160924.558470724@infradead.org>
+In-Reply-To: <20200324160924.440174280@infradead.org>
+References: <20200324160924.440174280@infradead.org>
 MIME-Version: 1.0
-Message-ID: <158521731454.28353.17616231128837111954.tip-bot2@tip-bot2>
+Message-ID: <158521731555.28353.11326523921308261337.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -57,68 +57,100 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the core/objtool branch of tip:
 
-Commit-ID:     53d20720bbc8718ef86fdfe53dec0accfb593ef8
-Gitweb:        https://git.kernel.org/tip/53d20720bbc8718ef86fdfe53dec0accfb593ef8
+Commit-ID:     ae358196fac3a0b4d2a7d47a4f401e3421027b03
+Gitweb:        https://git.kernel.org/tip/ae358196fac3a0b4d2a7d47a4f401e3421027b03
 Author:        Peter Zijlstra <peterz@infradead.org>
-AuthorDate:    Mon, 16 Mar 2020 10:36:53 +01:00
+AuthorDate:    Thu, 12 Mar 2020 09:32:10 +01:00
 Committer:     Peter Zijlstra <peterz@infradead.org>
 CommitterDate: Wed, 25 Mar 2020 18:28:29 +01:00
 
-objtool: Rename find_containing_func()
+objtool: Optimize find_section_by_name()
 
-For consistency; we have:
+In order to avoid yet another linear search of (20k) sections, add a
+name based hash.
 
-  find_symbol_by_offset() / find_symbol_containing()
-  find_func_by_offset()   / find_containing_func()
-
-fix that.
+This reduces objtool runtime on vmlinux.o by some 10s to around 35s.
 
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 Reviewed-by: Miroslav Benes <mbenes@suse.cz>
 Acked-by: Josh Poimboeuf <jpoimboe@redhat.com>
-Link: https://lkml.kernel.org/r/20200324160924.558470724@infradead.org
+Link: https://lkml.kernel.org/r/20200324160924.440174280@infradead.org
 ---
- tools/objtool/elf.c  | 2 +-
- tools/objtool/elf.h  | 2 +-
- tools/objtool/warn.h | 2 +-
- 3 files changed, 3 insertions(+), 3 deletions(-)
+ tools/objtool/elf.c | 10 +++++++++-
+ tools/objtool/elf.h |  3 +++
+ 2 files changed, 12 insertions(+), 1 deletion(-)
 
 diff --git a/tools/objtool/elf.c b/tools/objtool/elf.c
-index 3a8b426..07db4df 100644
+index 9007713..20fe40d 100644
 --- a/tools/objtool/elf.c
 +++ b/tools/objtool/elf.c
-@@ -187,7 +187,7 @@ struct symbol *find_symbol_containing(struct section *sec, unsigned long offset)
- 	return NULL;
- }
+@@ -22,11 +22,16 @@
  
--struct symbol *find_containing_func(struct section *sec, unsigned long offset)
-+struct symbol *find_func_containing(struct section *sec, unsigned long offset)
+ #define MAX_NAME_LEN 128
+ 
++static inline u32 str_hash(const char *str)
++{
++	return jhash(str, strlen(str), 0);
++}
++
+ struct section *find_section_by_name(struct elf *elf, const char *name)
  {
- 	struct rb_node *node;
+ 	struct section *sec;
  
+-	list_for_each_entry(sec, &elf->sections, list)
++	hash_for_each_possible(elf->section_name_hash, sec, name_hash, str_hash(name))
+ 		if (!strcmp(sec->name, name))
+ 			return sec;
+ 
+@@ -202,6 +207,7 @@ static int read_sections(struct elf *elf)
+ 
+ 		list_add_tail(&sec->list, &elf->sections);
+ 		hash_add(elf->section_hash, &sec->hash, sec->idx);
++		hash_add(elf->section_name_hash, &sec->name_hash, str_hash(sec->name));
+ 	}
+ 
+ 	if (stats)
+@@ -441,6 +447,7 @@ struct elf *elf_read(const char *name, int flags)
+ 
+ 	hash_init(elf->symbol_hash);
+ 	hash_init(elf->section_hash);
++	hash_init(elf->section_name_hash);
+ 	INIT_LIST_HEAD(&elf->sections);
+ 
+ 	elf->fd = open(name, flags);
+@@ -581,6 +588,7 @@ struct section *elf_create_section(struct elf *elf, const char *name,
+ 
+ 	list_add_tail(&sec->list, &elf->sections);
+ 	hash_add(elf->section_hash, &sec->hash, sec->idx);
++	hash_add(elf->section_name_hash, &sec->name_hash, str_hash(sec->name));
+ 
+ 	return sec;
+ }
 diff --git a/tools/objtool/elf.h b/tools/objtool/elf.h
-index e4a8d68..d18f466 100644
+index 8c272eb..ac7c46f 100644
 --- a/tools/objtool/elf.h
 +++ b/tools/objtool/elf.h
-@@ -91,7 +91,7 @@ struct symbol *find_symbol_containing(struct section *sec, unsigned long offset)
- struct rela *find_rela_by_dest(struct section *sec, unsigned long offset);
- struct rela *find_rela_by_dest_range(struct section *sec, unsigned long offset,
- 				     unsigned int len);
--struct symbol *find_containing_func(struct section *sec, unsigned long offset);
-+struct symbol *find_func_containing(struct section *sec, unsigned long offset);
- struct section *elf_create_section(struct elf *elf, const char *name, size_t
- 				   entsize, int nr);
- struct section *elf_create_rela_section(struct elf *elf, struct section *base);
-diff --git a/tools/objtool/warn.h b/tools/objtool/warn.h
-index cbb0a02..7799f60 100644
---- a/tools/objtool/warn.h
-+++ b/tools/objtool/warn.h
-@@ -21,7 +21,7 @@ static inline char *offstr(struct section *sec, unsigned long offset)
- 	char *name, *str;
- 	unsigned long name_off;
+@@ -10,6 +10,7 @@
+ #include <gelf.h>
+ #include <linux/list.h>
+ #include <linux/hashtable.h>
++#include <linux/jhash.h>
  
--	func = find_containing_func(sec, offset);
-+	func = find_func_containing(sec, offset);
- 	if (func) {
- 		name = func->name;
- 		name_off = offset - func->offset;
+ #ifdef LIBELF_USE_DEPRECATED
+ # define elf_getshdrnum    elf_getshnum
+@@ -26,6 +27,7 @@
+ struct section {
+ 	struct list_head list;
+ 	struct hlist_node hash;
++	struct hlist_node name_hash;
+ 	GElf_Shdr sh;
+ 	struct list_head symbol_list;
+ 	struct list_head rela_list;
+@@ -73,6 +75,7 @@ struct elf {
+ 	struct list_head sections;
+ 	DECLARE_HASHTABLE(symbol_hash, 20);
+ 	DECLARE_HASHTABLE(section_hash, 16);
++	DECLARE_HASHTABLE(section_name_hash, 16);
+ };
+ 
+ 
