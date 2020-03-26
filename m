@@ -2,143 +2,200 @@ Return-Path: <SRS0=aGSP=5L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-22.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=ham
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 883EDC43331
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 18:37:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6018C2D0E5
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 18:46:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 561472073E
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 18:37:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7407520714
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 18:46:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Mz03cmNX"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="BYXAsHe9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728314AbgCZShQ (ORCPT
+        id S1727907AbgCZSqH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 14:37:16 -0400
-Received: from mail-pl1-f202.google.com ([209.85.214.202]:47927 "EHLO
-        mail-pl1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726359AbgCZShP (ORCPT
+        Thu, 26 Mar 2020 14:46:07 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:41587 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727652AbgCZSqH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 14:37:15 -0400
-Received: by mail-pl1-f202.google.com with SMTP id l1so4932140pld.14
-        for <linux-kernel@vger.kernel.org>; Thu, 26 Mar 2020 11:37:14 -0700 (PDT)
+        Thu, 26 Mar 2020 14:46:07 -0400
+Received: by mail-ot1-f67.google.com with SMTP id f52so7011247otf.8
+        for <linux-kernel@vger.kernel.org>; Thu, 26 Mar 2020 11:46:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=1VavJ5Z7gke3ZjScCRX+571R0N4qJ3UtZHz2ejGsmPM=;
-        b=Mz03cmNX3lc1A2QqylFfXvNRdrX0DjBFn1gcQjK0ks/DKwgYbSDKtGOipgxIVNOspV
-         U3rWXJoXvESa/9DEAvWGE5+CPpTyseyH3B1GxBx7GzcIyrRQpCPuKedxRzPO0ehLzwBD
-         PtoSBWMoIoilWe4sILCDjsEduSFQiCGXeHjuw8Ac4zX24FoXMyztCutVfu+JMtlFGrkd
-         SUQSfU0uGngVqyJywlytT9J0ZOEs3HRFwKa8lrn8ndFP2D1dBTVw5pO/1D3GH28m/pQr
-         JzHDh5wQCWyxzpoh6rGfgaxRXiFet/J25b44lepf/kHEqrYX1qMe/j/9GBCaB5lOK9Qp
-         pJVw==
+        bh=DSaPi1qX32z4R5hBNdjTSka9jPbPxfHe58KpVQ2pneg=;
+        b=BYXAsHe9fDFiKQbkaEpYLrNdYpxCE2v5G6VFQHxCpBGHPCnN03bKIX0cr1VCAEu9Rg
+         0u0HgwpXi3GMGR9xw+I0FW42IlN/vuGOf9rb7J7W1mod/M2cK7tigZBbXm1OrZVZ5nF5
+         /ch76GZA+uxnx8Lv/5fIAE2nNlMg51xb2mLdTQV6oCrQ3rjG/1emnwYN5Ds+69xK8u6s
+         0ZQsdzsKiK7YSCcC0K9lvBJW742xWWN0ONeh5y/5Sfjg8CpsPRwf27PTuXTfV5HFD+34
+         l3TsxMQNM64kOstFhVSyTwfwxVG4Ux2OvdfP4KjKmtzL/f7ykX3qIRwtmt/hL+HXMQQM
+         EdXQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=1VavJ5Z7gke3ZjScCRX+571R0N4qJ3UtZHz2ejGsmPM=;
-        b=OfH6i8so+KBP/jg56NSfoopvkgqOYmOPaGxxOgEZZuMjFfAuBzj8MvzCe4Vnl0pl4R
-         5qqKfq/TPPfb1jR7Np97FrCcQlrX5h7V0LkhgHwlB2KwZKPCznhf6PTJ+NADnnu1HLCR
-         1rZ2oNC1ZcN22zQx+nafS2F7yGwyXebVBuzHW0/XrYMrwB4OxJBfkr8zif7V8DWhP4/8
-         hhjlCy8KEmhhmVJHXHkGk9MnvA4cBfTnhqTCrJMyBhqGYpCnsK9DHT0Zf6dQ632tGCLT
-         nRFaMRVaEZ48RAKVPSJzvHYjBYN//QCXgGI465MKhCbYDqv9yRI7MHT0vCNp/MZuUdDk
-         nkVQ==
-X-Gm-Message-State: ANhLgQ3m+se+oJfPdH96EKKR4gryYeuvLio792aByhzueL6M29ybSItB
-        jCI1CJQ+DskJbBJ3ZquwBAG96rXnVqOfjrzjLNE=
-X-Google-Smtp-Source: ADFU+vsrbsuXUjM8oF56gchzwHrNRIHzOy5PvHjLhEMUTUivfXfP6nPlmkBsYGF6WxrvP1I4JhalU8UiTYP+I0YUOsk=
-X-Received: by 2002:a17:90b:1a8b:: with SMTP id ng11mr1469403pjb.109.1585247834008;
- Thu, 26 Mar 2020 11:37:14 -0700 (PDT)
-Date:   Thu, 26 Mar 2020 11:37:06 -0700
-In-Reply-To: <20200326134701.GA118458@rlwimi.vmware.com>
-Message-Id: <20200326183707.238474-1-ndesaulniers@google.com>
-Mime-Version: 1.0
-References: <20200326134701.GA118458@rlwimi.vmware.com>
-X-Mailer: git-send-email 2.26.0.rc2.310.g2932bb562d-goog
-Subject: [PATCH v2] objtool: Documentation: document UACCESS warnings
-From:   Nick Desaulniers <ndesaulniers@google.com>
-To:     jpoimboe@redhat.com, peterz@infradead.org
-Cc:     Nick Desaulniers <ndesaulniers@google.com>,
-        Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>,
-        Matt Helsley <mhelsley@vmware.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Petr Mladek <pmladek@suse.com>,
-        Raphael Gault <raphael.gault@arm.com>,
-        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=DSaPi1qX32z4R5hBNdjTSka9jPbPxfHe58KpVQ2pneg=;
+        b=sfUwETqoQCKUFoMw+RyXUwUaIQ/G9wHIrxZsroFIpW37xT80S2LMuXnJvKpYN+t0pw
+         n6Fk6h5r6eFlvHTdIun8wefPAU5lCgZVFnL9i1kKlKKKe9EwbQKCi8T+sJu7cmJTGjeI
+         mkORkaLrLWpmDE32BPolctqVybfrtMs+bPo/UhvOFoSs1lsuCjdRzgrNGT+RXHpyFw3Z
+         +PYlSf8vyhWisjVP4t/jNlEwIvbjNLpa1bhxRPFAgfFO001won15EqQxaEe5wcg5Dyu5
+         qgxHx5OcTLnHHxGOFm6W1okfPw4gQGikODn+Q3dsGWzJsdW75HsSKzY9JZrdVLA7sVKE
+         8RNQ==
+X-Gm-Message-State: ANhLgQ0WAn67iS2h0JZQyqgJg5khD9vZbzMl7iz/h154iTKAzi76iu5g
+        AEBBmQVvVDIhetyiSugnZnpF48oQmF5xgX2Fs1taQA==
+X-Google-Smtp-Source: ADFU+vtzg+a7ZQexHtE4pMNO2X9rdMsKebqldlLPwKcI7thZoZW5JdSClsEyMSIJZH29yvaoRdaCI/72/CgZLGRMZrE=
+X-Received: by 2002:a9d:42f:: with SMTP id 44mr7376213otc.236.1585248364557;
+ Thu, 26 Mar 2020 11:46:04 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200324175719.62496-1-andriy.shevchenko@linux.intel.com>
+ <20200325032901.29551-1-saravanak@google.com> <20200325125120.GX1922688@smile.fi.intel.com>
+ <CAGETcx_TGw24UqX7pXZePyskrao6zwnKTq8mBk9g_7jokqAqkA@mail.gmail.com> <CAJZ5v0jB1hqzYK8ezjf1_1yMCudNXNS-CsrUJQcmL4W5mBD6fQ@mail.gmail.com>
+In-Reply-To: <CAJZ5v0jB1hqzYK8ezjf1_1yMCudNXNS-CsrUJQcmL4W5mBD6fQ@mail.gmail.com>
+From:   Saravana Kannan <saravanak@google.com>
+Date:   Thu, 26 Mar 2020 11:45:28 -0700
+Message-ID: <CAGETcx8kqBsqMLm4gqY83dd0mSxucVbk7VWGXu4dKqya9nsbsg@mail.gmail.com>
+Subject: Re: [PATCH v3] driver core: Break infinite loop when deferred probe
+ can't be satisfied
+To:     "Rafael J. Wysocki" <rafael@kernel.org>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Artem Bityutskiy <artem.bityutskiy@linux.intel.com>,
+        Felipe Balbi <balbi@kernel.org>,
+        Mark Brown <broonie@kernel.org>, Ferry Toth <fntoth@gmail.com>,
+        grant.likely@arm.com,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Android Kernel Team <kernel-team@android.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Compiling with Clang and CONFIG_KASAN=y was exposing a few warnings:
-  call to memset() with UACCESS enabled
+On Thu, Mar 26, 2020 at 1:39 AM Rafael J. Wysocki <rafael@kernel.org> wrote:
+>
+> On Wed, Mar 25, 2020 at 11:09 PM Saravana Kannan <saravanak@google.com> wrote:
+> >
+> > On Wed, Mar 25, 2020 at 5:51 AM Andy Shevchenko
+> > <andriy.shevchenko@linux.intel.com> wrote:
+> > >
+>
+> [cut]
+>
+> > >
+> > > Yes, it's (unlikely) possible (*), but it will give one more iteration per such
+> > > case. It's definitely better than infinite loop. Do you agree?
+> >
+> > Sorry I wasn't being clear (I was in a rush). I'm saying this patch
+> > can reintroduce the bug where the deferred probe isn't triggered when
+> > it should be.
+> >
+> > Let's take a simple execution flow.
+> >
+> > probe_okay is at 10.
+> >
+> > Thread-A
+> >   really_probe(Device-A)
+> >     local_probe_okay_count = 10
+> >     Device-A probe function is running...
+> >
+> > Thread-B
+> >   really_probe(Device-B)
+> >     Device-B probes successfully.
+> >     probe_okay incremented to 11
+> >
+> > Thread-C
+> >   Device-C (which had bound earlier) is unbound (say module is
+> > unloaded or a million other reasons).
+> >   probe_okay is decremented to 10.
+> >
+> > Thread-A continues
+> >   Device-A probe function returns -EPROBE_DEFER
+> >   driver_deferred_probe_add_trigger() doesn't do anything because
+> >     local_probe_okay_count == probe_okay
+> >   But Device-A might have deferred probe waiting on Device-B.
+> >   Device-A never probes.
+> >
+> > > *) It means during probe you have _intensive_ removing, of course you may keep
+> > > kernel busy with iterations, but it has no practical sense. DoS attacks more
+> > > effective in different ways.
+> >
+> > I wasn't worried about DoS attacks. More of a functional correctness
+> > issue what I explained above.
+>
+> The code is functionally incorrect as is already AFAICS.
+>
+> > Anyway, if your issue and similar issues can be handles in driver core
+> > in a clean way without breaking other cases, I don't have any problem
+> > with that. Just that, I think the current solution breaks other cases.
+>
+> OK, so the situation right now is that commit 58b116bce136 has
+> introduced a regression and so it needs to be fixed or reverted.  The
+> cases that were previously broken and were unbroken by that commit
+> don't matter here, so you cannot argue that they would be "broken".
+>
+> It looks to me like the original issue fixed by the commit in question
+> needs to be addressed differently, so I would vote for reverting it
+> and starting over.
 
-Document how to fix these for future travelers.
+I'm fine with whatever approach. My only point is that code that's
+been there for 5+ years might be preventing that race in a multitude
+of platforms. So I'm just reviewing to make sure fixes aren't
+introducing regressions. I'm all for anyone cleaning up/redoing
+deferred probe.
 
-Link: https://github.com/ClangBuiltLinux/linux/issues/876
-Suggested-by: Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>
-Suggested-by: Matt Helsley <mhelsley@vmware.com>
-Suggested-by: Peter Zijlstra <peterz@infradead.org>
-Suggested-by: Randy Dunlap <rdunlap@infradead.org>
-Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
----
-Changes V1 -> V2:
-* fix typo of listing uaccess_enable() twice rather than
-  uaccess_disable() as per Matt and Kamalesh.
-* fix type of "should called" to "should be called" as per Randy.
-* Mention non-obvious compiler instrumentation ie. -pg/mcount
-  -mfentry/fentry via tracing as per Peter.
-* Add sentence "It also helps verify..."
-* Add potential fix "1) remove explicit..."
+> > As an alternate solution, assuming "linux,extcon-name" is coming
+> > from some firmware, you might want to look into the fw_devlink
+> > feature.
+>
+> That would be a workaround for a driver core issue, though, wouldn't it?
 
+I'm not saying don't fix it in the driver core if it can be done
+without adding regressions.
 
- .../Documentation/stack-validation.txt        | 26 +++++++++++++++++++
- 1 file changed, 26 insertions(+)
+> > That feature allows driver core to add device links from firmware
+> > information. If you can get that feature to create device links from
+> > your dwc3.0.auto (or its parent pci_dev?) to the extcon supplier
+> > device, all of this can be sidestepped and your dwc3.0.auto's (or the
+> > dwc pci_dev's) probe will be triggered only after extcon is probed.
+> >
+> > I have very little familiarity with PCI/ACPI. I spent about an hour or
+> > two poking at ACPI scan/property code. The relationship between a
+> > pci_dev and an acpi_device is a bit confusing to me because I see:
+> >
+> > static int dwc3_pci_probe(struct pci_dev *pci, const struct pci_device_id *id)
+> > {
+> >         struct property_entry *p = (struct property_entry *)id->driver_data;
+> >         struct dwc3_pci         *dwc;
+> >         struct resource         res[2];
+> >         int                     ret;
+> >         struct device           *dev = &pci->dev;
+> > ....
+> >         dwc->dwc3 = platform_device_alloc("dwc3", PLATFORM_DEVID_AUTO);
+> > ....
+> >         ACPI_COMPANION_SET(&dwc->dwc3->dev, ACPI_COMPANION(dev));
+> >
+> > And ACPI_COMPANION returns an acpi_device by looking at dev->fwnode.
+> > So how the heck is a pci_device.dev.fwnode pointing to an
+> > acpi_device.fwnode?
+>
+> acpi_device is an of_node counterpart (or it is an fwnode itself if you will).
 
-diff --git a/tools/objtool/Documentation/stack-validation.txt b/tools/objtool/Documentation/stack-validation.txt
-index de094670050b..faa47c3aafae 100644
---- a/tools/objtool/Documentation/stack-validation.txt
-+++ b/tools/objtool/Documentation/stack-validation.txt
-@@ -289,6 +289,32 @@ they mean, and suggestions for how to fix them.
-       might be corrupt due to a gcc bug.  For more details, see:
-       https://gcc.gnu.org/bugzilla/show_bug.cgi?id=70646
- 
-+9. file.o: warning: objtool: funcA() call to funcB() with UACCESS enabled
-+
-+   This means that an unexpected call to a non-whitelisted function exists
-+   outside of arch-specific guards.
-+   X86: SMAP (stac/clac): __uaccess_begin()/__uaccess_end()
-+   ARM: PAN: uaccess_enable()/uaccess_disable()
-+
-+   These functions should be called to denote a minimal critical section around
-+   access to __user variables. See also: https://lwn.net/Articles/517475/
-+
-+   The intention of the warning is to prevent calls to funcB() from eventually
-+   calling schedule(), potentially leaking the AC flags state, and not
-+   restoring them correctly.
-+
-+   It also helps verify that there are no unexpected calls to funcB() which may
-+   access user space pages with protections against doing so disabled.
-+
-+   To fix, either:
-+   1) remove explicit calls to funcB() from funcA().
-+   2) add the correct guards before and after calls to low level functions like
-+      __get_user_size()/__put_user_size().
-+   3) add funcB to uaccess_safe_builtin whitelist in tools/objtool/check.c, if
-+      funcB obviously does not call schedule(), and is marked notrace (since
-+      function tracing inserts additional calls, which is not obvious from the
-+      sources).
-+
- 
- If the error doesn't seem to make sense, it could be a bug in objtool.
- Feel free to ask the objtool maintainer for help.
--- 
-2.26.0.rc2.310.g2932bb562d-goog
+If I understand correctly, you are saying it's similar to struct
+device_node for OF -- as in, a data struct that stores the unpacked
+ACPI firmware data. That helps me understand what is going on with
+ACPI_COMPANION_SET() in the PCI driver.
 
+But then, why does it have a "struct device dev" field embedded in it?
+Does the acpi_device.dev ever get registered with driver core?
+
+Thanks,
+Saravana
