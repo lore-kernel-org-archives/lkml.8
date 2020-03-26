@@ -2,218 +2,199 @@ Return-Path: <SRS0=aGSP=5L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0284C43331
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 17:28:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0690C2D0E5
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 17:32:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A10F22073E
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 17:28:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8EDFD2073E
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 17:32:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="EYPhvjCC"
+	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="n32rpiqP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728274AbgCZR2G (ORCPT
+        id S1727729AbgCZRcB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 13:28:06 -0400
-Received: from mail-pj1-f67.google.com ([209.85.216.67]:50735 "EHLO
-        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727889AbgCZR2G (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 13:28:06 -0400
-Received: by mail-pj1-f67.google.com with SMTP id v13so2759908pjb.0
-        for <linux-kernel@vger.kernel.org>; Thu, 26 Mar 2020 10:28:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=from:to:cc:subject:references:date:in-reply-to:message-id
-         :user-agent:mime-version;
-        bh=D0/COPPGR5pb1BR3H03WQvoeG9Sl2jWxjAzThIYaXiU=;
-        b=EYPhvjCCQaUdd5QO0PGwDwWJyqK6MoHmiV6e4PerQpMgN9GsI1tT3LFFZ2dJ0doV+0
-         SBZlrqNEw/0YlclYl800HXHJOlcq0ak/PaeaKCXy1b/wK7/fW9lcglKQGUVCHUajFfF8
-         MtD6N3IujSm0MH8gPZEZ9kcO13GM3OyYQtEJdWowPvpWJXzvz4WwblN9cBnXAyIL/m9A
-         Tj3zLkSNVpz9MNnqpCYQ/f526+IfnM69wZemQ69crGUWKMQuKoHUj9XZLfIgCOa9kSlA
-         qfzVSlV4j3rYcAxgQY7JFP2kFnWgJ5Z6pvzXh42VqEGOtJrmR9HxSUn7ZsOgER7FE8Fb
-         IP/A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:references:date:in-reply-to
-         :message-id:user-agent:mime-version;
-        bh=D0/COPPGR5pb1BR3H03WQvoeG9Sl2jWxjAzThIYaXiU=;
-        b=Jkw3G0xm1MW1tULWJArW0Fc5fRQZCqRZ3MSLyP9D47OSVP3TJ4QUa6S33rtmzN6T7e
-         rTt7P5DmEzuKNQkeC9G/YcMHz0HsFpHHsRts2LO0UGmNgMeudr+xiLqy3ipRmMrE/FSB
-         1ZCxlpvdz+BiWgyuusza5U6WkWaHlchhiOtCNnLP06iNY/9vGLyBaxdC2mYQEv1RFBOP
-         gajGeV4hPZZAiFE6YWhmJowah+bAkNZDw8p2XHLqEhDipF9KvU8IZsn3OGVYl/HkzSyl
-         OnNwATbrLJpVk1iRh1hIUxz7cQpqebc5lCF9CkFpNDhSkNmg/VUr1La6suuDd+2Jztnk
-         tuGQ==
-X-Gm-Message-State: ANhLgQ0pFmpVbAkJpR653RgUenu6pQA3zo/jEzmk1FiTnmXJ60yebBd1
-        mErIZ0IrklV035IJVYrWW8Uvnw==
-X-Google-Smtp-Source: ADFU+vsGUV+u72QL3wvgmlf/0qF3uTbOK0AGnHQp1wLenHfJudPEtBeh7qETUWSHWBOUlfHBAmNGNA==
-X-Received: by 2002:a17:902:8546:: with SMTP id d6mr9174931plo.193.1585243683102;
-        Thu, 26 Mar 2020 10:28:03 -0700 (PDT)
-Received: from bsegall-glaptop.localhost (c-73-71-82-80.hsd1.ca.comcast.net. [73.71.82.80])
-        by smtp.gmail.com with ESMTPSA id u18sm2150070pfl.40.2020.03.26.10.28.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 26 Mar 2020 10:28:01 -0700 (PDT)
-From:   bsegall@google.com
-To:     Huaixin Chang <changhuaixin@linux.alibaba.com>
-Cc:     linux-kernel@vger.kernel.org, shanpeic@linux.alibaba.com,
-        yun.wang@linux.alibaba.com, xlpang@linux.alibaba.com,
-        peterz@infradead.org, mingo@redhat.com, bsegall@google.com,
-        chiluk+linux@indeed.com, vincent.guittot@linaro.org
-Subject: Re: [PATCH v2] sched: Fix race between runtime distribution and assignment
-References: <20200325092602.22471-1-changhuaixin@linux.alibaba.com>
-        <20200326065606.19193-1-changhuaixin@linux.alibaba.com>
-Date:   Thu, 26 Mar 2020 10:27:59 -0700
-In-Reply-To: <20200326065606.19193-1-changhuaixin@linux.alibaba.com> (Huaixin
-        Chang's message of "Thu, 26 Mar 2020 14:56:06 +0800")
-Message-ID: <xm26v9mrni00.fsf@google.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.3 (gnu/linux)
+        Thu, 26 Mar 2020 13:32:01 -0400
+Received: from mail-eopbgr60055.outbound.protection.outlook.com ([40.107.6.55]:15615
+        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726163AbgCZRcA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Mar 2020 13:32:00 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=lrkEgZ8WfNUdeA3tBvW1YMHHXjmoCWH6w2og4NzZS+llozPZkYzwIPKO+6cSvYCl6e3FS7AK8H2AnvImhmFe7rGCBeuB7nDkOhK5UulEsieRx4BwebKjDAMW+DfzJQWUA/lchGiSWPzRzp1SH43E4Q1bUoCn8p077sZcya7dF4pPYFAQ5205AggvnHbhtbz9IrKXKHJHHTmzckNm0LI/64Zt4YLSpzXfOG4cpqr2j7BhqrkKHtWLKdNO6tYmzdRe79ck3K8Pzvqk65hWd9CsRFakhfTxiYHjeaGv4Nu0l1KYxaurE139HUTlz2r9N0VGRUWL4Onq+us+Du12yNuT+w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ij7AXp3jKjUVKWOo043dZErTVYooqNwrcRB1HBb0jSU=;
+ b=Lyhf/hzgaiEavjIDUsPGis3xDIu0KeMflGqabw+r0+Ky/Z7JeCooIPkJLQhRkexTklLLNChkJ2Kj/nxCjY41Lnc6HqwbvJgxdeyhdFMldHkp7vebRS7gL03eCnrOujvXKrQzFMH2dNCAW9gWA3mEO9Tpp4tTjSeK+rKazuazTgVVsrezCQbSrWf+88P3tJIwUUvXN5dpcOy9Ic28FpD9AVbHLNlEmkx1ruUkkK5xmAGHXLMXXlD9C0e4IULBbAcj/CvIbxtJCVXovFtvCs9xeqslaOP6iHuLwQaeJ/iOWWJEQFYnf4denUPDziowvLyShD3VJfVyBiwHFJMRaLz+Qw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
+ dkim=pass header.d=mellanox.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ij7AXp3jKjUVKWOo043dZErTVYooqNwrcRB1HBb0jSU=;
+ b=n32rpiqPLrB9a2kBxoQAvgPeDDUPO7R9ZXC2i84Hh56NlvU/8qrcAq/fAHv4CpGa5OXfPjrmvVVH6/AR+vjAUsI+YAortNwCu38qI4wmfy/5gQ1dKm2fRripA6pnh5vs3eVn4Gsl9jH/sXwxEw0Ib0SunEHygz4+Un4yle7rhpU=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=jgg@mellanox.com; 
+Received: from VI1PR05MB4141.eurprd05.prod.outlook.com (52.133.14.15) by
+ VI1PR05MB4141.eurprd05.prod.outlook.com (52.133.14.15) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2856.19; Thu, 26 Mar 2020 17:31:57 +0000
+Received: from VI1PR05MB4141.eurprd05.prod.outlook.com
+ ([fe80::18d2:a9ea:519:add3]) by VI1PR05MB4141.eurprd05.prod.outlook.com
+ ([fe80::18d2:a9ea:519:add3%7]) with mapi id 15.20.2856.019; Thu, 26 Mar 2020
+ 17:31:56 +0000
+Date:   Thu, 26 Mar 2020 14:31:52 -0300
+From:   Jason Gunthorpe <jgg@mellanox.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Doug Ledford <dledford@redhat.com>
+Cc:     linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [GIT PULL] Please pull RDMA subsystem changes
+Message-ID: <20200326173152.GA22458@ziepe.ca>
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="AhhlLboLdkugWU4S"
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-ClientProxiedBy: BL0PR02CA0087.namprd02.prod.outlook.com
+ (2603:10b6:208:51::28) To VI1PR05MB4141.eurprd05.prod.outlook.com
+ (2603:10a6:803:44::15)
 MIME-Version: 1.0
-Content-Type: text/plain
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from mlx.ziepe.ca (142.68.57.212) by BL0PR02CA0087.namprd02.prod.outlook.com (2603:10b6:208:51::28) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2856.19 via Frontend Transport; Thu, 26 Mar 2020 17:31:56 +0000
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)     (envelope-from <jgg@mellanox.com>)      id 1jHWMC-0005t1-Ce; Thu, 26 Mar 2020 14:31:52 -0300
+X-Originating-IP: [142.68.57.212]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 569a518d-1c8f-422b-b33a-08d7d1ab94d8
+X-MS-TrafficTypeDiagnostic: VI1PR05MB4141:
+X-Microsoft-Antispam-PRVS: <VI1PR05MB41415BEA6F48B8938C14258BCFCF0@VI1PR05MB4141.eurprd05.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:2089;
+X-Forefront-PRVS: 0354B4BED2
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR05MB4141.eurprd05.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10009020)(4636009)(396003)(376002)(39860400002)(366004)(136003)(346002)(9686003)(81156014)(81166006)(33656002)(66556008)(66946007)(66476007)(478600001)(8936002)(2906002)(44144004)(52116002)(4326008)(1076003)(86362001)(36756003)(8676002)(26005)(186003)(316002)(9786002)(9746002)(21480400003)(110136005)(5660300002)(24400500001)(2700100001);DIR:OUT;SFP:1101;
+Received-SPF: None (protection.outlook.com: mellanox.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: +YFrRDXWuyx6No+fJw3b/ri+An4+zYYwN08a3AS3V2z3RU0jSfOXOvySp+sDG0IDlEhAe5SeMcBjeViKp5Wn8VT/dx01cs+b+jVIdxYDpJ/Y3Bxo4ZgbZcia7rkRv54xDVtDqJJudodXyAnOzl8TxOE19BmXujClu9GyYQaKWJJqOr/viN3FWHx3V6XHfbBiBHQvnMITZVcO5fkJv21aG/G4OrLSgIfmNDWYY8BZpTM4JCmIbwGuHSdeBFb7YjHiOt5MQri7g3t38FFbMyBdznX+xFjQnkoyyZqNwFDD58c8UpTXFImoNSFdJZiwy13QaJCsyWcRnY0z5PhguAbMPbinNGIVtGpKX2eZpsX75x3HmqvbHM23mAxNta8fvQzWWU77ii9B4HhVt/Ej3iB6DM0ggqkLS+QjpzVVRA6z8ZBPCncJxPF+eNHyAyUSfXqgkpsD8qoUSkFKauTXutPnZQ77IJwvZbNewZRH4PQaNAaHLKdKiAJ71V0CWnBcjBW0v4r/R5oyI5e6Hm0KvK8eLQ==
+X-MS-Exchange-AntiSpam-MessageData: VDMNgo0daxQ6ZOjC8nqp22cqdXRJglFW6ORxvVdexMLuuHWFUBY4On8ME+JVgOQWaRrWDrpBrmO0zEaKP2j0SQH6vGLwbAlG3r2g+dSfqupRzv0V0yPtZ1gLffwqoNe9Cf4w0RoT/ZDQ3V3ycxiquw==
+X-OriginatorOrg: Mellanox.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 569a518d-1c8f-422b-b33a-08d7d1ab94d8
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Mar 2020 17:31:56.5815
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: a652971c-7d2e-4d9b-a6a4-d149256f461b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: rqqrKXjZHCx//9B+GKrNOMhTiJ9vB48BKdJMpCqhdPobFAALKfcCRExKPcC7ZIjQS+Zksod1sgGbf8EJtFBJlg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB4141
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Huaixin Chang <changhuaixin@linux.alibaba.com> writes:
+--AhhlLboLdkugWU4S
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-> Currently, there is a potential race between distribute_cfs_runtime()
-> and assign_cfs_rq_runtime(). Race happens when cfs_b->runtime is read,
-> distributes without holding lock and finds out there is not enough
-> runtime to charge against after distribution. Because
-> assign_cfs_rq_runtime() might be called during distribution, and use
-> cfs_b->runtime at the same time.
->
-> Fibtest is the tool to test this race. Assume all gcfs_rq is throttled
-> and cfs period timer runs, slow threads might run and sleep, returning
-> unused cfs_rq runtime and keeping min_cfs_rq_runtime in their local
-> pool. If all this happens sufficiently quickly, cfs_b->runtime will drop
-> a lot. If runtime distributed is large too, over-use of runtime happens.
->
-> A runtime over-using by about 70 percent of quota is seen when we
-> test fibtest on a 96-core machine. We run fibtest with 1 fast thread and
-> 95 slow threads in test group, configure 10ms quota for this group and
-> see the CPU usage of fibtest is 17.0%, which is far more than the
-> expected 10%.
->
-> On a smaller machine with 32 cores, we also run fibtest with 96
-> threads. CPU usage is more than 12%, which is also more than expected
-> 10%. This shows that on similar workloads, this race do affect CPU
-> bandwidth control.
->
-> Solve this by holding lock inside distribute_cfs_runtime().
+Hi Linus,
 
-Some minor requests below, other than that
+A small set of late-rc patches, mostly fixes for various crashers, some
+syzkaller fixes and a mlx5 HW limitation.
 
-Reviewed-by: Ben Segall <bsegall@google.com>
+Thanks,
+Jason
 
->
-> Fixes: c06f04c70489 ("sched: Fix potential near-infinite distribute_cfs_runtime() loop")
-> Signed-off-by: Huaixin Chang <changhuaixin@linux.alibaba.com>
-> ---
-> v2: fix spelling, initialize variable rumaining in distribute_cfs_runtime()
-> ---
->  kernel/sched/fair.c | 31 ++++++++++++-------------------
->  1 file changed, 12 insertions(+), 19 deletions(-)
->
-> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-> index c1217bfe5e81..fd30e06a7ffc 100644
-> --- a/kernel/sched/fair.c
-> +++ b/kernel/sched/fair.c
-> @@ -4629,11 +4629,11 @@ void unthrottle_cfs_rq(struct cfs_rq *cfs_rq)
->  		resched_curr(rq);
->  }
->  
-> -static u64 distribute_cfs_runtime(struct cfs_bandwidth *cfs_b, u64 remaining)
-> +static void distribute_cfs_runtime(struct cfs_bandwidth *cfs_b)
->  {
->  	struct cfs_rq *cfs_rq;
-> -	u64 runtime;
-> -	u64 starting_runtime = remaining;
-> +	u64 runtime, remaining = 1;
-> +	unsigned long flags;
->  
->  	rcu_read_lock();
->  	list_for_each_entry_rcu(cfs_rq, &cfs_b->throttled_cfs_rq,
-> @@ -4648,10 +4648,13 @@ static u64 distribute_cfs_runtime(struct cfs_bandwidth *cfs_b, u64 remaining)
->  		/* By the above check, this should never be true */
->  		SCHED_WARN_ON(cfs_rq->runtime_remaining > 0);
->  
-> +		raw_spin_lock_irqsave(&cfs_b->lock, flags);
+The following changes since commit 2c523b344dfa65a3738e7039832044aa133c75fb:
 
-No need for _irqsave/_irqrestore, the rqlock already did.
+  Linux 5.6-rc5 (2020-03-08 17:44:44 -0700)
 
->  		runtime = -cfs_rq->runtime_remaining + 1;
-> -		if (runtime > remaining)
-> -			runtime = remaining;
-> -		remaining -= runtime;
-> +		if (runtime > cfs_b->runtime)
-> +			runtime = cfs_b->runtime;
-> +		cfs_b->runtime -= runtime;
-> +		remaining = cfs_b->runtime;
-> +		raw_spin_unlock_irqrestore(&cfs_b->lock, flags);
->  
->  		cfs_rq->runtime_remaining += runtime;
->  
-> @@ -4666,8 +4669,6 @@ static u64 distribute_cfs_runtime(struct cfs_bandwidth *cfs_b, u64 remaining)
->  			break;
->  	}
->  	rcu_read_unlock();
-> -
-> -	return starting_runtime - remaining;
->  }
->  
->  /*
-> @@ -4678,7 +4679,6 @@ static u64 distribute_cfs_runtime(struct cfs_bandwidth *cfs_b, u64 remaining)
->   */
->  static int do_sched_cfs_period_timer(struct cfs_bandwidth *cfs_b, int overrun, unsigned long flags)
->  {
-> -	u64 runtime;
->  	int throttled;
->  
->  	/* no need to continue the timer with no bandwidth constraint */
-> @@ -4708,23 +4708,17 @@ static int do_sched_cfs_period_timer(struct cfs_bandwidth *cfs_b, int overrun, u
->  
->  	/*
->  	 * This check is repeated as we are holding onto the new bandwidth while
-> -	 * we unthrottle. This can potentially race with an unthrottled group
-> -	 * trying to acquire new bandwidth from the global pool. This can result
-> -	 * in us over-using our runtime if it is all used during this loop, but
-> -	 * only by limited amounts in that extreme case.
-> +	 * we unthrottle.
+are available in the Git repository at:
 
-"This check is repeated as we release cfs_b->lock while we unthrottle."
-or something like that. This code is no longer even holding onto the new
-bandwidth on its own.
+  git://git.kernel.org/pub/scm/linux/kernel/git/rdma/rdma.git tags/for-linus
 
->  	 */
->  	while (throttled && cfs_b->runtime > 0 && !cfs_b->distribute_running) {
-> -		runtime = cfs_b->runtime;
->  		cfs_b->distribute_running = 1;
->  		raw_spin_unlock_irqrestore(&cfs_b->lock, flags);
->  		/* we can't nest cfs_b->lock while distributing bandwidth */
-> -		runtime = distribute_cfs_runtime(cfs_b, runtime);
-> +		distribute_cfs_runtime(cfs_b);
->  		raw_spin_lock_irqsave(&cfs_b->lock, flags);
->  
->  		cfs_b->distribute_running = 0;
->  		throttled = !list_empty(&cfs_b->throttled_cfs_rq);
-> -
-> -		lsub_positive(&cfs_b->runtime, runtime);
->  	}
->  
->  	/*
-> @@ -4858,10 +4852,9 @@ static void do_sched_cfs_slack_timer(struct cfs_bandwidth *cfs_b)
->  	if (!runtime)
->  		return;
->  
-> -	runtime = distribute_cfs_runtime(cfs_b, runtime);
-> +	distribute_cfs_runtime(cfs_b);
->  
->  	raw_spin_lock_irqsave(&cfs_b->lock, flags);
-> -	lsub_positive(&cfs_b->runtime, runtime);
->  	cfs_b->distribute_running = 0;
->  	raw_spin_unlock_irqrestore(&cfs_b->lock, flags);
->  }
+for you to fetch changes up to ba80013fba656b9830ef45cd40a6a1e44707f47a:
+
+  RDMA/mlx5: Block delay drop to unprivileged users (2020-03-25 09:56:30 -0300)
+
+----------------------------------------------------------------
+Third RDMA 5.6 pull request
+
+- Several MAINTAINERS updates
+
+- Memory leak regression in ODP
+
+- Several fixes for syzkaller related crashes. Google recently taught
+  syzkaller to create the software RDMA devices
+
+- Crash fixes for HFI1
+
+- Several fixes for mlx5 crashes
+
+- Prevent unprivileged access to an unsafe mlx5 HW resource
+
+----------------------------------------------------------------
+Jason Gunthorpe (4):
+      RDMA/odp: Fix leaking the tgid for implicit ODP
+      RDMA/nl: Do not permit empty devices names during RDMA_NLDEV_CMD_NEWLINK/SET
+      RDMA/core: Fix missing error check on dev_set_name()
+      RDMA/mad: Do not crash if the rdma device does not have a umad interface
+
+Kaike Wan (1):
+      IB/rdmavt: Free kernel completion queue when done
+
+Leon Romanovsky (2):
+      MAINTAINERS: Clean RXE section and add Zhu as RXE maintainer
+      RDMA/mlx5: Fix access to wrong pointer while performing flush due to error
+
+Maor Gottlieb (1):
+      RDMA/mlx5: Block delay drop to unprivileged users
+
+Mark Zhang (1):
+      RDMA/mlx5: Fix the number of hwcounters of a dynamic counter
+
+Mike Marciniszyn (2):
+      IB/hfi1: Ensure pq is not left on waitlist
+      RDMA/core: Ensure security pkey modify is not lost
+
+Weihang Li (1):
+      MAINTAINERS: Update maintainers for HISILICON ROCE DRIVER
+
+ MAINTAINERS                            |  7 +++----
+ drivers/infiniband/core/device.c       |  4 +++-
+ drivers/infiniband/core/nldev.c        |  6 +++++-
+ drivers/infiniband/core/security.c     | 11 +++--------
+ drivers/infiniband/core/umem_odp.c     |  2 +-
+ drivers/infiniband/core/user_mad.c     | 33 ++++++++++++++++++++++-----------
+ drivers/infiniband/hw/hfi1/user_sdma.c | 25 ++++++++++++++++++++++---
+ drivers/infiniband/hw/mlx5/cq.c        | 27 +++++++++++++++++++++++++--
+ drivers/infiniband/hw/mlx5/main.c      |  5 +++--
+ drivers/infiniband/hw/mlx5/mlx5_ib.h   |  1 +
+ drivers/infiniband/hw/mlx5/qp.c        |  5 +++++
+ drivers/infiniband/sw/rdmavt/cq.c      |  2 +-
+ 12 files changed, 94 insertions(+), 34 deletions(-)
+
+--AhhlLboLdkugWU4S
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEfB7FMLh+8QxL+6i3OG33FX4gmxoFAl585wMACgkQOG33FX4g
+mxp3SA//QizT9p1gZOk0W2k7Zjz5KhBXghwvkrpQB/Uq3rI/+T5CWdA9KEBllC5f
+v244t2ORngUFD82p5JhZPEN2CRA5CqSs4fX5RPwchDDKLuIZQ+I4lirxUuzW6mFJ
+Em6KLm0TdeBMTB9EjupGRdV8h8iMLuI5mIJpQu5xmj+Zg4ywsnXcyZPw71HHyAkL
+XWg9vXNvNr8JngM4wNwqUFfpFsiirkw3p8PJdh7DQGW4t/sts6mZ1oXL8OpfaO3X
+BuYuyl4hg498NWSsW+fe/3Rc5p+zCp738IBed+AexmpTUgDCU+D3lVCRT++Ax8pH
+nnyQNsto9nfHPlQaTa2VtqbtfJidfd8Y4IGoLhWzqG9zUYzFjk8E1/0sdjXagS6/
+8Mf3P0+usQ0ltKcQJK6e5hrxRGH6AEN/wIkZ1IShsmugryP2L3QinFL8pOZB1sZh
+jOl2eQm+s+J6l3Gv+8QRKJBJ+ratzAA3Qq/P03vwauIQfen91zfphjvQY1i1GAg0
+rzB2kS2aRAEaq9v6bUVK412Kz63cVstqmJHdXYFKYgp32sCi53SCRhgiki5xcI4u
+y66sdEZLj580gRbzYPxHUQldBZ20GGhkT+z6cSonM/pNf8L6uhCZZavp4GESTyB/
+BDOotD1wBTICxVN4rNm/IuRvfq/uT9fC9AZVzXulLzKwIo8tXn4=
+=tF52
+-----END PGP SIGNATURE-----
+
+--AhhlLboLdkugWU4S--
