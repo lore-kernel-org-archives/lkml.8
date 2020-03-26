@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04C02C43331
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 23:28:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5F6BC43331
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 23:28:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C36F120409
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 23:28:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A11F32082D
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 23:28:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585265326;
-	bh=a4WdJga4dK8na8e33NYHsjWkbrP1pxfPuQbLNKbqrcA=;
+	s=default; t=1585265329;
+	bh=SZawdQI40sboV8ru38/GjGrBnwBOqz+ZRaoetvhWniA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bbFycrH0EDrwS6QdgDj8/0qJKum0kBlWXb+GYsuTvsKXP+FZUJw/Cfcm+i+7qBZxa
-	 Sg6A96qaqBU6L1aK/SOvJWOMLVdsg5f3DLpDjf7X/YS0EB46unteHS8zL76ktclgrw
-	 RWju292xlw5xmvxdToxXLhjw4mK1bA5nBmEd4EMQ=
+	b=c3doMfuOKRBBZTxg/kocJvQDLRd2DbumBqNLn2jH6xwaSAsqtfRoErDrSnqbjfD4H
+	 Ih3zqmRN5bZSYqyqrU4OPC6G5vqFJfEJkrb/nHUtdTFa/1YHmXQbX+FDuRuqhyKI5S
+	 5wbDMRCKu7Esa7P3Pk77pUyhyGJswoZ/fqNYaA7o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727911AbgCZXY3 (ORCPT
+        id S1728333AbgCZX2s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 19:24:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43740 "EHLO mail.kernel.org"
+        Thu, 26 Mar 2020 19:28:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44110 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727799AbgCZXYR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 19:24:17 -0400
+        id S1727904AbgCZXY2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Mar 2020 19:24:28 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E70DC2077D;
-        Thu, 26 Mar 2020 23:24:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1324E20714;
+        Thu, 26 Mar 2020 23:24:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585265056;
-        bh=a4WdJga4dK8na8e33NYHsjWkbrP1pxfPuQbLNKbqrcA=;
+        s=default; t=1585265067;
+        bh=SZawdQI40sboV8ru38/GjGrBnwBOqz+ZRaoetvhWniA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2kRx80S4YQW+f0fmtFywYLHin846Kd67z+EKSoqL9+QCzKyT/hGZiq8KJIFVhmkcM
-         FEkxvmwomNVTeDjO+FfHIlf83ncwh67bZzV3FXajhB405sfKVNi9sDr0jsr7Qsh4+A
-         BaNUeKlRo0EtbGIS9IWQ/djM/yDyAYP0QGBvat2U=
+        b=aLnXYwBkIz7dSfO0vnyCSarsSGXRAL7Id/8jIxc/+cG7S3v5AdnrkPHsNliysZ20v
+         jzPe5KOx5DQ0+b1+fPsPyTaLscxOuMhEHlEqvkaPRH9y/PfzBpKfXSVUpTXBm7cRgV
+         v64GX/PLZZjnbjGc9BVKp17hzzvlwH/WbruMfrko=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Xiao Yang <yangx.jy@cn.fujitsu.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-kbuild@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.5 16/28] modpost: Get proper section index by get_secindex() instead of st_shndx
-Date:   Thu, 26 Mar 2020 19:23:45 -0400
-Message-Id: <20200326232357.7516-16-sashal@kernel.org>
+Cc:     Takashi Iwai <tiwai@suse.de>,
+        syzbot+2a59ee7a9831b264f45e@syzkaller.appspotmail.com,
+        Sasha Levin <sashal@kernel.org>, alsa-devel@alsa-project.org
+Subject: [PATCH AUTOSEL 5.5 26/28] ALSA: pcm: oss: Remove WARNING from snd_pcm_plug_alloc() checks
+Date:   Thu, 26 Mar 2020 19:23:55 -0400
+Message-Id: <20200326232357.7516-26-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200326232357.7516-1-sashal@kernel.org>
 References: <20200326232357.7516-1-sashal@kernel.org>
@@ -59,41 +59,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xiao Yang <yangx.jy@cn.fujitsu.com>
+From: Takashi Iwai <tiwai@suse.de>
 
-[ Upstream commit 4b8a5cfb5fd375cf4c7502a18f0096ed2881be27 ]
+[ Upstream commit 5461e0530c222129dfc941058be114b5cbc00837 ]
 
-(uint16_t) st_shndx is limited to 65535(i.e. SHN_XINDEX) so sym_get_data() gets
-wrong section index by st_shndx if requested symbol contains extended section
-index that is more than 65535.  In this case, we need to get proper section index
-by .symtab_shndx section.
+The return value checks in snd_pcm_plug_alloc() are covered with
+snd_BUG_ON() macro that may trigger a kernel WARNING depending on the
+kconfig.  But since the error condition can be triggered by a weird
+user space parameter passed to OSS layer, we shouldn't give the kernel
+stack trace just for that.  As it's a normal error condition, let's
+remove snd_BUG_ON() macro usage there.
 
-Module.symvers generated by building kernel with "-ffunction-sections -fdata-sections"
-shows the issue.
-
-Fixes: 56067812d5b0 ("kbuild: modversions: add infrastructure for emitting relative CRCs")
-Fixes: e84f9fbbece1 ("modpost: refactor namespace_from_kstrtabns() to not hard-code section name")
-Signed-off-by: Xiao Yang <yangx.jy@cn.fujitsu.com>
-Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+Reported-by: syzbot+2a59ee7a9831b264f45e@syzkaller.appspotmail.com
+Cc: <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20200312155730.7520-1-tiwai@suse.de
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- scripts/mod/modpost.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ sound/core/oss/pcm_plugin.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/scripts/mod/modpost.c b/scripts/mod/modpost.c
-index 6e892c93d104a..90aaf29c61a0f 100644
---- a/scripts/mod/modpost.c
-+++ b/scripts/mod/modpost.c
-@@ -307,7 +307,8 @@ static const char *sec_name(struct elf_info *elf, int secindex)
- 
- static void *sym_get_data(const struct elf_info *info, const Elf_Sym *sym)
- {
--	Elf_Shdr *sechdr = &info->sechdrs[sym->st_shndx];
-+	unsigned int secindex = get_secindex(info, sym);
-+	Elf_Shdr *sechdr = &info->sechdrs[secindex];
- 	unsigned long offset;
- 
- 	offset = sym->st_value;
+diff --git a/sound/core/oss/pcm_plugin.c b/sound/core/oss/pcm_plugin.c
+index 9b588c6a6f099..732bbede7ebfd 100644
+--- a/sound/core/oss/pcm_plugin.c
++++ b/sound/core/oss/pcm_plugin.c
+@@ -111,7 +111,7 @@ int snd_pcm_plug_alloc(struct snd_pcm_substream *plug, snd_pcm_uframes_t frames)
+ 		while (plugin->next) {
+ 			if (plugin->dst_frames)
+ 				frames = plugin->dst_frames(plugin, frames);
+-			if (snd_BUG_ON((snd_pcm_sframes_t)frames <= 0))
++			if ((snd_pcm_sframes_t)frames <= 0)
+ 				return -ENXIO;
+ 			plugin = plugin->next;
+ 			err = snd_pcm_plugin_alloc(plugin, frames);
+@@ -123,7 +123,7 @@ int snd_pcm_plug_alloc(struct snd_pcm_substream *plug, snd_pcm_uframes_t frames)
+ 		while (plugin->prev) {
+ 			if (plugin->src_frames)
+ 				frames = plugin->src_frames(plugin, frames);
+-			if (snd_BUG_ON((snd_pcm_sframes_t)frames <= 0))
++			if ((snd_pcm_sframes_t)frames <= 0)
+ 				return -ENXIO;
+ 			plugin = plugin->prev;
+ 			err = snd_pcm_plugin_alloc(plugin, frames);
 -- 
 2.20.1
 
