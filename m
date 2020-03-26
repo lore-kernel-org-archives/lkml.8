@@ -2,96 +2,83 @@ Return-Path: <SRS0=aGSP=5L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57E2AC43331
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 17:42:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 804FAC2D0EC
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 17:42:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 201F220719
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 17:42:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="jjLX+CEw"
+	by mail.kernel.org (Postfix) with ESMTP id 5795420719
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 17:42:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585244527;
+	bh=PR3fTXO4gmBg3C7y7WW919YmnVrJ51lYEcotjqu9Vsk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=iixHJY+9bebGC/cM/gtZxTKzbqU667Z94x65QDseqS9ghOsVg5fEfXwtIGtCAjta2
+	 +vBQl+l7o0aUsodR/IkW1rsoXCSCjfJyOpZus4qVmwkjJoNSKIAlOxtaHlj8Ypo3Xa
+	 lI4f7sNtCq8ADPorgJPBYCL+o0caufwYBQlBOSac=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727752AbgCZRmC (ORCPT
+        id S1727938AbgCZRmG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 13:42:02 -0400
-Received: from mail-pf1-f202.google.com ([209.85.210.202]:56994 "EHLO
-        mail-pf1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726359AbgCZRmB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 13:42:01 -0400
-Received: by mail-pf1-f202.google.com with SMTP id s8so5697928pfd.23
-        for <linux-kernel@vger.kernel.org>; Thu, 26 Mar 2020 10:42:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=fVV9jm+DaDXENKvZmf5YNYYS/j8HMXJnii4J97iSW7Q=;
-        b=jjLX+CEw2JaIyPdbWaOTKcwNmYDaLzTBkZW5fgA/FeDEdmVrmcR1Rvww5FmJm82DJL
-         312xznj4hpWXdbzvtfrO8AlUwf+EljQi1YQ9ixqEyRSzAp4HtDG1wNQT0aYdXG1F4KFC
-         TF7MCo9Qkp/Rfr9ZFa+JoaUU9oJx98uA1Er7UWOddNzd+xWb0ofqyF+kpY5A3drMQh6F
-         7W3AZoZmjZFrjCUtiWSCYGDDJvCqQOL8TTs8rk8KfS2Jgy+dEPAR0blerEVih6C+trrK
-         fbe9bqY5ktVgAayPArnvmZCtNgG5x+W+hN8BPnNzwQRy83Zflg744j/E5KKYGJR6E8pv
-         x4mg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=fVV9jm+DaDXENKvZmf5YNYYS/j8HMXJnii4J97iSW7Q=;
-        b=U0o0zs8OR6VHT+D6XcWOZPSvFdaFTkV3pI8WepvpJXTMtdoMtNvwwwrlvKZnBHpnUl
-         QER+iKsJEZPRk0pB6iGlE6+6DGf53FUTWWPgzfb+0hiGOllZsWZPHJTCi7QuezRReIlv
-         YK+j4VhIJNcaQmhpKc5VUPuf0JGMqbjCF7GmS+W9/u1a5OR+CfHeQu8/EGwiJ7em9HMO
-         pD59E+BnKTaPNv9wxgc3mm0+yVhkpqSvSZSYxaTuyuaVFybRYQHtJhz9StK/4dyUJAYi
-         tiSQrvvTpwqPBbojzW82LfFfgRmISsvP0SmijGLnWBw4mu//de6ONlz+Y2sy7FnKKDHZ
-         yH4g==
-X-Gm-Message-State: ANhLgQ0d8NK3u8SXtOvy24YS1kgL8Ce/cwlhxB9ApBfD38WmjloYCg7f
-        paMzTzaz4jNVgfLpOA6OuFpZMNwfxhrGL2A=
-X-Google-Smtp-Source: ADFU+vvOxIgx+P4LZJQseVmq63NA4tSjm0lUd8nVjtuLo7pV6b22Zv7oSTi6DrfZ+KLKpAREJo80e85iBrOWK7A=
-X-Received: by 2002:a17:90a:c385:: with SMTP id h5mr1153165pjt.131.1585244520441;
- Thu, 26 Mar 2020 10:42:00 -0700 (PDT)
-Date:   Thu, 26 Mar 2020 10:41:54 -0700
-Message-Id: <20200326174154.32723-1-saravanak@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.25.1.696.g5e7596f4ac-goog
-Subject: [PATCH v1] Revert "clocksource: Avoid creating dead devices"
-From:   Saravana Kannan <saravanak@google.com>
-To:     Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-Cc:     Saravana Kannan <saravanak@google.com>, kernel-team@android.com,
+        Thu, 26 Mar 2020 13:42:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44426 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726359AbgCZRmG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Mar 2020 13:42:06 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 45AA520719;
+        Thu, 26 Mar 2020 17:42:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1585244525;
+        bh=PR3fTXO4gmBg3C7y7WW919YmnVrJ51lYEcotjqu9Vsk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=GMDLXo4onAulUghoEQWp9U/bSWTkKfOlCi1SkbavkGGKRppB1Xm4tgWWLRKk5n2LG
+         NwdqacWbX10ZfxcIjAsvKBMwKVre2C+it/YkucXDsMKDgMRczDa//5Enpj+agsUU3a
+         z0JUAMEzRRrev07Q0m6qsrkUNXf3h01MavEz0BCI=
+Date:   Thu, 26 Mar 2020 18:42:03 +0100
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc:     davem@davemloft.net, smohanad@codeaurora.org, jhugo@codeaurora.org,
+        kvalo@codeaurora.org, bjorn.andersson@linaro.org,
+        hemantk@codeaurora.org, linux-arm-msm@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Subject: Re: [PATCH v3 0/7] Improvements to MHI Bus
+Message-ID: <20200326174203.GA1558281@kroah.com>
+References: <20200324061050.14845-1-manivannan.sadhasivam@linaro.org>
+ <20200326145144.GA1484574@kroah.com>
+ <20200326172514.GA8813@Mani-XPS-13-9360>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200326172514.GA8813@Mani-XPS-13-9360>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This reverts commit 4f41fe386a94639cd9a1831298d4f85db5662f1e.
+On Thu, Mar 26, 2020 at 10:55:14PM +0530, Manivannan Sadhasivam wrote:
+> On Thu, Mar 26, 2020 at 03:51:44PM +0100, Greg KH wrote:
+> > On Tue, Mar 24, 2020 at 11:40:43AM +0530, Manivannan Sadhasivam wrote:
+> > > Hi Greg,
+> > > 
+> > > Here is the patchset for improving the MHI bus support. One of the patch
+> > > is suggested by you for adding the driver owner field and rest are additional
+> > > improvements and some fixes.
+> > 
+> > I've taken the first 4 of these now, thanks.
+> > 
+> 
+> Thanks Greg! For the future patches after v5.7, how do you want to pick them?
+> I assume that you'll be the person picking all "bus" related patches, then
+> do you want me to CC you for all patches or just send them as a pull request
+> finally?
 
-The commit cause stability issues in platforms where one device tree
-node is handled by more than one driver. So, let's revert it for now and
-try again later.
+Sending me patch series like this is good to start with for now.  If it
+gets too complex and too big, then we can worry about pull requests.
 
-Signed-off-by: Saravana Kannan <saravanak@google.com>
----
- drivers/clocksource/timer-probe.c | 2 --
- 1 file changed, 2 deletions(-)
+thanks,
 
-diff --git a/drivers/clocksource/timer-probe.c b/drivers/clocksource/timer-probe.c
-index a10f28d750a9..ee9574da53c0 100644
---- a/drivers/clocksource/timer-probe.c
-+++ b/drivers/clocksource/timer-probe.c
-@@ -27,10 +27,8 @@ void __init timer_probe(void)
- 
- 		init_func_ret = match->data;
- 
--		of_node_set_flag(np, OF_POPULATED);
- 		ret = init_func_ret(np);
- 		if (ret) {
--			of_node_clear_flag(np, OF_POPULATED);
- 			if (ret != -EPROBE_DEFER)
- 				pr_err("Failed to initialize '%pOF': %d\n", np,
- 				       ret);
--- 
-2.25.1.696.g5e7596f4ac-goog
-
+greg k-h
