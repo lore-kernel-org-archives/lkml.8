@@ -6,167 +6,227 @@ X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6486C2D0E5
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 10:41:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1D5CC43331
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 10:43:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B417820714
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 10:41:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD60520748
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 10:43:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728002AbgCZKlg convert rfc822-to-8bit (ORCPT
+        id S1727996AbgCZKnn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 06:41:36 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:34698 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727560AbgCZKlf (ORCPT
+        Thu, 26 Mar 2020 06:43:43 -0400
+Received: from mout.kundenserver.de ([212.227.126.135]:42857 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727560AbgCZKnn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 06:41:35 -0400
-Received: from mail-pg1-f198.google.com ([209.85.215.198])
-        by youngberry.canonical.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <kai.heng.feng@canonical.com>)
-        id 1jHPx7-00047x-8J
-        for linux-kernel@vger.kernel.org; Thu, 26 Mar 2020 10:41:33 +0000
-Received: by mail-pg1-f198.google.com with SMTP id 185so4360935pgc.22
-        for <linux-kernel@vger.kernel.org>; Thu, 26 Mar 2020 03:41:33 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=UeRJQevSUHXBRlf/4ze6OiB+Fx/GsXnxWvYb+Xd4brE=;
-        b=NikCLABUC157DpTI09kr5MLHqNu4f580OM7SQQOIgVOedIYYclUzev2FHBbxRAQmib
-         qY9NPnCaA7APOEKlmLazHqSn3viBTTAGgoV346RyEgms4KcoMBiMfQNiE8I0EgqYM4+9
-         hr8on9QnPATnFIT/VQBHhpeNdUFtuhBW+ehwsd22YX2RVvtcgt2UAXKr1niOmt3OIVZe
-         r2ZgwBYYd7AXBBFxIDl1rUsaeBw6mdDOghjWt2/54QK1Y9yMzO6N+VU9cZ3kn7a07gZ0
-         /pG+FBpifG1b8ifLQG94Ou9G/LmIjEDt0Dspl5sE0xobI4fmnYeAAa1+cy2S/he8nexH
-         iy+g==
-X-Gm-Message-State: ANhLgQ02Hpr/vEAdGdY8XplI/auHN2h3cuRePQmRH4cQwnLFug+62KWU
-        vyZAg07AZX4nyHijj8dNpQ7d3GnhYJDooPK3b0h2qPQe9j8Fs2DRyPUuOv4gYkw0nXGJab/ENHm
-        HOuPDSdavU0AVaTch7LvuU1Tifjv3FdZ4hMZ3QAPFQA==
-X-Received: by 2002:a17:90a:1784:: with SMTP id q4mr2309535pja.174.1585219291696;
-        Thu, 26 Mar 2020 03:41:31 -0700 (PDT)
-X-Google-Smtp-Source: ADFU+vvtvJeTgPnEHGqTVNs/nJiX7tpC4tKYPn4puM7/6xSliRABW/x4XN6hP9XhPfgKgJi/+xPhqw==
-X-Received: by 2002:a17:90a:1784:: with SMTP id q4mr2309504pja.174.1585219291245;
-        Thu, 26 Mar 2020 03:41:31 -0700 (PDT)
-Received: from [192.168.1.208] (220-133-187-190.HINET-IP.hinet.net. [220.133.187.190])
-        by smtp.gmail.com with ESMTPSA id mm18sm1341970pjb.39.2020.03.26.03.41.29
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 26 Mar 2020 03:41:30 -0700 (PDT)
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 13.0 \(3608.60.0.2.5\))
-Subject: Re: [PATCH] igb: Use a sperate mutex insead of rtnl_lock()
-From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
-In-Reply-To: <20200326103926.20888-1-kai.heng.feng@canonical.com>
-Date:   Thu, 26 Mar 2020 18:41:28 +0800
-Cc:     "Brown, Aaron F" <aaron.f.brown@intel.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        "moderated list:INTEL ETHERNET DRIVERS" 
-        <intel-wired-lan@lists.osuosl.org>,
-        "open list:NETWORKING DRIVERS" <netdev@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Content-Transfer-Encoding: 8BIT
-Message-Id: <EEE6C808-A7FC-42B6-8FA7-3958EE4C0BBC@canonical.com>
-References: <20200326103926.20888-1-kai.heng.feng@canonical.com>
-To:     "Kirsher, Jeffrey T" <jeffrey.t.kirsher@intel.com>
-X-Mailer: Apple Mail (2.3608.60.0.2.5)
+        Thu, 26 Mar 2020 06:43:43 -0400
+Received: from mail.cetitecgmbh.com ([87.190.42.90]) by
+ mrelayeu.kundenserver.de (mreue009 [212.227.15.167]) with ESMTPSA (Nemesis)
+ id 1N79q8-1jIVOq1alI-017X7z for <linux-kernel@vger.kernel.org>; Thu, 26 Mar
+ 2020 11:43:40 +0100
+Received: from pflvmailgateway.corp.cetitec.com (unknown [127.0.0.1])
+        by mail.cetitecgmbh.com (Postfix) with ESMTP id 291156502CB
+        for <linux-kernel@vger.kernel.org>; Thu, 26 Mar 2020 10:43:40 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at cetitec.com
+Received: from mail.cetitecgmbh.com ([127.0.0.1])
+        by pflvmailgateway.corp.cetitec.com (pflvmailgateway.corp.cetitec.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id ItpFom61juuT for <linux-kernel@vger.kernel.org>;
+        Thu, 26 Mar 2020 11:43:39 +0100 (CET)
+Received: from pfwsexchange.corp.cetitec.com (unknown [10.10.1.99])
+        by mail.cetitecgmbh.com (Postfix) with ESMTPS id 9CA4A64FD0A
+        for <linux-kernel@vger.kernel.org>; Thu, 26 Mar 2020 11:43:39 +0100 (CET)
+Received: from pflmari.corp.cetitec.com (10.8.5.79) by
+ PFWSEXCHANGE.corp.cetitec.com (10.10.1.99) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Thu, 26 Mar 2020 11:43:39 +0100
+Received: by pflmari.corp.cetitec.com (Postfix, from userid 1000)
+        id 4A517804FE; Thu, 26 Mar 2020 11:34:59 +0100 (CET)
+Date:   Thu, 26 Mar 2020 11:34:59 +0100
+From:   Alex Riesen <alexander.riesen@cetitec.com>
+To:     Kieran Bingham <kieran.bingham@ideasonboard.com>
+CC:     Geert Uytterhoeven <geert@linux-m68k.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        "Laurent Pinchart" <laurent.pinchart@ideasonboard.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        <devel@driverdev.osuosl.org>, <linux-media@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-renesas-soc@vger.kernel.org>
+Subject: [PATCH v4 2/9] media: adv748x: include everything adv748x.h needs
+ into the file
+Message-ID: <e37abb9c66571ad02a7d0c7903d1889d7d52ed46.1585218857.git.alexander.riesen@cetitec.com>
+Mail-Followup-To: Alex Riesen <alexander.riesen@cetitec.com>,
+        Kieran Bingham <kieran.bingham@ideasonboard.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        devel@driverdev.osuosl.org, linux-media@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org
+References: <cover.1585218857.git.alexander.riesen@cetitec.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <cover.1585218857.git.alexander.riesen@cetitec.com>
+X-Originating-IP: [10.8.5.79]
+X-ClientProxiedBy: PFWSEXCHANGE.corp.cetitec.com (10.10.1.99) To
+ PFWSEXCHANGE.corp.cetitec.com (10.10.1.99)
+X-EsetResult: clean, is OK
+X-EsetId: 37303A290D7F536A6D7C67
+X-Provags-ID: V03:K1:6zX46J1OtgbpS91h09Kh2mhAAB+Ra+cyNtMiLUGp4bzNShjrQJm
+ eQN9iY4JlmlGhTDxch2V/wwUVUeB42OKCXxCrJhHHU3/qluWniPGpMIBrJZmQrh69rTi3Zl
+ cvQSNYThq8Ijs+LVN+V5qMsQjFAzv/uSusoKGutIGJRVZG2OcLiQZAvs5OxAHYr7cMG7+8x
+ EnRtoanuPGsHAtKcbH76Q==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:V92qZAtN7tQ=:r64Bhqb7NdoYe6iNVcxZKc
+ A3NpSitdtPd43PX6Ew+vNxE7yIrgu3qDsX0ewymTsCLO1r9yyTybFMDoMDqM2yBnfgYxw7V5j
+ u1CceExUXX3OamFJpjO7UOTWBlq3811mj1rBmZCk7/eBATjiyEn+pnxSFNII0+oEgzmVro7YW
+ DgdRyKzF1uAlrobJHTxLxjZ+Hi7NWveBZ7NWCYxiTPN0tZ2H3nfpgKj8f3dR/ovjzfZCbhdAV
+ XjVjzcKYSpD4qL63jw7hnmXiakdVNTPAnvH+3MEx+mfA7xeF7BXNGjAsafCGXXsv3hoT88sD3
+ 7Iz6RvDhAxvIqavGbe+JufMVeESvde49+vYpJQLB6CFeYZXdIKijh3DUl7q2RLs6YFh6FWcEt
+ SX48bedGNnbQ/oKnGAZVOXD/dyd4hnmMkIkvCwfxtoi63EUaSdHWKK8FNX1wr3i/xHMXA7Rnj
+ j7rXiME5YufmpwV6Hir+8343Ry/LCZHfsCFSZzDXKOzC/9KXkR8ApEOv0TtxEXjr79cjPYGW3
+ uegcddJwRJ9sLCn6rFv98Uom7XxDXJvZt5NttuRa3mcITtUGWgcBEj784YPHOWrzR54O0MsQ4
+ iXSHWHbBnkQ6IqDe6zWqLLxQtJcwKVp/u0auuMjaq4Q8qvWQXIm02iBEvj3Z8tVp3ZykuNJP3
+ VQUMDIS6JAGjTBZOQAcArUcohjdHe+H01SPe9f3MhZhOAgHGKUAgd751JDZXN6Z82oNlYjM2p
+ Z9Fb428wf56mcWVU4B2luaLM5vJ3sWQKk0ofwRWdQo8kY6Rr0b8oNAObI9xzMUzKFSQ8nOHcT
+ WQYJmJ6ighsgtvgs+jU09Eo8nnf+vCnyoNQoYbHgScruUuo7Z34Eo/uNaL5kgScaABp7LFa
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+To follow the established practice of not depending on others to
+pull everything in. While at it, make sure it stays like this.
 
-> On Mar 26, 2020, at 18:39, Kai-Heng Feng <kai.heng.feng@canonical.com> wrote:
-> 
-> Commit 9474933caf21 ("igb: close/suspend race in netif_device_detach")
-> fixed race condition between close and power management ops by using
-> rtnl_lock().
-> 
-> This fix is a preparation for next patch, to prevent a dead lock under
-> rtnl_lock() when calling runtime resume routine.
-> 
-> However, we can't use device_lock() in igb_close() because when module
-> is getting removed, the lock is already held for igb_remove(), and
-> igb_close() gets called during unregistering the netdev, hence causing a
-> deadlock. So let's introduce a new mutex so we don't cause a deadlock
-> with driver core or netdev core.
-> 
-> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+Signed-off-by: Alexander Riesen <alexander.riesen@cetitec.com>
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+---
+ drivers/media/i2c/adv748x/adv748x-afe.c  | 6 ++----
+ drivers/media/i2c/adv748x/adv748x-core.c | 6 ++----
+ drivers/media/i2c/adv748x/adv748x-csi2.c | 6 ++----
+ drivers/media/i2c/adv748x/adv748x-hdmi.c | 6 ++----
+ drivers/media/i2c/adv748x/adv748x.h      | 2 ++
+ 5 files changed, 10 insertions(+), 16 deletions(-)
 
-Please drop "igb: Use device_lock() insead of rtnl_lock()" and use this one instead.
-Thanks!
+diff --git a/drivers/media/i2c/adv748x/adv748x-afe.c b/drivers/media/i2c/adv748x/adv748x-afe.c
+index dbbb1e4d6363..5a25d1fbe25f 100644
+--- a/drivers/media/i2c/adv748x/adv748x-afe.c
++++ b/drivers/media/i2c/adv748x/adv748x-afe.c
+@@ -6,18 +6,16 @@
+  * Copyright (C) 2017 Renesas Electronics Corp.
+  */
+ 
++#include "adv748x.h"
++
+ #include <linux/delay.h>
+ #include <linux/module.h>
+ #include <linux/mutex.h>
+ #include <linux/v4l2-dv-timings.h>
+ 
+-#include <media/v4l2-ctrls.h>
+-#include <media/v4l2-device.h>
+ #include <media/v4l2-dv-timings.h>
+ #include <media/v4l2-ioctl.h>
+ 
+-#include "adv748x.h"
+-
+ /* -----------------------------------------------------------------------------
+  * SDP
+  */
+diff --git a/drivers/media/i2c/adv748x/adv748x-core.c b/drivers/media/i2c/adv748x/adv748x-core.c
+index c3fb113cef62..5c59aad319d1 100644
+--- a/drivers/media/i2c/adv748x/adv748x-core.c
++++ b/drivers/media/i2c/adv748x/adv748x-core.c
+@@ -10,6 +10,8 @@
+  *	Kieran Bingham <kieran.bingham@ideasonboard.com>
+  */
+ 
++#include "adv748x.h"
++
+ #include <linux/delay.h>
+ #include <linux/errno.h>
+ #include <linux/i2c.h>
+@@ -20,14 +22,10 @@
+ #include <linux/slab.h>
+ #include <linux/v4l2-dv-timings.h>
+ 
+-#include <media/v4l2-ctrls.h>
+-#include <media/v4l2-device.h>
+ #include <media/v4l2-dv-timings.h>
+ #include <media/v4l2-fwnode.h>
+ #include <media/v4l2-ioctl.h>
+ 
+-#include "adv748x.h"
+-
+ /* -----------------------------------------------------------------------------
+  * Register manipulation
+  */
+diff --git a/drivers/media/i2c/adv748x/adv748x-csi2.c b/drivers/media/i2c/adv748x/adv748x-csi2.c
+index c43ce5d78723..c00d4f347d95 100644
+--- a/drivers/media/i2c/adv748x/adv748x-csi2.c
++++ b/drivers/media/i2c/adv748x/adv748x-csi2.c
+@@ -5,15 +5,13 @@
+  * Copyright (C) 2017 Renesas Electronics Corp.
+  */
+ 
++#include "adv748x.h"
++
+ #include <linux/module.h>
+ #include <linux/mutex.h>
+ 
+-#include <media/v4l2-ctrls.h>
+-#include <media/v4l2-device.h>
+ #include <media/v4l2-ioctl.h>
+ 
+-#include "adv748x.h"
+-
+ static int adv748x_csi2_set_virtual_channel(struct adv748x_csi2 *tx,
+ 					    unsigned int vc)
+ {
+diff --git a/drivers/media/i2c/adv748x/adv748x-hdmi.c b/drivers/media/i2c/adv748x/adv748x-hdmi.c
+index c557f8fdf11a..f598acec3b5c 100644
+--- a/drivers/media/i2c/adv748x/adv748x-hdmi.c
++++ b/drivers/media/i2c/adv748x/adv748x-hdmi.c
+@@ -5,18 +5,16 @@
+  * Copyright (C) 2017 Renesas Electronics Corp.
+  */
+ 
++#include "adv748x.h"
++
+ #include <linux/module.h>
+ #include <linux/mutex.h>
+ 
+-#include <media/v4l2-ctrls.h>
+-#include <media/v4l2-device.h>
+ #include <media/v4l2-dv-timings.h>
+ #include <media/v4l2-ioctl.h>
+ 
+ #include <uapi/linux/v4l2-dv-timings.h>
+ 
+-#include "adv748x.h"
+-
+ /* -----------------------------------------------------------------------------
+  * HDMI and CP
+  */
+diff --git a/drivers/media/i2c/adv748x/adv748x.h b/drivers/media/i2c/adv748x/adv748x.h
+index fccb388ce179..09aab4138c3f 100644
+--- a/drivers/media/i2c/adv748x/adv748x.h
++++ b/drivers/media/i2c/adv748x/adv748x.h
+@@ -19,6 +19,8 @@
+  */
+ 
+ #include <linux/i2c.h>
++#include <media/v4l2-ctrls.h>
++#include <media/v4l2-device.h>
+ 
+ #ifndef _ADV748X_H_
+ #define _ADV748X_H_
+-- 
+2.25.1.25.g9ecbe7eb18
 
-Kai-Heng
-
-> ---
-> drivers/net/ethernet/intel/igb/igb_main.c | 19 +++++++++++++------
-> 1 file changed, 13 insertions(+), 6 deletions(-)
-> 
-> diff --git a/drivers/net/ethernet/intel/igb/igb_main.c b/drivers/net/ethernet/intel/igb/igb_main.c
-> index b46bff8fe056..dc7ed5dd216b 100644
-> --- a/drivers/net/ethernet/intel/igb/igb_main.c
-> +++ b/drivers/net/ethernet/intel/igb/igb_main.c
-> @@ -288,6 +288,8 @@ static const struct igb_reg_info igb_reg_info_tbl[] = {
-> 	{}
-> };
-> 
-> +static DEFINE_MUTEX(igb_mutex);
-> +
-> /* igb_regdump - register printout routine */
-> static void igb_regdump(struct e1000_hw *hw, struct igb_reg_info *reginfo)
-> {
-> @@ -4026,9 +4028,14 @@ static int __igb_close(struct net_device *netdev, bool suspending)
-> 
-> int igb_close(struct net_device *netdev)
-> {
-> +	int err = 0;
-> +
-> +	mutex_lock(&igb_mutex);
-> 	if (netif_device_present(netdev) || netdev->dismantle)
-> -		return __igb_close(netdev, false);
-> -	return 0;
-> +		err = __igb_close(netdev, false);
-> +	mutex_unlock(&igb_mutex);
-> +
-> +	return err;
-> }
-> 
-> /**
-> @@ -8760,7 +8767,7 @@ static int __igb_shutdown(struct pci_dev *pdev, bool *enable_wake,
-> 	u32 wufc = runtime ? E1000_WUFC_LNKC : adapter->wol;
-> 	bool wake;
-> 
-> -	rtnl_lock();
-> +	mutex_lock(&igb_mutex);
-> 	netif_device_detach(netdev);
-> 
-> 	if (netif_running(netdev))
-> @@ -8769,7 +8776,7 @@ static int __igb_shutdown(struct pci_dev *pdev, bool *enable_wake,
-> 	igb_ptp_suspend(adapter);
-> 
-> 	igb_clear_interrupt_scheme(adapter);
-> -	rtnl_unlock();
-> +	mutex_unlock(&igb_mutex);
-> 
-> 	status = rd32(E1000_STATUS);
-> 	if (status & E1000_STATUS_LU)
-> @@ -8897,13 +8904,13 @@ static int __maybe_unused igb_resume(struct device *dev)
-> 
-> 	wr32(E1000_WUS, ~0);
-> 
-> -	rtnl_lock();
-> +	mutex_lock(&igb_mutex);
-> 	if (!err && netif_running(netdev))
-> 		err = __igb_open(netdev, true);
-> 
-> 	if (!err)
-> 		netif_device_attach(netdev);
-> -	rtnl_unlock();
-> +	mutex_unlock(&igb_mutex);
-> 
-> 	return err;
-> }
-> -- 
-> 2.17.1
-> 
 
