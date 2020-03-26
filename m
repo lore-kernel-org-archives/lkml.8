@@ -2,157 +2,91 @@ Return-Path: <SRS0=aGSP=5L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97D0CC43331
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 23:27:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADFE0C43331
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 23:27:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 756F12083E
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 23:27:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7459B20774
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 23:27:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585265225;
+	bh=m4etkLiEepcr0k8zXYpPGtfTEbrDtzPIjZMv44ZiuqE=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=ccRHR1mfA9AyZr/NSfm5C3gK3oPCIKSA5LRnpVzvIxmy95T02pu1XXuhFjRoQVusC
+	 R3o1PNvdGd16nuPKR64hJTBDgo4ZAua6eZv3fDCOmKZgY2PwFW26CReF9pUWgL3lEl
+	 K/pRGsSCdeM9NG+vtiQHj0B/VwAQW+azfPekx++4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728520AbgCZX07 (ORCPT
+        id S1728527AbgCZX1D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 19:26:59 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:18438 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727661AbgCZX0x (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 19:26:53 -0400
-Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02QN4Fog114235;
-        Thu, 26 Mar 2020 19:26:22 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2ywf3j7n28-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 26 Mar 2020 19:26:22 -0400
-Received: from m0098399.ppops.net (m0098399.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 02QN5VvJ144345;
-        Thu, 26 Mar 2020 19:26:22 -0400
-Received: from ppma02dal.us.ibm.com (a.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.10])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2ywf3j7n1n-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 26 Mar 2020 19:26:21 -0400
-Received: from pps.filterd (ppma02dal.us.ibm.com [127.0.0.1])
-        by ppma02dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 02QNOhOu007631;
-        Thu, 26 Mar 2020 23:26:21 GMT
-Received: from b01cxnp22035.gho.pok.ibm.com (b01cxnp22035.gho.pok.ibm.com [9.57.198.25])
-        by ppma02dal.us.ibm.com with ESMTP id 2ywaw2rv3q-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 26 Mar 2020 23:26:20 +0000
-Received: from b01ledav005.gho.pok.ibm.com (b01ledav005.gho.pok.ibm.com [9.57.199.110])
-        by b01cxnp22035.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 02QNQKC351315188
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 26 Mar 2020 23:26:20 GMT
-Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 36780AE062;
-        Thu, 26 Mar 2020 23:26:20 +0000 (GMT)
-Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 49007AE063;
-        Thu, 26 Mar 2020 23:26:06 +0000 (GMT)
-Received: from LeoBras.aus.stglabs.ibm.com (unknown [9.85.162.45])
-        by b01ledav005.gho.pok.ibm.com (Postfix) with ESMTP;
-        Thu, 26 Mar 2020 23:26:05 +0000 (GMT)
-From:   Leonardo Bras <leonardo@linux.ibm.com>
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Alexios Zavras <alexios.zavras@intel.com>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Leonardo Bras <leonardo@linux.ibm.com>
-Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH v2 1/1] ppc/crash: Skip spinlocks during crash
-Date:   Thu, 26 Mar 2020 20:25:43 -0300
-Message-Id: <20200326232542.503157-1-leonardo@linux.ibm.com>
-X-Mailer: git-send-email 2.24.1
+        Thu, 26 Mar 2020 19:27:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45692 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728198AbgCZXZG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Mar 2020 19:25:06 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8383B20B1F;
+        Thu, 26 Mar 2020 23:25:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1585265106;
+        bh=m4etkLiEepcr0k8zXYpPGtfTEbrDtzPIjZMv44ZiuqE=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=2KzyUpSUn83WYe278ntOHL8zDUq+eDn0NaEuGTlLrLlGNXUbfMfiY9NYMOP59m0dz
+         6Uc7TOPnWDCQL4Zb2F6xvZqonNwQdPKQBNgNI1KM/Uy7sz9D+Z3UqsywTVFTdPfEX9
+         4G4iJtJDiov1RfzO/IVXbag5ru7iMWQ8RDiRoVqo=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     James Zhu <James.Zhu@amd.com>, Leo Liu <leo.liu@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 4.19 09/15] drm/amdgpu: fix typo for vcn1 idle check
+Date:   Thu, 26 Mar 2020 19:24:49 -0400
+Message-Id: <20200326232455.8029-9-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200326232455.8029-1-sashal@kernel.org>
+References: <20200326232455.8029-1-sashal@kernel.org>
 MIME-Version: 1.0
+X-stable: review
+X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.645
- definitions=2020-03-26_13:2020-03-26,2020-03-26 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1011 phishscore=0
- priorityscore=1501 adultscore=0 mlxscore=0 mlxlogscore=999 impostorscore=0
- bulkscore=0 lowpriorityscore=0 malwarescore=0 spamscore=0 suspectscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2003260164
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-During a crash, there is chance that the cpus that handle the NMI IPI
-are holding a spin_lock. If this spin_lock is needed by crashing_cpu it
-will cause a deadlock. (rtas_lock and printk logbuf_log as of today)
+From: James Zhu <James.Zhu@amd.com>
 
-This is a problem if the system has kdump set up, given if it crashes
-for any reason kdump may not be saved for crash analysis.
+[ Upstream commit acfc62dc68770aa665cc606891f6df7d6d1e52c0 ]
 
-Skip spinlocks after NMI IPI is sent to all other cpus.
+fix typo for vcn1 idle check
 
-Signed-off-by: Leonardo Bras <leonardo@linux.ibm.com>
+Signed-off-by: James Zhu <James.Zhu@amd.com>
+Reviewed-by: Leo Liu <leo.liu@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/include/asm/spinlock.h | 6 ++++++
- arch/powerpc/kexec/crash.c          | 4 ++++
- 2 files changed, 10 insertions(+)
+ drivers/gpu/drm/amd/amdgpu/vcn_v1_0.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/powerpc/include/asm/spinlock.h b/arch/powerpc/include/asm/spinlock.h
-index 860228e917dc..a6381d110795 100644
---- a/arch/powerpc/include/asm/spinlock.h
-+++ b/arch/powerpc/include/asm/spinlock.h
-@@ -111,6 +111,8 @@ static inline void splpar_spin_yield(arch_spinlock_t *lock) {};
- static inline void splpar_rw_yield(arch_rwlock_t *lock) {};
- #endif
+diff --git a/drivers/gpu/drm/amd/amdgpu/vcn_v1_0.c b/drivers/gpu/drm/amd/amdgpu/vcn_v1_0.c
+index 4f8f3bb218320..a54f8943ffa34 100644
+--- a/drivers/gpu/drm/amd/amdgpu/vcn_v1_0.c
++++ b/drivers/gpu/drm/amd/amdgpu/vcn_v1_0.c
+@@ -857,7 +857,7 @@ static int vcn_v1_0_set_clockgating_state(void *handle,
  
-+extern bool crash_skip_spinlock __read_mostly;
-+
- static inline bool is_shared_processor(void)
- {
- #ifdef CONFIG_PPC_SPLPAR
-@@ -142,6 +144,8 @@ static inline void arch_spin_lock(arch_spinlock_t *lock)
- 		if (likely(__arch_spin_trylock(lock) == 0))
- 			break;
- 		do {
-+			if (unlikely(crash_skip_spinlock))
-+				return;
- 			HMT_low();
- 			if (is_shared_processor())
- 				splpar_spin_yield(lock);
-@@ -161,6 +165,8 @@ void arch_spin_lock_flags(arch_spinlock_t *lock, unsigned long flags)
- 		local_save_flags(flags_dis);
- 		local_irq_restore(flags);
- 		do {
-+			if (unlikely(crash_skip_spinlock))
-+				return;
- 			HMT_low();
- 			if (is_shared_processor())
- 				splpar_spin_yield(lock);
-diff --git a/arch/powerpc/kexec/crash.c b/arch/powerpc/kexec/crash.c
-index d488311efab1..ae081f0f2472 100644
---- a/arch/powerpc/kexec/crash.c
-+++ b/arch/powerpc/kexec/crash.c
-@@ -66,6 +66,9 @@ static int handle_fault(struct pt_regs *regs)
- 
- #ifdef CONFIG_SMP
- 
-+bool crash_skip_spinlock;
-+EXPORT_SYMBOL(crash_skip_spinlock);
-+
- static atomic_t cpus_in_crash;
- void crash_ipi_callback(struct pt_regs *regs)
- {
-@@ -129,6 +132,7 @@ static void crash_kexec_prepare_cpus(int cpu)
- 	/* Would it be better to replace the trap vector here? */
- 
- 	if (atomic_read(&cpus_in_crash) >= ncpus) {
-+		crash_skip_spinlock = true;
- 		printk(KERN_EMERG "IPI complete\n");
- 		return;
- 	}
+ 	if (enable) {
+ 		/* wait for STATUS to clear */
+-		if (vcn_v1_0_is_idle(handle))
++		if (!vcn_v1_0_is_idle(handle))
+ 			return -EBUSY;
+ 		vcn_v1_0_enable_clock_gating(adev);
+ 	} else {
 -- 
-2.24.1
+2.20.1
 
