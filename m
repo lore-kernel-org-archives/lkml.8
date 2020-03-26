@@ -2,55 +2,55 @@ Return-Path: <SRS0=aGSP=5L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94460C2D0E7
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 09:35:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DBFAEC43331
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 09:35:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B12C2073E
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 09:35:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A67442073E
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 09:35:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZSbUP9Bf"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TbKs66vs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727890AbgCZJfY (ORCPT
+        id S1727935AbgCZJf1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 05:35:24 -0400
-Received: from us-smtp-delivery-74.mimecast.com ([63.128.21.74]:35071 "EHLO
+        Thu, 26 Mar 2020 05:35:27 -0400
+Received: from us-smtp-delivery-74.mimecast.com ([63.128.21.74]:43974 "EHLO
         us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727855AbgCZJfX (ORCPT
+        by vger.kernel.org with ESMTP id S1727848AbgCZJfX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 26 Mar 2020 05:35:23 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1585215322;
+        s=mimecast20190719; t=1585215323;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:in-reply-to:in-reply-to:references:references;
-        bh=1O6NIR68kH3OijxL9QZfbmw0zgfeuNupKwN4iXBrHhI=;
-        b=ZSbUP9Bf7JjbkIz71Y9dUpu8DBmyq88Ely9JNm/VBaaSc+EPFYs9CKqF9RgYDMX2FfqixE
-        XLORGKp6ti8P9G7FfUMysfCMtaYFw1Vp2jWoulrrN8RsViV3+M/v87Ekd25rv+KigvLidP
-        8CPvH8K+5F+vSiDy+/mHtpD+WrW5Bko=
+        bh=L2sYLwTjpS4Wy/1BaruUB/j+qeV3x0Y8fENUYH2uZrU=;
+        b=TbKs66vsw47zidbVX+OktoypcYUi69/q6JGZUO8TQdZRCC2srek6wa3Up67jJl72d+jQWG
+        YmAwH6wLee05C1cc8ql47ySrwfCvEMoewKXPreiK+cWfR4CaoYStLE5mElXf571BXq9xe4
+        0jqCnP8IUB0yJm/ZVzWd2k5wKBeNPwM=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-394-NOKHm7gRMPK9MB14xIIOdg-1; Thu, 26 Mar 2020 05:35:20 -0400
-X-MC-Unique: NOKHm7gRMPK9MB14xIIOdg-1
+ us-mta-214-WkidQZtAOkig5nPGd6aNHw-1; Thu, 26 Mar 2020 05:35:21 -0400
+X-MC-Unique: WkidQZtAOkig5nPGd6aNHw-1
 Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 51F988010E8;
-        Thu, 26 Mar 2020 09:35:19 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 24EF4DB21;
+        Thu, 26 Mar 2020 09:35:20 +0000 (UTC)
 Received: from virtlab701.virt.lab.eng.bos.redhat.com (virtlab701.virt.lab.eng.bos.redhat.com [10.19.152.228])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id A82FB9CA3;
-        Thu, 26 Mar 2020 09:35:18 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 76FF69CA3;
+        Thu, 26 Mar 2020 09:35:19 +0000 (UTC)
 From:   Paolo Bonzini <pbonzini@redhat.com>
 To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
 Cc:     Junaid Shahid <junaids@google.com>,
         Sean Christopherson <sean.j.christopherson@intel.com>,
         Vitaly Kuznetsov <vkuznets@redhat.com>
-Subject: [PATCH 2/3] KVM: x86: cleanup kvm_inject_emulated_page_fault
-Date:   Thu, 26 Mar 2020 05:35:15 -0400
-Message-Id: <20200326093516.24215-3-pbonzini@redhat.com>
+Subject: [PATCH 3/3] KVM: x86: Sync SPTEs when injecting page/EPT fault into L1
+Date:   Thu, 26 Mar 2020 05:35:16 -0400
+Message-Id: <20200326093516.24215-4-pbonzini@redhat.com>
 In-Reply-To: <20200326093516.24215-1-pbonzini@redhat.com>
 References: <20200326093516.24215-1-pbonzini@redhat.com>
 X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
@@ -59,69 +59,122 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-To reconstruct the kvm_mmu to be used for page fault injection, we
-can simply use fault->nested_page_fault.  This matches how
-fault->nested_page_fault is assigned in the first place by
-FNAME(walk_addr_generic).
+From: Junaid Shahid <junaids@google.com>
 
+When injecting a page fault or EPT violation/misconfiguration, KVM is
+not syncing any shadow PTEs associated with the faulting address,
+including those in previous MMUs that are associated with L1's current
+EPTP (in a nested EPT scenario), nor is it flushing any hardware TLB
+entries.  All this is done by kvm_mmu_invalidate_gva.
+
+Page faults that are either !PRESENT or RSVD are exempt from the flushing,
+as the CPU is not allowed to cache such translations.
+
+Signed-off-by: Junaid Shahid <junaids@google.com>
+Co-developed-by: Sean Christopherson <sean.j.christopherson@intel.com>
+Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+Message-Id: <20200320212833.3507-8-sean.j.christopherson@intel.com>
 Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 ---
- arch/x86/kvm/mmu/mmu.c         | 6 ------
- arch/x86/kvm/mmu/paging_tmpl.h | 2 +-
- arch/x86/kvm/x86.c             | 7 +++----
- 3 files changed, 4 insertions(+), 11 deletions(-)
+ arch/x86/kvm/vmx/nested.c | 12 ++++++------
+ arch/x86/kvm/vmx/vmx.c    |  2 +-
+ arch/x86/kvm/x86.c        | 11 ++++++++++-
+ 3 files changed, 17 insertions(+), 8 deletions(-)
 
-diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
-index e26c9a583e75..6250e31ac617 100644
---- a/arch/x86/kvm/mmu/mmu.c
-+++ b/arch/x86/kvm/mmu/mmu.c
-@@ -4353,12 +4353,6 @@ static unsigned long get_cr3(struct kvm_vcpu *vcpu)
- 	return kvm_read_cr3(vcpu);
- }
+diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
+index 2c450b0ba592..1586b1b5ba93 100644
+--- a/arch/x86/kvm/vmx/nested.c
++++ b/arch/x86/kvm/vmx/nested.c
+@@ -4559,7 +4559,7 @@ static int nested_vmx_get_vmptr(struct kvm_vcpu *vcpu, gpa_t *vmpointer)
+ 		return 1;
  
--static void inject_page_fault(struct kvm_vcpu *vcpu,
--			      struct x86_exception *fault)
--{
--	vcpu->arch.mmu->inject_page_fault(vcpu, fault);
--}
--
- static bool sync_mmio_spte(struct kvm_vcpu *vcpu, u64 *sptep, gfn_t gfn,
- 			   unsigned int access, int *nr_present)
- {
-diff --git a/arch/x86/kvm/mmu/paging_tmpl.h b/arch/x86/kvm/mmu/paging_tmpl.h
-index 1ddbfff64ccc..ae646acf6703 100644
---- a/arch/x86/kvm/mmu/paging_tmpl.h
-+++ b/arch/x86/kvm/mmu/paging_tmpl.h
-@@ -812,7 +812,7 @@ static int FNAME(page_fault)(struct kvm_vcpu *vcpu, gpa_t addr, u32 error_code,
- 	if (!r) {
- 		pgprintk("%s: guest page fault\n", __func__);
- 		if (!prefault)
--			inject_page_fault(vcpu, &walker.fault);
-+			kvm_inject_emulated_page_fault(vcpu, &walker.fault);
- 
- 		return RET_PF_RETRY;
+ 	if (kvm_read_guest_virt(vcpu, gva, vmpointer, sizeof(*vmpointer), &e)) {
+-		kvm_inject_page_fault(vcpu, &e);
++		kvm_inject_emulated_page_fault(vcpu, &e);
+ 		return 1;
  	}
+ 
+@@ -4868,7 +4868,7 @@ static int handle_vmread(struct kvm_vcpu *vcpu)
+ 			return 1;
+ 		/* _system ok, nested_vmx_check_permission has verified cpl=0 */
+ 		if (kvm_write_guest_virt_system(vcpu, gva, &value, len, &e)) {
+-			kvm_inject_page_fault(vcpu, &e);
++			kvm_inject_emulated_page_fault(vcpu, &e);
+ 			return 1;
+ 		}
+ 	}
+@@ -4942,7 +4942,7 @@ static int handle_vmwrite(struct kvm_vcpu *vcpu)
+ 					instr_info, false, len, &gva))
+ 			return 1;
+ 		if (kvm_read_guest_virt(vcpu, gva, &value, len, &e)) {
+-			kvm_inject_page_fault(vcpu, &e);
++			kvm_inject_emulated_page_fault(vcpu, &e);
+ 			return 1;
+ 		}
+ 	}
+@@ -5107,7 +5107,7 @@ static int handle_vmptrst(struct kvm_vcpu *vcpu)
+ 	/* *_system ok, nested_vmx_check_permission has verified cpl=0 */
+ 	if (kvm_write_guest_virt_system(vcpu, gva, (void *)&current_vmptr,
+ 					sizeof(gpa_t), &e)) {
+-		kvm_inject_page_fault(vcpu, &e);
++		kvm_inject_emulated_page_fault(vcpu, &e);
+ 		return 1;
+ 	}
+ 	return nested_vmx_succeed(vcpu);
+@@ -5151,7 +5151,7 @@ static int handle_invept(struct kvm_vcpu *vcpu)
+ 			vmx_instruction_info, false, sizeof(operand), &gva))
+ 		return 1;
+ 	if (kvm_read_guest_virt(vcpu, gva, &operand, sizeof(operand), &e)) {
+-		kvm_inject_page_fault(vcpu, &e);
++		kvm_inject_emulated_page_fault(vcpu, &e);
+ 		return 1;
+ 	}
+ 
+@@ -5219,7 +5219,7 @@ static int handle_invvpid(struct kvm_vcpu *vcpu)
+ 			vmx_instruction_info, false, sizeof(operand), &gva))
+ 		return 1;
+ 	if (kvm_read_guest_virt(vcpu, gva, &operand, sizeof(operand), &e)) {
+-		kvm_inject_page_fault(vcpu, &e);
++		kvm_inject_emulated_page_fault(vcpu, &e);
+ 		return 1;
+ 	}
+ 	if (operand.vpid >> 16)
+diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+index 07299a957d4a..c944726b3c0c 100644
+--- a/arch/x86/kvm/vmx/vmx.c
++++ b/arch/x86/kvm/vmx/vmx.c
+@@ -5404,7 +5404,7 @@ static int handle_invpcid(struct kvm_vcpu *vcpu)
+ 		return 1;
+ 
+ 	if (kvm_read_guest_virt(vcpu, gva, &operand, sizeof(operand), &e)) {
+-		kvm_inject_page_fault(vcpu, &e);
++		kvm_inject_emulated_page_fault(vcpu, &e);
+ 		return 1;
+ 	}
+ 
 diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index 64ed6e6e2b56..522905523bf0 100644
+index 522905523bf0..dbca6c3bd0db 100644
 --- a/arch/x86/kvm/x86.c
 +++ b/arch/x86/kvm/x86.c
-@@ -614,12 +614,11 @@ EXPORT_SYMBOL_GPL(kvm_inject_page_fault);
- bool kvm_inject_emulated_page_fault(struct kvm_vcpu *vcpu,
- 				    struct x86_exception *fault)
- {
-+	struct kvm_mmu *fault_mmu;
+@@ -618,8 +618,17 @@ bool kvm_inject_emulated_page_fault(struct kvm_vcpu *vcpu,
  	WARN_ON_ONCE(fault->vector != PF_VECTOR);
  
--	if (mmu_is_nested(vcpu) && !fault->nested_page_fault)
--		vcpu->arch.nested_mmu.inject_page_fault(vcpu, fault);
--	else
--		vcpu->arch.mmu->inject_page_fault(vcpu, fault);
-+	fault_mmu = fault->nested_page_fault ? vcpu->arch.mmu : vcpu->arch.walk_mmu;
-+	fault_mmu->inject_page_fault(vcpu, fault);
+ 	fault_mmu = fault->nested_page_fault ? vcpu->arch.mmu : vcpu->arch.walk_mmu;
+-	fault_mmu->inject_page_fault(vcpu, fault);
  
++	/*
++	 * Invalidate the TLB entry for the faulting address, if it exists,
++	 * else the access will fault indefinitely (and to emulate hardware).
++	 */
++	if ((fault->error_code & PFERR_PRESENT_MASK)
++	    && !(fault->error_code & PFERR_RSVD_MASK))
++		kvm_mmu_invalidate_gva(vcpu, fault_mmu,
++				       fault->address, fault_mmu->root_hpa);
++
++	fault_mmu->inject_page_fault(vcpu, fault);
  	return fault->nested_page_fault;
  }
+ EXPORT_SYMBOL_GPL(kvm_inject_emulated_page_fault);
 -- 
 2.18.2
-
 
