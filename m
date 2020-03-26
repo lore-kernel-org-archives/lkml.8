@@ -2,208 +2,59 @@ Return-Path: <SRS0=aGSP=5L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C2D6C2D0E8
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 09:45:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA4A6C2D0E8
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 09:45:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C8F32070A
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 09:45:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="fmVv4Jh5"
+	by mail.kernel.org (Postfix) with ESMTP id CBB282070A
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 09:45:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727881AbgCZJpW (ORCPT
+        id S1727923AbgCZJpk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 05:45:22 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:36644 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726292AbgCZJpW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 05:45:22 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 02Q9j8SE074969;
-        Thu, 26 Mar 2020 04:45:08 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1585215908;
-        bh=Uo4/pxe9xGciqRZVGsz/aZE4/YhZj0j7qdyZVpdOgus=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=fmVv4Jh5C8mEp8bbxg75iaj0fejDJ/FOb2VOQhi9aNdLnLqodRw2w9AhGYQ1ofwQp
-         z9NggWO5xWugjVfNEJHAxPMFj3BA3Ag1CDxrd9uzOUkW3cK2EAftHs3dLvUI19Wt0/
-         IqoLgKGXbIuDKy89sHrloKa1m+75WuOBLVGBESw8=
-Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 02Q9j8fC017392
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 26 Mar 2020 04:45:08 -0500
-Received: from DFLE108.ent.ti.com (10.64.6.29) by DFLE114.ent.ti.com
- (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 26
- Mar 2020 04:45:08 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE108.ent.ti.com
- (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Thu, 26 Mar 2020 04:45:08 -0500
-Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 02Q9j5hT123802;
-        Thu, 26 Mar 2020 04:45:06 -0500
-Subject: Re: [PATCH v3] driver core: Break infinite loop when deferred probe
- can't be satisfied
-To:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Saravana Kannan <saravanak@google.com>
-CC:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Artem Bityutskiy <artem.bityutskiy@linux.intel.com>,
-        Felipe Balbi <balbi@kernel.org>,
-        Mark Brown <broonie@kernel.org>, Ferry Toth <fntoth@gmail.com>,
-        <grant.likely@arm.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Android Kernel Team <kernel-team@android.com>
-References: <20200324175719.62496-1-andriy.shevchenko@linux.intel.com>
- <20200325032901.29551-1-saravanak@google.com>
- <20200325125120.GX1922688@smile.fi.intel.com>
- <CAGETcx_TGw24UqX7pXZePyskrao6zwnKTq8mBk9g_7jokqAqkA@mail.gmail.com>
- <CAJZ5v0jB1hqzYK8ezjf1_1yMCudNXNS-CsrUJQcmL4W5mBD6fQ@mail.gmail.com>
-From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
-Message-ID: <ca661616-f5bf-d92f-9173-172792797b16@ti.com>
-Date:   Thu, 26 Mar 2020 11:45:18 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Thu, 26 Mar 2020 05:45:40 -0400
+Received: from verein.lst.de ([213.95.11.211]:44786 "EHLO verein.lst.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727780AbgCZJpj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Mar 2020 05:45:39 -0400
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id 602E068C65; Thu, 26 Mar 2020 10:45:35 +0100 (CET)
+Date:   Thu, 26 Mar 2020 10:45:34 +0100
+From:   Christoph Hellwig <hch@lst.de>
+To:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Cc:     Jens Axboe <axboe@kernel.dk>,
+        Michael Schmitz <schmitzmic@gmail.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Christoph Hellwig <hch@lst.de>, linux-ide@vger.kernel.org,
+        linux-m68k@lists.linux-m68k.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 02/27] ata: expose ncq_enable_prio sysfs attribute
+ only on NCQ capable hosts
+Message-ID: <20200326094534.GA9596@lst.de>
+References: <20200317144333.2904-1-b.zolnierkie@samsung.com> <CGME20200317144341eucas1p1b9caa7264b35b23e78fcaeb78d865255@eucas1p1.samsung.com> <20200317144333.2904-3-b.zolnierkie@samsung.com>
 MIME-Version: 1.0
-In-Reply-To: <CAJZ5v0jB1hqzYK8ezjf1_1yMCudNXNS-CsrUJQcmL4W5mBD6fQ@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200317144333.2904-3-b.zolnierkie@samsung.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Tue, Mar 17, 2020 at 03:43:08PM +0100, Bartlomiej Zolnierkiewicz wrote:
+> There is no point in exposing ncq_enable_prio sysfs attribute for
+> devices on PATA and non-NCQ capable SATA hosts so:
+> 
+> * remove dev_attr_ncq_prio_enable from ata_common_sdev_attrs[]
+> 
+> * add ata_ncq_sdev_attrs[]
+> 
+> * update ATA_NCQ_SHT() macro to use ata_ncq_sdev_attrs[]
+> 
+> Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
 
-On 26/03/2020 10.39, Rafael J. Wysocki wrote:
-> On Wed, Mar 25, 2020 at 11:09 PM Saravana Kannan <saravanak@google.com> wrote:
->>
->> On Wed, Mar 25, 2020 at 5:51 AM Andy Shevchenko
->> <andriy.shevchenko@linux.intel.com> wrote:
->>>
-> 
-> [cut]
-> 
->>>
->>> Yes, it's (unlikely) possible (*), but it will give one more iteration per such
->>> case. It's definitely better than infinite loop. Do you agree?
->>
->> Sorry I wasn't being clear (I was in a rush). I'm saying this patch
->> can reintroduce the bug where the deferred probe isn't triggered when
->> it should be.
->>
->> Let's take a simple execution flow.
->>
->> probe_okay is at 10.
->>
->> Thread-A
->>   really_probe(Device-A)
->>     local_probe_okay_count = 10
->>     Device-A probe function is running...
->>
->> Thread-B
->>   really_probe(Device-B)
->>     Device-B probes successfully.
->>     probe_okay incremented to 11
->>
->> Thread-C
->>   Device-C (which had bound earlier) is unbound (say module is
->> unloaded or a million other reasons).
->>   probe_okay is decremented to 10.
->>
->> Thread-A continues
->>   Device-A probe function returns -EPROBE_DEFER
->>   driver_deferred_probe_add_trigger() doesn't do anything because
->>     local_probe_okay_count == probe_okay
->>   But Device-A might have deferred probe waiting on Device-B.
->>   Device-A never probes.
->>
->>> *) It means during probe you have _intensive_ removing, of course you may keep
->>> kernel busy with iterations, but it has no practical sense. DoS attacks more
->>> effective in different ways.
->>
->> I wasn't worried about DoS attacks. More of a functional correctness
->> issue what I explained above.
-> 
-> The code is functionally incorrect as is already AFAICS.
-> 
->> Anyway, if your issue and similar issues can be handles in driver core
->> in a clean way without breaking other cases, I don't have any problem
->> with that. Just that, I think the current solution breaks other cases.
-> 
-> OK, so the situation right now is that commit 58b116bce136 has
-> introduced a regression and so it needs to be fixed or reverted.  The
-> cases that were previously broken and were unbroken by that commit
-> don't matter here, so you cannot argue that they would be "broken".
+Looks good,
 
-commit 58b116bce136 is from 2014 and the whole ULPI support for dwc3
-came in a year later.
-While I agree that 58b116bce136 fail to handle came a year later, but
-technically it did not introduced a regression.
-
-The revert on the other hand is going to introduce a regression as
-things were working fine since 2014. Not sure why the dwc3 issue got
-this long to be noticed as the 58b116bce136 was already in kernel when
-the ULPI support was added...
-
-> It looks to me like the original issue fixed by the commit in question
-> needs to be addressed differently, so I would vote for reverting it
-> and starting over.
-
-Fwiw my original approach was a bit different:
-https://lore.kernel.org/patchwork/patch/454800/
-
-Greg changed it to what ended up in the kernel:
-https://lore.kernel.org/patchwork/cover/454799/
-
->> As an alternate solution, assuming "linux,extcon-name" is coming
->> from some firmware, you might want to look into the fw_devlink
->> feature.
-> 
-> That would be a workaround for a driver core issue, though, wouldn't it?
-> 
->> That feature allows driver core to add device links from firmware
->> information. If you can get that feature to create device links from
->> your dwc3.0.auto (or its parent pci_dev?) to the extcon supplier
->> device, all of this can be sidestepped and your dwc3.0.auto's (or the
->> dwc pci_dev's) probe will be triggered only after extcon is probed.
->>
->> I have very little familiarity with PCI/ACPI. I spent about an hour or
->> two poking at ACPI scan/property code. The relationship between a
->> pci_dev and an acpi_device is a bit confusing to me because I see:
->>
->> static int dwc3_pci_probe(struct pci_dev *pci, const struct pci_device_id *id)
->> {
->>         struct property_entry *p = (struct property_entry *)id->driver_data;
->>         struct dwc3_pci         *dwc;
->>         struct resource         res[2];
->>         int                     ret;
->>         struct device           *dev = &pci->dev;
->> ....
->>         dwc->dwc3 = platform_device_alloc("dwc3", PLATFORM_DEVID_AUTO);
->> ....
->>         ACPI_COMPANION_SET(&dwc->dwc3->dev, ACPI_COMPANION(dev));
->>
->> And ACPI_COMPANION returns an acpi_device by looking at dev->fwnode.
->> So how the heck is a pci_device.dev.fwnode pointing to an
->> acpi_device.fwnode?
-> 
-> acpi_device is an of_node counterpart (or it is an fwnode itself if you will).
-> 
-> Thanks!
-> 
-
-- Péter
-
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+Reviewed-by: Christoph Hellwig <hch@lst.de>
