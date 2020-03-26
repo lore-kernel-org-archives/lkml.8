@@ -4,53 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80F02C43331
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 23:29:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 259AAC2D0E7
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 23:29:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4960E20737
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 23:29:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF2AE20663
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 23:29:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585265356;
-	bh=HDOf5iL2WzIZq9OFWuzWL8Xs5UhCelii0BSjOQdYEbQ=;
+	s=default; t=1585265360;
+	bh=mydvpf9JQotGF33zrvwujih4d2LyJw0bPk+qpk20hdk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kP+uxNc/XrrRYarPvkimah68k+RHPmG2LWAyoSIxZl3wV+yYkqREEh38lmdZH3DVq
-	 CiS/iRQPIxbiZZajquKxLUH0tbgLiw+GGnHFiC7UswYkparJLHLySwn8yXsLd07sqV
-	 7kxjfh/VC1SEtQcmtHZx5ywP0MD2f40kjI7gQA4A=
+	b=CarNj/gGjrm1tZf4rgmU1cpmenTUhHdYK4W1CiE5gPnb4cQk6M5eTEIhHLL/GSMoN
+	 iTUFVNJBrWD11zKZqxiu6EdRT9fGRd/mcg3ZQHgjKDJov4+gDxnmMjhn7sX+diSvAO
+	 bpHcPnUewAVpXxQNRVxEaSJ1iAUeQ9XQIs2QaF3Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728099AbgCZX3P (ORCPT
+        id S1727820AbgCZXYS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 19:29:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43846 "EHLO mail.kernel.org"
+        Thu, 26 Mar 2020 19:24:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43408 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727830AbgCZXYT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 19:24:19 -0400
+        id S1727736AbgCZXYJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Mar 2020 19:24:09 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3D68A20719;
-        Thu, 26 Mar 2020 23:24:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9C78E2083E;
+        Thu, 26 Mar 2020 23:24:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585265058;
-        bh=HDOf5iL2WzIZq9OFWuzWL8Xs5UhCelii0BSjOQdYEbQ=;
+        s=default; t=1585265048;
+        bh=mydvpf9JQotGF33zrvwujih4d2LyJw0bPk+qpk20hdk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RvWpNSpSo8oqr2V+UYHSTkMOysEofKvFcZpsxFvz+hRo7Cd9J7A7jceUbEpEHMh5v
-         pQ0ybfOQe8k9z3Pu3//j9ILxreS1Fo1WCIFUhRNYyTB5awGDcTOJO0HBLN89+nAuBp
-         KbHEr2s+x13ELSb0prcpc1KNOS3OIX43sRCANNjQ=
+        b=c6xobrK9aevBeXV6bHsOJFQT0BFhKGI1CsuzoI6H1+VuchCSW2uuW9+028ZRdnly7
+         l/b5k3qFcOZelMxM225CV+0oS6XpVRZfZKsNSLFENAOh6aEomgoAilsl8m0YKKNeeE
+         wVT4Dfy70X3ozJ0EhXhzgME782DR6Ouqb7vpdfI0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Len Brown <len.brown@intel.com>, Sasha Levin <sashal@kernel.org>,
-        linux-pm@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.5 18/28] tools/power turbostat: Fix gcc build warnings
-Date:   Thu, 26 Mar 2020 19:23:47 -0400
-Message-Id: <20200326232357.7516-18-sashal@kernel.org>
+Cc:     Mario Kleiner <mario.kleiner.de@gmail.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 5.5 09/28] drm/amd/display: Add link_rate quirk for Apple 15" MBP 2017
+Date:   Thu, 26 Mar 2020 19:23:38 -0400
+Message-Id: <20200326232357.7516-9-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200326232357.7516-1-sashal@kernel.org>
 References: <20200326232357.7516-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -59,38 +60,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Len Brown <len.brown@intel.com>
+From: Mario Kleiner <mario.kleiner.de@gmail.com>
 
-[ Upstream commit d8d005ba6afa502ca37ced5782f672c4d2fc1515 ]
+[ Upstream commit dec9de2ada523b344eb2428abfedf9d6cd0a0029 ]
 
-Warning: ‘__builtin_strncpy’ specified bound 20 equals destination size
-	[-Wstringop-truncation]
+This fixes a problem found on the MacBookPro 2017 Retina panel:
 
-reduce param to strncpy, to guarantee that a null byte is always copied
-into destination buffer.
+The panel reports 10 bpc color depth in its EDID, and the
+firmware chooses link settings at boot which support enough
+bandwidth for 10 bpc (324000 kbit/sec aka LINK_RATE_RBR2
+aka 0xc), but the DP_MAX_LINK_RATE dpcd register only reports
+2.7 Gbps (multiplier value 0xa) as possible, in direct
+contradiction of what the firmware successfully set up.
 
-Signed-off-by: Len Brown <len.brown@intel.com>
+This restricts the panel to 8 bpc, not providing the full
+color depth of the panel on Linux <= 5.5. Additionally, commit
+'4a8ca46bae8a ("drm/amd/display: Default max bpc to 16 for eDP")'
+introduced into Linux 5.6-rc1 will unclamp panel depth to
+its full 10 bpc, thereby requiring a eDP bandwidth for all
+modes that exceeds the bandwidth available and causes all modes
+to fail validation -> No modes for the laptop panel -> failure
+to set any mode -> Panel goes dark.
+
+This patch adds a quirk specific to the MBP 2017 15" Retina
+panel to override reported max link rate to the correct maximum
+of 0xc = LINK_RATE_RBR2 to fix the darkness and reduced display
+precision.
+
+Please apply for Linux 5.6+ to avoid regressing Apple MBP panel
+support.
+
+Signed-off-by: Mario Kleiner <mario.kleiner.de@gmail.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/power/x86/turbostat/turbostat.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/gpu/drm/amd/display/dc/core/dc_link_dp.c | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
-diff --git a/tools/power/x86/turbostat/turbostat.c b/tools/power/x86/turbostat/turbostat.c
-index 5d0fddda842c4..78507cd479bb4 100644
---- a/tools/power/x86/turbostat/turbostat.c
-+++ b/tools/power/x86/turbostat/turbostat.c
-@@ -5323,9 +5323,9 @@ int add_counter(unsigned int msr_num, char *path, char *name,
- 	}
+diff --git a/drivers/gpu/drm/amd/display/dc/core/dc_link_dp.c b/drivers/gpu/drm/amd/display/dc/core/dc_link_dp.c
+index 504055fc70e89..6f2b3ec17e7f0 100644
+--- a/drivers/gpu/drm/amd/display/dc/core/dc_link_dp.c
++++ b/drivers/gpu/drm/amd/display/dc/core/dc_link_dp.c
+@@ -2909,6 +2909,17 @@ static bool retrieve_link_cap(struct dc_link *link)
+ 		sink_id.ieee_device_id,
+ 		sizeof(sink_id.ieee_device_id));
  
- 	msrp->msr_num = msr_num;
--	strncpy(msrp->name, name, NAME_BYTES);
-+	strncpy(msrp->name, name, NAME_BYTES - 1);
- 	if (path)
--		strncpy(msrp->path, path, PATH_BYTES);
-+		strncpy(msrp->path, path, PATH_BYTES - 1);
- 	msrp->width = width;
- 	msrp->type = type;
- 	msrp->format = format;
++	/* Quirk Apple MBP 2017 15" Retina panel: Wrong DP_MAX_LINK_RATE */
++	{
++		uint8_t str_mbp_2017[] = { 101, 68, 21, 101, 98, 97 };
++
++		if ((link->dpcd_caps.sink_dev_id == 0x0010fa) &&
++		    !memcmp(link->dpcd_caps.sink_dev_id_str, str_mbp_2017,
++			    sizeof(str_mbp_2017))) {
++			link->reported_link_cap.link_rate = 0x0c;
++		}
++	}
++
+ 	core_link_read_dpcd(
+ 		link,
+ 		DP_SINK_HW_REVISION_START,
 -- 
 2.20.1
 
