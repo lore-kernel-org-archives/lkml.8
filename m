@@ -2,182 +2,305 @@ Return-Path: <SRS0=aGSP=5L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64FEEC2D0E8
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 22:12:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ECB28C2D0E8
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 22:13:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3441220719
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 22:12:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VZKU2EoS"
+	by mail.kernel.org (Postfix) with ESMTP id CA8CE2073E
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 22:13:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727393AbgCZWMm (ORCPT
+        id S1727607AbgCZWNM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 18:12:42 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:35449 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726260AbgCZWMl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 18:12:41 -0400
-Received: by mail-wm1-f67.google.com with SMTP id m3so9856886wmi.0;
-        Thu, 26 Mar 2020 15:12:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:reply-to:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=XV8ONxrhzLm1XRXAjklwNAD/3fXBeH2tcYtEjG9QsSY=;
-        b=VZKU2EoSY8ifMMoVJmBY3z5r8LkOjG1oNvQZZUNdXTAjo6+/rbR+N3AhkJwd8B+m4e
-         9sleYSqmzyPDtmd1MeTgwKf3VE8rN2qLPUpc5+SiaWOfPhjifQ2stsCJ8p4Qb3lQ7JQj
-         aACSd1WRQTwVEcwb8etKAq1hCr/+NohylSJoSGQukTfP5R770VjV4bBlHYcjUgEqwamX
-         j9q483MQjuIg4kYAmLz36XSg7EIWchn66kA0R9c7O3XWO7E+NQBKsm2blO0aB3H/mqOi
-         z6YKwPOHp/urIF3lcl+MaT768OZDjCIPbOUwtGvPa7DiQ38WnNyia80ysHOmYbPxdLPo
-         ZIbQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:reply-to
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=XV8ONxrhzLm1XRXAjklwNAD/3fXBeH2tcYtEjG9QsSY=;
-        b=VMqr9YqIRXvr78LB2ZsW3Bhp/PxgIwBQrR/Vab82dF1tGa1WOS9XrlCQHSho3/ngyf
-         IxslwoWjnhilFDmtSSvWFt5crkMS2AHUvPwvnRPz3rpq8yOSVbl/S1OIf/vGiZLVQNEh
-         mQRXQW/O4/TdcW8I5X0y7jPreADyVY8XTCxe/KRew3dVtkvq8WlYy45GppjXL3tLKOht
-         0lpR5Zf7pJ4EeXDUdCS9eeqAnOLtgugkXR87/Ni81Hx14dDAnJXCf7/QWylJR0iL11Fx
-         mEMmQgab0bNhjeEAkH/jo7iV98y57r1c/kWmWC3eRrG+hCWO+M53zjNIYBUZ+iO9HKOa
-         FkOA==
-X-Gm-Message-State: ANhLgQ2wvV3z54cFNyims3hbwRaXDt9DekEB6XhSWBczrgENXdCLG/s5
-        UEO3/qAMaaPidAUeGk/8+bc=
-X-Google-Smtp-Source: ADFU+vt6ZLuyioBcFjmo9C2azZJw71RH9CqKsiPptR5/A2XORNRp5r6KHCHmmVX7iu5aUcM/sO7bzA==
-X-Received: by 2002:a1c:b105:: with SMTP id a5mr2007926wmf.57.1585260759713;
-        Thu, 26 Mar 2020 15:12:39 -0700 (PDT)
-Received: from localhost ([185.92.221.13])
-        by smtp.gmail.com with ESMTPSA id 195sm5500455wmb.8.2020.03.26.15.12.38
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 26 Mar 2020 15:12:38 -0700 (PDT)
-Date:   Thu, 26 Mar 2020 22:12:37 +0000
-From:   Wei Yang <richard.weiyang@gmail.com>
-To:     "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
-Cc:     linux-mm@kvack.org, akpm@linux-foundation.org,
-        linux-kernel@vger.kernel.org, mpe@ellerman.id.au,
-        linuxppc-dev@lists.ozlabs.org,
-        Sachin Sant <sachinp@linux.vnet.ibm.com>,
-        Baoquan He <bhe@redhat.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Pankaj Gupta <pankaj.gupta.linux@gmail.com>,
-        David Hildenbrand <david@redhat.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Wei Yang <richardw.yang@linux.intel.com>,
-        Oscar Salvador <osalvador@suse.de>,
-        Mike Rapoport <rppt@linux.ibm.com>, stable@vger.kernel.org
-Subject: Re: [PATCH v2] mm/sparse: Fix kernel crash with pfn_section_valid
- check
-Message-ID: <20200326221237.fttur7yyfl7nrdsj@master>
-Reply-To: Wei Yang <richard.weiyang@gmail.com>
-References: <20200326133235.343616-1-aneesh.kumar@linux.ibm.com>
+        Thu, 26 Mar 2020 18:13:12 -0400
+Received: from mx2.suse.de ([195.135.220.15]:55580 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726260AbgCZWNL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Mar 2020 18:13:11 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 9B0E5ABBD;
+        Thu, 26 Mar 2020 22:13:08 +0000 (UTC)
+Subject: Re: [RFC v3 1/2] kernel/sysctl: support setting sysctl parameters
+ from kernel command line
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Luis Chamberlain <mcgrof@kernel.org>,
+        Iurii Zaikin <yzaikin@google.com>,
+        linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
+        linux-mm@kvack.org, Ivan Teterevkov <ivan.teterevkov@nutanix.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        "Eric W . Biederman" <ebiederm@xmission.com>,
+        "Guilherme G . Piccoli" <gpiccoli@canonical.com>
+References: <20200326181606.7027-1-vbabka@suse.cz>
+ <202003261256.950F1E5@keescook>
+From:   Vlastimil Babka <vbabka@suse.cz>
+Autocrypt: addr=vbabka@suse.cz; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <8afebb97-db51-5744-dca9-840dc60cd396@suse.cz>
+Date:   Thu, 26 Mar 2020 23:08:40 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200326133235.343616-1-aneesh.kumar@linux.ibm.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+In-Reply-To: <202003261256.950F1E5@keescook>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 26, 2020 at 07:02:35PM +0530, Aneesh Kumar K.V wrote:
->Fixes the below crash
->
->BUG: Kernel NULL pointer dereference on read at 0x00000000
->Faulting instruction address: 0xc000000000c3447c
->Oops: Kernel access of bad area, sig: 11 [#1]
->LE PAGE_SIZE=64K MMU=Hash SMP NR_CPUS=2048 NUMA pSeries
->CPU: 11 PID: 7519 Comm: lt-ndctl Not tainted 5.6.0-rc7-autotest #1
->...
->NIP [c000000000c3447c] vmemmap_populated+0x98/0xc0
->LR [c000000000088354] vmemmap_free+0x144/0x320
->Call Trace:
-> section_deactivate+0x220/0x240
-> __remove_pages+0x118/0x170
-> arch_remove_memory+0x3c/0x150
-> memunmap_pages+0x1cc/0x2f0
-> devm_action_release+0x30/0x50
-> release_nodes+0x2f8/0x3e0
-> device_release_driver_internal+0x168/0x270
-> unbind_store+0x130/0x170
-> drv_attr_store+0x44/0x60
-> sysfs_kf_write+0x68/0x80
-> kernfs_fop_write+0x100/0x290
-> __vfs_write+0x3c/0x70
-> vfs_write+0xcc/0x240
-> ksys_write+0x7c/0x140
-> system_call+0x5c/0x68
->
->The crash is due to NULL dereference at
->
->test_bit(idx, ms->usage->subsection_map); due to ms->usage = NULL; in pfn_section_valid()
->
->With commit: d41e2f3bd546 ("mm/hotplug: fix hot remove failure in SPARSEMEM|!VMEMMAP case")
->section_mem_map is set to NULL after depopulate_section_mem(). This
->was done so that pfn_page() can work correctly with kernel config that disables
->SPARSEMEM_VMEMMAP. With that config pfn_to_page does
->
->	__section_mem_map_addr(__sec) + __pfn;
->where
->
->static inline struct page *__section_mem_map_addr(struct mem_section *section)
->{
->	unsigned long map = section->section_mem_map;
->	map &= SECTION_MAP_MASK;
->	return (struct page *)map;
->}
->
->Now with SPASEMEM_VMEMAP enabled, mem_section->usage->subsection_map is used to
->check the pfn validity (pfn_valid()). Since section_deactivate release
->mem_section->usage if a section is fully deactivated, pfn_valid() check after
->a subsection_deactivate cause a kernel crash.
->
->static inline int pfn_valid(unsigned long pfn)
->{
->...
->	return early_section(ms) || pfn_section_valid(ms, pfn);
->}
->
->where
->
->static inline int pfn_section_valid(struct mem_section *ms, unsigned long pfn)
->{
->	int idx = subsection_map_index(pfn);
->
->	return test_bit(idx, ms->usage->subsection_map);
->}
->
->Avoid this by clearing SECTION_HAS_MEM_MAP when mem_section->usage is freed.
->For architectures like ppc64 where large pages are used for vmmemap mapping (16MB),
->a specific vmemmap mapping can cover multiple sections. Hence before a vmemmap
->mapping page can be freed, the kernel needs to make sure there are no valid sections
->within that mapping. Clearing the section valid bit before
->depopulate_section_memap enables this.
->
->Fixes: d41e2f3bd546 ("mm/hotplug: fix hot remove failure in SPARSEMEM|!VMEMMAP case")
->Reported-by: Sachin Sant <sachinp@linux.vnet.ibm.com>
->Tested-by: Sachin Sant <sachinp@linux.vnet.ibm.com>
->Cc: Baoquan He <bhe@redhat.com>
->Cc: Michael Ellerman <mpe@ellerman.id.au>
->Cc: Dan Williams <dan.j.williams@intel.com>
->Cc: Pankaj Gupta <pankaj.gupta.linux@gmail.com>
->Cc: David Hildenbrand <david@redhat.com>
->Cc: Michal Hocko <mhocko@suse.com>
->Cc: Wei Yang <richardw.yang@linux.intel.com>
->Cc: Oscar Salvador <osalvador@suse.de>
->Cc: Mike Rapoport <rppt@linux.ibm.com>
->Cc: <stable@vger.kernel.org>
->Signed-off-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
+On 3/26/20 9:24 PM, Kees Cook wrote:
+> On Thu, Mar 26, 2020 at 07:16:05PM +0100, Vlastimil Babka wrote:
+>> Since the major change, I'm sending another RFC. If this approach is ok, then
+>> it probably needs just some tweaks to the various error prints, and then
+>> converting the rest of existing on-off aliases (if I come up with an idea how
+>> to find them all). Thanks for all the feedback so far.
+> 
+> Yeah, I think you can drop "RFC" from this in the next version -- you're
+> well into getting this finalized IMO.
 
-Reviewed-by: Wei Yang <richard.weiyang@gmail.com>
+Thanks!
 
--- 
-Wei Yang
-Help you, Help me
+>>
+>>  .../admin-guide/kernel-parameters.txt         |  9 ++
+>>  fs/proc/proc_sysctl.c                         | 90 +++++++++++++++++++
+>>  include/linux/sysctl.h                        |  4 +
+>>  init/main.c                                   |  2 +
+>>  4 files changed, 105 insertions(+)
+>>
+>> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+>> index c07815d230bc..0c7e032e7c2e 100644
+>> --- a/Documentation/admin-guide/kernel-parameters.txt
+>> +++ b/Documentation/admin-guide/kernel-parameters.txt
+>> @@ -4793,6 +4793,15 @@
+>>  
+>>  	switches=	[HW,M68k]
+>>  
+>> +	sysctl.*=	[KNL]
+>> +			Set a sysctl parameter, right before loading the init
+>> +			process, as if the value was written to the respective
+>> +			/proc/sys/... file. Unrecognized parameters and invalid
+>> +			values are reported in the kernel log. Sysctls
+>> +			registered later by a loaded module cannot be set this
+>> +			way.
+> 
+> Maybe add: "Both '.' and '/' are recognized as separators."
+
+OK
+
+>> +
+>> +/* Set sysctl value passed on kernel command line. */
+>> +static int process_sysctl_arg(char *param, char *val,
+>> +			       const char *unused, void *arg)
+>> +{
+>> +	char *path;
+>> +	struct file_system_type *proc_fs_type;
+>> +	struct file *file;
+>> +	int len;
+>> +	int err;
+>> +	loff_t pos = 0;
+>> +	ssize_t wret;
+>> +
+>> +	if (strncmp(param, "sysctl", sizeof("sysctl") - 1))
+>> +		return 0;
+>> +
+>> +	param += sizeof("sysctl") - 1;
+>> +
+>> +	if (param[0] != '/' && param[0] != '.')
+>> +		return 0;
+>> +
+>> +	param++;
+>> +
+>> +	if (!proc_mnt) {
+>> +		proc_fs_type = get_fs_type("proc");
+>> +		if (!proc_fs_type) {
+>> +			pr_err("Failed to mount procfs to set sysctl from command line");
+>> +			return 0;
+>> +		}
+>> +		proc_mnt = kern_mount(proc_fs_type);
+>> +		put_filesystem(proc_fs_type);
+>> +		if (IS_ERR(proc_mnt)) {
+>> +			pr_err("Failed to mount procfs to set sysctl from command line");
+>> +			proc_mnt = NULL;
+>> +			return 0;
+>> +		}
+>> +	}
+>> +
+>> +	len = 4 + strlen(param) + 1;
+>> +	path = kmalloc(len, GFP_KERNEL);
+>> +	if (!path)
+>> +		panic("%s: Failed to allocate %d bytes t\n", __func__, len);
+>> +
+>> +	strcpy(path, "sys/");
+>> +	strcat(path, param);
+>> +	strreplace(path, '.', '/');
+> 
+> You can do the replacement against the param directly, and also avoid
+> all the open-coded string manipulations:
+> 
+> 	strreplace(param, '.', '/');
+
+I didn't want to modify param for the sake of error prints, but perhaps
+the replacements won't confuse system admin too much?
+
+> 	path = kasprintf(GFP_KERNEL, "sys/%s", param);
+
+Ah yea that's nicer.
+
+>> +
+>> +	file = file_open_root(proc_mnt->mnt_root, proc_mnt, path, O_WRONLY, 0);
+>> +	if (IS_ERR(file)) {
+>> +		err = PTR_ERR(file);
+>> +		pr_err("Error %d opening proc file %s to set sysctl parameter '%s=%s'",
+>> +			err, path, param, val);
+>> +		goto out;
+>> +	}
+>> +	len = strlen(val);
+>> +	wret = kernel_write(file, val, len, &pos);
+>> +	if (wret < 0) {
+>> +		err = wret;
+>> +		pr_err("Error %d writing to proc file %s to set sysctl parameter '%s=%s'",
+>> +			err, path, param, val);
+>> +	} else if (wret != len) {
+>> +		pr_err("Wrote only %ld bytes of %d  writing to proc file %s to set sysctl parameter '%s=%s'",
+>> +			wret, len, path, param, val);
+>> +	}
+>> +
+>> +	filp_close(file, NULL);
+> 
+> Please check the return value of filp_close() and treat that as an error
+> for this function too.
+
+Well I could print it, but not much else? The unmount will probably fail
+in that case?
+
+>> +out:
+>> +	kfree(path);
+>> +	return 0;
+>> +}
+>> +
+>> +void do_sysctl_args(void)
+>> +{
+>> +	char *command_line;
+>> +
+>> +	command_line = kstrdup(saved_command_line, GFP_KERNEL);
+>> +	if (!command_line)
+>> +		panic("%s: Failed to allocate copy of command line\n", __func__);
+>> +
+>> +	parse_args("Setting sysctl args", command_line,
+>> +		   NULL, 0, -1, -1, NULL, process_sysctl_arg);
+>> +
+>> +	if (proc_mnt)
+>> +		kern_unmount(proc_mnt);
+> 
+> I don't recommend sharing allocation lifetimes between two functions
+> (process_sysctl_arg() allocs proc_mnt, and do_sysctl_args() frees it).
+> And since you have a scoped lifetime, why allocate it or have it as a
+> global at all? It can be stack-allocated and passed to the handler:
+
+So the point was that the mount is only done when an applicable sysctl
+parameter is found. On majority of systems there won't be any, at least
+for initial X years :)
+
+> void do_sysctl_args(void)
+> {
+> 	struct file_system_type *proc_fs_type;
+> 	struct vfsmount *proc_mnt;
+> 	char *command_line;
+> 
+> 	proc_fs_type = get_fs_type("proc");
+> 	if (!proc_fs_type) {
+> 		pr_err("Failed to mount procfs to set sysctl from command line");
+> 		return;
+> 	}
+> 	proc_mnt = kern_mount(proc_fs_type);
+> 	put_filesystem(proc_fs_type);
+> 	if (IS_ERR(proc_mnt)) {
+> 		pr_err("Failed to mount procfs to set sysctl from command line");
+> 		return;
+> 	}
+> 
+> 	command_line = kstrdup(saved_command_line, GFP_KERNEL);
+> 	if (!command_line)
+> 		panic("%s: Failed to allocate copy of command line\n",
+> 			__func__);
+> 
+> 	parse_args("Setting sysctl args", command_line,
+> 		   NULL, 0, -1, -1, proc_mnt, process_sysctl_arg);
+> 
+> 	kfree(command_line);
+> 	kern_unmount(proc_mnt);
+> }
+> 
+> And then pull the mount from (the hilariously overloaded name) "arg":
+
+But I guess the "mount on first applicable argument" approach would work
+with this scheme as well:
+
+struct vfsmount *proc_mnt = NULL;
+parse_args(..., &proc_mnt, ...)
+
+Thanks!
