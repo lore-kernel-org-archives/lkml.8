@@ -2,163 +2,416 @@ Return-Path: <SRS0=aGSP=5L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 740D7C43331
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 21:59:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B36BC2D0E8
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 22:01:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2A93E20838
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 21:59:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5815720714
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 22:01:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="q0DrcVUn";
-	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="M6qFnMsh"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sAQWLJag"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727509AbgCZV7O (ORCPT
+        id S1727444AbgCZWBU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 17:59:14 -0400
-Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:49936 "EHLO
-        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726260AbgCZV7O (ORCPT
+        Thu, 26 Mar 2020 18:01:20 -0400
+Received: from mail-qv1-f66.google.com ([209.85.219.66]:43981 "EHLO
+        mail-qv1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726296AbgCZWBT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 17:59:14 -0400
-Received: from pps.filterd (m0109334.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02QLuO8a012424;
-        Thu, 26 Mar 2020 14:59:02 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : references : in-reply-to : content-type : content-id
- : content-transfer-encoding : mime-version; s=facebook;
- bh=btULhVNZ+FcsHMbgEadVs6xowHHuhCtXKovdGRDiq1M=;
- b=q0DrcVUnhBSzM8m5LOl+eo8D7V9kbdP7SLJvCwgYYRh5eVj9DAoPVUeDUSlH6scoQw95
- JHQ2FRkLCNIF9qVOh+ky4flBPjRgFaEaoKlzmBAlYnX409loVMO7Ben8Ich6+vXUiwSB
- 0SlzPIjokkHhQmEEf+Z244j0BRU514Y6Z4Q= 
-Received: from maileast.thefacebook.com ([163.114.130.16])
-        by mx0a-00082601.pphosted.com with ESMTP id 3010021pq8-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-        Thu, 26 Mar 2020 14:59:02 -0700
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (100.104.31.183)
- by o365-in.thefacebook.com (100.104.35.172) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1847.3; Thu, 26 Mar 2020 14:59:00 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=jPvThokSx1rcLvpfsoCBClxFfy6rKgwM90XzM9M+ZQd7TPXY//cRpByrpmTq7WkOKxUyQmPkiAO2e32/d4C+jz56LvvR4CZxl0EXIUF6By8jwvGCuvE+oBpdP23dgqeSCO3DAXlFblRQkl7xX9PqyGEGvyIFz0IwSJkdCqzJ1JijCzBHFByCVHB4oKrS5uSadc3FE60DzR9OK9a3KKQAjdhS8gt/iD+MMFwQbPK5elXYjy3/GSh/SAKyPK7bEoRghzfciBjltDAPalbYUjBy00Jh+jnPWsyO9O0G8Ongt4SzGucb/wydsVVJ5KIASqMth9pAV1ZBcM4NnwS/8G/+5A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=btULhVNZ+FcsHMbgEadVs6xowHHuhCtXKovdGRDiq1M=;
- b=jvjNlcEjOupfDeSD04vE2mnh+Amjp58jZYElpuPZevTVotNhcwbqKGsOqO2MqHRL7uNNCpB8e4YKFkFN9A9fFnmFGR+raO5dnvMtXEgXPYkaGQCByHv1yCUq086dgmZeV4PCNHF1yxgLL5dXYijlBOKORKHXPyzE6d49CfuSoKqDknUl0XtcooU985YusVKVdEcXbnmLRlEOS1cdhnzF0Hcx+3u+A30oO+IDgZ2OMRd8q2bO0nRYw98o4kNZh6NMzcsIhmcgUEWQzVgjyv1eapBPxUWpw10lOl6He5ggEriaPalx4hXLE0rLuRcbomMkK66JAN+1iO3iTLYCptxPCA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
- header.d=fb.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
- s=selector2-fb-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=btULhVNZ+FcsHMbgEadVs6xowHHuhCtXKovdGRDiq1M=;
- b=M6qFnMshS3ilokIBwA/WcmvmZp81GaarArA0Zb51O5MNxM1kvMCR0SByMMjosrUl9Na/XnhWEMZeGhGrzc/BokqqHItRxVkxM52xYF0cWU1PXyEBx+g0fRBQ+DIYQwpRlJod996fhGn3vI2vurMeSzsA32IA5ytVhdoNXgATMEE=
-Received: from MW3PR15MB3753.namprd15.prod.outlook.com (2603:10b6:303:50::17)
- by MW3PR15MB3884.namprd15.prod.outlook.com (2603:10b6:303:42::9) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2835.18; Thu, 26 Mar
- 2020 21:58:59 +0000
-Received: from MW3PR15MB3753.namprd15.prod.outlook.com
- ([fe80::3517:e69:6e78:4f7c]) by MW3PR15MB3753.namprd15.prod.outlook.com
- ([fe80::3517:e69:6e78:4f7c%7]) with mapi id 15.20.2856.019; Thu, 26 Mar 2020
- 21:58:59 +0000
-From:   Nick Terrell <terrelln@fb.com>
-To:     Petr Malat <oss@malat.biz>
-CC:     Nick Terrell <nickrterrell@gmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Chris Mason <clm@fb.com>,
-        "linux-kbuild@vger.kernel.org" <linux-kbuild@vger.kernel.org>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        Kees Cook <keescook@chromium.org>,
-        Kernel Team <Kernel-team@fb.com>,
-        Adam Borowski <kilobyte@angband.pl>,
-        Patrick Williams <patrickw3@fb.com>,
-        Michael van der Westhuizen <rmikey@fb.com>,
-        "mingo@kernel.org" <mingo@kernel.org>,
-        Patrick Williams <patrick@stwcx.xyz>
-Subject: Re: [PATCH v3 3/8] lib: add zstd support to decompress
-Thread-Topic: [PATCH v3 3/8] lib: add zstd support to decompress
-Thread-Index: AQHWAt/m23+sZPjy5kGvzHRfaAnHI6hbFrwAgAAmGgCAABROAIAAEAIAgAAIgoCAAAQZgA==
-Date:   Thu, 26 Mar 2020 21:58:59 +0000
-Message-ID: <48A06739-A73B-4AE3-80A2-3F490B78404B@fb.com>
-References: <20200325195849.407900-1-nickrterrell@gmail.com>
- <20200325195849.407900-4-nickrterrell@gmail.com>
- <20200326164732.GA17157@ntb.petris.klfree.czf>
- <611A224B-1CB3-4283-9783-87C184C8983A@fb.com>
- <20200326201634.GA9948@ntb.petris.klfree.czf>
- <ED5FFEDC-A3B7-470E-95AE-B60EB1E6AE64@fb.com>
- <20200326214419.GA13249@ntb.petris.klfree.czf>
-In-Reply-To: <20200326214419.GA13249@ntb.petris.klfree.czf>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [67.188.225.242]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 162c8664-c840-4af8-8b3d-08d7d1d0e3af
-x-ms-traffictypediagnostic: MW3PR15MB3884:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <MW3PR15MB3884B23BED671B96D2095BF5ABCF0@MW3PR15MB3884.namprd15.prod.outlook.com>
-x-fb-source: Internal
-x-ms-oob-tlc-oobclassifiers: OLM:8882;
-x-forefront-prvs: 0354B4BED2
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(39860400002)(376002)(366004)(136003)(346002)(396003)(66476007)(91956017)(6506007)(33656002)(26005)(76116006)(66556008)(4326008)(6916009)(36756003)(53546011)(66946007)(64756008)(66446008)(86362001)(7416002)(54906003)(6486002)(71200400001)(81166006)(8936002)(81156014)(6512007)(5660300002)(2906002)(316002)(2616005)(8676002)(478600001)(186003);DIR:OUT;SFP:1102;SCL:1;SRVR:MW3PR15MB3884;H:MW3PR15MB3753.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;
-received-spf: None (protection.outlook.com: fb.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: zELHJzu+QVxXymu3Jm+pWYwn4RmVwUMnwAccEwRk75YN7CLAzT3tWBsogzJybjCJHLQZ/uGyH39mu2wSOyGteKWxtyEcFELRRfiuEYAUrkgHYM3nZiHbk6QqmmqNl9jYIJv6G6deNt1NNwf8Hxdj5dXW2eKDXuIEOJxevVxzgKJAH5VkiRlp7uElEFcEX9XWcdw/wZ1uQTvdr5e6avprcXcJU5zIkpiK/r25yPm/Nu5tDSxIHdiNW3u3GSGlHXbJpvkAxzyfnrSxuh9y3maEc8PZya6u3v+tdzetColBXPlu6Qo3FpE7/mnxLO4NIRDBL5GmZPwCkVHgGbwM84ZwOIEBF5C6WaeuzmPV3ijjXr8Qus3gXCliF9dJym5hdnDoKDd1Ynq2SYtCGJOg9mRHaWE+m6edxBm13K/kmms6+7/0t9c4E+WBmvVZVZqbTilJ
-x-ms-exchange-antispam-messagedata: PRNo3QxOu2fofxCpITaIwGMs1bCuUrzULHwI7pjlrRCccgGR46SCbsKyocFyspjiY4EVNW9sohpT4XS0zaR/89zU7Lq9EwTS0ZFlnz214wR0/WrXKYaVqWPRjFDFy59itsV9pjAiZUej0GTfBxzv6w==
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <062C362D7CFD85429D95828EDC6128A8@namprd15.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Thu, 26 Mar 2020 18:01:19 -0400
+Received: by mail-qv1-f66.google.com with SMTP id c28so3933486qvb.10;
+        Thu, 26 Mar 2020 15:01:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=Cnvjxxekoh6WQ/XcbyvoiGVnj1BaZUTDZMS7i3NtQrI=;
+        b=sAQWLJagS8pKGwlzr+k6EBn5wW3fc7ZGD3jr3qR19QqaKuCnHpngy+SyKzpGZgyLze
+         77eFyF0Fyr0sX9yS4S90z/rtCv09AydCe4bhIAsdRHpbHdGtvAAIMDXLu3YoxvpoURPC
+         GPb9qS4zLfp2UGZHR2UaXJVlC5kI7Kqyb6MVaRg3oeU/kuB6cyV51B5J1mbntuGeBMPC
+         IWaTjlw1jYL/a2j2zARafnAsMFjoi8WTfw9mj3vOdknHXJkMa1Pt1LRVOWXcxkci+XGj
+         FkMayqiIztKnhFxApBWF4lcvvfkpfIeR4pluq1Ek6n8MneMqS9po3MdbJGv798ZrS5Vx
+         dnkA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=Cnvjxxekoh6WQ/XcbyvoiGVnj1BaZUTDZMS7i3NtQrI=;
+        b=idJcwso51UN6QwfmtBdA/7iaY3MWV6KW4AXYwNvcOnjAGuzXYrDW7lYF0q4Ajm63zC
+         3vInDGjK2KisBWTk4flhXsljI/YhiQ+89mgS3nBafya2GRpkapD/pzsOjrfAOduoz7OA
+         Txo3JtwJCth31LBw8ScBZ8wPRrcmkU01jZMS8yg/iPxtveyTg88jfVSlg23WsuHE9sKn
+         aekcFG/oEyBNifsYZ6RXv5YLJbQY0oyyMW3RVjRQDRDYL9gey2o69sBM4w5RKOYK8aTN
+         SnZ3lh3Bt0Fj+qOy8j5sVi9fFQy+kU/3PiZHtZQsV1A/LHo7wM2/tNoyFbdbpE/qAu/+
+         8C/A==
+X-Gm-Message-State: ANhLgQ3tcbdAxH7JVrOw0jQ2JhYCUEm48AnTAEthX/HduSUajYgsne8x
+        zvBcnif8DmcEHqtUMVvQjtI9vaJolIsvH6ToyeI=
+X-Google-Smtp-Source: ADFU+vueoChAbFDNn46cEYb3BBlBjHN2W4qGua6Jg3h8tTIb7MP4iHvdKjO8tccd0rUOndPWpnClq6jEEAsTnDxZTfY=
+X-Received: by 2002:a0c:ee28:: with SMTP id l8mr10838688qvs.196.1585260077465;
+ Thu, 26 Mar 2020 15:01:17 -0700 (PDT)
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 162c8664-c840-4af8-8b3d-08d7d1d0e3af
-X-MS-Exchange-CrossTenant-originalarrivaltime: 26 Mar 2020 21:58:59.8354
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: t26e8yNQAe8srUP6ylPXQ3NrkOfcof7QWHfFGn57i9kEzN4ePSjJeH8jPoUVFZ+6
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW3PR15MB3884
-X-OriginatorOrg: fb.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.645
- definitions=2020-03-26_13:2020-03-26,2020-03-26 signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 adultscore=0
- mlxlogscore=849 mlxscore=0 impostorscore=0 clxscore=1015 malwarescore=0
- phishscore=0 spamscore=0 priorityscore=1501 lowpriorityscore=0
- suspectscore=0 bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2003260160
-X-FB-Internal: deliver
+References: <20200326142823.26277-1-kpsingh@chromium.org> <20200326142823.26277-9-kpsingh@chromium.org>
+ <CAEf4BzZ=qCNVbGqRfkgS-rfsODQaAzjQOErN8U9RH4Eu-HuD8Q@mail.gmail.com> <20200326205604.GC15273@chromium.org>
+In-Reply-To: <20200326205604.GC15273@chromium.org>
+From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date:   Thu, 26 Mar 2020 15:01:06 -0700
+Message-ID: <CAEf4BzYFw+UDxHpAZnEyTQpgJXtG=kd-Rs14wPKgf0f1ZRemqA@mail.gmail.com>
+Subject: Re: [PATCH bpf-next v7 8/8] bpf: lsm: Add Documentation
+To:     KP Singh <kpsingh@chromium.org>
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        bpf <bpf@vger.kernel.org>, linux-security-module@vger.kernel.org,
+        Brendan Jackman <jackmanb@google.com>,
+        Florent Revest <revest@google.com>,
+        Thomas Garnier <thgarnie@google.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        James Morris <jmorris@namei.org>,
+        Kees Cook <keescook@chromium.org>,
+        Paul Turner <pjt@google.com>, Jann Horn <jannh@google.com>,
+        Florent Revest <revest@chromium.org>,
+        Brendan Jackman <jackmanb@chromium.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQoNCj4gT24gTWFyIDI2LCAyMDIwLCBhdCAyOjQ0IFBNLCBQZXRyIE1hbGF0IDxvc3NAbWFsYXQu
-Yml6PiB3cm90ZToNCj4gDQo+IE9uIFRodSwgTWFyIDI2LCAyMDIwIGF0IDA5OjEzOjU0UE0gKzAw
-MDAsIE5pY2sgVGVycmVsbCB3cm90ZToNCj4+Pj4gV2hhdCBkbyB5b3UgbWVhbiBieSB0aGF0PyBD
-YW4geW91IHNoYXJlIHdpdGggbWUgdGhlIHRlc3QgeW91IHJhbj8NCj4+Pj4gSXMgdGhpcyBmb3Ig
-a2VybmVsIGRlY29tcHJlc3Npb24gb3IgaW5pdHJhbWZzIGRlY29tcHJlc3Npb24/DQo+Pj4gSW5p
-dHJhbWZzIC0geW91IGNhbiBhcHBseSBteSB2MiBwYXRjaCBvbiB2NS41IGFuZCB0cnkgd2l0aCB5
-b3VyIHRlc3QgZGF0YS4NCj4+PiANCj4+PiBJIGhhdmUgdGVzdGVkIHlvdXIgcGF0Y2ggYWxzbyBv
-biBBUk12NyBwbGF0Zm9ybSBhbmQgdGhlcmUgdGhlIGRlZ3JhZGF0aW9uDQo+Pj4gd2FzIDglLg0K
-Pj4gDQo+PiBBcmUgeW91IGNvbXBhcmluZyB0aGUgcGVyZm9ybWFuY2Ugb2YgYW4gOCBNQiB3aW5k
-b3cgc2l6ZSB2cyBhIDEyOCBNQg0KPj4gd2luZG93IHNpemU/DQo+IE5vLCBJIHVzZSB0aGUgc2Ft
-ZSBpbml0cmFtZnMgZmlsZSB3aXRoIDIgZGlmZmVyZW50IGtlcm5lbHMgZm9yIHRoZSB0ZXN0LiBJ
-IGhhdmUNCj4gcmVtb3ZlZA0KPiAgaWYgKHBhcmFtcy53aW5kb3dTaXplID4gWlNURF9XSU5ET1dT
-SVpFX01BWCkgZ290byBvdXQ7DQo+IGZyb20geW91ciBjb2RlLg0KDQpUaGFua3MgZm9yIHRoZSBj
-bGFyaWZpY2F0aW9uLiBJIHdpbGwgdHJ5IHRvIHJlcHJvZHVjZSB0aGUgc3BlZWQgZGlmZmVyZW5j
-ZSB5b3XigJl2ZQ0KbWVhc3VyZWQgYmVmb3JlIHN1Ym1pdHRpbmcgdjQgKHRoYXQgZGVsZXRlcyB0
-aGUgd2luZG93U2l6ZSBib3VuZCkuDQoNCkluaXRyYW1mcyBwYXNzZXMgdGhlIHdob2xlIGlucHV0
-IGJ1ZmZlciAoZG9lc27igJl0IHVzZSBmaWxsKSwgYnV0IGRvZXMgdXNlIGZsdXNoLg0KWnN0ZCBh
-bHdheXMgZGVjb21wcmVzc2VzIGludG8gYW4gaW50ZXJuYWwgYnVmZmVyLCB0aGVuIGNvcGllcyBp
-bnRvIHRoZQ0KWlNURF9vdXRCdWZmZXIuIFRoYXQgbWVhbnMgdGhlIG9ubHkgZnVuY3Rpb25hbCBk
-aWZmZXJlbmNlIGJldHdlZW4gdGhlIHR3bw0KdmVyc2lvbnMgZm9yIGluaXRyYW1mcyBzaG91bGQg
-YmUgdGhhdCBJIHdpbGwgY2FsbCBmbHVzaCgpIDQgS0IgYXQgYSB0aW1lLCBhbmQgeW91DQpjYWxs
-IGZsdXNoIDEyOCBLQiBhdCBhIHRpbWUuIE5haXZlbHkgSSB3b3VsZG7igJl0IGV4cGVjdCB0aGlz
-IHRvIG1hdHRlciB0b28gbXVjaCwNCmJ1dCBJIHdpbGwgbWVhc3VyZS4NCg0KQmVzdCwNCk5pY2s=
+On Thu, Mar 26, 2020 at 1:56 PM KP Singh <kpsingh@chromium.org> wrote:
+>
+> Thanks for the reviews!
+>
+> On 26-M=C3=A4r 12:31, Andrii Nakryiko wrote:
+> > On Thu, Mar 26, 2020 at 7:29 AM KP Singh <kpsingh@chromium.org> wrote:
+> > >
+> > > From: KP Singh <kpsingh@google.com>
+> > >
+> > > Document how eBPF programs (BPF_PROG_TYPE_LSM) can be loaded and
+> > > attached (BPF_LSM_MAC) to the LSM hooks.
+> > >
+> > > Signed-off-by: KP Singh <kpsingh@google.com>
+> > > Reviewed-by: Brendan Jackman <jackmanb@google.com>
+> > > Reviewed-by: Florent Revest <revest@google.com>
+> > > Reviewed-by: Thomas Garnier <thgarnie@google.com>
+> > > ---
+> >
+> > This needs another pass and re-reading, has a bunch of outdated info :)
+>
+> Indeed :)
+>
+> >
+> > >  Documentation/bpf/bpf_lsm.rst | 150 ++++++++++++++++++++++++++++++++=
+++
+> > >  Documentation/bpf/index.rst   |   1 +
+> > >  2 files changed, 151 insertions(+)
+> > >  create mode 100644 Documentation/bpf/bpf_lsm.rst
+> > >
+> > > diff --git a/Documentation/bpf/bpf_lsm.rst b/Documentation/bpf/bpf_ls=
+m.rst
+> > > new file mode 100644
+> > > index 000000000000..2a2c3b4a74d4
+> > > --- /dev/null
+> > > +++ b/Documentation/bpf/bpf_lsm.rst
+> > > @@ -0,0 +1,150 @@
+> > > +.. SPDX-License-Identifier: GPL-2.0+
+> > > +.. Copyright (C) 2020 Google LLC.
+> > > +
+> > > +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> > > +LSM BPF Programs
+> > > +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> > > +
+> > > +These BPF programs allow runtime instrumentation of the LSM hooks by=
+ privileged
+> > > +users to implement system-wide MAC (Mandatory Access Control) and Au=
+dit
+> > > +policies using eBPF. Since these program end up modifying the MAC po=
+licies of
+> > > +the system, they require both ``CAP_MAC_ADMIN`` and also require
+> > > +``CAP_SYS_ADMIN`` for the loading of BPF programs.
+> > > +
+> > > +Structure
+> > > +---------
+> > > +
+> > > +The example shows an eBPF program that can be attached to the ``file=
+_mprotect``
+> > > +LSM hook:
+> > > +
+> > > +.. c:function:: int file_mprotect(struct vm_area_struct *vma, unsign=
+ed long reqprot, unsigned long prot);
+> > > +
+> > > +Other LSM hooks which can be instrumented can be found in
+> > > +``include/linux/lsm_hooks.h``.
+> > > +
+> > > +eBPF programs that use :doc:`/bpf/btf` do not need to include kernel=
+ headers
+> > > +for accessing information from the attached eBPF program's context. =
+They can
+> > > +simply declare the structures in the eBPF program and only specify t=
+he fields
+> > > +that need to be accessed.
+> > > +
+> > > +.. code-block:: c
+> > > +
+> > > +       struct mm_struct {
+> > > +               unsigned long start_brk, brk, start_stack;
+> > > +       } __attribute__((preserve_access_index));
+> > > +
+> > > +       struct vm_area_struct {
+> > > +               unsigned long start_brk, brk, start_stack;
+> > > +               unsigned long vm_start, vm_end;
+> > > +               struct mm_struct *vm_mm;
+> > > +       } __attribute__((preserve_access_index));
+> > > +
+> > > +
+> > > +.. note:: Only the size and the names of the fields must match the t=
+ype in the
+> > > +         kernel and the order of the fields is irrelevant.
+> >
+> > type should match/be compatible as well?
+>
+> I changed it to simply be:
+>
+> .. note:: The order of the fields is irrelevant.
+>
+> >
+> > > +
+> > > +This can be further simplified (if one has access to the BTF informa=
+tion at
+> > > +build time) by generating the ``vmlinux.h`` with:
+> > > +
+> > > +.. code-block:: console
+> > > +
+> > > +        # bpftool dump file <path-to-btf-vmlinux> format c > vmlinux=
+.h
+> > > +
+> >
+> > bpftool btf *dump* file
+>
+> Done.
+>
+> >
+> > > +.. note:: ``path-to-btf-vmlinux`` can be ``/sys/kernel/btf/vmlinux``=
+ if the
+> > > +         build environment matches the environment the BPF programs =
+are
+> > > +         deployed in.
+> > > +
+> > > +The ``vmlinux.h`` can then simply be included in the BPF programs wi=
+thout
+> > > +requiring the definition of the types.
+> > > +
+> > > +The eBPF programs can be declared using the``BPF_PROG``
+> > > +macros defined in `tools/lib/bpf/bpf_tracing.h`_. In this
+> > > +example:
+> > > +
+> > > +       * ``"lsm/file_mprotect"`` indicates the LSM hook that the pro=
+gram must
+> > > +         be attached to
+> > > +       * ``mprotect_audit`` is the name of the eBPF program
+> > > +
+> > > +.. code-block:: c
+> > > +
+> > > +        SEC("lsm/file_mprotect")
+> > > +        int BPF_PROG(mprotect_audit, struct vm_area_struct *vma,
+> > > +                     unsigned long reqprot, unsigned long prot, int =
+ret)
+> > > +       {
+> > > +                /* Ret is the return value from the previous BPF pro=
+gram
+> > > +                 * or 0 if it's the first hook.
+> > > +                 */
+> > > +                if (ret !=3D 0)
+> > > +                        return ret;
+> > > +
+> > > +               int is_heap;
+> > > +
+> > > +               is_heap =3D (vma->vm_start >=3D vma->vm_mm->start_brk=
+ &&
+> > > +                          vma->vm_end <=3D vma->vm_mm->brk);
+> > > +
+> > > +               /* Return an -EPERM or write information to the perf =
+events buffer
+> > > +                * for auditing
+> > > +                */
+> >
+> > return missing?
+>
+> Fixed.
+>
+> >
+> > > +       }
+> > > +
+> > > +The ``__attribute__((preserve_access_index))`` is a clang feature th=
+at allows
+> > > +the BPF verifier to update the offsets for the access at runtime usi=
+ng the
+> > > +:doc:`/bpf/btf` information. Since the BPF verifier is aware of the =
+types, it
+> > > +also validates all the accesses made to the various types in the eBP=
+F program.
+> > > +
+> > > +Loading
+> > > +-------
+> > > +
+> > > +eBPF programs can be loaded with the :manpage:`bpf(2)` syscall's
+> > > +``BPF_PROG_LOAD`` operation or more simply by using the the libbpf h=
+elper
+> > > +``bpf_prog_load_xattr``:
+> > > +
+> > > +
+> > > +.. code-block:: c
+> > > +
+> > > +       struct bpf_prog_load_attr attr =3D {
+> > > +               .file =3D "./prog.o",
+> > > +       };
+> > > +       struct bpf_object *prog_obj;
+> > > +       struct bpf_program *prog;
+> > > +       int prog_fd;
+> > > +
+> > > +       bpf_prog_load_xattr(&attr, &prog_obj, &prog_fd);
+> >
+> > Can you please update this to not use deprecated/legacy APIs. Please
+> > suggest bpf_object__open/bpf_object__load  and/or BPF skeleton as an
+> > example.
+>
+>
+> Simplified and modernized this section as:
+>
+>
+> Loading
+> -------
+>
+> eBPF programs can be loaded with the :manpage:`bpf(2)` syscall's
+> ``BPF_PROG_LOAD`` operation:
+>
+> .. code-block:: c
+>
+>         struct bpf_object *obj;
+>
+>         obj =3D bpf_object__open("./my_prog.o");
+>         bpf_object__load(obj);
+>
+> This can be simplified by using a skeleton header generated by ``bpftool`=
+`:
+>
+> .. code-block:: console
+>
+>         # bpftool gen skeleton my_prog.o > my_prog.skel.h
+>
+> and the program can be loaded by including ``my_prog.skel.h`` and using
+> the generated helper, ``my_prog__open_and_load``.
+>
+> Attachment to LSM Hooks
+> -----------------------
+>
+> The LSM allows attachment of eBPF programs as LSM hooks using :manpage:`b=
+pf(2)`
+> syscall's ``BPF_RAW_TRACEPOINT_OPEN`` operation or more simply by
+> using the libbpf helper ``bpf_program__attach_lsm``.
+>
+> The program can be detached from the LSM hook by *destroying* the ``link`=
+`
+> link returned by ``bpf_program__attach_lsm`` using ``bpf_link__destroy``.
+>
+> One can also use the helpers generated in ``my_prog.skel.h`` i.e.
+> ``my_prog__attach`` for attachment and ``my_prog__destroy`` for cleaning =
+up.
+>
+> </end>
+>
+> If this looks okay, I will send a v8 with this updated and other
+> fixes.
+>
+
+Sounds good.
+
+> - KP
+>
+> >
+> > > +
+> > > +Attachment to LSM Hooks
+> > > +-----------------------
+> > > +
+> > > +The LSM allows attachment of eBPF programs as LSM hooks using :manpa=
+ge:`bpf(2)`
+> > > +syscall's ``BPF_PROG_ATTACH`` operation or more simply by
+> >
+> > BPF_PROG_ATTACH is incorrect, it's RAW_TRACEPOINT_OPEN, isn't it?
+>
+> Correct, updated. Thanks!
+>
+> >
+> > > +using the libbpf helper ``bpf_program__attach_lsm``. In the code sho=
+wn below
+> > > +``prog`` is the eBPF program loaded using ``BPF_PROG_LOAD``:
+> > > +
+> > > +.. code-block:: c
+> > > +
+> > > +       struct bpf_link *link;
+> > > +
+> > > +       link =3D bpf_program__attach_lsm(prog);
+> > > +
+> > > +The program can be detached from the LSM hook by *destroying* the ``=
+link``
+> > > +link returned by ``bpf_program__attach_lsm``:
+> > > +
+> > > +.. code-block:: c
+> > > +
+> > > +       link->destroy();
+> >
+> > that's not how it works in C ;)
+>
+> Oops, I incorrectly picked it up from link->destroy(link); and wrote
+> something stupid.
+>
+> >
+> > bpf_link__destroy(link);
+>
+> Updated in the snippet posted above.
+>
+> - KP
+>
+> >
+> > > +
+> > > +Examples
+> > > +--------
+> > > +
+> > > +An example eBPF programs can be found in
+> > > +`tools/testing/selftests/bpf/progs/lsm.c`_ and the corresponding
+> > > +userspace code in `tools/testing/selftests/bpf/prog_tests/test_lsm.c=
+`_
+> > > +
+> > > +.. Links
+> > > +.. _tools/lib/bpf/bpf_tracing.h:
+> > > +   https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/=
+tree/tools/lib/bpf/bpf_tracing.h
+> > > +.. _tools/testing/selftests/bpf/progs/lsm.c:
+> > > +   https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/=
+tree/tools/testing/selftests/bpf/progs/lsm.c
+> > > +.. _tools/testing/selftests/bpf/progs/lsm_void_hook.c:
+> > > +   https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/=
+tree/tools/testing/selftests/bpf/progs/lsm_void_hook.c
+> > > +.. _tools/testing/selftests/bpf/prog_tests/test_lsm.c:
+> > > +   https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/=
+tree/tools/testing/selftests/bpf/prog_tests/test_lsm.c
+> > > diff --git a/Documentation/bpf/index.rst b/Documentation/bpf/index.rs=
+t
+> > > index 7be43c5f2dcf..f99677f3572f 100644
+> > > --- a/Documentation/bpf/index.rst
+> > > +++ b/Documentation/bpf/index.rst
+> > > @@ -45,6 +45,7 @@ Program types
+> > >     prog_cgroup_sockopt
+> > >     prog_cgroup_sysctl
+> > >     prog_flow_dissector
+> > > +   bpf_lsm
+> > >
+> > >
+> > >  Testing and debugging BPF
+> > > --
+> > > 2.20.1
+> > >
