@@ -2,91 +2,91 @@ Return-Path: <SRS0=aGSP=5L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70023C43331
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 23:41:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE67BC43331
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 23:48:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E2B920663
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 23:41:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 90E4420719
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 23:48:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HAyV60qB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727656AbgCZXlj (ORCPT
+        id S1727652AbgCZXsu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 19:41:39 -0400
-Received: from www262.sakura.ne.jp ([202.181.97.72]:56868 "EHLO
-        www262.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726363AbgCZXli (ORCPT
+        Thu, 26 Mar 2020 19:48:50 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:40033 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726067AbgCZXsu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 19:41:38 -0400
-Received: from fsav109.sakura.ne.jp (fsav109.sakura.ne.jp [27.133.134.236])
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id 02QNfUR6064902;
-        Fri, 27 Mar 2020 08:41:30 +0900 (JST)
-        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
-Received: from www262.sakura.ne.jp (202.181.97.72)
- by fsav109.sakura.ne.jp (F-Secure/fsigk_smtp/550/fsav109.sakura.ne.jp);
- Fri, 27 Mar 2020 08:41:30 +0900 (JST)
-X-Virus-Status: clean(F-Secure/fsigk_smtp/550/fsav109.sakura.ne.jp)
-Received: from [192.168.1.9] (M106072142033.v4.enabler.ne.jp [106.72.142.33])
-        (authenticated bits=0)
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id 02QNfUCc064896
-        (version=TLSv1.2 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO);
-        Fri, 27 Mar 2020 08:41:30 +0900 (JST)
-        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
-Subject: Re: [PATCH AUTOSEL 5.5 23/28] kconfig: Add yes2modconfig and
- mod2yesconfig targets.
-To:     Sasha Levin <sashal@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        linux-kbuild@vger.kernel.org
-References: <20200326232357.7516-1-sashal@kernel.org>
- <20200326232357.7516-23-sashal@kernel.org>
-From:   Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
-Message-ID: <d4546302-2dd8-0930-f478-654bfbddb642@i-love.sakura.ne.jp>
-Date:   Fri, 27 Mar 2020 08:41:28 +0900
-User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Thu, 26 Mar 2020 19:48:50 -0400
+Received: by mail-lf1-f65.google.com with SMTP id j17so6371575lfe.7;
+        Thu, 26 Mar 2020 16:48:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=OxfsuJxUwQgyHeL6ML1Ets48AkLBPa97SvcuT6O+r2w=;
+        b=HAyV60qBe3SD5OX4zLRd4QxQKBdm76OMz7aCv0yF0aj3KPd4/r7kOo6qnAwu/ZAF1/
+         eLn/MJhS9Axh75Ww/wSveVhWZzii5tBVlpQLMybJYFbXPEPu5Bz6n9OoJbHftph+tJkW
+         3EWuHUDVLo7CF+Uyydqv6bWzIsdAed+fCIUef+47qS3LgFUg4/KMl12NqsiOACYGfcGQ
+         VM3Jf5Lt/RQOdZv9R5TqRy9uLZznlnYTxUBKaEQcPjT2dMLUonFn+v3nuRPA3M7iPYhM
+         73rhbOBrJvUs4zCeCbHbT1WPQw92bjaredJkoRBunWqfvZEIgGg+OVeVNjiA3r2zvk2t
+         HUQQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=OxfsuJxUwQgyHeL6ML1Ets48AkLBPa97SvcuT6O+r2w=;
+        b=oQ/rqfgilGvM8/kaJemIrOck5fZ1Upq5NhhmX9Pg5yy8nDdRBI8HqBmXBwqItZYxAe
+         Pciw51mAvOdsx1sKfTelHz+VlNmuX5c9xDU76IKj9AH2rI/BUVCxyfmELV1zgcTavLHu
+         +Z3T5u0A63POTskqsSEhCsaD9ae4srTijvdJd3GAVfa338A3K/IQe94WPsdiiMKkiyjG
+         WX8ScOVjuaaIO6MXWQ3RM7P/QhmzZug56DhAF0LJ8tsXfmivO5kpDFyN/2Y32B35q4hG
+         qeroJ0PUxxoJGh79q4qg6w1bmZnIa1Ci9ZnnVQg0hzSjZ9F2RCiBnMqMNlG6DF4OTeav
+         bCfQ==
+X-Gm-Message-State: AGi0PuZ04azbDJFtVyFS9TR/vVm66paeo3KyyyGHCqnAvUPT3hPt7dTb
+        VqKWvK8HpE/QFYuJm1HTXs9LWHzScutrqGV6K4Y=
+X-Google-Smtp-Source: APiQypLmMGgk3Zqm7RhdrseYvQYa7UrVl29HUF1yy85h+6Zn9zyRg4mh8uaAzG74LZm0mcl3tFheM7MCdI2V5eeSNMs=
+X-Received: by 2002:a19:6f02:: with SMTP id k2mr1378706lfc.119.1585266527281;
+ Thu, 26 Mar 2020 16:48:47 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200326232357.7516-23-sashal@kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200326031613.19372-1-yuehaibing@huawei.com>
+In-Reply-To: <20200326031613.19372-1-yuehaibing@huawei.com>
+From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Date:   Thu, 26 Mar 2020 16:48:35 -0700
+Message-ID: <CAADnVQL=jcJAKwcNarjL8-=+9HxhPuRtYOWH_qZ8wGRbNmpbYQ@mail.gmail.com>
+Subject: Re: [PATCH bpf-next] bpf: remove unused vairable 'bpf_xdp_link_lops'
+To:     YueHaibing <yuehaibing@huawei.com>
+Cc:     Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Jesper Dangaard Brouer <hawk@kernel.org>,
+        John Fastabend <john.fastabend@gmail.com>,
+        Network Development <netdev@vger.kernel.org>,
+        bpf <bpf@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello.
+On Wed, Mar 25, 2020 at 8:16 PM YueHaibing <yuehaibing@huawei.com> wrote:
+>
+> kernel/bpf/syscall.c:2263:34: warning: 'bpf_xdp_link_lops' defined but not used [-Wunused-const-variable=]
+>  static const struct bpf_link_ops bpf_xdp_link_lops;
+>                                   ^~~~~~~~~~~~~~~~~
+>
+> commit 70ed506c3bbc ("bpf: Introduce pinnable bpf_link abstraction")
+> involded this unused variable, remove it.
+>
+> Reported-by: Hulk Robot <hulkci@huawei.com>
+> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 
-I'm fine with backporting this patch. But if you want to backport this patch, please also
-backport 089b7d890f972f6b ("kconfig: Invalidate all symbols after changing to y or m.")
-which actually makes this patch functional.
-
-On 2020/03/27 8:23, Sasha Levin wrote:
-> From: Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
-> 
-> [ Upstream commit 89b9060987d988333de59dd218c9666bd7ee95a5 ]
-> 
-> Since kernel configs provided by syzbot are close to "make allyesconfig",
-> it takes long time to rebuild. This is especially waste of time when we
-> need to rebuild for many times (e.g. doing manual printk() inspection,
-> bisect operations).
-> 
-> We can save time if we can exclude modules which are irrelevant to each
-> problem. But "make localmodconfig" cannot exclude modules which are built
-> into vmlinux because /sbin/lsmod output is used as the source of modules.
-> 
-> Therefore, this patch adds "make yes2modconfig" which converts from =y
-> to =m if possible. After confirming that the interested problem is still
-> reproducible, we can try "make localmodconfig" (and/or manually tune
-> based on "Modules linked in:" line) in order to exclude modules which are
-> irrelevant to the interested problem. While we are at it, this patch also
-> adds "make mod2yesconfig" which converts from =m to =y in case someone
-> wants to convert from =m to =y after "make localmodconfig".
-> 
-> Signed-off-by: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
-> Cc: Dmitry Vyukov <dvyukov@google.com>
-> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
-> Signed-off-by: Sasha Levin <sashal@kernel.org>
+Applied. Thanks
