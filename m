@@ -2,103 +2,174 @@ Return-Path: <SRS0=aGSP=5L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B464C2D0E9
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 11:02:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3B73C43331
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 11:03:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3410920409
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 11:02:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="wTmRLYka"
+	by mail.kernel.org (Postfix) with ESMTP id 9238D2073E
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 11:03:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728108AbgCZLCc (ORCPT
+        id S1728112AbgCZLD3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 07:02:32 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:35055 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727948AbgCZLCb (ORCPT
+        Thu, 26 Mar 2020 07:03:29 -0400
+Received: from mout.kundenserver.de ([212.227.126.135]:54401 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727688AbgCZLD3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 07:02:31 -0400
-Received: by mail-lj1-f194.google.com with SMTP id k21so5925541ljh.2
-        for <linux-kernel@vger.kernel.org>; Thu, 26 Mar 2020 04:02:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=dBYI2pw9sfGjCi0bzv0yJEEWCyqkyjizmfbFD6llCpw=;
-        b=wTmRLYkaXfjcDQz+CdaZDxndUCSZxc+ZmhUW90ynmlTOSPwHaSPR/ClhO/nWxAf7KV
-         4qbWZyni701zQEPh+GULzYXBJxAUVIBHjJXNvg5C3+il+bmdr2lje+8Fq7GiQ+0JtyfK
-         eHrlGTE66PPY62wp1VinlnBxYkMI9JO103TdN/wSPU6ZndMqYfHMyxZNKAJ96zdibjd4
-         d6P/2e2ei6EJUpHWQRRHplaPcdSfQB/WJgmBVQ0EF1EJNGJFGusx7B6eHWAMA+66upts
-         /8YOfHxZHJrkiw4F/7IWsJMqiYVYzTsmxEJUtQZNq9RvgaoF57MbAqhJQ90NjUkol4Ii
-         5+vA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=dBYI2pw9sfGjCi0bzv0yJEEWCyqkyjizmfbFD6llCpw=;
-        b=bM/LpEmCCq5x/h0e5Kfb0nPflBVXXs0o/bRsrj/BzGW+7YE5ODt+LbdWWdeWy8DmtM
-         6bq6UqcouZVm490DKQpx/dEqzag/v3NHMA5ZK3VyfEU7h1MwRKhK0e9trdCf/9wqBnqN
-         Ud4E9MsVwscuB5n78s56e0FyQ+VaKMKxk0+fKS1eMacBgOTg+zkR4rwOaT4mDj4rC5iG
-         AxRNSOu16lyltuAEl3L6C4dFN9R+CrERhS4bUxSnmxGuMjUK508sM+gsanMw7tX8THdE
-         6Y9OhWjjTUyhGc6jEr1d6xZHU+Z0Dd+H9Fgr9QzLz2ge09EeRbw9KtwUUtn065JzQpLJ
-         tj4Q==
-X-Gm-Message-State: ANhLgQ2R8L1lX0A/5Kfs4t0hIEnjmKMLQTvwb7tQanpHafkRJn44SZXP
-        wh1PNky4hFE6UonKuVWp0JEJfiwPLKomke0T9VYIlw==
-X-Google-Smtp-Source: ADFU+vuAu4NKjgOw04+YhFG4R26tuG7+/x5c+7Ylo0beaM6wZX++zLVCej8OOV3pch4cA7VonOGw2KOeqtn4XOjj9jY=
-X-Received: by 2002:a05:651c:445:: with SMTP id g5mr4725550ljg.125.1585220547769;
- Thu, 26 Mar 2020 04:02:27 -0700 (PDT)
+        Thu, 26 Mar 2020 07:03:29 -0400
+Received: from mail.cetitecgmbh.com ([87.190.42.90]) by
+ mrelayeu.kundenserver.de (mreue011 [212.227.15.167]) with ESMTPSA (Nemesis)
+ id 1MWzwP-1ikoIo1wN7-00XNkL for <linux-kernel@vger.kernel.org>; Thu, 26 Mar
+ 2020 12:03:27 +0100
+Received: from pflvmailgateway.corp.cetitec.com (unknown [127.0.0.1])
+        by mail.cetitecgmbh.com (Postfix) with ESMTP id 36DC26502CC
+        for <linux-kernel@vger.kernel.org>; Thu, 26 Mar 2020 11:03:27 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at cetitec.com
+Received: from mail.cetitecgmbh.com ([127.0.0.1])
+        by pflvmailgateway.corp.cetitec.com (pflvmailgateway.corp.cetitec.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id LcUoUfN6j31E for <linux-kernel@vger.kernel.org>;
+        Thu, 26 Mar 2020 12:03:26 +0100 (CET)
+Received: from pfwsexchange.corp.cetitec.com (unknown [10.10.1.99])
+        by mail.cetitecgmbh.com (Postfix) with ESMTPS id CA5C664CA32
+        for <linux-kernel@vger.kernel.org>; Thu, 26 Mar 2020 12:03:26 +0100 (CET)
+Received: from pflmari.corp.cetitec.com (10.8.5.79) by
+ PFWSEXCHANGE.corp.cetitec.com (10.10.1.99) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Thu, 26 Mar 2020 12:03:26 +0100
+Received: by pflmari.corp.cetitec.com (Postfix, from userid 1000)
+        id A12B180505; Thu, 26 Mar 2020 11:35:43 +0100 (CET)
+Date:   Thu, 26 Mar 2020 11:35:43 +0100
+From:   Alex Riesen <alexander.riesen@cetitec.com>
+To:     Kieran Bingham <kieran.bingham@ideasonboard.com>
+CC:     Geert Uytterhoeven <geert@linux-m68k.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        "Laurent Pinchart" <laurent.pinchart@ideasonboard.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        <devel@driverdev.osuosl.org>, <linux-media@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-renesas-soc@vger.kernel.org>
+Subject: [PATCH v4 8/9] dt-bindings: adv748x: add information about serial
+ audio interface (I2S/TDM)
+Message-ID: <37482bdfc6d6c6e231c58550b6bc4582aa29dde0.1585218857.git.alexander.riesen@cetitec.com>
+Mail-Followup-To: Alex Riesen <alexander.riesen@cetitec.com>,
+        Kieran Bingham <kieran.bingham@ideasonboard.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        devel@driverdev.osuosl.org, linux-media@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org
+References: <cover.1585218857.git.alexander.riesen@cetitec.com>
 MIME-Version: 1.0
-References: <20200325113407.26996-1-ulf.hansson@linaro.org> <20200325113407.26996-3-ulf.hansson@linaro.org>
-In-Reply-To: <20200325113407.26996-3-ulf.hansson@linaro.org>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 26 Mar 2020 12:02:16 +0100
-Message-ID: <CACRpkdYVTyViFk9CWwQsfLxsNRbinJs=wEX=th6QVH-fL_YQ7Q@mail.gmail.com>
-Subject: Re: [PATCH 2/2] amba: Initialize dma_parms for amba devices
-To:     Ulf Hansson <ulf.hansson@linaro.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>, Christoph Hellwig <hch@lst.de>,
-        Russell King <linux@armlinux.org.uk>,
-        Vinod Koul <vkoul@kernel.org>, Haibo Chen <haibo.chen@nxp.com>,
-        Ludovic Barre <ludovic.barre@st.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        dmaengine <dmaengine@vger.kernel.org>,
-        stable <stable@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <cover.1585218857.git.alexander.riesen@cetitec.com>
+X-Originating-IP: [10.8.5.79]
+X-ClientProxiedBy: PFWSEXCHANGE.corp.cetitec.com (10.10.1.99) To
+ PFWSEXCHANGE.corp.cetitec.com (10.10.1.99)
+X-EsetResult: clean, is OK
+X-EsetId: 37303A290D7F536A6D7C67
+X-Provags-ID: V03:K1:dVwMkS/YYimA0Fx4x7TlpQe8zOx0tqQ0qxOi0/UrlgQTYhlRTCo
+ H8L/iyheS3aTT6rBGxufKbsR5hcZqq7iHZsmUhIkxcgoEFUiWy5PEZwHp5rYT08ECIRKEZ6
+ TMcLAq6Y/Yd5MS1QJjzVz0E92ZzLYSUyVDUYIgkmR/HxUMFbqOYpT5spxjjGZUuSUqAgozW
+ hwbqdwZ9SjRS5jQkonUaA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:oEobVFJxd94=:JIrU6Ala9Pj6c1hpsLLORm
+ DJpZhhxiIaRKACbwJH844PTtw7oLA6ixxLUS/sd5ZRn/TrqbGpHdcac7WqfLx7VbtgKyBcNRR
+ 7P+HvG/4DPajmcaS+Bp4ymoVdOFcA5HXc6aVCXxgj+m1LKs1vuL0KSFBZnhnXYEsjeSV9JPHA
+ LKPbzBwgv5sEo0KEWtEfMOLlQ+46JreKPbbJgWD5lAyg3/+t1H1v0Xo0OoHDmqmT6AqFTOGdz
+ TW8h4PFpQTKCIIBDUOynneOtwtX/tpoKtYzsXo7eBy1UYdLXXVhl+lD56UQe7nK4SBB6jjbP+
+ e593iB4K8a6RByfdBsPLYN/2QA9VZzvPabD0xxsBZQXrmZe8SiElUAZ1iqcoSHEFYy9MYzBFk
+ 6lB6fz8Rg3NYKwgTtSCdkKsK7BKYDN3igVyaUGTgBakp/M2vwTA7mW3AJTf76b3zTplXK4MaB
+ cD3lw8tTGcBThsaYlgIC8YlEcz0txQHyVMnR+/ki2Jy2GwFkKYqafo3CM4T/jjDxOKls3+PPn
+ qei5LKOGw+hYXSl5B7J1usDV8IaSkIhPuvLPg9vPcW754BzamrDdBd/VO/3OAUgu+2EYGkI6K
+ syletu49YgGZV0bP/TYM9pikVP6k66PYBG0IFkRClZmfM0tFcKCExf7smNGG79DdzpS66fa+4
+ LzZQFOkW4WptUOptWKIt+V1ygmR0vyXKFNtKThh1LiMFO4LZbvrwG47N6BgDWKjOEUnSST+0Z
+ vCrvVPDbVshe/3Xt4HAwF/BHtvBpeueI89x47/vyR9SAsjpkAGNFNJVWSdI8cDE0r4Q0k1AeW
+ q9edlG6GVpu/8ua4MRHbNF6yyQCTvOm8ghoDsXze8/dl7QZ7OjSs+7MfaIvD/G2ir+Pu+0R
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 25, 2020 at 12:34 PM Ulf Hansson <ulf.hansson@linaro.org> wrote:
+As the driver has some support for the audio interface of the device,
+the bindings file should mention it.
 
-> It's currently the amba driver's responsibility to initialize the pointer,
-> dma_parms, for its corresponding struct device. The benefit with this
-> approach allows us to avoid the initialization and to not waste memory for
-> the struct device_dma_parameters, as this can be decided on a case by case
-> basis.
->
-> However, it has turned out that this approach is not very practical. Not
-> only does it lead to open coding, but also to real errors. In principle
-> callers of dma_set_max_seg_size() doesn't check the error code, but just
-> assumes it succeeds.
->
-> For these reasons, let's do the initialization from the common amba bus at
-> the device registration point. This also follows the way the PCI devices
-> are being managed, see pci_device_add().
->
-> Suggested-by: Christoph Hellwig <hch@lst.de>
-> Cc: Russell King <linux@armlinux.org.uk>
-> Cc: <stable@vger.kernel.org>
-> Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+Signed-off-by: Alexander Riesen <alexander.riesen@cetitec.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+--
 
-Yours,
-Linus Walleij
+v3: remove optionality off MCLK clock cell to ensure the description
+    matches the hardware no matter if the line is connected.
+    Suggested-by: Geert Uytterhoeven <geert@linux-m68k.org>
+---
+ .../devicetree/bindings/media/i2c/adv748x.txt    | 16 +++++++++++++++-
+ 1 file changed, 15 insertions(+), 1 deletion(-)
+
+diff --git a/Documentation/devicetree/bindings/media/i2c/adv748x.txt b/Documentation/devicetree/bindings/media/i2c/adv748x.txt
+index 4f91686e54a6..50a753189b81 100644
+--- a/Documentation/devicetree/bindings/media/i2c/adv748x.txt
++++ b/Documentation/devicetree/bindings/media/i2c/adv748x.txt
+@@ -2,7 +2,9 @@
+ 
+ The ADV7481 and ADV7482 are multi format video decoders with an integrated
+ HDMI receiver. They can output CSI-2 on two independent outputs TXA and TXB
+-from three input sources HDMI, analog and TTL.
++from three input sources HDMI, analog and TTL. There is also support for an
++I2S-compatible interface connected to the audio processor of the HDMI decoder.
++The interface has TDM capability (8 slots, 32 bits, left or right justified).
+ 
+ Required Properties:
+ 
+@@ -16,6 +18,8 @@ Required Properties:
+     slave device on the I2C bus. The main address is mandatory, others are
+     optional and remain at default values if not specified.
+ 
++  - #clock-cells: must be <0>
++
+ Optional Properties:
+ 
+   - interrupt-names: Should specify the interrupts as "intrq1", "intrq2" and/or
+@@ -47,6 +51,7 @@ are numbered as follows.
+ 	  TTL		sink		9
+ 	  TXA		source		10
+ 	  TXB		source		11
++	  I2S		source		12
+ 
+ The digital output port nodes, when present, shall contain at least one
+ endpoint. Each of those endpoints shall contain the data-lanes property as
+@@ -72,6 +77,7 @@ Example:
+ 
+ 		#address-cells = <1>;
+ 		#size-cells = <0>;
++		#clock-cells = <0>;
+ 
+ 		interrupt-parent = <&gpio6>;
+ 		interrupt-names = "intrq1", "intrq2";
+@@ -113,4 +119,12 @@ Example:
+ 				remote-endpoint = <&csi20_in>;
+ 			};
+ 		};
++
++		port@c {
++			reg = <12>;
++
++			adv7482_i2s: endpoint {
++				remote-endpoint = <&i2s_in>;
++			};
++		};
+ 	};
+-- 
+2.25.1.25.g9ecbe7eb18
+
+
