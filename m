@@ -2,116 +2,168 @@ Return-Path: <SRS0=aGSP=5L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E4FAC2D0E7
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 22:27:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B697C2D0E8
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 22:29:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 12DB120774
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 22:27:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E7742077D
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 22:29:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="OBFeeCUk"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="OSvQga1K"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727547AbgCZW1w (ORCPT
+        id S1727606AbgCZW3v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 18:27:52 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:43717 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726260AbgCZW1v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 18:27:51 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 48pKPK1KNjz9sR4;
-        Fri, 27 Mar 2020 09:27:48 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1585261669;
-        bh=TTUfgK8iyycLNqBt/AiEmDKjm1TJOM+wT3Gze1ZAfoI=;
-        h=Date:From:To:Cc:Subject:From;
-        b=OBFeeCUk/cwaKUMd5zgGF1BMof6bjIeMzIguMLlyDQUAgtrQYbv7wQgcB2tW6AzkO
-         Bc2qT6DLLdb5LleF8cZSIUnNxwaDEHdN5Nn2vbxKNjZBe9Tffd87OYb+SPPoGmu0mr
-         AWBNfhD8GMhnQVQLUMWwsgWkrCOBF50UuhiR23So90sSt+kxM1GZ1soIFpj5IxKHog
-         Ba3iKBpNxbhF84yVjQUyeXrt6SwLZB+yTFFtewWpAGuyk6uD7i+9Zek1bgQ8YgqnXQ
-         PV1KQ1alBU53uPOABEEmzdztbRq+f6k3PMkf/IuBXP0JMLzDGVK45jl3u6gaOFfUT2
-         u5BHSSZWbUx8g==
-Date:   Fri, 27 Mar 2020 09:27:41 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Colin Cross <ccross@android.com>, Olof Johansson <olof@lixom.net>,
-        Thierry Reding <treding@nvidia.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        ARM <linux-arm-kernel@lists.infradead.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Nagarjuna Kristam <nkristam@nvidia.com>,
-        JC Kuo <jckuo@nvidia.com>, Corentin Labbe <clabbe@baylibre.com>
-Subject: linux-next: manual merge of the tegra tree with the arm-soc tree
-Message-ID: <20200327092741.1dbd3242@canb.auug.org.au>
-MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/Tjrk3Z.A=gzsIRzl_glEECC";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+        Thu, 26 Mar 2020 18:29:51 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:55132 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726270AbgCZW3v (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Mar 2020 18:29:51 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02QMSYv0178468;
+        Thu, 26 Mar 2020 22:29:45 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
+ mime-version : subject : from : in-reply-to : date : cc :
+ content-transfer-encoding : message-id : references : to;
+ s=corp-2020-01-29; bh=AbnF9vL8V5KcErLA/dx3AbUSHBS3ZjKSUCbowOPIxBQ=;
+ b=OSvQga1K+wfyGCM+thkdl6gQ6QHkKbTxVPkn1eo+KofzPr8bhKUaE0P5mNGwqS3jlmpG
+ hGyCiDR24GbFuCl2ewyo6tbQWcqt7JWvgMd4PKVcMotgJkoCj2OfA/eCahe9eKlxf/Y9
+ D2+Ef3FfxMq5mksmKSSFXLsR0bQ6iGfDCPeBrw9b711H9cyvudTplqHybroFSEm9wd4c
+ GzdcA946rESJE5punlDl6SiojrvVtOwaau6kxSITrU3yf8bZidQqJF8eC7rbBDJvRxSr
+ chfIFIxIrL8WwzcvS1/vhqUhsJmNC1JYxCY0Jc6krGCC8b0XXPNeVw9zFtqZNQnDVeY7 xw== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2120.oracle.com with ESMTP id 300urk36pt-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 26 Mar 2020 22:29:44 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02QMQb85133092;
+        Thu, 26 Mar 2020 22:29:44 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by aserp3020.oracle.com with ESMTP id 30073epnya-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 26 Mar 2020 22:29:44 +0000
+Received: from abhmp0003.oracle.com (abhmp0003.oracle.com [141.146.116.9])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 02QMThpU029885;
+        Thu, 26 Mar 2020 22:29:43 GMT
+Received: from anon-dhcp-153.1015granger.net (/68.61.232.219)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 26 Mar 2020 15:29:43 -0700
+Content-Type: text/plain;
+        charset=utf-8
+Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
+Subject: Re: [PATCH 2/2] SUNRPC: Optimize 'svc_print_xprts()'
+From:   Chuck Lever <chuck.lever@oracle.com>
+In-Reply-To: <87r1xe7pvy.fsf@notabene.neil.brown.name>
+Date:   Thu, 26 Mar 2020 18:29:41 -0400
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
+        kernel-janitors@vger.kernel.org
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <9AC34F25-68B7-4184-9A91-A6D026F6BA6F@oracle.com>
+References: <20200325070452.22043-1-christophe.jaillet@wanadoo.fr>
+ <EA5BCDB2-DB05-4B26-8635-E6F5C231DDC6@oracle.com>
+ <42afbf1f-19e1-a05c-e70c-1d46eaba3a71@wanadoo.fr>
+ <87wo786o80.fsf@notabene.neil.brown.name>
+ <2e2d1293-c978-3f1d-5a1e-dc43dc2ad06b@wanadoo.fr>
+ <87r1xe7pvy.fsf@notabene.neil.brown.name>
+To:     Neil Brown <neilb@suse.de>,
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+X-Mailer: Apple Mail (2.3445.104.11)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9572 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=988 adultscore=0
+ suspectscore=0 mlxscore=0 phishscore=0 bulkscore=0 spamscore=0
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2003260163
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9572 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 spamscore=0
+ mlxlogscore=999 clxscore=1015 lowpriorityscore=0 mlxscore=0 phishscore=0
+ bulkscore=0 impostorscore=0 adultscore=0 malwarescore=0 priorityscore=1501
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2003260163
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/Tjrk3Z.A=gzsIRzl_glEECC
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
 
-Hi all,
 
-Today's linux-next merge of the tegra tree got conflicts in:
+> On Mar 26, 2020, at 5:44 PM, NeilBrown <neilb@suse.de> wrote:
+>=20
+> On Thu, Mar 26 2020, Christophe JAILLET wrote:
+>=20
+>> Le 25/03/2020 =C3=A0 23:53, NeilBrown a =C3=A9crit :
+>>> Can I suggest something more like this:
+>>> diff --git a/net/sunrpc/svc_xprt.c b/net/sunrpc/svc_xprt.c
+>>> index de3c077733a7..0292f45b70f6 100644
+>>> --- a/net/sunrpc/svc_xprt.c
+>>> +++ b/net/sunrpc/svc_xprt.c
+>>> @@ -115,16 +115,9 @@ int svc_print_xprts(char *buf, int maxlen)
+>>>  	buf[0] =3D '\0';
+>>>=20
+>>>  	spin_lock(&svc_xprt_class_lock);
+>>> -	list_for_each_entry(xcl, &svc_xprt_class_list, xcl_list) {
+>>> -		int slen;
+>>> -
+>>> -		sprintf(tmpstr, "%s %d\n", xcl->xcl_name, =
+xcl->xcl_max_payload);
+>>> -		slen =3D strlen(tmpstr);
+>>> -		if (len + slen > maxlen)
+>>> -			break;
+>>> -		len +=3D slen;
+>>> -		strcat(buf, tmpstr);
+>>> -	}
+>>> +	list_for_each_entry(xcl, &svc_xprt_class_list, xcl_list)
+>>> +		len +=3D scnprintf(buf + len, maxlen - len, "%s %d\n",
+>>> +				 xcl->xcl_name, xcl->xcl_max_payload);
+>>>  	spin_unlock(&svc_xprt_class_lock);
+>>>=20
+>>>  	return len;
+>>>=20
+>>> NeilBrown
+>>=20
+>> Hi,
+>>=20
+>> this was what I suggested in the patch:
+>>     ---
+>>     This patch should have no functional change.
+>>     We could go further, use scnprintf and write directly in the=20
+>> destination
+>>     buffer. However, this could lead to a truncated last line.
+>>     ---
+>=20
+> Sorry - I missed that.
+> So add
+>=20
+> end =3D strrchr(tmpstr, '\n');
+> if (end)
+>    end[1] =3D 0;
+> else
+>    tmpstr[0] =3D 0;
+>=20
+> or maybe something like
+> 	list_for_each_entry(xcl, &svc_xprt_class_list, xcl_list) {
+> 		int l =3D snprintf(buf + len, maxlen - len, "%s %d\n",
+> 				 xcl->xcl_name, xcl->xcl_max_payload);
+>                if (l < maxlen - len)
+>                	len +=3D l;
+>        }
+>        buf[len] =3D 0;
+>=20
+> There really is no need to have the secondary buffer, and I think =
+doing
+> so just complicates the code.
 
-  drivers/phy/tegra/Kconfig
-  drivers/phy/tegra/xusb.c
+In the interest of getting this fix into the upcoming merge window, =
+let's
+stick with the temporary buffer approach. Thanks!
 
-between commits:
 
-  5a00c7c7604f ("phy: tegra: xusb: Add usb-role-switch support")
-  23babe30fb45 ("phy: tegra: xusb: Add usb-phy support")
-  d74ce0954cb2 ("phy: tegra: xusb: Add support to get companion USB 3 port")
-  58e7bd08b569 ("phy: tegra: xusb: Add Tegra194 support")
+--
+Chuck Lever
 
-from the arm-soc tree and commit:
 
-  f67213cee2b3 ("phy: tegra: xusb: Add usb-role-switch support")
-  e8f7d2f409a1 ("phy: tegra: xusb: Add usb-phy support")
-  5a40fc4b934c ("phy: tegra: xusb: Add support to get companion USB 3 port")
-  1ef535c6ba8e ("phy: tegra: xusb: Add Tegra194 support")
 
-from the tegra tree.
-
-These are slightly different patches (the latter has been rebased).
-Also there are further commits affecting these files in the tegra tree.
-
-I fixed it up (I just used the version from the tegra tree) and can
-carry the fix as necessary. This is now fixed as far as linux-next is
-concerned, but any non trivial conflicts should be mentioned to your
-upstream maintainer when your tree is submitted for merging.  You may
-also want to consider cooperating with the maintainer of the conflicting
-tree to minimise any particularly complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/Tjrk3Z.A=gzsIRzl_glEECC
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl59LF0ACgkQAVBC80lX
-0GwyAQf+I5kTj3T8nDJGpq9RC07WHcKa32mVQgkMo2yk0xHSeyeD/pVxCFFUTAGM
-Dbn3bOwyMiRP7eXlvvlMue8eIwqBa8iZefahef2i0CbV7nhKR8HLuvVJwspIilMP
-IwA9rlKRT+ESRlP6c76oHbV43qSY6Bg1RtOLPw8CgqzcVFriItgDSbApN+VWvQSY
-Fl8xpuqBhWajxLTjZULhQo/PpngggfPpTI2Z/PE2qBlh9HBQLAFYU/U2qcEaTah/
-86h1R29S1m7VEuHlmzKmwyhB/Z8tt4zXRwhoN5ZdvLB9vXfrqT3HA015xZrPK12Y
-/3jEJRBE5TZ4vM7QZ78S6h51LSEQsA==
-=oWYQ
------END PGP SIGNATURE-----
-
---Sig_/Tjrk3Z.A=gzsIRzl_glEECC--
