@@ -2,115 +2,147 @@ Return-Path: <SRS0=aGSP=5L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.7 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66AA7C2D0E8
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 08:31:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB58CC43331
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 08:34:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 43BB520772
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 08:31:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8345A20719
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 08:34:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727612AbgCZIbF convert rfc822-to-8bit (ORCPT
+        id S1727895AbgCZIeY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 04:31:05 -0400
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:34240 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726259AbgCZIbE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 04:31:04 -0400
-Received: by mail-qt1-f195.google.com with SMTP id 10so4591412qtp.1;
-        Thu, 26 Mar 2020 01:31:04 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=1uL6T0AlsEjbmQmM6hXpAIWUikHWCOqgCwWrHStOPM4=;
-        b=JH3O4DFcQPzWFJmBjC/6CSDEMrX1UAowmp4PKE4vqLdFoiKqXriar8u53ExFjXN7wR
-         KapHDumX8ckM5BRYaqLwhT0TzsOvgmkbaJJAJEcpRtaqROujK51FlxjgO/7p8jXaNvWg
-         Pi/r326GHl07uzTo8ZESydPHPwEsKwt2HdD05EQhsNIkUI4BtNNfYXmJr4JPPqvmS0/V
-         JpSbD06R1HVaJXdAMws0Qxhq3bao/4/K9MR1wjGNlCGD+vGApDevKPIXkxXg1oBNVIPN
-         AWSIyWgxpFOxz9+vqGZ6YJQ1Dtemiusnr95jTXYnCaXCmDJx4DD7x1O0Aqj0TONMmsTW
-         rnCQ==
-X-Gm-Message-State: ANhLgQ2fvmi7DBGwwJWpnv8fq30xkfcNcUlKbTndNi9CcuiFKlqTOJv6
-        suub27wH7GWmXgk2evrxJLaWQOvh3b0U0F0M4ic=
-X-Google-Smtp-Source: ADFU+vvrb2nktbpRKwccTTwusZLhub3zTLR2A0M333GepHEiS4/SHtpcUDWp6ciSQJVRM0eIRQ3W5cCMQVXrKGlpkc4=
-X-Received: by 2002:ac8:7449:: with SMTP id h9mr7109717qtr.386.1585211464008;
- Thu, 26 Mar 2020 01:31:04 -0700 (PDT)
+        Thu, 26 Mar 2020 04:34:24 -0400
+Received: from mga04.intel.com ([192.55.52.120]:44735 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727866AbgCZIeV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Mar 2020 04:34:21 -0400
+IronPort-SDR: RVr/sKGyhxIMdz6HpIaaMhZpfgGs268wiRdrLx+0F/vTNiomitmxvpQm9rcyLdfPmw+VnHiadS
+ Pn7Gy77wADBw==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Mar 2020 01:34:21 -0700
+IronPort-SDR: nly9xD30xpsmGWYFWXpCQfSK56dqJFIPOST3nuhEheHKExNfIQ5XgPc3HXfYowGvGJpdixXyaW
+ B8k9bFVtCr9w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,307,1580803200"; 
+   d="scan'208";a="446919804"
+Received: from shao2-debian.sh.intel.com (HELO localhost) ([10.239.13.3])
+  by fmsmga005.fm.intel.com with ESMTP; 26 Mar 2020 01:34:13 -0700
+Date:   Thu, 26 Mar 2020 16:33:55 +0800
+From:   kernel test robot <rong.a.chen@intel.com>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mark Gross <mgross@linux.intel.com>,
+        Tony Luck <tony.luck@intel.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        Len Brown <lenb@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        linux-edac@vger.kernel.org,
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        linux-hwmon@vger.kernel.org, Zhang Rui <rui.zhang@intel.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Jacob Pan <jacob.jun.pan@linux.intel.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        linux-mmc <linux-mmc@vger.kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        Takashi Iwai <tiwai@suse.com>,
+        ALSA Development Mailing List <alsa-devel@alsa-project.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        linux-crypto <linux-crypto@vger.kernel.org>, lkp@lists.01.org
+Subject: Re: [cpufreq] 06c4d00466: will-it-scale.per_process_ops -53.4%
+ regression
+Message-ID: <20200326083355.GO11705@shao2-debian>
+References: <20200320131509.564059710@linutronix.de>
+ <20200324060124.GC11705@shao2-debian>
+ <CAHp75VeeKZLeZ8E3Py7LECN54SPFHaRgkxrMzBYQWXM8x+4JhA@mail.gmail.com>
+ <43a4189a-7153-18e8-4657-4a4400002c05@intel.com>
+ <87zhc4ybbt.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-References: <20200322095527.397716-1-syq@debian.org> <827f0ae8-2e97-5eeb-387d-275d8aac98ad@gmail.com>
-In-Reply-To: <827f0ae8-2e97-5eeb-387d-275d8aac98ad@gmail.com>
-From:   YunQiang Su <syq@debian.org>
-Date:   Thu, 26 Mar 2020 16:30:52 +0800
-Message-ID: <CAKcpw6XsJVYP=4k+fjSF+JLM_J7ab9sV7nYFwUduzvNvWPzmBw@mail.gmail.com>
-Subject: Re: [PATCH v2] getauxval.3: MIPS, AT_BASE_PLATFORM passes ISA level
-To:     "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com>
-Cc:     linux-mips <linux-mips@vger.kernel.org>, linux-man@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <87zhc4ybbt.fsf@nanos.tec.linutronix.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Michael Kerrisk (man-pages) <mtk.manpages@gmail.com> 于2020年3月26日周四 下午4:12写道：
->
-> Hello YunQiang Su
->
-> On 3/22/20 10:55 AM, YunQiang Su wrote:
-> > Since Linux 5.7, on MIPS, we use AT_BASE_PLATFORM to pass ISA level.
-> > The values may be:
-> >   mips2, mips3, mips4, mips5,
-> >   mips32, mips32r2, mips32r6,
-> >   mips64, mips64r2, mips64r6.
+On Wed, Mar 25, 2020 at 11:32:06AM +0100, Thomas Gleixner wrote:
+> Rong Chen <rong.a.chen@intel.com> writes:
+> > On 3/24/20 6:24 PM, Andy Shevchenko wrote:
+> >> On Tue, Mar 24, 2020 at 8:02 AM kernel test robot <rong.a.chen@intel.com> wrote:
+> >>> Greeting,
+> >>>
+> >>> FYI, we noticed a -53.4% regression of will-it-scale.per_process_ops due to commit:
+> >>> commit: 06c4d00466eb374841bc84c39af19b3161ff6917 ("[patch 09/22] cpufreq: Convert to new X86 CPU match macros")
+> >>> url: https://github.com/0day-ci/linux/commits/Thomas-Gleixner/x86-devicetable-Move-x86-specific-macro-out-of-generic-code/20200321-031729
+> >>> base: https://git.kernel.org/cgit/linux/kernel/git/rafael/linux-pm.git linux-next
+> >>>
+> >>> in testcase: will-it-scale
+> >>> on test machine: 4 threads Intel(R) Core(TM) i3-3220 CPU @ 3.30GHz with 8G memory
+> >>> with following parameters:
+> >>
+> >> drivers/cpufreq/speedstep-centrino.c change missed the terminator,
+> >> perhaps it's a culprit, because I don't believe removing dups and
+> >> reordering lines may affect this.
+> >> Can you restore terminator there and re-test?
+> >>
 > >
-> > This behavior is different with PowerPC.
->
-> Thank you for the patch. I see that this is scheduled for
-> Linux 5.7 (for which the merge window is not yet open).
-> How certain is it that the feature will land in 5.7?
-
-It is in mips-next and linux-next now.
-
->
+> > I have retested with the change, but it has no effect on the performance.
+> 
+> Bah. The binary equivalence testing detected this, but I obvioulsy
+> missed it. Delta fix below.
+> 
 > Thanks,
->
-> Michael
->
-> > https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/?id=e585b768da111f2c2d413de6214e83bbdfee8f22
-> > Signed-off-by: YunQiang Su <syq@debian.org>
-> >
-> > ----
-> > v1 -> v2: fix typo
-> > ---
-> >  man3/getauxval.3 | 7 ++++---
-> >  1 file changed, 4 insertions(+), 3 deletions(-)
-> >
-> > diff --git a/man3/getauxval.3 b/man3/getauxval.3
-> > index 456371c6a..bcc116dd2 100644
-> > --- a/man3/getauxval.3
-> > +++ b/man3/getauxval.3
-> > @@ -60,9 +60,10 @@ values are present on all architectures.
-> >  The base address of the program interpreter (usually, the dynamic linker).
-> >  .TP
-> >  .BR AT_BASE_PLATFORM
-> > -A pointer to a string identifying the real platform; may differ from
-> > -.BR AT_PLATFORM
-> > -(PowerPC only).
-> > +A pointer to a string (PowerPC and MIPS only).
-> > +On PowerPC, this identifies the real platform; may differ from
-> > +.BR AT_PLATFORM "."
-> > +On MIPS, this identifies the ISA level (Since 5.7).
-> >  .TP
-> >  .BR AT_CLKTCK
-> >  The frequency with which
-> >
->
->
-> --
-> Michael Kerrisk
-> Linux man-pages maintainer; http://www.kernel.org/doc/man-pages/
-> Linux/UNIX System Programming Training: http://man7.org/training/
+> 
+>         tglx
+> 
+> 8<--------------
+> --- a/drivers/cpufreq/intel_pstate.c
+> +++ b/drivers/cpufreq/intel_pstate.c
+> @@ -2727,7 +2727,7 @@ static inline void intel_pstate_request_
+>  
+>  #define X86_MATCH_HWP(model, hwp_mode)					\
+>  	X86_MATCH_VENDOR_FAM_MODEL_FEATURE(INTEL, 6, INTEL_FAM6_##model, \
+> -					   X86_FEATURE_APERFMPERF, hwp_mode)
+> +					   X86_FEATURE_HWP, hwp_mode)
+>  
+>  static const struct x86_cpu_id hwp_support_ids[] __initconst = {
+>  	X86_MATCH_HWP(BROADWELL_X,	INTEL_PSTATE_HWP_BROADWELL),
+
+Hi Thomas,
+
+The patch can fix the regression:
+
+commit: 
+  06c4d00466 ("cpufreq: Convert to new X86 CPU match macros")
+  d369f9be1a ("the fix patch")
+
+06c4d00466eb3748  d369f9be1ad1e22da4e8f03557  testcase/testparams/testbox
+----------------  --------------------------  ---------------------------
+         %stddev      change         %stddev
+             \          |                \  
+     93200             114%     199599        will-it-scale/performance-process-16-read2-ucode=0x21/lkp-ivb-d02
+     93200             114%     199599        GEO-MEAN will-it-scale.per_process_ops
+
+Best Regards,
+Rong Chen
