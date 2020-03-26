@@ -4,66 +4,66 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76D7EC43331
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 17:00:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B14B6C43331
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 17:00:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4501120714
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 17:00:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 886F120714
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 17:00:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="E0Av0gMB"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="oBUu203t"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728123AbgCZRAL (ORCPT
+        id S1728243AbgCZRAP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 13:00:11 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:33927 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727883AbgCZRAI (ORCPT
+        Thu, 26 Mar 2020 13:00:15 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:33940 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728071AbgCZRAL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 13:00:08 -0400
-Received: by mail-wr1-f65.google.com with SMTP id 65so8773779wrl.1
-        for <linux-kernel@vger.kernel.org>; Thu, 26 Mar 2020 10:00:07 -0700 (PDT)
+        Thu, 26 Mar 2020 13:00:11 -0400
+Received: by mail-wr1-f68.google.com with SMTP id 65so8774132wrl.1
+        for <linux-kernel@vger.kernel.org>; Thu, 26 Mar 2020 10:00:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=C9+ngUpmkFwCrrCCNM5K1pYaDR7H/QYUrPj981ohJpA=;
-        b=E0Av0gMBUOqV1dPvKF2FITdx8Rf0uAaobKa9Ln4rw+eC7JsGjCT057RazyNLToqdYH
-         uDM362SfMEaE7zSr81m7UtJQ2xDDpsqsxmUGaVfeKZBeqvv/vEe2gsnqwKSv4np35TFW
-         8EFA1KJB9qJxQUbzq/UzRCCRMY4nBGQUaajRFRG9MMBwrp1LPEaDjWccAoThyaXXPfm+
-         ZHpQR74vp4XXkR1gbn4lyQYMaZUHpO68kkbt/0dLeH/z8KMmdSSWBl/m09gMcbefsYKq
-         4hjpimLD5O3WfuEsmeJvI1MXq8AvpVQ8HKEBwpsxvofC/mt+BL9LfjlSdxxwVGPvaGpo
-         qdVg==
+        bh=KH7vfyD8OR+w3xEkJPXyaCwSs0SNGzK6N2bTA161o2Y=;
+        b=oBUu203t7RmFgHaWPKfqDoFNZ7qHA8FaJ57IhhRltK+4P7FX4lRZ1KagibzgXmPiS1
+         pAbe2ZIo/zd9GzYffqMYqUMCJjGL6Q+W8I4zCSJas0CYRTMQtw8aU3MVv6EbToUzoYnL
+         g0x5K1Q2Echb5hvO70B2wRozqQKt5CeRQu3+D81P84GVEL+rFlnRyZF/CCnf5UBvzdZW
+         YSsFQo7Jdm3hP0jc/+t2AF1FxDCySn7eFeEGXWZD5mtm8YeKAUvJP3S7YVO0vqdfyGzm
+         l575fST3wy2MLaHF072JL8P9brrFrMR8mV38T19U7FpTLFUJPVgsRQSwsBuUfm/hToZz
+         mEfw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=C9+ngUpmkFwCrrCCNM5K1pYaDR7H/QYUrPj981ohJpA=;
-        b=m3/54O1ttNdo6rT1ctj4gkA7qaS/BX+Ap/Cfbf55FzD84CEm4q4evrN4V/CMBQIBfT
-         fFj1PoWcgQluB7qL1SnumC8cIdWTAxA2zJ8bPKnNoOlX8D0q5nfv2ovoTE/Y5gDkOSoq
-         YZgiA5NuEtxkm4tpgNUg0Kf9yLpS7PFp4/bAnDWZLqWoH6othFfohzz8osZ06kMz6bQ3
-         F4J9tx4/CKGlRzxp73ePEn2HKkHtB06qVuLGjmV3fFbhdmNH4/9ncq58SFOT8mTgM6xE
-         xPnU4rNiaAfdte2eq0VGAQcAgGNcvJ9FENTU2YH5aUed6byCQDsyfVQ19vBXknjTnlnm
-         GQyQ==
-X-Gm-Message-State: ANhLgQ33WbF8wQ57W5w5SLLKUR8fczAFrJz+BdaALKzyQUHhhmDij93O
-        7USDHqnzzw7blwyUvBJd2Rl5zA==
-X-Google-Smtp-Source: ADFU+vseedUJg+qIi0p0xgZxO6cJSY/Je6ly7V3VTm6ALURObymwtKpKsQpPYy2rJDKVcOfhXF3N0A==
-X-Received: by 2002:adf:82b0:: with SMTP id 45mr10206215wrc.120.1585242006281;
-        Thu, 26 Mar 2020 10:00:06 -0700 (PDT)
+        bh=KH7vfyD8OR+w3xEkJPXyaCwSs0SNGzK6N2bTA161o2Y=;
+        b=Q3Z7a3ZqXY5YfSE6+fbYt58pU42AaiFbrymrf6mvJrIg3aCkBAUAXw5ShbWLz3Et2q
+         noi7/ATFSrlusXoq7tTN3bg9Q84mgS3aqj6+dn94a2IY2Uawi0UOI5uU8ka2RAjWmCWm
+         zV3A8o4GvJpBzCl+jBr7roZFHVVwj/8pF9Qyc02CvDgu8vdPwWCw6k2GALlVNEmHH5r/
+         hqwLn42TQQNfiaBdClwEdgsM12isGoZbjZHWJ3OirNwZj8XVT/Be05EVYFUli4z58KBC
+         Fgza40fom6olj1RPRjsxdglSfJuD7AjTb6tDocDrrxKkoL7h5nLzTUun4QwjTIH8FAqQ
+         EJoQ==
+X-Gm-Message-State: ANhLgQ3bn81LjGoYr+7NJzqEMQjC2FDzEhKxHsLRKQ0tgOwg95Qebxeu
+        YIX1ao8pshyn1MYgxxjDQu8YuQ==
+X-Google-Smtp-Source: ADFU+vt3O1mUzxJ83ShJE2FwW+mMD0UGCyJFszSd3W0wU5qTnctfhV6RSdjpu+iyF10tx1Nl+pEApQ==
+X-Received: by 2002:adf:bbca:: with SMTP id z10mr10326561wrg.34.1585242009350;
+        Thu, 26 Mar 2020 10:00:09 -0700 (PDT)
 Received: from bender.baylibre.local ([2a01:e35:2ec0:82b0:5c5f:613e:f775:b6a2])
-        by smtp.gmail.com with ESMTPSA id r15sm4609823wra.19.2020.03.26.10.00.04
+        by smtp.gmail.com with ESMTPSA id r15sm4609823wra.19.2020.03.26.10.00.07
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 26 Mar 2020 10:00:05 -0700 (PDT)
+        Thu, 26 Mar 2020 10:00:08 -0700 (PDT)
 From:   Neil Armstrong <narmstrong@baylibre.com>
 To:     khilman@baylibre.com, devicetree@vger.kernel.org
 Cc:     linux-amlogic@lists.infradead.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         Neil Armstrong <narmstrong@baylibre.com>
-Subject: [PATCH 2/5] arm64: dts: meson: fixup SCP sram nodes
-Date:   Thu, 26 Mar 2020 17:59:55 +0100
-Message-Id: <20200326165958.19274-3-narmstrong@baylibre.com>
+Subject: [PATCH 4/5] arm64: dts: meson-gxbb-kii-pro: fix board compatible
+Date:   Thu, 26 Mar 2020 17:59:57 +0100
+Message-Id: <20200326165958.19274-5-narmstrong@baylibre.com>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20200326165958.19274-1-narmstrong@baylibre.com>
 References: <20200326165958.19274-1-narmstrong@baylibre.com>
@@ -74,76 +74,29 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The GX and AXG SCP sram nodes were using invalid compatible and
-node names for the sram entries.
+Remove the uneeded "amlogic,p201", "amlogic,s905" in the board compatible list.
 
-Fixup the sram entries node names, and use proper compatible for them.
-
-It notably fixes:
-sram@c8000000: 'scp-shmem@0', 'scp-shmem@200' do not match any of the regexes: '^([a-z]*-)?sram(-section)?@[a-f0-9]+$', 'pinctrl-[0-9]+'
+It fixes:
+meson-gxbb-kii-pro.dt.yaml: /: compatible: ['videostrong,kii-pro', 'amlogic,p201', 'amlogic,s905', 'amlogic,meson-gxbb'] is not valid under any of the given schemas
 
 Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
 ---
- arch/arm64/boot/dts/amlogic/meson-axg.dtsi |  6 +++---
- arch/arm64/boot/dts/amlogic/meson-gx.dtsi  | 10 +++++-----
- 2 files changed, 8 insertions(+), 8 deletions(-)
+ arch/arm64/boot/dts/amlogic/meson-gxbb-kii-pro.dts | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-axg.dtsi b/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
-index aace3d32a3df..8e6281c685fa 100644
---- a/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
-@@ -1735,18 +1735,18 @@
- 		};
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-kii-pro.dts b/arch/arm64/boot/dts/amlogic/meson-gxbb-kii-pro.dts
+index 6c9cc45fb417..e8394a8269ee 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gxbb-kii-pro.dts
++++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-kii-pro.dts
+@@ -11,7 +11,7 @@
+ #include <dt-bindings/input/input.h>
+ #include <dt-bindings/leds/common.h>
+ / {
+-	compatible = "videostrong,kii-pro", "amlogic,p201", "amlogic,s905", "amlogic,meson-gxbb";
++	compatible = "videostrong,kii-pro", "amlogic,meson-gxbb";
+ 	model = "Videostrong KII Pro";
  
- 		sram: sram@fffc0000 {
--			compatible = "amlogic,meson-axg-sram", "mmio-sram";
-+			compatible = "mmio-sram";
- 			reg = <0x0 0xfffc0000 0x0 0x20000>;
- 			#address-cells = <1>;
- 			#size-cells = <1>;
- 			ranges = <0 0x0 0xfffc0000 0x20000>;
- 
--			cpu_scp_lpri: scp-shmem@13000 {
-+			cpu_scp_lpri: scp-sram@13000 {
- 				compatible = "amlogic,meson-axg-scp-shmem";
- 				reg = <0x13000 0x400>;
- 			};
- 
--			cpu_scp_hpri: scp-shmem@13400 {
-+			cpu_scp_hpri: scp-sram@13400 {
- 				compatible = "amlogic,meson-axg-scp-shmem";
- 				reg = <0x13400 0x400>;
- 			};
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gx.dtsi b/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
-index 03f79fe045b7..e2bb68ec8502 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
-@@ -398,20 +398,20 @@
- 		};
- 
- 		sram: sram@c8000000 {
--			compatible = "amlogic,meson-gx-sram", "amlogic,meson-gxbb-sram", "mmio-sram";
-+			compatible = "mmio-sram";
- 			reg = <0x0 0xc8000000 0x0 0x14000>;
- 
- 			#address-cells = <1>;
- 			#size-cells = <1>;
- 			ranges = <0 0x0 0xc8000000 0x14000>;
- 
--			cpu_scp_lpri: scp-shmem@0 {
--				compatible = "amlogic,meson-gx-scp-shmem", "amlogic,meson-gxbb-scp-shmem";
-+			cpu_scp_lpri: scp-sram@0 {
-+				compatible = "amlogic,meson-gxbb-scp-shmem";
- 				reg = <0x13000 0x400>;
- 			};
- 
--			cpu_scp_hpri: scp-shmem@200 {
--				compatible = "amlogic,meson-gx-scp-shmem", "amlogic,meson-gxbb-scp-shmem";
-+			cpu_scp_hpri: scp-sram@200 {
-+				compatible = "amlogic,meson-gxbb-scp-shmem";
- 				reg = <0x13400 0x400>;
- 			};
- 		};
+ 	leds {
 -- 
 2.22.0
 
