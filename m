@@ -7,45 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F40C9C43331
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 23:28:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F5C8C43331
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 23:28:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C85E320409
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 23:28:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D39120409
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 23:28:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585265318;
-	bh=YOtm7zAs79v1XBoTlS89YdTT4HhPrN1rh4uVtP3fu6A=;
+	s=default; t=1585265321;
+	bh=Uqu9T6znjX1+39KqQvn1WXb9FvYPbQ02CpAtw+3Q5ik=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Mh/5UUIuzjwsjzSWXWCct+XEidbU0LJv6e1jck7lIWtmaPIULLa5BEg52el0vjlWy
-	 Mtd77rgpPHLextHUYU8iV2QP4VeBhTNappUG5NmmfRqMH2nLyugltbV7+4deEYPgKt
-	 8KXZBEQdH+xOvuwPUqTcxx0pKHzsGNS6rtyP2ajY=
+	b=s9MnhK03fi/N3M81yFEPF9w3GeXO6AHTKFqKAKzzZy8wb7mxU3jzgzyiKnGLH97FG
+	 C6Curw7lAKmhK89HK71uqNpaJwB+KntQLj1oZdR3Uvpt8hBIOuefyXg9KIJDSDZBqu
+	 aN5h6ug0yctUFPMoNHGHj7njVBivB9Y42EmO4yIU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727934AbgCZXYc (ORCPT
+        id S1727927AbgCZXYb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 19:24:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43910 "EHLO mail.kernel.org"
+        Thu, 26 Mar 2020 19:24:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43802 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727848AbgCZXYV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 19:24:21 -0400
+        id S1727809AbgCZXYS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Mar 2020 19:24:18 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 376B12077D;
-        Thu, 26 Mar 2020 23:24:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 03AC420936;
+        Thu, 26 Mar 2020 23:24:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585265060;
-        bh=YOtm7zAs79v1XBoTlS89YdTT4HhPrN1rh4uVtP3fu6A=;
+        s=default; t=1585265057;
+        bh=Uqu9T6znjX1+39KqQvn1WXb9FvYPbQ02CpAtw+3Q5ik=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VXEC9lq+VsUA4xBlvxVbraEk7xI6rflOmSimyjkL1JGeXzOHXKlBU/QrUTRQfCAZG
-         p6goeD2oHjUImXwUWvnbkBtM/Ur3flTzFQo7V4EpUEPxJM73+cm79u9WgmW+J9bI8z
-         tcmf2yEmoHygzW0cif+dQ484ht+LXf5kZABHybN4=
+        b=XVEgJ6+mpQOM/fsOT04qcWx3AHDAl3i62L+RT4+bGWkE6smzR41zXs4T5uI8OCvBz
+         e7rFU8Zjj+CChlv3vsBtLq+sT/gCnEsa461VnYQRrVsoeSpzXdmISBvAJrGAAX2jPu
+         OMZ6lAsratf4Bt08EYRa326Nw9SCH8q/zT4tAk6Y=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Len Brown <len.brown@intel.com>, Sasha Levin <sashal@kernel.org>,
-        linux-pm@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.5 20/28] tools/power turbostat: Fix 32-bit capabilities warning
-Date:   Thu, 26 Mar 2020 19:23:49 -0400
-Message-Id: <20200326232357.7516-20-sashal@kernel.org>
+Cc:     James Zhu <James.Zhu@amd.com>, Leo Liu <leo.liu@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 5.5 17/28] drm/amdgpu: fix typo for vcn1 idle check
+Date:   Thu, 26 Mar 2020 19:23:46 -0400
+Message-Id: <20200326232357.7516-17-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200326232357.7516-1-sashal@kernel.org>
 References: <20200326232357.7516-1-sashal@kernel.org>
@@ -58,103 +60,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Len Brown <len.brown@intel.com>
+From: James Zhu <James.Zhu@amd.com>
 
-[ Upstream commit fcaa681c03ea82193e60d7f2cdfd94fbbcd4cae9 ]
+[ Upstream commit acfc62dc68770aa665cc606891f6df7d6d1e52c0 ]
 
-warning: `turbostat' uses 32-bit capabilities (legacy support in use)
+fix typo for vcn1 idle check
 
-Signed-off-by: Len Brown <len.brown@intel.com>
+Signed-off-by: James Zhu <James.Zhu@amd.com>
+Reviewed-by: Leo Liu <leo.liu@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/power/x86/turbostat/Makefile    |  2 +-
- tools/power/x86/turbostat/turbostat.c | 46 +++++++++++++++++----------
- 2 files changed, 31 insertions(+), 17 deletions(-)
+ drivers/gpu/drm/amd/amdgpu/vcn_v1_0.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/power/x86/turbostat/Makefile b/tools/power/x86/turbostat/Makefile
-index 13f1e8b9ac525..2b6551269e431 100644
---- a/tools/power/x86/turbostat/Makefile
-+++ b/tools/power/x86/turbostat/Makefile
-@@ -16,7 +16,7 @@ override CFLAGS +=	-D_FORTIFY_SOURCE=2
+diff --git a/drivers/gpu/drm/amd/amdgpu/vcn_v1_0.c b/drivers/gpu/drm/amd/amdgpu/vcn_v1_0.c
+index b4f84a820a448..654912402a851 100644
+--- a/drivers/gpu/drm/amd/amdgpu/vcn_v1_0.c
++++ b/drivers/gpu/drm/amd/amdgpu/vcn_v1_0.c
+@@ -1374,7 +1374,7 @@ static int vcn_v1_0_set_clockgating_state(void *handle,
  
- %: %.c
- 	@mkdir -p $(BUILD_OUTPUT)
--	$(CC) $(CFLAGS) $< -o $(BUILD_OUTPUT)/$@ $(LDFLAGS)
-+	$(CC) $(CFLAGS) $< -o $(BUILD_OUTPUT)/$@ $(LDFLAGS) -lcap
- 
- .PHONY : clean
- clean :
-diff --git a/tools/power/x86/turbostat/turbostat.c b/tools/power/x86/turbostat/turbostat.c
-index 17e82eaf5c4f4..988326b67a916 100644
---- a/tools/power/x86/turbostat/turbostat.c
-+++ b/tools/power/x86/turbostat/turbostat.c
-@@ -30,7 +30,7 @@
- #include <sched.h>
- #include <time.h>
- #include <cpuid.h>
--#include <linux/capability.h>
-+#include <sys/capability.h>
- #include <errno.h>
- #include <math.h>
- 
-@@ -3150,28 +3150,42 @@ void check_dev_msr()
- 			err(-5, "no /dev/cpu/0/msr, Try \"# modprobe msr\" ");
- }
- 
--void check_permissions()
-+/*
-+ * check for CAP_SYS_RAWIO
-+ * return 0 on success
-+ * return 1 on fail
-+ */
-+int check_for_cap_sys_rawio(void)
- {
--	struct __user_cap_header_struct cap_header_data;
--	cap_user_header_t cap_header = &cap_header_data;
--	struct __user_cap_data_struct cap_data_data;
--	cap_user_data_t cap_data = &cap_data_data;
--	extern int capget(cap_user_header_t hdrp, cap_user_data_t datap);
--	int do_exit = 0;
--	char pathname[32];
-+	cap_t caps;
-+	cap_flag_value_t cap_flag_value;
- 
--	/* check for CAP_SYS_RAWIO */
--	cap_header->pid = getpid();
--	cap_header->version = _LINUX_CAPABILITY_VERSION;
--	if (capget(cap_header, cap_data) < 0)
--		err(-6, "capget(2) failed");
-+	caps = cap_get_proc();
-+	if (caps == NULL)
-+		err(-6, "cap_get_proc\n");
- 
--	if ((cap_data->effective & (1 << CAP_SYS_RAWIO)) == 0) {
--		do_exit++;
-+	if (cap_get_flag(caps, CAP_SYS_RAWIO, CAP_EFFECTIVE, &cap_flag_value))
-+		err(-6, "cap_get\n");
-+
-+	if (cap_flag_value != CAP_SET) {
- 		warnx("capget(CAP_SYS_RAWIO) failed,"
- 			" try \"# setcap cap_sys_rawio=ep %s\"", progname);
-+		return 1;
- 	}
- 
-+	if (cap_free(caps) == -1)
-+		err(-6, "cap_free\n");
-+
-+	return 0;
-+}
-+void check_permissions(void)
-+{
-+	int do_exit = 0;
-+	char pathname[32];
-+
-+	/* check for CAP_SYS_RAWIO */
-+	do_exit += check_for_cap_sys_rawio();
-+
- 	/* test file permissions */
- 	sprintf(pathname, "/dev/cpu/%d/msr", base_cpu);
- 	if (euidaccess(pathname, R_OK)) {
+ 	if (enable) {
+ 		/* wait for STATUS to clear */
+-		if (vcn_v1_0_is_idle(handle))
++		if (!vcn_v1_0_is_idle(handle))
+ 			return -EBUSY;
+ 		vcn_v1_0_enable_clock_gating(adev);
+ 	} else {
 -- 
 2.20.1
 
