@@ -2,90 +2,90 @@ Return-Path: <SRS0=aGSP=5L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4682BC43331
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 16:50:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B912C43331
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 16:50:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0CC902074D
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 16:50:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585241443;
-	bh=WLCHALPxaf6AbiSaiH7MjlV2bA2FFJyEwY3qfPb2Yps=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=JSQNVCgyh9Uv8Xua1DfpASIv6OnB/vY0uw1E+a2Zl97vw2KduSNg3PEzIm1o+gnJZ
-	 4f057gwQDxj2QSY3rtVcYxdQPanvyCQo4GI4wi4lMX0MNUw30lYjWNzWNFaIvTJf8G
-	 FjGiftIswHEN6aVeLkpA13Z5ZV1GcKfACMeYNN4w=
+	by mail.kernel.org (Postfix) with ESMTP id 4C43520719
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 16:50:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="tY2vXeIY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727509AbgCZQum (ORCPT
+        id S1727828AbgCZQuu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 12:50:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56784 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726067AbgCZQul (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 12:50:41 -0400
-Received: from linux-8ccs (p5B2812F9.dip0.t-ipconnect.de [91.40.18.249])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Thu, 26 Mar 2020 12:50:50 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:15902 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726067AbgCZQut (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Mar 2020 12:50:49 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1585241449; h=Message-Id: Date: Subject: Cc: To: From:
+ Sender; bh=kzGBufw4XcOfd9u6lXmQ6aW6t3E2LZcw3C5ePtsICcM=; b=tY2vXeIYykdwbyEKiPLWRDvddWqwKVmjBDA3tDehnb6mJA/fWWbJaSYLBioQY0ZaSy5aeqhJ
+ s8PnuK9pwXVkj4jXKwixEnrrpDc6hiw7hcw4RCWRNO8LHGvMxbFf8oavWZf044CwkrdMKKC8
+ S/T6x+1BfT8l+0r3lVlvwsyQV3U=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e7cdd68.7f5cbc4c7960-smtp-out-n01;
+ Thu, 26 Mar 2020 16:50:48 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id AEE96C44791; Thu, 26 Mar 2020 16:50:47 +0000 (UTC)
+Received: from rishabhb-linux.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0680820719;
-        Thu, 26 Mar 2020 16:50:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585241441;
-        bh=WLCHALPxaf6AbiSaiH7MjlV2bA2FFJyEwY3qfPb2Yps=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=qxPPtcMFKY2aEU36KZDR6E/FCF+DVXVH2JMS8FcuPxM6BbVHaJAVE5G5gBf0zOKl9
-         xOJqW4vCklpEHDF6XdlVZcSH1IVmurjIZ+W0NRUcgHKboPEMz2coRBZylVNSXn+tMV
-         BEg/h42CT4X0lcPXSHjVJ5OiPS0hwHkmhGqmHkG4=
-Date:   Thu, 26 Mar 2020 17:50:37 +0100
-From:   Jessica Yu <jeyu@kernel.org>
-To:     David Laight <David.Laight@aculab.com>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        'Linus Torvalds' <torvalds@linux-foundation.org>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Matthias Maennich <maennich@google.com>
-Subject: Re: modpost Module.symver handling is broken in 5.6.0-rc7
-Message-ID: <20200326165036.GA22172@linux-8ccs>
-References: <931818529b1d4d13a08d30ddace22733@AcuMS.aculab.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <931818529b1d4d13a08d30ddace22733@AcuMS.aculab.com>
-X-OS:   Linux linux-8ccs 4.12.14-lp150.12.61-default x86_64
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        (Authenticated sender: rishabhb)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id EAAB9C433D2;
+        Thu, 26 Mar 2020 16:50:45 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org EAAB9C433D2
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=rishabhb@codeaurora.org
+From:   Rishabh Bhatnagar <rishabhb@codeaurora.org>
+To:     linux-kernel@vger.kernel.org, linux-remoteproc@vger.kernel.org,
+        bjorn.andersson@linaro.org, ohad@wizery.com
+Cc:     psodagud@codeaurora.org, tsoni@codeaurora.org,
+        sidgup@codeaurora.org, Rishabh Bhatnagar <rishabhb@codeaurora.org>
+Subject: [PATCH 0/2] Add character device interface to remoteproc
+Date:   Thu, 26 Mar 2020 09:50:38 -0700
+Message-Id: <1585241440-7572-1-git-send-email-rishabhb@codeaurora.org>
+X-Mailer: git-send-email 1.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+This patch series adds a character device interface to remoteproc
+framework. This interface can be used by userspace clients in order
+to boot and shutdown the remote processor.
+Currently there is only a sysfs interface which the userspace
+clients can use. If a usersapce application crashes after booting
+the remote processor through the sysfs interface the remote processor
+does not get any indication about the crash. It might still assume
+that the  application is running.
+For example modem uses remotefs service to data from disk/flash memory.
+If the remotefs service crashes, modem still keeps on requesting data
+which might lead to crash on modem. Even if the service is restarted the
+file handles modem requested previously would become stale.
+Adding a character device interface makes the remote processor tightly
+coupled with the user space application. A crash of the application
+leads to a close on the file descriptors therefore shutting down the
+remoteproc.
 
-+++ David Laight [26/03/20 16:25 +0000]:
->Something is currently broken in modpost.
->I'm guessing it is down to the recent patch that moved the
->namespace back to the end of the line.
->
->I'm building 2 'out of tree' modules that have a symbol dependency.
->When I build the 2nd module I get ERROR "symbol" undefined message.
->
->If I flip the order of the fields in Module.symver to the older order
->and link with modpost from 5.4.0-rc7 (which I happen to have lurking)
->it all works fine.
->
->Note that I'm using a named namespace, not the default one
->that is the full path of the module.
->
->I'll dig in a little further.
+Rishabh Bhatnagar (2):
+  remoteproc: Add userspace char device driver
+  remoteproc: core: Register the character device interface
 
-[ Adding more people to CC ]
+ drivers/remoteproc/Makefile               |   1 +
+ drivers/remoteproc/remoteproc_core.c      |   8 +-
+ drivers/remoteproc/remoteproc_internal.h  |   3 +
+ drivers/remoteproc/remoteproc_userspace.c | 126 ++++++++++++++++++++++++++++++
+ include/linux/remoteproc.h                |   2 +
+ 5 files changed, 139 insertions(+), 1 deletion(-)
+ create mode 100644 drivers/remoteproc/remoteproc_userspace.c
 
-Hi David,
-
-Could you provide some more details about how I can reproduce the
-issue? As I understand it, you have two out-of-tree modules, and one
-has a symbol dependency on the second? Pasting the modpost error
-messages helps too.
-
-Thanks,
-
-Jessica
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
