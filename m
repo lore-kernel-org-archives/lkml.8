@@ -2,135 +2,83 @@ Return-Path: <SRS0=aGSP=5L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	WEIRD_QUOTING autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5C25C2D0E9
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 21:29:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 576DEC43331
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 21:31:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C392820658
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 21:29:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 231362073E
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 21:31:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727639AbgCZV3O (ORCPT
+        id S1726954AbgCZVbz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 17:29:14 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:57001 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726067AbgCZV3O (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 17:29:14 -0400
-Received: from ip5f5bf7ec.dynamic.kabel-deutschland.de ([95.91.247.236] helo=wittgenstein)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1jHa3m-0005bi-TH; Thu, 26 Mar 2020 21:29:07 +0000
-Date:   Thu, 26 Mar 2020 22:29:06 +0100
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Vlastimil Babka <vbabka@suse.cz>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Iurii Zaikin <yzaikin@google.com>,
-        linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
-        linux-mm@kvack.org, Ivan Teterevkov <ivan.teterevkov@nutanix.com>,
-        Michal Hocko <mhocko@kernel.org>,
-        David Rientjes <rientjes@google.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        "Eric W . Biederman" <ebiederm@xmission.com>,
-        "Guilherme G . Piccoli" <gpiccoli@canonical.com>
-Subject: Re: [RFC v3 2/2] kernel/sysctl: support handling command line aliases
-Message-ID: <20200326212906.muutd636zfoytcgh@wittgenstein>
-References: <20200326181606.7027-1-vbabka@suse.cz>
- <20200326181606.7027-2-vbabka@suse.cz>
- <202003261329.AAFEE9C@keescook>
+        Thu, 26 Mar 2020 17:31:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47718 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726067AbgCZVby (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Mar 2020 17:31:54 -0400
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B34D420658;
+        Thu, 26 Mar 2020 21:31:53 +0000 (UTC)
+Date:   Thu, 26 Mar 2020 17:31:52 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Nathan Chancellor <natechancellor@gmail.com>
+Cc:     Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
+        clang-built-linux@googlegroups.com,
+        Nick Desaulniers <ndesaulniers@google.com>
+Subject: Re: [PATCH v2] tracing: Use address-of operator on section symbols
+Message-ID: <20200326173152.06ef57d5@gandalf.local.home>
+In-Reply-To: <20200326194652.GA29213@ubuntu-m2-xlarge-x86>
+References: <20200220051011.26113-1-natechancellor@gmail.com>
+        <20200319020004.GB8292@ubuntu-m2-xlarge-x86>
+        <20200319103312.070b4246@gandalf.local.home>
+        <20200326194652.GA29213@ubuntu-m2-xlarge-x86>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <202003261329.AAFEE9C@keescook>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 26, 2020 at 01:34:08PM -0700, Kees Cook wrote:
-> On Thu, Mar 26, 2020 at 07:16:06PM +0100, Vlastimil Babka wrote:
-> > We can now handle sysctl parameters on kernel command line, but historically
-> > some parameters introduced their own command line equivalent, which we don't
-> > want to remove for compatibility reasons. We can however convert them to the
-> > generic infrastructure with a table translating the legacy command line
-> > parameters to their sysctl names, and removing the one-off param handlers.
+On Thu, 26 Mar 2020 12:46:52 -0700
+Nathan Chancellor <natechancellor@gmail.com> wrote:
+
+> On Thu, Mar 19, 2020 at 10:33:12AM -0400, Steven Rostedt wrote:
+> > On Wed, 18 Mar 2020 19:00:04 -0700
+> > Nathan Chancellor <natechancellor@gmail.com> wrote:
+> >   
+> > > Gentle ping for review/acceptance.  
 > > 
-> > This patch adds the support and makes the first conversion to demonstrate it,
-> > on the (deprecated) numa_zonelist_order parameter.
+> > Hmm, my local patchwork had this patch rejected. I'll go and apply it, run
+> > some tests and see if it works. Perhaps I meant to reject v1 and
+> > accidentally rejected v2 :-/
 > > 
-> > Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
-> > ---
-> > Changes in v3:
-> > - constify some things according to Kees
-> > - expand the comment of sysctl_aliases to note on different timings
+> > Thanks for the ping!
 > > 
-> >  fs/proc/proc_sysctl.c | 48 ++++++++++++++++++++++++++++++++++++-------
-> >  mm/page_alloc.c       |  9 --------
-> >  2 files changed, 41 insertions(+), 16 deletions(-)
-> > 
-> > diff --git a/fs/proc/proc_sysctl.c b/fs/proc/proc_sysctl.c
-> > index 8ee3273e4540..3a861e0a7c7e 100644
-> > --- a/fs/proc/proc_sysctl.c
-> > +++ b/fs/proc/proc_sysctl.c
-> > @@ -1729,6 +1729,37 @@ int __init proc_sys_init(void)
-> >  
-> >  struct vfsmount *proc_mnt = NULL;
-> >  
-> > +struct sysctl_alias {
-> > +	const char *kernel_param;
-> > +	const char *sysctl_param;
-> > +};
-> > +
-> > +/*
-> > + * Historically some settings had both sysctl and a command line parameter.
-> > + * With the generic sysctl. parameter support, we can handle them at a single
-> > + * place and only keep the historical name for compatibility. This is not meant
-> > + * to add brand new aliases. When adding existing aliases, consider whether
-> > + * the possibly different moment of changing the value (e.g. from early_param
-> > + * to the moment do_sysctl_args() is called) is an issue for the specific
-> > + * parameter.
-> > + */
-> > +static const struct sysctl_alias sysctl_aliases[] = {
-> > +	{"numa_zonelist_order",		"vm.numa_zonelist_order" },
-> > +	{ }
-> > +};
-> > +
-> > +const char *sysctl_find_alias(char *param)
+> > -- Steve  
 > 
-> This should be "static" too.
+> Hi Steve,
 > 
-> > +{
-> > +	const struct sysctl_alias *alias;
-> > +
-> > +	for (alias = &sysctl_aliases[0]; alias->kernel_param != NULL; alias++) {
-> > +		if (strcmp(alias->kernel_param, param) == 0)
-> > +			return alias->sysctl_param;
-> > +	}
-> > +
-> > +	return NULL;
-> > +}
-> > +
-> >  /* Set sysctl value passed on kernel command line. */
-> >  static int process_sysctl_arg(char *param, char *val,
-> >  			       const char *unused, void *arg)
-> > @@ -1741,15 +1772,18 @@ static int process_sysctl_arg(char *param, char *val,
-> >  	loff_t pos = 0;
-> >  	ssize_t wret;
-> >  
-> > -	if (strncmp(param, "sysctl", sizeof("sysctl") - 1))
+> Did you ever get around to running any tests? If so, were there any
+> issues? This warning is one of two remaining across several different
+> configurations so I sent the patch to turn on the warning and I want
+> to make sure this gets picked up at some point:
+> 
+> https://lore.kernel.org/lkml/20200326194155.29107-1-natechancellor@gmail.com/
+> 
+> If you have not had time, totally fine, I just want to make sure it does
+> not fall through the cracks again :)
+> 
 
-Somewhat off-topic but in some projects I use macro-helpers to make that
-more transparent. So this would become a constant expression:
+I have applied it to my queue. But the code I have in with it failed my
+tests, and I'm just about to kick off another round (I believe I fixed
+everything). And hopefully if it all passes, I can get it out to my
+linux-next branch by tomorrow.
 
-#define STRLITERALLEN(x) (sizeof(""x"") - 1)
-or
-#define STRLEN(x) (sizeof(""x"") - 1)
-
-But I guess that's a matter of style/taste.
-
-Christian
+-- Steve
