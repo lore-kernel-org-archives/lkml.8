@@ -2,136 +2,156 @@ Return-Path: <SRS0=aGSP=5L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E693FC43331
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 15:38:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1554DC43331
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 15:39:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BBC0920714
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 15:38:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="m1JsAm3+"
+	by mail.kernel.org (Postfix) with ESMTP id E6AB920775
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 15:39:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728576AbgCZPiy (ORCPT
+        id S1728583AbgCZPjA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 11:38:54 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:53996 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728565AbgCZPiv (ORCPT
+        Thu, 26 Mar 2020 11:39:00 -0400
+Received: from mail-il1-f198.google.com ([209.85.166.198]:41107 "EHLO
+        mail-il1-f198.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727835AbgCZPiq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 11:38:51 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=9IAWjcoP6+ERSckz5iuIrOnb3X08KTh1mZKMyBXeW10=; b=m1JsAm3+bBhUPZBW/rd2/xi5ce
-        njdfT0jwvgZDLuW8YI4yzjSSssvV497BLlCJlMq+YDgkA+KNJo375sGUgaMvjM7bnP8At+AWWGx7H
-        m8rvr6kdENsSJ4ew71fNBT2TVyhjR8jwHSBgjxcIo2LJc47PwiJNgWNytm0F4+ueVxhze4B7Knr5U
-        UiyPDgaB11wa8kCU6Vi6kaXLEEfAYD0XBsuodXKEDRxo44Sdao8tGB9/HUp98Os9UU3MQlNAD1Hfe
-        4GEnhZvzSuvIyaNg6Fywi7ujVywEasRvw2ork3zUF2KfStIb+KuuCeyDsa3BCxQbPl+gdPym6mDmk
-        xKKdpxOQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jHUak-0004bT-3w; Thu, 26 Mar 2020 15:38:46 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 513143010C1;
-        Thu, 26 Mar 2020 16:38:42 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id E947B205866AC; Thu, 26 Mar 2020 16:38:41 +0100 (CET)
-Date:   Thu, 26 Mar 2020 16:38:41 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Josh Poimboeuf <jpoimboe@redhat.com>
-Cc:     tglx@linutronix.de, linux-kernel@vger.kernel.org, x86@kernel.org,
-        mhiramat@kernel.org, mbenes@suse.cz
-Subject: Re: [PATCH v4 01/13] objtool: Remove CFI save/restore special case
-Message-ID: <20200326153841.GN20713@hirez.programming.kicks-ass.net>
-References: <20200325174525.772641599@infradead.org>
- <20200325174605.369570202@infradead.org>
- <20200326113049.GD20696@hirez.programming.kicks-ass.net>
- <20200326125844.GD20760@hirez.programming.kicks-ass.net>
- <20200326134448.5zci3ikdlf5ar2w5@treble>
+        Thu, 26 Mar 2020 11:38:46 -0400
+Received: by mail-il1-f198.google.com with SMTP id f19so5714265ill.8
+        for <linux-kernel@vger.kernel.org>; Thu, 26 Mar 2020 08:38:45 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to:cc;
+        bh=KHPtzcx4FBaIuqDkpN3GS7ntLpHWXUFQhf3Z5vc8rRs=;
+        b=tCYEJVJtMxU+seez9QbG6Yu46wEdMaftFCrH9Cs6JQncCGnFnoKyJpnVSmaBJfkT9s
+         wTpDfgmWD+6lQJ5ox2gc61fm0SVdJdZQ95tKry3r4iDPmjfuOSlMWqYhGeWpsUU3cqf3
+         THDEBWnkbLmnKg6t+iyGGZc+MUsMztqP9XKnTNPihoV9+wkshBH661TJUdY3i+6eVYh0
+         NrTF0XmQadfxEGBzPGD0xaw8nVRuGQ+YM9fA1y7Ke9Dif+DXy3T25yIHDOpv4vRYOkAP
+         hhHv4iV1+HQ9QvnIDcw2Hvmp1V7ItAzETEXAKUBwHKw5Sz17h4R03h41sxS4vZMQ5Fgj
+         dtXg==
+X-Gm-Message-State: ANhLgQ2WdmO+TOaAVDoN24w6o87jiLJ5gOzkNZBsASZgQxLw6IVd1hMt
+        p3nHdZCigWlRa+zGiAyYiPTVIlCswfLKW2/qlLzatDszJGI3
+X-Google-Smtp-Source: ADFU+vurHxGYaDYXEXaC3Q9MYGy6mdBu+XsMGmfMevx1OlfBPltRpMc/TMP/u+xZXJahmrOeSgHZoFdnI7R86MEtpFkQXnBA/w4F
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200326134448.5zci3ikdlf5ar2w5@treble>
+X-Received: by 2002:a05:6638:398:: with SMTP id y24mr8339241jap.125.1585237124709;
+ Thu, 26 Mar 2020 08:38:44 -0700 (PDT)
+Date:   Thu, 26 Mar 2020 08:38:44 -0700
+In-Reply-To: <CADG63jDCTdgSxDRsN_9e3fKCAv5VduS5NNKWmqjByZ=4sT+HLQ@mail.gmail.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000b401da05a1c3c754@google.com>
+Subject: Re: Re: WARNING: refcount bug in sctp_wfree
+From:   syzbot <syzbot+cea71eec5d6de256d54d@syzkaller.appspotmail.com>
+To:     Qiujun Huang <anenbupt@gmail.com>
+Cc:     anenbupt@gmail.com, davem@davemloft.net, kuba@kernel.org,
+        linux-kernel@vger.kernel.org, linux-sctp@vger.kernel.org,
+        marcelo.leitner@gmail.com, netdev@vger.kernel.org,
+        nhorman@tuxdriver.com, syzkaller-bugs@googlegroups.com,
+        vyasevich@gmail.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 26, 2020 at 08:44:48AM -0500, Josh Poimboeuf wrote:
-> On Thu, Mar 26, 2020 at 01:58:44PM +0100, Peter Zijlstra wrote:
-> > So instr_begin() / instr_end() have this exact problem, but worse. Those
-> > actually do nest and I've ran into the following situation:
-> > 
-> > 	if (cond1) {
-> > 		instr_begin();
-> > 		// code1
-> > 		instr_end();
-> > 	}
-> > 	// code
-> > 
-> > 	if (cond2) {
-> > 		instr_begin();
-> > 		// code2
-> > 		instr_end();
-> > 	}
-> > 	// tail
-> > 
-> > Where objtool then finds the path: !cond1, cond2, which ends up at code2
-> > with 0, instead of 1.
-> 
-> Hm, I don't see the nesting in this example, can you clarify?
+> #syz test: upstream
 
-Indeed no nesting here, but because they can nest we have that begin as
-+1, end as -1 and then we sum it over the code flow.
+want 2 args (repo, branch), got 10
 
-Then given that, the above, ends up as -1 + 1 in the !cond1,cond2 case,
-because that -1 escapes the cond1 block.
-
-> > I've also seen:
-> > 
-> > 	if (cond) {
-> > 		instr_begin();
-> > 		// code1
-> > 		instr_end();
-> > 	}
-> > 	instr_begin();
-> > 	// code2
-> > 	instr_end();
-> > 
-> > Where instr_end() and instr_begin() merge onto the same instruction of
-> > code2 as a 0, and again code2 will issue a false warning.
-> > 
-> > You can also not make objtool lift the end marker to the previous
-> > instruction, because then:
-> > 
-> > 	if (cond1) {
-> > 		instr_begin();
-> > 		if (cond2) {
-> > 			// code2
-> > 		}
-> > 		instr_end();
-> > 	}
-> > 
-> > Suffers the reverse problem, instr_end() becomes part of the @cond2
-> > block and cond1 grows a path that misses it entirely.
-> > 
-> > So far I've not had any actual solution except adding a NOP to anchor
-> > the annotation on.
-> 
-> Are you adding the NOP to the instr_end() annotation itself?  Seems like
-> that would be the cleanest/easiest.
-
-That actually generates a whole bunch of 'stupid' unreachable warnings.
-Also, in the hope of still coming up with something saner, we've been
-carrying a minimal set of explicit nop()s.
-
-> Though it is sad that we have to change the code to make objtool happy
-> -- would be nice if we could come up with something less intrusive.
-
-Very much yes, but so far that's been eluding me.
+>
+> On Tue, Mar 10, 2020 at 9:36 AM syzbot
+> <syzbot+cea71eec5d6de256d54d@syzkaller.appspotmail.com> wrote:
+>>
+>> Hello,
+>>
+>> syzbot found the following crash on:
+>>
+>> HEAD commit:    2c523b34 Linux 5.6-rc5
+>> git tree:       upstream
+>> console output: https://syzkaller.appspot.com/x/log.txt?x=155a5f29e00000
+>> kernel config:  https://syzkaller.appspot.com/x/.config?x=a5295e161cd85b82
+>> dashboard link: https://syzkaller.appspot.com/bug?extid=cea71eec5d6de256d54d
+>> compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
+>> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=164b5181e00000
+>> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=166dd70de00000
+>>
+>> IMPORTANT: if you fix the bug, please add the following tag to the commit:
+>> Reported-by: syzbot+cea71eec5d6de256d54d@syzkaller.appspotmail.com
+>>
+>> ------------[ cut here ]------------
+>> refcount_t: underflow; use-after-free.
+>> WARNING: CPU: 1 PID: 8668 at lib/refcount.c:28 refcount_warn_saturate+0x15b/0x1a0 lib/refcount.c:28
+>> Kernel panic - not syncing: panic_on_warn set ...
+>> CPU: 1 PID: 8668 Comm: syz-executor779 Not tainted 5.6.0-rc5-syzkaller #0
+>> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+>> Call Trace:
+>>  __dump_stack lib/dump_stack.c:77 [inline]
+>>  dump_stack+0x1e9/0x30e lib/dump_stack.c:118
+>>  panic+0x264/0x7a0 kernel/panic.c:221
+>>  __warn+0x209/0x210 kernel/panic.c:582
+>>  report_bug+0x1ac/0x2d0 lib/bug.c:195
+>>  fixup_bug arch/x86/kernel/traps.c:174 [inline]
+>>  do_error_trap+0xca/0x1c0 arch/x86/kernel/traps.c:267
+>>  do_invalid_op+0x32/0x40 arch/x86/kernel/traps.c:286
+>>  invalid_op+0x23/0x30 arch/x86/entry/entry_64.S:1027
+>> RIP: 0010:refcount_warn_saturate+0x15b/0x1a0 lib/refcount.c:28
+>> Code: c7 e4 ff d0 88 31 c0 e8 23 20 b3 fd 0f 0b eb 85 e8 8a 4a e0 fd c6 05 ff 70 b1 05 01 48 c7 c7 10 00 d1 88 31 c0 e8 05 20 b3 fd <0f> 0b e9 64 ff ff ff e8 69 4a e0 fd c6 05 df 70 b1 05 01 48 c7 c7
+>> RSP: 0018:ffffc90001f577d0 EFLAGS: 00010246
+>> RAX: 8c9c9070bbb4e500 RBX: 0000000000000003 RCX: ffff8880938a63c0
+>> RDX: 0000000000000000 RSI: 0000000080000000 RDI: 0000000000000000
+>> RBP: 0000000000000003 R08: ffffffff815e16e6 R09: fffffbfff15db92a
+>> R10: fffffbfff15db92a R11: 0000000000000000 R12: dffffc0000000000
+>> R13: ffff88809de82000 R14: ffff8880a89237c0 R15: 1ffff11013be52b0
+>>  sctp_wfree+0x3b1/0x710 net/sctp/socket.c:9111
+>>  skb_release_head_state+0xfb/0x210 net/core/skbuff.c:651
+>>  skb_release_all net/core/skbuff.c:662 [inline]
+>>  __kfree_skb+0x22/0x1c0 net/core/skbuff.c:678
+>>  sctp_chunk_destroy net/sctp/sm_make_chunk.c:1454 [inline]
+>>  sctp_chunk_put+0x17b/0x200 net/sctp/sm_make_chunk.c:1481
+>>  __sctp_outq_teardown+0x80a/0x9d0 net/sctp/outqueue.c:257
+>>  sctp_association_free+0x21e/0x7c0 net/sctp/associola.c:339
+>>  sctp_cmd_delete_tcb net/sctp/sm_sideeffect.c:930 [inline]
+>>  sctp_cmd_interpreter net/sctp/sm_sideeffect.c:1318 [inline]
+>>  sctp_side_effects net/sctp/sm_sideeffect.c:1185 [inline]
+>>  sctp_do_sm+0x3c01/0x5560 net/sctp/sm_sideeffect.c:1156
+>>  sctp_primitive_ABORT+0x93/0xc0 net/sctp/primitive.c:104
+>>  sctp_close+0x231/0x770 net/sctp/socket.c:1512
+>>  inet_release+0x135/0x180 net/ipv4/af_inet.c:427
+>>  __sock_release net/socket.c:605 [inline]
+>>  sock_close+0xd8/0x260 net/socket.c:1283
+>>  __fput+0x2d8/0x730 fs/file_table.c:280
+>>  task_work_run+0x176/0x1b0 kernel/task_work.c:113
+>>  exit_task_work include/linux/task_work.h:22 [inline]
+>>  do_exit+0x5ef/0x1f80 kernel/exit.c:801
+>>  do_group_exit+0x15e/0x2c0 kernel/exit.c:899
+>>  __do_sys_exit_group+0x13/0x20 kernel/exit.c:910
+>>  __se_sys_exit_group+0x10/0x10 kernel/exit.c:908
+>>  __x64_sys_exit_group+0x37/0x40 kernel/exit.c:908
+>>  do_syscall_64+0xf3/0x1b0 arch/x86/entry/common.c:294
+>>  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+>> RIP: 0033:0x43ef98
+>> Code: Bad RIP value.
+>> RSP: 002b:00007ffcc7e7c398 EFLAGS: 00000246 ORIG_RAX: 00000000000000e7
+>> RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 000000000043ef98
+>> RDX: 0000000000000000 RSI: 000000000000003c RDI: 0000000000000000
+>> RBP: 00000000004be7a8 R08: 00000000000000e7 R09: ffffffffffffffd0
+>> R10: 000000002059aff8 R11: 0000000000000246 R12: 0000000000000001
+>> R13: 00000000006d01a0 R14: 0000000000000000 R15: 0000000000000000
+>> Kernel Offset: disabled
+>> Rebooting in 86400 seconds..
+>>
+>>
+>> ---
+>> This bug is generated by a bot. It may contain errors.
+>> See https://goo.gl/tpsmEJ for more information about syzbot.
+>> syzbot engineers can be reached at syzkaller@googlegroups.com.
+>>
+>> syzbot will keep track of this bug report. See:
+>> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+>> syzbot can test patches for this bug, for details see:
+>> https://goo.gl/tpsmEJ#testing-patches
