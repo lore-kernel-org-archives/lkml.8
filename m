@@ -7,41 +7,41 @@ X-Spam-Status: No, score=-11.7 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0490C43331
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 10:08:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96AEDC2D0E8
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 10:08:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC06B20B1F
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 10:08:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7945620B1F
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 10:08:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727851AbgCZKIl (ORCPT
+        id S1727933AbgCZKIm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 06:08:41 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:50174 "EHLO
+        Thu, 26 Mar 2020 06:08:42 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:50183 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726270AbgCZKIl (ORCPT
+        with ESMTP id S1726590AbgCZKIl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 26 Mar 2020 06:08:41 -0400
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1jHPRA-00045R-OJ; Thu, 26 Mar 2020 11:08:32 +0100
+        id 1jHPRC-00046d-Sr; Thu, 26 Mar 2020 11:08:35 +0100
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 3FAFD1C0440;
-        Thu, 26 Mar 2020 11:08:32 +0100 (CET)
-Date:   Thu, 26 Mar 2020 10:08:31 -0000
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 728B41C0470;
+        Thu, 26 Mar 2020 11:08:34 +0100 (CET)
+Date:   Thu, 26 Mar 2020 10:08:34 -0000
 From:   "tip-bot2 for Peter Zijlstra" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: core/objtool] objtool: Re-arrange validate_functions()
+Subject: [tip: core/objtool] objtool: Resize insn_hash
 Cc:     "Peter Zijlstra (Intel)" <peterz@infradead.org>,
         Miroslav Benes <mbenes@suse.cz>,
         Josh Poimboeuf <jpoimboe@redhat.com>, x86 <x86@kernel.org>,
         LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200324160924.924304616@infradead.org>
-References: <20200324160924.924304616@infradead.org>
+In-Reply-To: <20200324160924.617882545@infradead.org>
+References: <20200324160924.617882545@infradead.org>
 MIME-Version: 1.0
-Message-ID: <158521731184.28353.5517081652261174451.tip-bot2@tip-bot2>
+Message-ID: <158521731413.28353.1076192699779373606.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -57,104 +57,39 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the core/objtool branch of tip:
 
-Commit-ID:     350994bf95414d6da67a72f27d7ac3832ce3725d
-Gitweb:        https://git.kernel.org/tip/350994bf95414d6da67a72f27d7ac3832ce3725d
+Commit-ID:     513b5ca6b5fbeb766999fb1a4bc9a55c9fb7c9ca
+Gitweb:        https://git.kernel.org/tip/513b5ca6b5fbeb766999fb1a4bc9a55c9fb7c9ca
 Author:        Peter Zijlstra <peterz@infradead.org>
-AuthorDate:    Mon, 23 Mar 2020 20:57:13 +01:00
+AuthorDate:    Thu, 12 Mar 2020 10:20:46 +01:00
 Committer:     Peter Zijlstra <peterz@infradead.org>
-CommitterDate: Wed, 25 Mar 2020 18:28:31 +01:00
+CommitterDate: Wed, 25 Mar 2020 18:28:30 +01:00
 
-objtool: Re-arrange validate_functions()
+objtool: Resize insn_hash
 
-In preparation to adding a vmlinux.o specific pass, rearrange some
-code. No functional changes intended.
+Perf shows we're spending a lot of time in find_insn() and the
+statistics show we have around 3.2 million instruction. Increase the
+hash table size to reduce the bucket load from around 50 to 3.
+
+This shaves about 2s off of objtool on vmlinux.o runtime, down to 16s.
 
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 Reviewed-by: Miroslav Benes <mbenes@suse.cz>
 Acked-by: Josh Poimboeuf <jpoimboe@redhat.com>
-Link: https://lkml.kernel.org/r/20200324160924.924304616@infradead.org
+Link: https://lkml.kernel.org/r/20200324160924.617882545@infradead.org
 ---
- tools/objtool/check.c | 52 ++++++++++++++++++++++++------------------
- 1 file changed, 30 insertions(+), 22 deletions(-)
+ tools/objtool/check.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/objtool/check.c b/tools/objtool/check.c
-index 0c9c9ad..0bfcb39 100644
---- a/tools/objtool/check.c
-+++ b/tools/objtool/check.c
-@@ -2395,9 +2395,8 @@ static bool ignore_unreachable_insn(struct instruction *insn)
- 	return false;
- }
+diff --git a/tools/objtool/check.h b/tools/objtool/check.h
+index 6d875ca..f0ce8ff 100644
+--- a/tools/objtool/check.h
++++ b/tools/objtool/check.h
+@@ -50,7 +50,7 @@ struct instruction {
+ struct objtool_file {
+ 	struct elf *elf;
+ 	struct list_head insn_list;
+-	DECLARE_HASHTABLE(insn_hash, 16);
++	DECLARE_HASHTABLE(insn_hash, 20);
+ 	bool ignore_unreachables, c_file, hints, rodata;
+ };
  
--static int validate_functions(struct objtool_file *file)
-+static int validate_section(struct objtool_file *file, struct section *sec)
- {
--	struct section *sec;
- 	struct symbol *func;
- 	struct instruction *insn;
- 	struct insn_state state;
-@@ -2410,36 +2409,45 @@ static int validate_functions(struct objtool_file *file)
- 	       CFI_NUM_REGS * sizeof(struct cfi_reg));
- 	state.stack_size = initial_func_cfi.cfa.offset;
- 
--	for_each_sec(file, sec) {
--		list_for_each_entry(func, &sec->symbol_list, list) {
--			if (func->type != STT_FUNC)
--				continue;
-+	list_for_each_entry(func, &sec->symbol_list, list) {
-+		if (func->type != STT_FUNC)
-+			continue;
- 
--			if (!func->len) {
--				WARN("%s() is missing an ELF size annotation",
--				     func->name);
--				warnings++;
--			}
-+		if (!func->len) {
-+			WARN("%s() is missing an ELF size annotation",
-+			     func->name);
-+			warnings++;
-+		}
- 
--			if (func->pfunc != func || func->alias != func)
--				continue;
-+		if (func->pfunc != func || func->alias != func)
-+			continue;
- 
--			insn = find_insn(file, sec, func->offset);
--			if (!insn || insn->ignore || insn->visited)
--				continue;
-+		insn = find_insn(file, sec, func->offset);
-+		if (!insn || insn->ignore || insn->visited)
-+			continue;
- 
--			state.uaccess = func->uaccess_safe;
-+		state.uaccess = func->uaccess_safe;
- 
--			ret = validate_branch(file, func, insn, state);
--			if (ret && backtrace)
--				BT_FUNC("<=== (func)", insn);
--			warnings += ret;
--		}
-+		ret = validate_branch(file, func, insn, state);
-+		if (ret && backtrace)
-+			BT_FUNC("<=== (func)", insn);
-+		warnings += ret;
- 	}
- 
- 	return warnings;
- }
- 
-+static int validate_functions(struct objtool_file *file)
-+{
-+	struct section *sec;
-+	int warnings = 0;
-+
-+	for_each_sec(file, sec)
-+		warnings += validate_section(file, sec);
-+
-+	return warnings;
-+}
-+
- static int validate_reachable_instructions(struct objtool_file *file)
- {
- 	struct instruction *insn;
