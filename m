@@ -2,42 +2,43 @@ Return-Path: <SRS0=aGSP=5L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7E10C43331
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 14:49:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2662C43331
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 14:49:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7923F2078B
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 14:49:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD7712077D
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 14:49:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585234173;
-	bh=Ug1D44mwlx8j3F/CjHJhs2v08/ZQjLO4bJ6bUCCSm98=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=ahv1CpgJkozUS8jQxS0PgpKenLweZ3CyGRRFxkM0S2kjSIj0ri94kTY/5l62USVwT
-	 XsdSGTDqWdvOZ85hro4Y2gBFFr+veEeVD0hK14CjKzrQQqrgTbUQAM6906R+f9+D7O
-	 YXBDReDD2c9SV15cBnXmRvTcHA6537rJoSUK34Ug=
+	s=default; t=1585234184;
+	bh=gsiBdM4GJWRNPxCJKxgIFusNW93mPFGr2xfRoH1o6oU=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=Vsg7qlnNHLkcMliaNizmZYEuWLz/4+uyVOv6Qp04QU0mmk+KVlvKxK7ZdkUKoa4dR
+	 tVssmDHyjio3rSNI7CB43bUP4mwNai6PCpLanhI6xi3R5JZg0cfg3+WB2youDcU7dZ
+	 sKS2lU1j3mYnbd+GD1GbDH2eS5MtpQhsCtPwrLPw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727881AbgCZOtc (ORCPT
+        id S1728262AbgCZOtn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 10:49:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52744 "EHLO mail.kernel.org"
+        Thu, 26 Mar 2020 10:49:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52938 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726363AbgCZOtc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 10:49:32 -0400
+        id S1726267AbgCZOtn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Mar 2020 10:49:43 -0400
 Received: from localhost.localdomain (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 217312076A;
-        Thu, 26 Mar 2020 14:49:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1778D20775;
+        Thu, 26 Mar 2020 14:49:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585234171;
-        bh=Ug1D44mwlx8j3F/CjHJhs2v08/ZQjLO4bJ6bUCCSm98=;
-        h=From:To:Cc:Subject:Date:From;
-        b=YTXzjOdR9HmKH5G1vrzE5EcgwMp/HKuIKt6wYEB6z0UUl1D+lhxGIWGQRGDAs/axP
-         Rxt2gR1ShmIfcdE0QvRt6sgE0X3r7+R3Enh5GnU+eNOg32iECPZchmWnUr5EGiDTSK
-         rgVmJzYvQ3PxTRv3mmQggxMKFmq4liEAJizqtORc=
+        s=default; t=1585234182;
+        bh=gsiBdM4GJWRNPxCJKxgIFusNW93mPFGr2xfRoH1o6oU=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=I6pOYAMc3BykXzW7/u1TlepWN56skWAiUYjYyk0GbmNkMvSaybdWKp7v39LiLkmJX
+         AeGEBL7Sy72sMEguWZzthv312Yr2j8i25rf0jD2jFX+CFzMWisWIVUa/GJ08v3stOt
+         oP/miwH8kxnDNAEDDZOXV4BCd6hBNg4XMHYd+uDc=
 From:   Masami Hiramatsu <mhiramat@kernel.org>
 To:     Ingo Molnar <mingo@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>
@@ -55,10 +56,12 @@ Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
         Peter Zijlstra <peterz@infradead.org>,
         Tom Lendacky <thomas.lendacky@amd.com>,
         Paolo Bonzini <pbonzini@redhat.com>
-Subject: [PATCH -tip 0/4] kprobes: Support __kprobes and NOKPROBE_SYMBOL in modules
-Date:   Thu, 26 Mar 2020 23:49:23 +0900
-Message-Id: <158523416289.24735.10455512519475919061.stgit@devnote2>
+Subject: [PATCH -tip 1/4] kprobes: Lock kprobe_mutex while showing kprobe_blacklist
+Date:   Thu, 26 Mar 2020 23:49:36 +0900
+Message-Id: <158523417665.24735.10253198878535635600.stgit@devnote2>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <158523416289.24735.10455512519475919061.stgit@devnote2>
+References: <158523416289.24735.10455512519475919061.stgit@devnote2>
 User-Agent: StGit/0.17.1-dirty
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
@@ -68,40 +71,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Lock kprobe_mutex while showing kprobe_blacklist to prevent
+updating the kprobe_blacklist.
 
-Here is a series for adding support of __kprobes attribute
-and NOKPROBE_SYMBOL() macro in modules. With this series,
-kprobes user can add its handlers and sub-functions to kprobe
-blacklist so that other kprobes don't probe it.
-
-Note that user should not use both __kprobes and NOKPROBE_SYMBOL()
-to same function. In that case, the function will appear twice
-on the blacklist, and that is a waste of memory.
-
-Thomas, it is easy to add ".noinstr.text" support to this series.
-as same as __kprobes (.kprobes.text) support in [2/4], we can
-add mod->noinstr_text_start and mod->noinstr_text_size and
-register it in add_module_kprobe_blacklist().
-
-
-Thank you,
-
+Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
 ---
+ kernel/kprobes.c |    8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-Masami Hiramatsu (4):
-      kprobes: Lock kprobe_mutex while showing kprobe_blacklist
-      kprobes: Support __kprobes blacklist in modules
-      kprobes: Support NOKPROBE_SYMBOL() in modules
-      samples/kprobes: Add __kprobes and NOKPROBE_SYMBOL() for handlers.
+diff --git a/kernel/kprobes.c b/kernel/kprobes.c
+index 2625c241ac00..570d60827656 100644
+--- a/kernel/kprobes.c
++++ b/kernel/kprobes.c
+@@ -2420,6 +2420,7 @@ static const struct file_operations debugfs_kprobes_operations = {
+ /* kprobes/blacklist -- shows which functions can not be probed */
+ static void *kprobe_blacklist_seq_start(struct seq_file *m, loff_t *pos)
+ {
++	mutex_lock(&kprobe_mutex);
+ 	return seq_list_start(&kprobe_blacklist, *pos);
+ }
+ 
+@@ -2446,10 +2447,15 @@ static int kprobe_blacklist_seq_show(struct seq_file *m, void *v)
+ 	return 0;
+ }
+ 
++static void kprobe_blacklist_seq_stop(struct seq_file *f, void *v)
++{
++	mutex_unlock(&kprobe_mutex);
++}
++
+ static const struct seq_operations kprobe_blacklist_seq_ops = {
+ 	.start = kprobe_blacklist_seq_start,
+ 	.next  = kprobe_blacklist_seq_next,
+-	.stop  = kprobe_seq_stop,	/* Reuse void function */
++	.stop  = kprobe_blacklist_seq_stop,
+ 	.show  = kprobe_blacklist_seq_show,
+ };
+ 
 
-
- include/linux/module.h              |    6 +++
- kernel/kprobes.c                    |   67 ++++++++++++++++++++++++++++++++++-
- kernel/module.c                     |    7 ++++
- samples/kprobes/kprobe_example.c    |    6 ++-
- samples/kprobes/kretprobe_example.c |    2 +
- 5 files changed, 85 insertions(+), 3 deletions(-)
-
---
-Masami Hiramatsu (Linaro) <mhiramat@kernel.org>
