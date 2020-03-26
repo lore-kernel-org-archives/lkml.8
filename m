@@ -2,86 +2,179 @@ Return-Path: <SRS0=aGSP=5L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF3F2C2D0E8
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 14:22:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBC3CC43331
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 14:23:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C9A4220775
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 14:22:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585232542;
-	bh=YlsR+y4MevduxIpBHtlSqX0E4PR8rEoNyXJuFhZpfCs=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=Q0Fgx8EIW6i8wzLoVh02rXdPLTdO5bWbIdwZxT5kuvTgzqYp2+8IRYsQjj04DiS8f
-	 7iVjlcFt/HGJgrIFRUcYP6ygW8BLys29NZ+H0AR7UwXLXg4yTp43UE0CXwMpXzWu75
-	 amOB3jAAR+Z+i5z03E2upO8SN80t+Lm/lBmkNX98=
+	by mail.kernel.org (Postfix) with ESMTP id 990D0206F8
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 14:23:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727960AbgCZOWV (ORCPT
+        id S1727953AbgCZOXW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 10:22:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34526 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727695AbgCZOWV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 10:22:21 -0400
-Received: from localhost (mobile-166-175-186-165.mycingular.net [166.175.186.165])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AD322206F8;
-        Thu, 26 Mar 2020 14:22:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585232541;
-        bh=YlsR+y4MevduxIpBHtlSqX0E4PR8rEoNyXJuFhZpfCs=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=aUzqJqzYSCnTgPyA/P32W4O9j/LzdzCb6cnGRFJy0Cwv8RSWlx1+hK3ZUovfKdEtI
-         tvJHNho2Hbq8acMNBk8LnaocRhllSCzcGoE/b6S8E7jLJ4VgMCZdp/FAj24UGX+eaI
-         onNUYLGqPj9hTNVjVXaO6egDdALibnysCDzybkNY=
-Date:   Thu, 26 Mar 2020 09:22:18 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Srinath Mannam <srinath.mannam@broadcom.com>
-Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Ray Jui <rjui@broadcom.com>, Rob Herring <robh+dt@kernel.org>,
-        Andrew Murray <andrew.murray@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        bcm-kernel-feedback-list@broadcom.com, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, Ray Jui <ray.jui@broadcom.com>
-Subject: Re: [PATCH v5 1/6] dt-bindings: pci: Update iProc PCI binding for
- INTx support
-Message-ID: <20200326142218.GA259277@google.com>
+        Thu, 26 Mar 2020 10:23:22 -0400
+Received: from netrider.rowland.org ([192.131.102.5]:45575 "HELO
+        netrider.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with SMTP id S1727989AbgCZOXW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Mar 2020 10:23:22 -0400
+Received: (qmail 6696 invoked by uid 500); 26 Mar 2020 10:23:21 -0400
+Received: from localhost (sendmail-bs@127.0.0.1)
+  by localhost with SMTP; 26 Mar 2020 10:23:21 -0400
+Date:   Thu, 26 Mar 2020 10:23:21 -0400 (EDT)
+From:   Alan Stern <stern@rowland.harvard.edu>
+X-X-Sender: stern@netrider.rowland.org
+To:     Boqun Feng <boqun.feng@gmail.com>
+cc:     linux-kernel@vger.kernel.org,
+        Andrea Parri <parri.andrea@gmail.com>,
+        Will Deacon <will@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        David Howells <dhowells@redhat.com>,
+        Jade Alglave <j.alglave@ucl.ac.uk>,
+        Luc Maranget <luc.maranget@inria.fr>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Akira Yokosawa <akiyks@gmail.com>,
+        Daniel Lustig <dlustig@nvidia.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Rob Herring <robh@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        <linux-arch@vger.kernel.org>, <linux-doc@vger.kernel.org>
+Subject: Re: [PATCH v4 3/4] Documentation/litmus-tests/atomic: Add a test
+ for atomic_set()
+In-Reply-To: <20200326024022.7566-4-boqun.feng@gmail.com>
+Message-ID: <Pine.LNX.4.44L0.2003261023010.5714-100000@netrider.rowland.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1585205326-25326-2-git-send-email-srinath.mannam@broadcom.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-  $ git log --oneline Documentation/devicetree/bindings/pci/
+On Thu, 26 Mar 2020, Boqun Feng wrote:
 
-  34129bb831cc ("dt-bindings: PCI: intel: Fix dt_binding_check compilation failure")
-  e1ac611f57c9 ("dt-bindings: PCI: Convert generic host binding to DT schema")
-  919ba6e739eb ("dt-bindings: PCI: Convert Arm Versatile binding to DT schema")
-  0956dcb853dc ("dt-bindings: PCI: Add bindings for brcmstb's PCIe device")
-  5d28bee7c91e ("dt-bindings: PCI: qcom: Add support for SDM845 PCIe")
-  e54ea45a4955 ("dt-bindings: PCI: intel: Add YAML schemas for the PCIe RC controller")
-  d8725e38dd9f ("dt-bindings: pci: layerscape-pci: add compatible strings "fsl, ls1028a-pcie"")
-
-Capitalize yours match and put the useful information at the
-beginning; maybe something like this:
-
-  dt-bindings: PCI: iproc: Improve INTx modeling
-
-On Thu, Mar 26, 2020 at 12:18:41PM +0530, Srinath Mannam wrote:
-> From: Ray Jui <ray.jui@broadcom.com>
+> We already use a litmus test in atomic_t.txt to describe the behavior of
+> an atomic_set() with the an atomic RMW, so add it into atomic-tests
+> directory to make it easily accessible for anyone who cares about the
+> semantics of our atomic APIs.
 > 
-> Update the iProc PCIe binding document for better modeling of the legacy
-> interrupt (INTx) support.
+> Besides currently the litmus test "atomic-set" in atomic_t.txt has a few
+> things to be improved:
+> 
+> 1)	The CPU/Processor numbers "P1,P2" are not only inconsistent with
+> 	the rest of the document, which uses "CPU0" and "CPU1", but also
+> 	unacceptable by the herd tool, which requires processors start
+> 	at "P0".
+> 
+> 2)	The initialization block uses a "atomic_set()", which is OK, but
+> 	it's better to use ATOMIC_INIT() to make clear this is an
+> 	initialization.
+> 
+> 3)	The return value of atomic_add_unless() is discarded
+> 	inexplicitly, which is OK for C language, but it will be helpful
+> 	to the herd tool if we use a void cast to make the discard
+> 	explicit.
+> 
+> 4)	The name and the paragraph describing the test need to be more
+> 	accurate and aligned with our wording in LKMM.
+> 
+> Therefore fix these in both atomic_t.txt and the new added litmus test.
+> 
+> Signed-off-by: Boqun Feng <boqun.feng@gmail.com>
+> Acked-by: Andrea Parri <parri.andrea@gmail.com>
+> ---
+
+Acked-by: Alan Stern <stern@rowland.harvard.edu>
+
+>  Documentation/atomic_t.txt                    | 14 +++++------
+>  ...c-RMW-ops-are-atomic-WRT-atomic_set.litmus | 24 +++++++++++++++++++
+>  Documentation/litmus-tests/atomic/README      |  7 ++++++
+>  3 files changed, 38 insertions(+), 7 deletions(-)
+>  create mode 100644 Documentation/litmus-tests/atomic/Atomic-RMW-ops-are-atomic-WRT-atomic_set.litmus
+> 
+> diff --git a/Documentation/atomic_t.txt b/Documentation/atomic_t.txt
+> index 0ab747e0d5ac..67d1d99f8589 100644
+> --- a/Documentation/atomic_t.txt
+> +++ b/Documentation/atomic_t.txt
+> @@ -85,21 +85,21 @@ smp_store_release() respectively. Therefore, if you find yourself only using
+>  the Non-RMW operations of atomic_t, you do not in fact need atomic_t at all
+>  and are doing it wrong.
+>  
+> -A subtle detail of atomic_set{}() is that it should be observable to the RMW
+> -ops. That is:
+> +A note for the implementation of atomic_set{}() is that it must not break the
+> +atomicity of the RMW ops. That is:
+>  
+> -  C atomic-set
+> +  C Atomic-RMW-ops-are-atomic-WRT-atomic_set
+>  
+>    {
+> -    atomic_set(v, 1);
+> +    atomic_t v = ATOMIC_INIT(1);
+>    }
+>  
+> -  P1(atomic_t *v)
+> +  P0(atomic_t *v)
+>    {
+> -    atomic_add_unless(v, 1, 0);
+> +    (void)atomic_add_unless(v, 1, 0);
+>    }
+>  
+> -  P2(atomic_t *v)
+> +  P1(atomic_t *v)
+>    {
+>      atomic_set(v, 0);
+>    }
+> diff --git a/Documentation/litmus-tests/atomic/Atomic-RMW-ops-are-atomic-WRT-atomic_set.litmus b/Documentation/litmus-tests/atomic/Atomic-RMW-ops-are-atomic-WRT-atomic_set.litmus
+> new file mode 100644
+> index 000000000000..49385314d911
+> --- /dev/null
+> +++ b/Documentation/litmus-tests/atomic/Atomic-RMW-ops-are-atomic-WRT-atomic_set.litmus
+> @@ -0,0 +1,24 @@
+> +C Atomic-RMW-ops-are-atomic-WRT-atomic_set
+> +
+> +(*
+> + * Result: Never
+> + *
+> + * Test that atomic_set() cannot break the atomicity of atomic RMWs.
+> + *)
+> +
+> +{
+> +	atomic_t v = ATOMIC_INIT(1);
+> +}
+> +
+> +P0(atomic_t *v)
+> +{
+> +	(void)atomic_add_unless(v, 1, 0);
+> +}
+> +
+> +P1(atomic_t *v)
+> +{
+> +	atomic_set(v, 0);
+> +}
+> +
+> +exists
+> +(v=2)
+> diff --git a/Documentation/litmus-tests/atomic/README b/Documentation/litmus-tests/atomic/README
+> index ae61201a4271..a1b72410b539 100644
+> --- a/Documentation/litmus-tests/atomic/README
+> +++ b/Documentation/litmus-tests/atomic/README
+> @@ -2,3 +2,10 @@ This directory contains litmus tests that are typical to describe the semantics
+>  of our atomic APIs. For more information about how to "run" a litmus test or
+>  how to generate a kernel test module based on a litmus test, please see
+>  tools/memory-model/README.
+> +
+> +============
+> +LITMUS TESTS
+> +============
+> +
+> +Atomic-RMW-ops-are-atomic-WRT-atomic_set.litmus
+> +	Test that atomic_set() cannot break the atomicity of atomic RMWs.
+> 
+
