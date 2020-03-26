@@ -2,126 +2,159 @@ Return-Path: <SRS0=aGSP=5L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F5A8C43331
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 21:28:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24961C2D0E9
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 21:28:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0BF8120714
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 21:28:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED8CF20714
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 21:28:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="M6cg4sv8"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LeCF+XZO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727620AbgCZV2i (ORCPT
+        id S1727740AbgCZV2v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 17:28:38 -0400
-Received: from mail-il1-f193.google.com ([209.85.166.193]:42521 "EHLO
-        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726363AbgCZV2h (ORCPT
+        Thu, 26 Mar 2020 17:28:51 -0400
+Received: from mail-pj1-f65.google.com ([209.85.216.65]:52480 "EHLO
+        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726359AbgCZV2u (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 17:28:37 -0400
-Received: by mail-il1-f193.google.com with SMTP id f16so6842985ilj.9
-        for <linux-kernel@vger.kernel.org>; Thu, 26 Mar 2020 14:28:37 -0700 (PDT)
+        Thu, 26 Mar 2020 17:28:50 -0400
+Received: by mail-pj1-f65.google.com with SMTP id ng8so3008410pjb.2;
+        Thu, 26 Mar 2020 14:28:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=Btlqx21eu40zUkcej/V6liXdJs8HK+Dpn/OJAl+X7mA=;
-        b=M6cg4sv8ajLQueUJZXq4N/kjX221+tiJF3yQSbWclKBVnWsv+Ff2zDfM6Bxb6emo97
-         LQ1F9sPt3GWYLMPIdeL4dgPAXK5i4ESgbkSvjnUj5ytNaBhoyXlsz6x5It7brFjgReOv
-         n3MYFBCKdFqDEPs2O4hZKMy8DL1bmo9gMFqgPuJ/hsxgK/RcKyParZEVp1UdPgnkc0NK
-         ypUXfY0uVphJ5BknZRjb/x1FhKKT3ZFlCaklkosor2ursaMGsd8dvOP3HzYYhh7Juy2F
-         ayKp0BZ7fvweMRKcyB6i+xLNqNgAu+fvFuiwQOPjis10vBxB9LI0i1il4vufxE3hZufc
-         TXAA==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=h9Np+N/jnv+SaunZ4Qzp2gD2QknFbGsdEeKP5pH/MNs=;
+        b=LeCF+XZOSJAf2r1mO82UXQ3kV+Djmm1D+LCHPYnmBkNkol7AAPjlCdJkkH6Cq8DtH/
+         r1VcaMs3iCtk8ToH74cNB/NDcVzD870+dQKYqlWI8xrNudIH5vGjOyqPjx9OCSlqDfsk
+         uIg2kHiXg7Ka5T1//zCwnSYw/+kX/Q6ST2AJ2QQyT4rCg2HIyg77gqa/7ytQkBuA8shj
+         awhMUPcAhZu+MvBND8COMPT6u+1fqj2duc89O/sNiC7RJ8khXqynAOBu1jOMZJwgLzId
+         pEulOCn2yPqTON+ODxrzYTP13Snp3hVVWCLtmomQRWfHR0yAbjxneMRy1z1g1/fr/gtE
+         yjjA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=Btlqx21eu40zUkcej/V6liXdJs8HK+Dpn/OJAl+X7mA=;
-        b=PqGdELvy36ZE27J5vWvvklFP47m+WmETZXbNtWc48J+YdRhQMD+09FVcpgHLpPe8/o
-         4358gRnHyMI+6Mqm62WzE6VALp0FZzZ4no51Phca0ZH4Ax93E4EMhaWPUgTzmjg0hGEH
-         Omgz9OpUK85j44rsKTO6DdS+lkSvH0yduQ+tYSF5hJr++xO+lGA8trl34H2fYwyFeBt6
-         jgwDaqjMRqgtnCRQNxL7e8om0wobBGsMNLn6OVA6YbhWMrBVZy0wn5voS7RazJTwiUbU
-         WTfKSlpp2qGU3eyiYiIkAB1vFOqZxNVMVVnAofBFk1uVibR3DU359lLonAENrbSLVq2b
-         hFkA==
-X-Gm-Message-State: ANhLgQ1Hv0+mlq1DTczhaB3ohEMFVdnfQ4UVNpMrLKLo8leRxXcCD5Uo
-        ACdODpWt2LyOG3Pxw6LcOEBsjlC54HmtqHuBQqmFMQ==
-X-Google-Smtp-Source: ADFU+vtLzOd32bY6WCTbTFgGTLvCSJZvih2LXQlPgGOADfvm83VghlrezAbG6LvoVKJt3DkATZXqLyP+LNg02NhPwmE=
-X-Received: by 2002:a92:8384:: with SMTP id p4mr11224795ilk.16.1585258116250;
- Thu, 26 Mar 2020 14:28:36 -0700 (PDT)
-MIME-Version: 1.0
-References: <CACdnJusd7m-c0zLmAjSq9Sb9HxyCkhyyp5W=4FMdysgu7_g=Sw@mail.gmail.com>
- <BB670F86-9362-4A8C-8BE6-64A5AF9537A7@amacapital.net>
-In-Reply-To: <BB670F86-9362-4A8C-8BE6-64A5AF9537A7@amacapital.net>
-From:   Matthew Garrett <mjg59@google.com>
-Date:   Thu, 26 Mar 2020 14:28:25 -0700
-Message-ID: <CACdnJus6H3LQww8hkTMpPKN7u_sb1PXmgPwQOCSVZR_fi7GMrA@mail.gmail.com>
-Subject: Re: [RFC PATCH 00/12] x86: Trenchboot secure late launch Linux kernel support
-To:     Andy Lutomirski <luto@amacapital.net>
-Cc:     Daniel Kiper <daniel.kiper@oracle.com>,
-        Ross Philipson <ross.philipson@oracle.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        linux-doc@vger.kernel.org,
-        "Daniel P. Smith" <dpsmith@apertussolutions.com>,
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=h9Np+N/jnv+SaunZ4Qzp2gD2QknFbGsdEeKP5pH/MNs=;
+        b=i6TVP136kVJvQxf6dx3fRbnlWY3Haq9HIR2gPP04Ge795Etr0BlQSE32lcOg+UHHWw
+         DT42HwRQr4NXSlWgP8u1v1tgYYsaRzSolxr1NQildhIRyTVeaIHPEh9g2YD+LDtMGu0s
+         6/VsMcvcPYva32FEiBAbB/L4r6NSwiG45tOusRi6KiT89JMLjbQGJ23HG33gkhIitkSe
+         yID3FGwOJHqr7IynrfWYM1o2+5DfBvTB6PQYZZQ6O18SvH1kBp/BVHVByM+V1kxfbfHw
+         44HXAvDB2T32fsm8YGhqxzafu2k6eEF9VySezGVeC42Xym1C1mdjNbjxRZZAc7idcc7q
+         MABg==
+X-Gm-Message-State: ANhLgQ3QU2xImVSBxnjRiDWXtwMssHI9FxoEcGwkX29D26zXhDbEzaCn
+        yRZPaTWLLgooJvUCFcuHYuk=
+X-Google-Smtp-Source: ADFU+vvyNXnWrvCL+9n2rHlpowRbPitq4eWcQo//8PEWZiBpq6/KhVBOM8BUmyt8aTIlLrtjKSMjxw==
+X-Received: by 2002:a17:90a:5d16:: with SMTP id s22mr2163862pji.184.1585258129014;
+        Thu, 26 Mar 2020 14:28:49 -0700 (PDT)
+Received: from dtor-ws ([2620:15c:202:201:3c2a:73a9:c2cf:7f45])
+        by smtp.gmail.com with ESMTPSA id a24sm2445523pfl.115.2020.03.26.14.28.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 26 Mar 2020 14:28:48 -0700 (PDT)
+Date:   Thu, 26 Mar 2020 14:28:46 -0700
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To:     Rajat Jain <rajatja@google.com>
+Cc:     dtor@google.com, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Enrico Weigelt <info@metux.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        trenchboot-devel@googlegroups.com,
-        Ard Biesheuvel <ardb@kernel.org>, leif@nuviainc.com,
-        eric.snowberg@oracle.com, piotr.krol@3mdeb.com,
-        krystian.hebel@3mdeb.com, michal.zygowski@3mdeb.com,
-        James Bottomley <James.Bottomley@hansenpartnership.com>,
-        andrew.cooper3@citrix.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Allison Randal <allison@lohutok.net>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Stephen Boyd <swboyd@chromium.org>,
+        linux-input@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, furquan@google.com,
+        dlaurie@google.com, bleung@google.com, zentaro@google.com,
+        dbehr@google.com, rajatxjain@gmail.com
+Subject: Re: [PATCH v2 5/5] dt-bindings: input/atkbd.txt: Add binding info
+ for "keymap" property
+Message-ID: <20200326212846.GK75430@dtor-ws>
+References: <20200324123518.239768-1-rajatja@google.com>
+ <20200324123518.239768-5-rajatja@google.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200324123518.239768-5-rajatja@google.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 26, 2020 at 2:07 PM Andy Lutomirski <luto@amacapital.net> wrote=
-:
-> > On Mar 26, 2020, at 1:40 PM, Matthew Garrett <mjg59@google.com> wrote:
-> >
-> > =EF=BB=BFOn Thu, Mar 26, 2020 at 1:33 PM Andy Lutomirski <luto@amacapit=
-al.net> wrote:
-> >> As a straw-man approach: make the rule that we never call EFI after se=
-cure launch. Instead we write out any firmware variables that we want to ch=
-ange on disk somewhere.  When we want to commit those changes, we reboot, c=
-ommit the changes, and re-launch. Or we deactivate the kernel kexec-style, =
-seal the image against PCRs, blow away PCRs, call EFI, relaunch, unseal the=
- PCRs, and continue on our merry way.
-> >
-> > That breaks the memory overwrite protection code, where a variable is
-> > set at boot and cleared on a controlled reboot.
->
-> Can you elaborate?  I=E2=80=99m not familiar with this.
+On Tue, Mar 24, 2020 at 05:35:18AM -0700, Rajat Jain wrote:
+> Add the info for keymap property that allows firmware to specify the
+> mapping from physical code to linux keycode, that the kernel should use.
+> 
+> Signed-off-by: Rajat Jain <rajatja@google.com>
+> ---
+> v2: Remove the Change-Id from the commit log
+> 
+>  .../devicetree/bindings/input/atkbd.txt       | 27 ++++++++++++++++++-
+>  1 file changed, 26 insertions(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/input/atkbd.txt b/Documentation/devicetree/bindings/input/atkbd.txt
+> index 816653eb8e98d..0a0037d70adc8 100644
+> --- a/Documentation/devicetree/bindings/input/atkbd.txt
+> +++ b/Documentation/devicetree/bindings/input/atkbd.txt
+> @@ -6,9 +6,15 @@ Optional properties:
+>  			An ordered array of the physical codes for the function
+>  			row keys. Arranged in order from left to right.
+>  
+> +	keymap:
 
-https://trustedcomputinggroup.org/wp-content/uploads/TCG_PlatformResetAttac=
-kMitigationSpecification_1.10_published.pdf
-- you want to protect in-memory secrets from a physically present
-attacker hitting the reset button, booting something else and just
-dumping RAM. This is avoided by setting a variable at boot time (in
-the boot stub), and then clearing it on reboot once the secrets have
-been cleared from RAM. If the variable isn't cleared, the firmware
-overwrites all RAM contents before booting anything else.
+This map will contain Linux specific values, so I would say
+"linux,keymap". Rob?
 
-> > As for the second approach - how would we
-> > verify that the EFI code hadn't modified any user pages? Those
-> > wouldn't be measured during the second secure launch. If we're calling
-> > the code at runtime then I think we need to assert that it's trusted.
->
-> Maybe you=E2=80=99re misunderstanding my suggestion.  I=E2=80=99m suggest=
-ing that we hibernate the whole running system to memory (more like kexec j=
-ump than hibernate) and authenticated-encrypt the whole thing (including us=
-er memory) with a PCR-sealed key. We jump to a stub that zaps PCRs does EFI=
- calls. Then we re-launch and decrypt memory.
+> +			An array of the u32 entries to specify mapping from the
+> +			keyboard physcial codes to linux keycodes. The top 16
+> +			bits of each entry are the physical code, and bottom
+> +			16 bits are the	linux keycode.
+> +
+>  Example:
+>  
+> -	This is a sample ACPI _DSD node describing the property:
+> +	This is a sample ACPI _DSD node describing the properties:
+>  
+>          Name (_DSD, Package () {
+>                  ToUUID("daffd814-6eba-4d8c-8a91-bc9bbf4aa301"),
+> @@ -29,6 +35,25 @@ Example:
+>                                          0xAE, /* T12 VOL_DOWN */
+>                                          0xB0, /* T13 VOL_UP */
+>                                  }
+> +                        },
+> +                        Package () { "keymap",
+> +                                Package () {
+> +                                        0xEA009E, /* EA -> KEY_BACK */
+> +                                        0xE700AD, /* E7 -> KEY_REFRESH */
+> +                                        0x910174, /* 91 -> KEY_FULL_SCREEN */
+> +                                        0x920078, /* 92 -> KEY_SCALE */
+> +                                        0x930280, /* 93 -> 0x280 */
+> +                                        0x9400E0, /* 94 -> KEY_BRIGHTNESS_DOWN*/
+> +                                        0x9500E1, /* 95 -> KEY_BRIGHTNESS_UP */
+> +                                        0x960279, /* 96 -> KEY_PRIVACY_SCRN_TOGGLE*/
+> +                                        0x9700E5, /* 97 -> KEY_KBDILLUMDOWN */
+> +                                        0x9800E6, /* 98 -> KEY_KBDILLUMUP */
+> +                                        0xA00071, /* A0 -> KEY_MUTE */
+> +                                        0xAE0072, /* AE -> KEY_VOLUMEDOWN */
+> +                                        0xB00073, /* B0 -> KEY_VOLUMEUP */
+> +					...
+> +					<snip other entries>
+> +                                }
+>                          }
+>                  }
+>          })
+> -- 
+> 2.25.1.696.g5e7596f4ac-goog
+> 
 
-When you say "re-launch", you mean perform a second secure launch? I
-think that would work, as long as we could reconstruct an identical
-state to ensure that the PCR17 values matched - and that seems like a
-hard problem.
+Thanks.
+
+-- 
+Dmitry
