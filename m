@@ -2,156 +2,167 @@ Return-Path: <SRS0=aGSP=5L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58562C43331
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 22:30:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67D3EC43331
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 22:33:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3174E2077D
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 22:30:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 329972077D
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 22:33:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585262029;
+	bh=jd4Y+6N5rNGyGPYAl5OwO+RyRTpcNli8YQTfvDwC6Zc=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=itivp1VIhVaTOri7/w1AWlm2qwXn3YZpzoUJEhZGHHE/haxPiuGXuMxRsFQAaNrEq
+	 0iZKimTwQjIKq3sRPBMqKHIr/UhkAlX2tOJOEQlGW8/bnE/O6FDpqA3WEenfjsha4o
+	 C/Syg1B4txQz1cG/YfGD5vhtX1QwFelWoziuvg0s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727674AbgCZWaC (ORCPT
+        id S1727548AbgCZWds (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 18:30:02 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:33400 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726270AbgCZWaB (ORCPT
+        Thu, 26 Mar 2020 18:33:48 -0400
+Received: from mail-il1-f194.google.com ([209.85.166.194]:43280 "EHLO
+        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726067AbgCZWds (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 18:30:01 -0400
-Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02QM45pp017367;
-        Thu, 26 Mar 2020 18:29:29 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2ywe7wg67t-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 26 Mar 2020 18:29:29 -0400
-Received: from m0098409.ppops.net (m0098409.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 02QMGvZP149162;
-        Thu, 26 Mar 2020 18:29:29 -0400
-Received: from ppma04wdc.us.ibm.com (1a.90.2fa9.ip4.static.sl-reverse.com [169.47.144.26])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2ywe7wg67j-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 26 Mar 2020 18:29:29 -0400
-Received: from pps.filterd (ppma04wdc.us.ibm.com [127.0.0.1])
-        by ppma04wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 02QMPKDj016953;
-        Thu, 26 Mar 2020 22:29:27 GMT
-Received: from b01cxnp22034.gho.pok.ibm.com (b01cxnp22034.gho.pok.ibm.com [9.57.198.24])
-        by ppma04wdc.us.ibm.com with ESMTP id 2ywaw9d6bv-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 26 Mar 2020 22:29:27 +0000
-Received: from b01ledav005.gho.pok.ibm.com (b01ledav005.gho.pok.ibm.com [9.57.199.110])
-        by b01cxnp22034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 02QMTR8E51839366
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 26 Mar 2020 22:29:27 GMT
-Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 76774AE05F;
-        Thu, 26 Mar 2020 22:29:27 +0000 (GMT)
-Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 04A8EAE05C;
-        Thu, 26 Mar 2020 22:29:04 +0000 (GMT)
-Received: from LeoBras.aus.stglabs.ibm.com (unknown [9.85.162.45])
-        by b01ledav005.gho.pok.ibm.com (Postfix) with ESMTP;
-        Thu, 26 Mar 2020 22:29:04 +0000 (GMT)
-From:   Leonardo Bras <leonardo@linux.ibm.com>
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Enrico Weigelt <info@metux.net>,
-        Leonardo Bras <leonardo@linux.ibm.com>,
-        Allison Randal <allison@lohutok.net>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Thomas Gleixner <tglx@linutronix.de>
-Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH 1/1] ppc/crash: Skip spinlocks during crash
-Date:   Thu, 26 Mar 2020 19:28:37 -0300
-Message-Id: <20200326222836.501404-1-leonardo@linux.ibm.com>
-X-Mailer: git-send-email 2.24.1
+        Thu, 26 Mar 2020 18:33:48 -0400
+Received: by mail-il1-f194.google.com with SMTP id g15so6985842ilj.10
+        for <linux-kernel@vger.kernel.org>; Thu, 26 Mar 2020 15:33:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linuxfoundation.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=kjtLmei14Aqe6drnic5xmk3O+peLFqdWaisNXVkXGdU=;
+        b=LDp1HOz4HRDcpEUE/IODV5zUi8p4m/bTmt+Due8jI4CRWUH08jE3IOL0+gMN7atpoA
+         gTRYN4GEg+beygpKEJUpyOj5DLy7Aya6zVDZFacmvFjxr0x8yaK+xuZefyLMLtVSCXHQ
+         lDcPSqUMxCawAdciC6sGGZPl5FsLBpvCs/cuQ=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=kjtLmei14Aqe6drnic5xmk3O+peLFqdWaisNXVkXGdU=;
+        b=pAzk2nvQu9yUZgKrLPZ8g08Sc19q6qAnWtzCko7MdHKOEPKCZmHTYAnGfHd/dtpqOi
+         tSqARnQ5NNYxUct+gh+COgN8p0Wy5pOpnk4Vdgmph8Ynt+X/E5TQfw7GcGTmQ0nTRtwh
+         /+v9ZJwcv1sX4Ss2oqiK+bX/uUfH2YxOxdt7c/43O96snArWaYnqjN6Ly+MA9X0X3XVQ
+         hczFUs962+IzW8jD9f1jIs+c/9a/J4tftnET4a9QQ+f0ppPifAa+JYKQJMcOPkB/h3P/
+         vQJfAdNefhAfL8HqwQ3yBebT4/8Hoj2dJg4LR4N9vZw8xK7ouk8yP0cZVfdRtZhW2Vu9
+         7N3g==
+X-Gm-Message-State: ANhLgQ1WcyIyCASdgdK+mBjVpDMUmYpEUcdfMFitDU0eJNzReqbG9qJZ
+        aK6ctoFxSjGpA6hhLpF2+gSMwA==
+X-Google-Smtp-Source: ADFU+vtMO7/dx04DcpOtgDV7w5GSmDnkphd5lBOQl2I1jSMmN1W9RaTneGmqZD3lGbRVl2wtOisAng==
+X-Received: by 2002:a92:359b:: with SMTP id c27mr10690452ilf.148.1585262026859;
+        Thu, 26 Mar 2020 15:33:46 -0700 (PDT)
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net. [24.9.64.241])
+        by smtp.gmail.com with ESMTPSA id j84sm1238655ili.65.2020.03.26.15.33.45
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 26 Mar 2020 15:33:46 -0700 (PDT)
+Subject: Re: [PATCH] selftests: Fix memfd to support relocatable build
+ (O=objdir)
+To:     "Bird, Tim" <Tim.Bird@sony.com>,
+        "shuah@kernel.org" <shuah@kernel.org>
+Cc:     "linux-kselftest@vger.kernel.org" <linux-kselftest@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Shuah Khan <skhan@linuxfoundation.org>
+References: <20200325231709.13122-1-skhan@linuxfoundation.org>
+ <MWHPR13MB08955F0F8C5D0B07CA86DA92FDCF0@MWHPR13MB0895.namprd13.prod.outlook.com>
+From:   Shuah Khan <skhan@linuxfoundation.org>
+Message-ID: <3fa8af77-4b4b-c1e2-2467-fb7b9adb3f66@linuxfoundation.org>
+Date:   Thu, 26 Mar 2020 16:33:45 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.645
- definitions=2020-03-26_13:2020-03-26,2020-03-26 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999
- impostorscore=0 bulkscore=0 phishscore=0 spamscore=0 adultscore=0
- mlxscore=0 lowpriorityscore=0 suspectscore=0 malwarescore=0
- priorityscore=1501 clxscore=1011 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2003020000 definitions=main-2003260157
+In-Reply-To: <MWHPR13MB08955F0F8C5D0B07CA86DA92FDCF0@MWHPR13MB0895.namprd13.prod.outlook.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-During a crash, there is chance that the cpus that handle the NMI IPI
-are holding a spin_lock. If this spin_lock is needed by crashing_cpu it
-will cause a deadlock. (rtas_lock and printk logbuf_log as of today)
+On 3/26/20 4:23 PM, Bird, Tim wrote:
+>> -----Original Message-----
+>> From: Shuah Khan
+>>
+>> Fix memfd to support relocatable build (O=objdir). This calls out
+>> source files necessary to build tests and simplfies the dependency
+>> enforcement.
+>>
+>> Tested the following:
+>>
+>> Note that cross-build for fuse_mnt has dependency on -lfuse.
+>>
+>> make all
+>> make clean
+>> make kselftest-install O=/arm64_build/ ARCH=arm64 HOSTCC=gcc \
+>> CROSS_COMPILE=aarch64-linux-gnu- TARGETS=memfd
+>>
+>> Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
+>> ---
+>>   tools/testing/selftests/memfd/Makefile | 9 ++++-----
+>>   1 file changed, 4 insertions(+), 5 deletions(-)
+>>
+>> diff --git a/tools/testing/selftests/memfd/Makefile b/tools/testing/selftests/memfd/Makefile
+>> index 53a848109f7b..0a15f9e23431 100644
+>> --- a/tools/testing/selftests/memfd/Makefile
+>> +++ b/tools/testing/selftests/memfd/Makefile
+>> @@ -4,9 +4,8 @@ CFLAGS += -I../../../../include/uapi/
+>>   CFLAGS += -I../../../../include/
+>>   CFLAGS += -I../../../../usr/include/
+>>
+>> -TEST_GEN_PROGS := memfd_test
+>> +TEST_GEN_PROGS := memfd_test fuse_test fuse_mnt
+>>   TEST_PROGS := run_fuse_test.sh run_hugetlbfs_test.sh
+>> -TEST_GEN_FILES := fuse_mnt fuse_test
+>>
+>>   fuse_mnt.o: CFLAGS += $(shell pkg-config fuse --cflags)
+>>
+>> @@ -14,7 +13,7 @@ include ../lib.mk
+>>
+>>   $(OUTPUT)/fuse_mnt: LDLIBS += $(shell pkg-config fuse --libs)
+> 
+> Sorry to interject here.  This comment doesn't have to do with this patch,
+> but the above line is problematical for cross-compilation.
+> $(shell pkg-config fuse --libs) will use pkg-config from the host
+> machine, and may produce something different from what's
+> installed on the target.  For most enterprise and desktop systems
+> library paths for are mostly standardized.  The effect is that if
+> you're doing 'simple' embedded, the pkg-config output on the
+> host will match that of the target board.  However, in some
+> embedded products the partition and filesystem setups are
+> often quite complicated (e.g. I recently worked on a TV set with 14
+> partitions) and things are not in the locations preferred by the
+> Filesystem Hierarchy Standard.
+> 
+> When cross-compiling for our products, we tend to use the pkg-config
+> from the filesystem of the target (a copy of which is on the host), rather
+> than the host's pkg-config.
+> 
+Thanks for bringing attention to the issue. This is an existing
+issue. Thankfully this is one of the two tests that use pkg-config.
 
-This is a problem if the system has kdump set up, given if it crashes
-for any reason kdump may not be saved for crash analysis.
+The problem is limited to just two tests that are included in the
+Makefile TARGETS.
 
-Skip spinlocks after NMI IPI is sent to all other cpus.
+> I don't have a board in my test lab where this shows up, nor a
+> proposed solution at the moment, but I'm just mentioning it as a
+> potential host-environment build contamination issue.  Maybe I
+> should start keeping a list, and start thinking of possible solutions for
+> more of these types of issues.
 
-Signed-off-by: Leonardo Bras <leonardo@linux.ibm.com>
----
- arch/powerpc/include/asm/spinlock.h | 6 ++++++
- arch/powerpc/kexec/crash.c          | 3 +++
- 2 files changed, 9 insertions(+)
 
-diff --git a/arch/powerpc/include/asm/spinlock.h b/arch/powerpc/include/asm/spinlock.h
-index 860228e917dc..a6381d110795 100644
---- a/arch/powerpc/include/asm/spinlock.h
-+++ b/arch/powerpc/include/asm/spinlock.h
-@@ -111,6 +111,8 @@ static inline void splpar_spin_yield(arch_spinlock_t *lock) {};
- static inline void splpar_rw_yield(arch_rwlock_t *lock) {};
- #endif
- 
-+extern bool crash_skip_spinlock __read_mostly;
-+
- static inline bool is_shared_processor(void)
- {
- #ifdef CONFIG_PPC_SPLPAR
-@@ -142,6 +144,8 @@ static inline void arch_spin_lock(arch_spinlock_t *lock)
- 		if (likely(__arch_spin_trylock(lock) == 0))
- 			break;
- 		do {
-+			if (unlikely(crash_skip_spinlock))
-+				return;
- 			HMT_low();
- 			if (is_shared_processor())
- 				splpar_spin_yield(lock);
-@@ -161,6 +165,8 @@ void arch_spin_lock_flags(arch_spinlock_t *lock, unsigned long flags)
- 		local_save_flags(flags_dis);
- 		local_irq_restore(flags);
- 		do {
-+			if (unlikely(crash_skip_spinlock))
-+				return;
- 			HMT_low();
- 			if (is_shared_processor())
- 				splpar_spin_yield(lock);
-diff --git a/arch/powerpc/kexec/crash.c b/arch/powerpc/kexec/crash.c
-index d488311efab1..8a522380027d 100644
---- a/arch/powerpc/kexec/crash.c
-+++ b/arch/powerpc/kexec/crash.c
-@@ -66,6 +66,8 @@ static int handle_fault(struct pt_regs *regs)
- 
- #ifdef CONFIG_SMP
- 
-+bool crash_skip_spinlock;
-+
- static atomic_t cpus_in_crash;
- void crash_ipi_callback(struct pt_regs *regs)
- {
-@@ -129,6 +131,7 @@ static void crash_kexec_prepare_cpus(int cpu)
- 	/* Would it be better to replace the trap vector here? */
- 
- 	if (atomic_read(&cpus_in_crash) >= ncpus) {
-+		crash_skip_spinlock = true;
- 		printk(KERN_EMERG "IPI complete\n");
- 		return;
- 	}
--- 
-2.24.1
+Thanks for bringing attention to the issue. I will keep an eye out for
+this kind of usage during my reviews.
 
+> 
+> P.S. I'd ignore this issue for approving this patch.  I'm just bringing
+> it up as a red flag for future work.
+
+Thanks. This is an existing problem that can be addressed in a separate
+page.
+
+thanks,
+-- Shuah
