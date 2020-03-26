@@ -4,54 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7B9FC43331
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 23:24:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0974C2D0EF
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 23:24:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B4ADF2077D
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 23:24:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6475C208FE
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 23:24:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585265082;
-	bh=HlxskFbsYt3+njsgtfJZSeFdRTEuzk6dYipazKydfG4=;
+	s=default; t=1585265085;
+	bh=Nk6KRHSuSV+vV3uuL0Fbyt7lBGmFCrHu/aiRdLfbfJw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sYolFr7xZEWTxSs/Nr/z0vObN4AwPoELHSTe4sAj55kWvsy8k2SesU5W37h9RTMH1
-	 IRzfaPJNBIH1m+6G+SHcyCS6aDsmAnBSwtGPtr9Bvjf8uj9zkudAnWBLmGFb+3/d5N
-	 wV81cpCjskk4+wAVqQ2KuTwh5NP870wYIQj8BrOU=
+	b=sZlK1X9Q7Z+z4+HR/MFFmrT0I0hcWCmJA7ql8bTaZ3Z1TDmHZnsI4VpV86HPJIxmx
+	 Qzua+SI2aDf/K8IUyrt+NNmWKXO22xDCWZOaaorqWiPGsM21GoQ41/+pf3utZXFihR
+	 /Sbrdj2K96dnH+mkHWemLRCPfqT4pp2zTei2shNw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727989AbgCZXYl (ORCPT
+        id S1728004AbgCZXYo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 19:24:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44172 "EHLO mail.kernel.org"
+        Thu, 26 Mar 2020 19:24:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44390 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727912AbgCZXY3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 19:24:29 -0400
+        id S1727956AbgCZXYg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Mar 2020 19:24:36 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2C25220719;
-        Thu, 26 Mar 2020 23:24:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 16DE32082D;
+        Thu, 26 Mar 2020 23:24:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585265068;
-        bh=HlxskFbsYt3+njsgtfJZSeFdRTEuzk6dYipazKydfG4=;
+        s=default; t=1585265075;
+        bh=Nk6KRHSuSV+vV3uuL0Fbyt7lBGmFCrHu/aiRdLfbfJw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ov/npAwsHIdau8ZhA0+WeQYN+p6KGJS6V45IV/2uW0db32+Ri1WIv37NB9UFBrtos
-         uQ+Zk/TyItFpoxYCkMldWqA5RzBu4DBOxBU7HKLPK/5NVZFxJwfx7u+0Mqq+Q+FwgS
-         P+klsysXlZzzen3mfxdj6/zdxrXW/oylqHBYpXt0=
+        b=WRTZ7lKpu0inxg3I9vc5AjPs6v0vMNMQZ2tadk2DggfIPnRiTLXxkAkZCRspMQvum
+         MHn20/pSqbFfq+l7fVMBbsTk+hLOzku7gmaqj26kBSudNiKJ1C2EUMp2SOYzPdH525
+         TdNGadjeacKMbboITareCm7yIvzGhxhBFa7zJbZU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Eric Biggers <ebiggers@google.com>,
-        syzbot+8da9175e28eadcb203ce@syzkaller.appspotmail.com,
-        Jiri Slaby <jslaby@suse.cz>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.5 27/28] tty: fix compat TIOCGSERIAL leaking uninitialized memory
-Date:   Thu, 26 Mar 2020 19:23:56 -0400
-Message-Id: <20200326232357.7516-27-sashal@kernel.org>
+Cc:     Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>,
+        alsa-devel@alsa-project.org
+Subject: [PATCH AUTOSEL 5.4 03/19] ALSA: hda/realtek: Fix pop noise on ALC225
+Date:   Thu, 26 Mar 2020 19:24:15 -0400
+Message-Id: <20200326232431.7816-3-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200326232357.7516-1-sashal@kernel.org>
-References: <20200326232357.7516-1-sashal@kernel.org>
+In-Reply-To: <20200326232431.7816-1-sashal@kernel.org>
+References: <20200326232431.7816-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -61,47 +59,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Biggers <ebiggers@google.com>
+From: Kai-Heng Feng <kai.heng.feng@canonical.com>
 
-[ Upstream commit 17329563a97df3ba474eca5037c1336e46e14ff8 ]
+[ Upstream commit 3b36b13d5e69d6f51ff1c55d1b404a74646c9757 ]
 
-Commit 77654350306a ("take compat TIOC[SG]SERIAL treatment into
-tty_compat_ioctl()") changed the compat version of TIOCGSERIAL to start
-copying a whole 'serial_struct32' to userspace rather than individual
-fields, but failed to initialize all padding and fields -- namely the
-hole after the 'iomem_reg_shift' field, and the 'reserved' field.
+Commit 317d9313925c ("ALSA: hda/realtek - Set default power save node to
+0") makes the ALC225 have pop noise on S3 resume and cold boot.
 
-Fix this by initializing the struct to zero.
+So partially revert this commit for ALC225 to fix the regression.
 
-[v2: use sizeof, and convert the adjacent line for consistency.]
-
-Reported-by: syzbot+8da9175e28eadcb203ce@syzkaller.appspotmail.com
-Fixes: 77654350306a ("take compat TIOC[SG]SERIAL treatment into tty_compat_ioctl()")
-Cc: <stable@vger.kernel.org> # v4.20+
-Signed-off-by: Eric Biggers <ebiggers@google.com>
-Acked-by: Jiri Slaby <jslaby@suse.cz>
-Link: https://lore.kernel.org/r/20200224182044.234553-2-ebiggers@kernel.org
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fixes: 317d9313925c ("ALSA: hda/realtek - Set default power save node to 0")
+BugLink: https://bugs.launchpad.net/bugs/1866357
+Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+Link: https://lore.kernel.org/r/20200311061328.17614-1-kai.heng.feng@canonical.com
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/tty/tty_io.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ sound/pci/hda/patch_realtek.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/tty/tty_io.c b/drivers/tty/tty_io.c
-index d9f54c7d94f29..186e08a81b986 100644
---- a/drivers/tty/tty_io.c
-+++ b/drivers/tty/tty_io.c
-@@ -2734,7 +2734,9 @@ static int compat_tty_tiocgserial(struct tty_struct *tty,
- 	struct serial_struct32 v32;
- 	struct serial_struct v;
- 	int err;
--	memset(&v, 0, sizeof(struct serial_struct));
-+
-+	memset(&v, 0, sizeof(v));
-+	memset(&v32, 0, sizeof(v32));
- 
- 	if (!tty->ops->set_serial)
- 		return -ENOTTY;
+diff --git a/sound/pci/hda/patch_realtek.c b/sound/pci/hda/patch_realtek.c
+index 12858d95c2c85..73b182db7ef3b 100644
+--- a/sound/pci/hda/patch_realtek.c
++++ b/sound/pci/hda/patch_realtek.c
+@@ -8080,6 +8080,8 @@ static int patch_alc269(struct hda_codec *codec)
+ 		spec->gen.mixer_nid = 0;
+ 		break;
+ 	case 0x10ec0225:
++		codec->power_save_node = 1;
++		/* fall through */
+ 	case 0x10ec0295:
+ 	case 0x10ec0299:
+ 		spec->codec_variant = ALC269_TYPE_ALC225;
 -- 
 2.20.1
 
