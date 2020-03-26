@@ -2,351 +2,225 @@ Return-Path: <SRS0=aGSP=5L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64943C43331
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 10:19:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE48AC2D0E8
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 10:20:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 310CB2077D
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 10:19:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8EE4F2077D
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 10:20:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BKvCh9At"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727943AbgCZKTe (ORCPT
+        id S1727966AbgCZKUa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 06:19:34 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:47316 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726298AbgCZKTe (ORCPT
+        Thu, 26 Mar 2020 06:20:30 -0400
+Received: from mail-qv1-f68.google.com ([209.85.219.68]:38330 "EHLO
+        mail-qv1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726292AbgCZKU3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 06:19:34 -0400
-Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02QA4Llr067954
-        for <linux-kernel@vger.kernel.org>; Thu, 26 Mar 2020 06:19:33 -0400
-Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2ywf3hf3f5-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 26 Mar 2020 06:19:32 -0400
-Received: from localhost
-        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <maddy@linux.ibm.com>;
-        Thu, 26 Mar 2020 10:19:27 -0000
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
-        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 26 Mar 2020 10:19:21 -0000
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 02QAJMUg55509014
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 26 Mar 2020 10:19:22 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 9394DAE04D;
-        Thu, 26 Mar 2020 10:19:22 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id D90DDAE045;
-        Thu, 26 Mar 2020 10:19:17 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.199.62.177])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu, 26 Mar 2020 10:19:17 +0000 (GMT)
-Subject: Re: [RFC 00/11] perf: Enhancing perf to export processor hazard
- information
-To:     Kim Phillips <kim.phillips@amd.com>,
-        Ravi Bangoria <ravi.bangoria@linux.ibm.com>
-Cc:     Stephane Eranian <eranian@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        linuxppc-dev@lists.ozlabs.org, LKML <linux-kernel@vger.kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Paul Mackerras <paulus@samba.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        "Liang, Kan" <kan.liang@linux.intel.com>,
-        Alexey Budankov <alexey.budankov@linux.intel.com>,
-        yao.jin@linux.intel.com, Robert Richter <robert.richter@amd.com>
-References: <20200302052355.36365-1-ravi.bangoria@linux.ibm.com>
- <20200302101332.GS18400@hirez.programming.kicks-ass.net>
- <CABPqkBSzwpR6p7UZs7g1vWGCJRLsh565mRMGc6m0Enn1SnkC4w@mail.gmail.com>
- <df966d6e-8898-029f-e697-8496500a1663@amd.com>
- <2550ec4d-a015-4625-ca24-ff10632dbe2e@linux.ibm.com>
- <d3c82708-dd09-80e0-4e9f-1cbab118a169@amd.com>
- <8a4d966c-acc9-b2b7-8ab7-027aefab201c@linux.ibm.com>
- <f226f4c5-6310-fd6b-ee76-aebd938ec212@amd.com>
- <0c5e94a3-e86e-f7cb-d668-d542b3a8ae29@linux.ibm.com>
- <8803550e-5d6d-2eda-39f5-e4594052188c@amd.com>
-From:   maddy <maddy@linux.ibm.com>
-Date:   Thu, 26 Mar 2020 15:49:16 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Thu, 26 Mar 2020 06:20:29 -0400
+Received: by mail-qv1-f68.google.com with SMTP id p60so2604271qva.5;
+        Thu, 26 Mar 2020 03:20:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=AO1+kLNJMIFIpXSKsYT0LBsgxe58i/XAiEepkW6Sx0w=;
+        b=BKvCh9AtaNfMMgTpt8Ez8PpkWAbj+U1VYKEGO+xJv1hXyZpwI4CjCDIbn34nnAdyOu
+         85+SRsrfQucAUDlfxWxh61QuUYgO37Lb4DPwFtzPIZCJ0WXfZB7uYPPVL5uiAisMPevw
+         GUu8fgd8g/1YlVrUrflHRoSGY+GA48lIn53vkKW5VVvSOZiSF5b5vQXkCC55FEazKl7a
+         ex05FJ8T/nB/671yzEc78WAggpP/mjb4OETS8Mas+NbOYQaURL3Q3a7fVMs4wYQKxw6M
+         q165BbKQOQR2DfA7CxyqM0IywlBOqQQt7HkyC/O9eR2qKBt393YyiZqGjmieJk80a7oa
+         puJg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=AO1+kLNJMIFIpXSKsYT0LBsgxe58i/XAiEepkW6Sx0w=;
+        b=UUTmva0xL7IlxRaOIHds7UgPGEgAuAEn8dKNoK6legkTyrV2oL8bF9GwuVhRBHde6D
+         7ulf6tvBA1E+D9TE3E3691cJUnqad7eo3iM/BM6gjzoaJp2mNr79RZ4kt8qS+Y4J58Qw
+         hI0S1zfsHLhft+vf+6w6vDDYTIiWbWxxH6ZF/+MndaA865O5Vtb+sdf795DaGbcmnE5W
+         zeLWDgu1WBu5juWEONifX59FsKhFv8juR3hggRB6rxU7eIXGcNR8sCLgvLzhHUQaW5Pw
+         zzOYT+2eEQApHrjOxCzTZUK16N5ichYc6UEPkKY74IiyCXg3LWxLbZnF0RGAySp/oIeB
+         apow==
+X-Gm-Message-State: ANhLgQ02oGWTJJaQ5VvZzkQ+pXJvA7oEvvf0N/8X8ebMTcX5drOwyqWP
+        V0UGnXKuRMwgBqeOcHTDp0ITk/rK
+X-Google-Smtp-Source: ADFU+vuscYuwV4iW9IijORpo2EgGQA4Xn/uP+p6DYZt5WvK4rhT1BDT8FxqY47IRf0X5w+eGJZZWtg==
+X-Received: by 2002:a05:6214:72f:: with SMTP id c15mr7069507qvz.3.1585218028218;
+        Thu, 26 Mar 2020 03:20:28 -0700 (PDT)
+Received: from [192.168.1.46] (c-73-88-245-53.hsd1.tn.comcast.net. [73.88.245.53])
+        by smtp.gmail.com with ESMTPSA id d24sm1096242qkl.8.2020.03.26.03.20.27
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 26 Mar 2020 03:20:27 -0700 (PDT)
+Subject: Re: [PATCH 2/2] of: some unittest overlays not untracked
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Pantelis Antoniou <pantelis.antoniou@konsulko.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Alan Tull <atull@kernel.org>
+References: <1585187131-21642-1-git-send-email-frowand.list@gmail.com>
+ <1585187131-21642-3-git-send-email-frowand.list@gmail.com>
+ <CAMuHMdXnQ2Tcbac4OoWuSDO9KK0zMLt7ZbMdF79sCj-Yf78Bgg@mail.gmail.com>
+From:   Frank Rowand <frowand.list@gmail.com>
+Message-ID: <ddde9dca-6333-ba16-e97d-299fde06aaab@gmail.com>
+Date:   Thu, 26 Mar 2020 05:20:25 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <8803550e-5d6d-2eda-39f5-e4594052188c@amd.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAMuHMdXnQ2Tcbac4OoWuSDO9KK0zMLt7ZbMdF79sCj-Yf78Bgg@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-X-TM-AS-GCONF: 00
-x-cbid: 20032610-0012-0000-0000-000003986796
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20032610-0013-0000-0000-000021D562CF
-Message-Id: <965dba09-813a-59a7-9c10-97ed1c892245@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.645
- definitions=2020-03-26_01:2020-03-24,2020-03-26 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 phishscore=0
- priorityscore=1501 adultscore=0 mlxscore=0 mlxlogscore=999 impostorscore=0
- bulkscore=0 lowpriorityscore=0 malwarescore=0 spamscore=0 suspectscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2003260071
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 3/18/20 11:05 PM, Kim Phillips wrote:
-> Hi Maddy,
->
-> On 3/17/20 1:50 AM, maddy wrote:
->> On 3/13/20 4:08 AM, Kim Phillips wrote:
->>> On 3/11/20 11:00 AM, Ravi Bangoria wrote:
->>>> On 3/6/20 3:36 AM, Kim Phillips wrote:
->>>>>> On 3/3/20 3:55 AM, Kim Phillips wrote:
->>>>>>> On 3/2/20 2:21 PM, Stephane Eranian wrote:
->>>>>>>> On Mon, Mar 2, 2020 at 2:13 AM Peter Zijlstra <peterz@infradead.org> wrote:
->>>>>>>>> On Mon, Mar 02, 2020 at 10:53:44AM +0530, Ravi Bangoria wrote:
->>>>>>>>>> Modern processors export such hazard data in Performance
->>>>>>>>>> Monitoring Unit (PMU) registers. Ex, 'Sampled Instruction Event
->>>>>>>>>> Register' on IBM PowerPC[1][2] and 'Instruction-Based Sampling' on
->>>>>>>>>> AMD[3] provides similar information.
->>>>>>>>>>
->>>>>>>>>> Implementation detail:
->>>>>>>>>>
->>>>>>>>>> A new sample_type called PERF_SAMPLE_PIPELINE_HAZ is introduced.
->>>>>>>>>> If it's set, kernel converts arch specific hazard information
->>>>>>>>>> into generic format:
->>>>>>>>>>
->>>>>>>>>>       struct perf_pipeline_haz_data {
->>>>>>>>>>              /* Instruction/Opcode type: Load, Store, Branch .... */
->>>>>>>>>>              __u8    itype;
->>>>>>>>>>              /* Instruction Cache source */
->>>>>>>>>>              __u8    icache;
->>>>>>>>>>              /* Instruction suffered hazard in pipeline stage */
->>>>>>>>>>              __u8    hazard_stage;
->>>>>>>>>>              /* Hazard reason */
->>>>>>>>>>              __u8    hazard_reason;
->>>>>>>>>>              /* Instruction suffered stall in pipeline stage */
->>>>>>>>>>              __u8    stall_stage;
->>>>>>>>>>              /* Stall reason */
->>>>>>>>>>              __u8    stall_reason;
->>>>>>>>>>              __u16   pad;
->>>>>>>>>>       };
->>>>>>>>> Kim, does this format indeed work for AMD IBS?
->>>>>>> It's not really 1:1, we don't have these separations of stages
->>>>>>> and reasons, for example: we have missed in L2 cache, for example.
->>>>>>> So IBS output is flatter, with more cycle latency figures than
->>>>>>> IBM's AFAICT.
->>>>>> AMD IBS captures pipeline latency data incase Fetch sampling like the
->>>>>> Fetch latency, tag to retire latency, completion to retire latency and
->>>>>> so on. Yes, Ops sampling do provide more data on load/store centric
->>>>>> information. But it also captures more detailed data for Branch instructions.
->>>>>> And we also looked at ARM SPE, which also captures more details pipeline
->>>>>> data and latency information.
->>>>>>
->>>>>>>> Personally, I don't like the term hazard. This is too IBM Power
->>>>>>>> specific. We need to find a better term, maybe stall or penalty.
->>>>>>> Right, IBS doesn't have a filter to only count stalled or otherwise
->>>>>>> bad events.  IBS' PPR descriptions has one occurrence of the
->>>>>>> word stall, and no penalty.  The way I read IBS is it's just
->>>>>>> reporting more sample data than just the precise IP: things like
->>>>>>> hits, misses, cycle latencies, addresses, types, etc., so words
->>>>>>> like 'extended', or the 'auxiliary' already used today even
->>>>>>> are more appropriate for IBS, although I'm the last person to
->>>>>>> bikeshed.
->>>>>> We are thinking of using "pipeline" word instead of Hazard.
->>>>> Hm, the word 'pipeline' occurs 0 times in IBS documentation.
->>>> NP. We thought pipeline is generic hw term so we proposed "pipeline"
->>>> word. We are open to term which can be generic enough.
->>>>
->>>>> I realize there are a couple of core pipeline-specific pieces
->>>>> of information coming out of it, but the vast majority
->>>>> are addresses, latencies of various components in the memory
->>>>> hierarchy, and various component hit/miss bits.
->>>> Yes. we should capture core pipeline specific details. For example,
->>>> IBS generates Branch unit information(IbsOpData1) and Icahce related
->>>> data(IbsFetchCtl) which is something that shouldn't be extended as
->>>> part of perf-mem, IMO.
->>> Sure, IBS Op-side output is more 'perf mem' friendly, and so it
->>> should populate perf_mem_data_src fields, just like POWER9 can:
->>>
->>> union perf_mem_data_src {
->>> ...
->>>                   __u64   mem_rsvd:24,
->>>                           mem_snoopx:2,   /* snoop mode, ext */
->>>                           mem_remote:1,   /* remote */
->>>                           mem_lvl_num:4,  /* memory hierarchy level number */
->>>                           mem_dtlb:7,     /* tlb access */
->>>                           mem_lock:2,     /* lock instr */
->>>                           mem_snoop:5,    /* snoop mode */
->>>                           mem_lvl:14,     /* memory hierarchy level */
->>>                           mem_op:5;       /* type of opcode */
->>>
->>>
->>> E.g., SIER[LDST] SIER[A_XLATE_SRC] can be used to populate
->>> mem_lvl[_num], SIER_TYPE can be used to populate 'mem_op',
->>> 'mem_lock', and the Reload Bus Source Encoding bits can
->>> be used to populate mem_snoop, right?
->> Hi Kim,
+On 3/26/20 3:21 AM, Geert Uytterhoeven wrote:
+> Hi Frank,
+> 
+> On Thu, Mar 26, 2020 at 2:47 AM <frowand.list@gmail.com> wrote:
+>> From: Frank Rowand <frank.rowand@sony.com>
 >>
->> Yes. We do expose these data as part of perf-mem for POWER.
-> OK, I see relevant PERF_MEM_S bits in arch/powerpc/perf/isa207-common.c:
-> isa207_find_source now, thanks.
->
->>> For IBS, I see PERF_SAMPLE_ADDR and PERF_SAMPLE_PHYS_ADDR can be
->>> used for the ld/st target addresses, too.
->>>
->>>>> What's needed here is a vendor-specific extended
->>>>> sample information that all these technologies gather,
->>>>> of which things like e.g., 'L1 TLB cycle latency' we
->>>>> all should have in common.
->>>> Yes. We will include fields to capture the latency cycles (like Issue
->>>> latency, Instruction completion latency etc..) along with other pipeline
->>>> details in the proposed structure.
->>> Latency figures are just an example, and from what I
->>> can tell, struct perf_sample_data already has a 'weight' member,
->>> used with PERF_SAMPLE_WEIGHT, that is used by intel-pt to
->>> transfer memory access latency figures.  Granted, that's
->>> a bad name given all other vendors don't call latency
->>> 'weight'.
->>>
->>> I didn't see any latency figures coming out of POWER9,
->>> and do not expect this patchseries to implement those
->>> of other vendors, e.g., AMD's IBS; leave each vendor
->>> to amend perf to suit their own h/w output please.
->> Reference structure proposed in this patchset did not have members
->> to capture latency info for that exact reason. But idea here is to
->> abstract  as vendor specific as possible. So if we include u16 array,
->> then this format can also capture data from IBS since it provides
->> few latency details.
-> OK, that sounds a bit different from the 6 x u8's + 1 u16 padded
-> struct presented in this patchset.
->
-> IBS Ops can report e.g.:
->
-> 15 tag-to-retire cycles bits,
-> 15 completion to retire count bits,
-> 15 L1 DTLB refill latency bits,
-> 15 DC miss latency bits,
-> 5 outstanding memory requests on mem refill bits, and so on.
->
-> IBS Fetch reports 15 bits of fetch latency, and another 16
-> for iTLB latency, among others.
->
-> Some of these may/may not be valid simultaneously, and
-> there are IBS specific rules to establish validity.
->
->>> My main point there, however, was that each vendor should
->>> use streamlined record-level code to just copy the data
->>> in the proprietary format that their hardware produces,
->>> and then then perf tooling can synthesize the events
->>> from the raw data at report/script/etc. time.
->>>
->>>>> I'm not sure why a new PERF_SAMPLE_PIPELINE_HAZ is needed
->>>>> either.  Can we use PERF_SAMPLE_AUX instead?
->>>> We took a look at PERF_SAMPLE_AUX. IIUC, PERF_SAMPLE_AUX is intended when
->>>> large volume of data needs to be captured as part of perf.data without
->>>> frequent PMIs. But proposed type is to address the capture of pipeline
->>> SAMPLE_AUX shouldn't care whether the volume is large, or how frequent
->>> PMIs are, even though it may be used in those environments.
->>>
->>>> information on each sample using PMI at periodic intervals. Hence proposing
->>>> PERF_SAMPLE_PIPELINE_HAZ.
->>> And that's fine for any extra bits that POWER9 has to convey
->>> to its users beyond things already represented by other sample
->>> types like PERF_SAMPLE_DATA_SRC, but the capturing of both POWER9
->>> and other vendor e.g., AMD IBS data can be made vendor-independent
->>> at record time by using SAMPLE_AUX, or SAMPLE_RAW even, which is
->>> what IBS currently uses.
->> My bad. Not sure what you mean by this. We are trying to abstract
->> as much vendor specific data as possible with this (like perf-mem).
-> Perhaps if I say it this way: instead of doing all the
-> isa207_get_phazard_data() work past the mfspr(SPRN_SIER)
-> in patch 4/11, rather/instead just put the raw sier value in a
-> PERF_SAMPLE_RAW or _AUX event, and call perf_event_update_userpage.
-> Specific SIER capabilities can be written as part of the perf.data
-> header.  Then synthesize the true pipe events from the raw SIER
-> values later, and in userspace.
+>> kernel test robot reported "WARNING: held lock freed!" triggered by
+>> unittest_gpio_remove(), which should not have been called because
+>> the related gpio overlay was not tracked.  Another overlay that
+>> was tracked had previously used the same id as the gpio overlay
+>> but had not been untracked when the overlay was removed.  Thus the
+>> clean up function of_unittest_destroy_tracked_overlays() incorrectly
+>> attempted to remove the reused overlay id.
+>>
+>> Patch contents:
+>>
+>>   - Create tracking related helper functions
+>>   - Change BUG() to WARN_ON() for overlay id related issues
+>>   - Add some additional error checking for valid overlay id values
+>>   - Add the missing overlay untrack
+>>   - update comment on expectation that overlay ids are assigned in
+>>     sequence
+>>
+>> Fixes: 492a22aceb75 ("of: unittest: overlay: Keep track of created overlays")
+>> Reported-by: kernel test robot <lkp@intel.com>
+>> Signed-off-by: Frank Rowand <frank.rowand@sony.com>
+> 
+> Looks good to me, so:
+> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> 
+> Still, a few suggestions for future improvement below...
+> 
+>> --- a/drivers/of/unittest.c
+>> +++ b/drivers/of/unittest.c
+>> @@ -1689,19 +1689,27 @@ static const char *overlay_name_from_nr(int nr)
+>>
+>>  static const char *bus_path = "/testcase-data/overlay-node/test-bus";
+>>
+>> -/* it is guaranteed that overlay ids are assigned in sequence */
+>> +/* FIXME: it is NOT guaranteed that overlay ids are assigned in sequence */
+>> +
+>>  #define MAX_UNITTEST_OVERLAYS  256
+>>  static unsigned long overlay_id_bits[BITS_TO_LONGS(MAX_UNITTEST_OVERLAYS)];
+> 
+> Obviously this should have used DECLARE_BITMAP() ;-)
+> 
+>>  static int overlay_first_id = -1;
+>>
+>> +static long of_unittest_overlay_tracked(int id)
+>> +{
+>> +       if (WARN_ON(id >= MAX_UNITTEST_OVERLAYS))
+>> +               return 0;
+> 
+> Do we need all these checks on id? Can this really happen?
+> I guess doing it once in of_unittest_track_overlay(), and aborting all
+> of_unittests if it triggers should be sufficient?
 
-Hi Kim,
+Yes, that would be a better location to validate the id.  All of these
+checks will go away when I get rid of the bitmap (see below).
 
-Would like to stay away from SAMPLE_RAW type for these comments in 
-perf_events.h
+> 
+>> +       return overlay_id_bits[BIT_WORD(id)] & BIT_MASK(id);
+> 
+> No need for BIT_{WORD,MASK}() calculations if you would use test_bit().
 
-*      #
-*      # The RAW record below is opaque data wrt the ABI
-*      #
-*      # That is, the ABI doesn't make any promises wrt to
-*      # the stability of its content, it may vary depending
-*      # on event, hardware, kernel version and phase of
-*      # the moon.
-*      #
-*      # In other words, PERF_SAMPLE_RAW contents are not an ABI.
-*      #
+I was trying to not get too carried away with cleaning up the tracking
+code data structure in this patch.  In general, I would say that using
+a bitmap is an over optimization given the very small number of overlays
+that are tracked.  Long term I want to change it to a simpler form.
 
-Secondly, sorry I didn't understand your suggestion about using 
-PERF_SAMPLE_AUX.
-IIUC, SAMPLE_AUX will go to AUX ring buffer, which is more memory and more
-challenging when correlating and presenting the pipeline details for 
-each IP.
-IMO, having a new sample type can be useful to capture the pipeline data
-both in perf_sample_data and if _AUX is enabled, can be made to push to
-AUX buffer.
+> 
+>> +}
+>> +
+>>  static void of_unittest_track_overlay(int id)
+>>  {
+>>         if (overlay_first_id < 0)
+>>                 overlay_first_id = id;
+>>         id -= overlay_first_id;
+>>
+>> -       /* we shouldn't need that many */
+>> -       BUG_ON(id >= MAX_UNITTEST_OVERLAYS);
+>> +       if (WARN_ON(id >= MAX_UNITTEST_OVERLAYS))
+>> +               return;
+>>         overlay_id_bits[BIT_WORD(id)] |= BIT_MASK(id);
+> 
+> set_bit()
+> 
+>>  }
+>>
+>> @@ -1710,7 +1718,8 @@ static void of_unittest_untrack_overlay(int id)
+>>         if (overlay_first_id < 0)
+>>                 return;
+>>         id -= overlay_first_id;
+>> -       BUG_ON(id >= MAX_UNITTEST_OVERLAYS);
+>> +       if (WARN_ON(id >= MAX_UNITTEST_OVERLAYS))
+>> +               return;
+>>         overlay_id_bits[BIT_WORD(id)] &= ~BIT_MASK(id);
+> 
+> clear_bit()
+> 
+>>  }
+>>
+>> @@ -1726,7 +1735,7 @@ static void of_unittest_destroy_tracked_overlays(void)
+>>                 defers = 0;
+>>                 /* remove in reverse order */
+> 
+> If it is not guaranteed that overlay ids are assigned in sequence, the
+> reverse order is not really needed, so you could replace the bitmap and
+> your own tracking mechanism by DEFINE_IDR() and idr_for_each()?
+> And as IDRs are flexible, MAX_UNITTEST_OVERLAYS and all checks
+> could be removed, too.
 
-Maddy
+The id is actually allocted in the drivers/of/overlay.c via idr.
 
->
-> I guess it's technically optional, but I think that's how
-> I'd do it in IBS, since it minimizes the record-time overhead.
->
-> Thanks,
->
-> Kim
->
->> Maddy
->>>>>    Take a look at
->>>>> commit 98dcf14d7f9c "perf tools: Add kernel AUX area sampling
->>>>> definitions".  The sample identifier can be used to determine
->>>>> which vendor's sampling IP's data is in it, and events can
->>>>> be recorded just by copying the content of the SIER, etc.
->>>>> registers, and then events get synthesized from the aux
->>>>> sample at report/inject/annotate etc. time.  This allows
->>>>> for less sample recording overhead, and moves all the vendor
->>>>> specific decoding and common event conversions for userspace
->>>>> to figure out.
->>>> When AUX buffer data is structured, tool side changes added to present the
->>>> pipeline data can be re-used.
->>> Not sure I understand: AUX data would be structured on
->>> each vendor's raw h/w register formats.
->>>
->>> Thanks,
->>>
->>> Kim
->>>
->>>>>>>> Also worth considering is the support of ARM SPE (Statistical
->>>>>>>> Profiling Extension) which is their version of IBS.
->>>>>>>> Whatever gets added need to cover all three with no limitations.
->>>>>>> I thought Intel's various LBR, PEBS, and PT supported providing
->>>>>>> similar sample data in perf already, like with perf mem/c2c?
->>>>>> perf-mem is more of data centric in my opinion. It is more towards
->>>>>> memory profiling. So proposal here is to expose pipeline related
->>>>>> details like stalls and latencies.
->>>>> Like I said, I don't see it that way, I see it as "any particular
->>>>> vendor's event's extended details', and these pipeline details
->>>>> have overlap with existing infrastructure within perf, e.g., L2
->>>>> cache misses.
->>>>>
->>>>> Kim
->>>>>
+Thanks for the thougthful review.
+
+-Frank
+
+> 
+>>                 for (id = MAX_UNITTEST_OVERLAYS - 1; id >= 0; id--) {
+>> -                       if (!(overlay_id_bits[BIT_WORD(id)] & BIT_MASK(id)))
+>> +                       if (!of_unittest_overlay_tracked(id))
+>>                                 continue;
+>>
+>>                         ovcs_id = id + overlay_first_id;
+>> @@ -1743,7 +1752,7 @@ static void of_unittest_destroy_tracked_overlays(void)
+>>                                 continue;
+>>                         }
+>>
+>> -                       overlay_id_bits[BIT_WORD(id)] &= ~BIT_MASK(id);
+>> +                       of_unittest_untrack_overlay(id);
+>>                 }
+>>         } while (defers > 0);
+>>  }
+> 
+> Gr{oetje,eeting}s,
+> 
+>                         Geert
+> 
 
