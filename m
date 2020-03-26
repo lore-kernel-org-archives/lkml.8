@@ -3,118 +3,195 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B74A5C43331
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 16:03:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB934C2D0E5
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 16:05:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F34E2073E
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 16:03:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A23B82076A
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 16:05:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ysHzBPwO"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dqwJ3vnz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728484AbgCZQDY (ORCPT
+        id S1728508AbgCZQFC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 12:03:24 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:36772 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727670AbgCZQDY (ORCPT
+        Thu, 26 Mar 2020 12:05:02 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:55550 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726296AbgCZQFC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 12:03:24 -0400
-Received: by mail-lf1-f68.google.com with SMTP id s1so5302214lfd.3
-        for <linux-kernel@vger.kernel.org>; Thu, 26 Mar 2020 09:03:22 -0700 (PDT)
+        Thu, 26 Mar 2020 12:05:02 -0400
+Received: by mail-wm1-f66.google.com with SMTP id z5so7037044wml.5;
+        Thu, 26 Mar 2020 09:05:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=xsryagRvVoFbMcFk5ndWvfGYfunGGRbmaGXhKdSiUek=;
-        b=ysHzBPwOVcBR9JOSVKRcaDNPdGCt48vT1oXTkE1P488x04V0hIlMkHTQ9qFkuiIPDM
-         lrDk+rsC+4cLeTMta7k5qsFJ9tncl2Y8xsP2sYnzW7ho8VIxanUrOOMQpaKHI/5PCASR
-         md1D5YIB7GCjjADYz/KRetihwuEq3c65ZpgotYCzWyKSfCe2neCEUKe21oOOpjH46SwG
-         XOixwF6KUlRbeOYhTPlmfJnaT9TjgSRhK0wy+/TH2nUYtE/UkUX+ISxm8xXvqPltYG2i
-         62RsRFZhEDzBwwbI2NNxRmfj0kwnNRfHZmcFjNfFovXVRwMLZpW51clMVCxmIPTQptyN
-         2Xjw==
+        bh=jWhswxN9HQxV0nCCW/ijA/LKBxQbID7mVe37gnQPitw=;
+        b=dqwJ3vnz7U9zrvNqIgM2MDrOPkPRJntsqjaUCmayPiZXmgOePCAwQg68NmMORGrzvp
+         7VjndEdtlEs+VOWlBovC+Na0ujFud/i42W2fKEqCuQXj3iBBtyYtgBYZXtyakEPHwrh9
+         nOtf7SN6f/bFWtl9cyF7qnc0F+rFjpBMyceLyPWmVaOzRb+90/p7c+HCv/FQTk5l2iDt
+         +MRM4AimWwn4DUObLtVRGdbBTCWmcPeeO/hEUHji22d3rK9fKhFQoEtWHn1IpGWP9TYZ
+         SSxxE5u4B1fvpCxrojfEMZoq9rnzFJrO5l8/DeLc4q1/3UPYTxlZywbgf8d6zwqoNIIn
+         aWnA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=xsryagRvVoFbMcFk5ndWvfGYfunGGRbmaGXhKdSiUek=;
-        b=d8NNbU7CflaF2N1DKrnUBmIbeHYft7u5kAJ2iZ8avwDsADgoKzmNc/CMCqfny06xiV
-         oVroll5Dx57HD0+IeXw6IOa94YjQxFRUM426ZVTgrl230avaUTowKEYmRAv80hSlWJIX
-         S5fZN1PoNHd1h3lTSUHb70h/R1zXr7Udcp4c9h+4FTl63i9im/Xs3PDQpwwC22wPG4mS
-         IiUeJNGfqNPUMbLKmDHMyzuYZqrH8Xdrw5P4Xft+y72dfEK6fUiQ/6ZvqXBivqdTpzt0
-         IvZO1E18jxniiYu4PuFIbyRU1kJqEVepC2Gpb9nCpqw9+7D40Gsw2bFgPIKKl4dLaaEc
-         o8PA==
-X-Gm-Message-State: ANhLgQ0XfrrmTgdNYXmT85AkUAS/34svUEKPGKUYDPnWUhMKyfSoCGTS
-        gO4JiQMYGQDhlqj9og771Cmd1jadBGcuzckK/WtPEA==
-X-Google-Smtp-Source: ADFU+vsPCjuvq+fZsWLA4/OXHd/Qhuz2rJukqcHy8gyX/twtEzJaEJhADKOK74SHMGwQc+BDJykgiPfIqS7GYrH3L50=
-X-Received: by 2002:ac2:4c29:: with SMTP id u9mr6293876lfq.149.1585238602095;
- Thu, 26 Mar 2020 09:03:22 -0700 (PDT)
+        bh=jWhswxN9HQxV0nCCW/ijA/LKBxQbID7mVe37gnQPitw=;
+        b=FMZ4zH6lKFNlqi3cvPsB4P7u1rpHCZ88SgwqcqP4JAbQP/WXnQON4GrSVOkDUyxd0t
+         EyBGbBM0hrKtLR2Ol255dL3MPgsH0MXyMr/9S9m2Wcbe0wAHBntOuimlbs0oMrz+O9DG
+         MhiawK7KETQqkyjn3K6dzcbpxxSJIy0B3GCLL3G+zBax70pnJL3/APEuYCHeytreCt62
+         gHsCcb6905RQaa//YOU8Zwji/lv+qMoXz+teGKuj3r5NcvSLqV1eEXyz6eLglktlTixI
+         IjHUQ6IJ4rHsuVyf0G6vaj+UYke7s1wWClyDMkG35sKfvVobgBitKuvinX5Cd5OlPIX0
+         G9cg==
+X-Gm-Message-State: ANhLgQ3ZOWmVo/VhGn9zowYtxJG4ThPvm1m8GLMpdXrFLXZ1vcmlX6P8
+        ROPX2ME2nEhE6ecvkMbTBKYNIkJV1gBZFMz7hhI=
+X-Google-Smtp-Source: ADFU+vtaOxhcczxMAOz9StdZVZLixx/TTBbQdMAPFVdjZvzd+1/+U/20Y3/RjtNPR7fcn8ajcWhgZEzfyIZ2bGxXIZI=
+X-Received: by 2002:a1c:5506:: with SMTP id j6mr623256wmb.127.1585238699504;
+ Thu, 26 Mar 2020 09:04:59 -0700 (PDT)
 MIME-Version: 1.0
-References: <1585201349-70192-1-git-send-email-aubrey.li@intel.com>
-In-Reply-To: <1585201349-70192-1-git-send-email-aubrey.li@intel.com>
-From:   Vincent Guittot <vincent.guittot@linaro.org>
-Date:   Thu, 26 Mar 2020 17:03:10 +0100
-Message-ID: <CAKfTPtBWQDkmkuxPTEC8QY1PXicZ51w7tjDPRm2rYM+8QN5rLQ@mail.gmail.com>
-Subject: Re: [PATCH] sched/fair: Fix negative imbalance in imbalance calculation
-To:     Aubrey Li <aubrey.li@intel.com>
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        Vineeth Pillai <vpillai@digitalocean.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Aubrey Li <aubrey.li@linux.intel.com>,
-        Phil Auld <pauld@redhat.com>
+References: <20200326133235.343616-1-aneesh.kumar@linux.ibm.com>
+In-Reply-To: <20200326133235.343616-1-aneesh.kumar@linux.ibm.com>
+From:   Pankaj Gupta <pankaj.gupta.linux@gmail.com>
+Date:   Thu, 26 Mar 2020 17:04:47 +0100
+Message-ID: <CAM9Jb+h+pZMQ_9W8Qm=6MSOdRDPaMpc0izTKUFMSR-kW1A-EaA@mail.gmail.com>
+Subject: Re: [PATCH v2] mm/sparse: Fix kernel crash with pfn_section_valid check
+To:     "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
+Cc:     linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
+        linux-kernel@vger.kernel.org, mpe@ellerman.id.au,
+        linuxppc-dev@lists.ozlabs.org,
+        Sachin Sant <sachinp@linux.vnet.ibm.com>,
+        Baoquan He <bhe@redhat.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        David Hildenbrand <david@redhat.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Wei Yang <richardw.yang@linux.intel.com>,
+        Oscar Salvador <osalvador@suse.de>,
+        Mike Rapoport <rppt@linux.ibm.com>, stable@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 26 Mar 2020 at 06:53, Aubrey Li <aubrey.li@intel.com> wrote:
 >
-> A negative imbalance value was observed after imbalance calculation,
-> this happens when the local sched group type is group_fully_busy,
-> and the average load of local group is greater than the selected
-> busiest group. Fix this problem by comparing the average load of the
-> local and busiest group before imbalance calculation formula.
+> Fixes the below crash
 >
-> Suggested-by: Vincent Guittot <vincent.guittot@linaro.org>
-> Signed-off-by: Aubrey Li <aubrey.li@linux.intel.com>
-> Cc: Phil Auld <pauld@redhat.com>
-
-Reviewed-by: Vincent Guittot <vincent.guittot@linaro.org>
-
+> BUG: Kernel NULL pointer dereference on read at 0x00000000
+> Faulting instruction address: 0xc000000000c3447c
+> Oops: Kernel access of bad area, sig: 11 [#1]
+> LE PAGE_SIZE=64K MMU=Hash SMP NR_CPUS=2048 NUMA pSeries
+> CPU: 11 PID: 7519 Comm: lt-ndctl Not tainted 5.6.0-rc7-autotest #1
+> ...
+> NIP [c000000000c3447c] vmemmap_populated+0x98/0xc0
+> LR [c000000000088354] vmemmap_free+0x144/0x320
+> Call Trace:
+>  section_deactivate+0x220/0x240
+>  __remove_pages+0x118/0x170
+>  arch_remove_memory+0x3c/0x150
+>  memunmap_pages+0x1cc/0x2f0
+>  devm_action_release+0x30/0x50
+>  release_nodes+0x2f8/0x3e0
+>  device_release_driver_internal+0x168/0x270
+>  unbind_store+0x130/0x170
+>  drv_attr_store+0x44/0x60
+>  sysfs_kf_write+0x68/0x80
+>  kernfs_fop_write+0x100/0x290
+>  __vfs_write+0x3c/0x70
+>  vfs_write+0xcc/0x240
+>  ksys_write+0x7c/0x140
+>  system_call+0x5c/0x68
+>
+> The crash is due to NULL dereference at
+>
+> test_bit(idx, ms->usage->subsection_map); due to ms->usage = NULL; in pfn_section_valid()
+>
+> With commit: d41e2f3bd546 ("mm/hotplug: fix hot remove failure in SPARSEMEM|!VMEMMAP case")
+> section_mem_map is set to NULL after depopulate_section_mem(). This
+> was done so that pfn_page() can work correctly with kernel config that disables
+> SPARSEMEM_VMEMMAP. With that config pfn_to_page does
+>
+>         __section_mem_map_addr(__sec) + __pfn;
+> where
+>
+> static inline struct page *__section_mem_map_addr(struct mem_section *section)
+> {
+>         unsigned long map = section->section_mem_map;
+>         map &= SECTION_MAP_MASK;
+>         return (struct page *)map;
+> }
+>
+> Now with SPASEMEM_VMEMAP enabled, mem_section->usage->subsection_map is used to
+> check the pfn validity (pfn_valid()). Since section_deactivate release
+> mem_section->usage if a section is fully deactivated, pfn_valid() check after
+> a subsection_deactivate cause a kernel crash.
+>
+> static inline int pfn_valid(unsigned long pfn)
+> {
+> ...
+>         return early_section(ms) || pfn_section_valid(ms, pfn);
+> }
+>
+> where
+>
+> static inline int pfn_section_valid(struct mem_section *ms, unsigned long pfn)
+> {
+>         int idx = subsection_map_index(pfn);
+>
+>         return test_bit(idx, ms->usage->subsection_map);
+> }
+>
+> Avoid this by clearing SECTION_HAS_MEM_MAP when mem_section->usage is freed.
+> For architectures like ppc64 where large pages are used for vmmemap mapping (16MB),
+> a specific vmemmap mapping can cover multiple sections. Hence before a vmemmap
+> mapping page can be freed, the kernel needs to make sure there are no valid sections
+> within that mapping. Clearing the section valid bit before
+> depopulate_section_memap enables this.
+>
+> Fixes: d41e2f3bd546 ("mm/hotplug: fix hot remove failure in SPARSEMEM|!VMEMMAP case")
+> Reported-by: Sachin Sant <sachinp@linux.vnet.ibm.com>
+> Tested-by: Sachin Sant <sachinp@linux.vnet.ibm.com>
+> Cc: Baoquan He <bhe@redhat.com>
+> Cc: Michael Ellerman <mpe@ellerman.id.au>
+> Cc: Dan Williams <dan.j.williams@intel.com>
+> Cc: Pankaj Gupta <pankaj.gupta.linux@gmail.com>
+> Cc: David Hildenbrand <david@redhat.com>
+> Cc: Michal Hocko <mhocko@suse.com>
+> Cc: Wei Yang <richardw.yang@linux.intel.com>
+> Cc: Oscar Salvador <osalvador@suse.de>
+> Cc: Mike Rapoport <rppt@linux.ibm.com>
+> Cc: <stable@vger.kernel.org>
+> Signed-off-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
 > ---
->  kernel/sched/fair.c | 8 ++++++++
->  1 file changed, 8 insertions(+)
+>  mm/sparse.c | 6 ++++++
+>  1 file changed, 6 insertions(+)
 >
-> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-> index c1217bf..4a2ba3f 100644
-> --- a/kernel/sched/fair.c
-> +++ b/kernel/sched/fair.c
-> @@ -8761,6 +8761,14 @@ static inline void calculate_imbalance(struct lb_env *env, struct sd_lb_stats *s
->
->                 sds->avg_load = (sds->total_load * SCHED_CAPACITY_SCALE) /
->                                 sds->total_capacity;
+> diff --git a/mm/sparse.c b/mm/sparse.c
+> index aadb7298dcef..65599e8bd636 100644
+> --- a/mm/sparse.c
+> +++ b/mm/sparse.c
+> @@ -781,6 +781,12 @@ static void section_deactivate(unsigned long pfn, unsigned long nr_pages,
+>                         ms->usage = NULL;
+>                 }
+>                 memmap = sparse_decode_mem_map(ms->section_mem_map, section_nr);
 > +               /*
-> +                * If the local group is more loaded than the selected
-> +                * busiest group don't try to pull any tasks.
+> +                * Mark the section invalid so that valid_section()
+> +                * return false. This prevents code from dereferencing
+> +                * ms->usage array.
 > +                */
-> +               if (local->avg_load >= busiest->avg_load) {
-> +                       env->imbalance = 0;
-> +                       return;
-> +               }
+> +               ms->section_mem_map &= ~SECTION_HAS_MEM_MAP;
 >         }
 >
->         /*
+>         if (section_is_early && memmap)
 > --
-> 2.7.4
+Agree with Michal, comment for clearing the section would be nicer.
+
+Fix looks good to me.
+Acked-by: Pankaj Gupta <pankaj.gupta.linux@gmail.com>
+
+> 2.25.1
 >
