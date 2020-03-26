@@ -4,42 +4,43 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4098C43331
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 08:16:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B975DC43331
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 08:16:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE2112070A
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 08:16:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C6032070A
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 08:16:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727958AbgCZIQm (ORCPT
+        id S1727977AbgCZIQo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 04:16:42 -0400
-Received: from mga02.intel.com ([134.134.136.20]:27564 "EHLO mga02.intel.com"
+        Thu, 26 Mar 2020 04:16:44 -0400
+Received: from mga02.intel.com ([134.134.136.20]:27555 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727833AbgCZIQL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 04:16:11 -0400
-IronPort-SDR: FlTTE1Do/tXmIABAkvsBL8eR8P4Yhy4sQ0TC5u0yaOQ/aNzssgUCPrE7pwt9KtPvItFJNPF4Uw
- Tsz/2w7+XDCA==
+        id S1727720AbgCZIQH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Mar 2020 04:16:07 -0400
+IronPort-SDR: c8+IotzP46zru/jIdpNKZRftejIUGoHKnDH6a0bllLW3uJ8dd2dEa/Y0BNptH+aKn4ufb/QeC0
+ GZp4EGGHHnUQ==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Mar 2020 01:16:11 -0700
-IronPort-SDR: tombEY8YSCf8Hctysket833Q/0KP9Bt8c2wxV9La3XyFXmHABh6MukijicTIGRd5IrFimA+lTo
- AVF5o3mA89Vg==
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Mar 2020 01:16:06 -0700
+IronPort-SDR: 0ypeViXOAy7AWiW53RxQz6EIqHZXcNNgha9coXGdKSPPPtOdoXe6re9DjWL063ZBuLwTrVgV37
+ Ij58ojRj9bhg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.72,307,1580803200"; 
-   d="scan'208";a="393898924"
+   d="scan'208";a="393898876"
 Received: from local-michael-cet-test.sh.intel.com ([10.239.159.128])
-  by orsmga004.jf.intel.com with ESMTP; 26 Mar 2020 01:16:09 -0700
+  by orsmga004.jf.intel.com with ESMTP; 26 Mar 2020 01:16:04 -0700
 From:   Yang Weijiang <weijiang.yang@intel.com>
 To:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
         pbonzini@redhat.com, sean.j.christopherson@intel.com,
         jmattson@google.com
 Cc:     yu.c.zhang@linux.intel.com, Yang Weijiang <weijiang.yang@intel.com>
-Subject: [PATCH v11 6/9] KVM: X86: Load guest fpu state when access MSRs managed by XSAVES
-Date:   Thu, 26 Mar 2020 16:18:43 +0800
-Message-Id: <20200326081847.5870-7-weijiang.yang@intel.com>
+Subject: [PATCH v11 4/9] KVM: VMX: Check CET dependencies on CR settings
+Date:   Thu, 26 Mar 2020 16:18:41 +0800
+Message-Id: <20200326081847.5870-5-weijiang.yang@intel.com>
 X-Mailer: git-send-email 2.17.2
 In-Reply-To: <20200326081847.5870-1-weijiang.yang@intel.com>
 References: <20200326081847.5870-1-weijiang.yang@intel.com>
@@ -48,76 +49,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sean Christopherson <sean.j.christopherson@intel.com>
+CR4.CET is master control bit for CET function.
+There're mutual constrains between CR0.WP and CR4.CET, so need
+to check the dependent bit while changing the control registers.
 
-A handful of CET MSRs are not context switched through "traditional"
-methods, e.g. VMCS or manual switching, but rather are passed through
-to the guest and are saved and restored by XSAVES/XRSTORS, i.e. in the
-guest's FPU state.
+Note:
+1)The processor does not allow CR4.CET to be set if CR0.WP = 0,
+  similarly, it does not allow CR0.WP to be cleared while
+  CR4.CET = 1. In either case, KVM would inject #GP to guest.
 
-Load the guest's FPU state if userspace is accessing MSRs whose values
-are managed by XSAVES so that the MSR helper, e.g. vmx_{get,set}_msr(),
-can simply do {RD,WR}MSR to access the guest's value.
+2)SHSTK and IBT features share one control MSR:
+  MSR_IA32_{U,S}_CET, which means it's difficult to hide
+  one feature from another in the case of SHSTK != IBT,
+  after discussed in community, it's agreed to allow guest
+  control two features independently as it won't introduce
+  security hole.
 
-Note that guest_cpuid_has() is not queried as host userspace is allowed
-to access MSRs that have not been exposed to the guest, e.g. it might do
-KVM_SET_MSRS prior to KVM_SET_CPUID2.
-
-Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-Co-developed-by: Yang Weijiang <weijiang.yang@intel.com>
 Signed-off-by: Yang Weijiang <weijiang.yang@intel.com>
 ---
- arch/x86/kvm/x86.c | 19 ++++++++++++++++++-
- 1 file changed, 18 insertions(+), 1 deletion(-)
+ arch/x86/kvm/vmx/vmx.c | 4 ++++
+ arch/x86/kvm/x86.c     | 3 +++
+ 2 files changed, 7 insertions(+)
 
+diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+index bd7cd175fd81..87f101750746 100644
+--- a/arch/x86/kvm/vmx/vmx.c
++++ b/arch/x86/kvm/vmx/vmx.c
+@@ -3089,6 +3089,10 @@ int vmx_set_cr4(struct kvm_vcpu *vcpu, unsigned long cr4)
+ 			return 1;
+ 	}
+ 
++	if ((cr4 & X86_CR4_CET) && (!is_cet_supported(vcpu) ||
++	    !(kvm_read_cr0(vcpu) & X86_CR0_WP)))
++		return 1;
++
+ 	if (vmx->nested.vmxon && !nested_cr4_valid(vcpu, cr4))
+ 		return 1;
+ 
 diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index 51ecb496d47d..9654d779bdab 100644
+index 830afe5038d1..90acdbbb8a5a 100644
 --- a/arch/x86/kvm/x86.c
 +++ b/arch/x86/kvm/x86.c
-@@ -109,6 +109,8 @@ static void enter_smm(struct kvm_vcpu *vcpu);
- static void __kvm_set_rflags(struct kvm_vcpu *vcpu, unsigned long rflags);
- static void store_regs(struct kvm_vcpu *vcpu);
- static int sync_regs(struct kvm_vcpu *vcpu);
-+static void kvm_load_guest_fpu(struct kvm_vcpu *vcpu);
-+static void kvm_put_guest_fpu(struct kvm_vcpu *vcpu);
+@@ -804,6 +804,9 @@ int kvm_set_cr0(struct kvm_vcpu *vcpu, unsigned long cr0)
+ 	if (!(cr0 & X86_CR0_PG) && kvm_read_cr4_bits(vcpu, X86_CR4_PCIDE))
+ 		return 1;
  
- struct kvm_x86_ops *kvm_x86_ops __read_mostly;
- EXPORT_SYMBOL_GPL(kvm_x86_ops);
-@@ -3249,6 +3251,12 @@ int kvm_get_msr_common(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
- }
- EXPORT_SYMBOL_GPL(kvm_get_msr_common);
- 
-+static bool is_xsaves_msr(u32 index)
-+{
-+	return index == MSR_IA32_U_CET ||
-+	       (index >= MSR_IA32_PL0_SSP && index <= MSR_IA32_PL3_SSP);
-+}
++	if (!(cr0 & X86_CR0_WP) && kvm_read_cr4_bits(vcpu, X86_CR4_CET))
++		return 1;
 +
- /*
-  * Read or write a bunch of msrs. All parameters are kernel addresses.
-  *
-@@ -3259,11 +3267,20 @@ static int __msr_io(struct kvm_vcpu *vcpu, struct kvm_msrs *msrs,
- 		    int (*do_msr)(struct kvm_vcpu *vcpu,
- 				  unsigned index, u64 *data))
- {
-+	bool fpu_loaded = false;
- 	int i;
+ 	kvm_x86_ops->set_cr0(vcpu, cr0);
  
--	for (i = 0; i < msrs->nmsrs; ++i)
-+	for (i = 0; i < msrs->nmsrs; ++i) {
-+		if (vcpu && !fpu_loaded && supported_xss &&
-+		    is_xsaves_msr(entries[i].index)) {
-+			kvm_load_guest_fpu(vcpu);
-+			fpu_loaded = true;
-+		}
- 		if (do_msr(vcpu, entries[i].index, &entries[i].data))
- 			break;
-+	}
-+	if (fpu_loaded)
-+		kvm_put_guest_fpu(vcpu);
- 
- 	return i;
- }
+ 	if ((cr0 ^ old_cr0) & X86_CR0_PG) {
 -- 
 2.17.2
 
