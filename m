@@ -2,196 +2,181 @@ Return-Path: <SRS0=aGSP=5L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB934C2D0E5
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 16:05:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08F59C2D0EC
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 16:06:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A23B82076A
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 16:05:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA921208E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 16:06:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dqwJ3vnz"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qjboFr0P"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728508AbgCZQFC (ORCPT
+        id S1728446AbgCZQGE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 12:05:02 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:55550 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726296AbgCZQFC (ORCPT
+        Thu, 26 Mar 2020 12:06:04 -0400
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:40144 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726270AbgCZQGD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 12:05:02 -0400
-Received: by mail-wm1-f66.google.com with SMTP id z5so7037044wml.5;
-        Thu, 26 Mar 2020 09:05:00 -0700 (PDT)
+        Thu, 26 Mar 2020 12:06:03 -0400
+Received: by mail-qk1-f193.google.com with SMTP id l25so7124986qki.7;
+        Thu, 26 Mar 2020 09:06:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=jWhswxN9HQxV0nCCW/ijA/LKBxQbID7mVe37gnQPitw=;
-        b=dqwJ3vnz7U9zrvNqIgM2MDrOPkPRJntsqjaUCmayPiZXmgOePCAwQg68NmMORGrzvp
-         7VjndEdtlEs+VOWlBovC+Na0ujFud/i42W2fKEqCuQXj3iBBtyYtgBYZXtyakEPHwrh9
-         nOtf7SN6f/bFWtl9cyF7qnc0F+rFjpBMyceLyPWmVaOzRb+90/p7c+HCv/FQTk5l2iDt
-         +MRM4AimWwn4DUObLtVRGdbBTCWmcPeeO/hEUHji22d3rK9fKhFQoEtWHn1IpGWP9TYZ
-         SSxxE5u4B1fvpCxrojfEMZoq9rnzFJrO5l8/DeLc4q1/3UPYTxlZywbgf8d6zwqoNIIn
-         aWnA==
+        bh=EOQR43k/SYYoHg5rufoJ36PPPd7ND71XWjJAxPkqHGo=;
+        b=qjboFr0PlnmfNyb5hR1EBo/k2d05EyGBFwBoOAuoT6iWA75I4jLUC0rRFI5bxdxbFc
+         sKBSbVPfIt5ZlQ67ssS9cnPgAGbUM+cmqdjd/9Dec4EswkwnMaQ1SuwhwhwFkB9iv0NV
+         Lx+qiG4/qlxjDlIB4N5PqZyg8aBu147lDy6K3lUgyV4j5AX4p6lnvIHq4uN6TFU8rZ8I
+         4x17orm4XufbEHYMBzmP5PLknp3exNPCfn09WT1EHpUE5/Mc9vkhODJ/4gLH/HYfqzoK
+         G2S6DbOCC9gAkXJpDKCCzMj9yClsEj0p1BbEgp4QgZG8KNwKEgIhlv8Ey4uZlgzQtxK0
+         fwhw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=jWhswxN9HQxV0nCCW/ijA/LKBxQbID7mVe37gnQPitw=;
-        b=FMZ4zH6lKFNlqi3cvPsB4P7u1rpHCZ88SgwqcqP4JAbQP/WXnQON4GrSVOkDUyxd0t
-         EyBGbBM0hrKtLR2Ol255dL3MPgsH0MXyMr/9S9m2Wcbe0wAHBntOuimlbs0oMrz+O9DG
-         MhiawK7KETQqkyjn3K6dzcbpxxSJIy0B3GCLL3G+zBax70pnJL3/APEuYCHeytreCt62
-         gHsCcb6905RQaa//YOU8Zwji/lv+qMoXz+teGKuj3r5NcvSLqV1eEXyz6eLglktlTixI
-         IjHUQ6IJ4rHsuVyf0G6vaj+UYke7s1wWClyDMkG35sKfvVobgBitKuvinX5Cd5OlPIX0
-         G9cg==
-X-Gm-Message-State: ANhLgQ3ZOWmVo/VhGn9zowYtxJG4ThPvm1m8GLMpdXrFLXZ1vcmlX6P8
-        ROPX2ME2nEhE6ecvkMbTBKYNIkJV1gBZFMz7hhI=
-X-Google-Smtp-Source: ADFU+vtaOxhcczxMAOz9StdZVZLixx/TTBbQdMAPFVdjZvzd+1/+U/20Y3/RjtNPR7fcn8ajcWhgZEzfyIZ2bGxXIZI=
-X-Received: by 2002:a1c:5506:: with SMTP id j6mr623256wmb.127.1585238699504;
- Thu, 26 Mar 2020 09:04:59 -0700 (PDT)
+        bh=EOQR43k/SYYoHg5rufoJ36PPPd7ND71XWjJAxPkqHGo=;
+        b=OqJgdMAvMGP6V62HEODA0KCIRKBbFPADbwKjR/aUzse1aJ/lUoUC5QY6B99fV0lYWk
+         iYWRnxknz2nEX7rnA64NR23xCqiSHlUFgMfxIHn4cKE2i3osEBqoJ0Ydl50eqTfHS+oj
+         cNyGUfTPMyio4Bux6euKwAs3TjDU8KrZrmdcpZZEH/1AeUWguuJoUrMyCdCeFqEVmSYT
+         XWRjem5pNnzizrny4sPUIQdUSK5EezoEWZP013/9g3ev8+IUrSSWowZHvHETK1zhuCK7
+         UCcF6599672Jc1y2E8CFQO9je3kqZCWKgQbAv3L+bZtPK+sT8e0AH9kunZGvN53JrYIq
+         ezNw==
+X-Gm-Message-State: ANhLgQ1pH3R7oLAGKrVhfKgTW/Fi+oXbItIUvmnsMPL1BJHy8gu8molY
+        riKes9cGp3ixB7hZtKRjgX0/stSlzgypY1LlO0Q=
+X-Google-Smtp-Source: ADFU+vtKRUt3UCw7cgfrgdwc9jVo9pwgXXlBmeg/WQfzxfEf6oF11aHjEVYfu0TTUxXrPmW+g159yufEf6E/CgfUD20=
+X-Received: by 2002:a37:4fd0:: with SMTP id d199mr8766149qkb.121.1585238762078;
+ Thu, 26 Mar 2020 09:06:02 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200326133235.343616-1-aneesh.kumar@linux.ibm.com>
-In-Reply-To: <20200326133235.343616-1-aneesh.kumar@linux.ibm.com>
-From:   Pankaj Gupta <pankaj.gupta.linux@gmail.com>
-Date:   Thu, 26 Mar 2020 17:04:47 +0100
-Message-ID: <CAM9Jb+h+pZMQ_9W8Qm=6MSOdRDPaMpc0izTKUFMSR-kW1A-EaA@mail.gmail.com>
-Subject: Re: [PATCH v2] mm/sparse: Fix kernel crash with pfn_section_valid check
-To:     "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
-Cc:     linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
-        linux-kernel@vger.kernel.org, mpe@ellerman.id.au,
-        linuxppc-dev@lists.ozlabs.org,
-        Sachin Sant <sachinp@linux.vnet.ibm.com>,
-        Baoquan He <bhe@redhat.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        David Hildenbrand <david@redhat.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Wei Yang <richardw.yang@linux.intel.com>,
-        Oscar Salvador <osalvador@suse.de>,
-        Mike Rapoport <rppt@linux.ibm.com>, stable@vger.kernel.org
+References: <1579597494-60348-1-git-send-email-Sanju.Mehta@amd.com>
+In-Reply-To: <1579597494-60348-1-git-send-email-Sanju.Mehta@amd.com>
+From:   Vitaly Mayatskih <v.mayatskih@gmail.com>
+Date:   Thu, 26 Mar 2020 12:05:11 -0400
+Message-ID: <CAGF4SLg1ogj4O8Lafoby83+gjqtT0nBMd8MBZDJBQY=6UB0zJQ@mail.gmail.com>
+Subject: Re: [PATCH v3 0/3] Add AMD PassThru DMA Engine driver
+To:     Sanjay R Mehta <Sanju.Mehta@amd.com>
+Cc:     vkoul@kernel.org, gregkh@linuxfoundation.org,
+        dan.j.williams@intel.com, Thomas.Lendacky@amd.com,
+        Shyam-sundar.S-k@amd.com, Nehal-bakulchandra.Shah@amd.com,
+        robh@kernel.org, mchehab+samsung@kernel.org, davem@davemloft.net,
+        Jonathan.Cameron@huawei.com, linux-kernel@vger.kernel.org,
+        dmaengine@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+dmatest measures around 30 MB/s for one ptdma channel in EPYC 7302p
+and 11 GB/s for ioatdma channel in Xeon Gold 6248. Is it a driver
+limitation?
+
+I run dmatest as modprobe dmatest timeout=10000 transfer_size=512
+test_buf_size=1048576 threads_per_chan=1 iterations=1000 run=1 wait=1
+
+
+On Tue, Jan 21, 2020 at 4:06 AM Sanjay R Mehta <Sanju.Mehta@amd.com> wrote:
 >
-> Fixes the below crash
+> From: Sanjay R Mehta <sanju.mehta@amd.com>
 >
-> BUG: Kernel NULL pointer dereference on read at 0x00000000
-> Faulting instruction address: 0xc000000000c3447c
-> Oops: Kernel access of bad area, sig: 11 [#1]
-> LE PAGE_SIZE=64K MMU=Hash SMP NR_CPUS=2048 NUMA pSeries
-> CPU: 11 PID: 7519 Comm: lt-ndctl Not tainted 5.6.0-rc7-autotest #1
-> ...
-> NIP [c000000000c3447c] vmemmap_populated+0x98/0xc0
-> LR [c000000000088354] vmemmap_free+0x144/0x320
-> Call Trace:
->  section_deactivate+0x220/0x240
->  __remove_pages+0x118/0x170
->  arch_remove_memory+0x3c/0x150
->  memunmap_pages+0x1cc/0x2f0
->  devm_action_release+0x30/0x50
->  release_nodes+0x2f8/0x3e0
->  device_release_driver_internal+0x168/0x270
->  unbind_store+0x130/0x170
->  drv_attr_store+0x44/0x60
->  sysfs_kf_write+0x68/0x80
->  kernfs_fop_write+0x100/0x290
->  __vfs_write+0x3c/0x70
->  vfs_write+0xcc/0x240
->  ksys_write+0x7c/0x140
->  system_call+0x5c/0x68
+> This patch series adds support for AMD PassThru DMA Engine which
+> performs high bandwidth memory-to-memory and IO copy operation and
+> performs DMA transfer through queue based descriptor management.
 >
-> The crash is due to NULL dereference at
+> AMD Processor has multiple ptdma device instances and each engine has
+> single queue. The driver also adds support for for multiple PTDMA
+> instances, each device will get an unique identifier and uniquely
+> named resources.
 >
-> test_bit(idx, ms->usage->subsection_map); due to ms->usage = NULL; in pfn_section_valid()
+> v3:
+>         - Fixed the sparse warnings.
 >
-> With commit: d41e2f3bd546 ("mm/hotplug: fix hot remove failure in SPARSEMEM|!VMEMMAP case")
-> section_mem_map is set to NULL after depopulate_section_mem(). This
-> was done so that pfn_page() can work correctly with kernel config that disables
-> SPARSEMEM_VMEMMAP. With that config pfn_to_page does
+> v2:
+>         - Added controller description in cover letter
+>         - Removed "default m" from Kconfig
+>         - Replaced low_address() and high_address() functions with kernel
+>           API's lower_32_bits & upper_32_bits().
+>         - Removed the BH handler function pt_core_irq_bh() and instead
+>           handling transaction in irq handler itself.
+>         - Moved presetting of command queue registers into new function
+>           "init_cmdq_regs()"
+>         - Removed the kernel thread dependency to submit transaction.
+>         - Increased the hardware command queue size to 32 and adding it
+>           as a module parameter.
+>         - Removed backlog command queue handling mechanism.
+>         - Removed software command queue handling and instead submitting
+>           transaction command directly to
+>           hardware command queue.
+>         - Added tasklet structure variable in "struct pt_device".
+>           This is used to invoke pt_do_cmd_complete() upon receiving interrupt
+>           for command completion.
+>         - pt_core_perform_passthru() function parameters are modified and it is
+>           now used to submit command directly to hardware from dmaengine framework.
+>         - Removed below structures, enums, macros and functions, as these values are
+>           constants. Making command submission simple,
+>            - Removed "union pt_function"  and several macros like PT_VERSION,
+>              PT_BYTESWAP, PT_CMD_* etc..
+>            - enum pt_passthru_bitwise, enum pt_passthru_byteswap, enum pt_memtype
+>              struct pt_dma_info, struct pt_data, struct pt_mem, struct pt_passthru_op,
+>              struct pt_op,
+>            - Removed functions -> pt_cmd_queue_thread() pt_run_passthru_cmd(),
+>              pt_run_cmd(), pt_dev_init(), pt_dequeue_cmd(), pt_do_cmd_backlog(),
+>              pt_enqueue_cmd(),
+>         - Below functions, stuctures and variables moved from ptdma-ops.c
+>            - Moved function pt_alloc_struct() to ptdma-pci.c as its used only there.
+>            - Moved "struct pt_tasklet_data" structure to ptdma.h
+>            - Moved functions pt_do_cmd_complete(), pt_present(), pt_get_device(),
+>              pt_add_device(), pt_del_device(), pt_log_error() and its dependent
+>              static variables pt_unit_lock, pt_units, pt_rr_lock, pt_rr, pt_error_codes,
+>              pt_ordinal  to ptdma-dev.c as they are used only in that file.
 >
->         __section_mem_map_addr(__sec) + __pfn;
-> where
+> Links of the review comments for v2:
+> 1. https://lkml.org/lkml/2019/12/27/630
+> 2. https://lkml.org/lkml/2020/1/3/23
+> 3. https://lkml.org/lkml/2020/1/3/314
+> 4. https://lkml.org/lkml/2020/1/10/100
 >
-> static inline struct page *__section_mem_map_addr(struct mem_section *section)
-> {
->         unsigned long map = section->section_mem_map;
->         map &= SECTION_MAP_MASK;
->         return (struct page *)map;
-> }
 >
-> Now with SPASEMEM_VMEMAP enabled, mem_section->usage->subsection_map is used to
-> check the pfn validity (pfn_valid()). Since section_deactivate release
-> mem_section->usage if a section is fully deactivated, pfn_valid() check after
-> a subsection_deactivate cause a kernel crash.
+> Links of the review comments for v1:
 >
-> static inline int pfn_valid(unsigned long pfn)
-> {
-> ...
->         return early_section(ms) || pfn_section_valid(ms, pfn);
-> }
+> 1. https://lkml.org/lkml/2019/9/24/490
+> 2. https://lkml.org/lkml/2019/9/24/399
+> 3. https://lkml.org/lkml/2019/9/24/862
+> 4. https://lkml.org/lkml/2019/9/24/122
 >
-> where
+> Sanjay R Mehta (3):
+>   dmaengine: ptdma: Initial driver for the AMD PassThru DMA engine
+>   dmaengine: ptdma: Register pass-through engine as a DMA resource
+>   dmaengine: ptdma: Add debugfs entries for PTDMA information
 >
-> static inline int pfn_section_valid(struct mem_section *ms, unsigned long pfn)
-> {
->         int idx = subsection_map_index(pfn);
+>  MAINTAINERS                         |   6 +
+>  drivers/dma/Kconfig                 |   2 +
+>  drivers/dma/Makefile                |   1 +
+>  drivers/dma/ptdma/Kconfig           |   7 +
+>  drivers/dma/ptdma/Makefile          |  12 +
+>  drivers/dma/ptdma/ptdma-debugfs.c   | 237 ++++++++++++
+>  drivers/dma/ptdma/ptdma-dev.c       | 448 +++++++++++++++++++++++
+>  drivers/dma/ptdma/ptdma-dmaengine.c | 704 ++++++++++++++++++++++++++++++++++++
+>  drivers/dma/ptdma/ptdma-pci.c       | 269 ++++++++++++++
+>  drivers/dma/ptdma/ptdma.h           | 378 +++++++++++++++++++
+>  10 files changed, 2064 insertions(+)
+>  create mode 100644 drivers/dma/ptdma/Kconfig
+>  create mode 100644 drivers/dma/ptdma/Makefile
+>  create mode 100644 drivers/dma/ptdma/ptdma-debugfs.c
+>  create mode 100644 drivers/dma/ptdma/ptdma-dev.c
+>  create mode 100644 drivers/dma/ptdma/ptdma-dmaengine.c
+>  create mode 100644 drivers/dma/ptdma/ptdma-pci.c
+>  create mode 100644 drivers/dma/ptdma/ptdma.h
 >
->         return test_bit(idx, ms->usage->subsection_map);
-> }
->
-> Avoid this by clearing SECTION_HAS_MEM_MAP when mem_section->usage is freed.
-> For architectures like ppc64 where large pages are used for vmmemap mapping (16MB),
-> a specific vmemmap mapping can cover multiple sections. Hence before a vmemmap
-> mapping page can be freed, the kernel needs to make sure there are no valid sections
-> within that mapping. Clearing the section valid bit before
-> depopulate_section_memap enables this.
->
-> Fixes: d41e2f3bd546 ("mm/hotplug: fix hot remove failure in SPARSEMEM|!VMEMMAP case")
-> Reported-by: Sachin Sant <sachinp@linux.vnet.ibm.com>
-> Tested-by: Sachin Sant <sachinp@linux.vnet.ibm.com>
-> Cc: Baoquan He <bhe@redhat.com>
-> Cc: Michael Ellerman <mpe@ellerman.id.au>
-> Cc: Dan Williams <dan.j.williams@intel.com>
-> Cc: Pankaj Gupta <pankaj.gupta.linux@gmail.com>
-> Cc: David Hildenbrand <david@redhat.com>
-> Cc: Michal Hocko <mhocko@suse.com>
-> Cc: Wei Yang <richardw.yang@linux.intel.com>
-> Cc: Oscar Salvador <osalvador@suse.de>
-> Cc: Mike Rapoport <rppt@linux.ibm.com>
-> Cc: <stable@vger.kernel.org>
-> Signed-off-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
-> ---
->  mm/sparse.c | 6 ++++++
->  1 file changed, 6 insertions(+)
->
-> diff --git a/mm/sparse.c b/mm/sparse.c
-> index aadb7298dcef..65599e8bd636 100644
-> --- a/mm/sparse.c
-> +++ b/mm/sparse.c
-> @@ -781,6 +781,12 @@ static void section_deactivate(unsigned long pfn, unsigned long nr_pages,
->                         ms->usage = NULL;
->                 }
->                 memmap = sparse_decode_mem_map(ms->section_mem_map, section_nr);
-> +               /*
-> +                * Mark the section invalid so that valid_section()
-> +                * return false. This prevents code from dereferencing
-> +                * ms->usage array.
-> +                */
-> +               ms->section_mem_map &= ~SECTION_HAS_MEM_MAP;
->         }
->
->         if (section_is_early && memmap)
 > --
-Agree with Michal, comment for clearing the section would be nicer.
-
-Fix looks good to me.
-Acked-by: Pankaj Gupta <pankaj.gupta.linux@gmail.com>
-
-> 2.25.1
+> 2.7.4
 >
+
+
+--
+wbr, Vitaly
