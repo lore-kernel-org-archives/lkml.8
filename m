@@ -2,103 +2,86 @@ Return-Path: <SRS0=aGSP=5L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 211BFC43331
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 17:35:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73671C2D0E5
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 17:36:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E615D20719
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 17:35:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="VktKbXpg"
+	by mail.kernel.org (Postfix) with ESMTP id 58DD420719
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 17:36:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727806AbgCZRfC (ORCPT
+        id S1727661AbgCZRgD convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 13:35:02 -0400
-Received: from mail-pf1-f202.google.com ([209.85.210.202]:54620 "EHLO
-        mail-pf1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726067AbgCZRfC (ORCPT
+        Thu, 26 Mar 2020 13:36:03 -0400
+Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:23324 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726067AbgCZRgC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 13:35:02 -0400
-Received: by mail-pf1-f202.google.com with SMTP id t19so5696102pfq.21
-        for <linux-kernel@vger.kernel.org>; Thu, 26 Mar 2020 10:35:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=G+G8SzoTNYm3INTXZnya/9BfrExbp6FOm4lsdACc9gY=;
-        b=VktKbXpg0Ao5yMu4T3/zZ0IkunVLznTzi3YISxgzT27E2R21Mq9W4obdxBrjpWmvpW
-         dYfL86TNZPqhACrwLiin0og2QiAUeF31QIbNU4NjDDt0P5ZkG2tZDuTUGtAZ84D97Gu8
-         EGS9/riz8VU7cuM1TuixG/Fzcy0QO11pY36A2ME+BtirqMOUmpT9LhgkoG2/06m5E5w6
-         KwwPh3ZMMeOoARPq+4atwfAS34STDNHOgousf97A+DntfBawLWCT8WN7hSRP1vfpRP0D
-         zQs31npcQxr9R9IYGS1lLBF09sEmAQi0Yz2lD9mBYppJvvXDTBMadqecDI4hU5tGQbPM
-         FLKA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=G+G8SzoTNYm3INTXZnya/9BfrExbp6FOm4lsdACc9gY=;
-        b=UKKODutt7OsRIrbFJozECPQXpGDep9yocTTDItQ6IGJadW614ipv64+YK1Mgqc4TJN
-         QXL6bbLM/PQroX00F/SyVNIjMoEgvKEfIzZ68d0EbKIpNu1XD27lOXF6AITQTQ04McGT
-         lq1fPDNFDLkJ9ExbvVP+Y+3rIvtawU4l61X0q+1BpocupVapeYWgIlj2emO0h9Rfhhb7
-         SAZ1cHMQdFxVIvmNSJlHgVbUrpMM43cBfG3WPNPVYruLsamWk0C3wjAonkMV+ITvUbK+
-         +h8koDP41rPYrIZ1yLkFAzgMWNTcfo4ikDM3cWp2/dpvvs0YIxJVJZY2aO0UtB+2mSbU
-         JJAw==
-X-Gm-Message-State: ANhLgQ1YFmBtKl24EvtiwG4GcqeIZyZf9O+BgWK7rhh83dO5wHB6ldxD
-        SNswRj7zLDrNn3PdOdcRDL2C/j5jbq4P9VY=
-X-Google-Smtp-Source: ADFU+vvrbubNnjF/Quaud6R8eOUsieihvCBBg9WfH4mP4HFBuqBith01Gbz68HRn3tEjfLibzAYBTR1d8Ti89yY=
-X-Received: by 2002:a17:90a:198b:: with SMTP id 11mr1230411pji.23.1585244101710;
- Thu, 26 Mar 2020 10:35:01 -0700 (PDT)
-Date:   Thu, 26 Mar 2020 10:34:56 -0700
-Message-Id: <20200326173457.29233-1-saravanak@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.25.1.696.g5e7596f4ac-goog
-Subject: [PATCH v1] slimbus: core: Fix mismatch in of_node_get/put
-From:   Saravana Kannan <saravanak@google.com>
-To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc:     Saravana Kannan <saravanak@google.com>, kernel-team@android.com,
-        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        Thu, 26 Mar 2020 13:36:02 -0400
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-13-Tle9O2V7P9i3U-QD2IdWNw-1; Thu, 26 Mar 2020 17:34:36 +0000
+X-MC-Unique: Tle9O2V7P9i3U-QD2IdWNw-1
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
+ Server (TLS) id 15.0.1347.2; Thu, 26 Mar 2020 17:34:35 +0000
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Thu, 26 Mar 2020 17:34:35 +0000
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Jessica Yu' <jeyu@kernel.org>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "'Linus Torvalds'" <torvalds@linux-foundation.org>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Matthias Maennich <maennich@google.com>
+Subject: RE: modpost Module.symver handling is broken in 5.6.0-rc7
+Thread-Topic: modpost Module.symver handling is broken in 5.6.0-rc7
+Thread-Index: AdYDiqOPE71nee/CTfS3aDSZbkO5JwABAkKAAABe9DAAAHoCgAAAc4Rg
+Date:   Thu, 26 Mar 2020 17:34:35 +0000
+Message-ID: <ac06c49345824fd1bfb84f7e62ceb4d9@AcuMS.aculab.com>
+References: <931818529b1d4d13a08d30ddace22733@AcuMS.aculab.com>
+ <20200326165036.GA22172@linux-8ccs>
+ <90b763cc306140499fddf8e3185e26f5@AcuMS.aculab.com>
+ <20200326171453.GA21406@linux-8ccs>
+In-Reply-To: <20200326171453.GA21406@linux-8ccs>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
+MIME-Version: 1.0
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: aculab.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Also, remove some unnecessary NULL checks. The functions in question
-already do NULL checks.
+From: Jessica Yu
+> Sent: 26 March 2020 17:15
+...
+> I'm a bit confused - just to confirm, is there a legitimate bug
+> upstream or was it just a hiccup related to your setup?
 
-Signed-off-by: Saravana Kannan <saravanak@google.com>
----
- drivers/slimbus/core.c | 8 +++-----
- 1 file changed, 3 insertions(+), 5 deletions(-)
+An upstream change broke our build scripts in a very confusing way.
 
-diff --git a/drivers/slimbus/core.c b/drivers/slimbus/core.c
-index 44228a5b246d..ae1e248a8fb8 100644
---- a/drivers/slimbus/core.c
-+++ b/drivers/slimbus/core.c
-@@ -162,11 +162,8 @@ static int slim_add_device(struct slim_controller *ctrl,
- 	sbdev->ctrl = ctrl;
- 	INIT_LIST_HEAD(&sbdev->stream_list);
- 	spin_lock_init(&sbdev->stream_list_lock);
+I think KBUILD_EXTRA_SYMBOLS was added in 2.6.26.
+Since we no longer need to build on anything older than 2.6.32
+I can use that instead of copying the Module.symvers from the
+other build directory and relying on the build scripts passing
+-I Module.symver to modpost.
+
+I just need to find a suitable system to check it on.
+All made more difficult by working from home....
+
+	David
+
 -
--	if (node) {
--		sbdev->dev.of_node = of_node_get(node);
--		sbdev->dev.fwnode = of_fwnode_handle(node);
--	}
-+	sbdev->dev.of_node = of_node_get(node);
-+	sbdev->dev.fwnode = of_fwnode_handle(node);
- 
- 	dev_set_name(&sbdev->dev, "%x:%x:%x:%x",
- 				  sbdev->e_addr.manf_id,
-@@ -285,6 +282,7 @@ EXPORT_SYMBOL_GPL(slim_register_controller);
- /* slim_remove_device: Remove the effect of slim_add_device() */
- static void slim_remove_device(struct slim_device *sbdev)
- {
-+	of_node_put(sbdev->dev.of_node);
- 	device_unregister(&sbdev->dev);
- }
- 
--- 
-2.25.1.696.g5e7596f4ac-goog
+Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
+Registration No: 1397386 (Wales)
 
