@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF22EC2D0E7
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 23:24:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F6FEC2D0EF
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 23:24:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A1AB520719
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 23:24:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A22620409
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 23:24:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585265052;
-	bh=JzE8QSLBSji/fwbdetznn6wuAkvze4RHNwUOhEGZU9c=;
+	s=default; t=1585265055;
+	bh=q7wvOp/B+vcsKe//MRTz/um2sZICyj6+bgXMc/jce7k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=T75mYyXHuhw1yR16JyebjLunhoKfyZCEKPTqyGtu1ue8UXpkBFkc24o5ec9V+t7h3
-	 pvuHjiz8aDnlVPm3rVrrob7zeMihxRumnD1UTNrrr4rEYjqjcI8GKoj2Ya8nkeU1Rn
-	 flIIt+/1bGj0L/M8E8DnbVSubN8Asc6BK+nYZJhQ=
+	b=ICArJ94gigVZ3lzimuEuesjTFs/MR/VKzFnZnrQjMNi+QfsEUfTZxdXTQmVSgNGFI
+	 yyR2nDCsWPEGrYuBbCMzUCIc2Avql/3h82Lluyp++nDCjCQ/kzmM+uGLQ21GBLM7SN
+	 /Cgd86h+rf1n5Z+DMQ+jGI8Qy4bUb5QrRQ/8BX1Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727766AbgCZXYL (ORCPT
+        id S1727791AbgCZXYN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 19:24:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43258 "EHLO mail.kernel.org"
+        Thu, 26 Mar 2020 19:24:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43354 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727689AbgCZXYF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 19:24:05 -0400
+        id S1727719AbgCZXYH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Mar 2020 19:24:07 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 26E2F212CC;
-        Thu, 26 Mar 2020 23:24:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 77BE42074D;
+        Thu, 26 Mar 2020 23:24:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585265045;
-        bh=JzE8QSLBSji/fwbdetznn6wuAkvze4RHNwUOhEGZU9c=;
+        s=default; t=1585265047;
+        bh=q7wvOp/B+vcsKe//MRTz/um2sZICyj6+bgXMc/jce7k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cXGm5OHwXYJ049jHHuOGPBnfs3rxNHgDGKg1gypfVkKPUFspT/6WZkC8emxznePqm
-         xEqQzgaElbbw+deCSdStnD+1rfCeOewtGZfMDVJLjjg9Je8KIZzwPKSJOh6NRFvqYS
-         Cqcpc2vYwXCkDGpg0ouab7Tvno00LUDZsYGHLF4U=
+        b=t6PxG26Cv/HG2KtE1WmvTHZhLXbIox26JvVyaqmpg0lzmxTWEf6del734yseTjDIf
+         2Bm3CPugmjMKaqKe/C617J9e16z+kOJFZgA2FGwQsgZpM4MR0++6XE7Fn58G3hrNLh
+         SEf/vRjyKFOM7jpVsDqInocmnuUXL/E3ZCUvE4qU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Masahiro Yamada <masahiroy@kernel.org>,
-        George Spelvin <lkml@sdf.org>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Sasha Levin <sashal@kernel.org>, linux-kbuild@vger.kernel.org,
-        clang-built-linux@googlegroups.com
-Subject: [PATCH AUTOSEL 5.5 06/28] kconfig: introduce m32-flag and m64-flag
-Date:   Thu, 26 Mar 2020 19:23:35 -0400
-Message-Id: <20200326232357.7516-6-sashal@kernel.org>
+Cc:     Evan Quan <evan.quan@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 5.5 08/28] drm/amdgpu: add fbdev suspend/resume on gpu reset
+Date:   Thu, 26 Mar 2020 19:23:37 -0400
+Message-Id: <20200326232357.7516-8-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200326232357.7516-1-sashal@kernel.org>
 References: <20200326232357.7516-1-sashal@kernel.org>
@@ -61,82 +60,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Masahiro Yamada <masahiroy@kernel.org>
+From: Evan Quan <evan.quan@amd.com>
 
-[ Upstream commit 8cc4fd73501d9f1370c3eebb70cfe8cc9e24062b ]
+[ Upstream commit 063e768ebd27d3ec0d6908b7f8ea9b0a732b9949 ]
 
-When a compiler supports multiple architectures, some compiler features
-can be dependent on the target architecture.
+This can fix the baco reset failure seen on Navi10.
+And this should be a low risk fix as the same sequence
+is already used for system suspend/resume.
 
-This is typical for Clang, which supports multiple LLVM backends.
-Even for GCC, we need to take care of biarch compiler cases.
-
-It is not a problem when we evaluate cc-option in Makefiles because
-cc-option is tested against the flag in question + $(KBUILD_CFLAGS).
-
-The cc-option in Kconfig, on the other hand, does not accumulate
-tested flags. Due to this simplification, it could potentially test
-cc-option against a different target.
-
-At first, Kconfig always evaluated cc-option against the host
-architecture.
-
-Since commit e8de12fb7cde ("kbuild: Check for unknown options with
-cc-option usage in Kconfig and clang"), in case of cross-compiling
-with Clang, the target triple is correctly passed to Kconfig.
-
-The case with biarch GCC (and native build with Clang) is still not
-handled properly. We need to pass some flags to specify the target
-machine bit.
-
-Due to the design, all the macros in Kconfig are expanded in the
-parse stage, where we do not know the target bit size yet.
-
-For example, arch/x86/Kconfig allows a user to toggle CONFIG_64BIT.
-If a compiler flag -foo depends on the machine bit, it must be tested
-twice, one with -m32 and the other with -m64.
-
-However, -m32/-m64 are not always recognized. So, this commits adds
-m64-flag and m32-flag macros. They expand to -m32, -m64, respectively
-if supported. Or, they expand to an empty string if unsupported.
-
-The typical usage is like this:
-
-  config FOO
-          bool
-          default $(cc-option,$(m64-flag) -foo) if 64BIT
-          default $(cc-option,$(m32-flag) -foo)
-
-This is clumsy, but there is no elegant way to handle this in the
-current static macro expansion.
-
-There was discussion for static functions vs dynamic functions.
-The consensus was to go as far as possible with the static functions.
-(https://lkml.org/lkml/2018/3/2/22)
-
-Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
-Tested-by: George Spelvin <lkml@sdf.org>
-Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
+Signed-off-by: Evan Quan <evan.quan@amd.com>
+Reviewed-by: Alex Deucher <alexander.deucher@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- scripts/Kconfig.include | 7 +++++++
- 1 file changed, 7 insertions(+)
+ drivers/gpu/drm/amd/amdgpu/amdgpu_device.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/scripts/Kconfig.include b/scripts/Kconfig.include
-index bfb44b265a948..77a69ba9cd198 100644
---- a/scripts/Kconfig.include
-+++ b/scripts/Kconfig.include
-@@ -40,3 +40,10 @@ $(error-if,$(success, $(LD) -v | grep -q gold), gold linker '$(LD)' not supporte
+diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
+index 332b9c24a2cd0..9a8a1c6ca3210 100644
+--- a/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
++++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
+@@ -3854,6 +3854,8 @@ static int amdgpu_do_asic_reset(struct amdgpu_hive_info *hive,
+ 				if (r)
+ 					goto out;
  
- # gcc version including patch level
- gcc-version := $(shell,$(srctree)/scripts/gcc-version.sh $(CC))
++				amdgpu_fbdev_set_suspend(tmp_adev, 0);
 +
-+# machine bit flags
-+#  $(m32-flag): -m32 if the compiler supports it, or an empty string otherwise.
-+#  $(m64-flag): -m64 if the compiler supports it, or an empty string otherwise.
-+cc-option-bit = $(if-success,$(CC) -Werror $(1) -E -x c /dev/null -o /dev/null,$(1))
-+m32-flag := $(cc-option-bit,-m32)
-+m64-flag := $(cc-option-bit,-m64)
+ 				/* must succeed. */
+ 				amdgpu_ras_resume(tmp_adev);
+ 
+@@ -4023,6 +4025,8 @@ int amdgpu_device_gpu_recover(struct amdgpu_device *adev,
+ 		 */
+ 		amdgpu_unregister_gpu_instance(tmp_adev);
+ 
++		amdgpu_fbdev_set_suspend(adev, 1);
++
+ 		/* disable ras on ALL IPs */
+ 		if (!in_ras_intr && amdgpu_device_ip_need_full_reset(tmp_adev))
+ 			amdgpu_ras_suspend(tmp_adev);
 -- 
 2.20.1
 
