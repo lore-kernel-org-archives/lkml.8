@@ -2,112 +2,136 @@ Return-Path: <SRS0=aGSP=5L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AEA2C43331
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 17:22:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6284C2D0EC
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 17:24:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5EEC520409
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 17:22:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="ionFLP/z"
+	by mail.kernel.org (Postfix) with ESMTP id 8C0B520409
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 17:24:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728208AbgCZRWk (ORCPT
+        id S1727831AbgCZRYx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 13:22:40 -0400
-Received: from mout.gmx.net ([212.227.15.15]:50289 "EHLO mout.gmx.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727724AbgCZRWk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 13:22:40 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1585243347;
-        bh=MWQpqiFq+1hK9zp12FeAP0ENS8Btp4Us1plOsjWVOA4=;
-        h=X-UI-Sender-Class:Date:From:To:Cc:Subject:References:In-Reply-To;
-        b=ionFLP/z5hIMPcvYYdpYjsCoEq0rpFaf+I84HduZC/LtfLDDeCNk6pc97WHph6ZVJ
-         j8xUbf6gRkv6WPlnQHLEgCkkkDYCfGOGlyzFa35oFfRPOQshcMjcrCeFvaDfE8wNo8
-         GcN1PbgGofKXwYBo8iDv7T7OLRDpUPqf0fJRfF18=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from ubuntu ([83.52.229.196]) by mail.gmx.com (mrgmx004
- [212.227.17.184]) with ESMTPSA (Nemesis) id 1MRTRH-1iudja17wr-00NUbM; Thu, 26
- Mar 2020 18:22:27 +0100
-Date:   Thu, 26 Mar 2020 18:22:25 +0100
-From:   Oscar Carter <oscar.carter@gmx.com>
-To:     Dan Carpenter <dan.carpenter@oracle.com>,
-        Quentin Deslandes <quentin.deslandes@itdev.co.uk>
-Cc:     Oscar Carter <oscar.carter@gmx.com>,
-        Forest Bond <forest@alittletooquiet.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Malcolm Priestley <tvboxspy@gmail.com>,
-        Colin Ian King <colin.king@canonical.com>,
-        Gabriela Bittencourt <gabrielabittencourt00@gmail.com>,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] staging: vt6656: Use ARRAY_SIZE instead of hardcoded
- size
-Message-ID: <20200326172224.GC3629@ubuntu>
-References: <20200318174015.7515-1-oscar.carter@gmx.com>
- <20200324095456.GA7693@jiffies>
- <20200324131830.GD4672@kadam>
- <20200325091924.GB15158@jiffies>
+        Thu, 26 Mar 2020 13:24:53 -0400
+Received: from mout.kundenserver.de ([217.72.192.74]:53047 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726163AbgCZRYx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Mar 2020 13:24:53 -0400
+Received: from [192.168.1.183] ([37.4.249.171]) by mrelayeu.kundenserver.de
+ (mreue106 [212.227.15.183]) with ESMTPSA (Nemesis) id
+ 1Mk178-1jfYT036uO-00kQMZ; Thu, 26 Mar 2020 18:24:46 +0100
+Subject: Re: [PATCH] ARM: dts: bcm283x: Use firmware PM driver for V3D
+To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Eric Anholt <eric@anholt.net>
+Cc:     devicetree@vger.kernel.org,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        Ray Jui <rjui@broadcom.com>, linux-kernel@vger.kernel.org,
+        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
+        wahrenst@gmx.net, linux-arm-kernel@lists.infradead.org,
+        linux-rpi-kernel@lists.infradead.org
+References: <20200303173217.3987-1-nsaenzjulienne@suse.de>
+ <24f850f64b5c71c71938110775e16caaec2811cc.camel@suse.de>
+From:   Stefan Wahren <stefan.wahren@i2se.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=stefan.wahren@i2se.com; keydata=
+ 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 AQ==
+Message-ID: <8c2bdd83-c8a9-7ba8-8d61-69594e6a2bde@i2se.com>
+Date:   Thu, 26 Mar 2020 18:24:45 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200325091924.GB15158@jiffies>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Provags-ID: V03:K1:HLqxRcmQo28JRdSPp73j2tg1Y8Oyog28LeDWrq1bY2PGNpeNplf
- w+FiAc4Vgo+vp+aHfnauFLt6+tkoivrd+7WWSQ1oYbakn8QuqIOg41G0Q7PJ53ZjBsPNA20
- znqRWWPFpCp2V63I0K0ia5x4yk30Kt+pOoXGZpeP5vmUzjiv8IX5+IXZirn2nz4oyac2iXw
- 4+mOsuFVoCAYViHuuP3VQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:0rOYc05hHsg=:YWfhe8q5SwPvx1E1cvHmPp
- juNhBP2AXxFVwySkTWRdQcXCV751daKlHy2ZEfcJrB+3qMG8eXEF9mG9NwjWIMIet0NahjcLI
- G9Aizlt49U6GwvL02tGeVgs4Ls5OR8fihViij64ldaAhF5XUAM5T7tQbl5GgH5l3TxQ7jfqoU
- oiTVab0A1OzWezNg4XZrcMf7+4yeTN7LsHCwyehHS3ww4zekphdRUcvCXwAisEvfa1i6OQyfz
- 80HC97nHG4Xh4ooh7lNvMvRYKDeoPuRbiby6vsMGGakhXiMnBcnNPd6d2ecrSSWADbMuKTUcC
- RRz7tQw+nZwDyyDvrt0TO/6ONDEiVmhF3v46Ehd7tTMJM/1nUBfcnOLUWyG1hq9vRC68Ne4Mo
- OM5Dck0eClP0kkl5JczZykLo6kxjYQGE1mRALY5v0i+2jb5SGcBo5QyS0EmfoB4mla1xMXZhP
- fDfQ+IZB1b/ukTKw1VOzzLlE6/pCW51iZaDCBQRbTBwsvF53dAoOYBkHBmYtuHpgdQ72W3zbr
- 7VgAqvLAn4r+eehlAQfv87+BqJQ1hWvvGlIcBsF2GeCUyyqAWwl8c3XnyKjhCp5Rr6ajVYLuA
- 81refT6rqxyyfXnZtO5xkF7icqC6l2OVyt7Wu0EUQsQGe3tZWX1My67gIv4EF0UcOGauCb7E9
- w3Rv6Jm1UPC219K9EXaznesBBowSaa1IyvMY9k4odEBgPT7FbLuLRzd3CYXH/YCb+BCPWpdOv
- N6cMcHGyPVtXxwLyIJ6bwoAKbCdBhs/Klkkj81SpyKxxrMVIuVe72iTANLIle0OXuguOAatj/
- MX8GjUTdI4xZu6mIZ9luJRzayjVDcDFnVfIdSyvAkmcRx8CasJO4AfMf+7JbqylQc729ePdbD
- 63jsvnRPtlk1iVPaJogGLFS44XlQeX82ZvhfnpUYi5MoUNubqylru9SzEi0OUqzVNvddlw2YL
- cax3k+Fl/ImsqrwsaxE1KaCAxP2af8jfCq6k12UlJjR/WIzWDhsu9z7wRniGMl3Dh+tEyBD0w
- m//r+0NW+CB6i01QVwkS/cvki13aVbsDtKiwYSwlLZOlw2uHEK1Qk3jQQ6aDjcBjw9qmzGhbA
- 9dI3HWamH6zaZf69xxaRT+PDNSiL7SzfcS+ACW7A176WC5DA+IEseUNlj2zcP41ucHfoVNss3
- +lOJENqsqbV7OS8G2WcNhr+LK+5V4FQh1uvZiMzgfW3dZd3X2YmP7fq9FgZNJL934OFmz0/vn
- XDcOshFa+Fa2Y8raE
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <24f850f64b5c71c71938110775e16caaec2811cc.camel@suse.de>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Provags-ID: V03:K1:Ac7dLnMcbgcgIHaNRY2OVn2AFh3p6JDdm2ydQ54cEcT2mSjqKa3
+ +NMdof+DtagSo61Cnlr/p19IyEN89nop7uW/8NunpYl26vTnQtbadf/RC5GZHbyID6qqbBU
+ 7QzOzEYomgGmUoiRjw+ROkj3LxUxcUMjMQCgVFMU+rNyO+DqTO5HatZ/gQMW/0yI2eOYvO2
+ W+bVC+5UyZqyE9hS+6Hrw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:cZABVwr5tBY=:d0bGNLa0oO/7atjaXzIj/Q
+ SXY5z+mQUIu8mc9ZUrmlD564A+EJxx+/VKSc1NpceSEivcaJmPOcYLDBEKnigO2QACkd3Loqm
+ MRK2bBhs9tb9TnYhWlAZ4rUHGBbxHogeGr7ny+amSDPgh04Gk9khk+iH5pkcOI+P5k+CDPZiF
+ TizQFAfG8w664he2Lass4hhohwHmn/wtJhQEolrZ/pnkJyAHJhRNBoiEaf6VoURj5qm0o2kP8
+ xcqAg1SFVqC/5HBpzVxLFngP34oUdG+KZPD8Z75CEeS+jaQeSfkkJTUa/op3mi9mdjdjnQU5J
+ NhpWwFiSuXsiaokWQ9rWwBzxsDbrdLowGYyuIl5DSjode7LxjL/2lf+b7v/sBQUxC3tTiVpgS
+ ci8UCxao4myngeF/X0CYBtlq7s8dtkL3iCmA3/74LrzqGNieMfy7Fu2O7FIxQbrlvzVUYjVDm
+ n5Pc4nvsxXScOvoXR8E8V1aIqaCDtEENUf+s62AsWugJpO7Q0v29toq5R5omtLYQkbyAxMAyc
+ vLzfZ3orvwt12t7M2HZGsqtSdtKuFN4m4WXkoSxjLaz7l+gWS4oNERt9bbBUPwe3mAg+mqdKB
+ bcdW7Gpzk4rc6ykgou6j3Bzhp7s8heXEKPiEOX2uzwmzbtXDd2bxiFTycWIvpoAUEufE45wIE
+ QOzaAsWhE+RCfXAk89LFNOFvVsxDdigHrSNco1oS4Ua6RPScGZBrc+BQtQue2q9k/eg0HX1Tz
+ mRRLXLCaJHqSa+Fq2PVGgpW6+cney67wUIF6XN90MreAz4C4C9/1yXJQyNIM1TCFaxMYdFrms
+ j2W6toqYG9BBMXrAit2vYJHsjL0gLvgioF1hJ1SjPHRq+L/8XLd5VuwkRwgiSlFC+sgtonQ
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 25, 2020 at 09:19:24AM +0000, Quentin Deslandes wrote:
-> On 03/24/20 16:18:30, Dan Carpenter wrote:
-> > That's a bit over engineering something which is pretty trivial.
-> > Normally, we would just make the size a define instead of a magic numb=
-er
-> > 14.
+Am 26.03.20 um 13:24 schrieb Nicolas Saenz Julienne:
+> Hi Stefan and Florian,
 >
-> My bad, I meant "define", not "macro".
->
-> > If people change the size in the future (unlikely) and it causes a bug
-> > then they kind of deserve it because they need to ensure all the new
-> > stuff is initialized, right?  If they change it and it results in a
-> > buffer overflow then static checkers would complain.  If they changed =
-it
-> > and it resulted in uninitialized data being used then it would be zero
-> > so that's okay.
->
-> I wasn't sure where I should stand on this, that's clearer now.
->
-> Thanks,
-> Quentin
+> On Tue, 2020-03-03 at 18:32 +0100, Nicolas Saenz Julienne wrote:
+>> The register based driver turned out to be unstable, specially on RPi3a+
+>> but not limited to it. While a fix is being worked on, we roll back to
+>> using firmware based scheme.
+>>
+>> Fixes: e1dc2b2e1bef ("ARM: bcm283x: Switch V3D over to using the PM driver
+>> instead of firmware")
+>> Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+>> ---
+> now that the problem Stefan was seeing is being taken care of, I think it's
+> fair to reconsider taking this patch. Maybe even adding a Tested-by by Stefan?
 
-Dan and Quentin, thanks for your time to review my work, and make comments=
-.
+after applying "drm/vc4: Fix HDMI mode validation" this commit doesn't
+cause any regression:
 
-oscar carter
+Tested-by: Stefan Wahren <stefan.wahren@i2se.com>
+
+Thanks
+
+>
+> Regards,
+> Nicolas
