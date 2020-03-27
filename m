@@ -2,206 +2,188 @@ Return-Path: <SRS0=s8dx=5M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E57DBC43331
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 21:32:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C49FC43331
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 21:32:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF139206F6
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 21:32:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CAD8E2072F
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 21:32:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dT9KaL6H"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727607AbgC0VcH (ORCPT
+        id S1727685AbgC0VcM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Mar 2020 17:32:07 -0400
-Received: from mga06.intel.com ([134.134.136.31]:35606 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727444AbgC0VcH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Mar 2020 17:32:07 -0400
-IronPort-SDR: EOFZqAcXcoAVOMRdw0Wo7qWj+Nk/cbYdDdJYcYLwz1JzweMsxAs1SWkgVl+k6FO2Dcljbe0/NM
- H9W/ei9+TpkA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Mar 2020 14:32:05 -0700
-IronPort-SDR: o4LoLJwhJeVwIXQL+SnXsBgZLRDvhymPzW31HioVBQRmyOuvaSt5yTWT0pOZut9AowFG7gVR0k
- shlr1PNcw94Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,313,1580803200"; 
-   d="scan'208";a="271709012"
-Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
-  by fmsmga004.fm.intel.com with ESMTP; 27 Mar 2020 14:32:05 -0700
-Received: from kbuild by lkp-server01 with local (Exim 4.89)
-        (envelope-from <lkp@intel.com>)
-        id 1jHwaC-0006Y6-Q3; Sat, 28 Mar 2020 05:32:04 +0800
-Date:   Sat, 28 Mar 2020 05:31:01 +0800
-From:   kbuild test robot <lkp@intel.com>
-To:     "Paul E. McKenney" <paulmck@kernel.org>
-Cc:     linux-kernel@vger.kernel.org
-Subject: [rcu:rcu/next] BUILD SUCCESS
- c4ee749cffa9244e2de2066109339bfdc647573b
-Message-ID: <5e7e7095.4GYzUZpEeEL4c4hH%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        Fri, 27 Mar 2020 17:32:12 -0400
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:39740 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727444AbgC0VcL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Mar 2020 17:32:11 -0400
+Received: by mail-ed1-f65.google.com with SMTP id a43so13039902edf.6
+        for <linux-kernel@vger.kernel.org>; Fri, 27 Mar 2020 14:32:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=d/BcDy55M6k3RsToyaQtP26qvola5RUqyCk9DPFq0TY=;
+        b=dT9KaL6H+W6iFJ4UK/UE1Ag6+7J+nTZ56mmSDmdPsBjK2xLeysBUgDFdPJ2GEJmFXF
+         5cZYPpL1/6d5OmpHh+GdgM8MEbTnuRT1F48G20Dkr3ARIWb/nsNTbZbsAbYy2aI1sTEr
+         0+dYI7gMBDdb8M78ERSECrXwZaUue6G9Xbh62yqtCGeu8ZwTxi6vGSNValRRWGxHxPxv
+         S0qJmPHgtVEHQiVnAUWGQK35vMwYrPcHDANLob/6OpglYROKZ8A5CeKTS0HiGRP/0B3B
+         oQAPX4W+xBHCJaVfCpp3+XIH5hncUjOaggfZeSAwfZJWnCVRfI8XpGgXWRK6ooDGzpCR
+         dYmQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=d/BcDy55M6k3RsToyaQtP26qvola5RUqyCk9DPFq0TY=;
+        b=CpDSc1jGvCFofzWzjaIxQ3m6IZmnUMsrtoWlnz48ODM1F6rvp89BKAi/dPmbrRbQ5h
+         1VroPuV1BRgw9C513NJK6bmG5ecIVt/JnNdSA6WOMRD5HOCzL1kSR/guypEqWZpNWur+
+         qtTwW8OYyBL85K722V4YPNuIanLDtdrJUvRWqYKrIHcdybQRC+/dlAYfMYPro8dpa9Kf
+         T1buVXCQjTN638VWJrYSpQUpXXfvnNLs7FBZVSVU/RlMwB/YKJ0A8CB/R594G/1MY6jQ
+         xpN+DhGqtqAgkCb+S/AtM2r66MGXu7m9tnocPFa/Ginb80AEj09DlVEcje80JcfS1hWY
+         HHqQ==
+X-Gm-Message-State: ANhLgQ0RE8n5PgQbB184UGZsX/z1+HeeaQSN+KxJUnJSkSYHRNywEI7t
+        xs4UjTpZybUw8MooeGdghaZK8pzyx/+1KkDBlZ68p/34
+X-Google-Smtp-Source: ADFU+vsJJJGRfxvQ8W0NpLPVRfEQ2EuvR2uA7o9ESLPIjR4d7+tl9r1LSz1bqDCwKkIkPeYq7/CqWEGa7o1yG/sc2XA=
+X-Received: by 2002:a50:9f6e:: with SMTP id b101mr1197996edf.372.1585344727711;
+ Fri, 27 Mar 2020 14:32:07 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+References: <20200327170601.18563-1-kirill.shutemov@linux.intel.com>
+ <20200327170601.18563-5-kirill.shutemov@linux.intel.com> <AD80A72A-8FB7-4F89-A2C9-CDD5C616A479@sent.com>
+In-Reply-To: <AD80A72A-8FB7-4F89-A2C9-CDD5C616A479@sent.com>
+From:   Yang Shi <shy828301@gmail.com>
+Date:   Fri, 27 Mar 2020 14:31:55 -0700
+Message-ID: <CAHbLzkrLxB93xs78xejsBsZ=-b+oqNao6a5Bydi8-6+wpzjKQg@mail.gmail.com>
+Subject: Re: [PATCH 4/7] khugepaged: Allow to callapse a page shared across fork
+To:     Zi Yan <zi.yan@sent.com>
+Cc:     "Kirill A. Shutemov" <kirill@shutemov.name>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Linux MM <linux-mm@kvack.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/paulmck/linux-rcu.git  rcu/next
-branch HEAD: c4ee749cffa9244e2de2066109339bfdc647573b  rcu-tasks: Add IPI failure count to statistics
+On Fri, Mar 27, 2020 at 11:20 AM Zi Yan <zi.yan@sent.com> wrote:
+>
+> On 27 Mar 2020, at 13:05, Kirill A. Shutemov wrote:
+>
+> > The page can be included into collapse as long as it doesn't have extra
+> > pins (from GUP or otherwise).
+> >
+> > Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+> > ---
+> >  mm/khugepaged.c | 28 ++++++++++++++++------------
+> >  1 file changed, 16 insertions(+), 12 deletions(-)
+> >
+> > diff --git a/mm/khugepaged.c b/mm/khugepaged.c
+> > index 39e0994abeb8..b47edfe57f7b 100644
+> > --- a/mm/khugepaged.c
+> > +++ b/mm/khugepaged.c
+> > @@ -581,18 +581,26 @@ static int __collapse_huge_page_isolate(struct vm=
+_area_struct *vma,
+> >               }
+> >
+> >               /*
+> > -              * cannot use mapcount: can't collapse if there's a gup p=
+in.
+> > -              * The page must only be referenced by the scanned proces=
+s
+> > -              * and page swap cache.
+> > +              * Check if the page has any GUP (or other external) pins=
+.
+> > +              *
+> > +              * The page table that maps the page has been already unl=
+inked
+> > +              * from the page table tree and this process cannot get
+> > +              * additinal pin on the page.
+> > +              *
+> > +              * New pins can come later if the page is shared across f=
+ork,
+> > +              * but not for the this process. It is fine. The other pr=
+ocess
+> > +              * cannot write to the page, only trigger CoW.
+> >                */
+> > -             if (page_count(page) !=3D 1 + PageSwapCache(page)) {
+> > +             if (total_mapcount(page) + PageSwapCache(page) !=3D
+> > +                             page_count(page)) {
+>
+> Do you think having a function for this check would be better? Since the =
+check is used three times.
+>
+> >                       /*
+> >                        * Drain pagevec and retry just in case we can ge=
+t rid
+> >                        * of the extra pin, like in swapin case.
+> >                        */
+> >                       lru_add_drain();
+> >               }
+> > -             if (page_count(page) !=3D 1 + PageSwapCache(page)) {
+> > +             if (total_mapcount(page) + PageSwapCache(page) !=3D
+> > +                             page_count(page)) {
+> >                       unlock_page(page);
+> >                       result =3D SCAN_PAGE_COUNT;
+> >                       goto out;
+> > @@ -680,7 +688,6 @@ static void __collapse_huge_page_copy(pte_t *pte, s=
+truct page *page,
+> >               } else {
+> >                       src_page =3D pte_page(pteval);
+> >                       copy_user_highpage(page, src_page, address, vma);
+> > -                     VM_BUG_ON_PAGE(page_mapcount(src_page) !=3D 1, sr=
+c_page);
+>
+> Maybe replace it with this?
+>
+> VM_BUG_ON_PAGE(page_mapcount(src_page) + PageSwapCache(src_page) !=3D pag=
+e_count(src_page), src_page);
 
-elapsed time: 1171m
+I don't think this is correct either. If a THP is PTE mapped its
+refcount would be bumped by the number of PTE mapped subpages. But
+page_mapcount() would just return the mapcount of that specific
+subpage. So, total_mapcount() should be used, but the same check has
+been done before reaching here.
 
-configs tested: 139
-configs skipped: 0
-
-The following configs have been built successfully.
-More configs may be tested in the coming days.
-
-arm64                            allyesconfig
-arm                              allyesconfig
-arm64                             allnoconfig
-arm                               allnoconfig
-arm                         at91_dt_defconfig
-arm                           efm32_defconfig
-arm                          exynos_defconfig
-arm                        multi_v5_defconfig
-arm                        multi_v7_defconfig
-arm                        shmobile_defconfig
-arm                           sunxi_defconfig
-arm64                               defconfig
-nios2                         10m50_defconfig
-sparc64                           allnoconfig
-i386                             allyesconfig
-microblaze                    nommu_defconfig
-powerpc                       ppc64_defconfig
-sparc                            allyesconfig
-um                                  defconfig
-riscv                    nommu_virt_defconfig
-sh                  sh7785lcr_32bit_defconfig
-i386                              allnoconfig
-i386                             alldefconfig
-i386                                defconfig
-ia64                             allmodconfig
-ia64                                defconfig
-ia64                              allnoconfig
-ia64                             allyesconfig
-ia64                             alldefconfig
-arm64                            allmodconfig
-arm                              allmodconfig
-c6x                              allyesconfig
-c6x                        evmc6678_defconfig
-nios2                         3c120_defconfig
-openrisc                    or1ksim_defconfig
-openrisc                 simple_smp_defconfig
-xtensa                       common_defconfig
-xtensa                          iss_defconfig
-nds32                               defconfig
-nds32                             allnoconfig
-csky                                defconfig
-alpha                               defconfig
-h8300                       h8s-sim_defconfig
-h8300                     edosk2674_defconfig
-m68k                       m5475evb_defconfig
-m68k                             allmodconfig
-h8300                    h8300h-sim_defconfig
-m68k                           sun3_defconfig
-m68k                          multi_defconfig
-arc                                 defconfig
-arc                              allyesconfig
-powerpc                             defconfig
-powerpc                          rhel-kconfig
-microblaze                      mmu_defconfig
-powerpc                           allnoconfig
-mips                           32r2_defconfig
-mips                         64r6el_defconfig
-mips                             allmodconfig
-mips                              allnoconfig
-mips                             allyesconfig
-mips                      fuloong2e_defconfig
-mips                      malta_kvm_defconfig
-parisc                            allnoconfig
-parisc                           allyesconfig
-parisc                generic-32bit_defconfig
-parisc                generic-64bit_defconfig
-x86_64               randconfig-a001-20200326
-x86_64               randconfig-a002-20200326
-x86_64               randconfig-a003-20200326
-i386                 randconfig-a001-20200326
-i386                 randconfig-a002-20200326
-i386                 randconfig-a003-20200326
-alpha                randconfig-a001-20200327
-m68k                 randconfig-a001-20200327
-mips                 randconfig-a001-20200327
-nds32                randconfig-a001-20200327
-parisc               randconfig-a001-20200327
-mips                 randconfig-a001-20200326
-nds32                randconfig-a001-20200326
-m68k                 randconfig-a001-20200326
-parisc               randconfig-a001-20200326
-alpha                randconfig-a001-20200326
-riscv                randconfig-a001-20200326
-c6x                  randconfig-a001-20200326
-h8300                randconfig-a001-20200326
-microblaze           randconfig-a001-20200326
-nios2                randconfig-a001-20200326
-sparc64              randconfig-a001-20200326
-csky                 randconfig-a001-20200326
-openrisc             randconfig-a001-20200326
-s390                 randconfig-a001-20200326
-xtensa               randconfig-a001-20200326
-sh                   randconfig-a001-20200326
-x86_64               randconfig-e001-20200326
-x86_64               randconfig-e002-20200326
-x86_64               randconfig-e003-20200326
-i386                 randconfig-e001-20200326
-i386                 randconfig-e002-20200326
-i386                 randconfig-e003-20200326
-x86_64               randconfig-h001-20200327
-x86_64               randconfig-h002-20200327
-x86_64               randconfig-h003-20200327
-i386                 randconfig-h001-20200327
-i386                 randconfig-h002-20200327
-i386                 randconfig-h003-20200327
-arc                  randconfig-a001-20200326
-arm                  randconfig-a001-20200326
-arm64                randconfig-a001-20200326
-ia64                 randconfig-a001-20200326
-powerpc              randconfig-a001-20200326
-sparc                randconfig-a001-20200326
-riscv                            allmodconfig
-riscv                             allnoconfig
-riscv                            allyesconfig
-riscv                               defconfig
-riscv                          rv32_defconfig
-s390                             alldefconfig
-s390                             allmodconfig
-s390                              allnoconfig
-s390                             allyesconfig
-s390                          debug_defconfig
-s390                                defconfig
-s390                       zfcpdump_defconfig
-sh                          rsk7269_defconfig
-sh                               allmodconfig
-sh                            titan_defconfig
-sh                                allnoconfig
-sparc                               defconfig
-sparc64                          allmodconfig
-sparc64                          allyesconfig
-sparc64                             defconfig
-um                           x86_64_defconfig
-um                             i386_defconfig
-x86_64                              fedora-25
-x86_64                                  kexec
-x86_64                                    lkp
-x86_64                                   rhel
-x86_64                         rhel-7.2-clear
-x86_64                               rhel-7.6
-
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+>
+>
+> >                       release_pte_page(src_page);
+> >                       /*
+> >                        * ptl mostly unnecessary, but preempt has to
+> > @@ -1209,12 +1216,9 @@ static int khugepaged_scan_pmd(struct mm_struct =
+*mm,
+> >                       goto out_unmap;
+> >               }
+> >
+> > -             /*
+> > -              * cannot use mapcount: can't collapse if there's a gup p=
+in.
+> > -              * The page must only be referenced by the scanned proces=
+s
+> > -              * and page swap cache.
+> > -              */
+> > -             if (page_count(page) !=3D 1 + PageSwapCache(page)) {
+> > +             /* Check if the page has any GUP (or other external) pins=
+ */
+> > +             if (total_mapcount(page) + PageSwapCache(page) !=3D
+> > +                             page_count(page)) {
+> >                       result =3D SCAN_PAGE_COUNT;
+> >                       goto out_unmap;
+> >               }
+> > --
+> > 2.26.0
+>
+> Thanks.
+>
+> =E2=80=94
+> Best Regards,
+> Yan Zi
