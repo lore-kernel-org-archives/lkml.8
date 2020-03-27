@@ -2,108 +2,105 @@ Return-Path: <SRS0=s8dx=5M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16689C43331
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 02:42:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 285DAC43331
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 02:45:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E71ED20714
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 02:42:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC0132074D
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 02:45:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KFoLGWdJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727794AbgC0Cmc (ORCPT
+        id S1727717AbgC0CpF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 22:42:32 -0400
-Received: from zeniv.linux.org.uk ([195.92.253.2]:48240 "EHLO
-        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726363AbgC0Cmb (ORCPT
+        Thu, 26 Mar 2020 22:45:05 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:43326 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726363AbgC0CpE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 22:42:31 -0400
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jHex1-003hql-9z; Fri, 27 Mar 2020 02:42:27 +0000
-Date:   Fri, 27 Mar 2020 02:42:27 +0000
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [RFC][PATCH 5/7] x86: convert arch_futex_atomic_op_inuser() to
- user_access_begin/user_access_end()
-Message-ID: <20200327024227.GT23230@ZenIV.linux.org.uk>
-References: <20200323185057.GE23230@ZenIV.linux.org.uk>
- <20200323185127.252501-1-viro@ZenIV.linux.org.uk>
- <20200323185127.252501-5-viro@ZenIV.linux.org.uk>
- <CAHk-=wgMmmnQTFT7U9+q2BsyV6Ge+LAnnhPmv0SUtFBV1D4tVw@mail.gmail.com>
- <20200324020846.GG23230@ZenIV.linux.org.uk>
- <CAHk-=whTwaUZZ5Aj_Viapf2tdvcd65WdM4jjXJ3tdOTDmgkW0g@mail.gmail.com>
- <20200324204246.GH23230@ZenIV.linux.org.uk>
- <CAHk-=whnTRF5yA2MrPGcmMm=hXaGHfC2HEDtNzA=_1=szhJ4-w@mail.gmail.com>
+        Thu, 26 Mar 2020 22:45:04 -0400
+Received: by mail-pf1-f193.google.com with SMTP id f206so3782133pfa.10
+        for <linux-kernel@vger.kernel.org>; Thu, 26 Mar 2020 19:45:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=LAMb+jlGrdkLX6VOk3N/mFLnqMd6XkoSxNzF6Ai8PSQ=;
+        b=KFoLGWdJUk50xliH1dInPtU9IE8SXuW1ZUBrxy4d76EkLW0+SASrewTXqamugdhOTY
+         hb2YJN9pxDWNiHKPWXi8VEwLT46Jfn30xe8HBO80vvfTtEcKXvaHSWRaZU1PKkDgyBDx
+         t6zoDQRAuLD9qL400X3C9D+zTP8vgees8ab4VS6udvGE6PyTszZnhqDv8guZG13rZR7R
+         rVfU2cHkyGaBqwvqZdrz5PLok/28u2YTfC7vmAO1VZnCl7jdcQyMt7G8bV95wG0Dtkpe
+         ZTal2e3oAmL+1AZCT8LwrYVu5rwpWqlgA6uR7fUkOoB0coJO9HNlJM5RT+/pvA/s+7Vf
+         3UkQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=LAMb+jlGrdkLX6VOk3N/mFLnqMd6XkoSxNzF6Ai8PSQ=;
+        b=AVDEMb9ZoDR2WPuS6gWqh1WNJYPPTIbeJPjKDO4/R77VoB6R8Xbo8g5knYXGkBa1ib
+         P/N94+gbZHddYD/hYrHTtO9svN5EDkda5pPbfS17vIvv4tiSQQ6syTIhesxuvesEmmpC
+         m87Qfay7AyVZI09FSsBxQ+uqiN9I9u4lGpYaOJTyo8+08JqSlxieFc8IAOGySnQ9fSpl
+         kw3049lgiqie6brwCSI9OYtccWSMF/m97uEhvn1llaIn22mkwNYql+zBkqnDk3a29z7D
+         JEUiYFEi4ZhIkPm7Q4UWd4cPjdHh+6uap/a0WanO94AhtsPzm3N34ZLIVUELAWpxdgGV
+         ss+A==
+X-Gm-Message-State: ANhLgQ0Ku6kMGlHZ1IA6CJvRVPyOwoizKjKl6q+q6aRQYJaB17bJ9jk7
+        sik1Ju3LvRm3kkRw/ZYXpfM=
+X-Google-Smtp-Source: ADFU+vutCaKHR/azZNcj5vfWMrb+ncvddMxVqa+gyoM/pAazfDJDMMhGKxL+SEZhn3VDXbITC6tOTQ==
+X-Received: by 2002:a63:574c:: with SMTP id h12mr12080935pgm.424.1585277103315;
+        Thu, 26 Mar 2020 19:45:03 -0700 (PDT)
+Received: from localhost ([2401:fa00:8f:203:5bbb:c872:f2b1:f53b])
+        by smtp.gmail.com with ESMTPSA id v5sm2810584pfn.105.2020.03.26.19.45.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 26 Mar 2020 19:45:02 -0700 (PDT)
+Date:   Fri, 27 Mar 2020 11:45:00 +0900
+From:   Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
+To:     Jann Horn <jannh@google.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Petr Mladek <pmladek@suse.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        linux-kernel@vger.kernel.org, Dennis Zhou <dennis@kernel.org>,
+        Tejun Heo <tj@kernel.org>, Christoph Lameter <cl@linux.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Frederic Weisbecker <frederic@kernel.org>
+Subject: Re: [PATCH 0/2] Make printk_deferred() work properly before percpu
+ setup is done
+Message-ID: <20200327024500.GA211096@google.com>
+References: <20200326163245.119670-1-jannh@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAHk-=whnTRF5yA2MrPGcmMm=hXaGHfC2HEDtNzA=_1=szhJ4-w@mail.gmail.com>
+In-Reply-To: <20200326163245.119670-1-jannh@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 24, 2020 at 01:57:19PM -0700, Linus Torvalds wrote:
-> On Tue, Mar 24, 2020 at 1:45 PM Al Viro <viro@zeniv.linux.org.uk> wrote:
-> >
-> > OK...  BTW, I'd been trying to recall the reasons for the way
-> > __futex_atomic_op2() loop is done; ISTR some discussion along
-> > the lines of cacheline ping-pong prevention, but I'd been unable
-> > to reconstruct enough details to find it and I'm not sure it
-> > hadn't been about some other code ;-/
+On (20/03/26 17:32), Jann Horn wrote:
+> While I was doing some development work, I noticed that if you call
+> printk_deferred() before percpu setup has finished, stuff breaks, and
+> e.g. "dmesg -w" fails to print new messages.
 > 
-> No, that doesn't look like any cacheline advantage I can think of -
-> quite the reverse.
+> This happens because writing to percpu memory before percpu
+> initialization is done causes the modified percpu memory to be
+> propagated from the boot CPU to all the secondary CPUs; and both the
+> printk code as well as the irq_work implementation use percpu memory.
 > 
-> I suspect it's just lazy code, with the reload being unnecessary. Or
-> it might be written that way because you avoid an extra variable.
-> 
-> In fact, from a cacheline optimization standpoint, there are
-> advantages to not doing the load even on the initial run: if you know
-> a certain value is particularly likely, there are advantages to just
-> _assuming_ that value, rather than loading it. So no initial load at
-> all, and just initialize the first value to the likely case.
-> 
-> That can avoid an unnecessary "load for shared ownership" cacheline
-> state transition (since the cmpxchg will want to turn it into an
-> exclusive modified cacheline anyway).
-> 
-> But I don't think that optimization is likely the case here, and
-> you're right, the loop would be better written with the initial load
-> outside the loop.
+> I think that printk_deferred() ought to work even before percpu
+> initialization, since it is used by things like pr_warn_ratelimited()
+> and the unwinder infrastructure. I'm not entirely sure though whether
+> this is the best way to implement that, or whether it would be better to
+> let printk_deferred() do something different if it is called during
+> early boot.
 
-OK, updated branch is in the same place; changes: __futex_atomic_op{1,2}
-turned into unsafe_atomic_op{1,2}, with "goto on error" folded into those.
-And pointless reload removed from cmpxchg loop in unsafe_atomic_op2().
-Diffstat:
- arch/alpha/include/asm/futex.h      |  5 +-
- arch/arc/include/asm/futex.h        |  5 +-
- arch/arm/include/asm/futex.h        |  5 +-
- arch/arm64/include/asm/futex.h      |  5 +-
- arch/hexagon/include/asm/futex.h    |  5 +-
- arch/ia64/include/asm/futex.h       |  5 +-
- arch/microblaze/include/asm/futex.h |  5 +-
- arch/mips/include/asm/futex.h       |  5 +-
- arch/nds32/include/asm/futex.h      |  6 +--
- arch/openrisc/include/asm/futex.h   |  5 +-
- arch/parisc/include/asm/futex.h     |  2 -
- arch/powerpc/include/asm/futex.h    |  5 +-
- arch/riscv/include/asm/futex.h      |  5 +-
- arch/s390/include/asm/futex.h       |  2 -
- arch/sh/include/asm/futex.h         |  4 --
- arch/sparc/include/asm/futex_64.h   |  4 --
- arch/x86/include/asm/futex.h        | 97 ++++++++++++++++++++++++-------------
- arch/x86/include/asm/uaccess.h      | 93 -----------------------------------
- arch/xtensa/include/asm/futex.h     |  5 +-
- include/asm-generic/futex.h         |  2 -
- kernel/futex.c                      |  5 +-
- tools/objtool/check.c               |  1 +
- 22 files changed, 93 insertions(+), 183 deletions(-)
+Hi Jann,
 
-Sorry about the fuckup when sending that patchset ;-/  It ended up cc'd to
-x86 list instead of the futex one; Message-Id of the beginning of the
-thread is <20200327022836.881203-1-viro@ZenIV.linux.org.uk>.
+I believe we have a patch for this issue
+
+https://lore.kernel.org/lkml/20200303113002.63089-1-sergey.senozhatsky@gmail.com/
+
+	-ss
