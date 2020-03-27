@@ -2,173 +2,252 @@ Return-Path: <SRS0=s8dx=5M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3829C2D0E5
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 21:50:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29712C2D0E8
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 21:52:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A8AB4206DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 21:50:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E952B206DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 21:52:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pdZXvd9S"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="E0pjgTC2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727867AbgC0VuP (ORCPT
+        id S1727702AbgC0VwD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Mar 2020 17:50:15 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:35399 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727548AbgC0VuP (ORCPT
+        Fri, 27 Mar 2020 17:52:03 -0400
+Received: from mail-pj1-f67.google.com ([209.85.216.67]:35414 "EHLO
+        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727473AbgC0VwC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Mar 2020 17:50:15 -0400
-Received: by mail-wm1-f65.google.com with SMTP id f74so3172438wmf.0;
-        Fri, 27 Mar 2020 14:50:14 -0700 (PDT)
+        Fri, 27 Mar 2020 17:52:02 -0400
+Received: by mail-pj1-f67.google.com with SMTP id g9so4307852pjp.0
+        for <linux-kernel@vger.kernel.org>; Fri, 27 Mar 2020 14:52:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=UPYvtOj75J2/EwYyRdsACxnYCpxt8+KWK2M/XYoASio=;
-        b=pdZXvd9Su0kL4ajBpbQhIkICRXk2LvR6We+EPwTHlA28wJaFShzFPgUbQyfbIvQYzS
-         qCb2jxZWlZtGMMB3i0soOBxEFuDWb5OOmYFnzDsUdohbwTn78iISXAdr1A3RR2TZyIA9
-         6sQXZhxryqyw/L1N0zaEiV4vTw3auzSzz/W4Y7T62olfteXivjxc24cBLIRiFW3e59tc
-         nJ88HMCApPVEI103oSLypkeNgbqgajMKdi5VBM0GM50k7Z80YAtNVZYzDg8s1zHxQokt
-         a7Via6LDcTS7TX2h9m2eJe+ZSFgE4aAMInaO7jb6oU23HjKwVQkFvxVy6+caePWjWE8r
-         zoxw==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=gBPuJeY3dLf2RT1lf5uBkQiOCkTAmK3v0hMLV6g8WYA=;
+        b=E0pjgTC2wT8HGZZlEvw4wgVqJIyXjr7lYLeWPRIQfrZQyMl8GEdivYCcSRz8/C+QAT
+         BgWvF5fu+sJbxmM4K6cytpRAdvFPcashiS1qVq/hx1Au/iPzeakm8aARpEsY32O5TMOw
+         R4pK4aXghLdOrcHJ2yV1N9WpeITG5Q9sUKq6PwvlK8ESfvnxexT1L/poHbJTPWAld8wy
+         1Y5mh9+EG2HTW21iK2HZodTCV9rVn5B+dyW/fOo+pLyLXmfsKI6f2BytouT3pmeIwH3o
+         cOOdgOURm/kyhs6kcbEjR+dtp6ZxkU/Vyyj5LzZ/GLrj/+Q17wLL+V5W+lPYXZniL1Qc
+         J9DQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=UPYvtOj75J2/EwYyRdsACxnYCpxt8+KWK2M/XYoASio=;
-        b=ilAKCsV6fL3V1JbOYYZ3Dy4c8ywmX+BlYPZfMFYLDveJrpayr9b97numhWPMr2EawY
-         dVmZpyV5H0bvGDwQj2JKZycU0q8uLKrdinNSEcJ9VD9pWsA8sJDA4vpOVpCeV1iGUBJp
-         qyLJj1+RUqUoWffnJciohJHO57OGC2wbScFu7mITDK6YsTp0qLVW1nwDFYrinOiQN2uU
-         tVWAkPHeY+QnwrutDq3lfR9TVKmFs3GEolRaPG2qvHwLMb5YZ1LWT7NmMKHwG3Rc82xT
-         btuWlQGPvNuCKaM1jZwmj8OqLbxKtH2ddb7h750ksejb9ywImaYCKccHzRKkzguMd+Q1
-         Kwrw==
-X-Gm-Message-State: ANhLgQ2go0q9UYo2tmCC6mhoYVeFMC9+IXDiiSQ4AoSWI7fS/Q++68QP
-        KkNThrLs8wo3eRvkFrxkEei1f7UxF74=
-X-Google-Smtp-Source: ADFU+vvVtGIYGBhSlwePa09L/Ha1FQ2QJKkWLyhkmtaIy0xTyRFUFl97hefC/dNNhN9s8W0M89esSw==
-X-Received: by 2002:a1c:56d5:: with SMTP id k204mr869388wmb.13.1585345812891;
-        Fri, 27 Mar 2020 14:50:12 -0700 (PDT)
-Received: from [192.168.0.104] (p5B3F7536.dip0.t-ipconnect.de. [91.63.117.54])
-        by smtp.gmail.com with ESMTPSA id a2sm10228275wrp.13.2020.03.27.14.50.11
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 27 Mar 2020 14:50:11 -0700 (PDT)
-Subject: Re: [PATCH v4 1/5] dt-bindings: mfd: add document bindings for mp2629
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     robh+dt@kernel.org, jic23@kernel.org, knaack.h@gmx.de,
-        lars@metafoo.de, pmeerw@pmeerw.net, sre@kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-iio@vger.kernel.org, linux-pm@vger.kernel.org
-References: <20200322224626.13160-1-sravanhome@gmail.com>
- <20200322224626.13160-2-sravanhome@gmail.com> <20200327080013.GG603801@dell>
-From:   saravanan sekar <sravanhome@gmail.com>
-Message-ID: <d449b567-bd5c-168d-83af-5ba38771f75a@gmail.com>
-Date:   Fri, 27 Mar 2020 22:50:10 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=gBPuJeY3dLf2RT1lf5uBkQiOCkTAmK3v0hMLV6g8WYA=;
+        b=kdrp26LZVN+QkfD0RxnEsEWCCenWvA+4eJ9imSL+xmc+fRe7f5wL/b+Tu7RzP0ctDo
+         NzWCzmI1UbJZ3+mJnX65U+Kgc099XJNdW9gJVeC1UG6UDAgl/GnJWWQKWXa07nKKlYNq
+         20DNvtn3/llYNXxfwYQBfwYbhlhRkQ0hMT5dHqp1pSSzKYwjHa73rP9uSsf1VGbF1g5Z
+         mgUimyOHnb9vMqGbuuOMm34lO2Z1WZxIS4GEzJEHFUy6X0ojvzNZkz+8hkqaJvUSGMc3
+         AsD3Jhw0RvmPeanusCAMwzQRiJB2lw4z1a4ca+xbw3J/olRoB/TdW5ry4kKB2mH4k9z5
+         7x4g==
+X-Gm-Message-State: ANhLgQ2ujatWbkw1TJ6B8JC+cidJl8DmbiVZSioudkmrk++KztPAzf88
+        YdTTYkU/zUMce/g94HFTpikUuQ==
+X-Google-Smtp-Source: ADFU+vu4f8JEOmDCYOkH4DfavtNwX5cxyzPgeeL/wA/5Pkm6OiDvDjlanl0ORciaVKINpvfp7+47XQ==
+X-Received: by 2002:a17:902:8348:: with SMTP id z8mr995022pln.342.1585345919178;
+        Fri, 27 Mar 2020 14:51:59 -0700 (PDT)
+Received: from minitux (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id k17sm4803173pfp.194.2020.03.27.14.51.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 27 Mar 2020 14:51:58 -0700 (PDT)
+Date:   Fri, 27 Mar 2020 14:51:56 -0700
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     ansuelsmth@gmail.com
+Cc:     'Andy Gross' <agross@kernel.org>,
+        'Ajay Kishore' <akisho@codeaurora.org>,
+        'Linus Walleij' <linus.walleij@linaro.org>,
+        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: R: [PATCH v2] pinctrl: qcom: use scm_call to route GPIO irq to
+ Apps
+Message-ID: <20200327215156.GB211617@minitux>
+References: <20200326173524.15236-1-ansuelsmth@gmail.com>
+ <20200327201340.GA211617@minitux>
+ <048701d6047a$8752f390$95f8dab0$@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200327080013.GG603801@dell>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <048701d6047a$8752f390$95f8dab0$@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Lee,
+On Fri 27 Mar 13:58 PDT 2020, ansuelsmth@gmail.com wrote:
 
-On 27/03/20 9:00 am, Lee Jones wrote:
-> On Sun, 22 Mar 2020, Saravanan Sekar wrote:
->
->> Add device tree binding information for mp2629 mfd driver.
->>
->> Signed-off-by: Saravanan Sekar <sravanhome@gmail.com>
->> ---
->>   .../devicetree/bindings/mfd/mps,mp2629.yaml   | 60 +++++++++++++++++++
->>   1 file changed, 60 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/mfd/mps,mp2629.yaml
->>
->> diff --git a/Documentation/devicetree/bindings/mfd/mps,mp2629.yaml b/Documentation/devicetree/bindings/mfd/mps,mp2629.yaml
->> new file mode 100644
->> index 000000000000..314309ea91ac
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/mfd/mps,mp2629.yaml
->> @@ -0,0 +1,60 @@
->> +# SPDX-License-Identifier: GPL-2.0
->> +%YAML 1.2
->> +---
->> +$id: http://devicetree.org/schemas/mfd/mps,mp2629.yaml#
->> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> Are these links supposed to work?
-Not really, but as far my understanding needed for dt-bindings check
->> +title: MP2629 Battery Charger PMIC from Monolithic Power System.
->> +
->> +maintainers:
->> +  - Saravanan Sekar <sravanhome@gmail.com>
->> +
->> +description: |
->> +  MP2629 is an PMIC providing battery charging and power supply for smartphones,
-> s/an/a/
->
->> +  wireless camera and portable devices. Chip is contrlled over I2C.
-> Spell check!
->
->> +  The MFD device handles battery charger controller and ADC IIO device for
->> +  battery, system voltage
-> MFD isn't a thing.  We made it up.  Please describe it as it is in the datasheet.
->
->> +properties:
->> +  compatible:
->> +    const: mps,mp2629
->> +
->> +  reg:
->> +    maxItems: 1
->> +
->> +  interrupts:
->> +    maxItems: 1
->> +
->> +  interrupt-controller: true
->> +
->> +  "#interrupt-cells":
->> +    const: 2
->> +    description:
->> +      The first cell is the IRQ number, the second cell is the trigger type.
->> +
->> +required:
->> +  - compatible
->> +  - reg
->> +  - interrupts
->> +  - interrupt-controller
->> +  - "#interrupt-cells"
->> +
->> +examples:
->> +  - |
->> +    #include <dt-bindings/interrupt-controller/irq.h>
->> +    #include <dt-bindings/input/linux-event-codes.h>
->> +    i2c {
-> i2c@0x????????
+> > On Thu 26 Mar 10:35 PDT 2020, Ansuel Smith wrote:
+> > 
+> > > From: Ajay Kishore <akisho@codeaurora.org>
+> > >
+> > > For IPQ806x targets, TZ protects the registers that are used to
+> > > configure the routing of interrupts to a target processor.
+> > > To resolve this, this patch uses scm call to route GPIO interrupts
+> > > to application processor. Also the scm call interface is changed.
+> > >
+> > > Signed-off-by: Ajay Kishore <akisho@codeaurora.org>
+> > > Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
+> > 
+> > Thanks for respinning this Ansuel, just some minor things below.
+> > 
+> > > ---
+> > > v2:
+> > > * Move static varibale in msm_pinctrl struct
+> > > * Revert '4b024225c4a8 ("pinctrl: use
+> > devm_platform_ioremap_resource() to simplify code")'
+> > >   to get base_reg addr
+> > >
+> > >  drivers/pinctrl/qcom/pinctrl-msm.c | 37
+> > ++++++++++++++++++++++++++----
+> > >  1 file changed, 32 insertions(+), 5 deletions(-)
+> > >
+> > > diff --git a/drivers/pinctrl/qcom/pinctrl-msm.c
+> > b/drivers/pinctrl/qcom/pinctrl-msm.c
+> > > index 9a8daa256a32..9627ebd41ff9 100644
+> > > --- a/drivers/pinctrl/qcom/pinctrl-msm.c
+> > > +++ b/drivers/pinctrl/qcom/pinctrl-msm.c
+> > > @@ -22,6 +22,8 @@
+> > >  #include <linux/reboot.h>
+> > >  #include <linux/pm.h>
+> > >  #include <linux/log2.h>
+> > > +#include <linux/qcom_scm.h>
+> > > +#include <linux/io.h>
+> > >
+> > >  #include <linux/soc/qcom/irq.h>
+> > >
+> > > @@ -60,6 +62,9 @@ struct msm_pinctrl {
+> > >  	struct irq_chip irq_chip;
+> > >  	int irq;
+> > >
+> > > +	int route_to_apps;
+> > 
+> > We "always" route our interrupts to apps, so please rename this to
+> > intr_target_use_scm. And using "bool" instead would make it clear that
+> > this is a binary flag.
+> > 
+> 
+> Will fix in v3
+> 
+> > > +	u32 base_reg;
+> > 
+> > Even though I think it's fine that you only fill in the first entry,
+> > please make this phys_base[MAX_NR_GPIO]; next to regs.
+> > 
+> 
+> If I understand correctly, I should replace base_reg with 
+> phys_base[MAX_NR_GPIO]
+> I think we should use MAX_NR_TILES instead of MAX_NR_GPIO
 
-Its a I2C controller node, I don't think address is needed. Mention like 
-this my previous other driver patches,
+Yes of course, didn't pay attention to my autocomplete!
 
-dt_binding_check is also passed
+> Wouldn't this be a waste of memory since only the base_reg will be
+> needed?  I don't think there will be a soc with multiple tiles and the
+> need to add code in the loop function. (Also sorry for off-topic...
+> since we have soc_data->ntiles why don't we use kmem allocation
+> instead of statically use half empty array?)
+> 
 
->> +        #address-cells = <1>;
->> +        #size-cells = <0>;
->> +
->> +        pmic@4b {
->> +            compatible = "mps,mp2629";
->> +            reg = <0x4b>;
->> +
->> +            interrupt-controller;
->> +            interrupt-parent = <&gpio2>;
->> +            #interrupt-cells = <2>;
->> +            interrupts = <3 IRQ_TYPE_LEVEL_HIGH>;
->> +        };
->> +    };
+While I hope you're right, I think it looks better if it mimics the
+overall design - at the expense of wasting 12 bytes.
+
+> > > +
+> > >  	raw_spinlock_t lock;
+> > >
+> > >  	DECLARE_BITMAP(dual_edge_irqs, MAX_NR_GPIO);
+> > > @@ -883,10 +888,27 @@ static int msm_gpio_irq_set_type(struct
+> > irq_data *d, unsigned int type)
+> > >  		clear_bit(d->hwirq, pctrl->dual_edge_irqs);
+> > >
+> > >  	/* Route interrupts to application cpu */
+> > > -	val = msm_readl_intr_target(pctrl, g);
+> > > -	val &= ~(7 << g->intr_target_bit);
+> > > -	val |= g->intr_target_kpss_val << g->intr_target_bit;
+> > > -	msm_writel_intr_target(val, pctrl, g);
+> > > +	if (pctrl->route_to_apps && pctrl->base_reg) {
+> > 
+> > I meant that you could fill out "base_reg" only if it's supposed to be
+> > used, but looking at your patch I think it's nicer to have a separate
+> > flag - so you can omit the check for base_reg != NULL here.
+> > 
+> 
+> Since we return error if devm_ioremap_resource fails, it is good to only
+> check 
+> the route_to_apps as base_reg will be set for sure?
+> 
+
+Right.
+
+My initial suggestion was that base != NULL would have the meaning of
+intr_target_use_scm. But what I meant here is that after looking at your
+patch I think one flag and a separate base is better.
+
+Thanks,
+Bjorn
+
+> > > +		u32 addr = pctrl->base_reg + g->intr_target_reg;
+> > > +		int ret;
+> > > +
+> > > +		qcom_scm_io_readl(addr, &val);
+> > > +
+> > > +		val &= ~(7 << g->intr_target_bit);
+> > > +		val |= g->intr_target_kpss_val << g->intr_target_bit;
+> > > +
+> > > +		ret = qcom_scm_io_writel(addr, val);
+> > > +		if (ret)
+> > > +			dev_err(pctrl->dev,
+> > > +				"Failed routing %lu interrupt to Apps proc",
+> > > +				d->hwirq);
+> > > +		}
+> > > +	} else {
+> > > +		val = msm_readl_intr_target(pctrl, g);
+> > > +		val &= ~(7 << g->intr_target_bit);
+> > > +		val |= g->intr_target_kpss_val << g->intr_target_bit;
+> > > +		msm_writel_intr_target(val, pctrl, g);
+> > > +	}
+> > >
+> > >  	/* Update configuration for gpio.
+> > >  	 * RAW_STATUS_EN is left on for all gpio irqs. Due to the
+> > > @@ -1241,6 +1263,8 @@ int msm_pinctrl_probe(struct platform_device
+> > *pdev,
+> > >  	pctrl->dev = &pdev->dev;
+> > >  	pctrl->soc = soc_data;
+> > >  	pctrl->chip = msm_gpio_template;
+> > > +	pctrl->route_to_apps = of_device_is_compatible(pctrl->dev-
+> > >of_node,
+> > > +					"qcom,ipq8064-pinctrl");
+> > >
+> > >  	raw_spin_lock_init(&pctrl->lock);
+> > >
+> > > @@ -1253,9 +1277,12 @@ int msm_pinctrl_probe(struct
+> > platform_device *pdev,
+> > >  				return PTR_ERR(pctrl->regs[i]);
+> > >  		}
+> > >  	} else {
+> > > -		pctrl->regs[0] = devm_platform_ioremap_resource(pdev, 0);
+> > > +		res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> > > +		pctrl->regs[0] = devm_ioremap_resource(&pdev->dev, res);
+> > >  		if (IS_ERR(pctrl->regs[0]))
+> > >  			return PTR_ERR(pctrl->regs[0]);
+> > > +		else
+> > 
+> > No need for the else, as the "positive" case is a return.
+> > 
+> 
+> Will fix in v3
+> 
+> > Thank you,
+> > Bjorn
+> > 
+> > > +			pctrl->base_reg = res->start;
+> > >  	}
+> > >
+> > >  	msm_pinctrl_setup_pm_reset(pctrl);
+> > > --
+> > > 2.25.1
+> > >
+> 
