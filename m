@@ -2,216 +2,164 @@ Return-Path: <SRS0=s8dx=5M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0757BC2D0F2
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 01:40:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77A6FC2D0EC
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 01:46:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DF0B920774
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 01:40:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 58F4C20787
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 01:46:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727829AbgC0Bkp (ORCPT
+        id S1727740AbgC0BqV convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 21:40:45 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:44604 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727696AbgC0Bkp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 21:40:45 -0400
-Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 17BCC57FBF18DDAE6883;
-        Fri, 27 Mar 2020 09:40:40 +0800 (CST)
-Received: from DESKTOP-27KDQMV.china.huawei.com (10.173.228.124) by
- DGGEMS407-HUB.china.huawei.com (10.3.19.207) with Microsoft SMTP Server id
- 14.3.487.0; Fri, 27 Mar 2020 09:40:30 +0800
-From:   "Longpeng(Mike)" <longpeng2@huawei.com>
-To:     <linux-kernel@vger.kernel.org>, <linux-mm@kvack.org>
-CC:     <kvm@vger.kernel.org>, <arei.gonglei@huawei.com>,
-        <weidong.huang@huawei.com>, <weifuqiang@huawei.com>,
-        <kirill.shutemov@linux.intel.com>, Longpeng <longpeng2@huawei.com>,
-        "Mike Kravetz" <mike.kravetz@oracle.com>,
+        Thu, 26 Mar 2020 21:46:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49032 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727122AbgC0BqV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Mar 2020 21:46:21 -0400
+Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 212C62070A;
+        Fri, 27 Mar 2020 01:46:19 +0000 (UTC)
+Date:   Thu, 26 Mar 2020 21:46:17 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     David Laight <David.Laight@ACULAB.COM>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Matthew Wilcox <willy@infradead.org>,
-        "Sean Christopherson" <sean.j.christopherson@intel.com>,
-        <stable@vger.kernel.org>
-Subject: [PATCH v3] mm/hugetlb: fix a addressing exception caused by huge_pte_offset
-Date:   Fri, 27 Mar 2020 09:40:07 +0800
-Message-ID: <20200327014007.1915-1-longpeng2@huawei.com>
-X-Mailer: git-send-email 2.25.0.windows.1
+        Peter Zijlstra <peterz@infradead.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+        Peter Wu <peter@lekensteyn.nl>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Tom Zanussi <zanussi@kernel.org>,
+        Shuah Khan <shuahkhan@gmail.com>, bpf <bpf@vger.kernel.org>
+Subject: Re: [PATCH 00/12 v2] ring-buffer/tracing: Remove disabling of ring
+ buffer while reading trace file
+Message-ID: <20200326214617.697634f3@oasis.local.home>
+In-Reply-To: <2a7f96545945457cade216aa3c736bcc@AcuMS.aculab.com>
+References: <20200319232219.446480829@goodmis.org>
+        <2a7f96545945457cade216aa3c736bcc@AcuMS.aculab.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.173.228.124]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Longpeng <longpeng2@huawei.com>
+On Sat, 21 Mar 2020 19:13:51 +0000
+David Laight <David.Laight@ACULAB.COM> wrote:
 
-Our machine encountered a panic(addressing exception) after run
-for a long time and the calltrace is:
-RIP: 0010:[<ffffffff9dff0587>]  [<ffffffff9dff0587>] hugetlb_fault+0x307/0xbe0
-RSP: 0018:ffff9567fc27f808  EFLAGS: 00010286
-RAX: e800c03ff1258d48 RBX: ffffd3bb003b69c0 RCX: e800c03ff1258d48
-RDX: 17ff3fc00eda72b7 RSI: 00003ffffffff000 RDI: e800c03ff1258d48
-RBP: ffff9567fc27f8c8 R08: e800c03ff1258d48 R09: 0000000000000080
-R10: ffffaba0704c22a8 R11: 0000000000000001 R12: ffff95c87b4b60d8
-R13: 00005fff00000000 R14: 0000000000000000 R15: ffff9567face8074
-FS:  00007fe2d9ffb700(0000) GS:ffff956900e40000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: ffffd3bb003b69c0 CR3: 000000be67374000 CR4: 00000000003627e0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- [<ffffffff9df9b71b>] ? unlock_page+0x2b/0x30
- [<ffffffff9dff04a2>] ? hugetlb_fault+0x222/0xbe0
- [<ffffffff9dff1405>] follow_hugetlb_page+0x175/0x540
- [<ffffffff9e15b825>] ? cpumask_next_and+0x35/0x50
- [<ffffffff9dfc7230>] __get_user_pages+0x2a0/0x7e0
- [<ffffffff9dfc648d>] __get_user_pages_unlocked+0x15d/0x210
- [<ffffffffc068cfc5>] __gfn_to_pfn_memslot+0x3c5/0x460 [kvm]
- [<ffffffffc06b28be>] try_async_pf+0x6e/0x2a0 [kvm]
- [<ffffffffc06b4b41>] tdp_page_fault+0x151/0x2d0 [kvm]
- ...
- [<ffffffffc06a6f90>] kvm_arch_vcpu_ioctl_run+0x330/0x490 [kvm]
- [<ffffffffc068d919>] kvm_vcpu_ioctl+0x309/0x6d0 [kvm]
- [<ffffffff9deaa8c2>] ? dequeue_signal+0x32/0x180
- [<ffffffff9deae34d>] ? do_sigtimedwait+0xcd/0x230
- [<ffffffff9e03aed0>] do_vfs_ioctl+0x3f0/0x540
- [<ffffffff9e03b0c1>] SyS_ioctl+0xa1/0xc0
- [<ffffffff9e53879b>] system_call_fastpath+0x22/0x27
+> From: Steven Rostedt
+> > Sent: 19 March 2020 23:22  
+> ...
+> > 
+> > This patch series attempts to satisfy that request, by creating a
+> > temporary buffer in each of the per cpu iterators to place the
+> > read event into, such that it can be passed to users without worrying
+> > about a writer to corrupt the event while it was being written out.
+> > It also uses the fact that the ring buffer is broken up into pages,
+> > where each page has its own timestamp that gets updated when a
+> > writer crosses over to it. By copying it to the temp buffer, and
+> > doing a "before and after" test of the time stamp with memory barriers,
+> > can allow the events to be saved.  
+> 
+> Does this mean the you will no longer be able to look at a snapshot
+> of the trace by running 'less trace' (and typically going to the end
+> to get info for all cpus).
 
-For 1G hugepages, huge_pte_offset() wants to return NULL or pudp, but it
-may return a wrong 'pmdp' if there is a race. Please look at the following
-code snippet:
-    ...
-    pud = pud_offset(p4d, addr);
-    if (sz != PUD_SIZE && pud_none(*pud))
-        return NULL;
-    /* hugepage or swap? */
-    if (pud_huge(*pud) || !pud_present(*pud))
-        return (pte_t *)pud;
+I changed patch 9 to be this:
 
-    pmd = pmd_offset(pud, addr);
-    if (sz != PMD_SIZE && pmd_none(*pmd))
-        return NULL;
-    /* hugepage or swap? */
-    if (pmd_huge(*pmd) || !pmd_present(*pmd))
-        return (pte_t *)pmd;
-    ...
+It adds an option "pause-on-trace" that when set, will bring back the
+old behavior of pausing recording to the ring buffer when the trace
+file is open.
 
-The following sequence would trigger this bug:
-1. CPU0: sz = PUD_SIZE and *pud = 0 , continue
-1. CPU0: "pud_huge(*pud)" is false
-2. CPU1: calling hugetlb_no_page and set *pud to xxxx8e7(PRESENT)
-3. CPU0: "!pud_present(*pud)" is false, continue
-4. CPU0: pmd = pmd_offset(pud, addr) and maybe return a wrong pmdp
-However, we want CPU0 to return NULL or pudp in this case.
+If needed, I can add a kernel command line option and a Kconfig that
+makes this set to true by default.
 
-Also, according to the section 'COMPILER BARRIER' of memory-barriers.txt:
-'''
- (*) The compiler is within its rights to reorder loads and stores
-     to the same variable, and in some cases, the CPU is within its
-     rights to reorder loads to the same variable.  This means that
-     the following code:
+-- Steve
 
-        a[0] = x;
-        a[1] = x;
+From 71f44d604e5b16cc239d6276b447a515448f582f Mon Sep 17 00:00:00 2001
+From: "Steven Rostedt (VMware)" <rostedt@goodmis.org>
+Date: Tue, 17 Mar 2020 17:32:31 -0400
+Subject: [PATCH] tracing: Do not disable tracing when reading the trace file
 
-     Might result in an older value of x stored in a[1] than in a[0].
-'''
-there're several other data races in huge_pte_offset, for example:
-'''
-  p4d = p4d_offset(pgd, addr)
-  if (!p4d_present(*p4d))
-      return NULL;
-  pud = pud_offset(p4d, addr) <-- will be unwinded as:
-    pud = (pud_t *)p4d_page_vaddr(*p4d) + pud_index(address);
-'''
-which is free for the compiler/CPU to execute as:
-'''
-  p4d = p4d_offset(pgd, addr)
-  p4d_for_vaddr = *p4d;
-  if (!p4d_present(*p4d))
-      return NULL;
-  pud = (pud_t *)p4d_page_vaddr(p4d_for_vaddr) + pud_index(address);
-'''
-so in the case where *p4g goes from '!present' to 'present':
-p4d_present(*p4d) and p4d_for_vaddr == none, meaning the p4d_page_vaddr()
-will crash.
+When opening the "trace" file, it is no longer necessary to disable tracing.
 
-For these reasons, we must make sure there is exactly one dereference of
-p4g, pud and pmd.
+Note, a new option is created called "pause-on-trace", when set, will cause
+the trace file to emulate its original behavior.
 
-Cc: Mike Kravetz <mike.kravetz@oracle.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Jason Gunthorpe <jgg@ziepe.ca>
-Cc: Matthew Wilcox <willy@infradead.org>
-Cc: Sean Christopherson <sean.j.christopherson@intel.com>
-Cc: stable@vger.kernel.org
-Suggested-by: Jason Gunthorpe <jgg@ziepe.ca>
-Signed-off-by: Longpeng <longpeng2@huawei.com>
+Link: http://lkml.kernel.org/r/20200317213416.903351225@goodmis.org
+
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 ---
-v2 -> v3:
-  make sure p4g/pud/pmd be dereferenced once. [Jason]
----
- mm/hugetlb.c | 26 +++++++++++++++-----------
- 1 file changed, 15 insertions(+), 11 deletions(-)
+ Documentation/trace/ftrace.rst | 6 ++++++
+ kernel/trace/trace.c           | 9 ++++++---
+ kernel/trace/trace.h           | 1 +
+ 3 files changed, 13 insertions(+), 3 deletions(-)
 
-diff --git a/mm/hugetlb.c b/mm/hugetlb.c
-index dd8737a..d4fab68 100644
---- a/mm/hugetlb.c
-+++ b/mm/hugetlb.c
-@@ -4909,29 +4909,33 @@ pte_t *huge_pte_offset(struct mm_struct *mm,
- 		       unsigned long addr, unsigned long sz)
- {
- 	pgd_t *pgd;
--	p4d_t *p4d;
--	pud_t *pud;
--	pmd_t *pmd;
-+	p4d_t *p4g, p4d_entry;
-+	pud_t *pud, pud_entry;
-+	pmd_t *pmd, pmd_entry;
+diff --git a/Documentation/trace/ftrace.rst b/Documentation/trace/ftrace.rst
+index 99a0890e20ec..c33950a35d65 100644
+--- a/Documentation/trace/ftrace.rst
++++ b/Documentation/trace/ftrace.rst
+@@ -1125,6 +1125,12 @@ Here are the available options:
+ 	the trace displays additional information about the
+ 	latency, as described in "Latency trace format".
  
- 	pgd = pgd_offset(mm, addr);
- 	if (!pgd_present(*pgd))
- 		return NULL;
--	p4d = p4d_offset(pgd, addr);
--	if (!p4d_present(*p4d))
++  pause-on-trace
++	When set, opening the trace file for read, will pause
++	writing to the ring buffer (as if tracing_on was set to zero).
++	This simulates the original behavior of the trace file.
++	When the file is closed, tracing will be enabled again.
 +
-+	p4g = p4d_offset(pgd, addr);
-+	p4d_entry = READ_ONCE(*p4g);
-+	if (!p4d_present(p4d_entry))
- 		return NULL;
+   record-cmd
+ 	When any event or tracer is enabled, a hook is enabled
+ 	in the sched_switch trace point to fill comm cache
+diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+index 47889123be7f..650fa81fffe8 100644
+--- a/kernel/trace/trace.c
++++ b/kernel/trace/trace.c
+@@ -4273,8 +4273,11 @@ __tracing_open(struct inode *inode, struct file *file, bool snapshot)
+ 	if (trace_clocks[tr->clock_id].in_ns)
+ 		iter->iter_flags |= TRACE_FILE_TIME_IN_NS;
  
--	pud = pud_offset(p4d, addr);
--	if (sz != PUD_SIZE && pud_none(*pud))
-+	pud = pud_offset(&p4d_entry, addr);
-+	pud_entry = READ_ONCE(*pud);
-+	if (sz != PUD_SIZE && pud_none(pud_entry))
- 		return NULL;
- 	/* hugepage or swap? */
--	if (pud_huge(*pud) || !pud_present(*pud))
-+	if (pud_huge(pud_entry) || !pud_present(pud_entry))
- 		return (pte_t *)pud;
+-	/* stop the trace while dumping if we are not opening "snapshot" */
+-	if (!iter->snapshot)
++	/*
++	 * If pause-on-trace is enabled, then stop the trace while
++	 * dumping, unless this is the "snapshot" file
++	 */
++	if (!iter->snapshot && (tr->trace_flags & TRACE_ITER_PAUSE_ON_TRACE))
+ 		tracing_stop_tr(tr);
  
--	pmd = pmd_offset(pud, addr);
--	if (sz != PMD_SIZE && pmd_none(*pmd))
-+	pmd = pmd_offset(&pud_entry, addr);
-+	pmd_entry = READ_ONCE(*pmd);
-+	if (sz != PMD_SIZE && pmd_none(pmd_entry))
- 		return NULL;
- 	/* hugepage or swap? */
--	if (pmd_huge(*pmd) || !pmd_present(*pmd))
-+	if (pmd_huge(pmd_entry) || !pmd_present(pmd_entry))
- 		return (pte_t *)pmd;
+ 	if (iter->cpu_file == RING_BUFFER_ALL_CPUS) {
+@@ -4371,7 +4374,7 @@ static int tracing_release(struct inode *inode, struct file *file)
+ 	if (iter->trace && iter->trace->close)
+ 		iter->trace->close(iter);
  
- 	return NULL;
+-	if (!iter->snapshot)
++	if (!iter->snapshot && tr->stop_count)
+ 		/* reenable tracing if it was previously enabled */
+ 		tracing_start_tr(tr);
+ 
+diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
+index c61e1b1c85a6..f37e05135986 100644
+--- a/kernel/trace/trace.h
++++ b/kernel/trace/trace.h
+@@ -1302,6 +1302,7 @@ extern int trace_get_user(struct trace_parser *parser, const char __user *ubuf,
+ 		C(IRQ_INFO,		"irq-info"),		\
+ 		C(MARKERS,		"markers"),		\
+ 		C(EVENT_FORK,		"event-fork"),		\
++		C(PAUSE_ON_TRACE,	"pause-on-trace"),	\
+ 		FUNCTION_FLAGS					\
+ 		FGRAPH_FLAGS					\
+ 		STACK_FLAGS					\
 -- 
-1.8.3.1
+2.20.1
 
