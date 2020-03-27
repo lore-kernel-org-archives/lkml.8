@@ -2,154 +2,199 @@ Return-Path: <SRS0=s8dx=5M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0FB5C2BA11
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 22:51:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41299C2D0EF
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 22:53:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A6D4720787
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 22:51:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0FF2D2071B
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 22:53:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="oy+pJbNf"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="sCLGEAWM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727878AbgC0Wvb (ORCPT
+        id S1727729AbgC0Wxv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Mar 2020 18:51:31 -0400
-Received: from mail-pl1-f202.google.com ([209.85.214.202]:50799 "EHLO
-        mail-pl1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727851AbgC0Wv3 (ORCPT
+        Fri, 27 Mar 2020 18:53:51 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:39732 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727620AbgC0Wxu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Mar 2020 18:51:29 -0400
-Received: by mail-pl1-f202.google.com with SMTP id k10so8089903plx.17
-        for <linux-kernel@vger.kernel.org>; Fri, 27 Mar 2020 15:51:27 -0700 (PDT)
+        Fri, 27 Mar 2020 18:53:50 -0400
+Received: by mail-pg1-f193.google.com with SMTP id b22so5293225pgb.6
+        for <linux-kernel@vger.kernel.org>; Fri, 27 Mar 2020 15:53:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
-         :cc;
-        bh=xbfzfU9BuZhYVtZI+f7wZqdjFxjb/Cu4ZDBLeXOeWh4=;
-        b=oy+pJbNfN27cWWr81XSBaziJYK6CASpEPROsDy+RxWz/gsUiIHaho5ILpjN+1rWoFe
-         RZhgrmyC1NEzv4mWNRVD6rMrblcdvgRDl9vwC/Hpb5tWi9WpeMARBdyviuOShwXU+eIj
-         0wKuYmua2wLVH4PldXOQn01xAJfMu+UgEsxgbSzE3zHtEhUTZbpR8NMkdjhHIETiRSvy
-         ejXTRfhBCmaEMEOYUQSpakroSZaqXVgU3VIGeY3DYOs6WCXz/XscvuhN2I2VXBbMvwb4
-         Xlddmz8hpGwBRuywv2TIOtvKKl0P4zPYZ1oj/HFJKvmdX1OXKTqs6LYjMPwYUkM5VRj1
-         WZbQ==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=u//RFRwBb0m9lwVRnZnuN1wIsLwSxdDr93Wv4WL3gak=;
+        b=sCLGEAWMh1HSvJ+QM8j2lloft3uPeNHMcMj6BmwhaTwvSP2P4K8TyvIbsSpX+ZbSQ6
+         HERLK4yeWKux2ZLUriBsIVL77UetK/CkpdZTTh748tOxtGhooB5gcjlwQCggun6xvHX9
+         d4EVzFEPqcWxprhJvN3A9oBIXMUz+cHkaovqJfucawus4FjC9X5GjfdcjR2J4hVl8ezd
+         x/VGVaKjmWaXnxY6KQTQlBJgaxf1T3GqonDTIimI9rPYb6rHAPFd5J7IAIvTwVsZp0Tg
+         YnEEmvMPcyGK9b+ts9frgqH2YOGDrb5VHekmJ1I5ZXzmQTmvnNwtxsnNi9iiosGJ63qm
+         iSUw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=xbfzfU9BuZhYVtZI+f7wZqdjFxjb/Cu4ZDBLeXOeWh4=;
-        b=rmGo0EKE11Uz6Jz7yR8Dy8vX2AJ+tNED8PXIaQKBaczXtFQwI/AYeTmcgzeD7FUdWa
-         yklZiZAfaYyeWPiKA5Fxy57r2Imbn2rke7WRkvG1/ZoO0Oaprad/IvyubErQPu4TyFTE
-         ecmfyQHaQ0g5R8M9cDg7QsyfKGU9yN9W6GRh9TuGdrwkxxOjOuS8nfzn12w7cPMxUymO
-         5MzkWLMe7IzZR2un6ieNXrjDkkXWX/1yOKFdlM3KV8FxSfhoeWfP0ssqvBa5Coh1kv7G
-         PWV1Do8h+GjGqZbGxNSxjbLph2RoQvDMLZkQMNJt6ffLxZc9VKW21/02Xh7DDeMRO9Ne
-         u6iQ==
-X-Gm-Message-State: ANhLgQ3s4jIDfQpgLU99Jq+jslQLvQP1HFHRFM5Rkzj8GTwxV012u+kc
-        A8PwKb6FQDjesWJmHWQy8a/elJ0Ogaw=
-X-Google-Smtp-Source: ADFU+vvWd0IqiXiflyLpZ9mh9GOnzskLcl81XiO1ntJlLp1NZ1mpzt1ePzWvfoNKv3KayCXYoxGRvL7WJ5Y=
-X-Received: by 2002:a17:90a:222d:: with SMTP id c42mr1811170pje.16.1585349487110;
- Fri, 27 Mar 2020 15:51:27 -0700 (PDT)
-Date:   Fri, 27 Mar 2020 15:51:01 -0700
-In-Reply-To: <20200327225102.25061-1-walken@google.com>
-Message-Id: <20200327225102.25061-10-walken@google.com>
-Mime-Version: 1.0
-References: <20200327225102.25061-1-walken@google.com>
-X-Mailer: git-send-email 2.26.0.rc2.310.g2932bb562d-goog
-Subject: [PATCH v3 09/10] mmap locking API: use lockdep_assert_held
-From:   Michel Lespinasse <walken@google.com>
-To:     Andrew Morton <akpm@linux-foundation.org>,
-        linux-mm <linux-mm@kvack.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Laurent Dufour <ldufour@linux.ibm.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Matthew Wilcox <willy@infradead.org>,
-        Liam Howlett <Liam.Howlett@oracle.com>,
-        Jerome Glisse <jglisse@redhat.com>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        David Rientjes <rientjes@google.com>,
-        Hugh Dickins <hughd@google.com>, Ying Han <yinghan@google.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Markus Elfring <Markus.Elfring@web.de>,
-        Michel Lespinasse <walken@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=u//RFRwBb0m9lwVRnZnuN1wIsLwSxdDr93Wv4WL3gak=;
+        b=C9WH939gzRXn4GQPGYCmLJzv1/+XSJVpoGn/JFVifh4BxhP98Gb3Qba7ePcDq+0+Nl
+         AQcm/jCbgnoELUBQC/ePe5IE+er7i8Ng0yerX2q2nky/1509W/A3QF7YIBBf7W5ScfCT
+         HTtlyQolvDa7hYPc6068D6RGsQB1aBfYPTORoreNv9zQfiisJ+Wu2dNECtMpG/1coKq1
+         dlVm3KD3ICZPlbJbc+D2knKv2MIyQoaL7t/bQShPt0VmZc0akBXy00ju8VrbkWXBJmMI
+         yHRjOVtWwNdnTJR7Z5X33jl8wNheaJsS+gUksHdez1oEqDenX+uyjrZ6PNYEEEAWw9w8
+         DHcQ==
+X-Gm-Message-State: ANhLgQ0W6n20FhbWgetrqvhE2RcsEkdewM6KXI4nzkauQs9FisbP2cph
+        k4Ct2GVMrua9VWX6VzZ4kCIzuQ==
+X-Google-Smtp-Source: ADFU+vvmOFrFFFf0Ylaxpwo5cZwgZFAq0POqcMDvAU5keyfbpNREBBtPuvkrV6yluD9CWYp3jhMddA==
+X-Received: by 2002:a63:78e:: with SMTP id 136mr1551884pgh.181.1585349628346;
+        Fri, 27 Mar 2020 15:53:48 -0700 (PDT)
+Received: from builder (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id t1sm4590766pgh.88.2020.03.27.15.53.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 27 Mar 2020 15:53:47 -0700 (PDT)
+Date:   Fri, 27 Mar 2020 15:53:45 -0700
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Thara Gopinath <thara.gopinath@linaro.org>
+Cc:     rui.zhang@intel.com, ulf.hansson@linaro.org,
+        daniel.lezcano@linaro.org, agross@kernel.org, robh@kernel.org,
+        amit.kucheria@verdurent.com, mark.rutland@arm.com,
+        rjw@rjwysocki.net, linux-pm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [Patch v5 4/6] soc: qcom: Extend RPMh power controller driver to
+ register warming devices.
+Message-ID: <20200327225345.GH5063@builder>
+References: <20200320014107.26087-1-thara.gopinath@linaro.org>
+ <20200320014107.26087-5-thara.gopinath@linaro.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200320014107.26087-5-thara.gopinath@linaro.org>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use lockdep_assert_held when asserting that mmap_sem is held.
+On Thu 19 Mar 18:41 PDT 2020, Thara Gopinath wrote:
 
-Using this instead of rwsem_is_locked makes the assertions more
-tolerant of future changes to the lock type.
+> RPMh power control hosts power domains that can be used as
+> thermal warming devices. Register these power domains
+> with the generic power domain warming device thermal framework.
+> 
+> Reviewed-by: Ulf Hansson <ulf.hansson@linaro.org>
+> Signed-off-by: Thara Gopinath <thara.gopinath@linaro.org>
+> ---
+> 
+> v3->v4:
+> 	- Introduce a boolean value is_warming_dev in rpmhpd structure to
+> 	  indicate if a generic power domain can be used as a warming
+> 	  device or not.With this change, device tree no longer has to
+> 	  specify which power domain inside the rpmh power domain provider
+> 	  is a warming device.
+> 	- Move registering of warming devices into a late initcall to
+> 	  ensure that warming devices are registered after thermal
+> 	  framework is initialized.
 
-Signed-off-by: Michel Lespinasse <walken@google.com>
----
- fs/userfaultfd.c | 6 +++---
- mm/gup.c         | 2 +-
- mm/memory.c      | 2 +-
- 3 files changed, 5 insertions(+), 5 deletions(-)
+This information is lost when we merge patches, as such I would like
+such design decisions to be described in the commit message itself.
+But...
 
-diff --git a/fs/userfaultfd.c b/fs/userfaultfd.c
-index 5914eabd8185..ad1ce223ee6a 100644
---- a/fs/userfaultfd.c
-+++ b/fs/userfaultfd.c
-@@ -234,7 +234,7 @@ static inline bool userfaultfd_huge_must_wait(struct userfaultfd_ctx *ctx,
- 	pte_t *ptep, pte;
- 	bool ret = true;
- 
--	VM_BUG_ON(!rwsem_is_locked(&mm->mmap_sem));
-+	lockdep_assert_held(&mm->mmap_sem);
- 
- 	ptep = huge_pte_offset(mm, address, vma_mmu_pagesize(vma));
- 
-@@ -286,7 +286,7 @@ static inline bool userfaultfd_must_wait(struct userfaultfd_ctx *ctx,
- 	pte_t *pte;
- 	bool ret = true;
- 
--	VM_BUG_ON(!rwsem_is_locked(&mm->mmap_sem));
-+	lockdep_assert_held(&mm->mmap_sem);
- 
- 	pgd = pgd_offset(mm, address);
- 	if (!pgd_present(*pgd))
-@@ -376,7 +376,7 @@ vm_fault_t handle_userfault(struct vm_fault *vmf, unsigned long reason)
- 	 * Coredumping runs without mmap_sem so we can only check that
- 	 * the mmap_sem is held, if PF_DUMPCORE was not set.
- 	 */
--	WARN_ON_ONCE(!rwsem_is_locked(&mm->mmap_sem));
-+	lockdep_assert_held(&mm->mmap_sem);
- 
- 	ctx = vmf->vma->vm_userfaultfd_ctx.ctx;
- 	if (!ctx)
-diff --git a/mm/gup.c b/mm/gup.c
-index d78965738e7e..1e225eba4787 100644
---- a/mm/gup.c
-+++ b/mm/gup.c
-@@ -1154,7 +1154,7 @@ long populate_vma_page_range(struct vm_area_struct *vma,
- 	VM_BUG_ON(end   & ~PAGE_MASK);
- 	VM_BUG_ON_VMA(start < vma->vm_start, vma);
- 	VM_BUG_ON_VMA(end   > vma->vm_end, vma);
--	VM_BUG_ON_MM(!rwsem_is_locked(&mm->mmap_sem), mm);
-+	lockdep_assert_held(&mm->mmap_sem);
- 
- 	gup_flags = FOLL_TOUCH | FOLL_POPULATE | FOLL_MLOCK;
- 	if (vma->vm_flags & VM_LOCKONFAULT)
-diff --git a/mm/memory.c b/mm/memory.c
-index 03fce44eee16..4c125f0a1df9 100644
---- a/mm/memory.c
-+++ b/mm/memory.c
-@@ -1202,7 +1202,7 @@ static inline unsigned long zap_pud_range(struct mmu_gather *tlb,
- 		next = pud_addr_end(addr, end);
- 		if (pud_trans_huge(*pud) || pud_devmap(*pud)) {
- 			if (next - addr != HPAGE_PUD_SIZE) {
--				VM_BUG_ON_VMA(!rwsem_is_locked(&tlb->mm->mmap_sem), vma);
-+				lockdep_assert_held(&tlb->mm->mmap_sem);
- 				split_huge_pud(vma, pud, addr);
- 			} else if (zap_huge_pud(tlb, vma, pud, addr))
- 				goto next;
--- 
-2.26.0.rc2.310.g2932bb562d-goog
+> 
+>  drivers/soc/qcom/rpmhpd.c | 37 ++++++++++++++++++++++++++++++++++++-
+>  1 file changed, 36 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/soc/qcom/rpmhpd.c b/drivers/soc/qcom/rpmhpd.c
+> index 7142409a3b77..4e9c0bbb8826 100644
+> --- a/drivers/soc/qcom/rpmhpd.c
+> +++ b/drivers/soc/qcom/rpmhpd.c
+> @@ -11,6 +11,7 @@
+>  #include <linux/of_device.h>
+>  #include <linux/platform_device.h>
+>  #include <linux/pm_opp.h>
+> +#include <linux/pd_warming.h>
+>  #include <soc/qcom/cmd-db.h>
+>  #include <soc/qcom/rpmh.h>
+>  #include <dt-bindings/power/qcom-rpmpd.h>
+> @@ -48,6 +49,7 @@ struct rpmhpd {
+>  	bool		enabled;
+>  	const char	*res_name;
+>  	u32		addr;
+> +	bool		is_warming_dev;
+>  };
+>  
+>  struct rpmhpd_desc {
+> @@ -55,6 +57,8 @@ struct rpmhpd_desc {
+>  	size_t num_pds;
+>  };
+>  
+> +const struct rpmhpd_desc *global_desc;
+> +
+>  static DEFINE_MUTEX(rpmhpd_lock);
+>  
+>  /* SDM845 RPMH powerdomains */
+> @@ -89,6 +93,7 @@ static struct rpmhpd sdm845_mx = {
+>  	.pd = { .name = "mx", },
+>  	.peer = &sdm845_mx_ao,
+>  	.res_name = "mx.lvl",
+> +	.is_warming_dev = true,
+>  };
+>  
+>  static struct rpmhpd sdm845_mx_ao = {
+> @@ -452,7 +457,14 @@ static int rpmhpd_probe(struct platform_device *pdev)
+>  					       &rpmhpds[i]->pd);
+>  	}
+>  
+> -	return of_genpd_add_provider_onecell(pdev->dev.of_node, data);
+> +	ret = of_genpd_add_provider_onecell(pdev->dev.of_node, data);
+> +
+> +	if (ret)
+> +		return ret;
+> +
+> +	global_desc = desc;
+> +
+> +	return 0;
+>  }
+>  
+>  static struct platform_driver rpmhpd_driver = {
+> @@ -469,3 +481,26 @@ static int __init rpmhpd_init(void)
+>  	return platform_driver_register(&rpmhpd_driver);
+>  }
+>  core_initcall(rpmhpd_init);
+> +
+> +static int __init rpmhpd_init_warming_device(void)
+> +{
+> +	size_t num_pds;
+> +	struct rpmhpd **rpmhpds;
+> +	int i;
+> +
+> +	if (!global_desc)
+> +		return -EINVAL;
+> +
+> +	rpmhpds = global_desc->rpmhpds;
+> +	num_pds = global_desc->num_pds;
+> +
+> +	if (!of_find_property(rpmhpds[0]->dev->of_node, "#cooling-cells", NULL))
+> +		return 0;
+> +
+> +	for (i = 0; i < num_pds; i++)
+> +		if (rpmhpds[i]->is_warming_dev)
+> +			of_pd_warming_register(rpmhpds[i]->dev, i);
+> +
+> +	return 0;
+> +}
+> +late_initcall(rpmhpd_init_warming_device);
 
+...why can't this be done in rpmhpd_probe()?
+
+In particular with the recent patches from John Stultz to allow rpmhpd
+to be built as a module I don't think there's any guarantees that
+rpmh_probe() will have succeeded before rpmhpd_init_warming_device()
+executes.
+
+Regards,
+Bjorn
