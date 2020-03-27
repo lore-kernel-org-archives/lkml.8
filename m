@@ -2,84 +2,227 @@ Return-Path: <SRS0=s8dx=5M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A82FEC2D0E7
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 23:29:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E72E6C43331
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 23:29:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 86FE9206E6
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 23:29:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B9FE32071B
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 23:29:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727173AbgC0X3Q (ORCPT
+        id S1727179AbgC0X3l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Mar 2020 19:29:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54994 "EHLO mail.kernel.org"
+        Fri, 27 Mar 2020 19:29:41 -0400
+Received: from mga04.intel.com ([192.55.52.120]:55329 "EHLO mga04.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726071AbgC0X3Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Mar 2020 19:29:16 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2DB852071B;
-        Fri, 27 Mar 2020 23:22:10 +0000 (UTC)
-Date:   Fri, 27 Mar 2020 19:22:08 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Tiejun Chen <tiejunc@vmware.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        linux-rt-users <linux-rt-users@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Carsten Emde <C.Emde@osadl.org>,
-        John Kacur <jkacur@redhat.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Julia Cartwright <julia@ni.com>,
-        Daniel Wagner <wagi@monom.org>,
-        Tom Zanussi <zanussi@kernel.org>,
-        "srivatsa@csail.mit.edu" <srivatsa@csail.mit.edu>
-Subject: Re: [ANNOUNCE] 4.19.106-rt45
-Message-ID: <20200327192208.30bd16e5@gandalf.local.home>
-In-Reply-To: <BYAPR05MB587828CEA4A259906BAD3AA5C5CC0@BYAPR05MB5878.namprd05.prod.outlook.com>
-References: <20200310133154.6656b339@gandalf.local.home>
-        <BYAPR05MB587828CEA4A259906BAD3AA5C5CC0@BYAPR05MB5878.namprd05.prod.outlook.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        id S1726065AbgC0X3l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Mar 2020 19:29:41 -0400
+IronPort-SDR: hD3XyITihsJ6mbMbXrUr2Fnjc7QhY+UNR0Xm+mXa9pzhiS4IFEXILtNc02CF4fD2XamIxNoZd3
+ Y85Vf5F6qMog==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Mar 2020 16:29:40 -0700
+IronPort-SDR: GQvShWZrXtNqI2hnFxc+1q3tNmMzZmEDG4R4/cfmwNvaG1lXW2bxWjEhEX/MAYwFd/gda2HYGR
+ ve90+hRExtmQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,314,1580803200"; 
+   d="scan'208";a="248037306"
+Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
+  by orsmga003.jf.intel.com with ESMTP; 27 Mar 2020 16:29:38 -0700
+Received: from kbuild by lkp-server01 with local (Exim 4.89)
+        (envelope-from <lkp@intel.com>)
+        id 1jHyPy-000H2O-0G; Sat, 28 Mar 2020 07:29:38 +0800
+Date:   Sat, 28 Mar 2020 07:29:27 +0800
+From:   kbuild test robot <lkp@intel.com>
+To:     "x86-ml" <x86@kernel.org>
+Cc:     linux-kernel@vger.kernel.org
+Subject: [tip:x86/splitlock] BUILD SUCCESS
+ a6a60741035bb48ca8d9f92a138958818148064c
+Message-ID: <5e7e8c57.GpH43oN+zH7hG8kX%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 27 Mar 2020 23:16:51 +0000
-Tiejun Chen <tiejunc@vmware.com> wrote:
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git  x86/splitlock
+branch HEAD: a6a60741035bb48ca8d9f92a138958818148064c  x86/split_lock: Avoid runtime reads of the TEST_CTRL MSR
 
-> Steven,
-> 
-> We cannot build this release (maybe all 4.19-rt) with CONFIG_UBSAN=y
+elapsed time: 764m
 
-Thanks for the report. I'll take a look at this on Monday.
+configs tested: 160
+configs skipped: 0
 
--- Steve
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-> ----
-> lib/ubsan.c: In function '__ubsan_handle_vla_bound_not_positive':
-> lib/ubsan.c:348:2: error: too many arguments to function 'ubsan_prologue'
->   ubsan_prologue(&data->location, &flags);
->   ^~~~~~~~~~~~~~
-> lib/ubsan.c:146:13: note: declared here
->  static void ubsan_prologue(struct source_location *location)
->              ^~~~~~~~~~~~~~
-> lib/ubsan.c:353:2: error: too many arguments to function 'ubsan_epilogue'
->   ubsan_epilogue(&flags);
->   ^~~~~~~~~~~~~~
-> lib/ubsan.c:155:13: note: declared here
->  static void ubsan_epilogue(void)
->              ^~~~~~~~~~~~~~
-> 
-> I think you have to squash the following into patches/0309-lib-ubsan-Don-t-seralize-UBSAN-report.patch In your release.
-> 
->     rebase onto [PATCH 309/326] lib/ubsan: Don't seralize UBSAN report
->     
->     Signed-off-by: Tiejun Chen <tiejunc@vmware.com>
->
+arm                              allmodconfig
+arm                               allnoconfig
+arm                              allyesconfig
+arm64                            allmodconfig
+arm64                             allnoconfig
+arm64                            allyesconfig
+arm                         at91_dt_defconfig
+arm                           efm32_defconfig
+arm                          exynos_defconfig
+arm                        multi_v5_defconfig
+arm                        multi_v7_defconfig
+arm                        shmobile_defconfig
+arm                           sunxi_defconfig
+arm64                               defconfig
+sparc                            allyesconfig
+mips                      fuloong2e_defconfig
+s390                       zfcpdump_defconfig
+sh                  sh7785lcr_32bit_defconfig
+arc                              allyesconfig
+um                             i386_defconfig
+um                                  defconfig
+um                           x86_64_defconfig
+m68k                          multi_defconfig
+ia64                             alldefconfig
+m68k                           sun3_defconfig
+c6x                        evmc6678_defconfig
+sh                            titan_defconfig
+riscv                          rv32_defconfig
+alpha                               defconfig
+sparc                               defconfig
+i386                             alldefconfig
+sh                          rsk7269_defconfig
+i386                              allnoconfig
+i386                             allyesconfig
+i386                                defconfig
+ia64                             allmodconfig
+ia64                              allnoconfig
+ia64                             allyesconfig
+ia64                                defconfig
+c6x                              allyesconfig
+nios2                         10m50_defconfig
+nios2                         3c120_defconfig
+openrisc                    or1ksim_defconfig
+openrisc                 simple_smp_defconfig
+xtensa                       common_defconfig
+xtensa                          iss_defconfig
+h8300                     edosk2674_defconfig
+h8300                    h8300h-sim_defconfig
+h8300                       h8s-sim_defconfig
+m68k                             allmodconfig
+m68k                       m5475evb_defconfig
+arc                                 defconfig
+microblaze                      mmu_defconfig
+microblaze                    nommu_defconfig
+powerpc                           allnoconfig
+powerpc                             defconfig
+powerpc                       ppc64_defconfig
+powerpc                          rhel-kconfig
+mips                           32r2_defconfig
+mips                         64r6el_defconfig
+mips                             allmodconfig
+mips                              allnoconfig
+mips                             allyesconfig
+mips                      malta_kvm_defconfig
+parisc                            allnoconfig
+parisc                           allyesconfig
+parisc                generic-32bit_defconfig
+parisc                generic-64bit_defconfig
+x86_64               randconfig-a001-20200327
+x86_64               randconfig-a002-20200327
+x86_64               randconfig-a003-20200327
+i386                 randconfig-a001-20200327
+i386                 randconfig-a002-20200327
+i386                 randconfig-a003-20200327
+alpha                randconfig-a001-20200327
+m68k                 randconfig-a001-20200327
+mips                 randconfig-a001-20200327
+nds32                randconfig-a001-20200327
+parisc               randconfig-a001-20200327
+h8300                randconfig-a001-20200327
+microblaze           randconfig-a001-20200327
+nios2                randconfig-a001-20200327
+c6x                  randconfig-a001-20200327
+sparc64              randconfig-a001-20200327
+csky                 randconfig-a001-20200327
+openrisc             randconfig-a001-20200327
+s390                 randconfig-a001-20200327
+sh                   randconfig-a001-20200327
+xtensa               randconfig-a001-20200327
+x86_64               randconfig-b001-20200327
+x86_64               randconfig-b002-20200327
+x86_64               randconfig-b003-20200327
+i386                 randconfig-b001-20200327
+i386                 randconfig-b002-20200327
+i386                 randconfig-b003-20200327
+x86_64               randconfig-c003-20200327
+x86_64               randconfig-c001-20200327
+i386                 randconfig-c002-20200327
+x86_64               randconfig-c002-20200327
+i386                 randconfig-c003-20200327
+i386                 randconfig-c001-20200327
+x86_64               randconfig-d001-20200327
+x86_64               randconfig-d002-20200327
+x86_64               randconfig-d003-20200327
+i386                 randconfig-d001-20200327
+i386                 randconfig-d002-20200327
+i386                 randconfig-d003-20200327
+x86_64               randconfig-e001-20200327
+x86_64               randconfig-e002-20200327
+x86_64               randconfig-e003-20200327
+i386                 randconfig-e001-20200327
+i386                 randconfig-e002-20200327
+i386                 randconfig-e003-20200327
+x86_64               randconfig-f001-20200327
+x86_64               randconfig-f002-20200327
+x86_64               randconfig-f003-20200327
+i386                 randconfig-f001-20200327
+i386                 randconfig-f002-20200327
+i386                 randconfig-f003-20200327
+x86_64               randconfig-g001-20200327
+x86_64               randconfig-g002-20200327
+x86_64               randconfig-g003-20200327
+i386                 randconfig-g001-20200327
+i386                 randconfig-g002-20200327
+i386                 randconfig-g003-20200327
+x86_64               randconfig-h003-20200327
+i386                 randconfig-h003-20200327
+i386                 randconfig-h001-20200327
+x86_64               randconfig-h001-20200327
+i386                 randconfig-h002-20200327
+x86_64               randconfig-h002-20200327
+arm                  randconfig-a001-20200327
+arm64                randconfig-a001-20200327
+ia64                 randconfig-a001-20200327
+powerpc              randconfig-a001-20200327
+sparc                randconfig-a001-20200327
+arc                  randconfig-a001-20200327
+riscv                            allmodconfig
+riscv                             allnoconfig
+riscv                            allyesconfig
+riscv                               defconfig
+riscv                    nommu_virt_defconfig
+s390                             alldefconfig
+s390                             allmodconfig
+s390                              allnoconfig
+s390                             allyesconfig
+s390                          debug_defconfig
+s390                                defconfig
+sh                               allmodconfig
+sh                                allnoconfig
+sparc64                          allmodconfig
+sparc64                           allnoconfig
+sparc64                          allyesconfig
+sparc64                             defconfig
+x86_64                              fedora-25
+x86_64                                  kexec
+x86_64                                    lkp
+x86_64                                   rhel
+x86_64                         rhel-7.2-clear
+x86_64                               rhel-7.6
+
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
