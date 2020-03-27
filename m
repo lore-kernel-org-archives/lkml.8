@@ -4,103 +4,114 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 955E1C43331
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 09:42:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA412C43331
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 09:42:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6347E20714
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 09:42:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B2F520714
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 09:42:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="B1wZOt6p"
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="Bj1az3Qg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726750AbgC0JmD (ORCPT
+        id S1727336AbgC0JmN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Mar 2020 05:42:03 -0400
-Received: from smtprelay-out1.synopsys.com ([149.117.73.133]:36342 "EHLO
+        Fri, 27 Mar 2020 05:42:13 -0400
+Received: from smtprelay-out1.synopsys.com ([149.117.87.133]:44242 "EHLO
         smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726115AbgC0JmD (ORCPT
+        by vger.kernel.org with ESMTP id S1726027AbgC0JmN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Mar 2020 05:42:03 -0400
+        Fri, 27 Mar 2020 05:42:13 -0400
 Received: from mailhost.synopsys.com (mdc-mailhost1.synopsys.com [10.225.0.209])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 18BB64068F;
-        Fri, 27 Mar 2020 09:42:02 +0000 (UTC)
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 651E9C0F9C;
+        Fri, 27 Mar 2020 09:42:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1585302122; bh=5lvr85wmUB+ig2sjTf8GoiI7NOjmJtqmkcAiDXQQ+iE=;
+        t=1585302132; bh=NWAeJc+FAl9dC27fp2efai9R07gAZkuqfeVwWFD9/2c=;
         h=Date:In-Reply-To:References:From:Subject:To:Cc:From;
-        b=B1wZOt6pr1GmQZBOfYyL6GDT84QfA2uWCxy6qb5oiHj5dWC4VVSITpzUIz47GmbE6
-         RNhcBq94gwBo7de+qS8l2YqD5NzZ2hQlRjxe3LaUZXXwhhPmWjwNyHX/1dF5g3dq6Z
-         bq3oIFGNv/oJTMQQ6pBkDWK+wHFzfbmnBtM0OYscfMKoDOp2j/UQq2pOdtU2JCnxUD
-         yCS7f+Mm73Ds+npbdbuKYNLPIJBl7onyH7S18AkRqP2PSS4dN9KCk7VUiZKmGpkIdO
-         CoAukWT0VIbpsx4Sw/Ag611E1o0aoJ3G19F1aAht1W2YmMQzYlaLymxXiEV65ULe2l
-         6MnBefEg3GaIw==
+        b=Bj1az3Qgo0XxaMG7ROBqHJa79VMpOiNuNjYui97ruBpQNfq1X+/9Z4ZgIYfeuvW+q
+         xbpvhS+cvwJ06tz4RZdslM4Zwrbnv20Q2celtcsvYjM3rjWBOMpn10F/hbMkI01XHJ
+         M/iPXTx70ZK4veQmxvzUeAzeCv2NJDUH1OrF1dFLaMP8dWMH9blPexBvXl47dcGS9O
+         8WUmB5lomJ0eRzaTSb0sKUFpdFAryKp9Nss8W63f2SpA0mys5tevN3N/GehkZHNk6O
+         DOeUf+0FeQqD46hsMHdEdV8TZUX3geRVERxhgy6e2qakC5bAIEhyTTXUWZXXRVteGM
+         9+SSgXM6zv4kA==
 Received: from tejas-VirtualBox (joglekar-e7480.internal.synopsys.com [10.146.16.182])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mailhost.synopsys.com (Postfix) with ESMTPSA id 446CFA005B;
-        Fri, 27 Mar 2020 09:41:58 +0000 (UTC)
-Received: by tejas-VirtualBox (sSMTP sendmail emulation); Fri, 27 Mar 2020 15:11:56 +0530
-Date:   Fri, 27 Mar 2020 15:11:56 +0530
+        by mailhost.synopsys.com (Postfix) with ESMTPSA id ED7D8A005C;
+        Fri, 27 Mar 2020 09:42:08 +0000 (UTC)
+Received: by tejas-VirtualBox (sSMTP sendmail emulation); Fri, 27 Mar 2020 15:12:06 +0530
+Date:   Fri, 27 Mar 2020 15:12:06 +0530
 Message-Id:
- <8a9ca8e08d7c4957789a209c77589f1aa4bd2f06.1585297723.git.joglekar@synopsys.com>
+ <e3458b468d280a8d0cc6f3b49c63016e7b60586e.1585297723.git.joglekar@synopsys.com>
 In-Reply-To: <cover.1585297723.git.joglekar@synopsys.com>
 References: <cover.1585297723.git.joglekar@synopsys.com>
 From:   Tejas Joglekar <Tejas.Joglekar@synopsys.com>
-Subject: [RESENDING RFC PATCH 1/4] dt-bindings: usb: Add snps,consolidate-sgl & consolidate-sgl
+Subject: [RESENDING RFC PATCH 2/4] usb: xhci: Set quirk for XHCI_CONSOLIDATE_SG_LIST
 To:     Tejas Joglekar <Tejas.Joglekar@synopsys.com>,
-        linux-usb@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Mathias Nyman <mathias.nyman@intel.com>
 Cc:     John Youn <John.Youn@synopsys.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
-Message-ID: <20200327094156.nKO6qVohHZcNmBEhEglFxak_Pj27-KNL0lrDLrwiLpw@z>
+Message-ID: <20200327094206.o-VDms92ZnuU1krxI4cJWNMRfjz-cn4_6CNZRocPR_o@z>
 
-This commit adds the documentation for consolidate-sgl, and
-snps,consolidate-sgl property. These when set enables the quirk for
-XHCI driver for consolidation of sg list into a temporary buffer when small
-buffer sizes are scattered over the sg list not making up to MPS or total
-transfer size within TRB cache size with Synopsys xHC.
+This commit enables the quirk when the consolidate_trbs property is set
+for the Synopsys xHC. This patch fixes the SNPS xHC hang issue
+when the data is scattered across small buffers which does not make
+atleast MPS size for given TRB cache size of SNPS xHC.
 
 Signed-off-by: Tejas Joglekar <joglekar@synopsys.com>
 ---
- Documentation/devicetree/bindings/usb/dwc3.txt     | 3 +++
- Documentation/devicetree/bindings/usb/usb-xhci.txt | 3 +++
- 2 files changed, 6 insertions(+)
+ drivers/usb/host/xhci-pci.c  | 3 +++
+ drivers/usb/host/xhci-plat.c | 3 +++
+ drivers/usb/host/xhci.h      | 1 +
+ 3 files changed, 7 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/usb/dwc3.txt b/Documentation/devicetree/bindings/usb/dwc3.txt
-index 9946ff9ba735..292d1f7969e4 100644
---- a/Documentation/devicetree/bindings/usb/dwc3.txt
-+++ b/Documentation/devicetree/bindings/usb/dwc3.txt
-@@ -104,6 +104,9 @@ Optional properties:
- 			this and tx-thr-num-pkt-prd to a valid, non-zero value
- 			1-16 (DWC_usb31 programming guide section 1.2.3) to
- 			enable periodic ESS TX threshold.
-+ - snps,consolidate-sgl: enable sg list consolidation - host mode only. Set to use
-+			SG buffers of at least MPS size by consolidating smaller SG
-+			buffers list into a single buffer.
+diff --git a/drivers/usb/host/xhci-pci.c b/drivers/usb/host/xhci-pci.c
+index 766b74723e64..cdda8e2de1c2 100644
+--- a/drivers/usb/host/xhci-pci.c
++++ b/drivers/usb/host/xhci-pci.c
+@@ -268,6 +268,9 @@ static void xhci_pci_quirks(struct device *dev, struct xhci_hcd *xhci)
+ 	     pdev->device == 0x9026)
+ 		xhci->quirks |= XHCI_RESET_PLL_ON_DISCONNECT;
  
-  - <DEPRECATED> tx-fifo-resize: determines if the FIFO *has* to be reallocated.
-  - snps,incr-burst-type-adjustment: Value for INCR burst type of GSBUSCFG0
-diff --git a/Documentation/devicetree/bindings/usb/usb-xhci.txt b/Documentation/devicetree/bindings/usb/usb-xhci.txt
-index 3f378951d624..a90d853557ee 100644
---- a/Documentation/devicetree/bindings/usb/usb-xhci.txt
-+++ b/Documentation/devicetree/bindings/usb/usb-xhci.txt
-@@ -43,6 +43,9 @@ Optional properties:
-   - quirk-broken-port-ped: set if the controller has broken port disable mechanism
-   - imod-interval-ns: default interrupt moderation interval is 5000ns
-   - phys : see usb-hcd.yaml in the current directory
-+  - consolidate-sgl: indicate if you need to consolidate sg list into a
-+    temporary buffer when small SG buffer sizes does not make upto MPS
-+    size or total transfer size across the TRB cache size.
++	if (pdev->vendor == PCI_VENDOR_ID_SYNOPSYS)
++		xhci->quirks |= XHCI_CONSOLIDATE_SG_LIST;
++
+ 	if (xhci->quirks & XHCI_RESET_ON_RESUME)
+ 		xhci_dbg_trace(xhci, trace_xhci_dbg_quirks,
+ 				"QUIRK: Resetting on resume");
+diff --git a/drivers/usb/host/xhci-plat.c b/drivers/usb/host/xhci-plat.c
+index 315b4552693c..8333c78dcf03 100644
+--- a/drivers/usb/host/xhci-plat.c
++++ b/drivers/usb/host/xhci-plat.c
+@@ -289,6 +289,9 @@ static int xhci_plat_probe(struct platform_device *pdev)
+ 		if (device_property_read_bool(tmpdev, "quirk-broken-port-ped"))
+ 			xhci->quirks |= XHCI_BROKEN_PORT_PED;
  
- additionally the properties from usb-hcd.yaml (in the current directory) are
- supported.
++		if (device_property_read_bool(tmpdev, "consolidate-sgl"))
++			xhci->quirks |= XHCI_CONSOLIDATE_SG_LIST;
++
+ 		device_property_read_u32(tmpdev, "imod-interval-ns",
+ 					 &xhci->imod_interval);
+ 	}
+diff --git a/drivers/usb/host/xhci.h b/drivers/usb/host/xhci.h
+index 3289bb516201..a093eeaec70e 100644
+--- a/drivers/usb/host/xhci.h
++++ b/drivers/usb/host/xhci.h
+@@ -1873,6 +1873,7 @@ struct xhci_hcd {
+ #define XHCI_DEFAULT_PM_RUNTIME_ALLOW	BIT_ULL(33)
+ #define XHCI_RESET_PLL_ON_DISCONNECT	BIT_ULL(34)
+ #define XHCI_SNPS_BROKEN_SUSPEND    BIT_ULL(35)
++#define XHCI_CONSOLIDATE_SG_LIST    BIT_ULL(36)
+ 
+ 	unsigned int		num_active_eps;
+ 	unsigned int		limit_active_eps;
 -- 
 2.11.0
 
