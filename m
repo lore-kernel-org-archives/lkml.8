@@ -2,49 +2,49 @@ Return-Path: <SRS0=s8dx=5M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_DIGITS,
-	FROM_LOCAL_HEX,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04495C2D0E5
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 13:30:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58F7CC43331
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 13:30:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D8E26206F2
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 13:30:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 39EE1206F2
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 13:30:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727714AbgC0NaS (ORCPT
+        id S1727729AbgC0Na0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Mar 2020 09:30:18 -0400
-Received: from mail-il1-f197.google.com ([209.85.166.197]:37305 "EHLO
-        mail-il1-f197.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727541AbgC0NaR (ORCPT
+        Fri, 27 Mar 2020 09:30:26 -0400
+Received: from mail-io1-f71.google.com ([209.85.166.71]:40465 "EHLO
+        mail-io1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726540AbgC0NaP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Mar 2020 09:30:17 -0400
-Received: by mail-il1-f197.google.com with SMTP id z89so8924208ilk.4
+        Fri, 27 Mar 2020 09:30:15 -0400
+Received: by mail-io1-f71.google.com with SMTP id z207so8593399iof.7
         for <linux-kernel@vger.kernel.org>; Fri, 27 Mar 2020 06:30:15 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=HweTU5jj17xC6BlpXQyem62ObeI/pFALQMnTvUhCql4=;
-        b=Xh6rjQw5+djctXLhesJdjvg9/qzEUamS+/6AZQ08uQA2ggwZosY/dZ5FhxHYeZoMPd
-         5N2emHSuAOnIenmIWK7MtXL8MlLSgdwbLJRWxnWrtbQnWcALeiNdlqWq1+sq4QcLSeYr
-         AYO+ByFlE8h+wa0xu9ArpZJZtuGHqYqYBnnaRlNmB8zqqJPMm8CNJasSs7MRp0BlHwyW
-         I27F8GxhbM+eYr4CoG1CJtJ1zCgstgLc/5n/RluXuhCHMU4GgxxgWjtZAQZH3lixvLbQ
-         XDlZu3As6zs4Jx4lj5P5QnjCFVCzonD801xdzX9JFQ4Y6nFM+iSDGX7r8EUy7U2s2DVd
-         TArw==
-X-Gm-Message-State: ANhLgQ1SJes+3xfEE9jVjCRkDxoYrBlOTMoPDnicwZUFG29tbcXk6iPT
-        f21aOovzYACZw+ipzqXQBFfgxZnUpD+bUyb3SetpvbcriiLB
-X-Google-Smtp-Source: ADFU+vvJsJfct4TOYF0rsn4TG7dIp3UoAiUjSETSMIFbPyzhwwX/OW1NnqSw1DEFL3ukg0pGEpIAIM41ykLMvtPXAdnRAyTgXYnT
+        bh=n4vumiXWDS40eA/9ntKo+unPEO96iPs77sUIyblD6q8=;
+        b=jkLP7P95bIR6dpVkK6ly1zpN0DB9BvNXIrm/DYLqGmvpxfKA+hKQ8yhwo69E0rtNNu
+         YlAYKgxZOrM3eDtNybA0KCkavOxz17jtPS4/GTEqaxvhhjGK5JG30D36JaZ1rwvNCgM9
+         ASiI6RFh3sK+lwkwtXGErVe1uGMDZ9a0BpKcrNFoiDHVkFElZ1kTpuZBS7YSiVpEF74Y
+         pWD2OSmh4DXrK7nxZJc792Cm/SzBuxMYG6TtHuS+UZc9f9iOn697JUaomhq0/RsWGMgF
+         Y/hNT1VG5QDLTDsBFY/f2QayH9kS9+Nw2O4jUvjUERwQpX4+/LY/2uTG2UPtRs7GKTOv
+         v6OQ==
+X-Gm-Message-State: ANhLgQ2McpNTBXrxcgeZEGK769sStcVgH10izP6Vchp3Q2dSvzIh9dkb
+        pXBd9qZDiv6DsOO8Dp3cQDLG9wXsUkdw44IoM7izJIm1X1H4
+X-Google-Smtp-Source: ADFU+vtsdGZ0mIf4+EJpDoxAfc6IIb4PwKVbgR0RItf2HFkpqESytj6kyz/idIh55iyZQCV/qn/E4spNJ75LiVetgXCIpzopEKJx
 MIME-Version: 1.0
-X-Received: by 2002:a92:8f81:: with SMTP id r1mr13736124ilk.51.1585315814830;
+X-Received: by 2002:a05:6638:253:: with SMTP id w19mr12803116jaq.137.1585315814604;
  Fri, 27 Mar 2020 06:30:14 -0700 (PDT)
 Date:   Fri, 27 Mar 2020 06:30:14 -0700
 X-Google-Appengine-App-Id: s~syzkaller
 X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000000002fc05a1d61a68@google.com>
-Subject: KASAN: use-after-free Read in ath9k_wmi_ctrl_rx
-From:   syzbot <syzbot+5d338854440137ea0fef@syzkaller.appspotmail.com>
+Message-ID: <000000000000fc837f05a1d619d5@google.com>
+Subject: INFO: trying to register non-static key in ath9k_htc_rx_msg
+From:   syzbot <syzbot+835e7082fea90ddd153f@syzkaller.appspotmail.com>
 To:     andreyknvl@google.com, ath9k-devel@qca.qualcomm.com,
         davem@davemloft.net, kvalo@codeaurora.org,
         linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
@@ -62,40 +62,37 @@ syzbot found the following crash on:
 
 HEAD commit:    e17994d1 usb: core: kcov: collect coverage from usb comple..
 git tree:       https://github.com/google/kasan.git usb-fuzzer
-console output: https://syzkaller.appspot.com/x/log.txt?x=1253c9d5e00000
+console output: https://syzkaller.appspot.com/x/log.txt?x=1274cdc5e00000
 kernel config:  https://syzkaller.appspot.com/x/.config?x=5d64370c438bc60
-dashboard link: https://syzkaller.appspot.com/bug?extid=5d338854440137ea0fef
+dashboard link: https://syzkaller.appspot.com/bug?extid=835e7082fea90ddd153f
 compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=17fd135be00000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=16436be5e00000
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1415bba7e00000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=12c3316be00000
 
 IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+5d338854440137ea0fef@syzkaller.appspotmail.com
+Reported-by: syzbot+835e7082fea90ddd153f@syzkaller.appspotmail.com
 
-==================================================================
-BUG: KASAN: use-after-free in ath9k_wmi_ctrl_rx+0x416/0x500 drivers/net/wireless/ath/ath9k/wmi.c:215
-Read of size 1 at addr ffff8881cef1417c by task swapper/1/0
-
-CPU: 1 PID: 0 Comm: swapper/1 Not tainted 5.6.0-rc5-syzkaller #0
+INFO: trying to register non-static key.
+the code is fine but needs lockdep annotation.
+turning off the locking correctness validator.
+CPU: 0 PID: 0 Comm: swapper/0 Not tainted 5.6.0-rc5-syzkaller #0
 Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
 Call Trace:
  <IRQ>
  __dump_stack lib/dump_stack.c:77 [inline]
  dump_stack+0xef/0x16e lib/dump_stack.c:118
- print_address_description.constprop.0.cold+0xd3/0x314 mm/kasan/report.c:374
- __kasan_report.cold+0x37/0x77 mm/kasan/report.c:506
- kasan_report+0xe/0x20 mm/kasan/common.c:641
- ath9k_wmi_ctrl_rx+0x416/0x500 drivers/net/wireless/ath/ath9k/wmi.c:215
- ath9k_htc_rx_msg+0x2da/0xaf0 drivers/net/wireless/ath/ath9k/htc_hst.c:459
+ assign_lock_key kernel/locking/lockdep.c:880 [inline]
+ register_lock_class+0x1022/0x11d0 kernel/locking/lockdep.c:1189
+ __lock_acquire+0xfc/0x3b60 kernel/locking/lockdep.c:3836
+ lock_acquire+0x130/0x340 kernel/locking/lockdep.c:4484
+ __raw_spin_lock_irqsave include/linux/spinlock_api_smp.h:110 [inline]
+ _raw_spin_lock_irqsave+0x32/0x50 kernel/locking/spinlock.c:159
+ complete+0x13/0x70 kernel/sched/completion.c:32
+ htc_process_conn_rsp drivers/net/wireless/ath/ath9k/htc_hst.c:138 [inline]
+ ath9k_htc_rx_msg+0x7c2/0xaf0 drivers/net/wireless/ath/ath9k/htc_hst.c:443
  ath9k_hif_usb_reg_in_cb+0x1ba/0x630 drivers/net/wireless/ath/ath9k/hif_usb.c:718
  __usb_hcd_giveback_urb+0x29a/0x550 drivers/usb/core/hcd.c:1650
  usb_hcd_giveback_urb+0x368/0x420 drivers/usb/core/hcd.c:1716
- dummy_timer+0x1258/0x32ae drivers/usb/gadget/udc/dummy_hcd.c:1966
- call_timer_fn+0x195/0x6f0 kernel/time/timer.c:1404
- expire_timers kernel/time/timer.c:1449 [inline]
- __run_timers kernel/time/timer.c:1773 [inline]
- __run_timers kernel/time/timer.c:1740 [inline]
- run_timer_softirq+0x5f9/0x1500 kernel/time/timer.c:1786
 
 
 ---
