@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 902EAC43331
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 22:25:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF0A3C2D0E5
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 22:25:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 605E721D7E
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 22:25:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 87E8D2073B
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 22:25:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585347924;
-	bh=AozrG3MmGq6+pM4lOKZjhKJpJ9U2ielG7RVJMhTB7pw=;
+	s=default; t=1585347926;
+	bh=q2fE1kOW1cI7SuRCjq116uhDjWMg8G8XdBqzxEWCt3Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=z89iolsAP6GM2lrc/zcfJ9UKwSShqUP7VB44nNypnR27aq1TvTpMUdlcXk392itqb
-	 WwpwNdOC2C6sZ3MLvAOuVic4M2PM2vYZ5v8bbdn8UKsDuvqX+ELENS+mBmhZHcKiLQ
-	 otmbZwOQpTyFod+Uqm4r4mU3I5rkljox83LT3iuU=
+	b=0fYw3oitfGYTjtFpjjzaHi+/RhKPKHUc2qPasfPVLFrhx2VZccxxRvkdvOfFhpuW+
+	 O7VweWQqBiE+ecNdNLYiIaJ2c8U7lLvuPD6RSqbkWdd389ddaeXa2xEhNS1MghqOfy
+	 raLilicozzaI7iR2gxBifFKvIuxUCZzRp7eJVUfI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727967AbgC0WZX (ORCPT
+        id S1727979AbgC0WZZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Mar 2020 18:25:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43394 "EHLO mail.kernel.org"
+        Fri, 27 Mar 2020 18:25:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43218 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727869AbgC0WZJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1727854AbgC0WZJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 27 Mar 2020 18:25:09 -0400
 Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AA0E921D6C;
-        Fri, 27 Mar 2020 22:25:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EB45C214DB;
+        Fri, 27 Mar 2020 22:25:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585347907;
-        bh=AozrG3MmGq6+pM4lOKZjhKJpJ9U2ielG7RVJMhTB7pw=;
+        s=default; t=1585347906;
+        bh=q2fE1kOW1cI7SuRCjq116uhDjWMg8G8XdBqzxEWCt3Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xGDVj2yfmCfSZa+shrDeY1vLssuE0+riJLlgKTy7VPuNr8ZBbfEEneRCDfsNJmIpc
-         5GwKdWFg/0KBfc04TpPMCcEP6CkjWDd/YSZNwPogCtIpHYVtCWO+9KwvJltCm4Oerb
-         1WaRRebSxmH6rCwgOXYpWpRM9MeJ37IfwiGj7sZw=
+        b=I5SfAYoq5UMFhHOdCuTqt3DUqHnDA6nvjqxsz+oOfy2V5RiXxkaM0h+/etvfGG8AX
+         VOMqfdFFrjrSOmzq3bZp5pL+ZgBouHbGoa0H64Ff4H9ML3n2pqOiJ9G92IgK7Oh7SS
+         4zkNiH3/iVkDc5sgJ+dCxB7TiEuo0oiKY+eyl7cE=
 From:   paulmck@kernel.org
 To:     rcu@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
@@ -48,9 +48,9 @@ Cc:     linux-kernel@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
         rostedt@goodmis.org, dhowells@redhat.com, edumazet@google.com,
         fweisbec@gmail.com, oleg@redhat.com, joel@joelfernandes.org,
         "Paul E. McKenney" <paulmck@kernel.org>
-Subject: [PATCH v3 tip/core/rcu 28/34] rcu-tasks: Disable CPU hotplug across RCU tasks trace scans
-Date:   Fri, 27 Mar 2020 15:24:50 -0700
-Message-Id: <20200327222456.12470-28-paulmck@kernel.org>
+Subject: [PATCH v3 tip/core/rcu 23/34] rcu-tasks: Split ->trc_reader_need_end
+Date:   Fri, 27 Mar 2020 15:24:45 -0700
+Message-Id: <20200327222456.12470-23-paulmck@kernel.org>
 X-Mailer: git-send-email 2.9.5
 In-Reply-To: <20200327222346.GA12082@paulmck-ThinkPad-P72>
 References: <20200327222346.GA12082@paulmck-ThinkPad-P72>
@@ -61,71 +61,198 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: "Paul E. McKenney" <paulmck@kernel.org>
 
-This commit disables CPU hotplug across RCU tasks trace scans, which
-is a first step towards correctly recognizing idle tasks "running" on
-offline CPUs.
+This commit splits ->trc_reader_need_end by using the rcu_special union.
+This change permits readers to check to see if a memory barrier is
+required without any added overhead in the common case where no such
+barrier is required.  This commit also adds the read-side checking.
+Later commits will add the machinery to properly set the new
+->trc_reader_special.b.need_mb field.
+
+This commit also makes rcu_read_unlock_trace_special() tolerate nested
+read-side critical sections within interrupt and NMI handlers.
 
 Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
 ---
- kernel/rcu/tasks.h | 18 ++++++++++++++----
- 1 file changed, 14 insertions(+), 4 deletions(-)
+ include/linux/rcupdate_trace.h | 11 +++++++----
+ include/linux/sched.h          |  4 ++--
+ init/init_task.c               |  1 +
+ kernel/fork.c                  |  1 +
+ kernel/rcu/tasks.h             | 33 ++++++++++++++++++++-------------
+ 5 files changed, 31 insertions(+), 19 deletions(-)
 
-diff --git a/kernel/rcu/tasks.h b/kernel/rcu/tasks.h
-index 2663167e..df6e785 100644
---- a/kernel/rcu/tasks.h
-+++ b/kernel/rcu/tasks.h
-@@ -906,16 +906,16 @@ static void rcu_tasks_trace_pregp_step(void)
- {
- 	int cpu;
+diff --git a/include/linux/rcupdate_trace.h b/include/linux/rcupdate_trace.h
+index ed97e10..c42b365c 100644
+--- a/include/linux/rcupdate_trace.h
++++ b/include/linux/rcupdate_trace.h
+@@ -31,7 +31,7 @@ static inline int rcu_read_lock_trace_held(void)
  
--	// Wait for CPU-hotplug paths to complete.
--	cpus_read_lock();
--	cpus_read_unlock();
--
- 	// Allow for fast-acting IPIs.
- 	atomic_set(&trc_n_readers_need_end, 1);
+ #ifdef CONFIG_TASKS_TRACE_RCU
  
- 	// There shouldn't be any old IPIs, but...
- 	for_each_possible_cpu(cpu)
- 		WARN_ON_ONCE(per_cpu(trc_ipi_to_cpu, cpu));
-+
-+	// Disable CPU hotplug across the tasklist scan.
-+	// This also waits for all readers in CPU-hotplug code paths.
-+	cpus_read_lock();
+-void rcu_read_unlock_trace_special(struct task_struct *t);
++void rcu_read_unlock_trace_special(struct task_struct *t, int nesting);
+ 
+ /**
+  * rcu_read_lock_trace - mark beginning of RCU-trace read-side critical section
+@@ -50,6 +50,8 @@ static inline void rcu_read_lock_trace(void)
+ 	struct task_struct *t = current;
+ 
+ 	WRITE_ONCE(t->trc_reader_nesting, READ_ONCE(t->trc_reader_nesting) + 1);
++	if (t->trc_reader_special.b.need_mb)
++		smp_mb(); // Pairs with update-side barriers
+ 	rcu_lock_acquire(&rcu_trace_lock_map);
  }
  
- /* Do first-round processing for the specified task. */
-@@ -931,6 +931,9 @@ static void rcu_tasks_trace_pertask(struct task_struct *t,
- /* Do intermediate processing between task and holdout scans. */
- static void rcu_tasks_trace_postscan(void)
- {
-+	// Re-enable CPU hotplug now that the tasklist scan has completed.
-+	cpus_read_unlock();
-+
- 	// Wait for late-stage exiting tasks to finish exiting.
- 	// These might have passed the call to exit_tasks_rcu_finish().
- 	synchronize_rcu();
-@@ -975,6 +978,9 @@ static void check_all_holdout_tasks_trace(struct list_head *hop,
- {
- 	struct task_struct *g, *t;
+@@ -69,10 +71,11 @@ static inline void rcu_read_unlock_trace(void)
  
-+	// Disable CPU hotplug across the holdout list scan.
-+	cpus_read_lock();
+ 	rcu_lock_release(&rcu_trace_lock_map);
+ 	nesting = READ_ONCE(t->trc_reader_nesting) - 1;
+-	WRITE_ONCE(t->trc_reader_nesting, nesting);
+-	if (likely(!READ_ONCE(t->trc_reader_need_end)) || nesting)
++	if (likely(!READ_ONCE(t->trc_reader_special.s)) || nesting) {
++		WRITE_ONCE(t->trc_reader_nesting, nesting);
+ 		return;  // We assume shallow reader nesting.
+-	rcu_read_unlock_trace_special(t);
++	}
++	rcu_read_unlock_trace_special(t, nesting);
+ }
+ 
+ void call_rcu_tasks_trace(struct rcu_head *rhp, rcu_callback_t func);
+diff --git a/include/linux/sched.h b/include/linux/sched.h
+index ef68ae4..63d359e 100644
+--- a/include/linux/sched.h
++++ b/include/linux/sched.h
+@@ -611,7 +611,7 @@ union rcu_special {
+ 		u8			blocked;
+ 		u8			need_qs;
+ 		u8			exp_hint; /* Hint for performance. */
+-		u8			pad; /* No garbage from compiler! */
++		u8			need_mb; /* Readers need smp_mb(). */
+ 	} b; /* Bits. */
+ 	u32 s; /* Set of bits. */
+ };
+@@ -725,7 +725,7 @@ struct task_struct {
+ #ifdef CONFIG_TASKS_TRACE_RCU
+ 	int				trc_reader_nesting;
+ 	int				trc_ipi_to_cpu;
+-	bool				trc_reader_need_end;
++	union rcu_special		trc_reader_special;
+ 	bool				trc_reader_checked;
+ 	struct list_head		trc_holdout_list;
+ #endif /* #ifdef CONFIG_TASKS_TRACE_RCU */
+diff --git a/init/init_task.c b/init/init_task.c
+index 1b9ec3d..4efd819 100644
+--- a/init/init_task.c
++++ b/init/init_task.c
+@@ -142,6 +142,7 @@ struct task_struct init_task
+ #endif
+ #ifdef CONFIG_TASKS_TRACE_RCU
+ 	.trc_reader_nesting = 0,
++	.trc_reader_special.s = 0,
+ 	.trc_holdout_list = LIST_HEAD_INIT(init_task.trc_holdout_list),
+ #endif
+ #ifdef CONFIG_CPUSETS
+diff --git a/kernel/fork.c b/kernel/fork.c
+index 97df86b..2505e21 100644
+--- a/kernel/fork.c
++++ b/kernel/fork.c
+@@ -1687,6 +1687,7 @@ static inline void rcu_copy_process(struct task_struct *p)
+ #endif /* #ifdef CONFIG_TASKS_RCU */
+ #ifdef CONFIG_TASKS_TRACE_RCU
+ 	p->trc_reader_nesting = 0;
++	p->trc_reader_special.s = 0;
+ 	INIT_LIST_HEAD(&p->trc_holdout_list);
+ #endif /* #ifdef CONFIG_TASKS_TRACE_RCU */
+ }
+diff --git a/kernel/rcu/tasks.h b/kernel/rcu/tasks.h
+index a034f48..4150f8d 100644
+--- a/kernel/rcu/tasks.h
++++ b/kernel/rcu/tasks.h
+@@ -723,10 +723,17 @@ DEFINE_RCU_TASKS(rcu_tasks_trace, rcu_tasks_wait_gp, call_rcu_tasks_trace,
+ 		 "RCU Tasks Trace");
+ 
+ /* If we are the last reader, wake up the grace-period kthread. */
+-void rcu_read_unlock_trace_special(struct task_struct *t)
++void rcu_read_unlock_trace_special(struct task_struct *t, int nesting)
+ {
+-	WRITE_ONCE(t->trc_reader_need_end, false);
+-	if (atomic_dec_and_test(&trc_n_readers_need_end))
++	int nq = t->trc_reader_special.b.need_qs;
 +
- 	list_for_each_entry_safe(t, g, hop, trc_holdout_list) {
- 		// If safe and needed, try to check the current task.
- 		if (READ_ONCE(t->trc_ipi_to_cpu) == -1 &&
-@@ -987,6 +993,10 @@ static void check_all_holdout_tasks_trace(struct list_head *hop,
- 		else if (needreport)
- 			show_stalled_task_trace(t, firstreport);
++	if (t->trc_reader_special.b.need_mb)
++		smp_mb(); // Pairs with update-side barriers.
++	// Update .need_qs before ->trc_reader_nesting for irq/NMI handlers.
++	if (nq)
++		WRITE_ONCE(t->trc_reader_special.b.need_qs, false);
++	WRITE_ONCE(t->trc_reader_nesting, nesting);
++	if (nq && atomic_dec_and_test(&trc_n_readers_need_end))
+ 		wake_up(&trc_wait);
+ }
+ EXPORT_SYMBOL_GPL(rcu_read_unlock_trace_special);
+@@ -777,8 +784,8 @@ static void trc_read_check_handler(void *t_in)
+ 	// Get here if the task is in a read-side critical section.  Set
+ 	// its state so that it will awaken the grace-period kthread upon
+ 	// exit from that critical section.
+-	WARN_ON_ONCE(t->trc_reader_need_end);
+-	WRITE_ONCE(t->trc_reader_need_end, true);
++	WARN_ON_ONCE(t->trc_reader_special.b.need_qs);
++	WRITE_ONCE(t->trc_reader_special.b.need_qs, true);
+ 
+ reset_ipi:
+ 	// Allow future IPIs to be sent on CPU and for task.
+@@ -804,8 +811,8 @@ static bool trc_inspect_reader(struct task_struct *t, void *arg)
+ 	// exit from that critical section.
+ 	if (unlikely(t->trc_reader_nesting)) {
+ 		atomic_inc(&trc_n_readers_need_end); // One more to wait on.
+-		WARN_ON_ONCE(t->trc_reader_need_end);
+-		WRITE_ONCE(t->trc_reader_need_end, true);
++		WARN_ON_ONCE(t->trc_reader_special.b.need_qs);
++		WRITE_ONCE(t->trc_reader_special.b.need_qs, true);
  	}
-+
-+	// Re-enable CPU hotplug now that the holdout list scan has completed.
-+	cpus_read_unlock();
-+
- 	if (needreport) {
- 		if (firstreport)
- 			pr_err("INFO: rcu_tasks_trace detected stalls?\n");
+ 	return true;
+ }
+@@ -880,7 +887,7 @@ static void rcu_tasks_trace_pregp_step(void)
+ static void rcu_tasks_trace_pertask(struct task_struct *t,
+ 				    struct list_head *hop)
+ {
+-	WRITE_ONCE(t->trc_reader_need_end, false);
++	WRITE_ONCE(t->trc_reader_special.b.need_qs, false);
+ 	WRITE_ONCE(t->trc_reader_checked, false);
+ 	t->trc_ipi_to_cpu = -1;
+ 	trc_wait_for_one_reader(t, hop);
+@@ -912,7 +919,7 @@ static void show_stalled_task_trace(struct task_struct *t, bool *firstreport)
+ 		 ".i"[is_idle_task(t)],
+ 		 ".N"[cpu > 0 && tick_nohz_full_cpu(cpu)],
+ 		 t->trc_reader_nesting,
+-		 " N"[!!t->trc_reader_need_end],
++		 " N"[!!t->trc_reader_special.b.need_qs],
+ 		 cpu);
+ 	sched_show_task(t);
+ }
+@@ -976,11 +983,11 @@ static void rcu_tasks_trace_postgp(struct rcu_tasks *rtp)
+ 			break;  // Count reached zero.
+ 		// Stall warning time, so make a list of the offenders.
+ 		for_each_process_thread(g, t)
+-			if (READ_ONCE(t->trc_reader_need_end))
++			if (READ_ONCE(t->trc_reader_special.b.need_qs))
+ 				trc_add_holdout(t, &holdouts);
+ 		firstreport = true;
+ 		list_for_each_entry_safe(t, g, &holdouts, trc_holdout_list)
+-			if (READ_ONCE(t->trc_reader_need_end)) {
++			if (READ_ONCE(t->trc_reader_special.b.need_qs)) {
+ 				show_stalled_task_trace(t, &firstreport);
+ 				trc_del_holdout(t);
+ 			}
+@@ -999,8 +1006,8 @@ void exit_tasks_rcu_finish_trace(struct task_struct *t)
+ 	WRITE_ONCE(t->trc_reader_checked, true);
+ 	WARN_ON_ONCE(t->trc_reader_nesting);
+ 	WRITE_ONCE(t->trc_reader_nesting, 0);
+-	if (WARN_ON_ONCE(READ_ONCE(t->trc_reader_need_end)))
+-		rcu_read_unlock_trace_special(t);
++	if (WARN_ON_ONCE(READ_ONCE(t->trc_reader_special.b.need_qs)))
++		rcu_read_unlock_trace_special(t, 0);
+ }
+ 
+ /**
 -- 
 2.9.5
 
