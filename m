@@ -2,95 +2,129 @@ Return-Path: <SRS0=s8dx=5M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24E98C43331
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 19:29:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52093C2D0F0
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 19:30:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0520720575
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 19:29:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2CBA920575
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 19:30:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585337405;
+	bh=9HUbUWL7NClnsAp7hy93RP9ofIIzMS/2p2B7PIoKVIg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=w7prSfVGZitApLvQoCLtabizgqFjjoWR/Za7n/HbI3v6b5a4bmFH98oAZd5C/syG0
+	 0jBnya2A2gLa5xJHSvo5Ht9Nw1uTszAHn2pwd+CbdsEAzVSFGoFO/mx4yX5Tj0UBVp
+	 6Nd7B5PcywDKEZHdzw/JOpnq7WKqa/IM2w+1Ph0Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727707AbgC0T3w (ORCPT
+        id S1727919AbgC0TaE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Mar 2020 15:29:52 -0400
-Received: from out30-131.freemail.mail.aliyun.com ([115.124.30.131]:35767 "EHLO
-        out30-131.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726959AbgC0T3v (ORCPT
+        Fri, 27 Mar 2020 15:30:04 -0400
+Received: from mail-il1-f194.google.com ([209.85.166.194]:42237 "EHLO
+        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726959AbgC0TaD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Mar 2020 15:29:51 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R101e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04427;MF=yang.shi@linux.alibaba.com;NM=1;PH=DS;RN=7;SR=0;TI=SMTPD_---0TtnYtzc_1585337380;
-Received: from localhost(mailfrom:yang.shi@linux.alibaba.com fp:SMTPD_---0TtnYtzc_1585337380)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Sat, 28 Mar 2020 03:29:47 +0800
-From:   Yang Shi <yang.shi@linux.alibaba.com>
-To:     kirill.shutemov@linux.intel.com, hughd@google.com,
-        aarcange@redhat.com, akpm@linux-foundation.org
-Cc:     yang.shi@linux.alibaba.com, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] mm: thp: don't need drain lru cache when splitting and mlocking THP
-Date:   Sat, 28 Mar 2020 03:29:40 +0800
-Message-Id: <1585337380-97368-1-git-send-email-yang.shi@linux.alibaba.com>
-X-Mailer: git-send-email 1.8.3.1
+        Fri, 27 Mar 2020 15:30:03 -0400
+Received: by mail-il1-f194.google.com with SMTP id f16so9852713ilj.9;
+        Fri, 27 Mar 2020 12:30:01 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=+6juMdOF3ml8+Ae5THAMDkYKsZSA6LWpaypcZCb56iM=;
+        b=OqvAH8vt9xXb1IuAqhdnmQwHP7jEnye1A5ZQ8PHVjwpxtGkeV/841Nelp5HB08gT5Q
+         8VZPRbX2u2Pf3Yx8orwcMwQHIbCA49FTcYfkPEhvcH2zeW2fEQ7aDSf4EufP4wRioPJ/
+         IkfEiXvie6b4krztzXHU8nxo/2hpydM+INAVHbDiWhykss4Th04nWJOuuFUYsN24zCai
+         3sV3sN+yyoEp0o2OOdLsD0/SJXn/exvqicfHZBqbGLbTB+IEnhF+Vy8tjtDn+5daOZLb
+         YAN8qYt3Sr8Qfp3znPPKCJK6Q+MHYfkem8uL837vc6dbmC1Eio0E0PwinYhSHx9bQjMu
+         B6Uw==
+X-Gm-Message-State: ANhLgQ3iL35AHN2QLIwUd8lbGrujFZb0QDTDy2msMHX3PZo4/+nhJD/v
+        I4FplbzeHfIoDliKIMfZsw==
+X-Google-Smtp-Source: ADFU+vvcvzixXoT9nuU+25JCfDW/ewtABsf4WS3snntWAxPLhxgn9dzSKHh0huzUaaVDWcxFw7Rv9Q==
+X-Received: by 2002:a92:8c45:: with SMTP id o66mr732857ild.236.1585337401543;
+        Fri, 27 Mar 2020 12:30:01 -0700 (PDT)
+Received: from rob-hp-laptop ([64.188.179.250])
+        by smtp.gmail.com with ESMTPSA id j9sm2181862ilc.4.2020.03.27.12.29.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 27 Mar 2020 12:30:00 -0700 (PDT)
+Received: (nullmailer pid 1841 invoked by uid 1000);
+        Fri, 27 Mar 2020 19:29:59 -0000
+Date:   Fri, 27 Mar 2020 13:29:59 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Lubomir Rintel <lkundrak@v3.sk>,
+        Robert Jarzmik <robert.jarzmik@free.fr>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mark Brown <broonie@kernel.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Daniel Mack <daniel@zonque.org>,
+        Haojian Zhuang <haojian.zhuang@gmail.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        linux-i2c <linux-i2c@vger.kernel.org>,
+        linux-media@vger.kernel.org, linux-mmc <linux-mmc@vger.kernel.org>,
+        linux-rtc@vger.kernel.org,
+        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
+        linux-spi <linux-spi@vger.kernel.org>,
+        linux-usb <linux-usb@vger.kernel.org>
+Subject: Re: [PATCH 21/28] dt-bindings: gpio: Convert mrvl-gpio to json-schema
+Message-ID: <20200327192959.GB8577@bogus>
+References: <20200317093922.20785-1-lkundrak@v3.sk>
+ <20200317093922.20785-22-lkundrak@v3.sk>
+ <CACRpkdaEnODObC7emg2M7Ayn_JkeLuc3HpV4VhJcwaZ+=sDLcg@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CACRpkdaEnODObC7emg2M7Ayn_JkeLuc3HpV4VhJcwaZ+=sDLcg@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since the commit 8f182270dfec ("mm/swap.c: flush lru pvecs on compound
-page arrival") THP would not stay in pagevec anymore.  So the
-optimization made by commit d965432234db ("thp: increase
-split_huge_page() success rate") doesn't make sense anymore, which tries
-to unpin munlocked THPs from pagevec by draining pagevec.
+On Fri, Mar 27, 2020 at 11:04:00AM +0100, Linus Walleij wrote:
+> Hi Lubomir!
+> 
+> Excellent work! Just nitpicks:
+> 
+> On Tue, Mar 17, 2020 at 10:40 AM Lubomir Rintel <lkundrak@v3.sk> wrote:
+> 
+> > +++ b/Documentation/devicetree/bindings/gpio/mrvl-gpio.yaml
+> > @@ -0,0 +1,173 @@
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/gpio/mrvl-gpio.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > +
+> > +title: Marvell PXA GPIO controller
+> 
+> This binding is lacking a license. Please use the dual GPL+BSD license
+> tag.
 
-And draining lru cache before isolating THP in mlock path is unnecessary
-either.
+That is preferred, but should only be dual if you have rights on the old 
+binding file or get relicensing permissions.
 
-Cc: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-Cc: Hugh Dickins <hughd@google.com>
-Cc: Andrea Arcangeli <aarcange@redhat.com>
-Signed-off-by: Yang Shi <yang.shi@linux.alibaba.com>
----
- mm/huge_memory.c | 7 -------
- 1 file changed, 7 deletions(-)
-
-diff --git a/mm/huge_memory.c b/mm/huge_memory.c
-index b08b199..1af2e7d6 100644
---- a/mm/huge_memory.c
-+++ b/mm/huge_memory.c
-@@ -1527,7 +1527,6 @@ struct page *follow_trans_huge_pmd(struct vm_area_struct *vma,
- 			goto skip_mlock;
- 		if (!trylock_page(page))
- 			goto skip_mlock;
--		lru_add_drain();
- 		if (page->mapping && !PageDoubleMap(page))
- 			mlock_vma_page(page);
- 		unlock_page(page);
-@@ -2711,7 +2710,6 @@ int split_huge_page_to_list(struct page *page, struct list_head *list)
- 	struct anon_vma *anon_vma = NULL;
- 	struct address_space *mapping = NULL;
- 	int count, mapcount, extra_pins, ret;
--	bool mlocked;
- 	unsigned long flags;
- 	pgoff_t end;
- 
-@@ -2770,14 +2768,9 @@ int split_huge_page_to_list(struct page *page, struct list_head *list)
- 		goto out_unlock;
- 	}
- 
--	mlocked = PageMlocked(head);
- 	unmap_page(head);
- 	VM_BUG_ON_PAGE(compound_mapcount(head), head);
- 
--	/* Make sure the page is not on per-CPU pagevec as it takes pin */
--	if (mlocked)
--		lru_add_drain();
--
- 	/* prevent PageLRU to go away from under us, and freeze lru stats */
- 	spin_lock_irqsave(&pgdata->lru_lock, flags);
- 
--- 
-1.8.3.1
-
+> 
+> > +maintainers:
+> > +  - devicetree@vger.kernel.org
+> 
+> I don't know if Robert Jarzmik is in on maintaining this, would you accept
+> it Robert?
+> 
+> Yours,
+> Linus Walleij
