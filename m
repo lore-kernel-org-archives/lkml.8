@@ -2,274 +2,163 @@ Return-Path: <SRS0=s8dx=5M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51A7AC2D0E7
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 08:03:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79E0BC43331
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 08:03:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 185552071B
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 08:03:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585296209;
-	bh=L8j7G5jMjtpXoiR/9IBYLeUFH9fJrK3JA8DL+b3axRs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=bCNy0Szo/W1noPPzSGujkH3Qy7cUk7HNfK102L6VbhRlrZ835s2LHPlj0Sl3duSLO
-	 T+WfExbiRgFKA3iyu42m0GBUFS5JZsnsNkrXDP9vQtlvdqRdkIZ/G8JuZViP2QuUxp
-	 wflH7bQvWUrAO+NUYKYOyrtbXYFndregSXvHPUz8=
+	by mail.kernel.org (Postfix) with ESMTP id 2A73F20714
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 08:03:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bkeb68vQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726758AbgC0ID2 (ORCPT
+        id S1727247AbgC0IDn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Mar 2020 04:03:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56840 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726027AbgC0ID2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Mar 2020 04:03:28 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 05FD020714;
-        Fri, 27 Mar 2020 08:03:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585296206;
-        bh=L8j7G5jMjtpXoiR/9IBYLeUFH9fJrK3JA8DL+b3axRs=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=EiKQw2ThSLfdnCbX33dpyZNDwp9jLoKgLipBlBh4xVQaAG3/iwbEF+ua4BEWCz38R
-         HqtTOojxSbLjtGZMKIhHDD6zzR49ErMNlgWCyip5vZGgZEhapdejepCTj7UKXa0vbf
-         qEdJRIwJfJLHTRKiQp7FdFWts8JFquG/IKtL/laY=
-Date:   Fri, 27 Mar 2020 09:03:23 +0100
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Grant Likely <grant.likely@arm.com>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Saravana Kannan <saravanak@google.com>, a.hajda@samsung.com,
-        artem.bityutskiy@linux.intel.com, balbi@kernel.org,
-        broonie@kernel.org, fntoth@gmail.com, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org, peter.ujfalusi@ti.com, rafael@kernel.org,
-        kernel-team@android.com, nd <nd@arm.com>
-Subject: Re: [PATCH v3] driver core: Break infinite loop when deferred probe
- can't be satisfied
-Message-ID: <20200327080323.GA1627562@kroah.com>
-References: <20200324175719.62496-1-andriy.shevchenko@linux.intel.com>
- <20200325032901.29551-1-saravanak@google.com>
- <20200325125120.GX1922688@smile.fi.intel.com>
- <295d25de-f01e-26de-02d6-1ac0c149d828@arm.com>
- <20200326163110.GD1922688@smile.fi.intel.com>
- <20200326163953.GA1551380@kroah.com>
- <9350ec52-345f-5c3c-f175-4e256699b9cf@arm.com>
+        Fri, 27 Mar 2020 04:03:43 -0400
+Received: from us-smtp-delivery-74.mimecast.com ([216.205.24.74]:53864 "EHLO
+        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726027AbgC0IDm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Mar 2020 04:03:42 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1585296221;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=s3wT6nFybrS3qXNqSectqAHi2tg9aj7KFPNVsR/+fuQ=;
+        b=bkeb68vQDHqLQBm7qtKsacWPsKTx4nziO9Q6TQP4XaTLGVavkOGCMW7W9k/BwfPE60GtBJ
+        3W4wYIUuxHfMikNAr3JXWVFv9d8HvUZRZQmxMUDvfV+JkmWYQP0UgRfLvXIkh6FG6rAQ8L
+        HjMnudjAONxDfssM+EiFAMKWtdvpDX4=
+Received: from mail-qt1-f198.google.com (mail-qt1-f198.google.com
+ [209.85.160.198]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-249-W7PIXX2-ObCt_wpSaJBoTA-1; Fri, 27 Mar 2020 04:03:39 -0400
+X-MC-Unique: W7PIXX2-ObCt_wpSaJBoTA-1
+Received: by mail-qt1-f198.google.com with SMTP id x10so7557719qts.14
+        for <linux-kernel@vger.kernel.org>; Fri, 27 Mar 2020 01:03:39 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=s3wT6nFybrS3qXNqSectqAHi2tg9aj7KFPNVsR/+fuQ=;
+        b=jT088XJ3Fk6bAy/2/41rXecIWPWalPOJBACa0/dKBseq25UD18g2c1r413A8GxMOQA
+         OYsMwSWjpD0+Vle03XWDaYZxqGfHq6YSftd3vL//y4H++A/NtnUu7iCKLasnjRuxaT+m
+         ogEQAEtuOhFYtd2A69O6dtk8XlegPEzmcetCqDs6XhdBIxrs4MbUIHdkkAlXyvX646il
+         l5mqmhHfWuvKoXt5tUpgPwsGP2oMRlkAsn6d0AgWIdPbzq8tABXnBRDhMa2iDyGEMc81
+         bZsj1NzGTNQnpRCVD4gv6RwCZEDDIkSneVWaq3RR9eyQSxgC6KXukfXcFl8glzO/X4jJ
+         mY2Q==
+X-Gm-Message-State: ANhLgQ31KRGUYhw3uKbOedZtl0YLzGufAyvI8pKDdOvEK8eR7zfY1/oK
+        Or0rHNN1sy0p3xrd5zf06TRcDQ7VBpaj9qRCeEMyGRGxDdUOb/6OnCA9eMu+nNyeVQ97uoPAkyz
+        7KMXWT+0ayzEwjPh+WZt+H7XslORLgH9nuIITZnV9
+X-Received: by 2002:ac8:740b:: with SMTP id p11mr1079300qtq.379.1585296219320;
+        Fri, 27 Mar 2020 01:03:39 -0700 (PDT)
+X-Google-Smtp-Source: ADFU+vs/4SQy0FyOub1InlLW148p3ySSy5TgUr8hk4E+oBfeAUrNqvwpku0dpmQMLavKQGXEsGX2v72ZtQaUhPEdb2g=
+X-Received: by 2002:ac8:740b:: with SMTP id p11mr1079281qtq.379.1585296219048;
+ Fri, 27 Mar 2020 01:03:39 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <9350ec52-345f-5c3c-f175-4e256699b9cf@arm.com>
+References: <2a63b15f-8cf5-5868-550c-42e2cfd92c60@de.ibm.com>
+ <b6e32f58e5d85ac5cc3141e9155fb140ae5cd580.camel@redhat.com>
+ <1ade56b5-083f-bb6f-d3e0-3ddcf78f4d26@de.ibm.com> <20200206171349-mutt-send-email-mst@kernel.org>
+ <5c860fa1-cef5-b389-4ebf-99a62afa0fe8@de.ibm.com> <20200207025806-mutt-send-email-mst@kernel.org>
+ <97c93d38-ef07-e321-d133-18483d54c0c0@de.ibm.com> <CAJaqyWfngzP4d01B6+Sqt8FXN6jX7kGegjx8ie4no_1Er3igQA@mail.gmail.com>
+ <43a5dbaa-9129-e220-8483-45c60a82c945@de.ibm.com> <e299afca8e22044916abbf9fbbd0bff6b0ee9e13.camel@redhat.com>
+ <20200211085736-mutt-send-email-mst@kernel.org>
+In-Reply-To: <20200211085736-mutt-send-email-mst@kernel.org>
+From:   Eugenio Perez Martin <eperezma@redhat.com>
+Date:   Fri, 27 Mar 2020 09:03:02 +0100
+Message-ID: <CAJaqyWdpA-M3M3AJWuY9z7yHKbX3-zbSzssWrjur3ok8BuFR9A@mail.gmail.com>
+Subject: Re: vhost changes (batched) in linux-next after 12/13 trigger random
+ crashes in KVM guests after reboot
+To:     "Michael S. Tsirkin" <mst@redhat.com>
+Cc:     Christian Borntraeger <borntraeger@de.ibm.com>,
+        "virtualization@lists.linux-foundation.org" 
+        <virtualization@lists.linux-foundation.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        kvm list <kvm@vger.kernel.org>,
+        Halil Pasic <pasic@linux.ibm.com>,
+        Cornelia Huck <cohuck@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 26, 2020 at 06:06:37PM +0000, Grant Likely wrote:
-> 
-> 
-> On 26/03/2020 16:39, Greg KH wrote:
-> > On Thu, Mar 26, 2020 at 06:31:10PM +0200, Andy Shevchenko wrote:
-> > > On Thu, Mar 26, 2020 at 03:01:22PM +0000, Grant Likely wrote:
-> > > > On 25/03/2020 12:51, Andy Shevchenko wrote:
-> > > > > On Tue, Mar 24, 2020 at 08:29:01PM -0700, Saravana Kannan wrote:
-> > > > > > On Tue, Mar 24, 2020 at 5:38 AM Andy Shevchenko <andriy.shevchenko@linux.intel.com> wrote:
-> > > > > > > Consider the following scenario.
-> > > > > > > 
-> > > > > > > The main driver of USB OTG controller (dwc3-pci), which has the following
-> > > > > > > functional dependencies on certain platform:
-> > > > > > > - ULPI (tusb1210)
-> > > > > > > - extcon (tested with extcon-intel-mrfld)
-> > > > > > > 
-> > > > > > > Note, that first driver, tusb1210, is available at the moment of
-> > > > > > > dwc3-pci probing, while extcon-intel-mrfld is built as a module and
-> > > > > > > won't appear till user space does something about it.
-> > > > > > > 
-> > > > > > > This is depicted by kernel configuration excerpt:
-> > > > > > > 
-> > > > > > > 	CONFIG_PHY_TUSB1210=y
-> > > > > > > 	CONFIG_USB_DWC3=y
-> > > > > > > 	CONFIG_USB_DWC3_ULPI=y
-> > > > > > > 	CONFIG_USB_DWC3_DUAL_ROLE=y
-> > > > > > > 	CONFIG_USB_DWC3_PCI=y
-> > > > > > > 	CONFIG_EXTCON_INTEL_MRFLD=m
-> > > > > > > 
-> > > > > > > In the Buildroot environment the modules are probed by alphabetical ordering
-> > > > > > > of their modaliases. The latter comes to the case when USB OTG driver will be
-> > > > > > > probed first followed by extcon one.
-> > > > > > > 
-> > > > > > > So, if the platform anticipates extcon device to be appeared, in the above case
-> > > > > > > we will get deferred probe of USB OTG, because of ordering.
-> > > > > > > 
-> > > > > > > Since current implementation, done by the commit 58b116bce136 ("drivercore:
-> > > > > > > deferral race condition fix") counts the amount of triggered deferred probe,
-> > > > > > > we never advance the situation -- the change makes it to be an infinite loop.
-> > > > > > 
-> > > > > > Hi Andy,
-> > > > > > 
-> > > > > > I'm trying to understand this sequence of steps. Sorry if the questions
-> > > > > > are stupid -- I'm not very familiar with USB/PCI stuff.
-> > > > > 
-> > > > > Thank you for looking into this. My answer below.
-> > > > > 
-> > > > > As a first thing I would like to tell that there is another example of bad
-> > > > > behaviour of deferred probe with no relation to USB. The proposed change also
-> > > > > fixes that one (however, less possible to find in real life).
-> > > > > 
-> > > > > > > ---8<---8<---
-> > > > > > > 
-> > > > > > > [   22.187127] driver_deferred_probe_trigger <<< 1
-> > > > > > > 
-> > > > > > > ...here is the late initcall triggers deferred probe...
-> > > > > > > 
-> > > > > > > [   22.191725] platform dwc3.0.auto: deferred_probe_work_func in deferred list
-> > > > > > > 
-> > > > > > > ...dwc3.0.auto is the only device in the deferred list...
-> > > > > > 
-> > > > > > Ok, dwc3.0.auto is the only unprobed device at this point?
-> > > > > 
-> > > > > Correct.
-> > > > > 
-> > > > > > > [   22.198727] platform dwc3.0.auto: deferred_probe_work_func 1 <<< counter 1
-> > > > > > > 
-> > > > > > > ...the counter before mutex is unlocked is kept the same...
-> > > > > > > 
-> > > > > > > [   22.205663] platform dwc3.0.auto: Retrying from deferred list
-> > > > > > > 
-> > > > > > > ...mutes has been unlocked, we try to re-probe the driver...
-> > > > > > > 
-> > > > > > > [   22.211487] bus: 'platform': driver_probe_device: matched device dwc3.0.auto with driver dwc3
-> > > > > > > [   22.220060] bus: 'platform': really_probe: probing driver dwc3 with device dwc3.0.auto
-> > > > > > > [   22.238735] bus: 'ulpi': driver_probe_device: matched device dwc3.0.auto.ulpi with driver tusb1210
-> > > > > > > [   22.247743] bus: 'ulpi': really_probe: probing driver tusb1210 with device dwc3.0.auto.ulpi
-> > > > > > > [   22.256292] driver: 'tusb1210': driver_bound: bound to device 'dwc3.0.auto.ulpi'
-> > > > > > > [   22.263723] driver_deferred_probe_trigger <<< 2
-> > > > > > > 
-> > > > > > > ...the dwc3.0.auto probes ULPI, we got successful bound and bumped counter...
-> > > > > > > 
-> > > > > > > [   22.268304] bus: 'ulpi': really_probe: bound device dwc3.0.auto.ulpi to driver tusb1210
-> > > > > > 
-> > > > > > So where did this dwc3.0.auto.ulpi come from?
-> > > > > 
-> > > > > > Looks like the device is created by dwc3_probe() through this call flow:
-> > > > > > dwc3_probe() -> dwc3_core_init() -> dwc3_core_ulpi_init() ->
-> > > > > > dwc3_ulpi_init() -> ulpi_register_interface() -> ulpi_register()
-> > > > > 
-> > > > > Correct.
-> > > > > 
-> > > > > > > [   22.276697] platform dwc3.0.auto: Driver dwc3 requests probe deferral
-> > > > > > 
-> > > > > > Can you please point me to which code patch actually caused the probe
-> > > > > > deferral?
-> > > > > 
-> > > > > Sure, it's in drd.c.
-> > > > > 
-> > > > > if (device_property_read_string(dev, "linux,extcon-name", &name) == 0) {
-> > > > >     edev = extcon_get_extcon_dev(name);
-> > > > >     if (!edev)
-> > > > >       return ERR_PTR(-EPROBE_DEFER);
-> > > > >     return edev;
-> > > > > }
-> > > > > 
-> > > > > > > ...but extcon driver is still missing...
-> > > > > > > 
-> > > > > > > [   22.283174] platform dwc3.0.auto: Added to deferred list
-> > > > > > > [   22.288513] platform dwc3.0.auto: driver_deferred_probe_add_trigger local counter: 1 new counter 2
-> > > > > > 
-> > > > > > I'm not fully aware of all the USB implications, but if extcon is
-> > > > > > needed, why can't that check be done before we add and probe the ulpi
-> > > > > > device? That'll avoid this whole "fake" probing and avoid the counter
-> > > > > > increase. And avoid the need for this patch that's touching the code
-> > > > > > code that's already a bit delicate.
-> > > > > 
-> > > > > > Also, with my limited experience with all the possible drivers in the
-> > > > > > kernel, it's weird that the ulpi device is added and probed before we
-> > > > > > make sure the parent device (dwc3.0.auto) can actually probe
-> > > > > > successfully.
-> > > > > 
-> > > > > As I said above the deferred probe trigger has flaw on its own.
-> > > > > Even if we fix for USB case, there is (and probably will be) others.
-> > > > 
-> > > > Right here is the driver design bug. A driver's probe() hook should *not*
-> > > > return -EPROBE_DEFER after already creating child devices which may have
-> > > > already been probed.
-> > > 
-> > > Any documentation statement for this requirement?
-> > 
-> > There shouldn't be.  If you return ANY error from a probe function, your
-> > driver is essencially "dead" when it comes to that device, and it had
-> > better have cleaned up after itself. >
-> > That includes defering probe, that's not "special" here at all.
-> 
-> What is special in this case is that if a .probe() hook had registered a
-> child device, then removed that child device (so it did clean up after
-> itself) and then return -EPROBE_DEFER, then we end up in an endless probe
-> loop.
+On Tue, Feb 11, 2020 at 2:58 PM Michael S. Tsirkin <mst@redhat.com> wrote:
+>
+> On Tue, Feb 11, 2020 at 02:04:54PM +0100, Eugenio P=C3=A9rez wrote:
+> > On Mon, 2020-02-10 at 12:01 +0100, Christian Borntraeger wrote:
+> > >
+> > > On 10.02.20 10:47, Eugenio Perez Martin wrote:
+> > > > Hi Christian.
+> > > >
+> > > > I'm not able to reproduce the failure with eccb852f1fe6bede630e2e4f=
+1a121a81e34354ab commit. Could you add more data?
+> > > > Your configuration (libvirt or qemu line), and host's dmesg output =
+if any?
+> > > >
+> > > > Thanks!
+> > >
+> > > If it was not obvious, this is on s390x, a big endian system.
+> > >
+> >
+> > Hi Christian. Thank you very much for your fast responses.
+> >
+> > Could you try this patch on top of eccb852f1fe6bede630e2e4f1a121a81e343=
+54ab?
+> >
+> > Thanks!
+> >
+> > >From 71d0f9108a18aa894cc0c0c1c7efbad39f465a27 Mon Sep 17 00:00:00 2001
+> > From: =3D?UTF-8?q?Eugenio=3D20P=3DC3=3DA9rez?=3D <
+> > eperezma@redhat.com>
+> > Date: Tue, 11 Feb 2020 13:19:10 +0100
+> > Subject: [PATCH] vhost: fix return value of vhost_get_vq_desc
+> >
+> > Before of the batch change, it was the chain's head. Need to keep that
+> > way or we will not be able to free a chain of descriptors.
+>
+> I think it's cleaner to have all descriptors in the chain
+> have the same id.
+>
 
-If all child devices really are cleaned up completly, why would this be
-a problem?  What is set internally in the driver core that would get
-tripped up by this?
+Hi Michael.
 
-> But this is unusual behaviour. Normally a .probe() hook checks all required
-> resources are available before registering any child devices. This driver
-> doesn't do that. Arguably this is indeed an additional requirement beyond
-> "clean up after yourself". I cannot find anyplace where it is documented. In
-> fact, I cannot find any documentation on EPROBE_DEFER in the Documentation/
-> tree. How about the below?
-> 
-> > > By the way, I may imagine other mechanisms that probe the driver on other CPU
-> > > at the same time (let's consider parallel modprobes). The current code has a
-> > > flaw with that.
-> > 
-> > That can't happen, the driver core prevents that.
-> 
-> Greg's right, that can't happen. At worst a driver will get an additional
-> defer event; but it all still works.
-> 
-> g.
-> 
-> ---
-> diff --git a/Documentation/driver-api/driver-model/driver.rst
-> b/Documentation/driver-api/driver-model/driver.rst
-> index baa6a85c8287..46adede13aba 100644
-> --- a/Documentation/driver-api/driver-model/driver.rst
-> +++ b/Documentation/driver-api/driver-model/driver.rst
-> @@ -167,7 +167,17 @@ the driver to that device.
-> 
->  A driver's probe() may return a negative errno value to indicate that
->  the driver did not bind to this device, in which case it should have
-> -released all resources it allocated::
-> +released all resources it allocated. Optionally, probe() may return
-> +-EPROBE_DEFER if the driver depends on resources that are not yet
-> +available (e.g., supplied by a driver that hasn't initialized yet).
-> +The driver core will put the device onto the deferred probe list and
-> +will try to call it again later. Important: -EPROBE_DEFER must not be
-> +returned if probe() has already created child devices, even if those
-> +child devices have were removed again in a cleanup path. If -EPROBE_DEFER
-> +is returned after a child device has been registered, it may result in an
-> +infinite loop of .probe() calls to the same driver.
+Not sure if I understood you correctly. All the descriptors in the
+chain still have the same id, this just returns the first one instead
+of update it in every loop iteration. Can left unapplied in the final
+version though, is up to you.
 
-Ok, this is a bug, if that is the case, in the driver core as it should
-not matter how many devices were added/removed/whatever while a driver
-is in it's probe function.
+> > Fixes: eccb852f1fe6 ("vhost: batching fetches")
+> > ---
+> >  drivers/vhost/vhost.c | 3 +--
+> >  1 file changed, 1 insertion(+), 2 deletions(-)
+> >
+> > diff --git a/drivers/vhost/vhost.c b/drivers/vhost/vhost.c
+> > index b5a51b1f2e79..fc422c3e5c08 100644
+> > --- a/drivers/vhost/vhost.c
+> > +++ b/drivers/vhost/vhost.c
+> > @@ -2409,12 +2409,11 @@ int vhost_get_vq_desc(struct vhost_virtqueue *v=
+q,
+> >                       *out_num +=3D ret;
+> >               }
+> >
+> > -             ret =3D desc->id;
+> > -
+> >               if (!(desc->flags & VRING_DESC_F_NEXT))
+> >                       break;
+> >       }
+> >
+> > +     ret =3D vq->descs[vq->first_desc].id;
+> >       vq->first_desc =3D i + 1;
+> >
+> >       return ret;
+> > --
+> > 2.18.1
+>
 
-But, I don't see how this patch solves that problem, another probe call
-should never be made for the same bus while in this probe function.  If
-we do:
-	device1->probe()
-		device1 creates device2 and registers it
-			device2->probe is called
-			device2->probe returns 0
-		device1 has problems, unregisters device2
-			device2->remove is called
-		device1 deletes device2
-		device1 returns -EPROBE_DEFER
-
-So then where's the problem?  Did device2 somehow not really get
-properly cleaned up?
-
-confused,
-
-greg k-h
