@@ -2,79 +2,109 @@ Return-Path: <SRS0=s8dx=5M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 998BDC43331
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 13:04:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C14D5C43331
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 13:08:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 320352082D
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 13:04:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FUh66KIR"
+	by mail.kernel.org (Postfix) with ESMTP id 8DD062082D
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 13:08:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585314481;
+	bh=4tgPnzm9ftZJBZ/ykZmmOBuwECzQEXcmCGbcxgf01l4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=gAB7f1Ah94zoj5jf41+ijG2Me1+0mMe9ugnPduHaLeUcmU0dmyx+CHSiRcJFUpsyf
+	 5denVUZsOzV1/fxisy4V/3DRKU21p3P0HOf9liN757BJLn1/P/pTijzAh9KfZ/ATXm
+	 /deiKGE1XkBAiQVML+GpLnZuPpvtsB5NsWhRkATE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727639AbgC0NEe (ORCPT
+        id S1727585AbgC0NIA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Mar 2020 09:04:34 -0400
-Received: from mail-pl1-f172.google.com ([209.85.214.172]:40368 "EHLO
-        mail-pl1-f172.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726165AbgC0NEd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Mar 2020 09:04:33 -0400
-Received: by mail-pl1-f172.google.com with SMTP id h11so3421761plk.7
-        for <linux-kernel@vger.kernel.org>; Fri, 27 Mar 2020 06:04:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:content-transfer-encoding:mime-version:subject:date:message-id
-         :cc:to;
-        bh=q44r5Q+/YW0pPASFunSH8/is4AigD9w8fhoq4iObmf8=;
-        b=FUh66KIRSsyppgFCztklvDnxVUlsFFj7xwV8t7uOBfqRHZKLOrYFXaVTQ/YId9bbwQ
-         kon9samDNmyPhm+TDNUVuzBveqiVo7lnEiizwYTVGLFP8W8t6uJRms3HWjqAzrUbRS4W
-         BPucVc+6xtDsQwtauIxQNIRqrHcP4EjgE6jCc1k3wI3pciykDoh5KJvsUg8UCiqtNUl1
-         GkukySkHQR5nOHmjr+voXbH885iVi7Yi5jy7ppfIpz+NmuPE0pgpUkoVVBNXOwWmfTHP
-         oivO2NF6BDJDcYnJdLGzDFio3oCDDo4kQIgoTui+XEfpJ1FCZhYnm4CYbUx+72Oo5Vtj
-         BK9Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:content-transfer-encoding:mime-version
-         :subject:date:message-id:cc:to;
-        bh=q44r5Q+/YW0pPASFunSH8/is4AigD9w8fhoq4iObmf8=;
-        b=jwC9UOggWYmSi1nWREZSxpup/yFwCKV40Hj1ATUQOF8s7sd4IN4h3Hg2AYihVNX9Cm
-         gt9YWVN3dN7jWk7l7iqVhE7EPbByjUh+D90enM18FPCcM3vVUWVt3Gb76cSjP9aVWuYm
-         cuyrMgCzAUvCXsyjxRWaPTMfvlO9yS6DJLorENUDnQjFJTH09c3cystBxIpOJMsBjX3O
-         7Wjk2yjrn3/xKEHdG/ng2H+hWWkw7MfWPPHnzfGJgruc6QHmxWo5SavIPkHpfvwvD4Yh
-         /LUYiSBq4yoFp8SRBtHl10U37TzFEMm+lUYuJjINmPum0fcsJUtAdgvKQXZleWPtZrgU
-         +Qog==
-X-Gm-Message-State: ANhLgQ3JdAhZRHXCykXcz6lAw2Ia6UMd7cRHq1sMq9axofxyf36clbpq
-        0QJ984S1bEo4l/rCCI7iUIU=
-X-Google-Smtp-Source: ADFU+vu34BMCCtFfrb13IfOiRfruxVrmzSTDA0w4QJGIBvogwAy1YMY9bKy7bPI06eaF2oLUk1s9/A==
-X-Received: by 2002:a17:902:9890:: with SMTP id s16mr12219469plp.77.1585314272338;
-        Fri, 27 Mar 2020 06:04:32 -0700 (PDT)
-Received: from ?IPv6:2600:6c52:7300:a0a:e9aa:10c3:6793:9b8d? ([2600:6c52:7300:a0a:e9aa:10c3:6793:9b8d])
-        by smtp.gmail.com with ESMTPSA id i124sm4091826pfg.14.2020.03.27.06.04.31
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 27 Mar 2020 06:04:31 -0700 (PDT)
-From:   Billie Teall <billiejteall@gmail.com>
-X-Google-Original-From: Billie Teall <BilliejTeall@gmail.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-Mime-Version: 1.0 (1.0)
-Subject: Re: [PATCH v2 1/7] arm64: Introduce system_capabilities_finalized() marker
-Date:   Fri, 27 Mar 2020 06:04:30 -0700
-Message-Id: <279F99EB-1957-4A46-87CA-506CC749EC7F@gmail.com>
-Cc:     ard.biesheuvel@linaro.org, christoffer.dall@arm.com,
-        dave.martin@arm.com, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, mark.rutland@arm.com, maz@kernel.org,
-        suzuki.poulose@arm.com, will.deacon@arm.com, will@kernel.org
-To:     catalin.marinas@arm.com
-X-Mailer: iPhone Mail (17D50)
+        Fri, 27 Mar 2020 09:08:00 -0400
+Received: from foss.arm.com ([217.140.110.172]:44442 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726515AbgC0NIA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Mar 2020 09:08:00 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DA6981FB;
+        Fri, 27 Mar 2020 06:07:59 -0700 (PDT)
+Received: from localhost (unknown [10.37.6.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5CBD53F71F;
+        Fri, 27 Mar 2020 06:07:59 -0700 (PDT)
+Date:   Fri, 27 Mar 2020 13:07:58 +0000
+From:   Mark Brown <broonie@kernel.org>
+To:     Matt Flax <flatmax@flatmax.org>
+Cc:     Kate Stewart <kstewart@linuxfoundation.org>,
+        alsa-devel@alsa-project.org,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        linux-kernel@vger.kernel.org,
+        Scott Branden <sbranden@broadcom.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        linux-arm-kernel@lists.infradead.org, Ray Jui <rjui@broadcom.com>,
+        YueHaibing <yuehaibing@huawei.com>,
+        Takashi Iwai <tiwai@suse.com>,
+        bcm-kernel-feedback-list@broadcom.com,
+        Allison Randal <allison@lohutok.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        linux-rpi-kernel@lists.infradead.org
+Subject: Re: [PATCH] ASoC: bcm2835-i2s: substream alignment now independent
+ in hwparams
+Message-ID: <20200327130758.GB4437@sirena.org.uk>
+References: <20200324090823.20754-1-flatmax@flatmax.org>
+ <d0684926-3f7a-0b97-a298-4088925442a4@flatmax.org>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="wq9mPyueHGvFACwf"
+Content-Disposition: inline
+In-Reply-To: <d0684926-3f7a-0b97-a298-4088925442a4@flatmax.org>
+X-Cookie: Drop in any mailbox.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Zz
 
-Sent from my iPhone
+--wq9mPyueHGvFACwf
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Fri, Mar 27, 2020 at 10:56:50AM +1100, Matt Flax wrote:
+>=20
+> Should this patch be handled through the ALSA team the R. Pi team or the =
+BCM
+> team ?
+
+Please don't send content free pings and please allow a reasonable time
+for review.  People get busy, go on holiday, attend conferences and so=20
+on so unless there is some reason for urgency (like critical bug fixes)
+please allow at least a couple of weeks for review.  If there have been
+review comments then people may be waiting for those to be addressed.
+
+Sending content free pings adds to the mail volume (if they are seen at
+all) which is often the problem and since they can't be reviewed
+directly if something has gone wrong you'll have to resend the patches
+anyway, so sending again is generally a better approach though there are
+some other maintainers who like them - if in doubt look at how patches
+for the subsystem are normally handled.
+
+--wq9mPyueHGvFACwf
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl59+q0ACgkQJNaLcl1U
+h9AFaAf8Db5emY6EIgD03k5HjtM3kTn5ueFcW3VvYyJOfS7/qgx6q8JE7eDFaqgr
+/61tuP3BmQ08KYkA8TZtvHwOLc+3wjJi/Q/HDpwApmbcfy6LuA34oepLk+wKI5ik
+Os9ZiKsPjYKVKZZ9wVxrXHuVNaveCinKAqz7EU69s48kFbX054Ios83q6poKazm/
+KFnesj0pCLINvrFrXboSoKmhIzLHV6kxMAgO9qmd9mjJictyenNGoNnmk7fsdiM9
+QW/Pjs2YYg58/IOanTmz7OoxAgce3k3/TJRNnS7gRtyktNCcrC85CJkANzHtOst7
+cvwcNrA0SRrKj0A5IfwNhv1BSK2+/A==
+=NOmu
+-----END PGP SIGNATURE-----
+
+--wq9mPyueHGvFACwf--
