@@ -2,182 +2,128 @@ Return-Path: <SRS0=s8dx=5M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2E1BC43331
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 08:50:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DB10C43331
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 08:50:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D33720714
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 08:50:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=kalray.eu header.i=@kalray.eu header.b="cb1Ymu+V"
+	by mail.kernel.org (Postfix) with ESMTP id 3A90420717
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 08:50:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726804AbgC0IuP (ORCPT
+        id S1727143AbgC0Iuc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Mar 2020 04:50:15 -0400
-Received: from zimbra2.kalray.eu ([92.103.151.219]:57286 "EHLO
-        zimbra2.kalray.eu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726169AbgC0IuO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Mar 2020 04:50:14 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by zimbra2.kalray.eu (Postfix) with ESMTP id 5860A27E039A;
-        Fri, 27 Mar 2020 09:50:13 +0100 (CET)
-Received: from zimbra2.kalray.eu ([127.0.0.1])
-        by localhost (zimbra2.kalray.eu [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id FpmscZvK2U_Z; Fri, 27 Mar 2020 09:50:12 +0100 (CET)
-Received: from localhost (localhost [127.0.0.1])
-        by zimbra2.kalray.eu (Postfix) with ESMTP id CB6CC27E0AEB;
-        Fri, 27 Mar 2020 09:50:12 +0100 (CET)
-DKIM-Filter: OpenDKIM Filter v2.10.3 zimbra2.kalray.eu CB6CC27E0AEB
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kalray.eu;
-        s=32AE1B44-9502-11E5-BA35-3734643DEF29; t=1585299012;
-        bh=SN/jDLRWylESkAt6QMekC/Tpe7ewfTl4FIMoaHWoEeE=;
-        h=From:To:Date:Message-Id;
-        b=cb1Ymu+VokqUrg5PAArt3L1fVzMSjaS8q1pFp8sQ05nvnbXNfsNMzoWTUAbeAWvc3
-         T/P28dcqbk3354ctudCjeii82CY8Td+j1cg/eCpWgvONCz0RYRSeUfYhJjTq1CU0SV
-         p0aPmDnS+ZuITE0P0BxkugItjSRiYYTy36K90D00=
-X-Virus-Scanned: amavisd-new at zimbra2.kalray.eu
-Received: from zimbra2.kalray.eu ([127.0.0.1])
-        by localhost (zimbra2.kalray.eu [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id JMcNRfuSCV0B; Fri, 27 Mar 2020 09:50:12 +0100 (CET)
-Received: from triton.lin.mbt.kalray.eu (unknown [192.168.37.25])
-        by zimbra2.kalray.eu (Postfix) with ESMTPSA id AF16827E039A;
-        Fri, 27 Mar 2020 09:50:12 +0100 (CET)
-From:   Clement Leger <cleger@kalray.eu>
-To:     Ohad Ben-Cohen <ohad@wizery.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Patrice Chotard <patrice.chotard@st.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>
-Cc:     linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        Clement Leger <cleger@kalray.eu>
-Subject: [PATCH] remoteproc: remove rproc_elf32_sanity_check
-Date:   Fri, 27 Mar 2020 09:49:39 +0100
-Message-Id: <20200327084939.8321-1-cleger@kalray.eu>
-X-Mailer: git-send-email 2.17.1
+        Fri, 27 Mar 2020 04:50:32 -0400
+Received: from mga02.intel.com ([134.134.136.20]:8312 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726379AbgC0Iuc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Mar 2020 04:50:32 -0400
+IronPort-SDR: jnQwyytBsfJTrd6pZT4l5AQD3kqYNatVjoCUv5AuOA9oyQ9r/npsTGbKYLWWHPVydXglAORg3Z
+ Ht5XPw0t8plg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Mar 2020 01:50:31 -0700
+IronPort-SDR: Uisx96pK35clw9YgyfO/QLv+sU+bBHhXMMvK/yJZU1YAmdsQemiqJFJkEYlZRePanbxN4mUZXH
+ xcqIWN7gxt6Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,311,1580803200"; 
+   d="scan'208";a="448940722"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga006.fm.intel.com with ESMTP; 27 Mar 2020 01:50:31 -0700
+Received: from [10.249.36.56] (abudanko-mobl.ccr.corp.intel.com [10.249.36.56])
+        by linux.intel.com (Postfix) with ESMTP id E4F885803E3;
+        Fri, 27 Mar 2020 01:50:28 -0700 (PDT)
+Subject: [PATCH v1 7/8] perf record: implement resume and pause control
+ commands handling
+From:   Alexey Budankov <alexey.budankov@linux.intel.com>
+To:     Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc:     Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+References: <825a5132-b58d-c0b6-b050-5a6040386ec7@linux.intel.com>
+Organization: Intel Corp.
+Message-ID: <b4daca98-812c-3da3-3a75-85dbc7ef32be@linux.intel.com>
+Date:   Fri, 27 Mar 2020 11:50:27 +0300
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
+MIME-Version: 1.0
+In-Reply-To: <825a5132-b58d-c0b6-b050-5a6040386ec7@linux.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since checks are present in the remoteproc elf loader before calling
-da_to_va, loading a elf64 will work on 32bits flavors of kernel.
-Indeed, if a segment size is larger than what size_t can hold, the
-loader will return an error so the functionality is equivalent to
-what exists today.
 
-Signed-off-by: Clement Leger <cleger@kalray.eu>
+Implement handling of events coming from control file descriptor.
+
+Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
 ---
- drivers/remoteproc/remoteproc_core.c       |  2 +-
- drivers/remoteproc/remoteproc_elf_loader.c | 21 ---------------------
- drivers/remoteproc/remoteproc_internal.h   |  1 -
- drivers/remoteproc/st_remoteproc.c         |  2 +-
- drivers/remoteproc/st_slim_rproc.c         |  2 +-
- drivers/remoteproc/stm32_rproc.c           |  2 +-
- 6 files changed, 4 insertions(+), 26 deletions(-)
+ tools/perf/builtin-record.c | 21 ++++++++++++++++++++-
+ 1 file changed, 20 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/remoteproc/remoteproc_core.c b/drivers/remoteproc/remoteproc_core.c
-index a9ac1d01e09b..02ff076b0122 100644
---- a/drivers/remoteproc/remoteproc_core.c
-+++ b/drivers/remoteproc/remoteproc_core.c
-@@ -2069,7 +2069,7 @@ struct rproc *rproc_alloc(struct device *dev, const char *name,
- 		rproc->ops->parse_fw = rproc_elf_load_rsc_table;
- 		rproc->ops->find_loaded_rsc_table = rproc_elf_find_loaded_rsc_table;
- 		if (!rproc->ops->sanity_check)
--			rproc->ops->sanity_check = rproc_elf32_sanity_check;
-+			rproc->ops->sanity_check = rproc_elf_sanity_check;
- 		rproc->ops->get_boot_addr = rproc_elf_get_boot_addr;
+diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
+index f99751943b40..ae6f7d08e472 100644
+--- a/tools/perf/builtin-record.c
++++ b/tools/perf/builtin-record.c
+@@ -1418,6 +1418,7 @@ static int __cmd_record(struct record *rec, int argc, const char **argv)
+ 	struct evlist *sb_evlist = NULL;
+ 	int fd;
+ 	float ratio = 0;
++	enum evlist_ctl_cmd cmd = CTL_CMD_UNSUPPORTED;
+ 
+ 	atexit(record__sig_exit);
+ 	signal(SIGCHLD, sig_handler);
+@@ -1620,6 +1621,8 @@ static int __cmd_record(struct record *rec, int argc, const char **argv)
+ 		perf_evlist__start_workload(rec->evlist);
  	}
  
-diff --git a/drivers/remoteproc/remoteproc_elf_loader.c b/drivers/remoteproc/remoteproc_elf_loader.c
-index 16e2c496fd45..29034f99898d 100644
---- a/drivers/remoteproc/remoteproc_elf_loader.c
-+++ b/drivers/remoteproc/remoteproc_elf_loader.c
-@@ -112,27 +112,6 @@ int rproc_elf_sanity_check(struct rproc *rproc, const struct firmware *fw)
- }
- EXPORT_SYMBOL(rproc_elf_sanity_check);
++	perf_evlist__initialize_ctlfd(rec->evlist, opts->ctl_fd, opts->ctl_fd_ack);
++
+ 	if (opts->initial_delay) {
+ 		pr_info(PERF_EVLIST__PAUSED_MSG);
+ 		if (opts->initial_delay > 0) {
+@@ -1710,8 +1713,23 @@ static int __cmd_record(struct record *rec, int argc, const char **argv)
+ 			 * Propagate error, only if there's any. Ignore positive
+ 			 * number of returned events and interrupt error.
+ 			 */
+-			if (err > 0 || (err < 0 && errno == EINTR))
++			if (err > 0 || (err < 0 && errno == EINTR)) {
+ 				err = 0;
++				if (perf_evlist__ctlfd_process(rec->evlist, &cmd) > 0) {
++					switch (cmd) {
++					case CTL_CMD_RESUME:
++						pr_info(PERF_EVLIST__RESUMED_MSG);
++						break;
++					case CTL_CMD_PAUSE:
++						pr_info(PERF_EVLIST__PAUSED_MSG);
++						break;
++					case CTL_CMD_ACK:
++					case CTL_CMD_UNSUPPORTED:
++					default:
++						break;
++					}
++				}
++			}
+ 			waking++;
  
--/**
-- * rproc_elf_sanity_check() - Sanity Check ELF32 firmware image
-- * @rproc: the remote processor handle
-- * @fw: the ELF32 firmware image
-- *
-- * Make sure this fw image is sane.
-- */
--int rproc_elf32_sanity_check(struct rproc *rproc, const struct firmware *fw)
--{
--	int ret = rproc_elf_sanity_check(rproc, fw);
--
--	if (ret)
--		return ret;
--
--	if (fw_elf_get_class(fw) == ELFCLASS32)
--		return 0;
--
--	return -EINVAL;
--}
--EXPORT_SYMBOL(rproc_elf32_sanity_check);
--
- /**
-  * rproc_elf_get_boot_addr() - Get rproc's boot address.
-  * @rproc: the remote processor handle
-diff --git a/drivers/remoteproc/remoteproc_internal.h b/drivers/remoteproc/remoteproc_internal.h
-index b389dc79da81..31994715fd43 100644
---- a/drivers/remoteproc/remoteproc_internal.h
-+++ b/drivers/remoteproc/remoteproc_internal.h
-@@ -54,7 +54,6 @@ void *rproc_da_to_va(struct rproc *rproc, u64 da, size_t len);
- phys_addr_t rproc_va_to_pa(void *cpu_addr);
- int rproc_trigger_recovery(struct rproc *rproc);
+ 			if (evlist__filter_pollfd(rec->evlist, POLLERR | POLLHUP) == 0)
+@@ -1751,6 +1769,7 @@ static int __cmd_record(struct record *rec, int argc, const char **argv)
+ 		record__synthesize_workload(rec, true);
  
--int rproc_elf32_sanity_check(struct rproc *rproc, const struct firmware *fw);
- int rproc_elf_sanity_check(struct rproc *rproc, const struct firmware *fw);
- u64 rproc_elf_get_boot_addr(struct rproc *rproc, const struct firmware *fw);
- int rproc_elf_load_segments(struct rproc *rproc, const struct firmware *fw);
-diff --git a/drivers/remoteproc/st_remoteproc.c b/drivers/remoteproc/st_remoteproc.c
-index a6cbfa452764..a3268d95a50e 100644
---- a/drivers/remoteproc/st_remoteproc.c
-+++ b/drivers/remoteproc/st_remoteproc.c
-@@ -233,7 +233,7 @@ static const struct rproc_ops st_rproc_ops = {
- 	.parse_fw		= st_rproc_parse_fw,
- 	.load			= rproc_elf_load_segments,
- 	.find_loaded_rsc_table	= rproc_elf_find_loaded_rsc_table,
--	.sanity_check		= rproc_elf32_sanity_check,
-+	.sanity_check		= rproc_elf_sanity_check,
- 	.get_boot_addr		= rproc_elf_get_boot_addr,
- };
- 
-diff --git a/drivers/remoteproc/st_slim_rproc.c b/drivers/remoteproc/st_slim_rproc.c
-index 3cca8b65a8db..09bcb4d8b9e0 100644
---- a/drivers/remoteproc/st_slim_rproc.c
-+++ b/drivers/remoteproc/st_slim_rproc.c
-@@ -203,7 +203,7 @@ static const struct rproc_ops slim_rproc_ops = {
- 	.da_to_va       = slim_rproc_da_to_va,
- 	.get_boot_addr	= rproc_elf_get_boot_addr,
- 	.load		= rproc_elf_load_segments,
--	.sanity_check	= rproc_elf32_sanity_check,
-+	.sanity_check	= rproc_elf_sanity_check,
- };
- 
- /**
-diff --git a/drivers/remoteproc/stm32_rproc.c b/drivers/remoteproc/stm32_rproc.c
-index 6a66dbf2df40..2e07a95439c8 100644
---- a/drivers/remoteproc/stm32_rproc.c
-+++ b/drivers/remoteproc/stm32_rproc.c
-@@ -505,7 +505,7 @@ static struct rproc_ops st_rproc_ops = {
- 	.load		= rproc_elf_load_segments,
- 	.parse_fw	= stm32_rproc_parse_fw,
- 	.find_loaded_rsc_table = rproc_elf_find_loaded_rsc_table,
--	.sanity_check	= rproc_elf32_sanity_check,
-+	.sanity_check	= rproc_elf_sanity_check,
- 	.get_boot_addr	= rproc_elf_get_boot_addr,
- };
+ out_child:
++	perf_evlist__finalize_ctlfd(rec->evlist);
+ 	record__mmap_read_all(rec, true);
+ 	record__aio_mmap_read_sync(rec);
  
 -- 
-2.17.1
+2.24.1
+
 
