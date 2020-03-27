@@ -2,129 +2,260 @@ Return-Path: <SRS0=s8dx=5M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC618C2D0EE
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 19:17:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 093DDC2D0E5
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 19:19:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C87182072F
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 19:17:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF36D206E6
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 19:19:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Aj5KuCp5"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="Vmy6k4z8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727505AbgC0TRg (ORCPT
+        id S1727685AbgC0TTD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Mar 2020 15:17:36 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:38972 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726959AbgC0TRg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Mar 2020 15:17:36 -0400
-Received: by mail-wr1-f65.google.com with SMTP id p10so12807236wrt.6
-        for <linux-kernel@vger.kernel.org>; Fri, 27 Mar 2020 12:17:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=hh6WYJqT/M6VdZCxRRGFJ4X3bio1m9J2mQ8vyCBUNIY=;
-        b=Aj5KuCp5rUlAQ6zF28nJ3B92q65AO0KaTlRq7Hiod12FrJbTDddzKrzAevJvITTfmr
-         tSOgGVEdlR8yytc4R3UmpYwQ3nAisNYbKiSV98g3m+K8js1jSHsICGH+oZDRLvLutkB4
-         W1Kg+U/SFAKQNWSdnCyBeag5nqvbfKf4rlZrU=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=hh6WYJqT/M6VdZCxRRGFJ4X3bio1m9J2mQ8vyCBUNIY=;
-        b=i9neEEeKb38/5ywOla9uB1dO+FcBKzdOEolqmKaSOKxlI8FWJnP4m4l3Fu0Qok9tDj
-         H2DLWSrvBLtK8yeSq9Hpz35yZQdt9eWJucyUMuP+sw57D8wdvCvM6Q2KJYu58BJmIgtG
-         MUNknLiVCFlQVPs1ceYXSECtigLhynbFPoYG0vLh/vxCKIaJm9/+z/XzFdqf7P/PdjPC
-         rFcm6zMbcZGXDuRCiTKFoFc0JSfZ0qWs+tSXK7kfB1U0ffg9lxZ1YaZvAxWXsi/GTdJp
-         O63fs1Mx5PLS5rBQYXrCEbrU6ZnThDxb8AbZMpM8ZnLJD0pAQySj5xOpcFy8fY/qvtLw
-         CzEg==
-X-Gm-Message-State: ANhLgQ28rP3VBNCPR44G/GSOBOiTW7Bpa/RZ5AylOf5Z6+PiGMBst4UM
-        1uoamU+F2phyhWkHcbYqrsTHrQ==
-X-Google-Smtp-Source: ADFU+vsR7STlVYO4IV6+sb1UEbSKtqgoJjlapPf0cVHt271rMf3b6PMAe2TvKL793EyB2zae3Sc3Bw==
-X-Received: by 2002:a5d:4305:: with SMTP id h5mr935606wrq.69.1585336654111;
-        Fri, 27 Mar 2020 12:17:34 -0700 (PDT)
-Received: from chromium.org (77-56-209-237.dclient.hispeed.ch. [77.56.209.237])
-        by smtp.gmail.com with ESMTPSA id d6sm9333648wrw.10.2020.03.27.12.17.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 27 Mar 2020 12:17:33 -0700 (PDT)
-From:   KP Singh <kpsingh@chromium.org>
-X-Google-Original-From: KP Singh <kpsingh>
-Date:   Fri, 27 Mar 2020 20:17:31 +0100
-To:     Kees Cook <keescook@chromium.org>, James Morris <jmorris@namei.org>
-Cc:     Casey Schaufler <casey@schaufler-ca.com>,
-        Stephen Smalley <sds@tycho.nsa.gov>,
-        linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        Brendan Jackman <jackmanb@google.com>,
-        Florent Revest <revest@google.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Paul Turner <pjt@google.com>, Jann Horn <jannh@google.com>,
-        Florent Revest <revest@chromium.org>,
-        Brendan Jackman <jackmanb@chromium.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Paul Moore <paul@paul-moore.com>
-Subject: Re: [PATCH bpf-next v7 4/8] bpf: lsm: Implement attach, detach and
- execution
-Message-ID: <20200327191731.GA9419@chromium.org>
-References: <20200326142823.26277-1-kpsingh@chromium.org>
- <20200326142823.26277-5-kpsingh@chromium.org>
- <alpine.LRH.2.21.2003271119420.17089@namei.org>
- <2241c806-65c9-68f5-f822-9a245ecf7ba0@tycho.nsa.gov>
- <20200327124115.GA8318@chromium.org>
- <14ff822f-3ca5-7ebb-3df6-dd02249169d2@tycho.nsa.gov>
- <a3f6d9f8-6425-af28-d472-fad642439b69@schaufler-ca.com>
- <202003271143.71E0C591C1@keescook>
+        Fri, 27 Mar 2020 15:19:03 -0400
+Received: from mail-eopbgr50067.outbound.protection.outlook.com ([40.107.5.67]:44243
+        "EHLO EUR03-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726738AbgC0TTC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Mar 2020 15:19:02 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=iWkY+rFKJRZiegBKuLaRNV4uoP+lPeUlV/iuCon2ty8lOBbPmbGun/KHFg10RHiMT+7jhHVao5lVG11cBf4vBKP9pXJLKD4XGbxlQhSHO4uCOcnxKj09eW33dWQgrb6TQw5+571CmQp2O0nq6dEy+pZAGh1Y5+sUL4gNENVYtsvl/GUUiyifZpjtIvn6nw/vXq/c17M4NeiwdS3PlErga+lGnhXdLWoWQXjHh2NN9MMRUHzRyp59awERLUyI63Bs6BuN910flYC13gOMN2MWGVR2PjWq03tFns7c0p/3fy7X3ygCWwCJHaI8tClqM8rZ9yFR4brAgYStlfgacXxshw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=D3ofnNaLSVlHUV6SDaatBNjulkZGOwQ/fuPVrMvXaM4=;
+ b=JnzeawwAOJMzfhQj6RqwKyCasKPx7EcN/ovIJORd2HnarlRKAZGiDSYoi5zaCG+7EYTu3Dq+0rPTVOUjWzNTXaWJKNRfk7HHW+f5L+f44w1nfwBytkLc4TTaahaenwexzE3GtIFVwNIaqBf4HiC1vCpLBGelg8SGeUEPULuyXZUhNDzI9Cg80wnkKHpKtb6rlBWH+rRzLTS5FlQyK2XrgQguRy7KxMvgcdMplA7u7Fh7qnxaXB17jg+Kw90cdqEXFZy6YCbpY7X9m+OLk35qHXANQjOGdbLZaTYaIpgxgkAEFgrmt5Sd+EhuCYPmBu0e37TKlb0UALaVsL8rrR5qIQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=D3ofnNaLSVlHUV6SDaatBNjulkZGOwQ/fuPVrMvXaM4=;
+ b=Vmy6k4z8Mbq2GIr/uQgWQqRP0prvo+zk/3sXt9kn6+X6QTA4nhUGOZAFVej7K6DmTr5rH4FTNwHkdiuWfLenHHVQOUAyDL7GnUhrWPosHg316u+bv2gBOHN0Ja1d0Bayh0Q+76Vu49iyGWmh6r5YX//MpFi6JNB5PbkP67AZYH0=
+Received: from DB8PR04MB6828.eurprd04.prod.outlook.com (52.133.240.149) by
+ DB8PR04MB5644.eurprd04.prod.outlook.com (20.179.9.16) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2835.20; Fri, 27 Mar 2020 19:18:56 +0000
+Received: from DB8PR04MB6828.eurprd04.prod.outlook.com
+ ([fe80::e44e:f867:d67:e901]) by DB8PR04MB6828.eurprd04.prod.outlook.com
+ ([fe80::e44e:f867:d67:e901%2]) with mapi id 15.20.2835.023; Fri, 27 Mar 2020
+ 19:18:56 +0000
+From:   Ioana Ciornei <ioana.ciornei@nxp.com>
+To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>,
+        Florinel Iordache <florinel.iordache@nxp.com>
+CC:     Andrew Lunn <andrew@lunn.ch>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
+        "hkallweit1@gmail.com" <hkallweit1@gmail.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "kuba@kernel.org" <kuba@kernel.org>,
+        "corbet@lwn.net" <corbet@lwn.net>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        Leo Li <leoyang.li@nxp.com>,
+        "Madalin Bucur (OSS)" <madalin.bucur@oss.nxp.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH net-next 2/9] dt-bindings: net: add backplane dt bindings
+Thread-Topic: [PATCH net-next 2/9] dt-bindings: net: add backplane dt bindings
+Thread-Index: AdYEazypBGJuG/DbQbi/6Lky4CI1+w==
+Date:   Fri, 27 Mar 2020 19:18:56 +0000
+Message-ID: <DB8PR04MB68283F0268E43CCB882C236CE0CC0@DB8PR04MB6828.eurprd04.prod.outlook.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=ioana.ciornei@nxp.com; 
+x-originating-ip: [79.115.60.40]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 2bd02b25-fbfc-4a7e-c14f-08d7d283b1e7
+x-ms-traffictypediagnostic: DB8PR04MB5644:|DB8PR04MB5644:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DB8PR04MB564440BCB14E8548DF717718E0CC0@DB8PR04MB5644.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-forefront-prvs: 0355F3A3AE
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB8PR04MB6828.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10009020)(4636009)(396003)(346002)(136003)(376002)(39860400002)(366004)(71200400001)(478600001)(6636002)(66446008)(66946007)(81166006)(64756008)(55016002)(66556008)(8936002)(316002)(52536014)(66476007)(8676002)(7416002)(81156014)(9686003)(5660300002)(4326008)(7696005)(44832011)(86362001)(26005)(2906002)(110136005)(76116006)(33656002)(6506007)(186003)(54906003);DIR:OUT;SFP:1101;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: A4eUOsl0RTrgwH3PBvVOXeI5KIwiuZ/liTjL3H/v9SAxKcxY/cyFSNbrv5h60ZkItoon2efx300rgDd9I37jxM6cSf9euKxB05bMiwZvZSD/vprq2kd7BLb37YcT4/1wyEbLb8/Lu1n5u9vC+ivkoLzNXr2YQTUpREhKRIgP1Q6tbjDPFaPV8wPhys8lFmgfCZm4IWxN7zBUlkR0EjrAdw3tq5JENb4kfd89JHvfvabf2k+WMjeZbh96/BIhps41ZpccxZjLAQAUv+aUl3j3NIglwr8V7h5b3MocsT9EmqcmPlb6BXYP02ZGGrAuCP0WwBcXf0r8+HiT28pdWdeK8wHjhKKVoJLRs9UaJaLTK6yVPcOUV2jvMxgswSrMgexGbJmlclTUHMepQm/7v89uuDHBrxqdc/3X8dYEMwaFyhMgCUYhAdfI+d6pMvC4D3h7
+x-ms-exchange-antispam-messagedata: xsq5VFjRXAwpsc6czgCBX92PhlNbqcA0TCgLROC46rcz3rx0q28rsO/WbnQUcxUD+fLxwoYmwdNAwUTSnbZO0T0zq9JPoHteXzoJtis6GJMMQ/FmLI7PHXSKxqCNapavkI7BbQgKiDzXHdVapk9rXw==
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <202003271143.71E0C591C1@keescook>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2bd02b25-fbfc-4a7e-c14f-08d7d283b1e7
+X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Mar 2020 19:18:56.2184
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: TEHOiziWjPPER/4uJuguueNivADUSNiPK+i0nZPqfBE5rvBQZxyM2WM311x3Hra0n3LX/1xjH/O/BH20JOyblg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB8PR04MB5644
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 27-Mär 11:59, Kees Cook wrote:
-> On Fri, Mar 27, 2020 at 09:36:15AM -0700, Casey Schaufler wrote:
-> > On 3/27/2020 6:43 AM, Stephen Smalley wrote:
-> > > On 3/27/20 8:41 AM, KP Singh wrote:
-> > >> On 27-Mär 08:27, Stephen Smalley wrote:
-> > >>>>> +        return -EPERM;
 
-[...]
-
+> Subject: Re: [PATCH net-next 2/9] dt-bindings: net: add backplane dt
+> bindings
+>=20
+> On Fri, Mar 27, 2020 at 03:00:22PM +0000, Florinel Iordache wrote:
+> > > On Thu, Mar 26, 2020 at 03:51:15PM +0200, Florinel Iordache wrote:
+> > > > Add ethernet backplane device tree bindings
 > > >
-> > > I would favor removing the CAP_MAC_ADMIN check here, and implementing it in a bpf_prog hook for Smack and AppArmor if they want that.  SELinux would implement its own check in its existing bpf_prog hook.
+> > > > +  - |
+> > > > +    /* Backplane configurations for specific setup */
+> > > > +    &mdio9 {
+> > > > +        bpphy6: ethernet-phy@0 {
+> > > > +            compatible =3D "ethernet-phy-ieee802.3-c45";
+> > > > +            reg =3D <0x0>;
+> > > > +            lane-handle =3D <&lane_d>; /* use lane D */
+> > > > +            eq-algorithm =3D "bee";
+> > > > +            /* 10G Short cables setup: up to 30 cm cable */
+> > > > +            eq-init =3D <0x2 0x5 0x29>;
+> > > > +            eq-params =3D <0>;
+> > > > +        };
+> > > > +    };
 > > >
-> > The whole notion of one security module calling into another for permission
-> > to do something still gives me the heebee jeebees, but if more nimble minds
-> > than mine think this is a good idea I won't nack it.
-> 
-> Well, it's a hook into BPF prog creation, not the BPF LSM specifically,
-> so that's why I think it's general enough control without it being
-> directly weird. :)
-> 
-> As far as dropping CAP_MAC_ADMIN, yeah, that should be fine. Creating LSM
-> BPF programs already requires CAP_SYS_ADMIN, so for SELinux-less systems,
-> that's likely fine. If we need to change the BPF program creation access
-> control in the future we can revisit it then.
+> > > So you are modelling this as just another PHY? Does the driver get
+> > > loaded based on the PHY ID in registers 2 and 3? Does the standard
+> > > define these IDs or are they vendor specific?
+> > >
+> > > Thanks
+> > >         Andrew
+> >
+> > Hi Andrew,
+> > Thank you all for the feedback.
+> > I am currently working to address the entire feedback received so far
+> > for this new Backplane driver.
+> >
+> > Yes, we are modelling backplane driver as a phy driver.
+>=20
+> I think we need to think very carefully about that, and consider whether =
+that
+> really is a good idea.  phylib is currently built primarily around copper=
+ PHYs,
+> although there are some which also support fiber as well in weird "non-
+> standard" forms.
+>=20
+> What worries me is the situation which I've been working on, where we wan=
+t
+> access to the PCS PHYs, and we can't have the PCS PHYs represented as a p=
+hylib
+> PHY because we may have a copper PHY behind the PCS PHY, and we want to b=
+e
+> talking to the copper PHY in the first instance (the PCS PHY effectively =
+becomes
+> a slave to the copper PHY.)
+>=20
 
-Sounds good, I will send out v8 carrying James and Andri's
-Acks/Review tags, CAP_MAC_ADMIN check removed and some other minor
-fixes.
+We should think about the case when the PCS is the only transceiver on the =
+local
+board, as is happening in the backplane case, and the Ethernet driver does =
+not
+support phylink but rather phylib. By suggesting to not register the PCS wi=
+th
+phylib, you're effectively implying that the interface should operate as a =
+fixed-link.
+This PCS is shared for DPAA1 and DPAA2, and only one of those drivers uses =
+phylink.
 
-- KP
+> My worry is that we're ending up with conflicting implementations for the=
+ same
+> hardware which may only end up causing problems down the line.
+>=20
+> Please can you look at my DPAA2 PCS series which has been previously post=
+ed to
+> netdev -
 
-> 
-> -- 
-> Kees Cook
+I had a go today with your DPAA2 PCS patches and tried to see how one could
+extend your approach in order to use it in combination with quad PCSs.
+
+As I mentioned yesterday, in case of QSGMII all the 4 PCSs sit on the first=
+ MAC's
+internal MDIO. This leads to an error in probing the second MAC from the gr=
+oup
+of 4 since the mdio_device_register() will fail when trying with the same i=
+nternal
+MDIO bus the second time.
+
+I cannot see how this limitation can be overcome going forward if we still =
+pass the
+entire internal MDIO bus as a handle, as you are doing, and not just the sp=
+ecific
+PCS node as the current patch set is proposing.
+
+> it's rather difficult to work out who in NXP should be copied, because
+> that information is not visible to those of us in the community - we only=
+ find that
+> out after someone inside NXP posts patches, and even then the MAINTAINERS
+> file doesn't seem to get updated.
+>=20
+> It's also worth mentioning that on other SoCs, such as Marvell SoCs, the =
+serdes
+> and "PCS" are entirely separate hardware blocks, and the implementation i=
+n the
+> kernel, which works very well, is to use the drivers/phy for the serdes/c=
+omphy as
+> they call it, and the ethernet driver binds to the comphy to control the =
+serdes
+> settings, whereas the ethernet driver looks after the PCS.  I haven't bee=
+n able to
+> look at your code enough yet to work out if that would be possible.
+>=20
+> I also wonder whether we want a separate class of MDIO device for PCS PHY=
+s,
+> just as we have things like DSA switches implemented entirely separately =
+from
+> phylib - they're basically different sub- classes of a mdio device.
+>=20
+> I think we have around 20 or so weeks to hash this out, since it's clear =
+that the
+> 10gbase-kr (10GKR) phy interface mode can't be used until we've eliminate=
+d it
+> from existing dts files.
+>=20
+> > The driver is loaded based on PHY ID in registers 2 and 3 which are
+> > specified by the standard but it is a vendor specific value:
+> > 32-Bit identifier composed of the 3rd through 24th bits of the
+> > Organizationally Unique Identifier (OUI) assigned to the device
+> > manufacturer by the IEEE, plus a six-bit model number, plus a four-bit
+> > revision number.
+> > This is done in the device specific code and not in backplane generic
+> > driver.
+> > You can check support for QorIQ devices where qoriq_backplane_driver
+> > is registered as a phy_driver:
+> >
+> > @file: qoriq_backplane.c
+> > +static struct phy_driver qoriq_backplane_driver[] =3D {
+> > +	{
+> > +	.phy_id		=3D PCS_PHY_DEVICE_ID,
+> > +	.name		=3D QORIQ_BACKPLANE_DRIVER_NAME,
+> > +	.phy_id_mask	=3D PCS_PHY_DEVICE_ID_MASK,
+> > +	.features       =3D BACKPLANE_FEATURES,
+> > +	.probe          =3D qoriq_backplane_probe,
+> > +	.remove         =3D backplane_remove,
+> > +	.config_init    =3D qoriq_backplane_config_init,
+> > +	.aneg_done      =3D backplane_aneg_done,
+> >
+> > Here we register the particular phy device ID/mask and driver name
+> > specific for qoriq devices.
+> > Also we can use generic routines provided by generic backplane driver
+> > if they are suitable for particular qoriq device or otherwise we can
+> > use more specialized specific routines like:
+> > qoriq_backplane_config_init
+> >
+>=20
+> --
+
