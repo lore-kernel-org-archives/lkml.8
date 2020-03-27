@@ -2,124 +2,247 @@ Return-Path: <SRS0=s8dx=5M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28512C43331
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 22:38:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B12DBC43331
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 22:39:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E844C20663
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 22:37:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="pHcQG+1r"
+	by mail.kernel.org (Postfix) with ESMTP id 8355A20663
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 22:39:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727742AbgC0Wh6 (ORCPT
+        id S1727749AbgC0Wjt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Mar 2020 18:37:58 -0400
-Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:11048 "EHLO
-        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726781AbgC0Wh6 (ORCPT
+        Fri, 27 Mar 2020 18:39:49 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:43294 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727707AbgC0Wjt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Mar 2020 18:37:58 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e7e80380000>; Fri, 27 Mar 2020 15:37:44 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Fri, 27 Mar 2020 15:37:57 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Fri, 27 Mar 2020 15:37:57 -0700
-Received: from [10.2.58.50] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 27 Mar
- 2020 22:37:57 +0000
-Subject: Re: [Patch v2 2/2] mm/page_alloc.c: define node_order with all zero
-To:     Wei Yang <richard.weiyang@gmail.com>, <akpm@linux-foundation.org>
-CC:     <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>,
-        <jgg@ziepe.ca>, <david@redhat.com>
-References: <20200327220121.27823-1-richard.weiyang@gmail.com>
- <20200327220121.27823-2-richard.weiyang@gmail.com>
-From:   John Hubbard <jhubbard@nvidia.com>
-X-Nvconfidentiality: public
-Message-ID: <4c9d8138-d379-810f-64e7-0d018ed019df@nvidia.com>
-Date:   Fri, 27 Mar 2020 15:37:57 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Fri, 27 Mar 2020 18:39:49 -0400
+Received: from mail-qt1-f198.google.com ([209.85.160.198])
+        by youngberry.canonical.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <gpiccoli@canonical.com>)
+        id 1jHxau-0000W7-2C
+        for linux-kernel@vger.kernel.org; Fri, 27 Mar 2020 22:36:52 +0000
+Received: by mail-qt1-f198.google.com with SMTP id v10so9576316qtk.7
+        for <linux-kernel@vger.kernel.org>; Fri, 27 Mar 2020 15:36:52 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=O94P0uoScvdbW3wTdJiQYQPyg7B5lC7WAC85T+bbce4=;
+        b=LuFUBRLjZ9oQo5C2tt6jxdKmItcRWNe/iYMFiSvPzaWvXmHG9uKYOPfQ5J0JhgJzFt
+         jwdfKY5n2lDuCRRJfCj9/PGqaALb0pHMIvzHhRqNk1hyh2b3XQGgPknW0j4EiqVzCNjI
+         v3DYKrklU36ravnoMebwhnabDIa1crxJtZi1N6qK4jKfhsgWxjF07qzJ6QeL64lHur4j
+         yE/0BLDv3s3PLmu1CSoK/bMR2rtlu0ZBZhbQBPIShJdmWsJRRQ18d6PPJcyVWkvDT0XR
+         FYaVvgILfnuuQy+0/Pr2XnTtPE2320/PAcWtTFmDt2M4kZ01aD9MILH/I4LWmDwihNu/
+         QIKg==
+X-Gm-Message-State: ANhLgQ3q1yPEP+se+Cc88rVYxrT2tEJHjaOqSjyI7czeJfzPeCZMUJ2t
+        uT3lkZLiIjh60Ibhxj+jQ956qeWSJc2gH0ag2ZNY5yau4Ov/MKpSaRT9ARuRmlkpAJrjrizs36m
+        byuWGYQEzDRZl/CvzK/Yx+sVOIf+kFGdUVwEtT9tcIg==
+X-Received: by 2002:ae9:ed4a:: with SMTP id c71mr1637011qkg.418.1585348610699;
+        Fri, 27 Mar 2020 15:36:50 -0700 (PDT)
+X-Google-Smtp-Source: ADFU+vsEdbz0uv5I6GDIIDnD05XVXJ9B1aeiR0bCDmtaklFI7RlYJRhcoq0y3fccbC+JNH6yttitqQ==
+X-Received: by 2002:ae9:ed4a:: with SMTP id c71mr1636966qkg.418.1585348610238;
+        Fri, 27 Mar 2020 15:36:50 -0700 (PDT)
+Received: from localhost (189-47-87-73.dsl.telesp.net.br. [189.47.87.73])
+        by smtp.gmail.com with ESMTPSA id c40sm5212630qtk.18.2020.03.27.15.36.48
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 27 Mar 2020 15:36:49 -0700 (PDT)
+From:   "Guilherme G. Piccoli" <gpiccoli@canonical.com>
+To:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        akpm@linux-foundation.org
+Cc:     linux-api@vger.kernel.org, linux-doc@vger.kernel.org,
+        mcgrof@kernel.org, keescook@chromium.org, yzaikin@google.com,
+        tglx@linutronix.de, penguin-kernel@I-love.SAKURA.ne.jp,
+        vbabka@suse.cz, rdunlap@infradead.org, willy@infradead.org,
+        gpiccoli@canonical.com, kernel@gpiccoli.net
+Subject: [PATCH V3] kernel/hung_task.c: Introduce sysctl to print all traces when a hung task is detected
+Date:   Fri, 27 Mar 2020 19:36:46 -0300
+Message-Id: <20200327223646.20779-1-gpiccoli@canonical.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-In-Reply-To: <20200327220121.27823-2-richard.weiyang@gmail.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1585348664; bh=wICTeUYozVm+quzs+Nfk2y7usqwVZCyFqx6HcmkaOZ8=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:X-Nvconfidentiality:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=pHcQG+1rpMLT51VYJ5vwHY3KcztuvUeQ+z9YV1441wO/PKOnEAORx/0rFLZIesauj
-         cfCQneKKlOonMfpsrRG8wh8HKxI5oZhhiCrUvpBLJXv1MJV4pdebOf+0cxhiW1aeE+
-         HFeJzYf2EOz413btNGdoeSqcyPc186ZSPIL28V4TBBr4wTNfBtz5eyGKVUgQNbcK2A
-         jYRuVnmbl26Yili5U6rQjrl769X4MLM0wBa9MCxLeMvaJ22pJrPC94Nb1hK2emlOs9
-         Eo69UlF+kwWO+dcpBwZZoqsQi6n2zu2Kv8ruhUnbpW0Wr0jwYUNzP/HxXJMfq6dxb6
-         Ov/10oWXxUU/g==
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/27/20 3:01 PM, Wei Yang wrote:
-> Since we always clear node_order before getting it, we can leverage
-> compiler to do this instead of at run time.
-> 
-> Signed-off-by: Wei Yang <richard.weiyang@gmail.com>
-> ---
->   mm/page_alloc.c | 3 +--
->   1 file changed, 1 insertion(+), 2 deletions(-)
-> 
-> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-> index dfcf2682ed40..49dd1f25c000 100644
-> --- a/mm/page_alloc.c
-> +++ b/mm/page_alloc.c
-> @@ -5585,7 +5585,7 @@ static void build_thisnode_zonelists(pg_data_t *pgdat)
->   
->   static void build_zonelists(pg_data_t *pgdat)
->   {
-> -	static int node_order[MAX_NUMNODES];
-> +	static int node_order[MAX_NUMNODES] = {0};
+Commit 401c636a0eeb ("kernel/hung_task.c: show all hung tasks before panic")
+introduced a change in that we started to show all CPUs backtraces when a
+hung task is detected _and_ the sysctl/kernel parameter "hung_task_panic"
+is set. The idea is good, because usually when observing deadlocks (that
+may lead to hung tasks), the culprit is another task holding a lock and
+not necessarily the task detected as hung.
+
+The problem with this approach is that dumping backtraces is a slightly
+expensive task, specially printing that on console (and specially in many
+CPU machines, as servers commonly found nowadays). So, users that plan to
+collect a kdump to investigate the hung tasks and narrow down the deadlock
+definitely don't need the CPUs backtrace on dmesg/console, which will delay
+the panic and pollute the log (crash tool would easily grab all CPUs traces
+with 'bt -a' command).
+Also, there's the reciprocal scenario: some users may be interested in
+seeing the CPUs backtraces but not have the system panic when a hung task
+is detected. The current approach hence is almost as embedding a policy in
+the kernel, by forcing the CPUs backtraces' dump (only) on hung_task_panic.
+
+This patch decouples the panic event on hung task from the CPUs
+backtraces dump, by creating (and documenting) a new sysctl called
+"hung_task_all_cpu_backtrace", analog to the approach taken on soft/hard
+lockups, that have both a panic and an "all_cpu_backtrace" sysctl to allow
+individual control. The new mechanism for dumping the CPUs backtraces on
+hung task detection respects "hung_task_warnings" by not dumping the
+traces in case there's no warnings left.
+
+Cc: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+Reviewed-by: Kees Cook <keescook@chromium.org>
+Signed-off-by: Guilherme G. Piccoli <gpiccoli@canonical.com>
+---
+
+V3: Following the suggestion from Vlastimil, removed the kernel parameter
+since soon we (hopefully) will have a generic approach to set sysctls via
+kernel parameters[0] - thanks Vlastimil, great idea!
+
+Thanks,
+
+Guilherme
+
+[0] lore.kernel.org/lkml/20200326181606.7027-1-vbabka@suse.cz/T
 
 
-Looks wrong: now the single instance of node_order is initialized just once by
-the compiler. And that means that only the first caller of this function
-gets a zeroed node_order array...
+ Documentation/admin-guide/sysctl/kernel.rst | 15 +++++++++++++++
+ include/linux/sched/sysctl.h                |  7 +++++++
+ kernel/hung_task.c                          | 20 ++++++++++++++++++--
+ kernel/sysctl.c                             | 11 +++++++++++
+ 4 files changed, 51 insertions(+), 2 deletions(-)
 
-
->   	int node, load, nr_nodes = 0;
->   	nodemask_t used_mask = NODE_MASK_NONE;
->   	int local_node, prev_node;
-> @@ -5595,7 +5595,6 @@ static void build_zonelists(pg_data_t *pgdat)
->   	load = nr_online_nodes;
->   	prev_node = local_node;
->   
-> -	memset(node_order, 0, sizeof(node_order));
-
-...and all subsequent callers are left with whatever debris is remaining in
-node_order. So this is not good.
-
-The reason that memset() was used here, is that there aren't many other ways
-to get node_order zeroed, given that it is a statically defined variable.
-
-
->   	while ((node = find_next_best_node(local_node, &used_mask)) >= 0) {
->   		/*
->   		 * We don't want to pressure a particular node.
-> 
-
-
-
-thanks,
+diff --git a/Documentation/admin-guide/sysctl/kernel.rst b/Documentation/admin-guide/sysctl/kernel.rst
+index def074807cee..8b4ff69d2348 100644
+--- a/Documentation/admin-guide/sysctl/kernel.rst
++++ b/Documentation/admin-guide/sysctl/kernel.rst
+@@ -40,6 +40,7 @@ show up in /proc/sys/kernel:
+ - hotplug
+ - hardlockup_all_cpu_backtrace
+ - hardlockup_panic
++- hung_task_all_cpu_backtrace
+ - hung_task_panic
+ - hung_task_check_count
+ - hung_task_timeout_secs
+@@ -338,6 +339,20 @@ Path for the hotplug policy agent.
+ Default value is "/sbin/hotplug".
+ 
+ 
++hung_task_all_cpu_backtrace:
++================
++
++If this option is set, the kernel will send an NMI to all CPUs to dump
++their backtraces when a hung task is detected. This file shows up if
++CONFIG_DETECT_HUNG_TASK and CONFIG_SMP are enabled.
++
++0: Won't show all CPUs backtraces when a hung task is detected.
++This is the default behavior.
++
++1: Will non-maskably interrupt all CPUs and dump their backtraces when
++a hung task is detected.
++
++
+ hung_task_panic:
+ ================
+ 
+diff --git a/include/linux/sched/sysctl.h b/include/linux/sched/sysctl.h
+index d4f6215ee03f..8cd29440ec8a 100644
+--- a/include/linux/sched/sysctl.h
++++ b/include/linux/sched/sysctl.h
+@@ -7,6 +7,13 @@
+ struct ctl_table;
+ 
+ #ifdef CONFIG_DETECT_HUNG_TASK
++
++#ifdef CONFIG_SMP
++extern unsigned int sysctl_hung_task_all_cpu_backtrace;
++#else
++#define sysctl_hung_task_all_cpu_backtrace 0
++#endif /* CONFIG_SMP */
++
+ extern int	     sysctl_hung_task_check_count;
+ extern unsigned int  sysctl_hung_task_panic;
+ extern unsigned long sysctl_hung_task_timeout_secs;
+diff --git a/kernel/hung_task.c b/kernel/hung_task.c
+index 14a625c16cb3..9a774aee1a44 100644
+--- a/kernel/hung_task.c
++++ b/kernel/hung_task.c
+@@ -53,9 +53,18 @@ int __read_mostly sysctl_hung_task_warnings = 10;
+ static int __read_mostly did_panic;
+ static bool hung_task_show_lock;
+ static bool hung_task_call_panic;
++static bool hung_task_show_all_bt;
+ 
+ static struct task_struct *watchdog_task;
+ 
++#ifdef CONFIG_SMP
++/*
++ * Should we dump all CPUs backtraces in a hung task event?
++ * Defaults to 0, can be changed via sysctl.
++ */
++unsigned int __read_mostly sysctl_hung_task_all_cpu_backtrace;
++#endif /* CONFIG_SMP */
++
+ /*
+  * Should we panic (and reboot, if panic_timeout= is set) when a
+  * hung task is detected:
+@@ -137,6 +146,9 @@ static void check_hung_task(struct task_struct *t, unsigned long timeout)
+ 			" disables this message.\n");
+ 		sched_show_task(t);
+ 		hung_task_show_lock = true;
++
++		if (sysctl_hung_task_all_cpu_backtrace)
++			hung_task_show_all_bt = true;
+ 	}
+ 
+ 	touch_nmi_watchdog();
+@@ -201,10 +213,14 @@ static void check_hung_uninterruptible_tasks(unsigned long timeout)
+ 	rcu_read_unlock();
+ 	if (hung_task_show_lock)
+ 		debug_show_all_locks();
+-	if (hung_task_call_panic) {
++
++	if (hung_task_show_all_bt) {
++		hung_task_show_all_bt = false;
+ 		trigger_all_cpu_backtrace();
++	}
++
++	if (hung_task_call_panic)
+ 		panic("hung_task: blocked tasks");
+-	}
+ }
+ 
+ static long hung_timeout_jiffies(unsigned long last_checked,
+diff --git a/kernel/sysctl.c b/kernel/sysctl.c
+index ad5b88a53c5a..238f268de486 100644
+--- a/kernel/sysctl.c
++++ b/kernel/sysctl.c
+@@ -1098,6 +1098,17 @@ static struct ctl_table kern_table[] = {
+ 	},
+ #endif
+ #ifdef CONFIG_DETECT_HUNG_TASK
++#ifdef CONFIG_SMP
++	{
++		.procname	= "hung_task_all_cpu_backtrace",
++		.data		= &sysctl_hung_task_all_cpu_backtrace,
++		.maxlen		= sizeof(int),
++		.mode		= 0644,
++		.proc_handler	= proc_dointvec_minmax,
++		.extra1		= SYSCTL_ZERO,
++		.extra2		= SYSCTL_ONE,
++	},
++#endif /* CONFIG_SMP */
+ 	{
+ 		.procname	= "hung_task_panic",
+ 		.data		= &sysctl_hung_task_panic,
 -- 
-John Hubbard
-NVIDIA
+2.25.1
+
