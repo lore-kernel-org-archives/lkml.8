@@ -2,89 +2,72 @@ Return-Path: <SRS0=s8dx=5M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04FFBC43331
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 19:26:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C17BC43331
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 19:26:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CFC76206E6
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 19:26:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="IGaP7Mdp"
+	by mail.kernel.org (Postfix) with ESMTP id F2EAB2073B
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 19:26:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726738AbgC0T0N (ORCPT
+        id S1727705AbgC0T0t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Mar 2020 15:26:13 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:44024 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726900AbgC0T0N (ORCPT
+        Fri, 27 Mar 2020 15:26:49 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:39296 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727349AbgC0T0t (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Mar 2020 15:26:13 -0400
-Received: by mail-lf1-f68.google.com with SMTP id n20so8796366lfl.10
-        for <linux-kernel@vger.kernel.org>; Fri, 27 Mar 2020 12:26:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Xyt/WUa2OD/knVIi601SFgcT1l0Zvp/CDfO2pM2aN4k=;
-        b=IGaP7Mdp93QPDuqZ2364as99CykHs3PJ4uYKf6kPp4MEHCRvpSlBKK1Qz4NqpXAC6F
-         jcs/JXuF1nLBhdGF1Gfkw12gMzmJM5qi8Hew8wMHVHPFn7QhLflUWGX6h8S1zZUgwGyT
-         ZwdedZA3Dn3uw31OdZWSCHUvQ9C5JfKBWJ6IESHexoyfrt48U76swLir1qWsNWYgDKBz
-         Umrm5nAGV4JXf72ChFK+JRjPexOHxC/o9E2BcsUkz3OS2rD419n45AlPLeHu98S305n6
-         Vn9s3lQwR9CuCC+WQNGKtunP3nNeRTSmrM3aVOkwU64nC9v2VXIkLhIGnMW6fzq+KY+T
-         k/2Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Xyt/WUa2OD/knVIi601SFgcT1l0Zvp/CDfO2pM2aN4k=;
-        b=uirlJpAXwXr3jEuEk3SvRMQlAPST9Dhvc46Di65l8vrwJV+FSXwsI81ePU2mA5HHXD
-         FvKYm5o+b6t/i90QrDcpPFv2OuJT8VhMS+he3IN0t59d30PXnU3t9h3opWVe5nBKbWkA
-         GzcPOZgDig6V7FUgMIgAYai2ru8EqWDBdHfLfSnGesu/hHwsejZuyWJGjtrsp72NtFjR
-         Tjddx09nLoA4ufdZ7G713I62s7pzRZOC6/ptuaQRS4MN6nACNIOtDlcvKW84EqP7BzqG
-         0SXV0/gB8BBsxPcPEWRwzmCKfoDD8uj8gLwSSxzoGq/DyR8ax4D2P38oFNQdz+0OT8iH
-         ZzmQ==
-X-Gm-Message-State: AGi0PubaaTt6rYJ9VXRAH8JZ6ughVzxWpe74bQUFjr9qmgMv6aR0AQzR
-        pRpSINURHt+z3fUal76AOwqu2YkrpslP0fwj70kslQ==
-X-Google-Smtp-Source: APiQypIDOmD/wk2tYVESxm4bIRP7LjM723EaFL/9IRPRsGvMcf3ygcQJnmmosTirkk89eivLqwScLbnLWxa4ztRvg0Y=
-X-Received: by 2002:a19:ac8:: with SMTP id 191mr518366lfk.77.1585337170911;
- Fri, 27 Mar 2020 12:26:10 -0700 (PDT)
+        Fri, 27 Mar 2020 15:26:49 -0400
+Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <colin.king@canonical.com>)
+        id 1jHucp-0001vg-Tu; Fri, 27 Mar 2020 19:26:40 +0000
+From:   Colin King <colin.king@canonical.com>
+To:     Kalle Valo <kvalo@codeaurora.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        John Crispin <john@phrozen.org>, ath11k@lists.infradead.org,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH][next] ath11k: fix error message to correctly report the command that failed
+Date:   Fri, 27 Mar 2020 19:26:39 +0000
+Message-Id: <20200327192639.363354-1-colin.king@canonical.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-References: <cover.1584456635.git.mchehab+huawei@kernel.org> <51197e3568f073e22c280f0584bfa20b44436708.1584456635.git.mchehab+huawei@kernel.org>
-In-Reply-To: <51197e3568f073e22c280f0584bfa20b44436708.1584456635.git.mchehab+huawei@kernel.org>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Fri, 27 Mar 2020 20:25:59 +0100
-Message-ID: <CACRpkdY4_fEbsgX9vRHd5_8Z-1MbBDd3y-pVsTit4bDLW6VpoQ@mail.gmail.com>
-Subject: Re: [PATCH 12/17] gpio: gpiolib.c: fix a doc warning
-To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 17, 2020 at 3:54 PM Mauro Carvalho Chehab
-<mchehab+huawei@kernel.org> wrote:
+From: Colin Ian King <colin.king@canonical.com>
 
-> Use a different markup for the ERR_PTR, as %FOO doesn't work
-> if there are parenthesis. So, use, instead:
->
->         ``ERR_PTR(-EINVAL)``
->
-> This fixes the following warning:
->
->         ./drivers/gpio/gpiolib.c:139: WARNING: Inline literal start-string without end-string.
->
-> Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Currently the error message refers to the command WMI_TWT_DIeABLE_CMDID
+which looks like a cut-n-paste mangled typo. Fix the message to match
+the command WMI_BSS_COLOR_CHANGE_ENABLE_CMDID that failed.
 
-Patch applied.
+Fixes: 5a032c8d1953 ("ath11k: add WMI calls required for handling BSS color")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+---
+ drivers/net/wireless/ath/ath11k/wmi.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Yours,
-Linus Walleij
+diff --git a/drivers/net/wireless/ath/ath11k/wmi.c b/drivers/net/wireless/ath/ath11k/wmi.c
+index e7ce36966d6a..6fec62846279 100644
+--- a/drivers/net/wireless/ath/ath11k/wmi.c
++++ b/drivers/net/wireless/ath/ath11k/wmi.c
+@@ -2779,7 +2779,7 @@ int ath11k_wmi_send_bss_color_change_enable_cmd(struct ath11k *ar, u32 vdev_id,
+ 	ret = ath11k_wmi_cmd_send(wmi, skb,
+ 				  WMI_BSS_COLOR_CHANGE_ENABLE_CMDID);
+ 	if (ret) {
+-		ath11k_warn(ab, "Failed to send WMI_TWT_DIeABLE_CMDID");
++		ath11k_warn(ab, "Failed to send WMI_BSS_COLOR_CHANGE_ENABLE_CMDID");
+ 		dev_kfree_skb(skb);
+ 	}
+ 	return ret;
+-- 
+2.25.1
+
