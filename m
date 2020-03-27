@@ -2,182 +2,118 @@ Return-Path: <SRS0=s8dx=5M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.2 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07E14C43331
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 08:41:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B6A2C43331
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 08:42:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C5C4720716
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 08:41:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SVHARPEm"
+	by mail.kernel.org (Postfix) with ESMTP id 6B61F20705
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 08:42:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726540AbgC0IlA (ORCPT
+        id S1726656AbgC0ImQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Mar 2020 04:41:00 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:38207 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726165AbgC0IlA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Mar 2020 04:41:00 -0400
-Received: by mail-pf1-f193.google.com with SMTP id c21so3532141pfo.5
-        for <linux-kernel@vger.kernel.org>; Fri, 27 Mar 2020 01:40:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=S6PFdRv3dFm4asBnQ4z7ID9xmAaZoaiRYwbnBf1Aomc=;
-        b=SVHARPEmycHyImvHBgHAVvU2eJwJiMdtiGsZqydqXCXdHrwuikkc8lCEXfD7DF/GRw
-         ciLI1jv6xBmwX8YeaDNwcSA6+3xLPQbgjtwHiqBrH/lvz72KpaHOG/I/NSjO/VtpCSsi
-         u3t1vrOmYydtCTxsWFkHANaRzx6N4YHqeKnVHOEn3c5St/YeAFQMNBGmzp7OTqigpcKa
-         IOhaWt34pTLDSh5IYfDyNn0fKzoPyjgpOTOY8jETXD5lOPYdMaUVEATJIBioB7xc9EJG
-         8ke63TwrS7GtcsJGMz6UIMzjxT7uEA2Xo4hOdVxGQI4B8E+OMC32HtATxc2ZIMjqMSSZ
-         ZiEg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=S6PFdRv3dFm4asBnQ4z7ID9xmAaZoaiRYwbnBf1Aomc=;
-        b=NPrGn+1iiy6/n9vtG0gWAZnscZH7tA8W9a60IyfAPWYmotR2w8Lfh8Hjo8LfpQPfVc
-         crsTIPAdwsg1E4/k0s2tAkDFg8aOLqiIcYbFBqcoU4G/aC1caBWrBHP0EiF7S8px7gT1
-         G5L6SQ1f0aniITf/2hw7xjk+FRIh3yLql8W3BWZT2T9SLu8yzWRSER3hYT/lYRF3LZV3
-         2/1uKnCrfZ5MBmDryDRuQh7Bk7dSScthsvW/japCjB5A51FcILc1QB84AM6ajGq0fgsp
-         jafC8PyCtQgF5VQlpiTzI/SH1xGQCn6x87HKF5vo0xWtqsi3WGXhUiUT3SXcmGDGDqtc
-         lHDQ==
-X-Gm-Message-State: ANhLgQ02mLKAl4EuTXryZZL50TDKQ4EOi9g2JRLMtcDgPJPeZwRZsH80
-        AHrS2M0+MX3AMzLC2/iJXV5+/7LeJw8xuc6ljUE=
-X-Google-Smtp-Source: ADFU+vtwcQFCwFzM2ueqVGvKPa3MVfy8ElVkf6USapCChwulphg5iQDOysczS7g6xYHvBc6piEJosid5H9ua3LH5DJ8=
-X-Received: by 2002:a63:798a:: with SMTP id u132mr13447042pgc.203.1585298458191;
- Fri, 27 Mar 2020 01:40:58 -0700 (PDT)
+        Fri, 27 Mar 2020 04:42:16 -0400
+Received: from mx2.suse.de ([195.135.220.15]:38588 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726063AbgC0ImP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Mar 2020 04:42:15 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 69F31B0AE;
+        Fri, 27 Mar 2020 08:42:13 +0000 (UTC)
+Received: by unicorn.suse.cz (Postfix, from userid 1000)
+        id 96B90E00A5; Fri, 27 Mar 2020 09:42:12 +0100 (CET)
+Date:   Fri, 27 Mar 2020 09:42:12 +0100
+From:   Michal Kubecek <mkubecek@suse.cz>
+To:     netdev@vger.kernel.org
+Cc:     kbuild-all@lists.01.org, Jiri Pirko <jiri@resnulli.us>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        John Linville <linville@tuxdriver.com>,
+        Johannes Berg <johannes@sipsolutions.net>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next 11/12] ethtool: add timestamping related string
+ sets
+Message-ID: <20200327084212.GG31519@unicorn.suse.cz>
+References: <105373960c4afeeea7b51459b9763b0452d6e660.1585267388.git.mkubecek@suse.cz>
+ <202003271437.5LMEAGMc%lkp@intel.com>
 MIME-Version: 1.0
-References: <5aa5aad6fb1678230c260337dc066cd449a2bf32.camel@perches.com>
-In-Reply-To: <5aa5aad6fb1678230c260337dc066cd449a2bf32.camel@perches.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Fri, 27 Mar 2020 10:40:50 +0200
-Message-ID: <CAHp75VdyrvgD9GMP-gPWyHnLJC-zRcsupEhP3H1QuSuqqtUmdw@mail.gmail.com>
-Subject: Re: [PATCH] MAINTAINERS: List the section entries in the preferred order
-To:     Joe Perches <joe@perches.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Andy Shevchenko <andriy.shevchenko@intel.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <202003271437.5LMEAGMc%lkp@intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 27, 2020 at 1:29 AM Joe Perches <joe@perches.com> wrote:
->
-> The MAINTAINERS file header has never shown a preferred order for the
-> section entries but scripts/parse-maintainers.pl added a preferred
-> order with commit 61f741645a35 ("parse-maintainers: Add section pattern
-> sorting")
->
-> Commit 5cdbec108fd2 ("parse-maintainers: Do not sort section content by
-> default") changed the preferred order to be a bit more sensible.
->
-> Update the MAINTAINERS section description block to use this preferred
-> section entry ordering.
->
+On Fri, Mar 27, 2020 at 02:55:36PM +0800, kbuild test robot wrote:
+> Hi Michal,
+> 
+> Thank you for the patch! Perhaps something to improve:
+> 
+> [auto build test WARNING on net-next/master]
+> [also build test WARNING on next-20200326]
+> [cannot apply to net/master linus/master v5.6-rc7]
+> [if your patch is applied to the wrong git tree, please drop us a note to help
+> improve the system. BTW, we also suggest to use '--base' option to specify the
+> base tree in git format-patch, please see https://stackoverflow.com/a/37406982]
+> 
+> url:    https://github.com/0day-ci/linux/commits/Michal-Kubecek/ethtool-netlink-interface-part-4/20200327-122420
+> base:   https://git.kernel.org/pub/scm/linux/kernel/git/davem/net-next.git 5bb7357f45315138f623d08a615d23dd6ac26cf3
+> config: nds32-defconfig (attached as .config)
+> compiler: nds32le-linux-gcc (GCC) 9.2.0
+> reproduce:
+>         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+>         chmod +x ~/bin/make.cross
+>         # save the attached .config to linux build tree
+>         GCC_VERSION=9.2.0 make.cross ARCH=nds32 
+> 
+> If you fix the issue, kindly add following tag
+> Reported-by: kbuild test robot <lkp@intel.com>
+> 
+> All warnings (new ones prefixed by >>):
+> 
+>    net/core/dev_ioctl.c: In function 'net_hwtstamp_validate':
+> >> net/core/dev_ioctl.c:186:2: warning: enumeration value '__HWTSTAMP_TX_CNT' not handled in switch [-Wswitch]
+>      186 |  switch (tx_type) {
+>          |  ^~~~~~
+> >> net/core/dev_ioctl.c:195:2: warning: enumeration value '__HWTSTAMP_FILTER_CNT' not handled in switch [-Wswitch]
+>      195 |  switch (rx_filter) {
+>          |  ^~~~~~
 
-FWIW,
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-thanks!
+(kbuild bot omitted netdev list)
 
-> Add a slightly better description for the N: entry too.
->
-> Signed-off-by: Joe Perches <joe@perches.com>
-> ---
->  MAINTAINERS | 35 ++++++++++++++++++-----------------
->  1 file changed, 18 insertions(+), 17 deletions(-)
->
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 5060aa..ae4db4a 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -77,21 +77,13 @@ Tips for patch submitters
->
->  8.     Happy hacking.
->
-> -Descriptions of section entries
-> --------------------------------
-> +Descriptions of section entries and preferred order
-> +---------------------------------------------------
->
->         M: *Mail* patches to: FullName <address@domain>
->         R: Designated *Reviewer*: FullName <address@domain>
->            These reviewers should be CCed on patches.
->         L: *Mailing list* that is relevant to this area
-> -       W: *Web-page* with status/info
-> -       B: URI for where to file *bugs*. A web-page with detailed bug
-> -          filing info, a direct bug tracker link, or a mailto: URI.
-> -       C: URI for *chat* protocol, server and channel where developers
-> -          usually hang out, for example irc://server/channel.
-> -       Q: *Patchwork* web based patch tracking system site
-> -       T: *SCM* tree type and location.
-> -          Type is one of: git, hg, quilt, stgit, topgit
->         S: *Status*, one of the following:
->            Supported:   Someone is actually paid to look after this.
->            Maintained:  Someone actually looks after it.
-> @@ -102,30 +94,39 @@ Descriptions of section entries
->            Obsolete:    Old code. Something tagged obsolete generally means
->                         it has been replaced by a better system and you
->                         should be using that.
-> +       W: *Web-page* with status/info
-> +       Q: *Patchwork* web based patch tracking system site
-> +       B: URI for where to file *bugs*. A web-page with detailed bug
-> +          filing info, a direct bug tracker link, or a mailto: URI.
-> +       C: URI for *chat* protocol, server and channel where developers
-> +          usually hang out, for example irc://server/channel.
->         P: Subsystem Profile document for more details submitting
->            patches to the given subsystem. This is either an in-tree file,
->            or a URI. See Documentation/maintainer/maintainer-entry-profile.rst
->            for details.
-> +       T: *SCM* tree type and location.
-> +          Type is one of: git, hg, quilt, stgit, topgit
->         F: *Files* and directories wildcard patterns.
->            A trailing slash includes all files and subdirectory files.
->            F:   drivers/net/    all files in and below drivers/net
->            F:   drivers/net/*   all files in drivers/net, but not below
->            F:   */net/*         all files in "any top level directory"/net
->            One pattern per line.  Multiple F: lines acceptable.
-> +       X: *Excluded* files and directories that are NOT maintained, same
-> +          rules as F:. Files exclusions are tested before file matches.
-> +          Can be useful for excluding a specific subdirectory, for instance:
-> +          F:   net/
-> +          X:   net/ipv6/
-> +          matches all files in and below net excluding net/ipv6/
->         N: Files and directories *Regex* patterns.
-> -          N:   [^a-z]tegra     all files whose path contains the word tegra
+Something like below (probably with a better comment text) should get
+rid of this warning.
 
-> +          N:   [^a-z]tegra     all files whose path contains tegra
-> +                               (not including files like integrator)
+Michal
 
 
-
->            One pattern per line.  Multiple N: lines acceptable.
->            scripts/get_maintainer.pl has different behavior for files that
->            match F: pattern and matches of N: patterns.  By default,
->            get_maintainer will not look at git log history when an F: pattern
->            match occurs.  When an N: match occurs, git log history is used
->            to also notify the people that have git commit signatures.
-> -       X: *Excluded* files and directories that are NOT maintained, same
-> -          rules as F:. Files exclusions are tested before file matches.
-> -          Can be useful for excluding a specific subdirectory, for instance:
-> -          F:   net/
-> -          X:   net/ipv6/
-> -          matches all files in and below net excluding net/ipv6/
->         K: *Content regex* (perl extended) pattern match in a patch or file.
->            For instance:
->            K: of_get_profile
->
->
-
-
--- 
-With Best Regards,
-Andy Shevchenko
+diff --git a/net/core/dev_ioctl.c b/net/core/dev_ioctl.c
+index dbaebbe573f0..547b587c1950 100644
+--- a/net/core/dev_ioctl.c
++++ b/net/core/dev_ioctl.c
+@@ -190,6 +190,9 @@ static int net_hwtstamp_validate(struct ifreq *ifr)
+ 	case HWTSTAMP_TX_ONESTEP_P2P:
+ 		tx_type_valid = 1;
+ 		break;
++	case __HWTSTAMP_TX_CNT:
++		/* not a real value */
++		break;
+ 	}
+ 
+ 	switch (rx_filter) {
+@@ -211,6 +214,9 @@ static int net_hwtstamp_validate(struct ifreq *ifr)
+ 	case HWTSTAMP_FILTER_NTP_ALL:
+ 		rx_filter_valid = 1;
+ 		break;
++	case __HWTSTAMP_FILTER_CNT:
++		/* not a real value */
++		break;
+ 	}
+ 
+ 	if (!tx_type_valid || !rx_filter_valid)
