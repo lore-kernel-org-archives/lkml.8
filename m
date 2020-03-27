@@ -2,114 +2,93 @@ Return-Path: <SRS0=s8dx=5M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E575C2D0ED
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 18:51:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D75DC43331
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 18:53:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A7E1206F2
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 18:51:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0FFD2206F2
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 18:53:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bhDkyxLx"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cvMCrySc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727336AbgC0SvB (ORCPT
+        id S1727423AbgC0Sxs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Mar 2020 14:51:01 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:40314 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726758AbgC0SvA (ORCPT
+        Fri, 27 Mar 2020 14:53:48 -0400
+Received: from mail-pj1-f68.google.com ([209.85.216.68]:50258 "EHLO
+        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726738AbgC0Sxr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Mar 2020 14:51:00 -0400
-Received: by mail-ot1-f67.google.com with SMTP id r19so4999015otn.7;
-        Fri, 27 Mar 2020 11:51:00 -0700 (PDT)
+        Fri, 27 Mar 2020 14:53:47 -0400
+Received: by mail-pj1-f68.google.com with SMTP id v13so4249444pjb.0;
+        Fri, 27 Mar 2020 11:53:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=wDI9SfzV2R8hyVfBWBp+68ChjK6A5bogDpMizFkhzeM=;
-        b=bhDkyxLxUVigjSTEIIzP1F4GbQDrLmGX2OdMX4YPUWRLfB0UdzopRsiocfCDBjnTCH
-         RccowB5sFrNiabPaBIkjd/u+7m5DcIO3wWRu5cdGJEWvvU+sCpTrpCGlbUyOTmaQJrZv
-         TVwQMh+CAx+tdev7JmWIoOnfVWJlBLYVq1XN6s3aWbrjD+5LhxukuUToVOhKjm0DZLvx
-         mo13kaE8Cb+i7Y5F8zyztPC2i1jBQBLPRcCfEyLorw5+87z/zdJokNhbZmY6fsoqA4GV
-         I0YC047l11ATgh0c9RELO5YkFJThfMeM2ktp+ELv4uL2jhUFUchxOqvYOOmvo+mYi9Ym
-         9ZQQ==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=zz8pZffXcuHzcOzs7yUrmrfernHqa//RXyP98eRdT88=;
+        b=cvMCryScSbQdTRMTKEX6uqFsGst+mTtHrahGUubzKFyKJvqSTCnMdFB915495iRvNv
+         9V0rFw0bvk3/2aOPbokyBaogNTkwE92D3/aFBL7HQNFR/gBl/BEg1zVV4ou+hzGiutxK
+         j20HdyOQw0/5UY0ykVgjh1Hk3/Flzwkaee5qEY+ASi6g4Ez0P4tGXuHwPuoYzZmrS4+Z
+         byUOQL4ad/B+jFLIdA9h2MPrSM0oEgbyOz5tEtt9cLatTSzY8qrF/aUVzGpB7VGZoGzD
+         cQr1PXDp4jvE36Mc1ucKwktqn0HE+8McDCaE2MBWMAK3TjY5XGIlkClOdBCSP1lsg3Us
+         G4UQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=wDI9SfzV2R8hyVfBWBp+68ChjK6A5bogDpMizFkhzeM=;
-        b=hSByXtBdZXW9JJLFBumEtpyCRTjsGP41PWq0BnSVDTxXL4UqUv8L4pwebwqv5vrtRR
-         QGvuiDKTx6pbiv67iaAiv32y04gzZ3A86jSYFUQC2Y16XpSa1BuSPob7z7Ff7yMedHnw
-         /3pJwCk6Z1REP1Qad4vVUcpFGzniYSh2ibbZCYsYoUk4NExBP9eGDXk+vN/kIxy9MB28
-         jJlbeRuVlxXvHoGbXInPDKV6Dry26k8KDMhac3luBHOt2rdCLJBnqxtDAUWqTqemI73b
-         brFsPWd5KNTDj4EOt4/AhC18Xbb9wf1a+1sQ7V+GafrUEMzBU8gWUCRnzLYV+PEs8p3t
-         c6Pw==
-X-Gm-Message-State: ANhLgQ0nggW+Y/f8CnTrllASbDT7oMjfUHksVe9ySUEdaK6a8Zga6soL
-        pzN/4ZaZxhr+sllWG/58yy7yUZFttKk=
-X-Google-Smtp-Source: ADFU+vvuomHQOVxr5SPCDj1qBovJy4K7MFoYLPRUKu5zLKZaz14xBFFY2iM8Xphy/2s6CDhFP/+1MQ==
-X-Received: by 2002:a9d:3ea4:: with SMTP id b33mr89534otc.136.1585335059680;
-        Fri, 27 Mar 2020 11:50:59 -0700 (PDT)
-Received: from ubuntu-m2-xlarge-x86 ([2604:1380:4111:8b00::1])
-        by smtp.gmail.com with ESMTPSA id h29sm1696493ooe.33.2020.03.27.11.50.57
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 27 Mar 2020 11:50:59 -0700 (PDT)
-Date:   Fri, 27 Mar 2020 11:50:55 -0700
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Ohad Ben-Cohen <ohad@wizery.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-next@vger.kernel.org
-Subject: Build failure in omap_remoteproc due to 02e6d546e3bd
-Message-ID: <20200327185055.GA22438@ubuntu-m2-xlarge-x86>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=zz8pZffXcuHzcOzs7yUrmrfernHqa//RXyP98eRdT88=;
+        b=tiJO7QyMVkNhkCOhEXVTt6+0KF0SJcedFTY0WujOVBHW96JWv6MqNiY0beBfhbdlBL
+         uH8wpPrKWZzKJwcQK/qqCg/8QHNE9ztx691kfO4YIDO1XxXJcD5dORvG2Fkk0udBSbf3
+         P267R5WIr2WkgK/aBJwupGXQVQjo4yaT3UnmZmA8ifgQZsuQ/DUcc/4DvOHnYgcmZsm6
+         CZPvaMXF32FHXyXDPRU9Q7CNw4vtZCakNbzETFvxONsDYIIA6loEDUGl+l5vIaMbQOEH
+         14aE2+i4UeV1pDauXNQ3lBvJGJDlO/IG6hzU2No5zQpI92+zbjUVWCGJb4EpTr7aPjBA
+         jUVQ==
+X-Gm-Message-State: ANhLgQ1eIofOO6TLF2subIbmgAWEj2w3XToOujHf0YAnr3dctXK0Tm1U
+        04TNCPrI4T25txBrJooRkkE=
+X-Google-Smtp-Source: ADFU+vtSCkGSJRaZ60+Eh0o5MWVEcjGwR1ddOfdGV7PV5UWlOJnh9wHkb4tMp9KZ38zAT9TJzqGBvA==
+X-Received: by 2002:a17:90a:9e9:: with SMTP id 96mr889366pjo.168.1585335226872;
+        Fri, 27 Mar 2020 11:53:46 -0700 (PDT)
+Received: from localhost (c-73-241-114-122.hsd1.ca.comcast.net. [73.241.114.122])
+        by smtp.gmail.com with ESMTPSA id e184sm4626002pfh.219.2020.03.27.11.53.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 27 Mar 2020 11:53:46 -0700 (PDT)
+Date:   Fri, 27 Mar 2020 11:53:44 -0700
+From:   Richard Cochran <richardcochran@gmail.com>
+To:     Michal Kubecek <mkubecek@suse.cz>
+Cc:     David Miller <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
+        Jiri Pirko <jiri@resnulli.us>, Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        John Linville <linville@tuxdriver.com>,
+        Johannes Berg <johannes@sipsolutions.net>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next v2 11/12] ethtool: add timestamping related
+ string sets
+Message-ID: <20200327185344.GA28023@localhost>
+References: <cover.1585316159.git.mkubecek@suse.cz>
+ <9115b20867b6914eec70a58f3ba3b9deef4eb2b0.1585316159.git.mkubecek@suse.cz>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <9115b20867b6914eec70a58f3ba3b9deef4eb2b0.1585316159.git.mkubecek@suse.cz>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi all,
+On Fri, Mar 27, 2020 at 03:08:12PM +0100, Michal Kubecek wrote:
+> +const char ts_tx_type_names[][ETH_GSTRING_LEN] = {
+> +	[HWTSTAMP_TX_OFF]		= "off",
+> +	[HWTSTAMP_TX_ON]		= "on",
+> +	[HWTSTAMP_TX_ONESTEP_SYNC]	= "one-step-sync",
+> +	[HWTSTAMP_TX_ONESTEP_P2P]	= "one-step-p2p",
+> +};
 
-Apologies if this has already been reported, I did not see anything in
-the archives. On next-20200327, I see the following build error:
+Suggest "onestep-sync" and "onestep-p2p".
 
-drivers/remoteproc/omap_remoteproc.c:174:44: error: too many arguments
-to function call, expected 2, have 3
-        timer->timer_ops->set_load(timer->odt, 0, 0);
-        ~~~~~~~~~~~~~~~~~~~~~~~~~~                ^
-1 error generated.
-
-This is due to commit 02e6d546e3bd ("clocksource/drivers/timer-ti-dm:
-Enable autoreload in set_pwm") in the clockevents tree interacting with
-commit e28edc571925 ("remoteproc/omap: Request a timer(s) for remoteproc
-usage") from the rpmsg tree.
-
-Something like the diff below should resolve it but it cannot be applied
-to the rpmsg tree because it does not have the clockevents change. It
-will have to be applied by Linus as a merge fixup.
-
-Stephen, would you mind applying this to whichever merge happens second?
-
-Cheers,
-Nathan
-
-diff --git a/drivers/remoteproc/omap_remoteproc.c b/drivers/remoteproc/omap_remoteproc.c
-index cdb546f7232e..6955fab0a78b 100644
---- a/drivers/remoteproc/omap_remoteproc.c
-+++ b/drivers/remoteproc/omap_remoteproc.c
-@@ -171,7 +171,7 @@ static int omap_rproc_request_timer(struct device *dev, struct device_node *np,
- 	}
- 
- 	/* clean counter, remoteproc code will set the value */
--	timer->timer_ops->set_load(timer->odt, 0, 0);
-+	timer->timer_ops->set_load(timer->odt, 0);
- 
- 	return 0;
- }
+Acked-by: Richard Cochran <richardcochran@gmail.com>
