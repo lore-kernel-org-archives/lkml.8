@@ -2,112 +2,95 @@ Return-Path: <SRS0=s8dx=5M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85FD7C2D0ED
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 15:03:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81435C43331
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 15:06:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5CEB92074F
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 15:03:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585321429;
-	bh=ApyiJj5R6x/bWoO4b+GeCAO7RBq6UkEENtExb6RtAmw=;
-	h=Date:From:To:To:To:To:CC:Cc:Cc:Cc:Cc:Cc:Cc:Cc:Subject:In-Reply-To:
-	 References:List-ID:From;
-	b=CaGLBv0hLj3K3+kya41ShIAwJJokqXP3R1sICJwrCvWfSca9m+HUneQBXU5NMhbc6
-	 eQ7OenfpAABNtMwL9lL4fbiAlr3HfH6+vpChfASlIQgHOH5S+WcCplEgK/fY7dcQas
-	 KT8HR8qeQl0Dt9nOCSOeKoIqPnpGs9Mq9MCqEyxY=
+	by mail.kernel.org (Postfix) with ESMTP id 580FE20748
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 15:06:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="J80NARwE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727797AbgC0PDs (ORCPT
+        id S1727716AbgC0PGk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Mar 2020 11:03:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44074 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727742AbgC0PDq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Mar 2020 11:03:46 -0400
-Received: from localhost (unknown [137.135.114.1])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 736D520748;
-        Fri, 27 Mar 2020 15:03:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585321425;
-        bh=ApyiJj5R6x/bWoO4b+GeCAO7RBq6UkEENtExb6RtAmw=;
-        h=Date:From:To:To:To:To:CC:Cc:Cc:Cc:Cc:Cc:Cc:Cc:Subject:In-Reply-To:
-         References:From;
-        b=GnhYrU0VHAyWYiZnNLE09JMUXw007AdSMnfG8/MhHpi8YfPBpFUhgwNpCS4OolbgZ
-         Qv60xbbhMsAS/dgt8uHQHipyfCpv9a3HnSDBESC9YUFiyCQ/yvUc16HSMm3VSFIsXW
-         DC6eUTocZUM0AdvaGuR9BSr82CfWKFvby03xWLxc=
-Date:   Fri, 27 Mar 2020 15:03:44 +0000
-From:   Sasha Levin <sashal@kernel.org>
-To:     Sasha Levin <sashal@kernel.org>
-To:     "Longpeng(Mike)" <longpeng2@huawei.com>
-To:     Longpeng <longpeng2@huawei.com>
-To:     <linux-kernel@vger.kernel.org>, <linux-mm@kvack.org>
-CC:     <kvm@vger.kernel.org>, <arei.gonglei@huawei.com>
-Cc:     Mike Kravetz <mike.kravetz@oracle.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Jason Gunthorpe <jgg@ziepe.ca>
-Cc:     Matthew Wilcox <willy@infradead.org>
-Cc:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     stable@vger.kernel.org
-Cc:     stable@vger.kernel.org
-Subject: Re: [PATCH v3] mm/hugetlb: fix a addressing exception caused by huge_pte_offset
-In-Reply-To: <20200327014007.1915-1-longpeng2@huawei.com>
-References: <20200327014007.1915-1-longpeng2@huawei.com>
-Message-Id: <20200327150345.736D520748@mail.kernel.org>
+        Fri, 27 Mar 2020 11:06:40 -0400
+Received: from mail-pg1-f179.google.com ([209.85.215.179]:43449 "EHLO
+        mail-pg1-f179.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727322AbgC0PGi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Mar 2020 11:06:38 -0400
+Received: by mail-pg1-f179.google.com with SMTP id u12so4691041pgb.10
+        for <linux-kernel@vger.kernel.org>; Fri, 27 Mar 2020 08:06:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:references:from:message-id:date:user-agent:mime-version
+         :in-reply-to:content-language:content-transfer-encoding;
+        bh=eXeiwmriuUHSGPIQ5FE/vs4fhtvCZSUZ3+noRetg2ao=;
+        b=J80NARwEAtfKj8z76W4AvMB6js5ArpMXn6a03i9pbVQzqrM4mOTeWkHm5iLUvzWKq6
+         dvdMjte/1ibknnyKRwJhQgpA9uL2d4OucbWEktnWOfDfUhE3/Nin1yfF2DN9FgqoNm33
+         hNQKG3GYV1fXckGDsLsUagkYTLnTHw/Qic1FS1/hf0/YhrQ4qXe1NQblwT7DoW48ZfK8
+         Tc8Nej4b7pM3v2HivVo+eMvOYFgDALiweWzEwovBxrxHrGk39ihgZVhs902Mi+z/24FN
+         3bS482It5MEKjA2IRfolXEyRT4Xikvj3228njhM/OHjzR7GRbY7uJQ7fnAy1dRUMpOWy
+         yI/w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=eXeiwmriuUHSGPIQ5FE/vs4fhtvCZSUZ3+noRetg2ao=;
+        b=txq3nKDcJNP8JHjRIOLp52/xSmoZd2r+MzhvqnGWFn4hB6Ua68ratVGVn8Oct166Mz
+         v4DpfztKLei8me1AnKO6V9R2LWorT2TGNZLmQRAQwJP0z9ySvmBhwwvZYurDwl7hCL4c
+         ShBbqute0iWFpO5FIi4a/UG7BGZBGuYVbqnlo8PwvDZSNOPxc+f54QmC94QWF3v7FBJP
+         Ph1EN15iuPteWHb9vutnC1VzbEuKwNW9415oGs1lWjN6Xno6u3k7A/upm2Pr3kQlVoo8
+         qe6JoVzvHiXjeRH8kBx9CkHH9pl3d8bPtTdUlpdh4/C1hAyPOXG0zqcgRDmNKJmBKtrH
+         rIjQ==
+X-Gm-Message-State: ANhLgQ2nnXpIJkvGjQRZOAf+8jkSKjct9uG+ROvwW/VWXB1SjmymTSks
+        62gqeGlaHk910tbO8lVVzLmXDw==
+X-Google-Smtp-Source: ADFU+vs++DC7KxyU52I45Ga6jyMEVqGhwA7nu9vY/NNIxQmvXKQm1JdR/hw70GKZk7t4FSJKe8SEjw==
+X-Received: by 2002:a63:ef41:: with SMTP id c1mr13864299pgk.195.1585321596559;
+        Fri, 27 Mar 2020 08:06:36 -0700 (PDT)
+Received: from [192.168.1.188] ([66.219.217.145])
+        by smtp.gmail.com with ESMTPSA id mq18sm4255882pjb.6.2020.03.27.08.06.33
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 27 Mar 2020 08:06:35 -0700 (PDT)
+Subject: Re: KASAN: null-ptr-deref Write in blk_mq_map_swqueue
+To:     syzbot <syzbot+313d95e8a7a49263f88d@syzkaller.appspotmail.com>,
+        a@unstable.cc, b.a.t.m.a.n@lists.open-mesh.org,
+        davem@davemloft.net, dongli.zhang@oracle.com,
+        linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mareklindner@neomailbox.ch,
+        netdev@vger.kernel.org, sven@narfation.org, sw@simonwunderlich.de,
+        syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk
+References: <0000000000004760b805a1cc03fc@google.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <fa743a2c-f79e-6021-7c2b-72e178f913f4@kernel.dk>
+Date:   Fri, 27 Mar 2020 09:06:32 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
+MIME-Version: 1.0
+In-Reply-To: <0000000000004760b805a1cc03fc@google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi
+On 3/26/20 7:28 PM, syzbot wrote:
+> syzbot has bisected this bug to:
+> 
+> commit 768134d4f48109b90f4248feecbeeb7d684e410c
+> Author: Jens Axboe <axboe@kernel.dk>
+> Date:   Mon Nov 11 03:30:53 2019 +0000
+> 
+>     io_uring: don't do flush cancel under inflight_lock
 
-[This is an automated email]
-
-This commit has been processed because it contains a -stable tag.
-The stable tag indicates that it's relevant for the following trees: all
-
-The bot has tested the following trees: v5.5.11, v5.4.27, v4.19.112, v4.14.174, v4.9.217, v4.4.217.
-
-v5.5.11: Build OK!
-v5.4.27: Build OK!
-v4.19.112: Build OK!
-v4.14.174: Build OK!
-v4.9.217: Failed to apply! Possible dependencies:
-    166f61b9435a ("mm: codgin-style fixes")
-    505a60e22560 ("asm-generic: introduce 5level-fixup.h")
-    82b0f8c39a38 ("mm: join struct fault_env and vm_fault")
-    953c66c2b22a ("mm: THP page cache support for ppc64")
-    c2febafc6773 ("mm: convert generic code to 5-level paging")
-    fd60775aea80 ("mm, thp: avoid unlikely branches for split_huge_pmd")
-
-v4.4.217: Failed to apply! Possible dependencies:
-    01c8f1c44b83 ("mm, dax, gpu: convert vm_insert_mixed to pfn_t")
-    0e749e54244e ("dax: increase granularity of dax_clear_blocks() operations")
-    166f61b9435a ("mm: codgin-style fixes")
-    34c0fd540e79 ("mm, dax, pmem: introduce pfn_t")
-    505a60e22560 ("asm-generic: introduce 5level-fixup.h")
-    52db400fcd50 ("pmem, dax: clean up clear_pmem()")
-    5c6a84a3f455 ("mm/kasan: Switch to using __pa_symbol and lm_alias")
-    82b0f8c39a38 ("mm: join struct fault_env and vm_fault")
-    9973c98ecfda ("dax: add support for fsync/sync")
-    aac453635549 ("mm, oom: introduce oom reaper")
-    ac401cc78242 ("dax: New fault locking")
-    b2e0d1625e19 ("dax: fix lifetime of in-kernel dax mappings with dax_map_atomic()")
-    bae473a423f6 ("mm: introduce fault_env")
-    bc2466e42573 ("dax: Use radix tree entry lock to protect cow faults")
-    c2febafc6773 ("mm: convert generic code to 5-level paging")
-    e4b274915863 ("DAX: move RADIX_DAX_ definitions to dax.c")
-    f9fe48bece3a ("dax: support dirty DAX entries in radix tree")
-
-
-NOTE: The patch will not be queued to stable trees until it is upstream.
-
-How should we proceed with this patch?
+This is definitely an utterly bogus bisect, not related at all.
 
 -- 
-Thanks
-Sasha
+Jens Axboe
+
