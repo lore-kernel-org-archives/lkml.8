@@ -2,459 +2,276 @@ Return-Path: <SRS0=s8dx=5M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9E9DC43331
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 14:08:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BA90C2D0EC
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 14:08:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A8F9206F1
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 14:08:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 082AD206F2
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 14:08:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=invensense.com header.i=@invensense.com header.b="HFHbSJM6";
+	dkim=pass (1024-bit key) header.d=invensense.onmicrosoft.com header.i=@invensense.onmicrosoft.com header.b="aj2IrNVW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727927AbgC0OIW (ORCPT
+        id S1727933AbgC0OIw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Mar 2020 10:08:22 -0400
-Received: from mx2.suse.de ([195.135.220.15]:41656 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726333AbgC0OIV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Mar 2020 10:08:21 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 9FD11B269;
-        Fri, 27 Mar 2020 14:08:18 +0000 (UTC)
-Received: by unicorn.suse.cz (Postfix, from userid 1000)
-        id A0D45E009C; Fri, 27 Mar 2020 15:08:17 +0100 (CET)
-Message-Id: <5a3af8d892cafe9d9a2dc367e9ae463691261305.1585316159.git.mkubecek@suse.cz>
-In-Reply-To: <cover.1585316159.git.mkubecek@suse.cz>
-References: <cover.1585316159.git.mkubecek@suse.cz>
-From:   Michal Kubecek <mkubecek@suse.cz>
-Subject: [PATCH net-next v2 12/12] ethtool: provide timestamping information
- with TIMESTAMP_GET request
-To:     David Miller <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org
-Cc:     Jiri Pirko <jiri@resnulli.us>, Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        John Linville <linville@tuxdriver.com>,
-        Johannes Berg <johannes@sipsolutions.net>,
-        Richard Cochran <richardcochran@gmail.com>,
-        linux-kernel@vger.kernel.org
-Date:   Fri, 27 Mar 2020 15:08:17 +0100 (CET)
+        Fri, 27 Mar 2020 10:08:52 -0400
+Received: from mx0b-00328301.pphosted.com ([148.163.141.47]:4960 "EHLO
+        mx0b-00328301.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726333AbgC0OIv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Mar 2020 10:08:51 -0400
+Received: from pps.filterd (m0156136.ppops.net [127.0.0.1])
+        by mx0b-00328301.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02RE76vJ004158;
+        Fri, 27 Mar 2020 07:08:29 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=invensense.com; h=from : to : cc :
+ subject : date : message-id : references : in-reply-to : content-type :
+ content-transfer-encoding : mime-version; s=pfpt1;
+ bh=NT77/H0R5SEmcfy7z21uiTVvu6RyQ34FLnuuC/YieRQ=;
+ b=HFHbSJM6Rpygu7LMLKodBMF8PIdp+Olo742LDFamNEYoTY+mCuDfi8WPKJ74uaiOgpY0
+ tF7rRfrs47LEX1bkV8FALbV5fS+Np/wv0D7eg+fPH/uqWelMI4VYJM9wxDIjXyH2yg5+
+ SjouQlbOnYgW+bCPxTC+NU6bJNfNmLPM/Bo4MHR25gJ3jpQDxefOnfS2+eNTtJCTtjbU
+ tWEJ3fE2ghdP+NDTmmQPWgnurmzTOAEMBqTgHGjxJ3Mqd01C1Ybybwezefq28efAkQjP
+ O02vsl6OrzikCwF/LqQAZwbZEgnK9RXwoelGuYVsFt98mcxV0wpL3NmdryTy+fwEl06l dA== 
+Received: from nam11-bn8-obe.outbound.protection.outlook.com (mail-bn8nam11lp2168.outbound.protection.outlook.com [104.47.58.168])
+        by mx0b-00328301.pphosted.com with ESMTP id 300bux0y15-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 27 Mar 2020 07:08:29 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=EiGc9GUgB6lN6+eO+wGXnHtU5XRiC2Ptq+7rftVVXMHnfvI6Zgg2+ZC08OYQpM8yEdimPLcF+jJZLATRCIxBJSS6dDCpVD5R27cIOs/0O2pS/h0GYj9k6C9vPudbqpSa5JyEuyuhGt15zIKEOw99Sk6MgKSrBLCJHcwpYzVng1bXnQ1lQbDituQDCA5QQzIt6NldwhqjFq/Xa4znymVLZHmMiYAqkEE66KDtJ7z4PDNeIS334i/84FwB2bGPlg55Qm27vozWajdZyPLUMo2jDgxze+15KsPp+3LOSQgAYWfVcU03cVD/pexXjz+zge5lhJSiZdBlUoVJSnxRlyHN9A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=NT77/H0R5SEmcfy7z21uiTVvu6RyQ34FLnuuC/YieRQ=;
+ b=QKm0+aGg+XOPUCzeXd0Dc3IYEkoHlPiuQNV3910fOOTwG9EzLVS+rZSxeZ57lOo6ZO6IZpuZX1jrje3lkt00a5ltxwF1TffjE6Res6XmyyVfhBQabT3I8cLdy7obb5hZ35JF5dwvl/juP7GGjYrLIfFOV9urDXHJyxG25rvSD4xvv7qAvkVa42yMDKttuZ0KKcoa3EvVvmUAuNZryKvWVW5joAQszsI1wmzOrGl7h/Uiljv7mks0B3aSdFi77UTZQgZ8VgAXnghpaOHxnb6YbuG/WZzrZdVxbXBF3+qQ0HZY0g0RfRscyMndPju+E79cszS6bFJ2ncVOl1+SDfhtkQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=invensense.com; dmarc=pass action=none
+ header.from=invensense.com; dkim=pass header.d=invensense.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=invensense.onmicrosoft.com; s=selector2-invensense-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=NT77/H0R5SEmcfy7z21uiTVvu6RyQ34FLnuuC/YieRQ=;
+ b=aj2IrNVWrnM1e6o2PUwNxexuRs2556qy18mQuFwCKrTbOPt155j8B8Kq/HfoePNVK7VIDrzauOTCjr6uHalMW9YMekb9UHo1ROZ2o9y6ar8OW5i+B+0lhd8bQQ5hhfxvgTRL7eRX8hmA+wmnJ0pLfuRmwP8qS4/vqWIFVGf677I=
+Received: from MN2PR12MB4422.namprd12.prod.outlook.com (2603:10b6:208:265::9)
+ by MN2PR12MB2893.namprd12.prod.outlook.com (2603:10b6:208:107::21) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2856.18; Fri, 27 Mar
+ 2020 14:08:26 +0000
+Received: from MN2PR12MB4422.namprd12.prod.outlook.com
+ ([fe80::7471:da8b:8ca1:6af0]) by MN2PR12MB4422.namprd12.prod.outlook.com
+ ([fe80::7471:da8b:8ca1:6af0%4]) with mapi id 15.20.2835.025; Fri, 27 Mar 2020
+ 14:08:26 +0000
+From:   Jean-Baptiste Maneyrol <JManeyrol@invensense.com>
+To:     Rohit Sarkar <rohitsarkar5398@gmail.com>,
+        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>
+CC:     Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] iio: imu: inv_mpu6050: add debugfs register r/w
+ interface
+Thread-Topic: [PATCH v2] iio: imu: inv_mpu6050: add debugfs register r/w
+ interface
+Thread-Index: AQHWBDkX3Uqc77Vu2kucOeOFR1s1N6hceZjj
+Date:   Fri, 27 Mar 2020 14:08:26 +0000
+Message-ID: <MN2PR12MB4422513DF12A699F3B2C06D2C4CC0@MN2PR12MB4422.namprd12.prod.outlook.com>
+References: <5e7dfb41.1c69fb81.cc4bb.042f@mx.google.com>
+In-Reply-To: <5e7dfb41.1c69fb81.cc4bb.042f@mx.google.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [91.174.78.156]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: db5c8b0c-0310-4a71-debc-08d7d25851b1
+x-ms-traffictypediagnostic: MN2PR12MB2893:
+x-microsoft-antispam-prvs: <MN2PR12MB289367C4F828A62C212E0DA8C4CC0@MN2PR12MB2893.namprd12.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7691;
+x-forefront-prvs: 0355F3A3AE
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(396003)(136003)(39850400004)(346002)(376002)(366004)(110136005)(8676002)(54906003)(186003)(52536014)(76116006)(91956017)(4326008)(5660300002)(71200400001)(8936002)(26005)(81156014)(33656002)(6506007)(66946007)(53546011)(316002)(478600001)(81166006)(86362001)(66476007)(66446008)(9686003)(64756008)(55016002)(7696005)(2906002)(66556008);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR12MB2893;H:MN2PR12MB4422.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;
+received-spf: None (protection.outlook.com: invensense.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: DlIUrY/72j/lNcqfhX+5Aduhqpd9KnhxGrzvPlQD3IUJArVlDtsU/9GKNA7i7SfOMieCBz975WZbdgRPuopQ1IZLEvdnAbuHtWIC1ZlOAObwgNuHkhtYbWlCegNRT8M/IDEAYQgXHEnwADydKprR22Bo6gcjrKuhPNllwxZwFGWbDCPjm4VAu43DVOZDRebHk6RX5BIQNXL2pUWKJ75EIv4y2Z31S8o4QLSmnAnSAMDtbuUIALUFCrr2OQp5HuN8nZhqgBmO9XN4+Er7P+6dS9nA4HWpRG9LFIkU4jvS5wSR8iYr+SoideNScOKasTArtqjEFEv+/CUD4m6S9y8DKKCKmIUZspFaeQ7TvX4AXSlqUsEWaoa6UXXikqip+eToaVD/KoS02NEe3qnMXNHtPscqeVTV7sZDLaQxT5iMsKHOF8olYi12T82LTQ6uzBup
+x-ms-exchange-antispam-messagedata: LEwjEQlu1agd64MX6HlDjjYrW0+sw9u2YauuBjgf9Pqm7HzQdx7YVVy5nRtmVVS6YltwvgqcH+OBuXt84nJXYWXOJpcthsLXC5TCGaz2Wu/IBxGAwwG5aoCpigpqCDzsDuaZylRO/q096JSOzcFL7g==
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: invensense.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: db5c8b0c-0310-4a71-debc-08d7d25851b1
+X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Mar 2020 14:08:26.2485
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 462b3b3b-e42b-47ea-801a-f1581aac892d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: bQG+Gs6UijHOgJkxdlTnYKXRcasBZDqEhGHckz6NL+6ou8oU2egxE4NQgKTTfEjMYjl8jT0jG7puV0kVlVktQsZW1sVvrMkyVZ3s4zAT52c=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR12MB2893
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.645
+ definitions=2020-03-27_05:2020-03-27,2020-03-27 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ spamscore=0 clxscore=1011 mlxlogscore=999 bulkscore=0 adultscore=0
+ suspectscore=0 phishscore=0 lowpriorityscore=0 malwarescore=0 mlxscore=0
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2003270130
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Implement TIMESTAMP_GET request to get timestamping information for
-a network device. This is traditionally available via ETHTOOL_GET_TS_INFO
-ioctl request.
-
-Move part of ethtool_get_ts_info() into common.c so that ioctl and netlink
-code use the same logic to get timestamping information from the device.
-
-Signed-off-by: Michal Kubecek <mkubecek@suse.cz>
----
- Documentation/networking/ethtool-netlink.rst |  30 +++-
- include/uapi/linux/ethtool_netlink.h         |  17 +++
- net/ethtool/Makefile                         |   2 +-
- net/ethtool/common.c                         |  21 +++
- net/ethtool/common.h                         |   1 +
- net/ethtool/ioctl.c                          |  23 +--
- net/ethtool/netlink.c                        |   8 ++
- net/ethtool/netlink.h                        |   1 +
- net/ethtool/timestamp.c                      | 143 +++++++++++++++++++
- 9 files changed, 225 insertions(+), 21 deletions(-)
- create mode 100644 net/ethtool/timestamp.c
-
-diff --git a/Documentation/networking/ethtool-netlink.rst b/Documentation/networking/ethtool-netlink.rst
-index f1950a0a6c93..478196b36be6 100644
---- a/Documentation/networking/ethtool-netlink.rst
-+++ b/Documentation/networking/ethtool-netlink.rst
-@@ -203,6 +203,7 @@ Userspace to kernel:
-   ``ETHTOOL_MSG_PAUSE_SET``             set pause parameters
-   ``ETHTOOL_MSG_EEE_GET``               get EEE settings
-   ``ETHTOOL_MSG_EEE_SET``               set EEE settings
-+  ``ETHTOOL_MSG_TIMESTAMP_GET``		get timestamping info
-   ===================================== ================================
- 
- Kernel to userspace:
-@@ -233,6 +234,7 @@ Kernel to userspace:
-   ``ETHTOOL_MSG_PAUSE_NTF``             pause parameters
-   ``ETHTOOL_MSG_EEE_GET_REPLY``         EEE settings
-   ``ETHTOOL_MSG_EEE_NTF``               EEE settings
-+  ``ETHTOOL_MSG_TIMESTAMP_GET_REPLY``	timestamping info
-   ===================================== =================================
- 
- ``GET`` requests are sent by userspace applications to retrieve device
-@@ -928,6 +930,32 @@ but only first 32 can be set at the moment as that is what the ``ethtool_ops``
- callback supports.
- 
- 
-+TIMESTAMP_GET
-+=============
-+
-+Gets timestamping information like ``ETHTOOL_GET_TS_INFO`` ioctl request.
-+
-+Request contents:
-+
-+  =====================================  ======  ==========================
-+  ``ETHTOOL_A_TIMESTAMP_HEADER``         nested  request header
-+  =====================================  ======  ==========================
-+
-+Kernel response contents:
-+
-+  =====================================  ======  ==========================
-+  ``ETHTOOL_A_TIMESTAMP_HEADER``         nested  request header
-+  ``ETHTOOL_A_TIMESTAMP_TIMESTAMPING``   bitset  SO_TIMESTAMPING flags
-+  ``ETHTOOL_A_TIMESTAMP_TX_TYPES``       bitset  supported Tx types
-+  ``ETHTOOL_A_TIMESTAMP_RX_FILTERS``     bitset  supported Rx filters
-+  ``ETHTOOL_A_TIMESTAMP_PHC_INDEX``      u32     PTP hw clock index
-+  =====================================  ======  ==========================
-+
-+``ETHTOOL_A_TIMESTAMP_PHC_INDEX`` is absent if there is no associated PHC
-+(there is no special value for this case). The bitset attributes are omitted
-+if they would be empty (no bit set).
-+
-+
- Request translation
- ===================
- 
-@@ -1003,7 +1031,7 @@ have their netlink replacement yet.
-   ``ETHTOOL_SET_DUMP``                n/a
-   ``ETHTOOL_GET_DUMP_FLAG``           n/a
-   ``ETHTOOL_GET_DUMP_DATA``           n/a
--  ``ETHTOOL_GET_TS_INFO``             n/a
-+  ``ETHTOOL_GET_TS_INFO``             ``ETHTOOL_MSG_TIMESTAMP_GET``
-   ``ETHTOOL_GMODULEINFO``             n/a
-   ``ETHTOOL_GMODULEEEPROM``           n/a
-   ``ETHTOOL_GEEE``                    ``ETHTOOL_MSG_EEE_GET``
-diff --git a/include/uapi/linux/ethtool_netlink.h b/include/uapi/linux/ethtool_netlink.h
-index bacdd5363510..3db2732592b3 100644
---- a/include/uapi/linux/ethtool_netlink.h
-+++ b/include/uapi/linux/ethtool_netlink.h
-@@ -38,6 +38,7 @@ enum {
- 	ETHTOOL_MSG_PAUSE_SET,
- 	ETHTOOL_MSG_EEE_GET,
- 	ETHTOOL_MSG_EEE_SET,
-+	ETHTOOL_MSG_TIMESTAMP_GET,
- 
- 	/* add new constants above here */
- 	__ETHTOOL_MSG_USER_CNT,
-@@ -72,6 +73,7 @@ enum {
- 	ETHTOOL_MSG_PAUSE_NTF,
- 	ETHTOOL_MSG_EEE_GET_REPLY,
- 	ETHTOOL_MSG_EEE_NTF,
-+	ETHTOOL_MSG_TIMESTAMP_GET_REPLY,
- 
- 	/* add new constants above here */
- 	__ETHTOOL_MSG_KERNEL_CNT,
-@@ -386,6 +388,21 @@ enum {
- 	ETHTOOL_A_EEE_MAX = (__ETHTOOL_A_EEE_CNT - 1)
- };
- 
-+/* TIMESTAMP */
-+
-+enum {
-+	ETHTOOL_A_TIMESTAMP_UNSPEC,
-+	ETHTOOL_A_TIMESTAMP_HEADER,			/* nest - _A_HEADER_* */
-+	ETHTOOL_A_TIMESTAMP_TIMESTAMPING,		/* bitset */
-+	ETHTOOL_A_TIMESTAMP_TX_TYPES,			/* bitset */
-+	ETHTOOL_A_TIMESTAMP_RX_FILTERS,			/* bitset */
-+	ETHTOOL_A_TIMESTAMP_PHC_INDEX,			/* u32 */
-+
-+	/* add new constants above here */
-+	__ETHTOOL_A_TIMESTAMP_CNT,
-+	ETHTOOL_A_TIMESTAMP_MAX = (__ETHTOOL_A_TIMESTAMP_CNT - 1)
-+};
-+
- /* generic netlink info */
- #define ETHTOOL_GENL_NAME "ethtool"
- #define ETHTOOL_GENL_VERSION 1
-diff --git a/net/ethtool/Makefile b/net/ethtool/Makefile
-index a790f408aa5d..17da981bdea7 100644
---- a/net/ethtool/Makefile
-+++ b/net/ethtool/Makefile
-@@ -6,4 +6,4 @@ obj-$(CONFIG_ETHTOOL_NETLINK)	+= ethtool_nl.o
- 
- ethtool_nl-y	:= netlink.o bitset.o strset.o linkinfo.o linkmodes.o \
- 		   linkstate.o debug.o wol.o features.o privflags.o rings.o \
--		   channels.o coalesce.o pause.o eee.o
-+		   channels.o coalesce.o pause.o eee.o timestamp.o
-diff --git a/net/ethtool/common.c b/net/ethtool/common.c
-index 6faa1e0f99a4..9b03ca6c5a6e 100644
---- a/net/ethtool/common.c
-+++ b/net/ethtool/common.c
-@@ -1,6 +1,7 @@
- // SPDX-License-Identifier: GPL-2.0-only
- 
- #include <linux/net_tstamp.h>
-+#include <linux/phy.h>
- 
- #include "common.h"
- 
-@@ -349,3 +350,23 @@ int ethtool_check_ops(const struct ethtool_ops *ops)
- 	 */
- 	return 0;
- }
-+
-+int __ethtool_get_ts_info(struct net_device *dev, struct ethtool_ts_info *info)
-+{
-+	const struct ethtool_ops *ops = dev->ethtool_ops;
-+	struct phy_device *phydev = dev->phydev;
-+
-+	memset(info, 0, sizeof(*info));
-+	info->cmd = ETHTOOL_GET_TS_INFO;
-+
-+	if (phy_has_tsinfo(phydev))
-+		return phy_ts_info(phydev, info);
-+	if (ops->get_ts_info)
-+		return ops->get_ts_info(dev, info);
-+
-+	info->so_timestamping = SOF_TIMESTAMPING_RX_SOFTWARE |
-+				SOF_TIMESTAMPING_SOFTWARE;
-+	info->phc_index = -1;
-+
-+	return 0;
-+}
-diff --git a/net/ethtool/common.h b/net/ethtool/common.h
-index c54c8d57fd8f..a62f68ccc43a 100644
---- a/net/ethtool/common.h
-+++ b/net/ethtool/common.h
-@@ -35,5 +35,6 @@ bool convert_legacy_settings_to_link_ksettings(
- 	struct ethtool_link_ksettings *link_ksettings,
- 	const struct ethtool_cmd *legacy_settings);
- int ethtool_get_max_rxfh_channel(struct net_device *dev, u32 *max);
-+int __ethtool_get_ts_info(struct net_device *dev, struct ethtool_ts_info *info);
- 
- #endif /* _ETHTOOL_COMMON_H */
-diff --git a/net/ethtool/ioctl.c b/net/ethtool/ioctl.c
-index 05a2bf64a96b..89d0b1827aaf 100644
---- a/net/ethtool/ioctl.c
-+++ b/net/ethtool/ioctl.c
-@@ -2140,32 +2140,17 @@ static int ethtool_get_dump_data(struct net_device *dev,
- 
- static int ethtool_get_ts_info(struct net_device *dev, void __user *useraddr)
- {
--	int err = 0;
- 	struct ethtool_ts_info info;
--	const struct ethtool_ops *ops = dev->ethtool_ops;
--	struct phy_device *phydev = dev->phydev;
--
--	memset(&info, 0, sizeof(info));
--	info.cmd = ETHTOOL_GET_TS_INFO;
--
--	if (phy_has_tsinfo(phydev)) {
--		err = phy_ts_info(phydev, &info);
--	} else if (ops->get_ts_info) {
--		err = ops->get_ts_info(dev, &info);
--	} else {
--		info.so_timestamping =
--			SOF_TIMESTAMPING_RX_SOFTWARE |
--			SOF_TIMESTAMPING_SOFTWARE;
--		info.phc_index = -1;
--	}
-+	int err;
- 
-+	err = __ethtool_get_ts_info(dev, &info);
- 	if (err)
- 		return err;
- 
- 	if (copy_to_user(useraddr, &info, sizeof(info)))
--		err = -EFAULT;
-+		return -EFAULT;
- 
--	return err;
-+	return 0;
- }
- 
- static int __ethtool_get_module_info(struct net_device *dev,
-diff --git a/net/ethtool/netlink.c b/net/ethtool/netlink.c
-index e525c7b8ba4d..25422ff0b87d 100644
---- a/net/ethtool/netlink.c
-+++ b/net/ethtool/netlink.c
-@@ -230,6 +230,7 @@ ethnl_default_requests[__ETHTOOL_MSG_USER_CNT] = {
- 	[ETHTOOL_MSG_COALESCE_GET]	= &ethnl_coalesce_request_ops,
- 	[ETHTOOL_MSG_PAUSE_GET]		= &ethnl_pause_request_ops,
- 	[ETHTOOL_MSG_EEE_GET]		= &ethnl_eee_request_ops,
-+	[ETHTOOL_MSG_TIMESTAMP_GET]	= &ethnl_timestamp_request_ops,
- };
- 
- static struct ethnl_dump_ctx *ethnl_dump_context(struct netlink_callback *cb)
-@@ -831,6 +832,13 @@ static const struct genl_ops ethtool_genl_ops[] = {
- 		.flags	= GENL_UNS_ADMIN_PERM,
- 		.doit	= ethnl_set_eee,
- 	},
-+	{
-+		.cmd	= ETHTOOL_MSG_TIMESTAMP_GET,
-+		.doit	= ethnl_default_doit,
-+		.start	= ethnl_default_start,
-+		.dumpit	= ethnl_default_dumpit,
-+		.done	= ethnl_default_done,
-+	},
- };
- 
- static const struct genl_multicast_group ethtool_nl_mcgrps[] = {
-diff --git a/net/ethtool/netlink.h b/net/ethtool/netlink.h
-index a251957d535e..a8dbb2943940 100644
---- a/net/ethtool/netlink.h
-+++ b/net/ethtool/netlink.h
-@@ -344,6 +344,7 @@ extern const struct ethnl_request_ops ethnl_channels_request_ops;
- extern const struct ethnl_request_ops ethnl_coalesce_request_ops;
- extern const struct ethnl_request_ops ethnl_pause_request_ops;
- extern const struct ethnl_request_ops ethnl_eee_request_ops;
-+extern const struct ethnl_request_ops ethnl_timestamp_request_ops;
- 
- int ethnl_set_linkinfo(struct sk_buff *skb, struct genl_info *info);
- int ethnl_set_linkmodes(struct sk_buff *skb, struct genl_info *info);
-diff --git a/net/ethtool/timestamp.c b/net/ethtool/timestamp.c
-new file mode 100644
-index 000000000000..30e6118acdaf
---- /dev/null
-+++ b/net/ethtool/timestamp.c
-@@ -0,0 +1,143 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+
-+#include <linux/net_tstamp.h>
-+
-+#include "netlink.h"
-+#include "common.h"
-+#include "bitset.h"
-+
-+struct timestamp_req_info {
-+	struct ethnl_req_info		base;
-+};
-+
-+struct timestamp_reply_data {
-+	struct ethnl_reply_data		base;
-+	struct ethtool_ts_info		ts_info;
-+};
-+
-+#define TIMESTAMP_REPDATA(__reply_base) \
-+	container_of(__reply_base, struct timestamp_reply_data, base)
-+
-+static const struct nla_policy
-+timestamp_get_policy[ETHTOOL_A_TIMESTAMP_MAX + 1] = {
-+	[ETHTOOL_A_TIMESTAMP_UNSPEC]		= { .type = NLA_REJECT },
-+	[ETHTOOL_A_TIMESTAMP_HEADER]		= { .type = NLA_NESTED },
-+	[ETHTOOL_A_TIMESTAMP_TIMESTAMPING]	= { .type = NLA_REJECT },
-+	[ETHTOOL_A_TIMESTAMP_TX_TYPES]		= { .type = NLA_REJECT },
-+	[ETHTOOL_A_TIMESTAMP_RX_FILTERS]	= { .type = NLA_REJECT },
-+	[ETHTOOL_A_TIMESTAMP_PHC_INDEX]		= { .type = NLA_REJECT },
-+};
-+
-+static int timestamp_prepare_data(const struct ethnl_req_info *req_base,
-+				  struct ethnl_reply_data *reply_base,
-+				  struct genl_info *info)
-+{
-+	struct timestamp_reply_data *data = TIMESTAMP_REPDATA(reply_base);
-+	struct net_device *dev = reply_base->dev;
-+	int ret;
-+
-+	ret = ethnl_ops_begin(dev);
-+	if (ret < 0)
-+		return ret;
-+	ret = __ethtool_get_ts_info(dev, &data->ts_info);
-+	ethnl_ops_complete(dev);
-+
-+	return ret;
-+}
-+
-+static int timestamp_reply_size(const struct ethnl_req_info *req_base,
-+				const struct ethnl_reply_data *reply_base)
-+{
-+	const struct timestamp_reply_data *data = TIMESTAMP_REPDATA(reply_base);
-+	bool compact = req_base->flags & ETHTOOL_FLAG_COMPACT_BITSETS;
-+	const struct ethtool_ts_info *ts_info = &data->ts_info;
-+	int len = 0;
-+	int ret;
-+
-+	BUILD_BUG_ON(__SOF_TIMESTAMPING_CNT > 32);
-+	BUILD_BUG_ON(__HWTSTAMP_TX_CNT > 32);
-+	BUILD_BUG_ON(__HWTSTAMP_FILTER_CNT > 32);
-+
-+	if (ts_info->so_timestamping) {
-+		ret = ethnl_bitset32_size(&ts_info->so_timestamping, NULL,
-+					  __SOF_TIMESTAMPING_CNT,
-+					  sof_timestamping_names, compact);
-+		if (ret < 0)
-+			return ret;
-+		len += ret;	/* _TIMESTAMP_TIMESTAMPING */
-+	}
-+	if (ts_info->tx_types) {
-+		ret = ethnl_bitset32_size(&ts_info->tx_types, NULL,
-+					  __HWTSTAMP_TX_CNT,
-+					  ts_tx_type_names, compact);
-+		if (ret < 0)
-+			return ret;
-+		len += ret;	/* _TIMESTAMP_TX_TYPES */
-+	}
-+	if (ts_info->rx_filters) {
-+		ret = ethnl_bitset32_size(&ts_info->rx_filters, NULL,
-+					  __HWTSTAMP_FILTER_CNT,
-+					  ts_rx_filter_names, compact);
-+		if (ret < 0)
-+			return ret;
-+		len += ret;	/* _TIMESTAMP_RX_FILTERS */
-+	}
-+	if (ts_info->phc_index >= 0)
-+		len += nla_total_size(sizeof(u32)); /* _TIMESTAMP_PHC_INDEX */
-+
-+	return len;
-+}
-+
-+static int timestamp_fill_reply(struct sk_buff *skb,
-+				const struct ethnl_req_info *req_base,
-+				const struct ethnl_reply_data *reply_base)
-+{
-+	const struct timestamp_reply_data *data = TIMESTAMP_REPDATA(reply_base);
-+	bool compact = req_base->flags & ETHTOOL_FLAG_COMPACT_BITSETS;
-+	const struct ethtool_ts_info *ts_info = &data->ts_info;
-+	int ret;
-+
-+	if (ts_info->so_timestamping) {
-+		ret = ethnl_put_bitset32(skb, ETHTOOL_A_TIMESTAMP_TIMESTAMPING,
-+					 &ts_info->so_timestamping, NULL,
-+					 __SOF_TIMESTAMPING_CNT,
-+					 sof_timestamping_names, compact);
-+		if (ret < 0)
-+			return ret;
-+	}
-+	if (ts_info->tx_types) {
-+		ret = ethnl_put_bitset32(skb, ETHTOOL_A_TIMESTAMP_TX_TYPES,
-+					 &ts_info->tx_types, NULL,
-+					 __HWTSTAMP_TX_CNT,
-+					 ts_tx_type_names, compact);
-+		if (ret < 0)
-+			return ret;
-+	}
-+	if (ts_info->rx_filters) {
-+		ret = ethnl_put_bitset32(skb, ETHTOOL_A_TIMESTAMP_RX_FILTERS,
-+					 &ts_info->rx_filters, NULL,
-+					 __HWTSTAMP_FILTER_CNT,
-+					 ts_rx_filter_names, compact);
-+		if (ret < 0)
-+			return ret;
-+	}
-+	if (ts_info->phc_index >= 0 &&
-+	    nla_put_u32(skb, ETHTOOL_A_TIMESTAMP_PHC_INDEX, ts_info->phc_index))
-+		return -EMSGSIZE;
-+
-+	return 0;
-+}
-+
-+const struct ethnl_request_ops ethnl_timestamp_request_ops = {
-+	.request_cmd		= ETHTOOL_MSG_TIMESTAMP_GET,
-+	.reply_cmd		= ETHTOOL_MSG_TIMESTAMP_GET_REPLY,
-+	.hdr_attr		= ETHTOOL_A_TIMESTAMP_HEADER,
-+	.max_attr		= ETHTOOL_A_TIMESTAMP_MAX,
-+	.req_info_size		= sizeof(struct timestamp_req_info),
-+	.reply_data_size	= sizeof(struct timestamp_reply_data),
-+	.request_policy		= timestamp_get_policy,
-+
-+	.prepare_data		= timestamp_prepare_data,
-+	.reply_size		= timestamp_reply_size,
-+	.fill_reply		= timestamp_fill_reply,
-+};
--- 
-2.25.1
-
+Hello,=0A=
+=0A=
+thanks, it's OK for me.=0A=
+=0A=
+Acked-by: Jean-Baptiste Maneyrol <jmaneyrol@invensense.com>=0A=
+=0A=
+Best regards,=0A=
+JB=0A=
+=0A=
+=0A=
+=0A=
+From: Rohit Sarkar <rohitsarkar5398@gmail.com>=0A=
+=0A=
+Sent: Friday, March 27, 2020 14:10=0A=
+=0A=
+To: linux-iio@vger.kernel.org <linux-iio@vger.kernel.org>=0A=
+=0A=
+Cc: Jonathan Cameron <jic23@kernel.org>; Hartmut Knaack <knaack.h@gmx.de>; =
+Lars-Peter Clausen <lars@metafoo.de>; Peter Meerwald-Stadler <pmeerw@pmeerw=
+.net>; Jean-Baptiste Maneyrol <JManeyrol@invensense.com>; Linus Walleij <li=
+nus.walleij@linaro.org>;=0A=
+ Andy Shevchenko <andriy.shevchenko@linux.intel.com>; linux-iio@vger.kernel=
+.org <linux-iio@vger.kernel.org>; linux-kernel@vger.kernel.org <linux-kerne=
+l@vger.kernel.org>=0A=
+=0A=
+Subject: [PATCH v2] iio: imu: inv_mpu6050: add debugfs register r/w interfa=
+ce=0A=
+=0A=
+=A0=0A=
+=0A=
+=0A=
+=A0CAUTION: This email originated from outside of the organization. Please =
+make sure the sender is who they say they are and do not click links or ope=
+n attachments unless you recognize the sender and know the content is safe.=
+=0A=
+=0A=
+=0A=
+=0A=
+The debugfs interface provides direct access to read and write device=0A=
+=0A=
+registers if debugfs is enabled.=0A=
+=0A=
+=0A=
+=0A=
+Signed-off-by: Rohit Sarkar <rohitsarkar5398@gmail.com>=0A=
+=0A=
+---=0A=
+=0A=
+Changelog v1->v2=0A=
+=0A=
+* grab a lock to protect driver state=0A=
+=0A=
+* add a comma at the end of structure member initialisation=0A=
+=0A=
+=0A=
+=0A=
+=A0drivers/iio/imu/inv_mpu6050/inv_mpu_core.c | 19 +++++++++++++++++++=0A=
+=0A=
+=A01 file changed, 19 insertions(+)=0A=
+=0A=
+=0A=
+=0A=
+diff --git a/drivers/iio/imu/inv_mpu6050/inv_mpu_core.c b/drivers/iio/imu/i=
+nv_mpu6050/inv_mpu_core.c=0A=
+=0A=
+index 7cb9ff3d3e94..381a3fb09858 100644=0A=
+=0A=
+--- a/drivers/iio/imu/inv_mpu6050/inv_mpu_core.c=0A=
+=0A=
++++ b/drivers/iio/imu/inv_mpu6050/inv_mpu_core.c=0A=
+=0A=
+@@ -1248,12 +1248,31 @@ static const struct attribute_group inv_attribute_g=
+roup =3D {=0A=
+=0A=
+=A0=A0=A0=A0=A0=A0=A0=A0 .attrs =3D inv_attributes=0A=
+=0A=
+=A0};=0A=
+=0A=
+=A0=0A=
+=0A=
++static int inv_mpu6050_reg_access(struct iio_dev *indio_dev,=0A=
+=0A=
++=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=
+=A0=A0=A0=A0=A0=A0=A0=A0 unsigned int reg,=0A=
+=0A=
++=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=
+=A0=A0=A0=A0=A0=A0=A0=A0 unsigned int writeval,=0A=
+=0A=
++=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=
+=A0=A0=A0=A0=A0=A0=A0=A0 unsigned int *readval)=0A=
+=0A=
++{=0A=
+=0A=
++=A0=A0=A0=A0=A0=A0 struct inv_mpu6050_state *st =3D iio_priv(indio_dev);=
+=0A=
+=0A=
++=A0=A0=A0=A0=A0=A0 int ret =3D 0;=0A=
+=0A=
++=0A=
+=0A=
++=A0=A0=A0=A0=A0=A0 mutex_lock(&st->lock);=0A=
+=0A=
++=A0=A0=A0=A0=A0=A0 if (readval)=0A=
+=0A=
++=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 ret =3D regmap_read(st->map, re=
+g, readval);=0A=
+=0A=
++=A0=A0=A0=A0=A0=A0 else=0A=
+=0A=
++=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 ret =3D regmap_write(st->map, r=
+eg, writeval);=0A=
+=0A=
++=A0=A0=A0=A0=A0=A0 mutex_unlock(&st->lock);=0A=
+=0A=
++=0A=
+=0A=
++=A0=A0=A0=A0=A0=A0 return ret;=0A=
+=0A=
++}=0A=
+=0A=
++=0A=
+=0A=
+=A0static const struct iio_info mpu_info =3D {=0A=
+=0A=
+=A0=A0=A0=A0=A0=A0=A0=A0 .read_raw =3D &inv_mpu6050_read_raw,=0A=
+=0A=
+=A0=A0=A0=A0=A0=A0=A0=A0 .write_raw =3D &inv_mpu6050_write_raw,=0A=
+=0A=
+=A0=A0=A0=A0=A0=A0=A0=A0 .write_raw_get_fmt =3D &inv_write_raw_get_fmt,=0A=
+=0A=
+=A0=A0=A0=A0=A0=A0=A0=A0 .attrs =3D &inv_attribute_group,=0A=
+=0A=
+=A0=A0=A0=A0=A0=A0=A0=A0 .validate_trigger =3D inv_mpu6050_validate_trigger=
+,=0A=
+=0A=
++=A0=A0=A0=A0=A0=A0 .debugfs_reg_access =3D &inv_mpu6050_reg_access,=0A=
+=0A=
+=A0};=0A=
+=0A=
+=A0=0A=
+=0A=
+=A0/**=0A=
+=0A=
+-- =0A=
+=0A=
+2.23.0.385.gbc12974a89=0A=
+=0A=
+=0A=
+=0A=
