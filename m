@@ -2,104 +2,95 @@ Return-Path: <SRS0=s8dx=5M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52DBCC43331
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 16:30:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD750C43331
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 16:31:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 25AAC2072F
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 16:30:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 86E5D206E6
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 16:31:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="VFK791c3"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Sc8lp1CH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727718AbgC0QaC (ORCPT
+        id S1727750AbgC0QbP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Mar 2020 12:30:02 -0400
-Received: from mout.gmx.net ([212.227.15.18]:41461 "EHLO mout.gmx.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727560AbgC0QaC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Mar 2020 12:30:02 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1585326580;
-        bh=1Em0LI/KVl1xxriM0SUJ9ct2bhqg2n0IpV9lkveMp00=;
-        h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
-        b=VFK791c33sNkRSMGCC6CNnw4TjESkCF/FwFciz50fiUiWEs64KqatwrlDZHe+emQp
-         rWNhqpucHDYR+D1pl8ySVMmJipSGdf9fIDSMZVSUOGmERFbpKWEA3ueQevXpV4nb84
-         ontBHXKtafBRP0og9+BsQvmsbehQNJlQWDObOTOY=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from localhost.localdomain ([82.19.195.159]) by mail.gmx.com
- (mrgmx004 [212.227.17.184]) with ESMTPSA (Nemesis) id
- 1N7i8O-1jLuL343CU-014kxm; Fri, 27 Mar 2020 17:29:40 +0100
-From:   Alex Dewar <alex.dewar@gmx.co.uk>
-Cc:     alex.dewar@gmx.co.uk, Russell King <linux@armlinux.org.uk>,
-        Enrico Weigelt <info@metux.net>,
-        Allison Randal <allison@lohutok.net>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] arm: dma-mapping: Remove unneeded NULL checks
-Date:   Fri, 27 Mar 2020 16:29:13 +0000
-Message-Id: <20200327162914.24948-1-alex.dewar@gmx.co.uk>
-X-Mailer: git-send-email 2.26.0
+        Fri, 27 Mar 2020 12:31:15 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:34998 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727242AbgC0QbP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Mar 2020 12:31:15 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 02RGUNhE049560;
+        Fri, 27 Mar 2020 11:30:23 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1585326623;
+        bh=l5rP1MJ098endPpFd2r/1F4oKnCHZocHpiIjl3Yjeas=;
+        h=From:To:CC:Subject:Date;
+        b=Sc8lp1CHfGpWMuD27YH+Bcn8tzIN/6RAV4Y2CV1gpPWmzxwl2bh1nDlLUNTieHG8D
+         eW6qxaH8zrE5CuyAoKxEAds6hXvClCyw3yh4dMXddAF7OzkRMSKSNMKbAXMlcZbRyG
+         55bU/nFPIx8puDDsl3/EWIX42V6nKj8zARloiPQo=
+Received: from DLEE108.ent.ti.com (dlee108.ent.ti.com [157.170.170.38])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 02RGUNUc094613
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 27 Mar 2020 11:30:23 -0500
+Received: from DLEE105.ent.ti.com (157.170.170.35) by DLEE108.ent.ti.com
+ (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Fri, 27
+ Mar 2020 11:30:22 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE105.ent.ti.com
+ (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Fri, 27 Mar 2020 11:30:22 -0500
+Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 02RGUMvJ054778;
+        Fri, 27 Mar 2020 11:30:22 -0500
+From:   Dan Murphy <dmurphy@ti.com>
+To:     <lgirdwood@gmail.com>, <broonie@kernel.org>, <perex@perex.cz>,
+        <tiwai@suse.com>
+CC:     <alsa-devel@alsa-project.org>, <linux-kernel@vger.kernel.org>,
+        Dan Murphy <dmurphy@ti.com>, Rob Herring <robh@kernel.org>
+Subject: [PATCH] dt-bindings: sound: tlv320adcx140:  Remove undocumented property
+Date:   Fri, 27 Mar 2020 11:24:32 -0500
+Message-ID: <20200327162432.17067-1-dmurphy@ti.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:Vflazi5to4WwXtKcR0FGBcrbXYZ36lA8poJ8iwEZ1rnQsK7j7s+
- vIXToVShPwP07aJxDadCHyZ17J4FxImijCtv9DLX+5kelt88bP010UqQ+tgUfqY4D+VrHqI
- edxmB2JsfLaq4YGG+FFW2MzZ6NZwsKBBU/dEVynpi98lDdFQC653JBhMwkP+LbPWGnahLkd
- vQAb2/t/ANGz4Otdqi45Q==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:f09u4bQ98iM=:Y494TvphxhbHLCNgofeeX+
- 1ZQxJ8nYdLhJBywlKG8jb6GRAVO6ZyGB+S+cp9/LFS5iCIyuXU8qlr3wMHr/c3YroRZPNXm2V
- DknnZTDhLb0uEt7Cc5w6Ko/ZoV6ZVvvC0l9KOWH0YBXGyAraQjTx3H/ov3yF/buELAGrboG9X
- hohBcPDICNMhzNBxXZC15AQlLrDa3fR8j4u/Adr/wJmu3Zyxk3wpzIoQM9cpEPB88ur32dBHy
- DY/99Nop+CHZuaqENdmmGHx+oJpuPPaN5IRHKgsFJTbDbp/Lbo0WHomEUdAv8fAyUaFaEamUX
- 8F/tgtE0QXSwjAVZ/ypSpveEVqR7I3LrOpdStLvahGaOYG8qK+6O+lorw1aECIvzYLtZjiBd8
- fOSTSvleyEd1J8JaSmNDbbYo6ooRddqB206p9Lb6z5i3K/wEsoqZZdWt7B+fjNHjH983cc8kl
- xjibT3NKIgIUrEt2nUHsKayIgtADr904PNlUqe0HrnvUc06ZyQuqyCEGGuhmpwtmO2lDBgSvm
- huAy9LE2wAkfwGkNLYJhEPlZWIEmJhHWJzf1uU6n9TxAwV/7LZekvuUAaMZWZxhN0qcE6F76D
- GZeAgWmG48SYkvateeah8GNwmK0ZSBc2IMoICM8rC7WVZypFQhHeGHZqc5At+6N5BfKj0s2wf
- Y81XFC3s6kozQbEtNECuWWZ9Oh43nplPvK43h3faIIeSeHo1qi+V6Zknzy1BqrO4YjwsY6fOP
- 3Eb5JbtGYNn7b4pqPnE/86ojXYQ+5dhns8W0hZFHGzEuTdnzh41lMmtW4EBjNseO3eUtd36+7
- cOZ/QN96cco9Q/G6AGiTEgYG8HYDFfenQ2RNAX15VeGXDP37GL1LB8/kjSZq0IOcd+muP8HZj
- ozgMVU1EFK5PxmsrO2Y3BixwA6B9HZ4RjYhU8gGHzez8ekxTCSm9r7WvEPgkyYD3d39ZTOL4y
- o/cpE6/qQfK2ZwcsWV9w2CESvlugL0sedgF+s2zMkm2PtWEfqO3SzAw5xiVaipO57J2sUWCjy
- m1Na9JCCikwA8F3rjS9oD+oYDzJPQ6fMOGDf+zoEP1JGZ7uejsbI54JqWmS6eiAbk+q0MYd/J
- qURvUgvRgd4inLTinChk+vhsFs2BI4liqzVbK8tVTQp8oSFxlEmglymz0VhqJpLcsp0kXsFFn
- H+b5MnjzP2LAL/b1S+w5gp86kYyCiWCbrnpQVu+hNj7+hOWikYUtqT2bP5IsoeCkq0MaE5BWT
- JTuqgtCMB1aqg4ouW
-To:     unlisted-recipients:; (no To-header on input)
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-dma_pool_destroy() already checks for NULL arguments, so the extra check
-is unnecessary.
+Remove undocumented and unneeded ti,use-internal-reg from the example as
+it was an artifact from initial development.  The code does not query
+for this property and as the document indicates if areg-supply is
+undefined then the internal regulator is used.
 
-Signed-off-by: Alex Dewar <alex.dewar@gmx.co.uk>
-=2D--
- arch/arm/common/dmabounce.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+Fixes: 302c0b7490cd ("dt-bindings: sound: Add TLV320ADCx140 dt
+bindings")
+CC: Rob Herring <robh@kernel.org>
+Signed-off-by: Dan Murphy <dmurphy@ti.com>
+---
+ Documentation/devicetree/bindings/sound/tlv320adcx140.yaml | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/arch/arm/common/dmabounce.c b/arch/arm/common/dmabounce.c
-index f4b719bde763..a7c776cdc38f 100644
-=2D-- a/arch/arm/common/dmabounce.c
-+++ b/arch/arm/common/dmabounce.c
-@@ -560,10 +560,8 @@ void dmabounce_unregister_dev(struct device *dev)
- 		BUG();
- 	}
-
--	if (device_info->small.pool)
--		dma_pool_destroy(device_info->small.pool);
--	if (device_info->large.pool)
--		dma_pool_destroy(device_info->large.pool);
-+	dma_pool_destroy(device_info->small.pool);
-+	dma_pool_destroy(device_info->large.pool);
-
- #ifdef STATS
- 	if (device_info->attr_res =3D=3D 0)
-=2D-
-2.26.0
+diff --git a/Documentation/devicetree/bindings/sound/tlv320adcx140.yaml b/Documentation/devicetree/bindings/sound/tlv320adcx140.yaml
+index 1433ff62b14f..ab2268c0ee67 100644
+--- a/Documentation/devicetree/bindings/sound/tlv320adcx140.yaml
++++ b/Documentation/devicetree/bindings/sound/tlv320adcx140.yaml
+@@ -76,7 +76,6 @@ examples:
+       codec: codec@4c {
+         compatible = "ti,tlv320adc5140";
+         reg = <0x4c>;
+-        ti,use-internal-areg;
+         ti,mic-bias-source = <6>;
+         reset-gpios = <&gpio0 14 GPIO_ACTIVE_HIGH>;
+       };
+-- 
+2.25.1
 
