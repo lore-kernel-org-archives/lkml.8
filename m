@@ -7,43 +7,43 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13CB5C2D0EB
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 02:28:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5825CC2D0E8
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 02:28:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB144206DB
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 02:28:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 16C24206DB
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 02:28:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (4096-bit key) header.d=d-silva.org header.i=@d-silva.org header.b="QF7zCKhO"
+	dkim=pass (4096-bit key) header.d=d-silva.org header.i=@d-silva.org header.b="F4h29DRh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727685AbgC2C2C (ORCPT
+        id S1727433AbgC2C2B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 28 Mar 2020 22:28:02 -0400
-Received: from ushosting.nmnhosting.com ([66.55.73.32]:35430 "EHLO
-        ushosting.nmnhosting.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727183AbgC2C2B (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 28 Mar 2020 22:28:01 -0400
+Received: from ushosting.nmnhosting.com ([66.55.73.32]:35242 "EHLO
+        ushosting.nmnhosting.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726315AbgC2C2A (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 28 Mar 2020 22:28:00 -0400
 Received: from mail2.nmnhosting.com (unknown [202.169.106.97])
-        by ushosting.nmnhosting.com (Postfix) with ESMTPS id B91E72DC6832;
-        Fri, 27 Mar 2020 18:12:21 +1100 (AEDT)
+        by ushosting.nmnhosting.com (Postfix) with ESMTPS id AE1BE2DC682B;
+        Fri, 27 Mar 2020 18:12:20 +1100 (AEDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=d-silva.org;
-        s=201810a; t=1585293142;
-        bh=cqaf1e/QB+IAchm8eT268pDK8d/xM41B6FFZ8OqT9TI=;
+        s=201810a; t=1585293141;
+        bh=wz/42EdWYu+4cxF4TVIz60iDaZdQN/2nycuXkQuthlY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QF7zCKhOO9JvoXlvxy4VnsDJX+RwAyK4FeUeePRbrO8WnTpKijCUVL+iCF4MaMQrG
-         ODUD+yy/GvqqYRFbFAhuAmr95mcjJ3FrGBL9IcJd82LSzVZ6n505dXIjRK5nQ19haz
-         XIhzLF1o3GbzKvzl62NLKo1bgpWPTET1DgVMEk0NxV+85UIOszyAYm/eJ50+9LjziC
-         HHEFwR7hJlwcRcSjs80Q7YUKX+EZslhdHnIDDsluGeo620FtT09A0WHYXlWT/GQ7Rh
-         lslYpbukXPF+GkOfYhgHSNQB9T9TdVuv2OJf1C5MlMagEloNAEW4ZHT6JQivBWi+m+
-         Y9ZuIyQHe7Z240X832lKU/bC2AGYKCBupxW52G0BdEtNwVSGXzTeN+fntXETw1ZCZn
-         3Xs2pTUDHwyD7WdoNyUorO3WE4BkVVTgr2kOeQW3kxbhnLMSi5DvBP4VJUfWfEsCy0
-         tLQZiWPZey9bX9WqPZQXFch/xoGYoG/79znqmFlQdFC8GyITraJlBO/GehHDStGyD3
-         DAqwT0+8NGQvuPhjx9yfDN31nTaBzytXIuvHtEniZvZ6CpAlv+tLVc4uh2A7+ev0kv
-         zluDpBRC7bvTnT8TKZbFkT/oEMeKPYxN1VMFytlWUlBlYMmxbyG6ii3I2N166ErNDF
-         H99oxckYP+MvCqnW37EbNJj8=
+        b=F4h29DRhjvN8N3XO0FtfABSCnVYfNMjo6BubHZ31RTohvOub6kanPQvJzFi5EIv/5
+         AE/6Mqi81qb6pGsJCAuY1XqXjYTUSdekKFVIbBZ7PBc42TC1aCQOVGKrqhQsGus/jE
+         oq3I39fAuWJn+kXL/kdJYqHtJHiK0UBSHC2Fudu10FHe5/b9dR68M2qUDuzvGq3fU+
+         +lffHLLHf/GZxbGuPd+6DvrD//6aGGd2Dukuo5C4aBLOgj1TvyYe3/G9izTcynMEvM
+         syYwM88/QXyNWjHangopg8qZwH5VrhxPaVGkLqPRNw8K0UjaY7e9L+jci94ovAhHpw
+         yd4ubXwNXbW65Q4+wAipn1dqfISbfuzKc5qzY0K6M53u7qEBuU7MLHe9gemcSl/798
+         cGmtU1MHUqqp7CaVkc5y/FuES2PzU6GPKlD93l8FpMy57ROLLp285y5Hej/3Hxbpu5
+         RuTgabj+Qg9KLE1xYGWUrUDaAMg/bqhhQ3D7WS2NbkpVbzyIUtfhpuXnkmNWFk4qBw
+         6YVtf4jpdztL56DZFZNdrSGkmKMi64dTjZaRYKvY14TWCvb1aBsYxcVIKqpSzMULGJ
+         t1hJsHyYdzzhWDrBQWv/gSBNOW/2HyB6l2Hp3GdiCYR4zRq0rejFhnr56V66GylcyE
+         BwVscwQ9Oh0gX8sDpWdx2DaQ=
 Received: from localhost.lan ([10.0.1.179])
-        by mail2.nmnhosting.com (8.15.2/8.15.2) with ESMTP id 02R7C4An045934;
-        Fri, 27 Mar 2020 18:12:17 +1100 (AEDT)
+        by mail2.nmnhosting.com (8.15.2/8.15.2) with ESMTP id 02R7C4Aj045934;
+        Fri, 27 Mar 2020 18:12:16 +1100 (AEDT)
         (envelope-from alastair@d-silva.org)
 From:   "Alastair D'Silva" <alastair@d-silva.org>
 To:     alastair@d-silva.org
@@ -78,493 +78,610 @@ Cc:     "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
         Alexey Kardashevskiy <aik@ozlabs.ru>,
         linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
         linux-nvdimm@lists.01.org, linux-mm@kvack.org
-Subject: [PATCH v4 14/25] nvdimm/ocxl: Add support for Admin commands
-Date:   Fri, 27 Mar 2020 18:11:51 +1100
-Message-Id: <20200327071202.2159885-15-alastair@d-silva.org>
+Subject: [PATCH v4 10/25] nvdimm: Add driver for OpenCAPI Persistent Memory
+Date:   Fri, 27 Mar 2020 18:11:47 +1100
+Message-Id: <20200327071202.2159885-11-alastair@d-silva.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200327071202.2159885-1-alastair@d-silva.org>
 References: <20200327071202.2159885-1-alastair@d-silva.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mail2.nmnhosting.com [10.0.1.20]); Fri, 27 Mar 2020 18:12:17 +1100 (AEDT)
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mail2.nmnhosting.com [10.0.1.20]); Fri, 27 Mar 2020 18:12:16 +1100 (AEDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Admin commands for these devices are the primary means of interacting
-with the device controller to provide functionality beyond the load/store
-capabilities offered via the NPU.
+This driver exposes LPC memory on OpenCAPI pmem cards
+as an NVDIMM, allowing the existing nvram infrastructure
+to be used.
 
-For example, SMART data, firmware update, and device error logs are
-implemented via admin commands.
-
-This patch requests the metadata required to issue admin commands, as well
-as some helper functions to construct and check the completion of the
-commands.
+Namespace metadata is stored on the media itself, so
+scm_reserve_metadata() maps 1 section's worth of PMEM storage
+at the start to hold this. The rest of the PMEM range is registered
+with libnvdimm as an nvdimm. ndctl_config_read/write/size() provide
+callbacks to libnvdimm to access the metadata.
 
 Signed-off-by: Alastair D'Silva <alastair@d-silva.org>
 ---
- drivers/nvdimm/ocxl/main.c              |  65 ++++++
- drivers/nvdimm/ocxl/ocxlpmem.h          |  50 ++++-
- drivers/nvdimm/ocxl/ocxlpmem_internal.c | 261 ++++++++++++++++++++++++
- 3 files changed, 375 insertions(+), 1 deletion(-)
+ drivers/nvdimm/Kconfig         |   2 +
+ drivers/nvdimm/Makefile        |   1 +
+ drivers/nvdimm/ocxl/Kconfig    |  15 ++
+ drivers/nvdimm/ocxl/Makefile   |   7 +
+ drivers/nvdimm/ocxl/main.c     | 476 +++++++++++++++++++++++++++++++++
+ drivers/nvdimm/ocxl/ocxlpmem.h |  23 ++
+ 6 files changed, 524 insertions(+)
+ create mode 100644 drivers/nvdimm/ocxl/Kconfig
+ create mode 100644 drivers/nvdimm/ocxl/Makefile
+ create mode 100644 drivers/nvdimm/ocxl/main.c
+ create mode 100644 drivers/nvdimm/ocxl/ocxlpmem.h
 
-diff --git a/drivers/nvdimm/ocxl/main.c b/drivers/nvdimm/ocxl/main.c
-index be76acd33d74..8db573036423 100644
---- a/drivers/nvdimm/ocxl/main.c
-+++ b/drivers/nvdimm/ocxl/main.c
-@@ -217,6 +217,58 @@ static int register_lpc_mem(struct ocxlpmem *ocxlpmem)
- 	return 0;
- }
+diff --git a/drivers/nvdimm/Kconfig b/drivers/nvdimm/Kconfig
+index b7d1eb38b27d..368328637182 100644
+--- a/drivers/nvdimm/Kconfig
++++ b/drivers/nvdimm/Kconfig
+@@ -131,4 +131,6 @@ config NVDIMM_TEST_BUILD
+ 	  core devm_memremap_pages() implementation and other
+ 	  infrastructure.
  
++source "drivers/nvdimm/ocxl/Kconfig"
++
+ endif
+diff --git a/drivers/nvdimm/Makefile b/drivers/nvdimm/Makefile
+index 29203f3d3069..bc02be11c794 100644
+--- a/drivers/nvdimm/Makefile
++++ b/drivers/nvdimm/Makefile
+@@ -33,3 +33,4 @@ libnvdimm-$(CONFIG_NVDIMM_KEYS) += security.o
+ TOOLS := ../../tools
+ TEST_SRC := $(TOOLS)/testing/nvdimm/test
+ obj-$(CONFIG_NVDIMM_TEST_BUILD) += $(TEST_SRC)/iomap.o
++obj-$(CONFIG_LIBNVDIMM) += ocxl/
+diff --git a/drivers/nvdimm/ocxl/Kconfig b/drivers/nvdimm/ocxl/Kconfig
+new file mode 100644
+index 000000000000..c5d927520920
+--- /dev/null
++++ b/drivers/nvdimm/ocxl/Kconfig
+@@ -0,0 +1,15 @@
++# SPDX-License-Identifier: GPL-2.0-only
++if LIBNVDIMM
++
++config OCXL_PMEM
++	tristate "OpenCAPI Persistent Memory"
++	depends on LIBNVDIMM && PPC_POWERNV && PCI && EEH && ZONE_DEVICE && OCXL
++	help
++	  Exposes devices that implement the OpenCAPI Storage Class Memory
++	  specification as persistent memory regions. You may also want
++	  DEV_DAX, DEV_DAX_PMEM & FS_DAX if you plan on using DAX devices
++	  stacked on top of this driver.
++
++	  Select N if unsure.
++
++endif
+diff --git a/drivers/nvdimm/ocxl/Makefile b/drivers/nvdimm/ocxl/Makefile
+new file mode 100644
+index 000000000000..e0e8ade1987a
+--- /dev/null
++++ b/drivers/nvdimm/ocxl/Makefile
+@@ -0,0 +1,7 @@
++# SPDX-License-Identifier: GPL-2.0
++
++ccflags-$(CONFIG_PPC_WERROR)	+= -Werror
++
++obj-$(CONFIG_OCXL_PMEM) += ocxlpmem.o
++
++ocxlpmem-y := main.o
+\ No newline at end of file
+diff --git a/drivers/nvdimm/ocxl/main.c b/drivers/nvdimm/ocxl/main.c
+new file mode 100644
+index 000000000000..c0066fedf9cc
+--- /dev/null
++++ b/drivers/nvdimm/ocxl/main.c
+@@ -0,0 +1,476 @@
++// SPDX-License-Identifier: GPL-2.0+
++// Copyright 2020 IBM Corp.
++
++/*
++ * A driver for OpenCAPI devices that implement the Storage Class
++ * Memory specification.
++ */
++
++#include <linux/module.h>
++#include <misc/ocxl.h>
++#include <linux/ndctl.h>
++#include <linux/mm_types.h>
++#include <linux/memory_hotplug.h>
++#include "ocxlpmem.h"
++
++static const struct pci_device_id pci_tbl[] = {
++	{ PCI_DEVICE(PCI_VENDOR_ID_IBM, 0x0625), },
++	{ }
++};
++
++MODULE_DEVICE_TABLE(pci, pci_tbl);
++
++#define NUM_MINORS 256 // Total to reserve
++
++static dev_t ocxlpmem_dev;
++static struct class *ocxlpmem_class;
++static struct mutex minors_idr_lock;
++static struct idr minors_idr;
++
 +/**
-+ * extract_command_metadata() - Extract command data from MMIO & save it for further use
++ * ndctl_config_write() - Handle a ND_CMD_SET_CONFIG_DATA command from ndctl
 + * @ocxlpmem: the device metadata
-+ * @offset: The base address of the command data structures (address of CREQO)
-+ * @command_metadata: A pointer to the command metadata to populate
++ * @command: the incoming data to write
 + * Return: 0 on success, negative on failure
 + */
-+static int extract_command_metadata(struct ocxlpmem *ocxlpmem, u32 offset,
-+				    struct command_metadata *command_metadata)
++static int ndctl_config_write(struct ocxlpmem *ocxlpmem,
++			      struct nd_cmd_set_config_hdr *command)
 +{
-+	int rc;
-+	u64 tmp;
++	if (command->in_offset + command->in_length > LABEL_AREA_SIZE)
++		return -EINVAL;
 +
-+	rc = ocxl_global_mmio_read64(ocxlpmem->ocxl_afu, offset,
-+				     OCXL_LITTLE_ENDIAN, &tmp);
-+	if (rc)
-+		return rc;
-+
-+	command_metadata->request_offset = tmp >> 32;
-+	command_metadata->response_offset = tmp & 0xFFFFFFFF;
-+
-+	rc = ocxl_global_mmio_read64(ocxlpmem->ocxl_afu, offset + 8,
-+				     OCXL_LITTLE_ENDIAN, &tmp);
-+	if (rc)
-+		return rc;
-+
-+	command_metadata->data_offset = tmp >> 32;
-+	command_metadata->data_size = tmp & 0xFFFFFFFF;
-+
-+	command_metadata->id = 0;
++	memcpy_flushcache(ocxlpmem->metadata_addr + command->in_offset,
++			  command->in_buf, command->in_length);
 +
 +	return 0;
 +}
 +
 +/**
-+ * setup_command_metadata() - Set up the command metadata
++ * ndctl_config_read() - Handle a ND_CMD_GET_CONFIG_DATA command from ndctl
 + * @ocxlpmem: the device metadata
++ * @command: the read request
++ * Return: 0 on success, negative on failure
 + */
-+static int setup_command_metadata(struct ocxlpmem *ocxlpmem)
++static int ndctl_config_read(struct ocxlpmem *ocxlpmem,
++			     struct nd_cmd_get_config_data_hdr *command)
 +{
-+	int rc;
++	if (command->in_offset + command->in_length > LABEL_AREA_SIZE)
++		return -EINVAL;
 +
-+	mutex_init(&ocxlpmem->admin_command.lock);
-+
-+	rc = extract_command_metadata(ocxlpmem, GLOBAL_MMIO_ACMA_CREQO,
-+				      &ocxlpmem->admin_command);
-+	if (rc)
-+		return rc;
++	memcpy_mcsafe(command->out_buf,
++		      ocxlpmem->metadata_addr + command->in_offset,
++		      command->in_length);
 +
 +	return 0;
 +}
 +
- /**
-  * allocate_minor() - Allocate a minor number to use for an OpenCAPI pmem device
-  * @ocxlpmem: the device metadata
-@@ -421,6 +473,14 @@ static int probe(struct pci_dev *pdev, const struct pci_device_id *ent)
- 
- 	ocxlpmem->pdev = pci_dev_get(pdev);
- 
-+	ocxlpmem->timeouts[ADMIN_COMMAND_ERRLOG] = 2000; // ms
-+	ocxlpmem->timeouts[ADMIN_COMMAND_HEARTBEAT] = 100; // ms
-+	ocxlpmem->timeouts[ADMIN_COMMAND_SMART] = 100; // ms
-+	ocxlpmem->timeouts[ADMIN_COMMAND_CONTROLLER_DUMP] = 1000; // ms
-+	ocxlpmem->timeouts[ADMIN_COMMAND_CONTROLLER_STATS] = 100; // ms
-+	ocxlpmem->timeouts[ADMIN_COMMAND_SHUTDOWN] = 1000; // ms
-+	ocxlpmem->timeouts[ADMIN_COMMAND_FW_UPDATE] = 16000; // ms
++/**
++ * ndctl_config_size() - Handle a ND_CMD_GET_CONFIG_SIZE command from ndctl
++ * @command: the read request
++ * Return: 0 on success, negative on failure
++ */
++static int ndctl_config_size(struct nd_cmd_get_config_size *command)
++{
++	command->status = 0;
++	command->config_size = LABEL_AREA_SIZE;
++	command->max_xfer = PAGE_SIZE;
 +
- 	pci_set_drvdata(pdev, ocxlpmem);
- 
- 	ocxlpmem->ocxl_fn = ocxl_function_open(pdev);
-@@ -467,6 +527,11 @@ static int probe(struct pci_dev *pdev, const struct pci_device_id *ent)
- 		goto err;
- 	}
- 
-+	if (setup_command_metadata(ocxlpmem)) {
-+		dev_err(&pdev->dev, "Could not read command metadata\n");
++	return 0;
++}
++
++static int ndctl(struct nvdimm_bus_descriptor *nd_desc,
++		 struct nvdimm *nvdimm,
++		 unsigned int cmd, void *buf, unsigned int buf_len, int *cmd_rc)
++{
++	struct ocxlpmem *ocxlpmem = container_of(nd_desc,
++						 struct ocxlpmem, bus_desc);
++
++	switch (cmd) {
++	case ND_CMD_GET_CONFIG_SIZE:
++		*cmd_rc = ndctl_config_size(buf);
++		return 0;
++
++	case ND_CMD_GET_CONFIG_DATA:
++		*cmd_rc = ndctl_config_read(ocxlpmem, buf);
++		return 0;
++
++	case ND_CMD_SET_CONFIG_DATA:
++		*cmd_rc = ndctl_config_write(ocxlpmem, buf);
++		return 0;
++
++	default:
++		return -ENOTTY;
++	}
++}
++
++/**
++ * reserve_metadata() - Reserve space for nvdimm metadata
++ * @ocxlpmem: the device metadata
++ * @lpc_mem: The resource representing the LPC memory of the OpenCAPI device
++ */
++static int reserve_metadata(struct ocxlpmem *ocxlpmem,
++			    struct resource *lpc_mem)
++{
++	ocxlpmem->metadata_addr = devm_memremap(&ocxlpmem->dev, lpc_mem->start,
++						LABEL_AREA_SIZE, MEMREMAP_WB);
++	if (IS_ERR(ocxlpmem->metadata_addr))
++		return PTR_ERR(ocxlpmem->metadata_addr);
++
++	return 0;
++}
++
++/**
++ * register_lpc_mem() - Discover persistent memory on a device and register it with the NVDIMM subsystem
++ * @ocxlpmem: the device metadata
++ * Return: 0 on success
++ */
++static int register_lpc_mem(struct ocxlpmem *ocxlpmem)
++{
++	struct nd_region_desc region_desc;
++	struct nd_mapping_desc nd_mapping_desc;
++	struct resource *lpc_mem;
++	const struct ocxl_afu_config *config;
++	const struct ocxl_fn_config *fn_config;
++	int rc;
++	unsigned long nvdimm_cmd_mask = 0;
++	unsigned long nvdimm_flags = 0;
++	int target_node;
++	char serial[16 + 1];
++
++	// Set up the reserved metadata area
++	rc = ocxl_afu_map_lpc_mem(ocxlpmem->ocxl_afu);
++	if (rc < 0)
++		return rc;
++
++	lpc_mem = ocxl_afu_lpc_mem(ocxlpmem->ocxl_afu);
++	if (!lpc_mem || !lpc_mem->start)
++		return -EINVAL;
++
++	config = ocxl_afu_config(ocxlpmem->ocxl_afu);
++	fn_config = ocxl_function_config(ocxlpmem->ocxl_fn);
++
++	rc = reserve_metadata(ocxlpmem, lpc_mem);
++	if (rc)
++		return rc;
++
++	ocxlpmem->bus_desc.provider_name = "ocxlpmem";
++	ocxlpmem->bus_desc.ndctl = ndctl;
++	ocxlpmem->bus_desc.module = THIS_MODULE;
++
++	ocxlpmem->nvdimm_bus = nvdimm_bus_register(&ocxlpmem->dev,
++						   &ocxlpmem->bus_desc);
++	if (!ocxlpmem->nvdimm_bus)
++		return -EINVAL;
++
++	ocxlpmem->pmem_res.start = (u64)lpc_mem->start + LABEL_AREA_SIZE;
++	ocxlpmem->pmem_res.end = (u64)lpc_mem->start + config->lpc_mem_size - 1;
++	ocxlpmem->pmem_res.name = "OpenCAPI persistent memory";
++
++	set_bit(ND_CMD_GET_CONFIG_SIZE, &nvdimm_cmd_mask);
++	set_bit(ND_CMD_GET_CONFIG_DATA, &nvdimm_cmd_mask);
++	set_bit(ND_CMD_SET_CONFIG_DATA, &nvdimm_cmd_mask);
++
++	set_bit(NDD_ALIASING, &nvdimm_flags);
++
++	snprintf(serial, sizeof(serial), "%llx", fn_config->serial);
++	nd_mapping_desc.nvdimm = nvdimm_create(ocxlpmem->nvdimm_bus, ocxlpmem,
++					       NULL, nvdimm_flags,
++					       nvdimm_cmd_mask, 0, NULL);
++	if (!nd_mapping_desc.nvdimm)
++		return -ENOMEM;
++
++	if (nvdimm_bus_check_dimm_count(ocxlpmem->nvdimm_bus, 1))
++		return -EINVAL;
++
++	nd_mapping_desc.start = ocxlpmem->pmem_res.start;
++	nd_mapping_desc.size = resource_size(&ocxlpmem->pmem_res);
++	nd_mapping_desc.position = 0;
++
++	ocxlpmem->nd_set.cookie1 = fn_config->serial;
++	ocxlpmem->nd_set.cookie2 = fn_config->serial;
++
++	target_node = of_node_to_nid(ocxlpmem->pdev->dev.of_node);
++
++	memset(&region_desc, 0, sizeof(region_desc));
++	region_desc.res = &ocxlpmem->pmem_res;
++	region_desc.numa_node = NUMA_NO_NODE;
++	region_desc.target_node = target_node;
++	region_desc.num_mappings = 1;
++	region_desc.mapping = &nd_mapping_desc;
++	region_desc.nd_set = &ocxlpmem->nd_set;
++
++	set_bit(ND_REGION_PAGEMAP, &region_desc.flags);
++	/*
++	 * NB: libnvdimm copies the data from ndr_desc into it's own
++	 * structures so passing a stack pointer is fine.
++	 */
++	ocxlpmem->nd_region = nvdimm_pmem_region_create(ocxlpmem->nvdimm_bus,
++							&region_desc);
++	if (!ocxlpmem->nd_region)
++		return -EINVAL;
++
++	dev_info(&ocxlpmem->dev,
++		 "Onlining %lluMB of persistent memory\n",
++		 nd_mapping_desc.size / SZ_1M);
++
++	return 0;
++}
++
++/**
++ * allocate_minor() - Allocate a minor number to use for an OpenCAPI pmem device
++ * @ocxlpmem: the device metadata
++ * Return: the allocated minor number
++ */
++static int allocate_minor(struct ocxlpmem *ocxlpmem)
++{
++	int minor;
++
++	mutex_lock(&minors_idr_lock);
++	minor = idr_alloc(&minors_idr, ocxlpmem, 0, NUM_MINORS, GFP_KERNEL);
++	mutex_unlock(&minors_idr_lock);
++	return minor;
++}
++
++static void free_minor(struct ocxlpmem *ocxlpmem)
++{
++	mutex_lock(&minors_idr_lock);
++	idr_remove(&minors_idr, MINOR(ocxlpmem->dev.devt));
++	mutex_unlock(&minors_idr_lock);
++}
++
++/**
++ * free_ocxlpmem() - Free all members of an ocxlpmem struct
++ * @ocxlpmem: the device struct to clear
++ */
++static void free_ocxlpmem(struct ocxlpmem *ocxlpmem)
++{
++	int rc;
++
++	free_minor(ocxlpmem);
++
++	if (ocxlpmem->ocxl_context) {
++		rc = ocxl_context_detach(ocxlpmem->ocxl_context);
++		if (rc == -EBUSY)
++			dev_warn(&ocxlpmem->dev, "Timeout detaching ocxl context\n");
++		else
++			ocxl_context_free(ocxlpmem->ocxl_context);
++	}
++
++	if (ocxlpmem->ocxl_afu)
++		ocxl_afu_put(ocxlpmem->ocxl_afu);
++
++	if (ocxlpmem->ocxl_fn)
++		ocxl_function_close(ocxlpmem->ocxl_fn);
++
++	pci_dev_put(ocxlpmem->pdev);
++
++	kfree(ocxlpmem);
++}
++
++/**
++ * free_ocxlpmem_dev() - Free an OpenCAPI persistent memory device
++ * @dev: The device struct
++ */
++static void free_ocxlpmem_dev(struct device *dev)
++{
++	struct ocxlpmem *ocxlpmem = container_of(dev, struct ocxlpmem, dev);
++
++	free_ocxlpmem(ocxlpmem);
++}
++
++/**
++ * ocxlpmem_register() - Register an OpenCAPI pmem device with the kernel
++ * @ocxlpmem: the device metadata
++ * Return: 0 on success, negative on failure
++ */
++static int ocxlpmem_register(struct ocxlpmem *ocxlpmem)
++{
++	int rc;
++	int minor = allocate_minor(ocxlpmem);
++
++	if (minor < 0)
++		return minor;
++
++	ocxlpmem->dev.release = free_ocxlpmem_dev;
++	rc = dev_set_name(&ocxlpmem->dev, "ocxlpmem%d", minor);
++	if (rc < 0)
++		return rc;
++
++	ocxlpmem->dev.devt = MKDEV(MAJOR(ocxlpmem_dev), minor);
++	ocxlpmem->dev.class = ocxlpmem_class;
++	ocxlpmem->dev.parent = &ocxlpmem->pdev->dev;
++
++	return device_register(&ocxlpmem->dev);
++}
++
++/**
++ * ocxlpmem_remove() - Free an OpenCAPI persistent memory device
++ * @pdev: the PCI device information struct
++ */
++static void remove(struct pci_dev *pdev)
++{
++	if (PCI_FUNC(pdev->devfn) == 0) {
++		struct ocxl_fn *func0 = pci_get_drvdata(pdev);
++
++		if (func0)
++			ocxl_function_close(func0);
++	} else {
++		struct ocxlpmem *ocxlpmem = pci_get_drvdata(pdev);
++
++		if (!ocxlpmem)
++			return;
++
++		if (ocxlpmem->nvdimm_bus)
++			nvdimm_bus_unregister(ocxlpmem->nvdimm_bus);
++
++		device_unregister(&ocxlpmem->dev);
++	}
++}
++
++/**
++ * probe_function0() - Set up function 0 for an OpenCAPI persistent memory device
++ * This is important as it enables templates higher than 0 across all other
++ * functions, which in turn enables higher bandwidth accesses
++ * @pdev: the PCI device information struct
++ * Return: 0 on success, negative on failure
++ */
++static int probe_function0(struct pci_dev *pdev)
++{
++	struct ocxl_fn *fn;
++
++	fn = ocxl_function_open(pdev);
++	if (IS_ERR(fn)) {
++		dev_err(&pdev->dev, "failed to open OCXL function\n");
++		return PTR_ERR(fn);
++	}
++
++	pci_set_drvdata(pdev, fn);
++
++	return 0;
++}
++
++/**
++ * probe() - Init an OpenCAPI persistent memory device
++ * @pdev: the PCI device information struct
++ * @ent: The entry from ocxlpmem_pci_tbl
++ * Return: 0 on success, negative on failure
++ */
++static int probe(struct pci_dev *pdev, const struct pci_device_id *ent)
++{
++	struct ocxlpmem *ocxlpmem;
++	int rc;
++
++	if (PCI_FUNC(pdev->devfn) == 0)
++		return probe_function0(pdev);
++	else if (PCI_FUNC(pdev->devfn) != 1)
++		return 0;
++
++	ocxlpmem = kzalloc(sizeof(*ocxlpmem), GFP_KERNEL);
++	if (!ocxlpmem) {
++		rc = -ENOMEM;
 +		goto err;
 +	}
 +
- 	elapsed = 0;
- 	timeout = ocxlpmem->readiness_timeout +
- 		  ocxlpmem->memory_available_timeout;
-diff --git a/drivers/nvdimm/ocxl/ocxlpmem.h b/drivers/nvdimm/ocxl/ocxlpmem.h
-index 3eadbe19f6d0..b72b3f909fc3 100644
---- a/drivers/nvdimm/ocxl/ocxlpmem.h
-+++ b/drivers/nvdimm/ocxl/ocxlpmem.h
-@@ -7,6 +7,7 @@
- #include <linux/mm.h>
- 
- #define LABEL_AREA_SIZE	BIT_ULL(PA_SECTION_SHIFT)
-+#define DEFAULT_TIMEOUT 100
- 
- #define GLOBAL_MMIO_CHI		0x000
- #define GLOBAL_MMIO_CHIC	0x008
-@@ -57,6 +58,7 @@
- #define GLOBAL_MMIO_HCI_CONTROLLER_DUMP_COLLECTED	BIT_ULL(5) // CDC
- #define GLOBAL_MMIO_HCI_REQ_HEALTH_PERF			BIT_ULL(6) // CHPD
- 
-+// must be maintained with admin_command_names in ocxlpmem_internal.c
- #define ADMIN_COMMAND_HEARTBEAT		0x00u
- #define ADMIN_COMMAND_SHUTDOWN		0x01u
- #define ADMIN_COMMAND_FW_UPDATE		0x02u
-@@ -68,6 +70,13 @@
- #define ADMIN_COMMAND_CMD_CAPS		0x08u
- #define ADMIN_COMMAND_MAX		0x08u
- 
-+#define NS_COMMAND_SECURE_ERASE	0x20ull
++	ocxlpmem->pdev = pci_dev_get(pdev);
 +
-+#define NS_RESPONSE_SECURE_ERASE_ACCESSIBLE_SUCCESS 0x20
-+#define NS_RESPONSE_SECURE_ERASE_ACCESSIBLE_ATTEMPTED 0x28
-+#define NS_RESPONSE_SECURE_ERASE_DEFECTIVE_SUCCESS 0x30
-+#define NS_RESPONSE_SECURE_ERASE_DEFECTIVE_ATTEMPTED 0x38
++	pci_set_drvdata(pdev, ocxlpmem);
 +
- #define STATUS_SUCCESS		0x00
- #define STATUS_MEM_UNAVAILABLE	0x20
- #define STATUS_BLOCKED_BG_TASK	0x21
-@@ -81,6 +90,16 @@
- #define STATUS_FW_ARG_INVALID	STATUS_BAD_REQUEST_PARM
- #define STATUS_FW_INVALID	STATUS_BAD_DATA_PARM
- 
-+struct command_metadata {
-+	u32 request_offset;
-+	u32 response_offset;
-+	u32 data_offset;
-+	u32 data_size;
-+	struct mutex lock; /* locks access to this command */
-+	u16 id;
-+	u8 op_code;
++	ocxlpmem->ocxl_fn = ocxl_function_open(pdev);
++	if (IS_ERR(ocxlpmem->ocxl_fn)) {
++		rc = PTR_ERR(ocxlpmem->ocxl_fn);
++		dev_err(&pdev->dev, "failed to open OCXL function\n");
++		goto err_unregistered;
++	}
++
++	ocxlpmem->ocxl_afu = ocxl_function_fetch_afu(ocxlpmem->ocxl_fn, 0);
++	if (!ocxlpmem->ocxl_afu) {
++		rc = -ENXIO;
++		dev_err(&pdev->dev, "Could not get OCXL AFU from function\n");
++		goto err_unregistered;
++	}
++
++	ocxl_afu_get(ocxlpmem->ocxl_afu);
++
++	// Resources allocated below here are cleaned up in the release handler
++
++	rc = ocxlpmem_register(ocxlpmem);
++	if (rc) {
++		dev_err(&pdev->dev,
++			"Could not register OpenCAPI persistent memory device with the kernel\n");
++		goto err;
++	}
++
++	rc = ocxl_context_alloc(&ocxlpmem->ocxl_context, ocxlpmem->ocxl_afu,
++				NULL);
++	if (rc) {
++		dev_err(&pdev->dev, "Could not allocate OCXL context\n");
++		goto err;
++	}
++
++	rc = ocxl_context_attach(ocxlpmem->ocxl_context, 0, NULL);
++	if (rc) {
++		dev_err(&pdev->dev, "Could not attach ocxl context\n");
++		goto err;
++	}
++
++	rc = register_lpc_mem(ocxlpmem);
++	if (rc) {
++		dev_err(&pdev->dev,
++			"Could not register OpenCAPI persistent memory with libnvdimm\n");
++		goto err;
++	}
++
++	return 0;
++
++err_unregistered:
++	if (!IS_ERR(ocxlpmem->ocxl_fn))
++		ocxl_function_close(ocxlpmem->ocxl_fn);
++	pci_dev_put(ocxlpmem->pdev);
++	kfree(ocxlpmem);
++	pci_set_drvdata(pdev, NULL);
++
++err:
++	/*
++	 * Further cleanup is done in the release handler via free_ocxlpmem()
++	 * This allows us to keep the character device live to handle IOCTLs to
++	 * investigate issues if the card has an error
++	 */
++
++	dev_err(&pdev->dev,
++		"Error detected, will not register OpenCAPI persistent memory\n");
++	return 0;
++}
++
++static struct pci_driver pci_driver = {
++	.name = "ocxlpmem",
++	.id_table = pci_tbl,
++	.probe = probe,
++	.remove = remove,
++	.shutdown = remove,
 +};
 +
- struct ocxlpmem {
- 	struct device dev;
- 	struct pci_dev *pdev;
-@@ -91,10 +110,11 @@ struct ocxlpmem {
- 	struct ocxl_afu *ocxl_afu;
- 	struct ocxl_context *ocxl_context;
- 	void *metadata_addr;
-+	struct command_metadata admin_command;
- 	struct resource pmem_res;
- 	struct nd_region *nd_region;
- 	char fw_version[8 + 1];
--
-+	u32 timeouts[ADMIN_COMMAND_MAX + 1];
- 	u32 max_controller_dump_size;
- 	u16 scm_revision; // major/minor
- 	u8 readiness_timeout;  /* The worst case time (in seconds) that the host
-@@ -123,3 +143,31 @@ struct ocxlpmem {
-  * Returns 0 on success, negative on error
-  */
- int ocxlpmem_chi(const struct ocxlpmem *ocxlpmem, u64 *chi);
-+
-+/**
-+ * admin_command_execute() - Execute an admin command and wait for completion
-+ *
-+ * Additional MMIO registers (dependent on the command) may
-+ * need to be initialized
-+ *
-+ * @ocxlpmem: the device metadata
-+ * @op_code: the code for the admin command
-+ * Returns 0 on success, -EINVAL for a bad op code, -EBUSY on timeout
-+ */
-+int admin_command_execute(struct ocxlpmem *ocxlpmem, u8 op_code);
-+
-+/**
-+ * admin_response_handled() - Notify the controller that the admin response has been handled
-+ * @ocxlpmem: the device metadata
-+ * Returns 0 on success, negative on failure
-+ */
-+int admin_response_handled(const struct ocxlpmem *ocxlpmem);
-+
-+/**
-+ * warn_status() - Emit a kernel warning showing a command status.
-+ * @ocxlpmem: the device metadata
-+ * @message: A message to accompany the warning
-+ * @status: The command status
-+ */
-+void warn_status(const struct ocxlpmem *ocxlpmem, const char *message,
-+		 u8 status);
-diff --git a/drivers/nvdimm/ocxl/ocxlpmem_internal.c b/drivers/nvdimm/ocxl/ocxlpmem_internal.c
-index 5578169b7515..7470a6ab3b08 100644
---- a/drivers/nvdimm/ocxl/ocxlpmem_internal.c
-+++ b/drivers/nvdimm/ocxl/ocxlpmem_internal.c
-@@ -17,3 +17,264 @@ int ocxlpmem_chi(const struct ocxlpmem *ocxlpmem, u64 *chi)
- 
- 	return 0;
- }
-+
-+#define COMMAND_REQUEST_SIZE (8 * sizeof(u64))
-+/**
-+ * scm_command_request() - Set up a command request
-+ * @cmd: The metadata for the type of command to be issued
-+ * @op_code: the op code for the command
-+ * @valid_bytes: the number of bytes in the header to preserve (these must be set before calling)
-+ */
-+static int scm_command_request(const struct ocxlpmem *ocxlpmem,
-+			       struct command_metadata *cmd, u8 op_code,
-+			       u8 valid_bytes)
++static int __init ocxlpmem_init(void)
 +{
-+	u64 val = op_code;
 +	int rc;
-+	u8 i;
 +
-+	cmd->op_code = op_code;
-+	cmd->id++;
++	mutex_init(&minors_idr_lock);
++	idr_init(&minors_idr);
 +
-+	val |= ((u64)cmd->id) << 16;
-+
-+	rc = ocxl_global_mmio_write64(ocxlpmem->ocxl_afu, cmd->request_offset,
-+				      OCXL_LITTLE_ENDIAN, val);
++	rc = pci_register_driver(&pci_driver);
 +	if (rc)
 +		return rc;
-+
-+	for (i = valid_bytes; i < COMMAND_REQUEST_SIZE; i += sizeof(u64)) {
-+		rc = ocxl_global_mmio_write64(ocxlpmem->ocxl_afu,
-+					      cmd->request_offset + i,
-+					      OCXL_LITTLE_ENDIAN, 0);
-+		if (rc)
-+			return rc;
-+	}
 +
 +	return 0;
 +}
 +
-+/**
-+ * admin_command_request() - Issue an admin command request
-+ * @ocxlpmem: the device metadata
-+ * @op_code: The op-code for the command
-+ *
-+ * Returns an identifier for the command, or negative on error
-+ */
-+static int admin_command_request(struct ocxlpmem *ocxlpmem, u8 op_code)
++static void ocxlpmem_exit(void)
 +{
-+	u8 valid_bytes = sizeof(u64);
-+
-+	switch (op_code) {
-+	case ADMIN_COMMAND_HEARTBEAT:
-+	case ADMIN_COMMAND_SHUTDOWN:
-+	case ADMIN_COMMAND_ERRLOG:
-+	case ADMIN_COMMAND_CMD_CAPS:
-+		valid_bytes += 0;
-+		break;
-+	case ADMIN_COMMAND_FW_UPDATE:
-+	case ADMIN_COMMAND_SMART:
-+	case ADMIN_COMMAND_CONTROLLER_STATS:
-+	case ADMIN_COMMAND_CONTROLLER_DUMP:
-+		valid_bytes += sizeof(u64);
-+		break;
-+	case ADMIN_COMMAND_FW_DEBUG:
-+		valid_bytes += 3 * sizeof(u64);
-+		break;
-+	default:
-+		return -EINVAL;
-+	}
-+
-+	return scm_command_request(ocxlpmem, &ocxlpmem->admin_command, op_code,
-+				   valid_bytes);
++	pci_unregister_driver(&pci_driver);
 +}
 +
-+static int command_response(const struct ocxlpmem *ocxlpmem,
-+			    const struct command_metadata *cmd)
-+{
-+	u64 val;
-+	u16 id;
-+	u8 status;
-+	int rc = ocxl_global_mmio_read64(ocxlpmem->ocxl_afu,
-+					 cmd->response_offset,
-+					 OCXL_LITTLE_ENDIAN, &val);
-+	if (rc)
-+		return rc;
++module_init(ocxlpmem_init);
++module_exit(ocxlpmem_exit);
 +
-+	status = val & 0xff;
-+	id = (val >> 16) & 0xffff;
++MODULE_DESCRIPTION("OpenCAPI Persistent Memory");
++MODULE_LICENSE("GPL v2");
++MODULE_AUTHOR("Alastair D'Silva <alastair@d-silva.org>");
+diff --git a/drivers/nvdimm/ocxl/ocxlpmem.h b/drivers/nvdimm/ocxl/ocxlpmem.h
+new file mode 100644
+index 000000000000..03fe7a264281
+--- /dev/null
++++ b/drivers/nvdimm/ocxl/ocxlpmem.h
+@@ -0,0 +1,23 @@
++// SPDX-License-Identifier: GPL-2.0+
++// Copyright 2020 IBM Corp.
 +
-+	if (id != cmd->id) {
-+		dev_err(&ocxlpmem->dev,
-+			"Expected response for command %d, but received response for command %d instead.\n",
-+			cmd->id, id);
-+		return -EBUSY;
-+	}
++#include <linux/pci.h>
++#include <misc/ocxl.h>
++#include <linux/libnvdimm.h>
++#include <linux/mm.h>
 +
-+	return status;
-+}
++#define LABEL_AREA_SIZE	BIT_ULL(PA_SECTION_SHIFT)
 +
-+/**
-+ * admin_response() - Validate an admin response
-+ * @ocxlpmem: the device metadata
-+ * Returns the status code of the command, or negative on error
-+ */
-+static int admin_response(const struct ocxlpmem *ocxlpmem)
-+{
-+	return command_response(ocxlpmem, &ocxlpmem->admin_command);
-+}
-+
-+/**
-+ * admin_command_exec() - Notify the controller to start processing a pending admin command
-+ * @ocxlpmem: the device metadata
-+ * Returns 0 on success, negative on error
-+ */
-+static int admin_command_exec(const struct ocxlpmem *ocxlpmem)
-+{
-+	return ocxl_global_mmio_set64(ocxlpmem->ocxl_afu, GLOBAL_MMIO_HCI,
-+				      OCXL_LITTLE_ENDIAN, GLOBAL_MMIO_HCI_ACRW);
-+}
-+
-+static bool admin_command_complete(const struct ocxlpmem *ocxlpmem)
-+{
-+	u64 val = 0;
-+
-+	int rc = ocxlpmem_chi(ocxlpmem, &val);
-+
-+	WARN_ON(rc);
-+
-+	return (val & GLOBAL_MMIO_CHI_ACRA) != 0;
-+}
-+
-+/**
-+ * admin_command_complete_timeout() - Wait for an admin command to finish executing
-+ * @ocxlpmem: the device metadata
-+ * @command: the admin command to wait for completion (determines the timeout)
-+ * Returns 0 on success, -EBUSY on timeout
-+ */
-+static int admin_command_complete_timeout(const struct ocxlpmem *ocxlpmem,
-+					  int command)
-+{
-+	unsigned long timeout = jiffies +
-+				msecs_to_jiffies(ocxlpmem->timeouts[command]);
-+
-+	// 32 is the next power of 2 greater than the 20ms minimum for msleep
-+#define TIMEOUT_SLEEP_MILLIS 32
-+	do {
-+		if (admin_command_complete(ocxlpmem))
-+			return 0;
-+		msleep(TIMEOUT_SLEEP_MILLIS);
-+	} while (time_before(jiffies, timeout));
-+
-+	if (admin_command_complete(ocxlpmem))
-+		return 0;
-+
-+	return -EBUSY;
-+}
-+
-+// Must be maintained with ADMIN_COMMAND_* in ocxlpmem.h
-+static const char * const admin_command_names[] = {
-+	"heartbeat",
-+	"shutdown",
-+	"firmware update",
-+	"firmware debug",
-+	"retrieve error log",
-+	"retrieve SMART data",
-+	"controller statistics",
-+	"controller dump",
-+	"command capabilities",
++struct ocxlpmem {
++	struct device dev;
++	struct pci_dev *pdev;
++	struct ocxl_fn *ocxl_fn;
++	struct nd_interleave_set nd_set;
++	struct nvdimm_bus_descriptor bus_desc;
++	struct nvdimm_bus *nvdimm_bus;
++	struct ocxl_afu *ocxl_afu;
++	struct ocxl_context *ocxl_context;
++	void *metadata_addr;
++	struct resource pmem_res;
++	struct nd_region *nd_region;
 +};
-+
-+/**
-+ * admin_command_name() - get the name of an admin command
-+ * @ocxlpmem: the device metadata
-+ * @op_code: the code for the admin command
-+ * Returns a string representing the name of the command
-+ */
-+static const char *admin_command_name(u8 op_code)
-+{
-+	if (op_code > ADMIN_COMMAND_MAX)
-+		return "unknown command";
-+
-+	return admin_command_names[op_code];
-+}
-+
-+/**
-+ * admin_command_execute() - Execute an admin command and wait for completion
-+ *
-+ * Additional MMIO registers (dependent on the command) may
-+ * need to be initialized
-+ *
-+ * @ocxlpmem: the device metadata
-+ * @op_code: the code for the admin command
-+ * Returns 0 on success, -EINVAL for a bad op code, -EBUSY on timeout
-+ */
-+int admin_command_execute(struct ocxlpmem *ocxlpmem, u8 op_code)
-+{
-+	int rc;
-+
-+	if (op_code > ADMIN_COMMAND_MAX)
-+		return -EINVAL;
-+
-+	rc = admin_command_request(ocxlpmem, op_code);
-+	if (rc)
-+		return rc;
-+
-+	rc = admin_command_exec(ocxlpmem);
-+	if (rc)
-+		return rc;
-+
-+	rc = admin_command_complete_timeout(ocxlpmem, op_code);
-+	if (rc < 0) {
-+		dev_warn(&ocxlpmem->dev, "%s timed out\n",
-+			 admin_command_name(op_code));
-+		return rc;
-+	}
-+
-+	return admin_response(ocxlpmem);
-+}
-+
-+int admin_response_handled(const struct ocxlpmem *ocxlpmem)
-+{
-+	// writing to the CHIC register clears the bit in CHI
-+	return ocxl_global_mmio_set64(ocxlpmem->ocxl_afu, GLOBAL_MMIO_CHIC,
-+				      OCXL_LITTLE_ENDIAN, GLOBAL_MMIO_CHI_ACRA);
-+}
-+
-+void warn_status(const struct ocxlpmem *ocxlpmem, const char *message,
-+		 u8 status)
-+{
-+	const char *text = "Unknown";
-+
-+	switch (status) {
-+	case STATUS_SUCCESS:
-+		text = "Success";
-+		break;
-+
-+	case STATUS_MEM_UNAVAILABLE:
-+		text = "Persistent memory unavailable";
-+		break;
-+
-+	case STATUS_BAD_OPCODE:
-+		text = "Bad opcode";
-+		break;
-+
-+	case STATUS_BAD_REQUEST_PARM:
-+		text = "Bad request parameter";
-+		break;
-+
-+	case STATUS_BAD_DATA_PARM:
-+		text = "Bad data parameter";
-+		break;
-+
-+	case STATUS_DEBUG_BLOCKED:
-+		text = "Debug action blocked";
-+		break;
-+
-+	case STATUS_FAIL:
-+		text = "Failed";
-+		break;
-+	}
-+
-+	dev_warn(&ocxlpmem->dev, "%s: %s (%x)\n", message, text, status);
-+}
 -- 
 2.24.1
 
