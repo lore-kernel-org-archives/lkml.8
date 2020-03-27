@@ -6,29 +6,29 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F031C43331
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 02:33:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84728C43331
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 02:33:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5EAF32082D
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 02:33:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5892B2082D
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 02:33:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728035AbgC0CdE (ORCPT
+        id S1727843AbgC0CcK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 22:33:04 -0400
-Received: from zeniv.linux.org.uk ([195.92.253.2]:48038 "EHLO
-        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727848AbgC0CcK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 26 Mar 2020 22:32:10 -0400
+Received: from zeniv.linux.org.uk ([195.92.253.2]:48000 "EHLO
+        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727696AbgC0CcJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Mar 2020 22:32:09 -0400
 Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jHen0-003hRy-Rw; Fri, 27 Mar 2020 02:32:06 +0000
+        id 1jHemz-003hR3-Ni; Fri, 27 Mar 2020 02:32:05 +0000
 From:   Al Viro <viro@ZenIV.linux.org.uk>
 To:     Linus Torvalds <torvalds@linux-foundation.org>
 Cc:     Thomas Gleixner <tglx@linutronix.de>, x86@kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [RFC][PATCH v2 13/22] x86: ia32_setup_sigcontext(): lift user_access_{begin,end}() into the callers
-Date:   Fri, 27 Mar 2020 02:31:56 +0000
-Message-Id: <20200327023205.881896-13-viro@ZenIV.linux.org.uk>
+Subject: [RFC][PATCH v2 04/22] x86: get rid of small constant size cases in raw_copy_{to,from}_user()
+Date:   Fri, 27 Mar 2020 02:31:47 +0000
+Message-Id: <20200327023205.881896-4-viro@ZenIV.linux.org.uk>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200327023205.881896-1-viro@ZenIV.linux.org.uk>
 References: <20200327023007.GS23230@ZenIV.linux.org.uk>
@@ -42,139 +42,201 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Al Viro <viro@zeniv.linux.org.uk>
 
-What's left is just a sequence of stores to userland addresses, with all
-error handling, etc. done out of line.  Calling that from user_access block
-is safe, but rather than teaching objtool to recognize it as such we can
-just make it always_inline - it is small enough and has few enough callers,
-for the space savings not to be an issue.
-
-	Rename the sucker to __unsafe_setup_sigcontext32() and provide
-unsafe_put_sigcontext32() with usual kind of semantics.
+Very few call sites where that would be triggered remain, and none
+of those is anywhere near hot enough to bother.
 
 Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
 ---
- arch/x86/ia32/ia32_signal.c | 44 ++++++++++++++++++++++++++++----------------
- 1 file changed, 28 insertions(+), 16 deletions(-)
+ arch/x86/include/asm/uaccess.h    |  12 -----
+ arch/x86/include/asm/uaccess_32.h |  27 ----------
+ arch/x86/include/asm/uaccess_64.h | 108 +-------------------------------------
+ 3 files changed, 2 insertions(+), 145 deletions(-)
 
-diff --git a/arch/x86/ia32/ia32_signal.c b/arch/x86/ia32/ia32_signal.c
-index a96995aa23da..799ca5b31b87 100644
---- a/arch/x86/ia32/ia32_signal.c
-+++ b/arch/x86/ia32/ia32_signal.c
-@@ -154,13 +154,11 @@ COMPAT_SYSCALL_DEFINE0(rt_sigreturn)
+diff --git a/arch/x86/include/asm/uaccess.h b/arch/x86/include/asm/uaccess.h
+index ab8eab43a8a2..1cfa33b94a1a 100644
+--- a/arch/x86/include/asm/uaccess.h
++++ b/arch/x86/include/asm/uaccess.h
+@@ -378,18 +378,6 @@ do {									\
+ 		     : "=r" (err), ltype(x)				\
+ 		     : "m" (__m(addr)), "i" (errret), "0" (err))
  
- #define get_user_seg(seg)	({ unsigned int v; savesegment(seg, v); v; })
- 
--static int ia32_setup_sigcontext(struct sigcontext_32 __user *sc,
--				 void __user *fpstate,
--				 struct pt_regs *regs, unsigned int mask)
-+static __always_inline int
-+__unsafe_setup_sigcontext32(struct sigcontext_32 __user *sc,
-+			    void __user *fpstate,
-+			    struct pt_regs *regs, unsigned int mask)
- {
--	if (!user_access_begin(sc, sizeof(struct sigcontext_32)))
--		return -EFAULT;
+-#define __get_user_asm_nozero(x, addr, err, itype, rtype, ltype, errret)	\
+-	asm volatile("\n"						\
+-		     "1:	mov"itype" %2,%"rtype"1\n"		\
+-		     "2:\n"						\
+-		     ".section .fixup,\"ax\"\n"				\
+-		     "3:	mov %3,%0\n"				\
+-		     "	jmp 2b\n"					\
+-		     ".previous\n"					\
+-		     _ASM_EXTABLE_UA(1b, 3b)				\
+-		     : "=r" (err), ltype(x)				\
+-		     : "m" (__m(addr)), "i" (errret), "0" (err))
 -
- 	unsafe_put_user(get_user_seg(gs), (unsigned int __user *)&sc->gs, Efault);
- 	unsafe_put_user(get_user_seg(fs), (unsigned int __user *)&sc->fs, Efault);
- 	unsafe_put_user(get_user_seg(ds), (unsigned int __user *)&sc->ds, Efault);
-@@ -187,13 +185,18 @@ static int ia32_setup_sigcontext(struct sigcontext_32 __user *sc,
- 	/* non-iBCS2 extensions.. */
- 	unsafe_put_user(mask, &sc->oldmask, Efault);
- 	unsafe_put_user(current->thread.cr2, &sc->cr2, Efault);
--	user_access_end();
- 	return 0;
-+
- Efault:
--	user_access_end();
- 	return -EFAULT;
- }
- 
-+#define unsafe_put_sigcontext32(sc, fp, regs, set, label)		\
-+do {									\
-+	if (__unsafe_setup_sigcontext32(sc, fp, regs, set->sig[0]))	\
-+		goto label;						\
-+} while(0)
-+
  /*
-  * Determine which stack to use..
-  */
-@@ -234,7 +237,7 @@ int ia32_setup_frame(int sig, struct ksignal *ksig,
- 	struct sigframe_ia32 __user *frame;
- 	void __user *restorer;
- 	int err = 0;
--	void __user *fpstate = NULL;
-+	void __user *fp = NULL;
- 
- 	/* copy_to_user optimizes that into a single 8 byte store */
- 	static const struct {
-@@ -247,7 +250,7 @@ int ia32_setup_frame(int sig, struct ksignal *ksig,
- 		0x80cd,		/* int $0x80 */
- 	};
- 
--	frame = get_sigframe(ksig, regs, sizeof(*frame), &fpstate);
-+	frame = get_sigframe(ksig, regs, sizeof(*frame), &fp);
- 
- 	if (!access_ok(frame, sizeof(*frame)))
- 		return -EFAULT;
-@@ -255,9 +258,12 @@ int ia32_setup_frame(int sig, struct ksignal *ksig,
- 	if (__put_user(sig, &frame->sig))
- 		return -EFAULT;
- 
--	if (ia32_setup_sigcontext(&frame->sc, fpstate, regs, set->sig[0]))
-+	if (!user_access_begin(&frame->sc, sizeof(struct sigcontext_32)))
- 		return -EFAULT;
- 
-+	unsafe_put_sigcontext32(&frame->sc, fp, regs, set, Efault);
-+	user_access_end();
-+
- 	if (__put_user(set->sig[1], &frame->extramask[0]))
- 		return -EFAULT;
- 
-@@ -301,6 +307,9 @@ int ia32_setup_frame(int sig, struct ksignal *ksig,
- 	regs->ss = __USER32_DS;
- 
- 	return 0;
-+Efault:
-+	user_access_end();
-+	return -EFAULT;
+  * This doesn't do __uaccess_begin/end - the exception handling
+  * around it must do that.
+diff --git a/arch/x86/include/asm/uaccess_32.h b/arch/x86/include/asm/uaccess_32.h
+index ba2dc1930630..388a40660c7b 100644
+--- a/arch/x86/include/asm/uaccess_32.h
++++ b/arch/x86/include/asm/uaccess_32.h
+@@ -23,33 +23,6 @@ raw_copy_to_user(void __user *to, const void *from, unsigned long n)
+ static __always_inline unsigned long
+ raw_copy_from_user(void *to, const void __user *from, unsigned long n)
+ {
+-	if (__builtin_constant_p(n)) {
+-		unsigned long ret;
+-
+-		switch (n) {
+-		case 1:
+-			ret = 0;
+-			__uaccess_begin_nospec();
+-			__get_user_asm_nozero(*(u8 *)to, from, ret,
+-					      "b", "b", "=q", 1);
+-			__uaccess_end();
+-			return ret;
+-		case 2:
+-			ret = 0;
+-			__uaccess_begin_nospec();
+-			__get_user_asm_nozero(*(u16 *)to, from, ret,
+-					      "w", "w", "=r", 2);
+-			__uaccess_end();
+-			return ret;
+-		case 4:
+-			ret = 0;
+-			__uaccess_begin_nospec();
+-			__get_user_asm_nozero(*(u32 *)to, from, ret,
+-					      "l", "k", "=r", 4);
+-			__uaccess_end();
+-			return ret;
+-		}
+-	}
+ 	return __copy_user_ll(to, (__force const void *)from, n);
  }
  
- int ia32_setup_rt_frame(int sig, struct ksignal *ksig,
-@@ -309,7 +318,7 @@ int ia32_setup_rt_frame(int sig, struct ksignal *ksig,
- 	struct rt_sigframe_ia32 __user *frame;
- 	void __user *restorer;
- 	int err = 0;
--	void __user *fpstate = NULL;
-+	void __user *fp = NULL;
+diff --git a/arch/x86/include/asm/uaccess_64.h b/arch/x86/include/asm/uaccess_64.h
+index 5cd1caa8bc65..bc10e3dc64fe 100644
+--- a/arch/x86/include/asm/uaccess_64.h
++++ b/arch/x86/include/asm/uaccess_64.h
+@@ -65,117 +65,13 @@ copy_to_user_mcsafe(void *to, const void *from, unsigned len)
+ static __always_inline __must_check unsigned long
+ raw_copy_from_user(void *dst, const void __user *src, unsigned long size)
+ {
+-	int ret = 0;
+-
+-	if (!__builtin_constant_p(size))
+-		return copy_user_generic(dst, (__force void *)src, size);
+-	switch (size) {
+-	case 1:
+-		__uaccess_begin_nospec();
+-		__get_user_asm_nozero(*(u8 *)dst, (u8 __user *)src,
+-			      ret, "b", "b", "=q", 1);
+-		__uaccess_end();
+-		return ret;
+-	case 2:
+-		__uaccess_begin_nospec();
+-		__get_user_asm_nozero(*(u16 *)dst, (u16 __user *)src,
+-			      ret, "w", "w", "=r", 2);
+-		__uaccess_end();
+-		return ret;
+-	case 4:
+-		__uaccess_begin_nospec();
+-		__get_user_asm_nozero(*(u32 *)dst, (u32 __user *)src,
+-			      ret, "l", "k", "=r", 4);
+-		__uaccess_end();
+-		return ret;
+-	case 8:
+-		__uaccess_begin_nospec();
+-		__get_user_asm_nozero(*(u64 *)dst, (u64 __user *)src,
+-			      ret, "q", "", "=r", 8);
+-		__uaccess_end();
+-		return ret;
+-	case 10:
+-		__uaccess_begin_nospec();
+-		__get_user_asm_nozero(*(u64 *)dst, (u64 __user *)src,
+-			       ret, "q", "", "=r", 10);
+-		if (likely(!ret))
+-			__get_user_asm_nozero(*(u16 *)(8 + (char *)dst),
+-				       (u16 __user *)(8 + (char __user *)src),
+-				       ret, "w", "w", "=r", 2);
+-		__uaccess_end();
+-		return ret;
+-	case 16:
+-		__uaccess_begin_nospec();
+-		__get_user_asm_nozero(*(u64 *)dst, (u64 __user *)src,
+-			       ret, "q", "", "=r", 16);
+-		if (likely(!ret))
+-			__get_user_asm_nozero(*(u64 *)(8 + (char *)dst),
+-				       (u64 __user *)(8 + (char __user *)src),
+-				       ret, "q", "", "=r", 8);
+-		__uaccess_end();
+-		return ret;
+-	default:
+-		return copy_user_generic(dst, (__force void *)src, size);
+-	}
++	return copy_user_generic(dst, (__force void *)src, size);
+ }
  
- 	/* __copy_to_user optimizes that into a single 8 byte store */
- 	static const struct {
-@@ -324,7 +333,7 @@ int ia32_setup_rt_frame(int sig, struct ksignal *ksig,
- 		0,
- 	};
+ static __always_inline __must_check unsigned long
+ raw_copy_to_user(void __user *dst, const void *src, unsigned long size)
+ {
+-	int ret = 0;
+-
+-	if (!__builtin_constant_p(size))
+-		return copy_user_generic((__force void *)dst, src, size);
+-	switch (size) {
+-	case 1:
+-		__uaccess_begin();
+-		__put_user_asm(*(u8 *)src, (u8 __user *)dst,
+-			      ret, "b", "b", "iq", 1);
+-		__uaccess_end();
+-		return ret;
+-	case 2:
+-		__uaccess_begin();
+-		__put_user_asm(*(u16 *)src, (u16 __user *)dst,
+-			      ret, "w", "w", "ir", 2);
+-		__uaccess_end();
+-		return ret;
+-	case 4:
+-		__uaccess_begin();
+-		__put_user_asm(*(u32 *)src, (u32 __user *)dst,
+-			      ret, "l", "k", "ir", 4);
+-		__uaccess_end();
+-		return ret;
+-	case 8:
+-		__uaccess_begin();
+-		__put_user_asm(*(u64 *)src, (u64 __user *)dst,
+-			      ret, "q", "", "er", 8);
+-		__uaccess_end();
+-		return ret;
+-	case 10:
+-		__uaccess_begin();
+-		__put_user_asm(*(u64 *)src, (u64 __user *)dst,
+-			       ret, "q", "", "er", 10);
+-		if (likely(!ret)) {
+-			asm("":::"memory");
+-			__put_user_asm(4[(u16 *)src], 4 + (u16 __user *)dst,
+-				       ret, "w", "w", "ir", 2);
+-		}
+-		__uaccess_end();
+-		return ret;
+-	case 16:
+-		__uaccess_begin();
+-		__put_user_asm(*(u64 *)src, (u64 __user *)dst,
+-			       ret, "q", "", "er", 16);
+-		if (likely(!ret)) {
+-			asm("":::"memory");
+-			__put_user_asm(1[(u64 *)src], 1 + (u64 __user *)dst,
+-				       ret, "q", "", "er", 8);
+-		}
+-		__uaccess_end();
+-		return ret;
+-	default:
+-		return copy_user_generic((__force void *)dst, src, size);
+-	}
++	return copy_user_generic((__force void *)dst, src, size);
+ }
  
--	frame = get_sigframe(ksig, regs, sizeof(*frame), &fpstate);
-+	frame = get_sigframe(ksig, regs, sizeof(*frame), &fp);
- 
- 	if (!user_access_begin(frame, sizeof(*frame)))
- 		return -EFAULT;
-@@ -355,9 +364,12 @@ int ia32_setup_rt_frame(int sig, struct ksignal *ksig,
- 	unsafe_put_user(*((u64 *)&code), (u64 __user *)frame->retcode, Efault);
- 	user_access_end();
- 
--	err |= __copy_siginfo_to_user32(&frame->info, &ksig->info, false);
--	err |= ia32_setup_sigcontext(&frame->uc.uc_mcontext, fpstate,
--				     regs, set->sig[0]);
-+	if (__copy_siginfo_to_user32(&frame->info, &ksig->info, false))
-+		return -EFAULT;
-+	if (!user_access_begin(&frame->uc.uc_mcontext, sizeof(struct sigcontext_32)))
-+		return -EFAULT;
-+	unsafe_put_sigcontext32(&frame->uc.uc_mcontext, fp, regs, set, Efault);
-+	user_access_end();
- 	err |= __put_user(*(__u64 *)set, (__u64 __user *)&frame->uc.uc_sigmask);
- 
- 	if (err)
+ static __always_inline __must_check
 -- 
 2.11.0
 
