@@ -2,167 +2,202 @@ Return-Path: <SRS0=s8dx=5M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 146F1C2D0EC
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 22:45:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 218A5C43331
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 22:47:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DDD6C2073B
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 22:45:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585349105;
-	bh=7Zs/b+96WvUw27So2YKcRcWhDyAPTdzX/ZNYwXeNrqM=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=UeheEJDWwD9wwFhZh4SueiilIHr8PzLrDdp3GKX1lLPKctDgDNuD+6DEdTKZlVV5h
-	 O1uw1v4Y6cOVgytMwp1foS6YHlwMIeg1d+V56pYv4hTUQfF6RQZAFakxSV8+HIymBD
-	 Rn7NFpQetjBqvLAy7kEL8Dczuji/vpANmdlKmRjQ=
+	by mail.kernel.org (Postfix) with ESMTP id E675D2071B
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 22:47:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="lUyhJQ1S"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727774AbgC0WpE (ORCPT
+        id S1727752AbgC0WrH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Mar 2020 18:45:04 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:45434 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727620AbgC0WpE (ORCPT
+        Fri, 27 Mar 2020 18:47:07 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:42749 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727585AbgC0WrG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Mar 2020 18:45:04 -0400
-Received: by mail-io1-f67.google.com with SMTP id a24so10928117iol.12;
-        Fri, 27 Mar 2020 15:45:03 -0700 (PDT)
+        Fri, 27 Mar 2020 18:47:06 -0400
+Received: by mail-pl1-f193.google.com with SMTP id e1so3985604plt.9
+        for <linux-kernel@vger.kernel.org>; Fri, 27 Mar 2020 15:47:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=1wSwo251yyiXKUeE+XnUhhLK8OMnF/L91ccGd/UxDFQ=;
+        b=lUyhJQ1S6XDMLFU+K/JQXz8ijg9a2pwJAa9IT2T9+uqTf1A6hAKYOnfKaD69Z0ZJ/h
+         AXWY3SHctlNCCfzhHsJFuPylUJjafyd1lMZi7gnrwp61ewKfx+85+H74UgzlaDafWDb/
+         UeWg0DdayFfpxZsfAjm+Z6RsDAWqrZPbw7t/mClBsj1GG2ci+qiPDrBL6Xo+WrNyt8Cs
+         T2VrJBSFbc2h49OwwWli89i1EP1ppUgk08w1MQYouyZKEUSVaEH1sIfRrb3ZIHcHijWv
+         CsuzxcguR/3nIcHGyBdqgLyqXfiIpK5cvvaLZQUYSqEd7c8xiuSCe7XkcpoGkAut94s9
+         J4Ag==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=u4k13uf5713DqF6VnWYY7OaKrDxuIhG+KLjykTCZmLE=;
-        b=Gv/I3R7+nOm+zatwFGKaLrr2HO4RHpM6Wiywg6KtnKTZacBCH/iLnHXPrVtmtU7U5R
-         fRMHJNwxU/jxQEYWXRPYwDdfk4SmpRIY4RrNXxfIxEv59Y/sAGxWJg5OGo3vl5gX722n
-         R6cKMvdscNifJPGOiQgDSfKP8U7oX6QB8PdhQeU/Fn80Pzcp2GAjphFe+aAjnnLsDss2
-         NYxpyvMbfS9mBpU3R1WEjTB07ymrXS+dfVUAq2x1W5cHXUfypR34+iORfI2A5XsfJEib
-         5Y1bNS9hclBlv/aSkn6OXx65/TU1lD0QaO5zPmUSpQqNiA9j9Ck3d1s6jvST9Tk1Fb8T
-         ePjQ==
-X-Gm-Message-State: ANhLgQ0NxNnuVl10UUWDG/OARaPvajEC8t/cZx1nbKfHmV7Dy5sCBO07
-        bDnIU5eTGVq5cgF1ygBwKmyLhpc=
-X-Google-Smtp-Source: ADFU+vsAE04nea1pFbNgX10KkqsBq3CtTvHBC//maalfcP/HRR+gaN6juo2FWt0zeUBHYvmVpvNbkQ==
-X-Received: by 2002:a6b:ed17:: with SMTP id n23mr871676iog.165.1585349103124;
-        Fri, 27 Mar 2020 15:45:03 -0700 (PDT)
-Received: from xps15.herring.priv ([64.188.179.250])
-        by smtp.googlemail.com with ESMTPSA id u125sm1838651ioe.24.2020.03.27.15.45.01
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=1wSwo251yyiXKUeE+XnUhhLK8OMnF/L91ccGd/UxDFQ=;
+        b=Cq+wXYlJY5YMAd3enGn5UK7e2eONvF+KhBx37BCc6vRmBR/SaLqtluDkIX0Q9f6GtC
+         wo68U6EXZzHKCFfqTkh6acBMoxBNFg/6aGSMB4QRqRwWyl1VrqdqPEskjdED8jPOH2ek
+         6jOXkyUa18DDzvhorEtktF1qSjXBgrgEtvv5VGSOdMnW3p6X/7wKEE2mXksmlak16bXP
+         rjNlPMFGydZqIi90LhMomhIIE4CG/jxstO1bfg2ys9beTQVCbqp+jgyPrnL5IZTjb8dM
+         vfGKPEj+H7Jdda8e+bxp1juig7Ao1vslAsGQC7bT8xVl8afoZTq5PgrRIZOZN2Wbj1PF
+         IHLQ==
+X-Gm-Message-State: ANhLgQ1G4pnzFGplHEetTU4pJgNpbBNq3BfiT67kDwUHxxQ/aigO1MIE
+        TP38G/20jYfK3PUO1F0NMb4TJA==
+X-Google-Smtp-Source: ADFU+vuOpckmO8qm1DthNvPOq67QvO7aIoHF9/F8Bu7ngLFIW10zjhHBiLsdegMl1cdLk69PP8GRAA==
+X-Received: by 2002:a17:902:b787:: with SMTP id e7mr1331744pls.128.1585349224758;
+        Fri, 27 Mar 2020 15:47:04 -0700 (PDT)
+Received: from minitux (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id c207sm4932084pfb.47.2020.03.27.15.47.03
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 27 Mar 2020 15:45:02 -0700 (PDT)
-From:   Rob Herring <robh@kernel.org>
-To:     devicetree@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org,
-        =?UTF-8?q?Nuno=20S=C3=A1?= <nuno.sa@analog.com>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        linux-iio@vger.kernel.org
-Subject: [PATCH] dt-bindings: iio: Fix adi,ltc2983 uint64-matrix schema constraints
-Date:   Fri, 27 Mar 2020 16:45:01 -0600
-Message-Id: <20200327224501.18590-1-robh@kernel.org>
-X-Mailer: git-send-email 2.20.1
+        Fri, 27 Mar 2020 15:47:04 -0700 (PDT)
+Date:   Fri, 27 Mar 2020 15:47:02 -0700
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Ansuel Smith <ansuelsmth@gmail.com>
+Cc:     Andy Gross <agross@kernel.org>,
+        Ajay Kishore <akisho@codeaurora.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3] pinctrl: qcom: use scm_call to route GPIO irq to Apps
+Message-ID: <20200327224702.GC211617@minitux>
+References: <20200327223209.20409-1-ansuelsmth@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200327223209.20409-1-ansuelsmth@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-'minItems' and 'maxItems' apply at the same level as 'items' schemas as
-the keywords apply to arrays. What's currently defined is a 3
-dimensional matrix with the outer size being undefined. To fix this,
-minItems/maxItems needs to be moved up a level.
+On Fri 27 Mar 15:32 PDT 2020, Ansuel Smith wrote:
 
-With this fixed, the example fails validation. For matrix types, the dts
-syntax must use brackets (<>) matching the schema definition. In this
-case, the inner array size is 2 elements, so let's add the correct
-bracketing.
+> From: Ajay Kishore <akisho@codeaurora.org>
+> 
+> For IPQ806x targets, TZ protects the registers that are used to
+> configure the routing of interrupts to a target processor.
+> To resolve this, this patch uses scm call to route GPIO interrupts
+> to application processor. Also the scm call interface is changed.
+> 
+> Signed-off-by: Ajay Kishore <akisho@codeaurora.org>
+> Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
 
-Fixes: 3986a14870cb ("dt-bindings: iio: Add ltc2983 documentation")
-Cc: "Nuno Sá" <nuno.sa@analog.com>
-Cc: Jonathan Cameron <jic23@kernel.org>
-Cc: Hartmut Knaack <knaack.h@gmx.de>
-Cc: Lars-Peter Clausen <lars@metafoo.de>
-Cc: Peter Meerwald-Stadler <pmeerw@pmeerw.net>
-Cc: linux-iio@vger.kernel.org
-Signed-off-by: Rob Herring <robh@kernel.org>
----
-I'll take this via the DT tree as I have another change this will 
-conflict.
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 
-Rob
+Thanks,
+Bjorn
 
- .../bindings/iio/temperature/adi,ltc2983.yaml | 38 +++++++++----------
- 1 file changed, 18 insertions(+), 20 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/iio/temperature/adi,ltc2983.yaml b/Documentation/devicetree/bindings/iio/temperature/adi,ltc2983.yaml
-index acc030c1b20e..8fb46de6641d 100644
---- a/Documentation/devicetree/bindings/iio/temperature/adi,ltc2983.yaml
-+++ b/Documentation/devicetree/bindings/iio/temperature/adi,ltc2983.yaml
-@@ -123,12 +123,11 @@ patternProperties:
-           sign.
-         allOf:
-           - $ref: /schemas/types.yaml#/definitions/uint64-matrix
-+        minItems: 3
-+        maxItems: 64
-         items:
--          minItems: 3
--          maxItems: 64
--          items:
--            minItems: 2
--            maxItems: 2
-+          minItems: 2
-+          maxItems: 2
- 
-   "^diode@":
-     type: object
-@@ -328,12 +327,11 @@ patternProperties:
-           78 and 79.
-         allOf:
-           - $ref: /schemas/types.yaml#/definitions/uint64-matrix
-+        minItems: 3
-+        maxItems: 64
-         items:
--          minItems: 3
--          maxItems: 64
--          items:
--            minItems: 2
--            maxItems: 2
-+          minItems: 2
-+          maxItems: 2
- 
-       adi,custom-steinhart:
-         description:
-@@ -465,16 +463,16 @@ examples:
-                         adi,sensor-type = <9>; //custom thermocouple
-                         adi,single-ended;
-                         adi,custom-thermocouple = /bits/ 64
--                                 <(-50220000) 0
--                                  (-30200000) 99100000
--                                  (-5300000) 135400000
--                                  0 273150000
--                                  40200000 361200000
--                                  55300000 522100000
--                                  88300000 720300000
--                                  132200000 811200000
--                                  188700000 922500000
--                                  460400000 1000000000>; //10 pairs
-+                                 <(-50220000) 0>,
-+                                 <(-30200000) 99100000>,
-+                                 <(-5300000) 135400000>,
-+                                 <0 273150000>,
-+                                 <40200000 361200000>,
-+                                 <55300000 522100000>,
-+                                 <88300000 720300000>,
-+                                 <132200000 811200000>,
-+                                 <188700000 922500000>,
-+                                 <460400000 1000000000>; //10 pairs
-                };
- 
-         };
--- 
-2.20.1
-
+> ---
+> v3:
+> * Rename route_to_apps to intr_target_use_scm
+> * Follow standard design and rename base_reg to phys_base
+> * Add additional comments in route interrupts condition 
+> 
+> v2:
+> * Move static varibale in msm_pinctrl struct
+> * Revert '4b024225c4a8 ("pinctrl: use devm_platform_ioremap_resource() to simplify code")'
+>   to get base_reg addr
+> 
+>  drivers/pinctrl/qcom/pinctrl-msm.c | 42 +++++++++++++++++++++++++-----
+>  1 file changed, 36 insertions(+), 6 deletions(-)
+> 
+> diff --git a/drivers/pinctrl/qcom/pinctrl-msm.c b/drivers/pinctrl/qcom/pinctrl-msm.c
+> index 9a8daa256a32..7d2a34beb1b6 100644
+> --- a/drivers/pinctrl/qcom/pinctrl-msm.c
+> +++ b/drivers/pinctrl/qcom/pinctrl-msm.c
+> @@ -22,6 +22,8 @@
+>  #include <linux/reboot.h>
+>  #include <linux/pm.h>
+>  #include <linux/log2.h>
+> +#include <linux/qcom_scm.h>
+> +#include <linux/io.h>
+>  
+>  #include <linux/soc/qcom/irq.h>
+>  
+> @@ -60,6 +62,8 @@ struct msm_pinctrl {
+>  	struct irq_chip irq_chip;
+>  	int irq;
+>  
+> +	bool intr_target_use_scm;
+> +
+>  	raw_spinlock_t lock;
+>  
+>  	DECLARE_BITMAP(dual_edge_irqs, MAX_NR_GPIO);
+> @@ -68,6 +72,7 @@ struct msm_pinctrl {
+>  
+>  	const struct msm_pinctrl_soc_data *soc;
+>  	void __iomem *regs[MAX_NR_TILES];
+> +	u32 phys_base[MAX_NR_TILES];
+>  };
+>  
+>  #define MSM_ACCESSOR(name) \
+> @@ -882,11 +887,31 @@ static int msm_gpio_irq_set_type(struct irq_data *d, unsigned int type)
+>  	else
+>  		clear_bit(d->hwirq, pctrl->dual_edge_irqs);
+>  
+> -	/* Route interrupts to application cpu */
+> -	val = msm_readl_intr_target(pctrl, g);
+> -	val &= ~(7 << g->intr_target_bit);
+> -	val |= g->intr_target_kpss_val << g->intr_target_bit;
+> -	msm_writel_intr_target(val, pctrl, g);
+> +	/* Route interrupts to application cpu.
+> +	 * With intr_target_use_scm interrupts are routed to
+> +	 * application cpu using scm calls.
+> +	 */
+> +	if (pctrl->intr_target_use_scm) {
+> +		u32 addr = pctrl->phys_base[0] + g->intr_target_reg;
+> +		int ret;
+> +
+> +		qcom_scm_io_readl(addr, &val);
+> +
+> +		val &= ~(7 << g->intr_target_bit);
+> +		val |= g->intr_target_kpss_val << g->intr_target_bit;
+> +
+> +		ret = qcom_scm_io_writel(addr, val);
+> +		if (ret)
+> +			dev_err(pctrl->dev,
+> +				"Failed routing %lu interrupt to Apps proc",
+> +				d->hwirq);
+> +		}
+> +	} else {
+> +		val = msm_readl_intr_target(pctrl, g);
+> +		val &= ~(7 << g->intr_target_bit);
+> +		val |= g->intr_target_kpss_val << g->intr_target_bit;
+> +		msm_writel_intr_target(val, pctrl, g);
+> +	}
+>  
+>  	/* Update configuration for gpio.
+>  	 * RAW_STATUS_EN is left on for all gpio irqs. Due to the
+> @@ -1241,6 +1266,9 @@ int msm_pinctrl_probe(struct platform_device *pdev,
+>  	pctrl->dev = &pdev->dev;
+>  	pctrl->soc = soc_data;
+>  	pctrl->chip = msm_gpio_template;
+> +	pctrl->intr_target_use_scm = of_device_is_compatible(
+> +					pctrl->dev->of_node,
+> +					"qcom,ipq8064-pinctrl");
+>  
+>  	raw_spin_lock_init(&pctrl->lock);
+>  
+> @@ -1253,9 +1280,12 @@ int msm_pinctrl_probe(struct platform_device *pdev,
+>  				return PTR_ERR(pctrl->regs[i]);
+>  		}
+>  	} else {
+> -		pctrl->regs[0] = devm_platform_ioremap_resource(pdev, 0);
+> +		res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +		pctrl->regs[0] = devm_ioremap_resource(&pdev->dev, res);
+>  		if (IS_ERR(pctrl->regs[0]))
+>  			return PTR_ERR(pctrl->regs[0]);
+> +
+> +		pctrl->phys_base[0] = res->start;
+>  	}
+>  
+>  	msm_pinctrl_setup_pm_reset(pctrl);
+> -- 
+> 2.25.1
+> 
