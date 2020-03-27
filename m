@@ -2,189 +2,278 @@ Return-Path: <SRS0=s8dx=5M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D3AFC2D0F0
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 11:33:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB100C43331
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 11:33:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 272362073B
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 11:33:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="g9mIfMvD"
+	by mail.kernel.org (Postfix) with ESMTP id 9CC7D2073B
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 11:33:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727699AbgC0LdK (ORCPT
+        id S1727242AbgC0LdC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Mar 2020 07:33:10 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:41913 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727677AbgC0LdI (ORCPT
+        Fri, 27 Mar 2020 07:33:02 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:47301 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726275AbgC0LdC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Mar 2020 07:33:08 -0400
-Received: by mail-ed1-f68.google.com with SMTP id v1so10616580edq.8
-        for <linux-kernel@vger.kernel.org>; Fri, 27 Mar 2020 04:33:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=+HBDIdNbauUzWWpYygi2C8elHABQwqvtXozjKK9jHI8=;
-        b=g9mIfMvDXBJf9IKXU+ep7HNuIrcACmkCAlfPqrOeebATZu/zp+1kFgDcYwIlwtarnT
-         uGHcciMeUHiOiCf9zVFQo8SK+++7ueQJZcS0YbeFeq49y5a+IbMjk7Bhnm8v5+wj16ow
-         nSVG6bfxiVbsBcMTQ9hRdH+zTtM7PL50EsVYs=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=+HBDIdNbauUzWWpYygi2C8elHABQwqvtXozjKK9jHI8=;
-        b=nbzu9fSlrRoUS4PdHJVA3IVd/uQ2z+NoQFc215HU5xxEJtH6dC2wULfT/SoxoewOo2
-         s0bGIikpG5nIHDVwsYFnBcmn+TFKqTyhbjmA0qXXSfKJIeAnT1T439EAF0UARt9ErpvA
-         bmRSQG4VBM3AvZFYEBdf7LaA/9XHP/zHPlMQDcvTsBMuIBdMq0Z0bFu59XApndQqysdU
-         lb00UXxDZp7lSVNcQlKw1xnUb02QUKrc8iPTKVF3kLTBcT9e19SEwsKvj9GmxLiRODG6
-         PQDWxkzkOtaPcDyhUGAa7aUaYOBBnBAVyCWXPz2ZcIUns1aEg6kgFsHoQo8sU4ynZfpX
-         nM8Q==
-X-Gm-Message-State: ANhLgQ0CXq0nLvP0rFWBblOw+79NbYpT4Q6uy6mWo/B+m46BZhzQNrUJ
-        9NLFR2yQsVc7P0yauvYIr88W+JUeuUQL4w==
-X-Google-Smtp-Source: ADFU+vumC+r1yhC0U6kcNoWOR9UE8dBCKrg2HproLtVnNU+tXcXZourTcSgoqKUswjZchHiZTsHRiw==
-X-Received: by 2002:a17:906:69d1:: with SMTP id g17mr6053769ejs.32.1585308785803;
-        Fri, 27 Mar 2020 04:33:05 -0700 (PDT)
-Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com. [209.85.221.47])
-        by smtp.gmail.com with ESMTPSA id lu24sm699617ejb.35.2020.03.27.04.33.05
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 27 Mar 2020 04:33:05 -0700 (PDT)
-Received: by mail-wr1-f47.google.com with SMTP id p10so10990129wrt.6
-        for <linux-kernel@vger.kernel.org>; Fri, 27 Mar 2020 04:33:05 -0700 (PDT)
-X-Received: by 2002:adf:f0c5:: with SMTP id x5mr14731096wro.415.1585308473751;
- Fri, 27 Mar 2020 04:27:53 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200302041213.27662-1-senozhatsky@chromium.org>
- <20200302041213.27662-5-senozhatsky@chromium.org> <6e4fc7f9-0068-92ff-77d7-9c77c047f3db@collabora.com>
- <20200324023909.GA201720@google.com> <1187a3f660b092d8a9d5437445155edfc0744a4f.camel@collabora.com>
- <20200325023248.GA241329@google.com>
-In-Reply-To: <20200325023248.GA241329@google.com>
-From:   Tomasz Figa <tfiga@chromium.org>
-Date:   Fri, 27 Mar 2020 12:27:41 +0100
-X-Gmail-Original-Message-ID: <CAAFQd5BhDLcKHR1aO2U5Lf6EBhoqtBJbg6LzWDQd7XkDJ1YUaw@mail.gmail.com>
-Message-ID: <CAAFQd5BhDLcKHR1aO2U5Lf6EBhoqtBJbg6LzWDQd7XkDJ1YUaw@mail.gmail.com>
-Subject: Re: [PATCHv4 04/11] videobuf2: add queue memory consistency parameter
-To:     Sergey Senozhatsky <senozhatsky@chromium.org>
-Cc:     Ezequiel Garcia <ezequiel@collabora.com>,
-        Dafna Hirschfeld <dafna.hirschfeld@collabora.com>,
-        Hans Verkuil <hans.verkuil@cisco.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Sakari Ailus <sakari.ailus@iki.fi>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Pawel Osciak <posciak@chromium.org>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Helen Koike <helen.koike@collabora.com>,
-        nicolas.dufresne@collabora.co.uk
-Content-Type: text/plain; charset="UTF-8"
+        Fri, 27 Mar 2020 07:33:02 -0400
+Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02RB3Qsi108906;
+        Fri, 27 Mar 2020 07:32:53 -0400
+Received: from ppma02dal.us.ibm.com (a.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.10])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 300jev806y-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 27 Mar 2020 07:32:53 -0400
+Received: from pps.filterd (ppma02dal.us.ibm.com [127.0.0.1])
+        by ppma02dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 02RBVuMo006341;
+        Fri, 27 Mar 2020 11:32:52 GMT
+Received: from b03cxnp08026.gho.boulder.ibm.com (b03cxnp08026.gho.boulder.ibm.com [9.17.130.18])
+        by ppma02dal.us.ibm.com with ESMTP id 2ywaw2x8q2-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 27 Mar 2020 11:32:52 +0000
+Received: from b03ledav001.gho.boulder.ibm.com (b03ledav001.gho.boulder.ibm.com [9.17.130.232])
+        by b03cxnp08026.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 02RBWp9A57409982
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 27 Mar 2020 11:32:51 GMT
+Received: from b03ledav001.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id F05286E04C;
+        Fri, 27 Mar 2020 11:32:50 +0000 (GMT)
+Received: from b03ledav001.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 2CC736E052;
+        Fri, 27 Mar 2020 11:32:50 +0000 (GMT)
+Received: from sofia.ibm.com (unknown [9.85.72.108])
+        by b03ledav001.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Fri, 27 Mar 2020 11:32:50 +0000 (GMT)
+Received: by sofia.ibm.com (Postfix, from userid 1000)
+        id 438DE2E33D2; Fri, 27 Mar 2020 17:02:45 +0530 (IST)
+From:   "Gautham R. Shenoy" <ego@linux.vnet.ibm.com>
+To:     Nathan Lynch <nathanl@linux.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Vaidyanathan Srinivasan <svaidy@linux.vnet.ibm.com>,
+        Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>,
+        "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>,
+        Tyrel Datwyler <tyreld@linux.ibm.com>
+Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        "Gautham R. Shenoy" <ego@linux.vnet.ibm.com>
+Subject: [PATCH v4 1/6] powerpc: Move idle_loop_prolog()/epilog() functions to header file
+Date:   Fri, 27 Mar 2020 17:02:35 +0530
+Message-Id: <1585308760-28792-2-git-send-email-ego@linux.vnet.ibm.com>
+X-Mailer: git-send-email 1.8.3.1
+In-Reply-To: <1585308760-28792-1-git-send-email-ego@linux.vnet.ibm.com>
+References: <1585308760-28792-1-git-send-email-ego@linux.vnet.ibm.com>
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.645
+ definitions=2020-03-27_03:2020-03-27,2020-03-27 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 malwarescore=0
+ adultscore=0 phishscore=0 suspectscore=0 mlxlogscore=999 bulkscore=0
+ lowpriorityscore=0 priorityscore=1501 impostorscore=0 spamscore=0
+ clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2003270102
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 25, 2020 at 3:32 AM Sergey Senozhatsky
-<senozhatsky@chromium.org> wrote:
->
-> On (20/03/24 07:17), Ezequiel Garcia wrote:
-> [..]
-> > > > > +static void set_queue_consistency(struct vb2_queue *q, bool consistent_mem)
-> > > > > +{
-> > > > > +       if (!vb2_queue_allows_cache_hints(q))
-> > > > > +               return;
-> > > > > +
-> > > > > +       if (consistent_mem)
-> > > > > +               q->dma_attrs &= ~DMA_ATTR_NON_CONSISTENT;
-> > > > > +       else
-> > > > > +               q->dma_attrs |= DMA_ATTR_NON_CONSISTENT;
-> > > > > +}
-> > > > > +
-> > > > >   int vb2_core_reqbufs(struct vb2_queue *q, enum vb2_memory memory,
-> > > > > -               unsigned int *count)
-> > > > > +               bool consistent_mem, unsigned int *count)
-> > > > You extended the vb2_core_reqbufs accepting a new boolean that
-> > > > is decided according to the setting of the V4L2_FLAG_MEMORY_NON_CONSISTENT
-> > > > but in the future some other flags might be added, and so I think it
-> > > > is better to replace the boolean with a u32 consisting of all the flags.
-> > >
-> > > Don't have any objections. Can change the `bool' to `u32'.
-> > >
-> >
-> > or maybe an enum instead? That would help get a cleaner
-> > interface.
->
-> Hmm, interesting.
->
-> The flags in question can be from different, unrelated groups
-> (types), controlling various parts of the stack. Not necessarily
-> all of them are memory_consistency related. We can, for instance,
-> pass some additional flags to underlying memory allocators (contig,
-> sg), etc.
->
-> E.g.
->
->         enum MEMORY_ATTR {
->                 MEM_NON_CONSISTENT,
->                 ...
->         };
->
->         enum VMALLOC_ALLOCATOR_ATTR {
->                 DO_A_BARREL_ROLL,
->                 ...
->         };
->
->         enum DMA_SG_ALLOCATOR_ATTR {
->                 WRITEBACK_TO_TAPE_DEVICE,
->                 ...
->         };
->
->         enum DMA_CONTIG_ALLOCATOR_ATTR {
->                 PREFER_HTTPS,
->                 ...
->         };
->
-> and so on. We maybe can keep all of those in one enum (umm, what should
-> be the name?), and then either make sure that all of them are proper powers
-> of two
->
->         enum AUX_FLAGS {
->                 MEM_NON_CONSISTENT              = (1 << 0),
->                 DO_A_BARREL_ROLL                = (1 << 1),
->                 WRITEBACK_TO_TAPE_DEVICE        = (1 << 2),
->                 PREFER_HTTPS                    = (1 << 3),
->         };
->
-> or
->         enum AUX_FLAGS {
->                 MEM_NON_CONSISTENT              = 0,
->                 DO_A_BARREL_ROLL,
->                 WRITEBACK_TO_TAPE_DEVICE,
->                 PREFER_HTTPS,
->         };
->
-> and make sure that those are not flags, but bits.
-> IOW, if (flags & BIT(MEM_NON_CONSISTENT)).
->
->
-> What do others think?
+From: "Gautham R. Shenoy" <ego@linux.vnet.ibm.com>
 
-My feeling is that there it's a bit of an abuse of the language
-construct. Enum is expected to be an enumeration type, where the value
-is always one and only one of the defined values at the same time.
-Making a bitwise OR of several values makes the resulting value
-outside of the enum specification.
+Currently prior to entering an idle state on a Linux Guest, the
+pseries cpuidle driver implement an idle_loop_prolog() and
+idle_loop_epilog() functions which ensure that idle_purr is correctly
+computed, and the hypervisor is informed that the CPU cycles have been
+donated.
 
-AFAICT, the typical approach in the kernel is to just have a block of
-#define statements to define the flags and have the flag names
-prefixed with some consistent prefix, e.g. VB2_QUEUE_FLAG_. The flags
-itself would be defined using BIT() so they can be used directly in
-the bitwise arithmetics.
+These prolog and epilog functions are also required in the default
+idle call, i.e pseries_lpar_idle(). Hence move these accessor
+functions to a common header file and call them from
+pseries_lpar_idle(). Since the existing header files such as
+asm/processor.h have enough clutter, create a new header file
+asm/idle.h. Finally rename idle_loop_prolog() and idle_loop_epilog()
+to pseries_idle_prolog() and pseries_idle_epilog() as they are only
+relavent for on pseries guests.
 
-Best regards,
-Tomasz
+Signed-off-by: Gautham R. Shenoy <ego@linux.vnet.ibm.com>
+---
+ arch/powerpc/include/asm/idle.h        | 31 +++++++++++++++++++++++++++++
+ arch/powerpc/platforms/pseries/setup.c |  7 +++++--
+ drivers/cpuidle/cpuidle-pseries.c      | 36 +++++++---------------------------
+ 3 files changed, 43 insertions(+), 31 deletions(-)
+ create mode 100644 arch/powerpc/include/asm/idle.h
+
+diff --git a/arch/powerpc/include/asm/idle.h b/arch/powerpc/include/asm/idle.h
+new file mode 100644
+index 0000000..32064a4c
+--- /dev/null
++++ b/arch/powerpc/include/asm/idle.h
+@@ -0,0 +1,31 @@
++/* SPDX-License-Identifier: GPL-2.0-or-later */
++#ifndef _ASM_POWERPC_IDLE_H
++#define _ASM_POWERPC_IDLE_H
++#include <asm/runlatch.h>
++#include <asm/paca.h>
++
++#ifdef CONFIG_PPC_PSERIES
++static inline void pseries_idle_prolog(unsigned long *in_purr)
++{
++	ppc64_runlatch_off();
++	*in_purr = mfspr(SPRN_PURR);
++	/*
++	 * Indicate to the HV that we are idle. Now would be
++	 * a good time to find other work to dispatch.
++	 */
++	get_lppaca()->idle = 1;
++}
++
++static inline void pseries_idle_epilog(unsigned long in_purr)
++{
++	u64 wait_cycles;
++
++	wait_cycles = be64_to_cpu(get_lppaca()->wait_state_cycles);
++	wait_cycles += mfspr(SPRN_PURR) - in_purr;
++	get_lppaca()->wait_state_cycles = cpu_to_be64(wait_cycles);
++	get_lppaca()->idle = 0;
++
++	ppc64_runlatch_on();
++}
++#endif /* CONFIG_PPC_PSERIES */
++#endif
+diff --git a/arch/powerpc/platforms/pseries/setup.c b/arch/powerpc/platforms/pseries/setup.c
+index 0c8421d..2f53e6b 100644
+--- a/arch/powerpc/platforms/pseries/setup.c
++++ b/arch/powerpc/platforms/pseries/setup.c
+@@ -68,6 +68,7 @@
+ #include <asm/isa-bridge.h>
+ #include <asm/security_features.h>
+ #include <asm/asm-const.h>
++#include <asm/idle.h>
+ #include <asm/swiotlb.h>
+ #include <asm/svm.h>
+ 
+@@ -319,6 +320,8 @@ static int alloc_dispatch_log_kmem_cache(void)
+ 
+ static void pseries_lpar_idle(void)
+ {
++	unsigned long in_purr;
++
+ 	/*
+ 	 * Default handler to go into low thread priority and possibly
+ 	 * low power mode by ceding processor to hypervisor
+@@ -328,7 +331,7 @@ static void pseries_lpar_idle(void)
+ 		return;
+ 
+ 	/* Indicate to hypervisor that we are idle. */
+-	get_lppaca()->idle = 1;
++	pseries_idle_prolog(&in_purr);
+ 
+ 	/*
+ 	 * Yield the processor to the hypervisor.  We return if
+@@ -339,7 +342,7 @@ static void pseries_lpar_idle(void)
+ 	 */
+ 	cede_processor();
+ 
+-	get_lppaca()->idle = 0;
++	pseries_idle_epilog(in_purr);
+ }
+ 
+ /*
+diff --git a/drivers/cpuidle/cpuidle-pseries.c b/drivers/cpuidle/cpuidle-pseries.c
+index 74c2479..46d5e05 100644
+--- a/drivers/cpuidle/cpuidle-pseries.c
++++ b/drivers/cpuidle/cpuidle-pseries.c
+@@ -19,6 +19,7 @@
+ #include <asm/machdep.h>
+ #include <asm/firmware.h>
+ #include <asm/runlatch.h>
++#include <asm/idle.h>
+ #include <asm/plpar_wrappers.h>
+ 
+ struct cpuidle_driver pseries_idle_driver = {
+@@ -31,29 +32,6 @@ struct cpuidle_driver pseries_idle_driver = {
+ static u64 snooze_timeout __read_mostly;
+ static bool snooze_timeout_en __read_mostly;
+ 
+-static inline void idle_loop_prolog(unsigned long *in_purr)
+-{
+-	ppc64_runlatch_off();
+-	*in_purr = mfspr(SPRN_PURR);
+-	/*
+-	 * Indicate to the HV that we are idle. Now would be
+-	 * a good time to find other work to dispatch.
+-	 */
+-	get_lppaca()->idle = 1;
+-}
+-
+-static inline void idle_loop_epilog(unsigned long in_purr)
+-{
+-	u64 wait_cycles;
+-
+-	wait_cycles = be64_to_cpu(get_lppaca()->wait_state_cycles);
+-	wait_cycles += mfspr(SPRN_PURR) - in_purr;
+-	get_lppaca()->wait_state_cycles = cpu_to_be64(wait_cycles);
+-	get_lppaca()->idle = 0;
+-
+-	ppc64_runlatch_on();
+-}
+-
+ static int snooze_loop(struct cpuidle_device *dev,
+ 			struct cpuidle_driver *drv,
+ 			int index)
+@@ -63,7 +41,7 @@ static int snooze_loop(struct cpuidle_device *dev,
+ 
+ 	set_thread_flag(TIF_POLLING_NRFLAG);
+ 
+-	idle_loop_prolog(&in_purr);
++	pseries_idle_prolog(&in_purr);
+ 	local_irq_enable();
+ 	snooze_exit_time = get_tb() + snooze_timeout;
+ 
+@@ -87,7 +65,7 @@ static int snooze_loop(struct cpuidle_device *dev,
+ 
+ 	local_irq_disable();
+ 
+-	idle_loop_epilog(in_purr);
++	pseries_idle_epilog(in_purr);
+ 
+ 	return index;
+ }
+@@ -115,7 +93,7 @@ static int dedicated_cede_loop(struct cpuidle_device *dev,
+ {
+ 	unsigned long in_purr;
+ 
+-	idle_loop_prolog(&in_purr);
++	pseries_idle_prolog(&in_purr);
+ 	get_lppaca()->donate_dedicated_cpu = 1;
+ 
+ 	HMT_medium();
+@@ -124,7 +102,7 @@ static int dedicated_cede_loop(struct cpuidle_device *dev,
+ 	local_irq_disable();
+ 	get_lppaca()->donate_dedicated_cpu = 0;
+ 
+-	idle_loop_epilog(in_purr);
++	pseries_idle_epilog(in_purr);
+ 
+ 	return index;
+ }
+@@ -135,7 +113,7 @@ static int shared_cede_loop(struct cpuidle_device *dev,
+ {
+ 	unsigned long in_purr;
+ 
+-	idle_loop_prolog(&in_purr);
++	pseries_idle_prolog(&in_purr);
+ 
+ 	/*
+ 	 * Yield the processor to the hypervisor.  We return if
+@@ -147,7 +125,7 @@ static int shared_cede_loop(struct cpuidle_device *dev,
+ 	check_and_cede_processor();
+ 
+ 	local_irq_disable();
+-	idle_loop_epilog(in_purr);
++	pseries_idle_epilog(in_purr);
+ 
+ 	return index;
+ }
+-- 
+1.9.4
+
