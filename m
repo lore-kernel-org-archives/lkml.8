@@ -2,130 +2,116 @@ Return-Path: <SRS0=s8dx=5M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9A30C43331
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 04:04:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F33C8C43331
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 04:05:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7192B20714
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 04:04:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585281843;
-	bh=4QOps3qW34M1PbsdVZN7fn1JR2uHIhbSTq8mCsghhGo=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=Vj/jX4/fCrXskq3FHXHFUqR7i9S2cK5OgF2lAlxjCbTJaifMXHFHRHzwB/pjBuC9d
-	 rXZdXOpY5Gt7ME3pKhydFoEexaxsDzz4AXNkTP5unDomJl4itd/mwx7i/YtXEdoJjc
-	 wMVFJeP0YeKpBuedhzXzWIIJfIHIk08CeA67xL+8=
+	by mail.kernel.org (Postfix) with ESMTP id C1C8B2073E
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 04:05:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BrumY6/t"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726106AbgC0EEC (ORCPT
+        id S1726193AbgC0EFq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Mar 2020 00:04:02 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:46543 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725822AbgC0EEB (ORCPT
+        Fri, 27 Mar 2020 00:05:46 -0400
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:44863 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725822AbgC0EFq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Mar 2020 00:04:01 -0400
-Received: by mail-lj1-f196.google.com with SMTP id r7so1157595ljg.13
-        for <linux-kernel@vger.kernel.org>; Thu, 26 Mar 2020 21:04:00 -0700 (PDT)
+        Fri, 27 Mar 2020 00:05:46 -0400
+Received: by mail-qk1-f195.google.com with SMTP id j4so9513299qkc.11;
+        Thu, 26 Mar 2020 21:05:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=3BXn62xXJw/t/Bz7IJQThBrlQvnVRvxsEConyEt9HUQ=;
-        b=TVm7MxmWAJQW6pRgk/zjVz+9EODkYQXe5bckeBAvdtsCOqa6g1gD9samFpXH5VAgUz
-         pSuEjGaewh7dprbK4GPc2JC5Amek2NNoi+jkgWh6w7byJZoQt86YgiMXpJ2qI2qYxdCq
-         UlM4v5SPMl/bF0lnwk+K0U0H1iXhvLJolT2k4=
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=GByrdXs6lcU5kCSOoxR0ATrYfBsPPkiO/r5cVnhRM/k=;
+        b=BrumY6/taf+vJ22SnRyZhu8VL/uvIlkZ5nGyN1Z2tO3Xa5r/K1Pz/+s+hXq+q1ODbl
+         y5Qy0GnSv0KSzloJXKu57s38KifyWL4IJ2b9ZGmZrhsMcdeNJq39uRa0OK4FACxyJxgZ
+         r1wWvNeri4P++8cT4k2cEMtKv4dJLaTG/nJU5RWtGfUPay//uKzgtLAJSgjj98TXWeyB
+         JWwp+aNBpWhHYFe5W2xyPqmHRyhl2RwMJQmWv4061eCHpgsosSYCCqfErLJ+8F/cpMkL
+         O6Ym4Wlm9ziVtgZGupnVHF0WjOKMafcxqJvA6njcQldmnlRIG6R44gLNHX08Wtj5iedg
+         2f/w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=3BXn62xXJw/t/Bz7IJQThBrlQvnVRvxsEConyEt9HUQ=;
-        b=XGzGXFURQDtFOU37oMUbyEnz0NYan6+DFtBC8/A0n0QQsFnQye//86njNohC/dlDFI
-         95VjxFY5nifWy77almfx1j808rAq5JVI6THaNRBI5P8b6tfxNS0hP3MxcEVnUaY+d3It
-         Z62c/f48bYHF4rTjHRs7qwdCnliEsP9H3ACznN/UyQDqsb9mD185lFYdyS9oR7QT9B12
-         qwFO+0tkli6UnrIzmeWT4vc0Uc84vScWrKTRD0Ux9xdheEeKSEuR4sdyB9x+H4X0/j7t
-         cf8rJiWQ8uN7xVlg+HylI4uICnwx3AmdMYU9xSC9Vk/zGFfJQo7VvOHBg8cEm/z3kRNX
-         IpKA==
-X-Gm-Message-State: AGi0PuaAvKXtJmHfVTWqhX66wfPNcDm+g2M+dfpxVERVpCXkCzGEdCud
-        mpqXFVTeoG4U/mxAEEGwAutB9lODTko=
-X-Google-Smtp-Source: APiQypI/mltyZlYexYvGOEfTqjINye7VkCpqbNcKcU5jGru/xJ7boaUMjBbPuK1c/LHMTEch1rgeqA==
-X-Received: by 2002:a2e:b0ee:: with SMTP id h14mr5875168ljl.35.1585281838939;
-        Thu, 26 Mar 2020 21:03:58 -0700 (PDT)
-Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com. [209.85.167.43])
-        by smtp.gmail.com with ESMTPSA id b21sm2487390ljo.54.2020.03.26.21.03.57
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 26 Mar 2020 21:03:57 -0700 (PDT)
-Received: by mail-lf1-f43.google.com with SMTP id h6so971586lfp.6
-        for <linux-kernel@vger.kernel.org>; Thu, 26 Mar 2020 21:03:57 -0700 (PDT)
-X-Received: by 2002:ac2:4a72:: with SMTP id q18mr3611230lfp.10.1585281837374;
- Thu, 26 Mar 2020 21:03:57 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=GByrdXs6lcU5kCSOoxR0ATrYfBsPPkiO/r5cVnhRM/k=;
+        b=mkcEf0SIhyvNY62FeHu0k3XiPjPAYMu3kXBTkUVs3kmkBw9Ar0qZievqYZ35K22Hvv
+         gPI7mgze4yZDimlcltSnd8cgs+yBVQvZyIO2xzW6M8TN091R9z2bsnofd4lBQybe6h4t
+         dphBs56wmEf6wwGESfEcrtwt6A9vEnu10MoFVy689Y6wjm32AFtKJfgSTSKs3I974X/4
+         wQLsjeTQjeMaDlzYG0ZtI4bf5lls6FEnsN3nOabapsbORvKRB3zg3Eg/mKR0gZtiekQM
+         jgLLJ7r4JrlEr7byJRHHODMPkfFvhwZJ30CPSbiD3OnPUNNL8IiDeNOJQZZAQ8DNrbPA
+         D+MA==
+X-Gm-Message-State: ANhLgQ02c1ZBQk/8Xd4Uydhg+B1LKV8W0zD7kxe1Mu/Ty+bm/11+8WN0
+        3lfrv7aosM8qRPOWrALYHNU=
+X-Google-Smtp-Source: ADFU+vs+S6NHridaaaBDZTO/E9ZsShFQ3xAF7Ae2O/He6Gzy1qKxVW0mnafHU0aATRukIpfMciyoZQ==
+X-Received: by 2002:a37:a614:: with SMTP id p20mr12236940qke.114.1585281937701;
+        Thu, 26 Mar 2020 21:05:37 -0700 (PDT)
+Received: from localhost.localdomain ([168.181.48.248])
+        by smtp.gmail.com with ESMTPSA id q1sm3250572qtn.69.2020.03.26.21.05.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 26 Mar 2020 21:05:36 -0700 (PDT)
+Received: by localhost.localdomain (Postfix, from userid 1000)
+        id 24712C5CE4; Fri, 27 Mar 2020 01:05:34 -0300 (-03)
+Date:   Fri, 27 Mar 2020 01:05:34 -0300
+From:   Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
+To:     Qiujun Huang <hqjagain@gmail.com>
+Cc:     davem@davemloft.net, vyasevich@gmail.com, nhorman@tuxdriver.com,
+        kuba@kernel.org, linux-sctp@vger.kernel.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        anenbupt@gmail.com
+Subject: Re: [PATCH v6] sctp: fix refcount bug in sctp_wfree
+Message-ID: <20200327040534.GK3756@localhost.localdomain>
+References: <20200327030751.19404-1-hqjagain@gmail.com>
 MIME-Version: 1.0
-References: <20200323185057.GE23230@ZenIV.linux.org.uk> <20200323185127.252501-1-viro@ZenIV.linux.org.uk>
- <20200323185127.252501-5-viro@ZenIV.linux.org.uk> <CAHk-=wgMmmnQTFT7U9+q2BsyV6Ge+LAnnhPmv0SUtFBV1D4tVw@mail.gmail.com>
- <20200324020846.GG23230@ZenIV.linux.org.uk> <CAHk-=whTwaUZZ5Aj_Viapf2tdvcd65WdM4jjXJ3tdOTDmgkW0g@mail.gmail.com>
- <20200324204246.GH23230@ZenIV.linux.org.uk> <CAHk-=whnTRF5yA2MrPGcmMm=hXaGHfC2HEDtNzA=_1=szhJ4-w@mail.gmail.com>
- <20200327024227.GT23230@ZenIV.linux.org.uk> <CAHk-=wjn9Ohb7TW3OxaS0MTURi=boXzk=0Lo0WT-pN2CPE9PzA@mail.gmail.com>
- <CAHk-=wjk+GjHu-P_KNW3zw2uDsz6yz=U2CUT2hT4jKgyxLEfPQ@mail.gmail.com>
-In-Reply-To: <CAHk-=wjk+GjHu-P_KNW3zw2uDsz6yz=U2CUT2hT4jKgyxLEfPQ@mail.gmail.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Thu, 26 Mar 2020 21:03:41 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wix8-FHSpR2gebAxubQnzpgH3_HSOahh=o9TbgrPO6u0w@mail.gmail.com>
-Message-ID: <CAHk-=wix8-FHSpR2gebAxubQnzpgH3_HSOahh=o9TbgrPO6u0w@mail.gmail.com>
-Subject: Re: [RFC][PATCH 5/7] x86: convert arch_futex_atomic_op_inuser() to user_access_begin/user_access_end()
-To:     Al Viro <viro@zeniv.linux.org.uk>,
-        Josh Poimboeuf <jpoimboe@redhat.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200327030751.19404-1-hqjagain@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 26, 2020 at 8:49 PM Linus Torvalds
-<torvalds@linux-foundation.org> wrote:
->
-> Seems to work for me.
->
-> That's with the futex bug fixed. Not that it looks like it would have
-> mattered except for the (unlikely) exception case, so my testing is
-> meaningless.
+On Fri, Mar 27, 2020 at 11:07:51AM +0800, Qiujun Huang wrote:
+> We should iterate over the datamsgs to move
+> all chunks(skbs) to newsk.
+> 
+> The following case cause the bug:
+> for the trouble SKB, it was in outq->transmitted list
+> 
+> sctp_outq_sack
+>         sctp_check_transmitted
+>                 SKB was moved to outq->sacked list
+>         then throw away the sack queue
+>                 SKB was deleted from outq->sacked
+> (but it was held by datamsg at sctp_datamsg_to_asoc
+> So, sctp_wfree was not called here)
+> 
+> then migrate happened
+> 
+>         sctp_for_each_tx_datachunk(
+>         sctp_clear_owner_w);
+>         sctp_assoc_migrate();
+>         sctp_for_each_tx_datachunk(
+>         sctp_set_owner_w);
+> SKB was not in the outq, and was not changed to newsk
+> 
+> finally
+> 
+> __sctp_outq_teardown
+>         sctp_chunk_put (for another skb)
+>                 sctp_datamsg_put
+>                         __kfree_skb(msg->frag_list)
+>                                 sctp_wfree (for SKB)
+> 	SKB->sk was still oldsk (skb->sk != asoc->base.sk).
+> 
+> Reported-and-tested-by: syzbot+cea71eec5d6de256d54d@syzkaller.appspotmail.com
+> Signed-off-by: Qiujun Huang <hqjagain@gmail.com>
 
-Hmm. Doing a "perf" run, I only noticed after-the-fact that I got this:
-
-  WARNING: stack recursion on stack type 4
-  WARNING: can't dereference registers at 0000000079a3d9c5 for ip
-swapgs_restore_regs_and_return_to_usermode+0x25/0x80
-
-that may not be due to any of the uaccess or futex changes, though, it
-smells like just bad luck.
-
-Josh?
-
-This may also be related to the fact that I've been building my
-test-boot kernels with clang for the last couple of months,
-
-That "swapgs_restore_regs_and_return_to_usermode+0x25" location is the
-
-        pushq  0x28(%rdi)
-
-instruction. That's this:
-
-        movq    %rsp, %rdi
-        movq    PER_CPU_VAR(cpu_tss_rw + TSS_sp0), %rsp
-
-        /* Copy the IRET frame to the trampoline stack. */
-        pushq   6*8(%rdi)       /* SS */
---->    pushq   5*8(%rdi)       /* RSP */
-        pushq   4*8(%rdi)       /* EFLAGS */
-        pushq   3*8(%rdi)       /* CS */
-        pushq   2*8(%rdi)       /* RIP */
-
-and yeah, at this point the stack is obviously a mess, so I'm not
-surprised that it might cause confusion for unwinding..
-
-              Linus
+Acked-by: Marcelo Ricardo Leitner <mleitner@redhat.com>
+Thanks Qiujun.
