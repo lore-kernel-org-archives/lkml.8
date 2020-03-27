@@ -6,32 +6,31 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F2E6C43331
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 23:31:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 786A4C2D0E7
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 23:31:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 438C0206E6
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 23:31:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 54C5A206E6
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 23:31:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727394AbgC0XbU (ORCPT
+        id S1727401AbgC0Xb0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Mar 2020 19:31:20 -0400
-Received: from zeniv.linux.org.uk ([195.92.253.2]:35898 "EHLO
+        Fri, 27 Mar 2020 19:31:26 -0400
+Received: from zeniv.linux.org.uk ([195.92.253.2]:35888 "EHLO
         ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726330AbgC0XbT (ORCPT
+        with ESMTP id S1726065AbgC0XbU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Mar 2020 19:31:19 -0400
+        Fri, 27 Mar 2020 19:31:20 -0400
 Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jHyRa-004KKB-9i; Fri, 27 Mar 2020 23:31:18 +0000
+        id 1jHyRZ-004KK2-Uk; Fri, 27 Mar 2020 23:31:18 +0000
 From:   Al Viro <viro@ZenIV.linux.org.uk>
 To:     Linus Torvalds <torvalds@linux-foundation.org>
 Cc:     linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [RFC][PATCH 03/14] x86: switch both 32bit and 64bit to providing csum_and_copy_from_user()
-Date:   Fri, 27 Mar 2020 23:31:06 +0000
-Message-Id: <20200327233117.1031393-3-viro@ZenIV.linux.org.uk>
+Subject: [RFC][PATCH 01/14] get rid of csum_partial_copy_to_user()
+Date:   Fri, 27 Mar 2020 23:31:04 +0000
+Message-Id: <20200327233117.1031393-1-viro@ZenIV.linux.org.uk>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200327233117.1031393-1-viro@ZenIV.linux.org.uk>
+In-Reply-To: <20200327233006.GW23230@ZenIV.linux.org.uk>
 References: <20200327233006.GW23230@ZenIV.linux.org.uk>
- <20200327233117.1031393-1-viro@ZenIV.linux.org.uk>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -41,120 +40,95 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Al Viro <viro@zeniv.linux.org.uk>
 
-... rather than messing with the wrapper.  As a side effect,
-32bit variant gets access_ok() into it and can be switched to
-user_access_begin()/user_access_end()
+For historical reasons some architectures call their csum_and_copy_to_user()
+csum_partial_copy_to_user() instead (and supply a macro defining the
+former as the latter).  That's the last remnants of old experiment that
+went nowhere; time to bury them.  Rename those to csum_and_copy_to_user()
+and get rid of the macros.
 
 Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
 ---
- arch/x86/include/asm/checksum.h    |  1 +
- arch/x86/include/asm/checksum_32.h | 15 +++++++++------
- arch/x86/include/asm/checksum_64.h |  5 +----
- arch/x86/lib/csum-wrappers_64.c    |  6 +++---
- 4 files changed, 14 insertions(+), 13 deletions(-)
+ arch/sparc/include/asm/checksum_32.h | 7 +++----
+ arch/x86/include/asm/checksum_64.h   | 4 +---
+ arch/x86/lib/csum-wrappers_64.c      | 6 +++---
+ 3 files changed, 7 insertions(+), 10 deletions(-)
 
-diff --git a/arch/x86/include/asm/checksum.h b/arch/x86/include/asm/checksum.h
-index d79d1e622dcf..1ab9572ae4c2 100644
---- a/arch/x86/include/asm/checksum.h
-+++ b/arch/x86/include/asm/checksum.h
-@@ -1,4 +1,5 @@
- /* SPDX-License-Identifier: GPL-2.0 */
-+#define  _HAVE_ARCH_COPY_AND_CSUM_FROM_USER 1
- #ifdef CONFIG_X86_32
- # include <asm/checksum_32.h>
- #else
-diff --git a/arch/x86/include/asm/checksum_32.h b/arch/x86/include/asm/checksum_32.h
-index f57b94e02c57..2487b7fc2d24 100644
---- a/arch/x86/include/asm/checksum_32.h
-+++ b/arch/x86/include/asm/checksum_32.h
-@@ -44,18 +44,21 @@ static inline __wsum csum_partial_copy_nocheck(const void *src, void *dst,
- 	return csum_partial_copy_generic(src, dst, len, sum, NULL, NULL);
+diff --git a/arch/sparc/include/asm/checksum_32.h b/arch/sparc/include/asm/checksum_32.h
+index 5fc98d80b03b..450ddfb444c8 100644
+--- a/arch/sparc/include/asm/checksum_32.h
++++ b/arch/sparc/include/asm/checksum_32.h
+@@ -83,8 +83,10 @@ csum_partial_copy_from_user(const void __user *src, void *dst, int len,
+ 	return (__force __wsum)ret;
  }
  
--static inline __wsum csum_partial_copy_from_user(const void __user *src,
--						 void *dst,
--						 int len, __wsum sum,
--						 int *err_ptr)
-+static inline __wsum csum_and_copy_from_user(const void __user *src,
-+					     void *dst, int len,
-+					     __wsum sum, int *err_ptr)
++#define HAVE_CSUM_COPY_USER
++
+ static inline __wsum
+-csum_partial_copy_to_user(const void *src, void __user *dst, int len,
++csum_and_copy_to_user(const void *src, void __user *dst, int len,
+ 			  __wsum sum, int *err)
  {
- 	__wsum ret;
- 
- 	might_sleep();
--	stac();
-+	if (!user_access_begin(src, len)) {
-+		if (len)
-+			*err_ptr = -EFAULT;
-+		return sum;
-+	}
- 	ret = csum_partial_copy_generic((__force void *)src, dst,
- 					len, sum, err_ptr, NULL);
--	clac();
-+	user_access_end();
- 
- 	return ret;
+ 	if (!access_ok(dst, len)) {
+@@ -113,9 +115,6 @@ csum_partial_copy_to_user(const void *src, void __user *dst, int len,
+ 	}
  }
+ 
+-#define HAVE_CSUM_COPY_USER
+-#define csum_and_copy_to_user csum_partial_copy_to_user
+-
+ /* ihl is always 5 or greater, almost always is 5, and iph is word aligned
+  * the majority of the time.
+  */
 diff --git a/arch/x86/include/asm/checksum_64.h b/arch/x86/include/asm/checksum_64.h
-index ac9c06494827..2f8435542376 100644
+index 3ec6d3267cf9..ac9c06494827 100644
 --- a/arch/x86/include/asm/checksum_64.h
 +++ b/arch/x86/include/asm/checksum_64.h
-@@ -129,7 +129,6 @@ static inline __sum16 csum_tcpudp_magic(__be32 saddr, __be32 daddr,
-  */
- extern __wsum csum_partial(const void *buff, int len, __wsum sum);
+@@ -141,13 +141,11 @@ extern __visible __wsum csum_partial_copy_generic(const void *src, const void *d
  
--#define  _HAVE_ARCH_COPY_AND_CSUM_FROM_USER 1
- #define HAVE_CSUM_COPY_USER 1
- 
- 
-@@ -139,15 +138,13 @@ extern __visible __wsum csum_partial_copy_generic(const void *src, const void *d
- 					int *src_err_ptr, int *dst_err_ptr);
- 
- 
--extern __wsum csum_partial_copy_from_user(const void __user *src, void *dst,
-+extern __wsum csum_and_copy_from_user(const void __user *src, void *dst,
+ extern __wsum csum_partial_copy_from_user(const void __user *src, void *dst,
  					  int len, __wsum isum, int *errp);
- extern __wsum csum_and_copy_to_user(const void *src, void __user *dst,
+-extern __wsum csum_partial_copy_to_user(const void *src, void __user *dst,
++extern __wsum csum_and_copy_to_user(const void *src, void __user *dst,
  					int len, __wsum isum, int *errp);
  extern __wsum csum_partial_copy_nocheck(const void *src, void *dst,
  					int len, __wsum sum);
  
--#define csum_and_copy_from_user csum_partial_copy_from_user
--
- /**
-  * ip_compute_csum - Compute an 16bit IP checksum.
-  * @buff: buffer address.
-diff --git a/arch/x86/lib/csum-wrappers_64.c b/arch/x86/lib/csum-wrappers_64.c
-index 90d02c82bb7a..a12b8629206d 100644
---- a/arch/x86/lib/csum-wrappers_64.c
-+++ b/arch/x86/lib/csum-wrappers_64.c
-@@ -10,7 +10,7 @@
- #include <asm/smap.h>
+-/* Old names. To be removed. */
+-#define csum_and_copy_to_user csum_partial_copy_to_user
+ #define csum_and_copy_from_user csum_partial_copy_from_user
  
  /**
-- * csum_partial_copy_from_user - Copy and checksum from user space.
-+ * csum_and_copy_from_user - Copy and checksum from user space.
-  * @src: source address (user space)
-  * @dst: destination address
+diff --git a/arch/x86/lib/csum-wrappers_64.c b/arch/x86/lib/csum-wrappers_64.c
+index c66c8b00f236..875c2f5968a0 100644
+--- a/arch/x86/lib/csum-wrappers_64.c
++++ b/arch/x86/lib/csum-wrappers_64.c
+@@ -71,7 +71,7 @@ csum_partial_copy_from_user(const void __user *src, void *dst,
+ EXPORT_SYMBOL(csum_partial_copy_from_user);
+ 
+ /**
+- * csum_partial_copy_to_user - Copy and checksum to user space.
++ * csum_and_copy_to_user - Copy and checksum to user space.
+  * @src: source address
+  * @dst: destination address (user space)
   * @len: number of bytes to be copied.
-@@ -21,7 +21,7 @@
+@@ -82,7 +82,7 @@ EXPORT_SYMBOL(csum_partial_copy_from_user);
   * src and dst are best aligned to 64bits.
   */
  __wsum
--csum_partial_copy_from_user(const void __user *src, void *dst,
-+csum_and_copy_from_user(const void __user *src, void *dst,
- 			    int len, __wsum isum, int *errp)
+-csum_partial_copy_to_user(const void *src, void __user *dst,
++csum_and_copy_to_user(const void *src, void __user *dst,
+ 			  int len, __wsum isum, int *errp)
  {
- 	might_sleep();
-@@ -68,7 +68,7 @@ csum_partial_copy_from_user(const void __user *src, void *dst,
- 
- 	return isum;
+ 	__wsum ret;
+@@ -116,7 +116,7 @@ csum_partial_copy_to_user(const void *src, void __user *dst,
+ 	clac();
+ 	return ret;
  }
--EXPORT_SYMBOL(csum_partial_copy_from_user);
-+EXPORT_SYMBOL(csum_and_copy_from_user);
+-EXPORT_SYMBOL(csum_partial_copy_to_user);
++EXPORT_SYMBOL(csum_and_copy_to_user);
  
  /**
-  * csum_and_copy_to_user - Copy and checksum to user space.
+  * csum_partial_copy_nocheck - Copy and checksum.
 -- 
 2.11.0
 
