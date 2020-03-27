@@ -2,137 +2,113 @@ Return-Path: <SRS0=s8dx=5M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60EE1C2D0E7
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 05:07:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 834A2C2D0ED
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 05:09:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 37A0120663
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 05:07:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 53EDE20663
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 05:09:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=renesasgroup.onmicrosoft.com header.i=@renesasgroup.onmicrosoft.com header.b="DTsT9tZc"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="uqmMlcSL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726427AbgC0FHu (ORCPT
+        id S1726661AbgC0FJZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Mar 2020 01:07:50 -0400
-Received: from mail-eopbgr1410109.outbound.protection.outlook.com ([40.107.141.109]:65280
-        "EHLO JPN01-OS2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725857AbgC0FHt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Mar 2020 01:07:49 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=X2EoXeSzTDPUmdfok449rzLvTmX3nrB8YU/DwQdxu6bSXbFgQF50pHj/f7jYkH5Pufe2XUQ4tlwu03R7DUuicWfCbio9ihNx5rEBkAflEIi6O9mxaJU265k/samtiz/IsXjacg0tuIsweK+Bazc80VnDoE4uc5zRyyFpBA8IjFPKudb40gf0TlZZOTUmhhv624vlJ5UPaHm2VGosIMtGBncwpwCOvN5C2c/Tz2GtI74GfgL3/05PGfUU9oB8e3Cnp+uhPjso72gUTM2ji+FdrMKT8YDkSsZuH1EyEnaGDWLXyxdUd3tKRv5w1bYwz1X6zo506YzOD20aGJlz8nsIkA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=pQYdIgGroBz4xTBQ5kqAHfAV7KNZojVRQjbYBg8b0JM=;
- b=SCxqn6FKCTvIgEh7mjlFIrqvOo4KQnnF6EYGv6G0iGp0IO+4WZ7TwTWQl1/Ca8+Oc7GfmyPvVv9L+TxO4Hp0OqgB/Ws8bpgWxfrBpTxsTPguwEGniuVZ2FyylSyGod4Dpfbj2q2M8ytL29dGnZ+iTFOP/9wDLUivosecnStIAHxwKhK8dP89pNQsdy16fKrnNq/R/xrkopTij0R1dJ+MJmzVQ+JXCiHy8h0cvRmYW7BO36vbuV8GlTESpEx5RE4P0Fg+UgSLemuMqbjdX/6xzoBsgaG9hmmvSyJCp16juk1CO81ZaqxGa6XUDtWXA1RXf0aGh+HLcZXN3auPGjTu3Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=renesas.com; dmarc=pass action=none header.from=renesas.com;
- dkim=pass header.d=renesas.com; arc=none
+        Fri, 27 Mar 2020 01:09:25 -0400
+Received: from mail-yb1-f193.google.com ([209.85.219.193]:38487 "EHLO
+        mail-yb1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726071AbgC0FJY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Mar 2020 01:09:24 -0400
+Received: by mail-yb1-f193.google.com with SMTP id 204so3911107ybw.5
+        for <linux-kernel@vger.kernel.org>; Thu, 26 Mar 2020 22:09:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=renesasgroup.onmicrosoft.com; s=selector2-renesasgroup-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=pQYdIgGroBz4xTBQ5kqAHfAV7KNZojVRQjbYBg8b0JM=;
- b=DTsT9tZcxKh8HSpasysOLOJua+ftdIGS+CEeClJM7kS+ByfzSCb2udZ9Y7hRF4Qic/tY+H7+VSmD8heqNtnh3l6zf5FvQuB9TzCjQThN83eF/6XF/zpoym0p5ozzDNxyMFDGqdFapB8CdHYuxN7xF/hs2EIjDVsiJaU/dIrRVkc=
-Received: from TYAPR01MB4544.jpnprd01.prod.outlook.com (20.179.175.203) by
- TYAPR01MB4496.jpnprd01.prod.outlook.com (20.179.187.141) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2835.22; Fri, 27 Mar 2020 05:07:45 +0000
-Received: from TYAPR01MB4544.jpnprd01.prod.outlook.com
- ([fe80::ed7f:1268:55a9:fc06]) by TYAPR01MB4544.jpnprd01.prod.outlook.com
- ([fe80::ed7f:1268:55a9:fc06%4]) with mapi id 15.20.2835.023; Fri, 27 Mar 2020
- 05:07:45 +0000
-From:   Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-To:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Rob Herring <robh+dt@kernel.org>
-CC:     "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-renesas-soc@vger.kernel.org" 
-        <linux-renesas-soc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH 0/2] dt-bindings: usb: generic-ehci/ohci: Document
- power-domains property
-Thread-Topic: [PATCH 0/2] dt-bindings: usb: generic-ehci/ohci: Document
- power-domains property
-Thread-Index: AQHWA4z554OB0l2bAUaJVd29DMFcUqhb4/DA
-Date:   Fri, 27 Mar 2020 05:07:43 +0000
-Message-ID: <TYAPR01MB4544C0AD1F363CD0B5D8F43AD8CC0@TYAPR01MB4544.jpnprd01.prod.outlook.com>
-References: <20200326163807.23216-1-geert+renesas@glider.be>
-In-Reply-To: <20200326163807.23216-1-geert+renesas@glider.be>
-Accept-Language: ja-JP, en-US
-Content-Language: ja-JP
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=yoshihiro.shimoda.uh@renesas.com; 
-x-originating-ip: [211.11.155.148]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 5918fa8c-4746-411e-4b16-08d7d20cc903
-x-ms-traffictypediagnostic: TYAPR01MB4496:
-x-microsoft-antispam-prvs: <TYAPR01MB449616195A4F745D1CE6DCBFD8CC0@TYAPR01MB4496.jpnprd01.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8882;
-x-forefront-prvs: 0355F3A3AE
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(346002)(136003)(376002)(366004)(39860400002)(396003)(33656002)(86362001)(5660300002)(55016002)(7696005)(71200400001)(110136005)(8676002)(8936002)(81166006)(81156014)(66476007)(26005)(186003)(6506007)(66946007)(76116006)(66446008)(66556008)(4326008)(52536014)(64756008)(478600001)(9686003)(316002)(2906002)(54906003)(41533002);DIR:OUT;SFP:1102;SCL:1;SRVR:TYAPR01MB4496;H:TYAPR01MB4544.jpnprd01.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;
-received-spf: None (protection.outlook.com: renesas.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: HuXiDEX6KdGXBDyVRlD4r/xb1fdQiaUGOEyzOl/2mwiPMDtBVt76XhGOznW1k7f5wJXr7wyB4GnX2lxfoOeh6mbnyDrDX+GvaANagC3w0o20IxbLoGaaFYtDD5uucmW1QCQBNQJx9IgPQZ9eHv6qdYEVmleRGkkfZvD4zJLSl9reIlyOYMK7Tt6dLAvtrxHC3jL5tOBUcF5g+6/WBAo8Bf8MK3iRATsk7lDphBe9sjFw1WouWpTe06jkB/Od5aZw4oX2ofTOD+lb+jeaD9yQkDUTKQO/ynsPmu2o+yQpuNiMPqJnMyf23hzWTlsMCS0PihjhEGrwkKb/vCOzzlM6Pske4+w8dGP2iMnUMR/v52UIGyzuWRxyt3VegQveXHDYJIkDQegvdAc8UX1oVEOa9Ij6dwOLw3nN3Mc4Jt8ShzpepsoPSFKP3GMJg7n8+oegkmrQsVwNhxiZO+J1M7ppyBOm0EH2l6hKOPF1EovTsF07E87CNo+IDxnd9YVGMot+
-x-ms-exchange-antispam-messagedata: k4SjqomiKjmtclIK2FAEMM9Or03vLtRpL/WVJsmFiCTVq9f49mAS92JlV5rDYWOre2GTOQvt6SJNvfhsMAc5Uqgh7AzZ7teoH8ctEi8t6XPxOljdf7ejhGhqGY9bWd0s8KHlrn79J3e1FlPVxvwUOA==
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to;
+        bh=ohnZNgjDeOcrrgII3KrdEi2hNuGyHzs9U8pjD+WsuTc=;
+        b=uqmMlcSLr/aJyGrLVFPoqWyksk03NI8a822IT0j0ft9YIBJiatFbXJVZy6u11D3R2c
+         DgA+Pwgg5I3SZJYi//NjgjU+dinJO7EryHfQ72Vy7O7dQdldLL+/gP1clOCR82l3G8TV
+         T7jTETFt3pV6NkuJLQ3NZFYesU3RfZWs18NSK0EcDemZpzM40PA3p6S72AYdbZwfGa36
+         r/zkM6Yu9WLvaAWoSEGc1cxHfWvFirvTZvZHGzngBQu+YVpAKGu1qSTue1tboiV+r1at
+         m/JShFaIse/ZGkCThuuAadKwrkWDi0Ps8aDb8YO8bji08z+Ysi5lVvks09p0W2KbJFFd
+         6m+w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to;
+        bh=ohnZNgjDeOcrrgII3KrdEi2hNuGyHzs9U8pjD+WsuTc=;
+        b=fwch8QPKvgR7lpRzBRxmSm8ib8tgINyh8gpwtHtVCtrCsXUL69JqO73ymsrDo8sPzj
+         tDhLZHNV88HtX2hDb1O5aelsQYplGmm+8QNvyttC5lqXnDpwyMd7BROA2/TvewoZE+S2
+         Lyq0HfWbMNAIvTqnOyYcRslw/xNUuRkLKjM9PYT0Au2JIItE3g7BclM8CBXB/GxXNQp8
+         clZGn1s4SzLU5wpMbwPGVp5Ug7VLqas8+WdgdC6LPdNSDGFg/Hijv8fvGI0o0s3SgnGp
+         6H23G601osLuiTfS4kG8d2e1mwDyYZmgiqa0Pg+v7vaeu6ucNQlVuTzHtjsrCegzkTJi
+         Ufsw==
+X-Gm-Message-State: ANhLgQ2Tocpcrs/KSzQjs0cU1p9ktqPFpfr54dm1bLQqdNfosrNBvdrq
+        d1SvIFYHVFcRwhJ9YvUpNcMTw6HrPJYU3Il1D4R71A==
+X-Google-Smtp-Source: ADFU+vtpDbHudptQ7FfWw0e+/cwVeNaEqIblGpv1l/3zEkMwrkgEw3XL9Mjg3v3rXDPcpFZmqedQwIGQiCFyFXqU4YU=
+X-Received: by 2002:a25:bb0c:: with SMTP id z12mr17920472ybg.253.1585285762971;
+ Thu, 26 Mar 2020 22:09:22 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: renesas.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5918fa8c-4746-411e-4b16-08d7d20cc903
-X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Mar 2020 05:07:44.6483
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 1wCuIXlRyJl/uor2wwRHj7iTtttPQiPpwvcqU2IYdnrgNphNRo5oXZjlFKbA0w7ahBAyEDK3U72Cq2f8lzC5jVGT+ABrvFjdqN4u5WotXDhr35ppC0zN3iAh1coJf9sb
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYAPR01MB4496
+References: <20200327021058.221911-1-walken@google.com> <20200327021058.221911-8-walken@google.com>
+ <20200327044647.wgfsmjy37n72dixe@linux-p48b>
+In-Reply-To: <20200327044647.wgfsmjy37n72dixe@linux-p48b>
+From:   Michel Lespinasse <walken@google.com>
+Date:   Thu, 26 Mar 2020 22:09:09 -0700
+Message-ID: <CANN689Hr972e_0+kujGxXPbCVTd7xnpBPZXDk2T3dwARnWENVQ@mail.gmail.com>
+Subject: Re: [PATCH v2 07/10] mmap locking API: add mmap_read_release() and mmap_read_unlock_non_owner()
+To:     Michel Lespinasse <walken@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-mm <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Laurent Dufour <ldufour@linux.ibm.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Matthew Wilcox <willy@infradead.org>,
+        Liam Howlett <Liam.Howlett@oracle.com>,
+        Jerome Glisse <jglisse@redhat.com>,
+        David Rientjes <rientjes@google.com>,
+        Hugh Dickins <hughd@google.com>, Ying Han <yinghan@google.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Markus Elfring <Markus.Elfring@web.de>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Geert-san,
+On Thu, Mar 26, 2020 at 9:48 PM Davidlohr Bueso <dave@stgolabs.net> wrote:
+>
+> On Thu, 26 Mar 2020, Michel Lespinasse wrote:
+>
+> >Add a couple APIs to allow splitting mmap_read_unlock() into two calls:
+> >- mmap_read_release(), called by the task that had taken the mmap lock;
+> >- mmap_read_unlock_non_owner(), called from a work queue.
+> >
+> >These apis are used by kernel/bpf/stackmap.c only.
+>
+> I'm not crazy about the idea generalizing such calls into an mm api.
+> We try to stay away from non-owner semantics in locking - granted
+> the IS_ENABLED(CONFIG_PREEMPT_RT) warning, but still.
+>
+> Could this give future users the wrong impression? What about just
+> using rwsem calls directly in bpf?
 
-> From: Geert Uytterhoeven, Sent: Friday, March 27, 2020 1:38 AM
->=20
-> 	Hi Greg, Rob,
->=20
-> It is quite common for a generic EHCI or OHCI block to be embedded in an
-> SoC in its own power domain.  However, the current DT bindings do not
-> cover this yet, leading to "make dtbs_check" warnings like:
->=20
->     arch/arm64/boot/dts/renesas/r8a774a1-hihope-rzg2m.dt.yaml: usb@ee0800=
-00: 'power-domains' does not match any of the
-> regexes: 'pinctrl-[0-9]+'
->     arch/arm64/boot/dts/renesas/r8a774a1-hihope-rzg2m.dt.yaml: usb@ee0801=
-00: 'power-domains' does not match any of the
-> regexes: 'pinctrl-[0-9]+'
->=20
-> This patch series documents the optional presence of "power-domains"
-> properties in the EHCI and OHCI devices nodes, allowing the DTS writer
-> to describe the controllers' positions in the power hierarchy.
->=20
-> Thanks!
->=20
-> Geert Uytterhoeven (2):
->   dt-bindings: usb: generic-ehci: Document power-domains property
->   dt-bindings: usb: generic-ohci: Document power-domains property
+I see what you mean and I certainly don't want to encourage any new
+non-owner call sites to appear.... This bpf stackmap site is a small
+pain point in my larger range locking patchset too.
 
-Thank you for the patches!
+I am not sure what is the proper response to it; the opposite side of
+your argument could be that using a direct rwsem call there hides the
+issue and makes it less likely for someone to fix it ? I don't have a
+very strong opinion on this, as I think it can be argued either way...
 
-Reviewed-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+But at a minimum, I think it'd be worth adding a comment asking people
+not to add new call sites to the mmap_read_release() and
+mmap_read_unlock_non_owner() APIs ?
 
-Best regards,
-Yoshihiro Shimoda
-
+-- 
+Michel "Walken" Lespinasse
+A program is never fully debugged until the last user dies.
