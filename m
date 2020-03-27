@@ -7,58 +7,58 @@ X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
 	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD2CDC2D0F3
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 22:51:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0FB5C2BA11
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 22:51:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B1C962076B
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 22:51:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A6D4720787
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 22:51:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="N5lgoeki"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="oy+pJbNf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727866AbgC0Wva (ORCPT
+        id S1727878AbgC0Wvb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Mar 2020 18:51:30 -0400
-Received: from mail-pl1-f202.google.com ([209.85.214.202]:51821 "EHLO
+        Fri, 27 Mar 2020 18:51:31 -0400
+Received: from mail-pl1-f202.google.com ([209.85.214.202]:50799 "EHLO
         mail-pl1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727831AbgC0WvZ (ORCPT
+        with ESMTP id S1727851AbgC0Wv3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Mar 2020 18:51:25 -0400
-Received: by mail-pl1-f202.google.com with SMTP id d4so8099149plr.18
-        for <linux-kernel@vger.kernel.org>; Fri, 27 Mar 2020 15:51:25 -0700 (PDT)
+        Fri, 27 Mar 2020 18:51:29 -0400
+Received: by mail-pl1-f202.google.com with SMTP id k10so8089903plx.17
+        for <linux-kernel@vger.kernel.org>; Fri, 27 Mar 2020 15:51:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=28kVchorg0pFyF9b0ogWAEAHMYZwNEgdx4vJfdA+cNY=;
-        b=N5lgoekiDT0KdtpBQyJZN+rAhSDRFgLYlqk+FnMqCC7Nt+l8s5TsP6h3h1hSBisdOk
-         lJXgZbgQ9BxYEI6MS6WTnWVZ9B0JV63iz6Ed/0Y4nIeyqDcGI1wwz0kKSy2k1h4K3alO
-         laj97wLWd1WxTa2eydnBg1VD5ue6kv5hLxcrc7NYCnGZ09WQ7s16OnxC1MY0DldE1u1+
-         pgrRmyCqhY+13dYDwm/DpIfDoa/pXIOd1+dDJ/1ewCa3aZtVE/ePajwt2EfnOY/FFIKQ
-         f6nAqkZwT4SeDkYc0/jpG0YZj/cDnDfzUUJJahq1IQ8RX9mGGnFV9boW7gJPggTJB2y4
-         bHrA==
+        bh=xbfzfU9BuZhYVtZI+f7wZqdjFxjb/Cu4ZDBLeXOeWh4=;
+        b=oy+pJbNfN27cWWr81XSBaziJYK6CASpEPROsDy+RxWz/gsUiIHaho5ILpjN+1rWoFe
+         RZhgrmyC1NEzv4mWNRVD6rMrblcdvgRDl9vwC/Hpb5tWi9WpeMARBdyviuOShwXU+eIj
+         0wKuYmua2wLVH4PldXOQn01xAJfMu+UgEsxgbSzE3zHtEhUTZbpR8NMkdjhHIETiRSvy
+         ejXTRfhBCmaEMEOYUQSpakroSZaqXVgU3VIGeY3DYOs6WCXz/XscvuhN2I2VXBbMvwb4
+         Xlddmz8hpGwBRuywv2TIOtvKKl0P4zPYZ1oj/HFJKvmdX1OXKTqs6LYjMPwYUkM5VRj1
+         WZbQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=28kVchorg0pFyF9b0ogWAEAHMYZwNEgdx4vJfdA+cNY=;
-        b=Q5g6lCz0u7hk3Esp1rt0JPk29c+BbfM/kAKMYwHrjdAJflUN46uSBimV/Qsh4TUAT5
-         MY1QK+PorlgRi/601WUCE0mfOrbBdfHXrviyEJne1fsN3eE9qFkrJzgGn4xnXotCMriw
-         976O3oCzobJKVsxaX1qhlZEhjCpgDtLjdT+tBKaX5dAyTUu1J3IUMXGHlb6HOY+y3MCD
-         9aP8vRxZMO1sh0x4P4QHbkBN9Xd3CaBUNvzLNQUYwucvUYaFbeA88nBEVlmLJkoUWYcq
-         b6najlVSc9nyzL+Z881yNEJf6/dLxmUds8IWB1S2YvCfPJijGhS/P8z4XgUn/Vnmkcd6
-         zCmA==
-X-Gm-Message-State: ANhLgQ2AwCYVxXnn/+yPemzLwMzOPc514TXQ/vzZUMh4TWDsPMpfqRW1
-        vPxi1Lg+/PIk5q1KtDUtEZ9rZKJVJaY=
-X-Google-Smtp-Source: ADFU+vsZFnC2lgwaR/+bm7vWv24PAezbCSqsEnKPHHSSDCnNK07HbdoMMzr9genfbIzwWEfrvd1MyxKT7QY=
-X-Received: by 2002:a17:90a:5a42:: with SMTP id m2mr1746324pji.165.1585349484828;
- Fri, 27 Mar 2020 15:51:24 -0700 (PDT)
-Date:   Fri, 27 Mar 2020 15:51:00 -0700
+        bh=xbfzfU9BuZhYVtZI+f7wZqdjFxjb/Cu4ZDBLeXOeWh4=;
+        b=rmGo0EKE11Uz6Jz7yR8Dy8vX2AJ+tNED8PXIaQKBaczXtFQwI/AYeTmcgzeD7FUdWa
+         yklZiZAfaYyeWPiKA5Fxy57r2Imbn2rke7WRkvG1/ZoO0Oaprad/IvyubErQPu4TyFTE
+         ecmfyQHaQ0g5R8M9cDg7QsyfKGU9yN9W6GRh9TuGdrwkxxOjOuS8nfzn12w7cPMxUymO
+         5MzkWLMe7IzZR2un6ieNXrjDkkXWX/1yOKFdlM3KV8FxSfhoeWfP0ssqvBa5Coh1kv7G
+         PWV1Do8h+GjGqZbGxNSxjbLph2RoQvDMLZkQMNJt6ffLxZc9VKW21/02Xh7DDeMRO9Ne
+         u6iQ==
+X-Gm-Message-State: ANhLgQ3s4jIDfQpgLU99Jq+jslQLvQP1HFHRFM5Rkzj8GTwxV012u+kc
+        A8PwKb6FQDjesWJmHWQy8a/elJ0Ogaw=
+X-Google-Smtp-Source: ADFU+vvWd0IqiXiflyLpZ9mh9GOnzskLcl81XiO1ntJlLp1NZ1mpzt1ePzWvfoNKv3KayCXYoxGRvL7WJ5Y=
+X-Received: by 2002:a17:90a:222d:: with SMTP id c42mr1811170pje.16.1585349487110;
+ Fri, 27 Mar 2020 15:51:27 -0700 (PDT)
+Date:   Fri, 27 Mar 2020 15:51:01 -0700
 In-Reply-To: <20200327225102.25061-1-walken@google.com>
-Message-Id: <20200327225102.25061-9-walken@google.com>
+Message-Id: <20200327225102.25061-10-walken@google.com>
 Mime-Version: 1.0
 References: <20200327225102.25061-1-walken@google.com>
 X-Mailer: git-send-email 2.26.0.rc2.310.g2932bb562d-goog
-Subject: [PATCH v3 08/10] mmap locking API: add MMAP_LOCK_INITIALIZER
+Subject: [PATCH v3 09/10] mmap locking API: use lockdep_assert_held
 From:   Michel Lespinasse <walken@google.com>
 To:     Andrew Morton <akpm@linux-foundation.org>,
         linux-mm <linux-mm@kvack.org>
@@ -81,70 +81,75 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Define a new initializer for the mmap locking api.
-Initially this just evaluates to __RWSEM_INITIALIZER as the API
-is defined as wrappers around rwsem.
+Use lockdep_assert_held when asserting that mmap_sem is held.
+
+Using this instead of rwsem_is_locked makes the assertions more
+tolerant of future changes to the lock type.
 
 Signed-off-by: Michel Lespinasse <walken@google.com>
 ---
- arch/x86/kernel/tboot.c    | 2 +-
- drivers/firmware/efi/efi.c | 2 +-
- include/linux/mmap_lock.h  | 2 ++
- mm/init-mm.c               | 2 +-
- 4 files changed, 5 insertions(+), 3 deletions(-)
+ fs/userfaultfd.c | 6 +++---
+ mm/gup.c         | 2 +-
+ mm/memory.c      | 2 +-
+ 3 files changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/arch/x86/kernel/tboot.c b/arch/x86/kernel/tboot.c
-index b89f6ac6a0c0..4b79335624b1 100644
---- a/arch/x86/kernel/tboot.c
-+++ b/arch/x86/kernel/tboot.c
-@@ -90,7 +90,7 @@ static struct mm_struct tboot_mm = {
- 	.pgd            = swapper_pg_dir,
- 	.mm_users       = ATOMIC_INIT(2),
- 	.mm_count       = ATOMIC_INIT(1),
--	.mmap_sem       = __RWSEM_INITIALIZER(init_mm.mmap_sem),
-+	.mmap_sem       = MMAP_LOCK_INITIALIZER(init_mm.mmap_sem),
- 	.page_table_lock =  __SPIN_LOCK_UNLOCKED(init_mm.page_table_lock),
- 	.mmlist         = LIST_HEAD_INIT(init_mm.mmlist),
- };
-diff --git a/drivers/firmware/efi/efi.c b/drivers/firmware/efi/efi.c
-index 21ea99f65113..5bdfe698cd7f 100644
---- a/drivers/firmware/efi/efi.c
-+++ b/drivers/firmware/efi/efi.c
-@@ -60,7 +60,7 @@ struct mm_struct efi_mm = {
- 	.mm_rb			= RB_ROOT,
- 	.mm_users		= ATOMIC_INIT(2),
- 	.mm_count		= ATOMIC_INIT(1),
--	.mmap_sem		= __RWSEM_INITIALIZER(efi_mm.mmap_sem),
-+	.mmap_sem		= MMAP_LOCK_INITIALIZER(efi_mm.mmap_sem),
- 	.page_table_lock	= __SPIN_LOCK_UNLOCKED(efi_mm.page_table_lock),
- 	.mmlist			= LIST_HEAD_INIT(efi_mm.mmlist),
- 	.cpu_bitmap		= { [BITS_TO_LONGS(NR_CPUS)] = 0},
-diff --git a/include/linux/mmap_lock.h b/include/linux/mmap_lock.h
-index a80cf9695514..25a8a5458b84 100644
---- a/include/linux/mmap_lock.h
-+++ b/include/linux/mmap_lock.h
-@@ -1,6 +1,8 @@
- #ifndef _LINUX_MMAP_LOCK_H
- #define _LINUX_MMAP_LOCK_H
+diff --git a/fs/userfaultfd.c b/fs/userfaultfd.c
+index 5914eabd8185..ad1ce223ee6a 100644
+--- a/fs/userfaultfd.c
++++ b/fs/userfaultfd.c
+@@ -234,7 +234,7 @@ static inline bool userfaultfd_huge_must_wait(struct userfaultfd_ctx *ctx,
+ 	pte_t *ptep, pte;
+ 	bool ret = true;
  
-+#define MMAP_LOCK_INITIALIZER(name) __RWSEM_INITIALIZER(name)
-+
- static inline void mmap_init_lock(struct mm_struct *mm)
- {
- 	init_rwsem(&mm->mmap_sem);
-diff --git a/mm/init-mm.c b/mm/init-mm.c
-index 19603302a77f..3c128bd6a30c 100644
---- a/mm/init-mm.c
-+++ b/mm/init-mm.c
-@@ -31,7 +31,7 @@ struct mm_struct init_mm = {
- 	.pgd		= swapper_pg_dir,
- 	.mm_users	= ATOMIC_INIT(2),
- 	.mm_count	= ATOMIC_INIT(1),
--	.mmap_sem	= __RWSEM_INITIALIZER(init_mm.mmap_sem),
-+	.mmap_sem	= MMAP_LOCK_INITIALIZER(init_mm.mmap_sem),
- 	.page_table_lock =  __SPIN_LOCK_UNLOCKED(init_mm.page_table_lock),
- 	.arg_lock	=  __SPIN_LOCK_UNLOCKED(init_mm.arg_lock),
- 	.mmlist		= LIST_HEAD_INIT(init_mm.mmlist),
+-	VM_BUG_ON(!rwsem_is_locked(&mm->mmap_sem));
++	lockdep_assert_held(&mm->mmap_sem);
+ 
+ 	ptep = huge_pte_offset(mm, address, vma_mmu_pagesize(vma));
+ 
+@@ -286,7 +286,7 @@ static inline bool userfaultfd_must_wait(struct userfaultfd_ctx *ctx,
+ 	pte_t *pte;
+ 	bool ret = true;
+ 
+-	VM_BUG_ON(!rwsem_is_locked(&mm->mmap_sem));
++	lockdep_assert_held(&mm->mmap_sem);
+ 
+ 	pgd = pgd_offset(mm, address);
+ 	if (!pgd_present(*pgd))
+@@ -376,7 +376,7 @@ vm_fault_t handle_userfault(struct vm_fault *vmf, unsigned long reason)
+ 	 * Coredumping runs without mmap_sem so we can only check that
+ 	 * the mmap_sem is held, if PF_DUMPCORE was not set.
+ 	 */
+-	WARN_ON_ONCE(!rwsem_is_locked(&mm->mmap_sem));
++	lockdep_assert_held(&mm->mmap_sem);
+ 
+ 	ctx = vmf->vma->vm_userfaultfd_ctx.ctx;
+ 	if (!ctx)
+diff --git a/mm/gup.c b/mm/gup.c
+index d78965738e7e..1e225eba4787 100644
+--- a/mm/gup.c
++++ b/mm/gup.c
+@@ -1154,7 +1154,7 @@ long populate_vma_page_range(struct vm_area_struct *vma,
+ 	VM_BUG_ON(end   & ~PAGE_MASK);
+ 	VM_BUG_ON_VMA(start < vma->vm_start, vma);
+ 	VM_BUG_ON_VMA(end   > vma->vm_end, vma);
+-	VM_BUG_ON_MM(!rwsem_is_locked(&mm->mmap_sem), mm);
++	lockdep_assert_held(&mm->mmap_sem);
+ 
+ 	gup_flags = FOLL_TOUCH | FOLL_POPULATE | FOLL_MLOCK;
+ 	if (vma->vm_flags & VM_LOCKONFAULT)
+diff --git a/mm/memory.c b/mm/memory.c
+index 03fce44eee16..4c125f0a1df9 100644
+--- a/mm/memory.c
++++ b/mm/memory.c
+@@ -1202,7 +1202,7 @@ static inline unsigned long zap_pud_range(struct mmu_gather *tlb,
+ 		next = pud_addr_end(addr, end);
+ 		if (pud_trans_huge(*pud) || pud_devmap(*pud)) {
+ 			if (next - addr != HPAGE_PUD_SIZE) {
+-				VM_BUG_ON_VMA(!rwsem_is_locked(&tlb->mm->mmap_sem), vma);
++				lockdep_assert_held(&tlb->mm->mmap_sem);
+ 				split_huge_pud(vma, pud, addr);
+ 			} else if (zap_huge_pud(tlb, vma, pud, addr))
+ 				goto next;
 -- 
 2.26.0.rc2.310.g2932bb562d-goog
 
