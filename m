@@ -2,100 +2,158 @@ Return-Path: <SRS0=s8dx=5M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA82FC2D0EF
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 13:17:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A50E8C2D0E5
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 13:18:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA1C92082E
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 13:17:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B9542082E
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 13:18:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="lfWDXAOR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727349AbgC0NRg (ORCPT
+        id S1727541AbgC0NSf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Mar 2020 09:17:36 -0400
-Received: from mga02.intel.com ([134.134.136.20]:21831 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726540AbgC0NRg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Mar 2020 09:17:36 -0400
-IronPort-SDR: L3FMgNOVANyHEQQiPzXQhFrbkzFIQCjoWtIX2Qg8y4aH782rDqh01j72yvoIvk+LM+Ikdyrff1
- kDfLyNJUXXXQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Mar 2020 06:17:33 -0700
-IronPort-SDR: foPMD2FQZikaok3kV3miyDyHBAn9vtjKjrQOARBpQeXz1M1HoYXgX+pifcg3RUnnUJWKPYwPWZ
- kXueVak/Ae3A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,312,1580803200"; 
-   d="scan'208";a="394373114"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga004.jf.intel.com with ESMTP; 27 Mar 2020 06:17:31 -0700
-Received: from andy by smile with local (Exim 4.93)
-        (envelope-from <andy.shevchenko@gmail.com>)
-        id 1jHore-00DQJZ-2a; Fri, 27 Mar 2020 15:17:34 +0200
-Date:   Fri, 27 Mar 2020 15:17:34 +0200
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-To:     saravanan sekar <sravanhome@gmail.com>
-Cc:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald <pmeerw@pmeerw.net>,
-        Sebastian Reichel <sre@kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
+        Fri, 27 Mar 2020 09:18:35 -0400
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:1974 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726275AbgC0NSf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Mar 2020 09:18:35 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e7dfccd0001>; Fri, 27 Mar 2020 06:17:01 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Fri, 27 Mar 2020 06:18:34 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Fri, 27 Mar 2020 06:18:34 -0700
+Received: from localhost (10.124.1.5) by HQMAIL107.nvidia.com (172.20.187.13)
+ with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 27 Mar 2020 13:18:33
+ +0000
+Date:   Fri, 27 Mar 2020 14:18:31 +0100
+From:   Thierry Reding <treding@nvidia.com>
+To:     Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>
+CC:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Colin Cross <ccross@android.com>,
+        ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-iio <linux-iio@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>
-Subject: Re: [PATCH v4 2/5] mfd: mp2629: Add support for mps battery charger
-Message-ID: <20200327131734.GV1922688@smile.fi.intel.com>
-References: <20200322224626.13160-1-sravanhome@gmail.com>
- <20200322224626.13160-3-sravanhome@gmail.com>
- <20200327075541.GF603801@dell>
- <a6098b6a-2b2f-5279-f9fc-85201b9aabde@gmail.com>
- <20200327102221.GA3383@dell>
- <a679aba5-4cfb-1b6c-8cb0-dab3a644f3e7@gmail.com>
- <20200327112523.GC3383@dell>
- <45f68c40-8e50-e0a2-a89a-b5a164d6b75c@gmail.com>
- <CAHp75VcAq-CwsXccbLVxEwGjZjNhdcbMyM-Y-=SEbmexBidCHw@mail.gmail.com>
- <0f344b03-ce5e-4a31-5268-6db4266b352e@gmail.com>
+        Nagarjuna Kristam <nkristam@nvidia.com>,
+        "JC Kuo" <jckuo@nvidia.com>, Corentin Labbe <clabbe@baylibre.com>
+Subject: Re: linux-next: manual merge of the tegra tree with the arm-soc tree
+Message-ID: <20200327131831.GC2282366@ulmo>
+References: <20200327092741.1dbd3242@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+In-Reply-To: <20200327092741.1dbd3242@canb.auug.org.au>
+X-NVConfidentiality: public
+User-Agent: Mutt/1.13.1 (2019-12-14)
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="aT9PWwzfKXlsBJM1"
 Content-Disposition: inline
-In-Reply-To: <0f344b03-ce5e-4a31-5268-6db4266b352e@gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1585315021; bh=Tpo3NqFxWgOJjyev4XqBDbAl2TDTNnyAFczdL+YC21g=;
+        h=X-PGP-Universal:Date:From:To:CC:Subject:Message-ID:References:
+         MIME-Version:In-Reply-To:X-NVConfidentiality:User-Agent:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:
+         Content-Disposition;
+        b=lfWDXAOR96Sjlm0y8L+D1ypT1+v1R9xGvPHeDtbELVHNFCjV1GaDYuazr2kJTBDxJ
+         Teel8GiBjWyk1OJUGbAbQzOUUzLp1cloS+Sg30/xyn8ECTmamNs3AP6L94p2svkR3l
+         g9g8eTGYP+0alfSdBm3rTgPOqay0fmkCtoJlBcUCsdwJq3j8B7sQ+ZKnnYozLFNCrI
+         eo1Yjbxu38HEFqf3DZsEu3V69ebQj85GB7uKb/RlUNoQDDSKI/dKNWoAH5+VVJKiwj
+         oflTlgPqfyXQPMAfv+4gJmYTaq9DSfd/MUvInfAoz7+aaJHE8gvXWdTHDOwnYvHh2K
+         lvMIRiIECsfEw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 27, 2020 at 02:03:30PM +0100, saravanan sekar wrote:
-> On 27/03/20 1:56 pm, Andy Shevchenko wrote:
-> > On Fri, Mar 27, 2020 at 2:41 PM saravanan sekar <sravanhome@gmail.com> wrote:
-> > > On 27/03/20 12:25 pm, Lee Jones wrote:
-> > > > On Fri, 27 Mar 2020, saravanan sekar wrote:
-> > > > > On 27/03/20 11:22 am, Lee Jones wrote:
-> > > > So Andy has reviewed, but you still don't have him on Cc?
-> > > Sorry one of his hint made me removed him in CC unknowingly.
-> > > 
-> > > "For the future, hint:
-> > >           scripts/get_maintainer.pl --git --git-min-percent=67 ..."
-> > > 
-> > Perhaps I have to elaborate. The above hint for the initial submit.
-> > Then the rule of thumb: Include reviewers into Cc (to the patches they
-> > have reviewed), because you can't know their intention and maybe they
-> > want to follow a development.
-> Thanks for more details. Between Lee has not recommended "forward
-> declarations", the review comment
-> you gave on my V1 patch (more info on previous email). Hope you agree with
-> the same.
+--aT9PWwzfKXlsBJM1
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-I think so.
+On Fri, Mar 27, 2020 at 09:27:41AM +1100, Stephen Rothwell wrote:
+> Hi all,
+>=20
+> Today's linux-next merge of the tegra tree got conflicts in:
+>=20
+>   drivers/phy/tegra/Kconfig
+>   drivers/phy/tegra/xusb.c
+>=20
+> between commits:
+>=20
+>   5a00c7c7604f ("phy: tegra: xusb: Add usb-role-switch support")
+>   23babe30fb45 ("phy: tegra: xusb: Add usb-phy support")
+>   d74ce0954cb2 ("phy: tegra: xusb: Add support to get companion USB 3 por=
+t")
+>   58e7bd08b569 ("phy: tegra: xusb: Add Tegra194 support")
+>=20
+> from the arm-soc tree and commit:
+>=20
+>   f67213cee2b3 ("phy: tegra: xusb: Add usb-role-switch support")
+>   e8f7d2f409a1 ("phy: tegra: xusb: Add usb-phy support")
+>   5a40fc4b934c ("phy: tegra: xusb: Add support to get companion USB 3 por=
+t")
+>   1ef535c6ba8e ("phy: tegra: xusb: Add Tegra194 support")
+>=20
+> from the tegra tree.
+>=20
+> These are slightly different patches (the latter has been rebased).
+> Also there are further commits affecting these files in the tegra tree.
+>=20
+> I fixed it up (I just used the version from the tegra tree) and can
+> carry the fix as necessary. This is now fixed as far as linux-next is
+> concerned, but any non trivial conflicts should be mentioned to your
+> upstream maintainer when your tree is submitted for merging.  You may
+> also want to consider cooperating with the maintainer of the conflicting
+> tree to minimise any particularly complex conflicts.
 
--- 
-With Best Regards,
-Andy Shevchenko
+Olof, Arnd,
 
+There was a bit of back and forth on this because there happened to be a
+conflict with the USB tree. I tried to clarify this as replies to the PR
+request:
 
+	http://patchwork.ozlabs.org/patch/1254523/
+
+But I suspect you may have missed those replies. The bottom line is,
+there is a v2 of the pull request that has the patches that are now in
+the Tegra tree. That's already part of a PR that went in through the USB
+tree as a dependency to resolve the conflict.
+
+So as a result there should be no need for ARM SoC to carry that PR. But
+if you still want to merge it, please pull v2, which is here:
+
+	git://git.kernel.org/pub/scm/linux/kernel/git/tegra/linux.git tags/tegra-f=
+or-5.7-phy-v2
+
+Sorry for the confusion,
+Thierry
+
+--aT9PWwzfKXlsBJM1
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl59/ScACgkQ3SOs138+
+s6FG7xAAtsFMFTXn2daJeAwduvHdzjYOHqDpnNb4BtG0GPNzYa972YzaOyVoDT/v
+7YxiIgLgXT8Nu1T4xA+CIJS9U9vtRv+Auvsd0knHCTAcU/plvVWf8E2eB7eITDaB
+k3HdW8shjJ9LO+P5juQiOnRX8gcUEXW8jrzB4maccsFnKPr2vN/xISm/zYAKYYX3
+pbZzGpl29ThP2hT/0MtWycK0NsXZM3GvAqsksnTScGRjRAg0LokpZiZxq2e9d+VE
+L3b0bWXqB6Bb7bqQX9oAKb0rS5nlg8im0y/cCapklk5UtfREAiIDtD4Y1yz91NwW
+y7gBiMJpjlk3eHPUv3Zf5KTNSArueFcz1qknm9UGYpSFw1oplLauGo15L8IkYQ83
+XYFqNuYlbel7AI68LZeurpMWBYSWDz4SjD7mz//WQ+Q/RwGNoSVS1+1YA4IezM60
+rrckIpHm9PuPtr4v21AqaFCeQ69TkRSY1rNg1h9yj1gPE65/BK7B8hg4ptIaQpCR
+Fgue7ST3LkGjmnLY4ke0kz6jm3q1rnAVt4nBb8AoV7YdWXgfI51XfyWTy1Fmp1U+
+jvg4TsYiPj5CEpG/dKfm5l9YrjTIHivMqUjTTQ90hL9HcYjmV+2UJOZwHsxQMr7r
+AxhSoQ4EJaqQgf0LV3RdkH18HKmz/pQaFecWKei9gj1Ck7wNCqU=
+=MO7Z
+-----END PGP SIGNATURE-----
+
+--aT9PWwzfKXlsBJM1--
