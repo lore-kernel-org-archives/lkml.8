@@ -2,210 +2,129 @@ Return-Path: <SRS0=s8dx=5M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21F89C2D0E8
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 19:15:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC618C2D0EE
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 19:17:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F224B2072F
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 19:15:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C87182072F
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 19:17:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Aj5KuCp5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727655AbgC0TPm (ORCPT
+        id S1727505AbgC0TRg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Mar 2020 15:15:42 -0400
-Received: from foss.arm.com ([217.140.110.172]:51708 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726738AbgC0TPl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Mar 2020 15:15:41 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A8A9430E;
-        Fri, 27 Mar 2020 12:15:40 -0700 (PDT)
-Received: from [10.57.60.204] (unknown [10.57.60.204])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id AF4563F71E;
-        Fri, 27 Mar 2020 12:15:38 -0700 (PDT)
-Subject: Re: [PATCH 0/2] amba/platform: Initialize dma_parms at the bus level
-To:     Ulf Hansson <ulf.hansson@linaro.org>,
-        BOUGH CHEN <haibo.chen@nxp.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
+        Fri, 27 Mar 2020 15:17:36 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:38972 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726959AbgC0TRg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Mar 2020 15:17:36 -0400
+Received: by mail-wr1-f65.google.com with SMTP id p10so12807236wrt.6
+        for <linux-kernel@vger.kernel.org>; Fri, 27 Mar 2020 12:17:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=hh6WYJqT/M6VdZCxRRGFJ4X3bio1m9J2mQ8vyCBUNIY=;
+        b=Aj5KuCp5rUlAQ6zF28nJ3B92q65AO0KaTlRq7Hiod12FrJbTDddzKrzAevJvITTfmr
+         tSOgGVEdlR8yytc4R3UmpYwQ3nAisNYbKiSV98g3m+K8js1jSHsICGH+oZDRLvLutkB4
+         W1Kg+U/SFAKQNWSdnCyBeag5nqvbfKf4rlZrU=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=hh6WYJqT/M6VdZCxRRGFJ4X3bio1m9J2mQ8vyCBUNIY=;
+        b=i9neEEeKb38/5ywOla9uB1dO+FcBKzdOEolqmKaSOKxlI8FWJnP4m4l3Fu0Qok9tDj
+         H2DLWSrvBLtK8yeSq9Hpz35yZQdt9eWJucyUMuP+sw57D8wdvCvM6Q2KJYu58BJmIgtG
+         MUNknLiVCFlQVPs1ceYXSECtigLhynbFPoYG0vLh/vxCKIaJm9/+z/XzFdqf7P/PdjPC
+         rFcm6zMbcZGXDuRCiTKFoFc0JSfZ0qWs+tSXK7kfB1U0ffg9lxZ1YaZvAxWXsi/GTdJp
+         O63fs1Mx5PLS5rBQYXrCEbrU6ZnThDxb8AbZMpM8ZnLJD0pAQySj5xOpcFy8fY/qvtLw
+         CzEg==
+X-Gm-Message-State: ANhLgQ28rP3VBNCPR44G/GSOBOiTW7Bpa/RZ5AylOf5Z6+PiGMBst4UM
+        1uoamU+F2phyhWkHcbYqrsTHrQ==
+X-Google-Smtp-Source: ADFU+vsR7STlVYO4IV6+sb1UEbSKtqgoJjlapPf0cVHt271rMf3b6PMAe2TvKL793EyB2zae3Sc3Bw==
+X-Received: by 2002:a5d:4305:: with SMTP id h5mr935606wrq.69.1585336654111;
+        Fri, 27 Mar 2020 12:17:34 -0700 (PDT)
+Received: from chromium.org (77-56-209-237.dclient.hispeed.ch. [77.56.209.237])
+        by smtp.gmail.com with ESMTPSA id d6sm9333648wrw.10.2020.03.27.12.17.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 27 Mar 2020 12:17:33 -0700 (PDT)
+From:   KP Singh <kpsingh@chromium.org>
+X-Google-Original-From: KP Singh <kpsingh>
+Date:   Fri, 27 Mar 2020 20:17:31 +0100
+To:     Kees Cook <keescook@chromium.org>, James Morris <jmorris@namei.org>
+Cc:     Casey Schaufler <casey@schaufler-ca.com>,
+        Stephen Smalley <sds@tycho.nsa.gov>,
+        linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        Brendan Jackman <jackmanb@google.com>,
+        Florent Revest <revest@google.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Paul Turner <pjt@google.com>, Jann Horn <jannh@google.com>,
+        Florent Revest <revest@chromium.org>,
+        Brendan Jackman <jackmanb@chromium.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Russell King <linux@armlinux.org.uk>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Vinod Koul <vkoul@kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
-        Christoph Hellwig <hch@lst.de>,
-        Ludovic Barre <ludovic.barre@st.com>
-References: <20200325113407.26996-1-ulf.hansson@linaro.org>
- <VI1PR04MB504097B40CE0B804FA60D67A90CF0@VI1PR04MB5040.eurprd04.prod.outlook.com>
- <VI1PR04MB5040FFADA4F780422E208AC390CC0@VI1PR04MB5040.eurprd04.prod.outlook.com>
- <CAPDyKFr_yOmZ2MMvp=1krHejCRDRfhC0B+1icYR5xuZfhKy_ag@mail.gmail.com>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <2b2f1b1e-d186-e60f-baa9-3223ad4101f0@arm.com>
-Date:   Fri, 27 Mar 2020 19:15:37 +0000
-User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Paul Moore <paul@paul-moore.com>
+Subject: Re: [PATCH bpf-next v7 4/8] bpf: lsm: Implement attach, detach and
+ execution
+Message-ID: <20200327191731.GA9419@chromium.org>
+References: <20200326142823.26277-1-kpsingh@chromium.org>
+ <20200326142823.26277-5-kpsingh@chromium.org>
+ <alpine.LRH.2.21.2003271119420.17089@namei.org>
+ <2241c806-65c9-68f5-f822-9a245ecf7ba0@tycho.nsa.gov>
+ <20200327124115.GA8318@chromium.org>
+ <14ff822f-3ca5-7ebb-3df6-dd02249169d2@tycho.nsa.gov>
+ <a3f6d9f8-6425-af28-d472-fad642439b69@schaufler-ca.com>
+ <202003271143.71E0C591C1@keescook>
 MIME-Version: 1.0
-In-Reply-To: <CAPDyKFr_yOmZ2MMvp=1krHejCRDRfhC0B+1icYR5xuZfhKy_ag@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <202003271143.71E0C591C1@keescook>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-03-27 3:34 pm, Ulf Hansson wrote:
-> On Fri, 27 Mar 2020 at 04:02, BOUGH CHEN <haibo.chen@nxp.com> wrote:
->>
->>
->>> -----Original Message-----
->>> From: BOUGH CHEN
->>> Sent: 2020å¹´3æœˆ26æ—¥ 12:41
->>> To: Ulf Hansson <ulf.hansson@linaro.org>; Greg Kroah-Hartman
->>> <gregkh@linuxfoundation.org>; Rafael J . Wysocki <rafael@kernel.org>;
->>> linux-kernel@vger.kernel.org
->>> Cc: Arnd Bergmann <arnd@arndb.de>; Christoph Hellwig <hch@lst.de>;
->>> Russell King <linux@armlinux.org.uk>; Linus Walleij <linus.walleij@linaro.org>;
->>> Vinod Koul <vkoul@kernel.org>; Ludovic Barre <ludovic.barre@st.com>;
->>> linux-arm-kernel@lists.infradead.org; dmaengine@vger.kernel.org
->>> Subject: RE: [PATCH 0/2] amba/platform: Initialize dma_parms at the bus level
->>>
->>>> -----Original Message-----
->>>> From: Ulf Hansson <ulf.hansson@linaro.org>
->>>> Sent: 2020å¹´3æœˆ25æ—¥ 19:34
->>>> To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>; Rafael J .
->>>> Wysocki <rafael@kernel.org>; linux-kernel@vger.kernel.org
->>>> Cc: Arnd Bergmann <arnd@arndb.de>; Christoph Hellwig <hch@lst.de>;
->>>> Russell King <linux@armlinux.org.uk>; Linus Walleij
->>>> <linus.walleij@linaro.org>; Vinod Koul <vkoul@kernel.org>; BOUGH CHEN
->>>> <haibo.chen@nxp.com>; Ludovic Barre <ludovic.barre@st.com>;
->>>> linux-arm-kernel@lists.infradead.org; dmaengine@vger.kernel.org; Ulf
->>>> Hansson <ulf.hansson@linaro.org>
->>>> Subject: [PATCH 0/2] amba/platform: Initialize dma_parms at the bus
->>>> level
->>>>
->>>> It's currently the amba/platform driver's responsibility to initialize
->>>> the pointer, dma_parms, for its corresponding struct device. The
->>>> benefit with this approach allows us to avoid the initialization and
->>>> to not waste memory for the struct device_dma_parameters, as this can
->>>> be decided on a case by case basis.
->>>>
->>>> However, it has turned out that this approach is not very practical.
->>>> Not only does it lead to open coding, but also to real errors. In
->>>> principle callers of
->>>> dma_set_max_seg_size() doesn't check the error code, but just assumes
->>>> it succeeds.
->>>>
->>>> For these reasons, this series initializes the dma_parms from the
->>>> amba/platform bus at the device registration point. This also follows
->>>> the way the PCI devices are being managed, see pci_device_add().
->>>>
->>>> If it turns out that this is an acceptable solution, we probably also
->>>> want the changes for stable, but I am not sure if it applies without conflicts.
->>>>
->>>> The series is based on v5.6-rc7.
->>>>
->>>
->>> Hi Ulf,
->>>
->>> Since i.MXQM SMMU related code still not upstream yet, so I apply your
->>> patches on our internal Linux branch based on v5.4.24, and find it do not work
->>> on my side. Maybe for platform core drivers, there is a gap between v5.4.24
->>> and v5.6-rc7 which has the impact.
->>> I will try to put our SMMU related code into v5.6-rc7, then do the test again.
->>>
->>>
->>
->> Hi Ulf,
->>
->> On the latest Linux-next branch, the top commit 89295c59c1f063b533d071ca49d0fa0c0783ca6f (tag: next-20200326), after add your two patches, I just add the simple debug code as following in the /driver/mmc/core/queue.c, but seems still not work as our expect, logically, it should work, so can you or anyone test on other platform? This seems weird.
-> 
-> You are right, this doesn't work for platform devices being added
-> through the OF path.
-> 
-> In other words, of_platform_device_create_pdata() manually allocates
-> the platform device and assigns it the &platform_bus_type, but without
-> calling platform_device_add().
-> 
-> For amba, it works fine, as in that OF path, amba_device_add() is called. Hmm.
-> 
-> I re-spin this, to address the problem. Perhaps we simply need to use
-> the ->probe() path.
+On 27-Mär 11:59, Kees Cook wrote:
+> On Fri, Mar 27, 2020 at 09:36:15AM -0700, Casey Schaufler wrote:
+> > On 3/27/2020 6:43 AM, Stephen Smalley wrote:
+> > > On 3/27/20 8:41 AM, KP Singh wrote:
+> > >> On 27-Mär 08:27, Stephen Smalley wrote:
+> > >>>>> +        return -EPERM;
 
-FWIW we already have setup_pdev_dma_masks(), so it might be logical to 
-include dma_parms in there too.
+[...]
 
-Robin.
+> > >
+> > > I would favor removing the CAP_MAC_ADMIN check here, and implementing it in a bpf_prog hook for Smack and AppArmor if they want that.  SELinux would implement its own check in its existing bpf_prog hook.
+> > >
+> > The whole notion of one security module calling into another for permission
+> > to do something still gives me the heebee jeebees, but if more nimble minds
+> > than mine think this is a good idea I won't nack it.
+> 
+> Well, it's a hook into BPF prog creation, not the BPF LSM specifically,
+> so that's why I think it's general enough control without it being
+> directly weird. :)
+> 
+> As far as dropping CAP_MAC_ADMIN, yeah, that should be fine. Creating LSM
+> BPF programs already requires CAP_SYS_ADMIN, so for SELinux-less systems,
+> that's likely fine. If we need to change the BPF program creation access
+> control in the future we can revisit it then.
+
+Sounds good, I will send out v8 carrying James and Andri's
+Acks/Review tags, CAP_MAC_ADMIN check removed and some other minor
+fixes.
+
+- KP
 
 > 
-> Kind regards
-> Uffe
-> 
->>
->> diff --git a/drivers/mmc/core/queue.c b/drivers/mmc/core/queue.c
->> index 25bee3daf9e2..f091280f7ffb 100644
->> --- a/drivers/mmc/core/queue.c
->> +++ b/drivers/mmc/core/queue.c
->> @@ -403,6 +403,13 @@ static void mmc_setup_queue(struct mmc_queue *mq, struct mmc_card *card)
->>                  blk_queue_max_segment_size(mq->queue,
->>                          round_down(host->max_seg_size, block_size));
->>
->> +       pr_err("###### the max segment size is %d\n", queue_max_segment_size(mq->queue));
->> +       if (host->parent->dma_parms) {
->> +                      pr_err("######### the dma parms has value\n");
->> +       } else if (!(host->parent->dma_parms)) {
->> +                      pr_err("######## the dma parms is zero!!\n");
->> +       }
->> +
->>          dma_set_max_seg_size(mmc_dev(host), queue_max_segment_size(mq->queue));
->>
->>          INIT_WORK(&mq->recovery_work, mmc_mq_recovery_handler);
->>
->> Here is the log I got when system run, even after your patch, the dev->dma_parms is still NULL.
->> [    0.989853] mmc0: new HS400 MMC card at address 0001
->> [    0.995708] sdhci-esdhc-imx 30b50000.mmc: Got CD GPIO
->> [    0.999374] ###### the max segment size is 65024
->> [    1.008594] ######## the dma parms is zero!!
->> [    1.012875] mmcblk0: mmc0:0001 IB2932 29.2 GiB
->> [    1.017569] ###### the max segment size is 65024
->> [    1.022195] ######## the dma parms is zero!!
->> [    1.026479] mmcblk0boot0: mmc0:0001 IB2932 partition 1 4.00 MiB
->> [    1.032541] ###### the max segment size is 65024
->> [    1.035198] mmc1: SDHCI controller on 30b50000.mmc [30b50000.mmc] using ADMA
->> [    1.037169] ######## the dma parms is zero!!
->> [    1.048493] mmcblk0boot1: mmc0:0001 IB2932 partition 2 4.00 MiB
->> [    1.054531] mmcblk0rpmb: mmc0:0001 IB2932 partition 3 4.00 MiB, chardev (234:0)
->>
->>
->> Regards
->> Haibo Chen
->>> Best Regards
->>> Haibo Chen
->>>
->>>> Kind regards
->>>> Ulf Hansson
->>>>
->>>> Ulf Hansson (2):
->>>>    driver core: platform: Initialize dma_parms for platform devices
->>>>    amba: Initialize dma_parms for amba devices
->>>>
->>>>   drivers/amba/bus.c              | 2 ++
->>>>   drivers/base/platform.c         | 1 +
->>>>   include/linux/amba/bus.h        | 1 +
->>>>   include/linux/platform_device.h | 1 +
->>>>   4 files changed, 5 insertions(+)
->>>>
->>>> --
->>>> 2.20.1
->>
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-> 
+> -- 
+> Kees Cook
