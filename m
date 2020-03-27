@@ -2,120 +2,106 @@ Return-Path: <SRS0=s8dx=5M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF109C2D0EC
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 13:37:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 160B8C2D0EC
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 13:38:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A51C9206F2
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 13:37:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE18720658
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 13:38:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kiGSVCIX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727585AbgC0Nh3 (ORCPT
+        id S1727560AbgC0NiE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Mar 2020 09:37:29 -0400
-Received: from retiisi.org.uk ([95.216.213.190]:45640 "EHLO
-        hillosipuli.retiisi.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726275AbgC0Nh3 (ORCPT
+        Fri, 27 Mar 2020 09:38:04 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:39277 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726275AbgC0NiD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Mar 2020 09:37:29 -0400
-Received: from valkosipuli.localdomain (valkosipuli.retiisi.org.uk [IPv6:2a01:4f9:c010:4572::80:2])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by hillosipuli.retiisi.org.uk (Postfix) with ESMTPS id 14E41634C90;
-        Fri, 27 Mar 2020 15:37:06 +0200 (EET)
-Received: from sailus by valkosipuli.localdomain with local (Exim 4.92)
-        (envelope-from <sakari.ailus@retiisi.org.uk>)
-        id 1jHpAX-0000og-4s; Fri, 27 Mar 2020 15:37:05 +0200
-Date:   Fri, 27 Mar 2020 15:37:05 +0200
-From:   Sakari Ailus <sakari.ailus@iki.fi>
-To:     Robert Foss <robert.foss@linaro.org>
-Cc:     Dongchun Zhu <dongchun.zhu@mediatek.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Tomasz Figa <tfiga@chromium.org>,
-        linux-media <linux-media@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [v2 2/3] media: ov8856: Add devicetree support
-Message-ID: <20200327133705.GC2394@valkosipuli.retiisi.org.uk>
-References: <20200313110350.10864-1-robert.foss@linaro.org>
- <20200313110350.10864-3-robert.foss@linaro.org>
- <20200313121746.GC5730@valkosipuli.retiisi.org.uk>
- <CAG3jFytpx8_+DKhUVZnUFeMYK82Z1hFWcEnbyD0=4a8p3ojteg@mail.gmail.com>
- <20200326144725.GA2394@valkosipuli.retiisi.org.uk>
- <CAG3jFyu=HOsWNeRFC2t4HjzYrFrLjsbXzAm4+zD50Xq48mqzcw@mail.gmail.com>
+        Fri, 27 Mar 2020 09:38:03 -0400
+Received: by mail-lf1-f67.google.com with SMTP id h6so2104363lfp.6;
+        Fri, 27 Mar 2020 06:38:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=34VhHnVfQfCxnUAIZ8aanvohxvRx0Xe7SWZvIT0s5dU=;
+        b=kiGSVCIXBmiFG+Jwwm9T3FaTwCD64GutramKXcjpM2OEauD/AtMI8qnPyFBqt3OdTE
+         Sm1zEdRlh0tqe6VorFmw7aO4OpsnGxTNOmK8n9r8gBYgWK6+gknRCgDRnjdW/XYNnJso
+         qSQA1ZygeK+KHpyOeiiWLhj/gwIjwfkWuZ36c6JHCCLEnILkUMcz9RI2ubTqL5nVyNkP
+         xuSySsqUjXDKFk/waIk+5TJkdVfCM5opGRqTm2DTqPcbBDIPQ6TX8AU2ijRdhv+AyegI
+         /XGWSVZujj0oXL+CIETJ48GeqY2tV++cn2kDzSafb5u7MTufaGCCk0DUJMNXLc/x8Ndu
+         yU0w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=34VhHnVfQfCxnUAIZ8aanvohxvRx0Xe7SWZvIT0s5dU=;
+        b=k6JR3HHjwT0CQhzwFGr1PeWEjQv9wbpBPVhy+lU5Y8PgMsV5wRfITGP2gZia+bJ1hc
+         VxLBDMrPysADoMrxmEejXIglfndVW7yDJzMGlQqMfAL7UOtDQlwi/imLa48mOmDXXVjB
+         JYYnqavvQWgC17FxHLp59moLx3Z70kVujC1XZFxGIsSWh6hv7+/LhopwIjlHAMJSs9At
+         jul1nN8sfYDBuTk3ghrUzCjlZvdGpiTawlOw0++a5l/l9Dr8KwmB0pdzKKSTMDI+w642
+         hY8pYc0L1t89oQ0GGKbdCCuCj3llDTp7znIIVhvX8NEVwIblz4Z061b15RQYoZ1f308A
+         ovMw==
+X-Gm-Message-State: ANhLgQ12e/L0PCiejXLDEpQS6O5YC7QYuYnJj6VCyUDtFiUR6aWvPlS7
+        Xghp15mOk6B/w6ckBJAEp7c=
+X-Google-Smtp-Source: ADFU+vuFudCZffsf6YDRuon6AaHUNJ7IM5uPoDfCX7HpjZkFAInAeO/S0gdrU7+Gj5wqF2SnvIoS5w==
+X-Received: by 2002:a19:22cf:: with SMTP id i198mr9492426lfi.199.1585316281818;
+        Fri, 27 Mar 2020 06:38:01 -0700 (PDT)
+Received: from [192.168.2.145] (ppp91-78-208-152.pppoe.mtu-net.ru. [91.78.208.152])
+        by smtp.googlemail.com with ESMTPSA id i7sm3031011ljg.99.2020.03.27.06.38.00
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 27 Mar 2020 06:38:00 -0700 (PDT)
+Subject: Re: [PATCH v9 52/55] input: touchscreen: atmel_mxt_ts: Added sysfs
+ entry for touchscreen status
+To:     "Wang, Jiada" <jiada_wang@mentor.com>, nick@shmanahar.org,
+        dmitry.torokhov@gmail.com, jikos@kernel.org,
+        benjamin.tissoires@redhat.com, bsz@semihalf.com,
+        rydberg@bitmath.org
+Cc:     linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
+        erosca@de.adit-jv.com, Andrew_Gabbasov@mentor.com
+References: <20200325133334.19346-1-jiada_wang@mentor.com>
+ <20200325133334.19346-53-jiada_wang@mentor.com>
+ <4aeda6f1-25d8-9437-5cd0-560e43dbe081@gmail.com>
+ <b9368137-2fdc-558d-c27c-54d56950f7b8@mentor.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <5b03bf10-d4f1-fb3d-4561-1097630c195a@gmail.com>
+Date:   Fri, 27 Mar 2020 16:37:59 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAG3jFyu=HOsWNeRFC2t4HjzYrFrLjsbXzAm4+zD50Xq48mqzcw@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <b9368137-2fdc-558d-c27c-54d56950f7b8@mentor.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Robert,
+27.03.2020 15:49, Wang, Jiada пишет:
+>>> +static void mxt_watchdog_work(struct work_struct *work)
+>>> +{
+>>> +    struct mxt_data *data =
+>>> +        container_of(work, struct mxt_data, watchdog_work);
+>>> +    u16 info_buf;
+>>> +    int ret = 0;
+>>> +    u8 size = 2;
+>>
+>>> +    if (data->suspended || data->in_bootloader)
+>>> +        return;
+>>> +
+>>> +    ret = __mxt_read_reg(data->client, 0, size, &info_buf);
+>>
+>> Looks like this need to be protected with a lock to not race with the
+>> suspending / bootloader states.
+>>
+> right, I will add lock in next version
 
-On Fri, Mar 27, 2020 at 11:32:29AM +0100, Robert Foss wrote:
-> On Thu, 26 Mar 2020 at 15:47, Sakari Ailus <sakari.ailus@iki.fi> wrote:
-> >
-> > Hi Robert,
-> >
-> > On Thu, Mar 26, 2020 at 12:56:37PM +0100, Robert Foss wrote:
-> > ...
-> > > > > +static int __ov8856_power_on(struct ov8856 *ov8856)
-> > > > > +{
-> > > > > +     struct i2c_client *client = v4l2_get_subdevdata(&ov8856->sd);
-> > > > > +     int ret;
-> > > > > +
-> > > > > +     ret = clk_prepare_enable(ov8856->xvclk);
-> > > > > +     if (ret < 0) {
-> > > > > +             dev_err(&client->dev, "failed to enable xvclk\n");
-> > > > > +             return ret;
-> > > > > +     }
-> > > > > +
-> > > > > +     gpiod_set_value_cansleep(ov8856->reset_gpio, GPIOD_OUT_HIGH);
-> > > > > +
-> > > > > +     ret = regulator_bulk_enable(ARRAY_SIZE(ov8856_supply_names),
-> > > > > +                                 ov8856->supplies);
-> > > > > +     if (ret < 0) {
-> > > > > +             dev_err(&client->dev, "failed to enable regulators\n");
-> > > > > +             goto disable_clk;
-> > > > > +     }
-> > > > > +
-> > > > > +     gpiod_set_value_cansleep(ov8856->reset_gpio, GPIOD_OUT_LOW);
-> > > > > +
-> > > > > +     usleep_range(1500, 1800);
-> > > >
-> > > > I think you could omit the delay on ACPI based systems. Or just bail out
-> > > > early in that case.
-> > >
-> > > I'll add a check for reset_gpio being NULL, and skip the sleep for that case.
-> >
-> > There could also be a regulator but no GPIO.
-> >
-> > I think if you don't have either, then certainly there's no need for a
-> > delay.
-> 
-> Removing the delay if no action is taken makes sense, but I'm not sure
-> how best to do it.
-> If there are no regulators dummy ones are created automatically, which
-> makes distinguishing between a little bit cumbersome. The regulator
-> structs could of course all be inspected, and if all are dummy ones,
-> the delay could be skipped. But is there a neater way of doing this?
-> Manually inspecting the regs strikes me as a bit inelegant.
-
-I guess the cleanest, easy way to make this right, albeit slightly
-unoptimal in very rare cases where you have none of the above resources in
-a DT system, is to bail out if you're running on an ACPI based system.
-
-I.e. checking for e.g. is_acpi_node(dev->fwnode).
-
--- 
-Sakari Ailus
+Alternatively, maybe the watchdog_work could be just stopped in
+suspended / bootloader states.
