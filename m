@@ -2,164 +2,199 @@ Return-Path: <SRS0=s8dx=5M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED7B1C43331
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 12:08:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49E84C43331
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 12:09:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C19272074F
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 12:08:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F4D02073B
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 12:09:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QdNmKdGE"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YfTh2q5C"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727370AbgC0MIT (ORCPT
+        id S1727439AbgC0MJg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Mar 2020 08:08:19 -0400
-Received: from mail-il1-f193.google.com ([209.85.166.193]:36096 "EHLO
-        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726540AbgC0MIT (ORCPT
+        Fri, 27 Mar 2020 08:09:36 -0400
+Received: from us-smtp-delivery-74.mimecast.com ([216.205.24.74]:52728 "EHLO
+        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726739AbgC0MJg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Mar 2020 08:08:19 -0400
-Received: by mail-il1-f193.google.com with SMTP id p13so8493313ilp.3
-        for <linux-kernel@vger.kernel.org>; Fri, 27 Mar 2020 05:08:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=kbO0lHuZsUKur8Xx2DyfrCXgWZZVXfZaATPKKkvt8Bc=;
-        b=QdNmKdGEdVooYkdLrfjElrOl7ucEZ9mfMAJhGRxScANHMCVkg3Qd6V0V7cH8bqZYf1
-         tpLq3sBCFSUZsPpYwIWYrWBnbiNfhCZ86lFyBhhICmzdbhtB1YWLGtPFGvtqv0+nutJV
-         K/ooAFHXoJ3NFbvve25P3+e82TdtYzQAoR2z5ePDTAVFwlLsiZc3iXPWGZRKLFiPB4BP
-         1s7bLPnQP85Q2UbhFMzdZUL39/epdFiKVAzfK1rhScSYWKbetINEzggXcCWC+/0W7YRL
-         6o25P/11cEAO4RpEzIwYLyYzls7lWLt8ILwsORgkdYjJfEaSuY0UlwKTmwsxPQJmW1Wb
-         WYUw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=kbO0lHuZsUKur8Xx2DyfrCXgWZZVXfZaATPKKkvt8Bc=;
-        b=NFrliA9NlOU+RKXx/OHvo548OleHzlX96+Qh7F8ke5KxiNUnXPtX8HYJSaSNzabbhu
-         4T3EH+24SxYY7/khF4iQPxd/mWk4e1tgKQGqDhvdQqTNvC2qiopO8fkclvzJT2JQVa4c
-         N09IURCfM0mutd/pLR5Pce4Fot423c/qxOfdKNUn6s88a2ASPLrAX0eSqdohi+6bWVIV
-         QLRv91c5F1Z9v+yeW+1yzp6oZW+VENdBFT9eJIs9iRene8k1vkFgrOIoEv4oo8lj6nFM
-         I3Wl7USnuDXrQMXBpVgKAauN/s046aAwxgG6fR5Y2dpQsH5Sa2Xz1oa9HJqHkwDck4h8
-         V6fw==
-X-Gm-Message-State: ANhLgQ260SHZ5gKClXCLxseuQb/JJU7KcyZ3kdabOCx3pxAPXAujR9gt
-        AG3TTCCj9d3qIZ+XDN/yH/XzcMSdlnWsYO+otDuDc0rr
-X-Google-Smtp-Source: ADFU+vut+1DUt6ANPYKIkv5LwhoW56JDBrS4rSXFOhzWBkL3Y8PA6qdwdonFWuBzjFRs/qgDletxgqG1c1IHvaLCa58=
-X-Received: by 2002:a92:bf0b:: with SMTP id z11mr12605401ilh.213.1585310897779;
- Fri, 27 Mar 2020 05:08:17 -0700 (PDT)
+        Fri, 27 Mar 2020 08:09:36 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1585310975;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=qJQH4adUoRVUBtJ5CeJjShCGcnT/rCeSh9pNXp1X7Ag=;
+        b=YfTh2q5Cb8O7sEWL/U57+jhZn7Uf9n1AIS9EBn8RZx1ZEP76kP6/9PUStiRlP4+3oBKCQW
+        aSKiYiQ5hel9TQnUoYbCBwzxas2TNqnwVnZ8dh/knlpCuDfy3ih7kN/rJmdlvDMKAX9xq+
+        npw5IaARn8otN9kiXsnSgB5T23zwGws=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-353-3BBQ8wcvNCib6c4h8eJsFg-1; Fri, 27 Mar 2020 08:09:31 -0400
+X-MC-Unique: 3BBQ8wcvNCib6c4h8eJsFg-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id BBC8C1005509;
+        Fri, 27 Mar 2020 12:09:29 +0000 (UTC)
+Received: from fuller.cnet (ovpn-116-58.gru2.redhat.com [10.97.116.58])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 48F3760BF4;
+        Fri, 27 Mar 2020 12:09:29 +0000 (UTC)
+Received: by fuller.cnet (Postfix, from userid 1000)
+        id 8F85D4198B3C; Fri, 27 Mar 2020 09:07:28 -0300 (-03)
+Date:   Fri, 27 Mar 2020 09:07:28 -0300
+From:   Marcelo Tosatti <mtosatti@redhat.com>
+To:     Frederic Weisbecker <frederic@kernel.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Chris Friesen <chris.friesen@windriver.com>,
+        linux-kernel@vger.kernel.org, Christoph Lameter <cl@linux.com>,
+        Jim Somerville <Jim.Somerville@windriver.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Frederic Weisbecker <fweisbec@gmail.com>,
+        Peter Zijlstra <peterz@infradead.org>
+Subject: Re: [PATCH v2] isolcpus: affine kernel threads to specified cpumask
+Message-ID: <20200327120728.GA11108@fuller.cnet>
+References: <20200323135414.GA28634@fuller.cnet>
+ <87k13boxcn.fsf@nanos.tec.linutronix.de>
+ <af285c22-2a3f-5aa6-3fdb-27fba73389bd@windriver.com>
+ <87imiuq0cg.fsf@nanos.tec.linutronix.de>
+ <20200324152016.GA25422@fuller.cnet>
+ <20200325002956.GC20223@lenoir>
+ <20200325114736.GA17165@fuller.cnet>
+ <20200326162002.GA3946@lenoir>
 MIME-Version: 1.0
-References: <20200326174314.254662-1-hjl.tools@gmail.com> <20200327104450.GA8015@zn.tnic>
-In-Reply-To: <20200327104450.GA8015@zn.tnic>
-From:   "H.J. Lu" <hjl.tools@gmail.com>
-Date:   Fri, 27 Mar 2020 05:07:41 -0700
-Message-ID: <CAMe9rOpTWtojC=cJzw1AECrT=Q_cYN06uiv1V2JySwVm7N71dA@mail.gmail.com>
-Subject: Re: [PATCH] x86: Discard .note.gnu.property sections in vDSO
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Kees Cook <keescook@chromium.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        Yu-cheng Yu <yu-cheng.yu@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200326162002.GA3946@lenoir>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 27, 2020 at 3:44 AM Borislav Petkov <bp@alien8.de> wrote:
->
-> On Thu, Mar 26, 2020 at 10:43:14AM -0700, H.J. Lu wrote:
-> > With the command-line option, -mx86-used-note=yes, the x86 assembler
->
-> I see:
->
->        -mx86-used-note=no
->        -mx86-used-note=yes
->            These options control whether the assembler should generate
->            GNU_PROPERTY_X86_ISA_1_USED and GNU_PROPERTY_X86_FEATURE_2_USED GNU property
->            notes.  The default can be controlled by the --enable-x86-used-note
->            configure option.
->
-> Is there a plan to use this build option in the kernel in the future or
-> all binutils will have it enabled or what's the story here?
->
-> Because I don't see -mx86-used-note used anywhere in the kernel...
+On Thu, Mar 26, 2020 at 05:20:05PM +0100, Frederic Weisbecker wrote:
+> On Wed, Mar 25, 2020 at 08:47:36AM -0300, Marcelo Tosatti wrote:
+> > 
+> > Hi Frederic,
+> > 
+> > On Wed, Mar 25, 2020 at 01:30:00AM +0100, Frederic Weisbecker wrote:
+> > > On Tue, Mar 24, 2020 at 12:20:16PM -0300, Marcelo Tosatti wrote:
+> > > > 
+> > > > This is a kernel enhancement to configure the cpu affinity of kernel
+> > > > threads via kernel boot option isolcpus=no_kthreads,<isolcpus_params>,<cpulist>
+> > > > 
+> > > > When this option is specified, the cpumask is immediately applied upon
+> > > > thread launch. This does not affect kernel threads that specify cpu
+> > > > and node.
+> > > > 
+> > > > This allows CPU isolation (that is not allowing certain threads
+> > > > to execute on certain CPUs) without using the isolcpus=domain parameter,
+> > > > making it possible to enable load balancing on such CPUs
+> > > > during runtime (see
+> > > > 
+> > > > Note-1: this is based off on Wind River's patch at
+> > > > https://github.com/starlingx-staging/stx-integ/blob/master/kernel/kernel-std/centos/patches/affine-compute-kernel-threads.patch
+> > > > 
+> > > > Difference being that this patch is limited to modifying
+> > > > kernel thread cpumask: Behaviour of other threads can
+> > > > be controlled via cgroups or sched_setaffinity.
+> > > > 
+> > > > Note-2: MontaVista's patch was based off Christoph Lameter's patch at
+> > > > https://lwn.net/Articles/565932/ with the only difference being
+> > > > the kernel parameter changed from kthread to kthread_cpus.
+> > > > 
+> > > > Signed-off-by: Marcelo Tosatti <mtosatti@redhat.com>
+> > > 
+> > > I'm wondering, why do you need such a boot shift at all when you
+> > > can actually affine kthreads on runtime?
+> > 
+> > New, unbound kernel threads inherit the cpumask of kthreadd.
+> > 
+> > Therefore there is a race between kernel thread creation 
+> > and affine.
+> > 
+> > If you know of a solution to that problem, that can be used instead.
+> 
+> Well, you could first set the affinity of kthreadd and only then the affinity
+> of the others. But I can still imagine some tiny races with fork().
+> 
+> > > 
+> > > >  };
+> > > >  
+> > > >  #ifdef CONFIG_CPU_ISOLATION
+> > > > diff --git a/kernel/kthread.c b/kernel/kthread.c
+> > > > index b262f47046ca..be9c8d53a986 100644
+> > > > --- a/kernel/kthread.c
+> > > > +++ b/kernel/kthread.c
+> > > > @@ -347,7 +347,7 @@ struct task_struct *__kthread_create_on_node(int (*threadfn)(void *data),
+> > > >  		 * The kernel thread should not inherit these properties.
+> > > >  		 */
+> > > >  		sched_setscheduler_nocheck(task, SCHED_NORMAL, &param);
+> > > > -		set_cpus_allowed_ptr(task, cpu_all_mask);
+> > > > +		set_cpus_allowed_ptr(task, cpu_kthread_mask);
+> > > 
+> > > I'm wondering, why are we using cpu_all_mask and not cpu_possible_mask here?
+> > > If we used the latter, you wouldn't need to create cpu_kthread_mask and
+> > > you could directly rely on housekeeping_cpumask(HK_FLAG_KTHREAD).
+> > 
+> > I suppose that either work: CPUs can only be online from
+> > cpu_possible_mask (and is contained in cpu_possible_mask).
+> > 
+> > Nice cleanup, thanks.
+> 
+> But may I suggest you to do:
+> 
+> -         set_cpus_allowed_ptr(task, cpu_all_mask);
+> +         set_cpus_allowed_ptr(task, cpu_possible_mask);
+> 
+> as a first step in its own patch in the series. I just want to make sure that change
+> isn't missed by reviewers or bisections, in case someone catches something we
+> overlooked.
+> 
+> > 
+> > > 
+> > > > diff --git a/kernel/sched/isolation.c b/kernel/sched/isolation.c
+> > > > index 008d6ac2342b..e9d48729efd4 100644
+> > > > --- a/kernel/sched/isolation.c
+> > > > +++ b/kernel/sched/isolation.c
+> > > > @@ -169,6 +169,12 @@ static int __init housekeeping_isolcpus_setup(char *str)
+> > > >  			continue;
+> > > >  		}
+> > > >  
+> > > > +		if (!strncmp(str, "no_kthreads,", 12)) {
+> > > > +			str += 12;
+> > > > +			flags |= HK_FLAG_NO_KTHREADS;
+> > > 
+> > > You will certainly want HK_FLAG_WQ as well since workqueue has its own
+> > > way to deal with unbound affinity.
+> > 
+> > Yep. HK_FLAG_WQ is simply a convenience so that the user does not have
+> > to configure this separately: OK.
+> 
+> Also, and that's a larger debate, are you interested in isolating kthreads
+> only or any kind of kernel unbound work that could be affine outside
+> a given CPU?
 
--mx86-used-note=yes can be enabled by default at binutils configure time:
+Any kind of kernel work.
 
-[hjl@gnu-cfl-2 ~]$ as --help | grep mx86-used-note
-  -mx86-used-note=[no|yes] (default: yes)
-[hjl@gnu-cfl-2 ~]$
+> In case of all the unbound work, I may suggest an all-in-one "unbound"
+> flag that would do:
+> 
+>     HK_FLAG_KTHREAD | HK_FLAG_WQ | HK_FLAG_TIMER | HK_FLAG_RCU | HK_FLAG_MISC
+>         | HK_FLAG_SCHED
+> 
+> Otherwise we can stick with HK_FLAG_KTHREAD, but I'd be curious about your usecase.
+> 
+> Thanks.
 
-I am changing the commit log to
+BTW HK_FLAG_SCHED is not settable at the moment.
 
----
-With the command-line option, -mx86-used-note=yes, which can also be
-enabled at binutils build time with
+Any reason why nohz_full= is not setting it ?
 
-  --enable-x86-used-note  generate GNU x86 used ISA and feature properties
+Thanks
 
-the x86 assembler in binutils 2.32 and above generates a program property
-note in a note section, .note.gnu.property, to encode used x86 ISAs and
-features.  But kernel linker script only contains a single NOTE segment:
----
-
-> > in binutils 2.32 and above generates a program property note in a note
-> > section, .note.gnu.property, to encode used x86 ISAs and features.  But
-> > x86 kernel vDSO linker script only contains a single NOTE segment:
-> >
-> > PHDRS
-> > {
-> >  text PT_LOAD FLAGS(5) FILEHDR PHDRS; /* PF_R|PF_X */
-> >  dynamic PT_DYNAMIC FLAGS(4); /* PF_R */
-> >  note PT_NOTE FLAGS(4); /* PF_R */
-> >  eh_frame_hdr 0x6474e550;
-> > }
-> >
-> > The NOTE segment generated by vDSO linker script is aligned to 4 bytes.
-> > But .note.gnu.property section must be aligned to 8 bytes on x86-64 and
-> > we get
-> >
-> > [hjl@gnu-skx-1 vdso]$ readelf -n vdso64.so
-> >
-> > Displaying notes found in: .note
-> >   Owner                Data size      Description
-> >   Linux                0x00000004     Unknown note type: (0x00000000)
-> >    description data: 06 00 00 00
-> > readelf: Warning: note with invalid namesz and/or descsz found at offset 0x20
-> > readelf: Warning:  type: 0x78, namesize: 0x00000100, descsize: 0x756e694c, alignment: 8
-> > [hjl@gnu-skx-1 vdso]$
-> >
-> > Since note.gnu.property section in vDSO is not checked by dynamic linker,
-> > this patch discards .note.gnu.property sections in vDSO by adding
->
-> Avoid having "This patch" or "This commit" in the commit message. It is
-> tautologically useless.
-
-I am changing it to
-
-Since note.gnu.property section in kernel image is never used, discard
-.note.gnu.property sections in kernel linker script by adding
-
-/DISCARD/ : {
-  *(.note.gnu.property)
-}
-
-> Also, do
->
-> $ git grep 'This patch' Documentation/process
->
-> for more details.
-
-Thanks.
-
--- 
-H.J.
