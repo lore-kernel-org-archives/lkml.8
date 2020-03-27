@@ -2,95 +2,95 @@ Return-Path: <SRS0=s8dx=5M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2914C43331
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 23:32:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5783C2D0E7
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 23:33:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC00620717
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 23:32:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 89EFC206E6
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 23:33:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rROi4bYm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727167AbgC0Xcl (ORCPT
+        id S1727126AbgC0Xd5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Mar 2020 19:32:41 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:12206 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726065AbgC0Xcl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Mar 2020 19:32:41 -0400
-Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 4DCD976769C895C2FE5A;
-        Sat, 28 Mar 2020 07:32:38 +0800 (CST)
-Received: from [10.173.228.124] (10.173.228.124) by smtp.huawei.com
- (10.3.19.207) with Microsoft SMTP Server (TLS) id 14.3.487.0; Sat, 28 Mar
- 2020 07:32:27 +0800
-Subject: Re: [PATCH v3] mm/hugetlb: fix a addressing exception caused by
- huge_pte_offset
-To:     Jason Gunthorpe <jgg@ziepe.ca>
-CC:     <linux-kernel@vger.kernel.org>, <linux-mm@kvack.org>,
-        <kvm@vger.kernel.org>, <arei.gonglei@huawei.com>,
-        <weidong.huang@huawei.com>, <weifuqiang@huawei.com>,
-        <kirill.shutemov@linux.intel.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "Matthew Wilcox" <willy@infradead.org>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        <stable@vger.kernel.org>
-References: <20200327014007.1915-1-longpeng2@huawei.com>
- <20200327121100.GR20941@ziepe.ca>
-From:   "Longpeng (Mike, Cloud Infrastructure Service Product Dept.)" 
-        <longpeng2@huawei.com>
-Message-ID: <0d8771ec-9661-9ef4-0972-4dadf548487b@huawei.com>
-Date:   Sat, 28 Mar 2020 07:32:27 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Fri, 27 Mar 2020 19:33:57 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:41570 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726291AbgC0Xd5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Mar 2020 19:33:57 -0400
+Received: by mail-lj1-f194.google.com with SMTP id n17so11985062lji.8
+        for <linux-kernel@vger.kernel.org>; Fri, 27 Mar 2020 16:33:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=31OCCdsx5Mp+cw9g2eq/fgIixaxEpyfnaxTPFOvJXaY=;
+        b=rROi4bYmrya2laI29eBwhRi8+o0B6pv0VQ0S87fTvDSOO1fI2+V4b0Vi3Qd9NE/cXJ
+         mMu507vWPOzoHxkFh2PXEEBozO56iynS+gc+aU1gUJabRDrk2QYOHuA/j6obtc63r+sK
+         lBRbPiCQBu8h/FWzdqlqAKITKpNDgAXfGSi07YfsXX/K2J4DNy6xR30fZIBi93GTKn1Y
+         58Na3pTmM2nCqEvEDt3cI16oM911yve6Zu8EVsJZxVO9ub+FXvBuKgX9nwRB+iHbMBrZ
+         gKGbaefg4CamnX8bzITzpgwiRzpSPf0giuE6Y5joLA+AG9CL5gVR3mH01HLuYA9oCTbG
+         C88A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=31OCCdsx5Mp+cw9g2eq/fgIixaxEpyfnaxTPFOvJXaY=;
+        b=YwJ3PAg6iCDswwqL9cq0xPnwXh5bKLwNuL7JYZokLWCFaqE0aYicEYg9J1yZaMzCG8
+         heLh8dYyAcQZmDrioXACgzLhJf7mttzyhc9SaLBWw4xdSoDjXc4cV+NJ6G82bdLKBk5I
+         d25QSLzUYOVOVG9vNNSR6WL72Wx7sI8ERHMLRG55isS+BINwrnPjysFjuH/MeXKPes46
+         ACsivyo3voC/Het3djNhZfMCDqt30Bj64SSCpJ6itQSOxYKEcinElByUUJED8NkApZxL
+         ksMoS1rj8tYELmEUo5pywrzGCBCLZz/dFNoI2cyBqxk9OlqIQd4r1htENGGMOVX6gU/y
+         y0Ww==
+X-Gm-Message-State: AGi0PubRLi/M8eiRDy+GWNgTbz92VUdy5T8BJKsZjh5DyKV3ngLbdXJ3
+        UxWw1hcCbbsWmNpgVTFtxJGj8p2yXunbZEX5ZOgynQ==
+X-Google-Smtp-Source: APiQypI/NjrojqWxdb8e6IfCyjtcaINz+cXlEUyGidd5WOLU+ClWfg8pCJNKY7+Nnm9MsxpZbuwSJaUnMrtX8Xx3U+Q=
+X-Received: by 2002:a05:651c:445:: with SMTP id g5mr723803ljg.125.1585352034393;
+ Fri, 27 Mar 2020 16:33:54 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200327121100.GR20941@ziepe.ca>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.173.228.124]
-X-CFilter-Loop: Reflected
+References: <20200327223209.20409-1-ansuelsmth@gmail.com>
+In-Reply-To: <20200327223209.20409-1-ansuelsmth@gmail.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Sat, 28 Mar 2020 00:33:42 +0100
+Message-ID: <CACRpkdaemQ_udn=TawvcSrUgmnw4eG0ASpjTC-0hjJCP-hCQ_w@mail.gmail.com>
+Subject: Re: [PATCH v3] pinctrl: qcom: use scm_call to route GPIO irq to Apps
+To:     Ansuel Smith <ansuelsmth@gmail.com>
+Cc:     Andy Gross <agross@kernel.org>,
+        Ajay Kishore <akisho@codeaurora.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        MSM <linux-arm-msm@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Mar 27, 2020 at 11:32 PM Ansuel Smith <ansuelsmth@gmail.com> wrote:
 
+> From: Ajay Kishore <akisho@codeaurora.org>
+>
+> For IPQ806x targets, TZ protects the registers that are used to
+> configure the routing of interrupts to a target processor.
+> To resolve this, this patch uses scm call to route GPIO interrupts
+> to application processor. Also the scm call interface is changed.
+>
+> Signed-off-by: Ajay Kishore <akisho@codeaurora.org>
+> Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
+> ---
+> v3:
+> * Rename route_to_apps to intr_target_use_scm
+> * Follow standard design and rename base_reg to phys_base
+> * Add additional comments in route interrupts condition
 
-On 2020/3/27 20:11, Jason Gunthorpe wrote:
-> On Fri, Mar 27, 2020 at 09:40:07AM +0800, Longpeng(Mike) wrote:
->> diff --git a/mm/hugetlb.c b/mm/hugetlb.c
->> index dd8737a..d4fab68 100644
->> +++ b/mm/hugetlb.c
->> @@ -4909,29 +4909,33 @@ pte_t *huge_pte_offset(struct mm_struct *mm,
->>  		       unsigned long addr, unsigned long sz)
->>  {
->>  	pgd_t *pgd;
->> -	p4d_t *p4d;
->> -	pud_t *pud;
->> -	pmd_t *pmd;
->> +	p4d_t *p4g, p4d_entry;
->> +	pud_t *pud, pud_entry;
->> +	pmd_t *pmd, pmd_entry;
->>  
->>  	pgd = pgd_offset(mm, addr);
->>  	if (!pgd_present(*pgd))
->>  		return NULL;
->> -	p4d = p4d_offset(pgd, addr);
->> -	if (!p4d_present(*p4d))
->> +
->> +	p4g = p4d_offset(pgd, addr);
-> 
-> Why p4g here? Shouldn't it be p4d?
-> 
-Sorry, it's a typo, I'll send v4
+Patch applied with Bj=C3=B6rn's review tag.
 
-> Jason
-> .
-> 
-
----
-Regards,
-Longpeng(Mike)
+Yours,
+Linus Walleij
