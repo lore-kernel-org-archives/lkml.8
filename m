@@ -2,182 +2,112 @@ Return-Path: <SRS0=s8dx=5M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42F27C43331
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 18:22:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00D29C43331
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 18:22:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2093720B1F
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 18:22:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB6472083E
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 18:22:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="M4d5Js+F"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="G7WCrgsc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727423AbgC0SWW (ORCPT
+        id S1727611AbgC0SWp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Mar 2020 14:22:22 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:50084 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726540AbgC0SWV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Mar 2020 14:22:21 -0400
-Received: from zn.tnic (p200300EC2F0CFA006896CC49A8ABCE42.dip0.t-ipconnect.de [IPv6:2003:ec:2f0c:fa00:6896:cc49:a8ab:ce42])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id B4D041EC0C8E;
-        Fri, 27 Mar 2020 19:22:19 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1585333339;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=drSOBuDYgdgFJzfGjBudh0HtMiYsOKLj9y49+Tznv9I=;
-        b=M4d5Js+FaY+Bzj3FgMg6Z9WqEvTRNgrRZSWl7HtrhC0vBQouLd0I2oImy+eYIFgGOWUMJT
-        ZK6ZzdeoIbeczUDKLYFVZ9MdjYt1S5Nf65LKVa2TQpjxZ3QXWIAvzhm71wS7SW9RQTH/Mn
-        qX8V5D+e8lDr+m7NxnbfQQkZ13uqcWQ=
-Date:   Fri, 27 Mar 2020 19:22:14 +0100
-From:   Borislav Petkov <bp@alien8.de>
-To:     Shiju Jose <shiju.jose@huawei.com>
-Cc:     linux-acpi@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, rjw@rjwysocki.net,
-        helgaas@kernel.org, lenb@kernel.org, james.morse@arm.com,
-        tony.luck@intel.com, gregkh@linuxfoundation.org,
-        zhangliguang@linux.alibaba.com, tglx@linutronix.de,
-        linuxarm@huawei.com, jonathan.cameron@huawei.com,
-        tanxiaofei@huawei.com, yangyicong@hisilicon.com
-Subject: Re: [PATCH v6 1/2] ACPI / APEI: Add support to notify the vendor
- specific HW errors
-Message-ID: <20200327182214.GD8015@zn.tnic>
-References: <ShijuJose>
- <20200325164223.650-1-shiju.jose@huawei.com>
- <20200325164223.650-2-shiju.jose@huawei.com>
+        Fri, 27 Mar 2020 14:22:45 -0400
+Received: from mail-vs1-f66.google.com ([209.85.217.66]:38614 "EHLO
+        mail-vs1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726540AbgC0SWo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Mar 2020 14:22:44 -0400
+Received: by mail-vs1-f66.google.com with SMTP id x206so6834824vsx.5
+        for <linux-kernel@vger.kernel.org>; Fri, 27 Mar 2020 11:22:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=FMqfnFJfOBNCe0ahBd62eMY+XQaeL21j8Kfs+r5ufSA=;
+        b=G7WCrgscZMeRk0ftZqju+5xPkj8WyWt0QH3xSwv9B6HzbWbeum1U4B64GLxHjdb9Qt
+         SG2/j74SA5xNvA3oZy3EIZDIkGC3tvKLMwcsJVmo/w88jkaO/mufMSy/6mKQG5xd+3yt
+         r1mtAyJ6LsEE3cGbfLXKlEvld8VsPvVFft+PI=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=FMqfnFJfOBNCe0ahBd62eMY+XQaeL21j8Kfs+r5ufSA=;
+        b=fZvMCdn9T/qtEJQKsh3Qpc16DuoJYdr1wzFgPqeimOlQz4SJXyGwu5DhB/rnQkYYST
+         O3qe48NrDP8Uq8504gtZF+4YAevR+7Mmu8BOdsQVDpBx+q5dz+rxt8QDXDhBXlPACZQL
+         Js73GCd/ctE4+sYcvtOVUVHbgeKbOaY36etC/3i/9uVdg8gF2a+8MMAtB/AxlTPqI3pc
+         YpQD35/YqYA3mn+tBxAAGSI5LTGUPx1R8FtyOw5y5a1tok1VSyRMwrjGcg5tMhF1+VBa
+         Z+d8X6UhX1n9su2COcSLIeya/M4lfZphxehmFoOR4VlM8GojJYhrezAA9XMEI9AhB+iC
+         yP0A==
+X-Gm-Message-State: AGi0PubuFac5SaJOLJcxoM/pPGPj2RScjd3eaKgLSONpiO2xF1MiAa9y
+        javxekq+ex/5cT6QwR9yppiSilouhZ0=
+X-Google-Smtp-Source: APiQypKH/LZAiM+fejS+ZiWs3cY2WyP290YUj510duNtYT+rcgIyP1WUE6DUXafVMpzStgX8ZiSgTQ==
+X-Received: by 2002:a67:f24d:: with SMTP id y13mr283643vsm.72.1585333363239;
+        Fri, 27 Mar 2020 11:22:43 -0700 (PDT)
+Received: from mail-vs1-f53.google.com (mail-vs1-f53.google.com. [209.85.217.53])
+        by smtp.gmail.com with ESMTPSA id o39sm3165433uad.6.2020.03.27.11.22.42
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 27 Mar 2020 11:22:42 -0700 (PDT)
+Received: by mail-vs1-f53.google.com with SMTP id r7so3923617vsg.7
+        for <linux-kernel@vger.kernel.org>; Fri, 27 Mar 2020 11:22:42 -0700 (PDT)
+X-Received: by 2002:a67:7c02:: with SMTP id x2mr277589vsc.45.1585333361883;
+ Fri, 27 Mar 2020 11:22:41 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200325164223.650-2-shiju.jose@huawei.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <1585244270-637-1-git-send-email-mkshah@codeaurora.org>
+ <1585244270-637-5-git-send-email-mkshah@codeaurora.org> <CAD=FV=UQAbqitmYR7=5+AAL8pqy2imzEWf8BTkBoD6mthAwpKw@mail.gmail.com>
+ <7bd2c923-4003-a1c4-610f-548e79a94d35@codeaurora.org>
+In-Reply-To: <7bd2c923-4003-a1c4-610f-548e79a94d35@codeaurora.org>
+From:   Doug Anderson <dianders@chromium.org>
+Date:   Fri, 27 Mar 2020 11:22:29 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=WEH_A4SvyX0uv9Z_n+z9_SYcdm2LfsLRK7qALEiOyHqQ@mail.gmail.com>
+Message-ID: <CAD=FV=WEH_A4SvyX0uv9Z_n+z9_SYcdm2LfsLRK7qALEiOyHqQ@mail.gmail.com>
+Subject: Re: [PATCH v14 4/6] soc: qcom: rpmh: Invoke rpmh_flush() for dirty caches
+To:     Maulik Shah <mkshah@codeaurora.org>
+Cc:     Stephen Boyd <swboyd@chromium.org>,
+        Evan Green <evgreen@chromium.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Andy Gross <agross@kernel.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        Lina Iyer <ilina@codeaurora.org>, lsrao@codeaurora.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 25, 2020 at 04:42:22PM +0000, Shiju Jose wrote:
-> Presently APEI does not support reporting the vendor specific
-> HW errors, received in the vendor defined table entries, to the
-> vendor drivers for any recovery.
-> 
-> This patch adds the support to register and unregister the
+Hi,
 
-Avoid having "This patch" or "This commit" in the commit message. It is
-tautologically useless.
+On Fri, Mar 27, 2020 at 4:00 AM Maulik Shah <mkshah@codeaurora.org> wrote:
+>
+>   * @ctrlr: controller making request to flush cached data
+>   *
+> - * Return: -EBUSY if the controller is busy, probably waiting on a response
+> - * to a RPMH request sent earlier.
+> + * Return: 0 on success, error number otherwise.
+>   *
+> - * This function is always called from the sleep code from the last CPU
+> - * that is powering down the entire system. Since no other RPMH API would be
+> - * executing at this time, it is safe to run lockless.
+> + * This function can either be called from sleep code on the last CPU
+> + * (thus no spinlock needed) or with the ctrlr->cache_lock already held.
+>
+> Now you can remove the "or with the ctrlr->cache_lock already held"
+> since it's no longer true.
+>
+> It can be true for other RSCs, so i kept as it is.
 
-Also, do
+I don't really understand this.  The cache_lock is only a concept in
+"rpmh.c".  How could another RSC grab the cache lock?  If nothing
+else, can you remove this comment until support for those other RSCs
+are added and we can evaluate then?
 
-$ git grep 'This patch' Documentation/process
-
-for more details.
-
-> error handling function for the vendor specific HW errors and
-> notify the registered kernel driver.
-> 
-> Signed-off-by: Shiju Jose <shiju.jose@huawei.com>
-> ---
->  drivers/acpi/apei/ghes.c | 35 ++++++++++++++++++++++++++++++++++-
->  drivers/ras/ras.c        |  5 +++--
->  include/acpi/ghes.h      | 28 ++++++++++++++++++++++++++++
->  include/linux/ras.h      |  6 ++++--
->  include/ras/ras_event.h  |  7 +++++--
->  5 files changed, 74 insertions(+), 7 deletions(-)
-> 
-> diff --git a/drivers/acpi/apei/ghes.c b/drivers/acpi/apei/ghes.c
-> index 24c9642e8fc7..d83f0b1aad0d 100644
-> --- a/drivers/acpi/apei/ghes.c
-> +++ b/drivers/acpi/apei/ghes.c
-> @@ -490,6 +490,32 @@ static void ghes_handle_aer(struct acpi_hest_generic_data *gdata)
->  #endif
->  }
->  
-> +static ATOMIC_NOTIFIER_HEAD(ghes_event_notify_list);
-> +
-> +/**
-> + * ghes_register_event_notifier - register an event notifier
-> + * for the non-fatal HW errors.
-> + * @nb: pointer to the notifier_block structure of the event handler.
-> + *
-> + * return 0 : SUCCESS, non-zero : FAIL
-> + */
-> +int ghes_register_event_notifier(struct notifier_block *nb)
-> +{
-> +	return atomic_notifier_chain_register(&ghes_event_notify_list, nb);
-> +}
-> +EXPORT_SYMBOL_GPL(ghes_register_event_notifier);
-> +
-> +/**
-> + * ghes_unregister_event_notifier - unregister the previously
-> + * registered event notifier.
-> + * @nb: pointer to the notifier_block structure of the event handler.
-> + */
-> +void ghes_unregister_event_notifier(struct notifier_block *nb)
-> +{
-> +	atomic_notifier_chain_unregister(&ghes_event_notify_list, nb);
-> +}
-> +EXPORT_SYMBOL_GPL(ghes_unregister_event_notifier);
-> +
->  static void ghes_do_proc(struct ghes *ghes,
->  			 const struct acpi_hest_generic_status *estatus)
->  {
-> @@ -526,10 +552,17 @@ static void ghes_do_proc(struct ghes *ghes,
->  			log_arm_hw_error(err);
->  		} else {
->  			void *err = acpi_hest_get_payload(gdata);
-> +			u8 error_handled = false;
-> +			int ret;
-> +
-> +			ret = atomic_notifier_call_chain(&ghes_event_notify_list, 0, gdata);
-
-Well, this is a notifier with standard name for a non-standard event.
-Not optimal.
-
-Why does only this event need a notifier? Because your driver is
-interested in only those events?
-
-> +			if (ret & NOTIFY_OK)
-> +				error_handled = true;
->  
->  			log_non_standard_event(sec_type, fru_id, fru_text,
->  					       sec_sev, err,
-> -					       gdata->error_data_length);
-> +					       gdata->error_data_length,
-> +					       error_handled);
-
-What's that error_handled thing for? That's just silly.
-
-Your notifier returns NOTIFY_STOP when it has queued the error. If you
-don't want to log it, just test == NOTIFY_STOP and do not log it then.
-
-Then your notifier callback is queuing the error into a kfifo for
-whatever reason and then scheduling a workqueue to handle it in user
-context...
-
-So I'm thinking that it would be better if you:
-
-* make that kfifo generic and part of ghes.c and queue all types of
-error records into it in ghes_do_proc() - not just the non-standard
-ones.
-
-* then, when you're done queuing, you kick a workqueue.
-
-* that workqueue runs a normal, blocking notifier to which drivers
-register.
-
-Your driver can register to that notifier too and do the normal handling
-then and not have this ad-hoc, semi-generic, semi-vendor-specific thing.
-
-Thx.
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+-Doug
