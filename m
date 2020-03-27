@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1525BC43331
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 23:31:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F8E9C2D0F4
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 23:31:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E50DC2076B
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 23:31:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A58E20787
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 23:31:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727175AbgC0XbT (ORCPT
+        id S1727801AbgC0Xbw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Mar 2020 19:31:19 -0400
-Received: from zeniv.linux.org.uk ([195.92.253.2]:35894 "EHLO
+        Fri, 27 Mar 2020 19:31:52 -0400
+Received: from zeniv.linux.org.uk ([195.92.253.2]:35914 "EHLO
         ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726212AbgC0XbT (ORCPT
+        with ESMTP id S1727026AbgC0XbT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 27 Mar 2020 19:31:19 -0400
 Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jHyRa-004KK5-69; Fri, 27 Mar 2020 23:31:18 +0000
+        id 1jHyRa-004KKa-Ld; Fri, 27 Mar 2020 23:31:18 +0000
 From:   Al Viro <viro@ZenIV.linux.org.uk>
 To:     Linus Torvalds <torvalds@linux-foundation.org>
 Cc:     linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [RFC][PATCH 02/14] x86_64: csum_..._copy_..._user(): switch to unsafe_..._user()
-Date:   Fri, 27 Mar 2020 23:31:05 +0000
-Message-Id: <20200327233117.1031393-2-viro@ZenIV.linux.org.uk>
+Subject: [RFC][PATCH 07/14] alpha: turn csum_partial_copy_from_user() into csum_and_copy_from_user()
+Date:   Fri, 27 Mar 2020 23:31:10 +0000
+Message-Id: <20200327233117.1031393-7-viro@ZenIV.linux.org.uk>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200327233117.1031393-1-viro@ZenIV.linux.org.uk>
 References: <20200327233006.GW23230@ZenIV.linux.org.uk>
@@ -41,96 +41,60 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Al Viro <viro@zeniv.linux.org.uk>
 
-We already have stac/clac pair around the calls of csum_partial_copy_generic().
-Stretch that area back, so that it covers the preceding loop (and convert
-the loop body from __{get,put}_user() to unsafe_{get,put}_user()).
-That brings the beginning of the areas to the earlier access_ok(),
-which allows to convert them into user_access_{begin,end}() ones.
+It's already doing the right thing - it does access_ok() and the wrapper
+in net/checksum.h is pointless here.  Just rename it and be done with that...
 
 Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
 ---
- arch/x86/lib/csum-wrappers_64.c | 23 ++++++++++++-----------
- 1 file changed, 12 insertions(+), 11 deletions(-)
+ arch/alpha/include/asm/checksum.h  | 3 ++-
+ arch/alpha/lib/csum_partial_copy.c | 6 +++---
+ 2 files changed, 5 insertions(+), 4 deletions(-)
 
-diff --git a/arch/x86/lib/csum-wrappers_64.c b/arch/x86/lib/csum-wrappers_64.c
-index 875c2f5968a0..90d02c82bb7a 100644
---- a/arch/x86/lib/csum-wrappers_64.c
-+++ b/arch/x86/lib/csum-wrappers_64.c
-@@ -27,7 +27,7 @@ csum_partial_copy_from_user(const void __user *src, void *dst,
- 	might_sleep();
- 	*errp = 0;
+diff --git a/arch/alpha/include/asm/checksum.h b/arch/alpha/include/asm/checksum.h
+index 473e6ccb65a3..0eac81624d01 100644
+--- a/arch/alpha/include/asm/checksum.h
++++ b/arch/alpha/include/asm/checksum.h
+@@ -41,7 +41,8 @@ extern __wsum csum_partial(const void *buff, int len, __wsum sum);
+  * here even more important to align src and dst on a 32-bit (or even
+  * better 64-bit) boundary
+  */
+-__wsum csum_partial_copy_from_user(const void __user *src, void *dst, int len, __wsum sum, int *errp);
++#define _HAVE_ARCH_COPY_AND_CSUM_FROM_USER
++__wsum csum_and_copy_from_user(const void __user *src, void *dst, int len, __wsum sum, int *errp);
  
--	if (!likely(access_ok(src, len)))
-+	if (!likely(user_access_begin(src, len)))
- 		goto out_err;
+ __wsum csum_partial_copy_nocheck(const void *src, void *dst, int len, __wsum sum);
  
- 	/*
-@@ -42,8 +42,7 @@ csum_partial_copy_from_user(const void __user *src, void *dst,
- 		while (((unsigned long)src & 6) && len >= 2) {
- 			__u16 val16;
- 
--			if (__get_user(val16, (const __u16 __user *)src))
--				goto out_err;
-+			unsafe_get_user(val16, (const __u16 __user *)src, out);
- 
- 			*(__u16 *)dst = val16;
- 			isum = (__force __wsum)add32_with_carry(
-@@ -53,15 +52,16 @@ csum_partial_copy_from_user(const void __user *src, void *dst,
- 			len -= 2;
- 		}
- 	}
--	stac();
- 	isum = csum_partial_copy_generic((__force const void *)src,
- 				dst, len, isum, errp, NULL);
--	clac();
-+	user_access_end();
- 	if (unlikely(*errp))
- 		goto out_err;
- 
- 	return isum;
- 
-+out:
-+	user_access_end();
- out_err:
- 	*errp = -EFAULT;
- 	memset(dst, 0, len);
-@@ -89,7 +89,7 @@ csum_and_copy_to_user(const void *src, void __user *dst,
- 
- 	might_sleep();
- 
--	if (unlikely(!access_ok(dst, len))) {
-+	if (unlikely(!user_access_begin(dst, len))) {
- 		*errp = -EFAULT;
- 		return 0;
- 	}
-@@ -100,9 +100,7 @@ csum_and_copy_to_user(const void *src, void __user *dst,
- 
- 			isum = (__force __wsum)add32_with_carry(
- 					(__force unsigned)isum, val16);
--			*errp = __put_user(val16, (__u16 __user *)dst);
--			if (*errp)
--				return isum;
-+			unsafe_put_user(val16, (__u16 __user *)dst, out);
- 			src += 2;
- 			dst += 2;
- 			len -= 2;
-@@ -110,11 +108,14 @@ csum_and_copy_to_user(const void *src, void __user *dst,
- 	}
- 
- 	*errp = 0;
--	stac();
- 	ret = csum_partial_copy_generic(src, (void __force *)dst,
- 					len, isum, NULL, errp);
--	clac();
-+	user_access_end();
- 	return ret;
-+out:
-+	user_access_end();
-+	*errp = -EFAULT;
-+	return isum;
+diff --git a/arch/alpha/lib/csum_partial_copy.c b/arch/alpha/lib/csum_partial_copy.c
+index e53f96e8aa6d..af1dad74e933 100644
+--- a/arch/alpha/lib/csum_partial_copy.c
++++ b/arch/alpha/lib/csum_partial_copy.c
+@@ -325,7 +325,7 @@ csum_partial_cfu_unaligned(const unsigned long __user * src,
  }
- EXPORT_SYMBOL(csum_and_copy_to_user);
  
+ __wsum
+-csum_partial_copy_from_user(const void __user *src, void *dst, int len,
++csum_and_copy_from_user(const void __user *src, void *dst, int len,
+ 			       __wsum sum, int *errp)
+ {
+ 	unsigned long checksum = (__force u32) sum;
+@@ -369,7 +369,7 @@ csum_partial_copy_from_user(const void __user *src, void *dst, int len,
+ 	}
+ 	return (__force __wsum)checksum;
+ }
+-EXPORT_SYMBOL(csum_partial_copy_from_user);
++EXPORT_SYMBOL(csum_and_copy_from_user);
+ 
+ __wsum
+ csum_partial_copy_nocheck(const void *src, void *dst, int len, __wsum sum)
+@@ -377,7 +377,7 @@ csum_partial_copy_nocheck(const void *src, void *dst, int len, __wsum sum)
+ 	__wsum checksum;
+ 	mm_segment_t oldfs = get_fs();
+ 	set_fs(KERNEL_DS);
+-	checksum = csum_partial_copy_from_user((__force const void __user *)src,
++	checksum = csum_and_copy_from_user((__force const void __user *)src,
+ 						dst, len, sum, NULL);
+ 	set_fs(oldfs);
+ 	return checksum;
 -- 
 2.11.0
 
