@@ -2,165 +2,216 @@ Return-Path: <SRS0=s8dx=5M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B840C2D0E7
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 00:44:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FF82C43331
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 01:00:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA54620719
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 00:44:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E88F42070A
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 01:00:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fjtw3469"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZogiQvD+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727674AbgC0AoF (ORCPT
+        id S1727792AbgC0BAR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 20:44:05 -0400
-Received: from mail-il1-f194.google.com ([209.85.166.194]:35189 "EHLO
-        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726363AbgC0AoF (ORCPT
+        Thu, 26 Mar 2020 21:00:17 -0400
+Received: from us-smtp-delivery-74.mimecast.com ([63.128.21.74]:36618 "EHLO
+        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727683AbgC0BAR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 20:44:05 -0400
-Received: by mail-il1-f194.google.com with SMTP id 7so7270995ill.2;
-        Thu, 26 Mar 2020 17:44:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=kLzu2msHymfhVb6TpgYrrxOa2r3SSoJwicYD2qkXWJY=;
-        b=fjtw34695b6ne7qQks56S6mWm2ms6Nd/YA6PeLVp1zbXLzWHvVFhpGQhgF6K04XSPa
-         wSBmW0if2oiFam5egMjMyHNzM5+7n8N9yprbngRhXkQuVPrbuIypQ4mEeckNb5jr4d1R
-         T13uUlMmk9vUKmRYXPQXUdktmE1b0fFbbBGmOBZv0Bm3iWIXf8lvmRbdKvwDIyaFNjx8
-         N4Q3YnLym2hnGBJeUl9LPNjIggquGgpUkcXLZyhIcGAgNjphOREs+qi2WslgJB2560Q4
-         oTof1s9MnTGYjWc/Cm81GBEdMAPHJ894MXjYTdMZQMEU0m5MlQ9NFElSCORUhLQjKN0h
-         piWg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=kLzu2msHymfhVb6TpgYrrxOa2r3SSoJwicYD2qkXWJY=;
-        b=kLyI1te3OxYsRlosZTkguv15bahq+ZWxCT+ng+dcsixaYmT4lXfzFLyrvgi0MaMhsC
-         dJdM+wWVHkN59/XXZf9/F899yOXvAGjFEGVqTbbyhFNyacnYwOyf+YDrVwbQNrAfpZK6
-         wrFuzVxRxPv9D+Pif75dZlJ/PqOBfZwV9Te+ommC8egJGF5nY7JClAt6PYmBhQXrbPbB
-         JMEYfh+sPNgtcLrSuVtYLTXK0NeYCGWFiYtfLCe+wrGKOU5ec7UrAgkeUPHoewGNmjU7
-         XyNZlFBbCABNiViejEmMtn62BmwURxCJy16tOGKOLx27rzh3tTZ7RH10QwWnb/Gcm46X
-         d/YQ==
-X-Gm-Message-State: ANhLgQ3y/UpwOIZk75PzUcKAOoc5I7Ry1Exa03edDj4CO/tym+kHAUko
-        ILHV/Pz+zK/XJ1pYqMmrpnuNEU1tSfC+rJFDMqPP/V7KGBF/xg==
-X-Google-Smtp-Source: ADFU+vt1NlUlR80g6tBN/YWZAZQowsY9DLWFkTfTszWkamu2Pvj3oeOXAArbrSnLPoQzfbRnKLv8IHCf6XbQ2q/gSBo=
-X-Received: by 2002:a92:7b10:: with SMTP id w16mr11221793ilc.93.1585269844316;
- Thu, 26 Mar 2020 17:44:04 -0700 (PDT)
+        Thu, 26 Mar 2020 21:00:17 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1585270815;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=aYYz+dLHtQkfzjd1wcCUHm8UY1gsj6e46qHq8G1ei0U=;
+        b=ZogiQvD+DJzLWv7Vvlp6cmeN7xTiJPKm2u5Z9s+Fk5adDYDBa8jyuYeriWB300LeEOMrB4
+        oLF7w+BVIL1m+4XRq+J0umNTnA+Lm2FHuEwih/yVRfpgXmIw92uChU06fZtmJ9SA1rJG2J
+        Sz8ub1lzvb5Q20YAHUTyLLSUFiJT9rA=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-140-OB6_u16JMfeXy3PE_Varng-1; Thu, 26 Mar 2020 21:00:11 -0400
+X-MC-Unique: OB6_u16JMfeXy3PE_Varng-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 7D5A5189D6D4;
+        Fri, 27 Mar 2020 01:00:10 +0000 (UTC)
+Received: from treble (ovpn-112-33.rdu2.redhat.com [10.10.112.33])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id ECC2F1001B09;
+        Fri, 27 Mar 2020 01:00:08 +0000 (UTC)
+Date:   Thu, 26 Mar 2020 20:00:01 -0500
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     tglx@linutronix.de, linux-kernel@vger.kernel.org, x86@kernel.org,
+        mhiramat@kernel.org, mbenes@suse.cz
+Subject: Re: [PATCH v4 01/13] objtool: Remove CFI save/restore special case
+Message-ID: <20200327010001.i3kebxb4um422ycb@treble>
+References: <20200325174525.772641599@infradead.org>
+ <20200325174605.369570202@infradead.org>
+ <20200326113049.GD20696@hirez.programming.kicks-ass.net>
+ <20200326135620.tlmof5fa7p5wct62@treble>
+ <20200326154938.GO20713@hirez.programming.kicks-ass.net>
+ <20200326195718.GD2452@worktop.programming.kicks-ass.net>
 MIME-Version: 1.0
-References: <1585191042-9935-1-git-send-email-laoar.shao@gmail.com>
- <20200326130808.ccbacd6cba99a40326936fea@linux-foundation.org> <0945d867728008ad9d2243b4427220ef4745098f.camel@sipsolutions.net>
-In-Reply-To: <0945d867728008ad9d2243b4427220ef4745098f.camel@sipsolutions.net>
-From:   Yafang Shao <laoar.shao@gmail.com>
-Date:   Fri, 27 Mar 2020 08:43:28 +0800
-Message-ID: <CALOAHbCwUYGK_cbdBmz5Htr6a+KuVsTQT8q=wBw73CemGhuuFQ@mail.gmail.com>
-Subject: Re: [PATCH] kernel/taskstats: fix wrong nla type for
- {cgroup,task}stats policy
-To:     Johannes Berg <johannes@sipsolutions.net>
-Cc:     Andrew Morton <akpm@linux-foundation.org>, bsingharora@gmail.com,
-        LKML <linux-kernel@vger.kernel.org>, stable@vger.kernel.org,
-        David Ahern <dsahern@gmail.com>,
-        "David S.Miller" <davem@davemloft.net>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200326195718.GD2452@worktop.programming.kicks-ass.net>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 27, 2020 at 4:18 AM Johannes Berg <johannes@sipsolutions.net> wrote:
+On Thu, Mar 26, 2020 at 08:57:18PM +0100, Peter Zijlstra wrote:
+> On Thu, Mar 26, 2020 at 04:49:38PM +0100, Peter Zijlstra wrote:
+> > > The 'insn == first' check isn't ideal, but at least it works (I think?).
+> > 
+> > It works, yes, for exactly this one case.
 >
-> On Thu, 2020-03-26 at 13:08 -0700, Andrew Morton wrote:
->
-> > > After our server is upgraded to a newer kernel, we found that it
-> > > continuesly print a warning in the kernel message. The warning is,
-> > > [832984.946322] netlink: 'irmas.lc': attribute type 1 has an invalid length.
-> > >
-> > > irmas.lc is one of our container monitor daemons, and it will use
-> > > CGROUPSTATS_CMD_GET to get the cgroupstats, that is similar with
-> > > tools/accounting/getdelays.c. We can also produce this warning with
-> > > getdelays. For example, after running bellow command
-> > >     $ ./getdelays -C /sys/fs/cgroup/memory
-> > > then you can find a warning in dmesg,
-> > > [61607.229318] netlink: 'getdelays': attribute type 1 has an invalid length.
-> > >
-> > > This warning is introduced in commit 6e237d099fac ("netlink: Relax attr
-> > > validation for fixed length types"), which is used to check whether
-> > > attributes using types NLA_U* and NLA_S* have an exact length.
-> > >
-> > > Regarding this issue, the root cause is cgroupstats_cmd_get_policy defines
-> > > a wrong type as NLA_U32, while it should be NLA_NESTED an its minimal
-> > > length is NLA_HDRLEN. That is similar to taskstats_cmd_get_policy.
-> > >
-> > > As this behavior change really breaks our application, we'd better
-> > > cc stable as well.
->
-> Can you explain how it breaks the application? I mean, it's really only
-> printing a message to the kernel log in this case? At least that's what
-> you're describing.
->
-> I think you may be describing it wrong, because an NLA_NESTED is allowed
-> to be *empty* (but otherwise must have at least 4 bytes just like an
-> NLA_U32).
->
-> That said, I'm not even sure I agree that this fix is right? See below.
->
-> > Is it correct to say that although the code has always been incorrect,
-> > but only kernels after 6e237d099fac need this change?  If so, I'll add
-> > Fixes:6e237d099fac to guide the -stable backporting.
->
-> That doesn't really seem right - 6e237d099fac *relaxed* the checks. If
-> anything then it ought to point to 28033ae4e0f5 which may have actually
-> returned an error; but again, need to understand better what really the
-> issue is.
->
-> > > diff --git a/kernel/taskstats.c b/kernel/taskstats.c
-> > > index e2ac0e3..b90a520 100644
-> > > --- a/kernel/taskstats.c
-> > > +++ b/kernel/taskstats.c
-> > > @@ -35,8 +35,8 @@
-> > >  static struct genl_family family;
-> > >
-> > >  static const struct nla_policy taskstats_cmd_get_policy[TASKSTATS_CMD_ATTR_MAX+1] = {
-> > > -   [TASKSTATS_CMD_ATTR_PID]  = { .type = NLA_U32 },
-> > > -   [TASKSTATS_CMD_ATTR_TGID] = { .type = NLA_U32 },
-> > > +   [TASKSTATS_CMD_ATTR_PID]  = { .type = NLA_NESTED },
-> > > +   [TASKSTATS_CMD_ATTR_TGID] = { .type = NLA_NESTED },
->
->
-> I'm not sure where this is coming from - the kernel evidently uses them
-> as nested attributes in *outgoing* data (see mk_reply()), but as NLA_U32
-> in *incoming* data, (see cmd_attr_pid() and cmd_attr_tgid()).
->
+> How's this? Ignore the ignore_cfi bits, that's a 'failed' experiment.
 
-Thanks for the explanation.
-The nested attributes is only used in *outgoing* data, rather than the
-'incoming' data.
+It still seems complex to me.
 
-> I would generally recommend not doing such a thing as it's messy, but we
-> do have quite a few such instances cases. In all those cases must the
-> policy list the incoming policy since that's what the kernel uses to
-> validate the attributes.
->
-> IOW, this part of the change seems _wrong_.
->
->
-> > >   * Make sure they are always aligned.
-> > >   */
-> > >  static const struct nla_policy cgroupstats_cmd_get_policy[TASKSTATS_CMD_ATTR_MAX+1] = {
-> > > -   [CGROUPSTATS_CMD_ATTR_FD] = { .type = NLA_U32 },
-> > > +   [CGROUPSTATS_CMD_ATTR_FD] = { .type = NLA_NESTED },
-> > >  };
->
-> And same here, actually.
->
-> johannes
->
+What do you think about this?  If we store save_insn in the state when
+we see insn->save, the restore logic becomes a lot easier.  Then if we
+get a restore without a save, we can just ignore the restore hint in
+that path.  Later, when we see the restore insn again from the save
+path, we can then compare the insn state with the saved state to make
+sure they match.
 
+This assumes no crazy save/restore scenarios.  It also means that the
+restore path has to be reachable from the save path, for which I had to
+make a change to make IRETQ *not* a dead end if there's a restore hint
+immediately after it.
 
-Thanks
-Yafang
+diff --git a/tools/objtool/check.c b/tools/objtool/check.c
+index e637a4a38d2a..e9becd50f148 100644
+--- a/tools/objtool/check.c
++++ b/tools/objtool/check.c
+@@ -1265,7 +1265,6 @@ static int read_unwind_hints(struct objtool_file *file)
+ 
+ 		} else if (hint->type == UNWIND_HINT_TYPE_RESTORE) {
+ 			insn->restore = true;
+-			insn->hint = true;
+ 			continue;
+ 		}
+ 
+@@ -2003,7 +2002,7 @@ static int validate_branch(struct objtool_file *file, struct symbol *func,
+ 			   struct instruction *first, struct insn_state state)
+ {
+ 	struct alternative *alt;
+-	struct instruction *insn, *next_insn;
++	struct instruction *insn, *next_insn, *save_insn = NULL;
+ 	struct section *sec;
+ 	u8 visited;
+ 	int ret;
+@@ -2034,54 +2033,32 @@ static int validate_branch(struct objtool_file *file, struct symbol *func,
+ 
+ 		visited = 1 << state.uaccess;
+ 		if (insn->visited) {
+-			if (!insn->hint && !insn_state_match(insn, &state))
++			if (!insn->hint && !insn->restore &&
++			    !insn_state_match(insn, &state)) {
+ 				return 1;
++			}
++
++			if (insn->restore && save_insn) {
++				if (!insn_state_match(insn, &save_insn->state))
++					return 1;
++				save_insn = NULL;
++			}
+ 
+ 			if (insn->visited & visited)
+ 				return 0;
+ 		}
+ 
+-		if (insn->hint) {
+-			if (insn->restore) {
+-				struct instruction *save_insn, *i;
+-
+-				i = insn;
+-				save_insn = NULL;
+-				func_for_each_insn_continue_reverse(file, func, i) {
+-					if (i->save) {
+-						save_insn = i;
+-						break;
+-					}
+-				}
+-
+-				if (!save_insn) {
+-					WARN_FUNC("no corresponding CFI save for CFI restore",
+-						  sec, insn->offset);
+-					return 1;
+-				}
+-
+-				if (!save_insn->visited) {
+-					/*
+-					 * Oops, no state to copy yet.
+-					 * Hopefully we can reach this
+-					 * instruction from another branch
+-					 * after the save insn has been
+-					 * visited.
+-					 */
+-					if (insn == first)
+-						return 0;
+-
+-					WARN_FUNC("objtool isn't smart enough to handle this CFI save/restore combo",
+-						  sec, insn->offset);
+-					return 1;
+-				}
++		if (insn->save)
++			save_insn = insn;
+ 
+-				insn->state = save_insn->state;
+-			}
++		if (insn->restore && save_insn) {
++			insn->state = save_insn->state;
++			save_insn = NULL;
++		}
+ 
++		if (insn->hint)
+ 			state = insn->state;
+-
+-		} else
++		else
+ 			insn->state = state;
+ 
+ 		insn->visited |= visited;
+@@ -2191,12 +2168,17 @@ static int validate_branch(struct objtool_file *file, struct symbol *func,
+ 			break;
+ 
+ 		case INSN_CONTEXT_SWITCH:
+-			if (func && (!next_insn || !next_insn->hint)) {
+-				WARN_FUNC("unsupported instruction in callable function",
+-					  sec, insn->offset);
+-				return 1;
++			if (!next_insn || !next_insn->restore) {
++				if (func) {
++					WARN_FUNC("unsupported instruction in callable function",
++							sec, insn->offset);
++					return 1;
++				}
++
++				return 0;
+ 			}
+-			return 0;
++
++			break;
+ 
+ 		case INSN_STACK:
+ 			if (update_insn_state(insn, &state))
+@@ -2293,7 +2275,7 @@ static int validate_unwind_hints(struct objtool_file *file)
+ 	clear_insn_state(&state);
+ 
+ 	for_each_insn(file, insn) {
+-		if (insn->hint && !insn->visited) {
++		if ((insn->hint || insn->save || insn->restore) && !insn->visited) {
+ 			ret = validate_branch(file, insn->func, insn, state);
+ 			if (ret && backtrace)
+ 				BT_FUNC("<=== (hint)", insn);
+
