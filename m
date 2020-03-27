@@ -2,139 +2,169 @@ Return-Path: <SRS0=s8dx=5M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A158C2D0EC
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 02:42:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D77AC2D0E7
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 02:42:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 11D0120774
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 02:42:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2653C20714
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 02:42:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=renesasgroup.onmicrosoft.com header.i=@renesasgroup.onmicrosoft.com header.b="dCMI9io6"
+	dkim=pass (1024-bit key) header.d=linuxonhyperv.com header.i=@linuxonhyperv.com header.b="YFR8QAmQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727732AbgC0CmI (ORCPT
+        id S1727763AbgC0Cm2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 22:42:08 -0400
-Received: from mail-eopbgr1410105.outbound.protection.outlook.com ([40.107.141.105]:6209
-        "EHLO JPN01-OS2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726496AbgC0CmH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 22:42:07 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=SLr2Tb4/udWXBAXQw3JYFL5l+oMCTKom5LIgHnRqCznBPQuPPF1UQEj/hB5qGTDoEFgylbWUVu0CW7zdZK3ynWaOTe6pfjL9U1NjJlbOTcmHbp+ahHDIDshonQMy6YzDr8itoCyZsfJEjiXvsMotczUt4xznrts+C2NhCRObBHfmO6Ni3jeL/fnVFU/AUy264szs8uVQTB+2A9bMoKQTeS9LFF3QbRMVrr4eDqGzIZqzmIse9qp2D582VXhE/h3zgTleP3cU9WT34n+QNOmCqCB7ralGnOV/ZkE4QYe71XNHNPLn1v4zgohOq0H3Dp0WmFkZnp6SGF3j7iiEmmMF8A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=qngR+eHp383dc2gWSX0guNyR1Lll5ev4bvLQan94iko=;
- b=CBN42nLmaBCptTG1OW0RhzRz1DgH5nzXmGOq7f4zhdCBPtNsmItPhiXWuR1ygzcPuIsV+cvLZcz1FSbKrLUuEIYgykEmPqMNrHo402BFdUzNz1iX+AmZOdcXwVua/QT9SmihsnvDP8uHnMUheRzeXg2+QdoDFnrNMcoPXmED2XyW/2ImbWuQLYFYE0ASDtvKwg5xbuy6K53D3/USD3EoPOOV482XTf76MPw/5ce4TOBvdqjcmmLlreeo8jbMPPMCP/k/ocT4nHoxgR4bpKpXjnLZYUAaThA2MamLLqOs3k9BDFnBC+FLWKI284v14W+mRbzr6aBhEDnfn4nRuv0qwg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=renesas.com; dmarc=pass action=none header.from=renesas.com;
- dkim=pass header.d=renesas.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=renesasgroup.onmicrosoft.com; s=selector2-renesasgroup-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=qngR+eHp383dc2gWSX0guNyR1Lll5ev4bvLQan94iko=;
- b=dCMI9io6T680hnEVMhC8BVv9idSz2i7MdGCfVtgmi91JYV/06ydXmz1yiumnz8k3kqaWqCVuWcXwLZyBvkYus2n9Xz6gn+zgj0uGjRcv3WHdvUNou70AkQ/K7b8vAnH3i/a0QBRSiQv5cy8+qafWKA+sV4HVr0EbcCctrd/S46Y=
-Received: from TYAPR01MB4544.jpnprd01.prod.outlook.com (20.179.175.203) by
- TYAPR01MB3501.jpnprd01.prod.outlook.com (20.178.137.20) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2856.19; Fri, 27 Mar 2020 02:42:03 +0000
-Received: from TYAPR01MB4544.jpnprd01.prod.outlook.com
- ([fe80::ed7f:1268:55a9:fc06]) by TYAPR01MB4544.jpnprd01.prod.outlook.com
- ([fe80::ed7f:1268:55a9:fc06%4]) with mapi id 15.20.2835.023; Fri, 27 Mar 2020
- 02:42:03 +0000
-From:   Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-CC:     Kishon Vijay Abraham I <kishon@ti.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
-Subject: RE: [PATCH v2 1/4] dt-bindings: phy: renesas: usb2-phy: convert
- bindings to json-schema
-Thread-Topic: [PATCH v2 1/4] dt-bindings: phy: renesas: usb2-phy: convert
- bindings to json-schema
-Thread-Index: AQHWAy+F1mvYz+A33U2F91ptPg7QzKhak2+AgAEoRxA=
-Date:   Fri, 27 Mar 2020 02:42:03 +0000
-Message-ID: <TYAPR01MB454433CC3EEC24AF8619526FD8CC0@TYAPR01MB4544.jpnprd01.prod.outlook.com>
-References: <1585200559-30033-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
- <1585200559-30033-2-git-send-email-yoshihiro.shimoda.uh@renesas.com>
- <CAMuHMdVuiAqqERf_ZEAqkhuTfOrn-VUj8rpuAHMwL=QdRNi3qg@mail.gmail.com>
-In-Reply-To: <CAMuHMdVuiAqqERf_ZEAqkhuTfOrn-VUj8rpuAHMwL=QdRNi3qg@mail.gmail.com>
-Accept-Language: ja-JP, en-US
-Content-Language: ja-JP
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=yoshihiro.shimoda.uh@renesas.com; 
-x-originating-ip: [211.11.155.148]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 11cb7050-c847-41c2-0ac9-08d7d1f86e90
-x-ms-traffictypediagnostic: TYAPR01MB3501:
-x-microsoft-antispam-prvs: <TYAPR01MB35016AA3339B26E7F4EA352BD8CC0@TYAPR01MB3501.jpnprd01.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8273;
-x-forefront-prvs: 0355F3A3AE
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(366004)(346002)(376002)(396003)(39860400002)(136003)(71200400001)(81156014)(33656002)(86362001)(4326008)(478600001)(8676002)(6506007)(81166006)(8936002)(7696005)(316002)(5660300002)(186003)(2906002)(55016002)(66556008)(66476007)(76116006)(6916009)(66446008)(64756008)(66946007)(52536014)(54906003)(26005)(9686003);DIR:OUT;SFP:1102;SCL:1;SRVR:TYAPR01MB3501;H:TYAPR01MB4544.jpnprd01.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;
-received-spf: None (protection.outlook.com: renesas.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: X7imYqSZUUQ68ZupRV3ca/mwhYkLG4LEVn7gbTSwNe0CezJAX6Ei0XtwTVsAWj8b/OVxXp/xmkEKA8Ufw0mC30t6Pwb3mvKrCc4XecVAOPV4usens6W2dDaJkuvIYP73qH8pt3uzUZyzpMpF8ynBviRzce/+z5g1QbxOz+JsohVCzQGu6hUrQIGAqa7m/TrQ1JnoidxdLJmRpDFpkNWebpyd5/N0CUtBOc7zMJLhHd1V5SzvJ8a11QSvRlyzC5aEb/xl7VC56Ylq02WweXO475GQRqY8FXF12iNYd9Dt1U+/lo7FKDmhtHITnwE1Rs9c5qeot6VH2mPIazMsdluio7Jpj+JhP6gpya6gp6qOKglWxfH7gL3usmdE0nEu33OzNc9+/W+QzWZwqxJckMC3xgVeGKCdiDY5AiNiHRz0jWVqIkvmY768vkUuJePj+60B
-x-ms-exchange-antispam-messagedata: R9Q9Jsce/ztaUKUwg/UjRy5GzfF0B8ks5//oLGJ48DNl+RWu6Tmsu/vYVMjgSXEaghkKXhJ9eFjHmfbw7pb4YzkbFFxKLlNUSE5657biVeDUvYrKNxDanPRhX8/Xqj0ecxRrM8Uvo1EeGhvc/E9EuA==
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-MIME-Version: 1.0
-X-OriginatorOrg: renesas.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 11cb7050-c847-41c2-0ac9-08d7d1f86e90
-X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Mar 2020 02:42:03.2053
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: sgorXtZP1wcdKNp6bn33uAOjQp4F9tyk6IQ4ZwqM4fjvtU/A36gGnfe16/3dZyp57XNKGjxhoS3LhqImJHhzENL7uROPXrA3kNMeTPTk3TsuFDVFJL2XbVXSRSfuBpI9
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYAPR01MB3501
+        Thu, 26 Mar 2020 22:42:28 -0400
+Received: from linux.microsoft.com ([13.77.154.182]:34314 "EHLO
+        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726363AbgC0Cm2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Mar 2020 22:42:28 -0400
+Received: by linux.microsoft.com (Postfix, from userid 1004)
+        id 976F620B4737; Thu, 26 Mar 2020 19:42:26 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 976F620B4737
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linuxonhyperv.com;
+        s=default; t=1585276946;
+        bh=zvffKctMIj2SFnhEj55/AzFnvDRhG2tE5Rzn8kutAEA=;
+        h=From:To:Cc:Subject:Date:Reply-To:From;
+        b=YFR8QAmQvBbsrDSG95KLNjrojPASe8E68C6aEhrFpr5LuqKVUydN5R2l2eOiec2Cj
+         Y0DYwIzY/RBeF+ZnB3GcRdJ+LMBZrGnb+du5p2PbI75az+UcDBVBP5EXLQLlmXx/St
+         t5YV8EFSnXPjlvLYgH0zYjOtGYpWIc2NEgzgvbIU=
+From:   longli@linuxonhyperv.com
+To:     Steve French <sfrench@samba.org>, linux-cifs@vger.kernel.org,
+        samba-technical@lists.samba.org, linux-kernel@vger.kernel.org
+Cc:     Long Li <longli@microsoft.com>
+Subject: [Patch v2] cifs: smbd: Calculate the correct maximum packet size for segmented SMBDirect send/receive
+Date:   Thu, 26 Mar 2020 19:42:24 -0700
+Message-Id: <1585276944-5332-1-git-send-email-longli@linuxonhyperv.com>
+X-Mailer: git-send-email 1.8.3.1
+Reply-To: longli@microsoft.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgR2VlcnQtc2FuLA0KDQpUaGFuayB5b3UgZm9yIHlvdXIgcmV2aWV3IQ0KDQo+IEZyb206IEdl
-ZXJ0IFV5dHRlcmhvZXZlbiwgU2VudDogVGh1cnNkYXksIE1hcmNoIDI2LCAyMDIwIDY6MDAgUE0N
-CjxzbmlwPg0KPiA+IC0tLSAvZGV2L251bGwNCj4gPiArKysgYi9Eb2N1bWVudGF0aW9uL2Rldmlj
-ZXRyZWUvYmluZGluZ3MvcGh5L3JlbmVzYXMsdXNiMi1waHkueWFtbA0KPiA+IEBAIC0wLDAgKzEs
-MTAzIEBADQo+ID4gKyMgU1BEWC1MaWNlbnNlLUlkZW50aWZpZXI6IEdQTC0yLjAtb25seQ0KPiAN
-Cj4gSSB0aGluayBSb2Igd291bGQgcHJlZmVyIHRvIHNlZQ0KPiANCj4gICAgICMgU1BEWC1MaWNl
-bnNlLUlkZW50aWZpZXI6IChHUEwtMi4wLW9ubHkgT1IgQlNELTItQ2xhdXNlKQ0KDQpJJ2xsIGZp
-eCBpdC4NCg0KPiA+ICsgIHJlZzoNCj4gPiArICAgICMgYmFzZSBhZGRyZXNzIGFuZCBsZW5ndGgg
-b2YgdGhlIHJlZ2lzdGVycyBibG9jayBmb3IgdGhlIFBIWS4NCj4gDQo+IFRoZSBjb21tZW50IGlz
-IG5vdCBuZWVkZWQuDQoNCk9LLiBJJ2xsIHJlbW92ZSBpdC4NCg0KPiA+ICsgICAgbWF4SXRlbXM6
-IDENCj4gPiArDQo+ID4gKyAgY2xvY2tzOg0KPiA+ICsgICAgIyBjbG9jayBwaGFuZGxlIGFuZCBz
-cGVjaWZpZXIgcGFpcihzKS4NCj4gDQo+IExpa2V3aXNlLg0KDQpJIGdvdCBpdC4NCg0KPiA+ICsg
-ICAgbWluSXRlbXM6IDENCj4gPiArICAgIG1heEl0ZW1zOiAyDQo+ID4gKw0KPiA+ICsgIGNsb2Nr
-LW5hbWVzOg0KPiA+ICsgICAgIyBmb3IgUlovQTINCj4gDQo+IGlmOg0KPiAgIHByb3BlcnRpZXM6
-DQo+ICAgICBjb21wYXRpYmxlOg0KPiAgICAgICBpdGVtczoNCj4gICAgICAgICBlbnVtOg0KPiAg
-ICAgICAgICAgLSByZW5lc2FzLHVzYjItcGh5LXI3czkyMTANCg0KVGhhbmsgeW91IGZvciB0aGUg
-cHJvcG9zYWwuIEknbGwgZml4IGl0Lg0KDQo+ID4gKyAgICBtaW5JdGVtczogMQ0KPiA+ICsgICAg
-bWF4SXRlbXM6IDINCj4gPiArICAgIGl0ZW1zOg0KPiA+ICsgICAgICAtIGNvbnN0OiBmY2sNCj4g
-PiArICAgICAgLSBjb25zdDogdXNiX3gxDQo+IA0KPiA+ICtleGFtcGxlczoNCj4gPiArICAtIHwN
-Cj4gPiArICAgICNpbmNsdWRlIDxkdC1iaW5kaW5ncy9jbG9jay9yOGE3Nzk1LWNwZy1tc3NyLmg+
-DQo+ID4gKyAgICAjaW5jbHVkZSA8ZHQtYmluZGluZ3MvaW50ZXJydXB0LWNvbnRyb2xsZXIvYXJt
-LWdpYy5oPg0KPiA+ICsgICAgI2luY2x1ZGUgPGR0LWJpbmRpbmdzL3Bvd2VyL3I4YTc3OTUtc3lz
-Yy5oPg0KPiA+ICsNCj4gPiArICAgIHVzYi1waHlAZWUwODAyMDAgew0KPiA+ICsgICAgICAgIGNv
-bXBhdGlibGUgPSAicmVuZXNhcyx1c2IyLXBoeS1yOGE3Nzk1IiwgInJlbmVzYXMscmNhci1nZW4z
-LXVzYjItcGh5IjsNCj4gPiArICAgICAgICByZWcgPSA8MCAweGVlMDgwMjAwIDAgMHg3MDA+Ow0K
-PiANCj4gRXhhbXBsZXMgYXJlIGJ1aWx0IHdpdGggI3thZGRyZXNzLHNpemV9LWNlbGxzID0gPDE+
-LCBzbw0KPiANCj4gICAgIHJlZyA9IDwweGVlMDgwMjAwIDB4NzAwPjsNCg0KSSBnb3QgaXQuIEkn
-bGwgZml4IGl0Lg0KDQo+ID4gKyAgICAgICAgaW50ZXJydXB0cyA9IDxHSUNfU1BJIDEwOCBJUlFf
-VFlQRV9MRVZFTF9ISUdIPjsNCj4gPiArICAgICAgICBjbG9ja3MgPSA8JmNwZyBDUEdfTU9EIDcw
-Mz47DQo+ID4gKyAgICAgICAgI3BoeS1jZWxscyA9IDwxPjsNCj4gPiArICAgIH07DQo+ID4gKw0K
-PiA+ICsgICAgdXNiLXBoeUBlZTBhMDIwMCB7DQo+ID4gKyAgICAgICAgY29tcGF0aWJsZSA9ICJy
-ZW5lc2FzLHVzYjItcGh5LXI4YTc3OTUiLCAicmVuZXNhcyxyY2FyLWdlbjMtdXNiMi1waHkiOw0K
-PiA+ICsgICAgICAgIHJlZyA9IDwwIDB4ZWUwYTAyMDAgMCAweDcwMD47DQo+IA0KPiByZWcgPSA8
-MHhlZTBhMDIwMCAweDcwMD47DQoNClllcywgSSdsbCBmaXggaXQuDQoNCkJlc3QgcmVnYXJkcywN
-Cllvc2hpaGlybyBTaGltb2RhDQoNCg==
+From: Long Li <longli@microsoft.com>
+
+The packet size needs to take account of SMB2 header size and possible
+encryption header size. This is only done when signing is used and it is for
+RDMA send/receive, not read/write.
+
+Also remove the dead SMBD code in smb2_negotiate_r(w)size.
+
+Signed-off-by: Long Li <longli@microsoft.com>
+---
+
+Change since v1: defined SMB2_READWRITE_PDU_HEADER_SIZE for header size and corrected miscalculation
+
+ fs/cifs/smb2ops.c   | 38 ++++++++++++++++----------------------
+ fs/cifs/smb2pdu.h   |  3 +++
+ fs/cifs/smbdirect.c |  3 +--
+ 3 files changed, 20 insertions(+), 24 deletions(-)
+
+diff --git a/fs/cifs/smb2ops.c b/fs/cifs/smb2ops.c
+index 9c9258fc8756..b36c46f48705 100644
+--- a/fs/cifs/smb2ops.c
++++ b/fs/cifs/smb2ops.c
+@@ -328,16 +328,6 @@ smb2_negotiate_wsize(struct cifs_tcon *tcon, struct smb_vol *volume_info)
+ 	/* start with specified wsize, or default */
+ 	wsize = volume_info->wsize ? volume_info->wsize : CIFS_DEFAULT_IOSIZE;
+ 	wsize = min_t(unsigned int, wsize, server->max_write);
+-#ifdef CONFIG_CIFS_SMB_DIRECT
+-	if (server->rdma) {
+-		if (server->sign)
+-			wsize = min_t(unsigned int,
+-				wsize, server->smbd_conn->max_fragmented_send_size);
+-		else
+-			wsize = min_t(unsigned int,
+-				wsize, server->smbd_conn->max_readwrite_size);
+-	}
+-#endif
+ 	if (!(server->capabilities & SMB2_GLOBAL_CAP_LARGE_MTU))
+ 		wsize = min_t(unsigned int, wsize, SMB2_MAX_BUFFER_SIZE);
+ 
+@@ -356,8 +346,15 @@ smb3_negotiate_wsize(struct cifs_tcon *tcon, struct smb_vol *volume_info)
+ #ifdef CONFIG_CIFS_SMB_DIRECT
+ 	if (server->rdma) {
+ 		if (server->sign)
++			/*
++			 * Account for SMB2 data transfer packet header and
++			 * possible encryption header
++			 */
+ 			wsize = min_t(unsigned int,
+-				wsize, server->smbd_conn->max_fragmented_send_size);
++				wsize,
++				server->smbd_conn->max_fragmented_send_size -
++					SMB2_READWRITE_PDU_HEADER_SIZE -
++					sizeof(struct smb2_transform_hdr));
+ 		else
+ 			wsize = min_t(unsigned int,
+ 				wsize, server->smbd_conn->max_readwrite_size);
+@@ -378,16 +375,6 @@ smb2_negotiate_rsize(struct cifs_tcon *tcon, struct smb_vol *volume_info)
+ 	/* start with specified rsize, or default */
+ 	rsize = volume_info->rsize ? volume_info->rsize : CIFS_DEFAULT_IOSIZE;
+ 	rsize = min_t(unsigned int, rsize, server->max_read);
+-#ifdef CONFIG_CIFS_SMB_DIRECT
+-	if (server->rdma) {
+-		if (server->sign)
+-			rsize = min_t(unsigned int,
+-				rsize, server->smbd_conn->max_fragmented_recv_size);
+-		else
+-			rsize = min_t(unsigned int,
+-				rsize, server->smbd_conn->max_readwrite_size);
+-	}
+-#endif
+ 
+ 	if (!(server->capabilities & SMB2_GLOBAL_CAP_LARGE_MTU))
+ 		rsize = min_t(unsigned int, rsize, SMB2_MAX_BUFFER_SIZE);
+@@ -407,8 +394,15 @@ smb3_negotiate_rsize(struct cifs_tcon *tcon, struct smb_vol *volume_info)
+ #ifdef CONFIG_CIFS_SMB_DIRECT
+ 	if (server->rdma) {
+ 		if (server->sign)
++			/*
++			 * Account for SMB2 data transfer packet header and
++			 * possible encryption header
++			 */
+ 			rsize = min_t(unsigned int,
+-				rsize, server->smbd_conn->max_fragmented_recv_size);
++				rsize,
++				server->smbd_conn->max_fragmented_recv_size -
++					SMB2_READWRITE_PDU_HEADER_SIZE -
++					sizeof(struct smb2_transform_hdr));
+ 		else
+ 			rsize = min_t(unsigned int,
+ 				rsize, server->smbd_conn->max_readwrite_size);
+diff --git a/fs/cifs/smb2pdu.h b/fs/cifs/smb2pdu.h
+index dda928d05c13..10acf90f858d 100644
+--- a/fs/cifs/smb2pdu.h
++++ b/fs/cifs/smb2pdu.h
+@@ -120,6 +120,9 @@ struct smb2_sync_hdr {
+ 	__u8   Signature[16];
+ } __packed;
+ 
++/* The total header size for SMB2 read and write */
++#define SMB2_READWRITE_PDU_HEADER_SIZE (48 + sizeof(struct smb2_sync_hdr))
++
+ struct smb2_sync_pdu {
+ 	struct smb2_sync_hdr sync_hdr;
+ 	__le16 StructureSize2; /* size of wct area (varies, request specific) */
+diff --git a/fs/cifs/smbdirect.c b/fs/cifs/smbdirect.c
+index 5b1b97e9e0c9..a6ae29b3c4e7 100644
+--- a/fs/cifs/smbdirect.c
++++ b/fs/cifs/smbdirect.c
+@@ -2097,8 +2097,7 @@ int smbd_send(struct TCP_Server_Info *server,
+ 	for (i = 0; i < num_rqst; i++)
+ 		remaining_data_length += smb_rqst_len(server, &rqst_array[i]);
+ 
+-	if (remaining_data_length + sizeof(struct smbd_data_transfer) >
+-		info->max_fragmented_send_size) {
++	if (remaining_data_length > info->max_fragmented_send_size) {
+ 		log_write(ERR, "payload size %d > max size %d\n",
+ 			remaining_data_length, info->max_fragmented_send_size);
+ 		rc = -EINVAL;
+-- 
+2.17.1
+
