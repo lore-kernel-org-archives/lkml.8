@@ -2,141 +2,94 @@ Return-Path: <SRS0=s8dx=5M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2C41C43331
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 14:10:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 908EBC2D0E5
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 14:12:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 73C13206F1
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 14:10:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585318233;
-	bh=dfPdJ2yulo3myqEP+7rOFU9ecy93SLpbGI5Q2cwUJ3w=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=GVC2zpr6MxPGD69ybu41tJ1IXV8K9bDSAsYVv2IesveDyhShKtNeK9iGaxNd6IZwR
-	 SOfXP5hlQ9w9dWKlPlVZ5agqOvRl0HsHH9LlzV6B11FBFTFtvOm5HAXKzivHsfJEeY
-	 G6P++8NASq2j1Jeor7194hBi7NPJYyBNZmyDhsLo=
+	by mail.kernel.org (Postfix) with ESMTP id 6D362206F1
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 14:12:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727354AbgC0OKc (ORCPT
+        id S1727548AbgC0OMG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Mar 2020 10:10:32 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:47284 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726333AbgC0OKc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Mar 2020 10:10:32 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:
-        From:Date:Sender:Reply-To:Content-ID:Content-Description;
-        bh=AnRhIg5RFm3Qrmnieov4E28AVf0Oay6d4xBVbwT6Ib8=; b=I+lMVe6WHg2ORatRALBx73Uwfe
-        PLBUIk7eiW0elbpwfhczMcTrsKaUhkR28D33yjkLvAKlBmrS6lWqBy0sbDdEdObb/eO1rWX93fqDj
-        7AK7WNufeo9ygdfvwOg9n2gM2BqSylQj4lD3lXhM+ZroZKicuc0W1ypP8PEv3ri1xKvEPIuJLNn43
-        djvYCLfS2tar5jC+h1sEdo4NFN1dZXuARAffHJit7et69qRd+qcCX9t8fQavtp0XuMOU+GspAYPZB
-        NZX7vlg6EvWId8ono6jADqvpX+CsDskmHbcOXbQT61YV1B5/ohBzroaZ8ISSXnQjNxU/s9gw9ISwC
-        WfaS+FyQ==;
-Received: from ip5f5ad4d8.dynamic.kabel-deutschland.de ([95.90.212.216] helo=coco.lan)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jHpgo-000443-Hr; Fri, 27 Mar 2020 14:10:26 +0000
-Date:   Fri, 27 Mar 2020 15:10:20 +0100
-From:   Mauro Carvalho Chehab <mchehab@kernel.org>
-To:     Ezequiel Garcia <ezequiel@collabora.com>
-Cc:     linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Tomasz Figa <tfiga@chromium.org>,
-        Nicolas Dufresne <nicolas@ndufresne.ca>, kernel@collabora.com,
-        Hans Verkuil <hverkuil@xs4all.nl>, Sean Young <sean@mess.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Sakari Ailus <sakari.ailus@iki.fi>,
-        Michael Ira Krufky <mkrufky@gmail.com>,
-        Helen Koike <helen.koike@collabora.com>
-Subject: Re: [PATCH 2/2] media: Remove VIDEO_DEV unneeded dependency
-Message-ID: <20200327151020.231cf045@coco.lan>
-In-Reply-To: <c82b6c7be2e2f05c6924df00256caee6c5e32b23.camel@collabora.com>
-References: <20200323211022.28297-1-ezequiel@collabora.com>
-        <20200323211022.28297-3-ezequiel@collabora.com>
-        <20200324104722.1c605792@coco.lan>
-        <0336a046563a3d0556c988a67be2642194831710.camel@collabora.com>
-        <c82b6c7be2e2f05c6924df00256caee6c5e32b23.camel@collabora.com>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Fri, 27 Mar 2020 10:12:06 -0400
+Received: from foss.arm.com ([217.140.110.172]:45120 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726739AbgC0OMG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Mar 2020 10:12:06 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5CD251FB;
+        Fri, 27 Mar 2020 07:12:05 -0700 (PDT)
+Received: from [10.57.60.204] (unknown [10.57.60.204])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 42A153F71F;
+        Fri, 27 Mar 2020 07:12:04 -0700 (PDT)
+Subject: Re: [PATCH] iommu/arm-smmu: Demote error messages to debug in
+ shutdown callback
+To:     Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
+        Will Deacon <will@kernel.org>, Joerg Roedel <joro@8bytes.org>,
+        iommu@lists.linux-foundation.org,
+        Douglas Anderson <dianders@chromium.org>
+Cc:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200327132852.10352-1-saiprakash.ranjan@codeaurora.org>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <0023bc68-45fb-4e80-00c8-01fd0369243f@arm.com>
+Date:   Fri, 27 Mar 2020 14:12:03 +0000
+User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <20200327132852.10352-1-saiprakash.ranjan@codeaurora.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Fri, 27 Mar 2020 10:47:44 -0300
-Ezequiel Garcia <ezequiel@collabora.com> escreveu:
-
-> Hi Mauro,
+On 2020-03-27 1:28 pm, Sai Prakash Ranjan wrote:
+> Currently on reboot/shutdown, the following messages are
+> displayed on the console as error messages before the
+> system reboots/shutdown.
 > 
-> On Tue, 2020-03-24 at 07:18 -0300, Ezequiel Garcia wrote:
-> > On Tue, 2020-03-24 at 10:47 +0100, Mauro Carvalho Chehab wrote:  
-> > > Em Mon, 23 Mar 2020 18:10:22 -0300
-> > > Ezequiel Garcia <ezequiel@collabora.com> escreveu:
-> > >   
-> > > > Enable VIDEO_DEV (which compiles Video4Linux core)
-> > > > when MEDIA_SUPPORT is selected. This is needed, in order
-> > > > to be able to enable devices such as stateless codecs.
-> > > > 
-> > > > Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
-> > > > ---
-> > > >  drivers/media/Kconfig | 2 --
-> > > >  1 file changed, 2 deletions(-)
-> > > > 
-> > > > diff --git a/drivers/media/Kconfig b/drivers/media/Kconfig
-> > > > index b36a41332867..7de472ad07a2 100644
-> > > > --- a/drivers/media/Kconfig
-> > > > +++ b/drivers/media/Kconfig
-> > > > @@ -93,13 +93,11 @@ source "drivers/media/mc/Kconfig"
-> > > >  
-> > > >  #
-> > > >  # Video4Linux support
-> > > > -#	Only enables if one of the V4L2 types (ATV, webcam, radio) is selected
-> > > >  #
-> > > >  
-> > > >  config VIDEO_DEV
-> > > >  	tristate
-> > > >  	depends on MEDIA_SUPPORT
-> > > > -	depends on MEDIA_CAMERA_SUPPORT || MEDIA_ANALOG_TV_SUPPORT || MEDIA_RADIO_SUPPORT || MEDIA_SDR_SUPPORT
-> > > >  	default y
-> > > >  
-> > > >  config VIDEO_V4L2_SUBDEV_API  
-> > > 
-> > > The rationale of the above is to exclude Digital TV and remote
-> > > controller.
-> > > 
-> > > Removing the above will make the V4L2 core available every time, even
-> > > if all the user wants is remote controller or Digital TV support.
-> > >   
-> > 
-> > Hm, right.
-> >   
-> > > I'm working on a patchset that should hopefully address the issues
-> > > you're concerning.
-> > >   
-> > 
-> > Thanks, I'll appreciate that.
-> >   
+> On SC7180:
 > 
-> It seems the config rework you sent will undergo some
-> extended discussions, which is fine given it's a full rework.
+>    arm-smmu 15000000.iommu: removing device with active domains!
+>    arm-smmu 5040000.iommu: removing device with active domains!
 > 
-> I'd like to send a smaller (ideally just one or two patches)
-> series, so we can improve the situation on codecs on a smaller
-> timeframe.
+> Demote the log level to debug since it does not offer much
+> help in identifying/fixing any issue as the system is anyways
+> going down and reduce spamming the kernel log.
 
-I won't be merging anything new until the end of the merge
-window. So, we have around 20 days where no patches will
-be merged at linux media (except by critical bug fixes,
-merge conflicts, build breakages and similar stuff).
+I've gone back and forth on this pretty much ever since we added the 
+shutdown hook - on the other hand, if any devices *are* still running in 
+those domains at this point, then once we turn off the SMMU and let 
+those IOVAs go out on the bus as physical addresses, all manner of 
+weirdness may ensue. Thus there is an argument for *some* indication 
+that this may happen, although IMO it could be downgraded to at least 
+dev_warn().
 
-So, there are plenty of time to review such series.
+Robin.
 
-Thanks,
-Mauro
+> Reported-by: Douglas Anderson <dianders@chromium.org>
+> Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+> ---
+>   drivers/iommu/arm-smmu.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/iommu/arm-smmu.c b/drivers/iommu/arm-smmu.c
+> index 16c4b87af42b..0a865e32054a 100644
+> --- a/drivers/iommu/arm-smmu.c
+> +++ b/drivers/iommu/arm-smmu.c
+> @@ -2250,7 +2250,7 @@ static int arm_smmu_device_remove(struct platform_device *pdev)
+>   		return -ENODEV;
+>   
+>   	if (!bitmap_empty(smmu->context_map, ARM_SMMU_MAX_CBS))
+> -		dev_err(&pdev->dev, "removing device with active domains!\n");
+> +		dev_dbg(&pdev->dev, "removing device with active domains!\n");
+>   
+>   	arm_smmu_bus_init(NULL);
+>   	iommu_device_unregister(&smmu->iommu);
+> 
