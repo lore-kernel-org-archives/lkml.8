@@ -2,235 +2,378 @@ Return-Path: <SRS0=s8dx=5M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE3A2C2D0E5
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 16:50:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6B2AC2D0EF
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 16:50:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 88DF4206E6
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 16:50:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 99A1A20A8B
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 16:50:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="U6Ik5QyH"
+	dkim=pass (1024-bit key) header.d=windriversystems.onmicrosoft.com header.i=@windriversystems.onmicrosoft.com header.b="iNu0+/gr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727792AbgC0QuQ (ORCPT
+        id S1727826AbgC0QuT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Mar 2020 12:50:16 -0400
-Received: from us-smtp-delivery-74.mimecast.com ([216.205.24.74]:55812 "EHLO
-        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727666AbgC0QuQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Mar 2020 12:50:16 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1585327813;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-        bh=nnzkbZqVUgnra7CNXUXdYdVrlOR8vlayJA0nBvj6W5k=;
-        b=U6Ik5QyHVZTEzEG+Ll2iaWJJUo0fNzKUgHi3qBpHjGn/QIPOBE8x72lIu9YRS5MzQpZsRv
-        uACwWC23oHBFvkmsB/KO/WuO1SlqVuBVrEu9E3pep5VW0cSLpGo0VmGhQgQtKwji1G6FnH
-        vddolMi6kSTo5JBG6Tl5sEB8LC+YvbE=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-331-ge5IGVbXOoCPcwX97k4oOQ-1; Fri, 27 Mar 2020 12:50:09 -0400
-X-MC-Unique: ge5IGVbXOoCPcwX97k4oOQ-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D6A0C80269A;
-        Fri, 27 Mar 2020 16:50:06 +0000 (UTC)
-Received: from [10.36.112.108] (ovpn-112-108.ams2.redhat.com [10.36.112.108])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id BD1FA100EBA7;
-        Fri, 27 Mar 2020 16:50:02 +0000 (UTC)
-Subject: Re: [PATCH v1] drivers/base/memory.c: indicate all memory blocks as
- removable
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     Michal Hocko <mhocko@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux MM <linux-mm@kvack.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        powerpc-utils-devel@googlegroups.com, util-linux@vger.kernel.org,
-        Badari Pulavarty <pbadari@us.ibm.com>,
-        Nathan Fontenot <nfont@linux.vnet.ibm.com>,
-        Robert Jennings <rcj@linux.vnet.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Karel Zak <kzak@redhat.com>,
-        "Scargall, Steve" <steve.scargall@intel.com>
-References: <20200128093542.6908-1-david@redhat.com>
- <CAPcyv4jpdaNvJ67SkjyUJLBnBnXXQv686BiVW042g03FUmWLXw@mail.gmail.com>
- <20200327074718.GT27965@dhcp22.suse.cz>
- <8c74afdc-98cb-dd48-c516-ff6e8b59d598@redhat.com>
- <CAPcyv4jWG8zpK_fJ=JsnTX0d5zXmQsKap=6=CTtOQpD0iGCoMQ@mail.gmail.com>
-From:   David Hildenbrand <david@redhat.com>
-Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
- 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
-Organization: Red Hat GmbH
-Message-ID: <1bf9777b-90a1-35be-b909-facf1812f91e@redhat.com>
-Date:   Fri, 27 Mar 2020 17:50:01 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+        Fri, 27 Mar 2020 12:50:19 -0400
+Received: from mail-dm6nam12on2072.outbound.protection.outlook.com ([40.107.243.72]:27998
+        "EHLO NAM12-DM6-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727242AbgC0QuT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Mar 2020 12:50:19 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=oBPVyJEqKUlAQVYGuyt44jbauZh3kiq+WRfYuqW3hMZjKXrL97V5YCgjnJtE19jVUPXbU853fzeqK6V7JCqZ705uBgHeX++RvdaZ/9GvLcBm+QE0nSMenll6XyzLtKTUeaXqO6GBAw5gAMhbnadwX++h8XWyVyNiaHZCkTUu9y4PBXCYWqbodn5WfHT5mKvqO5vmFUypsHEssiLwcLaEy3rnBuuvLDQyamb4LeHigt5bKwUQjKJP2aO1W2617oZiLu7pP2RJCsfT8eTA1o1VmDsIeTGI34bO1uoXPVK1gEAB5HlVViUpGR1YObFRg5zFz1nP+cUr0tJdq1XWS3rpww==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=0LFqiO5qG5YYDkhm8lTNwaev9cw/vu90KnMaH9OFfFw=;
+ b=SdXzujwns9e0aH9j3CjRsoBgpAV1ZSlEQl5zi0NDYnUfDLkInnoARNTxQSkFAvV+WUyDq8MmgYHZBT3gDf6DhQgBSIeMzYLPdLu3erP5/KUx6sMtwAyQ+XUVs8KZMUs+cqEwscQJAA+JJWwWL0R3YVt/kp1/piw1aO1yejgmGILAezWh8DWmtQKr0lZnMvx/zePmJGK5cyQHOAirrkwf+p0GGtI7BduMDfsCmUWLy95LR67KGuJk+KXUKuhbaSGE1XtKB3gc7q2KHDl9+/CT5NIzL4GeZcXQOP5yCt17HF2A5DQx1BcY4idEa4Q/SZDzKCHQiuZNzY4jki8SzGlQAA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=windriver.com; dmarc=pass action=none
+ header.from=windriver.com; dkim=pass header.d=windriver.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=windriversystems.onmicrosoft.com;
+ s=selector2-windriversystems-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=0LFqiO5qG5YYDkhm8lTNwaev9cw/vu90KnMaH9OFfFw=;
+ b=iNu0+/grTcSkrkcTMnkTROapy+whi5mpRPZiOWQMVoFAwP5Ugo3721724GQR/74toSDpxDa5GhbrrFs0LHF96wuLh3R/rXsG0KKjBW7M21eA1abgspP9wfJNBFWN1laWuUYKf4SKq7yqbGPYVUofxtLvW/6BBOR+6OIB+gO3DWs=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=Li.Wang@windriver.com; 
+Received: from DM6PR11MB3595.namprd11.prod.outlook.com (2603:10b6:5:142::16)
+ by DM6PR11MB3177.namprd11.prod.outlook.com (2603:10b6:5:c::28) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2835.20; Fri, 27 Mar 2020 16:47:40 +0000
+Received: from DM6PR11MB3595.namprd11.prod.outlook.com
+ ([fe80::4038:e1b8:4bd3:74f3]) by DM6PR11MB3595.namprd11.prod.outlook.com
+ ([fe80::4038:e1b8:4bd3:74f3%5]) with mapi id 15.20.2835.023; Fri, 27 Mar 2020
+ 16:47:40 +0000
+Subject: Re: [PATCH] arm64: mmu: no write cache for O_SYNC flag
+To:     Mark Rutland <mark.rutland@arm.com>
+Cc:     Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20200326163625.30714-1-li.wang@windriver.com>
+ <20200327142937.GB94838@C02TD0UTHF1T.local>
+From:   "Wang, Li" <li.wang@windriver.com>
+Message-ID: <6fc201bf-ad0c-3dae-783e-c9c9e4ac034e@windriver.com>
+Date:   Sat, 28 Mar 2020 00:47:32 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:68.0) Gecko/20100101
  Thunderbird/68.6.0
+In-Reply-To: <20200327142937.GB94838@C02TD0UTHF1T.local>
+Content-Type: multipart/mixed;
+ boundary="------------456B615C93724A699A05DEC0"
+X-ClientProxiedBy: HKAPR04CA0018.apcprd04.prod.outlook.com
+ (2603:1096:203:d0::28) To DM6PR11MB3595.namprd11.prod.outlook.com
+ (2603:10b6:5:142::16)
 MIME-Version: 1.0
-In-Reply-To: <CAPcyv4jWG8zpK_fJ=JsnTX0d5zXmQsKap=6=CTtOQpD0iGCoMQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-Content-Transfer-Encoding: quoted-printable
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from [192.168.0.116] (120.244.141.26) by HKAPR04CA0018.apcprd04.prod.outlook.com (2603:1096:203:d0::28) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2856.19 via Frontend Transport; Fri, 27 Mar 2020 16:47:37 +0000
+X-Originating-IP: [120.244.141.26]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: ca9bfc6b-1a16-4242-69aa-08d7d26e8fc1
+X-MS-TrafficTypeDiagnostic: DM6PR11MB3177:
+X-Microsoft-Antispam-PRVS: <DM6PR11MB3177A2E932E57EBB6D3A70B6EFCC0@DM6PR11MB3177.namprd11.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:2512;
+X-Forefront-PRVS: 0355F3A3AE
+X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(39850400004)(136003)(346002)(396003)(366004)(376002)(81166006)(81156014)(8936002)(6666004)(54906003)(316002)(6916009)(36756003)(5660300002)(52116002)(33964004)(66946007)(66556008)(6486002)(8676002)(66476007)(235185007)(16576012)(66616009)(31686004)(186003)(966005)(2906002)(2616005)(26005)(86362001)(478600001)(31696002)(956004)(4326008)(16526019);DIR:OUT;SFP:1101;SCL:1;SRVR:DM6PR11MB3177;H:DM6PR11MB3595.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;
+Received-SPF: None (protection.outlook.com: windriver.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: kvCcQu/ZxTvCaNfsIHUCIG2AZ5OyR8tIa+yME/l+hpAC3dePAsKHREWwu4NKeUlY0KzMli0MnUgpb/IqjmvBKuDH2zuVFVB+EK/9lnyho+ZOptyzT+tfzvvrIcYljtlDgyLOGAP7tB8diHEFTZLxC0MsZpB2GTIX6VNfIjPmFyUdQUm36aA/wzSdzFt8ENCv/icSV/lvKcEYFnRSHF7kTtKtzYr3eTYMNghLsZIw4LDEsZ8BHXk33EdzAx6lkgLGOzSgfCyxgct5hBB8rMJXMyFPEcOt8gUYL+PSEntgikWBqd5V0Rv9kIHLuIOjnJgyjFoVxvnL+1Fzj/I9sIBhqpJGAtrXOK0xxcDq5SAsT6nrkoRiDuD5OJsoPUjRDz9kIU9otUEiDAC3i9ebiBHjPKE5XBII8nnaxhDbqgdw6l7Ty7Q77S6UKIlmKVMiRwdFfq1vJ1Q04rdIiGv7NPu/1eTcEDkBfzsUfZUvZyxisojWZXjboJSh+7nRNRf5wcNA/ua/r52TJgcWyXQ14TzAxA==
+X-MS-Exchange-AntiSpam-MessageData: jYtovzZCUk1fs5rYV/m1WOn/bYcEF6SULYtTms5POAcqZmSoAnYjsYvT6ckD4uOjXohEbi7RFvyPskrv1bGCIFl2hgTC9+hG5vGUZpBr4YiRBD01DnzpZ0urWDa+30FOjr6r88QVMCbhWIPOjOtsdg==
+X-OriginatorOrg: windriver.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: ca9bfc6b-1a16-4242-69aa-08d7d26e8fc1
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Mar 2020 16:47:40.0444
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 8ddb2873-a1ad-4a18-ae4e-4644631433be
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: +Xzyt6rLtkMMHLirtYAvK4mXG9gth9mFvw44VAD8u2sAfgeny26SnVKOVqlbOeOQ0QCntrgRuYjdLvn+JvaMNA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR11MB3177
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 27.03.20 17:28, Dan Williams wrote:
-> On Fri, Mar 27, 2020 at 2:00 AM David Hildenbrand <david@redhat.com> wr=
-ote:
->>
->> On 27.03.20 08:47, Michal Hocko wrote:
->>> On Thu 26-03-20 23:24:08, Dan Williams wrote:
->>> [...]
->>>> David, Andrew,
->>>>
->>>> I'd like to recommend this patch for -stable as it likely (test
->>>> underway) solves this crash report from Steve:
->>>>
->>>> [  148.796036] page dumped because: VM_BUG_ON_PAGE(PagePoisoned(p))
->>>> [  148.796074] ------------[ cut here ]------------
->>>> [  148.796098] kernel BUG at include/linux/mm.h:1087!
->>>> [  148.796126] invalid opcode: 0000 [#1] SMP NOPTI
->>>> [  148.796146] CPU: 63 PID: 5471 Comm: lsmem Not tainted 5.5.10-200.=
-fc31.x8=3D
->>>> 6_64+debug #1
->>>> [  148.796173] Hardware name: Intel Corporation S2600WFD/S2600WFD, B=
-IOS SE5=3D
->>>> C620.86B.02.01.0010.010620200716 01/06/2020
->>>> [  148.796212] RIP: 0010:is_mem_section_removable+0x1a4/0x1b0
->>>> [  148.796561] Call Trace:
->>>> [  148.796591]  removable_show+0x6e/0xa0
->>>> [  148.796608]  dev_attr_show+0x19/0x40
->>>> [  148.796625]  sysfs_kf_seq_show+0xa9/0x100
->>>> [  148.796640]  seq_read+0xd5/0x450
->>>> [  148.796657]  vfs_read+0xc5/0x180
->>>> [  148.796672]  ksys_read+0x68/0xe0
->>>> [  148.796688]  do_syscall_64+0x5c/0xa0
->>>> [  148.796704]  entry_SYSCALL_64_after_hwframe+0x49/0xbe
->>>> [  148.796721] RIP: 0033:0x7f3ab1646412
->>>>
->>>> ...on a non-debug kernel it just crashes.
->>>>
->>>> In this case lsmem is failing when reading memory96:
->>>>
->>>> openat(3, "memory96/removable", O_RDONLY|O_CLOEXEC) =3D 4
->>>> fcntl(4, F_GETFL)                       =3D 0x8000 (flags O_RDONLY|O=
-_LARGEFILE)
->>>> fstat(4, {st_mode=3DS_IFREG|0444, st_size=3D4096, ...}) =3D 0
->>>> read(4,  <unfinished ...>)              =3D ?
->>>> +++ killed by SIGSEGV +++
->>>> Segmentation fault (core dumped)
->>>>
->>>> ...which is phys_index 0x60 =3D> memory address 0x3000000000
->>>>
->>>> On this platform that lands us here:
->>>>
->>>> 100000000-303fffffff : System RAM
->>>>   291f000000-291fe00f70 : Kernel code
->>>>   2920000000-292051efff : Kernel rodata
->>>>   2920600000-292093b0bf : Kernel data
->>>>   29214f3000-2922dfffff : Kernel bss
->>>> 3040000000-305fffffff : Reserved
->>>> 3060000000-1aa5fffffff : Persistent Memory
->>>
->>> OK, 2GB memblocks and that would mean [0x3000000000, 0x3080000000]
->>>
->>>> ...where the last memory block of System RAM is shared with persiste=
-nt
->>>> memory. I.e. the block is only partially online which means that
->>>> page_to_nid() in is_mem_section_removable() will assert or crash for
->>>> some of the offline pages in that block.
->>>
->>> Yes, this patch is a simple workaround. Normal memory hotplug will no=
-t
->>> blow up because it should be able to find out that test_pages_in_a_zo=
-ne
->>> is false. Who knows how other potential pfn walkers handle that.
->>
->> All other pfn walkers now correctly use pfn_to_online_page() - which
->> will also result in false positives in this scenario and is still to b=
-e
->> fixed by Dan IIRC. [1]
->=20
-> Sorry, it's been too long and this fell out of my cache. I also turned
-> away once the major fire in KVM was put out with special consideration
-> for for devmem pages. What's left these days? ...besides
-> removable_show()?
-
-Essentially any pfn_to_online_page() is a candidate.
-
-E.g.,
-
-mm/memory-failure.c:memory_failure()
-
-is obviously broken (could be worked around)
-
-Also
-
-mm/memory-failure.c:soft_offline_page()
-
-is obviously broken.
+--------------456B615C93724A699A05DEC0
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
 
-Also set_zone_contiguous()->__pageblock_pfn_to_page() is broken, when it
-checks for "page_zone(start_page) !=3D zone" if the memmap contains garba=
-ge.
+在 2020/3/27 22:29, Mark Rutland 写道:
+> On Thu, Mar 26, 2020 at 09:36:25AM -0700, Li Wang wrote:
+>> reproduce steps:
+>> 1.
+>> disable CONFIG_STRICT_DEVMEM in linux kernel
+>> 2.
+>> Process A gets a Physical Address of global variable by
+>> "/proc/self/pagemap".
+>> 3.
+>> Process B writes a value to the same Physical Address by mmap():
+>> fd=open("/dev/mem",O_SYNC);
+>> Virtual Address=mmap(fd);
+> Is this just to demonstrate the behaviour, or is this meant to be
+> indicative of a real use-case? I'm struggling to see the latter.
+>
+>> problem symptom:
+>> after Process B write a value to the Physical Address,
+>> Process A of the value of global variable does not change.
+>> They both W/R the same Physical Address.
+> If Process A is not using the same attributes as process B, there is no
+> guarantee of coherency. How did process A map this memory?
 
-And I only checked a handful of examples.
 
---=20
+about 2 Process:
+
+Process A:
+
+the memory is not declared by map function, it is just a global variable.
+
+only by /proc/self/pagemap to get its Physical Address.
+
+I attached the codes(wrl-cache-coh-test.c)
+
+Process B:
+
+it is command of "devmem" in busybox, it writes a value to Physical Address.
+
+it uses open(O_SYNC) and mmap.
+
+
+>> technical reason:
+>> Process B writing the Physical Address is by the Virtual Address,
+>> and the Virtual Address comes from "/dev/mem" and mmap().
+>> In arm64 arch, the Virtual Address has write cache.
+>> So, maybe the value is not written into Physical Address.
+> I don't think that's true. I think what's happening here is:
+>
+> * Process A has a Normal WBWA Cacheable mapping.
+> * Process B as a Normal Non-cacheable mapping.
+> * Process B's write does not snoop any caches, and goes straight to
+>    memory.
+> * Process A reads a value from cache, which does not include process B's
+>    write.
+>
+> That's a natural result of using mismatched attributes, and is
+> consistent with the O_SYNC flag meaning that the write "is transferred
+> to the underlying hardware".
+
+
+if you agree that O_SYNC flag means "is transferred to the underlying 
+hardware",
+
+the arm64 does not do that:
+
+when use O_SYNC flag under arm64 arch, it adds write cache feature,
+
+so, it is no guarantee "transferred to hardware".
+
+=====
+
+arch/arm64/mm/mmu.c
+phys_mem_access_prot(){
+   else if (file->f_flags & O_SYNC)
+     return pgprot_writecombine(vma_prot);}
+
+=====
+
+
+by my test without the write cache, even if Process A is not using the 
+same attributes as process B,
+
+it has guarantee of coherency:
+
+when Process B change value, Process B can see the change, too.
+
+
 Thanks,
 
-David / dhildenb
+LiWang.
 
+
+my email server seems to reject to send to 
+linux-arm-kernel@lists.infradead.org,
+
+the info is in another email not showing in 
+linux-arm-kernel@lists.infradead.org:
+
+
+1.
+
+no pass O_SYNC in user space is not a good idea.
+
+in fact, the codes come from 'devmem' command of busybox:
+
+=====
+
+busybox-1.24.1/miscutils$ vim devmem.c
+
+fd = xopen("/dev/mem", O_SYNC);
+
+=====
+
+the codes are used for a long time.
+
+
+2.
+
+according to info of open man about "O_SYNC":
+
+=====
+
+http://man7.org/linux/man-pages/man2/open.2.html
+
+the output data and associated file metadata have been transferred to 
+the underlying hardware
+
+=====
+
+I think "O_SYNC" means no cache.
+
+
+3.
+
+/dev/mem of driver offers 2 ways to operate  physical memory.
+
+one is mmap, the other is read/write.
+
+when use read/write way, it operates uncached memory:
+
+=====
+
+kernel-source/drivers/char/mem.c
+
+write_mem(){
+
+/* it must also be accessed uncached */
+
+}
+
+=====
+
+
+4.
+
+arm64 arch is different with other arch about phys_mem_access_prot().
+
+you can see no any other arch add cache flag in the function.
+
+only arm and arm64 add write cache for O_SYNC flag.
+
+
+x86/mm/pat.c
+
+phys_mem_access_prot(){
+
+return vma_prot;
+
+}
+
+
+powerpc/mm/mem.c
+
+phys_mem_access_prot(){
+         if (ppc_md.phys_mem_access_prot)
+                 return ppc_md.phys_mem_access_prot(file, pfn, size, 
+vma_prot);
+         if (!page_is_ram(pfn))
+                 vma_prot = pgprot_noncached(vma_prot);
+         return vma_prot;
+}
+
+
+drivers/char/mem.c
+
+phys_mem_access_prot()
+{
+#ifdef pgprot_noncached
+         phys_addr_t offset = pfn << PAGE_SHIFT;
+
+         if (uncached_access(file, offset))
+                 return pgprot_noncached(vma_prot);
+#endif
+    return vma_prot;
+}
+
+
+>> fix reason:
+>> giving write cache flag in arm64 is in phys_mem_access_prot():
+>> =====
+>> arch/arm64/mm/mmu.c
+>> phys_mem_access_prot()
+>> {
+>>    if (!pfn_valid(pfn))
+>>      return pgprot_noncached(vma_prot);
+>>    else if (file->f_flags & O_SYNC)
+>>      return pgprot_writecombine(vma_prot);
+>>    return vma_prot;
+>> }
+>> ====
+>> the other arch and the share function drivers/char/mem.c of phys_mem_access_prot()
+>> does not add write cache flag.
+>> So, removing the flag to fix the issue
+> This will change behaviour that other software may be relying upon, and
+> as above I do not believe this actually solves the problem you describe.
+>
+> Thanks,
+> Mark.
+>
+>> Signed-off-by: Li Wang <li.wang@windriver.com>
+>> Cc: Catalin Marinas <catalin.marinas@arm.com>
+>> Cc: Will Deacon <will@kernel.org>
+>> Cc: linux-arm-kernel@lists.infradead.org
+>> Cc: linux-kernel@vger.kernel.org
+>> ---
+>>   arch/arm64/mm/mmu.c | 2 --
+>>   1 file changed, 2 deletions(-)
+>>
+>> diff --git a/arch/arm64/mm/mmu.c b/arch/arm64/mm/mmu.c
+>> index 128f70852bf3..d7083965ca17 100644
+>> --- a/arch/arm64/mm/mmu.c
+>> +++ b/arch/arm64/mm/mmu.c
+>> @@ -81,8 +81,6 @@ pgprot_t phys_mem_access_prot(struct file *file, unsigned long pfn,
+>>   {
+>>   	if (!pfn_valid(pfn))
+>>   		return pgprot_noncached(vma_prot);
+>> -	else if (file->f_flags & O_SYNC)
+>> -		return pgprot_writecombine(vma_prot);
+>>   	return vma_prot;
+>>   }
+>>   EXPORT_SYMBOL(phys_mem_access_prot);
+>> -- 
+>> 2.24.1
+>>
+
+--------------456B615C93724A699A05DEC0
+Content-Type: text/plain; charset=UTF-8;
+ name="cache-test.c"
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment;
+ filename="cache-test.c"
+
+I2luY2x1ZGUgPHN0ZGlvLmg+CiNpbmNsdWRlIDxzdGRpbnQuaD4KI2luY2x1ZGUgPHVuaXN0ZC5o
+PgoKc3RhdGljIHVpbnRwdHJfdCB2aXJ0X3RvX3BoeXNfYWRkcmVzcyh1aW50cHRyX3QgdmFkZHIp
+CnsKCUZJTEUgKnBhZ2VtYXA7Cgl1aW50cHRyX3QgcGFkZHIgPSAwOwoJb2ZmX3Qgb2Zmc2V0ID0g
+KHZhZGRyIC8gc3lzY29uZihfU0NfUEFHRVNJWkUpKSAqIHNpemVvZih1aW50NjRfdCk7Cgl1aW50
+NjRfdCBlOwoKCS8qIGh0dHBzOi8vd3d3Lmtlcm5lbC5vcmcvZG9jL0RvY3VtZW50YXRpb24vdm0v
+cGFnZW1hcC50eHQgKi8KCWlmICgocGFnZW1hcCA9IGZvcGVuKCIvcHJvYy9zZWxmL3BhZ2VtYXAi
+LCAiciIpKSkgewoJCWlmIChsc2VlayhmaWxlbm8ocGFnZW1hcCksIG9mZnNldCwgU0VFS19TRVQp
+ID09IG9mZnNldCkgewoJCQlpZiAoZnJlYWQoJmUsIHNpemVvZih1aW50NjRfdCksIDEsIHBhZ2Vt
+YXApKSB7CgkJCQlpZiAoZSAmICgxVUxMIDw8IDYzKSkgeyAvKiBwYWdlIHByZXNlbnQgPyAqLwoJ
+CQkJCS8qIHBmbiBtYXNrICovCgkJCQkJcGFkZHIgPSBlICYgKCgxVUxMIDw8IDU0KSAtIDEpOwoJ
+CQkJCXBhZGRyID0gcGFkZHIgKiBzeXNjb25mKF9TQ19QQUdFU0laRSk7CgkJCQkJLyogYWRkIG9m
+ZnNldCB3aXRoaW4gcGFnZSAqLwoJCQkJCXBhZGRyIHw9ICh2YWRkciAmIChzeXNjb25mKF9TQ19Q
+QUdFU0laRSkgLSAxKSk7CgkJCQl9CgkJCQllbHNlCgkJCQkJcHJpbnRmKCIlczogTm8gcGFnZSBw
+cmVzZW50XG4iLCBfX2Z1bmNfXyk7CgkJCX0KCQkJZWxzZQoJCQkJcHJpbnRmKCIlczogZnJlYWQg
+ZmFpbGVkXG4iLCBfX2Z1bmNfXyk7CgkJfQoJCWVsc2UKCQkJcHJpbnRmKCIlczogbHNlZWsgZGlk
+IG5vdCBmaW5kXG4iLCBfX2Z1bmNfXyk7CgoJCWZjbG9zZShwYWdlbWFwKTsKCX0KCWVsc2UKCQlw
+cmludGYoIiVzOiBQYWdlbWFwIG9wZW4gZmFpbGVkXG4iLCBfX2Z1bmNfXyk7CgoJcmV0dXJuIHBh
+ZGRyOwp9Cgp2b2xhdGlsZSB1aW50MzJfdCB2YXI9MDsKCmludCBtYWluKCkKewogICB2b2lkKiBw
+aHlzX2FkZHIgPSB2aXJ0X3RvX3BoeXNfYWRkcmVzcygmdmFyKTsKICAgcHJpbnRmKCIlcCAlcFxu
+IiwgJnZhciwgcGh5c19hZGRyKTsKICAgd2hpbGUoIHZhcj09MCApCiAgICAgIHNsZWVwKDEpOwog
+ICBwcmludGYoImRvbmVcbiIpOwogICBmZmx1c2goc3Rkb3V0KTsKICAgcmV0dXJuIDA7Cn0K
+
+--------------456B615C93724A699A05DEC0--
