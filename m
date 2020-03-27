@@ -2,142 +2,153 @@ Return-Path: <SRS0=s8dx=5M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97B67C2D0EC
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 16:06:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37722C43331
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 16:08:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 637A120716
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 16:06:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B4CA20716
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 16:08:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JSlpCw4V"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="an6bUaMW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727677AbgC0QGO (ORCPT
+        id S1727724AbgC0QIZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Mar 2020 12:06:14 -0400
-Received: from us-smtp-delivery-74.mimecast.com ([216.205.24.74]:42672 "EHLO
-        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726515AbgC0QGO (ORCPT
+        Fri, 27 Mar 2020 12:08:25 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:41063 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727354AbgC0QIY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Mar 2020 12:06:14 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1585325170;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=rADClTuM8rDCPwa+pftuZtYBhIX2IPiWqkZ05BPZYE0=;
-        b=JSlpCw4VB06QDfm6nFl/AWgn1sohEQ4OEc+rSk558Ro4vZJC9F32OyVpZSrECO8YxUiqVy
-        4k2fVAR4YGxtfF9/WEKDjSFE3UIj55kcTGRBxFt4xMl6wOAwdFNTWR3b8b96kcTEKBXE1L
-        3/8R7OIUh1s4bSnANnNrXhOzeSMYrEQ=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-461-K_ZuWAB8M42Xkd9Far-IRA-1; Fri, 27 Mar 2020 12:06:05 -0400
-X-MC-Unique: K_ZuWAB8M42Xkd9Far-IRA-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 5251A8018A1;
-        Fri, 27 Mar 2020 16:06:03 +0000 (UTC)
-Received: from [10.36.113.142] (ovpn-113-142.ams2.redhat.com [10.36.113.142])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 957C460304;
-        Fri, 27 Mar 2020 16:05:54 +0000 (UTC)
-Subject: Re: [PATCH V10 04/11] iommu/vt-d: Use helper function to skip agaw
- for SL
-To:     "Tian, Kevin" <kevin.tian@intel.com>,
-        Jacob Pan <jacob.jun.pan@linux.intel.com>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Jean-Philippe Brucker <jean-philippe@linaro.com>
-Cc:     "Liu, Yi L" <yi.l.liu@intel.com>,
-        "Raj, Ashok" <ashok.raj@intel.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Jonathan Cameron <jic23@kernel.org>
-References: <1584746861-76386-1-git-send-email-jacob.jun.pan@linux.intel.com>
- <1584746861-76386-5-git-send-email-jacob.jun.pan@linux.intel.com>
- <AADFC41AFE54684AB9EE6CBC0274A5D19D7ED91C@SHSMSX104.ccr.corp.intel.com>
-From:   Auger Eric <eric.auger@redhat.com>
-Message-ID: <310693c3-9bd2-a764-2053-cd785d329ee6@redhat.com>
-Date:   Fri, 27 Mar 2020 17:05:52 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
+        Fri, 27 Mar 2020 12:08:24 -0400
+Received: by mail-pg1-f193.google.com with SMTP id b1so4774996pgm.8;
+        Fri, 27 Mar 2020 09:08:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=v3WW2gICCRcfa0oGxmZ+LfSQn5AikLIQ+ZRnRYdwUfA=;
+        b=an6bUaMWa/gge8dt35mNz51d8Pj8Aa/qVvKR0POiYMe4zuNsTFMbWsDqtJpu8Vfgps
+         HodQ817xNYHI9SLLHcYrsshSCnFQVPdRz5miPel3a6dQh30+182sG4GpKzSYGg0Moaql
+         oICMZDkEloRd8GN1T9OAdis5YEzicvSdRi2cwTkeLqxIisdfp6u4WrF2upjoOm0b/Nqv
+         xJs9hkC3swEZG36oeWhAa8kBkb2p598PAhHmrKt9TC86LDUy19H7w13AsSWaFeOMFBw1
+         1kiJmtgBbfIhYEZfNNWHTKYdN5NFa73OW2vgKUh7ekKVHy/s1yLOWQQExWS6RBTI4i5f
+         lubA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=v3WW2gICCRcfa0oGxmZ+LfSQn5AikLIQ+ZRnRYdwUfA=;
+        b=K61t+aL22V7z1zCxdy92iLEGfcUUfCcui1nXRjhlhBoF1i5bSiZeUHJHo9tj8E3hl7
+         LkfP1UHq6zAWyukKSnmDoWQTb2yZrra+7+orFlf/8phatZvSEc7pQjNcOeAdyBTCb1y6
+         IhuKSgp++nxg6di5pN8GCuKkAZhlw9fp7Td3Lqfr5w+nMRQdLyxPHMKR29SWvVUjhJ8u
+         KM5b+m29XY3GGJbeEYgD0GcJ292B3HsiMUi15O2xGS7FQMVnNnCv5TnoJeHcfiL/xGDE
+         AvNCTKvVXOnoWxUGyLgLhfXf1T5W5Vt6svfYf4q1S3rQ8N8kaoK9bCv7okpY4oL/5JOk
+         3qgw==
+X-Gm-Message-State: ANhLgQ3vw/FfWuBbGxGGxSE2ZiBjUx8kOAWKqaEKYZYl9EBGZhw3jGAy
+        sz3DwZrD1BEUqvJS4J1F57A=
+X-Google-Smtp-Source: ADFU+vs5xl4PN9llzz39JwJNhgmk9dgWBu5u30cb77PT2OtFyYrOeXBrJPUM82BlUm8kk65OLbcqNQ==
+X-Received: by 2002:aa7:947d:: with SMTP id t29mr14654589pfq.184.1585325301244;
+        Fri, 27 Mar 2020 09:08:21 -0700 (PDT)
+Received: from localhost ([49.207.55.57])
+        by smtp.gmail.com with ESMTPSA id v185sm4391917pfv.32.2020.03.27.09.08.20
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 27 Mar 2020 09:08:20 -0700 (PDT)
+Date:   Fri, 27 Mar 2020 21:38:18 +0530
+From:   afzal mohammed <afzal.mohd.ma@gmail.com>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, x86@kernel.org,
+        linux-sh@vger.kernel.org, linux-s390@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-parisc@vger.kernel.org,
+        linux-mips@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
+        linux-ia64@vger.kernel.org, linux-hexagon@vger.kernel.org,
+        linux-c6x-dev@linux-c6x.org, linux-omap@vger.kernel.org,
+        linux-alpha@vger.kernel.org
+Subject: [PATCH 0/6] Kill setup_irq()
+Message-ID: <cover.1585320721.git.afzal.mohd.ma@gmail.com>
+References: <20200321174303.GA7930@afzalpc>
 MIME-Version: 1.0
-In-Reply-To: <AADFC41AFE54684AB9EE6CBC0274A5D19D7ED91C@SHSMSX104.ccr.corp.intel.com>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200321174303.GA7930@afzalpc>
+User-Agent: Mutt/1.9.3 (2018-01-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jacob,
+Hi Thomas,
 
-On 3/27/20 12:55 PM, Tian, Kevin wrote:
->> From: Jacob Pan <jacob.jun.pan@linux.intel.com>
->> Sent: Saturday, March 21, 2020 7:28 AM
->>
->> Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
->> ---
->>  drivers/iommu/intel-pasid.c | 14 ++++----------
->>  1 file changed, 4 insertions(+), 10 deletions(-)
->>
->> diff --git a/drivers/iommu/intel-pasid.c b/drivers/iommu/intel-pasid.c
->> index 191508c7c03e..9bdb7ee228b6 100644
->> --- a/drivers/iommu/intel-pasid.c
->> +++ b/drivers/iommu/intel-pasid.c
->> @@ -544,17 +544,11 @@ int intel_pasid_setup_second_level(struct
->> intel_iommu *iommu,
->>  		return -EINVAL;
->>  	}
->>
->> -	/*
->> -	 * Skip top levels of page tables for iommu which has less agaw
->> -	 * than default. Unnecessary for PT mode.
->> -	 */
->>  	pgd = domain->pgd;
->> -	for (agaw = domain->agaw; agaw > iommu->agaw; agaw--) {
->> -		pgd = phys_to_virt(dma_pte_addr(pgd));
->> -		if (!dma_pte_present(pgd)) {
->> -			dev_err(dev, "Invalid domain page table\n");
->> -			return -EINVAL;
->> -		}
->> +	agaw = iommu_skip_agaw(domain, iommu, &pgd);
->> +	if (agaw < 0) {
->> +		dev_err(dev, "Invalid domain page table\n");
-is the dev_err() really requested. I see in domain_setup_first_level(),
-there is none.
->> +		return -EINVAL;
->>  	}
-> 
-> ok, I see how it is used. possibly combine last and this one together since
-> it's mostly moving code...
+As compared to the situation mentioned earlier[1], now powerpc patch is
+also in -next, and the pending ARM patches has been picked up by ARM SoC
+maintainers today and is expected to show up in next -next. All other
+subsytem patches has been picked by relevant maintainers & are already
+in -next except alpha, c6x, hexagon, unicore32 & sh.
 
-I tend to agree with Kevin. May be better squash the 2 patches. Also not
-sure the inline of iommu_skip_agaw() is meaningful then. Also Add commit
-messages on the resulting patch.
+As it is the case, i am sending you patches for the above 5
+architecture's plus the core removal patch.
 
-Note domain_setup_first_level() also could use the helper while we are
-it (if declaration moved to common helper). Only the error code differs
-in case !dma_pte_present(pgd), ie. -ENOMEM. May be good to align.
+Status of 5 arch's:
+-------------------
+alpha:		received ack from Matt Turner, build test success
+c6x:		did receive ack from Mark Salter in v1, the final
+		 version (v3) was with minor changes, hence removed his
+		 ack & cc'ed him, build test success
+hexagon:	build test success
+unicore32:	couldn't get toolchain from kernel.org, 0day test robot
+		 or Segher's buildall
+sh:		To compile the relevant changes sh64 compiler is
+		 required, couldn't get it from above mentioned 3
+		 sources.
 
-Otherwise those stuff may be done in a fixup patch.
+Note 1: sh toolchain is available, but that will not make the
+ relevant changes compile as it has dependency of 64bit arch toolchain,
+ did try a Kconfig hack to make it compile w/ 32bit sh toolchain, but it
+ failed due to other reasons (unknown operands), so gave up on that.
+Note 2: hexagon final image creation fails even w/o my patch, but it
+ has been ensured that w/ my changes relevant object files are getting
+ built  w/o warnings.
 
-Thanks
+Regards
+afzal
 
-Eric
-> 
->>
->>  	pgd_val = virt_to_phys(pgd);
->> --
->> 2.7.4
-> 
+[1] https://lkml.kernel.org/r/20200321172626.GA6323@afzalpc
+
+afzal mohammed (6):
+  alpha: Replace setup_irq() by request_irq()
+  c6x: replace setup_irq() by request_irq()
+  hexagon: replace setup_irq() by request_irq()
+  sh: replace setup_irq() by request_irq()
+  unicore32: replace setup_irq() by request_irq()
+  genirq: Remove setup_irq() and remove_irq()
+
+ arch/alpha/kernel/irq_alpha.c     | 29 ++++----------------
+ arch/alpha/kernel/irq_i8259.c     |  8 ++----
+ arch/alpha/kernel/irq_impl.h      |  7 +----
+ arch/alpha/kernel/irq_pyxis.c     |  3 ++-
+ arch/alpha/kernel/sys_alcor.c     |  3 ++-
+ arch/alpha/kernel/sys_cabriolet.c |  3 ++-
+ arch/alpha/kernel/sys_eb64p.c     |  3 ++-
+ arch/alpha/kernel/sys_marvel.c    |  2 +-
+ arch/alpha/kernel/sys_miata.c     |  6 +++--
+ arch/alpha/kernel/sys_ruffian.c   |  3 ++-
+ arch/alpha/kernel/sys_rx164.c     |  3 ++-
+ arch/alpha/kernel/sys_sx164.c     |  3 ++-
+ arch/alpha/kernel/sys_wildfire.c  |  7 ++---
+ arch/alpha/kernel/time.c          |  6 ++---
+ arch/c6x/platforms/timer64.c      | 11 +++-----
+ arch/hexagon/kernel/smp.c         | 22 ++++++++--------
+ arch/hexagon/kernel/time.c        | 11 +++-----
+ arch/sh/boards/mach-cayman/irq.c  | 18 +++++--------
+ arch/sh/drivers/dma/dma-pvr2.c    |  9 +++----
+ arch/unicore32/kernel/time.c      | 11 +++-----
+ include/linux/irq.h               |  2 --
+ kernel/irq/manage.c               | 44 -------------------------------
+ 22 files changed, 60 insertions(+), 154 deletions(-)
+
+-- 
+2.25.1
 
