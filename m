@@ -2,118 +2,453 @@ Return-Path: <SRS0=s8dx=5M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C48CC2D0EC
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 14:55:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7D9BC2D0E5
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 14:55:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2FBD62074F
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 14:55:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585320904;
-	bh=NLcg8KW/dZw7wy0b01U+CcbR/Kn5ISoIiCtxhv/EldU=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=M/I6gnMhq/2F7jiLMArrnidzpU2XRXnlYF9L2b0k388+vr4BWKaAcvhGWHAT6Jtbt
-	 AcMAjONbM/lI4QS2amzYg8qUDwQpYlJXIXoygIVPa0ii4+5mVDR1A1iAW/NfjAXUuP
-	 DMw+Aryip6QWPyx4L+rXdpdolkn8MfSdcl3P1ERs=
+	by mail.kernel.org (Postfix) with ESMTP id 9C73220748
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 14:55:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uclgbugm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727828AbgC0OzD (ORCPT
+        id S1727843AbgC0Oza (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Mar 2020 10:55:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41128 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726515AbgC0OzC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Mar 2020 10:55:02 -0400
-Received: from coco.lan (ip5f5ad4d8.dynamic.kabel-deutschland.de [95.90.212.216])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 342442073B;
-        Fri, 27 Mar 2020 14:54:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585320902;
-        bh=NLcg8KW/dZw7wy0b01U+CcbR/Kn5ISoIiCtxhv/EldU=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=lj+ypSdD3GgA7cTWkjGw6AEbmyo0TBSyGhajV9dIULl5V9teVxwnjAmjzq0QD5wyJ
-         BOBtagFDlNDVunjYnRRgq0tXkMaUncYAH4kmdu9qLvmu5DZD82jkf1Aj6eiKVkoSM2
-         P4dczkaw3svEpC60eOqFY4A5RZavGk1tWvTjYCRU=
-Date:   Fri, 27 Mar 2020 15:54:56 +0100
-From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To:     Rob Herring <robh+dt@kernel.org>
-Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        "David S. Miller" <davem@davemloft.net>,
-        Marcel Holtmann <marcel@holtmann.org>,
-        Simon Horman <simon.horman@netronome.com>,
-        Harish Bandi <c-hbandi@codeaurora.org>,
-        Venkata Lakshmi Narayana Gubba <gubbaven@codeaurora.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Rocky Liao <rjliao@codeaurora.org>,
-        Matthias Brugger <mbrugger@suse.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        netdev <netdev@vger.kernel.org>, devicetree@vger.kernel.org
-Subject: Re: [PATCH] docs: dt: fix a broken reference for a file converted
- to json
-Message-ID: <20200327155456.6d582bde@coco.lan>
-In-Reply-To: <CAL_JsqLZQN253PDi-HXtP3s5CCg0OzaUK99onC9UjQWeVw3KYw@mail.gmail.com>
-References: <33fa622c263ad40a129dc2b8dd0111b40016bc17.1585316085.git.mchehab+huawei@kernel.org>
-        <CAL_JsqLZQN253PDi-HXtP3s5CCg0OzaUK99onC9UjQWeVw3KYw@mail.gmail.com>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Fri, 27 Mar 2020 10:55:30 -0400
+Received: from mail-pj1-f67.google.com ([209.85.216.67]:34677 "EHLO
+        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726515AbgC0Oza (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Mar 2020 10:55:30 -0400
+Received: by mail-pj1-f67.google.com with SMTP id q16so4418978pje.1;
+        Fri, 27 Mar 2020 07:55:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=hMe+oSHJBW6UsdbtjmeglsZzzpJBLz67w+Nq9lTpv0M=;
+        b=uclgbugm3q1+tDitqZwMtXmnPFnoPKF9EBr+hyERJ8aQrR+926othflFR12Xnwla9P
+         4HoLuO18+YGXlP/TRpt3jG5Yf7diItTSj0kCud7TFXo1Zm0vnQu0ZXoEO0LfCh1qHX/x
+         cb6bO9LSy7V4l8ThHESVtPA7qWtU4rKJlRWwNa7/fX5ySS2ibrQvEOd38dxAk2AUaGVm
+         j+jmyRrEANcSegdxton5r3fEzSNA3bjG6VZSwnnJOovxGoYbO941DXVUOaR0uU+rcDjn
+         RC3u5OkIH6kGdLRAE8gn8GuSuzRfs4gLw5PzdWL6cb/K8nCG2+U/DO6fLp5/vTmqyQum
+         BzDw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=hMe+oSHJBW6UsdbtjmeglsZzzpJBLz67w+Nq9lTpv0M=;
+        b=FvDa74X8Q8J2hK1do1IHd8w0+70t1QUo4gECB5b01aMaQV4J+Us00hdaura3xkBt3d
+         VX6sShV1QNCaC1mQvspxd6Guq/4BhokN98hx237teuP8Y0oI4gcA2so0moe2kQLiXI8V
+         3+MxiakeLi43nttGCRmWPaXTe9xNFhYuLifu5jdZNWX5orcnnkedKoQJ3z4/eyu3juii
+         EQoKsslAUW0RJHX4STgKSm8je9GSnhbE3r7acl3JznCj4ppt2j71cayQjStJgWWm88Nk
+         8rOjtsINruAdlb7gqtNwBfVXPbC0ga/EHJzSjMtKblzV1tMDCtEmBotiRDGlDxWMQpoY
+         FjUA==
+X-Gm-Message-State: ANhLgQ2KcKUnKbKlfs+Trl5UV5xhJRil+6M/5e2lDY6uwclYN311wDfZ
+        NvgUdXJfcFbRvBOVt1UeHcdzwERfcyVcb9mvzv0=
+X-Google-Smtp-Source: ADFU+vt/mVFDoSr3PudJB8BF8eGZnZLEv617k9lqwl/4PZPvavEiozFscKiHZPly8fetj5mNUWou2WE2GG13XahiHtA=
+X-Received: by 2002:a17:902:5acb:: with SMTP id g11mr6245009plm.18.1585320927632;
+ Fri, 27 Mar 2020 07:55:27 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <1582779537-25662-1-git-send-email-Sandeep.Singh@amd.com> <1582779537-25662-3-git-send-email-Sandeep.Singh@amd.com>
+In-Reply-To: <1582779537-25662-3-git-send-email-Sandeep.Singh@amd.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Fri, 27 Mar 2020 16:55:20 +0200
+Message-ID: <CAHp75VcTnZzf9_=ftO=+LbSx3v5FWqVq5RJ=FW32z2FPCnYbsw@mail.gmail.com>
+Subject: Re: [PATCH v4 2/4] SFH: PCI driver to add support of AMD sensor
+ fusion Hub using HID framework
+To:     Sandeep Singh <Sandeep.Singh@amd.com>
+Cc:     Jiri Kosina <jikos@kernel.org>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-input <linux-input@vger.kernel.org>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        Jonathan Cameron <jic23@kernel.org>,
+        linux-iio <linux-iio@vger.kernel.org>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Nehal-bakulchandra.Shah@amd.com, Shyam-sundar.S-k@amd.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Fri, 27 Mar 2020 08:26:58 -0600
-Rob Herring <robh+dt@kernel.org> escreveu:
+On Thu, Feb 27, 2020 at 7:01 AM Sandeep Singh <Sandeep.Singh@amd.com> wrote=
+:
+>
+> From: Sandeep Singh <sandeep.singh@amd.com>
+>
+> AMD SFH uses HID over PCIe bus.SFH fw is part of MP2
+> processor (MP2 which is an ARM=C2=AE Cortex-M4 core based
+> co-processor to x86) and it runs on MP2 where in driver resides
+> on X86. This part of module will communicate with MP2 FW and
+> provide that data into DRAM
 
-> On Fri, Mar 27, 2020 at 7:34 AM Mauro Carvalho Chehab
-> <mchehab+huawei@kernel.org> wrote:
-> >
-> > Changeset 32ced09d7903 ("dt-bindings: serial: Convert slave-device bindings to json-schema")
-> > moved a binding to json and updated the links. Yet, one link
-> > was forgotten.  
-> 
-> It was not. There's a merge conflict, so I dropped it until after rc1.
+You asked for review, here you are.
+TL,DR; it requires a bit of work.
 
-Ah, ok.
+...
 
-Thanks!
-Mauro
+> +       depends on (X86_64 || COMPILE_TEST) && PCI
 
-> >
-> > Update this one too.
-> >
-> > Fixes: 32ced09d7903 ("dt-bindings: serial: Convert slave-device bindings to json-schema")
-> > Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-> > ---
-> >  Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> >
-> > diff --git a/Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt b/Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt
-> > index beca6466d59a..d2202791c1d4 100644
-> > --- a/Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt
-> > +++ b/Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt
-> > @@ -29,7 +29,7 @@ Required properties for compatible string qcom,wcn399x-bt:
-> >
-> >  Optional properties for compatible string qcom,wcn399x-bt:
-> >
-> > - - max-speed: see Documentation/devicetree/bindings/serial/slave-device.txt
-> > + - max-speed: see Documentation/devicetree/bindings/serial/serial.yaml
-> >   - firmware-name: specify the name of nvm firmware to load
-> >   - clocks: clock provided to the controller
-> >
-> > --
-> > 2.25.1
-> >  
+For better maintenance
+       depends on X86_64 || COMPILE_TEST
+       depends on PCI
+
+...
+
+> +# SPDX-License-Identifier: GPL-2.0
+> +#
+> +# Makefile - AMD SFH HID drivers
+> +# Copyright (c) 2020-2021, Advanced Micro Devices, Inc.
+> +#
+
+> +#
+
+Perhaps simple blank line instead?
+
+> +ccflags-y +=3D -I$(srctree)/$(src)/
+
+Why?
+
+...
+
+> +#include <linux/interrupt.h>
+> +#include <linux/module.h>
+> +#include <linux/pci.h>
+> +#include <linux/slab.h>
+> +#include <linux/delay.h>
+
+Keep in order?
+
++ blank line?
+
+Missed bits.h, types.h.
+
+> +#include "amd_mp2_pcie.h"
+
+...
+
+> +       write64((u64)info.phy_address, privdata->mmio + AMD_C2P_MSG2);
+
+Why explicit cast?
+
+...
+
+> +       /*fill up command register */
+
+Space is missed.
+
+...
+
+> +       if (!sensor_id)
+> +               return -ENOMEM;
+
+I can say -EINVAL as per its definition, but why do you need this at all?
+
+...
+
+> +static int amd_mp2_pci_init(struct amd_mp2_dev *privdata, struct pci_dev=
+ *pdev)
+> +{
+> +       int rc;
+> +       int bar_index =3D 2;
+> +       resource_size_t size, base;
+
+> +       pci_set_drvdata(pdev, privdata);
+
+Better to assign when you are sure (to some extend in both of them):
+a) it's needed
+b) driver is going to be probed correctly
+
+...
+
+> +       rc =3D pcim_iomap_regions(pdev, 1 >> 2, DRIVER_NAME);
+
+What 1 >> 2 means? Shouldn't be simple BIT(2)?
+How was this been tested?
+
+> +       if (rc)
+> +               goto err_pci_regions;
+
+...
+
+> +       base =3D pci_resource_start(pdev, bar_index);
+> +       size =3D pci_resource_len(pdev, bar_index);
+> +       dev_dbg(ndev_dev(privdata), "Base addr:%llx size:%llx\n",
+> +               (unsigned long long)base, (unsigned long long)size);
+
+Read printk-formats.rst.
+Now, when you get familiar with it, find proper specifier and drop
+these ugly castings.
+But wait, why do you need this? `dmesg` will show it anyway during
+boot / hotplug event time.
+
+...
+
+> +       privdata->mmio =3D ioremap(base, size);
+> +       if (!privdata->mmio) {
+> +               rc =3D -EIO;
+> +               goto err_dma_mask;
+> +       }
+
+Why?!
+
+...
+
+> +err_dma_mask:
+> +       pci_clear_master(pdev);
+> +err_pci_regions:
+> +       pci_disable_device(pdev);
+
+Are you using devres or not? Please, be consistent.
+
+> +err_pci_enable:
+
+> +       pci_set_drvdata(pdev, NULL);
+
+I think it's some like 5 to 10 years that we don't need this.
+
+> +       return rc;
+> +}
+
+...
+
+> +       pci_iounmap(pdev, privdata->mmio);
+> +
+> +       pci_clear_master(pdev);
+> +       pci_disable_device(pdev);
+> +       pci_set_drvdata(pdev, NULL);
+
+Ditto as above two comments.
+
+...
+
+> +       dev_info(&pdev->dev, "MP2 device found [%04x:%04x] (rev %x)\n",
+> +                (int)pdev->vendor, (int)pdev->device, (int)pdev->revisio=
+n);
+
+Oh, if you use explicit casting for printf(), 99.9% you are doing
+something wrong (in kernel space).
+On top of that, why this noise is here?
+
+...
+
+> +       privdata =3D devm_kzalloc(&pdev->dev, sizeof(*privdata), GFP_KERN=
+EL);
+
+> +
+
+No need for this blank line.
+
+> +       if (!privdata) {
+
+> +       }
+
+...
 
 
+> +       rc =3D amd_mp2_pci_init(privdata, pdev);
+> +       if (rc)
+> +               goto err_pci_init;
+> +       return 0;
 
-Thanks,
-Mauro
+Why its content can't be simple here? I.o.w. why this function is needed?
+
+...
+
+> +err_pci_init:
+> +       return rc;
+> +err_dev:
+> +       return rc;
+
+Completely useless code.
+
+> +}
+
+...
+
+> +static const struct pci_device_id amd_mp2_pci_tbl[] =3D {
+> +       {PCI_VDEVICE(AMD, PCI_DEVICE_ID_AMD_MP2)},
+> +       {0}
+
+0 is not needed, but it's up to you.
+
+> +};
+
+...
+
+> +static int __init amd_mp2_pci_driver_init(void)
+> +{
+> +       return pci_register_driver(&amd_mp2_pci_driver);
+> +}
+> +module_init(amd_mp2_pci_driver_init);
+> +
+> +static void __exit amd_mp2_pci_driver_exit(void)
+> +{
+> +       pci_unregister_driver(&amd_mp2_pci_driver);
+> +}
+> +module_exit(amd_mp2_pci_driver_exit);
+
+module_pci_driver()
+We have it for years.
+
+...
+
+> +#include <linux/pci.h>
+
+I don't see users of it, but missed headers
+types.h
+
+...
+
+> +#define PCI_DEVICE_ID_AMD_MP2  0x15E4
+
+Why it's not in C file?
+
+...
+
+> +#define AMD_P2C_MSG0   0x10680 /*Do not use*/
+> +#define AMD_P2C_MSG1   0x10684
+> +#define AMD_P2C_MSG2   0x10688
+> +#define AMD_P2C_MSG3   0x1068C /*MP2 debug info*/
+> +#define AMD_P2C_MSG_INTEN      0x10690 /*MP2 int gen register*/
+> +#define AMD_P2C_MSG_INTSTS     0x10694 /*Interrupt sts*/
+
+Missed spaces.
+
+...
+
+> +#define write64 amdsfh_write64
+> +static inline void amdsfh_write64(u64 val, void __iomem *mmio)
+> +{
+> +       writel(val, mmio);
+> +       writel(val >> 32, mmio + sizeof(u32));
+> +}
+
+NIH of lo_hi_writeq().
+
+> +#define read64 amdsfh_read64
+> +static inline u64 amdsfh_read64(void __iomem *mmio)
+> +{
+> +       u64 low, high;
+> +
+> +       low =3D readl(mmio);
+> +       high =3D readl(mmio + sizeof(u32));
+> +       return low | (high << 32);
+> +}
+
+NIH of lo_hi_readq().
+
+...
+
+> +struct sfh_command_register {
+> +       union sfh_cmd_base cmd_base;
+> +       union sfh_command_parameter cmd_param;
+
+> +       phys_addr_t phy_addr;
+
+Are you sure? This type is flexible. And by name of the struct I think
+it operates with hardware, so, fix it accordingly.
+
+> +};
+
+...
+
+> +enum response_type {
+> +       non_operationevent,
+> +       command_success,
+> +       command_failed,
+> +       sfi_dataready_event,
+> +       invalid_response =3D 0xff,
+
+GENMASK()
+
+> +};
+
+UPPER CASE?
+
+> +enum status_type {
+> +       cmd_success,
+> +       invalid_data_payload,
+> +       invalid_data_length,
+> +       invalid_sensor_id,
+> +       invalid_dram_addr,
+> +       invalid_command,
+> +       sensor_enabled,
+> +       sensor_disabled,
+> +       status_end,
+> +};
+> +
+> +enum command_id {
+> +       non_operation =3D 0,
+> +       enable_sensor =3D 1,
+> +       disable_sensor =3D 2,
+> +       dump_sensorinfo =3D 3,
+> +       numberof_sensordiscovered =3D 4,
+> +       who_am_i_regchipid =3D 5,
+> +       set_dcd_data =3D 6,
+> +       get_dcd_data =3D 7,
+> +       stop_all_sensors =3D 8,
+> +       invalid_cmd =3D 0xf,
+> +};
+
+Ditto.
+
+...
+
+> +enum sensor_idx {
+
+Do you need names for enums like this?
+
+> +       ACCEL_IDX               =3D 0,
+> +       GYRO_IDX                =3D 1,
+> +       MAG_IDX                 =3D 2,
+> +       AMBIENT_LIGHT_IDX       =3D 19,
+> +       NUM_ALL_SENSOR_CONSUMERS
+> +};
+
+...
+
+> +struct amd_mp2_dev {
+> +       struct pci_dev *pdev;
+
+> +       void __iomem *mmio;
+
+Header for __iomem?
+
+> +       struct delayed_work work;
+
+Header for this?
+
+> +       void *ctx;
+> +       void *cl_data;
+> +};
+
+...
+
+> +struct amd_mp2_sensor_info {
+> +       u8 sensor_idx;
+> +       u32 period;
+
+> +       phys_addr_t phy_address;
+
+Same comment as per above use of phys_addr_t type.
+
+> +};
+
+...
+
+> +#define ndev_pdev(ndev) ((ndev)->pdev)
+> +#define ndev_name(ndev) pci_name(ndev_pdev(ndev))
+> +#define ndev_dev(ndev) (&ndev_pdev(ndev)->dev)
+
+Why? What's the benefit?
+
+--=20
+With Best Regards,
+Andy Shevchenko
