@@ -2,151 +2,98 @@ Return-Path: <SRS0=s8dx=5M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A02AC43331
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 18:59:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F9D8C2D0ED
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 19:02:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 520A42071B
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 18:59:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D9A572073B
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 19:01:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="BvMDA3Fm"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XzwTwOQ2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727254AbgC0S7y (ORCPT
+        id S1727354AbgC0TB6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Mar 2020 14:59:54 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:42559 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726738AbgC0S7x (ORCPT
+        Fri, 27 Mar 2020 15:01:58 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:43957 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726900AbgC0TB6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Mar 2020 14:59:53 -0400
-Received: by mail-pf1-f193.google.com with SMTP id 22so4920372pfa.9
-        for <linux-kernel@vger.kernel.org>; Fri, 27 Mar 2020 11:59:51 -0700 (PDT)
+        Fri, 27 Mar 2020 15:01:58 -0400
+Received: by mail-lf1-f66.google.com with SMTP id n20so8741603lfl.10
+        for <linux-kernel@vger.kernel.org>; Fri, 27 Mar 2020 12:01:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=twjYcQrRYpiw9NudM5mQXAf1fpDRg8b0hwUBq6FdQjU=;
-        b=BvMDA3FmKQtoeTxdP15PTNARGM9gHf3Feep8W5rjyaXMr3aZzhTYvlY1A9qlAuufld
-         im3+AVd7vDsI993CjrFNXXH3bYLxcmYeWbrURE8nGUcT0SoEKHX1wEkT1TX26MUDgfM8
-         1oR8E85XFrBCP7YHWhsudLUxOkUucgASTxyDM=
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=CooN/lA7d5yACqkmjNxbvElnXH9xWYc5D690cPagV5A=;
+        b=XzwTwOQ2tZqjO9DLphNswRW0Faz+tkI3lW4QKn8PnDodceq0s69XJc+EX+CaxLUZAc
+         DsmeaJdkg7faxGR2WlOr2Q2xOqCK3LhvO83UpvhTPjbrrDITVXe01nU0HW2zIBGLSdNK
+         x+SI4S2qeU3EY5SopL7X1UD90wHcT3WjJvLfVVsAO2U5Em5d1XWCXX0PRhRjUwlFbFjC
+         /RhNOl/qPgtup89fKy/XuqC10uHh8xb2p99SAbLCDPTbSVvO8tHFnVGOGXPs57VzLKHy
+         z3pNrxrHAv/ZVQFSEpVOjEocb4Os2eKubiclJ5LN8KBbJgdGF3NkBVCWlJGOm0DbvFTa
+         Y1mA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=twjYcQrRYpiw9NudM5mQXAf1fpDRg8b0hwUBq6FdQjU=;
-        b=TEUllD74CwBqEccQ2wzi+QZ89lkLYH+qmPRn/BR1Gsvp0wRVC2ayujOEyG7MUw6LjP
-         DFNi/zA29NFQgGrEZjhrEV13OY0Z8W+6u80zt1KHJVsASzRSZTedZwCUyg8o2dwX7b7A
-         FgU+efkzx7MurhlI7Ot2PcnqmdZ9RojL20odu5zPoRrTOUHC1PfU/mn7+ZkWd78QaopT
-         MfKxuUJcLznvHa57jdE+OD798HbMd8xOHZ6DtxcDZfYFWIjDo3izemzPXnd6xhfvhfeT
-         ZrIEingi8NDLT8Mq8Eckq0oW7ByLNrQBbX8LdItihwpKYbJUll2kCo9H2hZUbEvqsvTr
-         F57Q==
-X-Gm-Message-State: ANhLgQ1porMWj6N+nLJXSW1fqCSu2S8mjcgdznXW9go0SOnqPq9MUzPy
-        Z0b9LQOimQIgdHx6j5psECVCiQ==
-X-Google-Smtp-Source: ADFU+vtMRQfs9N4AjysrflNX5zG9vzYD/JPSw15rRMFH/Mx2OQ8LyX9qs1/Ulvgri4xT39OWOujRNQ==
-X-Received: by 2002:a63:c212:: with SMTP id b18mr722672pgd.92.1585335591118;
-        Fri, 27 Mar 2020 11:59:51 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id e26sm4679920pfj.61.2020.03.27.11.59.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 27 Mar 2020 11:59:50 -0700 (PDT)
-Date:   Fri, 27 Mar 2020 11:59:48 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Casey Schaufler <casey@schaufler-ca.com>
-Cc:     Stephen Smalley <sds@tycho.nsa.gov>,
-        KP Singh <kpsingh@chromium.org>,
-        James Morris <jmorris@namei.org>, linux-kernel@vger.kernel.org,
-        bpf@vger.kernel.org, linux-security-module@vger.kernel.org,
-        Brendan Jackman <jackmanb@google.com>,
-        Florent Revest <revest@google.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Paul Turner <pjt@google.com>, Jann Horn <jannh@google.com>,
-        Florent Revest <revest@chromium.org>,
-        Brendan Jackman <jackmanb@chromium.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Paul Moore <paul@paul-moore.com>
-Subject: Re: [PATCH bpf-next v7 4/8] bpf: lsm: Implement attach, detach and
- execution
-Message-ID: <202003271143.71E0C591C1@keescook>
-References: <20200326142823.26277-1-kpsingh@chromium.org>
- <20200326142823.26277-5-kpsingh@chromium.org>
- <alpine.LRH.2.21.2003271119420.17089@namei.org>
- <2241c806-65c9-68f5-f822-9a245ecf7ba0@tycho.nsa.gov>
- <20200327124115.GA8318@chromium.org>
- <14ff822f-3ca5-7ebb-3df6-dd02249169d2@tycho.nsa.gov>
- <a3f6d9f8-6425-af28-d472-fad642439b69@schaufler-ca.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=CooN/lA7d5yACqkmjNxbvElnXH9xWYc5D690cPagV5A=;
+        b=KlyOMtqsuX4o7J9AxHAm6topx9Zfucd6nDx2+mGXrzL1FfTUw4bLpUBhpeg7OUhwfn
+         NWfmkrUwuuAiHxJbzoWfPxLBV4bK7C1lzbPFIsmukw2ckEzNYR8a+iabg5XJWKRTkjkx
+         pJ5/Y2Y8ZNJGlb70dntFTNdY5AovkioAw0dFPggcOTxbsM1kvu0mckZNHEGDtIvzHPDK
+         sHOGljE1WooYGEbrJjLmqnWPeRvOElZEg1JMZ/1xM97oHkKBHRYr8XvGuCYRU/oJHVBg
+         P6jYTLN0AJurxyAGdWomAUtn6O/q+4xb1STF0f38MXlfd0zcHQtk0s3iAe0IFKAHPZKp
+         kCdw==
+X-Gm-Message-State: AGi0PuaRmi/dDR8L6/bIPLQFEZW0hdoDoaPiOnAuLahO+fAwEl/cuGoo
+        hfYwzjw3163nOFNjSR/aqhLqiQmJmbYHZgyXYdO8zA==
+X-Google-Smtp-Source: APiQypLD/fNDqtD4u7+uuQ8ZqMmHjJHk9/rbkJ2Ows6MzWRJlKEVAAUCTvzeqzTfoWN78XIJxBngK/onAWpgkIOJt00=
+X-Received: by 2002:ac2:5f7c:: with SMTP id c28mr457241lfc.4.1585335716191;
+ Fri, 27 Mar 2020 12:01:56 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <a3f6d9f8-6425-af28-d472-fad642439b69@schaufler-ca.com>
+References: <20200317205017.28280-1-michael@walle.cc> <20200317205017.28280-13-michael@walle.cc>
+ <CAMpxmJW770v6JLdveEe1hkgNEJByVyArhorSyUZBYOyFiVyOeg@mail.gmail.com>
+ <9c310f2a11913d4d089ef1b07671be00@walle.cc> <CAMpxmJXmD-M+Wbj6=wgFgP2aDxbqDN=ceHi1XDun4iwdLm55Zg@mail.gmail.com>
+ <22944c9b62aa69da418de7766b7741bd@walle.cc> <CACRpkdbJ3DBO+W4P0n-CfZ1T3L8d_L0Nizra8frkv92XPXR4WA@mail.gmail.com>
+ <4d8d3bc26bdf73eb5c0e5851589fe085@walle.cc>
+In-Reply-To: <4d8d3bc26bdf73eb5c0e5851589fe085@walle.cc>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Fri, 27 Mar 2020 20:01:44 +0100
+Message-ID: <CACRpkdYwqReW+UcY=4S3ZnC+jFeVr=e+Ns12A_CK6o7VBUXHbA@mail.gmail.com>
+Subject: Re: [PATCH 12/18] gpio: add support for the sl28cpld GPIO controller
+To:     Michael Walle <michael@walle.cc>
+Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        linux-gpio <linux-gpio@vger.kernel.org>,
+        linux-devicetree <devicetree@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, linux-hwmon@vger.kernel.org,
+        linux-pwm@vger.kernel.org,
+        LINUXWATCHDOG <linux-watchdog@vger.kernel.org>,
+        arm-soc <linux-arm-kernel@lists.infradead.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Lee Jones <lee.jones@linaro.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 27, 2020 at 09:36:15AM -0700, Casey Schaufler wrote:
-> On 3/27/2020 6:43 AM, Stephen Smalley wrote:
-> > On 3/27/20 8:41 AM, KP Singh wrote:
-> >> On 27-Mär 08:27, Stephen Smalley wrote:
-> >>> On 3/26/20 8:24 PM, James Morris wrote:
-> >>>> On Thu, 26 Mar 2020, KP Singh wrote:
-> >>>>
-> >>>>> +int bpf_lsm_verify_prog(struct bpf_verifier_log *vlog,
-> >>>>> +            const struct bpf_prog *prog)
-> >>>>> +{
-> >>>>> +    /* Only CAP_MAC_ADMIN users are allowed to make changes to LSM hooks
-> >>>>> +     */
-> >>>>> +    if (!capable(CAP_MAC_ADMIN))
-> >>>>> +        return -EPERM;
-> >>>>> +
-> >>>>
-> >>>> Stephen, can you confirm that your concerns around this are resolved
-> >>>> (IIRC, by SELinux implementing a bpf_prog callback) ?
-> >>>
-> >>> I guess the only residual concern I have is that CAP_MAC_ADMIN means
-> >>> something different to SELinux (ability to get/set file security contexts
-> >>> unknown to the currently loaded policy), so leaving the CAP_MAC_ADMIN check
-> >>> here (versus calling a new security hook here and checking CAP_MAC_ADMIN in
-> >>> the implementation of that hook for the modules that want that) conflates
-> >>> two very different things.  Prior to this patch, there are no users of
-> >>> CAP_MAC_ADMIN outside of individual security modules; it is only checked in
-> >>> module-specific logic within apparmor, safesetid, selinux, and smack, so the
-> >>> meaning was module-specific.
-> >>
-> >> As we had discussed, We do have a security hook as well:
-> >>
-> >> https://lore.kernel.org/bpf/20200324180652.GA11855@chromium.org/
-> >>
-> >> The bpf_prog hook which can check for BPF_PROG_TYPE_LSM and implement
-> >> module specific logic for LSM programs. I thougt that was okay?
-> >>
-> >> Kees was in favor of keeping the CAP_MAC_ADMIN check here:
-> >>
-> >> https://lore.kernel.org/bpf/202003241133.16C02BE5B@keescook
-> >>
-> >> If you feel strongly and Kees agrees, we can remove the CAP_MAC_ADMIN
-> >> check here, but given that we already have a security hook that meets
-> >> the requirements, we probably don't need another one.
-> >
-> > I would favor removing the CAP_MAC_ADMIN check here, and implementing it in a bpf_prog hook for Smack and AppArmor if they want that.  SELinux would implement its own check in its existing bpf_prog hook.
-> >
-> The whole notion of one security module calling into another for permission
-> to do something still gives me the heebee jeebees, but if more nimble minds
-> than mine think this is a good idea I won't nack it.
+On Fri, Mar 27, 2020 at 4:28 PM Michael Walle <michael@walle.cc> wrote:
 
-Well, it's a hook into BPF prog creation, not the BPF LSM specifically,
-so that's why I think it's general enough control without it being
-directly weird. :)
+> For starters, would that be a drivers/gpio/gpio-regmap.c or a
+> drivers/base/regmap/regmap-gpio.c? I would assume the first,
 
-As far as dropping CAP_MAC_ADMIN, yeah, that should be fine. Creating LSM
-BPF programs already requires CAP_SYS_ADMIN, so for SELinux-less systems,
-that's likely fine. If we need to change the BPF program creation access
-control in the future we can revisit it then.
+Yeah I would name it like that. gpio-regmap.c.
 
--- 
-Kees Cook
+Yours,
+Linus Walleij
