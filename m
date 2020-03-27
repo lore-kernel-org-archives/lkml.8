@@ -2,155 +2,443 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4B2CC2D0E8
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 08:57:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76210C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 08:59:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 86251207FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 08:57:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3785F20CC7
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 08:59:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="BV1hpcUS"
+	dkim=pass (4096-bit key) header.d=d-silva.org header.i=@d-silva.org header.b="WFsUJw7F"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730130AbgCaI5w (ORCPT
+        id S1730147AbgCaI7V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 04:57:52 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:21336 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729624AbgCaI5w (ORCPT
+        Tue, 31 Mar 2020 04:59:21 -0400
+Received: from ushosting.nmnhosting.com ([66.55.73.32]:44184 "EHLO
+        ushosting.nmnhosting.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726299AbgCaI7U (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 04:57:52 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1585645071; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=8zUKrH2eIVqN6GKTdxqKOn/YdfA3gQCLto6btL9KOfk=; b=BV1hpcUSDkvzNSgl+uaW4ET8M+QDnKDh2zNwa6Hq/4M90pKrKtvoZxspjRywfCJwsoioN0B1
- yq4F+0kzshQeE7xeCSR3k+yUFYwhNRcmArQvVKdEdi1QKDHZX3WJBQkFJEiAJpsjnk2Bka86
- jXNGo+mPttAsBTYOc2o8g4SWveU=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e83060d.7fe39cd5b960-smtp-out-n03;
- Tue, 31 Mar 2020 08:57:49 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id D8A0AC4478F; Tue, 31 Mar 2020 08:57:49 +0000 (UTC)
-Received: from [192.168.43.137] (unknown [106.213.183.81])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: mkshah)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 16C5DC433F2;
-        Tue, 31 Mar 2020 08:57:44 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 16C5DC433F2
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=mkshah@codeaurora.org
-Subject: Re: [PATCH v14 6/6] soc: qcom: rpmh-rsc: Allow using free WAKE TCS
- for active request
-To:     Doug Anderson <dianders@chromium.org>
-Cc:     Stephen Boyd <swboyd@chromium.org>,
-        Evan Green <evgreen@chromium.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Andy Gross <agross@kernel.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        Lina Iyer <ilina@codeaurora.org>, lsrao@codeaurora.org
-References: <1585244270-637-1-git-send-email-mkshah@codeaurora.org>
- <1585244270-637-7-git-send-email-mkshah@codeaurora.org>
- <CAD=FV=Vbo3JC6mBJXq+q+DQPC_bbNtn3bbScG5N8wzJZm87YuA@mail.gmail.com>
- <8d19958d-7334-ca4e-d7ba-f5919a56b279@codeaurora.org>
- <CAD=FV=UZTyfVN=a35hiXxdNSvdhfK60HewP_p_VvH1KdoUa1ww@mail.gmail.com>
-From:   Maulik Shah <mkshah@codeaurora.org>
-Message-ID: <65eb7236-0df0-8256-bfda-34d8d57b282d@codeaurora.org>
-Date:   Tue, 31 Mar 2020 14:27:41 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Tue, 31 Mar 2020 04:59:20 -0400
+Received: from mail2.nmnhosting.com (unknown [202.169.106.97])
+        by ushosting.nmnhosting.com (Postfix) with ESMTPS id 167402DC6865;
+        Mon, 30 Mar 2020 16:53:00 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=d-silva.org;
+        s=201810a; t=1585547581;
+        bh=vRLE2b0DEucnyqflmU5elmtDiv/1IFmmCdakHAT0FxQ=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=WFsUJw7F0hIvPb6ZSnt7GAZpXr/E2Z9FYSbulLN05P/O+C0TaVzvwKh5K8dIeXpiB
+         1y8bnd3fGf1XVk3oXKsSI3fdeQmG2Me70bYNsdEBHoW8J42QpayBFlESBkFy7hhRgO
+         1IqLDbk9/270vDZqLI04gDZnK4Zk7KL6KQgSKfRaDWPSQEL53mUKtqvNVX19talTTY
+         5GQaF52LoakCZPynBwsvCdUq1XJovsBZLYme3hHOkaqo4pdalXmKJe8+4lLbuHvUMZ
+         Y7X6oVZUKnMsZB4sbxShJLs6L/G/IAZ1MCptBoex4XCq0mx4W+x8nrgnfKDuSTbMDn
+         fghqXsNGY5v14b0EDv0f+f9cfcMrCP/enxq03xCTHsDWAGRtNCbzS6nG4UR0xKQYyA
+         /hNaj4Uy20cpBY5Y57b+0zCilg4+GOdZucdF3SA+TMPC9K0gq8ClMn8f1w/lp/Mn+h
+         Jn7wjsWP505+/8Mn94Lb1USkIdTadhAnDQW+OrDzezfqlVWBThppZJKxi2C397wF2Q
+         QzR6dAX2U3BPMQKNyjQoHMqnwmWm2ieepCeTAkAmErwjiwtz69TRaanTh+Xf61MbSy
+         T8KOniORK8+jCPalfJasMUw6I1GNvWxqrhhlYo69FnhBtCnNWJTfrVf6ZW1N4+lYUi
+         BpfFwmmdfaCKrHJ2RWcBpCE8=
+Received: from localhost.lan ([10.0.1.179])
+        by mail2.nmnhosting.com (8.15.2/8.15.2) with ESMTP id 02R7C4As045934;
+        Fri, 27 Mar 2020 18:12:19 +1100 (AEDT)
+        (envelope-from alastair@d-silva.org)
+From:   "Alastair D'Silva" <alastair@d-silva.org>
+To:     alastair@d-silva.org
+Cc:     "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
+        "Oliver O'Halloran" <oohall@gmail.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Frederic Barrat <fbarrat@linux.ibm.com>,
+        Andrew Donnellan <ajd@linux.ibm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Rob Herring <robh@kernel.org>,
+        Anton Blanchard <anton@ozlabs.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>,
+        Madhavan Srinivasan <maddy@linux.vnet.ibm.com>,
+        =?UTF-8?q?C=C3=A9dric=20Le=20Goater?= <clg@kaod.org>,
+        Anju T Sudhakar <anju@linux.vnet.ibm.com>,
+        Hari Bathini <hbathini@linux.ibm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Greg Kurz <groug@kaod.org>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Alexey Kardashevskiy <aik@ozlabs.ru>,
+        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-nvdimm@lists.01.org, linux-mm@kvack.org
+Subject: [PATCH v4 19/25] nvdimm/ocxl: Forward events to userspace
+Date:   Fri, 27 Mar 2020 18:11:56 +1100
+Message-Id: <20200327071202.2159885-20-alastair@d-silva.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200327071202.2159885-1-alastair@d-silva.org>
+References: <20200327071202.2159885-1-alastair@d-silva.org>
 MIME-Version: 1.0
-In-Reply-To: <CAD=FV=UZTyfVN=a35hiXxdNSvdhfK60HewP_p_VvH1KdoUa1ww@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-GB
+Content-Transfer-Encoding: 8bit
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mail2.nmnhosting.com [10.0.1.20]); Fri, 27 Mar 2020 18:12:19 +1100 (AEDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Some of the interrupts that the card generates are better handled
+by the userspace daemon, in particular:
+Controller Hardware/Firmware Fatal
+Controller Dump Available
+Error Log available
 
-On 3/28/2020 12:12 AM, Doug Anderson wrote:
-> Hi,
->
-> On Fri, Mar 27, 2020 at 5:04 AM Maulik Shah <mkshah@codeaurora.org> wrote:
->>> Why can't rpmh_write()
->>> / rpmh_write_async() / rpmh_write_batch() just always unconditionally
->>> mark the cache dirty?  Are there really lots of cases when those calls
->>> are made and they do nothing?
->> At rpmh.c, it doesn't know that rpmh-rsc.c worked on borrowed TCS to finish the request.
->>
->> We should not blindly mark caches dirty everytime.
-> In message ID "5a5274ac-41f4-b06d-ff49-c00cef67aa7f@codeaurora.org"
-> which seems to be missing from the archives, you said:
->
->> yes we should trust callers not to send duplicate data
-> ...you can see some reference to it in my reply:
->
-> https://lore.kernel.org/r/CAD=FV=VPSahhK71k_D+nfL1=5QE5sKMQT=6zzyEF7+JWMcTxsg@mail.gmail.com/
->
-> If callers are trusted to never send duplicate data then ever call to
-> rpmh_write() will make a change.  ...and thus the cache should always
-> be marked dirty, no?  Also note that since rpmh_write() to "active"
-> also counts as a write to "wake" even those will dirty the cache.
->
-> Which case are you expecting a rpmh_write() call to not dirty the cache?
-Ok, i will remove marking cache dirty here.
->
->
->>> ...interestingly after your patch I guess now I guess tcs_invalidate()
->>> no longer needs spinlocks since it's only ever called from PM code on
->>> the last CPU.  ...if you agree, I can always do it in my cleanup
->>> series.  See:
->>>
->>> https://lore.kernel.org/r/CAD=FV=Xp1o68HnC2-hMnffDDsi+jjgc9pNrdNuypjQZbS5K4nQ@mail.gmail.com
->>>
->>> -Doug
->> There are other RSCs which use same driver, so lets keep spinlock.
-> It is really hard to try to write keeping in mind these "other RSCs"
-> for which there is no code upstream.  IMO we should write the code
-> keeping in mind what is supported upstream and then when those "other
-> RSCs" get added we can evaluate their needs.
+This patch allows a userspace application to register an eventfd with
+the driver via SCM_IOCTL_EVENTFD to receive notifications of these
+interrupts.
 
-Agree but i would insist not remove locks in your cleanup/documentation 
-series which are already there.
+Userspace can then identify what events have occurred by calling
+SCM_IOCTL_EVENT_CHECK and checking against the SCM_IOCTL_EVENT_FOO
+masks.
 
-These will be again need to be added.
+Signed-off-by: Alastair D'Silva <alastair@d-silva.org>
+---
+ drivers/nvdimm/ocxl/main.c     | 220 +++++++++++++++++++++++++++++++++
+ drivers/nvdimm/ocxl/ocxlpmem.h |   4 +
+ include/uapi/nvdimm/ocxlpmem.h |  12 ++
+ 3 files changed, 236 insertions(+)
 
-The locks don't cause any issue being there since only last cpu is 
-invoking rpmh_flush() at present.
-
-Adding support for other RSCs is in my to do list, and when that is 
-being done we can re-evaluate and
-
-remove if not required.
-
->
-> Specifically when reasoning about rpmh.c and rpmh-rsc.c I can only
-> look at the code that's there now and decide whether it is race free
-> or there are races.  Back when I was analyzing the proposal to do
-> rpmh_flush() all the time (not from PM code) it felt like there were a
-> bunch of races, especially in the zero-active-TCS case.  Most of the
-> races go away when you assume that rpmh_flush() is only ever called
-> from the PM code when nobody could be in the middle of an active
-> transfer.
->
-> If we are ever planning to call rpmh_flush() from another place we
-> need to re-look at all those races.
-Sure. we can re-look all cases.
->
->
-> -Doug
-Thanks,
-Maulik
-
+diff --git a/drivers/nvdimm/ocxl/main.c b/drivers/nvdimm/ocxl/main.c
+index 0040fc09cceb..cb6cdc9eb899 100644
+--- a/drivers/nvdimm/ocxl/main.c
++++ b/drivers/nvdimm/ocxl/main.c
+@@ -10,6 +10,7 @@
+ #include <misc/ocxl.h>
+ #include <linux/delay.h>
+ #include <linux/ndctl.h>
++#include <linux/eventfd.h>
+ #include <linux/fs.h>
+ #include <linux/mm_types.h>
+ #include <linux/memory_hotplug.h>
+@@ -301,8 +302,19 @@ static void free_ocxlpmem(struct ocxlpmem *ocxlpmem)
+ {
+ 	int rc;
+ 
++	// Disable doorbells
++	(void)ocxl_global_mmio_set64(ocxlpmem->ocxl_afu, GLOBAL_MMIO_CHIEC,
++				     OCXL_LITTLE_ENDIAN,
++				     GLOBAL_MMIO_CHI_ALL);
++
+ 	free_minor(ocxlpmem);
+ 
++	if (ocxlpmem->irq_addr[1])
++		iounmap(ocxlpmem->irq_addr[1]);
++
++	if (ocxlpmem->irq_addr[0])
++		iounmap(ocxlpmem->irq_addr[0]);
++
+ 	if (ocxlpmem->ocxl_context) {
+ 		rc = ocxl_context_detach(ocxlpmem->ocxl_context);
+ 		if (rc == -EBUSY)
+@@ -398,6 +410,11 @@ static int file_release(struct inode *inode, struct file *file)
+ {
+ 	struct ocxlpmem *ocxlpmem = file->private_data;
+ 
++	if (ocxlpmem->ev_ctx) {
++		eventfd_ctx_put(ocxlpmem->ev_ctx);
++		ocxlpmem->ev_ctx = NULL;
++	}
++
+ 	ocxlpmem_put(ocxlpmem);
+ 	return 0;
+ }
+@@ -928,6 +945,52 @@ static int ioctl_controller_stats(struct ocxlpmem *ocxlpmem,
+ 	return rc;
+ }
+ 
++static int ioctl_eventfd(struct ocxlpmem *ocxlpmem,
++			 struct ioctl_ocxlpmem_eventfd __user *uarg)
++{
++	struct ioctl_ocxlpmem_eventfd args;
++
++	if (copy_from_user(&args, uarg, sizeof(args)))
++		return -EFAULT;
++
++	if (ocxlpmem->ev_ctx)
++		return -EBUSY;
++
++	ocxlpmem->ev_ctx = eventfd_ctx_fdget(args.eventfd);
++	if (IS_ERR(ocxlpmem->ev_ctx))
++		return PTR_ERR(ocxlpmem->ev_ctx);
++
++	return 0;
++}
++
++static int ioctl_event_check(struct ocxlpmem *ocxlpmem, u64 __user *uarg)
++{
++	u64 val = 0;
++	int rc;
++	u64 chi = 0;
++
++	rc = ocxlpmem_chi(ocxlpmem, &chi);
++	if (rc < 0)
++		return rc;
++
++	if (chi & GLOBAL_MMIO_CHI_ELA)
++		val |= IOCTL_OCXLPMEM_EVENT_ERROR_LOG_AVAILABLE;
++
++	if (chi & GLOBAL_MMIO_CHI_CDA)
++		val |= IOCTL_OCXLPMEM_EVENT_CONTROLLER_DUMP_AVAILABLE;
++
++	if (chi & GLOBAL_MMIO_CHI_CFFS)
++		val |= IOCTL_OCXLPMEM_EVENT_FIRMWARE_FATAL;
++
++	if (chi & GLOBAL_MMIO_CHI_CHFS)
++		val |= IOCTL_OCXLPMEM_EVENT_HARDWARE_FATAL;
++
++	if (copy_to_user((u64 __user *)uarg, &val, sizeof(val)))
++		return -EFAULT;
++
++	return rc;
++}
++
+ static long file_ioctl(struct file *file, unsigned int cmd, unsigned long args)
+ {
+ 	struct ocxlpmem *ocxlpmem = file->private_data;
+@@ -956,6 +1019,15 @@ static long file_ioctl(struct file *file, unsigned int cmd, unsigned long args)
+ 		rc = ioctl_controller_stats(ocxlpmem,
+ 					    (struct ioctl_ocxlpmem_controller_stats __user *)args);
+ 		break;
++
++	case IOCTL_OCXLPMEM_EVENTFD:
++		rc = ioctl_eventfd(ocxlpmem,
++				   (struct ioctl_ocxlpmem_eventfd __user *)args);
++		break;
++
++	case IOCTL_OCXLPMEM_EVENT_CHECK:
++		rc = ioctl_event_check(ocxlpmem, (u64 __user *)args);
++		break;
+ 	}
+ 
+ 	return rc;
+@@ -1109,6 +1181,148 @@ static void dump_error_log(struct ocxlpmem *ocxlpmem)
+ 	kfree(buf);
+ }
+ 
++static irqreturn_t imn0_handler(void *private)
++{
++	struct ocxlpmem *ocxlpmem = private;
++	u64 chi = 0;
++
++	(void)ocxlpmem_chi(ocxlpmem, &chi);
++
++	if (chi & GLOBAL_MMIO_CHI_ELA) {
++		dev_warn(&ocxlpmem->dev, "Error log is available\n");
++
++		if (ocxlpmem->ev_ctx)
++			eventfd_signal(ocxlpmem->ev_ctx, 1);
++	}
++
++	if (chi & GLOBAL_MMIO_CHI_CDA) {
++		dev_warn(&ocxlpmem->dev, "Controller dump is available\n");
++
++		if (ocxlpmem->ev_ctx)
++			eventfd_signal(ocxlpmem->ev_ctx, 1);
++	}
++
++	return IRQ_HANDLED;
++}
++
++static irqreturn_t imn1_handler(void *private)
++{
++	struct ocxlpmem *ocxlpmem = private;
++	u64 chi = 0;
++
++	(void)ocxlpmem_chi(ocxlpmem, &chi);
++
++	if (chi & (GLOBAL_MMIO_CHI_CFFS | GLOBAL_MMIO_CHI_CHFS)) {
++		dev_err(&ocxlpmem->dev,
++			"Controller status is fatal, chi=0x%llx, going offline\n",
++			chi);
++
++		if (ocxlpmem->nvdimm_bus) {
++			nvdimm_bus_unregister(ocxlpmem->nvdimm_bus);
++			ocxlpmem->nvdimm_bus = NULL;
++		}
++
++		if (ocxlpmem->ev_ctx)
++			eventfd_signal(ocxlpmem->ev_ctx, 1);
++	}
++
++	return IRQ_HANDLED;
++}
++
++/**
++ * ocxlpmem_setup_irq() - Set up the IRQs for the OpenCAPI Persistent Memory device
++ * @ocxlpmem: the device metadata
++ * Return: 0 on success, negative on failure
++ */
++static int setup_irqs(struct ocxlpmem *ocxlpmem)
++{
++	int rc;
++	u64 irq_addr;
++
++	rc = ocxl_afu_irq_alloc(ocxlpmem->ocxl_context,
++				&ocxlpmem->irq_id[0]);
++	if (rc)
++		return rc;
++
++	rc = ocxl_irq_set_handler(ocxlpmem->ocxl_context, ocxlpmem->irq_id[0],
++				  imn0_handler, NULL, ocxlpmem);
++
++	irq_addr = ocxl_afu_irq_get_addr(ocxlpmem->ocxl_context,
++					 ocxlpmem->irq_id[0]);
++	if (!irq_addr)
++		return -EFAULT;
++
++	ocxlpmem->irq_addr[0] = ioremap(irq_addr, PAGE_SIZE);
++	if (!ocxlpmem->irq_addr[0])
++		return -ENODEV;
++
++	rc = ocxl_global_mmio_write64(ocxlpmem->ocxl_afu, GLOBAL_MMIO_IMA0_OHP,
++				      OCXL_LITTLE_ENDIAN,
++				      (u64)ocxlpmem->irq_addr[0]);
++	if (rc)
++		goto out_irq0;
++
++	rc = ocxl_global_mmio_write64(ocxlpmem->ocxl_afu, GLOBAL_MMIO_IMA0_CFP,
++				      OCXL_LITTLE_ENDIAN, 0);
++	if (rc)
++		goto out_irq0;
++
++	rc = ocxl_afu_irq_alloc(ocxlpmem->ocxl_context, &ocxlpmem->irq_id[1]);
++	if (rc)
++		goto out_irq0;
++
++	rc = ocxl_irq_set_handler(ocxlpmem->ocxl_context, ocxlpmem->irq_id[1],
++				  imn1_handler, NULL, ocxlpmem);
++	if (rc)
++		goto out_irq0;
++
++	irq_addr = ocxl_afu_irq_get_addr(ocxlpmem->ocxl_context,
++					 ocxlpmem->irq_id[1]);
++	if (!irq_addr) {
++		rc = -EFAULT;
++		goto out_irq0;
++	}
++
++	ocxlpmem->irq_addr[1] = ioremap(irq_addr, PAGE_SIZE);
++	if (!ocxlpmem->irq_addr[1]) {
++		rc = -ENODEV;
++		goto out_irq0;
++	}
++
++	rc = ocxl_global_mmio_write64(ocxlpmem->ocxl_afu, GLOBAL_MMIO_IMA1_OHP,
++				      OCXL_LITTLE_ENDIAN,
++				      (u64)ocxlpmem->irq_addr[1]);
++	if (rc)
++		goto out_irq1;
++
++	rc = ocxl_global_mmio_write64(ocxlpmem->ocxl_afu, GLOBAL_MMIO_IMA1_CFP,
++				      OCXL_LITTLE_ENDIAN, 0);
++	if (rc)
++		goto out_irq1;
++
++	// Enable doorbells
++	rc = ocxl_global_mmio_set64(ocxlpmem->ocxl_afu, GLOBAL_MMIO_CHIE,
++				    OCXL_LITTLE_ENDIAN,
++				    GLOBAL_MMIO_CHI_ELA |
++				    GLOBAL_MMIO_CHI_CDA |
++				    GLOBAL_MMIO_CHI_CFFS |
++				    GLOBAL_MMIO_CHI_CHFS);
++	if (rc)
++		goto out_irq1;
++
++	return 0;
++
++out_irq1:
++	iounmap(ocxlpmem->irq_addr[1]);
++	ocxlpmem->irq_addr[1] = NULL;
++
++out_irq0:
++	iounmap(ocxlpmem->irq_addr[0]);
++	ocxlpmem->irq_addr[0] = NULL;
++
++	return rc;
++}
++
+ /**
+  * probe_function0() - Set up function 0 for an OpenCAPI persistent memory device
+  * This is important as it enables templates higher than 0 across all other
+@@ -1212,6 +1426,12 @@ static int probe(struct pci_dev *pdev, const struct pci_device_id *ent)
+ 		goto err;
+ 	}
+ 
++	rc = setup_irqs(ocxlpmem);
++	if (rc) {
++		dev_err(&pdev->dev, "Could not set up OCXL IRQs\n");
++		goto err;
++	}
++
+ 	rc = setup_command_metadata(ocxlpmem);
+ 	if (rc) {
+ 		dev_err(&pdev->dev, "Could not read command metadata\n");
+diff --git a/drivers/nvdimm/ocxl/ocxlpmem.h b/drivers/nvdimm/ocxl/ocxlpmem.h
+index ee3bd651f254..01721596f982 100644
+--- a/drivers/nvdimm/ocxl/ocxlpmem.h
++++ b/drivers/nvdimm/ocxl/ocxlpmem.h
+@@ -106,6 +106,9 @@ struct ocxlpmem {
+ 	struct pci_dev *pdev;
+ 	struct cdev cdev;
+ 	struct ocxl_fn *ocxl_fn;
++#define SCM_IRQ_COUNT 2
++	int irq_id[SCM_IRQ_COUNT];
++	void __iomem *irq_addr[SCM_IRQ_COUNT];
+ 	struct nd_interleave_set nd_set;
+ 	struct nvdimm_bus_descriptor bus_desc;
+ 	struct nvdimm_bus *nvdimm_bus;
+@@ -117,6 +120,7 @@ struct ocxlpmem {
+ 	struct nd_region *nd_region;
+ 	char fw_version[8 + 1];
+ 	u32 timeouts[ADMIN_COMMAND_MAX + 1];
++	struct eventfd_ctx *ev_ctx;
+ 	u32 max_controller_dump_size;
+ 	u16 scm_revision; // major/minor
+ 	u8 readiness_timeout;  /* The worst case time (in seconds) that the host
+diff --git a/include/uapi/nvdimm/ocxlpmem.h b/include/uapi/nvdimm/ocxlpmem.h
+index ca3a7098fa9d..d573bd307e35 100644
+--- a/include/uapi/nvdimm/ocxlpmem.h
++++ b/include/uapi/nvdimm/ocxlpmem.h
+@@ -71,6 +71,16 @@ struct ioctl_ocxlpmem_controller_stats {
+ 	__u64 fast_write_count;
+ };
+ 
++struct ioctl_ocxlpmem_eventfd {
++	__s32 eventfd;
++	__u32 reserved;
++};
++
++#define IOCTL_OCXLPMEM_EVENT_CONTROLLER_DUMP_AVAILABLE	(1ULL << (0))
++#define IOCTL_OCXLPMEM_EVENT_ERROR_LOG_AVAILABLE	(1ULL << (1))
++#define IOCTL_OCXLPMEM_EVENT_HARDWARE_FATAL		(1ULL << (2))
++#define IOCTL_OCXLPMEM_EVENT_FIRMWARE_FATAL		(1ULL << (3))
++
+ /* ioctl numbers */
+ #define OCXLPMEM_MAGIC 0xCA
+ /* OpenCAPI Persistent memory devices */
+@@ -79,5 +89,7 @@ struct ioctl_ocxlpmem_controller_stats {
+ #define IOCTL_OCXLPMEM_CONTROLLER_DUMP_DATA		_IOWR(OCXLPMEM_MAGIC, 0x32, struct ioctl_ocxlpmem_controller_dump_data)
+ #define IOCTL_OCXLPMEM_CONTROLLER_DUMP_COMPLETE		_IO(OCXLPMEM_MAGIC, 0x33)
+ #define IOCTL_OCXLPMEM_CONTROLLER_STATS			_IO(OCXLPMEM_MAGIC, 0x34)
++#define IOCTL_OCXLPMEM_EVENTFD				_IOW(OCXLPMEM_MAGIC, 0x35, struct ioctl_ocxlpmem_eventfd)
++#define IOCTL_OCXLPMEM_EVENT_CHECK			_IOR(OCXLPMEM_MAGIC, 0x36, __u64)
+ 
+ #endif /* _UAPI_OCXL_SCM_H */
 -- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+2.24.1
+
