@@ -2,101 +2,197 @@ Return-Path: <SRS0=s8dx=5M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3268CC43331
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 08:47:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75B03C43331
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 08:47:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 07DA120714
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 08:47:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="SnI+snLZ"
+	by mail.kernel.org (Postfix) with ESMTP id 4BC3720716
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 08:47:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727352AbgC0IrP (ORCPT
+        id S1726758AbgC0Iro (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Mar 2020 04:47:15 -0400
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:59772 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725946AbgC0IrO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Mar 2020 04:47:14 -0400
-Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02R8gLtS031851;
-        Fri, 27 Mar 2020 09:47:02 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : subject :
- date : message-id : references : in-reply-to : content-type : content-id :
- content-transfer-encoding : mime-version; s=STMicroelectronics;
- bh=YJw8XoTO1v1PRGqYcjUGZSKR+X2/a6Uk4mv/NSHkJo8=;
- b=SnI+snLZWTU/DrJFlg1DOyaQQ0TcS9te3M3/UemSgMwEcK+W/YEWs45YsFX/iEMeZ8Th
- RVi63AgBytgWVMQpl0mXOmy1H8Vq3o8qdBful3gsK9VR7ABDne1VWwlWw6T2PFmi+h3z
- 2lxhYojVMu86AYcWR404xVcthmdBodsxAAT3JXns5rRdY4oTUX0fyKlt+bPfWaP3iRhb
- wehSPUNKi+7Hf4r+R3zhRTJbdT8COLEukz/Ifpqp5M9fE+frmTmsEAPhN30R3y4tRM0e
- H/vkrlbnoR5LvyfCOaMJiAzUH/aTyBoIUp5MC61QFtMibE3fBn3hBGN/eDQ0YqEAUl8V Og== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2ywappgpfx-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 27 Mar 2020 09:47:02 +0100
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id BD9BF100034;
-        Fri, 27 Mar 2020 09:47:01 +0100 (CET)
-Received: from Webmail-eu.st.com (sfhdag6node1.st.com [10.75.127.16])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id B138921F663;
-        Fri, 27 Mar 2020 09:47:01 +0100 (CET)
-Received: from SFHDAG6NODE3.st.com (10.75.127.18) by SFHDAG6NODE1.st.com
- (10.75.127.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 27 Mar
- 2020 09:47:01 +0100
-Received: from SFHDAG6NODE3.st.com ([fe80::d04:5337:ab17:b6f6]) by
- SFHDAG6NODE3.st.com ([fe80::d04:5337:ab17:b6f6%20]) with mapi id
- 15.00.1473.003; Fri, 27 Mar 2020 09:47:01 +0100
-From:   Patrice CHOTARD <patrice.chotard@st.com>
-To:     Alain Volmat <avolmat@me.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] i2c: i2c-st: fix missing struct parameter description
-Thread-Topic: [PATCH] i2c: i2c-st: fix missing struct parameter description
-Thread-Index: AQHWA7S25N2xB719JUWj+X22ne9jPKhcEGIA
-Date:   Fri, 27 Mar 2020 08:47:01 +0000
-Message-ID: <0b432170-8ae0-d5c3-7557-fe6d606782f7@st.com>
-References: <20200326212243.17363-1-avolmat@me.com>
-In-Reply-To: <20200326212243.17363-1-avolmat@me.com>
-Accept-Language: fr-FR, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.75.127.51]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <679754E3029C214598936C34C70CF6F2@st.com>
-Content-Transfer-Encoding: base64
+        Fri, 27 Mar 2020 04:47:44 -0400
+Received: from mga04.intel.com ([192.55.52.120]:4766 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725946AbgC0Irn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Mar 2020 04:47:43 -0400
+IronPort-SDR: TAantA/ZZCbTAbBu9uPuykj6nb4rFkW0l2seloxQzcbzzaggFc6U4PVo9jpdmMGjGFQ4HTvoxQ
+ khqBl9SFBPnw==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Mar 2020 01:47:43 -0700
+IronPort-SDR: a0G6jkWI6RPL3Wlgf0lWKqyVd5UQS4Bt/Cg+13vdWsFlD/35y1LKYKW6Gvra/eGw7m1AZwshQy
+ A0wqcksTyZHA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,311,1580803200"; 
+   d="scan'208";a="251080347"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga006.jf.intel.com with ESMTP; 27 Mar 2020 01:47:43 -0700
+Received: from [10.249.36.56] (abudanko-mobl.ccr.corp.intel.com [10.249.36.56])
+        by linux.intel.com (Postfix) with ESMTP id 3C631580479;
+        Fri, 27 Mar 2020 01:47:41 -0700 (PDT)
+Subject: [PATCH v1 3/8] perf stat: introduce control descriptors and
+ --ctl-fd[-ack] options
+From:   Alexey Budankov <alexey.budankov@linux.intel.com>
+To:     Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc:     Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+References: <825a5132-b58d-c0b6-b050-5a6040386ec7@linux.intel.com>
+Organization: Intel Corp.
+Message-ID: <98dfb3ce-dab9-3747-8748-fbf2777f69ba@linux.intel.com>
+Date:   Fri, 27 Mar 2020 11:47:40 +0300
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.645
- definitions=2020-03-27_02:2020-03-26,2020-03-27 signatures=0
+In-Reply-To: <825a5132-b58d-c0b6-b050-5a6040386ec7@linux.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgQWxhaW4NCg0KT24gMy8yNi8yMCAxMDoyMiBQTSwgQWxhaW4gVm9sbWF0IHdyb3RlOg0KPiBG
-aXggYSBtaXNzaW5nIHN0cnVjdCBwYXJhbWV0ZXIgZGVzY3JpcHRpb24gdG8gYWxsb3cNCj4gd2Fy
-bmluZyBmcmVlIFc9MSBjb21waWxhdGlvbi4NCj4NCj4gU2lnbmVkLW9mZi1ieTogQWxhaW4gVm9s
-bWF0IDxhdm9sbWF0QG1lLmNvbT4NCj4gLS0tDQo+ICBkcml2ZXJzL2kyYy9idXNzZXMvaTJjLXN0
-LmMgfCAxICsNCj4gIDEgZmlsZSBjaGFuZ2VkLCAxIGluc2VydGlvbigrKQ0KPg0KPiBkaWZmIC0t
-Z2l0IGEvZHJpdmVycy9pMmMvYnVzc2VzL2kyYy1zdC5jIGIvZHJpdmVycy9pMmMvYnVzc2VzL2ky
-Yy1zdC5jDQo+IGluZGV4IDU0ZTFmYzhhNDk1ZS4uZjdmN2I1YjY0NzIwIDEwMDY0NA0KPiAtLS0g
-YS9kcml2ZXJzL2kyYy9idXNzZXMvaTJjLXN0LmMNCj4gKysrIGIvZHJpdmVycy9pMmMvYnVzc2Vz
-L2kyYy1zdC5jDQo+IEBAIC00MzQsNiArNDM0LDcgQEAgc3RhdGljIHZvaWQgc3RfaTJjX3dyX2Zp
-bGxfdHhfZmlmbyhzdHJ1Y3Qgc3RfaTJjX2RldiAqaTJjX2RldikNCj4gIC8qKg0KPiAgICogc3Rf
-aTJjX3JkX2ZpbGxfdHhfZmlmbygpIC0gRmlsbCB0aGUgVHggRklGTyBpbiByZWFkIG1vZGUNCj4g
-ICAqIEBpMmNfZGV2OiBDb250cm9sbGVyJ3MgcHJpdmF0ZSBkYXRhDQo+ICsgKiBAbWF4OiBNYXhp
-bXVtIGFtb3VudCBvZiBkYXRhIHRvIGZpbGwgaW50byB0aGUgVHggRklGTw0KPiAgICoNCj4gICAq
-IFRoaXMgZnVuY3Rpb25zIGZpbGxzIHRoZSBUeCBGSUZPIHdpdGggZml4ZWQgcGF0dGVybiB3aGVu
-DQo+ICAgKiBpbiByZWFkIG1vZGUgdG8gdHJpZ2dlciBjbG9jay4NCg0KUmV2aWV3ZWQtYnk6IFBh
-dHJpY2UgQ2hvdGFyZCA8cGF0cmljZS5jaG90YXJkQHN0LmNvbT4NCg0KVGhhbmtzDQo=
+
+Introduce control file descriptors and --ctl-fd[-ack] options to pass
+control descriptors from command line. Extend --delay option with -1
+value to start collection in paused mode to be resumed later by resume
+command provided via control file descriptor.
+
+Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
+---
+ tools/perf/builtin-stat.c | 28 ++++++++++++++++++++++++----
+ tools/perf/util/evlist.h  |  3 +++
+ tools/perf/util/stat.h    |  4 +++-
+ 3 files changed, 30 insertions(+), 5 deletions(-)
+
+diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
+index ec053dc1e35c..0a1b79fd3f48 100644
+--- a/tools/perf/builtin-stat.c
++++ b/tools/perf/builtin-stat.c
+@@ -187,6 +187,8 @@ static struct perf_stat_config stat_config = {
+ 	.metric_only_len	= METRIC_ONLY_LEN,
+ 	.walltime_nsecs_stats	= &walltime_nsecs_stats,
+ 	.big_num		= true,
++	.ctl_fd			= -1,
++	.ctl_fd_ack		= -1
+ };
+ 
+ static inline void diff_timespec(struct timespec *r, struct timespec *a,
+@@ -373,16 +375,26 @@ static void process_interval(void)
+ 
+ static void enable_counters(void)
+ {
+-	if (stat_config.initial_delay)
++	if (stat_config.initial_delay < 0) {
++		pr_info(PERF_EVLIST__PAUSED_MSG);
++		return;
++	}
++
++	if (stat_config.initial_delay > 0) {
++		pr_info(PERF_EVLIST__PAUSED_MSG);
+ 		usleep(stat_config.initial_delay * USEC_PER_MSEC);
++	}
+ 
+ 	/*
+ 	 * We need to enable counters only if:
+ 	 * - we don't have tracee (attaching to task or cpu)
+ 	 * - we have initial delay configured
+ 	 */
+-	if (!target__none(&target) || stat_config.initial_delay)
++	if (!target__none(&target) || stat_config.initial_delay) {
+ 		evlist__enable(evsel_list);
++		if (stat_config.initial_delay > 0)
++			pr_info(PERF_EVLIST__RESUMED_MSG);
++	}
+ }
+ 
+ static void disable_counters(void)
+@@ -912,8 +924,8 @@ static struct option stat_options[] = {
+ 		     "aggregate counts per thread", AGGR_THREAD),
+ 	OPT_SET_UINT(0, "per-node", &stat_config.aggr_mode,
+ 		     "aggregate counts per numa node", AGGR_NODE),
+-	OPT_UINTEGER('D', "delay", &stat_config.initial_delay,
+-		     "ms to wait before starting measurement after program start"),
++	OPT_INTEGER('D', "delay", &stat_config.initial_delay,
++		     "ms to wait before starting measurement after program start (-1: start paused"),
+ 	OPT_CALLBACK_NOOPT(0, "metric-only", &stat_config.metric_only, NULL,
+ 			"Only print computed metrics. No raw values", enable_metric_only),
+ 	OPT_BOOLEAN(0, "topdown", &topdown_run,
+@@ -933,6 +945,10 @@ static struct option stat_options[] = {
+ 		    "Use with 'percore' event qualifier to show the event "
+ 		    "counts of one hardware thread by sum up total hardware "
+ 		    "threads of same physical core"),
++	OPT_INTEGER(0, "ctl-fd", &stat_config.ctl_fd,
++		    "Listen on fd descriptor for command to control measurement ('r': resume, 'p': pause)"),
++	OPT_INTEGER(0, "ctl-fd-ack", &stat_config.ctl_fd_ack,
++		    "Send control command completion ('a') to fd ack descriptor"),
+ 	OPT_END()
+ };
+ 
+@@ -2129,6 +2145,8 @@ int cmd_stat(int argc, const char **argv)
+ 	signal(SIGALRM, skip_signal);
+ 	signal(SIGABRT, skip_signal);
+ 
++	perf_evlist__initialize_ctlfd(evsel_list, stat_config.ctl_fd, stat_config.ctl_fd_ack);
++
+ 	status = 0;
+ 	for (run_idx = 0; forever || run_idx < stat_config.run_count; run_idx++) {
+ 		if (stat_config.run_count != 1 && verbose > 0)
+@@ -2148,6 +2166,8 @@ int cmd_stat(int argc, const char **argv)
+ 	if (!forever && status != -1 && !interval)
+ 		print_counters(NULL, argc, argv);
+ 
++	perf_evlist__finalize_ctlfd(evsel_list);
++
+ 	if (STAT_RECORD) {
+ 		/*
+ 		 * We synthesize the kernel mmap record just so that older tools
+diff --git a/tools/perf/util/evlist.h b/tools/perf/util/evlist.h
+index a94b2993fafc..c91368483074 100644
+--- a/tools/perf/util/evlist.h
++++ b/tools/perf/util/evlist.h
+@@ -369,6 +369,9 @@ enum evlist_ctl_cmd {
+ 	CTL_CMD_ACK = 'a'
+ };
+ 
++#define PERF_EVLIST__RESUMED_MSG "Monitoring resumed\n"
++#define PERF_EVLIST__PAUSED_MSG  "Monitoring paused\n"
++
+ int perf_evlist__initialize_ctlfd(struct evlist *evlist, int ctl_fd, int ctl_fd_ack);
+ int perf_evlist__finalize_ctlfd(struct evlist *evlist);
+ int perf_evlist__ctlfd_process(struct evlist *evlist, enum evlist_ctl_cmd *cmd);
+diff --git a/tools/perf/util/stat.h b/tools/perf/util/stat.h
+index b4fdfaa7f2c0..0b0fa3a2cde2 100644
+--- a/tools/perf/util/stat.h
++++ b/tools/perf/util/stat.h
+@@ -113,7 +113,7 @@ struct perf_stat_config {
+ 	FILE			*output;
+ 	unsigned int		 interval;
+ 	unsigned int		 timeout;
+-	unsigned int		 initial_delay;
++	int			 initial_delay;
+ 	unsigned int		 unit_width;
+ 	unsigned int		 metric_only_len;
+ 	int			 times;
+@@ -130,6 +130,8 @@ struct perf_stat_config {
+ 	struct perf_cpu_map		*cpus_aggr_map;
+ 	u64			*walltime_run;
+ 	struct rblist		 metric_events;
++	int			 ctl_fd;
++	int			 ctl_fd_ack;
+ };
+ 
+ void update_stats(struct stats *stats, u64 val);
+-- 
+2.24.1
+
+
