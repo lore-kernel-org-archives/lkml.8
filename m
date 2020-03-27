@@ -2,216 +2,180 @@ Return-Path: <SRS0=s8dx=5M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32271C43331
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 20:48:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12E1AC2D0E5
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 20:54:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EFA4C206DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 20:48:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF96A2073B
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 20:54:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="GmqrUd2C"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Sgw5NWu6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727849AbgC0UsC (ORCPT
+        id S1727548AbgC0UyU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Mar 2020 16:48:02 -0400
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:37167 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727352AbgC0UsB (ORCPT
+        Fri, 27 Mar 2020 16:54:20 -0400
+Received: from mail-pg1-f172.google.com ([209.85.215.172]:44016 "EHLO
+        mail-pg1-f172.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726959AbgC0UyU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Mar 2020 16:48:01 -0400
-Received: by mail-qk1-f196.google.com with SMTP id x3so12342789qki.4
-        for <linux-kernel@vger.kernel.org>; Fri, 27 Mar 2020 13:48:01 -0700 (PDT)
+        Fri, 27 Mar 2020 16:54:20 -0400
+Received: by mail-pg1-f172.google.com with SMTP id u12so5138420pgb.10;
+        Fri, 27 Mar 2020 13:54:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=9q1XY4KqbbTRLheOot7MCrox3Fgc87F65JC9LGYyt/E=;
-        b=GmqrUd2C6lvT6vlUdQucy70SSLtfxsKdUjOHWqJyOD8f1vWLJa5e6GYpJ9Npn1jKUh
-         RQKqmeIdVm7NetPjv9kPl5b08t/PpjpjUv7DCinp3PrZIwC2UmHt2CpwFM7OOJ6lHiFM
-         Q102qGtpZYc7xQKpLdqS7yQXUHF3YHZYzGkfuuSMThrDVUYxKczB+z15Rm9CSHYQlIOz
-         fmKXu+PqvhBXZjZtUrzjdZxknkPNMfoKO4wAnvUxi75V++fORXMOHg3aziuDT+9lGaRM
-         wzi5R35OV/ah4OcxihiVz15pL/N44chQI0FXkwtkZMiDWJ/3PHJw79yOsQlrvwX1kq6P
-         CnbA==
+        d=gmail.com; s=20161025;
+        h=sender:subject:to:cc:references:from:autocrypt:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=Cwj5nmQrvJ47lutQGRvx1/s1DCNTUI3vVQnQClxBJzM=;
+        b=Sgw5NWu6pmsTYTlZYH0XVVImOSwL98/+5241dCZNjsx/PFpM91E+5nygcDnsoJAWOg
+         qb7PdEIRVlOT7016BWdpGfCrFZwRAtYhmjcVCwLLf/rnifFgaDfC8OxAgTDfCwpgCTqQ
+         0T35S2ip8u/azlSK1dqnr80OG4E8XfbglSkIm6uUMNi1d8Oag8HxZLIVyGPV3A2c9zyp
+         WFrPpaR+9ysT/4vllfQm8V7r3PFHgVqF8G2e/ebyo22DHZVFuhV6JLjbkMMu5AYS5RQX
+         rACZOWgLRdof4HB/5CdvDGmW802w9207dRDA3U+Vkfj2G0kSODr6lNZ8pecG/zqwLhsQ
+         8kiQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=9q1XY4KqbbTRLheOot7MCrox3Fgc87F65JC9LGYyt/E=;
-        b=TicfeeESb+uiJM+GcchpXkntsLK1PgWXzjM7zxFpZk9V9GvdcEBmsXXn+VtsWxGFpb
-         6ynbkNWLSlB1V6CSvyxtttnYS1bAf6yjDKASWQ1rGeDPMIbbjhuKcjlZLlVkwG06ra7e
-         s2IwEMjRwA4j+0y2vs8K3j363UX64VC2Kar/3+z7CPct/5S/KGgdTBEBgtrVzzx3vbQI
-         50dhSol9BLFfM0UwUkwnTuSGfS+3NLq9mmnigPrhP0Eir9385neEgsinF5iJ2/A3/ZIn
-         tsZOXx0Ye93iNqzdEEcY71uNJ6kYIVhr+N6Z1e/nXjwEkjMyrwx+nkgAZJST1zjTcn6J
-         3Vhg==
-X-Gm-Message-State: ANhLgQ0g3pPJyqkWI59XSBwFB3I9fIK1vEM+kSWF+PMBOy0J3akcD4MK
-        4PQwDxG4XSw+AQ89o+/o6rOSrg==
-X-Google-Smtp-Source: ADFU+vum1YDCNVR+ZGbjSSgdxeGaVZ3Vf8cRn4knXCG80t3ZykaXm1aP4n2qerO0tMux7GIpvqDeng==
-X-Received: by 2002:a05:620a:135b:: with SMTP id c27mr1301375qkl.104.1585342080284;
-        Fri, 27 Mar 2020 13:48:00 -0700 (PDT)
-Received: from [192.168.1.153] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
-        by smtp.gmail.com with ESMTPSA id p1sm4485204qkf.73.2020.03.27.13.47.59
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 27 Mar 2020 13:47:59 -0700 (PDT)
-Content-Type: text/plain;
-        charset=utf-8
-Mime-Version: 1.0 (Mac OS X Mail 13.0 \(3608.60.0.2.5\))
-Subject: Memory leaks due to "locking/percpu-rwsem: Remove the embedded rwsem"
-From:   Qian Cai <cai@lca.pw>
-In-Reply-To: <BB30C711-B54C-4D61-8BEE-A55F410C4178@lca.pw>
-Date:   Fri, 27 Mar 2020 16:47:58 -0400
-Cc:     Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
-        dbueso@suse.de, juri.lelli@redhat.com, longman@redhat.com,
-        linux-kernel@vger.kernel.org
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <C1CCBDAC-A453-4FF2-908F-0B6E356223D1@lca.pw>
-References: <20200327093754.GS20713@hirez.programming.kicks-ass.net>
- <BB30C711-B54C-4D61-8BEE-A55F410C4178@lca.pw>
-To:     Peter Zijlstra <peterz@infradead.org>
-X-Mailer: Apple Mail (2.3608.60.0.2.5)
+        h=x-gm-message-state:sender:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=Cwj5nmQrvJ47lutQGRvx1/s1DCNTUI3vVQnQClxBJzM=;
+        b=tJcU9n9hNO7nMju7d8rzVINjKvxzAB823i6FvRIkC9gZJwQBrQug8iGDq/6x1FceFh
+         xB7EVkuc0BqyDidJR+UZGvSUIH4z954Gx7W27DihgYdGrdARtaaFmsXmwORpQtyIUx2J
+         i8v7ojCrrHncX2MBfzWNa0cOfwPwF3Gx58B/vt2e69AlAYgSfM5rHaqlFPVWRnlQ0tyw
+         w6XoHZKjfDWZ6Bt/4lRTYWH1j6w+cVXaiXJY05iOxcNyb7J2tZZ5kyEJxmIBpQaR+M3r
+         E07J8A77naKtAfFsPVnmQ2KC3D/gZV6Sz8KBGU9RbA5067TpQCxFxCtzMuJTpAcx3FBl
+         T4vA==
+X-Gm-Message-State: ANhLgQ1yuX/uF9lYoaCG5e+4ZT5P4MXAoDDLEyDelKhEsYgR3Gj0f5QL
+        7t7v58f+pOAU+y7cvdnRjWo=
+X-Google-Smtp-Source: ADFU+vuOp3lwPPL/ouFp7v+rkgVXurqEZcA4SMA2DXg3vC9ap4sPYtgWcREa0J3VOhldpLpYMgjHLA==
+X-Received: by 2002:aa7:9af7:: with SMTP id y23mr1169648pfp.1.1585342458401;
+        Fri, 27 Mar 2020 13:54:18 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id iq14sm1838930pjb.43.2020.03.27.13.54.16
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 27 Mar 2020 13:54:17 -0700 (PDT)
+Subject: =?UTF-8?B?UmU6IOetlOWkjTogW3YyLDEvMV0gaHdtb246IChuY3Q3OTA0KSBBZGQg?=
+ =?UTF-8?Q?watchdog_function?=
+To:     =?UTF-8?B?eXVlY2hhby56aGFvKOi1tei2iui2hSk=?= 
+        <yuechao.zhao@advantech.com.cn>
+Cc:     "345351830@qq.com" <345351830@qq.com>,
+        Jean Delvare <jdelvare@suse.com>,
+        "linux-hwmon@vger.kernel.org" <linux-hwmon@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Amy.Shih" <Amy.Shih@advantech.com.tw>,
+        "Oakley.Ding" <Oakley.Ding@advantech.com.tw>,
+        =?UTF-8?B?SmlhLlN1aSjotL7nnaIp?= <Jia.Sui@advantech.com.cn>,
+        =?UTF-8?B?c2hlbmdrdWkubGVuZyjlhrfog5zprYEp?= 
+        <shengkui.leng@advantech.com.cn>,
+        =?UTF-8?B?UmFpbmJvdy5aaGFuZyjlvLXnjokp?= 
+        <Rainbow.Zhang@advantech.com.cn>
+References: <20200325082237.7002-1-yuechao.zhao@advantech.com.cn>
+ <20200325224733.GA27706@roeck-us.net>
+ <37833c60d7df45109897dcf35fb1b102@ACNMB2.ACN.ADVANTECH.CORP>
+From:   Guenter Roeck <linux@roeck-us.net>
+Autocrypt: addr=linux@roeck-us.net; keydata=
+ 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
+ mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
+Message-ID: <c8dd611e-3ff4-a041-6800-8396dd517e7b@roeck-us.net>
+Date:   Fri, 27 Mar 2020 13:54:16 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
+MIME-Version: 1.0
+In-Reply-To: <37833c60d7df45109897dcf35fb1b102@ACNMB2.ACN.ADVANTECH.CORP>
+Content-Type: text/plain; charset=gbk
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 3/26/20 7:39 PM, yuechao.zhao(ÕÔÔ½³¬) wrote:
+> Hi Guenter
+> Thank you very much for the suggestion
+> 
+> But, I wish to consult you on a few questions.
+> The NCT7904 is very special in watchdog function. Its minimum unit is minutes.
+> So, what unit do we use for setting the timeout in user space. Minutes or seconds?
+> Does the kernel document specify it?
+> 
+Documentation/watchdog/watchdog-api.rst very clearly specifies that
+the timeout is set in seconds.
 
+> Also, about this suggestion:
+> 	> +	data->wdt.timeout = timeout * 60; /* in seconds */
+> 	> +	data->wdt.min_timeout = 1;
+> 	> +	data->wdt.max_timeout = 15300;
+> 	Please make it 60 * 255 (or use a respective define) to clarify where the number comes from.
+> 
+> The reason for not use 60 * 255(or use a respective define ) is that we will set the default timeout with 
+> "timeout" parameter when "insmod nct7904.ko".
 
-> On Mar 27, 2020, at 6:19 AM, Qian Cai <cai@lca.pw> wrote:
->=20
->=20
->=20
->> On Mar 27, 2020, at 5:37 AM, Peter Zijlstra <peterz@infradead.org> =
-wrote:
->>=20
->> If the trylock fails, someone else got the lock and we remain on the
->> waitqueue. It seems like a very bad idea to put the task while it
->> remains on the waitqueue, no?
->=20
-> Interesting, I thought this was more straightforward to see, but I may =
-be wrong as always. At the beginning of percpu_rwsem_wake_function() it =
-calls get_task_struct(), but if the trylock failed, it will remain in =
-the waitqueue. However, it will run percpu_rwsem_wake_function() again =
-with get_task_struct() to increase the refcount. Can you enlighten me =
-where it will call put_task_struct() in waitqueue or elsewhere to =
-balance the refcount in this case?
+This is not an argument for
+	data->wdt.max_timeout = 15300;
+instead of
+	data->wdt.max_timeout = 60 * 255;
+or
 
-I am pretty confident that the linux-next commit,
+#define MAX_TIMEOUT	(60 * 255)
+...
+	data->wdt.max_timeout = MAX_TIMEOUT;
 
-7f26482a872c ("locking/percpu-rwsem: Remove the embedded rwsem=E2=80=9D)
+> The relevant code as follows:
+> 	> +static int timeout = WATCHDOG_TIMEOUT; module_param(timeout, int, 0); 
+> 	> +MODULE_PARM_DESC(timeout, "Watchdog timeout in minutes. 1 <= timeout <= 255, default="
+> 	> +			__MODULE_STRING(WATCHODOG_TIMEOUT) ".");
+> 
 
-Introduced memory leaks,
+I accepted that you want to have a module parameter which specifies
+the timeout in minutes instead of seconds (as would be customary).
+However, I completely fail to understand what that has to do with
+using an unexplained constant of "15300" when setting the maximum
+timeout variable instead of "60 * 255" or, as I had suggested, a
+define.
 
-I put a debugging patch here,
-
-diff --git a/kernel/locking/percpu-rwsem.c =
-b/kernel/locking/percpu-rwsem.c
-index a008a1ba21a7..857602ef54f1 100644
---- a/kernel/locking/percpu-rwsem.c
-+++ b/kernel/locking/percpu-rwsem.c
-@@ -123,8 +123,10 @@ static int percpu_rwsem_wake_function(struct =
-wait_queue_entry *wq_entry,
- 	struct percpu_rw_semaphore *sem =3D key;
-=20
- 	/* concurrent against percpu_down_write(), can get stolen */
--	if (!__percpu_rwsem_trylock(sem, reader))
-+	if (!__percpu_rwsem_trylock(sem, reader)) {
-+		printk("KK __percpu_rwsem_trylock\n");
- 		return 1;
-+	}
-=20
- 	list_del_init(&wq_entry->entry);
- 	smp_store_release(&wq_entry->private, NULL);
-
-Once those printks() triggered, it ends up with task_struct leaks,
-
-unreferenced object 0xc000200df1422280 (size 8192):
-  comm "read_all", pid 12975, jiffies 4297309144 (age 5351.480s)
-  hex dump (first 32 bytes):
-    02 00 00 00 00 00 00 00 10 00 00 00 00 00 00 00  ................
-    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-  backtrace:
-    [<00000000f5c5fa2d>] copy_process+0x26c/0x1920
-    [<0000000099229290>] _do_fork+0xac/0xb20
-    [<00000000d40a7825>] __do_sys_clone+0x98/0xe0
-    [<00000000c7cd06a4>] ppc_clone+0x8/0xc
-unreferenced object 0xc00020047ef8eb80 (size 120):
-  comm "read_all", pid 12975, jiffies 4297309144 (age 5351.480s)
-  hex dump (first 32 bytes):
-    02 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-  backtrace:
-    [<000000004def8a44>] prepare_creds+0x38/0x110
-    [<0000000037a68116>] copy_creds+0xbc/0x1d0
-    [<0000000016b7471c>] copy_process+0x454/0x1920
-    [<0000000099229290>] _do_fork+0xac/0xb20
-    [<00000000d40a7825>] __do_sys_clone+0x98/0xe0
-    [<00000000c7cd06a4>] ppc_clone+0x8/0xc
-unreferenced object 0xc000200d96f80800 (size 1384):
-  comm "read_all", pid 12975, jiffies 4297309144 (age 5351.480s)
-  hex dump (first 32 bytes):
-    01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-    10 08 f8 96 0d 20 00 c0 10 08 f8 96 0d 20 00 c0  ..... ....... ..
-  backtrace:
-    [<000000008894d13b>] copy_process+0xa40/0x1920
-    [<0000000099229290>] _do_fork+0xac/0xb20
-    [<00000000d40a7825>] __do_sys_clone+0x98/0xe0
-    [<00000000c7cd06a4>] ppc_clone+0x8/0xc
-unreferenced object 0xc000001e91ba4000 (size 16384):
-  comm "read_all", pid 12982, jiffies 4297309462 (age 5348.300s)
-  hex dump (first 32 bytes):
-    00 00 00 00 00 00 00 00 08 00 00 00 00 00 00 00  ................
-    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-  backtrace:
-    [<000000009689397b>] kzalloc.constprop.48+0x1c/0x30
-    [<000000001753eb18>] task_numa_fault+0xac8/0x1260
-    [<0000000047bb80b1>] __handle_mm_fault+0x12cc/0x1b00
-    [<00000000c0a4c8ba>] handle_mm_fault+0x298/0x450
-    [<000000003465b20d>] __do_page_fault+0x2b8/0xf90
-    [<000000005037fec9>] handle_page_fault+0x10/0x30
-unreferenced object 0xc0002015fe4aaa80 (size 8192):
-  comm "read_all", pid 13157, jiffies 4297353979 (age 4903.130s)
-  hex dump (first 32 bytes):
-    02 00 00 00 00 00 00 00 10 00 00 00 00 00 00 00  ................
-    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-  backtrace:
-    [<00000000f5c5fa2d>] copy_process+0x26c/0x1920
-    [<0000000099229290>] _do_fork+0xac/0xb20
-    [<00000000d40a7825>] __do_sys_clone+0x98/0xe0
-    [<00000000c7cd06a4>] ppc_clone+0x8/0xc
-unreferenced object 0xc00020047ef8f080 (size 120):
-  comm "read_all", pid 13157, jiffies 4297353979 (age 4903.130s)
-  hex dump (first 32 bytes):
-    02 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-  backtrace:
-    [<000000004def8a44>] prepare_creds+0x38/0x110
-    [<0000000037a68116>] copy_creds+0xbc/0x1d0
-    [<0000000016b7471c>] copy_process+0x454/0x1920
-    [<0000000099229290>] _do_fork+0xac/0xb20
-    [<00000000d40a7825>] __do_sys_clone+0x98/0xe0
-    [<00000000c7cd06a4>] ppc_clone+0x8/0xc
-unreferenced object 0xc0002012a9388f00 (size 1384):
-  comm "read_all", pid 13157, jiffies 4297353979 (age 4903.130s)
-  hex dump (first 32 bytes):
-    01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-    10 8f 38 a9 12 20 00 c0 10 8f 38 a9 12 20 00 c0  ..8.. ....8.. ..
-  backtrace:
-    [<000000008894d13b>] copy_process+0xa40/0x1920
-    [<0000000099229290>] _do_fork+0xac/0xb20
-    [<00000000d40a7825>] __do_sys_clone+0x98/0xe0
-    [<00000000c7cd06a4>] ppc_clone+0x8/0xc
-unreferenced object 0xc000001c86704000 (size 16384):
-  comm "read_all", pid 13164, jiffies 4297354081 (age 4902.110s)
-  hex dump (first 32 bytes):
-    00 00 00 00 00 00 00 00 08 00 00 00 00 00 00 00  ................
-    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-  backtrace:
-    [<000000009689397b>] kzalloc.constprop.48+0x1c/0x30
-    [<000000001753eb18>] task_numa_fault+0xac8/0x1260
-    [<0000000047bb80b1>] __handle_mm_fault+0x12cc/0x1b00
-    [<00000000c0a4c8ba>] handle_mm_fault+0x298/0x450
-    [<000000003465b20d>] __do_page_fault+0x2b8/0xf90
-    [<000000005037fec9>] handle_page_fault+0x10/0x30=
+Thanks,
+Guenter
