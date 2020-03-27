@@ -2,93 +2,89 @@ Return-Path: <SRS0=s8dx=5M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EE6AC43331
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 19:24:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04FFBC43331
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 19:26:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 793B120737
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 19:24:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585337054;
-	bh=qt6SbvEQShuKIl/6a/6slI+vmFBgRwo48MnklEokrOg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=vJC9HkS91XNdW181BYAP/JmynwFiufttN/TGEdZREcHJkci3bwJ8YNAkC6uo3X9eP
-	 +mFBjki7zGmK66zrZytNrZDqAr2ya3fG8cToCS0Z1Cl4wcCSOHMMgy7TrxaU0ihtvI
-	 3Akokz9YlHtAmzPRry8TH0/bnW8XH9uJscs2S5Z0=
+	by mail.kernel.org (Postfix) with ESMTP id CFC76206E6
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 19:26:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="IGaP7Mdp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727354AbgC0TYN (ORCPT
+        id S1726738AbgC0T0N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Mar 2020 15:24:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59350 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726738AbgC0TYN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Mar 2020 15:24:13 -0400
-Received: from localhost (unknown [104.132.1.66])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8A713206E6;
-        Fri, 27 Mar 2020 19:24:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585337052;
-        bh=qt6SbvEQShuKIl/6a/6slI+vmFBgRwo48MnklEokrOg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=wxARzqqdtgKfS3KjIlCaVHSzxYdqXgoeK01ef4pGrKZHx7IBEWmP6//vU0itLS1ZA
-         /3s2iEbTmyJe1ek/xLn0FpWvYOyLvO8Obm3GNc+HhIJVHUYCCezTpT/nVdQG7C/asF
-         J/pDGPCYUWB0WCHDi1+29HrTPxs9kR/XaxyFIaGQ=
-Date:   Fri, 27 Mar 2020 12:24:12 -0700
-From:   Jaegeuk Kim <jaegeuk@kernel.org>
-To:     Sahitya Tummala <stummala@codeaurora.org>
-Cc:     Chao Yu <yuchao0@huawei.com>,
-        linux-f2fs-devel@lists.sourceforge.net,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] f2fs: prevent meta updates while checkpoint is in
- progress
-Message-ID: <20200327192412.GA186975@google.com>
-References: <1585219019-24831-1-git-send-email-stummala@codeaurora.org>
+        Fri, 27 Mar 2020 15:26:13 -0400
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:44024 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726900AbgC0T0N (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Mar 2020 15:26:13 -0400
+Received: by mail-lf1-f68.google.com with SMTP id n20so8796366lfl.10
+        for <linux-kernel@vger.kernel.org>; Fri, 27 Mar 2020 12:26:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Xyt/WUa2OD/knVIi601SFgcT1l0Zvp/CDfO2pM2aN4k=;
+        b=IGaP7Mdp93QPDuqZ2364as99CykHs3PJ4uYKf6kPp4MEHCRvpSlBKK1Qz4NqpXAC6F
+         jcs/JXuF1nLBhdGF1Gfkw12gMzmJM5qi8Hew8wMHVHPFn7QhLflUWGX6h8S1zZUgwGyT
+         ZwdedZA3Dn3uw31OdZWSCHUvQ9C5JfKBWJ6IESHexoyfrt48U76swLir1qWsNWYgDKBz
+         Umrm5nAGV4JXf72ChFK+JRjPexOHxC/o9E2BcsUkz3OS2rD419n45AlPLeHu98S305n6
+         Vn9s3lQwR9CuCC+WQNGKtunP3nNeRTSmrM3aVOkwU64nC9v2VXIkLhIGnMW6fzq+KY+T
+         k/2Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Xyt/WUa2OD/knVIi601SFgcT1l0Zvp/CDfO2pM2aN4k=;
+        b=uirlJpAXwXr3jEuEk3SvRMQlAPST9Dhvc46Di65l8vrwJV+FSXwsI81ePU2mA5HHXD
+         FvKYm5o+b6t/i90QrDcpPFv2OuJT8VhMS+he3IN0t59d30PXnU3t9h3opWVe5nBKbWkA
+         GzcPOZgDig6V7FUgMIgAYai2ru8EqWDBdHfLfSnGesu/hHwsejZuyWJGjtrsp72NtFjR
+         Tjddx09nLoA4ufdZ7G713I62s7pzRZOC6/ptuaQRS4MN6nACNIOtDlcvKW84EqP7BzqG
+         0SXV0/gB8BBsxPcPEWRwzmCKfoDD8uj8gLwSSxzoGq/DyR8ax4D2P38oFNQdz+0OT8iH
+         ZzmQ==
+X-Gm-Message-State: AGi0PubaaTt6rYJ9VXRAH8JZ6ughVzxWpe74bQUFjr9qmgMv6aR0AQzR
+        pRpSINURHt+z3fUal76AOwqu2YkrpslP0fwj70kslQ==
+X-Google-Smtp-Source: APiQypIDOmD/wk2tYVESxm4bIRP7LjM723EaFL/9IRPRsGvMcf3ygcQJnmmosTirkk89eivLqwScLbnLWxa4ztRvg0Y=
+X-Received: by 2002:a19:ac8:: with SMTP id 191mr518366lfk.77.1585337170911;
+ Fri, 27 Mar 2020 12:26:10 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1585219019-24831-1-git-send-email-stummala@codeaurora.org>
+References: <cover.1584456635.git.mchehab+huawei@kernel.org> <51197e3568f073e22c280f0584bfa20b44436708.1584456635.git.mchehab+huawei@kernel.org>
+In-Reply-To: <51197e3568f073e22c280f0584bfa20b44436708.1584456635.git.mchehab+huawei@kernel.org>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Fri, 27 Mar 2020 20:25:59 +0100
+Message-ID: <CACRpkdY4_fEbsgX9vRHd5_8Z-1MbBDd3y-pVsTit4bDLW6VpoQ@mail.gmail.com>
+Subject: Re: [PATCH 12/17] gpio: gpiolib.c: fix a doc warning
+To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Sahitya,
+On Tue, Mar 17, 2020 at 3:54 PM Mauro Carvalho Chehab
+<mchehab+huawei@kernel.org> wrote:
 
-On 03/26, Sahitya Tummala wrote:
-> allocate_segment_for_resize() can cause metapage updates if
-> it requires to change the current node/data segments for resizing.
-> Stop these meta updates when there is a checkpoint already
-> in progress to prevent inconsistent CP data.
+> Use a different markup for the ERR_PTR, as %FOO doesn't work
+> if there are parenthesis. So, use, instead:
+>
+>         ``ERR_PTR(-EINVAL)``
+>
+> This fixes the following warning:
+>
+>         ./drivers/gpio/gpiolib.c:139: WARNING: Inline literal start-string without end-string.
+>
+> Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 
-Doesn't freeze|thaw_bdev(sbi->sb->s_bdev); work for you?
+Patch applied.
 
-> 
-> Signed-off-by: Sahitya Tummala <stummala@codeaurora.org>
-> ---
->  fs/f2fs/gc.c | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/fs/f2fs/gc.c b/fs/f2fs/gc.c
-> index 5bca560..6122bad 100644
-> --- a/fs/f2fs/gc.c
-> +++ b/fs/f2fs/gc.c
-> @@ -1399,8 +1399,10 @@ static int free_segment_range(struct f2fs_sb_info *sbi, unsigned int start,
->  	int err = 0;
->  
->  	/* Move out cursegs from the target range */
-> +	f2fs_lock_op(sbi);
->  	for (type = CURSEG_HOT_DATA; type < NR_CURSEG_TYPE; type++)
->  		allocate_segment_for_resize(sbi, type, start, end);
-> +	f2fs_unlock_op(sbi);
->  
->  	/* do GC to move out valid blocks in the range */
->  	for (segno = start; segno <= end; segno += sbi->segs_per_sec) {
-> -- 
-> Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center, Inc.
-> Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, a Linux Foundation Collaborative Project.
+Yours,
+Linus Walleij
