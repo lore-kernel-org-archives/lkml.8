@@ -2,151 +2,120 @@ Return-Path: <SRS0=s8dx=5M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D425C2D0E7
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 06:46:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF256C2D0E7
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 06:48:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0DE1820714
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 06:46:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 923DB20714
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 06:48:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="QNhpPzdq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726758AbgC0Gqw (ORCPT
+        id S1726804AbgC0Gs0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Mar 2020 02:46:52 -0400
-Received: from foss.arm.com ([217.140.110.172]:41054 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725956AbgC0Gqw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Mar 2020 02:46:52 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id EC7317FA;
-        Thu, 26 Mar 2020 23:46:50 -0700 (PDT)
-Received: from [10.163.1.31] (unknown [10.163.1.31])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6B53F3F71F;
-        Thu, 26 Mar 2020 23:50:47 -0700 (PDT)
-Subject: Re: [PATCH V2 0/3] mm/debug: Add more arch page table helper tests
-To:     Christophe Leroy <christophe.leroy@c-s.fr>, linux-mm@kvack.org
-Cc:     Jonathan Corbet <corbet@lwn.net>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Vineet Gupta <vgupta@synopsys.com>,
+        Fri, 27 Mar 2020 02:48:26 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:43845 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725956AbgC0GsZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Mar 2020 02:48:25 -0400
+Received: by mail-pg1-f195.google.com with SMTP id u12so4130760pgb.10
+        for <linux-kernel@vger.kernel.org>; Thu, 26 Mar 2020 23:48:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=RpYBuJfY08WhjaxaukJkaddMj0LXmdHxotG0jM4ptqg=;
+        b=QNhpPzdqJpCei279jTF+h/ObhmvlR6FTP7G9SeLHFQQYYYl/hOo7K7A4ahYZW9rBTi
+         CxTyqKu7s/VDnh0YhGgfs7LNY7Bn+lOco0Y3SE1ZH7MyzXiWqcevIJXEgNfXB9RcIubp
+         WtzpdKV9R1aShxwRNBzHJ6OLnP2DSIhS0HLyA=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=RpYBuJfY08WhjaxaukJkaddMj0LXmdHxotG0jM4ptqg=;
+        b=CZB1LzTEwONFqH+zKtqCGqo6yroh/Fx7VqGRn+Zf+Ogoj5UfB4iQK8kgxJRcnEKWZl
+         IOXExIFuV+JEY5coQwGdEF/JU0kC6OmmhDmjgNvptiIGd4P5WSj4Nanh2LfGQXEs6AIt
+         1apRpxyXL36DBKFnwsqtXS7WrusKgU1EQg+udZ+vWMT2aUwNvxkzgEFCJlQIQfkPc3wA
+         /4pkcWgKwSvy4hgu3FWDnGo/Tlo9yiANGgzMeyfg+LPCFZWaO16NL9LO4V/PyBGSuFJL
+         cfp/JSWktKnaHExcDPaee/EHm0hJGb+CJKPZx0I/Q07Z1qMnlx4ttwT+GgCYIR13wh5V
+         53bg==
+X-Gm-Message-State: ANhLgQ2TJW3xgMmvPGcHGh0IdFxS4NZnn7fJZ4g9k0aAIwE5i/vJeLTe
+        FimQ97T+sshrQfwYnomUxrW8bA==
+X-Google-Smtp-Source: ADFU+vsCyDBR9n7viFoDu0Ekx+5WslhiT7XTciFmLxv2z4EAe6/t7zwz9Rj+ofshsa0IFDSE5S7sOw==
+X-Received: by 2002:a62:75d0:: with SMTP id q199mr13127618pfc.72.1585291704670;
+        Thu, 26 Mar 2020 23:48:24 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id g14sm3227306pfb.131.2020.03.26.23.48.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 26 Mar 2020 23:48:23 -0700 (PDT)
+From:   Kees Cook <keescook@chromium.org>
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Hector Marco-Gisbert <hecmargi@upv.es>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
         Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "Kirill A . Shutemov" <kirill@shutemov.name>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        linux-snps-arc@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        linux-riscv@lists.infradead.org, x86@kernel.org,
-        linux-doc@vger.kernel.org, linux-arch@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <1585027375-9997-1-git-send-email-anshuman.khandual@arm.com>
- <2bb4badc-2b7a-e15d-a99b-b1bd38c9d9bf@arm.com>
- <a46d18ed-8911-1ec3-c32f-58b6e0d959d7@c-s.fr>
-From:   Anshuman Khandual <anshuman.khandual@arm.com>
-Message-ID: <9675882f-0ec5-5e46-551f-dd3aa38bf8d8@arm.com>
-Date:   Fri, 27 Mar 2020 12:16:34 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        Russell King <linux@armlinux.org.uk>,
+        Will Deacon <will@kernel.org>, Jann Horn <jannh@google.com>,
+        x86@kernel.org, linux-arm-kernel@lists.infradead.org,
+        kernel-hardening@lists.openwall.com, linux-kernel@vger.kernel.org
+Subject: [PATCH v5 3/6] x86/elf: Disable automatic READ_IMPLIES_EXEC for 64-bit address spaces
+Date:   Thu, 26 Mar 2020 23:48:17 -0700
+Message-Id: <20200327064820.12602-4-keescook@chromium.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200327064820.12602-1-keescook@chromium.org>
+References: <20200327064820.12602-1-keescook@chromium.org>
 MIME-Version: 1.0
-In-Reply-To: <a46d18ed-8911-1ec3-c32f-58b6e0d959d7@c-s.fr>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+With modern x86 64-bit environments, there should never be a need for
+automatic READ_IMPLIES_EXEC, as the architecture is intended to always
+be execute-bit aware (as in, the default memory protection should be NX
+unless a region explicitly requests to be executable).
 
-On 03/26/2020 08:53 PM, Christophe Leroy wrote:
-> 
-> 
-> Le 26/03/2020 à 03:23, Anshuman Khandual a écrit :
->>
->>
->> On 03/24/2020 10:52 AM, Anshuman Khandual wrote:
->>> This series adds more arch page table helper tests. The new tests here are
->>> either related to core memory functions and advanced arch pgtable helpers.
->>> This also creates a documentation file enlisting all expected semantics as
->>> suggested by Mike Rapoport (https://lkml.org/lkml/2020/1/30/40).
->>>
->>> This series has been tested on arm64 and x86 platforms.
->>
->> If folks can test these patches out on remaining ARCH_HAS_DEBUG_VM_PGTABLE
->> enabled platforms i.e s390, arc, powerpc (32 and 64), that will be really
->> appreciated. Thank you.
->>
-> 
-> On powerpc 8xx (PPC32), I get:
-> 
-> [   53.338368] debug_vm_pgtable: debug_vm_pgtable: Validating architecture page table helpers
-> [   53.347403] ------------[ cut here ]------------
-> [   53.351832] WARNING: CPU: 0 PID: 1 at mm/debug_vm_pgtable.c:647 debug_vm_pgtable+0x280/0x3f4
+There were very old x86_64 systems that lacked the NX bit, but for those,
+the NX bit is, obviously, unenforceable, so these changes should have
+no impact on them.
 
-mm/debug_vm_pgtable.c:647 ?
+Suggested-by: Hector Marco-Gisbert <hecmargi@upv.es>
+Signed-off-by: Kees Cook <keescook@chromium.org>
+Reviewed-by: Jason Gunthorpe <jgg@mellanox.com>
+---
+ arch/x86/include/asm/elf.h | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-With the following commits in place
+diff --git a/arch/x86/include/asm/elf.h b/arch/x86/include/asm/elf.h
+index 397a1c74433e..452beed7892b 100644
+--- a/arch/x86/include/asm/elf.h
++++ b/arch/x86/include/asm/elf.h
+@@ -287,7 +287,7 @@ extern u32 elf_hwcap2;
+  *                 CPU: | lacks NX*  | has NX, ia32     | has NX, x86_64 |
+  * ELF:                 |            |                  |                |
+  * ---------------------|------------|------------------|----------------|
+- * missing PT_GNU_STACK | exec-all   | exec-all         | exec-all       |
++ * missing PT_GNU_STACK | exec-all   | exec-all         | exec-none      |
+  * PT_GNU_STACK == RWX  | exec-stack | exec-stack       | exec-stack     |
+  * PT_GNU_STACK == RW   | exec-none  | exec-none        | exec-none      |
+  *
+@@ -303,7 +303,7 @@ extern u32 elf_hwcap2;
+  *
+  */
+ #define elf_read_implies_exec(ex, executable_stack)	\
+-	(executable_stack == EXSTACK_DEFAULT)
++	(mmap_is_ia32() && executable_stack == EXSTACK_DEFAULT)
+ 
+ struct task_struct;
+ 
+-- 
+2.20.1
 
-53a8338ce (HEAD) Documentation/mm: Add descriptions for arch page table helper
-5d4913fc1 mm/debug: Add tests validating arch advanced page table helpers
-bcaf120a7 mm/debug: Add tests validating arch page table helpers for core features
-d6ed5a4a5 x86/memory: Drop pud_mknotpresent()
-0739d1f8d mm/debug: Add tests validating architecture page table helpers
-16fbf79b0 (tag: v5.6-rc7) Linux 5.6-rc7
-
-mm/debug_vm_pgtable.c:647 is here.
-
-#ifdef CONFIG_ARCH_ENABLE_THP_MIGRATION
-static void __init pmd_swap_tests(unsigned long pfn, pgprot_t prot)
-{
-        swp_entry_t swp;
-        pmd_t pmd;  -----------------------------> Line #647
-
-        pmd = pfn_pmd(pfn, prot);
-        swp = __pmd_to_swp_entry(pmd);
-        WARN_ON(!pmd_same(pmd, __swp_entry_to_pmd(swp)));
-}
-#else
-static void __init pmd_swap_tests(unsigned long pfn, pgprot_t prot) { }
-#end
-
-Did I miss something ?
-
-> [   53.360140] CPU: 0 PID: 1 Comm: swapper Not tainted 5.6.0-rc7-s3k-dev-01090-g92710e99881f #3544
-> [   53.368718] NIP:  c0777c04 LR: c0777bb8 CTR: 00000000
-> [   53.373720] REGS: c9023df0 TRAP: 0700   Not tainted (5.6.0-rc7-s3k-dev-01090-g92710e99881f)
-> [   53.382042] MSR:  00029032 <EE,ME,IR,DR,RI>  CR: 22000222  XER: 20000000
-> [   53.388667]
-> [   53.388667] GPR00: c0777bb8 c9023ea8 c6120000 00000001 1e410000 00000000 00000000 007641c9
-> [   53.388667] GPR08: 00000000 00000001 00000000 ffffffff 82000222 00000000 c00039b8 00000000
-> [   53.388667] GPR16: 00000000 00000000 00000000 fffffff0 065fc000 1e410000 c6600000 000001e4
-> [   53.388667] GPR24: 000001d9 c062d14c c65fc000 c642d448 000006c9 00000000 c65f8000 c65fc040
-> [   53.423400] NIP [c0777c04] debug_vm_pgtable+0x280/0x3f4
-> [   53.428559] LR [c0777bb8] debug_vm_pgtable+0x234/0x3f4
-> [   53.433593] Call Trace:
-> [   53.436048] [c9023ea8] [c0777bb8] debug_vm_pgtable+0x234/0x3f4 (unreliable)
-> [   53.442936] [c9023f28] [c00039e0] kernel_init+0x28/0x124
-> [   53.448184] [c9023f38] [c000f174] ret_from_kernel_thread+0x14/0x1c
-> [   53.454245] Instruction dump:
-> [   53.457180] 41a20008 4bea3ed9 62890021 7d36b92e 7d36b82e 71290fd0 3149ffff 7d2a4910
-> [   53.464838] 0f090000 5789077e 3149ffff 7d2a4910 <0f090000> 38c00000 38a00000 38800000
-> [   53.472671] ---[ end trace fd5dd92744dc0065 ]---
-Could you please point me to the exact test which is failing ?
-
-> [   53.519778] Freeing unused kernel memory: 608K
-> 
-> 
-So I assume that the system should have come till runtime just fine apart from
-the above warning message because.
