@@ -2,113 +2,373 @@ Return-Path: <SRS0=s8dx=5M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6644CC43331
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 19:28:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46D1FC2D0E8
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 19:28:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C578206E6
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 19:28:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="dZbWG7+W"
+	by mail.kernel.org (Postfix) with ESMTP id 2088A206E6
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 19:28:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585337311;
+	bh=keY1+owy37ix2iG8rPwLRgd2QfxkfIEF8+QeMAkbqQ0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=LYy95k2hlNRZ7w4c8wqq8++O+ElEdexRHuHGfcktap5xPR5UZ8Vw/Nso1lDWZhQSd
+	 Pe/UrmU2vWreCqtuB28Pb5rtku0hDKVgIFvySFS0/eaXLEZYOA0EFUhjsmPgJX1fA3
+	 ZTqy+bO/bZiTdmZZG/ItXhd5pe/9p/HsVtT+HV2k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727740AbgC0T2L (ORCPT
+        id S1727769AbgC0T2a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Mar 2020 15:28:11 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:46982 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727585AbgC0T2J (ORCPT
+        Fri, 27 Mar 2020 15:28:30 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:44675 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726959AbgC0T23 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Mar 2020 15:28:09 -0400
-Received: by mail-pf1-f196.google.com with SMTP id q3so4941726pff.13
-        for <linux-kernel@vger.kernel.org>; Fri, 27 Mar 2020 12:28:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=ciBC3j8wG4a8pHJA61Krk7wdzxQIPFblhY8Mnmnqr/E=;
-        b=dZbWG7+WmyxKjt8o1CFjmawcgYb9EEMCzsYlcILxxPtiGer6uV+HnUYpVcY1RNBFRG
-         RjwL4s2vQk6bvP8QSj2WiIANCPx4nfL86AVwKtE/T3vgBWCwO+W6gCzZsM50wBfPNP02
-         pVt3JhCwHQK0kEFTi5SLljHXMhHno/WK55SKM=
+        Fri, 27 Mar 2020 15:28:29 -0400
+Received: by mail-io1-f68.google.com with SMTP id v3so10941236iot.11;
+        Fri, 27 Mar 2020 12:28:28 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=ciBC3j8wG4a8pHJA61Krk7wdzxQIPFblhY8Mnmnqr/E=;
-        b=dDt4NI7sISlnE2A1mAIGodpaudXqEObKVyMN3AAXjGDOt8HLzKyXgra24ycXvD8gDN
-         LgqpKOlySLCWfbSTrToPQiQDZmfkIztIkyrlhBxv59GYlyymDdnMMcNw2wUhLJo5SH4h
-         XsyVpjZAvf5NCUzZd+5tM9hydk4wk9BWNxegd+suXnNqjIXRL0+GXZI3oF4sNM0d00tP
-         VeIAgu5yBIhKVhhpCWhYNkQ7Mm+s8cDXVJZ39MTkcqrrxTjRQxi75CHuC1f1I/W+l31s
-         O6sNp6FNw/2fGL2lQPNroKk2c6LLhH5ROHGkOrjlrLlFZTe29kJRJgOrOGk52nrP+fv0
-         wVSw==
-X-Gm-Message-State: ANhLgQ16MVWNy8OvTZtQ5kuvCfdrjJB256d976J8tieTW0scDLCYY9NM
-        FFCzOD8ElX5j90sOkwbgfD5btg==
-X-Google-Smtp-Source: ADFU+vuchbCxcDuvMI0oXv3NR9kDEcIvh5PdrH4MH/b2GxywfhrWBKPCrJOWYzpn/J65ZJciM9QCVg==
-X-Received: by 2002:aa7:9a01:: with SMTP id w1mr759393pfj.256.1585337286979;
-        Fri, 27 Mar 2020 12:28:06 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id u21sm4342053pjy.8.2020.03.27.12.28.05
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=wSuTgZKTO0qQOqXByUSPaUzWdLN8577ii/3i8TYD/j4=;
+        b=jPYR9vVO4YMsP5fstaCfQDfCt2nr2hfTiEXjXqI+lJlLGWfeFE2WEA8WnCYqFXPdTP
+         CMZyy5fK8/sy4aagLTaumNySbBgWkElzN9pXyTjzYrIR73IoQTCr3Qa5c3d9TbI2EGHm
+         7mjnaTQmmBWO2hzOp4dFrmjlX2ZXTy91OwSlt1CBHi/U6Rnj1E+wFwpUhJsgTxaLFBI8
+         r4RB9dkNOQk6Rhx05QTMJC0Aed06K3m/1ANF02NXJVY9Ohdlj2E1OPjLrn2RtitahMLx
+         HMqP0DLrqjjy/8N88iKxhRZc7B2tq3xXbIduBA42CgKBNAP7YNXdp4cnqQtNQ8hETeYY
+         9YPQ==
+X-Gm-Message-State: ANhLgQ3zzimEB0nSq8IB/MUMoLbd68zjWZrKRjJKoDICZCdBv/Ryt52G
+        WImD77BOqRo+fSHTudiOUA==
+X-Google-Smtp-Source: ADFU+vth6s3C4OMa7P2NrAFx24kevxMVVS6l73efVN15xapS4Cr/+y7vVrxHjDFNT97ioEaZowh09g==
+X-Received: by 2002:a02:cd2d:: with SMTP id h13mr455298jaq.46.1585337306126;
+        Fri, 27 Mar 2020 12:28:26 -0700 (PDT)
+Received: from rob-hp-laptop ([64.188.179.250])
+        by smtp.gmail.com with ESMTPSA id c12sm2129545ile.12.2020.03.27.12.28.22
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 27 Mar 2020 12:28:06 -0700 (PDT)
-Date:   Fri, 27 Mar 2020 12:28:05 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Andrea Righi <andrea.righi@canonical.com>
-Cc:     Shuah Khan <shuah@kernel.org>, linux-kselftest@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] kselftest/runner: avoid using timeout when timeout is
- disabled
-Message-ID: <202003271208.0D9A3A48CC@keescook>
-References: <20200327093620.GB1223497@xps-13>
+        Fri, 27 Mar 2020 12:28:25 -0700 (PDT)
+Received: (nullmailer pid 31924 invoked by uid 1000);
+        Fri, 27 Mar 2020 19:28:20 -0000
+Date:   Fri, 27 Mar 2020 13:28:20 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Lubomir Rintel <lkundrak@v3.sk>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mark Brown <broonie@kernel.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Daniel Mack <daniel@zonque.org>,
+        Haojian Zhuang <haojian.zhuang@gmail.com>,
+        Robert Jarzmik <robert.jarzmik@free.fr>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-i2c@vger.kernel.org,
+        linux-media@vger.kernel.org, linux-mmc@vger.kernel.org,
+        linux-rtc@vger.kernel.org, linux-serial@vger.kernel.org,
+        linux-spi@vger.kernel.org, linux-usb@vger.kernel.org
+Subject: Re: [PATCH 21/28] dt-bindings: gpio: Convert mrvl-gpio to json-schema
+Message-ID: <20200327192820.GA8577@bogus>
+References: <20200317093922.20785-1-lkundrak@v3.sk>
+ <20200317093922.20785-22-lkundrak@v3.sk>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200327093620.GB1223497@xps-13>
+In-Reply-To: <20200317093922.20785-22-lkundrak@v3.sk>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 27, 2020 at 10:36:20AM +0100, Andrea Righi wrote:
-> Avoid using /usr/bin/timeout unnecessarily if timeout is set to 0
-> (disabled) in the "settings" file for a specific test.
-
-That seems to be a reasonable optimization, sure.
-
-> NOTE: without this change (and adding timeout=0 in the corresponding
-> settings file - tools/testing/selftests/seccomp/settings) the
-> seccomp_bpf selftest is always failing with a timeout event during the
-> syscall_restart step.
-
-This, however, is worrisome. I think there is something else wrong here.
-I will investigate why the output of seccomp_bpf is weird when running
-under the runner scripts. Hmmm. The output looks corrupted...
-
--Kees
-
-> Signed-off-by: Andrea Righi <andrea.righi@canonical.com>
-> ---
->  tools/testing/selftests/kselftest/runner.sh | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+On Tue, Mar 17, 2020 at 10:39:15AM +0100, Lubomir Rintel wrote:
+> This converts the mrvl-gpio binding to DT schema format using json-schema.
 > 
-> diff --git a/tools/testing/selftests/kselftest/runner.sh b/tools/testing/selftests/kselftest/runner.sh
-> index e84d901f8567..2cd3c8def0f6 100644
-> --- a/tools/testing/selftests/kselftest/runner.sh
-> +++ b/tools/testing/selftests/kselftest/runner.sh
-> @@ -32,7 +32,7 @@ tap_prefix()
->  tap_timeout()
->  {
->  	# Make sure tests will time out if utility is available.
-> -	if [ -x /usr/bin/timeout ] ; then
-> +	if [ -x /usr/bin/timeout ] && [ $kselftest_timeout -gt 0 ] ; then
->  		/usr/bin/timeout "$kselftest_timeout" "$1"
->  	else
->  		"$1"
+> Various fixes were done during the conversion, such as adding more
+> properties that are in fact mandatory or extending the examples to
+> include child nodes with extra GPIO blocks.
+
+Ugg, not how I would have done this. Differences in register layout 
+should be implied by the compatible strings. But I guess we have to live 
+with it now.
+
+> The compatible strings are a mess. It is not clear why so many of them
+> are needed; the driver doesn't really seem to differentiate between the
+> models. Some of them, like marvell,pxa93x-gpio and marvell,pxa1928-gpio
+> are not used at all, so it's not known how many interrupts they utilize.
+> On the other hand, mrvl,pxa-gpio has been seen in the tree, but it
+> doesn't end up in any actual DTB file.
+
+I added pxa1928 and then work on it ended. I think it is safe to remove, 
+but I dug up dts file and it is 1 irq.
+
+> In any case -- the schema merely copies whatever was in the original
+> binding document, so it's hopefully no more wrong that the original.
+> 
+> Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
+> ---
+>  .../devicetree/bindings/gpio/mrvl-gpio.txt    |  48 -----
+>  .../devicetree/bindings/gpio/mrvl-gpio.yaml   | 173 ++++++++++++++++++
+>  2 files changed, 173 insertions(+), 48 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/gpio/mrvl-gpio.txt
+>  create mode 100644 Documentation/devicetree/bindings/gpio/mrvl-gpio.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/gpio/mrvl-gpio.txt b/Documentation/devicetree/bindings/gpio/mrvl-gpio.txt
+> deleted file mode 100644
+> index 30fd2201b3d4c..0000000000000
+> --- a/Documentation/devicetree/bindings/gpio/mrvl-gpio.txt
+> +++ /dev/null
+> @@ -1,48 +0,0 @@
+> -* Marvell PXA GPIO controller
+> -
+> -Required properties:
+> -- compatible : Should be "intel,pxa25x-gpio", "intel,pxa26x-gpio",
+> -		"intel,pxa27x-gpio", "intel,pxa3xx-gpio",
+> -		"marvell,pxa93x-gpio", "marvell,mmp-gpio",
+> -		"marvell,mmp2-gpio" or marvell,pxa1928-gpio.
+> -- reg : Address and length of the register set for the device
+> -- interrupts : Should be the port interrupt shared by all gpio pins.
+> -  There're three gpio interrupts in arch-pxa, and they're gpio0,
+> -  gpio1 and gpio_mux. There're only one gpio interrupt in arch-mmp,
+> -  gpio_mux.
+> -- interrupt-names : Should be the names of irq resources. Each interrupt
+> -  uses its own interrupt name, so there should be as many interrupt names
+> -  as referenced interrupts.
+> -- interrupt-controller : Identifies the node as an interrupt controller.
+> -- #interrupt-cells: Specifies the number of cells needed to encode an
+> -  interrupt source.
+> -- gpio-controller : Marks the device node as a gpio controller.
+> -- #gpio-cells : Should be two.  The first cell is the pin number and
+> -  the second cell is used to specify flags. See gpio.txt for possible
+> -  values.
+> -
+> -Example for a MMP platform:
+> -
+> -	gpio: gpio@d4019000 {
+> -		compatible = "marvell,mmp-gpio";
+> -		reg = <0xd4019000 0x1000>;
+> -		interrupts = <49>;
+> -		interrupt-names = "gpio_mux";
+> -		gpio-controller;
+> -		#gpio-cells = <2>;
+> -		interrupt-controller;
+> -		#interrupt-cells = <1>;
+> -      };
+> -
+> -Example for a PXA3xx platform:
+> -
+> -	gpio: gpio@40e00000 {
+> -		compatible = "intel,pxa3xx-gpio";
+> -		reg = <0x40e00000 0x10000>;
+> -		interrupt-names = "gpio0", "gpio1", "gpio_mux";
+> -		interrupts = <8 9 10>;
+> -		gpio-controller;
+> -		#gpio-cells = <0x2>;
+> -		interrupt-controller;
+> -		#interrupt-cells = <0x2>;
+> -	};
+> diff --git a/Documentation/devicetree/bindings/gpio/mrvl-gpio.yaml b/Documentation/devicetree/bindings/gpio/mrvl-gpio.yaml
+> new file mode 100644
+> index 0000000000000..5c713bf59b06d
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/gpio/mrvl-gpio.yaml
+> @@ -0,0 +1,173 @@
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/gpio/mrvl-gpio.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Marvell PXA GPIO controller
+> +
+> +maintainers:
+> +  - devicetree@vger.kernel.org
+
+Needs to be a real person that cares about this h/w.
+
+> +
+> +allOf:
+> +  - if:
+> +      properties:
+> +        compatible:
+> +          contains:
+> +            enum:
+> +              - intel,pxa25x-gpio
+> +              - intel,pxa26x-gpio
+> +              - intel,pxa27x-gpio
+> +              - intel,pxa3xx-gpio
+> +    then:
+> +      properties:
+> +        interrupts:
+> +          minItems: 3
+> +          maxItems: 3
+> +        interrupt-names:
+> +          items:
+> +            - const: gpio0
+> +            - const: gpio1
+> +            - const: gpio_mux
+> +  - if:
+> +      properties:
+> +        compatible:
+> +          contains:
+> +            enum:
+> +              - marvell,mmp-gpio
+> +              - marvell,mmp2-gpio
+
+I'd make this an else clause.
+
+> +    then:
+> +      properties:
+> +        interrupts:
+> +          maxItems: 1
+> +        interrupt-names:
+> +          items:
+> +            - const: gpio_mux
+> +
+> +properties:
+> +  $nodename:
+> +    pattern: '^gpio@[0-9a-f]+$'
+> +
+> +  compatible:
+> +    enum:
+> +      - intel,pxa25x-gpio
+> +      - intel,pxa26x-gpio
+> +      - intel,pxa27x-gpio
+> +      - intel,pxa3xx-gpio
+> +      - marvell,mmp-gpio
+> +      - marvell,mmp2-gpio
+> +      - marvell,pxa93x-gpio
+> +      - marvell,pxa1928-gpio
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  clocks:
+> +    maxItems: 1
+> +
+> +  resets:
+> +    maxItems: 1
+> +
+> +  ranges: true
+> +
+> +  '#address-cells':
+> +    const: 1
+> +
+> +  '#size-cells':
+> +    const: 1
+> +
+> +  gpio-controller: true
+> +
+> +  '#gpio-cells':
+> +    const: 2
+> +
+> +  gpio-ranges:
+> +    maxItems: 1
+
+My pxa1928 dts has this in the child nodes. Sure this is right?
+
+> +
+> +  interrupts: true
+> +
+> +  interrupt-names: true
+> +
+> +  interrupt-controller: true
+> +
+> +  '#interrupt-cells':
+> +    const: 2
+> +
+> +patternProperties:
+> +  '^gpio@[0-9a-f]*$':
+> +    type: object
+> +    properties:
+> +      reg:
+> +        maxItems: 1
+> +
+> +    required:
+> +      - reg
+> +
+> +    additionalProperties: false
+> +
+> +required:
+> +  - compatible
+> +  - '#address-cells'
+> +  - '#size-cells'
+> +  - reg
+> +  - gpio-controller
+> +  - '#gpio-cells'
+> +  - interrupts
+> +  - interrupt-names
+> +  - interrupt-controller
+> +  - '#interrupt-cells'
+> +  - ranges
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/clock/pxa-clock.h>
+> +    gpio@40e00000 {
+> +        compatible = "intel,pxa3xx-gpio";
+> +        #address-cells = <1>;
+> +        #size-cells = <1>;
+> +        reg = <0x40e00000 0x10000>;
+> +        gpio-controller;
+> +        #gpio-cells = <2>;
+> +        interrupts = <8>, <9>, <10>;
+> +        interrupt-names = "gpio0", "gpio1", "gpio_mux";
+> +        clocks = <&clks CLK_GPIO>;
+> +        interrupt-controller;
+> +        #interrupt-cells = <2>;
+> +        ranges;
+
+No child, so there should be no ranges here.
+
+> +    };
+> +  - |
+> +    #include <dt-bindings/clock/marvell,pxa910.h>
+> +    gpio@d4019000 {
+> +        compatible = "marvell,mmp-gpio";
+> +        #address-cells = <1>;
+> +        #size-cells = <1>;
+> +        reg = <0xd4019000 0x1000>;
+> +        gpio-controller;
+> +        #gpio-cells = <2>;
+> +        interrupts = <49>;
+> +        interrupt-names = "gpio_mux";
+> +        clocks = <&soc_clocks PXA910_CLK_GPIO>;
+> +        resets = <&soc_clocks PXA910_CLK_GPIO>;
+> +        interrupt-controller;
+> +        #interrupt-cells = <2>;
+> +        ranges;
+> +
+> +        gpio@d4019000 {
+> +            reg = <0xd4019000 0x4>;
+> +        };
+> +
+> +        gpio@d4019004 {
+> +            reg = <0xd4019004 0x4>;
+> +        };
+> +
+> +        gpio@d4019008 {
+> +            reg = <0xd4019008 0x4>;
+> +        };
+> +
+> +        gpio@d4019100 {
+> +            reg = <0xd4019100 0x4>;
+> +        };
+> +     };
+> +
+> +...
 > -- 
 > 2.25.1
 > 
-
--- 
-Kees Cook
