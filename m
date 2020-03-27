@@ -2,148 +2,146 @@ Return-Path: <SRS0=s8dx=5M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 534C1C2D0ED
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 18:31:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 443A9C43331
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 18:42:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 304782073B
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 18:31:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C1112076B
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 18:42:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="KbYEM+2v"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727549AbgC0Sbn (ORCPT
+        id S1727354AbgC0SmU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Mar 2020 14:31:43 -0400
-Received: from mga09.intel.com ([134.134.136.24]:54829 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726515AbgC0Sbm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Mar 2020 14:31:42 -0400
-IronPort-SDR: NhpQelx26bGobiSxOyWhAgQQ99DVG0HC1j4z38idCJDD62cIahcCLKYGmlRbwJumy4KSChjqUH
- b2+RC/0jo6lw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Mar 2020 11:31:41 -0700
-IronPort-SDR: cG8RjTzfhLi4jFGoL06K+0MCYrphuSQ6j6Otn7RFY/vjq3MDzwBD4xlE+JuyjrPphbmASo3WnQ
- K0rGnG1d3UGQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,313,1580803200"; 
-   d="scan'208";a="247970686"
-Received: from fmsmsx103.amr.corp.intel.com ([10.18.124.201])
-  by orsmga003.jf.intel.com with ESMTP; 27 Mar 2020 11:31:40 -0700
-Received: from fmsmsx154.amr.corp.intel.com (10.18.116.70) by
- FMSMSX103.amr.corp.intel.com (10.18.124.201) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Fri, 27 Mar 2020 11:31:40 -0700
-Received: from fmsmsx107.amr.corp.intel.com ([169.254.6.38]) by
- FMSMSX154.amr.corp.intel.com ([169.254.6.41]) with mapi id 14.03.0439.000;
- Fri, 27 Mar 2020 11:31:40 -0700
-From:   "Ruhl, Michael J" <michael.j.ruhl@intel.com>
-To:     Marek Szyprowski <m.szyprowski@samsung.com>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "linux-samsung-soc@vger.kernel.org" 
-        <linux-samsung-soc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     "stable@vger.kernel.org" <stable@vger.kernel.org>,
-        "Bartlomiej Zolnierkiewicz" <b.zolnierkie@samsung.com>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Shane Francis <bigbeeshane@gmail.com>
-Subject: RE: [PATCH v2] drm/prime: fix extracting of the DMA addresses from
- a scatterlist
-Thread-Topic: [PATCH v2] drm/prime: fix extracting of the DMA addresses from
- a scatterlist
-Thread-Index: AQHWBFQRvRx+hOOiski5ycfWmHv7Tahcuvpg
-Date:   Fri, 27 Mar 2020 18:31:39 +0000
-Message-ID: <14063C7AD467DE4B82DEDB5C278E8663FFFBFCE1@fmsmsx107.amr.corp.intel.com>
-References: <CGME20200327162330eucas1p1b0413e0e9887aa76d3048f86d2166dcd@eucas1p1.samsung.com>
- <20200327162126.29705-1-m.szyprowski@samsung.com>
-In-Reply-To: <20200327162126.29705-1-m.szyprowski@samsung.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-dlp-product: dlpe-windows
-dlp-version: 11.2.0.6
-dlp-reaction: no-action
-x-originating-ip: [10.1.200.108]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Fri, 27 Mar 2020 14:42:20 -0400
+Received: from mail-vs1-f68.google.com ([209.85.217.68]:35409 "EHLO
+        mail-vs1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726770AbgC0SmU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Mar 2020 14:42:20 -0400
+Received: by mail-vs1-f68.google.com with SMTP id u11so6895589vsg.2
+        for <linux-kernel@vger.kernel.org>; Fri, 27 Mar 2020 11:42:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=xc3LoiplRnf2aKZoDkeqAn+I7PpOTwp2GWQBp5c9cME=;
+        b=KbYEM+2vyjx2c7Pk5OCUrrNAWU8wVJP8BfLb9V1kBS3T3g9kwSbFPaih46M5o42bHE
+         BwX800FckXQ8L0ubDF/CdkrVIPG7r4L/IuzFcu+CJKZDfw93iGrHwj2Ka1WDjoN2heic
+         MriKZ8uwjcDbohlycFXZywHiFek01lSaL/Fho=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=xc3LoiplRnf2aKZoDkeqAn+I7PpOTwp2GWQBp5c9cME=;
+        b=roADx8S6r5gSZTpKUUM+Jq8A55/konzoQjz9QB71TXU1xzJkE+a0Fn+tzlQP4lKwyF
+         Nciv2UfgrOXoxSXctnLjQp6/5Uta9TEzryRLwBw6Q6s5eEnU5y4T4Up/HFgb4wRiCpxV
+         7SBOQ5gC3EmhdTgxxqYPB0bONhBUX1mVh4dFGDj5/8PznHp7pe6TyW4Z9V8ymdakTPHy
+         AYQ8DlK8Q6k/sFH6N97K2tT5ikndd+leeKdezAYEEYWg46v0/AhiGyeHNw230XaJWaxC
+         4l3rfWoITXSambCUzQRGPjajmcEEBD3BVAGEfVLCxkHnuhg+3VQ+D3aCUo1WN8T6FBGR
+         jnCA==
+X-Gm-Message-State: AGi0PuYj7zJuTSK0JoRQS94sJR7tYZPS094yiUGUWrk8GXIhyAk4KIlE
+        LM68JW36ALstdGFfuIBb5AqcLYl7F2w=
+X-Google-Smtp-Source: APiQypL/Nzr/rwWqmsnrkFk/J4WcMINB2nh8fxWNz8UQqY1II9Nhw2DrP8wP8KywLgL1oezcfU3HDQ==
+X-Received: by 2002:a67:2fd8:: with SMTP id v207mr308061vsv.233.1585334537277;
+        Fri, 27 Mar 2020 11:42:17 -0700 (PDT)
+Received: from mail-ua1-f44.google.com (mail-ua1-f44.google.com. [209.85.222.44])
+        by smtp.gmail.com with ESMTPSA id c16sm1065352vsq.18.2020.03.27.11.42.15
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 27 Mar 2020 11:42:15 -0700 (PDT)
+Received: by mail-ua1-f44.google.com with SMTP id t20so3869486uao.7
+        for <linux-kernel@vger.kernel.org>; Fri, 27 Mar 2020 11:42:15 -0700 (PDT)
+X-Received: by 2002:a9f:21b8:: with SMTP id 53mr279391uac.8.1585334535095;
+ Fri, 27 Mar 2020 11:42:15 -0700 (PDT)
 MIME-Version: 1.0
+References: <1585244270-637-1-git-send-email-mkshah@codeaurora.org>
+ <1585244270-637-7-git-send-email-mkshah@codeaurora.org> <CAD=FV=Vbo3JC6mBJXq+q+DQPC_bbNtn3bbScG5N8wzJZm87YuA@mail.gmail.com>
+ <8d19958d-7334-ca4e-d7ba-f5919a56b279@codeaurora.org>
+In-Reply-To: <8d19958d-7334-ca4e-d7ba-f5919a56b279@codeaurora.org>
+From:   Doug Anderson <dianders@chromium.org>
+Date:   Fri, 27 Mar 2020 11:42:03 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=UZTyfVN=a35hiXxdNSvdhfK60HewP_p_VvH1KdoUa1ww@mail.gmail.com>
+Message-ID: <CAD=FV=UZTyfVN=a35hiXxdNSvdhfK60HewP_p_VvH1KdoUa1ww@mail.gmail.com>
+Subject: Re: [PATCH v14 6/6] soc: qcom: rpmh-rsc: Allow using free WAKE TCS
+ for active request
+To:     Maulik Shah <mkshah@codeaurora.org>
+Cc:     Stephen Boyd <swboyd@chromium.org>,
+        Evan Green <evgreen@chromium.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Andy Gross <agross@kernel.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        Lina Iyer <ilina@codeaurora.org>, lsrao@codeaurora.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Pi0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+RnJvbTogTWFyZWsgU3p5cHJvd3NraSA8bS5z
-enlwcm93c2tpQHNhbXN1bmcuY29tPg0KPlNlbnQ6IEZyaWRheSwgTWFyY2ggMjcsIDIwMjAgMTI6
-MjEgUE0NCj5UbzogZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZzsgbGludXgtc2Ftc3Vu
-Zy1zb2NAdmdlci5rZXJuZWwub3JnOw0KPmxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmcNCj5D
-YzogTWFyZWsgU3p5cHJvd3NraSA8bS5zenlwcm93c2tpQHNhbXN1bmcuY29tPjsNCj5zdGFibGVA
-dmdlci5rZXJuZWwub3JnOyBCYXJ0bG9taWVqIFpvbG5pZXJraWV3aWN6DQo+PGIuem9sbmllcmtp
-ZUBzYW1zdW5nLmNvbT47IE1hYXJ0ZW4gTGFua2hvcnN0DQo+PG1hYXJ0ZW4ubGFua2hvcnN0QGxp
-bnV4LmludGVsLmNvbT47IE1heGltZSBSaXBhcmQNCj48bXJpcGFyZEBrZXJuZWwub3JnPjsgVGhv
-bWFzIFppbW1lcm1hbm4gPHR6aW1tZXJtYW5uQHN1c2UuZGU+Ow0KPkRhdmlkIEFpcmxpZSA8YWly
-bGllZEBsaW51eC5pZT47IERhbmllbCBWZXR0ZXIgPGRhbmllbEBmZndsbC5jaD47IEFsZXggRGV1
-Y2hlcg0KPjxhbGV4YW5kZXIuZGV1Y2hlckBhbWQuY29tPjsgU2hhbmUgRnJhbmNpcyA8YmlnYmVl
-c2hhbmVAZ21haWwuY29tPjsNCj5SdWhsLCBNaWNoYWVsIEogPG1pY2hhZWwuai5ydWhsQGludGVs
-LmNvbT4NCj5TdWJqZWN0OiBbUEFUQ0ggdjJdIGRybS9wcmltZTogZml4IGV4dHJhY3Rpbmcgb2Yg
-dGhlIERNQSBhZGRyZXNzZXMgZnJvbSBhDQo+c2NhdHRlcmxpc3QNCj4NCj5TY2F0dGVybGlzdCBl
-bGVtZW50cyBjb250YWlucyBib3RoIHBhZ2VzIGFuZCBETUEgYWRkcmVzc2VzLCBidXQgb25lDQo+
-c2hvdWxkIG5vdCBhc3N1bWUgMToxIHJlbGF0aW9uIGJldHdlZW4gdGhlbS4gVGhlIHNnLT5sZW5n
-dGggaXMgdGhlIHNpemUNCj5vZiB0aGUgcGh5c2ljYWwgbWVtb3J5IGNodW5rIGRlc2NyaWJlZCBi
-eSB0aGUgc2ctPnBhZ2UsIHdoaWxlDQo+c2dfZG1hX2xlbihzZykgaXMgdGhlIHNpemUgb2YgdGhl
-IERNQSAoSU8gdmlydHVhbCkgY2h1bmsgZGVzY3JpYmVkIGJ5DQo+dGhlIHNnX2RtYV9hZGRyZXNz
-KHNnKS4NCj4NCj5UaGUgcHJvcGVyIHdheSBvZiBleHRyYWN0aW5nIGJvdGg6IHBhZ2VzIGFuZCBE
-TUEgYWRkcmVzc2VzIG9mIHRoZSB3aG9sZQ0KPmJ1ZmZlciBkZXNjcmliZWQgYnkgYSBzY2F0dGVy
-bGlzdCBpdCB0byBpdGVyYXRlIGluZGVwZW5kZW50bHkgb3ZlciB0aGUNCj5zZy0+cGFnZXMvc2ct
-Pmxlbmd0aCBhbmQgc2dfZG1hX2FkZHJlc3Moc2cpL3NnX2RtYV9sZW4oc2cpIGVudHJpZXMuDQo+
-DQo+Rml4ZXM6IDQyZTY3YjQ3OWVhYiAoImRybS9wcmltZTogdXNlIGRtYSBsZW5ndGggbWFjcm8g
-d2hlbiBtYXBwaW5nIHNnIikNCj5TaWduZWQtb2ZmLWJ5OiBNYXJlayBTenlwcm93c2tpIDxtLnN6
-eXByb3dza2lAc2Ftc3VuZy5jb20+DQo+UmV2aWV3ZWQtYnk6IEFsZXggRGV1Y2hlciA8YWxleGFu
-ZGVyLmRldWNoZXJAYW1kLmNvbT4NCj4tLS0NCj4gZHJpdmVycy9ncHUvZHJtL2RybV9wcmltZS5j
-IHwgMzcgKysrKysrKysrKysrKysrKysrKysrKysrKy0tLS0tLS0tLS0tDQo+LQ0KPiAxIGZpbGUg
-Y2hhbmdlZCwgMjUgaW5zZXJ0aW9ucygrKSwgMTIgZGVsZXRpb25zKC0pDQo+DQo+ZGlmZiAtLWdp
-dCBhL2RyaXZlcnMvZ3B1L2RybS9kcm1fcHJpbWUuYyBiL2RyaXZlcnMvZ3B1L2RybS9kcm1fcHJp
-bWUuYw0KPmluZGV4IDFkZTJjZGUyMjc3Yy4uMjgyNzc0ZTQ2OWFjIDEwMDY0NA0KPi0tLSBhL2Ry
-aXZlcnMvZ3B1L2RybS9kcm1fcHJpbWUuYw0KPisrKyBiL2RyaXZlcnMvZ3B1L2RybS9kcm1fcHJp
-bWUuYw0KPkBAIC05NjIsMjcgKzk2Miw0MCBAQCBpbnQgZHJtX3ByaW1lX3NnX3RvX3BhZ2VfYWRk
-cl9hcnJheXMoc3RydWN0DQo+c2dfdGFibGUgKnNndCwgc3RydWN0IHBhZ2UgKipwYWdlcywNCj4g
-CXVuc2lnbmVkIGNvdW50Ow0KPiAJc3RydWN0IHNjYXR0ZXJsaXN0ICpzZzsNCj4gCXN0cnVjdCBw
-YWdlICpwYWdlOw0KPi0JdTMyIGxlbiwgaW5kZXg7DQo+Kwl1MzIgcGFnZV9sZW4sIHBhZ2VfaW5k
-ZXg7DQo+IAlkbWFfYWRkcl90IGFkZHI7DQo+Kwl1MzIgZG1hX2xlbiwgZG1hX2luZGV4Ow0KPg0K
-Pi0JaW5kZXggPSAwOw0KPisJLyoNCj4rCSAqIFNjYXR0ZXJsaXN0IGVsZW1lbnRzIGNvbnRhaW5z
-IGJvdGggcGFnZXMgYW5kIERNQSBhZGRyZXNzZXMsIGJ1dA0KPisJICogb25lIHNob3VkIG5vdCBh
-c3N1bWUgMToxIHJlbGF0aW9uIGJldHdlZW4gdGhlbS4gVGhlIHNnLT5sZW5ndGgNCj5pcw0KPisJ
-ICogdGhlIHNpemUgb2YgdGhlIHBoeXNpY2FsIG1lbW9yeSBjaHVuayBkZXNjcmliZWQgYnkgdGhl
-IHNnLT5wYWdlLA0KPisJICogd2hpbGUgc2dfZG1hX2xlbihzZykgaXMgdGhlIHNpemUgb2YgdGhl
-IERNQSAoSU8gdmlydHVhbCkgY2h1bmsNCj4rCSAqIGRlc2NyaWJlZCBieSB0aGUgc2dfZG1hX2Fk
-ZHJlc3Moc2cpLg0KPisJICovDQoNCklzIHRoZXJlIGFuIGV4YW1wbGUgb2Ygd2hhdCB0aGUgc2Nh
-dHRlcmxpc3Qgd291bGQgbG9vayBsaWtlIGluIHRoaXMgY2FzZT8NCg0KRG9lcyBlYWNoIFNHIGVu
-dHJ5IGFsd2F5cyBoYXZlIHRoZSBwYWdlIGFuZCBkbWEgaW5mbz8gb3IgY291bGQgeW91IGhhdmUN
-CmVudHJpZXMgdGhhdCBoYXZlIHBhZ2UgaW5mb3JtYXRpb24gb25seSwgYW5kIGVudHJpZXMgdGhh
-dCBoYXZlIGRtYSBpbmZvIG9ubHk/DQoNCklmIHRoZSBzYW1lIGVudHJ5IGhhcyBkaWZmZXJlbnQg
-c2l6ZSBpbmZvIChwYWdlX2xlbiA9IFBBR0VfU0laRSwNCmRtYV9sZW4gPSA0ICogUEFHRV9TSVpF
-PyksIGFyZSB3ZSBndWFyYW50ZWVkIHRoYXQgdGhlIGFycmF5cyAocGFnZSBhbmQgYWRkcnMpIGhh
-dmUNCmJlZW4gc2l6ZWQgY29ycmVjdGx5Pw0KDQpKdXN0IHRyeWluZyB0byBnZXQgbXkgaGVhZCB3
-cmFwcGVkIGFyb3VuZCB0aGlzLg0KDQpUaGFua3MsDQoNCk1pa2UNCg0KPisJcGFnZV9pbmRleCA9
-IDA7DQo+KwlkbWFfaW5kZXggPSAwOw0KPiAJZm9yX2VhY2hfc2coc2d0LT5zZ2wsIHNnLCBzZ3Qt
-Pm5lbnRzLCBjb3VudCkgew0KPi0JCWxlbiA9IHNnX2RtYV9sZW4oc2cpOw0KPisJCXBhZ2VfbGVu
-ID0gc2ctPmxlbmd0aDsNCj4gCQlwYWdlID0gc2dfcGFnZShzZyk7DQo+KwkJZG1hX2xlbiA9IHNn
-X2RtYV9sZW4oc2cpOw0KPiAJCWFkZHIgPSBzZ19kbWFfYWRkcmVzcyhzZyk7DQo+DQo+LQkJd2hp
-bGUgKGxlbiA+IDApIHsNCj4tCQkJaWYgKFdBUk5fT04oaW5kZXggPj0gbWF4X2VudHJpZXMpKQ0K
-PisJCXdoaWxlIChwYWdlcyAmJiBwYWdlX2xlbiA+IDApIHsNCj4rCQkJaWYgKFdBUk5fT04ocGFn
-ZV9pbmRleCA+PSBtYXhfZW50cmllcykpDQo+IAkJCQlyZXR1cm4gLTE7DQo+LQkJCWlmIChwYWdl
-cykNCj4tCQkJCXBhZ2VzW2luZGV4XSA9IHBhZ2U7DQo+LQkJCWlmIChhZGRycykNCj4tCQkJCWFk
-ZHJzW2luZGV4XSA9IGFkZHI7DQo+LQ0KPisJCQlwYWdlc1twYWdlX2luZGV4XSA9IHBhZ2U7DQo+
-IAkJCXBhZ2UrKzsNCj4rCQkJcGFnZV9sZW4gLT0gUEFHRV9TSVpFOw0KPisJCQlwYWdlX2luZGV4
-Kys7DQo+KwkJfQ0KPisJCXdoaWxlIChhZGRycyAmJiBkbWFfbGVuID4gMCkgew0KPisJCQlpZiAo
-V0FSTl9PTihkbWFfaW5kZXggPj0gbWF4X2VudHJpZXMpKQ0KPisJCQkJcmV0dXJuIC0xOw0KPisJ
-CQlhZGRyc1tkbWFfaW5kZXhdID0gYWRkcjsNCj4gCQkJYWRkciArPSBQQUdFX1NJWkU7DQo+LQkJ
-CWxlbiAtPSBQQUdFX1NJWkU7DQo+LQkJCWluZGV4Kys7DQo+KwkJCWRtYV9sZW4gLT0gUEFHRV9T
-SVpFOw0KPisJCQlkbWFfaW5kZXgrKzsNCj4gCQl9DQo+IAl9DQo+IAlyZXR1cm4gMDsNCj4tLQ0K
-PjIuMTcuMQ0KDQo=
+Hi,
+
+On Fri, Mar 27, 2020 at 5:04 AM Maulik Shah <mkshah@codeaurora.org> wrote:
+>
+> > Why can't rpmh_write()
+> > / rpmh_write_async() / rpmh_write_batch() just always unconditionally
+> > mark the cache dirty?  Are there really lots of cases when those calls
+> > are made and they do nothing?
+>
+> At rpmh.c, it doesn't know that rpmh-rsc.c worked on borrowed TCS to finish the request.
+>
+> We should not blindly mark caches dirty everytime.
+
+In message ID "5a5274ac-41f4-b06d-ff49-c00cef67aa7f@codeaurora.org"
+which seems to be missing from the archives, you said:
+
+> yes we should trust callers not to send duplicate data
+
+...you can see some reference to it in my reply:
+
+https://lore.kernel.org/r/CAD=FV=VPSahhK71k_D+nfL1=5QE5sKMQT=6zzyEF7+JWMcTxsg@mail.gmail.com/
+
+If callers are trusted to never send duplicate data then ever call to
+rpmh_write() will make a change.  ...and thus the cache should always
+be marked dirty, no?  Also note that since rpmh_write() to "active"
+also counts as a write to "wake" even those will dirty the cache.
+
+Which case are you expecting a rpmh_write() call to not dirty the cache?
+
+
+> > ...interestingly after your patch I guess now I guess tcs_invalidate()
+> > no longer needs spinlocks since it's only ever called from PM code on
+> > the last CPU.  ...if you agree, I can always do it in my cleanup
+> > series.  See:
+> >
+> > https://lore.kernel.org/r/CAD=FV=Xp1o68HnC2-hMnffDDsi+jjgc9pNrdNuypjQZbS5K4nQ@mail.gmail.com
+> >
+> > -Doug
+>
+> There are other RSCs which use same driver, so lets keep spinlock.
+
+It is really hard to try to write keeping in mind these "other RSCs"
+for which there is no code upstream.  IMO we should write the code
+keeping in mind what is supported upstream and then when those "other
+RSCs" get added we can evaluate their needs.
+
+Specifically when reasoning about rpmh.c and rpmh-rsc.c I can only
+look at the code that's there now and decide whether it is race free
+or there are races.  Back when I was analyzing the proposal to do
+rpmh_flush() all the time (not from PM code) it felt like there were a
+bunch of races, especially in the zero-active-TCS case.  Most of the
+races go away when you assume that rpmh_flush() is only ever called
+from the PM code when nobody could be in the middle of an active
+transfer.
+
+If we are ever planning to call rpmh_flush() from another place we
+need to re-look at all those races.
+
+
+-Doug
