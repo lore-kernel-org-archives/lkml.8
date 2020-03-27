@@ -8,54 +8,54 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F932C43331
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 12:44:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86789C43331
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 12:45:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 139AC2082E
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 12:44:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 55F15206F2
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 12:45:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YeUXuFl8"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cJj+HvEY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727607AbgC0Mor (ORCPT
+        id S1727675AbgC0MpA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Mar 2020 08:44:47 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:46546 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727242AbgC0Mor (ORCPT
+        Fri, 27 Mar 2020 08:45:00 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:44637 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727620AbgC0MpA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Mar 2020 08:44:47 -0400
-Received: by mail-pf1-f196.google.com with SMTP id q3so4428846pff.13
-        for <linux-kernel@vger.kernel.org>; Fri, 27 Mar 2020 05:44:45 -0700 (PDT)
+        Fri, 27 Mar 2020 08:45:00 -0400
+Received: by mail-pg1-f196.google.com with SMTP id 142so4512173pgf.11
+        for <linux-kernel@vger.kernel.org>; Fri, 27 Mar 2020 05:44:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=xFdvPRnQ5Nq8J+GnOFEHtRkDs3iYX4yKgZJqfls3/Pk=;
-        b=YeUXuFl8dwFM3mWt1H2uHEqUccLT5Xz+QFYTGztMmEJoY6CJssaZCuvAawjQwmUXCq
-         WE7TnXJ0S7ox17JZ+21+DTHw+iZW/GlO1d0lUqXN7992tY+agbibzc+IMP/oGW7vpWM5
-         gE13iQAxCOeB4Yl8kdzjItjkLawp/ZVSOtQ4rKgzu700xbuaJQMe5Ccsu8TwjVsLusAH
-         wK8EPmnr3IelGS4b8u3BeSJXBSboMATZKfmjFAV+FFSy/aE3tJvInzpdaqzOsuRN9bzc
-         vICZ6w+pbojyLVGrrIUCRIp/TNOH4/Mgwtm5lC6p4NGYsrXsAPUp7ocz2WJkTycuDQYY
-         /ULg==
+        bh=+k9FpHI6R329k1p5n2ZmxLrGGeywgn+d1U7fGz/e9fs=;
+        b=cJj+HvEYUrch4yUgmLxsQfZstI1JxA0pQDazHNg6IMMsqsjdMjKwmzWoVuCAdMQ2ua
+         EERQg4cDrroRlSqfqACd0CcPBpWMjhlGDMIh2nmjzF6Tr8jcXlT6vvrVuPKFDZGplUui
+         6VuoAq+7SvMyaKGfd4x36kLvjEhcQFWvsg8ctmPt669FtdT7mglaMQlhJ28EJqweoe0N
+         36wuQErl0fLfSy2jtG4q2CXGRFRaKlbvmDk3eTxK7XHh7138+I21f2PDMFhymIxrgGXG
+         0NzesrfPdwA/ykaTatv5zddtQzq5Y1HbMI9OJXfHg4mO1SoI7kMAGQ9ozclney7LWjed
+         0Jeg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=xFdvPRnQ5Nq8J+GnOFEHtRkDs3iYX4yKgZJqfls3/Pk=;
-        b=Jsd0L5bwp/K8vs210gcwf/QVDeXl31yAC0yUk3qCOoOBc2VrID7c4ZTDIM047U9T4K
-         aWlNcRuk6Zub0TXXGimqs0N/YPhMEvzJgaqqKB6xcyUjEP0Z2WoOYGLp87rFOw2+8/+k
-         bEdnHnhgya/g+UhNPqW3OMhHVhsxgqwvZQXKrwZniG2QC2FJR1cm74U4qTcHaqaYJp1z
-         ZdKt0Om5CwNPv0PCQ8JkrghItpog0VBmRUMzyAGkceMZ1FVSb/P79YoBGNaciELQU5OV
-         kGEozq6fwYtMd5KbJkxcPiedua8iG3f/3yBEVJ3F2tooc/Cyn2FYgUm70NLXib8lIxoe
-         29Eg==
-X-Gm-Message-State: ANhLgQ3AbxRHIMGNsj93++FJ8kCgp9CBByAca4SjZ7d7kR+HCg58CF58
-        SFJ5NrlLaYTjBc8M0EH04ao=
-X-Google-Smtp-Source: ADFU+vuLkq2V3axK2zqaj7bfQQYwxISRui0bqL+BPM0Z4hxEntrKa7bvyaSE7IdlBKgOhRoaLMMD4Q==
-X-Received: by 2002:a63:2442:: with SMTP id k63mr5968884pgk.250.1585313085217;
-        Fri, 27 Mar 2020 05:44:45 -0700 (PDT)
+        bh=+k9FpHI6R329k1p5n2ZmxLrGGeywgn+d1U7fGz/e9fs=;
+        b=RZPT0I0qSOXq+kq2VzYgCodYKQHM64R2mFWuckgevIwSTlSdDKF+UdQSCgFy2THew6
+         Zh66dZIObbcEgSEe5zbuoVENT4NIg3lo/1pdlsgHHUOmsE+U0BNcw+2hZryCUdwYuSm2
+         qrd4UjUrRj8RNulRtbOXMBeug4BDWXJIzCgZxqNmgnpFOkLOpicFgR5z56cNxO0AjPty
+         AXYDpSDaUCRLltCxyOzkb8jPrBUddrUrYmlOAgb4zr8M95HwFKcXOby3Kt42aknp/VmK
+         SbezclsScSElaYVwmu7kLbQ4poJ+zc0rodqXqbJS07YBMY7OHZ3ytNmbSog8UepCWux1
+         yWuw==
+X-Gm-Message-State: ANhLgQ0jjcja0M+nOwlj51wNw1DKuBvHc6g0rJ7U6KUSV0hr79GerR0x
+        BWjXuybItvf0+jY7nKZrWa8=
+X-Google-Smtp-Source: ADFU+vt4ULTKYB4EI+sbHTJ5JUWGsxXrQ+wP+sgamWxYG48SKpaR8sUaOWRqDMbtt4LvgaR5hQ6/ig==
+X-Received: by 2002:a65:53c9:: with SMTP id z9mr12309655pgr.405.1585313099156;
+        Fri, 27 Mar 2020 05:44:59 -0700 (PDT)
 Received: from localhost.localdomain ([49.207.51.33])
-        by smtp.gmail.com with ESMTPSA id 1sm3752699pjo.10.2020.03.27.05.44.40
+        by smtp.gmail.com with ESMTPSA id e9sm4085390pfl.179.2020.03.27.05.44.54
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 27 Mar 2020 05:44:44 -0700 (PDT)
+        Fri, 27 Mar 2020 05:44:58 -0700 (PDT)
 From:   afzal mohammed <afzal.mohd.ma@gmail.com>
 List-Id: <soc.lore.kernel.org>
 To:     Arnd Bergmann <arnd@arndb.de>, SoC Team <soc@kernel.org>
@@ -77,9 +77,9 @@ Cc:     afzal mohammed <afzal.mohd.ma@gmail.com>,
         Linux ARM <linux-arm-kernel@lists.infradead.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
         arm-soc <arm@kernel.org>, Olof Johansson <olof@lixom.net>
-Subject: [PATCH v4 4/5] ARM: mmp: replace setup_irq() by request_irq()
-Date:   Fri, 27 Mar 2020 18:14:37 +0530
-Message-Id: <20200327124437.4239-1-afzal.mohd.ma@gmail.com>
+Subject: [PATCH v4 5/5] ARM: iop32x: replace setup_irq() by request_irq()
+Date:   Fri, 27 Mar 2020 18:14:51 +0530
+Message-Id: <20200327124451.4298-1-afzal.mohd.ma@gmail.com>
 X-Mailer: git-send-email 2.18.0
 In-Reply-To: <CAK8P3a2sqika7=3D6Zgkz+v8HtGEc0q0+skWG8mSKuL+qSoYLw@mail.gmail.com>
 References: <CAK8P3a2sqika7=3D6Zgkz+v8HtGEc0q0+skWG8mSKuL+qSoYLw@mail.gmail.com>
@@ -99,12 +99,10 @@ Hence replace setup_irq() by request_irq().
 [1] https://lkml.kernel.org/r/alpine.DEB.2.20.1710191609480.1971@nanos
 
 Signed-off-by: afzal mohammed <afzal.mohd.ma@gmail.com>
-Acked-by: Lubomir Rintel <lkundrak@v3.sk>
-Tested-by: Lubomir Rintel <lkundrak@v3.sk>
 ---
 
 v4:
- * Add received tags
+ * No change
 
 v3:
  * Split out from series, also split out from ARM patch to subarch level
@@ -118,38 +116,46 @@ v2:
            pr_err("%s: request_irq() failed"
  * Commit message massage
 
- arch/arm/mach-mmp/time.c | 11 +++--------
- 1 file changed, 3 insertions(+), 8 deletions(-)
+ arch/arm/mach-iop32x/time.c | 12 ++++--------
+ 1 file changed, 4 insertions(+), 8 deletions(-)
 
-diff --git a/arch/arm/mach-mmp/time.c b/arch/arm/mach-mmp/time.c
-index c65cfc1ad99b..049a65f47b42 100644
---- a/arch/arm/mach-mmp/time.c
-+++ b/arch/arm/mach-mmp/time.c
-@@ -175,13 +175,6 @@ static void __init timer_config(void)
- 	__raw_writel(0x2, mmp_timer_base + TMR_CER);
+diff --git a/arch/arm/mach-iop32x/time.c b/arch/arm/mach-iop32x/time.c
+index 18a4df5c1baa..ae533b66fefd 100644
+--- a/arch/arm/mach-iop32x/time.c
++++ b/arch/arm/mach-iop32x/time.c
+@@ -137,13 +137,6 @@ iop_timer_interrupt(int irq, void *dev_id)
+ 	return IRQ_HANDLED;
  }
  
--static struct irqaction timer_irq = {
--	.name		= "timer",
+-static struct irqaction iop_timer_irq = {
+-	.name		= "IOP Timer Tick",
+-	.handler	= iop_timer_interrupt,
 -	.flags		= IRQF_TIMER | IRQF_IRQPOLL,
--	.handler	= timer_interrupt,
--	.dev_id		= &ckevt,
+-	.dev_id		= &iop_clockevent,
 -};
 -
- void __init mmp_timer_init(int irq, unsigned long rate)
+ static unsigned long iop_tick_rate;
+ unsigned long get_iop_tick_rate(void)
  {
- 	timer_config();
-@@ -190,7 +183,9 @@ void __init mmp_timer_init(int irq, unsigned long rate)
+@@ -154,6 +147,7 @@ EXPORT_SYMBOL(get_iop_tick_rate);
+ void __init iop_init_time(unsigned long tick_rate)
+ {
+ 	u32 timer_ctl;
++	int irq = IRQ_IOP32X_TIMER0;
  
- 	ckevt.cpumask = cpumask_of(0);
+ 	sched_clock_register(iop_read_sched_clock, 32, tick_rate);
  
--	setup_irq(irq, &timer_irq);
-+	if (request_irq(irq, timer_interrupt, IRQF_TIMER | IRQF_IRQPOLL,
-+			"timer", &ckevt))
-+		pr_err("Failed to request irq %d (timer)\n", irq);
- 
- 	clocksource_register_hz(&cksrc, rate);
- 	clockevents_config_and_register(&ckevt, rate, MIN_DELTA, MAX_DELTA);
+@@ -168,7 +162,9 @@ void __init iop_init_time(unsigned long tick_rate)
+ 	 */
+ 	write_tmr0(timer_ctl & ~IOP_TMR_EN);
+ 	write_tisr(1);
+-	setup_irq(IRQ_IOP32X_TIMER0, &iop_timer_irq);
++	if (request_irq(irq, iop_timer_interrupt, IRQF_TIMER | IRQF_IRQPOLL,
++			"IOP Timer Tick", &iop_clockevent))
++		pr_err("Failed to request irq() %d (IOP Timer Tick)\n", irq);
+ 	iop_clockevent.cpumask = cpumask_of(0);
+ 	clockevents_config_and_register(&iop_clockevent, tick_rate,
+ 					0xf, 0xfffffffe);
 -- 
 2.25.1
 
