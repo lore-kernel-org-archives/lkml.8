@@ -2,156 +2,84 @@ Return-Path: <SRS0=s8dx=5M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8179EC2D0ED
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 06:28:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40D8CC2D0ED
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 06:32:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 576EB20705
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 06:28:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E65E20716
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 06:32:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585290518;
-	bh=ImlDJzKKwt9tiiPdyAKPvZO37GYRF9w32PEaS7HDj9w=;
+	s=default; t=1585290757;
+	bh=ZRrCX6Kb/mbwp2oOlBAUbxjPIj5ASBM+09HqLycX7h0=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=iX/fdH291i9fEmrx6Sy33qfI6srhCTLo8NzC1EhNCrJcj00Fpd03FfaouR0ARvZ/6
-	 lZAYuGmlhWi9FDzcrhXY/5RaN9QjOWZpjTYj4Wz7w8UXpIr53tk8NZnhqNSb3cybtl
-	 6K5dsdHGm+R0oz/boDdcrYE+YeLtlVkZVhX4QskE=
+	b=c0TbbcL14gmzcubmRAAXfdIlmdHGLy4qIfpX46FznYiZ3m/uWx6AK9Juh8RBukAdA
+	 C6VojJSK+JXX7qI9ZDZRUS8p6QRH6ul3uDhxwnsLPXRW1sXdZ9pXpbrQnOehmBcykk
+	 O8uWkLB6imfpmdtlFiufXYiPrZi0YCb9pNpzPViE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727696AbgC0G2h (ORCPT
+        id S1726439AbgC0Gcg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Mar 2020 02:28:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43460 "EHLO mail.kernel.org"
+        Fri, 27 Mar 2020 02:32:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44420 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726215AbgC0G2h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Mar 2020 02:28:37 -0400
+        id S1725992AbgC0Gcf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Mar 2020 02:32:35 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DC1C320705;
-        Fri, 27 Mar 2020 06:28:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D8CFA20663;
+        Fri, 27 Mar 2020 06:32:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585290516;
-        bh=ImlDJzKKwt9tiiPdyAKPvZO37GYRF9w32PEaS7HDj9w=;
+        s=default; t=1585290755;
+        bh=ZRrCX6Kb/mbwp2oOlBAUbxjPIj5ASBM+09HqLycX7h0=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=QeSQzXuxEd20XZreGGkX7wR05nP3p0WtzZc+CIpPmaHTJf5RSDMnyjqf40dYOwJTX
-         ucHB5hI4u4ExOd1dhdZu6Soi4PPiTxt+6buk2nu3KgVE6GvszzN1IQMhFpVrPpf5Zb
-         aNWFlg9POPLNQxZLKikbr5kwjkDvauLCrHBFeSiY=
-Date:   Fri, 27 Mar 2020 07:28:33 +0100
+        b=vndsNj2aNpMgJeMQrfekwmAcagH6Rw1vkxM72gTToe9qTz5/xdFchzyh58pwc6/lP
+         fvn10/C5aDbTKUejU8mzFzPX8JUa0qOkMlQbb68AdEVKhT6h+dXJK4u3I8LuEVijhl
+         VbKRMQpM43X854FooyTJ/SrzWjUbpqPeF3baIEFo=
+Date:   Fri, 27 Mar 2020 07:32:32 +0100
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Sasha Levin <sashal@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        devel@driverdev.osuosl.org, Johan Hovold <johan@kernel.org>,
-        greybus-dev@lists.linaro.org
-Subject: Re: [PATCH AUTOSEL 5.5 13/28] staging: greybus: loopback_test: fix
- potential path truncations
-Message-ID: <20200327062833.GE1601217@kroah.com>
-References: <20200326232357.7516-1-sashal@kernel.org>
- <20200326232357.7516-13-sashal@kernel.org>
+To:     peter@bikeshed.quignogs.org.uk
+Cc:     Matthew Wilcox <willy@infradead.org>, linux-kernel@vger.kernel.org,
+        "Rafael J. Wysocki" <rafael@kernel.org>, linux-doc@vger.kernel.org,
+        Jonathan Corbet <corbet@lwn.net>
+Subject: Re: [PATCH v3 1/1] A compact idiom to add code examples in kerneldoc
+ comments.
+Message-ID: <20200327063232.GF1601217@kroah.com>
+References: <20200326192947.GM22483@bombadil.infradead.org>
+ <20200326195156.11858-1-peter@bikeshed.quignogs.org.uk>
+ <20200326195156.11858-2-peter@bikeshed.quignogs.org.uk>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200326232357.7516-13-sashal@kernel.org>
+In-Reply-To: <20200326195156.11858-2-peter@bikeshed.quignogs.org.uk>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 26, 2020 at 07:23:42PM -0400, Sasha Levin wrote:
-> From: Johan Hovold <johan@kernel.org>
+On Thu, Mar 26, 2020 at 07:51:56PM +0000, peter@bikeshed.quignogs.org.uk wrote:
+> From: Peter Lister <peter@bikeshed.quignogs.org.uk>
 > 
-> [ Upstream commit ae62cf5eb2792d9a818c2d93728ed92119357017 ]
+> scripts/kernel-doc - When a double colon follows a section heading
+> (e.g. Example::), write a double colon line to the ReST output to make
+> the following text (e.g. a code snippet) into a literal block.
 > 
-> Newer GCC warns about possible truncations of two generated path names as
-> we're concatenating the configurable sysfs and debugfs path prefixes
-> with a filename and placing the results in buffers of the same size as
-> the maximum length of the prefixes.
+> drivers/base/platform.c - Changed Example: headings to Example:: to
+> literalise code snippets as above.
 > 
-> 	snprintf(d->name, MAX_STR_LEN, "gb_loopback%u", dev_id);
+> This patch also removes two kerneldoc build warnings:
+> ./drivers/base/platform.c:134: WARNING: Unexpected indentation.
+> ./drivers/base/platform.c:213: WARNING: Unexpected indentation.
 > 
-> 	snprintf(d->sysfs_entry, MAX_SYSFS_PATH, "%s%s/",
-> 		 t->sysfs_prefix, d->name);
-> 
-> 	snprintf(d->debugfs_entry, MAX_SYSFS_PATH, "%sraw_latency_%s",
-> 		 t->debugfs_prefix, d->name);
-> 
-> Fix this by separating the maximum path length from the maximum prefix
-> length and reducing the latter enough to fit the generated strings.
-> 
-> Note that we also need to reduce the device-name buffer size as GCC
-> isn't smart enough to figure out that we ever only used MAX_STR_LEN
-> bytes of it.
-> 
-> Fixes: 6b0658f68786 ("greybus: tools: Add tools directory to greybus repo and add loopback")
-> Signed-off-by: Johan Hovold <johan@kernel.org>
-> Link: https://lore.kernel.org/r/20200312110151.22028-4-johan@kernel.org
-> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Signed-off-by: Sasha Levin <sashal@kernel.org>
+> Signed-off-by: Peter Lister <peter@bikeshed.quignogs.org.uk>
 > ---
->  drivers/staging/greybus/tools/loopback_test.c | 15 ++++++++-------
->  1 file changed, 8 insertions(+), 7 deletions(-)
-> 
-> diff --git a/drivers/staging/greybus/tools/loopback_test.c b/drivers/staging/greybus/tools/loopback_test.c
-> index 5ce7d6fa086cc..3ee9109c38f60 100644
-> --- a/drivers/staging/greybus/tools/loopback_test.c
-> +++ b/drivers/staging/greybus/tools/loopback_test.c
-> @@ -19,6 +19,7 @@
->  #include <signal.h>
->  
->  #define MAX_NUM_DEVICES 10
-> +#define MAX_SYSFS_PREFIX 0x80
->  #define MAX_SYSFS_PATH	0x200
->  #define CSV_MAX_LINE	0x1000
->  #define SYSFS_MAX_INT	0x20
-> @@ -67,7 +68,7 @@ struct loopback_results {
->  };
->  
->  struct loopback_device {
-> -	char name[MAX_SYSFS_PATH];
-> +	char name[MAX_STR_LEN];
->  	char sysfs_entry[MAX_SYSFS_PATH];
->  	char debugfs_entry[MAX_SYSFS_PATH];
->  	struct loopback_results results;
-> @@ -93,8 +94,8 @@ struct loopback_test {
->  	int stop_all;
->  	int poll_count;
->  	char test_name[MAX_STR_LEN];
-> -	char sysfs_prefix[MAX_SYSFS_PATH];
-> -	char debugfs_prefix[MAX_SYSFS_PATH];
-> +	char sysfs_prefix[MAX_SYSFS_PREFIX];
-> +	char debugfs_prefix[MAX_SYSFS_PREFIX];
->  	struct timespec poll_timeout;
->  	struct loopback_device devices[MAX_NUM_DEVICES];
->  	struct loopback_results aggregate_results;
-> @@ -907,10 +908,10 @@ int main(int argc, char *argv[])
->  			t.iteration_max = atoi(optarg);
->  			break;
->  		case 'S':
-> -			snprintf(t.sysfs_prefix, MAX_SYSFS_PATH, "%s", optarg);
-> +			snprintf(t.sysfs_prefix, MAX_SYSFS_PREFIX, "%s", optarg);
->  			break;
->  		case 'D':
-> -			snprintf(t.debugfs_prefix, MAX_SYSFS_PATH, "%s", optarg);
-> +			snprintf(t.debugfs_prefix, MAX_SYSFS_PREFIX, "%s", optarg);
->  			break;
->  		case 'm':
->  			t.mask = atol(optarg);
-> @@ -961,10 +962,10 @@ int main(int argc, char *argv[])
->  	}
->  
->  	if (!strcmp(t.sysfs_prefix, ""))
-> -		snprintf(t.sysfs_prefix, MAX_SYSFS_PATH, "%s", sysfs_prefix);
-> +		snprintf(t.sysfs_prefix, MAX_SYSFS_PREFIX, "%s", sysfs_prefix);
->  
->  	if (!strcmp(t.debugfs_prefix, ""))
-> -		snprintf(t.debugfs_prefix, MAX_SYSFS_PATH, "%s", debugfs_prefix);
-> +		snprintf(t.debugfs_prefix, MAX_SYSFS_PREFIX, "%s", debugfs_prefix);
->  
->  	ret = find_loopback_devices(&t);
->  	if (ret)
-> -- 
-> 2.20.1
+>  drivers/base/platform.c |  4 ++--
+>  scripts/kernel-doc      | 19 +++++++++++++++----
+>  2 files changed, 17 insertions(+), 6 deletions(-)
 
-ALso already in all trees, please don't try to add it again.
+For the driver/base/platform.c change:
+
+Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
