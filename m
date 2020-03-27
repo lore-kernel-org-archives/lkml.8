@@ -2,100 +2,123 @@ Return-Path: <SRS0=s8dx=5M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 026A2C43331
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 02:50:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8DA8C43331
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 02:52:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C81D72074D
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 02:50:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="z3LeB4Ob"
+	by mail.kernel.org (Postfix) with ESMTP id B29152074D
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 02:52:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727766AbgC0Cuc (ORCPT
+        id S1727702AbgC0CwK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 22:50:32 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:51992 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726363AbgC0Cuc (ORCPT
+        Thu, 26 Mar 2020 22:52:10 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:46220 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727456AbgC0CwK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 22:50:32 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02R2nuQ2110950;
-        Fri, 27 Mar 2020 02:50:12 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
- from : references : date : in-reply-to : message-id : mime-version :
- content-type; s=corp-2020-01-29;
- bh=KXjmN+364jiyCzv1gWGc+e6yHZaiF4mXo9ppkls1CVs=;
- b=z3LeB4Obxsuu4+rII4Lhn6K8jr7JXn79EzVEMgPSUm+giNGJytfnmB2fr3o7E01swRTL
- e7MHHk2qY7c2r6mwfs+G04HhU4Umfy7BLhnmGcN3cmMI3HCTe6LIITwyhinavsyRx/SD
- WRkFqX1+GITU9AoSeKzCeoDKQAp74r3IdRgCZEmbFBxD8mSi0vKbcgHf8LWls5nU1cMN
- TXY4qs0XSwpy8WTJdmnlBMRoWqvbgF93JR4DXoM1YyMh0u2EjE6Hq1y6s8iEtGmCAas1
- vjwGDdgWOop03mopSLxU3x4mhNy/vvigCzqyoeShauSfDic3yHwsRo/W4BsgHHTDSxh7 6g== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2130.oracle.com with ESMTP id 3014598qx4-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 27 Mar 2020 02:50:12 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02R2nncF122492;
-        Fri, 27 Mar 2020 02:50:12 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by userp3020.oracle.com with ESMTP id 3003gn1ghw-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 27 Mar 2020 02:50:12 +0000
-Received: from abhmp0003.oracle.com (abhmp0003.oracle.com [141.146.116.9])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 02R2oAAL023461;
-        Fri, 27 Mar 2020 02:50:11 GMT
-Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 26 Mar 2020 19:50:10 -0700
-To:     "wubo \(T\)" <wubo40@huawei.com>
-Cc:     Lee Duncan <lduncan@suse.com>, Chris Leech <cleech@redhat.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        "linux-scsi\@vger.kernel.org" <linux-scsi@vger.kernel.org>,
-        "open-iscsi\@googlegroups.com" <open-iscsi@googlegroups.com>,
-        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linfeilong <linfeilong@huawei.com>,
-        "liuzhiqiang \(I\)" <liuzhiqiang26@huawei.com>
-Subject: Re: [PATCH] scsi:libiscsi:Fix an error count for active session
-From:   "Martin K. Petersen" <martin.petersen@oracle.com>
-Organization: Oracle Corporation
-References: <EDBAAA0BBBA2AC4E9C8B6B81DEEE1D6916A28542@DGGEML525-MBS.china.huawei.com>
-Date:   Thu, 26 Mar 2020 22:50:07 -0400
-In-Reply-To: <EDBAAA0BBBA2AC4E9C8B6B81DEEE1D6916A28542@DGGEML525-MBS.china.huawei.com>
-        (wubo's message of "Wed, 25 Mar 2020 06:53:25 +0000")
-Message-ID: <yq1tv2acy00.fsf@oracle.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1.92 (gnu/linux)
+        Thu, 26 Mar 2020 22:52:10 -0400
+Received: by mail-pl1-f194.google.com with SMTP id s23so2905530plq.13;
+        Thu, 26 Mar 2020 19:52:09 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:references:from:autocrypt:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=o/x+mawiAvGAzXR6KVukxERD/FlFfrvg3WXOiyWEPps=;
+        b=SVUH3fje9XgH8zo99lBj38qgCDWKkqdkblr13dD7/YduwMaiLjUfsGYc+NW536+zW0
+         0cBMOIj4HddQoAGUFEytg6f3/F8p/O5JQ1G4I+Bn2WAhn+NZzRaCQeOYQTtFhjzlECGb
+         8ZZJE8oSxfG5zZO7ekZmSNQIJaQfVWBoUtyF98EnsBn3nspVLKP6uD6E1pwMxd5TxbLJ
+         1FOYifjlCQBzUfwGS72eXFqLwp2q0EXbEckzHUn9IFFY5ZkFaoeLb0N1jRLEM6Z+WlNj
+         auhOSPwvoseSHMN4Xkqd4cGaUv6RbLmXxDo8/RJZ/OCeX3Uh1MtlYstx4R/ViVU/+LYY
+         HPlw==
+X-Gm-Message-State: ANhLgQ0XZHd6GTMOIPEjQJZfydixWZg2XvM/DHhspe5fmyN/aaWGcGB2
+        BmA8ifVRFCyN3YYU66kowrE=
+X-Google-Smtp-Source: ADFU+vvY9d6FD9lutlmPr8wGpYNcXAXgpzUlPywZ8hK6JdGSAwBhtj7WcaYjdzjgsE+pbDMrIU5xyA==
+X-Received: by 2002:a17:902:8d94:: with SMTP id v20mr11584657plo.259.1585277528656;
+        Thu, 26 Mar 2020 19:52:08 -0700 (PDT)
+Received: from ?IPv6:2601:647:4000:d7:f4c2:6961:f3fb:2dca? ([2601:647:4000:d7:f4c2:6961:f3fb:2dca])
+        by smtp.gmail.com with ESMTPSA id q91sm2626217pjb.11.2020.03.26.19.52.07
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 26 Mar 2020 19:52:07 -0700 (PDT)
+Subject: Re: KASAN: null-ptr-deref Write in blk_mq_map_swqueue
+To:     Dongli Zhang <dongli.zhang@oracle.com>,
+        syzbot <syzbot+313d95e8a7a49263f88d@syzkaller.appspotmail.com>,
+        axboe@kernel.dk, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
+References: <00000000000047770d05a1c70ecb@google.com>
+ <ffabca27-309e-4a6e-eac2-d03a56a7493a@oracle.com>
+From:   Bart Van Assche <bvanassche@acm.org>
+Autocrypt: addr=bvanassche@acm.org; prefer-encrypt=mutual; keydata=
+ mQENBFSOu4oBCADcRWxVUvkkvRmmwTwIjIJvZOu6wNm+dz5AF4z0FHW2KNZL3oheO3P8UZWr
+ LQOrCfRcK8e/sIs2Y2D3Lg/SL7qqbMehGEYcJptu6mKkywBfoYbtBkVoJ/jQsi2H0vBiiCOy
+ fmxMHIPcYxaJdXxrOG2UO4B60Y/BzE6OrPDT44w4cZA9DH5xialliWU447Bts8TJNa3lZKS1
+ AvW1ZklbvJfAJJAwzDih35LxU2fcWbmhPa7EO2DCv/LM1B10GBB/oQB5kvlq4aA2PSIWkqz4
+ 3SI5kCPSsygD6wKnbRsvNn2mIACva6VHdm62A7xel5dJRfpQjXj2snd1F/YNoNc66UUTABEB
+ AAG0JEJhcnQgVmFuIEFzc2NoZSA8YnZhbmFzc2NoZUBhY20ub3JnPokBOQQTAQIAIwUCVI67
+ igIbAwcLCQgHAwIBBhUIAgkKCwQWAgMBAh4BAheAAAoJEHFcPTXFzhAJ8QkH/1AdXblKL65M
+ Y1Zk1bYKnkAb4a98LxCPm/pJBilvci6boefwlBDZ2NZuuYWYgyrehMB5H+q+Kq4P0IBbTqTa
+ jTPAANn62A6jwJ0FnCn6YaM9TZQjM1F7LoDX3v+oAkaoXuq0dQ4hnxQNu792bi6QyVdZUvKc
+ macVFVgfK9n04mL7RzjO3f+X4midKt/s+G+IPr4DGlrq+WH27eDbpUR3aYRk8EgbgGKvQFdD
+ CEBFJi+5ZKOArmJVBSk21RHDpqyz6Vit3rjep7c1SN8s7NhVi9cjkKmMDM7KYhXkWc10lKx2
+ RTkFI30rkDm4U+JpdAd2+tP3tjGf9AyGGinpzE2XY1K5AQ0EVI67igEIAKiSyd0nECrgz+H5
+ PcFDGYQpGDMTl8MOPCKw/F3diXPuj2eql4xSbAdbUCJzk2ETif5s3twT2ER8cUTEVOaCEUY3
+ eOiaFgQ+nGLx4BXqqGewikPJCe+UBjFnH1m2/IFn4T9jPZkV8xlkKmDUqMK5EV9n3eQLkn5g
+ lco+FepTtmbkSCCjd91EfThVbNYpVQ5ZjdBCXN66CKyJDMJ85HVr5rmXG/nqriTh6cv1l1Js
+ T7AFvvPjUPknS6d+BETMhTkbGzoyS+sywEsQAgA+BMCxBH4LvUmHYhpS+W6CiZ3ZMxjO8Hgc
+ ++w1mLeRUvda3i4/U8wDT3SWuHcB3DWlcppECLkAEQEAAYkBHwQYAQIACQUCVI67igIbDAAK
+ CRBxXD01xc4QCZ4dB/0QrnEasxjM0PGeXK5hcZMT9Eo998alUfn5XU0RQDYdwp6/kMEXMdmT
+ oH0F0xB3SQ8WVSXA9rrc4EBvZruWQ+5/zjVrhhfUAx12CzL4oQ9Ro2k45daYaonKTANYG22y
+ //x8dLe2Fv1By4SKGhmzwH87uXxbTJAUxiWIi1np0z3/RDnoVyfmfbbL1DY7zf2hYXLLzsJR
+ mSsED/1nlJ9Oq5fALdNEPgDyPUerqHxcmIub+pF0AzJoYHK5punqpqfGmqPbjxrJLPJfHVKy
+ goMj5DlBMoYqEgpbwdUYkH6QdizJJCur4icy8GUNbisFYABeoJ91pnD4IGei3MTdvINSZI5e
+Message-ID: <523c2b61-476e-0fb6-12d9-37038d150fb7@acm.org>
+Date:   Thu, 26 Mar 2020 19:52:06 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9572 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 mlxlogscore=999 bulkscore=0
- phishscore=0 adultscore=0 spamscore=0 malwarescore=0 suspectscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2003270022
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9572 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 phishscore=0
- priorityscore=1501 bulkscore=0 lowpriorityscore=0 mlxlogscore=999
- adultscore=0 suspectscore=0 impostorscore=0 mlxscore=0 spamscore=0
- clxscore=1011 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2003270022
+In-Reply-To: <ffabca27-309e-4a6e-eac2-d03a56a7493a@oracle.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 2020-03-26 17:19, Dongli Zhang wrote:
+> I think the issue is because of line 2827, that is, the q->nr_hw_queues is
+> updated too earlier. It is still possible the init would fail later.
+> 
+> 2809 static void blk_mq_realloc_hw_ctxs(struct blk_mq_tag_set *set,
+> 2810                                                 struct request_queue *q)
+> 2811 {
+> 2812         int i, j, end;
+> 2813         struct blk_mq_hw_ctx **hctxs = q->queue_hw_ctx;
+> 2814
+> 2815         if (q->nr_hw_queues < set->nr_hw_queues) {
+> 2816                 struct blk_mq_hw_ctx **new_hctxs;
+> 2817
+> 2818                 new_hctxs = kcalloc_node(set->nr_hw_queues,
+> 2819                                        sizeof(*new_hctxs), GFP_KERNEL,
+> 2820                                        set->numa_node);
+> 2821                 if (!new_hctxs)
+> 2822                         return;
+> 2823                 if (hctxs)
+> 2824                         memcpy(new_hctxs, hctxs, q->nr_hw_queues *
+> 2825                                sizeof(*hctxs));
+> 2826                 q->queue_hw_ctx = new_hctxs;
+> 2827                 q->nr_hw_queues = set->nr_hw_queues;
+> 2828                 kfree(hctxs);
+> 2829                 hctxs = new_hctxs;
+> 2830         }
 
-wubo,
+Which kernel tree does this syzbot report refer to? Commit
+d0930bb8f46b ("blk-mq: Fix a recently introduced regression in
+blk_mq_realloc_hw_ctxs()") in Jens' tree removed line 2827 shown above.
 
-> Fix an error count for active session if the total_cmds is invalid on
-> the function iscsi_session_setup().  decrement the number of active
-> sessions before the func return.
+Thanks,
 
-Applied to 5.7/scsi-queue, thanks!
-
--- 
-Martin K. Petersen	Oracle Linux Engineering
+Bart.
