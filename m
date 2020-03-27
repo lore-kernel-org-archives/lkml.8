@@ -2,95 +2,98 @@ Return-Path: <SRS0=s8dx=5M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56E3FC43331
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 09:37:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B745C43331
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 09:38:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1FE2E20716
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 09:37:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585301820;
-	bh=Z8y2Z5aEeF+z9UOEIWaU8xA4AEeVbeYYGfvUFYkg0N4=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=E32Bfn3B4Odb3ARbizGFAtTAzboGYOSmanRiKZ8OHYpEL9b3lXdqGO9cTbeYvak64
-	 Q6Vc1AaAKrlKIRailKspx4EhAAQ6xaZ7oeJU9/+L1sr07J7YqM8i+Jt7ZOYdhJFJPt
-	 5thQGdAh0R7z5nAuNN/wBi9RBvoP7mi8inWtgoUk=
+	by mail.kernel.org (Postfix) with ESMTP id 4AA7620714
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 09:38:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="GBagvQ3n"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727585AbgC0Jg7 (ORCPT
+        id S1727655AbgC0JiB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Mar 2020 05:36:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59464 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725956AbgC0Jg5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Mar 2020 05:36:57 -0400
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        Fri, 27 Mar 2020 05:38:01 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:55624 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725946AbgC0JiB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Mar 2020 05:38:01 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=x9/k7pLBQXCwm7HGvR1QbvLQvbr1hh7C7rCsl4jVIp8=; b=GBagvQ3n3RtUHtNaZr+93PgyTz
+        FoC+rqyv0fZwWLad3v3YTDiSA3bQpzsrz7DNe9lYbKu/dzX/LizYBtyQr3OjE6IusokaLyZ2KeYf9
+        Jko1nCvSwFcdzQHePIVaHU07umb3Wi7OsPwp3psxL1EJp7dF658jJoaDkIOcMGN4R+hporRkR+ihW
+        kDC0SG9iSF0+gVcHHncvw8xzTvnx5HgY3xUcOyAVnP8yjOckwwMuNKqsmW5DNrxd6KWe20YGKXpK+
+        FGircB0FvGDmKCAXF6abyVAuu35YJTFUD0BN9MQ5gZdTBNO22i05ybmrmWmrmEpP/ANvWnvoQYQMH
+        g3BSVfag==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jHlR7-0008Ch-Di; Fri, 27 Mar 2020 09:37:57 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0474A20714;
-        Fri, 27 Mar 2020 09:36:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585301817;
-        bh=Z8y2Z5aEeF+z9UOEIWaU8xA4AEeVbeYYGfvUFYkg0N4=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=cwitNcsR3Ct67Sr55iKtAw9SxJA30nXNJKETVqhxJqd970o26YqHvJSwiOqSnyGBT
-         XCFW3wgR1/MBWJ5fdT/mZHozpIQ3j3cCDYrGm1nnOJKc09cXfQLukeS+wnYq76CVDh
-         5nSJEZ9rpGBc5JFG2Ndxa1OGJWIED6eQhxfmjeX4=
-Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1jHlQ7-00G8Ze-BG; Fri, 27 Mar 2020 09:36:55 +0000
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id DDD1A30066E;
+        Fri, 27 Mar 2020 10:37:54 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id CD153203B8786; Fri, 27 Mar 2020 10:37:54 +0100 (CET)
+Date:   Fri, 27 Mar 2020 10:37:54 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Qian Cai <cai@lca.pw>
+Cc:     mingo@redhat.com, will@kernel.org, dbueso@suse.de,
+        juri.lelli@redhat.com, longman@redhat.com,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH -next] locking/percpu-rwsem: fix a task_struct refcount
+Message-ID: <20200327093754.GS20713@hirez.programming.kicks-ass.net>
+References: <20200327031057.10866-1-cai@lca.pw>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Fri, 27 Mar 2020 09:36:55 +0000
-From:   Marc Zyngier <maz@kernel.org>
-To:     Jianyong Wu <Jianyong.Wu@arm.com>
-Cc:     netdev@vger.kernel.org, yangbo.lu@nxp.com, john.stultz@linaro.org,
-        tglx@linutronix.de, pbonzini@redhat.com,
-        sean.j.christopherson@intel.com, richardcochran@gmail.com,
-        Mark Rutland <Mark.Rutland@arm.com>, will@kernel.org,
-        Suzuki Poulose <Suzuki.Poulose@arm.com>,
-        Steven Price <Steven.Price@arm.com>,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        kvmarm@lists.cs.columbia.edu, kvm@vger.kernel.org,
-        Steve Capper <Steve.Capper@arm.com>,
-        Kaly Xin <Kaly.Xin@arm.com>, Justin He <Justin.He@arm.com>,
-        nd <nd@arm.com>
-Subject: Re: [RFC PATCH v10 0/9] Enable ptp_kvm for arm/arm64
-In-Reply-To: <HE1PR0801MB167659B867202B6D4B1695BFF4CC0@HE1PR0801MB1676.eurprd08.prod.outlook.com>
-References: <20200210084906.24870-1-jianyong.wu@arm.com>
- <HE1PR0801MB1676DA6F1AE78462CB524D6AF4160@HE1PR0801MB1676.eurprd08.prod.outlook.com>
- <HE1PR0801MB167659B867202B6D4B1695BFF4CC0@HE1PR0801MB1676.eurprd08.prod.outlook.com>
-Message-ID: <91361abbe0a6550cdc3d10f41729a452@kernel.org>
-X-Sender: maz@kernel.org
-User-Agent: Roundcube Webmail/1.3.10
-X-SA-Exim-Connect-IP: 51.254.78.96
-X-SA-Exim-Rcpt-To: Jianyong.Wu@arm.com, netdev@vger.kernel.org, yangbo.lu@nxp.com, john.stultz@linaro.org, tglx@linutronix.de, pbonzini@redhat.com, sean.j.christopherson@intel.com, richardcochran@gmail.com, Mark.Rutland@arm.com, will@kernel.org, Suzuki.Poulose@arm.com, Steven.Price@arm.com, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu, kvm@vger.kernel.org, Steve.Capper@arm.com, Kaly.Xin@arm.com, Justin.He@arm.com, nd@arm.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200327031057.10866-1-cai@lca.pw>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-03-27 09:35, Jianyong Wu wrote:
-> Hi ,
+On Thu, Mar 26, 2020 at 11:10:57PM -0400, Qian Cai wrote:
+> There are some memory leaks due to a missing put_task_struct().
+
+This is an absolutely inadequate changelog. There is no explaning what
+the actual race is and why this patch is correct.
+
+> Fixes: 7f26482a872c ("locking/percpu-rwsem: Remove the embedded rwsem")
+> Signed-off-by: Qian Cai <cai@lca.pw>
+> ---
+>  kernel/locking/percpu-rwsem.c | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
 > 
-> Ping ...
-> Is there any comments.
-> Need some comments to move forward.
+> diff --git a/kernel/locking/percpu-rwsem.c b/kernel/locking/percpu-rwsem.c
+> index a008a1ba21a7..6f487e5d923f 100644
+> --- a/kernel/locking/percpu-rwsem.c
+> +++ b/kernel/locking/percpu-rwsem.c
+> @@ -123,8 +123,10 @@ static int percpu_rwsem_wake_function(struct wait_queue_entry *wq_entry,
+>  	struct percpu_rw_semaphore *sem = key;
+>  
+>  	/* concurrent against percpu_down_write(), can get stolen */
+> -	if (!__percpu_rwsem_trylock(sem, reader))
+> +	if (!__percpu_rwsem_trylock(sem, reader)) {
+> +		put_task_struct(p);
+>  		return 1;
+> +	}
 
-Damn, I dropped the ball on this. Sorry about that.
 
-I'll have a look over the weekend.
+If the trylock fails, someone else got the lock and we remain on the
+waitqueue. It seems like a very bad idea to put the task while it
+remains on the waitqueue, no?
 
-Thanks,
-
-         M.
--- 
-Jazz is not dead. It just smells funny...
+>  
+>  	list_del_init(&wq_entry->entry);
+>  	smp_store_release(&wq_entry->private, NULL);
+> -- 
+> 2.21.0 (Apple Git-122.2)
+> 
