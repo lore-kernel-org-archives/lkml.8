@@ -4,68 +4,68 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C268EC2D0E5
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 17:06:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 954B4C2D0ED
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 17:06:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C8FD2073E
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 17:06:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B1D92073B
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 17:06:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="u+C71ie/"
+	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="fNHTd/MA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727922AbgC0RGS (ORCPT
+        id S1727930AbgC0RGT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Mar 2020 13:06:18 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:42470 "EHLO
+        Fri, 27 Mar 2020 13:06:19 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:36884 "EHLO
         mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727714AbgC0RGJ (ORCPT
+        with ESMTP id S1726770AbgC0RGI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Mar 2020 13:06:09 -0400
-Received: by mail-lj1-f194.google.com with SMTP id q19so10922019ljp.9
+        Fri, 27 Mar 2020 13:06:08 -0400
+Received: by mail-lj1-f194.google.com with SMTP id r24so10996791ljd.4
         for <linux-kernel@vger.kernel.org>; Fri, 27 Mar 2020 10:06:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=shutemov-name.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=lGq5mNtWk1yCOGUlZF7eNnLsBNsX4wbf+5kA2+B3Tzo=;
-        b=u+C71ie/Y/RnMh4ZZLXO0tWqoqDpvrhIH9hQMpb/q9or3BR2I8SXJ7ZwY1ZgohZl7a
-         qgPgVjm5A52nXZ4shBttJnpaCpoM3b+KGoHyUKKjnFtffk1qk5M2bVrbJBG9eDRej44S
-         8KT91S3hGbDldf0/MF1H7IkrILfL63wtBQbzl/zpM8YgwDjXS70f9/cVFnOqrZncWb0x
-         DilVI6mmktHdUxDetzXq42Z1+JYjpj14n0bN1F2pJYrMaiP+5YE+Tg4fuWaTxbKGjkNX
-         u9h9eRNlZ2ZGYMdhYccmb3afLy9tYjfVShnbgDjpCLX4uHLGIAHZFoRPWVHNBRMyZi+S
-         y6rA==
+        bh=ThpcVoxxySBsyGDL9yqIPPj2mnnyBXzq6rEXvZDPIuA=;
+        b=fNHTd/MARGBDdMO/5j8pGyv1gV0nBmX6x3XXpQnpq1EssAZZ1iPmkK24TfgSdoIPZ7
+         zB+EDT1S8pUEnv4AU2xKOt/qRJw7Brw6WoyxvFeKej16Mv20jxP8xGZSLsE04KJhwz4m
+         zYuRXoJsT3WE0gMGKx2NqYQYonIYj6KDAwwAQhsB5sQtLXcKsWmZWMxgNfqbXoENWLYj
+         Tm/dpS/UUQagNliXw1OPspoP8YQYKKKbnrditaiksEOnKWJoYKu/QLPfwqOn4FsZ8nZN
+         FLuhSnDFJgoGb2EI79yLSfh49rnhZPCtq6WLO1L+oSgIMgFPJbbJ0n7490F2GybiezZ8
+         TWQQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=lGq5mNtWk1yCOGUlZF7eNnLsBNsX4wbf+5kA2+B3Tzo=;
-        b=Cm6byxvCT/dzhlCp6HgkTH9qEPfld243DDH7GeMc/NGXB6oUyUbQHpL2UvPABWaFXm
-         dO8hOoKo0o4FyqJtFUvJ6r7euuIrqLDrXCW8SKTnYCbyCJIsiPDtCui4i7AU4L0j8+6o
-         kXQMfvsBnSTi5Jau3wg7wQJU3DNv7Z+w2YB0NRijC6mLxBgSFy/7HfEtcsvC0/lnMvgk
-         o2hCJ0+iahu4MSAwW4yawCT3kmrH/ob45fI/yScER6dJCWQkbSycg+9+OkZtg6MwJBn8
-         JVToRkxIjIpZAXNtCdqwNWOD4DbTYA4tWWbht7hWGKijbyAMs6aKgOkgl5ZEvQJfVTJQ
-         38JQ==
-X-Gm-Message-State: ANhLgQ3mF7hrm7lkkPmU7c18bIiBpW8urWSyL7dXmvQSiM5IceETt3ok
-        aeEY6qcbsLJERjhyEf4jTpnvGA==
-X-Google-Smtp-Source: APiQypL6ZLqxNMBHqT8Dws7pnqIWj7EmywZXM/I+NTdJ6bkGPga3w2odbs1WKqvAUcrKiAko34XjEQ==
-X-Received: by 2002:a05:651c:1061:: with SMTP id y1mr8388958ljm.285.1585328765641;
+        bh=ThpcVoxxySBsyGDL9yqIPPj2mnnyBXzq6rEXvZDPIuA=;
+        b=A4s0uECxLZ9NW3LWnKvxF9/9MXaeCAESvXOUNaRO8Kc81/d77B4xae1PvgWbeIUi4q
+         fkyoZef5P1ZDddNfNeemD+vJ48n926K38NlgmKnW97UE9uG078xsYD6hYBdx8XqhojAF
+         ymmJ5YcJZ4FNa22R2SvA/8L0hiBLu4XCy6vTGGlvJ8iyTSQiHZ28q2eyIIKNP65lQ1Ma
+         hXKlA7tOT1NHM6tWWA3GWu5BEkwltNXx6g4jtakEEi0STy+NRUR7szb94IurnMruONfR
+         o8hBAO3hEfl2Ed0UiumghGjd8/O4TClRw4eSPGNiMJJ2rEG/VcOLsLotW+9OWSy+Ielp
+         +zEw==
+X-Gm-Message-State: ANhLgQ0+B2usTj2SZhMPMK8k3i5CwBJ5/UBixEAeb68bzjEfD8wpB/iO
+        EvHEGkXVMiiprRUK7ZFh0JDZCQ==
+X-Google-Smtp-Source: APiQypLtn/NpXZCnCXpoQScUjDIxmuhP+tRIc0nLOzigxrfVLxvwc+v9+cf1EYMqS3kUQzsle5YSxQ==
+X-Received: by 2002:a2e:730e:: with SMTP id o14mr8917059ljc.273.1585328765915;
         Fri, 27 Mar 2020 10:06:05 -0700 (PDT)
 Received: from box.localdomain ([86.57.175.117])
-        by smtp.gmail.com with ESMTPSA id r141sm3261695lff.58.2020.03.27.10.06.04
+        by smtp.gmail.com with ESMTPSA id u8sm3272039lfi.12.2020.03.27.10.06.04
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Fri, 27 Mar 2020 10:06:05 -0700 (PDT)
 From:   "Kirill A. Shutemov" <kirill@shutemov.name>
 X-Google-Original-From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
 Received: by box.localdomain (Postfix, from userid 1000)
-        id 7D8A8100D2B; Fri, 27 Mar 2020 20:06:07 +0300 (+03)
+        id 7673A100D2A; Fri, 27 Mar 2020 20:06:07 +0300 (+03)
 To:     akpm@linux-foundation.org, Andrea Arcangeli <aarcange@redhat.com>
 Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
         "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-Subject: [PATCH 6/7] thp: Change CoW semantics for anon-THP
-Date:   Fri, 27 Mar 2020 20:06:00 +0300
-Message-Id: <20200327170601.18563-7-kirill.shutemov@linux.intel.com>
+Subject: [PATCH 5/7] khugepaged: Allow to collapse PTE-mapped compound pages
+Date:   Fri, 27 Mar 2020 20:05:59 +0300
+Message-Id: <20200327170601.18563-6-kirill.shutemov@linux.intel.com>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200327170601.18563-1-kirill.shutemov@linux.intel.com>
 References: <20200327170601.18563-1-kirill.shutemov@linux.intel.com>
@@ -76,320 +76,98 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently we have different copy-on-write semantics for anon- and
-file-THP. For anon-THP we try to allocate huge page on the write fault,
-but on file-THP we split PMD and allocate 4k page.
-
-Arguably, file-THP semantics is more desirable: we don't necessary want
-to unshare full PMD range from the parent on the first access. This is
-the primary reason THP is unusable for some workloads, like Redis.
-
-The original THP refcounting didn't allow to have PTE-mapped compound
-pages, so we had no options, but to allocate huge page on CoW (with
-fallback to 512 4k pages).
-
-The current refcounting doesn't have such limitations and we can cut a
-lot of complex code out of fault path.
-
-khugepaged is now able to recover THP from such ranges if the
-configuration allows.
+We can collapse PTE-mapped compound pages. We only need to avoid
+handling them more than once: lock/unlock page only once if it's present
+in the PMD range multiple times as it handled on compound level. The
+same goes for LRU isolation and putpack.
 
 Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
 ---
- mm/huge_memory.c | 247 +++++------------------------------------------
- 1 file changed, 24 insertions(+), 223 deletions(-)
+ mm/khugepaged.c | 41 +++++++++++++++++++++++++++++++----------
+ 1 file changed, 31 insertions(+), 10 deletions(-)
 
-diff --git a/mm/huge_memory.c b/mm/huge_memory.c
-index ef6a6bcb291f..15b7a9c86b7c 100644
---- a/mm/huge_memory.c
-+++ b/mm/huge_memory.c
-@@ -1206,262 +1206,63 @@ void huge_pmd_set_accessed(struct vm_fault *vmf, pmd_t orig_pmd)
- 	spin_unlock(vmf->ptl);
- }
+diff --git a/mm/khugepaged.c b/mm/khugepaged.c
+index b47edfe57f7b..c8c2c463095c 100644
+--- a/mm/khugepaged.c
++++ b/mm/khugepaged.c
+@@ -515,6 +515,17 @@ void __khugepaged_exit(struct mm_struct *mm)
  
--static vm_fault_t do_huge_pmd_wp_page_fallback(struct vm_fault *vmf,
--			pmd_t orig_pmd, struct page *page)
--{
--	struct vm_area_struct *vma = vmf->vma;
--	unsigned long haddr = vmf->address & HPAGE_PMD_MASK;
--	struct mem_cgroup *memcg;
--	pgtable_t pgtable;
--	pmd_t _pmd;
--	int i;
--	vm_fault_t ret = 0;
--	struct page **pages;
--	struct mmu_notifier_range range;
--
--	pages = kmalloc_array(HPAGE_PMD_NR, sizeof(struct page *),
--			      GFP_KERNEL);
--	if (unlikely(!pages)) {
--		ret |= VM_FAULT_OOM;
--		goto out;
--	}
--
--	for (i = 0; i < HPAGE_PMD_NR; i++) {
--		pages[i] = alloc_page_vma_node(GFP_HIGHUSER_MOVABLE, vma,
--					       vmf->address, page_to_nid(page));
--		if (unlikely(!pages[i] ||
--			     mem_cgroup_try_charge_delay(pages[i], vma->vm_mm,
--				     GFP_KERNEL, &memcg, false))) {
--			if (pages[i])
--				put_page(pages[i]);
--			while (--i >= 0) {
--				memcg = (void *)page_private(pages[i]);
--				set_page_private(pages[i], 0);
--				mem_cgroup_cancel_charge(pages[i], memcg,
--						false);
--				put_page(pages[i]);
--			}
--			kfree(pages);
--			ret |= VM_FAULT_OOM;
+ static void release_pte_page(struct page *page)
+ {
++	/*
++	 * We need to unlock and put compound page on LRU only once.
++	 * The rest of the pages have to be locked and not on LRU here.
++	 */
++	VM_BUG_ON_PAGE(!PageCompound(page) &&
++			(!PageLocked(page) && PageLRU(page)), page);
++
++	if (!PageLocked(page))
++		return;
++
++	page = compound_head(page);
+ 	dec_node_page_state(page, NR_ISOLATED_ANON + page_is_file_cache(page));
+ 	unlock_page(page);
+ 	putback_lru_page(page);
+@@ -537,6 +548,7 @@ static int __collapse_huge_page_isolate(struct vm_area_struct *vma,
+ 	pte_t *_pte;
+ 	int none_or_zero = 0, result = 0, referenced = 0;
+ 	bool writable = false;
++	LIST_HEAD(compound_pagelist);
+ 
+ 	for (_pte = pte; _pte < pte+HPAGE_PMD_NR;
+ 	     _pte++, address += PAGE_SIZE) {
+@@ -561,13 +573,23 @@ static int __collapse_huge_page_isolate(struct vm_area_struct *vma,
+ 			goto out;
+ 		}
+ 
+-		/* TODO: teach khugepaged to collapse THP mapped with pte */
++		VM_BUG_ON_PAGE(!PageAnon(page), page);
++
+ 		if (PageCompound(page)) {
+-			result = SCAN_PAGE_COMPOUND;
 -			goto out;
 -		}
--		set_page_private(pages[i], (unsigned long)memcg);
--	}
--
--	for (i = 0; i < HPAGE_PMD_NR; i++) {
--		copy_user_highpage(pages[i], page + i,
--				   haddr + PAGE_SIZE * i, vma);
--		__SetPageUptodate(pages[i]);
--		cond_resched();
--	}
--
--	mmu_notifier_range_init(&range, MMU_NOTIFY_CLEAR, 0, vma, vma->vm_mm,
--				haddr, haddr + HPAGE_PMD_SIZE);
--	mmu_notifier_invalidate_range_start(&range);
--
--	vmf->ptl = pmd_lock(vma->vm_mm, vmf->pmd);
--	if (unlikely(!pmd_same(*vmf->pmd, orig_pmd)))
--		goto out_free_pages;
--	VM_BUG_ON_PAGE(!PageHead(page), page);
--
--	/*
--	 * Leave pmd empty until pte is filled note we must notify here as
--	 * concurrent CPU thread might write to new page before the call to
--	 * mmu_notifier_invalidate_range_end() happens which can lead to a
--	 * device seeing memory write in different order than CPU.
--	 *
--	 * See Documentation/vm/mmu_notifier.rst
--	 */
--	pmdp_huge_clear_flush_notify(vma, haddr, vmf->pmd);
--
--	pgtable = pgtable_trans_huge_withdraw(vma->vm_mm, vmf->pmd);
--	pmd_populate(vma->vm_mm, &_pmd, pgtable);
--
--	for (i = 0; i < HPAGE_PMD_NR; i++, haddr += PAGE_SIZE) {
--		pte_t entry;
--		entry = mk_pte(pages[i], vma->vm_page_prot);
--		entry = maybe_mkwrite(pte_mkdirty(entry), vma);
--		memcg = (void *)page_private(pages[i]);
--		set_page_private(pages[i], 0);
--		page_add_new_anon_rmap(pages[i], vmf->vma, haddr, false);
--		mem_cgroup_commit_charge(pages[i], memcg, false, false);
--		lru_cache_add_active_or_unevictable(pages[i], vma);
--		vmf->pte = pte_offset_map(&_pmd, haddr);
--		VM_BUG_ON(!pte_none(*vmf->pte));
--		set_pte_at(vma->vm_mm, haddr, vmf->pte, entry);
--		pte_unmap(vmf->pte);
--	}
--	kfree(pages);
--
--	smp_wmb(); /* make pte visible before pmd */
--	pmd_populate(vma->vm_mm, vmf->pmd, pgtable);
--	page_remove_rmap(page, true);
--	spin_unlock(vmf->ptl);
--
--	/*
--	 * No need to double call mmu_notifier->invalidate_range() callback as
--	 * the above pmdp_huge_clear_flush_notify() did already call it.
--	 */
--	mmu_notifier_invalidate_range_only_end(&range);
--
--	ret |= VM_FAULT_WRITE;
--	put_page(page);
--
--out:
--	return ret;
--
--out_free_pages:
--	spin_unlock(vmf->ptl);
--	mmu_notifier_invalidate_range_end(&range);
--	for (i = 0; i < HPAGE_PMD_NR; i++) {
--		memcg = (void *)page_private(pages[i]);
--		set_page_private(pages[i], 0);
--		mem_cgroup_cancel_charge(pages[i], memcg, false);
--		put_page(pages[i]);
--	}
--	kfree(pages);
--	goto out;
--}
--
- vm_fault_t do_huge_pmd_wp_page(struct vm_fault *vmf, pmd_t orig_pmd)
- {
- 	struct vm_area_struct *vma = vmf->vma;
--	struct page *page = NULL, *new_page;
--	struct mem_cgroup *memcg;
-+	struct page *page;
- 	unsigned long haddr = vmf->address & HPAGE_PMD_MASK;
--	struct mmu_notifier_range range;
--	gfp_t huge_gfp;			/* for allocation and charge */
--	vm_fault_t ret = 0;
++			struct page *p;
++			page = compound_head(page);
  
- 	vmf->ptl = pmd_lockptr(vma->vm_mm, vmf->pmd);
- 	VM_BUG_ON_VMA(!vma->anon_vma, vma);
-+
- 	if (is_huge_zero_pmd(orig_pmd))
--		goto alloc;
-+		goto fallback;
-+
- 	spin_lock(vmf->ptl);
--	if (unlikely(!pmd_same(*vmf->pmd, orig_pmd)))
--		goto out_unlock;
-+
-+	if (unlikely(!pmd_same(*vmf->pmd, orig_pmd))) {
-+		spin_unlock(vmf->ptl);
-+		return 0;
-+	}
+-		VM_BUG_ON_PAGE(!PageAnon(page), page);
++			/*
++			 * Check if we have dealt with the compount page
++			 * already
++			 */
++			list_for_each_entry(p, &compound_pagelist, lru) {
++				if (page ==  p)
++					break;
++			}
++			if (page ==  p)
++				continue;
++		}
  
- 	page = pmd_page(orig_pmd);
- 	VM_BUG_ON_PAGE(!PageCompound(page) || !PageHead(page), page);
--	/*
--	 * We can only reuse the page if nobody else maps the huge page or it's
--	 * part.
--	 */
+ 		/*
+ 		 * We can do it before isolate_lru_page because the
+@@ -640,6 +662,9 @@ static int __collapse_huge_page_isolate(struct vm_area_struct *vma,
+ 		    page_is_young(page) || PageReferenced(page) ||
+ 		    mmu_notifier_test_young(vma->vm_mm, address))
+ 			referenced++;
 +
-+	/* Lock page for reuse_swap_page() */
- 	if (!trylock_page(page)) {
- 		get_page(page);
- 		spin_unlock(vmf->ptl);
- 		lock_page(page);
- 		spin_lock(vmf->ptl);
- 		if (unlikely(!pmd_same(*vmf->pmd, orig_pmd))) {
-+			spin_unlock(vmf->ptl);
- 			unlock_page(page);
- 			put_page(page);
--			goto out_unlock;
-+			return 0;
++		if (PageCompound(page))
++			list_add_tail(&page->lru, &compound_pagelist);
+ 	}
+ 	if (likely(writable)) {
+ 		if (likely(referenced)) {
+@@ -1185,11 +1210,7 @@ static int khugepaged_scan_pmd(struct mm_struct *mm,
+ 			goto out_unmap;
  		}
- 		put_page(page);
- 	}
-+
-+	/*
-+	 * We can only reuse the page if nobody else maps the huge page or it's
-+	 * part.
-+	 */
- 	if (reuse_swap_page(page, NULL)) {
- 		pmd_t entry;
- 		entry = pmd_mkyoung(orig_pmd);
- 		entry = maybe_pmd_mkwrite(pmd_mkdirty(entry), vma);
- 		if (pmdp_set_access_flags(vma, haddr, vmf->pmd, entry,  1))
- 			update_mmu_cache_pmd(vma, vmf->address, vmf->pmd);
--		ret |= VM_FAULT_WRITE;
- 		unlock_page(page);
--		goto out_unlock;
--	}
--	unlock_page(page);
--	get_page(page);
--	spin_unlock(vmf->ptl);
--alloc:
--	if (__transparent_hugepage_enabled(vma) &&
--	    !transparent_hugepage_debug_cow()) {
--		huge_gfp = alloc_hugepage_direct_gfpmask(vma);
--		new_page = alloc_hugepage_vma(huge_gfp, vma, haddr, HPAGE_PMD_ORDER);
--	} else
--		new_page = NULL;
--
--	if (likely(new_page)) {
--		prep_transhuge_page(new_page);
--	} else {
--		if (!page) {
--			split_huge_pmd(vma, vmf->pmd, vmf->address);
--			ret |= VM_FAULT_FALLBACK;
--		} else {
--			ret = do_huge_pmd_wp_page_fallback(vmf, orig_pmd, page);
--			if (ret & VM_FAULT_OOM) {
--				split_huge_pmd(vma, vmf->pmd, vmf->address);
--				ret |= VM_FAULT_FALLBACK;
--			}
--			put_page(page);
--		}
--		count_vm_event(THP_FAULT_FALLBACK);
--		goto out;
--	}
--
--	if (unlikely(mem_cgroup_try_charge_delay(new_page, vma->vm_mm,
--					huge_gfp, &memcg, true))) {
--		put_page(new_page);
--		split_huge_pmd(vma, vmf->pmd, vmf->address);
--		if (page)
--			put_page(page);
--		ret |= VM_FAULT_FALLBACK;
--		count_vm_event(THP_FAULT_FALLBACK);
--		goto out;
--	}
--
--	count_vm_event(THP_FAULT_ALLOC);
--	count_memcg_events(memcg, THP_FAULT_ALLOC, 1);
--
--	if (!page)
--		clear_huge_page(new_page, vmf->address, HPAGE_PMD_NR);
--	else
--		copy_user_huge_page(new_page, page, vmf->address,
--				    vma, HPAGE_PMD_NR);
--	__SetPageUptodate(new_page);
--
--	mmu_notifier_range_init(&range, MMU_NOTIFY_CLEAR, 0, vma, vma->vm_mm,
--				haddr, haddr + HPAGE_PMD_SIZE);
--	mmu_notifier_invalidate_range_start(&range);
--
--	spin_lock(vmf->ptl);
--	if (page)
--		put_page(page);
--	if (unlikely(!pmd_same(*vmf->pmd, orig_pmd))) {
- 		spin_unlock(vmf->ptl);
--		mem_cgroup_cancel_charge(new_page, memcg, true);
--		put_page(new_page);
--		goto out_mn;
--	} else {
--		pmd_t entry;
--		entry = mk_huge_pmd(new_page, vma->vm_page_prot);
--		entry = maybe_pmd_mkwrite(pmd_mkdirty(entry), vma);
--		pmdp_huge_clear_flush_notify(vma, haddr, vmf->pmd);
--		page_add_new_anon_rmap(new_page, vma, haddr, true);
--		mem_cgroup_commit_charge(new_page, memcg, false, true);
--		lru_cache_add_active_or_unevictable(new_page, vma);
--		set_pmd_at(vma->vm_mm, haddr, vmf->pmd, entry);
--		update_mmu_cache_pmd(vma, vmf->address, vmf->pmd);
--		if (!page) {
--			add_mm_counter(vma->vm_mm, MM_ANONPAGES, HPAGE_PMD_NR);
--		} else {
--			VM_BUG_ON_PAGE(!PageHead(page), page);
--			page_remove_rmap(page, true);
--			put_page(page);
--		}
--		ret |= VM_FAULT_WRITE;
-+		return VM_FAULT_WRITE;
- 	}
-+
-+	unlock_page(page);
- 	spin_unlock(vmf->ptl);
--out_mn:
--	/*
--	 * No need to double call mmu_notifier->invalidate_range() callback as
--	 * the above pmdp_huge_clear_flush_notify() did already call it.
--	 */
--	mmu_notifier_invalidate_range_only_end(&range);
--out:
--	return ret;
--out_unlock:
--	spin_unlock(vmf->ptl);
--	return ret;
-+fallback:
-+	__split_huge_pmd(vma, vmf->pmd, vmf->address, false, NULL);
-+	return VM_FAULT_FALLBACK;
- }
  
- /*
+-		/* TODO: teach khugepaged to collapse THP mapped with pte */
+-		if (PageCompound(page)) {
+-			result = SCAN_PAGE_COMPOUND;
+-			goto out_unmap;
+-		}
++		page = compound_head(page);
+ 
+ 		/*
+ 		 * Record which node the original page is from and save this
 -- 
 2.26.0
 
