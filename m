@@ -6,49 +6,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DF1DC43331
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 11:33:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22A1CC2D0E5
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 11:33:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D31EA2072F
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 11:33:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE8C92073B
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 11:33:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727423AbgC0LdC (ORCPT
+        id S1727620AbgC0LdD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Mar 2020 07:33:02 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:63894 "EHLO
+        Fri, 27 Mar 2020 07:33:03 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:5190 "EHLO
         mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726540AbgC0LdC (ORCPT
+        by vger.kernel.org with ESMTP id S1727354AbgC0LdD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Mar 2020 07:33:02 -0400
-Received: from pps.filterd (m0187473.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02RBPcZv144906;
-        Fri, 27 Mar 2020 07:32:53 -0400
-Received: from ppma01dal.us.ibm.com (83.d6.3fa9.ip4.static.sl-reverse.com [169.63.214.131])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2ywek0taan-1
+        Fri, 27 Mar 2020 07:33:03 -0400
+Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02RB7DLk015793;
+        Fri, 27 Mar 2020 07:32:56 -0400
+Received: from ppma02dal.us.ibm.com (a.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.10])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2ywe7x1fxt-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 27 Mar 2020 07:32:52 -0400
-Received: from pps.filterd (ppma01dal.us.ibm.com [127.0.0.1])
-        by ppma01dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 02RBUwJv029825;
-        Fri, 27 Mar 2020 11:32:51 GMT
-Received: from b01cxnp23032.gho.pok.ibm.com (b01cxnp23032.gho.pok.ibm.com [9.57.198.27])
-        by ppma01dal.us.ibm.com with ESMTP id 2ywawmp7wp-1
+        Fri, 27 Mar 2020 07:32:56 -0400
+Received: from pps.filterd (ppma02dal.us.ibm.com [127.0.0.1])
+        by ppma02dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 02RBVSgV006135;
+        Fri, 27 Mar 2020 11:32:55 GMT
+Received: from b01cxnp22035.gho.pok.ibm.com (b01cxnp22035.gho.pok.ibm.com [9.57.198.25])
+        by ppma02dal.us.ibm.com with ESMTP id 2ywaw2x8qm-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 27 Mar 2020 11:32:51 +0000
-Received: from b01ledav006.gho.pok.ibm.com (b01ledav006.gho.pok.ibm.com [9.57.199.111])
-        by b01cxnp23032.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 02RBWoxN55181718
+        Fri, 27 Mar 2020 11:32:55 +0000
+Received: from b01ledav002.gho.pok.ibm.com (b01ledav002.gho.pok.ibm.com [9.57.199.107])
+        by b01cxnp22035.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 02RBWt1K50856434
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 27 Mar 2020 11:32:50 GMT
-Received: from b01ledav006.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id B71F3AC05E;
-        Fri, 27 Mar 2020 11:32:50 +0000 (GMT)
-Received: from b01ledav006.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 1974CAC059;
-        Fri, 27 Mar 2020 11:32:50 +0000 (GMT)
+        Fri, 27 Mar 2020 11:32:55 GMT
+Received: from b01ledav002.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 1C538124052;
+        Fri, 27 Mar 2020 11:32:55 +0000 (GMT)
+Received: from b01ledav002.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 6CE4F124055;
+        Fri, 27 Mar 2020 11:32:54 +0000 (GMT)
 Received: from sofia.ibm.com (unknown [9.85.72.108])
-        by b01ledav006.gho.pok.ibm.com (Postfix) with ESMTP;
-        Fri, 27 Mar 2020 11:32:50 +0000 (GMT)
+        by b01ledav002.gho.pok.ibm.com (Postfix) with ESMTP;
+        Fri, 27 Mar 2020 11:32:54 +0000 (GMT)
 Received: by sofia.ibm.com (Postfix, from userid 1000)
-        id 657FE2E3B05; Fri, 27 Mar 2020 17:02:45 +0530 (IST)
+        id 317932E3B0A; Fri, 27 Mar 2020 17:02:45 +0530 (IST)
 From:   "Gautham R. Shenoy" <ego@linux.vnet.ibm.com>
 To:     Nathan Lynch <nathanl@linux.ibm.com>,
         Michael Ellerman <mpe@ellerman.id.au>,
@@ -58,20 +58,20 @@ To:     Nathan Lynch <nathanl@linux.ibm.com>,
         Tyrel Datwyler <tyreld@linux.ibm.com>
 Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
         "Gautham R. Shenoy" <ego@linux.vnet.ibm.com>
-Subject: [PATCH v4 3/6] powerpc/pseries: Account for SPURR ticks on idle CPUs
-Date:   Fri, 27 Mar 2020 17:02:37 +0530
-Message-Id: <1585308760-28792-4-git-send-email-ego@linux.vnet.ibm.com>
+Subject: [PATCH v4 6/6] pseries/sysfs: Minimise IPI noise while reading [idle_][s]purr
+Date:   Fri, 27 Mar 2020 17:02:40 +0530
+Message-Id: <1585308760-28792-7-git-send-email-ego@linux.vnet.ibm.com>
 X-Mailer: git-send-email 1.8.3.1
 In-Reply-To: <1585308760-28792-1-git-send-email-ego@linux.vnet.ibm.com>
 References: <1585308760-28792-1-git-send-email-ego@linux.vnet.ibm.com>
 X-TM-AS-GCONF: 00
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.645
  definitions=2020-03-27_03:2020-03-27,2020-03-27 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 clxscore=1015
- suspectscore=0 spamscore=0 mlxscore=0 mlxlogscore=999 adultscore=0
- bulkscore=0 phishscore=0 lowpriorityscore=0 priorityscore=1501
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2003270102
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999
+ impostorscore=0 bulkscore=0 phishscore=0 spamscore=0 adultscore=0
+ mlxscore=0 lowpriorityscore=0 suspectscore=0 malwarescore=0
+ priorityscore=1501 clxscore=1015 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2003020000 definitions=main-2003270097
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -79,109 +79,201 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: "Gautham R. Shenoy" <ego@linux.vnet.ibm.com>
 
-On Pseries LPARs, to calculate utilization, we need to know the
-[S]PURR ticks when the CPUs were busy or idle.
+Currently purr, spurr, idle_purr, idle_spurr are exposed for every CPU
+via the sysfs interface
+/sys/devices/system/cpu/cpuX/[idle_][s]purr. Each sysfs read currently
+generates an IPI to obtain the desired value from the target CPU X.
+Since these aforementioned sysfs are typically read one after another,
+we end up generating 4 IPIs per CPU in a short duration.
 
-Via pseries_idle_prolog(), pseries_idle_epilog(), we track the idle
-PURR ticks in the VPA variable "wait_state_cycles". This patch extends
-the support to account for the idle SPURR ticks. It also provides an
-accessor function to accurately reads idle SPURR ticks.
+In order to minimize the IPI noise, this patch caches the values of
+all the four entities whenever one of them is read. If subsequently
+any of these are read within the next 10ms, the cached value is
+returned. With this, we will generate at most one IPI every 10ms for
+every CPU.
+
+Test-results: While reading the four sysfs files back-to-back for a
+given CPU every second for 100 seconds.
+
+Without the patch:
+		 16 [XICS 2 Edge IPI] = 422 times
+		 DBL [Doorbell interrupts] = 13 times
+		 Total : 435 IPIs.
+
+With the patch:
+		  16 [XICS 2 Edge IPI] = 111 times
+		  DBL [Doorbell interrupts] = 17 times
+		  Total : 128 IPIs.
 
 Signed-off-by: Gautham R. Shenoy <ego@linux.vnet.ibm.com>
 ---
- arch/powerpc/include/asm/idle.h        | 33 +++++++++++++++++++++++++++++++++
- arch/powerpc/platforms/pseries/setup.c |  2 ++
- 2 files changed, 35 insertions(+)
+ arch/powerpc/kernel/sysfs.c | 117 ++++++++++++++++++++++++++++++++++++--------
+ 1 file changed, 97 insertions(+), 20 deletions(-)
 
-diff --git a/arch/powerpc/include/asm/idle.h b/arch/powerpc/include/asm/idle.h
-index d4bfb6a..accd1f5 100644
---- a/arch/powerpc/include/asm/idle.h
-+++ b/arch/powerpc/include/asm/idle.h
-@@ -5,13 +5,20 @@
- #include <asm/paca.h>
+diff --git a/arch/powerpc/kernel/sysfs.c b/arch/powerpc/kernel/sysfs.c
+index 571b325..bd92023 100644
+--- a/arch/powerpc/kernel/sysfs.c
++++ b/arch/powerpc/kernel/sysfs.c
+@@ -586,8 +586,6 @@ void ppc_enable_pmcs(void)
+  * SPRs which are not related to PMU.
+  */
+ #ifdef CONFIG_PPC64
+-SYSFS_SPRSETUP(purr, SPRN_PURR);
+-SYSFS_SPRSETUP(spurr, SPRN_SPURR);
+ SYSFS_SPRSETUP(pir, SPRN_PIR);
+ SYSFS_SPRSETUP(tscr, SPRN_TSCR);
  
+@@ -596,8 +594,6 @@ void ppc_enable_pmcs(void)
+   enable write when needed with a separate function.
+   Lets be conservative and default to pseries.
+ */
+-static DEVICE_ATTR(spurr, 0400, show_spurr, NULL);
+-static DEVICE_ATTR(purr, 0400, show_purr, store_purr);
+ static DEVICE_ATTR(pir, 0400, show_pir, NULL);
+ static DEVICE_ATTR(tscr, 0600, show_tscr, store_tscr);
+ #endif /* CONFIG_PPC64 */
+@@ -761,22 +757,110 @@ static void create_svm_file(void)
+ }
+ #endif /* CONFIG_PPC_SVM */
+ 
++#ifdef CONFIG_PPC64
++/*
++ * The duration (in ms) from the last IPI to the target CPU until
++ * which a cached value of purr, spurr, idle_purr, idle_spurr can be
++ * reported to the user on a corresponding sysfs file read. Beyond
++ * this duration, fresh values need to be obtained by sending IPIs to
++ * the target CPU when the sysfs files are read.
++ */
++static unsigned long util_stats_staleness_tolerance_ms = 10;
++struct util_acct_stats {
++	u64 latest_purr;
++	u64 latest_spurr;
++#ifdef CONFIG_PPC_PSERIES
++	u64 latest_idle_purr;
++	u64 latest_idle_spurr;
++#endif
++	unsigned long last_update_jiffies;
++};
++
++DEFINE_PER_CPU(struct util_acct_stats, util_acct_stats);
++
++static void update_util_acct_stats(void *ptr)
++{
++	struct util_acct_stats *stats = ptr;
++
++	stats->latest_purr = mfspr(SPRN_PURR);
++	stats->latest_spurr = mfspr(SPRN_SPURR);
  #ifdef CONFIG_PPC_PSERIES
-+DECLARE_PER_CPU(u64, idle_spurr_cycles);
- DECLARE_PER_CPU(u64, idle_entry_purr_snap);
-+DECLARE_PER_CPU(u64, idle_entry_spurr_snap);
- 
- static inline void snapshot_purr_idle_entry(void)
- {
- 	*this_cpu_ptr(&idle_entry_purr_snap) = mfspr(SPRN_PURR);
- }
- 
-+static inline void snapshot_spurr_idle_entry(void)
-+{
-+	*this_cpu_ptr(&idle_entry_spurr_snap) = mfspr(SPRN_SPURR);
+-static void read_idle_purr(void *val)
++	stats->latest_idle_purr = read_this_idle_purr();
++	stats->latest_idle_spurr = read_this_idle_spurr();
++#endif
++	stats->last_update_jiffies = jiffies;
 +}
 +
- static inline void update_idle_purr_accounting(void)
- {
- 	u64 wait_cycles;
-@@ -22,10 +29,19 @@ static inline void update_idle_purr_accounting(void)
- 	get_lppaca()->wait_state_cycles = cpu_to_be64(wait_cycles);
- }
- 
-+static inline void update_idle_spurr_accounting(void)
++struct util_acct_stats *get_util_stats_ptr(int cpu)
 +{
-+	u64 *idle_spurr_cycles_ptr = this_cpu_ptr(&idle_spurr_cycles);
-+	u64 in_spurr = *this_cpu_ptr(&idle_entry_spurr_snap);
++	struct util_acct_stats *stats = per_cpu_ptr(&util_acct_stats, cpu);
++	unsigned long delta_jiffies;
 +
-+	*idle_spurr_cycles_ptr += mfspr(SPRN_SPURR) - in_spurr;
-+}
++	delta_jiffies = jiffies - stats->last_update_jiffies;
 +
- static inline void pseries_idle_prolog(void)
- {
- 	ppc64_runlatch_off();
- 	snapshot_purr_idle_entry();
-+	snapshot_spurr_idle_entry();
- 	/*
- 	 * Indicate to the HV that we are idle. Now would be
- 	 * a good time to find other work to dispatch.
-@@ -36,6 +52,7 @@ static inline void pseries_idle_prolog(void)
- static inline void pseries_idle_epilog(void)
- {
- 	update_idle_purr_accounting();
-+	update_idle_spurr_accounting();
- 	get_lppaca()->idle = 0;
- 	ppc64_runlatch_on();
- }
-@@ -56,5 +73,21 @@ static inline u64 read_this_idle_purr(void)
- 	return be64_to_cpu(get_lppaca()->wait_state_cycles);
- }
- 
-+static inline u64 read_this_idle_spurr(void)
-+{
 +	/*
-+	 * If we are reading from an idle context, update the
-+	 * idle-spurr cycles corresponding to the last idle period.
-+	 * Since the idle context is not yet over, take a fresh
-+	 * snapshot of the idle-spurr.
++	 * If we have a recent enough data, reuse that instead of
++	 * sending an IPI.
 +	 */
-+	if (get_lppaca()->idle == 1) {
-+		update_idle_spurr_accounting();
-+		snapshot_spurr_idle_entry();
-+	}
++	if (jiffies_to_msecs(delta_jiffies) < util_stats_staleness_tolerance_ms)
++		return stats;
 +
-+	return *this_cpu_ptr(&idle_spurr_cycles);
++	smp_call_function_single(cpu, update_util_acct_stats, stats, 1);
++	return stats;
 +}
 +
- #endif /* CONFIG_PPC_PSERIES */
- #endif
-diff --git a/arch/powerpc/platforms/pseries/setup.c b/arch/powerpc/platforms/pseries/setup.c
-index 4905c96..1b55e80 100644
---- a/arch/powerpc/platforms/pseries/setup.c
-+++ b/arch/powerpc/platforms/pseries/setup.c
-@@ -318,7 +318,9 @@ static int alloc_dispatch_log_kmem_cache(void)
- }
- machine_early_initcall(pseries, alloc_dispatch_log_kmem_cache);
- 
-+DEFINE_PER_CPU(u64, idle_spurr_cycles);
- DEFINE_PER_CPU(u64, idle_entry_purr_snap);
-+DEFINE_PER_CPU(u64, idle_entry_spurr_snap);
- static void pseries_lpar_idle(void)
++static ssize_t show_purr(struct device *dev,
++			 struct device_attribute *attr, char *buf)
  {
- 	/*
+-	u64 *ret = val;
++	struct cpu *cpu = container_of(dev, struct cpu, dev);
++	struct util_acct_stats *stats;
+ 
+-	*ret = read_this_idle_purr();
++	stats = get_util_stats_ptr(cpu->dev.id);
++	return sprintf(buf, "%llx\n", stats->latest_purr);
+ }
+ 
++static void write_purr(void *val)
++{
++	mtspr(SPRN_PURR, *(unsigned long *)val);
++}
++
++static ssize_t __used store_purr(struct device *dev,
++				 struct device_attribute *attr,
++				 const char *buf, size_t count)
++{
++	struct cpu *cpu = container_of(dev, struct cpu, dev);
++	unsigned long val;
++	int ret = kstrtoul(buf, 16, &val);
++
++	if (ret != 0)
++		return -EINVAL;
++
++	smp_call_function_single(cpu->dev.id, write_purr, &val, 1);
++	return count;
++}
++static DEVICE_ATTR(purr, 0400, show_purr, store_purr);
++
++static ssize_t show_spurr(struct device *dev,
++			  struct device_attribute *attr, char *buf)
++{
++	struct cpu *cpu = container_of(dev, struct cpu, dev);
++	struct util_acct_stats *stats;
++
++	stats = get_util_stats_ptr(cpu->dev.id);
++	return sprintf(buf, "%llx\n", stats->latest_spurr);
++}
++static DEVICE_ATTR(spurr, 0400, show_spurr, NULL);
++#endif /* CONFIG_PPC64 */
++
++#ifdef CONFIG_PPC_PSERIES
+ static ssize_t idle_purr_show(struct device *dev,
+ 			      struct device_attribute *attr, char *buf)
+ {
+ 	struct cpu *cpu = container_of(dev, struct cpu, dev);
+-	u64 val;
++	struct util_acct_stats *stats;
+ 
+-	smp_call_function_single(cpu->dev.id, read_idle_purr, &val, 1);
+-	return sprintf(buf, "%llx\n", val);
++	stats = get_util_stats_ptr(cpu->dev.id);
++	return sprintf(buf, "%llx\n", stats->latest_idle_purr);
+ }
+ static DEVICE_ATTR(idle_purr, 0400, idle_purr_show, NULL);
+ 
+@@ -792,21 +876,14 @@ static void remove_idle_purr_file(struct device *s)
+ 		device_remove_file(s, &dev_attr_idle_purr);
+ }
+ 
+-static void read_idle_spurr(void *val)
+-{
+-	u64 *ret = val;
+-
+-	*ret = read_this_idle_spurr();
+-}
+-
+ static ssize_t idle_spurr_show(struct device *dev,
+ 			       struct device_attribute *attr, char *buf)
+ {
+ 	struct cpu *cpu = container_of(dev, struct cpu, dev);
+-	u64 val;
++	struct util_acct_stats *stats;
+ 
+-	smp_call_function_single(cpu->dev.id, read_idle_spurr, &val, 1);
+-	return sprintf(buf, "%llx\n", val);
++	stats =  get_util_stats_ptr(cpu->dev.id);
++	return sprintf(buf, "%llx\n", stats->latest_idle_spurr);
+ }
+ static DEVICE_ATTR(idle_spurr, 0400, idle_spurr_show, NULL);
+ 
 -- 
 1.9.4
 
