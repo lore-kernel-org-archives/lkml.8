@@ -2,179 +2,134 @@ Return-Path: <SRS0=s8dx=5M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F9C7C43331
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 02:32:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1830C2D0ED
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 02:32:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E0932070A
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 02:32:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C75812070A
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 02:32:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dgk4CrDh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727984AbgC0Cci (ORCPT
+        id S1727998AbgC0Ccl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 22:32:38 -0400
-Received: from zeniv.linux.org.uk ([195.92.253.2]:48050 "EHLO
-        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727878AbgC0CcL (ORCPT
+        Thu, 26 Mar 2020 22:32:41 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:44409 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727985AbgC0Cci (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 22:32:11 -0400
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jHen0-003hRd-GW; Fri, 27 Mar 2020 02:32:06 +0000
-From:   Al Viro <viro@ZenIV.linux.org.uk>
+        Thu, 26 Mar 2020 22:32:38 -0400
+Received: by mail-pg1-f196.google.com with SMTP id 142so3862924pgf.11;
+        Thu, 26 Mar 2020 19:32:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=XajnJwqf7IDi08ky1T7ypUpRxAJg4V4LZuWadlWU3Io=;
+        b=dgk4CrDhCdQIJr63haiO9+4bf6Aaiv+yUPotOeJwjO/i2aj4/SDr+cWU3DV34QOxRh
+         MCM/wFYB9/BZdN7NtHCnc9QRepwsMdn8mEvX8g9JH7ffaQtYZWqqaSY2xdxRJdyXuBLJ
+         hFscshr48GoU2JW2v3YBco4J135mtYnUGQRx8mYpdoTik41ovSMIIpytjCgYLu3EwyGK
+         qrkFV6RLiOoWxoEYWuDZ6WQ9h8kIkRYMgGJrVm+tFrKVoAPyWy9nDVqqo36M1bxmIHdm
+         zmhUJ4OEoJQb4ZdK/kbhxJUuygMOnTRJJAhcmyqJI6++yxR1zVUsIqdwt0E+T6m/EYH8
+         xJOg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=XajnJwqf7IDi08ky1T7ypUpRxAJg4V4LZuWadlWU3Io=;
+        b=RziibEw2YZHPMVLGV1Za2Sse2eiLbPQ3UPSTU2BMJn//0ateP0yRSDPYVM77yXvVko
+         mhIo1uzg/K7S0XEhR3tb4NCtKWn7JzWfycmZv/whLnFjmMQUHEKlQPjqni/owCh+NDM2
+         qQxZlOUZAipZOv372LiWARpQKRCo5l7avcXbL9mv2sXESFvTmLmxlbA/KW+ybtzR+0Mi
+         Fh6Lu+tr74zbTiozgwIm+JPT+WWUqyyENSAFBp0aWTyo7+d/Gdh0DLAEEGNkAAw13JhL
+         4mORJEpDdTJwrrDXDCw6m0SYu4KMm/6R6OZZkX6DMyHyCx0fPfurfKdN9cbTYm0uRtxQ
+         daJg==
+X-Gm-Message-State: ANhLgQ0bFX/SFmMy2xF9qj10mIH0/YijyU00+5PkKoKaVc2wHemLdFA7
+        jL555Wevb2LBMm1b1X7u7xI=
+X-Google-Smtp-Source: ADFU+vucIB45dpa6qg4/alOcqUA2N4VXWHvcTBfrTBXEclsZeOB/l4jpZTRElsrba32x/sDONvQnbw==
+X-Received: by 2002:aa7:92da:: with SMTP id k26mr12034925pfa.139.1585276356172;
+        Thu, 26 Mar 2020 19:32:36 -0700 (PDT)
+Received: from dtor-ws ([2620:15c:202:201:3c2a:73a9:c2cf:7f45])
+        by smtp.gmail.com with ESMTPSA id x15sm2743026pfq.107.2020.03.26.19.32.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 26 Mar 2020 19:32:35 -0700 (PDT)
+Date:   Thu, 26 Mar 2020 19:32:33 -0700
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
 To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>, x86@kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [RFC][PATCH v2 10/22] x86: switch setup_sigcontext() to unsafe_put_user()
-Date:   Fri, 27 Mar 2020 02:31:53 +0000
-Message-Id: <20200327023205.881896-10-viro@ZenIV.linux.org.uk>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200327023205.881896-1-viro@ZenIV.linux.org.uk>
-References: <20200327023007.GS23230@ZenIV.linux.org.uk>
- <20200327023205.881896-1-viro@ZenIV.linux.org.uk>
+Cc:     linux-kernel@vger.kernel.org, linux-input@vger.kernel.org
+Subject: [git pull] Input updates for v5.6-rc7
+Message-ID: <20200327023233.GA180354@dtor-ws>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Al Viro <viro@zeniv.linux.org.uk>
+Hi Linus,
 
-Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
----
- arch/x86/include/asm/sighandling.h |  3 --
- arch/x86/kernel/signal.c           | 88 +++++++++++++++++++-------------------
- 2 files changed, 45 insertions(+), 46 deletions(-)
+Please pull from:
 
-diff --git a/arch/x86/include/asm/sighandling.h b/arch/x86/include/asm/sighandling.h
-index 2fcbd6f33ef7..35e0b579ffcb 100644
---- a/arch/x86/include/asm/sighandling.h
-+++ b/arch/x86/include/asm/sighandling.h
-@@ -14,9 +14,6 @@
- 			 X86_EFLAGS_CF | X86_EFLAGS_RF)
- 
- void signal_fault(struct pt_regs *regs, void __user *frame, char *where);
--int setup_sigcontext(struct sigcontext __user *sc, void __user *fpstate,
--		     struct pt_regs *regs, unsigned long mask);
--
- 
- #ifdef CONFIG_X86_X32_ABI
- asmlinkage long sys32_x32_rt_sigreturn(void);
-diff --git a/arch/x86/kernel/signal.c b/arch/x86/kernel/signal.c
-index 83563e98f0be..3b4ca484cfc2 100644
---- a/arch/x86/kernel/signal.c
-+++ b/arch/x86/kernel/signal.c
-@@ -140,63 +140,65 @@ static int restore_sigcontext(struct pt_regs *regs,
- 			       IS_ENABLED(CONFIG_X86_32));
- }
- 
--int setup_sigcontext(struct sigcontext __user *sc, void __user *fpstate,
-+static int setup_sigcontext(struct sigcontext __user *sc, void __user *fpstate,
- 		     struct pt_regs *regs, unsigned long mask)
- {
--	int err = 0;
--
--	put_user_try {
-+	if (!user_access_begin(sc, sizeof(struct sigcontext)))
-+		return -EFAULT;
- 
- #ifdef CONFIG_X86_32
--		put_user_ex(get_user_gs(regs), (unsigned int __user *)&sc->gs);
--		put_user_ex(regs->fs, (unsigned int __user *)&sc->fs);
--		put_user_ex(regs->es, (unsigned int __user *)&sc->es);
--		put_user_ex(regs->ds, (unsigned int __user *)&sc->ds);
-+	unsafe_put_user(get_user_gs(regs),
-+				  (unsigned int __user *)&sc->gs, Efault);
-+	unsafe_put_user(regs->fs, (unsigned int __user *)&sc->fs, Efault);
-+	unsafe_put_user(regs->es, (unsigned int __user *)&sc->es, Efault);
-+	unsafe_put_user(regs->ds, (unsigned int __user *)&sc->ds, Efault);
- #endif /* CONFIG_X86_32 */
- 
--		put_user_ex(regs->di, &sc->di);
--		put_user_ex(regs->si, &sc->si);
--		put_user_ex(regs->bp, &sc->bp);
--		put_user_ex(regs->sp, &sc->sp);
--		put_user_ex(regs->bx, &sc->bx);
--		put_user_ex(regs->dx, &sc->dx);
--		put_user_ex(regs->cx, &sc->cx);
--		put_user_ex(regs->ax, &sc->ax);
-+	unsafe_put_user(regs->di, &sc->di, Efault);
-+	unsafe_put_user(regs->si, &sc->si, Efault);
-+	unsafe_put_user(regs->bp, &sc->bp, Efault);
-+	unsafe_put_user(regs->sp, &sc->sp, Efault);
-+	unsafe_put_user(regs->bx, &sc->bx, Efault);
-+	unsafe_put_user(regs->dx, &sc->dx, Efault);
-+	unsafe_put_user(regs->cx, &sc->cx, Efault);
-+	unsafe_put_user(regs->ax, &sc->ax, Efault);
- #ifdef CONFIG_X86_64
--		put_user_ex(regs->r8, &sc->r8);
--		put_user_ex(regs->r9, &sc->r9);
--		put_user_ex(regs->r10, &sc->r10);
--		put_user_ex(regs->r11, &sc->r11);
--		put_user_ex(regs->r12, &sc->r12);
--		put_user_ex(regs->r13, &sc->r13);
--		put_user_ex(regs->r14, &sc->r14);
--		put_user_ex(regs->r15, &sc->r15);
-+	unsafe_put_user(regs->r8, &sc->r8, Efault);
-+	unsafe_put_user(regs->r9, &sc->r9, Efault);
-+	unsafe_put_user(regs->r10, &sc->r10, Efault);
-+	unsafe_put_user(regs->r11, &sc->r11, Efault);
-+	unsafe_put_user(regs->r12, &sc->r12, Efault);
-+	unsafe_put_user(regs->r13, &sc->r13, Efault);
-+	unsafe_put_user(regs->r14, &sc->r14, Efault);
-+	unsafe_put_user(regs->r15, &sc->r15, Efault);
- #endif /* CONFIG_X86_64 */
- 
--		put_user_ex(current->thread.trap_nr, &sc->trapno);
--		put_user_ex(current->thread.error_code, &sc->err);
--		put_user_ex(regs->ip, &sc->ip);
-+	unsafe_put_user(current->thread.trap_nr, &sc->trapno, Efault);
-+	unsafe_put_user(current->thread.error_code, &sc->err, Efault);
-+	unsafe_put_user(regs->ip, &sc->ip, Efault);
- #ifdef CONFIG_X86_32
--		put_user_ex(regs->cs, (unsigned int __user *)&sc->cs);
--		put_user_ex(regs->flags, &sc->flags);
--		put_user_ex(regs->sp, &sc->sp_at_signal);
--		put_user_ex(regs->ss, (unsigned int __user *)&sc->ss);
-+	unsafe_put_user(regs->cs, (unsigned int __user *)&sc->cs, Efault);
-+	unsafe_put_user(regs->flags, &sc->flags, Efault);
-+	unsafe_put_user(regs->sp, &sc->sp_at_signal, Efault);
-+	unsafe_put_user(regs->ss, (unsigned int __user *)&sc->ss, Efault);
- #else /* !CONFIG_X86_32 */
--		put_user_ex(regs->flags, &sc->flags);
--		put_user_ex(regs->cs, &sc->cs);
--		put_user_ex(0, &sc->gs);
--		put_user_ex(0, &sc->fs);
--		put_user_ex(regs->ss, &sc->ss);
-+	unsafe_put_user(regs->flags, &sc->flags, Efault);
-+	unsafe_put_user(regs->cs, &sc->cs, Efault);
-+	unsafe_put_user(0, &sc->gs, Efault);
-+	unsafe_put_user(0, &sc->fs, Efault);
-+	unsafe_put_user(regs->ss, &sc->ss, Efault);
- #endif /* CONFIG_X86_32 */
- 
--		put_user_ex(fpstate, (unsigned long __user *)&sc->fpstate);
-+	unsafe_put_user(fpstate, (unsigned long __user *)&sc->fpstate, Efault);
- 
--		/* non-iBCS2 extensions.. */
--		put_user_ex(mask, &sc->oldmask);
--		put_user_ex(current->thread.cr2, &sc->cr2);
--	} put_user_catch(err);
--
--	return err;
-+	/* non-iBCS2 extensions.. */
-+	unsafe_put_user(mask, &sc->oldmask, Efault);
-+	unsafe_put_user(current->thread.cr2, &sc->cr2, Efault);
-+	user_access_end();
-+	return 0;
-+Efault:
-+	user_access_end();
-+	return -EFAULT;
- }
- 
- /*
+	git://git.kernel.org/pub/scm/linux/kernel/git/dtor/input.git for-linus
+
+to receive updates for the input subsystem. You will get:
+
+- a fix to generate proper timestamps on key autorepeat events that were
+  broken recently
+- a fix for Synaptics driver to only activate reduced reporting mode
+  when explicitly requested
+- a new keycode for "selective screenshot" function
+- other assorted fixes.
+
+Changelog:
+---------
+
+Andrew Duggan (1):
+      Input: synaptics-rmi4 - set reduced reporting mode only when requested
+
+Dan Carpenter (1):
+      Input: raydium_i2c_ts - fix error codes in raydium_i2c_boot_trigger()
+
+Dmitry Torokhov (2):
+      Input: move the new KEY_SELECTIVE_SCREENSHOT keycode
+      Input: fix stale timestamp on key autorepeat events
+
+Eugene Syromiatnikov (1):
+      Input: avoid BIT() macro usage in the serio.h UAPI header
+
+Nick Reitemeyer (3):
+      dt-bindings: vendor-prefixes: Add Coreriver vendor prefix
+      dt-bindings: input: add Coreriver TC360 binding
+      Input: tm2-touchkey - add support for Coreriver TC360 variant
+
+Rajat Jain (1):
+      Input: allocate keycode for "Selective Screenshot" key
+
+Yussuf Khalil (1):
+      Input: synaptics - enable RMI on HP Envy 13-ad105ng
+
+Diffstat:
+--------
+
+ .../devicetree/bindings/input/cypress,tm2-touchkey.txt        |  1 +
+ Documentation/devicetree/bindings/vendor-prefixes.yaml        |  2 ++
+ drivers/input/input.c                                         |  1 +
+ drivers/input/keyboard/tm2-touchkey.c                         | 11 +++++++++++
+ drivers/input/mouse/synaptics.c                               |  1 +
+ drivers/input/rmi4/rmi_f11.c                                  |  4 ++--
+ drivers/input/touchscreen/raydium_i2c_ts.c                    |  8 ++++----
+ include/uapi/linux/input-event-codes.h                        |  3 +++
+ include/uapi/linux/serio.h                                    | 10 +++++-----
+ 9 files changed, 30 insertions(+), 11 deletions(-)
+
+Thanks.
+
+
 -- 
-2.11.0
-
+Dmitry
