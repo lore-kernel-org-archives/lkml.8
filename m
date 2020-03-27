@@ -2,197 +2,151 @@ Return-Path: <SRS0=s8dx=5M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D39FC43331
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 06:43:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D425C2D0E7
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 06:46:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 53BB82073B
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 06:43:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SPa8DYgm"
+	by mail.kernel.org (Postfix) with ESMTP id 0DE1820714
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 06:46:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727495AbgC0GnG (ORCPT
+        id S1726758AbgC0Gqw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Mar 2020 02:43:06 -0400
-Received: from mail-pj1-f67.google.com ([209.85.216.67]:52050 "EHLO
-        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725956AbgC0GnF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Mar 2020 02:43:05 -0400
-Received: by mail-pj1-f67.google.com with SMTP id w9so3465910pjh.1;
-        Thu, 26 Mar 2020 23:43:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:autocrypt:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=Gn4RDiUpqtiQaQrWSiN3ADF547Gz9FwHIuF5Us+3HlI=;
-        b=SPa8DYgmQz9Ul5OjDHnV/2oR5deAWvbqWtgplujutcVD4oSxOpf1Dhv4DHbeW/XM8L
-         ViJ+hVJyfjmsN+CMfX9s3f5cPdBp0U4Et/cQCV3YwNipSpxvWirpq1GZKkRasnD7HoTe
-         ca8SBRHmBPKHpjX0AXAxqqIB1p82oZDN0ONJI8AhQP5FDtAAotN3+sYpqXIxU0ZVF6Fh
-         Q8CHIlVGXDOJ/0OAIhVkfRURx9c4tZtEvR8igHVWIHZZwJL+bDtUH0YNBQMCKh+HJGoN
-         x6hXLpOKkEhQNk03Etb5ZUklRIDuKHtxgzbw0Pi5+JtckQTdYKo0Yc7CKyUrZQWk3dYO
-         janA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=Gn4RDiUpqtiQaQrWSiN3ADF547Gz9FwHIuF5Us+3HlI=;
-        b=A8YBdiqv25e5j6wTWicZE8uG21BIo//ydXUqnkP1bKYec1CjiyJyBYBXzp1teww8K3
-         ff7JaoqLmGG2qElQ/uGlWizpVnUEUh2iBb8Llsn8M2T5DRvIfH7CFFKn4eq1CVL3qEeW
-         MVt12P87s2XkeUvjMaXwuKr+DUeFugyqETun4wL9EhPUKWWHKJuepBgd0pzd6Ac6nUWd
-         kH688IqPd9j1gpuLr4LWXM/KuOat2osKq8ouyEj6hb3tcMwYrecMG0yt9RtGLdXJbISc
-         V58G3cbMExLJcedZzKqHeyYr+PbUNn+R/jYuVO152nIovnlWvOSEc+bwpHtH1D76xWTx
-         PmOg==
-X-Gm-Message-State: ANhLgQ2ztM+ahXAP2XYNXuFB6lV4g/LmY707rrt15yCPNQEf94Qdd/EO
-        Mu12RxcziwXgUu64C+2CzAT8M4ej
-X-Google-Smtp-Source: ADFU+vu26OKVuS4MSs7MMcp5vgHZ4ea4oOOq/pDdUDA0Hb5gb9UNbIYIEIcUygYepHYGbl1RTPcfjw==
-X-Received: by 2002:a17:90a:32c1:: with SMTP id l59mr4274806pjb.36.1585291383568;
-        Thu, 26 Mar 2020 23:43:03 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id t15sm3065589pgv.61.2020.03.26.23.43.01
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 26 Mar 2020 23:43:02 -0700 (PDT)
-Subject: Re: [PATCH] parisc: Regenerate parisc defconfigs
-To:     Helge Deller <deller@gmx.de>
-Cc:     linux-parisc@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200326202006.GA160630@roeck-us.net>
- <20200326221921.GA20495@ls3530.fritz.box>
-From:   Guenter Roeck <linux@roeck-us.net>
-Autocrypt: addr=linux@roeck-us.net; keydata=
- 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
- mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
-Message-ID: <d83868cb-12cd-054e-db85-bcbb9121683a@roeck-us.net>
-Date:   Thu, 26 Mar 2020 23:43:01 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Fri, 27 Mar 2020 02:46:52 -0400
+Received: from foss.arm.com ([217.140.110.172]:41054 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725956AbgC0Gqw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Mar 2020 02:46:52 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id EC7317FA;
+        Thu, 26 Mar 2020 23:46:50 -0700 (PDT)
+Received: from [10.163.1.31] (unknown [10.163.1.31])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6B53F3F71F;
+        Thu, 26 Mar 2020 23:50:47 -0700 (PDT)
+Subject: Re: [PATCH V2 0/3] mm/debug: Add more arch page table helper tests
+To:     Christophe Leroy <christophe.leroy@c-s.fr>, linux-mm@kvack.org
+Cc:     Jonathan Corbet <corbet@lwn.net>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Vineet Gupta <vgupta@synopsys.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "Kirill A . Shutemov" <kirill@shutemov.name>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        linux-snps-arc@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org,
+        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+        linux-riscv@lists.infradead.org, x86@kernel.org,
+        linux-doc@vger.kernel.org, linux-arch@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <1585027375-9997-1-git-send-email-anshuman.khandual@arm.com>
+ <2bb4badc-2b7a-e15d-a99b-b1bd38c9d9bf@arm.com>
+ <a46d18ed-8911-1ec3-c32f-58b6e0d959d7@c-s.fr>
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+Message-ID: <9675882f-0ec5-5e46-551f-dd3aa38bf8d8@arm.com>
+Date:   Fri, 27 Mar 2020 12:16:34 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-In-Reply-To: <20200326221921.GA20495@ls3530.fritz.box>
+In-Reply-To: <a46d18ed-8911-1ec3-c32f-58b6e0d959d7@c-s.fr>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/26/20 3:19 PM, Helge Deller wrote:
-> * Guenter Roeck <linux@roeck-us.net>:
->> On Mon, Feb 03, 2020 at 10:31:22PM +0100, Helge Deller wrote:
->>> Regenerate the 32- and 64-bit defconfigs and drop the outdated specific
->>> machine defconfigs for the 712, A500, B160, C3000 and C8000 workstations.
->>> ---
->>>  arch/parisc/configs/712_defconfig           | 181 ---------------
->>>  arch/parisc/configs/a500_defconfig          | 177 ---------------
->>>  arch/parisc/configs/defconfig               | 206 -----------------
+
+On 03/26/2020 08:53 PM, Christophe Leroy wrote:
+> 
+> 
+> Le 26/03/2020 à 03:23, Anshuman Khandual a écrit :
 >>
->> Since the removal of arch/parisc/configs/defconfig, "make ARCH=parisc
->> defconfig" results in an endless recursive make loop.
+>>
+>> On 03/24/2020 10:52 AM, Anshuman Khandual wrote:
+>>> This series adds more arch page table helper tests. The new tests here are
+>>> either related to core memory functions and advanced arch pgtable helpers.
+>>> This also creates a documentation file enlisting all expected semantics as
+>>> suggested by Mike Rapoport (https://lkml.org/lkml/2020/1/30/40).
+>>>
+>>> This series has been tested on arm64 and x86 platforms.
+>>
+>> If folks can test these patches out on remaining ARCH_HAS_DEBUG_VM_PGTABLE
+>> enabled platforms i.e s390, arc, powerpc (32 and 64), that will be really
+>> appreciated. Thank you.
+>>
 > 
-> Can you please test the patch below?
-> Helge
+> On powerpc 8xx (PPC32), I get:
 > 
-> ----
-> [PATCH] parisc: Fix defconfig selection
-> 
-> Fix the recursive loop when running "make ARCH=parisc defconfig".
-> 
-> Fixes: 84669923e1ed ("parisc: Regenerate parisc defconfigs")
-> Noticed-by: Guenter Roeck <linux@roeck-us.net>
-> Signed-off-by: Helge Deller <deller@gmx.de>
+> [   53.338368] debug_vm_pgtable: debug_vm_pgtable: Validating architecture page table helpers
+> [   53.347403] ------------[ cut here ]------------
+> [   53.351832] WARNING: CPU: 0 PID: 1 at mm/debug_vm_pgtable.c:647 debug_vm_pgtable+0x280/0x3f4
 
-This works.
+mm/debug_vm_pgtable.c:647 ?
 
-Tested-by: Guenter Roeck <linux@roeck-us.net>
+With the following commits in place
 
-It would be nice if there was a better way to select 32-bit
-vs. 64-bit defconfigs (for example based on the compiler,
-or with ARCH={parisc,parisc64}). However, that never worked
-for parisc, so I guess we can't expect it to magically work
-now, and much less so for a bug fix.
+53a8338ce (HEAD) Documentation/mm: Add descriptions for arch page table helper
+5d4913fc1 mm/debug: Add tests validating arch advanced page table helpers
+bcaf120a7 mm/debug: Add tests validating arch page table helpers for core features
+d6ed5a4a5 x86/memory: Drop pud_mknotpresent()
+0739d1f8d mm/debug: Add tests validating architecture page table helpers
+16fbf79b0 (tag: v5.6-rc7) Linux 5.6-rc7
 
-Thanks,
-Guenter
+mm/debug_vm_pgtable.c:647 is here.
 
-> 
-> diff --git a/arch/parisc/Kconfig b/arch/parisc/Kconfig
-> index 71034b54d74e..3801a2ef9bca 100644
-> --- a/arch/parisc/Kconfig
-> +++ b/arch/parisc/Kconfig
-> @@ -79,6 +79,11 @@ config MMU
->  config STACK_GROWSUP
->  	def_bool y
-> 
-> +config ARCH_DEFCONFIG
-> +	string
-> +	default "arch/parisc/configs/generic-32bit_defconfig" if !64BIT
-> +	default "arch/parisc/configs/generic-64bit_defconfig" if 64BIT
-> +
->  config GENERIC_LOCKBREAK
->  	bool
->  	default y
-> diff --git a/arch/parisc/Makefile b/arch/parisc/Makefile
-> index dca8f2de8cf5..628cd8bb7ad8 100644
-> --- a/arch/parisc/Makefile
-> +++ b/arch/parisc/Makefile
-> @@ -34,6 +34,13 @@ CC_ARCHES	= hppa hppa2.0 hppa1.1
->  LD_BFD		:= elf32-hppa-linux
->  endif
-> 
-> +# select defconfig based on actual architecture
-> +ifeq ($(shell uname -m),parisc64)
-> +	KBUILD_DEFCONFIG := generic-64bit_defconfig
-> +else
-> +	KBUILD_DEFCONFIG := generic-32bit_defconfig
-> +endif
-> +
->  export LD_BFD
-> 
->  ifneq ($(SUBARCH),$(UTS_MACHINE))
-> 
+#ifdef CONFIG_ARCH_ENABLE_THP_MIGRATION
+static void __init pmd_swap_tests(unsigned long pfn, pgprot_t prot)
+{
+        swp_entry_t swp;
+        pmd_t pmd;  -----------------------------> Line #647
 
+        pmd = pfn_pmd(pfn, prot);
+        swp = __pmd_to_swp_entry(pmd);
+        WARN_ON(!pmd_same(pmd, __swp_entry_to_pmd(swp)));
+}
+#else
+static void __init pmd_swap_tests(unsigned long pfn, pgprot_t prot) { }
+#end
+
+Did I miss something ?
+
+> [   53.360140] CPU: 0 PID: 1 Comm: swapper Not tainted 5.6.0-rc7-s3k-dev-01090-g92710e99881f #3544
+> [   53.368718] NIP:  c0777c04 LR: c0777bb8 CTR: 00000000
+> [   53.373720] REGS: c9023df0 TRAP: 0700   Not tainted (5.6.0-rc7-s3k-dev-01090-g92710e99881f)
+> [   53.382042] MSR:  00029032 <EE,ME,IR,DR,RI>  CR: 22000222  XER: 20000000
+> [   53.388667]
+> [   53.388667] GPR00: c0777bb8 c9023ea8 c6120000 00000001 1e410000 00000000 00000000 007641c9
+> [   53.388667] GPR08: 00000000 00000001 00000000 ffffffff 82000222 00000000 c00039b8 00000000
+> [   53.388667] GPR16: 00000000 00000000 00000000 fffffff0 065fc000 1e410000 c6600000 000001e4
+> [   53.388667] GPR24: 000001d9 c062d14c c65fc000 c642d448 000006c9 00000000 c65f8000 c65fc040
+> [   53.423400] NIP [c0777c04] debug_vm_pgtable+0x280/0x3f4
+> [   53.428559] LR [c0777bb8] debug_vm_pgtable+0x234/0x3f4
+> [   53.433593] Call Trace:
+> [   53.436048] [c9023ea8] [c0777bb8] debug_vm_pgtable+0x234/0x3f4 (unreliable)
+> [   53.442936] [c9023f28] [c00039e0] kernel_init+0x28/0x124
+> [   53.448184] [c9023f38] [c000f174] ret_from_kernel_thread+0x14/0x1c
+> [   53.454245] Instruction dump:
+> [   53.457180] 41a20008 4bea3ed9 62890021 7d36b92e 7d36b82e 71290fd0 3149ffff 7d2a4910
+> [   53.464838] 0f090000 5789077e 3149ffff 7d2a4910 <0f090000> 38c00000 38a00000 38800000
+> [   53.472671] ---[ end trace fd5dd92744dc0065 ]---
+Could you please point me to the exact test which is failing ?
+
+> [   53.519778] Freeing unused kernel memory: 608K
+> 
+> 
+So I assume that the system should have come till runtime just fine apart from
+the above warning message because.
