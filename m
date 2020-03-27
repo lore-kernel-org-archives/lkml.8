@@ -2,276 +2,141 @@ Return-Path: <SRS0=s8dx=5M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BA90C2D0EC
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 14:08:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2C41C43331
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 14:10:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 082AD206F2
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 14:08:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=invensense.com header.i=@invensense.com header.b="HFHbSJM6";
-	dkim=pass (1024-bit key) header.d=invensense.onmicrosoft.com header.i=@invensense.onmicrosoft.com header.b="aj2IrNVW"
+	by mail.kernel.org (Postfix) with ESMTP id 73C13206F1
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 14:10:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585318233;
+	bh=dfPdJ2yulo3myqEP+7rOFU9ecy93SLpbGI5Q2cwUJ3w=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=GVC2zpr6MxPGD69ybu41tJ1IXV8K9bDSAsYVv2IesveDyhShKtNeK9iGaxNd6IZwR
+	 SOfXP5hlQ9w9dWKlPlVZ5agqOvRl0HsHH9LlzV6B11FBFTFtvOm5HAXKzivHsfJEeY
+	 G6P++8NASq2j1Jeor7194hBi7NPJYyBNZmyDhsLo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727933AbgC0OIw (ORCPT
+        id S1727354AbgC0OKc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Mar 2020 10:08:52 -0400
-Received: from mx0b-00328301.pphosted.com ([148.163.141.47]:4960 "EHLO
-        mx0b-00328301.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726333AbgC0OIv (ORCPT
+        Fri, 27 Mar 2020 10:10:32 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:47284 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726333AbgC0OKc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Mar 2020 10:08:51 -0400
-Received: from pps.filterd (m0156136.ppops.net [127.0.0.1])
-        by mx0b-00328301.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02RE76vJ004158;
-        Fri, 27 Mar 2020 07:08:29 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=invensense.com; h=from : to : cc :
- subject : date : message-id : references : in-reply-to : content-type :
- content-transfer-encoding : mime-version; s=pfpt1;
- bh=NT77/H0R5SEmcfy7z21uiTVvu6RyQ34FLnuuC/YieRQ=;
- b=HFHbSJM6Rpygu7LMLKodBMF8PIdp+Olo742LDFamNEYoTY+mCuDfi8WPKJ74uaiOgpY0
- tF7rRfrs47LEX1bkV8FALbV5fS+Np/wv0D7eg+fPH/uqWelMI4VYJM9wxDIjXyH2yg5+
- SjouQlbOnYgW+bCPxTC+NU6bJNfNmLPM/Bo4MHR25gJ3jpQDxefOnfS2+eNTtJCTtjbU
- tWEJ3fE2ghdP+NDTmmQPWgnurmzTOAEMBqTgHGjxJ3Mqd01C1Ybybwezefq28efAkQjP
- O02vsl6OrzikCwF/LqQAZwbZEgnK9RXwoelGuYVsFt98mcxV0wpL3NmdryTy+fwEl06l dA== 
-Received: from nam11-bn8-obe.outbound.protection.outlook.com (mail-bn8nam11lp2168.outbound.protection.outlook.com [104.47.58.168])
-        by mx0b-00328301.pphosted.com with ESMTP id 300bux0y15-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 27 Mar 2020 07:08:29 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=EiGc9GUgB6lN6+eO+wGXnHtU5XRiC2Ptq+7rftVVXMHnfvI6Zgg2+ZC08OYQpM8yEdimPLcF+jJZLATRCIxBJSS6dDCpVD5R27cIOs/0O2pS/h0GYj9k6C9vPudbqpSa5JyEuyuhGt15zIKEOw99Sk6MgKSrBLCJHcwpYzVng1bXnQ1lQbDituQDCA5QQzIt6NldwhqjFq/Xa4znymVLZHmMiYAqkEE66KDtJ7z4PDNeIS334i/84FwB2bGPlg55Qm27vozWajdZyPLUMo2jDgxze+15KsPp+3LOSQgAYWfVcU03cVD/pexXjz+zge5lhJSiZdBlUoVJSnxRlyHN9A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=NT77/H0R5SEmcfy7z21uiTVvu6RyQ34FLnuuC/YieRQ=;
- b=QKm0+aGg+XOPUCzeXd0Dc3IYEkoHlPiuQNV3910fOOTwG9EzLVS+rZSxeZ57lOo6ZO6IZpuZX1jrje3lkt00a5ltxwF1TffjE6Res6XmyyVfhBQabT3I8cLdy7obb5hZ35JF5dwvl/juP7GGjYrLIfFOV9urDXHJyxG25rvSD4xvv7qAvkVa42yMDKttuZ0KKcoa3EvVvmUAuNZryKvWVW5joAQszsI1wmzOrGl7h/Uiljv7mks0B3aSdFi77UTZQgZ8VgAXnghpaOHxnb6YbuG/WZzrZdVxbXBF3+qQ0HZY0g0RfRscyMndPju+E79cszS6bFJ2ncVOl1+SDfhtkQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=invensense.com; dmarc=pass action=none
- header.from=invensense.com; dkim=pass header.d=invensense.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=invensense.onmicrosoft.com; s=selector2-invensense-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=NT77/H0R5SEmcfy7z21uiTVvu6RyQ34FLnuuC/YieRQ=;
- b=aj2IrNVWrnM1e6o2PUwNxexuRs2556qy18mQuFwCKrTbOPt155j8B8Kq/HfoePNVK7VIDrzauOTCjr6uHalMW9YMekb9UHo1ROZ2o9y6ar8OW5i+B+0lhd8bQQ5hhfxvgTRL7eRX8hmA+wmnJ0pLfuRmwP8qS4/vqWIFVGf677I=
-Received: from MN2PR12MB4422.namprd12.prod.outlook.com (2603:10b6:208:265::9)
- by MN2PR12MB2893.namprd12.prod.outlook.com (2603:10b6:208:107::21) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2856.18; Fri, 27 Mar
- 2020 14:08:26 +0000
-Received: from MN2PR12MB4422.namprd12.prod.outlook.com
- ([fe80::7471:da8b:8ca1:6af0]) by MN2PR12MB4422.namprd12.prod.outlook.com
- ([fe80::7471:da8b:8ca1:6af0%4]) with mapi id 15.20.2835.025; Fri, 27 Mar 2020
- 14:08:26 +0000
-From:   Jean-Baptiste Maneyrol <JManeyrol@invensense.com>
-To:     Rohit Sarkar <rohitsarkar5398@gmail.com>,
-        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>
-CC:     Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2] iio: imu: inv_mpu6050: add debugfs register r/w
- interface
-Thread-Topic: [PATCH v2] iio: imu: inv_mpu6050: add debugfs register r/w
- interface
-Thread-Index: AQHWBDkX3Uqc77Vu2kucOeOFR1s1N6hceZjj
-Date:   Fri, 27 Mar 2020 14:08:26 +0000
-Message-ID: <MN2PR12MB4422513DF12A699F3B2C06D2C4CC0@MN2PR12MB4422.namprd12.prod.outlook.com>
-References: <5e7dfb41.1c69fb81.cc4bb.042f@mx.google.com>
-In-Reply-To: <5e7dfb41.1c69fb81.cc4bb.042f@mx.google.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [91.174.78.156]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: db5c8b0c-0310-4a71-debc-08d7d25851b1
-x-ms-traffictypediagnostic: MN2PR12MB2893:
-x-microsoft-antispam-prvs: <MN2PR12MB289367C4F828A62C212E0DA8C4CC0@MN2PR12MB2893.namprd12.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7691;
-x-forefront-prvs: 0355F3A3AE
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(396003)(136003)(39850400004)(346002)(376002)(366004)(110136005)(8676002)(54906003)(186003)(52536014)(76116006)(91956017)(4326008)(5660300002)(71200400001)(8936002)(26005)(81156014)(33656002)(6506007)(66946007)(53546011)(316002)(478600001)(81166006)(86362001)(66476007)(66446008)(9686003)(64756008)(55016002)(7696005)(2906002)(66556008);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR12MB2893;H:MN2PR12MB4422.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;
-received-spf: None (protection.outlook.com: invensense.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: DlIUrY/72j/lNcqfhX+5Aduhqpd9KnhxGrzvPlQD3IUJArVlDtsU/9GKNA7i7SfOMieCBz975WZbdgRPuopQ1IZLEvdnAbuHtWIC1ZlOAObwgNuHkhtYbWlCegNRT8M/IDEAYQgXHEnwADydKprR22Bo6gcjrKuhPNllwxZwFGWbDCPjm4VAu43DVOZDRebHk6RX5BIQNXL2pUWKJ75EIv4y2Z31S8o4QLSmnAnSAMDtbuUIALUFCrr2OQp5HuN8nZhqgBmO9XN4+Er7P+6dS9nA4HWpRG9LFIkU4jvS5wSR8iYr+SoideNScOKasTArtqjEFEv+/CUD4m6S9y8DKKCKmIUZspFaeQ7TvX4AXSlqUsEWaoa6UXXikqip+eToaVD/KoS02NEe3qnMXNHtPscqeVTV7sZDLaQxT5iMsKHOF8olYi12T82LTQ6uzBup
-x-ms-exchange-antispam-messagedata: LEwjEQlu1agd64MX6HlDjjYrW0+sw9u2YauuBjgf9Pqm7HzQdx7YVVy5nRtmVVS6YltwvgqcH+OBuXt84nJXYWXOJpcthsLXC5TCGaz2Wu/IBxGAwwG5aoCpigpqCDzsDuaZylRO/q096JSOzcFL7g==
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+        Fri, 27 Mar 2020 10:10:32 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:
+        From:Date:Sender:Reply-To:Content-ID:Content-Description;
+        bh=AnRhIg5RFm3Qrmnieov4E28AVf0Oay6d4xBVbwT6Ib8=; b=I+lMVe6WHg2ORatRALBx73Uwfe
+        PLBUIk7eiW0elbpwfhczMcTrsKaUhkR28D33yjkLvAKlBmrS6lWqBy0sbDdEdObb/eO1rWX93fqDj
+        7AK7WNufeo9ygdfvwOg9n2gM2BqSylQj4lD3lXhM+ZroZKicuc0W1ypP8PEv3ri1xKvEPIuJLNn43
+        djvYCLfS2tar5jC+h1sEdo4NFN1dZXuARAffHJit7et69qRd+qcCX9t8fQavtp0XuMOU+GspAYPZB
+        NZX7vlg6EvWId8ono6jADqvpX+CsDskmHbcOXbQT61YV1B5/ohBzroaZ8ISSXnQjNxU/s9gw9ISwC
+        WfaS+FyQ==;
+Received: from ip5f5ad4d8.dynamic.kabel-deutschland.de ([95.90.212.216] helo=coco.lan)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jHpgo-000443-Hr; Fri, 27 Mar 2020 14:10:26 +0000
+Date:   Fri, 27 Mar 2020 15:10:20 +0100
+From:   Mauro Carvalho Chehab <mchehab@kernel.org>
+To:     Ezequiel Garcia <ezequiel@collabora.com>
+Cc:     linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Tomasz Figa <tfiga@chromium.org>,
+        Nicolas Dufresne <nicolas@ndufresne.ca>, kernel@collabora.com,
+        Hans Verkuil <hverkuil@xs4all.nl>, Sean Young <sean@mess.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Sakari Ailus <sakari.ailus@iki.fi>,
+        Michael Ira Krufky <mkrufky@gmail.com>,
+        Helen Koike <helen.koike@collabora.com>
+Subject: Re: [PATCH 2/2] media: Remove VIDEO_DEV unneeded dependency
+Message-ID: <20200327151020.231cf045@coco.lan>
+In-Reply-To: <c82b6c7be2e2f05c6924df00256caee6c5e32b23.camel@collabora.com>
+References: <20200323211022.28297-1-ezequiel@collabora.com>
+        <20200323211022.28297-3-ezequiel@collabora.com>
+        <20200324104722.1c605792@coco.lan>
+        <0336a046563a3d0556c988a67be2642194831710.camel@collabora.com>
+        <c82b6c7be2e2f05c6924df00256caee6c5e32b23.camel@collabora.com>
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-X-OriginatorOrg: invensense.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: db5c8b0c-0310-4a71-debc-08d7d25851b1
-X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Mar 2020 14:08:26.2485
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 462b3b3b-e42b-47ea-801a-f1581aac892d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: bQG+Gs6UijHOgJkxdlTnYKXRcasBZDqEhGHckz6NL+6ou8oU2egxE4NQgKTTfEjMYjl8jT0jG7puV0kVlVktQsZW1sVvrMkyVZ3s4zAT52c=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR12MB2893
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.645
- definitions=2020-03-27_05:2020-03-27,2020-03-27 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- spamscore=0 clxscore=1011 mlxlogscore=999 bulkscore=0 adultscore=0
- suspectscore=0 phishscore=0 lowpriorityscore=0 malwarescore=0 mlxscore=0
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2003270130
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,=0A=
-=0A=
-thanks, it's OK for me.=0A=
-=0A=
-Acked-by: Jean-Baptiste Maneyrol <jmaneyrol@invensense.com>=0A=
-=0A=
-Best regards,=0A=
-JB=0A=
-=0A=
-=0A=
-=0A=
-From: Rohit Sarkar <rohitsarkar5398@gmail.com>=0A=
-=0A=
-Sent: Friday, March 27, 2020 14:10=0A=
-=0A=
-To: linux-iio@vger.kernel.org <linux-iio@vger.kernel.org>=0A=
-=0A=
-Cc: Jonathan Cameron <jic23@kernel.org>; Hartmut Knaack <knaack.h@gmx.de>; =
-Lars-Peter Clausen <lars@metafoo.de>; Peter Meerwald-Stadler <pmeerw@pmeerw=
-.net>; Jean-Baptiste Maneyrol <JManeyrol@invensense.com>; Linus Walleij <li=
-nus.walleij@linaro.org>;=0A=
- Andy Shevchenko <andriy.shevchenko@linux.intel.com>; linux-iio@vger.kernel=
-.org <linux-iio@vger.kernel.org>; linux-kernel@vger.kernel.org <linux-kerne=
-l@vger.kernel.org>=0A=
-=0A=
-Subject: [PATCH v2] iio: imu: inv_mpu6050: add debugfs register r/w interfa=
-ce=0A=
-=0A=
-=A0=0A=
-=0A=
-=0A=
-=A0CAUTION: This email originated from outside of the organization. Please =
-make sure the sender is who they say they are and do not click links or ope=
-n attachments unless you recognize the sender and know the content is safe.=
-=0A=
-=0A=
-=0A=
-=0A=
-The debugfs interface provides direct access to read and write device=0A=
-=0A=
-registers if debugfs is enabled.=0A=
-=0A=
-=0A=
-=0A=
-Signed-off-by: Rohit Sarkar <rohitsarkar5398@gmail.com>=0A=
-=0A=
----=0A=
-=0A=
-Changelog v1->v2=0A=
-=0A=
-* grab a lock to protect driver state=0A=
-=0A=
-* add a comma at the end of structure member initialisation=0A=
-=0A=
-=0A=
-=0A=
-=A0drivers/iio/imu/inv_mpu6050/inv_mpu_core.c | 19 +++++++++++++++++++=0A=
-=0A=
-=A01 file changed, 19 insertions(+)=0A=
-=0A=
-=0A=
-=0A=
-diff --git a/drivers/iio/imu/inv_mpu6050/inv_mpu_core.c b/drivers/iio/imu/i=
-nv_mpu6050/inv_mpu_core.c=0A=
-=0A=
-index 7cb9ff3d3e94..381a3fb09858 100644=0A=
-=0A=
---- a/drivers/iio/imu/inv_mpu6050/inv_mpu_core.c=0A=
-=0A=
-+++ b/drivers/iio/imu/inv_mpu6050/inv_mpu_core.c=0A=
-=0A=
-@@ -1248,12 +1248,31 @@ static const struct attribute_group inv_attribute_g=
-roup =3D {=0A=
-=0A=
-=A0=A0=A0=A0=A0=A0=A0=A0 .attrs =3D inv_attributes=0A=
-=0A=
-=A0};=0A=
-=0A=
-=A0=0A=
-=0A=
-+static int inv_mpu6050_reg_access(struct iio_dev *indio_dev,=0A=
-=0A=
-+=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=
-=A0=A0=A0=A0=A0=A0=A0=A0 unsigned int reg,=0A=
-=0A=
-+=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=
-=A0=A0=A0=A0=A0=A0=A0=A0 unsigned int writeval,=0A=
-=0A=
-+=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=
-=A0=A0=A0=A0=A0=A0=A0=A0 unsigned int *readval)=0A=
-=0A=
-+{=0A=
-=0A=
-+=A0=A0=A0=A0=A0=A0 struct inv_mpu6050_state *st =3D iio_priv(indio_dev);=
-=0A=
-=0A=
-+=A0=A0=A0=A0=A0=A0 int ret =3D 0;=0A=
-=0A=
-+=0A=
-=0A=
-+=A0=A0=A0=A0=A0=A0 mutex_lock(&st->lock);=0A=
-=0A=
-+=A0=A0=A0=A0=A0=A0 if (readval)=0A=
-=0A=
-+=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 ret =3D regmap_read(st->map, re=
-g, readval);=0A=
-=0A=
-+=A0=A0=A0=A0=A0=A0 else=0A=
-=0A=
-+=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 ret =3D regmap_write(st->map, r=
-eg, writeval);=0A=
-=0A=
-+=A0=A0=A0=A0=A0=A0 mutex_unlock(&st->lock);=0A=
-=0A=
-+=0A=
-=0A=
-+=A0=A0=A0=A0=A0=A0 return ret;=0A=
-=0A=
-+}=0A=
-=0A=
-+=0A=
-=0A=
-=A0static const struct iio_info mpu_info =3D {=0A=
-=0A=
-=A0=A0=A0=A0=A0=A0=A0=A0 .read_raw =3D &inv_mpu6050_read_raw,=0A=
-=0A=
-=A0=A0=A0=A0=A0=A0=A0=A0 .write_raw =3D &inv_mpu6050_write_raw,=0A=
-=0A=
-=A0=A0=A0=A0=A0=A0=A0=A0 .write_raw_get_fmt =3D &inv_write_raw_get_fmt,=0A=
-=0A=
-=A0=A0=A0=A0=A0=A0=A0=A0 .attrs =3D &inv_attribute_group,=0A=
-=0A=
-=A0=A0=A0=A0=A0=A0=A0=A0 .validate_trigger =3D inv_mpu6050_validate_trigger=
-,=0A=
-=0A=
-+=A0=A0=A0=A0=A0=A0 .debugfs_reg_access =3D &inv_mpu6050_reg_access,=0A=
-=0A=
-=A0};=0A=
-=0A=
-=A0=0A=
-=0A=
-=A0/**=0A=
-=0A=
--- =0A=
-=0A=
-2.23.0.385.gbc12974a89=0A=
-=0A=
-=0A=
-=0A=
+Em Fri, 27 Mar 2020 10:47:44 -0300
+Ezequiel Garcia <ezequiel@collabora.com> escreveu:
+
+> Hi Mauro,
+> 
+> On Tue, 2020-03-24 at 07:18 -0300, Ezequiel Garcia wrote:
+> > On Tue, 2020-03-24 at 10:47 +0100, Mauro Carvalho Chehab wrote:  
+> > > Em Mon, 23 Mar 2020 18:10:22 -0300
+> > > Ezequiel Garcia <ezequiel@collabora.com> escreveu:
+> > >   
+> > > > Enable VIDEO_DEV (which compiles Video4Linux core)
+> > > > when MEDIA_SUPPORT is selected. This is needed, in order
+> > > > to be able to enable devices such as stateless codecs.
+> > > > 
+> > > > Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
+> > > > ---
+> > > >  drivers/media/Kconfig | 2 --
+> > > >  1 file changed, 2 deletions(-)
+> > > > 
+> > > > diff --git a/drivers/media/Kconfig b/drivers/media/Kconfig
+> > > > index b36a41332867..7de472ad07a2 100644
+> > > > --- a/drivers/media/Kconfig
+> > > > +++ b/drivers/media/Kconfig
+> > > > @@ -93,13 +93,11 @@ source "drivers/media/mc/Kconfig"
+> > > >  
+> > > >  #
+> > > >  # Video4Linux support
+> > > > -#	Only enables if one of the V4L2 types (ATV, webcam, radio) is selected
+> > > >  #
+> > > >  
+> > > >  config VIDEO_DEV
+> > > >  	tristate
+> > > >  	depends on MEDIA_SUPPORT
+> > > > -	depends on MEDIA_CAMERA_SUPPORT || MEDIA_ANALOG_TV_SUPPORT || MEDIA_RADIO_SUPPORT || MEDIA_SDR_SUPPORT
+> > > >  	default y
+> > > >  
+> > > >  config VIDEO_V4L2_SUBDEV_API  
+> > > 
+> > > The rationale of the above is to exclude Digital TV and remote
+> > > controller.
+> > > 
+> > > Removing the above will make the V4L2 core available every time, even
+> > > if all the user wants is remote controller or Digital TV support.
+> > >   
+> > 
+> > Hm, right.
+> >   
+> > > I'm working on a patchset that should hopefully address the issues
+> > > you're concerning.
+> > >   
+> > 
+> > Thanks, I'll appreciate that.
+> >   
+> 
+> It seems the config rework you sent will undergo some
+> extended discussions, which is fine given it's a full rework.
+> 
+> I'd like to send a smaller (ideally just one or two patches)
+> series, so we can improve the situation on codecs on a smaller
+> timeframe.
+
+I won't be merging anything new until the end of the merge
+window. So, we have around 20 days where no patches will
+be merged at linux media (except by critical bug fixes,
+merge conflicts, build breakages and similar stuff).
+
+So, there are plenty of time to review such series.
+
+Thanks,
+Mauro
