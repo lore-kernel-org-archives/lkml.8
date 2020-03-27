@@ -2,105 +2,91 @@ Return-Path: <SRS0=s8dx=5M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F521C2D0E8
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 12:56:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5ACE2C2D0E8
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 12:58:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 25D69206F2
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 12:56:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CoO6ypzN"
+	by mail.kernel.org (Postfix) with ESMTP id 31AA3206F2
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 12:58:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727444AbgC0M4w (ORCPT
+        id S1727548AbgC0M6Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Mar 2020 08:56:52 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:40048 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726900AbgC0M4w (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Mar 2020 08:56:52 -0400
-Received: by mail-pf1-f194.google.com with SMTP id c20so1919450pfi.7;
-        Fri, 27 Mar 2020 05:56:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=JCESKrrWnEcLImLZvJm5tR1fjZbwCGME3IqndlFgAd8=;
-        b=CoO6ypzNkOmyFHnruT4hQazdZeYV0ej95HEw1xMXx7JHlJ4uiKMUqOfarbksTb9Wok
-         458GeF0mY3hW10GFyr0UvYzVY8HIXdfia1EtudKJut1U1SQ1ohhpbYHtn3pC2KbaNM0D
-         A5lBJojF4CREWm7yNAO7fN2jxnB1qpbLHOYv6a8nsiwEilysWuWVFffZ5qi3C3kK/v87
-         Opq3/TjcWGYtWuoAvMmQvYSh2bEhQR7enzal9/T/4/4/N+9S9oKo78qT7Lbawcg9fn1r
-         0h8AGbXDP6L4nB2gu8BUnKK3vit+Gp6qKeiiNEXz0kTmqYXxWa+jXSa1p53IYv6hi/gd
-         9X2Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=JCESKrrWnEcLImLZvJm5tR1fjZbwCGME3IqndlFgAd8=;
-        b=THV0TwWruytPjbg8aAt1DUT3yAdgKzTH+B8lRvfMySWw6z+KEDAgNx/NNpmd5UqWjQ
-         pkyf9cYdCqg9p+Q5VUj9ZWpTGqAv4CfHQzGFDJM0uXHNNq737+dSUcaVdXHdtcZdA7B7
-         eeVR8ZqFwnjzhsgxa0oRdYF3pEXMcOISZ7XO6VfSvJWScOSSEVhP83lyM6NKElATpNS1
-         yoWNK6Z+3+clryWMfj6zCowq6lSRwWIOjJfWzw5kIFRNq1dDykJslcR9mrPg06GarEsg
-         +trdXuER5eP2/AmQ+i/RsRMllTS/dQ69P4xZVS24W7q611EcacUB+PLVyVVtN30Djb1l
-         I0pA==
-X-Gm-Message-State: ANhLgQ1iABUOykD1G1Q/i2+nt6dyeik47V8UJG14EOcq8Zo3umuWrelc
-        d5pEa3JwSfqo7hzCIYyCHCCB/TnHesFcNLZvJg4=
-X-Google-Smtp-Source: ADFU+vuBprMuWtXdm/FnbYNvjG3ofuWuI6NnR5OtgHiNk04Q2OWyrABc5FzEbeSm7D7BlNrC+5ZwVRZa86bjZgeuRVg=
-X-Received: by 2002:a63:798a:: with SMTP id u132mr14441551pgc.203.1585313810224;
- Fri, 27 Mar 2020 05:56:50 -0700 (PDT)
+        Fri, 27 Mar 2020 08:58:24 -0400
+Received: from mx2.suse.de ([195.135.220.15]:46202 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726165AbgC0M6Y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Mar 2020 08:58:24 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 7D2E6AC1D;
+        Fri, 27 Mar 2020 12:58:22 +0000 (UTC)
+Message-ID: <7b3f1bb70dd232a09851789fdaa5d7de957c9294.camel@suse.de>
+Subject: Re: [PATCH] ARM: dts: bcm283x: Use firmware PM driver for V3D
+From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        bcm-kernel-feedback-list@broadcom.com,
+        Stefan Wahren <stefan.wahren@i2se.com>,
+        Eric Anholt <eric@anholt.net>
+Cc:     wahrenst@gmx.net, devicetree@vger.kernel.org,
+        linux-rpi-kernel@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Date:   Fri, 27 Mar 2020 13:58:20 +0100
+In-Reply-To: <20200303173217.3987-1-nsaenzjulienne@suse.de>
+References: <20200303173217.3987-1-nsaenzjulienne@suse.de>
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-sr8I0z5hMln8enfhNN+B"
+User-Agent: Evolution 3.34.4 
 MIME-Version: 1.0
-References: <20200322224626.13160-1-sravanhome@gmail.com> <20200322224626.13160-3-sravanhome@gmail.com>
- <20200327075541.GF603801@dell> <a6098b6a-2b2f-5279-f9fc-85201b9aabde@gmail.com>
- <20200327102221.GA3383@dell> <a679aba5-4cfb-1b6c-8cb0-dab3a644f3e7@gmail.com>
- <20200327112523.GC3383@dell> <45f68c40-8e50-e0a2-a89a-b5a164d6b75c@gmail.com>
-In-Reply-To: <45f68c40-8e50-e0a2-a89a-b5a164d6b75c@gmail.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Fri, 27 Mar 2020 14:56:43 +0200
-Message-ID: <CAHp75VcAq-CwsXccbLVxEwGjZjNhdcbMyM-Y-=SEbmexBidCHw@mail.gmail.com>
-Subject: Re: [PATCH v4 2/5] mfd: mp2629: Add support for mps battery charger
-To:     saravanan sekar <sravanhome@gmail.com>
-Cc:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald <pmeerw@pmeerw.net>,
-        Sebastian Reichel <sre@kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-iio <linux-iio@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 27, 2020 at 2:41 PM saravanan sekar <sravanhome@gmail.com> wrote:
-> On 27/03/20 12:25 pm, Lee Jones wrote:
-> > On Fri, 27 Mar 2020, saravanan sekar wrote:
-> >> On 27/03/20 11:22 am, Lee Jones wrote:
 
-> > So Andy has reviewed, but you still don't have him on Cc?
-> Sorry one of his hint made me removed him in CC unknowingly.
->
-> "For the future, hint:
->          scripts/get_maintainer.pl --git --git-min-percent=67 ..."
->
+--=-sr8I0z5hMln8enfhNN+B
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Perhaps I have to elaborate. The above hint for the initial submit.
-Then the rule of thumb: Include reviewers into Cc (to the patches they
-have reviewed), because you can't know their intention and maybe they
-want to follow a development.
+On Tue, 2020-03-03 at 18:32 +0100, Nicolas Saenz Julienne wrote:
+> The register based driver turned out to be unstable, specially on RPi3a+
+> but not limited to it. While a fix is being worked on, we roll back to
+> using firmware based scheme.
+>=20
+> Fixes: e1dc2b2e1bef ("ARM: bcm283x: Switch V3D over to using the PM drive=
+r
+> instead of firmware")
+> Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+> ---
 
-> My fault, added him in CC
+Applied for-next.
 
-No problem.
+Regards,
+Nicolas
 
---
-With Best Regards,
-Andy Shevchenko
+
+--=-sr8I0z5hMln8enfhNN+B
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl59+GwACgkQlfZmHno8
+x/5IZAf+Jssc7zy9oVNz9NTe7OmnW+X4UFITXiDV15LXlQWZ+vYugWzUMnIsEMI+
+sIAy/LJlkVWDb6F0vhl5eUif4e1ESSBQv7oMSSWQPZMff/Te4KC6a4JvrgFaFoke
+N+PPj1mfQsFAEdCt3wpBu5DBk2G8C/XQJWdNyitc0N5s2GHjREZdi2m61fLnUgKq
+BCRCLAo3HJ9kJYX4qwA0o8e83y0zdVF7/s5BvA4QbINxlRiYejqxQK6mTSc5VOM7
+MpCiTYjQVEXFJbDtrc+Pl6RoT9zSt7mJ/iaV7dNweASW0s+qGmJyW11QpRfKRQzl
+AKo+l+GxgdBcmWN9rnZ2MY+yqP1ZMA==
+=Jnbv
+-----END PGP SIGNATURE-----
+
+--=-sr8I0z5hMln8enfhNN+B--
+
