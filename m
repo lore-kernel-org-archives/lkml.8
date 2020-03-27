@@ -2,96 +2,301 @@ Return-Path: <SRS0=s8dx=5M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2966C43331
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 09:55:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D602AC43331
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 09:55:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E15120578
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 09:55:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="CC4qD8sa"
+	by mail.kernel.org (Postfix) with ESMTP id A4AA720578
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 09:55:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727254AbgC0JzL (ORCPT
+        id S1726959AbgC0Jzs convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Mar 2020 05:55:11 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:18979 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726002AbgC0JzL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Mar 2020 05:55:11 -0400
-X-UUID: 4558927e9ecd4cc6bc8cd68f84f4d65e-20200327
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=mhldOisu3DDCyVpCIZOg4fKzpce7E3Pq+4ZmOlXaB40=;
-        b=CC4qD8saT8cbcbSn6N+UrR+xOk3+pZ2+zXlyH63nEL132KY4vOmq8eXoD3BZDf0GblQgRoRG7Na30a3AP8GQxy6+RNzckyTuiXCSrx4IVbr533UHnCF6u9w56yf9QdN63+78jxZk8In1cUkGtibwpLWLQU7rPAJ+K75Tf7nwYrQ=;
-X-UUID: 4558927e9ecd4cc6bc8cd68f84f4d65e-20200327
-Received: from mtkcas07.mediatek.inc [(172.21.101.84)] by mailgw01.mediatek.com
-        (envelope-from <stanley.chu@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1101273993; Fri, 27 Mar 2020 17:55:03 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- mtkmbs08n2.mediatek.inc (172.21.101.56) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Fri, 27 Mar 2020 17:54:55 +0800
-Received: from [172.21.84.99] (172.21.84.99) by mtkcas07.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Fri, 27 Mar 2020 17:54:55 +0800
-Message-ID: <1585302896.4609.2.camel@mtksdccf07>
-Subject: RE: [PATCH v2 2/2] scsi: ufs-mediatek: add error recovery for
- suspend and resume
-From:   Stanley Chu <stanley.chu@mediatek.com>
-To:     Avri Altman <Avri.Altman@wdc.com>
-CC:     "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
-        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
-        "alim.akhtar@samsung.com" <alim.akhtar@samsung.com>,
-        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
-        "beanhuo@micron.com" <beanhuo@micron.com>,
-        "asutoshd@codeaurora.org" <asutoshd@codeaurora.org>,
-        "cang@codeaurora.org" <cang@codeaurora.org>,
-        "matthias.bgg@gmail.com" <matthias.bgg@gmail.com>,
-        "bvanassche@acm.org" <bvanassche@acm.org>,
-        "linux-mediatek@lists.infradead.org" 
-        <linux-mediatek@lists.infradead.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kuohong.wang@mediatek.com" <kuohong.wang@mediatek.com>,
-        "peter.wang@mediatek.com" <peter.wang@mediatek.com>,
-        "chun-hung.wu@mediatek.com" <chun-hung.wu@mediatek.com>,
-        "andy.teng@mediatek.com" <andy.teng@mediatek.com>
-Date:   Fri, 27 Mar 2020 17:54:56 +0800
-In-Reply-To: <SN6PR04MB4640191B1F648C3D43BD9AF8FCCC0@SN6PR04MB4640.namprd04.prod.outlook.com>
-References: <20200326150747.11426-1-stanley.chu@mediatek.com>
-         <20200326150747.11426-3-stanley.chu@mediatek.com>
-         <SN6PR04MB4640191B1F648C3D43BD9AF8FCCC0@SN6PR04MB4640.namprd04.prod.outlook.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.2.3-0ubuntu6 
+        Fri, 27 Mar 2020 05:55:48 -0400
+Received: from mga11.intel.com ([192.55.52.93]:22325 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726002AbgC0Jzs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Mar 2020 05:55:48 -0400
+IronPort-SDR: ASc5RBs5L/0RKB9C3lWjE48Lj18AX9N9RYDvOJfq4usJMG1hZJ/G54EheHMuVBYrhZdov5+c3/
+ gfX+aLmjNPBg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Mar 2020 02:55:47 -0700
+IronPort-SDR: bT3ryrd0tT1jr94GKKr+iX/NuqdMwo9CVGcWdKbynZAEHht25qR7IknmMqEZ2YwZv63D8Eitcm
+ YwCNAnvYBWyw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,311,1580803200"; 
+   d="scan'208";a="421047659"
+Received: from fmsmsx106.amr.corp.intel.com ([10.18.124.204])
+  by orsmga005.jf.intel.com with ESMTP; 27 Mar 2020 02:55:47 -0700
+Received: from fmsmsx157.amr.corp.intel.com (10.18.116.73) by
+ FMSMSX106.amr.corp.intel.com (10.18.124.204) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Fri, 27 Mar 2020 02:55:46 -0700
+Received: from shsmsx102.ccr.corp.intel.com (10.239.4.154) by
+ FMSMSX157.amr.corp.intel.com (10.18.116.73) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Fri, 27 Mar 2020 02:55:46 -0700
+Received: from shsmsx104.ccr.corp.intel.com ([169.254.5.206]) by
+ shsmsx102.ccr.corp.intel.com ([169.254.2.50]) with mapi id 14.03.0439.000;
+ Fri, 27 Mar 2020 17:55:44 +0800
+From:   "Tian, Kevin" <kevin.tian@intel.com>
+To:     Jacob Pan <jacob.jun.pan@linux.intel.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Jean-Philippe Brucker <jean-philippe@linaro.com>
+CC:     "Liu, Yi L" <yi.l.liu@intel.com>,
+        "Raj, Ashok" <ashok.raj@intel.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Eric Auger <eric.auger@redhat.com>
+Subject: RE: [PATCH 07/10] iommu/ioasid: Use mutex instead of spinlock
+Thread-Topic: [PATCH 07/10] iommu/ioasid: Use mutex instead of spinlock
+Thread-Index: AQHWAs3Lc4yP/KZICUWluZLwsVHvnqhcNb4w
+Date:   Fri, 27 Mar 2020 09:55:43 +0000
+Message-ID: <AADFC41AFE54684AB9EE6CBC0274A5D19D7ED597@SHSMSX104.ccr.corp.intel.com>
+References: <1585158931-1825-1-git-send-email-jacob.jun.pan@linux.intel.com>
+ <1585158931-1825-8-git-send-email-jacob.jun.pan@linux.intel.com>
+In-Reply-To: <1585158931-1825-8-git-send-email-jacob.jun.pan@linux.intel.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-product: dlpe-windows
+dlp-version: 11.2.0.6
+dlp-reaction: no-action
+x-originating-ip: [10.239.127.40]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-X-TM-SNTS-SMTP: B2902B3FD719266556EA2DD3FDCC2597BFDE148D1E39AB67CAC55E4472BE7D1A2000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgQXZyaSwNCg0KT24gRnJpLCAyMDIwLTAzLTI3IGF0IDA5OjIzICswMDAwLCBBdnJpIEFsdG1h
-biB3cm90ZToNCj4gPiANCj4gPiBPbmNlIGZhaWwgaGFwcGVucyBkdXJpbmcgc3VzcGVuZCBhbmQg
-cmVzdW1lIGZsb3cgaWYgdGhlIGRlc2lyZWQgbG93DQo+ID4gcG93ZXIgbGluayBzdGF0ZSBpcyBI
-OCwgbGluayByZWNvdmVyeSBpcyByZXF1aXJlZCBmb3IgTWVkaWFUZWsgVUZTDQo+ID4gY29udHJv
-bGxlci4NCj4gPiANCj4gPiBGb3IgcmVzdW1lIGZsb3csIHNpbmNlIHBvd2VyIGFuZCBjbG9ja3Mg
-YXJlIGFscmVhZHkgZW5hYmxlZCBiZWZvcmUNCj4gPiBpbnZva2luZyB2ZW5kb3IncyByZXN1bWUg
-Y2FsbGJhY2ssIHNpbXBseSB1c2luZyB1ZnNoY2RfbGlua19yZWNvdmVyeSgpDQo+ID4gaW5zaWRl
-IGNhbGxiYWNrIGlzIGZpbmUuDQo+ID4gDQo+ID4gRm9yIHN1c3BlbmQgZmxvdywgdGhlIGRldmlj
-ZSBwb3dlciBlbnRlcnMgbG93IHBvd2VyIG1vZGUgb3IgaXMgZGlzYWJsZWQNCj4gPiBiZWZvcmUg
-c3VzcGVuZCBjYWxsYmFjaywgdGh1cyB1ZnNoY2RfbGlua19yZWNvdmVyeSgpIGNhbiBub3QgYmUg
-ZGlyZWN0bHkNCj4gPiB1c2VkIGluIGNhbGxiYWNrLiBUbyBsZXZlcmFnZSBob3N0IHJlc2V0IGZs
-b3cgZHVyaW5nIHVmc2hjZF9zdXNwZW5kKCksDQo+ID4gc2V0IGxpbmsgYXMgb2ZmIHN0YXRlIGVu
-Zm9yY2VkbHkgDQo+IE5vdCBzdXJlIHRoaXMgaXMgYSBwcm9wZXIgRW5nbGlzaCwgYnV0IEknbSBu
-b3Qgc3VyZS4NCj4gDQo+IHRvIGxldCB1ZnNoY2RfaG9zdF9yZXNldF9hbmRfcmVzdG9yZSgpDQo+
-ID4gYmUgZXhlY3V0ZWQgYnkgdWZzaGNkX3N1c3BlbmQoKS4NCg0KVGhhbmtzIGZvciB5b3VyIHJl
-dmlldyEgSSB3aWxsIGZpeCB0aGlzIHNlbnRlbmNlIGluIG5leHQgdmVyc2lvbi4NCg0KU3Rhbmxl
-eSBDaHUNCg==
+> From: Jacob Pan <jacob.jun.pan@linux.intel.com>
+> Sent: Thursday, March 26, 2020 1:55 AM
+> 
+> Each IOASID or set could have multiple users with its own HW context
+> to maintain. Often times access to the HW context requires thread context.
+> For example, consumers of IOASIDs can register notification blocks to
+> sync up its states. Having an atomic notifier is not feasible for these
+> update operations.
+> 
+> This patch converts allocator lock from spinlock to mutex in preparation
+> for IOASID notifier.
+> 
+> Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
+> ---
+>  drivers/iommu/ioasid.c | 45 +++++++++++++++++++++++----------------------
+>  1 file changed, 23 insertions(+), 22 deletions(-)
+> 
+> diff --git a/drivers/iommu/ioasid.c b/drivers/iommu/ioasid.c
+> index f89a595f6978..8612fe6477dc 100644
+> --- a/drivers/iommu/ioasid.c
+> +++ b/drivers/iommu/ioasid.c
+> @@ -98,7 +98,7 @@ struct ioasid_allocator_data {
+>  	struct rcu_head rcu;
+>  };
+> 
+> -static DEFINE_SPINLOCK(ioasid_allocator_lock);
+> +static DEFINE_MUTEX(ioasid_allocator_lock);
+>  static LIST_HEAD(allocators_list);
+> 
+>  static ioasid_t default_alloc(ioasid_t min, ioasid_t max, void *opaque);
+> @@ -121,7 +121,7 @@ static ioasid_t default_alloc(ioasid_t min, ioasid_t
+> max, void *opaque)
+>  {
+>  	ioasid_t id;
+> 
+> -	if (xa_alloc(&default_allocator.xa, &id, opaque, XA_LIMIT(min, max),
+> GFP_ATOMIC)) {
+> +	if (xa_alloc(&default_allocator.xa, &id, opaque, XA_LIMIT(min, max),
+> GFP_KERNEL)) {
+>  		pr_err("Failed to alloc ioasid from %d to %d\n", min, max);
+>  		return INVALID_IOASID;
+>  	}
+> @@ -142,7 +142,7 @@ static struct ioasid_allocator_data
+> *ioasid_alloc_allocator(struct ioasid_alloca
+>  {
+>  	struct ioasid_allocator_data *ia_data;
+> 
+> -	ia_data = kzalloc(sizeof(*ia_data), GFP_ATOMIC);
+> +	ia_data = kzalloc(sizeof(*ia_data), GFP_KERNEL);
+>  	if (!ia_data)
+>  		return NULL;
+> 
+> @@ -184,7 +184,7 @@ int ioasid_register_allocator(struct
+> ioasid_allocator_ops *ops)
+>  	struct ioasid_allocator_data *pallocator;
+>  	int ret = 0;
+> 
+> -	spin_lock(&ioasid_allocator_lock);
+> +	mutex_lock(&ioasid_allocator_lock);
+> 
+>  	ia_data = ioasid_alloc_allocator(ops);
+>  	if (!ia_data) {
+> @@ -228,12 +228,12 @@ int ioasid_register_allocator(struct
+> ioasid_allocator_ops *ops)
+>  	}
+>  	list_add_tail(&ia_data->list, &allocators_list);
+> 
+> -	spin_unlock(&ioasid_allocator_lock);
+> +	mutex_unlock(&ioasid_allocator_lock);
+>  	return 0;
+>  out_free:
+>  	kfree(ia_data);
+>  out_unlock:
+> -	spin_unlock(&ioasid_allocator_lock);
+> +	mutex_unlock(&ioasid_allocator_lock);
+>  	return ret;
+>  }
+>  EXPORT_SYMBOL_GPL(ioasid_register_allocator);
+> @@ -251,7 +251,7 @@ void ioasid_unregister_allocator(struct
+> ioasid_allocator_ops *ops)
+>  	struct ioasid_allocator_data *pallocator;
+>  	struct ioasid_allocator_ops *sops;
+> 
+> -	spin_lock(&ioasid_allocator_lock);
+> +	mutex_lock(&ioasid_allocator_lock);
+>  	if (list_empty(&allocators_list)) {
+>  		pr_warn("No custom IOASID allocators active!\n");
+>  		goto exit_unlock;
+> @@ -296,7 +296,7 @@ void ioasid_unregister_allocator(struct
+> ioasid_allocator_ops *ops)
+>  	}
+> 
+>  exit_unlock:
+> -	spin_unlock(&ioasid_allocator_lock);
+> +	mutex_unlock(&ioasid_allocator_lock);
+>  }
+>  EXPORT_SYMBOL_GPL(ioasid_unregister_allocator);
+> 
+> @@ -313,13 +313,13 @@ int ioasid_attach_data(ioasid_t ioasid, void *data)
+>  	struct ioasid_data *ioasid_data;
+>  	int ret = 0;
+> 
+> -	spin_lock(&ioasid_allocator_lock);
+> +	mutex_lock(&ioasid_allocator_lock);
+>  	ioasid_data = xa_load(&active_allocator->xa, ioasid);
+>  	if (ioasid_data)
+>  		rcu_assign_pointer(ioasid_data->private, data);
+>  	else
+>  		ret = -ENOENT;
+> -	spin_unlock(&ioasid_allocator_lock);
+> +	mutex_unlock(&ioasid_allocator_lock);
+> 
+>  	/*
+>  	 * Wait for readers to stop accessing the old private data, so the
+> @@ -374,7 +374,7 @@ ioasid_t ioasid_alloc(int sid, ioasid_t min, ioasid_t
+> max, void *private)
+>  	 * Custom allocator needs allocator data to perform platform specific
+>  	 * operations.
+>  	 */
+> -	spin_lock(&ioasid_allocator_lock);
+> +	mutex_lock(&ioasid_allocator_lock);
+>  	adata = active_allocator->flags & IOASID_ALLOCATOR_CUSTOM ?
+> active_allocator->ops->pdata : data;
+>  	id = active_allocator->ops->alloc(min, max, adata);
+>  	if (id == INVALID_IOASID) {
+> @@ -383,7 +383,7 @@ ioasid_t ioasid_alloc(int sid, ioasid_t min, ioasid_t
+> max, void *private)
+>  	}
+> 
+>  	if ((active_allocator->flags & IOASID_ALLOCATOR_CUSTOM) &&
+> -	     xa_alloc(&active_allocator->xa, &id, data, XA_LIMIT(id, id),
+> GFP_ATOMIC)) {
+> +	     xa_alloc(&active_allocator->xa, &id, data, XA_LIMIT(id, id),
+> GFP_KERNEL)) {
+>  		/* Custom allocator needs framework to store and track
+> allocation results */
+>  		pr_err("Failed to alloc ioasid from %d\n", id);
+>  		active_allocator->ops->free(id, active_allocator->ops->pdata);
+> @@ -394,10 +394,11 @@ ioasid_t ioasid_alloc(int sid, ioasid_t min, ioasid_t
+> max, void *private)
+>  	/* Store IOASID in the per set data */
+>  	xa_store(&sdata->xa, id, data, GFP_KERNEL);
+>  	sdata->nr_ioasids++;
+> -	spin_unlock(&ioasid_allocator_lock);
+> +	mutex_unlock(&ioasid_allocator_lock);
+> +
+>  	return id;
+>  exit_free:
+> -	spin_unlock(&ioasid_allocator_lock);
+> +	mutex_unlock(&ioasid_allocator_lock);
+>  	kfree(data);
+>  	return INVALID_IOASID;
+>  }
+> @@ -440,9 +441,9 @@ static void ioasid_free_locked(ioasid_t ioasid)
+>   */
+>  void ioasid_free(ioasid_t ioasid)
+>  {
+> -	spin_lock(&ioasid_allocator_lock);
+> +	mutex_lock(&ioasid_allocator_lock);
+>  	ioasid_free_locked(ioasid);
+> -	spin_unlock(&ioasid_allocator_lock);
+> +	mutex_unlock(&ioasid_allocator_lock);
+>  }
+>  EXPORT_SYMBOL_GPL(ioasid_free);
+> 
+> @@ -473,7 +474,7 @@ int ioasid_alloc_set(struct ioasid_set *token, ioasid_t
+> quota, int *sid)
+>  	if (!sdata)
+>  		return -ENOMEM;
+> 
+> -	spin_lock(&ioasid_allocator_lock);
+> +	mutex_lock(&ioasid_allocator_lock);
+> 
+>  	ret = xa_alloc(&ioasid_sets, &id, sdata,
+>  		       XA_LIMIT(0, ioasid_capacity_avail - quota),
+> @@ -497,7 +498,7 @@ int ioasid_alloc_set(struct ioasid_set *token, ioasid_t
+> quota, int *sid)
+>  	*sid = id;
+> 
+>  error:
+> -	spin_unlock(&ioasid_allocator_lock);
+> +	mutex_unlock(&ioasid_allocator_lock);
+> 
+>  	return ret;
+>  }
+> @@ -518,7 +519,7 @@ void ioasid_free_set(int sid, bool destroy_set)
+>  	struct ioasid_data *entry;
+>  	unsigned long index;
+> 
+> -	spin_lock(&ioasid_allocator_lock);
+> +	mutex_lock(&ioasid_allocator_lock);
+>  	sdata = xa_load(&ioasid_sets, sid);
+>  	if (!sdata) {
+>  		pr_err("No IOASID set found to free %d\n", sid);
+> @@ -549,7 +550,7 @@ void ioasid_free_set(int sid, bool destroy_set)
+>  	}
+> 
+>  done_unlock:
+> -	spin_unlock(&ioasid_allocator_lock);
+> +	mutex_unlock(&ioasid_allocator_lock);
+>  }
+>  EXPORT_SYMBOL_GPL(ioasid_free_set);
+> 
+> @@ -613,11 +614,11 @@ int ioasid_find_sid(ioasid_t ioasid)
+>  	struct ioasid_data *ioasid_data;
+>  	int ret = 0;
+> 
+> -	spin_lock(&ioasid_allocator_lock);
+> +	mutex_lock(&ioasid_allocator_lock);
+>  	ioasid_data = xa_load(&active_allocator->xa, ioasid);
+>  	ret = (ioasid_data) ? ioasid_data->sdata->sid : -ENOENT;
+> 
+> -	spin_unlock(&ioasid_allocator_lock);
+> +	mutex_unlock(&ioasid_allocator_lock);
+> 
+>  	return ret;
+>  }
+> --
+> 2.7.4
 
+Reviewed-by: Kevin Tian <kevin.tian@intel.com>
