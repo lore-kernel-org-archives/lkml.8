@@ -2,103 +2,77 @@ Return-Path: <SRS0=s8dx=5M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6589EC2D0ED
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 06:26:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B1E5C2D0EF
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 06:27:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3864620717
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 06:26:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585290412;
-	bh=C+c/5oL+UO0v+m4Q/VCcV4JwRE2JWyTk69oWVbv2Q6E=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=J87rOuPhaWhijyfufgX790lGL5qKoSHnrV44HRn6BoM13BGLBAYXC7V0/EbhaazhD
-	 dyIpEowL2rBSYgXTt/S3PKBYRdX5tz5BFX7IZjfssSkzBeEnmoIs0pTZj/V0Dm3KJT
-	 cKUsidh8uILBcVxFlnhZdOgxRnNA06kHJ8uroxxY=
+	by mail.kernel.org (Postfix) with ESMTP id 61C3820717
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 06:27:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=flygoat.com header.i=jiaxun.yang@flygoat.com header.b="MHijPGAJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726750AbgC0G0v (ORCPT
+        id S1727495AbgC0G1u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Mar 2020 02:26:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40558 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725857AbgC0G0v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Mar 2020 02:26:51 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 91A7220705;
-        Fri, 27 Mar 2020 06:26:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585290410;
-        bh=C+c/5oL+UO0v+m4Q/VCcV4JwRE2JWyTk69oWVbv2Q6E=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=vhT4TRi3LgnelhiRvdEj6xnuN3X/CneXgQ7Lx9L4aa6N3wxj5y4NSLz/zM9GjRnlj
-         tMQanEKBXNq5bAjFPPuM0MoCXQRFD+u6YjvK80wECzNqTNKekdFFjj9hmcXDNWoZAb
-         rSgJdpLjCTVcwqq6PlD8Ln3rBazWQLU0SSwfA7Qs=
-Date:   Fri, 27 Mar 2020 07:26:46 +0100
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Sasha Levin <sashal@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        linux-kbuild@vger.kernel.org
-Subject: Re: [PATCH AUTOSEL 5.5 23/28] kconfig: Add yes2modconfig and
- mod2yesconfig targets.
-Message-ID: <20200327062646.GB1601217@kroah.com>
-References: <20200326232357.7516-1-sashal@kernel.org>
- <20200326232357.7516-23-sashal@kernel.org>
+        Fri, 27 Mar 2020 02:27:50 -0400
+Received: from sender3-op-o12.zoho.com.cn ([124.251.121.243]:17875 "EHLO
+        sender3-op-o12.zoho.com.cn" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725857AbgC0G1t (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Mar 2020 02:27:49 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1585290402;
+        s=mail; d=flygoat.com; i=jiaxun.yang@flygoat.com;
+        h=Date:In-Reply-To:References:MIME-Version:Content-Type:Content-Transfer-Encoding:Subject:To:CC:From:Message-ID;
+        bh=UoGQjp02SZU51biG4JZ6PBIIfzrJ6T8Qawk+9xg9Btw=;
+        b=MHijPGAJo0DC6YIAcR8HKhFTs0oCxZuOoFElNhvOFi1bVSjLyk2TXUPTLDllwwuN
+        Bv5GOX6QjxvtsgCK5zGutXlHTTkOsmL2J0soTGrZZGrQTleIy03svp47bgFyWOvWYCS
+        bRbPUH/XMeBmk8H17+3Zufbt27WIBYIwfJJVMWoo=
+Received: from [10.233.233.252] (115.193.86.228 [115.193.86.228]) by mx.zoho.com.cn
+        with SMTPS id 1585290398265664.6145661046983; Fri, 27 Mar 2020 14:26:38 +0800 (CST)
+Date:   Fri, 27 Mar 2020 14:26:34 +0800
+User-Agent: K-9 Mail for Android
+In-Reply-To: <20200325132756.GA13750@infradead.org>
+References: <1584932355-3642-1-git-send-email-yangtiezhu@loongson.cn> <1584932355-3642-3-git-send-email-yangtiezhu@loongson.cn> <20200325132756.GA13750@infradead.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200326232357.7516-23-sashal@kernel.org>
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v2 2/3] MIPS: Loongson: Add DMA support for 7A1000
+To:     Christoph Hellwig <hch@infradead.org>,
+        Tiezhu Yang <yangtiezhu@loongson.cn>
+CC:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Huacai Chen <chenhc@lemote.com>, linux-mips@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Xuefeng Li <lixuefeng@loongson.cn>
+From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
+Message-ID: <7786800D-3B37-4F0D-8E55-17F595D97EF2@flygoat.com>
+X-ZohoCNMailClient: External
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 26, 2020 at 07:23:52PM -0400, Sasha Levin wrote:
-> From: Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
-> 
-> [ Upstream commit 89b9060987d988333de59dd218c9666bd7ee95a5 ]
-> 
-> Since kernel configs provided by syzbot are close to "make allyesconfig",
-> it takes long time to rebuild. This is especially waste of time when we
-> need to rebuild for many times (e.g. doing manual printk() inspection,
-> bisect operations).
-> 
-> We can save time if we can exclude modules which are irrelevant to each
-> problem. But "make localmodconfig" cannot exclude modules which are built
-> into vmlinux because /sbin/lsmod output is used as the source of modules.
-> 
-> Therefore, this patch adds "make yes2modconfig" which converts from =y
-> to =m if possible. After confirming that the interested problem is still
-> reproducible, we can try "make localmodconfig" (and/or manually tune
-> based on "Modules linked in:" line) in order to exclude modules which are
-> irrelevant to the interested problem. While we are at it, this patch also
-> adds "make mod2yesconfig" which converts from =m to =y in case someone
-> wants to convert from =m to =y after "make localmodconfig".
-> 
-> Signed-off-by: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
-> Cc: Dmitry Vyukov <dvyukov@google.com>
-> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
-> Signed-off-by: Sasha Levin <sashal@kernel.org>
-> ---
->  scripts/kconfig/Makefile   |  4 +++-
->  scripts/kconfig/conf.c     | 16 ++++++++++++++++
->  scripts/kconfig/confdata.c | 16 ++++++++++++++++
->  scripts/kconfig/lkc.h      |  3 +++
->  4 files changed, 38 insertions(+), 1 deletion(-)
 
-Why did this patch get picked up by the autobot?  Because it referenced
-syzbot?
 
-It adds a new feature, that isn't really needed by any stable things, so
-it should be dropped from your queues for all trees.
+=E4=BA=8E 2020=E5=B9=B43=E6=9C=8825=E6=97=A5 GMT+08:00 =E4=B8=8B=E5=8D=889=
+:27:56, Christoph Hellwig <hch@infradead=2Eorg> =E5=86=99=E5=88=B0:
+>On Mon, Mar 23, 2020 at 10:59:14AM +0800, Tiezhu Yang wrote:
+>> Implement __phys_to_dma() and __dma_to_phys() according to the
+>> node id offset in the 7A1000 DMA route config register=2E
+>
+>Can you please try to just use the dma_pfn_offset field in struct
+>device
+>for all loongson platforms?  I'm pretty sure I asked for that last time
+>around=2E=2E
 
-thanks,
+Here we have a problem that dma_pfn_offset doesn't fit our platform=2E
 
-greg k-h
+We have multiple dma-ranges that translate in to different address and
+dma_pfn_offset can only handle single range=20
+with fixed offset=2E
+
+Thanks=2E
+
+--=20
+Jiaxun Yang
