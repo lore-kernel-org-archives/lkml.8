@@ -2,192 +2,164 @@ Return-Path: <SRS0=s8dx=5M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD07CC43331
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 02:53:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8646EC43331
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 02:56:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 975712074D
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 02:53:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 49F4D2082D
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 02:56:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hU/k2AOM"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KwAkr6OA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727738AbgC0CxT (ORCPT
+        id S1727705AbgC0C4g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 22:53:19 -0400
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:46551 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726363AbgC0CxT (ORCPT
+        Thu, 26 Mar 2020 22:56:36 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:40893 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726363AbgC0C4f (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 22:53:19 -0400
-Received: by mail-qk1-f196.google.com with SMTP id u4so9405660qkj.13;
-        Thu, 26 Mar 2020 19:53:17 -0700 (PDT)
+        Thu, 26 Mar 2020 22:56:35 -0400
+Received: by mail-wr1-f66.google.com with SMTP id u10so9702998wro.7;
+        Thu, 26 Mar 2020 19:56:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=w4++N08RVpCiGlHmC7RmsL50uQ3EATHmFpjCdBVUENY=;
-        b=hU/k2AOMFDZW0xf2BTOdavbWpT9pJTPn5Tt4E+qgd05wDRKScCPi5YUt4C2mnhe21M
-         F21+rftavAYTzxByOFilILMoJbIE175BynuHXmWruxcIPbN7DOX5lP37uLkfw03+KgwX
-         Hd6BSisFfdsCA5HA7M8BIN3ZC/NtCWP5FaZ1oxYDH4c1+/nhdFkEhy7PlRqWrzmtcwpk
-         zOXU5VqpQRmPT/hkmdV4ORqorxMdaQ5EZC0LaPwLIBCNz1DGgckKhDKITXUsjwjQvXzv
-         uc2lHt8V33efHdZYETB4LrqnYCrXVJfdrs30w1mBuqFvcqwvAPKZhSj+38hyZSz5uk73
-         KH5Q==
+        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=n5Kcdu+4pUBMOADSPXLw+5tPpkEAkjfQRELCDZz/nTQ=;
+        b=KwAkr6OA/lO9BVjCg/pqTzlTVWu3zrQS56Wdnf0jeHwF6zH68cpAFmqdIDjgn/zuF1
+         66USQlTuJ0NVUiG4q8rsn7MADHNyke6jO85L6orK6X/LdARljnf3Jc+GXh0Vb9WFZBXr
+         //Fx5n3t8FjyIDFjhO51wm4DU5gmhXVi1MdtoKtJI3aSGaht6z1MTfdggxSdqBWZTQ7l
+         e3ginuquv7WExMo0rVHt2+bRyTIpRDgZ8SWIiNTikvNVNl9T+fu+XvrVuS/tAv+n2Zn+
+         XBMWvlZddsw0MyaqfYIh2Jky7hFXwDzZd41SNzEQB0xNuSBlAcbB0FNbyXfD6KgMzu2X
+         70Cg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=w4++N08RVpCiGlHmC7RmsL50uQ3EATHmFpjCdBVUENY=;
-        b=foXecZ+4/IvhRbuUEZBHC5j8rbd+PHQYQVJyPe9vbLnD5vR11WjDrHoY6dsYW5IMlV
-         qMChK6Q+8ShAxj1rnLekcMvtUbiNo8SO8m5vZxH9pgOwowRBqFaJ7SE6EhxlDFR8Bal+
-         WT4tTWI5E714X+cEwwQ5nWUpmaKu7jmdzvK1r9NXE8EDH5EWV1hSl56QefQzAxKjdazk
-         3dUPpjVXKDkdmfoLULt9/lahaDJ8WZbQMZ4jyZnvzD25D7d0B4C4ccYUSGjXEmcX8Pvz
-         SfI/G34y1j9Be2att5FNea39Vh60D5t/LgerNKPFKKNvB3bprsSehD4VEkyVKbvzzO8J
-         vQGg==
-X-Gm-Message-State: ANhLgQ0BRzmbIHB8GqE/0emA5T3ChLUK/OqbsXx9J4y5UoSZ16PX9QWt
-        Kgs9bndYWKbodnfGyjlp+jg=
-X-Google-Smtp-Source: ADFU+vsf/uspcYVH7mYPhpWkrWzKtSPs3tfZK62tZ0tvai+h5fvS+c9Q7eIoUvlSOoguHooVlFmCEw==
-X-Received: by 2002:a37:e109:: with SMTP id c9mr12347525qkm.348.1585277596566;
-        Thu, 26 Mar 2020 19:53:16 -0700 (PDT)
-Received: from auth1-smtp.messagingengine.com (auth1-smtp.messagingengine.com. [66.111.4.227])
-        by smtp.gmail.com with ESMTPSA id 69sm2659196qki.131.2020.03.26.19.53.15
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 26 Mar 2020 19:53:15 -0700 (PDT)
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailauth.nyi.internal (Postfix) with ESMTP id DB83F27C0054;
-        Thu, 26 Mar 2020 22:53:14 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute3.internal (MEProxy); Thu, 26 Mar 2020 22:53:14 -0400
-X-ME-Sender: <xms:mWp9XsCdBgR7RtDU8pZ5DqzQDRqDRyK9oPZwjHulUVZ8OUKMVKzWqA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrudehjedgudehudcutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
-    necuuegrihhlohhuthemuceftddtnecunecujfgurhepfffhvffukfhfgggtuggjsehttd
-    ertddttddvnecuhfhrohhmpeeuohhquhhnucfhvghnghcuoegsohhquhhnrdhfvghnghes
-    ghhmrghilhdrtghomheqnecuffhomhgrihhnpehkvghrnhgvlhdrohhrghenucfkphephe
-    dvrdduheehrdduuddurdejudenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhep
-    mhgrihhlfhhrohhmpegsohhquhhnodhmvghsmhhtphgruhhthhhpvghrshhonhgrlhhith
-    ihqdeiledvgeehtdeigedqudejjeekheehhedvqdgsohhquhhnrdhfvghngheppehgmhgr
-    ihhlrdgtohhmsehfihigmhgvrdhnrghmvg
-X-ME-Proxy: <xmx:mWp9XlUdsCleGvywe-HEdp0lhcdz8ahRrAVhkMS2RNi9lp0kii6i3Q>
-    <xmx:mWp9XgzPzUq2vm3FSFBB4Eij0Wh9eL5ziWI-av4T62ScEu7919dMrg>
-    <xmx:mWp9XghLzByYNCNeaUseak4SfsK3YDjdybxKrhr7y8vKiYd4LMVMiQ>
-    <xmx:mmp9XniXl81qomo-VsCMXK2kITOVEIBnzCeBa9_mpZhkaNl1srVe7iNqNgw>
-Received: from localhost (unknown [52.155.111.71])
-        by mail.messagingengine.com (Postfix) with ESMTPA id D982F306B4EE;
-        Thu, 26 Mar 2020 22:53:12 -0400 (EDT)
-Date:   Fri, 27 Mar 2020 10:53:11 +0800
-From:   Boqun Feng <boqun.feng@gmail.com>
-To:     tglx@linutronix.de, peterz@infradead.org,
-        linux-kernel@vger.kernel.org, len.brown@intel.com,
-        pkondeti@codeaurora.org, jpoimboe@redhat.com, pavel@ucw.cz,
-        konrad.wilk@oracle.com, mojha@codeaurora.org, jkosina@suse.cz,
-        mingo@kernel.org, hpa@zytor.com, rjw@rjwysocki.net
-Cc:     linux-tip-commits@vger.kernel.org
-Subject: Re: [tip:smp/hotplug] cpu/hotplug: Abort disabling secondary CPUs if
- wakeup is pending
-Message-ID: <20200327025311.GA58760@debian-boqun.qqnc3lrjykvubdpftowmye0fmh.lx.internal.cloudapp.net>
-References: <1559536263-16472-1-git-send-email-pkondeti@codeaurora.org>
- <tip-a66d955e910ab0e598d7a7450cbe6139f52befe7@git.kernel.org>
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=n5Kcdu+4pUBMOADSPXLw+5tPpkEAkjfQRELCDZz/nTQ=;
+        b=JF6swbor68K9VIsKJ7wcvduxMGw8souI7Xfj/M4Cuuo2whkOPTuZxrETz6941ErLdO
+         QHzQlQHD7MALV8MxMHmVGwSZmg4cdyZknaPvHuH1/GxTLCVELh2A0O9lJEZ34oEV8MaY
+         CPm2LU5lcmi/hXAuqukOWzd6jyfk78tXKjpR8bijzx3BeIL3340R3Sp1qDjHEvfABI1M
+         ZrZIlJkp3H0R5IjMvK9mvQCcUQ46vv8VFfuPnP0hwTMBkU6+Tg8IDGIhm5D2hCrEeoVG
+         rHRREYavT2EtGHXXK5FJPoYB99NNKDEdOvPDItSVKr9XZTmZHCFujw5yrqlid6sH2JFX
+         1afA==
+X-Gm-Message-State: ANhLgQ0iE43De4CaH8kkEejm5C6yUaUpclLvG2HVxTBHozejjSoX7Lcl
+        3TuUCR5Pu/hatxudoLyKziVVqiry
+X-Google-Smtp-Source: ADFU+vup9wZUZ+10Gwx7rKLW7+5hosECP5N28RLkM25FpromNTtKCzn6T5atL4kQH16W9dpAqw4tUQ==
+X-Received: by 2002:a5d:4ad1:: with SMTP id y17mr12010171wrs.13.1585277793621;
+        Thu, 26 Mar 2020 19:56:33 -0700 (PDT)
+Received: from [10.230.186.223] ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id d9sm5877812wmb.21.2020.03.26.19.56.30
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 26 Mar 2020 19:56:32 -0700 (PDT)
+Subject: Re: [PATCH] ethtool: Report speed and duplex as unknown when device
+ is runtime suspended
+To:     Kai-Heng Feng <kai.heng.feng@canonical.com>, davem@davemloft.net,
+        kuba@kernel.org
+Cc:     alexander.duyck@gmail.com,
+        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
+        Aaron Brown <aaron.f.brown@intel.com>,
+        Michal Kubecek <mkubecek@suse.cz>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Maxime Chevallier <maxime.chevallier@bootlin.com>,
+        "open list:NETWORKING [GENERAL]" <netdev@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+References: <20200327024552.22170-1-kai.heng.feng@canonical.com>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Autocrypt: addr=f.fainelli@gmail.com; keydata=
+ mQGiBEjPuBIRBACW9MxSJU9fvEOCTnRNqG/13rAGsj+vJqontvoDSNxRgmafP8d3nesnqPyR
+ xGlkaOSDuu09rxuW+69Y2f1TzjFuGpBk4ysWOR85O2Nx8AJ6fYGCoeTbovrNlGT1M9obSFGQ
+ X3IzRnWoqlfudjTO5TKoqkbOgpYqIo5n1QbEjCCwCwCg3DOH/4ug2AUUlcIT9/l3pGvoRJ0E
+ AICDzi3l7pmC5IWn2n1mvP5247urtHFs/uusE827DDj3K8Upn2vYiOFMBhGsxAk6YKV6IP0d
+ ZdWX6fqkJJlu9cSDvWtO1hXeHIfQIE/xcqvlRH783KrihLcsmnBqOiS6rJDO2x1eAgC8meAX
+ SAgsrBhcgGl2Rl5gh/jkeA5ykwbxA/9u1eEuL70Qzt5APJmqVXR+kWvrqdBVPoUNy/tQ8mYc
+ nzJJ63ng3tHhnwHXZOu8hL4nqwlYHRa9eeglXYhBqja4ZvIvCEqSmEukfivk+DlIgVoOAJbh
+ qIWgvr3SIEuR6ayY3f5j0f2ejUMYlYYnKdiHXFlF9uXm1ELrb0YX4GMHz7QnRmxvcmlhbiBG
+ YWluZWxsaSA8Zi5mYWluZWxsaUBnbWFpbC5jb20+iGYEExECACYCGyMGCwkIBwMCBBUCCAME
+ FgIDAQIeAQIXgAUCVF/S8QUJHlwd3wAKCRBhV5kVtWN2DvCVAJ4u4/bPF4P3jxb4qEY8I2gS
+ 6hG0gACffNWlqJ2T4wSSn+3o7CCZNd7SLSC5BA0ESM+4EhAQAL/o09boR9D3Vk1Tt7+gpYr3
+ WQ6hgYVON905q2ndEoA2J0dQxJNRw3snabHDDzQBAcqOvdi7YidfBVdKi0wxHhSuRBfuOppu
+ pdXkb7zxuPQuSveCLqqZWRQ+Cc2QgF7SBqgznbe6Ngout5qXY5Dcagk9LqFNGhJQzUGHAsIs
+ hap1f0B1PoUyUNeEInV98D8Xd/edM3mhO9nRpUXRK9Bvt4iEZUXGuVtZLT52nK6Wv2EZ1TiT
+ OiqZlf1P+vxYLBx9eKmabPdm3yjalhY8yr1S1vL0gSA/C6W1o/TowdieF1rWN/MYHlkpyj9c
+ Rpc281gAO0AP3V1G00YzBEdYyi0gaJbCEQnq8Vz1vDXFxHzyhgGz7umBsVKmYwZgA8DrrB0M
+ oaP35wuGR3RJcaG30AnJpEDkBYHznI2apxdcuTPOHZyEilIRrBGzDwGtAhldzlBoBwE3Z3MY
+ 31TOpACu1ZpNOMysZ6xiE35pWkwc0KYm4hJA5GFfmWSN6DniimW3pmdDIiw4Ifcx8b3mFrRO
+ BbDIW13E51j9RjbO/nAaK9ndZ5LRO1B/8Fwat7bLzmsCiEXOJY7NNpIEpkoNoEUfCcZwmLrU
+ +eOTPzaF6drw6ayewEi5yzPg3TAT6FV3oBsNg3xlwU0gPK3v6gYPX5w9+ovPZ1/qqNfOrbsE
+ FRuiSVsZQ5s3AAMFD/9XjlnnVDh9GX/r/6hjmr4U9tEsM+VQXaVXqZuHKaSmojOLUCP/YVQo
+ 7IiYaNssCS4FCPe4yrL4FJJfJAsbeyDykMN7wAnBcOkbZ9BPJPNCbqU6dowLOiy8AuTYQ48m
+ vIyQ4Ijnb6GTrtxIUDQeOBNuQC/gyyx3nbL/lVlHbxr4tb6YkhkO6shjXhQh7nQb33FjGO4P
+ WU11Nr9i/qoV8QCo12MQEo244RRA6VMud06y/E449rWZFSTwGqb0FS0seTcYNvxt8PB2izX+
+ HZA8SL54j479ubxhfuoTu5nXdtFYFj5Lj5x34LKPx7MpgAmj0H7SDhpFWF2FzcC1bjiW9mjW
+ HaKaX23Awt97AqQZXegbfkJwX2Y53ufq8Np3e1542lh3/mpiGSilCsaTahEGrHK+lIusl6mz
+ Joil+u3k01ofvJMK0ZdzGUZ/aPMZ16LofjFA+MNxWrZFrkYmiGdv+LG45zSlZyIvzSiG2lKy
+ kuVag+IijCIom78P9jRtB1q1Q5lwZp2TLAJlz92DmFwBg1hyFzwDADjZ2nrDxKUiybXIgZp9
+ aU2d++ptEGCVJOfEW4qpWCCLPbOT7XBr+g/4H3qWbs3j/cDDq7LuVYIe+wchy/iXEJaQVeTC
+ y5arMQorqTFWlEOgRA8OP47L9knl9i4xuR0euV6DChDrguup2aJVU4hPBBgRAgAPAhsMBQJU
+ X9LxBQkeXB3fAAoJEGFXmRW1Y3YOj4UAn3nrFLPZekMeqX5aD/aq/dsbXSfyAKC45Go0YyxV
+ HGuUuzv+GKZ6nsysJ7kCDQRXG8fwARAA6q/pqBi5PjHcOAUgk2/2LR5LjjesK50bCaD4JuNc
+ YDhFR7Vs108diBtsho3w8WRd9viOqDrhLJTroVckkk74OY8r+3t1E0Dd4wHWHQZsAeUvOwDM
+ PQMqTUBFuMi6ydzTZpFA2wBR9x6ofl8Ax+zaGBcFrRlQnhsuXLnM1uuvS39+pmzIjasZBP2H
+ UPk5ifigXcpelKmj6iskP3c8QN6x6GjUSmYx+xUfs/GNVSU1XOZn61wgPDbgINJd/THGdqiO
+ iJxCLuTMqlSsmh1+E1dSdfYkCb93R/0ZHvMKWlAx7MnaFgBfsG8FqNtZu3PCLfizyVYYjXbV
+ WO1A23riZKqwrSJAATo5iTS65BuYxrFsFNPrf7TitM8E76BEBZk0OZBvZxMuOs6Z1qI8YKVK
+ UrHVGFq3NbuPWCdRul9SX3VfOunr9Gv0GABnJ0ET+K7nspax0xqq7zgnM71QEaiaH17IFYGS
+ sG34V7Wo3vyQzsk7qLf9Ajno0DhJ+VX43g8+AjxOMNVrGCt9RNXSBVpyv2AMTlWCdJ5KI6V4
+ KEzWM4HJm7QlNKE6RPoBxJVbSQLPd9St3h7mxLcne4l7NK9eNgNnneT7QZL8fL//s9K8Ns1W
+ t60uQNYvbhKDG7+/yLcmJgjF74XkGvxCmTA1rW2bsUriM533nG9gAOUFQjURkwI8jvMAEQEA
+ AYkCaAQYEQIACQUCVxvH8AIbAgIpCRBhV5kVtWN2DsFdIAQZAQIABgUCVxvH8AAKCRCH0Jac
+ RAcHBIkHD/9nmfog7X2ZXMzL9ktT++7x+W/QBrSTCTmq8PK+69+INN1ZDOrY8uz6htfTLV9+
+ e2W6G8/7zIvODuHk7r+yQ585XbplgP0V5Xc8iBHdBgXbqnY5zBrcH+Q/oQ2STalEvaGHqNoD
+ UGyLQ/fiKoLZTPMur57Fy1c9rTuKiSdMgnT0FPfWVDfpR2Ds0gpqWePlRuRGOoCln5GnREA/
+ 2MW2rWf+CO9kbIR+66j8b4RUJqIK3dWn9xbENh/aqxfonGTCZQ2zC4sLd25DQA4w1itPo+f5
+ V/SQxuhnlQkTOCdJ7b/mby/pNRz1lsLkjnXueLILj7gNjwTabZXYtL16z24qkDTI1x3g98R/
+ xunb3/fQwR8FY5/zRvXJq5us/nLvIvOmVwZFkwXc+AF+LSIajqQz9XbXeIP/BDjlBNXRZNdo
+ dVuSU51ENcMcilPr2EUnqEAqeczsCGpnvRCLfVQeSZr2L9N4svNhhfPOEscYhhpHTh0VPyxI
+ pPBNKq+byuYPMyk3nj814NKhImK0O4gTyCK9b+gZAVvQcYAXvSouCnTZeJRrNHJFTgTgu6E0
+ caxTGgc5zzQHeX67eMzrGomG3ZnIxmd1sAbgvJUDaD2GrYlulfwGWwWyTNbWRvMighVdPkSF
+ 6XFgQaosWxkV0OELLy2N485YrTr2Uq64VKyxpncLh50e2RnyAJ9Za0Dx0yyp44iD1OvHtkEI
+ M5kY0ACeNhCZJvZ5g4C2Lc9fcTHu8jxmEkI=
+Message-ID: <d6c5a1c4-e41f-d239-e0b0-15eba3e78274@gmail.com>
+Date:   Thu, 26 Mar 2020 19:56:29 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Firefox/68.0 Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <tip-a66d955e910ab0e598d7a7450cbe6139f52befe7@git.kernel.org>
+In-Reply-To: <20200327024552.22170-1-kai.heng.feng@canonical.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Thomas and Pavankumar,
 
-I have a question about this patch, please see below:
 
-On Wed, Jun 12, 2019 at 05:34:08AM -0700, tip-bot for Pavankumar Kondeti wrote:
-> Commit-ID:  a66d955e910ab0e598d7a7450cbe6139f52befe7
-> Gitweb:     https://git.kernel.org/tip/a66d955e910ab0e598d7a7450cbe6139f52befe7
-> Author:     Pavankumar Kondeti <pkondeti@codeaurora.org>
-> AuthorDate: Mon, 3 Jun 2019 10:01:03 +0530
-> Committer:  Thomas Gleixner <tglx@linutronix.de>
-> CommitDate: Wed, 12 Jun 2019 11:03:05 +0200
+On 3/26/2020 7:45 PM, Kai-Heng Feng wrote:
+> Device like igb gets runtime suspended when there's no link partner. We
+> can't get correct speed under that state:
+> $ cat /sys/class/net/enp3s0/speed
+> 1000
 > 
-> cpu/hotplug: Abort disabling secondary CPUs if wakeup is pending
+> In addition to that, an error can also be spotted in dmesg:
+> [  385.991957] igb 0000:03:00.0 enp3s0: PCIe link lost
 > 
-> When "deep" suspend is enabled, all CPUs except the primary CPU are frozen
-> via CPU hotplug one by one. After all secondary CPUs are unplugged the
-> wakeup pending condition is evaluated and if pending the suspend operation
-> is aborted and the secondary CPUs are brought up again.
+> Since device can only be runtime suspended when there's no link partner,
+> we can directly report the speed and duplex as unknown.
 > 
-> CPU hotplug is a slow operation, so it makes sense to check for wakeup
-> pending in the freezer loop before bringing down the next CPU. This
-> improves the system suspend abort latency significantly.
-> 
+> Cc: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
+> Cc: Aaron Brown <aaron.f.brown@intel.com>
+> Suggested-by: Alexander Duyck <alexander.duyck@gmail.com>
+> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
 
-From the commit message, it makes sense to add the pm_wakeup_pending()
-check if freeze_secondary_cpus() is used for system suspend. However,
-freeze_secondary_cpus() is also used in kexec path on arm64:
-
-	kernel_kexec():
-	  machine_shutdown():
-	    disable_nonboot_cpus():
-	      freeze_secondary_cpus()
-
-, so I wonder whether the pm_wakeup_pending() makes sense in this
-situation? Because IIUC, in this case we want to reboot the system
-regardlessly, the pm_wakeup_pending() checking seems to be inappropriate
-then.
-
-I'm asking this because I'm debugging a kexec failure on ARM64 guest on
-Hyper-V, and I got the BUG_ON() triggered:
-
-[  108.378016] kexec_core: Starting new kernel
-[  108.378018] Disabling non-boot CPUs ...
-[  108.378019] Wakeup pending. Abort CPU freeze
-[  108.378020] Non-boot CPUs are not disabled
-[  108.378049] ------------[ cut here ]------------
-[  108.378050] kernel BUG at arch/arm64/kernel/machine_kexec.c:154!
-
-Thanks!
-
-Regards,
-Boqun
-
-> [ tglx: Massaged changelog and improved printk message ]
-> 
-> Signed-off-by: Pavankumar Kondeti <pkondeti@codeaurora.org>
-> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-> Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-> Cc: Len Brown <len.brown@intel.com>
-> Cc: Pavel Machek <pavel@ucw.cz>
-> Cc: Josh Poimboeuf <jpoimboe@redhat.com>
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Cc: Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
-> Cc: iri Kosina <jkosina@suse.cz>
-> Cc: Mukesh Ojha <mojha@codeaurora.org>
-> Cc: linux-pm@vger.kernel.org
-> Link: https://lkml.kernel.org/r/1559536263-16472-1-git-send-email-pkondeti@codeaurora.org
-> 
-> ---
->  kernel/cpu.c | 7 +++++++
->  1 file changed, 7 insertions(+)
-> 
-> diff --git a/kernel/cpu.c b/kernel/cpu.c
-> index be82cbc11a8a..0778249cd49d 100644
-> --- a/kernel/cpu.c
-> +++ b/kernel/cpu.c
-> @@ -1221,6 +1221,13 @@ int freeze_secondary_cpus(int primary)
->  	for_each_online_cpu(cpu) {
->  		if (cpu == primary)
->  			continue;
-> +
-> +		if (pm_wakeup_pending()) {
-> +			pr_info("Wakeup pending. Abort CPU freeze\n");
-> +			error = -EBUSY;
-> +			break;
-> +		}
-> +
->  		trace_suspend_resume(TPS("CPU_OFF"), cpu, true);
->  		error = _cpu_down(cpu, 1, CPUHP_OFFLINE);
->  		trace_suspend_resume(TPS("CPU_OFF"), cpu, false);
+I would push this to the responsibility of the various drivers instead
+of making this part of the standard ethtool implementation.
+-- 
+Florian
