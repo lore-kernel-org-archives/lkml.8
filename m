@@ -7,42 +7,42 @@ X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61318C2D0EE
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 19:48:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B933C2D0E8
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 19:48:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E3E5206F1
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 19:48:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 519D5206F1
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 19:48:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="XXjTfh76"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="htyrqqgx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727775AbgC0Tsw (ORCPT
+        id S1727798AbgC0Ts4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Mar 2020 15:48:52 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:36880 "EHLO
+        Fri, 27 Mar 2020 15:48:56 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:30934 "EHLO
         mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727701AbgC0Tsv (ORCPT
+        by vger.kernel.org with ESMTP id S1727766AbgC0Ts4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Mar 2020 15:48:51 -0400
+        Fri, 27 Mar 2020 15:48:56 -0400
 DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1585338530; h=References: In-Reply-To: Message-Id: Date:
+ s=smtp; t=1585338535; h=References: In-Reply-To: Message-Id: Date:
  Subject: Cc: To: From: Sender;
- bh=lFClKp9YImPAe7HParWpT3YvwvHYdK4vNuSzrBWlskU=; b=XXjTfh768WpJTJzv+McelQEbZlhfFgeqKNqBlzuFrb5XNt5uhDeJmWVuP8GzCRRWkMysX4ZN
- /Xam1j0YgDrn8Bzlw8s+v4YqS4alcNwaRJhFD3GFyWkt1DhIkwm40+INyaPzSxn6TZorBsZc
- 5Lp9Z7ZahHrOgW3zYvZfsXbmZoY=
+ bh=k0A0JRiuIG+Y6lzQU64ysYi40Sb/U89gmKHVr0wM7pY=; b=htyrqqgx+L6qINoVmFOJvf6p0RsUBKIjWwEHlK5rHvhGy+HNJdEpwxZqQTmnjrkgWVOGq46b
+ h0F+Q48mcLf+QcNHnGAvxIPIbmDBGZmBE4z8bqQAoxICcr3fIhi/P6Ouw7dBRshLxjvFRXsZ
+ 0RKopEc/5WbOEI08d1XlJ0f+S/o=
 X-Mailgun-Sending-Ip: 104.130.122.27
 X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
 Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e7e588f.7fb70b6d5d50-smtp-out-n01;
- Fri, 27 Mar 2020 19:48:31 -0000 (UTC)
+ by mxa.mailgun.org with ESMTP id 5e7e5899.7f0ca4e9fdf8-smtp-out-n02;
+ Fri, 27 Mar 2020 19:48:41 -0000 (UTC)
 Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 4E20EC433BA; Fri, 27 Mar 2020 19:48:31 +0000 (UTC)
+        id 33D34C4478C; Fri, 27 Mar 2020 19:48:41 +0000 (UTC)
 Received: from tdas-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
         (Authenticated sender: tdas)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 75C61C43637;
-        Fri, 27 Mar 2020 19:48:25 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 75C61C43637
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id BE316C433F2;
+        Fri, 27 Mar 2020 19:48:34 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org BE316C433F2
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=tdas@codeaurora.org
 From:   Taniya Das <tdas@codeaurora.org>
@@ -55,9 +55,9 @@ Cc:     David Brown <david.brown@linaro.org>,
         Andy Gross <agross@kernel.org>, devicetree@vger.kernel.org,
         robh@kernel.org, robh+dt@kernel.org,
         Taniya Das <tdas@codeaurora.org>
-Subject: [PATCH v1 2/4] dt-bindings: clock: Add YAML schemas for LPASS clocks on SC7180
-Date:   Sat, 28 Mar 2020 01:18:03 +0530
-Message-Id: <1585338485-31820-3-git-send-email-tdas@codeaurora.org>
+Subject: [PATCH v1 4/4] clk: qcom: lpass: Add support for LPASS clock controller for SC7180
+Date:   Sat, 28 Mar 2020 01:18:05 +0530
+Message-Id: <1585338485-31820-5-git-send-email-tdas@codeaurora.org>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1585338485-31820-1-git-send-email-tdas@codeaurora.org>
 References: <1585338485-31820-1-git-send-email-tdas@codeaurora.org>
@@ -66,152 +66,534 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The LPASS(Low Power Audio Subsystem) clock provider have a bunch of generic
-properties that are needed in a device tree. Also add clock ids for GCC
-LPASS and LPASS Core clock IDs for LPASS client to request for the clocks.
+The Low Power Audio subsystem clocks are required for Audio client
+to be able to request for the clocks and power domains.
 
 Signed-off-by: Taniya Das <tdas@codeaurora.org>
 ---
- .../bindings/clock/qcom,sc7180-lpasscorecc.yaml    | 81 ++++++++++++++++++++++
- include/dt-bindings/clock/qcom,gcc-sc7180.h        |  1 +
- .../dt-bindings/clock/qcom,lpasscorecc-sc7180.h    | 28 ++++++++
- 3 files changed, 110 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/clock/qcom,sc7180-lpasscorecc.yaml
- create mode 100644 include/dt-bindings/clock/qcom,lpasscorecc-sc7180.h
+ drivers/clk/qcom/Kconfig              |   9 +
+ drivers/clk/qcom/Makefile             |   1 +
+ drivers/clk/qcom/lpasscorecc-sc7180.c | 479 ++++++++++++++++++++++++++++++++++
+ 3 files changed, 489 insertions(+)
+ create mode 100644 drivers/clk/qcom/lpasscorecc-sc7180.c
 
-diff --git a/Documentation/devicetree/bindings/clock/qcom,sc7180-lpasscorecc.yaml b/Documentation/devicetree/bindings/clock/qcom,sc7180-lpasscorecc.yaml
-new file mode 100644
-index 0000000..d040bd1
---- /dev/null
-+++ b/Documentation/devicetree/bindings/clock/qcom,sc7180-lpasscorecc.yaml
-@@ -0,0 +1,81 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/clock/qcom,sc7180-lpasscorecc.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Qualcomm LPASS Core Clock Controller Binding for SC7180
-+
-+maintainers:
-+  - Taniya Das <tdas@codeaurora.org>
-+
-+description: |
-+  Qualcomm LPASS core clock control module which supports the clocks and
-+  power domains on SC7180.
-+
-+  See also:
-+  - dt-bindings/clock/qcom,lpasscorecc-sc7180.h
-+
-+properties:
-+  compatible:
-+    enum:
-+      - qcom,sc7180-lpasshm
-+      - qcom,sc7180-lpasscorecc
-+
-+  clocks:
-+    items:
-+      - description: gcc_lpass_sway clock from GCC
-+
-+  clock-names:
-+    items:
-+      - const: gcc_lpass_sway
-+
-+  power-domains:
-+    items:
-+      - description: LPASS CORE HM GSDCR
-+
-+  '#clock-cells':
-+    const: 1
-+
-+  '#power-domain-cells':
-+    const: 1
-+
-+  reg:
-+    minItems: 1
-+    maxItems: 2
-+
-+required:
-+  - compatible
-+  - reg
-+  - clocks
-+  - clock-names
-+  - '#clock-cells'
-+  - '#power-domain-cells'
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/clock/qcom,gcc-sc7180.h>
-+    #include <dt-bindings/clock/qcom,lpasscorecc-sc7180.h>
-+    clock-controller@63000000 {
-+      compatible = "qcom,sc7180-lpasshm";
-+        reg = <0 0x63000000 0 0x28>;
-+        clocks = <&gcc GCC_LPASS_CFG_NOC_SWAY_CLK>;
-+        clock-names = "gcc_lpass_sway";
-+        #clock-cells = <1>;
-+        #power-domain-cells = <1>;
-+    };
-+
-+  - |
-+    clock-controller@62d00000 {
-+        compatible = "qcom,sc7180-lpasscorecc";
-+        reg = <0 0x62d00000 0 0x50000>,
-+            <0 0x62780000 0 0x30000>;
-+        clocks = <&gcc GCC_LPASS_CFG_NOC_SWAY_CLK>;
-+        clock-names = "gcc_lpass_sway";
-+        power-domains = <&lpass_hm LPASS_CORE_HM_GDSCR>;
-+        #clock-cells = <1>;
-+        #power-domain-cells = <1>;
-+    };
-+...
-diff --git a/include/dt-bindings/clock/qcom,gcc-sc7180.h b/include/dt-bindings/clock/qcom,gcc-sc7180.h
-index 1258fd0..439476c 100644
---- a/include/dt-bindings/clock/qcom,gcc-sc7180.h
-+++ b/include/dt-bindings/clock/qcom,gcc-sc7180.h
-@@ -137,6 +137,7 @@
- #define GCC_MSS_NAV_AXI_CLK					127
- #define GCC_MSS_Q6_MEMNOC_AXI_CLK				128
- #define GCC_MSS_SNOC_AXI_CLK					129
-+#define GCC_LPASS_CFG_NOC_SWAY_CLK				130
+diff --git a/drivers/clk/qcom/Kconfig b/drivers/clk/qcom/Kconfig
+index 11ec6f4..732e91d 100644
+--- a/drivers/clk/qcom/Kconfig
++++ b/drivers/clk/qcom/Kconfig
+@@ -272,6 +272,15 @@ config SC_GCC_7180
+ 	  Say Y if you want to use peripheral devices such as UART, SPI,
+ 	  I2C, USB, UFS, SDCC, etc.
 
- /* GCC resets */
- #define GCC_QUSB2PHY_PRIM_BCR					0
-diff --git a/include/dt-bindings/clock/qcom,lpasscorecc-sc7180.h b/include/dt-bindings/clock/qcom,lpasscorecc-sc7180.h
++config SC_LPASS_CORECC_7180
++	tristate "SC7180 LPASS Core Clock Controller"
++	select SC_GCC_7180
++	help
++	  Support for the LPASS(Low Power Audio Subsystem) core clock controller
++	  on SC7180 devices.
++	  Say Y if you want to use LPASS clocks and power domains of the LPASS
++	  core clock controller.
++
+ config SC_GPUCC_7180
+ 	tristate "SC7180 Graphics Clock Controller"
+ 	select SC_GCC_7180
+diff --git a/drivers/clk/qcom/Makefile b/drivers/clk/qcom/Makefile
+index 691efbf..cb29262 100644
+--- a/drivers/clk/qcom/Makefile
++++ b/drivers/clk/qcom/Makefile
+@@ -50,6 +50,7 @@ obj-$(CONFIG_QCS_TURING_404) += turingcc-qcs404.o
+ obj-$(CONFIG_SC_DISPCC_7180) += dispcc-sc7180.o
+ obj-$(CONFIG_SC_GCC_7180) += gcc-sc7180.o
+ obj-$(CONFIG_SC_GPUCC_7180) += gpucc-sc7180.o
++obj-$(CONFIG_SC_LPASS_CORECC_7180) += lpasscorecc-sc7180.o
+ obj-$(CONFIG_SC_MSS_7180) += mss-sc7180.o
+ obj-$(CONFIG_SC_VIDEOCC_7180) += videocc-sc7180.o
+ obj-$(CONFIG_SDM_CAMCC_845) += camcc-sdm845.o
+diff --git a/drivers/clk/qcom/lpasscorecc-sc7180.c b/drivers/clk/qcom/lpasscorecc-sc7180.c
 new file mode 100644
-index 0000000..9466d5e
+index 0000000..86e3599
 --- /dev/null
-+++ b/include/dt-bindings/clock/qcom,lpasscorecc-sc7180.h
-@@ -0,0 +1,28 @@
-+/* SPDX-License-Identifier: GPL-2.0-only */
++++ b/drivers/clk/qcom/lpasscorecc-sc7180.c
+@@ -0,0 +1,479 @@
++// SPDX-License-Identifier: GPL-2.0-only
 +/*
 + * Copyright (c) 2020, The Linux Foundation. All rights reserved.
 + */
 +
-+#ifndef _DT_BINDINGS_CLK_QCOM_LPASS_CORE_CC_SC7180_H
-+#define _DT_BINDINGS_CLK_QCOM_LPASS_CORE_CC_SC7180_H
++#include <linux/clk-provider.h>
++#include <linux/err.h>
++#include <linux/module.h>
++#include <linux/of_device.h>
++#include <linux/pm_clock.h>
++#include <linux/pm_runtime.h>
++#include <linux/of.h>
++#include <linux/regmap.h>
 +
-+/* LPASS_CORE_CC clocks */
-+#define LPASS_LPAAUDIO_DIG_PLL				0
-+#define LPASS_LPAAUDIO_DIG_PLL_OUT_ODD			1
-+#define CORE_CLK_SRC					2
-+#define EXT_MCLK0_CLK_SRC				3
-+#define LPAIF_PRI_CLK_SRC				4
-+#define LPAIF_SEC_CLK_SRC				5
-+#define LPASS_AUDIO_CORE_CORE_CLK			6
-+#define LPASS_AUDIO_CORE_EXT_MCLK0_CLK			7
-+#define LPASS_AUDIO_CORE_LPAIF_PRI_IBIT_CLK		8
-+#define LPASS_AUDIO_CORE_LPAIF_SEC_IBIT_CLK		9
-+#define LPASS_AUDIO_CORE_SYSNOC_MPORT_CORE_CLK		10
++#include <dt-bindings/clock/qcom,lpasscorecc-sc7180.h>
 +
-+/* LPASS power domains */
-+#define LPASS_CORE_HM_GDSCR				0
++#include "clk-alpha-pll.h"
++#include "clk-branch.h"
++#include "clk-rcg.h"
++#include "clk-regmap.h"
++#include "common.h"
++#include "gdsc.h"
 +
-+#define LPASS_AUDIO_HM_GDSCR				0
-+#define LPASS_PDC_HM_GDSCR				1
++enum {
++	P_BI_TCXO,
++	P_LPASS_LPAAUDIO_DIG_PLL_OUT_ODD,
++	P_SLEEP_CLK,
++};
 +
-+#endif
++static struct pll_vco fabia_vco[] = {
++	{ 249600000, 2000000000, 0 },
++};
++
++static const struct alpha_pll_config lpass_lpaaudio_dig_pll_config = {
++	.l = 0x20,
++	.alpha = 0x0,
++	.config_ctl_val = 0x20485699,
++	.config_ctl_hi_val = 0x00002067,
++	.test_ctl_val = 0x40000000,
++	.test_ctl_hi_val = 0x00000000,
++	.user_ctl_val = 0x00005105,
++	.user_ctl_hi_val = 0x00004805,
++};
++
++static const u8 clk_alpha_pll_regs_offset[][PLL_OFF_MAX_REGS] = {
++	[CLK_ALPHA_PLL_TYPE_FABIA] =  {
++		[PLL_OFF_L_VAL] = 0x04,
++		[PLL_OFF_CAL_L_VAL] = 0x8,
++		[PLL_OFF_USER_CTL] = 0x0c,
++		[PLL_OFF_USER_CTL_U] = 0x10,
++		[PLL_OFF_USER_CTL_U1] = 0x14,
++		[PLL_OFF_CONFIG_CTL] = 0x18,
++		[PLL_OFF_CONFIG_CTL_U] = 0x1C,
++		[PLL_OFF_CONFIG_CTL_U1] = 0x20,
++		[PLL_OFF_TEST_CTL] = 0x24,
++		[PLL_OFF_TEST_CTL_U] = 0x28,
++		[PLL_OFF_STATUS] = 0x30,
++		[PLL_OFF_OPMODE] = 0x38,
++		[PLL_OFF_FRAC] = 0x40,
++	},
++};
++
++static struct clk_alpha_pll lpass_lpaaudio_dig_pll = {
++	.offset = 0x1000,
++	.vco_table = fabia_vco,
++	.num_vco = ARRAY_SIZE(fabia_vco),
++	.regs = clk_alpha_pll_regs_offset[CLK_ALPHA_PLL_TYPE_FABIA],
++	.clkr = {
++		.hw.init = &(struct clk_init_data){
++			.name = "lpass_lpaaudio_dig_pll",
++			.parent_data = &(const struct clk_parent_data){
++				.fw_name = "bi_tcxo",
++				.name = "bi_tcxo",
++			},
++			.num_parents = 1,
++			.ops = &clk_alpha_pll_fabia_ops,
++		},
++	},
++};
++
++static const struct clk_div_table
++			post_div_table_lpass_lpaaudio_dig_pll_out_odd[] = {
++	{ 0x5, 5 },
++	{ }
++};
++
++static struct clk_alpha_pll_postdiv lpass_lpaaudio_dig_pll_out_odd = {
++	.offset = 0x1000,
++	.post_div_shift = 12,
++	.post_div_table = post_div_table_lpass_lpaaudio_dig_pll_out_odd,
++	.num_post_div =
++		ARRAY_SIZE(post_div_table_lpass_lpaaudio_dig_pll_out_odd),
++	.width = 4,
++	.regs = clk_alpha_pll_regs[CLK_ALPHA_PLL_TYPE_FABIA],
++	.clkr.hw.init = &(struct clk_init_data){
++		.name = "lpass_lpaaudio_dig_pll_out_odd",
++		.parent_data = &(const struct clk_parent_data){
++			.hw = &lpass_lpaaudio_dig_pll.clkr.hw,
++		},
++		.num_parents = 1,
++		.flags = CLK_SET_RATE_PARENT,
++		.ops = &clk_alpha_pll_postdiv_fabia_ops,
++	},
++};
++
++static const struct parent_map lpass_core_cc_parent_map_0[] = {
++	{ P_BI_TCXO, 0 },
++	{ P_LPASS_LPAAUDIO_DIG_PLL_OUT_ODD, 5 },
++};
++
++static const struct clk_parent_data lpass_core_cc_parent_data_0[] = {
++	{ .fw_name = "bi_tcxo", .name = "bi_tcxo" },
++	{ .hw = &lpass_lpaaudio_dig_pll_out_odd.clkr.hw },
++};
++
++static const struct parent_map lpass_core_cc_parent_map_2[] = {
++	{ P_BI_TCXO, 0 },
++};
++
++static struct clk_rcg2 core_clk_src = {
++	.cmd_rcgr = 0x1d000,
++	.mnd_width = 8,
++	.hid_width = 5,
++	.parent_map = lpass_core_cc_parent_map_2,
++	.clkr.hw.init = &(struct clk_init_data){
++		.name = "core_clk_src",
++		.parent_data = &(const struct clk_parent_data){
++			.fw_name = "bi_tcxo",
++		},
++		.num_parents = 1,
++		.ops = &clk_rcg2_ops,
++	},
++};
++
++static const struct freq_tbl ftbl_ext_mclk0_clk_src[] = {
++	F(9600000, P_BI_TCXO, 2, 0, 0),
++	F(19200000, P_BI_TCXO, 1, 0, 0),
++	{ }
++};
++
++static const struct freq_tbl ftbl_ext_lpaif_clk_src[] = {
++	F(256000, P_LPASS_LPAAUDIO_DIG_PLL_OUT_ODD, 15, 1, 32),
++	F(512000, P_LPASS_LPAAUDIO_DIG_PLL_OUT_ODD, 15, 1, 16),
++	F(768000, P_LPASS_LPAAUDIO_DIG_PLL_OUT_ODD, 10, 1, 16),
++	F(1024000, P_LPASS_LPAAUDIO_DIG_PLL_OUT_ODD, 15, 1, 8),
++	F(1536000, P_LPASS_LPAAUDIO_DIG_PLL_OUT_ODD, 10, 1, 8),
++	F(2048000, P_LPASS_LPAAUDIO_DIG_PLL_OUT_ODD, 15, 1, 4),
++	F(3072000, P_LPASS_LPAAUDIO_DIG_PLL_OUT_ODD, 10, 1, 4),
++	F(4096000, P_LPASS_LPAAUDIO_DIG_PLL_OUT_ODD, 15, 1, 2),
++	F(6144000, P_LPASS_LPAAUDIO_DIG_PLL_OUT_ODD, 10, 1, 2),
++	F(8192000, P_LPASS_LPAAUDIO_DIG_PLL_OUT_ODD, 15, 0, 0),
++	F(9600000, P_BI_TCXO, 2, 0, 0),
++	F(12288000, P_LPASS_LPAAUDIO_DIG_PLL_OUT_ODD, 10, 0, 0),
++	F(19200000, P_BI_TCXO, 1, 0, 0),
++	F(24576000, P_LPASS_LPAAUDIO_DIG_PLL_OUT_ODD, 5, 0, 0),
++	{ }
++};
++
++static struct clk_rcg2 ext_mclk0_clk_src = {
++	.cmd_rcgr = 0x20000,
++	.mnd_width = 8,
++	.hid_width = 5,
++	.parent_map = lpass_core_cc_parent_map_0,
++	.freq_tbl = ftbl_ext_mclk0_clk_src,
++	.clkr.hw.init = &(struct clk_init_data){
++		.name = "ext_mclk0_clk_src",
++		.parent_data = lpass_core_cc_parent_data_0,
++		.num_parents = 2,
++		.flags = CLK_SET_RATE_PARENT,
++		.ops = &clk_rcg2_ops,
++	},
++};
++
++static struct clk_rcg2 lpaif_pri_clk_src = {
++	.cmd_rcgr = 0x10000,
++	.mnd_width = 16,
++	.hid_width = 5,
++	.parent_map = lpass_core_cc_parent_map_0,
++	.freq_tbl = ftbl_ext_lpaif_clk_src,
++	.clkr.hw.init = &(struct clk_init_data){
++		.name = "lpaif_pri_clk_src",
++		.parent_data = lpass_core_cc_parent_data_0,
++		.num_parents = 2,
++		.flags = CLK_SET_RATE_PARENT,
++		.ops = &clk_rcg2_ops,
++	},
++};
++
++static struct clk_rcg2 lpaif_sec_clk_src = {
++	.cmd_rcgr = 0x11000,
++	.mnd_width = 16,
++	.hid_width = 5,
++	.parent_map = lpass_core_cc_parent_map_0,
++	.freq_tbl = ftbl_ext_lpaif_clk_src,
++	.clkr.hw.init = &(struct clk_init_data){
++		.name = "lpaif_sec_clk_src",
++		.parent_data = lpass_core_cc_parent_data_0,
++		.num_parents = 2,
++		.flags = CLK_SET_RATE_PARENT,
++		.ops = &clk_rcg2_ops,
++	},
++};
++
++static struct clk_branch lpass_audio_core_ext_mclk0_clk = {
++	.halt_reg = 0x20014,
++	.halt_check = BRANCH_HALT,
++	.hwcg_reg = 0x20014,
++	.hwcg_bit = 1,
++	.clkr = {
++		.enable_reg = 0x20014,
++		.enable_mask = BIT(0),
++		.hw.init = &(struct clk_init_data){
++			.name = "lpass_audio_core_ext_mclk0_clk",
++			.parent_data = &(const struct clk_parent_data){
++				.hw = &ext_mclk0_clk_src.clkr.hw,
++			},
++			.num_parents = 1,
++			.flags = CLK_SET_RATE_PARENT,
++			.ops = &clk_branch2_ops,
++		},
++	},
++};
++
++static struct clk_branch lpass_audio_core_lpaif_pri_ibit_clk = {
++	.halt_reg = 0x10018,
++	.halt_check = BRANCH_HALT,
++	.hwcg_reg = 0x10018,
++	.hwcg_bit = 1,
++	.clkr = {
++		.enable_reg = 0x10018,
++		.enable_mask = BIT(0),
++		.hw.init = &(struct clk_init_data){
++			.name = "lpass_audio_core_lpaif_pri_ibit_clk",
++			.parent_data = &(const struct clk_parent_data){
++				.hw = &lpaif_pri_clk_src.clkr.hw,
++			},
++			.num_parents = 1,
++			.flags = CLK_SET_RATE_PARENT,
++			.ops = &clk_branch2_ops,
++		},
++	},
++};
++
++static struct clk_branch lpass_audio_core_lpaif_sec_ibit_clk = {
++	.halt_reg = 0x11018,
++	.halt_check = BRANCH_HALT,
++	.hwcg_reg = 0x11018,
++	.hwcg_bit = 1,
++	.clkr = {
++		.enable_reg = 0x11018,
++		.enable_mask = BIT(0),
++		.hw.init = &(struct clk_init_data){
++			.name = "lpass_audio_core_lpaif_sec_ibit_clk",
++			.parent_data = &(const struct clk_parent_data){
++				.hw = &lpaif_sec_clk_src.clkr.hw,
++			},
++			.num_parents = 1,
++			.flags = CLK_SET_RATE_PARENT,
++			.ops = &clk_branch2_ops,
++		},
++	},
++};
++
++static struct clk_branch lpass_audio_core_sysnoc_mport_core_clk = {
++	.halt_reg = 0x23000,
++	.halt_check = BRANCH_HALT,
++	.hwcg_reg = 0x23000,
++	.hwcg_bit = 1,
++	.clkr = {
++		.enable_reg = 0x23000,
++		.enable_mask = BIT(0),
++		.hw.init = &(struct clk_init_data){
++			.name = "lpass_audio_core_sysnoc_mport_core_clk",
++			.parent_data = &(const struct clk_parent_data){
++				.hw = &core_clk_src.clkr.hw,
++			},
++			.num_parents = 1,
++			.flags = CLK_SET_RATE_PARENT,
++			.ops = &clk_branch2_ops,
++		},
++	},
++};
++
++static struct clk_regmap *lpass_core_cc_sc7180_clocks[] = {
++	[EXT_MCLK0_CLK_SRC] = &ext_mclk0_clk_src.clkr,
++	[LPAIF_PRI_CLK_SRC] = &lpaif_pri_clk_src.clkr,
++	[LPAIF_SEC_CLK_SRC] = &lpaif_sec_clk_src.clkr,
++	[CORE_CLK_SRC] = &core_clk_src.clkr,
++	[LPASS_AUDIO_CORE_EXT_MCLK0_CLK] = &lpass_audio_core_ext_mclk0_clk.clkr,
++	[LPASS_AUDIO_CORE_LPAIF_PRI_IBIT_CLK] =
++		&lpass_audio_core_lpaif_pri_ibit_clk.clkr,
++	[LPASS_AUDIO_CORE_LPAIF_SEC_IBIT_CLK] =
++		&lpass_audio_core_lpaif_sec_ibit_clk.clkr,
++	[LPASS_AUDIO_CORE_SYSNOC_MPORT_CORE_CLK] =
++		&lpass_audio_core_sysnoc_mport_core_clk.clkr,
++	[LPASS_LPAAUDIO_DIG_PLL] = &lpass_lpaaudio_dig_pll.clkr,
++	[LPASS_LPAAUDIO_DIG_PLL_OUT_ODD] = &lpass_lpaaudio_dig_pll_out_odd.clkr,
++};
++
++static struct gdsc lpass_pdc_hm_gdsc = {
++	.gdscr = 0x3090,
++	.pd = {
++		.name = "lpass_pdc_hm_gdsc",
++	},
++	.pwrsts = PWRSTS_OFF_ON,
++	.flags = VOTABLE,
++};
++
++static struct gdsc lpass_audio_hm_gdsc = {
++	.gdscr = 0x9090,
++	.pd = {
++		.name = "lpass_audio_hm_gdsc",
++	},
++	.pwrsts = PWRSTS_OFF_ON,
++};
++
++static struct gdsc lpass_core_hm_gdsc = {
++	.gdscr = 0x0,
++	.pd = {
++		.name = "lpass_core_hm_gdsc",
++	},
++	.pwrsts = PWRSTS_OFF_ON,
++	.flags = RETAIN_FF_ENABLE,
++};
++
++static struct gdsc *lpass_core_hm_sc7180_gdscs[] = {
++	[LPASS_CORE_HM_GDSCR] = &lpass_core_hm_gdsc,
++};
++
++static struct gdsc *lpass_audio_hm_sc7180_gdscs[] = {
++	[LPASS_PDC_HM_GDSCR] = &lpass_pdc_hm_gdsc,
++	[LPASS_AUDIO_HM_GDSCR] = &lpass_audio_hm_gdsc,
++};
++
++static struct regmap_config lpass_core_cc_sc7180_regmap_config = {
++	.reg_bits = 32,
++	.reg_stride = 4,
++	.val_bits = 32,
++	.fast_io = true,
++};
++
++static const struct qcom_cc_desc lpass_core_hm_sc7180_desc = {
++	.config = &lpass_core_cc_sc7180_regmap_config,
++	.gdscs = lpass_core_hm_sc7180_gdscs,
++	.num_gdscs = ARRAY_SIZE(lpass_core_hm_sc7180_gdscs),
++};
++
++static const struct qcom_cc_desc lpass_core_cc_sc7180_desc = {
++	.config = &lpass_core_cc_sc7180_regmap_config,
++	.clks = lpass_core_cc_sc7180_clocks,
++	.num_clks = ARRAY_SIZE(lpass_core_cc_sc7180_clocks),
++};
++
++static const struct qcom_cc_desc lpass_audio_hm_sc7180_desc = {
++	.config = &lpass_core_cc_sc7180_regmap_config,
++	.gdscs = lpass_audio_hm_sc7180_gdscs,
++	.num_gdscs = ARRAY_SIZE(lpass_audio_hm_sc7180_gdscs),
++};
++
++
++static int lpass_core_cc_sc7180_probe(struct platform_device *pdev)
++{
++	const struct qcom_cc_desc *desc;
++	struct regmap *regmap;
++	int ret;
++
++	lpass_core_cc_sc7180_regmap_config.name = "lpass_audio_cc";
++	desc = &lpass_audio_hm_sc7180_desc;
++	ret = qcom_cc_probe_by_index(pdev, 1, desc);
++	if (ret)
++		return ret;
++
++	lpass_core_cc_sc7180_regmap_config.name = "lpass_core_cc";
++	regmap = qcom_cc_map(pdev, &lpass_core_cc_sc7180_desc);
++	if (IS_ERR(regmap))
++		return PTR_ERR(regmap);
++
++	/*
++	 * Keep the CLK always-ON
++	 * LPASS_AUDIO_CORE_SYSNOC_SWAY_CORE_CLK
++	 */
++	regmap_update_bits(regmap, 0x24000, BIT(0), BIT(0));
++
++	/* PLL settings */
++	regmap_write(regmap, 0x1008, 0x20);
++	regmap_update_bits(regmap, 0x1014, BIT(0), BIT(0));
++
++	clk_fabia_pll_configure(&lpass_lpaaudio_dig_pll, regmap,
++				&lpass_lpaaudio_dig_pll_config);
++
++	return qcom_cc_really_probe(pdev, &lpass_core_cc_sc7180_desc, regmap);
++}
++
++static int lpass_hm_core_probe(struct platform_device *pdev)
++{
++	const struct qcom_cc_desc *desc;
++	int ret;
++
++	lpass_core_cc_sc7180_regmap_config.name = "lpass_hm_core";
++	desc = &lpass_core_hm_sc7180_desc;
++
++	return qcom_cc_probe_by_index(pdev, 0, desc);
++}
++
++static const struct of_device_id lpass_core_cc_sc7180_match_table[] = {
++	{
++		.compatible = "qcom,sc7180-lpasshm",
++		.data = lpass_hm_core_probe,
++	},
++	{
++		.compatible = "qcom,sc7180-lpasscorecc",
++		.data = lpass_core_cc_sc7180_probe,
++	},
++	{ }
++};
++MODULE_DEVICE_TABLE(of, lpass_core_cc_sc7180_match_table);
++
++static int lpass_core_sc7180_probe(struct platform_device *pdev)
++{
++	int (*clk_probe)(struct platform_device *p);
++	int ret;
++
++	pm_runtime_enable(&pdev->dev);
++	ret = pm_clk_create(&pdev->dev);
++	if (ret)
++		return ret;
++
++	ret = pm_clk_add(&pdev->dev, "gcc_lpass_sway");
++	if (ret < 0) {
++		dev_err(&pdev->dev, "failed to acquire iface clock\n");
++		goto disable_pm_runtime;
++	}
++
++	clk_probe = of_device_get_match_data(&pdev->dev);
++	if (!clk_probe)
++		return -EINVAL;
++
++	ret = clk_probe(pdev);
++	if (ret)
++		goto destroy_pm_clk;
++
++	return 0;
++
++destroy_pm_clk:
++	pm_clk_destroy(&pdev->dev);
++
++disable_pm_runtime:
++	pm_runtime_disable(&pdev->dev);
++
++	return ret;
++}
++
++static const struct dev_pm_ops lpass_core_cc_pm_ops = {
++	SET_RUNTIME_PM_OPS(pm_clk_suspend, pm_clk_resume, NULL)
++};
++
++static struct platform_driver lpass_core_cc_sc7180_driver = {
++	.probe = lpass_core_sc7180_probe,
++	.driver = {
++		.name = "lpass_core_cc-sc7180",
++		.of_match_table = lpass_core_cc_sc7180_match_table,
++		.pm = &lpass_core_cc_pm_ops,
++	},
++};
++
++static int __init lpass_core_cc_sc7180_init(void)
++{
++	return platform_driver_register(&lpass_core_cc_sc7180_driver);
++}
++subsys_initcall(lpass_core_cc_sc7180_init);
++
++static void __exit lpass_core_cc_sc7180_exit(void)
++{
++	platform_driver_unregister(&lpass_core_cc_sc7180_driver);
++}
++module_exit(lpass_core_cc_sc7180_exit);
++
++MODULE_DESCRIPTION("QTI LPASS_CORE_CC SC7180 Driver");
++MODULE_LICENSE("GPL v2");
 --
 Qualcomm INDIA, on behalf of Qualcomm Innovation Center, Inc.is a member
 of the Code Aurora Forum, hosted by the  Linux Foundation.
