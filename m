@@ -2,260 +2,185 @@ Return-Path: <SRS0=s8dx=5M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F50EC2D0E5
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 15:52:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06B91C43331
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 15:54:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0B1542074F
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 15:52:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A307B20748
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 15:54:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="iJ+kBl4D"
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="ca+oPRlW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727639AbgC0Pwv (ORCPT
+        id S1727655AbgC0PyI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Mar 2020 11:52:51 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:49534 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726900AbgC0Pwu (ORCPT
+        Fri, 27 Mar 2020 11:54:08 -0400
+Received: from smtprelay-out1.synopsys.com ([149.117.73.133]:47728 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726900AbgC0PyI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Mar 2020 11:52:50 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description;
-        bh=ACvsZf1sb/ZPbsmrhFL30kdimae4anZCMRz8z9bhNVQ=; b=iJ+kBl4DZBZqxM7kQw5hFMF4iw
-        xTmDVObuAgEyG7SWN8Y/GFOZvqpQ0IluClbjKRit9dK4ajQtgned6I9Pos0tdhk32SdwSc+R4jKa0
-        jjlbGsos7djdIp/txBVC14GWQuCy607sgymWwVjcRwUi638NVD1YtQRul2YiDrusnci1+cyTR/CcI
-        jLgWzJphvFMf3HVVNAfg1VnBueFL2yaSjxZCDWNmUUw95OvflJTZjuBECzoyoiDE2Hr8G+QTusTR3
-        T/+kvvfmZgw+KyanAI/MyTEQcyIuek9/0wifq8fjM0x2sWhMQuUe/+h8BXbg46DmDHrQnEIt5BH1c
-        LJaDCyYw==;
-Received: from [2601:1c0:6280:3f0::19c2]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jHrHs-0004L8-C6; Fri, 27 Mar 2020 15:52:48 +0000
-Subject: Re: linux-next: Tree for Mar 27
-To:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        richard -rw- weinberger <richard.weinberger@gmail.com>,
-        Al Viro <viro@ZenIV.linux.org.uk>
-References: <20200327190740.7385d4ff@canb.auug.org.au>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <425b6d83-53da-15bb-8e7a-158f7c44ffad@infradead.org>
-Date:   Fri, 27 Mar 2020 08:52:47 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Fri, 27 Mar 2020 11:54:08 -0400
+Received: from mailhost.synopsys.com (mdc-mailhost1.synopsys.com [10.225.0.209])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 5811340603;
+        Fri, 27 Mar 2020 15:54:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
+        t=1585324447; bh=i2e0c2LqmgeW1R7eZp3z5uHb0cvu0fxZMLpreG/MeUc=;
+        h=From:To:Cc:Subject:Date:From;
+        b=ca+oPRlW+vWHw++d9ylzhKzyWZeLaRZwMd6Aipkv180h5dHqL5OUDvx0DNzfe8D84
+         IqG5E7F0gYhGxtlNNSPr7uN7addj09iO0cz1axyVO55S1rZzRBWZyHyhc7dIANBwcy
+         obq18xIWDC++GnjsB0qS9GwEYta+ktd/xa9DecS5SJcPSGFfZAWtowyItB/ZKWQQ8y
+         MjtL9e+zp+ODLESv06CX9uEudj8vOGI/6d6KrOdSfNwb5dlW/qzlex0SCvk1jwh8HQ
+         xtErlVfUdoNB0vs9DRuhUxTtPlXO0Ug3HJ3MCRab/HbMteWL5QXQk2oYFLmjQbhT10
+         XNSiIc4Ym5X8g==
+Received: from paltsev-e7480.internal.synopsys.com (ru20-e7250.internal.synopsys.com [10.225.49.134])
+        by mailhost.synopsys.com (Postfix) with ESMTP id 6636DA005C;
+        Fri, 27 Mar 2020 15:53:59 +0000 (UTC)
+From:   Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
+To:     linux-snps-arc@lists.infradead.org,
+        Vineet Gupta <Vineet.Gupta1@synopsys.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Alexey Brodkin <Alexey.Brodkin@synopsys.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
+Subject: [RFC] ARC: initial ftrace support
+Date:   Fri, 27 Mar 2020 18:53:55 +0300
+Message-Id: <20200327155355.18668-1-Eugeniy.Paltsev@synopsys.com>
+X-Mailer: git-send-email 2.21.1
 MIME-Version: 1.0
-In-Reply-To: <20200327190740.7385d4ff@canb.auug.org.au>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/27/20 1:07 AM, Stephen Rothwell wrote:
-> Hi all,
-> 
-> Changes since 20200326:
-> 
+Add initial ftrace support for ARCv2. We add support only for
+function tracer (the simplest, not dynamic one), however it is
+prerequisite for dynamic function tracer and other complex
+ones.
 
-on i386, UML defconfig build fails with: (mostly get_user() variants)
+Signed-off-by: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
+---
+ arch/arc/Kconfig              |  1 +
+ arch/arc/include/asm/Kbuild   |  1 -
+ arch/arc/include/asm/ftrace.h | 16 ++++++++++++++++
+ arch/arc/kernel/Makefile      | 10 ++++++++++
+ arch/arc/kernel/ftrace.c      | 27 +++++++++++++++++++++++++++
+ 5 files changed, 54 insertions(+), 1 deletion(-)
+ create mode 100644 arch/arc/include/asm/ftrace.h
+ create mode 100644 arch/arc/kernel/ftrace.c
 
-
-  CC      kernel/signal.o
-In file included from ../include/linux/kernel.h:15:0,
-                 from ../include/asm-generic/bug.h:19,
-                 from ./arch/um/include/generated/asm/bug.h:1,
-                 from ../include/linux/bug.h:5,
-                 from ../include/linux/mmdebug.h:5,
-                 from ../include/linux/gfp.h:5,
-                 from ../include/linux/slab.h:15,
-                 from ../kernel/signal.c:14:
-../kernel/signal.c: In function 'print_fatal_signal':
-../kernel/signal.c:1250:33: error: 'struct pt_regs' has no member named 'ip'
-  pr_info("code at %08lx: ", regs->ip);
-                                 ^
-../include/linux/printk.h:310:34: note: in definition of macro 'pr_info'
-  printk(KERN_INFO pr_fmt(fmt), ##__VA_ARGS__)
-                                  ^~~~~~~~~~~
-In file included from ../arch/um/include/asm/uaccess.h:39:0,
-                 from ../include/linux/uaccess.h:11,
-                 from ../include/linux/sched/task.h:11,
-                 from ../kernel/signal.c:20:
-../kernel/signal.c:1256:45: error: 'struct pt_regs' has no member named 'ip'
-    if (get_user(insn, (unsigned char *)(regs->ip + i)))
-                                             ^
-../include/asm-generic/uaccess.h:196:28: note: in definition of macro 'get_user'
-  const void __user *__p = (ptr);    \
-                            ^~~
-../kernel/signal.c:1256:45: error: 'struct pt_regs' has no member named 'ip'
-    if (get_user(insn, (unsigned char *)(regs->ip + i)))
-                                             ^
-../include/asm-generic/uaccess.h:93:66: note: in definition of macro 'access_ok'
- #define access_ok(addr, size) __access_ok((unsigned long)(addr),(size))
-                                                                  ^~~~
-../kernel/signal.c:1256:8: note: in expansion of macro 'get_user'
-    if (get_user(insn, (unsigned char *)(regs->ip + i)))
-        ^~~~~~~~
-../kernel/signal.c:1256:45: error: 'struct pt_regs' has no member named 'ip'
-    if (get_user(insn, (unsigned char *)(regs->ip + i)))
-                                             ^
-../include/asm-generic/uaccess.h:158:19: note: in definition of macro '__get_user'
-  switch (sizeof(*(ptr))) {    \
-                   ^~~
-../kernel/signal.c:1256:8: note: in expansion of macro 'get_user'
-    if (get_user(insn, (unsigned char *)(regs->ip + i)))
-        ^~~~~~~~
-../kernel/signal.c:1256:45: error: 'struct pt_regs' has no member named 'ip'
-    if (get_user(insn, (unsigned char *)(regs->ip + i)))
-                                             ^
-../include/asm-generic/uaccess.h:209:47: note: in definition of macro '__get_user_fn'
- #define __get_user_fn(sz, u, k) __get_user_fn(sz, u, k)
-                                               ^~
-../include/asm-generic/uaccess.h:199:3: note: in expansion of macro '__get_user'
-   __get_user((x), (__typeof__(*(ptr)) __user *)__p) :\
-   ^~~~~~~~~~
-../kernel/signal.c:1256:8: note: in expansion of macro 'get_user'
-    if (get_user(insn, (unsigned char *)(regs->ip + i)))
-        ^~~~~~~~
-../kernel/signal.c:1256:45: error: 'struct pt_regs' has no member named 'ip'
-    if (get_user(insn, (unsigned char *)(regs->ip + i)))
-                                             ^
-../include/asm-generic/uaccess.h:209:51: note: in definition of macro '__get_user_fn'
- #define __get_user_fn(sz, u, k) __get_user_fn(sz, u, k)
-                                                   ^
-../include/asm-generic/uaccess.h:199:3: note: in expansion of macro '__get_user'
-   __get_user((x), (__typeof__(*(ptr)) __user *)__p) :\
-   ^~~~~~~~~~
-../kernel/signal.c:1256:8: note: in expansion of macro 'get_user'
-    if (get_user(insn, (unsigned char *)(regs->ip + i)))
-        ^~~~~~~~
-../kernel/signal.c:1256:45: error: 'struct pt_regs' has no member named 'ip'
-    if (get_user(insn, (unsigned char *)(regs->ip + i)))
-                                             ^
-../include/asm-generic/uaccess.h:163:32: note: in definition of macro '__get_user'
-   (x) = *(__force __typeof__(*(ptr)) *) &__x; \
-                                ^~~
-../kernel/signal.c:1256:8: note: in expansion of macro 'get_user'
-    if (get_user(insn, (unsigned char *)(regs->ip + i)))
-        ^~~~~~~~
-../kernel/signal.c:1256:45: error: 'struct pt_regs' has no member named 'ip'
-    if (get_user(insn, (unsigned char *)(regs->ip + i)))
-                                             ^
-../include/asm-generic/uaccess.h:209:47: note: in definition of macro '__get_user_fn'
- #define __get_user_fn(sz, u, k) __get_user_fn(sz, u, k)
-                                               ^~
-../include/asm-generic/uaccess.h:199:3: note: in expansion of macro '__get_user'
-   __get_user((x), (__typeof__(*(ptr)) __user *)__p) :\
-   ^~~~~~~~~~
-../kernel/signal.c:1256:8: note: in expansion of macro 'get_user'
-    if (get_user(insn, (unsigned char *)(regs->ip + i)))
-        ^~~~~~~~
-../kernel/signal.c:1256:45: error: 'struct pt_regs' has no member named 'ip'
-    if (get_user(insn, (unsigned char *)(regs->ip + i)))
-                                             ^
-../include/asm-generic/uaccess.h:209:51: note: in definition of macro '__get_user_fn'
- #define __get_user_fn(sz, u, k) __get_user_fn(sz, u, k)
-                                                   ^
-../include/asm-generic/uaccess.h:199:3: note: in expansion of macro '__get_user'
-   __get_user((x), (__typeof__(*(ptr)) __user *)__p) :\
-   ^~~~~~~~~~
-../kernel/signal.c:1256:8: note: in expansion of macro 'get_user'
-    if (get_user(insn, (unsigned char *)(regs->ip + i)))
-        ^~~~~~~~
-../kernel/signal.c:1256:45: error: 'struct pt_regs' has no member named 'ip'
-    if (get_user(insn, (unsigned char *)(regs->ip + i)))
-                                             ^
-../include/asm-generic/uaccess.h:170:32: note: in definition of macro '__get_user'
-   (x) = *(__force __typeof__(*(ptr)) *) &__x; \
-                                ^~~
-../kernel/signal.c:1256:8: note: in expansion of macro 'get_user'
-    if (get_user(insn, (unsigned char *)(regs->ip + i)))
-        ^~~~~~~~
-../kernel/signal.c:1256:45: error: 'struct pt_regs' has no member named 'ip'
-    if (get_user(insn, (unsigned char *)(regs->ip + i)))
-                                             ^
-../include/asm-generic/uaccess.h:209:47: note: in definition of macro '__get_user_fn'
- #define __get_user_fn(sz, u, k) __get_user_fn(sz, u, k)
-                                               ^~
-../include/asm-generic/uaccess.h:199:3: note: in expansion of macro '__get_user'
-   __get_user((x), (__typeof__(*(ptr)) __user *)__p) :\
-   ^~~~~~~~~~
-../kernel/signal.c:1256:8: note: in expansion of macro 'get_user'
-    if (get_user(insn, (unsigned char *)(regs->ip + i)))
-        ^~~~~~~~
-../kernel/signal.c:1256:45: error: 'struct pt_regs' has no member named 'ip'
-    if (get_user(insn, (unsigned char *)(regs->ip + i)))
-                                             ^
-../include/asm-generic/uaccess.h:209:51: note: in definition of macro '__get_user_fn'
- #define __get_user_fn(sz, u, k) __get_user_fn(sz, u, k)
-                                                   ^
-../include/asm-generic/uaccess.h:199:3: note: in expansion of macro '__get_user'
-   __get_user((x), (__typeof__(*(ptr)) __user *)__p) :\
-   ^~~~~~~~~~
-../kernel/signal.c:1256:8: note: in expansion of macro 'get_user'
-    if (get_user(insn, (unsigned char *)(regs->ip + i)))
-        ^~~~~~~~
-../kernel/signal.c:1256:45: error: 'struct pt_regs' has no member named 'ip'
-    if (get_user(insn, (unsigned char *)(regs->ip + i)))
-                                             ^
-../include/asm-generic/uaccess.h:177:32: note: in definition of macro '__get_user'
-   (x) = *(__force __typeof__(*(ptr)) *) &__x; \
-                                ^~~
-../kernel/signal.c:1256:8: note: in expansion of macro 'get_user'
-    if (get_user(insn, (unsigned char *)(regs->ip + i)))
-        ^~~~~~~~
-../kernel/signal.c:1256:45: error: 'struct pt_regs' has no member named 'ip'
-    if (get_user(insn, (unsigned char *)(regs->ip + i)))
-                                             ^
-../include/asm-generic/uaccess.h:209:47: note: in definition of macro '__get_user_fn'
- #define __get_user_fn(sz, u, k) __get_user_fn(sz, u, k)
-                                               ^~
-../include/asm-generic/uaccess.h:199:3: note: in expansion of macro '__get_user'
-   __get_user((x), (__typeof__(*(ptr)) __user *)__p) :\
-   ^~~~~~~~~~
-../kernel/signal.c:1256:8: note: in expansion of macro 'get_user'
-    if (get_user(insn, (unsigned char *)(regs->ip + i)))
-        ^~~~~~~~
-../kernel/signal.c:1256:45: error: 'struct pt_regs' has no member named 'ip'
-    if (get_user(insn, (unsigned char *)(regs->ip + i)))
-                                             ^
-../include/asm-generic/uaccess.h:209:51: note: in definition of macro '__get_user_fn'
- #define __get_user_fn(sz, u, k) __get_user_fn(sz, u, k)
-                                                   ^
-../include/asm-generic/uaccess.h:199:3: note: in expansion of macro '__get_user'
-   __get_user((x), (__typeof__(*(ptr)) __user *)__p) :\
-   ^~~~~~~~~~
-../kernel/signal.c:1256:8: note: in expansion of macro 'get_user'
-    if (get_user(insn, (unsigned char *)(regs->ip + i)))
-        ^~~~~~~~
-../kernel/signal.c:1256:45: error: 'struct pt_regs' has no member named 'ip'
-    if (get_user(insn, (unsigned char *)(regs->ip + i)))
-                                             ^
-../include/asm-generic/uaccess.h:184:32: note: in definition of macro '__get_user'
-   (x) = *(__force __typeof__(*(ptr)) *) &__x; \
-                                ^~~
-../kernel/signal.c:1256:8: note: in expansion of macro 'get_user'
-    if (get_user(insn, (unsigned char *)(regs->ip + i)))
-        ^~~~~~~~
-../kernel/signal.c:1256:45: error: 'struct pt_regs' has no member named 'ip'
-    if (get_user(insn, (unsigned char *)(regs->ip + i)))
-                                             ^
-../include/asm-generic/uaccess.h:200:24: note: in definition of macro 'get_user'
-   ((x) = (__typeof__(*(ptr)))0,-EFAULT);  \
-                        ^~~
-../include/asm-generic/uaccess.h:200:31: warning: left-hand operand of comma expression has no effect [-Wunused-value]
-   ((x) = (__typeof__(*(ptr)))0,-EFAULT);  \
-                               ^
-../kernel/signal.c:1256:8: note: in expansion of macro 'get_user'
-    if (get_user(insn, (unsigned char *)(regs->ip + i)))
-        ^~~~~~~~
-
-
+diff --git a/arch/arc/Kconfig b/arch/arc/Kconfig
+index ff2a393b635c..4b8f750bd32b 100644
+--- a/arch/arc/Kconfig
++++ b/arch/arc/Kconfig
+@@ -48,6 +48,7 @@ config ARC
+ 	select PCI_SYSCALL if PCI
+ 	select PERF_USE_VMALLOC if ARC_CACHE_VIPT_ALIASING
+ 	select HAVE_ARCH_JUMP_LABEL if ISA_ARCV2 && !CPU_ENDIAN_BE32
++	select HAVE_FUNCTION_TRACER if ISA_ARCV2
+ 
+ config ARCH_HAS_CACHE_LINE_SIZE
+ 	def_bool y
+diff --git a/arch/arc/include/asm/Kbuild b/arch/arc/include/asm/Kbuild
+index 1b505694691e..4e2f55bdf2ff 100644
+--- a/arch/arc/include/asm/Kbuild
++++ b/arch/arc/include/asm/Kbuild
+@@ -6,7 +6,6 @@ generic-y += div64.h
+ generic-y += dma-mapping.h
+ generic-y += emergency-restart.h
+ generic-y += extable.h
+-generic-y += ftrace.h
+ generic-y += hardirq.h
+ generic-y += hw_irq.h
+ generic-y += irq_regs.h
+diff --git a/arch/arc/include/asm/ftrace.h b/arch/arc/include/asm/ftrace.h
+new file mode 100644
+index 000000000000..92303e506edf
+--- /dev/null
++++ b/arch/arc/include/asm/ftrace.h
+@@ -0,0 +1,16 @@
++/* SPDX-License-Identifier: GPL-2.0-only */
++/*
++ * Copyright (C) 2020 Synopsys, Inc. (www.synopsys.com)
++ *
++ * Author: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
++ */
++
++#ifndef __ASM_ARC_FTRACE_H
++#define __ASM_ARC_FTRACE_H
++
++extern void _mcount(unsigned long parent_ip);
++
++/* 3 instructions 1x 16 bit + 1x 32 bit */
++#define MCOUNT_INSN_SIZE	6
++
++#endif /* __ASM_ARC_FTRACE_H */
+diff --git a/arch/arc/kernel/Makefile b/arch/arc/kernel/Makefile
+index 75539670431a..42c9c4b1cabd 100644
+--- a/arch/arc/kernel/Makefile
++++ b/arch/arc/kernel/Makefile
+@@ -22,12 +22,22 @@ obj-$(CONFIG_ARC_METAWARE_HLINK)	+= arc_hostlink.o
+ obj-$(CONFIG_PERF_EVENTS)		+= perf_event.o
+ obj-$(CONFIG_JUMP_LABEL)		+= jump_label.o
+ 
++
++obj-$(CONFIG_FUNCTION_TRACER)		+= ftrace.o
++
++ifdef CONFIG_FUNCTION_TRACER
++CFLAGS_REMOVE_ftrace.o = $(CC_FLAGS_FTRACE)
++endif
++
+ obj-$(CONFIG_ARC_FPU_SAVE_RESTORE)	+= fpu.o
+ ifdef CONFIG_ISA_ARCOMPACT
+ CFLAGS_fpu.o   += -mdpfp
+ endif
+ 
+ ifdef CONFIG_ARC_DW2_UNWIND
++ifdef CONFIG_FUNCTION_TRACER
++CFLAGS_REMOVE_ctx_sw.o = $(CC_FLAGS_FTRACE)
++endif
+ CFLAGS_ctx_sw.o += -fno-omit-frame-pointer
+ obj-y += ctx_sw.o
+ else
+diff --git a/arch/arc/kernel/ftrace.c b/arch/arc/kernel/ftrace.c
+new file mode 100644
+index 000000000000..a61edf52bfe2
+--- /dev/null
++++ b/arch/arc/kernel/ftrace.c
+@@ -0,0 +1,27 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/*
++ * Copyright (C) 2020 Synopsys, Inc. (www.synopsys.com)
++ *
++ * Author: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
++ */
++
++#include <linux/ftrace.h>
++
++noinline void ftrace_stub(unsigned long ip, unsigned long parent_ip,
++			  struct ftrace_ops *op, struct pt_regs *regs)
++{
++	/* do notning */
++}
++
++extern void (*ftrace_trace_function)(unsigned long, unsigned long,
++				     struct ftrace_ops*, struct pt_regs*);
++
++noinline void _mcount(unsigned long parent_ip)
++{
++	unsigned long ip = (unsigned long)__builtin_return_address(0);
++
++	if (unlikely(ftrace_trace_function != ftrace_stub))
++		ftrace_trace_function(ip - MCOUNT_INSN_SIZE, parent_ip,
++				      NULL, NULL);
++}
++EXPORT_SYMBOL(_mcount);
 -- 
-~Randy
-Reported-by: Randy Dunlap <rdunlap@infradead.org>
+2.21.1
+
