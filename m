@@ -2,83 +2,147 @@ Return-Path: <SRS0=s8dx=5M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06746C2D0E8
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 11:22:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 967BCC2D0E5
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 11:24:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D08C720675
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 11:22:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D4002073B
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 11:24:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Jtw4Hczp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727439AbgC0LWY (ORCPT
+        id S1726739AbgC0LYe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Mar 2020 07:22:24 -0400
-Received: from mx2.suse.de ([195.135.220.15]:38966 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726698AbgC0LWX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Mar 2020 07:22:23 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 4467AADF1;
-        Fri, 27 Mar 2020 11:22:22 +0000 (UTC)
-Message-ID: <6553f266f3c2a3fe2bdded5d4ca31e3720ea7ee3.camel@suse.de>
-Subject: Re: [PATCH v2 11/11] ARM: dts: bcm2711: Add vmmc regulator in emmc2
-From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     adrian.hunter@intel.com, linux-kernel@vger.kernel.org,
-        Rob Herring <robh+dt@kernel.org>
-Cc:     phil@raspberrypi.com, linux-mmc@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, f.fainelli@gmail.com,
-        stefan.wahren@i2se.com, bcm-kernel-feedback-list@broadcom.com,
-        linux-rpi-kernel@lists.infradead.org, devicetree@vger.kernel.org
-Date:   Fri, 27 Mar 2020 12:22:21 +0100
-In-Reply-To: <20200306174413.20634-12-nsaenzjulienne@suse.de>
-References: <20200306174413.20634-1-nsaenzjulienne@suse.de>
-         <20200306174413.20634-12-nsaenzjulienne@suse.de>
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-vjSG4WH1xfhs1bTv2Qs6"
-User-Agent: Evolution 3.34.4 
+        Fri, 27 Mar 2020 07:24:34 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:53385 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726275AbgC0LYe (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Mar 2020 07:24:34 -0400
+Received: by mail-wm1-f67.google.com with SMTP id b12so11026220wmj.3
+        for <linux-kernel@vger.kernel.org>; Fri, 27 Mar 2020 04:24:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=NEKo1+Ks52CKrgqp13o2semhHLME73XljK+CspwLPrY=;
+        b=Jtw4HczpGtExse/Jed/9i2XrjLsmX3A8SK85csRKWjvyV7FYnyDWaK8osGBUNIh4IT
+         SXyF2Inx9f76wiysMcdpRB24m3bU94HFjU9zXmvZsK+rxp96pezRZeLD4AKgMLcX7I6t
+         AE0n5YdCM9yiRHauKSO14tA1SwGtP39L7lbsBOvqC2Tl5xCDaXZBKDcBwmNEd9k+gA0a
+         K6Fxy5inzLVO95/7z3fX98ZxfcOv5+WuZo3Bl8ZPbXBlA5aswDEs0VuqqwPmkMCfayvV
+         6j4uOqJZcjd38vtVnCaXo6geSVe/5BMRbzNACDHgTCBtqfua9IxT+Yq/ksnegy9Xw7X+
+         A8eg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=NEKo1+Ks52CKrgqp13o2semhHLME73XljK+CspwLPrY=;
+        b=ihrLp87fnWKmHfkGQy9vQ3Z+luy27VceZht1C2Z6EGYh/2ff/X5XguGGNZ7IXvcd4i
+         1rciMEQy59XfZM1TkTnb19VYals47hEtYq19iEhBaC2XlXIhfO8DTXHpjsD4nXrMmqBu
+         h8zRr6Bq4ozwZkPdo0ohgkcwT/8x71OpV47sac3eM+wLbLqAtNfpTvjqzqko6bpNz9Vx
+         YSXYlLlfX6OiyQHt7uRkxC1U8QVNqxLPAXmKQxbMix7P+eGVr1+Q3XTtPYRHGa+5OgFe
+         /CpaL6eT2yT2obwi8Ne/Jo7LIk2KYkv7K2xSgFEPbBFkEswsb21BZnJmu7sUYU6xeFiL
+         6K9g==
+X-Gm-Message-State: ANhLgQ08VpTCNs7mun+ZSHc/Q+AHae2SnH6yj/B3mJW51Cx/VEvPmh1h
+        VfgLw36WIZNqnKu6jeqPIIHmvA==
+X-Google-Smtp-Source: ADFU+vukihyFjfwUuPh25SnSXHqq3y8g/HlHxFrHniP9gGajGvwecjChMSKb0wlOCy8D3fuAaLaRiA==
+X-Received: by 2002:a7b:c408:: with SMTP id k8mr4876391wmi.11.1585308272376;
+        Fri, 27 Mar 2020 04:24:32 -0700 (PDT)
+Received: from dell ([95.149.164.95])
+        by smtp.gmail.com with ESMTPSA id q17sm8213043wrp.11.2020.03.27.04.24.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 27 Mar 2020 04:24:31 -0700 (PDT)
+Date:   Fri, 27 Mar 2020 11:25:23 +0000
+From:   Lee Jones <lee.jones@linaro.org>
+To:     saravanan sekar <sravanhome@gmail.com>
+Cc:     robh+dt@kernel.org, jic23@kernel.org, knaack.h@gmx.de,
+        lars@metafoo.de, pmeerw@pmeerw.net, sre@kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-iio@vger.kernel.org, linux-pm@vger.kernel.org
+Subject: Re: [PATCH v4 2/5] mfd: mp2629: Add support for mps battery charger
+Message-ID: <20200327112523.GC3383@dell>
+References: <20200322224626.13160-1-sravanhome@gmail.com>
+ <20200322224626.13160-3-sravanhome@gmail.com>
+ <20200327075541.GF603801@dell>
+ <a6098b6a-2b2f-5279-f9fc-85201b9aabde@gmail.com>
+ <20200327102221.GA3383@dell>
+ <a679aba5-4cfb-1b6c-8cb0-dab3a644f3e7@gmail.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <a679aba5-4cfb-1b6c-8cb0-dab3a644f3e7@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, 27 Mar 2020, saravanan sekar wrote:
+> On 27/03/20 11:22 am, Lee Jones wrote:
+> > Saravanan, Jonathan,
+> > 
+> > On Fri, 27 Mar 2020, saravanan sekar wrote:
+> > > On 27/03/20 8:55 am, Lee Jones wrote:
+> > > > On Sun, 22 Mar 2020, Saravanan Sekar wrote:
+> > > > 
+> > > > > mp2629 is a highly-integrated switching-mode battery charge management
+> > > > > device for single-cell Li-ion or Li-polymer battery.
+> > > > > 
+> > > > > Add MFD core enables chip access for ADC driver for battery readings,
+> > > > > and a power supply battery-charger driver
+> > > > > 
+> > > > > Signed-off-by: Saravanan Sekar <sravanhome@gmail.com>
+> > > > > ---
+> > > > >    drivers/mfd/Kconfig        |   9 +++
+> > > > >    drivers/mfd/Makefile       |   2 +
+> > > > >    drivers/mfd/mp2629.c       | 116 +++++++++++++++++++++++++++++++++++++
+> > > > >    include/linux/mfd/mp2629.h |  22 +++++++
+> > > > >    4 files changed, 149 insertions(+)
+> > > > >    create mode 100644 drivers/mfd/mp2629.c
+> > > > >    create mode 100644 include/linux/mfd/mp2629.h
 
---=-vjSG4WH1xfhs1bTv2Qs6
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+[...]
 
-On Fri, 2020-03-06 at 18:44 +0100, Nicolas Saenz Julienne wrote:
-> The SD card power can be controlled trough a pin routed into the board's
-> external GPIO expander. Turn that into a regulator and provide it to
-> emmc2.
->=20
-> Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+> > > > > +#ifndef __MP2629_H__
+> > > > > +#define __MP2629_H__
+> > > > > +
+> > > > > +#include <linux/types.h>
+> > > > > +
+> > > > > +struct device;
+> > > > > +struct regmap;
+> > > > Why not just add the includes?
+> > > Some more shared enum added in ADC driver
+> > Sorry?
+> 
+> I misunderstood your previous question that you are asking to remove this
+> mp2629.h file
+> 
+> "No user here. (Hint: Use forward declaration of struct device instead)" -
+> review comments on V1 from Andy Shevchenko.
+> So remove the includes
 
-Applied for-next.
+So Andy has reviewed, but you still don't have him on Cc?
 
-Regards,
-Nicolas
+How are we meant to continue the discussion?
 
+As a general rule I'm not a fan of forward declarations.
 
---=-vjSG4WH1xfhs1bTv2Qs6
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
+I think they should be avoided if at all possible.
 
------BEGIN PGP SIGNATURE-----
+> > > > > +struct mp2629_info {
+> > > > > +	struct device *dev;
+> > > > > +	struct regmap *regmap;
+> > > > > +};
+> > > > > +
+> > > > > +#endif
 
-iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl594e0ACgkQlfZmHno8
-x/7mUwf+JdWXfDc6pDlSApWDA195aytcdvKfmu7Wsn5Cofww7VPbRaCr6aXiLF6O
-ir36AtHRiAlXnnhaAJDsriTs5FxD3VCQ7rDt9kxO9j1jSYCpsOlVTSY6MeoB4npT
-XEpL7nAoqKoWTTl7uB/vwT1aCeFsFVURMaMHGbhDXtCxahjpiyl4SOHy/dJzZGYR
-0LOn2gmk6DsKBLFuC0R0f1mDtVfLxyKOa27e7rGQS64bH4gQTc6DQ9Ta+FvZOSO7
-OGUDpcnmEVpwuqoxwskwr/nmn6ElGWWOpN9HvIPDBeasUwBlErFyNzNv22Sr+40N
-b0lEbOnZoX4UV1mMDWZXeaau39QZ6w==
-=iJaU
------END PGP SIGNATURE-----
-
---=-vjSG4WH1xfhs1bTv2Qs6--
-
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
