@@ -2,45 +2,51 @@ Return-Path: <SRS0=s8dx=5M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.7 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00A97C43331
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 11:07:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 348F0C43331
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 11:08:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C3B61206F6
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 11:07:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 10B31206F1
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 11:08:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727263AbgC0LHT (ORCPT
+        id S1727287AbgC0LH7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Mar 2020 07:07:19 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:53037 "EHLO
+        Fri, 27 Mar 2020 07:07:59 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:53045 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726275AbgC0LHP (ORCPT
+        with ESMTP id S1726275AbgC0LH7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Mar 2020 07:07:15 -0400
-Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
+        Fri, 27 Mar 2020 07:07:59 -0400
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1jHmpD-0004W4-L3; Fri, 27 Mar 2020 12:06:55 +0100
-Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
-        id CA5991040BD; Fri, 27 Mar 2020 12:06:44 +0100 (CET)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Boqun Feng <boqun.feng@gmail.com>, peterz@infradead.org,
-        linux-kernel@vger.kernel.org, len.brown@intel.com,
-        pkondeti@codeaurora.org, jpoimboe@redhat.com, pavel@ucw.cz,
-        konrad.wilk@oracle.com, mojha@codeaurora.org, jkosina@suse.cz,
-        mingo@kernel.org, hpa@zytor.com, rjw@rjwysocki.net
-Cc:     linux-tip-commits@vger.kernel.org
-Subject: Re: [tip:smp/hotplug] cpu/hotplug: Abort disabling secondary CPUs if wakeup is pending
-In-Reply-To: <20200327025311.GA58760@debian-boqun.qqnc3lrjykvubdpftowmye0fmh.lx.internal.cloudapp.net>
-References: <1559536263-16472-1-git-send-email-pkondeti@codeaurora.org> <tip-a66d955e910ab0e598d7a7450cbe6139f52befe7@git.kernel.org> <20200327025311.GA58760@debian-boqun.qqnc3lrjykvubdpftowmye0fmh.lx.internal.cloudapp.net>
-Date:   Fri, 27 Mar 2020 12:06:44 +0100
-Message-ID: <874kuaxdiz.fsf@nanos.tec.linutronix.de>
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1jHmqC-0004Xr-9v; Fri, 27 Mar 2020 12:07:56 +0100
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id D73081C03AB;
+        Fri, 27 Mar 2020 12:07:55 +0100 (CET)
+Date:   Fri, 27 Mar 2020 11:07:55 -0000
+From:   "tip-bot2 for H.J. Lu" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/build] x86, vmlinux.lds: Add RUNTIME_DISCARD_EXIT to
+ generic DISCARDS
+Cc:     "H.J. Lu" <hjl.tools@gmail.com>, Borislav Petkov <bp@suse.de>,
+        Kees Cook <keescook@chromium.org>, x86 <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <20200326193021.255002-1-hjl.tools@gmail.com>
+References: <20200326193021.255002-1-hjl.tools@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Message-ID: <158530727545.28353.10694097580939655357.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 X-Linutronix-Spam-Score: -1.0
 X-Linutronix-Spam-Level: -
 X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
@@ -49,72 +55,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Boqun Feng <boqun.feng@gmail.com> writes:
-> From the commit message, it makes sense to add the pm_wakeup_pending()
-> check if freeze_secondary_cpus() is used for system suspend. However,
-> freeze_secondary_cpus() is also used in kexec path on arm64:
+The following commit has been merged into the x86/build branch of tip:
 
-Bah!
+Commit-ID:     84d5f77fc2ee4e010c2c037750e32f06e55224b0
+Gitweb:        https://git.kernel.org/tip/84d5f77fc2ee4e010c2c037750e32f06e55224b0
+Author:        H.J. Lu <hjl.tools@gmail.com>
+AuthorDate:    Thu, 26 Mar 2020 12:30:20 -07:00
+Committer:     Borislav Petkov <bp@suse.de>
+CommitterDate: Fri, 27 Mar 2020 11:52:11 +01:00
 
-> 	kernel_kexec():
-> 	  machine_shutdown():
-> 	    disable_nonboot_cpus():
-> 	      freeze_secondary_cpus()
->
-> , so I wonder whether the pm_wakeup_pending() makes sense in this
-> situation? Because IIUC, in this case we want to reboot the system
-> regardlessly, the pm_wakeup_pending() checking seems to be inappropriate
-> then.
+x86, vmlinux.lds: Add RUNTIME_DISCARD_EXIT to generic DISCARDS
 
-Fix below.
+In the x86 kernel, .exit.text and .exit.data sections are discarded at
+runtime, not by the linker. Add RUNTIME_DISCARD_EXIT to generic DISCARDS
+and define it in the x86 kernel linker script to keep them.
 
-Thanks,
+The sections are added before the DISCARD directive so document here
+only the situation explicitly as this change doesn't have any effect on
+the generated kernel. Also, other architectures like ARM64 will use it
+too so generalize the approach with the RUNTIME_DISCARD_EXIT define.
 
-        tglx
+ [ bp: Massage and extend commit message. ]
 
-8<------------
+Signed-off-by: H.J. Lu <hjl.tools@gmail.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Reviewed-by: Kees Cook <keescook@chromium.org>
+Link: https://lkml.kernel.org/r/20200326193021.255002-1-hjl.tools@gmail.com
+---
+ arch/x86/kernel/vmlinux.lds.S     |  1 +
+ include/asm-generic/vmlinux.lds.h | 11 +++++++++--
+ 2 files changed, 10 insertions(+), 2 deletions(-)
 
---- a/include/linux/cpu.h
-+++ b/include/linux/cpu.h
-@@ -133,12 +133,18 @@ static inline void get_online_cpus(void)
- static inline void put_online_cpus(void) { cpus_read_unlock(); }
+diff --git a/arch/x86/kernel/vmlinux.lds.S b/arch/x86/kernel/vmlinux.lds.S
+index e3296aa..7206e1a 100644
+--- a/arch/x86/kernel/vmlinux.lds.S
++++ b/arch/x86/kernel/vmlinux.lds.S
+@@ -21,6 +21,7 @@
+ #define LOAD_OFFSET __START_KERNEL_map
+ #endif
  
- #ifdef CONFIG_PM_SLEEP_SMP
--extern int freeze_secondary_cpus(int primary);
-+int __freeze_secondary_cpus(int primary, bool suspend);
-+static inline int freeze_secondary_cpus(int primary)
-+{
-+	return __freeze_secondary_cpus(primary, true);
-+}
++#define RUNTIME_DISCARD_EXIT
+ #define EMITS_PT_NOTE
+ #define RO_EXCEPTION_TABLE_ALIGN	16
+ 
+diff --git a/include/asm-generic/vmlinux.lds.h b/include/asm-generic/vmlinux.lds.h
+index e00f41a..2444336 100644
+--- a/include/asm-generic/vmlinux.lds.h
++++ b/include/asm-generic/vmlinux.lds.h
+@@ -894,10 +894,17 @@
+  * section definitions so that such archs put those in earlier section
+  * definitions.
+  */
++#ifdef RUNTIME_DISCARD_EXIT
++#define EXIT_DISCARDS
++#else
++#define EXIT_DISCARDS							\
++	EXIT_TEXT							\
++	EXIT_DATA
++#endif
 +
- static inline int disable_nonboot_cpus(void)
- {
--	return freeze_secondary_cpus(0);
-+	return __freeze_secondary_cpus(0, false);
- }
--extern void enable_nonboot_cpus(void);
-+
-+void enable_nonboot_cpus(void);
- 
- static inline int suspend_disable_secondary_cpus(void)
- {
---- a/kernel/cpu.c
-+++ b/kernel/cpu.c
-@@ -1200,7 +1200,7 @@ EXPORT_SYMBOL_GPL(cpu_up);
- #ifdef CONFIG_PM_SLEEP_SMP
- static cpumask_var_t frozen_cpus;
- 
--int freeze_secondary_cpus(int primary)
-+int __freeze_secondary_cpus(int primary, bool suspend)
- {
- 	int cpu, error = 0;
- 
-@@ -1225,7 +1225,7 @@ int freeze_secondary_cpus(int primary)
- 		if (cpu == primary)
- 			continue;
- 
--		if (pm_wakeup_pending()) {
-+		if (suspend && pm_wakeup_pending()) {
- 			pr_info("Wakeup pending. Abort CPU freeze\n");
- 			error = -EBUSY;
- 			break;
+ #define DISCARDS							\
+ 	/DISCARD/ : {							\
+-	EXIT_TEXT							\
+-	EXIT_DATA							\
++	EXIT_DISCARDS							\
+ 	EXIT_CALL							\
+ 	*(.discard)							\
+ 	*(.discard.*)							\
