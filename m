@@ -2,127 +2,117 @@ Return-Path: <SRS0=s8dx=5M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1C99C43331
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 10:55:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4B7AC43331
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 10:55:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 911A620675
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 10:55:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=metafoo.de header.i=@metafoo.de header.b="Bt39e9FS"
+	by mail.kernel.org (Postfix) with ESMTP id BA01020578
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 10:55:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726518AbgC0Kzq (ORCPT
+        id S1726758AbgC0Kzz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Mar 2020 06:55:46 -0400
-Received: from www381.your-server.de ([78.46.137.84]:35086 "EHLO
-        www381.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726217AbgC0Kzq (ORCPT
+        Fri, 27 Mar 2020 06:55:55 -0400
+Received: from mout.kundenserver.de ([212.227.126.134]:47301 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726217AbgC0Kzz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Mar 2020 06:55:46 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=metafoo.de;
-         s=default2002; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:
-        MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender:Reply-To:
-        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-        Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=Rz/WKkoxuszzmxuFpVkEjaDif17o+9Qu8/N8bZ72T+I=; b=Bt39e9FSUl+Xx0yVsK1tsY63UK
-        kDB/7WLJCzLJ2bPZWP8GpFLoAcsNbwcfocrTKAWLzLBnRY0ncTDcqlGsnlgnUGzHyM5b5W7kv2EY+
-        rxrbeM63udGhTpmwy5QoTpFlCBRko9iGW+EvJ2UqeTKibj/7SkSlVEGB18FP4YJp30jM89JBxBwZN
-        ZCRkWedc5fmy9COUVLBGhntOkR4zzYYtBdX4A6BXbxICeZhZpFz0LQ+YV7dKFr+Er0rHgyJs4Ob4/
-        tRE1fm0aMDUiJO1zL4MtMWV+UYJaBTdo7Wp6pXK/UIPH/VcmM9VTtCfx+wU7qm7GVK9hfkC8q2WtO
-        RKXllsOg==;
-Received: from sslproxy01.your-server.de ([78.46.139.224])
-        by www381.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.89_1)
-        (envelope-from <lars@metafoo.de>)
-        id 1jHmeN-0006Xy-BR; Fri, 27 Mar 2020 11:55:43 +0100
-Received: from [82.135.64.145] (helo=[192.168.178.20])
-        by sslproxy01.your-server.de with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <lars@metafoo.de>)
-        id 1jHmeN-0000aD-1S; Fri, 27 Mar 2020 11:55:43 +0100
-Subject: Re: [PATCH] usb: dwc3: gadget: don't dequeue requests on already
- disabled endpoints
-To:     Michael Grzeschik <mgr@pengutronix.de>
-Cc:     alexandru.Ardelean@analog.com, linux-usb@vger.kernel.org,
-        linux-kernel@vger.kernel.org, balbi@kernel.org,
-        gregkh@linuxfoundation.org, bigeasy@linutronix.de,
-        m.olbrich@pengutronix.de, kernel@pengutronix.de
-References: <dc52d6a0-12ed-a34c-01c4-0fc5ccbf7b1d@metafoo.de>
- <20200327084302.606-1-m.grzeschik@pengutronix.de>
- <f746cc1f-b5e2-af0a-d946-edce634c46c3@metafoo.de>
- <20200327104352.GF27849@pengutronix.de>
-From:   Lars-Peter Clausen <lars@metafoo.de>
-Message-ID: <c2bbd132-c482-21c4-232d-2786021759cf@metafoo.de>
-Date:   Fri, 27 Mar 2020 11:55:41 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Fri, 27 Mar 2020 06:55:55 -0400
+Received: from mail-qk1-f181.google.com ([209.85.222.181]) by
+ mrelayeu.kundenserver.de (mreue009 [212.227.15.129]) with ESMTPSA (Nemesis)
+ id 1Md6V1-1jr7Ck3rut-00aCVD for <linux-kernel@vger.kernel.org>; Fri, 27 Mar
+ 2020 11:55:54 +0100
+Received: by mail-qk1-f181.google.com with SMTP id k13so10292925qki.2
+        for <linux-kernel@vger.kernel.org>; Fri, 27 Mar 2020 03:55:53 -0700 (PDT)
+X-Gm-Message-State: ANhLgQ0SkL9vtLDiCzNm7x/TTBLm20EGsdfEdPJDkX23+duj0CBER8Qm
+        QFjD/0kQ1N8tO6QrtpMW9725SRz1qFvpp+UBNvY=
+X-Google-Smtp-Source: ADFU+vu/SBluPJe4SG/RVo/VOSCt5yg8qCa0C0hT1HJWo2MkHT9vfnjXTH3ldYZD2r/o7bjQOUlqAYVkLLzc9qdU5cI=
+X-Received: by 2002:a37:a4d6:: with SMTP id n205mr13487320qke.352.1585306552796;
+ Fri, 27 Mar 2020 03:55:52 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200327104352.GF27849@pengutronix.de>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Authenticated-Sender: lars@metafoo.de
-X-Virus-Scanned: Clear (ClamAV 0.102.2/25763/Thu Mar 26 14:07:34 2020)
+References: <87mu8ppknv.fsf@FE-laptop> <20200302031736.5or4ww5a4l7zomfo@vireshk-i7>
+ <20200308161903.GA156645@furthur.local> <20200301122226.4068-1-afzal.mohd.ma@gmail.com>
+ <m3ftepbtxm.fsf@t19.piap.pl> <51cebbbb-3ba4-b336-82a9-abcc22f9a69c@gmail.com>
+ <20200304163412.GX37466@atomide.com> <20200313154520.GA5375@afzalpc>
+ <20200317043702.GA5852@afzalpc> <20200325114332.GA6337@afzalpc> <20200327104635.GA7775@afzalpc>
+In-Reply-To: <20200327104635.GA7775@afzalpc>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Fri, 27 Mar 2020 11:55:36 +0100
+X-Gmail-Original-Message-ID: <CAK8P3a0kVvkCW+2eiyZTkfS=LqqnbeQS+S-os=vxhaYXCwLK+A@mail.gmail.com>
+Message-ID: <CAK8P3a0kVvkCW+2eiyZTkfS=LqqnbeQS+S-os=vxhaYXCwLK+A@mail.gmail.com>
+Subject: Re: [PATCH v3] ARM: replace setup_irq() by request_irq()
+To:     afzal mohammed <afzal.mohd.ma@gmail.com>
+List-Id: <soc.lore.kernel.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Tony Lindgren <tony@atomide.com>,
+        Alexander Sverdlin <alexander.sverdlin@gmail.com>,
+        =?UTF-8?Q?Krzysztof_Ha=C5=82asa?= <khalasa@piap.pl>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Lubomir Rintel <lkundrak@v3.sk>,
+        Gregory CLEMENT <gregory.clement@bootlin.com>,
+        Hartley Sweeten <hsweeten@visionengravers.com>,
+        Viresh Kumar <vireshk@kernel.org>,
+        Shiraz Hashim <shiraz.linux.kernel@gmail.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        SoC Team <soc@kernel.org>, arm-soc <arm@kernel.org>,
+        Olof Johansson <olof@lixom.net>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:eGcuhSAiGrRQoEppFKm7A4PdslXwF0gaWKNb5ZwO0MyIjmoM14P
+ 692hUMtoO5bSnbsl4cH70X5C9+J/kvfo5jRMd8dBasEkM7cqfAJbOdru9b3Bci+wAUohfWu
+ F/FfoqWGiEONMxrGXpwai2m6dxlsUHdv1rsDeTb1d/O8uafsIoV0mlglVWGOetpVc/7YV6w
+ kbzFV/PhLWkoUr6vvLrCA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:oAbNTvQNORc=:4TlCRANWGFvOYVNzZKeBfH
+ cm59hdNs2JHKx0QxLEPuJgoQJ+GmC8EaLPGbxJHjI/vKiUSOj3yjLgoDRRAFjgBi+JzBr6AA+
+ TAWow/twxbKwcOXixsrDmLscy7gFbUR0xXTBlxe7VJj/O533DzbyTSIefnEhIxGnXxabykrSg
+ ZZa8/824EkxBKbCgr3RCElnVFtheBHEPGvDLrpUJI/NyNIfwOvqyhKktS9PJPSaI8LzKd9vK6
+ Ps2tOa3J7Mz4I+rR/gUSvVErxIMZq82YD2HA/fTtqj3HqH3lnbBsuzQzSgo00e2gZtXKA4okA
+ FzgO1I7M3VW9krsewoQC6r+940anlE0eoeUuJl2YiBN7undJguGRPdM3hN7k8isrqQ3JiKawn
+ Z+rLtZB3wesgeibCosKgTJNQJbiAqNYScwe9llL7TzYx5tF/aW2pODIa9qazKjxTzvOfLX/Xx
+ MJA/CoQJJ9eisT94GeORwEHKDjH/MthN9I9bTyUg7hN5orjeRgHCIh/eMKsckXnlIxniMUe32
+ msig1uYRK9CrvL4vdH6JMjPVWDbztAYYXs9k/lb4CBNTi+npvg0OzYsF1c+12Be83JXyT3YjS
+ T8rNmPnOakdD1L6SbkQ0PZ5qMqL9GNUGc4kPm0gqkvulnsEJWsWsJybIuVREJlhI/jC038gyx
+ YVaEb/xNlSYEQW8Y54+cL7e+PQ/Lr8DORk9DCtPiGx4RKvBkJiOnJBlTh1qGNw9BGxZ+iXNuJ
+ yd2L2fK0exKdJO/JB49l8ayt9m9XISznICuAZ0X+dJtjTO4f41JsGr9rRtP3Fl+q3f69dX6Wt
+ AYjxClLVH2SOVRST5Bj3rp6NWUqsi7/KnSm0WHB6srNLmh4p10=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/27/20 11:43 AM, Michael Grzeschik wrote:
-> On Fri, Mar 27, 2020 at 10:14:10AM +0100, Lars-Peter Clausen wrote:
->> On 3/27/20 9:43 AM, Michael Grzeschik wrote:
->>> dwc3_gadget_ep_disable gets called before the last request gets
->>> dequeued.
->>>
->>> In __dwc3_gadget_ep_disable all started, pending and cancelled
->>> lists for this endpoint will call dwc3_gadget_giveback in
->>> dwc3_remove_requests.
->>>
->>> After that no list containing the afterwards dequed request,
->>> therefor it is not necessary to run the dequeue routine.
->>>
->>> Signed-off-by: Michael Grzeschik <m.grzeschik@pengutronix.de>
->>> ---
->>> @Lars-Peter Clausen:
->>>
->>> This patch addresses the case that not queued requests get dequeued.
->>> The only case that this happens seems on disabling the gadget.
->>
->> I don't believe it does. Calling usb_ep_dequeue() is not limited to be
->> called after the endpoint has been disabled. It is part of the API and can
->> be called at any time. E.g. with function_fs you can abort a queued transfer
->> from userspace at any time.
-> OK, can you give me an Userspace example how to simply trigger the
-> issue. I tried to figure your mentioned function stack but it would
-> be much easier if it could be reproduced.
+On Fri, Mar 27, 2020 at 11:46 AM afzal mohammed <afzal.mohd.ma@gmail.com> wrote:
 >
-> The patch on the other hand can stand on itself, as it then
-> fixes another code path that is much more common.
+> Hi Arnd,
+>
+> On Wed, Mar 25, 2020 at 05:13:32PM +0530, afzal mohammed wrote:
+> > On Tue, Mar 17, 2020 at 10:07:02AM +0530, afzal mohammed wrote:
+> > > On Fri, Mar 13, 2020 at 09:15:20PM +0530, afzal mohammed wrote:
+>
+> > > > Can you please include the patches 6-10 directly into the armsoc tree ?,
+> > > > Let me know if anything needs to be done from my side.
+> >
+> > Can you please consider for inclusion the above 5 patches.
+> >
+> > Sorry for pestering, i understand that none of the ARM SoC pull requests
+> > has been picked up as opposed to what happens normally by this time of
+> > development cycle.
+>
+> i think you have pulled the ARM SoC pull requests, but above changes
+> doesn't seem to be applied, can you please respond on how to proceed ?
+> (of all the tree-wide changes, the above are the only ones in limbo)
 
-Hi,
+Hi afzal,
 
-I don't have a standalone example. But the issue occurs if you submit a 
-request when using function_fs through the AIO API and then call 
-io_cancel() to abort it. At the same time there must be traffic on the 
-USB bus so that the URB has a chance to complete.
+To make sure I get the right ones, could you bounce all the patches that are
+still missing to soc@kernel.org to let them show up in patchwork?
 
-This is a race condition between the IRQ handler running on one CPU and 
-the usb_ep_dequeue() running on another CPU. As such it might take a 
-while of stress testing before it is triggered. The more CPUs your 
-system has the higher the chance of trigger the issue.
+I'll apply them right away after that. Sorry I forgot about them as I went
+through the patchwork backlog.
 
-You can find the code which triggers the issue below.
-
-Submission of the request:
-
-https://github.com/analogdevicesinc/libiio/blob/master/iiod/ops.c#L139-L156
-
-Canceling it:
-
-https://github.com/analogdevicesinc/libiio/blob/master/iiod/ops.c#L193
-
+       Arnd
