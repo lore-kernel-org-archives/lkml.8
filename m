@@ -2,191 +2,174 @@ Return-Path: <SRS0=s8dx=5M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15A62C43331
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 10:21:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84BC2C43331
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 10:23:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D183C20714
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 10:21:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="lwFfgP7q"
+	by mail.kernel.org (Postfix) with ESMTP id 4F92520717
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 10:23:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727254AbgC0KVd (ORCPT
+        id S1726379AbgC0KXC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Mar 2020 06:21:33 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:53968 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726275AbgC0KVd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Mar 2020 06:21:33 -0400
-Received: by mail-wm1-f66.google.com with SMTP id b12so10833313wmj.3
-        for <linux-kernel@vger.kernel.org>; Fri, 27 Mar 2020 03:21:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=mxz8+ilE2NjB6kYVNyYap8z20EWNc89Zq7z80dHig9g=;
-        b=lwFfgP7q0u5LzYu5IHEQz+moTPm67eiVbNP8jvxisTOsI5Ma9EXK0h13/GmZJTgMnl
-         +Onr6bFvSPfXY+9YSNs3mbaMYQKyYOx/Nun1R1AIDyUetdtqqChqnXG7/1EIZeZJwG+h
-         AoYjZMrLCixc4B2+nEQHEZhYmkVUgGuEFxsGPd1u8CQiLy2L6AQ8e4C5sS5mdW24AHni
-         L423xnfJL3YVYLmXGSdDIk0Rk/t8gmiLBSeHvfIrZebXL+l1ni5cFPFsMcSjyofPyV6m
-         rZrGDRGPqN0mT60S1tgbFGUZi4IjDSYnD6UJGS6q6bGnrTlVviriUNh9zl3/vfCBifys
-         8g/g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=mxz8+ilE2NjB6kYVNyYap8z20EWNc89Zq7z80dHig9g=;
-        b=KPGjxXBgZ6QsWAm0tKQQBMGOTqP+5uNA0ZRtPkn7rJIFVi1J6eZDMl0uMOXBJA+nQp
-         EdMdcA7l54LaRChLPSt5vOeYSJaTz/msGYom+eL+KeDcLYavTUfINxWK/lgNimAFjNAl
-         +EMZT7aUW1GYyaTxswaqYCpztczjwXXLaQhLxoL8IqmendXxH1pIZeU0rPvPTkYGg7iy
-         +b7o8RTDLIfaG8EaIWJAKCAiKA7O4bEjcJHDfruh9fyThtltU4bA0cWQrEOF2zXIlwvp
-         RgI5Gp64LpASLBE6EVjbfaDvEldeljebFf5ZtztX3xmgism5ZhsaK8M0AWpKC39uARRO
-         CI2g==
-X-Gm-Message-State: ANhLgQ14O212+csTivz4FJSsqxpy3Q+XmYNpSrqKf6ZhwFyKfTLtKFf6
-        NQCpDdnl90PaCGqBjsypH0idkw==
-X-Google-Smtp-Source: ADFU+vv/J6W+8sMVirHWEM1E3vhMlYyC18B4Hdl1cCEW5yYGJgHZTGUu0teFlFTlPWijkILtA2tP2g==
-X-Received: by 2002:a1c:b4c6:: with SMTP id d189mr4433247wmf.132.1585304491231;
-        Fri, 27 Mar 2020 03:21:31 -0700 (PDT)
-Received: from dell ([95.149.164.95])
-        by smtp.gmail.com with ESMTPSA id n9sm7646671wru.50.2020.03.27.03.21.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 27 Mar 2020 03:21:30 -0700 (PDT)
-Date:   Fri, 27 Mar 2020 10:22:21 +0000
-From:   Lee Jones <lee.jones@linaro.org>
-To:     saravanan sekar <sravanhome@gmail.com>
-Cc:     robh+dt@kernel.org, jic23@kernel.org, knaack.h@gmx.de,
-        lars@metafoo.de, pmeerw@pmeerw.net, sre@kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-iio@vger.kernel.org, linux-pm@vger.kernel.org
-Subject: Re: [PATCH v4 2/5] mfd: mp2629: Add support for mps battery charger
-Message-ID: <20200327102221.GA3383@dell>
-References: <20200322224626.13160-1-sravanhome@gmail.com>
- <20200322224626.13160-3-sravanhome@gmail.com>
- <20200327075541.GF603801@dell>
- <a6098b6a-2b2f-5279-f9fc-85201b9aabde@gmail.com>
+        Fri, 27 Mar 2020 06:23:02 -0400
+Received: from mga02.intel.com ([134.134.136.20]:13029 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726002AbgC0KXC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Mar 2020 06:23:02 -0400
+IronPort-SDR: atyEV/cYMmLhPZT0F4O6Jn2cCIDe7n2tWRT1Lxs7xtn9HZvCH0rGYwK295fd5cLJ6qzZhxr7M1
+ 8r5zhsiWxSHw==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Mar 2020 03:23:00 -0700
+IronPort-SDR: 6ZN8f+bSxYAMu9n5uXSQWg/zn0EJ8O2Dk24TSu6QUUHM+CHiqTAqF6gVQsnp4iSOViWy3BPlji
+ tjSbyEo3RLYA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,311,1580803200"; 
+   d="scan'208";a="271529243"
+Received: from fmsmsx105.amr.corp.intel.com ([10.18.124.203])
+  by fmsmga004.fm.intel.com with ESMTP; 27 Mar 2020 03:23:00 -0700
+Received: from fmsmsx161.amr.corp.intel.com (10.18.125.9) by
+ FMSMSX105.amr.corp.intel.com (10.18.124.203) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Fri, 27 Mar 2020 03:23:00 -0700
+Received: from shsmsx105.ccr.corp.intel.com (10.239.4.158) by
+ FMSMSX161.amr.corp.intel.com (10.18.125.9) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Fri, 27 Mar 2020 03:23:00 -0700
+Received: from shsmsx104.ccr.corp.intel.com ([169.254.5.206]) by
+ SHSMSX105.ccr.corp.intel.com ([169.254.11.144]) with mapi id 14.03.0439.000;
+ Fri, 27 Mar 2020 18:22:57 +0800
+From:   "Tian, Kevin" <kevin.tian@intel.com>
+To:     Jacob Pan <jacob.jun.pan@linux.intel.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Jean-Philippe Brucker <jean-philippe@linaro.com>
+CC:     "Raj, Ashok" <ashok.raj@intel.com>,
+        Jonathan Cameron <jic23@kernel.org>
+Subject: RE: [PATCH 10/10] iommu/vt-d: Register PASID notifier for status
+ change
+Thread-Topic: [PATCH 10/10] iommu/vt-d: Register PASID notifier for status
+ change
+Thread-Index: AQHWAs3LAsvpFGSvTECBwK8sBN6czqhcOe4w
+Date:   Fri, 27 Mar 2020 10:22:57 +0000
+Message-ID: <AADFC41AFE54684AB9EE6CBC0274A5D19D7ED65A@SHSMSX104.ccr.corp.intel.com>
+References: <1585158931-1825-1-git-send-email-jacob.jun.pan@linux.intel.com>
+ <1585158931-1825-11-git-send-email-jacob.jun.pan@linux.intel.com>
+In-Reply-To: <1585158931-1825-11-git-send-email-jacob.jun.pan@linux.intel.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-product: dlpe-windows
+dlp-version: 11.2.0.6
+dlp-reaction: no-action
+x-originating-ip: [10.239.127.40]
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <a6098b6a-2b2f-5279-f9fc-85201b9aabde@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Saravanan, Jonathan,
-
-On Fri, 27 Mar 2020, saravanan sekar wrote:
-> On 27/03/20 8:55 am, Lee Jones wrote:
-> > On Sun, 22 Mar 2020, Saravanan Sekar wrote:
-> > 
-> > > mp2629 is a highly-integrated switching-mode battery charge management
-> > > device for single-cell Li-ion or Li-polymer battery.
-> > > 
-> > > Add MFD core enables chip access for ADC driver for battery readings,
-> > > and a power supply battery-charger driver
-> > > 
-> > > Signed-off-by: Saravanan Sekar <sravanhome@gmail.com>
-> > > ---
-> > >   drivers/mfd/Kconfig        |   9 +++
-> > >   drivers/mfd/Makefile       |   2 +
-> > >   drivers/mfd/mp2629.c       | 116 +++++++++++++++++++++++++++++++++++++
-> > >   include/linux/mfd/mp2629.h |  22 +++++++
-> > >   4 files changed, 149 insertions(+)
-> > >   create mode 100644 drivers/mfd/mp2629.c
-> > >   create mode 100644 include/linux/mfd/mp2629.h
-
-[...]
-
-> > > +static int mp2629_probe(struct i2c_client *client)
-> > > +{
-> > > +	struct mp2629_info *info;
-> > Call this ddata instead of info.
-> Not sure the reason, I will do.
-
-Because this is device data.  Info is too loose of a definition.
-
-> > > +	struct resource	*resources;
-> > > +	int ret;
-> > > +	int i;
-> > > +
-> > > +	info = devm_kzalloc(&client->dev, sizeof(*info), GFP_KERNEL);
-> > > +	if (!info)
-> > > +		return -ENOMEM;
-> > > +
-> > > +	info->dev = &client->dev;
-> > > +	i2c_set_clientdata(client, info);
-> > > +
-> > > +	info->regmap = devm_regmap_init_i2c(client, &mp2629_regmap_config);
-> > > +	if (IS_ERR(info->regmap)) {
-> > > +		dev_err(info->dev, "Failed to allocate regmap!\n");
-> > > +		return PTR_ERR(info->regmap);
-> > > +	}
-> > > +
-> > > +	for (i = 0; i < MP2629_MFD_MAX; i++) {
-> > > +		mp2629mfd[i].platform_data = &info->regmap;
-> > > +		mp2629mfd[i].pdata_size = sizeof(info->regmap);
-> > You don't need to store this in platform data as well.
-> > 
-> > You already have it in device data (ddata [currently 'info']).
-> 
-> "The IIO parts seems fine (minor comments inline) but I'm not keep on
-> directly accessing the internals of the mfd device info structure.
-> To my mind that should be opaque to the child drivers so as to provide
-> clear structure to any such accesses.
-> 
-> This mess in layering with the children directly using the parents
-> regmap is a little concerning. It means that the 3 drivers
-> really aren't very well separated and can't really be reviewed
-> independently (not a good thing)."
-> 
-> This is the review comments form Jonathan on V2, not to access parent data
-> structure directly.
-> Am I misunderstood his review comments? please suggest the better option to
-> follow as like in V2
-> or V2 + some improvements or V4 + improvements?
-
-I will take this up with Jonathan separately if necessary.
-
-For your FYI (and Jonathan if he's Cc'ed), it's very common for a
-child of an MFD to acquire resources from their parent.  That is the
-point of a lot of MFDs, to obtain and register shared resources and
-pass them onto their offspring.  There are 10's of examples of this.
-
-Things like Regmaps aren't platform data, they are device/driver data,
-which is usually passed though platform_set_drvdata().
-
-[...]
-
-> > > + */
-> > > +
-> > > +#ifndef __MP2629_H__
-> > > +#define __MP2629_H__
-> > > +
-> > > +#include <linux/types.h>
-> > > +
-> > > +struct device;
-> > > +struct regmap;
-> > Why not just add the includes?
-> Some more shared enum added in ADC driver
-
-Sorry?
-
-> > > +struct mp2629_info {
-> > > +	struct device *dev;
-> > > +	struct regmap *regmap;
-> > > +};
-> > > +
-> > > +#endif
-
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+PiBGcm9tOiBKYWNvYiBQYW4NCj4gU2VudDogVGh1cnNkYXksIE1hcmNoIDI2LCAyMDIwIDE6NTYg
+QU0NCj4gDQo+IEluIGJhcmUgbWV0YWwgU1ZBLCBJT01NVSBkcml2ZXIgZW5zdXJlcyB0aGF0IElP
+QVNJRCBmcmVlIGNhbGwgYWx3YXlzIGNvbWVzDQo+IGFmdGVyIElPQVNJRCB1bmJpbmQgb3BlcmF0
+aW9uLg0KPiANCj4gSG93ZXZlciwgZm9yIGd1ZXN0IFNWQSB0aGUgdW5iaW5kIGFuZCBmcmVlIGNh
+bGwgY29tZSBmcm9tIHVzZXIgc3BhY2UNCj4gdmlhIFZGSU8sIHdoaWNoIGNvdWxkIGJlIG91dCBv
+ZiBvcmRlci4gVGhpcyBwYXRjaCByZWdpc3RlcnMgYSBub3RpZmllcg0KPiBibG9jayBpbiBjYXNl
+IElPQVNJRCBmcmVlKCkgY29tZXMgYmVmb3JlIHVuYmluZCBzdWNoIHRoYXQgVlQtZCBkcml2ZXIN
+Cj4gY2FuIHRha2UgYWN0aW9uIHRvIGNsZWFuIHVwIFBBU0lEIGNvbnRleHQgYW5kIGRhdGEuDQoN
+CmNsZWFybHkgdGhlIHBhdGNoIGluY2x1ZGVzIG1vcmUgdGhhbiBhYm92ZSB1c2FnZS4gSXQgYWxz
+byBoYW5kbGVzIHRoZQ0KYmluZCB1c2FnZSB0byBub3RpZnkgS1ZNIGZvciBzZXR0aW5nIFBBU0lE
+IHRyYW5zbGF0aW9uIHRhYmxlLg0KDQo+IA0KPiBTaWduZWQtb2ZmLWJ5OiBMaXUgWWkgTCA8eWku
+bC5saXVAaW50ZWwuY29tPg0KPiBTaWduZWQtb2ZmLWJ5OiBKYWNvYiBQYW4gPGphY29iLmp1bi5w
+YW5AbGludXguaW50ZWwuY29tPg0KPiAtLS0NCj4gIGRyaXZlcnMvaW9tbXUvaW50ZWwtc3ZtLmMg
+ICB8IDY4DQo+ICsrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrLQ0K
+PiAgaW5jbHVkZS9saW51eC9pbnRlbC1pb21tdS5oIHwgIDEgKw0KPiAgMiBmaWxlcyBjaGFuZ2Vk
+LCA2OCBpbnNlcnRpb25zKCspLCAxIGRlbGV0aW9uKC0pDQo+IA0KPiBkaWZmIC0tZ2l0IGEvZHJp
+dmVycy9pb21tdS9pbnRlbC1zdm0uYyBiL2RyaXZlcnMvaW9tbXUvaW50ZWwtc3ZtLmMNCj4gaW5k
+ZXggZjUxMTg1NWQxODdiLi43NzlkZDJjNmY5ZTEgMTAwNjQ0DQo+IC0tLSBhL2RyaXZlcnMvaW9t
+bXUvaW50ZWwtc3ZtLmMNCj4gKysrIGIvZHJpdmVycy9pb21tdS9pbnRlbC1zdm0uYw0KPiBAQCAt
+MjMsNiArMjMsNyBAQA0KPiAgI2luY2x1ZGUgImludGVsLXBhc2lkLmgiDQo+IA0KPiAgc3RhdGlj
+IGlycXJldHVybl90IHBycV9ldmVudF90aHJlYWQoaW50IGlycSwgdm9pZCAqZCk7DQo+ICtzdGF0
+aWMgREVGSU5FX01VVEVYKHBhc2lkX211dGV4KTsNCj4gDQo+ICAjZGVmaW5lIFBSUV9PUkRFUiAw
+DQo+IA0KPiBAQCAtOTIsNiArOTMsNjUgQEAgc3RhdGljIGlubGluZSBib29sIGludGVsX3N2bV9j
+YXBhYmxlKHN0cnVjdA0KPiBpbnRlbF9pb21tdSAqaW9tbXUpDQo+ICAJcmV0dXJuIGlvbW11LT5m
+bGFncyAmIFZURF9GTEFHX1NWTV9DQVBBQkxFOw0KPiAgfQ0KPiANCj4gKyNkZWZpbmUgcGFzaWRf
+bG9ja19oZWxkKCkgbG9ja19pc19oZWxkKCZwYXNpZF9tdXRleC5kZXBfbWFwKQ0KPiArDQo+ICtz
+dGF0aWMgaW50IHBhc2lkX3N0YXR1c19jaGFuZ2Uoc3RydWN0IG5vdGlmaWVyX2Jsb2NrICpuYiwN
+Cj4gKwkJCQl1bnNpZ25lZCBsb25nIGNvZGUsIHZvaWQgKmRhdGEpDQo+ICt7DQo+ICsJc3RydWN0
+IGlvYXNpZF9uYl9hcmdzICphcmdzID0gKHN0cnVjdCBpb2FzaWRfbmJfYXJncyAqKWRhdGE7DQo+
+ICsJc3RydWN0IGludGVsX3N2bV9kZXYgKnNkZXY7DQo+ICsJc3RydWN0IGludGVsX3N2bSAqc3Zt
+Ow0KPiArCWludCByZXQgPSBOT1RJRllfRE9ORTsNCj4gKw0KPiArCWlmIChjb2RlID09IElPQVNJ
+RF9GUkVFKSB7DQo+ICsJCS8qDQo+ICsJCSAqIFVuYmluZCBhbGwgZGV2aWNlcyBhc3NvY2lhdGVk
+IHdpdGggdGhpcyBQQVNJRCB3aGljaCBpcw0KPiArCQkgKiBiZWluZyBmcmVlZCBieSBvdGhlciB1
+c2VycyBzdWNoIGFzIFZGSU8uDQo+ICsJCSAqLw0KPiArCQltdXRleF9sb2NrKCZwYXNpZF9tdXRl
+eCk7DQo+ICsJCXN2bSA9IGlvYXNpZF9maW5kKElOVkFMSURfSU9BU0lEX1NFVCwgYXJncy0+aWQs
+IE5VTEwpOw0KPiArCQlpZiAoIXN2bSB8fCAhc3ZtLT5pb21tdSkNCj4gKwkJCWdvdG8gZG9uZV91
+bmxvY2s7DQoNCnNob3VsZCB3ZSB0cmVhdCAhc3ZtLT5pb21tdSBhcyBhbiBlcnJvciBjb25kaXRp
+b24/IGlmIG5vdCwgZG8geW91IGhhdmUNCmFuIGV4YW1wbGUgd2hlbiBpdCBtYXkgb2NjdXIgaW4g
+bm9ybWFsIHNpdHVhdGlvbj8NCg0KPiArDQo+ICsJCWlmIChJU19FUlIoc3ZtKSkgew0KPiArCQkJ
+cmV0ID0gTk9USUZZX0JBRDsNCj4gKwkJCWdvdG8gZG9uZV91bmxvY2s7DQo+ICsJCX0NCg0Kc3Zt
+LT5pb21tdSBzaG91bGQgYmUgcmVmZXJlbmNlZCBhZnRlciBJU19FUlIgY2hlY2sNCg0KPiArDQo+
+ICsJCWxpc3RfZm9yX2VhY2hfZW50cnlfcmN1KHNkZXYsICZzdm0tPmRldnMsIGxpc3QsDQo+IHBh
+c2lkX2xvY2tfaGVsZCgpKSB7DQo+ICsJCQkvKiBEb2VzIG5vdCBwb2lzb24gZm9yd2FyZCBwb2lu
+dGVyICovDQo+ICsJCQlsaXN0X2RlbF9yY3UoJnNkZXYtPmxpc3QpOw0KPiArCQkJaW50ZWxfcGFz
+aWRfdGVhcl9kb3duX2VudHJ5KHN2bS0+aW9tbXUsIHNkZXYtDQo+ID5kZXYsDQo+ICsJCQkJCQkg
+ICAgc3ZtLT5wYXNpZCk7DQo+ICsJCQlrZnJlZV9yY3Uoc2RldiwgcmN1KTsNCj4gKw0KPiArCQkJ
+LyoNCj4gKwkJCSAqIEZyZWUgYmVmb3JlIHVuYmluZCBvbmx5IGhhcHBlbnMgd2l0aCBndWVzdA0K
+PiB1c2FnZWQNCj4gKwkJCSAqIGhvc3QgUEFTSURzLiBJT0FTSUQgZnJlZSB3aWxsIGRldGFjaCBw
+cml2YXRlIGRhdGENCj4gKwkJCSAqIGFuZCBmcmVlIHRoZSBJT0FTSUQgZW50cnkuDQoNCiJndWVz
+dCB1c2FnZWQgaG9zdCBQQVNJRHMiPw0KDQo+ICsJCQkgKi8NCj4gKwkJCWlmIChsaXN0X2VtcHR5
+KCZzdm0tPmRldnMpKQ0KPiArCQkJCWtmcmVlKHN2bSk7DQo+ICsJCX0NCj4gKwkJbXV0ZXhfdW5s
+b2NrKCZwYXNpZF9tdXRleCk7DQo+ICsNCj4gKwkJcmV0dXJuIE5PVElGWV9PSzsNCj4gKwl9DQo+
+ICsNCj4gK2RvbmVfdW5sb2NrOg0KPiArCW11dGV4X3VubG9jaygmcGFzaWRfbXV0ZXgpOw0KPiAr
+CXJldHVybiByZXQ7DQo+ICt9DQo+ICsNCj4gK3N0YXRpYyBzdHJ1Y3Qgbm90aWZpZXJfYmxvY2sg
+cGFzaWRfbmIgPSB7DQo+ICsJCS5ub3RpZmllcl9jYWxsID0gcGFzaWRfc3RhdHVzX2NoYW5nZSwN
+Cj4gK307DQo+ICsNCj4gK3ZvaWQgaW50ZWxfc3ZtX2FkZF9wYXNpZF9ub3RpZmllcih2b2lkKQ0K
+PiArew0KPiArCWlvYXNpZF9hZGRfbm90aWZpZXIoJnBhc2lkX25iKTsNCj4gK30NCj4gKw0KPiAg
+dm9pZCBpbnRlbF9zdm1fY2hlY2soc3RydWN0IGludGVsX2lvbW11ICppb21tdSkNCj4gIHsNCj4g
+IAlpZiAoIXBhc2lkX3N1cHBvcnRlZChpb21tdSkpDQo+IEBAIC0yMTksNyArMjc5LDYgQEAgc3Rh
+dGljIGNvbnN0IHN0cnVjdCBtbXVfbm90aWZpZXJfb3BzIGludGVsX21tdW9wcyA9DQo+IHsNCj4g
+IAkuaW52YWxpZGF0ZV9yYW5nZSA9IGludGVsX2ludmFsaWRhdGVfcmFuZ2UsDQo+ICB9Ow0KPiAN
+Cj4gLXN0YXRpYyBERUZJTkVfTVVURVgocGFzaWRfbXV0ZXgpOw0KPiAgc3RhdGljIExJU1RfSEVB
+RChnbG9iYWxfc3ZtX2xpc3QpOw0KPiANCj4gICNkZWZpbmUgZm9yX2VhY2hfc3ZtX2RldihzZGV2
+LCBzdm0sIGQpCQkJXA0KPiBAQCAtMzE5LDYgKzM3OCw3IEBAIGludCBpbnRlbF9zdm1fYmluZF9n
+cGFzaWQoc3RydWN0IGlvbW11X2RvbWFpbg0KPiAqZG9tYWluLA0KPiAgCQkJc3ZtLT5ncGFzaWQg
+PSBkYXRhLT5ncGFzaWQ7DQo+ICAJCQlzdm0tPmZsYWdzIHw9IFNWTV9GTEFHX0dVRVNUX1BBU0lE
+Ow0KPiAgCQl9DQo+ICsJCXN2bS0+aW9tbXUgPSBpb21tdTsNCg0KYWgsIGl0J3MgaW50ZXJlc3Rp
+bmcgdG8gc2VlIHdlIGhhdmUgYSBmaWVsZCBkZWZpbmVkIGJlZm9yZSBidXQgbmV2ZXIgdXNlZC4g
+8J+Yig0KDQo+IA0KPiAgCQlpb2FzaWRfYXR0YWNoX2RhdGEoZGF0YS0+aHBhc2lkLCBzdm0pOw0K
+PiAgCQlJTklUX0xJU1RfSEVBRF9SQ1UoJnN2bS0+ZGV2cyk7DQo+IEBAIC0zODMsNiArNDQzLDEx
+IEBAIGludCBpbnRlbF9zdm1fYmluZF9ncGFzaWQoc3RydWN0IGlvbW11X2RvbWFpbg0KPiAqZG9t
+YWluLA0KPiAgCX0NCj4gIAlzdm0tPmZsYWdzIHw9IFNWTV9GTEFHX0dVRVNUX01PREU7DQo+IA0K
+PiArCS8qDQo+ICsJICogTm90aWZ5IEtWTSBuZXcgaG9zdC1ndWVzdCBQQVNJRCBiaW5kIGlzIHJl
+YWR5LiBLVk0gd2lsbCBzZXQgdXANCj4gKwkgKiBQQVNJRCB0cmFuc2xhdGlvbiB0YWJsZSB0byBz
+dXBwb3J0IGd1ZXN0IEVOUUNNRC4NCj4gKwkgKi8NCg0Kc2hvdWxkIHRha2UgaXQgYXMgYW4gZXhh
+bXBsZSBpbnN0ZWFkIG9mIHRoZSBvbmx5IHBvc3NpYmxlIHVzYWdlLg0KDQo+ICsJaW9hc2lkX25v
+dGlmeShkYXRhLT5ocGFzaWQsIElPQVNJRF9CSU5EKTsNCj4gIAlpbml0X3JjdV9oZWFkKCZzZGV2
+LT5yY3UpOw0KPiAgCWxpc3RfYWRkX3JjdSgmc2Rldi0+bGlzdCwgJnN2bS0+ZGV2cyk7DQo+ICAg
+b3V0Og0KPiBAQCAtNDQwLDYgKzUwNSw3IEBAIGludCBpbnRlbF9zdm1fdW5iaW5kX2dwYXNpZChz
+dHJ1Y3QgZGV2aWNlICpkZXYsIGludA0KPiBwYXNpZCkNCj4gIAkJCQkgKiB1c2VkIGJ5IGFub3Ro
+ZXIuDQo+ICAJCQkJICovDQo+ICAJCQkJaW9hc2lkX2F0dGFjaF9kYXRhKHBhc2lkLCBOVUxMKTsN
+Cj4gKwkJCQlpb2FzaWRfbm90aWZ5KHBhc2lkLCBJT0FTSURfVU5CSU5EKTsNCj4gIAkJCQlrZnJl
+ZShzdm0pOw0KPiAgCQkJfQ0KPiAgCQl9DQo+IGRpZmYgLS1naXQgYS9pbmNsdWRlL2xpbnV4L2lu
+dGVsLWlvbW11LmggYi9pbmNsdWRlL2xpbnV4L2ludGVsLWlvbW11LmgNCj4gaW5kZXggZjg1MDRh
+OTgwOTgxLi42NDc5OTA2N2VhNTggMTAwNjQ0DQo+IC0tLSBhL2luY2x1ZGUvbGludXgvaW50ZWwt
+aW9tbXUuaA0KPiArKysgYi9pbmNsdWRlL2xpbnV4L2ludGVsLWlvbW11LmgNCj4gQEAgLTcwOCw2
+ICs3MDgsNyBAQCBleHRlcm4gc3RydWN0IGlvbW11X3N2YSAqDQo+ICBpbnRlbF9zdm1fYmluZChz
+dHJ1Y3QgZGV2aWNlICpkZXYsIHN0cnVjdCBtbV9zdHJ1Y3QgKm1tLCB2b2lkICpkcnZkYXRhKTsN
+Cj4gIGV4dGVybiB2b2lkIGludGVsX3N2bV91bmJpbmQoc3RydWN0IGlvbW11X3N2YSAqaGFuZGxl
+KTsNCj4gIGV4dGVybiBpbnQgaW50ZWxfc3ZtX2dldF9wYXNpZChzdHJ1Y3QgaW9tbXVfc3ZhICpo
+YW5kbGUpOw0KPiArZXh0ZXJuIHZvaWQgaW50ZWxfc3ZtX2FkZF9wYXNpZF9ub3RpZmllcih2b2lk
+KTsNCj4gDQo+ICBzdHJ1Y3Qgc3ZtX2Rldl9vcHM7DQo+IA0KPiAtLQ0KPiAyLjcuNA0KPiANCj4g
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18NCj4gaW9tbXUg
+bWFpbGluZyBsaXN0DQo+IGlvbW11QGxpc3RzLmxpbnV4LWZvdW5kYXRpb24ub3JnDQo+IGh0dHBz
+Oi8vbGlzdHMubGludXhmb3VuZGF0aW9uLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2lvbW11DQo=
