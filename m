@@ -2,154 +2,146 @@ Return-Path: <SRS0=s8dx=5M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A60AC2D0EC
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 10:44:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8F14C2D0E8
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 10:44:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A17E20578
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 10:44:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC2DC20575
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 10:44:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="RqQskwD/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726518AbgC0Kn7 (ORCPT
+        id S1726804AbgC0KoG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Mar 2020 06:43:59 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:58081 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726215AbgC0Kn6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Mar 2020 06:43:58 -0400
-Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <mgr@pengutronix.de>)
-        id 1jHmSv-0001Op-Nz; Fri, 27 Mar 2020 11:43:53 +0100
-Received: from mgr by ptx.hi.pengutronix.de with local (Exim 4.92)
-        (envelope-from <mgr@pengutronix.de>)
-        id 1jHmSu-0004GC-Gm; Fri, 27 Mar 2020 11:43:52 +0100
-Date:   Fri, 27 Mar 2020 11:43:52 +0100
-From:   Michael Grzeschik <mgr@pengutronix.de>
-To:     Lars-Peter Clausen <lars@metafoo.de>
-Cc:     alexandru.Ardelean@analog.com, linux-usb@vger.kernel.org,
-        linux-kernel@vger.kernel.org, balbi@kernel.org,
-        gregkh@linuxfoundation.org, bigeasy@linutronix.de,
-        m.olbrich@pengutronix.de, kernel@pengutronix.de
-Subject: Re: [PATCH] usb: dwc3: gadget: don't dequeue requests on already
- disabled endpoints
-Message-ID: <20200327104352.GF27849@pengutronix.de>
-References: <dc52d6a0-12ed-a34c-01c4-0fc5ccbf7b1d@metafoo.de>
- <20200327084302.606-1-m.grzeschik@pengutronix.de>
- <f746cc1f-b5e2-af0a-d946-edce634c46c3@metafoo.de>
+        Fri, 27 Mar 2020 06:44:06 -0400
+Received: from mail-eopbgr150058.outbound.protection.outlook.com ([40.107.15.58]:11429
+        "EHLO EUR01-DB5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726215AbgC0KoG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Mar 2020 06:44:06 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=NkqTObYEhAhAxLMT7AE7AWPT2ilstylLWrzzPtLCIankjd1Zoh493b0W9YL5jTfqTeYJRzejjgt///5dJzcLGYOcqrDfBl5FfAagC84UTtQT/tLx6juZSzbaIAxie4pj3KkuvCMpAEUAAQ4Iasmxp4XQfqcIL6F+PLeR6rzXQ66ogEUOORc9A5mBExVr6QFpU1mZlVsqiWQmidWShNHN1B2jq1971aB6JkyMF9nINLDrB1jTq6L+wqVjmH87o5F0oRYfsKxJq/XrJQvSTfGpbH8LO5AXhE+dU2xlR/7XYY1bXJ25DE8g+4J2ySzmU94HMfBGCSr5lJt6Ll3G5zhgEA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=6mT4wf7BleKVliBmFMMu8r6p+GJ3fTxeMgjUCqejqCw=;
+ b=D8yR54R1c6rpnbeKPvlKpDloKdQZ/8PX94OJjxF2A+fanxoN56YJDq2fe12S5+pgQXPdg/HNUvXZyWqXM+ATNNTUiXkDtqqF/eaknqPEdYoIRKCN/6WFSLXgaLLf+Qb4eI18PbXakTTn/gehKXEEQFabOGNCPo5hx1GwDZromz/Ecif+JuF75ZpOfje3sO/25ynRblbo0npYzrZuGA6MXMW8k2pP3fZSLLyoCcI6r7zdWrpHzSg4zr9Rpm7QPfkEyegOKFm2FQpZdGz+QUiK0XAnrSWBGgcCULGgZgskfFQYJcFz/Ftxh44GP98vqYcBIIcc0V0Q2h/Wez/sGl5/Rw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=6mT4wf7BleKVliBmFMMu8r6p+GJ3fTxeMgjUCqejqCw=;
+ b=RqQskwD/trCNv71T9xOJkgl51jGgO0cniOdiDTYpSVEiTJQWtCeOEB0O2DFCFow3Di4M3v01acfMNdaqiAUFO3rTwEY5+/4yAnarXleFByHa8c3BWmVZPyjcWTn5xVRkJxn+nqDVg6qKzBP0FErw/v2hVouiqsNQmO0Ar5XJV/o=
+Received: from AM6PR0402MB3701.eurprd04.prod.outlook.com (52.133.29.16) by
+ AM6PR0402MB3336.eurprd04.prod.outlook.com (52.133.25.29) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2856.20; Fri, 27 Mar 2020 10:44:02 +0000
+Received: from AM6PR0402MB3701.eurprd04.prod.outlook.com
+ ([fe80::d8e6:42db:b8be:1e1c]) by AM6PR0402MB3701.eurprd04.prod.outlook.com
+ ([fe80::d8e6:42db:b8be:1e1c%3]) with mapi id 15.20.2856.019; Fri, 27 Mar 2020
+ 10:44:02 +0000
+From:   Iuliana Prodan <iuliana.prodan@nxp.com>
+To:     Herbert Xu <herbert@gondor.apana.org.au>
+CC:     Baolin Wang <baolin.wang@linaro.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Corentin Labbe <clabbe.montjoie@gmail.com>,
+        Horia Geanta <horia.geanta@nxp.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Aymen Sghaier <aymen.sghaier@nxp.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Silvano Di Ninno <silvano.dininno@nxp.com>,
+        Franck Lenormand <franck.lenormand@nxp.com>,
+        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>
+Subject: Re: [PATCH v4 1/2] crypto: engine - support for parallel requests
+Thread-Topic: [PATCH v4 1/2] crypto: engine - support for parallel requests
+Thread-Index: AQHV9ZwplCPBsoqUKkWl+/E0XiXZQA==
+Date:   Fri, 27 Mar 2020 10:44:02 +0000
+Message-ID: <AM6PR0402MB370147736BEAD099AAF061558CCC0@AM6PR0402MB3701.eurprd04.prod.outlook.com>
+References: <1583707893-23699-1-git-send-email-iuliana.prodan@nxp.com>
+ <1583707893-23699-2-git-send-email-iuliana.prodan@nxp.com>
+ <20200312032553.GB19920@gondor.apana.org.au>
+ <AM0PR04MB71710B3535153286D9F31F8B8CFD0@AM0PR04MB7171.eurprd04.prod.outlook.com>
+ <20200317032924.GB18743@gondor.apana.org.au>
+ <VI1PR0402MB3712DC09FC02FBE215006C5B8CF60@VI1PR0402MB3712.eurprd04.prod.outlook.com>
+ <20200327044404.GA12318@gondor.apana.org.au>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=iuliana.prodan@nxp.com; 
+x-originating-ip: [92.121.36.197]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: d1d40d99-3204-4dbe-6f83-08d7d23bc3f1
+x-ms-traffictypediagnostic: AM6PR0402MB3336:|AM6PR0402MB3336:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <AM6PR0402MB333692B9A7808CE2B078F3A18CCC0@AM6PR0402MB3336.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 0355F3A3AE
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM6PR0402MB3701.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10009020)(4636009)(136003)(366004)(39860400002)(396003)(346002)(376002)(66946007)(91956017)(52536014)(26005)(53546011)(186003)(76116006)(478600001)(316002)(81166006)(71200400001)(33656002)(6916009)(8936002)(7416002)(6506007)(7696005)(81156014)(8676002)(66556008)(66476007)(5660300002)(2906002)(44832011)(64756008)(54906003)(9686003)(55016002)(4326008)(66446008)(86362001);DIR:OUT;SFP:1101;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 6HKlWhWIp5DENAP9ScsiceKv5uK+r1saI2luPBFmo0pARiaC2sxcDWr1rtH6eVoxeZZGgn5i5TpG+L/PVe6IXFXly5VNrgeVXknH4fshKSqlP5+vnwtgW1/T/WpEP7AtR7CfBxSPSQ5rkX5G0ORKnoYy2vqoXM7KGEJzyYJJlJtFLkbgPe+SZjydrw/5eaVVdNAbW85peJG/zWXO2kEd4KutEkvOLY7BHUnfcMkpySqxyYE/Bp5sxMIt8ojgkWhRSV8l7OB3ui7R5b20HG3gbaR1EM5eG9TXk6JinS0FfEQn/0P+TqMgc+QMVVNt2b1MGScKy3M/YnNCGHIGCS1qkGP9eoaLGihm9Fehu5cHBnYK50eac+Hvl0GmKxqZUnaQySb9I+gwS4mnqgDAJfEHz33G9Y/dY0M1F0Hj9xNoRVX1VCFeJYWDhvNubt/2j6g9
+x-ms-exchange-antispam-messagedata: HW3yJ29/MO2jP3D5a+u9Vyr5tYekYZuCnyXtPSGKoQLktCvfGx9T/pAYUCflZsukLe2IEw9jHzaQCZmrUI6lOBd2tlXXGFzWTtgVdCdhOYgd7qVZ/kulLu4F6Z1EEuXgLaIjCf6EXSM2R/pkGB2x1A==
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="EDJsL2R9iCFAt7IV"
-Content-Disposition: inline
-In-Reply-To: <f746cc1f-b5e2-af0a-d946-edce634c46c3@metafoo.de>
-X-Sent-From: Pengutronix Hildesheim
-X-URL:  http://www.pengutronix.de/
-X-IRC:  #ptxdist @freenode
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-Uptime: 11:40:34 up 36 days, 18:11, 85 users,  load average: 0.51, 0.21,
- 0.14
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
-X-SA-Exim-Mail-From: mgr@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: d1d40d99-3204-4dbe-6f83-08d7d23bc3f1
+X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Mar 2020 10:44:02.6798
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: cMuaKsB8MxraxVqV62ICQVCN+cFflqoM3vn40nuC0MsfSoAHPIW03cE8dA9g+qhPzmKW4++7CcE3B/MvVHmfbw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR0402MB3336
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
---EDJsL2R9iCFAt7IV
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Fri, Mar 27, 2020 at 10:14:10AM +0100, Lars-Peter Clausen wrote:
-> On 3/27/20 9:43 AM, Michael Grzeschik wrote:
-> > dwc3_gadget_ep_disable gets called before the last request gets
-> > dequeued.
-> >=20
-> > In __dwc3_gadget_ep_disable all started, pending and cancelled
-> > lists for this endpoint will call dwc3_gadget_giveback in
-> > dwc3_remove_requests.
-> >=20
-> > After that no list containing the afterwards dequed request,
-> > therefor it is not necessary to run the dequeue routine.
-> >=20
-> > Signed-off-by: Michael Grzeschik <m.grzeschik@pengutronix.de>
-> > ---
-> > @Lars-Peter Clausen:
-> >=20
-> > This patch addresses the case that not queued requests get dequeued.
-> > The only case that this happens seems on disabling the gadget.
->=20
->=20
-> I don't believe it does. Calling usb_ep_dequeue() is not limited to be
-> called after the endpoint has been disabled. It is part of the API and can
-> be called at any time. E.g. with function_fs you can abort a queued trans=
-fer
-> from userspace at any time.
-
-OK, can you give me an Userspace example how to simply trigger the
-issue. I tried to figure your mentioned function stack but it would
-be much easier if it could be reproduced.
-
-The patch on the other hand can stand on itself, as it then
-fixes another code path that is much more common.
-
-Regads,
-Michael
-
-> >=20
-> >   drivers/usb/dwc3/gadget.c | 3 +++
-> >   1 file changed, 3 insertions(+)
-> >=20
-> > diff --git a/drivers/usb/dwc3/gadget.c b/drivers/usb/dwc3/gadget.c
-> > index 9a6f741d1db0dc..5d4fa8d6c93e49 100644
-> > --- a/drivers/usb/dwc3/gadget.c
-> > +++ b/drivers/usb/dwc3/gadget.c
-> > @@ -1609,6 +1609,9 @@ static int dwc3_gadget_ep_dequeue(struct usb_ep *=
-ep,
-> >   	trace_dwc3_ep_dequeue(req);
-> > +	if (!(dep->flags & DWC3_EP_ENABLED))
-> > +		return 0;
-> > +
-> >   	spin_lock_irqsave(&dwc->lock, flags);
-> >   	list_for_each_entry(r, &dep->pending_list, list) {
->=20
->=20
->=20
-
---=20
-Pengutronix e.K.                           |                             |
-Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
-31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
-
---EDJsL2R9iCFAt7IV
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEElXvEUs6VPX6mDPT8C+njFXoeLGQFAl592N0ACgkQC+njFXoe
-LGQtSw/9FwbQzq60D+PS5pBU5U5GKKy5ji9a4ukn3qdw/DMIYlV8Q6b/upxspaPP
-g+1LQ/WmyxD+fhu2W9s9ylRvXaLa3ZuDiKDNpaFpt/q9DRM182FDg3pOc1nOAOn2
-Rot5Hk2NkrgDwDLRBv45cHT8omfckLTmheZGl0XM5T/rIAsy2Qhr0KmEVYWnUQpy
-v7COEA3YjfvFQUlLJDz3+ZRkvaWjcyqCVQb2SF9CjINbeO9/DchfubzmXXFH1qA+
-7X8HqM6+t/JJbfmQnp/6HgmCV/kN27EjCZ7xhMNAWW3eYf883g/hmSx5+PmHrsvC
-HVCCHnlsKA1QnDpTSAX4Tqt7w1kNiWOfrX00q/pH3/VNaS1mK175seUYtm/PlHz6
-1QhkxktjPDJFXISHv9ig0wirK6Ox+M6I5QgzPIN7aqjL4Re0GRZQPvYv2EP8u7uf
-f53+AwhSvPeVunxCFMSDusXgiKhKxEFkyNvSP4HGBC0biZqhjMkMIF3TMuBWx8u0
-KRX2l1rnLFxwx4mKXfZ2811nhLB7me5wn6e3nGDC9I113JDEXMb37Yq8O5HxzJ8L
-ZBSt2XvfeEy6Iut6hmsVCi2c1TdTrKwv8hk1QB3Kb2/6ZCFJoCiqorR2gm6Ul+Rt
-Y4LbBdRUhR/C7ol6s5iC/NRB5fmw+buTkpUuCRkhqJGdrF5wm04=
-=3ul1
------END PGP SIGNATURE-----
-
---EDJsL2R9iCFAt7IV--
+On 3/27/2020 6:44 AM, Herbert Xu wrote:=0A=
+> On Tue, Mar 17, 2020 at 01:08:18PM +0000, Iuliana Prodan wrote:=0A=
+>>=0A=
+>> This case can happen right now, also. I can't guarantee that all drivers=
+=0A=
+>> send all requests via crypto-engine.=0A=
+> =0A=
+> I think this is something that we should address.  =0A=
+=0A=
+=0A=
+I agree we should not have failed requests, _with_ MAY_BACKLOG, that =0A=
+pass through crypto-engine. All these requests must me executed. For =0A=
+this case I have a solution and I'll work on it.=0A=
+=0A=
+> If a driver=0A=
+> is going to use crypto_engine then really all requests should go=0A=
+> through that.  IOW, we should have a one-to-one relationship between=0A=
+> engines and hardware.=0A=
+> =0A=
+This cannot happen right now.=0A=
+For non-crypto API requests (like split key or rng) I cannot pass them =0A=
+through crypto-engine which only supports aead, skcipher, hash and =0A=
+akcipher requests.=0A=
+=0A=
+So, I believe that if the first problem is solved (to have all crypto =0A=
+API requests, that have backlog flag executed - retry mechanism instead =0A=
+of reporting failure) the non-crypto API request doesn't have to be pass =
+=0A=
+through crypto-engine - these can be handled by driver.=0A=
+=0A=
+Thanks,=0A=
+Iulia=0A=
+=0A=
+=0A=
