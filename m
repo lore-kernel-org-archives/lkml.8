@@ -3,359 +3,210 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B43DDC2D0E7
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 08:30:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52B5FC2D0E8
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 08:31:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6ED4520705
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 08:30:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2BFD32073E
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 08:31:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nqWncTEk"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Re9nh7mY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726750AbgC0Iac (ORCPT
+        id S1727242AbgC0IbL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Mar 2020 04:30:32 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:43787 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726063AbgC0Iab (ORCPT
+        Fri, 27 Mar 2020 04:31:11 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:44771 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726360AbgC0IbL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Mar 2020 04:30:31 -0400
-Received: by mail-lj1-f195.google.com with SMTP id g27so9254987ljn.10;
-        Fri, 27 Mar 2020 01:30:28 -0700 (PDT)
+        Fri, 27 Mar 2020 04:31:11 -0400
+Received: by mail-wr1-f65.google.com with SMTP id m17so10286284wrw.11
+        for <linux-kernel@vger.kernel.org>; Fri, 27 Mar 2020 01:31:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=+nQFDTsrK8LF14KWC0RY0xitS+98DinidixFhm3xejA=;
-        b=nqWncTEkRIfaWPq2seL1bNkxfxW3p2ohY3tFpbm9uXEGmO31Gtu9QzFMnN5R+sV5ZD
-         s6CNvrpA9lJtrge847KM2nb5KDP+jPGPbm0vAyAnvrpn8VOqaXfQ2G6cySgAmOAEd7fL
-         z6/je+ZA9Umyql0Anv0SshxBwOjXykVx+YB9oY9VS3sR1zZAwvQ5UAqkwRapn0d5z3Zl
-         Xap9hd8ode2w2U5CZwPvHaGPERxYP4TZnMOi1+MTuSXCnhvq2rWtkKzWEeSWW71v8oot
-         2j6PujZWeC3k8CgLpVCx/CiKRKGbbx82w6RnbXi1k7fOi6FAfO9B8F3ka+BFwiC1hN0U
-         fQvw==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=7qMxcUuECzy6UW7EY22DAqOxFR3J+yYatNeUV89Utj0=;
+        b=Re9nh7mY7E2XnsoW7UqnE/ZbPpu/RAKnPlkcHVa+kmfTNDW7Q8B+tS5p7UHi+5cQzr
+         BoVPWRVPSDacWjh56gaT78/RFhIEV+yvCIrnphWAOihwXMbTJ3wEJabJ9p/kvd359VZW
+         DHiulHb5HIhXw2KzkMMZ/m6cgb0duHKD+TrVUQa4iTBBFWqefNuYnKCdHNTIOS8awbKW
+         ElPVI6HDUuw7o2+SI6O/SoB/QrV4uSimO/Lht54lGbHc5r0Jr0thhgokUFlgR3yS/VBV
+         LJQVP8XMaQrc+enAiFb6qurB13hn5fbTUYDDiEfWMdTFHH579thoAdWbrBFW7mHhF5DR
+         nkaw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=+nQFDTsrK8LF14KWC0RY0xitS+98DinidixFhm3xejA=;
-        b=fIc4VZlnDvcrMjT/CpKJGiEcideKsXAaLboqGhuxxfeAK5KBDVUNMGfdQxKKf7BhBU
-         AeNNsQc50wn4BCUiaPrMmhK1wsiL3rEtGGO0+zpvRYdlESxPhL64Lw0ALF05fZTy2aIj
-         RNEN/9SrMyRxsI3c7Cs9Ezezk6t911EAUOsxbRDK8g67WG6tz8uEl672arBgIKCVcbQy
-         c5E6gL/ungDyEB0LHmCyKPsRqKYTcoKD6LSTFVvO1uSraL4YJpg/WJ7d3Ls+eXl1r5F7
-         HxGikJ5laDK8SZl55QFCm827/Im88cFW/37+JW5BWtltmdF2PDsW/d3WzVbM1VE5Hakh
-         ieWw==
-X-Gm-Message-State: AGi0PuaIcKsCHYnCnBkEPxPRWUZn/Eaji8D477nK33RSCC+IZUuqHDIM
-        slPYSrxqcnkuRgW95xsvHG0iBRHzp1X8fBhkzMw=
-X-Google-Smtp-Source: APiQypJ1Rf0teZtKddLlmq4XYeHH4CD7ZNqKCQEzHAlEyP2djj904fnkPMEOOYz64fcchj1v04oGTcTMrivJlGZ1gCE=
-X-Received: by 2002:a2e:9b07:: with SMTP id u7mr7605735lji.110.1585297827573;
- Fri, 27 Mar 2020 01:30:27 -0700 (PDT)
-MIME-Version: 1.0
-References: <c2e62e5a9942fb833dfc0cdc8c967a12f3c34b03.1584350380.git.baolin.wang7@gmail.com>
- <20200318100123.GA27531@ming.t460p> <CADBw62qbdpoyPZd+_np6f0L+83Ah8B218EYKmi8xiUbBf5c6+A@mail.gmail.com>
- <CADBw62rWWk=Jeg7=3nEBqK2prQjLzCGcFyJ+WkZ0D6_grcETHA@mail.gmail.com>
- <20200323034432.GA27507@ming.t460p> <CADBw62rxFdriCSEo78M7_xnS3UiaDPN9CwURtiDOTxGVCevbsg@mail.gmail.com>
- <20200323072640.GA4767@ming.t460p> <CADBw62rDOUUpEdOKxoC3J5R=noSGMLzkJZjjjFa1Mv6J7FX_Aw@mail.gmail.com>
- <20200323082830.GB5616@ming.t460p> <CADBw62rd4Ro2VbfFZqev6ou7jY+sLtn6b9Z6HCcZAigHngj9Fw@mail.gmail.com>
- <20200323095806.GD5616@ming.t460p> <CADBw62o5X_NpSjCWHL+-s9jDyAD4pp2bMRbo=vhuB4V2i2O8ag@mail.gmail.com>
-In-Reply-To: <CADBw62o5X_NpSjCWHL+-s9jDyAD4pp2bMRbo=vhuB4V2i2O8ag@mail.gmail.com>
-From:   Baolin Wang <baolin.wang7@gmail.com>
-Date:   Fri, 27 Mar 2020 16:30:14 +0800
-Message-ID: <CADBw62rZ4h80y_98kpd4p=cVfmo1hjKpANqgDUQ6sABQrFpz3g@mail.gmail.com>
-Subject: Re: [RESEND RFC PATCH 2/8] block: Allow sending a batch of requests
- from the scheduler to hardware
-To:     Ming Lei <ming.lei@redhat.com>
-Cc:     axboe@kernel.dk, Paolo Valente <paolo.valente@linaro.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Arnd Bergmann <arnd@arndb.de>,
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=7qMxcUuECzy6UW7EY22DAqOxFR3J+yYatNeUV89Utj0=;
+        b=iSOKIeBTGCSF91DaoN03WdQd9SQry1TAyVOzxPONO+gBKlv8V1D9cwsZaRjXcllaR8
+         Alp33ReWexW5yQRHPESe28ciUmkcpunxKAn59Ge4tM1ua7Kh2f1T8ew6xKrevrzh8iZs
+         5xopsHPYw3CSXCxv5DXmatJ2E7/9dlltX5LSM54owdUfw4an6uHjZYSnaQmLhO1c6nVd
+         Qx6el5WY4HxQl2jy7+DL8utJ+HS5GCCwuF0W2wUBDkBH/AS7nVoZVdHXUEoB9Zb+MmKJ
+         WfRePfdDtgBQHZMC9eHK1xgK7ILjIHWTRogKilzBlu8DzQzgbYD739oUKaTttSdXEyWH
+         G3aw==
+X-Gm-Message-State: ANhLgQ0eKusVJV1/Fa7jclxnMz51ARtdXhbSNNbVz5pNMZVqsIubQ2yS
+        Y+kSfAfrXAOVJ8NcL+rOGlr36Q==
+X-Google-Smtp-Source: ADFU+vsnkuuXK5PCN3CGLGb7k6BWdwMd/4riN9BWBlsjaqEq6fO9cPeQcvyc9vM82ENDj4wZ1oJO+A==
+X-Received: by 2002:a5d:5141:: with SMTP id u1mr12997224wrt.146.1585297868413;
+        Fri, 27 Mar 2020 01:31:08 -0700 (PDT)
+Received: from dell ([95.149.164.95])
+        by smtp.gmail.com with ESMTPSA id q3sm7373231wru.87.2020.03.27.01.31.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 27 Mar 2020 01:31:07 -0700 (PDT)
+Date:   Fri, 27 Mar 2020 08:31:57 +0000
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Rob Herring <robh@kernel.org>
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Brian Masney <masneyb@onstation.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Guillaume La Roque <glaroque@baylibre.com>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Liam Girdwood <lgirdwood@gmail.com>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Orson Zhai <orsonzhai@gmail.com>,
-        Chunyan Zhang <zhang.lyra@gmail.com>,
-        linux-mmc <linux-mmc@vger.kernel.org>,
-        linux-block <linux-block@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Mark Brown <broonie@kernel.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Michael Hennerich <michael.hennerich@analog.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Zhang Rui <rui.zhang@intel.com>,
+        dri-devel@lists.freedesktop.org, linux-amlogic@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-iio@vger.kernel.org,
+        linux-media@vger.kernel.org, linux-pm@vger.kernel.org,
+        netdev@vger.kernel.org
+Subject: Re: [PATCH 4/4] dt-bindings: Add missing 'additionalProperties:
+ false'
+Message-ID: <20200327083157.GI603801@dell>
+References: <20200325220542.19189-1-robh@kernel.org>
+ <20200325220542.19189-5-robh@kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200325220542.19189-5-robh@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Ming,
+On Wed, 25 Mar 2020, Rob Herring wrote:
 
-On Tue, Mar 24, 2020 at 4:29 PM Baolin Wang <baolin.wang7@gmail.com> wrote:
->
-> Hi Ming,
->
-> On Mon, Mar 23, 2020 at 5:58 PM Ming Lei <ming.lei@redhat.com> wrote:
-> >
-> > On Mon, Mar 23, 2020 at 05:13:27PM +0800, Baolin Wang wrote:
-> > > On Mon, Mar 23, 2020 at 4:29 PM Ming Lei <ming.lei@redhat.com> wrote:
-> > > >
-> > > > On Mon, Mar 23, 2020 at 04:22:38PM +0800, Baolin Wang wrote:
-> > > > > On Mon, Mar 23, 2020 at 3:27 PM Ming Lei <ming.lei@redhat.com> wrote:
-> > > > > >
-> > > > > > On Mon, Mar 23, 2020 at 01:36:34PM +0800, Baolin Wang wrote:
-> > > > > > > On Mon, Mar 23, 2020 at 11:44 AM Ming Lei <ming.lei@redhat.com> wrote:
-> > > > > > > >
-> > > > > > > > On Fri, Mar 20, 2020 at 06:27:41PM +0800, Baolin Wang wrote:
-> > > > > > > > > Hi Ming,
-> > > > > > > > >
-> > > > > > > > > On Wed, Mar 18, 2020 at 6:26 PM Baolin Wang <baolin.wang7@gmail.com> wrote:
-> > > > > > > > > >
-> > > > > > > > > > Hi Ming,
-> > > > > > > > > >
-> > > > > > > > > > On Wed, Mar 18, 2020 at 6:01 PM Ming Lei <ming.lei@redhat.com> wrote:
-> > > > > > > > > > >
-> > > > > > > > > > > On Mon, Mar 16, 2020 at 06:01:19PM +0800, Baolin Wang wrote:
-> > > > > > > > > > > > As we know, some SD/MMC host controllers can support packed request,
-> > > > > > > > > > > > that means we can package several requests to host controller at one
-> > > > > > > > > > > > time to improve performence. So the hardware driver expects the blk-mq
-> > > > > > > > > > > > can dispatch a batch of requests at one time, and driver can use bd.last
-> > > > > > > > > > > > to indicate if it is the last request in the batch to help to combine
-> > > > > > > > > > > > requests as much as possible.
-> > > > > > > > > > > >
-> > > > > > > > > > > > Thus we should add batch requests setting from the block driver to tell
-> > > > > > > > > > > > the scheduler how many requests can be dispatched in a batch, as well
-> > > > > > > > > > > > as changing the scheduler to dispatch more than one request if setting
-> > > > > > > > > > > > the maximum batch requests number.
-> > > > > > > > > > > >
-> > > > > > > > > > >
-> > > > > > > > > > > I feel this batch dispatch style is more complicated, and some other
-> > > > > > > > > > > drivers(virtio blk/scsi) still may get benefit if we can pass real 'last' flag in
-> > > > > > > > > > > .queue_rq().
-> > > > > > > > > > >
-> > > > > > > > > > > So what about the following way by extending .commit_rqs() to this usage?
-> > > > > > > > > > > And you can do whatever batch processing in .commit_rqs() which will be
-> > > > > > > > > > > guaranteed to be called if BLK_MQ_F_FORCE_COMMIT_RQS is set by driver.
-> > > > > > > > > >
-> > > > > > > > > > I'm very appreciated for your good suggestion, which is much simpler than mine.
-> > > > > > > > > > It seems to solve my problem, and I will try it on my platform to see
-> > > > > > > > > > if it can work and give you the feadback. Thanks again.
-> > > > > > > > >
-> > > > > > > > > I tried your approach on my platform, but met some problems, see below.
-> > > > > > > > >
-> > > > > > > > > >
-> > > > > > > > > > > diff --git a/block/blk-mq-sched.c b/block/blk-mq-sched.c
-> > > > > > > > > > > index 856356b1619e..cd2bbe56f83f 100644
-> > > > > > > > > > > --- a/block/blk-mq-sched.c
-> > > > > > > > > > > +++ b/block/blk-mq-sched.c
-> > > > > > > > > > > @@ -85,11 +85,12 @@ void blk_mq_sched_restart(struct blk_mq_hw_ctx *hctx)
-> > > > > > > > > > >   * its queue by itself in its completion handler, so we don't need to
-> > > > > > > > > > >   * restart queue if .get_budget() returns BLK_STS_NO_RESOURCE.
-> > > > > > > > > > >   */
-> > > > > > > > > > > -static void blk_mq_do_dispatch_sched(struct blk_mq_hw_ctx *hctx)
-> > > > > > > > > > > +static bool blk_mq_do_dispatch_sched(struct blk_mq_hw_ctx *hctx)
-> > > > > > > > > > >  {
-> > > > > > > > > > >         struct request_queue *q = hctx->queue;
-> > > > > > > > > > >         struct elevator_queue *e = q->elevator;
-> > > > > > > > > > >         LIST_HEAD(rq_list);
-> > > > > > > > > > > +       bool ret = false;
-> > > > > > > > > > >
-> > > > > > > > > > >         do {
-> > > > > > > > > > >                 struct request *rq;
-> > > > > > > > > > > @@ -112,7 +113,10 @@ static void blk_mq_do_dispatch_sched(struct blk_mq_hw_ctx *hctx)
-> > > > > > > > > > >                  * in blk_mq_dispatch_rq_list().
-> > > > > > > > > > >                  */
-> > > > > > > > > > >                 list_add(&rq->queuelist, &rq_list);
-> > > > > > > > > > > -       } while (blk_mq_dispatch_rq_list(q, &rq_list, true));
-> > > > > > > > > > > +               ret = blk_mq_dispatch_rq_list(q, &rq_list, true);
-> > > > > > > > > > > +       } while (ret);
-> > > > > > > > > > > +
-> > > > > > > > > > > +       return ret;
-> > > > > > > > > > >  }
-> > > > > > > > > > >
-> > > > > > > > > > >  static struct blk_mq_ctx *blk_mq_next_ctx(struct blk_mq_hw_ctx *hctx,
-> > > > > > > > > > > @@ -131,11 +135,12 @@ static struct blk_mq_ctx *blk_mq_next_ctx(struct blk_mq_hw_ctx *hctx,
-> > > > > > > > > > >   * its queue by itself in its completion handler, so we don't need to
-> > > > > > > > > > >   * restart queue if .get_budget() returns BLK_STS_NO_RESOURCE.
-> > > > > > > > > > >   */
-> > > > > > > > > > > -static void blk_mq_do_dispatch_ctx(struct blk_mq_hw_ctx *hctx)
-> > > > > > > > > > > +static bool blk_mq_do_dispatch_ctx(struct blk_mq_hw_ctx *hctx)
-> > > > > > > > > > >  {
-> > > > > > > > > > >         struct request_queue *q = hctx->queue;
-> > > > > > > > > > >         LIST_HEAD(rq_list);
-> > > > > > > > > > >         struct blk_mq_ctx *ctx = READ_ONCE(hctx->dispatch_from);
-> > > > > > > > > > > +       bool ret = false;
-> > > > > > > > > > >
-> > > > > > > > > > >         do {
-> > > > > > > > > > >                 struct request *rq;
-> > > > > > > > > > > @@ -161,10 +166,12 @@ static void blk_mq_do_dispatch_ctx(struct blk_mq_hw_ctx *hctx)
-> > > > > > > > > > >
-> > > > > > > > > > >                 /* round robin for fair dispatch */
-> > > > > > > > > > >                 ctx = blk_mq_next_ctx(hctx, rq->mq_ctx);
-> > > > > > > > > > > -
-> > > > > > > > > > > -       } while (blk_mq_dispatch_rq_list(q, &rq_list, true));
-> > > > > > > > > > > +               ret = blk_mq_dispatch_rq_list(q, &rq_list, true);
-> > > > > > > > > > > +       } while (ret);
-> > > > > > > > > > >
-> > > > > > > > > > >         WRITE_ONCE(hctx->dispatch_from, ctx);
-> > > > > > > > > > > +
-> > > > > > > > > > > +       return ret;
-> > > > > > > > > > >  }
-> > > > > > > > > > >
-> > > > > > > > > > >  void blk_mq_sched_dispatch_requests(struct blk_mq_hw_ctx *hctx)
-> > > > > > > > > > > @@ -173,6 +180,7 @@ void blk_mq_sched_dispatch_requests(struct blk_mq_hw_ctx *hctx)
-> > > > > > > > > > >         struct elevator_queue *e = q->elevator;
-> > > > > > > > > > >         const bool has_sched_dispatch = e && e->type->ops.dispatch_request;
-> > > > > > > > > > >         LIST_HEAD(rq_list);
-> > > > > > > > > > > +       bool dispatch_ret;
-> > > > > > > > > > >
-> > > > > > > > > > >         /* RCU or SRCU read lock is needed before checking quiesced flag */
-> > > > > > > > > > >         if (unlikely(blk_mq_hctx_stopped(hctx) || blk_queue_quiesced(q)))
-> > > > > > > > > > > @@ -206,20 +214,26 @@ void blk_mq_sched_dispatch_requests(struct blk_mq_hw_ctx *hctx)
-> > > > > > > > > > >          */
-> > > > > > > > > > >         if (!list_empty(&rq_list)) {
-> > > > > > > > > > >                 blk_mq_sched_mark_restart_hctx(hctx);
-> > > > > > > > > > > -               if (blk_mq_dispatch_rq_list(q, &rq_list, false)) {
-> > > > > > > > > > > +               dispatch_ret = blk_mq_dispatch_rq_list(q, &rq_list, false);
-> > > > > > > > > > > +               if (dispatch_ret) {
-> > > > > > > > > > >                         if (has_sched_dispatch)
-> > > > > > > > > > > -                               blk_mq_do_dispatch_sched(hctx);
-> > > > > > > > > > > +                               dispatch_ret = blk_mq_do_dispatch_sched(hctx);
-> > > > > > > > >
-> > > > > > > > > If we dispatched a request successfully by blk_mq_dispatch_rq_list(),
-> > > > > > > > > and got dispatch_ret = true now. Then we will try to dispatch more
-> > > > > > > > > reuqests from scheduler by blk_mq_do_dispatch_sched(), but if now no
-> > > > > > > > > more requests in scheduler, then we will got dispatch_ret = false. In
-> > > > > > > >
-> > > > > > > > 'dispatch_ret' always holds result of the last blk_mq_do_dispatch_sched().
-> > > > > > > > When any one request has been dispatched successfully, 'dispatch_ret'
-> > > > > > > > is true. New request is always added to list before calling
-> > > > > > > > blk_mq_do_dispatch_sched(), so once blk_mq_do_dispatch_sched() returns
-> > > > > > > > false, it means that .commit_rqs() has been called.
-> > > > > > >
-> > > > > > > Not really, if no requests int the IO cheduler, we will break the loop
-> > > > > > > in blk_mq_do_dispatch_sched() and return false without calling
-> > > > > > > .commit_rqs().
-> > > > > >
-> > > > > > If there isn't any request to dispatch, false is returned. Otherwise,
-> > > > > > always return the return value of last 'blk_mq_dispatch_rq_list'.
-> > > > > >
-> > > > > > >
-> > > > > > > So in this case, blk_mq_do_dispatch_sched() will return 'false', which
-> > > > > > > overlapped the return value of 'true' from blk_mq_dispatch_rq_list(),
-> > > > > > > and did not call .commit_rqs(). Then the IO processing will be stuck.
-> > > > > >
-> > > > > > See below.
-> > > > > >
-> > > > > > >
-> > > > > > > static void blk_mq_do_dispatch_sched(struct blk_mq_hw_ctx *hctx)
-> > > > > > > {
-> > > > > > >         struct request_queue *q = hctx->queue;
-> > > > > > >         struct elevator_queue *e = q->elevator;
-> > > > > > >         LIST_HEAD(rq_list);
-> > > > > > >         bool ret = false;
-> > > > > >
-> > > > > > The above initialization is just done once.
-> > > > > >
-> > > > > > >
-> > > > > > >        do {
-> > > > > > >               struct request *rq;
-> > > > > > >
-> > > > > > >               if (e->type->ops.has_work && !e->type->ops.has_work(hctx))
-> > > > > > >                      break;
-> > > > > > >
-> > > > > > >               .......
-> > > > > >                             ret = blk_mq_dispatch_rq_list(q, list, ...);
-> > > > > >
-> > > > > > list includes one request, so blk_mq_dispatch_rq_list() won't return
-> > > > > > false in case of no request in list.
-> > > > > >
-> > > > > > >        } while (ret);
-> > > > > > >
-> > > > > > >        return ret;
-> > > > > >
-> > > > > > 'ret' is always updated by return value of last blk_mq_dispatch_rq_list()
-> > > > > > if at least one request is dispatched. So if it becomes false, the loop
-> > > > > > breaks, that means .commit_rqs() has been called cause 'list' does
-> > > > > > include one request for blk_mq_dispatch_rq_list(). Otherwise, true is
-> > > > > > still returned.
-> > > > >
-> > > > > Sorry for my confusing description, let me try again to describe the problem.
-> > > > > When I try to mount the block device, I got the IO stuck with your
-> > > > > patch, and I did some debugging. I found we missed calling
-> > > > > commit_rqs() for one case:
-> > > > >
-> > > > > void blk_mq_sched_dispatch_requests(struct blk_mq_hw_ctx *hctx)
-> > > > > @@ -173,6 +180,7 @@ void blk_mq_sched_dispatch_requests(struct
-> > > > > blk_mq_hw_ctx *hctx)
-> > > > >         struct elevator_queue *e = q->elevator;
-> > > > >         const bool has_sched_dispatch = e && e->type->ops.dispatch_request;
-> > > > >         LIST_HEAD(rq_list);
-> > > > > +       bool dispatch_ret;
-> > > > >
-> > > > >         /* RCU or SRCU read lock is needed before checking quiesced flag */
-> > > > >         if (unlikely(blk_mq_hctx_stopped(hctx) || blk_queue_quiesced(q)))
-> > > > > @@ -206,20 +214,26 @@ void blk_mq_sched_dispatch_requests(struct
-> > > > > blk_mq_hw_ctx *hctx)
-> > > > >          */
-> > > > >         if (!list_empty(&rq_list)) {
-> > > > >                 blk_mq_sched_mark_restart_hctx(hctx);
-> > > > > -               if (blk_mq_dispatch_rq_list(q, &rq_list, false)) {
-> > > > > +               dispatch_ret = blk_mq_dispatch_rq_list(q, &rq_list, false);
-> > > > >
-> > > > > Suppose we dispatch one request to block driver, and return 'true' here.
-> > > > >
-> > > > > +               if (dispatch_ret) {
-> > > > >                         if (has_sched_dispatch)
-> > > > > -                               blk_mq_do_dispatch_sched(hctx);
-> > > > > +                               dispatch_ret = blk_mq_do_dispatch_sched(hctx);
-> > > > >
-> > > > > Then we will continue to try to dispatch more requests from IO
-> > > > > scheduler, but if there are no requests in IO scheduler now, it will
-> > > > > return 'false' here, and set dispatch_ret as false.
-> > > > >
-> > > > >                         else
-> > > > > -                               blk_mq_do_dispatch_ctx(hctx);
-> > > > > +                               dispatch_ret = blk_mq_do_dispatch_ctx(hctx);
-> > > >
-> > > > OK, this one is an issue, but it can be fixed simply by not updating
-> > > > 'dispatch_ret' for the following dispatch, something like the below
-> > > > way:
-> > > >
-> > > >         if (dispatch_ret) {
-> > > >                 if (has_sched_dispatch)
-> > > >                         blk_mq_do_dispatch_sched(hctx);
-> > > >                 else
-> > > >                         blk_mq_do_dispatch_ctx(hctx);
-> > > >         }
-> > >
-> > > Yes, this can work.
-> > >
-> > > But I found your patch will drop some performance comparing with my
-> > > method in patch 1/2. My method can fetch several requests from IO
-> > > scheduler and dispatch them to block driver at one time, but in your
-> > > patch we still need dispatch request one by one, which will drop some
-> > > performance I think.
-> > > What do you think? Thanks.
-> >
-> > Please run your test and see if performance drop can be observed.
->
-> From my testing (using the same fio configuration in cover letter), I
-> found your method will drop some performance from below data.
->
-> My original patches:
-> Sequential read: 229.6MiB/s
-> Random read:180.8MiB/s
-> Sequential write: 172MiB/s
-> Random write:169.2MiB/s
->
-> Your patches:
-> Sequential read: 209MiB/s
-> Random read:177MiB/s
-> Sequential write: 148MiB/s
-> Random write:147MiB/s
+> Setting 'additionalProperties: false' is frequently omitted, but is
+> important in order to check that there aren't extra undocumented
+> properties in a binding.
+> 
+> Ideally, we'd just add this automatically and make this the default, but
+> there's some cases where it doesn't work. For example, if a common
+> schema is referenced, then properties in the common schema aren't part
+> of what's considered for 'additionalProperties'. Also, sometimes there
+> are bus specific properties such as 'spi-max-frequency' that go into
+> bus child nodes, but aren't defined in the child node's schema.
+> 
+> So let's stick with the json-schema defined default and add
+> 'additionalProperties: false' where needed. This will be a continual
+> review comment and game of wack-a-mole.
+> 
+> Signed-off-by: Rob Herring <robh@kernel.org>
+> ---
+>  .../devicetree/bindings/arm/altera/socfpga-clk-manager.yaml    | 2 ++
+>  .../bindings/arm/amlogic/amlogic,meson-gx-ao-secure.yaml       | 2 ++
+>  Documentation/devicetree/bindings/arm/msm/qcom,llcc.yaml       | 2 ++
+>  Documentation/devicetree/bindings/arm/renesas,prr.yaml         | 2 ++
+>  .../devicetree/bindings/arm/samsung/exynos-chipid.yaml         | 2 ++
+>  Documentation/devicetree/bindings/arm/samsung/pmu.yaml         | 2 ++
+>  .../bindings/arm/samsung/samsung-secure-firmware.yaml          | 2 ++
+>  .../devicetree/bindings/arm/stm32/st,stm32-syscon.yaml         | 2 ++
+>  Documentation/devicetree/bindings/clock/fsl,plldig.yaml        | 2 ++
+>  Documentation/devicetree/bindings/clock/imx8mn-clock.yaml      | 2 ++
+>  Documentation/devicetree/bindings/clock/imx8mp-clock.yaml      | 2 ++
+>  Documentation/devicetree/bindings/clock/milbeaut-clock.yaml    | 2 ++
+>  Documentation/devicetree/bindings/clock/qcom,gcc-apq8064.yaml  | 2 ++
+>  Documentation/devicetree/bindings/clock/qcom,gcc-ipq8074.yaml  | 2 ++
+>  Documentation/devicetree/bindings/clock/qcom,gcc-msm8996.yaml  | 2 ++
+>  Documentation/devicetree/bindings/clock/qcom,gcc-msm8998.yaml  | 2 ++
+>  Documentation/devicetree/bindings/clock/qcom,gcc-qcs404.yaml   | 2 ++
+>  Documentation/devicetree/bindings/clock/qcom,gcc-sc7180.yaml   | 2 ++
+>  Documentation/devicetree/bindings/clock/qcom,gcc-sm8150.yaml   | 2 ++
+>  Documentation/devicetree/bindings/clock/qcom,gcc.yaml          | 2 ++
+>  Documentation/devicetree/bindings/clock/qcom,mmcc.yaml         | 2 ++
+>  .../devicetree/bindings/clock/qcom,msm8998-gpucc.yaml          | 2 ++
+>  Documentation/devicetree/bindings/clock/qcom,rpmhcc.yaml       | 2 ++
+>  .../devicetree/bindings/clock/qcom,sc7180-dispcc.yaml          | 2 ++
+>  Documentation/devicetree/bindings/clock/qcom,sc7180-gpucc.yaml | 2 ++
+>  .../devicetree/bindings/clock/qcom,sc7180-videocc.yaml         | 2 ++
+>  .../devicetree/bindings/clock/qcom,sdm845-dispcc.yaml          | 2 ++
+>  Documentation/devicetree/bindings/clock/qcom,sdm845-gpucc.yaml | 2 ++
+>  .../devicetree/bindings/clock/qcom,sdm845-videocc.yaml         | 2 ++
+>  .../devicetree/bindings/display/amlogic,meson-vpu.yaml         | 2 ++
+>  .../devicetree/bindings/dma/sifive,fu540-c000-pdma.yaml        | 2 ++
+>  Documentation/devicetree/bindings/dsp/fsl,dsp.yaml             | 2 ++
+>  Documentation/devicetree/bindings/eeprom/at24.yaml             | 2 ++
+>  .../firmware/intel,ixp4xx-network-processing-engine.yaml       | 3 +++
+>  .../devicetree/bindings/gpio/brcm,xgs-iproc-gpio.yaml          | 2 ++
+>  .../devicetree/bindings/gpio/socionext,uniphier-gpio.yaml      | 2 ++
+>  Documentation/devicetree/bindings/gpio/xylon,logicvc-gpio.yaml | 2 ++
+>  Documentation/devicetree/bindings/gpu/arm,mali-bifrost.yaml    | 2 ++
+>  Documentation/devicetree/bindings/gpu/arm,mali-midgard.yaml    | 2 ++
+>  Documentation/devicetree/bindings/gpu/arm,mali-utgard.yaml     | 2 ++
+>  Documentation/devicetree/bindings/gpu/samsung-rotator.yaml     | 2 ++
+>  Documentation/devicetree/bindings/hwmon/adi,adm1177.yaml       | 2 ++
+>  Documentation/devicetree/bindings/hwmon/adi,ltc2947.yaml       | 2 ++
+>  Documentation/devicetree/bindings/hwmon/pmbus/ti,ucd90320.yaml | 2 ++
+>  Documentation/devicetree/bindings/hwmon/ti,tmp513.yaml         | 2 ++
+>  Documentation/devicetree/bindings/iio/accel/bosch,bma400.yaml  | 2 ++
+>  Documentation/devicetree/bindings/iio/adc/adi,ad7780.yaml      | 2 ++
+>  Documentation/devicetree/bindings/iio/adc/avia-hx711.yaml      | 2 ++
+>  Documentation/devicetree/bindings/iio/adc/lltc,ltc2496.yaml    | 2 ++
+>  .../devicetree/bindings/iio/adc/microchip,mcp3911.yaml         | 2 ++
+>  .../devicetree/bindings/iio/adc/st,stm32-dfsdm-adc.yaml        | 2 ++
+>  .../devicetree/bindings/iio/chemical/plantower,pms7003.yaml    | 2 ++
+>  .../devicetree/bindings/iio/chemical/sensirion,sps30.yaml      | 2 ++
+>  Documentation/devicetree/bindings/iio/dac/lltc,ltc1660.yaml    | 2 ++
+>  Documentation/devicetree/bindings/iio/light/adux1020.yaml      | 2 ++
+>  Documentation/devicetree/bindings/iio/light/bh1750.yaml        | 2 ++
+>  Documentation/devicetree/bindings/iio/light/isl29018.yaml      | 2 ++
+>  Documentation/devicetree/bindings/iio/light/noa1305.yaml       | 2 ++
+>  Documentation/devicetree/bindings/iio/light/stk33xx.yaml       | 2 ++
+>  Documentation/devicetree/bindings/iio/light/tsl2583.yaml       | 2 ++
+>  Documentation/devicetree/bindings/iio/light/tsl2772.yaml       | 2 ++
+>  Documentation/devicetree/bindings/iio/light/veml6030.yaml      | 2 ++
+>  .../devicetree/bindings/iio/pressure/asc,dlhl60d.yaml          | 2 ++
+>  Documentation/devicetree/bindings/iio/pressure/bmp085.yaml     | 2 ++
+>  .../devicetree/bindings/iio/proximity/devantech-srf04.yaml     | 2 ++
+>  .../devicetree/bindings/iio/proximity/parallax-ping.yaml       | 2 ++
+>  .../devicetree/bindings/iio/temperature/adi,ltc2983.yaml       | 2 ++
+>  Documentation/devicetree/bindings/input/gpio-vibrator.yaml     | 2 ++
+>  Documentation/devicetree/bindings/input/max77650-onkey.yaml    | 3 +++
+>  .../bindings/interrupt-controller/intel,ixp4xx-interrupt.yaml  | 2 ++
+>  Documentation/devicetree/bindings/iommu/samsung,sysmmu.yaml    | 2 ++
+>  Documentation/devicetree/bindings/leds/leds-max77650.yaml      | 3 +++
+>  Documentation/devicetree/bindings/leds/rohm,bd71828-leds.yaml  | 3 +++
+>  .../devicetree/bindings/mailbox/amlogic,meson-gxbb-mhu.yaml    | 2 ++
+>  Documentation/devicetree/bindings/media/amlogic,gx-vdec.yaml   | 2 ++
+>  .../devicetree/bindings/media/amlogic,meson-gx-ao-cec.yaml     | 2 ++
+>  Documentation/devicetree/bindings/media/renesas,ceu.yaml       | 2 ++
 
-After some optimiziton and I did more testing, I did not found any
-performance issue with your patch comparing with my old method. Sorry
-for noise in my last email.
+>  Documentation/devicetree/bindings/mfd/max77650.yaml            | 2 ++
+>  Documentation/devicetree/bindings/mfd/rohm,bd71828-pmic.yaml   | 2 ++
 
-So will you send out a formal patch? If yes, please add my test-by
-tag. Thanks for your help.
-Tested-by: Baolin Wang <baolin.wang7@gmail.com>
+Acked-by: Lee Jones <lee.jones@linaro.org>
 
 -- 
-Baolin Wang
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
