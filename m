@@ -2,120 +2,143 @@ Return-Path: <SRS0=s8dx=5M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-19.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F902C2D0E5
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 17:26:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21284C43331
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 17:27:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 04D742071B
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 17:26:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E77E02071B
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 17:27:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="hmBCjbTg"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="p1kxgtdl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727549AbgC0R0r (ORCPT
+        id S1727473AbgC0R1J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Mar 2020 13:26:47 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:37212 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726515AbgC0R0r (ORCPT
+        Fri, 27 Mar 2020 13:27:09 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:42229 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726275AbgC0R1I (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Mar 2020 13:26:47 -0400
-Received: by mail-pf1-f193.google.com with SMTP id h72so4819575pfe.4
-        for <linux-kernel@vger.kernel.org>; Fri, 27 Mar 2020 10:26:46 -0700 (PDT)
+        Fri, 27 Mar 2020 13:27:08 -0400
+Received: by mail-ot1-f67.google.com with SMTP id z5so10275623oth.9
+        for <linux-kernel@vger.kernel.org>; Fri, 27 Mar 2020 10:27:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=X8ps1N/pYBA7KlC6SJyDXK1HkCeJUluIuEnwRO89GEU=;
-        b=hmBCjbTgMqFJZImRqjN4cWi+1oiD8+HAEmEByq7V4Xj+pZ40AbphunjFgtdfMF2Y5E
-         aiAZ5kx5UWMqooP0//e5S8mGaI8Ns8HwOdDgx7LqV3ixxxKvsuEm2O643LkB5cvQwDNs
-         DdPViDg7+o6QLCWbOcgeV5do6umR9em7CJt/8/ncZqGRxQ4GfFy4VTfIRpnRiN0WL3MI
-         1LKO95FrPge2Dn8K07Pn/PuHLqlM1eb7ATRyMzvf6cj6cqpbFw8fcGumYtlQRXfSx33h
-         G3sfCxaRgBHOnZjHw7bj37vBur+WP4wkmVKnUdPEnQ1j9TvHSPLXH+WUDWzuUQp5s5SP
-         JniA==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=ClBYvSVmf83rxBcoJPioNptteHGrQ49oK3IN7T/4Mgc=;
+        b=p1kxgtdlAlcm9ZYp0voSXEtcsJCiehEdu2swGy2F/tJZXZEDEM0LiBh5bLYFtdgFZc
+         vsH8oBKUYVuWCQSRJUlNW+M4qg4yLXiWgD2eK+pQCBZ69YoTQhmD3rwBCLNgQqIhOlvk
+         ABETgIyKgHprRV5zGNhl+GGjY2bpPLCWeBOFSQCn0HbGJbZQ/g60ZuYwe2cfmOOAGajh
+         Kf0cjQ/kS6FJKgws+xZ3OVq2EwfuFkKLdUaqmqF6Ul8xX/bBN2ZEnNowVyy1ujh15FJs
+         xnswehxIsxVIpsUdnGDvqjPgUAqQSKKMrB0vNuBQo1ni7AIwNHppUSReQB9iSUvLNxD4
+         T8Zw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=X8ps1N/pYBA7KlC6SJyDXK1HkCeJUluIuEnwRO89GEU=;
-        b=YuAVcPiap1NYFmUJ+pmrfNEDaYYIM5LApIHG0Qdky9aMGrBaZ72xRHAl8yTkhKU7jg
-         KwWVT7LFHCbcjTDdEJuhxQP8Pu30Ouv9XIsfXrkoNjPgFGXpRI+A/FuDbXUG07jlqVFw
-         scnxdG9VROAFRdo/S3gL4IE1V2twQurPI6+10HMl/Nw37RuLTjAk7v4k/t/k/IGSl7uX
-         M4yfulBvTIgHmhH6Px4OTY9kkNWZd5olF2a2bL0lztMRbEW/0tECWaArPabuqBtS+A7r
-         1bgdKWpyCbeSM/wEqYwWyvUajJh7hg3Y4GUO2uQpKJ8ikbLyvP8k1KSz3yg5agEmjvn+
-         mEvA==
-X-Gm-Message-State: ANhLgQ1Czb2W8YW1/tIjPzbmolgGb9c4uEGZVakF08vijKap7hWazxno
-        HjE6+fiQZpMzILLGLQU65u2jVpHiMs4hGFU1wUR10g==
-X-Google-Smtp-Source: ADFU+vskNw4rx9J8k/JB6zNGDuE+XATYo7xfLE+NCQ/VTYSZNrt8mav9Wo2CNYj9Y/bYulHHAACI97tU0sg7i+3mX0I=
-X-Received: by 2002:a63:4e22:: with SMTP id c34mr335809pgb.263.1585330005540;
- Fri, 27 Mar 2020 10:26:45 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200327171030.30625-1-natechancellor@gmail.com>
-In-Reply-To: <20200327171030.30625-1-natechancellor@gmail.com>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Fri, 27 Mar 2020 10:26:34 -0700
-Message-ID: <CAKwvOdkHSRZy_BjyWx2sdZ89CwmMaHAJrNf_xmiGQDphrqjEiA@mail.gmail.com>
-Subject: Re: [PATCH -next] fanotify: Fix the checks in fanotify_fsid_equal
-To:     Nathan Chancellor <natechancellor@gmail.com>
-Cc:     Jan Kara <jack@suse.cz>, Amir Goldstein <amir73il@gmail.com>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=ClBYvSVmf83rxBcoJPioNptteHGrQ49oK3IN7T/4Mgc=;
+        b=d7fWcOvZhJbPGgq5UFBL7q/gTQsdsbA7UoL7i5RSFMXyvHWwSxYjKtZE+3HmWQYQPW
+         g+UslBPyR6BrRpbUF1Jy6Mrxa2F5Lmee0LC60dhX6b9gKnDXJMQdKLJTBOVYKFozgBhs
+         34UUVkBsOv+EqocgHJa/IzTvz4/LTWjvD4y/OolShv2a3bJXgcAiTK6kwwDRkVTf0taJ
+         +KuKai0dFAcs7ZEAJp30ltm2q2VrQdbCc3q4rC8BwC1OeTmWXgRuTviggnEF0hZLlDTA
+         G8f8bxSS040ZCiEfDnYkQOFViyVp7J+3yCTS/mOsaQgrq6eqg3RsqoOdyMoH3tydCXSm
+         g53Q==
+X-Gm-Message-State: ANhLgQ2+fA1H0qJ/TsiE/nmwC4k0G3wDWIbBNu/bfT75eSDL0mscaz4P
+        l3A29LYHDMY2V7fKudCbE6s=
+X-Google-Smtp-Source: ADFU+vvCryVp1EzUDSsGpKlMWDJ2IGkuG+A5nBaN01hdZ8Oaa4LyrQLUUb4FlTMO9zHE2KaPs5q0Og==
+X-Received: by 2002:a4a:d88b:: with SMTP id b11mr421504oov.42.1585330026427;
+        Fri, 27 Mar 2020 10:27:06 -0700 (PDT)
+Received: from ubuntu-m2-xlarge-x86 ([2604:1380:4111:8b00::1])
+        by smtp.gmail.com with ESMTPSA id t4sm1105871otm.45.2020.03.27.10.27.04
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 27 Mar 2020 10:27:05 -0700 (PDT)
+Date:   Fri, 27 Mar 2020 10:27:03 -0700
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     Nick Desaulniers <ndesaulniers@google.com>
+Cc:     Clement Courbet <courbet@google.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Segher Boessenkool <segher@kernel.crashing.org>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
         LKML <linux-kernel@vger.kernel.org>,
         clang-built-linux <clang-built-linux@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+Subject: Re: [PATCH v1] powerpc: Make setjmp/longjump signature standard
+Message-ID: <20200327172703.GA28580@ubuntu-m2-xlarge-x86>
+References: <20200327100801.161671-1-courbet@google.com>
+ <CAKwvOdmLmfJY4Uk-Atd9dT5+zQTPeoagjMZMcDqdVfKCU7_BuA@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAKwvOdmLmfJY4Uk-Atd9dT5+zQTPeoagjMZMcDqdVfKCU7_BuA@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 27, 2020 at 10:10 AM Nathan Chancellor
-<natechancellor@gmail.com> wrote:
->
-> Clang warns:
->
-> fs/notify/fanotify/fanotify.c:28:23: warning: self-comparison always
-> evaluates to true [-Wtautological-compare]
->         return fsid1->val[0] == fsid1->val[0] && fsid2->val[1] == fsid2->val[1];
->                              ^
-> fs/notify/fanotify/fanotify.c:28:57: warning: self-comparison always
-> evaluates to true [-Wtautological-compare]
->         return fsid1->val[0] == fsid1->val[0] && fsid2->val[1] == fsid2->val[1];
->                                                                ^
-> 2 warnings generated.
->
-> The intention was clearly to compare val[0] and val[1] in the two
-> different fsid structs. Fix it otherwise this function always returns
-> true.
->
-> Fixes: afc894c784c8 ("fanotify: Store fanotify handles differently")
-> Link: https://github.com/ClangBuiltLinux/linux/issues/952
-> Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+On Fri, Mar 27, 2020 at 10:10:44AM -0700, Nick Desaulniers wrote:
+> On Fri, Mar 27, 2020 at 3:08 AM Clement Courbet <courbet@google.com> wrote:
+> >
+> > Declaring setjmp()/longjmp() as taking longs makes the signature
+> > non-standard, and makes clang complain. In the past, this has been
+> > worked around by adding -ffreestanding to the compile flags.
+> >
+> > The implementation looks like it only ever propagates the value
+> > (in longjmp) or sets it to 1 (in setjmp), and we only call longjmp
+> > with integer parameters.
+> >
+> > This allows removing -ffreestanding from the compilation flags.
+> >
+> > Context:
+> > https://lore.kernel.org/patchwork/patch/1214060
+> > https://lore.kernel.org/patchwork/patch/1216174
+> >
+> > Signed-off-by: Clement Courbet <courbet@google.com>
 
-Thanks for the patch. Subtle bugs that are off by one character have
-always been hard for me to spot!
-Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+Thanks for fixing this properly, not really sure why I did not think of
+this in the first place. I guess my thought was the warning makes it
+seem like clang is going to ignore the kernel's implementation of
+setjmp/longjmp but I can't truly remember.
 
-> ---
->  fs/notify/fanotify/fanotify.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/fs/notify/fanotify/fanotify.c b/fs/notify/fanotify/fanotify.c
-> index 7a889da1ee12..cb54ecdb3fb9 100644
-> --- a/fs/notify/fanotify/fanotify.c
-> +++ b/fs/notify/fanotify/fanotify.c
-> @@ -25,7 +25,7 @@ static bool fanotify_path_equal(struct path *p1, struct path *p2)
->  static inline bool fanotify_fsid_equal(__kernel_fsid_t *fsid1,
->                                        __kernel_fsid_t *fsid2)
->  {
-> -       return fsid1->val[0] == fsid1->val[0] && fsid2->val[1] == fsid2->val[1];
-> +       return fsid1->val[0] == fsid2->val[0] && fsid1->val[1] == fsid2->val[1];
->  }
->
->  static bool fanotify_fh_equal(struct fanotify_fh *fh1,
-> --
+> Hi Clement, thanks for the patch! Would you mind sending a V2 that
+> included a similar fix to arch/powerpc/xmon/Makefile?
 
--- 
-Thanks,
-~Nick Desaulniers
+Agreed.
+
+> For context, this was the original patch:
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=aea447141c7e7824b81b49acd1bc78
+> which was then modified to:
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=c9029ef9c95765e7b63c4d9aa780674447db1ec0
+> 
+> So on your V2, if you include in the commit message, the line:
+> 
+> Fixes c9029ef9c957 ("powerpc: Avoid clang warnings around setjmp and longjmp")
+> 
+> then that will help our LTS branch maintainers back port it to the
+> appropriate branches.
+
+The tags should be:
+
+Cc: stable@vger.kernel.org # v4.14+
+Fixes: c9029ef9c957 ("powerpc: Avoid clang warnings around setjmp and longjmp")
+
+that way it explicitly gets picked up for stable, rather than Sasha's
+AUTOSEL process, which could miss it.
+
+With the xmon/Makefile -ffreestanding removed and the tags updated,
+consider this:
+
+Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
+Tested-by: Nathan Chancellor <natechancellor@gmail.com>
+
+Cheers,
+Nathan
