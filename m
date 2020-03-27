@@ -2,144 +2,266 @@ Return-Path: <SRS0=s8dx=5M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C25CC2D0EC
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 23:56:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA347C43331
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 23:57:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 10A042071B
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 23:56:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A2C22071B
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 23:57:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="XurJei6Y"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="eWgnUHUa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726518AbgC0X4L (ORCPT
+        id S1727028AbgC0X5D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Mar 2020 19:56:11 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:34870 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726071AbgC0X4L (ORCPT
+        Fri, 27 Mar 2020 19:57:03 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:57292 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726071AbgC0X5D (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Mar 2020 19:56:11 -0400
-Received: by mail-ot1-f65.google.com with SMTP id v2so7112256oto.2
-        for <linux-kernel@vger.kernel.org>; Fri, 27 Mar 2020 16:56:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=K0NZbCLQ3EXESvGxt7BooZUrPODG0bjvoacB9E61EEM=;
-        b=XurJei6Y0zK73hOuGlwQ5mXHRF0bCiHRG6oKmYdCjlws+X/5KoM9fDGdLuEEL5nngn
-         /T94i7uCchViIvOMy3pUWqFsU6MyiWxQMJqkkYxOfcAa6Pez0iNRZP9a8UNG4KrQUQSc
-         wWxmaPyr8eDYV5niFJGTjV+W6mUa9Szj3OZ9KDoHLRDo5P2OI9GY5yUuc1rBTGX5SRZp
-         8dD++OkavrllEVjwGwV/NXLnWhmnfKlTxJ7By2Rl+Zyctfpdz/YCI8beVj474am+z4Ar
-         GRWq2yI/rKZKnRVyz2tYFsCC4AKmpZnAioCE+t3sHDINPDVgLWtObc0qhWhJHliaB1cy
-         4Jkg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=K0NZbCLQ3EXESvGxt7BooZUrPODG0bjvoacB9E61EEM=;
-        b=h4EUPrEjxnGxYXAGldI4ckaWN6EhljaITXVTyaKligeHY1sS9/MTF/SFfurDufrT7Y
-         13eh0pSZ2I3a/ROXR+v5tQw6lNRByTrw+IXBko4hnFA8Ousns4FXx3mvzKQf03SDq5mL
-         b9ieiu6YMDTc5c8LETFnF10j0WGgW07HbGihxqDPR+B0XGdGToUK21WHIsxFCQlIzjdN
-         rpCTpAYwJWJMPVHh8EiJO3qK+sId3q3KHZKipWtUny4OLz05WKxbO8xxgBzUoINTMxfs
-         w0mbhj+URzr7ARK2wKoz9xaBCnIs3Lp+HX54813Jhi1orwOYEHMK2SBBtJuOgC02nRK8
-         6Fzg==
-X-Gm-Message-State: ANhLgQ3kYIP9dl1uXPPKszTJOSQ7A+uo07AzzbZYgpPJhIYlK4by3HHg
-        H8jspN4v/Ccxw/o7PCFDnkynDv1fx5ZX6zHHhWuX/A==
-X-Google-Smtp-Source: ADFU+vt2lzCYLjMmDYQ7QI1GbWZ1pzJp/+PeDaT91MG7KWT2Q1Bu9ZCCfiT78aA9hpd2w88mP12gYjj3WbX9G70dP+M=
-X-Received: by 2002:a9d:42f:: with SMTP id 44mr959944otc.236.1585353370394;
- Fri, 27 Mar 2020 16:56:10 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200327170132.17275-1-grant.likely@arm.com> <CAGETcx8CJqMQaHBj1r5MhNBTw7Smz4BRHPkB0kCUCJPSmW6KwA@mail.gmail.com>
- <2885b440-77a5-f2be-7524-d5fba2b0c08a@arm.com>
-In-Reply-To: <2885b440-77a5-f2be-7524-d5fba2b0c08a@arm.com>
-From:   Saravana Kannan <saravanak@google.com>
-Date:   Fri, 27 Mar 2020 16:55:34 -0700
-Message-ID: <CAGETcx_0=W6P_Zf-6fvDfncXUrPvt31bf6de-RWwHaXtwJizmQ@mail.gmail.com>
-Subject: Re: [PATCH] Add documentation on meaning of -EPROBE_DEFER
-To:     Grant Likely <grant.likely@arm.com>
-Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, nd@arm.com,
-        Jonathan Corbet <corbet@lwn.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
+        Fri, 27 Mar 2020 19:57:03 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1585353422; h=Message-Id: Date: Subject: Cc: To: From:
+ Sender; bh=zC2emTwPKxUPRv3bLCjD97NRgGeOHFMYAI7D8CPHheg=; b=eWgnUHUaKRcrx+AOdFRw4MCBabNCt12ZMTrQEFbg7gsGTY4qAUF4GnYFEHsdhfQYDoaDCxzr
+ PLiMdL06xHt2FFfy1MQGcAB6TgNNeZeSiNrxeqlnUk3kYYaJ8DPkmrWkYp+fcuMsBfEDdliH
+ vq6FolX9W/ONE63f/+TI7JixiZM=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e7e92cb.7f8e54293e30-smtp-out-n03;
+ Fri, 27 Mar 2020 23:56:59 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 6E62BC433BA; Fri, 27 Mar 2020 23:56:59 +0000 (UTC)
+Received: from rishabhb-linux.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: rishabhb)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 3A1C5C433D2;
+        Fri, 27 Mar 2020 23:56:58 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 3A1C5C433D2
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=rishabhb@codeaurora.org
+From:   Rishabh Bhatnagar <rishabhb@codeaurora.org>
+To:     linux-kernel@vger.kernel.org, linux-remoteproc@vger.kernel.org,
+        bjorn.andersson@linaro.org, ohad@wizery.com
+Cc:     psodagud@codeaurora.org, tsoni@codeaurora.org,
+        sidgup@codeaurora.org, Rishabh Bhatnagar <rishabhb@codeaurora.org>
+Subject: [PATCH] remoteproc: core: Add a memory efficient coredump function
+Date:   Fri, 27 Mar 2020 16:56:52 -0700
+Message-Id: <1585353412-19644-1-git-send-email-rishabhb@codeaurora.org>
+X-Mailer: git-send-email 1.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 27, 2020 at 4:25 PM Grant Likely <grant.likely@arm.com> wrote:
->
->
->
-> On 27/03/2020 18:10, Saravana Kannan wrote:
-> > On Fri, Mar 27, 2020 at 10:01 AM Grant Likely <grant.likely@arm.com> wrote:
-> >>
-> >> Add a bit of documentation on what it means when a driver .probe() hook
-> >> returns the -EPROBE_DEFER error code, including the limitation that
-> >> -EPROBE_DEFER should be returned as early as possible, before the driver
-> >> starts to register child devices.
-> >>
-> >> Also: minor markup fixes in the same file
-> >>
-> >> Signed-off-by: Grant Likely <grant.likely@arm.com>
-> >> Cc: Jonathan Corbet <corbet@lwn.net>
-> >> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> >> Cc: Saravana Kannan <saravanak@google.com>
-> >> Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> >> ---
-> >>   .../driver-api/driver-model/driver.rst        | 32 ++++++++++++++++---
-> >>   1 file changed, 27 insertions(+), 5 deletions(-)
-> >>
-> >> diff --git a/Documentation/driver-api/driver-model/driver.rst b/Documentation/driver-api/driver-model/driver.rst
-> >> index baa6a85c8287..63057d9bc8a6 100644
-> >> --- a/Documentation/driver-api/driver-model/driver.rst
-> >> +++ b/Documentation/driver-api/driver-model/driver.rst
-> >> @@ -4,7 +4,6 @@ Device Drivers
-> >>
-> >>   See the kerneldoc for the struct device_driver.
-> >>
-> >> -
-> >>   Allocation
-> >>   ~~~~~~~~~~
-> >>
-> >> @@ -167,9 +166,26 @@ the driver to that device.
-> >>
-> >>   A driver's probe() may return a negative errno value to indicate that
-> >>   the driver did not bind to this device, in which case it should have
-> >> -released all resources it allocated::
-> >> +released all resources it allocated.
-> >> +
-> >> +Optionally, probe() may return -EPROBE_DEFER if the driver depends on
-> >> +resources that are not yet available (e.g., supplied by a driver that
-> >> +hasn't initialized yet).  The driver core will put the device onto the
-> >> +deferred probe list and will try to call it again later. If a driver
-> >> +must defer, it should return -EPROBE_DEFER as early as possible to
-> >> +reduce the amount of time spent on setup work that will need to be
-> >> +unwound and reexecuted at a later time.
-> >> +
-> >> +.. warning::
-> >> +      -EPROBE_DEFER must not be returned if probe() has already created
-> >> +      child devices, even if those child devices are removed again
-> >> +      in a cleanup path. If -EPROBE_DEFER is returned after a child
-> >> +      device has been registered, it may result in an infinite loop of
-> >> +      .probe() calls to the same driver.
-> >
-> > The infinite loop is a current implementation behavior. Not an
-> > intentional choice. So, maybe we can say the behavior is undefined
-> > instead?
->
-> If you feel strongly about it, but I don't have any problem with
-> documenting it as the current implementation behaviour, and then
-> changing the text if that ever changes.
+The current coredump implementation uses vmalloc area to copy
+all the segments. But this might put a lot of strain on low memory
+targets as the firmware size sometimes is in ten's of MBs.
+The situation becomes worse if there are multiple remote processors
+undergoing recovery at the same time.
+This patch directly copies the device memory to userspace buffer
+and avoids extra memory usage. This requires recovery to be halted
+until data is read by userspace and free function is called.
 
-Assuming Greg is okay with this doc update, I'm kinda leaning towards
-"undefined" because if documented as "infinite loop" people might be
-hesitant towards removing that behavior. But I'll let Greg make the
-final call. Not going to NACK for this point.
+Signed-off-by: Rishabh Bhatnagar <rishabhb@codeaurora.org>
+---
+ drivers/remoteproc/remoteproc_core.c | 107 +++++++++++++++++++++++++++++------
+ include/linux/remoteproc.h           |   4 ++
+ 2 files changed, 94 insertions(+), 17 deletions(-)
 
--Saravana
+diff --git a/drivers/remoteproc/remoteproc_core.c b/drivers/remoteproc/remoteproc_core.c
+index 097f33e..2d881e5 100644
+--- a/drivers/remoteproc/remoteproc_core.c
++++ b/drivers/remoteproc/remoteproc_core.c
+@@ -1516,6 +1516,86 @@ int rproc_coredump_add_segment(struct rproc *rproc, dma_addr_t da, size_t size)
+ }
+ EXPORT_SYMBOL(rproc_coredump_add_segment);
+ 
++
++void rproc_free_dump(void *data)
++{
++	struct rproc *rproc = data;
++
++	dev_info(&rproc->dev, "Userspace done reading rproc dump\n");
++	complete(&rproc->dump_done);
++}
++
++static unsigned long get_offset(loff_t user_offset, struct list_head *segments,
++				unsigned long *data_left)
++{
++	struct rproc_dump_segment *segment;
++
++	list_for_each_entry(segment, segments, node) {
++		if (user_offset >= segment->size)
++			user_offset -= segment->size;
++		else
++			break;
++	}
++
++	if (&segment->node == segments) {
++		*data_left = 0;
++		return 0;
++	}
++
++	*data_left = segment->size - user_offset;
++
++	return segment->da + user_offset;
++}
++
++static ssize_t rproc_read_dump(char *buffer, loff_t offset, size_t count,
++				void *data, size_t elfcorelen)
++{
++	void *device_mem = NULL;
++	unsigned long data_left = 0;
++	unsigned long bytes_left = count;
++	unsigned long addr = 0;
++	size_t copy_size = 0;
++	struct rproc *rproc = data;
++
++	if (offset < elfcorelen) {
++		copy_size = elfcorelen - offset;
++		copy_size = min(copy_size, bytes_left);
++
++		memcpy(buffer, rproc->elfcore + offset, copy_size);
++		offset += copy_size;
++		bytes_left -= copy_size;
++		buffer += copy_size;
++	}
++
++	while (bytes_left) {
++		addr = get_offset(offset - elfcorelen, &rproc->dump_segments,
++				&data_left);
++	/* EOF check */
++		if (data_left == 0) {
++			pr_info("Ramdump complete. %lld bytes read.", offset);
++			return 0;
++		}
++
++		copy_size = min_t(size_t, bytes_left, data_left);
++
++		device_mem = rproc->ops->da_to_va(rproc, addr, copy_size);
++		if (!device_mem) {
++			pr_err("Unable to ioremap: addr %lx, size %zd\n",
++				 addr, copy_size);
++			return -ENOMEM;
++		}
++		memcpy(buffer, device_mem, copy_size);
++
++		offset += copy_size;
++		buffer += copy_size;
++		bytes_left -= copy_size;
++		dev_dbg(&rproc->dev, "Copied %d bytes to userspace\n",
++			copy_size);
++	}
++
++	return count;
++}
++
+ /**
+  * rproc_coredump_add_custom_segment() - add custom coredump segment
+  * @rproc:	handle of a remote processor
+@@ -1566,27 +1646,27 @@ static void rproc_coredump(struct rproc *rproc)
+ 	struct rproc_dump_segment *segment;
+ 	struct elf32_phdr *phdr;
+ 	struct elf32_hdr *ehdr;
+-	size_t data_size;
++	size_t header_size;
+ 	size_t offset;
+ 	void *data;
+-	void *ptr;
+ 	int phnum = 0;
+ 
+ 	if (list_empty(&rproc->dump_segments))
+ 		return;
+ 
+-	data_size = sizeof(*ehdr);
++	header_size = sizeof(*ehdr);
+ 	list_for_each_entry(segment, &rproc->dump_segments, node) {
+-		data_size += sizeof(*phdr) + segment->size;
++		header_size += sizeof(*phdr);
+ 
+ 		phnum++;
+ 	}
+ 
+-	data = vmalloc(data_size);
++	data = vmalloc(header_size);
+ 	if (!data)
+ 		return;
+ 
+ 	ehdr = data;
++	rproc->elfcore = data;
+ 
+ 	memset(ehdr, 0, sizeof(*ehdr));
+ 	memcpy(ehdr->e_ident, ELFMAG, SELFMAG);
+@@ -1618,23 +1698,14 @@ static void rproc_coredump(struct rproc *rproc)
+ 
+ 		if (segment->dump) {
+ 			segment->dump(rproc, segment, data + offset);
+-		} else {
+-			ptr = rproc_da_to_va(rproc, segment->da, segment->size);
+-			if (!ptr) {
+-				dev_err(&rproc->dev,
+-					"invalid coredump segment (%pad, %zu)\n",
+-					&segment->da, segment->size);
+-				memset(data + offset, 0xff, segment->size);
+-			} else {
+-				memcpy(data + offset, ptr, segment->size);
+-			}
+-		}
+ 
+ 		offset += phdr->p_filesz;
+ 		phdr++;
+ 	}
++	dev_coredumpm(&rproc->dev, NULL, rproc, header_size, GFP_KERNEL,
++			rproc_read_dump, rproc_free_dump);
+ 
+-	dev_coredumpv(&rproc->dev, data, data_size, GFP_KERNEL);
++	wait_for_completion(&rproc->dump_done);
+ }
+ 
+ /**
+@@ -1665,6 +1736,7 @@ int rproc_trigger_recovery(struct rproc *rproc)
+ 
+ 	/* generate coredump */
+ 	rproc_coredump(rproc);
++	reinit_completion(&rproc->dump_done);
+ 
+ 	/* load firmware */
+ 	ret = request_firmware(&firmware_p, rproc->firmware, dev);
+@@ -2067,6 +2139,7 @@ struct rproc *rproc_alloc(struct device *dev, const char *name,
+ 	INIT_LIST_HEAD(&rproc->rvdevs);
+ 	INIT_LIST_HEAD(&rproc->subdevs);
+ 	INIT_LIST_HEAD(&rproc->dump_segments);
++	init_completion(&rproc->dump_done);
+ 
+ 	INIT_WORK(&rproc->crash_handler, rproc_crash_handler_work);
+ 
+diff --git a/include/linux/remoteproc.h b/include/linux/remoteproc.h
+index 16ad666..461b235 100644
+--- a/include/linux/remoteproc.h
++++ b/include/linux/remoteproc.h
+@@ -481,6 +481,8 @@ struct rproc_dump_segment {
+  * @auto_boot: flag to indicate if remote processor should be auto-started
+  * @dump_segments: list of segments in the firmware
+  * @nb_vdev: number of vdev currently handled by rproc
++ * @dump_done: completion variable when dump is complete
++ * @elfcore: pointer to elf header buffer
+  */
+ struct rproc {
+ 	struct list_head node;
+@@ -514,6 +516,8 @@ struct rproc {
+ 	bool auto_boot;
+ 	struct list_head dump_segments;
+ 	int nb_vdev;
++	struct completion dump_done;
++	void *elfcore;
+ };
+ 
+ /**
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
