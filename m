@@ -2,110 +2,97 @@ Return-Path: <SRS0=s8dx=5M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F484C2D0E5
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 17:47:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A69EC2D0ED
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 17:47:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 68A222072F
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 17:47:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ifx83egn"
+	by mail.kernel.org (Postfix) with ESMTP id 2E7E82071B
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 17:47:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727505AbgC0RrM (ORCPT
+        id S1727636AbgC0Rr0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Mar 2020 13:47:12 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:39769 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726540AbgC0RrM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Mar 2020 13:47:12 -0400
-Received: by mail-ed1-f65.google.com with SMTP id a43so12268961edf.6
-        for <linux-kernel@vger.kernel.org>; Fri, 27 Mar 2020 10:47:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=vl6M74fDKYNuH8RGWdOOCCv6ZP4dyjZ70PvCE1aC7GQ=;
-        b=ifx83egnh61+hG/1a0lKBCQCmLlYS9+TKE+Yo3jgRE3LY7l7hLz+snpkDi/TJfnVSo
-         tozJDHdlNGXlcu4jyUPuBaxB6Le71WOzFH6gUuhaj+D5ulqcJwDOZ/SvwNYbBfzYsMel
-         OWTo+1fWpuyt+QKJzDVCvTfHemqcIeZZ1x2ajI2q3YDrc+5NAwXCxbE8rHylR2Ku+rGp
-         CBU8rEnP3WuDCbrzGRxD/Fslrkh0syCkk4Pt6KVofOhljNAZJAXXxPnS4Z+1rwecUeOu
-         9JK1d8Fg0FHBN27uz7b7z181nfV9IwQPLyLjlhMp/hN8AiL3Uf/8EDDkg+WA4g6FTfHu
-         5cEQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=vl6M74fDKYNuH8RGWdOOCCv6ZP4dyjZ70PvCE1aC7GQ=;
-        b=kUPLt+0bpfGMk0b82tb8z196vRj/4MA4cdwb5jFxbE/Ib+VquEmrfU6ACV6R7av7AY
-         cyY1usHPovlqCondFJBxdXIrCdxRWJmnx4dftvEpm5sDpgW+mLbRoAmxyGa4JvZcz8NW
-         F7MI9Ui648UjOOJrepueKoka0SBWs6x10xGDNGbUGjKajLWc1kAvFZowETC0kS2slZM5
-         MwQbJmyJ/M1hEy7Sn623/kiQK38yDXXnF76/8vOwy5vNIzRYL1DJALDVIXm3HFAfvBxt
-         s0dHX1jclN6nBveEkJScksKk7p8ow5lKhYZh7DTOgjlM6J9/AXmeqqh7kKauUiYsYV9+
-         QCiw==
-X-Gm-Message-State: ANhLgQ397rJLVD1kFBB81WqeL/ay3fr97MfSU7s7IsHia1k9J75jMYYW
-        7Omd0aI8gFBq8f66lDHJJXdfIBp3udWm0I4kte7I6g==
-X-Google-Smtp-Source: ADFU+vuNz8LGvg20VvbIcfg5Bu1FdbJR4PiA5lO7bRTDYECiX0Vg2LO3/1kSphKCavJm3xzTDVkEBGFdri5vVYruHgc=
-X-Received: by 2002:a50:9f6e:: with SMTP id b101mr245921edf.372.1585331229996;
- Fri, 27 Mar 2020 10:47:09 -0700 (PDT)
+        Fri, 27 Mar 2020 13:47:26 -0400
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2611 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726275AbgC0Rr0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Mar 2020 13:47:26 -0400
+Received: from LHREML711-CAH.china.huawei.com (unknown [172.18.7.107])
+        by Forcepoint Email with ESMTP id 804B7F671D65EA02507B;
+        Fri, 27 Mar 2020 17:47:24 +0000 (GMT)
+Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
+ LHREML711-CAH.china.huawei.com (10.201.108.34) with Microsoft SMTP Server
+ (TLS) id 14.3.408.0; Fri, 27 Mar 2020 17:47:24 +0000
+Received: from [127.0.0.1] (10.47.10.23) by lhreml724-chm.china.huawei.com
+ (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5; Fri, 27 Mar
+ 2020 17:47:23 +0000
+Subject: Re: [PATCH v3 0/2] irqchip/gic-v3-its: Balance LPI affinity across
+ CPUs
+From:   John Garry <john.garry@huawei.com>
+To:     Marc Zyngier <maz@kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>
+CC:     Jason Cooper <jason@lakedaemon.net>,
+        chenxiang <chenxiang66@hisilicon.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        "luojiaxing@huawei.com" <luojiaxing@huawei.com>,
+        Ming Lei <ming.lei@redhat.com>,
+        Zhou Wang <wangzhou1@hisilicon.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Will Deacon <will@kernel.org>
+References: <20200316115433.9017-1-maz@kernel.org>
+ <9171c554-50d2-142b-96ae-1357952fce52@huawei.com>
+Message-ID: <80b673a7-1097-c5fa-82c0-1056baa5309d@huawei.com>
+Date:   Fri, 27 Mar 2020 17:47:08 +0000
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.2
 MIME-Version: 1.0
-References: <20200327170601.18563-1-kirill.shutemov@linux.intel.com> <20200327170601.18563-3-kirill.shutemov@linux.intel.com>
-In-Reply-To: <20200327170601.18563-3-kirill.shutemov@linux.intel.com>
-From:   Yang Shi <shy828301@gmail.com>
-Date:   Fri, 27 Mar 2020 10:46:55 -0700
-Message-ID: <CAHbLzkom4C0qBdMouJF4U+C2my6qySyS6oM3v3Pihx68jfmUzQ@mail.gmail.com>
-Subject: Re: [PATCH 2/7] khugepaged: Do not stop collapse if less than half
- PTEs are referenced
-To:     "Kirill A. Shutemov" <kirill@shutemov.name>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Linux MM <linux-mm@kvack.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <9171c554-50d2-142b-96ae-1357952fce52@huawei.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.47.10.23]
+X-ClientProxiedBy: lhreml703-chm.china.huawei.com (10.201.108.52) To
+ lhreml724-chm.china.huawei.com (10.201.108.75)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 27, 2020 at 10:06 AM Kirill A. Shutemov
-<kirill@shutemov.name> wrote:
->
-> __collapse_huge_page_swapin() check number of referenced PTE to decide
-> if the memory range is hot enough to justify swapin.
->
-> The problem is that it stops collapse altogether if there's not enough
-> refereced pages, not only swappingin.
 
-s/refereced/referenced
+> Before: ~1.2M IOPs fio read
+> After: ~1.2M IOPs fio read
+> 
+> So they were about the same. I would have hoped for an improvement here, 
+> considering before we would have all the per-queue threaded handlers 
+> running on the single CPU handling the hard irq.
+> 
+> But we will retest all this tomorrow, so please consider these 
+> provisional for now.
+> 
+> Thanks to Luo Jiaxing for testing.
 
->
-> Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-> Fixes: 0db501f7a34c ("mm, thp: convert from optimistic swapin collapsing to conservative")
-> ---
->  mm/khugepaged.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
->
-> diff --git a/mm/khugepaged.c b/mm/khugepaged.c
-> index 99bab7e4d05b..14d7afc90786 100644
-> --- a/mm/khugepaged.c
-> +++ b/mm/khugepaged.c
-> @@ -905,7 +905,8 @@ static bool __collapse_huge_page_swapin(struct mm_struct *mm,
->         /* we only decide to swapin, if there is enough young ptes */
->         if (referenced < HPAGE_PMD_NR/2) {
->                 trace_mm_collapse_huge_page_swapin(mm, swapped_in, referenced, 0);
-> -               return false;
-> +               /* Do not block collapse, only skip swapping in */
-> +               return true;
->         }
->         vmf.pte = pte_offset_map(pmd, address);
->         for (; vmf.address < address + HPAGE_PMD_NR*PAGE_SIZE;
-> --
-> 2.26.0
->
->
+Hi Marc,
+
+Just to let you know that we're still looking at this. It turns out that 
+we're not getting the results as hoped, and the previous results were 
+incorrect due to a test booboo ..
+
+I also think that the SMMU may even be creating a performance ceiling. I 
+need to check this more, as I can't seem to get the throughput above a 
+certain level.
+
+I realise that we're so late in the cycle that there is now no immediate 
+rush.
+
+But I would also like to report some other unexpected behaviour for 
+managed interrupts in this series - I'll reply directly to the specific 
+patch for that.
+
+Much appreciated,
+John
+
+
