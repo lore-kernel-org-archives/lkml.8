@@ -2,200 +2,191 @@ Return-Path: <SRS0=s8dx=5M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 757EFC43331
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 03:02:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EEB35C43331
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 03:03:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3EBB4206F6
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 03:02:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="qV23y+95"
+	by mail.kernel.org (Postfix) with ESMTP id B2AA02082D
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 03:03:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585278183;
+	bh=b2ccDeO/pD0R+Y+srohROcyVA9Q145YuMgSh8oAXLmM=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=LoD9XPxUWGFUZt0Su5DA5vE4NwZqGD96PuQ0lTKnH4DS6mEJW9oTXGnX6BnKpAfrm
+	 IchabkNamdjcnQ8iGl+pSlyyB8Y2l9t+SbcySz/+T5EfxsUorFJuhjddHvv9S+kYt5
+	 F8iAZ2jIb6L0FIg/ngP8iX1i7s/xQ1hirXcE/1HA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727809AbgC0DCc (ORCPT
+        id S1727830AbgC0DDC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 23:02:32 -0400
-Received: from mail-eopbgr30059.outbound.protection.outlook.com ([40.107.3.59]:35424
-        "EHLO EUR03-AM5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726496AbgC0DCa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 23:02:30 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=cZs0tKL2Vgx7ryQLkzsXr0s8vuneAy8nwPbxtaARJEHDoF/qZlllu3sWPKFBBxtI6XZlWuU5Lh7f52FPb3Wd6FhAOUvWTiKlguHer0Ch8vpzN+bBcpVWExrMNRmLxW0fJkBfUbjpK/qy1eQZSmeqA3VNI03pUsKLsBIuQuj94Z3xDMdsIEQsi4BDoZWgFdIB03+3oDTZIMxj9WZytj4HjSOEy/oGidUq5HjQXk8OyVM29pcI+poFHTqCOJKORc5l3Z77qy8Xk5qOvWnoVHQutPUpMLrx2ySeqUOJMOFQ3dYjMCvBGZNNHUeu/3RRrscHCYwEfgyaMJ5JBj/sDMdp4Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=aKV8ueVgJMRQ6+oNZVpnxaWmUmeFI/S/QicWTdl2sXc=;
- b=lN5Zx2TBP6iirhUlP9FiTrvBuNpMA6WgwinSArF4bnWXSbvtltIjXo2tguC9NBxE7VrSi4JPjEnRfi7qg9XGp77Y9Xj90kdPHgbzHvymDXVvtkhS0FqDVNpIsItR/DO8ht2uu88gW+NHiWaKEF2+4vm+Dtnabd+JZYNaTjKlD6nKKgwU3vEGNBa5GpOvkQsxMDHsAYfhDfhqubfmS/TTGYqcliII2osv7qVGBYApRLsYl57a7/v9MTTcV4Cp+ODSZ3EmtrkHkzX/G6EQ2dB+JARdNAFmpCxaa2RwUEKEhBNcvQ7Y6yZ8aPloYojmGaQJeZQil+SwfOAY6hpgAu4iWA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=aKV8ueVgJMRQ6+oNZVpnxaWmUmeFI/S/QicWTdl2sXc=;
- b=qV23y+95ofYQ4JlenhSwOXlXRD7yyO20jMjRHJr4D2bxbYkZUdZHkVj+NRldC+/7wA999oY4VtQ5n86hCU5w9TbZ0NEKlC1gKLNUztNSpcKzjIX36/AFdX5JYTtWM9WNTYt0myFqQpK9Fx2tZeyNJZqerqRzcKl3inalA5WJUkA=
-Received: from VI1PR04MB5040.eurprd04.prod.outlook.com (20.177.52.24) by
- VI1PR04MB6239.eurprd04.prod.outlook.com (20.179.27.82) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2856.18; Fri, 27 Mar 2020 03:02:12 +0000
-Received: from VI1PR04MB5040.eurprd04.prod.outlook.com
- ([fe80::154e:421d:dd21:3fc3]) by VI1PR04MB5040.eurprd04.prod.outlook.com
- ([fe80::154e:421d:dd21:3fc3%5]) with mapi id 15.20.2856.019; Fri, 27 Mar 2020
- 03:02:12 +0000
-From:   BOUGH CHEN <haibo.chen@nxp.com>
-To:     Ulf Hansson <ulf.hansson@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     Arnd Bergmann <arnd@arndb.de>, Christoph Hellwig <hch@lst.de>,
-        Russell King <linux@armlinux.org.uk>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Vinod Koul <vkoul@kernel.org>,
-        Ludovic Barre <ludovic.barre@st.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>
-Subject: RE: [PATCH 0/2] amba/platform: Initialize dma_parms at the bus level
-Thread-Topic: [PATCH 0/2] amba/platform: Initialize dma_parms at the bus level
-Thread-Index: AQHWAplYl7UuTU7KbUCxzHoPeZdbk6haSTvAgAF1v8A=
-Date:   Fri, 27 Mar 2020 03:02:12 +0000
-Message-ID: <VI1PR04MB5040FFADA4F780422E208AC390CC0@VI1PR04MB5040.eurprd04.prod.outlook.com>
-References: <20200325113407.26996-1-ulf.hansson@linaro.org>
- <VI1PR04MB504097B40CE0B804FA60D67A90CF0@VI1PR04MB5040.eurprd04.prod.outlook.com>
-In-Reply-To: <VI1PR04MB504097B40CE0B804FA60D67A90CF0@VI1PR04MB5040.eurprd04.prod.outlook.com>
-Accept-Language: zh-CN, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=haibo.chen@nxp.com; 
-x-originating-ip: [119.31.174.71]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 92d242ab-616a-4374-fa72-08d7d1fb3f78
-x-ms-traffictypediagnostic: VI1PR04MB6239:
-x-microsoft-antispam-prvs: <VI1PR04MB62392D664D6763984D4BDE6090CC0@VI1PR04MB6239.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8882;
-x-forefront-prvs: 0355F3A3AE
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR04MB5040.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10009020)(4636009)(376002)(396003)(346002)(136003)(39860400002)(366004)(186003)(86362001)(52536014)(2906002)(81166006)(55016002)(8676002)(9686003)(81156014)(26005)(71200400001)(5660300002)(478600001)(64756008)(6506007)(316002)(76116006)(8936002)(66946007)(66446008)(7696005)(110136005)(33656002)(66556008)(54906003)(66476007)(7416002)(53546011)(4326008);DIR:OUT;SFP:1101;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: RjzIuvV7dZ2DIIwprs9qEich3EdiyaCM9afHKrAPI594BLBZk4xFuWVZqHqgn5kYFmW3doP0E4Ah/1LtvLdrBvxD8LKEHaF3hpj6+Sskh9BWzKy3R8uYEGIb0Qru45lAkr8cYpOu7+4ZUzSLXLgYaHgca8jh41avqfNJ8hPF4XqDpVPOVHvP55qoD22K6LlARNVl19QRjPLZw/j/YliQDywg75/NVMHI827/DXwj9p/ZHYC4P3qomyunxjxDU/F8ZA0UgCe/bxGiP6+YhDBwAvreZFoCf2rObHww9l/Oibnb6EG+bASYxS1jtXyNYgbJ74Y51B47gtZPEE4g0S9cuvewPuk+mQGPJFa/OBzFiXSiiu+42W4xWu1I5To0gyvuz8syNrOdeGlhp5yGkMMAjhzJpz5R7qZ9pz7PqCXLuIk8j+OECQBiw7wGW6AL4lNh
-x-ms-exchange-antispam-messagedata: cnRkwjY2S4coJYfXm/ZBaQ4G4SXpLTAKW1pfRTRXiJGDKNghWA5CrS/glokHnWnlgp4ShYydnAwmC8EDOGXd5Aqq7yAfhEos8MdJ7GlrnGYID9W+P4LNb/9N/4buTaXg5h/dF6dyodiq3cB1c01uqg==
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
-MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 92d242ab-616a-4374-fa72-08d7d1fb3f78
-X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Mar 2020 03:02:12.6584
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: +JpINlg3j7pNbEoi4iFq2IYfaPhs49FZR1CKxvoOzbwapW/ad9XHFRbDmYDIHpzcCZIT8Orz8sphyQIqO+Q4yg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB6239
+        Thu, 26 Mar 2020 23:03:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42064 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726496AbgC0DDC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Mar 2020 23:03:02 -0400
+Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4CA9C20787;
+        Fri, 27 Mar 2020 03:02:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1585278181;
+        bh=b2ccDeO/pD0R+Y+srohROcyVA9Q145YuMgSh8oAXLmM=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=rniJm74HvN/lsrQkGt9EY0ampwZGukQI1mGNUHZ+Y1qgVosyqSmxQh7Y/aB0kiHUd
+         skjYGOhr0dmRm2/Rkd2IbLKBHC5ii1/ZdoWPnM2LYGCid8jJUA+iigEapBxQLUIJVy
+         je1LuCvKfE6zYULbGOvvJ9u/UCVNUeI2v0ouqBgk=
+Date:   Fri, 27 Mar 2020 12:02:32 +0900
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Borislav Petkov <bp@alien8.de>, Joerg Roedel <jroedel@suse.de>
+Cc:     Joerg Roedel <joro@8bytes.org>, x86@kernel.org, hpa@zytor.com,
+        Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Hellstrom <thellstrom@vmware.com>,
+        Jiri Slaby <jslaby@suse.cz>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Juergen Gross <jgross@suse.com>,
+        Kees Cook <keescook@chromium.org>,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        virtualization@lists.linux-foundation.org,
+        Joerg Roedel <jroedel@suse.de>,
+        Masami Hiramatsu <mhiramat@kernel.org>
+Subject: Re: [PATCH 05/70] x86/insn: Make inat-tables.c suitable for
+ pre-decompression code
+Message-Id: <20200327120232.c8e455ca100dc0d96e4ddc43@kernel.org>
+In-Reply-To: <20200325153945.GD27261@zn.tnic>
+References: <20200319091407.1481-1-joro@8bytes.org>
+        <20200319091407.1481-6-joro@8bytes.org>
+        <20200325153945.GD27261@zn.tnic>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IEJPVUdIIENIRU4NCj4gU2Vu
-dDogMjAyMMTqM9TCMjbI1SAxMjo0MQ0KPiBUbzogVWxmIEhhbnNzb24gPHVsZi5oYW5zc29uQGxp
-bmFyby5vcmc+OyBHcmVnIEtyb2FoLUhhcnRtYW4NCj4gPGdyZWdraEBsaW51eGZvdW5kYXRpb24u
-b3JnPjsgUmFmYWVsIEogLiBXeXNvY2tpIDxyYWZhZWxAa2VybmVsLm9yZz47DQo+IGxpbnV4LWtl
-cm5lbEB2Z2VyLmtlcm5lbC5vcmcNCj4gQ2M6IEFybmQgQmVyZ21hbm4gPGFybmRAYXJuZGIuZGU+
-OyBDaHJpc3RvcGggSGVsbHdpZyA8aGNoQGxzdC5kZT47DQo+IFJ1c3NlbGwgS2luZyA8bGludXhA
-YXJtbGludXgub3JnLnVrPjsgTGludXMgV2FsbGVpaiA8bGludXMud2FsbGVpakBsaW5hcm8ub3Jn
-PjsNCj4gVmlub2QgS291bCA8dmtvdWxAa2VybmVsLm9yZz47IEx1ZG92aWMgQmFycmUgPGx1ZG92
-aWMuYmFycmVAc3QuY29tPjsNCj4gbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3Jn
-OyBkbWFlbmdpbmVAdmdlci5rZXJuZWwub3JnDQo+IFN1YmplY3Q6IFJFOiBbUEFUQ0ggMC8yXSBh
-bWJhL3BsYXRmb3JtOiBJbml0aWFsaXplIGRtYV9wYXJtcyBhdCB0aGUgYnVzIGxldmVsDQo+IA0K
-PiA+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+ID4gRnJvbTogVWxmIEhhbnNzb24gPHVs
-Zi5oYW5zc29uQGxpbmFyby5vcmc+DQo+ID4gU2VudDogMjAyMMTqM9TCMjXI1SAxOTozNA0KPiA+
-IFRvOiBHcmVnIEtyb2FoLUhhcnRtYW4gPGdyZWdraEBsaW51eGZvdW5kYXRpb24ub3JnPjsgUmFm
-YWVsIEogLg0KPiA+IFd5c29ja2kgPHJhZmFlbEBrZXJuZWwub3JnPjsgbGludXgta2VybmVsQHZn
-ZXIua2VybmVsLm9yZw0KPiA+IENjOiBBcm5kIEJlcmdtYW5uIDxhcm5kQGFybmRiLmRlPjsgQ2hy
-aXN0b3BoIEhlbGx3aWcgPGhjaEBsc3QuZGU+Ow0KPiA+IFJ1c3NlbGwgS2luZyA8bGludXhAYXJt
-bGludXgub3JnLnVrPjsgTGludXMgV2FsbGVpag0KPiA+IDxsaW51cy53YWxsZWlqQGxpbmFyby5v
-cmc+OyBWaW5vZCBLb3VsIDx2a291bEBrZXJuZWwub3JnPjsgQk9VR0ggQ0hFTg0KPiA+IDxoYWli
-by5jaGVuQG54cC5jb20+OyBMdWRvdmljIEJhcnJlIDxsdWRvdmljLmJhcnJlQHN0LmNvbT47DQo+
-ID4gbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnOyBkbWFlbmdpbmVAdmdlci5r
-ZXJuZWwub3JnOyBVbGYNCj4gPiBIYW5zc29uIDx1bGYuaGFuc3NvbkBsaW5hcm8ub3JnPg0KPiA+
-IFN1YmplY3Q6IFtQQVRDSCAwLzJdIGFtYmEvcGxhdGZvcm06IEluaXRpYWxpemUgZG1hX3Bhcm1z
-IGF0IHRoZSBidXMNCj4gPiBsZXZlbA0KPiA+DQo+ID4gSXQncyBjdXJyZW50bHkgdGhlIGFtYmEv
-cGxhdGZvcm0gZHJpdmVyJ3MgcmVzcG9uc2liaWxpdHkgdG8gaW5pdGlhbGl6ZQ0KPiA+IHRoZSBw
-b2ludGVyLCBkbWFfcGFybXMsIGZvciBpdHMgY29ycmVzcG9uZGluZyBzdHJ1Y3QgZGV2aWNlLiBU
-aGUNCj4gPiBiZW5lZml0IHdpdGggdGhpcyBhcHByb2FjaCBhbGxvd3MgdXMgdG8gYXZvaWQgdGhl
-IGluaXRpYWxpemF0aW9uIGFuZA0KPiA+IHRvIG5vdCB3YXN0ZSBtZW1vcnkgZm9yIHRoZSBzdHJ1
-Y3QgZGV2aWNlX2RtYV9wYXJhbWV0ZXJzLCBhcyB0aGlzIGNhbg0KPiA+IGJlIGRlY2lkZWQgb24g
-YSBjYXNlIGJ5IGNhc2UgYmFzaXMuDQo+ID4NCj4gPiBIb3dldmVyLCBpdCBoYXMgdHVybmVkIG91
-dCB0aGF0IHRoaXMgYXBwcm9hY2ggaXMgbm90IHZlcnkgcHJhY3RpY2FsLg0KPiA+IE5vdCBvbmx5
-IGRvZXMgaXQgbGVhZCB0byBvcGVuIGNvZGluZywgYnV0IGFsc28gdG8gcmVhbCBlcnJvcnMuIElu
-DQo+ID4gcHJpbmNpcGxlIGNhbGxlcnMgb2YNCj4gPiBkbWFfc2V0X21heF9zZWdfc2l6ZSgpIGRv
-ZXNuJ3QgY2hlY2sgdGhlIGVycm9yIGNvZGUsIGJ1dCBqdXN0IGFzc3VtZXMNCj4gPiBpdCBzdWNj
-ZWVkcy4NCj4gPg0KPiA+IEZvciB0aGVzZSByZWFzb25zLCB0aGlzIHNlcmllcyBpbml0aWFsaXpl
-cyB0aGUgZG1hX3Bhcm1zIGZyb20gdGhlDQo+ID4gYW1iYS9wbGF0Zm9ybSBidXMgYXQgdGhlIGRl
-dmljZSByZWdpc3RyYXRpb24gcG9pbnQuIFRoaXMgYWxzbyBmb2xsb3dzDQo+ID4gdGhlIHdheSB0
-aGUgUENJIGRldmljZXMgYXJlIGJlaW5nIG1hbmFnZWQsIHNlZSBwY2lfZGV2aWNlX2FkZCgpLg0K
-PiA+DQo+ID4gSWYgaXQgdHVybnMgb3V0IHRoYXQgdGhpcyBpcyBhbiBhY2NlcHRhYmxlIHNvbHV0
-aW9uLCB3ZSBwcm9iYWJseSBhbHNvDQo+ID4gd2FudCB0aGUgY2hhbmdlcyBmb3Igc3RhYmxlLCBi
-dXQgSSBhbSBub3Qgc3VyZSBpZiBpdCBhcHBsaWVzIHdpdGhvdXQgY29uZmxpY3RzLg0KPiA+DQo+
-ID4gVGhlIHNlcmllcyBpcyBiYXNlZCBvbiB2NS42LXJjNy4NCj4gPg0KPiANCj4gSGkgVWxmLA0K
-PiANCj4gU2luY2UgaS5NWFFNIFNNTVUgcmVsYXRlZCBjb2RlIHN0aWxsIG5vdCB1cHN0cmVhbSB5
-ZXQsIHNvIEkgYXBwbHkgeW91cg0KPiBwYXRjaGVzIG9uIG91ciBpbnRlcm5hbCBMaW51eCBicmFu
-Y2ggYmFzZWQgb24gdjUuNC4yNCwgYW5kIGZpbmQgaXQgZG8gbm90IHdvcmsNCj4gb24gbXkgc2lk
-ZS4gTWF5YmUgZm9yIHBsYXRmb3JtIGNvcmUgZHJpdmVycywgdGhlcmUgaXMgYSBnYXAgYmV0d2Vl
-biB2NS40LjI0DQo+IGFuZCB2NS42LXJjNyB3aGljaCBoYXMgdGhlIGltcGFjdC4NCj4gSSB3aWxs
-IHRyeSB0byBwdXQgb3VyIFNNTVUgcmVsYXRlZCBjb2RlIGludG8gdjUuNi1yYzcsIHRoZW4gZG8g
-dGhlIHRlc3QgYWdhaW4uDQo+IA0KPiANCg0KSGkgVWxmLA0KDQpPbiB0aGUgbGF0ZXN0IExpbnV4
-LW5leHQgYnJhbmNoLCB0aGUgdG9wIGNvbW1pdCA4OTI5NWM1OWMxZjA2M2I1MzNkMDcxY2E0OWQw
-ZmEwYzA3ODNjYTZmICh0YWc6IG5leHQtMjAyMDAzMjYpLCBhZnRlciBhZGQgeW91ciB0d28gcGF0
-Y2hlcywgSSBqdXN0IGFkZCB0aGUgc2ltcGxlIGRlYnVnIGNvZGUgYXMgZm9sbG93aW5nIGluIHRo
-ZSAvZHJpdmVyL21tYy9jb3JlL3F1ZXVlLmMsIGJ1dCBzZWVtcyBzdGlsbCBub3Qgd29yayBhcyBv
-dXIgZXhwZWN0LCBsb2dpY2FsbHksIGl0IHNob3VsZCB3b3JrLCBzbyBjYW4geW91IG9yIGFueW9u
-ZSB0ZXN0IG9uIG90aGVyIHBsYXRmb3JtPyBUaGlzIHNlZW1zIHdlaXJkLg0KDQpkaWZmIC0tZ2l0
-IGEvZHJpdmVycy9tbWMvY29yZS9xdWV1ZS5jIGIvZHJpdmVycy9tbWMvY29yZS9xdWV1ZS5jDQpp
-bmRleCAyNWJlZTNkYWY5ZTIuLmYwOTEyODBmN2ZmYiAxMDA2NDQNCi0tLSBhL2RyaXZlcnMvbW1j
-L2NvcmUvcXVldWUuYw0KKysrIGIvZHJpdmVycy9tbWMvY29yZS9xdWV1ZS5jDQpAQCAtNDAzLDYg
-KzQwMywxMyBAQCBzdGF0aWMgdm9pZCBtbWNfc2V0dXBfcXVldWUoc3RydWN0IG1tY19xdWV1ZSAq
-bXEsIHN0cnVjdCBtbWNfY2FyZCAqY2FyZCkNCiAgICAgICAgICAgICAgICBibGtfcXVldWVfbWF4
-X3NlZ21lbnRfc2l6ZShtcS0+cXVldWUsDQogICAgICAgICAgICAgICAgICAgICAgICByb3VuZF9k
-b3duKGhvc3QtPm1heF9zZWdfc2l6ZSwgYmxvY2tfc2l6ZSkpOw0KDQorICAgICAgIHByX2Vycigi
-IyMjIyMjIHRoZSBtYXggc2VnbWVudCBzaXplIGlzICVkXG4iLCBxdWV1ZV9tYXhfc2VnbWVudF9z
-aXplKG1xLT5xdWV1ZSkpOw0KKyAgICAgICBpZiAoaG9zdC0+cGFyZW50LT5kbWFfcGFybXMpIHsN
-CisgICAgICAgICAgICAgICAgICAgICAgcHJfZXJyKCIjIyMjIyMjIyMgdGhlIGRtYSBwYXJtcyBo
-YXMgdmFsdWVcbiIpOw0KKyAgICAgICB9IGVsc2UgaWYgKCEoaG9zdC0+cGFyZW50LT5kbWFfcGFy
-bXMpKSB7DQorICAgICAgICAgICAgICAgICAgICAgIHByX2VycigiIyMjIyMjIyMgdGhlIGRtYSBw
-YXJtcyBpcyB6ZXJvISFcbiIpOw0KKyAgICAgICB9DQorDQogICAgICAgIGRtYV9zZXRfbWF4X3Nl
-Z19zaXplKG1tY19kZXYoaG9zdCksIHF1ZXVlX21heF9zZWdtZW50X3NpemUobXEtPnF1ZXVlKSk7
-DQoNCiAgICAgICAgSU5JVF9XT1JLKCZtcS0+cmVjb3Zlcnlfd29yaywgbW1jX21xX3JlY292ZXJ5
-X2hhbmRsZXIpOw0KDQpIZXJlIGlzIHRoZSBsb2cgSSBnb3Qgd2hlbiBzeXN0ZW0gcnVuLCBldmVu
-IGFmdGVyIHlvdXIgcGF0Y2gsIHRoZSBkZXYtPmRtYV9wYXJtcyBpcyBzdGlsbCBOVUxMLiANClsg
-ICAgMC45ODk4NTNdIG1tYzA6IG5ldyBIUzQwMCBNTUMgY2FyZCBhdCBhZGRyZXNzIDAwMDENClsg
-ICAgMC45OTU3MDhdIHNkaGNpLWVzZGhjLWlteCAzMGI1MDAwMC5tbWM6IEdvdCBDRCBHUElPDQpb
-ICAgIDAuOTk5Mzc0XSAjIyMjIyMgdGhlIG1heCBzZWdtZW50IHNpemUgaXMgNjUwMjQNClsgICAg
-MS4wMDg1OTRdICMjIyMjIyMjIHRoZSBkbWEgcGFybXMgaXMgemVybyEhDQpbICAgIDEuMDEyODc1
-XSBtbWNibGswOiBtbWMwOjAwMDEgSUIyOTMyIDI5LjIgR2lCDQpbICAgIDEuMDE3NTY5XSAjIyMj
-IyMgdGhlIG1heCBzZWdtZW50IHNpemUgaXMgNjUwMjQNClsgICAgMS4wMjIxOTVdICMjIyMjIyMj
-IHRoZSBkbWEgcGFybXMgaXMgemVybyEhDQpbICAgIDEuMDI2NDc5XSBtbWNibGswYm9vdDA6IG1t
-YzA6MDAwMSBJQjI5MzIgcGFydGl0aW9uIDEgNC4wMCBNaUINClsgICAgMS4wMzI1NDFdICMjIyMj
-IyB0aGUgbWF4IHNlZ21lbnQgc2l6ZSBpcyA2NTAyNA0KWyAgICAxLjAzNTE5OF0gbW1jMTogU0RI
-Q0kgY29udHJvbGxlciBvbiAzMGI1MDAwMC5tbWMgWzMwYjUwMDAwLm1tY10gdXNpbmcgQURNQQ0K
-WyAgICAxLjAzNzE2OV0gIyMjIyMjIyMgdGhlIGRtYSBwYXJtcyBpcyB6ZXJvISENClsgICAgMS4w
-NDg0OTNdIG1tY2JsazBib290MTogbW1jMDowMDAxIElCMjkzMiBwYXJ0aXRpb24gMiA0LjAwIE1p
-Qg0KWyAgICAxLjA1NDUzMV0gbW1jYmxrMHJwbWI6IG1tYzA6MDAwMSBJQjI5MzIgcGFydGl0aW9u
-IDMgNC4wMCBNaUIsIGNoYXJkZXYgKDIzNDowKQ0KDQoNClJlZ2FyZHMNCkhhaWJvIENoZW4NCj4g
-QmVzdCBSZWdhcmRzDQo+IEhhaWJvIENoZW4NCj4gDQo+ID4gS2luZCByZWdhcmRzDQo+ID4gVWxm
-IEhhbnNzb24NCj4gPg0KPiA+IFVsZiBIYW5zc29uICgyKToNCj4gPiAgIGRyaXZlciBjb3JlOiBw
-bGF0Zm9ybTogSW5pdGlhbGl6ZSBkbWFfcGFybXMgZm9yIHBsYXRmb3JtIGRldmljZXMNCj4gPiAg
-IGFtYmE6IEluaXRpYWxpemUgZG1hX3Bhcm1zIGZvciBhbWJhIGRldmljZXMNCj4gPg0KPiA+ICBk
-cml2ZXJzL2FtYmEvYnVzLmMgICAgICAgICAgICAgIHwgMiArKw0KPiA+ICBkcml2ZXJzL2Jhc2Uv
-cGxhdGZvcm0uYyAgICAgICAgIHwgMSArDQo+ID4gIGluY2x1ZGUvbGludXgvYW1iYS9idXMuaCAg
-ICAgICAgfCAxICsNCj4gPiAgaW5jbHVkZS9saW51eC9wbGF0Zm9ybV9kZXZpY2UuaCB8IDEgKw0K
-PiA+ICA0IGZpbGVzIGNoYW5nZWQsIDUgaW5zZXJ0aW9ucygrKQ0KPiA+DQo+ID4gLS0NCj4gPiAy
-LjIwLjENCg0K
+Hi,
+
+On Wed, 25 Mar 2020 16:39:45 +0100
+Borislav Petkov <bp@alien8.de> wrote:
+
+> + Masami.
+> 
+> On Thu, Mar 19, 2020 at 10:13:02AM +0100, Joerg Roedel wrote:
+> > From: Joerg Roedel <jroedel@suse.de>
+> > 
+> > The inat-tables.c file has some arrays in it that contain pointers to
+> > other arrays. These pointers need to be relocated when the kernel
+> > image is moved to a different location.
+> > 
+> > The pre-decompression boot-code has no support for applying ELF
+> > relocations, so initialize these arrays at runtime in the
+> > pre-decompression code to make sure all pointers are correctly
+> > initialized.
+
+I need to check the whole series, but as far as I can understand from
+this patch, this seems not allowing to store the address value in
+static pointers. It may break more things, for example _kprobe_blacklist
+records the NOKPROBE_SYMBOL() symbol addresses at the build time.
+
+I have some comments here.
+ 
+> > Signed-off-by: Joerg Roedel <jroedel@suse.de>
+> > ---
+> >  arch/x86/tools/gen-insn-attr-x86.awk       | 50 +++++++++++++++++++++-
+> >  tools/arch/x86/tools/gen-insn-attr-x86.awk | 50 +++++++++++++++++++++-
+> >  2 files changed, 98 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/arch/x86/tools/gen-insn-attr-x86.awk b/arch/x86/tools/gen-insn-attr-x86.awk
+> > index a42015b305f4..af38469afd14 100644
+> > --- a/arch/x86/tools/gen-insn-attr-x86.awk
+> > +++ b/arch/x86/tools/gen-insn-attr-x86.awk
+> > @@ -362,6 +362,9 @@ function convert_operands(count,opnd,       i,j,imm,mod)
+> >  END {
+> >  	if (awkchecked != "")
+> >  		exit 1
+> > +
+> > +	print "#ifndef __BOOT_COMPRESSED\n"
+> > +
+> >  	# print escape opcode map's array
+> >  	print "/* Escape opcode map array */"
+> >  	print "const insn_attr_t * const inat_escape_tables[INAT_ESC_MAX + 1]" \
+> > @@ -388,6 +391,51 @@ END {
+> >  		for (j = 0; j < max_lprefix; j++)
+> >  			if (atable[i,j])
+> >  				print "	["i"]["j"] = "atable[i,j]","
+> > -	print "};"
+> > +	print "};\n"
+> > +
+> > +	print "#else /* !__BOOT_COMPRESSED */\n"
+
+I think the definitions of inat_*_tables can be shared in both case.
+If __BOOT_COMPRESSED is set, we can define inat_init_tables() as a
+initialize function, and if not, it will be just a dummy "do {} while (0)".
+
+BTW, where is the __BOOT_COMPRESSED defined?
+
+> > +
+> > +	print "/* Escape opcode map array */"
+> > +	print "static const insn_attr_t *inat_escape_tables[INAT_ESC_MAX + 1]" \
+> > +	      "[INAT_LSTPFX_MAX + 1];"
+> > +	print ""
+> > +
+> > +	print "/* Group opcode map array */"
+> > +	print "static const insn_attr_t *inat_group_tables[INAT_GRP_MAX + 1]"\
+> > +	      "[INAT_LSTPFX_MAX + 1];"
+> > +	print ""
+> > +
+> > +	print "/* AVX opcode map array */"
+> > +	print "static const insn_attr_t *inat_avx_tables[X86_VEX_M_MAX + 1]"\
+> > +	      "[INAT_LSTPFX_MAX + 1];"
+> > +	print ""
+> > +
+> > +	print "static void inat_init_tables(void)"
+
+This functions should be "inline".
+And I can not see the call-site of inat_init_tables() in this patch.
+
+If possible, please include call-site with definition (especially
+new init function) so that I can check the init call timing too.
+
+> > +	print "{"
+> > +
+> > +	# print escape opcode map's array
+> > +	print "\t/* Print Escape opcode map array */"
+> > +	for (i = 0; i < geid; i++)
+> > +		for (j = 0; j < max_lprefix; j++)
+> > +			if (etable[i,j])
+> > +				print "\tinat_escape_tables["i"]["j"] = "etable[i,j]";"
+> > +	print ""
+> > +
+> > +	# print group opcode map's array
+> > +	print "\t/* Print Group opcode map array */"
+> > +	for (i = 0; i < ggid; i++)
+> > +		for (j = 0; j < max_lprefix; j++)
+> > +			if (gtable[i,j])
+> > +				print "\tinat_group_tables["i"]["j"] = "gtable[i,j]";"
+> > +	print ""
+> > +	# print AVX opcode map's array
+> > +	print "\t/* Print AVX opcode map array */"
+> > +	for (i = 0; i < gaid; i++)
+> > +		for (j = 0; j < max_lprefix; j++)
+> > +			if (atable[i,j])
+> > +				print "\tinat_avx_tables["i"]["j"] = "atable[i,j]";"
+> > +
+> > +	print "}"
+> > +	print "#endif"
+> >  }
+
+The code itself looks good to me.
+
+Thank you,
+
+-- 
+Masami Hiramatsu <mhiramat@kernel.org>
