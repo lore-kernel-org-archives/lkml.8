@@ -2,125 +2,82 @@ Return-Path: <SRS0=s8dx=5M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FD3BC2D0E5
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 13:42:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1A0CC2D0EC
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 13:43:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E1AF520658
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 13:42:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C632520658
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 13:43:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=tycho.nsa.gov header.i=@tycho.nsa.gov header.b="g9btz5ne"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GKvNLfr9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727370AbgC0Nmc (ORCPT
+        id S1727548AbgC0Nn5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Mar 2020 09:42:32 -0400
-Received: from UPDC19PA23.eemsg.mail.mil ([214.24.27.198]:12045 "EHLO
-        UPDC19PA23.eemsg.mail.mil" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726540AbgC0Nmc (ORCPT
+        Fri, 27 Mar 2020 09:43:57 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:32862 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726540AbgC0Nn5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Mar 2020 09:42:32 -0400
-X-EEMSG-check-017: 71368882|UPDC19PA23_ESA_OUT05.csd.disa.mil
-X-IronPort-AV: E=Sophos;i="5.72,312,1580774400"; 
-   d="scan'208";a="71368882"
-Received: from emsm-gh1-uea11.ncsc.mil ([214.29.60.3])
-  by UPDC19PA23.eemsg.mail.mil with ESMTP/TLS/DHE-RSA-AES256-SHA256; 27 Mar 2020 13:42:28 +0000
+        Fri, 27 Mar 2020 09:43:57 -0400
+Received: by mail-lj1-f195.google.com with SMTP id f20so10286022ljm.0;
+        Fri, 27 Mar 2020 06:43:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=tycho.nsa.gov; i=@tycho.nsa.gov; q=dns/txt;
-  s=tycho.nsa.gov; t=1585316549; x=1616852549;
-  h=subject:to:cc:references:from:message-id:date:
-   mime-version:in-reply-to:content-transfer-encoding;
-  bh=EluxbPINP69ahvzM5QR7sPRQweHHFIS2OjUyuJ8MGO8=;
-  b=g9btz5neRwCNeNvrhumA11va9WhAVrZLctT58YZLVotp3VB3lmOYsq3O
-   V8rAX8AmgVLkNTzhw6Q30a/TGFSsWmk17Isyi5jml3z9aA3HUiUZ+8zwY
-   eLyI1m966FpJYOLHuKOe95WZWtAXhXdfWiHUaJPg71uCoupmKsWDzGphQ
-   MfVsu4rYnncYf+8vmy8L86zihRCe9GeUj68vpxbEt8xjyE2G1dZy6n2HT
-   cHqEYQyaxJ+ZJG3y3WVFq/SGgxxu4F6Ajbwcewn/EGHBFVWqo/JxiXAgh
-   p6ag0EXaKVwubwgIDW9CwE3gEFP47RygYzzYgZ9+zvHyKXUE7ryAYrnJG
-   g==;
-X-IronPort-AV: E=Sophos;i="5.72,312,1580774400"; 
-   d="scan'208";a="41132559"
-IronPort-PHdr: =?us-ascii?q?9a23=3A+wouJR1LxFUSBm5msmDT+DRfVm0co7zxezQtwd?=
- =?us-ascii?q?8ZsesQI/XxwZ3uMQTl6Ol3ixeRBMOHsq4C0reH+P26EUU7or+/81k6OKRWUB?=
- =?us-ascii?q?EEjchE1ycBO+WiTXPBEfjxciYhF95DXlI2t1uyMExSBdqsLwaK+i764jEdAA?=
- =?us-ascii?q?jwOhRoLerpBIHSk9631+ev8JHPfglEnjWwba59IRmssAncts0bjYRiJ6ov1x?=
- =?us-ascii?q?DEvmZGd+NKyGxnIl6egwzy7dqq8p559CRQtfMh98peXqj/Yq81U79WAik4Pm?=
- =?us-ascii?q?4s/MHkugXNQgWJ5nsHT2UZiQFIDBTf7BH7RZj+rC33vfdg1SaAPM32Sbc0WS?=
- =?us-ascii?q?m+76puVRTlhjsLOyI//WrKkcF7kr5Vrwy9qBx+247UYZ+aNPxifqPGYNgWQX?=
- =?us-ascii?q?NNUttNWyBdB4+xaYUAD/AFPe1FsYfzoVUApga6CQW1Cu7izjpEi3nr1qM4zu?=
- =?us-ascii?q?shCxnL0hE+EdIAsHrar9v7O6kdXu+30KbGwi7Ob+9V1Drn9ITEbh4srPOKUL?=
- =?us-ascii?q?ltccTR004vFwbdg1uNtYzqISuV1uQTvGid8uFuSOevhHQjqwF1vDeuxtonh4?=
- =?us-ascii?q?7Sho0I0VDJ7jl5wYYpKt24T053e9ikEIBKuC2AOIt2Rd0iTnhutS0nxLMGvp?=
- =?us-ascii?q?u7czILyJQh3xPfaOKIc5KO4h39UOadOzB4hGhqeL+5mh288lCgx/XhWsS731?=
- =?us-ascii?q?tGtCpInsTWunwT2BHf9NKLRuZ780y8wziAzRrT5ftBIU0skKrbLIMuzaAom5?=
- =?us-ascii?q?oItETDAjf2mELrjK+Kbkkk+van6+DgYrj+up+TLZV0igDjMqQ1gMC/HeQ5PR?=
- =?us-ascii?q?QOX2ic4+i80qHs/VblT7lQi/02k63ZvIjbJcQduKG5HxdY3pss5huwFTur0M?=
- =?us-ascii?q?kUkWMZIF9KZh6LlZXlN0nLIP/iDPe/h1qskC1sx/DDJrDhGYjCLmPYnbf9fb?=
- =?us-ascii?q?dy905cyA0pwdBZ/JJbEKsNIP30Wk/vrNDYFAM2MxSow+b7D9VwzoAeWXqUAq?=
- =?us-ascii?q?+YNqPSvl+I6/kzLOmMfo8VvzP9K/k45/7rl3M5nkUdfaax15sNdH+4BuhmI1?=
- =?us-ascii?q?meYXf0gNcBFGAKvhAkTOzrk12PSjhTaGy3X60i5zE3EoWmDZ3MRoq1mryOwD?=
- =?us-ascii?q?+7HoFKZmBBEl2MFXbod4OZW/YDcS6SIdFukiYCVbe/T48szg+utADkxLp9NO?=
- =?us-ascii?q?bU+TMXtYjl1Ndr4+3fjxYy9SZ7D86FyWGCU3l0nn8URz8xxK1wulR9ylmY3K?=
- =?us-ascii?q?hmjPxXC8ZT6+lKUggkL57cyfJ1C9ToVgLGZNeJR06sQs+6DjEpUtIx39gObl?=
- =?us-ascii?q?55G9WjiBDDwiWrD6YOl7OVGJM077jc33ntJ8d90nrG0a4hgEQ7QstLK2Krnb?=
- =?us-ascii?q?B/9wfNCI7TiUmZlLildb4a3CHT8GeP122OvFtXUARoS6XKQWgfZlfKrdT+/k?=
- =?us-ascii?q?7CTaWhBqgkMgtE08GCLLBFZ8bmjVVBQ/fjN9DebHyrl2isAhaIw6uGbJD2dG?=
- =?us-ascii?q?UFwCXdFE8EnhgJ/XmYKwgxGDyho37FATxhElLvZEzs8e1gp3+hUkA0yASKZV?=
- =?us-ascii?q?V717Wp4h4VmeCcS/QL070eoychty55HFWj0NLMDdqPuQ5hcL9bYdMn71dNzX?=
- =?us-ascii?q?jZuBBlPpy8M6BigUYTfBltsEPo1hV4FIFAnNMrrHMtwwp9N7iX0ElaeDOf0p?=
- =?us-ascii?q?H8ILvXJXfu/Bq3ca7Zxkne0MqK+qcI8Pk4qEvssx+yFkU+9HVn1NpV3mCA6Z?=
- =?us-ascii?q?XKFgoSVpfxUkcq9xh/vb3aZTM954zM3312Laa0qiPC284uBOY90hagfctfPb?=
- =?us-ascii?q?iLFA/1FM0aCMyuJ/Iwl1e1aRIEOfhY9LQoMMO+a/uGxKmrMf5inD28i2RH5o?=
- =?us-ascii?q?B931mD9yp7Te7I0JIFzO+C0gSbUDf8iU+rstrrloBceTESAm2/xDD+BIFPeK?=
- =?us-ascii?q?19Y50LCXu1LsKrxtV+nZntW3tZ9F6+AlMKwsipeQCdb1blxw1fyVwXoWC7mS?=
- =?us-ascii?q?u/1zF0kSsmobac3CzL2evicgEIN3VXS2lil1fsJo20j9EHXEitdQQpkwGl5U?=
- =?us-ascii?q?nizahBuKt/N3XTQVtPfyXuIGFiSLW/trWBY85P854otSRXUOKhYVGVRL79pA?=
- =?us-ascii?q?Ya0yX+EGRE2DA7djaqupPjkxx9kmKdI255rGDFdsFo2Rff+NvcSOZJ3jUcWS?=
- =?us-ascii?q?l4jSLaBkCmMNm0+dWYjpLDsue5V2K7SJJfazXkzYSFtHjz2Wo/IiX3pPG1ld?=
- =?us-ascii?q?2vRQsiyi792NlCXiXSqxP9f4yt0L61Z7FJZE5tUWTg5tJ6F4c2qY45gJUdyD?=
- =?us-ascii?q?BOnZmO1WYWmmf0d9NA0OTxa2RbFm1D+MLc/AWwgB4rFXmO3Y+sEyzGk8Y=3D?=
-X-IPAS-Result: =?us-ascii?q?A2AGAQA4An5e/wHyM5BmHAEBAQEBBwEBEQEEBAEBgWoEA?=
- =?us-ascii?q?QELAYF8LGxUATIqhBqOfFIBAQaBCi2Je5FNCgEBAQEBAQEBASsJAQIEAQGER?=
- =?us-ascii?q?AKCMSQ3Bg4CEAEBAQUBAQEBAQUDAQFshVYMgjspAYMMAQUjDwEFQRALGAICJ?=
- =?us-ascii?q?gICVwYNBgIBAYJjPwGCVyUPrECBMoQ1AYEVg2uBOAaBDioBjC4aeYEHgREnD?=
- =?us-ascii?q?4JePoJOhRKCXgSQOV2fR4JGglaFCY8nBh2baZgmlHgjgVgrCAIYCCEPgygSP?=
- =?us-ascii?q?RgNlySFXSUDMgGBAwEBjX4BAQ?=
-Received: from tarius.tycho.ncsc.mil ([144.51.242.1])
-  by emsm-gh1-uea11.NCSC.MIL with ESMTP; 27 Mar 2020 13:42:25 +0000
-Received: from moss-pluto.infosec.tycho.ncsc.mil (moss-pluto.infosec.tycho.ncsc.mil [192.168.25.131])
-        by tarius.tycho.ncsc.mil (8.14.7/8.14.4) with ESMTP id 02RDglU2212485;
-        Fri, 27 Mar 2020 09:42:47 -0400
-Subject: Re: [PATCH bpf-next v7 4/8] bpf: lsm: Implement attach, detach and
- execution
-To:     KP Singh <kpsingh@chromium.org>
-Cc:     James Morris <jmorris@namei.org>, linux-kernel@vger.kernel.org,
-        bpf@vger.kernel.org, linux-security-module@vger.kernel.org,
-        Brendan Jackman <jackmanb@google.com>,
-        Florent Revest <revest@google.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Kees Cook <keescook@chromium.org>,
-        Paul Turner <pjt@google.com>, Jann Horn <jannh@google.com>,
-        Florent Revest <revest@chromium.org>,
-        Brendan Jackman <jackmanb@chromium.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Paul Moore <paul@paul-moore.com>
-References: <20200326142823.26277-1-kpsingh@chromium.org>
- <20200326142823.26277-5-kpsingh@chromium.org>
- <alpine.LRH.2.21.2003271119420.17089@namei.org>
- <2241c806-65c9-68f5-f822-9a245ecf7ba0@tycho.nsa.gov>
- <20200327124115.GA8318@chromium.org>
-From:   Stephen Smalley <sds@tycho.nsa.gov>
-Message-ID: <14ff822f-3ca5-7ebb-3df6-dd02249169d2@tycho.nsa.gov>
-Date:   Fri, 27 Mar 2020 09:43:45 -0400
+        d=gmail.com; s=20161025;
+        h=subject:from:to:cc:references:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=h3HMsR6HZU31G+xQ5I9GeaveOctSpxG3dZcbeLk7cIc=;
+        b=GKvNLfr95azbSrXv7DMgjchOFqCOYfl5grnsAA+bRFz4Y8CAnxX8hIy7GbIiGA7Jay
+         ouZ/DX2BUCgA5AT3f8ClxcDjBXt7/0xFWn1NZCynNwmEqvSI6f7+2yAYii4lz+G0I2wo
+         fGlOVaAlVe+kyJTmvrquB/unfkjv7JS7xysAzgUKeT10Ajb0n7xz8fMjf6y3Lb+6ZOOR
+         vGK1eBTQnXPYcuvwp3IoZLAfwTSFafGkxmm//RvwOfX5rKTBHZ/cl/CWhwqTpvrqxUNz
+         9fNbg3hRnCA/3bXyoGVJiPSo8cOjbBosw9oOTbAxSsS6MGzjOuNScX8eBazI6Jv7wygg
+         ynNA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=h3HMsR6HZU31G+xQ5I9GeaveOctSpxG3dZcbeLk7cIc=;
+        b=Sz5wTm66BsRZyycHMZ0vsCAt+Z6WAbnQYPOu/SI4L1AMdDrpdhv55GZOrgDEKWDnIV
+         p7JdCcJ1Qdrv2iYe89vZhNz/CVy05hpTP1IKOwICWErOwqPUk5DGqV+7apJGpRg0aBY2
+         exptjo8cO5jpGxqJpfLJAwg93Qq/pxjnnIxWkLPqxepipMFHiKR+WWmbyKs+2iw55xsO
+         VjkEZB+xxOw1DOpjvKvX4Vn/Lsn84E2NZy8twlqOSBAZb2D7AF7YzCZmFYAbrM5Iqfd+
+         xp9hzn4BXQUh+a8Zn7XlUwFV9y2aPqaVSUzBtsFeQrB+1dFwW9KR3lQksmyUKpA1iWVL
+         /dTg==
+X-Gm-Message-State: AGi0PuaZLgNpDJQ4OaG4sKDTnYk+Nvya7Zk/Kc5x5kgA0mG5VfSULuTG
+        IRfqhUwHbqJb4DYUMp1ESLI=
+X-Google-Smtp-Source: APiQypK3GwcTU1z2CorSBvReY5Rip+JCow1O1vGOD2yzZmUWOFpm6JEGznsM60IM52m//93WnEJQTQ==
+X-Received: by 2002:a2e:3012:: with SMTP id w18mr8713173ljw.100.1585316635323;
+        Fri, 27 Mar 2020 06:43:55 -0700 (PDT)
+Received: from [192.168.2.145] (ppp91-78-208-152.pppoe.mtu-net.ru. [91.78.208.152])
+        by smtp.googlemail.com with ESMTPSA id o192sm870042lfa.89.2020.03.27.06.43.54
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 27 Mar 2020 06:43:54 -0700 (PDT)
+Subject: Re: [PATCH v9 52/55] input: touchscreen: atmel_mxt_ts: Added sysfs
+ entry for touchscreen status
+From:   Dmitry Osipenko <digetx@gmail.com>
+To:     "Wang, Jiada" <jiada_wang@mentor.com>, nick@shmanahar.org,
+        dmitry.torokhov@gmail.com, jikos@kernel.org,
+        benjamin.tissoires@redhat.com, bsz@semihalf.com,
+        rydberg@bitmath.org
+Cc:     linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
+        erosca@de.adit-jv.com, Andrew_Gabbasov@mentor.com
+References: <20200325133334.19346-1-jiada_wang@mentor.com>
+ <20200325133334.19346-53-jiada_wang@mentor.com>
+ <4aeda6f1-25d8-9437-5cd0-560e43dbe081@gmail.com>
+ <b9368137-2fdc-558d-c27c-54d56950f7b8@mentor.com>
+ <5b03bf10-d4f1-fb3d-4561-1097630c195a@gmail.com>
+Message-ID: <a7f77683-f86d-5e23-6afc-96834cbb55cc@gmail.com>
+Date:   Fri, 27 Mar 2020 16:43:53 +0300
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-In-Reply-To: <20200327124115.GA8318@chromium.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <5b03bf10-d4f1-fb3d-4561-1097630c195a@gmail.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -128,51 +85,21 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/27/20 8:41 AM, KP Singh wrote:
-> On 27-Mär 08:27, Stephen Smalley wrote:
->> On 3/26/20 8:24 PM, James Morris wrote:
->>> On Thu, 26 Mar 2020, KP Singh wrote:
->>>
->>>> +int bpf_lsm_verify_prog(struct bpf_verifier_log *vlog,
->>>> +			const struct bpf_prog *prog)
+27.03.2020 16:37, Dmitry Osipenko пишет:
+> 27.03.2020 15:49, Wang, Jiada пишет:
+>>>> +static void mxt_watchdog_work(struct work_struct *work)
 >>>> +{
->>>> +	/* Only CAP_MAC_ADMIN users are allowed to make changes to LSM hooks
->>>> +	 */
->>>> +	if (!capable(CAP_MAC_ADMIN))
->>>> +		return -EPERM;
+>>>> +    struct mxt_data *data =
+>>>> +        container_of(work, struct mxt_data, watchdog_work);
+>>>> +    u16 info_buf;
+>>>> +    int ret = 0;
+>>>> +    u8 size = 2;
+
+There is no need to initialize the ret variable.
+
+>>>> +    if (data->suspended || data->in_bootloader)
+>>>> +        return;
 >>>> +
->>>
->>> Stephen, can you confirm that your concerns around this are resolved
->>> (IIRC, by SELinux implementing a bpf_prog callback) ?
->>
->> I guess the only residual concern I have is that CAP_MAC_ADMIN means
->> something different to SELinux (ability to get/set file security contexts
->> unknown to the currently loaded policy), so leaving the CAP_MAC_ADMIN check
->> here (versus calling a new security hook here and checking CAP_MAC_ADMIN in
->> the implementation of that hook for the modules that want that) conflates
->> two very different things.  Prior to this patch, there are no users of
->> CAP_MAC_ADMIN outside of individual security modules; it is only checked in
->> module-specific logic within apparmor, safesetid, selinux, and smack, so the
->> meaning was module-specific.
-> 
-> As we had discussed, We do have a security hook as well:
-> 
-> https://lore.kernel.org/bpf/20200324180652.GA11855@chromium.org/
-> 
-> The bpf_prog hook which can check for BPF_PROG_TYPE_LSM and implement
-> module specific logic for LSM programs. I thougt that was okay?
-> 
-> Kees was in favor of keeping the CAP_MAC_ADMIN check here:
-> 
-> https://lore.kernel.org/bpf/202003241133.16C02BE5B@keescook
-> 
-> If you feel strongly and Kees agrees, we can remove the CAP_MAC_ADMIN
-> check here, but given that we already have a security hook that meets
-> the requirements, we probably don't need another one.
+>>>> +    ret = __mxt_read_reg(data->client, 0, size, &info_buf);
 
-I would favor removing the CAP_MAC_ADMIN check here, and implementing it 
-in a bpf_prog hook for Smack and AppArmor if they want that.  SELinux 
-would implement its own check in its existing bpf_prog hook.
-
-
-
+The "size" argument could be replaced with "sizeof(info_buf)".
