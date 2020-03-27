@@ -2,105 +2,122 @@ Return-Path: <SRS0=s8dx=5M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0C90C43331
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 18:08:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCF86C2D0ED
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 18:10:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 73E5D2071B
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 18:08:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA0892072F
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 18:10:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XSavPXEt"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PqPTCWuS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727322AbgC0SI1 (ORCPT
+        id S1727185AbgC0SK5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Mar 2020 14:08:27 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:53892 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726738AbgC0SI1 (ORCPT
+        Fri, 27 Mar 2020 14:10:57 -0400
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:37276 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726515AbgC0SK5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Mar 2020 14:08:27 -0400
-Received: by mail-wm1-f68.google.com with SMTP id b12so12387667wmj.3;
-        Fri, 27 Mar 2020 11:08:24 -0700 (PDT)
+        Fri, 27 Mar 2020 14:10:57 -0400
+Received: by mail-ed1-f68.google.com with SMTP id de14so12389796edb.4
+        for <linux-kernel@vger.kernel.org>; Fri, 27 Mar 2020 11:10:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=dLGBA4Mb9FTGMIlIs8CkqjXevwkXDBhsu7I/2DN/lVg=;
-        b=XSavPXEt6mUB1SdOj1YBnqkqrJe93YaS1Lj87R+jSLPm/kVKARDUyB6wB2AsEwTBCG
-         qM/z86PE664z3DTmfnDVf+nltCnU3Z4XbDn+9FgM3kzV+zc9oUgqzDs8ssodwhFPqZUN
-         1GDLHoxfXi1CVPhYMLuuQ7wg1ghTeGKNF3rjU5rN3Un45oaLRB3atl2DXkP3BnhUZ5GP
-         aPrwLdkzNF0qQsb7+9VsvLuOPs4fFaD1E6C7olvwr8paQB2o+NbPRnQm4UlpmN3OUcYm
-         hODliHhjyyg8ePlqV3nOZ+pAhqQlpzVgMcVUts0qBAowglOFgJjHeIA9RPsxTOds/bBi
-         CnFg==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=HgLPKsmfWVu/jSbaiK5YtS+h03FH0KlNpjtZGdb44ik=;
+        b=PqPTCWuS2ibLmwAWw9gb1YvuH5vJbKB6wXMzh5L9/UuhpBLj5DVX4tuRr7KTUhNp0B
+         WcFVL9vHWL3RL9KJ92YsCMGDSW8p+jRDCzOgfwhaEmzNd8u0GzMFg2rdpDIBr7mqjMFD
+         ZxGlBmrGxCQp86bJgQVTzymz+3cysJ36qPZ6kQXql6GwdRgvpf0rUZFXFszV7cKU+hEO
+         oDl1yR1VVozpU+HbHYKKuOt9CH8o9R9BXRJhDPkAHhm9nT/a9XaCRVKJw0Z1HPAJ38ZE
+         yrUU7Dl805Q2gOPrz0x8UqCrN4ivWL4ME5dBaRilk0FaYu1z6W5W7x9eCF1XlKf/qY3m
+         gSlA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=dLGBA4Mb9FTGMIlIs8CkqjXevwkXDBhsu7I/2DN/lVg=;
-        b=odDuH3soAgj3hpF8nhHlO1vGhQGCzLLCkC6cBN0SFsQe2mE0xBfZ3V1y5+kVW0YBKc
-         DCUglwLs+EHRNDDBGXqgW1uUmKM4GHdBXx1eXdRAfyneMDPSgt7bK4Vszg+vYB9g3KNq
-         FDl9whwI5TJ6TyIqhgji2KA75QSfr94glw85s553qPsMgjj2IYnTQHsN9avSmlAqI5WN
-         ZwugKt+tCgTs0kHqzp110GP8z5olDx+hj08AwD5fbBxbsZgYpmNni37w2xuboXqmwy05
-         D68WiHyYCX3CP/0bmUc3Pn41nhfhyj4YewDD7BFj+eow0HalQ3ymzaLjwruPR6Bn+1Lj
-         whNg==
-X-Gm-Message-State: ANhLgQ12H83/DEOuB6BMiQELtdmO84lBgmg+37KvdILQVJIqVGyDA1wQ
-        HBw1u2dI8kQNlOVmH6yb270=
-X-Google-Smtp-Source: ADFU+vuRMr0aC1EEOQ2IUU53LmmatocpY5HzNQyaogQnO2V9F4Wmb186gwCYrLSt0dT6vHzlGLI58A==
-X-Received: by 2002:a7b:c450:: with SMTP id l16mr6515752wmi.9.1585332503792;
-        Fri, 27 Mar 2020 11:08:23 -0700 (PDT)
-Received: from felia.fritz.box ([2001:16b8:2df4:e800:d943:cc2a:2aed:eb16])
-        by smtp.gmail.com with ESMTPSA id a186sm8789185wmh.33.2020.03.27.11.08.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 27 Mar 2020 11:08:23 -0700 (PDT)
-From:   Lukas Bulwahn <lukas.bulwahn@gmail.com>
-To:     Lubomir Rintel <lkundrak@v3.sk>, Olof Johansson <olof@lixom.net>
-Cc:     linux-arm-kernel@lists.infradead.org,
-        Joe Perches <joe@perches.com>, kernel-janitors@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Lukas Bulwahn <lukas.bulwahn@gmail.com>
-Subject: [PATCH RESEND] MAINTAINERS: rectify MMP SUPPORT after moving cputype.h
-Date:   Fri, 27 Mar 2020 19:08:14 +0100
-Message-Id: <20200327180814.7255-1-lukas.bulwahn@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=HgLPKsmfWVu/jSbaiK5YtS+h03FH0KlNpjtZGdb44ik=;
+        b=GCZuAfElRnPDbBr5a9vB9uLG6uEWJswUjsID1G+sfP7xbVo6c44Q1Mv2YytB50XGwg
+         Z6p0azcb5AGFRBOcz+qCkZmK3bf6TpHfpLQFtoa3e7IFNddkV7Gup2GWsgz7A6PQFTWs
+         oRe7hkhqxPVaZLeeHL/9k5ABbuL5FURQnYwGBiz1D4hzopp0Igyi+Zs/cLwsUBSgLTcs
+         uu4QxjQqnbppUY3SyGS18G5H++ReLPee5RVIxU7ihOBU9DWaZDVkSVfrxP9a1g03SyS3
+         Vohg5Hu1zzJpZTFKu6M41aADYMuH+fOH2JlZ5IgpvK7aNQmKUYlZ+vn08XrP90HBMIFh
+         0aJg==
+X-Gm-Message-State: ANhLgQ3bkBWE20yA2fmp6gCNBSfURWmuGKrEksWBR3YJQgLNsZ6MyTe7
+        hPCWlz5FcOwPEI1RZTuI+yyq+rL5mMOKNNZcjmY=
+X-Google-Smtp-Source: ADFU+vvN0UUlONTwZNdlp5HxOlnmdQrR7kdvIyEMSXCJV2YAqXTiDG8jHfNVJcFGibcS0ZsRpTeOTKu5AMbgzliGcQU=
+X-Received: by 2002:a50:9f6e:: with SMTP id b101mr352734edf.372.1585332655311;
+ Fri, 27 Mar 2020 11:10:55 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200327170601.18563-1-kirill.shutemov@linux.intel.com> <20200327170601.18563-4-kirill.shutemov@linux.intel.com>
+In-Reply-To: <20200327170601.18563-4-kirill.shutemov@linux.intel.com>
+From:   Yang Shi <shy828301@gmail.com>
+Date:   Fri, 27 Mar 2020 11:10:40 -0700
+Message-ID: <CAHbLzkoe-07mxAuA18QUi=H21_Ts0JcbP2SUT=02ZTPhaQB6ug@mail.gmail.com>
+Subject: Re: [PATCH 3/7] khugepaged: Drain LRU add pagevec to get rid of extra pins
+To:     "Kirill A. Shutemov" <kirill@shutemov.name>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Linux MM <linux-mm@kvack.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit 32adcaa010fa ("ARM: mmp: move cputype.h to include/linux/soc/")
-added a file entry that does not point to the intended file location.
+On Fri, Mar 27, 2020 at 10:06 AM Kirill A. Shutemov
+<kirill@shutemov.name> wrote:
+>
+> __collapse_huge_page_isolate() may fail due to extra pin in the LRU add
+> pagevec. It's petty common for swapin case: we swap in pages just to
+> fail due to the extra pin.
+>
+> Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+> ---
+>  mm/khugepaged.c | 8 ++++++++
+>  1 file changed, 8 insertions(+)
+>
+> diff --git a/mm/khugepaged.c b/mm/khugepaged.c
+> index 14d7afc90786..39e0994abeb8 100644
+> --- a/mm/khugepaged.c
+> +++ b/mm/khugepaged.c
+> @@ -585,11 +585,19 @@ static int __collapse_huge_page_isolate(struct vm_area_struct *vma,
+>                  * The page must only be referenced by the scanned process
+>                  * and page swap cache.
+>                  */
+> +               if (page_count(page) != 1 + PageSwapCache(page)) {
+> +                       /*
+> +                        * Drain pagevec and retry just in case we can get rid
+> +                        * of the extra pin, like in swapin case.
+> +                        */
+> +                       lru_add_drain();
 
-Since then, ./scripts/get_maintainer.pl --self-test complains:
+This is definitely correct.
 
-  warning: no file matches F: linux/soc/mmp/
+I'm wondering if we need one more lru_add_drain() before PageLRU check
+in khugepaged_scan_pmd() or not? The page might be in lru cache then
+get skipped. This would improve the success rate.
 
-Rectify the MAINTAINERS entry now.
+Reviewed-by: Yang Shi <yang.shi@linux.alibaba.com>
 
-Fixes: 32adcaa010fa ("ARM: mmp: move cputype.h to include/linux/soc/")
-Signed-off-by: Lukas Bulwahn <lukas.bulwahn@gmail.com>
----
-Lubomir, please pick this patch.
-applies cleanly on current master and next-20200327
-
- MAINTAINERS | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 5a5332b3591d..d1b21510fe5f 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -11199,7 +11199,7 @@ T:	git git://git.kernel.org/pub/scm/linux/kernel/git/lkundrak/linux-mmp.git
- S:	Odd Fixes
- F:	arch/arm/boot/dts/mmp*
- F:	arch/arm/mach-mmp/
--F:	linux/soc/mmp/
-+F:	include/linux/soc/mmp/
- 
- MMP USB PHY DRIVERS
- R:	Lubomir Rintel <lkundrak@v3.sk>
--- 
-2.17.1
-
+> +               }
+>                 if (page_count(page) != 1 + PageSwapCache(page)) {
+>                         unlock_page(page);
+>                         result = SCAN_PAGE_COUNT;
+>                         goto out;
+>                 }
+> +
+>                 if (pte_write(pteval)) {
+>                         writable = true;
+>                 } else {
+> --
+> 2.26.0
+>
+>
