@@ -2,178 +2,169 @@ Return-Path: <SRS0=s8dx=5M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 384DEC2D0EC
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 01:19:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD5ADC2D0E7
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 01:20:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0FCAD20774
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 01:19:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kuNIE00h"
+	by mail.kernel.org (Postfix) with ESMTP id BBCF520774
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 01:20:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727787AbgC0BTV (ORCPT
+        id S1727794AbgC0BUR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 21:19:21 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:38270 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727547AbgC0BTV (ORCPT
+        Thu, 26 Mar 2020 21:20:17 -0400
+Received: from mail-il1-f200.google.com ([209.85.166.200]:52062 "EHLO
+        mail-il1-f200.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727547AbgC0BUR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 21:19:21 -0400
-Received: by mail-pl1-f193.google.com with SMTP id w3so2843567plz.5;
-        Thu, 26 Mar 2020 18:19:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=8RzccpdJs/G4g/YI70Cb7EPmR/Et2mXpJnq1PHg6nSk=;
-        b=kuNIE00hSfe4Qa8d/4Dkb6zmRsWekGmGOLYtU6xT+ys2w9YxVaylami9atibTZ//6U
-         hCo045d/sRdh1jC+pUSbb+cmQb5fXF7VD3WXhfu685urCuH0cvitL7Ebj1D5/VKrmiuB
-         J+bQB+ccBhjMj+XtxEeM+anwRAV+T263V5YbLrcTVTQntq5OhC2I5DtjRBxJJi0ObgTD
-         asj0Ibr0bRSctoetbGOp3G7HaDaRvbYnP1SDIgllBQAcjws0G45y4eWm+2cG5neWUEMQ
-         VAllnvGj4VankHCxYF4F3ZQR87BMH6Q14ThWRZK3C9Q3Ja2m6oN+MWCWiFd17ihbZWH1
-         +O9A==
+        Thu, 26 Mar 2020 21:20:17 -0400
+Received: by mail-il1-f200.google.com with SMTP id j12so7262473ilf.18
+        for <linux-kernel@vger.kernel.org>; Thu, 26 Mar 2020 18:20:15 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=8RzccpdJs/G4g/YI70Cb7EPmR/Et2mXpJnq1PHg6nSk=;
-        b=mzGRPrG2ltSm8GKrUx5fH06eYRXent6vrAdDos1kp7Oqh5zYL8Lbw2NwqnL8QXRnNw
-         cltWFakfRgxfQcelOYINnXkVPHB0GO3O6CCwrvubq/aF58BHH6xmgH1Hz3MUm5t5xbKq
-         nrgSjVlmBZMQJrNZs7FvSi6gO3aojg2PYEoaZDV08aF0+IePDt2i/b+yrnKTaEK/I+i1
-         sDoJwfRk5IGbDl7ovfGbdNL1EBZRiPBns/QWKapDVTOXXaizBFSYQiTz6OMuv/txVICp
-         vSwTBaa8o31Hkxxa9D7ahZnwLYfbHWYQ0RXQIueL1CqXnCeFWT6bFO+7nPBqmjqE7bPd
-         XhZg==
-X-Gm-Message-State: ANhLgQ2ZNJXQ58bnd4KQD99/veqlj08Tp3acGlQicE+SUbXa7NhIGe0E
-        J9BscE3IkzEJnNMnGQkxezs=
-X-Google-Smtp-Source: ADFU+vutGYgWglpq5wY7uxRtBeJgiwazJiQtmeF0fbJ9rqpi474voEdnnWFDmrGj4biq9HgGHe5IIg==
-X-Received: by 2002:a17:90a:208:: with SMTP id c8mr3056837pjc.153.1585271958559;
-        Thu, 26 Mar 2020 18:19:18 -0700 (PDT)
-Received: from localhost ([161.117.239.120])
-        by smtp.gmail.com with ESMTPSA id y7sm2701914pfq.159.2020.03.26.18.19.17
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 26 Mar 2020 18:19:18 -0700 (PDT)
-From:   Qiujun Huang <hqjagain@gmail.com>
-To:     marcelo.leitner@gmail.com, davem@davemloft.net
-Cc:     vyasevich@gmail.com, nhorman@tuxdriver.com, kuba@kernel.org,
-        linux-sctp@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, anenbupt@gmail.com,
-        Qiujun Huang <hqjagain@gmail.com>
-Subject: [PATCH v5] sctp: fix refcount bug in sctp_wfree
-Date:   Fri, 27 Mar 2020 09:19:12 +0800
-Message-Id: <20200327011912.19040-1-hqjagain@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=nv56BrM1FdW4Prsb3RIkp/NnnWl5NQQVtK5CLTpOTpw=;
+        b=QMecaUGUntLPOCdSt7zpIXvUrZEgNIgnDq/HNG/P4ae//8uav+50lLtUflKURUckRN
+         QAdU2Yw6X3I5/foXwqpjog5bp0qLcLI1tWvnuOjsyOiWiYIBm6HVM/lgoeFD6YKVe2fe
+         6HYhSDThioYb/kOLoBVIjqlO2CS5uItMcqdFiAneHUFMys2IBFNDN+Y1tzncg04VlHNC
+         0RutwFqKCI+/1CvPS6R40DkEEWgpBpGswT52+uQ+CovPQb0sXQLrn0mPu0Qj2KA42qLN
+         DyaRBXd2fx2dEzCXo1ND09xtwaEGJLq8sTXVd73Cz+offjq4jCb+RSv6BioWlZgkF5R9
+         mRfA==
+X-Gm-Message-State: ANhLgQ3Y5ter/mecEeHlm/Cd/szUsSGlgB6yG+fDxcGG36tS2JXohOZB
+        Ou7CU3ozuiEmAjESId4eszvgUZCliPxEFI4rurwevSP2iOs4
+X-Google-Smtp-Source: ADFU+vuyE2Uj89wuHmdzL5iE6DwfYqTpSvi2c6V4qPhGOhf+2zjwEaFke3LEHGHY7VJ0+0KBCGa/OIIAcZvCr8E1rRIx8hemG4Yk
+MIME-Version: 1.0
+X-Received: by 2002:a92:1e02:: with SMTP id e2mr11683358ile.292.1585272014740;
+ Thu, 26 Mar 2020 18:20:14 -0700 (PDT)
+Date:   Thu, 26 Mar 2020 18:20:14 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000004fa25e05a1cbe763@google.com>
+Subject: KASAN: slab-out-of-bounds Read in vsscanf
+From:   syzbot <syzbot+bfdd4a2f07be52351350@syzkaller.appspotmail.com>
+To:     casey@schaufler-ca.com, jmorris@namei.org,
+        linux-kernel@vger.kernel.org,
+        linux-security-module@vger.kernel.org, serge@hallyn.com,
+        syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We should iterate over the datamsgs to modify
-all chunks(skbs) to newsk.
+Hello,
 
-The following case cause the bug:
-for the trouble SKB, it was in outq->transmitted list
+syzbot found the following crash on:
 
-sctp_outq_sack
-        sctp_check_transmitted
-                SKB was moved to outq->sacked list
-        then throw away the sack queue
-                SKB was deleted from outq->sacked
-(but it was held by datamsg at sctp_datamsg_to_asoc
-So, sctp_wfree was not called here)
+HEAD commit:    1b649e0b Merge git://git.kernel.org/pub/scm/linux/kernel/g..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=11044405e00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=4ac76c43beddbd9
+dashboard link: https://syzkaller.appspot.com/bug?extid=bfdd4a2f07be52351350
+compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=13819303e00000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=13eaed4be00000
 
-then migrate happened
+Bisection is inconclusive: the bug happens on the oldest tested release.
 
-        sctp_for_each_tx_datachunk(
-        sctp_clear_owner_w);
-        sctp_assoc_migrate();
-        sctp_for_each_tx_datachunk(
-        sctp_set_owner_w);
-SKB was not in the outq, and was not changed to newsk
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=150e6ac5e00000
+final crash:    https://syzkaller.appspot.com/x/report.txt?x=170e6ac5e00000
+console output: https://syzkaller.appspot.com/x/log.txt?x=130e6ac5e00000
 
-finally
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+bfdd4a2f07be52351350@syzkaller.appspotmail.com
 
-__sctp_outq_teardown
-        sctp_chunk_put (for another skb)
-                sctp_datamsg_put
-                        __kfree_skb(msg->frag_list)
-                                sctp_wfree (for SKB)
-	SKB->sk was still oldsk (skb->sk != asoc->base.sk).
+==================================================================
+BUG: KASAN: slab-out-of-bounds in vsscanf+0x2666/0x2ef0 lib/vsprintf.c:3275
+Read of size 1 at addr ffff888093622f42 by task syz-executor055/7117
 
-Reported-and-tested-by:syzbot+cea71eec5d6de256d54d@syzkaller.appspotmail.com
-Signed-off-by: Qiujun Huang <hqjagain@gmail.com>
+CPU: 1 PID: 7117 Comm: syz-executor055 Not tainted 5.6.0-rc7-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x1e9/0x30e lib/dump_stack.c:118
+ print_address_description+0x74/0x5c0 mm/kasan/report.c:374
+ __kasan_report+0x14b/0x1c0 mm/kasan/report.c:506
+ kasan_report+0x25/0x50 mm/kasan/common.c:641
+ vsscanf+0x2666/0x2ef0 lib/vsprintf.c:3275
+ sscanf+0x6c/0x90 lib/vsprintf.c:3481
+ smk_set_cipso+0x1ac/0x6a0 security/smack/smackfs.c:881
+ __vfs_write+0xa7/0x710 fs/read_write.c:494
+ vfs_write+0x271/0x570 fs/read_write.c:558
+ ksys_write+0x115/0x220 fs/read_write.c:611
+ do_syscall_64+0xf3/0x1b0 arch/x86/entry/common.c:294
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x4401b9
+Code: 18 89 d0 c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 fb 13 fc ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007ffd20456888 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
+RAX: ffffffffffffffda RBX: 00000000004002c8 RCX: 00000000004401b9
+RDX: 0000000000000001 RSI: 00000000200005c0 RDI: 0000000000000003
+RBP: 00000000006ca018 R08: 00000000004002c8 R09: 00000000004002c8
+R10: 00000000004002c8 R11: 0000000000000246 R12: 0000000000401a40
+R13: 0000000000401ad0 R14: 0000000000000000 R15: 0000000000000000
+
+Allocated by task 7117:
+ save_stack mm/kasan/common.c:72 [inline]
+ set_track mm/kasan/common.c:80 [inline]
+ __kasan_kmalloc+0x118/0x1c0 mm/kasan/common.c:515
+ __do_kmalloc mm/slab.c:3656 [inline]
+ __kmalloc_track_caller+0x249/0x320 mm/slab.c:3671
+ memdup_user_nul+0x26/0xf0 mm/util.c:259
+ smk_set_cipso+0xff/0x6a0 security/smack/smackfs.c:859
+ __vfs_write+0xa7/0x710 fs/read_write.c:494
+ vfs_write+0x271/0x570 fs/read_write.c:558
+ ksys_write+0x115/0x220 fs/read_write.c:611
+ do_syscall_64+0xf3/0x1b0 arch/x86/entry/common.c:294
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+Freed by task 1:
+ save_stack mm/kasan/common.c:72 [inline]
+ set_track mm/kasan/common.c:80 [inline]
+ kasan_set_free_info mm/kasan/common.c:337 [inline]
+ __kasan_slab_free+0x12e/0x1e0 mm/kasan/common.c:476
+ __cache_free mm/slab.c:3426 [inline]
+ kfree+0x10a/0x220 mm/slab.c:3757
+ tomoyo_path_perm+0x59b/0x740 security/tomoyo/file.c:842
+ security_inode_getattr+0xc0/0x140 security/security.c:1254
+ vfs_getattr+0x27/0x6e0 fs/stat.c:117
+ vfs_statx fs/stat.c:201 [inline]
+ vfs_lstat include/linux/fs.h:3277 [inline]
+ __do_sys_newlstat fs/stat.c:364 [inline]
+ __se_sys_newlstat+0x85/0x140 fs/stat.c:358
+ do_syscall_64+0xf3/0x1b0 arch/x86/entry/common.c:294
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+The buggy address belongs to the object at ffff888093622f40
+ which belongs to the cache kmalloc-32 of size 32
+The buggy address is located 2 bytes inside of
+ 32-byte region [ffff888093622f40, ffff888093622f60)
+The buggy address belongs to the page:
+page:ffffea00024d8880 refcount:1 mapcount:0 mapping:ffff8880aa4001c0 index:0xffff888093622fc1
+flags: 0xfffe0000000200(slab)
+raw: 00fffe0000000200 ffffea000271b988 ffffea00028ae488 ffff8880aa4001c0
+raw: ffff888093622fc1 ffff888093622000 0000000100000039 0000000000000000
+page dumped because: kasan: bad access detected
+
+Memory state around the buggy address:
+ ffff888093622e00: fb fb fb fb fc fc fc fc fb fb fb fb fc fc fc fc
+ ffff888093622e80: fb fb fb fb fc fc fc fc 00 00 01 fc fc fc fc fc
+>ffff888093622f00: fb fb fb fb fc fc fc fc 02 fc fc fc fc fc fc fc
+                                           ^
+ ffff888093622f80: fb fb fb fb fc fc fc fc fc fc fc fc fc fc fc fc
+ ffff888093623000: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+==================================================================
+
+
 ---
- net/sctp/socket.c | 30 ++++++++++++++++++++++--------
- 1 file changed, 22 insertions(+), 8 deletions(-)
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-diff --git a/net/sctp/socket.c b/net/sctp/socket.c
-index 1b56fc440606..75acbd5d4597 100644
---- a/net/sctp/socket.c
-+++ b/net/sctp/socket.c
-@@ -147,29 +147,43 @@ static void sctp_clear_owner_w(struct sctp_chunk *chunk)
- 	skb_orphan(chunk->skb);
- }
- 
-+#define traverse_and_process()	\
-+do {				\
-+	msg = chunk->msg;	\
-+	if (msg == prev_msg)	\
-+		continue;	\
-+	list_for_each_entry(c, &msg->chunks, frag_list) {	\
-+		if ((clear && asoc->base.sk == c->skb->sk) ||	\
-+		    (!clear && asoc->base.sk != c->skb->sk))	\
-+		    cb(c);	\
-+	}			\
-+} while (0)
-+
- static void sctp_for_each_tx_datachunk(struct sctp_association *asoc,
-+				       bool clear,
- 				       void (*cb)(struct sctp_chunk *))
- 
- {
-+	struct sctp_datamsg *msg, *prev_msg = NULL;
- 	struct sctp_outq *q = &asoc->outqueue;
-+	struct sctp_chunk *chunk, *c;
- 	struct sctp_transport *t;
--	struct sctp_chunk *chunk;
- 
- 	list_for_each_entry(t, &asoc->peer.transport_addr_list, transports)
- 		list_for_each_entry(chunk, &t->transmitted, transmitted_list)
--			cb(chunk);
-+			traverse_and_process();
- 
- 	list_for_each_entry(chunk, &q->retransmit, transmitted_list)
--		cb(chunk);
-+		traverse_and_process();
- 
- 	list_for_each_entry(chunk, &q->sacked, transmitted_list)
--		cb(chunk);
-+		traverse_and_process();
- 
- 	list_for_each_entry(chunk, &q->abandoned, transmitted_list)
--		cb(chunk);
-+		traverse_and_process();
- 
- 	list_for_each_entry(chunk, &q->out_chunk_list, list)
--		cb(chunk);
-+		traverse_and_process();
- }
- 
- static void sctp_for_each_rx_skb(struct sctp_association *asoc, struct sock *sk,
-@@ -9574,9 +9588,9 @@ static int sctp_sock_migrate(struct sock *oldsk, struct sock *newsk,
- 	 * paths won't try to lock it and then oldsk.
- 	 */
- 	lock_sock_nested(newsk, SINGLE_DEPTH_NESTING);
--	sctp_for_each_tx_datachunk(assoc, sctp_clear_owner_w);
-+	sctp_for_each_tx_datachunk(assoc, true, sctp_clear_owner_w);
- 	sctp_assoc_migrate(assoc, newsk);
--	sctp_for_each_tx_datachunk(assoc, sctp_set_owner_w);
-+	sctp_for_each_tx_datachunk(assoc, false, sctp_set_owner_w);
- 
- 	/* If the association on the newsk is already closed before accept()
- 	 * is called, set RCV_SHUTDOWN flag.
--- 
-2.17.1
-
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
