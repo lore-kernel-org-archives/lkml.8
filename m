@@ -2,123 +2,189 @@ Return-Path: <SRS0=s8dx=5M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6FECC2D0ED
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 13:23:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D9E5C43331
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 13:24:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 71BFA2082E
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 13:23:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E25C2206DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 13:24:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="B3p2FW7y"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EjM7MEdY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727575AbgC0NX3 (ORCPT
+        id S1727611AbgC0NYN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Mar 2020 09:23:29 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:33784 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726275AbgC0NX3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Mar 2020 09:23:29 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=KxLAqRWANV+lRpwj2JfW/z28qcDsnVnMDHMTtllBTdU=; b=B3p2FW7y41USJyD7JbgxxGzYae
-        2wnaFlA/0Ag++03oLARlmo19xECQB4FkGAuOn+ffFTxdNCfMEOFQ0hgilpPt7ye/3abHiSHLT+jfV
-        DJGuWVZm+teNrbR0MpvqUUrFGFGkyvA/AANfjGHsyhLkIEg6hPn9bkoUfxbEwuPBtEJ8=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
-        (envelope-from <andrew@lunn.ch>)
-        id 1jHox7-0001ab-P3; Fri, 27 Mar 2020 14:23:13 +0100
-Date:   Fri, 27 Mar 2020 14:23:13 +0100
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Florinel Iordache <florinel.iordache@nxp.com>
-Cc:     "davem@davemloft.net" <davem@davemloft.net>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
-        "hkallweit1@gmail.com" <hkallweit1@gmail.com>,
-        "linux@armlinux.org.uk" <linux@armlinux.org.uk>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "kuba@kernel.org" <kuba@kernel.org>,
-        "corbet@lwn.net" <corbet@lwn.net>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        Leo Li <leoyang.li@nxp.com>,
-        "Madalin Bucur (OSS)" <madalin.bucur@oss.nxp.com>,
-        Ioana Ciornei <ioana.ciornei@nxp.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [EXT] Re: [PATCH net-next 6/9] net: phy: add backplane kr driver
- support
-Message-ID: <20200327132313.GO3819@lunn.ch>
-References: <1585230682-24417-1-git-send-email-florinel.iordache@nxp.com>
- <1585230682-24417-7-git-send-email-florinel.iordache@nxp.com>
- <20200327010706.GN3819@lunn.ch>
- <AM0PR04MB5443C1142ABE578ACC641FC5FBCC0@AM0PR04MB5443.eurprd04.prod.outlook.com>
+        Fri, 27 Mar 2020 09:24:13 -0400
+Received: from us-smtp-delivery-74.mimecast.com ([63.128.21.74]:43562 "EHLO
+        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726275AbgC0NYN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Mar 2020 09:24:13 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1585315451;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=JSq3c7WLShp81KSs/TbLLBrH5NCFAOk3q6ZjSEUVQL4=;
+        b=EjM7MEdYx852YiM/4xNSALzJt/hbz0GHxYXlMPwVVo9kvXRLx2wAP/RAdjlejrph/itOyV
+        8BCC9vPTV8KbONAR98xOZq9yIsrRCwDUkiNrw83ubh01FfWSVcKoYMQgwLDC0WMb2tAu1i
+        rX/iKkrD5JT8LWaK5O7C8qbAXrpIzxM=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-206-yCHsG3NONTeOpZ9lTzC5Xw-1; Fri, 27 Mar 2020 09:24:10 -0400
+X-MC-Unique: yCHsG3NONTeOpZ9lTzC5Xw-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 6C319800D48;
+        Fri, 27 Mar 2020 13:24:08 +0000 (UTC)
+Received: from krava (unknown [10.40.196.17])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id A3A5E5C1D4;
+        Fri, 27 Mar 2020 13:24:02 +0000 (UTC)
+Date:   Fri, 27 Mar 2020 14:23:58 +0100
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     Ian Rogers <irogers@google.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-kernel@vger.kernel.org, Stephane Eranian <eranian@google.com>
+Subject: Re: [PATCH] perf synthetic-events: save 4kb from 2 stack frames
+Message-ID: <20200327132358.GA2114302@krava>
+References: <20200327063651.146969-1-irogers@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <AM0PR04MB5443C1142ABE578ACC641FC5FBCC0@AM0PR04MB5443.eurprd04.prod.outlook.com>
+In-Reply-To: <20200327063651.146969-1-irogers@google.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 27, 2020 at 01:02:17PM +0000, Florinel Iordache wrote:
-> > > +static u32 le_ioread32(void __iomem *reg) {
-> > > +     return ioread32(reg);
-> > > +}
-> > > +
-> > > +static void le_iowrite32(u32 value, void __iomem *reg) {
-> > > +     iowrite32(value, reg);
-> > > +}
-> > > +
-> > > +static u32 be_ioread32(void __iomem *reg) {
-> > > +     return ioread32be(reg);
-> > > +}
-> > > +
-> > > +static void be_iowrite32(u32 value, void __iomem *reg) {
-> > > +     iowrite32be(value, reg);
-> > > +}
-> > 
-> > This is very surprising to me. I've not got my head around the structure of this
-> > code yet, but i'm surprised to see memory mapped access functions in generic
-> > code.
-> > 
-> >        Andrew
+On Thu, Mar 26, 2020 at 11:36:51PM -0700, Ian Rogers wrote:
+> Reduce the scope of PATH_MAX sized char buffers so that the compiler can
+> overlap their usage.
 > 
-> Hi Andrew,
+> perf_event__synthesize_mmap_events before 'sub $0x45b8,%rsp' after
+> 'sub $0x35b8,%rsp'.
 > 
-> This is part of the framework used to automatically setup desired I/O 
-> callbacks for memory access according to device specific endianness 
-> which is specified in the specific device tree (DTS).
-> This approach (explained below) was used to avoid the potential 
-> redundant code related to memory access LE/BE which should be 
-> similar for all devices. 
+> perf_event__get_comm_ids before 'sub $0x2028,%rsp' after 'sub $0x1028,%rsp'.
 
-All devices which are using mmio. I assume the standard does not say
-anything about memory mapped IO. It talks just about MDIO registers.
+nice catch.. is this actualy problem somewhere? I thought
+we don't need to care that much about this in user space
 
-I would expect the generic code to just have generic accessors, which
-could work for MMIO, yet more MDIO registers, i2c, spi, etc.
+jirka
 
-So add another support file which adds an MMIO implementation of these
-generic access functions. Any driver which uses MMIO can pull it in.
-The same should be true for the DT binding. Don't assume MMIO in the
-generic binding.
+> 
+> Signed-off-by: Ian Rogers <irogers@google.com>
+> ---
+>  tools/perf/util/synthetic-events.c | 46 ++++++++++++++++++------------
+>  1 file changed, 27 insertions(+), 19 deletions(-)
+> 
+> diff --git a/tools/perf/util/synthetic-events.c b/tools/perf/util/synthetic-events.c
+> index 3f28af39f9c6..9ff54707bb30 100644
+> --- a/tools/perf/util/synthetic-events.c
+> +++ b/tools/perf/util/synthetic-events.c
+> @@ -70,7 +70,6 @@ int perf_tool__process_synth_event(struct perf_tool *tool,
+>  static int perf_event__get_comm_ids(pid_t pid, char *comm, size_t len,
+>  				    pid_t *tgid, pid_t *ppid)
+>  {
+> -	char filename[PATH_MAX];
+>  	char bf[4096];
+>  	int fd;
+>  	size_t size = 0;
+> @@ -80,12 +79,16 @@ static int perf_event__get_comm_ids(pid_t pid, char *comm, size_t len,
+>  	*tgid = -1;
+>  	*ppid = -1;
+>  
+> -	snprintf(filename, sizeof(filename), "/proc/%d/status", pid);
+> +	{
+> +		char filename[PATH_MAX];
+>  
+> -	fd = open(filename, O_RDONLY);
+> -	if (fd < 0) {
+> -		pr_debug("couldn't open %s\n", filename);
+> -		return -1;
+> +		snprintf(filename, sizeof(filename), "/proc/%d/status", pid);
+> +
+> +		fd = open(filename, O_RDONLY);
+> +		if (fd < 0) {
+> +			pr_debug("couldn't open %s\n", filename);
+> +			return -1;
+> +		}
+>  	}
+>  
+>  	n = read(fd, bf, sizeof(bf) - 1);
+> @@ -280,7 +283,6 @@ int perf_event__synthesize_mmap_events(struct perf_tool *tool,
+>  				       struct machine *machine,
+>  				       bool mmap_data)
+>  {
+> -	char filename[PATH_MAX];
+>  	FILE *fp;
+>  	unsigned long long t;
+>  	bool truncation = false;
+> @@ -292,18 +294,22 @@ int perf_event__synthesize_mmap_events(struct perf_tool *tool,
+>  	if (machine__is_default_guest(machine))
+>  		return 0;
+>  
+> -	snprintf(filename, sizeof(filename), "%s/proc/%d/task/%d/maps",
+> -		 machine->root_dir, pid, pid);
+> +#define FILENAME_FMT_STRING "%s/proc/%d/task/%d/maps"
+> +	{
+> +		char filename[PATH_MAX];
+>  
+> -	fp = fopen(filename, "r");
+> -	if (fp == NULL) {
+> -		/*
+> -		 * We raced with a task exiting - just return:
+> -		 */
+> -		pr_debug("couldn't open %s\n", filename);
+> -		return -1;
+> -	}
+> +		snprintf(filename, sizeof(filename), FILENAME_FMT_STRING,
+> +			machine->root_dir, pid, pid);
+>  
+> +		fp = fopen(filename, "r");
+> +		if (fp == NULL) {
+> +			/*
+> +			 * We raced with a task exiting - just return:
+> +			 */
+> +			pr_debug("couldn't open %s\n", filename);
+> +			return -1;
+> +		}
+> +	}
+>  	event->header.type = PERF_RECORD_MMAP2;
+>  	t = rdclock();
+>  
+> @@ -320,10 +326,10 @@ int perf_event__synthesize_mmap_events(struct perf_tool *tool,
+>  			break;
+>  
+>  		if ((rdclock() - t) > timeout) {
+> -			pr_warning("Reading %s time out. "
+> +			pr_warning("Reading " FILENAME_FMT_STRING " time out. "
+>  				   "You may want to increase "
+>  				   "the time limit by --proc-map-timeout\n",
+> -				   filename);
+> +				   machine->root_dir, pid, pid);
+>  			truncation = true;
+>  			goto out;
+>  		}
+> @@ -412,6 +418,8 @@ int perf_event__synthesize_mmap_events(struct perf_tool *tool,
+>  
+>  	fclose(fp);
+>  	return rc;
+> +
+> +#undef FILENAME_FMT_STRING
+>  }
+>  
+>  int perf_event__synthesize_modules(struct perf_tool *tool, perf_event__handler_t process,
+> -- 
+> 2.25.1.696.g5e7596f4ac-goog
+> 
 
-> This portion of code is just preparing these four static IO routines 
-> for specific endianness access LE/BE
-
-Linux has a lot of MMIO accessors. Are you sure there is not one which
-will do the right thing, making use of cpu_le32() or cpu_be32()
-etc. Or are there different variants of the hardware, with some using
-BE registers and some using LE registers? Note, this is all about the
-endianness of the register, not the endianness of the cpu. cpu_le32()
-will be a NOP when the CPU is running LE.
-
-     Andrew
