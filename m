@@ -2,183 +2,184 @@ Return-Path: <SRS0=s8dx=5M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25A21C2D0E5
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 17:03:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85010C2D0EE
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 17:04:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A5BF920838
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 17:03:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F213206E6
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 17:04:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="UKAxQ3og"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ITO7+o+P"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727763AbgC0RDz (ORCPT
+        id S1727792AbgC0REE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Mar 2020 13:03:55 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:39440 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726515AbgC0RDz (ORCPT
+        Fri, 27 Mar 2020 13:04:04 -0400
+Received: from us-smtp-delivery-74.mimecast.com ([216.205.24.74]:59734 "EHLO
+        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727505AbgC0RED (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Mar 2020 13:03:55 -0400
-Received: by mail-lj1-f196.google.com with SMTP id i20so10967853ljn.6
-        for <linux-kernel@vger.kernel.org>; Fri, 27 Mar 2020 10:03:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=iEb1i/1dam767tXvuNF7Sp30M1yJHeTtnfytL2XD9+0=;
-        b=UKAxQ3oghy+KZvU5JfMJspP8dHawVw7uDcnn47JgJG7naaZjSSbK3N/IV1OHC4LJiD
-         y4XVmBqPEg8SEU+wmheP20Xupt0JU5rP9FMo9KWUEmky3NsncP1TBOc1V6LAv+cNI2MW
-         hOb0MWLTA0sCb2gN8xaaF7IKfrgbtHv1VBtgI5alO0NUxnDbF47pj8AwJI2tCqaQKrqL
-         ET+rtMfzfCxvwusObnkT4M6ZrFUOdSnbXV35HKtvOZGbxcZ3UPExH9BpRUL4A67zVJDt
-         tCST/F2usiNPzXp8GA33dK4aj0lB5usiYOYRV9iU/g5UYYCBdV9GZfhgIFp+uZ5VkzXk
-         00xA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=iEb1i/1dam767tXvuNF7Sp30M1yJHeTtnfytL2XD9+0=;
-        b=rNd0BKJWrEyst8LXFtnQdAbRoOFRFj7+VeU85ePBTFJNJh34Y60ygJtt6AXmqzqk4O
-         Yvez1632CxOZhjxhHwU0c8MN8ziv+TzxVun97j2u17y7kW2rjur3n0iKoeC41RxUs2/c
-         Cfmu/4bIOlICUdWg4LZXlmRPcfEH3n/11yceKt7sKPR2ZgucT5r/TK9VOqlGhYKYnVMF
-         K7BrDO1GXkT2sOKT3hjLxsOkPU+IzPtRt0Y/Rvypw8qDgIZL41cksnn2pU7vKOyw3B9y
-         XveLDdBPHHCGG6bIEUaLOrOLikn4ZKetNUNC9sLmINnTBKN5I5W4KtkjjFxAFsvLDeUd
-         +bdA==
-X-Gm-Message-State: ANhLgQ2Ehk9IbO1dpQNfATz6nSWoan7q+K6HQzDATbwdHbu8qdVj5wyn
-        C9EZVGdiCb0DGfAL1lskhCXesw==
-X-Google-Smtp-Source: ADFU+vsaOT1upNhaotWwn6axLPCq69xi3Z89C1aMdJzXgAdGhWzDJWqFhqI079xcIrBwzRY46uYzpw==
-X-Received: by 2002:a2e:b6c2:: with SMTP id m2mr8958115ljo.72.1585328631545;
-        Fri, 27 Mar 2020 10:03:51 -0700 (PDT)
-Received: from box.localdomain ([86.57.175.117])
-        by smtp.gmail.com with ESMTPSA id j125sm2083865lfj.38.2020.03.27.10.03.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 27 Mar 2020 10:03:50 -0700 (PDT)
-From:   "Kirill A. Shutemov" <kirill@shutemov.name>
-X-Google-Original-From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-Received: by box.localdomain (Postfix, from userid 1000)
-        id 8BD32100D24; Fri, 27 Mar 2020 20:03:54 +0300 (+03)
-To:     akpm@linux-foundation.org
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-Subject: [PATCH] thp: Simplify splitting PMD mapping huge zero page
-Date:   Fri, 27 Mar 2020 20:03:53 +0300
-Message-Id: <20200327170353.17734-1-kirill.shutemov@linux.intel.com>
-X-Mailer: git-send-email 2.26.0
+        Fri, 27 Mar 2020 13:04:03 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1585328641;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+        bh=OQDF47lil51TLfYy2HK0tKspeN1b188hDk3snsOmZik=;
+        b=ITO7+o+PxlWQjB6xxKZ8GqVMNcMc1mwIC55WcW7+pq4nXGqX0I3g3OKGmByU6XKFSZ5tWH
+        E7w85dS9s1l6dD88VHjTi9Xbs+nHdFJYxk0/onabsE1ArIelVWwDiwBeq/4+9Cc9Gc/tdS
+        ltgxp1G7xu4iJ2s8+pC6Erv4LlKmq2E=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-155-MZ4vZhQbMD6GD5l1NLGb3w-1; Fri, 27 Mar 2020 13:03:57 -0400
+X-MC-Unique: MZ4vZhQbMD6GD5l1NLGb3w-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 4973EDB61;
+        Fri, 27 Mar 2020 17:03:52 +0000 (UTC)
+Received: from [10.36.112.108] (ovpn-112-108.ams2.redhat.com [10.36.112.108])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 39BB68B773;
+        Fri, 27 Mar 2020 17:03:27 +0000 (UTC)
+Subject: Re: [PATCH v2 00/10] virtio-mem: paravirtualized memory
+To:     Pankaj Gupta <pankaj.gupta.linux@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        virtio-dev@lists.oasis-open.org,
+        virtualization@lists.linux-foundation.org, kvm@vger.kernel.org,
+        Michal Hocko <mhocko@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Michael S . Tsirkin" <mst@redhat.com>,
+        Sebastien Boeuf <sebastien.boeuf@intel.com>,
+        Samuel Ortiz <samuel.ortiz@intel.com>,
+        Robert Bradford <robert.bradford@intel.com>,
+        Luiz Capitulino <lcapitulino@redhat.com>,
+        teawater <teawaterz@linux.alibaba.com>,
+        Igor Mammedov <imammedo@redhat.com>,
+        "Dr . David Alan Gilbert" <dgilbert@redhat.com>,
+        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
+        Alexander Potapenko <glider@google.com>,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        Anthony Yznaga <anthony.yznaga@oracle.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Young <dyoung@redhat.com>,
+        Jason Wang <jasowang@redhat.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Juergen Gross <jgross@suse.com>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        Len Brown <lenb@kernel.org>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Michal Hocko <mhocko@suse.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Oscar Salvador <osalvador@suse.com>,
+        Oscar Salvador <osalvador@suse.de>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        Pavel Tatashin <pavel.tatashin@microsoft.com>,
+        Pingfan Liu <kernelfans@gmail.com>, Qian Cai <cai@lca.pw>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Wei Yang <richard.weiyang@gmail.com>
+References: <20200311171422.10484-1-david@redhat.com>
+ <CAM9Jb+g6DEL1=L1ESfW+Jnr_rfO5rEtOwnp10eCLpajaAv8wvg@mail.gmail.com>
+From:   David Hildenbrand <david@redhat.com>
+Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+Organization: Red Hat GmbH
+Message-ID: <6858c4d8-7570-2c2b-5d53-1a7f994c14ee@redhat.com>
+Date:   Fri, 27 Mar 2020 18:03:26 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAM9Jb+g6DEL1=L1ESfW+Jnr_rfO5rEtOwnp10eCLpajaAv8wvg@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Splitting PMD mapping huge zero page can be simplified a lot: we can
-just unmap it and fallback to PTE handling.
+On 27.03.20 17:58, Pankaj Gupta wrote:
+> Hi David,
+> 
+> Trying to test the series with the Qemu branch(virtio-mem) mentioned.
+> Unfortunately,
+> not able to hotplug memory. Is anything changed from your previous posting
+> or I am doing something wrong?
+> 
+> After giving value to "requested-size", I see size as zero.
+> 
+> (qemu) qom-set vm0 requested-size 10G
+> (qemu) info memory-devices
+> Memory device [virtio-mem]: "vm0"
+>   memaddr: 0x240000000
+>   node: 0
+>   requested-size: 10737418240
+>   size: 0
+>   max-size: 107374182400
+>   block-size: 2097152
+>   memdev: /objects/mem0
+> 
+> Guest kernel: 5.6.0-rc4
+> Using same Qemu commandline arguments mentioned in cover-letter.
 
-Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
----
- mm/huge_memory.c | 57 ++++--------------------------------------------
- 1 file changed, 4 insertions(+), 53 deletions(-)
+Are you booting from an initrd? Are you compiling virtio-mem as a kernel
+module or into the kernel binary?
 
-diff --git a/mm/huge_memory.c b/mm/huge_memory.c
-index 42407e16bd80..ef6a6bcb291f 100644
---- a/mm/huge_memory.c
-+++ b/mm/huge_memory.c
-@@ -2114,40 +2114,6 @@ void __split_huge_pud(struct vm_area_struct *vma, pud_t *pud,
- }
- #endif /* CONFIG_HAVE_ARCH_TRANSPARENT_HUGEPAGE_PUD */
- 
--static void __split_huge_zero_page_pmd(struct vm_area_struct *vma,
--		unsigned long haddr, pmd_t *pmd)
--{
--	struct mm_struct *mm = vma->vm_mm;
--	pgtable_t pgtable;
--	pmd_t _pmd;
--	int i;
--
--	/*
--	 * Leave pmd empty until pte is filled note that it is fine to delay
--	 * notification until mmu_notifier_invalidate_range_end() as we are
--	 * replacing a zero pmd write protected page with a zero pte write
--	 * protected page.
--	 *
--	 * See Documentation/vm/mmu_notifier.rst
--	 */
--	pmdp_huge_clear_flush(vma, haddr, pmd);
--
--	pgtable = pgtable_trans_huge_withdraw(mm, pmd);
--	pmd_populate(mm, &_pmd, pgtable);
--
--	for (i = 0; i < HPAGE_PMD_NR; i++, haddr += PAGE_SIZE) {
--		pte_t *pte, entry;
--		entry = pfn_pte(my_zero_pfn(haddr), vma->vm_page_prot);
--		entry = pte_mkspecial(entry);
--		pte = pte_offset_map(&_pmd, haddr);
--		VM_BUG_ON(!pte_none(*pte));
--		set_pte_at(mm, haddr, pte, entry);
--		pte_unmap(pte);
--	}
--	smp_wmb(); /* make pte visible before pmd */
--	pmd_populate(mm, pmd, pgtable);
--}
--
- static void __split_huge_pmd_locked(struct vm_area_struct *vma, pmd_t *pmd,
- 		unsigned long haddr, bool freeze)
- {
-@@ -2167,7 +2133,7 @@ static void __split_huge_pmd_locked(struct vm_area_struct *vma, pmd_t *pmd,
- 
- 	count_vm_event(THP_SPLIT_PMD);
- 
--	if (!vma_is_anonymous(vma)) {
-+	if (!vma_is_anonymous(vma) || is_huge_zero_pmd(*pmd)) {
- 		_pmd = pmdp_huge_clear_flush_notify(vma, haddr, pmd);
- 		/*
- 		 * We are going to unmap this huge page. So
-@@ -2175,7 +2141,7 @@ static void __split_huge_pmd_locked(struct vm_area_struct *vma, pmd_t *pmd,
- 		 */
- 		if (arch_needs_pgtable_deposit())
- 			zap_deposited_table(mm, pmd);
--		if (vma_is_dax(vma))
-+		if (vma_is_dax(vma) || is_huge_zero_pmd(*pmd))
- 			return;
- 		page = pmd_page(_pmd);
- 		if (!PageDirty(page) && pmd_dirty(_pmd))
-@@ -2186,17 +2152,6 @@ static void __split_huge_pmd_locked(struct vm_area_struct *vma, pmd_t *pmd,
- 		put_page(page);
- 		add_mm_counter(mm, mm_counter_file(page), -HPAGE_PMD_NR);
- 		return;
--	} else if (is_huge_zero_pmd(*pmd)) {
--		/*
--		 * FIXME: Do we want to invalidate secondary mmu by calling
--		 * mmu_notifier_invalidate_range() see comments below inside
--		 * __split_huge_pmd() ?
--		 *
--		 * We are going from a zero huge page write protected to zero
--		 * small page also write protected so it does not seems useful
--		 * to invalidate secondary mmu at this time.
--		 */
--		return __split_huge_zero_page_pmd(vma, haddr, pmd);
- 	}
- 
- 	/*
-@@ -2339,13 +2294,9 @@ void __split_huge_pmd(struct vm_area_struct *vma, pmd_t *pmd,
- 	spin_unlock(ptl);
- 	/*
- 	 * No need to double call mmu_notifier->invalidate_range() callback.
--	 * They are 3 cases to consider inside __split_huge_pmd_locked():
-+	 * They are 2 cases to consider inside __split_huge_pmd_locked():
- 	 *  1) pmdp_huge_clear_flush_notify() call invalidate_range() obvious
--	 *  2) __split_huge_zero_page_pmd() read only zero page and any write
--	 *    fault will trigger a flush_notify before pointing to a new page
--	 *    (it is fine if the secondary mmu keeps pointing to the old zero
--	 *    page in the meantime)
--	 *  3) Split a huge pmd into pte pointing to the same page. No need
-+	 *  2) Split a huge pmd into pte pointing to the same page. No need
- 	 *     to invalidate secondary tlb entry they are all still valid.
- 	 *     any further changes to individual pte will notify. So no need
- 	 *     to call mmu_notifier->invalidate_range()
+Make sure that the virtio-mem driver will actually be loaded. (lsmod  |
+grep virtio-mem).
+
+Also, double check if there are any virtio-mem dmesg errors/warnings.
+
 -- 
-2.26.0
+Thanks,
+
+David / dhildenb
 
