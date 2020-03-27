@@ -2,93 +2,138 @@ Return-Path: <SRS0=s8dx=5M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 177BDC2D0EC
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 01:36:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 468A8C2D0F0
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 01:36:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC13520787
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 01:36:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1613520774
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 01:36:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GnwZFUcQ"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Z2i95Aqx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727895AbgC0BeP (ORCPT
+        id S1727841AbgC0Bc5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 21:34:15 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:40670 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727725AbgC0BeP (ORCPT
+        Thu, 26 Mar 2020 21:32:57 -0400
+Received: from mail-pl1-f201.google.com ([209.85.214.201]:44748 "EHLO
+        mail-pl1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727831AbgC0Bcy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 21:34:15 -0400
-Received: by mail-pl1-f194.google.com with SMTP id h11so2852049plk.7;
-        Thu, 26 Mar 2020 18:34:14 -0700 (PDT)
+        Thu, 26 Mar 2020 21:32:54 -0400
+Received: by mail-pl1-f201.google.com with SMTP id c7so5825908plr.11
+        for <linux-kernel@vger.kernel.org>; Thu, 26 Mar 2020 18:32:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=uFKK0rmf3+J4yn+P1XSuUCuH04czYSHT54dW1GTJiIE=;
-        b=GnwZFUcQYqI7zQi8Mj3xiFnMlKQufDQ93cXDZ8zf6U9O+GeDp+srzeKk6whXoiKbNF
-         sRK3qhWoDl/jh9BNDeLaLwH3bldkPA8iDRhgD0YnlOJsjwdh3CmngZD6mx13U+Yz6K1U
-         amC6EC+ZdQJh5Ke6PhA9/6VbECAHdufuZxxO8Mgg/qOZ3iblvqfM5lOCpxUt+TtaNUrE
-         x0W9HL/B2CrUS2cNuJgWQ/1eaFtCJ12K0g6qOImoMvr3Q8hpVxmJu01ic8Ssc+OWQClb
-         k3zQbZhEJzWzzCKvA58nw2JH7w5bjEN5j2G0UBG3r3MvmWJhgS/wFWA/aBrX29hE4nKv
-         k2wA==
+        d=google.com; s=20161025;
+        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
+         :cc;
+        bh=CndPbhEYDs1U4gkN9kz/g201YX5b6/GIUM2pkWkOTok=;
+        b=Z2i95AqxFtFVeJnN0ep10o2FLq3PHgLj0xV1jas+TG8DoHR/Ie+akCb78FuKraPzKz
+         5aoVGcNUcN8y2qQzoBO0xfnWUftDtaJwhSSJ3j4DqC7DT63Dw4v4mM5VXLzsrlcbEXpp
+         5OpEooJMSJpoIbeIy/wyazTFWjJ9rqCjPkliTqDnMNWWtGBW4ip8H6gDpwQmHE6NHRXP
+         /e8lpO8XPWTXNUYU4mMInzlM3mpaz/GYK9bJAyiG+oT7KNYz2COa3tO7FBNqBBv4WH6p
+         8xOK/8TWkKuoLZwdOSnKmKYVvyr5dewf+biAQDRqc3ncEHidS84Wt9vcPYW49WP4Do7Z
+         YUuQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=uFKK0rmf3+J4yn+P1XSuUCuH04czYSHT54dW1GTJiIE=;
-        b=Os7es1srQc69wLcGIgQoX4r/U9QinaF0MoARUKD6fgpjHfpGOSg+PxloF/RC84Hd/A
-         O42IwGXuUnpNgVTUmhW5JW7Lio8J0xNzthHaIFIPhx/O+DXteMCI8VqQqDuCocevf7Gp
-         q04GWE1p4WSTPhCFMQhSEzPFTPFqERWQhwf7HQMA0P+mcujEJs43ywgXuoKmunStHewW
-         Sb5qcG5O6n0QAcMK1zeIhvO/KJVhjIAme8m0nDvl5mdUwmmkgPsBsHeGFSBtLxwtXTi7
-         Qa1eGdt9nz9YNMnYm92/JHM/QIQg+T2JnGAGARQRf/5chwg3cdbAhMl96S2hbsG2i+/j
-         he5w==
-X-Gm-Message-State: ANhLgQ2IKIlFtonPTX8OgV3ElU2po02+vClNz0vQSr/6vQsp69loU2D6
-        qLwRdNiw9Wvv8fBqNAAFxPc=
-X-Google-Smtp-Source: ADFU+vsvC/cghxY3m+o0RhnGEcQXGHPtloWMklG8ItXaIqS7q6X3VvXOGxG/X8J9PCt5lFl1gjG5Jw==
-X-Received: by 2002:a17:90a:f0c6:: with SMTP id fa6mr3140222pjb.5.1585272853380;
-        Thu, 26 Mar 2020 18:34:13 -0700 (PDT)
-Received: from localhost (c-73-241-114-122.hsd1.ca.comcast.net. [73.241.114.122])
-        by smtp.gmail.com with ESMTPSA id 193sm2724577pfa.182.2020.03.26.18.34.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 26 Mar 2020 18:34:12 -0700 (PDT)
-Date:   Thu, 26 Mar 2020 18:34:10 -0700
-From:   Richard Cochran <richardcochran@gmail.com>
-To:     Grygorii Strashko <grygorii.strashko@ti.com>
-Cc:     "David S . Miller" <davem@davemloft.net>,
-        Lokesh Vutla <lokeshvutla@ti.com>,
-        Tony Lindgren <tony@atomide.com>, Sekhar Nori <nsekhar@ti.com>,
-        Murali Karicheri <m-karicheri2@ti.com>,
-        netdev <netdev@vger.kernel.org>, linux-omap@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next v3 10/11] net: ethernet: ti: cpts: add support
- for HW_TS_PUSH events
-Message-ID: <20200327013410.GC9677@localhost>
-References: <20200320194244.4703-1-grygorii.strashko@ti.com>
- <20200320194244.4703-11-grygorii.strashko@ti.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200320194244.4703-11-grygorii.strashko@ti.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
+         :references:subject:from:to:cc;
+        bh=CndPbhEYDs1U4gkN9kz/g201YX5b6/GIUM2pkWkOTok=;
+        b=aL5y0/9ZpdwpCkCTVlxfvxKfVJvXzpBGJTkHgK5JbqXpnibQgCflLZyNgZxSZ7dreF
+         oCrVJ3i7H4nJ3DjXpoi3uBRXk5SEVjKoi4S4A+g6o0ojFejg8rRx2TSzbtTFis7BmtD+
+         odxl2PChrlIh2U7CKwUBgNGnlY0bdfxPEm/XDlXA9LHmtI5rJio/GNG0GKaQT0zmtDWM
+         Ggk64dKxG1KwNOS6p4ng9gYknBsnHTa+dKkIU+nK6r12oaUT5NaqIJw/7F0Zn04YwSTa
+         cJPFGDqgcyxaMmBI54AvbS9g54ngIniojQ1oDUS01c9Y95OT2WGQuZ7a6Il3wxj1ROcl
+         /AuQ==
+X-Gm-Message-State: ANhLgQ0S3/WQs0Zgzc0jdHjEPV42DCFZhmCfCyqJEiRgiWjonxJXEe23
+        jw9S7MvroveoB+v9VoywQ9KGQasJ8hx3
+X-Google-Smtp-Source: ADFU+vtEHaAqRLOhguRyQ6WDAN2vuYnRbqyv9pgMaWqOyGbQOTVbIoWbvV3BqJHbw+jxXtfx1C87+q2KzjgX
+X-Received: by 2002:a63:da4d:: with SMTP id l13mr11745412pgj.216.1585272773528;
+ Thu, 26 Mar 2020 18:32:53 -0700 (PDT)
+Date:   Thu, 26 Mar 2020 18:32:37 -0700
+In-Reply-To: <20200327013239.238182-1-rajatja@google.com>
+Message-Id: <20200327013239.238182-3-rajatja@google.com>
+Mime-Version: 1.0
+References: <20200327013239.238182-1-rajatja@google.com>
+X-Mailer: git-send-email 2.25.1.696.g5e7596f4ac-goog
+Subject: [PATCH v3 3/5] dt-bindings: input/atkbd.txt: Add binding for "function-row-physmap"
+From:   Rajat Jain <rajatja@google.com>
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>, dtor@google.com,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Rajat Jain <rajatja@google.com>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Enrico Weigelt <info@metux.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Allison Randal <allison@lohutok.net>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Stephen Boyd <swboyd@chromium.org>,
+        linux-input@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, furquan@google.com,
+        dlaurie@google.com, bleung@google.com, zentaro@google.com,
+        dbehr@google.com
+Cc:     rajatxjain@gmail.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> +static int cpts_extts_enable(struct cpts *cpts, u32 index, int on)
-> +{
-> +	u32 v;
-> +
-> +	if (index >= cpts->info.n_ext_ts)
-> +		return -ENXIO;
+Create the documentation for the new introduced property, that
+describes the function-row keys physical positions.
 
-This check is already performed in ptp_chardev.c.
+Signed-off-by: Rajat Jain <rajatja@google.com>
+---
+v3: same as v2
+v2: Remove the Change-Id from the commit log
 
-Thanks,
-Richard
+ .../devicetree/bindings/input/atkbd.txt       | 34 +++++++++++++++++++
+ 1 file changed, 34 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/input/atkbd.txt
+
+diff --git a/Documentation/devicetree/bindings/input/atkbd.txt b/Documentation/devicetree/bindings/input/atkbd.txt
+new file mode 100644
+index 0000000000000..816653eb8e98d
+--- /dev/null
++++ b/Documentation/devicetree/bindings/input/atkbd.txt
+@@ -0,0 +1,34 @@
++Device tree bindings for AT / PS2 keyboard device
++
++Optional properties:
++
++	function-row-physmap:
++			An ordered array of the physical codes for the function
++			row keys. Arranged in order from left to right.
++
++Example:
++
++	This is a sample ACPI _DSD node describing the property:
++
++        Name (_DSD, Package () {
++                ToUUID("daffd814-6eba-4d8c-8a91-bc9bbf4aa301"),
++                Package () {
++                        Package () { "function-row-physmap",
++                                Package () {
++                                        0xEA, /* T1 BACK */
++                                        0xE7, /* T2 REFRESH */
++                                        0x91, /* T3 FULLSCREEN */
++                                        0x92, /* T4 SCALE */
++                                        0x93, /* T5 SNIP */
++                                        0x94, /* T6 BRIGHTNESS_DOWN */
++                                        0x95, /* T7 BRIGHTNESS_UP */
++                                        0x96, /* T8 PRIVACY_SCRN_TOGGLE */
++                                        0x97, /* T9 KBD_BKLIGHT_DOWN */
++                                        0x98, /* T10 KBD_BKLIGHT_UP */
++                                        0xA0, /* T11 VOL_MUTE */
++                                        0xAE, /* T12 VOL_DOWN */
++                                        0xB0, /* T13 VOL_UP */
++                                }
++                        }
++                }
++        })
+-- 
+2.25.1.696.g5e7596f4ac-goog
 
