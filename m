@@ -7,62 +7,60 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B12DBC43331
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 22:39:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E3C9C43331
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 22:42:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8355A20663
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 22:39:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E584620663
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 22:42:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727749AbgC0Wjt (ORCPT
+        id S1727733AbgC0WmW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Mar 2020 18:39:49 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:43294 "EHLO
+        Fri, 27 Mar 2020 18:42:22 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:43331 "EHLO
         youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727707AbgC0Wjt (ORCPT
+        with ESMTP id S1727585AbgC0WmW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Mar 2020 18:39:49 -0400
-Received: from mail-qt1-f198.google.com ([209.85.160.198])
+        Fri, 27 Mar 2020 18:42:22 -0400
+Received: from mail-qv1-f71.google.com ([209.85.219.71])
         by youngberry.canonical.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
         (Exim 4.86_2)
         (envelope-from <gpiccoli@canonical.com>)
-        id 1jHxau-0000W7-2C
-        for linux-kernel@vger.kernel.org; Fri, 27 Mar 2020 22:36:52 +0000
-Received: by mail-qt1-f198.google.com with SMTP id v10so9576316qtk.7
-        for <linux-kernel@vger.kernel.org>; Fri, 27 Mar 2020 15:36:52 -0700 (PDT)
+        id 1jHxfF-0001G9-0w
+        for linux-kernel@vger.kernel.org; Fri, 27 Mar 2020 22:41:21 +0000
+Received: by mail-qv1-f71.google.com with SMTP id d2so9008933qve.11
+        for <linux-kernel@vger.kernel.org>; Fri, 27 Mar 2020 15:41:20 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=O94P0uoScvdbW3wTdJiQYQPyg7B5lC7WAC85T+bbce4=;
-        b=LuFUBRLjZ9oQo5C2tt6jxdKmItcRWNe/iYMFiSvPzaWvXmHG9uKYOPfQ5J0JhgJzFt
-         jwdfKY5n2lDuCRRJfCj9/PGqaALb0pHMIvzHhRqNk1hyh2b3XQGgPknW0j4EiqVzCNjI
-         v3DYKrklU36ravnoMebwhnabDIa1crxJtZi1N6qK4jKfhsgWxjF07qzJ6QeL64lHur4j
-         yE/0BLDv3s3PLmu1CSoK/bMR2rtlu0ZBZhbQBPIShJdmWsJRRQ18d6PPJcyVWkvDT0XR
-         FYaVvgILfnuuQy+0/Pr2XnTtPE2320/PAcWtTFmDt2M4kZ01aD9MILH/I4LWmDwihNu/
-         QIKg==
-X-Gm-Message-State: ANhLgQ3q1yPEP+se+Cc88rVYxrT2tEJHjaOqSjyI7czeJfzPeCZMUJ2t
-        uT3lkZLiIjh60Ibhxj+jQ956qeWSJc2gH0ag2ZNY5yau4Ov/MKpSaRT9ARuRmlkpAJrjrizs36m
-        byuWGYQEzDRZl/CvzK/Yx+sVOIf+kFGdUVwEtT9tcIg==
-X-Received: by 2002:ae9:ed4a:: with SMTP id c71mr1637011qkg.418.1585348610699;
-        Fri, 27 Mar 2020 15:36:50 -0700 (PDT)
-X-Google-Smtp-Source: ADFU+vsEdbz0uv5I6GDIIDnD05XVXJ9B1aeiR0bCDmtaklFI7RlYJRhcoq0y3fccbC+JNH6yttitqQ==
-X-Received: by 2002:ae9:ed4a:: with SMTP id c71mr1636966qkg.418.1585348610238;
-        Fri, 27 Mar 2020 15:36:50 -0700 (PDT)
+        bh=WYptB1jwZhNbtl0E2BMrFXsPVgmLkUSZ/p3r2QlCVdM=;
+        b=Z85M7rDzG+R5WKu9ZlFh8Ke+8PDL3GIgqgeP1MHj6PlMOx6vHK+CIO0GwkuaIpxlnr
+         XW1d1TdcKwSXNTHMWQCibmtNypdLjqQa4vlnlIjER7b3ZPTSFQp3fg8/MZAUBI6szzmA
+         9dkRJG6sAKIbcNvg3kOK45YCYUIaSUQF4y1R9CtiUiXUu3mt4+64BtEv0dHSuZLqEveM
+         F7AgrW3i273YcXaVBhMPwV2Ayixs0NWSVGIOzOgL7MwV111wojLn9kJx2iTHtrvr5vjo
+         Lr/br3WDnB0Q3lM6RWC5YVaswluk4tVqb+bcXXWIChA120kBvg7Xn2kFB+BF2bcSvqaP
+         1OCw==
+X-Gm-Message-State: ANhLgQ2W8EI77nvK+X9v9y/leQVP6d0XqnleQUv5YdaiHlV9K7ySdkCx
+        k4Ce1CuUz59eV/1F4o+1aOcjI6xF53A1nYSykXqUzZuaKVDLJlpYJPpwPPoLs7aYy+YZVHM+hu3
+        9lIBAIaqoqgcisdHCicruQKTYz25q3nttfrSUfvDa7Q==
+X-Received: by 2002:a37:d8a:: with SMTP id 132mr1685554qkn.270.1585348879543;
+        Fri, 27 Mar 2020 15:41:19 -0700 (PDT)
+X-Google-Smtp-Source: ADFU+vtjMtOe9MPgoLyvQBJZW0ZKggklCIj8NUUP8TFzGEWeTvYd/ZjNltBbt+D+oGfZ1N/lirkisg==
+X-Received: by 2002:a37:d8a:: with SMTP id 132mr1685531qkn.270.1585348879219;
+        Fri, 27 Mar 2020 15:41:19 -0700 (PDT)
 Received: from localhost (189-47-87-73.dsl.telesp.net.br. [189.47.87.73])
-        by smtp.gmail.com with ESMTPSA id c40sm5212630qtk.18.2020.03.27.15.36.48
+        by smtp.gmail.com with ESMTPSA id h5sm4729651qkc.118.2020.03.27.15.41.18
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 27 Mar 2020 15:36:49 -0700 (PDT)
+        Fri, 27 Mar 2020 15:41:18 -0700 (PDT)
 From:   "Guilherme G. Piccoli" <gpiccoli@canonical.com>
-To:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        akpm@linux-foundation.org
+To:     linux-kernel@vger.kernel.org, akpm@linux-foundation.org
 Cc:     linux-api@vger.kernel.org, linux-doc@vger.kernel.org,
         mcgrof@kernel.org, keescook@chromium.org, yzaikin@google.com,
-        tglx@linutronix.de, penguin-kernel@I-love.SAKURA.ne.jp,
-        vbabka@suse.cz, rdunlap@infradead.org, willy@infradead.org,
-        gpiccoli@canonical.com, kernel@gpiccoli.net
-Subject: [PATCH V3] kernel/hung_task.c: Introduce sysctl to print all traces when a hung task is detected
-Date:   Fri, 27 Mar 2020 19:36:46 -0300
-Message-Id: <20200327223646.20779-1-gpiccoli@canonical.com>
+        tglx@linutronix.de, vbabka@suse.cz, rdunlap@infradead.org,
+        willy@infradead.org, gpiccoli@canonical.com, kernel@gpiccoli.net
+Subject: [PATCH V3] panic: Add sysctl to dump all CPUs backtraces on oops event
+Date:   Fri, 27 Mar 2020 19:41:16 -0300
+Message-Id: <20200327224116.21030-1-gpiccoli@canonical.com>
 X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -71,39 +69,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit 401c636a0eeb ("kernel/hung_task.c: show all hung tasks before panic")
-introduced a change in that we started to show all CPUs backtraces when a
-hung task is detected _and_ the sysctl/kernel parameter "hung_task_panic"
-is set. The idea is good, because usually when observing deadlocks (that
-may lead to hung tasks), the culprit is another task holding a lock and
-not necessarily the task detected as hung.
+Usually when kernel reach an oops condition, it's a point of no return;
+in case not enough debug information is available in the kernel splat,
+one of the last resorts would be to collect a kernel crash dump and
+analyze it. The problem with this approach is that in order to collect
+the dump, a panic is required (to kexec-load the crash kernel). When
+in an environment of multiple virtual machines, users may prefer to
+try living with the oops, at least until being able to properly
+shutdown their VMs / finish their important tasks.
 
-The problem with this approach is that dumping backtraces is a slightly
-expensive task, specially printing that on console (and specially in many
-CPU machines, as servers commonly found nowadays). So, users that plan to
-collect a kdump to investigate the hung tasks and narrow down the deadlock
-definitely don't need the CPUs backtrace on dmesg/console, which will delay
-the panic and pollute the log (crash tool would easily grab all CPUs traces
-with 'bt -a' command).
-Also, there's the reciprocal scenario: some users may be interested in
-seeing the CPUs backtraces but not have the system panic when a hung task
-is detected. The current approach hence is almost as embedding a policy in
-the kernel, by forcing the CPUs backtraces' dump (only) on hung_task_panic.
+This patch implements a way to collect a bit more debug details when an
+oops event is reached, by printing all the CPUs backtraces through the
+usage of NMIs (on architectures that support that). The sysctl added
+(and documented) here was called "oops_all_cpu_backtrace", and when
+set will (as the name suggests) dump all CPUs backtraces.
 
-This patch decouples the panic event on hung task from the CPUs
-backtraces dump, by creating (and documenting) a new sysctl called
-"hung_task_all_cpu_backtrace", analog to the approach taken on soft/hard
-lockups, that have both a panic and an "all_cpu_backtrace" sysctl to allow
-individual control. The new mechanism for dumping the CPUs backtraces on
-hung task detection respects "hung_task_warnings" by not dumping the
-traces in case there's no warnings left.
+Far from ideal, this may be the last option though for users that for
+some reason cannot panic on oops. Most of times oopses are clear enough
+to indicate the kernel portion that must be investigated, but in virtual
+environments it's possible to observe hypervisor/KVM issues that could
+lead to oopses shown in other guests CPUs (like virtual APIC crashes).
+This patch hence aims to help debug such complex issues without
+resorting to kdump.
 
-Cc: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
 Reviewed-by: Kees Cook <keescook@chromium.org>
 Signed-off-by: Guilherme G. Piccoli <gpiccoli@canonical.com>
 ---
 
-V3: Following the suggestion from Vlastimil, removed the kernel parameter
+V3: Added the reviewed-by tag from Kees (thanks!) and following the
+suggestion from Vlastimil (in other patch), removed the kernel parameter
 since soon we (hopefully) will have a generic approach to set sysctls via
 kernel parameters[0] - thanks Vlastimil, great idea!
 
@@ -114,125 +108,105 @@ Guilherme
 [0] lore.kernel.org/lkml/20200326181606.7027-1-vbabka@suse.cz/T
 
 
- Documentation/admin-guide/sysctl/kernel.rst | 15 +++++++++++++++
- include/linux/sched/sysctl.h                |  7 +++++++
- kernel/hung_task.c                          | 20 ++++++++++++++++++--
+ Documentation/admin-guide/sysctl/kernel.rst | 17 +++++++++++++++++
+ include/linux/kernel.h                      |  6 ++++++
+ kernel/panic.c                              | 11 +++++++++++
  kernel/sysctl.c                             | 11 +++++++++++
- 4 files changed, 51 insertions(+), 2 deletions(-)
+ 4 files changed, 45 insertions(+)
 
 diff --git a/Documentation/admin-guide/sysctl/kernel.rst b/Documentation/admin-guide/sysctl/kernel.rst
-index def074807cee..8b4ff69d2348 100644
+index 8b4ff69d2348..8660001d3a3e 100644
 --- a/Documentation/admin-guide/sysctl/kernel.rst
 +++ b/Documentation/admin-guide/sysctl/kernel.rst
-@@ -40,6 +40,7 @@ show up in /proc/sys/kernel:
- - hotplug
- - hardlockup_all_cpu_backtrace
- - hardlockup_panic
-+- hung_task_all_cpu_backtrace
- - hung_task_panic
- - hung_task_check_count
- - hung_task_timeout_secs
-@@ -338,6 +339,20 @@ Path for the hotplug policy agent.
- Default value is "/sbin/hotplug".
+@@ -57,6 +57,7 @@ show up in /proc/sys/kernel:
+ - msgmnb
+ - msgmni
+ - nmi_watchdog
++- oops_all_cpu_backtrace
+ - osrelease
+ - ostype
+ - overflowgid
+@@ -572,6 +573,22 @@ numa_balancing_scan_size_mb is how many megabytes worth of pages are
+ scanned for a given scan.
  
  
-+hung_task_all_cpu_backtrace:
++oops_all_cpu_backtrace:
 +================
 +
 +If this option is set, the kernel will send an NMI to all CPUs to dump
-+their backtraces when a hung task is detected. This file shows up if
-+CONFIG_DETECT_HUNG_TASK and CONFIG_SMP are enabled.
++their backtraces when an oops event occurs. It should be used as a last
++resort in case a panic cannot be triggered (to protect VMs running, for
++example) or kdump can't be collected. This file shows up if CONFIG_SMP
++is enabled.
 +
-+0: Won't show all CPUs backtraces when a hung task is detected.
++0: Won't show all CPUs backtraces when an oops is detected.
 +This is the default behavior.
 +
 +1: Will non-maskably interrupt all CPUs and dump their backtraces when
-+a hung task is detected.
++an oops event is detected.
 +
 +
- hung_task_panic:
- ================
+ osrelease, ostype & version:
+ ============================
  
-diff --git a/include/linux/sched/sysctl.h b/include/linux/sched/sysctl.h
-index d4f6215ee03f..8cd29440ec8a 100644
---- a/include/linux/sched/sysctl.h
-+++ b/include/linux/sched/sysctl.h
-@@ -7,6 +7,13 @@
- struct ctl_table;
+diff --git a/include/linux/kernel.h b/include/linux/kernel.h
+index 0d9db2a14f44..6cd00257b572 100644
+--- a/include/linux/kernel.h
++++ b/include/linux/kernel.h
+@@ -513,6 +513,12 @@ static inline u32 int_sqrt64(u64 x)
+ }
+ #endif
  
- #ifdef CONFIG_DETECT_HUNG_TASK
-+
 +#ifdef CONFIG_SMP
-+extern unsigned int sysctl_hung_task_all_cpu_backtrace;
++extern unsigned int sysctl_oops_all_cpu_backtrace;
 +#else
-+#define sysctl_hung_task_all_cpu_backtrace 0
++#define sysctl_oops_all_cpu_backtrace 0
 +#endif /* CONFIG_SMP */
 +
- extern int	     sysctl_hung_task_check_count;
- extern unsigned int  sysctl_hung_task_panic;
- extern unsigned long sysctl_hung_task_timeout_secs;
-diff --git a/kernel/hung_task.c b/kernel/hung_task.c
-index 14a625c16cb3..9a774aee1a44 100644
---- a/kernel/hung_task.c
-+++ b/kernel/hung_task.c
-@@ -53,9 +53,18 @@ int __read_mostly sysctl_hung_task_warnings = 10;
- static int __read_mostly did_panic;
- static bool hung_task_show_lock;
- static bool hung_task_call_panic;
-+static bool hung_task_show_all_bt;
- 
- static struct task_struct *watchdog_task;
+ extern void bust_spinlocks(int yes);
+ extern int oops_in_progress;		/* If set, an oops, panic(), BUG() or die() is in progress */
+ extern int panic_timeout;
+diff --git a/kernel/panic.c b/kernel/panic.c
+index b69ee9e76cb2..ec6d7d788ce7 100644
+--- a/kernel/panic.c
++++ b/kernel/panic.c
+@@ -36,6 +36,14 @@
+ #define PANIC_TIMER_STEP 100
+ #define PANIC_BLINK_SPD 18
  
 +#ifdef CONFIG_SMP
 +/*
-+ * Should we dump all CPUs backtraces in a hung task event?
++ * Should we dump all CPUs backtraces in an oops event?
 + * Defaults to 0, can be changed via sysctl.
 + */
-+unsigned int __read_mostly sysctl_hung_task_all_cpu_backtrace;
++unsigned int __read_mostly sysctl_oops_all_cpu_backtrace;
 +#endif /* CONFIG_SMP */
 +
- /*
-  * Should we panic (and reboot, if panic_timeout= is set) when a
-  * hung task is detected:
-@@ -137,6 +146,9 @@ static void check_hung_task(struct task_struct *t, unsigned long timeout)
- 			" disables this message.\n");
- 		sched_show_task(t);
- 		hung_task_show_lock = true;
+ int panic_on_oops = CONFIG_PANIC_ON_OOPS_VALUE;
+ static unsigned long tainted_mask =
+ 	IS_ENABLED(CONFIG_GCC_PLUGIN_RANDSTRUCT) ? (1 << TAINT_RANDSTRUCT) : 0;
+@@ -515,6 +523,9 @@ void oops_enter(void)
+ 	/* can't trust the integrity of the kernel anymore: */
+ 	debug_locks_off();
+ 	do_oops_enter_exit();
 +
-+		if (sysctl_hung_task_all_cpu_backtrace)
-+			hung_task_show_all_bt = true;
- 	}
- 
- 	touch_nmi_watchdog();
-@@ -201,10 +213,14 @@ static void check_hung_uninterruptible_tasks(unsigned long timeout)
- 	rcu_read_unlock();
- 	if (hung_task_show_lock)
- 		debug_show_all_locks();
--	if (hung_task_call_panic) {
-+
-+	if (hung_task_show_all_bt) {
-+		hung_task_show_all_bt = false;
- 		trigger_all_cpu_backtrace();
-+	}
-+
-+	if (hung_task_call_panic)
- 		panic("hung_task: blocked tasks");
--	}
++	if (sysctl_oops_all_cpu_backtrace)
++		trigger_all_cpu_backtrace();
  }
  
- static long hung_timeout_jiffies(unsigned long last_checked,
+ /*
 diff --git a/kernel/sysctl.c b/kernel/sysctl.c
-index ad5b88a53c5a..238f268de486 100644
+index 238f268de486..1ac31d9d5b7e 100644
 --- a/kernel/sysctl.c
 +++ b/kernel/sysctl.c
-@@ -1098,6 +1098,17 @@ static struct ctl_table kern_table[] = {
+@@ -813,6 +813,17 @@ static struct ctl_table kern_table[] = {
+ 		.proc_handler	= proc_dointvec,
  	},
  #endif
- #ifdef CONFIG_DETECT_HUNG_TASK
 +#ifdef CONFIG_SMP
 +	{
-+		.procname	= "hung_task_all_cpu_backtrace",
-+		.data		= &sysctl_hung_task_all_cpu_backtrace,
++		.procname	= "oops_all_cpu_backtrace",
++		.data		= &sysctl_oops_all_cpu_backtrace,
 +		.maxlen		= sizeof(int),
 +		.mode		= 0644,
 +		.proc_handler	= proc_dointvec_minmax,
@@ -241,8 +215,8 @@ index ad5b88a53c5a..238f268de486 100644
 +	},
 +#endif /* CONFIG_SMP */
  	{
- 		.procname	= "hung_task_panic",
- 		.data		= &sysctl_hung_task_panic,
+ 		.procname	= "pid_max",
+ 		.data		= &pid_max,
 -- 
 2.25.1
 
