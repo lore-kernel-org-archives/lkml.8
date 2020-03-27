@@ -2,50 +2,58 @@ Return-Path: <SRS0=s8dx=5M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E988EC2D0EC
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 14:30:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B53EC2D0E5
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 14:32:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C98832073B
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 14:30:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 478DD20748
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 14:32:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585319553;
+	bh=rGsnUkAfzHyC/Eb7Gb/9HXJVVTaSwN/ewijdlwINBOU=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=Y4RKJFBnrkknNkfPYefqhlFYei/2CZSBpK1JDywV/59662eGL84e/b7wKBjTtpV3C
+	 K+xuy2cz1yCWL2sbK5u0VRobiw8glTV0AOaeqykOptvSyimUMQmexbnGdWLdE3T8Xg
+	 YStJ2qb8KW9tHELr4f0VSxTvlAoRh2w8cj/xUMU0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727620AbgC0Oat (ORCPT
+        id S1727505AbgC0Occ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Mar 2020 10:30:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56792 "EHLO mail.kernel.org"
+        Fri, 27 Mar 2020 10:32:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58450 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726742AbgC0Oat (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Mar 2020 10:30:49 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        id S1726518AbgC0Occ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Mar 2020 10:32:32 -0400
+Received: from coco.lan (ip5f5ad4d8.dynamic.kabel-deutschland.de [95.90.212.216])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CFF5D206F2;
-        Fri, 27 Mar 2020 14:30:47 +0000 (UTC)
-Date:   Fri, 27 Mar 2020 10:30:46 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     David Laight <David.Laight@ACULAB.COM>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        "Alexei Starovoitov" <alexei.starovoitov@gmail.com>,
-        Peter Wu <peter@lekensteyn.nl>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Tom Zanussi <zanussi@kernel.org>,
-        "Shuah Khan" <shuahkhan@gmail.com>, bpf <bpf@vger.kernel.org>
-Subject: Re: [PATCH 00/12 v2] ring-buffer/tracing: Remove disabling of ring
- buffer while reading trace file
-Message-ID: <20200327103046.08f06131@gandalf.local.home>
-In-Reply-To: <60977a309b5d46979a9a9bbd46c10932@AcuMS.aculab.com>
-References: <20200319232219.446480829@goodmis.org>
-        <2a7f96545945457cade216aa3c736bcc@AcuMS.aculab.com>
-        <20200326214617.697634f3@oasis.local.home>
-        <60977a309b5d46979a9a9bbd46c10932@AcuMS.aculab.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        by mail.kernel.org (Postfix) with ESMTPSA id BD410206F2;
+        Fri, 27 Mar 2020 14:32:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1585319551;
+        bh=rGsnUkAfzHyC/Eb7Gb/9HXJVVTaSwN/ewijdlwINBOU=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=n3cS6pSNtwlXzCsTj6mOeaL7HmPD7n5lnu3s86Wx38DfXbaogmfWvwo7J21xmtK0B
+         04J+hvJJSDEE2sOv6nZEe2LXSjDNrE+NG0xqFSG97KD3SXkp5WSsMmsFx6U1a5brcb
+         zKZ+wJBsxCudgmlFddWCqbGFwNlar9IjMK/1FcNA=
+Date:   Fri, 27 Mar 2020 15:32:26 +0100
+From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+To:     Jason Gunthorpe <jgg@ziepe.ca>
+Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        Dennis Dalessandro <dennis.dalessandro@intel.com>,
+        Niranjana Vishwanathapura <niranjana.vishwanathapura@intel.com>,
+        Doug Ledford <dledford@redhat.com>, linux-rdma@vger.kernel.org
+Subject: Re: [PATCH 14/17] infiniband: pa_vnic_encap.h: get rid of a warning
+Message-ID: <20200327153226.1fed1835@coco.lan>
+In-Reply-To: <20200319003645.GH20941@ziepe.ca>
+References: <cover.1584456635.git.mchehab+huawei@kernel.org>
+        <9dce702510505556d75a13d9641e09218a4b4a65.1584456635.git.mchehab+huawei@kernel.org>
+        <20200319003645.GH20941@ziepe.ca>
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
@@ -54,20 +62,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 27 Mar 2020 10:07:00 +0000
-David Laight <David.Laight@ACULAB.COM> wrote:
+Em Wed, 18 Mar 2020 21:36:45 -0300
+Jason Gunthorpe <jgg@ziepe.ca> escreveu:
 
-> > If needed, I can add a kernel command line option and a Kconfig that
-> > makes this set to true by default.  
+> On Tue, Mar 17, 2020 at 03:54:23PM +0100, Mauro Carvalho Chehab wrote:
+> > The right markup for a variable is @foo, and not @foo[].
+> > 
+> > Using a wrong markup caused this warning:
+> > 
+> > 	./drivers/infiniband/ulp/opa_vnic/opa_vnic_encap.h:243: WARNING: Inline strong start-string without end-string.
+> > 
+> > Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+> > ---
+> >  drivers/infiniband/ulp/opa_vnic/opa_vnic_encap.h | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)  
 > 
-> Maybe a different file 'trace_no_pause' ?
+> Do you want this to go to the RDMA tree? I wasn't cc'd on the cover
+> letter
 
-I rather not add another file, it adds more complexity, and confuses the
-interface even more. I'll leave this as is.
+Sorry for not answering earlier. Got sidetracked with other things.
 
-> Along with the one that lets you read the raw trace and get EOF.
+Yeah, if there are still time, feel free to pick it. Otherwise, 
+I'll likely send again after the merge window, to be applied either 
+by you or via the docs tree.
 
-Can you explain this more? I think we talked about this before, but I don't
-remember the details.
+> 
+> Otherwise
+> 
+> Acked-by: Jason Gunthorpe <jgg@mellanox.com>
+>  
+> Thanks,
+> Jason
 
--- Steve
+
+
+Thanks,
+Mauro
