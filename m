@@ -2,138 +2,91 @@ Return-Path: <SRS0=s8dx=5M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D659DC43331
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 15:06:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F27EC2D0E5
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 15:07:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA96B20748
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 15:06:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="hO4sdxNx"
+	by mail.kernel.org (Postfix) with ESMTP id 07C0F20748
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 15:07:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585321634;
+	bh=sIGXOYmpWblR0yL4lyxVPLJLSUNHUp9A2R6LtZEKFvw=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=Rn0lFlZXY+NN7TxB850UBtc4h4eDf4DsVBYjsWj/TR//dvZz6+nquhIdJHzwhoVCc
+	 f2GY0V1zP+JsUUGNb5jTPBOu7+3AidHtQauIPmDQNnvj+D3L4RXlmScJX9WjdFwrQ9
+	 pHAqgzTC5n8otFdjP8OFLbHe80Y+hb/64PZ3eYfQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727769AbgC0PGn (ORCPT
+        id S1727763AbgC0PHN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Mar 2020 11:06:43 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:53345 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727322AbgC0PGm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Mar 2020 11:06:42 -0400
-Received: by mail-wm1-f68.google.com with SMTP id b12so11749926wmj.3
-        for <linux-kernel@vger.kernel.org>; Fri, 27 Mar 2020 08:06:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=pr0qD0iPXCEmGNYn73fmX69Dspd/3/go52tlDvpiG+I=;
-        b=hO4sdxNxvULwr69BbYBiyiZhy52w5Rt88jCkrSsCrpHZlgE+artcZrY4Hh2ptIs6D3
-         DzJNdRCbZuPdmL/2YArjpOMh6REjq0xJK0LdLZk9+aTlSheU3verxJCPPZvs7uBSn3+Q
-         JIGInARCeIT1eNOGQmVGWgunmy6cxgGwcDp+4=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=pr0qD0iPXCEmGNYn73fmX69Dspd/3/go52tlDvpiG+I=;
-        b=XgpI/PPniLrE2WD9tPG0N4rNhjUlDMYytvEdQ91iksCAUMdegfTreWRHy+e/FTco+e
-         dtxEhHc0k5aBXTaWHQ5nfiG8tBOamkN7CQxwd81DtO0nY9k8xaf7GgodVcJM9fK6ql6W
-         69rh6Fo385FsVp++1QwMKhCf5EB795hnvuzY5tKic3jlnxeSGQ2AlIm8QR89lKkLau2z
-         JNQHFkQR11jtbmxYh53IpSgdf9Jl/t8OYSPmz4QerLtdMvrruvh0mjR8nIqxz1kMYIp0
-         JVugBTgJ9Ahws4tqL8Vg1mK0nfouuqaM6lJJl4SQC2VorHMtodhnX8EpAndQiWLx2qwb
-         bmAw==
-X-Gm-Message-State: ANhLgQ3xkh84o5y3igY/SdmMdWv3EAzNVx+bJQxb9r7nj/SpDIaX5mDG
-        H2wqMdOB/2GtEzRkrZWe5fsFbQ==
-X-Google-Smtp-Source: ADFU+vttbTEMoPK04x5Y+InaWRPyOJAislXquQ5dm7z8g2RLd7ecoYpHxc6ZBWjAUh9hORUzjzQMJw==
-X-Received: by 2002:a1c:8108:: with SMTP id c8mr5764675wmd.50.1585321600541;
-        Fri, 27 Mar 2020 08:06:40 -0700 (PDT)
-Received: from chromium.org (77-56-209-237.dclient.hispeed.ch. [77.56.209.237])
-        by smtp.gmail.com with ESMTPSA id m5sm8001072wmg.13.2020.03.27.08.06.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 27 Mar 2020 08:06:39 -0700 (PDT)
-From:   KP Singh <kpsingh@chromium.org>
-X-Google-Original-From: KP Singh <kpsingh>
-Date:   Fri, 27 Mar 2020 16:06:37 +0100
-To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Cc:     linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        Brendan Jackman <jackmanb@google.com>,
-        Florent Revest <revest@google.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        James Morris <jmorris@namei.org>,
-        Kees Cook <keescook@chromium.org>,
-        Paul Turner <pjt@google.com>, Jann Horn <jannh@google.com>,
-        Florent Revest <revest@chromium.org>,
-        Brendan Jackman <jackmanb@chromium.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH bpf-next v7 4/8] bpf: lsm: Implement attach, detach and
- execution
-Message-ID: <20200327150637.GA23032@chromium.org>
-References: <20200326142823.26277-1-kpsingh@chromium.org>
- <20200326142823.26277-5-kpsingh@chromium.org>
- <20200327031256.vhk2luomxgex3ui4@ast-mbp>
+        Fri, 27 Mar 2020 11:07:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44764 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727185AbgC0PHM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Mar 2020 11:07:12 -0400
+Received: from localhost (mobile-166-175-186-165.mycingular.net [166.175.186.165])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A3E892072F;
+        Fri, 27 Mar 2020 15:07:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1585321632;
+        bh=sIGXOYmpWblR0yL4lyxVPLJLSUNHUp9A2R6LtZEKFvw=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=SBt7nDY8srmcxCDoWQfHq6tZpV06ldg+rg7SLnBn5oO/Ykxr7Fs6HJUayX8ElMdPH
+         HbSA6icHJl5Q1MfxyU3tL3P1CgpyIE8PqGyf00RF84e4UJzkJYQS/Iil3eP7InLpkC
+         GTRlklgQK4sTXsVISrZBZefbjfvVTzVvPVQtuIPg=
+Date:   Fri, 27 Mar 2020 10:07:10 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Shiju Jose <shiju.jose@huawei.com>
+Cc:     linux-acpi@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, rjw@rjwysocki.net, lenb@kernel.org,
+        bp@alien8.de, james.morse@arm.com, tony.luck@intel.com,
+        gregkh@linuxfoundation.org, zhangliguang@linux.alibaba.com,
+        tglx@linutronix.de, linuxarm@huawei.com,
+        jonathan.cameron@huawei.com, tanxiaofei@huawei.com,
+        yangyicong@hisilicon.com
+Subject: Re: [PATCH v6 0/2] ACPI / APEI: Add support to notify the vendor
+ specific HW errors
+Message-ID: <20200327150710.GA31821@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200327031256.vhk2luomxgex3ui4@ast-mbp>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200325164223.650-1-shiju.jose@huawei.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 26-Mär 20:12, Alexei Starovoitov wrote:
-> On Thu, Mar 26, 2020 at 03:28:19PM +0100, KP Singh wrote:
-> >  
-> >  	if (arg == nr_args) {
-> > -		if (prog->expected_attach_type == BPF_TRACE_FEXIT) {
-> > +		/* BPF_LSM_MAC programs only have int and void functions they
-> > +		 * can be attached to. When they are attached to a void function
-> > +		 * they result in the creation of an FEXIT trampoline and when
-> > +		 * to a function that returns an int, a MODIFY_RETURN
-> > +		 * trampoline.
-> > +		 */
-> > +		if (prog->expected_attach_type == BPF_TRACE_FEXIT ||
-> > +		    prog->expected_attach_type == BPF_LSM_MAC) {
-> >  			if (!t)
-> >  				return true;
-> >  			t = btf_type_by_id(btf, t->type);
+On Wed, Mar 25, 2020 at 04:42:21PM +0000, Shiju Jose wrote:
+> Presently the vendor drivers are unable to do the recovery for the
+> vendor specific recoverable HW errors, reported to the APEI driver
+> in the vendor defined sections, because APEI driver does not support
+> reporting the same to the vendor drivers.
 > 
-> Could you add a comment here that though BPF_MODIFY_RETURN-like check
-> if (ret_type != 'int') return -EINVAL;
-> is _not_ done here. It is still safe, since LSM hooks have only
-> void and int return types.
-
-Good idea, I reworded the comment to make this explicit and moved
-the comment to inside the if condition.
-
+> This patch set
+> 1. add an interface to the APEI driver to enable the vendor
+> drivers to register the event handling functions for the corresponding
+> vendor specific HW errors and report the error to the vendor driver.
 > 
-> > +	case BPF_LSM_MAC:
-> > +		if (!prog->aux->attach_func_proto->type)
-> > +			/* The function returns void, we cannot modify its
-> > +			 * return value.
-> > +			 */
-> > +			return BPF_TRAMP_FEXIT;
-> > +		else
-> > +			return BPF_TRAMP_MODIFY_RETURN;
+> 2. add driver to handle HiSilicon hip08 PCIe controller's errors
+>    which is an example application of the above APEI interface.
 > 
-> I was thinking whether it would help performance significantly enough
-> if we add a flavor of BPF_TRAMP_FEXIT that doesn't have
-> BPF_TRAMP_F_CALL_ORIG.
+> Changes:
+> 
+> V6:
+> 1. Fix few changes in the patch subject line suggested by Bjorn Helgaas.
 
-Agreed.
+I think it will save everybody a little work if you can wait a day or
+two so you can address more comments at once.  You posted v6 only
+about three hours after v5, which isn't enough time for people to
+respond to v5.
 
-> That will save the cost of nop call, but I guess indirect call due
-> to lsm infra is slow enough, so this extra few cycles won't be noticeable.
-> So I'm fine with it as-is. When lsm hooks will get rid of indirect call
-> we can optimize it further.
+I'm not going to even look at v6 because it doesn't address some of my
+v5 comments.  Please wait a few days before v7 to see if Rafael has
+any thoughts on where the error driver should live.
 
-Also agreed, that's the next step. :)
-
-- KP
+Bjorn
