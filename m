@@ -2,124 +2,101 @@ Return-Path: <SRS0=s8dx=5M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF843C2D0E8
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 08:45:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B181C43331
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 08:45:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B96FE20714
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 08:45:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 473A820714
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 08:45:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726739AbgC0IpX (ORCPT
+        id S1726959AbgC0Ipm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Mar 2020 04:45:23 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:40997 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725946AbgC0IpX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Mar 2020 04:45:23 -0400
-Received: by mail-ot1-f68.google.com with SMTP id f52so8906097otf.8;
-        Fri, 27 Mar 2020 01:45:22 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=eOBjyRt4JV8Fw0zzDZumBm7LVivMqi17PPfNiqHh3qk=;
-        b=nNNtvb5JIc83n6idKlCJmdznoRwgO2XqukBnIqMVHR2iYiS1c0eQbQxNV+khns1Etz
-         4a19wgV6Bu+yyQykC346Oc4laIsycpZmkDZQ0pAcfB7Tbbt/rWcA0IHWz6GZc4OK6RMH
-         Tel2tXBp7fRhFyuFxu2Hh4l0hxBSQ+6kK6e0mQjk5I5SFffAaGKUCbxNcbeyzT+kCZFB
-         TAVpLLmGR4zveD8PAUUZAp5yjfQmOs74roa7w2JDayt1VpGBdyhZdHgL4T2fRsOI0H3f
-         QmTNvvo0o3CMGcyz2wtZWaabIwwkAwHjyuMDpl+xGCNnA+rR6ThX9QppUZPlgRaeVZPH
-         V8Qg==
-X-Gm-Message-State: ANhLgQ2yJ40qSCH3ljnZDz/B3IlhkWOVH4uThm15uwGHNJx/erY3xT64
-        6UQMHcA8JUP371nKFCQblVc83c4CQTK89rUxvok=
-X-Google-Smtp-Source: ADFU+vtagf4b+RAfGcuiioWln2gooMsQamKP8V2Ub80rkt/+u/ChxOOa1j8Iz++kwA+q3IcKZA+D0S4VCVlwIW0ISTU=
-X-Received: by 2002:a9d:7590:: with SMTP id s16mr9385922otk.250.1585298722494;
- Fri, 27 Mar 2020 01:45:22 -0700 (PDT)
+        Fri, 27 Mar 2020 04:45:42 -0400
+Received: from mga04.intel.com ([192.55.52.120]:4632 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726165AbgC0Ipm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Mar 2020 04:45:42 -0400
+IronPort-SDR: u+QRmxAWTWeK5KX9XlPNdTjCs2FFgpS0dSK2gvmjZa8F4eWzvyiDkx94UmtgvipaZpVVjCgkqD
+ PQ240+fxgDWA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Mar 2020 01:45:41 -0700
+IronPort-SDR: a6NT259l81OjGF2jCfp9ZtBYHTbQC4MIdQN8e07YDaSjj1h+3PK/cNb57NyuFbXWu49SYjYIu8
+ 6Sh0z3NJmv7g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,311,1580803200"; 
+   d="scan'208";a="293876602"
+Received: from linux.intel.com ([10.54.29.200])
+  by FMSMGA003.fm.intel.com with ESMTP; 27 Mar 2020 01:45:41 -0700
+Received: from [10.249.36.56] (abudanko-mobl.ccr.corp.intel.com [10.249.36.56])
+        by linux.intel.com (Postfix) with ESMTP id 057B85803E3;
+        Fri, 27 Mar 2020 01:45:38 -0700 (PDT)
+Subject: [PATCH v1 1/8] perf evlist: introduce control file descriptors
+From:   Alexey Budankov <alexey.budankov@linux.intel.com>
+To:     Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc:     Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+References: <825a5132-b58d-c0b6-b050-5a6040386ec7@linux.intel.com>
+Organization: Intel Corp.
+Message-ID: <61540ab8-bb20-911b-6a2e-8d7b83829d9b@linux.intel.com>
+Date:   Fri, 27 Mar 2020 11:45:37 +0300
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-References: <20200324135328.5796-1-geert+renesas@glider.be>
- <20200324135653.6676-1-geert+renesas@glider.be> <20200324135653.6676-5-geert+renesas@glider.be>
- <CACRpkdZuQrPqFPyoop9pv6MVwqwz_C6ZNKMxWqSFXdAMkhbsvQ@mail.gmail.com>
-In-Reply-To: <CACRpkdZuQrPqFPyoop9pv6MVwqwz_C6ZNKMxWqSFXdAMkhbsvQ@mail.gmail.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Fri, 27 Mar 2020 09:45:11 +0100
-Message-ID: <CAMuHMdVpiO+KGRTF=83kubuuJF2p8TJhWe_X32amSTa6bXsCxg@mail.gmail.com>
-Subject: Re: [PATCH v6 5/8] gpiolib: Introduce gpiod_set_config()
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Harish Jenny K N <harish_kandiga@mentor.com>,
-        Eugeniu Rosca <erosca@de.adit-jv.com>,
-        Alexander Graf <graf@amazon.com>,
-        Peter Maydell <peter.maydell@linaro.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Phil Reid <preid@electromag.com.au>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        Christoffer Dall <christoffer.dall@arm.com>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        QEMU Developers <qemu-devel@nongnu.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <825a5132-b58d-c0b6-b050-5a6040386ec7@linux.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
 
-On Thu, Mar 26, 2020 at 10:26 PM Linus Walleij <linus.walleij@linaro.org> wrote:
-> On Tue, Mar 24, 2020 at 2:57 PM Geert Uytterhoeven
-> <geert+renesas@glider.be> wrote:
-> > The GPIO Aggregator will need a method to forward a .set_config() call
-> > to its parent gpiochip.  This requires obtaining the gpio_chip and
-> > offset for a given gpio_desc.  While gpiod_to_chip() is public,
-> > gpio_chip_hwgpio() is not, so there is currently no method to obtain the
-> > needed GPIO offset parameter.
-> >
-> > Hence introduce a public gpiod_set_config() helper, which invokes the
-> > .set_config() callback through a gpio_desc pointer, like is done for
-> > most other gpio_chip callbacks.
-> >
-> > Rewrite the existing gpiod_set_debounce() helper as a wrapper around
-> > gpiod_set_config(), to avoid duplication.
-> >
-> > Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> > ---
-> > v6:
-> >   - New.
->
-> This is nice, I tried to actually just apply this (you also sent some
-> two cleanups that I tried to apply) byt Yue's cleanup patch
-> commit d18fddff061d2796525e6d4a958cb3d30aed8efd
-> "gpiolib: Remove duplicated function gpio_do_set_config()"
-> makes none of them apply :/
+Define and initialize control file descriptors.
 
-/me confused.
+Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
+---
+ tools/perf/util/evlist.c | 3 +++
+ tools/perf/util/evlist.h | 3 +++
+ 2 files changed, 6 insertions(+)
 
-That commit was reverted later, so it shouldn't matter.
-
-I have just verified, and both my full series and just this single
-patch, do apply fine to all of current gpio/for-next, linus/master, and
-next-20200327.  They even apply fine to gpio/for-next before or after
-the two cleanups I sent, too.
-
-What am I missing?
-Thanks!
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
+diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
+index 1548237b6558..1afd87cfa027 100644
+--- a/tools/perf/util/evlist.c
++++ b/tools/perf/util/evlist.c
+@@ -62,6 +62,9 @@ void evlist__init(struct evlist *evlist, struct perf_cpu_map *cpus,
+ 	perf_evlist__set_maps(&evlist->core, cpus, threads);
+ 	evlist->workload.pid = -1;
+ 	evlist->bkw_mmap_state = BKW_MMAP_NOTREADY;
++	evlist->ctl_fd = -1;
++	evlist->ctl_fd_ack = -1;
++	evlist->ctl_fd_pos = -1;
+ }
+ 
+ struct evlist *evlist__new(void)
+diff --git a/tools/perf/util/evlist.h b/tools/perf/util/evlist.h
+index f5bd5c386df1..ac3dd895ef8f 100644
+--- a/tools/perf/util/evlist.h
++++ b/tools/perf/util/evlist.h
+@@ -74,6 +74,9 @@ struct evlist {
+ 		pthread_t		th;
+ 		volatile int		done;
+ 	} thread;
++	int		ctl_fd;
++	int		ctl_fd_ack;
++	int		ctl_fd_pos;
+ };
+ 
+ struct evsel_str_handler {
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+2.24.1
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
