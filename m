@@ -2,238 +2,92 @@ Return-Path: <SRS0=s8dx=5M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B263C2D0E5
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 20:59:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FE8DC2D0E8
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 21:06:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1975A2073B
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 20:59:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2774420658
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 21:06:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PmMUoNlJ"
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="O+5fIL/d"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727696AbgC0U7B (ORCPT
+        id S1727696AbgC0VGr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Mar 2020 16:59:01 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:33085 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727322AbgC0U7B (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Mar 2020 16:59:01 -0400
-Received: by mail-wm1-f65.google.com with SMTP id w25so8203924wmi.0;
-        Fri, 27 Mar 2020 13:58:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:references:in-reply-to:subject:date:message-id
-         :mime-version:content-transfer-encoding:thread-index
-         :content-language;
-        bh=Q6cxwe9Qb2vwkeuHtz/dD2tnRfKg6dCCgqMHhoqOHqo=;
-        b=PmMUoNlJOyZ7K0NKV9paeQeqZFLaXzAfIkPAn2mfGn8NgQ2Ik+r0zAnxVT+kFkJHds
-         XO1Gyuc47YJ1Wjlfs2gQV6KNvivQL0RTX1yJfKwF1UQOiW3HrsuUNr44+sz8JIuFRYeO
-         BjLsTXQBnxXmYsbp3j0GsROORrzbAJ8tS92GAmbIu6UQiE7jQvfq/9y6vmmoiVOMevic
-         CB63TDGEWTZxgilOOptE4K7sum84gBagKEA5KsfuklloMrWfIE83iTnnorb09ZXdMtqN
-         u1ETm/e7XDsC+Br4mt0swWRKlM7hEuW1+78nJDbSI7mjI1t3/JGAPLcL2AMKTcVimJug
-         4ieA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:references:in-reply-to:subject:date
-         :message-id:mime-version:content-transfer-encoding:thread-index
-         :content-language;
-        bh=Q6cxwe9Qb2vwkeuHtz/dD2tnRfKg6dCCgqMHhoqOHqo=;
-        b=kCOoiY+L+E5oXe0N8lV9J+8kyO+jmn40KKwvB/EsEma3i8kTp+ca/2M+6jtLjGcHjq
-         BFmaVqjaC0CymgsADk239VhGmCQpPELr/YNrqqGR3BaQ9yxFbHgRrxZhu8aCFYfDA/hq
-         XA14N0Q0RhhYi4g+g6Z/lzPdFxEhQMp5U3QLXLof7GqyBRw67lui3Y10B0DQ80QIY503
-         fTGkGyUVC4gwJW5BhqUmPUa2Xb3IQ+Rmk0SaxE0jHOvquEUI7WNnJg6+OvUJQ9BlFDIr
-         b0NwzVk++TgB1lJmJUlYt7EJXf5P2GceVLb9zfE6yLS1rDtgk8oiA9piOLnovodEtz7y
-         9yQw==
-X-Gm-Message-State: ANhLgQ2VdXwk+3SXQJkM7YMRyUqJeDOwQDkH8oh+WFeS9o5ZGXvqQhwz
-        EHT44zNxZSgrkUZ3s0Hs8yg=
-X-Google-Smtp-Source: ADFU+vt//RPC/ZmN1X0LHsqVqVtX4Fzd31sl/CVw9kOFofXvOCz4Rdp7BUBfl6w+EADZMfCQKpegFg==
-X-Received: by 2002:a7b:cbcf:: with SMTP id n15mr575918wmi.13.1585342737774;
-        Fri, 27 Mar 2020 13:58:57 -0700 (PDT)
-Received: from AnsuelXPS ([2001:470:b467:1:6970:5124:473a:ebab])
-        by smtp.gmail.com with ESMTPSA id p3sm9874945wrj.91.2020.03.27.13.58.56
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 27 Mar 2020 13:58:57 -0700 (PDT)
-From:   <ansuelsmth@gmail.com>
-To:     "'Bjorn Andersson'" <bjorn.andersson@linaro.org>
-Cc:     "'Andy Gross'" <agross@kernel.org>,
-        "'Ajay Kishore'" <akisho@codeaurora.org>,
-        "'Linus Walleij'" <linus.walleij@linaro.org>,
-        <linux-arm-msm@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20200326173524.15236-1-ansuelsmth@gmail.com> <20200327201340.GA211617@minitux>
-In-Reply-To: <20200327201340.GA211617@minitux>
-Subject: R: [PATCH v2] pinctrl: qcom: use scm_call to route GPIO irq to Apps
-Date:   Fri, 27 Mar 2020 21:58:53 +0100
-Message-ID: <048701d6047a$8752f390$95f8dab0$@gmail.com>
+        Fri, 27 Mar 2020 17:06:47 -0400
+Received: from mout.gmx.net ([212.227.17.21]:44509 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727352AbgC0VGr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Mar 2020 17:06:47 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1585343179;
+        bh=BkicKu3vszgAZYB5VVjsQBFzgHoqTmVLs6lBPNlNKRM=;
+        h=X-UI-Sender-Class:Date:From:To:Cc:Subject;
+        b=O+5fIL/dZ7jLVM4bY+E7Pxc7vPhZ2wEc7RqUxUbMQlbVRUKW/E7MOd1IzmGf1FlLG
+         KBNrq5XBpSRXL94Wh3VT263eOIE/KbDepp8X6vbYULIhsPh6MTt4T5/752YSiTYyd8
+         ddaTn1z1hYADEAafprWePJvTWWszTHd8Lxw+9JgQ=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from ls3530.fritz.box ([92.116.180.137]) by mail.gmx.com (mrgmx104
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 1MbzyJ-1jngxg1NPj-00dSsV; Fri, 27
+ Mar 2020 22:06:19 +0100
+Date:   Fri, 27 Mar 2020 22:06:15 +0100
+From:   Helge Deller <deller@gmx.de>
+To:     Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-kernel@vger.kernel.org, linux-parisc@vger.kernel.org,
+        James Bottomley <James.Bottomley@hansenpartnership.com>,
+        John David Anglin <dave.anglin@bell.net>
+Cc:     Guenter Roeck <linux@roeck-us.net>
+Subject: [GIT PULL] parisc architecture fix for kernel v5.6
+Message-ID: <20200327210615.GA25160@ls3530.fritz.box>
 MIME-Version: 1.0
-Content-Type: text/plain;
-        charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-X-Mailer: Microsoft Outlook 16.0
-Thread-Index: AQLj+LtT0Ig1DBg116zfQ12wMypniwFqtdGipjWnCEA=
-Content-Language: it
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+X-Provags-ID: V03:K1:74xy4lam6JN392Y1Z7adHT3ALcmGhlta014WpTFBjKZkGK0AlPt
+ Cdq16U1bJejuePbVNyd458Mm/OuQVBgtSXcfraUbcpsimRSroIdM6hGNxr76+RXjSjK+ekq
+ x4kU+kWqDNnhwbKX+a0+nHoHcRgmRC/wv6acki7d0e+qyFHKXuOsUw87QuxcRCq0bScLZEI
+ LmnqKJpl45jBQefaA1x3Q==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:n8d/9FVN/pQ=:QD1e28Baaca3R5MADWPzIu
+ Zwd7itVXuspvZG2o4k7iiS34tPK0085qvqq2n4B/uRvjqNnnhKQB9a+i0jsxhD28cggneKj6w
+ dWfNT1ut6vcAgI6bygzvmvoZ8TI9KVZPpG4iz/0hXAneP7CzFPdfvqRAt2yHcWY8eYHAVTEA4
+ L+KBUGf3+f0njWgyuUDmsGJxUITEfBl1r0lMvnXvKMRTNSNGOaibYl+lhxEQFoafyQJy/NxGq
+ MLdDIriWIJUCzojQzzaS/wTjUTIlZZQ4WxXbFy8p6K+YMyPyQj0tz/2PkgWP8Wm3QUIuabSMa
+ dnPJutAp89I1hbS2CCYmPwRcnDvAYGlnhzRVxG3z5gsXazKLe0i2hTlrX9QL1GuakdV76Zf9O
+ 3D8to1Pe91sftQ6Am5Le8vpWudW5NToJTc63xGL9q6Jgk4cJXvRvquNMJm9BG39LiKMtuoSNu
+ H5AkST18RVgWUQ24AVkQ/jf2tEmnQAD283v/CjtKTSyfRW2/d1iq7L2hDN78Z6BqROXwgk+qI
+ wI6WJKm9+A47vIhw6lsOcTytFaqMpu/2D2xTKU1nXhEWgc40TEw7vhz8bYFj5qqmXokgpLncm
+ McmGKBbZ6njjHdZm0uZjJCzHEswhssg66EARnrgoN+VrC0oU4x++hjYFoj7J5XdA48yOzC4ly
+ jIrW++DdkR9pOdxJnINGL2Vr7caGSXxa52RJ6UKpC/u646ko2tKcLPRS7im7LHnpc2Age9k6+
+ iWUsnYDtKuQbM46uCdyWk5qEfFL5Gk6p4I/GyLGWdPCG1Lz/naRgVzL/pA4J+BpOKwyUuiOxv
+ ObrfrJ7WrR2l2C3kxzntZsld3ovGhGrA8zYxSP+lA7WqNtlXTRWmr78dWpsegG24CqK8rxIRC
+ i5G0qXeykba1yVuEYeVHRVmSxBoZJPzK7/L/bxvdpmKmL5UhMvdf0RdzHxql+7ZInB0AC1F6D
+ LlebTr7mKIU4qtkAqzfUaCGDD62ht9lpBwDxfSiuDQXFIUGGqKS7qu4VBVFXrkXYvu9hrCTCb
+ 6dHxtmFDpzNgAS9iAWgssSNWa34YKHVCzXQ7zws118WmBOemZkchlxRskDOA6amqAULUXTUgD
+ PRPyYJtSWlbKqvZtkK3g/5GeRCKDCLUSCCordlyh1Z/CZFQYM6dwuKn49eIlu9Lb2aFwiM+8/
+ LYkGatfkxaU7f7IqO7wSK1f4qcJDBkT+N8FTh7GTTEu6W2WpPZSknR/+6gco8eyaIc/itfFSg
+ 706s00CH6w+0/j66n
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> On Thu 26 Mar 10:35 PDT 2020, Ansuel Smith wrote:
-> 
-> > From: Ajay Kishore <akisho@codeaurora.org>
-> >
-> > For IPQ806x targets, TZ protects the registers that are used to
-> > configure the routing of interrupts to a target processor.
-> > To resolve this, this patch uses scm call to route GPIO interrupts
-> > to application processor. Also the scm call interface is changed.
-> >
-> > Signed-off-by: Ajay Kishore <akisho@codeaurora.org>
-> > Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
-> 
-> Thanks for respinning this Ansuel, just some minor things below.
-> 
-> > ---
-> > v2:
-> > * Move static varibale in msm_pinctrl struct
-> > * Revert '4b024225c4a8 ("pinctrl: use
-> devm_platform_ioremap_resource() to simplify code")'
-> >   to get base_reg addr
-> >
-> >  drivers/pinctrl/qcom/pinctrl-msm.c | 37
-> ++++++++++++++++++++++++++----
-> >  1 file changed, 32 insertions(+), 5 deletions(-)
-> >
-> > diff --git a/drivers/pinctrl/qcom/pinctrl-msm.c
-> b/drivers/pinctrl/qcom/pinctrl-msm.c
-> > index 9a8daa256a32..9627ebd41ff9 100644
-> > --- a/drivers/pinctrl/qcom/pinctrl-msm.c
-> > +++ b/drivers/pinctrl/qcom/pinctrl-msm.c
-> > @@ -22,6 +22,8 @@
-> >  #include <linux/reboot.h>
-> >  #include <linux/pm.h>
-> >  #include <linux/log2.h>
-> > +#include <linux/qcom_scm.h>
-> > +#include <linux/io.h>
-> >
-> >  #include <linux/soc/qcom/irq.h>
-> >
-> > @@ -60,6 +62,9 @@ struct msm_pinctrl {
-> >  	struct irq_chip irq_chip;
-> >  	int irq;
-> >
-> > +	int route_to_apps;
-> 
-> We "always" route our interrupts to apps, so please rename this to
-> intr_target_use_scm. And using "bool" instead would make it clear that
-> this is a binary flag.
-> 
+Hi Linus,
 
-Will fix in v3
+please pull one late patch for the parisc architecture for kernel 5.6 from:
 
-> > +	u32 base_reg;
-> 
-> Even though I think it's fine that you only fill in the first entry,
-> please make this phys_base[MAX_NR_GPIO]; next to regs.
-> 
+  git://git.kernel.org/pub/scm/linux/kernel/git/deller/parisc-linux.git parisc-5.6-2
 
-If I understand correctly, I should replace base_reg with 
-phys_base[MAX_NR_GPIO]
-I think we should use MAX_NR_TILES instead of MAX_NR_GPIO
-Wouldn't this be a waste of memory since only the base_reg will be needed?
-I don't think there will be a soc with multiple tiles and the need to add
-code 
-in the loop function. (Also sorry for off-topic... since we have
-soc_data->ntiles
-why don't we use kmem allocation instead of statically use half empty
-array?)
+Fix a recursive loop when running "make ARCH=parisc defconfig".
 
-> > +
-> >  	raw_spinlock_t lock;
-> >
-> >  	DECLARE_BITMAP(dual_edge_irqs, MAX_NR_GPIO);
-> > @@ -883,10 +888,27 @@ static int msm_gpio_irq_set_type(struct
-> irq_data *d, unsigned int type)
-> >  		clear_bit(d->hwirq, pctrl->dual_edge_irqs);
-> >
-> >  	/* Route interrupts to application cpu */
-> > -	val = msm_readl_intr_target(pctrl, g);
-> > -	val &= ~(7 << g->intr_target_bit);
-> > -	val |= g->intr_target_kpss_val << g->intr_target_bit;
-> > -	msm_writel_intr_target(val, pctrl, g);
-> > +	if (pctrl->route_to_apps && pctrl->base_reg) {
-> 
-> I meant that you could fill out "base_reg" only if it's supposed to be
-> used, but looking at your patch I think it's nicer to have a separate
-> flag - so you can omit the check for base_reg != NULL here.
-> 
+Thanks,
+Helge
 
-Since we return error if devm_ioremap_resource fails, it is good to only
-check 
-the route_to_apps as base_reg will be set for sure?
+----------------------------------------------------------------
+Helge Deller (1):
+      parisc: Fix defconfig selection
 
-> > +		u32 addr = pctrl->base_reg + g->intr_target_reg;
-> > +		int ret;
-> > +
-> > +		qcom_scm_io_readl(addr, &val);
-> > +
-> > +		val &= ~(7 << g->intr_target_bit);
-> > +		val |= g->intr_target_kpss_val << g->intr_target_bit;
-> > +
-> > +		ret = qcom_scm_io_writel(addr, val);
-> > +		if (ret)
-> > +			dev_err(pctrl->dev,
-> > +				"Failed routing %lu interrupt to Apps proc",
-> > +				d->hwirq);
-> > +		}
-> > +	} else {
-> > +		val = msm_readl_intr_target(pctrl, g);
-> > +		val &= ~(7 << g->intr_target_bit);
-> > +		val |= g->intr_target_kpss_val << g->intr_target_bit;
-> > +		msm_writel_intr_target(val, pctrl, g);
-> > +	}
-> >
-> >  	/* Update configuration for gpio.
-> >  	 * RAW_STATUS_EN is left on for all gpio irqs. Due to the
-> > @@ -1241,6 +1263,8 @@ int msm_pinctrl_probe(struct platform_device
-> *pdev,
-> >  	pctrl->dev = &pdev->dev;
-> >  	pctrl->soc = soc_data;
-> >  	pctrl->chip = msm_gpio_template;
-> > +	pctrl->route_to_apps = of_device_is_compatible(pctrl->dev-
-> >of_node,
-> > +					"qcom,ipq8064-pinctrl");
-> >
-> >  	raw_spin_lock_init(&pctrl->lock);
-> >
-> > @@ -1253,9 +1277,12 @@ int msm_pinctrl_probe(struct
-> platform_device *pdev,
-> >  				return PTR_ERR(pctrl->regs[i]);
-> >  		}
-> >  	} else {
-> > -		pctrl->regs[0] = devm_platform_ioremap_resource(pdev, 0);
-> > +		res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> > +		pctrl->regs[0] = devm_ioremap_resource(&pdev->dev, res);
-> >  		if (IS_ERR(pctrl->regs[0]))
-> >  			return PTR_ERR(pctrl->regs[0]);
-> > +		else
-> 
-> No need for the else, as the "positive" case is a return.
-> 
-
-Will fix in v3
-
-> Thank you,
-> Bjorn
-> 
-> > +			pctrl->base_reg = res->start;
-> >  	}
-> >
-> >  	msm_pinctrl_setup_pm_reset(pctrl);
-> > --
-> > 2.25.1
-> >
-
+ arch/parisc/Kconfig  | 5 +++++
+ arch/parisc/Makefile | 7 +++++++
+ 2 files changed, 12 insertions(+)
