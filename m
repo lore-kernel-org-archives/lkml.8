@@ -2,153 +2,90 @@ Return-Path: <SRS0=s8dx=5M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 347D8C43331
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 14:35:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA981C2D0EC
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 14:37:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0FE86206F2
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 14:35:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF88F2074F
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 14:37:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585319822;
+	bh=YhxnLqESn5OJ6l0aP2+/xsbNdof7w2zmwZVpw4YJjhw=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=kcoUbkNYh+yy0w3ZqvfeknHxG2U0vvm3dwINFUZVwwT0KVaPtF+mA3z9OeyZXYDFP
+	 ZD6nSSNEGYdS8FY4AgbVasRjGrZgDvn8BZs8oMuvz3/D8TqWKbNVu4KJO5qJS1wA0+
+	 7Hxu+MhjZNTa32Cf9iiM9W328TBBmDxYURqY0iPw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727906AbgC0Ofa (ORCPT
+        id S1727575AbgC0OhB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Mar 2020 10:35:30 -0400
-Received: from foss.arm.com ([217.140.110.172]:45580 "EHLO foss.arm.com"
+        Fri, 27 Mar 2020 10:37:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33722 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726518AbgC0Oev (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Mar 2020 10:34:51 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 881531042;
-        Fri, 27 Mar 2020 07:34:50 -0700 (PDT)
-Received: from e120937-lin.home (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2C0193F71F;
-        Fri, 27 Mar 2020 07:34:49 -0700 (PDT)
-From:   Cristian Marussi <cristian.marussi@arm.com>
-To:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc:     sudeep.holla@arm.com, lukasz.luba@arm.com,
-        james.quinlan@broadcom.com, Jonathan.Cameron@Huawei.com,
-        cristian.marussi@arm.com
-Subject: [PATCH v6 03/13] firmware: arm_scmi: Add notifications support in transport layer
-Date:   Fri, 27 Mar 2020 14:34:28 +0000
-Message-Id: <20200327143438.5382-4-cristian.marussi@arm.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200327143438.5382-1-cristian.marussi@arm.com>
-References: <20200327143438.5382-1-cristian.marussi@arm.com>
+        id S1726518AbgC0OhB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Mar 2020 10:37:01 -0400
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id F0EA8206F2;
+        Fri, 27 Mar 2020 14:36:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1585319820;
+        bh=YhxnLqESn5OJ6l0aP2+/xsbNdof7w2zmwZVpw4YJjhw=;
+        h=Date:From:To:Cc:Subject:From;
+        b=D82neLNeNnF3peNxO19ARovHHuLJ9IodxxTi6bsXOLbUBSgw4ETNpQKrqo+q8ZsGf
+         crI556YvCMFcQ1Sl2EFLg8stV1+3ATz7PGifB7DHuq4sRLGXkdGGytvr/JVekh6deA
+         4whECf7biyLTmVDqXReD58xnloZHqGNqecg68Zgk=
+Date:   Fri, 27 Mar 2020 14:36:56 +0000
+From:   Will Deacon <will@kernel.org>
+To:     torvalds@linux-foundation.org
+Cc:     catalin.marinas@arm.com, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, kernel-team@android.com
+Subject: [GIT PULL] arm64 fix for -rc8/final
+Message-ID: <20200327143655.GA6205@willie-the-truck>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add common transport-layer methods to:
- - fetch a notification instead of a response
- - clear a pending notification
+Hi Linus,
 
-Add also all the needed support in mailbox/shmem transports.
+Please pull this arm64 fix for 5.6-rc8/final to resolve a defconfig build
+failure when using Clang's integrated assembler.
 
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Reviewed-by: Viresh Kumar <viresh.kumar@linaro.org>
-Signed-off-by: Cristian Marussi <cristian.marussi@arm.com>
----
- drivers/firmware/arm_scmi/common.h  |  8 ++++++++
- drivers/firmware/arm_scmi/mailbox.c | 17 +++++++++++++++++
- drivers/firmware/arm_scmi/shmem.c   | 15 +++++++++++++++
- 3 files changed, 40 insertions(+)
+Cheers,
 
-diff --git a/drivers/firmware/arm_scmi/common.h b/drivers/firmware/arm_scmi/common.h
-index 5ac06469b01c..3c2e5d0d7b68 100644
---- a/drivers/firmware/arm_scmi/common.h
-+++ b/drivers/firmware/arm_scmi/common.h
-@@ -178,6 +178,8 @@ struct scmi_chan_info {
-  * @send_message: Callback to send a message
-  * @mark_txdone: Callback to mark tx as done
-  * @fetch_response: Callback to fetch response
-+ * @fetch_notification: Callback to fetch notification
-+ * @clear_notification: Callback to clear a pending notification
-  * @poll_done: Callback to poll transfer status
-  */
- struct scmi_transport_ops {
-@@ -190,6 +192,9 @@ struct scmi_transport_ops {
- 	void (*mark_txdone)(struct scmi_chan_info *cinfo, int ret);
- 	void (*fetch_response)(struct scmi_chan_info *cinfo,
- 			       struct scmi_xfer *xfer);
-+	void (*fetch_notification)(struct scmi_chan_info *cinfo,
-+				   size_t max_len, struct scmi_xfer *xfer);
-+	void (*clear_notification)(struct scmi_chan_info *cinfo);
- 	bool (*poll_done)(struct scmi_chan_info *cinfo, struct scmi_xfer *xfer);
- };
- 
-@@ -222,5 +227,8 @@ void shmem_tx_prepare(struct scmi_shared_mem __iomem *shmem,
- u32 shmem_read_header(struct scmi_shared_mem __iomem *shmem);
- void shmem_fetch_response(struct scmi_shared_mem __iomem *shmem,
- 			  struct scmi_xfer *xfer);
-+void shmem_fetch_notification(struct scmi_shared_mem __iomem *shmem,
-+			      size_t max_len, struct scmi_xfer *xfer);
-+void shmem_clear_notification(struct scmi_shared_mem __iomem *shmem);
- bool shmem_poll_done(struct scmi_shared_mem __iomem *shmem,
- 		     struct scmi_xfer *xfer);
-diff --git a/drivers/firmware/arm_scmi/mailbox.c b/drivers/firmware/arm_scmi/mailbox.c
-index 73077bbc4ad9..19ee058f9f44 100644
---- a/drivers/firmware/arm_scmi/mailbox.c
-+++ b/drivers/firmware/arm_scmi/mailbox.c
-@@ -158,6 +158,21 @@ static void mailbox_fetch_response(struct scmi_chan_info *cinfo,
- 	shmem_fetch_response(smbox->shmem, xfer);
- }
- 
-+static void mailbox_fetch_notification(struct scmi_chan_info *cinfo,
-+				       size_t max_len, struct scmi_xfer *xfer)
-+{
-+	struct scmi_mailbox *smbox = cinfo->transport_info;
-+
-+	shmem_fetch_notification(smbox->shmem, max_len, xfer);
-+}
-+
-+static void mailbox_clear_notification(struct scmi_chan_info *cinfo)
-+{
-+	struct scmi_mailbox *smbox = cinfo->transport_info;
-+
-+	shmem_clear_notification(smbox->shmem);
-+}
-+
- static bool
- mailbox_poll_done(struct scmi_chan_info *cinfo, struct scmi_xfer *xfer)
- {
-@@ -173,6 +188,8 @@ static struct scmi_transport_ops scmi_mailbox_ops = {
- 	.send_message = mailbox_send_message,
- 	.mark_txdone = mailbox_mark_txdone,
- 	.fetch_response = mailbox_fetch_response,
-+	.fetch_notification = mailbox_fetch_notification,
-+	.clear_notification = mailbox_clear_notification,
- 	.poll_done = mailbox_poll_done,
- };
- 
-diff --git a/drivers/firmware/arm_scmi/shmem.c b/drivers/firmware/arm_scmi/shmem.c
-index ca0ffd302ea2..e1ab05be90e3 100644
---- a/drivers/firmware/arm_scmi/shmem.c
-+++ b/drivers/firmware/arm_scmi/shmem.c
-@@ -67,6 +67,21 @@ void shmem_fetch_response(struct scmi_shared_mem __iomem *shmem,
- 	memcpy_fromio(xfer->rx.buf, shmem->msg_payload + 4, xfer->rx.len);
- }
- 
-+void shmem_fetch_notification(struct scmi_shared_mem __iomem *shmem,
-+			      size_t max_len, struct scmi_xfer *xfer)
-+{
-+	/* Skip only the length of header in shmem area i.e 4 bytes */
-+	xfer->rx.len = min_t(size_t, max_len, ioread32(&shmem->length) - 4);
-+
-+	/* Take a copy to the rx buffer.. */
-+	memcpy_fromio(xfer->rx.buf, shmem->msg_payload, xfer->rx.len);
-+}
-+
-+void shmem_clear_notification(struct scmi_shared_mem __iomem *shmem)
-+{
-+	iowrite32(SCMI_SHMEM_CHAN_STAT_CHANNEL_FREE, &shmem->channel_status);
-+}
-+
- bool shmem_poll_done(struct scmi_shared_mem __iomem *shmem,
- 		     struct scmi_xfer *xfer)
- {
--- 
-2.17.1
+Will
 
+--->8
+
+The following changes since commit 3568b88944fef28db3ee989b957da49ffc627ede:
+
+  arm64: compat: Fix syscall number of compat_clock_getres (2020-03-19 19:23:46 +0000)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git tags/arm64-fixes
+
+for you to fetch changes up to 6f5459da2b8736720afdbd67c4bd2d1edba7d0e3:
+
+  arm64: alternative: fix build with clang integrated assembler (2020-03-20 10:01:28 +0000)
+
+----------------------------------------------------------------
+arm64 fix for -rc8/final
+
+- Fix defconfig build when using Clang's integrated assembler
+
+----------------------------------------------------------------
+Ilie Halip (1):
+      arm64: alternative: fix build with clang integrated assembler
+
+ arch/arm64/include/asm/alternative.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
