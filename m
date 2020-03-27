@@ -2,53 +2,101 @@ Return-Path: <SRS0=s8dx=5M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92A23C43331
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 20:33:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1456C2D0E5
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 20:34:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 69A2E2073E
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 20:33:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A46092071B
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 20:34:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727793AbgC0Udx (ORCPT
+        id S1727815AbgC0UeL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Mar 2020 16:33:53 -0400
-Received: from mx2.suse.de ([195.135.220.15]:54036 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727750AbgC0Udu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Mar 2020 16:33:50 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id E88D6ADE3;
-        Fri, 27 Mar 2020 20:33:48 +0000 (UTC)
-Date:   Fri, 27 Mar 2020 13:33:44 -0700
-From:   Tony Jones <tonyj@suse.de>
-To:     Arnaldo Melo <arnaldo.melo@gmail.com>
-Cc:     linux-perf-users@vger.kernel.org,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] perf tools: update docs regarding kernel/user space
- unwinding
-Message-ID: <20200327203344.GC2715@suse.de>
-References: <20200325164053.10177-1-tonyj@suse.de>
- <38ba2caa-dadd-52c4-c6ea-5e01b7e59ee2@us.ibm.com>
- <20200327200934.GB2715@suse.de>
- <C8021C4E-2764-47CE-AF79-10823C7FDBB2@gmail.com>
+        Fri, 27 Mar 2020 16:34:11 -0400
+Received: from www62.your-server.de ([213.133.104.62]:39836 "EHLO
+        www62.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727393AbgC0UeL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Mar 2020 16:34:11 -0400
+Received: from sslproxy05.your-server.de ([78.46.172.2])
+        by www62.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.89_1)
+        (envelope-from <daniel@iogearbox.net>)
+        id 1jHvg6-00089O-S4; Fri, 27 Mar 2020 21:34:06 +0100
+Received: from [178.195.186.98] (helo=pc-9.home)
+        by sslproxy05.your-server.de with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <daniel@iogearbox.net>)
+        id 1jHvg6-000Lpp-Dh; Fri, 27 Mar 2020 21:34:06 +0100
+Subject: Re: [PATCH v3] bpf: fix build warning - missing prototype
+To:     Jean-Philippe Menil <jpmenil@gmail.com>,
+        alexei.starovoitov@gmail.com
+Cc:     kernel-janitors@vger.kernel.org,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>, netdev@vger.kernel.org,
+        bpf@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200326235426.ei6ae2z5ek6uq3tt@ast-mbp>
+ <20200327075544.22814-1-jpmenil@gmail.com>
+From:   Daniel Borkmann <daniel@iogearbox.net>
+Message-ID: <3164e566-d54e-2254-32c4-d7fee47c37ea@iogearbox.net>
+Date:   Fri, 27 Mar 2020 21:34:05 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <C8021C4E-2764-47CE-AF79-10823C7FDBB2@gmail.com>
+In-Reply-To: <20200327075544.22814-1-jpmenil@gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Authenticated-Sender: daniel@iogearbox.net
+X-Virus-Scanned: Clear (ClamAV 0.102.2/25764/Fri Mar 27 14:11:26 2020)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 27, 2020 at 05:17:59PM -0300, Arnaldo Melo wrote:
+On 3/27/20 8:55 AM, Jean-Philippe Menil wrote:
+> Fix build warnings when building net/bpf/test_run.o with W=1 due
+> to missing prototype for bpf_fentry_test{1..6}.
+> 
+> Instead of declaring prototypes, turn off warnings with
+> __diag_{push,ignore,pop} as pointed by Alexei.
+> 
+> Signed-off-by: Jean-Philippe Menil <jpmenil@gmail.com>
 
-> English as a second language, many contributors, please consider sending fixes, would be really appreciated,
+Looks better, but this doesn't apply cleanly. Please respin to latest bpf-next tree, thanks.
 
-Understood and I was planning on doing so.
+> ---
+>   net/bpf/test_run.c | 5 +++++
+>   1 file changed, 5 insertions(+)
+> 
+> diff --git a/net/bpf/test_run.c b/net/bpf/test_run.c
+> index d555c0d8657d..cc1592413fc3 100644
+> --- a/net/bpf/test_run.c
+> +++ b/net/bpf/test_run.c
+> @@ -113,6 +113,9 @@ static int bpf_test_finish(const union bpf_attr *kattr,
+>    * architecture dependent calling conventions. 7+ can be supported in the
+>    * future.
+>    */
+> +__diag_push();
+> +__diag_ignore(GCC, 8, "-Wmissing-prototypes",
+> +	      "Global functions as their definitions will be in vmlinux BTF);
+>   int noinline bpf_fentry_test1(int a)
+>   {
+>   	return a + 1;
+> @@ -143,6 +146,8 @@ int noinline bpf_fentry_test6(u64 a, void *b, short c, int d, void *e, u64 f)
+>   	return a + (long)b + c + d + (long)e + f;
+>   }
+>   
+> +__diag_pop();
+> +
+>   static void *bpf_test_init(const union bpf_attr *kattr, u32 size,
+>   			   u32 headroom, u32 tailroom)
+>   {
+> 
 
-Tony
