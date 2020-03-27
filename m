@@ -2,134 +2,150 @@ Return-Path: <SRS0=s8dx=5M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27FC0C43331
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 12:48:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83D7DC2D0E8
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 12:49:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE7B4206F2
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 12:48:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="I04So+p9"
+	by mail.kernel.org (Postfix) with ESMTP id 63AC8206F2
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 12:49:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727345AbgC0MsK (ORCPT
+        id S1727541AbgC0Mtf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Mar 2020 08:48:10 -0400
-Received: from us-smtp-delivery-74.mimecast.com ([63.128.21.74]:54073 "EHLO
-        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726165AbgC0MsK (ORCPT
+        Fri, 27 Mar 2020 08:49:35 -0400
+Received: from esa3.mentor.iphmx.com ([68.232.137.180]:2339 "EHLO
+        esa3.mentor.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727125AbgC0Mtf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Mar 2020 08:48:10 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1585313288;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=J3R9pjfcrLfveJt0OaJwOudwQhu7GzXewbxhBYVgwpg=;
-        b=I04So+p9VSD2hBwynFiXK+dmEn7MeZnQ5SOLdGNa5yArhKHYDpfXNyQQeCiANEiQEj/SHZ
-        3mnfhENd+MqjhXJVNs1ZuOs/xhDZZaPeCz3hQbxrgxVa76Awl43ej42yMPF/bIvMIQoVcF
-        cCDgqNfrzAo9s9kS6HQhMRl2k7QIGF4=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-240-LPpkSmZJMEe8A8K9hONBgQ-1; Fri, 27 Mar 2020 08:48:07 -0400
-X-MC-Unique: LPpkSmZJMEe8A8K9hONBgQ-1
-Received: by mail-wr1-f70.google.com with SMTP id u18so4466700wrn.11
-        for <linux-kernel@vger.kernel.org>; Fri, 27 Mar 2020 05:48:07 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=J3R9pjfcrLfveJt0OaJwOudwQhu7GzXewbxhBYVgwpg=;
-        b=MF2NzFFfE40v3AoqmNPTpU0CCFzN7w2bt+0nluaO2VijDVu9FB+2+1qvK445BwPLAE
-         fdcJTbw9Ayd3je14qpoLVnDEDTaOrJymsKV3u7OZx77ksrl5cm/CrIu2U2p0DwtQxeEP
-         dbMnlRrvhEwiNpF+lkyMxfWOxmTbSx6I15YPcXxi0WwvVtJwufT5GwWonT4ePMUrg6hH
-         MQsbRWXojYrWMCOzZY9yEVuO1zV8fge+mjNPSd8eXcmJXvK4Jwn513PBiAqbLHu4L43I
-         pnLjxBimkGcOJyylvZJCuhNgVXihp64KK9qorCegb1mOUveVOQnCWHBk0UoNDrrK0dsJ
-         5hkQ==
-X-Gm-Message-State: ANhLgQ3yqE20tv1UQRZzGkvFM69ONexbp67bAseS1K/4J+j3Ki2I/WmL
-        FdYOu/Jj0NdmYqpgxNgvfcSYwFypEFUUfQUL0WCso9TkbQHiJpi09EaO1AK8L7gG3Xf6RGr+Y9R
-        tIAgjeGTuHqKcZOUbt+fw62Ag
-X-Received: by 2002:adf:f5c8:: with SMTP id k8mr13922486wrp.33.1585313286078;
-        Fri, 27 Mar 2020 05:48:06 -0700 (PDT)
-X-Google-Smtp-Source: ADFU+vt5vgDE/lGJRuJHFUg90TW5N/ADRnKJCzJQ3za8iF5BR3iNikqZ3JIgzc9k8sjECJJks2AE1A==
-X-Received: by 2002:adf:f5c8:: with SMTP id k8mr13922457wrp.33.1585313285753;
-        Fri, 27 Mar 2020 05:48:05 -0700 (PDT)
-Received: from vitty.brq.redhat.com (g-server-2.ign.cz. [91.219.240.2])
-        by smtp.gmail.com with ESMTPSA id a8sm7715284wmb.39.2020.03.27.05.48.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 27 Mar 2020 05:48:04 -0700 (PDT)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Junaid Shahid <junaids@google.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-Subject: Re: [PATCH 2/3] KVM: x86: cleanup kvm_inject_emulated_page_fault
-In-Reply-To: <d2222e81-8618-b3b0-baf3-2bda72d48ede@redhat.com>
-References: <20200326093516.24215-1-pbonzini@redhat.com> <20200326093516.24215-3-pbonzini@redhat.com> <877dz75j4i.fsf@vitty.brq.redhat.com> <d2222e81-8618-b3b0-baf3-2bda72d48ede@redhat.com>
-Date:   Fri, 27 Mar 2020 13:48:04 +0100
-Message-ID: <87a7423qwr.fsf@vitty.brq.redhat.com>
+        Fri, 27 Mar 2020 08:49:35 -0400
+IronPort-SDR: N6mJ5jQVFmaoeXk8IMWTdHonEVfzBavS3kGzVjRHFyY9vLDwSuYoottRmIFz0M9PqDdwAPONOM
+ VTvo6pqyDhJ+O1sWLY8j73PIhXp1tYpza+durdvE/WHjI6UWejjULSb69/8lybnxh6iSdKsg/A
+ l5VsiBgNoJepBtvzaPAHJ1c0TrUbNOkB8ujakZmUDuwlfqogWDHdtvIsUq8DRoxm8ZqYZwQs9R
+ CE9Zp042pXau6IG5R8yj2etullPYURzCTGT372j4FxybiB3Qxdr7I/UFDRc92wj8UVswgoPuyY
+ JCE=
+X-IronPort-AV: E=Sophos;i="5.72,312,1580803200"; 
+   d="scan'208";a="47175290"
+Received: from orw-gwy-01-in.mentorg.com ([192.94.38.165])
+  by esa3.mentor.iphmx.com with ESMTP; 27 Mar 2020 04:49:34 -0800
+IronPort-SDR: mLbGuIWhr8qHvJEGRs4rGITXzvziN+jYvXMPNxgqaGORCP7VS8sUeq6K/esQ7Ya5CGMEtL1a0p
+ QhKXGnBHaLtIdXBRearHR3KfZC66p76yiATCHAQ+PwyMsg0tHj3OulVzXuHvIi3MNLYXFk2/O0
+ PjFkrky3JvEk9QP9JheQ3h0iJmxbJ93Vfs93sIDpTmpGkrFCT83SnM/ZPC9lv2QPL0yPXBrKds
+ GVEgpuwPOFlbbT5XKeSZLINl9zNhz7B7f+m9D0FBa3hoADIvyiZv4ci2u41JqItwRbFD8OuCEz
+ zYA=
+Subject: Re: [PATCH v9 52/55] input: touchscreen: atmel_mxt_ts: Added sysfs
+ entry for touchscreen status
+To:     Dmitry Osipenko <digetx@gmail.com>, <nick@shmanahar.org>,
+        <dmitry.torokhov@gmail.com>, <jikos@kernel.org>,
+        <benjamin.tissoires@redhat.com>, <bsz@semihalf.com>,
+        <rydberg@bitmath.org>
+CC:     <linux-input@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <erosca@de.adit-jv.com>, <Andrew_Gabbasov@mentor.com>
+References: <20200325133334.19346-1-jiada_wang@mentor.com>
+ <20200325133334.19346-53-jiada_wang@mentor.com>
+ <4aeda6f1-25d8-9437-5cd0-560e43dbe081@gmail.com>
+From:   "Wang, Jiada" <jiada_wang@mentor.com>
+Message-ID: <b9368137-2fdc-558d-c27c-54d56950f7b8@mentor.com>
+Date:   Fri, 27 Mar 2020 21:49:14 +0900
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <4aeda6f1-25d8-9437-5cd0-560e43dbe081@gmail.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: SVR-ORW-MBX-06.mgc.mentorg.com (147.34.90.206) To
+ svr-orw-mbx-01.mgc.mentorg.com (147.34.90.201)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Paolo Bonzini <pbonzini@redhat.com> writes:
+Hi Dmitry
 
-> On 26/03/20 14:41, Vitaly Kuznetsov wrote:
->> Paolo Bonzini <pbonzini@redhat.com> writes:
->> 
->>> To reconstruct the kvm_mmu to be used for page fault injection, we
->>> can simply use fault->nested_page_fault.  This matches how
->>> fault->nested_page_fault is assigned in the first place by
->>> FNAME(walk_addr_generic).
->>>
->>> Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
->>> ---
->>>  arch/x86/kvm/mmu/mmu.c         | 6 ------
->>>  arch/x86/kvm/mmu/paging_tmpl.h | 2 +-
->>>  arch/x86/kvm/x86.c             | 7 +++----
->>>  3 files changed, 4 insertions(+), 11 deletions(-)
->>>
->>> diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
->>> index e26c9a583e75..6250e31ac617 100644
->>> --- a/arch/x86/kvm/mmu/mmu.c
->>> +++ b/arch/x86/kvm/mmu/mmu.c
->>> @@ -4353,12 +4353,6 @@ static unsigned long get_cr3(struct kvm_vcpu *vcpu)
->>>  	return kvm_read_cr3(vcpu);
->>>  }
->>>  
->>> -static void inject_page_fault(struct kvm_vcpu *vcpu,
->>> -			      struct x86_exception *fault)
->>> -{
->>> -	vcpu->arch.mmu->inject_page_fault(vcpu, fault);
->>> -}
->>> -
->> 
->> This is already gone with Sean's "KVM: x86: Consolidate logic for
->> injecting page faults to L1".
->> 
->> It would probably make sense to have a combined series (or a branch on
->> kvm.git) to simplify testing efforts.
->
-> Yes, these three patches replace part of Sean's (the patch you mention
-> and the next one, "KVM: x86: Sync SPTEs when injecting page/EPT fault
-> into L1").
->
-> I pushed the result to a branch named kvm-tlb-cleanup on kvm.git.
->
+On 2020/03/26 4:35, Dmitry Osipenko wrote:
+> 25.03.2020 16:33, Jiada Wang пишет:
+>> From: Naveen Chakka <Naveen.Chakka@in.bosch.com>
+>>
+>> To know the current communication status of the touch controller during
+>> runtime, sysfs interface is added
+>>
+>> sysfs interface: /sys/class/i2c-dev/i2c-*/device/*/touch_dev_stat
+>> Executing the above sysfs interface provides two output values
+>>
+>> 1)Status of the touch device
+>> 	value 0 represents device is inactive
+>> 	value 1 represents device is active
+>> 2)Error counter
+>> 	value represents the number of times device in inactive since last read
+> 
+> ...
+>>   /* Each client has this additional data */
+>>   struct mxt_data {
+>>   	struct i2c_client *client;
+>> @@ -372,6 +380,9 @@ struct mxt_data {
+>>   	const char *pcfg_name;
+>>   	const char *input_name;
+>>   	struct mxt_flash *flash;
+> 
+>> +	struct work_struct watchdog_work;
+>> +	struct timer_list watchdog_timer;
+> 
+> This should be replaced with a delayed_work.
 
-Thank you,
+will replace with delayer_work
+> 
+>> +	struct mxt_statusinfo mxt_status;
+>>   
+>>   	/* Cached parameters from object table */
+>>   	u16 T5_address;
+> 
+> ...
+>> +static void mxt_watchdog_work(struct work_struct *work)
+>> +{
+>> +	struct mxt_data *data =
+>> +		container_of(work, struct mxt_data, watchdog_work);
+>> +	u16 info_buf;
+>> +	int ret = 0;
+>> +	u8 size = 2;
+> 
+>> +	if (data->suspended || data->in_bootloader)
+>> +		return;
+>> +
+>> +	ret = __mxt_read_reg(data->client, 0, size, &info_buf);
+> 
+> Looks like this need to be protected with a lock to not race with the
+> suspending / bootloader states.
+> 
+right, I will add lock in next version
 
-I've tested it with Hyper-V on both VMX and SVM with and without PV TLB
-flush and nothing immediately blew up. I'm also observing a very nice
-19000 -> 14000 cycles improvement on tight cpuid loop test (with EVMCS
-enabled).
+>> +	if (ret) {
+>> +		data->mxt_status.error_count++;
+>> +		data->mxt_status.dev_status = false;
+>> +	} else {
+>> +		data->mxt_status.dev_status = true;
+>> +	}
+>> +}
+> 
+> ...> @@ -4329,6 +4414,13 @@ static int mxt_probe(struct i2c_client
+> *client, const struct i2c_device_id *id)
+>>   		msleep(MXT_RESET_TIME);
+>>   	}
+>>   
+>> +	INIT_WORK(&data->watchdog_work, mxt_watchdog_work);
+>> +
+>> +	/* setup watchdog timer */
+>> +	timer_setup(&data->watchdog_timer, mxt_watchdog_timer, 0);
+>> +
+>> +	mxt_start_wd_timer(data);
+> 
+> I'd expect it to be optional and opt-in by either using #ifdef
+> TOUCHSCREEN_ATMEL_MXT_DEBUG or having a new debugfs option to explicitly
+> enable the "watchdog".
+> 
+Thanks for your suggestion, I will use module_param to enable/disable
+watchdog
 
--- 
-Vitaly
-
+Thanks,
+Jiada
