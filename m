@@ -2,113 +2,83 @@ Return-Path: <SRS0=s8dx=5M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4921C2D0E8
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 12:27:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 784F7C2D0E8
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 12:30:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 98F862137B
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 12:27:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jcKrGM7e"
+	by mail.kernel.org (Postfix) with ESMTP id 4E4862082D
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 12:30:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727541AbgC0M1x (ORCPT
+        id S1727336AbgC0Ma3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Mar 2020 08:27:53 -0400
-Received: from mail-vk1-f193.google.com ([209.85.221.193]:38266 "EHLO
-        mail-vk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727143AbgC0M1v (ORCPT
+        Fri, 27 Mar 2020 08:30:29 -0400
+Received: from mail.cn.fujitsu.com ([183.91.158.132]:51807 "EHLO
+        heian.cn.fujitsu.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726515AbgC0Ma2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Mar 2020 08:27:51 -0400
-Received: by mail-vk1-f193.google.com with SMTP id n128so2612276vke.5
-        for <linux-kernel@vger.kernel.org>; Fri, 27 Mar 2020 05:27:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=In6AkM11gvqmdb/KispfzpmD2iRwwXtrg0CmmoI1bFo=;
-        b=jcKrGM7exGuQiO1LjlslrdOoUNSre0tVMGa8X1rUwAJMoElMCXNRubZF5PwRCB95d6
-         aNcuWamXRntJBVslsOEVoKLAKW80FJyIIcBeL2f8cJ7R68fekIllxvdDUoAqQFvJymCx
-         XdCelLEQAo310iLDkU60a8lsWlVz2So8fqiQ9pqXZtANOavod0KBr5/IWIpeG7zlbFYv
-         zZNIGA51vu8GtL2Vkj0OwFJZD9VZR3UtFspqf32K3AE8zb7NWhQZWlYNwoK59k4R6ZDr
-         r82rokEhVSpUVN9wgvJdiPFRIUvHfjTd6XHGXxlAWbhBDiDpWOoZmKoWqdr8f14rRSk0
-         3HoQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=In6AkM11gvqmdb/KispfzpmD2iRwwXtrg0CmmoI1bFo=;
-        b=buVFThmy+m3ZuI28Nyuxtw4P1CBeuWQA63793ikdphP89dc1/RJ7c3jD2FwWOpeVTZ
-         /vm5bBfJegNTwrGh9DieKPP8zghb/bbSoKDnlkHmkEhaj84AGeLWgoszfv96HiTtoyfJ
-         mHj9Ri+R3fRebpoTnJIf9PyiX1wb6DIxk9JbU3xsPLcgfS83voNoUVDKjDpbKGeMDw2U
-         joGbjhxU9bjiVPb0aHk9UEzepVpxuL89IIw67TuiqcGdTK4XmzSBNriwfrc92aabfKGF
-         duI1dHCSGYD9hSuJ6jjTkjD4ZIUvCVw5Rpjgc5NLLlsHwLbIeZvQyzrXKqzIZRFIPD2Y
-         YfXQ==
-X-Gm-Message-State: ANhLgQ1Em0+9dAZ+6QaKWMlHGBeb13yNjUH0a8+hUFDfp/LD4QTGg/qK
-        9sKJlYEfAoArYdGyv6Cf6E9DNf6A9aLaNUJGRz7cyULi
-X-Google-Smtp-Source: ADFU+vsj3gMKz6JTZIh07Yw64OuO/tMYwReAjM54epn6GbmNlPQc0JWJA4fDl48NwW284gLnlQsKXcRQ9cQhHYiWP+Q=
-X-Received: by 2002:a1f:d084:: with SMTP id h126mr10768426vkg.25.1585312070406;
- Fri, 27 Mar 2020 05:27:50 -0700 (PDT)
+        Fri, 27 Mar 2020 08:30:28 -0400
+X-IronPort-AV: E=Sophos;i="5.72,312,1580745600"; 
+   d="scan'208";a="87563059"
+Received: from unknown (HELO cn.fujitsu.com) ([10.167.33.5])
+  by heian.cn.fujitsu.com with ESMTP; 27 Mar 2020 20:30:12 +0800
+Received: from G08CNEXMBPEKD06.g08.fujitsu.local (unknown [10.167.33.206])
+        by cn.fujitsu.com (Postfix) with ESMTP id 9BB0B50A9981;
+        Fri, 27 Mar 2020 20:19:55 +0800 (CST)
+Received: from [10.167.226.60] (10.167.226.60) by
+ G08CNEXMBPEKD06.g08.fujitsu.local (10.167.33.206) with Microsoft SMTP Server
+ (TLS) id 15.0.1497.2; Fri, 27 Mar 2020 20:30:07 +0800
+Subject: Re: [RFC PATCH 0/2] x86/boot: early ACPI MADT processing cleanup
+From:   Cao jin <caoj.fnst@cn.fujitsu.com>
+To:     <x86@kernel.org>, <linux-pm@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-acpi@vger.kernel.org>
+CC:     <rjw@rjwysocki.net>, <len.brown@intel.com>, <pavel@ucw.cz>,
+        <tglx@linutronix.de>, <mingo@redhat.com>, <hpa@zytor.com>,
+        Borislav Petkov <bp@alien8.de>
+References: <20200123014144.19155-1-caoj.fnst@cn.fujitsu.com>
+Message-ID: <c19f3eeb-f0d4-72c0-e942-79015d281c77@cn.fujitsu.com>
+Date:   Fri, 27 Mar 2020 20:30:16 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-References: <20200327043639.6564-1-tangbin@cmss.chinamobile.com>
-In-Reply-To: <20200327043639.6564-1-tangbin@cmss.chinamobile.com>
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Fri, 27 Mar 2020 13:27:14 +0100
-Message-ID: <CAPDyKFpwJq5j0CwDN152bZkdPj4_xrL1p6raMPkHuBwWTXTTwQ@mail.gmail.com>
-Subject: Re: [PATCH] mmc:cavium-octeon: remove nonsense variable coercion
-To:     Tang Bin <tangbin@cmss.chinamobile.com>
-Cc:     rrichter@marvell.com,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200123014144.19155-1-caoj.fnst@cn.fujitsu.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.167.226.60]
+X-ClientProxiedBy: G08CNEXCHPEKD04.g08.fujitsu.local (10.167.33.200) To
+ G08CNEXMBPEKD06.g08.fujitsu.local (10.167.33.206)
+X-yoursite-MailScanner-ID: 9BB0B50A9981.AA43B
+X-yoursite-MailScanner: Found to be clean
+X-yoursite-MailScanner-From: caoj.fnst@cn.fujitsu.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 27 Mar 2020 at 05:36, Tang Bin <tangbin@cmss.chinamobile.com> wrote:
->
-> In this function, the variable 'base' is already 'void __iomem *base',
-> and the return function 'devm_platform_ioremap_resource()' also returns
-> this type, so the mandatory definition here is redundant.
->
-> Signed-off-by: Tang Bin <tangbin@cmss.chinamobile.com>
+Ping.
 
-Applied for next, thanks!
+On 1/23/20 9:41 AM, Cao jin wrote:
+> Logic in early_acpi_process_madt() & acpi_process_madt() is really hard to
+> follow now. Clean them up.
+> 
+> Done basic boot test on my x86-64 PC.
+> 
+> CCed linux-acpi@vger.kernel.org
+> 
+> Cao jin (2):
+>   x86/acpi: Improve code readablity of early madt processing
+>   x86/acpi: Cleanup acpi_process_madt()
+> 
+>  arch/x86/kernel/acpi/boot.c | 72 +++++++++++++++----------------------
+>  1 file changed, 28 insertions(+), 44 deletions(-)
+> 
 
-Kind regards
-Uffe
+
+-- 
+Sincerely,
+Cao jin
 
 
-> ---
->  drivers/mmc/host/cavium-octeon.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/mmc/host/cavium-octeon.c b/drivers/mmc/host/cavium-octeon.c
-> index 916746c6c..e299cdd1e 100644
-> --- a/drivers/mmc/host/cavium-octeon.c
-> +++ b/drivers/mmc/host/cavium-octeon.c
-> @@ -207,13 +207,13 @@ static int octeon_mmc_probe(struct platform_device *pdev)
->         base = devm_platform_ioremap_resource(pdev, 0);
->         if (IS_ERR(base))
->                 return PTR_ERR(base);
-> -       host->base = (void __iomem *)base;
-> +       host->base = base;
->         host->reg_off = 0;
->
->         base = devm_platform_ioremap_resource(pdev, 1);
->         if (IS_ERR(base))
->                 return PTR_ERR(base);
-> -       host->dma_base = (void __iomem *)base;
-> +       host->dma_base = base;
->         /*
->          * To keep the register addresses shared we intentionaly use
->          * a negative offset here, first register used on Octeon therefore
-> --
-> 2.20.1.windows.1
->
->
->
