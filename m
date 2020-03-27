@@ -2,111 +2,150 @@ Return-Path: <SRS0=s8dx=5M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D844EC2D0EE
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 19:09:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D16CC43331
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 19:11:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B5BFC2071B
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 19:09:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585336188;
-	bh=pFRJJQ0TSVtQcDBTXGIQZdxTKW6kK4p4dhUi/L4ZGZ0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=DzgUcxtqzOJwYfU38Ex1ZKaefv8/3/B2l1uk1Boy1Hoa7E3sFND3eSabFz7W3NItQ
-	 kT/BJ4Yw3waE8EXqp47hnjGi8QtPSDSTW8zRkt6eTGTxUzBnqtpordlLtqDYXl6Wi9
-	 jmQ5lTULjtx8MgLyErp+Yn6bgUf1F69IYFaT1z5k=
+	by mail.kernel.org (Postfix) with ESMTP id DAF9C2071B
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 19:11:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="VD/Wg3nP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727652AbgC0TJr (ORCPT
+        id S1727347AbgC0TLq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Mar 2020 15:09:47 -0400
-Received: from mail-il1-f193.google.com ([209.85.166.193]:40880 "EHLO
-        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726738AbgC0TJr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Mar 2020 15:09:47 -0400
-Received: by mail-il1-f193.google.com with SMTP id j9so9840275ilr.7;
-        Fri, 27 Mar 2020 12:09:46 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=6rX+h+uJgGe8m8xtVJ86+22oKe3RcvHhIbxU08dTCMQ=;
-        b=hATQNLtYrtYjohKz7Rt8e0NLaubz2X5PmSPERn3MUP+U3XFM8Gz5nCj5GowqY2AQ9J
-         QZpnopxtbgK4vYSDnKOtIf3yNyXmCmBgsOatSa5wU2RMKcCpFE3wYGF7CbSS1XO+vAv7
-         lxNtzgRJi9BPapI/EIGzoiv4nlWCYTsj7wUQzuxyXNRnl0fOJZjmFf+kanUO05wjBd3i
-         FGlGGDRikYttOW76sTIhcMFUfeEHS+xriNPsNsYFIftvn3XcxK0wgSBGoUQ71i7w8xlg
-         1YGBr8yn6H/adl1nk5T38bSwCEbnkbsaSRK96ev3p+DBFQQq2tgiSEJfsqDFJIySt7FA
-         Va6w==
-X-Gm-Message-State: ANhLgQ3ffqmYYEKJsSupf7r7oyNAuFhEz0nQ70cgCX/RhQCfM8JTk4m8
-        To4Chi9FuId4JwjT4Bb0XA==
-X-Google-Smtp-Source: ADFU+vscvwuKw7PKMVNwihd///exX3VL5zIeuA4QhBx1b3ZCf7B6dYLbOhdo0QQAD6ziGBGk6UT+EQ==
-X-Received: by 2002:a92:9fd0:: with SMTP id z77mr589295ilk.257.1585336185552;
-        Fri, 27 Mar 2020 12:09:45 -0700 (PDT)
-Received: from rob-hp-laptop ([64.188.179.250])
-        by smtp.gmail.com with ESMTPSA id l6sm2168753ilh.27.2020.03.27.12.09.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 27 Mar 2020 12:09:44 -0700 (PDT)
-Received: (nullmailer pid 6759 invoked by uid 1000);
-        Fri, 27 Mar 2020 19:09:42 -0000
-Date:   Fri, 27 Mar 2020 13:09:42 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Lubomir Rintel <lkundrak@v3.sk>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Mark Brown <broonie@kernel.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        Daniel Mack <daniel@zonque.org>,
-        Haojian Zhuang <haojian.zhuang@gmail.com>,
-        Robert Jarzmik <robert.jarzmik@free.fr>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-i2c@vger.kernel.org,
-        linux-media@vger.kernel.org, linux-mmc@vger.kernel.org,
-        linux-rtc@vger.kernel.org, linux-serial@vger.kernel.org,
-        linux-spi@vger.kernel.org, linux-usb@vger.kernel.org,
-        Lubomir Rintel <lkundrak@v3.sk>
-Subject: Re: [PATCH 20/28] dt-bindings: phy: Convert phy-mmp3-usb to
- json-schema
-Message-ID: <20200327190942.GA6703@bogus>
-References: <20200317093922.20785-1-lkundrak@v3.sk>
- <20200317093922.20785-21-lkundrak@v3.sk>
+        Fri, 27 Mar 2020 15:11:46 -0400
+Received: from mout.gmx.net ([212.227.15.19]:53755 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726738AbgC0TLq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Mar 2020 15:11:46 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1585336295;
+        bh=8Whm2odb9cru4oSy8Pr/kzkWaqvGlKuhyfmTgrfLl/E=;
+        h=X-UI-Sender-Class:From:To:Cc:Subject:Date:In-Reply-To:References;
+        b=VD/Wg3nPoxEFI9hCPI4+GHYlntpnHzdigoRNMe/hkXeno74XNieAT1M6QJnzypvae
+         Sd8O+vou8wVg9eWZBYdFtQJ8Ds0hlzCXsaALeuv90hDMFx0PPz+b/OdPCLAW7Z1dxg
+         ya9thv6nTcUNy+DVSv3dqQ4fHi1dpBq+TLNb5WX8=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from localhost.localdomain ([82.19.195.159]) by mail.gmx.com
+ (mrgmx004 [212.227.17.184]) with ESMTPSA (Nemesis) id
+ 1MkYXs-1jec5B02qE-00m0tJ; Fri, 27 Mar 2020 20:11:35 +0100
+From:   Alex Dewar <alex.dewar@gmx.co.uk>
+Cc:     alex.dewar@gmx.co.uk, Martin Petersen <martin.petersen@oracle.com>,
+        Hannes Reinecke <hare@suse.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] scsi: aic7xxx: Remove more FreeBSD-specific code from aic7xxx_core.c
+Date:   Fri, 27 Mar 2020 19:11:02 +0000
+Message-Id: <20200327191102.78554-1-alex.dewar@gmx.co.uk>
+X-Mailer: git-send-email 2.26.0
+In-Reply-To: <yq15zepbsve.fsf@oracle.com>
+References: <yq15zepbsve.fsf@oracle.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200317093922.20785-21-lkundrak@v3.sk>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:rQ/y2c9OY/H+OTBiKokF//EIecEuAFClMr6MRPBTWLTEDKo3x5G
+ yKN17Vuquz3ReulJpC6ta/o65LDPLkR7L3fe/H2qHdYuvUf9PXOeDW/ODB0xUFO4cwiUtaY
+ 30DqzvJMVPGCVnP5h8lXtKz9NmfOnX1a65asCOwmoIYdKsg1kv5ndC7/0OawevHAdRX/29d
+ kk62uCpi6qfpW6Ye17+7Q==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:mVp+m6YWQVo=:0SNnI+n3n0XQJu4myjt0EK
+ 1QZIOXuRZPiVpDKQQyTTBW4gHKQudcEuHRmDoUzkWHSRL81T+OXrTIFT/iNzhUO7k/C5On7b6
+ nPxkdyo1uqvx3j0AXa8g4wElKafKDjX6rhcKXvMq6AFv0OQH1ybJSgHWoW+e3WcM4GyuJnfcc
+ +e2OqLnulCHIBRMSkhbaP0/MBOEXLK1NisSh7TGJ7z97yy01gUxIjrEQuVuvmamDNCJnl0XU+
+ nfkReh/fDIE0E4yAzUMCnE8r6IoXYLmtv5K72rxFwHuOcgwvveulNQORv6mG4tR8FmxmL3zdf
+ MXlmdUC/xVeLyaDzj79VS/7WKs7CAcG08S37DcL2GB6r9oW1ofTrdjvT17vJ6FXMXXxcdgBx4
+ SuCTetLOMucGe6KSklCWAo73AloeQE5YMHIcwcJStX+Lmfw0khqJbDC04ymSH6r3R4cdP6/bu
+ WtAjaL3JWMqxvRDoesrzZYOTBOwGXD5egL7QCf8+FvD6IOnahkQ/0FoghF6ynJmVxk0hN7n9B
+ YxG96nXyp9UsInRCAUIQkn2WGi2sD36QuDlr0EOoKWz0g/ToNFWsSFOrKbRp12IcG3MAW/owh
+ 2vX//UGEOy1lPq8UoRR3DDdCJU30VHp8Xc999nCRHs7+pscJowyqY+3Sumbe++0sekr5Xsta4
+ NLD7Ca5AWYcndS88HEn9CFr/OHSKagRM1gcaMv6RkK5cJ9QW+7cVWzFnpOTOHbW1UamW8LkQu
+ wO4/PGRavRvYDAn51SnuSPOD3A0qbG75q/kqsrGn7me+InPukIzZITyDADQIbazHWPqUT2jMQ
+ pVcxyA6ebkuj+4YoGmC3yeY7tyapKx64pGMvNwHT7erQFL+SLYwN3KDIDFq9CeSwST+q9LHiE
+ /OyTMDDoE2e55AtqAW3h8cbO/8qdmdTwYgYMzzD/8eoNmGT5eLpHhDzny5wjM4+IsIYKuzI3m
+ VeCw/JNcM3CLob2AD7RqBm7dokGk6Jj33N0KwO2PCIUctrk1QYdys/ha+yCZV5VkT1xbddprw
+ Z5w3xqf7o1rwdl+jnddm4QKdHx7Ibpf6PyifaCnCx2z1MFRg1wyIc8TQnSPOyAsKZ+1F5maxy
+ 3ZnudH7VOsk4vXAS6cUS/UM/sGpgJC1DGkHw2ct+ybLKWCcr0Nl+U1rQDH54lD2EY+v/YAnN4
+ khxRgV7/C1aQjNxqhVGWBVYD3mSugZstLph01a/10346CIwb6U5Bf2waOIqsH7bCRpT5Fz+B1
+ al9LJEyj/k8Cu+6UD
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 17 Mar 2020 10:39:14 +0100, Lubomir Rintel wrote:
-> A rather straightforward conversion of the phy-mmp3-usb binding to DT
-> schema format using json-schema.
-> 
-> Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
-> ---
->  .../bindings/phy/marvell,mmp3-usb-phy.yaml    | 40 +++++++++++++++++++
->  .../devicetree/bindings/phy/phy-mmp3-usb.txt  | 13 ------
->  2 files changed, 40 insertions(+), 13 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/phy/marvell,mmp3-usb-phy.yaml
->  delete mode 100644 Documentation/devicetree/bindings/phy/phy-mmp3-usb.txt
-> 
+Remove additional code for FreeBSD in aic7xxx_core.c, which is unneeded
+since commit cca6cb8ad7a8 ("scsi: aic7xxx: Fix build using bare-metal
+toolchain").
 
-Applied, thanks.
+Suggested-by: Martin Petersen <martin.petersen@oracle.com>
+Signed-off-by: Alex Dewar <alex.dewar@gmx.co.uk>
+=2D--
+ drivers/scsi/aic7xxx/aic7xxx_core.c | 23 -----------------------
+ 1 file changed, 23 deletions(-)
 
-Rob
+diff --git a/drivers/scsi/aic7xxx/aic7xxx_core.c b/drivers/scsi/aic7xxx/ai=
+c7xxx_core.c
+index 4190a025381a..84fc499cb1e6 100644
+=2D-- a/drivers/scsi/aic7xxx/aic7xxx_core.c
++++ b/drivers/scsi/aic7xxx/aic7xxx_core.c
+@@ -1834,21 +1834,6 @@ ahc_handle_scsiint(struct ahc_softc *ahc, u_int int=
+stat)
+ 				printerror =3D 0;
+ 			} else if (ahc_sent_msg(ahc, AHCMSG_1B,
+ 						MSG_BUS_DEV_RESET, TRUE)) {
+-#ifdef __FreeBSD__
+-				/*
+-				 * Don't mark the user's request for this BDR
+-				 * as completing with CAM_BDR_SENT.  CAM3
+-				 * specifies CAM_REQ_CMP.
+-				 */
+-				if (scb !=3D NULL
+-				 && scb->io_ctx->ccb_h.func_code=3D=3D XPT_RESET_DEV
+-				 && ahc_match_scb(ahc, scb, target, channel,
+-						  CAM_LUN_WILDCARD,
+-						  SCB_LIST_NULL,
+-						  ROLE_INITIATOR)) {
+-					ahc_set_transaction_status(scb, CAM_REQ_CMP);
+-				}
+-#endif
+ 				ahc_compile_devinfo(&devinfo,
+ 						    initiator_role_id,
+ 						    target,
+@@ -4399,22 +4384,16 @@ ahc_alloc(void *platform_arg, char *name)
+ 	struct  ahc_softc *ahc;
+ 	int	i;
+
+-#ifndef	__FreeBSD__
+ 	ahc =3D kmalloc(sizeof(*ahc), GFP_ATOMIC);
+ 	if (!ahc) {
+ 		printk("aic7xxx: cannot malloc softc!\n");
+ 		kfree(name);
+ 		return NULL;
+ 	}
+-#else
+-	ahc =3D device_get_softc((device_t)platform_arg);
+-#endif
+ 	memset(ahc, 0, sizeof(*ahc));
+ 	ahc->seep_config =3D kmalloc(sizeof(*ahc->seep_config), GFP_ATOMIC);
+ 	if (ahc->seep_config =3D=3D NULL) {
+-#ifndef	__FreeBSD__
+ 		kfree(ahc);
+-#endif
+ 		kfree(name);
+ 		return (NULL);
+ 	}
+@@ -4540,9 +4519,7 @@ ahc_free(struct ahc_softc *ahc)
+ 		kfree(ahc->name);
+ 	if (ahc->seep_config !=3D NULL)
+ 		kfree(ahc->seep_config);
+-#ifndef __FreeBSD__
+ 	kfree(ahc);
+-#endif
+ 	return;
+ }
+
+=2D-
+2.26.0
+
