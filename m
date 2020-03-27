@@ -2,97 +2,120 @@ Return-Path: <SRS0=s8dx=5M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65E1CC2D0EC
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 13:34:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF109C2D0EC
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 13:37:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 333E7206F2
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 13:34:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585316092;
-	bh=50d7atbbqCu8sVfTjeDFx1DNlGegS0O1DKeZQZ52JP8=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=hRSi1MKLyjv8v7P8Qd86PFcIdXgz710VlC5FiRB1xgN31LmsZPjAWBOLJkqj3x+DO
-	 YqCD368FrBvbPGThqPDIexfvjbd2nWL4CkfOB88Xq7JVe2oX3x2YBoC8Im3/K1EdNP
-	 vEzWILV2tdKQbkW5hu5JCrpMopL4+3E8sa9xLFGU=
+	by mail.kernel.org (Postfix) with ESMTP id A51C9206F2
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 13:37:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727560AbgC0Nev (ORCPT
+        id S1727585AbgC0Nh3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Mar 2020 09:34:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47836 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726275AbgC0Nev (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Mar 2020 09:34:51 -0400
-Received: from mail.kernel.org (ip5f5ad4d8.dynamic.kabel-deutschland.de [95.90.212.216])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Fri, 27 Mar 2020 09:37:29 -0400
+Received: from retiisi.org.uk ([95.216.213.190]:45640 "EHLO
+        hillosipuli.retiisi.org.uk" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726275AbgC0Nh3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Mar 2020 09:37:29 -0400
+Received: from valkosipuli.localdomain (valkosipuli.retiisi.org.uk [IPv6:2a01:4f9:c010:4572::80:2])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 28EF120658;
-        Fri, 27 Mar 2020 13:34:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585316090;
-        bh=50d7atbbqCu8sVfTjeDFx1DNlGegS0O1DKeZQZ52JP8=;
-        h=From:To:Cc:Subject:Date:From;
-        b=WBUFkK5g/Fd0EJOxssi6MUZ8HPDTne7wpMIkbWcxTeqKQxpHTFrdDUGhYKsfAiNsr
-         DUQJCsqXySsHXU3oZs7SEwrbj4VOHzh+wky1vfgBqQNR+bklIcYFGZZaQRh0o6yd4W
-         xRJC502G1n6dGOTlOIc6cmGye2/plnCxTk7nVWFw=
-Received: from mchehab by mail.kernel.org with local (Exim 4.92.3)
-        (envelope-from <mchehab@kernel.org>)
-        id 1jHp8J-0049th-V8; Fri, 27 Mar 2020 14:34:47 +0100
-From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
-Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        "David S. Miller" <davem@davemloft.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Marcel Holtmann <marcel@holtmann.org>,
-        Simon Horman <simon.horman@netronome.com>,
-        Harish Bandi <c-hbandi@codeaurora.org>,
-        Venkata Lakshmi Narayana Gubba <gubbaven@codeaurora.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Rocky Liao <rjliao@codeaurora.org>,
-        Matthias Brugger <mbrugger@suse.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        netdev@vger.kernel.org, devicetree@vger.kernel.org
-Subject: [PATCH] docs: dt: fix a broken reference for a file converted to json
-Date:   Fri, 27 Mar 2020 14:34:47 +0100
-Message-Id: <33fa622c263ad40a129dc2b8dd0111b40016bc17.1585316085.git.mchehab+huawei@kernel.org>
-X-Mailer: git-send-email 2.25.1
+        by hillosipuli.retiisi.org.uk (Postfix) with ESMTPS id 14E41634C90;
+        Fri, 27 Mar 2020 15:37:06 +0200 (EET)
+Received: from sailus by valkosipuli.localdomain with local (Exim 4.92)
+        (envelope-from <sakari.ailus@retiisi.org.uk>)
+        id 1jHpAX-0000og-4s; Fri, 27 Mar 2020 15:37:05 +0200
+Date:   Fri, 27 Mar 2020 15:37:05 +0200
+From:   Sakari Ailus <sakari.ailus@iki.fi>
+To:     Robert Foss <robert.foss@linaro.org>
+Cc:     Dongchun Zhu <dongchun.zhu@mediatek.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Tomasz Figa <tfiga@chromium.org>,
+        linux-media <linux-media@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [v2 2/3] media: ov8856: Add devicetree support
+Message-ID: <20200327133705.GC2394@valkosipuli.retiisi.org.uk>
+References: <20200313110350.10864-1-robert.foss@linaro.org>
+ <20200313110350.10864-3-robert.foss@linaro.org>
+ <20200313121746.GC5730@valkosipuli.retiisi.org.uk>
+ <CAG3jFytpx8_+DKhUVZnUFeMYK82Z1hFWcEnbyD0=4a8p3ojteg@mail.gmail.com>
+ <20200326144725.GA2394@valkosipuli.retiisi.org.uk>
+ <CAG3jFyu=HOsWNeRFC2t4HjzYrFrLjsbXzAm4+zD50Xq48mqzcw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAG3jFyu=HOsWNeRFC2t4HjzYrFrLjsbXzAm4+zD50Xq48mqzcw@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Changeset 32ced09d7903 ("dt-bindings: serial: Convert slave-device bindings to json-schema")
-moved a binding to json and updated the links. Yet, one link
-was forgotten.
+Hi Robert,
 
-Update this one too.
+On Fri, Mar 27, 2020 at 11:32:29AM +0100, Robert Foss wrote:
+> On Thu, 26 Mar 2020 at 15:47, Sakari Ailus <sakari.ailus@iki.fi> wrote:
+> >
+> > Hi Robert,
+> >
+> > On Thu, Mar 26, 2020 at 12:56:37PM +0100, Robert Foss wrote:
+> > ...
+> > > > > +static int __ov8856_power_on(struct ov8856 *ov8856)
+> > > > > +{
+> > > > > +     struct i2c_client *client = v4l2_get_subdevdata(&ov8856->sd);
+> > > > > +     int ret;
+> > > > > +
+> > > > > +     ret = clk_prepare_enable(ov8856->xvclk);
+> > > > > +     if (ret < 0) {
+> > > > > +             dev_err(&client->dev, "failed to enable xvclk\n");
+> > > > > +             return ret;
+> > > > > +     }
+> > > > > +
+> > > > > +     gpiod_set_value_cansleep(ov8856->reset_gpio, GPIOD_OUT_HIGH);
+> > > > > +
+> > > > > +     ret = regulator_bulk_enable(ARRAY_SIZE(ov8856_supply_names),
+> > > > > +                                 ov8856->supplies);
+> > > > > +     if (ret < 0) {
+> > > > > +             dev_err(&client->dev, "failed to enable regulators\n");
+> > > > > +             goto disable_clk;
+> > > > > +     }
+> > > > > +
+> > > > > +     gpiod_set_value_cansleep(ov8856->reset_gpio, GPIOD_OUT_LOW);
+> > > > > +
+> > > > > +     usleep_range(1500, 1800);
+> > > >
+> > > > I think you could omit the delay on ACPI based systems. Or just bail out
+> > > > early in that case.
+> > >
+> > > I'll add a check for reset_gpio being NULL, and skip the sleep for that case.
+> >
+> > There could also be a regulator but no GPIO.
+> >
+> > I think if you don't have either, then certainly there's no need for a
+> > delay.
+> 
+> Removing the delay if no action is taken makes sense, but I'm not sure
+> how best to do it.
+> If there are no regulators dummy ones are created automatically, which
+> makes distinguishing between a little bit cumbersome. The regulator
+> structs could of course all be inspected, and if all are dummy ones,
+> the delay could be skipped. But is there a neater way of doing this?
+> Manually inspecting the regs strikes me as a bit inelegant.
 
-Fixes: 32ced09d7903 ("dt-bindings: serial: Convert slave-device bindings to json-schema")
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
----
- Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+I guess the cleanest, easy way to make this right, albeit slightly
+unoptimal in very rare cases where you have none of the above resources in
+a DT system, is to bail out if you're running on an ACPI based system.
 
-diff --git a/Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt b/Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt
-index beca6466d59a..d2202791c1d4 100644
---- a/Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt
-+++ b/Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt
-@@ -29,7 +29,7 @@ Required properties for compatible string qcom,wcn399x-bt:
- 
- Optional properties for compatible string qcom,wcn399x-bt:
- 
-- - max-speed: see Documentation/devicetree/bindings/serial/slave-device.txt
-+ - max-speed: see Documentation/devicetree/bindings/serial/serial.yaml
-  - firmware-name: specify the name of nvm firmware to load
-  - clocks: clock provided to the controller
- 
+I.e. checking for e.g. is_acpi_node(dev->fwnode).
+
 -- 
-2.25.1
-
+Sakari Ailus
