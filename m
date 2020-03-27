@@ -2,77 +2,108 @@ Return-Path: <SRS0=s8dx=5M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B1E5C2D0EF
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 06:27:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD136C43331
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 06:27:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 61C3820717
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 06:27:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=flygoat.com header.i=jiaxun.yang@flygoat.com header.b="MHijPGAJ"
+	by mail.kernel.org (Postfix) with ESMTP id 9C71420705
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 06:27:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585290473;
+	bh=Dpbh2qTT1euTuHgN4OP1pIfySN+NtQkwvFBKRFehaMI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=VatBTBng4oc7fU36uRmUVC/YYS5xhbVN2Q9a6IqoG0NDeT7fJb7AffL9ntABdnZV5
+	 bJsnb8Qzdu/BGgkc9DSl8adto7boQceZmhn2MdmKTNGgQ7YW8lOdpkSn6RZ3mR0+1v
+	 6Gn5lx6kueo+nSXA2qWk3T+3rgH5maA9izukH/jQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727495AbgC0G1u (ORCPT
+        id S1727185AbgC0G1t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Mar 2020 02:27:50 -0400
-Received: from sender3-op-o12.zoho.com.cn ([124.251.121.243]:17875 "EHLO
-        sender3-op-o12.zoho.com.cn" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725857AbgC0G1t (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 27 Mar 2020 02:27:49 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1585290402;
-        s=mail; d=flygoat.com; i=jiaxun.yang@flygoat.com;
-        h=Date:In-Reply-To:References:MIME-Version:Content-Type:Content-Transfer-Encoding:Subject:To:CC:From:Message-ID;
-        bh=UoGQjp02SZU51biG4JZ6PBIIfzrJ6T8Qawk+9xg9Btw=;
-        b=MHijPGAJo0DC6YIAcR8HKhFTs0oCxZuOoFElNhvOFi1bVSjLyk2TXUPTLDllwwuN
-        Bv5GOX6QjxvtsgCK5zGutXlHTTkOsmL2J0soTGrZZGrQTleIy03svp47bgFyWOvWYCS
-        bRbPUH/XMeBmk8H17+3Zufbt27WIBYIwfJJVMWoo=
-Received: from [10.233.233.252] (115.193.86.228 [115.193.86.228]) by mx.zoho.com.cn
-        with SMTPS id 1585290398265664.6145661046983; Fri, 27 Mar 2020 14:26:38 +0800 (CST)
-Date:   Fri, 27 Mar 2020 14:26:34 +0800
-User-Agent: K-9 Mail for Android
-In-Reply-To: <20200325132756.GA13750@infradead.org>
-References: <1584932355-3642-1-git-send-email-yangtiezhu@loongson.cn> <1584932355-3642-3-git-send-email-yangtiezhu@loongson.cn> <20200325132756.GA13750@infradead.org>
+Received: from mail.kernel.org ([198.145.29.99]:42200 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726217AbgC0G1t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Mar 2020 02:27:49 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 63B8C20705;
+        Fri, 27 Mar 2020 06:27:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1585290467;
+        bh=Dpbh2qTT1euTuHgN4OP1pIfySN+NtQkwvFBKRFehaMI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ZCdgY7C7ixPhqUHVLx5UNeQ4K8PpEGG4l803HIGGCDbMDNTOjj0wp/zLL4tAyce/R
+         3cfoXBZRVeQOvGRwa0NcSbYATpzgiiC3+mOjJo4p5k1TWM5x749AHeKLOJLIF4XXl8
+         z0bG18wzMiXaQhRR7mriwbxcqpELgABhLde+gtE0=
+Date:   Fri, 27 Mar 2020 07:27:44 +0100
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Sasha Levin <sashal@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Eric Biggers <ebiggers@google.com>,
+        syzbot+8da9175e28eadcb203ce@syzkaller.appspotmail.com,
+        Jiri Slaby <jslaby@suse.cz>
+Subject: Re: [PATCH AUTOSEL 5.5 27/28] tty: fix compat TIOCGSERIAL leaking
+ uninitialized memory
+Message-ID: <20200327062744.GC1601217@kroah.com>
+References: <20200326232357.7516-1-sashal@kernel.org>
+ <20200326232357.7516-27-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v2 2/3] MIPS: Loongson: Add DMA support for 7A1000
-To:     Christoph Hellwig <hch@infradead.org>,
-        Tiezhu Yang <yangtiezhu@loongson.cn>
-CC:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Huacai Chen <chenhc@lemote.com>, linux-mips@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Xuefeng Li <lixuefeng@loongson.cn>
-From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
-Message-ID: <7786800D-3B37-4F0D-8E55-17F595D97EF2@flygoat.com>
-X-ZohoCNMailClient: External
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200326232357.7516-27-sashal@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Mar 26, 2020 at 07:23:56PM -0400, Sasha Levin wrote:
+> From: Eric Biggers <ebiggers@google.com>
+> 
+> [ Upstream commit 17329563a97df3ba474eca5037c1336e46e14ff8 ]
+> 
+> Commit 77654350306a ("take compat TIOC[SG]SERIAL treatment into
+> tty_compat_ioctl()") changed the compat version of TIOCGSERIAL to start
+> copying a whole 'serial_struct32' to userspace rather than individual
+> fields, but failed to initialize all padding and fields -- namely the
+> hole after the 'iomem_reg_shift' field, and the 'reserved' field.
+> 
+> Fix this by initializing the struct to zero.
+> 
+> [v2: use sizeof, and convert the adjacent line for consistency.]
+> 
+> Reported-by: syzbot+8da9175e28eadcb203ce@syzkaller.appspotmail.com
+> Fixes: 77654350306a ("take compat TIOC[SG]SERIAL treatment into tty_compat_ioctl()")
+> Cc: <stable@vger.kernel.org> # v4.20+
+> Signed-off-by: Eric Biggers <ebiggers@google.com>
+> Acked-by: Jiri Slaby <jslaby@suse.cz>
+> Link: https://lore.kernel.org/r/20200224182044.234553-2-ebiggers@kernel.org
+> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Signed-off-by: Sasha Levin <sashal@kernel.org>
+> ---
+>  drivers/tty/tty_io.c | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/tty/tty_io.c b/drivers/tty/tty_io.c
+> index d9f54c7d94f29..186e08a81b986 100644
+> --- a/drivers/tty/tty_io.c
+> +++ b/drivers/tty/tty_io.c
+> @@ -2734,7 +2734,9 @@ static int compat_tty_tiocgserial(struct tty_struct *tty,
+>  	struct serial_struct32 v32;
+>  	struct serial_struct v;
+>  	int err;
+> -	memset(&v, 0, sizeof(struct serial_struct));
+> +
+> +	memset(&v, 0, sizeof(v));
+> +	memset(&v32, 0, sizeof(v32));
+>  
+>  	if (!tty->ops->set_serial)
+>  		return -ENOTTY;
+> -- 
+> 2.20.1
+> 
 
-
-=E4=BA=8E 2020=E5=B9=B43=E6=9C=8825=E6=97=A5 GMT+08:00 =E4=B8=8B=E5=8D=889=
-:27:56, Christoph Hellwig <hch@infradead=2Eorg> =E5=86=99=E5=88=B0:
->On Mon, Mar 23, 2020 at 10:59:14AM +0800, Tiezhu Yang wrote:
->> Implement __phys_to_dma() and __dma_to_phys() according to the
->> node id offset in the 7A1000 DMA route config register=2E
->
->Can you please try to just use the dma_pfn_offset field in struct
->device
->for all loongson platforms?  I'm pretty sure I asked for that last time
->around=2E=2E
-
-Here we have a problem that dma_pfn_offset doesn't fit our platform=2E
-
-We have multiple dma-ranges that translate in to different address and
-dma_pfn_offset can only handle single range=20
-with fixed offset=2E
-
-Thanks=2E
-
---=20
-Jiaxun Yang
+This is already in 5.4.28 and 5.5.12, so no need to add it again :)
