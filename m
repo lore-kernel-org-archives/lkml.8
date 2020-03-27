@@ -2,127 +2,197 @@ Return-Path: <SRS0=s8dx=5M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27234C43331
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 06:59:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F21A8C2D0E7
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 07:00:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E1EB820578
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 06:59:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE65420714
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 07:00:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="A4bES7e6"
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="UX15Jazq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726360AbgC0G67 (ORCPT
+        id S1726427AbgC0HAy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Mar 2020 02:58:59 -0400
-Received: from mail-ot1-f41.google.com ([209.85.210.41]:40776 "EHLO
-        mail-ot1-f41.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725956AbgC0G67 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Mar 2020 02:58:59 -0400
-Received: by mail-ot1-f41.google.com with SMTP id r19so2859462otn.7
-        for <linux-kernel@vger.kernel.org>; Thu, 26 Mar 2020 23:58:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:from:date:message-id:subject:to:cc;
-        bh=0OvgzAUpJOb5U0m6XVla+IjaXNlPer0DBm+gmB2qBB4=;
-        b=A4bES7e6LdCzvpj80XAcy0n6U4veuE/qDWGvby2jJcgM+/RPFGWdasYCAOn11/6fOO
-         m0g5lZ9pyLRWKb6FiRJY+FtJbcSwShv1bNB1ajmUXjl5Vilvpk5Le1W1ulZ94zqJAJ/3
-         Q9jnEw61OgPC/f+JMRJZlL4b+1TTn3ynX/9NRNaan0Fe8At0G8rWH11gMX4l+LdPi7nS
-         jLTgOMCm15gT8BGktGUe8PGDG5VqaIbeXe/U0RrhpJc8NpWv/fx/1CI+GLNGNNcSZqqK
-         jZ0loHhNJEVD/Iu3VwJiMLn0GaAK/kmU6LpgzaWrSYqsYF1FzFnQj97xedT7HkEBEAZ3
-         UhkA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=0OvgzAUpJOb5U0m6XVla+IjaXNlPer0DBm+gmB2qBB4=;
-        b=UNQpqceuN7NdAC1gqZ53VJTZ6ikh/Py1IxJbYLqQnMmGjB5gWZyPWDUk112dcoz/b7
-         MmNAYJqo/5H//BcpYOb5vTnIhKYVNg/2ajmwWYKzI4fjRALo8MZpNE92BzUTfHSv96ZS
-         SPjDCEPA73sejX5bSnEYI0qFUttn7p0Flo6r1wmxA89mzTnX51pwS0NhkLFFgDQdydGh
-         Vijlh5c5pXs9itFW95dIHgQ9UeP1JqhhMoNJYMtzl1j2GLrGueY8/sW88GQD8bF2JOxG
-         UGVqjFbo3h1mn/8XHd54ppNLmDkEOpZaT56Op0CNNjIXwFS85CYc/k5Oajj2IYj4XoUR
-         a5eQ==
-X-Gm-Message-State: ANhLgQ19uBVVTljC/fK8G8TSIvUBqpZbZKDkfApvhouIlwBf073NKoNh
-        aVVgfoK2fdQrPQchgvxB6kzj3d/Eg51WFeQ28hw=
-X-Google-Smtp-Source: ADFU+vsN+CBLq7qZ8M51XGNT/SlTLkXGErxUW4g9/CgvsRZQshcve9+asKn+qyXR7fEP22LHUmSOPJlRZ7jauLjKboE=
-X-Received: by 2002:a9d:4802:: with SMTP id c2mr6462122otf.78.1585292338382;
- Thu, 26 Mar 2020 23:58:58 -0700 (PDT)
+        Fri, 27 Mar 2020 03:00:54 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:37711 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725857AbgC0HAy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Mar 2020 03:00:54 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 48pXnH05D3z9txq3;
+        Fri, 27 Mar 2020 08:00:51 +0100 (CET)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=UX15Jazq; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id RA_-yOiis4rA; Fri, 27 Mar 2020 08:00:50 +0100 (CET)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 48pXnG5XWyz9txq2;
+        Fri, 27 Mar 2020 08:00:50 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1585292450; bh=Ws1T27uMA0wfJZIl4CR6AQkUqBHuQiB6haJ0qz+xiIM=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=UX15Jazq692nKezahgcBWFZADQzoEn5TOJTlYr5XLS/57u6ncysBxqFZPWgQbrlBy
+         BLPR/FqnpU+HiqGEHw4aO+Mm3ZF1ZASdmP3rOi0gJGXiZXKXdy6KknGg8FIO+Or9JQ
+         qCqJd84lmJi/DNXsbkiMINQjf68WtsGi+npCBrzc=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 8BDF78B7BC;
+        Fri, 27 Mar 2020 08:00:51 +0100 (CET)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id oH2Pf5pBdxv5; Fri, 27 Mar 2020 08:00:51 +0100 (CET)
+Received: from pc16570vm.idsi0.si.c-s.fr (unknown [192.168.4.90])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 655658B756;
+        Fri, 27 Mar 2020 08:00:49 +0100 (CET)
+Subject: Re: [PATCH V2 0/3] mm/debug: Add more arch page table helper tests
+To:     Anshuman Khandual <anshuman.khandual@arm.com>, linux-mm@kvack.org
+Cc:     Jonathan Corbet <corbet@lwn.net>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Vineet Gupta <vgupta@synopsys.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "Kirill A . Shutemov" <kirill@shutemov.name>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        linux-snps-arc@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org,
+        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+        linux-riscv@lists.infradead.org, x86@kernel.org,
+        linux-doc@vger.kernel.org, linux-arch@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <1585027375-9997-1-git-send-email-anshuman.khandual@arm.com>
+ <2bb4badc-2b7a-e15d-a99b-b1bd38c9d9bf@arm.com>
+ <a46d18ed-8911-1ec3-c32f-58b6e0d959d7@c-s.fr>
+ <9675882f-0ec5-5e46-551f-dd3aa38bf8d8@arm.com>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Message-ID: <ef28cb75-40b8-5ab5-83ba-84fd4384c7c5@c-s.fr>
+Date:   Fri, 27 Mar 2020 07:00:45 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.7.0
 MIME-Version: 1.0
-From:   Dave Airlie <airlied@gmail.com>
-Date:   Fri, 27 Mar 2020 16:58:46 +1000
-Message-ID: <CAPM=9tx=PisdA7qzEBz+n9Sqc4YfSpaSV-ja3tf7MjBnZ=_NXg@mail.gmail.com>
-Subject: [git pull] drm fixes for 5.6-rc8
-To:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>
-Cc:     dri-devel <dri-devel@lists.freedesktop.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <9675882f-0ec5-5e46-551f-dd3aa38bf8d8@arm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
 
-Pretty quiet some minor sg mapping fixes for 3 drivers, and a single
-oops fix for the scheduler.
-I'm hoping nobody tries to send me a fixes pull today but I'll keep an
-eye out of the weekend.
 
-Dave.
+On 03/27/2020 06:46 AM, Anshuman Khandual wrote:
+> 
+> On 03/26/2020 08:53 PM, Christophe Leroy wrote:
+>>
+>>
+>> Le 26/03/2020 à 03:23, Anshuman Khandual a écrit :
+>>>
+>>>
+>>> On 03/24/2020 10:52 AM, Anshuman Khandual wrote:
+>>>> This series adds more arch page table helper tests. The new tests here are
+>>>> either related to core memory functions and advanced arch pgtable helpers.
+>>>> This also creates a documentation file enlisting all expected semantics as
+>>>> suggested by Mike Rapoport (https://lkml.org/lkml/2020/1/30/40).
+>>>>
+>>>> This series has been tested on arm64 and x86 platforms.
+>>>
+>>> If folks can test these patches out on remaining ARCH_HAS_DEBUG_VM_PGTABLE
+>>> enabled platforms i.e s390, arc, powerpc (32 and 64), that will be really
+>>> appreciated. Thank you.
+>>>
+>>
+>> On powerpc 8xx (PPC32), I get:
+>>
+>> [   53.338368] debug_vm_pgtable: debug_vm_pgtable: Validating architecture page table helpers
+>> [   53.347403] ------------[ cut here ]------------
+>> [   53.351832] WARNING: CPU: 0 PID: 1 at mm/debug_vm_pgtable.c:647 debug_vm_pgtable+0x280/0x3f4
+> 
+> mm/debug_vm_pgtable.c:647 ?
+> 
+> With the following commits in place
+> 
+> 53a8338ce (HEAD) Documentation/mm: Add descriptions for arch page table helper
+> 5d4913fc1 mm/debug: Add tests validating arch advanced page table helpers
+> bcaf120a7 mm/debug: Add tests validating arch page table helpers for core features
+> d6ed5a4a5 x86/memory: Drop pud_mknotpresent()
+> 0739d1f8d mm/debug: Add tests validating architecture page table helpers
+> 16fbf79b0 (tag: v5.6-rc7) Linux 5.6-rc7
 
-drm-fixes-2020-03-27:
-drm fixes for 5.6-rc8/final
+I have:
 
-radeon/amdgpu/dma-buf:
-- sg list fixes
+facaa5eb5909 (HEAD -> helpers0) mm/debug: Add tests validating arch 
+advanced page table helpers
+6389fed515fc mm/debug: Add tests validating arch page table helpers for 
+core features
+dc14ecc8b94e mm/debug: add tests validating architecture page table helpers
+c6624071c338 (origin/merge, merge) Automatic merge of branches 'master', 
+'next' and 'fixes' into merge
+58e05c5508e6 Automatic merge of branches 'master', 'next' and 'fixes' 
+into merge
+1b649e0bcae7 (origin/master, origin/HEAD) Merge 
+git://git.kernel.org/pub/scm/linux/kernel/git/netdev/net
 
-scheduler:
-- oops fix
-The following changes since commit 16fbf79b0f83bc752cee8589279f1ebfe57b3b6e:
+origin is https://git.kernel.org/pub/scm/linux/kernel/git/powerpc/linux.git
 
-  Linux 5.6-rc7 (2020-03-22 18:31:56 -0700)
+I can't see your last patch in powerpc mailing list 
+(https://patchwork.ozlabs.org/project/linuxppc-dev/list/?series=166237)
 
-are available in the Git repository at:
+> 
+> mm/debug_vm_pgtable.c:647 is here.
 
-  git://anongit.freedesktop.org/drm/drm tags/drm-fixes-2020-03-27
+Line 647 is:
 
-for you to fetch changes up to c4b979ebcafe978338cad1df4c77cdc8f84bd51c:
+	WARN_ON(!pte_same(pte, __swp_entry_to_pte(swp)));
 
-  Merge tag 'amd-drm-fixes-5.6-2020-03-26' of
-git://people.freedesktop.org/~agd5f/linux into drm-fixes (2020-03-27
-13:03:17 +1000)
 
-----------------------------------------------------------------
-drm fixes for 5.6-rc8/final
+> 
+> #ifdef CONFIG_ARCH_ENABLE_THP_MIGRATION
+> static void __init pmd_swap_tests(unsigned long pfn, pgprot_t prot)
+> {
+>          swp_entry_t swp;
+>          pmd_t pmd;  -----------------------------> Line #647
+> 
+>          pmd = pfn_pmd(pfn, prot);
+>          swp = __pmd_to_swp_entry(pmd);
+>          WARN_ON(!pmd_same(pmd, __swp_entry_to_pmd(swp)));
+> }
+> #else
+> static void __init pmd_swap_tests(unsigned long pfn, pgprot_t prot) { }
+> #end
+> 
+> Did I miss something ?
+> 
 
-radeon/amdgpu/dma-buf:
-- sg list fixes
+[...]
 
-scheduler:
-- oops fix
+> Could you please point me to the exact test which is failing ?
+> 
+>> [   53.519778] Freeing unused kernel memory: 608K
+>>
+>>
+> So I assume that the system should have come till runtime just fine apart from
+> the above warning message because.
+> 
 
-----------------------------------------------------------------
-Dave Airlie (2):
-      Merge tag 'drm-misc-fixes-2020-03-26' of
-git://anongit.freedesktop.org/drm/drm-misc into drm-fixes
-      Merge tag 'amd-drm-fixes-5.6-2020-03-26' of
-git://people.freedesktop.org/~agd5f/linux into drm-fixes
+Yes it boots fine otherwise.
 
-Shane Francis (3):
-      drm/prime: use dma length macro when mapping sg
-      drm/amdgpu: fix scatter-gather mapping with user pages
-      drm/radeon: fix scatter-gather mapping with user pages
-
-Yintian Tao (1):
-      drm/scheduler: fix rare NULL ptr race
-
- drivers/gpu/drm/amd/amdgpu/amdgpu_ttm.c | 2 +-
- drivers/gpu/drm/drm_prime.c             | 2 +-
- drivers/gpu/drm/radeon/radeon_ttm.c     | 2 +-
- drivers/gpu/drm/scheduler/sched_main.c  | 2 ++
- 4 files changed, 5 insertions(+), 3 deletions(-)
+Christophe
