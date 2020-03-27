@@ -2,63 +2,114 @@ Return-Path: <SRS0=s8dx=5M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51B88C43331
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 17:10:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8FA7C43331
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 17:10:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2FA7F2073B
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 17:10:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D60720714
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 17:10:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AmJeA7jH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727548AbgC0RKY (ORCPT
+        id S1727675AbgC0RKq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Mar 2020 13:10:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45478 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726333AbgC0RKX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Mar 2020 13:10:23 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BC18C206F2;
-        Fri, 27 Mar 2020 17:10:22 +0000 (UTC)
-Date:   Fri, 27 Mar 2020 13:10:20 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
-Cc:     linux-snps-arc@lists.infradead.org,
-        Vineet Gupta <Vineet.Gupta1@synopsys.com>,
-        linux-kernel@vger.kernel.org,
-        Alexey Brodkin <Alexey.Brodkin@synopsys.com>,
-        Ingo Molnar <mingo@redhat.com>
-Subject: Re: [RFC] ARC: initial ftrace support
-Message-ID: <20200327131020.79e68313@gandalf.local.home>
-In-Reply-To: <20200327155355.18668-1-Eugeniy.Paltsev@synopsys.com>
-References: <20200327155355.18668-1-Eugeniy.Paltsev@synopsys.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Fri, 27 Mar 2020 13:10:46 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:37945 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726333AbgC0RKq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Mar 2020 13:10:46 -0400
+Received: by mail-ot1-f68.google.com with SMTP id t28so10488883ott.5;
+        Fri, 27 Mar 2020 10:10:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=8Uz+T/mHoGv3NzPZQFttOck1KCbWaKiOsJFWw1oiNn4=;
+        b=AmJeA7jHA5gU1mKTHQX7pKpNnvlXEZEWSPxy9vjKsSruz9wmAUIYQBAmmZBIfHhlbL
+         pGFqCe7zQXkI4e8XDoB1LDgyktHCwn/pSjdj5k4U3z6raJBvjyQFT8EyfqJaMrxVtiJM
+         gf5eRVi+XHrebrt0R97V0WIlMEMBv7yi3oS/8AEgk1kI7F41UNjfn4udzeLgWI3NJFid
+         rZsGJBdDbpbh7RAKXZiChOVNL6yOSVyI9WRfZNy08dd1QE32PCsjKANvtykGN8+io9l5
+         91HnyKTI+zv414zN247LX8LkHlQU+ja91QQ/3Iqj3Ju8+gAsQZBGo55yaB/lnRpTQX6x
+         QA7Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=8Uz+T/mHoGv3NzPZQFttOck1KCbWaKiOsJFWw1oiNn4=;
+        b=nbaCJRM0eKb3T4Ky8ZL9rFyLBlpjOdP6Itm2YxNaMZx02TBATfB+tabSNpkxLZ7MRi
+         WpJoQ12+ad52BB1KjW4kCVBjwzwc9Fcn7tEYitAI9rD7rV/JW2d/BJuRyFmFwwnmpSYB
+         JAOxEI71jUrdosEVoT7eH+cBB45xod6MSxO8cDKkc/gvf5RjQbtA/jRyLJWfyRtQhbQC
+         L9IoVufF9VuLPWCfPqD8Ewc3B+8o+VlETzemzMBINwPJOOzkqmVNM/ijTxEj24iZ6Olm
+         fM6dT5qcyGmd4VaTw9lf7TcU3Ycw7u8VrdZGA76XTzw3xNOhY/r3LC2JjJDCWNjYi4wN
+         snpA==
+X-Gm-Message-State: ANhLgQ3DYuHFt1y2Bv43X+r6hWgeMx/oeLuvcTbjfPOKRKR8NcMjqu0S
+        KlIKGq6gV8IS/E/DLDsevto=
+X-Google-Smtp-Source: ADFU+vsLgQwi/EEDtILnJFOfKJw+bzvHFICjlavWiG8jn6HpSdq8ljMRCa2YJ3Kd37rI7/XmNhx1Lg==
+X-Received: by 2002:a9d:6857:: with SMTP id c23mr11129155oto.224.1585329045188;
+        Fri, 27 Mar 2020 10:10:45 -0700 (PDT)
+Received: from localhost.localdomain ([2604:1380:4111:8b00::1])
+        by smtp.gmail.com with ESMTPSA id l188sm1967881oib.44.2020.03.27.10.10.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 27 Mar 2020 10:10:44 -0700 (PDT)
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     Jan Kara <jack@suse.cz>
+Cc:     Amir Goldstein <amir73il@gmail.com>, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com,
+        Nathan Chancellor <natechancellor@gmail.com>
+Subject: [PATCH -next] fanotify: Fix the checks in fanotify_fsid_equal
+Date:   Fri, 27 Mar 2020 10:10:30 -0700
+Message-Id: <20200327171030.30625-1-natechancellor@gmail.com>
+X-Mailer: git-send-email 2.26.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+X-Patchwork-Bot: notify
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 27 Mar 2020 18:53:55 +0300
-Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com> wrote:
+Clang warns:
 
-> +
-> +noinline void _mcount(unsigned long parent_ip)
-> +{
-> +	unsigned long ip = (unsigned long)__builtin_return_address(0);
-> +
-> +	if (unlikely(ftrace_trace_function != ftrace_stub))
-> +		ftrace_trace_function(ip - MCOUNT_INSN_SIZE, parent_ip,
-> +				      NULL, NULL);
-> +}
-> +EXPORT_SYMBOL(_mcount);
+fs/notify/fanotify/fanotify.c:28:23: warning: self-comparison always
+evaluates to true [-Wtautological-compare]
+        return fsid1->val[0] == fsid1->val[0] && fsid2->val[1] == fsid2->val[1];
+                             ^
+fs/notify/fanotify/fanotify.c:28:57: warning: self-comparison always
+evaluates to true [-Wtautological-compare]
+        return fsid1->val[0] == fsid1->val[0] && fsid2->val[1] == fsid2->val[1];
+                                                               ^
+2 warnings generated.
 
-So, ARCv2 allows the _mcount code to be written in C? Nice!
+The intention was clearly to compare val[0] and val[1] in the two
+different fsid structs. Fix it otherwise this function always returns
+true.
 
--- Steve
+Fixes: afc894c784c8 ("fanotify: Store fanotify handles differently")
+Link: https://github.com/ClangBuiltLinux/linux/issues/952
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+---
+ fs/notify/fanotify/fanotify.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/fs/notify/fanotify/fanotify.c b/fs/notify/fanotify/fanotify.c
+index 7a889da1ee12..cb54ecdb3fb9 100644
+--- a/fs/notify/fanotify/fanotify.c
++++ b/fs/notify/fanotify/fanotify.c
+@@ -25,7 +25,7 @@ static bool fanotify_path_equal(struct path *p1, struct path *p2)
+ static inline bool fanotify_fsid_equal(__kernel_fsid_t *fsid1,
+ 				       __kernel_fsid_t *fsid2)
+ {
+-	return fsid1->val[0] == fsid1->val[0] && fsid2->val[1] == fsid2->val[1];
++	return fsid1->val[0] == fsid2->val[0] && fsid1->val[1] == fsid2->val[1];
+ }
+ 
+ static bool fanotify_fh_equal(struct fanotify_fh *fh1,
+-- 
+2.26.0
+
