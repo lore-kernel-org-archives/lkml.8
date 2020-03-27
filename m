@@ -2,201 +2,216 @@ Return-Path: <SRS0=s8dx=5M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11B8DC2D0E5
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 20:47:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32271C43331
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 20:48:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D85DC206DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 20:47:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EFA4C206DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 20:48:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Uf4eu+nr"
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="GmqrUd2C"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727843AbgC0Urt (ORCPT
+        id S1727849AbgC0UsC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Mar 2020 16:47:49 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:35560 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727655AbgC0Urs (ORCPT
+        Fri, 27 Mar 2020 16:48:02 -0400
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:37167 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727352AbgC0UsB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Mar 2020 16:47:48 -0400
-Received: by mail-wr1-f66.google.com with SMTP id d5so13188956wrn.2;
-        Fri, 27 Mar 2020 13:47:45 -0700 (PDT)
+        Fri, 27 Mar 2020 16:48:01 -0400
+Received: by mail-qk1-f196.google.com with SMTP id x3so12342789qki.4
+        for <linux-kernel@vger.kernel.org>; Fri, 27 Mar 2020 13:48:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=9SZQxM/8L6c14zoyYaEljetpWBvkbLkTTHBa0hQabWQ=;
-        b=Uf4eu+nrSqCVBqkyDz5hqbUadokH8pm41sABl6/bCS/Rws83z8zKiYkdl98bb1+yMY
-         dSZs8JQ5h+uHXcL8XqhKf+IFmyaLKuOoRr/9qcKkLwayCj9wNdnA1u+vjlyCe0Tkl41A
-         /fe44A1HyIprnMUyQg/mcQ6u7Yvbq7+syPyb+k2eH9xcJxhLoqeZeuyTjZIv0okuOLHf
-         S9c92m2WI60M1BnjzuqpV1J+H3dwzmeKQQM7YqRpxWecwj87Bh0ULgQ+NtzJvVc3AMe6
-         iAY9JU+vBTPyl0sD4hVByxjCuqPAggXFzMla94k/e+Lk/ht9YhE+LEGWfWuF2UsYEndv
-         4+7A==
+        d=lca.pw; s=google;
+        h=mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=9q1XY4KqbbTRLheOot7MCrox3Fgc87F65JC9LGYyt/E=;
+        b=GmqrUd2C6lvT6vlUdQucy70SSLtfxsKdUjOHWqJyOD8f1vWLJa5e6GYpJ9Npn1jKUh
+         RQKqmeIdVm7NetPjv9kPl5b08t/PpjpjUv7DCinp3PrZIwC2UmHt2CpwFM7OOJ6lHiFM
+         Q102qGtpZYc7xQKpLdqS7yQXUHF3YHZYzGkfuuSMThrDVUYxKczB+z15Rm9CSHYQlIOz
+         fmKXu+PqvhBXZjZtUrzjdZxknkPNMfoKO4wAnvUxi75V++fORXMOHg3aziuDT+9lGaRM
+         wzi5R35OV/ah4OcxihiVz15pL/N44chQI0FXkwtkZMiDWJ/3PHJw79yOsQlrvwX1kq6P
+         CnbA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=9SZQxM/8L6c14zoyYaEljetpWBvkbLkTTHBa0hQabWQ=;
-        b=Rs/0CiBVU4x7InFR9OVZuF5NHyBe9CiCbBuE6ZRiwmBuQ+ok/L6kd+tS3P9uhrdBMu
-         I7TOsI1JYU1B6ZEewxT0VkonJhCtoWQGeM3ieEm8xOR6DNnc7HEgmoj7PM9o64GgUS9K
-         VV0UT81G0BsQccmijNiousqm5wb0cd7jJjDEiD0ck0NFpIGFZ0HAWfWnw3fGlY0E2NVr
-         gNDgcptxT5QtarLq1RsCrsXNE+8KmwwwH7tAIXVz4mHYozU/oZOXvxfLFTH/NwvVjVbI
-         6HNKcHyCJtwckdL2xVjlL+HdHtNnsZiWp8U8exeVm0p5+lPIQJawfWSZioebPW1XQRNK
-         8ypA==
-X-Gm-Message-State: ANhLgQ2BxmVDlJR8J6D4AZKKrbSyzF17aNpxb5MC1zzl0WgicYimLchc
-        r0GFMkeShigIw+sLlw0NiLIqt0z2Ubg=
-X-Google-Smtp-Source: ADFU+vv7mUndEx8pk9XXf3SsKPRjuoIW+7G7Le9nof9v6N4LhN+OHhh+2itRNEshTI3wYieLcdG+rg==
-X-Received: by 2002:adf:82b0:: with SMTP id 45mr1365091wrc.120.1585342064342;
-        Fri, 27 Mar 2020 13:47:44 -0700 (PDT)
-Received: from stbsrv-and-01.and.broadcom.net ([192.19.231.250])
-        by smtp.gmail.com with ESMTPSA id z129sm9661450wmb.7.2020.03.27.13.47.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 27 Mar 2020 13:47:43 -0700 (PDT)
-From:   Al Cooper <alcooperx@gmail.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     andriy.shevchenko@linux.intel.com, Al Cooper <alcooperx@gmail.com>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        bcm-kernel-feedback-list@broadcom.com,
-        Chunfeng Yun <chunfeng.yun@mediatek.com>,
-        devicetree@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        linux-usb@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>,
-        Mathias Nyman <mathias.nyman@intel.com>,
-        Rob Herring <robh+dt@kernel.org>
-Subject: [PATCH v2 4/4] usb: host: Add ability to build new Broadcom STB USB drivers
-Date:   Fri, 27 Mar 2020 16:47:11 -0400
-Message-Id: <20200327204711.10614-5-alcooperx@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200327204711.10614-1-alcooperx@gmail.com>
-References: <20200327204711.10614-1-alcooperx@gmail.com>
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=9q1XY4KqbbTRLheOot7MCrox3Fgc87F65JC9LGYyt/E=;
+        b=TicfeeESb+uiJM+GcchpXkntsLK1PgWXzjM7zxFpZk9V9GvdcEBmsXXn+VtsWxGFpb
+         6ynbkNWLSlB1V6CSvyxtttnYS1bAf6yjDKASWQ1rGeDPMIbbjhuKcjlZLlVkwG06ra7e
+         s2IwEMjRwA4j+0y2vs8K3j363UX64VC2Kar/3+z7CPct/5S/KGgdTBEBgtrVzzx3vbQI
+         50dhSol9BLFfM0UwUkwnTuSGfS+3NLq9mmnigPrhP0Eir9385neEgsinF5iJ2/A3/ZIn
+         tsZOXx0Ye93iNqzdEEcY71uNJ6kYIVhr+N6Z1e/nXjwEkjMyrwx+nkgAZJST1zjTcn6J
+         3Vhg==
+X-Gm-Message-State: ANhLgQ0g3pPJyqkWI59XSBwFB3I9fIK1vEM+kSWF+PMBOy0J3akcD4MK
+        4PQwDxG4XSw+AQ89o+/o6rOSrg==
+X-Google-Smtp-Source: ADFU+vum1YDCNVR+ZGbjSSgdxeGaVZ3Vf8cRn4knXCG80t3ZykaXm1aP4n2qerO0tMux7GIpvqDeng==
+X-Received: by 2002:a05:620a:135b:: with SMTP id c27mr1301375qkl.104.1585342080284;
+        Fri, 27 Mar 2020 13:48:00 -0700 (PDT)
+Received: from [192.168.1.153] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
+        by smtp.gmail.com with ESMTPSA id p1sm4485204qkf.73.2020.03.27.13.47.59
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 27 Mar 2020 13:47:59 -0700 (PDT)
+Content-Type: text/plain;
+        charset=utf-8
+Mime-Version: 1.0 (Mac OS X Mail 13.0 \(3608.60.0.2.5\))
+Subject: Memory leaks due to "locking/percpu-rwsem: Remove the embedded rwsem"
+From:   Qian Cai <cai@lca.pw>
+In-Reply-To: <BB30C711-B54C-4D61-8BEE-A55F410C4178@lca.pw>
+Date:   Fri, 27 Mar 2020 16:47:58 -0400
+Cc:     Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
+        dbueso@suse.de, juri.lelli@redhat.com, longman@redhat.com,
+        linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <C1CCBDAC-A453-4FF2-908F-0B6E356223D1@lca.pw>
+References: <20200327093754.GS20713@hirez.programming.kicks-ass.net>
+ <BB30C711-B54C-4D61-8BEE-A55F410C4178@lca.pw>
+To:     Peter Zijlstra <peterz@infradead.org>
+X-Mailer: Apple Mail (2.3608.60.0.2.5)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add the build system changes needed to get the Broadcom STB XHCI,
-EHCI and OHCI functionality working. The OHCI support does not
-require anything unique to Broadcom so the standard ohci-platform
-driver is being used. The link order for XHCI was changed in the
-Makefile because of the way STB XHCI, EHCI and OHCI controllers
-share a port which requires that the XHCI driver be initialized
-first. Also update MAINTAINERS.
 
-Signed-off-by: Al Cooper <alcooperx@gmail.com>
----
- MAINTAINERS               |  9 +++++++++
- drivers/usb/host/Kconfig  | 20 ++++++++++++++++++++
- drivers/usb/host/Makefile | 20 ++++++++++++++------
- 3 files changed, 43 insertions(+), 6 deletions(-)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 5a5332b3591d..978f3a574f64 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -3433,6 +3433,15 @@ S:	Supported
- F:	drivers/i2c/busses/i2c-brcmstb.c
- F:	Documentation/devicetree/bindings/i2c/i2c-brcmstb.txt
- 
-+BROADCOM BRCMSTB USB XHCI and EHCI DRIVERS
-+M:	Al Cooper <alcooperx@gmail.com>
-+L:	linux-usb@vger.kernel.org
-+L:	bcm-kernel-feedback-list@broadcom.com
-+S:	Maintained
-+F:	drivers/usb/host/ehci-brcm.*
-+F:	drivers/usb/host/xhci-brcm.*
-+F:	Documentation/devicetree/bindings/usb/brcm,bcm7445-ehci.yaml
-+
- BROADCOM BRCMSTB USB2 and USB3 PHY DRIVER
- M:	Al Cooper <alcooperx@gmail.com>
- L:	linux-kernel@vger.kernel.org
-diff --git a/drivers/usb/host/Kconfig b/drivers/usb/host/Kconfig
-index 55bdfdf11e4c..bc582ab6c5c8 100644
---- a/drivers/usb/host/Kconfig
-+++ b/drivers/usb/host/Kconfig
-@@ -97,6 +97,26 @@ config USB_XHCI_TEGRA
- 
- endif # USB_XHCI_HCD
- 
-+config USB_EHCI_BRCMSTB
-+       tristate
-+
-+config USB_XHCI_BRCMSTB
-+       tristate
-+
-+config USB_BRCMSTB
-+	tristate "Broadcom STB USB support"
-+	depends on (ARCH_BRCMSTB && PHY_BRCM_USB) || COMPILE_TEST
-+	select USB_OHCI_HCD_PLATFORM if USB_OHCI_HCD
-+	select USB_EHCI_BRCMSTB if USB_EHCI_HCD
-+	select USB_XHCI_BRCMSTB if USB_XHCI_HCD
-+	select USB_XHCI_PLATFORM if USB_XHCI_HCD
-+	help
-+	  Say Y to enable support for XHCI, EHCI and OHCI host controllers
-+	  found in Broadcom STB SoC's.
-+
-+	  Disabling this will keep the controllers and corresponding
-+	  PHYs powered down.
-+
- config USB_EHCI_HCD
- 	tristate "EHCI HCD (USB 2.0) support"
- 	depends on HAS_DMA && HAS_IOMEM
-diff --git a/drivers/usb/host/Makefile b/drivers/usb/host/Makefile
-index b191361257cc..2a9a16047684 100644
---- a/drivers/usb/host/Makefile
-+++ b/drivers/usb/host/Makefile
-@@ -31,12 +31,25 @@ ifneq ($(CONFIG_USB_XHCI_RCAR), )
- 	xhci-plat-hcd-y		+= xhci-rcar.o
- endif
- 
-+ifneq ($(CONFIG_USB_XHCI_BRCMSTB), )
-+	xhci-plat-hcd-y		+= xhci-brcm.o
-+endif
-+
- ifneq ($(CONFIG_DEBUG_FS),)
- 	xhci-hcd-y		+= xhci-debugfs.o
- endif
- 
- obj-$(CONFIG_USB_PCI)	+= pci-quirks.o
- 
-+# NOTE: BRCMSTB systems require that xhci driver be linked before the
-+# ehci/ohci drivers.
-+obj-$(CONFIG_USB_XHCI_HCD)	+= xhci-hcd.o
-+obj-$(CONFIG_USB_XHCI_PCI)	+= xhci-pci.o
-+obj-$(CONFIG_USB_XHCI_PLATFORM) += xhci-plat-hcd.o
-+obj-$(CONFIG_USB_XHCI_HISTB)	+= xhci-histb.o
-+obj-$(CONFIG_USB_XHCI_MTK)	+= xhci-mtk.o
-+obj-$(CONFIG_USB_XHCI_TEGRA)	+= xhci-tegra.o
-+
- obj-$(CONFIG_USB_EHCI_HCD)	+= ehci-hcd.o
- obj-$(CONFIG_USB_EHCI_PCI)	+= ehci-pci.o
- obj-$(CONFIG_USB_EHCI_HCD_PLATFORM)	+= ehci-platform.o
-@@ -49,6 +62,7 @@ obj-$(CONFIG_USB_EHCI_HCD_STI)	+= ehci-st.o
- obj-$(CONFIG_USB_EHCI_EXYNOS)	+= ehci-exynos.o
- obj-$(CONFIG_USB_EHCI_HCD_AT91) += ehci-atmel.o
- obj-$(CONFIG_USB_EHCI_TEGRA)	+= ehci-tegra.o
-+obj-$(CONFIG_USB_EHCI_BRCMSTB)	+= ehci-brcm.o
- 
- obj-$(CONFIG_USB_OXU210HP_HCD)	+= oxu210hp-hcd.o
- obj-$(CONFIG_USB_ISP116X_HCD)	+= isp116x-hcd.o
-@@ -69,12 +83,6 @@ obj-$(CONFIG_USB_OHCI_HCD_DAVINCI)	+= ohci-da8xx.o
- 
- obj-$(CONFIG_USB_UHCI_HCD)	+= uhci-hcd.o
- obj-$(CONFIG_USB_FHCI_HCD)	+= fhci.o
--obj-$(CONFIG_USB_XHCI_HCD)	+= xhci-hcd.o
--obj-$(CONFIG_USB_XHCI_PCI)	+= xhci-pci.o
--obj-$(CONFIG_USB_XHCI_PLATFORM) += xhci-plat-hcd.o
--obj-$(CONFIG_USB_XHCI_HISTB)	+= xhci-histb.o
--obj-$(CONFIG_USB_XHCI_MTK)	+= xhci-mtk.o
--obj-$(CONFIG_USB_XHCI_TEGRA)	+= xhci-tegra.o
- obj-$(CONFIG_USB_SL811_HCD)	+= sl811-hcd.o
- obj-$(CONFIG_USB_SL811_CS)	+= sl811_cs.o
- obj-$(CONFIG_USB_U132_HCD)	+= u132-hcd.o
--- 
-2.17.1
+> On Mar 27, 2020, at 6:19 AM, Qian Cai <cai@lca.pw> wrote:
+>=20
+>=20
+>=20
+>> On Mar 27, 2020, at 5:37 AM, Peter Zijlstra <peterz@infradead.org> =
+wrote:
+>>=20
+>> If the trylock fails, someone else got the lock and we remain on the
+>> waitqueue. It seems like a very bad idea to put the task while it
+>> remains on the waitqueue, no?
+>=20
+> Interesting, I thought this was more straightforward to see, but I may =
+be wrong as always. At the beginning of percpu_rwsem_wake_function() it =
+calls get_task_struct(), but if the trylock failed, it will remain in =
+the waitqueue. However, it will run percpu_rwsem_wake_function() again =
+with get_task_struct() to increase the refcount. Can you enlighten me =
+where it will call put_task_struct() in waitqueue or elsewhere to =
+balance the refcount in this case?
 
+I am pretty confident that the linux-next commit,
+
+7f26482a872c ("locking/percpu-rwsem: Remove the embedded rwsem=E2=80=9D)
+
+Introduced memory leaks,
+
+I put a debugging patch here,
+
+diff --git a/kernel/locking/percpu-rwsem.c =
+b/kernel/locking/percpu-rwsem.c
+index a008a1ba21a7..857602ef54f1 100644
+--- a/kernel/locking/percpu-rwsem.c
++++ b/kernel/locking/percpu-rwsem.c
+@@ -123,8 +123,10 @@ static int percpu_rwsem_wake_function(struct =
+wait_queue_entry *wq_entry,
+ 	struct percpu_rw_semaphore *sem =3D key;
+=20
+ 	/* concurrent against percpu_down_write(), can get stolen */
+-	if (!__percpu_rwsem_trylock(sem, reader))
++	if (!__percpu_rwsem_trylock(sem, reader)) {
++		printk("KK __percpu_rwsem_trylock\n");
+ 		return 1;
++	}
+=20
+ 	list_del_init(&wq_entry->entry);
+ 	smp_store_release(&wq_entry->private, NULL);
+
+Once those printks() triggered, it ends up with task_struct leaks,
+
+unreferenced object 0xc000200df1422280 (size 8192):
+  comm "read_all", pid 12975, jiffies 4297309144 (age 5351.480s)
+  hex dump (first 32 bytes):
+    02 00 00 00 00 00 00 00 10 00 00 00 00 00 00 00  ................
+    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+  backtrace:
+    [<00000000f5c5fa2d>] copy_process+0x26c/0x1920
+    [<0000000099229290>] _do_fork+0xac/0xb20
+    [<00000000d40a7825>] __do_sys_clone+0x98/0xe0
+    [<00000000c7cd06a4>] ppc_clone+0x8/0xc
+unreferenced object 0xc00020047ef8eb80 (size 120):
+  comm "read_all", pid 12975, jiffies 4297309144 (age 5351.480s)
+  hex dump (first 32 bytes):
+    02 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+  backtrace:
+    [<000000004def8a44>] prepare_creds+0x38/0x110
+    [<0000000037a68116>] copy_creds+0xbc/0x1d0
+    [<0000000016b7471c>] copy_process+0x454/0x1920
+    [<0000000099229290>] _do_fork+0xac/0xb20
+    [<00000000d40a7825>] __do_sys_clone+0x98/0xe0
+    [<00000000c7cd06a4>] ppc_clone+0x8/0xc
+unreferenced object 0xc000200d96f80800 (size 1384):
+  comm "read_all", pid 12975, jiffies 4297309144 (age 5351.480s)
+  hex dump (first 32 bytes):
+    01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+    10 08 f8 96 0d 20 00 c0 10 08 f8 96 0d 20 00 c0  ..... ....... ..
+  backtrace:
+    [<000000008894d13b>] copy_process+0xa40/0x1920
+    [<0000000099229290>] _do_fork+0xac/0xb20
+    [<00000000d40a7825>] __do_sys_clone+0x98/0xe0
+    [<00000000c7cd06a4>] ppc_clone+0x8/0xc
+unreferenced object 0xc000001e91ba4000 (size 16384):
+  comm "read_all", pid 12982, jiffies 4297309462 (age 5348.300s)
+  hex dump (first 32 bytes):
+    00 00 00 00 00 00 00 00 08 00 00 00 00 00 00 00  ................
+    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+  backtrace:
+    [<000000009689397b>] kzalloc.constprop.48+0x1c/0x30
+    [<000000001753eb18>] task_numa_fault+0xac8/0x1260
+    [<0000000047bb80b1>] __handle_mm_fault+0x12cc/0x1b00
+    [<00000000c0a4c8ba>] handle_mm_fault+0x298/0x450
+    [<000000003465b20d>] __do_page_fault+0x2b8/0xf90
+    [<000000005037fec9>] handle_page_fault+0x10/0x30
+unreferenced object 0xc0002015fe4aaa80 (size 8192):
+  comm "read_all", pid 13157, jiffies 4297353979 (age 4903.130s)
+  hex dump (first 32 bytes):
+    02 00 00 00 00 00 00 00 10 00 00 00 00 00 00 00  ................
+    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+  backtrace:
+    [<00000000f5c5fa2d>] copy_process+0x26c/0x1920
+    [<0000000099229290>] _do_fork+0xac/0xb20
+    [<00000000d40a7825>] __do_sys_clone+0x98/0xe0
+    [<00000000c7cd06a4>] ppc_clone+0x8/0xc
+unreferenced object 0xc00020047ef8f080 (size 120):
+  comm "read_all", pid 13157, jiffies 4297353979 (age 4903.130s)
+  hex dump (first 32 bytes):
+    02 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+  backtrace:
+    [<000000004def8a44>] prepare_creds+0x38/0x110
+    [<0000000037a68116>] copy_creds+0xbc/0x1d0
+    [<0000000016b7471c>] copy_process+0x454/0x1920
+    [<0000000099229290>] _do_fork+0xac/0xb20
+    [<00000000d40a7825>] __do_sys_clone+0x98/0xe0
+    [<00000000c7cd06a4>] ppc_clone+0x8/0xc
+unreferenced object 0xc0002012a9388f00 (size 1384):
+  comm "read_all", pid 13157, jiffies 4297353979 (age 4903.130s)
+  hex dump (first 32 bytes):
+    01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+    10 8f 38 a9 12 20 00 c0 10 8f 38 a9 12 20 00 c0  ..8.. ....8.. ..
+  backtrace:
+    [<000000008894d13b>] copy_process+0xa40/0x1920
+    [<0000000099229290>] _do_fork+0xac/0xb20
+    [<00000000d40a7825>] __do_sys_clone+0x98/0xe0
+    [<00000000c7cd06a4>] ppc_clone+0x8/0xc
+unreferenced object 0xc000001c86704000 (size 16384):
+  comm "read_all", pid 13164, jiffies 4297354081 (age 4902.110s)
+  hex dump (first 32 bytes):
+    00 00 00 00 00 00 00 00 08 00 00 00 00 00 00 00  ................
+    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+  backtrace:
+    [<000000009689397b>] kzalloc.constprop.48+0x1c/0x30
+    [<000000001753eb18>] task_numa_fault+0xac8/0x1260
+    [<0000000047bb80b1>] __handle_mm_fault+0x12cc/0x1b00
+    [<00000000c0a4c8ba>] handle_mm_fault+0x298/0x450
+    [<000000003465b20d>] __do_page_fault+0x2b8/0xf90
+    [<000000005037fec9>] handle_page_fault+0x10/0x30=
