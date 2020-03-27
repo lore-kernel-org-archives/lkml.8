@@ -2,115 +2,131 @@ Return-Path: <SRS0=s8dx=5M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D230DC43331
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 11:59:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CA4AC43331
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 12:02:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A9891206DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 11:59:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C602206DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 12:02:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="qrI9PjSf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726901AbgC0L7Q (ORCPT
+        id S1727143AbgC0MCG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Mar 2020 07:59:16 -0400
-Received: from mout.kundenserver.de ([212.227.126.187]:49533 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726165AbgC0L7Q (ORCPT
+        Fri, 27 Mar 2020 08:02:06 -0400
+Received: from pandora.armlinux.org.uk ([78.32.30.218]:33052 "EHLO
+        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726165AbgC0MCG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Mar 2020 07:59:16 -0400
-Received: from mail-qk1-f180.google.com ([209.85.222.180]) by
- mrelayeu.kundenserver.de (mreue011 [212.227.15.129]) with ESMTPSA (Nemesis)
- id 1M8hlZ-1jD8wF388P-004jIv for <linux-kernel@vger.kernel.org>; Fri, 27 Mar
- 2020 12:59:14 +0100
-Received: by mail-qk1-f180.google.com with SMTP id d11so10431754qko.3
-        for <linux-kernel@vger.kernel.org>; Fri, 27 Mar 2020 04:59:14 -0700 (PDT)
-X-Gm-Message-State: ANhLgQ3f7zr3f4cOtpEWkBJeuRXX/sk5nkRn+ynjRGKOlJnZlQdLXFki
-        C+bhIddSLyaiEjPGaoZq4QfE1uTZrvrKr6ZF49I=
-X-Google-Smtp-Source: ADFU+vuE+pRxvTEA/tUOWrqhrw6Yo/aFYGbSxiy/A0Z97EJ0d/qGe5AGsH4sFBSJry+cXavGtFSTjhkWadU8yBY+3Dc=
-X-Received: by 2002:a37:6285:: with SMTP id w127mr13147141qkb.138.1585310353633;
- Fri, 27 Mar 2020 04:59:13 -0700 (PDT)
+        Fri, 27 Mar 2020 08:02:06 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=0KCyy4fR6uqfv7pQ7Bns3VVcVENtN8zz9qfPJTw1u4U=; b=qrI9PjSf/erLcmWVGVGBLQ3Mq
+        01EOlIAqHOrpOFWwygcxDrNjhTmbFQ9VQX92GkkqsZ+n5l2wtjzpSi+3A50x8bCduK1sO1pVfsB61
+        bHohG0qrEgypXagKGIaLv0ERu47suHhJkWI+wHldYyowaoRWhi5U6MgxJ5vFQXbaWzgeUTXlywCkB
+        hkoRLzdjJ8V8DZ1Nj9hXLvXwZCUIOup90jsHvuaY0ptujc453VdVh54oUfD24NtB2R+AKS4XcLKFH
+        K+xpv5v5M74br+N3dEVjydMvRcwTVQ67AsDpoLwSnjRcDbmfnhY0B1I2/f/x4cJJoQ+7Xx8fuO2fA
+        Q3UM/wpTg==;
+Received: from shell.armlinux.org.uk ([2002:4e20:1eda:1:5054:ff:fe00:4ec]:37884)
+        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.90_1)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1jHngR-0000tb-TR; Fri, 27 Mar 2020 12:01:56 +0000
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1jHngO-0004Bh-2o; Fri, 27 Mar 2020 12:01:52 +0000
+Date:   Fri, 27 Mar 2020 12:01:52 +0000
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     Andrew Lunn <andrew@lunn.ch>
+Cc:     Florinel Iordache <florinel.iordache@nxp.com>, davem@davemloft.net,
+        netdev@vger.kernel.org, f.fainelli@gmail.com, hkallweit1@gmail.com,
+        devicetree@vger.kernel.org, linux-doc@vger.kernel.org,
+        robh+dt@kernel.org, mark.rutland@arm.com, kuba@kernel.org,
+        corbet@lwn.net, shawnguo@kernel.org, leoyang.li@nxp.com,
+        madalin.bucur@oss.nxp.com, ioana.ciornei@nxp.com,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next 3/9] net: phy: add kr phy connection type
+Message-ID: <20200327120151.GG25745@shell.armlinux.org.uk>
+References: <1585230682-24417-1-git-send-email-florinel.iordache@nxp.com>
+ <1585230682-24417-4-git-send-email-florinel.iordache@nxp.com>
+ <20200327001515.GL3819@lunn.ch>
 MIME-Version: 1.0
-References: <20200301122226.4068-1-afzal.mohd.ma@gmail.com>
- <m3ftepbtxm.fsf@t19.piap.pl> <51cebbbb-3ba4-b336-82a9-abcc22f9a69c@gmail.com>
- <20200304163412.GX37466@atomide.com> <20200313154520.GA5375@afzalpc>
- <20200317043702.GA5852@afzalpc> <20200325114332.GA6337@afzalpc>
- <20200327104635.GA7775@afzalpc> <CAK8P3a0kVvkCW+2eiyZTkfS=LqqnbeQS+S-os=vxhaYXCwLK+A@mail.gmail.com>
- <20200327111012.GA8355@afzalpc> <20200327112913.GA8711@afzalpc>
-In-Reply-To: <20200327112913.GA8711@afzalpc>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Fri, 27 Mar 2020 12:58:57 +0100
-X-Gmail-Original-Message-ID: <CAK8P3a2sqika7=3D6Zgkz+v8HtGEc0q0+skWG8mSKuL+qSoYLw@mail.gmail.com>
-Message-ID: <CAK8P3a2sqika7=3D6Zgkz+v8HtGEc0q0+skWG8mSKuL+qSoYLw@mail.gmail.com>
-Subject: Re: [PATCH v3] ARM: replace setup_irq() by request_irq()
-To:     afzal mohammed <afzal.mohd.ma@gmail.com>
-List-Id: <soc.lore.kernel.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Tony Lindgren <tony@atomide.com>,
-        Alexander Sverdlin <alexander.sverdlin@gmail.com>,
-        =?UTF-8?Q?Krzysztof_Ha=C5=82asa?= <khalasa@piap.pl>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Lubomir Rintel <lkundrak@v3.sk>,
-        Gregory CLEMENT <gregory.clement@bootlin.com>,
-        Hartley Sweeten <hsweeten@visionengravers.com>,
-        Viresh Kumar <vireshk@kernel.org>,
-        Shiraz Hashim <shiraz.linux.kernel@gmail.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        SoC Team <soc@kernel.org>, arm-soc <arm@kernel.org>,
-        Olof Johansson <olof@lixom.net>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:eSpsFH22Zf29ANsZtvepCx5u7KMIPMMr9Nc+39smeQAqpCjEOff
- SaBfaGwreUbb0Dzt8ABjevEHRyqEHhSE6L6InnWFzsUg60V2l5rI8fv0Nut5KIGpLz5i6n3
- phLhObKV/AM7Z0lewcmwwEoVhArIzk0kZyXYAOQS+kjj8BdleSBik7IcFYQUsWB+y+pNC+4
- Gt4oJYc3c1gJgNoVyqYSw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:x5prTMqlB4E=:7UvqZhZbxqc0vh9xs77Xiq
- xOBxbPNEWag4zCMYudJag/OGvqq83/mELgf3vKUD/fN9I5RbvUQcanSOGi6Npr2ahNo2FyJCB
- E28veyVUmZaUvPSWltTSswwmJM1UG3kTirX/kxqn4I5Li8MsInU+yVv6TjLz0hfKRsYy5U1ut
- BMRs1bN9aZook1w/2AkTQM5KYSEO13z8LcSpQhOE2ZAKqzkTuiAGD22oC+xBINpfVOT5BBCTm
- kCsKbL6038OMgTmDdTeJLNLsn18ZzcoXlGZDNKmAhpSZcrIOe0BrBOmgTtmjBP2TKBUOwUj0D
- mm/Xmwn6xoJFfk94prno0e9aUNFwsBEf2wY5GOA2DZIcocYZgiUSk4eC4h3vA12Xc7HBZpHQa
- ft+BkA6L8f1fPyIAxW3FQPC+9i+U7REKfTAgsVnYqQE3BvkZ+nHdLI3XewzTz6sCN85lSubfH
- W5PoItJjnqxZupRQuywP7Khmu6e53cv6SUAcsgwKkbRolgfRa+1c9EaTKQ+tXdnvNNE+JMvbJ
- MkWypHIT5/DlP2II63KcZKea0+gol9wSGQqf3VA9l8ZoaCOo8IXLHCK3i14DMC4TmqkhRMIYg
- Dco8pycdL0CD6g6xmt6xCfrEYmXoB/q/CSitiV+25boQ3GhBJKhNPAN59EDs0JKJ8+HkQokQ6
- o3uwJgYPeirhKB56uIQGwbqfmINecQ6slLE/rgavc2VaFFdrjEn3y9p37AhtJmd9z4kc6dUfn
- brlhWgaRNtwjwyhDhLKRTEg5r8xyGrvDISp+4aCdPdijxHak7PvVtWtYjsFgiqRBHgw480Z1g
- i4YHNcY0lIUKiFQqQmrdk4lsCRkwsJaHizNMXVdnJyOQypR+Qg=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200327001515.GL3819@lunn.ch>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 27, 2020 at 12:29 PM afzal mohammed <afzal.mohd.ma@gmail.com> wrote:
->
-> Hi Arnd,
->
-> On Fri, Mar 27, 2020 at 04:40:12PM +0530, afzal mohammed wrote:
-> > On Fri, Mar 27, 2020 at 11:55:36AM +0100, Arnd Bergmann wrote:
->
-> > > To make sure I get the right ones, could you bounce all the patches that are
-> > > still missing to soc@kernel.org to let them show up in patchwork?
-> >
-> > Done.
->
-> Sorry, i first forwarded, after that i bounced all, but not able to
-> see the bounced ones in patchwork, only the forwarded ones.
+On Fri, Mar 27, 2020 at 01:15:15AM +0100, Andrew Lunn wrote:
+> On Thu, Mar 26, 2020 at 03:51:16PM +0200, Florinel Iordache wrote:
+> > Add support for backplane kr phy connection types currently available
+> > (10gbase-kr, 40gbase-kr4) and the required phylink updates (cover all
+> > the cases for KR modes which are clause 45 compatible to correctly assign
+> > phy_interface and phylink#supported)
+> > 
+> > Signed-off-by: Florinel Iordache <florinel.iordache@nxp.com>
+> > ---
+> >  drivers/net/phy/phylink.c | 15 ++++++++++++---
+> >  include/linux/phy.h       |  6 +++++-
+> >  2 files changed, 17 insertions(+), 4 deletions(-)
+> > 
+> > diff --git a/drivers/net/phy/phylink.c b/drivers/net/phy/phylink.c
+> > index fed0c59..db1bb87 100644
+> > --- a/drivers/net/phy/phylink.c
+> > +++ b/drivers/net/phy/phylink.c
+> > @@ -4,6 +4,7 @@
+> >   * technologies such as SFP cages where the PHY is hot-pluggable.
+> >   *
+> >   * Copyright (C) 2015 Russell King
+> > + * Copyright 2020 NXP
+> >   */
+> >  #include <linux/ethtool.h>
+> >  #include <linux/export.h>
+> > @@ -303,7 +304,6 @@ static int phylink_parse_mode(struct phylink *pl, struct fwnode_handle *fwnode)
+> >  			break;
+> >  
+> >  		case PHY_INTERFACE_MODE_USXGMII:
+> > -		case PHY_INTERFACE_MODE_10GKR:
+> 
+> We might have a backwards compatibility issue here. If i remember
+> correctly, there are some boards out in the wild using
+> PHY_INTERFACE_MODE_10GKR not PHY_INTERFACE_MODE_10GBASER.
+> 
+> See e0f909bc3a242296da9ccff78277f26d4883a79d
+> 
+> Russell, what do you say about this?
 
-Right, I see the same thing. Unfortunately, the version I have now
-doesn't work easily in git-am.
+Yes, and that's a point that I made when I introduced 10GBASER to
+correct that mistake.  It is way too soon to change this; it will
+definitely cause regressions:
 
-> > If it helps, i can send the same patches w/ tags received as well.
->
-> Let me know if if anything more needs to be done from my side.
+$ grep 10gbase-kr arch/*/boot/dts -r
+arch/arm64/boot/dts/marvell/cn9131-db.dts:      phy-mode = "10gbase-kr";
+arch/arm64/boot/dts/marvell/armada-8040-mcbin.dts:      phy-mode = "10gbase-kr";
+arch/arm64/boot/dts/marvell/armada-8040-mcbin.dts:      phy-mode = "10gbase-kr";
+arch/arm64/boot/dts/marvell/armada-7040-db.dts:    phy-mode = "10gbase-kr";
+arch/arm64/boot/dts/marvell/armada-8040-mcbin-singleshot.dts:   phy-mode = "10gbase-kr";
+arch/arm64/boot/dts/marvell/armada-8040-mcbin-singleshot.dts:   phy-mode = "10gbase-kr";
+arch/arm64/boot/dts/marvell/armada-8040-clearfog-gt-8k.dts:     phy-mode = "10gbase-kr";
+arch/arm64/boot/dts/marvell/armada-8040-db.dts: phy-mode = "10gbase-kr";
+arch/arm64/boot/dts/marvell/armada-8040-db.dts: phy-mode = "10gbase-kr";
+arch/arm64/boot/dts/marvell/cn9132-db.dts:      phy-mode = "10gbase-kr";
+arch/arm64/boot/dts/marvell/cn9130-db.dts:      phy-mode = "10gbase-kr";
 
-I can probably fix it up here, but it would help if you can resend the
-remaining patches using git-send-email with all the tags added in
-and the normal subject lines.
+So any change to the existing PHY_INTERFACE_MODE_10GKR will likely
+break all these platforms.
 
-      Arnd
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 10.2Mbps down 587kbps up
