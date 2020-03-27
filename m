@@ -2,143 +2,141 @@ Return-Path: <SRS0=s8dx=5M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.7 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21284C43331
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 17:27:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F90CC43331
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 17:27:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E77E02071B
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 17:27:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="p1kxgtdl"
+	by mail.kernel.org (Postfix) with ESMTP id 1393020716
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 17:27:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727473AbgC0R1J (ORCPT
+        id S1727636AbgC0R13 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Mar 2020 13:27:09 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:42229 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726275AbgC0R1I (ORCPT
+        Fri, 27 Mar 2020 13:27:29 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:54355 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726275AbgC0R13 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Mar 2020 13:27:08 -0400
-Received: by mail-ot1-f67.google.com with SMTP id z5so10275623oth.9
-        for <linux-kernel@vger.kernel.org>; Fri, 27 Mar 2020 10:27:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=ClBYvSVmf83rxBcoJPioNptteHGrQ49oK3IN7T/4Mgc=;
-        b=p1kxgtdlAlcm9ZYp0voSXEtcsJCiehEdu2swGy2F/tJZXZEDEM0LiBh5bLYFtdgFZc
-         vsH8oBKUYVuWCQSRJUlNW+M4qg4yLXiWgD2eK+pQCBZ69YoTQhmD3rwBCLNgQqIhOlvk
-         ABETgIyKgHprRV5zGNhl+GGjY2bpPLCWeBOFSQCn0HbGJbZQ/g60ZuYwe2cfmOOAGajh
-         Kf0cjQ/kS6FJKgws+xZ3OVq2EwfuFkKLdUaqmqF6Ul8xX/bBN2ZEnNowVyy1ujh15FJs
-         xnswehxIsxVIpsUdnGDvqjPgUAqQSKKMrB0vNuBQo1ni7AIwNHppUSReQB9iSUvLNxD4
-         T8Zw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=ClBYvSVmf83rxBcoJPioNptteHGrQ49oK3IN7T/4Mgc=;
-        b=d7fWcOvZhJbPGgq5UFBL7q/gTQsdsbA7UoL7i5RSFMXyvHWwSxYjKtZE+3HmWQYQPW
-         g+UslBPyR6BrRpbUF1Jy6Mrxa2F5Lmee0LC60dhX6b9gKnDXJMQdKLJTBOVYKFozgBhs
-         34UUVkBsOv+EqocgHJa/IzTvz4/LTWjvD4y/OolShv2a3bJXgcAiTK6kwwDRkVTf0taJ
-         +KuKai0dFAcs7ZEAJp30ltm2q2VrQdbCc3q4rC8BwC1OeTmWXgRuTviggnEF0hZLlDTA
-         G8f8bxSS040ZCiEfDnYkQOFViyVp7J+3yCTS/mOsaQgrq6eqg3RsqoOdyMoH3tydCXSm
-         g53Q==
-X-Gm-Message-State: ANhLgQ2+fA1H0qJ/TsiE/nmwC4k0G3wDWIbBNu/bfT75eSDL0mscaz4P
-        l3A29LYHDMY2V7fKudCbE6s=
-X-Google-Smtp-Source: ADFU+vvCryVp1EzUDSsGpKlMWDJ2IGkuG+A5nBaN01hdZ8Oaa4LyrQLUUb4FlTMO9zHE2KaPs5q0Og==
-X-Received: by 2002:a4a:d88b:: with SMTP id b11mr421504oov.42.1585330026427;
-        Fri, 27 Mar 2020 10:27:06 -0700 (PDT)
-Received: from ubuntu-m2-xlarge-x86 ([2604:1380:4111:8b00::1])
-        by smtp.gmail.com with ESMTPSA id t4sm1105871otm.45.2020.03.27.10.27.04
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 27 Mar 2020 10:27:05 -0700 (PDT)
-Date:   Fri, 27 Mar 2020 10:27:03 -0700
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     Nick Desaulniers <ndesaulniers@google.com>
-Cc:     Clement Courbet <courbet@google.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Segher Boessenkool <segher@kernel.crashing.org>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>
-Subject: Re: [PATCH v1] powerpc: Make setjmp/longjump signature standard
-Message-ID: <20200327172703.GA28580@ubuntu-m2-xlarge-x86>
-References: <20200327100801.161671-1-courbet@google.com>
- <CAKwvOdmLmfJY4Uk-Atd9dT5+zQTPeoagjMZMcDqdVfKCU7_BuA@mail.gmail.com>
+        Fri, 27 Mar 2020 13:27:29 -0400
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1jHslR-0002vB-Pc; Fri, 27 Mar 2020 18:27:25 +0100
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 57EB91C03AB;
+        Fri, 27 Mar 2020 18:27:25 +0100 (CET)
+Date:   Fri, 27 Mar 2020 17:27:24 -0000
+From:   "tip-bot2 for H.J. Lu" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/build] vmlinux.lds: Discard .note.gnu.property sections in
+ generic NOTES
+Cc:     "H.J. Lu" <hjl.tools@gmail.com>, Borislav Petkov <bp@suse.de>,
+        Kees Cook <keescook@chromium.org>, x86 <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <20200327121101.948934-1-hjl.tools@gmail.com>
+References: <20200327121101.948934-1-hjl.tools@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAKwvOdmLmfJY4Uk-Atd9dT5+zQTPeoagjMZMcDqdVfKCU7_BuA@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Message-ID: <158533004496.28353.6659866597938496589.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 27, 2020 at 10:10:44AM -0700, Nick Desaulniers wrote:
-> On Fri, Mar 27, 2020 at 3:08 AM Clement Courbet <courbet@google.com> wrote:
-> >
-> > Declaring setjmp()/longjmp() as taking longs makes the signature
-> > non-standard, and makes clang complain. In the past, this has been
-> > worked around by adding -ffreestanding to the compile flags.
-> >
-> > The implementation looks like it only ever propagates the value
-> > (in longjmp) or sets it to 1 (in setjmp), and we only call longjmp
-> > with integer parameters.
-> >
-> > This allows removing -ffreestanding from the compilation flags.
-> >
-> > Context:
-> > https://lore.kernel.org/patchwork/patch/1214060
-> > https://lore.kernel.org/patchwork/patch/1216174
-> >
-> > Signed-off-by: Clement Courbet <courbet@google.com>
+The following commit has been merged into the x86/build branch of tip:
 
-Thanks for fixing this properly, not really sure why I did not think of
-this in the first place. I guess my thought was the warning makes it
-seem like clang is going to ignore the kernel's implementation of
-setjmp/longjmp but I can't truly remember.
+Commit-ID:     72cb2113c1bbd82cf3e062a39ff2753ee9d3fae7
+Gitweb:        https://git.kernel.org/tip/72cb2113c1bbd82cf3e062a39ff2753ee9d3fae7
+Author:        H.J. Lu <hjl.tools@gmail.com>
+AuthorDate:    Fri, 27 Mar 2020 05:11:01 -07:00
+Committer:     Borislav Petkov <bp@suse.de>
+CommitterDate: Fri, 27 Mar 2020 15:58:13 +01:00
 
-> Hi Clement, thanks for the patch! Would you mind sending a V2 that
-> included a similar fix to arch/powerpc/xmon/Makefile?
+vmlinux.lds: Discard .note.gnu.property sections in generic NOTES
 
-Agreed.
+With the command-line option, -mx86-used-note=yes, which can also be
+enabled at binutils build time with
 
-> For context, this was the original patch:
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=aea447141c7e7824b81b49acd1bc78
-> which was then modified to:
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=c9029ef9c95765e7b63c4d9aa780674447db1ec0
-> 
-> So on your V2, if you include in the commit message, the line:
-> 
-> Fixes c9029ef9c957 ("powerpc: Avoid clang warnings around setjmp and longjmp")
-> 
-> then that will help our LTS branch maintainers back port it to the
-> appropriate branches.
+  --enable-x86-used-note  generate GNU x86 used ISA and feature properties
 
-The tags should be:
+the x86 assembler in binutils 2.32 and above generates a program property
+note in a note section, .note.gnu.property, to encode used x86 ISAs and
+features.  But the kernel linker script only contains a single NOTE segment:
 
-Cc: stable@vger.kernel.org # v4.14+
-Fixes: c9029ef9c957 ("powerpc: Avoid clang warnings around setjmp and longjmp")
+  PHDRS {
+   text PT_LOAD FLAGS(5);
+   data PT_LOAD FLAGS(6);
+   percpu PT_LOAD FLAGS(6);
+   init PT_LOAD FLAGS(7);
+   note PT_NOTE FLAGS(0);
+  }
+  SECTIONS
+  {
+  ...
+   .notes : AT(ADDR(.notes) - 0xffffffff80000000) { __start_notes = .; KEEP(*(.not
+  e.*)) __stop_notes = .; } :text :note
+  ...
+  }
 
-that way it explicitly gets picked up for stable, rather than Sasha's
-AUTOSEL process, which could miss it.
+The NOTE segment generated by the kernel linker script is aligned to
+4 bytes. But .note.gnu.property section must be aligned to 8 bytes on
+x86-64, resulting in:
 
-With the xmon/Makefile -ffreestanding removed and the tags updated,
-consider this:
+  [hjl@gnu-skx-1 linux]$ readelf -n vmlinux
 
-Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
-Tested-by: Nathan Chancellor <natechancellor@gmail.com>
+  Displaying notes found in: .notes
+    Owner                Data size Description
+    Xen                  0x00000006 Unknown note type: (0x00000006)
+     description data: 6c 69 6e 75 78 00
+    Xen                  0x00000004 Unknown note type: (0x00000007)
+     description data: 32 2e 36 00
+    xen-3.0              0x00000005 Unknown note type: (0x006e6558)
+     description data: 08 00 00 00 03
+  readelf: Warning: note with invalid namesz and/or descsz found at offset 0x50
+  readelf: Warning:  type: 0xffffffff, namesize: 0x006e6558, descsize:
+  0x80000000, alignment: 8
 
-Cheers,
-Nathan
+Since note.gnu.property section in the kernel image is never used,
+discard it.
+
+ [ bp: Massage. ]
+
+Signed-off-by: H.J. Lu <hjl.tools@gmail.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Reviewed-by: Kees Cook <keescook@chromium.org>
+Link: https://lkml.kernel.org/r/20200327121101.948934-1-hjl.tools@gmail.com
+---
+ include/asm-generic/vmlinux.lds.h | 7 +++++++
+ 1 file changed, 7 insertions(+)
+
+diff --git a/include/asm-generic/vmlinux.lds.h b/include/asm-generic/vmlinux.lds.h
+index 2444336..998eafa 100644
+--- a/include/asm-generic/vmlinux.lds.h
++++ b/include/asm-generic/vmlinux.lds.h
+@@ -818,7 +818,14 @@
+ #define TRACEDATA
+ #endif
+ 
++/*
++ * Discard .note.gnu.property sections which are unused and have
++ * different alignment requirement from kernel note sections.
++ */
+ #define NOTES								\
++	/DISCARD/ : {							\
++		*(.note.gnu.property)					\
++	}								\
+ 	.notes : AT(ADDR(.notes) - LOAD_OFFSET) {			\
+ 		__start_notes = .;					\
+ 		KEEP(*(.note.*))					\
