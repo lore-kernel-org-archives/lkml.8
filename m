@@ -2,53 +2,53 @@ Return-Path: <SRS0=s8dx=5M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22A1CC2D0E5
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 11:33:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94DA4C2D0E8
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 11:33:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE8C92073B
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 11:33:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 722112073B
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 11:33:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727620AbgC0LdD (ORCPT
+        id S1727185AbgC0LdG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Mar 2020 07:33:03 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:5190 "EHLO
+        Fri, 27 Mar 2020 07:33:06 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:34514 "EHLO
         mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727354AbgC0LdD (ORCPT
+        by vger.kernel.org with ESMTP id S1727443AbgC0LdD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 27 Mar 2020 07:33:03 -0400
 Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02RB7DLk015793;
-        Fri, 27 Mar 2020 07:32:56 -0400
-Received: from ppma02dal.us.ibm.com (a.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.10])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2ywe7x1fxt-1
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02RB7Dlh015805;
+        Fri, 27 Mar 2020 07:32:57 -0400
+Received: from ppma04dal.us.ibm.com (7a.29.35a9.ip4.static.sl-reverse.com [169.53.41.122])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2ywe7x1fy3-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 27 Mar 2020 07:32:56 -0400
-Received: from pps.filterd (ppma02dal.us.ibm.com [127.0.0.1])
-        by ppma02dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 02RBVSgV006135;
-        Fri, 27 Mar 2020 11:32:55 GMT
-Received: from b01cxnp22035.gho.pok.ibm.com (b01cxnp22035.gho.pok.ibm.com [9.57.198.25])
-        by ppma02dal.us.ibm.com with ESMTP id 2ywaw2x8qm-1
+        Fri, 27 Mar 2020 07:32:57 -0400
+Received: from pps.filterd (ppma04dal.us.ibm.com [127.0.0.1])
+        by ppma04dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 02RBUIhT021901;
+        Fri, 27 Mar 2020 11:32:56 GMT
+Received: from b03cxnp08027.gho.boulder.ibm.com (b03cxnp08027.gho.boulder.ibm.com [9.17.130.19])
+        by ppma04dal.us.ibm.com with ESMTP id 2ywawgp8mb-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 27 Mar 2020 11:32:55 +0000
-Received: from b01ledav002.gho.pok.ibm.com (b01ledav002.gho.pok.ibm.com [9.57.199.107])
-        by b01cxnp22035.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 02RBWt1K50856434
+        Fri, 27 Mar 2020 11:32:56 +0000
+Received: from b03ledav004.gho.boulder.ibm.com (b03ledav004.gho.boulder.ibm.com [9.17.130.235])
+        by b03cxnp08027.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 02RBWtN457278834
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
         Fri, 27 Mar 2020 11:32:55 GMT
-Received: from b01ledav002.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 1C538124052;
+Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 4ADFB78060;
         Fri, 27 Mar 2020 11:32:55 +0000 (GMT)
-Received: from b01ledav002.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 6CE4F124055;
+Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id D99207805E;
         Fri, 27 Mar 2020 11:32:54 +0000 (GMT)
 Received: from sofia.ibm.com (unknown [9.85.72.108])
-        by b01ledav002.gho.pok.ibm.com (Postfix) with ESMTP;
+        by b03ledav004.gho.boulder.ibm.com (Postfix) with ESMTP;
         Fri, 27 Mar 2020 11:32:54 +0000 (GMT)
 Received: by sofia.ibm.com (Postfix, from userid 1000)
-        id 317932E3B0A; Fri, 27 Mar 2020 17:02:45 +0530 (IST)
+        id 853902E3B09; Fri, 27 Mar 2020 17:02:45 +0530 (IST)
 From:   "Gautham R. Shenoy" <ego@linux.vnet.ibm.com>
 To:     Nathan Lynch <nathanl@linux.ibm.com>,
         Michael Ellerman <mpe@ellerman.id.au>,
@@ -58,9 +58,9 @@ To:     Nathan Lynch <nathanl@linux.ibm.com>,
         Tyrel Datwyler <tyreld@linux.ibm.com>
 Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
         "Gautham R. Shenoy" <ego@linux.vnet.ibm.com>
-Subject: [PATCH v4 6/6] pseries/sysfs: Minimise IPI noise while reading [idle_][s]purr
-Date:   Fri, 27 Mar 2020 17:02:40 +0530
-Message-Id: <1585308760-28792-7-git-send-email-ego@linux.vnet.ibm.com>
+Subject: [PATCH v4 5/6] Documentation: Document sysfs interfaces purr, spurr, idle_purr, idle_spurr
+Date:   Fri, 27 Mar 2020 17:02:39 +0530
+Message-Id: <1585308760-28792-6-git-send-email-ego@linux.vnet.ibm.com>
 X-Mailer: git-send-email 1.8.3.1
 In-Reply-To: <1585308760-28792-1-git-send-email-ego@linux.vnet.ibm.com>
 References: <1585308760-28792-1-git-send-email-ego@linux.vnet.ibm.com>
@@ -79,201 +79,64 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: "Gautham R. Shenoy" <ego@linux.vnet.ibm.com>
 
-Currently purr, spurr, idle_purr, idle_spurr are exposed for every CPU
-via the sysfs interface
-/sys/devices/system/cpu/cpuX/[idle_][s]purr. Each sysfs read currently
-generates an IPI to obtain the desired value from the target CPU X.
-Since these aforementioned sysfs are typically read one after another,
-we end up generating 4 IPIs per CPU in a short duration.
-
-In order to minimize the IPI noise, this patch caches the values of
-all the four entities whenever one of them is read. If subsequently
-any of these are read within the next 10ms, the cached value is
-returned. With this, we will generate at most one IPI every 10ms for
-every CPU.
-
-Test-results: While reading the four sysfs files back-to-back for a
-given CPU every second for 100 seconds.
-
-Without the patch:
-		 16 [XICS 2 Edge IPI] = 422 times
-		 DBL [Doorbell interrupts] = 13 times
-		 Total : 435 IPIs.
-
-With the patch:
-		  16 [XICS 2 Edge IPI] = 111 times
-		  DBL [Doorbell interrupts] = 17 times
-		  Total : 128 IPIs.
+Add documentation for the following sysfs interfaces:
+/sys/devices/system/cpu/cpuX/purr
+/sys/devices/system/cpu/cpuX/spurr
+/sys/devices/system/cpu/cpuX/idle_purr
+/sys/devices/system/cpu/cpuX/idle_spurr
 
 Signed-off-by: Gautham R. Shenoy <ego@linux.vnet.ibm.com>
 ---
- arch/powerpc/kernel/sysfs.c | 117 ++++++++++++++++++++++++++++++++++++--------
- 1 file changed, 97 insertions(+), 20 deletions(-)
+ Documentation/ABI/testing/sysfs-devices-system-cpu | 39 ++++++++++++++++++++++
+ 1 file changed, 39 insertions(+)
 
-diff --git a/arch/powerpc/kernel/sysfs.c b/arch/powerpc/kernel/sysfs.c
-index 571b325..bd92023 100644
---- a/arch/powerpc/kernel/sysfs.c
-+++ b/arch/powerpc/kernel/sysfs.c
-@@ -586,8 +586,6 @@ void ppc_enable_pmcs(void)
-  * SPRs which are not related to PMU.
-  */
- #ifdef CONFIG_PPC64
--SYSFS_SPRSETUP(purr, SPRN_PURR);
--SYSFS_SPRSETUP(spurr, SPRN_SPURR);
- SYSFS_SPRSETUP(pir, SPRN_PIR);
- SYSFS_SPRSETUP(tscr, SPRN_TSCR);
- 
-@@ -596,8 +594,6 @@ void ppc_enable_pmcs(void)
-   enable write when needed with a separate function.
-   Lets be conservative and default to pseries.
- */
--static DEVICE_ATTR(spurr, 0400, show_spurr, NULL);
--static DEVICE_ATTR(purr, 0400, show_purr, store_purr);
- static DEVICE_ATTR(pir, 0400, show_pir, NULL);
- static DEVICE_ATTR(tscr, 0600, show_tscr, store_tscr);
- #endif /* CONFIG_PPC64 */
-@@ -761,22 +757,110 @@ static void create_svm_file(void)
- }
- #endif /* CONFIG_PPC_SVM */
- 
-+#ifdef CONFIG_PPC64
-+/*
-+ * The duration (in ms) from the last IPI to the target CPU until
-+ * which a cached value of purr, spurr, idle_purr, idle_spurr can be
-+ * reported to the user on a corresponding sysfs file read. Beyond
-+ * this duration, fresh values need to be obtained by sending IPIs to
-+ * the target CPU when the sysfs files are read.
-+ */
-+static unsigned long util_stats_staleness_tolerance_ms = 10;
-+struct util_acct_stats {
-+	u64 latest_purr;
-+	u64 latest_spurr;
-+#ifdef CONFIG_PPC_PSERIES
-+	u64 latest_idle_purr;
-+	u64 latest_idle_spurr;
-+#endif
-+	unsigned long last_update_jiffies;
-+};
+diff --git a/Documentation/ABI/testing/sysfs-devices-system-cpu b/Documentation/ABI/testing/sysfs-devices-system-cpu
+index 2e0e3b4..bc07677 100644
+--- a/Documentation/ABI/testing/sysfs-devices-system-cpu
++++ b/Documentation/ABI/testing/sysfs-devices-system-cpu
+@@ -580,3 +580,42 @@ Description:	Secure Virtual Machine
+ 		If 1, it means the system is using the Protected Execution
+ 		Facility in POWER9 and newer processors. i.e., it is a Secure
+ 		Virtual Machine.
 +
-+DEFINE_PER_CPU(struct util_acct_stats, util_acct_stats);
++What: 		/sys/devices/system/cpu/cpuX/purr
++Date:		Apr 2005
++Contact:	Linux for PowerPC mailing list <linuxppc-dev@ozlabs.org>
++Description:	PURR ticks for this CPU since the system boot.
 +
-+static void update_util_acct_stats(void *ptr)
-+{
-+	struct util_acct_stats *stats = ptr;
++		The Processor Utilization Resources Register (PURR) is
++		a 64-bit counter which provides an estimate of the
++		resources used by the CPU thread. The contents of this
++		register increases monotonically. This sysfs interface
++		exposes the number of PURR ticks for cpuX.
 +
-+	stats->latest_purr = mfspr(SPRN_PURR);
-+	stats->latest_spurr = mfspr(SPRN_SPURR);
- #ifdef CONFIG_PPC_PSERIES
--static void read_idle_purr(void *val)
-+	stats->latest_idle_purr = read_this_idle_purr();
-+	stats->latest_idle_spurr = read_this_idle_spurr();
-+#endif
-+	stats->last_update_jiffies = jiffies;
-+}
++What: 		/sys/devices/system/cpu/cpuX/spurr
++Date:		Dec 2006
++Contact:	Linux for PowerPC mailing list <linuxppc-dev@ozlabs.org>
++Description:	SPURR ticks for this CPU since the system boot.
 +
-+struct util_acct_stats *get_util_stats_ptr(int cpu)
-+{
-+	struct util_acct_stats *stats = per_cpu_ptr(&util_acct_stats, cpu);
-+	unsigned long delta_jiffies;
++		The Scaled Processor Utilization Resources Register
++		(SPURR) is a 64-bit counter that provides a frequency
++		invariant estimate of the resources used by the CPU
++		thread. The contents of this register increases
++		monotonically. This sysfs interface exposes the number
++		of SPURR ticks for cpuX.
 +
-+	delta_jiffies = jiffies - stats->last_update_jiffies;
++What: 		/sys/devices/system/cpu/cpuX/idle_purr
++Date:		Mar 2020
++Contact:	Linux for PowerPC mailing list <linuxppc-dev@ozlabs.org>
++Description:	PURR ticks for cpuX when it was idle.
 +
-+	/*
-+	 * If we have a recent enough data, reuse that instead of
-+	 * sending an IPI.
-+	 */
-+	if (jiffies_to_msecs(delta_jiffies) < util_stats_staleness_tolerance_ms)
-+		return stats;
++		This sysfs interface exposes the number of PURR ticks
++		for cpuX when it was idle.
 +
-+	smp_call_function_single(cpu, update_util_acct_stats, stats, 1);
-+	return stats;
-+}
++What: 		/sys/devices/system/cpu/cpuX/idle_spurr
++Date:		Mar 2020
++Contact:	Linux for PowerPC mailing list <linuxppc-dev@ozlabs.org>
++Description:	SPURR ticks for cpuX when it was idle.
 +
-+static ssize_t show_purr(struct device *dev,
-+			 struct device_attribute *attr, char *buf)
- {
--	u64 *ret = val;
-+	struct cpu *cpu = container_of(dev, struct cpu, dev);
-+	struct util_acct_stats *stats;
- 
--	*ret = read_this_idle_purr();
-+	stats = get_util_stats_ptr(cpu->dev.id);
-+	return sprintf(buf, "%llx\n", stats->latest_purr);
- }
- 
-+static void write_purr(void *val)
-+{
-+	mtspr(SPRN_PURR, *(unsigned long *)val);
-+}
-+
-+static ssize_t __used store_purr(struct device *dev,
-+				 struct device_attribute *attr,
-+				 const char *buf, size_t count)
-+{
-+	struct cpu *cpu = container_of(dev, struct cpu, dev);
-+	unsigned long val;
-+	int ret = kstrtoul(buf, 16, &val);
-+
-+	if (ret != 0)
-+		return -EINVAL;
-+
-+	smp_call_function_single(cpu->dev.id, write_purr, &val, 1);
-+	return count;
-+}
-+static DEVICE_ATTR(purr, 0400, show_purr, store_purr);
-+
-+static ssize_t show_spurr(struct device *dev,
-+			  struct device_attribute *attr, char *buf)
-+{
-+	struct cpu *cpu = container_of(dev, struct cpu, dev);
-+	struct util_acct_stats *stats;
-+
-+	stats = get_util_stats_ptr(cpu->dev.id);
-+	return sprintf(buf, "%llx\n", stats->latest_spurr);
-+}
-+static DEVICE_ATTR(spurr, 0400, show_spurr, NULL);
-+#endif /* CONFIG_PPC64 */
-+
-+#ifdef CONFIG_PPC_PSERIES
- static ssize_t idle_purr_show(struct device *dev,
- 			      struct device_attribute *attr, char *buf)
- {
- 	struct cpu *cpu = container_of(dev, struct cpu, dev);
--	u64 val;
-+	struct util_acct_stats *stats;
- 
--	smp_call_function_single(cpu->dev.id, read_idle_purr, &val, 1);
--	return sprintf(buf, "%llx\n", val);
-+	stats = get_util_stats_ptr(cpu->dev.id);
-+	return sprintf(buf, "%llx\n", stats->latest_idle_purr);
- }
- static DEVICE_ATTR(idle_purr, 0400, idle_purr_show, NULL);
- 
-@@ -792,21 +876,14 @@ static void remove_idle_purr_file(struct device *s)
- 		device_remove_file(s, &dev_attr_idle_purr);
- }
- 
--static void read_idle_spurr(void *val)
--{
--	u64 *ret = val;
--
--	*ret = read_this_idle_spurr();
--}
--
- static ssize_t idle_spurr_show(struct device *dev,
- 			       struct device_attribute *attr, char *buf)
- {
- 	struct cpu *cpu = container_of(dev, struct cpu, dev);
--	u64 val;
-+	struct util_acct_stats *stats;
- 
--	smp_call_function_single(cpu->dev.id, read_idle_spurr, &val, 1);
--	return sprintf(buf, "%llx\n", val);
-+	stats =  get_util_stats_ptr(cpu->dev.id);
-+	return sprintf(buf, "%llx\n", stats->latest_idle_spurr);
- }
- static DEVICE_ATTR(idle_spurr, 0400, idle_spurr_show, NULL);
- 
++		This sysfs interface exposes the number of SPURR ticks
++		for cpuX when it was idle.
 -- 
 1.9.4
 
