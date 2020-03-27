@@ -2,160 +2,133 @@ Return-Path: <SRS0=s8dx=5M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 448C0C2D0E5
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 20:42:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 362BAC2D0E8
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 20:45:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1CA0E206F1
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 20:42:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jLhGpXkY"
+	by mail.kernel.org (Postfix) with ESMTP id 131CD206DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 20:45:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727541AbgC0UmL (ORCPT
+        id S1727600AbgC0UpL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Mar 2020 16:42:11 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:42540 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726959AbgC0UmK (ORCPT
+        Fri, 27 Mar 2020 16:45:11 -0400
+Received: from netrider.rowland.org ([192.131.102.5]:48975 "HELO
+        netrider.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with SMTP id S1727322AbgC0UpK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Mar 2020 16:42:10 -0400
-Received: by mail-pf1-f194.google.com with SMTP id 22so5041880pfa.9;
-        Fri, 27 Mar 2020 13:42:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:autocrypt:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=Q2fc09QuL0vuPEfyLn2MIhj2N/FRjY+3fW5Z5f14Js4=;
-        b=jLhGpXkYA1wZJl+Vn9LrohRWXm5mT0YDaYcBdgBKC0OKpg194RYojlYMU+bkNpL1pb
-         Qbksq6QhLXjbMJfC9QCkiP5lUvD0wsJ37xplLmW+bNK/nJGBj/NCIyGH2MLwk6F7e+J1
-         9EcgY+o1nAR6D0wKS1w3mxWylxrGoYyiC9w5wAml+chT3cGYETUEUIttc7YSpplyrPU6
-         /G51bgGfY3E3a4lGrRhKXn78wRQnQJ7jgr4fwQU3jPN9O8ZVCOmw8ygKi+3gC0K7YSrx
-         NukdfVL9Ady6tGFwjri/4NsFh1MRQY4ehza5XNIqq6vmr390foWj/OtqmLSh7TbAGx90
-         0MLg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=Q2fc09QuL0vuPEfyLn2MIhj2N/FRjY+3fW5Z5f14Js4=;
-        b=cWNP+z0L0/syMPu0H7ke3SCxCVXKG4zY5cugza7IWibpLC8iKSrVvZ+iu5mIk4zMjp
-         E0CfhxHMhkEVlHPW32uPCRYsU8UzxjgUtQ3TQTywSCxx2kZNPxA54Dv73n3EtU68c+KE
-         6wWw5eDyenoZ5fJIexBRvr0OQTqmRNsmmvRHcEnJ89fWEo3QTHhghaBOid2H9YYiMPP+
-         Z8rWuL3W17fdkNyyHl41+LeBwCxwKSx8Ql/qMAMWqqesyG2ueYAdp5lwbDvlOS+na+cn
-         tHgmuPbFKKUofWaYlTMjEhTk72b1DGHOefkdQeM8b07GXOiHsE4nJDDBa6W/vpgHUS75
-         uCfw==
-X-Gm-Message-State: ANhLgQ3Fcs8wNH/pCUlQq5cZvadLfYC9MNgAJVE4Tr2SpNzAsAu1dbfn
-        iZbWZGmgFDj4Vi19zBpX+/c=
-X-Google-Smtp-Source: ADFU+vtAlj4M3EZreawCR4E6F/hBdZJPEnWEguI9gSWbo7xQ+qm2EsmjVrWgkCFoixTRhjA0LNblSw==
-X-Received: by 2002:a62:778d:: with SMTP id s135mr1101976pfc.21.1585341727423;
-        Fri, 27 Mar 2020 13:42:07 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id e26sm4796108pfj.61.2020.03.27.13.42.05
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 27 Mar 2020 13:42:06 -0700 (PDT)
-Subject: Re: [PATCH] watchdog: sp805: fix restart handler
-To:     Michael Walle <michael@walle.cc>, linux-kernel@vger.kernel.org,
-        linux-watchdog@vger.kernel.org
-Cc:     Jongsung Kim <neidhard.kim@lge.com>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>
-References: <20200327162450.28506-1-michael@walle.cc>
-From:   Guenter Roeck <linux@roeck-us.net>
-Autocrypt: addr=linux@roeck-us.net; keydata=
- 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
- mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
-Message-ID: <89ad42e9-8852-7ffd-6bfa-6db602caa51c@roeck-us.net>
-Date:   Fri, 27 Mar 2020 13:42:04 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Fri, 27 Mar 2020 16:45:10 -0400
+Received: (qmail 5854 invoked by uid 500); 27 Mar 2020 16:45:09 -0400
+Received: from localhost (sendmail-bs@127.0.0.1)
+  by localhost with SMTP; 27 Mar 2020 16:45:09 -0400
+Date:   Fri, 27 Mar 2020 16:45:09 -0400 (EDT)
+From:   Alan Stern <stern@rowland.harvard.edu>
+X-X-Sender: stern@netrider.rowland.org
+To:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Qais Yousef <qais.yousef@arm.com>
+cc:     USB list <linux-usb@vger.kernel.org>,
+        Linux-pm mailing list <linux-pm@vger.kernel.org>,
+        Kernel development list <linux-kernel@vger.kernel.org>
+Subject: Re: lockdep warning in urb.c:363 usb_submit_urb
+In-Reply-To: <20200326122744.kbtlmev2ravn3wey@e107158-lin>
+Message-ID: <Pine.LNX.4.44L0.2003271515480.29819-100000@netrider.rowland.org>
 MIME-Version: 1.0
-In-Reply-To: <20200327162450.28506-1-michael@walle.cc>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/27/20 9:24 AM, Michael Walle wrote:
-> The restart handler is missing two things, first, the registers
-> has to be unlocked and second there is no synchronization for the
-> write_relaxed() calls.
-> 
-> This was tested on a custom board with the NXP LS1028A SoC.
-> 
-> Fixes: 6c5c0d48b686c ("watchdog: sp805: add restart handler")
-> Signed-off-by: Michael Walle <michael@walle.cc>
+On Thu, 26 Mar 2020, Qais Yousef wrote:
 
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+> On 03/25/20 22:28, Rafael J. Wysocki wrote:
+> > On Wed, Mar 25, 2020 at 9:49 PM Alan Stern <stern@rowland.harvard.edu> wrote:
 
-> ---
->  drivers/watchdog/sp805_wdt.c | 4 ++++
->  1 file changed, 4 insertions(+)
+> > > Raphael, now that we have the direct_complete mechanism, can we revisit
+> > > this?  Should the PM core automatically call pm_runtime_set_active() if
+> > > dev->power.direct_complete isn't set?  Perhaps in device_resume_early()
+> > > prior to the pm_runtime_enable() call?
+> > >
+> > > It's possible we discussed this and decided against it at the time when
+> > > direct_complete was added, but if so I don't remember what was said.
+> > 
+> > Me neither. :-)
+> > 
+> > That said complexity has grown since then and there are the
+> > DPM_FLAG_SMART_SUSPEND and DPM_FLAG_LEAVE_SUSPENDED flags that can be
+> > used to control that behavior to some extent.
+> > 
+> > Setting DPM_FLAG_SMART_SUSPEND alone, in particular, causes
+> > pm_runtime_set_active() to be called at the noirq stage of device
+> > resume either by the core or by bus types (e.g. PCI) etc.
+> > 
+> > It looks like ohci-platform might use DPM_FLAG_SMART_SUSPEND, but I
+> > need to take a closer look at that (possibly later this week).
 > 
-> diff --git a/drivers/watchdog/sp805_wdt.c b/drivers/watchdog/sp805_wdt.c
-> index 53e04926a7b2..190d26e2e75f 100644
-> --- a/drivers/watchdog/sp805_wdt.c
-> +++ b/drivers/watchdog/sp805_wdt.c
-> @@ -137,10 +137,14 @@ wdt_restart(struct watchdog_device *wdd, unsigned long mode, void *cmd)
->  {
->  	struct sp805_wdt *wdt = watchdog_get_drvdata(wdd);
->  
-> +	writel_relaxed(UNLOCK, wdt->base + WDTLOCK);
->  	writel_relaxed(0, wdt->base + WDTCONTROL);
->  	writel_relaxed(0, wdt->base + WDTLOAD);
->  	writel_relaxed(INT_ENABLE | RESET_ENABLE, wdt->base + WDTCONTROL);
->  
-> +	/* Flush posted writes. */
-> +	readl_relaxed(wdt->base + WDTLOCK);
-> +
->  	return 0;
->  }
->  
-> 
+> Okay I take it this was root caused correctly and now it's a question of which
+> is a better fix.
+
+Indeed.
+
+Raphael, I've been going over the PM core code, trying to figure out
+what it's really doing.  It's kind of a mess.
+
+A large part of the problem is related to an inconsistency between the
+documentation and the code.  include/linux/pm.h says that
+DPM_FLAG_SMART_SUSPEND tells bus types and PM domains about what the
+driver wants.  This strongly implies that the PM core will ignore
+SMART_SUSPEND.  But in fact the core does check that flag and takes its
+own actions if the device has no subsystem-level callbacks!
+
+Furthermore, the PM core's actions don't seem to make sense.  If the
+flag is set and the device is runtime-suspended when the system sleep
+begins, the core will skip issuing the suspend_late and suspend_noirq
+callbacks to the driver.  But it doesn't skip issuing the suspend
+callback!  I can't figure that out.  Furthermore, the decisions about
+whether to skip the resume_noirq, resume_early, and resume callbacks
+are based on different criteria from the decisions on the suspend side.
+
+That's not all: The SMART_SUSPEND decisions completely ignore the value
+of DPM_FLAG_NEVER_SKIP!  NEVER_SKIP affects only the direct_completion
+pathway.
+
+SMART_SUSPEND seems to have two different meanings.  (1) If the device 
+is already in runtime suspend when a system sleep starts, skip the 
+suspend_late and suspend_noirq callbacks.  (2) Under certain (similar) 
+circumstances, skip the resume callbacks.  The documentation only 
+mentions (1) but the code also handles (2).
+
+Other things in there also seem strange.  device_prepare() does a
+WARN_ON if either SMART_SUSPEND or LEAVE_SUSPENDED is set and the
+device is not runtime-PM-enabled.  That's understandable, but it's also
+racy.  A system sleep can begin at any time; how can a driver know when
+it is safe to disable a device's runtime PM briefly?
+
+When device_prepare() calculates the power.direct_complete flag, it
+checks to see whether the device is currently in runtime suspend in
+some cases but not in others, as in the code added by your commit
+c62ec4610c40 ("PM / core:  Fix direct_complete handling for devices
+with no callbacks").  Since the runtime-PM state is going to checked in
+__device_suspend() anyway, we shouldn't need to check it here at all.
+
+At a couple of points in the code, THAW and RESTORE events are each
+treatedly specially, with no explanation.
+
+The power.may_skip_resume flag is used in only one place, when 
+LEAVE_SUSPENDED is set and there are subsystem-level callbacks.  In 
+particular, it is _not_ used by dev_pm_may_skip_resume().  That seems 
+highly suspicious at best.
+
+I think it would be worthwhile to expend some serious effort
+straightening all this stuff out.  Perhaps we could start with a more
+explicit description of what is supposed to happen at each step.  
+(Things to be careful about include phrases like "leave suspended",
+which is not the same as "don't call the resume callbacks", even though
+the two are easily conflated.)
+
+What do you think?
+
+Alan Stern
 
