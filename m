@@ -2,96 +2,100 @@ Return-Path: <SRS0=s8dx=5M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE2CDC2D0EC
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 14:56:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CC41C2D0ED
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 14:59:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE61D20774
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 14:56:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ECB6A206F6
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 14:59:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727652AbgC0O4O convert rfc822-to-8bit (ORCPT
+        id S1727652AbgC0O7T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Mar 2020 10:56:14 -0400
-Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:49056 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726515AbgC0O4O (ORCPT
+        Fri, 27 Mar 2020 10:59:19 -0400
+Received: from smtp-bc08.mail.infomaniak.ch ([45.157.188.8]:33717 "EHLO
+        smtp-bc08.mail.infomaniak.ch" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727287AbgC0O7S (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Mar 2020 10:56:14 -0400
-Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
- TLS) by relay.mimecast.com with ESMTP id
- uk-mta-170-SGnCHWRUOGKntCL40nF8vw-1; Fri, 27 Mar 2020 14:56:09 +0000
-X-MC-Unique: SGnCHWRUOGKntCL40nF8vw-1
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
- AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
- Server (TLS) id 15.0.1347.2; Fri, 27 Mar 2020 14:56:08 +0000
-Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
- AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
- Fri, 27 Mar 2020 14:56:08 +0000
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'Steven Rostedt' <rostedt@goodmis.org>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        "Alexei Starovoitov" <alexei.starovoitov@gmail.com>,
-        Peter Wu <peter@lekensteyn.nl>,
+        Fri, 27 Mar 2020 10:59:18 -0400
+Received: from smtp-3-0000.mail.infomaniak.ch (unknown [10.4.36.107])
+        by smtp-3-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 48plPH759QzljC1w;
+        Fri, 27 Mar 2020 15:59:15 +0100 (CET)
+Received: from ns3096276.ip-94-23-54.eu (unknown [94.23.54.103])
+        by smtp-3-0000.mail.infomaniak.ch (Postfix) with ESMTPA id 48plPD42s4zln3X2;
+        Fri, 27 Mar 2020 15:59:12 +0100 (CET)
+Subject: Re: [PATCH v15 09/10] samples/landlock: Add a sandbox manager example
+To:     Randy Dunlap <rdunlap@infradead.org>, linux-kernel@vger.kernel.org
+Cc:     Al Viro <viro@zeniv.linux.org.uk>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        James Morris <jmorris@namei.org>, Jann Horn <jann@thejh.net>,
         Jonathan Corbet <corbet@lwn.net>,
-        Tom Zanussi <zanussi@kernel.org>,
-        "Shuah Khan" <shuahkhan@gmail.com>, bpf <bpf@vger.kernel.org>
-Subject: RE: [PATCH 00/12 v2] ring-buffer/tracing: Remove disabling of ring
- buffer while reading trace file
-Thread-Topic: [PATCH 00/12 v2] ring-buffer/tracing: Remove disabling of ring
- buffer while reading trace file
-Thread-Index: AQHV/kYCQIwPxRMFlk+UdEERk+KYoKhTa8kQgAhKroCAAIuIsIAAShAAgAAFRhA=
-Date:   Fri, 27 Mar 2020 14:56:08 +0000
-Message-ID: <c87eadc38d614b73a2c73f521fecb877@AcuMS.aculab.com>
-References: <20200319232219.446480829@goodmis.org>
-        <2a7f96545945457cade216aa3c736bcc@AcuMS.aculab.com>
-        <20200326214617.697634f3@oasis.local.home>
-        <60977a309b5d46979a9a9bbd46c10932@AcuMS.aculab.com>
- <20200327103046.08f06131@gandalf.local.home>
-In-Reply-To: <20200327103046.08f06131@gandalf.local.home>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        Kees Cook <keescook@chromium.org>,
+        Michael Kerrisk <mtk.manpages@gmail.com>,
+        =?UTF-8?Q?Micka=c3=abl_Sala=c3=bcn?= <mickael.salaun@ssi.gouv.fr>,
+        "Serge E . Hallyn" <serge@hallyn.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Vincent Dagonneau <vincent.dagonneau@ssi.gouv.fr>,
+        kernel-hardening@lists.openwall.com, linux-api@vger.kernel.org,
+        linux-arch@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-security-module@vger.kernel.org, x86@kernel.org
+References: <20200326202731.693608-1-mic@digikod.net>
+ <20200326202731.693608-10-mic@digikod.net>
+ <11634607-2fdb-1868-03d0-94096763766f@infradead.org>
+From:   =?UTF-8?Q?Micka=c3=abl_Sala=c3=bcn?= <mic@digikod.net>
+Message-ID: <4285db52-e7ce-6a0f-3791-fd39c892489e@digikod.net>
+Date:   Fri, 27 Mar 2020 15:59:00 +0100
+User-Agent: 
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: aculab.com
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+In-Reply-To: <11634607-2fdb-1868-03d0-94096763766f@infradead.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Antivirus: Dr.Web (R) for Unix mail servers drweb plugin ver.6.0.2.8
+X-Antivirus-Code: 0x100000
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Steven Rostedt
-> Sent: 27 March 2020 14:31
-..
-> > Along with the one that lets you read the raw trace and get EOF.
+
+On 27/03/2020 00:54, Randy Dunlap wrote:
+> Hi,
 > 
-> Can you explain this more? I think we talked about this before, but I don't
-> remember the details.
+> On 3/26/20 1:27 PM, Mickaël Salaün wrote:
+>> diff --git a/samples/Kconfig b/samples/Kconfig
+>> index 9d236c346de5..b54408c5bd86 100644
+>> --- a/samples/Kconfig
+>> +++ b/samples/Kconfig
+>> @@ -120,6 +120,13 @@ config SAMPLE_HIDRAW
+>>  	bool "hidraw sample"
+>>  	depends on HEADERS_INSTALL
+>>  
+>> +config SAMPLE_LANDLOCK
+>> +	bool "Build Landlock sample code"
+>> +	select HEADERS_INSTALL
+> 
+> I think that this should be like all of the other users of HEADERS_INSTALL
+> and depend on that instead of select-ing it.
 
-I was trying to use schedviz (on github from google).
-It reads out the raw trace (for some scheduler events)
-and then postprocesses it to generate to nice pictures.
-However the shell script it uses for the captures has to run the
-copies in the background, sleep a random time, and then kill all
-the copies having hoped it has waited long enough - truly horrid.
+Ok, I though it made sense to select it automatically, but I'll get back
+the "depends on".
 
-There is also some confusion (IIRC between a header and your library
-code) about the 'time-delta' on 'pad' entries.
+Thanks.
 
-	David
-
--
-Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
-Registration No: 1397386 (Wales)
-
+> 
+>> +	help
+>> +	  Build a simple Landlock sandbox manager able to launch a process
+>> +	  restricted by a user-defined filesystem access-control security policy.
+>> +
+>>  config SAMPLE_PIDFD
+>>  	bool "pidfd sample"
+>>  	depends on HEADERS_INSTALL
+> 
+> thanks.
+> 
