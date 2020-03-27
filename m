@@ -2,111 +2,90 @@ Return-Path: <SRS0=s8dx=5M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 889A5C2D0ED
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 01:30:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7E9DC2D0F3
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 01:30:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5FBD620787
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 01:30:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7EFB720787
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 01:30:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="G5dS7ASB"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HuWKfMMp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727809AbgC0B1C (ORCPT
+        id S1727851AbgC0B22 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 21:27:02 -0400
-Received: from us-smtp-delivery-74.mimecast.com ([216.205.24.74]:27858 "EHLO
-        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727122AbgC0B1B (ORCPT
+        Thu, 26 Mar 2020 21:28:28 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:45680 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727696AbgC0B22 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 21:27:01 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1585272420;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=MUJ4EFBey4RnBsubrV8OieVsspJ5+/9YngaSQHIcXsM=;
-        b=G5dS7ASBmByiPynkdns0cjjiamIfAXgpytnr0VBKI7LgddUM6hQBfc+/Cyp9TuZ/jLFzSV
-        pbI9f4aCAy+1qqB2XLiUjENxmbIkKb5NE1F0oUtqlUhQBrrn3e1zIzsxu7GUyQ+KCOjHqW
-        4SolYuBAT6FJzOr/A40sQgpPcSKi1wA=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-305-4cO3SvUDMUK6LNiuW7ZcNA-1; Thu, 26 Mar 2020 21:26:58 -0400
-X-MC-Unique: 4cO3SvUDMUK6LNiuW7ZcNA-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A6AA6800D6C;
-        Fri, 27 Mar 2020 01:26:55 +0000 (UTC)
-Received: from llong.remote.csb (ovpn-117-112.rdu2.redhat.com [10.10.117.112])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 73F9C60BF3;
-        Fri, 27 Mar 2020 01:26:52 +0000 (UTC)
-Subject: Re: [PATCH RFC] cpuset: Make cpusets get restored on hotplug
-To:     Joel Fernandes <joel@joelfernandes.org>, Tejun Heo <tj@kernel.org>
-Cc:     Sonny Rao <sonnyrao@google.com>, linux-kernel@vger.kernel.org,
-        Dmitry Shmidt <dimitrysh@google.com>,
-        Amit Pundir <amit.pundir@linaro.org>, kernel-team@android.com,
-        Jesse Barnes <jsbarnes@google.com>, vpillai@digitalocean.com,
-        Peter Zijlstra <peterz@infradead.org>,
-        Guenter Roeck <groeck@chromium.org>,
-        Greg Kerr <kerrnel@google.com>, cgroups@vger.kernel.org,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Li Zefan <lizefan@huawei.com>
-References: <20200326191623.129285-1-joel@joelfernandes.org>
- <20200326192035.GO162390@mtj.duckdns.org>
- <20200326194448.GA133524@google.com>
- <972a5c1b-6721-ac20-cec5-617af67e617d@redhat.com>
- <CAPz6YkVUsDz456z8-X2G_EDd-uet1rRNnh2sDUpdcoWp_fkDDw@mail.gmail.com>
- <20200326201649.GQ162390@mtj.duckdns.org>
- <20200326202340.GA146657@google.com>
-From:   Waiman Long <longman@redhat.com>
-Organization: Red Hat
-Message-ID: <592d4120-0b42-4607-5efd-fb2d4d29f0cc@redhat.com>
-Date:   Thu, 26 Mar 2020 21:26:51 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Thu, 26 Mar 2020 21:28:28 -0400
+Received: by mail-pg1-f193.google.com with SMTP id o26so3792831pgc.12;
+        Thu, 26 Mar 2020 18:28:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=tU4XA8irroYMzripT/awkGxqg4KUUGMF4aMQNnVQrEc=;
+        b=HuWKfMMp13GcvvShQD4GZ6Lo/bkghLBF2++b2dcgInZA0LVD1yZomRML9odZu51CAT
+         SZVFC57nqCpJ/AuVM4cMjWqK6bI/J3lnQ3y7frAGxd2Cbntuc9JjmZlmnSKoRnS0VyM/
+         nnk5K9g1ol4aEg8UXyI+K+yqnJnhikQ/JHkQaVZKBzpMVe8f0wEyslwaw7bWB2X1Cv+f
+         k3cjIwyBLJz4kuYrQzuUs04aESGP1e0D+GKTTS+oxVGd4e/nttc+DsyXcrBO0mYSDAvZ
+         hLevwAPRd7okUy6LT0Ocn9XxsXsIRhuiR35/g8F/IGYE73uwOycfLvPXzt3DqOGetry1
+         t9Lg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=tU4XA8irroYMzripT/awkGxqg4KUUGMF4aMQNnVQrEc=;
+        b=Egw8WQbFKGQVbwcc3aTofml9mZZIQc1R0uZ5U+bWi2dreHnas57fzotN2dpO5eJD84
+         ryErC7Oqjg4RHGyY6aDVcnWGvtWroMbv4B55qLAhsLvobbQCi5extAbVBkDCwTMNsU1o
+         MkIMr1I0b07OCdz9NU3c19ZC0/mYhorfm79OSsP51G/QIdek+32CqIKzQOxSUHohD3qY
+         YkP1P1hTAZojqtDGyUxrhu5PGnCfO4zd8FPqQJb4aiCQ7leZ2/hSW7GUYqFbjYZO0Bb4
+         gSmHkoSCSIHX9r6LEIGt097KPRa45fBVDA34yU8WDblo67pN1wApZ47SToutHgH+AcLI
+         SIVg==
+X-Gm-Message-State: ANhLgQ1PoCL8nriWz8UmILACoF1d4/h6+jGwwYCkIxztizwk/21Lis4N
+        J3miTmuUlZNhCW9fVd9WssA=
+X-Google-Smtp-Source: ADFU+vvbJ14huQcPZe5YKPn+wUwRWgJM6wzrP5DkgRQsjFgr5CroWbeCJn+kp820/djlDMuzK9TdhA==
+X-Received: by 2002:aa7:87c1:: with SMTP id i1mr11486026pfo.44.1585272507083;
+        Thu, 26 Mar 2020 18:28:27 -0700 (PDT)
+Received: from localhost (c-73-241-114-122.hsd1.ca.comcast.net. [73.241.114.122])
+        by smtp.gmail.com with ESMTPSA id e6sm2649643pgu.44.2020.03.26.18.28.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 26 Mar 2020 18:28:26 -0700 (PDT)
+Date:   Thu, 26 Mar 2020 18:28:24 -0700
+From:   Richard Cochran <richardcochran@gmail.com>
+To:     Grygorii Strashko <grygorii.strashko@ti.com>
+Cc:     "David S . Miller" <davem@davemloft.net>,
+        Lokesh Vutla <lokeshvutla@ti.com>,
+        Tony Lindgren <tony@atomide.com>, Sekhar Nori <nsekhar@ti.com>,
+        Murali Karicheri <m-karicheri2@ti.com>,
+        netdev <netdev@vger.kernel.org>, linux-omap@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next v3 07/11] net: ethernet: ti: cpts: rework locking
+Message-ID: <20200327012824.GB9677@localhost>
+References: <20200320194244.4703-1-grygorii.strashko@ti.com>
+ <20200320194244.4703-8-grygorii.strashko@ti.com>
 MIME-Version: 1.0
-In-Reply-To: <20200326202340.GA146657@google.com>
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200320194244.4703-8-grygorii.strashko@ti.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/26/20 4:23 PM, Joel Fernandes wrote:
-> On Thu, Mar 26, 2020 at 04:18:59PM -0400, Tejun Heo wrote: >> On Thu, Mar 26, 2020 at 01:05:04PM -0700, Sonny Rao wrote: >>> I am
-surprised if anyone actually wants this behavior, we (Chrome >>> OS) >>
->> The behavior is silly but consistent in that it doesn't allow empty
->> active cpusets and it has been like that for many many years now. >>
->>> found out about it accidentally, and then found that Android had >>>
-been carrying a patch to fix it. And if it were a desirable >>> behavior
-then why isn't it an option in v2? >> >> Nobody is saying it's a good
-behavior (hence the change in cgroup2) >> and there are situations where
-changing things like this is >> justifiable, but, here: >> >> * The
-proposed change makes the interface inconsistent and does so >>
-unconditionally on what is now a mostly legacy interface. >> >> * There
-already is a newer version of the interface which includes >> the
-desired behavior. >> >> * I forgot but as Waiman pointed out, you can
-even opt-in to the >> new behavior, which is more comprehensive without
-the >> inconsitencies, while staying on cgroup1. > > Thank you Tejun,
-Waiman and Sonny. I confirmed the cgroup_v2_mode > option fixes cgroup
-v1's broken behavior. > > We will use this mount option on our systems
-to fix it.
-I am glad that it works for you.
+On Fri, Mar 20, 2020 at 09:42:40PM +0200, Grygorii Strashko wrote:
+> Now spinlock is used to synchronize everything which is not required. Add
+> mutex and use to sync access to PTP interface and PTP worker and use
+> spinlock only to sync FIFO/events processing.
 
-I think the problem is that the v2_mode mount option is not that well
-documented. Maybe I should send a patch to add some some description
-about it in cgroup-v2.rst or cgroup-v1/cpusets.rst.
+If you haven't already, I suggest testing this change with lockdep
+enabled.
 
-Cheers,
-Longman
-
-
-
+Thanks,
+Richard
