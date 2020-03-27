@@ -2,123 +2,123 @@ Return-Path: <SRS0=s8dx=5M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07B08C2D0EC
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 03:13:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDA7AC43331
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 03:24:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D211D2082D
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 03:13:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IFwqDYEF"
+	by mail.kernel.org (Postfix) with ESMTP id 95CFA20714
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 03:24:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585279462;
+	bh=EJrO+ay23oFPaDm5e7voyfzo2zotMJYKFA+r8ofPtU8=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=TSViV3ZH1Mqnwkj3XguiyxP8nWxTeYip564gNuds/zFqVdVWuaEklJzxq287llmfB
+	 aWX69tgPhKSet68VYoyy3bY3+n//yjG9yfPQlYnhzxdBFJHcUoLbtKpn/Wp4ZrGb8B
+	 I5dn3GyX0K1eeoYzdM24D9E2HtBbMPp5Lwggo0Ao=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727806AbgC0DNC (ORCPT
+        id S1727722AbgC0DYV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 23:13:02 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:44451 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727509AbgC0DNC (ORCPT
+        Thu, 26 Mar 2020 23:24:21 -0400
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:37790 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726363AbgC0DYV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 23:13:02 -0400
-Received: by mail-pg1-f193.google.com with SMTP id 142so3907806pgf.11;
-        Thu, 26 Mar 2020 20:13:01 -0700 (PDT)
+        Thu, 26 Mar 2020 23:24:21 -0400
+Received: by mail-lf1-f68.google.com with SMTP id j11so6690297lfg.4
+        for <linux-kernel@vger.kernel.org>; Thu, 26 Mar 2020 20:24:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=/FAiupbq7ijBqqhfCHQ+LKr/8inE0CiEthvKJQ+FYbU=;
-        b=IFwqDYEFF2JE0Ho1LEZF7TRM28eNrRIXyMFmHo87Zsulf9Hpa6gYX7X0GzCDlnpzeP
-         wCGDpPPXXkdb56RFBp3Fsf2+nlePxViNgwPpSF7Ag5LKo9dsAKKbWa3Wu2R9dBc/oZLY
-         QcNRhcPYRxuYfCvB0+Zng+VDeLtWxj0if8iwAv3jAWGPR7/3klUajWesE/2snH+6OU2F
-         BadX/emU+WznC/UBetWnCWLMQUpJXLIFYb2Mr1uLmdUNxj0fcplTgRMYDY5qwSJZ/P9h
-         mdY3kqQ88iC7PjlQdO275SvUMY3Dv8rJj+LeIC+9wynVn50FxURecaMxqjKXIqEsKhvC
-         g+vw==
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=WqlgEyg9y7uuAPxy577cVMUd3cF1yLpYiceQFIfBvp0=;
+        b=eKUmY5/1JeJPIfRiVE1DqyubJzXLusIjTtIOS6QZI6Lxp260kF2xbps8bxKV5i+MPY
+         P6vk0HgEvc9KiCOekc/QzuOAiSvHl52t43HSgbRPU9yqbegFMMIJGif51HsKr1vuTYRZ
+         Uq+dwn7ljedT1tMdNmD+BHYa31ROiOUf/ycv8=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=/FAiupbq7ijBqqhfCHQ+LKr/8inE0CiEthvKJQ+FYbU=;
-        b=ucs5KicKfzekMxfFB28RfOzcnL0Z3cHghMnsc6B05Y7hBEqLVH5/mcV+bPSDdnrlRK
-         soDn+8A6XLMp2AVeWDxE0+YGXf/0z3eotDSzy1CB4SGtJ64K7wXoOJPDUEvTdpVWxs+8
-         YObF0jF15o1UmTJ7xlHiOmShey66Po+mVFU+Qy4BECCbB4xX+WMtRP84RxN0+dWts17M
-         smjnycm2AtjItEg430H1Oa13fBYoOYfzi/kSTFzVxASZ9F8PcZQ+wCdua/GPRVhc6htD
-         kIsHtFsxbK9+03ZFhquaEk3MvZDDZd5MigzpoYY1IYtsY0E/EhYuaF60hgj/Iu3nkjsF
-         000w==
-X-Gm-Message-State: ANhLgQ2xfMLGgzJye3BAFZztpLjKqwKEXCusJGMLeMZCuyoT1DPFv+dF
-        yr5nnRB5dY0hZMpTu7Eelp0=
-X-Google-Smtp-Source: ADFU+vuHzIddnVm+YomQmVyVBvOX/KHr2ffE0qgTr5m2QJt2oN8z3JjXp3HapiCZWFKI6Lod5I+VdA==
-X-Received: by 2002:a63:1053:: with SMTP id 19mr11248314pgq.60.1585278780602;
-        Thu, 26 Mar 2020 20:13:00 -0700 (PDT)
-Received: from ast-mbp ([2620:10d:c090:400::5:f1d9])
-        by smtp.gmail.com with ESMTPSA id w205sm2866343pfc.75.2020.03.26.20.12.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 26 Mar 2020 20:12:59 -0700 (PDT)
-Date:   Thu, 26 Mar 2020 20:12:56 -0700
-From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
-To:     KP Singh <kpsingh@chromium.org>
-Cc:     linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        Brendan Jackman <jackmanb@google.com>,
-        Florent Revest <revest@google.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        James Morris <jmorris@namei.org>,
-        Kees Cook <keescook@chromium.org>,
-        Paul Turner <pjt@google.com>, Jann Horn <jannh@google.com>,
-        Florent Revest <revest@chromium.org>,
-        Brendan Jackman <jackmanb@chromium.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH bpf-next v7 4/8] bpf: lsm: Implement attach, detach and
- execution
-Message-ID: <20200327031256.vhk2luomxgex3ui4@ast-mbp>
-References: <20200326142823.26277-1-kpsingh@chromium.org>
- <20200326142823.26277-5-kpsingh@chromium.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=WqlgEyg9y7uuAPxy577cVMUd3cF1yLpYiceQFIfBvp0=;
+        b=qy2U1h0zqVg60HzOLixyAMfWBs7SkhtAgrH0HDnfMsfpsq1/D0bEqG6pdNM9lDm/j3
+         t0AYuVOptgLGxiAa+D7emn5QuAxZYvUKQ2JSoID+s7vZdV2iPHsm9akPGTNN7ZOW0nBN
+         Q5Vc2Auv50UNeXl7EnXAk7iRvR9ZEHQbwkWt+IERPB8TMyJeblfesnHFhQA/zabq2YBx
+         tO49uV/xEOfI2ummkhuzBfe6DN9zRB32xmtVHG1W66sygzdWDz7VCA+syp9RD43GkiXM
+         IRudtWgtuStrcD8Dkxf0FqtUa2hR86Bb/aOeZ4baHTfLmRlub1cPWKXyy0Lb7FFHLP5+
+         kudw==
+X-Gm-Message-State: ANhLgQ2dAthrYqAih7cHgkjqe1UWvH2p8ayhYRJXUxXyclxE809GjsuM
+        gpMy/0mE9hKurzxyunA9wiE+Eap2to4=
+X-Google-Smtp-Source: ADFU+vt65/q9ZeYpkZHGx2/kmFd5lewNmQrOO/HxkjEOhAvaGl/HFY/zg3isvp+BUbP79dQB0+T/Hw==
+X-Received: by 2002:a19:88d4:: with SMTP id k203mr7663365lfd.75.1585279456761;
+        Thu, 26 Mar 2020 20:24:16 -0700 (PDT)
+Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com. [209.85.208.172])
+        by smtp.gmail.com with ESMTPSA id m12sm2161482lji.50.2020.03.26.20.24.15
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 26 Mar 2020 20:24:15 -0700 (PDT)
+Received: by mail-lj1-f172.google.com with SMTP id g12so8779606ljj.3
+        for <linux-kernel@vger.kernel.org>; Thu, 26 Mar 2020 20:24:15 -0700 (PDT)
+X-Received: by 2002:a2e:9b8e:: with SMTP id z14mr7111562lji.150.1585279455046;
+ Thu, 26 Mar 2020 20:24:15 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200326142823.26277-5-kpsingh@chromium.org>
+References: <20200327022836.881203-1-viro@ZenIV.linux.org.uk> <20200327022836.881203-6-viro@ZenIV.linux.org.uk>
+In-Reply-To: <20200327022836.881203-6-viro@ZenIV.linux.org.uk>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Thu, 26 Mar 2020 20:23:59 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wga5Z9qk0Wa-Jpwb7x+4BG6C17cHfqX4KKqWm9jATpQUw@mail.gmail.com>
+Message-ID: <CAHk-=wga5Z9qk0Wa-Jpwb7x+4BG6C17cHfqX4KKqWm9jATpQUw@mail.gmail.com>
+Subject: Re: [RFC][PATCH v2 6/8] x86: don't reload after cmpxchg in
+ unsafe_atomic_op2() loop
+To:     Al Viro <viro@zeniv.linux.org.uk>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 26, 2020 at 03:28:19PM +0100, KP Singh wrote:
->  
->  	if (arg == nr_args) {
-> -		if (prog->expected_attach_type == BPF_TRACE_FEXIT) {
-> +		/* BPF_LSM_MAC programs only have int and void functions they
-> +		 * can be attached to. When they are attached to a void function
-> +		 * they result in the creation of an FEXIT trampoline and when
-> +		 * to a function that returns an int, a MODIFY_RETURN
-> +		 * trampoline.
-> +		 */
-> +		if (prog->expected_attach_type == BPF_TRACE_FEXIT ||
-> +		    prog->expected_attach_type == BPF_LSM_MAC) {
->  			if (!t)
->  				return true;
->  			t = btf_type_by_id(btf, t->type);
+On Thu, Mar 26, 2020 at 7:28 PM Al Viro <viro@zeniv.linux.org.uk> wrote:
+>
+> From: Al Viro <viro@zeniv.linux.org.uk>
+>
+> lock cmpxchg leaves the current value in eax; no need to reload it.
 
-Could you add a comment here that though BPF_MODIFY_RETURN-like check
-if (ret_type != 'int') return -EINVAL;
-is _not_ done here. It is still safe, since LSM hooks have only
-void and int return types.
+I think this one is buggy.
 
-> +	case BPF_LSM_MAC:
-> +		if (!prog->aux->attach_func_proto->type)
-> +			/* The function returns void, we cannot modify its
-> +			 * return value.
-> +			 */
-> +			return BPF_TRAMP_FEXIT;
-> +		else
-> +			return BPF_TRAMP_MODIFY_RETURN;
+Patch edited to remove the "-" lines, so that you see the end result:
 
-I was thinking whether it would help performance significantly enough
-if we add a flavor of BPF_TRAMP_FEXIT that doesn't have
-BPF_TRAMP_F_CALL_ORIG.
-That will save the cost of nop call, but I guess indirect call due
-to lsm infra is slow enough, so this extra few cycles won't be noticeable.
-So I'm fine with it as-is. When lsm hooks will get rid of indirect call
-we can optimize it further.
+>         int oldval = 0, ret, tem;                               \
+>         asm volatile("1:\tmovl  %2, %0\n"                       \
+> +                    "2:\tmovl\t%0, %3\n"                       \
+>                      "\t" insn "\n"                             \
+> +                    "3:\t" LOCK_PREFIX "cmpxchgl %3, %2\n"     \
+> +                    "\tjnz\t2b\n"                              \
+> +                    "4:\n"                                     \
+>                      "\t.section .fixup,\"ax\"\n"               \
+> +                    "5:\tmov\t%5, %1\n"                        \
+>                      "\tjmp\t3b\n"                              \
+>                      "\t.previous\n"                            \
+> +                    _ASM_EXTABLE_UA(1b, 5b)                    \
+> +                    _ASM_EXTABLE_UA(3b, 5b)                    \
+>                      : "=&a" (oldval), "=&r" (ret),             \
+>                        "+m" (*uaddr), "=&r" (tem)               \
+>                      : "r" (oparg), "i" (-EFAULT), "1" (0));    \
+
+I think that
+
+                       "\tjmp\t3b\n"
+
+line in the fixup section should be
+
+                       "\tjmp\t4b\n"
+
+because you don't want to jump to the cmpxchg instruction.
+
+Maybe I'm misreading it.
+
+               Linus
