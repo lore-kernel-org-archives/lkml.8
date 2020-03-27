@@ -2,184 +2,217 @@ Return-Path: <SRS0=s8dx=5M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85010C2D0EE
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 17:04:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34081C43331
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 17:04:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F213206E6
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 17:04:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 06B4E206F2
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 17:04:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ITO7+o+P"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tnykoHw2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727792AbgC0REE (ORCPT
+        id S1727666AbgC0REt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Mar 2020 13:04:04 -0400
-Received: from us-smtp-delivery-74.mimecast.com ([216.205.24.74]:59734 "EHLO
-        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727505AbgC0RED (ORCPT
+        Fri, 27 Mar 2020 13:04:49 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:41542 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726333AbgC0REt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Mar 2020 13:04:03 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1585328641;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-        bh=OQDF47lil51TLfYy2HK0tKspeN1b188hDk3snsOmZik=;
-        b=ITO7+o+PxlWQjB6xxKZ8GqVMNcMc1mwIC55WcW7+pq4nXGqX0I3g3OKGmByU6XKFSZ5tWH
-        E7w85dS9s1l6dD88VHjTi9Xbs+nHdFJYxk0/onabsE1ArIelVWwDiwBeq/4+9Cc9Gc/tdS
-        ltgxp1G7xu4iJ2s8+pC6Erv4LlKmq2E=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-155-MZ4vZhQbMD6GD5l1NLGb3w-1; Fri, 27 Mar 2020 13:03:57 -0400
-X-MC-Unique: MZ4vZhQbMD6GD5l1NLGb3w-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 4973EDB61;
-        Fri, 27 Mar 2020 17:03:52 +0000 (UTC)
-Received: from [10.36.112.108] (ovpn-112-108.ams2.redhat.com [10.36.112.108])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 39BB68B773;
-        Fri, 27 Mar 2020 17:03:27 +0000 (UTC)
-Subject: Re: [PATCH v2 00/10] virtio-mem: paravirtualized memory
-To:     Pankaj Gupta <pankaj.gupta.linux@gmail.com>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        virtio-dev@lists.oasis-open.org,
-        virtualization@lists.linux-foundation.org, kvm@vger.kernel.org,
-        Michal Hocko <mhocko@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "Michael S . Tsirkin" <mst@redhat.com>,
-        Sebastien Boeuf <sebastien.boeuf@intel.com>,
-        Samuel Ortiz <samuel.ortiz@intel.com>,
-        Robert Bradford <robert.bradford@intel.com>,
-        Luiz Capitulino <lcapitulino@redhat.com>,
-        teawater <teawaterz@linux.alibaba.com>,
-        Igor Mammedov <imammedo@redhat.com>,
-        "Dr . David Alan Gilbert" <dgilbert@redhat.com>,
-        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
-        Alexander Potapenko <glider@google.com>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        Anthony Yznaga <anthony.yznaga@oracle.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Young <dyoung@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Juergen Gross <jgross@suse.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Len Brown <lenb@kernel.org>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Michal Hocko <mhocko@suse.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Oscar Salvador <osalvador@suse.com>,
-        Oscar Salvador <osalvador@suse.de>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>,
-        Pavel Tatashin <pavel.tatashin@microsoft.com>,
-        Pingfan Liu <kernelfans@gmail.com>, Qian Cai <cai@lca.pw>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Wei Yang <richard.weiyang@gmail.com>
-References: <20200311171422.10484-1-david@redhat.com>
- <CAM9Jb+g6DEL1=L1ESfW+Jnr_rfO5rEtOwnp10eCLpajaAv8wvg@mail.gmail.com>
-From:   David Hildenbrand <david@redhat.com>
-Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
- 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
-Organization: Red Hat GmbH
-Message-ID: <6858c4d8-7570-2c2b-5d53-1a7f994c14ee@redhat.com>
-Date:   Fri, 27 Mar 2020 18:03:26 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Fri, 27 Mar 2020 13:04:49 -0400
+Received: by mail-io1-f67.google.com with SMTP id y24so10535632ioa.8
+        for <linux-kernel@vger.kernel.org>; Fri, 27 Mar 2020 10:04:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=OKLY8TX9PBKTkw1igDhhrZ1fVl9lcNMkwfQ7KL1HIxA=;
+        b=tnykoHw2n3S9fOwdLtVZZtlKip0gSPE8cylLNt1heu7ggdMFbgkq0l6Rk38A4P5oEV
+         dCcoDTC+hU/tx629HLHBQCYAxl6VGpA/uNEh2PpSn/oiTcfjcjAk0kfEXmKDAW2lv8I/
+         wAs6rsd1FHtjpCji0GVFM3CNkd2t0UoBL+SksWwmXdmTY9iyHD/thM94OJPDqU2GU4us
+         4gP8AdM3EOMI9h9skNjoXuLMgUz58KBzgXI96mG4pWNy/YY4TSGi7zG8XICNDOEh80/x
+         vIjleBpy3FKkpgV8JpqwBqKZVRBEvkgptJg0midoZRfhf91sOUWXJm89KTuzAb184Dlb
+         iVmw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=OKLY8TX9PBKTkw1igDhhrZ1fVl9lcNMkwfQ7KL1HIxA=;
+        b=MkgzZkZmhUS2FnExFDojFX3DO89KrVF5XhD3Tqim/outmwcyAXdyXXfR5dMyQxiiCM
+         OWoT6QJ7BxhsCPMRzVfdmhCRgj4dAa/UNFSiAMl1LTcV6TzIXMO7QMo3E+SltY+ubG3i
+         sl+A+v9RGTQYSdAPZOuRDB7FTvMeqZ3sI4JGQBxGLc/81jfcSddYYUZI6iuIcVhLXrQL
+         urBLpeW/0QVZYV2DS3bVB1VHwBGxSM7Q13OQg2yw7ua2s/MB9dawyWp/YQGpcH/jQzdT
+         nl02qO2GqKAymXiPnAo98FzhA8P46auw4RrgxI4tejDVGENxyrYv9tSGElp2VswL46DZ
+         bOEA==
+X-Gm-Message-State: ANhLgQ0xxwCnC6cS+mDFme5Cw20A/p3E/bCHxNpJAiLcHb+4eidClXDU
+        HXA7Fq0sjR8vueqyRy8bPkvETX66S1/vvPNlH08=
+X-Google-Smtp-Source: ADFU+vufDyKMFwwgw+tNEwPgAyzzk95ZFgAPEIGMIb4IOXudF480dQIrfd/lzv15If/QLPsNwfVOpTL5L6O/X8Yozx4=
+X-Received: by 2002:a5d:954c:: with SMTP id a12mr6842138ios.25.1585328686840;
+ Fri, 27 Mar 2020 10:04:46 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <CAM9Jb+g6DEL1=L1ESfW+Jnr_rfO5rEtOwnp10eCLpajaAv8wvg@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+References: <20200326174232.23365-1-andrew.smirnov@gmail.com>
+In-Reply-To: <20200326174232.23365-1-andrew.smirnov@gmail.com>
+From:   Chris Healy <cphealy@gmail.com>
+Date:   Fri, 27 Mar 2020 10:04:37 -0700
+Message-ID: <CAFXsbZou9DJn2dwVkXYBCqu2vU4TOD0xiW-h=zF15tgbWzBNTg@mail.gmail.com>
+Subject: Re: [PATCH] ARM: vf610: report soc info via soc device
+To:     Andrey Smirnov <andrew.smirnov@gmail.com>
+Cc:     Shawn Guo <shawnguo@kernel.org>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>, linux-imx@nxp.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 27.03.20 17:58, Pankaj Gupta wrote:
-> Hi David,
-> 
-> Trying to test the series with the Qemu branch(virtio-mem) mentioned.
-> Unfortunately,
-> not able to hotplug memory. Is anything changed from your previous posting
-> or I am doing something wrong?
-> 
-> After giving value to "requested-size", I see size as zero.
-> 
-> (qemu) qom-set vm0 requested-size 10G
-> (qemu) info memory-devices
-> Memory device [virtio-mem]: "vm0"
->   memaddr: 0x240000000
->   node: 0
->   requested-size: 10737418240
->   size: 0
->   max-size: 107374182400
->   block-size: 2097152
->   memdev: /objects/mem0
-> 
-> Guest kernel: 5.6.0-rc4
-> Using same Qemu commandline arguments mentioned in cover-letter.
+On a VF610 Vybrid:
 
-Are you booting from an initrd? Are you compiling virtio-mem as a kernel
-module or into the kernel binary?
+Tested-by: Chris Healy <cphealy@gmail.com>
 
-Make sure that the virtio-mem driver will actually be loaded. (lsmod  |
-grep virtio-mem).
-
-Also, double check if there are any virtio-mem dmesg errors/warnings.
-
--- 
-Thanks,
-
-David / dhildenb
-
+On Thu, Mar 26, 2020 at 10:42 AM Andrey Smirnov
+<andrew.smirnov@gmail.com> wrote:
+>
+> The patch adds plumbing to soc device info code necessary to support
+> Vybrid devices. Use case in mind for this is CAAM driver, which
+> utilizes said API.
+>
+> Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
+> Cc: Lucas Stach <l.stach@pengutronix.de>
+> Cc: Chris Healy <cphealy@gmail.com>
+> Cc: Shawn Guo <shawnguo@kernel.org>
+> Cc: linux-arm-kernel@lists.infradead.org
+> Cc: linux-kernel@vger.kernel.org
+> Cc: linux-imx@nxp.com
+> ---
+>  arch/arm/mach-imx/cpu.c        | 16 ++++++++++
+>  arch/arm/mach-imx/mach-vf610.c | 53 ++++++++++++++++++++++++++++++++++
+>  arch/arm/mach-imx/mxc.h        |  6 ++++
+>  3 files changed, 75 insertions(+)
+>
+> diff --git a/arch/arm/mach-imx/cpu.c b/arch/arm/mach-imx/cpu.c
+> index 06f8d64b65af..e3d12b21d6f6 100644
+> --- a/arch/arm/mach-imx/cpu.c
+> +++ b/arch/arm/mach-imx/cpu.c
+> @@ -172,6 +172,22 @@ struct device * __init imx_soc_device_init(void)
+>                 ocotp_compat = "fsl,imx7ulp-ocotp";
+>                 soc_id = "i.MX7ULP";
+>                 break;
+> +       case MXC_CPU_VF500:
+> +               ocotp_compat = "fsl,vf610-ocotp";
+> +               soc_id = "VF500";
+> +               break;
+> +       case MXC_CPU_VF510:
+> +               ocotp_compat = "fsl,vf610-ocotp";
+> +               soc_id = "VF510";
+> +               break;
+> +       case MXC_CPU_VF600:
+> +               ocotp_compat = "fsl,vf610-ocotp";
+> +               soc_id = "VF600";
+> +               break;
+> +       case MXC_CPU_VF610:
+> +               ocotp_compat = "fsl,vf610-ocotp";
+> +               soc_id = "VF610";
+> +               break;
+>         default:
+>                 soc_id = "Unknown";
+>         }
+> diff --git a/arch/arm/mach-imx/mach-vf610.c b/arch/arm/mach-imx/mach-vf610.c
+> index 9c929b09310c..565dc08412a2 100644
+> --- a/arch/arm/mach-imx/mach-vf610.c
+> +++ b/arch/arm/mach-imx/mach-vf610.c
+> @@ -3,11 +3,63 @@
+>   * Copyright 2012-2013 Freescale Semiconductor, Inc.
+>   */
+>
+> +#include <linux/of_address.h>
+>  #include <linux/of_platform.h>
+> +#include <linux/io.h>
+> +
+>  #include <linux/irqchip.h>
+>  #include <asm/mach/arch.h>
+>  #include <asm/hardware/cache-l2x0.h>
+>
+> +#include "common.h"
+> +#include "hardware.h"
+> +
+> +#define MSCM_CPxCOUNT          0x00c
+> +#define MSCM_CPxCFG1           0x014
+> +
+> +static void __init vf610_detect_cpu(void)
+> +{
+> +       struct device_node *np;
+> +       u32 cpxcount, cpxcfg1;
+> +       unsigned int cpu_type;
+> +       void __iomem *mscm;
+> +
+> +       np = of_find_compatible_node(NULL, NULL, "fsl,vf610-mscm-cpucfg");
+> +       if (WARN_ON(!np))
+> +               return;
+> +
+> +       mscm = of_iomap(np, 0);
+> +       of_node_put(np);
+> +
+> +       if (WARN_ON(!mscm))
+> +               return;
+> +
+> +       cpxcount = readl_relaxed(mscm + MSCM_CPxCOUNT);
+> +       cpxcfg1  = readl_relaxed(mscm + MSCM_CPxCFG1);
+> +
+> +       iounmap(mscm);
+> +
+> +       cpu_type = cpxcount ? MXC_CPU_VF600 : MXC_CPU_VF500;
+> +
+> +       if (cpxcfg1)
+> +               cpu_type |= MXC_CPU_VFx10;
+> +
+> +       mxc_set_cpu_type(cpu_type);
+> +}
+> +
+> +static void __init vf610_init_machine(void)
+> +{
+> +       struct device *parent;
+> +
+> +       vf610_detect_cpu();
+> +
+> +       parent = imx_soc_device_init();
+> +       if (parent == NULL)
+> +               pr_warn("failed to initialize soc device\n");
+> +
+> +       of_platform_default_populate(NULL, NULL, parent);
+> +}
+> +
+>  static const char * const vf610_dt_compat[] __initconst = {
+>         "fsl,vf500",
+>         "fsl,vf510",
+> @@ -20,5 +72,6 @@ static const char * const vf610_dt_compat[] __initconst = {
+>  DT_MACHINE_START(VYBRID_VF610, "Freescale Vybrid VF5xx/VF6xx (Device Tree)")
+>         .l2c_aux_val    = 0,
+>         .l2c_aux_mask   = ~0,
+> +       .init_machine   = vf610_init_machine,
+>         .dt_compat      = vf610_dt_compat,
+>  MACHINE_END
+> diff --git a/arch/arm/mach-imx/mxc.h b/arch/arm/mach-imx/mxc.h
+> index 2bfd2d59b4a6..48e6d781f15b 100644
+> --- a/arch/arm/mach-imx/mxc.h
+> +++ b/arch/arm/mach-imx/mxc.h
+> @@ -33,6 +33,12 @@
+>  #define MXC_CPU_IMX7D          0x72
+>  #define MXC_CPU_IMX7ULP                0xff
+>
+> +#define MXC_CPU_VFx10          0x010
+> +#define MXC_CPU_VF500          0x500
+> +#define MXC_CPU_VF510          (MXC_CPU_VF500 | MXC_CPU_VFx10)
+> +#define MXC_CPU_VF600          0x600
+> +#define MXC_CPU_VF610          (MXC_CPU_VF600 | MXC_CPU_VFx10)
+> +
+>  #define IMX_DDR_TYPE_LPDDR2            1
+>
+>  #ifndef __ASSEMBLY__
+> --
+> 2.21.0
