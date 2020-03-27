@@ -2,128 +2,114 @@ Return-Path: <SRS0=s8dx=5M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C55DC43331
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 19:02:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42E0FC2D0ED
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 19:03:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DD85E2071B
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 19:02:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="YDStaEX6"
+	by mail.kernel.org (Postfix) with ESMTP id 23AE82071B
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 19:03:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727600AbgC0TC3 (ORCPT
+        id S1727639AbgC0TDC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Mar 2020 15:02:29 -0400
-Received: from mail-pj1-f66.google.com ([209.85.216.66]:38961 "EHLO
-        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726937AbgC0TC3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Mar 2020 15:02:29 -0400
-Received: by mail-pj1-f66.google.com with SMTP id z3so3630636pjr.4
-        for <linux-kernel@vger.kernel.org>; Fri, 27 Mar 2020 12:02:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=gLHLJMBxOTqwCxIgz1nbKQaYKpREIN6QpIXiV+9902w=;
-        b=YDStaEX6FW0zeNHrPj8m5tYTTJAFB0UA+l8BOnvVb0iWm3a2YpwQubFnKtxYdiX6wc
-         rdc2I0NTNRFu9hkGqsPXL+f+i9piCA2FERCHSuuvGJefKvUhJcv9F0NLyIqWr80Ca13l
-         opXmkVW4bQ0uyg0kgllCYZ2YxRazlzUna1Sf8=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=gLHLJMBxOTqwCxIgz1nbKQaYKpREIN6QpIXiV+9902w=;
-        b=NV96lCDTwkirFvBJicQZ2rHKB2dEksH7elFMgk4Gk9IkKyHcQ+O7LfccdVwyLPIB7y
-         NNi48cKZg2joKCWVdgDo9DlPnz7w9MwHyxNnwRdzEAvfAKunuUt+MRcV37Nf9mHcIiXy
-         FegrLLoxXj7BKRYSEyBnmH/00a7l6LQ39meKoeaAudkXU3UiXc6itiSwIRBPj7p4wR2N
-         e790A5xLw8tk5YPKJXHuNxVsFmlh8IHlLrI0xIw3AnEhXKbXl1L5yb/FWO/nmMM7vNpU
-         j5oh+PG6Idhj7Th52jB9NStk8uQ5/yEoqvKbIqITivbSaI84N0FK6m+FlZpQkiO8fYaI
-         N37g==
-X-Gm-Message-State: ANhLgQ1ETkg1CxLtqviOgUUze7SiGRJakHa7cMR0SEwaKJiOARonSVnJ
-        jM884Nc6eYOXEYcq+OJnU15P1g==
-X-Google-Smtp-Source: ADFU+vvwfXD92DVjRTRsBC244V6nBLBIIAKRK9iqmRYmCFZehEyPmSFv30qn1E9v5K5oldZejZ3zow==
-X-Received: by 2002:a17:90a:2307:: with SMTP id f7mr926623pje.152.1585335746985;
-        Fri, 27 Mar 2020 12:02:26 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id f15sm4696400pfq.100.2020.03.27.12.02.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 27 Mar 2020 12:02:26 -0700 (PDT)
-Date:   Fri, 27 Mar 2020 12:02:25 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Colin King <colin.king@canonical.com>
-Cc:     Andy Lutomirski <luto@amacapital.net>,
-        Will Drewry <wad@chromium.org>, Shuah Khan <shuah@kernel.org>,
-        linux-kselftest@vger.kernel.org, kernel-janitors@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH][next] selftests/harness: fix spelling mistake "SIGARLM"
- -> "SIGALRM"
-Message-ID: <202003271202.123FD50@keescook>
-References: <20200327090648.13387-1-colin.king@canonical.com>
+        Fri, 27 Mar 2020 15:03:02 -0400
+Received: from foss.arm.com ([217.140.110.172]:51450 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726900AbgC0TDC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Mar 2020 15:03:02 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BF59E30E;
+        Fri, 27 Mar 2020 12:03:00 -0700 (PDT)
+Received: from [10.57.60.204] (unknown [10.57.60.204])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6527F3F71E;
+        Fri, 27 Mar 2020 12:02:59 -0700 (PDT)
+Subject: Re: [PATCH] iommu/arm-smmu: Demote error messages to debug in
+ shutdown callback
+To:     Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+Cc:     Will Deacon <will@kernel.org>, Joerg Roedel <joro@8bytes.org>,
+        iommu@lists.linux-foundation.org,
+        Douglas Anderson <dianders@chromium.org>,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200327132852.10352-1-saiprakash.ranjan@codeaurora.org>
+ <0023bc68-45fb-4e80-00c8-01fd0369243f@arm.com>
+ <37db9a4d524aa4d7529ae47a8065c9e0@codeaurora.org>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <5858bdac-b7f9-ac26-0c0d-c9653cef841d@arm.com>
+Date:   Fri, 27 Mar 2020 19:02:58 +0000
+User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200327090648.13387-1-colin.king@canonical.com>
+In-Reply-To: <37db9a4d524aa4d7529ae47a8065c9e0@codeaurora.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 27, 2020 at 09:06:48AM +0000, Colin King wrote:
-> From: Colin Ian King <colin.king@canonical.com>
+On 2020-03-27 3:09 pm, Sai Prakash Ranjan wrote:
+> Hi Robin,
 > 
-> There a few identical spelling mistakes, fix these.
-
-Argh, thanks Colin!
-
-Acked-by: Kees Cook <keescook@chromium.org>
-
--Kees
-
+> Thanks for taking a look at this.
 > 
-> Signed-off-by: Colin Ian King <colin.king@canonical.com>
-> ---
->  tools/testing/selftests/kselftest_harness.h | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
+> On 2020-03-27 19:42, Robin Murphy wrote:
+>> On 2020-03-27 1:28 pm, Sai Prakash Ranjan wrote:
+>>> Currently on reboot/shutdown, the following messages are
+>>> displayed on the console as error messages before the
+>>> system reboots/shutdown.
+>>>
+>>> On SC7180:
+>>>
+>>>    arm-smmu 15000000.iommu: removing device with active domains!
+>>>    arm-smmu 5040000.iommu: removing device with active domains!
+>>>
+>>> Demote the log level to debug since it does not offer much
+>>> help in identifying/fixing any issue as the system is anyways
+>>> going down and reduce spamming the kernel log.
+>>
+>> I've gone back and forth on this pretty much ever since we added the
+>> shutdown hook - on the other hand, if any devices *are* still running
+>> in those domains at this point, then once we turn off the SMMU and let
+>> those IOVAs go out on the bus as physical addresses, all manner of
+>> weirdness may ensue. Thus there is an argument for *some* indication
+>> that this may happen, although IMO it could be downgraded to at least
+>> dev_warn().
+>>
 > 
-> diff --git a/tools/testing/selftests/kselftest_harness.h b/tools/testing/selftests/kselftest_harness.h
-> index 2902f6a78f8a..2bb8c81fc0b4 100644
-> --- a/tools/testing/selftests/kselftest_harness.h
-> +++ b/tools/testing/selftests/kselftest_harness.h
-> @@ -705,7 +705,7 @@ static void __timeout_handler(int sig, siginfo_t *info, void *ucontext)
->  	/* Sanity check handler execution environment. */
->  	if (!t) {
->  		fprintf(TH_LOG_STREAM,
-> -			"no active test in SIGARLM handler!?\n");
-> +			"no active test in SIGALRM handler!?\n");
->  		abort();
->  	}
->  	if (sig != SIGALRM || sig != info->si_signo) {
-> @@ -731,7 +731,7 @@ void __wait_for_test(struct __test_metadata *t)
->  	if (sigaction(SIGALRM, &action, &saved_action)) {
->  		t->passed = 0;
->  		fprintf(TH_LOG_STREAM,
-> -			"%s: unable to install SIGARLM handler\n",
-> +			"%s: unable to install SIGALRM handler\n",
->  			t->name);
->  		return;
->  	}
-> @@ -743,7 +743,7 @@ void __wait_for_test(struct __test_metadata *t)
->  	if (sigaction(SIGALRM, &saved_action, NULL)) {
->  		t->passed = 0;
->  		fprintf(TH_LOG_STREAM,
-> -			"%s: unable to uninstall SIGARLM handler\n",
-> +			"%s: unable to uninstall SIGALRM handler\n",
->  			t->name);
->  		return;
->  	}
-> -- 
-> 2.25.1
+> Any pointers to the weirdness here after SMMU is turned off?
+> Because if we look at the call sites, device_shutdown is called
+> from kernel_restart_prepare or kernel_shutdown_prepare which would
+> mean system is going down anyways, so do we really care about these
+> error messages or warnings from SMMU?
 > 
+>   arm_smmu_device_shutdown
+>    platform_drv_shutdown
+>     device_shutdown
+>      kernel_restart_prepare
+>       kernel_restart
 
--- 
-Kees Cook
+Imagine your network driver doesn't implement a .shutdown method (so the 
+hardware is still active regardless of device links), happens to have an 
+Rx buffer or descriptor ring DMA-mapped at an IOVA that looks like the 
+physical address of the memory containing some part of the kernel text 
+lower down that call stack, and the MAC receives a broadcast IP packet 
+at about the point arm_smmu_device_shutdown() is returning. Enjoy 
+debugging that ;)
+
+And if coincidental memory corruption seems too far-fetched for your 
+liking, other fun alternatives might include "display tries to scan out 
+from powered-off device, deadlocks interconnect and prevents anything 
+else making progress", or "access to TZC-protected physical address 
+triggers interrupt and over-eager Secure firmware resets system before 
+orderly poweroff has a chance to finish".
+
+Of course the fact that in practice we'll *always* see the warning 
+because there's no way to tear down the default DMA domains, and even if 
+all devices *have* been nicely quiesced there's no way to tell, is 
+certainly less than ideal. Like I say, it's not entirely clear-cut 
+either way...
+
+Robin.
