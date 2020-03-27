@@ -2,95 +2,138 @@ Return-Path: <SRS0=s8dx=5M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81435C43331
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 15:06:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D659DC43331
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 15:06:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 580FE20748
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 15:06:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA96B20748
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 15:06:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="J80NARwE"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="hO4sdxNx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727716AbgC0PGk (ORCPT
+        id S1727769AbgC0PGn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Mar 2020 11:06:40 -0400
-Received: from mail-pg1-f179.google.com ([209.85.215.179]:43449 "EHLO
-        mail-pg1-f179.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727322AbgC0PGi (ORCPT
+        Fri, 27 Mar 2020 11:06:43 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:53345 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727322AbgC0PGm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Mar 2020 11:06:38 -0400
-Received: by mail-pg1-f179.google.com with SMTP id u12so4691041pgb.10
-        for <linux-kernel@vger.kernel.org>; Fri, 27 Mar 2020 08:06:37 -0700 (PDT)
+        Fri, 27 Mar 2020 11:06:42 -0400
+Received: by mail-wm1-f68.google.com with SMTP id b12so11749926wmj.3
+        for <linux-kernel@vger.kernel.org>; Fri, 27 Mar 2020 08:06:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:references:from:message-id:date:user-agent:mime-version
-         :in-reply-to:content-language:content-transfer-encoding;
-        bh=eXeiwmriuUHSGPIQ5FE/vs4fhtvCZSUZ3+noRetg2ao=;
-        b=J80NARwEAtfKj8z76W4AvMB6js5ArpMXn6a03i9pbVQzqrM4mOTeWkHm5iLUvzWKq6
-         dvdMjte/1ibknnyKRwJhQgpA9uL2d4OucbWEktnWOfDfUhE3/Nin1yfF2DN9FgqoNm33
-         hNQKG3GYV1fXckGDsLsUagkYTLnTHw/Qic1FS1/hf0/YhrQ4qXe1NQblwT7DoW48ZfK8
-         Tc8Nej4b7pM3v2HivVo+eMvOYFgDALiweWzEwovBxrxHrGk39ihgZVhs902Mi+z/24FN
-         3bS482It5MEKjA2IRfolXEyRT4Xikvj3228njhM/OHjzR7GRbY7uJQ7fnAy1dRUMpOWy
-         yI/w==
+        d=chromium.org; s=google;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=pr0qD0iPXCEmGNYn73fmX69Dspd/3/go52tlDvpiG+I=;
+        b=hO4sdxNxvULwr69BbYBiyiZhy52w5Rt88jCkrSsCrpHZlgE+artcZrY4Hh2ptIs6D3
+         DzJNdRCbZuPdmL/2YArjpOMh6REjq0xJK0LdLZk9+aTlSheU3verxJCPPZvs7uBSn3+Q
+         JIGInARCeIT1eNOGQmVGWgunmy6cxgGwcDp+4=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=eXeiwmriuUHSGPIQ5FE/vs4fhtvCZSUZ3+noRetg2ao=;
-        b=txq3nKDcJNP8JHjRIOLp52/xSmoZd2r+MzhvqnGWFn4hB6Ua68ratVGVn8Oct166Mz
-         v4DpfztKLei8me1AnKO6V9R2LWorT2TGNZLmQRAQwJP0z9ySvmBhwwvZYurDwl7hCL4c
-         ShBbqute0iWFpO5FIi4a/UG7BGZBGuYVbqnlo8PwvDZSNOPxc+f54QmC94QWF3v7FBJP
-         Ph1EN15iuPteWHb9vutnC1VzbEuKwNW9415oGs1lWjN6Xno6u3k7A/upm2Pr3kQlVoo8
-         qe6JoVzvHiXjeRH8kBx9CkHH9pl3d8bPtTdUlpdh4/C1hAyPOXG0zqcgRDmNKJmBKtrH
-         rIjQ==
-X-Gm-Message-State: ANhLgQ2nnXpIJkvGjQRZOAf+8jkSKjct9uG+ROvwW/VWXB1SjmymTSks
-        62gqeGlaHk910tbO8lVVzLmXDw==
-X-Google-Smtp-Source: ADFU+vs++DC7KxyU52I45Ga6jyMEVqGhwA7nu9vY/NNIxQmvXKQm1JdR/hw70GKZk7t4FSJKe8SEjw==
-X-Received: by 2002:a63:ef41:: with SMTP id c1mr13864299pgk.195.1585321596559;
-        Fri, 27 Mar 2020 08:06:36 -0700 (PDT)
-Received: from [192.168.1.188] ([66.219.217.145])
-        by smtp.gmail.com with ESMTPSA id mq18sm4255882pjb.6.2020.03.27.08.06.33
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 27 Mar 2020 08:06:35 -0700 (PDT)
-Subject: Re: KASAN: null-ptr-deref Write in blk_mq_map_swqueue
-To:     syzbot <syzbot+313d95e8a7a49263f88d@syzkaller.appspotmail.com>,
-        a@unstable.cc, b.a.t.m.a.n@lists.open-mesh.org,
-        davem@davemloft.net, dongli.zhang@oracle.com,
-        linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mareklindner@neomailbox.ch,
-        netdev@vger.kernel.org, sven@narfation.org, sw@simonwunderlich.de,
-        syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk
-References: <0000000000004760b805a1cc03fc@google.com>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <fa743a2c-f79e-6021-7c2b-72e178f913f4@kernel.dk>
-Date:   Fri, 27 Mar 2020 09:06:32 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=pr0qD0iPXCEmGNYn73fmX69Dspd/3/go52tlDvpiG+I=;
+        b=XgpI/PPniLrE2WD9tPG0N4rNhjUlDMYytvEdQ91iksCAUMdegfTreWRHy+e/FTco+e
+         dtxEhHc0k5aBXTaWHQ5nfiG8tBOamkN7CQxwd81DtO0nY9k8xaf7GgodVcJM9fK6ql6W
+         69rh6Fo385FsVp++1QwMKhCf5EB795hnvuzY5tKic3jlnxeSGQ2AlIm8QR89lKkLau2z
+         JNQHFkQR11jtbmxYh53IpSgdf9Jl/t8OYSPmz4QerLtdMvrruvh0mjR8nIqxz1kMYIp0
+         JVugBTgJ9Ahws4tqL8Vg1mK0nfouuqaM6lJJl4SQC2VorHMtodhnX8EpAndQiWLx2qwb
+         bmAw==
+X-Gm-Message-State: ANhLgQ3xkh84o5y3igY/SdmMdWv3EAzNVx+bJQxb9r7nj/SpDIaX5mDG
+        H2wqMdOB/2GtEzRkrZWe5fsFbQ==
+X-Google-Smtp-Source: ADFU+vttbTEMoPK04x5Y+InaWRPyOJAislXquQ5dm7z8g2RLd7ecoYpHxc6ZBWjAUh9hORUzjzQMJw==
+X-Received: by 2002:a1c:8108:: with SMTP id c8mr5764675wmd.50.1585321600541;
+        Fri, 27 Mar 2020 08:06:40 -0700 (PDT)
+Received: from chromium.org (77-56-209-237.dclient.hispeed.ch. [77.56.209.237])
+        by smtp.gmail.com with ESMTPSA id m5sm8001072wmg.13.2020.03.27.08.06.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 27 Mar 2020 08:06:39 -0700 (PDT)
+From:   KP Singh <kpsingh@chromium.org>
+X-Google-Original-From: KP Singh <kpsingh>
+Date:   Fri, 27 Mar 2020 16:06:37 +0100
+To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        Brendan Jackman <jackmanb@google.com>,
+        Florent Revest <revest@google.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        James Morris <jmorris@namei.org>,
+        Kees Cook <keescook@chromium.org>,
+        Paul Turner <pjt@google.com>, Jann Horn <jannh@google.com>,
+        Florent Revest <revest@chromium.org>,
+        Brendan Jackman <jackmanb@chromium.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH bpf-next v7 4/8] bpf: lsm: Implement attach, detach and
+ execution
+Message-ID: <20200327150637.GA23032@chromium.org>
+References: <20200326142823.26277-1-kpsingh@chromium.org>
+ <20200326142823.26277-5-kpsingh@chromium.org>
+ <20200327031256.vhk2luomxgex3ui4@ast-mbp>
 MIME-Version: 1.0
-In-Reply-To: <0000000000004760b805a1cc03fc@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200327031256.vhk2luomxgex3ui4@ast-mbp>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/26/20 7:28 PM, syzbot wrote:
-> syzbot has bisected this bug to:
+On 26-Mär 20:12, Alexei Starovoitov wrote:
+> On Thu, Mar 26, 2020 at 03:28:19PM +0100, KP Singh wrote:
+> >  
+> >  	if (arg == nr_args) {
+> > -		if (prog->expected_attach_type == BPF_TRACE_FEXIT) {
+> > +		/* BPF_LSM_MAC programs only have int and void functions they
+> > +		 * can be attached to. When they are attached to a void function
+> > +		 * they result in the creation of an FEXIT trampoline and when
+> > +		 * to a function that returns an int, a MODIFY_RETURN
+> > +		 * trampoline.
+> > +		 */
+> > +		if (prog->expected_attach_type == BPF_TRACE_FEXIT ||
+> > +		    prog->expected_attach_type == BPF_LSM_MAC) {
+> >  			if (!t)
+> >  				return true;
+> >  			t = btf_type_by_id(btf, t->type);
 > 
-> commit 768134d4f48109b90f4248feecbeeb7d684e410c
-> Author: Jens Axboe <axboe@kernel.dk>
-> Date:   Mon Nov 11 03:30:53 2019 +0000
+> Could you add a comment here that though BPF_MODIFY_RETURN-like check
+> if (ret_type != 'int') return -EINVAL;
+> is _not_ done here. It is still safe, since LSM hooks have only
+> void and int return types.
+
+Good idea, I reworded the comment to make this explicit and moved
+the comment to inside the if condition.
+
 > 
->     io_uring: don't do flush cancel under inflight_lock
+> > +	case BPF_LSM_MAC:
+> > +		if (!prog->aux->attach_func_proto->type)
+> > +			/* The function returns void, we cannot modify its
+> > +			 * return value.
+> > +			 */
+> > +			return BPF_TRAMP_FEXIT;
+> > +		else
+> > +			return BPF_TRAMP_MODIFY_RETURN;
+> 
+> I was thinking whether it would help performance significantly enough
+> if we add a flavor of BPF_TRAMP_FEXIT that doesn't have
+> BPF_TRAMP_F_CALL_ORIG.
 
-This is definitely an utterly bogus bisect, not related at all.
+Agreed.
 
--- 
-Jens Axboe
+> That will save the cost of nop call, but I guess indirect call due
+> to lsm infra is slow enough, so this extra few cycles won't be noticeable.
+> So I'm fine with it as-is. When lsm hooks will get rid of indirect call
+> we can optimize it further.
 
+Also agreed, that's the next step. :)
+
+- KP
