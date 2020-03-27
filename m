@@ -2,200 +2,156 @@ Return-Path: <SRS0=s8dx=5M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B03C2C2D0EC
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 22:33:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4525C2D0E5
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 22:34:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B8A720663
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 22:33:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 996E320663
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 22:34:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="MWJ1hSHB"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Kv/dvlff"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727793AbgC0Wd1 (ORCPT
+        id S1727726AbgC0Wet (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Mar 2020 18:33:27 -0400
-Received: from mail-pj1-f66.google.com ([209.85.216.66]:53535 "EHLO
-        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727585AbgC0Wd1 (ORCPT
+        Fri, 27 Mar 2020 18:34:49 -0400
+Received: from mail-pj1-f65.google.com ([209.85.216.65]:40609 "EHLO
+        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727655AbgC0Wet (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Mar 2020 18:33:27 -0400
-Received: by mail-pj1-f66.google.com with SMTP id l36so4448713pjb.3
-        for <linux-kernel@vger.kernel.org>; Fri, 27 Mar 2020 15:33:25 -0700 (PDT)
+        Fri, 27 Mar 2020 18:34:49 -0400
+Received: by mail-pj1-f65.google.com with SMTP id kx8so4333472pjb.5
+        for <linux-kernel@vger.kernel.org>; Fri, 27 Mar 2020 15:34:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=d/KauctItzFcz4MTqqd1vUXD0AkHqsSbhj7pDruk56s=;
-        b=MWJ1hSHBbc9XdAiP8isr7WdcCfHrTAeSAsfLsPttskj8ru14jpS6XSJExEd+D7+x4n
-         4OHW2Cs8ZTnFhZHBE2sVlbg2ZypZVkj4l/D59p5XFsqhZYu3WD2zx2F7zy2h5dX/Ug6u
-         yNX6pRubA0w24iXYco8yZAHRcurEHhYjqV2aH/zKx0uxz5fXGBddmYF0NAkVL10Q95AA
-         sp26mugVpC/waCWnzEzrhSSABUDGc3ZoS3JoFYu/kWGJruy2KDEB9+8dD7VCQbG7Ybz8
-         7bUrhQUowP+5vlnF03HfBpMlnoh9Zp7Zp6/T3laPaky46OLqvH2R5fy4I9UWglSN9dZf
-         0TOQ==
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=8tHI92AzVcQSQD/O5A5HHGFkdI/p6OxDwwDw+5JnKm0=;
+        b=Kv/dvlffhpd0NFV8xh9VkJRxc89AeOdti3ykzWw1en516Vwl4ZgKcaZBljAUTLkF2I
+         0k/Z54XHn3tTdZuMhDi44wEOHNsp0Cbw6GLlb7keKfX9w5JZ0ZBKsQURABGZvxqKCac+
+         7rm7Kci6u29qw1nu6QGB6TLNCilWIPjWW6+zg=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=d/KauctItzFcz4MTqqd1vUXD0AkHqsSbhj7pDruk56s=;
-        b=iLzf293pv7Z2sKOaMp4r8ZOqjD8OA5K1AFqL04DCi+bZ6RQZ7BTGUlIgQL+XgHtJc0
-         sSX/E2/9JzCjJ+daeXntqqXbUnQ/MTPjuLJHOWR4v/XvHZa3z2QdXp3tJ7/Vdr53RewT
-         +UGdYe+vVQpyVRxjboajJuu0DSH+v2pzh/lyEueZtDOs0N7rN0Zn/u26pysOFCwFn5OP
-         1Js/C5F2ZuHxNML5GnCbyM3vGZOxMuEvl3+TGEeGlS0penzTyn76Jd1BYdy14l6Mvy6w
-         73X6nQKWwo97Ii/uTfU0yutzePt20oPk7Cs1h4D6Nih6UCftpa9pprXl6VOjaUcYa5rw
-         p+pg==
-X-Gm-Message-State: ANhLgQ2klb7oJ002gGt8qr9tx5e9OUsL/X6P54fGwAomBi6Jc1sR5jR6
-        xXzo6vDr/YZX7cBSDQL8PCkNmg==
-X-Google-Smtp-Source: ADFU+vssCeEO2fNVLOHh9lVPMb7g8Vyce8f9YZ3fpI0mEUsCWO+pn45g3L8i2nWBTgIMNEM/YhFfUg==
-X-Received: by 2002:a17:90a:1b4f:: with SMTP id q73mr1577559pjq.188.1585348405138;
-        Fri, 27 Mar 2020 15:33:25 -0700 (PDT)
-Received: from builder (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id c9sm4451481pjr.47.2020.03.27.15.33.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 27 Mar 2020 15:33:24 -0700 (PDT)
-Date:   Fri, 27 Mar 2020 15:33:22 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Thara Gopinath <thara.gopinath@linaro.org>
-Cc:     rui.zhang@intel.com, ulf.hansson@linaro.org,
-        daniel.lezcano@linaro.org, agross@kernel.org, robh@kernel.org,
-        amit.kucheria@verdurent.com, mark.rutland@arm.com,
-        rjw@rjwysocki.net, linux-pm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [Patch v5 1/6] PM/Domains: Add support for retrieving genpd
- performance states information
-Message-ID: <20200327223322.GG5063@builder>
-References: <20200320014107.26087-1-thara.gopinath@linaro.org>
- <20200320014107.26087-2-thara.gopinath@linaro.org>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=8tHI92AzVcQSQD/O5A5HHGFkdI/p6OxDwwDw+5JnKm0=;
+        b=UNP3eM7oSAbAh1Kzsw2m5s9iq4PsnedPP2MmI7yIQA1ULraXDQnQF9hB8Ub2bewVwR
+         +qvCU7thRwNvSTWN6CjeLaIF0XNSAoYooL/9S715TMxv2REQXIGkPWEIZpNu+BhbfSXy
+         eLQ5E7q2mq5PtrOYvMXKAVpECkPpQfJysv23nhludZal72vS3Pjd84DNhLKFU+fhVsko
+         dEHGeOPjCRKerHf79ZGZ1hRlIlg+P1RmVH5yHHMoEaeqqsVJM5aJcgEw6nQjZ64e7gsl
+         LVZMeX3N/nIfaFKIRnchqjEt5b1vjAU3wao/hQC2CgK8EYFbLUND3Q6RUMNzlgwgwE8S
+         cHYg==
+X-Gm-Message-State: ANhLgQ2m0mTdSLpDosltZ6dJIPmC1LbHu9f+9fjIoFOv0Mi7xja9NGVd
+        UOjp1qdFNRpEsR+GlHxMpMpqXQ==
+X-Google-Smtp-Source: ADFU+vu1jv4HuYjns/KO7aUE3KuN3yMwVaojO02Y8Wlg8prhpyBcGC2UxqjS9FtT5dfNdu74v+YxyQ==
+X-Received: by 2002:a17:902:76ca:: with SMTP id j10mr1252937plt.184.1585348486602;
+        Fri, 27 Mar 2020 15:34:46 -0700 (PDT)
+Received: from localhost ([2620:15c:202:1:4cc0:7eee:97c9:3c1a])
+        by smtp.gmail.com with ESMTPSA id u129sm4891895pfb.101.2020.03.27.15.34.45
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 27 Mar 2020 15:34:45 -0700 (PDT)
+From:   Gwendal Grignou <gwendal@chromium.org>
+To:     bleung@chromium.org, enric.balletbo@collabora.com,
+        Jonathan.Cameron@huawei.com
+Cc:     linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Gwendal Grignou <gwendal@chromium.org>
+Subject: [PATCH v7 00/12] Cros EC sensor hub FIFO support
+Date:   Fri, 27 Mar 2020 15:34:31 -0700
+Message-Id: <20200327223443.6006-1-gwendal@chromium.org>
+X-Mailer: git-send-email 2.26.0.rc2.310.g2932bb562d-goog
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200320014107.26087-2-thara.gopinath@linaro.org>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu 19 Mar 18:41 PDT 2020, Thara Gopinath wrote:
+This patchset adds a sensorhub driver for spreading sensor
+events coming from the Embedded controller sensor FIFO:
 
-> Add two new APIs in the genpd framework, dev_pm_genpd_get_performance_state
-> to return the current performance state of a power domain and
-> dev_pm_genpd_performance_state_count to return the total number of
-> performance states supported by a power domain. Since the genpd framework
-> does not maintain a count of number of performance states supported by a
-> power domain, introduce a new callback(.get_performance_state_count) that
-> can be used to retrieve this information from power domain drivers.
-> 
-> These APIs are added to aid the implementation of a power domain as a
-> warming device. Linux kernel cooling device framework(into which warming
-> device can be plugged in) requires during initialization to be provided
-> with the maximum number of states that can be supported. When a power
-> domain acts as a warming device, the max state is the max number of
-> perfomrance states supported by the power domain. The cooling device
-> framework implements API to retrieve the current state of the cooling
-> device. This in turn translates to the current performance state of the
-> power domain.
-> 
-> Reviewed-by: Ulf Hansson <ulf.hansson@linaro.org>
-> Signed-off-by: Thara Gopinath <thara.gopinath@linaro.org>
+       +---------------+ +--------------+ +----
+       | cros_ec_accel | | cros_ec_gyro | | ...
+       +---------------+ +--------------+ +----
+           id:0       \        id:1 |       / id:..
+                 +------------------------------+
+                 |       cros-ec-sensorhub      |
+                 +------------------------------+
+                 |           cros_ec_dev        |
+                 +------------------------------+
+                 | cros_ec_i2c, cros_ec_lpc, .. |
+                 +------------------------------+
+                                 |
+                                 EC
 
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+When new sensors events are present, the EC raises and interrupt,
+sensorhub reads the FIFO and uses the 'id' field to spread the event to
+the proper IIO sensors. This stack is similar to the HID sensor input
+stack.
 
-> ---
->  drivers/base/power/domain.c | 37 +++++++++++++++++++++++++++++++++++++
->  include/linux/pm_domain.h   | 13 +++++++++++++
->  2 files changed, 50 insertions(+)
-> 
-> diff --git a/drivers/base/power/domain.c b/drivers/base/power/domain.c
-> index 959d6d5eb000..d0297c48fa79 100644
-> --- a/drivers/base/power/domain.c
-> +++ b/drivers/base/power/domain.c
-> @@ -408,6 +408,43 @@ int dev_pm_genpd_set_performance_state(struct device *dev, unsigned int state)
->  }
->  EXPORT_SYMBOL_GPL(dev_pm_genpd_set_performance_state);
->  
-> +int dev_pm_genpd_get_performance_state(struct device *dev)
-> +{
-> +	struct generic_pm_domain *genpd;
-> +	unsigned int state;
-> +
-> +	genpd = dev_to_genpd_safe(dev);
-> +	if (IS_ERR(genpd))
-> +		return -ENODEV;
-> +
-> +	genpd_lock(genpd);
-> +	state = genpd->performance_state;
-> +	genpd_unlock(genpd);
-> +
-> +	return state;
-> +}
-> +EXPORT_SYMBOL_GPL(dev_pm_genpd_get_performance_state);
-> +
-> +int dev_pm_genpd_performance_state_count(struct device *dev)
-> +{
-> +	struct generic_pm_domain *genpd;
-> +	int count;
-> +
-> +	genpd = dev_to_genpd_safe(dev);
-> +	if (IS_ERR(genpd))
-> +		return -ENODEV;
-> +
-> +	if (unlikely(!genpd->get_performance_state_count))
-> +		return -EINVAL;
-> +
-> +	genpd_lock(genpd);
-> +	count = genpd->get_performance_state_count(genpd);
-> +	genpd_unlock(genpd);
-> +
-> +	return count;
-> +}
-> +EXPORT_SYMBOL_GPL(dev_pm_genpd_performance_state_count);
-> +
->  static int _genpd_power_on(struct generic_pm_domain *genpd, bool timed)
->  {
->  	unsigned int state_idx = genpd->state_idx;
-> diff --git a/include/linux/pm_domain.h b/include/linux/pm_domain.h
-> index 9ec78ee53652..7d415350380f 100644
-> --- a/include/linux/pm_domain.h
-> +++ b/include/linux/pm_domain.h
-> @@ -117,6 +117,7 @@ struct generic_pm_domain {
->  						 struct dev_pm_opp *opp);
->  	int (*set_performance_state)(struct generic_pm_domain *genpd,
->  				     unsigned int state);
-> +	int (*get_performance_state_count)(struct generic_pm_domain *genpd);
->  	struct gpd_dev_ops dev_ops;
->  	s64 max_off_time_ns;	/* Maximum allowed "suspended" time. */
->  	bool max_off_time_changed;
-> @@ -204,6 +205,8 @@ int pm_genpd_init(struct generic_pm_domain *genpd,
->  		  struct dev_power_governor *gov, bool is_off);
->  int pm_genpd_remove(struct generic_pm_domain *genpd);
->  int dev_pm_genpd_set_performance_state(struct device *dev, unsigned int state);
-> +int dev_pm_genpd_get_performance_state(struct device *dev);
-> +int dev_pm_genpd_performance_state_count(struct device *dev);
->  
->  extern struct dev_power_governor simple_qos_governor;
->  extern struct dev_power_governor pm_domain_always_on_gov;
-> @@ -251,6 +254,16 @@ static inline int dev_pm_genpd_set_performance_state(struct device *dev,
->  	return -ENOTSUPP;
->  }
->  
-> +static inline int dev_pm_genpd_get_performance_state(struct device *dev)
-> +{
-> +	return -ENOTSUPP;
-> +}
-> +
-> +static inline int dev_pm_genpd_performance_state_count(struct device *dev)
-> +{
-> +	return -ENOTSUPP;
-> +}
-> +
->  #define simple_qos_governor		(*(struct dev_power_governor *)(NULL))
->  #define pm_domain_always_on_gov		(*(struct dev_power_governor *)(NULL))
->  #endif
-> -- 
-> 2.20.1
-> 
+The patch set allows the host to receive MEMS sensor sample
+asynchronously from ChromeOS Emebedded Controller (EC).
+
+Given the EC and the host are not synchronized, the timestamp generated
+by the EC drifts and the AP interrupt latency adds variable delay.
+
+When events arrive, the driver stores the time of the interrupt and use
+that information to convert the timestamp from the EC time domain to the
+AP time domain. To prevent the errors from the interrupt time variation,
+a median filter smooth the timestamp generation and prevents timestamps
+to go in the past.
+
+When a batch of sensor events arrives, the sensor hub ring code spreads
+the timestamps.
+
+The buffer interaface is presentid through the IIO ABI.
+And extra parameter - flush - (presents on HID and ST sensor hub implementation)
+force the EC to send accumulated events in its queue, without waiting
+for buffer hwfifo_timeout to expire.
+
+To access sensor data, we can use iio_readdev like:
+ iio_readdev -T 10000 -s 4 -b 2 iio:device4
+
+When FIFO is not supported by the EC, a trigger is present in the
+directory. After registering a trigger, setting sampling_frequency,
+the latest data collected by the sensor will be retrieved by the host
+when the trigger expires.
+
+When cros_ec_accel_legacy driver is used, no FIFO is supported and the
+sampling frequency for the accelerometers is hard coded at 10Hz.
+
+Gwendal Grignou (12):
+  platform: chrome: sensorhub: Add the number of sensors in sensorhub
+  platform: chrome: sensorhub: Add FIFO support
+  platform: chrome: sensorhub: Add code to spread timestmap
+  platform: chrome: sensorhub: Add median filter
+  iio: cros_ec: Move function description to .c file
+  iio: expose iio_device_set_clock
+  iio: cros_ec: Register to cros_ec_sensorhub when EC supports FIFO
+  iio: cros_ec: Remove pm function
+  iio: cros_ec: Expose hwfifo_timeout
+  iio: cros_ec: Report hwfifo_watermark_max
+  iio: cros_ec: Use Hertz as unit for sampling frequency
+  iio: cros_ec: flush as hwfifo attribute
+
+ drivers/iio/accel/cros_ec_accel_legacy.c      |    8 +-
+ .../cros_ec_sensors/cros_ec_lid_angle.c       |    3 +-
+ .../common/cros_ec_sensors/cros_ec_sensors.c  |   13 +-
+ .../cros_ec_sensors/cros_ec_sensors_core.c    |  403 +++++--
+ drivers/iio/industrialio-core.c               |    8 +-
+ drivers/iio/light/cros_ec_light_prox.c        |   15 +-
+ drivers/iio/pressure/cros_ec_baro.c           |   14 +-
+ drivers/platform/chrome/Makefile              |    4 +-
+ drivers/platform/chrome/cros_ec_sensorhub.c   |  111 +-
+ .../platform/chrome/cros_ec_sensorhub_ring.c  | 1046 +++++++++++++++++
+ .../linux/iio/common/cros_ec_sensors_core.h   |  104 +-
+ include/linux/iio/iio.h                       |    2 +
+ .../linux/platform_data/cros_ec_sensorhub.h   |  163 +++
+ 13 files changed, 1655 insertions(+), 239 deletions(-)
+ create mode 100644 drivers/platform/chrome/cros_ec_sensorhub_ring.c
+
+-- 
+2.26.0.rc2.310.g2932bb562d-goog
+
