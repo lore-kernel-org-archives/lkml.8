@@ -2,112 +2,146 @@ Return-Path: <SRS0=s8dx=5M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B04DC2D0E8
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 12:11:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BD78C43331
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 12:11:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EEFD32074F
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 12:11:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="Ex3D0PnD"
+	by mail.kernel.org (Postfix) with ESMTP id 7B6062074F
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 12:11:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727185AbgC0MLG (ORCPT
+        id S1727606AbgC0MLK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Mar 2020 08:11:06 -0400
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:44008 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726275AbgC0MLF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Mar 2020 08:11:05 -0400
-Received: by mail-qk1-f195.google.com with SMTP id o10so10401107qki.10
-        for <linux-kernel@vger.kernel.org>; Fri, 27 Mar 2020 05:11:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Ae32xXO67Uei3DTimjBj1wlAZ/pkH/el6Qiul9IT/30=;
-        b=Ex3D0PnD7gDl3aSUB2klXnKG6WqRJ7QfwnM6N9ZGFL92WovcOuAzEFRyYweVO4bxtE
-         7Xg8gqSK2Z3BuI8TP9K0fdhDNWpdwzHD/JkAmE9cJPZ0tZrDsJOHhAbWsH+vjsmkuIY6
-         uwK5871CUpjZLzSstezfN/aBg5CasNqsGxP8A9EfPWuZRYdJDyWQBXQ7ttS6IiSCsthL
-         ifCas0C0YCZ3fC4iuuQORU9gg8EUmyeqhcf3rCO0NRXcZ2xj0HrGTKS3hd6SWnksKhsW
-         VFFIjipCV/rNC4HQApb3Vkke+23D5s7p4BGXZmNMTKFYNFv1sR1pllPZ8YXvdvs0uPyV
-         9Few==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Ae32xXO67Uei3DTimjBj1wlAZ/pkH/el6Qiul9IT/30=;
-        b=Cqlam+IiDP7lHN40iptwrITQ6Sec3dblLEQt6VtBW5tv+dD8nECLxRSsHf1B+Qdebp
-         GOO33rYOpLxgPofPGtLWp4MGdO+frPyA0Nf30zW2NuhD+OcfqaGAstrtPoHfhxPdAz0O
-         7yGGO3EpzF/hCyTmfU8Wn/BGzFvK7OnLj1CfRYUndvgDKeoCmKoAekfFUK6ianVuWeXL
-         nTL+DaF/RaQjfYgoLelvoigCJoPxaExG1TNN2u4Zt0mQOAP8HtOFq611I0FN09Y+CXgY
-         CZiTtPjl1/Ib4bIsMuLra4q+XRf84yLyxNCHk+aCU0gMEZ5m4lj+/OHNC5V2X0Sxbk8W
-         6UQA==
-X-Gm-Message-State: ANhLgQ0Clf+1uV4HbqgvlVW1XdC62wlD8A0dLeNpuy0coAMm0DE8eDVc
-        tO0QcvTd8ASJrpgb0Te6MvRT6g==
-X-Google-Smtp-Source: ADFU+vu5etCsTsz6Y5TtfPSyk7GQigfbQaUBOkfH75rGPq30AeujH7DUKAa3E9WYmWw4syrKT0bbug==
-X-Received: by 2002:a37:a746:: with SMTP id q67mr14014729qke.215.1585311063288;
-        Fri, 27 Mar 2020 05:11:03 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-142-68-57-212.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.57.212])
-        by smtp.gmail.com with ESMTPSA id t71sm3539359qke.55.2020.03.27.05.11.01
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 27 Mar 2020 08:11:10 -0400
+Received: from mga04.intel.com ([192.55.52.120]:15166 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726515AbgC0MLH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Mar 2020 08:11:07 -0400
+IronPort-SDR: 5nFlaLwLGO2mBuKb96aKPsoiwuFUJtzjZnUddlmLRoaH7PEXPc168qVUGMAHYhzyd8NvNFbk9w
+ 8CbCNRGSIX1g==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Mar 2020 05:11:07 -0700
+IronPort-SDR: Etf54K1EPTAIVD5gLsmN0O763p6q57L8A07aMXJxHLdGUittQwkQoWYLs9duLjsfEU8WYr4gYm
+ PZnKQIi665Gw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,312,1580803200"; 
+   d="scan'208";a="448986424"
+Received: from scymds01.sc.intel.com ([10.148.94.138])
+  by fmsmga006.fm.intel.com with ESMTP; 27 Mar 2020 05:11:07 -0700
+Received: from gnu-skx-1.sc.intel.com (gnu-skx-1.sc.intel.com [172.25.70.205])
+        by scymds01.sc.intel.com
+        with ESMTP id 02RCB2r8031618;
+        Fri, 27 Mar 2020 05:11:02 -0700
+Received: from gnu-skx-1.sc.intel.com (localhost [IPv6:::1])
+        by gnu-skx-1.sc.intel.com (Postfix) with ESMTP id 0B90A2C0574;
         Fri, 27 Mar 2020 05:11:02 -0700 (PDT)
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1jHnpE-0007MU-MC; Fri, 27 Mar 2020 09:11:00 -0300
-Date:   Fri, 27 Mar 2020 09:11:00 -0300
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     "Longpeng(Mike)" <longpeng2@huawei.com>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        kvm@vger.kernel.org, arei.gonglei@huawei.com,
-        weidong.huang@huawei.com, weifuqiang@huawei.com,
-        kirill.shutemov@linux.intel.com,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        stable@vger.kernel.org
-Subject: Re: [PATCH v3] mm/hugetlb: fix a addressing exception caused by
- huge_pte_offset
-Message-ID: <20200327121100.GR20941@ziepe.ca>
-References: <20200327014007.1915-1-longpeng2@huawei.com>
+From:   "H.J. Lu" <hjl.tools@gmail.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Andy Lutomirski <luto@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Kees Cook <keescook@chromium.org>,
+        Thomas Lendacky <Thomas.Lendacky@amd.com>,
+        Sami Tolvanen <samitolvanen@google.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        Arnd Bergmann <arnd@arndb.de>, linux-arch@vger.kernel.org,
+        Yu-cheng Yu <yu-cheng.yu@intel.com>
+Subject: [PATCH] Discard .note.gnu.property sections in generic NOTES
+Date:   Fri, 27 Mar 2020 05:11:01 -0700
+Message-Id: <20200327121101.948934-1-hjl.tools@gmail.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200327014007.1915-1-longpeng2@huawei.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 27, 2020 at 09:40:07AM +0800, Longpeng(Mike) wrote:
-> diff --git a/mm/hugetlb.c b/mm/hugetlb.c
-> index dd8737a..d4fab68 100644
-> +++ b/mm/hugetlb.c
-> @@ -4909,29 +4909,33 @@ pte_t *huge_pte_offset(struct mm_struct *mm,
->  		       unsigned long addr, unsigned long sz)
->  {
->  	pgd_t *pgd;
-> -	p4d_t *p4d;
-> -	pud_t *pud;
-> -	pmd_t *pmd;
-> +	p4d_t *p4g, p4d_entry;
-> +	pud_t *pud, pud_entry;
-> +	pmd_t *pmd, pmd_entry;
->  
->  	pgd = pgd_offset(mm, addr);
->  	if (!pgd_present(*pgd))
->  		return NULL;
-> -	p4d = p4d_offset(pgd, addr);
-> -	if (!p4d_present(*p4d))
-> +
-> +	p4g = p4d_offset(pgd, addr);
+**"this patch depends on patch Add RUNTIME_DISCARD_EXIT to generic DISCARDS"**
 
-Why p4g here? Shouldn't it be p4d?
+With the command-line option, -mx86-used-note=yes, which can also be
+enabled at binutils build time with
 
-Jason
+  --enable-x86-used-note  generate GNU x86 used ISA and feature properties
+
+the x86 assembler in binutils 2.32 and above generates a program property
+note in a note section, .note.gnu.property, to encode used x86 ISAs and
+features.  But kernel linker script only contains a single NOTE segment:
+
+PHDRS {
+ text PT_LOAD FLAGS(5);
+ data PT_LOAD FLAGS(6);
+ percpu PT_LOAD FLAGS(6);
+ init PT_LOAD FLAGS(7);
+ note PT_NOTE FLAGS(0);
+}
+SECTIONS
+{
+...
+ .notes : AT(ADDR(.notes) - 0xffffffff80000000) { __start_notes = .; KEEP(*(.not
+e.*)) __stop_notes = .; } :text :note
+...
+}
+
+The NOTE segment generated by kernel linker script is aligned to 4 bytes.
+But .note.gnu.property section must be aligned to 8 bytes on x86-64 and
+we get
+
+[hjl@gnu-skx-1 linux]$ readelf -n vmlinux
+
+Displaying notes found in: .notes
+  Owner                Data size Description
+  Xen                  0x00000006 Unknown note type: (0x00000006)
+   description data: 6c 69 6e 75 78 00
+  Xen                  0x00000004 Unknown note type: (0x00000007)
+   description data: 32 2e 36 00
+  xen-3.0              0x00000005 Unknown note type: (0x006e6558)
+   description data: 08 00 00 00 03
+readelf: Warning: note with invalid namesz and/or descsz found at offset 0x50
+readelf: Warning:  type: 0xffffffff, namesize: 0x006e6558, descsize:
+0x80000000, alignment: 8
+[hjl@gnu-skx-1 linux]$
+
+Since note.gnu.property section in kernel image is never used, discard
+.note.gnu.property sections in kernel linker script by adding
+
+/DISCARD/ : {
+  *(.note.gnu.property)
+}
+
+before kernel NOTE segment in generic NOTES.
+
+Signed-off-by: H.J. Lu <hjl.tools@gmail.com>
+Reviewed-by: Kees Cook <keescook@chromium.org>
+---
+ include/asm-generic/vmlinux.lds.h | 7 +++++++
+ 1 file changed, 7 insertions(+)
+
+diff --git a/include/asm-generic/vmlinux.lds.h b/include/asm-generic/vmlinux.lds.h
+index 6b943fb8c5fd..6659a7c07c84 100644
+--- a/include/asm-generic/vmlinux.lds.h
++++ b/include/asm-generic/vmlinux.lds.h
+@@ -818,7 +818,14 @@
+ #define TRACEDATA
+ #endif
+ 
++/*
++ * Discard .note.gnu.property sections which are unused and have
++ * different alignment requirement from kernel note sections.
++ */
+ #define NOTES								\
++	/DISCARD/ : {							\
++		*(.note.gnu.property)					\
++	}								\
+ 	.notes : AT(ADDR(.notes) - LOAD_OFFSET) {			\
+ 		__start_notes = .;					\
+ 		KEEP(*(.note.*))					\
+-- 
+2.25.1
+
