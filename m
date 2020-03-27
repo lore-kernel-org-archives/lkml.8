@@ -2,180 +2,369 @@ Return-Path: <SRS0=s8dx=5M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB060C43331
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 16:36:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53C77C43331
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 16:36:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 731A9206E6
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 16:36:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=yahoo.com header.i=@yahoo.com header.b="T2g7taMq"
+	by mail.kernel.org (Postfix) with ESMTP id 1D9B8206E6
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 16:36:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727850AbgC0QgY (ORCPT
+        id S1727879AbgC0Qge (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Mar 2020 12:36:24 -0400
-Received: from sonic313-14.consmr.mail.ne1.yahoo.com ([66.163.185.37]:35706
-        "EHLO sonic313-14.consmr.mail.ne1.yahoo.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727639AbgC0QgY (ORCPT
+        Fri, 27 Mar 2020 12:36:34 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:57354 "EHLO
+        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727740AbgC0Qgd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Mar 2020 12:36:24 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1585326983; bh=oU5zcAPB2SkuXW2hCS2U3NXubF8yFf0U9e5WSRAAonM=; h=Subject:To:Cc:References:From:Date:In-Reply-To:From:Subject; b=T2g7taMqkgEX/XrGV+/k5vCiB4u0+wR+nSpe7/DT1aqiK3/ammePovKmefnlxGoDHqQh7ljohWcce4YRlSmU7floxLE69njFk8Kjla3e/mz2npUXS5YwgHJ4Idq0tCXyRs7tXblKH1sPR+3qae7M0skwS6xp27Wj1eizUnBV6d8HfXodgpmOA9zM0IgMMQgqB9eW68YqEXKFFvnd3zlDmkee/60TarIqQoN31rwwA6QDo2N3/Dc64BAzEZOlzvEWTGKjXKebO3JiXOyU3PmNGbJuCfmbtPFYXbaLXpcnmdu0StA6pZOIRJUltO/qnALUtIQ84J+ahb8QLv/5xOAXuw==
-X-YMail-OSG: HJWjnLUVM1ldViaQGmxzRshWcb6C0woOXnGj.PHbvlykCz5DiCeCp2ObNGOXEWg
- 5xMSAUswTTD6TwPwCp7HaDy8cSAQX01_2pWosX_7KFicE24AYNTsxCPg7AYZHxTOM1BjRMT11ABQ
- GcaA_Mnzt5Vblg70_sml3bEKjH_2ERAplQRwxnhD_PCmiEBNgq0uwKrErZ3WlzE1h0jqrv5c9BdN
- Q0f2JzTC9hNPjJ8iU561W.mt1WlHx8GQ_E1tL_7KMXiJouEMNXjcbQwjFHEOmUa8MOICeGTtptyg
- MXS3brVKe8c4lwt5vr60ZcfieU0skZGjUnzxrBHG9qYWFd3u2Y5hZ7..ok0Xmkef3MoqBZSboUUf
- JjiByeKPwDk1cvi81EgXvqNZQI4q6UO5w55ehp2WzwHyXItlykooAoLPQrD5MbLwygrQzPOjS1gV
- YUG6u0UCsQfckUsUSzEcGYxWXvi1F1ZchT8FGe.KEhcZihmhRgZgpP.WEH6K5_23I2RMTq6jrsCA
- 3dAUGwc6h9rVHrA.R.5vNTeTeqqFTzf2lCIUvoVDtrvIiFCzKMQFkC9N8apFoEhH3k85golfmIby
- pzpgbicfeD_6pAU5miS4GzJNk6Thkz3oWuZYI8moeDWM258TxuIeT.8CUAITGhIXtBPxJ7jQbqrw
- GDxhMW5yyc_XtJvu1W3EHaFTw4Jj6pClmMAvNRvgyisgh9Tbb_kVsFsW9yg0r1i3tLrjEYHbWoUH
- dwVxNkaNSlICgZvTN77MUKaTj24W7iJEvu9p2FfncieDdUfKTfmvi0tk9ut1_t69EVYnvK2Ndbx_
- eiUEvMt72ymFfPokF4h0mi76Xuc00ELrC9qkVOPk4okLkV55e3WxlCCtLFG681cbCN0sqjyUW04G
- FYdJnoYlA4sWji37O_5TmG_fIUAmbku_rB8JD2dsRvNmo_HgCdh9F9dlWko4YDwJrzXnpSMCOnY9
- hZY2nMo0Hf_QTaKUFZVMBMoxfl3aNU58lsKe3abQkXIPmHFKLRQ9Xdn724NyIwsUOUx.32Y8bLu3
- gAgBgYPw79Vjj3XVIe9EBhhPVwY2S12u8rHI5.dC7k.7GmM2ma2rFQBFe7YcHLlg0G5PX3qClarW
- iUg2X6PkI8JLmZHpEmmllK0pbkR7jU2v30eRuOKuhPhKjTYiyWH4cOT2rbfoRlXFJQs2T30p1da5
- 9WnmVkxvqoJUrFAQvALP48TpCK3iYwAeqnLP717QJ__wvB37A0AbbuxCckQL7wxJJ7lNyl7RHatX
- ceYiFoUQG74cZKNkEs28ZJGMA9.b46QkJ.4GZXeyAqZkHRH7ZYHtd9tozFFKI08dch_BRnM7c2El
- isMalkviuhBDBtFAVa_3zTC4eb.mU4P3b9NyQJKaAtMi1w8kXgO6zp9xp97IuEwh6ztRFuDRMj16
- qM2fzCO5gx_IKHOxrIp3zoLkN.1ANYyK9xl7HH08msL_0rieLioYUeik_c3Audvw.g9Ta33O8pg1
- TVqx5zoZlJ3FUVA--
-Received: from sonic.gate.mail.ne1.yahoo.com by sonic313.consmr.mail.ne1.yahoo.com with HTTP; Fri, 27 Mar 2020 16:36:23 +0000
-Received: by smtp417.mail.bf1.yahoo.com (Oath Hermes SMTP Server) with ESMTPA ID 1f531044ee13811a271dc4f05871c6be;
-          Fri, 27 Mar 2020 16:36:17 +0000 (UTC)
-Subject: Re: [PATCH bpf-next v7 4/8] bpf: lsm: Implement attach, detach and
- execution
-To:     Stephen Smalley <sds@tycho.nsa.gov>,
-        KP Singh <kpsingh@chromium.org>
-Cc:     James Morris <jmorris@namei.org>, linux-kernel@vger.kernel.org,
-        bpf@vger.kernel.org, linux-security-module@vger.kernel.org,
-        Brendan Jackman <jackmanb@google.com>,
-        Florent Revest <revest@google.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Kees Cook <keescook@chromium.org>,
-        Paul Turner <pjt@google.com>, Jann Horn <jannh@google.com>,
-        Florent Revest <revest@chromium.org>,
-        Brendan Jackman <jackmanb@chromium.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Paul Moore <paul@paul-moore.com>,
-        Casey Schaufler <casey@schaufler-ca.com>
-References: <20200326142823.26277-1-kpsingh@chromium.org>
- <20200326142823.26277-5-kpsingh@chromium.org>
- <alpine.LRH.2.21.2003271119420.17089@namei.org>
- <2241c806-65c9-68f5-f822-9a245ecf7ba0@tycho.nsa.gov>
- <20200327124115.GA8318@chromium.org>
- <14ff822f-3ca5-7ebb-3df6-dd02249169d2@tycho.nsa.gov>
-From:   Casey Schaufler <casey@schaufler-ca.com>
-Autocrypt: addr=casey@schaufler-ca.com; keydata=
- mQINBFzV9HABEAC/mmv3jeJyF7lR7QhILYg1+PeBLIMZv7KCzBSc/4ZZipoWdmr77Lel/RxQ
- 1PrNx0UaM5r6Hj9lJmJ9eg4s/TUBSP67mTx+tsZ1RhG78/WFf9aBe8MSXxY5cu7IUwo0J/CG
- vdSqACKyYPV5eoTJmnMxalu8/oVUHyPnKF3eMGgE0mKOFBUMsb2pLS/enE4QyxhcZ26jeeS6
- 3BaqDl1aTXGowM5BHyn7s9LEU38x/y2ffdqBjd3au2YOlvZ+XUkzoclSVfSR29bomZVVyhMB
- h1jTmX4Ac9QjpwsxihT8KNGvOM5CeCjQyWcW/g8LfWTzOVF9lzbx6IfEZDDoDem4+ZiPsAXC
- SWKBKil3npdbgb8MARPes2DpuhVm8yfkJEQQmuLYv8GPiJbwHQVLZGQAPBZSAc7IidD2zbf9
- XAw1/SJGe1poxOMfuSBsfKxv9ba2i8hUR+PH7gWwkMQaQ97B1yXYxVEkpG8Y4MfE5Vd3bjJU
- kvQ/tOBUCw5zwyIRC9+7zr1zYi/3hk+OG8OryZ5kpILBNCo+aePeAJ44znrySarUqS69tuXd
- a3lMPHUJJpUpIwSKQ5UuYYkWlWwENEWSefpakFAIwY4YIBkzoJ/t+XJHE1HTaJnRk6SWpeDf
- CreF3+LouP4njyeLEjVIMzaEpwROsw++BX5i5vTXJB+4UApTAQARAQABtChDYXNleSBTY2hh
- dWZsZXIgPGNhc2V5QHNjaGF1Zmxlci1jYS5jb20+iQJUBBMBCAA+FiEEC+9tH1YyUwIQzUIe
- OKUVfIxDyBEFAlzV9HACGwMFCRLMAwAFCwkIBwIGFQoJCAsCBBYCAwECHgECF4AACgkQOKUV
- fIxDyBG6ag/6AiRl8yof47YOEVHlrmewbpnlBTaYNfJ5cZflNRKRX6t4bp1B2YV1whlDTpiL
- vNOwFkh+ZE0eI5M4x8Gw2Oiok+4Q5liA9PHTozQYF+Ia+qdL5EehfbLGoEBqklpGvG3h8JsO
- 7SvONJuFDgvab/U/UriDYycJwzwKZuhVtK9EMpnTtUDyP3DY+Q8h7MWsniNBLVXnh4yBIEJg
- SSgDn3COpZoFTPGKE+rIzioo/GJe8CTa2g+ZggJiY/myWTS3quG0FMvwvNYvZ4I2g6uxSl7n
- bZVqAZgqwoTAv1HSXIAn9muwZUJL03qo25PFi2gQmX15BgJKQcV5RL0GHFHRThDS3IyadOgK
- P2j78P8SddTN73EmsG5OoyzwZAxXfck9A512BfVESqapHurRu2qvMoUkQaW/2yCeRQwGTsFj
- /rr0lnOBkyC6wCmPSKXe3dT2mnD5KnCkjn7KxLqexKt4itGjJz4/ynD/qh+gL7IPbifrQtVH
- JI7cr0fI6Tl8V6efurk5RjtELsAlSR6fKV7hClfeDEgLpigHXGyVOsynXLr59uE+g/+InVic
- jKueTq7LzFd0BiduXGO5HbGyRKw4MG5DNQvC//85EWmFUnDlD3WHz7Hicg95D+2IjD2ZVXJy
- x3LTfKWdC8bU8am1fi+d6tVEFAe/KbUfe+stXkgmfB7pxqW5Ag0EXNX0cAEQAPIEYtPebJzT
- wHpKLu1/j4jQcke06Kmu5RNuj1pEje7kX5IKzQSs+CPH0NbSNGvrA4dNGcuDUTNHgb5Be9hF
- zVqRCEvF2j7BFbrGe9jqMBWHuWheQM8RRoa2UMwQ704mRvKr4sNPh01nKT52ASbWpBPYG3/t
- WbYaqfgtRmCxBnqdOx5mBJIBh9Q38i63DjQgdNcsTx2qS7HFuFyNef5LCf3jogcbmZGxG/b7
- yF4OwmGsVc8ufvlKo5A9Wm+tnRjLr/9Mn9vl5Xa/tQDoPxz26+aWz7j1in7UFzAarcvqzsdM
- Em6S7uT+qy5jcqyuipuenDKYF/yNOVSNnsiFyQTFqCPCpFihOnuaWqfmdeUOQHCSo8fD4aRF
- emsuxqcsq0Jp2ODq73DOTsdFxX2ESXYoFt3Oy7QmIxeEgiHBzdKU2bruIB5OVaZ4zWF+jusM
- Uh+jh+44w9DZkDNjxRAA5CxPlmBIn1OOYt1tsphrHg1cH1fDLK/pDjsJZkiH8EIjhckOtGSb
- aoUUMMJ85nVhN1EbU/A3DkWCVFEA//Vu1+BckbSbJKE7Hl6WdW19BXOZ7v3jo1q6lWwcFYth
- esJfk3ZPPJXuBokrFH8kqnEQ9W2QgrjDX3et2WwZFLOoOCItWxT0/1QO4ikcef/E7HXQf/ij
- Dxf9HG2o5hOlMIAkJq/uLNMvABEBAAGJAjwEGAEIACYWIQQL720fVjJTAhDNQh44pRV8jEPI
- EQUCXNX0cAIbDAUJEswDAAAKCRA4pRV8jEPIEWkzEACKFUnpp+wIVHpckMfBqN8BE5dUbWJc
- GyQ7wXWajLtlPdw1nNw0Wrv+ob2RCT7qQlUo6GRLcvj9Fn5tR4hBvR6D3m8aR0AGHbcC62cq
- I7LjaSDP5j/em4oVL2SMgNTrXgE2w33JMGjAx9oBzkxmKUqprhJomPwmfDHMJ0t7y39Da724
- oLPTkQDpJL1kuraM9TC5NyLe1+MyIxqM/8NujoJbWeQUgGjn9uxQAil7o/xSCjrWCP3kZDID
- vd5ZaHpdl8e1mTExQoKr4EWgaMjmD/a3hZ/j3KfTVNpM2cLfD/QwTMaC2fkK8ExMsz+rUl1H
- icmcmpptCwOSgwSpPY1Zfio6HvEJp7gmDwMgozMfwQuT9oxyFTxn1X3rn1IoYQF3P8gsziY5
- qtTxy2RrgqQFm/hr8gM78RhP54UPltIE96VywviFzDZehMvuwzW//fxysIoK97Y/KBZZOQs+
- /T+Bw80Pwk/dqQ8UmIt2ffHEgwCTbkSm711BejapWCfklxkMZDp16mkxSt2qZovboVjXnfuq
- wQ1QL4o4t1hviM7LyoflsCLnQFJh6RSBhBpKQinMJl/z0A6NYDkQi6vEGMDBWX/M2vk9Jvwa
- v0cEBfY3Z5oFgkh7BUORsu1V+Hn0fR/Lqq/Pyq+nTR26WzGDkolLsDr3IH0TiAVH5ZuPxyz6
- abzjfg==
-Message-ID: <a3f6d9f8-6425-af28-d472-fad642439b69@schaufler-ca.com>
-Date:   Fri, 27 Mar 2020 09:36:15 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Fri, 27 Mar 2020 12:36:33 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id AF711803078E;
+        Fri, 27 Mar 2020 16:36:24 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at baikalelectronics.ru
+Received: from mail.baikalelectronics.ru ([127.0.0.1])
+        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id Og6JkWQte3QB; Fri, 27 Mar 2020 19:36:23 +0300 (MSK)
+Date:   Fri, 27 Mar 2020 19:36:18 +0300
+From:   Sergey Semin <Sergey.Semin@baikalelectronics.ru>
+To:     Miquel Raynal <miquel.raynal@bootlin.com>
+CC:     Lee Jones <lee.jones@linaro.org>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        <linux-mtd@lists.infradead.org>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 2/2] mfd: Add Baikal-T1 Boot Controller driver
+Message-ID: <20200327163618.bpqkvjpmtexs5eqq@ubsrv2.baikal.int>
+References: <20200306130528.9973-1-Sergey.Semin@baikalelectronics.ru>
+ <20200306130614.696EF8030704@mail.baikalelectronics.ru>
+ <20200325100940.GI442973@dell>
+ <20200325165511.tjdaf2l5kkuhbhrr@ubsrv2.baikal.int>
+ <20200326091313.GA603801@dell>
+ <20200326113254.nfgiw5uynpbx5xhy@ubsrv2.baikal.int>
+ <20200327090139.GK603801@dell>
+ <20200327112530.71192909@xps13>
 MIME-Version: 1.0
-In-Reply-To: <14ff822f-3ca5-7ebb-3df6-dd02249169d2@tycho.nsa.gov>
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Mailer: WebService/1.1.15518 hermes Apache-HttpAsyncClient/4.1.4 (Java/1.8.0_242)
+In-Reply-To: <20200327112530.71192909@xps13>
+X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/27/2020 6:43 AM, Stephen Smalley wrote:
-> On 3/27/20 8:41 AM, KP Singh wrote:
->> On 27-Mär 08:27, Stephen Smalley wrote:
->>> On 3/26/20 8:24 PM, James Morris wrote:
->>>> On Thu, 26 Mar 2020, KP Singh wrote:
->>>>
->>>>> +int bpf_lsm_verify_prog(struct bpf_verifier_log *vlog,
->>>>> +            const struct bpf_prog *prog)
->>>>> +{
->>>>> +    /* Only CAP_MAC_ADMIN users are allowed to make changes to LSM hooks
->>>>> +     */
->>>>> +    if (!capable(CAP_MAC_ADMIN))
->>>>> +        return -EPERM;
->>>>> +
->>>>
->>>> Stephen, can you confirm that your concerns around this are resolved
->>>> (IIRC, by SELinux implementing a bpf_prog callback) ?
->>>
->>> I guess the only residual concern I have is that CAP_MAC_ADMIN means
->>> something different to SELinux (ability to get/set file security contexts
->>> unknown to the currently loaded policy), so leaving the CAP_MAC_ADMIN check
->>> here (versus calling a new security hook here and checking CAP_MAC_ADMIN in
->>> the implementation of that hook for the modules that want that) conflates
->>> two very different things.  Prior to this patch, there are no users of
->>> CAP_MAC_ADMIN outside of individual security modules; it is only checked in
->>> module-specific logic within apparmor, safesetid, selinux, and smack, so the
->>> meaning was module-specific.
->>
->> As we had discussed, We do have a security hook as well:
->>
->> https://lore.kernel.org/bpf/20200324180652.GA11855@chromium.org/
->>
->> The bpf_prog hook which can check for BPF_PROG_TYPE_LSM and implement
->> module specific logic for LSM programs. I thougt that was okay?
->>
->> Kees was in favor of keeping the CAP_MAC_ADMIN check here:
->>
->> https://lore.kernel.org/bpf/202003241133.16C02BE5B@keescook
->>
->> If you feel strongly and Kees agrees, we can remove the CAP_MAC_ADMIN
->> check here, but given that we already have a security hook that meets
->> the requirements, we probably don't need another one.
->
-> I would favor removing the CAP_MAC_ADMIN check here, and implementing it in a bpf_prog hook for Smack and AppArmor if they want that.  SELinux would implement its own check in its existing bpf_prog hook.
->
-The whole notion of one security module calling into another for permission
-to do something still gives me the heebee jeebees, but if more nimble minds
-than mine think this is a good idea I won't nack it.
+Hello Miquel,
 
+Thanks for clarifications. My comments are blow.
+
+On Fri, Mar 27, 2020 at 11:25:30AM +0100, Miquel Raynal wrote:
+> Hi Lee, Sergey,
+> 
+> Lee Jones <lee.jones@linaro.org> wrote on Fri, 27 Mar 2020 09:01:39
+> +0000:
+> 
+> > On Thu, 26 Mar 2020, Sergey Semin wrote:
+> > 
+> > > Michael, Richard, Vignesh and MTD mailing list are Cc'ed to have their
+> > > comments on the issue.
+> > > 
+> > > My answers on the previous email are below.
+> > > 
+> > > On Thu, Mar 26, 2020 at 09:13:13AM +0000, Lee Jones wrote:  
+> > > > On Wed, 25 Mar 2020, Sergey Semin wrote:
+> > > >   
+> > > > > Hello Lee,
+> > > > > 
+> > > > > On Wed, Mar 25, 2020 at 10:09:40AM +0000, Lee Jones wrote:  
+> > > > > > On Fri, 06 Mar 2020, Sergey.Semin@baikalelectronics.ru wrote:
+> > > > > >   
+> > > > > > > From: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+> > > > > > > 
+> > > > > > > Baikal-T1 Boot Controller is an IP block embedded into the SoC and
+> > > > > > > responsible for the chip proper pre-initialization and further
+> > > > > > > booting up from some memory device. From the Linux kernel point of view
+> > > > > > > it's just a multi-functional device, which exports three physically mapped
+> > > > > > > ROMs and a single SPI controller.
+> > > > > > > 
+> > > > > > > Primarily the ROMs are intended to be used for transparent access of
+> > > > > > > the memory devices with system bootup code. First ROM device is an
+> > > > > > > embedded into the SoC firmware, which is supposed to be used just for
+> > > > > > > the chip debug and tests. Second ROM device provides a MMIO-based
+> > > > > > > access to an external SPI flash. Third ROM mirrors either the Internal
+> > > > > > > or SPI ROM region, depending on the state of the external BOOTCFG_{0,1}
+> > > > > > > chip pins selecting the system boot device.
+> > > > > > > 
+> > > > > > > External SPI flash can be also accessed by the DW APB SSI SPI controller
+> > > > > > > embedded into the Baikal-T1 Boot Controller. In this case the memory mapped
+> > > > > > > SPI flash region shouldn't be accessed.
+> > > > > > > 
+> > > > > > > Taking into account all the peculiarities described above, we created
+> > > > > > > an MFD-based driver for the Baikal-T1 controller. Aside from ordinary
+> > > > > > > OF-based sub-device registration it also provides a simple API to
+> > > > > > > serialize an access to the external SPI flash from either the MMIO-based
+> > > > > > > SPI interface or embedded SPI controller.  
+> > > > > > 
+> > > > > > Not sure why this is being classified as an MFD.
+> > > > > > 
+> > > > > > This is clearly 'just' a memory device.
+> > > > > >   
+> > > > > 
+> > > > > Hm, I see this as a normal MFD device. The Boot controller provides a
+> > > > > set of physically mapped ROMs and a DW APB SSI-based embedded SPI
+> > > > > controller. Yes, the SPI controller is normally utilized to access an external
+> > > > > flash device, and at boot stage it is used for it. But still it's a SPI
+> > > > > controller which driver belongs to the kernel SPI subsystem. Moreover
+> > > > > nothing prevents a platform designer from using it together with custom
+> > > > > GPIO-based chip-selects to have additional devices on the SPI bus.
+> > > > > 
+> > > > > As I said the problem is that an SPI flash might be accessed either with
+> > > > > use of a physically mapped ROM or via the normal DW APB SPI controller.
+> > > > > These two interfaces can't be used simultaneously, because the ROM is
+> > > > > just an rtl state-machine, which is built to translate MMIO operations
+> > > > > through the SPI controller registers to an external SPI-nor at CS0 of
+> > > > > the interface. That's why first I need to make sure the interface is locked,
+> > > > > then being enabled, then the corresponding driver can use it, then get
+> > > > > to unlock. That's the point of having the __bt1_bc_spi_lock() and
+> > > > > bt1_bc_spi_unlock() methods exported from the driver.
+> > > > > 
+> > > > > I've got two drivers for MTD ROM and SPI controller based on that
+> > > > > methods. But I haven't submitted them yet, because they belong to two
+> > > > > different subsystems and I need to have this one being accepted first.  
+> > > > 
+> > > > This is not a totally unique device/situation.  I've seen (and NACKed)
+> > > > this type of device before.  You need to explain this to the MTD
+> > > > (SPI-NOR?) maintainers.  They should be in a good position to provide
+> > > > guidance.
+> > > >   
+> > > 
+> > > Sorry, I don't really understand your justification. The boot controller
+> > > exports two types of devices: physically mapped ROMs and an DW APB
+> > > SSI-based SPI controller. Aside from being able to access an externally
+> > > attached SPI flash the SPI controller has normal SPI interface which in
+> > > general can be used to access any other SPI-slave. The complexity of
+> > > the case is that one of physically mapped ROM RTL uses the DW APB SSI
+> > > controller to access an external SPI flash, which when done makes the
+> > > DW APB SSI registers unusable on direct way. That's why I implemented the
+> > > boot controller as an MFD. An alternation caused by this peculiarity
+> > > will be submitted to drivers/mtd/maps/physmap-{core.c,baikal-t1-rom.c}
+> > > later after this change is reviewed and accepted. Similar situation
+> > > concerns a driver of DW APB SSI-based SPI controller. So according to
+> > > the current design the boot controller with it' sub-devices will be
+> > > declared in dts as follows:
+> > > 
+> > > boot: boot@1f040000 {
+> > > 	compatible = "be,bt1-boot-ctl";
+> > > 	reg = <0x1f040000 0x100>;
+> > > 	#address-cells = <1>;
+> > > 	#size-cells = <1>;
+> > > 	ranges;  
+> > 
+> > What control does this device offer in those 0x100 registers? 
+> > 
+> > > 	clocks = <&ccu_sys CCU_SYS_APB_CLK>;
+> > > 	clock-names = "pclk";
+> > > 
+> > > 	int_rom: rom@1bfc0000 {
+> > > 		compatible = "be,bt1-int-rom", "mtd-rom";
+> > > 		reg = <0x1bfc0000 0x10000>;
+> > > 		...
+> > > 	};
+> > > 
+> > > 	spi_rom: rom@1c000000 {
+> > > 		compatible = "be,bt1-ssi-rom", "mtd-rom";
+> > > 		reg = <0x1c000000 0x1000000>;
+> > > 		...
+> > > 	};
+> > > 
+> > > 	spi0: spi@1f040100 {
+> > > 		compatible = "be,bt1-boot-ssi";
+> > > 		reg = <0x1f040100 0xf00>;
+> > > 		#address-cells = <1>;
+> > > 		#size-cells = <0>;
+> > > 
+> > > 		clocks = <&ccu_sys CCU_SYS_SPI_CLK>;
+> > > 		clock-names = "ref";
+> > > 
+> > > 		...
+> > > 	};
+> > > 
+> > > 	boot_rom: rom@1fc00000 {
+> > > 		compatible = "be,bt1-boot-rom", "mtd-rom";
+> > > 		reg = <0x1fc00000 0x400000>;
+> > > 		...
+> > > 	};
+> > > };
+> > > 
+> > > I dare to assume, that by saying: "Despite including the MFD API, I don't
+> > > see it being used at all." you meant that since the driver doesn't
+> > > redistribute any resource by declaring mfd_cell'es, doesn't
+> > > register mfd-based sub-devices, and primary use-case of the boot
+> > > controller is to access flash-devices, it should be just moved to the MTD
+> > > subsystem. I don't think it would be better than to have a common part 
+> > > defined here in MFD while ROM-specific part - in MTD, and SPI-specific - in
+> > > the SPI subsystems. I would consider Baikal-T1 Boot Controller being similar
+> > > to drivers/mfd/qcom-spmi-pmic.c, drivers/mfd/atmel-flexcom.c, etc, but
+> > > instead of having GPIO, RTC, UART, i2c, etc sub-devices (which are also
+> > > fully defied in dts), it exports MMIO-based ROMs and SPI-controller.  
+> > 
+> > Are the ROMs all controlled via SPI?
+> > 
+> > > Lee, explain me please what is the difference between these MFDs and
+> > > Baikal-T1 Boot Controller, that makes one simple MFDs suitable for the
+> > > MFD subsystem, while another isn't?  
+> > 
+> > Complexity.
+> > 
+> > [NB: Please Don't assume that just because I accepted a driver into
+> >      MFD 6 years ago, that it would be accepted again today.]
+> > 
+> > To me this looks like an MTD device which is controlled via SPI.
+> > 
+> > The way I'm reading this currently, it might serve well to make the
+> > MTD portion(s) children of the SPI controller.  I still do not see a
+> > compelling reason to warrant adding a superfluous MFD driver if at all
+> > avoidable.
+> > 
+> > > Miquel, Richard, Vignesh and everyone from MTD, who can help could you
+> > > join this discussion and clarify whether the Baikal-T1 Boot Controller
+> > > driver is supposed to be moved to the MTD subsystem? If so, then what is
+> > > the better place to put it within the drivers/mtd/ directory tree?
+> > >   
+> 
+> Thank you for the detailed explanation. I'll try to bring useful
+> information to sort this out. IIUC, this bloc exports:
+> 
+
+> 1/ One ROM located in the SoC
+> 2/ The access to a possible second ROM over SPI
+> 
+
+Absolutely right. In this case these are the physically mapped ROMs in
+the mtd subsystem notation. So they are the subjects of
+drivers/mtd/maps/physmap-* driver. Though these ROMs require a
+word-aligned access, so I had to implement a dedicated
+driver/mtd/maps/physmap-bt1-rom.c code. I'll submit it after we
+finish with this patchset, settle the issues raised in its framework.
+
+> And also:
+> 
+> 3/ Access to the SPI controller itself
+
+Absolutely right. It's a set of DW APB SSI registers, so normally it
+would be a subject of drivers/spi/{spi-dw-mmio.c,spi-dw.c} driver, but
+due to very limited resources (no DMA, no IRQ, just 8 bytes FIFO, a
+single native chip-select) and a racy access from 2/, that code won't
+work, but would only after a serious refactoring, so I had to create
+a dedicated driver for it.
+
+> 4/ Access to 1/ or 2/ depending on an external switch.
+> 
+
+Yes, it's another physically mapped ROM, which is a mirror of either 1/
+or 2/ depending on the SoC boot mode strapped at the chip startup.
+
+So to speak 1/ is always mapped (it's Internal ROM), 2/ is a physically
+mapped SPI ROM, 3/ is an SPI controller itself primarily dedicated to
+access the SPI ROM, and 4/ is a mirror of 1/ or 2/. The problem is in
+simultaneous access to 2/ and 3/ and to 4/ when the SPI-boot mode is enabled.
+Here is the Boot Controller structure together with comments of how my
+current drivers design is using it:
+
+Boot Controller (0x1f040000 0x100) - root MFD device.
+|
++---+-> 1/ Internal ROM (0x1bfc0000 0x10000) - seen as /dev/mtdX (64KB of internal firmware).
+|  \
++---+-> 4/ Boot ROM (0x1fc00000 0x400000) - seen as /dev/mtdY (4MB mirror of either Internal ROM or SPI ROM depending on the SoC boot mode strapped at the chip startup).
+|  /
++---+-> 3/ SPI ROM (0x1c000000 0x1000000) - seen as /dev/mtdZ.
+|   |
+|  \  - This is a switch, which is handled by a flag in the Boot Controller register 0x1f040000.
++-- +-> 2/ DW APB SSI registers (0x1f040100 0xf00) - seen as SPI-dev +------> Connected to CS0 external SPI-nor flash - seen as mtdN
+                                                                     |
+                                                                     +------> Might be connected to any other SPI-slave with using GPIO-based chip-select.
+
+So as you can see, a system software can access either SPI/Boot ROM or DW APB SSI
+registers at a time, not simultaneously. That's why I needed a dedicated
+API, which would serialize an access to the DW APB SSI registers. This
+is what the MFD driver submitted by this patchset is intended for. It
+provides a lock, which makes sure that either SPI/Boot ROM or DW APB SSI
+is enabled while lock is held. In addition the MFD driver is responsible
+for the sub-devices population.
+
+See the https://lkml.org/lkml/2020/3/27/273 message for some more
+details.
+
+> IMHO:
+> 
+> 1/ Might be seen as a random MTD device, its driver should be in
+>    /drivers/mtd/devices I guess.
+
+Agreed. I've got a driver for it, but it will be
+drivers/mtd/maps/physmap-bt1-rom.c (will use the common code
+drivers/mtd/maps/physmap-core.c), since it's just a ROM. Alas the ROM
+will have no direct mapping due to the word-aligned access restriction
+(no-unaligned-direct-access property). Due to this restriction I also had
+to create a dedicated code in drivers/mtd/maps/physmap-bt1-rom.c instead
+of using generic "mtd-rom" compatible binding.
+
+> 3/ Is a SPI controller, its driver should be memory agnostic and
+>    located in /driver/spi/. However, it should probably implement
+>    the spi-mem infrastructure *and* the direct-mapping infrastructure
+>    which would automatically cover 2/ as well. The reg property of 2/
+>    should probably be part of 3/.
+> 
+
+My new SPI-controller driver does implement the spi-mem infrastructure,
+but it also implements a generic SPI callbacks so to allow any SPI-slave
+(not only the Boot SPI-flash) being connected to the SPI bus. The
+generic SPI callbacks are also required if GPIO-based chip-select is
+available for the SPI-flash (don't really know why you permitted this
+restriction in spi_mem_exec_op() instead of enabling the slave device at
+the time of mem_op-based communications). Since 2/ and 4/ are handled by
+drivers/mtd/maps/physmap-bt1-rom.c, there is no direct-mapping
+implemented for this SPI-controller.
+
+> For 4/ I don't know what is the right thing to do yet.
+> 
+
+That's one of the reason why I implemented it in a way it's implemented.
+1/, 2/ and 4/ are the physically mapped ROMs handled by the
+drivers/mtd/maps/physmap-bt1-rom.c driver, while 3/ is just an SPI-controller.
+And all of them are parts of a single MFD - Baikal-T1 Boot Controller.
+Moreover current Boot Controller DT-nodes structure is as much as possible
+close to the structure of the device and its subnodes from hardware
+point of view. Such design looked neat and elegant for me. It also
+covered all parts of the RTL block.
+
+> What do you think?
+>  
+
+Yes, your design was my first thought. I also had in mind to implement
+2/ as a direct mapping of 3/ . But then I didn't find spi-nor using the
+direct mapping interface, I also didn't come up with a solution for 4/
+and seeing 1/, 2/ and 4/ having the same properties I decided that it
+would be better to make them being exported as a dedicated mtd'es.
+
+So, Miqu�l, do you still think that my decision was wrong and it would be
+better to create your version of the design? If so, folks, what to do with 4/
+then, just drop?
+
+Regards,
+-Sergey
+
+> > > > > Recently I've sent an RFC regarding a different question, but it
+> > > > > concerns the Baikal-T1 system controller and the boot controller as being part
+> > > > > of it:
+> > > > > 
+> > > > > https://lkml.org/lkml/2020/3/22/393  
+> 
+> 
+> Thanks,
+> Miqu�l
