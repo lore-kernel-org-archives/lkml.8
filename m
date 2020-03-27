@@ -2,199 +2,128 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D881C2D0EB
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 05:45:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95DE2C2D0EB
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 05:52:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4EDA0206F6
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 05:45:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6678320786
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 05:52:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (4096-bit key) header.d=d-silva.org header.i=@d-silva.org header.b="bMbioP7E"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728713AbgC3Fpp (ORCPT
+        id S1728648AbgC3Fwu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 01:45:45 -0400
-Received: from emcscan.emc.com.tw ([192.72.220.5]:54411 "EHLO
-        emcscan.emc.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728489AbgC3Fpo (ORCPT
+        Mon, 30 Mar 2020 01:52:50 -0400
+Received: from ushosting.nmnhosting.com ([66.55.73.32]:37028 "EHLO
+        ushosting.nmnhosting.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728492AbgC3Fwt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 01:45:44 -0400
-X-IronPort-AV: E=Sophos;i="5.56,253,1539619200"; 
-   d="scan'208";a="35013932"
-Received: from unknown (HELO webmail.emc.com.tw) ([192.168.10.1])
-  by emcscan.emc.com.tw with ESMTP; 30 Mar 2020 13:45:12 +0800
-Received: from 192.168.10.23
-        by webmail.emc.com.tw with MailAudit ESMTP Server V5.0(20942:0:AUTH_RELAY)
-        (envelope-from <johnny.chuang@emc.com.tw>); Mon, 30 Mar 2020 13:45:14 +0800 (CST)
-Received: from 192.168.55.71
-        by webmail.emc.com.tw with Mail2000 ESMTPA Server V7.00(2486:0:AUTH_LOGIN)
-        (envelope-from <johnny.chuang@emc.com.tw>); Mon, 30 Mar 2020 13:45:13 +0800 (CST)
-From:   "Johnny.Chuang" <johnny.chuang@emc.com.tw>
-To:     "'Peter Hutterer'" <peter.hutterer@who-t.net>
-Cc:     "'Johnny Chuang'" <johnny.chuang.emc@gmail.com>,
-        "'Dmitry Torokhov'" <dmitry.torokhov@gmail.com>,
-        "'Benjamin Tissoires'" <benjamin.tissoires@redhat.com>,
-        <linux-kernel@vger.kernel.org>, <linux-input@vger.kernel.org>,
-        "'Rob Schonberger'" <robsc@google.com>,
-        "'James Chen'" <james.chen@emc.com.tw>,
-        "'Jennifer Tsai'" <jennifer.tsai@emc.com.tw>,
-        "'Paul Liang'" <paul.liang@emc.com.tw>,
-        "'Jeff Chuang'" <jeff.chuang@emc.com.tw>
-References: <1585209525-6047-1-git-send-email-johnny.chuang.emc@gmail.com> <20200329021436.GA68168@jelly> <001501d6062e$849afb60$8dd0f220$@emc.com.tw> <20200330034732.GA156101@jelly>
-In-Reply-To: <20200330034732.GA156101@jelly>
-Subject: RE: [PATCH] Input: elants_i2c - support palm detection
-Date:   Mon, 30 Mar 2020 13:45:10 +0800
-Message-ID: <000001d60656$600c47e0$2024d7a0$@emc.com.tw>
+        Mon, 30 Mar 2020 01:52:49 -0400
+Received: from mail2.nmnhosting.com (unknown [202.169.106.97])
+        by ushosting.nmnhosting.com (Postfix) with ESMTPS id BB2D52DC6849;
+        Mon, 30 Mar 2020 16:52:45 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=d-silva.org;
+        s=201810a; t=1585547566;
+        bh=usgtpWwfPqN3Po8Erc64Din9rr6Mrn4qoxSsihnBfcI=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=bMbioP7EtdRIN7Psu7rzMUpwa2C/X6QC4z279/qrlgZqOuYGPlOwaH67cXt1O9uFN
+         yOjDqQ7nMQ+tvZeiC3hFYQ7HkNgHSBbyXfOcwjqnoGGaTF/NmFZa/cZdks4yFx1rMN
+         SY8i1g6ylE1zIvnQ4+BlwncOv6lIg8IPtu7wxpS04cV44QA+KZi2iMEu6bwkTuOfof
+         Y49t6MWeq96LBdLMYXjaSmO54h9U3i1fSUQp5vBqUJ19SIAdr2sm6OAW6Z1Qkuv20U
+         7r9tsLXd/jVSP2tx5O3YbfGLhX60JbQU/5G2VTu+b3ndMWAb430Gz2hu8VpwC6JFRp
+         0ESQ++Zwi1ehD6oM/g89XDPAa1J5Rnn890kEAlVRB7y46BhGvxZbPZ4Vw9AkNpJsHB
+         cMV5R2mdHXLLQgCpbDHpG6zziIq/nLlkrhCrNCg5beqdPmiTucYeBODFIHKReDK02p
+         +bTsSrqanwYTuozWj8TiV9BtUYmI6YnNsfpXcEHcUATwh7NBNKNuNIDiN2vKdHC56v
+         3MJRPUnWhYZg6Q2eB5TAj14uimXz9l5Y0LlG1MynoP2X+JYl/o4p5ZmKb9I2wE1J6z
+         /JOLdd+DdJwF1YHIa2bnFcs514YF3C+C5vK1g2b0TyRT23PrKcfcG1qzvflCD9DxrC
+         nzuS2Tu74wUp1I8IUt9lKT1M=
+Received: from localhost.lan ([10.0.1.179])
+        by mail2.nmnhosting.com (8.15.2/8.15.2) with ESMTP id 02R7C4B0045934;
+        Fri, 27 Mar 2020 18:12:20 +1100 (AEDT)
+        (envelope-from alastair@d-silva.org)
+From:   "Alastair D'Silva" <alastair@d-silva.org>
+To:     alastair@d-silva.org
+Cc:     "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
+        "Oliver O'Halloran" <oohall@gmail.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Frederic Barrat <fbarrat@linux.ibm.com>,
+        Andrew Donnellan <ajd@linux.ibm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Rob Herring <robh@kernel.org>,
+        Anton Blanchard <anton@ozlabs.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>,
+        Madhavan Srinivasan <maddy@linux.vnet.ibm.com>,
+        =?UTF-8?q?C=C3=A9dric=20Le=20Goater?= <clg@kaod.org>,
+        Anju T Sudhakar <anju@linux.vnet.ibm.com>,
+        Hari Bathini <hbathini@linux.ibm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Greg Kurz <groug@kaod.org>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Alexey Kardashevskiy <aik@ozlabs.ru>,
+        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-nvdimm@lists.01.org, linux-mm@kvack.org
+Subject: [PATCH v4 25/25] MAINTAINERS: Add myself & nvdimm/ocxl to ocxl
+Date:   Fri, 27 Mar 2020 18:12:02 +1100
+Message-Id: <20200327071202.2159885-26-alastair@d-silva.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200327071202.2159885-1-alastair@d-silva.org>
+References: <20200327071202.2159885-1-alastair@d-silva.org>
 MIME-Version: 1.0
-Content-Type: text/plain;
-        charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-X-Mailer: Microsoft Outlook 14.0
-Thread-Index: AQFNlY3ZGTB8jr2YC71KGESJaTtjnwHvPYN1Aovp+zsCHnbTnqk8tEmw
-Content-Language: zh-tw
-x-dg-ref: PG1ldGE+PGF0IG5tPSJib2R5LnR4dCIgcD0iYzpcdXNlcnNcMDUwMTBcYXBwZGF0YVxyb2FtaW5nXDA5ZDg0OWI2LTMyZDMtNGE0MC04NWVlLTZiODRiYTI5ZTM1Ylxtc2dzXG1zZy05ZDI1OTI5NS03MjQ5LTExZWEtYWQ1Zi03YzVjZjg3NDk0NzhcYW1lLXRlc3RcOWQyNTkyOTctNzI0OS0xMWVhLWFkNWYtN2M1Y2Y4NzQ5NDc4Ym9keS50eHQiIHN6PSI0ODgyIiB0PSIxMzIzMDAyMDcwOTQyMjU5MTUiIGg9Ikc2Y3VnL1ZZU3NpYWsvNFU3YmdOWFU0S3dqQT0iIGlkPSIiIGJsPSIwIiBibz0iMSIvPjwvbWV0YT4=
-x-dg-rorf: true
+Content-Transfer-Encoding: 8bit
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mail2.nmnhosting.com [10.0.1.20]); Fri, 27 Mar 2020 18:12:20 +1100 (AEDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> -----Original Message-----
-> From: Peter Hutterer [mailto:peter.hutterer@who-t.net]
-> Sent: Monday, March 30, 2020 11:48 AM
-> To: Johnny.Chuang
-> Cc: 'Johnny Chuang'; 'Dmitry Torokhov'; 'Benjamin Tissoires';
-> linux-kernel@vger.kernel.org; linux-input@vger.kernel.org; 'Rob
-Schonberger';
-> 'James Chen'; 'Jennifer Tsai'; 'Paul Liang'; 'Jeff Chuang'
-> Subject: Re: [PATCH] Input: elants_i2c - support palm detection
-> 
-> On Mon, Mar 30, 2020 at 08:59:51AM +0800, Johnny.Chuang wrote:
-> > > -----Original Message-----
-> > > From: Peter Hutterer [mailto:peter.hutterer@who-t.net]
-> > > Sent: Sunday, March 29, 2020 10:15 AM
-> > > To: Johnny Chuang
-> > > Cc: Dmitry Torokhov; Benjamin Tissoires; linux-kernel@vger.kernel.org;
-> > > linux-input@vger.kernel.org; Rob Schonberger; Johnny Chuang; James
-> Chen;
-> > > Jennifer Tsai; Paul Liang; Jeff Chuang
-> > > Subject: Re: [PATCH] Input: elants_i2c - support palm detection
-> > >
-> > > On Thu, Mar 26, 2020 at 03:58:45PM +0800, Johnny Chuang wrote:
-> > > > From: Johnny Chuang <johnny.chuang@emc.com.tw>
-> > > >
-> > > > Elan define finger/palm detection on the least significant bit of
-byte
-> > 33.
-> > > > The default value is 1 for all firmwares, which report as
-> > MT_TOOL_FINGER.
-> > > > If firmware support palm detection, the bit will change to 0 and
-> > > > report as MT_TOOL_PALM when firmware detecting palm.
-> > > >
-> > > > Signed-off-by: Johnny Chuang <johnny.chuang@emc.com.tw>
-> > > > ---
-> > > >  drivers/input/touchscreen/elants_i2c.c | 11 ++++++++++-
-> > > >  1 file changed, 10 insertions(+), 1 deletion(-)
-> > > >
-> > > > diff --git a/drivers/input/touchscreen/elants_i2c.c
-> > > > b/drivers/input/touchscreen/elants_i2c.c
-> > > > index 14c577c..3b4d9eb3 100644
-> > > > --- a/drivers/input/touchscreen/elants_i2c.c
-> > > > +++ b/drivers/input/touchscreen/elants_i2c.c
-> > > > @@ -73,6 +73,7 @@
-> > > >  #define FW_POS_STATE		1
-> > > >  #define FW_POS_TOTAL		2
-> > > >  #define FW_POS_XY		3
-> > > > +#define FW_POS_TOOL_TYPE	33
-> > > >  #define FW_POS_CHECKSUM		34
-> > > >  #define FW_POS_WIDTH		35
-> > > >  #define FW_POS_PRESSURE		45
-> > > > @@ -842,6 +843,7 @@ static void elants_i2c_mt_event(struct
-> elants_data
-> > > > *ts, u8 *buf)  {
-> > > >  	struct input_dev *input = ts->input;
-> > > >  	unsigned int n_fingers;
-> > > > +	unsigned int tool_type;
-> > > >  	u16 finger_state;
-> > > >  	int i;
-> > > >
-> > > > @@ -852,6 +854,12 @@ static void elants_i2c_mt_event(struct
-> elants_data
-> > > *ts, u8 *buf)
-> > > >  	dev_dbg(&ts->client->dev,
-> > > >  		"n_fingers: %u, state: %04x\n",  n_fingers,
-finger_state);
-> > > >
-> > > > +	/* Note: all fingers have the same tool type */
-> > > > +	if (buf[FW_POS_TOOL_TYPE] & 0x01)
-> > > > +		tool_type = MT_TOOL_FINGER;
-> > > > +	else
-> > > > +		tool_type = MT_TOOL_PALM;
-> > > > +
-> > > >  	for (i = 0; i < MAX_CONTACT_NUM && n_fingers; i++) {
-> > > >  		if (finger_state & 1) {
-> > > >  			unsigned int x, y, p, w;
-> > > > @@ -867,7 +875,7 @@ static void elants_i2c_mt_event(struct
-> elants_data
-> > > *ts, u8 *buf)
-> > > >  				i, x, y, p, w);
-> > > >
-> > > >  			input_mt_slot(input, i);
-> > > > -			input_mt_report_slot_state(input,
-MT_TOOL_FINGER,
-> > true);
-> > > > +			input_mt_report_slot_state(input, tool_type,
-true);
-> > > >  			input_event(input, EV_ABS,
-ABS_MT_POSITION_X, x);
-> > > >  			input_event(input, EV_ABS,
-ABS_MT_POSITION_Y, y);
-> > > >  			input_event(input, EV_ABS, ABS_MT_PRESSURE,
-p); @@
-> > > -1307,6 +1315,7
-> > > > @@ static int elants_i2c_probe(struct i2c_client *client,
-> > > >  	input_set_abs_params(ts->input, ABS_MT_POSITION_Y, 0,
-ts->y_max,
-> 0,
-> > > 0);
-> > > >  	input_set_abs_params(ts->input, ABS_MT_TOUCH_MAJOR, 0, 255,
-0,
-> 0);
-> > > >  	input_set_abs_params(ts->input, ABS_MT_PRESSURE, 0, 255, 0,
-0);
-> > > > +	input_set_abs_params(ts->input, ABS_MT_TOOL_TYPE, 0,
-> > > MT_TOOL_MAX, 0,
-> > > > +0);
-> > >
-> > > if you're only reporting pen and palm, can we set this to MT_TOOL_PALM
-> > > instead? Otherwise you're indicating you may also send MT_TOOL_DIAL
-> which
-> > > is unlikely on this hardware :)
-> > >
-> >
-> > Yes, we do not have MT_TOOL_DIAL on touch screen.
-> > So I need to modify MT_TOOL_MAX to MT_TOOL_PALM, right?
-> 
-> yes please.
-> 
-> Cheers,
->    Peter
-> 
+The OpenCAPI Persistent Memory driver will be maintained as part ofi
+the ppc tree.
 
-OK, I will submit patch v2 today.
+I'm also adding myself as an author of the driver & contributor to
+the generic ocxl driver.
 
-> >
-> > > Reviewed-by: Peter Hutterer <peter.hutterer@who-t.net> otherwise
-> > >
-> > > Cheers,
-> > >    Peter
-> > >
-> > > >  	input_abs_set_res(ts->input, ABS_MT_POSITION_X, ts->x_res);
-> > > >  	input_abs_set_res(ts->input, ABS_MT_POSITION_Y, ts->y_res);
-> > > >  	input_abs_set_res(ts->input, ABS_MT_TOUCH_MAJOR, 1);
-> > > > --
-> > > > 2.7.4
-> > > >
-> >
+Signed-off-by: Alastair D'Silva <alastair@d-silva.org>
+---
+ MAINTAINERS | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/MAINTAINERS b/MAINTAINERS
+index f8670989ec91..3fb9a9f576a7 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -12064,13 +12064,16 @@ F:	tools/objtool/
+ OCXL (Open Coherent Accelerator Processor Interface OpenCAPI) DRIVER
+ M:	Frederic Barrat <fbarrat@linux.ibm.com>
+ M:	Andrew Donnellan <ajd@linux.ibm.com>
++M:	Alastair D'Silva <alastair@d-silva.org>
+ L:	linuxppc-dev@lists.ozlabs.org
+ S:	Supported
+ F:	arch/powerpc/platforms/powernv/ocxl.c
++F:	arch/powerpc/platforms/powernv/pmem/*
+ F:	arch/powerpc/include/asm/pnv-ocxl.h
+ F:	drivers/misc/ocxl/
+ F:	include/misc/ocxl*
+ F:	include/uapi/misc/ocxl.h
++F:	include/uapi/nvdimm/ocxl-pmem.h
+ F:	Documentation/userspace-api/accelerators/ocxl.rst
+ 
+ OMAP AUDIO SUPPORT
+-- 
+2.24.1
 
