@@ -2,215 +2,226 @@ Return-Path: <SRS0=s8dx=5M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B85A5C43331
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 14:41:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20BA7C43331
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 14:42:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 739BE206F2
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 14:41:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D6D7B206F2
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 14:42:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="K1hCL8HE"
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="XVJBlTCt";
+	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="XG4viJC7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727473AbgC0Olz (ORCPT
+        id S1727666AbgC0OmO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Mar 2020 10:41:55 -0400
-Received: from ssl.serverraum.org ([176.9.125.105]:32917 "EHLO
-        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726656AbgC0Olz (ORCPT
+        Fri, 27 Mar 2020 10:42:14 -0400
+Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:30372 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727505AbgC0OmO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Mar 2020 10:41:55 -0400
-Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ssl.serverraum.org (Postfix) with ESMTPSA id 2388F22FEC;
-        Fri, 27 Mar 2020 15:41:51 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
-        t=1585320112;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=IhhqnEEjd7j8YFsiPIF4MDR1OPYkqd3YBJDx5dOWyuM=;
-        b=K1hCL8HEIQ0t2wWT5JN3F9eKgjFQvtlGnT4UaTb+9ygZy6AV2lxWRbRkxLHU3PIDZkMdgF
-        MH5SIMhDWci/IF6T2HTZdAGkucEYG49WrRkOCsuW0q/LdfFyPWA4EfNUikWz/CaLR102ht
-        BbZldfsn5j/9eoNWNZLvNrkwmUid9I4=
+        Fri, 27 Mar 2020 10:42:14 -0400
+Received: from pps.filterd (m0089730.ppops.net [127.0.0.1])
+        by m0089730.ppops.net (8.16.0.42/8.16.0.42) with SMTP id 02REZu69021737;
+        Fri, 27 Mar 2020 07:42:04 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=date : from : to : cc :
+ subject : message-id : references : content-type : in-reply-to :
+ mime-version; s=facebook; bh=7hEtRLJykbHGto8wyLK0QKqbT3ymv87iGB0eqdADA/g=;
+ b=XVJBlTCtzeiLgIKFpRKDIgf7ahOr/1Nm8N6eceqmNk4oOyN45h1SJWYia+ukBBKTvFW8
+ DbR+PIUzXnnc1GkJvkYKqvNGdMkrr5y3WCNbDw6ypVIGeCH+LHWDLo8LfmOh+IpP3FCI
+ hkrsq5s/tCzvxJ++YgGf9Z8wPvXPYkbkmE8= 
+Received: from maileast.thefacebook.com ([163.114.130.16])
+        by m0089730.ppops.net with ESMTP id 301jxw85eu-5
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+        Fri, 27 Mar 2020 07:42:03 -0700
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (100.104.31.183)
+ by o365-in.thefacebook.com (100.104.35.175) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1847.3; Fri, 27 Mar 2020 07:42:01 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=QGwGq31vD3FTlLXnfhhdDsS26sJO6WFtfI/AFhNhFnhh/ZxQO/wB4gVHcb3GC60TJ5ToOibBlw28THoXE1GLNoCcvtSL5GDfuIQBRxc8Mr5p5DM+sQFPE3qNFDlPCFRortO1JCbB0dV9fFKyQJ1bWiu3Kc2dwrfHQAzp8asy6Xza66MSm/sKy88hVwDrCfeNVBpU2LJXbYQsoob1UyQIJt3bqkk/EFjOZUDpBamxqKlmRY1ykbR5WKWZLPXayvkywdzts6Kcg7ZhL3veM6RTBL+PoJzhB0NttVcWb66fh42GscQtWCal8Nh8IcT1gx4Hq3srIUP4d8wltr6Xo6RxSw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=7hEtRLJykbHGto8wyLK0QKqbT3ymv87iGB0eqdADA/g=;
+ b=U6EtPqOxDQ9jPZ/TsIywvf/fbHYByZP51EbGGNmiWEdNwjJanOwXxTrIvt2S38sxiieh9EMPSF1/PaiMq6OAds7EBucquAv0+2S4ZolxyI9Mf4+lBs1paeh6h5Yg3pY0oTQJnthAz+edmKvnXk5iO9k36O71GoaZDRNZ4UfzqoptM8afZFKVtwoxtUip2sTLWdFMr/PEbigGAqBZfA2oNsEP0GcgdANiE16R6qINddju1n64s+IA4k36BnfXmwdQZaHPSMzxsOc28Txj5vBWehEDTRmgQ8tjKN4PhsHDWnqUCHlHTIXUj5YzDRhwfkGQlz0kxycG7BtmSIZcg9LonQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
+ header.d=fb.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
+ s=selector2-fb-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=7hEtRLJykbHGto8wyLK0QKqbT3ymv87iGB0eqdADA/g=;
+ b=XG4viJC7EBemYl4dRI6IqQMHqIbnkzlfn2MCH6ArAoV/ZgroB2y8pdIersIanp2OzqGFvC9FlwPIJ78xzLOjHulXhwjSZdo0ztFsYIWDbI5SSI+ybJsAeSkoZRUqP4Inf0o7u7RWFtWuPB8Gn9XrnbazDVjmMaEt5UFP7CdPaGk=
+Received: from BYAPR15MB4136.namprd15.prod.outlook.com (2603:10b6:a03:96::24)
+ by BYAPR15MB2600.namprd15.prod.outlook.com (2603:10b6:a03:150::33) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2856.20; Fri, 27 Mar
+ 2020 14:42:00 +0000
+Received: from BYAPR15MB4136.namprd15.prod.outlook.com
+ ([fe80::bdf9:6577:1d2a:a275]) by BYAPR15MB4136.namprd15.prod.outlook.com
+ ([fe80::bdf9:6577:1d2a:a275%7]) with mapi id 15.20.2835.023; Fri, 27 Mar 2020
+ 14:42:00 +0000
+Date:   Fri, 27 Mar 2020 07:41:55 -0700
+From:   Roman Gushchin <guro@fb.com>
+To:     Michal Hocko <mhocko@kernel.org>
+CC:     Aslan Bakirov <aslan@fb.com>, <akpm@linux-foundation.org>,
+        <linux-kernel@vger.kernel.org>, <linux-mm@kvack.org>,
+        <kernel-team@fb.com>, <riel@surriel.com>, <hannes@cmpxchg.org>
+Subject: Re: [PATCH 2/2] mm: hugetlb: Use node interface of cma
+Message-ID: <20200327144155.GA194089@carbon.DHCP.thefacebook.com>
+References: <20200326212718.3798742-1-aslan@fb.com>
+ <20200326212718.3798742-2-aslan@fb.com>
+ <20200327080610.GV27965@dhcp22.suse.cz>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200327080610.GV27965@dhcp22.suse.cz>
+X-ClientProxiedBy: MWHPR03CA0013.namprd03.prod.outlook.com
+ (2603:10b6:300:117::23) To BYAPR15MB4136.namprd15.prod.outlook.com
+ (2603:10b6:a03:96::24)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 8bit
-Date:   Fri, 27 Mar 2020 15:41:51 +0100
-From:   Michael Walle <michael@walle.cc>
-To:     Vignesh Raghavendra <vigneshr@ti.com>
-Cc:     Tudor.Ambarus@microchip.com, linux-mtd@lists.infradead.org,
-        linux-kernel@vger.kernel.org, richard@nod.at,
-        boris.brezillon@collabora.com, miquel.raynal@bootlin.com,
-        marex@denx.de
-Subject: Re: [PATCH v2] mtd: spi-nor: keep lock bits if they are non-volatile
-In-Reply-To: <a4f3657b-8ebe-a54d-8a11-c6e4ce8a3561@ti.com>
-References: <20200103221229.7287-1-michael@walle.cc>
- <8187061.UfBqSTmf1g@192.168.0.113>
- <62b578b07d5eb46a015dafd4c2f45bc2@walle.cc>
- <5323055.WqobA3rpa8@192.168.0.113>
- <990b9b16-36e5-ce73-36c7-0ebfa391c26b@ti.com>
- <e64cc3ac32d2b44c9e6f4b4f795354ae@walle.cc>
- <a4f3657b-8ebe-a54d-8a11-c6e4ce8a3561@ti.com>
-Message-ID: <926471a04028dda58ff2aba2657c2fe2@walle.cc>
-X-Sender: michael@walle.cc
-User-Agent: Roundcube Webmail/1.3.10
-X-Spamd-Bar: /
-X-Rspamd-Server: web
-X-Rspamd-Queue-Id: 2388F22FEC
-X-Spamd-Result: default: False [-0.10 / 15.00];
-         FROM_HAS_DN(0.00)[];
-         TO_DN_SOME(0.00)[];
-         TO_MATCH_ENVRCPT_ALL(0.00)[];
-         MIME_GOOD(-0.10)[text/plain];
-         DKIM_SIGNED(0.00)[];
-         RCPT_COUNT_SEVEN(0.00)[8];
-         NEURAL_HAM(-0.00)[-0.870];
-         RCVD_COUNT_ZERO(0.00)[0];
-         FROM_EQ_ENVFROM(0.00)[];
-         MIME_TRACE(0.00)[0:+];
-         MID_RHS_MATCH_FROM(0.00)[]
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from carbon.DHCP.thefacebook.com (2620:10d:c090:400::5:56f3) by MWHPR03CA0013.namprd03.prod.outlook.com (2603:10b6:300:117::23) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2856.20 via Frontend Transport; Fri, 27 Mar 2020 14:41:59 +0000
+X-Originating-IP: [2620:10d:c090:400::5:56f3]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 825c2b90-7074-4df3-1664-08d7d25d01b1
+X-MS-TrafficTypeDiagnostic: BYAPR15MB2600:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <BYAPR15MB260029AF1B6971F608FAF3EBBECC0@BYAPR15MB2600.namprd15.prod.outlook.com>
+X-FB-Source: Internal
+X-MS-Oob-TLC-OOBClassifiers: OLM:2803;
+X-Forefront-PRVS: 0355F3A3AE
+X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10019020)(39860400002)(376002)(346002)(366004)(136003)(396003)(1076003)(66476007)(66556008)(66946007)(186003)(16526019)(4326008)(33656002)(5660300002)(55016002)(7696005)(52116002)(2906002)(478600001)(316002)(8676002)(6916009)(8936002)(9686003)(6506007)(6666004)(81166006)(86362001)(81156014);DIR:OUT;SFP:1102;SCL:1;SRVR:BYAPR15MB2600;H:BYAPR15MB4136.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;
+Received-SPF: None (protection.outlook.com: fb.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: x06egVOX/Zq2BKEEvuGqQr6ISxmdf7s9sNgdMocqboOvke+JQjd5SMZ+EJRGA1E04TNsAyV4iOIU629HmhEEW9ce9nX4/4DsRRhwAf6s8qoy7U5L084aAtUbs/3ab0aJXfchblXI5uUb3ECy2IpjrlxM/M5+sgidqsvetU/pVIEnfLZExXd1xXCugHDoCcxFKqNRufUhOmZ/GpdGvWVc1qS5S753CUQVgzkEwHEkLlnxvzMeeerupyC+/3Zo6fwtL0pJpS1qI78K0Kj177XKA+AS3hOnSyWGxpJ9UK5fEVuF3HRgbqBntsxCndA6FtSxEP+nh4pOfjjZuo1wYLFHKaaoeLTuwp271wUB2yM4yn+n9eEYVrzBRSVm9XfRRxxp0nBcemtaIucuPtxwnmmf46ZRc/hSSa3qvS07zmoD4SwWwxil1MuWvcjm3c4ygGOQ
+X-MS-Exchange-AntiSpam-MessageData: 1wQRyrMD4ZPTvoAPA/isksdg5b/hMlclhtSRBRJZIwVAWLlZgL8qq42kby7ndT0VZ2lFCw35sMLnnKOmGk2YbYbOXi/VkUkgbtB8Krgsr8HQRGd0jVQEYeWA+BA/qHQJMmJ6GC75wAbjLb+uX2o3SG9QZyu4FI142hFFPsyH7epaMdZcAYeb7EFMxyJuin7T
+X-MS-Exchange-CrossTenant-Network-Message-Id: 825c2b90-7074-4df3-1664-08d7d25d01b1
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Mar 2020 14:42:00.0947
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: wieQkKK1l7khvSj30wDdZjNTPQxANH+1jEgjJKyFqfCC1s5BeHQKg1X6W6cac6Cm
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR15MB2600
+X-OriginatorOrg: fb.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.645
+ definitions=2020-03-27_05:2020-03-27,2020-03-27 signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 lowpriorityscore=0
+ clxscore=1015 spamscore=0 suspectscore=1 bulkscore=0 priorityscore=1501
+ phishscore=0 malwarescore=0 impostorscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2003270135
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am 2020-01-23 18:20, schrieb Vignesh Raghavendra:
-> On 1/22/2020 6:14 PM, Michael Walle wrote:
->> Hi Vignesh,
->> 
->> Am 2020-01-22 13:10, schrieb Vignesh Raghavendra:
->>> On 22/01/20 12:23 am, Tudor.Ambarus@microchip.com wrote:
->>>> Hi, Michael, Vignesh,
->>>> 
->>>> On Sunday, January 12, 2020 12:50:57 AM EET Michael Walle wrote:
->>>>> EXTERNAL EMAIL: Do not click links or open attachments unless you
->>>>> know the
->>>>> content is safe
->>> [...]
->>> 
+On Fri, Mar 27, 2020 at 09:06:10AM +0100, Michal Hocko wrote:
+> On Thu 26-03-20 14:27:18, Aslan Bakirov wrote:
+> > With introduction of numa node interface for CMA, this patch is for using that
+> > interface for allocating memory on numa nodes if NUMA is configured.
+> > This will be more efficient  and cleaner because first, instead of iterating
+> > mem range of each numa node, cma_declare_contigueous_nid() will do
+> > its own address finding if we pass 0 for  both min_pfn and max_pfn,
+> > second, it can also handle caseswhere NUMA is not configured
+> > by passing NUMA_NO_NODE as an argument.
+> > 
+> > In addition, checking if desired size of memory is available or not,
+> > is happening in cma_declare_contiguous_nid()  because base and
+> > limit will be determined there, since 0(any) for  base and
+> > 0(any) for limit is passed as argument to the function.
 > 
-> [...]
-> 
->>>>>> Preferences or suggestions?
->>>>> 
->>>> I would go with 2/ or 3/. Vignesh, what do you prefer and why?
->>>> 
->>> 
->>> I dont like option 1, because I am not convinced that this is a HW
->>> description to be put in DT.  IIUC, problem is more of what to do 
->>> with
->>> locking configuration that is done before Linux comes up(either in
->>> previous boot or by bootloader or POR default). Current code just
->>> discards it and unlocks entire flash.
->> 
->> But this is not the main problem. It is rather the intention of the
->> user to actually want write protect the flash (for flashes who has
->> proper support for them, that is the ones which have non-volatile
->> bits).
->> 
->> Flashes with volatile bits are another subject. Here it might be 
->> useful
->> to unlock them either at probe time or when we first write to them, so
->> the user doesn't need to know if its this kind of flash and he would
->> actually have to unlock the flash before writing. I've left the
->> behaviour for these flashes as it was before.
->> 
->> And yes, u-boot suffers from the same problem, eg. it unlocks the 
->> whole
->> flash too. I guess they inherited the behaviour from linux. But I
->> wanted to start with linux first.
->> 
-> 
-> U-Boot only unlocks entire flash in case of Atmel or SST or Intel.
+> This looks much better than the original patch. Can we simply squash
+> your and Roman's patch in the mmotm tree and post it for the review in
+> one piece? It would be slightly easier to review that way.
 
-well for now.. until someone thinks its a good idea to follow linux
-behaviour.
+I'm glad you liked it! I agree, it's much nicer now, thanks to Aslan!
 
->>> But proposal is not to touch those bits at probe time and leave this
->>> upto userspace to handle.
->> 
->> No, my proposal was to divide the flashes into two categories. The
->> unlocking is only done on the flashes which have volatile locking 
->> bits,
->> thus even when the new option is enabled it won't break access to 
->> these
->> flashes.
->> 
-> 
-> Hmm, looks like before commit 3e0930f109e7 ("mtd: spi-nor: Rework the
-> disabling of block write protection") global unlock was being done only
-> for Atmel, SST and Intel flashes. So 3e0930f109e7 definitely changes
-> this behavior to unlock all flashes that have SPI_NOR_HAS_LOCK set (in
-> addition to Atmel,SST and Intel).
-> I think we should just revert to the behavior before 3e0930f109e7 so as
-> not to break userspace expectation of preserving non volatile BP 
-> setting
-> across boots
-> 
-> Are we sure there are no Atmel and SST flashes that have non-volatile 
-> BP
-> bits? If so, then I have no objection for this patch as this 
-> effectively
-> reverts back to behavior before 3e0930f109e7.
-
-I've gone through all the flashes which were supported (at that time), 
-all
-which have non-volatile have the SPI_NOR_UNPROTECT flag. Also some ESMT
-parts have non-volatile flags.
-
-But this patch doesn't restore the state as of before 3e0930f109e7. 
-Before
-this commit any Atmel, Intel and SST flashes were unlocked. With this
-patch only the ones are unlocked which have volatile bits.
-
-I'll send a v3 which introduces a new kernel config option with three
-choices:
-  (1) Disable WP on any flashes (legacy behaviour)
-  (2) Disable WP on flashes w/ volatile protection bits
-  (3) Keep write protection as is
-
-(1) is enabled by default. One should choose (2) though, because that is
-the sane thing to do and (3) is for completeness and the special case if
-anyone will actually keep the write protection on flashes with volatile
-bits.
-
-I still don't think a kernel parameter is a good idea because you may
-miss it and end up with your flash being unprotected.
-
-And i still hope that sometime, (2) may be the default..
-
--michael
-
+I think it's simpler to keep it as a separate patch, because there was
+already a fix by Randy Dunlap on top of my original version.
 
 > 
-> Regards
-> Vignesh
+> > Signed-off-by: Aslan Bakirov <aslan@fb.com>
+
+Acked-by: Roman Gushchin <guro@fb.com>
+
+Thanks!
+
 > 
->>> Adding a Kconfig does not scale well for multi-platform builds. There
->>> would not be a way to have protection enabled on one platform but
->>> disabled on other. Does not scale for multiple flashes either
->>> 
->>> Option 3 sounds least bad among all. If module param can be designed 
->>> to
->>> be a string then, we could control locking behavior to be per flash
->>> using flash name.
->> 
->> What about both? A kconfig option which defines the default for the
->> kernel parameter? My fear is that once it is a kernel parameter it is
->> easy to forget (thus having the non-volatile bits, the flash is
->> completely unlocked again) and it is not very handy; for proper write
->> protection you'd always have to have this parameter.
->> 
->> btw. I don't see a need to have this option per flash, because once
->> the user actually enables it, he is aware that its for all of his
->> flashes. I haven't seen flashes which has non-volatile protection bits
->> _and_ are protected by default. There shouldn't be a noticable
->> difference for the user if the option when enabled.
->> 
->> -michael
+> Thanks!
+> 
+> > ---
+> >  mm/hugetlb.c | 40 +++++++++++-----------------------------
+> >  1 file changed, 11 insertions(+), 29 deletions(-)
+> > 
+> > diff --git a/mm/hugetlb.c b/mm/hugetlb.c
+> > index b9f0c903c4cf..62989220c4ff 100644
+> > --- a/mm/hugetlb.c
+> > +++ b/mm/hugetlb.c
+> > @@ -5573,42 +5573,24 @@ void __init hugetlb_cma_reserve(int order)
+> >  
+> >  	reserved = 0;
+> >  	for_each_node_state(nid, N_ONLINE) {
+> > -		unsigned long min_pfn = 0, max_pfn = 0;
+> >  		int res;
+> > -#ifdef CONFIG_NUMA
+> > -		unsigned long start_pfn, end_pfn;
+> > -		int i;
+> >  
+> > -		for_each_mem_pfn_range(i, nid, &start_pfn, &end_pfn, NULL) {
+> > -			if (!min_pfn)
+> > -				min_pfn = start_pfn;
+> > -			max_pfn = end_pfn;
+> > -		}
+> > -#else
+> > -		min_pfn = min_low_pfn;
+> > -		max_pfn = max_low_pfn;
+> > -#endif
+> >  		size = min(per_node, hugetlb_cma_size - reserved);
+> >  		size = round_up(size, PAGE_SIZE << order);
+> > -
+> > -		if (size > ((max_pfn - min_pfn) << PAGE_SHIFT) / 2) {
+> > -			pr_warn("hugetlb_cma: cma_area is too big, please try less than %lu MiB\n",
+> > -				round_down(((max_pfn - min_pfn) << PAGE_SHIFT) *
+> > -					   nr_online_nodes / 2 / SZ_1M,
+> > -					   PAGE_SIZE << order));
+> > -			break;
+> > -		}
+> > -
+> > -		res = cma_declare_contiguous(PFN_PHYS(min_pfn), size,
+> > -					     PFN_PHYS(max_pfn),
+> > +		
+> > +		
+> > +#ifndef CONFIG_NUMA
+> > +		nid = NUMA_NO_NODE
+> > +#endif		
+> > +		res = cma_declare_contiguous_nid(0, size,
+> > +					     0, 
+> >  					     PAGE_SIZE << order,
+> >  					     0, false,
+> > -					     "hugetlb", &hugetlb_cma[nid]);
+> > +					     "hugetlb", &hugetlb_cma[nid], nid);		
+> > +
+> >  		if (res) {
+> > -			phys_addr_t begpa = PFN_PHYS(min_pfn);
+> > -			phys_addr_t endpa = PFN_PHYS(max_pfn);
+> > -			pr_warn("%s: reservation failed: err %d, node %d, [%pap, %pap)\n",
+> > -				__func__, res, nid, &begpa, &endpa);
+> > +			pr_warn("%s: reservation failed: err %d, node %d\n",
+> > +				__func__, res, nid);
+> >  			break;
+> >  		}
+> >  
+> > -- 
+> > 2.17.1
+> 
+> -- 
+> Michal Hocko
+> SUSE Labs
