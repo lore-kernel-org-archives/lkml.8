@@ -2,92 +2,114 @@ Return-Path: <SRS0=s8dx=5M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A26BC2D0EC
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 13:47:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 052B0C43331
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 13:47:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 54883208E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 13:47:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585316834;
-	bh=7Pepu9uT9jkfT1u0Lw+gmVZkqKbmxOrp/H5fM5L/zww=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=TnXCkTY2eDYDnezB0QIWSgDTOxfP8p3I33BIxW7YQMtQAY84zYaMDfKLySJWFSkio
-	 wUAAdx8wv7+PBQoHaewmHAfy2qsfy8Gi55CpVZS+br8ugs+NJGjGzC6B4O2TLUAmsF
-	 6e4Gze59ZKtAd6jr3l2SCvaeCj27NsPqKcbHglTQ=
+	by mail.kernel.org (Postfix) with ESMTP id CA34C206F6
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 13:47:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727423AbgC0NrN (ORCPT
+        id S1727575AbgC0Nr4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Mar 2020 09:47:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57004 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726275AbgC0NrN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Mar 2020 09:47:13 -0400
-Received: from coco.lan (ip5f5ad4d8.dynamic.kabel-deutschland.de [95.90.212.216])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CDAD8207FF;
-        Fri, 27 Mar 2020 13:47:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585316832;
-        bh=7Pepu9uT9jkfT1u0Lw+gmVZkqKbmxOrp/H5fM5L/zww=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=r6jUV25hxb/sEpYPoqpJU1QKNzNxsiNj7D3JzeqbhGADUSCqB0TdMOv/B0ej8NnKt
-         8ShhDGrgzq2OzTXESqv5ic0ArU0UYXJimhf90bFpyTOWFd+yxw1BZ8equJV8WA0nz6
-         9BsPMjcC2cuum+Ix9ZoMEiSu1aq8DXrK5eOhZM30=
-Date:   Fri, 27 Mar 2020 14:47:07 +0100
-From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Subject: Re: [PATCH 12/17] gpio: gpiolib.c: fix a doc warning
-Message-ID: <20200327144707.3367e97d@coco.lan>
-In-Reply-To: <CACRpkdYrL02YHn5dPnh_Oz0Ysm5BxHrwQgwNMtsD55XGid_hCQ@mail.gmail.com>
-References: <cover.1584456635.git.mchehab+huawei@kernel.org>
-        <51197e3568f073e22c280f0584bfa20b44436708.1584456635.git.mchehab+huawei@kernel.org>
-        <CACRpkdYrL02YHn5dPnh_Oz0Ysm5BxHrwQgwNMtsD55XGid_hCQ@mail.gmail.com>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Fri, 27 Mar 2020 09:47:56 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:33878 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726275AbgC0Nr4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Mar 2020 09:47:56 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: ezequiel)
+        with ESMTPSA id C4333297E7F
+Message-ID: <c82b6c7be2e2f05c6924df00256caee6c5e32b23.camel@collabora.com>
+Subject: Re: [PATCH 2/2] media: Remove VIDEO_DEV unneeded dependency
+From:   Ezequiel Garcia <ezequiel@collabora.com>
+To:     Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc:     linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Tomasz Figa <tfiga@chromium.org>,
+        Nicolas Dufresne <nicolas@ndufresne.ca>, kernel@collabora.com,
+        Hans Verkuil <hverkuil@xs4all.nl>, Sean Young <sean@mess.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Sakari Ailus <sakari.ailus@iki.fi>,
+        Michael Ira Krufky <mkrufky@gmail.com>,
+        Helen Koike <helen.koike@collabora.com>
+Date:   Fri, 27 Mar 2020 10:47:44 -0300
+In-Reply-To: <0336a046563a3d0556c988a67be2642194831710.camel@collabora.com>
+References: <20200323211022.28297-1-ezequiel@collabora.com>
+         <20200323211022.28297-3-ezequiel@collabora.com>
+         <20200324104722.1c605792@coco.lan>
+         <0336a046563a3d0556c988a67be2642194831710.camel@collabora.com>
+Organization: Collabora
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.36.0-1 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Fri, 27 Mar 2020 11:22:52 +0100
-Linus Walleij <linus.walleij@linaro.org> escreveu:
+Hi Mauro,
 
-> On Tue, Mar 17, 2020 at 3:54 PM Mauro Carvalho Chehab
-> <mchehab+huawei@kernel.org> wrote:
+On Tue, 2020-03-24 at 07:18 -0300, Ezequiel Garcia wrote:
+> On Tue, 2020-03-24 at 10:47 +0100, Mauro Carvalho Chehab wrote:
+> > Em Mon, 23 Mar 2020 18:10:22 -0300
+> > Ezequiel Garcia <ezequiel@collabora.com> escreveu:
+> > 
+> > > Enable VIDEO_DEV (which compiles Video4Linux core)
+> > > when MEDIA_SUPPORT is selected. This is needed, in order
+> > > to be able to enable devices such as stateless codecs.
+> > > 
+> > > Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
+> > > ---
+> > >  drivers/media/Kconfig | 2 --
+> > >  1 file changed, 2 deletions(-)
+> > > 
+> > > diff --git a/drivers/media/Kconfig b/drivers/media/Kconfig
+> > > index b36a41332867..7de472ad07a2 100644
+> > > --- a/drivers/media/Kconfig
+> > > +++ b/drivers/media/Kconfig
+> > > @@ -93,13 +93,11 @@ source "drivers/media/mc/Kconfig"
+> > >  
+> > >  #
+> > >  # Video4Linux support
+> > > -#	Only enables if one of the V4L2 types (ATV, webcam, radio) is selected
+> > >  #
+> > >  
+> > >  config VIDEO_DEV
+> > >  	tristate
+> > >  	depends on MEDIA_SUPPORT
+> > > -	depends on MEDIA_CAMERA_SUPPORT || MEDIA_ANALOG_TV_SUPPORT || MEDIA_RADIO_SUPPORT || MEDIA_SDR_SUPPORT
+> > >  	default y
+> > >  
+> > >  config VIDEO_V4L2_SUBDEV_API
+> > 
+> > The rationale of the above is to exclude Digital TV and remote
+> > controller.
+> > 
+> > Removing the above will make the V4L2 core available every time, even
+> > if all the user wants is remote controller or Digital TV support.
+> > 
 > 
-> > Use a different markup for the ERR_PTR, as %FOO doesn't work
-> > if there are parenthesis. So, use, instead:
-> >
-> >         ``ERR_PTR(-EINVAL)``
-> >
-> > This fixes the following warning:
-> >
-> >         ./drivers/gpio/gpiolib.c:139: WARNING: Inline literal start-string without end-string.
-> >
-> > Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>  
+> Hm, right.
 > 
-> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+> > I'm working on a patchset that should hopefully address the issues
+> > you're concerning.
+> > 
 > 
-> Mauro are you merging this or do you want me to merge it?
+> Thanks, I'll appreciate that.
+> 
 
-Feel free to merge it.
+It seems the config rework you sent will undergo some
+extended discussions, which is fine given it's a full rework.
 
-My plan is to rebase my trees after the merge window, re-sending
-anything that got missed for them to be either applied directly
-or via the docs tree.
+I'd like to send a smaller (ideally just one or two patches)
+series, so we can improve the situation on codecs on a smaller
+timeframe.
 
-Thanks,
-Mauro
+Thanks!
+Ezequiel
+
