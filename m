@@ -2,115 +2,97 @@ Return-Path: <SRS0=s8dx=5M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9205CC43331
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 12:53:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19D97C43331
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 12:55:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5CC2B206F2
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 12:53:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GE4RxeLU"
+	by mail.kernel.org (Postfix) with ESMTP id CE95D206F2
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 12:55:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727495AbgC0MxW (ORCPT
+        id S1727349AbgC0Mz0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Mar 2020 08:53:22 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:33429 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726165AbgC0MxW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Mar 2020 08:53:22 -0400
-Received: by mail-pl1-f193.google.com with SMTP id g18so3434366plq.0
-        for <linux-kernel@vger.kernel.org>; Fri, 27 Mar 2020 05:53:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=G68liNtd5NAG8F0BUIcyo/RJH3sB3+HWc+rvRzN4j0s=;
-        b=GE4RxeLUl+XDIRjDHsc7r1GUEwGkxGTk5jppoxA5ILovhndXMF/ujBurOL+/JkFMSM
-         +bbYVGl9yQ2iTsxsheQSgowngt51vzFgFJMz7XgW4wNQE+0Ux9W9mcEo97kB+lW1XpX1
-         Fjy8DnG/PyYkN2Xx0S1jUf2DNtBGca/QdBTm0gZTBbb5DcnQhdxgdqDQFkCwnqR5sMw8
-         DiWMZMDhj19kkLU5hZ3ct2BPboJy2NURR5muASZRP+wSbNzgEqoh6/6mbHwavM3IPiHH
-         mjC28oO48zd/RIPc3dQwMs5iH5j//DBdK6+xr84cYVFk+BSbEFl3Yjn96nEy7HyW7MfA
-         KizQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=G68liNtd5NAG8F0BUIcyo/RJH3sB3+HWc+rvRzN4j0s=;
-        b=p000eSNDBXK16vQPXF+UvIFi+FYk7VyQJFrsFKvFxpQKvFd/zM1BpDUC8JrcDrOOHC
-         urZphqm7a6rD7Jf1DwZW0dI7eW8JQJmoFGLxUvuCCXUcmlAD6y4Daqj1fqttg34IpT87
-         guQ/R5KCDOrHGF1czN0G/Kq6EYawFA/zzOO54x9vjLQ4oNBcwCOcEqXE69qOMFVaio8Q
-         pc0gwufyW+Z05rU4jVNtTXt/hfuvjMGkPBj4NBKvCiukQKhbLlpu4cLMxDsXGIWq6XE2
-         fwpWU7hBGyj0gc/tZ/cqjWg7FdhT6UnUZ8tSiD0L+SzoJL1KcYQ57SUy4+HE5FQQ9Xvg
-         4+gA==
-X-Gm-Message-State: ANhLgQ2jyHO+0ksBOd3CXSfEpXsfjR7nxpFMYjAWC04OJQvZSWyQ3v5J
-        bHRf2IKPSP3YIUAthGphFds=
-X-Google-Smtp-Source: ADFU+vur85N5b/dYIZxb3jY8T3tnGlocKor6avYVXq6UVEyv5NAFg9S0iJYegIyPVQZreo4gMtB6vA==
-X-Received: by 2002:a17:902:d895:: with SMTP id b21mr12893200plz.118.1585313600479;
-        Fri, 27 Mar 2020 05:53:20 -0700 (PDT)
-Received: from localhost ([49.207.51.33])
-        by smtp.gmail.com with ESMTPSA id c9sm3710728pjr.47.2020.03.27.05.53.19
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 27 Mar 2020 05:53:20 -0700 (PDT)
-Date:   Fri, 27 Mar 2020 18:23:18 +0530
-From:   afzal mohammed <afzal.mohd.ma@gmail.com>
-To:     Arnd Bergmann <arnd@arndb.de>
-List-Id: <soc.lore.kernel.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Tony Lindgren <tony@atomide.com>,
-        Alexander Sverdlin <alexander.sverdlin@gmail.com>,
-        Krzysztof =?utf-8?Q?Ha=C5=82asa?= <khalasa@piap.pl>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Lubomir Rintel <lkundrak@v3.sk>,
-        Gregory CLEMENT <gregory.clement@bootlin.com>,
-        Hartley Sweeten <hsweeten@visionengravers.com>,
-        Viresh Kumar <vireshk@kernel.org>,
-        Shiraz Hashim <shiraz.linux.kernel@gmail.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        SoC Team <soc@kernel.org>, arm-soc <arm@kernel.org>,
-        Olof Johansson <olof@lixom.net>
-Subject: Re: [PATCH v3] ARM: replace setup_irq() by request_irq()
-Message-ID: <20200327125318.GA4979@afzalpc>
-References: <51cebbbb-3ba4-b336-82a9-abcc22f9a69c@gmail.com>
- <20200304163412.GX37466@atomide.com>
- <20200313154520.GA5375@afzalpc>
- <20200317043702.GA5852@afzalpc>
- <20200325114332.GA6337@afzalpc>
- <20200327104635.GA7775@afzalpc>
- <CAK8P3a0kVvkCW+2eiyZTkfS=LqqnbeQS+S-os=vxhaYXCwLK+A@mail.gmail.com>
- <20200327111012.GA8355@afzalpc>
- <20200327112913.GA8711@afzalpc>
- <CAK8P3a2sqika7=3D6Zgkz+v8HtGEc0q0+skWG8mSKuL+qSoYLw@mail.gmail.com>
+        Fri, 27 Mar 2020 08:55:26 -0400
+Received: from foss.arm.com ([217.140.110.172]:44294 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726165AbgC0Mz0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Mar 2020 08:55:26 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 06E1C7FA;
+        Fri, 27 Mar 2020 05:55:26 -0700 (PDT)
+Received: from mbp (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2B2AF3F71F;
+        Fri, 27 Mar 2020 05:55:25 -0700 (PDT)
+Date:   Fri, 27 Mar 2020 12:55:22 +0000
+From:   Catalin Marinas <catalin.marinas@arm.com>
+To:     Amit Daniel Kachhap <amit.kachhap@arm.com>
+Cc:     linux-arm-kernel@lists.infradead.org,
+        Will Deacon <will@kernel.org>,
+        Vincenzo Frascino <Vincenzo.Frascino@arm.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] arm64: Kconfig: ptrauth: Add binutils version check
+ to fix mismatch
+Message-ID: <20200327125522.GB18117@mbp>
+References: <1585236720-21819-1-git-send-email-amit.kachhap@arm.com>
+ <1585236720-21819-2-git-send-email-amit.kachhap@arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAK8P3a2sqika7=3D6Zgkz+v8HtGEc0q0+skWG8mSKuL+qSoYLw@mail.gmail.com>
-User-Agent: Mutt/1.9.3 (2018-01-21)
+In-Reply-To: <1585236720-21819-2-git-send-email-amit.kachhap@arm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Thu, Mar 26, 2020 at 09:02:00PM +0530, Amit Daniel Kachhap wrote:
+> Recent addition of ARM64_PTR_AUTH exposed a mismatch issue with binutils.
+> 9.1+ versions of gcc inserts a section note .note.gnu.property but this
+> can be used properly by binutils version greater than 2.33.1. If older
+> binutils are used then the following warnings are generated,
+> 
+> aarch64-linux-ld: warning: arch/arm64/kernel/vdso/vgettimeofday.o: unsupported GNU_PROPERTY_TYPE (5) type: 0xc0000000
+> aarch64-linux-objdump: warning: arch/arm64/lib/csum.o: unsupported GNU_PROPERTY_TYPE (5) type: 0xc0000000
+> aarch64-linux-nm: warning: .tmp_vmlinux1: unsupported GNU_PROPERTY_TYPE (5) type: 0xc0000000
+> 
+> This patch enables ARM64_PTR_AUTH when gcc and binutils versions are
+> compatible with each other. Older gcc which do not insert such section
+> continue to work as before.
+> 
+> This scenario may not occur with clang as a recent commit 3b446c7d27ddd06
+> ("arm64: Kconfig: verify binutils support for ARM64_PTR_AUTH") masks
+> binutils version lesser then 2.34.
+> 
+> Reported-by: kbuild test robot <lkp@intel.com>
+> Suggested-by: Vincenzo Frascino <Vincenzo.Frascino@arm.com>
+> Signed-off-by: Amit Daniel Kachhap <amit.kachhap@arm.com>
+> ---
+>  arch/arm64/Kconfig | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+> index e6712b6..73135da 100644
+> --- a/arch/arm64/Kconfig
+> +++ b/arch/arm64/Kconfig
+> @@ -1503,7 +1503,7 @@ config ARM64_PTR_AUTH
+>  	default y
+>  	depends on !KVM || ARM64_VHE
+>  	depends on (CC_HAS_SIGN_RETURN_ADDRESS || CC_HAS_BRANCH_PROT_PAC_RET) && AS_HAS_PAC
+> -	depends on CC_IS_GCC || (CC_IS_CLANG && AS_HAS_CFI_NEGATE_RA_STATE)
+> +	depends on (CC_IS_GCC && (GCC_VERSION < 90100 || LD_VERSION >= 233010000)) || (CC_IS_CLANG && AS_HAS_CFI_NEGATE_RA_STATE)
 
-On Fri, Mar 27, 2020 at 12:58:57PM +0100, Arnd Bergmann wrote:
+We should add some of the comments in the commit log to the Kconfig
+entry. I would also split this in two (equivalent to CC_IS_ implies):
 
-> I can probably fix it up here, but it would help if you can resend the
-> remaining patches using git-send-email with all the tags added in
-> and the normal subject lines.
+	depends on !CC_IS_GCC || GCC_VERSION < 90100 || LD_VERSION >= 233010000
+	depends on !CC_IS_CLANG || AS_HAS_CFI_NEGATE_RA_STATE
 
-i have sent the remaining patches using git send-email w/ all the tags
-collected and with normal subject lines, as a reply to your mail. They
-look okay in patchwork, let me know in case of any problems.
+and add a comment above the gcc/ld version checking.
 
-Regards
-afzal
+(not entirely identical to the original if CC is neither of them but I
+don't think we have this problem)
+
+-- 
+Catalin
