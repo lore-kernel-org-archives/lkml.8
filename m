@@ -2,408 +2,181 @@ Return-Path: <SRS0=s8dx=5M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 835AAC2D0EC
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 14:33:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCA86C43331
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 14:34:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 50289206F2
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 14:33:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="ZnCfv6uQ"
+	by mail.kernel.org (Postfix) with ESMTP id A2E06206F2
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 14:34:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727701AbgC0OdW (ORCPT
+        id S1727549AbgC0Oer (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Mar 2020 10:33:22 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:34100 "EHLO vps0.lunn.ch"
+        Fri, 27 Mar 2020 10:34:47 -0400
+Received: from foss.arm.com ([217.140.110.172]:45548 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726518AbgC0OdW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Mar 2020 10:33:22 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=Zp1OoLvazhS4meLDNmjOyUF912Zg68lT1M9OqwGJoow=; b=ZnCfv6uQNoYQaISgKq6Dv8/UtU
-        vNZzf0HJr0P52YogYg4tECAikJrUnNlw9GGW09A/tUbE+EenLWgWGEir643PqVY6HddYqnHnqlW1s
-        9ooE070zcqu9zBXL6YWoUfz1jWwp6dWVNr7YtxT0jzt/benGcecFzOdPXiXJtI25VX2g=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
-        (envelope-from <andrew@lunn.ch>)
-        id 1jHq2q-0002HB-Mp; Fri, 27 Mar 2020 15:33:12 +0100
-Date:   Fri, 27 Mar 2020 15:33:12 +0100
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Florinel Iordache <florinel.iordache@nxp.com>
-Cc:     davem@davemloft.net, netdev@vger.kernel.org, f.fainelli@gmail.com,
-        hkallweit1@gmail.com, linux@armlinux.org.uk,
-        devicetree@vger.kernel.org, linux-doc@vger.kernel.org,
-        robh+dt@kernel.org, mark.rutland@arm.com, kuba@kernel.org,
-        corbet@lwn.net, shawnguo@kernel.org, leoyang.li@nxp.com,
-        madalin.bucur@oss.nxp.com, ioana.ciornei@nxp.com,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next 6/9] net: phy: add backplane kr driver support
-Message-ID: <20200327143312.GH11004@lunn.ch>
-References: <1585230682-24417-1-git-send-email-florinel.iordache@nxp.com>
- <1585230682-24417-7-git-send-email-florinel.iordache@nxp.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1585230682-24417-7-git-send-email-florinel.iordache@nxp.com>
+        id S1726518AbgC0Oer (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Mar 2020 10:34:47 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6F4011FB;
+        Fri, 27 Mar 2020 07:34:46 -0700 (PDT)
+Received: from e120937-lin.home (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 65F0D3F71F;
+        Fri, 27 Mar 2020 07:34:45 -0700 (PDT)
+From:   Cristian Marussi <cristian.marussi@arm.com>
+To:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc:     sudeep.holla@arm.com, lukasz.luba@arm.com,
+        james.quinlan@broadcom.com, Jonathan.Cameron@Huawei.com,
+        cristian.marussi@arm.com
+Subject: [PATCH v6 00/13] SCMI Notifications Core Support
+Date:   Fri, 27 Mar 2020 14:34:25 +0000
+Message-Id: <20200327143438.5382-1-cristian.marussi@arm.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 26, 2020 at 03:51:19PM +0200, Florinel Iordache wrote:
-> Add support for backplane kr generic driver including link training
-> (ieee802.3ap/ba) and fixed equalization algorithm
-> 
-> Signed-off-by: Florinel Iordache <florinel.iordache@nxp.com>
-> ---
->  drivers/net/phy/Kconfig                   |    2 +
->  drivers/net/phy/Makefile                  |    1 +
->  drivers/net/phy/backplane/Kconfig         |   20 +
->  drivers/net/phy/backplane/Makefile        |    9 +
->  drivers/net/phy/backplane/backplane.c     | 1538 +++++++++++++++++++++++++++
->  drivers/net/phy/backplane/backplane.h     |  262 +++++
->  drivers/net/phy/backplane/eq_fixed.c      |   83 ++
->  drivers/net/phy/backplane/equalization.h  |  282 +++++
->  drivers/net/phy/backplane/link_training.c | 1604 +++++++++++++++++++++++++++++
->  drivers/net/phy/backplane/link_training.h |   34 +
->  10 files changed, 3835 insertions(+)
->  create mode 100644 drivers/net/phy/backplane/Kconfig
->  create mode 100644 drivers/net/phy/backplane/Makefile
->  create mode 100644 drivers/net/phy/backplane/backplane.c
->  create mode 100644 drivers/net/phy/backplane/backplane.h
->  create mode 100644 drivers/net/phy/backplane/eq_fixed.c
->  create mode 100644 drivers/net/phy/backplane/equalization.h
->  create mode 100644 drivers/net/phy/backplane/link_training.c
->  create mode 100644 drivers/net/phy/backplane/link_training.h
-> 
-> diff --git a/drivers/net/phy/Kconfig b/drivers/net/phy/Kconfig
-> index cc7f1df..abab4e5 100644
-> --- a/drivers/net/phy/Kconfig
-> +++ b/drivers/net/phy/Kconfig
-> @@ -523,6 +523,8 @@ config XILINX_GMII2RGMII
->  	  the Reduced Gigabit Media Independent Interface(RGMII) between
->  	  Ethernet physical media devices and the Gigabit Ethernet controller.
->  
-> +source "drivers/net/phy/backplane/Kconfig"
-> +
->  endif # PHYLIB
->  
->  config MICREL_KS8995MA
-> diff --git a/drivers/net/phy/Makefile b/drivers/net/phy/Makefile
-> index 70774ab..0b867fb 100644
-> --- a/drivers/net/phy/Makefile
-> +++ b/drivers/net/phy/Makefile
-> @@ -101,3 +101,4 @@ obj-$(CONFIG_STE10XP)		+= ste10Xp.o
->  obj-$(CONFIG_TERANETICS_PHY)	+= teranetics.o
->  obj-$(CONFIG_VITESSE_PHY)	+= vitesse.o
->  obj-$(CONFIG_XILINX_GMII2RGMII) += xilinx_gmii2rgmii.o
-> +obj-$(CONFIG_ETH_BACKPLANE)	+= backplane/
-> diff --git a/drivers/net/phy/backplane/Kconfig b/drivers/net/phy/backplane/Kconfig
-> new file mode 100644
-> index 0000000..9ec54b5
-> --- /dev/null
-> +++ b/drivers/net/phy/backplane/Kconfig
-> @@ -0,0 +1,20 @@
-> +# SPDX-License-Identifier: (GPL-2.0+ OR BSD-3-Clause)
-> +config ETH_BACKPLANE
-> +	tristate "Ethernet Backplane support"
-> +	depends on OF_MDIO
-> +	help
-> +	  This module provides driver support for Ethernet Operation over
-> +	  Electrical Backplanes. It includes Backplane generic
-> +	  driver including support for Link Training (IEEE802.3ap/ba).
-> +	  Based on the link quality, a signal equalization is required.
-> +	  The standard specifies that a start-up algorithm should be in place
-> +	  in order to get the link up.
-> +
-> +config ETH_BACKPLANE_FIXED
-> +	tristate "Fixed: No Equalization algorithm"
-> +	depends on ETH_BACKPLANE
-> +	help
-> +	  This module provides a driver to setup fixed user configurable
-> +	  coefficient values for backplanes equalization. This means
-> +	  No Equalization algorithm is used to adapt the initial coefficients
-> +	  initially set by the user.
-> \ No newline at end of file
-> diff --git a/drivers/net/phy/backplane/Makefile b/drivers/net/phy/backplane/Makefile
-> new file mode 100644
-> index 0000000..ded6f2d
-> --- /dev/null
-> +++ b/drivers/net/phy/backplane/Makefile
-> @@ -0,0 +1,9 @@
-> +# SPDX-License-Identifier: (GPL-2.0+ OR BSD-3-Clause)
-> +#
-> +# Makefile for Ethernet Backplane driver
-> +#
-> +
-> +obj-$(CONFIG_ETH_BACKPLANE) += eth_backplane.o
-> +obj-$(CONFIG_ETH_BACKPLANE_FIXED) += eq_fixed.o
-> +
-> +eth_backplane-objs	:= backplane.o link_training.o
-> diff --git a/drivers/net/phy/backplane/backplane.c b/drivers/net/phy/backplane/backplane.c
-> new file mode 100644
-> index 0000000..1b580bc
-> --- /dev/null
-> +++ b/drivers/net/phy/backplane/backplane.c
-> @@ -0,0 +1,1538 @@
-> +// SPDX-License-Identifier: (GPL-2.0+ OR BSD-3-Clause)
-> +/* Backplane driver
-> + *
-> + * Copyright 2015 Freescale Semiconductor, Inc.
-> + * Copyright 2018-2020 NXP
-> + */
-> +
-> +#include <linux/kernel.h>
-> +#include <linux/module.h>
-> +#include <linux/mii.h>
-> +#include <linux/mdio.h>
-> +#include <linux/ethtool.h>
-> +#include <linux/io.h>
-> +#include <linux/of.h>
-> +#include <linux/of_net.h>
-> +#include <linux/of_address.h>
-> +#include <linux/of_platform.h>
-> +#include <linux/timer.h>
-> +#include <linux/delay.h>
-> +#include <linux/workqueue.h>
-> +#include <linux/netdevice.h>
-> +#include <linux/list.h>
-> +
-> +#include "backplane.h"
-> +#include "link_training.h"
-> +
-> +/* KR timeouts in milliseconds */
-> +#define KR_TIMEOUT_1				100
-> +#define KR_TIMEOUT_2				1000
-> +#define KR_DENY_RT_INTERVAL			3000
-> +#define KR_LT_TIMEOUT				500
-> +
-> +/* KR timings in interations */
-> +#define KR_AN_WAIT_ITERATIONS			5
-> +#define KR_TRAIN_STEP_ITERATIONS		2
-> +#define CDR_LOCK_RETRY_COUNT			3
-> +
-> +/* AN status register (Clause 45) (MMD 7): MDIO_STAT1 */
-> +#define AN_LINK_UP_MASK				0x04
-> +
-> +/* Logging buffer size */
-> +#define LOG_BUFFER_SIZE				200
-> +
-> +/* Backplane custom logging */
-> +#define BPDEV_LOG(name) \
-> +	char log_buffer[LOG_BUFFER_SIZE]; \
-> +	va_list args; va_start(args, msg); \
-> +	vsnprintf(log_buffer, LOG_BUFFER_SIZE - 1, msg, args); \
-> +	if (!bpphy->attached_dev) \
-> +		dev_##name(&bpphy->mdio.dev, log_buffer); \
-> +	else \
-> +		dev_##name(&bpphy->mdio.dev, "%s: %s", \
-> +			netdev_name(bpphy->attached_dev), log_buffer); \
-> +	va_end(args)
-> +
-> +/* Backplane features */
-> +__ETHTOOL_DECLARE_LINK_MODE_MASK(backplane_features) __ro_after_init;
-> +EXPORT_SYMBOL(backplane_features);
-> +
-> +const int backplane_common_features_array[] = {
-> +	ETHTOOL_LINK_MODE_Backplane_BIT,
-> +	ETHTOOL_LINK_MODE_Autoneg_BIT,
-> +	ETHTOOL_LINK_MODE_MII_BIT,
-> +};
-> +
-> +const int backplane_protocol_features_array[] = {
-> +	ETHTOOL_LINK_MODE_10000baseKR_Full_BIT,
-> +	ETHTOOL_LINK_MODE_40000baseKR4_Full_BIT,
-> +};
-> +
-> +/* map string key to pointer data */
-> +struct spmap_node {
-> +	struct list_head entry;
-> +	const char *key;
-> +	void *pdata;
-> +};
-> +
-> +/* registered equalization algorithms info */
-> +static LIST_HEAD(eqalg_list);
-> +
-> +/* lanes attached to an equalization algorithm */
-> +static LIST_HEAD(lnalg_list);
-> +
-> +/* Backplane mutex between all KR PHY threads */
-> +static struct mutex backplane_lock;
-> +
-> +static int get_backplane_speed(phy_interface_t bp_mode)
-> +{
-> +	switch (bp_mode) {
-> +	case PHY_INTERFACE_MODE_10GKR:
-> +		return SPEED_10000;
-> +	case PHY_INTERFACE_MODE_40GKR4:
-> +		return SPEED_40000;
-> +	default:
-> +		pr_err("%s: Unsupported backplane phy interface\n",
-> +		       BACKPLANE_DRIVER_NAME);
-> +		return SPEED_UNKNOWN;
-> +	}
-> +	return SPEED_UNKNOWN;
-> +}
-> +
-> +static enum ethtool_link_mode_bit_indices
-> +	get_backplane_supported_mode(phy_interface_t bp_mode)
-> +{
-> +	switch (bp_mode) {
-> +	case PHY_INTERFACE_MODE_10GKR:
-> +		return ETHTOOL_LINK_MODE_10000baseKR_Full_BIT;
-> +	case PHY_INTERFACE_MODE_40GKR4:
-> +		return ETHTOOL_LINK_MODE_40000baseKR4_Full_BIT;
-> +	default:
-> +		pr_err("%s: Unsupported backplane phy interface\n",
-> +		       BACKPLANE_DRIVER_NAME);
-> +		return ETHTOOL_LINK_MODE_Backplane_BIT;
-> +	}
-> +	return ETHTOOL_LINK_MODE_Backplane_BIT;
-> +}
-> +
-> +static int spmap_add(struct list_head *list, const char *key, void *pdata)
-> +{
-> +	struct spmap_node *node;
-> +
-> +	/* create a new entry with desired key */
-> +	node = kzalloc(sizeof(*node), GFP_KERNEL);
-> +	if (!node)
-> +		return -ENOMEM;
-> +
-> +	node->key = key;
-> +	node->pdata = pdata;
-> +
-> +	list_add(&node->entry, list);
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct equalization_algorithm *eq_find(const char *key)
-> +{
-> +	struct spmap_node *eqalg, *eqalg_tmp;
-> +
-> +	if (!key)
-> +		return NULL;
-> +
-> +	/* search desired single key */
-> +	list_for_each_entry_safe(eqalg, eqalg_tmp, &eqalg_list, entry) {
-> +		if (strcmp(eqalg->key, key) == 0)
-> +			return (struct equalization_algorithm *)eqalg->pdata;
-> +	}
-> +	return NULL;
-> +}
-> +
-> +static void backplane_features_init(void)
-> +{
-> +	linkmode_set_bit_array(backplane_common_features_array,
-> +			       ARRAY_SIZE(backplane_common_features_array),
-> +			       backplane_features);
-> +
-> +	linkmode_set_bit_array(backplane_protocol_features_array,
-> +			       ARRAY_SIZE(backplane_protocol_features_array),
-> +			       backplane_features);
-> +}
-> +
-> +static u32 le_ioread32(void __iomem *reg)
-> +{
-> +	return ioread32(reg);
-> +}
-> +
-> +static void le_iowrite32(u32 value, void __iomem *reg)
-> +{
-> +	iowrite32(value, reg);
-> +}
-> +
-> +static u32 be_ioread32(void __iomem *reg)
-> +{
-> +	return ioread32be(reg);
-> +}
-> +
-> +static void be_iowrite32(u32 value, void __iomem *reg)
-> +{
-> +	iowrite32be(value, reg);
-> +}
-> +
-> +static void training_status_init(struct training_status *trst)
-> +{
-> +	trst->done_training = false;
-> +	trst->remote_tx_complete = false;
-> +	trst->remote_tx_running = false;
-> +	trst->sent_init = false;
-> +	trst->lp_rx_ready = 0;
-> +	trst->local_tx_running = false;
-> +}
-> +
-> +static void init_krln(struct kr_lane_info *krln, bool revert_default)
-> +{
-> +	if (revert_default)
-> +		backplane_default_kr_lane(krln);
-> +
-> +	training_status_init(&krln->trst);
-> +	krln->state = DETECTING_LP;
-> +	krln->an_acquired = false;
-> +
-> +	krln->ld_update = 0;
-> +	krln->prev_ld_update = 0;
-> +	krln->ld_last_nonhold_update = 0;
-> +	krln->lp_status = 0;
-> +	krln->lp_last_change_status = 0;
-> +	krln->last_lp_update_status[C_M1] = 0;
-> +	krln->last_lp_update_status[C_Z0] = 0;
-> +	krln->last_lp_update_status[C_P1] = 0;
-> +	krln->ld_status = 0;
-> +	krln->move_back_prev = false;
-> +	krln->move_back_cnt = 0;
-> +	krln->move_back_lp_status = 0;
-> +
-> +	lt_init_ld(krln);
-> +}
-> +
-> +static void setup_supported_linkmode(struct phy_device *bpphy)
-> +{
-> +	struct backplane_phy_info *bp_phy = bpphy->priv;
-> +	int i;
-> +
-> +	/* Clear all supported backplane protocols features
-> +	 * and setup only the currently configured protocol
-> +	 */
-> +	for (i = 0; i < ARRAY_SIZE(backplane_protocol_features_array); i++)
-> +		linkmode_clear_bit(backplane_protocol_features_array[i],
-> +				   bpphy->supported);
-> +
-> +	linkmode_set_bit(get_backplane_supported_mode(bp_phy->bp_mode),
-> +			 bpphy->supported);
-> +}
-> +
-> +/* Read AN Link Status */
-> +static int is_an_link_up(struct phy_device *bpphy)
-> +{
-> +	struct backplane_phy_info *bp_phy = bpphy->priv;
-> +	int ret, val = 0;
-> +
-> +	mutex_lock(&bp_phy->bpphy_lock);
-> +
-> +	/* Read twice because Link_Status is LL (Latched Low) bit */
-> +	val = phy_read_mmd(bpphy, MDIO_MMD_AN, bp_phy->bp_dev.mdio.an_status);
-> +	val = phy_read_mmd(bpphy, MDIO_MMD_AN, bp_phy->bp_dev.mdio.an_status);
+Hi all,
 
-Why not just 
+this series wants to introduce SCMI Notification Support, built on top of
+the standard Kernel notification chain subsystem.
 
-val = phy_read_mmd(bpphy, MDIO_MMD_AN, MDIO_CTRL1);
+At initialization time each SCMI Protocol takes care to register with the
+new SCMI notification core the set of its own events which it intends to
+support.
 
-Or is your hardware not actually conformant to the standard?
+Using the API exposed via scmi_handle.notify_ops a Kernel user can register
+its own notifier_t callback (via a notifier_block as usual) against any
+registered event as identified by the tuple:
 
-There has also been a lot of discussion of reading the status twice is
-correct or not. Don't you care the link has briefly gone down and up
-again?
+		(proto_id, event_id, src_id)
 
-	Andrew
+where src_id represents a generic source identifier which is protocol
+dependent like domain_id, performance_id, sensor_id and so forth.
+(users can anyway do NOT provide any src_id, and subscribe instead to ALL
+ the existing (if any) src_id sources for that proto_id/evt_id combination)
+
+Each of the above tuple-specified event will be served on its own dedicated
+blocking notification chain, dynamically allocated on-demand when at least
+one user has shown interest on that event.
+
+Upon a notification delivery all the users' registered notifier_t callbacks
+will be in turn invoked and fed with the event_id as @action param and a
+generated custom per-event struct _report as @data param.
+(as in include/linux/scmi_protocol.h)
+
+The final step of notification delivery via users' callback invocation is
+instead delegated to a pool of deferred workers (Kernel cmwq): each
+SCMI protocol has its own dedicated worker and dedicated queue to push
+events from the rx ISR to the worker.
+
+Based on scmi-next 5.6 [1], on top of:
+
+commit 5c8a47a5a91d ("firmware: arm_scmi: Make scmi core independent of
+		      the transport type")
+
+This series has been tested on JUNO with an experimental firmware only
+supporting Perf Notifications.
+
+Thanks
+
+Cristian
+
+----
+v5 --> v6:
+- added handle argument to fill_custom_report() helper
+v4 --> v5:
+- fixed kernel-doc
+- added proper barriers around registered protocols and events
+  initialization
+- reviewed queues allocation using devm_add_action_or_reset
+- reviewed REVT_NOTIFY_ENABLE macro
+
+v3 --> v4:
+- dropped RFC tag
+- avoid one unneeded evt payload memcpy on the ISR RC code path by
+  redesigning dispatcher to handle partial queue-reads (in_flight events,
+  only header)
+- fixed the initialization issue exposed by late SCMI modules loading by
+  reviewing the init process to support possible late events registrations
+  by protocols and early callbacks registrations by users (pending)
+- cleanup/simplification of exit path: SCMI protocols are generally never
+  de-initialized after the initial device creation, so do not deinit
+  notification core either (we do halt the delivery, stop the wq and empty
+  the queues though)
+- reduced contention on regustered_events_handler to the minimum during
+  delivery by splitting the common registered_events_handlers hashtable
+  into a number of per-protocol tables
+- converted registered_protocols and registered_events hastable to
+  fixed size arrays: simpler and lockless in our usage scenario
+
+v2 --> v3:
+- added platform instance awareness to the notification core: a
+  notification instance is created for each known handle
+- reviewed notification core initialization and shutdown process
+- removed generic non-handle-rooted registration API
+- added WQ_SYSFS flag to workqueue instance
+
+v1 --> v2:
+- dropped anti-tampering patch
+- rebased on top of scmi-for-next-5.6, which includes Viresh series that
+  make SCMI core independent of transport (5c8a47a5a91d)
+- add a few new SCMI transport methods on top of Viresh patch to address
+  needs of SCMI Notifications
+- reviewed/renamed scmi_handle_xfer_delayed_resp()
+- split main SCMI Notification core patch (~1k lines) into three chunks:
+  protocol-registration / callbacks-registration / dispatch-and-delivery
+- removed awkward usage of IDR maps in favour of pure hashtables
+- added enable/disable refcounting in notification core (was broken in v1)
+- removed per-protocol candidate API: a single generic API is now proposed
+  instead of scmi_register_<proto>_event_notifier(evt_id, *src_id, *nb)
+- added handle->notify_ops as an alternative notification API
+  for scmi_driver
+- moved ALL_SRCIDs enabled handling from protocol code to core code
+- reviewed protocol registration/unregistration logic to use devres
+- reviewed cleanup phase on shutdown
+- fixed  ERROR: reference preceded by free as reported by kbuild test robot
+
+[1] git://git.kernel.org/pub/scm/linux/kernel/git/sudeep.holla/linux.git
+
+
+Cristian Marussi (10):
+  firmware: arm_scmi: Add notifications support in transport layer
+  firmware: arm_scmi: Add notification protocol-registration
+  firmware: arm_scmi: Add notification callbacks-registration
+  firmware: arm_scmi: Add notification dispatch and delivery
+  firmware: arm_scmi: Enable notification core
+  firmware: arm_scmi: Add Power notifications support
+  firmware: arm_scmi: Add Perf notifications support
+  firmware: arm_scmi: Add Sensor notifications support
+  firmware: arm_scmi: Add Reset notifications support
+  firmware: arm_scmi: Add Base notifications support
+
+Sudeep Holla (3):
+  firmware: arm_scmi: Add receive buffer support for notifications
+  firmware: arm_scmi: Update protocol commands and notification list
+  firmware: arm_scmi: Add support for notifications message processing
+
+ drivers/firmware/arm_scmi/Makefile  |    2 +-
+ drivers/firmware/arm_scmi/base.c    |  117 +++
+ drivers/firmware/arm_scmi/common.h  |   12 +
+ drivers/firmware/arm_scmi/driver.c  |  118 ++-
+ drivers/firmware/arm_scmi/mailbox.c |   17 +
+ drivers/firmware/arm_scmi/notify.c  | 1461 +++++++++++++++++++++++++++
+ drivers/firmware/arm_scmi/notify.h  |   78 ++
+ drivers/firmware/arm_scmi/perf.c    |  136 +++
+ drivers/firmware/arm_scmi/power.c   |  130 +++
+ drivers/firmware/arm_scmi/reset.c   |   97 ++
+ drivers/firmware/arm_scmi/sensors.c |   74 ++
+ drivers/firmware/arm_scmi/shmem.c   |   15 +
+ include/linux/scmi_protocol.h       |  107 ++
+ 13 files changed, 2337 insertions(+), 27 deletions(-)
+ create mode 100644 drivers/firmware/arm_scmi/notify.c
+ create mode 100644 drivers/firmware/arm_scmi/notify.h
+
+-- 
+2.17.1
+
