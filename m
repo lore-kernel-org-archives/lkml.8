@@ -2,92 +2,127 @@ Return-Path: <SRS0=s8dx=5M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 247E1C43331
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 17:31:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2DE3C2D0E5
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 17:31:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EB1892073E
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 17:31:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585330284;
-	bh=8qJQPj9pCV/ucE13Md57BSv0v16W7nEKjkdA+w0bXpo=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=azYcdk3PfMsQobjubQmsjxQ9sLpuKu9mW2zAtkSS//Y72quE2owoNESDUJK4VMbEa
-	 7pvXE8yrbyGLlqVQOjMEetEDT8vWywRwMxcynIHVOTvjBoyFTLL3h9yqrZLe5FO50A
-	 AggDccxSONkrOHvpOV3FNqcB1DUp+ppeGSF8lFFo=
+	by mail.kernel.org (Postfix) with ESMTP id C5E5C2072F
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 17:31:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727549AbgC0RbW (ORCPT
+        id S1727699AbgC0Rbn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Mar 2020 13:31:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58066 "EHLO mail.kernel.org"
+        Fri, 27 Mar 2020 13:31:43 -0400
+Received: from raptor.unsafe.ru ([5.9.43.93]:38818 "EHLO raptor.unsafe.ru"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726738AbgC0RbW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Mar 2020 13:31:22 -0400
-Received: from C02YQ0RWLVCF.internal.digitalocean.com (c-73-181-34-237.hsd1.co.comcast.net [73.181.34.237])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1726275AbgC0Rbn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Mar 2020 13:31:43 -0400
+X-Greylist: delayed 464 seconds by postgrey-1.27 at vger.kernel.org; Fri, 27 Mar 2020 13:31:41 EDT
+Received: from comp-core-i7-2640m-0182e6.redhat.com (ip-89-102-33-211.net.upcbroadband.cz [89.102.33.211])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AE2BD2073B;
-        Fri, 27 Mar 2020 17:31:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585330282;
-        bh=8qJQPj9pCV/ucE13Md57BSv0v16W7nEKjkdA+w0bXpo=;
-        h=From:To:Cc:Subject:Date:From;
-        b=ZwhMBj7G3ZR7lgq1ToMbkYHWUURkvB3DIO0OmuB3z5vF/oATecgQoLzCrL2VIXmm8
-         HB/6dUjyBupoa4cD+vJ0zDyl87dBg7RXT8TyCN+e+jiPYJbcNBSDEzru6KoR3g1JnD
-         961o+5AXodSuVEPfoOxXbWvNjkfqM3GkuOkPIIDk=
-From:   David Ahern <dsahern@kernel.org>
-To:     akpm@linux-foundation.org
-Cc:     linux-kernel@vger.kernel.org, David Ahern <dsahern@kernel.org>,
-        Yafang Shao <laoar.shao@gmail.com>,
-        Johannes Berg <johannes@sipsolutions.net>,
-        Shailabh Nagar <nagar@watson.ibm.com>
-Subject: [PATCH] getdelays: Fix netlink attribute length
-Date:   Fri, 27 Mar 2020 11:31:11 -0600
-Message-Id: <20200327173111.63922-1-dsahern@kernel.org>
-X-Mailer: git-send-email 2.21.1 (Apple Git-122.3)
+        by raptor.unsafe.ru (Postfix) with ESMTPSA id BEA84209C7;
+        Fri, 27 Mar 2020 17:23:55 +0000 (UTC)
+From:   Alexey Gladkov <gladkov.alexey@gmail.com>
+To:     LKML <linux-kernel@vger.kernel.org>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        Linux API <linux-api@vger.kernel.org>,
+        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
+        Linux Security Module <linux-security-module@vger.kernel.org>
+Cc:     Akinobu Mita <akinobu.mita@gmail.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Alexey Gladkov <legion@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Daniel Micay <danielmicay@gmail.com>,
+        Djalal Harouni <tixxdz@gmail.com>,
+        "Dmitry V . Levin" <ldv@altlinux.org>,
+        "Eric W . Biederman" <ebiederm@xmission.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        "J . Bruce Fields" <bfields@fieldses.org>,
+        Jeff Layton <jlayton@poochiereds.net>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Oleg Nesterov <oleg@redhat.com>
+Subject: [PATCH v10 1/9] proc: rename struct proc_fs_info to proc_fs_opts
+Date:   Fri, 27 Mar 2020 18:23:23 +0100
+Message-Id: <20200327172331.418878-2-gladkov.alexey@gmail.com>
+X-Mailer: git-send-email 2.25.2
+In-Reply-To: <20200327172331.418878-1-gladkov.alexey@gmail.com>
+References: <20200327172331.418878-1-gladkov.alexey@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.6.1 (raptor.unsafe.ru [5.9.43.93]); Fri, 27 Mar 2020 17:23:56 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-A recent change to the netlink code:
-  6e237d099fac ("netlink: Relax attr validation for fixed length types")
-logs a warning when programs send messages with invalid attributes
-(e.g., wrong length for a u32). Yafang reported this error message
-for tools/accounting/getdelays.c.
-
-send_cmd() is wrongly adding 1 to the attribute length. As noted in
-include/uapi/linux/netlink.h nla_len should be NLA_HDRLEN + payload
-length, so drop the +1.
-
-Fixes: 9e06d3f9f6b1 ("per task delay accounting taskstats interface: documentation fix")
-Signed-off-by: David Ahern <dsahern@kernel.org>
-Tested-by: Yafang Shao <laoar.shao@gmail.com>
-Cc: Johannes Berg <johannes@sipsolutions.net>
-Cc: Shailabh Nagar <nagar@watson.ibm.com>
+Reviewed-by: Alexey Dobriyan <adobriyan@gmail.com>
+Signed-off-by: Alexey Gladkov <gladkov.alexey@gmail.com>
 ---
- tools/accounting/getdelays.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/proc_namespace.c | 14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
 
-diff --git a/tools/accounting/getdelays.c b/tools/accounting/getdelays.c
-index 8cb504d30384..5ef1c15e88ad 100644
---- a/tools/accounting/getdelays.c
-+++ b/tools/accounting/getdelays.c
-@@ -136,7 +136,7 @@ static int send_cmd(int sd, __u16 nlmsg_type, __u32 nlmsg_pid,
- 	msg.g.version = 0x1;
- 	na = (struct nlattr *) GENLMSG_DATA(&msg);
- 	na->nla_type = nla_type;
--	na->nla_len = nla_len + 1 + NLA_HDRLEN;
-+	na->nla_len = nla_len + NLA_HDRLEN;
- 	memcpy(NLA_DATA(na), nla_data, nla_len);
- 	msg.n.nlmsg_len += NLMSG_ALIGN(na->nla_len);
+diff --git a/fs/proc_namespace.c b/fs/proc_namespace.c
+index 273ee82d8aa9..9a8b624bc3db 100644
+--- a/fs/proc_namespace.c
++++ b/fs/proc_namespace.c
+@@ -37,23 +37,23 @@ static __poll_t mounts_poll(struct file *file, poll_table *wait)
+ 	return res;
+ }
  
+-struct proc_fs_info {
++struct proc_fs_opts {
+ 	int flag;
+ 	const char *str;
+ };
+ 
+ static int show_sb_opts(struct seq_file *m, struct super_block *sb)
+ {
+-	static const struct proc_fs_info fs_info[] = {
++	static const struct proc_fs_opts fs_opts[] = {
+ 		{ SB_SYNCHRONOUS, ",sync" },
+ 		{ SB_DIRSYNC, ",dirsync" },
+ 		{ SB_MANDLOCK, ",mand" },
+ 		{ SB_LAZYTIME, ",lazytime" },
+ 		{ 0, NULL }
+ 	};
+-	const struct proc_fs_info *fs_infop;
++	const struct proc_fs_opts *fs_infop;
+ 
+-	for (fs_infop = fs_info; fs_infop->flag; fs_infop++) {
++	for (fs_infop = fs_opts; fs_infop->flag; fs_infop++) {
+ 		if (sb->s_flags & fs_infop->flag)
+ 			seq_puts(m, fs_infop->str);
+ 	}
+@@ -63,7 +63,7 @@ static int show_sb_opts(struct seq_file *m, struct super_block *sb)
+ 
+ static void show_mnt_opts(struct seq_file *m, struct vfsmount *mnt)
+ {
+-	static const struct proc_fs_info mnt_info[] = {
++	static const struct proc_fs_opts mnt_opts[] = {
+ 		{ MNT_NOSUID, ",nosuid" },
+ 		{ MNT_NODEV, ",nodev" },
+ 		{ MNT_NOEXEC, ",noexec" },
+@@ -72,9 +72,9 @@ static void show_mnt_opts(struct seq_file *m, struct vfsmount *mnt)
+ 		{ MNT_RELATIME, ",relatime" },
+ 		{ 0, NULL }
+ 	};
+-	const struct proc_fs_info *fs_infop;
++	const struct proc_fs_opts *fs_infop;
+ 
+-	for (fs_infop = mnt_info; fs_infop->flag; fs_infop++) {
++	for (fs_infop = mnt_opts; fs_infop->flag; fs_infop++) {
+ 		if (mnt->mnt_flags & fs_infop->flag)
+ 			seq_puts(m, fs_infop->str);
+ 	}
 -- 
-2.17.1
+2.25.2
 
