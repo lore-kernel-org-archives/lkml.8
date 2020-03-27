@@ -2,215 +2,142 @@ Return-Path: <SRS0=s8dx=5M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC9B1C2D0E5
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 16:03:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97B67C2D0EC
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 16:06:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A3AD2072F
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 16:03:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585325000;
-	bh=buElJtB4x/XrZOgypEpMPh22nhReLA0geldePbdmD4I=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=Zpq1GvpA3eiDR79+UgcI4Y5AsAtCj7V5gXsXbRTx+osRXUNOBYsHmVWqe6+SHGbVE
-	 TAn0VSqTwtawr4Q4JF37qJnW0WGdiVJ8kNSv+OYhKfIIOUB5/7ouaqo7LFLWkLFbar
-	 +fS8J9YgtHxpQjlDdyz9LmLeTm6aupzR7dqA3eWU=
+	by mail.kernel.org (Postfix) with ESMTP id 637A120716
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 16:06:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JSlpCw4V"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727716AbgC0QDT (ORCPT
+        id S1727677AbgC0QGO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Mar 2020 12:03:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45004 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726333AbgC0QDT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Mar 2020 12:03:19 -0400
-Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        Fri, 27 Mar 2020 12:06:14 -0400
+Received: from us-smtp-delivery-74.mimecast.com ([216.205.24.74]:42672 "EHLO
+        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726515AbgC0QGO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Mar 2020 12:06:14 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1585325170;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=rADClTuM8rDCPwa+pftuZtYBhIX2IPiWqkZ05BPZYE0=;
+        b=JSlpCw4VB06QDfm6nFl/AWgn1sohEQ4OEc+rSk558Ro4vZJC9F32OyVpZSrECO8YxUiqVy
+        4k2fVAR4YGxtfF9/WEKDjSFE3UIj55kcTGRBxFt4xMl6wOAwdFNTWR3b8b96kcTEKBXE1L
+        3/8R7OIUh1s4bSnANnNrXhOzeSMYrEQ=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-461-K_ZuWAB8M42Xkd9Far-IRA-1; Fri, 27 Mar 2020 12:06:05 -0400
+X-MC-Unique: K_ZuWAB8M42Xkd9Far-IRA-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7A1A220716;
-        Fri, 27 Mar 2020 16:03:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585324997;
-        bh=buElJtB4x/XrZOgypEpMPh22nhReLA0geldePbdmD4I=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=viFO5kDP/2s0/3AJx9TFLXHX6SV5+ibd4fa3+p65xOq3D6zaGzSmJwvR+YMS7agDw
-         52hjxt++Nekk6rPPLyuP2m6Hqm4Jn5G1fFpMR48LAHPBT00ULt4GWgmBUIsKIc9VvH
-         0WVB5OKiOkcJhJb7hWddUOndBUJwW3aaEynCjsss=
-Subject: Re: [RFC v3 0/3] Fix errors when try to build kvm selftests on
- specified output
-To:     Xiaoyao Li <xiaoyao.li@intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Cc:     kvm@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        linux-kernel@vger.kernel.org, shuah <shuah@kernel.org>
-References: <20200326030750.173972-1-xiaoyao.li@intel.com>
- <41d5d89e-79c2-6f7d-de3e-ca3255e910e8@kernel.org>
- <cb445047-ab84-0c49-cfba-ec6933971dc7@intel.com>
-From:   shuah <shuah@kernel.org>
-Message-ID: <71a5abdf-07b5-d927-1a08-de8019b3f39f@kernel.org>
-Date:   Fri, 27 Mar 2020 10:03:03 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 5251A8018A1;
+        Fri, 27 Mar 2020 16:06:03 +0000 (UTC)
+Received: from [10.36.113.142] (ovpn-113-142.ams2.redhat.com [10.36.113.142])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 957C460304;
+        Fri, 27 Mar 2020 16:05:54 +0000 (UTC)
+Subject: Re: [PATCH V10 04/11] iommu/vt-d: Use helper function to skip agaw
+ for SL
+To:     "Tian, Kevin" <kevin.tian@intel.com>,
+        Jacob Pan <jacob.jun.pan@linux.intel.com>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Jean-Philippe Brucker <jean-philippe@linaro.com>
+Cc:     "Liu, Yi L" <yi.l.liu@intel.com>,
+        "Raj, Ashok" <ashok.raj@intel.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Jonathan Cameron <jic23@kernel.org>
+References: <1584746861-76386-1-git-send-email-jacob.jun.pan@linux.intel.com>
+ <1584746861-76386-5-git-send-email-jacob.jun.pan@linux.intel.com>
+ <AADFC41AFE54684AB9EE6CBC0274A5D19D7ED91C@SHSMSX104.ccr.corp.intel.com>
+From:   Auger Eric <eric.auger@redhat.com>
+Message-ID: <310693c3-9bd2-a764-2053-cd785d329ee6@redhat.com>
+Date:   Fri, 27 Mar 2020 17:05:52 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.4.0
 MIME-Version: 1.0
-In-Reply-To: <cb445047-ab84-0c49-cfba-ec6933971dc7@intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <AADFC41AFE54684AB9EE6CBC0274A5D19D7ED91C@SHSMSX104.ccr.corp.intel.com>
+Content-Type: text/plain; charset=windows-1252
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/27/20 7:31 AM, Xiaoyao Li wrote:
-> On 3/27/2020 4:57 AM, shuah wrote:
->> On 3/25/20 9:07 PM, Xiaoyao Li wrote:
->>> Hi Shuah,
->>>
->>> Hope you're happy with this version that I only touch KVM's Makefile.
->>>
->>> I attempted to build KVM selftests on a specified dir, unfortunately
->>> neither    "make O=/path/to/mydir TARGETS=kvm" in 
->>> tools/testing/selftests, nor
->>> "make OUTPUT=/path/to/mydir" in tools/testing/selftests/kvm work.
->>>
+Hi Jacob,
+
+On 3/27/20 12:55 PM, Tian, Kevin wrote:
+>> From: Jacob Pan <jacob.jun.pan@linux.intel.com>
+>> Sent: Saturday, March 21, 2020 7:28 AM
 >>
->> Why are you running "make OUTPUT=/path/to/mydir"
+>> Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
+>> ---
+>>  drivers/iommu/intel-pasid.c | 14 ++++----------
+>>  1 file changed, 4 insertions(+), 10 deletions(-)
 >>
->> It isn't correct.
-> 
-> So what's the meaning of
-> 
-> ifeq (0,$(MAKELEVEL))
->      ifeq ($(OUTPUT),)
->      OUTPUT := $(shell pwd)
->      DEFAULT_INSTALL_HDR_PATH := 1
->      endif
-> endif
-> 
-> in lib.mk?
-> 
-
-O is the variable for selftests Makefile and which is handled in
-lib.mk. OUTPUT is internal and shouldn't set when running make.
-
+>> diff --git a/drivers/iommu/intel-pasid.c b/drivers/iommu/intel-pasid.c
+>> index 191508c7c03e..9bdb7ee228b6 100644
+>> --- a/drivers/iommu/intel-pasid.c
+>> +++ b/drivers/iommu/intel-pasid.c
+>> @@ -544,17 +544,11 @@ int intel_pasid_setup_second_level(struct
+>> intel_iommu *iommu,
+>>  		return -EINVAL;
+>>  	}
 >>
->> make O=/path/to/mydir is what you have to use. Please main Makefile
->> as well for O= and KBUILD_OUTPUT usages.
+>> -	/*
+>> -	 * Skip top levels of page tables for iommu which has less agaw
+>> -	 * than default. Unnecessary for PT mode.
+>> -	 */
+>>  	pgd = domain->pgd;
+>> -	for (agaw = domain->agaw; agaw > iommu->agaw; agaw--) {
+>> -		pgd = phys_to_virt(dma_pte_addr(pgd));
+>> -		if (!dma_pte_present(pgd)) {
+>> -			dev_err(dev, "Invalid domain page table\n");
+>> -			return -EINVAL;
+>> -		}
+>> +	agaw = iommu_skip_agaw(domain, iommu, &pgd);
+>> +	if (agaw < 0) {
+>> +		dev_err(dev, "Invalid domain page table\n");
+is the dev_err() really requested. I see in domain_setup_first_level(),
+there is none.
+>> +		return -EINVAL;
+>>  	}
+> 
+> ok, I see how it is used. possibly combine last and this one together since
+> it's mostly moving code...
+
+I tend to agree with Kevin. May be better squash the 2 patches. Also not
+sure the inline of iommu_skip_agaw() is meaningful then. Also Add commit
+messages on the resulting patch.
+
+Note domain_setup_first_level() also could use the helper while we are
+it (if declaration moved to common helper). Only the error code differs
+in case !dma_pte_present(pgd), ie. -ENOMEM. May be good to align.
+
+Otherwise those stuff may be done in a fixup patch.
+
+Thanks
+
+Eric
+> 
 >>
->> Please see Documentation/dev-tools/kselftest.rst for use-cases.
->>
->> make O=/path/to/mydir TARGETS=kvm is a right use-case and I can see
->> it will fail to create x86_64 directory.
->>
->> Let's start with the following two commands and try to fix the
->> problems you are seeing.
->>
->> make O=/path/to/mydir in kvm directory (this is supported,
->> however, the following command from the main Makefile is
->> recommended use.)
-> 
-> Of course we can do this, but the "O=/path/to/mydir" only has effect on 
-> header install, the *.o files still generated in kvm/ directory.
+>>  	pgd_val = virt_to_phys(pgd);
+>> --
+>> 2.7.4
 > 
 
-Right. That is what needs to be fixed. This is the reason for your
-source directory getting dirty when kvm test is built.
-
-> And kvm's INSTALL_HDR_PATH cannot find the right headers.
-> 
-> That's why I choose to use "OUTPUT=/somewhere"
-> 
->>  From main Makefile in kernel srcdir
->> make O=/path/to/mydir TARGETS=kvm
-> 
-> I guess "kernel srcdir" means "kselftest srcdir", i.e., 
-> tools/testing/selftests/ ?
-
-This is kernel source root directory. The command you would
-use is:
-
-make kselftest-all O=/path/to/mydir TARGETS=kvm
-
-> 
-> Well, as I said in the first place, I tried
-> 
->      make O=/path/to/mydir TARGETS=kvm
-> 
-> but it doesn't work. So I did some fixup, and sent out the Patches.
-> 
-
-Right. It doesn't work for a couple of reasons:
-
-1. The Makefile doesn't create sub-dirs when build is relocatable.
-2. Makes source directory dirty.
-
-> If the patches are wrong, please point it out and give your comments how 
-> to make it right.
-> 
-
-The patches you sent are based on running the command with OUTPUT
-set. That is why I am asking you start with the right use-cases,
-and gave you pointers on tests to refer to that have sub-dirs
-and handle relocatable builds:
-
-futex
-arm64
-android
-
->> Also, just build isn't sufficient for you to be able to run the
->> tests.
->>
->> make kselftest-install O=/path/to/mydir TARGETS=kvm will generate
->> run script.
-> 
-> This command also has the x86_64 directory not created issue.
-> Since it generates header files in kernel_src/usr/include, it doesn't 
-> have headers path issue. But as result, the kernel_src directory is not 
-> clean, this requires me to run "make mrproper", I *really* don't like it.
-> 
-> 
-
-If the test leverages lib.mk headers install logic correctly, you
-shouldn't see this problem.
-
-Yes. It does make the source directory dirty. That is the problem we
-have to fix. I am seeing issues the issue of x86_64 not being created
-in the case of relocatable builds.
-
-Thanks for working on this by the way. It is one of the tests that
-identified as the one doesn't support relocatable builds.
-
-You will see fixes to others I already fixed in
-
-https://git.kernel.org/pub/scm/linux/kernel/git/shuah/linux-kselftest.git/log/?h=next
-
-Start withe the following use0-cases to fix and then test your fixes
-for these use-cases. The goal is to be able to run kvm from target
-directory and source directory staying clean.
-
-You will have to build the kernel first in all of these cases.
-Let's use kselftest-install which is what you would need if you
-want build and then run tests later. Also assuming you are doing
-native build on x86_64.
-
- From main kernel Makefile: (from kernel source root dir)
-
-Builds in the same source directory:
-make kselftest-install TARGETS=kvm
-
-Relocatable build: (from kernel source root dir)
-
-make O=/path/objdir  - build kernel
-make kselftest-install O=/path/objdir TARGETS=kvm
-
- From tools/testing/selftests/kvm directory:
-make O=/path/objdir install
-
-Install step is important especially for relocatable builds,
-as it makes sure all run-time dependencies are copied to the
-target directory.
-
-thanks,
--- Shuah
