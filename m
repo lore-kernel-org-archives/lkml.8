@@ -2,114 +2,172 @@ Return-Path: <SRS0=s8dx=5M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42E0FC2D0ED
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 19:03:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84440C2D0ED
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 19:03:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 23AE82071B
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 19:03:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B4952071B
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 19:03:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585335791;
+	bh=5PZQQkX9pqp1iK7C4WWS+jJPQco4LLjR9b/RFO3H+hM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=JGQa4A+Avt/FXYToD1+pJcj6vf9XpEfh60/GULiYovaJsM2mEu358Ml3zCEn93AoO
+	 e96AyVKbJPbZqLW4r2wuMfotGZNxkV89Eirk03n3Ix6CXmLGcuPOZDV5eudAxqB/iS
+	 00DYMINbO4rOIel5frnu5LV0ta6zkvofNES+v1js=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727639AbgC0TDC (ORCPT
+        id S1727717AbgC0TDK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Mar 2020 15:03:02 -0400
-Received: from foss.arm.com ([217.140.110.172]:51450 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726900AbgC0TDC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Mar 2020 15:03:02 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BF59E30E;
-        Fri, 27 Mar 2020 12:03:00 -0700 (PDT)
-Received: from [10.57.60.204] (unknown [10.57.60.204])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6527F3F71E;
-        Fri, 27 Mar 2020 12:02:59 -0700 (PDT)
-Subject: Re: [PATCH] iommu/arm-smmu: Demote error messages to debug in
- shutdown callback
-To:     Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-Cc:     Will Deacon <will@kernel.org>, Joerg Roedel <joro@8bytes.org>,
-        iommu@lists.linux-foundation.org,
-        Douglas Anderson <dianders@chromium.org>,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200327132852.10352-1-saiprakash.ranjan@codeaurora.org>
- <0023bc68-45fb-4e80-00c8-01fd0369243f@arm.com>
- <37db9a4d524aa4d7529ae47a8065c9e0@codeaurora.org>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <5858bdac-b7f9-ac26-0c0d-c9653cef841d@arm.com>
-Date:   Fri, 27 Mar 2020 19:02:58 +0000
-User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Fri, 27 Mar 2020 15:03:10 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:42399 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726900AbgC0TDJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Mar 2020 15:03:09 -0400
+Received: by mail-io1-f65.google.com with SMTP id q128so10926611iof.9;
+        Fri, 27 Mar 2020 12:03:07 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=3ITt8Qtkvl5bWhH2ykH+DLle23U//GmXww0cEqt/CIY=;
+        b=CvCynFAZS4dMybHvxtHUziRZ36RAQk8WsTg4Ahx/3PxcK3bFi5w2lnQkx3VUN9YrFD
+         NWQenPDqZBOM5mkJYDucIeRM5V2OaOI3DHXIbEw3EqmyDYcnze9hV3grG+HNG8ihdTJ4
+         vLBA1VfDFT9jswcrsvdXzHC6XOzRDzDyarqB8BI8h0gq5ebWwO2TjGFWXMl0NBtan+Az
+         SDlQh0JUDAZIZHhJRfyd11UmluOC8HfS9ivtQxZobhH9gdrx6yu9gUMLkgAcw1ZR76U/
+         lcOEkM3MBqKiGMPLT5Ehl6ipFxWMrGSn/tFYMobRjGKSme0gTj/l2uZfsjAwOLvYgIyO
+         DiGg==
+X-Gm-Message-State: ANhLgQ0xuctvJK0voy9vg05a09pNYesrfPKo9u4fU6zWuT7J7AFZcraO
+        MX1q7B09Rd91iEY/IFQpsg==
+X-Google-Smtp-Source: ADFU+vsunpeTEtU3sJ3oVNdeonBxmAUzgtdZqJZ/EoRBD2F6QkitYdNkClMiUGGxNjFjEiNEshg0VQ==
+X-Received: by 2002:a6b:c8d4:: with SMTP id y203mr72705iof.111.1585335787129;
+        Fri, 27 Mar 2020 12:03:07 -0700 (PDT)
+Received: from rob-hp-laptop ([64.188.179.250])
+        by smtp.gmail.com with ESMTPSA id i6sm2148350ila.20.2020.03.27.12.03.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 27 Mar 2020 12:03:06 -0700 (PDT)
+Received: (nullmailer pid 28795 invoked by uid 1000);
+        Fri, 27 Mar 2020 19:03:04 -0000
+Date:   Fri, 27 Mar 2020 13:03:04 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Lubomir Rintel <lkundrak@v3.sk>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mark Brown <broonie@kernel.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Daniel Mack <daniel@zonque.org>,
+        Haojian Zhuang <haojian.zhuang@gmail.com>,
+        Robert Jarzmik <robert.jarzmik@free.fr>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-i2c@vger.kernel.org,
+        linux-media@vger.kernel.org, linux-mmc@vger.kernel.org,
+        linux-rtc@vger.kernel.org, linux-serial@vger.kernel.org,
+        linux-spi@vger.kernel.org, linux-usb@vger.kernel.org
+Subject: Re: [PATCH 14/28] dt-bindings: arm: l2x0: Tauros 3 is PL310
+ compatible
+Message-ID: <20200327190304.GA27639@bogus>
+References: <20200317093922.20785-1-lkundrak@v3.sk>
+ <20200317093922.20785-15-lkundrak@v3.sk>
 MIME-Version: 1.0
-In-Reply-To: <37db9a4d524aa4d7529ae47a8065c9e0@codeaurora.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200317093922.20785-15-lkundrak@v3.sk>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-03-27 3:09 pm, Sai Prakash Ranjan wrote:
-> Hi Robin,
+On Tue, Mar 17, 2020 at 10:39:08AM +0100, Lubomir Rintel wrote:
+> The validation is unhappy about mmp3-dell-ariel declaring its
+> marvell,tauros3-cache node to be compatible with arm,pl310-cache:
 > 
-> Thanks for taking a look at this.
+>   mmp3-dell-ariel.dt.yaml: cache-controller@d0020000: compatible:
+>        Additional items are not allowed ('arm,pl310-cache' was unexpected)
+>   mmp3-dell-ariel.dt.yaml: cache-controller@d0020000: compatible:
+>        ['marvell,tauros3-cache', 'arm,pl310-cache'] is too long
 > 
-> On 2020-03-27 19:42, Robin Murphy wrote:
->> On 2020-03-27 1:28 pm, Sai Prakash Ranjan wrote:
->>> Currently on reboot/shutdown, the following messages are
->>> displayed on the console as error messages before the
->>> system reboots/shutdown.
->>>
->>> On SC7180:
->>>
->>>    arm-smmu 15000000.iommu: removing device with active domains!
->>>    arm-smmu 5040000.iommu: removing device with active domains!
->>>
->>> Demote the log level to debug since it does not offer much
->>> help in identifying/fixing any issue as the system is anyways
->>> going down and reduce spamming the kernel log.
->>
->> I've gone back and forth on this pretty much ever since we added the
->> shutdown hook - on the other hand, if any devices *are* still running
->> in those domains at this point, then once we turn off the SMMU and let
->> those IOVAs go out on the bus as physical addresses, all manner of
->> weirdness may ensue. Thus there is an argument for *some* indication
->> that this may happen, although IMO it could be downgraded to at least
->> dev_warn().
->>
+> Let's allow this -- Tauros 3 is designed to be compatible with PL310.
 > 
-> Any pointers to the weirdness here after SMMU is turned off?
-> Because if we look at the call sites, device_shutdown is called
-> from kernel_restart_prepare or kernel_shutdown_prepare which would
-> mean system is going down anyways, so do we really care about these
-> error messages or warnings from SMMU?
+> Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
+> ---
+>  .../devicetree/bindings/arm/l2c2x0.yaml       | 45 ++++++++++---------
+>  1 file changed, 24 insertions(+), 21 deletions(-)
 > 
->   arm_smmu_device_shutdown
->    platform_drv_shutdown
->     device_shutdown
->      kernel_restart_prepare
->       kernel_restart
+> diff --git a/Documentation/devicetree/bindings/arm/l2c2x0.yaml b/Documentation/devicetree/bindings/arm/l2c2x0.yaml
+> index 913a8cd8b2c00..7e39088a9bed2 100644
+> --- a/Documentation/devicetree/bindings/arm/l2c2x0.yaml
+> +++ b/Documentation/devicetree/bindings/arm/l2c2x0.yaml
+> @@ -29,27 +29,30 @@ allOf:
+>  
+>  properties:
+>    compatible:
+> -    enum:
+> -      - arm,pl310-cache
+> -      - arm,l220-cache
+> -      - arm,l210-cache
+> -        # DEPRECATED by "brcm,bcm11351-a2-pl310-cache"
+> -      - bcm,bcm11351-a2-pl310-cache
+> -        # For Broadcom bcm11351 chipset where an
+> -        # offset needs to be added to the address before passing down to the L2
+> -        # cache controller
+> -      - brcm,bcm11351-a2-pl310-cache
+> -        # Marvell Controller designed to be
+> -        # compatible with the ARM one, with system cache mode (meaning
+> -        # maintenance operations on L1 are broadcasted to the L2 and L2
+> -        # performs the same operation).
+> -      - marvell,aurora-system-cache
+> -        # Marvell Controller designed to be
+> -        # compatible with the ARM one with outer cache mode.
+> -      - marvell,aurora-outer-cache
+> -        # Marvell Tauros3 cache controller, compatible
+> -        # with arm,pl310-cache controller.
+> -      - marvell,tauros3-cache
+> +    oneOf:
+> +      - enum:
+> +        - arm,pl310-cache
 
-Imagine your network driver doesn't implement a .shutdown method (so the 
-hardware is still active regardless of device links), happens to have an 
-Rx buffer or descriptor ring DMA-mapped at an IOVA that looks like the 
-physical address of the memory containing some part of the kernel text 
-lower down that call stack, and the MAC receives a broadcast IP packet 
-at about the point arm_smmu_device_shutdown() is returning. Enjoy 
-debugging that ;)
+The list should be indented 2 more spaces. I'll fixup when applying.
 
-And if coincidental memory corruption seems too far-fetched for your 
-liking, other fun alternatives might include "display tries to scan out 
-from powered-off device, deadlocks interconnect and prevents anything 
-else making progress", or "access to TZC-protected physical address 
-triggers interrupt and over-eager Secure firmware resets system before 
-orderly poweroff has a chance to finish".
-
-Of course the fact that in practice we'll *always* see the warning 
-because there's no way to tear down the default DMA domains, and even if 
-all devices *have* been nicely quiesced there's no way to tell, is 
-certainly less than ideal. Like I say, it's not entirely clear-cut 
-either way...
-
-Robin.
+> +        - arm,l220-cache
+> +        - arm,l210-cache
+> +          # DEPRECATED by "brcm,bcm11351-a2-pl310-cache"
+> +        - bcm,bcm11351-a2-pl310-cache
+> +          # For Broadcom bcm11351 chipset where an
+> +          # offset needs to be added to the address before passing down to the L2
+> +          # cache controller
+> +        - brcm,bcm11351-a2-pl310-cache
+> +          # Marvell Controller designed to be
+> +          # compatible with the ARM one, with system cache mode (meaning
+> +          # maintenance operations on L1 are broadcasted to the L2 and L2
+> +          # performs the same operation).
+> +        - marvell,aurora-system-cache
+> +          # Marvell Controller designed to be
+> +          # compatible with the ARM one with outer cache mode.
+> +        - marvell,aurora-outer-cache
+> +      - items:
+> +         # Marvell Tauros3 cache controller, compatible
+> +         # with arm,pl310-cache controller.
+> +        - const: marvell,tauros3-cache
+> +        - const: arm,pl310-cache
+>  
+>    cache-level:
+>      const: 2
+> -- 
+> 2.25.1
+> 
