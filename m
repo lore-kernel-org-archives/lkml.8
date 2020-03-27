@@ -2,99 +2,110 @@ Return-Path: <SRS0=s8dx=5M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.7 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C94CC2D0E8
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 11:30:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8F7EC43331
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 11:31:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6AA8820705
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 11:30:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585308646;
-	bh=vba1+ff8GL/oR+HlvxVDHtEKjYfF8hxoXUDYxy50Jkc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=j6Svk98aYFcuVY+lmfEUYB/NWY9yM4fAKMk/97c7ViitN3n1tKJ0WPZNPlxg1yLLU
-	 tcP0dEkKSQLIofv30cku3/oyOF8wunMYCzLu5M0nHDv+HLKRzrdrwQlVu5f9yXbA3i
-	 /r66zEq//bRnZUpPCGVYfMs1p0dFKC+0ZcqA/6k0=
+	by mail.kernel.org (Postfix) with ESMTP id A1CE2206F1
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 11:31:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727185AbgC0Lap (ORCPT
+        id S1727495AbgC0LbF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Mar 2020 07:30:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40476 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726165AbgC0Lap (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Mar 2020 07:30:45 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0E53C206F1;
-        Fri, 27 Mar 2020 11:30:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585308644;
-        bh=vba1+ff8GL/oR+HlvxVDHtEKjYfF8hxoXUDYxy50Jkc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=iUcEMILWrBSrbYydPksBHKHAgTNmurDKsRwoO5NuElUD/R+/0tno/6tkVcXCaxyZr
-         veUjBr2R1ZIkwJhtbcxuuJjILJD9M7rYrzOMlYThTJc+Iou6qAYMRZdHPjxm+ZoeSx
-         A3PXxCwLfXvJNR/ovfD749uREg4ilPMnziqKW/ls=
-Date:   Fri, 27 Mar 2020 12:30:41 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Marek Szyprowski <m.szyprowski@samsung.com>
-Cc:     Saravana Kannan <saravanak@google.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        devicetree@vger.kernel.org, kernel-team@android.com,
-        linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH v1] driver core: Set fw_devlink to "permissive"
- behavior by default
-Message-ID: <20200327113041.GA1708599@kroah.com>
-References: <20200321210305.28937-1-saravanak@google.com>
- <CGME20200327102554eucas1p1f848633a39f8e158472506b84877f98c@eucas1p1.samsung.com>
- <bd8b42d3-a35a-cc8e-0d06-2899416c2996@samsung.com>
+        Fri, 27 Mar 2020 07:31:05 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:53112 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726165AbgC0LbF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Mar 2020 07:31:05 -0400
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1jHnCV-0004rb-Kw; Fri, 27 Mar 2020 12:30:59 +0100
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 4016E1C03AB;
+        Fri, 27 Mar 2020 12:30:59 +0100 (CET)
+Date:   Fri, 27 Mar 2020 11:30:58 -0000
+From:   "tip-bot2 for Yubo Xie" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: timers/urgent] clocksource/drivers/hyper-v: Make sched clock
+ return nanoseconds correctly
+Cc:     Yubo Xie <yuboxie@microsoft.com>,
+        Tianyu Lan <Tianyu.Lan@microsoft.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>, stable@vger.kernel.org,
+        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <20200327021159.31429-1-Tianyu.Lan@microsoft.com>
+References: <20200327021159.31429-1-Tianyu.Lan@microsoft.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <bd8b42d3-a35a-cc8e-0d06-2899416c2996@samsung.com>
+Message-ID: <158530865882.28353.581776728371427215.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 27, 2020 at 11:25:48AM +0100, Marek Szyprowski wrote:
-> Hi,
-> 
-> On 2020-03-21 22:03, Saravana Kannan wrote:
-> > Set fw_devlink to "permissive" behavior by default so that device links
-> > are automatically created (with DL_FLAG_SYNC_STATE_ONLY) by scanning the
-> > firmware.
-> >
-> > This ensures suppliers get their sync_state() calls only after all their
-> > consumers have probed successfully. Without this, suppliers will get
-> > their sync_state() calls at late_initcall_sync() even if their consuer
-> >
-> > Ideally, we'd want to set fw_devlink to "on" or "rpm" by default. But
-> > that needs more testing as it's known to break some corner case
-> > drivers/platforms.
-> >
-> > Cc: Rob Herring <robh+dt@kernel.org>
-> > Cc: Frank Rowand <frowand.list@gmail.com>
-> > Cc: devicetree@vger.kernel.org
-> > Signed-off-by: Saravana Kannan <saravanak@google.com>
-> 
-> This patch has just landed in linux-next 20200326. Sadly it breaks 
-> booting of the Raspberry Pi3b and Pi4 boards, either in 32bit or 64bit 
-> mode. There is no warning nor panic message, just a silent freeze. The 
-> last message shown on the earlycon is:
-> 
-> [    0.893217] Serial: 8250/16550 driver, 1 ports, IRQ sharing enabled
+The following commit has been merged into the timers/urgent branch of tip:
 
-Ugh, not good.
+Commit-ID:     749da8ca978f19710aba496208c480ad42d37f79
+Gitweb:        https://git.kernel.org/tip/749da8ca978f19710aba496208c480ad42d37f79
+Author:        Yubo Xie <yuboxie@microsoft.com>
+AuthorDate:    Thu, 26 Mar 2020 19:11:59 -07:00
+Committer:     Thomas Gleixner <tglx@linutronix.de>
+CommitterDate: Fri, 27 Mar 2020 12:27:45 +01:00
 
-Saravana, mind if I revert this?
+clocksource/drivers/hyper-v: Make sched clock return nanoseconds correctly
 
-thanks,
+The sched clock read functions return the HV clock (100ns granularity)
+without converting it to nanoseconds.
 
-greg k-h
+Add the missing conversion.
+
+Fixes: bd00cd52d5be ("clocksource/drivers/hyperv: Add Hyper-V specific sched clock function")
+Signed-off-by: Yubo Xie <yuboxie@microsoft.com>
+Signed-off-by: Tianyu Lan <Tianyu.Lan@microsoft.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+Cc: stable@vger.kernel.org
+Link: https://lkml.kernel.org/r/20200327021159.31429-1-Tianyu.Lan@microsoft.com
+
+---
+ drivers/clocksource/hyperv_timer.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/clocksource/hyperv_timer.c b/drivers/clocksource/hyperv_timer.c
+index 9d808d5..eb0ba78 100644
+--- a/drivers/clocksource/hyperv_timer.c
++++ b/drivers/clocksource/hyperv_timer.c
+@@ -343,7 +343,8 @@ static u64 notrace read_hv_clock_tsc_cs(struct clocksource *arg)
+ 
+ static u64 read_hv_sched_clock_tsc(void)
+ {
+-	return read_hv_clock_tsc() - hv_sched_clock_offset;
++	return (read_hv_clock_tsc() - hv_sched_clock_offset) *
++		(NSEC_PER_SEC / HV_CLOCK_HZ);
+ }
+ 
+ static void suspend_hv_clock_tsc(struct clocksource *arg)
+@@ -398,7 +399,8 @@ static u64 notrace read_hv_clock_msr_cs(struct clocksource *arg)
+ 
+ static u64 read_hv_sched_clock_msr(void)
+ {
+-	return read_hv_clock_msr() - hv_sched_clock_offset;
++	return (read_hv_clock_msr() - hv_sched_clock_offset) *
++		(NSEC_PER_SEC / HV_CLOCK_HZ);
+ }
+ 
+ static struct clocksource hyperv_cs_msr = {
