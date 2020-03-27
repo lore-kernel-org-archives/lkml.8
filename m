@@ -2,195 +2,92 @@ Return-Path: <SRS0=s8dx=5M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA4DBC2D0E5
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 18:16:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04050C43331
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 18:17:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F7B42083E
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 18:16:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D140A208E4
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 18:17:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727322AbgC0SQG (ORCPT
+        id S1727548AbgC0SRs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Mar 2020 14:16:06 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:22130 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726515AbgC0SQG (ORCPT
+        Fri, 27 Mar 2020 14:17:48 -0400
+Received: from relmlor2.renesas.com ([210.160.252.172]:40340 "EHLO
+        relmlie6.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726758AbgC0SRs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Mar 2020 14:16:06 -0400
-Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02RI3hLe058444;
-        Fri, 27 Mar 2020 14:15:31 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2ywd8h6dpe-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 27 Mar 2020 14:15:31 -0400
-Received: from m0098396.ppops.net (m0098396.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 02RI3lpg058972;
-        Fri, 27 Mar 2020 14:15:30 -0400
-Received: from ppma03wdc.us.ibm.com (ba.79.3fa9.ip4.static.sl-reverse.com [169.63.121.186])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2ywd8h6dp1-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 27 Mar 2020 14:15:30 -0400
-Received: from pps.filterd (ppma03wdc.us.ibm.com [127.0.0.1])
-        by ppma03wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 02RI8m9o017564;
-        Fri, 27 Mar 2020 18:15:29 GMT
-Received: from b03cxnp08028.gho.boulder.ibm.com (b03cxnp08028.gho.boulder.ibm.com [9.17.130.20])
-        by ppma03wdc.us.ibm.com with ESMTP id 2ywawam74y-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 27 Mar 2020 18:15:29 +0000
-Received: from b03ledav005.gho.boulder.ibm.com (b03ledav005.gho.boulder.ibm.com [9.17.130.236])
-        by b03cxnp08028.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 02RIFSHL13435178
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 27 Mar 2020 18:15:28 GMT
-Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 30179BE054;
-        Fri, 27 Mar 2020 18:15:28 +0000 (GMT)
-Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 7DDCCBE051;
-        Fri, 27 Mar 2020 18:15:18 +0000 (GMT)
-Received: from LeoBras (unknown [9.85.230.141])
-        by b03ledav005.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Fri, 27 Mar 2020 18:15:18 +0000 (GMT)
-Message-ID: <f4447980747f4633ae720825128663bda0101188.camel@linux.ibm.com>
-Subject: Re: [PATCH v2 1/1] ppc/crash: Skip spinlocks during crash
-From:   Leonardo Bras <leonardo@linux.ibm.com>
-To:     Michael Ellerman <mpe@ellerman.id.au>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Alexios Zavras <alexios.zavras@intel.com>,
-        Christophe Leroy <christophe.leroy@c-s.fr>
-Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Date:   Fri, 27 Mar 2020 15:15:12 -0300
-In-Reply-To: <87d08ywj61.fsf@mpe.ellerman.id.au>
-References: <20200326232542.503157-1-leonardo@linux.ibm.com>
-         <87d08ywj61.fsf@mpe.ellerman.id.au>
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-txa6N3c5No/7zpOox/tI"
-User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
-MIME-Version: 1.0
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.645
- definitions=2020-03-27_06:2020-03-27,2020-03-27 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 suspectscore=0
- malwarescore=0 mlxlogscore=999 spamscore=0 lowpriorityscore=0 phishscore=0
- adultscore=0 priorityscore=1501 bulkscore=0 impostorscore=0 clxscore=1015
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2003270152
+        Fri, 27 Mar 2020 14:17:48 -0400
+X-IronPort-AV: E=Sophos;i="5.72,313,1580742000"; 
+   d="scan'208";a="42831016"
+Received: from unknown (HELO relmlir5.idc.renesas.com) ([10.200.68.151])
+  by relmlie6.idc.renesas.com with ESMTP; 28 Mar 2020 03:17:46 +0900
+Received: from localhost.localdomain (unknown [10.226.36.204])
+        by relmlir5.idc.renesas.com (Postfix) with ESMTP id ED9B74012BF2;
+        Sat, 28 Mar 2020 03:17:43 +0900 (JST)
+From:   Kazuhiro Fujita <kazuhiro.fujita.jg@renesas.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>
+Cc:     linux-serial@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        Prabhakar <prabhakar.csengg@gmail.com>,
+        linux-kernel@vger.kernel.org,
+        Kazuhiro Fujita <kazuhiro.fujita.jg@renesas.com>,
+        stable@vger.kernel.org, Hao Bui <hao.bui.yg@renesas.com>,
+        KAZUMI HARADA <kazumi.harada.rh@renesas.com>,
+        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: [PATCH] serial: sh-sci: Make sure status register SCxSR is read in correct sequence
+Date:   Fri, 27 Mar 2020 18:17:28 +0000
+Message-Id: <1585333048-31828-1-git-send-email-kazuhiro.fujita.jg@renesas.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+For SCIF and HSCIF interfaces the SCxSR register holds the status of
+data that is to be read next from SCxRDR register, But where as for
+SCIFA and SCIFB interfaces SCxSR register holds status of data that is
+previously read from SCxRDR register.
 
---=-txa6N3c5No/7zpOox/tI
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+This patch makes sure the status register is read depending on the port
+types so that errors are caught accordingly.
 
-Hello Michael,
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Kazuhiro Fujita <kazuhiro.fujita.jg@renesas.com>
+Signed-off-by: Hao Bui <hao.bui.yg@renesas.com>
+Signed-off-by: KAZUMI HARADA <kazumi.harada.rh@renesas.com>
+Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+---
+ drivers/tty/serial/sh-sci.c | 13 ++++++++++---
+ 1 file changed, 10 insertions(+), 3 deletions(-)
 
-On Fri, 2020-03-27 at 14:50 +1100, Michael Ellerman wrote:
-> Hi Leonardo,
->=20
-> Leonardo Bras <leonardo@linux.ibm.com> writes:
-> > During a crash, there is chance that the cpus that handle the NMI IPI
-> > are holding a spin_lock. If this spin_lock is needed by crashing_cpu it
-> > will cause a deadlock. (rtas_lock and printk logbuf_log as of today)
->=20
-> Please give us more detail on how those locks are causing you trouble, a
-> stack trace would be good if you have it.
-
-Sure, I have hit it in printf and rtas_call, as said before.=20
-
-After crash_send_ipi(), it's tested how many cpus_in_crash are there,
-and once they hit the total value, it's printed "IPI complete". This
-printk call itself already got stuck in spin_lock, for example.
-
-Here are the stack traces:
-
-#0  arch_spin_lock=20
-#1  do_raw_spin_lock=20
-#2  __raw_spin_lock=20
-#3  _raw_spin_lock=20
-#4  vprintk_emit=20
-#5  vprintk_func
-#7  crash_kexec_prepare_cpus=20
-#8  default_machine_crash_shutdown
-#9  machine_crash_shutdown=20
-#10 __crash_kexec
-#11 crash_kexec
-#12 oops_end
-
-#0 arch_spin_lock
-#1  lock_rtas ()=20
-#2  rtas_call (token=3D8204, nargs=3D1, nret=3D1, outputs=3D0x0)
-#3  ics_rtas_mask_real_irq (hw_irq=3D4100)=20
-#4  machine_kexec_mask_interrupts
-#5  default_machine_crash_shutdown
-#6  machine_crash_shutdown=20
-#7  __crash_kexec
-#8  crash_kexec
-#9  oops_end
-
-> > This is a problem if the system has kdump set up, given if it crashes
-> > for any reason kdump may not be saved for crash analysis.
-> >=20
-> > Skip spinlocks after NMI IPI is sent to all other cpus.
->=20
-> We don't want to add overhead to all spinlocks for the life of the
-> system, just to handle this one case.
-
-I understand.=20
-Other than this patch, I would propose doing something uglier, like
-forcing the said locks to unlocked state when cpus_in_crash hits it's
-maximum value, before printing "IPI complete".
-Creating similar functions that don't lock, just for this case, looks
-like overkill to me.
-
-Do you have any other suggestion?
-
-> There's already a flag that is set when the system is crashing,
-> "oops_in_progress", maybe we need to use that somewhere to skip a lock
-> or do an early return.
-
-I think that would not work, because oops_in_progress should be 0 here:
-oops_end() calls bust_spinlocks(0) before calling crash_kexec(), and
-bust_spinlocks(0) will decrement oops_in_progress.
-(just verified, it's 0 before printing "IPI complete").
-
-Thank you the feedback, :)
-
-Best regards,
-Leonardo
-
-
---=-txa6N3c5No/7zpOox/tI
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEMdeUgIzgjf6YmUyOlQYWtz9SttQFAl5+QrAACgkQlQYWtz9S
-ttRtkxAAxQ18qV/sitx+eX0YI1Eu3Uj78PX8UN90MddDaTO0QU6k/ZV7UvEBmU8C
-POlNTSgIkzMXq+N2DT+0OhhmP+2Fdj91ovQGtPnO7kjXRO3wpvRbIFoPi8/PDsCx
-RJGGEv1AV+yleSYhG3pf/jk2q1NUSZW+t3A9SvkVMX0w4jav3qHzTm3T37ZZ1dks
-6mJE+RlMvnt5N1PWNCcnlxcYgpvQZjWNfcltsfcG5f8aWEAXjKH5lZ9kTkBzUOmw
-RXJIZhhLFr7QIBJK6joqAnohED0JlFyp9X/pfFkFYBkNmPcgB4AzuLHH+7xNvHd2
-A23u4k7Xj7oYbpwYMLeMDg9yvpj1hk13R+RzcSk1x5WLAhWCAbtc2pW5Sps646sM
-5BYN4XG0X1TIqU3XzVX9j5oeax7ePe9vFDta/CmV8KSsUdwTzOYNgGaKyi7vgYg4
-dhkRYpMWTo+RJbyfDw8pJV2ABk3xgYmugQTfQNGDzJYTArDU5fq/UCovzat61eDh
-jp28ciBr9jaZ3PHd6UhHZjogmaHewm/sJiLnr0qA0XPXb7acYc1LoMsEWCqBj1PG
-3EuiHxJ1DlhBo7rfQ0kzxogfTpegEZ2u265eSKuEPO4ssPz9w30hex4fMJWuP5Lq
-A3RlcbXHeZQyj+PxM2OFRxNXzXfesqOoD6JRA/kch5ZHGMz2J78=
-=qwkO
------END PGP SIGNATURE-----
-
---=-txa6N3c5No/7zpOox/tI--
+diff --git a/drivers/tty/serial/sh-sci.c b/drivers/tty/serial/sh-sci.c
+index 0641a72..d646bc4 100644
+--- a/drivers/tty/serial/sh-sci.c
++++ b/drivers/tty/serial/sh-sci.c
+@@ -870,9 +870,16 @@ static void sci_receive_chars(struct uart_port *port)
+ 				tty_insert_flip_char(tport, c, TTY_NORMAL);
+ 		} else {
+ 			for (i = 0; i < count; i++) {
+-				char c = serial_port_in(port, SCxRDR);
+-
+-				status = serial_port_in(port, SCxSR);
++				char c;
++
++				if (port->type == PORT_SCIF ||
++				    port->type == PORT_HSCIF) {
++					status = serial_port_in(port, SCxSR);
++					c = serial_port_in(port, SCxRDR);
++				} else {
++					c = serial_port_in(port, SCxRDR);
++					status = serial_port_in(port, SCxSR);
++				}
+ 				if (uart_handle_sysrq_char(port, c)) {
+ 					count--; i--;
+ 					continue;
+-- 
+2.7.4
 
