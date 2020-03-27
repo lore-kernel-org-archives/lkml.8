@@ -2,144 +2,173 @@ Return-Path: <SRS0=s8dx=5M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3ACBAC43331
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 21:45:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3829C2D0E5
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 21:50:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 07444206DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 21:45:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A8AB4206DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 21:50:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="nWcdx6M8"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pdZXvd9S"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727702AbgC0VpB (ORCPT
+        id S1727867AbgC0VuP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Mar 2020 17:45:01 -0400
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:4035 "EHLO
-        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727473AbgC0VpA (ORCPT
+        Fri, 27 Mar 2020 17:50:15 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:35399 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727548AbgC0VuP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Mar 2020 17:45:00 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e7e73ad0000>; Fri, 27 Mar 2020 14:44:13 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Fri, 27 Mar 2020 14:45:00 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Fri, 27 Mar 2020 14:45:00 -0700
-Received: from [10.2.174.211] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 27 Mar
- 2020 21:44:58 +0000
-From:   Zi Yan <ziy@nvidia.com>
-To:     Yang Shi <shy828301@gmail.com>
-CC:     "Kirill A. Shutemov" <kirill@shutemov.name>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Linux MM <linux-mm@kvack.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-Subject: Re: [PATCH 4/7] khugepaged: Allow to callapse a page shared across
- fork
-Date:   Fri, 27 Mar 2020 17:44:56 -0400
-X-Mailer: MailMate (1.13.1r5680)
-Message-ID: <2498F20B-DD98-4244-AD60-58D4A771ADF6@nvidia.com>
-In-Reply-To: <CAHbLzkrLxB93xs78xejsBsZ=-b+oqNao6a5Bydi8-6+wpzjKQg@mail.gmail.com>
-References: <20200327170601.18563-1-kirill.shutemov@linux.intel.com>
- <20200327170601.18563-5-kirill.shutemov@linux.intel.com>
- <AD80A72A-8FB7-4F89-A2C9-CDD5C616A479@sent.com>
- <CAHbLzkrLxB93xs78xejsBsZ=-b+oqNao6a5Bydi8-6+wpzjKQg@mail.gmail.com>
+        Fri, 27 Mar 2020 17:50:15 -0400
+Received: by mail-wm1-f65.google.com with SMTP id f74so3172438wmf.0;
+        Fri, 27 Mar 2020 14:50:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=UPYvtOj75J2/EwYyRdsACxnYCpxt8+KWK2M/XYoASio=;
+        b=pdZXvd9Su0kL4ajBpbQhIkICRXk2LvR6We+EPwTHlA28wJaFShzFPgUbQyfbIvQYzS
+         qCb2jxZWlZtGMMB3i0soOBxEFuDWb5OOmYFnzDsUdohbwTn78iISXAdr1A3RR2TZyIA9
+         6sQXZhxryqyw/L1N0zaEiV4vTw3auzSzz/W4Y7T62olfteXivjxc24cBLIRiFW3e59tc
+         nJ88HMCApPVEI103oSLypkeNgbqgajMKdi5VBM0GM50k7Z80YAtNVZYzDg8s1zHxQokt
+         a7Via6LDcTS7TX2h9m2eJe+ZSFgE4aAMInaO7jb6oU23HjKwVQkFvxVy6+caePWjWE8r
+         zoxw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=UPYvtOj75J2/EwYyRdsACxnYCpxt8+KWK2M/XYoASio=;
+        b=ilAKCsV6fL3V1JbOYYZ3Dy4c8ywmX+BlYPZfMFYLDveJrpayr9b97numhWPMr2EawY
+         dVmZpyV5H0bvGDwQj2JKZycU0q8uLKrdinNSEcJ9VD9pWsA8sJDA4vpOVpCeV1iGUBJp
+         qyLJj1+RUqUoWffnJciohJHO57OGC2wbScFu7mITDK6YsTp0qLVW1nwDFYrinOiQN2uU
+         tVWAkPHeY+QnwrutDq3lfR9TVKmFs3GEolRaPG2qvHwLMb5YZ1LWT7NmMKHwG3Rc82xT
+         btuWlQGPvNuCKaM1jZwmj8OqLbxKtH2ddb7h750ksejb9ywImaYCKccHzRKkzguMd+Q1
+         Kwrw==
+X-Gm-Message-State: ANhLgQ2go0q9UYo2tmCC6mhoYVeFMC9+IXDiiSQ4AoSWI7fS/Q++68QP
+        KkNThrLs8wo3eRvkFrxkEei1f7UxF74=
+X-Google-Smtp-Source: ADFU+vvVtGIYGBhSlwePa09L/Ha1FQ2QJKkWLyhkmtaIy0xTyRFUFl97hefC/dNNhN9s8W0M89esSw==
+X-Received: by 2002:a1c:56d5:: with SMTP id k204mr869388wmb.13.1585345812891;
+        Fri, 27 Mar 2020 14:50:12 -0700 (PDT)
+Received: from [192.168.0.104] (p5B3F7536.dip0.t-ipconnect.de. [91.63.117.54])
+        by smtp.gmail.com with ESMTPSA id a2sm10228275wrp.13.2020.03.27.14.50.11
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 27 Mar 2020 14:50:11 -0700 (PDT)
+Subject: Re: [PATCH v4 1/5] dt-bindings: mfd: add document bindings for mp2629
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     robh+dt@kernel.org, jic23@kernel.org, knaack.h@gmx.de,
+        lars@metafoo.de, pmeerw@pmeerw.net, sre@kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-iio@vger.kernel.org, linux-pm@vger.kernel.org
+References: <20200322224626.13160-1-sravanhome@gmail.com>
+ <20200322224626.13160-2-sravanhome@gmail.com> <20200327080013.GG603801@dell>
+From:   saravanan sekar <sravanhome@gmail.com>
+Message-ID: <d449b567-bd5c-168d-83af-5ba38771f75a@gmail.com>
+Date:   Fri, 27 Mar 2020 22:50:10 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: multipart/signed;
-        boundary="=_MailMate_32016954-B99D-44CD-BE67-01B33907190B_=";
-        micalg=pgp-sha512; protocol="application/pgp-signature"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1585345453; bh=qA5lmaOWEHFjoxmorFbt1s5u6NyUnRdUFtf4I6cXnoU=;
-        h=X-PGP-Universal:From:To:CC:Subject:Date:X-Mailer:Message-ID:
-         In-Reply-To:References:MIME-Version:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type;
-        b=nWcdx6M8e9j1TNLR9McyGrPkWGclNr6z0+9PBsv79WZ0b3SpI0g1v6W0HiX+UW2PS
-         9hj4/lC160GsWbB9cGyYNSsKMIkhQAskYKWzEfMiZ2RdZzS4V1ng4BQjLr9ZrMIxsb
-         oZAPoyKfG6FkOwHZPeuivq/gtem9iEDO0r5VgQlIdI3832L3F5QisiikxG74PUabGo
-         4Unwir9PR56t5meMGJVNb564wBGuvcyz9KjbO+IhFKajySFlh15X1VlIypD049zycO
-         Jpvgz0TN4J2RsBd4k7DzI7689iU9Ekb333w0pF+cyHoXMfWluQ6F2WLwhW8P3DtrkP
-         06mOxZNMctmeg==
+In-Reply-To: <20200327080013.GG603801@dell>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---=_MailMate_32016954-B99D-44CD-BE67-01B33907190B_=
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Hi Lee,
 
-<snip>
->>>                       /*
->>>                        * Drain pagevec and retry just in case we can =
-get rid
->>>                        * of the extra pin, like in swapin case.
->>>                        */
->>>                       lru_add_drain();
->>>               }
->>> -             if (page_count(page) !=3D 1 + PageSwapCache(page)) {
->>> +             if (total_mapcount(page) + PageSwapCache(page) !=3D
->>> +                             page_count(page)) {
->>>                       unlock_page(page);
->>>                       result =3D SCAN_PAGE_COUNT;
->>>                       goto out;
->>> @@ -680,7 +688,6 @@ static void __collapse_huge_page_copy(pte_t *pte,=
- struct page *page,
->>>               } else {
->>>                       src_page =3D pte_page(pteval);
->>>                       copy_user_highpage(page, src_page, address, vma=
-);
->>> -                     VM_BUG_ON_PAGE(page_mapcount(src_page) !=3D 1, =
-src_page);
->>
->> Maybe replace it with this?
->>
->> VM_BUG_ON_PAGE(page_mapcount(src_page) + PageSwapCache(src_page) !=3D =
-page_count(src_page), src_page);
+On 27/03/20 9:00 am, Lee Jones wrote:
+> On Sun, 22 Mar 2020, Saravanan Sekar wrote:
 >
-> I don't think this is correct either. If a THP is PTE mapped its
-> refcount would be bumped by the number of PTE mapped subpages. But
-> page_mapcount() would just return the mapcount of that specific
-> subpage. So, total_mapcount() should be used, but the same check has
-> been done before reaching here.
+>> Add device tree binding information for mp2629 mfd driver.
+>>
+>> Signed-off-by: Saravanan Sekar <sravanhome@gmail.com>
+>> ---
+>>   .../devicetree/bindings/mfd/mps,mp2629.yaml   | 60 +++++++++++++++++++
+>>   1 file changed, 60 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/mfd/mps,mp2629.yaml
+>>
+>> diff --git a/Documentation/devicetree/bindings/mfd/mps,mp2629.yaml b/Documentation/devicetree/bindings/mfd/mps,mp2629.yaml
+>> new file mode 100644
+>> index 000000000000..314309ea91ac
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/mfd/mps,mp2629.yaml
+>> @@ -0,0 +1,60 @@
+>> +# SPDX-License-Identifier: GPL-2.0
+>> +%YAML 1.2
+>> +---
+>> +$id: http://devicetree.org/schemas/mfd/mps,mp2629.yaml#
+>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> Are these links supposed to work?
+Not really, but as far my understanding needed for dt-bindings check
+>> +title: MP2629 Battery Charger PMIC from Monolithic Power System.
+>> +
+>> +maintainers:
+>> +  - Saravanan Sekar <sravanhome@gmail.com>
+>> +
+>> +description: |
+>> +  MP2629 is an PMIC providing battery charging and power supply for smartphones,
+> s/an/a/
+>
+>> +  wireless camera and portable devices. Chip is contrlled over I2C.
+> Spell check!
+>
+>> +  The MFD device handles battery charger controller and ADC IIO device for
+>> +  battery, system voltage
+> MFD isn't a thing.  We made it up.  Please describe it as it is in the datasheet.
+>
+>> +properties:
+>> +  compatible:
+>> +    const: mps,mp2629
+>> +
+>> +  reg:
+>> +    maxItems: 1
+>> +
+>> +  interrupts:
+>> +    maxItems: 1
+>> +
+>> +  interrupt-controller: true
+>> +
+>> +  "#interrupt-cells":
+>> +    const: 2
+>> +    description:
+>> +      The first cell is the IRQ number, the second cell is the trigger type.
+>> +
+>> +required:
+>> +  - compatible
+>> +  - reg
+>> +  - interrupts
+>> +  - interrupt-controller
+>> +  - "#interrupt-cells"
+>> +
+>> +examples:
+>> +  - |
+>> +    #include <dt-bindings/interrupt-controller/irq.h>
+>> +    #include <dt-bindings/input/linux-event-codes.h>
+>> +    i2c {
+> i2c@0x????????
 
-Yes, you are right. Thanks.
+Its a I2C controller node, I don't think address is needed. Mention like 
+this my previous other driver patches,
 
-Please disregard this comment.
+dt_binding_check is also passed
 
-=E2=80=94
-Best Regards,
-Yan Zi
-
---=_MailMate_32016954-B99D-44CD-BE67-01B33907190B_=
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQJDBAEBCgAtFiEEh7yFAW3gwjwQ4C9anbJR82th+ooFAl5+c9gPHHppeUBudmlk
-aWEuY29tAAoJEJ2yUfNrYfqKsyAP/i12fyBS2ituC3rfVid/bDImAZfQY5ZmUwOi
-hRZzsfdXxw3M5eF79z39HPGCeh8pOOJdu5wK+Ug/20GchAj/V1F/VplnoUF+nSwv
-nRRXUo7QkMk/6KYxCeWWytbE7xiOb4POzGcYsnh25pE9hAQ3yweW5WQXidNyHjGo
-Ba20hGQj6GTWx9wnaNHqOcAIMzG1a+dRymRp8jARqtB+lw7FP1hJrbzh2yy0meyB
-svBAGL8KKSI7RSb50T2PxZIjlZgnLtiTnUm8/tDZJ9smF0TImggTxDaBpOp8YHqU
-rq0obnu7MYwkPQjYKjYgVX3u6+d07hgUrAZKAPEgNCIzQr0KKrJ5AZFA7U4ZznWx
-YyZG11RxdxyJRnmtbUv3/mPJ54sAOqnOIhz/h6Wg0bZrOcA0XoY9tg80Tc/bh7zS
-MHr/JCVCquPbFgAj+RvsCl0YNo8Y/l+49xQIZt3wbRZe56l3e1wTOgAkBGEtrd5G
-yd2WHSP6oAXgE0WM4RJLnusrBUut2bQ6CyDsvhLMOiNzSKuK03LuuMGv8+9+eZuG
-qcwCLbe2Rc3+OO4fD0tpQIJzOAOl+VV0ztSGhZss4ZPMl7szNSrUERcQytEH5Tc+
-UbeAicfvNIAW+vE2faH6rls+AeWKltVZavBI3wWxASTrvydhHwPYkmcF3BrkrRzH
-eKtMEysU
-=wx8b
------END PGP SIGNATURE-----
-
---=_MailMate_32016954-B99D-44CD-BE67-01B33907190B_=--
+>> +        #address-cells = <1>;
+>> +        #size-cells = <0>;
+>> +
+>> +        pmic@4b {
+>> +            compatible = "mps,mp2629";
+>> +            reg = <0x4b>;
+>> +
+>> +            interrupt-controller;
+>> +            interrupt-parent = <&gpio2>;
+>> +            #interrupt-cells = <2>;
+>> +            interrupts = <3 IRQ_TYPE_LEVEL_HIGH>;
+>> +        };
+>> +    };
