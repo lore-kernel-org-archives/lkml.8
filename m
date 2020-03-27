@@ -2,271 +2,197 @@ Return-Path: <SRS0=s8dx=5M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D719C2D0E8
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 10:28:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DDB6C43331
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 10:28:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D430920705
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 10:28:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD23320705
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 10:28:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="OiHCkO3N";
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="nm6qxOJ6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726937AbgC0K2Q (ORCPT
+        id S1727247AbgC0K2p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Mar 2020 06:28:16 -0400
-Received: from mx2.suse.de ([195.135.220.15]:34224 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726266AbgC0K2P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Mar 2020 06:28:15 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id D5718AE07;
-        Fri, 27 Mar 2020 10:28:12 +0000 (UTC)
-Subject: Re: [PATCH v3 1/2] vt: vt_ioctl: fix VT_DISALLOCATE freeing in-use
- virtual console
-To:     Eric Biggers <ebiggers@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com,
-        Eric Dumazet <edumazet@google.com>,
-        Nicolas Pitre <nico@fluxnic.net>
-References: <20200320193424.GM851@sol.localdomain>
- <20200322034305.210082-1-ebiggers@kernel.org>
- <20200322034305.210082-2-ebiggers@kernel.org>
-From:   Jiri Slaby <jslaby@suse.cz>
-Autocrypt: addr=jslaby@suse.cz; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <5a6a80e8-cf7f-dcfd-9cf4-afd3ee502220@suse.cz>
-Date:   Fri, 27 Mar 2020 11:28:10 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
-MIME-Version: 1.0
-In-Reply-To: <20200322034305.210082-2-ebiggers@kernel.org>
-Content-Type: text/plain; charset=iso-8859-2
+        Fri, 27 Mar 2020 06:28:45 -0400
+Received: from smtprelay-out1.synopsys.com ([149.117.73.133]:37760 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726002AbgC0K2p (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Mar 2020 06:28:45 -0400
+Received: from mailhost.synopsys.com (badc-mailhost1.synopsys.com [10.192.0.17])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 04795425BD;
+        Fri, 27 Mar 2020 10:28:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
+        t=1585304924; bh=Dr43viJs/Cyd6J2wzr4se58hi3UXf6AQDCgErx1lLzc=;
+        h=From:To:CC:Subject:Date:References:In-Reply-To:From;
+        b=OiHCkO3Nd6Br7/pu6rkG8S1yqo1ylvSC2hJC0YyVfvcYBx6mobkTQLOjms8SKA0mq
+         73YZ9wYKdQdqOehxpY9SrOHFZYZXrCS5uwca0gyWq4lY6nw17cYwyUI6E7ZAqik0G4
+         UsdCkff6VO1x3P8mO+L9EMWqnVvzkIR5vrDlxM0LsyQEctZctmT3OiYaftK9VXUUIJ
+         uEEodQCWZK6lqNAjH0dF7ybmDTU85bdBH+a4xqF3ueF9fLI2Gk15UHxNbhpIIorZmO
+         EXY+NkIuR/mhNT0cYwQ/UEaM2uQ91u8Swd8MTd7SymV6mkM6aPu2L76aZ+hwmrX8pQ
+         m5/Mmbjt6VZ2g==
+Received: from US01WEHTC3.internal.synopsys.com (us01wehtc3.internal.synopsys.com [10.15.84.232])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mailhost.synopsys.com (Postfix) with ESMTPS id 7249DA0079;
+        Fri, 27 Mar 2020 10:28:43 +0000 (UTC)
+Received: from us01hybrid1.internal.synopsys.com (10.200.27.51) by
+ US01WEHTC3.internal.synopsys.com (10.15.84.232) with Microsoft SMTP Server
+ (TLS) id 14.3.408.0; Fri, 27 Mar 2020 03:28:11 -0700
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (10.202.3.67) by
+ mrs.synopsys.com (10.200.27.51) with Microsoft SMTP Server (TLS) id
+ 14.3.408.0; Fri, 27 Mar 2020 03:28:10 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=l1IFGphLl2LMD34rcd2wyHpdsdcFJG4gBvNesP8491VSVB8X2q2HRJHe5ojHLWaV4a85LaEWPDfINBU5/USB+S4/aP3UvoRXo7LmsJzDJvzQb4VpGrPOm8DY/7w4Z5nXQeOl7bhdIJQYnnYskm7QNlLT+Swyb8Xl/ymiTC26R0lSdv+djdjV7ypCtGupih8JirF+YpsVe6sOClaAAU9KwsoiTWXlZyoDAiSR4yM8YdMOXr9/Zb2pjvFJ+pun/hckA5GvVv0bHQk5pFQxjGJ28KK0SnAeYQqfIxRD914PLRHTQ2UWFWKWHq8tl+zgK/YU4ydqkG3/f7cYoUeRukLHjA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Dr43viJs/Cyd6J2wzr4se58hi3UXf6AQDCgErx1lLzc=;
+ b=Ymn+cTPk9cw0R2CCQWR9MhMeGB5WeTcxZm4rOqerXA20EeD3RID1PMiPAgwvqaMo74donuX/G/1uPrBMWu+Fmj/lc07gY6Ut9IXDY1jE8agQqLeYdAzMsGs97ciDQ3Pi53Kjr6Kl/q+xq1Osm8iylwLDDowY0zsN+wgcLOejUP0t8qrkBAVM4a14F2BDLHdvWVI0ZWTBLxQxu6GEes0J5TGZKN5eBBOe/RuEF1sfn/kUo4f+E8t1JouTyTCtfrXvLoYSWcPSOaVpisHXMZfMzo2sSH2/lG0GLT2u0uIZ5vtdcs2w5XDjnLLJte/4HBhO3lk1n2Agf+LWh2b6Zm9WKA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=synopsys.com; dmarc=pass action=none header.from=synopsys.com;
+ dkim=pass header.d=synopsys.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=synopsys.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Dr43viJs/Cyd6J2wzr4se58hi3UXf6AQDCgErx1lLzc=;
+ b=nm6qxOJ6xIt74J+ZNXdEyCv5cEoR0XHSIa4q+hcarewZK9cY+QEJY9yWCXjxv49e/x85HaDK5FL0KKBX2gk2LRdgMT/kHJs/KnAzX8p+qFthNMowmA0p7jh74wDvyQka48X78wigyeqF0apTVPBoD+PqCubhrt737NujbbT/JFY=
+Received: from DM6PR12MB4251.namprd12.prod.outlook.com (2603:10b6:5:21e::12)
+ by DM6PR12MB4434.namprd12.prod.outlook.com (2603:10b6:5:2ad::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2856.20; Fri, 27 Mar
+ 2020 10:28:09 +0000
+Received: from DM6PR12MB4251.namprd12.prod.outlook.com
+ ([fe80::65a9:e78c:7f63:81ab]) by DM6PR12MB4251.namprd12.prod.outlook.com
+ ([fe80::65a9:e78c:7f63:81ab%6]) with mapi id 15.20.2835.023; Fri, 27 Mar 2020
+ 10:28:09 +0000
+From:   Tejas Joglekar <Tejas.Joglekar@synopsys.com>
+To:     Greg KH <gregkh@linuxfoundation.org>,
+        Tejas Joglekar <Tejas.Joglekar@synopsys.com>
+CC:     "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        John Youn <John.Youn@synopsys.com>
+Subject: Re: [RESENDING RFC PATCH 1/4] dt-bindings: usb: Add
+ snps,consolidate-sgl & consolidate-sgl
+Thread-Topic: [RESENDING RFC PATCH 1/4] dt-bindings: usb: Add
+ snps,consolidate-sgl & consolidate-sgl
+Thread-Index: AQHWBB3U2hXO07jC8U6J6+lTktLsnqhcOBAAgAADaICAAAEdAA==
+Date:   Fri, 27 Mar 2020 10:28:09 +0000
+Message-ID: <53f27031-50bb-8fde-3c53-30307aec6982@synopsys.com>
+References: <cover.1585297723.git.joglekar@synopsys.com>
+ <8a9ca8e08d7c4957789a209c77589f1aa4bd2f06.1585297723.git.joglekar@synopsys.com>
+ <20200327095447.GA1698181@kroah.com>
+ <11a058bc-a947-a763-680f-a11fd454925a@synopsys.com>
+ <20200327102409.GB1700570@kroah.com>
+In-Reply-To: <20200327102409.GB1700570@kroah.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=joglekar@synopsys.com; 
+x-originating-ip: [198.182.52.26]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 04684ee1-f649-424c-6dec-08d7d2398b93
+x-ms-traffictypediagnostic: DM6PR12MB4434:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DM6PR12MB4434C6B61C85406F1DF37C82A4CC0@DM6PR12MB4434.namprd12.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7691;
+x-forefront-prvs: 0355F3A3AE
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(376002)(346002)(396003)(366004)(39860400002)(136003)(316002)(36756003)(81156014)(186003)(8676002)(31696002)(86362001)(107886003)(6512007)(81166006)(6486002)(54906003)(76116006)(91956017)(2906002)(31686004)(478600001)(4326008)(2616005)(66946007)(64756008)(8936002)(53546011)(6506007)(5660300002)(26005)(66476007)(66556008)(66446008)(110136005)(71200400001)(142933001);DIR:OUT;SFP:1102;SCL:1;SRVR:DM6PR12MB4434;H:DM6PR12MB4251.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;
+received-spf: None (protection.outlook.com: synopsys.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: Ed0j9+Vtc5LDQEkn70zZqa5oCrg4/J665QsWoUOu3N4Y5wKdk7eh2EvPG6IrX6pumoHILfTvBR9tLvkH0y+wWWvAsNm4kF8tbkK1t1KHx5CGI+FHT365U8KJUCMIn4lFfWEVQXNj2hAiqozLiwFaaEwauMUXTlsXvf0G5fHT2qnsrkVOwhXGmjUebhgKZLebNbcSMSyLfyjNYHgYQIg642uIwbnwSoj0H5Ke9k8JRhCiACpUSZficjbAAPWDLsYOugIJkpx0W2fpPEDdFa2aziYo1wZnpqPbmxSs6n5D7Fk+9cvLmnWX/VsZ1HlwZWM++TWUoYy7vheEaR3mtZzBYygOlWtrPZ49xds/+fhJ+slDvXvCSG9f1JXfMeabtzQ6Cw6aJDPvbWa7Sn7gIYqzfomMk+23S9FGhJljrbieEKVlmD63yq3ejx6mLBn1SGyp5vO8Fx88/VgbEa/IsuGzJftqch/8409hy71TSqFiqmj72TFFB5ijjf4rlVB8Hpxr
+x-ms-exchange-antispam-messagedata: fUkdcS4dRFAubVA/MnvHqXhk9h5Q8l0nz1xdD+iQZfy83C4xlLQGm954pblEdIG4+nqM8FT9S18ArbKRpDyyoafYASyHGq91dfZzYg9dp0mu012s2WrulJVHkEchqkVy2kcfwc582JVzLkYja72fWA==
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <E6CCB0FB71AFED4A9C78D87417695328@namprd12.prod.outlook.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-MS-Exchange-CrossTenant-Network-Message-Id: 04684ee1-f649-424c-6dec-08d7d2398b93
+X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Mar 2020 10:28:09.1195
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: c33c9f88-1eb7-4099-9700-16013fd9e8aa
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 9sHPidsnbXtv4Wq8AFBwtFsqEf5XrED8FDO3eVww3Uv4s5N8qpIhIPx/vB2QN9fFEclYuQug+JEhEX0uPJBBaA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB4434
+X-OriginatorOrg: synopsys.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 22. 03. 20, 4:43, Eric Biggers wrote:
-> From: Eric Biggers <ebiggers@google.com>
-> 
-> The VT_DISALLOCATE ioctl can free a virtual console while tty_release()
-> is still running, causing a use-after-free in con_shutdown().  This
-> occurs because VT_DISALLOCATE considers a virtual console's
-> 'struct vc_data' to be unused as soon as the corresponding tty's
-> refcount hits 0.  But actually it may be still being closed.
-> 
-> Fix this by making vc_data be reference-counted via the embedded
-> 'struct tty_port'.  A newly allocated virtual console has refcount 1.
-> Opening it for the first time increments the refcount to 2.  Closing it
-> for the last time decrements the refcount (in tty_operations::cleanup()
-> so that it happens late enough), as does VT_DISALLOCATE.
-> 
-> Reproducer:
-> 	#include <fcntl.h>
-> 	#include <linux/vt.h>
-> 	#include <sys/ioctl.h>
-> 	#include <unistd.h>
-> 
-> 	int main()
-> 	{
-> 		if (fork()) {
-> 			for (;;)
-> 				close(open("/dev/tty5", O_RDWR));
-> 		} else {
-> 			int fd = open("/dev/tty10", O_RDWR);
-> 
-> 			for (;;)
-> 				ioctl(fd, VT_DISALLOCATE, 5);
-> 		}
-> 	}
-> 
-> KASAN report:
-> 	BUG: KASAN: use-after-free in con_shutdown+0x76/0x80 drivers/tty/vt/vt.c:3278
-> 	Write of size 8 at addr ffff88806a4ec108 by task syz_vt/129
-> 
-> 	CPU: 0 PID: 129 Comm: syz_vt Not tainted 5.6.0-rc2 #11
-> 	Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS ?-20191223_100556-anatol 04/01/2014
-> 	Call Trace:
-> 	 [...]
-> 	 con_shutdown+0x76/0x80 drivers/tty/vt/vt.c:3278
-> 	 release_tty+0xa8/0x410 drivers/tty/tty_io.c:1514
-> 	 tty_release_struct+0x34/0x50 drivers/tty/tty_io.c:1629
-> 	 tty_release+0x984/0xed0 drivers/tty/tty_io.c:1789
-> 	 [...]
-> 
-> 	Allocated by task 129:
-> 	 [...]
-> 	 kzalloc include/linux/slab.h:669 [inline]
-> 	 vc_allocate drivers/tty/vt/vt.c:1085 [inline]
-> 	 vc_allocate+0x1ac/0x680 drivers/tty/vt/vt.c:1066
-> 	 con_install+0x4d/0x3f0 drivers/tty/vt/vt.c:3229
-> 	 tty_driver_install_tty drivers/tty/tty_io.c:1228 [inline]
-> 	 tty_init_dev+0x94/0x350 drivers/tty/tty_io.c:1341
-> 	 tty_open_by_driver drivers/tty/tty_io.c:1987 [inline]
-> 	 tty_open+0x3ca/0xb30 drivers/tty/tty_io.c:2035
-> 	 [...]
-> 
-> 	Freed by task 130:
-> 	 [...]
-> 	 kfree+0xbf/0x1e0 mm/slab.c:3757
-> 	 vt_disallocate drivers/tty/vt/vt_ioctl.c:300 [inline]
-> 	 vt_ioctl+0x16dc/0x1e30 drivers/tty/vt/vt_ioctl.c:818
-> 	 tty_ioctl+0x9db/0x11b0 drivers/tty/tty_io.c:2660
-> 	 [...]
-> 
-> Fixes: 4001d7b7fc27 ("vt: push down the tty lock so we can see what is left to tackle")
-> Cc: <stable@vger.kernel.org> # v3.4+
-> Reported-by: syzbot+522643ab5729b0421998@syzkaller.appspotmail.com
-> Signed-off-by: Eric Biggers <ebiggers@google.com>
-
-Acked-by: Jiri Slaby <jslaby@suse.cz>
-
-> ---
->  drivers/tty/vt/vt.c       | 23 ++++++++++++++++++++++-
->  drivers/tty/vt/vt_ioctl.c | 12 ++++--------
->  2 files changed, 26 insertions(+), 9 deletions(-)
-> 
-> diff --git a/drivers/tty/vt/vt.c b/drivers/tty/vt/vt.c
-> index bbc26d73209a4..309a39197be0a 100644
-> --- a/drivers/tty/vt/vt.c
-> +++ b/drivers/tty/vt/vt.c
-> @@ -1075,6 +1075,17 @@ static void visual_deinit(struct vc_data *vc)
->  	module_put(vc->vc_sw->owner);
->  }
->  
-> +static void vc_port_destruct(struct tty_port *port)
-> +{
-> +	struct vc_data *vc = container_of(port, struct vc_data, port);
-> +
-> +	kfree(vc);
-> +}
-> +
-> +static const struct tty_port_operations vc_port_ops = {
-> +	.destruct = vc_port_destruct,
-> +};
-> +
->  int vc_allocate(unsigned int currcons)	/* return 0 on success */
->  {
->  	struct vt_notifier_param param;
-> @@ -1100,6 +1111,7 @@ int vc_allocate(unsigned int currcons)	/* return 0 on success */
->  
->  	vc_cons[currcons].d = vc;
->  	tty_port_init(&vc->port);
-> +	vc->port.ops = &vc_port_ops;
->  	INIT_WORK(&vc_cons[currcons].SAK_work, vc_SAK);
->  
->  	visual_init(vc, currcons, 1);
-> @@ -3250,6 +3262,7 @@ static int con_install(struct tty_driver *driver, struct tty_struct *tty)
->  
->  	tty->driver_data = vc;
->  	vc->port.tty = tty;
-> +	tty_port_get(&vc->port);
->  
->  	if (!tty->winsize.ws_row && !tty->winsize.ws_col) {
->  		tty->winsize.ws_row = vc_cons[currcons].d->vc_rows;
-> @@ -3285,6 +3298,13 @@ static void con_shutdown(struct tty_struct *tty)
->  	console_unlock();
->  }
->  
-> +static void con_cleanup(struct tty_struct *tty)
-> +{
-> +	struct vc_data *vc = tty->driver_data;
-> +
-> +	tty_port_put(&vc->port);
-> +}
-> +
->  static int default_color           = 7; /* white */
->  static int default_italic_color    = 2; // green (ASCII)
->  static int default_underline_color = 3; // cyan (ASCII)
-> @@ -3410,7 +3430,8 @@ static const struct tty_operations con_ops = {
->  	.throttle = con_throttle,
->  	.unthrottle = con_unthrottle,
->  	.resize = vt_resize,
-> -	.shutdown = con_shutdown
-> +	.shutdown = con_shutdown,
-> +	.cleanup = con_cleanup,
->  };
->  
->  static struct cdev vc0_cdev;
-> diff --git a/drivers/tty/vt/vt_ioctl.c b/drivers/tty/vt/vt_ioctl.c
-> index 7297997fcf04c..f62f498f63c05 100644
-> --- a/drivers/tty/vt/vt_ioctl.c
-> +++ b/drivers/tty/vt/vt_ioctl.c
-> @@ -310,10 +310,8 @@ static int vt_disallocate(unsigned int vc_num)
->  		vc = vc_deallocate(vc_num);
->  	console_unlock();
->  
-> -	if (vc && vc_num >= MIN_NR_CONSOLES) {
-> -		tty_port_destroy(&vc->port);
-> -		kfree(vc);
-> -	}
-> +	if (vc && vc_num >= MIN_NR_CONSOLES)
-> +		tty_port_put(&vc->port);
->  
->  	return ret;
->  }
-> @@ -333,10 +331,8 @@ static void vt_disallocate_all(void)
->  	console_unlock();
->  
->  	for (i = 1; i < MAX_NR_CONSOLES; i++) {
-> -		if (vc[i] && i >= MIN_NR_CONSOLES) {
-> -			tty_port_destroy(&vc[i]->port);
-> -			kfree(vc[i]);
-> -		}
-> +		if (vc[i] && i >= MIN_NR_CONSOLES)
-> +			tty_port_put(&vc[i]->port);
->  	}
->  }
->  
-> 
-
-
--- 
-js
-suse labs
+T24gMy8yNy8yMDIwIDM6NTQgUE0sIEdyZWcgS0ggd3JvdGU6DQo+IE9uIEZyaSwgTWFyIDI3LCAy
+MDIwIGF0IDEwOjExOjU5QU0gKzAwMDAsIFRlamFzIEpvZ2xla2FyIHdyb3RlOg0KPj4gSGksDQo+
+PiBPbiAzLzI3LzIwMjAgMzoyNCBQTSwgR3JlZyBLSCB3cm90ZToNCj4+PiBPbiBGcmksIE1hciAy
+NywgMjAyMCBhdCAwMzoxMTo1NlBNICswNTMwLCBUZWphcyBKb2dsZWthciB3cm90ZToNCj4+Pj4g
+VGhpcyBjb21taXQgYWRkcyB0aGUgZG9jdW1lbnRhdGlvbiBmb3IgY29uc29saWRhdGUtc2dsLCBh
+bmQNCj4+Pj4gc25wcyxjb25zb2xpZGF0ZS1zZ2wgcHJvcGVydHkuIFRoZXNlIHdoZW4gc2V0IGVu
+YWJsZXMgdGhlIHF1aXJrIGZvcg0KPj4+PiBYSENJIGRyaXZlciBmb3IgY29uc29saWRhdGlvbiBv
+ZiBzZyBsaXN0IGludG8gYSB0ZW1wb3JhcnkgYnVmZmVyIHdoZW4gc21hbGwNCj4+Pj4gYnVmZmVy
+IHNpemVzIGFyZSBzY2F0dGVyZWQgb3ZlciB0aGUgc2cgbGlzdCBub3QgbWFraW5nIHVwIHRvIE1Q
+UyBvciB0b3RhbA0KPj4+PiB0cmFuc2ZlciBzaXplIHdpdGhpbiBUUkIgY2FjaGUgc2l6ZSB3aXRo
+IFN5bm9wc3lzIHhIQy4NCj4+Pj4NCj4+Pj4gU2lnbmVkLW9mZi1ieTogVGVqYXMgSm9nbGVrYXIg
+PGpvZ2xla2FyQHN5bm9wc3lzLmNvbT4NCj4+Pj4gLS0tDQo+Pj4+ICBEb2N1bWVudGF0aW9uL2Rl
+dmljZXRyZWUvYmluZGluZ3MvdXNiL2R3YzMudHh0ICAgICB8IDMgKysrDQo+Pj4+ICBEb2N1bWVu
+dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvdXNiL3VzYi14aGNpLnR4dCB8IDMgKysrDQo+Pj4+
+ICAyIGZpbGVzIGNoYW5nZWQsIDYgaW5zZXJ0aW9ucygrKQ0KPj4+Pg0KPj4+PiBkaWZmIC0tZ2l0
+IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3VzYi9kd2MzLnR4dCBiL0RvY3Vt
+ZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy91c2IvZHdjMy50eHQNCj4+Pj4gaW5kZXggOTk0
+NmZmOWJhNzM1Li4yOTJkMWY3OTY5ZTQgMTAwNjQ0DQo+Pj4+IC0tLSBhL0RvY3VtZW50YXRpb24v
+ZGV2aWNldHJlZS9iaW5kaW5ncy91c2IvZHdjMy50eHQNCj4+Pj4gKysrIGIvRG9jdW1lbnRhdGlv
+bi9kZXZpY2V0cmVlL2JpbmRpbmdzL3VzYi9kd2MzLnR4dA0KPj4+PiBAQCAtMTA0LDYgKzEwNCw5
+IEBAIE9wdGlvbmFsIHByb3BlcnRpZXM6DQo+Pj4+ICAJCQl0aGlzIGFuZCB0eC10aHItbnVtLXBr
+dC1wcmQgdG8gYSB2YWxpZCwgbm9uLXplcm8gdmFsdWUNCj4+Pj4gIAkJCTEtMTYgKERXQ191c2Iz
+MSBwcm9ncmFtbWluZyBndWlkZSBzZWN0aW9uIDEuMi4zKSB0bw0KPj4+PiAgCQkJZW5hYmxlIHBl
+cmlvZGljIEVTUyBUWCB0aHJlc2hvbGQuDQo+Pj4+ICsgLSBzbnBzLGNvbnNvbGlkYXRlLXNnbDog
+ZW5hYmxlIHNnIGxpc3QgY29uc29saWRhdGlvbiAtIGhvc3QgbW9kZSBvbmx5LiBTZXQgdG8gdXNl
+DQo+Pj4+ICsJCQlTRyBidWZmZXJzIG9mIGF0IGxlYXN0IE1QUyBzaXplIGJ5IGNvbnNvbGlkYXRp
+bmcgc21hbGxlciBTRw0KPj4+PiArCQkJYnVmZmVycyBsaXN0IGludG8gYSBzaW5nbGUgYnVmZmVy
+Lg0KPj4+PiAgDQo+Pj4+ICAgLSA8REVQUkVDQVRFRD4gdHgtZmlmby1yZXNpemU6IGRldGVybWlu
+ZXMgaWYgdGhlIEZJRk8gKmhhcyogdG8gYmUgcmVhbGxvY2F0ZWQuDQo+Pj4+ICAgLSBzbnBzLGlu
+Y3ItYnVyc3QtdHlwZS1hZGp1c3RtZW50OiBWYWx1ZSBmb3IgSU5DUiBidXJzdCB0eXBlIG9mIEdT
+QlVTQ0ZHMA0KPj4+PiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRp
+bmdzL3VzYi91c2IteGhjaS50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mv
+dXNiL3VzYi14aGNpLnR4dA0KPj4+PiBpbmRleCAzZjM3ODk1MWQ2MjQuLmE5MGQ4NTM1NTdlZSAx
+MDA2NDQNCj4+Pj4gLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3VzYi91
+c2IteGhjaS50eHQNCj4+Pj4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdz
+L3VzYi91c2IteGhjaS50eHQNCj4+Pj4gQEAgLTQzLDYgKzQzLDkgQEAgT3B0aW9uYWwgcHJvcGVy
+dGllczoNCj4+Pj4gICAgLSBxdWlyay1icm9rZW4tcG9ydC1wZWQ6IHNldCBpZiB0aGUgY29udHJv
+bGxlciBoYXMgYnJva2VuIHBvcnQgZGlzYWJsZSBtZWNoYW5pc20NCj4+Pj4gICAgLSBpbW9kLWlu
+dGVydmFsLW5zOiBkZWZhdWx0IGludGVycnVwdCBtb2RlcmF0aW9uIGludGVydmFsIGlzIDUwMDBu
+cw0KPj4+PiAgICAtIHBoeXMgOiBzZWUgdXNiLWhjZC55YW1sIGluIHRoZSBjdXJyZW50IGRpcmVj
+dG9yeQ0KPj4+PiArICAtIGNvbnNvbGlkYXRlLXNnbDogaW5kaWNhdGUgaWYgeW91IG5lZWQgdG8g
+Y29uc29saWRhdGUgc2cgbGlzdCBpbnRvIGENCj4+Pj4gKyAgICB0ZW1wb3JhcnkgYnVmZmVyIHdo
+ZW4gc21hbGwgU0cgYnVmZmVyIHNpemVzIGRvZXMgbm90IG1ha2UgdXB0byBNUFMNCj4+Pj4gKyAg
+ICBzaXplIG9yIHRvdGFsIHRyYW5zZmVyIHNpemUgYWNyb3NzIHRoZSBUUkIgY2FjaGUgc2l6ZS4N
+Cj4+Pg0KPj4+IFNob3VsZG4ndCB0aGlzIHJlZmVyIHRvIHRoZSBmYWN0IHRoYXQgdGhlIGhhcmR3
+YXJlIGlzIGJyb2tlbj8gIE90aGVyd2lzZQ0KPj4+IHdoeSB3b3VsZCBhbnlvbmUga25vdyBpZiB0
+aGV5IHNob3VsZCwgb3Igc2hvdWxkIG5vdCwgZW5hYmxlIHRoaXMgb3B0aW9uPw0KPj4+DQo+PiBX
+ZSBoYXZlIG5vdCBzZWVuIGlzc3VlIHdpdGggTGludXggZW52aXJvbm1lbnQgZm9yIG5vdy4gQnV0
+IHdpdGggb3RoZXIgT1Mgd2l0aA0KPj4gU0cgbGlzdCB3aXRoIHZlcnkgc21hbGwgYnVmZmVyIHNp
+emVzIHRoZSB4SEMgY29udHJvbGxlciBoYW5nIHdhcyBzZWVuLiBTbyANCj4+IGN1cnJlbnRseSBp
+bnRyb2R1Y2luZyB0aGUgYmluZGluZyBhcyBvcHRpb25hbCBvbmUuIE9uZSBjb3VsZCBlbmFibGUg
+dGhpcyANCj4+IG9wdGlvbiB3aGVuIHhIQyBoYWx0IGhhcHBlbnMgZHVlIHRvIHNtYWxsIFNHIGxp
+c3Qgc2l6ZXMuICANCj4gDQo+IFdoYXQgSSBtZWFuIGlzIHRoaXMgc2hvdWxkIGJlIHNvbWV0aGlu
+ZyBsaWtlLA0KPiAicXVpcmstYnJva2VuLXNnLWxpc3QtaGFuZGxlciIgb3Igc29tZXRoaW5nIGxp
+a2UgdGhhdC4gIE90aGVyd2lzZSBob3cNCj4gZG9lcyBhbnlvbmUga25vdyBpZiB0aGlzIHJlYWxs
+eSBpcyBuZWVkZWQgb3Igbm90LiAgUmVhZGluZyB0aGlzIHdvdWxkDQo+IHNlZW0gbGlrZSBldmVy
+eW9uZSB3b3VsZCBsaWtlIHRvIGRvIHRoaXMsIGFzIGNvbnNvbGlkYXRpbmcgbGlua3MNCj4gc291
+bmRzIGxpa2UgYSBnb29kIG9wdGltaXphdGlvbiwgd2hlbiBpbnN0ZWFkIHRoaXMgcmVhbGx5IGNh
+dXNlIG1vcmUNCj4gbWVtb3J5IGFsbG9jYXRpb25zLCBtYWtpbmcgdGhpcyBwb3NzaWJseSB3b3Jz
+ZSBwZXJmb3JtYW5jZS4NCj4gDQpTdXJlLCB1bmRlcnN0b29kLiBJIHdpbGwgcmVuYW1lIHRoaXMg
+ZW50cnkuDQo+IHRoYW5rcywNCj4gDQo+IGdyZWcgay1oDQo+IA0KDQpUaGFua3MgJiBSZWdhcmRz
+LA0KIFRlamFzIEpvZ2xla2FyDQo=
