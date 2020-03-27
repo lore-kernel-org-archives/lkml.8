@@ -2,148 +2,207 @@ Return-Path: <SRS0=s8dx=5M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EE0DC43331
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 11:33:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64FF9C2D0E8
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 11:38:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E54B520748
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 11:33:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=themaw.net header.i=@themaw.net header.b="ndoytVo0";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="oZLe0eCM"
+	by mail.kernel.org (Postfix) with ESMTP id 3CD862073B
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 11:38:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585309129;
+	bh=6j55oUEyG0KDLPPko2WYFMIs7IohgRyPrjnEzjPUQqI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=RKLmmhBNY8iDl+VHrFU7io3R7imLqG5AZjXHPssUnY/nadPHms3JOgslS8AHlHvnL
+	 QGBaIZteCHKgMpOS6atnazyuEUyuoC1cU2jnwyfDZc997hjeg94jD3Ts2Pg0RN1fqb
+	 wFPg0gzpEtGfIkQugf1Q2jSz9OBxzFR6t+bBmnKU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727606AbgC0Ld2 (ORCPT
+        id S1727115AbgC0Lis (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Mar 2020 07:33:28 -0400
-Received: from wout1-smtp.messagingengine.com ([64.147.123.24]:42727 "EHLO
-        wout1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726742AbgC0LdZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Mar 2020 07:33:25 -0400
-Received: from compute2.internal (compute2.nyi.internal [10.202.2.42])
-        by mailout.west.internal (Postfix) with ESMTP id 12439784;
-        Fri, 27 Mar 2020 07:33:24 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute2.internal (MEProxy); Fri, 27 Mar 2020 07:33:24 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=themaw.net; h=
-        message-id:subject:from:to:cc:date:in-reply-to:references
-        :content-type:mime-version:content-transfer-encoding; s=fm2; bh=
-        Onhi3WOhu99LoHFUFk71poWljRjNkAHvTTxbtB4I1nE=; b=ndoytVo0TrRRKDgA
-        Y+Otg+vtxSv11h+SWwq0w478ve0tIPFGWJxdypZOYh9E6o+L0ct0IBxY5LXtQEwq
-        YWT22NVpyJgsVDgMSdf1Haj0t8IBJZycaYTREF9suSJmWgdqcJPx1IUWNRtCtxn9
-        4+uiPugRwOPqndmONwEEetjArRqBnQlwFdOqLQISlmG1e2a1511xGnnU31vu0/hI
-        WwBc2+ryptxKc7hRzM4C/grbOQKtnIwk/Qx+k6j5L/r4rVuk/8q1uRiIxQ1RjFZ/
-        SoN9nO+5H5S62NiA9VQ/9ZvZA2N46qddpTZXb5U4ZkVyeNaA/dhcvSV0kc39cAbZ
-        QDMI1w==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:content-type
-        :date:from:in-reply-to:message-id:mime-version:references
-        :subject:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
-        :x-sasl-enc; s=fm2; bh=Onhi3WOhu99LoHFUFk71poWljRjNkAHvTTxbtB4I1
-        nE=; b=oZLe0eCM/BA9pkehdtqitW5v+7BL08NRu2SeTuxoEHygOlz+YWXrSXJff
-        CXvbH4k5fIXJjsPkrhpgffh42w7ZSn6bXbuRN4d+kfMNlgj66p+E4VHkNq5R41rz
-        8PGEfHK1t018xtSINAqoCwkCNSKQRfGiNmcRwCbTs/9Ey3bLi4C6wEBGyZt8/kA+
-        Als6Gqljwu060rNK/lagpUr2TqM9xyKuicnO1FsJg4rjd/jSmGGcLpT0s+peJrLz
-        cNzL1SWxenwOGDVs2ehEYRJTKA/u1bb/dIvydwSKspBknTg7qldnhTzr2v7zZ2wS
-        mZPYw1j05ZEf7RS7Y0wkZHhxY4Sog==
-X-ME-Sender: <xms:guR9Xlu5-aR4DJgfMQr9MHoZ9yqAUzuTlcohriJapN2TCIGDoV3JKw>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrudehledgvdejucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepkffuhffvffgjfhgtfggggfesthejredttderjeenucfhrhhomhepkfgrnhcu
-    mfgvnhhtuceorhgrvhgvnhesthhhvghmrgifrdhnvghtqeenucfkphepuddukedrvddtle
-    drudeitddrvddtleenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhl
-    fhhrohhmpehrrghvvghnsehthhgvmhgrfidrnhgvth
-X-ME-Proxy: <xmx:g-R9XiGoIcAZF05Hy62GODynbSaNFYl9-fRjcQYH0A7eFEao0Q6I1Q>
-    <xmx:g-R9XgCrockZbyUjGXwmdASYyVMHKNU8Z21Ho6ZC8eq5ymHVcXwMJQ>
-    <xmx:g-R9XhIZb4yi-fEtGeb9HA3M9fKhnXOvgN5wj0ck6S2yGDylADv2GA>
-    <xmx:g-R9Xm_lE_FhaZPhOTiSJJTQhFdi_O7TJIlM_SCvccbhnt4KdWpcFQ>
-Received: from mickey.themaw.net (unknown [118.209.160.209])
-        by mail.messagingengine.com (Postfix) with ESMTPA id B2AD6306BEE3;
-        Fri, 27 Mar 2020 07:33:20 -0400 (EDT)
-Message-ID: <11a106b080f743964c86e6c0dd3ce32aa5d48b1b.camel@themaw.net>
-Subject: Re: [PATCH 4/4] autofs: add comment about
- autofs_mountpoint_changed()
-From:   Ian Kent <raven@themaw.net>
-To:     "McIntyre, Vincent (CASS, Marsfield)" <Vincent.Mcintyre@csiro.au>
-Cc:     Al Viro <viro@ZenIV.linux.org.uk>,
-        autofs mailing list <autofs@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Kernel Mailing List <linux-kernel@vger.kernel.org>
-Date:   Fri, 27 Mar 2020 19:33:17 +0800
-In-Reply-To: <20200327051928.i5xtvskvktbugifa@mayhem.atnf.CSIRO.AU>
-References: <158520019862.5325.7856909810909592388.stgit@mickey.themaw.net>
-         <158520021604.5325.4342529050022426912.stgit@mickey.themaw.net>
-         <20200327051928.i5xtvskvktbugifa@mayhem.atnf.CSIRO.AU>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.32.5 (3.32.5-1.fc30) 
+        Fri, 27 Mar 2020 07:38:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42676 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726360AbgC0Lis (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Mar 2020 07:38:48 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 80F5E2072F;
+        Fri, 27 Mar 2020 11:38:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1585309125;
+        bh=6j55oUEyG0KDLPPko2WYFMIs7IohgRyPrjnEzjPUQqI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=luMimkNm/33xIz9Nd5ZEnm1mQX7meVYegqnwltskpch0XTALbQ6n0VPbFzzckAJ0C
+         KiykhnkIdLdvJvCTRu6+NxBEwzKzmZAI6bYA6RVdLH+lD+O3kB01aiiYEwNFNFHqbL
+         YpZadT3XOyCwTng4JsC0gpEJd3DdzIp8EN+cXC7Q=
+Date:   Fri, 27 Mar 2020 12:38:42 +0100
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Chester Lin <clin@suse.com>
+Cc:     rjw@rjwysocki.net, lenb@kernel.org, robert.moore@intel.com,
+        erik.kaneda@intel.com, linux-acpi@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devel@acpica.org, jlee@suse.com,
+        mhocko@suse.com
+Subject: Re: [RFC PATCH 1/3] ACPI: scan: add userland notification while
+ handling eject events
+Message-ID: <20200327113842.GA1736848@kroah.com>
+References: <20200327112247.17691-1-clin@suse.com>
+ <20200327112247.17691-2-clin@suse.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200327112247.17691-2-clin@suse.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2020-03-27 at 05:19 +0000, McIntyre, Vincent (CASS, Marsfield)
-wrote:
-> One nit, below.
+On Fri, Mar 27, 2020 at 07:22:45PM +0800, Chester Lin wrote:
+> Add a request_offline attribute in order to tell the kernel if it's
+> required to send notifications to userland first while handling an eject
+> event. Userland will have to put the target device offline when this
+> attribute is set.
+> 
+> Signed-off-by: Chester Lin <clin@suse.com>
+> ---
+>  Documentation/ABI/testing/sysfs-bus-acpi | 16 ++++++++++
+>  drivers/acpi/device_sysfs.c              | 40 +++++++++++++++++++++++-
+>  drivers/acpi/scan.c                      | 39 +++++++++++++++++++----
+>  include/acpi/acpi_bus.h                  |  1 +
+>  4 files changed, 89 insertions(+), 7 deletions(-)
+> 
+> diff --git a/Documentation/ABI/testing/sysfs-bus-acpi b/Documentation/ABI/testing/sysfs-bus-acpi
+> index e7898cfe5fb1..b9c467704889 100644
+> --- a/Documentation/ABI/testing/sysfs-bus-acpi
+> +++ b/Documentation/ABI/testing/sysfs-bus-acpi
+> @@ -93,3 +93,19 @@ Description:
+>  		hardware, if the _HRV control method is present.  It is mostly
+>  		useful for non-PCI devices because lspci can list the hardware
+>  		version for PCI devices.
+> +
+> +What:		/sys/bus/acpi/devices/.../request_offline
+> +Date:		Mar, 2020
+> +Contact:	Chester Lin <clin@suse.com>
+> +Description:
+> +		(RW) Allows the userland to receive offline requests when
+> +		devices are planning to be ejected.
+> +
+> +		If bit [0] is clear, the kernel will automatically try putting
+> +		the target offline before the target can be ejected.
+> +
+> +		If bit [0] is set, a uevent will be sent to userland as an
+> +		offline request and userland is responsible for handling offline
+> +		operations before the target can be ejected. This approach
+> +		provides flexibility while some applications could need more
+> +		time to release resources.
 
-Yeah, thanks for that, you effort looking at the patches is
-appreciated, I'll fix it.
+Don't use "bit", use 1/0/y/n/Y/N as the kernel will parse all of that
+for you with the kstrtobool() which was created just for this type of
+sysfs file.
 
-> Vince
-> 
-> On Thu, Mar 26, 2020 at 01:23:36PM +0800, Ian Kent wrote:
-> > The function autofs_mountpoint_changed() is unusual, add a comment
-> > about two cases for which it is used.
-> > 
-> > Signed-off-by: Ian Kent <raven@themaw.net>
-> > ---
-> > fs/autofs/root.c |   21 ++++++++++++++++++---
-> > 1 file changed, 18 insertions(+), 3 deletions(-)
-> > 
-> > diff --git a/fs/autofs/root.c b/fs/autofs/root.c
-> > index 308cc49aca1d..a972bbaecb46 100644
-> > --- a/fs/autofs/root.c
-> > +++ b/fs/autofs/root.c
-> > @@ -280,9 +280,24 @@ static struct dentry
-> > *autofs_mountpoint_changed(struct path *path)
-> > 	struct dentry *dentry = path->dentry;
-> > 	struct autofs_sb_info *sbi = autofs_sbi(dentry->d_sb);
-> > 
-> > -	/*
-> > -	 * If this is an indirect mount the dentry could have gone away
-> > -	 * as a result of an expire and a new one created.
-> > +	/* If this is an indirect mount the dentry could have gone away
-> > +	 * and a new one created.
-> > +	 *
-> > +	 * This is unusual and I can't remember the case for which it
-> > +	 * was originally added now. But a example of how this can
-> 
-> 'an' example
-> 
-> > +	 * happen is an autofs indirect mount that has the "browse"
-> > +	 * option set and also has the "symlink" option in the autofs
-> > +	 * map entry. In this case the daemon will remove the browse
-> > +	 * directory and create a symlink as the mount (pointing to a
-> > +	 * local path) leaving the struct path stale.
-> > +	 *
-> > +	 * Another not so obvious case is when a mount in an autofs
-> > +	 * indirect mount that uses the "nobrowse" option is being
-> > +	 * expired and the mount has been umounted but the mount point
-> > +	 * directory remains when a stat family system call is made.
-> > +	 * In this case the mount point is removed (by the daemon) and
-> > +	 * a new mount triggered leading to a stale dentry in the
-> > struct
-> > +	 * path of the waiting process.
-> > 	 */
-> > 	if (autofs_type_indirect(sbi->type) && d_unhashed(dentry)) {
-> > 		struct dentry *parent = dentry->d_parent;
-> > 
-> 
-> -- 
+> diff --git a/drivers/acpi/device_sysfs.c b/drivers/acpi/device_sysfs.c
+> index 96869f1538b9..453bd1b9edf5 100644
+> --- a/drivers/acpi/device_sysfs.c
+> +++ b/drivers/acpi/device_sysfs.c
+> @@ -506,6 +506,37 @@ static ssize_t status_show(struct device *dev, struct device_attribute *attr,
+>  }
+>  static DEVICE_ATTR_RO(status);
+>  
+> +static ssize_t request_offline_show(struct device *dev,
+> +		struct device_attribute *attr, char *buf)
+> +{
+> +	struct acpi_device *acpi_dev = to_acpi_device(dev);
+> +
+> +	return sprintf(buf, "%u\n", acpi_dev->request_offline?1:0);
+> +}
+> +
+> +static ssize_t request_offline_store(struct device *dev,
+> +		struct device_attribute *attr, const char *buf, size_t count)
+> +{
+> +	struct acpi_device *acpi_dev = to_acpi_device(dev);
+> +
+> +	if (!count)
+> +		return -EINVAL;
+> +
+> +	switch (buf[0]) {
+> +	case '0':
+> +		acpi_dev->request_offline = false;
+> +		break;
+> +	case '1':
+> +		acpi_dev->request_offline = true;
+> +		break;
+> +	default:
+> +		return -EINVAL;
+> +	}
+> +
+> +	return count;
+> +}
+> +static DEVICE_ATTR_RW(request_offline);
+> +
+>  /**
+>   * acpi_device_setup_files - Create sysfs attributes of an ACPI device.
+>   * @dev: ACPI device object.
+> @@ -580,6 +611,11 @@ int acpi_device_setup_files(struct acpi_device *dev)
+>  		result = device_create_file(&dev->dev, &dev_attr_eject);
+>  		if (result)
+>  			return result;
+> +
+> +		result = device_create_file(&dev->dev,
+> +					    &dev_attr_request_offline);
+> +		if (result)
+> +			return result;
+>  	}
+>  
+>  	if (dev->flags.power_manageable) {
+> @@ -623,8 +659,10 @@ void acpi_device_remove_files(struct acpi_device *dev)
+>  	/*
+>  	 * If device has _EJ0, remove 'eject' file.
+>  	 */
+> -	if (acpi_has_method(dev->handle, "_EJ0"))
+> +	if (acpi_has_method(dev->handle, "_EJ0")) {
+>  		device_remove_file(&dev->dev, &dev_attr_eject);
+> +		device_remove_file(&dev->dev, &dev_attr_request_offline);
+
+You all really should be using an attribute group and the is_visible()
+callback to handle all of this for you automatically.
+
+But that's a separate issue than this specific patch.
+
+> +	}
+>  
+>  	if (acpi_has_method(dev->handle, "_SUN"))
+>  		device_remove_file(&dev->dev, &dev_attr_sun);
+> diff --git a/drivers/acpi/scan.c b/drivers/acpi/scan.c
+> index 6d3448895382..1cb39c5360cf 100644
+> --- a/drivers/acpi/scan.c
+> +++ b/drivers/acpi/scan.c
+> @@ -145,6 +145,7 @@ static acpi_status acpi_bus_offline(acpi_handle handle, u32 lvl, void *data,
+>  	struct acpi_device_physical_node *pn;
+>  	bool second_pass = (bool)data;
+>  	acpi_status status = AE_OK;
+> +	char *envp[] = { "EVENT=offline", NULL };
+>  
+>  	if (acpi_bus_get_device(handle, &device))
+>  		return AE_OK;
+> @@ -166,7 +167,18 @@ static acpi_status acpi_bus_offline(acpi_handle handle, u32 lvl, void *data,
+>  		} else {
+>  			pn->put_online = false;
+>  		}
+> -		ret = device_offline(pn->dev);
+> +
+> +		/* Don't offline directly but need to notify userland first */
+> +		if (device->request_offline) {
+> +			if (pn->dev->offline)
+> +				ret = 0;
+> +			else
+> +				ret = kobject_uevent_env(&pn->dev->kobj,
+> +							KOBJ_CHANGE, envp);
+
+So this is a userspace visable change with regards to kobject events?
+
+Are you sure that is ok?
+
 
