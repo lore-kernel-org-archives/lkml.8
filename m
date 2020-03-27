@@ -2,118 +2,118 @@ Return-Path: <SRS0=s8dx=5M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7F80C2D0E8
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 09:14:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27BF3C2D0EE
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 09:19:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E58E20705
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 09:14:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF4D62073B
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 09:19:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=metafoo.de header.i=@metafoo.de header.b="CXyIlPI1"
+	dkim=pass (1024-bit key) header.d=renesasgroup.onmicrosoft.com header.i=@renesasgroup.onmicrosoft.com header.b="i1tpjs5L"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727185AbgC0JOV (ORCPT
+        id S1726215AbgC0JTX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Mar 2020 05:14:21 -0400
-Received: from www381.your-server.de ([78.46.137.84]:60896 "EHLO
-        www381.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726096AbgC0JOV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Mar 2020 05:14:21 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=metafoo.de;
-         s=default2002; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:
-        MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender:Reply-To:
-        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-        Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=i5/GTfOj6acDIGpcrU7CL6Wpgc2I8NpZJXqjKZ1f8xw=; b=CXyIlPI1fbD/tvHVU1oew63ga7
-        V3a4bhgbnN/UCS7lS/EkZ1S+0TX3+VNmhX6mK9xlpH5+hWXm15ypyQguBR18+YMX+se3b0QSPhNUJ
-        HXyZQco3SxOGRcb6NseLfQ8YlojPrJQ9bCN9UbNo2qQ06sxcB3wz0hOMTvo3cdzFvAxvb2kiLzmtC
-        cmUyg/bvUrh0r697HtgZ5gpQDLdYc+f4m5Mz4dcKLKf/fyDWNEB2uVdtL2h3dwqFUQAYzWsHsU5So
-        xYHgA/D2ru9rHCCYq1m3nMPh3Vh4o6rnZJg0INChoLW+sX0f1LWmVPA27Oq55FirZ0qVaeuDRhNfv
-        i/9KZjEQ==;
-Received: from sslproxy02.your-server.de ([78.47.166.47])
-        by www381.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.89_1)
-        (envelope-from <lars@metafoo.de>)
-        id 1jHl48-0006uj-Ca; Fri, 27 Mar 2020 10:14:16 +0100
-Received: from [82.135.64.145] (helo=[192.168.178.20])
-        by sslproxy02.your-server.de with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <lars@metafoo.de>)
-        id 1jHl48-000RZG-3B; Fri, 27 Mar 2020 10:14:12 +0100
-Subject: Re: [PATCH] usb: dwc3: gadget: don't dequeue requests on already
- disabled endpoints
-To:     Michael Grzeschik <m.grzeschik@pengutronix.de>,
-        alexandru.Ardelean@analog.com, linux-usb@vger.kernel.org,
-        linux-kernel@vger.kernel.org, balbi@kernel.org
-Cc:     gregkh@linuxfoundation.org, bigeasy@linutronix.de,
-        m.olbrich@pengutronix.de, kernel@pengutronix.de
-References: <dc52d6a0-12ed-a34c-01c4-0fc5ccbf7b1d@metafoo.de>
- <20200327084302.606-1-m.grzeschik@pengutronix.de>
-From:   Lars-Peter Clausen <lars@metafoo.de>
-Message-ID: <f746cc1f-b5e2-af0a-d946-edce634c46c3@metafoo.de>
-Date:   Fri, 27 Mar 2020 10:14:10 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Fri, 27 Mar 2020 05:19:23 -0400
+Received: from mail-eopbgr1400090.outbound.protection.outlook.com ([40.107.140.90]:10828
+        "EHLO JPN01-TY1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725946AbgC0JTX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Mar 2020 05:19:23 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Zo6sgmlwkf9ySWokJi/pR9aQmn+XQ5hZrk1oVmcEl4lUSAzGHo+WBknO9uEabw/bF14tMeFp1MeQqRQoxqN2gxWzil4g7QgJ2U8jwjyYU7zL9moFYVTW7WinCDOf+pGUWQSaNEoedo+tnLhTc7UlvQJVsE+UWHZv0tHWvwrYXW/pIfAsMEdQZi1aovL89AlXEEUZSx5xBerifZwJJsXP+eRh0VGZYNy780LWslgcuQbtdBxBjymJHPybpmhEPl2dFQbCQBtQKlhrszubdY/sRDtBQPfRFkDpUsgXeRlwHexrTuXXbSGKYAtLQNUVf8+WfoVCSq35uJGFtMk5JkJQdQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=8WWd/EB7bKGVbjYf7lmOO/3qwqklrC7Ims8FSJ/BCr8=;
+ b=jmHar2D7WK7Wy00+QYFYvs8uQulWWsPhSIcHNsdYZjDZBG8LxeN0ppVAaW6DoOM//bEmMs3ZU6O8U7r3R7LoqVjpKGgExKOQpg7+cMRccXB/0bsbXGFrao0ZVr3NVbDWHyf1AW3vxJPhX3xbs9MgLgPFXWB8iT5ydDsljlaMIp/BXMWFO0dKU9LVwdb4EtyQOfD9Iist4kYIFwKqVYrMl+r9uKL4zJS0gFIUwNFFNvTffYX2J9HFNDtQoru5pflFBtHdetsRkCp8ZR+w3vnUCstCDXyMJpFZFD3IyoOiFNuxMX6ljWBYb2yTp7vBg1K7Ehar7nDZsZz+2gioyqn00w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=renesas.com; dmarc=pass action=none header.from=renesas.com;
+ dkim=pass header.d=renesas.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=renesasgroup.onmicrosoft.com; s=selector2-renesasgroup-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=8WWd/EB7bKGVbjYf7lmOO/3qwqklrC7Ims8FSJ/BCr8=;
+ b=i1tpjs5LJmmlmhTeCWjIL8ZcgI8X8D5SM6lgwcJKIP2JswuKv5O2bOliEHW16Uwv0mccBs5/x4PuwEZrvcts4swUwkn34bRPHpLhHhKhhfF14SIRIXSkou7dOMn7WKXlnVFBChjbDtREG7T140TDYziiL3E292vhpkBRSFv84yo=
+Received: from TYAPR01MB4544.jpnprd01.prod.outlook.com (20.179.175.203) by
+ TYAPR01MB4063.jpnprd01.prod.outlook.com (20.178.140.79) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2835.22; Fri, 27 Mar 2020 09:19:20 +0000
+Received: from TYAPR01MB4544.jpnprd01.prod.outlook.com
+ ([fe80::ed7f:1268:55a9:fc06]) by TYAPR01MB4544.jpnprd01.prod.outlook.com
+ ([fe80::ed7f:1268:55a9:fc06%4]) with mapi id 15.20.2835.023; Fri, 27 Mar 2020
+ 09:19:19 +0000
+From:   Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+CC:     Kishon Vijay Abraham I <kishon@ti.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
+Subject: RE: [PATCH v3 1/4] dt-bindings: phy: renesas: usb2-phy: convert
+ bindings to json-schema
+Thread-Topic: [PATCH v3 1/4] dt-bindings: phy: renesas: usb2-phy: convert
+ bindings to json-schema
+Thread-Index: AQHWA/iZb4r2sibuR06+pRT+YCncm6hcIuKAgAAF3uA=
+Date:   Fri, 27 Mar 2020 09:19:19 +0000
+Message-ID: <TYAPR01MB4544104071EEA9DA9BF86B96D8CC0@TYAPR01MB4544.jpnprd01.prod.outlook.com>
+References: <1585286923-11740-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+ <1585286923-11740-2-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+ <CAMuHMdV+kPei=4tBb8FGC1oE2+sRffXRz2KZtKU7svyz=22AGg@mail.gmail.com>
+In-Reply-To: <CAMuHMdV+kPei=4tBb8FGC1oE2+sRffXRz2KZtKU7svyz=22AGg@mail.gmail.com>
+Accept-Language: ja-JP, en-US
+Content-Language: ja-JP
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=yoshihiro.shimoda.uh@renesas.com; 
+x-originating-ip: [211.11.155.148]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: ca2af7de-3a51-4748-7de6-08d7d22fee4e
+x-ms-traffictypediagnostic: TYAPR01MB4063:
+x-microsoft-antispam-prvs: <TYAPR01MB406382A901F77500E64995A3D8CC0@TYAPR01MB4063.jpnprd01.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 0355F3A3AE
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(136003)(366004)(39860400002)(396003)(346002)(376002)(81156014)(71200400001)(186003)(2906002)(4326008)(86362001)(4744005)(8676002)(6916009)(26005)(6506007)(76116006)(55016002)(5660300002)(52536014)(9686003)(33656002)(66446008)(7696005)(66476007)(66556008)(64756008)(8936002)(316002)(478600001)(81166006)(66946007)(54906003);DIR:OUT;SFP:1102;SCL:1;SRVR:TYAPR01MB4063;H:TYAPR01MB4544.jpnprd01.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;
+received-spf: None (protection.outlook.com: renesas.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: OWhIQ7ZFSnRwkvW5pKiC6ibBNECFPhb18Tw+lold6OUHo2shyuNlh4xjJj82+2ExJJzZ/w8ezG4Isz2Wb3KFT8FNpFQCNHfMZt7teaKzi+DEPc+iv3GQro1VYS2wKYkhqzmF6ko/v3VTO+nHIPiGIP4WAx0MlgBmcLqk/8rGXIfCrZP9EkhVj9MziS7L/rBRBczEyMlaytHW/a7IYeoBmYrwZgbr4EpTRCgpxVZU69gNgFdZQYwq4d9jzXkPPGgq9eqKsPVjYR9B47zRXo65Vmgf3Jw21dg7W8N/Djj5FAMvLL4ymuu9ksA2cQgq/HpvvvrQZVL6Pc3zEVoNxi3xuE4LXHIGVbS7ag9LKgy1+3rYwXZVss/OKeLzquxGOzPJkBcJs6XEnfPdh7U9xw+yEaL7vEgU6rjJ7Rs3pyLhMBcNlKbip41gIgl96eRU/UXu
+x-ms-exchange-antispam-messagedata: 8Sbp+XcN9b9tn/V5YohJwSw119fjqdA96rZAiJI3EspHP1pUmAPZUitcOiDs05UUbObSnKODErmsF+8/gfVziwQ3D/3wf9PLDUmHQeyXlr2QhI9S5CeGZClihi1gNqWoF3gs71fTApbqIixlxZ30ug==
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-In-Reply-To: <20200327084302.606-1-m.grzeschik@pengutronix.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Authenticated-Sender: lars@metafoo.de
-X-Virus-Scanned: Clear (ClamAV 0.102.2/25763/Thu Mar 26 14:07:34 2020)
+X-OriginatorOrg: renesas.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: ca2af7de-3a51-4748-7de6-08d7d22fee4e
+X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Mar 2020 09:19:19.8682
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: HHwZ9FH06EUCxrA8a1qjJAq5XmH3RSl1/2Es9hU7zeDN9h6lbU7E+ZJrkBp2WUyEWoTAqsbH4jyFURYQMR9dFIbnDTtefxhP9aPXsTv22Z0Zp7EniPQZ/oKuVogW9F9T
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYAPR01MB4063
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/27/20 9:43 AM, Michael Grzeschik wrote:
-> dwc3_gadget_ep_disable gets called before the last request gets
-> dequeued.
->
-> In __dwc3_gadget_ep_disable all started, pending and cancelled
-> lists for this endpoint will call dwc3_gadget_giveback in
-> dwc3_remove_requests.
->
-> After that no list containing the afterwards dequed request,
-> therefor it is not necessary to run the dequeue routine.
->
-> Signed-off-by: Michael Grzeschik <m.grzeschik@pengutronix.de>
-> ---
-> @Lars-Peter Clausen:
->
-> This patch addresses the case that not queued requests get dequeued.
-> The only case that this happens seems on disabling the gadget.
-
-
-I don't believe it does. Calling usb_ep_dequeue() is not limited to be 
-called after the endpoint has been disabled. It is part of the API and 
-can be called at any time. E.g. with function_fs you can abort a queued 
-transfer from userspace at any time.
-
-- Lars
-
->
->   drivers/usb/dwc3/gadget.c | 3 +++
->   1 file changed, 3 insertions(+)
->
-> diff --git a/drivers/usb/dwc3/gadget.c b/drivers/usb/dwc3/gadget.c
-> index 9a6f741d1db0dc..5d4fa8d6c93e49 100644
-> --- a/drivers/usb/dwc3/gadget.c
-> +++ b/drivers/usb/dwc3/gadget.c
-> @@ -1609,6 +1609,9 @@ static int dwc3_gadget_ep_dequeue(struct usb_ep *ep,
->   
->   	trace_dwc3_ep_dequeue(req);
->   
-> +	if (!(dep->flags & DWC3_EP_ENABLED))
-> +		return 0;
-> +
->   	spin_lock_irqsave(&dwc->lock, flags);
->   
->   	list_for_each_entry(r, &dep->pending_list, list) {
-
-
+SGkgR2VlcnQtc2FuLA0KDQpUaGFuayB5b3UgZm9yIHlvdXIgcmV2aWV3IQ0KDQo+IEZyb206IEdl
+ZXJ0IFV5dHRlcmhvZXZlbiwgU2VudDogRnJpZGF5LCBNYXJjaCAyNywgMjAyMCA1OjU1IFBNDQo8
+c25pcD4NCj4gPiAtLS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcGh5L3Jj
+YXItZ2VuMy1waHktdXNiMi50eHQNCj4gPiArKysgL2Rldi9udWxsDQo+IA0KPiA+IC1UaGUgcGhh
+bmRsZSdzIGFyZ3VtZW50IGluIHRoZSBQSFkgc3BlY2lmaWVyIGlzIHRoZSBJTlRfU1RBVFVTIGJp
+dCBvZiBjb250cm9sbGVyOg0KPiA+IC0tIDEgPSBVU0JIX0lOVEEgKE9IQ0kpDQo+ID4gLS0gMiA9
+IFVTQkhfSU5UQiAoRUhDSSkNCj4gPiAtLSAzID0gVUNPTV9JTlQgKE9URyBhbmQgQkMpDQo+IA0K
+PiBTb3JyeSwgSSBmYWlsZWQgdG8gbm90aWNlIGR1cmluZyBteSBwcmV2aW91cyByZXZpZXcgdGhh
+dCB0aGUgYWJvdmUgaW5mb3JtYXRpb24NCj4gaXMgbG9zdCBkdXJpbmcgdGhlIGNvbnZlcnNpb24u
+ICBJIHRoaW5rIGl0IHdvdWxkIGJlIGdvb2QgdG8gcmV0YWluIGl0IGluIHRoZQ0KPiBkZXNjcmlw
+dGlvbiBmb3IgI3BoeS1jZWxscy4NCg0KSSBhZ3JlZS4gSSdsbCBhZGQgaXQuDQoNCj4gV2l0aCB0
+aGF0IGFkZGVkOg0KPiBSZXZpZXdlZC1ieTogR2VlcnQgVXl0dGVyaG9ldmVuIDxnZWVydCtyZW5l
+c2FzQGdsaWRlci5iZT4NCg0KVGhhbmtzIQ0KDQpCZXN0IHJlZ2FyZHMsDQpZb3NoaWhpcm8gU2hp
+bW9kYQ0KDQo=
