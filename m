@@ -7,45 +7,42 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C3CAC43331
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 17:28:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB193C43331
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 17:28:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0CEFD20716
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 17:28:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 82FF220716
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 17:28:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585330129;
-	bh=73/dfVC1cTw6UV/jYoF2MdL4rOOGbfRD2VavjDUaTSQ=;
+	s=default; t=1585330133;
+	bh=dYpbymi3Hi6fgw1kRTS1bpj2PhjbQ1UXWpPw0ZpUBFY=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=E9E4N/Wn6u1J4mMLtGgLr+y3IwAcENM4vHYpZsIUn9mmSMrNEcVXfzFiIFB59xpy7
-	 yYolefCDBxfwhc7UxAle1m4xz0eNP9Yk6U3GqRXZqJM1r52Sw2QIEd6CyUUk/39YAU
-	 n3fbH23hsQ26lquRaZjuAD+rNv7uuI+WlInbPxFU=
+	b=VSi4WW36Mc7+4ONWzerdAa9dJtFQa2aln4YMoffbNmnKfSaTUPpZRPt6/ho9CkhXf
+	 1B8YIL00hUG01gUDiPr4Yn4JNHnfmxMVCS2OwJxjONmS4D3chY7NfspNN09lxYyQLD
+	 5PAOwdSa7UY84CGw/1j/sLIWm0XhxpMJD4dlHBf8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727585AbgC0R2r (ORCPT
+        id S1727716AbgC0R2w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Mar 2020 13:28:47 -0400
-Received: from foss.arm.com ([217.140.110.172]:49730 "EHLO foss.arm.com"
+        Fri, 27 Mar 2020 13:28:52 -0400
+Received: from foss.arm.com ([217.140.110.172]:49746 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726698AbgC0R2r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Mar 2020 13:28:47 -0400
+        id S1726698AbgC0R2v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Mar 2020 13:28:51 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0497E1FB;
-        Fri, 27 Mar 2020 10:28:47 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 82FB531B;
+        Fri, 27 Mar 2020 10:28:51 -0700 (PDT)
 Received: from localhost (unknown [10.37.6.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7C1983F71E;
-        Fri, 27 Mar 2020 10:28:46 -0700 (PDT)
-Date:   Fri, 27 Mar 2020 17:28:45 +0000
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 05F763F71E;
+        Fri, 27 Mar 2020 10:28:50 -0700 (PDT)
+Date:   Fri, 27 Mar 2020 17:28:49 +0000
 From:   Mark Brown <broonie@kernel.org>
-To:     Colin Ian King <colin.king@canonical.com>
-Cc:     alsa-devel@alsa-project.org, Jaroslav Kysela <perex@perex.cz>,
-        kernel-janitors@vger.kernel.org,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>,
-        Ravulapati Vishnu vardhan rao 
-        <Vishnuvardhanrao.Ravulapati@amd.com>,
-        Takashi Iwai <tiwai@suse.com>
-Subject: Applied "ASoC: amd: acp3x-pcm-dma: clean up two indentation issues" to the asoc tree
-In-Reply-To:  <20200327141429.269191-1-colin.king@canonical.com>
-Message-Id:  <applied-20200327141429.269191-1-colin.king@canonical.com>
+To:     Dan Murphy <dmurphy@ti.com>
+Cc:     alsa-devel@alsa-project.org, broonie@kernel.org,
+        lgirdwood@gmail.com, linux-kernel@vger.kernel.org,
+        Mark Brown <broonie@kernel.org>, perex@perex.cz,
+        Rob Herring <robh@kernel.org>, tiwai@suse.com
+Subject: Applied "ASoC: tlv320adcx140: Remove undocumented property" to the asoc tree
+In-Reply-To:  <20200327162432.17067-1-dmurphy@ti.com>
+Message-Id:  <applied-20200327162432.17067-1-dmurphy@ti.com>
 X-Patchwork-Hint: ignore
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -54,7 +51,7 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   ASoC: amd: acp3x-pcm-dma: clean up two indentation issues
+   ASoC: tlv320adcx140: Remove undocumented property
 
 has been applied to the asoc tree at
 
@@ -79,46 +76,38 @@ to this mail.
 Thanks,
 Mark
 
-From acd4946f5bf031fa38e64bfe2467be94a1b8c25d Mon Sep 17 00:00:00 2001
-From: Colin Ian King <colin.king@canonical.com>
-Date: Fri, 27 Mar 2020 14:14:29 +0000
-Subject: [PATCH] ASoC: amd: acp3x-pcm-dma: clean up two indentation issues
+From d4061518c3982010d8f07b9b327c8e00297b14a3 Mon Sep 17 00:00:00 2001
+From: Dan Murphy <dmurphy@ti.com>
+Date: Fri, 27 Mar 2020 11:24:32 -0500
+Subject: [PATCH] ASoC: tlv320adcx140: Remove undocumented property
 
-There are a couple of statements that are not indented correctly,
-add in the missing tab and break the lines to address a checkpatch
-warning.
+Remove undocumented and unneeded ti,use-internal-reg from the example as
+it was an artifact from initial development.  The code does not query
+for this property and as the document indicates if areg-supply is
+undefined then the internal regulator is used.
 
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
-Link: https://lore.kernel.org/r/20200327141429.269191-1-colin.king@canonical.com
+Fixes: 302c0b7490cd ("dt-bindings: sound: Add TLV320ADCx140 dt
+bindings")
+Signed-off-by: Dan Murphy <dmurphy@ti.com>
+CC: Rob Herring <robh@kernel.org>
+Link: https://lore.kernel.org/r/20200327162432.17067-1-dmurphy@ti.com
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- sound/soc/amd/raven/acp3x-pcm-dma.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ Documentation/devicetree/bindings/sound/tlv320adcx140.yaml | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/sound/soc/amd/raven/acp3x-pcm-dma.c b/sound/soc/amd/raven/acp3x-pcm-dma.c
-index d62c0d90c41e..e362f0bc9e46 100644
---- a/sound/soc/amd/raven/acp3x-pcm-dma.c
-+++ b/sound/soc/amd/raven/acp3x-pcm-dma.c
-@@ -458,7 +458,8 @@ static int acp3x_resume(struct device *dev)
- 			reg_val = mmACP_I2STDM_ITER;
- 			frmt_val = mmACP_I2STDM_TXFRMT;
- 		}
--	rv_writel((rtd->xfer_resolution  << 3), rtd->acp3x_base + reg_val);
-+		rv_writel((rtd->xfer_resolution  << 3),
-+			  rtd->acp3x_base + reg_val);
- 	}
- 	if (adata->capture_stream && adata->capture_stream->runtime) {
- 		struct i2s_stream_instance *rtd =
-@@ -474,7 +475,8 @@ static int acp3x_resume(struct device *dev)
- 			reg_val = mmACP_I2STDM_IRER;
- 			frmt_val = mmACP_I2STDM_RXFRMT;
- 		}
--	rv_writel((rtd->xfer_resolution  << 3), rtd->acp3x_base + reg_val);
-+		rv_writel((rtd->xfer_resolution  << 3),
-+			  rtd->acp3x_base + reg_val);
- 	}
- 	if (adata->tdm_mode == TDM_ENABLE) {
- 		rv_writel(adata->tdm_fmt, adata->acp3x_base + frmt_val);
+diff --git a/Documentation/devicetree/bindings/sound/tlv320adcx140.yaml b/Documentation/devicetree/bindings/sound/tlv320adcx140.yaml
+index 1433ff62b14f..ab2268c0ee67 100644
+--- a/Documentation/devicetree/bindings/sound/tlv320adcx140.yaml
++++ b/Documentation/devicetree/bindings/sound/tlv320adcx140.yaml
+@@ -76,7 +76,6 @@ examples:
+       codec: codec@4c {
+         compatible = "ti,tlv320adc5140";
+         reg = <0x4c>;
+-        ti,use-internal-areg;
+         ti,mic-bias-source = <6>;
+         reset-gpios = <&gpio0 14 GPIO_ACTIVE_HIGH>;
+       };
 -- 
 2.20.1
 
