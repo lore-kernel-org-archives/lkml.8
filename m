@@ -2,129 +2,195 @@ Return-Path: <SRS0=s8dx=5M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 804CEC2D0ED
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 18:11:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA4DBC2D0E5
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 18:16:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5CB112071B
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 18:11:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="AAOuHu6m"
+	by mail.kernel.org (Postfix) with ESMTP id 8F7B42083E
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 18:16:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727473AbgC0SLV (ORCPT
+        id S1727322AbgC0SQG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Mar 2020 14:11:21 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:36133 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727335AbgC0SLU (ORCPT
+        Fri, 27 Mar 2020 14:16:06 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:22130 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726515AbgC0SQG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Mar 2020 14:11:20 -0400
-Received: by mail-ot1-f66.google.com with SMTP id l23so10718794otf.3
-        for <linux-kernel@vger.kernel.org>; Fri, 27 Mar 2020 11:11:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=AS7mvCEIh3pfi107as5vEH/QpwGnWQ91Bq23h2zKukA=;
-        b=AAOuHu6msnb0522EGCRpK5xZtBD58kCNF61e9Hh//c38fWvY0k+cdPmoykV4JIxRPF
-         ql4vdYzydpzORHqlk4VlQTcwQuJ8Kk/83bg19CB+gkem47HMZMzklPdg2aMSVbGCRlFB
-         3fc5RNFdO3bHVh18AOj67uALOTnbnV8NjLr7on5LJpRbDz6+cMAT28nIZYNVMCbyP8ri
-         VP+Vxi8PEN3wxPULWQSY2ioic0SD8MqCzWs/M6FKR15/ftOgU2YyMDdpofWYCZ1dWS/H
-         YfUHBPrj0f6haCuibFeFc+lga6BjN5idf9AE9BRy/dOjSkc68DEvAIFFBQ+wZsVpXqvv
-         mIOQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=AS7mvCEIh3pfi107as5vEH/QpwGnWQ91Bq23h2zKukA=;
-        b=qZTGF1zX3aBy4iGEg3z6IjZjd4k/AKk2TOwK7IXZFZwSyJnHI8mHB9CurxQ0bGM11o
-         Y2/1kw6QDRUsPB9Mizfl3kuq5BPJnmg3uLeK/l0xt4nuQwZEIYBs12EiCgjGIhqj5lpi
-         lhdoK/FR3FYiKS5NkANH9GkkFw7sf6cra9VzlKyfsl+HhRJp/Itg7GX+PM2YU6zBUiS6
-         lIfiyo1CN/R792F8Pb0RiUkrfbZgq69+qKfMkCQFRSvwLOQuYbb9k4fIvy7jaPIWKbaU
-         j4GYfPXffWwItIakFdfax0C+NvKtS5N/f8QcdDhZhSqTBag1h3C3j6gSjt8AdKuBLpE0
-         neXA==
-X-Gm-Message-State: ANhLgQ3d1/DnycvQt839pz9y17mnh720OPWHr1rm55zReaed1WKbJkp6
-        TyI4pxi42dbMWMNTHQrmkfCTAGv35HctptjKiaPnUg==
-X-Google-Smtp-Source: ADFU+vvOv8c9JQm5kJNhUDWGfgsraRLePI5O5SCd/PtS/FVJ+qQm9TfMsznMckxhjSugQh0d2JMqHv913HiGhIhwIlA=
-X-Received: by 2002:a05:6830:1ac1:: with SMTP id r1mr11748856otc.139.1585332679671;
- Fri, 27 Mar 2020 11:11:19 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200327170132.17275-1-grant.likely@arm.com>
-In-Reply-To: <20200327170132.17275-1-grant.likely@arm.com>
-From:   Saravana Kannan <saravanak@google.com>
-Date:   Fri, 27 Mar 2020 11:10:43 -0700
-Message-ID: <CAGETcx8CJqMQaHBj1r5MhNBTw7Smz4BRHPkB0kCUCJPSmW6KwA@mail.gmail.com>
-Subject: Re: [PATCH] Add documentation on meaning of -EPROBE_DEFER
-To:     Grant Likely <grant.likely@arm.com>
-Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, nd@arm.com,
-        Jonathan Corbet <corbet@lwn.net>,
+        Fri, 27 Mar 2020 14:16:06 -0400
+Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02RI3hLe058444;
+        Fri, 27 Mar 2020 14:15:31 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2ywd8h6dpe-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 27 Mar 2020 14:15:31 -0400
+Received: from m0098396.ppops.net (m0098396.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 02RI3lpg058972;
+        Fri, 27 Mar 2020 14:15:30 -0400
+Received: from ppma03wdc.us.ibm.com (ba.79.3fa9.ip4.static.sl-reverse.com [169.63.121.186])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2ywd8h6dp1-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 27 Mar 2020 14:15:30 -0400
+Received: from pps.filterd (ppma03wdc.us.ibm.com [127.0.0.1])
+        by ppma03wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 02RI8m9o017564;
+        Fri, 27 Mar 2020 18:15:29 GMT
+Received: from b03cxnp08028.gho.boulder.ibm.com (b03cxnp08028.gho.boulder.ibm.com [9.17.130.20])
+        by ppma03wdc.us.ibm.com with ESMTP id 2ywawam74y-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 27 Mar 2020 18:15:29 +0000
+Received: from b03ledav005.gho.boulder.ibm.com (b03ledav005.gho.boulder.ibm.com [9.17.130.236])
+        by b03cxnp08028.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 02RIFSHL13435178
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 27 Mar 2020 18:15:28 GMT
+Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 30179BE054;
+        Fri, 27 Mar 2020 18:15:28 +0000 (GMT)
+Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 7DDCCBE051;
+        Fri, 27 Mar 2020 18:15:18 +0000 (GMT)
+Received: from LeoBras (unknown [9.85.230.141])
+        by b03ledav005.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Fri, 27 Mar 2020 18:15:18 +0000 (GMT)
+Message-ID: <f4447980747f4633ae720825128663bda0101188.camel@linux.ibm.com>
+Subject: Re: [PATCH v2 1/1] ppc/crash: Skip spinlocks during crash
+From:   Leonardo Bras <leonardo@linux.ibm.com>
+To:     Michael Ellerman <mpe@ellerman.id.au>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
+        Thomas Gleixner <tglx@linutronix.de>,
+        Alexios Zavras <alexios.zavras@intel.com>,
+        Christophe Leroy <christophe.leroy@c-s.fr>
+Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Date:   Fri, 27 Mar 2020 15:15:12 -0300
+In-Reply-To: <87d08ywj61.fsf@mpe.ellerman.id.au>
+References: <20200326232542.503157-1-leonardo@linux.ibm.com>
+         <87d08ywj61.fsf@mpe.ellerman.id.au>
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-txa6N3c5No/7zpOox/tI"
+User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
+MIME-Version: 1.0
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.645
+ definitions=2020-03-27_06:2020-03-27,2020-03-27 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 suspectscore=0
+ malwarescore=0 mlxlogscore=999 spamscore=0 lowpriorityscore=0 phishscore=0
+ adultscore=0 priorityscore=1501 bulkscore=0 impostorscore=0 clxscore=1015
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2003270152
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 27, 2020 at 10:01 AM Grant Likely <grant.likely@arm.com> wrote:
->
-> Add a bit of documentation on what it means when a driver .probe() hook
-> returns the -EPROBE_DEFER error code, including the limitation that
-> -EPROBE_DEFER should be returned as early as possible, before the driver
-> starts to register child devices.
->
-> Also: minor markup fixes in the same file
->
-> Signed-off-by: Grant Likely <grant.likely@arm.com>
-> Cc: Jonathan Corbet <corbet@lwn.net>
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Cc: Saravana Kannan <saravanak@google.com>
-> Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> ---
->  .../driver-api/driver-model/driver.rst        | 32 ++++++++++++++++---
->  1 file changed, 27 insertions(+), 5 deletions(-)
->
-> diff --git a/Documentation/driver-api/driver-model/driver.rst b/Documentation/driver-api/driver-model/driver.rst
-> index baa6a85c8287..63057d9bc8a6 100644
-> --- a/Documentation/driver-api/driver-model/driver.rst
-> +++ b/Documentation/driver-api/driver-model/driver.rst
-> @@ -4,7 +4,6 @@ Device Drivers
->
->  See the kerneldoc for the struct device_driver.
->
-> -
->  Allocation
->  ~~~~~~~~~~
->
-> @@ -167,9 +166,26 @@ the driver to that device.
->
->  A driver's probe() may return a negative errno value to indicate that
->  the driver did not bind to this device, in which case it should have
-> -released all resources it allocated::
-> +released all resources it allocated.
-> +
-> +Optionally, probe() may return -EPROBE_DEFER if the driver depends on
-> +resources that are not yet available (e.g., supplied by a driver that
-> +hasn't initialized yet).  The driver core will put the device onto the
-> +deferred probe list and will try to call it again later. If a driver
-> +must defer, it should return -EPROBE_DEFER as early as possible to
-> +reduce the amount of time spent on setup work that will need to be
-> +unwound and reexecuted at a later time.
-> +
-> +.. warning::
-> +      -EPROBE_DEFER must not be returned if probe() has already created
-> +      child devices, even if those child devices are removed again
-> +      in a cleanup path. If -EPROBE_DEFER is returned after a child
-> +      device has been registered, it may result in an infinite loop of
-> +      .probe() calls to the same driver.
 
-The infinite loop is a current implementation behavior. Not an
-intentional choice. So, maybe we can say the behavior is undefined
-instead?
+--=-txa6N3c5No/7zpOox/tI
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
--Saravana
+Hello Michael,
+
+On Fri, 2020-03-27 at 14:50 +1100, Michael Ellerman wrote:
+> Hi Leonardo,
+>=20
+> Leonardo Bras <leonardo@linux.ibm.com> writes:
+> > During a crash, there is chance that the cpus that handle the NMI IPI
+> > are holding a spin_lock. If this spin_lock is needed by crashing_cpu it
+> > will cause a deadlock. (rtas_lock and printk logbuf_log as of today)
+>=20
+> Please give us more detail on how those locks are causing you trouble, a
+> stack trace would be good if you have it.
+
+Sure, I have hit it in printf and rtas_call, as said before.=20
+
+After crash_send_ipi(), it's tested how many cpus_in_crash are there,
+and once they hit the total value, it's printed "IPI complete". This
+printk call itself already got stuck in spin_lock, for example.
+
+Here are the stack traces:
+
+#0  arch_spin_lock=20
+#1  do_raw_spin_lock=20
+#2  __raw_spin_lock=20
+#3  _raw_spin_lock=20
+#4  vprintk_emit=20
+#5  vprintk_func
+#7  crash_kexec_prepare_cpus=20
+#8  default_machine_crash_shutdown
+#9  machine_crash_shutdown=20
+#10 __crash_kexec
+#11 crash_kexec
+#12 oops_end
+
+#0 arch_spin_lock
+#1  lock_rtas ()=20
+#2  rtas_call (token=3D8204, nargs=3D1, nret=3D1, outputs=3D0x0)
+#3  ics_rtas_mask_real_irq (hw_irq=3D4100)=20
+#4  machine_kexec_mask_interrupts
+#5  default_machine_crash_shutdown
+#6  machine_crash_shutdown=20
+#7  __crash_kexec
+#8  crash_kexec
+#9  oops_end
+
+> > This is a problem if the system has kdump set up, given if it crashes
+> > for any reason kdump may not be saved for crash analysis.
+> >=20
+> > Skip spinlocks after NMI IPI is sent to all other cpus.
+>=20
+> We don't want to add overhead to all spinlocks for the life of the
+> system, just to handle this one case.
+
+I understand.=20
+Other than this patch, I would propose doing something uglier, like
+forcing the said locks to unlocked state when cpus_in_crash hits it's
+maximum value, before printing "IPI complete".
+Creating similar functions that don't lock, just for this case, looks
+like overkill to me.
+
+Do you have any other suggestion?
+
+> There's already a flag that is set when the system is crashing,
+> "oops_in_progress", maybe we need to use that somewhere to skip a lock
+> or do an early return.
+
+I think that would not work, because oops_in_progress should be 0 here:
+oops_end() calls bust_spinlocks(0) before calling crash_kexec(), and
+bust_spinlocks(0) will decrement oops_in_progress.
+(just verified, it's 0 before printing "IPI complete").
+
+Thank you the feedback, :)
+
+Best regards,
+Leonardo
+
+
+--=-txa6N3c5No/7zpOox/tI
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEMdeUgIzgjf6YmUyOlQYWtz9SttQFAl5+QrAACgkQlQYWtz9S
+ttRtkxAAxQ18qV/sitx+eX0YI1Eu3Uj78PX8UN90MddDaTO0QU6k/ZV7UvEBmU8C
+POlNTSgIkzMXq+N2DT+0OhhmP+2Fdj91ovQGtPnO7kjXRO3wpvRbIFoPi8/PDsCx
+RJGGEv1AV+yleSYhG3pf/jk2q1NUSZW+t3A9SvkVMX0w4jav3qHzTm3T37ZZ1dks
+6mJE+RlMvnt5N1PWNCcnlxcYgpvQZjWNfcltsfcG5f8aWEAXjKH5lZ9kTkBzUOmw
+RXJIZhhLFr7QIBJK6joqAnohED0JlFyp9X/pfFkFYBkNmPcgB4AzuLHH+7xNvHd2
+A23u4k7Xj7oYbpwYMLeMDg9yvpj1hk13R+RzcSk1x5WLAhWCAbtc2pW5Sps646sM
+5BYN4XG0X1TIqU3XzVX9j5oeax7ePe9vFDta/CmV8KSsUdwTzOYNgGaKyi7vgYg4
+dhkRYpMWTo+RJbyfDw8pJV2ABk3xgYmugQTfQNGDzJYTArDU5fq/UCovzat61eDh
+jp28ciBr9jaZ3PHd6UhHZjogmaHewm/sJiLnr0qA0XPXb7acYc1LoMsEWCqBj1PG
+3EuiHxJ1DlhBo7rfQ0kzxogfTpegEZ2u265eSKuEPO4ssPz9w30hex4fMJWuP5Lq
+A3RlcbXHeZQyj+PxM2OFRxNXzXfesqOoD6JRA/kch5ZHGMz2J78=
+=qwkO
+-----END PGP SIGNATURE-----
+
+--=-txa6N3c5No/7zpOox/tI--
+
