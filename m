@@ -2,186 +2,160 @@ Return-Path: <SRS0=s8dx=5M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E4C6C43331
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 16:34:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F97AC43331
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 16:35:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 33048206E6
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 16:34:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DDBF4206E6
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 16:35:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="ATmBjj0I"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cSwjkgGs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727797AbgC0QeD (ORCPT
+        id S1727794AbgC0Qft (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Mar 2020 12:34:03 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:58490 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727352AbgC0QeC (ORCPT
+        Fri, 27 Mar 2020 12:35:49 -0400
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:40579 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727636AbgC0Qft (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Mar 2020 12:34:02 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02RGMSEh134501;
-        Fri, 27 Mar 2020 16:33:43 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
- mime-version : subject : from : in-reply-to : date : cc :
- content-transfer-encoding : message-id : references : to;
- s=corp-2020-01-29; bh=jtn7o2RhFvINwYlF9zAidEwSZ9rhb3VsE2CDhAlOads=;
- b=ATmBjj0I7w4miIptaUNnsW0Rn/WJOQoompsthfwAI4TxezVefXJe4TUOgLTCiZPK2mdg
- rYBifw88+pJkeIwBpdSTbNq2rEIAewVB5m9BVFvZITH2GWFRx5fiF0Scj7DnALI6UwTs
- 7Qd/3G3GBhlqv0nU9TmsCOiRE6/5PMhnzidP4WV/dBPL96aMBSAA0lGweI+xgmexPfj3
- 7XFTFmJhOl+UdnQ9qTOC2I+zZ/YDuMV3uMGE1lhdP5fuRU1zaOdXMVcX36YbeQ5CqL8+
- MKrpefzdHpo3vgGrqmlX7ov8/k/ngEXl7HdKKTEg9mMhSOz35JL+SUWeyC/S7JHhTQfm Hg== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2120.oracle.com with ESMTP id 3019veb8cb-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 27 Mar 2020 16:33:43 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02RGW4jJ121146;
-        Fri, 27 Mar 2020 16:33:43 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userp3020.oracle.com with ESMTP id 3003gp8xvx-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 27 Mar 2020 16:33:42 +0000
-Received: from abhmp0004.oracle.com (abhmp0004.oracle.com [141.146.116.10])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 02RGXcUd019210;
-        Fri, 27 Mar 2020 16:33:38 GMT
-Received: from anon-dhcp-153.1015granger.net (/68.61.232.219)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 27 Mar 2020 09:33:38 -0700
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
-Subject: Re: [PATCH V2] SUNRPC: Fix a potential buffer overflow in
- 'svc_print_xprts()'
-From:   Chuck Lever <chuck.lever@oracle.com>
-In-Reply-To: <20200327161539.21554-1-christophe.jaillet@wanadoo.fr>
-Date:   Fri, 27 Mar 2020 12:33:36 -0400
-Cc:     Bruce Fields <bfields@fieldses.org>,
-        trond.myklebust@hammerspace.com,
-        Anna Schumaker <anna.schumaker@netapp.com>,
-        davem@davemloft.net, kuba@kernel.org, Neil Brown <neilb@suse.de>,
-        Tom Tucker <tom@opengridcomputing.com>, gnb@sgi.com,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-janitors@vger.kernel.org
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <EC65FE50-6CEC-4D97-9011-2A88F63C26D7@oracle.com>
-References: <20200327161539.21554-1-christophe.jaillet@wanadoo.fr>
-To:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-X-Mailer: Apple Mail (2.3445.104.11)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9573 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 mlxlogscore=999 bulkscore=0
- phishscore=0 adultscore=0 spamscore=0 malwarescore=0 suspectscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2003270145
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9573 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 impostorscore=0 phishscore=0
- clxscore=1011 adultscore=0 spamscore=0 malwarescore=0 mlxlogscore=999
- lowpriorityscore=0 bulkscore=0 priorityscore=1501 suspectscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2003270144
+        Fri, 27 Mar 2020 12:35:49 -0400
+Received: by mail-qt1-f196.google.com with SMTP id c9so9059876qtw.7
+        for <linux-kernel@vger.kernel.org>; Fri, 27 Mar 2020 09:35:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=EeTdbPcwG7sV1Jp+6pzaay04o+c2fNiGM5kQ0pSLS4g=;
+        b=cSwjkgGsHc144U7lV3/9cGVt6Bsfr6e1qYlpR8W41DZYQnBkHPdOVgICYLgYgCgPXT
+         BEqMx8XP5QjH2sTcMAr4X0J3OgLUPA+WN49wG09m/siImIeKoItGtQ+6h0L0dQuArK5p
+         2sA+7g/6oy6y0F1LwbS1oYq8iwiGHuJ3e2X26Jdmf6kdS0/ClgaeDEj0QajwuR0bNQ/v
+         xNopsy0B/jnSwW0b7o4BMO/IIPMCYeGaYoXNgHghusmyRvNtUPEUJAj5Q6oCv9RAiagn
+         aSvswa/3thWH9uHKpHrkhSCoDZhMIHcpb7KEQuPW2uj1boNMwFg6hroTxvhmEZWPRdSl
+         zb4g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=EeTdbPcwG7sV1Jp+6pzaay04o+c2fNiGM5kQ0pSLS4g=;
+        b=lDJVkT68+wBRYkuu5L2FeSOHW5MOiaz9Tr9zjlFmiULemimqpVJWVDzVYDqk1gaW7P
+         gejqgkJJpJthcH/o60GqxxsZfkmrS0hvsP8qzrF9U7Puwa7C5AF5V6F2LR3zlsD8hslU
+         aPuTvE8xvLUrrpfGAiRCIFeXmfi/hg2Kuf3wCpTwSAqCEeGpjvqyD2ZJsxpok89McHDr
+         J9HlUKINiCQmWWri0YItPxsI884Nb6Zk5JKxPj4p3OwkdA/rmhNUtpMCaChBQTwRPJv9
+         xfXgS4r1CyG1QgcHnMZJpUYGIbPO2QfKL1jZ59FSMx1EYW/b+UqjHymgXFB84aglCDaz
+         65Pw==
+X-Gm-Message-State: ANhLgQ0nfSAnsp5E5RqOWTjew8jd7QBHi8wdrB5YUlZ640NUdVJNbvbv
+        mxXMLkfv7H8jMG7HU1RKFsE=
+X-Google-Smtp-Source: ADFU+vv/WtC5GFyta0U346llmC8bCpKGD0uSKIWxdz4TvTD9tqCnH/DaprrZCkJwgU2AEz5XIz5AxA==
+X-Received: by 2002:aed:2da7:: with SMTP id i36mr84401qtd.84.1585326948296;
+        Fri, 27 Mar 2020 09:35:48 -0700 (PDT)
+Received: from quaco.ghostprotocols.net ([179.97.37.151])
+        by smtp.gmail.com with ESMTPSA id p38sm4368288qtf.50.2020.03.27.09.35.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 27 Mar 2020 09:35:46 -0700 (PDT)
+From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 5616F409A3; Fri, 27 Mar 2020 13:35:43 -0300 (-03)
+Date:   Fri, 27 Mar 2020 13:35:43 -0300
+To:     Namhyung Kim <namhyung@kernel.org>
+Cc:     Jiri Olsa <jolsa@redhat.com>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Ingo Molnar <mingo@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Subject: Re: [PATCH 8/9] perf top: Add --all-cgroups option
+Message-ID: <20200327163543.GB19927@kernel.org>
+References: <20200325124536.2800725-1-namhyung@kernel.org>
+ <20200325124536.2800725-9-namhyung@kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200325124536.2800725-9-namhyung@kernel.org>
+X-Url:  http://acmel.wordpress.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Em Wed, Mar 25, 2020 at 09:45:35PM +0900, Namhyung Kim escreveu:
+> The --all-cgroups option is to enable cgroup profiling support.  It
+> tells kernel to record CGROUP events in the ring buffer so that perf
+> report can identify task/cgroup association later.
+ s/report/top/g in this case, and I added:
 
+     Committer testing:
 
-> On Mar 27, 2020, at 12:15 PM, Christophe JAILLET =
-<christophe.jaillet@wanadoo.fr> wrote:
->=20
-> 'maxlen' is the total size of the destination buffer. There is only =
-one
-> caller and this value is 256.
->=20
-> When we compute the size already used and what we would like to add in
-> the buffer, the trailling NULL character is not taken into account.
-> However, this trailling character will be added by the 'strcat' once =
-we
-> have checked that we have enough place.
->=20
-> So, there is a off-by-one issue and 1 byte of the stack could be
-> erroneously overwridden.
->=20
-> Take into account the trailling NULL, when checking if there is enough
-> place in the destination buffer.
->=20
->=20
-> While at it, also replace a 'sprintf' by a safer 'snprintf', check for
-> output truncation and avoid a superfluous 'strlen'.
->=20
-> Fixes: dc9a16e49dbba ("svc: Add /proc/sys/sunrpc/transport files")
-> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+    Use:
+
+      # perf top --all-cgroups -s cgroup_id,cgroup,pid
+
+- Arnaldo
+
+ 
+> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 > ---
-> V2: add a doxygen comment to clarify the goal of the function
->    merge previous 2 patches into a single one
->    keep strcat for clarity, this function being just a slow path =
-anyway
->=20
-> Doc being most of the time a matter of taste, please adjust the =
-description
-> as needed.
+>  tools/perf/Documentation/perf-top.txt | 4 ++++
+>  tools/perf/builtin-top.c              | 9 +++++++++
+>  2 files changed, 13 insertions(+)
+> 
+> diff --git a/tools/perf/Documentation/perf-top.txt b/tools/perf/Documentation/perf-top.txt
+> index 324b6b53c86b..ddab103af8c7 100644
+> --- a/tools/perf/Documentation/perf-top.txt
+> +++ b/tools/perf/Documentation/perf-top.txt
+> @@ -272,6 +272,10 @@ Default is to monitor all CPUS.
+>  	Record events of type PERF_RECORD_NAMESPACES and display it with the
+>  	'cgroup_id' sort key.
+>  
+> +--all-cgroups::
+> +	Record events of type PERF_RECORD_CGROUP and display it with the
+> +	'cgroup' sort key.
+> +
+>  --switch-on EVENT_NAME::
+>  	Only consider events after this event is found.
+>  
+> diff --git a/tools/perf/builtin-top.c b/tools/perf/builtin-top.c
+> index d2539b793f9d..56b2dd0db88e 100644
+> --- a/tools/perf/builtin-top.c
+> +++ b/tools/perf/builtin-top.c
+> @@ -1246,6 +1246,8 @@ static int __cmd_top(struct perf_top *top)
+>  
+>  	if (opts->record_namespaces)
+>  		top->tool.namespace_events = true;
+> +	if (opts->record_cgroup)
+> +		top->tool.cgroup_events = true;
+>  
+>  	ret = perf_event__synthesize_bpf_events(top->session, perf_event__process,
+>  						&top->session->machines.host,
+> @@ -1253,6 +1255,11 @@ static int __cmd_top(struct perf_top *top)
+>  	if (ret < 0)
+>  		pr_debug("Couldn't synthesize BPF events: Pre-existing BPF programs won't have symbols resolved.\n");
+>  
+> +	ret = perf_event__synthesize_cgroups(&top->tool, perf_event__process,
+> +					     &top->session->machines.host);
+> +	if (ret < 0)
+> +		pr_debug("Couldn't synthesize cgroup events.\n");
+> +
+>  	machine__synthesize_threads(&top->session->machines.host, &opts->target,
+>  				    top->evlist->core.threads, false,
+>  				    top->nr_threads_synthesize);
+> @@ -1545,6 +1552,8 @@ int cmd_top(int argc, const char **argv)
+>  			"number of thread to run event synthesize"),
+>  	OPT_BOOLEAN(0, "namespaces", &opts->record_namespaces,
+>  		    "Record namespaces events"),
+> +	OPT_BOOLEAN(0, "all-cgroups", &opts->record_cgroup,
+> +		    "Record cgroup events"),
+>  	OPTS_EVSWITCH(&top.evswitch),
+>  	OPT_END()
+>  	};
+> -- 
+> 2.25.1.696.g5e7596f4ac-goog
+> 
 
-I've applied this to my local nfsd-5.7 with a very small adjustment
-to the doc-comment. Testing it now. Thanks, all.
+-- 
 
-
-> ---
-> net/sunrpc/svc_xprt.c | 19 ++++++++++++++-----
-> 1 file changed, 14 insertions(+), 5 deletions(-)
->=20
-> diff --git a/net/sunrpc/svc_xprt.c b/net/sunrpc/svc_xprt.c
-> index de3c077733a7..e0f61a8c1965 100644
-> --- a/net/sunrpc/svc_xprt.c
-> +++ b/net/sunrpc/svc_xprt.c
-> @@ -104,8 +104,17 @@ void svc_unreg_xprt_class(struct svc_xprt_class =
-*xcl)
-> }
-> EXPORT_SYMBOL_GPL(svc_unreg_xprt_class);
->=20
-> -/*
-> - * Format the transport list for printing
-> +/**
-> + * svc_print_xprts - Format the transport list for printing
-> + * @buf: target buffer for formatted address
-> + * @maxlen: length of target buffer
-> + *
-> + * Fills in @buf with a string containing a list of transport names, =
-each name
-> + * terminated with '\n'. If the buffer is too small, some entries may =
-be
-> + * missing, but it is guaranteed that the line in the output buffer =
-are
-> + * complete.
-> + *
-> + * Returns positive length of the filled-in string.
->  */
-> int svc_print_xprts(char *buf, int maxlen)
-> {
-> @@ -118,9 +127,9 @@ int svc_print_xprts(char *buf, int maxlen)
-> 	list_for_each_entry(xcl, &svc_xprt_class_list, xcl_list) {
-> 		int slen;
->=20
-> -		sprintf(tmpstr, "%s %d\n", xcl->xcl_name, =
-xcl->xcl_max_payload);
-> -		slen =3D strlen(tmpstr);
-> -		if (len + slen > maxlen)
-> +		slen =3D snprintf(tmpstr, sizeof(tmpstr), "%s %d\n",
-> +				xcl->xcl_name, xcl->xcl_max_payload);
-> +		if (slen >=3D sizeof(tmpstr) || len + slen >=3D maxlen)
-> 			break;
-> 		len +=3D slen;
-> 		strcat(buf, tmpstr);
-> --=20
-> 2.20.1
->=20
-
---
-Chuck Lever
-
-
-
+- Arnaldo
