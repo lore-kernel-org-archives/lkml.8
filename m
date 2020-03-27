@@ -8,63 +8,62 @@ X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9F5DC43331
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 16:09:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF998C43331
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 16:09:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AD7E820716
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 16:09:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7373020737
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 16:09:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fFy95hPW"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Wr9w0+2+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727742AbgC0QJg (ORCPT
+        id S1727769AbgC0QJz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Mar 2020 12:09:36 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:36277 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727352AbgC0QJg (ORCPT
+        Fri, 27 Mar 2020 12:09:55 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:44510 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727509AbgC0QJy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Mar 2020 12:09:36 -0400
-Received: by mail-pl1-f195.google.com with SMTP id g2so3621108plo.3
-        for <linux-kernel@vger.kernel.org>; Fri, 27 Mar 2020 09:09:34 -0700 (PDT)
+        Fri, 27 Mar 2020 12:09:54 -0400
+Received: by mail-pl1-f196.google.com with SMTP id h11so3601135plr.11;
+        Fri, 27 Mar 2020 09:09:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=YTxI/vmh7H8psD5zaF9jAeQPznpJVnF6SqRKJaDJ+ks=;
-        b=fFy95hPWrJfvZ3Lque6nIPsxfKs0aHjKz2gkg3eZnac5pJTyjhCyNfpEgTa2VyGCPc
-         Udgh6NwWcOdvnXuWNOubNLIwZoXPVgcO/Jmmv6jIjvvQQj9IauI0bWPztzstPC2S8oDh
-         DdjdEmeRCZwJjMqEK5HB95iRPnr0wrQ/N6XF1T/sfW+2iLCD0dgPIY8VRpAJaiy6kKl1
-         aAm3rJwyTkYfefXViJ4pYJyj12BiicZGcJSleDnRJWWP0JCY9Yubpb2pFb1r5nl8fWCf
-         xV98byxx7KFwWHgpPlr4bJM6AtWBsvoQ/9JHLbzEzcy4LLX69K4wKXmxiHIbjQetrWja
-         aLJg==
+        bh=LVnJntLYzH7Zj+TzjtaQCNZBQVMzfV4qtxc28RtRXBk=;
+        b=Wr9w0+2+vG5+GIAAsmHkLUkJ67+/v20StxdCIVcNOlCs1QgDja/SK2gi7YgnnMFCGl
+         HqSkGV/oGGtS6/1IrxyAh30HL3Qevyj0bxI/wsnJcoeBaVjt5/CrXKItw8oWEJIpR/wr
+         3g3N8RNPbovPzgp0anVktMGWqsQpm9BSn/Tb/hKbvCCkUMghQZ8Wu+RilqBmxWr1ThpQ
+         kIO1SDJR8ESRGErze6elG3ltPQHVW+2FeN3QzsQkvXiFIIbquieyyw3FfFfF66jUxXNU
+         zQ8kzRGG+UPOMyBu3hgdyEGagv1iPbBg3ZwxeQFOASiIOfSbYqfww66+82ms5GFh6CoK
+         75aw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=YTxI/vmh7H8psD5zaF9jAeQPznpJVnF6SqRKJaDJ+ks=;
-        b=NRYwuZTAy+CrHG8isqkMuI0cBRqLzXCfeIo6vy1qSe4IJTSanIJiKlRbvSKHaMEYuy
-         d97HvuVizdibJynNGEnZisgU03wbHgj7KsUY1sBzY7nrjxSADrcYivEEGPzktqL+iL+A
-         ZYIWE4KQ0Meym1lAdBP3g6/+16vCHx4udiyt9Mdsp06eyHZ+XmORtraaO1wS5UGvBUyA
-         +1pZUlirdq03k7P6wJrBWYDmuuEUhCGqFbn0AQnKdHf0oRIVVS6Eh/XsnbUbQrlshTZc
-         lNPGBjNuFygxZtEIN92WoZs3QdpoKiO1+fGXE5J5PSfZO+cge48vNx0PKYQBzrkHnQmZ
-         A30w==
-X-Gm-Message-State: ANhLgQ1ojecs62mR6ImOL7QB0LLbL3xv5RNP2uqUc8kJRi/ngP4Acsn0
-        k6SfUMBOedF/Rxvw8kQQcFY=
-X-Google-Smtp-Source: ADFU+vuwwqvSXZqXsarIhQFTkxUNP9dT0yJPIDweKZX4m/IfsxbgmDPlKTpvk3ewS1TVqwTAYezvGA==
-X-Received: by 2002:a17:902:6ac9:: with SMTP id i9mr14307042plt.35.1585325374377;
-        Fri, 27 Mar 2020 09:09:34 -0700 (PDT)
+        bh=LVnJntLYzH7Zj+TzjtaQCNZBQVMzfV4qtxc28RtRXBk=;
+        b=IQqh73GffAY90wmse+MyW7163J1fIPoHWxSTLHt5Ff+nmtch1EmsmCTizeV6vfSF8M
+         AW27r3pkCDjmXwfms+lQ9Vqx6qttvm2gHWeCq3Xs1kuqN7HuTO8vnqeJPK5CPj9P4ItG
+         nT9X489g1SseNNUzOcW3lUpKHOLLBYWvwATPKcLGYnJnc1Y+T2dHES4tb3TX1aNO2FMN
+         PtSTOAmorc6Y3FTl1EQ8ohfVniQxBQ05gPla2Des4/xgLTT/Jnz2GxaNvG/ZNNpFh6s+
+         MElHL5T/TiNmpm1B6lRG5agyZsNi5ywmlupa5s+pbYWCpGMUv3xFyR4tMbpxaGoh5maT
+         42dA==
+X-Gm-Message-State: ANhLgQ3/6jeNngBBjAH6Va+OWfXbWCOTgvUwnnbfB9xKqs+JMIwer27H
+        eEE7ePDwh0XUnXKSsOGb8SE=
+X-Google-Smtp-Source: ADFU+vv0QOIrhMO6NfKN1odzXeh1iV4k+Uofu66WworPTXHF22tzwTen4Eqo3yR0XRfHOMzjE4De2w==
+X-Received: by 2002:a17:902:9a93:: with SMTP id w19mr13834187plp.277.1585325393014;
+        Fri, 27 Mar 2020 09:09:53 -0700 (PDT)
 Received: from localhost ([49.207.55.57])
-        by smtp.gmail.com with ESMTPSA id i14sm4176480pgh.47.2020.03.27.09.09.33
+        by smtp.gmail.com with ESMTPSA id l6sm4280981pff.173.2020.03.27.09.09.52
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 27 Mar 2020 09:09:33 -0700 (PDT)
-Date:   Fri, 27 Mar 2020 21:39:32 +0530
+        Fri, 27 Mar 2020 09:09:52 -0700 (PDT)
+Date:   Fri, 27 Mar 2020 21:39:50 +0530
 From:   afzal mohammed <afzal.mohd.ma@gmail.com>
 To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     linux-c6x-dev@linux-c6x.org, linux-kernel@vger.kernel.org,
-        Mark Salter <msalter@redhat.com>,
-        Aurelien Jacquiot <jacquiot.aurelien@gmail.com>
-Subject: [PATCH v5 2/6] c6x: replace setup_irq() by request_irq()
-Message-ID: <56e991e920ce5806771fab892574cba89a3d413f.1585320721.git.afzal.mohd.ma@gmail.com>
+Cc:     Brian Cain <bcain@codeaurora.org>, linux-hexagon@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v5 3/6] hexagon: replace setup_irq() by request_irq()
+Message-ID: <e84ac60de8f747d49ce082659e51595f708c29d4.1585320721.git.afzal.mohd.ma@gmail.com>
 References: <20200321174303.GA7930@afzalpc>
  <cover.1585320721.git.afzal.mohd.ma@gmail.com>
 MIME-Version: 1.0
@@ -91,7 +90,7 @@ Signed-off-by: afzal mohammed <afzal.mohd.ma@gmail.com>
 ---
 
 Link to v3, v2 & v1,
-[v3] https://lkml.kernel.org/r/20200304004143.3960-1-afzal.mohd.ma@gmail.com
+[v3] https://lkml.kernel.org/r/20200304004910.4842-1-afzal.mohd.ma@gmail.com
 [v2] https://lkml.kernel.org/r/cover.1582471508.git.afzal.mohd.ma@gmail.com
 [v1] https://lkml.kernel.org/r/cover.1581478323.git.afzal.mohd.ma@gmail.com
 
@@ -111,38 +110,108 @@ v2:
            pr_err("%s: request_irq() failed"
  * Commit message massage
 
- arch/c6x/platforms/timer64.c | 11 +++--------
- 1 file changed, 3 insertions(+), 8 deletions(-)
+ arch/hexagon/kernel/smp.c  | 22 +++++++++++-----------
+ arch/hexagon/kernel/time.c | 11 +++--------
+ 2 files changed, 14 insertions(+), 19 deletions(-)
 
-diff --git a/arch/c6x/platforms/timer64.c b/arch/c6x/platforms/timer64.c
-index d98d94303498..661f4c7c6ef6 100644
---- a/arch/c6x/platforms/timer64.c
-+++ b/arch/c6x/platforms/timer64.c
-@@ -165,13 +165,6 @@ static irqreturn_t timer_interrupt(int irq, void *dev_id)
+diff --git a/arch/hexagon/kernel/smp.c b/arch/hexagon/kernel/smp.c
+index 0bbbe652a513..619c56420aa0 100644
+--- a/arch/hexagon/kernel/smp.c
++++ b/arch/hexagon/kernel/smp.c
+@@ -114,12 +114,6 @@ void send_ipi(const struct cpumask *cpumask, enum ipi_message_type msg)
+ 	local_irq_restore(flags);
+ }
+ 
+-static struct irqaction ipi_intdesc = {
+-	.handler = handle_ipi,
+-	.flags = IRQF_TRIGGER_RISING,
+-	.name = "ipi_handler"
+-};
+-
+ void __init smp_prepare_boot_cpu(void)
+ {
+ }
+@@ -132,8 +126,8 @@ void __init smp_prepare_boot_cpu(void)
+ 
+ void start_secondary(void)
+ {
+-	unsigned int cpu;
+ 	unsigned long thread_ptr;
++	unsigned int cpu, irq;
+ 
+ 	/*  Calculate thread_info pointer from stack pointer  */
+ 	__asm__ __volatile__(
+@@ -155,7 +149,10 @@ void start_secondary(void)
+ 
+ 	cpu = smp_processor_id();
+ 
+-	setup_irq(BASE_IPI_IRQ + cpu, &ipi_intdesc);
++	irq = BASE_IPI_IRQ + cpu;
++	if (request_irq(irq, handle_ipi, IRQF_TRIGGER_RISING, "ipi_handler",
++			NULL))
++		pr_err("Failed to request irq %u (ipi_handler)\n", irq);
+ 
+ 	/*  Register the clock_event dummy  */
+ 	setup_percpu_clockdev();
+@@ -201,7 +198,7 @@ void __init smp_cpus_done(unsigned int max_cpus)
+ 
+ void __init smp_prepare_cpus(unsigned int max_cpus)
+ {
+-	int i;
++	int i, irq = BASE_IPI_IRQ;
+ 
+ 	/*
+ 	 * should eventually have some sort of machine
+@@ -213,8 +210,11 @@ void __init smp_prepare_cpus(unsigned int max_cpus)
+ 		set_cpu_present(i, true);
+ 
+ 	/*  Also need to register the interrupts for IPI  */
+-	if (max_cpus > 1)
+-		setup_irq(BASE_IPI_IRQ, &ipi_intdesc);
++	if (max_cpus > 1) {
++		if (request_irq(irq, handle_ipi, IRQF_TRIGGER_RISING,
++				"ipi_handler", NULL))
++			pr_err("Failed to request irq %d (ipi_handler)\n", irq);
++	}
+ }
+ 
+ void smp_send_reschedule(int cpu)
+diff --git a/arch/hexagon/kernel/time.c b/arch/hexagon/kernel/time.c
+index f99e9257bed4..feffe527ac92 100644
+--- a/arch/hexagon/kernel/time.c
++++ b/arch/hexagon/kernel/time.c
+@@ -143,13 +143,6 @@ static irqreturn_t timer_interrupt(int irq, void *devid)
  	return IRQ_HANDLED;
  }
  
--static struct irqaction timer_iact = {
--	.name		= "timer",
--	.flags		= IRQF_TIMER,
--	.handler	= timer_interrupt,
--	.dev_id		= &t64_clockevent_device,
+-/*  This should also be pulled from devtree  */
+-static struct irqaction rtos_timer_intdesc = {
+-	.handler = timer_interrupt,
+-	.flags = IRQF_TIMER | IRQF_TRIGGER_RISING,
+-	.name = "rtos_timer"
 -};
 -
- void __init timer64_init(void)
+ /*
+  * time_init_deferred - called by start_kernel to set up timer/clock source
+  *
+@@ -163,6 +156,7 @@ void __init time_init_deferred(void)
  {
- 	struct clock_event_device *cd = &t64_clockevent_device;
-@@ -238,7 +231,9 @@ void __init timer64_init(void)
- 	cd->cpumask		= cpumask_of(smp_processor_id());
+ 	struct resource *resource = NULL;
+ 	struct clock_event_device *ce_dev = &hexagon_clockevent_dev;
++	unsigned long flag = IRQF_TIMER | IRQF_TRIGGER_RISING;
  
- 	clockevents_register_device(cd);
--	setup_irq(cd->irq, &timer_iact);
-+	if (request_irq(cd->irq, timer_interrupt, IRQF_TIMER, "timer",
-+			&t64_clockevent_device))
-+		pr_err("Failed to request irq %d (timer)\n", cd->irq);
+ 	ce_dev->cpumask = cpu_all_mask;
  
- out:
- 	of_node_put(np);
+@@ -195,7 +189,8 @@ void __init time_init_deferred(void)
+ #endif
+ 
+ 	clockevents_register_device(ce_dev);
+-	setup_irq(ce_dev->irq, &rtos_timer_intdesc);
++	if (request_irq(ce_dev->irq, timer_interrupt, flag, "rtos_timer", NULL))
++		pr_err("Failed to register rtos_timer interrupt\n");
+ }
+ 
+ void __init time_init(void)
 -- 
 2.25.1
 
