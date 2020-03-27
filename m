@@ -2,221 +2,124 @@ Return-Path: <SRS0=s8dx=5M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CF9FC43331
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 07:13:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CEE42C43331
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 07:19:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 22E9F20705
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 07:13:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9139120663
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 07:19:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (4096-bit key) header.d=d-silva.org header.i=@d-silva.org header.b="l0xv6Qkr"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="cdU3jT5o"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726360AbgC0HMW (ORCPT
+        id S1726217AbgC0HTU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Mar 2020 03:12:22 -0400
-Received: from ushosting.nmnhosting.com ([66.55.73.32]:35566 "EHLO
-        ushosting.nmnhosting.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726118AbgC0HMV (ORCPT
+        Fri, 27 Mar 2020 03:19:20 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:36351 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725936AbgC0HTU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Mar 2020 03:12:21 -0400
-Received: from mail2.nmnhosting.com (unknown [202.169.106.97])
-        by ushosting.nmnhosting.com (Postfix) with ESMTPS id 738C32DC6829;
-        Fri, 27 Mar 2020 18:12:20 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=d-silva.org;
-        s=201810a; t=1585293141;
-        bh=iql+P5xKXAK7D5i2p3DQ+jr9oIISWrdh7woNYcXPetQ=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=l0xv6Qkr8VzM9ZG5lMS/tOu1JFQYeHTOxng+UyItI7K+BTfAdHAn5jl0Vc98MdH5L
-         svJHiChQtX5o8cTO3dd/fdihbcTq1JBv0lcp1/0c3Ilk5aLLpJOnQ1FQ15klXidcI9
-         HzlXm5cZbwJbsCl6Byo4R9vTIo8oGh+UAYH/OsCvx1PSCVjVWx1x/VXegbQyjMOR51
-         V4LP4dGgNfczNXy3uzX+jsLMyTr269zBNIgIk44+ayuhFugOXkoTzpijNadY64HMyY
-         8BwDM3tMr1Bi5xMuveddrROnBXS/aYhpLzKyHqCTZjwaY0YlGyMCNhgkHXqdKkM8/5
-         0ZIjsg3Sg0ou01WLekF/gpkzxV28dn8yvkIO0OcGrhzyxu4kmlzPyFEp1rskt5UCkv
-         N9C0oEHQG0GJR+e65zOkTmC8UkwdqUsHqI9kYTpXuJcrbPDSDPrsEljoPuI/NAibsH
-         GIm4KPDgwMdhe2CXHCLovQFSBQww6wbR+rGrzrWcwkr7P7ps+fjPRJYXnZjA8AkvVk
-         L//ADFtFERH1s3KlT4Xs2wPEdyiR6A3bFiTqt/0itt2K+YOTFn/gufrnwp3JV/eQJ5
-         XLE9vu40yNlig92V8LtkILAEFfP0NQDPOGhMQca160KxhQYz8l7pPQdHYe+9lxRZBJ
-         DGCfKUohqC6Ydh4+l1CuVtcI=
-Received: from localhost.lan ([10.0.1.179])
-        by mail2.nmnhosting.com (8.15.2/8.15.2) with ESMTP id 02R7C4Ag045934;
-        Fri, 27 Mar 2020 18:12:15 +1100 (AEDT)
-        (envelope-from alastair@d-silva.org)
-From:   "Alastair D'Silva" <alastair@d-silva.org>
-To:     alastair@d-silva.org
-Cc:     "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
-        "Oliver O'Halloran" <oohall@gmail.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Frederic Barrat <fbarrat@linux.ibm.com>,
-        Andrew Donnellan <ajd@linux.ibm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Rob Herring <robh@kernel.org>,
-        Anton Blanchard <anton@ozlabs.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>,
-        Madhavan Srinivasan <maddy@linux.vnet.ibm.com>,
-        =?UTF-8?q?C=C3=A9dric=20Le=20Goater?= <clg@kaod.org>,
-        Anju T Sudhakar <anju@linux.vnet.ibm.com>,
-        Hari Bathini <hbathini@linux.ibm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Greg Kurz <groug@kaod.org>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Alexey Kardashevskiy <aik@ozlabs.ru>,
-        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-nvdimm@lists.01.org, linux-mm@kvack.org
-Subject: [PATCH v4 07/25] ocxl: Add functions to map/unmap LPC memory
-Date:   Fri, 27 Mar 2020 18:11:44 +1100
-Message-Id: <20200327071202.2159885-8-alastair@d-silva.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200327071202.2159885-1-alastair@d-silva.org>
-References: <20200327071202.2159885-1-alastair@d-silva.org>
+        Fri, 27 Mar 2020 03:19:20 -0400
+Received: by mail-lf1-f67.google.com with SMTP id s1so6996132lfd.3
+        for <linux-kernel@vger.kernel.org>; Fri, 27 Mar 2020 00:19:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=8yD3/mZAPx4NyJAYvyAM42UOXEcrRRB02HlarcvJcpY=;
+        b=cdU3jT5oe/H7QKTBQOhKMp9drgTOsgZe5NhZH3AgSZm3iIiqG7Mpdb7eiSi/aoXspU
+         adDnKmgjnNQOPOlbHzzO67tuGNnmIIXVdvnZjQLsWvhaxncdd/E9LNTu0B8xituEt11S
+         im4peLookDERzMUR0/fJILym8NflyDU2H23CU1F2sEboZO0GzyBnSX7Sw58NmW1eoFRz
+         QmjqAIIJ9eQ8gHc/xFj9sQsbaUodlZeNkmUP/NtCyr8IOePkWyk2t1k8IYPAE5lUA9Un
+         TRQsPtLWtJUdSDAhud+rUIempEHW9rwXfg91DpI/kpwYm00hGRzm7ZMusZ+CVcF3VjUC
+         zW8Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=8yD3/mZAPx4NyJAYvyAM42UOXEcrRRB02HlarcvJcpY=;
+        b=OKtF3v9Ty5h0+o+c84WXsqhgh07t8C3N0VkbimX+MtP0srNDR/vaIXTP2kRIlC4hJ/
+         sN5uviEj/Er4MpAjitFgXOnkbUaJa6MnUBv9qL2SzeiXyyxidxj5/cZcvA38KPW6iqZc
+         sa4z18g2GjKACtMZMWzedEnoG5WeRpbHsDQjyBDVvMvQrprHdNijheVu8YR7FfLbKMKm
+         0oPg+CeCeSmctYs1H5GmPmlI4mXiZ4bpbDjPUfnLwKgkeDSGBteacRaTrDjKMRDWqCvD
+         1p57INgicNSvB93mPd0Ne2jqLcsypV0DophapAQNkn+IwMT5QpzYdX3L0rI3iHmlN3xd
+         SOBw==
+X-Gm-Message-State: ANhLgQ2CTRa4OS6Mfl6CBK6lzeVt9umYZzIDazzQNSf51bk2on/b6BcR
+        E8g13mJli1zUXN6Z5WQf3NHGNQl4t+p9saq9c5T9UQ==
+X-Google-Smtp-Source: ADFU+vsVleHzR2OlQgFnip8JwdTpgtyxbozUTC6A2rWBZO45SHy2RsvKY2E8cSZkDmSqmkfRqCMidvfUsGCh9kDJWeQ=
+X-Received: by 2002:ac2:53b2:: with SMTP id j18mr8178328lfh.206.1585293557144;
+ Fri, 27 Mar 2020 00:19:17 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mail2.nmnhosting.com [10.0.1.20]); Fri, 27 Mar 2020 18:12:16 +1100 (AEDT)
+References: <20200326182742.487026-1-enric.balletbo@collabora.com>
+In-Reply-To: <20200326182742.487026-1-enric.balletbo@collabora.com>
+From:   Anders Roxell <anders.roxell@linaro.org>
+Date:   Fri, 27 Mar 2020 08:19:06 +0100
+Message-ID: <CADYN=9Kd-eWAFaN-ttX+Aq5HyH2AiUfqeCRC1mMTZM93DBshsA@mail.gmail.com>
+Subject: Re: [PATCH] soc: mediatek: mtk-mmsys: Export ddp_dis/connect symbols
+To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Collabora Kernel ML <kernel@collabora.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        drinkcat@chromium.org, hsinyi@chromium.org,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-mediatek@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add functions to map/unmap LPC memory
+On Thu, 26 Mar 2020 at 19:27, Enric Balletbo i Serra
+<enric.balletbo@collabora.com> wrote:
+>
+> When building on arm64 with allmodconfig or CONFIG_DRM_MEDIATEK=m we see
+> the following error.
+>
+>   ERROR: modpost: "mtk_mmsys_ddp_disconnect"
+>   [drivers/gpu/drm/mediatek/mediatek-drm.ko] undefined!
+>   ERROR: modpost: "mtk_mmsys_ddp_connect"
+>   [drivers/gpu/drm/mediatek/mediatek-drm.ko] undefined!
+>
+> Export mtk_mmsys_ddp_connect and mtk_mmsys_ddp_disconnect symbols to be
+> able to be used for other modules.
+>
+> Fixes: 396c3fccaf03 ("soc / drm: mediatek: Move routing control to mmsys device")
+> Reported-by: Anders Roxell <anders.roxell@linaro.org>
+> Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
 
-Signed-off-by: Alastair D'Silva <alastair@d-silva.org>
-Acked-by: Frederic Barrat <fbarrat@linux.ibm.com>
----
- drivers/misc/ocxl/core.c          | 51 +++++++++++++++++++++++++++++++
- drivers/misc/ocxl/ocxl_internal.h |  3 ++
- include/misc/ocxl.h               | 21 +++++++++++++
- 3 files changed, 75 insertions(+)
+Tested-by: Anders Roxell <anders.roxell@linaro.org>
 
-diff --git a/drivers/misc/ocxl/core.c b/drivers/misc/ocxl/core.c
-index 2531c6cf19a0..75ff14e3882a 100644
---- a/drivers/misc/ocxl/core.c
-+++ b/drivers/misc/ocxl/core.c
-@@ -210,6 +210,56 @@ static void unmap_mmio_areas(struct ocxl_afu *afu)
- 	release_fn_bar(afu->fn, afu->config.global_mmio_bar);
- }
- 
-+int ocxl_afu_map_lpc_mem(struct ocxl_afu *afu)
-+{
-+	struct pci_dev *dev = to_pci_dev(afu->fn->dev.parent);
-+
-+	if ((afu->config.lpc_mem_size + afu->config.special_purpose_mem_size) == 0)
-+		return 0;
-+
-+	afu->lpc_base_addr = ocxl_link_lpc_map(afu->fn->link, dev);
-+	if (afu->lpc_base_addr == 0)
-+		return -EINVAL;
-+
-+	if (afu->config.lpc_mem_size > 0) {
-+		afu->lpc_res.start = afu->lpc_base_addr + afu->config.lpc_mem_offset;
-+		afu->lpc_res.end = afu->lpc_res.start + afu->config.lpc_mem_size - 1;
-+	}
-+
-+	if (afu->config.special_purpose_mem_size > 0) {
-+		afu->special_purpose_res.start = afu->lpc_base_addr +
-+						 afu->config.special_purpose_mem_offset;
-+		afu->special_purpose_res.end = afu->special_purpose_res.start +
-+					       afu->config.special_purpose_mem_size - 1;
-+	}
-+
-+	return 0;
-+}
-+EXPORT_SYMBOL_GPL(ocxl_afu_map_lpc_mem);
-+
-+struct resource *ocxl_afu_lpc_mem(struct ocxl_afu *afu)
-+{
-+	return &afu->lpc_res;
-+}
-+EXPORT_SYMBOL_GPL(ocxl_afu_lpc_mem);
-+
-+static void unmap_lpc_mem(struct ocxl_afu *afu)
-+{
-+	struct pci_dev *dev = to_pci_dev(afu->fn->dev.parent);
-+
-+	if (afu->lpc_res.start || afu->special_purpose_res.start) {
-+		void *link = afu->fn->link;
-+
-+		// only release the link when the the last consumer calls release
-+		ocxl_link_lpc_release(link, dev);
-+
-+		afu->lpc_res.start = 0;
-+		afu->lpc_res.end = 0;
-+		afu->special_purpose_res.start = 0;
-+		afu->special_purpose_res.end = 0;
-+	}
-+}
-+
- static int configure_afu(struct ocxl_afu *afu, u8 afu_idx, struct pci_dev *dev)
- {
- 	int rc;
-@@ -251,6 +301,7 @@ static int configure_afu(struct ocxl_afu *afu, u8 afu_idx, struct pci_dev *dev)
- 
- static void deconfigure_afu(struct ocxl_afu *afu)
- {
-+	unmap_lpc_mem(afu);
- 	unmap_mmio_areas(afu);
- 	reclaim_afu_pasid(afu);
- 	reclaim_afu_actag(afu);
-diff --git a/drivers/misc/ocxl/ocxl_internal.h b/drivers/misc/ocxl/ocxl_internal.h
-index 2d7575225bd7..7b975a89db7b 100644
---- a/drivers/misc/ocxl/ocxl_internal.h
-+++ b/drivers/misc/ocxl/ocxl_internal.h
-@@ -52,6 +52,9 @@ struct ocxl_afu {
- 	void __iomem *global_mmio_ptr;
- 	u64 pp_mmio_start;
- 	void *private;
-+	u64 lpc_base_addr; /* Covers both LPC & special purpose memory */
-+	struct resource lpc_res;
-+	struct resource special_purpose_res;
- };
- 
- enum ocxl_context_status {
-diff --git a/include/misc/ocxl.h b/include/misc/ocxl.h
-index 357ef1aadbc0..d8b0b4d46bfb 100644
---- a/include/misc/ocxl.h
-+++ b/include/misc/ocxl.h
-@@ -203,6 +203,27 @@ int ocxl_irq_set_handler(struct ocxl_context *ctx, int irq_id,
- 
- // AFU Metadata
- 
-+/**
-+ * ocxl_afu_map_lpc_mem() - Map the LPC system & special purpose memory for an AFU
-+ * Do not call this during device discovery, as there may me multiple
-+ * devices on a link, and the memory is mapped for the whole link, not
-+ * just one device. It should only be called after all devices have
-+ * registered their memory on the link.
-+ *
-+ * @afu: The AFU that has the LPC memory to map
-+ *
-+ * Returns 0 on success, negative on failure
-+ */
-+int ocxl_afu_map_lpc_mem(struct ocxl_afu *afu);
-+
-+/**
-+ * ocxl_afu_lpc_mem() - Get the physical address range of LPC memory for an AFU
-+ * @afu: The AFU associated with the LPC memory
-+ *
-+ * Returns a pointer to the resource struct for the physical address range
-+ */
-+struct resource *ocxl_afu_lpc_mem(struct ocxl_afu *afu);
-+
- /**
-  * ocxl_afu_config() - Get a pointer to the config for an AFU
-  * @afu: a pointer to the AFU to get the config for
--- 
-2.24.1
+Cheers,
+Anders
 
+> ---
+>
+>  drivers/soc/mediatek/mtk-mmsys.c | 2 ++
+>  1 file changed, 2 insertions(+)
+>
+> diff --git a/drivers/soc/mediatek/mtk-mmsys.c b/drivers/soc/mediatek/mtk-mmsys.c
+> index 32a92ec447c5..05e322c9c301 100644
+> --- a/drivers/soc/mediatek/mtk-mmsys.c
+> +++ b/drivers/soc/mediatek/mtk-mmsys.c
+> @@ -259,6 +259,7 @@ void mtk_mmsys_ddp_connect(struct device *dev,
+>                 writel_relaxed(reg, config_regs + addr);
+>         }
+>  }
+> +EXPORT_SYMBOL_GPL(mtk_mmsys_ddp_connect);
+>
+>  void mtk_mmsys_ddp_disconnect(struct device *dev,
+>                               enum mtk_ddp_comp_id cur,
+> @@ -279,6 +280,7 @@ void mtk_mmsys_ddp_disconnect(struct device *dev,
+>                 writel_relaxed(reg, config_regs + addr);
+>         }
+>  }
+> +EXPORT_SYMBOL_GPL(mtk_mmsys_ddp_disconnect);
+>
+>  static int mtk_mmsys_probe(struct platform_device *pdev)
+>  {
+> --
+> 2.25.1
+>
