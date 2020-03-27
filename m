@@ -2,169 +2,108 @@ Return-Path: <SRS0=s8dx=5M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D77AC2D0E7
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 02:42:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16689C43331
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 02:42:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2653C20714
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 02:42:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxonhyperv.com header.i=@linuxonhyperv.com header.b="YFR8QAmQ"
+	by mail.kernel.org (Postfix) with ESMTP id E71ED20714
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 02:42:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727763AbgC0Cm2 (ORCPT
+        id S1727794AbgC0Cmc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 22:42:28 -0400
-Received: from linux.microsoft.com ([13.77.154.182]:34314 "EHLO
-        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726363AbgC0Cm2 (ORCPT
+        Thu, 26 Mar 2020 22:42:32 -0400
+Received: from zeniv.linux.org.uk ([195.92.253.2]:48240 "EHLO
+        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726363AbgC0Cmb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 22:42:28 -0400
-Received: by linux.microsoft.com (Postfix, from userid 1004)
-        id 976F620B4737; Thu, 26 Mar 2020 19:42:26 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 976F620B4737
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linuxonhyperv.com;
-        s=default; t=1585276946;
-        bh=zvffKctMIj2SFnhEj55/AzFnvDRhG2tE5Rzn8kutAEA=;
-        h=From:To:Cc:Subject:Date:Reply-To:From;
-        b=YFR8QAmQvBbsrDSG95KLNjrojPASe8E68C6aEhrFpr5LuqKVUydN5R2l2eOiec2Cj
-         Y0DYwIzY/RBeF+ZnB3GcRdJ+LMBZrGnb+du5p2PbI75az+UcDBVBP5EXLQLlmXx/St
-         t5YV8EFSnXPjlvLYgH0zYjOtGYpWIc2NEgzgvbIU=
-From:   longli@linuxonhyperv.com
-To:     Steve French <sfrench@samba.org>, linux-cifs@vger.kernel.org,
-        samba-technical@lists.samba.org, linux-kernel@vger.kernel.org
-Cc:     Long Li <longli@microsoft.com>
-Subject: [Patch v2] cifs: smbd: Calculate the correct maximum packet size for segmented SMBDirect send/receive
-Date:   Thu, 26 Mar 2020 19:42:24 -0700
-Message-Id: <1585276944-5332-1-git-send-email-longli@linuxonhyperv.com>
-X-Mailer: git-send-email 1.8.3.1
-Reply-To: longli@microsoft.com
+        Thu, 26 Mar 2020 22:42:31 -0400
+Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jHex1-003hql-9z; Fri, 27 Mar 2020 02:42:27 +0000
+Date:   Fri, 27 Mar 2020 02:42:27 +0000
+From:   Al Viro <viro@zeniv.linux.org.uk>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [RFC][PATCH 5/7] x86: convert arch_futex_atomic_op_inuser() to
+ user_access_begin/user_access_end()
+Message-ID: <20200327024227.GT23230@ZenIV.linux.org.uk>
+References: <20200323185057.GE23230@ZenIV.linux.org.uk>
+ <20200323185127.252501-1-viro@ZenIV.linux.org.uk>
+ <20200323185127.252501-5-viro@ZenIV.linux.org.uk>
+ <CAHk-=wgMmmnQTFT7U9+q2BsyV6Ge+LAnnhPmv0SUtFBV1D4tVw@mail.gmail.com>
+ <20200324020846.GG23230@ZenIV.linux.org.uk>
+ <CAHk-=whTwaUZZ5Aj_Viapf2tdvcd65WdM4jjXJ3tdOTDmgkW0g@mail.gmail.com>
+ <20200324204246.GH23230@ZenIV.linux.org.uk>
+ <CAHk-=whnTRF5yA2MrPGcmMm=hXaGHfC2HEDtNzA=_1=szhJ4-w@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHk-=whnTRF5yA2MrPGcmMm=hXaGHfC2HEDtNzA=_1=szhJ4-w@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Long Li <longli@microsoft.com>
+On Tue, Mar 24, 2020 at 01:57:19PM -0700, Linus Torvalds wrote:
+> On Tue, Mar 24, 2020 at 1:45 PM Al Viro <viro@zeniv.linux.org.uk> wrote:
+> >
+> > OK...  BTW, I'd been trying to recall the reasons for the way
+> > __futex_atomic_op2() loop is done; ISTR some discussion along
+> > the lines of cacheline ping-pong prevention, but I'd been unable
+> > to reconstruct enough details to find it and I'm not sure it
+> > hadn't been about some other code ;-/
+> 
+> No, that doesn't look like any cacheline advantage I can think of -
+> quite the reverse.
+> 
+> I suspect it's just lazy code, with the reload being unnecessary. Or
+> it might be written that way because you avoid an extra variable.
+> 
+> In fact, from a cacheline optimization standpoint, there are
+> advantages to not doing the load even on the initial run: if you know
+> a certain value is particularly likely, there are advantages to just
+> _assuming_ that value, rather than loading it. So no initial load at
+> all, and just initialize the first value to the likely case.
+> 
+> That can avoid an unnecessary "load for shared ownership" cacheline
+> state transition (since the cmpxchg will want to turn it into an
+> exclusive modified cacheline anyway).
+> 
+> But I don't think that optimization is likely the case here, and
+> you're right, the loop would be better written with the initial load
+> outside the loop.
 
-The packet size needs to take account of SMB2 header size and possible
-encryption header size. This is only done when signing is used and it is for
-RDMA send/receive, not read/write.
+OK, updated branch is in the same place; changes: __futex_atomic_op{1,2}
+turned into unsafe_atomic_op{1,2}, with "goto on error" folded into those.
+And pointless reload removed from cmpxchg loop in unsafe_atomic_op2().
+Diffstat:
+ arch/alpha/include/asm/futex.h      |  5 +-
+ arch/arc/include/asm/futex.h        |  5 +-
+ arch/arm/include/asm/futex.h        |  5 +-
+ arch/arm64/include/asm/futex.h      |  5 +-
+ arch/hexagon/include/asm/futex.h    |  5 +-
+ arch/ia64/include/asm/futex.h       |  5 +-
+ arch/microblaze/include/asm/futex.h |  5 +-
+ arch/mips/include/asm/futex.h       |  5 +-
+ arch/nds32/include/asm/futex.h      |  6 +--
+ arch/openrisc/include/asm/futex.h   |  5 +-
+ arch/parisc/include/asm/futex.h     |  2 -
+ arch/powerpc/include/asm/futex.h    |  5 +-
+ arch/riscv/include/asm/futex.h      |  5 +-
+ arch/s390/include/asm/futex.h       |  2 -
+ arch/sh/include/asm/futex.h         |  4 --
+ arch/sparc/include/asm/futex_64.h   |  4 --
+ arch/x86/include/asm/futex.h        | 97 ++++++++++++++++++++++++-------------
+ arch/x86/include/asm/uaccess.h      | 93 -----------------------------------
+ arch/xtensa/include/asm/futex.h     |  5 +-
+ include/asm-generic/futex.h         |  2 -
+ kernel/futex.c                      |  5 +-
+ tools/objtool/check.c               |  1 +
+ 22 files changed, 93 insertions(+), 183 deletions(-)
 
-Also remove the dead SMBD code in smb2_negotiate_r(w)size.
-
-Signed-off-by: Long Li <longli@microsoft.com>
----
-
-Change since v1: defined SMB2_READWRITE_PDU_HEADER_SIZE for header size and corrected miscalculation
-
- fs/cifs/smb2ops.c   | 38 ++++++++++++++++----------------------
- fs/cifs/smb2pdu.h   |  3 +++
- fs/cifs/smbdirect.c |  3 +--
- 3 files changed, 20 insertions(+), 24 deletions(-)
-
-diff --git a/fs/cifs/smb2ops.c b/fs/cifs/smb2ops.c
-index 9c9258fc8756..b36c46f48705 100644
---- a/fs/cifs/smb2ops.c
-+++ b/fs/cifs/smb2ops.c
-@@ -328,16 +328,6 @@ smb2_negotiate_wsize(struct cifs_tcon *tcon, struct smb_vol *volume_info)
- 	/* start with specified wsize, or default */
- 	wsize = volume_info->wsize ? volume_info->wsize : CIFS_DEFAULT_IOSIZE;
- 	wsize = min_t(unsigned int, wsize, server->max_write);
--#ifdef CONFIG_CIFS_SMB_DIRECT
--	if (server->rdma) {
--		if (server->sign)
--			wsize = min_t(unsigned int,
--				wsize, server->smbd_conn->max_fragmented_send_size);
--		else
--			wsize = min_t(unsigned int,
--				wsize, server->smbd_conn->max_readwrite_size);
--	}
--#endif
- 	if (!(server->capabilities & SMB2_GLOBAL_CAP_LARGE_MTU))
- 		wsize = min_t(unsigned int, wsize, SMB2_MAX_BUFFER_SIZE);
- 
-@@ -356,8 +346,15 @@ smb3_negotiate_wsize(struct cifs_tcon *tcon, struct smb_vol *volume_info)
- #ifdef CONFIG_CIFS_SMB_DIRECT
- 	if (server->rdma) {
- 		if (server->sign)
-+			/*
-+			 * Account for SMB2 data transfer packet header and
-+			 * possible encryption header
-+			 */
- 			wsize = min_t(unsigned int,
--				wsize, server->smbd_conn->max_fragmented_send_size);
-+				wsize,
-+				server->smbd_conn->max_fragmented_send_size -
-+					SMB2_READWRITE_PDU_HEADER_SIZE -
-+					sizeof(struct smb2_transform_hdr));
- 		else
- 			wsize = min_t(unsigned int,
- 				wsize, server->smbd_conn->max_readwrite_size);
-@@ -378,16 +375,6 @@ smb2_negotiate_rsize(struct cifs_tcon *tcon, struct smb_vol *volume_info)
- 	/* start with specified rsize, or default */
- 	rsize = volume_info->rsize ? volume_info->rsize : CIFS_DEFAULT_IOSIZE;
- 	rsize = min_t(unsigned int, rsize, server->max_read);
--#ifdef CONFIG_CIFS_SMB_DIRECT
--	if (server->rdma) {
--		if (server->sign)
--			rsize = min_t(unsigned int,
--				rsize, server->smbd_conn->max_fragmented_recv_size);
--		else
--			rsize = min_t(unsigned int,
--				rsize, server->smbd_conn->max_readwrite_size);
--	}
--#endif
- 
- 	if (!(server->capabilities & SMB2_GLOBAL_CAP_LARGE_MTU))
- 		rsize = min_t(unsigned int, rsize, SMB2_MAX_BUFFER_SIZE);
-@@ -407,8 +394,15 @@ smb3_negotiate_rsize(struct cifs_tcon *tcon, struct smb_vol *volume_info)
- #ifdef CONFIG_CIFS_SMB_DIRECT
- 	if (server->rdma) {
- 		if (server->sign)
-+			/*
-+			 * Account for SMB2 data transfer packet header and
-+			 * possible encryption header
-+			 */
- 			rsize = min_t(unsigned int,
--				rsize, server->smbd_conn->max_fragmented_recv_size);
-+				rsize,
-+				server->smbd_conn->max_fragmented_recv_size -
-+					SMB2_READWRITE_PDU_HEADER_SIZE -
-+					sizeof(struct smb2_transform_hdr));
- 		else
- 			rsize = min_t(unsigned int,
- 				rsize, server->smbd_conn->max_readwrite_size);
-diff --git a/fs/cifs/smb2pdu.h b/fs/cifs/smb2pdu.h
-index dda928d05c13..10acf90f858d 100644
---- a/fs/cifs/smb2pdu.h
-+++ b/fs/cifs/smb2pdu.h
-@@ -120,6 +120,9 @@ struct smb2_sync_hdr {
- 	__u8   Signature[16];
- } __packed;
- 
-+/* The total header size for SMB2 read and write */
-+#define SMB2_READWRITE_PDU_HEADER_SIZE (48 + sizeof(struct smb2_sync_hdr))
-+
- struct smb2_sync_pdu {
- 	struct smb2_sync_hdr sync_hdr;
- 	__le16 StructureSize2; /* size of wct area (varies, request specific) */
-diff --git a/fs/cifs/smbdirect.c b/fs/cifs/smbdirect.c
-index 5b1b97e9e0c9..a6ae29b3c4e7 100644
---- a/fs/cifs/smbdirect.c
-+++ b/fs/cifs/smbdirect.c
-@@ -2097,8 +2097,7 @@ int smbd_send(struct TCP_Server_Info *server,
- 	for (i = 0; i < num_rqst; i++)
- 		remaining_data_length += smb_rqst_len(server, &rqst_array[i]);
- 
--	if (remaining_data_length + sizeof(struct smbd_data_transfer) >
--		info->max_fragmented_send_size) {
-+	if (remaining_data_length > info->max_fragmented_send_size) {
- 		log_write(ERR, "payload size %d > max size %d\n",
- 			remaining_data_length, info->max_fragmented_send_size);
- 		rc = -EINVAL;
--- 
-2.17.1
-
+Sorry about the fuckup when sending that patchset ;-/  It ended up cc'd to
+x86 list instead of the futex one; Message-Id of the beginning of the
+thread is <20200327022836.881203-1-viro@ZenIV.linux.org.uk>.
