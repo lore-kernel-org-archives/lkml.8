@@ -2,89 +2,93 @@ Return-Path: <SRS0=s8dx=5M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CB7EC2D0E8
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 11:13:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EAED2C43331
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 11:15:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7332A206F1
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 11:13:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B645720675
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 11:15:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Bv53Tbm6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726901AbgC0LNa (ORCPT
+        id S1727125AbgC0LPK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Mar 2020 07:13:30 -0400
-Received: from mga06.intel.com ([134.134.136.31]:65535 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726217AbgC0LNa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Mar 2020 07:13:30 -0400
-IronPort-SDR: 5mjP/eToJptF8XXS5ET8vWaZummJ0kMenL1I1P/2o0XsuxHnDZzcqfsS+D8G5YyICgox8m3sbx
- POOqDJW9xEqw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Mar 2020 04:13:29 -0700
-IronPort-SDR: 1TMMu0bX7LuJ4UwoUGRyHRf7VQ5nlu/6g+WiYeRMJZo1fivt+FUk4Ryr2Nt3AW5nK7X87H6Ptg
- Iu4ikqUsaBqg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,312,1580803200"; 
-   d="scan'208";a="247854794"
-Received: from chenyu-office.sh.intel.com ([10.239.158.173])
-  by orsmga003.jf.intel.com with ESMTP; 27 Mar 2020 04:13:27 -0700
-From:   Chen Yu <yu.c.chen@intel.com>
-To:     linux-pm@vger.kernel.org
-Cc:     Pavel Machek <pavel@ucw.cz>, linux-kernel@vger.kernel.org,
-        Chen Yu <yu.c.chen@intel.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH] PM / sleep: Add pm_debug_messages boot command control
-Date:   Fri, 27 Mar 2020 19:11:41 +0800
-Message-Id: <20200327111141.14324-1-yu.c.chen@intel.com>
-X-Mailer: git-send-email 2.17.1
+        Fri, 27 Mar 2020 07:15:10 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:42621 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726379AbgC0LPK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Mar 2020 07:15:10 -0400
+Received: by mail-pl1-f195.google.com with SMTP id e1so3326112plt.9;
+        Fri, 27 Mar 2020 04:15:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=uw+JRvQxVmOKT1EAzd0lLPvYRpQZw6+NCKGgay1n9fs=;
+        b=Bv53Tbm6CkCl0KeoHcAg2ubF7CQILkzuswIAOAmpam0jucd046jXYVrwPS2DfhfHE6
+         M/y4LD1eNX18SllZk4d2a7uGY/bdcLXKVHWWIAr5tAwXCEfuDMhm00SuToz04MSCZlcs
+         gIxUNd/0lE9OR0EVXi8VSDsIwsOTsnOiQ9KJlLaE1KVt9FCzZ2jToIAUc+AThodgaHXF
+         eyGPoYk+xN45TzZ3YYzhtI/6hw8WQrBMWe9dKMz1M+rL0g9ITkkCPszQA2FDE+uuwvy5
+         b8/436i5vnpo3qlYmab7CRP64KaN4r/S9NGt/Q1YsFKkQO5UHBwdFFBkAJ6Sytt1NAV6
+         1CYw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=uw+JRvQxVmOKT1EAzd0lLPvYRpQZw6+NCKGgay1n9fs=;
+        b=N/d+7lVwSkMorjkgnwN2giUAbRL25RKuhrxY/wtftqkJ7gzbDoN3eNqShjB1kgIaMb
+         Ju+7aB+IeWNPATbrdaqIFwi4AMKNL2sTT+Tf5asBfSv1LEZovT+buIkWpqPFO448IcUO
+         V0HcWdLWCBH0tFAGSJzUsBHkajRQtuRaWGFkMfmQHUm4TpAwYzByws7FxS7SlMC3CDyN
+         Bcxus1Ki4rtjo4T8JnIEbTtVhWB+puHNHF91CTTEm+L6DFEN7oKgbxn+GTEYaP7MY195
+         n4Pu8idk+k7OT7Q6xOkYIAQmKRxruz5i8p9Zxr9m6/PJhlJoav8cn+fHopmtWrdbWwa3
+         tgig==
+X-Gm-Message-State: ANhLgQ1u57VZaeNNv0gDXqG3CZZYNy1sivpMOnSLZk5TOmJX0fjN+D2n
+        mI7lZuCOcumk2kVzxPyOl2k9Q/UNATpZGh9el9Q=
+X-Google-Smtp-Source: ADFU+vsN4zGhg/V1K6dB1j3pTzqSYm4SdDyPc4Gv34XkiJlnNeeWFlTejWgjfku2yneHuhSdQ06C5jvZjv8skW9799g=
+X-Received: by 2002:a17:902:7c05:: with SMTP id x5mr7561558pll.255.1585307708811;
+ Fri, 27 Mar 2020 04:15:08 -0700 (PDT)
+MIME-Version: 1.0
+References: <dc52d6a0-12ed-a34c-01c4-0fc5ccbf7b1d@metafoo.de>
+ <20200327084302.606-1-m.grzeschik@pengutronix.de> <035d6582-b513-2ebd-f755-325df52e6a10@cogentembedded.com>
+In-Reply-To: <035d6582-b513-2ebd-f755-325df52e6a10@cogentembedded.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Fri, 27 Mar 2020 13:15:01 +0200
+Message-ID: <CAHp75Vfe4XK_2_hz3zbrx0s=n9VkmDynMGwWi9vY0wjgcETuYg@mail.gmail.com>
+Subject: Re: [PATCH] usb: dwc3: gadget: don't dequeue requests on already
+ disabled endpoints
+To:     Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Cc:     Michael Grzeschik <m.grzeschik@pengutronix.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Alexandru Ardelean <alexandru.Ardelean@analog.com>,
+        USB <linux-usb@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Felipe Balbi <balbi@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        m.olbrich@pengutronix.de, Sascha Hauer <kernel@pengutronix.de>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Debug messages from the system suspend/hibernation infrastructure
-is disabled by default, and can only be enabled after the system
-has boot up via /sys/power/pm_debug_messages. This makes the hibernation
-resume hard to track as it involves system boot up across hibernation.
-There's no chance for software_resume() to track the resume process,
-eg.
+On Fri, Mar 27, 2020 at 10:54 AM Sergei Shtylyov
+<sergei.shtylyov@cogentembedded.com> wrote:
+> On 27.03.2020 11:43, Michael Grzeschik wrote:
 
-Turning on the pm_debug_messages during boot up by appending
-'pm_debug_message'.
+...
 
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc: Len Brown <lenb@kernel.org>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Signed-off-by: Chen Yu <yu.c.chen@intel.com>
----
- kernel/power/main.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+> > therefor it is not necessary to run the dequeue routine.
+>
+>     Therefore?
 
-diff --git a/kernel/power/main.c b/kernel/power/main.c
-index 69b7a8aeca3b..1da3d7c15e03 100644
---- a/kernel/power/main.c
-+++ b/kernel/power/main.c
-@@ -535,6 +535,13 @@ static ssize_t pm_debug_messages_store(struct kobject *kobj,
- 
- power_attr(pm_debug_messages);
- 
-+static int __init pm_debug_message_setup(char *str)
-+{
-+	pm_debug_messages_on = true;
-+	return 1;
-+}
-+__setup("pm_debug_message", pm_debug_message_setup);
-+
- /**
-  * __pm_pr_dbg - Print a suspend debug message to the kernel log.
-  * @defer: Whether or not to use printk_deferred() to print the message.
+Original as good on its own.
+
 -- 
-2.17.1
-
+With Best Regards,
+Andy Shevchenko
