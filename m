@@ -2,82 +2,168 @@ Return-Path: <SRS0=s8dx=5M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A148C2D0F1
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 01:08:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25650C43331
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 01:12:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4893A20848
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 01:08:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="3kOrAlvV"
+	by mail.kernel.org (Postfix) with ESMTP id 01A4E2070A
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 01:12:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727779AbgC0BHP (ORCPT
+        id S1727720AbgC0BMX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 21:07:15 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:60766 "EHLO vps0.lunn.ch"
+        Thu, 26 Mar 2020 21:12:23 -0400
+Received: from mga05.intel.com ([192.55.52.43]:62947 "EHLO mga05.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727547AbgC0BHO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 21:07:14 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=slYTqywddxrf0q3UZbv67p05DHILUfdrIqKZxFHxC1E=; b=3kOrAlvVmmPPwwZfajoPD2PdsW
-        OFFOFEQMtbPAifE8/t3CqUlvoCAtih0bSDE5zz/ccmsMTN6WZTihEAGP43vYv7O3wOLoD7aIbJpP5
-        fvSEs3iEaIEbaZfK84Pmq7WzeZLDfwTvVEuI8tvzJuY65HsS9SzKY7PkCwZFjDqG75ao=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
-        (envelope-from <andrew@lunn.ch>)
-        id 1jHdSk-0005Ku-Cl; Fri, 27 Mar 2020 02:07:06 +0100
-Date:   Fri, 27 Mar 2020 02:07:06 +0100
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Florinel Iordache <florinel.iordache@nxp.com>
-Cc:     davem@davemloft.net, netdev@vger.kernel.org, f.fainelli@gmail.com,
-        hkallweit1@gmail.com, linux@armlinux.org.uk,
-        devicetree@vger.kernel.org, linux-doc@vger.kernel.org,
-        robh+dt@kernel.org, mark.rutland@arm.com, kuba@kernel.org,
-        corbet@lwn.net, shawnguo@kernel.org, leoyang.li@nxp.com,
-        madalin.bucur@oss.nxp.com, ioana.ciornei@nxp.com,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next 6/9] net: phy: add backplane kr driver support
-Message-ID: <20200327010706.GN3819@lunn.ch>
-References: <1585230682-24417-1-git-send-email-florinel.iordache@nxp.com>
- <1585230682-24417-7-git-send-email-florinel.iordache@nxp.com>
+        id S1727509AbgC0BMX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Mar 2020 21:12:23 -0400
+IronPort-SDR: fx+cIexjz+VVKU4teuSpYs9KPUd2jYReK44axqCEiFKLdQMkD98M1fb2eNrAOYHjOkHfcAy3fD
+ T819tgrBqJyw==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Mar 2020 18:12:21 -0700
+IronPort-SDR: EPIhhFabr72O4/MWz1OkNdJSPZiFik9yhy8/ZXDy/KCxVUAqVRdYiEuyFH+lHQFUWMKSOu5Jlh
+ GZu+NMzfGsPg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,310,1580803200"; 
+   d="scan'208";a="271387872"
+Received: from shao2-debian.sh.intel.com (HELO localhost) ([10.239.13.3])
+  by fmsmga004.fm.intel.com with ESMTP; 26 Mar 2020 18:12:20 -0700
+Date:   Fri, 27 Mar 2020 09:12:01 +0800
+From:   kbuild test robot <lkp@intel.com>
+To:     Colin King <colin.king@canonical.com>
+Cc:     kbuild-all@lists.01.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sekhar Nori <nsekhar@ti.com>, Roger Quadros <rogerq@ti.com>,
+        Felipe Balbi <felipe.balbi@linux.intel.com>,
+        Pawel Laszczak <pawell@cadence.com>, linux-usb@vger.kernel.org,
+        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [kbuild-all] [RFC PATCH v2] usb: cdns3: cdns3_clear_register_bit()
+ can be static
+Message-ID: <20200327011201.GU11705@shao2-debian>
+References: <20200325125041.94769-1-colin.king@canonical.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <1585230682-24417-7-git-send-email-florinel.iordache@nxp.com>
+In-Reply-To: <20200325125041.94769-1-colin.king@canonical.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> +static u32 le_ioread32(void __iomem *reg)
-> +{
-> +	return ioread32(reg);
-> +}
-> +
-> +static void le_iowrite32(u32 value, void __iomem *reg)
-> +{
-> +	iowrite32(value, reg);
-> +}
-> +
-> +static u32 be_ioread32(void __iomem *reg)
-> +{
-> +	return ioread32be(reg);
-> +}
-> +
-> +static void be_iowrite32(u32 value, void __iomem *reg)
-> +{
-> +	iowrite32be(value, reg);
-> +}
 
-This is very surprising to me. I've not got my head around the
-structure of this code yet, but i'm surprised to see memory mapped
-access functions in generic code.
+Signed-off-by: kbuild test robot <lkp@intel.com>
+---
+ gadget.c |   32 ++++++++++++++++----------------
+ 1 file changed, 16 insertions(+), 16 deletions(-)
 
-       Andrew
+diff --git a/drivers/usb/cdns3/gadget.c b/drivers/usb/cdns3/gadget.c
+index 372460ea4df9a..54a04614d336f 100644
+--- a/drivers/usb/cdns3/gadget.c
++++ b/drivers/usb/cdns3/gadget.c
+@@ -82,7 +82,7 @@ static int cdns3_ep_run_stream_transfer(struct cdns3_endpoint *priv_ep,
+  * @ptr: address of device controller register to be read and changed
+  * @mask: bits requested to clar
+  */
+-void cdns3_clear_register_bit(void __iomem *ptr, u32 mask)
++static void cdns3_clear_register_bit(void __iomem *ptr, u32 mask)
+ {
+ 	mask = readl(ptr) & ~mask;
+ 	writel(mask, ptr);
+@@ -137,7 +137,7 @@ struct usb_request *cdns3_next_request(struct list_head *list)
+  *
+  * Returns buffer or NULL if no buffers in list
+  */
+-struct cdns3_aligned_buf *cdns3_next_align_buf(struct list_head *list)
++static struct cdns3_aligned_buf *cdns3_next_align_buf(struct list_head *list)
+ {
+ 	return list_first_entry_or_null(list, struct cdns3_aligned_buf, list);
+ }
+@@ -148,7 +148,7 @@ struct cdns3_aligned_buf *cdns3_next_align_buf(struct list_head *list)
+  *
+  * Returns request or NULL if no requests in list
+  */
+-struct cdns3_request *cdns3_next_priv_request(struct list_head *list)
++static struct cdns3_request *cdns3_next_priv_request(struct list_head *list)
+ {
+ 	return list_first_entry_or_null(list, struct cdns3_request, list);
+ }
+@@ -190,7 +190,7 @@ dma_addr_t cdns3_trb_virt_to_dma(struct cdns3_endpoint *priv_ep,
+ 	return priv_ep->trb_pool_dma + offset;
+ }
+ 
+-int cdns3_ring_size(struct cdns3_endpoint *priv_ep)
++static int cdns3_ring_size(struct cdns3_endpoint *priv_ep)
+ {
+ 	switch (priv_ep->type) {
+ 	case USB_ENDPOINT_XFER_ISOC:
+@@ -345,7 +345,7 @@ static void cdns3_ep_inc_deq(struct cdns3_endpoint *priv_ep)
+ 	cdns3_ep_inc_trb(&priv_ep->dequeue, &priv_ep->ccs, priv_ep->num_trbs);
+ }
+ 
+-void cdns3_move_deq_to_next_trb(struct cdns3_request *priv_req)
++static void cdns3_move_deq_to_next_trb(struct cdns3_request *priv_req)
+ {
+ 	struct cdns3_endpoint *priv_ep = priv_req->priv_ep;
+ 	int current_trb = priv_req->start_trb;
+@@ -511,9 +511,9 @@ static void cdns3_wa2_descmiss_copy_data(struct cdns3_endpoint *priv_ep,
+ 	}
+ }
+ 
+-struct usb_request *cdns3_wa2_gadget_giveback(struct cdns3_device *priv_dev,
+-					      struct cdns3_endpoint *priv_ep,
+-					      struct cdns3_request *priv_req)
++static struct usb_request *cdns3_wa2_gadget_giveback(struct cdns3_device *priv_dev,
++						     struct cdns3_endpoint *priv_ep,
++						     struct cdns3_request *priv_req)
+ {
+ 	if (priv_ep->flags & EP_QUIRK_EXTRA_BUF_EN &&
+ 	    priv_req->flags & REQUEST_INTERNAL) {
+@@ -551,9 +551,9 @@ struct usb_request *cdns3_wa2_gadget_giveback(struct cdns3_device *priv_dev,
+ 	return &priv_req->request;
+ }
+ 
+-int cdns3_wa2_gadget_ep_queue(struct cdns3_device *priv_dev,
+-			      struct cdns3_endpoint *priv_ep,
+-			      struct cdns3_request *priv_req)
++static int cdns3_wa2_gadget_ep_queue(struct cdns3_device *priv_dev,
++				     struct cdns3_endpoint *priv_ep,
++				     struct cdns3_request *priv_req)
+ {
+ 	int deferred = 0;
+ 
+@@ -836,7 +836,7 @@ void cdns3_gadget_giveback(struct cdns3_endpoint *priv_ep,
+ 		cdns3_gadget_ep_free_request(&priv_ep->endpoint, request);
+ }
+ 
+-void cdns3_wa1_restore_cycle_bit(struct cdns3_endpoint *priv_ep)
++static void cdns3_wa1_restore_cycle_bit(struct cdns3_endpoint *priv_ep)
+ {
+ 	/* Work around for stale data address in TRB*/
+ 	if (priv_ep->wa1_set) {
+@@ -1904,8 +1904,8 @@ static int cdns3_ep_onchip_buffer_reserve(struct cdns3_device *priv_dev,
+ 	return 0;
+ }
+ 
+-void cdns3_stream_ep_reconfig(struct cdns3_device *priv_dev,
+-			      struct cdns3_endpoint *priv_ep)
++static void cdns3_stream_ep_reconfig(struct cdns3_device *priv_dev,
++				     struct cdns3_endpoint *priv_ep)
+ {
+ 	if (!priv_ep->use_streams || priv_dev->gadget.speed < USB_SPEED_SUPER)
+ 		return;
+@@ -1925,8 +1925,8 @@ void cdns3_stream_ep_reconfig(struct cdns3_device *priv_dev,
+ 			       EP_CFG_TDL_CHK | EP_CFG_SID_CHK);
+ }
+ 
+-void cdns3_configure_dmult(struct cdns3_device *priv_dev,
+-			   struct cdns3_endpoint *priv_ep)
++static void cdns3_configure_dmult(struct cdns3_device *priv_dev,
++				  struct cdns3_endpoint *priv_ep)
+ {
+ 	struct cdns3_usb_regs __iomem *regs = priv_dev->regs;
+ 
