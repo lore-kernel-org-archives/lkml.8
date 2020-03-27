@@ -2,106 +2,89 @@ Return-Path: <SRS0=s8dx=5M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75DF5C43331
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 15:39:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC97CC2D0E5
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 15:45:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 462C520658
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 15:39:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 795B22074F
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 15:45:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="VgTMqvN2"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="bPPkVIFb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727336AbgC0Pjw (ORCPT
+        id S1727473AbgC0PpD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Mar 2020 11:39:52 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:40756 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726454AbgC0Pjv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Mar 2020 11:39:51 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description;
-        bh=Glkd4Poyiz/H8tXZD3WNk7OjbV0plFdAnFSLYOWflAc=; b=VgTMqvN2GhS2F+72hyoHVuZIfX
-        mhBVu6xa3IcAdST9Cl0/hifX2ny7hpNRkDFP8nXFXLJThYqqs7C+01rfd9ExVqdAxLZZxw5pTkWcA
-        137UWX2ptUugqk3vk01Ftkd0r3JSRbor9iRK7rfMNvytND51qtx8uGRiLLxPmbBL3rfwGEfif8yDA
-        cBOb20gEAU3/Iido5GZpPkMocn/q6Zz4jx9AZj/hEHoFKzSnLcEP2odZqjMdTGnjVEFoq1Regkck6
-        7KYY3sJsBK9M8GdIcrKLr4nb1hma+xy1NHoKIi8EoRzUkDWfLHmVvbAN+g9p5xNPoWeQ/Pa9dx3kc
-        mjp2goMQ==;
-Received: from [2601:1c0:6280:3f0::19c2]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jHr5I-0006ZA-AP; Fri, 27 Mar 2020 15:39:48 +0000
-Subject: Re: [PATCH] PM / sleep: Add pm_debug_messages boot command control
-To:     Chen Yu <yu.c.chen@intel.com>, linux-pm@vger.kernel.org
-Cc:     Pavel Machek <pavel@ucw.cz>, linux-kernel@vger.kernel.org,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-References: <20200327111141.14324-1-yu.c.chen@intel.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <a9843786-e7da-2c3c-30e2-c4887e9af4c6@infradead.org>
-Date:   Fri, 27 Mar 2020 08:39:44 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Fri, 27 Mar 2020 11:45:03 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:34284 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726515AbgC0PpD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Mar 2020 11:45:03 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=Pm/asNb1Pns7utlRhHbrECwkl0DqjgsSY9mzrFMWbfc=; b=bPPkVIFbYibgLevFJDBOJPj9z8
+        vLZPFE4CZqVSOcg9UstAwQmVVhdcjPIkgLkeDbZiXK3wfVC9q4l/VkbVHndf0uxEA4l3lmnhvUTa6
+        pExzEGX0D5qVstXT3yGsZR0Am0t+PtD7PgcCmE+JQHMW7IQuXkJ3EDqm2dN1R+y6Kb/M=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
+        (envelope-from <andrew@lunn.ch>)
+        id 1jHrA8-0002qY-2y; Fri, 27 Mar 2020 16:44:48 +0100
+Date:   Fri, 27 Mar 2020 16:44:48 +0100
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
+Cc:     Florinel Iordache <florinel.iordache@nxp.com>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
+        "hkallweit1@gmail.com" <hkallweit1@gmail.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "kuba@kernel.org" <kuba@kernel.org>,
+        "corbet@lwn.net" <corbet@lwn.net>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        Leo Li <leoyang.li@nxp.com>,
+        "Madalin Bucur (OSS)" <madalin.bucur@oss.nxp.com>,
+        Ioana Ciornei <ioana.ciornei@nxp.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [EXT] Re: [PATCH net-next 2/9] dt-bindings: net: add backplane
+ dt bindings
+Message-ID: <20200327154448.GK11004@lunn.ch>
+References: <1585230682-24417-1-git-send-email-florinel.iordache@nxp.com>
+ <1585230682-24417-3-git-send-email-florinel.iordache@nxp.com>
+ <20200327010411.GM3819@lunn.ch>
+ <AM0PR04MB5443185A1236F621B9EC9873FBCC0@AM0PR04MB5443.eurprd04.prod.outlook.com>
+ <20200327152849.GP25745@shell.armlinux.org.uk>
 MIME-Version: 1.0
-In-Reply-To: <20200327111141.14324-1-yu.c.chen@intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200327152849.GP25745@shell.armlinux.org.uk>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/27/20 4:11 AM, Chen Yu wrote:
-> Debug messages from the system suspend/hibernation infrastructure
-> is disabled by default, and can only be enabled after the system
-> has boot up via /sys/power/pm_debug_messages. This makes the hibernation
-> resume hard to track as it involves system boot up across hibernation.
-> There's no chance for software_resume() to track the resume process,
-> eg.
-> 
-> Turning on the pm_debug_messages during boot up by appending
-> 'pm_debug_message'.
+> What worries me is the situation which I've been working on, where
+> we want access to the PCS PHYs, and we can't have the PCS PHYs
+> represented as a phylib PHY because we may have a copper PHY behind
+> the PCS PHY, and we want to be talking to the copper PHY in the
+> first instance (the PCS PHY effectivel ybecomes a slave to the
+> copper PHY.)
 
-Please add that command line option to
-Documentation/admin-guide/kernel-parameters.txt.
-Thanks.
+I guess we need to clarify what KR actually means. If we have a
+backplane with a MAC on each end, i think modelling it as a PHY could
+work.
 
-> Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-> Cc: Len Brown <lenb@kernel.org>
-> Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> Signed-off-by: Chen Yu <yu.c.chen@intel.com>
-> ---
->  kernel/power/main.c | 7 +++++++
->  1 file changed, 7 insertions(+)
-> 
-> diff --git a/kernel/power/main.c b/kernel/power/main.c
-> index 69b7a8aeca3b..1da3d7c15e03 100644
-> --- a/kernel/power/main.c
-> +++ b/kernel/power/main.c
-> @@ -535,6 +535,13 @@ static ssize_t pm_debug_messages_store(struct kobject *kobj,
->  
->  power_attr(pm_debug_messages);
->  
-> +static int __init pm_debug_message_setup(char *str)
-> +{
-> +	pm_debug_messages_on = true;
-> +	return 1;
-> +}
-> +__setup("pm_debug_message", pm_debug_message_setup);
-> +
->  /**
->   * __pm_pr_dbg - Print a suspend debug message to the kernel log.
->   * @defer: Whether or not to use printk_deferred() to print the message.
-> 
+If however, we have a MAC connected to a backplane, and on the end of
+the backplane is a traditional PHY, or an SFP cage, we have problems.
+As your point out, we cannot have two PHYs in a chain for one MAC.
 
+But i agree with Russell. We need a general solution of how we deal
+with PCSs.
 
--- 
-~Randy
-Reported-by: Randy Dunlap <rdunlap@infradead.org>
+   Andrew
