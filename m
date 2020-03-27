@@ -2,125 +2,148 @@ Return-Path: <SRS0=s8dx=5M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92B57C2D0E5
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 18:31:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 534C1C2D0ED
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 18:31:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6EB5920737
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 18:31:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ftU32uvo"
+	by mail.kernel.org (Postfix) with ESMTP id 304782073B
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 18:31:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727352AbgC0Sbi (ORCPT
+        id S1727549AbgC0Sbn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Mar 2020 14:31:38 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:41878 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726515AbgC0Sbh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Mar 2020 14:31:37 -0400
-Received: by mail-ot1-f66.google.com with SMTP id f52so10760327otf.8
-        for <linux-kernel@vger.kernel.org>; Fri, 27 Mar 2020 11:31:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=KI2dTrx/jXK38PbXpYOkSOlcGmSiDkUIwHW8vQMK71g=;
-        b=ftU32uvodMmh9TUHBTsggNDykA0JWSoOl8vv6OZMmjFyeH+BjHX3KbXJ64DokTNeW8
-         bJYL7htiWlyya8+yMZKcSWzvd2QzqRSVq90WRpVAWIED6t6G4Vvy7gQfUYwlHv636Qon
-         pJILf2c9ad+yw94jyDC4zn1jVtQfCbD0fA8u3QGgsSr56xs/5hzWg7WxsVfMscprH+9x
-         9lycyrBABLC8NZOHDGFQg2Ys67QcMo26x36JMYW8Tf1jlljbxEUL0GxZ9hL1SlJ2Zf6M
-         YYu2l01UCXdJThX0Sx+viedEeZKn4XfRrk4z/XGsRE5sUu2IdQj9jfosX+ApYrGPqjwJ
-         nSXg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=KI2dTrx/jXK38PbXpYOkSOlcGmSiDkUIwHW8vQMK71g=;
-        b=pM8+kMCp+2VKNxNkTAhOxH+5R5UYvqfBMmCZO2ADJDUdUMqHW9GiNquLVRfpHo96qm
-         V1w92XqoxVWMQmoRi8rwUB5NK1wY/Upf8e6WPZEmuVOrO6SH7KMUE9yMOZL9gXiUBhQC
-         sb/VPw9XQWpTNpmTNJa0zEANoFbfTTKt6SFFJjNmabP2VEpkoi6S0ilABbe9yUYtiME6
-         h0lHphnJ8gD7JkJVbl80llkSvn/A+sJ5P0gL3fRaQk8gPCtUvhGhd7GM+oUcWRGTHlip
-         69EOast4OpUg8PraCG1sxOOTqtoLGEHloAOgK6lXd8kkow0Pq6b4WmFS3rVXn2xxR1vI
-         HD9w==
-X-Gm-Message-State: ANhLgQ0IQn7Q62Xkcg5MNEnrJf30qTrr7kiAoiFk/yQ56AQDmHRoHABA
-        k39LPkBeuGAPEKQjqGFtlwutJWEFKG4/oIA7H4ODdA==
-X-Google-Smtp-Source: ADFU+vvTE+yu3Qrc0iwfoYnnfjvt5whAuu9S0p0ocDjhgWmev5ClxaCzU9FH1Cxy+HeexYbpKglLL/8Ushcu3EV/D5M=
-X-Received: by 2002:a9d:42f:: with SMTP id 44mr22412otc.236.1585333895496;
- Fri, 27 Mar 2020 11:31:35 -0700 (PDT)
+        Fri, 27 Mar 2020 14:31:43 -0400
+Received: from mga09.intel.com ([134.134.136.24]:54829 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726515AbgC0Sbm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Mar 2020 14:31:42 -0400
+IronPort-SDR: NhpQelx26bGobiSxOyWhAgQQ99DVG0HC1j4z38idCJDD62cIahcCLKYGmlRbwJumy4KSChjqUH
+ b2+RC/0jo6lw==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Mar 2020 11:31:41 -0700
+IronPort-SDR: cG8RjTzfhLi4jFGoL06K+0MCYrphuSQ6j6Otn7RFY/vjq3MDzwBD4xlE+JuyjrPphbmASo3WnQ
+ K0rGnG1d3UGQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,313,1580803200"; 
+   d="scan'208";a="247970686"
+Received: from fmsmsx103.amr.corp.intel.com ([10.18.124.201])
+  by orsmga003.jf.intel.com with ESMTP; 27 Mar 2020 11:31:40 -0700
+Received: from fmsmsx154.amr.corp.intel.com (10.18.116.70) by
+ FMSMSX103.amr.corp.intel.com (10.18.124.201) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Fri, 27 Mar 2020 11:31:40 -0700
+Received: from fmsmsx107.amr.corp.intel.com ([169.254.6.38]) by
+ FMSMSX154.amr.corp.intel.com ([169.254.6.41]) with mapi id 14.03.0439.000;
+ Fri, 27 Mar 2020 11:31:40 -0700
+From:   "Ruhl, Michael J" <michael.j.ruhl@intel.com>
+To:     Marek Szyprowski <m.szyprowski@samsung.com>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "linux-samsung-soc@vger.kernel.org" 
+        <linux-samsung-soc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+CC:     "stable@vger.kernel.org" <stable@vger.kernel.org>,
+        "Bartlomiej Zolnierkiewicz" <b.zolnierkie@samsung.com>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Shane Francis <bigbeeshane@gmail.com>
+Subject: RE: [PATCH v2] drm/prime: fix extracting of the DMA addresses from
+ a scatterlist
+Thread-Topic: [PATCH v2] drm/prime: fix extracting of the DMA addresses from
+ a scatterlist
+Thread-Index: AQHWBFQRvRx+hOOiski5ycfWmHv7Tahcuvpg
+Date:   Fri, 27 Mar 2020 18:31:39 +0000
+Message-ID: <14063C7AD467DE4B82DEDB5C278E8663FFFBFCE1@fmsmsx107.amr.corp.intel.com>
+References: <CGME20200327162330eucas1p1b0413e0e9887aa76d3048f86d2166dcd@eucas1p1.samsung.com>
+ <20200327162126.29705-1-m.szyprowski@samsung.com>
+In-Reply-To: <20200327162126.29705-1-m.szyprowski@samsung.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-product: dlpe-windows
+dlp-version: 11.2.0.6
+dlp-reaction: no-action
+x-originating-ip: [10.1.200.108]
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-References: <20200321210305.28937-1-saravanak@google.com> <CGME20200327102554eucas1p1f848633a39f8e158472506b84877f98c@eucas1p1.samsung.com>
- <bd8b42d3-a35a-cc8e-0d06-2899416c2996@samsung.com> <20200327152144.GA2996253@kroah.com>
-In-Reply-To: <20200327152144.GA2996253@kroah.com>
-From:   Saravana Kannan <saravanak@google.com>
-Date:   Fri, 27 Mar 2020 11:30:59 -0700
-Message-ID: <CAGETcx-J+TP+0NsOe75Uu3Q8K6=qYja6eDbjNH2764QV53=nMA@mail.gmail.com>
-Subject: Re: [RFC PATCH v1] driver core: Set fw_devlink to "permissive"
- behavior by default
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Android Kernel Team <kernel-team@android.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 27, 2020 at 8:21 AM Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> On Fri, Mar 27, 2020 at 11:25:48AM +0100, Marek Szyprowski wrote:
-> > Hi,
-> >
-> > On 2020-03-21 22:03, Saravana Kannan wrote:
-> > > Set fw_devlink to "permissive" behavior by default so that device links
-> > > are automatically created (with DL_FLAG_SYNC_STATE_ONLY) by scanning the
-> > > firmware.
-> > >
-> > > This ensures suppliers get their sync_state() calls only after all their
-> > > consumers have probed successfully. Without this, suppliers will get
-> > > their sync_state() calls at late_initcall_sync() even if their consuer
-> > >
-> > > Ideally, we'd want to set fw_devlink to "on" or "rpm" by default. But
-> > > that needs more testing as it's known to break some corner case
-> > > drivers/platforms.
-> > >
-> > > Cc: Rob Herring <robh+dt@kernel.org>
-> > > Cc: Frank Rowand <frowand.list@gmail.com>
-> > > Cc: devicetree@vger.kernel.org
-> > > Signed-off-by: Saravana Kannan <saravanak@google.com>
-> >
-> > This patch has just landed in linux-next 20200326. Sadly it breaks
-> > booting of the Raspberry Pi3b and Pi4 boards, either in 32bit or 64bit
-> > mode. There is no warning nor panic message, just a silent freeze. The
-> > last message shown on the earlycon is:
-> >
-> > [    0.893217] Serial: 8250/16550 driver, 1 ports, IRQ sharing enabled
-
-Marek,
-
-Any chance you could get me a stack trace for when it's stuck? That'd
-be super helpful and I'd really appreciate it. Is it working fine on
-other variants of Raspberry?
-
->
-> I've just reverted this for now.
->
-
-Greg,
-
-I have no problem with reverting this. If there's any other
-tree/branch you can put this on where it could get more testing and
-reporting of issues, that'd be great.
-
--Saravana
+Pi0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+RnJvbTogTWFyZWsgU3p5cHJvd3NraSA8bS5z
+enlwcm93c2tpQHNhbXN1bmcuY29tPg0KPlNlbnQ6IEZyaWRheSwgTWFyY2ggMjcsIDIwMjAgMTI6
+MjEgUE0NCj5UbzogZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZzsgbGludXgtc2Ftc3Vu
+Zy1zb2NAdmdlci5rZXJuZWwub3JnOw0KPmxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmcNCj5D
+YzogTWFyZWsgU3p5cHJvd3NraSA8bS5zenlwcm93c2tpQHNhbXN1bmcuY29tPjsNCj5zdGFibGVA
+dmdlci5rZXJuZWwub3JnOyBCYXJ0bG9taWVqIFpvbG5pZXJraWV3aWN6DQo+PGIuem9sbmllcmtp
+ZUBzYW1zdW5nLmNvbT47IE1hYXJ0ZW4gTGFua2hvcnN0DQo+PG1hYXJ0ZW4ubGFua2hvcnN0QGxp
+bnV4LmludGVsLmNvbT47IE1heGltZSBSaXBhcmQNCj48bXJpcGFyZEBrZXJuZWwub3JnPjsgVGhv
+bWFzIFppbW1lcm1hbm4gPHR6aW1tZXJtYW5uQHN1c2UuZGU+Ow0KPkRhdmlkIEFpcmxpZSA8YWly
+bGllZEBsaW51eC5pZT47IERhbmllbCBWZXR0ZXIgPGRhbmllbEBmZndsbC5jaD47IEFsZXggRGV1
+Y2hlcg0KPjxhbGV4YW5kZXIuZGV1Y2hlckBhbWQuY29tPjsgU2hhbmUgRnJhbmNpcyA8YmlnYmVl
+c2hhbmVAZ21haWwuY29tPjsNCj5SdWhsLCBNaWNoYWVsIEogPG1pY2hhZWwuai5ydWhsQGludGVs
+LmNvbT4NCj5TdWJqZWN0OiBbUEFUQ0ggdjJdIGRybS9wcmltZTogZml4IGV4dHJhY3Rpbmcgb2Yg
+dGhlIERNQSBhZGRyZXNzZXMgZnJvbSBhDQo+c2NhdHRlcmxpc3QNCj4NCj5TY2F0dGVybGlzdCBl
+bGVtZW50cyBjb250YWlucyBib3RoIHBhZ2VzIGFuZCBETUEgYWRkcmVzc2VzLCBidXQgb25lDQo+
+c2hvdWxkIG5vdCBhc3N1bWUgMToxIHJlbGF0aW9uIGJldHdlZW4gdGhlbS4gVGhlIHNnLT5sZW5n
+dGggaXMgdGhlIHNpemUNCj5vZiB0aGUgcGh5c2ljYWwgbWVtb3J5IGNodW5rIGRlc2NyaWJlZCBi
+eSB0aGUgc2ctPnBhZ2UsIHdoaWxlDQo+c2dfZG1hX2xlbihzZykgaXMgdGhlIHNpemUgb2YgdGhl
+IERNQSAoSU8gdmlydHVhbCkgY2h1bmsgZGVzY3JpYmVkIGJ5DQo+dGhlIHNnX2RtYV9hZGRyZXNz
+KHNnKS4NCj4NCj5UaGUgcHJvcGVyIHdheSBvZiBleHRyYWN0aW5nIGJvdGg6IHBhZ2VzIGFuZCBE
+TUEgYWRkcmVzc2VzIG9mIHRoZSB3aG9sZQ0KPmJ1ZmZlciBkZXNjcmliZWQgYnkgYSBzY2F0dGVy
+bGlzdCBpdCB0byBpdGVyYXRlIGluZGVwZW5kZW50bHkgb3ZlciB0aGUNCj5zZy0+cGFnZXMvc2ct
+Pmxlbmd0aCBhbmQgc2dfZG1hX2FkZHJlc3Moc2cpL3NnX2RtYV9sZW4oc2cpIGVudHJpZXMuDQo+
+DQo+Rml4ZXM6IDQyZTY3YjQ3OWVhYiAoImRybS9wcmltZTogdXNlIGRtYSBsZW5ndGggbWFjcm8g
+d2hlbiBtYXBwaW5nIHNnIikNCj5TaWduZWQtb2ZmLWJ5OiBNYXJlayBTenlwcm93c2tpIDxtLnN6
+eXByb3dza2lAc2Ftc3VuZy5jb20+DQo+UmV2aWV3ZWQtYnk6IEFsZXggRGV1Y2hlciA8YWxleGFu
+ZGVyLmRldWNoZXJAYW1kLmNvbT4NCj4tLS0NCj4gZHJpdmVycy9ncHUvZHJtL2RybV9wcmltZS5j
+IHwgMzcgKysrKysrKysrKysrKysrKysrKysrKysrKy0tLS0tLS0tLS0tDQo+LQ0KPiAxIGZpbGUg
+Y2hhbmdlZCwgMjUgaW5zZXJ0aW9ucygrKSwgMTIgZGVsZXRpb25zKC0pDQo+DQo+ZGlmZiAtLWdp
+dCBhL2RyaXZlcnMvZ3B1L2RybS9kcm1fcHJpbWUuYyBiL2RyaXZlcnMvZ3B1L2RybS9kcm1fcHJp
+bWUuYw0KPmluZGV4IDFkZTJjZGUyMjc3Yy4uMjgyNzc0ZTQ2OWFjIDEwMDY0NA0KPi0tLSBhL2Ry
+aXZlcnMvZ3B1L2RybS9kcm1fcHJpbWUuYw0KPisrKyBiL2RyaXZlcnMvZ3B1L2RybS9kcm1fcHJp
+bWUuYw0KPkBAIC05NjIsMjcgKzk2Miw0MCBAQCBpbnQgZHJtX3ByaW1lX3NnX3RvX3BhZ2VfYWRk
+cl9hcnJheXMoc3RydWN0DQo+c2dfdGFibGUgKnNndCwgc3RydWN0IHBhZ2UgKipwYWdlcywNCj4g
+CXVuc2lnbmVkIGNvdW50Ow0KPiAJc3RydWN0IHNjYXR0ZXJsaXN0ICpzZzsNCj4gCXN0cnVjdCBw
+YWdlICpwYWdlOw0KPi0JdTMyIGxlbiwgaW5kZXg7DQo+Kwl1MzIgcGFnZV9sZW4sIHBhZ2VfaW5k
+ZXg7DQo+IAlkbWFfYWRkcl90IGFkZHI7DQo+Kwl1MzIgZG1hX2xlbiwgZG1hX2luZGV4Ow0KPg0K
+Pi0JaW5kZXggPSAwOw0KPisJLyoNCj4rCSAqIFNjYXR0ZXJsaXN0IGVsZW1lbnRzIGNvbnRhaW5z
+IGJvdGggcGFnZXMgYW5kIERNQSBhZGRyZXNzZXMsIGJ1dA0KPisJICogb25lIHNob3VkIG5vdCBh
+c3N1bWUgMToxIHJlbGF0aW9uIGJldHdlZW4gdGhlbS4gVGhlIHNnLT5sZW5ndGgNCj5pcw0KPisJ
+ICogdGhlIHNpemUgb2YgdGhlIHBoeXNpY2FsIG1lbW9yeSBjaHVuayBkZXNjcmliZWQgYnkgdGhl
+IHNnLT5wYWdlLA0KPisJICogd2hpbGUgc2dfZG1hX2xlbihzZykgaXMgdGhlIHNpemUgb2YgdGhl
+IERNQSAoSU8gdmlydHVhbCkgY2h1bmsNCj4rCSAqIGRlc2NyaWJlZCBieSB0aGUgc2dfZG1hX2Fk
+ZHJlc3Moc2cpLg0KPisJICovDQoNCklzIHRoZXJlIGFuIGV4YW1wbGUgb2Ygd2hhdCB0aGUgc2Nh
+dHRlcmxpc3Qgd291bGQgbG9vayBsaWtlIGluIHRoaXMgY2FzZT8NCg0KRG9lcyBlYWNoIFNHIGVu
+dHJ5IGFsd2F5cyBoYXZlIHRoZSBwYWdlIGFuZCBkbWEgaW5mbz8gb3IgY291bGQgeW91IGhhdmUN
+CmVudHJpZXMgdGhhdCBoYXZlIHBhZ2UgaW5mb3JtYXRpb24gb25seSwgYW5kIGVudHJpZXMgdGhh
+dCBoYXZlIGRtYSBpbmZvIG9ubHk/DQoNCklmIHRoZSBzYW1lIGVudHJ5IGhhcyBkaWZmZXJlbnQg
+c2l6ZSBpbmZvIChwYWdlX2xlbiA9IFBBR0VfU0laRSwNCmRtYV9sZW4gPSA0ICogUEFHRV9TSVpF
+PyksIGFyZSB3ZSBndWFyYW50ZWVkIHRoYXQgdGhlIGFycmF5cyAocGFnZSBhbmQgYWRkcnMpIGhh
+dmUNCmJlZW4gc2l6ZWQgY29ycmVjdGx5Pw0KDQpKdXN0IHRyeWluZyB0byBnZXQgbXkgaGVhZCB3
+cmFwcGVkIGFyb3VuZCB0aGlzLg0KDQpUaGFua3MsDQoNCk1pa2UNCg0KPisJcGFnZV9pbmRleCA9
+IDA7DQo+KwlkbWFfaW5kZXggPSAwOw0KPiAJZm9yX2VhY2hfc2coc2d0LT5zZ2wsIHNnLCBzZ3Qt
+Pm5lbnRzLCBjb3VudCkgew0KPi0JCWxlbiA9IHNnX2RtYV9sZW4oc2cpOw0KPisJCXBhZ2VfbGVu
+ID0gc2ctPmxlbmd0aDsNCj4gCQlwYWdlID0gc2dfcGFnZShzZyk7DQo+KwkJZG1hX2xlbiA9IHNn
+X2RtYV9sZW4oc2cpOw0KPiAJCWFkZHIgPSBzZ19kbWFfYWRkcmVzcyhzZyk7DQo+DQo+LQkJd2hp
+bGUgKGxlbiA+IDApIHsNCj4tCQkJaWYgKFdBUk5fT04oaW5kZXggPj0gbWF4X2VudHJpZXMpKQ0K
+PisJCXdoaWxlIChwYWdlcyAmJiBwYWdlX2xlbiA+IDApIHsNCj4rCQkJaWYgKFdBUk5fT04ocGFn
+ZV9pbmRleCA+PSBtYXhfZW50cmllcykpDQo+IAkJCQlyZXR1cm4gLTE7DQo+LQkJCWlmIChwYWdl
+cykNCj4tCQkJCXBhZ2VzW2luZGV4XSA9IHBhZ2U7DQo+LQkJCWlmIChhZGRycykNCj4tCQkJCWFk
+ZHJzW2luZGV4XSA9IGFkZHI7DQo+LQ0KPisJCQlwYWdlc1twYWdlX2luZGV4XSA9IHBhZ2U7DQo+
+IAkJCXBhZ2UrKzsNCj4rCQkJcGFnZV9sZW4gLT0gUEFHRV9TSVpFOw0KPisJCQlwYWdlX2luZGV4
+Kys7DQo+KwkJfQ0KPisJCXdoaWxlIChhZGRycyAmJiBkbWFfbGVuID4gMCkgew0KPisJCQlpZiAo
+V0FSTl9PTihkbWFfaW5kZXggPj0gbWF4X2VudHJpZXMpKQ0KPisJCQkJcmV0dXJuIC0xOw0KPisJ
+CQlhZGRyc1tkbWFfaW5kZXhdID0gYWRkcjsNCj4gCQkJYWRkciArPSBQQUdFX1NJWkU7DQo+LQkJ
+CWxlbiAtPSBQQUdFX1NJWkU7DQo+LQkJCWluZGV4Kys7DQo+KwkJCWRtYV9sZW4gLT0gUEFHRV9T
+SVpFOw0KPisJCQlkbWFfaW5kZXgrKzsNCj4gCQl9DQo+IAl9DQo+IAlyZXR1cm4gMDsNCj4tLQ0K
+PjIuMTcuMQ0KDQo=
