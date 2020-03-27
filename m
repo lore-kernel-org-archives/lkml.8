@@ -2,126 +2,123 @@ Return-Path: <SRS0=s8dx=5M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.7 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6305C2D0ED
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 17:27:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C3CAC43331
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 17:28:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B6C5D20716
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 17:27:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0CEFD20716
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 17:28:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585330129;
+	bh=73/dfVC1cTw6UV/jYoF2MdL4rOOGbfRD2VavjDUaTSQ=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=E9E4N/Wn6u1J4mMLtGgLr+y3IwAcENM4vHYpZsIUn9mmSMrNEcVXfzFiIFB59xpy7
+	 yYolefCDBxfwhc7UxAle1m4xz0eNP9Yk6U3GqRXZqJM1r52Sw2QIEd6CyUUk/39YAU
+	 n3fbH23hsQ26lquRaZjuAD+rNv7uuI+WlInbPxFU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727701AbgC0R1a (ORCPT
+        id S1727585AbgC0R2r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Mar 2020 13:27:30 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:54358 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726937AbgC0R1a (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Mar 2020 13:27:30 -0400
-Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tip-bot2@linutronix.de>)
-        id 1jHslS-0002vE-7N; Fri, 27 Mar 2020 18:27:26 +0100
-Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id C1C711C0470;
-        Fri, 27 Mar 2020 18:27:25 +0100 (CET)
-Date:   Fri, 27 Mar 2020 17:27:25 -0000
-From:   "tip-bot2 for H.J. Lu" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/build] x86/vdso: Discard .note.gnu.property sections in vDSO
-Cc:     "H.J. Lu" <hjl.tools@gmail.com>, Borislav Petkov <bp@suse.de>,
-        Kees Cook <keescook@chromium.org>, x86 <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200326174314.254662-1-hjl.tools@gmail.com>
-References: <20200326174314.254662-1-hjl.tools@gmail.com>
-MIME-Version: 1.0
-Message-ID: <158533004544.28353.7775118937296827800.tip-bot2@tip-bot2>
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+        Fri, 27 Mar 2020 13:28:47 -0400
+Received: from foss.arm.com ([217.140.110.172]:49730 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726698AbgC0R2r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Mar 2020 13:28:47 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0497E1FB;
+        Fri, 27 Mar 2020 10:28:47 -0700 (PDT)
+Received: from localhost (unknown [10.37.6.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7C1983F71E;
+        Fri, 27 Mar 2020 10:28:46 -0700 (PDT)
+Date:   Fri, 27 Mar 2020 17:28:45 +0000
+From:   Mark Brown <broonie@kernel.org>
+To:     Colin Ian King <colin.king@canonical.com>
+Cc:     alsa-devel@alsa-project.org, Jaroslav Kysela <perex@perex.cz>,
+        kernel-janitors@vger.kernel.org,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>,
+        Ravulapati Vishnu vardhan rao 
+        <Vishnuvardhanrao.Ravulapati@amd.com>,
+        Takashi Iwai <tiwai@suse.com>
+Subject: Applied "ASoC: amd: acp3x-pcm-dma: clean up two indentation issues" to the asoc tree
+In-Reply-To:  <20200327141429.269191-1-colin.king@canonical.com>
+Message-Id:  <applied-20200327141429.269191-1-colin.king@canonical.com>
+X-Patchwork-Hint: ignore
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the x86/build branch of tip:
+The patch
 
-Commit-ID:     4caffe6a28d3157c11cae923a40456a053c520ea
-Gitweb:        https://git.kernel.org/tip/4caffe6a28d3157c11cae923a40456a053c520ea
-Author:        H.J. Lu <hjl.tools@gmail.com>
-AuthorDate:    Thu, 26 Mar 2020 10:43:14 -07:00
-Committer:     Borislav Petkov <bp@suse.de>
-CommitterDate: Fri, 27 Mar 2020 15:53:05 +01:00
+   ASoC: amd: acp3x-pcm-dma: clean up two indentation issues
 
-x86/vdso: Discard .note.gnu.property sections in vDSO
+has been applied to the asoc tree at
 
-With the command-line option -mx86-used-note=yes which can also be
-enabled at binutils build time with:
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git 
 
-  --enable-x86-used-note  generate GNU x86 used ISA and feature properties
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
 
-the x86 assembler in binutils 2.32 and above generates a program property
-note in a note section, .note.gnu.property, to encode used x86 ISAs and
-features.  But kernel linker script only contains a single NOTE segment:
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
 
-  PHDRS
-  {
-   text PT_LOAD FLAGS(5) FILEHDR PHDRS; /* PF_R|PF_X */
-   dynamic PT_DYNAMIC FLAGS(4); /* PF_R */
-   note PT_NOTE FLAGS(4); /* PF_R */
-   eh_frame_hdr 0x6474e550;
-  }
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
 
-The NOTE segment generated by the vDSO linker script is aligned to 4 bytes.
-But the .note.gnu.property section must be aligned to 8 bytes on x86-64:
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
 
-  [hjl@gnu-skx-1 vdso]$ readelf -n vdso64.so
+Thanks,
+Mark
 
-  Displaying notes found in: .note
-    Owner                Data size 	Description
-    Linux                0x00000004	Unknown note type: (0x00000000)
-     description data: 06 00 00 00
-  readelf: Warning: note with invalid namesz and/or descsz found at offset 0x20
-  readelf: Warning:  type: 0x78, namesize: 0x00000100, descsize: 0x756e694c, alignment: 8
+From acd4946f5bf031fa38e64bfe2467be94a1b8c25d Mon Sep 17 00:00:00 2001
+From: Colin Ian King <colin.king@canonical.com>
+Date: Fri, 27 Mar 2020 14:14:29 +0000
+Subject: [PATCH] ASoC: amd: acp3x-pcm-dma: clean up two indentation issues
 
-Since the note.gnu.property section in the vDSO is not checked by the
-dynamic linker, discard the .note.gnu.property sections in the vDSO.
+There are a couple of statements that are not indented correctly,
+add in the missing tab and break the lines to address a checkpatch
+warning.
 
- [ bp: Massage. ]
-
-Signed-off-by: H.J. Lu <hjl.tools@gmail.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Reviewed-by: Kees Cook <keescook@chromium.org>
-Link: https://lkml.kernel.org/r/20200326174314.254662-1-hjl.tools@gmail.com
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Link: https://lore.kernel.org/r/20200327141429.269191-1-colin.king@canonical.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- arch/x86/entry/vdso/vdso-layout.lds.S | 7 +++++++
- 1 file changed, 7 insertions(+)
+ sound/soc/amd/raven/acp3x-pcm-dma.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/arch/x86/entry/vdso/vdso-layout.lds.S b/arch/x86/entry/vdso/vdso-layout.lds.S
-index ea7e015..4d15293 100644
---- a/arch/x86/entry/vdso/vdso-layout.lds.S
-+++ b/arch/x86/entry/vdso/vdso-layout.lds.S
-@@ -57,6 +57,13 @@ SECTIONS
- 		*(.gnu.linkonce.b.*)
- 	}						:text
- 
-+	/*
-+	 * Discard .note.gnu.property sections which are unused and have
-+	 * different alignment requirement from vDSO note sections.
-+	 */
-+	/DISCARD/ : {
-+		*(.note.gnu.property)
-+	}
- 	.note		: { *(.note.*) }		:text	:note
- 
- 	.eh_frame_hdr	: { *(.eh_frame_hdr) }		:text	:eh_frame_hdr
+diff --git a/sound/soc/amd/raven/acp3x-pcm-dma.c b/sound/soc/amd/raven/acp3x-pcm-dma.c
+index d62c0d90c41e..e362f0bc9e46 100644
+--- a/sound/soc/amd/raven/acp3x-pcm-dma.c
++++ b/sound/soc/amd/raven/acp3x-pcm-dma.c
+@@ -458,7 +458,8 @@ static int acp3x_resume(struct device *dev)
+ 			reg_val = mmACP_I2STDM_ITER;
+ 			frmt_val = mmACP_I2STDM_TXFRMT;
+ 		}
+-	rv_writel((rtd->xfer_resolution  << 3), rtd->acp3x_base + reg_val);
++		rv_writel((rtd->xfer_resolution  << 3),
++			  rtd->acp3x_base + reg_val);
+ 	}
+ 	if (adata->capture_stream && adata->capture_stream->runtime) {
+ 		struct i2s_stream_instance *rtd =
+@@ -474,7 +475,8 @@ static int acp3x_resume(struct device *dev)
+ 			reg_val = mmACP_I2STDM_IRER;
+ 			frmt_val = mmACP_I2STDM_RXFRMT;
+ 		}
+-	rv_writel((rtd->xfer_resolution  << 3), rtd->acp3x_base + reg_val);
++		rv_writel((rtd->xfer_resolution  << 3),
++			  rtd->acp3x_base + reg_val);
+ 	}
+ 	if (adata->tdm_mode == TDM_ENABLE) {
+ 		rv_writel(adata->tdm_fmt, adata->acp3x_base + frmt_val);
+-- 
+2.20.1
+
