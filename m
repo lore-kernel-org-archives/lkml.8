@@ -6,29 +6,29 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADBDDC43331
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 02:32:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1939EC43331
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 02:32:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 864792082D
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 02:32:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E188F20857
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 02:32:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727933AbgC0CcX (ORCPT
+        id S1727897AbgC0CcM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 22:32:23 -0400
-Received: from zeniv.linux.org.uk ([195.92.253.2]:48056 "EHLO
-        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727884AbgC0CcM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 26 Mar 2020 22:32:12 -0400
+Received: from zeniv.linux.org.uk ([195.92.253.2]:48022 "EHLO
+        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727729AbgC0CcK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Mar 2020 22:32:10 -0400
 Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jHen1-003hSu-PG; Fri, 27 Mar 2020 02:32:07 +0000
+        id 1jHemz-003hQw-LT; Fri, 27 Mar 2020 02:32:05 +0000
 From:   Al Viro <viro@ZenIV.linux.org.uk>
 To:     Linus Torvalds <torvalds@linux-foundation.org>
 Cc:     Thomas Gleixner <tglx@linutronix.de>, x86@kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [RFC][PATCH v2 22/22] kill uaccess_try()
-Date:   Fri, 27 Mar 2020 02:32:05 +0000
-Message-Id: <20200327023205.881896-22-viro@ZenIV.linux.org.uk>
+Subject: [RFC][PATCH v2 03/22] x86: switch sigframe sigset handling to explict __get_user()/__put_user()
+Date:   Fri, 27 Mar 2020 02:31:46 +0000
+Message-Id: <20200327023205.881896-3-viro@ZenIV.linux.org.uk>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200327023205.881896-1-viro@ZenIV.linux.org.uk>
 References: <20200327023007.GS23230@ZenIV.linux.org.uk>
@@ -42,194 +42,147 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Al Viro <viro@zeniv.linux.org.uk>
 
-finally
+... and consolidate the definition of sigframe_ia32->extramask - it's
+always a 1-element array of 32bit unsigned.
 
 Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
 ---
- Documentation/x86/exception-tables.rst |  6 ----
- arch/x86/include/asm/asm.h             |  6 ----
- arch/x86/include/asm/processor.h       |  1 -
- arch/x86/include/asm/uaccess.h         | 65 ----------------------------------
- arch/x86/mm/extable.c                  | 12 -------
- 5 files changed, 90 deletions(-)
+ arch/x86/ia32/ia32_signal.c     | 16 +++++-----------
+ arch/x86/include/asm/sigframe.h |  6 +-----
+ arch/x86/kernel/signal.c        | 20 ++++++++------------
+ 3 files changed, 14 insertions(+), 28 deletions(-)
 
-diff --git a/Documentation/x86/exception-tables.rst b/Documentation/x86/exception-tables.rst
-index ed6d4b0cf62c..514f51829da7 100644
---- a/Documentation/x86/exception-tables.rst
-+++ b/Documentation/x86/exception-tables.rst
-@@ -337,10 +337,4 @@ pointer which points to one of:
-      entry->insn. It is used to distinguish page faults from machine
-      check.
+diff --git a/arch/x86/ia32/ia32_signal.c b/arch/x86/ia32/ia32_signal.c
+index a3aefe9b9401..c72025d615f8 100644
+--- a/arch/x86/ia32/ia32_signal.c
++++ b/arch/x86/ia32/ia32_signal.c
+@@ -126,10 +126,7 @@ COMPAT_SYSCALL_DEFINE0(sigreturn)
+ 	if (!access_ok(frame, sizeof(*frame)))
+ 		goto badframe;
+ 	if (__get_user(set.sig[0], &frame->sc.oldmask)
+-	    || (_COMPAT_NSIG_WORDS > 1
+-		&& __copy_from_user((((char *) &set.sig) + 4),
+-				    &frame->extramask,
+-				    sizeof(frame->extramask))))
++	    || __get_user(((__u32 *)&set)[1], &frame->extramask[0]))
+ 		goto badframe;
  
--3) ``int ex_handler_ext(const struct exception_table_entry *fixup)``
--     This case is used for uaccess_err ... we need to set a flag
--     in the task structure. Before the handler functions existed this
--     case was handled by adding a large offset to the fixup to tag
--     it as special.
--
- More functions can easily be added.
-diff --git a/arch/x86/include/asm/asm.h b/arch/x86/include/asm/asm.h
-index cd339b88d5d4..0f63585edf5f 100644
---- a/arch/x86/include/asm/asm.h
-+++ b/arch/x86/include/asm/asm.h
-@@ -138,9 +138,6 @@
- # define _ASM_EXTABLE_FAULT(from, to)				\
- 	_ASM_EXTABLE_HANDLE(from, to, ex_handler_fault)
+ 	set_current_blocked(&set);
+@@ -153,7 +150,7 @@ COMPAT_SYSCALL_DEFINE0(rt_sigreturn)
  
--# define _ASM_EXTABLE_EX(from, to)				\
--	_ASM_EXTABLE_HANDLE(from, to, ex_handler_ext)
--
- # define _ASM_NOKPROBE(entry)					\
- 	.pushsection "_kprobe_blacklist","aw" ;			\
- 	_ASM_ALIGN ;						\
-@@ -166,9 +163,6 @@
- # define _ASM_EXTABLE_FAULT(from, to)				\
- 	_ASM_EXTABLE_HANDLE(from, to, ex_handler_fault)
+ 	if (!access_ok(frame, sizeof(*frame)))
+ 		goto badframe;
+-	if (__copy_from_user(&set, &frame->uc.uc_sigmask, sizeof(set)))
++	if (__get_user(set.sig[0], (__u64 __user *)&frame->uc.uc_sigmask))
+ 		goto badframe;
  
--# define _ASM_EXTABLE_EX(from, to)				\
--	_ASM_EXTABLE_HANDLE(from, to, ex_handler_ext)
--
- /* For C file, we already have NOKPROBE_SYMBOL macro */
- #endif
+ 	set_current_blocked(&set);
+@@ -277,11 +274,8 @@ int ia32_setup_frame(int sig, struct ksignal *ksig,
+ 	if (ia32_setup_sigcontext(&frame->sc, fpstate, regs, set->sig[0]))
+ 		return -EFAULT;
  
-diff --git a/arch/x86/include/asm/processor.h b/arch/x86/include/asm/processor.h
-index 09705ccc393c..19718fcfdd6a 100644
---- a/arch/x86/include/asm/processor.h
-+++ b/arch/x86/include/asm/processor.h
-@@ -541,7 +541,6 @@ struct thread_struct {
- 	mm_segment_t		addr_limit;
+-	if (_COMPAT_NSIG_WORDS > 1) {
+-		if (__copy_to_user(frame->extramask, &set->sig[1],
+-				   sizeof(frame->extramask)))
+-			return -EFAULT;
+-	}
++	if (__put_user(set->sig[1], &frame->extramask[0]))
++		return -EFAULT;
  
- 	unsigned int		sig_on_uaccess_err:1;
--	unsigned int		uaccess_err:1;	/* uaccess failed */
+ 	if (ksig->ka.sa.sa_flags & SA_RESTORER) {
+ 		restorer = ksig->ka.sa.sa_restorer;
+@@ -381,7 +375,7 @@ int ia32_setup_rt_frame(int sig, struct ksignal *ksig,
+ 	err |= __copy_siginfo_to_user32(&frame->info, &ksig->info, false);
+ 	err |= ia32_setup_sigcontext(&frame->uc.uc_mcontext, fpstate,
+ 				     regs, set->sig[0]);
+-	err |= __copy_to_user(&frame->uc.uc_sigmask, set, sizeof(*set));
++	err |= __put_user(*(__u64 *)set, (__u64 __user *)&frame->uc.uc_sigmask);
  
- 	/* Floating point and extended processor state */
- 	struct fpu		fpu;
-diff --git a/arch/x86/include/asm/uaccess.h b/arch/x86/include/asm/uaccess.h
-index 4dc5accdd826..d11662f753d2 100644
---- a/arch/x86/include/asm/uaccess.h
-+++ b/arch/x86/include/asm/uaccess.h
-@@ -193,23 +193,12 @@ __typeof__(__builtin_choose_expr(sizeof(x) > sizeof(0UL), 0ULL, 0UL))
- 		     : : "A" (x), "r" (addr)			\
- 		     : : label)
+ 	if (err)
+ 		return -EFAULT;
+diff --git a/arch/x86/include/asm/sigframe.h b/arch/x86/include/asm/sigframe.h
+index f176114c04d4..84eab2724875 100644
+--- a/arch/x86/include/asm/sigframe.h
++++ b/arch/x86/include/asm/sigframe.h
+@@ -33,11 +33,7 @@ struct sigframe_ia32 {
+ 	 * legacy application accessing/modifying it.
+ 	 */
+ 	struct _fpstate_32 fpstate_unused;
+-#ifdef CONFIG_IA32_EMULATION
+-	unsigned int extramask[_COMPAT_NSIG_WORDS-1];
+-#else /* !CONFIG_IA32_EMULATION */
+-	unsigned long extramask[_NSIG_WORDS-1];
+-#endif /* CONFIG_IA32_EMULATION */
++	unsigned int extramask[1];
+ 	char retcode[8];
+ 	/* fp state follows here */
+ };
+diff --git a/arch/x86/kernel/signal.c b/arch/x86/kernel/signal.c
+index 8a29573851a3..53ac66b3fd9b 100644
+--- a/arch/x86/kernel/signal.c
++++ b/arch/x86/kernel/signal.c
+@@ -326,11 +326,8 @@ __setup_frame(int sig, struct ksignal *ksig, sigset_t *set,
+ 	if (setup_sigcontext(&frame->sc, fpstate, regs, set->sig[0]))
+ 		return -EFAULT;
  
--#define __put_user_asm_ex_u64(x, addr)					\
--	asm volatile("\n"						\
--		     "1:	movl %%eax,0(%1)\n"			\
--		     "2:	movl %%edx,4(%1)\n"			\
--		     "3:"						\
--		     _ASM_EXTABLE_EX(1b, 2b)				\
--		     _ASM_EXTABLE_EX(2b, 3b)				\
--		     : : "A" (x), "r" (addr))
--
- #define __put_user_x8(x, ptr, __ret_pu)				\
- 	asm volatile("call __put_user_8" : "=a" (__ret_pu)	\
- 		     : "A" ((typeof(*(ptr)))(x)), "c" (ptr) : "ebx")
- #else
- #define __put_user_goto_u64(x, ptr, label) \
- 	__put_user_goto(x, ptr, "q", "", "er", label)
--#define __put_user_asm_ex_u64(x, addr)	\
--	__put_user_asm_ex(x, addr, "q", "", "er")
- #define __put_user_x8(x, ptr, __ret_pu) __put_user_x(8, x, ptr, __ret_pu)
- #endif
+-	if (_NSIG_WORDS > 1) {
+-		if (__copy_to_user(&frame->extramask, &set->sig[1],
+-				   sizeof(frame->extramask)))
+-			return -EFAULT;
+-	}
++	if (__put_user(set->sig[1], &frame->extramask[0]))
++		return -EFAULT;
  
-@@ -289,31 +278,6 @@ do {									\
- 	}								\
- } while (0)
+ 	if (current->mm->context.vdso)
+ 		restorer = current->mm->context.vdso +
+@@ -489,7 +486,7 @@ static int __setup_rt_frame(int sig, struct ksignal *ksig,
+ 	} put_user_catch(err);
  
--/*
-- * This doesn't do __uaccess_begin/end - the exception handling
-- * around it must do that.
-- */
--#define __put_user_size_ex(x, ptr, size)				\
--do {									\
--	__chk_user_ptr(ptr);						\
--	switch (size) {							\
--	case 1:								\
--		__put_user_asm_ex(x, ptr, "b", "b", "iq");		\
--		break;							\
--	case 2:								\
--		__put_user_asm_ex(x, ptr, "w", "w", "ir");		\
--		break;							\
--	case 4:								\
--		__put_user_asm_ex(x, ptr, "l", "k", "ir");		\
--		break;							\
--	case 8:								\
--		__put_user_asm_ex_u64((__typeof__(*ptr))(x), ptr);	\
--		break;							\
--	default:							\
--		__put_user_bad();					\
--	}								\
--} while (0)
--
- #ifdef CONFIG_X86_32
- #define __get_user_asm_u64(x, ptr, retval, errret)			\
- ({									\
-@@ -430,29 +394,6 @@ struct __large_struct { unsigned long buf[100]; };
- 	retval = __put_user_failed(x, addr, itype, rtype, ltype, errret);	\
- } while (0)
+ 	err |= setup_sigcontext(&frame->uc.uc_mcontext, fp, regs, set->sig[0]);
+-	err |= __copy_to_user(&frame->uc.uc_sigmask, set, sizeof(*set));
++	err |= __put_user(set->sig[0], &frame->uc.uc_sigmask.sig[0]);
  
--#define __put_user_asm_ex(x, addr, itype, rtype, ltype)			\
--	asm volatile("1:	mov"itype" %"rtype"0,%1\n"		\
--		     "2:\n"						\
--		     _ASM_EXTABLE_EX(1b, 2b)				\
--		     : : ltype(x), "m" (__m(addr)))
--
--/*
-- * uaccess_try and catch
-- */
--#define uaccess_try	do {						\
--	current->thread.uaccess_err = 0;				\
--	__uaccess_begin();						\
--	barrier();
--
--#define uaccess_try_nospec do {						\
--	current->thread.uaccess_err = 0;				\
--	__uaccess_begin_nospec();					\
--
--#define uaccess_catch(err)						\
--	__uaccess_end();						\
--	(err) |= (current->thread.uaccess_err ? -EFAULT : 0);		\
--} while (0)
--
- /**
-  * __get_user - Get a simple variable from user space, with less checking.
-  * @x:   Variable to store result.
-@@ -502,12 +443,6 @@ struct __large_struct { unsigned long buf[100]; };
- #define __put_user(x, ptr)						\
- 	__put_user_nocheck((__typeof__(*(ptr)))(x), (ptr), sizeof(*(ptr)))
+ 	if (err)
+ 		return -EFAULT;
+@@ -575,7 +572,7 @@ static int x32_setup_rt_frame(struct ksignal *ksig,
  
--#define put_user_try		uaccess_try
--#define put_user_catch(err)	uaccess_catch(err)
--
--#define put_user_ex(x, ptr)						\
--	__put_user_size_ex((__typeof__(*(ptr)))(x), (ptr), sizeof(*(ptr)))
--
- extern unsigned long
- copy_from_user_nmi(void *to, const void __user *from, unsigned long n);
- extern __must_check long
-diff --git a/arch/x86/mm/extable.c b/arch/x86/mm/extable.c
-index 30bb0bd3b1b8..b991aa4bdfae 100644
---- a/arch/x86/mm/extable.c
-+++ b/arch/x86/mm/extable.c
-@@ -80,18 +80,6 @@ __visible bool ex_handler_uaccess(const struct exception_table_entry *fixup,
- }
- EXPORT_SYMBOL(ex_handler_uaccess);
+ 	err |= setup_sigcontext(&frame->uc.uc_mcontext, fpstate,
+ 				regs, set->sig[0]);
+-	err |= __copy_to_user(&frame->uc.uc_sigmask, set, sizeof(*set));
++	err |= __put_user(*(__u64 *)set, (__u64 __user *)&frame->uc.uc_sigmask);
  
--__visible bool ex_handler_ext(const struct exception_table_entry *fixup,
--			      struct pt_regs *regs, int trapnr,
--			      unsigned long error_code,
--			      unsigned long fault_addr)
--{
--	/* Special hack for uaccess_err */
--	current->thread.uaccess_err = 1;
--	regs->ip = ex_fixup_addr(fixup);
--	return true;
--}
--EXPORT_SYMBOL(ex_handler_ext);
--
- __visible bool ex_handler_rdmsr_unsafe(const struct exception_table_entry *fixup,
- 				       struct pt_regs *regs, int trapnr,
- 				       unsigned long error_code,
+ 	if (err)
+ 		return -EFAULT;
+@@ -613,9 +610,8 @@ SYSCALL_DEFINE0(sigreturn)
+ 
+ 	if (!access_ok(frame, sizeof(*frame)))
+ 		goto badframe;
+-	if (__get_user(set.sig[0], &frame->sc.oldmask) || (_NSIG_WORDS > 1
+-		&& __copy_from_user(&set.sig[1], &frame->extramask,
+-				    sizeof(frame->extramask))))
++	if (__get_user(set.sig[0], &frame->sc.oldmask) ||
++	    __get_user(set.sig[1], &frame->extramask[0]))
+ 		goto badframe;
+ 
+ 	set_current_blocked(&set);
+@@ -645,7 +641,7 @@ SYSCALL_DEFINE0(rt_sigreturn)
+ 	frame = (struct rt_sigframe __user *)(regs->sp - sizeof(long));
+ 	if (!access_ok(frame, sizeof(*frame)))
+ 		goto badframe;
+-	if (__copy_from_user(&set, &frame->uc.uc_sigmask, sizeof(set)))
++	if (__get_user(*(__u64 *)&set, (__u64 __user *)&frame->uc.uc_sigmask))
+ 		goto badframe;
+ 	if (__get_user(uc_flags, &frame->uc.uc_flags))
+ 		goto badframe;
+@@ -870,7 +866,7 @@ asmlinkage long sys32_x32_rt_sigreturn(void)
+ 
+ 	if (!access_ok(frame, sizeof(*frame)))
+ 		goto badframe;
+-	if (__copy_from_user(&set, &frame->uc.uc_sigmask, sizeof(set)))
++	if (__get_user(set.sig[0], (__u64 __user *)&frame->uc.uc_sigmask))
+ 		goto badframe;
+ 	if (__get_user(uc_flags, &frame->uc.uc_flags))
+ 		goto badframe;
 -- 
 2.11.0
 
