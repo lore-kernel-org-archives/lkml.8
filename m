@@ -2,250 +2,127 @@ Return-Path: <SRS0=s8dx=5M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C95B9C43331
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 10:52:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1C99C43331
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 10:55:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8DDB020578
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 10:52:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 911A620675
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 10:55:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=invensense.com header.i=@invensense.com header.b="R2jt3VIj";
-	dkim=pass (1024-bit key) header.d=invensense.onmicrosoft.com header.i=@invensense.onmicrosoft.com header.b="LOoMeksZ"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=metafoo.de header.i=@metafoo.de header.b="Bt39e9FS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726750AbgC0Kw2 (ORCPT
+        id S1726518AbgC0Kzq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Mar 2020 06:52:28 -0400
-Received: from mx0b-00328301.pphosted.com ([148.163.141.47]:24418 "EHLO
-        mx0b-00328301.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726284AbgC0Kw2 (ORCPT
+        Fri, 27 Mar 2020 06:55:46 -0400
+Received: from www381.your-server.de ([78.46.137.84]:35086 "EHLO
+        www381.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726217AbgC0Kzq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Mar 2020 06:52:28 -0400
-Received: from pps.filterd (m0156136.ppops.net [127.0.0.1])
-        by mx0b-00328301.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02RApnf1020688;
-        Fri, 27 Mar 2020 03:52:05 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=invensense.com; h=from : to : cc :
- subject : date : message-id : references : in-reply-to : content-type :
- content-transfer-encoding : mime-version; s=pfpt1;
- bh=YAdAil2EByAmnOnKo3Bheq01DoRT7Usv7JJwfCNN66Q=;
- b=R2jt3VIjc8bH7YH/I7bE28NCwniG1ZvecyvtaCfrcdtE4bdCPoqWUitDVPvdhRJpAu6b
- jOv8hnjBFiGOG523zbbbNYgEGA6taNC07ERZTmDQW88Y1hn6vG1qmSHPBoFEsnxnNKMF
- 6U0ODyQeaTXm2x+OO/UBEj4araS+AXSOyckF1/mYUxXI6qTTw61jvwzamEfTsCsfxRaT
- rPRAq7glN+8n3yjijfEusHQMeAmjEixEN7sb3Gt/HgU2U6LZptGaNrRVcz/6MoX0BsJl
- /WAXEBrAweezkcsy6egHU7VPkTRi9h0IDwda1+On0X1zA+Vk/ght2KLEaJVNTjwBoZ3A /A== 
-Received: from nam12-mw2-obe.outbound.protection.outlook.com (mail-mw2nam12lp2049.outbound.protection.outlook.com [104.47.66.49])
-        by mx0b-00328301.pphosted.com with ESMTP id 300bux0v9r-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 27 Mar 2020 03:52:05 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=FtPSfOOv08u3GX2JLcznwDVBH8oY+8D9hV2+Lp/lQbMGibnNGy/KzcLUxUxF0o73ASdS4F9sugQOBNq4blpmYDafcdACWXAZLCHA1XJaezyE8JQc+Wf0rKzadsB5eNDfHfNf6NDKnQExP9BRe6X5AKDJkAh2lbWwzX76ED6bZ6gi1lO27WZ/0rpj5CVEIJKjEvWGwMHybuJVQLFSd4Q6Sg8waiPgkDz7Vi3Hj+78oLWSUeCcAQJb5PXIeRPxblT5KZfjut1TgbvBDBE2hmx2j3yaojca+E62fXxs/+pNqHuNB2JP7zeJPMU8m83DAB2qmgtMsTzl+F13xt41Boa55w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=YAdAil2EByAmnOnKo3Bheq01DoRT7Usv7JJwfCNN66Q=;
- b=ku8kaMTNcCdp1pd+3xO18fQdMMEY8BKa0s8o1KB6gjVMq0Wd+9NwOIDJS6wZH0rI9cYxaYnkApN+QpftyABRp8AkxlVCPdNodGEWTJSEryDDCatIfnupiHvypRlxkUK+kepgxtYSAlWY/4PlTSM5Ru8oWss8dnzp/S6cobik0NplPciJyU3ILHn+/DYIHWJEE+ETXM/BPRq/M13sX1gUEUKF+Ar/Em/yFubKbvvOW1f66RpW1685fOFdgWRPo2g34GOaLX9L7k+MpIO+qzT2CY/x47P1ASvZE+9hGyX1Pvf8MIy3O1J8ZmfnSb0XRQANBc1qqHmPBGq55ktETah7Uw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=invensense.com; dmarc=pass action=none
- header.from=invensense.com; dkim=pass header.d=invensense.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=invensense.onmicrosoft.com; s=selector2-invensense-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=YAdAil2EByAmnOnKo3Bheq01DoRT7Usv7JJwfCNN66Q=;
- b=LOoMeksZwkHyZei5QQNQSDBEEbgohMZtb7VicxVmEFWCq/MwDDRs/bcdR7iL5mTNe1d2EpCPvUHWP7KwsvICBP3F4H5Rw2Vr+nG64hGx0UVVU4xpJFDD1ENqxk0gRvm+3muFQMuvxKXjQ8GQIhCJAaMljEbc05PtAUtbhGbRx0A=
-Received: from MN2PR12MB4422.namprd12.prod.outlook.com (2603:10b6:208:265::9)
- by MN2PR12MB4533.namprd12.prod.outlook.com (2603:10b6:208:266::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2835.20; Fri, 27 Mar
- 2020 10:52:02 +0000
-Received: from MN2PR12MB4422.namprd12.prod.outlook.com
- ([fe80::7471:da8b:8ca1:6af0]) by MN2PR12MB4422.namprd12.prod.outlook.com
- ([fe80::7471:da8b:8ca1:6af0%4]) with mapi id 15.20.2835.021; Fri, 27 Mar 2020
- 10:52:02 +0000
-From:   Jean-Baptiste Maneyrol <JManeyrol@invensense.com>
-To:     Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>
-CC:     Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/1] iio: imu: inv_mpu6050: convert to use
- i2c_new_client_device()
-Thread-Topic: [PATCH 1/1] iio: imu: inv_mpu6050: convert to use
- i2c_new_client_device()
-Thread-Index: AQHWA7NBLBGRcKbNIkm533g4m2Qp66hcQ5oV
-Date:   Fri, 27 Mar 2020 10:52:02 +0000
-Message-ID: <MN2PR12MB44228DEA7CE19B853292FE38C4CC0@MN2PR12MB4422.namprd12.prod.outlook.com>
-References: <20200326210955.12991-1-wsa+renesas@sang-engineering.com>,<20200326210955.12991-2-wsa+renesas@sang-engineering.com>
-In-Reply-To: <20200326210955.12991-2-wsa+renesas@sang-engineering.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [91.174.78.156]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: a7e5910a-5431-457d-08d0-08d7d23ce1c1
-x-ms-traffictypediagnostic: MN2PR12MB4533:
-x-microsoft-antispam-prvs: <MN2PR12MB4533140DC097390C0293D0FCC4CC0@MN2PR12MB4533.namprd12.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:4502;
-x-forefront-prvs: 0355F3A3AE
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(346002)(366004)(376002)(136003)(396003)(39850400004)(64756008)(66556008)(91956017)(33656002)(76116006)(86362001)(66446008)(2906002)(26005)(66946007)(71200400001)(478600001)(4326008)(110136005)(81166006)(8676002)(8936002)(9686003)(66476007)(52536014)(53546011)(54906003)(7696005)(5660300002)(55016002)(186003)(316002)(81156014)(6506007);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR12MB4533;H:MN2PR12MB4422.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;
-received-spf: None (protection.outlook.com: invensense.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: j5KOn+qrCIQC0ienDwVdbbTKCPSRP2guh6ENbg9hBXCf4pFuRdn6la8Sm7cML7eJhGX1tI5lnAyIHXWNt2Opaq9x9bbywH2BSWkSYjScdol652gi3VyB6DXob1XPum89ev9paZpR0Z4SsBqDfSC9OVhLF/sb04K8j9fy6BftqAW+HNajKI8y+xj3wVQySB/6/MBsuNAdveU66UcJPvMFJgO3k7kCqCLAw0AK6togcKcseUOsjnQAKy1W0BHLw0v6bKSfSu27TeYuGkv0+sXDTdDhBz46NhuCTZjrpP/HJKpzPnw2Bkgr24VMPo5LMr3W99jO/eQxw0Unca4IhGhEAFNM6u7BTXfSbXMWP9UwcodfgfCfFNnUXciq3W+h3O30S2ZnWtrJfcYLK0pRBYDFHFM0bisj8nBBqDat5NVKChObNKr0SwThsgzFUCPIhwWm
-x-ms-exchange-antispam-messagedata: lF1se7bi4A1TGdwOhxL5smVAtsiy5dKb/vpLM2bVbttzezxtGxfovZun3QbR0vxGZn91FBXNEP+o6ShE9GICyyXG00WRIpWxu7DQjUXF5GZIWX4gwLJB6PG6rGDK5KG2BI4Hs2kFtI2A0Z0JFwx4gQ==
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+        Fri, 27 Mar 2020 06:55:46 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=metafoo.de;
+         s=default2002; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:
+        MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender:Reply-To:
+        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+        Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=Rz/WKkoxuszzmxuFpVkEjaDif17o+9Qu8/N8bZ72T+I=; b=Bt39e9FSUl+Xx0yVsK1tsY63UK
+        kDB/7WLJCzLJ2bPZWP8GpFLoAcsNbwcfocrTKAWLzLBnRY0ncTDcqlGsnlgnUGzHyM5b5W7kv2EY+
+        rxrbeM63udGhTpmwy5QoTpFlCBRko9iGW+EvJ2UqeTKibj/7SkSlVEGB18FP4YJp30jM89JBxBwZN
+        ZCRkWedc5fmy9COUVLBGhntOkR4zzYYtBdX4A6BXbxICeZhZpFz0LQ+YV7dKFr+Er0rHgyJs4Ob4/
+        tRE1fm0aMDUiJO1zL4MtMWV+UYJaBTdo7Wp6pXK/UIPH/VcmM9VTtCfx+wU7qm7GVK9hfkC8q2WtO
+        RKXllsOg==;
+Received: from sslproxy01.your-server.de ([78.46.139.224])
+        by www381.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.89_1)
+        (envelope-from <lars@metafoo.de>)
+        id 1jHmeN-0006Xy-BR; Fri, 27 Mar 2020 11:55:43 +0100
+Received: from [82.135.64.145] (helo=[192.168.178.20])
+        by sslproxy01.your-server.de with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <lars@metafoo.de>)
+        id 1jHmeN-0000aD-1S; Fri, 27 Mar 2020 11:55:43 +0100
+Subject: Re: [PATCH] usb: dwc3: gadget: don't dequeue requests on already
+ disabled endpoints
+To:     Michael Grzeschik <mgr@pengutronix.de>
+Cc:     alexandru.Ardelean@analog.com, linux-usb@vger.kernel.org,
+        linux-kernel@vger.kernel.org, balbi@kernel.org,
+        gregkh@linuxfoundation.org, bigeasy@linutronix.de,
+        m.olbrich@pengutronix.de, kernel@pengutronix.de
+References: <dc52d6a0-12ed-a34c-01c4-0fc5ccbf7b1d@metafoo.de>
+ <20200327084302.606-1-m.grzeschik@pengutronix.de>
+ <f746cc1f-b5e2-af0a-d946-edce634c46c3@metafoo.de>
+ <20200327104352.GF27849@pengutronix.de>
+From:   Lars-Peter Clausen <lars@metafoo.de>
+Message-ID: <c2bbd132-c482-21c4-232d-2786021759cf@metafoo.de>
+Date:   Fri, 27 Mar 2020 11:55:41 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-X-OriginatorOrg: invensense.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a7e5910a-5431-457d-08d0-08d7d23ce1c1
-X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Mar 2020 10:52:02.2992
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 462b3b3b-e42b-47ea-801a-f1581aac892d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: uMEsU8IilfofHRFRtgZR46Ph5WeRfuUvI+juthJlXrYTPMbtZ1WU6ZKS3o6CSlb678xet03INLkMKfPgYtYmKXNbWYGW/HgSbqU7xchZ4NY=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR12MB4533
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.645
- definitions=2020-03-27_03:2020-03-27,2020-03-27 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- spamscore=0 clxscore=1011 mlxlogscore=978 bulkscore=0 adultscore=0
- suspectscore=0 phishscore=0 lowpriorityscore=0 malwarescore=0 mlxscore=0
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2003270100
+In-Reply-To: <20200327104352.GF27849@pengutronix.de>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Authenticated-Sender: lars@metafoo.de
+X-Virus-Scanned: Clear (ClamAV 0.102.2/25763/Thu Mar 26 14:07:34 2020)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,=0A=
-=0A=
-thanks for the patch.=0A=
-Looks good for me.=0A=
-=0A=
-Acked-by: Jean-Baptiste Maneyrol <jmaneyrol@invensense.com>=0A=
-=0A=
-Best regards,=0A=
-JB=0A=
-=0A=
-=0A=
-From: linux-iio-owner@vger.kernel.org <linux-iio-owner@vger.kernel.org> on =
-behalf of Wolfram Sang <wsa+renesas@sang-engineering.com>=0A=
-=0A=
-Sent: Thursday, March 26, 2020 22:09=0A=
-=0A=
-To: linux-i2c@vger.kernel.org <linux-i2c@vger.kernel.org>=0A=
-=0A=
-Cc: Wolfram Sang <wsa+renesas@sang-engineering.com>; Jonathan Cameron <jic2=
-3@kernel.org>; Hartmut Knaack <knaack.h@gmx.de>; Lars-Peter Clausen <lars@m=
-etafoo.de>; Peter Meerwald-Stadler <pmeerw@pmeerw.net>; linux-iio@vger.kern=
-el.org <linux-iio@vger.kernel.org>;=0A=
- linux-kernel@vger.kernel.org <linux-kernel@vger.kernel.org>=0A=
-=0A=
-Subject: [PATCH 1/1] iio: imu: inv_mpu6050: convert to use i2c_new_client_d=
-evice()=0A=
-=0A=
-=A0=0A=
-=0A=
-=0A=
-=A0CAUTION: This email originated from outside of the organization. Please =
-make sure the sender is who they say they are and do not click links or ope=
-n attachments unless you recognize the sender and know the content is safe.=
-=0A=
-=0A=
-=0A=
-=0A=
-Move away from the deprecated API and return the shiny new ERRPTR where=0A=
-=0A=
-useful.=0A=
-=0A=
-=0A=
-=0A=
-Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>=0A=
-=0A=
----=0A=
-=0A=
-=A0drivers/iio/imu/inv_mpu6050/inv_mpu_acpi.c | 8 +++++---=0A=
-=0A=
-=A01 file changed, 5 insertions(+), 3 deletions(-)=0A=
-=0A=
-=0A=
-=0A=
-diff --git a/drivers/iio/imu/inv_mpu6050/inv_mpu_acpi.c b/drivers/iio/imu/i=
-nv_mpu6050/inv_mpu_acpi.c=0A=
-=0A=
-index 2f8560ba4572..c27d06035c8b 100644=0A=
-=0A=
---- a/drivers/iio/imu/inv_mpu6050/inv_mpu_acpi.c=0A=
-=0A=
-+++ b/drivers/iio/imu/inv_mpu6050/inv_mpu_acpi.c=0A=
-=0A=
-@@ -135,6 +135,7 @@ int inv_mpu_acpi_create_mux_client(struct i2c_client *c=
-lient)=0A=
-=0A=
-=A0=A0=A0=A0=A0=A0=A0=A0 st->mux_client =3D NULL;=0A=
-=0A=
-=A0=A0=A0=A0=A0=A0=A0=A0 if (ACPI_HANDLE(&client->dev)) {=0A=
-=0A=
-=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 struct i2c_board_info info=
-;=0A=
-=0A=
-+=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 struct i2c_client *mux_client;=
-=0A=
-=0A=
-=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 struct acpi_device *adev;=
-=0A=
-=0A=
-=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 int ret =3D -1;=0A=
-=0A=
-=A0=0A=
-=0A=
-@@ -172,9 +173,10 @@ int inv_mpu_acpi_create_mux_client(struct i2c_client *=
-client)=0A=
-=0A=
-=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 } =
-else=0A=
-=0A=
-=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=
-=A0=A0=A0=A0=A0=A0=A0 return 0; /* no secondary addr, which is OK */=0A=
-=0A=
-=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 }=0A=
-=0A=
--=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 st->mux_client =3D i2c_new_devi=
-ce(st->muxc->adapter[0], &info);=0A=
-=0A=
--=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 if (!st->mux_client)=0A=
-=0A=
--=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 return =
--ENODEV;=0A=
-=0A=
-+=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 mux_client =3D i2c_new_client_d=
-evice(st->muxc->adapter[0], &info);=0A=
-=0A=
-+=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 if (IS_ERR(mux_client))=0A=
-=0A=
-+=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 return =
-PTR_ERR(mux_client);=0A=
-=0A=
-+=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 st->mux_client =3D mux_client;=
-=0A=
-=0A=
-=A0=A0=A0=A0=A0=A0=A0=A0 }=0A=
-=0A=
-=A0=0A=
-=0A=
-=A0=A0=A0=A0=A0=A0=A0=A0 return 0;=0A=
-=0A=
--- =0A=
-=0A=
-2.20.1=0A=
-=0A=
-=0A=
-=0A=
+On 3/27/20 11:43 AM, Michael Grzeschik wrote:
+> On Fri, Mar 27, 2020 at 10:14:10AM +0100, Lars-Peter Clausen wrote:
+>> On 3/27/20 9:43 AM, Michael Grzeschik wrote:
+>>> dwc3_gadget_ep_disable gets called before the last request gets
+>>> dequeued.
+>>>
+>>> In __dwc3_gadget_ep_disable all started, pending and cancelled
+>>> lists for this endpoint will call dwc3_gadget_giveback in
+>>> dwc3_remove_requests.
+>>>
+>>> After that no list containing the afterwards dequed request,
+>>> therefor it is not necessary to run the dequeue routine.
+>>>
+>>> Signed-off-by: Michael Grzeschik <m.grzeschik@pengutronix.de>
+>>> ---
+>>> @Lars-Peter Clausen:
+>>>
+>>> This patch addresses the case that not queued requests get dequeued.
+>>> The only case that this happens seems on disabling the gadget.
+>>
+>> I don't believe it does. Calling usb_ep_dequeue() is not limited to be
+>> called after the endpoint has been disabled. It is part of the API and can
+>> be called at any time. E.g. with function_fs you can abort a queued transfer
+>> from userspace at any time.
+> OK, can you give me an Userspace example how to simply trigger the
+> issue. I tried to figure your mentioned function stack but it would
+> be much easier if it could be reproduced.
+>
+> The patch on the other hand can stand on itself, as it then
+> fixes another code path that is much more common.
+
+Hi,
+
+I don't have a standalone example. But the issue occurs if you submit a 
+request when using function_fs through the AIO API and then call 
+io_cancel() to abort it. At the same time there must be traffic on the 
+USB bus so that the URB has a chance to complete.
+
+This is a race condition between the IRQ handler running on one CPU and 
+the usb_ep_dequeue() running on another CPU. As such it might take a 
+while of stress testing before it is triggered. The more CPUs your 
+system has the higher the chance of trigger the issue.
+
+You can find the code which triggers the issue below.
+
+Submission of the request:
+
+https://github.com/analogdevicesinc/libiio/blob/master/iiod/ops.c#L139-L156
+
+Canceling it:
+
+https://github.com/analogdevicesinc/libiio/blob/master/iiod/ops.c#L193
+
