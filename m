@@ -2,362 +2,231 @@ Return-Path: <SRS0=s8dx=5M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9423FC43331
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 22:42:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53983C2D0EC
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 22:43:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 504DA20663
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 22:42:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B7E620663
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 22:43:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Qo7acoP8"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YA8cLSpW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727751AbgC0Wmv (ORCPT
+        id S1727754AbgC0WnB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Mar 2020 18:42:51 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:33304 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727620AbgC0Wmu (ORCPT
+        Fri, 27 Mar 2020 18:43:01 -0400
+Received: from us-smtp-delivery-74.mimecast.com ([63.128.21.74]:35449 "EHLO
+        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727752AbgC0WnA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Mar 2020 18:42:50 -0400
-Received: by mail-ot1-f65.google.com with SMTP id 22so11551131otf.0;
-        Fri, 27 Mar 2020 15:42:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=b2K5AFjmsX/bgW6eWjt5DFeA+GmCKVXYTCWAUaaLArQ=;
-        b=Qo7acoP8YAIjNoDvUoQ98+LNisRozgc2w5dAsTloR/sbgxpaMNxZfutPkkI+7mWXVn
-         NGaJNbBzdZKMKe6+I3OGfT+AvV5prpOiC9WoPvdXg0LcCaIUknmP5mE5Zhy+F5kDllPI
-         O/jLBdLrlpWuAyhGLg4iLEBwEf4z8o8lSfpCyX6hS8uITEAdPEkBmbmWSLTBGH+zsupq
-         PREPJ56GQnM+hlVR9dwAaFAaKq4zDJRDVfnuAFV/9q9kk0XfG6WF6b4MCmt6m89tcczO
-         0e10sMqNQGJJGPlrdRpED+mogiUUnfAfeeiktEbhRiI8XnLWOxdLj3iB6CmSxzsnJK54
-         vBkA==
+        Fri, 27 Mar 2020 18:43:00 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1585348979;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=4Mzj3ADDwHK3OZxpDobYVftdFd+qF9R9aBxcCpPNr+U=;
+        b=YA8cLSpWcI49T8nF58hEQ4L8/SmjvQcCMgWx5XNcOEg5LgDZHvWmDnQL1bwgARh27JON4I
+        tePBVwJQz7mNtsYCCjsdkogP8oy/K8ZRQBlyGl2NVopcLQ8f3TOiJ3YTeHxc9O/4FG+cJA
+        IrVoZnAf6mAvGBsvk9+vZERVEVjN9iI=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-220-UCab2SOyPBmpT4czBjNmkg-1; Fri, 27 Mar 2020 18:42:57 -0400
+X-MC-Unique: UCab2SOyPBmpT4czBjNmkg-1
+Received: by mail-wr1-f69.google.com with SMTP id l17so5272305wro.3
+        for <linux-kernel@vger.kernel.org>; Fri, 27 Mar 2020 15:42:57 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=b2K5AFjmsX/bgW6eWjt5DFeA+GmCKVXYTCWAUaaLArQ=;
-        b=JyXVPXf1z3V4PnKhZoi5KpQDBJTXqaNEIHVOcHkI3xi1lOM7hLpEV7bzz591L4o3S1
-         k6UxSwKpZ1veXGKmEmBcrTWdvPIKgafkwKY1qDJxIZ5UjTXONMDb7RRayUUiGrud+N3w
-         7nOk8/UYXNZiaO07McF/XVbeQoBxj+JmVoDdXzGjGjAIut7Vw3gnSmLJFENt623rzXFu
-         lSlF6OjB+rbBdfFNhaPU/p5po20J+7hKlp6wcNlMkRogi51Ur0gs1PX9ddfpyMaf58AB
-         jD8qUrJl97EJxxqx77FwRK3XgMKTsL3BovJEa4dbAj/sxFMcxNPxce3fuoVquRta1cyH
-         knXA==
-X-Gm-Message-State: ANhLgQ3ZeJGA9ZRUFigmRfDcrsQ4enPbX0KUPpMl0i6mtEpkvNVGuGRk
-        iKKgOcKNK4EQxA8wvqetbbU=
-X-Google-Smtp-Source: ADFU+vtukz2LmvX3IoICm3cgCBDA2Xzp45uxqrTH1HynXo6uBaYtb1l2E25GScwMV1h428xcvS4BkA==
-X-Received: by 2002:a05:6830:158e:: with SMTP id i14mr801986otr.103.1585348968691;
-        Fri, 27 Mar 2020 15:42:48 -0700 (PDT)
-Received: from ubuntu-m2-xlarge-x86 ([2604:1380:4111:8b00::1])
-        by smtp.gmail.com with ESMTPSA id z12sm2253435otk.24.2020.03.27.15.42.47
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 27 Mar 2020 15:42:48 -0700 (PDT)
-Date:   Fri, 27 Mar 2020 15:42:46 -0700
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     Nick Desaulniers <ndesaulniers@google.com>
-Cc:     masahiroy@kernel.org, clang-built-linux@googlegroups.com,
-        linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Sandeep Patil <sspatil@google.com>
-Subject: Re: [PATCH v2] Makefile.llvm: simplify LLVM build
-Message-ID: <20200327224246.GA12350@ubuntu-m2-xlarge-x86>
-References: <20200317202404.GA20746@ubuntu-m2-xlarge-x86>
- <20200317215515.226917-1-ndesaulniers@google.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200317215515.226917-1-ndesaulniers@google.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        h=x-gm-message-state:content-transfer-encoding:from:mime-version
+         :subject:date:message-id:references:cc:in-reply-to:to;
+        bh=4Mzj3ADDwHK3OZxpDobYVftdFd+qF9R9aBxcCpPNr+U=;
+        b=Rj/oCdLiljuowexk79EEEcLcZhZSwI02hFVBKA+51zxkUpOcWCd+DnUSgd1yjdlNg8
+         l9mZGY8ArmjC/l2uqLebvlicsj5xBqpVLLFUpkxWAGJSvldq1Dr0FM0Hz04MOrulppmN
+         SUxug/oBh0M6gqDzUravJpRLJwUY+N/wQbYRLvZ6sv1U2c96jTKfn9MRtAtBMPvIO52c
+         9T9uBWXvWZ2ITxRpQEOWUMMpaQTGNXwywpQ2klLZPj+t7y/pPWNcIBA1iORGmU3CmsmA
+         0FBxBrKfX6TE6ayaEU3DLNi1IcX08Pcc63Zyk/oKUKW/SLc9+JFnN8KxIRlbJ8WejL9t
+         HgPQ==
+X-Gm-Message-State: ANhLgQ2mkMbkvFGY5sO7POAIz4+XqfsRhj9jhOIdUzo9ndpmuWFzDFdf
+        wAZmfJOIXnAdwRO4XIBMfZxwcnI2KPxeVOheGyuwm58fygKlgFbCXIod1PMJ6XLFKYIwhd5mEUq
+        9qqbql3c8BU8/wiB/I04fu4JP
+X-Received: by 2002:a1c:1d48:: with SMTP id d69mr967964wmd.166.1585348976110;
+        Fri, 27 Mar 2020 15:42:56 -0700 (PDT)
+X-Google-Smtp-Source: ADFU+vvht9CnqI023WuyvRzJ486mByWv2gyDxVbdP8TdugWtI1ObphZr39PiEAYB16jEmau7Kp4AJA==
+X-Received: by 2002:a1c:1d48:: with SMTP id d69mr967943wmd.166.1585348975798;
+        Fri, 27 Mar 2020 15:42:55 -0700 (PDT)
+Received: from [192.168.3.122] (p5B0C6821.dip0.t-ipconnect.de. [91.12.104.33])
+        by smtp.gmail.com with ESMTPSA id 195sm10017222wmb.8.2020.03.27.15.42.54
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 27 Mar 2020 15:42:55 -0700 (PDT)
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+From:   David Hildenbrand <david@redhat.com>
+Mime-Version: 1.0 (1.0)
+Subject: Re: [PATCH v1] drivers/base/memory.c: indicate all memory blocks as removable
+Date:   Fri, 27 Mar 2020 23:42:54 +0100
+Message-Id: <700D7668-8E47-4691-8E9F-97A544D660CE@redhat.com>
+References: <CAPcyv4jYG8djxq2r=Obosq6VPG2CrR0y24N6vpqhTTvfYNbNKg@mail.gmail.com>
+Cc:     David Hildenbrand <david@redhat.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux MM <linux-mm@kvack.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        powerpc-utils-devel@googlegroups.com, util-linux@vger.kernel.org,
+        Badari Pulavarty <pbadari@us.ibm.com>,
+        Nathan Fontenot <nfont@linux.vnet.ibm.com>,
+        Robert Jennings <rcj@linux.vnet.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Karel Zak <kzak@redhat.com>,
+        "Scargall, Steve" <steve.scargall@intel.com>
+In-Reply-To: <CAPcyv4jYG8djxq2r=Obosq6VPG2CrR0y24N6vpqhTTvfYNbNKg@mail.gmail.com>
+To:     Dan Williams <dan.j.williams@intel.com>
+X-Mailer: iPhone Mail (17D50)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sorry for the delay in review :(
 
-On Tue, Mar 17, 2020 at 02:55:15PM -0700, Nick Desaulniers wrote:
-> Prior to this patch, building the Linux kernel with Clang
-> looked like:
-> 
-> $ make CC=clang
-> 
-> or when cross compiling:
-> 
-> $ ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- make CC=clang
-> 
-> which got very verbose and unwieldy when using all of LLVM's substitutes
-> for GNU binutils:
-> 
-> $ ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- make CC=clang AS=clang \
->   LD=ld.lld AR=llvm-ar NM=llvm-nm STRIP=llvm-strip \
->   OBJCOPY=llvm-objcopy OBJDUMP=llvm-objdump OBJSIZE=llvm-objsize \
->   READELF=llvm-readelf HOSTCC=clang HOSTCXX=clang++ HOSTAR=llvm-ar \
->   HOSTLD=ld.lld
-> 
-> This change adds a new Makefile under scripts/ which will be included in
-> the top level Makefile AFTER CC and friends are set, in order to make
-> the use of LLVM utilities when building a Linux kernel more ergonomic.
-> 
-> With this patch, the above now looks like:
-> 
-> $ ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- make LLVM=y
-> 
-> Then you can "opt out" of certain LLVM utilities explicitly:
-> 
-> $ ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- make LLVM=y AS=as
-> 
-> will instead invoke arm-linux-gnueabihf-as in place of clang for AS.
-> 
-> Or when not cross compiling:
-> 
-> $ make LLVM=y AS=as
-> 
-> This would make it more verbose to opt into just one tool from LLVM, but
-> this patch doesn't actually break the old style; just leave off LLVM=y.
-> Also, LLVM=y CC=clang would wind up prefixing clang with $CROSS_COMPILE.
-> In that case, it's recommended to just drop LLVM=y and use the old
-> style. So LLVM=y can be thought of as default to LLVM with explicit opt
-> ins for GNU, vs the current case of default to GNU and opt in for LLVM.
-> 
-> A key part of the design of this patch is to be minimally invasive to
-> the top level Makefile and not break existing workflows. We could get
-> more aggressive, but I'd prefer to save larger refactorings for another
-> day.
-> 
-> Finally, some linux distributions package specific versions of LLVM
-> utilities with naming conventions that use the version as a suffix, ie.
-> clang-11.  In that case, you can use LLVM=<number> and that number will
-> be used as a suffix. Example:
-> 
-> $ make LLVM=11
-> 
-> will invoke clang-11, ld.lld-11, llvm-objcopy-11, etc.
-> 
-> About the script:
-> The pattern used in the script is in the form:
-> 
-> ifeq "$(origin $(CC))" "file"
-> $(CC) := $(clang)
-> else
-> override $(CC) := $(CROSS_COMPILE)$(CC)
-> endif
-> 
-> "Metaprogramming" (eval) is used to template the above to make it more
-> concise for specifying all of the substitutions.
-> 
-> The "origin" of a variable tracks whether a variable was explicitly set
-> via "command line", "environment", was defined earlier via Makefile
-> "file", was provided by "default", or was "undefined".
-> 
-> Variable assignment in GNU Make has some special and complicated rules.
-> 
-> If the variable was set earlier explicitly in the Makefile, we can
-> simply reassign a new value to it. If a variable was unspecified, then
-> earlier assignments were executed and change the origin to file.
-> Otherwise, the variable was explicitly specified.
-> 
-> If a variable's "origin" was "command line" or "environment",
-> non-"override" assignments are not executed. The "override" directive
-> forces the assignment regardless of "origin".
-> 
-> Some tips I found useful for debugging for future travelers:
-> 
-> $(info $$origin of $$CC is $(origin CC))
-> 
-> at the start of the new script for all of the variables can help you
-> understand "default" vs "undefined" variable origins.
-> 
-> $(info $$CC is [${CC}])
-> 
-> in the top level Makefile after including the new script, for all of the
-> variables can help you check that they're being set as expected.
-> 
-> Link: https://www.gnu.org/software/make/manual/html_node/Eval-Function.html
-> Link: https://www.gnu.org/software/make/manual/html_node/Origin-Function.html
-> Link: https://www.gnu.org/software/make/manual/html_node/Implicit-Variables.html
-> Link: https://www.gnu.org/software/make/manual/html_node/Override-Directive.html
-> Suggested-by: Nathan Chancellor <natechancellor@gmail.com>
-> Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
-> ---
-> Changes V1 -> V2:
-> * Rather than LLVM=1, use LLVM=y to enable all.
-> * LLVM=<anything other than y> becomes a suffix, LLVM_SUFFIX.
-> * strip has to be used on the LLVM_SUFFIX to avoid an extra whitespace.
-> 
-> 
->  Makefile              |  4 ++++
->  scripts/Makefile.llvm | 30 ++++++++++++++++++++++++++++++
->  2 files changed, 34 insertions(+)
->  create mode 100644 scripts/Makefile.llvm
-> 
-> diff --git a/Makefile b/Makefile
-> index 402f276da062..72ec9dfea15e 100644
-> --- a/Makefile
-> +++ b/Makefile
-> @@ -475,6 +475,10 @@ KBUILD_LDFLAGS :=
->  GCC_PLUGINS_CFLAGS :=
->  CLANG_FLAGS :=
->  
-> +ifneq ($(LLVM),)
-> +include scripts/Makefile.llvm
-> +endif
-> +
->  export ARCH SRCARCH CONFIG_SHELL BASH HOSTCC KBUILD_HOSTCFLAGS CROSS_COMPILE AS LD CC
->  export CPP AR NM STRIP OBJCOPY OBJDUMP OBJSIZE READELF PAHOLE LEX YACC AWK INSTALLKERNEL
->  export PERL PYTHON PYTHON3 CHECK CHECKFLAGS MAKE UTS_MACHINE HOSTCXX
-> diff --git a/scripts/Makefile.llvm b/scripts/Makefile.llvm
-> new file mode 100644
-> index 000000000000..0bab45a100a3
-> --- /dev/null
-> +++ b/scripts/Makefile.llvm
-> @@ -0,0 +1,30 @@
-> +LLVM_SUFFIX=
-> +
-> +ifneq ($(LLVM),y)
-> +LLVM_SUFFIX += -$(LLVM)
-> +endif
-> +
-> +define META_set =
-> +ifeq "$(origin $(1))" "file"
-> +$(1) := $(2)$(strip $(LLVM_SUFFIX))
-> +else
-> +override $(1) := $(CROSS_COMPILE)$($(1))
-> +endif
-> +endef
-> +
-> +$(eval $(call META_set,CC,clang))
-> +$(eval $(call META_set,AS,clang))
-> +$(eval $(call META_set,LD,ld.lld))
-> +$(eval $(call META_set,AR,llvm-ar))
-> +$(eval $(call META_set,NM,llvm-nm))
-> +$(eval $(call META_set,STRIP,llvm-strip))
-> +$(eval $(call META_set,OBJCOPY,llvm-objcopy))
-> +$(eval $(call META_set,OBJDUMP,llvm-objdump))
-> +$(eval $(call META_set,OBJSIZE,llvm-objsize))
-> +$(eval $(call META_set,READELF,llvm-readelf))
-> +$(eval $(call META_set,HOSTCC,clang))
-> +$(eval $(call META_set,HOSTCXX,clang++))
-> +$(eval $(call META_set,HOSTAR,llvm-ar))
-> +$(eval $(call META_set,HOSTLD,ld.lld))
-> +
-> +## TODO: HOSTAR, HOSTLD in tools/objtool/Makefile
-> -- 
-> 2.25.1.481.gfbce0eb801-goog
-> 
 
-The use of override appears to break exporting the value to Kconfig,
-which causes Kconfig to endlessly loop at the --syncconfig step:
+> Am 27.03.2020 um 23:13 schrieb Dan Williams <dan.j.williams@intel.com>:
+>=20
+> =EF=BB=BFOn Fri, Mar 27, 2020 at 9:50 AM David Hildenbrand <david@redhat.c=
+om> wrote:
+>>=20
+>>> On 27.03.20 17:28, Dan Williams wrote:
+>>> On Fri, Mar 27, 2020 at 2:00 AM David Hildenbrand <david@redhat.com> wro=
+te:
+>>>>=20
+>>>> On 27.03.20 08:47, Michal Hocko wrote:
+>>>>> On Thu 26-03-20 23:24:08, Dan Williams wrote:
+>>>>> [...]
+>>>>>> David, Andrew,
+>>>>>>=20
+>>>>>> I'd like to recommend this patch for -stable as it likely (test
+>>>>>> underway) solves this crash report from Steve:
+>>>>>>=20
+>>>>>> [  148.796036] page dumped because: VM_BUG_ON_PAGE(PagePoisoned(p))
+>>>>>> [  148.796074] ------------[ cut here ]------------
+>>>>>> [  148.796098] kernel BUG at include/linux/mm.h:1087!
+>>>>>> [  148.796126] invalid opcode: 0000 [#1] SMP NOPTI
+>>>>>> [  148.796146] CPU: 63 PID: 5471 Comm: lsmem Not tainted 5.5.10-200.f=
+c31.x8=3D
+>>>>>> 6_64+debug #1
+>>>>>> [  148.796173] Hardware name: Intel Corporation S2600WFD/S2600WFD, BI=
+OS SE5=3D
+>>>>>> C620.86B.02.01.0010.010620200716 01/06/2020
+>>>>>> [  148.796212] RIP: 0010:is_mem_section_removable+0x1a4/0x1b0
+>>>>>> [  148.796561] Call Trace:
+>>>>>> [  148.796591]  removable_show+0x6e/0xa0
+>>>>>> [  148.796608]  dev_attr_show+0x19/0x40
+>>>>>> [  148.796625]  sysfs_kf_seq_show+0xa9/0x100
+>>>>>> [  148.796640]  seq_read+0xd5/0x450
+>>>>>> [  148.796657]  vfs_read+0xc5/0x180
+>>>>>> [  148.796672]  ksys_read+0x68/0xe0
+>>>>>> [  148.796688]  do_syscall_64+0x5c/0xa0
+>>>>>> [  148.796704]  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+>>>>>> [  148.796721] RIP: 0033:0x7f3ab1646412
+>>>>>>=20
+>>>>>> ...on a non-debug kernel it just crashes.
+>>>>>>=20
+>>>>>> In this case lsmem is failing when reading memory96:
+>>>>>>=20
+>>>>>> openat(3, "memory96/removable", O_RDONLY|O_CLOEXEC) =3D 4
+>>>>>> fcntl(4, F_GETFL)                       =3D 0x8000 (flags O_RDONLY|O_=
+LARGEFILE)
+>>>>>> fstat(4, {st_mode=3DS_IFREG|0444, st_size=3D4096, ...}) =3D 0
+>>>>>> read(4,  <unfinished ...>)              =3D ?
+>>>>>> +++ killed by SIGSEGV +++
+>>>>>> Segmentation fault (core dumped)
+>>>>>>=20
+>>>>>> ...which is phys_index 0x60 =3D> memory address 0x3000000000
+>>>>>>=20
+>>>>>> On this platform that lands us here:
+>>>>>>=20
+>>>>>> 100000000-303fffffff : System RAM
+>>>>>>  291f000000-291fe00f70 : Kernel code
+>>>>>>  2920000000-292051efff : Kernel rodata
+>>>>>>  2920600000-292093b0bf : Kernel data
+>>>>>>  29214f3000-2922dfffff : Kernel bss
+>>>>>> 3040000000-305fffffff : Reserved
+>>>>>> 3060000000-1aa5fffffff : Persistent Memory
+>>>>>=20
+>>>>> OK, 2GB memblocks and that would mean [0x3000000000, 0x3080000000]
+>>>>>=20
+>>>>>> ...where the last memory block of System RAM is shared with persisten=
+t
+>>>>>> memory. I.e. the block is only partially online which means that
+>>>>>> page_to_nid() in is_mem_section_removable() will assert or crash for
+>>>>>> some of the offline pages in that block.
+>>>>>=20
+>>>>> Yes, this patch is a simple workaround. Normal memory hotplug will not=
 
-$ make -j$(nproc) ARCH=riscv CROSS_COMPILE=riscv64-linux-gnu- LD=ld LLVM=y defconfig prepare
-...
-Makefile: LD is riscv64-linux-gnu-ld
-*** Default configuration is based on 'defconfig'
-Kconfig: LD is ld
-#
-# No change to .config
-#
-Makefile: LD is riscv64-linux-gnu-ld
-Makefile: LD is riscv64-linux-gnu-ld
-scripts/kconfig/conf  --syncconfig Kconfig
-Kconfig: LD is ld
-Makefile: LD is riscv64-linux-gnu-ld
-auto.conf.cmd: LD is riscv64-linux-gnu-ld
-Makefile: LD is riscv64-linux-gnu-ld
-scripts/kconfig/conf  --syncconfig Kconfig
-Kconfig: LD is ld
-Makefile: LD is riscv64-linux-gnu-ld
-auto.conf.cmd: LD is riscv64-linux-gnu-ld
-Makefile: LD is riscv64-linux-gnu-ld
-scripts/kconfig/conf  --syncconfig Kconfig
-Kconfig: LD is ld
-...
+>>>>> blow up because it should be able to find out that test_pages_in_a_zon=
+e
+>>>>> is false. Who knows how other potential pfn walkers handle that.
+>>>>=20
+>>>> All other pfn walkers now correctly use pfn_to_online_page() - which
+>>>> will also result in false positives in this scenario and is still to be=
 
-This endless loops happens because auto.conf.cmd is constantly being
-regenerated because Kconfig is not picking up the override value, as you
-can see from the debugging output above and auto.conf.cmd below:
+>>>> fixed by Dan IIRC. [1]
+>>>=20
+>>> Sorry, it's been too long and this fell out of my cache. I also turned
+>>> away once the major fire in KVM was put out with special consideration
+>>> for for devmem pages. What's left these days? ...besides
+>>> removable_show()?
+>>=20
+>> Essentially any pfn_to_online_page() is a candidate.
+>>=20
+>> E.g.,
+>>=20
+>> mm/memory-failure.c:memory_failure()
+>>=20
+>> is obviously broken (could be worked around)
+>=20
+> Ooh, the current state looks worse than when I looked previously. I
+> wasn't copied on commit 96c804a6ae8c ("mm/memory-failure.c: don't
+> access uninitialized memmaps in memory_failure()"). That commit seems
+> to ensure the pmem errors in memory sections that overlap with
+> System-RAM are not handled. So that change looks broken to me.
+> Previously get_devpagemap() was sufficient protection.
+>=20
 
-$ rg -A 2 "LD\)" include/config/auto.conf.cmd | cat
-ifneq "$(LD)" "ld"
-include/config/auto.conf: FORCE
-endif
+Well, it went in before we learned that pfn_to_online_page() is now broken i=
+n corner cases since sub-section hotadd.
 
-$(LD) evaluates to riscv64-linux-gnu-ld, which is not equal to ld, so
-include/config/auto.conf is regenerated, but env_write_dep in
-scripts/kconfig/preprocess.c just picks up the environment value, rather
-than the value that was overridden. This appears to be related to
-recursive make calls from what I can tell.
 
-$ cat Makefile
-override FOO := foo
-export FOO
+>>=20
+>> Also
+>>=20
+>> mm/memory-failure.c:soft_offline_page()
+>>=20
+>> is obviously broken.
+>=20
+> How exactly? The soft_offline_page() callers seem to already account
+> for System-RAM vs devmem.
 
-all:
-	$(info Makefile: $$(FOO) is $(FOO))
-	$(MAKE) -f Makefile.sub all
+Then my quick scan was maybe wrong :)
 
-$ cat Makefile.sub
-all:
-	$(info Makefile.sub: $$(FOO) is $(FOO))
+>=20
+>>=20
+>>=20
+>> Also set_zone_contiguous()->__pageblock_pfn_to_page() is broken, when it
+>> checks for "page_zone(start_page) !=3D zone" if the memmap contains garba=
+ge.
+>>=20
+>> And I only checked a handful of examples.
+>=20
+> Ok, but as the first example shows in the absence of a problem report
+> these pre-emptive changes might make things worse so I don't think
+> it's as simple as go instrument all the pfn_to_online_page() users.
+>=20
 
-$ make -s
-Makefile: $(FOO) is foo
-Makefile.sub: $(FOO) is foo
+Fixing pfn_to_online_page() is the right thing to do, not working around it e=
+ventually having false positives IMHO.=
 
-$ make -s FOO=bar
-Makefile: $(FOO) is foo
-Makefile.sub: $(FOO) is bar
-
-No idea if this is a bug in make or not, this seems subtle. Not really
-sure where to go from here, hopefully this is useful to you or Masahiro.
-
-You will only notice this with variables that impact Kconfig, which
-is why you never noticed with AS=as. See include/config/auto.conf.cmd
-for the full list (CC, LD, NM, OBJCOPY, HOSTCC, and HOSTCXX are the ones
-I see).
-
-Debug patch if you want to play around with this.
-
-Cheers,
-Nathan
-
-================================
-
-diff --git a/Makefile b/Makefile
-index acd8022ddb52..81cbb940e035 100644
---- a/Makefile
-+++ b/Makefile
-@@ -479,6 +479,8 @@ ifneq ($(LLVM),)
- include scripts/Makefile.llvm
- endif
- 
-+$(info Makefile: LD is $(LD))
-+
- export ARCH SRCARCH CONFIG_SHELL BASH HOSTCC KBUILD_HOSTCFLAGS CROSS_COMPILE AS LD CC
- export CPP AR NM STRIP OBJCOPY OBJDUMP OBJSIZE READELF PAHOLE LEX YACC AWK INSTALLKERNEL
- export PERL PYTHON PYTHON3 CHECK CHECKFLAGS MAKE UTS_MACHINE HOSTCXX
-diff --git a/scripts/Kconfig.include b/scripts/Kconfig.include
-index 8074f14d9d0d..43a852e0ee93 100644
---- a/scripts/Kconfig.include
-+++ b/scripts/Kconfig.include
-@@ -57,3 +57,5 @@ gcc-version := $(shell,$(srctree)/scripts/gcc-version.sh $(CC))
- cc-option-bit = $(if-success,$(CC) -Werror $(1) -E -x c /dev/null -o /dev/null,$(1))
- m32-flag := $(cc-option-bit,-m32)
- m64-flag := $(cc-option-bit,-m64)
-+
-+$(info,Kconfig: LD is $(LD))
-diff --git a/scripts/kconfig/preprocess.c b/scripts/kconfig/preprocess.c
-index 0243086fb168..fd828efc85fc 100644
---- a/scripts/kconfig/preprocess.c
-+++ b/scripts/kconfig/preprocess.c
-@@ -93,6 +93,7 @@ void env_write_dep(FILE *f, const char *autoconfig_name)
- 
- 	list_for_each_entry_safe(e, tmp, &env_list, node) {
- 		fprintf(f, "ifneq \"$(%s)\" \"%s\"\n", e->name, e->value);
-+		fprintf(f, "$(info auto.conf.cmd: %s is $(%s))\n", e->name, e->name);
- 		fprintf(f, "%s: FORCE\n", autoconfig_name);
- 		fprintf(f, "endif\n");
- 		env_del(e);
