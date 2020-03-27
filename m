@@ -2,358 +2,194 @@ Return-Path: <SRS0=s8dx=5M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E1F0C2D0ED
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 16:44:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0121FC2D0E5
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 16:49:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1801A20737
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 16:44:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C1EC720857
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 16:48:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="N94PB/az"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GkDeyJ/P"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727766AbgC0Qn6 (ORCPT
+        id S1727774AbgC0Qs6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Mar 2020 12:43:58 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:46571 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727677AbgC0Qn6 (ORCPT
+        Fri, 27 Mar 2020 12:48:58 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:54534 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727606AbgC0Qs6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Mar 2020 12:43:58 -0400
-Received: by mail-lj1-f196.google.com with SMTP id r7so3249367ljg.13
-        for <linux-kernel@vger.kernel.org>; Fri, 27 Mar 2020 09:43:55 -0700 (PDT)
+        Fri, 27 Mar 2020 12:48:58 -0400
+Received: by mail-wm1-f67.google.com with SMTP id c81so12111147wmd.4;
+        Fri, 27 Mar 2020 09:48:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=/as+JmASInELkwgMMroyTytycvdO80e/O5XQm7EVJ04=;
-        b=N94PB/az/5ogUkEN2H5bSUX/pt39lLxP6TGokNcH47TODKfVNSFWelt+L2lhTIKQtI
-         RvVsggxZZqOfj4avuouhfKgFn+jGs5UQSDjPN7kwLmCnKp++4cZYfcFGb2jEGbnHQgOu
-         PiU/YZ9gUnHqFV9xF/0jtiPkupWenYH9NgsCN7Q2hn4YYF7IRTnTraedmM/PmRq7MSSi
-         PstbSqqfi4tVSDsEQlRlHkERcM3fw/dF4IQxr29o+vGaerHwvdddujg8x2nx4LJBRceU
-         iIpIU8bOKijqJJGvJIySuSLVI2fW3NMH2gxT7w2lzJUhF4OkJXtu79+u9b9DSnQsT0Po
-         FpZQ==
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=h1aelAWLaoqq3uil0dejAhrqyTDcEF0k6JCj32olGXA=;
+        b=GkDeyJ/PCc0L5dJxqXZT3LuJ3mpLN69xZP9u7AT+BEY/kivZWonVcjpLn9ujh2pUCg
+         uYiP/TZGpCYBIjIfI79MybwkJlLF18HTjaecjRlAsZAzqBqYrkwpQpKtF5eUrDAjik71
+         Fpa3evP8G6gv34y8NsQ2cXZjdgOl/Tk+RfAEeWBN48ox72/77KErx/PlY4h9joS3gSCq
+         hnKT737Nw8q+oJ3P5t9cxi8cs47qsvk4uuBbAi9a/KRe1TFz4Ax3VmRDlXZCsS3ZPS5z
+         IHTMJARKCrJioKKL4alJrK7QoPUr8p7/gUkIgAfXo9w+svMz5ufI6UKR8ytyVBCkwN58
+         DBKA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=/as+JmASInELkwgMMroyTytycvdO80e/O5XQm7EVJ04=;
-        b=I9vf4ztt9T/XFeCYAxyWNgyt+3JG2YWIzk0Jj46xzObLl/LI3Yzwd+hhIjIzm19A+w
-         2KmTp+GSd+B4AAe/xZIMHKx3ZQqcxW23cJO6zxTJEyIcnquwvd/GDm8JfBSIppr/D68Z
-         VrJA0l26c6bCIQTYI88gOBRh+rV99q2q6Z1LlD7ShNzMLDe/myMFRfrEx2yHVlTXIKnc
-         pvrzWTacO9gyV7trpd0gBI5yfLginqz/Vu2Ziv21TQmM8yGifphjfAUASOLlS4Gy8nW5
-         KQWij7taXgJQlcadGKMQk+i9IECl8pY6XmV0lQ8u1VIgFU0/qDwf2M/oPJVY8CK7GW5/
-         azXA==
-X-Gm-Message-State: ANhLgQ2P24tbKGemGmc9/53vCgQBj/elTlBGvDKh44WhWpWqRBsUOeo0
-        U1V03LBQqULTmIm9A1F3vwlHJfgxu1oPhv4wG+naBA==
-X-Google-Smtp-Source: APiQypLiDOdZo24P4irE2iCOBbxz0P/Ae40vM0rZyGQiaVc8txobsuxM3AssXxPTAa/sZUhJvWeerCEsmPjhG7t3LXc=
-X-Received: by 2002:a2e:8015:: with SMTP id j21mr8570425ljg.165.1585327434686;
- Fri, 27 Mar 2020 09:43:54 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=h1aelAWLaoqq3uil0dejAhrqyTDcEF0k6JCj32olGXA=;
+        b=tdBmd21r4lUFiz4IjcHbvfCpI/fUNps+FO3QFcf+OaaEd8LKIBLBZQIFw4OTZCUF1n
+         XhA2uoSocNpqKXK5mjV09MWeMRTK7Z/KmyVBMvj62C0UmVG23fgxizhMoiNNILSQ6VFr
+         eRFZ13Zfrn83Q4GeLloh0nr09Z0NVBtk4uf3s+Y0lqxFqMDvqmcDsR3SSiW3b0KZMuMX
+         Zvgd7iUORtER+p6E7XvA1NxB8+kBXrSts1vm5PeEQcipo02V18//z56jqN7jstgnoG9L
+         g7ZWCPW94McWjOIXVH0GvOEkikqEyItyi6pKK6wOW4nwmqS5LRj2lSjjhHr4qT5NtBir
+         EIUg==
+X-Gm-Message-State: ANhLgQ1XcP0WwE87i9d2jLKO63ISXSkV/9pXGGZgisYs4D+1JHW9PfA+
+        ZwvK64rQIX/aRT9/O79WK4gQ27iZUyo=
+X-Google-Smtp-Source: ADFU+vvAbGX0hOXXJsXga4rmC2wnaTcEWIvck8c9xLmeF2v0jGqWQ7UjvMRuzizVUB2i1aHBQOu+Dw==
+X-Received: by 2002:a1c:de07:: with SMTP id v7mr6495554wmg.79.1585327735486;
+        Fri, 27 Mar 2020 09:48:55 -0700 (PDT)
+Received: from ziggy.stardust ([213.195.113.243])
+        by smtp.gmail.com with ESMTPSA id y7sm9838574wrq.54.2020.03.27.09.48.54
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 27 Mar 2020 09:48:54 -0700 (PDT)
+Subject: Re: [PATCH] ARM: dts: bcm283x: Add cells encoding format to firmware
+ bus
+To:     Florian Fainelli <f.fainelli@gmail.com>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Rob Herring <robh+dt@kernel.org>, Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        bcm-kernel-feedback-list@broadcom.com
+Cc:     devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20200326134413.12298-1-nsaenzjulienne@suse.de>
+ <015ad553-86a2-c6ac-e515-f14df83cec26@gmail.com>
+ <701084d1-d03d-8890-c2ca-16daaa3085d6@gmail.com>
+From:   Matthias Brugger <matthias.bgg@gmail.com>
+Autocrypt: addr=matthias.bgg@gmail.com; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <05354cea-756c-640e-24d7-272eafd69ef1@gmail.com>
+Date:   Fri, 27 Mar 2020 17:48:53 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-References: <CA+G9fYv5NxK+F5DX_q1c_wvnhjT_WTZBFJQXLWFeqMXsEcASZg@mail.gmail.com>
-In-Reply-To: <CA+G9fYv5NxK+F5DX_q1c_wvnhjT_WTZBFJQXLWFeqMXsEcASZg@mail.gmail.com>
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Fri, 27 Mar 2020 22:13:43 +0530
-Message-ID: <CA+G9fYu-qYP2wJw4p1p_C6_ttwK0fvw+qUnsN9mDuKOv3zGEBw@mail.gmail.com>
-Subject: Re: OF: ERROR: Bad of_node_put() on /ocp/interconnect@4a000000/segment@0/target-module@8000/cm_core@0/l4per-cm@1700/l4per-clkctrl@28
-To:     "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        linux-omap@vger.kernel.org
-Cc:     lkft-triage@lists.linaro.org, Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Tony Lindgren <tony@atomide.com>,
-        Benoit Cousson <bcousson@baylibre.com>,
-        Carlos Hernandez <ceh@ti.com>,
-        Thomas Gleixner <tglx@linutronix.de>, t-kristo@ti.com,
-        Olof Johansson <olof@lixom.net>, tomi.valkeinen@ti.com,
-        Anders Roxell <anders.roxell@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <701084d1-d03d-8890-c2ca-16daaa3085d6@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The reported problem still happening on arm beagle board x15 device
-running Linux next kernel 20200327.
-
-[    0.000000] Linux version 5.6.0-rc7-next-20200327
-(TuxBuild@63c63a28ad60) (gcc version 9.2.1 20191130 (Debian 9.2.1-21))
-#1 SMP Fri Mar 27 08:19:49 UTC 2020
-[    0.000000] CPU: ARMv7 Processor [412fc0f2] revision 2 (ARMv7), cr=10c5387d
-[    0.000000] CPU: div instructions available: patching division code
-[    0.000000] CPU: PIPT / VIPT nonaliasing data cache, PIPT instruction cache
-[    0.000000] OF: fdt: Machine model: TI AM5728 BeagleBoard-X15
-[    0.000000] Memory policy: Data cache writealloc
-[    0.000000] efi: UEFI not found.
-[    0.000000] cma: Reserved 64 MiB at 0xfb800000
-[    0.000000] OMAP4: Map 0xafe00000 to (ptrval) for dram barrier
-[    0.000000] DRA752 ES2.0
-[    0.000000] percpu: Embedded 20 pages/cpu s49484 r8192 d24244 u81920
-[    0.000000] Built 1 zonelists, mobility grouping on.  Total pages: 522051
-[    0.000000] Kernel command line: console=ttyS2,115200n8
-root=PARTUUID=faec2ecf-8544-e241-b19d-757e796da607 rw rootfstype=ext4
-rootwait
-[    0.000000] Dentry cache hash table entries: 131072 (order: 7,
-524288 bytes, linear)
-[    0.000000] Inode-cache hash table entries: 65536 (order: 6, 262144
-bytes, linear)
-[    0.000000] mem auto-init: stack:off, heap alloc:off, heap free:off
-[    0.000000] Memory: 1985888K/2095100K available (13312K kernel
-code, 1844K rwdata, 5676K rodata, 2048K init, 424K bss, 43676K
-reserved, 65536K cma-reserved, 1245180K highmem)
-[    0.000000] SLUB: HWalign=64, Order=0-3, MinObjects=0, CPUs=2, Nodes=1
-[    0.000000] rcu: Hierarchical RCU implementation.
-[    0.000000] rcu: RCU event tracing is enabled.
-[    0.000000] rcu: RCU restricting CPUs from NR_CPUS=16 to nr_cpu_ids=2.
-[    0.000000] rcu: RCU calculated value of scheduler-enlistment delay
-is 10 jiffies.
-[    0.000000] rcu: Adjusting geometry for rcu_fanout_leaf=16, nr_cpu_ids=2
-[    0.000000] NR_IRQS: 16, nr_irqs: 16, preallocated irqs: 16
-[    0.000000] GIC: Using split EOI/Deactivate mode
-[    0.000000] random: get_random_bytes called from
-start_kernel+0x300/0x4b8 with crng_init=0
-[    0.000000] OF: ERROR: Bad of_node_put() on
-/ocp/interconnect@4a000000/segment@0/target-module@5000/cm_core_aon@0/ipu-cm@500/ipu1-clkctrl@20
-[    0.000000] CPU: 0 PID: 0 Comm: swapper/0 Tainted: G        W
-  5.6.0-rc7-next-20200327 #1
-[    0.000000] Hardware name: Generic DRA74X (Flattened Device Tree)
-[    0.000000] [<c0311810>] (unwind_backtrace) from [<c030ba14>]
-(show_stack+0x10/0x14)
-[    0.000000] [<c030ba14>] (show_stack) from [<c0fb6604>]
-(dump_stack+0xbc/0xd0)
-[    0.000000] [<c0fb6604>] (dump_stack) from [<c0fbb07c>]
-(kobject_put+0xc0/0x104)
-[    0.000000] [<c0fbb07c>] (kobject_put) from [<c1639e4c>]
-(of_clk_init+0x18c/0x228)
-[    0.000000] [<c1639e4c>] (of_clk_init) from [<c1611544>]
-(omap_clk_init+0x3c/0x58)
-[    0.000000] [<c1611544>] (omap_clk_init) from [<c1611ea8>]
-(omap4_sync32k_timer_init+0x8/0x2c)
-[    0.000000] [<c1611ea8>] (omap4_sync32k_timer_init) from
-[<c161213c>] (omap5_realtime_timer_init+0x8/0x234)
-[    0.000000] [<c161213c>] (omap5_realtime_timer_init) from
-[<c1600c88>] (start_kernel+0x330/0x4b8)
-[    0.000000] [<c1600c88>] (start_kernel) from [<00000000>] (0x0)
-[    0.000000] OF: ERROR: Bad of_node_put() on
-/ocp/interconnect@4a000000/segment@0/target-module@8000/cm_core@0/l4per-cm@1700/l4per-clkctrl@28
-[    0.000000] CPU: 0 PID: 0 Comm: swapper/0 Tainted: G        W
-  5.6.0-rc7-next-20200327 #1
-[    0.000000] Hardware name: Generic DRA74X (Flattened Device Tree)
-[    0.000000] [<c0311810>] (unwind_backtrace) from [<c030ba14>]
-(show_stack+0x10/0x14)
-[    0.000000] [<c030ba14>] (show_stack) from [<c0fb6604>]
-(dump_stack+0xbc/0xd0)
-[    0.000000] [<c0fb6604>] (dump_stack) from [<c0fbb07c>]
-(kobject_put+0xc0/0x104)
-[    0.000000] [<c0fbb07c>] (kobject_put) from [<c1639e4c>]
-(of_clk_init+0x18c/0x228)
-[    0.000000] [<c1639e4c>] (of_clk_init) from [<c1611544>]
-(omap_clk_init+0x3c/0x58)
-[    0.000000] [<c1611544>] (omap_clk_init) from [<c1611ea8>]
-(omap4_sync32k_timer_init+0x8/0x2c)
-[    0.000000] [<c1611ea8>] (omap4_sync32k_timer_init) from
-[<c161213c>] (omap5_realtime_timer_init+0x8/0x234)
-[    0.000000] [<c161213c>] (omap5_realtime_timer_init) from
-[<c1600c88>] (start_kernel+0x330/0x4b8)
-[    0.000000] [<c1600c88>] (start_kernel) from [<00000000>] (0x0)
-[    0.000000] OMAP clockevent source: timer1 at 32786 Hz
-[    0.000000] arch_timer: cp15 timer(s) running at 6.14MHz (phys).
-[    0.000000] clocksource: arch_sys_counter: mask: 0xffffffffffffff
-max_cycles: 0x16af5adb9, max_idle_ns: 440795202250 ns
-[    0.000005] sched_clock: 56 bits at 6MHz, resolution 162ns, wraps
-every 4398046511023ns
-[    0.000016] Switching to timer-based delay loop, resolution 162ns
-[    0.004217] clocksource: 32k_counter: mask: 0xffffffff max_cycles:
-0xffffffff, max_idle_ns: 58327039986419 ns
-[    0.004225] OMAP clocksource: 32k_counter at 32768 Hz
-[    0.010420] ------------[ cut here ]------------
 
 
-https://lkft.validation.linaro.org/scheduler/job/1317004#L3449
+On 27/03/2020 17:17, Florian Fainelli wrote:
+> 
+> 
+> On 3/27/2020 9:15 AM, Matthias Brugger wrote:
+>>
+>>
+>> On 26/03/2020 14:44, Nicolas Saenz Julienne wrote:
+>>> With the introduction of 55c7c0621078 ("ARM: dts: bcm283x: Fix vc4's
+>>> firmware bus DMA limitations") the firmware bus has to comply with
+>>> /soc's DMA limitations. Ultimately linking both buses to a same
+>>> dma-ranges property. The patch (and author) missed the fact that a bus'
+>>> #address-cells and #size-cells properties are not inherited, but set to
+>>> a fixed value which, in this case, doesn't match /soc's. This, although
+>>> not breaking Linux's DMA mapping functionality, generates ugly dtc
+>>> warnings.
+>>>
+>>> Fix the issue by adding the correct address and size cells properties
+>>> under the firmware bus.
+>>>
+>>> Fixes: 55c7c0621078 ("ARM: dts: bcm283x: Fix vc4's firmware bus DMA limitations")
+>>> Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+>>
+>> Reviewed-by: Matthias Brugger <mbrugger@suse.com>
+> 
+> Should this be squashed into "ARM: dts: bcm283x: Fix vc4's firmware bus
+> DMA limitations"? I have not gotten a response it has been accepted yet.
+> 
 
-- Naresh
-On Wed, 19 Feb 2020 at 21:11, Naresh Kamboju <naresh.kamboju@linaro.org> wrote:
->
-> The following error/warning noticed on arm beagleboard x15 running
-> linux next  and linux mainline.
->
-> [    0.000000] Linux version 5.6.0-rc1 (oe-user@oe-host) (gcc version
-> 7.3.0 (GCC)) #1 SMP Fri Feb 14 21:54:55 UTC 2020
-> [    0.000000] CPU: ARMv7 Processor [412fc0f2] revision 2 (ARMv7), cr=30c5387d
-> ...
-> [    0.000000] random: get_random_bytes called from
-> start_kernel+0x5d0/0x798 with crng_init=0
-> [    0.000000] OF: ERROR: Bad of_node_put() on
-> /ocp/interconnect@4a000000/segment@0/target-module@8000/cm_core@0/l4per-cm@1700/l4per-clkctrl@28
-> [    0.000000] CPU: 0 PID: 0 Comm: swapper/0 Tainted: G        W
->   5.6.0-rc1 #1
-> [    0.000000] Hardware name: Generic DRA74X (Flattened Device Tree)
-> [    0.000000] Backtrace:
-> [    0.000000] [<c040fabc>] (dump_backtrace) from [<c040fdf0>]
-> (show_stack+0x20/0x24)
-> [    0.000000]  r7:c23f1460 r6:00000000 r5:600000d3 r4:c23f1460
-> [    0.000000] [<c040fdd0>] (show_stack) from [<c13e0cf0>]
-> (dump_stack+0xe8/0x114)
-> [    0.000000] [<c13e0c08>] (dump_stack) from [<c1127c0c>]
-> (of_node_release+0xb4/0xcc)
-> [    0.000000]  r10:efca9a44 r9:00000001 r8:00000000 r7:00000000
-> r6:c23d1250 r5:efca9a44
-> [    0.000000]  r4:efca9a70 r3:aac0aa55
-> [    0.000000] [<c1127b58>] (of_node_release) from [<c13e6448>]
-> (kobject_put+0x11c/0x23c)
-> [    0.000000]  r5:c2421020 r4:efca9a70
-> [    0.000000] [<c13e632c>] (kobject_put) from [<c1126ed8>]
-> (of_node_put+0x24/0x28)
-> [    0.000000]  r7:e98f6940 r6:c2201ef4 r5:00000000 r4:e98f6900
-> [    0.000000] [<c1126eb4>] (of_node_put) from [<c2047540>]
-> (of_clk_init+0x1a4/0x248)
-> [    0.000000] [<c204739c>] (of_clk_init) from [<c20141bc>]
-> (omap_clk_init+0x4c/0x68)
-> [    0.000000]  r10:efc8b8c0 r9:c243129c r8:00000000 r7:c2208700
-> r6:00000066 r5:c20daf64
-> [    0.000000]  r4:c2432740
-> [    0.000000] [<c2014170>] (omap_clk_init) from [<c2014bdc>]
-> (omap4_sync32k_timer_init+0x18/0x3c)
-> [    0.000000]  r5:c20daf64 r4:c2431240
-> [    0.000000] [<c2014bc4>] (omap4_sync32k_timer_init) from
-> [<c2014ec8>] (omap5_realtime_timer_init+0x1c/0x258)
-> [    0.000000] [<c2014eac>] (omap5_realtime_timer_init) from
-> [<c2005a38>] (time_init+0x30/0x44)
-> [    0.000000]  r9:c243129c r8:00000000 r7:c2208700 r6:00000066
-> r5:c20daf64 r4:c2431240
-> [    0.000000] [<c2005a08>] (time_init) from [<c20013bc>]
-> (start_kernel+0x604/0x798)
-> [    0.000000] [<c2000db8>] (start_kernel) from [<00000000>] (0x0)
-> [    0.000000]  r10:30c5387d r9:412fc0f2 r8:8ffdc000 r7:00000000
-> r6:30c0387d r5:00000000
-> [    0.000000]  r4:c2000330
-> [    0.000000] OMAP clockevent source: timer1 at 32786 Hz
-> [    0.000000] arch_timer: cp15 timer(s) running at 6.14MHz (phys).
-> [    0.000000] clocksource: arch_sys_counter: mask: 0xffffffffffffff
-> max_cycles: 0x16af5adb9, max_idle_ns: 440795202250 ns
-> [    0.000006] sched_clock: 56 bits at 6MHz, resolution 162ns, wraps
-> every 4398046511023ns
-> [    0.000028] Switching to timer-based delay loop, resolution 162ns
-> [    0.005242] clocksource: 32k_counter: mask: 0xffffffff max_cycles:
-> 0xffffffff, max_idle_ns: 58327039986419 ns
-> [    0.005261] OMAP clocksource: 32k_counter at 32768 Hz
-> [    0.012808] ------------[ cut here ]------------
-> [    0.012814] WARNING: CPU: 0 PID: 0 at
-> /usr/src/kernel/lib/refcount.c:25 refcount_warn_saturate+0x108/0x174
-> [    0.012818] refcount_t: addition on 0; use-after-free.
-> [    0.012821] Modules linked in:
-> [    0.012828] CPU: 0 PID: 0 Comm: swapper/0 Not tainted 5.6.0-rc1 #1
-> [    0.012831] Hardware name: Generic DRA74X (Flattened Device Tree)
-> [    0.012834] Backtrace:
-> [    0.012841] [<c040fabc>] (dump_backtrace) from [<c040fdf0>]
-> (show_stack+0x20/0x24)
-> [    0.012844]  r7:c23f1460 r6:00000000 r5:600000d3 r4:c23f1460
-> [    0.012848] [<c040fdd0>] (show_stack) from [<c13e0cf0>]
-> (dump_stack+0xe8/0x114)
-> [    0.012852] [<c13e0c08>] (dump_stack) from [<c04595d0>] (__warn+0x100/0x118)
-> [    0.012856]  r10:efca9a50 r9:c09577c8 r8:00000019 r7:c1c1c6c0
-> r6:00000009 r5:00000000
-> [    0.012859]  r4:c2201b7c r3:aac0aa55
-> [    0.012862] [<c04594d0>] (__warn) from [<c045966c>]
-> (warn_slowpath_fmt+0x84/0xc0)
-> [    0.012866]  r9:00000009 r8:c09577c8 r7:00000019 r6:c1c1c6c0
-> r5:c1c1c6e0 r4:c2208708
-> [    0.012870] [<c04595ec>] (warn_slowpath_fmt) from [<c09577c8>]
-> (refcount_warn_saturate+0x108/0x174)
-> [    0.012873]  r9:c2a34254 r8:c2a33e96 r7:c2a33e96 r6:00000007
-> r5:efca9a50 r4:efca9a70
-> [    0.012877] [<c09576c0>] (refcount_warn_saturate) from [<c13e6250>]
-> (kobject_get+0xa8/0xac)
-> [    0.012881] [<c13e61a8>] (kobject_get) from [<c1126eac>]
-> (of_node_get+0x24/0x2c)
-> [    0.012884]  r4:efca9a44
-> [    0.012887] [<c1126e88>] (of_node_get) from [<c1125d3c>]
-> (of_fwnode_get+0x44/0x50)
-> [    0.012890]  r5:efca9a50 r4:00000007
-> [    0.012894] [<c1125cf8>] (of_fwnode_get) from [<c0cbc270>]
-> (fwnode_get_nth_parent+0x3c/0x6c)
-> [    0.012898] [<c0cbc234>] (fwnode_get_nth_parent) from [<c13f4e44>]
-> (fwnode_full_name_string+0x3c/0xa8)
-> [    0.012901]  r7:c2a33e96 r6:c1c4d59d r5:c189ae2c r4:00000007
-> [    0.012904] [<c13f4e08>] (fwnode_full_name_string) from
-> [<c13f686c>] (device_node_string+0x48c/0x4ec)
-> [    0.012908]  r10:ffffffff r9:c1bd7a4c r8:efca9a44 r7:c2a33e96
-> r6:c1c4d59d r5:c2a34254
-> [    0.012911]  r4:c2208708
-> [    0.012915] [<c13f63e4>] (device_node_string) from [<c13f843c>]
-> (pointer+0x43c/0x4e0)
-> [    0.012918]  r10:c2a34254 r9:c2201d3c r8:c2201e90 r7:00000002
-> r6:00000000 r5:c2a34254
-> [    0.012921]  r4:c2a33e96
-> [    0.012925] [<c13f8000>] (pointer) from [<c13f86a8>] (vsnprintf+0x1c8/0x414)
-> [    0.012928]  r7:00000002 r6:c1d5476c r5:c1d5476a r4:c2a33e96
-> [    0.012931] [<c13f84e0>] (vsnprintf) from [<c13f8908>] (vscnprintf+0x14/0x2c)
-> [    0.012935]  r10:00000000 r9:00000000 r8:ffffffff r7:c2a33528
-> r6:00000028 r5:600000d3
-> [    0.012938]  r4:000003e0
-> [    0.012942] [<c13f88f4>] (vscnprintf) from [<c04db308>]
-> (vprintk_store+0x44/0x220)
-> [    0.012945]  r5:600000d3 r4:c2a33528
-> [    0.012949] [<c04db2c4>] (vprintk_store) from [<c04db8a8>]
-> (vprintk_emit+0xa0/0x2fc)
-> [    0.012953]  r10:00000001 r9:ffffffff r8:00000000 r7:00000000
-> r6:00000028 r5:600000d3
-> [    0.012956]  r4:c2a33528
-> [    0.012959] [<c04db808>] (vprintk_emit) from [<c04dbb34>]
-> (vprintk_default+0x30/0x38)
-> [    0.012963]  r10:efca9a44 r9:00000001 r8:00000000 r7:ffffe000
-> r6:c2201e8c r5:c1d54748
-> [    0.012966]  r4:c21a8590
-> [    0.012970] [<c04dbb04>] (vprintk_default) from [<c04dc9dc>]
-> (vprintk_func+0xe0/0x168)
-> [    0.012974] [<c04dc8fc>] (vprintk_func) from [<c04dc1f4>] (printk+0x40/0x5c)
-> [    0.012977]  r7:00000000 r6:c23d1250 r5:efca9a44 r4:c2208708
-> [    0.012981] [<c04dc1b4>] (printk) from [<c1127c08>]
-> (of_node_release+0xb0/0xcc)
-> [    0.012984]  r3:00000008 r2:00000000 r1:efca9a44 r0:c1d54748
-> [    0.012987]  r4:efca9a70
-> [    0.012991] [<c1127b58>] (of_node_release) from [<c13e6448>]
-> (kobject_put+0x11c/0x23c)
-> [    0.012994]  r5:c2421020 r4:efca9a70
-> [    0.012998] [<c13e632c>] (kobject_put) from [<c1126ed8>]
-> (of_node_put+0x24/0x28)
-> [    0.013001]  r7:e98f6940 r6:c2201ef4 r5:00000000 r4:e98f6900
-> [    0.013005] [<c1126eb4>] (of_node_put) from [<c2047540>]
-> (of_clk_init+0x1a4/0x248)
-> [    0.013009] [<c204739c>] (of_clk_init) from [<c20141bc>]
-> (omap_clk_init+0x4c/0x68)
-> [    0.013013]  r10:efc8b8c0 r9:c243129c r8:00000000 r7:c2208700
-> r6:00000066 r5:c20daf64
-> [    0.013016]  r4:c2432740
-> [    0.013020] [<c2014170>] (omap_clk_init) from [<c2014bdc>]
-> (omap4_sync32k_timer_init+0x18/0x3c)
-> [    0.013023]  r5:c20daf64 r4:c2431240
-> [    0.013027] [<c2014bc4>] (omap4_sync32k_timer_init) from
-> [<c2014ec8>] (omap5_realtime_timer_init+0x1c/0x258)
-> [    0.013031] [<c2014eac>] (omap5_realtime_timer_init) from
-> [<c2005a38>] (time_init+0x30/0x44)
-> [    0.013034]  r9:c243129c r8:00000000 r7:c2208700 r6:00000066
-> r5:c20daf64 r4:c2431240
-> [    0.013038] [<c2005a08>] (time_init) from [<c20013bc>]
-> (start_kernel+0x604/0x798)
-> [    0.013042] [<c2000db8>] (start_kernel) from [<00000000>] (0x0)
-> [    0.013045]  r10:30c5387d r9:412fc0f2 r8:8ffdc000 r7:00000000
-> r6:30c0387d r5:00000000
-> [    0.013048]  r4:c2000330
-> [    0.013051] irq event stamp: 0
-> [    0.013055] hardirqs last  enabled at (0): [<00000000>] 0x0
-> [    0.013058] hardirqs last disabled at (0): [<00000000>] 0x0
-> [    0.013062] softirqs last  enabled at (0): [<00000000>] 0x0
-> [    0.013065] softirqs last disabled at (0): [<00000000>] 0x0
-> [    0.013069] ---[ end trace dc03abb39d272e33 ]---
-> [    0.013072] ------------[ cut here ]------------
->
-> ref:
-> https://qa-reports.linaro.org/lkft/linux-mainline-oe/build/v5.6-rc1-186-g2019fc96af22/testrun/1221060/log
->
-> --
-> Linaro LKFT
-> https://lkft.linaro.org
+Well I think if we can squash the two instead of providing a Fixes-tag, even better.
+
+Regards,
+Matthias
