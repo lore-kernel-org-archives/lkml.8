@@ -2,164 +2,322 @@ Return-Path: <SRS0=s8dx=5M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9905C43331
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 07:49:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8081CC2D0EE
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 07:54:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 846A720705
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 07:49:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4CCFA20705
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 07:54:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="gRttRzhL";
-	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="J2ihjdL7"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Y3cEWhLc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727115AbgC0HtL (ORCPT
+        id S1726383AbgC0Hy4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Mar 2020 03:49:11 -0400
-Received: from esa4.hgst.iphmx.com ([216.71.154.42]:37026 "EHLO
-        esa4.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725946AbgC0HtK (ORCPT
+        Fri, 27 Mar 2020 03:54:56 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:39213 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726106AbgC0Hyz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Mar 2020 03:49:10 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1585295350; x=1616831350;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=3So4KQElf8n6iZiDQZl0yB+pEwm0dJL4dFu3ybCXiHc=;
-  b=gRttRzhLhluEcjyTHZaNEuyVEl+iNsdN8bhoRz6cW/WDhjPgN4K905xq
-   a9DO+07G+9bb3nSmhKZs5tKIZtc1JHKqMTWgiMYqFaxwEV/5aOJZRgtkF
-   x6rOaLvlwOiYY0R2PvPYL5rkLkImibuDVIxPWsMBW/65ErcriiXLewBpD
-   xbqrTd91ds6h+mpkVEafbGz5+lwYEVlzA9SBV3o47RmVGrhYqwFwBVrQv
-   nFMQpQn6svA86zQbt4CIpJxeIIp4zvqPTN8dVqJXlUvxo1U/ZKFL/tQPO
-   yUDyRMC/NGJ0rAQ/A3TSogWQowD4PpYA0w9Ecl8/Q4U8hCxTrhDp/FjEj
-   Q==;
-IronPort-SDR: vCJzssId70WsgZUQRz4GGkFsBDr2OGOIqee/oFsSrIUXqYyGt7jl8nccCOal88pnils4ExUTyS
- Y4g9B/z174BMfbyDiyjFpBbFSNXBpIYmKYdmPjKPwzl1+ro7NRNtqNlfoky72+LVGqoX54iJil
- GnXeCnOoB4xLDOhKitB/ss/yg0Npy2s6Rku5eTUtUtRrfD0kW3RL+RaURhYyJduqnIu3vF0o2F
- SKyk08pMoZN0xJXB27RmJ/GvT/rfbCHN2pG2zKgcyT2bi+niSR5jtUupFRqcTr0xD2C5QCR/g9
- uJ0=
-X-IronPort-AV: E=Sophos;i="5.72,311,1580745600"; 
-   d="scan'208";a="133661378"
-Received: from mail-dm6nam10lp2106.outbound.protection.outlook.com (HELO NAM10-DM6-obe.outbound.protection.outlook.com) ([104.47.58.106])
-  by ob1.hgst.iphmx.com with ESMTP; 27 Mar 2020 15:49:07 +0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=jaY2ERPWZhRYodwlNIviTx9OF4pSLI4Pu9B/gh98LA53aNAkdtkShNhzD13BstHP56+SgDXUFSndq5COD5SzNMzJX17LoUDmF9jtMpxp2ik1hfMN1bAXp0pDIWR7lqryQNwBOvt/yliLltyTaae6bdMMFmvIaASgiiW2LYlYeJMURZMziyuEYBSmJ2Xvylo7ijcqtiZxwNjz6AI74x6FA2pbATRXEqHZWPPLRL7Weq/Bkb7BSule4V1esov9D5Ma0KWaELQNplIb3nz9PVWoHe7kovfEX4BoEehiqJb39d9q8wsbpGT93mcqUGFZ7e4vTHLqJn5eRblmO0iWSpJ+xA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=JaVdG8BfpUVk+asPQi8jPX6PCq6mY33ZMSKuN47pNOw=;
- b=jUA++6EY2i8VIJ/bPfBK7Q0tVT8U/aQLc4gakORB1kvScfxo+eZ0d+aoCi0sEJgpcztG9QdPM5Vxd5kDuZmu5YVw0WQ7lXsB3yOkR3Fes+Ftre1h3CcPE9ZxZHxt2mN3TX/UPVGqmKZzzR4lTmQbr/EmVk8Tn1yQc799JYSwcJWHzrl/2hu+QoYG1zpkFYXJcPrmji6erkfAgVQYUZMQY++tRAAGcNt1LM+lYLLu2XWBiJeZsB7yh/pwfKzSD3sW6Y4x1dYGIyqyG6rCDD5h/Rsm4UcotWGUAR+ntsRHcdKvxX00A+galMNN+JvdO7s2Iq4p7/Ykwy+f7iEfULwodA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
- header.d=wdc.com; arc=none
+        Fri, 27 Mar 2020 03:54:55 -0400
+Received: by mail-wr1-f66.google.com with SMTP id p10so10231522wrt.6
+        for <linux-kernel@vger.kernel.org>; Fri, 27 Mar 2020 00:54:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=JaVdG8BfpUVk+asPQi8jPX6PCq6mY33ZMSKuN47pNOw=;
- b=J2ihjdL7T/zsUzH9OA9wDREtaXsUoBoB1NnpBMFR5VQSqPTufy29WH2UPUM3WDrNldIdzpo4+Ob5YHz1MEHXO8aHxeXFYdWCGCrUA5YEcRHhKDXD75bNJfUc+HMM2P54imNRjLal+L/+s7ujhcuaP0yIgeiG0mLnj14im6dSyo4=
-Received: from SN6PR04MB4640.namprd04.prod.outlook.com (2603:10b6:805:a4::19)
- by SN6PR04MB4656.namprd04.prod.outlook.com (2603:10b6:805:aa::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2835.20; Fri, 27 Mar
- 2020 07:49:04 +0000
-Received: from SN6PR04MB4640.namprd04.prod.outlook.com
- ([fe80::3877:5e49:6cdd:c8b]) by SN6PR04MB4640.namprd04.prod.outlook.com
- ([fe80::3877:5e49:6cdd:c8b%5]) with mapi id 15.20.2856.019; Fri, 27 Mar 2020
- 07:49:04 +0000
-From:   Avri Altman <Avri.Altman@wdc.com>
-To:     "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Can Guo <cang@codeaurora.org>
-CC:     "asutoshd@codeaurora.org" <asutoshd@codeaurora.org>,
-        "nguyenb@codeaurora.org" <nguyenb@codeaurora.org>,
-        "hongwus@codeaurora.org" <hongwus@codeaurora.org>,
-        "rnayak@codeaurora.org" <rnayak@codeaurora.org>,
-        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
-        "kernel-team@android.com" <kernel-team@android.com>,
-        "saravanak@google.com" <saravanak@google.com>,
-        "salyzyn@google.com" <salyzyn@google.com>,
-        Alim Akhtar <alim.akhtar@samsung.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Stanley Chu <stanley.chu@mediatek.com>,
-        Bean Huo <beanhuo@micron.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        Venkat Gopalakrishnan <venkatg@codeaurora.org>,
-        Tomas Winkler <tomas.winkler@intel.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>
-Subject: RE: [PATCH v6 2/2] scsi: ufs: Do not rely on prefetched data
-Thread-Topic: [PATCH v6 2/2] scsi: ufs: Do not rely on prefetched data
-Thread-Index: AQHWA+Pw3UJgJmAzSE+5Ajw5XEBLVqhcEGrw
-Date:   Fri, 27 Mar 2020 07:49:04 +0000
-Message-ID: <SN6PR04MB46402B83E0E69E2309A9EDA8FCCC0@SN6PR04MB4640.namprd04.prod.outlook.com>
-References: <1585214742-5466-1-git-send-email-cang@codeaurora.org>
-        <1585214742-5466-3-git-send-email-cang@codeaurora.org>
- <yq1lfnmcxmc.fsf@oracle.com>
-In-Reply-To: <yq1lfnmcxmc.fsf@oracle.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Avri.Altman@wdc.com; 
-x-originating-ip: [2a00:a040:188:9054:1046:30ec:e40a:caed]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 4d4d0431-8c08-4baa-7fdb-08d7d22352b7
-x-ms-traffictypediagnostic: SN6PR04MB4656:
-x-microsoft-antispam-prvs: <SN6PR04MB46567256E7C05186E66119FFFCCC0@SN6PR04MB4656.namprd04.prod.outlook.com>
-wdcipoutbound: EOP-TRUE
-x-ms-oob-tlc-oobclassifiers: OLM:8882;
-x-forefront-prvs: 0355F3A3AE
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN6PR04MB4640.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10019020)(4636009)(136003)(366004)(396003)(346002)(39860400002)(376002)(478600001)(86362001)(66446008)(52536014)(186003)(33656002)(64756008)(4326008)(8936002)(55016002)(9686003)(66556008)(66476007)(2906002)(76116006)(316002)(4744005)(7696005)(7416002)(81156014)(6506007)(66946007)(110136005)(8676002)(5660300002)(81166006)(71200400001)(54906003);DIR:OUT;SFP:1102;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: NTvsK5IfrDzvWu5TNzsmykLGuO0p7tSTmDBd1f4o3ikhT0t9hDLbi0uB5YwACOiBQaS9mQe9ZMil6PyQaCAA/bhrmJCZtBnedHwnyr5ieo5+1Y5RapZybNvMka/8fcaN/R+fi3ME4iJyRPqdf/2j/zm4x3R69UofYTT+eibqpCOCyDuFZi5ih6JE3PRNUqzAy7i5BLhMphT9y7aifOhgZMd9AwLuGFbX3kQlMCNZmxAVcYpwBMGp9nGrYqWkhs/gr/qhyCenxEbdharh3lPAjl9ujq8KXQL0kCTrYsxiZZ2OwdcSilmRLCFSimclKfxMDucRcEf5rsVkxrgdAABzY3427iBHXVtYZpnOVFveTLHxhuIxTQwrN8SAVcxCZOS9syeas8QNko4jTjzItU+SznPMeOW5FY285YIq9K0bnuXr2U0d6Lq/faFO82nhsoIf
-x-ms-exchange-antispam-messagedata: 7f+PGzVqIQ7xkTOc9KTpRNUcRGY5PgRKbiz7xRqEIJW2oOgUIM9VEV08Od2XOzYJ19VUZmpCIBEbbZEtJl8DtFhxMoscUuZ4UubtdnIk66cNZlhgUsAy1hEwJkie9Qk6LEYtsx5xlAqMZezPqDDuJRnlQkBaka4n6g/9XkH4R57GvY8ODA61CJYAbj77I9qc6RNgFsmo2a4yqrUIk+rgEA==
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=xUFFKgN3GfGwUoYxNVOvMRouA9N+GmIsWjhSsoKFX5E=;
+        b=Y3cEWhLcIOHEPTL/VkoGr5rmc2Y51cZVjR78PzBKRezoNIZvm5eHjjNQUgRpZin8GZ
+         Z1d0WpYywAPdqlpPgLJM8M5Sh3JeSh+WIoW2weDwLhqoUcjZo+tvHfDH/x1c11ABky5O
+         oEca0QR4lk/RKLO79mNgjPvRE1AL5spkEsGJPB6hCf0HY359JwyjQq5+zXCCHRuRhAfP
+         2Q8HPvqrvTxd0F5CqJC2J+kxaJ3jnCqZkJaa/pcmekjFJS013iuo25wMnzaZd2l1bA9/
+         jG3OxrmO2pHlA5Ny5H1gE60EraNsNzqVJSUeDOC65+V+7pKGqhaHUVJScP7ECzPPv0bb
+         XkmQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=xUFFKgN3GfGwUoYxNVOvMRouA9N+GmIsWjhSsoKFX5E=;
+        b=E9zq+lWCJE84eV/IWWNrxXqM2SS/Tia0ZTvzda55+noHzmI2cjaULR8S8iNspkXON7
+         TQJ1NuEmTYagc0tUyqcfghqxaxiMhAKY4RXMUgTZ6oi9tir1Nz4caXILriDBGdb5OwNI
+         rv+H0Jdvqlb+qORxU2Vm6RSDGoHy5gLnmhBLt+/1uVaskK2gMf1KtrZYjqG774BqAmGU
+         OTiU6th1pS5h135ZIyOxbi8Bs7ZJu9V1yI/LgNhB0fx0kfFOoWywovAw7476pb3drwpA
+         r5gcdn1WreG/8UyzTw8MBu0y8f/Brgwg8VSLlXLala6YMxewjMvo4eZso00JvKPUnC/e
+         LdcQ==
+X-Gm-Message-State: ANhLgQ3a49JIPfKUvK4qmetLajbGuWD2vCtWq3UHTVz/fhPOzjVaBXJa
+        A7r03S+pXvveAbsNBxsn8AzI1Q==
+X-Google-Smtp-Source: ADFU+vvNRH9b0uC33Fh+bPHVkYEbnbN5ACvModpHREVazC0tcnSTCxv7KBdulAOvR2/d/NScx9s/QQ==
+X-Received: by 2002:adf:f7cb:: with SMTP id a11mr13341425wrq.79.1585295692174;
+        Fri, 27 Mar 2020 00:54:52 -0700 (PDT)
+Received: from dell ([95.149.164.95])
+        by smtp.gmail.com with ESMTPSA id k9sm7684467wrd.74.2020.03.27.00.54.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 27 Mar 2020 00:54:51 -0700 (PDT)
+Date:   Fri, 27 Mar 2020 07:55:41 +0000
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Saravanan Sekar <sravanhome@gmail.com>
+Cc:     robh+dt@kernel.org, jic23@kernel.org, knaack.h@gmx.de,
+        lars@metafoo.de, pmeerw@pmeerw.net, sre@kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-iio@vger.kernel.org, linux-pm@vger.kernel.org
+Subject: Re: [PATCH v4 2/5] mfd: mp2629: Add support for mps battery charger
+Message-ID: <20200327075541.GF603801@dell>
+References: <20200322224626.13160-1-sravanhome@gmail.com>
+ <20200322224626.13160-3-sravanhome@gmail.com>
 MIME-Version: 1.0
-X-OriginatorOrg: wdc.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4d4d0431-8c08-4baa-7fdb-08d7d22352b7
-X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Mar 2020 07:49:04.7661
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: KxJMQGJiTGeW8tlZpMMi7ea7/Gq/gbGothmX58lPz5WT1kQrv36xb/lpV7YcDKXFlCxSbPORbsxpkDrRBe7tYQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR04MB4656
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200322224626.13160-3-sravanhome@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Sun, 22 Mar 2020, Saravanan Sekar wrote:
 
+> mp2629 is a highly-integrated switching-mode battery charge management
+> device for single-cell Li-ion or Li-polymer battery.
+> 
+> Add MFD core enables chip access for ADC driver for battery readings,
+> and a power supply battery-charger driver
+> 
+> Signed-off-by: Saravanan Sekar <sravanhome@gmail.com>
+> ---
+>  drivers/mfd/Kconfig        |   9 +++
+>  drivers/mfd/Makefile       |   2 +
+>  drivers/mfd/mp2629.c       | 116 +++++++++++++++++++++++++++++++++++++
+>  include/linux/mfd/mp2629.h |  22 +++++++
+>  4 files changed, 149 insertions(+)
+>  create mode 100644 drivers/mfd/mp2629.c
+>  create mode 100644 include/linux/mfd/mp2629.h
+> 
+> diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
+> index 3c547ed575e6..6614e5cff881 100644
+> --- a/drivers/mfd/Kconfig
+> +++ b/drivers/mfd/Kconfig
+> @@ -434,6 +434,15 @@ config MFD_MC13XXX_I2C
+>  	help
+>  	  Select this if your MC13xxx is connected via an I2C bus.
+>  
+> +config MFD_MP2629
+> +	bool "Monolithic power system MP2629 ADC and Battery charger"
+> +	depends on I2C
+> +	select REGMAP_I2C
+> +	help
+> +	  Select this option to enable support for monolithic power system
+> +	  battery charger. This provides ADC, thermal, battery charger power
+> +	  management functions on the systems.
+> +
+>  config MFD_MXS_LRADC
+>  	tristate "Freescale i.MX23/i.MX28 LRADC"
+>  	depends on ARCH_MXS || COMPILE_TEST
+> diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
+> index f935d10cbf0f..d6c210f96d02 100644
+> --- a/drivers/mfd/Makefile
+> +++ b/drivers/mfd/Makefile
+> @@ -170,6 +170,8 @@ obj-$(CONFIG_MFD_MAX8925)	+= max8925.o
+>  obj-$(CONFIG_MFD_MAX8997)	+= max8997.o max8997-irq.o
+>  obj-$(CONFIG_MFD_MAX8998)	+= max8998.o max8998-irq.o
+>  
+> +obj-$(CONFIG_MFD_MP2629)	+= mp2629.o
+> +
+>  pcf50633-objs			:= pcf50633-core.o pcf50633-irq.o
+>  obj-$(CONFIG_MFD_PCF50633)	+= pcf50633.o
+>  obj-$(CONFIG_PCF50633_ADC)	+= pcf50633-adc.o
+> diff --git a/drivers/mfd/mp2629.c b/drivers/mfd/mp2629.c
+> new file mode 100644
+> index 000000000000..41a4082387ce
+> --- /dev/null
+> +++ b/drivers/mfd/mp2629.c
+> @@ -0,0 +1,116 @@
+> +// SPDX-License-Identifier: GPL-2.0+
+> +/*
+> + * MP2629 MFD Driver for ADC and battery charger
 
->=20
-> Can,
->=20
-> > We were setting bActiveICCLevel attribute for UFS device only once but
-> > type of this attribute has changed from persistent to volatile since
-> > UFS device specification v2.1. This attribute is set to the default
-> > value after power cycle or hardware reset event. It isn't safe to rely
-> > on prefetched data (only used for bActiveICCLevel attribute
-> > now). Hence this change removes the code related to data prefetching
-> > and set this parameter on every attempt to probe the UFS device.
->=20
-> Applied patch #2 to 5.7/scsi-queue. Awaiting Avri's feedback on patch
-> #1. Thanks!
-It looks fine.
-Thanks,
-Avri
+s/MFD Driver/parent driver/
 
->=20
-> --
-> Martin K. Petersen      Oracle Linux Engineering
+> + * Copyright 2020 Monolithic Power Systems, Inc
+> + *
+> + * Author: Saravanan Sekar <sravanhome@gmail.com>
+> + */
+> +
+> +#include <linux/kernel.h>
+> +#include <linux/module.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/i2c.h>
+> +#include <linux/regmap.h>
+> +#include <linux/slab.h>
+> +#include <linux/irq.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/mfd/core.h>
+> +#include <linux/mfd/mp2629.h>
+
+Alphabetical please.
+
+> +enum {
+> +	MP2629_MFD_ADC,
+> +	MP2629_MFD_CHARGER,
+> +	MP2629_MFD_MAX
+> +};
+> +
+> +static struct resource mp2629_irq_rsrc[] = {
+> +	{
+> +		.flags = IORESOURCE_IRQ,
+> +	},
+> +};
+> +
+> +static struct mfd_cell mp2629mfd[] = {
+> +	[MP2629_MFD_ADC] = {
+> +		.name = "mp2629_adc",
+> +		.of_compatible = "mps,mp2629_adc",
+> +	},
+> +	[MP2629_MFD_CHARGER] = {
+> +		.name = "mp2629_charger",
+> +		.of_compatible = "mps,mp2629_charger",
+> +		.resources = mp2629_irq_rsrc,
+> +		.num_resources = ARRAY_SIZE(mp2629_irq_rsrc),
+> +	}
+> +};
+> +
+> +static const struct regmap_config mp2629_regmap_config = {
+> +	.reg_bits = 8,
+> +	.val_bits = 8,
+> +	.max_register = 0x17,
+> +};
+> +
+> +static int mp2629_probe(struct i2c_client *client)
+> +{
+> +	struct mp2629_info *info;
+
+All this ddata instead of info.
+
+> +	struct resource	*resources;
+> +	int ret;
+> +	int i;
+> +
+> +	info = devm_kzalloc(&client->dev, sizeof(*info), GFP_KERNEL);
+> +	if (!info)
+> +		return -ENOMEM;
+> +
+> +	info->dev = &client->dev;
+> +	i2c_set_clientdata(client, info);
+> +
+> +	info->regmap = devm_regmap_init_i2c(client, &mp2629_regmap_config);
+> +	if (IS_ERR(info->regmap)) {
+> +		dev_err(info->dev, "Failed to allocate regmap!\n");
+> +		return PTR_ERR(info->regmap);
+> +	}
+> +
+> +	for (i = 0; i < MP2629_MFD_MAX; i++) {
+> +		mp2629mfd[i].platform_data = &info->regmap;
+> +		mp2629mfd[i].pdata_size = sizeof(info->regmap);
+
+You don't need to store this in platform data as well.
+
+You already have it in device data (ddata [currently 'info']).
+
+> +		resources = (struct resource *)mp2629mfd[i].resources;
+> +		if (resources) {
+> +			resources[0].start = client->irq;
+> +			resources[0].end = client->irq;
+> +		}
+
+You don't need to store this separately either.
+
+Just fetch it from the parent in the child device driver.
+
+It will look something like (untested, off the top of my head):
+
+  platform_get_irq(to_platform_device(pdev->dev.parent), 0);
+
+> +	}
+> +
+> +	ret = devm_mfd_add_devices(info->dev, PLATFORM_DEVID_NONE, mp2629mfd,
+> +				ARRAY_SIZE(mp2629mfd), NULL,
+> +				0, NULL);
+> +	if (ret)
+> +		dev_err(info->dev, "Failed to add mfd %d\n", ret);
+
+"Failed to register sub-devices"
+
+> +	return ret;
+> +}
+> +
+> +static const struct of_device_id mp2629_of_match[] = {
+> +	{ .compatible = "mps,mp2629"},
+> +	{ }
+> +};
+> +MODULE_DEVICE_TABLE(of, mp2629_of_match);
+> +
+> +static const struct i2c_device_id mp2629_id[] = {
+> +	{ "mp2629", },
+> +	{ }
+> +};
+> +MODULE_DEVICE_TABLE(i2c, mp2629_id);
+
+You're already using .probe_new - this can be removed.
+
+> +static struct i2c_driver mp2629_driver = {
+> +	.driver = {
+> +		.name = "mp2629",
+> +		.of_match_table = mp2629_of_match,
+> +	},
+> +	.probe_new	= mp2629_probe,
+> +	.id_table	= mp2629_id,
+> +};
+> +module_i2c_driver(mp2629_driver);
+> +
+> +MODULE_AUTHOR("Saravanan Sekar <sravanhome@gmail.com>");
+> +MODULE_DESCRIPTION("MP2629 Battery charger mfd driver");
+
+"parent driver"
+
+> +MODULE_LICENSE("GPL");
+> diff --git a/include/linux/mfd/mp2629.h b/include/linux/mfd/mp2629.h
+> new file mode 100644
+> index 000000000000..371e44330ba8
+> --- /dev/null
+> +++ b/include/linux/mfd/mp2629.h
+> @@ -0,0 +1,22 @@
+> +/* SPDX-License-Identifier: GPL-2.0+ */
+> +/*
+> + * mp2629.h  - register definitions for mp2629 charger
+
+Remove the filename.
+
+s/mp2629/MP2629/
+
+> + * Copyright 2020 Monolithic Power Systems, Inc
+> + *
+
+Superfluous '\n'.
+
+> + */
+> +
+> +#ifndef __MP2629_H__
+> +#define __MP2629_H__
+> +
+> +#include <linux/types.h>
+> +
+> +struct device;
+> +struct regmap;
+
+Why not just add the includes?
+
+> +struct mp2629_info {
+> +	struct device *dev;
+> +	struct regmap *regmap;
+> +};
+> +
+> +#endif
+
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
