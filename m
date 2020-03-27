@@ -2,95 +2,142 @@ Return-Path: <SRS0=s8dx=5M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96DEDC43331
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 01:14:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B06DC2D0ED
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 01:18:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5EF7D20714
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 01:14:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3228C2082D
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 01:18:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="aLOnc6z0"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ErC7gJ2p"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727763AbgC0BOX (ORCPT
+        id S1727729AbgC0BSi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 21:14:23 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:35104 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727547AbgC0BOW (ORCPT
+        Thu, 26 Mar 2020 21:18:38 -0400
+Received: from mail-il1-f194.google.com ([209.85.166.194]:40835 "EHLO
+        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727547AbgC0BSi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 21:14:22 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02R1AHAX057146;
-        Fri, 27 Mar 2020 01:14:19 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
- from : references : date : in-reply-to : message-id : mime-version :
- content-type; s=corp-2020-01-29;
- bh=6s3AOLNIIg0oz6YOWQ14NEebEdTLo08QFpDiKkufNnU=;
- b=aLOnc6z0/MUwTfKLwR9RlJTyGtlb1/Z0KPK95dGib7vFyxsguy1VmHrwOcQRq3/RIsFZ
- TRZzJ56kWL2it6ieDyG4uzUBAKoNCE+rCy21jEmI7PUvztYbA3EUuuwj9tnDGPe3kFlj
- 9o3o3ap/Iz4gfiu6V6d+ibMgc0oBOzC92Jp7Tteywf5cAzgtMg+wo3oy2raPvM6KSAM1
- DuZ1JYnPir0mZ/uNJRHGZnUJZhCK3trGmRRyMiRYzYmPqQ7TrG1Injyja8/kiiVDnmDR
- ZB/+qTW88Ex5aL/TFRt13rCC++jnbKdLMaC84/1eE7IzCEvo+vYPu13iPEVP/Xqu+wwX PQ== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by aserp2120.oracle.com with ESMTP id 2ywavmjtus-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 27 Mar 2020 01:14:19 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02R16eah071109;
-        Fri, 27 Mar 2020 01:12:19 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3020.oracle.com with ESMTP id 30073f1v13-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 27 Mar 2020 01:12:19 +0000
-Received: from abhmp0012.oracle.com (abhmp0012.oracle.com [141.146.116.18])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 02R1CIFN020611;
-        Fri, 27 Mar 2020 01:12:18 GMT
-Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 26 Mar 2020 18:12:18 -0700
-To:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Cc:     jejb@linux.ibm.com, martin.petersen@oracle.com,
-        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH] scsi: aha1740: Fix an errro handling path in 'aha1740_probe()'
-From:   "Martin K. Petersen" <martin.petersen@oracle.com>
-Organization: Oracle Corporation
-References: <20200228215948.7473-1-christophe.jaillet@wanadoo.fr>
-Date:   Thu, 26 Mar 2020 21:12:15 -0400
-In-Reply-To: <20200228215948.7473-1-christophe.jaillet@wanadoo.fr> (Christophe
-        JAILLET's message of "Fri, 28 Feb 2020 22:59:48 +0100")
-Message-ID: <yq1k136fvo0.fsf@oracle.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1.92 (gnu/linux)
+        Thu, 26 Mar 2020 21:18:38 -0400
+Received: by mail-il1-f194.google.com with SMTP id j9so7338937ilr.7;
+        Thu, 26 Mar 2020 18:18:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=3J6Daz6wR+/gwmuLEW0pap6CJc1mq3+fsvcbg3bR/mk=;
+        b=ErC7gJ2pSdXGWgCl+BtFEjg8ncyU3bi5/7A8vCLaivlvIDsV4Adn4H36vuvx5k7leJ
+         peaeyGh1NgBbYWFinlmcXeNOapjSTXNQHIYNLTuWfaybzDx7x9uaBvu8Qw94qX0yTz2j
+         b6nNbUHmhwxSHO5gDWNF/63yrpHERa5efATwGXedVrGdaW+cVWQF7QBi6s6+P3zt6RXT
+         1yEHuXpGxK0AwTIvhzg3O2DVq/f8V569u0PRMHquwHGhfO9nLdkm+4Bi3OKEKpcDh6gG
+         cLBz1qkxBpGkww6ydaNMRhb1lZmrgeWvEKz0rS4I0fLK8fQIdNkQsJ484vVuLTHCIJ/x
+         ccpg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=3J6Daz6wR+/gwmuLEW0pap6CJc1mq3+fsvcbg3bR/mk=;
+        b=HY2RczutdCoS/ytZv5nLYSM9BS7AtDpOCbRAlpObg2t7Nf900gtDnuZKgQf9yk6NaA
+         5w+0QhkMn/O4Vv7mVJPoGCfLeLvrdV0FCHnuaRutsF9RHCDFBSAVjbYcihPG2hAm1EXE
+         c9TyvNVTnDK0dqN/edQ2uqOBYBkNOEpPESXfB1qT6XPNvvt9RMC2m86n7WRgtL+8OIk0
+         OwLsG+PYsXSlvuoVBdJBnKwLlfl940Vf5QZIfq7jqKacxjvpVvOf4BL9049dKDc5TB4B
+         APpj2DF2pQtLhD37ZOM2w7KbLIaT93DATbiJx8MP0aFz/WfCWdgY44ttk4zScit0t0Jj
+         wWhQ==
+X-Gm-Message-State: ANhLgQ1KF6j6D2h/PA9bCCjOlWNUHZJxq6qdG6ePb6nW23Rs0RO5LZYi
+        g+k4ECvIkbYoQ7Z5JZH/h9BmrSHRG2kfbDjxNcw=
+X-Google-Smtp-Source: ADFU+vulu/vI3kwqdbc2oRSG/1hF43/XgdyXecjFY74DaUm2NhvhtICjXGqjbaiLtaI4Kb8iF9ezaarRO0kAiyYAnuk=
+X-Received: by 2002:a92:7b10:: with SMTP id w16mr11322764ilc.93.1585271915967;
+ Thu, 26 Mar 2020 18:18:35 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9572 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=912 adultscore=0
- suspectscore=0 mlxscore=0 phishscore=0 bulkscore=0 spamscore=0
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2003270008
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9572 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 malwarescore=0
- priorityscore=1501 mlxscore=0 bulkscore=0 clxscore=1011 impostorscore=0
- phishscore=0 suspectscore=0 mlxlogscore=989 spamscore=0 lowpriorityscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2003270008
+References: <1585221127-11458-1-git-send-email-laoar.shao@gmail.com> <20200326143102.GB342070@cmpxchg.org>
+In-Reply-To: <20200326143102.GB342070@cmpxchg.org>
+From:   Yafang Shao <laoar.shao@gmail.com>
+Date:   Fri, 27 Mar 2020 09:17:59 +0800
+Message-ID: <CALOAHbCe9msQ+7uON=7iXnud-hzDcrnz_2er4PMQRXtNLM2BSQ@mail.gmail.com>
+Subject: Re: [PATCH 0/2] psi: enhance psi with the help of ebpf
+To:     Johannes Weiner <hannes@cmpxchg.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@kernel.org>, Jens Axboe <axboe@kernel.dk>,
+        mgorman@suse.de, Steven Rostedt <rostedt@goodmis.org>,
+        mingo@redhat.com, Linux MM <linux-mm@kvack.org>,
+        linux-block@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Mar 26, 2020 at 10:31 PM Johannes Weiner <hannes@cmpxchg.org> wrote:
+>
+> On Thu, Mar 26, 2020 at 07:12:05AM -0400, Yafang Shao wrote:
+> > PSI gives us a powerful way to anaylze memory pressure issue, but we can
+> > make it more powerful with the help of tracepoint, kprobe, ebpf and etc.
+> > Especially with ebpf we can flexiblely get more details of the memory
+> > pressure.
+> >
+> > In orderc to achieve this goal, a new parameter is added into
+> > psi_memstall_{enter, leave}, which indicates the specific type of a
+> > memstall. There're totally ten memstalls by now,
+> >         MEMSTALL_KSWAPD
+> >         MEMSTALL_RECLAIM_DIRECT
+> >         MEMSTALL_RECLAIM_MEMCG
+> >         MEMSTALL_RECLAIM_HIGH
+> >         MEMSTALL_KCOMPACTD
+> >         MEMSTALL_COMPACT
+> >         MEMSTALL_WORKINGSET_REFAULT
+> >         MEMSTALL_WORKINGSET_THRASHING
+> >         MEMSTALL_MEMDELAY
+> >         MEMSTALL_SWAPIO
+>
+> What does this provide over the events tracked in /proc/vmstats?
+>
 
-Christophe,
+/proc/vmstat only tells us which events occured, but it can't tell us
+how long these events take.
+Sometimes we really want to know how long the event takes and PSI can
+provide us the data
+For example, in the past days when I did performance tuning for a
+database service, I monitored that the latency spike is related with
+the workingset_refault counter in /proc/vmstat, and at that time I
+really want to know the spread of latencies caused by
+workingset_refault, but there's no easy way to get it. Now with newly
+added MEMSTALL_WORKINGSET_REFAULT, I can get the latencies caused by
+workingset refault.
 
-> If 'dma_map_single()' fails, the ref counted 'shpnt' will be decremented
-> twice because 'scsi_host_put()' is called in the if block, and in the
-> error handling path.
+> Can you elaborate a bit how you are using this information? It's not
+> quite clear to me from the example in patch #2.
+>
 
-Applied to 5.7/scsi-queue, thanks!
+From the traced data in patch #2, we can find that the high latencies
+of user tasks are always type 7 of memstall , which is
+MEMSTALL_WORKINGSET_THRASHING,  and then we should look into the
+details of wokingset of the user tasks and think about how to improve
+it - for example, by reducing the workingset.
 
--- 
-Martin K. Petersen	Oracle Linux Engineering
+BTW, there's some error in the definition of show_psi_memstall_type()
+in patch #2 ( that's an old version), I will correct it.
+
+To summarize, with the pressure data in /proc/pressure/memroy we know
+that the system is under memory pressure, and then with the newly
+added tracing facility in this patchset we can get the reason of this
+memory pressure, and then thinks about how to make the change.
+The workflow can be illustrated as bellow.
+
+                                      REASON        ACTION
+                                |    compaction  |  look into the
+details of compaction |
+Memory pressure -  |    vmscan        |  look into the details of vmscan       |
+                                |    workingset   |  look into the
+details of workingset   |
+                                |     etc              |   ...
+                                           |
+
+
+Thanks
+
+Yafang
