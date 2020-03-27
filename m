@@ -5,61 +5,61 @@ X-Spam-Level:
 X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22F13C2D0F4
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 01:36:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B343DC2D0F1
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 01:36:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E5C4220774
+	by mail.kernel.org (Postfix) with ESMTP id 818E720774
 	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 01:36:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="cOd197Tc"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="b8YClyd+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727901AbgC0BdB (ORCPT
+        id S1727887AbgC0Bc7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 21:33:01 -0400
-Received: from mail-pl1-f202.google.com ([209.85.214.202]:33823 "EHLO
-        mail-pl1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727884AbgC0Bc7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 26 Mar 2020 21:32:59 -0400
-Received: by mail-pl1-f202.google.com with SMTP id j8so5884354plk.1
-        for <linux-kernel@vger.kernel.org>; Thu, 26 Mar 2020 18:32:58 -0700 (PDT)
+Received: from mail-pl1-f202.google.com ([209.85.214.202]:34913 "EHLO
+        mail-pl1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727854AbgC0Bc5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Mar 2020 21:32:57 -0400
+Received: by mail-pl1-f202.google.com with SMTP id a8so5869631plm.2
+        for <linux-kernel@vger.kernel.org>; Thu, 26 Mar 2020 18:32:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=KfX4YhNI554hDVYR+6ARHJ1c92FuwzQbetwUIUbSZaQ=;
-        b=cOd197Tc0jF8mPH8KVYwd9hJtOaPM0teR5d/aaVBilfpv2fnQq4VdJ8W2OLD9Wvn7g
-         OeBDI3TNzKDHKT3W8qc0eDAr2I3PHdckKRs8YTe7xheYA62F6dUCRHYv+/hzH9B5iTcR
-         SnY7GQpHxOxHfQo+NejJhn+Gg4cXCF+UOAucPeeLnSRNWVoTYm9hQSaG5JsS990B2pDd
-         9XIYxKRa37roipCiSN1F+//suiCaCII2Hu7nCtoWQBWMuTMhslCozyfRLdp4uSPHD7Du
-         12h94o8Z90VphWhaQYP5S01wZwMbZow82nU+GLcU9g9jLqFRD8qhpPtcg4+03NBI+BPu
-         wZUQ==
+        bh=1tcAWU23e/8ucRLXfB8Bf3DPNWWN2Xhk2IPOTZhBJdU=;
+        b=b8YClyd+joF1ICbitvFylO2DFCsO8F5g9Ec7xPO+DJ+873ECEI2/mwqWB4pYD4DbSI
+         cOELowT0Dia3PdQp60x/0qhnpins6s/pRVrr7F1eb2Sf4dfplZ/S5CtaLgBZ/XzQO9nQ
+         vY2PSMbyLbKl4bUY/qw7i9a+A/Moy94kiBd7+1qBBPEz6Ibp9uYCAWfDtFZwpEcU6e3P
+         G3K1XwvYbjaeA4ewI1B0tbBBFIWphbp2n/AxLIvWqhMUT/1wKJ/8e2j6A9IMv6caNbeV
+         yiKMlbkhoBZQcvbVdZWSAhMpDmc9wEd738zLIShROJRdsTHxnIK6H/paXuh+Gj+N6uKC
+         U7NA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=KfX4YhNI554hDVYR+6ARHJ1c92FuwzQbetwUIUbSZaQ=;
-        b=R6sKK/3f7NTH0lJXmk+xOaUONMSERXlSOyn1eWoouq+wydD4H7sH5bCIJTzV0EshvP
-         eKoTI8HQ0HZiECQxc5veigKMW/MO0PAZsXIk1c0Ixz4aMtGlfzrcJB1EodmAakOeEAfp
-         Q09ysvcGHUNLXLADgrCr+R6QY5aD8ScTGmOg39S/n6rTk7MegEbRQw5bz/dH3qpVevOZ
-         VtMrjxioNWyE+w/zUZevj4L45fs9vwWbVxpSIW+06ZeXuUW/WmVVfE5TKQKtLeyNc24r
-         h4oW4AyrK/4DSNAx64sUfTnUuP63jaMuHoY0A05/tCUFvEDGFCEa2/Klkc/ygBMqPpL8
-         CS3g==
-X-Gm-Message-State: ANhLgQ2kpIyhtEfMOJcbIeOYXVoNhzOXFqDx1ZBHgyAB/tVVTNPQ9E/z
-        8003RM8QYwvJPEDUdCCewCl+srkd2h+Z
-X-Google-Smtp-Source: ADFU+vvZVBcF8elF8fTvulona4bRznVutDnKtKKl/DFIzMuaGqA1lxuTP7n4DU222Wk5nXojz7mHQMYTa4xt
-X-Received: by 2002:a17:90a:e382:: with SMTP id b2mr2952451pjz.83.1585272778333;
- Thu, 26 Mar 2020 18:32:58 -0700 (PDT)
-Date:   Thu, 26 Mar 2020 18:32:39 -0700
+        bh=1tcAWU23e/8ucRLXfB8Bf3DPNWWN2Xhk2IPOTZhBJdU=;
+        b=oVLo2gI5qnh0RZGEu9DVa7B1bY753WqCVxWvGifVZzz5/jqtdP2bNEpod6yshJ/dKD
+         cuviu6HVtfztEdM4tzCuNEZee3i4bcoZSElB3NDYa7CRBeBLDgZVI509HPfLhVbyD9Mp
+         NCbZb+qeQzVpqNV8xCF8ertufGbV+tgt4Zo/bZx7WKEIfWVXVEjHgn8vfDMmn/s/RTuE
+         GfZgdCe0b2i2WT9ZAdH7s0+0cuvfsac1ImLoXQQ7cCtRMBEqcCaQjRk4jAQl6AtAJxVi
+         2XTSGRwT16IoZ/z0W1zTDIN6BpR0JGVuSQbws+DqLw1jMst7OkKBqiHQDAqc1bNvifzP
+         4Ctw==
+X-Gm-Message-State: ANhLgQ0VFlbXWt7vrQrdPUa61zWR7QrAhIKP390jggg9WCwHBY1omKWO
+        4f5zNR+0YKwaZQwRfj+qOROQJhXaM/FJ
+X-Google-Smtp-Source: ADFU+vvU0Pz1HEuo3Vn8SApjRgiPioPAG2esbBsxvbRVTv3Ql/N7mV0cmtlBo34yI1UQ8TltLwOz2yCR6d0N
+X-Received: by 2002:a17:90b:1b01:: with SMTP id nu1mr3059618pjb.129.1585272775898;
+ Thu, 26 Mar 2020 18:32:55 -0700 (PDT)
+Date:   Thu, 26 Mar 2020 18:32:38 -0700
 In-Reply-To: <20200327013239.238182-1-rajatja@google.com>
-Message-Id: <20200327013239.238182-5-rajatja@google.com>
+Message-Id: <20200327013239.238182-4-rajatja@google.com>
 Mime-Version: 1.0
 References: <20200327013239.238182-1-rajatja@google.com>
 X-Mailer: git-send-email 2.25.1.696.g5e7596f4ac-goog
-Subject: [PATCH v3 5/5] dt-bindings: input/atkbd.txt: Add binding info for
- "keymap" property
+Subject: [PATCH v3 4/5] Input: atkbd: Receive and use physcode->keycode
+ mapping from FW
 From:   Rajat Jain <rajatja@google.com>
 To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>, dtor@google.com,
         Rob Herring <robh+dt@kernel.org>,
@@ -83,64 +83,98 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add the info for keymap property that allows firmware to specify the
-mapping from physical code to linux keycode, that the kernel should use.
+Allow the firmware to specify the mapping between the physical
+code and the linux keycode. This takes the form of a "keymap"
+property which is an array of u32 values, each value specifying
+mapping for a key.
 
 Signed-off-by: Rajat Jain <rajatja@google.com>
 ---
-v3: same as v2
+v3: Don't save the FW mapping in atkbd device.
 v2: Remove the Change-Id from the commit log
 
- .../devicetree/bindings/input/atkbd.txt       | 27 ++++++++++++++++++-
- 1 file changed, 26 insertions(+), 1 deletion(-)
+ drivers/input/keyboard/atkbd.c | 41 +++++++++++++++++++++++++++++++++-
+ 1 file changed, 40 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/input/atkbd.txt b/Documentation/devicetree/bindings/input/atkbd.txt
-index 816653eb8e98d..0a0037d70adc8 100644
---- a/Documentation/devicetree/bindings/input/atkbd.txt
-+++ b/Documentation/devicetree/bindings/input/atkbd.txt
-@@ -6,9 +6,15 @@ Optional properties:
- 			An ordered array of the physical codes for the function
- 			row keys. Arranged in order from left to right.
+diff --git a/drivers/input/keyboard/atkbd.c b/drivers/input/keyboard/atkbd.c
+index 3b20aba1861cd..0afa6d5aec3b4 100644
+--- a/drivers/input/keyboard/atkbd.c
++++ b/drivers/input/keyboard/atkbd.c
+@@ -66,6 +66,9 @@ MODULE_PARM_DESC(terminal, "Enable break codes on an IBM Terminal keyboard conne
  
-+	keymap:
-+			An array of the u32 entries to specify mapping from the
-+			keyboard physcial codes to linux keycodes. The top 16
-+			bits of each entry are the physical code, and bottom
-+			16 bits are the	linux keycode.
+ #define MAX_FUNCTION_ROW_KEYS	24
+ 
++#define PHYSCODE(keymap)	((keymap >> 16) & 0xFFFF)
++#define KEYCODE(keymap)		(keymap & 0xFFFF)
 +
- Example:
+ /*
+  * Scancode to keycode tables. These are just the default setting, and
+  * are loadable via a userland utility.
+@@ -1032,6 +1035,38 @@ static unsigned int atkbd_oqo_01plus_scancode_fixup(struct atkbd *atkbd,
+ 	return code;
+ }
  
--	This is a sample ACPI _DSD node describing the property:
-+	This is a sample ACPI _DSD node describing the properties:
++static int atkbd_get_keymap_from_fwnode(struct atkbd *atkbd)
++{
++	struct device *dev = &atkbd->ps2dev.serio->dev;
++	int i, n;
++	u32 *ptr;
++	u16 physcode, keycode;
++
++	/* Parse "keymap" property */
++	n = device_property_count_u32(dev, "keymap");
++	if (n <= 0 || n > ATKBD_KEYMAP_SIZE)
++		return -ENXIO;
++
++	ptr = kcalloc(n, sizeof(u32), GFP_KERNEL);
++	if (!ptr)
++		return -ENOMEM;
++
++	if (device_property_read_u32_array(dev, "keymap", ptr, n)) {
++		dev_err(dev, "problem parsing FW keymap property\n");
++		kfree(ptr);
++		return -EINVAL;
++	}
++
++	memset(atkbd->keycode, 0, sizeof(atkbd->keycode));
++	for (i = 0; i < n; i++) {
++		physcode = PHYSCODE(ptr[i]);
++		keycode = KEYCODE(ptr[i]);
++		atkbd->keycode[physcode] = keycode;
++	}
++	kfree(ptr);
++	return 0;
++}
++
+ /*
+  * atkbd_set_keycode_table() initializes keyboard's keycode table
+  * according to the selected scancode set
+@@ -1039,13 +1074,16 @@ static unsigned int atkbd_oqo_01plus_scancode_fixup(struct atkbd *atkbd,
  
-         Name (_DSD, Package () {
-                 ToUUID("daffd814-6eba-4d8c-8a91-bc9bbf4aa301"),
-@@ -29,6 +35,25 @@ Example:
-                                         0xAE, /* T12 VOL_DOWN */
-                                         0xB0, /* T13 VOL_UP */
-                                 }
-+                        },
-+                        Package () { "keymap",
-+                                Package () {
-+                                        0xEA009E, /* EA -> KEY_BACK */
-+                                        0xE700AD, /* E7 -> KEY_REFRESH */
-+                                        0x910174, /* 91 -> KEY_FULL_SCREEN */
-+                                        0x920078, /* 92 -> KEY_SCALE */
-+                                        0x930280, /* 93 -> 0x280 */
-+                                        0x9400E0, /* 94 -> KEY_BRIGHTNESS_DOWN*/
-+                                        0x9500E1, /* 95 -> KEY_BRIGHTNESS_UP */
-+                                        0x960279, /* 96 -> KEY_PRIVACY_SCRN_TOGGLE*/
-+                                        0x9700E5, /* 97 -> KEY_KBDILLUMDOWN */
-+                                        0x9800E6, /* 98 -> KEY_KBDILLUMUP */
-+                                        0xA00071, /* A0 -> KEY_MUTE */
-+                                        0xAE0072, /* AE -> KEY_VOLUMEDOWN */
-+                                        0xB00073, /* B0 -> KEY_VOLUMEUP */
-+					...
-+					<snip other entries>
-+                                }
-                         }
-                 }
-         })
+ static void atkbd_set_keycode_table(struct atkbd *atkbd)
+ {
++	struct device *dev = &atkbd->ps2dev.serio->dev;
+ 	unsigned int scancode;
+ 	int i, j;
+ 
+ 	memset(atkbd->keycode, 0, sizeof(atkbd->keycode));
+ 	bitmap_zero(atkbd->force_release_mask, ATKBD_KEYMAP_SIZE);
+ 
+-	if (atkbd->translated) {
++	if (!atkbd_get_keymap_from_fwnode(atkbd)) {
++		dev_dbg(dev, "Using FW keymap\n");
++	} else if (atkbd->translated) {
+ 		for (i = 0; i < 128; i++) {
+ 			scancode = atkbd_unxlate_table[i];
+ 			atkbd->keycode[i] = atkbd_set2_keycode[scancode];
+@@ -1173,6 +1211,7 @@ static void atkbd_parse_fwnode_data(struct serio *serio)
+ 		atkbd->num_function_row_keys = n;
+ 		dev_dbg(dev, "FW reported %d function-row key locations\n", n);
+ 	}
++
+ }
+ 
+ /*
 -- 
 2.25.1.696.g5e7596f4ac-goog
 
