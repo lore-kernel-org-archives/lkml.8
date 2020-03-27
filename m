@@ -2,157 +2,163 @@ Return-Path: <SRS0=s8dx=5M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BEE54C2D0E5
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 15:27:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AEAE4C2D0E5
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 15:27:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9224120748
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 15:27:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 855E22078B
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 15:27:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="QeX12oQA"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="refdVySV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727868AbgC0P1N (ORCPT
+        id S1727754AbgC0P1s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Mar 2020 11:27:13 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:56662 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727505AbgC0P1L (ORCPT
+        Fri, 27 Mar 2020 11:27:48 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:38999 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727115AbgC0P1r (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Mar 2020 11:27:11 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 02RFR5Cc034074;
-        Fri, 27 Mar 2020 10:27:05 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1585322825;
-        bh=JoSE4KS/EBjkD65NeBxt6yyL8T/GBsNherjOFrGs2kY=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=QeX12oQA01mdt0aCxMz6k1HBIXZWnc1xbuF992rNER6psMbqrKzR+G/c/+QKA+qX9
-         +FL8BUDqeywrmILz4iX8PDrhNBI5ftOQbTnYA1UA49z0dD5hR12hb6TsCkOpcdIwTc
-         wgRZhCl5ZfPMibm4Au2eT9Kq6M5CAW5k6CnsfAiQ=
-Received: from DLEE115.ent.ti.com (dlee115.ent.ti.com [157.170.170.26])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 02RFR4l3087392;
-        Fri, 27 Mar 2020 10:27:05 -0500
-Received: from DLEE101.ent.ti.com (157.170.170.31) by DLEE115.ent.ti.com
- (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Fri, 27
- Mar 2020 10:27:04 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE101.ent.ti.com
- (157.170.170.31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Fri, 27 Mar 2020 10:27:04 -0500
-Received: from [10.250.133.193] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 02RFR0Rk068295;
-        Fri, 27 Mar 2020 10:27:01 -0500
-Subject: Re: [PATCH 3/3] PCI: Cadence: Remove using
- "cdns,max-outbound-regions" DT property
-To:     Bjorn Helgaas <helgaas@kernel.org>
-CC:     Tom Joseph <tjoseph@cadence.com>, Rob Herring <robh+dt@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <amurray@thegoodpenguin.co.uk>,
-        Mark Rutland <mark.rutland@arm.com>,
-        <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20200327145417.GA30341@google.com>
-From:   Kishon Vijay Abraham I <kishon@ti.com>
-Message-ID: <27e3eb0b-c7d0-7eb7-1fb8-1f98b729513a@ti.com>
-Date:   Fri, 27 Mar 2020 20:57:00 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Fri, 27 Mar 2020 11:27:47 -0400
+Received: by mail-wr1-f66.google.com with SMTP id p10so11881848wrt.6;
+        Fri, 27 Mar 2020 08:27:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=p68q7FxdWefV2R5Th1a0xfEDj3RdF6HgiFTN3ydE1vM=;
+        b=refdVySVw7A/pjOV9Yp6LwkjoZ3kUkwdbrOU9RndbtuC/4tsonratdUUCGBoTCY2SA
+         Yf6Po0lnXZFYZbqtXd7skSJWJuJbf/o6e937mRCKZoGUDJYNRZMLP+WymMaSNhbjmmbS
+         fIHfwH93KIL3cNCGlTm12gf4Su6YRF0RHYHOLIXOaycGKIco23qMNSAerS83e3cx7FDd
+         fQK5X7RjeRBcM41vyHmxrkpqjvoc4FQmKzz4VPHUBKSiP/0moJoylxpFDAG2jjHmOjgj
+         zxnDw4oXb0xWHMdKgtF7LHKxv5DKm9vKVCTQZAaDhh0VY+MbLfK0jxZP3N0+Fh6V8L+d
+         Fx+Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=p68q7FxdWefV2R5Th1a0xfEDj3RdF6HgiFTN3ydE1vM=;
+        b=j8AxawuObKpGuA+N0pG2BS6S8HKNUmsV2TET7bEiunrsFhLyKfiRCHpJZPukzQ8pBy
+         lZp+ou4Lv9oIDhTkZ/E1wdE/OgpbnmBDZ9i8yqqeanFi9aojiVsdCRZEGR4fbgea2px7
+         CfB+haabmmZqDGv7x4xPAdfpG44Vo4B0AY/JwFStbLHu38OJqYdL1P4Ew8igTKPNpqpS
+         N9iIlokWaWKYW6zH5K3IaptdpI91DwYfEyYDhZQdcmi2poNXvKi+qYtHjFAD2g5xOuZ/
+         crg5eU09ICUpn4VcAeA7uoHSDKyCBWtG8vRgnhQfFChRQ0yJY3DQel9MjMP7oqwURYRQ
+         haZg==
+X-Gm-Message-State: ANhLgQ0SerxTaEcaeACTIfgP1Vu9FnN1wFSvFPn6hh5eqi/+IW0Q7MLG
+        Ueev3edW+FhH3x3wwOcdXUzZPka/C/Zfub94Bp03uA==
+X-Google-Smtp-Source: ADFU+vsH3mqpR9Tp9Tb+v4FFlhiStOYYETN7n0scypKKrukFU3p0H5RC7vLX/Vov04v2FyQ0XBN+26FQKXcaZao+8qQ=
+X-Received: by 2002:a5d:6187:: with SMTP id j7mr16239644wru.419.1585322866189;
+ Fri, 27 Mar 2020 08:27:46 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200327145417.GA30341@google.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <20200326211005.13301-1-wsa+renesas@sang-engineering.com>
+ <20200326211005.13301-7-wsa+renesas@sang-engineering.com> <CADnq5_P07b-A-VawLTgiTMSdifxMbWS5kgQV_+0Bw2x_DQHATQ@mail.gmail.com>
+ <20200327152535.GA2191@ravnborg.org>
+In-Reply-To: <20200327152535.GA2191@ravnborg.org>
+From:   Alex Deucher <alexdeucher@gmail.com>
+Date:   Fri, 27 Mar 2020 11:27:35 -0400
+Message-ID: <CADnq5_O-pXK1FeT1NfGBdXYZbqF6jmyXJNPgJt5qLaYMLiZy_Q@mail.gmail.com>
+Subject: Re: [PATCH 6/6] drm/radeon: convert to use i2c_new_client_device()
+To:     Sam Ravnborg <sam@ravnborg.org>
+Cc:     Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        amd-gfx list <amd-gfx@lists.freedesktop.org>,
+        David Airlie <airlied@linux.ie>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Maling list - DRI developers 
+        <dri-devel@lists.freedesktop.org>,
+        Linux I2C <linux-i2c@vger.kernel.org>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Bjorn,
+On Fri, Mar 27, 2020 at 11:25 AM Sam Ravnborg <sam@ravnborg.org> wrote:
+>
+> On Fri, Mar 27, 2020 at 10:25:16AM -0400, Alex Deucher wrote:
+> > On Thu, Mar 26, 2020 at 5:35 PM Wolfram Sang
+> > <wsa+renesas@sang-engineering.com> wrote:
+> > >
+> > > Move away from the deprecated API.
+> > >
+> > > Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+> >
+> > patches 1,6, are:
+> > Acked-by: Alex Deucher <alexander.deucher@amd.com>
+> Should we commit all to drm-misc-next?
 
-On 3/27/2020 8:24 PM, Bjorn Helgaas wrote:
-> Update subject to match capitalization of others:
-> 
->   PCI: cadence: Remove "cdns,max-outbound-regions" DT property
-> 
-> On Fri, Mar 27, 2020 at 04:17:27PM +0530, Kishon Vijay Abraham I wrote:
->> "cdns,max-outbound-regions" device tree property provides the
->> maximum number of outbound regions supported by the Host PCIe
->> controller. However the outbound regions are configured based
->> on what is populated in the "ranges" DT property.
-> 
-> Looks like this is missing a blank line here?  Or it should be
-> rewrapped as part of the above paragraph?  I think the below makes
-> more sense as a separate paragraph, though.
+I'm fine to see it go through whatever tree makes sense.
 
-I'll add a blank line for the next paragraph and re-post once I get Ack from
-Rob on the DT binding patch.
+Alex
 
-Thanks for reviewing!
 
-Regards
-Kishon
-> 
-> Again, thanks for doing this; this is a great cleanup.
-> 
->> Avoid using two properties for configuring outbound regions and
->> use only "ranges" property instead.
->>
->> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
->> ---
->>  drivers/pci/controller/cadence/pcie-cadence-host.c | 6 ------
->>  drivers/pci/controller/cadence/pcie-cadence.h      | 2 --
->>  2 files changed, 8 deletions(-)
->>
->> diff --git a/drivers/pci/controller/cadence/pcie-cadence-host.c b/drivers/pci/controller/cadence/pcie-cadence-host.c
->> index 60f912a657b9..8f72967f298f 100644
->> --- a/drivers/pci/controller/cadence/pcie-cadence-host.c
->> +++ b/drivers/pci/controller/cadence/pcie-cadence-host.c
->> @@ -140,9 +140,6 @@ static int cdns_pcie_host_init_address_translation(struct cdns_pcie_rc *rc)
->>  	for_each_of_pci_range(&parser, &range) {
->>  		bool is_io;
->>  
->> -		if (r >= rc->max_regions)
->> -			break;
->> -
->>  		if ((range.flags & IORESOURCE_TYPE_BITS) == IORESOURCE_MEM)
->>  			is_io = false;
->>  		else if ((range.flags & IORESOURCE_TYPE_BITS) == IORESOURCE_IO)
->> @@ -221,9 +218,6 @@ int cdns_pcie_host_setup(struct cdns_pcie_rc *rc)
->>  	pcie = &rc->pcie;
->>  	pcie->is_rc = true;
->>  
->> -	rc->max_regions = 32;
->> -	of_property_read_u32(np, "cdns,max-outbound-regions", &rc->max_regions);
->> -
->>  	if (!of_pci_dma_range_parser_init(&parser, np))
->>  		if (of_pci_range_parser_one(&parser, &range))
->>  			rc->no_bar_nbits = ilog2(range.size);
->> diff --git a/drivers/pci/controller/cadence/pcie-cadence.h b/drivers/pci/controller/cadence/pcie-cadence.h
->> index a2b28b912ca4..6bd89a21bb1c 100644
->> --- a/drivers/pci/controller/cadence/pcie-cadence.h
->> +++ b/drivers/pci/controller/cadence/pcie-cadence.h
->> @@ -251,7 +251,6 @@ struct cdns_pcie {
->>   * @bus_range: first/last buses behind the PCIe host controller
->>   * @cfg_base: IO mapped window to access the PCI configuration space of a
->>   *            single function at a time
->> - * @max_regions: maximum number of regions supported by the hardware
->>   * @no_bar_nbits: Number of bits to keep for inbound (PCIe -> CPU) address
->>   *                translation (nbits sets into the "no BAR match" register)
->>   * @vendor_id: PCI vendor ID
->> @@ -262,7 +261,6 @@ struct cdns_pcie_rc {
->>  	struct resource		*cfg_res;
->>  	struct resource		*bus_range;
->>  	void __iomem		*cfg_base;
->> -	u32			max_regions;
->>  	u32			no_bar_nbits;
->>  	u16			vendor_id;
->>  	u16			device_id;
->> -- 
->> 2.17.1
->>
+>
+>         Sam
+>
+>
+> >
+> > > ---
+> > >  drivers/gpu/drm/radeon/radeon_atombios.c | 4 ++--
+> > >  drivers/gpu/drm/radeon/radeon_combios.c  | 4 ++--
+> > >  2 files changed, 4 insertions(+), 4 deletions(-)
+> > >
+> > > diff --git a/drivers/gpu/drm/radeon/radeon_atombios.c b/drivers/gpu/drm/radeon/radeon_atombios.c
+> > > index 848ef68d9086..5d2591725189 100644
+> > > --- a/drivers/gpu/drm/radeon/radeon_atombios.c
+> > > +++ b/drivers/gpu/drm/radeon/radeon_atombios.c
+> > > @@ -2111,7 +2111,7 @@ static int radeon_atombios_parse_power_table_1_3(struct radeon_device *rdev)
+> > >                                                                     ucOverdriveThermalController];
+> > >                         info.addr = power_info->info.ucOverdriveControllerAddress >> 1;
+> > >                         strlcpy(info.type, name, sizeof(info.type));
+> > > -                       i2c_new_device(&rdev->pm.i2c_bus->adapter, &info);
+> > > +                       i2c_new_client_device(&rdev->pm.i2c_bus->adapter, &info);
+> > >                 }
+> > >         }
+> > >         num_modes = power_info->info.ucNumOfPowerModeEntries;
+> > > @@ -2351,7 +2351,7 @@ static void radeon_atombios_add_pplib_thermal_controller(struct radeon_device *r
+> > >                                 const char *name = pp_lib_thermal_controller_names[controller->ucType];
+> > >                                 info.addr = controller->ucI2cAddress >> 1;
+> > >                                 strlcpy(info.type, name, sizeof(info.type));
+> > > -                               i2c_new_device(&rdev->pm.i2c_bus->adapter, &info);
+> > > +                               i2c_new_client_device(&rdev->pm.i2c_bus->adapter, &info);
+> > >                         }
+> > >                 } else {
+> > >                         DRM_INFO("Unknown thermal controller type %d at 0x%02x %s fan control\n",
+> > > diff --git a/drivers/gpu/drm/radeon/radeon_combios.c b/drivers/gpu/drm/radeon/radeon_combios.c
+> > > index c3e49c973812..d3c04df7e75d 100644
+> > > --- a/drivers/gpu/drm/radeon/radeon_combios.c
+> > > +++ b/drivers/gpu/drm/radeon/radeon_combios.c
+> > > @@ -2704,7 +2704,7 @@ void radeon_combios_get_power_modes(struct radeon_device *rdev)
+> > >                                 const char *name = thermal_controller_names[thermal_controller];
+> > >                                 info.addr = i2c_addr >> 1;
+> > >                                 strlcpy(info.type, name, sizeof(info.type));
+> > > -                               i2c_new_device(&rdev->pm.i2c_bus->adapter, &info);
+> > > +                               i2c_new_client_device(&rdev->pm.i2c_bus->adapter, &info);
+> > >                         }
+> > >                 }
+> > >         } else {
+> > > @@ -2721,7 +2721,7 @@ void radeon_combios_get_power_modes(struct radeon_device *rdev)
+> > >                                 const char *name = "f75375";
+> > >                                 info.addr = 0x28;
+> > >                                 strlcpy(info.type, name, sizeof(info.type));
+> > > -                               i2c_new_device(&rdev->pm.i2c_bus->adapter, &info);
+> > > +                               i2c_new_client_device(&rdev->pm.i2c_bus->adapter, &info);
+> > >                                 DRM_INFO("Possible %s thermal controller at 0x%02x\n",
+> > >                                          name, info.addr);
+> > >                         }
+> > > --
+> > > 2.20.1
+> > >
+> > > _______________________________________________
+> > > dri-devel mailing list
+> > > dri-devel@lists.freedesktop.org
+> > > https://lists.freedesktop.org/mailman/listinfo/dri-devel
+> > _______________________________________________
+> > dri-devel mailing list
+> > dri-devel@lists.freedesktop.org
+> > https://lists.freedesktop.org/mailman/listinfo/dri-devel
