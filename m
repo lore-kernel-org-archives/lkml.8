@@ -2,217 +2,189 @@ Return-Path: <SRS0=s8dx=5M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 205F0C2D0EC
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 11:33:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D3AFC2D0F0
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 11:33:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E5BC12073B
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 11:33:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 272362073B
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 11:33:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="g9mIfMvD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727705AbgC0LdI (ORCPT
+        id S1727699AbgC0LdK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Mar 2020 07:33:08 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:59560 "EHLO
-        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727666AbgC0LdG (ORCPT
+        Fri, 27 Mar 2020 07:33:10 -0400
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:41913 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727677AbgC0LdI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Mar 2020 07:33:06 -0400
-Received: from pps.filterd (m0127361.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02RB4dKL107909;
-        Fri, 27 Mar 2020 07:32:58 -0400
-Received: from ppma02dal.us.ibm.com (a.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.10])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2ywdr9kcyt-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 27 Mar 2020 07:32:57 -0400
-Received: from pps.filterd (ppma02dal.us.ibm.com [127.0.0.1])
-        by ppma02dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 02RBUgcc005451;
-        Fri, 27 Mar 2020 11:32:53 GMT
-Received: from b03cxnp08027.gho.boulder.ibm.com (b03cxnp08027.gho.boulder.ibm.com [9.17.130.19])
-        by ppma02dal.us.ibm.com with ESMTP id 2ywaw2x8q5-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 27 Mar 2020 11:32:52 +0000
-Received: from b03ledav005.gho.boulder.ibm.com (b03ledav005.gho.boulder.ibm.com [9.17.130.236])
-        by b03cxnp08027.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 02RBWpYw13435396
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 27 Mar 2020 11:32:51 GMT
-Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 837B1BE058;
-        Fri, 27 Mar 2020 11:32:51 +0000 (GMT)
-Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id B44FEBE053;
-        Fri, 27 Mar 2020 11:32:50 +0000 (GMT)
-Received: from sofia.ibm.com (unknown [9.85.72.108])
-        by b03ledav005.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Fri, 27 Mar 2020 11:32:50 +0000 (GMT)
-Received: by sofia.ibm.com (Postfix, from userid 1000)
-        id 7548D2E3B08; Fri, 27 Mar 2020 17:02:45 +0530 (IST)
-From:   "Gautham R. Shenoy" <ego@linux.vnet.ibm.com>
-To:     Nathan Lynch <nathanl@linux.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Vaidyanathan Srinivasan <svaidy@linux.vnet.ibm.com>,
-        Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>,
-        "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>,
-        Tyrel Datwyler <tyreld@linux.ibm.com>
-Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        "Gautham R. Shenoy" <ego@linux.vnet.ibm.com>
-Subject: [PATCH v4 4/6] powerpc/sysfs: Show idle_purr and idle_spurr for every CPU
-Date:   Fri, 27 Mar 2020 17:02:38 +0530
-Message-Id: <1585308760-28792-5-git-send-email-ego@linux.vnet.ibm.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1585308760-28792-1-git-send-email-ego@linux.vnet.ibm.com>
-References: <1585308760-28792-1-git-send-email-ego@linux.vnet.ibm.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.645
- definitions=2020-03-27_03:2020-03-27,2020-03-27 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 bulkscore=0
- adultscore=0 impostorscore=0 lowpriorityscore=0 phishscore=0
- priorityscore=1501 clxscore=1015 suspectscore=0 mlxlogscore=987 mlxscore=0
- spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2003270097
+        Fri, 27 Mar 2020 07:33:08 -0400
+Received: by mail-ed1-f68.google.com with SMTP id v1so10616580edq.8
+        for <linux-kernel@vger.kernel.org>; Fri, 27 Mar 2020 04:33:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=+HBDIdNbauUzWWpYygi2C8elHABQwqvtXozjKK9jHI8=;
+        b=g9mIfMvDXBJf9IKXU+ep7HNuIrcACmkCAlfPqrOeebATZu/zp+1kFgDcYwIlwtarnT
+         uGHcciMeUHiOiCf9zVFQo8SK+++7ueQJZcS0YbeFeq49y5a+IbMjk7Bhnm8v5+wj16ow
+         nSVG6bfxiVbsBcMTQ9hRdH+zTtM7PL50EsVYs=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=+HBDIdNbauUzWWpYygi2C8elHABQwqvtXozjKK9jHI8=;
+        b=nbzu9fSlrRoUS4PdHJVA3IVd/uQ2z+NoQFc215HU5xxEJtH6dC2wULfT/SoxoewOo2
+         s0bGIikpG5nIHDVwsYFnBcmn+TFKqTyhbjmA0qXXSfKJIeAnT1T439EAF0UARt9ErpvA
+         bmRSQG4VBM3AvZFYEBdf7LaA/9XHP/zHPlMQDcvTsBMuIBdMq0Z0bFu59XApndQqysdU
+         lb00UXxDZp7lSVNcQlKw1xnUb02QUKrc8iPTKVF3kLTBcT9e19SEwsKvj9GmxLiRODG6
+         PQDWxkzkOtaPcDyhUGAa7aUaYOBBnBAVyCWXPz2ZcIUns1aEg6kgFsHoQo8sU4ynZfpX
+         nM8Q==
+X-Gm-Message-State: ANhLgQ0CXq0nLvP0rFWBblOw+79NbYpT4Q6uy6mWo/B+m46BZhzQNrUJ
+        9NLFR2yQsVc7P0yauvYIr88W+JUeuUQL4w==
+X-Google-Smtp-Source: ADFU+vumC+r1yhC0U6kcNoWOR9UE8dBCKrg2HproLtVnNU+tXcXZourTcSgoqKUswjZchHiZTsHRiw==
+X-Received: by 2002:a17:906:69d1:: with SMTP id g17mr6053769ejs.32.1585308785803;
+        Fri, 27 Mar 2020 04:33:05 -0700 (PDT)
+Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com. [209.85.221.47])
+        by smtp.gmail.com with ESMTPSA id lu24sm699617ejb.35.2020.03.27.04.33.05
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 27 Mar 2020 04:33:05 -0700 (PDT)
+Received: by mail-wr1-f47.google.com with SMTP id p10so10990129wrt.6
+        for <linux-kernel@vger.kernel.org>; Fri, 27 Mar 2020 04:33:05 -0700 (PDT)
+X-Received: by 2002:adf:f0c5:: with SMTP id x5mr14731096wro.415.1585308473751;
+ Fri, 27 Mar 2020 04:27:53 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200302041213.27662-1-senozhatsky@chromium.org>
+ <20200302041213.27662-5-senozhatsky@chromium.org> <6e4fc7f9-0068-92ff-77d7-9c77c047f3db@collabora.com>
+ <20200324023909.GA201720@google.com> <1187a3f660b092d8a9d5437445155edfc0744a4f.camel@collabora.com>
+ <20200325023248.GA241329@google.com>
+In-Reply-To: <20200325023248.GA241329@google.com>
+From:   Tomasz Figa <tfiga@chromium.org>
+Date:   Fri, 27 Mar 2020 12:27:41 +0100
+X-Gmail-Original-Message-ID: <CAAFQd5BhDLcKHR1aO2U5Lf6EBhoqtBJbg6LzWDQd7XkDJ1YUaw@mail.gmail.com>
+Message-ID: <CAAFQd5BhDLcKHR1aO2U5Lf6EBhoqtBJbg6LzWDQd7XkDJ1YUaw@mail.gmail.com>
+Subject: Re: [PATCHv4 04/11] videobuf2: add queue memory consistency parameter
+To:     Sergey Senozhatsky <senozhatsky@chromium.org>
+Cc:     Ezequiel Garcia <ezequiel@collabora.com>,
+        Dafna Hirschfeld <dafna.hirschfeld@collabora.com>,
+        Hans Verkuil <hans.verkuil@cisco.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Sakari Ailus <sakari.ailus@iki.fi>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Pawel Osciak <posciak@chromium.org>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Helen Koike <helen.koike@collabora.com>,
+        nicolas.dufresne@collabora.co.uk
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Gautham R. Shenoy" <ego@linux.vnet.ibm.com>
+On Wed, Mar 25, 2020 at 3:32 AM Sergey Senozhatsky
+<senozhatsky@chromium.org> wrote:
+>
+> On (20/03/24 07:17), Ezequiel Garcia wrote:
+> [..]
+> > > > > +static void set_queue_consistency(struct vb2_queue *q, bool consistent_mem)
+> > > > > +{
+> > > > > +       if (!vb2_queue_allows_cache_hints(q))
+> > > > > +               return;
+> > > > > +
+> > > > > +       if (consistent_mem)
+> > > > > +               q->dma_attrs &= ~DMA_ATTR_NON_CONSISTENT;
+> > > > > +       else
+> > > > > +               q->dma_attrs |= DMA_ATTR_NON_CONSISTENT;
+> > > > > +}
+> > > > > +
+> > > > >   int vb2_core_reqbufs(struct vb2_queue *q, enum vb2_memory memory,
+> > > > > -               unsigned int *count)
+> > > > > +               bool consistent_mem, unsigned int *count)
+> > > > You extended the vb2_core_reqbufs accepting a new boolean that
+> > > > is decided according to the setting of the V4L2_FLAG_MEMORY_NON_CONSISTENT
+> > > > but in the future some other flags might be added, and so I think it
+> > > > is better to replace the boolean with a u32 consisting of all the flags.
+> > >
+> > > Don't have any objections. Can change the `bool' to `u32'.
+> > >
+> >
+> > or maybe an enum instead? That would help get a cleaner
+> > interface.
+>
+> Hmm, interesting.
+>
+> The flags in question can be from different, unrelated groups
+> (types), controlling various parts of the stack. Not necessarily
+> all of them are memory_consistency related. We can, for instance,
+> pass some additional flags to underlying memory allocators (contig,
+> sg), etc.
+>
+> E.g.
+>
+>         enum MEMORY_ATTR {
+>                 MEM_NON_CONSISTENT,
+>                 ...
+>         };
+>
+>         enum VMALLOC_ALLOCATOR_ATTR {
+>                 DO_A_BARREL_ROLL,
+>                 ...
+>         };
+>
+>         enum DMA_SG_ALLOCATOR_ATTR {
+>                 WRITEBACK_TO_TAPE_DEVICE,
+>                 ...
+>         };
+>
+>         enum DMA_CONTIG_ALLOCATOR_ATTR {
+>                 PREFER_HTTPS,
+>                 ...
+>         };
+>
+> and so on. We maybe can keep all of those in one enum (umm, what should
+> be the name?), and then either make sure that all of them are proper powers
+> of two
+>
+>         enum AUX_FLAGS {
+>                 MEM_NON_CONSISTENT              = (1 << 0),
+>                 DO_A_BARREL_ROLL                = (1 << 1),
+>                 WRITEBACK_TO_TAPE_DEVICE        = (1 << 2),
+>                 PREFER_HTTPS                    = (1 << 3),
+>         };
+>
+> or
+>         enum AUX_FLAGS {
+>                 MEM_NON_CONSISTENT              = 0,
+>                 DO_A_BARREL_ROLL,
+>                 WRITEBACK_TO_TAPE_DEVICE,
+>                 PREFER_HTTPS,
+>         };
+>
+> and make sure that those are not flags, but bits.
+> IOW, if (flags & BIT(MEM_NON_CONSISTENT)).
+>
+>
+> What do others think?
 
-On Pseries LPARs, to calculate utilization, we need to know the
-[S]PURR ticks when the CPUs were busy or idle.
+My feeling is that there it's a bit of an abuse of the language
+construct. Enum is expected to be an enumeration type, where the value
+is always one and only one of the defined values at the same time.
+Making a bitwise OR of several values makes the resulting value
+outside of the enum specification.
 
-The total PURR and SPURR ticks are already exposed via the per-cpu
-sysfs files "purr" and "spurr". This patch adds support for exposing
-the idle PURR and SPURR ticks via new per-cpu sysfs files named
-"idle_purr" and "idle_spurr".
+AFAICT, the typical approach in the kernel is to just have a block of
+#define statements to define the flags and have the flag names
+prefixed with some consistent prefix, e.g. VB2_QUEUE_FLAG_. The flags
+itself would be defined using BIT() so they can be used directly in
+the bitwise arithmetics.
 
-Signed-off-by: Gautham R. Shenoy <ego@linux.vnet.ibm.com>
----
- arch/powerpc/kernel/sysfs.c | 82 +++++++++++++++++++++++++++++++++++++++++++--
- 1 file changed, 79 insertions(+), 3 deletions(-)
-
-diff --git a/arch/powerpc/kernel/sysfs.c b/arch/powerpc/kernel/sysfs.c
-index 479c706..571b325 100644
---- a/arch/powerpc/kernel/sysfs.c
-+++ b/arch/powerpc/kernel/sysfs.c
-@@ -19,6 +19,7 @@
- #include <asm/smp.h>
- #include <asm/pmc.h>
- #include <asm/firmware.h>
-+#include <asm/idle.h>
- #include <asm/svm.h>
- 
- #include "cacheinfo.h"
-@@ -760,6 +761,74 @@ static void create_svm_file(void)
- }
- #endif /* CONFIG_PPC_SVM */
- 
-+#ifdef CONFIG_PPC_PSERIES
-+static void read_idle_purr(void *val)
-+{
-+	u64 *ret = val;
-+
-+	*ret = read_this_idle_purr();
-+}
-+
-+static ssize_t idle_purr_show(struct device *dev,
-+			      struct device_attribute *attr, char *buf)
-+{
-+	struct cpu *cpu = container_of(dev, struct cpu, dev);
-+	u64 val;
-+
-+	smp_call_function_single(cpu->dev.id, read_idle_purr, &val, 1);
-+	return sprintf(buf, "%llx\n", val);
-+}
-+static DEVICE_ATTR(idle_purr, 0400, idle_purr_show, NULL);
-+
-+static void create_idle_purr_file(struct device *s)
-+{
-+	if (firmware_has_feature(FW_FEATURE_LPAR))
-+		device_create_file(s, &dev_attr_idle_purr);
-+}
-+
-+static void remove_idle_purr_file(struct device *s)
-+{
-+	if (firmware_has_feature(FW_FEATURE_LPAR))
-+		device_remove_file(s, &dev_attr_idle_purr);
-+}
-+
-+static void read_idle_spurr(void *val)
-+{
-+	u64 *ret = val;
-+
-+	*ret = read_this_idle_spurr();
-+}
-+
-+static ssize_t idle_spurr_show(struct device *dev,
-+			       struct device_attribute *attr, char *buf)
-+{
-+	struct cpu *cpu = container_of(dev, struct cpu, dev);
-+	u64 val;
-+
-+	smp_call_function_single(cpu->dev.id, read_idle_spurr, &val, 1);
-+	return sprintf(buf, "%llx\n", val);
-+}
-+static DEVICE_ATTR(idle_spurr, 0400, idle_spurr_show, NULL);
-+
-+static void create_idle_spurr_file(struct device *s)
-+{
-+	if (firmware_has_feature(FW_FEATURE_LPAR))
-+		device_create_file(s, &dev_attr_idle_spurr);
-+}
-+
-+static void remove_idle_spurr_file(struct device *s)
-+{
-+	if (firmware_has_feature(FW_FEATURE_LPAR))
-+		device_remove_file(s, &dev_attr_idle_spurr);
-+}
-+
-+#else /* CONFIG_PPC_PSERIES */
-+#define create_idle_purr_file(s)
-+#define remove_idle_purr_file(s)
-+#define create_idle_spurr_file(s)
-+#define remove_idle_spurr_file(s)
-+#endif /* CONFIG_PPC_PSERIES */
-+
- static int register_cpu_online(unsigned int cpu)
- {
- 	struct cpu *c = &per_cpu(cpu_devices, cpu);
-@@ -823,10 +892,13 @@ static int register_cpu_online(unsigned int cpu)
- 		if (!firmware_has_feature(FW_FEATURE_LPAR))
- 			add_write_permission_dev_attr(&dev_attr_purr);
- 		device_create_file(s, &dev_attr_purr);
-+		create_idle_purr_file(s);
- 	}
- 
--	if (cpu_has_feature(CPU_FTR_SPURR))
-+	if (cpu_has_feature(CPU_FTR_SPURR)) {
- 		device_create_file(s, &dev_attr_spurr);
-+		create_idle_spurr_file(s);
-+	}
- 
- 	if (cpu_has_feature(CPU_FTR_DSCR))
- 		device_create_file(s, &dev_attr_dscr);
-@@ -910,11 +982,15 @@ static int unregister_cpu_online(unsigned int cpu)
- 		device_remove_file(s, &dev_attr_mmcra);
- #endif /* CONFIG_PMU_SYSFS */
- 
--	if (cpu_has_feature(CPU_FTR_PURR))
-+	if (cpu_has_feature(CPU_FTR_PURR)) {
- 		device_remove_file(s, &dev_attr_purr);
-+		remove_idle_purr_file(s);
-+	}
- 
--	if (cpu_has_feature(CPU_FTR_SPURR))
-+	if (cpu_has_feature(CPU_FTR_SPURR)) {
- 		device_remove_file(s, &dev_attr_spurr);
-+		remove_idle_spurr_file(s);
-+	}
- 
- 	if (cpu_has_feature(CPU_FTR_DSCR))
- 		device_remove_file(s, &dev_attr_dscr);
--- 
-1.9.4
-
+Best regards,
+Tomasz
