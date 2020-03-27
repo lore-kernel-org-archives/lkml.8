@@ -2,289 +2,134 @@ Return-Path: <SRS0=s8dx=5M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1F62C2D0E8
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 12:46:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27FC0C43331
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 12:48:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE9AB20838
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 12:46:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE7B4206F2
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 12:48:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="lc2tTlpV"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="I04So+p9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727705AbgC0MqL (ORCPT
+        id S1727345AbgC0MsK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Mar 2020 08:46:11 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:37376 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726515AbgC0MqL (ORCPT
+        Fri, 27 Mar 2020 08:48:10 -0400
+Received: from us-smtp-delivery-74.mimecast.com ([63.128.21.74]:54073 "EHLO
+        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726165AbgC0MsK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Mar 2020 08:46:11 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02RCi3lx171583;
-        Fri, 27 Mar 2020 12:46:06 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references; s=corp-2020-01-29;
- bh=EtuvsdSirFos4AqZLPMsv7ugIs0vPYtQQbK4VHPa1fo=;
- b=lc2tTlpVWUDp22Bo8kC6j4pH7zqy1W31DRJRxlEmaTT2CsWd9C5j8bOR6NqkjxA/Ka6j
- AyzeQPh1NQVLgGnUx/cRh+dR0+37pkEuuNiWOFmh7bS3k2l4RBXgx6B5LoAtfQ0RYtS6
- evvqW+nLMmSuCltRAPw81kxYUvrBcQIasNOVw/exX7Ecu0IsQKaHd6ToMhJc32HhoKsQ
- OqefUey1S5QncAXyanHuztZiALmHnkkGKs9/DRxawkhWmmcdWUDZjhrUQLSCl1Qk+2Zr
- 2Of8S5frVBH4KkU2YHkCGq1J45ulx7jVvoVlGbDwhyoDHUrd4drmrDDBC0MypiRhubl/ Nw== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2130.oracle.com with ESMTP id 301459aw7d-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 27 Mar 2020 12:46:06 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02RCgaVI071607;
-        Fri, 27 Mar 2020 12:46:06 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by userp3030.oracle.com with ESMTP id 2yxw4vsffw-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 27 Mar 2020 12:46:06 +0000
-Received: from abhmp0001.oracle.com (abhmp0001.oracle.com [141.146.116.7])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 02RCk5e5005499;
-        Fri, 27 Mar 2020 12:46:05 GMT
-Received: from localhost.uk.oracle.com (/10.175.186.71)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 27 Mar 2020 05:46:01 -0700
-From:   Alan Maguire <alan.maguire@oracle.com>
-To:     brendanhiggins@google.com, shuah@kernel.org,
-        trishalfonso@google.com, linux-kselftest@vger.kernel.org
-Cc:     kunit-dev@googlegroups.com, linux-kernel@vger.kernel.org,
-        Alan Maguire <alan.maguire@oracle.com>
-Subject: [PATCH v3 kunit-next 2/2] kunit: add support for named resources
-Date:   Fri, 27 Mar 2020 12:45:22 +0000
-Message-Id: <1585313122-26441-3-git-send-email-alan.maguire@oracle.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1585313122-26441-1-git-send-email-alan.maguire@oracle.com>
-References: <1585313122-26441-1-git-send-email-alan.maguire@oracle.com>
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9572 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 suspectscore=2
- spamscore=0 mlxlogscore=999 adultscore=0 phishscore=0 mlxscore=0
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2003270117
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9572 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 phishscore=0
- priorityscore=1501 bulkscore=0 lowpriorityscore=0 mlxlogscore=999
- adultscore=0 suspectscore=2 impostorscore=0 mlxscore=0 spamscore=0
- clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2003270117
+        Fri, 27 Mar 2020 08:48:10 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1585313288;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=J3R9pjfcrLfveJt0OaJwOudwQhu7GzXewbxhBYVgwpg=;
+        b=I04So+p9VSD2hBwynFiXK+dmEn7MeZnQ5SOLdGNa5yArhKHYDpfXNyQQeCiANEiQEj/SHZ
+        3mnfhENd+MqjhXJVNs1ZuOs/xhDZZaPeCz3hQbxrgxVa76Awl43ej42yMPF/bIvMIQoVcF
+        cCDgqNfrzAo9s9kS6HQhMRl2k7QIGF4=
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
+ [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-240-LPpkSmZJMEe8A8K9hONBgQ-1; Fri, 27 Mar 2020 08:48:07 -0400
+X-MC-Unique: LPpkSmZJMEe8A8K9hONBgQ-1
+Received: by mail-wr1-f70.google.com with SMTP id u18so4466700wrn.11
+        for <linux-kernel@vger.kernel.org>; Fri, 27 Mar 2020 05:48:07 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=J3R9pjfcrLfveJt0OaJwOudwQhu7GzXewbxhBYVgwpg=;
+        b=MF2NzFFfE40v3AoqmNPTpU0CCFzN7w2bt+0nluaO2VijDVu9FB+2+1qvK445BwPLAE
+         fdcJTbw9Ayd3je14qpoLVnDEDTaOrJymsKV3u7OZx77ksrl5cm/CrIu2U2p0DwtQxeEP
+         dbMnlRrvhEwiNpF+lkyMxfWOxmTbSx6I15YPcXxi0WwvVtJwufT5GwWonT4ePMUrg6hH
+         MQsbRWXojYrWMCOzZY9yEVuO1zV8fge+mjNPSd8eXcmJXvK4Jwn513PBiAqbLHu4L43I
+         pnLjxBimkGcOJyylvZJCuhNgVXihp64KK9qorCegb1mOUveVOQnCWHBk0UoNDrrK0dsJ
+         5hkQ==
+X-Gm-Message-State: ANhLgQ3yqE20tv1UQRZzGkvFM69ONexbp67bAseS1K/4J+j3Ki2I/WmL
+        FdYOu/Jj0NdmYqpgxNgvfcSYwFypEFUUfQUL0WCso9TkbQHiJpi09EaO1AK8L7gG3Xf6RGr+Y9R
+        tIAgjeGTuHqKcZOUbt+fw62Ag
+X-Received: by 2002:adf:f5c8:: with SMTP id k8mr13922486wrp.33.1585313286078;
+        Fri, 27 Mar 2020 05:48:06 -0700 (PDT)
+X-Google-Smtp-Source: ADFU+vt5vgDE/lGJRuJHFUg90TW5N/ADRnKJCzJQ3za8iF5BR3iNikqZ3JIgzc9k8sjECJJks2AE1A==
+X-Received: by 2002:adf:f5c8:: with SMTP id k8mr13922457wrp.33.1585313285753;
+        Fri, 27 Mar 2020 05:48:05 -0700 (PDT)
+Received: from vitty.brq.redhat.com (g-server-2.ign.cz. [91.219.240.2])
+        by smtp.gmail.com with ESMTPSA id a8sm7715284wmb.39.2020.03.27.05.48.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 27 Mar 2020 05:48:04 -0700 (PDT)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     Junaid Shahid <junaids@google.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Subject: Re: [PATCH 2/3] KVM: x86: cleanup kvm_inject_emulated_page_fault
+In-Reply-To: <d2222e81-8618-b3b0-baf3-2bda72d48ede@redhat.com>
+References: <20200326093516.24215-1-pbonzini@redhat.com> <20200326093516.24215-3-pbonzini@redhat.com> <877dz75j4i.fsf@vitty.brq.redhat.com> <d2222e81-8618-b3b0-baf3-2bda72d48ede@redhat.com>
+Date:   Fri, 27 Mar 2020 13:48:04 +0100
+Message-ID: <87a7423qwr.fsf@vitty.brq.redhat.com>
+MIME-Version: 1.0
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The kunit resources API allows for custom initialization and
-cleanup code (init/fini); here a new resource add function sets
-the "struct kunit_resource" "name" field, and calls the standard
-add function.  Having a simple way to name resources is
-useful in cases such as multithreaded tests where a set of
-resources are shared among threads; a pointer to the
-"struct kunit *" test state then is all that is needed to
-retrieve and use named resources.  Support is provided to add,
-find and destroy named resources; the latter two are simply
-wrappers that use a "match-by-name" callback.
+Paolo Bonzini <pbonzini@redhat.com> writes:
 
-If an attempt to add a resource with a name that already exists
-is made kunit_add_named_resource() will return -EEXIST.
+> On 26/03/20 14:41, Vitaly Kuznetsov wrote:
+>> Paolo Bonzini <pbonzini@redhat.com> writes:
+>> 
+>>> To reconstruct the kvm_mmu to be used for page fault injection, we
+>>> can simply use fault->nested_page_fault.  This matches how
+>>> fault->nested_page_fault is assigned in the first place by
+>>> FNAME(walk_addr_generic).
+>>>
+>>> Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+>>> ---
+>>>  arch/x86/kvm/mmu/mmu.c         | 6 ------
+>>>  arch/x86/kvm/mmu/paging_tmpl.h | 2 +-
+>>>  arch/x86/kvm/x86.c             | 7 +++----
+>>>  3 files changed, 4 insertions(+), 11 deletions(-)
+>>>
+>>> diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
+>>> index e26c9a583e75..6250e31ac617 100644
+>>> --- a/arch/x86/kvm/mmu/mmu.c
+>>> +++ b/arch/x86/kvm/mmu/mmu.c
+>>> @@ -4353,12 +4353,6 @@ static unsigned long get_cr3(struct kvm_vcpu *vcpu)
+>>>  	return kvm_read_cr3(vcpu);
+>>>  }
+>>>  
+>>> -static void inject_page_fault(struct kvm_vcpu *vcpu,
+>>> -			      struct x86_exception *fault)
+>>> -{
+>>> -	vcpu->arch.mmu->inject_page_fault(vcpu, fault);
+>>> -}
+>>> -
+>> 
+>> This is already gone with Sean's "KVM: x86: Consolidate logic for
+>> injecting page faults to L1".
+>> 
+>> It would probably make sense to have a combined series (or a branch on
+>> kvm.git) to simplify testing efforts.
+>
+> Yes, these three patches replace part of Sean's (the patch you mention
+> and the next one, "KVM: x86: Sync SPTEs when injecting page/EPT fault
+> into L1").
+>
+> I pushed the result to a branch named kvm-tlb-cleanup on kvm.git.
+>
 
-Signed-off-by: Alan Maguire <alan.maguire@oracle.com>
----
- include/kunit/test.h   | 54 ++++++++++++++++++++++++++++++++++++++++++++++++++
- lib/kunit/kunit-test.c | 37 ++++++++++++++++++++++++++++++++++
- lib/kunit/test.c       | 24 ++++++++++++++++++++++
- 3 files changed, 115 insertions(+)
+Thank you,
 
-diff --git a/include/kunit/test.h b/include/kunit/test.h
-index 8c7f3ff..ac59d18 100644
---- a/include/kunit/test.h
-+++ b/include/kunit/test.h
-@@ -72,9 +72,15 @@
-  *		return kunit_alloc_resource(test, kunit_kmalloc_init,
-  *			kunit_kmalloc_free, &params);
-  *	}
-+ *
-+ * Resources can also be named, with lookup/removal done on a name
-+ * basis also.  kunit_add_named_resource(), kunit_find_named_resource()
-+ * and kunit_destroy_named_resource().  Resource names must be
-+ * unique within the test instance.
-  */
- struct kunit_resource {
- 	void *data;
-+	const char *name;		/* optional name */
- 
- 	/* private: internal use only. */
- 	kunit_resource_init_t init;
-@@ -345,6 +351,21 @@ int kunit_add_resource(struct kunit *test,
- 		       kunit_resource_free_t free,
- 		       struct kunit_resource *res,
- 		       void *data);
-+
-+/**
-+ * kunit_add_named_resource() - Add a named *test managed resource*.
-+ * @test: The test context object.
-+ * @init: a user-supplied function to initialize the resource data, if needed.
-+ * @free: a user-supplied function to free the resource data, if needed.
-+ * @name_data: name and data to be set for resource.
-+ */
-+int kunit_add_named_resource(struct kunit *test,
-+			     kunit_resource_init_t init,
-+			     kunit_resource_free_t free,
-+			     struct kunit_resource *res,
-+			     const char *name,
-+			     void *data);
-+
- /**
-  * kunit_alloc_resource() - Allocates a *test managed resource*.
-  * @test: The test context object.
-@@ -400,6 +421,19 @@ static inline bool kunit_resource_instance_match(struct kunit *test,
- }
- 
- /**
-+ * kunit_resource_name_match() - Match a resource with the same name.
-+ * @test: Test case to which the resource belongs.
-+ * @res: The resource.
-+ * @match_name: The name to match against.
-+ */
-+static inline bool kunit_resource_name_match(struct kunit *test,
-+					     struct kunit_resource *res,
-+					     void *match_name)
-+{
-+	return res->name && strcmp(res->name, match_name) == 0;
-+}
-+
-+/**
-  * kunit_find_resource() - Find a resource using match function/data.
-  * @test: Test case to which the resource belongs.
-  * @match: match function to be applied to resources/match data.
-@@ -428,6 +462,19 @@ static inline bool kunit_resource_instance_match(struct kunit *test,
- }
- 
- /**
-+ * kunit_find_named_resource() - Find a resource using match name.
-+ * @test: Test case to which the resource belongs.
-+ * @name: match name.
-+ */
-+static inline struct kunit_resource *
-+kunit_find_named_resource(struct kunit *test,
-+			  const char *name)
-+{
-+	return kunit_find_resource(test, kunit_resource_name_match,
-+				   (void *)name);
-+}
-+
-+/**
-  * kunit_destroy_resource() - Find a kunit_resource and destroy it.
-  * @test: Test case to which the resource belongs.
-  * @match: Match function. Returns whether a given resource matches @match_data.
-@@ -440,6 +487,13 @@ int kunit_destroy_resource(struct kunit *test,
- 			   kunit_resource_match_t match,
- 			   void *match_data);
- 
-+static inline int kunit_destroy_named_resource(struct kunit *test,
-+					       const char *name)
-+{
-+	return kunit_destroy_resource(test, kunit_resource_name_match,
-+				      (void *)name);
-+}
-+
- /**
-  * kunit_remove_resource: remove resource from resource list associated with
-  *			  test.
-diff --git a/lib/kunit/kunit-test.c b/lib/kunit/kunit-test.c
-index 03f3eca..69f9024 100644
---- a/lib/kunit/kunit-test.c
-+++ b/lib/kunit/kunit-test.c
-@@ -325,6 +325,42 @@ static void kunit_resource_test_static(struct kunit *test)
- 	KUNIT_EXPECT_TRUE(test, list_empty(&test->resources));
- }
- 
-+static void kunit_resource_test_named(struct kunit *test)
-+{
-+	struct kunit_resource res1, res2, *found = NULL;
-+	struct kunit_test_resource_context ctx;
-+
-+	KUNIT_EXPECT_EQ(test,
-+			kunit_add_named_resource(test, NULL, NULL, &res1,
-+						 "resource_1", &ctx),
-+			0);
-+	KUNIT_EXPECT_PTR_EQ(test, res1.data, (void *)&ctx);
-+
-+	KUNIT_EXPECT_EQ(test,
-+			kunit_add_named_resource(test, NULL, NULL, &res1,
-+						 "resource_1", &ctx),
-+			-EEXIST);
-+
-+	KUNIT_EXPECT_EQ(test,
-+			kunit_add_named_resource(test, NULL, NULL, &res2,
-+						 "resource_2", &ctx),
-+			0);
-+
-+	found = kunit_find_named_resource(test, "resource_1");
-+
-+	KUNIT_EXPECT_PTR_EQ(test, found, &res1);
-+
-+	if (found)
-+		kunit_put_resource(&res1);
-+
-+	KUNIT_EXPECT_EQ(test, kunit_destroy_named_resource(test, "resource_2"),
-+			0);
-+
-+	kunit_cleanup(test);
-+
-+	KUNIT_EXPECT_TRUE(test, list_empty(&test->resources));
-+}
-+
- static int kunit_resource_test_init(struct kunit *test)
- {
- 	struct kunit_test_resource_context *ctx =
-@@ -354,6 +390,7 @@ static void kunit_resource_test_exit(struct kunit *test)
- 	KUNIT_CASE(kunit_resource_test_cleanup_resources),
- 	KUNIT_CASE(kunit_resource_test_proper_free_ordering),
- 	KUNIT_CASE(kunit_resource_test_static),
-+	KUNIT_CASE(kunit_resource_test_named),
- 	{}
- };
- 
-diff --git a/lib/kunit/test.c b/lib/kunit/test.c
-index 5560cdd..2cb7c62 100644
---- a/lib/kunit/test.c
-+++ b/lib/kunit/test.c
-@@ -442,6 +442,30 @@ int kunit_add_resource(struct kunit *test,
- }
- EXPORT_SYMBOL_GPL(kunit_add_resource);
- 
-+int kunit_add_named_resource(struct kunit *test,
-+			     kunit_resource_init_t init,
-+			     kunit_resource_free_t free,
-+			     struct kunit_resource *res,
-+			     const char *name,
-+			     void *data)
-+{
-+	struct kunit_resource *existing;
-+
-+	if (!name)
-+		return -EINVAL;
-+
-+	existing = kunit_find_named_resource(test, name);
-+	if (existing) {
-+		kunit_put_resource(existing);
-+		return -EEXIST;
-+	}
-+
-+	res->name = name;
-+
-+	return kunit_add_resource(test, init, free, res, data);
-+}
-+EXPORT_SYMBOL_GPL(kunit_add_named_resource);
-+
- struct kunit_resource *kunit_alloc_and_get_resource(struct kunit *test,
- 						    kunit_resource_init_t init,
- 						    kunit_resource_free_t free,
+I've tested it with Hyper-V on both VMX and SVM with and without PV TLB
+flush and nothing immediately blew up. I'm also observing a very nice
+19000 -> 14000 cycles improvement on tight cpuid loop test (with EVMCS
+enabled).
+
 -- 
-1.8.3.1
+Vitaly
 
