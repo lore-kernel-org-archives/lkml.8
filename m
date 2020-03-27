@@ -2,145 +2,105 @@ Return-Path: <SRS0=s8dx=5M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48433C2D0ED
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 05:33:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77508C43331
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 05:39:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1DBB220714
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 05:33:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxonhyperv.com header.i=@linuxonhyperv.com header.b="Pw7xdQOg"
+	by mail.kernel.org (Postfix) with ESMTP id 50DAE206DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 05:39:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726465AbgC0FdR (ORCPT
+        id S1726217AbgC0Fi7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Mar 2020 01:33:17 -0400
-Received: from linux.microsoft.com ([13.77.154.182]:38140 "EHLO
-        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725956AbgC0FdQ (ORCPT
+        Fri, 27 Mar 2020 01:38:59 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:47679 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725857AbgC0Fi6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Mar 2020 01:33:16 -0400
-Received: by linux.microsoft.com (Postfix, from userid 1004)
-        id 4D4D220B4737; Thu, 26 Mar 2020 22:33:15 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 4D4D220B4737
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linuxonhyperv.com;
-        s=default; t=1585287195;
-        bh=p8YGRod+AoZSOG+yxhDi9CuAIYPiAdJpgka/fXNPphE=;
-        h=From:To:Cc:Subject:Date:Reply-To:From;
-        b=Pw7xdQOgpEi/d7fkjjLUDr9c3giKGLWFJXVjlaWVukxdgRRM5roPWEdwwKWq22+FU
-         QwkOue/d53Gs8nZtihhHrTZmzEB0UDl7P1b0EsLiEC1vn+76G0rAKlHgrgR3/jRE27
-         dqDVJgkbwrpu/fGAG6nZT93ZUIpmrhxwdtEPzQlc=
-From:   longli@linuxonhyperv.com
-To:     Steve French <sfrench@samba.org>, linux-cifs@vger.kernel.org,
-        samba-technical@lists.samba.org, linux-kernel@vger.kernel.org
-Cc:     Long Li <longli@microsoft.com>
-Subject: [PATCH] cifs: smbd: Check and extend sender credits in interrupt context
-Date:   Thu, 26 Mar 2020 22:33:01 -0700
-Message-Id: <1585287181-35333-1-git-send-email-longli@linuxonhyperv.com>
-X-Mailer: git-send-email 1.8.3.1
-Reply-To: longli@microsoft.com
+        Fri, 27 Mar 2020 01:38:58 -0400
+Received: from dude.hi.pengutronix.de ([2001:67c:670:100:1d::7])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ore@pengutronix.de>)
+        id 1jHhhk-00085G-Qu; Fri, 27 Mar 2020 06:38:52 +0100
+Received: from ore by dude.hi.pengutronix.de with local (Exim 4.92)
+        (envelope-from <ore@pengutronix.de>)
+        id 1jHhhj-0001QA-LF; Fri, 27 Mar 2020 06:38:51 +0100
+From:   Oleksij Rempel <o.rempel@pengutronix.de>
+To:     Bin Liu <b-liu@ti.com>
+Cc:     Oleksij Rempel <o.rempel@pengutronix.de>,
+        Michael Grzeschik <m.grzeschik@pengutronix.de>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-usb@vger.kernel.org, russell@personaltelco.net,
+        fercerpav@gmail.com
+Subject: [PATCH v1] usb: musb: dsps: set MUSB_DA8XX quirk for AM335x
+Date:   Fri, 27 Mar 2020 06:38:49 +0100
+Message-Id: <20200327053849.5348-1-o.rempel@pengutronix.de>
+X-Mailer: git-send-email 2.26.0.rc2
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::7
+X-SA-Exim-Mail-From: ore@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Long Li <longli@microsoft.com>
+Beagle Bone Black has different memory corruptions if kernel is
+configured with USB_TI_CPPI41_DMA=y. This issue is reproducible with
+ath9k-htc driver (ar9271 based wifi usb controller):
 
-When a RDMA packet is received and server is extending send credits, we should
-check and unblock senders immediately in IRQ context. Doing it in a worker
-queue causes unnecessary delay and doesn't save much CPU on the receive path.
+root@AccessBox:~ iw dev wlan0 set monitor  fcsfail otherbss
+root@AccessBox:~ ip l s dev wlan0 up
+kmemleak: Cannot insert 0xda577e40 into the object search tree (overlaps existing)
+CPU: 0 PID: 176 Comm: ip Not tainted 5.5.0 #7
+Hardware name: Generic AM33XX (Flattened Device Tree)
+[<c0112c14>] (unwind_backtrace) from [<c010dc98>] (show_stack+0x18/0x1c)
+[<c010dc98>] (show_stack) from [<c08c7c2c>] (dump_stack+0x84/0x98)
+[<c08c7c2c>] (dump_stack) from [<c02c75a8>] (create_object+0x2f8/0x324)
+[<c02c75a8>] (create_object) from [<c02b8928>] (kmem_cache_alloc+0x1a8/0x39c)
+[<c02b8928>] (kmem_cache_alloc) from [<c072fb68>] (__alloc_skb+0x60/0x174)
+[<c072fb68>] (__alloc_skb) from [<bf0c5c58>] (ath9k_wmi_cmd+0x50/0x184 [ath9k_htc])
+[<bf0c5c58>] (ath9k_wmi_cmd [ath9k_htc]) from [<bf0cb410>] (ath9k_regwrite_multi+0x54/0x84 [ath9k_htc])
+[<bf0cb410>] (ath9k_regwrite_multi [ath9k_htc]) from [<bf0cb7fc>] (ath9k_regwrite+0xf0/0xfc [ath9k_htc])
+[<bf0cb7fc>] (ath9k_regwrite [ath9k_htc]) from [<bf1aca78>] (ar5008_hw_process_ini+0x280/0x6c0 [ath9k_hw])
+[<bf1aca78>] (ar5008_hw_process_ini [ath9k_hw]) from [<bf1a66ac>] (ath9k_hw_reset+0x270/0x1458 [ath9k_hw])
+[<bf1a66ac>] (ath9k_hw_reset [ath9k_hw]) from [<bf0c9588>] (ath9k_htc_start+0xb0/0x22c [ath9k_htc])
+[<bf0c9588>] (ath9k_htc_start [ath9k_htc]) from [<bf0eb3c0>] (drv_start+0x4c/0x1e8 [mac80211])
+[<bf0eb3c0>] (drv_start [mac80211]) from [<bf104a84>] (ieee80211_do_open+0x480/0x954 [mac80211])
+[<bf104a84>] (ieee80211_do_open [mac80211]) from [<c075127c>] (__dev_open+0xdc/0x160)
+[<c075127c>] (__dev_open) from [<c07516a8>] (__dev_change_flags+0x1a4/0x204)
+[<c07516a8>] (__dev_change_flags) from [<c0751728>] (dev_change_flags+0x20/0x50)
+[<c0751728>] (dev_change_flags) from [<c076971c>] (do_setlink+0x2ac/0x978)
 
-Signed-off-by: Long Li <longli@microsoft.com>
+After applying this patch, the system is running in monitor mode without
+noticeable issues.
+
+Suggested-by: Michael Grzeschik <m.grzeschik@pengutronix.de>
+Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
 ---
- fs/cifs/smbdirect.c | 38 +++++++++++++++-----------------------
- fs/cifs/smbdirect.h |  1 -
- 2 files changed, 15 insertions(+), 24 deletions(-)
+ drivers/usb/musb/musb_dsps.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/cifs/smbdirect.c b/fs/cifs/smbdirect.c
-index a6ae29b3c4e7..8da43a500686 100644
---- a/fs/cifs/smbdirect.c
-+++ b/fs/cifs/smbdirect.c
-@@ -459,25 +459,6 @@ static void smbd_post_send_credits(struct work_struct *work)
- 	check_and_send_immediate(info);
- }
+diff --git a/drivers/usb/musb/musb_dsps.c b/drivers/usb/musb/musb_dsps.c
+index 88923175f71e..c01f9e9e69f5 100644
+--- a/drivers/usb/musb/musb_dsps.c
++++ b/drivers/usb/musb/musb_dsps.c
+@@ -690,7 +690,7 @@ static void dsps_dma_controller_resume(struct dsps_glue *glue) {}
+ #endif /* CONFIG_USB_TI_CPPI41_DMA */
  
--static void smbd_recv_done_work(struct work_struct *work)
--{
--	struct smbd_connection *info =
--		container_of(work, struct smbd_connection, recv_done_work);
--
--	/*
--	 * We may have new send credits granted from remote peer
--	 * If any sender is blcoked on lack of credets, unblock it
--	 */
--	if (atomic_read(&info->send_credits))
--		wake_up_interruptible(&info->wait_send_queue);
--
--	/*
--	 * Check if we need to send something to remote peer to
--	 * grant more credits or respond to KEEP_ALIVE packet
--	 */
--	check_and_send_immediate(info);
--}
--
- /* Called from softirq, when recv is done */
- static void recv_done(struct ib_cq *cq, struct ib_wc *wc)
- {
-@@ -546,8 +527,15 @@ static void recv_done(struct ib_cq *cq, struct ib_wc *wc)
- 		atomic_dec(&info->receive_credits);
- 		info->receive_credit_target =
- 			le16_to_cpu(data_transfer->credits_requested);
--		atomic_add(le16_to_cpu(data_transfer->credits_granted),
--			&info->send_credits);
-+		if (le16_to_cpu(data_transfer->credits_granted)) {
-+			atomic_add(le16_to_cpu(data_transfer->credits_granted),
-+				&info->send_credits);
-+			/*
-+			 * We have new send credits granted from remote peer
-+			 * If any sender is waiting for credits, unblock it
-+			 */
-+			wake_up_interruptible(&info->wait_send_queue);
-+		}
+ static struct musb_platform_ops dsps_ops = {
+-	.quirks		= MUSB_DMA_CPPI41 | MUSB_INDEXED_EP,
++	.quirks		= MUSB_DMA_CPPI41 | MUSB_INDEXED_EP | MUSB_DA8XX,
+ 	.init		= dsps_musb_init,
+ 	.exit		= dsps_musb_exit,
  
- 		log_incoming(INFO, "data flags %d data_offset %d "
- 			"data_length %d remaining_data_length %d\n",
-@@ -563,7 +551,12 @@ static void recv_done(struct ib_cq *cq, struct ib_wc *wc)
- 			info->keep_alive_requested = KEEP_ALIVE_PENDING;
- 		}
- 
--		queue_work(info->workqueue, &info->recv_done_work);
-+		/*
-+		 * Check if we need to send something to remote peer to
-+		 * grant more credits or respond to KEEP_ALIVE packet
-+		 */
-+		check_and_send_immediate(info);
-+
- 		return;
- 
- 	default:
-@@ -1762,7 +1755,6 @@ static struct smbd_connection *_smbd_get_connection(
- 	atomic_set(&info->send_payload_pending, 0);
- 
- 	INIT_WORK(&info->disconnect_work, smbd_disconnect_rdma_work);
--	INIT_WORK(&info->recv_done_work, smbd_recv_done_work);
- 	INIT_WORK(&info->post_send_credits_work, smbd_post_send_credits);
- 	info->new_credits_offered = 0;
- 	spin_lock_init(&info->lock_new_credits_offered);
-diff --git a/fs/cifs/smbdirect.h b/fs/cifs/smbdirect.h
-index 6ff880a1e186..8ede915f2b24 100644
---- a/fs/cifs/smbdirect.h
-+++ b/fs/cifs/smbdirect.h
-@@ -67,7 +67,6 @@ struct smbd_connection {
- 	bool negotiate_done;
- 
- 	struct work_struct disconnect_work;
--	struct work_struct recv_done_work;
- 	struct work_struct post_send_credits_work;
- 
- 	spinlock_t lock_new_credits_offered;
 -- 
-2.17.1
+2.26.0.rc2
 
