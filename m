@@ -2,88 +2,91 @@ Return-Path: <SRS0=s8dx=5M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AAA1C2D0E7
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 01:21:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2366C2D0E7
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 01:26:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5242720774
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 01:21:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 88A4F20774
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 01:26:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BeVatET+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727749AbgC0BVi (ORCPT
+        id S1727749AbgC0B0L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 21:21:38 -0400
-Received: from mail.loongson.cn ([114.242.206.163]:53078 "EHLO loongson.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727547AbgC0BVi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 21:21:38 -0400
-Received: from [10.130.0.79] (unknown [113.200.148.30])
-        by mail.loongson.cn (Coremail) with SMTP id AQAAf9Dxj90NVX1ew3EgAA--.18S3;
-        Fri, 27 Mar 2020 09:21:18 +0800 (CST)
-Subject: Re: [PATCH v3 1/2] firmware: dmi: Add macro
- SMBIOS_ENTRY_POINT_SCAN_START
-To:     Jean Delvare <jdelvare@suse.de>
-References: <1580875713-18252-1-git-send-email-yangtiezhu@loongson.cn>
- <8ee01022-d3d1-8145-1a0b-ba77c5bb7101@loongson.cn>
- <20200326150716.47b4152f@endymion>
-Cc:     jiaxun.yang@flygoat.com, chenhc@lemote.com,
-        linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
-        lixuefeng@loongson.cn, paulburton@kernel.org, ralf@linux-mips.org,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-From:   Tiezhu Yang <yangtiezhu@loongson.cn>
-Message-ID: <623abcd1-7c5b-3cae-817b-fc993897b9a9@loongson.cn>
-Date:   Fri, 27 Mar 2020 09:21:17 +0800
-User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
- Thunderbird/45.4.0
+        Thu, 26 Mar 2020 21:26:11 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:37923 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727122AbgC0B0L (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Mar 2020 21:26:11 -0400
+Received: by mail-pf1-f196.google.com with SMTP id c21so3047425pfo.5;
+        Thu, 26 Mar 2020 18:26:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=6Sl9e1fpV3n/PUpys52AurBxrK0AUmZ3suddAnYhqks=;
+        b=BeVatET+VO+W+d6njIuSybcLG2ueAPEpR7q+hJfQpIITnInalrOAqMeQcUOvY7pQp+
+         dg3SWej0qU7JLF6MxUWvKl3fXoUhMzLHyLSXZixz0QwvdN+nB97C4Fpj9uKDv9mZDJME
+         lFOEZ7PjF2pf/K13P2L2bUhh4/kIFmKQdRcsUN22SNYbL/cSc3RpoMY1uWt6BhJTufYw
+         btBwoAjUIJ9O0NoFAW1T9FfJCMI8wja/cMLn7iMMn2k45amz+mGrmLRFJtjosFA7KxHa
+         fLf9OlKbDJJODH6csvWhn9NInOd0IDdMbUgArn6E4nq4XwRKJdgawhmbFNjgj9L4UjoO
+         G37Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=6Sl9e1fpV3n/PUpys52AurBxrK0AUmZ3suddAnYhqks=;
+        b=KvXq473S+T2XVCtmxVRbiuUSlPhDCHUvICgZXfhUAmXOoUDuJeVdxlaoQGqtzqy4/B
+         uNyDSokUfNS2Ow8hAV0mYza3GkpVWm05+fzzpoIpCLxpP75rXILKYKq4XdkC2OPMMxN+
+         oImqvsL25cYyTmxL/HxUSDJ0ZeViHIlRW/oyiv8Gic3BW2fEpL7naUbU7JoFnqhsbUpk
+         Ig1SFAxNDDru10e3c8N/E26mEM8ajX+6eiT6iJpYHVlS5QiRRg38ApZF0vs7NIZJCuj6
+         3vmHq5RNnX1j2fvzg003OGgVL4+GFNJpuXyNl5a2JJK2KkZNjyIdmjuxKkKZWWFrYZEa
+         519g==
+X-Gm-Message-State: ANhLgQ0qi7GTxIgZNUp1OAe0Mn+YhwteB3Ecu7vAMF6yNdNzA7dvd7aK
+        G3ArsbSFfrA90cxBDIXf4ZU=
+X-Google-Smtp-Source: ADFU+vtL88oQlNeFSjMNkmS7nCbdPob1bFnZKbDmOLBXFNOJ2mLvWafcaKDgmiB2Iu82JsgI/qK+hQ==
+X-Received: by 2002:a63:100c:: with SMTP id f12mr11260613pgl.185.1585272369760;
+        Thu, 26 Mar 2020 18:26:09 -0700 (PDT)
+Received: from localhost (c-73-241-114-122.hsd1.ca.comcast.net. [73.241.114.122])
+        by smtp.gmail.com with ESMTPSA id i4sm2549027pjg.4.2020.03.26.18.26.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 26 Mar 2020 18:26:09 -0700 (PDT)
+Date:   Thu, 26 Mar 2020 18:26:06 -0700
+From:   Richard Cochran <richardcochran@gmail.com>
+To:     Grygorii Strashko <grygorii.strashko@ti.com>
+Cc:     "David S . Miller" <davem@davemloft.net>,
+        Lokesh Vutla <lokeshvutla@ti.com>,
+        Tony Lindgren <tony@atomide.com>, Sekhar Nori <nsekhar@ti.com>,
+        Murali Karicheri <m-karicheri2@ti.com>,
+        netdev <netdev@vger.kernel.org>, linux-omap@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next v3 03/11] net: ethernet: ti: cpts: move tc mult
+ update in cpts_fifo_read()
+Message-ID: <20200327012606.GA9677@localhost>
+References: <20200320194244.4703-1-grygorii.strashko@ti.com>
+ <20200320194244.4703-4-grygorii.strashko@ti.com>
+ <20200326142049.GD20841@localhost>
+ <f91001c9-2b11-53ac-84a7-11e1e94c5dc9@ti.com>
 MIME-Version: 1.0
-In-Reply-To: <20200326150716.47b4152f@endymion>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID: AQAAf9Dxj90NVX1ew3EgAA--.18S3
-X-Coremail-Antispam: 1UD129KBjvdXoW7GrykJw4UZr43GrW7uFyDZFb_yoW3AFbE9w
-        4kCr1Sk34jkr1UAwnrKr1avFn5t34ktFWIya18Cw47Z3Z8Aan5Xr4fuwn5Jan5J3W8Cr4D
-        Ar15tryqyrsavjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-        9fnUUIcSsGvfJTRUUUbskFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k26cxKx2IYs7xG
-        6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
-        A2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Cr0_
-        Gr1UM28EF7xvwVC2z280aVAFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv6xkF7I0E14v26r4UJV
-        WxJr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
-        2Ix0cI8IcVAFwI0_JrI_JrylYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
-        W8JwACjcxG0xvEwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lc7I2V7IY0VAS07AlzVAY
-        IcxG8wCY02Avz4vE14v_KwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8Jw
-        C20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAF
-        wI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjx
-        v20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6rW3Jr0E3s1lIxAIcVC2
-        z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73Uj
-        IFyTuYvjfUFVyIUUUUU
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <f91001c9-2b11-53ac-84a7-11e1e94c5dc9@ti.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 03/26/2020 10:07 PM, Jean Delvare wrote:
-> Hi Tiezhu,
->
-> On Thu, 20 Feb 2020 10:43:56 +0800, Tiezhu Yang wrote:
->> Since this patch is independent and it has no any negative influence,
->> could you apply it to your DMI tree first?
-> I've just queued your patch for kernel 5.6. Thanks for your
-> contribution and sorry for the delay.
->
+On Thu, Mar 26, 2020 at 10:18:18PM +0200, Grygorii Strashko wrote:
+> I've been thinking to squash them. What's your opinion.
 
-Hi Jean,
-
-Thank you very much, it has been merged into
-mips-next and linux-next tree by Thomas about
-three days ago, so you can drop it in your tree.
-
-https://git.kernel.org/pub/scm/linux/kernel/git/mips/linux.git/commit/?id=3da27a4eb8c214d692e024473415fe7d2e88e7d7
-https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/?id=3da27a4eb8c214d692e024473415fe7d2e88e7d7
+I favor small, incremental patches.  Just the motivation for the first
+patch was missing, that's all.
 
 Thanks,
-
-Tiezhu Yang
-
+Richard
