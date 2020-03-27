@@ -2,113 +2,168 @@ Return-Path: <SRS0=s8dx=5M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D248C43331
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 17:54:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E952C43331
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 17:56:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6866F206F1
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 17:54:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 363C02071B
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 17:56:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=dabbelt-com.20150623.gappssmtp.com header.i=@dabbelt-com.20150623.gappssmtp.com header.b="zUCc/TDa"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="sakGwuM/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727509AbgC0Ryj (ORCPT
+        id S1727639AbgC0R41 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Mar 2020 13:54:39 -0400
-Received: from mail-pj1-f67.google.com ([209.85.216.67]:39244 "EHLO
-        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726275AbgC0Ryj (ORCPT
+        Fri, 27 Mar 2020 13:56:27 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:33215 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726959AbgC0R40 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Mar 2020 13:54:39 -0400
-Received: by mail-pj1-f67.google.com with SMTP id z3so3559227pjr.4
-        for <linux-kernel@vger.kernel.org>; Fri, 27 Mar 2020 10:54:37 -0700 (PDT)
+        Fri, 27 Mar 2020 13:56:26 -0400
+Received: by mail-lj1-f194.google.com with SMTP id f20so11168903ljm.0
+        for <linux-kernel@vger.kernel.org>; Fri, 27 Mar 2020 10:56:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=dabbelt-com.20150623.gappssmtp.com; s=20150623;
-        h=date:subject:cc:from:to:message-id;
-        bh=Mkw52LsZ6nlRtEJ4Q5T/LK/F7/IwJaCpYdC0S/qED7M=;
-        b=zUCc/TDavisIS/nEckngunG08U6GNKcmnEOHhEc46YIwW8rfTM/wP8COdeqcysBcf7
-         vlgYbaIBL0ovzuzIcKWkwZ6i4coYZ7WxZjkcieWp+c9nLKoG7GKYgh8YQVKQaXZtjMuH
-         aV18KHnEaWnOaSj6I+oSzJw/0www9/NR6vArfG20yGMAnESDiY4H3lX7z+EhCL1s7LJi
-         1UGcX+0a9gTSWhHiVZtxUFfwjGObCee1PAHGW0SRPMu5iLloNFNnK5cNNiHpKtj7WpWg
-         uNGK0dUcKToZQcIcXSdfTEmW6RxhzYE7g+FrLO4n+KQadJO3Unofx8cn2l6g8ESQVv0h
-         7esA==
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=8XJ2lQP0L57szcIAapEMR6VNQIKCSdKLAQyLg27/wjk=;
+        b=sakGwuM/GdjgxKI2AGd28p9S/IME7y/sCz13stu0h8IWyWad4IpKBpQxSQ+b+N9EBb
+         jtpIWt3bwUouljneSCzLa08hg96BqRyQl+Ydi00AuH8IvRtGjUEbeDne2MK9YSw8Pdkz
+         OC4SecEImyHq16xiTYVSIV7ySiv/iJacTGl6lLuLMz9Wi5gOgqoB7bgaWLgOfIVkzmwa
+         FBRA2fBY0ygUsd5B6qrPsBMSNdGHiA7oHt3CFtjS8Uhiuq7Y9l8+E7sKXjrnTxupDIFl
+         z1O8Hy4NFDXBnXF5Ab7XdPt1/uwQFRMUbfk69pvyN/cf5l4INs/0ODjwmxWFCGKmuLXO
+         Zt2g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:subject:cc:from:to:message-id;
-        bh=Mkw52LsZ6nlRtEJ4Q5T/LK/F7/IwJaCpYdC0S/qED7M=;
-        b=WUj3xxnulpJqOdgqT7cT66txXSjtHH3e7Wk9L2zsmLexfUmh0mQWMyhVjfB+XnyAwm
-         m7CtlJy72BJxvoxmjj0422fY5czrODvWaQO2uxInySJ/ZWdyfZ/Mf6JQZ6xoW37CA1Na
-         CsZKoaxfgAGlQCWLdfDeAtEDDaSHgnJi3DrG44pcfmpd3tL6ObrMQdDFmHlWpaJWACu8
-         8FGRxk6H6StvaP1UlwHKzTEDvauOlB3BUhArdTIZ3NlxwpQ5ywUzX5WxPEJ96UwDZZSV
-         T9aRIXaka6+kRHUgoUR7ESOWjiBrXImDO/HkzC2jUSx0inWEARdCg+YPX/DhgIBK7rQk
-         FDrg==
-X-Gm-Message-State: ANhLgQ02u2Mf4UfbcrPiQHcjEAdrJr2F+/exa7RLjYQATUFCx47sat2C
-        R+gg0WFNl/1EiBdaiILuLCPnxD9Niqk=
-X-Google-Smtp-Source: ADFU+vumAh9nXlqDjpD0UVqFzkCeeTU2h8ixiixYjLbr95USmGkKSYGWcFFFU1M8p8dzYao6FtasFQ==
-X-Received: by 2002:a17:902:a5c6:: with SMTP id t6mr220421plq.323.1585331676441;
-        Fri, 27 Mar 2020 10:54:36 -0700 (PDT)
-Received: from localhost (c-67-161-15-180.hsd1.ca.comcast.net. [67.161.15.180])
-        by smtp.gmail.com with ESMTPSA id a3sm4572259pfg.172.2020.03.27.10.54.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 27 Mar 2020 10:54:35 -0700 (PDT)
-Date:   Fri, 27 Mar 2020 10:54:35 -0700 (PDT)
-X-Google-Original-Date: Fri, 27 Mar 2020 10:52:27 PDT (-0700)
-Subject: [GIT PULL] Last Minute RISC-V Patches for 5.6
-CC:         linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
-From:   Palmer Dabbelt <palmer@dabbelt.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Message-ID:
- <mhng-06e46f55-fd4f-48ab-b741-cf487976999b@palmerdabbelt-glaptop1>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=8XJ2lQP0L57szcIAapEMR6VNQIKCSdKLAQyLg27/wjk=;
+        b=VBUwA30Z3tfHIsv2Lzn3hra17pPyhJNrrLOLWYtR+7M9U35I2eXrP0fbEjsNPA5rB5
+         sEm+i/lWFBE43NuhQRspw7WHUr/tdkUwdQgr9TsecDrR4pXFytKhiDCSlwxPbNrvtTO8
+         jKtfPBNJ4btUWevJExDCG3gcDhU+EuGgWGVz91FK80k0qJv2PWFJ52MDcxPru1Zo6RUd
+         quaRrPfUgeSLh1ktGVTrQmIZUHDCMQkWJrJSSlkVmaAEDwWlgCzEzrmqhJuQ5+k5wpbk
+         IVhKR3BKyNRMz4enwrUN7RyqcpAwQWI6GyUdFO131djV/mRZPVqG6W+jJOLx85yohoea
+         TDvg==
+X-Gm-Message-State: AGi0PuZ3nPqkzNDCFeJpayh+mH2hJAlMLm0QTYUpNVfE7HX3zTSbQm51
+        1n+HoIzgaoHLqEsvy1f+r0cjA3xUq6+jFJHERYCbAA==
+X-Google-Smtp-Source: APiQypI+St/TLugxs8HDkgbOKp8wyBAPN5zl90AWgAhsEWY/AicEjEmZzv4UQ/6dyuK7UuoP0iHnFQ3hXtSjiJTj1sQ=
+X-Received: by 2002:a2e:a495:: with SMTP id h21mr78247lji.123.1585331784702;
+ Fri, 27 Mar 2020 10:56:24 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200324122023.9649-1-andriy.shevchenko@linux.intel.com>
+ <20200324122023.9649-3-andriy.shevchenko@linux.intel.com> <CAJZ5v0gg=V8uDd4afJ3MULsgKYvWajKJioANk4jj7xEhBzrRrQ@mail.gmail.com>
+In-Reply-To: <CAJZ5v0gg=V8uDd4afJ3MULsgKYvWajKJioANk4jj7xEhBzrRrQ@mail.gmail.com>
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Fri, 27 Mar 2020 23:26:13 +0530
+Message-ID: <CA+G9fYvFnXqSnoQSJ-DkQvAFv87iWmhH6dT1N79qrq=Aeuv4rw@mail.gmail.com>
+Subject: Re: [PATCH v2 3/3] driver core: Replace open-coded list_last_entry()
+To:     "Rafael J. Wysocki" <rafael@kernel.org>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Basil Eljuse <Basil.Eljuse@arm.com>,
+        lkft-triage@lists.linaro.org,
+        Linux-Next Mailing List <linux-next@vger.kernel.org>,
+        fntoth@gmail.com, Arnd Bergmann <arnd@arndb.de>,
+        Anders Roxell <anders.roxell@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
-Message-ID: <20200327175435.tRz8BMghUWmNCjeyEguEOv20vv6kkR3HS_Fz4sRvmFo@z>
 
-The following changes since commit fb33c6510d5595144d585aa194d377cf74d31911:
+The kernel warning noticed on arm64 juno-r2 device running linux
+next-20200326 and next-20200327
 
-  Linux 5.6-rc6 (2020-03-15 15:01:23 -0700)
+[   36.077086] ------------[ cut here ]------------
+[   36.081752] amba 20010000.etf: deferred probe timeout, ignoring dependency
+[   36.081859] WARNING: CPU: 1 PID: 42 at drivers/base/dd.c:270
+driver_deferred_probe_check_state+0x54/0x80
+[   36.098242] Modules linked in: fuse
+[   36.101753] CPU: 1 PID: 42 Comm: kworker/1:1 Not tainted
+5.6.0-rc7-next-20200327 #1
+[   36.109427] Hardware name: ARM Juno development board (r2) (DT)
+[   36.115372] Workqueue: events amba_deferred_retry_func
+[   36.120526] pstate: 60000005 (nZCv daif -PAN -UAO)
+[   36.125334] pc : driver_deferred_probe_check_state+0x54/0x80
+[   36.131010] lr : driver_deferred_probe_check_state+0x54/0x80
+[   36.136680] sp : ffff000934e0fae0
+[   36.140001] x29: ffff000934e0fae0 x28: ffff000934db5608
+[   36.145337] x27: ffffa00013c63240 x26: ffff000934f2a800
+[   36.150668] x25: 0000000000000001 x24: fffffffffffffffe
+[   36.155996] x23: ffff000934c6ab80 x22: ffffa00011b39ea0
+[   36.161322] x21: ffff000934f2a800 x20: ffffa00011905fe0
+[   36.166649] x19: ffff000934f2a800 x18: 0000000000000000
+[   36.171974] x17: 0000000000000000 x16: 0000000000000000
+[   36.177299] x15: 0000000000000000 x14: 003d090000000000
+[   36.182625] x13: 00003d0900000000 x12: ffff9400027ef445
+[   36.187952] x11: 1ffff400027ef444 x10: ffff9400027ef444
+[   36.193278] x9 : dfffa00000000000 x8 : 0000000000000000
+[   36.198603] x7 : 0000000000000001 x6 : ffffa00013f7a220
+[   36.203929] x5 : 0000000000000004 x4 : dfffa00000000000
+[   36.209255] x3 : ffffa000101a74ec x2 : ffff8001269c1f26
+[   36.214581] x1 : da1107b7b6a8fb00 x0 : 0000000000000000
+[   36.219906] Call trace:
+[   36.222369]  driver_deferred_probe_check_state+0x54/0x80
+[   36.227698]  __genpd_dev_pm_attach+0x264/0x2a0
+[   36.232154]  genpd_dev_pm_attach+0x68/0x78
+[   36.236265]  dev_pm_domain_attach+0x6c/0x70
+[   36.240463]  amba_device_try_add+0xec/0x3f8
+[   36.244659]  amba_deferred_retry_func+0x84/0x158
+[   36.249301]  process_one_work+0x3f0/0x660
+[   36.253326]  worker_thread+0x74/0x698
+[   36.256997]  kthread+0x218/0x220
+[   36.260236]  ret_from_fork+0x10/0x1c
+[   36.263819] ---[ end trace c637c10e549bd716 ]---#
 
-are available in the Git repository at:
+Full test log,
+https://lkft.validation.linaro.org/scheduler/job/1317079#L981
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/riscv/linux.git tags/riscv-for-linus-5.6
+On Tue, 24 Mar 2020 at 18:24, Rafael J. Wysocki <rafael@kernel.org> wrote:
+>
+> On Tue, Mar 24, 2020 at 1:20 PM Andy Shevchenko
+> <andriy.shevchenko@linux.intel.com> wrote:
+> >
+> > There is a place in the code where open-coded version of list entry accessors
+> > list_last_entry() is used.
+> >
+> > Replace that with the standard macro.
+> >
+> > Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+>
+> Reviewed-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+>
+> > ---
+> > v2: no change
+> >  drivers/base/dd.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> >
+> > diff --git a/drivers/base/dd.c b/drivers/base/dd.c
+> > index efd0e4c16ba5..27a4d51b5bba 100644
+> > --- a/drivers/base/dd.c
+> > +++ b/drivers/base/dd.c
+> > @@ -1226,7 +1226,7 @@ void driver_detach(struct device_driver *drv)
+> >                         spin_unlock(&drv->p->klist_devices.k_lock);
+> >                         break;
+> >                 }
+> > -               dev_prv = list_entry(drv->p->klist_devices.k_list.prev,
+> > +               dev_prv = list_last_entry(&drv->p->klist_devices.k_list,
+> >                                      struct device_private,
+> >                                      knode_driver.n_node);
+> >                 dev = dev_prv->device;
 
-for you to fetch changes up to 2191b4f298fa360f2d1d967c2c7db565bea2c32e:
+metadata:
+  git branch: master
+  git repo: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
+  git describe: next-20200327
+  kernel-config:
+https://builds.tuxbuild.com/nqmmxorUbC1qTWp42iEKjQ/kernel.config
 
-  RISC-V: Move all address space definition macros to one place (2020-03-26 19:26:11 -0700)
 
-----------------------------------------------------------------
-Last Minute RISC-V Patches for 5.6
-
-Sorry for the last minute patches, but a few things fell through the cracks
-recently.  I was on the fence about sending a late PR just for the M-mode
-fixes, as we don't really have any users, but the last patch fixes the build
-for Fedora which I consider pretty important.  Given that the M-mode fixes
-should be very low risk, I figured it's worth sending them along as well.
-
-This passes my standard "boot in QEMU" test.
-
-----------------------------------------------------------------
-Anup Patel (1):
-      RISC-V: Only select essential drivers for SOC_VIRT config
-
-Atish Patra (1):
-      RISC-V: Move all address space definition macros to one place
-
-Greentime Hu (2):
-      riscv: uaccess should be used in nommu mode
-      riscv: fix the IPI missing issue in nommu mode
-
- arch/riscv/Kconfig                |  1 -
- arch/riscv/Kconfig.socs           | 14 -------
- arch/riscv/configs/defconfig      | 16 +++++++-
- arch/riscv/configs/rv32_defconfig | 16 +++++++-
- arch/riscv/include/asm/clint.h    |  8 ++--
- arch/riscv/include/asm/pgtable.h  | 78 ++++++++++++++++++++-------------------
- arch/riscv/include/asm/uaccess.h  | 36 +++++++++---------
- arch/riscv/kernel/smp.c           |  2 +-
- arch/riscv/lib/Makefile           |  2 +-
- 9 files changed, 95 insertions(+), 78 deletions(-)
+-- 
+Linaro LKFT
+https://lkft.linaro.org
