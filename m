@@ -2,141 +2,110 @@ Return-Path: <SRS0=s8dx=5M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF067C43331
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 03:50:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52B69C2D0E7
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 03:50:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A3AC12074D
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 03:50:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A3DD20748
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 03:50:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="AKeE3rtC"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="VM6BiVy3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727752AbgC0DuO (ORCPT
+        id S1727770AbgC0Duv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 23:50:14 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:45507 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727607AbgC0DuN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 23:50:13 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 48pSYG15kMz9sRR;
-        Fri, 27 Mar 2020 14:50:10 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
-        s=201909; t=1585281010;
-        bh=4Qqg2r8oM4zPrJhzVQO07i32dlNDD+eFmBtDY+IJlB0=;
-        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-        b=AKeE3rtC/tHmgbrDN+BCRn0kRIXQhECLUqtFW9Yv6a/cJApH/zdfgOFjn/WYU7Buh
-         9ZmJqGOLvqNKaV2W2oAjBO8NHnQIqHpMFxsoI13sRFoBV183mxazsQLrPApSmkJrlH
-         IN/ND6SstTbfalEQE+GOh13LwSwp8LMQmvm68zzqUHZ8LN+vUrcapZevjeh2vdQ6SY
-         7ABlVGzAl+sJznQmXo/JukKf2j44nx35QMwZ1qRgOCBeaQ3TtCpk33AD8/U+PMRZlr
-         EYZ75f3mkiwv3B+z4cVpg641xeIep6hQIP7vKZCpeSCXVF1elVrB8d02Jdui/slXo4
-         XTioOijx4aiww==
-From:   Michael Ellerman <mpe@ellerman.id.au>
-To:     Leonardo Bras <leonardo@linux.ibm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Alexios Zavras <alexios.zavras@intel.com>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Leonardo Bras <leonardo@linux.ibm.com>
-Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Subject: Re: [PATCH v2 1/1] ppc/crash: Skip spinlocks during crash
-In-Reply-To: <20200326232542.503157-1-leonardo@linux.ibm.com>
-References: <20200326232542.503157-1-leonardo@linux.ibm.com>
-Date:   Fri, 27 Mar 2020 14:50:14 +1100
-Message-ID: <87d08ywj61.fsf@mpe.ellerman.id.au>
+        Thu, 26 Mar 2020 23:50:51 -0400
+Received: from mail-pj1-f66.google.com ([209.85.216.66]:37681 "EHLO
+        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727611AbgC0Duv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Mar 2020 23:50:51 -0400
+Received: by mail-pj1-f66.google.com with SMTP id o12so3260796pjs.2
+        for <linux-kernel@vger.kernel.org>; Thu, 26 Mar 2020 20:50:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=TQKnjjnnFIx9OEk2sWZkIOZkXlTkDKqAFTfhqeOjSAk=;
+        b=VM6BiVy3TJ+nvI5RskhEnSu7623UH7nfGrIKJl/ORWcGUF2lI8NS6I8irgEGdiq2XR
+         vQtfjqf0TEgiA7T7gZBHv/CnE5Ro1vv4s1pZ5MibeXU9lI+oA9gnFOS9VKYlCjJi+b7Q
+         3dJKWu+7FdIPsjaLQIzi//I9Vd3PCfFb2zs+c=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=TQKnjjnnFIx9OEk2sWZkIOZkXlTkDKqAFTfhqeOjSAk=;
+        b=etGdwU8qG8vYW3pLp2u02Ogazc2fg85Ohity8gYgHS3iO9YHYOWBjqKpcylejWzrji
+         OWQh1x8mC/gpcrwKWsDN3cGqPuXMPZnEzmx+xuwRl4axo6/5iPAr5PRkWGEYsGNYCxHp
+         yaWVNhpiDtqHg7PeqMq/JEoQ5cX0fVEaJZXzfpurnBG+NI8CAfW6rTQntuARnM9WY26R
+         31SvkIVDevB1J0S1/9GC6+0tkAZ18FDbrUUO4g2PaX2mgBzeP5ciccDGHNVel6FaszpT
+         2Uk+e6RwoeFt3Xo4Wxb2T2La6FuG8Gfofz1kGK/XBEr6+ASaexU9RBbXEAoe46+MXNnW
+         V3OQ==
+X-Gm-Message-State: ANhLgQ1iZP2A2W3Joo2SG+d19T6jB2bWKwTzkx8ktAQDcrhD2QJ5HUKB
+        3YvB5a6IXBNgYRuCjWHQdz/MUg==
+X-Google-Smtp-Source: ADFU+vsIQeYYJToUL3MPTGLgoCfpa8ooX6ORuBVJtQv23T7G5vwNOYygk3RRQrumo7g2y4wH6jmKwg==
+X-Received: by 2002:a17:90a:fb47:: with SMTP id iq7mr3767952pjb.191.1585281049760;
+        Thu, 26 Mar 2020 20:50:49 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id c1sm2672036pje.24.2020.03.26.20.50.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 26 Mar 2020 20:50:48 -0700 (PDT)
+Date:   Thu, 26 Mar 2020 20:50:47 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Vlastimil Babka <vbabka@suse.cz>
+Cc:     Luis Chamberlain <mcgrof@kernel.org>,
+        Iurii Zaikin <yzaikin@google.com>,
+        linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
+        linux-mm@kvack.org, Ivan Teterevkov <ivan.teterevkov@nutanix.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        "Eric W . Biederman" <ebiederm@xmission.com>,
+        "Guilherme G . Piccoli" <gpiccoli@canonical.com>
+Subject: Re: [RFC v3 1/2] kernel/sysctl: support setting sysctl parameters
+ from kernel command line
+Message-ID: <202003262048.70D845CDF@keescook>
+References: <20200326181606.7027-1-vbabka@suse.cz>
+ <202003261256.950F1E5@keescook>
+ <8afebb97-db51-5744-dca9-840dc60cd396@suse.cz>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <8afebb97-db51-5744-dca9-840dc60cd396@suse.cz>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Leonardo,
+On Thu, Mar 26, 2020 at 11:08:40PM +0100, Vlastimil Babka wrote:
+> On 3/26/20 9:24 PM, Kees Cook wrote:
+> I didn't want to modify param for the sake of error prints, but perhaps
+> the replacements won't confuse system admin too much?
 
-Leonardo Bras <leonardo@linux.ibm.com> writes:
-> During a crash, there is chance that the cpus that handle the NMI IPI
-> are holding a spin_lock. If this spin_lock is needed by crashing_cpu it
-> will cause a deadlock. (rtas_lock and printk logbuf_log as of today)
+Ah, fair enough. Should be fine to do it against "path" then. Ignore
+that bit from me. ;)
 
-Please give us more detail on how those locks are causing you trouble, a
-stack trace would be good if you have it.
+> >> +	filp_close(file, NULL);
+> > 
+> > Please check the return value of filp_close() and treat that as an error
+> > for this function too.
+> 
+> Well I could print it, but not much else? The unmount will probably fail
+> in that case?
 
-> This is a problem if the system has kdump set up, given if it crashes
-> for any reason kdump may not be saved for crash analysis.
->
-> Skip spinlocks after NMI IPI is sent to all other cpus.
+Maybe? This is just a nit of mine from tracking horrible bugs that
+turned out to be unreported 'close' failures. :)
 
-We don't want to add overhead to all spinlocks for the life of the
-system, just to handle this one case.
+> But I guess the "mount on first applicable argument" approach would work
+> with this scheme as well:
+> 
+> struct vfsmount *proc_mnt = NULL;
+> parse_args(..., &proc_mnt, ...)
 
-There's already a flag that is set when the system is crashing,
-"oops_in_progress", maybe we need to use that somewhere to skip a lock
-or do an early return.
+Yes please! That would be perfect. (And yeah, it's a sensible
+optimization to do it "as needed"; I hadn't thought of that.)
 
-cheers
-
-> diff --git a/arch/powerpc/include/asm/spinlock.h b/arch/powerpc/include/asm/spinlock.h
-> index 860228e917dc..a6381d110795 100644
-> --- a/arch/powerpc/include/asm/spinlock.h
-> +++ b/arch/powerpc/include/asm/spinlock.h
-> @@ -111,6 +111,8 @@ static inline void splpar_spin_yield(arch_spinlock_t *lock) {};
->  static inline void splpar_rw_yield(arch_rwlock_t *lock) {};
->  #endif
->  
-> +extern bool crash_skip_spinlock __read_mostly;
-> +
->  static inline bool is_shared_processor(void)
->  {
->  #ifdef CONFIG_PPC_SPLPAR
-> @@ -142,6 +144,8 @@ static inline void arch_spin_lock(arch_spinlock_t *lock)
->  		if (likely(__arch_spin_trylock(lock) == 0))
->  			break;
->  		do {
-> +			if (unlikely(crash_skip_spinlock))
-> +				return;
->  			HMT_low();
->  			if (is_shared_processor())
->  				splpar_spin_yield(lock);
-> @@ -161,6 +165,8 @@ void arch_spin_lock_flags(arch_spinlock_t *lock, unsigned long flags)
->  		local_save_flags(flags_dis);
->  		local_irq_restore(flags);
->  		do {
-> +			if (unlikely(crash_skip_spinlock))
-> +				return;
->  			HMT_low();
->  			if (is_shared_processor())
->  				splpar_spin_yield(lock);
-> diff --git a/arch/powerpc/kexec/crash.c b/arch/powerpc/kexec/crash.c
-> index d488311efab1..ae081f0f2472 100644
-> --- a/arch/powerpc/kexec/crash.c
-> +++ b/arch/powerpc/kexec/crash.c
-> @@ -66,6 +66,9 @@ static int handle_fault(struct pt_regs *regs)
->  
->  #ifdef CONFIG_SMP
->  
-> +bool crash_skip_spinlock;
-> +EXPORT_SYMBOL(crash_skip_spinlock);
-> +
->  static atomic_t cpus_in_crash;
->  void crash_ipi_callback(struct pt_regs *regs)
->  {
-> @@ -129,6 +132,7 @@ static void crash_kexec_prepare_cpus(int cpu)
->  	/* Would it be better to replace the trap vector here? */
->  
->  	if (atomic_read(&cpus_in_crash) >= ncpus) {
-> +		crash_skip_spinlock = true;
->  		printk(KERN_EMERG "IPI complete\n");
->  		return;
->  	}
-> -- 
-> 2.24.1
+-- 
+Kees Cook
