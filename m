@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BE70C2D0F2
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 23:31:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1525BC43331
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 23:31:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EFFB920787
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 23:31:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E50DC2076B
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 23:31:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727768AbgC0Xbk (ORCPT
+        id S1727175AbgC0XbT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Mar 2020 19:31:40 -0400
-Received: from zeniv.linux.org.uk ([195.92.253.2]:35922 "EHLO
+        Fri, 27 Mar 2020 19:31:19 -0400
+Received: from zeniv.linux.org.uk ([195.92.253.2]:35894 "EHLO
         ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727048AbgC0XbU (ORCPT
+        with ESMTP id S1726212AbgC0XbT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Mar 2020 19:31:20 -0400
+        Fri, 27 Mar 2020 19:31:19 -0400
 Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jHyRa-004KKm-UV; Fri, 27 Mar 2020 23:31:18 +0000
+        id 1jHyRa-004KK5-69; Fri, 27 Mar 2020 23:31:18 +0000
 From:   Al Viro <viro@ZenIV.linux.org.uk>
 To:     Linus Torvalds <torvalds@linux-foundation.org>
 Cc:     linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [RFC][PATCH 09/14] sparc: switch to providing csum_and_copy_from_user()
-Date:   Fri, 27 Mar 2020 23:31:12 +0000
-Message-Id: <20200327233117.1031393-9-viro@ZenIV.linux.org.uk>
+Subject: [RFC][PATCH 02/14] x86_64: csum_..._copy_..._user(): switch to unsafe_..._user()
+Date:   Fri, 27 Mar 2020 23:31:05 +0000
+Message-Id: <20200327233117.1031393-2-viro@ZenIV.linux.org.uk>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200327233117.1031393-1-viro@ZenIV.linux.org.uk>
 References: <20200327233006.GW23230@ZenIV.linux.org.uk>
@@ -41,68 +41,96 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Al Viro <viro@zeniv.linux.org.uk>
 
-sparc64 already is equivalent to that (trivial access_ok());
-add it into sparc32 csum_partial_copy_from_user() and we can
-rename both to csum_and_copy_fromUser() and be done with that.
+We already have stac/clac pair around the calls of csum_partial_copy_generic().
+Stretch that area back, so that it covers the preceding loop (and convert
+the loop body from __{get,put}_user() to unsafe_{get,put}_user()).
+That brings the beginning of the areas to the earlier access_ok(),
+which allows to convert them into user_access_{begin,end}() ones.
 
 Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
 ---
- arch/sparc/include/asm/checksum.h    | 1 +
- arch/sparc/include/asm/checksum_32.h | 8 +++++++-
- arch/sparc/include/asm/checksum_64.h | 2 +-
- 3 files changed, 9 insertions(+), 2 deletions(-)
+ arch/x86/lib/csum-wrappers_64.c | 23 ++++++++++++-----------
+ 1 file changed, 12 insertions(+), 11 deletions(-)
 
-diff --git a/arch/sparc/include/asm/checksum.h b/arch/sparc/include/asm/checksum.h
-index c3be56e2e768..a6256cb6fc5c 100644
---- a/arch/sparc/include/asm/checksum.h
-+++ b/arch/sparc/include/asm/checksum.h
-@@ -1,6 +1,7 @@
- /* SPDX-License-Identifier: GPL-2.0 */
- #ifndef ___ASM_SPARC_CHECKSUM_H
- #define ___ASM_SPARC_CHECKSUM_H
-+#define _HAVE_ARCH_COPY_AND_CSUM_FROM_USER
- #if defined(__sparc__) && defined(__arch64__)
- #include <asm/checksum_64.h>
- #else
-diff --git a/arch/sparc/include/asm/checksum_32.h b/arch/sparc/include/asm/checksum_32.h
-index 450ddfb444c8..479a0b812af5 100644
---- a/arch/sparc/include/asm/checksum_32.h
-+++ b/arch/sparc/include/asm/checksum_32.h
-@@ -60,7 +60,7 @@ csum_partial_copy_nocheck(const void *src, void *dst, int len, __wsum sum)
+diff --git a/arch/x86/lib/csum-wrappers_64.c b/arch/x86/lib/csum-wrappers_64.c
+index 875c2f5968a0..90d02c82bb7a 100644
+--- a/arch/x86/lib/csum-wrappers_64.c
++++ b/arch/x86/lib/csum-wrappers_64.c
+@@ -27,7 +27,7 @@ csum_partial_copy_from_user(const void __user *src, void *dst,
+ 	might_sleep();
+ 	*errp = 0;
+ 
+-	if (!likely(access_ok(src, len)))
++	if (!likely(user_access_begin(src, len)))
+ 		goto out_err;
+ 
+ 	/*
+@@ -42,8 +42,7 @@ csum_partial_copy_from_user(const void __user *src, void *dst,
+ 		while (((unsigned long)src & 6) && len >= 2) {
+ 			__u16 val16;
+ 
+-			if (__get_user(val16, (const __u16 __user *)src))
+-				goto out_err;
++			unsafe_get_user(val16, (const __u16 __user *)src, out);
+ 
+ 			*(__u16 *)dst = val16;
+ 			isum = (__force __wsum)add32_with_carry(
+@@ -53,15 +52,16 @@ csum_partial_copy_from_user(const void __user *src, void *dst,
+ 			len -= 2;
+ 		}
+ 	}
+-	stac();
+ 	isum = csum_partial_copy_generic((__force const void *)src,
+ 				dst, len, isum, errp, NULL);
+-	clac();
++	user_access_end();
+ 	if (unlikely(*errp))
+ 		goto out_err;
+ 
+ 	return isum;
+ 
++out:
++	user_access_end();
+ out_err:
+ 	*errp = -EFAULT;
+ 	memset(dst, 0, len);
+@@ -89,7 +89,7 @@ csum_and_copy_to_user(const void *src, void __user *dst,
+ 
+ 	might_sleep();
+ 
+-	if (unlikely(!access_ok(dst, len))) {
++	if (unlikely(!user_access_begin(dst, len))) {
+ 		*errp = -EFAULT;
+ 		return 0;
+ 	}
+@@ -100,9 +100,7 @@ csum_and_copy_to_user(const void *src, void __user *dst,
+ 
+ 			isum = (__force __wsum)add32_with_carry(
+ 					(__force unsigned)isum, val16);
+-			*errp = __put_user(val16, (__u16 __user *)dst);
+-			if (*errp)
+-				return isum;
++			unsafe_put_user(val16, (__u16 __user *)dst, out);
+ 			src += 2;
+ 			dst += 2;
+ 			len -= 2;
+@@ -110,11 +108,14 @@ csum_and_copy_to_user(const void *src, void __user *dst,
+ 	}
+ 
+ 	*errp = 0;
+-	stac();
+ 	ret = csum_partial_copy_generic(src, (void __force *)dst,
+ 					len, isum, NULL, errp);
+-	clac();
++	user_access_end();
+ 	return ret;
++out:
++	user_access_end();
++	*errp = -EFAULT;
++	return isum;
  }
+ EXPORT_SYMBOL(csum_and_copy_to_user);
  
- static inline __wsum
--csum_partial_copy_from_user(const void __user *src, void *dst, int len,
-+csum_and_copy_from_user(const void __user *src, void *dst, int len,
- 			    __wsum sum, int *err)
-   {
- 	register unsigned long ret asm("o0") = (unsigned long)src;
-@@ -68,6 +68,12 @@ csum_partial_copy_from_user(const void __user *src, void *dst, int len,
- 	register int l asm("g1") = len;
- 	register __wsum s asm("g7") = sum;
- 
-+	if (unlikely(!access_ok(src, len))) {
-+		if (len)
-+			*err = -EFAULT;
-+		return sum;
-+	}
-+
- 	__asm__ __volatile__ (
- 	".section __ex_table,#alloc\n\t"
- 	".align 4\n\t"
-diff --git a/arch/sparc/include/asm/checksum_64.h b/arch/sparc/include/asm/checksum_64.h
-index e52450930e4e..0fa4433f5662 100644
---- a/arch/sparc/include/asm/checksum_64.h
-+++ b/arch/sparc/include/asm/checksum_64.h
-@@ -46,7 +46,7 @@ long __csum_partial_copy_from_user(const void __user *src,
- 				   __wsum sum);
- 
- static inline __wsum
--csum_partial_copy_from_user(const void __user *src,
-+csum_and_copy_from_user(const void __user *src,
- 			    void *dst, int len,
- 			    __wsum sum, int *err)
- {
 -- 
 2.11.0
 
