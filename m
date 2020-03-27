@@ -2,100 +2,117 @@ Return-Path: <SRS0=s8dx=5M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3393BC43331
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 19:56:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3724C43331
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 19:58:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 09EF32071B
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 19:56:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 969E0206F1
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 19:58:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Ai41kCkI"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="aFl/tKHU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727738AbgC0T4v (ORCPT
+        id S1727509AbgC0T6E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Mar 2020 15:56:51 -0400
-Received: from us-smtp-delivery-74.mimecast.com ([216.205.24.74]:57668 "EHLO
-        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726900AbgC0T4v (ORCPT
+        Fri, 27 Mar 2020 15:58:04 -0400
+Received: from gateway23.websitewelcome.com ([192.185.50.104]:27106 "EHLO
+        gateway23.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726900AbgC0T6E (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Mar 2020 15:56:51 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1585339010;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=47M1/R1fKOfaD/fxe2Qq1Sh6Lnd4CcgXHtJqgS2HeLI=;
-        b=Ai41kCkIA4/64efqe3miKGsZlI+7ZqbxCuPguNNczuOSXOWp8DWvKyhTK3pmA9uPSn+cHA
-        FyF5plvJZdR3yOJu/Vgys5O0q35ym3WIoz8WYT0MHMhVDKad+OodYkPDcVkSlI2x9idF5/
-        cHkU4bXlCLJNSbLdLKMI4Ai58ckbGPI=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-273-vYDegnzvOf6ERafJ4qbcTQ-1; Fri, 27 Mar 2020 15:56:48 -0400
-X-MC-Unique: vYDegnzvOf6ERafJ4qbcTQ-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 407AF85EE96;
-        Fri, 27 Mar 2020 19:56:46 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.40.192.121])
-        by smtp.corp.redhat.com (Postfix) with SMTP id 4D9298AC36;
-        Fri, 27 Mar 2020 19:56:44 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-        oleg@redhat.com; Fri, 27 Mar 2020 20:56:45 +0100 (CET)
-Date:   Fri, 27 Mar 2020 20:56:43 +0100
-From:   Oleg Nesterov <oleg@redhat.com>
-To:     "Eric W. Biederman" <ebiederm@xmission.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Manfred Spraul <manfred@colorfullife.com>,
-        Markus Elfring <elfring@users.sourceforge.net>,
-        Yoji <yoji.fujihar.min@gmail.com>, linux-kernel@vger.kernel.org
-Subject: [PATCH -mm]
- ipc-mqueuec-change-__do_notify-to-bypass-check_kill_permission-fix
-Message-ID: <20200327195643.GA9366@redhat.com>
-References: <20200322110901.GA25108@redhat.com>
- <20200324200932.GB24230@redhat.com>
- <87v9mr1dlf.fsf@x220.int.ebiederm.org>
+        Fri, 27 Mar 2020 15:58:04 -0400
+Received: from cm16.websitewelcome.com (cm16.websitewelcome.com [100.42.49.19])
+        by gateway23.websitewelcome.com (Postfix) with ESMTP id B24655446A
+        for <linux-kernel@vger.kernel.org>; Fri, 27 Mar 2020 14:58:02 -0500 (CDT)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id Hv7CjWj1l8vkBHv7CjMN51; Fri, 27 Mar 2020 14:58:02 -0500
+X-Authority-Reason: nr=8
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
+        Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=BeuzSJqhbI7Sy5DD0lNgT5zLFB8JnttXuEFOYmqN6kg=; b=aFl/tKHUcDOoccm3ZhoAJyW+Qd
+        jnJcRS9T5IDzI0En1j7D1Ughj2qYWI3kNrZR4CrNM9XCU2Jg9ULCFOS11ok/30BuAFmFd6fPu34z0
+        /pTZPBje0fYlVqHrHh9Ogcm4pRvOwjcoZE+iLZGoSTajgUsVR8L7cKWY2LFT1qxY11Qj2Q5u1HQ74
+        tjS0/iRFCtRt96akXG6e24A1QH7Wn55UypZF2SxAiEoLKcX/CE6UPlYUfRSPHHuobhzESmxxQRVjQ
+        kQFJO+JFs5jDLxLEqE0hD6fNlEBl925gCcFT2hBeuf20D4E2qCemI6yNFTUHWlB/KYpXiP3FmK16W
+        bSkHll9g==;
+Received: from cablelink-189-218-116-241.hosts.intercable.net ([189.218.116.241]:45334 helo=embeddedor)
+        by gator4166.hostgator.com with esmtpa (Exim 4.92)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1jHv7B-002Xgn-6w; Fri, 27 Mar 2020 14:58:01 -0500
+Date:   Fri, 27 Mar 2020 15:01:35 -0500
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+To:     Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
+        David Sterba <dsterba@suse.com>
+Cc:     linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Subject: [PATCH][next] btrfs: inode: Fix uninitialized variable bug
+Message-ID: <20200327200135.GA3472@embeddedor>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <87v9mr1dlf.fsf@x220.int.ebiederm.org>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 189.218.116.241
+X-Source-L: No
+X-Exim-ID: 1jHv7B-002Xgn-6w
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: cablelink-189-218-116-241.hosts.intercable.net (embeddedor) [189.218.116.241]:45334
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 14
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 03/26, Eric W. Biederman wrote:
->
-> > +			task = pid_task(info->notify_owner, PIDTYPE_PID);
->                                                             ^^^^^^^^^^^^
-> Minor nit:  If we are doing the task lookup ourselves that can and
->             should be PIDTYPE_TGID.
+geom.len is being used without being properly initialized, previously.
 
-I think this shouldn't make any difference, in particular because
-do_mq_notify() does "notify_owner = task_tgid()" and we do not care
-about exec.
+Fix this by placing ASSERT(geom.len <= INT_MAX); after geom.len has been
+initialized.
 
-But I agree, pid_task(PIDTYPE_TGID) looks better, thanks.
+Addresses-Coverity-ID: 1491912 ("Uninitialized scalar variable")
+Fixes: 1eb52c8bd8d6 ("btrfs: get rid of one layer of bios in direct I/O")
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+---
+ fs/btrfs/inode.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-
-diff --git a/ipc/mqueue.c b/ipc/mqueue.c
-index 63b164932ffd..9a44dcb04e13 100644
---- a/ipc/mqueue.c
-+++ b/ipc/mqueue.c
-@@ -801,7 +801,7 @@ static void __do_notify(struct mqueue_inode_info *info)
- 			 * bypass check_kill_permission(). It is from kernel
- 			 * but si_fromuser() can't know this.
- 			 */
--			task = pid_task(info->notify_owner, PIDTYPE_PID);
-+			task = pid_task(info->notify_owner, PIDTYPE_TGID);
- 			if (task)
- 				do_send_sig_info(info->notify.sigev_signo,
- 						&sig_i, task, PIDTYPE_TGID);
+diff --git a/fs/btrfs/inode.c b/fs/btrfs/inode.c
+index fce94591e092..00ea02268f54 100644
+--- a/fs/btrfs/inode.c
++++ b/fs/btrfs/inode.c
+@@ -7637,7 +7637,6 @@ static void btrfs_submit_direct_hook(struct btrfs_dio_private *dip)
+ 	else
+ 		async_submit = 1;
+ 
+-	ASSERT(geom.len <= INT_MAX);
+ 	do {
+ 		ret = btrfs_get_io_geometry(fs_info, btrfs_op(dio_bio),
+ 					    start_sector << 9, submit_len,
+@@ -7647,6 +7646,8 @@ static void btrfs_submit_direct_hook(struct btrfs_dio_private *dip)
+ 			goto out_err;
+ 		}
+ 
++		ASSERT(geom.len <= INT_MAX);
++
+ 		clone_len = min_t(int, submit_len, geom.len);
+ 
+ 		/*
+-- 
+2.26.0
 
