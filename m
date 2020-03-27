@@ -2,129 +2,86 @@ Return-Path: <SRS0=s8dx=5M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52093C2D0F0
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 19:30:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75AF1C43331
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 19:32:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2CBA920575
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 19:30:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 43C8B206E6
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 19:32:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585337405;
-	bh=9HUbUWL7NClnsAp7hy93RP9ofIIzMS/2p2B7PIoKVIg=;
+	s=default; t=1585337555;
+	bh=wWoAjZwt2nR5X1UPX0ZZp4acCT8N6K2BluWge4uJRGQ=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=w7prSfVGZitApLvQoCLtabizgqFjjoWR/Za7n/HbI3v6b5a4bmFH98oAZd5C/syG0
-	 0jBnya2A2gLa5xJHSvo5Ht9Nw1uTszAHn2pwd+CbdsEAzVSFGoFO/mx4yX5Tj0UBVp
-	 6Nd7B5PcywDKEZHdzw/JOpnq7WKqa/IM2w+1Ph0Q=
+	b=ZJ0Y04B9fseM3C2weuM3JnmpJl4+9CI4D28qDrIJ6aQFwzDvOmhTHTVtiCRHWtSGw
+	 /fu8/bWaYnWuOjBZYJnPV8NrFzcSOqhYVo2ZPatxG1jg8LNH1pyxMFfttyI34NX6cc
+	 55op1L+nevtfP85SO3fR2Mo/NywVICoxR1TGeE1Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727919AbgC0TaE (ORCPT
+        id S1727423AbgC0Tce (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Mar 2020 15:30:04 -0400
-Received: from mail-il1-f194.google.com ([209.85.166.194]:42237 "EHLO
-        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726959AbgC0TaD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Mar 2020 15:30:03 -0400
-Received: by mail-il1-f194.google.com with SMTP id f16so9852713ilj.9;
-        Fri, 27 Mar 2020 12:30:01 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=+6juMdOF3ml8+Ae5THAMDkYKsZSA6LWpaypcZCb56iM=;
-        b=OqvAH8vt9xXb1IuAqhdnmQwHP7jEnye1A5ZQ8PHVjwpxtGkeV/841Nelp5HB08gT5Q
-         8VZPRbX2u2Pf3Yx8orwcMwQHIbCA49FTcYfkPEhvcH2zeW2fEQ7aDSf4EufP4wRioPJ/
-         IkfEiXvie6b4krztzXHU8nxo/2hpydM+INAVHbDiWhykss4Th04nWJOuuFUYsN24zCai
-         3sV3sN+yyoEp0o2OOdLsD0/SJXn/exvqicfHZBqbGLbTB+IEnhF+Vy8tjtDn+5daOZLb
-         YAN8qYt3Sr8Qfp3znPPKCJK6Q+MHYfkem8uL837vc6dbmC1Eio0E0PwinYhSHx9bQjMu
-         B6Uw==
-X-Gm-Message-State: ANhLgQ3iL35AHN2QLIwUd8lbGrujFZb0QDTDy2msMHX3PZo4/+nhJD/v
-        I4FplbzeHfIoDliKIMfZsw==
-X-Google-Smtp-Source: ADFU+vvcvzixXoT9nuU+25JCfDW/ewtABsf4WS3snntWAxPLhxgn9dzSKHh0huzUaaVDWcxFw7Rv9Q==
-X-Received: by 2002:a92:8c45:: with SMTP id o66mr732857ild.236.1585337401543;
-        Fri, 27 Mar 2020 12:30:01 -0700 (PDT)
-Received: from rob-hp-laptop ([64.188.179.250])
-        by smtp.gmail.com with ESMTPSA id j9sm2181862ilc.4.2020.03.27.12.29.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 27 Mar 2020 12:30:00 -0700 (PDT)
-Received: (nullmailer pid 1841 invoked by uid 1000);
-        Fri, 27 Mar 2020 19:29:59 -0000
-Date:   Fri, 27 Mar 2020 13:29:59 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Lubomir Rintel <lkundrak@v3.sk>,
-        Robert Jarzmik <robert.jarzmik@free.fr>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Mark Brown <broonie@kernel.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        Daniel Mack <daniel@zonque.org>,
-        Haojian Zhuang <haojian.zhuang@gmail.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        linux-i2c <linux-i2c@vger.kernel.org>,
-        linux-media@vger.kernel.org, linux-mmc <linux-mmc@vger.kernel.org>,
-        linux-rtc@vger.kernel.org,
-        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
-        linux-spi <linux-spi@vger.kernel.org>,
-        linux-usb <linux-usb@vger.kernel.org>
-Subject: Re: [PATCH 21/28] dt-bindings: gpio: Convert mrvl-gpio to json-schema
-Message-ID: <20200327192959.GB8577@bogus>
-References: <20200317093922.20785-1-lkundrak@v3.sk>
- <20200317093922.20785-22-lkundrak@v3.sk>
- <CACRpkdaEnODObC7emg2M7Ayn_JkeLuc3HpV4VhJcwaZ+=sDLcg@mail.gmail.com>
+        Fri, 27 Mar 2020 15:32:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33232 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726738AbgC0Tce (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Mar 2020 15:32:34 -0400
+Received: from localhost (unknown [104.132.1.66])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8F43F20575;
+        Fri, 27 Mar 2020 19:32:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1585337553;
+        bh=wWoAjZwt2nR5X1UPX0ZZp4acCT8N6K2BluWge4uJRGQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ZIdX+zVLGrFZGp9dBUOVypptkgXVWdke59yk8jKqMZpdpClIGzxKm2WW990B2Xq3w
+         Ycgwyu0RSSByNv0YKGZ2hWNga+DXU4+PwFWzck9gYDldbJWpDsfE1qHVMH/JkWe4Ha
+         IniH6OY7izr4MJGs8sp2auOMJRfD+eAD4WKlRqOI=
+Date:   Fri, 27 Mar 2020 12:32:33 -0700
+From:   Jaegeuk Kim <jaegeuk@kernel.org>
+To:     Chao Yu <yuchao0@huawei.com>
+Cc:     linux-f2fs-devel@lists.sourceforge.net,
+        linux-kernel@vger.kernel.org, chao@kernel.org
+Subject: Re: [PATCH 3/3] f2fs: fix to check f2fs_compressed_file() in
+ f2fs_bmap()
+Message-ID: <20200327193233.GB186975@google.com>
+References: <20200327102953.104035-1-yuchao0@huawei.com>
+ <20200327102953.104035-3-yuchao0@huawei.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CACRpkdaEnODObC7emg2M7Ayn_JkeLuc3HpV4VhJcwaZ+=sDLcg@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200327102953.104035-3-yuchao0@huawei.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 27, 2020 at 11:04:00AM +0100, Linus Walleij wrote:
-> Hi Lubomir!
-> 
-> Excellent work! Just nitpicks:
-> 
-> On Tue, Mar 17, 2020 at 10:40 AM Lubomir Rintel <lkundrak@v3.sk> wrote:
-> 
-> > +++ b/Documentation/devicetree/bindings/gpio/mrvl-gpio.yaml
-> > @@ -0,0 +1,173 @@
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/gpio/mrvl-gpio.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: Marvell PXA GPIO controller
-> 
-> This binding is lacking a license. Please use the dual GPL+BSD license
-> tag.
+On 03/27, Chao Yu wrote:
+> Otherwise, for compressed inode, returned physical block address
+> may be wrong.
 
-That is preferred, but should only be dual if you have rights on the old 
-binding file or get relicensing permissions.
+We can use bmap to check the allocated (non)compressed blocks.
 
 > 
-> > +maintainers:
-> > +  - devicetree@vger.kernel.org
+> Signed-off-by: Chao Yu <yuchao0@huawei.com>
+> ---
+>  fs/f2fs/data.c | 2 ++
+>  1 file changed, 2 insertions(+)
 > 
-> I don't know if Robert Jarzmik is in on maintaining this, would you accept
-> it Robert?
-> 
-> Yours,
-> Linus Walleij
+> diff --git a/fs/f2fs/data.c b/fs/f2fs/data.c
+> index 24643680489b..f22f3ba10a48 100644
+> --- a/fs/f2fs/data.c
+> +++ b/fs/f2fs/data.c
+> @@ -3591,6 +3591,8 @@ static sector_t f2fs_bmap(struct address_space *mapping, sector_t block)
+>  
+>  	if (f2fs_has_inline_data(inode))
+>  		return 0;
+> +	if (f2fs_compressed_file(inode))
+> +		return 0;
+>  
+>  	/* make sure allocating whole blocks */
+>  	if (mapping_tagged(mapping, PAGECACHE_TAG_DIRTY))
+> -- 
+> 2.18.0.rc1
