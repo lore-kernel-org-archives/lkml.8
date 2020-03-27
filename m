@@ -2,210 +2,216 @@ Return-Path: <SRS0=s8dx=5M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92336C2D0EF
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 01:40:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0757BC2D0F2
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 01:40:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5EEA820787
+	by mail.kernel.org (Postfix) with ESMTP id DF0B920774
 	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 01:40:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="N7+rU/HM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727880AbgC0Bie (ORCPT
+        id S1727829AbgC0Bkp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 21:38:34 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:42018 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727846AbgC0Bie (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 21:38:34 -0400
-Received: by mail-lf1-f66.google.com with SMTP id t21so6531268lfe.9
-        for <linux-kernel@vger.kernel.org>; Thu, 26 Mar 2020 18:38:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=n7WV/EpnZROyLfEaMPawCMxPabFPT6/7MuhbzbnfSN8=;
-        b=N7+rU/HMdCMrO09FKv2jhmMJmEotS+k7FgW93dzfsVzYT4Wx2yOxLYPiiZVXQmWsKB
-         mTaNEfdk92qmu3JpAGGKf8D8DrJHO1/HnVUuFDZGTTt7eSa3XU0Syfp9jgVd20qDWBX5
-         ruKKWNdS4EvtowHaZWx44yt2eSgVEgGl+S+uDP/fjBEi85avvK3K0ujKSsp7yXugbcnh
-         P3fgtZC5OWKJA5Nju4RKQOF8VgkBfi2iZJyrAUq23w6Q0z4oI+ImhqkJIH5CvogqedDG
-         KkH51MpVZ4dESbvlHGKfVjOmMylfulftRcUj3lGkQEehz/iWGHfoWdx/aQZdSn7QFkCd
-         uK1Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=n7WV/EpnZROyLfEaMPawCMxPabFPT6/7MuhbzbnfSN8=;
-        b=HtrcwJfr5Ejb79geCgJ4GU/eU0JCbCnfIMevohCY4XFuQAJyqjx5UVQ+etR38Lavz3
-         2STPt/vcpuQkf19rBrr25paX14heytS+D8Tm0H931lzzaG7SXQDpTsJYQLQElGyEnedO
-         gMWCE9HHOUvKdIIPuSW55ToVNm5QhTpwQ5uXx6Z0r/i1DOMMeva7/b72DkriNacJNWcE
-         LpO2dYh41lwAQBijGEjmEsQ9gFq13GY2u45mDjWoGlK+8W2kLcMVQUP0XRsANA341tU3
-         ARST1tIcxelhAeraFc3o4aaLMjBJdRtUwN3gx5KOxwCzGjjQs/wayKKlFbsoV0WTk0U+
-         bxSg==
-X-Gm-Message-State: ANhLgQ2I/nLF9SDX+MlLv7rJhslM0ygZpM1eHxM3zzA0mqa9mb3NmfBf
-        r8jx+eP4mM3VzjwVTD4g4yL3SbCUybdE08tH2CuwMw==
-X-Google-Smtp-Source: ADFU+vuKmO4rcij2uPD34u8BMt6+NSD83GcaxgfxBTr1GExVYFySIeBtMr9F8AsT2WjwC8O3ItGydbB8E463i11H+o0=
-X-Received: by 2002:a19:3803:: with SMTP id f3mr7647519lfa.160.1585273109028;
- Thu, 26 Mar 2020 18:38:29 -0700 (PDT)
+        Thu, 26 Mar 2020 21:40:45 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:44604 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727696AbgC0Bkp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Mar 2020 21:40:45 -0400
+Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 17BCC57FBF18DDAE6883;
+        Fri, 27 Mar 2020 09:40:40 +0800 (CST)
+Received: from DESKTOP-27KDQMV.china.huawei.com (10.173.228.124) by
+ DGGEMS407-HUB.china.huawei.com (10.3.19.207) with Microsoft SMTP Server id
+ 14.3.487.0; Fri, 27 Mar 2020 09:40:30 +0800
+From:   "Longpeng(Mike)" <longpeng2@huawei.com>
+To:     <linux-kernel@vger.kernel.org>, <linux-mm@kvack.org>
+CC:     <kvm@vger.kernel.org>, <arei.gonglei@huawei.com>,
+        <weidong.huang@huawei.com>, <weifuqiang@huawei.com>,
+        <kirill.shutemov@linux.intel.com>, Longpeng <longpeng2@huawei.com>,
+        "Mike Kravetz" <mike.kravetz@oracle.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Matthew Wilcox <willy@infradead.org>,
+        "Sean Christopherson" <sean.j.christopherson@intel.com>,
+        <stable@vger.kernel.org>
+Subject: [PATCH v3] mm/hugetlb: fix a addressing exception caused by huge_pte_offset
+Date:   Fri, 27 Mar 2020 09:40:07 +0800
+Message-ID: <20200327014007.1915-1-longpeng2@huawei.com>
+X-Mailer: git-send-email 2.25.0.windows.1
 MIME-Version: 1.0
-References: <20200324123518.239768-1-rajatja@google.com> <20200324123518.239768-4-rajatja@google.com>
- <20200326212025.GH75430@dtor-ws>
-In-Reply-To: <20200326212025.GH75430@dtor-ws>
-From:   Rajat Jain <rajatja@google.com>
-Date:   Thu, 26 Mar 2020 18:37:52 -0700
-Message-ID: <CACK8Z6G5PBZozq6TB6-PNtL0PCg_k9wpi1YxWp-E=Snhm7693Q@mail.gmail.com>
-Subject: Re: [PATCH v2 4/5] Input: atkbd: Receive and use physcode->keycode
- mapping from FW
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc:     Dmitry Torokhov <dtor@google.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Enrico Weigelt <info@metux.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Allison Randal <allison@lohutok.net>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Stephen Boyd <swboyd@chromium.org>,
-        linux-input <linux-input@vger.kernel.org>,
-        devicetree@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Furquan Shaikh <furquan@google.com>,
-        Duncan Laurie <dlaurie@google.com>,
-        Benson Leung <bleung@google.com>,
-        Zentaro Kavanagh <zentaro@google.com>,
-        Dominik Behr <dbehr@google.com>,
-        Rajat Jain <rajatxjain@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.173.228.124]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 26, 2020 at 2:20 PM Dmitry Torokhov
-<dmitry.torokhov@gmail.com> wrote:
->
-> Hi Rajat,
->
-> On Tue, Mar 24, 2020 at 05:35:17AM -0700, Rajat Jain wrote:
-> > Allow the firmware to specify the mapping between the physical
-> > code and the linux keycode. This takes the form of a "keymap"
-> > property which is an array of u32 values, each value specifying
-> > mapping for a key.
-> >
-> > Signed-off-by: Rajat Jain <rajatja@google.com>
-> > ---
-> > v2: Remove the Change-Id from the commit log
-> >
-> >  drivers/input/keyboard/atkbd.c | 39 ++++++++++++++++++++++++++++++++--
-> >  1 file changed, 37 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/drivers/input/keyboard/atkbd.c b/drivers/input/keyboard/atkbd.c
-> > index 7623eebef2593..c8017a5707581 100644
-> > --- a/drivers/input/keyboard/atkbd.c
-> > +++ b/drivers/input/keyboard/atkbd.c
-> > @@ -66,6 +66,9 @@ MODULE_PARM_DESC(terminal, "Enable break codes on an IBM Terminal keyboard conne
-> >
-> >  #define MAX_FUNCTION_ROW_KEYS        24
-> >
-> > +#define PHYSCODE(keymap)     ((keymap >> 16) & 0xFFFF)
-> > +#define KEYCODE(keymap)              (keymap & 0xFFFF)
-> > +
-> >  /*
-> >   * Scancode to keycode tables. These are just the default setting, and
-> >   * are loadable via a userland utility.
-> > @@ -236,6 +239,9 @@ struct atkbd {
-> >
-> >       u16 function_row_physmap[MAX_FUNCTION_ROW_KEYS];
-> >       int num_function_row_keys;
-> > +
-> > +     unsigned short fw_keymap[ATKBD_KEYMAP_SIZE];
-> > +     bool use_fw_keymap;
->
-> Why do we need to keep firmware-provided keymap in atkbd instance? It is
-> not going anywhere and can be accessed via device_property_* API
-> whenever we decide to refresh the keymap.
+From: Longpeng <longpeng2@huawei.com>
 
-Done. I've sent out a new v3 patchset for review with this change.
+Our machine encountered a panic(addressing exception) after run
+for a long time and the calltrace is:
+RIP: 0010:[<ffffffff9dff0587>]  [<ffffffff9dff0587>] hugetlb_fault+0x307/0xbe0
+RSP: 0018:ffff9567fc27f808  EFLAGS: 00010286
+RAX: e800c03ff1258d48 RBX: ffffd3bb003b69c0 RCX: e800c03ff1258d48
+RDX: 17ff3fc00eda72b7 RSI: 00003ffffffff000 RDI: e800c03ff1258d48
+RBP: ffff9567fc27f8c8 R08: e800c03ff1258d48 R09: 0000000000000080
+R10: ffffaba0704c22a8 R11: 0000000000000001 R12: ffff95c87b4b60d8
+R13: 00005fff00000000 R14: 0000000000000000 R15: ffff9567face8074
+FS:  00007fe2d9ffb700(0000) GS:ffff956900e40000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: ffffd3bb003b69c0 CR3: 000000be67374000 CR4: 00000000003627e0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ [<ffffffff9df9b71b>] ? unlock_page+0x2b/0x30
+ [<ffffffff9dff04a2>] ? hugetlb_fault+0x222/0xbe0
+ [<ffffffff9dff1405>] follow_hugetlb_page+0x175/0x540
+ [<ffffffff9e15b825>] ? cpumask_next_and+0x35/0x50
+ [<ffffffff9dfc7230>] __get_user_pages+0x2a0/0x7e0
+ [<ffffffff9dfc648d>] __get_user_pages_unlocked+0x15d/0x210
+ [<ffffffffc068cfc5>] __gfn_to_pfn_memslot+0x3c5/0x460 [kvm]
+ [<ffffffffc06b28be>] try_async_pf+0x6e/0x2a0 [kvm]
+ [<ffffffffc06b4b41>] tdp_page_fault+0x151/0x2d0 [kvm]
+ ...
+ [<ffffffffc06a6f90>] kvm_arch_vcpu_ioctl_run+0x330/0x490 [kvm]
+ [<ffffffffc068d919>] kvm_vcpu_ioctl+0x309/0x6d0 [kvm]
+ [<ffffffff9deaa8c2>] ? dequeue_signal+0x32/0x180
+ [<ffffffff9deae34d>] ? do_sigtimedwait+0xcd/0x230
+ [<ffffffff9e03aed0>] do_vfs_ioctl+0x3f0/0x540
+ [<ffffffff9e03b0c1>] SyS_ioctl+0xa1/0xc0
+ [<ffffffff9e53879b>] system_call_fastpath+0x22/0x27
 
->
-> >  };
-> >
-> >  /*
-> > @@ -1045,7 +1051,10 @@ static void atkbd_set_keycode_table(struct atkbd *atkbd)
-> >       memset(atkbd->keycode, 0, sizeof(atkbd->keycode));
-> >       bitmap_zero(atkbd->force_release_mask, ATKBD_KEYMAP_SIZE);
-> >
-> > -     if (atkbd->translated) {
-> > +     if (atkbd->use_fw_keymap) {
-> > +             memcpy(atkbd->keycode, atkbd->fw_keymap,
-> > +                    sizeof(atkbd->keycode));
-> > +     } else if (atkbd->translated) {
-> >               for (i = 0; i < 128; i++) {
-> >                       scancode = atkbd_unxlate_table[i];
-> >                       atkbd->keycode[i] = atkbd_set2_keycode[scancode];
-> > @@ -1163,7 +1172,9 @@ static void atkbd_parse_fwnode_data(struct serio *serio)
-> >  {
-> >       struct atkbd *atkbd = serio_get_drvdata(serio);
-> >       struct device *dev = &serio->dev;
-> > -     int n;
-> > +     int i, n;
-> > +     u32 *ptr;
-> > +     u16 physcode, keycode;
-> >
-> >       if (!dev_fwnode(dev))
-> >               return;
-> > @@ -1176,6 +1187,30 @@ static void atkbd_parse_fwnode_data(struct serio *serio)
-> >               atkbd->num_function_row_keys = n;
-> >               dev_info(dev, "FW reported %d function-row key locations\n", n);
-> >       }
-> > +
-> > +     /* Parse "keymap" property */
-> > +     n = device_property_count_u32(dev, "keymap");
-> > +     if (n > 0 && n <= ATKBD_KEYMAP_SIZE) {
-> > +
-> > +             ptr = kcalloc(n, sizeof(u32), GFP_KERNEL);
-> > +             if (!ptr)
-> > +                     return;
-> > +
-> > +             if (device_property_read_u32_array(dev, "keymap", ptr, n)) {
-> > +                     dev_err(dev, "problem parsing FW keymap property\n");
-> > +                     kfree(ptr);
-> > +                     return;
-> > +             }
-> > +
-> > +             for (i = 0; i < n; i++) {
-> > +                     physcode = PHYSCODE(ptr[i]);
-> > +                     keycode = KEYCODE(ptr[i]);
-> > +                     atkbd->fw_keymap[physcode] = keycode;
-> > +             }
-> > +             dev_info(dev, "Using FW keymap (%d keys)\n", n);
->
-> This should be dev_dbg().
+For 1G hugepages, huge_pte_offset() wants to return NULL or pudp, but it
+may return a wrong 'pmdp' if there is a race. Please look at the following
+code snippet:
+    ...
+    pud = pud_offset(p4d, addr);
+    if (sz != PUD_SIZE && pud_none(*pud))
+        return NULL;
+    /* hugepage or swap? */
+    if (pud_huge(*pud) || !pud_present(*pud))
+        return (pte_t *)pud;
 
-Done.
+    pmd = pmd_offset(pud, addr);
+    if (sz != PMD_SIZE && pmd_none(*pmd))
+        return NULL;
+    /* hugepage or swap? */
+    if (pmd_huge(*pmd) || !pmd_present(*pmd))
+        return (pte_t *)pmd;
+    ...
 
-Thanks,
+The following sequence would trigger this bug:
+1. CPU0: sz = PUD_SIZE and *pud = 0 , continue
+1. CPU0: "pud_huge(*pud)" is false
+2. CPU1: calling hugetlb_no_page and set *pud to xxxx8e7(PRESENT)
+3. CPU0: "!pud_present(*pud)" is false, continue
+4. CPU0: pmd = pmd_offset(pud, addr) and maybe return a wrong pmdp
+However, we want CPU0 to return NULL or pudp in this case.
 
-Rajat
+Also, according to the section 'COMPILER BARRIER' of memory-barriers.txt:
+'''
+ (*) The compiler is within its rights to reorder loads and stores
+     to the same variable, and in some cases, the CPU is within its
+     rights to reorder loads to the same variable.  This means that
+     the following code:
 
->
-> > +             atkbd->use_fw_keymap = true;
-> > +             kfree(ptr);
-> > +     }
-> >  }
-> >
-> >  /*
-> > --
-> > 2.25.1.696.g5e7596f4ac-goog
-> >
->
-> Thanks.
->
-> --
-> Dmitry
+        a[0] = x;
+        a[1] = x;
+
+     Might result in an older value of x stored in a[1] than in a[0].
+'''
+there're several other data races in huge_pte_offset, for example:
+'''
+  p4d = p4d_offset(pgd, addr)
+  if (!p4d_present(*p4d))
+      return NULL;
+  pud = pud_offset(p4d, addr) <-- will be unwinded as:
+    pud = (pud_t *)p4d_page_vaddr(*p4d) + pud_index(address);
+'''
+which is free for the compiler/CPU to execute as:
+'''
+  p4d = p4d_offset(pgd, addr)
+  p4d_for_vaddr = *p4d;
+  if (!p4d_present(*p4d))
+      return NULL;
+  pud = (pud_t *)p4d_page_vaddr(p4d_for_vaddr) + pud_index(address);
+'''
+so in the case where *p4g goes from '!present' to 'present':
+p4d_present(*p4d) and p4d_for_vaddr == none, meaning the p4d_page_vaddr()
+will crash.
+
+For these reasons, we must make sure there is exactly one dereference of
+p4g, pud and pmd.
+
+Cc: Mike Kravetz <mike.kravetz@oracle.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Jason Gunthorpe <jgg@ziepe.ca>
+Cc: Matthew Wilcox <willy@infradead.org>
+Cc: Sean Christopherson <sean.j.christopherson@intel.com>
+Cc: stable@vger.kernel.org
+Suggested-by: Jason Gunthorpe <jgg@ziepe.ca>
+Signed-off-by: Longpeng <longpeng2@huawei.com>
+---
+v2 -> v3:
+  make sure p4g/pud/pmd be dereferenced once. [Jason]
+---
+ mm/hugetlb.c | 26 +++++++++++++++-----------
+ 1 file changed, 15 insertions(+), 11 deletions(-)
+
+diff --git a/mm/hugetlb.c b/mm/hugetlb.c
+index dd8737a..d4fab68 100644
+--- a/mm/hugetlb.c
++++ b/mm/hugetlb.c
+@@ -4909,29 +4909,33 @@ pte_t *huge_pte_offset(struct mm_struct *mm,
+ 		       unsigned long addr, unsigned long sz)
+ {
+ 	pgd_t *pgd;
+-	p4d_t *p4d;
+-	pud_t *pud;
+-	pmd_t *pmd;
++	p4d_t *p4g, p4d_entry;
++	pud_t *pud, pud_entry;
++	pmd_t *pmd, pmd_entry;
+ 
+ 	pgd = pgd_offset(mm, addr);
+ 	if (!pgd_present(*pgd))
+ 		return NULL;
+-	p4d = p4d_offset(pgd, addr);
+-	if (!p4d_present(*p4d))
++
++	p4g = p4d_offset(pgd, addr);
++	p4d_entry = READ_ONCE(*p4g);
++	if (!p4d_present(p4d_entry))
+ 		return NULL;
+ 
+-	pud = pud_offset(p4d, addr);
+-	if (sz != PUD_SIZE && pud_none(*pud))
++	pud = pud_offset(&p4d_entry, addr);
++	pud_entry = READ_ONCE(*pud);
++	if (sz != PUD_SIZE && pud_none(pud_entry))
+ 		return NULL;
+ 	/* hugepage or swap? */
+-	if (pud_huge(*pud) || !pud_present(*pud))
++	if (pud_huge(pud_entry) || !pud_present(pud_entry))
+ 		return (pte_t *)pud;
+ 
+-	pmd = pmd_offset(pud, addr);
+-	if (sz != PMD_SIZE && pmd_none(*pmd))
++	pmd = pmd_offset(&pud_entry, addr);
++	pmd_entry = READ_ONCE(*pmd);
++	if (sz != PMD_SIZE && pmd_none(pmd_entry))
+ 		return NULL;
+ 	/* hugepage or swap? */
+-	if (pmd_huge(*pmd) || !pmd_present(*pmd))
++	if (pmd_huge(pmd_entry) || !pmd_present(pmd_entry))
+ 		return (pte_t *)pmd;
+ 
+ 	return NULL;
+-- 
+1.8.3.1
+
