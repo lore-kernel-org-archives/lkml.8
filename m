@@ -2,173 +2,158 @@ Return-Path: <SRS0=s8dx=5M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D38D2C43331
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 07:59:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5674DC43331
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 08:00:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A420D206F2
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 07:59:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1461B2073B
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 08:00:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="PH8Cpe40"
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="Ryiw2eq6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726266AbgC0H7Z (ORCPT
+        id S1726360AbgC0IAl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Mar 2020 03:59:25 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:51658 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726106AbgC0H7Z (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Mar 2020 03:59:25 -0400
-Received: by mail-wm1-f68.google.com with SMTP id c187so10480462wme.1
-        for <linux-kernel@vger.kernel.org>; Fri, 27 Mar 2020 00:59:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=A3SXt9hKtlX1+t84Pw/hXlXdpS45L5XvfwgDMGD8Nko=;
-        b=PH8Cpe40EpSF7HB9AKeXxzJ1+XtwHVysz14bHbN16e+oAMowvX590ARQroH633UNUx
-         f+rXTFoH9FEkJAs7AxlbINo7Io1KUh/QFsEU8hRJ9UckHHvOyK7uT0gnRWIn3lTqIZY4
-         VszUzEF1c3iVwZtq8xr/Rt/1h927SDlUfEc3OYlTsKwkk+jjDeGWQGxXLmy6eLqf4h36
-         lsPty8cviKyEar+HtlgyOxKTG96MgoiP5Z5fmuckNar2L1b07WKA6JgNmp3TVlz0JHUy
-         MrUeIChjLJzTnqWcwr7loYjzbUPin3CRt93ie1JeIhqrWzu9HH6lGKmZfzWobXn9Sobi
-         rl0w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=A3SXt9hKtlX1+t84Pw/hXlXdpS45L5XvfwgDMGD8Nko=;
-        b=Ml1j8/Dcp1U/jY2bbE2uSFqASY5OYUnZq7H181Q5dkJK1omyfj57HVbvSCoFu1i6N6
-         6PcKbXvJQcZymKOPt8X4d4+Oywgl0GRJZIUqLZqUuyeWQJmQ+e+QldFSOJIc+faYrPk4
-         iyMCyQKsF+QF7Mfv5GUrC41fHj+BmVoN8hVSUa9G9wTL3EdaerG0iwCw1cQPDsdSOl0z
-         DzhdHkEQhxf8VxceMiMEfdOv6MrfU0ZRQ8oUb7KDqmMjh3MaCNq80Z2Ugy1b/ZMfRK2D
-         8UsWfx4J7tSGSpSXPuzx12N5pU1iOFMEnnO3IBF6YOFv5t8/DrOxN+2LK43D6sA9CHhx
-         8Y4w==
-X-Gm-Message-State: ANhLgQ1dk8ECWWHiW4ldFoyHESg/0qf0eAIAKnEFvEEs6zNAJuWVWF4N
-        BmW1ahg7mq4Ko2W66PHBpHBHZQ==
-X-Google-Smtp-Source: ADFU+vtuAAzt17YyAL9hR5KUBg7fm4k5jzYFnkXge0vitnHvBL5WZM5ArdCdYWMQtFG71oW2werRfw==
-X-Received: by 2002:a7b:ca52:: with SMTP id m18mr3951832wml.156.1585295963787;
-        Fri, 27 Mar 2020 00:59:23 -0700 (PDT)
-Received: from dell ([95.149.164.95])
-        by smtp.gmail.com with ESMTPSA id o9sm7378769wrx.48.2020.03.27.00.59.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 27 Mar 2020 00:59:22 -0700 (PDT)
-Date:   Fri, 27 Mar 2020 08:00:13 +0000
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Saravanan Sekar <sravanhome@gmail.com>
-Cc:     robh+dt@kernel.org, jic23@kernel.org, knaack.h@gmx.de,
-        lars@metafoo.de, pmeerw@pmeerw.net, sre@kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-iio@vger.kernel.org, linux-pm@vger.kernel.org
-Subject: Re: [PATCH v4 1/5] dt-bindings: mfd: add document bindings for mp2629
-Message-ID: <20200327080013.GG603801@dell>
-References: <20200322224626.13160-1-sravanhome@gmail.com>
- <20200322224626.13160-2-sravanhome@gmail.com>
+        Fri, 27 Mar 2020 04:00:41 -0400
+Received: from mout.web.de ([212.227.15.4]:35393 "EHLO mout.web.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726063AbgC0IAk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Mar 2020 04:00:40 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1585296012;
+        bh=qsrIXvyI5XAqFT/bXzhp7BN576w9yn0qWhtkPLd/MFw=;
+        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
+        b=Ryiw2eq6p32Xptvn5yWb7YreK0Za1tgDc3HYdL2Ihe9vKkdmymexPsG7HtpCiThzi
+         eV/oKZqPXMHP5Rqouy8bQmuaVGLd2mK8YV6S6wsPYat9dKK4WnYMYmyMB9m0xWN+wD
+         NMwYLMRvkT2w8umMu5PCe+zkwhM+DYMvr05hdyh8=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.1.2] ([2.244.164.253]) by smtp.web.de (mrweb003
+ [213.165.67.108]) with ESMTPSA (Nemesis) id 0LwHmQ-1jJHP819OI-0184q1; Fri, 27
+ Mar 2020 09:00:12 +0100
+Subject: Re: [v2 04/10] mmap locking API: use coccinelle to convert mmap_sem
+ rwsem call sites
+To:     Michel Lespinasse <walken@google.com>, linux-mm@kvack.org
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Coccinelle <cocci@systeme.lip6.fr>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Matthew Wilcox <willy@infradead.org>,
+        Liam Howlett <Liam.Howlett@oracle.com>,
+        Jerome Glisse <jglisse@redhat.com>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        David Rientjes <rientjes@google.com>,
+        Hugh Dickins <hughd@google.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Laurent Dufour <ldufour@linux.ibm.com>,
+        Ying Han <yinghan@google.com>
+References: <20200327021058.221911-1-walken@google.com>
+ <20200327021058.221911-5-walken@google.com>
+ <d780d91f-43fa-b2ec-1a08-80013b153a56@web.de>
+ <CANN689E-SZhv3tvYc11cNuvGwCi1V1n1ztAnLkUPGvvz7C85dQ@mail.gmail.com>
+From:   Markus Elfring <Markus.Elfring@web.de>
+Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
+ 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 FEE=
+Message-ID: <bc15b633-68ab-a121-53c6-32972ef1ad9b@web.de>
+Date:   Fri, 27 Mar 2020 09:00:10 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
+In-Reply-To: <CANN689E-SZhv3tvYc11cNuvGwCi1V1n1ztAnLkUPGvvz7C85dQ@mail.gmail.com>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200322224626.13160-2-sravanhome@gmail.com>
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:dcMcueHUQVFFNviLz6d709esPHEAERQJVckeYupwVRHYfZecXUp
+ 1EGDL62O3La6nHt6FcNxgS/FDwRFKOT9DEQ73MYKBjSUn2AD+3Pv2EWlyYsuf055nCyuwd7
+ +gmH1gakD06lj/3D/WBSXx16LdBICFUI4/7Gqzfn3k24szzMWYsP4iqsZ/xmgALYUyJ58VN
+ CPp/VVGJ2WvyJwKNR/NSQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:ejVoErBuYBY=:9acXfw6axRJDdBeYIHcMi+
+ ZNXDEGEAEIBMzfuuMt56ox6NlmngAdN5MlFRDXNwb42acqxyKdZ80uKwf3+v/vrJ1bLn5qEE0
+ fgrNZ9oYYu0qDK/8te0mBLXhdZE7vlP1NWgSWvMT+MztY+vsoqXdvYdw0sZeopppOLgeIBsTO
+ IgH9CFNJ621sB+Gm29AODQcIJSsp6OSftLzihMRpFDDjeENFQsEKDQMAZAzvMj6NsuKS8zitl
+ dAe3oUXMR1yFhy5f6xtcJDgtL6wgU1mgcrCW0JkDx/PjV8NSpt9j7AMKS+8hbj0QHxYLqrihA
+ sJgna/GwQIYgiCyOTnreVbco5SU3oknhal00MZs7xqQmjjjal8xeI5M9WrSt59Kd3t47OFQPD
+ 28mzXuRkk5OWzITpQWh3xfCoeWjwU36wrpslTp8h8Hs+aahXEd36pHPG4dSLGD5gT2LSKeUaT
+ FVftCQ7Bxe/ua3h3cZCSxCBfXQJHFDLTpMk+yGRrhHjvhowHy8XuLIbeLOueb8G6NuyrQmo63
+ MPlC+hkXhWqVLfnpJSeMRTezHCxQE77yTO2vEEvHsxWShJquk2sj77XSsiG+I659sCw/11GZx
+ LVkdmNoVuzp4uAksulCzwCxIt3EufGh4i730KoFwubfhZXbhih4WT/N1TmmU1EGqOn4xaKEFD
+ FWNtaq4Y0I28hxsLigd0lgUFC9IUkbSMzTVx51K6ZlHq+3sEZ+tmIbZA2YZzscJWzBizrMEK6
+ JJEoXc4DAYa7pfoBINh+8VqP57e4xKd7A6PnLp2oeyy1xkIbZsmDkJDsLKmMMSJcfQODtVLtL
+ UDEcfP9A30lBPklh3yXiYJd+hlmH/XmIHyTbY460auIcFrb9e8OaFNQ3Lh7o68HoAjpC8Yq65
+ 6s/yb9fvctu7u4Qk/OE3T0/IYiIT0RPwmA94FXOAj6JsivJPn3cNY/QOD/6mRheZF04d5WOEG
+ IN95Ttw2YVd5Z7Qobi+tr06G8Qf5MgXhGsZUNLiEyYplvtC9Jt2eOkXTH0wqozqGIdf+xKctP
+ pT49WwoEHDMMIuXO1cBBRD51L7tHWVREdqh0/bt2c0G6CIsXOn+ZexV2qaQKyAbvWO/ALHaaZ
+ zFMucRRtncbLfeQuCpU72jWvZUHU3J/COJsMU5zPbOCxjjIC15fvJbUFwV3WOfkU0fgC1NYU7
+ NeEUYbPbHkDdnBP3NjHyPl7R0BJEgMekqQk6ubJjsJcPQOAQ4pqFM6zW3Zg1e1YYG4rL6FZ85
+ WgHhDZNf2HySCs6I7
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 22 Mar 2020, Saravanan Sekar wrote:
+>>> The change is generated using coccinelle with the following rules:
+>>
+>> Would you like to apply only a single SmPL rule here?
+>
+> I think this version of the patch is already a single rule,
+> similar to what you suggested ?
 
-> Add device tree binding information for mp2629 mfd driver.
-> 
-> Signed-off-by: Saravanan Sekar <sravanhome@gmail.com>
-> ---
->  .../devicetree/bindings/mfd/mps,mp2629.yaml   | 60 +++++++++++++++++++
->  1 file changed, 60 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mfd/mps,mp2629.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/mfd/mps,mp2629.yaml b/Documentation/devicetree/bindings/mfd/mps,mp2629.yaml
-> new file mode 100644
-> index 000000000000..314309ea91ac
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mfd/mps,mp2629.yaml
-> @@ -0,0 +1,60 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/mfd/mps,mp2629.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+Yes. - But you repeated the wording =E2=80=9Crules=E2=80=9D in the change =
+description.
+Are there any other software extensions still in the waiting queue?
 
-Are these links supposed to work?
 
-> +title: MP2629 Battery Charger PMIC from Monolithic Power System.
-> +
-> +maintainers:
-> +  - Saravanan Sekar <sravanhome@gmail.com>
-> +
-> +description: |
-> +  MP2629 is an PMIC providing battery charging and power supply for smartphones,
+> I'm not sure it matters that much, as long as it produces the correct
+> end result. The run takes about 25 seconds before any optimizations,
+> which I find very acceptable.
 
-s/an/a/
+I am used to look also at the run time characteristics of
+SmPL script execution.
+The discussed SmPL code can be good enough for your current needs.
 
-> +  wireless camera and portable devices. Chip is contrlled over I2C.
-
-Spell check!
-
-> +  The MFD device handles battery charger controller and ADC IIO device for
-> +  battery, system voltage
-
-MFD isn't a thing.  We made it up.  Please describe it as it is in the datasheet.
-
-> +properties:
-> +  compatible:
-> +    const: mps,mp2629
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +  interrupt-controller: true
-> +
-> +  "#interrupt-cells":
-> +    const: 2
-> +    description:
-> +      The first cell is the IRQ number, the second cell is the trigger type.
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - interrupts
-> +  - interrupt-controller
-> +  - "#interrupt-cells"
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/interrupt-controller/irq.h>
-> +    #include <dt-bindings/input/linux-event-codes.h>
-> +    i2c {
-
-i2c@0x????????
-
-> +        #address-cells = <1>;
-> +        #size-cells = <0>;
-> +
-> +        pmic@4b {
-> +            compatible = "mps,mp2629";
-> +            reg = <0x4b>;
-> +
-> +            interrupt-controller;
-> +            interrupt-parent = <&gpio2>;
-> +            #interrupt-cells = <2>;
-> +            interrupts = <3 IRQ_TYPE_LEVEL_HIGH>;
-> +        };
-> +    };
-
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+Regards,
+Markus
