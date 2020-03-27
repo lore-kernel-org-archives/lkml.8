@@ -2,333 +2,124 @@ Return-Path: <SRS0=s8dx=5M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A551DC2D0EE
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 22:35:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28512C43331
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 22:38:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A10420663
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 22:35:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E844C20663
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 22:37:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Wgo5kynm"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="pHcQG+1r"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727940AbgC0Wfe (ORCPT
+        id S1727742AbgC0Wh6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Mar 2020 18:35:34 -0400
-Received: from mail-pj1-f68.google.com ([209.85.216.68]:36567 "EHLO
-        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727805AbgC0Wex (ORCPT
+        Fri, 27 Mar 2020 18:37:58 -0400
+Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:11048 "EHLO
+        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726781AbgC0Wh6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Mar 2020 18:34:53 -0400
-Received: by mail-pj1-f68.google.com with SMTP id nu11so4343918pjb.1
-        for <linux-kernel@vger.kernel.org>; Fri, 27 Mar 2020 15:34:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=9iqOeE9hw+dt5WyFHwckotB6IKe97XhX2NxCFAFYvoc=;
-        b=Wgo5kynmVEJO0Fi3vCm2iDRi/6sAdIvsWlCvqtErMwD7nyP9oOEflnmF7VEPViuJG4
-         AS7TiuTrvs+xPRBlVC6SkERYHPD2hQA2MqWI5Eb3kBDAjd80QSAkHnNeRw1eiL9fsVZU
-         Unp4/kuWa9yhcyGv0ds2jS8+ZVRZ9LOQysfUU=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=9iqOeE9hw+dt5WyFHwckotB6IKe97XhX2NxCFAFYvoc=;
-        b=SlJ+rl81wNaugn1OVVLO1AhpJ5M5r0Xb+3ehq4YA1U6m/hMmmuVON9rCnGcNQzKDYo
-         r4N8ApxAyImmS11ep/FYNhzPNDOuV3Fma5rai9++U7BRnowwUMqKq8nWbzU4aYtk5Jfn
-         O5RnOBB3JRnWi63xugKkH196BcPEL7bXUbrcjYkYDTjMSPNgTG+idwonx6yYTjpjJ+G4
-         /1BGbgl/lJrJFKIj6UulKD6Wi+p/KgBQ9yOQYAlpL03WPAHVcakOlLhH4TyjnnZ1sLLW
-         gHQmIyXuPrsheK0Ft8uOXxkpS+o6DS+/x2Mz6gnb4zBbPzf9Vewg++gxsCvto26Xi+uS
-         dyRw==
-X-Gm-Message-State: ANhLgQ0utyh9HclxGqsnNqi0xaNtc2ps88qGVUOtMqlUbd+LzQFPIPsV
-        zSi/5NiiMuhITjbny+2j1SH2Uw==
-X-Google-Smtp-Source: ADFU+vt+NjuxeiSU8AgDNZGLlTEHzEwumWDKaD1dteg5MymQpJaWs8FtwP4J+GiWOEMkWtapQGKDkw==
-X-Received: by 2002:a17:90a:bd0c:: with SMTP id y12mr1788038pjr.82.1585348492672;
-        Fri, 27 Mar 2020 15:34:52 -0700 (PDT)
-Received: from localhost ([2620:15c:202:1:4cc0:7eee:97c9:3c1a])
-        by smtp.gmail.com with ESMTPSA id h11sm4916537pfn.125.2020.03.27.15.34.52
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 27 Mar 2020 15:34:52 -0700 (PDT)
-From:   Gwendal Grignou <gwendal@chromium.org>
-To:     bleung@chromium.org, enric.balletbo@collabora.com,
-        Jonathan.Cameron@huawei.com
-Cc:     linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Gwendal Grignou <gwendal@chromium.org>
-Subject: [PATCH v7 05/12] iio: cros_ec: Move function description to .c file
-Date:   Fri, 27 Mar 2020 15:34:36 -0700
-Message-Id: <20200327223443.6006-6-gwendal@chromium.org>
-X-Mailer: git-send-email 2.26.0.rc2.310.g2932bb562d-goog
-In-Reply-To: <20200327223443.6006-1-gwendal@chromium.org>
-References: <20200327223443.6006-1-gwendal@chromium.org>
+        Fri, 27 Mar 2020 18:37:58 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e7e80380000>; Fri, 27 Mar 2020 15:37:44 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Fri, 27 Mar 2020 15:37:57 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Fri, 27 Mar 2020 15:37:57 -0700
+Received: from [10.2.58.50] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 27 Mar
+ 2020 22:37:57 +0000
+Subject: Re: [Patch v2 2/2] mm/page_alloc.c: define node_order with all zero
+To:     Wei Yang <richard.weiyang@gmail.com>, <akpm@linux-foundation.org>
+CC:     <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>,
+        <jgg@ziepe.ca>, <david@redhat.com>
+References: <20200327220121.27823-1-richard.weiyang@gmail.com>
+ <20200327220121.27823-2-richard.weiyang@gmail.com>
+From:   John Hubbard <jhubbard@nvidia.com>
+X-Nvconfidentiality: public
+Message-ID: <4c9d8138-d379-810f-64e7-0d018ed019df@nvidia.com>
+Date:   Fri, 27 Mar 2020 15:37:57 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200327220121.27823-2-richard.weiyang@gmail.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1585348664; bh=wICTeUYozVm+quzs+Nfk2y7usqwVZCyFqx6HcmkaOZ8=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:X-Nvconfidentiality:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=pHcQG+1rpMLT51VYJ5vwHY3KcztuvUeQ+z9YV1441wO/PKOnEAORx/0rFLZIesauj
+         cfCQneKKlOonMfpsrRG8wh8HKxI5oZhhiCrUvpBLJXv1MJV4pdebOf+0cxhiW1aeE+
+         HFeJzYf2EOz413btNGdoeSqcyPc186ZSPIL28V4TBBr4wTNfBtz5eyGKVUgQNbcK2A
+         jYRuVnmbl26Yili5U6rQjrl769X4MLM0wBa9MCxLeMvaJ22pJrPC94Nb1hK2emlOs9
+         Eo69UlF+kwWO+dcpBwZZoqsQi6n2zu2Kv8ruhUnbpW0Wr0jwYUNzP/HxXJMfq6dxb6
+         Ov/10oWXxUU/g==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-To prevent comment rot, move function description to
-cros_ec_sensors_core.c.
+On 3/27/20 3:01 PM, Wei Yang wrote:
+> Since we always clear node_order before getting it, we can leverage
+> compiler to do this instead of at run time.
+> 
+> Signed-off-by: Wei Yang <richard.weiyang@gmail.com>
+> ---
+>   mm/page_alloc.c | 3 +--
+>   1 file changed, 1 insertion(+), 2 deletions(-)
+> 
+> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+> index dfcf2682ed40..49dd1f25c000 100644
+> --- a/mm/page_alloc.c
+> +++ b/mm/page_alloc.c
+> @@ -5585,7 +5585,7 @@ static void build_thisnode_zonelists(pg_data_t *pgdat)
+>   
+>   static void build_zonelists(pg_data_t *pgdat)
+>   {
+> -	static int node_order[MAX_NUMNODES];
+> +	static int node_order[MAX_NUMNODES] = {0};
 
-Acked-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Acked-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Signed-off-by: Gwendal Grignou <gwendal@chromium.org>
----
-No changes in v6 and v7.
-Changes in v5:
-  Added ack.
-No changes in v4.
-Changes in v3:
-  fix spelling.
-New in v2.
 
- .../cros_ec_sensors/cros_ec_sensors_core.c    | 69 ++++++++++++++++
- .../linux/iio/common/cros_ec_sensors_core.h   | 80 -------------------
- 2 files changed, 69 insertions(+), 80 deletions(-)
+Looks wrong: now the single instance of node_order is initialized just once by
+the compiler. And that means that only the first caller of this function
+gets a zeroed node_order array...
 
-diff --git a/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c b/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c
-index d3a3626c7cd83..f3c000448b90e 100644
---- a/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c
-+++ b/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c
-@@ -82,6 +82,14 @@ static void get_default_min_max_freq(enum motionsensor_type type,
- 	}
- }
- 
-+/**
-+ * cros_ec_sensors_core_init() - basic initialization of the core structure
-+ * @pdev:		platform device created for the sensors
-+ * @indio_dev:		iio device structure of the device
-+ * @physical_device:	true if the device refers to a physical device
-+ *
-+ * Return: 0 on success, -errno on failure.
-+ */
- int cros_ec_sensors_core_init(struct platform_device *pdev,
- 			      struct iio_dev *indio_dev,
- 			      bool physical_device)
-@@ -159,6 +167,16 @@ int cros_ec_sensors_core_init(struct platform_device *pdev,
- }
- EXPORT_SYMBOL_GPL(cros_ec_sensors_core_init);
- 
-+/**
-+ * cros_ec_motion_send_host_cmd() - send motion sense host command
-+ * @state:		pointer to state information for device
-+ * @opt_length:	optional length to reduce the response size, useful on the data
-+ *		path. Otherwise, the maximal allowed response size is used
-+ *
-+ * When called, the sub-command is assumed to be set in param->cmd.
-+ *
-+ * Return: 0 on success, -errno on failure.
-+ */
- int cros_ec_motion_send_host_cmd(struct cros_ec_sensors_core_state *state,
- 				 u16 opt_length)
- {
-@@ -421,6 +439,14 @@ int cros_ec_sensors_read_lpc(struct iio_dev *indio_dev,
- }
- EXPORT_SYMBOL_GPL(cros_ec_sensors_read_lpc);
- 
-+/**
-+ * cros_ec_sensors_read_cmd() - retrieve data using the EC command protocol
-+ * @indio_dev:	pointer to IIO device
-+ * @scan_mask:	bitmap of the sensor indices to scan
-+ * @data:	location to store data
-+ *
-+ * Return: 0 on success, -errno on failure.
-+ */
- int cros_ec_sensors_read_cmd(struct iio_dev *indio_dev,
- 			     unsigned long scan_mask, s16 *data)
- {
-@@ -445,6 +471,18 @@ int cros_ec_sensors_read_cmd(struct iio_dev *indio_dev,
- }
- EXPORT_SYMBOL_GPL(cros_ec_sensors_read_cmd);
- 
-+/**
-+ * cros_ec_sensors_capture() - the trigger handler function
-+ * @irq:	the interrupt number.
-+ * @p:		a pointer to the poll function.
-+ *
-+ * On a trigger event occurring, if the pollfunc is attached then this
-+ * handler is called as a threaded interrupt (and hence may sleep). It
-+ * is responsible for grabbing data from the device and pushing it into
-+ * the associated buffer.
-+ *
-+ * Return: IRQ_HANDLED
-+ */
- irqreturn_t cros_ec_sensors_capture(int irq, void *p)
- {
- 	struct iio_poll_func *pf = p;
-@@ -480,6 +518,16 @@ irqreturn_t cros_ec_sensors_capture(int irq, void *p)
- }
- EXPORT_SYMBOL_GPL(cros_ec_sensors_capture);
- 
-+/**
-+ * cros_ec_sensors_core_read() - function to request a value from the sensor
-+ * @st:		pointer to state information for device
-+ * @chan:	channel specification structure table
-+ * @val:	will contain one element making up the returned value
-+ * @val2:	will contain another element making up the returned value
-+ * @mask:	specifies which values to be requested
-+ *
-+ * Return:	the type of value returned by the device
-+ */
- int cros_ec_sensors_core_read(struct cros_ec_sensors_core_state *st,
- 			  struct iio_chan_spec const *chan,
- 			  int *val, int *val2, long mask)
-@@ -520,6 +568,17 @@ int cros_ec_sensors_core_read(struct cros_ec_sensors_core_state *st,
- }
- EXPORT_SYMBOL_GPL(cros_ec_sensors_core_read);
- 
-+/**
-+ * cros_ec_sensors_core_read_avail() - get available values
-+ * @indio_dev:		pointer to state information for device
-+ * @chan:	channel specification structure table
-+ * @vals:	list of available values
-+ * @type:	type of data returned
-+ * @length:	number of data returned in the array
-+ * @mask:	specifies which values to be requested
-+ *
-+ * Return:	an error code, IIO_AVAIL_RANGE or IIO_AVAIL_LIST
-+ */
- int cros_ec_sensors_core_read_avail(struct iio_dev *indio_dev,
- 				    struct iio_chan_spec const *chan,
- 				    const int **vals,
-@@ -541,6 +600,16 @@ int cros_ec_sensors_core_read_avail(struct iio_dev *indio_dev,
- }
- EXPORT_SYMBOL_GPL(cros_ec_sensors_core_read_avail);
- 
-+/**
-+ * cros_ec_sensors_core_write() - function to write a value to the sensor
-+ * @st:		pointer to state information for device
-+ * @chan:	channel specification structure table
-+ * @val:	first part of value to write
-+ * @val2:	second part of value to write
-+ * @mask:	specifies which values to write
-+ *
-+ * Return:	the type of value returned by the device
-+ */
- int cros_ec_sensors_core_write(struct cros_ec_sensors_core_state *st,
- 			       struct iio_chan_spec const *chan,
- 			       int val, int val2, long mask)
-diff --git a/include/linux/iio/common/cros_ec_sensors_core.h b/include/linux/iio/common/cros_ec_sensors_core.h
-index bb331e6356a9c..0af918978f975 100644
---- a/include/linux/iio/common/cros_ec_sensors_core.h
-+++ b/include/linux/iio/common/cros_ec_sensors_core.h
-@@ -79,95 +79,25 @@ struct cros_ec_sensors_core_state {
- 	int frequencies[3];
- };
- 
--/**
-- * cros_ec_sensors_read_lpc() - retrieve data from EC shared memory
-- * @indio_dev:	pointer to IIO device
-- * @scan_mask:	bitmap of the sensor indices to scan
-- * @data:	location to store data
-- *
-- * This is the safe function for reading the EC data. It guarantees that the
-- * data sampled was not modified by the EC while being read.
-- *
-- * Return: 0 on success, -errno on failure.
-- */
- int cros_ec_sensors_read_lpc(struct iio_dev *indio_dev, unsigned long scan_mask,
- 			     s16 *data);
- 
--/**
-- * cros_ec_sensors_read_cmd() - retrieve data using the EC command protocol
-- * @indio_dev:	pointer to IIO device
-- * @scan_mask:	bitmap of the sensor indices to scan
-- * @data:	location to store data
-- *
-- * Return: 0 on success, -errno on failure.
-- */
- int cros_ec_sensors_read_cmd(struct iio_dev *indio_dev, unsigned long scan_mask,
- 			     s16 *data);
- 
- struct platform_device;
--/**
-- * cros_ec_sensors_core_init() - basic initialization of the core structure
-- * @pdev:		platform device created for the sensors
-- * @indio_dev:		iio device structure of the device
-- * @physical_device:	true if the device refers to a physical device
-- *
-- * Return: 0 on success, -errno on failure.
-- */
- int cros_ec_sensors_core_init(struct platform_device *pdev,
- 			      struct iio_dev *indio_dev, bool physical_device);
- 
--/**
-- * cros_ec_sensors_capture() - the trigger handler function
-- * @irq:	the interrupt number.
-- * @p:		a pointer to the poll function.
-- *
-- * On a trigger event occurring, if the pollfunc is attached then this
-- * handler is called as a threaded interrupt (and hence may sleep). It
-- * is responsible for grabbing data from the device and pushing it into
-- * the associated buffer.
-- *
-- * Return: IRQ_HANDLED
-- */
- irqreturn_t cros_ec_sensors_capture(int irq, void *p);
- 
--/**
-- * cros_ec_motion_send_host_cmd() - send motion sense host command
-- * @st:		pointer to state information for device
-- * @opt_length:	optional length to reduce the response size, useful on the data
-- *		path. Otherwise, the maximal allowed response size is used
-- *
-- * When called, the sub-command is assumed to be set in param->cmd.
-- *
-- * Return: 0 on success, -errno on failure.
-- */
- int cros_ec_motion_send_host_cmd(struct cros_ec_sensors_core_state *st,
- 				 u16 opt_length);
- 
--/**
-- * cros_ec_sensors_core_read() - function to request a value from the sensor
-- * @st:		pointer to state information for device
-- * @chan:	channel specification structure table
-- * @val:	will contain one element making up the returned value
-- * @val2:	will contain another element making up the returned value
-- * @mask:	specifies which values to be requested
-- *
-- * Return:	the type of value returned by the device
-- */
- int cros_ec_sensors_core_read(struct cros_ec_sensors_core_state *st,
- 			      struct iio_chan_spec const *chan,
- 			      int *val, int *val2, long mask);
- 
--/**
-- * cros_ec_sensors_core_read_avail() - get available values
-- * @indio_dev:		pointer to state information for device
-- * @chan:	channel specification structure table
-- * @vals:	list of available values
-- * @type:	type of data returned
-- * @length:	number of data returned in the array
-- * @mask:	specifies which values to be requested
-- *
-- * Return:	an error code, IIO_AVAIL_RANGE or IIO_AVAIL_LIST
-- */
- int cros_ec_sensors_core_read_avail(struct iio_dev *indio_dev,
- 				    struct iio_chan_spec const *chan,
- 				    const int **vals,
-@@ -175,16 +105,6 @@ int cros_ec_sensors_core_read_avail(struct iio_dev *indio_dev,
- 				    int *length,
- 				    long mask);
- 
--/**
-- * cros_ec_sensors_core_write() - function to write a value to the sensor
-- * @st:		pointer to state information for device
-- * @chan:	channel specification structure table
-- * @val:	first part of value to write
-- * @val2:	second part of value to write
-- * @mask:	specifies which values to write
-- *
-- * Return:	the type of value returned by the device
-- */
- int cros_ec_sensors_core_write(struct cros_ec_sensors_core_state *st,
- 			       struct iio_chan_spec const *chan,
- 			       int val, int val2, long mask);
+
+>   	int node, load, nr_nodes = 0;
+>   	nodemask_t used_mask = NODE_MASK_NONE;
+>   	int local_node, prev_node;
+> @@ -5595,7 +5595,6 @@ static void build_zonelists(pg_data_t *pgdat)
+>   	load = nr_online_nodes;
+>   	prev_node = local_node;
+>   
+> -	memset(node_order, 0, sizeof(node_order));
+
+...and all subsequent callers are left with whatever debris is remaining in
+node_order. So this is not good.
+
+The reason that memset() was used here, is that there aren't many other ways
+to get node_order zeroed, given that it is a statically defined variable.
+
+
+>   	while ((node = find_next_best_node(local_node, &used_mask)) >= 0) {
+>   		/*
+>   		 * We don't want to pressure a particular node.
+> 
+
+
+
+thanks,
 -- 
-2.26.0.rc2.310.g2932bb562d-goog
-
+John Hubbard
+NVIDIA
