@@ -4,189 +4,164 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EEB35C43331
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 03:03:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46252C2D0EC
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 03:04:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B2AA02082D
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 03:03:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1DA3920787
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 03:04:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585278183;
-	bh=b2ccDeO/pD0R+Y+srohROcyVA9Q145YuMgSh8oAXLmM=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=LoD9XPxUWGFUZt0Su5DA5vE4NwZqGD96PuQ0lTKnH4DS6mEJW9oTXGnX6BnKpAfrm
-	 IchabkNamdjcnQ8iGl+pSlyyB8Y2l9t+SbcySz/+T5EfxsUorFJuhjddHvv9S+kYt5
-	 F8iAZ2jIb6L0FIg/ngP8iX1i7s/xQ1hirXcE/1HA=
+	s=default; t=1585278262;
+	bh=1QaBX/TCVQartJ3XCSnS4hcC6ju0GnYBjA0EyGXhNwU=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=f7qp6tXHMCM3Aa3xn1Iiv5pGHEsnIx7RxDMYsKHT9sLc6OiRDnt2vrO30ifqdtUOa
+	 8NUKxXe8nWLfktw/XLqKnfX1N0r0pkUE7tokpWhh0h2f5kuZDayumEM/IdT09f6TTO
+	 xQaJzwFJd8BNIt/hM6urh74Aoc9oURdUrET9jdvw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727830AbgC0DDC (ORCPT
+        id S1727770AbgC0DEV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 23:03:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42064 "EHLO mail.kernel.org"
+        Thu, 26 Mar 2020 23:04:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42534 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726496AbgC0DDC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 23:03:02 -0400
-Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1726496AbgC0DEU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Mar 2020 23:04:20 -0400
+Received: from mail-qt1-f182.google.com (mail-qt1-f182.google.com [209.85.160.182])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4CA9C20787;
-        Fri, 27 Mar 2020 03:02:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 57B8420A8B;
+        Fri, 27 Mar 2020 03:04:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585278181;
-        bh=b2ccDeO/pD0R+Y+srohROcyVA9Q145YuMgSh8oAXLmM=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=rniJm74HvN/lsrQkGt9EY0ampwZGukQI1mGNUHZ+Y1qgVosyqSmxQh7Y/aB0kiHUd
-         skjYGOhr0dmRm2/Rkd2IbLKBHC5ii1/ZdoWPnM2LYGCid8jJUA+iigEapBxQLUIJVy
-         je1LuCvKfE6zYULbGOvvJ9u/UCVNUeI2v0ouqBgk=
-Date:   Fri, 27 Mar 2020 12:02:32 +0900
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     Borislav Petkov <bp@alien8.de>, Joerg Roedel <jroedel@suse.de>
-Cc:     Joerg Roedel <joro@8bytes.org>, x86@kernel.org, hpa@zytor.com,
-        Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Hellstrom <thellstrom@vmware.com>,
-        Jiri Slaby <jslaby@suse.cz>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Juergen Gross <jgross@suse.com>,
-        Kees Cook <keescook@chromium.org>,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        virtualization@lists.linux-foundation.org,
-        Joerg Roedel <jroedel@suse.de>,
-        Masami Hiramatsu <mhiramat@kernel.org>
-Subject: Re: [PATCH 05/70] x86/insn: Make inat-tables.c suitable for
- pre-decompression code
-Message-Id: <20200327120232.c8e455ca100dc0d96e4ddc43@kernel.org>
-In-Reply-To: <20200325153945.GD27261@zn.tnic>
-References: <20200319091407.1481-1-joro@8bytes.org>
-        <20200319091407.1481-6-joro@8bytes.org>
-        <20200325153945.GD27261@zn.tnic>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        s=default; t=1585278260;
+        bh=1QaBX/TCVQartJ3XCSnS4hcC6ju0GnYBjA0EyGXhNwU=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=g3V4/S5yj0lkokrjq4rHn0YaOs5ktFQxGyBri6i9mLjh0c1xqkKhIao0TOazbBZSq
+         84E9NQfJ6lh/3VfY4GH7c4g9VxS8lbiPEUpO/xEZHNMYAlz9jR2eaDufUTrUFb89ap
+         E0Tlfdi5n3a+n5Qctfr8SHGWQZONpmPqCMGrQVYI=
+Received: by mail-qt1-f182.google.com with SMTP id m33so7502289qtb.3;
+        Thu, 26 Mar 2020 20:04:20 -0700 (PDT)
+X-Gm-Message-State: ANhLgQ2VxEIU5dlPF61a6ilq7N7voIXoaMD18r4RsryKpNUHE96d6N/u
+        /p48aB1klGYeGoGxnST56SbKYHubaDhMrWhEFA==
+X-Google-Smtp-Source: ADFU+vumdp+yoHmOndReHPe5KBTcIwfbcpwYm2SJv4vxq3LNPhVocpSd6D04SDQe+ewv6F3wC3JVyohcF8lQkB31Pr8=
+X-Received: by 2002:aed:3461:: with SMTP id w88mr12145077qtd.143.1585278259310;
+ Thu, 26 Mar 2020 20:04:19 -0700 (PDT)
+MIME-Version: 1.0
+References: <1585114871-6912-1-git-send-email-hadar.gat@arm.com>
+ <1585114871-6912-2-git-send-email-hadar.gat@arm.com> <20200326194104.GA4118@bogus>
+ <DB6PR0802MB25334E308B8D4B10D2562460E9CF0@DB6PR0802MB2533.eurprd08.prod.outlook.com>
+In-Reply-To: <DB6PR0802MB25334E308B8D4B10D2562460E9CF0@DB6PR0802MB2533.eurprd08.prod.outlook.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Thu, 26 Mar 2020 21:04:07 -0600
+X-Gmail-Original-Message-ID: <CAL_Jsq+KJyZLncOTB8CwgjvRQvkgc+8=hqHKA87aJ4LoYYXnvQ@mail.gmail.com>
+Message-ID: <CAL_Jsq+KJyZLncOTB8CwgjvRQvkgc+8=hqHKA87aJ4LoYYXnvQ@mail.gmail.com>
+Subject: Re: [PATCH v6 1/3] dt-bindings: add device tree binding for Arm
+ CryptoCell trng engine
+To:     Hadar Gat <Hadar.Gat@arm.com>
+Cc:     Matt Mackall <mpm@selenic.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Mark Rutland <Mark.Rutland@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Alexander Sverdlin <alexander.sverdlin@nokia.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Tomer Maimon <tmaimon77@gmail.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Zaibo Xu <xuzaibo@huawei.com>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Gilad Ben-Yossef <gilad@benyossef.com>,
+        Ofir Drang <Ofir.Drang@arm.com>, nd <nd@arm.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Thu, Mar 26, 2020 at 3:05 PM Hadar Gat <Hadar.Gat@arm.com> wrote:
+>
+> Hi Rob,
+>
+> >
+> > On Wed, Mar 25, 2020 at 07:41:09AM +0200, Hadar Gat wrote:
+> > > The Arm CryptoCell is a hardware security engine. This patch adds DT
+> > > bindings for its TRNG (True Random Number Generator) engine.
+> > >
+> > > Signed-off-by: Hadar Gat <hadar.gat@arm.com>
+> > > ---
+> > >  .../devicetree/bindings/rng/arm-cctrng.yaml        | 55
+> > ++++++++++++++++++++++
+> > >  1 file changed, 55 insertions(+)
+> > >  create mode 100644
+> > > Documentation/devicetree/bindings/rng/arm-cctrng.yaml
+> > >
+> > > diff --git a/Documentation/devicetree/bindings/rng/arm-cctrng.yaml
+> > > b/Documentation/devicetree/bindings/rng/arm-cctrng.yaml
+> > > new file mode 100644
+> > > index 0000000..7f70e4b
+> > > --- /dev/null
+> > > +++ b/Documentation/devicetree/bindings/rng/arm-cctrng.yaml
+> > > @@ -0,0 +1,55 @@
+> > > +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause) %YAML 1.2
+> > > +---
+> > > +$id: http://devicetree.org/schemas/rng/arm-cctrng.yaml#
+> > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > > +
+> > > +title: Arm TrustZone CryptoCell TRNG engine
+> > > +
+> > > +maintainers:
+> > > +  - Hadar Gat <hadar.gat@arm.com>
+> > > +
+> > > +description: |+
+> > > +  Arm TrustZone CryptoCell TRNG (True Random Number Generator)
+> > engine.
+> > > +
+> > > +properties:
+> > > +  compatible:
+> > > +    enum:
+> > > +      - arm,cryptocell-713-trng
+> > > +      - arm,cryptocell-703-trng
+> > > +
+> > > +  interrupts:
+> > > +    maxItems: 1
+> > > +
+> > > +  reg:
+> > > +    maxItems: 1
+> > > +
+> > > +  arm,rosc-ratio:
+> > > +    description:
+> > > +      Arm TrustZone CryptoCell TRNG engine has 4 ring oscillators.
+> > > +      Sampling ratio values for these 4 ring oscillators. (from calibration)
+> > > +    allOf:
+> > > +      - $ref: /schemas/types.yaml#/definitions/uint32-array
+> > > +      - items:
+> > > +          minItems: 4
+> > > +          maxItems: 4
+> >
+> > Aren't there some constraints on the values?
+> >
+> > If not, then just this is enough:
+> >
+> > - maxItems: 4
+> >
+> The constraint is just on the array size and not on the values.
+> The array is of 4 elements for the CryptoCell 4 ring oscillators.
+> Isn't 'minitems:' is about the array min size? Isn't it the way to block less than 4 items? This is what I want to do.
+> I'm a bit confused if it is required or not..
 
-On Wed, 25 Mar 2020 16:39:45 +0100
-Borislav Petkov <bp@alien8.de> wrote:
+Essentially, we always require bounds on the array size, so if you
+only specify one of minItems or maxItems it's implied to be a fixed
+size. IOW, you only have to specify both if you have a variable number
+of items. Also, note that an 'items' list implies the exact size. Both
+of these are not the default behavior for json-schema.
 
-> + Masami.
-> 
-> On Thu, Mar 19, 2020 at 10:13:02AM +0100, Joerg Roedel wrote:
-> > From: Joerg Roedel <jroedel@suse.de>
-> > 
-> > The inat-tables.c file has some arrays in it that contain pointers to
-> > other arrays. These pointers need to be relocated when the kernel
-> > image is moved to a different location.
-> > 
-> > The pre-decompression boot-code has no support for applying ELF
-> > relocations, so initialize these arrays at runtime in the
-> > pre-decompression code to make sure all pointers are correctly
-> > initialized.
+Hope that helps.
 
-I need to check the whole series, but as far as I can understand from
-this patch, this seems not allowing to store the address value in
-static pointers. It may break more things, for example _kprobe_blacklist
-records the NOKPROBE_SYMBOL() symbol addresses at the build time.
-
-I have some comments here.
- 
-> > Signed-off-by: Joerg Roedel <jroedel@suse.de>
-> > ---
-> >  arch/x86/tools/gen-insn-attr-x86.awk       | 50 +++++++++++++++++++++-
-> >  tools/arch/x86/tools/gen-insn-attr-x86.awk | 50 +++++++++++++++++++++-
-> >  2 files changed, 98 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/arch/x86/tools/gen-insn-attr-x86.awk b/arch/x86/tools/gen-insn-attr-x86.awk
-> > index a42015b305f4..af38469afd14 100644
-> > --- a/arch/x86/tools/gen-insn-attr-x86.awk
-> > +++ b/arch/x86/tools/gen-insn-attr-x86.awk
-> > @@ -362,6 +362,9 @@ function convert_operands(count,opnd,       i,j,imm,mod)
-> >  END {
-> >  	if (awkchecked != "")
-> >  		exit 1
-> > +
-> > +	print "#ifndef __BOOT_COMPRESSED\n"
-> > +
-> >  	# print escape opcode map's array
-> >  	print "/* Escape opcode map array */"
-> >  	print "const insn_attr_t * const inat_escape_tables[INAT_ESC_MAX + 1]" \
-> > @@ -388,6 +391,51 @@ END {
-> >  		for (j = 0; j < max_lprefix; j++)
-> >  			if (atable[i,j])
-> >  				print "	["i"]["j"] = "atable[i,j]","
-> > -	print "};"
-> > +	print "};\n"
-> > +
-> > +	print "#else /* !__BOOT_COMPRESSED */\n"
-
-I think the definitions of inat_*_tables can be shared in both case.
-If __BOOT_COMPRESSED is set, we can define inat_init_tables() as a
-initialize function, and if not, it will be just a dummy "do {} while (0)".
-
-BTW, where is the __BOOT_COMPRESSED defined?
-
-> > +
-> > +	print "/* Escape opcode map array */"
-> > +	print "static const insn_attr_t *inat_escape_tables[INAT_ESC_MAX + 1]" \
-> > +	      "[INAT_LSTPFX_MAX + 1];"
-> > +	print ""
-> > +
-> > +	print "/* Group opcode map array */"
-> > +	print "static const insn_attr_t *inat_group_tables[INAT_GRP_MAX + 1]"\
-> > +	      "[INAT_LSTPFX_MAX + 1];"
-> > +	print ""
-> > +
-> > +	print "/* AVX opcode map array */"
-> > +	print "static const insn_attr_t *inat_avx_tables[X86_VEX_M_MAX + 1]"\
-> > +	      "[INAT_LSTPFX_MAX + 1];"
-> > +	print ""
-> > +
-> > +	print "static void inat_init_tables(void)"
-
-This functions should be "inline".
-And I can not see the call-site of inat_init_tables() in this patch.
-
-If possible, please include call-site with definition (especially
-new init function) so that I can check the init call timing too.
-
-> > +	print "{"
-> > +
-> > +	# print escape opcode map's array
-> > +	print "\t/* Print Escape opcode map array */"
-> > +	for (i = 0; i < geid; i++)
-> > +		for (j = 0; j < max_lprefix; j++)
-> > +			if (etable[i,j])
-> > +				print "\tinat_escape_tables["i"]["j"] = "etable[i,j]";"
-> > +	print ""
-> > +
-> > +	# print group opcode map's array
-> > +	print "\t/* Print Group opcode map array */"
-> > +	for (i = 0; i < ggid; i++)
-> > +		for (j = 0; j < max_lprefix; j++)
-> > +			if (gtable[i,j])
-> > +				print "\tinat_group_tables["i"]["j"] = "gtable[i,j]";"
-> > +	print ""
-> > +	# print AVX opcode map's array
-> > +	print "\t/* Print AVX opcode map array */"
-> > +	for (i = 0; i < gaid; i++)
-> > +		for (j = 0; j < max_lprefix; j++)
-> > +			if (atable[i,j])
-> > +				print "\tinat_avx_tables["i"]["j"] = "atable[i,j]";"
-> > +
-> > +	print "}"
-> > +	print "#endif"
-> >  }
-
-The code itself looks good to me.
-
-Thank you,
-
--- 
-Masami Hiramatsu <mhiramat@kernel.org>
+Rob
