@@ -2,172 +2,172 @@ Return-Path: <SRS0=s8dx=5M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7327C2D0E7
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 02:33:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 655CCC43331
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 02:35:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C67072082D
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 02:33:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3579620714
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 02:35:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jvd0Kqyd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728078AbgC0CdT (ORCPT
+        id S1727779AbgC0Cfk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 22:33:19 -0400
-Received: from zeniv.linux.org.uk ([195.92.253.2]:48020 "EHLO
-        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727725AbgC0CcK (ORCPT
+        Thu, 26 Mar 2020 22:35:40 -0400
+Received: from mail-qv1-f65.google.com ([209.85.219.65]:44414 "EHLO
+        mail-qv1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727685AbgC0Cfj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 22:32:10 -0400
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jHemz-003hQn-7t; Fri, 27 Mar 2020 02:32:05 +0000
-From:   Al Viro <viro@ZenIV.linux.org.uk>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>, x86@kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [RFC][PATCH v2 01/22] x86 user stack frame reads: switch to explicit __get_user()
-Date:   Fri, 27 Mar 2020 02:31:44 +0000
-Message-Id: <20200327023205.881896-1-viro@ZenIV.linux.org.uk>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200327023007.GS23230@ZenIV.linux.org.uk>
-References: <20200327023007.GS23230@ZenIV.linux.org.uk>
+        Thu, 26 Mar 2020 22:35:39 -0400
+Received: by mail-qv1-f65.google.com with SMTP id ef12so2181419qvb.11;
+        Thu, 26 Mar 2020 19:35:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=G7Sr1gwaHsCrajdueVmnHwr6RalDOGPbbpo1vRReyaA=;
+        b=jvd0KqydU/86zFkzJPupX1YgNwI4hF0SBGrHftrDKBVzZ+qVPUdyUuYZfeYlYaRsUC
+         JXy3yJJ10kED8Z0zdlLGCt2tLY3DNEzHfg0CfH7alZRzKU7xf6E8Iutcb1kAWAC4Ueuv
+         7koooStyMq2diJfAAqjUfyOtfor4CYXnPlNaqTSEHjh3DL5B5/lXwV7hyI7Sxbwxpx7p
+         6ZM2rQmbeYVAw1R8hPN927SmLR8JwR+PQKRLf0X+zkVYBgqJgEm7CkBIWoIs3Qa8WFfT
+         LdJj2uofomcHmZ1uCZBWHUgj0cbtXuoM2Y6GmTE+fVZzj7F/o66KcRQGEZpuLaVx3eA5
+         W/Ig==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=G7Sr1gwaHsCrajdueVmnHwr6RalDOGPbbpo1vRReyaA=;
+        b=IkuUIfoVT+sOK5YXw+S0YVKEItbqWBCbVoGKrOjYmYfH1TgK85i8nvXFipMrX9MO/W
+         sPikYr43i6k0ctGJ7aWa4kKnLlBG/ScAt2uOcanHDwCdWIMqcDxlaW8FOiCvLy+WdnH8
+         7+7LDM+8uPzU5UFJovZOV9lgaWonmU7s567Tx+hoCMVBM/qJzXUo9NzEm6SzY3vPnnwN
+         vkYOAIJzUmKQeufP79CSisyMxj4Zjrgdmcjnxm5AQcAzrfgobyiZ2ar8L+tQdzpzL5yV
+         eDvWAcpwlXCX/TUePLdNeTgPpcj2Tlbbb7z63ruc5hDm39KNU23FgvX4CTIOLZlA+a6l
+         TWMQ==
+X-Gm-Message-State: ANhLgQ1CMCZnkw9J6uQscXx3+A7jJn2Dl5HpmfblFLr6jHn3GOZ2WNvz
+        3jldijZ2uULer0RJCZ8Hrrs=
+X-Google-Smtp-Source: ADFU+vs7EV9uTCvAkNK26DL+gWyTtgaS+Rf3pcu5RVTa0t12aI3gb6LR7rxJJao95kY4E/Q2kTIzXQ==
+X-Received: by 2002:a0c:a8e9:: with SMTP id h41mr11909678qvc.235.1585276538114;
+        Thu, 26 Mar 2020 19:35:38 -0700 (PDT)
+Received: from localhost.localdomain ([168.181.48.248])
+        by smtp.gmail.com with ESMTPSA id l13sm2843115qtu.66.2020.03.26.19.35.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 26 Mar 2020 19:35:37 -0700 (PDT)
+Received: by localhost.localdomain (Postfix, from userid 1000)
+        id CC91CC5CE4; Thu, 26 Mar 2020 23:35:34 -0300 (-03)
+Date:   Thu, 26 Mar 2020 23:35:34 -0300
+From:   Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
+To:     Qiujun Huang <hqjagain@gmail.com>
+Cc:     davem@davemloft.net, vyasevich@gmail.com, nhorman@tuxdriver.com,
+        kuba@kernel.org, linux-sctp@vger.kernel.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        anenbupt@gmail.com
+Subject: Re: [PATCH v5 RESEND] sctp: fix refcount bug in sctp_wfree
+Message-ID: <20200327023534.GJ3756@localhost.localdomain>
+References: <20200327012832.19193-1-hqjagain@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200327012832.19193-1-hqjagain@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Al Viro <viro@zeniv.linux.org.uk>
+On Fri, Mar 27, 2020 at 09:28:32AM +0800, Qiujun Huang wrote:
+> We should iterate over the datamsgs to modify
 
-rather than relying upon the magic in raw_copy_from_user()
+Just two small things now.
+s/modify/move/  , it's more accurate.
+But mainly because...
 
-Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
----
- arch/x86/events/core.c         | 27 +++++++--------------------
- arch/x86/include/asm/uaccess.h |  9 ---------
- arch/x86/kernel/stacktrace.c   |  6 ++++--
- 3 files changed, 11 insertions(+), 31 deletions(-)
+...
+> 
+> Reported-and-tested-by:syzbot+cea71eec5d6de256d54d@syzkaller.appspotmail.com
 
-diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
-index 3bb738f5a472..a619763e96e1 100644
---- a/arch/x86/events/core.c
-+++ b/arch/x86/events/core.c
-@@ -2490,7 +2490,7 @@ perf_callchain_user32(struct pt_regs *regs, struct perf_callchain_entry_ctx *ent
- 	/* 32-bit process in 64-bit kernel. */
- 	unsigned long ss_base, cs_base;
- 	struct stack_frame_ia32 frame;
--	const void __user *fp;
-+	const struct stack_frame_ia32 __user *fp;
- 
- 	if (!test_thread_flag(TIF_IA32))
- 		return 0;
-@@ -2501,18 +2501,12 @@ perf_callchain_user32(struct pt_regs *regs, struct perf_callchain_entry_ctx *ent
- 	fp = compat_ptr(ss_base + regs->bp);
- 	pagefault_disable();
- 	while (entry->nr < entry->max_stack) {
--		unsigned long bytes;
--		frame.next_frame     = 0;
--		frame.return_address = 0;
--
- 		if (!valid_user_frame(fp, sizeof(frame)))
- 			break;
- 
--		bytes = __copy_from_user_nmi(&frame.next_frame, fp, 4);
--		if (bytes != 0)
-+		if (__get_user(frame.next_frame, &fp->next_frame))
- 			break;
--		bytes = __copy_from_user_nmi(&frame.return_address, fp+4, 4);
--		if (bytes != 0)
-+		if (__get_user(frame.return_address, &fp->return_address))
- 			break;
- 
- 		perf_callchain_store(entry, cs_base + frame.return_address);
-@@ -2533,7 +2527,7 @@ void
- perf_callchain_user(struct perf_callchain_entry_ctx *entry, struct pt_regs *regs)
- {
- 	struct stack_frame frame;
--	const unsigned long __user *fp;
-+	const struct stack_frame __user *fp;
- 
- 	if (perf_guest_cbs && perf_guest_cbs->is_in_guest()) {
- 		/* TODO: We don't support guest os callchain now */
-@@ -2546,7 +2540,7 @@ perf_callchain_user(struct perf_callchain_entry_ctx *entry, struct pt_regs *regs
- 	if (regs->flags & (X86_VM_MASK | PERF_EFLAGS_VM))
- 		return;
- 
--	fp = (unsigned long __user *)regs->bp;
-+	fp = (void __user *)regs->bp;
- 
- 	perf_callchain_store(entry, regs->ip);
- 
-@@ -2558,19 +2552,12 @@ perf_callchain_user(struct perf_callchain_entry_ctx *entry, struct pt_regs *regs
- 
- 	pagefault_disable();
- 	while (entry->nr < entry->max_stack) {
--		unsigned long bytes;
--
--		frame.next_frame	     = NULL;
--		frame.return_address = 0;
--
- 		if (!valid_user_frame(fp, sizeof(frame)))
- 			break;
- 
--		bytes = __copy_from_user_nmi(&frame.next_frame, fp, sizeof(*fp));
--		if (bytes != 0)
-+		if (__get_user(frame.next_frame, &fp->next_frame))
- 			break;
--		bytes = __copy_from_user_nmi(&frame.return_address, fp + 1, sizeof(*fp));
--		if (bytes != 0)
-+		if (__get_user(frame.return_address, &fp->return_address))
- 			break;
- 
- 		perf_callchain_store(entry, frame.return_address);
-diff --git a/arch/x86/include/asm/uaccess.h b/arch/x86/include/asm/uaccess.h
-index 61d93f062a36..ab8eab43a8a2 100644
---- a/arch/x86/include/asm/uaccess.h
-+++ b/arch/x86/include/asm/uaccess.h
-@@ -695,15 +695,6 @@ extern struct movsl_mask {
- #endif
- 
- /*
-- * We rely on the nested NMI work to allow atomic faults from the NMI path; the
-- * nested NMI paths are careful to preserve CR2.
-- *
-- * Caller must use pagefault_enable/disable, or run in interrupt context,
-- * and also do a uaccess_ok() check
-- */
--#define __copy_from_user_nmi __copy_from_user_inatomic
--
--/*
-  * The "unsafe" user accesses aren't really "unsafe", but the naming
-  * is a big fat warning: you have to not only do the access_ok()
-  * checking before using them, but you have to surround them with the
-diff --git a/arch/x86/kernel/stacktrace.c b/arch/x86/kernel/stacktrace.c
-index 2d6898c2cb64..6ad43fc44556 100644
---- a/arch/x86/kernel/stacktrace.c
-+++ b/arch/x86/kernel/stacktrace.c
-@@ -96,7 +96,8 @@ struct stack_frame_user {
- };
- 
- static int
--copy_stack_frame(const void __user *fp, struct stack_frame_user *frame)
-+copy_stack_frame(const struct stack_frame_user __user *fp,
-+		 struct stack_frame_user *frame)
- {
- 	int ret;
- 
-@@ -105,7 +106,8 @@ copy_stack_frame(const void __user *fp, struct stack_frame_user *frame)
- 
- 	ret = 1;
- 	pagefault_disable();
--	if (__copy_from_user_inatomic(frame, fp, sizeof(*frame)))
-+	if (__get_user(frame->next_fp, &fp->next_fp) ||
-+	    __get_user(frame->ret_addr, &fp->ret_addr))
- 		ret = 0;
- 	pagefault_enable();
- 
--- 
-2.11.0
+checkpatch.pl is warning that there should be an empty space after the
+':' here.
 
+Otherwise, looks very good.
+
+Btw, I learned a lot about syzbot new features with your tests, thanks :-)
+
+> Signed-off-by: Qiujun Huang <hqjagain@gmail.com>
+> ---
+>  net/sctp/socket.c | 31 +++++++++++++++++++++++--------
+>  1 file changed, 23 insertions(+), 8 deletions(-)
+> 
+> diff --git a/net/sctp/socket.c b/net/sctp/socket.c
+> index 1b56fc440606..f68076713162 100644
+> --- a/net/sctp/socket.c
+> +++ b/net/sctp/socket.c
+> @@ -147,29 +147,44 @@ static void sctp_clear_owner_w(struct sctp_chunk *chunk)
+>  	skb_orphan(chunk->skb);
+>  }
+>  
+> +#define traverse_and_process()	\
+> +do {				\
+> +	msg = chunk->msg;	\
+> +	if (msg == prev_msg)	\
+> +		continue;	\
+> +	list_for_each_entry(c, &msg->chunks, frag_list) {	\
+> +		if ((clear && asoc->base.sk == c->skb->sk) ||	\
+> +		    (!clear && asoc->base.sk != c->skb->sk))	\
+> +		    cb(c);	\
+> +	}			\
+> +	prev_msg = msg;		\
+> +} while (0)
+> +
+>  static void sctp_for_each_tx_datachunk(struct sctp_association *asoc,
+> +				       bool clear,
+>  				       void (*cb)(struct sctp_chunk *))
+>  
+>  {
+> +	struct sctp_datamsg *msg, *prev_msg = NULL;
+>  	struct sctp_outq *q = &asoc->outqueue;
+> +	struct sctp_chunk *chunk, *c;
+>  	struct sctp_transport *t;
+> -	struct sctp_chunk *chunk;
+>  
+>  	list_for_each_entry(t, &asoc->peer.transport_addr_list, transports)
+>  		list_for_each_entry(chunk, &t->transmitted, transmitted_list)
+> -			cb(chunk);
+> +			traverse_and_process();
+>  
+>  	list_for_each_entry(chunk, &q->retransmit, transmitted_list)
+> -		cb(chunk);
+> +		traverse_and_process();
+>  
+>  	list_for_each_entry(chunk, &q->sacked, transmitted_list)
+> -		cb(chunk);
+> +		traverse_and_process();
+>  
+>  	list_for_each_entry(chunk, &q->abandoned, transmitted_list)
+> -		cb(chunk);
+> +		traverse_and_process();
+>  
+>  	list_for_each_entry(chunk, &q->out_chunk_list, list)
+> -		cb(chunk);
+> +		traverse_and_process();
+>  }
+>  
+>  static void sctp_for_each_rx_skb(struct sctp_association *asoc, struct sock *sk,
+> @@ -9574,9 +9589,9 @@ static int sctp_sock_migrate(struct sock *oldsk, struct sock *newsk,
+>  	 * paths won't try to lock it and then oldsk.
+>  	 */
+>  	lock_sock_nested(newsk, SINGLE_DEPTH_NESTING);
+> -	sctp_for_each_tx_datachunk(assoc, sctp_clear_owner_w);
+> +	sctp_for_each_tx_datachunk(assoc, true, sctp_clear_owner_w);
+>  	sctp_assoc_migrate(assoc, newsk);
+> -	sctp_for_each_tx_datachunk(assoc, sctp_set_owner_w);
+> +	sctp_for_each_tx_datachunk(assoc, false, sctp_set_owner_w);
+>  
+>  	/* If the association on the newsk is already closed before accept()
+>  	 * is called, set RCV_SHUTDOWN flag.
+> -- 
+> 2.17.1
+> 
