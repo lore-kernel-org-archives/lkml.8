@@ -2,97 +2,95 @@ Return-Path: <SRS0=s8dx=5M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28325C43331
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 09:36:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56E3FC43331
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 09:37:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0258720716
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 09:36:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1FE2E20716
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 09:37:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585301820;
+	bh=Z8y2Z5aEeF+z9UOEIWaU8xA4AEeVbeYYGfvUFYkg0N4=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=E32Bfn3B4Odb3ARbizGFAtTAzboGYOSmanRiKZ8OHYpEL9b3lXdqGO9cTbeYvak64
+	 Q6Vc1AaAKrlKIRailKspx4EhAAQ6xaZ7oeJU9/+L1sr07J7YqM8i+Jt7ZOYdhJFJPt
+	 5thQGdAh0R7z5nAuNN/wBi9RBvoP7mi8inWtgoUk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727263AbgC0JgY (ORCPT
+        id S1727585AbgC0Jg7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Mar 2020 05:36:24 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:48436 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726168AbgC0JgY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Mar 2020 05:36:24 -0400
-Received: from mail-wm1-f71.google.com ([209.85.128.71])
-        by youngberry.canonical.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <andrea.righi@canonical.com>)
-        id 1jHlPb-0008Iz-7T
-        for linux-kernel@vger.kernel.org; Fri, 27 Mar 2020 09:36:23 +0000
-Received: by mail-wm1-f71.google.com with SMTP id m4so4133113wmi.5
-        for <linux-kernel@vger.kernel.org>; Fri, 27 Mar 2020 02:36:23 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition;
-        bh=ap78OtXZq7aQJZ6TMPBs7AlXvQ7dSNaiueS9qsI4mxo=;
-        b=cHgCoYr/N4gnhFw3e64rnbeFZSsJIWWCVb6jr/fH1dWujN7OB2UN57D3dlof/PnT0X
-         tebs8GMikXmIl1M1H8cVuJOUVaHsswXruS3U6ztzzy1aG92ljdYXdHs/4OVLqk3/G6oF
-         d+5tKVyqAeebVif/bIaKi7Y1bwll/Q4E5sqkFV0Uqa2OMih7o3PSYhi4jITFpomkxqaS
-         4SLW9PFw/Z908wnFybI5mhBKOZa55ZIH0zhWBM9JC2okH16BYCdbMG9cBrYrNr4z5GV6
-         Bp00kbZc5C0UESOX6tShTzU4JRtUWbZLpsORkaMdmLLM0Igu0PV3T88I/60KeA6F8U6K
-         JyWg==
-X-Gm-Message-State: ANhLgQ3Db77b7pjOXlY5lt2HV57hbjGyTTKeIyRUpMe8EL1DAkJmRsId
-        EupnlsrYwwtxhasMQgom0R6SfQolgb6cfMGIIVEQVNtf62c56OOyMtz2ZDEeMDnEHINUbjWx9XA
-        T2wOT5CpiKHREXTrJS9NtFHOVyeQ7715Vd8elVMoMZw==
-X-Received: by 2002:adf:f8c1:: with SMTP id f1mr3211177wrq.345.1585301782619;
-        Fri, 27 Mar 2020 02:36:22 -0700 (PDT)
-X-Google-Smtp-Source: ADFU+vvx5Ju256H8lihDv+l/wpn/owlEL5RgRyERZjbHzg4A1aOGeFUlR72YVLLEH15UgqMSh/gGzQ==
-X-Received: by 2002:adf:f8c1:: with SMTP id f1mr3211156wrq.345.1585301782361;
-        Fri, 27 Mar 2020 02:36:22 -0700 (PDT)
-Received: from localhost (host87-23-dynamic.53-79-r.retail.telecomitalia.it. [79.53.23.87])
-        by smtp.gmail.com with ESMTPSA id c23sm7673665wrb.79.2020.03.27.02.36.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 27 Mar 2020 02:36:21 -0700 (PDT)
-Date:   Fri, 27 Mar 2020 10:36:20 +0100
-From:   Andrea Righi <andrea.righi@canonical.com>
-To:     Shuah Khan <shuah@kernel.org>
-Cc:     Kees Cook <keescook@chromium.org>, linux-kselftest@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] kselftest/runner: avoid using timeout when timeout is
- disabled
-Message-ID: <20200327093620.GB1223497@xps-13>
+        Fri, 27 Mar 2020 05:36:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59464 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725956AbgC0Jg5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Mar 2020 05:36:57 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0474A20714;
+        Fri, 27 Mar 2020 09:36:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1585301817;
+        bh=Z8y2Z5aEeF+z9UOEIWaU8xA4AEeVbeYYGfvUFYkg0N4=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=cwitNcsR3Ct67Sr55iKtAw9SxJA30nXNJKETVqhxJqd970o26YqHvJSwiOqSnyGBT
+         XCFW3wgR1/MBWJ5fdT/mZHozpIQ3j3cCDYrGm1nnOJKc09cXfQLukeS+wnYq76CVDh
+         5nSJEZ9rpGBc5JFG2Ndxa1OGJWIED6eQhxfmjeX4=
+Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1jHlQ7-00G8Ze-BG; Fri, 27 Mar 2020 09:36:55 +0000
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Fri, 27 Mar 2020 09:36:55 +0000
+From:   Marc Zyngier <maz@kernel.org>
+To:     Jianyong Wu <Jianyong.Wu@arm.com>
+Cc:     netdev@vger.kernel.org, yangbo.lu@nxp.com, john.stultz@linaro.org,
+        tglx@linutronix.de, pbonzini@redhat.com,
+        sean.j.christopherson@intel.com, richardcochran@gmail.com,
+        Mark Rutland <Mark.Rutland@arm.com>, will@kernel.org,
+        Suzuki Poulose <Suzuki.Poulose@arm.com>,
+        Steven Price <Steven.Price@arm.com>,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        kvmarm@lists.cs.columbia.edu, kvm@vger.kernel.org,
+        Steve Capper <Steve.Capper@arm.com>,
+        Kaly Xin <Kaly.Xin@arm.com>, Justin He <Justin.He@arm.com>,
+        nd <nd@arm.com>
+Subject: Re: [RFC PATCH v10 0/9] Enable ptp_kvm for arm/arm64
+In-Reply-To: <HE1PR0801MB167659B867202B6D4B1695BFF4CC0@HE1PR0801MB1676.eurprd08.prod.outlook.com>
+References: <20200210084906.24870-1-jianyong.wu@arm.com>
+ <HE1PR0801MB1676DA6F1AE78462CB524D6AF4160@HE1PR0801MB1676.eurprd08.prod.outlook.com>
+ <HE1PR0801MB167659B867202B6D4B1695BFF4CC0@HE1PR0801MB1676.eurprd08.prod.outlook.com>
+Message-ID: <91361abbe0a6550cdc3d10f41729a452@kernel.org>
+X-Sender: maz@kernel.org
+User-Agent: Roundcube Webmail/1.3.10
+X-SA-Exim-Connect-IP: 51.254.78.96
+X-SA-Exim-Rcpt-To: Jianyong.Wu@arm.com, netdev@vger.kernel.org, yangbo.lu@nxp.com, john.stultz@linaro.org, tglx@linutronix.de, pbonzini@redhat.com, sean.j.christopherson@intel.com, richardcochran@gmail.com, Mark.Rutland@arm.com, will@kernel.org, Suzuki.Poulose@arm.com, Steven.Price@arm.com, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu, kvm@vger.kernel.org, Steve.Capper@arm.com, Kaly.Xin@arm.com, Justin.He@arm.com, nd@arm.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Avoid using /usr/bin/timeout unnecessarily if timeout is set to 0
-(disabled) in the "settings" file for a specific test.
+On 2020-03-27 09:35, Jianyong Wu wrote:
+> Hi ,
+> 
+> Ping ...
+> Is there any comments.
+> Need some comments to move forward.
 
-NOTE: without this change (and adding timeout=0 in the corresponding
-settings file - tools/testing/selftests/seccomp/settings) the
-seccomp_bpf selftest is always failing with a timeout event during the
-syscall_restart step.
+Damn, I dropped the ball on this. Sorry about that.
 
-Signed-off-by: Andrea Righi <andrea.righi@canonical.com>
----
- tools/testing/selftests/kselftest/runner.sh | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+I'll have a look over the weekend.
 
-diff --git a/tools/testing/selftests/kselftest/runner.sh b/tools/testing/selftests/kselftest/runner.sh
-index e84d901f8567..2cd3c8def0f6 100644
---- a/tools/testing/selftests/kselftest/runner.sh
-+++ b/tools/testing/selftests/kselftest/runner.sh
-@@ -32,7 +32,7 @@ tap_prefix()
- tap_timeout()
- {
- 	# Make sure tests will time out if utility is available.
--	if [ -x /usr/bin/timeout ] ; then
-+	if [ -x /usr/bin/timeout ] && [ $kselftest_timeout -gt 0 ] ; then
- 		/usr/bin/timeout "$kselftest_timeout" "$1"
- 	else
- 		"$1"
+Thanks,
+
+         M.
 -- 
-2.25.1
-
+Jazz is not dead. It just smells funny...
