@@ -2,142 +2,108 @@ Return-Path: <SRS0=s8dx=5M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D48F6C2D0E5
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 14:25:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CC7AC2D0ED
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 14:27:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A20DE2073B
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 14:25:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="StriVB/9"
+	by mail.kernel.org (Postfix) with ESMTP id 64E7E20787
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 14:27:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585319233;
+	bh=hD4cAlT39Vlqg/WzYLmXW0gi8KZ+OInRbLCxPG4TkAg=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=jzJDuWdrooMgZ/czkR4/wtfAPga1F8TJqqsMtBJYGOaxZKxghrdtb/61IDSITqrHz
+	 b6CsM4LSx5w8gYUPw2jT29FWPWdY1SZt9WwGARBerdwPf9iobV8gksJIsp4RJo56DR
+	 VY1G8O/SjvR+GQf1kmR43Y/9fF7CdIEXtpDA1ij4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727495AbgC0OZa (ORCPT
+        id S1727606AbgC0O1M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Mar 2020 10:25:30 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:34146 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726333AbgC0OZa (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Mar 2020 10:25:30 -0400
-Received: by mail-wr1-f66.google.com with SMTP id 65so11672224wrl.1;
-        Fri, 27 Mar 2020 07:25:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=peP7S2GwPuZ1IKo8FYOZ1jeo4ELir9xxjxU6GqZTgX4=;
-        b=StriVB/9TjnZWqc9kH0lHNwEqOCxpb0m9aQdojCVw1TQU0oy/QZmPbaIfR9bNuuDue
-         7QSZAxlsnLBkfPYxxgTtuTR7SG4++YVzHqCtUdty6s6uiOdYYad77k+0Xw9ASLhjFAAm
-         ay5WyECrlMw2Zm2a/hdNBiz8O01W0fYEyoGhfJ8zJLc35IS25jRq/W8EnoIxlLXuIgiW
-         V1SW9UcztB62fpCyNNq7iXdVJh4K+Zc68m3LvFEQECRHDZzeIjsZiGDE2NW0a6PXcRRq
-         OCYALWXPpOprqJaK8D3HOoOH8pGbJ6wveEo4cTPqYtePW5d1v4IWdsTgpPwJCfJidDUl
-         5JTQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=peP7S2GwPuZ1IKo8FYOZ1jeo4ELir9xxjxU6GqZTgX4=;
-        b=dSz+k0TKUeKj25fxOFLpomp8IIb3GbRqn8oY7PB8lBx0VT4spAii/UFvhfOs6FD+js
-         qwcjq/pC41uhiRFoo1T48sE0ug7YPTkecSXZjPcFyTNDSxTY/TILVVqHFlohehysu+dq
-         v5DH00bpJuxwHqasJstPJWEtRoh0ylAEGGgB12QnLagiunM3Ku7y9vsBKnia9tULH1Sf
-         DoLGsI029dBqsRTP0Kk7y0R56mcg7ujHfuGnJsVzWgpEsTY8efEKAd59lCZskrjLbQxd
-         ui6GoWLLWEctKrI6tRCCqKlWqVu3e2vILf48tWKjXI/dv/nW+tMSAjq2JoB58WTseDDm
-         PoaA==
-X-Gm-Message-State: ANhLgQ0iWCb64s57HqnAInFUMUZ3LN+YhzNBUf1M5ZMTbwldYb5t8/v8
-        wsGfcRFnMnipylNrL33Vnt5Hb3ZBGKTO93sdA+E=
-X-Google-Smtp-Source: ADFU+vsXiZ0/Ce9a1O/msDlNwkE/7qgqmUo4B7/lmX8Z7cLom/fYyI4rkhFAI0E0S/gHRNqEyYdwzjZyyssYophWnCs=
-X-Received: by 2002:a05:6000:111:: with SMTP id o17mr15146245wrx.111.1585319127768;
- Fri, 27 Mar 2020 07:25:27 -0700 (PDT)
+        Fri, 27 Mar 2020 10:27:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52866 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726656AbgC0O1M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Mar 2020 10:27:12 -0400
+Received: from mail-qt1-f169.google.com (mail-qt1-f169.google.com [209.85.160.169])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5919E207FF;
+        Fri, 27 Mar 2020 14:27:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1585319231;
+        bh=hD4cAlT39Vlqg/WzYLmXW0gi8KZ+OInRbLCxPG4TkAg=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=yYtb3fpsxLMABkI77C9j2ZyUBFKQ9iCsDfJVjiNFECx3dLEkGrSU+8nM4dpShZVmy
+         FcY+kR31nfpBBcWnJ2F6rQpYa3F+DgFJZ+jLcyD7FcJVib7y1Ym41WuDpg+UY23w4z
+         issME7/jgpz62D0aCw8aCw7fOAcXeP94f+PbkfXM=
+Received: by mail-qt1-f169.google.com with SMTP id c14so8688108qtp.0;
+        Fri, 27 Mar 2020 07:27:11 -0700 (PDT)
+X-Gm-Message-State: ANhLgQ25goE8IRv1uTg4JtWM4i4K9lz8Ojc658BwqP/W9T0AuheCMZQJ
+        d6i+7ABjM0SlMPQ+ZvomGELym+2t0cVoQBAwjw==
+X-Google-Smtp-Source: ADFU+vuijTQWskgOuHhXvkzKMDdfKJKhsSzMwtt9f7bvO1piVOayuh+2y8tfvMHs6N09tnSJkSCMoyGOatLe8FZ9haA=
+X-Received: by 2002:ac8:18ab:: with SMTP id s40mr14342388qtj.224.1585319230429;
+ Fri, 27 Mar 2020 07:27:10 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200326211005.13301-1-wsa+renesas@sang-engineering.com> <20200326211005.13301-7-wsa+renesas@sang-engineering.com>
-In-Reply-To: <20200326211005.13301-7-wsa+renesas@sang-engineering.com>
-From:   Alex Deucher <alexdeucher@gmail.com>
-Date:   Fri, 27 Mar 2020 10:25:16 -0400
-Message-ID: <CADnq5_P07b-A-VawLTgiTMSdifxMbWS5kgQV_+0Bw2x_DQHATQ@mail.gmail.com>
-Subject: Re: [PATCH 6/6] drm/radeon: convert to use i2c_new_client_device()
-To:     Wolfram Sang <wsa+renesas@sang-engineering.com>
-Cc:     Linux I2C <linux-i2c@vger.kernel.org>,
-        David Airlie <airlied@linux.ie>,
-        LKML <linux-kernel@vger.kernel.org>,
-        amd-gfx list <amd-gfx@lists.freedesktop.org>,
-        Maling list - DRI developers 
-        <dri-devel@lists.freedesktop.org>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>
+References: <33fa622c263ad40a129dc2b8dd0111b40016bc17.1585316085.git.mchehab+huawei@kernel.org>
+In-Reply-To: <33fa622c263ad40a129dc2b8dd0111b40016bc17.1585316085.git.mchehab+huawei@kernel.org>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Fri, 27 Mar 2020 08:26:58 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqLZQN253PDi-HXtP3s5CCg0OzaUK99onC9UjQWeVw3KYw@mail.gmail.com>
+Message-ID: <CAL_JsqLZQN253PDi-HXtP3s5CCg0OzaUK99onC9UjQWeVw3KYw@mail.gmail.com>
+Subject: Re: [PATCH] docs: dt: fix a broken reference for a file converted to json
+To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        "David S. Miller" <davem@davemloft.net>,
+        Marcel Holtmann <marcel@holtmann.org>,
+        Simon Horman <simon.horman@netronome.com>,
+        Harish Bandi <c-hbandi@codeaurora.org>,
+        Venkata Lakshmi Narayana Gubba <gubbaven@codeaurora.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Rocky Liao <rjliao@codeaurora.org>,
+        Matthias Brugger <mbrugger@suse.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        netdev <netdev@vger.kernel.org>, devicetree@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 26, 2020 at 5:35 PM Wolfram Sang
-<wsa+renesas@sang-engineering.com> wrote:
+On Fri, Mar 27, 2020 at 7:34 AM Mauro Carvalho Chehab
+<mchehab+huawei@kernel.org> wrote:
 >
-> Move away from the deprecated API.
+> Changeset 32ced09d7903 ("dt-bindings: serial: Convert slave-device bindings to json-schema")
+> moved a binding to json and updated the links. Yet, one link
+> was forgotten.
+
+It was not. There's a merge conflict, so I dropped it until after rc1.
+
 >
-> Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
-
-patches 1,6, are:
-Acked-by: Alex Deucher <alexander.deucher@amd.com>
-
+> Update this one too.
+>
+> Fixes: 32ced09d7903 ("dt-bindings: serial: Convert slave-device bindings to json-schema")
+> Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 > ---
->  drivers/gpu/drm/radeon/radeon_atombios.c | 4 ++--
->  drivers/gpu/drm/radeon/radeon_combios.c  | 4 ++--
->  2 files changed, 4 insertions(+), 4 deletions(-)
+>  Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 >
-> diff --git a/drivers/gpu/drm/radeon/radeon_atombios.c b/drivers/gpu/drm/radeon/radeon_atombios.c
-> index 848ef68d9086..5d2591725189 100644
-> --- a/drivers/gpu/drm/radeon/radeon_atombios.c
-> +++ b/drivers/gpu/drm/radeon/radeon_atombios.c
-> @@ -2111,7 +2111,7 @@ static int radeon_atombios_parse_power_table_1_3(struct radeon_device *rdev)
->                                                                     ucOverdriveThermalController];
->                         info.addr = power_info->info.ucOverdriveControllerAddress >> 1;
->                         strlcpy(info.type, name, sizeof(info.type));
-> -                       i2c_new_device(&rdev->pm.i2c_bus->adapter, &info);
-> +                       i2c_new_client_device(&rdev->pm.i2c_bus->adapter, &info);
->                 }
->         }
->         num_modes = power_info->info.ucNumOfPowerModeEntries;
-> @@ -2351,7 +2351,7 @@ static void radeon_atombios_add_pplib_thermal_controller(struct radeon_device *r
->                                 const char *name = pp_lib_thermal_controller_names[controller->ucType];
->                                 info.addr = controller->ucI2cAddress >> 1;
->                                 strlcpy(info.type, name, sizeof(info.type));
-> -                               i2c_new_device(&rdev->pm.i2c_bus->adapter, &info);
-> +                               i2c_new_client_device(&rdev->pm.i2c_bus->adapter, &info);
->                         }
->                 } else {
->                         DRM_INFO("Unknown thermal controller type %d at 0x%02x %s fan control\n",
-> diff --git a/drivers/gpu/drm/radeon/radeon_combios.c b/drivers/gpu/drm/radeon/radeon_combios.c
-> index c3e49c973812..d3c04df7e75d 100644
-> --- a/drivers/gpu/drm/radeon/radeon_combios.c
-> +++ b/drivers/gpu/drm/radeon/radeon_combios.c
-> @@ -2704,7 +2704,7 @@ void radeon_combios_get_power_modes(struct radeon_device *rdev)
->                                 const char *name = thermal_controller_names[thermal_controller];
->                                 info.addr = i2c_addr >> 1;
->                                 strlcpy(info.type, name, sizeof(info.type));
-> -                               i2c_new_device(&rdev->pm.i2c_bus->adapter, &info);
-> +                               i2c_new_client_device(&rdev->pm.i2c_bus->adapter, &info);
->                         }
->                 }
->         } else {
-> @@ -2721,7 +2721,7 @@ void radeon_combios_get_power_modes(struct radeon_device *rdev)
->                                 const char *name = "f75375";
->                                 info.addr = 0x28;
->                                 strlcpy(info.type, name, sizeof(info.type));
-> -                               i2c_new_device(&rdev->pm.i2c_bus->adapter, &info);
-> +                               i2c_new_client_device(&rdev->pm.i2c_bus->adapter, &info);
->                                 DRM_INFO("Possible %s thermal controller at 0x%02x\n",
->                                          name, info.addr);
->                         }
+> diff --git a/Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt b/Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt
+> index beca6466d59a..d2202791c1d4 100644
+> --- a/Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt
+> +++ b/Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt
+> @@ -29,7 +29,7 @@ Required properties for compatible string qcom,wcn399x-bt:
+>
+>  Optional properties for compatible string qcom,wcn399x-bt:
+>
+> - - max-speed: see Documentation/devicetree/bindings/serial/slave-device.txt
+> + - max-speed: see Documentation/devicetree/bindings/serial/serial.yaml
+>   - firmware-name: specify the name of nvm firmware to load
+>   - clocks: clock provided to the controller
+>
 > --
-> 2.20.1
+> 2.25.1
 >
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
