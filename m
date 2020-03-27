@@ -2,235 +2,207 @@ Return-Path: <SRS0=s8dx=5M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EF55C2D0ED
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 17:02:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CFABC43331
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 17:02:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4AF92206E6
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 17:02:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C0BCA206E6
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 17:02:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="VuEVVEz/";
-	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="VuEVVEz/"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GNTkLAMs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727585AbgC0RCC (ORCPT
+        id S1727696AbgC0RCF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Mar 2020 13:02:02 -0400
-Received: from mail-eopbgr130050.outbound.protection.outlook.com ([40.107.13.50]:60171
-        "EHLO EUR01-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726515AbgC0RCB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Mar 2020 13:02:01 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
- s=selector2-armh-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=JfT+kca4GLNNh9u4rlHJEk+/N0PILO4/pBqrj87G/18=;
- b=VuEVVEz/9yoK4xYIoGRqYTN5C8cwkVbeYmVDLOfK2LGa7zH7RRww35whweT+tGbhBNIt3N6/m73mbwvUYQu48t6wd3ZeSJBT8lae+2YC6YSQ2TWVfYjYU6WBhp8XpRAOJYBsGEduxgd1WqsAQYynUkq6JsBF+m23kBhkTjIYYpM=
-Received: from VI1PR0701CA0041.eurprd07.prod.outlook.com
- (2603:10a6:800:90::27) by HE1PR08MB2873.eurprd08.prod.outlook.com
- (2603:10a6:7:30::10) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2835.20; Fri, 27 Mar
- 2020 17:01:55 +0000
-Received: from VE1EUR03FT036.eop-EUR03.prod.protection.outlook.com
- (2603:10a6:800:90:cafe::3b) by VI1PR0701CA0041.outlook.office365.com
- (2603:10a6:800:90::27) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2878.9 via Frontend
- Transport; Fri, 27 Mar 2020 17:01:54 +0000
-Authentication-Results: spf=pass (sender IP is 63.35.35.123)
- smtp.mailfrom=arm.com; vger.kernel.org; dkim=pass (signature was verified)
- header.d=armh.onmicrosoft.com;vger.kernel.org; dmarc=bestguesspass
- action=none header.from=arm.com;
-Received-SPF: Pass (protection.outlook.com: domain of arm.com designates
- 63.35.35.123 as permitted sender) receiver=protection.outlook.com;
- client-ip=63.35.35.123; helo=64aa7808-outbound-1.mta.getcheckrecipient.com;
-Received: from 64aa7808-outbound-1.mta.getcheckrecipient.com (63.35.35.123) by
- VE1EUR03FT036.mail.protection.outlook.com (10.152.19.204) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2856.17 via Frontend Transport; Fri, 27 Mar 2020 17:01:54 +0000
-Received: ("Tessian outbound 19f8d550f75c:v48"); Fri, 27 Mar 2020 17:01:54 +0000
-X-CheckRecipientChecked: true
-X-CR-MTA-CID: f4805d5f11123ead
-X-CR-MTA-TID: 64aa7808
-Received: from b8e79db3fe2a.2
-        by 64aa7808-outbound-1.mta.getcheckrecipient.com id A4944EE2-CB12-420A-B914-C2162DFA389E.1;
-        Fri, 27 Mar 2020 17:01:48 +0000
-Received: from EUR03-VE1-obe.outbound.protection.outlook.com
-    by 64aa7808-outbound-1.mta.getcheckrecipient.com with ESMTPS id b8e79db3fe2a.2
-    (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384);
-    Fri, 27 Mar 2020 17:01:48 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Xhz5fWzcgDZqbWdBeR3xTI1eq+b9MEZPClfzFEnqSxSZtockjAA1IH+s3tUALXWWbDLA0mrgcHSvGg+jE3HowXISBzlf2E+07QlrKLS5WQAgqChHsTawFvfGMfhq18+4wWyx3yHXof2dMG5wp2EWHBrg1l+uB+G/ruyd4mbtCj1II34eov9FbImJwuIMQWI/CVuLO2qliq2zHRdFNhzfjaKrr89XQ20OiXJg4hZy+xSQg3+CzeliOQ6te+ragXPG8PkRklsxBz3g0Y/qZLaYNG1WsJyliHGItPIDFyX+wkvlsHsGsB/f0As0OL4R1+rBLkKZXkVHBxtQ6ZIAzg6Spg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=JfT+kca4GLNNh9u4rlHJEk+/N0PILO4/pBqrj87G/18=;
- b=WvdCEV+D5UxlO8Sl1rHg6HMfzubLaZDiNlgMTOfrHpgWgnwaOIyv6Habn8qtLChfSABWb+Np9d2x037xxDd8GNI0H9OlB4WAkmK/dVZBlpR+ecxSmvKY242OUVlox8Cv8+coTzCrfVqvDhM83zfWrATP6oJyqMeD0g4eHCc828YrVXz5h1v3a2kmJoJnPj8j32b80w3E/qd63B/8IDeOAxrhsw9DZkP5WmZxGRCsw2+9UJLnGwgZREadXoOd9ymbAMzj14O2NcrXksuRzdiBSIVOW2Jz4k3pDPiIquZ3knJdsDOhPLksoGsTjc17h+cWAwjdr8qFPlPXLtWHG/Y9Iw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=arm.com; dmarc=pass action=none header.from=arm.com; dkim=pass
- header.d=arm.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
- s=selector2-armh-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=JfT+kca4GLNNh9u4rlHJEk+/N0PILO4/pBqrj87G/18=;
- b=VuEVVEz/9yoK4xYIoGRqYTN5C8cwkVbeYmVDLOfK2LGa7zH7RRww35whweT+tGbhBNIt3N6/m73mbwvUYQu48t6wd3ZeSJBT8lae+2YC6YSQ2TWVfYjYU6WBhp8XpRAOJYBsGEduxgd1WqsAQYynUkq6JsBF+m23kBhkTjIYYpM=
-Authentication-Results-Original: spf=none (sender IP is )
- smtp.mailfrom=Grant.Likely@arm.com; 
-Received: from DB8PR08MB4010.eurprd08.prod.outlook.com (20.179.10.207) by
- DB8SPR01MB0016.eurprd08.prod.outlook.com (20.179.251.212) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2856.18; Fri, 27 Mar 2020 17:01:46 +0000
-Received: from DB8PR08MB4010.eurprd08.prod.outlook.com
- ([fe80::4521:d746:9e7:4ae3]) by DB8PR08MB4010.eurprd08.prod.outlook.com
- ([fe80::4521:d746:9e7:4ae3%5]) with mapi id 15.20.2835.023; Fri, 27 Mar 2020
- 17:01:46 +0000
-From:   Grant Likely <grant.likely@arm.com>
-To:     linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     nd@arm.com, Grant Likely <grant.likely@arm.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Saravana Kannan <saravanak@google.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH] Add documentation on meaning of -EPROBE_DEFER
-Date:   Fri, 27 Mar 2020 17:01:32 +0000
-Message-Id: <20200327170132.17275-1-grant.likely@arm.com>
-X-Mailer: git-send-email 2.20.1
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: LO2P123CA0047.GBRP123.PROD.OUTLOOK.COM (2603:10a6:600::35)
- To DB8PR08MB4010.eurprd08.prod.outlook.com (2603:10a6:10:ab::15)
+        Fri, 27 Mar 2020 13:02:05 -0400
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:40744 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726515AbgC0RCF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Mar 2020 13:02:05 -0400
+Received: by mail-ed1-f65.google.com with SMTP id w26so12065530edu.7
+        for <linux-kernel@vger.kernel.org>; Fri, 27 Mar 2020 10:02:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=b2lZOPIWJTr9UFjcnFoxSRpPs49wAvfNXtMi3TbyzjE=;
+        b=GNTkLAMsqQBubf7OPjldjSsbSSGvn/TUqonf3jfEkwP7elNd0t2vbNAtQqeCdywEDq
+         gtYAPZZHzUqx4hNF2NYOOLJudJD2Xr+BoGrEN+iAIgRsCvWF28o+OzptEj7Q4+G9FpaK
+         m+a7sugjSo/4OVZVhmh5TlICoNkzDtyceXOJ6sjMcTqHeir2ztUU+0gPmxIw0Wi5IcI5
+         Bj8M+97xAAdN4ZMbjsI0rPT81Ko/bJkuCXn7EbRfeTFNKJw0cHchT9TRfmpS63faneY+
+         bYgZZ5IPrKwAWPsYb1xAfvFjnm3JWi5sW4W8Kc2MTJp/qGtF/4Hw6k14aPs107xEEutf
+         ITGg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=b2lZOPIWJTr9UFjcnFoxSRpPs49wAvfNXtMi3TbyzjE=;
+        b=TXhyix6Bl5bZwmBMmDe6RMdmq1DmtUxjS1qVBBHJ5MRogYRJC27WJ//7cPTYmH259C
+         kzw1cg9otc5Vc+9HSp5uEKpvZ9SDQNwyiEpl5VFVcaTFyYcvuxpVEs/6DSs18QqA/sbG
+         XJsDpqMP8OWnfg4jBl1jX+PKdfSkOkkOLd1v4V5Vl+kB+8cnsmgEZhFP9+KT97tvWurF
+         bZv6NcS9GY0GsKwHV7sjwAFxoj6QA3ycvrcCMTjLH6NZT/MTkhw0cZ+hvdh0NL+aUJUP
+         GlfMh4lxaEn36X/jN2gKw9p917omQCfC+xxCh94hS3bR5lvmM0nHw2SvTEpMnzcRQjGs
+         1yEw==
+X-Gm-Message-State: ANhLgQ3REYEVJiHJMMDLOFoM9c2ZTJ9yI3eHYYvIfAob3x1jji3HrrMM
+        FadsddsKVxgIbewO2C41orM=
+X-Google-Smtp-Source: ADFU+vsAAhNdyTS7AfHTxbEEEziAPTPsURTtKtrQKqT6okS4DWhd7Ai1ZqedjRvLPSX2rLSR3EmKpQ==
+X-Received: by 2002:a50:9d83:: with SMTP id w3mr37017ede.23.1585328523658;
+        Fri, 27 Mar 2020 10:02:03 -0700 (PDT)
+Received: from ziggy.stardust ([213.195.113.243])
+        by smtp.gmail.com with ESMTPSA id s10sm714093ejf.88.2020.03.27.10.02.02
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 27 Mar 2020 10:02:02 -0700 (PDT)
+Subject: Re: [PATCH] soc: mediatek: mtk-mmsys: Export ddp_dis/connect symbols
+To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        linux-kernel@vger.kernel.org
+Cc:     Collabora Kernel ML <kernel@collabora.com>, drinkcat@chromium.org,
+        hsinyi@chromium.org, Anders Roxell <anders.roxell@linaro.org>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org
+References: <20200326182742.487026-1-enric.balletbo@collabora.com>
+From:   Matthias Brugger <matthias.bgg@gmail.com>
+Autocrypt: addr=matthias.bgg@gmail.com; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <e1442ebf-b094-f16c-3cf5-10159d2fd12b@gmail.com>
+Date:   Fri, 27 Mar 2020 18:02:01 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from moist.secretlab.ca (92.40.174.1) by LO2P123CA0047.GBRP123.PROD.OUTLOOK.COM (2603:10a6:600::35) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2856.20 via Frontend Transport; Fri, 27 Mar 2020 17:01:45 +0000
-X-Mailer: git-send-email 2.20.1
-X-Originating-IP: [92.40.174.1]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: b9a9b07f-eea9-48e2-2e07-08d7d2708d61
-X-MS-TrafficTypeDiagnostic: DB8SPR01MB0016:|DB8SPR01MB0016:|HE1PR08MB2873:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <HE1PR08MB2873F217EB9B54B4D404788195CC0@HE1PR08MB2873.eurprd08.prod.outlook.com>
-x-checkrecipientrouted: true
-NoDisclaimer: true
-X-MS-Oob-TLC-OOBClassifiers: OLM:9508;OLM:9508;
-X-Forefront-PRVS: 0355F3A3AE
-X-Forefront-Antispam-Report-Untrusted: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB8PR08MB4010.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10009020)(4636009)(136003)(396003)(376002)(39860400002)(346002)(366004)(4326008)(2906002)(8676002)(26005)(66556008)(66476007)(6506007)(66946007)(55236004)(1076003)(36756003)(6512007)(86362001)(5660300002)(8936002)(81156014)(81166006)(6666004)(186003)(478600001)(956004)(316002)(44832011)(2616005)(6486002)(52116002)(54906003)(16526019);DIR:OUT;SFP:1101;
-Received-SPF: None (protection.outlook.com: arm.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam-Untrusted: BCL:0;
-X-Microsoft-Antispam-Message-Info-Original: Qc3Q8VuOPWX90wCYXk/Mq2C2yNhaty3Gll0Q518+cpEuixPMUkELB0vrBLf0p4vn8Sec03B81Bb2nRANZW5A14bpuY3hzFMViVcyNp1Z/oCd4oSnAzLUTJXW7Ty0LvT8iG9RHn0FL0vUUdKIhnDPY/JsOIaLvyx0IbKxhbvKfnaQ5R07icZvS/IlbiCfX+jJuSX0uSlurywJtV6A+jG6+RlLae2/k2C/n479Ll8d/2HEk8kG8DSOUt+cbjBS8oB59r7x3+apfRm4eqJU3NsHw7MSQcgxDI6TwT/KRCiIzBjUgY5jwmlZnwT64KADpquSZ2hWKMRZn8kje1XLVVGbCBrD+Q1EgrvBHNkDBW+c2uoAz+UVOHVQq8VPxNDLhi+cLex4pV0bC1RjSZyCnLgPMicVHd1MUaL+QO2BHjvO0/Rraehich5Tq6EXnH+sCCet
-X-MS-Exchange-AntiSpam-MessageData: lRcCVs+Pavytr2M6cpOsb7GrUWzir73ynlFhCABkrgJMzxE0xpJ5cmYiK1UFC9nuj38Y6bzniHFbaEci3DFBCd66vwg3w8HMXQsi6UlqZ1IyoBv0HlGhGGtWgK8QEeM+6QxUYyT3nZcwPHYEJ5nPpA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB8SPR01MB0016
-Original-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=Grant.Likely@arm.com; 
-X-EOPAttributedMessage: 0
-X-MS-Exchange-Transport-CrossTenantHeadersStripped: VE1EUR03FT036.eop-EUR03.prod.protection.outlook.com
-X-Forefront-Antispam-Report: CIP:63.35.35.123;CTRY:IE;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:64aa7808-outbound-1.mta.getcheckrecipient.com;PTR:ec2-63-35-35-123.eu-west-1.compute.amazonaws.com;CAT:NONE;SFTY:;SFS:(10009020)(4636009)(346002)(136003)(396003)(376002)(39860400002)(46966005)(6506007)(336012)(81156014)(6666004)(82740400003)(2906002)(5660300002)(8676002)(70586007)(16526019)(26005)(356004)(1076003)(44832011)(81166006)(186003)(47076004)(8936002)(4326008)(70206006)(316002)(86362001)(36756003)(36906005)(26826003)(450100002)(956004)(478600001)(54906003)(2616005)(6486002)(107886003)(6512007);DIR:OUT;SFP:1101;
-X-MS-Office365-Filtering-Correlation-Id-Prvs: f88f4bdf-2851-4d5c-9af4-08d7d2708828
-X-Forefront-PRVS: 0355F3A3AE
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 13YW+75haqasC2wSI+2qE8LUI7JU8/Y0imdRGzsSP1fWo008pM8BtQXZDHWn587CtilzI+87z4VRyP8SXkO0fJYu0hMe73BwDiaAydbxmi7/Yex+L2OgTgywTUyekEe5Pci/saq36x07K680hBbIhJu0vXss1WYwCvuVtISdoxVVT1bURVtJohp+nxBvOAJvH4gUun0I5ytp4L74rCEmHbMbThHByk+L70m8j0xd8fIkljWPlFmMUeeZVLOUfucCRlkVqz4EBVm87RdyI+WG7YDaqhO1dh+S3p+xLuZGvv4zcswXmHTBB/cN3QDo/i/r0U8ACsXQAxMYymrK31cfKtWHZcsgWj8zwir2PQi2hwQMVcbD1dEyhOaWdvofZHYi+mPCwoDyUdIrrv+cYuTYgkDTbaxjDqOrmvwWkoNOg45Xmps932rtkbYN0kzWZCAjTOmOmNgl/AaN3IrpGpYF23QmSCareki2KdfcRVPoNuSz/vR7uSCpiysTyQ5RT4g/5aDdKGquozHXWW5w0jXN1A==
-X-OriginatorOrg: arm.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Mar 2020 17:01:54.4959
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: b9a9b07f-eea9-48e2-2e07-08d7d2708d61
-X-MS-Exchange-CrossTenant-Id: f34e5979-57d9-4aaa-ad4d-b122a662184d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f34e5979-57d9-4aaa-ad4d-b122a662184d;Ip=[63.35.35.123];Helo=[64aa7808-outbound-1.mta.getcheckrecipient.com]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: HE1PR08MB2873
+In-Reply-To: <20200326182742.487026-1-enric.balletbo@collabora.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a bit of documentation on what it means when a driver .probe() hook
-returns the -EPROBE_DEFER error code, including the limitation that
--EPROBE_DEFER should be returned as early as possible, before the driver
-starts to register child devices.
 
-Also: minor markup fixes in the same file
 
-Signed-off-by: Grant Likely <grant.likely@arm.com>
-Cc: Jonathan Corbet <corbet@lwn.net>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Saravana Kannan <saravanak@google.com>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
- .../driver-api/driver-model/driver.rst        | 32 ++++++++++++++++---
- 1 file changed, 27 insertions(+), 5 deletions(-)
+On 26/03/2020 19:27, Enric Balletbo i Serra wrote:
+> When building on arm64 with allmodconfig or CONFIG_DRM_MEDIATEK=m we see
+> the following error.
+> 
+>   ERROR: modpost: "mtk_mmsys_ddp_disconnect"
+>   [drivers/gpu/drm/mediatek/mediatek-drm.ko] undefined!
+>   ERROR: modpost: "mtk_mmsys_ddp_connect"
+>   [drivers/gpu/drm/mediatek/mediatek-drm.ko] undefined!
+> 
+> Export mtk_mmsys_ddp_connect and mtk_mmsys_ddp_disconnect symbols to be
+> able to be used for other modules.
+> 
+> Fixes: 396c3fccaf03 ("soc / drm: mediatek: Move routing control to mmsys device")
+> Reported-by: Anders Roxell <anders.roxell@linaro.org>
+> Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
 
-diff --git a/Documentation/driver-api/driver-model/driver.rst b/Documentation/driver-api/driver-model/driver.rst
-index baa6a85c8287..63057d9bc8a6 100644
---- a/Documentation/driver-api/driver-model/driver.rst
-+++ b/Documentation/driver-api/driver-model/driver.rst
-@@ -4,7 +4,6 @@ Device Drivers
- 
- See the kerneldoc for the struct device_driver.
- 
--
- Allocation
- ~~~~~~~~~~
- 
-@@ -167,9 +166,26 @@ the driver to that device.
- 
- A driver's probe() may return a negative errno value to indicate that
- the driver did not bind to this device, in which case it should have
--released all resources it allocated::
-+released all resources it allocated.
-+
-+Optionally, probe() may return -EPROBE_DEFER if the driver depends on
-+resources that are not yet available (e.g., supplied by a driver that
-+hasn't initialized yet).  The driver core will put the device onto the
-+deferred probe list and will try to call it again later. If a driver
-+must defer, it should return -EPROBE_DEFER as early as possible to
-+reduce the amount of time spent on setup work that will need to be
-+unwound and reexecuted at a later time.
-+
-+.. warning::
-+      -EPROBE_DEFER must not be returned if probe() has already created
-+      child devices, even if those child devices are removed again
-+      in a cleanup path. If -EPROBE_DEFER is returned after a child
-+      device has been registered, it may result in an infinite loop of
-+      .probe() calls to the same driver.
-+
-+::
- 
--	void (*sync_state)(struct device *dev);
-+	void	(*sync_state)	(struct device *dev);
- 
- sync_state is called only once for a device. It's called when all the consumer
- devices of the device have successfully probed. The list of consumers of the
-@@ -212,6 +228,8 @@ over management of devices from the bootloader, the usage of sync_state() is
- not restricted to that. Use it whenever it makes sense to take an action after
- all the consumers of a device have probed.
- 
-+::
-+
- 	int 	(*remove)	(struct device *dev);
- 
- remove is called to unbind a driver from a device. This may be
-@@ -224,11 +242,15 @@ not. It should free any resources allocated specifically for the
- device; i.e. anything in the device's driver_data field.
- 
- If the device is still present, it should quiesce the device and place
--it into a supported low-power state::
-+it into a supported low-power state.
-+
-+::
- 
- 	int	(*suspend)	(struct device *dev, pm_message_t state);
- 
--suspend is called to put the device in a low power state::
-+suspend is called to put the device in a low power state.
-+
-+::
- 
- 	int	(*resume)	(struct device *dev);
- 
--- 
-2.20.1
+I squashed this into the old commit:
+396c3fccaf03 ("soc / drm: mediatek: Move routing control to mmsys device")
 
+And pushed it out to v5.6-next/soc
+
+Thanks!
+
+> ---
+> 
+>  drivers/soc/mediatek/mtk-mmsys.c | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/drivers/soc/mediatek/mtk-mmsys.c b/drivers/soc/mediatek/mtk-mmsys.c
+> index 32a92ec447c5..05e322c9c301 100644
+> --- a/drivers/soc/mediatek/mtk-mmsys.c
+> +++ b/drivers/soc/mediatek/mtk-mmsys.c
+> @@ -259,6 +259,7 @@ void mtk_mmsys_ddp_connect(struct device *dev,
+>  		writel_relaxed(reg, config_regs + addr);
+>  	}
+>  }
+> +EXPORT_SYMBOL_GPL(mtk_mmsys_ddp_connect);
+>  
+>  void mtk_mmsys_ddp_disconnect(struct device *dev,
+>  			      enum mtk_ddp_comp_id cur,
+> @@ -279,6 +280,7 @@ void mtk_mmsys_ddp_disconnect(struct device *dev,
+>  		writel_relaxed(reg, config_regs + addr);
+>  	}
+>  }
+> +EXPORT_SYMBOL_GPL(mtk_mmsys_ddp_disconnect);
+>  
+>  static int mtk_mmsys_probe(struct platform_device *pdev)
+>  {
+> 
