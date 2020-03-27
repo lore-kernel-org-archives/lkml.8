@@ -2,104 +2,179 @@ Return-Path: <SRS0=s8dx=5M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73CEFC43331
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 03:06:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DF1FC43331
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 03:08:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B80E20787
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 03:06:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 01C0C20787
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 03:08:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="o1rUgMWm"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XqGi/tia"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727817AbgC0DGO (ORCPT
+        id S1727749AbgC0DIA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 23:06:14 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:46737 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726496AbgC0DGN (ORCPT
+        Thu, 26 Mar 2020 23:08:00 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:46902 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727446AbgC0DH7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 23:06:13 -0400
-Received: by mail-lf1-f68.google.com with SMTP id q5so6640959lfb.13
-        for <linux-kernel@vger.kernel.org>; Thu, 26 Mar 2020 20:06:11 -0700 (PDT)
+        Thu, 26 Mar 2020 23:07:59 -0400
+Received: by mail-pf1-f195.google.com with SMTP id q3so3795798pff.13;
+        Thu, 26 Mar 2020 20:07:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=CSLNSOAWi6KCk4zSx0nfkc3noQNEt96T9ParppIuBog=;
-        b=o1rUgMWmuu/u5WcBto31zRT1GEI3pHzIvSYQHY4OFpBJuPQuCTLtpAidukeGYXob/q
-         SIEcxXncDs/FQuanUO8pkn4HtBJ1OB+kRA3jtwVJCIjWG+KOzVQA1G07r4LIFCqFXlVs
-         Wj6nU1HOJspWfzWUHexCOy4ZkJ1Xe+DD/z5XO+pkgVlqX0WkNBTEdv0BbVXBvQdHZ4tq
-         b9qacY4H2WaFb2QLy06nmR0ZOirm8dA2yht6LtRO0k9AZZ54cQCmiuIDgmA9R9bS2ORM
-         8KoUGsDCDSRi0Ps+bPcNio5PUj2ZqugisoFuGtkY2y+pDekeqMmPS3IARBhXOTyPDn5m
-         26pA==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=2DQUOCm1EaVk4TsyfJrUq1iAxjoNQGGgwCMFKg9aS9g=;
+        b=XqGi/tiazfMdyxJUvUzP5R+WcHVs3t2gtjdaaJnkfxwd6AS3Dhon8D7T8Hvs3hezZG
+         1SBMyLISonSsAIo+qkFafQXCCedhzx5827FvRafihFmoGdDD0P2Dth9Rii76GU/STTj8
+         iwAWK+L7DT1iaDCn9gm7jpvOonVUh4lIgb1mFv+Yol0TnO46ESIqzlnPOVB0SE5wxiYD
+         5blJOI8ZUwyhNynM8/bgpZJLcBujN614V8M5oUJ0N9Q2agFzM6ZMXLjXCTWpF2X2KemX
+         gBIOxAOKF1u2jz9c2THj1okZcOfZFAG2C4CmiQYhW04bGMi/Xdw8H4kmlcM1sjQQzLPS
+         qEnQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=CSLNSOAWi6KCk4zSx0nfkc3noQNEt96T9ParppIuBog=;
-        b=nd26i7+tXbDOcIx6aEWY6URjcH+HLeHakBG0IbmfxKaCDPHubuyQkFxHJCqqj4OwMB
-         quLsDpWHD9wGhKohxO0zcJQSdUqIlXMnBDxc82kV/Il6EobEfPoU2YrZblLty4yagUfp
-         Wqwrh49uH8AuOAytbdA+BKxdxDfjrh3I9wuS/BZgGrObwXHoaooo3sUQ84Xp6gY9ci2w
-         auxxFTZOzbmGPVZ4AdLMyT69EcKee/gjAuPZKGQye5bftGpJPJauWI5BvR+d3XdrVB2P
-         5CY7S3htgWJEVuADQLvr2HtmcdTFKqhwVGq71eivY1UBhiIZJFTBthbZlW1ondx1RZsp
-         Lisg==
-X-Gm-Message-State: ANhLgQ1YIfpd3nYWa/z0MajL+wJSOPiiz+zD9q+k6vmnhyXi7FerZksb
-        6uMssbT20V2ie3ERvL/tLf5nmA+7XfrvGkdS00VHKQ==
-X-Google-Smtp-Source: ADFU+vs+lTx9hER5McUabLfcl4hXpBx6bhOxOtGZRV+SpUcFTItUjI5/V8SW2oq31TxnXWiXJtTipm8bfOxpw2Twgp8=
-X-Received: by 2002:a19:a401:: with SMTP id q1mr7550442lfc.157.1585278370632;
- Thu, 26 Mar 2020 20:06:10 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200326163245.119670-1-jannh@google.com> <20200327024500.GA211096@google.com>
-In-Reply-To: <20200327024500.GA211096@google.com>
-From:   Jann Horn <jannh@google.com>
-Date:   Fri, 27 Mar 2020 04:05:43 +0100
-Message-ID: <CAG48ez32cmGxHfijeK1YJLU8WdYv=qooXDYE+PSD7-Wwjg4DuQ@mail.gmail.com>
-Subject: Re: [PATCH 0/2] Make printk_deferred() work properly before percpu
- setup is done
-To:     Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Petr Mladek <pmladek@suse.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        kernel list <linux-kernel@vger.kernel.org>,
-        Dennis Zhou <dennis@kernel.org>, Tejun Heo <tj@kernel.org>,
-        Christoph Lameter <cl@linux.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Frederic Weisbecker <frederic@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=2DQUOCm1EaVk4TsyfJrUq1iAxjoNQGGgwCMFKg9aS9g=;
+        b=cdweE6YLI+wu/s+Guc4f8+JySQvJ0RIrhiwNzdfapops/AvDSEkcfptbASOLPU6K1N
+         b2fQnZYK0yNDRo0/lhfxHw+jlQ/4pIySNs0ycLpINxvutUaO55MKVmVtpZR3eY+EPtNa
+         vY08Sa+9xeRVYC34fwk9iE31tgv4/U1S63Y5yf2OkCdasHfAOziufZK0TyeHI+xQ5uMj
+         FQ2OVrgiNI3i7Fr/6E72iynFsdGZIsSCpy2ZsMH88YFH1uV89NIcEAuLf0+uRq5BrYbK
+         fMwFMnUzoDbzOKrObCvWUQ/IJr+VhRyava3icGJMTXnNDHgWs+C4cuTJGiGPGMKv3jNl
+         9tlw==
+X-Gm-Message-State: ANhLgQ14EZz+wy92G2NP1PVqmMVKPjSWYd0dXvHRshN8mdCzDMLsJXCt
+        u4419REaslsv5jueKUKbJw7Go5ShIhrEVw==
+X-Google-Smtp-Source: ADFU+vvzLjoiyk6aa4bXaqKb0l9qNEJQaMPG0FyhsOBZ2iDmDjYTF2pETniPQE5M1pJVBQjo7k0WlA==
+X-Received: by 2002:a62:15cc:: with SMTP id 195mr12866413pfv.276.1585278478035;
+        Thu, 26 Mar 2020 20:07:58 -0700 (PDT)
+Received: from localhost ([161.117.239.120])
+        by smtp.gmail.com with ESMTPSA id w31sm2750543pgl.84.2020.03.26.20.07.56
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 26 Mar 2020 20:07:57 -0700 (PDT)
+From:   Qiujun Huang <hqjagain@gmail.com>
+To:     marcelo.leitner@gmail.com, davem@davemloft.net
+Cc:     vyasevich@gmail.com, nhorman@tuxdriver.com, kuba@kernel.org,
+        linux-sctp@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, anenbupt@gmail.com,
+        Qiujun Huang <hqjagain@gmail.com>
+Subject: [PATCH v6] sctp: fix refcount bug in sctp_wfree
+Date:   Fri, 27 Mar 2020 11:07:51 +0800
+Message-Id: <20200327030751.19404-1-hqjagain@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 27, 2020 at 3:45 AM Sergey Senozhatsky
-<sergey.senozhatsky.work@gmail.com> wrote:
-> On (20/03/26 17:32), Jann Horn wrote:
-> > While I was doing some development work, I noticed that if you call
-> > printk_deferred() before percpu setup has finished, stuff breaks, and
-> > e.g. "dmesg -w" fails to print new messages.
-> >
-> > This happens because writing to percpu memory before percpu
-> > initialization is done causes the modified percpu memory to be
-> > propagated from the boot CPU to all the secondary CPUs; and both the
-> > printk code as well as the irq_work implementation use percpu memory.
-> >
-> > I think that printk_deferred() ought to work even before percpu
-> > initialization, since it is used by things like pr_warn_ratelimited()
-> > and the unwinder infrastructure. I'm not entirely sure though whether
-> > this is the best way to implement that, or whether it would be better to
-> > let printk_deferred() do something different if it is called during
-> > early boot.
->
-> Hi Jann,
->
-> I believe we have a patch for this issue
->
-> https://lore.kernel.org/lkml/20200303113002.63089-1-sergey.senozhatsky@gmail.com/
+We should iterate over the datamsgs to move
+all chunks(skbs) to newsk.
 
-Ah, thanks, I didn't think of searching the list archives for an
-existing pending patch...
+The following case cause the bug:
+for the trouble SKB, it was in outq->transmitted list
+
+sctp_outq_sack
+        sctp_check_transmitted
+                SKB was moved to outq->sacked list
+        then throw away the sack queue
+                SKB was deleted from outq->sacked
+(but it was held by datamsg at sctp_datamsg_to_asoc
+So, sctp_wfree was not called here)
+
+then migrate happened
+
+        sctp_for_each_tx_datachunk(
+        sctp_clear_owner_w);
+        sctp_assoc_migrate();
+        sctp_for_each_tx_datachunk(
+        sctp_set_owner_w);
+SKB was not in the outq, and was not changed to newsk
+
+finally
+
+__sctp_outq_teardown
+        sctp_chunk_put (for another skb)
+                sctp_datamsg_put
+                        __kfree_skb(msg->frag_list)
+                                sctp_wfree (for SKB)
+	SKB->sk was still oldsk (skb->sk != asoc->base.sk).
+
+Reported-and-tested-by: syzbot+cea71eec5d6de256d54d@syzkaller.appspotmail.com
+Signed-off-by: Qiujun Huang <hqjagain@gmail.com>
+---
+ net/sctp/socket.c | 31 +++++++++++++++++++++++--------
+ 1 file changed, 23 insertions(+), 8 deletions(-)
+
+diff --git a/net/sctp/socket.c b/net/sctp/socket.c
+index 1b56fc440606..f68076713162 100644
+--- a/net/sctp/socket.c
++++ b/net/sctp/socket.c
+@@ -147,29 +147,44 @@ static void sctp_clear_owner_w(struct sctp_chunk *chunk)
+ 	skb_orphan(chunk->skb);
+ }
+ 
++#define traverse_and_process()	\
++do {				\
++	msg = chunk->msg;	\
++	if (msg == prev_msg)	\
++		continue;	\
++	list_for_each_entry(c, &msg->chunks, frag_list) {	\
++		if ((clear && asoc->base.sk == c->skb->sk) ||	\
++		    (!clear && asoc->base.sk != c->skb->sk))	\
++			cb(c);	\
++	}			\
++	prev_msg = msg;		\
++} while (0)
++
+ static void sctp_for_each_tx_datachunk(struct sctp_association *asoc,
++				       bool clear,
+ 				       void (*cb)(struct sctp_chunk *))
+ 
+ {
++	struct sctp_datamsg *msg, *prev_msg = NULL;
+ 	struct sctp_outq *q = &asoc->outqueue;
++	struct sctp_chunk *chunk, *c;
+ 	struct sctp_transport *t;
+-	struct sctp_chunk *chunk;
+ 
+ 	list_for_each_entry(t, &asoc->peer.transport_addr_list, transports)
+ 		list_for_each_entry(chunk, &t->transmitted, transmitted_list)
+-			cb(chunk);
++			traverse_and_process();
+ 
+ 	list_for_each_entry(chunk, &q->retransmit, transmitted_list)
+-		cb(chunk);
++		traverse_and_process();
+ 
+ 	list_for_each_entry(chunk, &q->sacked, transmitted_list)
+-		cb(chunk);
++		traverse_and_process();
+ 
+ 	list_for_each_entry(chunk, &q->abandoned, transmitted_list)
+-		cb(chunk);
++		traverse_and_process();
+ 
+ 	list_for_each_entry(chunk, &q->out_chunk_list, list)
+-		cb(chunk);
++		traverse_and_process();
+ }
+ 
+ static void sctp_for_each_rx_skb(struct sctp_association *asoc, struct sock *sk,
+@@ -9574,9 +9589,9 @@ static int sctp_sock_migrate(struct sock *oldsk, struct sock *newsk,
+ 	 * paths won't try to lock it and then oldsk.
+ 	 */
+ 	lock_sock_nested(newsk, SINGLE_DEPTH_NESTING);
+-	sctp_for_each_tx_datachunk(assoc, sctp_clear_owner_w);
++	sctp_for_each_tx_datachunk(assoc, true, sctp_clear_owner_w);
+ 	sctp_assoc_migrate(assoc, newsk);
+-	sctp_for_each_tx_datachunk(assoc, sctp_set_owner_w);
++	sctp_for_each_tx_datachunk(assoc, false, sctp_set_owner_w);
+ 
+ 	/* If the association on the newsk is already closed before accept()
+ 	 * is called, set RCV_SHUTDOWN flag.
+-- 
+2.17.1
+
