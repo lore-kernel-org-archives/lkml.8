@@ -2,89 +2,144 @@ Return-Path: <SRS0=s8dx=5M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B75CC43331
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 23:47:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C25CC2D0EC
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 23:56:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD7DB2071B
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 23:47:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 10A042071B
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 23:56:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="XurJei6Y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726422AbgC0Xru (ORCPT
+        id S1726518AbgC0X4L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Mar 2020 19:47:50 -0400
-Received: from mga01.intel.com ([192.55.52.88]:31878 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726212AbgC0Xru (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Mar 2020 19:47:50 -0400
-IronPort-SDR: Y7WQqg/HsDBfayPv+H0M24Y+Y2meJHsSi0LjxvpTO6uDd43ON+Jv9of/EDg3OKIkcBat48g0zB
- 9tAzxQl26QuQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Mar 2020 16:47:50 -0700
-IronPort-SDR: qlJo1yoZnNpykM2wi0KZD8GSGBaxeWa+7YA/XlRIpYQ3fJ2YnszxrD/P8TWLiGXMMqLuYuMWj6
- c5hhbWPQFp3Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,314,1580803200"; 
-   d="scan'208";a="447595129"
-Received: from jacob-builder.jf.intel.com (HELO jacob-builder) ([10.7.199.155])
-  by fmsmga005.fm.intel.com with ESMTP; 27 Mar 2020 16:47:49 -0700
-Date:   Fri, 27 Mar 2020 16:53:35 -0700
-From:   Jacob Pan <jacob.jun.pan@linux.intel.com>
-To:     Christoph Hellwig <hch@infradead.org>
-Cc:     "Tian, Kevin" <kevin.tian@intel.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Jean-Philippe Brucker <jean-philippe@linaro.com>,
-        "Raj, Ashok" <ashok.raj@intel.com>, jacob.jun.pan@linux.intel.com
-Subject: Re: [PATCH v2 1/3] iommu/uapi: Define uapi version and capabilities
-Message-ID: <20200327165335.397f24a3@jacob-builder>
-In-Reply-To: <20200327074702.GA27959@infradead.org>
-References: <1585178227-17061-1-git-send-email-jacob.jun.pan@linux.intel.com>
-        <1585178227-17061-2-git-send-email-jacob.jun.pan@linux.intel.com>
-        <20200326092316.GA31648@infradead.org>
-        <20200326094442.5be042ce@jacob-builder>
-        <AADFC41AFE54684AB9EE6CBC0274A5D19D7ECB45@SHSMSX104.ccr.corp.intel.com>
-        <20200327074702.GA27959@infradead.org>
-Organization: OTC
-X-Mailer: Claws Mail 3.13.2 (GTK+ 2.24.30; x86_64-pc-linux-gnu)
+        Fri, 27 Mar 2020 19:56:11 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:34870 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726071AbgC0X4L (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Mar 2020 19:56:11 -0400
+Received: by mail-ot1-f65.google.com with SMTP id v2so7112256oto.2
+        for <linux-kernel@vger.kernel.org>; Fri, 27 Mar 2020 16:56:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=K0NZbCLQ3EXESvGxt7BooZUrPODG0bjvoacB9E61EEM=;
+        b=XurJei6Y0zK73hOuGlwQ5mXHRF0bCiHRG6oKmYdCjlws+X/5KoM9fDGdLuEEL5nngn
+         /T94i7uCchViIvOMy3pUWqFsU6MyiWxQMJqkkYxOfcAa6Pez0iNRZP9a8UNG4KrQUQSc
+         wWxmaPyr8eDYV5niFJGTjV+W6mUa9Szj3OZ9KDoHLRDo5P2OI9GY5yUuc1rBTGX5SRZp
+         8dD++OkavrllEVjwGwV/NXLnWhmnfKlTxJ7By2Rl+Zyctfpdz/YCI8beVj474am+z4Ar
+         GRWq2yI/rKZKnRVyz2tYFsCC4AKmpZnAioCE+t3sHDINPDVgLWtObc0qhWhJHliaB1cy
+         4Jkg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=K0NZbCLQ3EXESvGxt7BooZUrPODG0bjvoacB9E61EEM=;
+        b=h4EUPrEjxnGxYXAGldI4ckaWN6EhljaITXVTyaKligeHY1sS9/MTF/SFfurDufrT7Y
+         13eh0pSZ2I3a/ROXR+v5tQw6lNRByTrw+IXBko4hnFA8Ousns4FXx3mvzKQf03SDq5mL
+         b9ieiu6YMDTc5c8LETFnF10j0WGgW07HbGihxqDPR+B0XGdGToUK21WHIsxFCQlIzjdN
+         rpCTpAYwJWJMPVHh8EiJO3qK+sId3q3KHZKipWtUny4OLz05WKxbO8xxgBzUoINTMxfs
+         w0mbhj+URzr7ARK2wKoz9xaBCnIs3Lp+HX54813Jhi1orwOYEHMK2SBBtJuOgC02nRK8
+         6Fzg==
+X-Gm-Message-State: ANhLgQ3kYIP9dl1uXPPKszTJOSQ7A+uo07AzzbZYgpPJhIYlK4by3HHg
+        H8jspN4v/Ccxw/o7PCFDnkynDv1fx5ZX6zHHhWuX/A==
+X-Google-Smtp-Source: ADFU+vt2lzCYLjMmDYQ7QI1GbWZ1pzJp/+PeDaT91MG7KWT2Q1Bu9ZCCfiT78aA9hpd2w88mP12gYjj3WbX9G70dP+M=
+X-Received: by 2002:a9d:42f:: with SMTP id 44mr959944otc.236.1585353370394;
+ Fri, 27 Mar 2020 16:56:10 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20200327170132.17275-1-grant.likely@arm.com> <CAGETcx8CJqMQaHBj1r5MhNBTw7Smz4BRHPkB0kCUCJPSmW6KwA@mail.gmail.com>
+ <2885b440-77a5-f2be-7524-d5fba2b0c08a@arm.com>
+In-Reply-To: <2885b440-77a5-f2be-7524-d5fba2b0c08a@arm.com>
+From:   Saravana Kannan <saravanak@google.com>
+Date:   Fri, 27 Mar 2020 16:55:34 -0700
+Message-ID: <CAGETcx_0=W6P_Zf-6fvDfncXUrPvt31bf6de-RWwHaXtwJizmQ@mail.gmail.com>
+Subject: Re: [PATCH] Add documentation on meaning of -EPROBE_DEFER
+To:     Grant Likely <grant.likely@arm.com>
+Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, nd@arm.com,
+        Jonathan Corbet <corbet@lwn.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 27 Mar 2020 00:47:02 -0700
-Christoph Hellwig <hch@infradead.org> wrote:
+On Fri, Mar 27, 2020 at 4:25 PM Grant Likely <grant.likely@arm.com> wrote:
+>
+>
+>
+> On 27/03/2020 18:10, Saravana Kannan wrote:
+> > On Fri, Mar 27, 2020 at 10:01 AM Grant Likely <grant.likely@arm.com> wrote:
+> >>
+> >> Add a bit of documentation on what it means when a driver .probe() hook
+> >> returns the -EPROBE_DEFER error code, including the limitation that
+> >> -EPROBE_DEFER should be returned as early as possible, before the driver
+> >> starts to register child devices.
+> >>
+> >> Also: minor markup fixes in the same file
+> >>
+> >> Signed-off-by: Grant Likely <grant.likely@arm.com>
+> >> Cc: Jonathan Corbet <corbet@lwn.net>
+> >> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> >> Cc: Saravana Kannan <saravanak@google.com>
+> >> Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> >> ---
+> >>   .../driver-api/driver-model/driver.rst        | 32 ++++++++++++++++---
+> >>   1 file changed, 27 insertions(+), 5 deletions(-)
+> >>
+> >> diff --git a/Documentation/driver-api/driver-model/driver.rst b/Documentation/driver-api/driver-model/driver.rst
+> >> index baa6a85c8287..63057d9bc8a6 100644
+> >> --- a/Documentation/driver-api/driver-model/driver.rst
+> >> +++ b/Documentation/driver-api/driver-model/driver.rst
+> >> @@ -4,7 +4,6 @@ Device Drivers
+> >>
+> >>   See the kerneldoc for the struct device_driver.
+> >>
+> >> -
+> >>   Allocation
+> >>   ~~~~~~~~~~
+> >>
+> >> @@ -167,9 +166,26 @@ the driver to that device.
+> >>
+> >>   A driver's probe() may return a negative errno value to indicate that
+> >>   the driver did not bind to this device, in which case it should have
+> >> -released all resources it allocated::
+> >> +released all resources it allocated.
+> >> +
+> >> +Optionally, probe() may return -EPROBE_DEFER if the driver depends on
+> >> +resources that are not yet available (e.g., supplied by a driver that
+> >> +hasn't initialized yet).  The driver core will put the device onto the
+> >> +deferred probe list and will try to call it again later. If a driver
+> >> +must defer, it should return -EPROBE_DEFER as early as possible to
+> >> +reduce the amount of time spent on setup work that will need to be
+> >> +unwound and reexecuted at a later time.
+> >> +
+> >> +.. warning::
+> >> +      -EPROBE_DEFER must not be returned if probe() has already created
+> >> +      child devices, even if those child devices are removed again
+> >> +      in a cleanup path. If -EPROBE_DEFER is returned after a child
+> >> +      device has been registered, it may result in an infinite loop of
+> >> +      .probe() calls to the same driver.
+> >
+> > The infinite loop is a current implementation behavior. Not an
+> > intentional choice. So, maybe we can say the behavior is undefined
+> > instead?
+>
+> If you feel strongly about it, but I don't have any problem with
+> documenting it as the current implementation behaviour, and then
+> changing the text if that ever changes.
 
-> On Fri, Mar 27, 2020 at 02:49:55AM +0000, Tian, Kevin wrote:
-> > If those API calls are inter-dependent for composing a feature
-> > (e.g. SVA), shouldn't we need a way to check them together before
-> > exposing the feature to the guest, e.g. through a
-> > iommu_get_uapi_capabilities interface?  
-> 
-> Yes, that makes sense.  The important bit is to have a capability
-> flags and not version numbers.
+Assuming Greg is okay with this doc update, I'm kinda leaning towards
+"undefined" because if documented as "infinite loop" people might be
+hesitant towards removing that behavior. But I'll let Greg make the
+final call. Not going to NACK for this point.
 
-The challenge is that there are two consumers in the kernel for this.
-1. VFIO only look for compatibility, and size of each data struct such
-that it can copy_from_user.
-
-2. IOMMU driver, the "real consumer" of the content.
-
-For 2, I agree and we do plan to use the capability flags to check
-content and maintain backward compatibility etc.
-
-For VFIO, it is difficult to do size look up based on capability flags.
-
-
-Jacob
+-Saravana
