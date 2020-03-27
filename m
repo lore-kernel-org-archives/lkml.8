@@ -2,152 +2,104 @@ Return-Path: <SRS0=s8dx=5M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26E96C2D0ED
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 16:28:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52DBCC43331
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 16:30:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F26DA20658
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 16:28:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 25AAC2072F
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 16:30:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="fw4vZ9o6"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="VFK791c3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727706AbgC0Q2N (ORCPT
+        id S1727718AbgC0QaC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Mar 2020 12:28:13 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:40387 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727560AbgC0Q2N (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Mar 2020 12:28:13 -0400
-Received: by mail-ed1-f68.google.com with SMTP id w26so11914553edu.7
-        for <linux-kernel@vger.kernel.org>; Fri, 27 Mar 2020 09:28:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=9DDvHtu2LPjFPTk6N1lekFV2ShYbYm5F3D1HLZEOy4c=;
-        b=fw4vZ9o6IO+HeqP3Xok6kSfraOxkKRu3PTNnrtA1xuBEpKJw4E2lOL0cwe6R5C4/fS
-         RhoOsxRVFEQ355RtKB3injRaQbeTDEMKkjGAXvMZTpncOv8V7sOpzZRls2ppexvsVyje
-         8x3ynqj+MMtcZV9eDQORFww/0X7TksNVf8vHCgQK6tgnV9ImVXB0dqW03mf9gZdRHEQi
-         9hPZQZLkYoG4j9gDWdgvLfOZNYWWH/kP7Ehqhdjt1+Mi5Qn90OXtTq6WURD/sChECIal
-         D3e0+PY74OGxeKZUWDQx84QNiXzOKPB2pi2qAoCtUnVq+R4rydI8B2RaJ3TV2PtPsSOd
-         TQsA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=9DDvHtu2LPjFPTk6N1lekFV2ShYbYm5F3D1HLZEOy4c=;
-        b=cDDIhfcO8pCnbqDmbZY7nLU1N829iw/YNMH2c7y8inEvTDV7VHX/BHPNx8VBruXrrW
-         rWFv2aaoWu/AD7Z7FLvcIyMBdx7hdb+P35F48HR/czt05MZqOSDmMnalXVEVr0/Sx749
-         JSNLuxv9WW8LzojkW9TbazCWbkv1YfpWTs6Du58fjX/eB1G40YHsyo5G1cZpVyRv2Xqw
-         gM0/eUU8xZsGChGMGAH2q2nulduE5//ug6Ktm18z0ggj2hDs2KnYYxkvjdBO2EVMi9Re
-         jJ66wpj8P0gvQdQQSilQomKkkRWndok/PIJqEaFbZThWEflt5J8266F9ZRwXRdyliIQq
-         XnmQ==
-X-Gm-Message-State: ANhLgQ0GajkWAXi49rxvhdbt5dBkR7IasnOoKH4oNozb3FmBaRyC+SbS
-        i+a04TR9lh/PNi6+v/0/1KVhpczG/u/VVjkvhpDSUQ==
-X-Google-Smtp-Source: ADFU+vv9x1cRXR5JTTiwUKkMwnERnkbjfXRnFDDpWIPM5Fjuj1B/ZA0jL9dsfDKbMCnmWg8krWLCIRJeGHd6OtlGNmU=
-X-Received: by 2002:aa7:d7c7:: with SMTP id e7mr13903000eds.296.1585326491184;
- Fri, 27 Mar 2020 09:28:11 -0700 (PDT)
+        Fri, 27 Mar 2020 12:30:02 -0400
+Received: from mout.gmx.net ([212.227.15.18]:41461 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727560AbgC0QaC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Mar 2020 12:30:02 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1585326580;
+        bh=1Em0LI/KVl1xxriM0SUJ9ct2bhqg2n0IpV9lkveMp00=;
+        h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
+        b=VFK791c33sNkRSMGCC6CNnw4TjESkCF/FwFciz50fiUiWEs64KqatwrlDZHe+emQp
+         rWNhqpucHDYR+D1pl8ySVMmJipSGdf9fIDSMZVSUOGmERFbpKWEA3ueQevXpV4nb84
+         ontBHXKtafBRP0og9+BsQvmsbehQNJlQWDObOTOY=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from localhost.localdomain ([82.19.195.159]) by mail.gmx.com
+ (mrgmx004 [212.227.17.184]) with ESMTPSA (Nemesis) id
+ 1N7i8O-1jLuL343CU-014kxm; Fri, 27 Mar 2020 17:29:40 +0100
+From:   Alex Dewar <alex.dewar@gmx.co.uk>
+Cc:     alex.dewar@gmx.co.uk, Russell King <linux@armlinux.org.uk>,
+        Enrico Weigelt <info@metux.net>,
+        Allison Randal <allison@lohutok.net>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] arm: dma-mapping: Remove unneeded NULL checks
+Date:   Fri, 27 Mar 2020 16:29:13 +0000
+Message-Id: <20200327162914.24948-1-alex.dewar@gmx.co.uk>
+X-Mailer: git-send-email 2.26.0
 MIME-Version: 1.0
-References: <20200128093542.6908-1-david@redhat.com> <CAPcyv4jpdaNvJ67SkjyUJLBnBnXXQv686BiVW042g03FUmWLXw@mail.gmail.com>
- <20200327074718.GT27965@dhcp22.suse.cz> <8c74afdc-98cb-dd48-c516-ff6e8b59d598@redhat.com>
-In-Reply-To: <8c74afdc-98cb-dd48-c516-ff6e8b59d598@redhat.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Fri, 27 Mar 2020 09:28:00 -0700
-Message-ID: <CAPcyv4jWG8zpK_fJ=JsnTX0d5zXmQsKap=6=CTtOQpD0iGCoMQ@mail.gmail.com>
-Subject: Re: [PATCH v1] drivers/base/memory.c: indicate all memory blocks as removable
-To:     David Hildenbrand <david@redhat.com>
-Cc:     Michal Hocko <mhocko@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux MM <linux-mm@kvack.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        powerpc-utils-devel@googlegroups.com, util-linux@vger.kernel.org,
-        Badari Pulavarty <pbadari@us.ibm.com>,
-        Nathan Fontenot <nfont@linux.vnet.ibm.com>,
-        Robert Jennings <rcj@linux.vnet.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Karel Zak <kzak@redhat.com>,
-        "Scargall, Steve" <steve.scargall@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:Vflazi5to4WwXtKcR0FGBcrbXYZ36lA8poJ8iwEZ1rnQsK7j7s+
+ vIXToVShPwP07aJxDadCHyZ17J4FxImijCtv9DLX+5kelt88bP010UqQ+tgUfqY4D+VrHqI
+ edxmB2JsfLaq4YGG+FFW2MzZ6NZwsKBBU/dEVynpi98lDdFQC653JBhMwkP+LbPWGnahLkd
+ vQAb2/t/ANGz4Otdqi45Q==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:f09u4bQ98iM=:Y494TvphxhbHLCNgofeeX+
+ 1ZQxJ8nYdLhJBywlKG8jb6GRAVO6ZyGB+S+cp9/LFS5iCIyuXU8qlr3wMHr/c3YroRZPNXm2V
+ DknnZTDhLb0uEt7Cc5w6Ko/ZoV6ZVvvC0l9KOWH0YBXGyAraQjTx3H/ov3yF/buELAGrboG9X
+ hohBcPDICNMhzNBxXZC15AQlLrDa3fR8j4u/Adr/wJmu3Zyxk3wpzIoQM9cpEPB88ur32dBHy
+ DY/99Nop+CHZuaqENdmmGHx+oJpuPPaN5IRHKgsFJTbDbp/Lbo0WHomEUdAv8fAyUaFaEamUX
+ 8F/tgtE0QXSwjAVZ/ypSpveEVqR7I3LrOpdStLvahGaOYG8qK+6O+lorw1aECIvzYLtZjiBd8
+ fOSTSvleyEd1J8JaSmNDbbYo6ooRddqB206p9Lb6z5i3K/wEsoqZZdWt7B+fjNHjH983cc8kl
+ xjibT3NKIgIUrEt2nUHsKayIgtADr904PNlUqe0HrnvUc06ZyQuqyCEGGuhmpwtmO2lDBgSvm
+ huAy9LE2wAkfwGkNLYJhEPlZWIEmJhHWJzf1uU6n9TxAwV/7LZekvuUAaMZWZxhN0qcE6F76D
+ GZeAgWmG48SYkvateeah8GNwmK0ZSBc2IMoICM8rC7WVZypFQhHeGHZqc5At+6N5BfKj0s2wf
+ Y81XFC3s6kozQbEtNECuWWZ9Oh43nplPvK43h3faIIeSeHo1qi+V6Zknzy1BqrO4YjwsY6fOP
+ 3Eb5JbtGYNn7b4pqPnE/86ojXYQ+5dhns8W0hZFHGzEuTdnzh41lMmtW4EBjNseO3eUtd36+7
+ cOZ/QN96cco9Q/G6AGiTEgYG8HYDFfenQ2RNAX15VeGXDP37GL1LB8/kjSZq0IOcd+muP8HZj
+ ozgMVU1EFK5PxmsrO2Y3BixwA6B9HZ4RjYhU8gGHzez8ekxTCSm9r7WvEPgkyYD3d39ZTOL4y
+ o/cpE6/qQfK2ZwcsWV9w2CESvlugL0sedgF+s2zMkm2PtWEfqO3SzAw5xiVaipO57J2sUWCjy
+ m1Na9JCCikwA8F3rjS9oD+oYDzJPQ6fMOGDf+zoEP1JGZ7uejsbI54JqWmS6eiAbk+q0MYd/J
+ qURvUgvRgd4inLTinChk+vhsFs2BI4liqzVbK8tVTQp8oSFxlEmglymz0VhqJpLcsp0kXsFFn
+ H+b5MnjzP2LAL/b1S+w5gp86kYyCiWCbrnpQVu+hNj7+hOWikYUtqT2bP5IsoeCkq0MaE5BWT
+ JTuqgtCMB1aqg4ouW
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 27, 2020 at 2:00 AM David Hildenbrand <david@redhat.com> wrote:
->
-> On 27.03.20 08:47, Michal Hocko wrote:
-> > On Thu 26-03-20 23:24:08, Dan Williams wrote:
-> > [...]
-> >> David, Andrew,
-> >>
-> >> I'd like to recommend this patch for -stable as it likely (test
-> >> underway) solves this crash report from Steve:
-> >>
-> >> [  148.796036] page dumped because: VM_BUG_ON_PAGE(PagePoisoned(p))
-> >> [  148.796074] ------------[ cut here ]------------
-> >> [  148.796098] kernel BUG at include/linux/mm.h:1087!
-> >> [  148.796126] invalid opcode: 0000 [#1] SMP NOPTI
-> >> [  148.796146] CPU: 63 PID: 5471 Comm: lsmem Not tainted 5.5.10-200.fc31.x8=
-> >> 6_64+debug #1
-> >> [  148.796173] Hardware name: Intel Corporation S2600WFD/S2600WFD, BIOS SE5=
-> >> C620.86B.02.01.0010.010620200716 01/06/2020
-> >> [  148.796212] RIP: 0010:is_mem_section_removable+0x1a4/0x1b0
-> >> [  148.796561] Call Trace:
-> >> [  148.796591]  removable_show+0x6e/0xa0
-> >> [  148.796608]  dev_attr_show+0x19/0x40
-> >> [  148.796625]  sysfs_kf_seq_show+0xa9/0x100
-> >> [  148.796640]  seq_read+0xd5/0x450
-> >> [  148.796657]  vfs_read+0xc5/0x180
-> >> [  148.796672]  ksys_read+0x68/0xe0
-> >> [  148.796688]  do_syscall_64+0x5c/0xa0
-> >> [  148.796704]  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-> >> [  148.796721] RIP: 0033:0x7f3ab1646412
-> >>
-> >> ...on a non-debug kernel it just crashes.
-> >>
-> >> In this case lsmem is failing when reading memory96:
-> >>
-> >> openat(3, "memory96/removable", O_RDONLY|O_CLOEXEC) = 4
-> >> fcntl(4, F_GETFL)                       = 0x8000 (flags O_RDONLY|O_LARGEFILE)
-> >> fstat(4, {st_mode=S_IFREG|0444, st_size=4096, ...}) = 0
-> >> read(4,  <unfinished ...>)              = ?
-> >> +++ killed by SIGSEGV +++
-> >> Segmentation fault (core dumped)
-> >>
-> >> ...which is phys_index 0x60 => memory address 0x3000000000
-> >>
-> >> On this platform that lands us here:
-> >>
-> >> 100000000-303fffffff : System RAM
-> >>   291f000000-291fe00f70 : Kernel code
-> >>   2920000000-292051efff : Kernel rodata
-> >>   2920600000-292093b0bf : Kernel data
-> >>   29214f3000-2922dfffff : Kernel bss
-> >> 3040000000-305fffffff : Reserved
-> >> 3060000000-1aa5fffffff : Persistent Memory
-> >
-> > OK, 2GB memblocks and that would mean [0x3000000000, 0x3080000000]
-> >
-> >> ...where the last memory block of System RAM is shared with persistent
-> >> memory. I.e. the block is only partially online which means that
-> >> page_to_nid() in is_mem_section_removable() will assert or crash for
-> >> some of the offline pages in that block.
-> >
-> > Yes, this patch is a simple workaround. Normal memory hotplug will not
-> > blow up because it should be able to find out that test_pages_in_a_zone
-> > is false. Who knows how other potential pfn walkers handle that.
->
-> All other pfn walkers now correctly use pfn_to_online_page() - which
-> will also result in false positives in this scenario and is still to be
-> fixed by Dan IIRC. [1]
+dma_pool_destroy() already checks for NULL arguments, so the extra check
+is unnecessary.
 
-Sorry, it's been too long and this fell out of my cache. I also turned
-away once the major fire in KVM was put out with special consideration
-for for devmem pages. What's left these days? ...besides
-removable_show()?
+Signed-off-by: Alex Dewar <alex.dewar@gmx.co.uk>
+=2D--
+ arch/arm/common/dmabounce.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
+
+diff --git a/arch/arm/common/dmabounce.c b/arch/arm/common/dmabounce.c
+index f4b719bde763..a7c776cdc38f 100644
+=2D-- a/arch/arm/common/dmabounce.c
++++ b/arch/arm/common/dmabounce.c
+@@ -560,10 +560,8 @@ void dmabounce_unregister_dev(struct device *dev)
+ 		BUG();
+ 	}
+
+-	if (device_info->small.pool)
+-		dma_pool_destroy(device_info->small.pool);
+-	if (device_info->large.pool)
+-		dma_pool_destroy(device_info->large.pool);
++	dma_pool_destroy(device_info->small.pool);
++	dma_pool_destroy(device_info->large.pool);
+
+ #ifdef STATS
+ 	if (device_info->attr_res =3D=3D 0)
+=2D-
+2.26.0
+
