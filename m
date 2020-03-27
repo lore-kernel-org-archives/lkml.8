@@ -2,104 +2,98 @@ Return-Path: <SRS0=s8dx=5M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1152C2D0E5
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 22:01:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA9B7C43331
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 22:06:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B25882072F
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 22:01:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BpllLOss"
+	by mail.kernel.org (Postfix) with ESMTP id 823282071B
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 22:06:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727791AbgC0WBp (ORCPT
+        id S1727707AbgC0WGO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Mar 2020 18:01:45 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:39772 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727707AbgC0WBp (ORCPT
+        Fri, 27 Mar 2020 18:06:14 -0400
+Received: from out4436.biz.mail.alibaba.com ([47.88.44.36]:8930 "EHLO
+        out4436.biz.mail.alibaba.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727611AbgC0WGO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Mar 2020 18:01:45 -0400
-Received: by mail-wm1-f65.google.com with SMTP id e9so2252611wme.4
-        for <linux-kernel@vger.kernel.org>; Fri, 27 Mar 2020 15:01:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=XnLQep2lydjftwMmt6HoIl5lVjdDRVIm/B2qHNSgXII=;
-        b=BpllLOssvHng2UrUTpZ8HD5uh0iHoPm0xW5pzyg910YurEuPaXzvxN9kcEyxiUYHHb
-         pm+4GooXP881cTpknMX0aMtiqQ353cNcMFGZc69n4qIgwedXPcd0tVm17NgSxvVwUAwJ
-         tq6sQtDrQpVNXUr7jHrkU0AqedXQLXfENEHXdbq6WKvPom1dWFK7Ie+mPXu+GT1y2jeP
-         NwbEjCzfKhsFppSYBqt9apVdVWA2Wk0St1VsfjCIjtrg8u1mxn0hbpa28w1hZebMDCdq
-         JU8ZehegVn88bcluyOprHYxGWh+IgRmaSlgsPSSXUHqJtAsg/XlPW2RLdT5sj2KVnlFR
-         4G1w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=XnLQep2lydjftwMmt6HoIl5lVjdDRVIm/B2qHNSgXII=;
-        b=fK+DE2dnE4/AtoDKM1+R2YQGpnfqM9VJWEPBlXICaNulwERBjLcqu9u5OSzI4OQAoj
-         6JGpVywRcR7Hw5bUBSYiLNG3drp4f+yAR1nmqqg2tWzKEb+pg8WPfpKx2yUXXkItBL1s
-         yrHUps7wvoUbmC9xQ1ynm+OaYqdGg1OhJr5wRg4P9H4uu5WQQieHII6nymzh/vgrEUHU
-         SeLw/r9AVD4Gststgf4uqFtKlOzGU5d6PmRgjcDVAF+Kd7x2ULRq3JBP8zCpSULg/yJh
-         RMjzP2HcOq5eQMk9W6QJAbo4GAdnUgmFvJz25x3cotLOLYJoaVkm94bstgt3huUE3MXX
-         okRA==
-X-Gm-Message-State: ANhLgQ1p7CCrJcJh4UUqi73In9BVgflLqDSEiDbcsqmZ68G0PFrvQBaW
-        e+iy2d9jhVCEJ0mgKORVDk0=
-X-Google-Smtp-Source: ADFU+vt/HkTH78PKwAOIbtRVmwgtK8/TzNy0i9xLfALHCE1xvdi6K+3teolQyt9PMe5QoSP2uFv7EQ==
-X-Received: by 2002:a1c:2605:: with SMTP id m5mr833534wmm.184.1585346503517;
-        Fri, 27 Mar 2020 15:01:43 -0700 (PDT)
-Received: from localhost ([185.92.221.13])
-        by smtp.gmail.com with ESMTPSA id a186sm9522774wmh.33.2020.03.27.15.01.42
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 27 Mar 2020 15:01:42 -0700 (PDT)
-From:   Wei Yang <richard.weiyang@gmail.com>
-To:     akpm@linux-foundation.org
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org, jgg@ziepe.ca,
-        david@redhat.com, Wei Yang <richard.weiyang@gmail.com>
-Subject: [Patch v2 2/2] mm/page_alloc.c: define node_order with all zero
-Date:   Fri, 27 Mar 2020 22:01:21 +0000
-Message-Id: <20200327220121.27823-2-richard.weiyang@gmail.com>
-X-Mailer: git-send-email 2.11.0
-In-Reply-To: <20200327220121.27823-1-richard.weiyang@gmail.com>
-References: <20200327220121.27823-1-richard.weiyang@gmail.com>
+        Fri, 27 Mar 2020 18:06:14 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R191e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e01422;MF=bo.liu@linux.alibaba.com;NM=1;PH=DS;RN=9;SR=0;TI=SMTPD_---0TtnyMjr_1585346766;
+Received: from rsjd01523.et2sqa(mailfrom:bo.liu@linux.alibaba.com fp:SMTPD_---0TtnyMjr_1585346766)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Sat, 28 Mar 2020 06:06:11 +0800
+Date:   Sat, 28 Mar 2020 06:06:06 +0800
+From:   Liu Bo <bo.liu@linux.alibaba.com>
+To:     Vivek Goyal <vgoyal@redhat.com>
+Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-nvdimm@lists.01.org, virtio-fs@redhat.com, miklos@szeredi.hu,
+        stefanha@redhat.com, dgilbert@redhat.com, mst@redhat.com
+Subject: Re: [PATCH 20/20] fuse,virtiofs: Add logic to free up a memory range
+Message-ID: <20200327220606.GA119028@rsjd01523.et2sqa>
+Reply-To: bo.liu@linux.alibaba.com
+References: <20200304165845.3081-1-vgoyal@redhat.com>
+ <20200304165845.3081-21-vgoyal@redhat.com>
+ <20200326000904.GA34937@rsjd01523.et2sqa>
+ <20200327140114.GB32717@redhat.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200327140114.GB32717@redhat.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since we always clear node_order before getting it, we can leverage
-compiler to do this instead of at run time.
+On Fri, Mar 27, 2020 at 10:01:14AM -0400, Vivek Goyal wrote:
+> On Thu, Mar 26, 2020 at 08:09:05AM +0800, Liu Bo wrote:
+> 
+> [..]
+> > > +/*
+> > > + * Find first mapping in the tree and free it and return it. Do not add
+> > > + * it back to free pool. If fault == true, this function should be called
+> > > + * with fi->i_mmap_sem held.
+> > > + */
+> > > +static struct fuse_dax_mapping *inode_reclaim_one_dmap(struct fuse_conn *fc,
+> > > +							 struct inode *inode,
+> > > +							 bool fault)
+> > > +{
+> > > +	struct fuse_inode *fi = get_fuse_inode(inode);
+> > > +	struct fuse_dax_mapping *dmap;
+> > > +	int ret;
+> > > +
+> > > +	if (!fault)
+> > > +		down_write(&fi->i_mmap_sem);
+> > > +
+> > > +	/*
+> > > +	 * Make sure there are no references to inode pages using
+> > > +	 * get_user_pages()
+> > > +	 */
+> > > +	ret = fuse_break_dax_layouts(inode, 0, 0);
+> > 
+> > Hi Vivek,
+> > 
+> > This patch is enabling inline reclaim for fault path, but fault path
+> > has already holds a locked exceptional entry which I believe the above
+> > fuse_break_dax_layouts() needs to wait for, can you please elaborate
+> > on how this can be avoided?
+> > 
+> 
+> Hi Liubo,
+> 
+> Can you please point to the exact lock you are referring to. I will
+> check it out. Once we got rid of needing to take inode lock in
+> reclaim path, that opended the door to do inline reclaim in fault
+> path as well. But I was not aware of this exceptional entry lock.
 
-Signed-off-by: Wei Yang <richard.weiyang@gmail.com>
----
- mm/page_alloc.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+Hi Vivek,
 
-diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-index dfcf2682ed40..49dd1f25c000 100644
---- a/mm/page_alloc.c
-+++ b/mm/page_alloc.c
-@@ -5585,7 +5585,7 @@ static void build_thisnode_zonelists(pg_data_t *pgdat)
- 
- static void build_zonelists(pg_data_t *pgdat)
- {
--	static int node_order[MAX_NUMNODES];
-+	static int node_order[MAX_NUMNODES] = {0};
- 	int node, load, nr_nodes = 0;
- 	nodemask_t used_mask = NODE_MASK_NONE;
- 	int local_node, prev_node;
-@@ -5595,7 +5595,6 @@ static void build_zonelists(pg_data_t *pgdat)
- 	load = nr_online_nodes;
- 	prev_node = local_node;
- 
--	memset(node_order, 0, sizeof(node_order));
- 	while ((node = find_next_best_node(local_node, &used_mask)) >= 0) {
- 		/*
- 		 * We don't want to pressure a particular node.
--- 
-2.23.0
+dax_iomap_{pte,pmd}_fault has called grab_mapping_entry to get a
+locked entry, when this fault gets into inline reclaim, would
+fuse_break_dax_layouts wait for the locked exceptional entry which is
+locked in dax_iomap_{pte,pmd}_fault?
 
+thanks,
+liubo
