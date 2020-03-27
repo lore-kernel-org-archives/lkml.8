@@ -2,85 +2,160 @@ Return-Path: <SRS0=s8dx=5M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFB8EC2D0E8
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 00:35:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 330F1C2D0E7
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 00:40:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 907A22074D
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 00:35:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0AA0820714
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 00:40:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="W5nlJorN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727772AbgC0AfR (ORCPT
+        id S1727653AbgC0AkB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 20:35:17 -0400
-Received: from mga12.intel.com ([192.55.52.136]:44340 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726359AbgC0AfR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 20:35:17 -0400
-IronPort-SDR: sK+/uC2zPYzaUNZTSerJFe63ma0XYcLCEmuusGv6FgejRMIBCv2QhmtHPjcUc3EdGfjBmUxWKW
- kDiB3yhQx+NQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Mar 2020 17:35:16 -0700
-IronPort-SDR: e22T3VdHduyjz5bDy4OZa210k9WTO1218bTaoPEseA5BLErTX2QCPDoJWKDZia+MKeWxQXCcma
- BQIJKtcvrU0g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,310,1580803200"; 
-   d="scan'208";a="250972692"
-Received: from shao2-debian.sh.intel.com (HELO [10.239.13.3]) ([10.239.13.3])
-  by orsmga006.jf.intel.com with ESMTP; 26 Mar 2020 17:35:10 -0700
-Subject: Re: [kbuild-all] Re: [RFC PATCH] usb: cdns3:
- cdns3_clear_register_bit() can be static
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        kbuild test robot <lkp@intel.com>
-Cc:     Colin King <colin.king@canonical.com>, kbuild-all@lists.01.org,
-        Sekhar Nori <nsekhar@ti.com>, Roger Quadros <rogerq@ti.com>,
-        Felipe Balbi <felipe.balbi@linux.intel.com>,
-        Pawel Laszczak <pawell@cadence.com>, linux-usb@vger.kernel.org,
-        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200325125041.94769-1-colin.king@canonical.com>
- <20200326122858.GA50118@cde5a4ed3207> <20200326130418.GA1295433@kroah.com>
-From:   Rong Chen <rong.a.chen@intel.com>
-Message-ID: <571960b6-5ed7-2106-7091-3ea83c31051a@intel.com>
-Date:   Fri, 27 Mar 2020 08:34:52 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Thu, 26 Mar 2020 20:40:01 -0400
+Received: from mail-il1-f195.google.com ([209.85.166.195]:36160 "EHLO
+        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726363AbgC0AkA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Mar 2020 20:40:00 -0400
+Received: by mail-il1-f195.google.com with SMTP id p13so7246633ilp.3;
+        Thu, 26 Mar 2020 17:40:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=zd/d+NmMfPoiVkw185r4QcNynYeA8Jn7+WiOnzp7Ycc=;
+        b=W5nlJorNuK4rURuQTs6iC1P12yA5n9Wuu8NtBkUOsA28f/gRN3PPhsNN16ANwGfkyK
+         r9e7/WcZ5jqGRCnCUjy+RsHIPuJ9hJEpbEhmRVJyTbv4DA0IBeQDyu/frMlUWMALBvv0
+         7gi7ne70vx/TwDzk3Ajx4DKoosU7UB7N6wuADgzjg2dkIyQWRit8BRdiCnYs+lUEBQWd
+         uaJZwQjJtjE4YId47nkZmDuTQ+nkflxbm8knUO4RmmXr6E0isGA7e+VoFT13I6sgvHBh
+         p0Cen6VvO+2Fh6EJhThKKmjytiluW0aJqdUPsCPFXeXzgJJwbDnaZxe9scXURZI2iiDx
+         gqlw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=zd/d+NmMfPoiVkw185r4QcNynYeA8Jn7+WiOnzp7Ycc=;
+        b=lRhV7iroaUo1+KV7DXscSc7QMn69tIDhdfQ36m69eKsVzhz7zL/UGxTc30pVodRKI5
+         zVa6wxWBZgQE+iLx8rmTD0oBoH+6gIknza4XDdLmLArQ1mloFiuonOvdfTUVUvBa5FxC
+         BM3XDIaWbDqhUGWWJCK5LcaxFASm05rmtfROqcBRMHaXDGl/6VYhMf/3CGeUDzdpj6j7
+         mBHyDi1oOs0kgcHxd+Wpt0OZjS/kC7AbU36/AjaxB+jW4T8Q/VAZAG586qTGTRHKN4xw
+         d7DfTPof/Cq3tra7X83JmJ4YjBgTO+AoBZuBO96zSfCqcIyiAl1AuSkcsHUYnmT3T3nz
+         O8vA==
+X-Gm-Message-State: ANhLgQ0KYy2qx7meKjN/0pJUqb6rAxLOMkmmtSOSTaVudjCOoh5U2TXY
+        PsJUYfhtKFetxgcmhIAgtJNr7PtTQiajDDVK2Pg=
+X-Google-Smtp-Source: ADFU+vvq6MTlWxf9MwL0wPp/8QhnDH4n7lMLXziqgL0JnLCFB/c74o1Hh1ddfrQpa2QnhBwjCPHktiDH7/9v0k39Nfw=
+X-Received: by 2002:a92:d850:: with SMTP id h16mr11422557ilq.203.1585269599596;
+ Thu, 26 Mar 2020 17:39:59 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200326130418.GA1295433@kroah.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+References: <1585191042-9935-1-git-send-email-laoar.shao@gmail.com>
+ <20200326130808.ccbacd6cba99a40326936fea@linux-foundation.org>
+ <b879b50324b502cbd3f8439182d63532518d7315.camel@sipsolutions.net> <ed7c4063-8b45-9fc8-5b92-a903d9da4054@gmail.com>
+In-Reply-To: <ed7c4063-8b45-9fc8-5b92-a903d9da4054@gmail.com>
+From:   Yafang Shao <laoar.shao@gmail.com>
+Date:   Fri, 27 Mar 2020 08:39:23 +0800
+Message-ID: <CALOAHbB3mByKY4jfkHLBMu+GOt5XiXURXYwVhExXc4DdZThhVQ@mail.gmail.com>
+Subject: Re: [PATCH] kernel/taskstats: fix wrong nla type for
+ {cgroup,task}stats policy
+To:     David Ahern <dsahern@gmail.com>
+Cc:     Johannes Berg <johannes@sipsolutions.net>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        bsingharora@gmail.com, LKML <linux-kernel@vger.kernel.org>,
+        stable@vger.kernel.org, "David S.Miller" <davem@davemloft.net>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 3/26/20 9:04 PM, Greg Kroah-Hartman wrote:
-> On Thu, Mar 26, 2020 at 08:28:58PM +0800, kbuild test robot wrote:
->> Fixes: 87db1192dc33 ("usb: cdns3: make signed 1 bit bitfields unsigned")
-> This original patch did not "cause" this problem, it's just that you for
-> some reason ran sparse for the first time on the file.
+On Fri, Mar 27, 2020 at 5:11 AM David Ahern <dsahern@gmail.com> wrote:
 >
-> So I can't take this as-is, can you remove this line and resend?
-
-Hi Greg,
-
-Sorry for the inconvenience, the patch was generated by the bot,
-we'll check and resend it.
-
-Best Regards,
-Rong Chen
-
+> On 3/26/20 2:28 PM, Johannes Berg wrote:
+> >
+> > And looking at this ... well, that code is completely wrong?
+> >
+> > E.g.
+> >
+> >                 rc = send_cmd(nl_sd, id, mypid, TASKSTATS_CMD_GET,
+> >                               cmd_type, &tid, sizeof(__u32));
+> >
+> > (cmd_type is one of TASKSTATS_CMD_ATTR_TGID, TASKSTATS_CMD_ATTR_PID)
+> >
+> > or it might do
+> >
+> >                 rc = send_cmd(nl_sd, id, mypid, CGROUPSTATS_CMD_GET,
+> >                               CGROUPSTATS_CMD_ATTR_FD, &cfd, sizeof(__u32));
+> >
+> > so clearly it wants to produce a u32 attribute.
+> >
+> > But then
+> >
+> > static int send_cmd(int sd, __u16 nlmsg_type, __u32 nlmsg_pid,
+> >              __u8 genl_cmd, __u16 nla_type,
+> >              void *nla_data, int nla_len)
+> > {
+> > ...
+> >
+> >         na = (struct nlattr *) GENLMSG_DATA(&msg);
+> >
+> > // this is still fine
+> >
+> >         na->nla_type = nla_type;
+> >
+> > // this is also fine
+> >
+> >         na->nla_len = nla_len + 1 + NLA_HDRLEN;
+> >
+> > // but this??? the nla_len of a netlink attribute should just be
+> > // the len ... what's NLA_HDRLEN doing here? this isn't nested
+> > // here we end up just reserving 1+NLA_HDRLEN too much space
+> >
+> >         memcpy(NLA_DATA(na), nla_data, nla_len);
+> >
+> > // but then it anyway only fills the first nla_len bytes, which
+> > // is just like a regular attribute.
+> >
+> >         msg.n.nlmsg_len += NLMSG_ALIGN(na->nla_len);
+> > // note that this is also wrong - it should be
+> > // += NLA_ALIGN(NLA_HDRLEN + nla_len)
+> >
+> >
+> >
+> > So really I think what happened here is precisely what we wanted -
+> > David's kernel patch caught the broken userspace tool.
 >
-> thanks,
+> agreed. The tool needs to be fixed, not the kernel policy.
 >
-> greg k-h
-> _______________________________________________
-> kbuild-all mailing list -- kbuild-all@lists.01.org
-> To unsubscribe send an email to kbuild-all-leave@lists.01.org
+> I do not get the error message with this change as Johannes points out
+> above:
+>
+> diff --git a/tools/accounting/getdelays.c b/tools/accounting/getdelays.c
+> index 8cb504d30384..e90fd133df0e 100644
+> --- a/tools/accounting/getdelays.c
+> +++ b/tools/accounting/getdelays.c
+> @@ -136,7 +136,7 @@ static int send_cmd(int sd, __u16 nlmsg_type, __u32
+> nlmsg_pid,
+>         msg.g.version = 0x1;
+>         na = (struct nlattr *) GENLMSG_DATA(&msg);
+>         na->nla_type = nla_type;
+> -       na->nla_len = nla_len + 1 + NLA_HDRLEN;
+> +       na->nla_len = nla_len + NLA_HDRLEN;
+>         memcpy(NLA_DATA(na), nla_data, nla_len);
+>         msg.n.nlmsg_len += NLMSG_ALIGN(na->nla_len);
+>
 
+Right. This is the right thing to do.
+I missed that the nla_len() will minus the NLA_HDRLEN.
+
+Would you pls. submit a patch ?
+
+Feel free to add:
+Tested-by: Yafang Shao <laoar.shao@gmail.com>
+
+Thanks
+Yafang
