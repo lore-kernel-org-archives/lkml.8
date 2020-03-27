@@ -4,41 +4,41 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BE43C43331
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 22:25:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 902EAC43331
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 22:25:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 60EBA21974
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 22:25:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 605E721D7E
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 22:25:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585347920;
-	bh=NxgrhisdmzDzf9gqb4zKWzHaq1mAF+loLVqEMIP8QrU=;
+	s=default; t=1585347924;
+	bh=AozrG3MmGq6+pM4lOKZjhKJpJ9U2ielG7RVJMhTB7pw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=aCrj3wEwuCe1Hn9Wv2Ssv9KtoEqsPSRsqO9Tam322BaQ52kW79kHlxZmflSDcIw2v
-	 h+Op8aQyyRPN1RFdv/IrveMkdUMVsQtA1IcsrIdSnnXme42Rmwc2HJggxt3jf++G7p
-	 e0nCjyNKlyrtHZY0++zsMWCPQjjY/lE9fbRAMYq4=
+	b=z89iolsAP6GM2lrc/zcfJ9UKwSShqUP7VB44nNypnR27aq1TvTpMUdlcXk392itqb
+	 WwpwNdOC2C6sZ3MLvAOuVic4M2PM2vYZ5v8bbdn8UKsDuvqX+ELENS+mBmhZHcKiLQ
+	 otmbZwOQpTyFod+Uqm4r4mU3I5rkljox83LT3iuU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727943AbgC0WZT (ORCPT
+        id S1727967AbgC0WZX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Mar 2020 18:25:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42628 "EHLO mail.kernel.org"
+        Fri, 27 Mar 2020 18:25:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43394 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727834AbgC0WZF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Mar 2020 18:25:05 -0400
+        id S1727869AbgC0WZJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Mar 2020 18:25:09 -0400
 Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E2D8421473;
-        Fri, 27 Mar 2020 22:25:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AA0E921D6C;
+        Fri, 27 Mar 2020 22:25:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585347905;
-        bh=NxgrhisdmzDzf9gqb4zKWzHaq1mAF+loLVqEMIP8QrU=;
+        s=default; t=1585347907;
+        bh=AozrG3MmGq6+pM4lOKZjhKJpJ9U2ielG7RVJMhTB7pw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NKsWx+pnqEJL//6VQEkBrLxV4qX3RtIDiGEojnjZER9p9MygcUG877bhHnjxvUDtQ
-         xpDhslPHYEhQBnykjqgQERs0wTfghY/q9xb4vgGzZnvSfkdRwDDxC5pM1CebmTo9DK
-         etH56O4R3EDavkwWJ8T0L/K/GXRZl1/ItkFX/uhg=
+        b=xGDVj2yfmCfSZa+shrDeY1vLssuE0+riJLlgKTy7VPuNr8ZBbfEEneRCDfsNJmIpc
+         5GwKdWFg/0KBfc04TpPMCcEP6CkjWDd/YSZNwPogCtIpHYVtCWO+9KwvJltCm4Oerb
+         1WaRRebSxmH6rCwgOXYpWpRM9MeJ37IfwiGj7sZw=
 From:   paulmck@kernel.org
 To:     rcu@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
@@ -48,9 +48,9 @@ Cc:     linux-kernel@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
         rostedt@goodmis.org, dhowells@redhat.com, edumazet@google.com,
         fweisbec@gmail.com, oleg@redhat.com, joel@joelfernandes.org,
         "Paul E. McKenney" <paulmck@kernel.org>
-Subject: [PATCH v3 tip/core/rcu 20/34] rcu-tasks: Make RCU Tasks Trace make use of RCU scheduler hooks
-Date:   Fri, 27 Mar 2020 15:24:42 -0700
-Message-Id: <20200327222456.12470-20-paulmck@kernel.org>
+Subject: [PATCH v3 tip/core/rcu 28/34] rcu-tasks: Disable CPU hotplug across RCU tasks trace scans
+Date:   Fri, 27 Mar 2020 15:24:50 -0700
+Message-Id: <20200327222456.12470-28-paulmck@kernel.org>
 X-Mailer: git-send-email 2.9.5
 In-Reply-To: <20200327222346.GA12082@paulmck-ThinkPad-P72>
 References: <20200327222346.GA12082@paulmck-ThinkPad-P72>
@@ -61,152 +61,71 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: "Paul E. McKenney" <paulmck@kernel.org>
 
-This commit makes the calls to rcu_tasks_qs() detect and report
-quiescent states for RCU tasks trace.  If the task is in a quiescent
-state and if ->trc_reader_checked is not yet set, the task sets its own
-->trc_reader_checked.  This will cause the grace-period kthread to
-remove it from the holdout list if it still remains there.
+This commit disables CPU hotplug across RCU tasks trace scans, which
+is a first step towards correctly recognizing idle tasks "running" on
+offline CPUs.
 
 Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
 ---
- include/linux/rcupdate.h | 39 ++++++++++++++++++++++++++++++++-------
- include/linux/rcutiny.h  |  2 +-
- kernel/rcu/tasks.h       |  5 +++--
- kernel/rcu/tree_plugin.h |  6 ++----
- 4 files changed, 38 insertions(+), 14 deletions(-)
+ kernel/rcu/tasks.h | 18 ++++++++++++++----
+ 1 file changed, 14 insertions(+), 4 deletions(-)
 
-diff --git a/include/linux/rcupdate.h b/include/linux/rcupdate.h
-index 2be97a8..3598bbb 100644
---- a/include/linux/rcupdate.h
-+++ b/include/linux/rcupdate.h
-@@ -131,12 +131,37 @@ static inline void rcu_init_nohz(void) { }
-  * This is a macro rather than an inline function to avoid #include hell.
-  */
- #ifdef CONFIG_TASKS_RCU_GENERIC
--#define rcu_tasks_qs(t) \
--	do { \
--		if (READ_ONCE((t)->rcu_tasks_holdout)) \
--			WRITE_ONCE((t)->rcu_tasks_holdout, false); \
-+
-+# ifdef CONFIG_TASKS_RCU
-+# define rcu_tasks_classic_qs(t, preempt)				\
-+	do {								\
-+		if (!(preempt) && READ_ONCE((t)->rcu_tasks_holdout))	\
-+			WRITE_ONCE((t)->rcu_tasks_holdout, false);	\
- 	} while (0)
--#define rcu_note_voluntary_context_switch(t) rcu_tasks_qs(t)
-+# else
-+# define rcu_tasks_classic_qs(t, preempt) do { } while (0)
-+# endif
-+
-+# ifdef CONFIG_TASKS_RCU_TRACE
-+# define rcu_tasks_trace_qs(t)						\
-+	do {								\
-+		if (!likely(READ_ONCE((t)->trc_reader_checked)) &&	\
-+		    !unlikely(READ_ONCE((t)->trc_reader_nesting))) {	\
-+			smp_store_release(&(t)->trc_reader_checked, true); \
-+			smp_mb(); /* Readers partitioned by store. */	\
-+		}							\
-+	} while (0)
-+# else
-+# define rcu_tasks_trace_qs(t) do { } while (0)
-+# endif
-+
-+#define rcu_tasks_qs(t, preempt)					\
-+do {									\
-+	rcu_tasks_classic_qs((t), (preempt));				\
-+	rcu_tasks_trace_qs((t));					\
-+} while (0)
-+
-+#define rcu_note_voluntary_context_switch(t) rcu_tasks_qs(t, false)
- void call_rcu_tasks(struct rcu_head *head, rcu_callback_t func);
- void synchronize_rcu_tasks(void);
- void call_rcu_tasks_rude(struct rcu_head *head, rcu_callback_t func);
-@@ -144,7 +169,7 @@ void synchronize_rcu_tasks_rude(void);
- void exit_tasks_rcu_start(void);
- void exit_tasks_rcu_finish(void);
- #else /* #ifdef CONFIG_TASKS_RCU_GENERIC */
--#define rcu_tasks_qs(t)	do { } while (0)
-+#define rcu_tasks_qs(t, preempt) do { } while (0)
- #define rcu_note_voluntary_context_switch(t) do { } while (0)
- #define call_rcu_tasks call_rcu
- #define synchronize_rcu_tasks synchronize_rcu
-@@ -161,7 +186,7 @@ static inline void exit_tasks_rcu_finish(void) { }
-  */
- #define cond_resched_tasks_rcu_qs() \
- do { \
--	rcu_tasks_qs(current); \
-+	rcu_tasks_qs(current, false); \
- 	cond_resched(); \
- } while (0)
- 
-diff --git a/include/linux/rcutiny.h b/include/linux/rcutiny.h
-index 045c28b..d77e111 100644
---- a/include/linux/rcutiny.h
-+++ b/include/linux/rcutiny.h
-@@ -49,7 +49,7 @@ static inline void rcu_softirq_qs(void)
- #define rcu_note_context_switch(preempt) \
- 	do { \
- 		rcu_qs(); \
--		rcu_tasks_qs(current); \
-+		rcu_tasks_qs(current, (preempt)); \
- 	} while (0)
- 
- static inline int rcu_needs_cpu(u64 basemono, u64 *nextevt)
 diff --git a/kernel/rcu/tasks.h b/kernel/rcu/tasks.h
-index 7286582..cbc9905 100644
+index 2663167e..df6e785 100644
 --- a/kernel/rcu/tasks.h
 +++ b/kernel/rcu/tasks.h
-@@ -180,7 +180,7 @@ static int __noreturn rcu_tasks_kthread(void *arg)
- 
- 		/* Pick up any new callbacks. */
- 		raw_spin_lock_irqsave(&rtp->cbs_lock, flags);
--		smp_mb__after_unlock_lock(); // Order updates vs. GP.
-+		smp_mb__after_spinlock(); // Order updates vs. GP.
- 		list = rtp->cbs_head;
- 		rtp->cbs_head = NULL;
- 		rtp->cbs_tail = &rtp->cbs_head;
-@@ -870,7 +870,7 @@ static void rcu_tasks_trace_pertask(struct task_struct *t,
- 				    struct list_head *hop)
+@@ -906,16 +906,16 @@ static void rcu_tasks_trace_pregp_step(void)
  {
- 	WRITE_ONCE(t->trc_reader_need_end, false);
--	t->trc_reader_checked = false;
-+	WRITE_ONCE(t->trc_reader_checked, false);
- 	t->trc_ipi_to_cpu = -1;
- 	trc_wait_for_one_reader(t, hop);
- }
-@@ -979,6 +979,7 @@ static void rcu_tasks_trace_postgp(struct rcu_tasks *rtp)
- 		pr_err("\t%d holdouts\n", atomic_read(&trc_n_readers_need_end));
- 	}
- 	smp_mb(); // Caller's code must be ordered after wakeup.
-+		  // Pairs with pretty much every ordering primitive.
+ 	int cpu;
+ 
+-	// Wait for CPU-hotplug paths to complete.
+-	cpus_read_lock();
+-	cpus_read_unlock();
+-
+ 	// Allow for fast-acting IPIs.
+ 	atomic_set(&trc_n_readers_need_end, 1);
+ 
+ 	// There shouldn't be any old IPIs, but...
+ 	for_each_possible_cpu(cpu)
+ 		WARN_ON_ONCE(per_cpu(trc_ipi_to_cpu, cpu));
++
++	// Disable CPU hotplug across the tasklist scan.
++	// This also waits for all readers in CPU-hotplug code paths.
++	cpus_read_lock();
  }
  
- /* Report any needed quiescent state for this exiting task. */
-diff --git a/kernel/rcu/tree_plugin.h b/kernel/rcu/tree_plugin.h
-index 7cf76e8..9355536 100644
---- a/kernel/rcu/tree_plugin.h
-+++ b/kernel/rcu/tree_plugin.h
-@@ -331,8 +331,7 @@ void rcu_note_context_switch(bool preempt)
- 	rcu_qs();
- 	if (rdp->exp_deferred_qs)
- 		rcu_report_exp_rdp(rdp);
--	if (!preempt)
--		rcu_tasks_qs(current);
-+	rcu_tasks_qs(current, preempt);
- 	trace_rcu_utilization(TPS("End context switch"));
- }
- EXPORT_SYMBOL_GPL(rcu_note_context_switch);
-@@ -841,8 +840,7 @@ void rcu_note_context_switch(bool preempt)
- 	this_cpu_write(rcu_data.rcu_urgent_qs, false);
- 	if (unlikely(raw_cpu_read(rcu_data.rcu_need_heavy_qs)))
- 		rcu_momentary_dyntick_idle();
--	if (!preempt)
--		rcu_tasks_qs(current);
-+	rcu_tasks_qs(current, preempt);
- out:
- 	trace_rcu_utilization(TPS("End context switch"));
- }
+ /* Do first-round processing for the specified task. */
+@@ -931,6 +931,9 @@ static void rcu_tasks_trace_pertask(struct task_struct *t,
+ /* Do intermediate processing between task and holdout scans. */
+ static void rcu_tasks_trace_postscan(void)
+ {
++	// Re-enable CPU hotplug now that the tasklist scan has completed.
++	cpus_read_unlock();
++
+ 	// Wait for late-stage exiting tasks to finish exiting.
+ 	// These might have passed the call to exit_tasks_rcu_finish().
+ 	synchronize_rcu();
+@@ -975,6 +978,9 @@ static void check_all_holdout_tasks_trace(struct list_head *hop,
+ {
+ 	struct task_struct *g, *t;
+ 
++	// Disable CPU hotplug across the holdout list scan.
++	cpus_read_lock();
++
+ 	list_for_each_entry_safe(t, g, hop, trc_holdout_list) {
+ 		// If safe and needed, try to check the current task.
+ 		if (READ_ONCE(t->trc_ipi_to_cpu) == -1 &&
+@@ -987,6 +993,10 @@ static void check_all_holdout_tasks_trace(struct list_head *hop,
+ 		else if (needreport)
+ 			show_stalled_task_trace(t, firstreport);
+ 	}
++
++	// Re-enable CPU hotplug now that the holdout list scan has completed.
++	cpus_read_unlock();
++
+ 	if (needreport) {
+ 		if (firstreport)
+ 			pr_err("INFO: rcu_tasks_trace detected stalls?\n");
 -- 
 2.9.5
 
