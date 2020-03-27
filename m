@@ -2,66 +2,149 @@ Return-Path: <SRS0=s8dx=5M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 976C3C43331
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 12:40:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73491C2D0EC
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 12:40:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6ED552082D
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 12:40:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A56E2083E
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 12:40:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gSh1gE1Y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727607AbgC0MkB (ORCPT
+        id S1727674AbgC0MkL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Mar 2020 08:40:01 -0400
-Received: from belmont94srvr.owm.bell.net ([184.150.200.94]:48927 "EHLO
-        mtlfep04.bell.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726540AbgC0MkA (ORCPT
+        Fri, 27 Mar 2020 08:40:11 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:40293 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726540AbgC0MkK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Mar 2020 08:40:00 -0400
-X-Greylist: delayed 690 seconds by postgrey-1.27 at vger.kernel.org; Fri, 27 Mar 2020 08:39:59 EDT
-Received: from bell.net mtlfep02 184.150.200.30 by mtlfep02.bell.net
-          with ESMTP
-          id <20200327122828.BFVD9274.mtlfep02.bell.net@mtlspm01.bell.net>;
-          Fri, 27 Mar 2020 08:28:28 -0400
-Received: from [192.168.2.49] (really [70.53.53.104]) by mtlspm01.bell.net
-          with ESMTP
-          id <20200327122828.NPLT130487.mtlspm01.bell.net@[192.168.2.49]>;
-          Fri, 27 Mar 2020 08:28:28 -0400
-Subject: Re: [PATCH] parisc: Regenerate parisc defconfigs
-To:     Guenter Roeck <linux@roeck-us.net>, Helge Deller <deller@gmx.de>
-Cc:     linux-parisc@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200326202006.GA160630@roeck-us.net>
- <20200326221921.GA20495@ls3530.fritz.box>
- <d83868cb-12cd-054e-db85-bcbb9121683a@roeck-us.net>
-From:   John David Anglin <dave.anglin@bell.net>
-Message-ID: <bcfc4d29-7b21-a3f3-8659-ee8ed369dfff@bell.net>
-Date:   Fri, 27 Mar 2020 08:28:28 -0400
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Fri, 27 Mar 2020 08:40:10 -0400
+Received: by mail-wr1-f66.google.com with SMTP id u10so11220071wro.7;
+        Fri, 27 Mar 2020 05:40:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=jZHFiWax8vCvFZJl+Fo54qpkUa4Crpp6F75KMLPAOl8=;
+        b=gSh1gE1Yz3lU4ivwfNB+k/+ydo1wN4UNR3yIdL5Ae311j2ZRONhSmKEL4Ky00zVO6B
+         p0vDv3LMBMBcX+xF5JsE9FFLEdyuayAuxuq0YpBOgAmb3raaqn7Z8whvwmG9vrtg69Sw
+         JVrflaT1O86knx4zu6XIU0Eejx4mYm0i972UKLIL5VLuZXn8iDwOYswPEm8ujRc18Gem
+         xh/lXLvIGELQEAt8HWpSbDCq3Hg0FdLZTIL8+ioEaz1HZFt2on+nOGfEP9waji/lI16u
+         4MrrS89SWr5I8WQSRdQhEJlofDB46HDpTZksPP+H3HyWxr39RjXJM+14IMsqgzjwNtsl
+         wbqw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=jZHFiWax8vCvFZJl+Fo54qpkUa4Crpp6F75KMLPAOl8=;
+        b=hL/ey5hkDXc9vilE5RKInTrY1OmAai/Dvpyt7deZpbb7UIZpvSzWk0k3pPQIja3qZq
+         xJcVLCXd87sMXmkYHgKlOdPRdUlv8r30+nQ4q08vY8DfBjblR72i6A7JZOOGWnKaD2P2
+         I40TVky28tfoL++YazOXfhDuYOqTcunWr8qXzk8ojV9fKfy5lrhWX0IZnhM0dzbIgT32
+         tu9G3Mha8he8sgVc4qqTt6X/xcNc3g+b2OMedx1A+XuUH97dvivD3FQOVMNWWTtfoBZj
+         EYE1/NJZjF6b7chGPXCMulk/96R8R20/OXhun8genCNX/FbLZ1YEjV1skISDoQiU0V6X
+         gPnA==
+X-Gm-Message-State: ANhLgQ1gExEibaFXYCZB1xTCkg9p5N+CVZ5EvqA3b4DCuu8nKAomUwTU
+        liguFai9tfkTeDA/7jJkHIQ=
+X-Google-Smtp-Source: ADFU+vvKWziGHlMdvcuetUGwCoGi7eYH0NZ0+lmcZX0O4k6SAr9Vh6MW+2Mw+lx2eY1oQlgBl03rlQ==
+X-Received: by 2002:adf:ab12:: with SMTP id q18mr15276713wrc.148.1585312808970;
+        Fri, 27 Mar 2020 05:40:08 -0700 (PDT)
+Received: from [192.168.0.104] (p5B3F6E13.dip0.t-ipconnect.de. [91.63.110.19])
+        by smtp.gmail.com with ESMTPSA id u131sm8292883wmg.41.2020.03.27.05.40.07
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 27 Mar 2020 05:40:08 -0700 (PDT)
+Subject: Re: [PATCH v4 2/5] mfd: mp2629: Add support for mps battery charger
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     robh+dt@kernel.org, jic23@kernel.org, knaack.h@gmx.de,
+        lars@metafoo.de, pmeerw@pmeerw.net, sre@kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-iio@vger.kernel.org, linux-pm@vger.kernel.org,
+        andriy.shevchenko@linux.intel.com
+References: <20200322224626.13160-1-sravanhome@gmail.com>
+ <20200322224626.13160-3-sravanhome@gmail.com> <20200327075541.GF603801@dell>
+ <a6098b6a-2b2f-5279-f9fc-85201b9aabde@gmail.com> <20200327102221.GA3383@dell>
+ <a679aba5-4cfb-1b6c-8cb0-dab3a644f3e7@gmail.com> <20200327112523.GC3383@dell>
+From:   saravanan sekar <sravanhome@gmail.com>
+Message-ID: <45f68c40-8e50-e0a2-a89a-b5a164d6b75c@gmail.com>
+Date:   Fri, 27 Mar 2020 13:40:07 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-In-Reply-To: <d83868cb-12cd-054e-db85-bcbb9121683a@roeck-us.net>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <20200327112523.GC3383@dell>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Content-Language: en-US
-X-CM-Analysis: v=2.3 cv=I5Mbu+og c=1 sm=1 tr=0 a=htCe9XT+XAlGhzqgweArVg==:117 a=htCe9XT+XAlGhzqgweArVg==:17 a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=IkcTkHD0fZMA:10 a=SS2py6AdgQ4A:10 a=FBHGMhGWAAAA:8 a=MhJ-TvlPdR1EieP45akA:9 a=QEXdDO2ut3YA:10 a=9gvnlMMaQFpL9xblJ6ne:22
-X-CM-Envelope: MS4wfEXklPdkaVn5cLmqM7xAr9+Fnjxyrz8ODyWz7yakgNxuiI91IbhlIgG2KjgasC9qoLfd8HKU8KV2JG+dBnwfOz3lC35YA+hRMI54vEId9ZqCy1cJgdK0 2ry5czbrNp8dhIZOfCcXP6/aTOSgJg2XNTqsoowXHeUqVbQRWDTx9i1rujgHTlk5wjgKqChgEqH6+3NOQxG6yZ3V0waEt/z1znXMbmwA9fvjBt/uSwFgxZna
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-03-27 2:43 a.m., Guenter Roeck wrote:
-> It would be nice if there was a better way to select 32-bit
-> vs. 64-bit defconfigs (for example based on the compiler,
-> or with ARCH={parisc,parisc64}). However, that never worked
-> for parisc, so I guess we can't expect it to magically work
-> now, and much less so for a bug fix.
-LP64 is defined when using the 64-bit compiler.
+Hi Lee, Andy
 
-Dave
+On 27/03/20 12:25 pm, Lee Jones wrote:
+> On Fri, 27 Mar 2020, saravanan sekar wrote:
+>> On 27/03/20 11:22 am, Lee Jones wrote:
+>>> Saravanan, Jonathan,
+>>>
+>>> On Fri, 27 Mar 2020, saravanan sekar wrote:
+>>>> On 27/03/20 8:55 am, Lee Jones wrote:
+>>>>> On Sun, 22 Mar 2020, Saravanan Sekar wrote:
+>>>>>
+>>>>>> mp2629 is a highly-integrated switching-mode battery charge management
+>>>>>> device for single-cell Li-ion or Li-polymer battery.
+>>>>>>
+>>>>>> Add MFD core enables chip access for ADC driver for battery readings,
+>>>>>> and a power supply battery-charger driver
+>>>>>>
+>>>>>> Signed-off-by: Saravanan Sekar <sravanhome@gmail.com>
+>>>>>> ---
+>>>>>>     drivers/mfd/Kconfig        |   9 +++
+>>>>>>     drivers/mfd/Makefile       |   2 +
+>>>>>>     drivers/mfd/mp2629.c       | 116 +++++++++++++++++++++++++++++++++++++
+>>>>>>     include/linux/mfd/mp2629.h |  22 +++++++
+>>>>>>     4 files changed, 149 insertions(+)
+>>>>>>     create mode 100644 drivers/mfd/mp2629.c
+>>>>>>     create mode 100644 include/linux/mfd/mp2629.h
+> [...]
+>
+>>>>>> +#ifndef __MP2629_H__
+>>>>>> +#define __MP2629_H__
+>>>>>> +
+>>>>>> +#include <linux/types.h>
+>>>>>> +
+>>>>>> +struct device;
+>>>>>> +struct regmap;
+>>>>> Why not just add the includes?
+>>>> Some more shared enum added in ADC driver
+>>> Sorry?
+>> I misunderstood your previous question that you are asking to remove this
+>> mp2629.h file
+>>
+>> "No user here. (Hint: Use forward declaration of struct device instead)" -
+>> review comments on V1 from Andy Shevchenko.
+>> So remove the includes
+> So Andy has reviewed, but you still don't have him on Cc?
+Sorry one of his hint made me removed him in CC unknowingly.
 
--- 
-John David Anglin  dave.anglin@bell.net
+"For the future, hint:
+         scripts/get_maintainer.pl --git --git-min-percent=67 ..."
 
+My fault, added him in CC
+
+> How are we meant to continue the discussion?
+>
+> As a general rule I'm not a fan of forward declarations.
+>
+> I think they should be avoided if at all possible.
+Ok will add includes
+>>>>>> +struct mp2629_info {
+>>>>>> +	struct device *dev;
+>>>>>> +	struct regmap *regmap;
+>>>>>> +};
+>>>>>> +
+>>>>>> +#endif
