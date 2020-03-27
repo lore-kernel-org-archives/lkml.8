@@ -2,367 +2,250 @@ Return-Path: <SRS0=s8dx=5M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53A6EC43331
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 10:50:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C95B9C43331
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 10:52:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F64220578
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 10:50:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8DDB020578
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 10:52:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=yadro.com header.i=@yadro.com header.b="rqWi8F/f"
+	dkim=pass (2048-bit key) header.d=invensense.com header.i=@invensense.com header.b="R2jt3VIj";
+	dkim=pass (1024-bit key) header.d=invensense.onmicrosoft.com header.i=@invensense.onmicrosoft.com header.b="LOoMeksZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727335AbgC0KuD (ORCPT
+        id S1726750AbgC0Kw2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Mar 2020 06:50:03 -0400
-Received: from mta-02.yadro.com ([89.207.88.252]:44094 "EHLO mta-01.yadro.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726640AbgC0Kt7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Mar 2020 06:49:59 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mta-01.yadro.com (Postfix) with ESMTP id 3998F412CA;
-        Fri, 27 Mar 2020 10:49:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=yadro.com; h=
-        content-type:content-type:content-transfer-encoding:mime-version
-        :references:in-reply-to:x-mailer:message-id:date:date:subject
-        :subject:from:from:received:received:received; s=mta-01; t=
-        1585306194; x=1587120595; bh=kvGAwCJQTLwldh4WZC+7moZICtjw9ioN4wJ
-        RZG3MPPU=; b=rqWi8F/faUar5D4exs1/QpSXwrSv5fIjDIchT5qe+SnRVIBTg8c
-        iELyqiiCZMHsSwqFP+2wuALhYAg7FG4+4+dgoZ0dvAxESp5bIT+LFHS/KMQZkQ6G
-        zCcWEEw74K+hkDMjqMKQtykHITkhfJZYIKfkocWXFLDYPhfku0WBwllQ=
-X-Virus-Scanned: amavisd-new at yadro.com
-Received: from mta-01.yadro.com ([127.0.0.1])
-        by localhost (mta-01.yadro.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id HSQepXBbmmZI; Fri, 27 Mar 2020 13:49:54 +0300 (MSK)
-Received: from T-EXCH-02.corp.yadro.com (t-exch-02.corp.yadro.com [172.17.10.102])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mta-01.yadro.com (Postfix) with ESMTPS id 11738412D0;
-        Fri, 27 Mar 2020 13:49:54 +0300 (MSK)
-Received: from localhost.yadro.com (10.199.0.42) by T-EXCH-02.corp.yadro.com
- (172.17.10.102) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384_P384) id 15.1.669.32; Fri, 27
- Mar 2020 13:49:54 +0300
-From:   Ivan Mikhaylov <i.mikhaylov@yadro.com>
-CC:     Ivan Mikhaylov <i.mikhaylov@yadro.com>,
-        Jonathan Cameron <jic23@kernel.org>,
+        Fri, 27 Mar 2020 06:52:28 -0400
+Received: from mx0b-00328301.pphosted.com ([148.163.141.47]:24418 "EHLO
+        mx0b-00328301.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726284AbgC0Kw2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Mar 2020 06:52:28 -0400
+Received: from pps.filterd (m0156136.ppops.net [127.0.0.1])
+        by mx0b-00328301.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02RApnf1020688;
+        Fri, 27 Mar 2020 03:52:05 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=invensense.com; h=from : to : cc :
+ subject : date : message-id : references : in-reply-to : content-type :
+ content-transfer-encoding : mime-version; s=pfpt1;
+ bh=YAdAil2EByAmnOnKo3Bheq01DoRT7Usv7JJwfCNN66Q=;
+ b=R2jt3VIjc8bH7YH/I7bE28NCwniG1ZvecyvtaCfrcdtE4bdCPoqWUitDVPvdhRJpAu6b
+ jOv8hnjBFiGOG523zbbbNYgEGA6taNC07ERZTmDQW88Y1hn6vG1qmSHPBoFEsnxnNKMF
+ 6U0ODyQeaTXm2x+OO/UBEj4araS+AXSOyckF1/mYUxXI6qTTw61jvwzamEfTsCsfxRaT
+ rPRAq7glN+8n3yjijfEusHQMeAmjEixEN7sb3Gt/HgU2U6LZptGaNrRVcz/6MoX0BsJl
+ /WAXEBrAweezkcsy6egHU7VPkTRi9h0IDwda1+On0X1zA+Vk/ght2KLEaJVNTjwBoZ3A /A== 
+Received: from nam12-mw2-obe.outbound.protection.outlook.com (mail-mw2nam12lp2049.outbound.protection.outlook.com [104.47.66.49])
+        by mx0b-00328301.pphosted.com with ESMTP id 300bux0v9r-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 27 Mar 2020 03:52:05 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=FtPSfOOv08u3GX2JLcznwDVBH8oY+8D9hV2+Lp/lQbMGibnNGy/KzcLUxUxF0o73ASdS4F9sugQOBNq4blpmYDafcdACWXAZLCHA1XJaezyE8JQc+Wf0rKzadsB5eNDfHfNf6NDKnQExP9BRe6X5AKDJkAh2lbWwzX76ED6bZ6gi1lO27WZ/0rpj5CVEIJKjEvWGwMHybuJVQLFSd4Q6Sg8waiPgkDz7Vi3Hj+78oLWSUeCcAQJb5PXIeRPxblT5KZfjut1TgbvBDBE2hmx2j3yaojca+E62fXxs/+pNqHuNB2JP7zeJPMU8m83DAB2qmgtMsTzl+F13xt41Boa55w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=YAdAil2EByAmnOnKo3Bheq01DoRT7Usv7JJwfCNN66Q=;
+ b=ku8kaMTNcCdp1pd+3xO18fQdMMEY8BKa0s8o1KB6gjVMq0Wd+9NwOIDJS6wZH0rI9cYxaYnkApN+QpftyABRp8AkxlVCPdNodGEWTJSEryDDCatIfnupiHvypRlxkUK+kepgxtYSAlWY/4PlTSM5Ru8oWss8dnzp/S6cobik0NplPciJyU3ILHn+/DYIHWJEE+ETXM/BPRq/M13sX1gUEUKF+Ar/Em/yFubKbvvOW1f66RpW1685fOFdgWRPo2g34GOaLX9L7k+MpIO+qzT2CY/x47P1ASvZE+9hGyX1Pvf8MIy3O1J8ZmfnSb0XRQANBc1qqHmPBGq55ktETah7Uw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=invensense.com; dmarc=pass action=none
+ header.from=invensense.com; dkim=pass header.d=invensense.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=invensense.onmicrosoft.com; s=selector2-invensense-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=YAdAil2EByAmnOnKo3Bheq01DoRT7Usv7JJwfCNN66Q=;
+ b=LOoMeksZwkHyZei5QQNQSDBEEbgohMZtb7VicxVmEFWCq/MwDDRs/bcdR7iL5mTNe1d2EpCPvUHWP7KwsvICBP3F4H5Rw2Vr+nG64hGx0UVVU4xpJFDD1ENqxk0gRvm+3muFQMuvxKXjQ8GQIhCJAaMljEbc05PtAUtbhGbRx0A=
+Received: from MN2PR12MB4422.namprd12.prod.outlook.com (2603:10b6:208:265::9)
+ by MN2PR12MB4533.namprd12.prod.outlook.com (2603:10b6:208:266::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2835.20; Fri, 27 Mar
+ 2020 10:52:02 +0000
+Received: from MN2PR12MB4422.namprd12.prod.outlook.com
+ ([fe80::7471:da8b:8ca1:6af0]) by MN2PR12MB4422.namprd12.prod.outlook.com
+ ([fe80::7471:da8b:8ca1:6af0%4]) with mapi id 15.20.2835.021; Fri, 27 Mar 2020
+ 10:52:02 +0000
+From:   Jean-Baptiste Maneyrol <JManeyrol@invensense.com>
+To:     Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>
+CC:     Jonathan Cameron <jic23@kernel.org>,
         Hartmut Knaack <knaack.h@gmx.de>,
         Lars-Peter Clausen <lars@metafoo.de>,
         Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: [PATCH v4 2/2] iio: proximity: Add driver support for vcnl3020 proximity sensor
-Date:   Fri, 27 Mar 2020 13:49:54 +0300
-Message-ID: <20200327104954.27829-3-i.mikhaylov@yadro.com>
-X-Mailer: git-send-email 2.21.1
-In-Reply-To: <20200327104954.27829-1-i.mikhaylov@yadro.com>
-References: <20200327104954.27829-1-i.mikhaylov@yadro.com>
+        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 1/1] iio: imu: inv_mpu6050: convert to use
+ i2c_new_client_device()
+Thread-Topic: [PATCH 1/1] iio: imu: inv_mpu6050: convert to use
+ i2c_new_client_device()
+Thread-Index: AQHWA7NBLBGRcKbNIkm533g4m2Qp66hcQ5oV
+Date:   Fri, 27 Mar 2020 10:52:02 +0000
+Message-ID: <MN2PR12MB44228DEA7CE19B853292FE38C4CC0@MN2PR12MB4422.namprd12.prod.outlook.com>
+References: <20200326210955.12991-1-wsa+renesas@sang-engineering.com>,<20200326210955.12991-2-wsa+renesas@sang-engineering.com>
+In-Reply-To: <20200326210955.12991-2-wsa+renesas@sang-engineering.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [91.174.78.156]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: a7e5910a-5431-457d-08d0-08d7d23ce1c1
+x-ms-traffictypediagnostic: MN2PR12MB4533:
+x-microsoft-antispam-prvs: <MN2PR12MB4533140DC097390C0293D0FCC4CC0@MN2PR12MB4533.namprd12.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:4502;
+x-forefront-prvs: 0355F3A3AE
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(346002)(366004)(376002)(136003)(396003)(39850400004)(64756008)(66556008)(91956017)(33656002)(76116006)(86362001)(66446008)(2906002)(26005)(66946007)(71200400001)(478600001)(4326008)(110136005)(81166006)(8676002)(8936002)(9686003)(66476007)(52536014)(53546011)(54906003)(7696005)(5660300002)(55016002)(186003)(316002)(81156014)(6506007);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR12MB4533;H:MN2PR12MB4422.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;
+received-spf: None (protection.outlook.com: invensense.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: j5KOn+qrCIQC0ienDwVdbbTKCPSRP2guh6ENbg9hBXCf4pFuRdn6la8Sm7cML7eJhGX1tI5lnAyIHXWNt2Opaq9x9bbywH2BSWkSYjScdol652gi3VyB6DXob1XPum89ev9paZpR0Z4SsBqDfSC9OVhLF/sb04K8j9fy6BftqAW+HNajKI8y+xj3wVQySB/6/MBsuNAdveU66UcJPvMFJgO3k7kCqCLAw0AK6togcKcseUOsjnQAKy1W0BHLw0v6bKSfSu27TeYuGkv0+sXDTdDhBz46NhuCTZjrpP/HJKpzPnw2Bkgr24VMPo5LMr3W99jO/eQxw0Unca4IhGhEAFNM6u7BTXfSbXMWP9UwcodfgfCfFNnUXciq3W+h3O30S2ZnWtrJfcYLK0pRBYDFHFM0bisj8nBBqDat5NVKChObNKr0SwThsgzFUCPIhwWm
+x-ms-exchange-antispam-messagedata: lF1se7bi4A1TGdwOhxL5smVAtsiy5dKb/vpLM2bVbttzezxtGxfovZun3QbR0vxGZn91FBXNEP+o6ShE9GICyyXG00WRIpWxu7DQjUXF5GZIWX4gwLJB6PG6rGDK5KG2BI4Hs2kFtI2A0Z0JFwx4gQ==
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Originating-IP: [10.199.0.42]
-X-ClientProxiedBy: T-EXCH-01.corp.yadro.com (172.17.10.101) To
- T-EXCH-02.corp.yadro.com (172.17.10.102)
-To:     unlisted-recipients:; (no To-header on input)
+X-OriginatorOrg: invensense.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: a7e5910a-5431-457d-08d0-08d7d23ce1c1
+X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Mar 2020 10:52:02.2992
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 462b3b3b-e42b-47ea-801a-f1581aac892d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: uMEsU8IilfofHRFRtgZR46Ph5WeRfuUvI+juthJlXrYTPMbtZ1WU6ZKS3o6CSlb678xet03INLkMKfPgYtYmKXNbWYGW/HgSbqU7xchZ4NY=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR12MB4533
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.645
+ definitions=2020-03-27_03:2020-03-27,2020-03-27 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ spamscore=0 clxscore=1011 mlxlogscore=978 bulkscore=0 adultscore=0
+ suspectscore=0 phishscore=0 lowpriorityscore=0 malwarescore=0 mlxscore=0
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2003270100
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Proximity sensor driver based on light/vcnl4000.c code.
-For now supports only the single on-demand measurement.
-
-The VCNL3020 is a fully integrated proximity sensor. Fully
-integrated means that the infrared emitter is included in the
-package. It has 16-bit resolution. It includes a signal
-processing IC and features standard I2C communication
-interface. It features an interrupt function.
-
-Datasheet: http://www.vishay.com/docs/84150/vcnl3020.pdf
-Signed-off-by: Ivan Mikhaylov <i.mikhaylov@yadro.com>
----
- drivers/iio/proximity/Kconfig    |  11 ++
- drivers/iio/proximity/Makefile   |   1 +
- drivers/iio/proximity/vcnl3020.c | 232 +++++++++++++++++++++++++++++++
- 3 files changed, 244 insertions(+)
- create mode 100644 drivers/iio/proximity/vcnl3020.c
-
-diff --git a/drivers/iio/proximity/Kconfig b/drivers/iio/proximity/Kconfig
-index d53601447da4..b8d2b17e60ac 100644
---- a/drivers/iio/proximity/Kconfig
-+++ b/drivers/iio/proximity/Kconfig
-@@ -112,6 +112,17 @@ config SRF08
- 	  To compile this driver as a module, choose M here: the
- 	  module will be called srf08.
- 
-+config VCNL3020
-+	tristate "VCNL3020 proximity sensor"
-+	select REGMAP_I2C
-+	depends on I2C
-+	help
-+	  Say Y here if you want to build a driver for the Vishay VCNL3020
-+	  proximity sensor.
-+
-+	  To compile this driver as a module, choose M here: the
-+	  module will be called vcnl3020.
-+
- config VL53L0X_I2C
- 	tristate "STMicroelectronics VL53L0X ToF ranger sensor (I2C)"
- 	depends on I2C
-diff --git a/drivers/iio/proximity/Makefile b/drivers/iio/proximity/Makefile
-index 0bb5f9de13d6..8245978ced30 100644
---- a/drivers/iio/proximity/Makefile
-+++ b/drivers/iio/proximity/Makefile
-@@ -12,5 +12,6 @@ obj-$(CONFIG_RFD77402)		+= rfd77402.o
- obj-$(CONFIG_SRF04)		+= srf04.o
- obj-$(CONFIG_SRF08)		+= srf08.o
- obj-$(CONFIG_SX9500)		+= sx9500.o
-+obj-$(CONFIG_VCNL3020)		+= vcnl3020.o
- obj-$(CONFIG_VL53L0X_I2C)	+= vl53l0x-i2c.o
- 
-diff --git a/drivers/iio/proximity/vcnl3020.c b/drivers/iio/proximity/vcnl3020.c
-new file mode 100644
-index 000000000000..fcde509238f9
---- /dev/null
-+++ b/drivers/iio/proximity/vcnl3020.c
-@@ -0,0 +1,232 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Support for Vishay VCNL3020 proximity sensor on i2c bus.
-+ * Based on Vishay VCNL4000 driver code.
-+ *
-+ * TODO: interrupts.
-+ */
-+
-+#include <linux/module.h>
-+#include <linux/i2c.h>
-+#include <linux/err.h>
-+#include <linux/delay.h>
-+#include <linux/regmap.h>
-+
-+#include <linux/iio/iio.h>
-+#include <linux/iio/sysfs.h>
-+
-+#define VCNL_DRV_NAME		"vcnl3020"
-+#define VCNL_REGMAP_NAME	"vcnl3020_regmap"
-+#define VCNL3020_PROD_ID	0x21
-+
-+#define VCNL_COMMAND		0x80 /* Command register */
-+#define VCNL_PROD_REV		0x81 /* Product ID and Revision ID */
-+#define VCNL_PROXIMITY_RATE	0x82 /* Rate of Proximity Measurement */
-+#define VCNL_LED_CURRENT	0x83 /* IR LED current for proximity mode */
-+#define VCNL_PS_RESULT_HI	0x87 /* Proximity result register, MSB */
-+#define VCNL_PS_RESULT_LO	0x88 /* Proximity result register, LSB */
-+#define VCNL_PS_ICR		0x89 /* Interrupt Control Register  */
-+
-+#define VCNL_PS_LO_THR_HI	0x8a /* High byte of low threshold value */
-+#define VCNL_PS_LO_THR_LO	0x8b /* Low byte of low threshold value */
-+#define VCNL_PS_HI_THR_HI	0x8c /* High byte of high threshold value */
-+#define VCNL_PS_HI_THR_LO	0x8d /* Low byte of high threshold value */
-+#define VCNL_ISR		0x8e /* Interrupt Status Register */
-+#define VCNL_PS_MOD_ADJ		0x8f /* Proximity Modulator Timing Adjustment */
-+
-+/* Bit masks for COMMAND register */
-+#define VCNL_PS_RDY		BIT(5) /* proximity data ready? */
-+#define VCNL_PS_OD		BIT(3) /* start on-demand proximity
-+					* measurement
-+					*/
-+
-+#define VCNL_ON_DEMAND_TIMEOUT_US	100000
-+#define VCNL_POLL_US			20000
-+
-+struct vcnl3020_data {
-+	struct regmap *regmap;
-+	struct device *dev;
-+	u8 rev;
-+	struct mutex lock;
-+};
-+
-+static int vcnl3020_init(struct vcnl3020_data *data)
-+{
-+	int rc;
-+	unsigned int reg;
-+	u32 led_current;
-+
-+	rc = device_property_read_u32(data->dev, "led-current", &led_current);
-+	if (rc) {
-+		dev_err(data->dev, "Couldn't get led current (%d)", rc);
-+		return rc;
-+	}
-+
-+	rc = regmap_read(data->regmap, VCNL_PROD_REV, &reg);
-+	if (rc) {
-+		dev_err(data->dev,
-+			"Error (%d) reading product revision", rc);
-+		return rc;
-+	}
-+
-+	if (reg != VCNL3020_PROD_ID) {
-+		dev_err(data->dev,
-+			"Product id (%x) did not match vcnl3020 (%x)", reg,
-+			VCNL3020_PROD_ID);
-+		return -ENODEV;
-+	} else {
-+		data->rev = reg;
-+		mutex_init(&data->lock);
-+	}
-+
-+	/* set led current */
-+	rc = regmap_write(data->regmap, VCNL_LED_CURRENT, led_current);
-+	if (rc)
-+		dev_err(data->dev, "Error (%d) setting LED current", rc);
-+
-+	return rc;
-+};
-+
-+static int vcnl3020_measure_proximity(struct vcnl3020_data *data, int *val)
-+{
-+	int rc;
-+	unsigned int reg;
-+	unsigned int hi, lo;
-+
-+	mutex_lock(&data->lock);
-+
-+	rc = regmap_write(data->regmap, VCNL_COMMAND, VCNL_PS_OD);
-+	if (rc)
-+		goto err_unlock;
-+
-+	/* wait for data to become ready */
-+	rc = regmap_read_poll_timeout(data->regmap, VCNL_COMMAND, reg,
-+				      reg & VCNL_PS_RDY, VCNL_POLL_US,
-+				      VCNL_ON_DEMAND_TIMEOUT_US);
-+	if (rc) {
-+		dev_err(data->dev,
-+			"vcnl3020_measure() failed, data is not ready");
-+		goto err_unlock;
-+	}
-+
-+	rc = regmap_read(data->regmap, VCNL_PS_RESULT_HI, &hi);
-+	if (rc)
-+		goto err_unlock;
-+	dev_dbg(data->dev, "result high byte 0x%x", hi);
-+
-+	rc = regmap_read(data->regmap, VCNL_PS_RESULT_LO, &lo);
-+	if (rc)
-+		goto err_unlock;
-+	dev_dbg(data->dev, "result low byte 0x%x", lo);
-+	*val = (hi << 8) | lo;
-+
-+err_unlock:
-+	mutex_unlock(&data->lock);
-+
-+	return rc;
-+}
-+
-+static const struct iio_chan_spec vcnl3020_channels[] = {
-+	{
-+		.type = IIO_PROXIMITY,
-+		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW),
-+	},
-+};
-+
-+static int vcnl3020_read_raw(struct iio_dev *indio_dev,
-+			     struct iio_chan_spec const *chan, int *val,
-+			     int *val2, long mask)
-+{
-+	int rc;
-+	struct vcnl3020_data *data = iio_priv(indio_dev);
-+
-+	switch (mask) {
-+	case IIO_CHAN_INFO_RAW:
-+		switch (chan->type) {
-+		case IIO_PROXIMITY:
-+			rc = vcnl3020_measure_proximity(data, val);
-+			if (rc)
-+				return rc;
-+			return IIO_VAL_INT;
-+		default:
-+			return -EINVAL;
-+		}
-+	default:
-+		return -EINVAL;
-+	}
-+}
-+
-+static const struct iio_info vcnl3020_info = {
-+	.read_raw = vcnl3020_read_raw,
-+};
-+
-+static const struct regmap_config vcnl3020_regmap_config = {
-+	.name		= VCNL_REGMAP_NAME,
-+	.reg_bits	= 8,
-+	.val_bits	= 8,
-+	.max_register	= VCNL_PS_MOD_ADJ,
-+};
-+
-+static int vcnl3020_probe(struct i2c_client *client)
-+{
-+	struct vcnl3020_data *data;
-+	struct iio_dev *indio_dev;
-+	struct regmap *regmap;
-+	int rc;
-+
-+	regmap = devm_regmap_init_i2c(client, &vcnl3020_regmap_config);
-+	if (IS_ERR(regmap)) {
-+		dev_err(&client->dev, "regmap_init failed!");
-+		return PTR_ERR(regmap);
-+	}
-+
-+	indio_dev = devm_iio_device_alloc(&client->dev, sizeof(*data));
-+	if (!indio_dev)
-+		return -ENOMEM;
-+
-+	data = iio_priv(indio_dev);
-+	i2c_set_clientdata(client, indio_dev);
-+	data->regmap = regmap;
-+	data->dev = &client->dev;
-+
-+	rc = vcnl3020_init(data);
-+	if (rc)
-+		return rc;
-+
-+	indio_dev->dev.parent = &client->dev;
-+	indio_dev->info = &vcnl3020_info;
-+	indio_dev->channels = vcnl3020_channels;
-+	indio_dev->num_channels = ARRAY_SIZE(vcnl3020_channels);
-+	indio_dev->name = VCNL_DRV_NAME;
-+	indio_dev->modes = INDIO_DIRECT_MODE;
-+
-+	return devm_iio_device_register(&client->dev, indio_dev);
-+}
-+
-+static const struct i2c_device_id vcnl3020_id[] = {
-+	{ "vcnl3020", 0 },
-+	{}
-+};
-+MODULE_DEVICE_TABLE(i2c, vcnl3020_id);
-+
-+static const struct of_device_id vcnl3020_of_match[] = {
-+	{
-+		.compatible = "vishay,vcnl3020",
-+	},
-+	{}
-+};
-+MODULE_DEVICE_TABLE(of, vcnl3020_of_match);
-+
-+static struct i2c_driver vcnl3020_driver = {
-+	.driver = {
-+		.name   = VCNL_DRV_NAME,
-+		.of_match_table = vcnl3020_of_match,
-+	},
-+	.probe_new  = vcnl3020_probe,
-+	.id_table = vcnl3020_id,
-+};
-+module_i2c_driver(vcnl3020_driver);
-+
-+MODULE_AUTHOR("Ivan Mikhaylov <i.mikhaylov@yadro.com>");
-+MODULE_DESCRIPTION("Vishay VCNL3020 proximity sensor driver");
-+MODULE_LICENSE("GPL");
--- 
-2.21.1
-
+Hello,=0A=
+=0A=
+thanks for the patch.=0A=
+Looks good for me.=0A=
+=0A=
+Acked-by: Jean-Baptiste Maneyrol <jmaneyrol@invensense.com>=0A=
+=0A=
+Best regards,=0A=
+JB=0A=
+=0A=
+=0A=
+From: linux-iio-owner@vger.kernel.org <linux-iio-owner@vger.kernel.org> on =
+behalf of Wolfram Sang <wsa+renesas@sang-engineering.com>=0A=
+=0A=
+Sent: Thursday, March 26, 2020 22:09=0A=
+=0A=
+To: linux-i2c@vger.kernel.org <linux-i2c@vger.kernel.org>=0A=
+=0A=
+Cc: Wolfram Sang <wsa+renesas@sang-engineering.com>; Jonathan Cameron <jic2=
+3@kernel.org>; Hartmut Knaack <knaack.h@gmx.de>; Lars-Peter Clausen <lars@m=
+etafoo.de>; Peter Meerwald-Stadler <pmeerw@pmeerw.net>; linux-iio@vger.kern=
+el.org <linux-iio@vger.kernel.org>;=0A=
+ linux-kernel@vger.kernel.org <linux-kernel@vger.kernel.org>=0A=
+=0A=
+Subject: [PATCH 1/1] iio: imu: inv_mpu6050: convert to use i2c_new_client_d=
+evice()=0A=
+=0A=
+=A0=0A=
+=0A=
+=0A=
+=A0CAUTION: This email originated from outside of the organization. Please =
+make sure the sender is who they say they are and do not click links or ope=
+n attachments unless you recognize the sender and know the content is safe.=
+=0A=
+=0A=
+=0A=
+=0A=
+Move away from the deprecated API and return the shiny new ERRPTR where=0A=
+=0A=
+useful.=0A=
+=0A=
+=0A=
+=0A=
+Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>=0A=
+=0A=
+---=0A=
+=0A=
+=A0drivers/iio/imu/inv_mpu6050/inv_mpu_acpi.c | 8 +++++---=0A=
+=0A=
+=A01 file changed, 5 insertions(+), 3 deletions(-)=0A=
+=0A=
+=0A=
+=0A=
+diff --git a/drivers/iio/imu/inv_mpu6050/inv_mpu_acpi.c b/drivers/iio/imu/i=
+nv_mpu6050/inv_mpu_acpi.c=0A=
+=0A=
+index 2f8560ba4572..c27d06035c8b 100644=0A=
+=0A=
+--- a/drivers/iio/imu/inv_mpu6050/inv_mpu_acpi.c=0A=
+=0A=
++++ b/drivers/iio/imu/inv_mpu6050/inv_mpu_acpi.c=0A=
+=0A=
+@@ -135,6 +135,7 @@ int inv_mpu_acpi_create_mux_client(struct i2c_client *c=
+lient)=0A=
+=0A=
+=A0=A0=A0=A0=A0=A0=A0=A0 st->mux_client =3D NULL;=0A=
+=0A=
+=A0=A0=A0=A0=A0=A0=A0=A0 if (ACPI_HANDLE(&client->dev)) {=0A=
+=0A=
+=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 struct i2c_board_info info=
+;=0A=
+=0A=
++=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 struct i2c_client *mux_client;=
+=0A=
+=0A=
+=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 struct acpi_device *adev;=
+=0A=
+=0A=
+=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 int ret =3D -1;=0A=
+=0A=
+=A0=0A=
+=0A=
+@@ -172,9 +173,10 @@ int inv_mpu_acpi_create_mux_client(struct i2c_client *=
+client)=0A=
+=0A=
+=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 } =
+else=0A=
+=0A=
+=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=
+=A0=A0=A0=A0=A0=A0=A0 return 0; /* no secondary addr, which is OK */=0A=
+=0A=
+=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 }=0A=
+=0A=
+-=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 st->mux_client =3D i2c_new_devi=
+ce(st->muxc->adapter[0], &info);=0A=
+=0A=
+-=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 if (!st->mux_client)=0A=
+=0A=
+-=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 return =
+-ENODEV;=0A=
+=0A=
++=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 mux_client =3D i2c_new_client_d=
+evice(st->muxc->adapter[0], &info);=0A=
+=0A=
++=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 if (IS_ERR(mux_client))=0A=
+=0A=
++=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 return =
+PTR_ERR(mux_client);=0A=
+=0A=
++=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 st->mux_client =3D mux_client;=
+=0A=
+=0A=
+=A0=A0=A0=A0=A0=A0=A0=A0 }=0A=
+=0A=
+=A0=0A=
+=0A=
+=A0=A0=A0=A0=A0=A0=A0=A0 return 0;=0A=
+=0A=
+-- =0A=
+=0A=
+2.20.1=0A=
+=0A=
+=0A=
+=0A=
