@@ -2,123 +2,174 @@ Return-Path: <SRS0=s8dx=5M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDA7AC43331
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 03:24:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DAE1C43331
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 03:26:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 95CFA20714
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 03:24:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585279462;
-	bh=EJrO+ay23oFPaDm5e7voyfzo2zotMJYKFA+r8ofPtU8=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=TSViV3ZH1Mqnwkj3XguiyxP8nWxTeYip564gNuds/zFqVdVWuaEklJzxq287llmfB
-	 aWX69tgPhKSet68VYoyy3bY3+n//yjG9yfPQlYnhzxdBFJHcUoLbtKpn/Wp4ZrGb8B
-	 I5dn3GyX0K1eeoYzdM24D9E2HtBbMPp5Lwggo0Ao=
+	by mail.kernel.org (Postfix) with ESMTP id 3AEDD20787
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 03:26:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727722AbgC0DYV (ORCPT
+        id S1727666AbgC0D0q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 23:24:21 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:37790 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726363AbgC0DYV (ORCPT
+        Thu, 26 Mar 2020 23:26:46 -0400
+Received: from out30-44.freemail.mail.aliyun.com ([115.124.30.44]:50419 "EHLO
+        out30-44.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726363AbgC0D0q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 23:24:21 -0400
-Received: by mail-lf1-f68.google.com with SMTP id j11so6690297lfg.4
-        for <linux-kernel@vger.kernel.org>; Thu, 26 Mar 2020 20:24:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=WqlgEyg9y7uuAPxy577cVMUd3cF1yLpYiceQFIfBvp0=;
-        b=eKUmY5/1JeJPIfRiVE1DqyubJzXLusIjTtIOS6QZI6Lxp260kF2xbps8bxKV5i+MPY
-         P6vk0HgEvc9KiCOekc/QzuOAiSvHl52t43HSgbRPU9yqbegFMMIJGif51HsKr1vuTYRZ
-         Uq+dwn7ljedT1tMdNmD+BHYa31ROiOUf/ycv8=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=WqlgEyg9y7uuAPxy577cVMUd3cF1yLpYiceQFIfBvp0=;
-        b=qy2U1h0zqVg60HzOLixyAMfWBs7SkhtAgrH0HDnfMsfpsq1/D0bEqG6pdNM9lDm/j3
-         t0AYuVOptgLGxiAa+D7emn5QuAxZYvUKQ2JSoID+s7vZdV2iPHsm9akPGTNN7ZOW0nBN
-         Q5Vc2Auv50UNeXl7EnXAk7iRvR9ZEHQbwkWt+IERPB8TMyJeblfesnHFhQA/zabq2YBx
-         tO49uV/xEOfI2ummkhuzBfe6DN9zRB32xmtVHG1W66sygzdWDz7VCA+syp9RD43GkiXM
-         IRudtWgtuStrcD8Dkxf0FqtUa2hR86Bb/aOeZ4baHTfLmRlub1cPWKXyy0Lb7FFHLP5+
-         kudw==
-X-Gm-Message-State: ANhLgQ2dAthrYqAih7cHgkjqe1UWvH2p8ayhYRJXUxXyclxE809GjsuM
-        gpMy/0mE9hKurzxyunA9wiE+Eap2to4=
-X-Google-Smtp-Source: ADFU+vt65/q9ZeYpkZHGx2/kmFd5lewNmQrOO/HxkjEOhAvaGl/HFY/zg3isvp+BUbP79dQB0+T/Hw==
-X-Received: by 2002:a19:88d4:: with SMTP id k203mr7663365lfd.75.1585279456761;
-        Thu, 26 Mar 2020 20:24:16 -0700 (PDT)
-Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com. [209.85.208.172])
-        by smtp.gmail.com with ESMTPSA id m12sm2161482lji.50.2020.03.26.20.24.15
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 26 Mar 2020 20:24:15 -0700 (PDT)
-Received: by mail-lj1-f172.google.com with SMTP id g12so8779606ljj.3
-        for <linux-kernel@vger.kernel.org>; Thu, 26 Mar 2020 20:24:15 -0700 (PDT)
-X-Received: by 2002:a2e:9b8e:: with SMTP id z14mr7111562lji.150.1585279455046;
- Thu, 26 Mar 2020 20:24:15 -0700 (PDT)
+        Thu, 26 Mar 2020 23:26:46 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R171e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04397;MF=changhuaixin@linux.alibaba.com;NM=1;PH=DS;RN=10;SR=0;TI=SMTPD_---0Ttjxvmh_1585279600;
+Received: from localhost(mailfrom:changhuaixin@linux.alibaba.com fp:SMTPD_---0Ttjxvmh_1585279600)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Fri, 27 Mar 2020 11:26:42 +0800
+From:   Huaixin Chang <changhuaixin@linux.alibaba.com>
+To:     linux-kernel@vger.kernel.org, changhuaixin@linux.alibaba.com
+Cc:     shanpeic@linux.alibaba.com, yun.wang@linux.alibaba.com,
+        xlpang@linux.alibaba.com, peterz@infradead.org, mingo@redhat.com,
+        bsegall@google.com, chiluk+linux@indeed.com,
+        vincent.guittot@linaro.org
+Subject: [PATCH v3] sched/fair: Fix race between runtime distribution and assignment
+Date:   Fri, 27 Mar 2020 11:26:25 +0800
+Message-Id: <20200327032625.53856-1-changhuaixin@linux.alibaba.com>
+X-Mailer: git-send-email 2.14.4.44.g2045bb6
+In-Reply-To: <20200325092602.22471-1-changhuaixin@linux.alibaba.com>
+References: <20200325092602.22471-1-changhuaixin@linux.alibaba.com>
 MIME-Version: 1.0
-References: <20200327022836.881203-1-viro@ZenIV.linux.org.uk> <20200327022836.881203-6-viro@ZenIV.linux.org.uk>
-In-Reply-To: <20200327022836.881203-6-viro@ZenIV.linux.org.uk>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Thu, 26 Mar 2020 20:23:59 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wga5Z9qk0Wa-Jpwb7x+4BG6C17cHfqX4KKqWm9jATpQUw@mail.gmail.com>
-Message-ID: <CAHk-=wga5Z9qk0Wa-Jpwb7x+4BG6C17cHfqX4KKqWm9jATpQUw@mail.gmail.com>
-Subject: Re: [RFC][PATCH v2 6/8] x86: don't reload after cmpxchg in
- unsafe_atomic_op2() loop
-To:     Al Viro <viro@zeniv.linux.org.uk>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 26, 2020 at 7:28 PM Al Viro <viro@zeniv.linux.org.uk> wrote:
->
-> From: Al Viro <viro@zeniv.linux.org.uk>
->
-> lock cmpxchg leaves the current value in eax; no need to reload it.
+Currently, there is a potential race between distribute_cfs_runtime()
+and assign_cfs_rq_runtime(). Race happens when cfs_b->runtime is read,
+distributes without holding lock and finds out there is not enough
+runtime to charge against after distribution. Because
+assign_cfs_rq_runtime() might be called during distribution, and use
+cfs_b->runtime at the same time.
 
-I think this one is buggy.
+Fibtest is the tool to test this race. Assume all gcfs_rq is throttled
+and cfs period timer runs, slow threads might run and sleep, returning
+unused cfs_rq runtime and keeping min_cfs_rq_runtime in their local
+pool. If all this happens sufficiently quickly, cfs_b->runtime will drop
+a lot. If runtime distributed is large too, over-use of runtime happens.
 
-Patch edited to remove the "-" lines, so that you see the end result:
+A runtime over-using by about 70 percent of quota is seen when we
+test fibtest on a 96-core machine. We run fibtest with 1 fast thread and
+95 slow threads in test group, configure 10ms quota for this group and
+see the CPU usage of fibtest is 17.0%, which is far more than the
+expected 10%.
 
->         int oldval = 0, ret, tem;                               \
->         asm volatile("1:\tmovl  %2, %0\n"                       \
-> +                    "2:\tmovl\t%0, %3\n"                       \
->                      "\t" insn "\n"                             \
-> +                    "3:\t" LOCK_PREFIX "cmpxchgl %3, %2\n"     \
-> +                    "\tjnz\t2b\n"                              \
-> +                    "4:\n"                                     \
->                      "\t.section .fixup,\"ax\"\n"               \
-> +                    "5:\tmov\t%5, %1\n"                        \
->                      "\tjmp\t3b\n"                              \
->                      "\t.previous\n"                            \
-> +                    _ASM_EXTABLE_UA(1b, 5b)                    \
-> +                    _ASM_EXTABLE_UA(3b, 5b)                    \
->                      : "=&a" (oldval), "=&r" (ret),             \
->                        "+m" (*uaddr), "=&r" (tem)               \
->                      : "r" (oparg), "i" (-EFAULT), "1" (0));    \
+On a smaller machine with 32 cores, we also run fibtest with 96
+threads. CPU usage is more than 12%, which is also more than expected
+10%. This shows that on similar workloads, this race do affect CPU
+bandwidth control.
 
-I think that
+Solve this by holding lock inside distribute_cfs_runtime().
 
-                       "\tjmp\t3b\n"
+Fixes: c06f04c70489 ("sched: Fix potential near-infinite distribute_cfs_runtime() loop")
+Signed-off-by: Huaixin Chang <changhuaixin@linux.alibaba.com>
+Reviewed-by: Ben Segall <bsegall@google.com>
+Link: https://lore.kernel.org/lkml/20200325092602.22471-1-changhuaixin@linux.alibaba.com/
+---
+ kernel/sched/fair.c | 31 +++++++++++--------------------
+ 1 file changed, 11 insertions(+), 20 deletions(-)
 
-line in the fixup section should be
+diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+index c1217bfe5e81..0eaa12d0f1b9 100644
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -4629,11 +4629,10 @@ void unthrottle_cfs_rq(struct cfs_rq *cfs_rq)
+ 		resched_curr(rq);
+ }
+ 
+-static u64 distribute_cfs_runtime(struct cfs_bandwidth *cfs_b, u64 remaining)
++static void distribute_cfs_runtime(struct cfs_bandwidth *cfs_b)
+ {
+ 	struct cfs_rq *cfs_rq;
+-	u64 runtime;
+-	u64 starting_runtime = remaining;
++	u64 runtime, remaining = 1;
+ 
+ 	rcu_read_lock();
+ 	list_for_each_entry_rcu(cfs_rq, &cfs_b->throttled_cfs_rq,
+@@ -4648,10 +4647,13 @@ static u64 distribute_cfs_runtime(struct cfs_bandwidth *cfs_b, u64 remaining)
+ 		/* By the above check, this should never be true */
+ 		SCHED_WARN_ON(cfs_rq->runtime_remaining > 0);
+ 
++		raw_spin_lock(&cfs_b->lock);
+ 		runtime = -cfs_rq->runtime_remaining + 1;
+-		if (runtime > remaining)
+-			runtime = remaining;
+-		remaining -= runtime;
++		if (runtime > cfs_b->runtime)
++			runtime = cfs_b->runtime;
++		cfs_b->runtime -= runtime;
++		remaining = cfs_b->runtime;
++		raw_spin_unlock(&cfs_b->lock);
+ 
+ 		cfs_rq->runtime_remaining += runtime;
+ 
+@@ -4666,8 +4668,6 @@ static u64 distribute_cfs_runtime(struct cfs_bandwidth *cfs_b, u64 remaining)
+ 			break;
+ 	}
+ 	rcu_read_unlock();
+-
+-	return starting_runtime - remaining;
+ }
+ 
+ /*
+@@ -4678,7 +4678,6 @@ static u64 distribute_cfs_runtime(struct cfs_bandwidth *cfs_b, u64 remaining)
+  */
+ static int do_sched_cfs_period_timer(struct cfs_bandwidth *cfs_b, int overrun, unsigned long flags)
+ {
+-	u64 runtime;
+ 	int throttled;
+ 
+ 	/* no need to continue the timer with no bandwidth constraint */
+@@ -4707,24 +4706,17 @@ static int do_sched_cfs_period_timer(struct cfs_bandwidth *cfs_b, int overrun, u
+ 	cfs_b->nr_throttled += overrun;
+ 
+ 	/*
+-	 * This check is repeated as we are holding onto the new bandwidth while
+-	 * we unthrottle. This can potentially race with an unthrottled group
+-	 * trying to acquire new bandwidth from the global pool. This can result
+-	 * in us over-using our runtime if it is all used during this loop, but
+-	 * only by limited amounts in that extreme case.
++	 * This check is repeated as we release cfs_b->lock while we unthrottle.
+ 	 */
+ 	while (throttled && cfs_b->runtime > 0 && !cfs_b->distribute_running) {
+-		runtime = cfs_b->runtime;
+ 		cfs_b->distribute_running = 1;
+ 		raw_spin_unlock_irqrestore(&cfs_b->lock, flags);
+ 		/* we can't nest cfs_b->lock while distributing bandwidth */
+-		runtime = distribute_cfs_runtime(cfs_b, runtime);
++		distribute_cfs_runtime(cfs_b);
+ 		raw_spin_lock_irqsave(&cfs_b->lock, flags);
+ 
+ 		cfs_b->distribute_running = 0;
+ 		throttled = !list_empty(&cfs_b->throttled_cfs_rq);
+-
+-		lsub_positive(&cfs_b->runtime, runtime);
+ 	}
+ 
+ 	/*
+@@ -4858,10 +4850,9 @@ static void do_sched_cfs_slack_timer(struct cfs_bandwidth *cfs_b)
+ 	if (!runtime)
+ 		return;
+ 
+-	runtime = distribute_cfs_runtime(cfs_b, runtime);
++	distribute_cfs_runtime(cfs_b);
+ 
+ 	raw_spin_lock_irqsave(&cfs_b->lock, flags);
+-	lsub_positive(&cfs_b->runtime, runtime);
+ 	cfs_b->distribute_running = 0;
+ 	raw_spin_unlock_irqrestore(&cfs_b->lock, flags);
+ }
+-- 
+2.14.4.44.g2045bb6
 
-                       "\tjmp\t4b\n"
-
-because you don't want to jump to the cmpxchg instruction.
-
-Maybe I'm misreading it.
-
-               Linus
