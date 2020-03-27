@@ -2,150 +2,174 @@ Return-Path: <SRS0=s8dx=5M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10482C2D0EE
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 07:47:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C60B5C43331
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 07:48:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE7AC20717
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 07:47:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585295244;
-	bh=6BfJqeZ5GPTg9LriPtdJ82fgs7cFEsDpX1K2rR/Uuo4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=YyypN5Xyn+tKvgdUU8sBUC/w6vcmxq9lLTIo3zXiD2p3/RfU2V4xeDzST0KBhdJII
-	 17A/8o2E72KiVct7yKjipwe5WInIsITy9CPDKVOwvtc9LtIlynnTLI+6J0CfbMCASY
-	 IEpunMhlj0u8KKNjjf5XSO8iodRjVLRCXSaNEdf8=
+	by mail.kernel.org (Postfix) with ESMTP id A403520705
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 07:48:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726698AbgC0HrX (ORCPT
+        id S1726900AbgC0HsS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Mar 2020 03:47:23 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:42560 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726275AbgC0HrX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Mar 2020 03:47:23 -0400
-Received: by mail-wr1-f66.google.com with SMTP id h15so10190323wrx.9;
-        Fri, 27 Mar 2020 00:47:22 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=qEZ5Ip7i9had6fEO82hFIkKLGs/LbFrnFrp/b642r5w=;
-        b=hwwCKFL5YkFHIBvpIOVmsnmr1DbYJxQnxziwJVd9+AQ5AiHR4EuOYq1L3guSA/H/ZE
-         kqOZjpr0X5Ok1+E4BD+HaKubx32fne3om02x7aHE0H9wlOtg6hsBvTjZT0AgcgTS3K1o
-         VQKeSECOrm74vev2oO8PLCSkrYQsVv71xuDXeDKAH0DOOlQZP3VEIX6qi1URZBTXLCOq
-         sbE6ff3A3WQ/5Xbp5dMk+a2G65aEL+UmJTu79K6m9SCGk02x+jHWpUnzhv9M4fFQdU15
-         CPXuVOI5cPtRvDeTjUEvk+VA+qE2ivvhjP84y8O4oOUtY5viTZSNOcmFYlNeEYzIJzR5
-         NwCw==
-X-Gm-Message-State: ANhLgQ3wwp5BcVaVGQAbCsVJ9uFwK7S2V3TjuUQHq2DD0iuhj9BqxiS2
-        dR6w9OJ+nsDNCQ9jDpZ45Fs=
-X-Google-Smtp-Source: ADFU+vuuSo7T6YcHgxJxpJMJO9OFoszj9JySSGi9/4AourYAZav0KiQQ3z+vQhBmGWDP73/P6MkV9w==
-X-Received: by 2002:adf:a448:: with SMTP id e8mr1057190wra.238.1585295241412;
-        Fri, 27 Mar 2020 00:47:21 -0700 (PDT)
-Received: from localhost (ip-37-188-135-150.eurotel.cz. [37.188.135.150])
-        by smtp.gmail.com with ESMTPSA id g14sm7306767wme.32.2020.03.27.00.47.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 27 Mar 2020 00:47:20 -0700 (PDT)
-Date:   Fri, 27 Mar 2020 08:47:18 +0100
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     David Hildenbrand <david@redhat.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux MM <linux-mm@kvack.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        powerpc-utils-devel@googlegroups.com, util-linux@vger.kernel.org,
-        Badari Pulavarty <pbadari@us.ibm.com>,
-        Nathan Fontenot <nfont@linux.vnet.ibm.com>,
-        Robert Jennings <rcj@linux.vnet.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Karel Zak <kzak@redhat.com>,
-        "Scargall, Steve" <steve.scargall@intel.com>
-Subject: Re: [PATCH v1] drivers/base/memory.c: indicate all memory blocks as
- removable
-Message-ID: <20200327074718.GT27965@dhcp22.suse.cz>
-References: <20200128093542.6908-1-david@redhat.com>
- <CAPcyv4jpdaNvJ67SkjyUJLBnBnXXQv686BiVW042g03FUmWLXw@mail.gmail.com>
+        Fri, 27 Mar 2020 03:48:18 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:38658 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725946AbgC0HsS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Mar 2020 03:48:18 -0400
+Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 37C835C46EC15541C6AC;
+        Fri, 27 Mar 2020 15:48:12 +0800 (CST)
+Received: from [127.0.0.1] (10.173.221.117) by DGGEMS408-HUB.china.huawei.com
+ (10.3.19.208) with Microsoft SMTP Server id 14.3.487.0; Fri, 27 Mar 2020
+ 15:48:09 +0800
+From:   Kemeng Shi <shikemeng@huawei.com>
+To:     <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
+        <alexander.shishkin@linux.intel.com>, <jolsa@redhat.com>,
+        <namhyung@kernel.org>, <linux-kernel@vger.kernel.org>
+CC:     <tmricht@linux.ibm.com>
+Subject: Subject: [PATCH] perf report: Fix arm64 gap between kernel start and
+ module end
+Message-ID: <fce3dbdf-751a-ae5b-107b-173ce5d8b79e@huawei.com>
+Date:   Fri, 27 Mar 2020 15:48:08 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAPcyv4jpdaNvJ67SkjyUJLBnBnXXQv686BiVW042g03FUmWLXw@mail.gmail.com>
+Content-Type: text/plain; charset="gbk"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.173.221.117]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu 26-03-20 23:24:08, Dan Williams wrote:
-[...]
-> David, Andrew,
-> 
-> I'd like to recommend this patch for -stable as it likely (test
-> underway) solves this crash report from Steve:
-> 
-> [  148.796036] page dumped because: VM_BUG_ON_PAGE(PagePoisoned(p))
-> [  148.796074] ------------[ cut here ]------------
-> [  148.796098] kernel BUG at include/linux/mm.h:1087!
-> [  148.796126] invalid opcode: 0000 [#1] SMP NOPTI
-> [  148.796146] CPU: 63 PID: 5471 Comm: lsmem Not tainted 5.5.10-200.fc31.x8=
-> 6_64+debug #1
-> [  148.796173] Hardware name: Intel Corporation S2600WFD/S2600WFD, BIOS SE5=
-> C620.86B.02.01.0010.010620200716 01/06/2020
-> [  148.796212] RIP: 0010:is_mem_section_removable+0x1a4/0x1b0
-> [  148.796561] Call Trace:
-> [  148.796591]  removable_show+0x6e/0xa0
-> [  148.796608]  dev_attr_show+0x19/0x40
-> [  148.796625]  sysfs_kf_seq_show+0xa9/0x100
-> [  148.796640]  seq_read+0xd5/0x450
-> [  148.796657]  vfs_read+0xc5/0x180
-> [  148.796672]  ksys_read+0x68/0xe0
-> [  148.796688]  do_syscall_64+0x5c/0xa0
-> [  148.796704]  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-> [  148.796721] RIP: 0033:0x7f3ab1646412
-> 
-> ...on a non-debug kernel it just crashes.
-> 
-> In this case lsmem is failing when reading memory96:
-> 
-> openat(3, "memory96/removable", O_RDONLY|O_CLOEXEC) = 4
-> fcntl(4, F_GETFL)                       = 0x8000 (flags O_RDONLY|O_LARGEFILE)
-> fstat(4, {st_mode=S_IFREG|0444, st_size=4096, ...}) = 0
-> read(4,  <unfinished ...>)              = ?
-> +++ killed by SIGSEGV +++
-> Segmentation fault (core dumped)
-> 
-> ...which is phys_index 0x60 => memory address 0x3000000000
-> 
-> On this platform that lands us here:
-> 
-> 100000000-303fffffff : System RAM
->   291f000000-291fe00f70 : Kernel code
->   2920000000-292051efff : Kernel rodata
->   2920600000-292093b0bf : Kernel data
->   29214f3000-2922dfffff : Kernel bss
-> 3040000000-305fffffff : Reserved
-> 3060000000-1aa5fffffff : Persistent Memory
+During execution of command 'perf report' in my arm64 virtual machine,
+the error message is showed:
 
-OK, 2GB memblocks and that would mean [0x3000000000, 0x3080000000]
+failed to process sample
 
-> ...where the last memory block of System RAM is shared with persistent
-> memory. I.e. the block is only partially online which means that
-> page_to_nid() in is_mem_section_removable() will assert or crash for
-> some of the offline pages in that block.
+__symbol__inc_addr_samples(860): ENOMEM! sym->name=__this_module,
+    start=0x1477100, addr=0x147dbd8, end=0x80002000, func: 0
 
-Yes, this patch is a simple workaround. Normal memory hotplug will not
-blow up because it should be able to find out that test_pages_in_a_zone
-is false. Who knows how other potential pfn walkers handle that.
+The error is caused with path:
+cmd_report
+ __cmd_report
+  perf_session__process_events
+   __perf_session__process_events
+    ordered_events__flush
+     __ordered_events__flush
+      oe->deliver (ordered_events__deliver_event)
+       perf_session__deliver_event
+        machines__deliver_event
+         perf_evlist__deliver_sample
+          tool->sample (process_sample_event)
+           hist_entry_iter__add
+            iter->add_entry_cb(hist_iter__report_callback)
+             hist_entry__inc_addr_samples
+              symbol__inc_addr_samples
+               __symbol__inc_addr_samples
+                h = annotated_source__histogram(src, evidx) (NULL)
 
-Risking to sound like a broken record I will remind that I have been
-pushing for having _all_ existing struct pages initialized and we
-wouldn't have problems like this popping out here and there.
+annotated_source__histogram failed is caused with path:
+...
+ hist_entry__inc_addr_samples
+  symbol__inc_addr_samples
+   symbol__hists
+    annotated_source__alloc_histograms
+     src->histograms = calloc(nr_hists, sizeof_sym_hist) (failed)
 
-That being said, I do not have any objections to backporting to stable
-trees.
+Calloc failed as the symbol__size(sym) is too huge. As show in error
+message: start=0x1477100, end=0x80002000, size of symbol is about 2G.
+
+This is the same problem as 'perf annotate: Fix s390 gap between kernel
+end and module start (b9c0a64901d5bd)'. Perf gets symbol information from
+/proc/kallsyms in __dso__load_kallsyms. A part of symbol in /proc/kallsyms
+from my virtual machine is as follows:
+ #cat /proc/kallsyms | sort
+ ...
+ ffff000001475080 d rpfilter_mt_reg      [ip6t_rpfilter]
+ ffff000001475100 d $d   [ip6t_rpfilter]
+ ffff000001475100 d __this_module        [ip6t_rpfilter]
+ ffff000080080000 t _head
+ ffff000080080000 T _text
+ ffff000080080040 t pe_header
+ ...
+
+Take line 'ffff000001475100 d __this_module [ip6t_rpfilter]' as example.
+The start and end of symbol are both set to ffff000001475100 in
+dso__load_all_kallsyms. Then symbols__fixup_end will set the end of symbol
+to next big address to ffff000001475100 in /proc/kallsyms, ffff000080080000
+in this example. Then sizeof of symbol will be about 2G and cause the
+problem.
+
+The start of module in my machine is
+ ffff000000a62000 t $x   [dm_mod]
+
+The start of kernel in my machine is
+ ffff000080080000 t _head
+
+There is a big gap between end of module and begin of kernel if a samll
+amount of memory is used by module. And the last symbol in module will
+have a large address range as caotaining the big gap.
+
+Give that the module and kernel text segment sequence may change in
+the future, fix this by limiting range of last symbol in module and kernel
+to 4K in arch arm64.
+
+Signed-off-by: Kemeng Shi <shikemeng@huawei.com>
+---
+ tools/perf/arch/arm64/util/Build     |  1 +
+ tools/perf/arch/arm64/util/machine.c | 26 ++++++++++++++++++++++++++
+ 2 files changed, 27 insertions(+)
+ create mode 100644 tools/perf/arch/arm64/util/machine.c
+
+diff --git a/tools/perf/arch/arm64/util/Build b/tools/perf/arch/arm64/util/Build
+index 393b9895c..37cbfa5e9 100644
+--- a/tools/perf/arch/arm64/util/Build
++++ b/tools/perf/arch/arm64/util/Build
+@@ -2,6 +2,7 @@ libperf-y += header.o
+ libperf-y += tsc.o
+ libperf-y += sym-handling.o
+ libperf-y += kvm-stat.o
++libperf-y += machine.o
+ libperf-$(CONFIG_DWARF)     += dwarf-regs.o
+ libperf-$(CONFIG_LOCAL_LIBUNWIND) += unwind-libunwind.o
+ libperf-$(CONFIG_LIBDW_DWARF_UNWIND) += unwind-libdw.o
+diff --git a/tools/perf/arch/arm64/util/machine.c b/tools/perf/arch/arm64/util/machine.c
+new file mode 100644
+index 000000000..a25be2431
+--- /dev/null
++++ b/tools/perf/arch/arm64/util/machine.c
+@@ -0,0 +1,26 @@
++// SPDX-License-Identifier: GPL-2.0
++
++#include <stdio.h>
++#include "debug.h"
++#include "symbol.h"
++
++/* On arm64, kernel text segment start at high memory address,
++ * for example 0xffff 0000 8xxx xxxx. Modules start at a low memory
++ * address, like 0xffff 0000 00ax xxxx. When only samll amount of
++ * memory is used by modules, gap between end of module's text segment
++ * and start of kernel text segment may be reach 2G.
++ * Therefore do not fill this gap and do not assign it to the kernel dso map.
++ */
++
++#define SYMBOL_LIMIT (1 << 12) /* 4K */
++
++void arch__symbols__fixup_end(struct symbol *p, struct symbol *c)
++{
++	if ((strchr(p->name, '[') && strchr(c->name, '[') == NULL) ||
++			(strchr(p->name, '[') == NULL && strchr(c->name, '[')))
++		/* Limit range of last symbol in module and kernel */
++		p->end += SYMBOL_LIMIT;
++	else
++		p->end = c->start;
++	pr_debug4("%s sym:%s end:%#lx\n", __func__, p->name, p->end);
++}
 -- 
-Michal Hocko
-SUSE Labs
+2.19.1
+
