@@ -2,88 +2,316 @@ Return-Path: <SRS0=s8dx=5M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E340C2D0E8
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 21:12:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50E32C2D0EE
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 21:12:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CEA1B20658
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 21:12:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1604D20658
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 21:12:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="SRwOWlJ2"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="N6Y5HXHA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727701AbgC0VMC (ORCPT
+        id S1727718AbgC0VMY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Mar 2020 17:12:02 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:42745 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727606AbgC0VMC (ORCPT
+        Fri, 27 Mar 2020 17:12:24 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:46893 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727352AbgC0VMX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Mar 2020 17:12:02 -0400
-Received: by mail-lf1-f65.google.com with SMTP id t21so9032092lfe.9
-        for <linux-kernel@vger.kernel.org>; Fri, 27 Mar 2020 14:12:00 -0700 (PDT)
+        Fri, 27 Mar 2020 17:12:23 -0400
+Received: by mail-pf1-f194.google.com with SMTP id q3so5066218pff.13;
+        Fri, 27 Mar 2020 14:12:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=7JZ1QFI9+FtgdXcyl77TJuQPCE3U91hu8/wkfGn1LbU=;
-        b=SRwOWlJ2qXCpTZZFjHvFl3mL29jKoQFgfoZHcDLjwHGukw8P6wFh3FGGu+AXRlrn2y
-         +OdH52BNXFEn6p21ublMsHoo6lqqaR+4jkUuy0C0oxdqcNpHWuMML4QuXlQK52Xi+cso
-         P9XGUT437lc4964eA+xTTH8kDtY9o4BnYb1rFY5a30twe5eC4YRrQXN/btg62B3pxDkh
-         HXXHUtMfsNtvDuAouVXCvgAkN72fIINSfeFKG5y5yXYMzPei7uug/fBLL5YbI5qtX6Ux
-         4C5Oe9PQJNvG3Wiki1kOgmgOOWDnVzu5ULOG0vZs+hIZMfXismb1HNHAe0M6BiWDMbIu
-         oFeA==
+        d=gmail.com; s=20161025;
+        h=sender:subject:to:cc:references:from:autocrypt:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=AvMap2oHzGADAPyLaHD1k6GQ9GPfHKezf4ZSh/78MJ8=;
+        b=N6Y5HXHAnkeQ2DIEh6vJFCeE+YVmEfQbt/h9VnZXv3w7OrPSGFbPQDY3CsnlSHsRSN
+         Mgb3eNw9MYKU4iwHx9dOpjEe/1HqPIid+Wg9OU0qgKp7zjb0V9ka+HnDRPlCcAcQvKHG
+         S4Do2OAudEnymbMjEL0U95bJNk5628wCcKJ8qjmORvVKiH/c+xfFgW2JMmdaWGtb5GpN
+         Fq8fFGpsvgiPoHQ82TOd7qv6v+WMKUvwDHMGZ875KM0iFs9ofbo/9oSOKubLVwR2Ib/S
+         sOqPCn81n4nk5n4vkc6puKpHONTTT2sxmUsy9/E9a7fXYV/ubWj/zh5PHhD409sOH1Rb
+         CadA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=7JZ1QFI9+FtgdXcyl77TJuQPCE3U91hu8/wkfGn1LbU=;
-        b=dMHWUO/FKTd/oy2h9O+/gbX0rodANXUO/jV+cpXWQKohnIWU+2h4vzH6lqhzB/+uYa
-         X1FZYs+kmiGU/MdW+QyIXuoiAl/2wZXB1Bbizsmp2o5Pi68ZgyWw+IFPiSMhuaLN5Ex4
-         irh81NF8ffXmE5iKoRGUro9mlJjDN1nCBZ9UjYEQeFk3GNHOWiosdTHpfoj/q+fUh7Oo
-         +SrJNRevDmt1MI9ki5dGKR1VJSP1ShFbFOCezkUE3N0fLg1BDaUXKvalSfIs83b7PE8w
-         BEMvUEtpj4mXOW4FX+lyk+VHr25DIGub1kglg/nW01yaxyTrpQ7uLZrARcm0TlV4RBUl
-         W9OA==
-X-Gm-Message-State: AGi0Pub4MAK+z8zGVeNheyjV8x62RWEm8ncEN67EswEZeUiePxoHWepP
-        981WNVXQNMLDdPhulK/LzhcZa5bPv+XSx6xTKFIJ3Q==
-X-Google-Smtp-Source: APiQypJLzv1jR04mjd+jD35S7idB5qw5grrozbcEYe5adOdvJDvuj9PH5V5xlh1OkmHnheg5tdSKwvBMWIQrB/u7tNk=
-X-Received: by 2002:a19:ac8:: with SMTP id 191mr745752lfk.77.1585343520022;
- Fri, 27 Mar 2020 14:12:00 -0700 (PDT)
+        h=x-gm-message-state:sender:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=AvMap2oHzGADAPyLaHD1k6GQ9GPfHKezf4ZSh/78MJ8=;
+        b=HgLCuqGH5rkUxnVugYWn9l2HeJR4sUvE3JqEzwnhEb6n22rLWKf4fy44j9r154gO2s
+         Oxj9VHT/y1Ule/2jJ0xovA/Pb/fSkPwIvyCeroZPywX8jCyknhU3R7/9GqxIhwdLRdG5
+         ROgRKxhqb5fDB+rCNmFWT8r7PbCMAG+C2BBZ7cCmqjVpG9gNN2ntg5tr2joakiBDrXT7
+         EAcivfXbs0ziYxkS+QjQ+iEg9Yjd/GRj1M/MUiQOBrOJejPH1U+TOEznrx1Np4xL26HH
+         3gB5ldzuUWR3Xhq0aYGFZi8AyUVB1murSlK7KnYxs/ejPRDEdWakZcFxSzPjq8LXUcu7
+         ACLg==
+X-Gm-Message-State: ANhLgQ0Wt3KKCSAN1v0Z1xhYSlyw2Iqr0pdwTOxB8wizDZvunI21g1/N
+        B9Bs/lisxYfgFkgBtL4MT/VrJyk1
+X-Google-Smtp-Source: ADFU+vsJOQ5Gt7WKw/I4h7UdqwUkPoZ4Pif9QREGCvZCF0aU//yKU/AbqXG0IAp+2QubtRdj539/4A==
+X-Received: by 2002:a62:1a90:: with SMTP id a138mr1225151pfa.320.1585343540790;
+        Fri, 27 Mar 2020 14:12:20 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id x4sm3897352pga.54.2020.03.27.14.12.18
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 27 Mar 2020 14:12:19 -0700 (PDT)
+Subject: Re: [PATCH v2] rtc: ds1307: add support for watchdog timer on ds1388
+To:     Chris Packham <chris.packham@alliedtelesis.co.nz>,
+        a.zummo@towertech.it, alexandre.belloni@bootlin.com,
+        wim@linux-watchdog.org
+Cc:     linux-rtc@vger.kernel.org, linux-watchdog@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200327041809.2029-1-chris.packham@alliedtelesis.co.nz>
+From:   Guenter Roeck <linux@roeck-us.net>
+Autocrypt: addr=linux@roeck-us.net; keydata=
+ xsFNBE6H1WcBEACu6jIcw5kZ5dGeJ7E7B2uweQR/4FGxH10/H1O1+ApmcQ9i87XdZQiB9cpN
+ RYHA7RCEK2dh6dDccykQk3bC90xXMPg+O3R+C/SkwcnUak1UZaeK/SwQbq/t0tkMzYDRxfJ7
+ nyFiKxUehbNF3r9qlJgPqONwX5vJy4/GvDHdddSCxV41P/ejsZ8PykxyJs98UWhF54tGRWFl
+ 7i1xvaDB9lN5WTLRKSO7wICuLiSz5WZHXMkyF4d+/O5ll7yz/o/JxK5vO/sduYDIlFTvBZDh
+ gzaEtNf5tQjsjG4io8E0Yq0ViobLkS2RTNZT8ICq/Jmvl0SpbHRvYwa2DhNsK0YjHFQBB0FX
+ IdhdUEzNefcNcYvqigJpdICoP2e4yJSyflHFO4dr0OrdnGLe1Zi/8Xo/2+M1dSSEt196rXaC
+ kwu2KgIgmkRBb3cp2vIBBIIowU8W3qC1+w+RdMUrZxKGWJ3juwcgveJlzMpMZNyM1jobSXZ0
+ VHGMNJ3MwXlrEFPXaYJgibcg6brM6wGfX/LBvc/haWw4yO24lT5eitm4UBdIy9pKkKmHHh7s
+ jfZJkB5fWKVdoCv/omy6UyH6ykLOPFugl+hVL2Prf8xrXuZe1CMS7ID9Lc8FaL1ROIN/W8Vk
+ BIsJMaWOhks//7d92Uf3EArDlDShwR2+D+AMon8NULuLBHiEUQARAQABzTJHdWVudGVyIFJv
+ ZWNrIChMaW51eCBhY2NvdW50KSA8bGludXhAcm9lY2stdXMubmV0PsLBgQQTAQIAKwIbAwYL
+ CQgHAwIGFQgCCQoLBBYCAwECHgECF4ACGQEFAlVcphcFCRmg06EACgkQyx8mb86fmYFg0RAA
+ nzXJzuPkLJaOmSIzPAqqnutACchT/meCOgMEpS5oLf6xn5ySZkl23OxuhpMZTVX+49c9pvBx
+ hpvl5bCWFu5qC1jC2eWRYU+aZZE4sxMaAGeWenQJsiG9lP8wkfCJP3ockNu0ZXXAXwIbY1O1
+ c+l11zQkZw89zNgWgKobKzrDMBFOYtAh0pAInZ9TSn7oA4Ctejouo5wUugmk8MrDtUVXmEA9
+ 7f9fgKYSwl/H7dfKKsS1bDOpyJlqhEAH94BHJdK/b1tzwJCFAXFhMlmlbYEk8kWjcxQgDWMu
+ GAthQzSuAyhqyZwFcOlMCNbAcTSQawSo3B9yM9mHJne5RrAbVz4TWLnEaX8gA5xK3uCNCeyI
+ sqYuzA4OzcMwnnTASvzsGZoYHTFP3DQwf2nzxD6yBGCfwNGIYfS0i8YN8XcBgEcDFMWpOQhT
+ Pu3HeztMnF3HXrc0t7e5rDW9zCh3k2PA6D2NV4fews9KDFhLlTfCVzf0PS1dRVVWM+4jVl6l
+ HRIAgWp+2/f8dx5vPc4Ycp4IsZN0l1h9uT7qm1KTwz+sSl1zOqKD/BpfGNZfLRRxrXthvvY8
+ BltcuZ4+PGFTcRkMytUbMDFMF9Cjd2W9dXD35PEtvj8wnEyzIos8bbgtLrGTv/SYhmPpahJA
+ l8hPhYvmAvpOmusUUyB30StsHIU2LLccUPPOwU0ETofVZwEQALlLbQeBDTDbwQYrj0gbx3bq
+ 7kpKABxN2MqeuqGr02DpS9883d/t7ontxasXoEz2GTioevvRmllJlPQERVxM8gQoNg22twF7
+ pB/zsrIjxkE9heE4wYfN1AyzT+AxgYN6f8hVQ7Nrc9XgZZe+8IkuW/Nf64KzNJXnSH4u6nJM
+ J2+Dt274YoFcXR1nG76Q259mKwzbCukKbd6piL+VsT/qBrLhZe9Ivbjq5WMdkQKnP7gYKCAi
+ pNVJC4enWfivZsYupMd9qn7Uv/oCZDYoBTdMSBUblaLMwlcjnPpOYK5rfHvC4opxl+P/Vzyz
+ 6WC2TLkPtKvYvXmdsI6rnEI4Uucg0Au/Ulg7aqqKhzGPIbVaL+U0Wk82nz6hz+WP2ggTrY1w
+ ZlPlRt8WM9w6WfLf2j+PuGklj37m+KvaOEfLsF1v464dSpy1tQVHhhp8LFTxh/6RWkRIR2uF
+ I4v3Xu/k5D0LhaZHpQ4C+xKsQxpTGuYh2tnRaRL14YMW1dlI3HfeB2gj7Yc8XdHh9vkpPyuT
+ nY/ZsFbnvBtiw7GchKKri2gDhRb2QNNDyBnQn5mRFw7CyuFclAksOdV/sdpQnYlYcRQWOUGY
+ HhQ5eqTRZjm9z+qQe/T0HQpmiPTqQcIaG/edgKVTUjITfA7AJMKLQHgp04Vylb+G6jocnQQX
+ JqvvP09whbqrABEBAAHCwWUEGAECAA8CGwwFAlVcpi8FCRmg08MACgkQyx8mb86fmYHNRQ/+
+ J0OZsBYP4leJvQF8lx9zif+v4ZY/6C9tTcUv/KNAE5leyrD4IKbnV4PnbrVhjq861it/zRQW
+ cFpWQszZyWRwNPWUUz7ejmm9lAwPbr8xWT4qMSA43VKQ7ZCeTQJ4TC8kjqtcbw41SjkjrcTG
+ wF52zFO4bOWyovVAPncvV9eGA/vtnd3xEZXQiSt91kBSqK28yjxAqK/c3G6i7IX2rg6pzgqh
+ hiH3/1qM2M/LSuqAv0Rwrt/k+pZXE+B4Ud42hwmMr0TfhNxG+X7YKvjKC+SjPjqp0CaztQ0H
+ nsDLSLElVROxCd9m8CAUuHplgmR3seYCOrT4jriMFBtKNPtj2EE4DNV4s7k0Zy+6iRQ8G8ng
+ QjsSqYJx8iAR8JRB7Gm2rQOMv8lSRdjva++GT0VLXtHULdlzg8VjDnFZ3lfz5PWEOeIMk7Rj
+ trjv82EZtrhLuLjHRCaG50OOm0hwPSk1J64R8O3HjSLdertmw7eyAYOo4RuWJguYMg5DRnBk
+ WkRwrSuCn7UG+qVWZeKEsFKFOkynOs3pVbcbq1pxbhk3TRWCGRU5JolI4ohy/7JV1TVbjiDI
+ HP/aVnm6NC8of26P40Pg8EdAhajZnHHjA7FrJXsy3cyIGqvg9os4rNkUWmrCfLLsZDHD8FnU
+ mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
+Message-ID: <4aecb77e-f635-9bfd-c2bd-21cb68fa333d@roeck-us.net>
+Date:   Fri, 27 Mar 2020 14:12:18 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-References: <8a6f91b49c17beb218e46b23084f59a7c7260f86.1585124562.git.baolin.wang7@gmail.com>
- <3bdac4c2673b54c940e511f3fa569ee33b87b8d5.1585124562.git.baolin.wang7@gmail.com>
-In-Reply-To: <3bdac4c2673b54c940e511f3fa569ee33b87b8d5.1585124562.git.baolin.wang7@gmail.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Fri, 27 Mar 2020 22:11:48 +0100
-Message-ID: <CACRpkdZ9VwZdexCm+WsDT3c3ScTSMDCTii2fOphH-CrKqf6TMA@mail.gmail.com>
-Subject: Re: [PATCH 2/2] pinctrl: sprd: Add pin high impedance mode support
-To:     Baolin Wang <baolin.wang7@gmail.com>
-Cc:     linhua.xu@unisoc.com, Orson Zhai <orsonzhai@gmail.com>,
-        Lyra Zhang <zhang.lyra@gmail.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200327041809.2029-1-chris.packham@alliedtelesis.co.nz>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 25, 2020 at 9:25 AM Baolin Wang <baolin.wang7@gmail.com> wrote:
+On 3/26/20 9:18 PM, Chris Packham wrote:
+> The DS1388 variant has watchdog timer capabilities. When using a DS1388
+> and having enabled CONFIG_WATCHDOG_CORE register a watchdog device for
+> the DS1388.
+> 
+> Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
+> ---
+> This is going to the linux-watchdog list as well this time so it's probably the
+> first time the watchdog maintainers have seen it.
+> 
+> Changes in v2:
+> - Address review comments from Alexandre, the only functional change is setting
+>   the hundredths of seconds to 0 instead of 99.
+> 
+>  drivers/rtc/rtc-ds1307.c | 97 ++++++++++++++++++++++++++++++++++++++++
 
-> From: Linhua Xu <linhua.xu@unisoc.com>
->
-> For Spreadtrum pin controller, it will be the high impedance
-> mode if disable input and output mode for a pin. Thus add
-> PIN_CONFIG_BIAS_HIGH_IMPEDANCE configuration to support it.
->
-> Signed-off-by: Linhua Xu <linhua.xu@unisoc.com>
-> Signed-off-by: Baolin Wang <baolin.wang7@gmail.com>
+	"select WATCHDOG_CORE if WATCHDOG"
 
-Patch applied! Nice engineering here, figuring out the right
-fit for pin control configs, thanks folks!
+should be added to Kconfig. While it makes sense for watchdog functionality
+to depend on WATCHDOG, it should not depend on the existence of another
+watchdog driver in the system.
 
-Yours,
-Linus Walleij
+>  1 file changed, 97 insertions(+)
+> 
+> diff --git a/drivers/rtc/rtc-ds1307.c b/drivers/rtc/rtc-ds1307.c
+> index 31a38d468378..1452982c3a6a 100644
+> --- a/drivers/rtc/rtc-ds1307.c
+> +++ b/drivers/rtc/rtc-ds1307.c
+> @@ -22,6 +22,7 @@
+>  #include <linux/hwmon-sysfs.h>
+>  #include <linux/clk-provider.h>
+>  #include <linux/regmap.h>
+> +#include <linux/watchdog.h>
+>  
+>  /*
+>   * We can't determine type by probing, but if we expect pre-Linux code
+> @@ -144,8 +145,15 @@ enum ds_type {
+>  #	define M41TXX_BIT_CALIB_SIGN	BIT(5)
+>  #	define M41TXX_M_CALIBRATION	GENMASK(4, 0)
+>  
+> +#define DS1388_REG_WDOG_HUN_SECS	0x08
+> +#define DS1388_REG_WDOG_SECS		0x09
+>  #define DS1388_REG_FLAG			0x0b
+> +#	define DS1388_BIT_WF		BIT(6)
+>  #	define DS1388_BIT_OSF		BIT(7)
+> +#define DS1388_REG_CONTROL		0x0c
+> +#	define DS1388_BIT_RST		BIT(0)
+> +#	define DS1388_BIT_WDE		BIT(1)
+> +
+>  /* negative offset step is -2.034ppm */
+>  #define M41TXX_NEG_OFFSET_STEP_PPB	2034
+>  /* positive offset step is +4.068ppm */
+> @@ -166,6 +174,9 @@ struct ds1307 {
+>  #ifdef CONFIG_COMMON_CLK
+>  	struct clk_hw		clks[2];
+>  #endif
+> +#ifdef CONFIG_WATCHDOG_CORE
+> +	struct watchdog_device	wdt;
+> +#endif
+
+I don't immediately see why this would be necessary. I think it would
+be better to allocate struct watchdog_device in ds1307_wdt_register().
+
+>  };
+>  
+>  struct chip_desc {
+> @@ -854,6 +865,58 @@ static int m41txx_rtc_set_offset(struct device *dev, long offset)
+>  				  ctrl_reg);
+>  }
+>  
+> +#ifdef CONFIG_WATCHDOG_CORE
+> +static int ds1388_wdt_start(struct watchdog_device *wdt_dev)
+> +{
+> +	struct ds1307 *ds1307 = watchdog_get_drvdata(wdt_dev);
+> +	u8 regs[2];
+> +	int ret;
+> +
+> +	ret = regmap_update_bits(ds1307->regmap, DS1388_REG_FLAG,
+> +				 DS1388_BIT_WF, 0);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = regmap_update_bits(ds1307->regmap, DS1388_REG_CONTROL,
+> +				 DS1388_BIT_WDE | DS1388_BIT_RST, 0);
+> +	if (ret)
+> +		return ret;
+> +
+> +	/*
+> +	 * watchdog timeouts are measured in seconds. So ignore hundreths of
+
+hundredths
+
+> +	 * seconds field.
+> +	 */
+> +	regs[0] = 0;
+> +	regs[1] = bin2bcd(wdt_dev->timeout);
+> +
+> +	ret = regmap_bulk_write(ds1307->regmap, DS1388_REG_WDOG_HUN_SECS, regs,
+> +				sizeof(regs));
+> +	if (ret)
+> +		return ret;
+> +
+> +	return regmap_update_bits(ds1307->regmap, DS1388_REG_CONTROL,
+> +				  DS1388_BIT_WDE | DS1388_BIT_RST,
+> +				  DS1388_BIT_WDE | DS1388_BIT_RST);
+> +}
+> +
+> +static int ds1388_wdt_stop(struct watchdog_device *wdt_dev)
+> +{
+> +	struct ds1307 *ds1307 = watchdog_get_drvdata(wdt_dev);
+> +
+> +	return regmap_update_bits(ds1307->regmap, DS1388_REG_CONTROL,
+> +				  DS1388_BIT_WDE | DS1388_BIT_RST, 0);
+> +}
+> +
+> +static int ds1388_wdt_ping(struct watchdog_device *wdt_dev)
+> +{
+> +	struct ds1307 *ds1307 = watchdog_get_drvdata(wdt_dev);
+> +	u8 regs[2];
+> +
+> +	return regmap_bulk_read(ds1307->regmap, DS1388_REG_WDOG_HUN_SECS, regs,
+> +				sizeof(regs));
+> +}
+> +#endif
+> +
+>  static const struct rtc_class_ops rx8130_rtc_ops = {
+>  	.read_time      = ds1307_get_time,
+>  	.set_time       = ds1307_set_time,
+> @@ -1576,6 +1639,39 @@ static void ds1307_clks_register(struct ds1307 *ds1307)
+>  
+>  #endif /* CONFIG_COMMON_CLK */
+>  
+> +#ifdef CONFIG_WATCHDOG_CORE
+> +static const struct watchdog_info ds1388_wdt_info = {
+> +	.options = WDIOF_SETTIMEOUT | WDIOF_KEEPALIVEPING | WDIOF_MAGICCLOSE,
+> +	.identity = "DS1388 watchdog",
+> +};
+> +
+> +static const struct watchdog_ops ds1388_wdt_ops = {
+> +	.owner = THIS_MODULE,
+> +	.start = ds1388_wdt_start,
+> +	.stop = ds1388_wdt_stop,
+> +	.ping = ds1388_wdt_ping,
+
+Maybe I am missing something, but I don't see how the timeout is updated
+if it is changed while the watchdog is already running.
+
+> +};
+> +
+> +static void ds1307_wdt_register(struct ds1307 *ds1307)
+> +{
+> +	if (ds1307->type != ds_1388)
+> +		return;
+> +
+> +	ds1307->wdt.info = &ds1388_wdt_info;
+> +	ds1307->wdt.ops = &ds1388_wdt_ops;
+> +	ds1307->wdt.max_timeout = 99;
+> +	ds1307->wdt.min_timeout = 1;
+> +
+> +	watchdog_init_timeout(&ds1307->wdt, 99, ds1307->dev);
+
+That is quite pointless; just set wdt.timeout to 99 (assuming
+that is what you want as default).
+
+watchdog_init_timeout() only makes sense if it is used to set the
+timeout from a module parameter or from a devicetree property.
+
+> +	watchdog_set_drvdata(&ds1307->wdt, ds1307);
+> +	watchdog_register_device(&ds1307->wdt);
+
+Please call devm_watchdog_register_device().
+
+> +}
+> +#else
+> +static void ds1307_wdt_register(struct ds1307 *ds1307)
+> +{
+> +}
+> +#endif /* CONFIG_WATCHDOG_CORE */
+> +
+>  static const struct regmap_config regmap_config = {
+>  	.reg_bits = 8,
+>  	.val_bits = 8,
+> @@ -1865,6 +1961,7 @@ static int ds1307_probe(struct i2c_client *client,
+>  
+>  	ds1307_hwmon_register(ds1307);
+>  	ds1307_clks_register(ds1307);
+> +	ds1307_wdt_register(ds1307);
+>  
+>  	return 0;
+>  
+> 
+
