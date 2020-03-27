@@ -2,143 +2,303 @@ Return-Path: <SRS0=s8dx=5M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 463C2C2D0E5
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 11:24:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCBA1C2D0E8
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 11:25:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 23AF2206F8
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 11:24:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9809C2072F
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 11:25:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727185AbgC0LYj (ORCPT
+        id S1727439AbgC0LZS convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Mar 2020 07:24:39 -0400
-Received: from mout.kundenserver.de ([212.227.126.130]:57683 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726540AbgC0LYh (ORCPT
+        Fri, 27 Mar 2020 07:25:18 -0400
+Received: from m4a0073g.houston.softwaregrp.com ([15.124.2.131]:45029 "EHLO
+        m4a0073g.houston.softwaregrp.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727254AbgC0LZR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Mar 2020 07:24:37 -0400
-Received: from [192.168.1.183] ([37.4.249.171]) by mrelayeu.kundenserver.de
- (mreue012 [212.227.15.167]) with ESMTPSA (Nemesis) id
- 1MGgRW-1j57eA21oY-00DoGH; Fri, 27 Mar 2020 12:24:28 +0100
-Subject: Re: [PATCH] ARM: dts: bcm283x: Use firmware PM driver for V3D
-To:     Florian Fainelli <f.fainelli@gmail.com>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Eric Anholt <eric@anholt.net>
-Cc:     devicetree@vger.kernel.org, Scott Branden <sbranden@broadcom.com>,
-        Ray Jui <rjui@broadcom.com>, linux-kernel@vger.kernel.org,
-        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
-        wahrenst@gmx.net, linux-arm-kernel@lists.infradead.org
-References: <20200303173217.3987-1-nsaenzjulienne@suse.de>
- <24f850f64b5c71c71938110775e16caaec2811cc.camel@suse.de>
- <8c2bdd83-c8a9-7ba8-8d61-69594e6a2bde@i2se.com>
- <4239bf44-1a2d-09c4-fc1b-186955c062ab@gmail.com>
-From:   Stefan Wahren <stefan.wahren@i2se.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=stefan.wahren@i2se.com; keydata=
- xsFNBFt6gBMBEACub/pBevHxbvJefyZG32JINmn2bsEPX25V6fejmyYwmCGKjFtL/DoUMEVH
- DxCJ47BMXo344fHV1C3AnudgN1BehLoBtLHxmneCzgH3KcPtWW7ptj4GtJv9CQDZy27SKoEP
- xyaI8CF0ygRxJc72M9I9wmsPZ5bUHsLuYWMqQ7JcRmPs6D8gBkk+8/yngEyNExwxJpR1ylj5
- bjxWDHyYQvuJ5LzZKuO9LB3lXVsc4bqXEjc6VFuZFCCk/syio/Yhse8N+Qsx7MQagz4wKUkQ
- QbfXg1VqkTnAivXs42VnIkmu5gzIw/0tRJv50FRhHhxpyKAI8B8nhN8Qvx7MVkPc5vDfd3uG
- YW47JPhVQBcUwJwNk/49F9eAvg2mtMPFnFORkWURvP+G6FJfm6+CvOv7YfP1uewAi4ln+JO1
- g+gjVIWl/WJpy0nTipdfeH9dHkgSifQunYcucisMyoRbF955tCgkEY9EMEdY1t8iGDiCgX6s
- 50LHbi3k453uacpxfQXSaAwPksl8MkCOsv2eEr4INCHYQDyZiclBuuCg8ENbR6AGVtZSPcQb
- enzSzKRZoO9CaqID+favLiB/dhzmHA+9bgIhmXfvXRLDZze8po1dyt3E1shXiddZPA8NuJVz
- EIt2lmI6V8pZDpn221rfKjivRQiaos54TgZjjMYI7nnJ7e6xzwARAQABzSlTdGVmYW4gV2Fo
- cmVuIDxzdGVmYW4ud2FocmVuQGluLXRlY2guY29tPsLBdwQTAQgAIQUCXIdehwIbAwULCQgH
- AgYVCAkKCwIEFgIDAQIeAQIXgAAKCRCUgewPEZDy2yHTD/9UF7QlDkGxzQ7AaCI6N95iQf8/
- 1oSUaDNu2Y6IK+DzQpb1TbTOr3VJwwY8a3OWz5NLSOLMWeVxt+osMmlQIGubD3ODZJ8izPlG
- /JrNt5zSdmN5IA5f3esWWQVKvghZAgTDqdpv+ZHW2EmxnAJ1uLFXXeQd3UZcC5r3/g/vSaMo
- 9xek3J5mNuDm71lEWsAs/BAcFc+ynLhxwBWBWwsvwR8bHtJ5DOMWvaKuDskpIGFUe/Kb2B+j
- ravQ3Tn6s/HqJM0cexSHz5pe+0sGvP+t9J7234BFQweFExriey8UIxOr4XAbaabSryYnU/zV
- H9U1i2AIQZMWJAevCvVgQ/U+NeRhXude9YUmDMDo2sB2VAFEAqiF2QUHPA2m8a7EO3yfL4rM
- k0iHzLIKvh6/rH8QCY8i3XxTNL9iCLzBWu/NOnCAbS+zlvLZaiSMh5EfuxTtv4PlVdEjf62P
- +ZHID16gUDwEmazLAMrx666jH5kuUCTVymbL0TvB+6L6ARl8ANyM4ADmkWkpyM22kCuISYAE
- fQR3uWXZ9YgxaPMqbV+wBrhJg4HaN6C6xTqGv3r4B2aqb77/CVoRJ1Z9cpHCwiOzIaAmvyzP
- U6MxCDXZ8FgYlT4v23G5imJP2zgX5s+F6ACUJ9UQPD0uTf+J9Da2r+skh/sWOnZ+ycoHNBQv
- ocZENAHQf87BTQRbeoATARAA2Hd0fsDVK72RLSDHby0OhgDcDlVBM2M+hYYpO3fX1r++shiq
- PKCHVAsQ5bxe7HmJimHa4KKYs2kv/mlt/CauCJ//pmcycBM7GvwnKzmuXzuAGmVTZC6WR5Lk
- akFrtHOzVmsEGpNv5Rc9l6HYFpLkbSkVi5SPQZJy+EMgMCFgjrZfVF6yotwE1af7HNtMhNPa
- LDN1oUKF5j+RyRg5iwJuCDknHjwBQV4pgw2/5vS8A7ZQv2MbW/TLEypKXif78IhgAzXtE2Xr
- M1n/o6ZH71oRFFKOz42lFdzdrSX0YsqXgHCX5gItLfqzj1psMa9o1eiNTEm1dVQrTqnys0l1
- 8oalRNswYlQmnYBwpwCkaTHLMHwKfGBbo5dLPEshtVowI6nsgqLTyQHmqHYqUZYIpigmmC3S
- wBWY1V6ffUEmkqpAACEnL4/gUgn7yQ/5d0seqnAq2pSBHMUUoCcTzEQUWVkiDv3Rk7hTFmhT
- sMq78xv2XRsXMR6yQhSTPFZCYDUExElEsSo9FWHWr6zHyYcc8qDLFvG9FPhmQuT2s9Blx6gI
- 323GnEq1lwWPJVzP4jQkJKIAXwFpv+W8CWLqzDWOvdlrDaTaVMscFTeH5W6Uprl65jqFQGMp
- cRGCs8GCUW13H0IyOtQtwWXA4ny+SL81pviAmaSXU8laKaRu91VOVaF9f4sAEQEAAcLBXwQY
- AQIACQUCW3qAEwIbDAAKCRCUgewPEZDy2+oXD/9cHHRkBZOfkmSq14Svx062PtU0KV470TSn
- p/jWoYJnKIw3G0mXIRgrtH2dPwpIgVjsYyRSVMKmSpt5ZrDf9NtTbNWgk8VoLeZzYEo+J3oP
- qFrTMs3aYYv7e4+JK695YnmQ+mOD9nia915tr5AZj95UfSTlyUmyic1d8ovsf1fP7XCUVRFc
- RjfNfDF1oL/pDgMP5GZ2OwaTejmyCuHjM8IR1CiavBpYDmBnTYk7Pthy6atWvYl0fy/CqajT
- Ksx7+p9xziu8ZfVX+iKBCc+He+EDEdGIDhvNZ/IQHfOB2PUXWGS+s9FNTxr/A6nLGXnA9Y6w
- 93iPdYIwxS7KXLoKJee10DjlzsYsRflFOW0ZOiSihICXiQV1uqM6tzFG9gtRcius5UAthWaO
- 1OwUSCQmfCOm4fvMIJIA9rxtoS6OqRQciF3crmo0rJCtN2awZfgi8XEif7d6hjv0EKM9XZoi
- AZYZD+/iLm5TaKWN6oGIti0VjJv8ZZOZOfCb6vqFIkJW+aOu4orTLFMz28aoU3QyWpNC8FFm
- dYsVua8s6gN1NIa6y3qa/ZB8bA/iky59AEz4iDIRrgUzMEg8Ak7Tfm1KiYeiTtBDCo25BvXj
- bqsyxkQD1nkRm6FAVzEuOPIe8JuqW2xD9ixGYvjU5hkRgJp3gP5b+cnG3LPqquQ2E6goKUML AQ==
-Message-ID: <216d21e5-1a69-7d76-55bb-118715b30278@i2se.com>
-Date:   Fri, 27 Mar 2020 12:24:27 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Fri, 27 Mar 2020 07:25:17 -0400
+Received: FROM m4a0073g.houston.softwaregrp.com (15.120.17.147) BY m4a0073g.houston.softwaregrp.com WITH ESMTP;
+ Fri, 27 Mar 2020 11:22:44 +0000
+Received: from M9W0067.microfocus.com (2002:f79:be::f79:be) by
+ M4W0335.microfocus.com (2002:f78:1193::f78:1193) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.1591.10; Fri, 27 Mar 2020 11:23:20 +0000
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (15.124.72.11) by
+ M9W0067.microfocus.com (15.121.0.190) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.1591.10 via Frontend Transport; Fri, 27 Mar 2020 11:23:20 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=ghu8jzo5bpPgDkLxwzBuvd/3VXLq7KISkWo1YUDCzIOPE/oKjyAurhOAPdt9V1yWfCIGAC/muxC/sASZW1DsBddIQX+Y17E+z0EqZS2LinRvRY8rWLrWLY7RX8bThJxgcEdFWvNexrwzaScCDtHzv9nnlTaWPGj1+9G3B0Wo4Yue/rxBh6VRvKs3wF7lsZUIofP/Fln/6tK7G8hUFfD2UQkxePfUxmP+4zZVCbI8Il+CigMZ83KT/Spj8TUpHLww3VwanGu2ZjXKXJmpgHM3k+GdsLL9q839oOmzafK2L3Ogl8TeINDYvK+Ph+wHbcduXjkneJT/u68iKldSLm7TMA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=5C1izI03Kdap6Bj+CEK2rEn6r/SqgjASTF/nli3PDbw=;
+ b=Lw21wtV5HXppzZxadewUkApobrUu8uULIRcXOA20bT4bGzrUj6HlETo1mw32l34CQwBU7Gf1AKb4v83XMdi8oBqPFeHrEDork7HQVWLwL8lBm4TIZBcme3NpUcR/b0Mm6iuSKHBi0G3dRxnGJJtRmApDtdAw/RlxvdK9PJvjrrmUkd8oNWNMUYS3F1W7rYvcZiGgtA8s+BsJ6sFpoFU7812Z1SwcvBdhDh8oFf4rUIRkxRv/qXcddMNhMqLrhQJKgqTO3lfelzcC70TLXqAq2hoqPqfRsf7Ef3Q3pMhnoYFPyr3Gk1nv9TFxWe9AIN2BRPR341rrDFlWzKA20EiqWw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=suse.com; dmarc=pass action=none header.from=suse.com;
+ dkim=pass header.d=suse.com; arc=none
+Authentication-Results: spf=none (sender IP is ) smtp.mailfrom=clin@suse.com; 
+Received: from SN1PR18MB2126.namprd18.prod.outlook.com (2603:10b6:802:29::29)
+ by SN1PR18MB2095.namprd18.prod.outlook.com (2603:10b6:802:31::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2835.22; Fri, 27 Mar
+ 2020 11:23:19 +0000
+Received: from SN1PR18MB2126.namprd18.prod.outlook.com
+ ([fe80::1b1:6ada:da24:d1e9]) by SN1PR18MB2126.namprd18.prod.outlook.com
+ ([fe80::1b1:6ada:da24:d1e9%5]) with mapi id 15.20.2856.019; Fri, 27 Mar 2020
+ 11:23:19 +0000
+From:   Chester Lin <clin@suse.com>
+To:     <rjw@rjwysocki.net>, <lenb@kernel.org>, <robert.moore@intel.com>,
+        <erik.kaneda@intel.com>, <gregkh@linuxfoundation.org>
+CC:     <linux-acpi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <devel@acpica.org>, <jlee@suse.com>, <mhocko@suse.com>,
+        Chester Lin <clin@suse.com>
+Subject: [RFC PATCH 1/3] ACPI: scan: add userland notification while handling eject events
+Date:   Fri, 27 Mar 2020 19:22:45 +0800
+Message-ID: <20200327112247.17691-2-clin@suse.com>
+X-Mailer: git-send-email 2.24.0
+In-Reply-To: <20200327112247.17691-1-clin@suse.com>
+References: <20200327112247.17691-1-clin@suse.com>
+Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain
+X-ClientProxiedBy: HK2PR02CA0162.apcprd02.prod.outlook.com
+ (2603:1096:201:1f::22) To SN1PR18MB2126.namprd18.prod.outlook.com
+ (2603:10b6:802:29::29)
 MIME-Version: 1.0
-In-Reply-To: <4239bf44-1a2d-09c4-fc1b-186955c062ab@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Provags-ID: V03:K1:HuG7uCzm5sZSv/V781JbnxNGfw9eNTrd9ceDEEQiH1za3YOHg28
- oqHcXFj9VxfhL8TdKJftky6E7iK+sDMECZPtRb9NXHO/zkypN7X8bX2OmrVRBfNjX0+enVX
- OSGgT5SKr/+zUCP6s6WSViyI6+YRzVIqZ6BDobGm6+gVPFlQ50kJN6eBV2K7gkh0aCKbbLV
- iTdmJg+7yv/4ohugTSgkg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:MU00D6eHlgM=:EjXFpbGi/SSpjJhCoTA+0B
- BWeVSWcGKaCGJXdCWiLtx6MMFwuXDh/jxiAl8T6rst4DxZTouMaaLARlZyqe4eWG/B5rrbvn0
- /BYX3VObOyONSs1h48R/d11X44SAn7Et7pEwmFghvLqnR4j5kI5BL2zg2zLVL8L8MzISmnIWw
- bpzu7f3gq3EJwNKo2UJIqDN+9PZOyNYv+F1nZ6FcSzcz9NDCpepZPgmrPXpgT/3uFfUgeomMJ
- R2oogJKPIN8YX6JCBvq4D/t5c5HgfDYpC/Wo/HTXsJ5v4oXh+8LBwUrH2qDVIG+A5a94hk3ja
- QtNFSIavfat58qbxTi9a7slHNwQQfVe5Wr73+OoYMGUNm7fNFIJF+Ng6XeKSGY9PP5WOypG4t
- vmAHJWqTcU124bcKh3zlHIuJNh9XD4uVPJs1TF1thce37v6nIOmB5eyZX7e3yrFH3OG8qKvqG
- hcIU05Za2Yo9GXp/ML/N0Z6IWddQvvUyQ9fmUlna9D02fgj7euyoVoVfwFvKaiRL78nGaacoH
- /cha0f0gNUUILIdNREUe5jNVeyyHMzeCFDbWKgaAflzWNlxQHUWg6gF/bTF0um0R7wWO/GFU7
- Wk64YSDrEvirVkdYltdZahnTDTGu1i3a4+XrY53AMIF8AIMBIxFpxjV3Cd/BpDG+nZ93wqtLG
- /JJ5a2lnd/q9rObOLDKcQdowpWzzDVaMNgIuMmJdIlriPeKplCFRlRdzR+ZB8VDp5Zv2rt3Xl
- m2j+NVsuJzRwp/Nuf4AN4AAEn0G8RZAd9+1Xn+eg6T7GK/5BLm6pCDwWvoh/Blj0gY0DkxJ+3
- 7wjNfWG5IviCOuX1i0CkQ140q72ZQJ4eMeTsQFZVpeQL8UhQaCTuY+Ys/jMhQjQn1MIB7v/
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from localhost.localdomain (220.141.80.97) by HK2PR02CA0162.apcprd02.prod.outlook.com (2603:1096:201:1f::22) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2856.19 via Frontend Transport; Fri, 27 Mar 2020 11:23:16 +0000
+X-Mailer: git-send-email 2.24.0
+X-Originating-IP: [220.141.80.97]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 1a9b88e8-817a-4376-aaf3-08d7d2414027
+X-MS-TrafficTypeDiagnostic: SN1PR18MB2095:
+X-LD-Processed: 856b813c-16e5-49a5-85ec-6f081e13b527,ExtFwd
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <SN1PR18MB2095FE9654D624D29738C4EEADCC0@SN1PR18MB2095.namprd18.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:7219;
+X-Forefront-PRVS: 0355F3A3AE
+X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10019020)(4636009)(346002)(39860400002)(136003)(376002)(366004)(396003)(6666004)(66556008)(6512007)(66946007)(69590400007)(66476007)(316002)(1076003)(6486002)(107886003)(52116002)(6506007)(5660300002)(81166006)(81156014)(16526019)(186003)(8676002)(8936002)(4326008)(956004)(2616005)(2906002)(86362001)(478600001)(15650500001)(26005)(36756003);DIR:OUT;SFP:1102;SCL:1;SRVR:SN1PR18MB2095;H:SN1PR18MB2126.namprd18.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;
+Received-SPF: None (protection.outlook.com: suse.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: N4IQeZZWLybWnHSFXuu0f8uVGh5em9MtPLwmec4Pa0ZWalOXsIvfR+MjaiTDKpefBCSIV+E51Rfp+2P0LbM14gxi8h8uwhoX1XKgkRi65MRiN6uKFWgDMVeefotl5lsj0ZZVAwHPu8niaHClFF9soi600F/usb5Oh9TkkRX8mFt8FcDMpijCLyj5ojcNdSo3/KHNcEXKIsBlE9zfW1wWTTzjif3UetQP/Bgy+CJIO9fExN5RMRHWe+4LDQalOt/vAaBzpEZtmjfkZ7goppyYIe0T+U1XUz8slRf5ZGuukZdjUnqUBjn6WvcZAcAZADyh4rfT+k2cTm1ow340MPDyYkWZVCQEsIbo7teIyuC51GJu+DZj9lt6ZvzhKGQLrw1ZKOWMzjogjh5IW7PbOT7auD/nNre1uxR5SDKoezdWm6+nfUdA6RuYnKMnGiBGGwbFpzqWtiPvgBUmzn+0zimbmyKhPRjXtaQl1+u0/LRmFCYjz6KI6Xe8yg08XTY1wdim
+X-MS-Exchange-AntiSpam-MessageData: 8DYhMLpAdsjzrtnoKaPh/QdwrAVSL5Dsq0QB1cll5bPpe/RcDmMSZcknPXecKd1yWD9EtNsYt3/JcWEXRUSw4hU7aOsoLOs2Malh2eDC4yKakapmkzS18DQTF5HH1laSekf8nA+/TTuzgcyrcFk/mw==
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1a9b88e8-817a-4376-aaf3-08d7d2414027
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Mar 2020 11:23:18.9332
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 856b813c-16e5-49a5-85ec-6f081e13b527
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: GhyxLpPPk/W8BR+bqP/wJ6LC8MgpZqYyK54woevq7jI81SrixexLTOtiD+zRZSDi
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN1PR18MB2095
+X-OriginatorOrg: suse.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Add a request_offline attribute in order to tell the kernel if it's
+required to send notifications to userland first while handling an eject
+event. Userland will have to put the target device offline when this
+attribute is set.
 
-Am 27.03.20 um 01:35 schrieb Florian Fainelli:
->
-> On 3/26/2020 10:24 AM, Stefan Wahren wrote:
->> Am 26.03.20 um 13:24 schrieb Nicolas Saenz Julienne:
->>> Hi Stefan and Florian,
->>>
->>> On Tue, 2020-03-03 at 18:32 +0100, Nicolas Saenz Julienne wrote:
->>>> The register based driver turned out to be unstable, specially on RPi3a+
->>>> but not limited to it. While a fix is being worked on, we roll back to
->>>> using firmware based scheme.
->>>>
->>>> Fixes: e1dc2b2e1bef ("ARM: bcm283x: Switch V3D over to using the PM driver
->>>> instead of firmware")
->>>> Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
->>>> ---
->>> now that the problem Stefan was seeing is being taken care of, I think it's
->>> fair to reconsider taking this patch. Maybe even adding a Tested-by by Stefan?
->> after applying "drm/vc4: Fix HDMI mode validation" this commit doesn't
->> cause any regression:
->>
->> Tested-by: Stefan Wahren <stefan.wahren@i2se.com>
-> Good, how do you like to see this applied? Do we need to ensure that
-> drm/vc4: Fix HDMI mode validation is applied to Linus' tree before
-> merging this one? Nicolas, should this be queued for 5.7 or 5.8 (I do
-> not think the 5.7 PRs have been merged yet).
-not sure how many are affected. I'm fine as long as both patches are
-applied to a tree.
+Signed-off-by: Chester Lin <clin@suse.com>
+---
+ Documentation/ABI/testing/sysfs-bus-acpi | 16 ++++++++++
+ drivers/acpi/device_sysfs.c              | 40 +++++++++++++++++++++++-
+ drivers/acpi/scan.c                      | 39 +++++++++++++++++++----
+ include/acpi/acpi_bus.h                  |  1 +
+ 4 files changed, 89 insertions(+), 7 deletions(-)
 
-Regards
+diff --git a/Documentation/ABI/testing/sysfs-bus-acpi b/Documentation/ABI/testing/sysfs-bus-acpi
+index e7898cfe5fb1..b9c467704889 100644
+--- a/Documentation/ABI/testing/sysfs-bus-acpi
++++ b/Documentation/ABI/testing/sysfs-bus-acpi
+@@ -93,3 +93,19 @@ Description:
+ 		hardware, if the _HRV control method is present.  It is mostly
+ 		useful for non-PCI devices because lspci can list the hardware
+ 		version for PCI devices.
++
++What:		/sys/bus/acpi/devices/.../request_offline
++Date:		Mar, 2020
++Contact:	Chester Lin <clin@suse.com>
++Description:
++		(RW) Allows the userland to receive offline requests when
++		devices are planning to be ejected.
++
++		If bit [0] is clear, the kernel will automatically try putting
++		the target offline before the target can be ejected.
++
++		If bit [0] is set, a uevent will be sent to userland as an
++		offline request and userland is responsible for handling offline
++		operations before the target can be ejected. This approach
++		provides flexibility while some applications could need more
++		time to release resources.
+diff --git a/drivers/acpi/device_sysfs.c b/drivers/acpi/device_sysfs.c
+index 96869f1538b9..453bd1b9edf5 100644
+--- a/drivers/acpi/device_sysfs.c
++++ b/drivers/acpi/device_sysfs.c
+@@ -506,6 +506,37 @@ static ssize_t status_show(struct device *dev, struct device_attribute *attr,
+ }
+ static DEVICE_ATTR_RO(status);
+ 
++static ssize_t request_offline_show(struct device *dev,
++		struct device_attribute *attr, char *buf)
++{
++	struct acpi_device *acpi_dev = to_acpi_device(dev);
++
++	return sprintf(buf, "%u\n", acpi_dev->request_offline?1:0);
++}
++
++static ssize_t request_offline_store(struct device *dev,
++		struct device_attribute *attr, const char *buf, size_t count)
++{
++	struct acpi_device *acpi_dev = to_acpi_device(dev);
++
++	if (!count)
++		return -EINVAL;
++
++	switch (buf[0]) {
++	case '0':
++		acpi_dev->request_offline = false;
++		break;
++	case '1':
++		acpi_dev->request_offline = true;
++		break;
++	default:
++		return -EINVAL;
++	}
++
++	return count;
++}
++static DEVICE_ATTR_RW(request_offline);
++
+ /**
+  * acpi_device_setup_files - Create sysfs attributes of an ACPI device.
+  * @dev: ACPI device object.
+@@ -580,6 +611,11 @@ int acpi_device_setup_files(struct acpi_device *dev)
+ 		result = device_create_file(&dev->dev, &dev_attr_eject);
+ 		if (result)
+ 			return result;
++
++		result = device_create_file(&dev->dev,
++					    &dev_attr_request_offline);
++		if (result)
++			return result;
+ 	}
+ 
+ 	if (dev->flags.power_manageable) {
+@@ -623,8 +659,10 @@ void acpi_device_remove_files(struct acpi_device *dev)
+ 	/*
+ 	 * If device has _EJ0, remove 'eject' file.
+ 	 */
+-	if (acpi_has_method(dev->handle, "_EJ0"))
++	if (acpi_has_method(dev->handle, "_EJ0")) {
+ 		device_remove_file(&dev->dev, &dev_attr_eject);
++		device_remove_file(&dev->dev, &dev_attr_request_offline);
++	}
+ 
+ 	if (acpi_has_method(dev->handle, "_SUN"))
+ 		device_remove_file(&dev->dev, &dev_attr_sun);
+diff --git a/drivers/acpi/scan.c b/drivers/acpi/scan.c
+index 6d3448895382..1cb39c5360cf 100644
+--- a/drivers/acpi/scan.c
++++ b/drivers/acpi/scan.c
+@@ -145,6 +145,7 @@ static acpi_status acpi_bus_offline(acpi_handle handle, u32 lvl, void *data,
+ 	struct acpi_device_physical_node *pn;
+ 	bool second_pass = (bool)data;
+ 	acpi_status status = AE_OK;
++	char *envp[] = { "EVENT=offline", NULL };
+ 
+ 	if (acpi_bus_get_device(handle, &device))
+ 		return AE_OK;
+@@ -166,7 +167,18 @@ static acpi_status acpi_bus_offline(acpi_handle handle, u32 lvl, void *data,
+ 		} else {
+ 			pn->put_online = false;
+ 		}
+-		ret = device_offline(pn->dev);
++
++		/* Don't offline directly but need to notify userland first */
++		if (device->request_offline) {
++			if (pn->dev->offline)
++				ret = 0;
++			else
++				ret = kobject_uevent_env(&pn->dev->kobj,
++							KOBJ_CHANGE, envp);
++		} else {
++			ret = device_offline(pn->dev);
++		}
++
+ 		if (ret >= 0) {
+ 			pn->put_online = !ret;
+ 		} else {
+@@ -188,6 +200,7 @@ static acpi_status acpi_bus_online(acpi_handle handle, u32 lvl, void *data,
+ {
+ 	struct acpi_device *device = NULL;
+ 	struct acpi_device_physical_node *pn;
++	char *envp[] = { "EVENT=online", NULL };
+ 
+ 	if (acpi_bus_get_device(handle, &device))
+ 		return AE_OK;
+@@ -196,7 +209,12 @@ static acpi_status acpi_bus_online(acpi_handle handle, u32 lvl, void *data,
+ 
+ 	list_for_each_entry(pn, &device->physical_node_list, node)
+ 		if (pn->put_online) {
+-			device_online(pn->dev);
++			if (device->request_offline)
++				kobject_uevent_env(&pn->dev->kobj,
++						   KOBJ_CHANGE, envp);
++			else
++				device_online(pn->dev);
++
+ 			pn->put_online = false;
+ 		}
+ 
+@@ -256,14 +274,23 @@ static int acpi_scan_hot_remove(struct acpi_device *device)
+ 	acpi_handle handle = device->handle;
+ 	unsigned long long sta;
+ 	acpi_status status;
++	bool notify_single = false;
++	int error;
+ 
+-	if (device->handler && device->handler->hotplug.demand_offline) {
+-		if (!acpi_scan_is_offline(device, true))
++	if (device->handler && device->handler->hotplug.demand_offline)
++		if (!device->request_offline)
++			notify_single = true;
++
++	if (!acpi_scan_is_offline(device, notify_single)) {
++		if (notify_single)
+ 			return -EBUSY;
+-	} else {
+-		int error = acpi_scan_try_to_offline(device);
++
++		error = acpi_scan_try_to_offline(device);
+ 		if (error)
+ 			return error;
++
++		if (device->request_offline)
++			return -EBUSY;
+ 	}
+ 
+ 	ACPI_DEBUG_PRINT((ACPI_DB_INFO,
+diff --git a/include/acpi/acpi_bus.h b/include/acpi/acpi_bus.h
+index 0c23fd0548d1..7a29ea0a7d0e 100644
+--- a/include/acpi/acpi_bus.h
++++ b/include/acpi/acpi_bus.h
+@@ -375,6 +375,7 @@ struct acpi_device {
+ 	struct list_head physical_node_list;
+ 	struct mutex physical_node_lock;
+ 	void (*remove)(struct acpi_device *);
++	bool request_offline;
+ };
+ 
+ /* Non-device subnode */
+-- 
+2.24.0
 
