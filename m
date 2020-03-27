@@ -2,90 +2,131 @@ Return-Path: <SRS0=s8dx=5M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B5CDC43331
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 06:11:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E4D5C43331
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 06:24:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0FAE520714
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 06:11:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E293B20717
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 06:24:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IQ2KiKpu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727370AbgC0GLH (ORCPT
+        id S1726518AbgC0GYU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Mar 2020 02:11:07 -0400
-Received: from foss.arm.com ([217.140.110.172]:40856 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725936AbgC0GLG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Mar 2020 02:11:06 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D024B1045;
-        Thu, 26 Mar 2020 23:11:05 -0700 (PDT)
-Received: from ssg-dev-vb.arm.com (unknown [10.57.25.3])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 582873F71F;
-        Thu, 26 Mar 2020 23:15:07 -0700 (PDT)
-From:   Hadar Gat <hadar.gat@arm.com>
-To:     Matt Mackall <mpm@selenic.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Alexander Sverdlin <alexander.sverdlin@nokia.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Tomer Maimon <tmaimon77@gmail.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Zaibo Xu <xuzaibo@huawei.com>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc:     linux-crypto@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Gilad Ben-Yossef <gilad@benyossef.com>,
-        Ofir Drang <ofir.drang@arm.com>, Hadar Gat <hadar.gat@arm.com>
-Subject: [PATCH v7 3/3] MAINTAINERS: add HG as cctrng maintainer
-Date:   Fri, 27 Mar 2020 09:10:23 +0300
-Message-Id: <1585289423-18440-4-git-send-email-hadar.gat@arm.com>
+        Fri, 27 Mar 2020 02:24:20 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:36075 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726215AbgC0GYU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Mar 2020 02:24:20 -0400
+Received: by mail-pl1-f196.google.com with SMTP id g2so3090296plo.3;
+        Thu, 26 Mar 2020 23:24:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=KxvtWHMTpXNJcpAcSzyia90JODer9a/KosglAsSw/h4=;
+        b=IQ2KiKpu4ddLFmRTmWjfg249VH+ZFwyu58/9gHxJ/emZHzab338EyOXqRlgwoZmCve
+         Fum5ZBGL7XnZiVeX076I66cpXM5trxBxFs4vRhRj6Mox4dqFrSe+7cpMKo5HIv4eT136
+         jeTZuuJup7J9WQHAiI55O/RrY891voTXSr/u6YBxwetmd84fTEKWEPF008/aqFZUk51q
+         XitBO64fN0M+X3F1P4uaPmnjDubfhKLIXZTDTGoP1vVTz6uyxCR6366oZOXFpdSrtm3o
+         PGBEfqAVrKzJkPHYg81nfyMQh4xuixVMhmfRLx70zXns78Xl1TZ/kPeK1wuBoJgBjS6v
+         WLMw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=KxvtWHMTpXNJcpAcSzyia90JODer9a/KosglAsSw/h4=;
+        b=Y7QZX6xDA7Z/eNg/yVFTvRrhH9tBnKWBF0YLCQGsKo0sPISgYAFmR+jdEsHl6EeqSN
+         nasEUyG71mceXLKOpyvZRpubP3qb36ebNk9mNWUUJc6z6YIeiJQiXBj/OjJFoE24ErHl
+         o8JbOAsR2JV1IFISQp1ZpnTBbfAe3nVBqIrkzxoYGcO1jLkTKE+HemN3meuLzdhaif2D
+         IJ2lBvriw1TZJiPLLNHvqzqkX7HKGcUhWaCp31UcrBJocyEN3VM5yiRYcwju+f3PlSFX
+         utlMcOOMF/KObDUnrpGzzKU+GjYFd5gR8pyqyZ6iwZUmDG+KXyqA2Z1NOf0kFwmVDJ41
+         BlZQ==
+X-Gm-Message-State: ANhLgQ35Bb429OdzFXYBuwGxlsnopucCRE4R4c7zGvewDK7qYqwDWgCv
+        bNXY58N6gyoVSuYaNO2JcZ2+Usom
+X-Google-Smtp-Source: ADFU+vvjua2b0xRBETCx8MIDDcQaAl6IilmVfMS0FYJKgP6FqbfNmkEsgcH3PEbAVcNL35CZ0lmf9A==
+X-Received: by 2002:a17:90a:e289:: with SMTP id d9mr4027778pjz.172.1585290258735;
+        Thu, 26 Mar 2020 23:24:18 -0700 (PDT)
+Received: from localhost.localdomain ([103.7.29.6])
+        by smtp.googlemail.com with ESMTPSA id s4sm3262078pgm.18.2020.03.26.23.24.15
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Thu, 26 Mar 2020 23:24:17 -0700 (PDT)
+From:   Wanpeng Li <kernellwp@gmail.com>
+X-Google-Original-From: Wanpeng Li <wanpengli@tencent.com>
+To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>
+Subject: [PATCH 1/2] KVM: X86: Filter the broadcast dest for IPI fastpath
+Date:   Fri, 27 Mar 2020 14:23:59 +0800
+Message-Id: <1585290240-18643-1-git-send-email-wanpengli@tencent.com>
 X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1585289423-18440-1-git-send-email-hadar.gat@arm.com>
-References: <1585289423-18440-1-git-send-email-hadar.gat@arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I work for Arm on maintaining the TrustZone CryptoCell TRNG driver.
+From: Wanpeng Li <wanpengli@tencent.com>
 
-Signed-off-by: Hadar Gat <hadar.gat@arm.com>
+Except destination shorthand, a destination value 0xffffffff is used to 
+broadcast interrupts, let's also filter this for single target IPI fastpath.
+
+Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
 ---
- MAINTAINERS | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ arch/x86/kvm/lapic.c | 3 ---
+ arch/x86/kvm/lapic.h | 3 +++
+ arch/x86/kvm/x86.c   | 3 ++-
+ 3 files changed, 5 insertions(+), 4 deletions(-)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index c312b65..3f27716 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -3847,6 +3847,15 @@ S:	Supported
- F:	drivers/crypto/ccree/
- W:	https://developer.arm.com/products/system-ip/trustzone-cryptocell/cryptocell-700-family
+diff --git a/arch/x86/kvm/lapic.c b/arch/x86/kvm/lapic.c
+index a38f1a8..88929b1 100644
+--- a/arch/x86/kvm/lapic.c
++++ b/arch/x86/kvm/lapic.c
+@@ -59,9 +59,6 @@
+ #define MAX_APIC_VECTOR			256
+ #define APIC_VECTORS_PER_REG		32
  
-+CCTRNG ARM TRUSTZONE CRYPTOCELL TRUE RANDOM NUMBER GENERATOR (TRNG) DRIVER
-+M:	Hadar Gat <hadar.gat@arm.com>
-+L:	linux-crypto@vger.kernel.org
-+S:	Supported
-+F:	drivers/char/hw_random/cctrng.c
-+F:	drivers/char/hw_random/cctrng.h
-+F:	Documentation/devicetree/bindings/rng/arm-cctrng.txt
-+W:	https://developer.arm.com/products/system-ip/trustzone-cryptocell/cryptocell-700-family
+-#define APIC_BROADCAST			0xFF
+-#define X2APIC_BROADCAST		0xFFFFFFFFul
+-
+ static bool lapic_timer_advance_dynamic __read_mostly;
+ #define LAPIC_TIMER_ADVANCE_ADJUST_MIN	100	/* clock cycles */
+ #define LAPIC_TIMER_ADVANCE_ADJUST_MAX	10000	/* clock cycles */
+diff --git a/arch/x86/kvm/lapic.h b/arch/x86/kvm/lapic.h
+index bc76860..25b77a6 100644
+--- a/arch/x86/kvm/lapic.h
++++ b/arch/x86/kvm/lapic.h
+@@ -17,6 +17,9 @@
+ #define APIC_BUS_CYCLE_NS       1
+ #define APIC_BUS_FREQUENCY      (1000000000ULL / APIC_BUS_CYCLE_NS)
+ 
++#define APIC_BROADCAST			0xFF
++#define X2APIC_BROADCAST		0xFFFFFFFFul
 +
- CEC FRAMEWORK
- M:	Hans Verkuil <hverkuil-cisco@xs4all.nl>
- L:	linux-media@vger.kernel.org
+ enum lapic_mode {
+ 	LAPIC_MODE_DISABLED = 0,
+ 	LAPIC_MODE_INVALID = X2APIC_ENABLE,
+diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+index c4bb7d8..495709f 100644
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -1559,7 +1559,8 @@ static int handle_fastpath_set_x2apic_icr_irqoff(struct kvm_vcpu *vcpu, u64 data
+ 
+ 	if (((data & APIC_SHORT_MASK) == APIC_DEST_NOSHORT) &&
+ 		((data & APIC_DEST_MASK) == APIC_DEST_PHYSICAL) &&
+-		((data & APIC_MODE_MASK) == APIC_DM_FIXED)) {
++		((data & APIC_MODE_MASK) == APIC_DM_FIXED) &&
++		((u32)(data >> 32) != X2APIC_BROADCAST)) {
+ 
+ 		data &= ~(1 << 12);
+ 		kvm_apic_send_ipi(vcpu->arch.apic, (u32)data, (u32)(data >> 32));
 -- 
 2.7.4
 
