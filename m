@@ -7,54 +7,58 @@ X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
 	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24EBAC43331
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74002C2D0E7
 	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 01:36:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E468020774
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 01:36:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A67E20774
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 01:36:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="OeidLvA5"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="IniSd5FS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727770AbgC0Bcu (ORCPT
+        id S1727834AbgC0Bcy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 21:32:50 -0400
-Received: from mail-pl1-f202.google.com ([209.85.214.202]:43445 "EHLO
-        mail-pl1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727509AbgC0Bct (ORCPT
+        Thu, 26 Mar 2020 21:32:54 -0400
+Received: from mail-pj1-f74.google.com ([209.85.216.74]:35575 "EHLO
+        mail-pj1-f74.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727122AbgC0Bcw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 21:32:49 -0400
-Received: by mail-pl1-f202.google.com with SMTP id z9so5847882pln.10
-        for <linux-kernel@vger.kernel.org>; Thu, 26 Mar 2020 18:32:49 -0700 (PDT)
+        Thu, 26 Mar 2020 21:32:52 -0400
+Received: by mail-pj1-f74.google.com with SMTP id nk12so5841006pjb.0
+        for <linux-kernel@vger.kernel.org>; Thu, 26 Mar 2020 18:32:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=00RV7bNLHk/+srLS130iQAKmhRfndHchHDNeo4WMsqs=;
-        b=OeidLvA5lvefgDK7/Lhlm9pfs2j2GdTsKuu8cUAqJgpnGukG4D3aD9o8ROmAxiZfiC
-         N1um11XjyxlpPPHf/FZ8K1Knc0277Ub7tcnjwFjGTNp6UbKWixZoqxIJkikE/UJ+SBJU
-         DEoQbeU3GkPGwQK1vCm+BsGV/ZnEauid0cdne89ZrJQXeRkV0wQdsZnIL82oHnGJ8Gy7
-         y8hn5XXtGEpKHzaVacRzIMYV4NRWE4E7QwF7lElKf7yq8G+pZwFc1UyIpMRgNs7bKa0z
-         scMoBz3E+MotGPm3SgxPfEx/JimkmjYMipqOEL53oJ+eI8rT+Z4JP6MI7vZgX/rVgMOB
-         LHJQ==
+        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
+         :cc;
+        bh=m+LBqNPjIzI/i9s16PMcLCo7oQ00z3NG9NsKpsashP4=;
+        b=IniSd5FS/y8perrcfoLk0jYuwuXa9iiB7J6jReuu7Drq4aE2/mX2ZLrg+PF7EfI7Ef
+         IOxyACbnWFgAg2bxNIqHCTatF8ZMi7A6axNsKDsvZsYXVIU/Omw/HGlcxztyvOzbFLUO
+         Wd1OVOZBLhY6HdtSlhIalBcn1PLJVVGEm993t/nHozzxGk9zQnv02VcBHCp4j2Ds/nYO
+         GYq7IBe3GUcxmGQbGgCWsLwSy9mfW3cheiajnPpylz51hEAlIPtP7zM4nAaipZRdJHjL
+         It73mvnfAcAJiVsW9ttG3lv8f8pncVOYOdRk1qYFMoq3EQprr/CFW3mDmxjTVkZ8fqX/
+         /v+w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=00RV7bNLHk/+srLS130iQAKmhRfndHchHDNeo4WMsqs=;
-        b=TvGaT36E5qVI055yB7cEYaxPYvyUvketBdlg08mRfZhW20oWQm283nRKQocZxOmc8B
-         rJAewpvuurTEq/pWXYs0T2fxr7XrSPt2eWvm07lOlkUQ+qOedGSlMRZphwSuRUiLY6R/
-         oJvR7Yjd40/2iynd/mraAC/OoEU+HnG4+XG6pI0YgDqgFdHRr4uEKskHtMP4s28VerZM
-         yQI5TqbOjCqNDHSDYWEf96ewI+z0HmrEtITPXbtzn/7c4HWoKBUL5A9Mx81pUysoVkR5
-         ERtS9fnUayiB7PaYucsAOHUfp3NNvTRRJNT+KWAih+nn9vEt3nuFgmkJCH4Mz8/kSe/t
-         XruA==
-X-Gm-Message-State: ANhLgQ2lzyVaP1PeG2cpQTmDNjpSnXIdIqvpeWu+hDL0u6bM06Cm24rK
-        +DTOzD3nL+MOfpSzSoj2qpnXUCBulwF+
-X-Google-Smtp-Source: ADFU+vvxEB6/tnu1KoE7CiH6g1ntv3CfQrUiRH4eQWXOoeZZYIIdOLTg20OXiK4zK1sdzoHVsZ96xI4ldhQa
-X-Received: by 2002:a63:cf4a:: with SMTP id b10mr11648063pgj.354.1585272768440;
- Thu, 26 Mar 2020 18:32:48 -0700 (PDT)
-Date:   Thu, 26 Mar 2020 18:32:35 -0700
-Message-Id: <20200327013239.238182-1-rajatja@google.com>
+        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
+         :references:subject:from:to:cc;
+        bh=m+LBqNPjIzI/i9s16PMcLCo7oQ00z3NG9NsKpsashP4=;
+        b=i4/t3VXLoJpcotzsPifuKDOuwQO7uKFoOgYo/ZhHGqClYSMezIifvOzuwDJLFlCH2d
+         MNdyg4Be9RDMCDCIpI20+/T/LZs/938W63U83CRw0yz5xnVSJL78fsQYraG+tgOlbCuR
+         qL7s4GmfDT8LhqcEzYebrmLBzKwCWeL9UZc8+3RmwmvXZMR68/Qh6QwkhnYbcotglgjU
+         K9W5d5vng450I3dyjD7dNuhrh+GpM1RKK87Zka9FH+KbJv4TWgh8Yn7/Y6784+Zw3w19
+         Xfo1xl5BTDk83T+5PRBseQP41vtSpK2LyfZ/qW4YtRI3NYu0d6oCuldWz5xo2ocj/Rdt
+         vikw==
+X-Gm-Message-State: ANhLgQ3o60uTXbUzwm9LGDgsSzQxgkcNk8+bYagTpBR+9tgNdJTbzm5X
+        bZKWt/oitYbtUaoUQFtY6XLyyzaWWefx
+X-Google-Smtp-Source: ADFU+vuSZmpS1Lv5Y2YlOQwUVUT3i8v0Ev/ptDuGm8Q5/RE+iHg6qHDAHM4fAvW84XN9kAm7BD4iuXv8/SKz
+X-Received: by 2002:a17:90a:d349:: with SMTP id i9mr2965528pjx.180.1585272770919;
+ Thu, 26 Mar 2020 18:32:50 -0700 (PDT)
+Date:   Thu, 26 Mar 2020 18:32:36 -0700
+In-Reply-To: <20200327013239.238182-1-rajatja@google.com>
+Message-Id: <20200327013239.238182-2-rajatja@google.com>
 Mime-Version: 1.0
+References: <20200327013239.238182-1-rajatja@google.com>
 X-Mailer: git-send-email 2.25.1.696.g5e7596f4ac-goog
-Subject: [PATCH v3 1/5] input/serio/i8042: Attach fwnode to serio i8042 kbd device
+Subject: [PATCH v3 2/5] Input: atkbd: Expose function row physical map to userspace
 From:   Rajat Jain <rajatja@google.com>
 To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>, dtor@google.com,
         Rob Herring <robh+dt@kernel.org>,
@@ -78,58 +82,147 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Attach the firmware node to the serio i8042 kbd device so that device
-properties can be passed from the firmware.
+Certain keyboards have their top-row keys intended
+for actions such as "Browser back", "Browser Refresh", "Fullscreen"
+etc as their primary mode, thus they will send physical codes for those
+actions. Further, they don't have a dedicated "Fn" key so don't have
+the capability to generate function key codes (e.g. F1, F2 etc..).
+However in this case, if userspace still wants to "synthesize" those
+function keys using the top row action keys, it needs to know the
+physical position of the top row keys. (Essentially a mapping between
+usage codes and a physical location in the top row).
+
+This patch enhances the atkbd driver to receive such a mapping from the
+firmware / device tree, and expose it to userspace in the form of
+a function-row-physmap attribute. The attribute would be a space
+separated ordered list of physical codes, for the keys in the function
+row, in left-to-right order.
+
+The attribute will only be present if the kernel knows about such
+mapping, otherwise the attribute shall not be visible.
 
 Signed-off-by: Rajat Jain <rajatja@google.com>
 ---
-v3: Same as v2
+v3: Change to dev_dbg and remove unecessary error check
 v2: Remove the Change-Id from the commit log
 
- drivers/input/serio/i8042-x86ia64io.h | 1 +
- drivers/input/serio/i8042.c           | 3 +++
- 2 files changed, 4 insertions(+)
+ drivers/input/keyboard/atkbd.c | 56 ++++++++++++++++++++++++++++++++++
+ 1 file changed, 56 insertions(+)
 
-diff --git a/drivers/input/serio/i8042-x86ia64io.h b/drivers/input/serio/i8042-x86ia64io.h
-index dc974c288e880..ed9ec4310d976 100644
---- a/drivers/input/serio/i8042-x86ia64io.h
-+++ b/drivers/input/serio/i8042-x86ia64io.h
-@@ -927,6 +927,7 @@ static int i8042_pnp_kbd_probe(struct pnp_dev *dev, const struct pnp_device_id *
- 	}
- 	i8042_pnp_id_to_string(dev->id, i8042_kbd_firmware_id,
- 			       sizeof(i8042_kbd_firmware_id));
-+	i8042_kbd_fwnode = dev_fwnode(&dev->dev);
- 
- 	/* Keyboard ports are always supposed to be wakeup-enabled */
- 	device_set_wakeup_enable(&dev->dev, true);
-diff --git a/drivers/input/serio/i8042.c b/drivers/input/serio/i8042.c
-index 20ff2bed3917a..0dddf273afd94 100644
---- a/drivers/input/serio/i8042.c
-+++ b/drivers/input/serio/i8042.c
-@@ -21,6 +21,7 @@
- #include <linux/i8042.h>
- #include <linux/slab.h>
- #include <linux/suspend.h>
+diff --git a/drivers/input/keyboard/atkbd.c b/drivers/input/keyboard/atkbd.c
+index 7e3eae54c1926..3b20aba1861cd 100644
+--- a/drivers/input/keyboard/atkbd.c
++++ b/drivers/input/keyboard/atkbd.c
+@@ -24,6 +24,7 @@
+ #include <linux/libps2.h>
+ #include <linux/mutex.h>
+ #include <linux/dmi.h>
 +#include <linux/property.h>
  
- #include <asm/io.h>
+ #define DRIVER_DESC	"AT and PS/2 keyboard driver"
  
-@@ -124,6 +125,7 @@ MODULE_PARM_DESC(unmask_kbd_data, "Unconditional enable (may reveal sensitive da
- static bool i8042_bypass_aux_irq_test;
- static char i8042_kbd_firmware_id[128];
- static char i8042_aux_firmware_id[128];
-+static struct fwnode_handle *i8042_kbd_fwnode;
+@@ -63,6 +64,8 @@ static bool atkbd_terminal;
+ module_param_named(terminal, atkbd_terminal, bool, 0);
+ MODULE_PARM_DESC(terminal, "Enable break codes on an IBM Terminal keyboard connected via AT/PS2");
  
- #include "i8042.h"
++#define MAX_FUNCTION_ROW_KEYS	24
++
+ /*
+  * Scancode to keycode tables. These are just the default setting, and
+  * are loadable via a userland utility.
+@@ -230,6 +233,9 @@ struct atkbd {
  
-@@ -1335,6 +1337,7 @@ static int __init i8042_create_kbd_port(void)
- 	strlcpy(serio->phys, I8042_KBD_PHYS_DESC, sizeof(serio->phys));
- 	strlcpy(serio->firmware_id, i8042_kbd_firmware_id,
- 		sizeof(serio->firmware_id));
-+	set_primary_fwnode(&serio->dev, i8042_kbd_fwnode);
+ 	/* Serializes reconnect(), attr->set() and event work */
+ 	struct mutex mutex;
++
++	u16 function_row_physmap[MAX_FUNCTION_ROW_KEYS];
++	int num_function_row_keys;
+ };
  
- 	port->serio = serio;
- 	port->irq = I8042_KBD_IRQ;
+ /*
+@@ -283,6 +289,7 @@ static struct device_attribute atkbd_attr_##_name =				\
+ 	__ATTR(_name, S_IRUGO, atkbd_do_show_##_name, NULL);
+ 
+ ATKBD_DEFINE_RO_ATTR(err_count);
++ATKBD_DEFINE_RO_ATTR(function_row_physmap);
+ 
+ static struct attribute *atkbd_attributes[] = {
+ 	&atkbd_attr_extra.attr,
+@@ -292,11 +299,42 @@ static struct attribute *atkbd_attributes[] = {
+ 	&atkbd_attr_softrepeat.attr,
+ 	&atkbd_attr_softraw.attr,
+ 	&atkbd_attr_err_count.attr,
++	&atkbd_attr_function_row_physmap.attr,
+ 	NULL
+ };
+ 
++static ssize_t atkbd_show_function_row_physmap(struct atkbd *atkbd, char *buf)
++{
++	ssize_t size = 0;
++	int i;
++
++	if (!atkbd->num_function_row_keys)
++		return 0;
++
++	for (i = 0; i < atkbd->num_function_row_keys; i++)
++		size += sprintf(buf + size, "%02X ",
++				atkbd->function_row_physmap[i]);
++	size += sprintf(buf + size, "\n");
++	return size;
++}
++
++static umode_t atkbd_attr_is_visible(struct kobject *kobj,
++				struct attribute *attr, int i)
++{
++	struct device *dev = container_of(kobj, struct device, kobj);
++	struct serio *serio = to_serio_port(dev);
++	struct atkbd *atkbd = serio_get_drvdata(serio);
++
++	if (attr == &atkbd_attr_function_row_physmap.attr &&
++	    !atkbd->num_function_row_keys)
++		return 0;
++
++	return attr->mode;
++}
++
+ static struct attribute_group atkbd_attribute_group = {
+ 	.attrs	= atkbd_attributes,
++	.is_visible = atkbd_attr_is_visible,
+ };
+ 
+ static const unsigned int xl_table[] = {
+@@ -1121,6 +1159,22 @@ static void atkbd_set_device_attrs(struct atkbd *atkbd)
+ 	}
+ }
+ 
++static void atkbd_parse_fwnode_data(struct serio *serio)
++{
++	struct atkbd *atkbd = serio_get_drvdata(serio);
++	struct device *dev = &serio->dev;
++	int n;
++
++	/* Parse "function-row-physmap" property */
++	n = device_property_count_u16(dev, "function-row-physmap");
++	if (n > 0 && n <= MAX_FUNCTION_ROW_KEYS &&
++	    !device_property_read_u16_array(dev, "function-row-physmap",
++					    atkbd->function_row_physmap, n)) {
++		atkbd->num_function_row_keys = n;
++		dev_dbg(dev, "FW reported %d function-row key locations\n", n);
++	}
++}
++
+ /*
+  * atkbd_connect() is called when the serio module finds an interface
+  * that isn't handled yet by an appropriate device driver. We check if
+@@ -1184,6 +1238,8 @@ static int atkbd_connect(struct serio *serio, struct serio_driver *drv)
+ 		atkbd->id = 0xab00;
+ 	}
+ 
++	atkbd_parse_fwnode_data(serio);
++
+ 	atkbd_set_keycode_table(atkbd);
+ 	atkbd_set_device_attrs(atkbd);
+ 
 -- 
 2.25.1.696.g5e7596f4ac-goog
 
