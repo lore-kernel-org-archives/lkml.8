@@ -2,174 +2,374 @@ Return-Path: <SRS0=s8dx=5M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6385C2D0E5
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 15:00:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89F90C2D0EC
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 15:01:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AEE0C2072F
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 15:00:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="Aur+39Av"
+	by mail.kernel.org (Postfix) with ESMTP id 56231208E4
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 15:01:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727708AbgC0PAd (ORCPT
+        id S1727726AbgC0PBh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Mar 2020 11:00:33 -0400
-Received: from mail-eopbgr50087.outbound.protection.outlook.com ([40.107.5.87]:30198
-        "EHLO EUR03-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727287AbgC0PAd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Mar 2020 11:00:33 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=l18I+/d526Jl8+CeBjlADLzo5DG/FkZpi1jnfEcktUB1e+eOE+3kaDf/x3xqy65gyi4PM2ynsUrzv56jPgt0X3rjs/QUzQ0NplQI7dBCgf0YfkHkcGiZThOoyHb+aVWEovktlmu1UZMAJDf9dakqFM9Mb0c2OHMqEMfZ7/11IKRItQ09MfzHGhjUYKXTJjHaSfiY28Bz+IPkzEzQ7IhMaROgWvDnlsYybyn53TohI1E6WpopYpwMrYiK3aSu8qCadm+g7V/zsMSuj+MS7YNYOcqBlLlcKKbStkbURcT1OoJ7rfTlJGjvxtA4a7zRbsU+WA/pXHX6m39QI/FkV1Tl+Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=UXh7cGCMY7ukNkIKhhUygyaHobBsn+tYPkkAmPAsjNg=;
- b=doLOxtQ88/dHu6+4Q68Dpa8wxEcy24yZzeGFPQcxC3ewFnzRFBCGZydP5/znCNHQkW57JxWxNvz0WCgTOj+Cgdx87PaM57SrflacKhG0W9hAbTxBmN2t7Itw2kJTupQOkLeDxbNupGuvG4g0AARRraS3LCgTE+L0uKXx1GJNZF/DbkF8cRijABirCOfOhFVcnB0M4ig0JIoenIzsub8wyEK7+nQOU6Y64rK5CMTfjR33RzQpiaLAXtxLJBBLfVDroLBk/0gnu3xahvy5xQZDUhTu3pT0BAK9nHu1BkdayT2GY5Ny1MQqEBGqgmKZw333LwIvePUxY6HMFea1FT4Sdw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=UXh7cGCMY7ukNkIKhhUygyaHobBsn+tYPkkAmPAsjNg=;
- b=Aur+39AvTHabyOfWlEmStAxoREakYrSbBZXIN/FZrL45XPLwN3ycHhjFgdcz7sjbLnvPW2bn25kpmydQ7y/vBDLCDNOgHAftrbJDPvbI/PR3YJzVFIPQX+b6nNy+mew1LLv8Ql9n3Fj6GyedbKAI0lRQc3KNzZ8Jce2qSRd/DUo=
-Received: from AM0PR04MB5443.eurprd04.prod.outlook.com (20.178.114.161) by
- AM0PR04MB4659.eurprd04.prod.outlook.com (52.135.144.150) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2835.22; Fri, 27 Mar 2020 15:00:22 +0000
-Received: from AM0PR04MB5443.eurprd04.prod.outlook.com
- ([fe80::ccc:be36:aaf0:709a]) by AM0PR04MB5443.eurprd04.prod.outlook.com
- ([fe80::ccc:be36:aaf0:709a%7]) with mapi id 15.20.2856.019; Fri, 27 Mar 2020
- 15:00:22 +0000
-From:   Florinel Iordache <florinel.iordache@nxp.com>
-To:     Andrew Lunn <andrew@lunn.ch>
-CC:     "davem@davemloft.net" <davem@davemloft.net>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
-        "hkallweit1@gmail.com" <hkallweit1@gmail.com>,
-        "linux@armlinux.org.uk" <linux@armlinux.org.uk>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "kuba@kernel.org" <kuba@kernel.org>,
-        "corbet@lwn.net" <corbet@lwn.net>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        Leo Li <leoyang.li@nxp.com>,
-        "Madalin Bucur (OSS)" <madalin.bucur@oss.nxp.com>,
-        Ioana Ciornei <ioana.ciornei@nxp.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Florinel Iordache <florinel.iordache@nxp.com>
-Subject: RE: [EXT] Re: [PATCH net-next 2/9] dt-bindings: net: add backplane dt
- bindings
-Thread-Topic: [EXT] Re: [PATCH net-next 2/9] dt-bindings: net: add backplane
- dt bindings
-Thread-Index: AQHWA3W21iOEOBCSMUyOOEOFmYZ41KhboFSAgADoIOA=
-Date:   Fri, 27 Mar 2020 15:00:22 +0000
-Message-ID: <AM0PR04MB5443185A1236F621B9EC9873FBCC0@AM0PR04MB5443.eurprd04.prod.outlook.com>
-References: <1585230682-24417-1-git-send-email-florinel.iordache@nxp.com>
- <1585230682-24417-3-git-send-email-florinel.iordache@nxp.com>
- <20200327010411.GM3819@lunn.ch>
-In-Reply-To: <20200327010411.GM3819@lunn.ch>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=florinel.iordache@nxp.com; 
-x-originating-ip: [78.96.99.111]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 424e84a1-f41b-4355-b20d-08d7d25f92d2
-x-ms-traffictypediagnostic: AM0PR04MB4659:|AM0PR04MB4659:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <AM0PR04MB465932103C8CC2FA64F03972FBCC0@AM0PR04MB4659.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-forefront-prvs: 0355F3A3AE
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM0PR04MB5443.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10009020)(4636009)(366004)(136003)(376002)(346002)(39860400002)(396003)(316002)(7416002)(71200400001)(478600001)(7696005)(6916009)(54906003)(33656002)(5660300002)(76116006)(186003)(8676002)(6506007)(64756008)(55016002)(66446008)(52536014)(66476007)(81156014)(9686003)(44832011)(2906002)(66556008)(8936002)(81166006)(4326008)(86362001)(66946007)(26005);DIR:OUT;SFP:1101;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: K7ndZRJdXiygoLz5Tjs2VcoegMSM4A0sYtsha5bOHDeHrY5BhqyAwbmthjEH3Prn/hehTi408s71DMSlZYU1yLzO+CV5XTBjy5TTPMKKqSOb8eQK2bVzk96I968SOEXPgaiRywLcXqmeT3XEynRCuHKQD3Pi9M1cIRp9ANJMcPVVVqpFaaHamWyd9klJycqtL9rxHyn+gZQI41oaypLMggJR6+wuSBpvYnY3IwABiiO02WQdYC/ekoyA58WZiygEBcF1lQuxH2qjuTa5REOqRvoboXiYg3MUT0+HQXaffwYYOv+XuN96yAI8aJS0/94+fLL01+x3tyN6y95hFYunQWgXk2joWOWCL99+eELRu5AxKR1wkneSWpgNnltrod3+o1VeUfRUaX8TGTv6J3y0Aidfeg5B61+kfC7BliQvJc8aoo5EIVrAC4BCc84MxQp/
-x-ms-exchange-antispam-messagedata: aeF1NAw18xOH8xS/lrxdfmc5Cuyr29+L0JecrLYTvjBlDpWpt1qgCJWnNogmbZfaaz/9N6r9hQ4an66UXcfMtaDoyK7DdzhFwSZNCer4J4NThrmAZcckwHb/OUsokTIIjgb67n5B2INOiva570NXKQ==
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Fri, 27 Mar 2020 11:01:37 -0400
+Received: from foss.arm.com ([217.140.110.172]:46336 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727287AbgC0PBh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Mar 2020 11:01:37 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CD18F1FB;
+        Fri, 27 Mar 2020 08:01:36 -0700 (PDT)
+Received: from red-moon.cambridge.arm.com (unknown [10.57.22.247])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 309623F71F;
+        Fri, 27 Mar 2020 08:01:35 -0700 (PDT)
+Date:   Fri, 27 Mar 2020 15:01:27 +0000
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Vignesh Raghavendra <vigneshr@ti.com>
+Cc:     Kishon Vijay Abraham I <kishon@ti.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Andrew Murray <amurray@thegoodpenguin.co.uk>,
+        linux-omap@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4] PCI: dwc: pci-dra7xx: Fix MSI IRQ handling
+Message-ID: <20200327150127.GA18751@red-moon.cambridge.arm.com>
+References: <20200327095434.945-1-vigneshr@ti.com>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 424e84a1-f41b-4355-b20d-08d7d25f92d2
-X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Mar 2020 15:00:22.1883
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: C7MvblYJz0PnCSBPaMzZ4IJkZyXuI41UAr0nZOpA5ZJvMhVSbn+IPGyQ6e1QR/9g8OkTKy2qjrJpYyxhXqLy+MnQM8mrQA8EihYDo2m+Sag=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB4659
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200327095434.945-1-vigneshr@ti.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> On Thu, Mar 26, 2020 at 03:51:15PM +0200, Florinel Iordache wrote:
-> > Add ethernet backplane device tree bindings
->=20
-> > +  - |
-> > +    /* Backplane configurations for specific setup */
-> > +    &mdio9 {
-> > +        bpphy6: ethernet-phy@0 {
-> > +            compatible =3D "ethernet-phy-ieee802.3-c45";
-> > +            reg =3D <0x0>;
-> > +            lane-handle =3D <&lane_d>; /* use lane D */
-> > +            eq-algorithm =3D "bee";
-> > +            /* 10G Short cables setup: up to 30 cm cable */
-> > +            eq-init =3D <0x2 0x5 0x29>;
-> > +            eq-params =3D <0>;
-> > +        };
-> > +    };
->=20
-> So you are modelling this as just another PHY? Does the driver get loaded=
- based
-> on the PHY ID in registers 2 and 3? Does the standard define these IDs or=
- are
-> they vendor specific?
->=20
-> Thanks
->         Andrew
+On Fri, Mar 27, 2020 at 03:24:34PM +0530, Vignesh Raghavendra wrote:
+> Due an issue with PCIe wrapper around DWC PCIe IP on dra7xx, driver
+> needs to ensure that there are no pending MSI IRQ vector set (i.e
+> PCIE_MSI_INTR0_STATUS reads 0 at least once) before exiting IRQ handler.
+> Else, the dra7xx PCIe wrapper will not register new MSI IRQs even though
+> PCIE_MSI_INTR0_STATUS shows IRQs are pending.
+> 
+> Therefore its no longer possible to use default IRQ handler provided by
+> DWC library. So, add irqchip implementation inside pci-dra7xx.c and
+> install new MSI IRQ handler to handle above errata.
+> 
+> This fixes a bug, where PCIe wifi cards with 4 DMA queues like Intel
+> 8260 used to throw following error and stall during ping/iperf3 tests.
+> 
+> [   97.776310] iwlwifi 0000:01:00.0: Queue 9 stuck for 2500 ms.
+> 
+> Signed-off-by: Vignesh Raghavendra <vigneshr@ti.com>
+> Acked-by: Kishon Vijay Abraham I <kishon@ti.com>
+> Tested-by: Kishon Vijay Abraham I <kishon@ti.com>
+> ---
+> 
+> v4:
+> Simplify dra7xx_pcie_handle_msi_irq() by spliting inner loop into
+> separte function as suggested by Lorenzo
+> 
+> v3:
+> - Move loop to service all MSI IRQs into dra7xx_pcie_handle_msi_irq()
+> - Add a warning msg when loop counter overflows
+> 
+> 
+>  drivers/pci/controller/dwc/pci-dra7xx.c | 231 ++++++++++++++++++++----
+>  1 file changed, 195 insertions(+), 36 deletions(-)
 
-Hi Andrew,
-Thank you all for the feedback.
-I am currently working to address the entire feedback received=20
-so far for this new Backplane driver.
+Applied to pci/dwc, thanks.
 
-Yes, we are modelling backplane driver as a phy driver.
-The driver is loaded based on PHY ID in registers 2 and 3 which=20
-are specified by the standard but it is a vendor specific value:=20
-32-Bit identifier composed of the 3rd through 24th bits of the=20
-Organizationally Unique Identifier (OUI) assigned to the device=20
-manufacturer by the IEEE, plus a six-bit model number, plus a=20
-four-bit revision number.
-This is done in the device specific code and not in backplane=20
-generic driver.
-You can check support for QorIQ devices where qoriq_backplane_driver=20
-is registered as a phy_driver:
-=20
-@file: qoriq_backplane.c
-+static struct phy_driver qoriq_backplane_driver[] =3D {
-+	{
-+	.phy_id		=3D PCS_PHY_DEVICE_ID,
-+	.name		=3D QORIQ_BACKPLANE_DRIVER_NAME,
-+	.phy_id_mask	=3D PCS_PHY_DEVICE_ID_MASK,
-+	.features       =3D BACKPLANE_FEATURES,
-+	.probe          =3D qoriq_backplane_probe,
-+	.remove         =3D backplane_remove,
-+	.config_init    =3D qoriq_backplane_config_init,
-+	.aneg_done      =3D backplane_aneg_done,
+Lorenzo
 
-Here we register the particular phy device ID/mask and driver name=20
-specific for qoriq devices.=20
-Also we can use generic routines provided by generic backplane driver=20
-if they are suitable for particular qoriq device or otherwise we can use=20
-more specialized specific routines like: qoriq_backplane_config_init
+> diff --git a/drivers/pci/controller/dwc/pci-dra7xx.c b/drivers/pci/controller/dwc/pci-dra7xx.c
+> index 9bf7fa99b103..3b0e58f2de58 100644
+> --- a/drivers/pci/controller/dwc/pci-dra7xx.c
+> +++ b/drivers/pci/controller/dwc/pci-dra7xx.c
+> @@ -215,10 +215,6 @@ static int dra7xx_pcie_host_init(struct pcie_port *pp)
+>  	return 0;
+>  }
+>  
+> -static const struct dw_pcie_host_ops dra7xx_pcie_host_ops = {
+> -	.host_init = dra7xx_pcie_host_init,
+> -};
+> -
+>  static int dra7xx_pcie_intx_map(struct irq_domain *domain, unsigned int irq,
+>  				irq_hw_number_t hwirq)
+>  {
+> @@ -233,43 +229,77 @@ static const struct irq_domain_ops intx_domain_ops = {
+>  	.xlate = pci_irqd_intx_xlate,
+>  };
+>  
+> -static int dra7xx_pcie_init_irq_domain(struct pcie_port *pp)
+> +static int dra7xx_pcie_handle_msi(struct pcie_port *pp, int index)
+>  {
+>  	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
+> -	struct device *dev = pci->dev;
+> -	struct dra7xx_pcie *dra7xx = to_dra7xx_pcie(pci);
+> -	struct device_node *node = dev->of_node;
+> -	struct device_node *pcie_intc_node =  of_get_next_child(node, NULL);
+> +	unsigned long val;
+> +	int pos, irq;
+>  
+> -	if (!pcie_intc_node) {
+> -		dev_err(dev, "No PCIe Intc node found\n");
+> -		return -ENODEV;
+> -	}
+> +	val = dw_pcie_readl_dbi(pci, PCIE_MSI_INTR0_STATUS +
+> +				   (index * MSI_REG_CTRL_BLOCK_SIZE));
+> +	if (!val)
+> +		return 0;
+>  
+> -	dra7xx->irq_domain = irq_domain_add_linear(pcie_intc_node, PCI_NUM_INTX,
+> -						   &intx_domain_ops, pp);
+> -	of_node_put(pcie_intc_node);
+> -	if (!dra7xx->irq_domain) {
+> -		dev_err(dev, "Failed to get a INTx IRQ domain\n");
+> -		return -ENODEV;
+> +	pos = find_next_bit(&val, MAX_MSI_IRQS_PER_CTRL, 0);
+> +	while (pos != MAX_MSI_IRQS_PER_CTRL) {
+> +		irq = irq_find_mapping(pp->irq_domain,
+> +				       (index * MAX_MSI_IRQS_PER_CTRL) + pos);
+> +		generic_handle_irq(irq);
+> +		pos++;
+> +		pos = find_next_bit(&val, MAX_MSI_IRQS_PER_CTRL, pos);
+>  	}
+>  
+> -	return 0;
+> +	return 1;
+>  }
+>  
+> -static irqreturn_t dra7xx_pcie_msi_irq_handler(int irq, void *arg)
+> +static void dra7xx_pcie_handle_msi_irq(struct pcie_port *pp)
+>  {
+> -	struct dra7xx_pcie *dra7xx = arg;
+> -	struct dw_pcie *pci = dra7xx->pci;
+> -	struct pcie_port *pp = &pci->pp;
+> +	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
+> +	int ret, i, count, num_ctrls;
+> +
+> +	num_ctrls = pp->num_vectors / MAX_MSI_IRQS_PER_CTRL;
+> +
+> +	/**
+> +	 * Need to make sure all MSI status bits read 0 before exiting.
+> +	 * Else, new MSI IRQs are not registered by the wrapper. Have an
+> +	 * upperbound for the loop and exit the IRQ in case of IRQ flood
+> +	 * to avoid locking up system in interrupt context.
+> +	 */
+> +	count = 0;
+> +	do {
+> +		ret = 0;
+> +
+> +		for (i = 0; i < num_ctrls; i++)
+> +			ret |= dra7xx_pcie_handle_msi(pp, i);
+> +		count++;
+> +	} while (ret && count <= 1000);
+> +
+> +	if (count > 1000)
+> +		dev_warn_ratelimited(pci->dev,
+> +				     "Too many MSI IRQs to handle\n");
+> +}
+> +
+> +static void dra7xx_pcie_msi_irq_handler(struct irq_desc *desc)
+> +{
+> +	struct irq_chip *chip = irq_desc_get_chip(desc);
+> +	struct dra7xx_pcie *dra7xx;
+> +	struct dw_pcie *pci;
+> +	struct pcie_port *pp;
+>  	unsigned long reg;
+>  	u32 virq, bit;
+>  
+> +	chained_irq_enter(chip, desc);
+> +
+> +	pp = irq_desc_get_handler_data(desc);
+> +	pci = to_dw_pcie_from_pp(pp);
+> +	dra7xx = to_dra7xx_pcie(pci);
+> +
+>  	reg = dra7xx_pcie_readl(dra7xx, PCIECTRL_DRA7XX_CONF_IRQSTATUS_MSI);
+> +	dra7xx_pcie_writel(dra7xx, PCIECTRL_DRA7XX_CONF_IRQSTATUS_MSI, reg);
+>  
+>  	switch (reg) {
+>  	case MSI:
+> -		dw_handle_msi_irq(pp);
+> +		dra7xx_pcie_handle_msi_irq(pp);
+>  		break;
+>  	case INTA:
+>  	case INTB:
+> @@ -283,9 +313,7 @@ static irqreturn_t dra7xx_pcie_msi_irq_handler(int irq, void *arg)
+>  		break;
+>  	}
+>  
+> -	dra7xx_pcie_writel(dra7xx, PCIECTRL_DRA7XX_CONF_IRQSTATUS_MSI, reg);
+> -
+> -	return IRQ_HANDLED;
+> +	chained_irq_exit(chip, desc);
+>  }
+>  
+>  static irqreturn_t dra7xx_pcie_irq_handler(int irq, void *arg)
+> @@ -347,6 +375,145 @@ static irqreturn_t dra7xx_pcie_irq_handler(int irq, void *arg)
+>  	return IRQ_HANDLED;
+>  }
+>  
+> +static int dra7xx_pcie_init_irq_domain(struct pcie_port *pp)
+> +{
+> +	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
+> +	struct device *dev = pci->dev;
+> +	struct dra7xx_pcie *dra7xx = to_dra7xx_pcie(pci);
+> +	struct device_node *node = dev->of_node;
+> +	struct device_node *pcie_intc_node =  of_get_next_child(node, NULL);
+> +
+> +	if (!pcie_intc_node) {
+> +		dev_err(dev, "No PCIe Intc node found\n");
+> +		return -ENODEV;
+> +	}
+> +
+> +	irq_set_chained_handler_and_data(pp->irq, dra7xx_pcie_msi_irq_handler,
+> +					 pp);
+> +	dra7xx->irq_domain = irq_domain_add_linear(pcie_intc_node, PCI_NUM_INTX,
+> +						   &intx_domain_ops, pp);
+> +	of_node_put(pcie_intc_node);
+> +	if (!dra7xx->irq_domain) {
+> +		dev_err(dev, "Failed to get a INTx IRQ domain\n");
+> +		return -ENODEV;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static void dra7xx_pcie_setup_msi_msg(struct irq_data *d, struct msi_msg *msg)
+> +{
+> +	struct pcie_port *pp = irq_data_get_irq_chip_data(d);
+> +	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
+> +	u64 msi_target;
+> +
+> +	msi_target = (u64)pp->msi_data;
+> +
+> +	msg->address_lo = lower_32_bits(msi_target);
+> +	msg->address_hi = upper_32_bits(msi_target);
+> +
+> +	msg->data = d->hwirq;
+> +
+> +	dev_dbg(pci->dev, "msi#%d address_hi %#x address_lo %#x\n",
+> +		(int)d->hwirq, msg->address_hi, msg->address_lo);
+> +}
+> +
+> +static int dra7xx_pcie_msi_set_affinity(struct irq_data *d,
+> +					const struct cpumask *mask,
+> +					bool force)
+> +{
+> +	return -EINVAL;
+> +}
+> +
+> +static void dra7xx_pcie_bottom_mask(struct irq_data *d)
+> +{
+> +	struct pcie_port *pp = irq_data_get_irq_chip_data(d);
+> +	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
+> +	unsigned int res, bit, ctrl;
+> +	unsigned long flags;
+> +
+> +	raw_spin_lock_irqsave(&pp->lock, flags);
+> +
+> +	ctrl = d->hwirq / MAX_MSI_IRQS_PER_CTRL;
+> +	res = ctrl * MSI_REG_CTRL_BLOCK_SIZE;
+> +	bit = d->hwirq % MAX_MSI_IRQS_PER_CTRL;
+> +
+> +	pp->irq_mask[ctrl] |= BIT(bit);
+> +	dw_pcie_writel_dbi(pci, PCIE_MSI_INTR0_MASK + res,
+> +			   pp->irq_mask[ctrl]);
+> +
+> +	raw_spin_unlock_irqrestore(&pp->lock, flags);
+> +}
+> +
+> +static void dra7xx_pcie_bottom_unmask(struct irq_data *d)
+> +{
+> +	struct pcie_port *pp = irq_data_get_irq_chip_data(d);
+> +	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
+> +	unsigned int res, bit, ctrl;
+> +	unsigned long flags;
+> +
+> +	raw_spin_lock_irqsave(&pp->lock, flags);
+> +
+> +	ctrl = d->hwirq / MAX_MSI_IRQS_PER_CTRL;
+> +	res = ctrl * MSI_REG_CTRL_BLOCK_SIZE;
+> +	bit = d->hwirq % MAX_MSI_IRQS_PER_CTRL;
+> +
+> +	pp->irq_mask[ctrl] &= ~BIT(bit);
+> +	dw_pcie_writel_dbi(pci, PCIE_MSI_INTR0_MASK + res,
+> +			   pp->irq_mask[ctrl]);
+> +
+> +	raw_spin_unlock_irqrestore(&pp->lock, flags);
+> +}
+> +
+> +static void dra7xx_pcie_bottom_ack(struct irq_data *d)
+> +{
+> +	struct pcie_port *pp  = irq_data_get_irq_chip_data(d);
+> +	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
+> +	unsigned int res, bit, ctrl;
+> +
+> +	ctrl = d->hwirq / MAX_MSI_IRQS_PER_CTRL;
+> +	res = ctrl * MSI_REG_CTRL_BLOCK_SIZE;
+> +	bit = d->hwirq % MAX_MSI_IRQS_PER_CTRL;
+> +
+> +	dw_pcie_writel_dbi(pci, PCIE_MSI_INTR0_STATUS + res, BIT(bit));
+> +}
+> +
+> +static struct irq_chip dra7xx_pci_msi_bottom_irq_chip = {
+> +	.name = "DRA7XX-PCI-MSI",
+> +	.irq_ack = dra7xx_pcie_bottom_ack,
+> +	.irq_compose_msi_msg = dra7xx_pcie_setup_msi_msg,
+> +	.irq_set_affinity = dra7xx_pcie_msi_set_affinity,
+> +	.irq_mask = dra7xx_pcie_bottom_mask,
+> +	.irq_unmask = dra7xx_pcie_bottom_unmask,
+> +};
+> +
+> +static int dra7xx_pcie_msi_host_init(struct pcie_port *pp)
+> +{
+> +	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
+> +	u32 ctrl, num_ctrls;
+> +
+> +	pp->msi_irq_chip = &dra7xx_pci_msi_bottom_irq_chip;
+> +
+> +	num_ctrls = pp->num_vectors / MAX_MSI_IRQS_PER_CTRL;
+> +	/* Initialize IRQ Status array */
+> +	for (ctrl = 0; ctrl < num_ctrls; ctrl++) {
+> +		pp->irq_mask[ctrl] = ~0;
+> +		dw_pcie_writel_dbi(pci, PCIE_MSI_INTR0_MASK +
+> +				    (ctrl * MSI_REG_CTRL_BLOCK_SIZE),
+> +				    pp->irq_mask[ctrl]);
+> +		dw_pcie_writel_dbi(pci, PCIE_MSI_INTR0_ENABLE +
+> +				    (ctrl * MSI_REG_CTRL_BLOCK_SIZE),
+> +				    ~0);
+> +	}
+> +
+> +	return dw_pcie_allocate_domains(pp);
+> +}
+> +
+> +static const struct dw_pcie_host_ops dra7xx_pcie_host_ops = {
+> +	.host_init = dra7xx_pcie_host_init,
+> +	.msi_host_init = dra7xx_pcie_msi_host_init,
+> +};
+> +
+>  static void dra7xx_pcie_ep_init(struct dw_pcie_ep *ep)
+>  {
+>  	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
+> @@ -467,14 +634,6 @@ static int __init dra7xx_add_pcie_port(struct dra7xx_pcie *dra7xx,
+>  		return pp->irq;
+>  	}
+>  
+> -	ret = devm_request_irq(dev, pp->irq, dra7xx_pcie_msi_irq_handler,
+> -			       IRQF_SHARED | IRQF_NO_THREAD,
+> -			       "dra7-pcie-msi",	dra7xx);
+> -	if (ret) {
+> -		dev_err(dev, "failed to request irq\n");
+> -		return ret;
+> -	}
+> -
+>  	ret = dra7xx_pcie_init_irq_domain(pp);
+>  	if (ret < 0)
+>  		return ret;
+> -- 
+> 2.26.0
+> 
