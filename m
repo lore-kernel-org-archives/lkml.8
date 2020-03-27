@@ -2,280 +2,148 @@ Return-Path: <SRS0=s8dx=5M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01967C2D0E8
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 11:33:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EE0DC43331
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 11:33:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD0082073B
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 11:33:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E54B520748
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 11:33:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=themaw.net header.i=@themaw.net header.b="ndoytVo0";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="oZLe0eCM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727738AbgC0Ld0 (ORCPT
+        id S1727606AbgC0Ld2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Mar 2020 07:33:26 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:16332 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726758AbgC0LdC (ORCPT
+        Fri, 27 Mar 2020 07:33:28 -0400
+Received: from wout1-smtp.messagingengine.com ([64.147.123.24]:42727 "EHLO
+        wout1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726742AbgC0LdZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Mar 2020 07:33:02 -0400
-Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02RBWmZ6060755;
-        Fri, 27 Mar 2020 07:32:52 -0400
-Received: from ppma02wdc.us.ibm.com (aa.5b.37a9.ip4.static.sl-reverse.com [169.55.91.170])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2ywf2mdhp2-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 27 Mar 2020 07:32:52 -0400
-Received: from pps.filterd (ppma02wdc.us.ibm.com [127.0.0.1])
-        by ppma02wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 02RBUJWu013693;
-        Fri, 27 Mar 2020 11:32:51 GMT
-Received: from b03cxnp08028.gho.boulder.ibm.com (b03cxnp08028.gho.boulder.ibm.com [9.17.130.20])
-        by ppma02wdc.us.ibm.com with ESMTP id 2ywawkhtkh-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 27 Mar 2020 11:32:51 +0000
-Received: from b03ledav006.gho.boulder.ibm.com (b03ledav006.gho.boulder.ibm.com [9.17.130.237])
-        by b03cxnp08028.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 02RBWo2Q58851658
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 27 Mar 2020 11:32:50 GMT
-Received: from b03ledav006.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id B76D6C6059;
-        Fri, 27 Mar 2020 11:32:50 +0000 (GMT)
-Received: from b03ledav006.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 0931CC6055;
-        Fri, 27 Mar 2020 11:32:49 +0000 (GMT)
-Received: from sofia.ibm.com (unknown [9.85.72.108])
-        by b03ledav006.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Fri, 27 Mar 2020 11:32:49 +0000 (GMT)
-Received: by sofia.ibm.com (Postfix, from userid 1000)
-        id 53A5D2E346D; Fri, 27 Mar 2020 17:02:45 +0530 (IST)
-From:   "Gautham R. Shenoy" <ego@linux.vnet.ibm.com>
-To:     Nathan Lynch <nathanl@linux.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Vaidyanathan Srinivasan <svaidy@linux.vnet.ibm.com>,
-        Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>,
-        "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>,
-        Tyrel Datwyler <tyreld@linux.ibm.com>
-Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        "Gautham R. Shenoy" <ego@linux.vnet.ibm.com>
-Subject: [PATCH v4 2/6] powerpc/idle: Add accessor function to always read latest idle PURR
-Date:   Fri, 27 Mar 2020 17:02:36 +0530
-Message-Id: <1585308760-28792-3-git-send-email-ego@linux.vnet.ibm.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1585308760-28792-1-git-send-email-ego@linux.vnet.ibm.com>
-References: <1585308760-28792-1-git-send-email-ego@linux.vnet.ibm.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.645
- definitions=2020-03-27_03:2020-03-27,2020-03-27 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 impostorscore=0
- suspectscore=0 adultscore=0 priorityscore=1501 spamscore=0 phishscore=0
- malwarescore=0 mlxlogscore=999 clxscore=1015 mlxscore=0 lowpriorityscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2003270106
+        Fri, 27 Mar 2020 07:33:25 -0400
+Received: from compute2.internal (compute2.nyi.internal [10.202.2.42])
+        by mailout.west.internal (Postfix) with ESMTP id 12439784;
+        Fri, 27 Mar 2020 07:33:24 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute2.internal (MEProxy); Fri, 27 Mar 2020 07:33:24 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=themaw.net; h=
+        message-id:subject:from:to:cc:date:in-reply-to:references
+        :content-type:mime-version:content-transfer-encoding; s=fm2; bh=
+        Onhi3WOhu99LoHFUFk71poWljRjNkAHvTTxbtB4I1nE=; b=ndoytVo0TrRRKDgA
+        Y+Otg+vtxSv11h+SWwq0w478ve0tIPFGWJxdypZOYh9E6o+L0ct0IBxY5LXtQEwq
+        YWT22NVpyJgsVDgMSdf1Haj0t8IBJZycaYTREF9suSJmWgdqcJPx1IUWNRtCtxn9
+        4+uiPugRwOPqndmONwEEetjArRqBnQlwFdOqLQISlmG1e2a1511xGnnU31vu0/hI
+        WwBc2+ryptxKc7hRzM4C/grbOQKtnIwk/Qx+k6j5L/r4rVuk/8q1uRiIxQ1RjFZ/
+        SoN9nO+5H5S62NiA9VQ/9ZvZA2N46qddpTZXb5U4ZkVyeNaA/dhcvSV0kc39cAbZ
+        QDMI1w==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-transfer-encoding:content-type
+        :date:from:in-reply-to:message-id:mime-version:references
+        :subject:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
+        :x-sasl-enc; s=fm2; bh=Onhi3WOhu99LoHFUFk71poWljRjNkAHvTTxbtB4I1
+        nE=; b=oZLe0eCM/BA9pkehdtqitW5v+7BL08NRu2SeTuxoEHygOlz+YWXrSXJff
+        CXvbH4k5fIXJjsPkrhpgffh42w7ZSn6bXbuRN4d+kfMNlgj66p+E4VHkNq5R41rz
+        8PGEfHK1t018xtSINAqoCwkCNSKQRfGiNmcRwCbTs/9Ey3bLi4C6wEBGyZt8/kA+
+        Als6Gqljwu060rNK/lagpUr2TqM9xyKuicnO1FsJg4rjd/jSmGGcLpT0s+peJrLz
+        cNzL1SWxenwOGDVs2ehEYRJTKA/u1bb/dIvydwSKspBknTg7qldnhTzr2v7zZ2wS
+        mZPYw1j05ZEf7RS7Y0wkZHhxY4Sog==
+X-ME-Sender: <xms:guR9Xlu5-aR4DJgfMQr9MHoZ9yqAUzuTlcohriJapN2TCIGDoV3JKw>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrudehledgvdejucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepkffuhffvffgjfhgtfggggfesthejredttderjeenucfhrhhomhepkfgrnhcu
+    mfgvnhhtuceorhgrvhgvnhesthhhvghmrgifrdhnvghtqeenucfkphepuddukedrvddtle
+    drudeitddrvddtleenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhl
+    fhhrohhmpehrrghvvghnsehthhgvmhgrfidrnhgvth
+X-ME-Proxy: <xmx:g-R9XiGoIcAZF05Hy62GODynbSaNFYl9-fRjcQYH0A7eFEao0Q6I1Q>
+    <xmx:g-R9XgCrockZbyUjGXwmdASYyVMHKNU8Z21Ho6ZC8eq5ymHVcXwMJQ>
+    <xmx:g-R9XhIZb4yi-fEtGeb9HA3M9fKhnXOvgN5wj0ck6S2yGDylADv2GA>
+    <xmx:g-R9Xm_lE_FhaZPhOTiSJJTQhFdi_O7TJIlM_SCvccbhnt4KdWpcFQ>
+Received: from mickey.themaw.net (unknown [118.209.160.209])
+        by mail.messagingengine.com (Postfix) with ESMTPA id B2AD6306BEE3;
+        Fri, 27 Mar 2020 07:33:20 -0400 (EDT)
+Message-ID: <11a106b080f743964c86e6c0dd3ce32aa5d48b1b.camel@themaw.net>
+Subject: Re: [PATCH 4/4] autofs: add comment about
+ autofs_mountpoint_changed()
+From:   Ian Kent <raven@themaw.net>
+To:     "McIntyre, Vincent (CASS, Marsfield)" <Vincent.Mcintyre@csiro.au>
+Cc:     Al Viro <viro@ZenIV.linux.org.uk>,
+        autofs mailing list <autofs@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Kernel Mailing List <linux-kernel@vger.kernel.org>
+Date:   Fri, 27 Mar 2020 19:33:17 +0800
+In-Reply-To: <20200327051928.i5xtvskvktbugifa@mayhem.atnf.CSIRO.AU>
+References: <158520019862.5325.7856909810909592388.stgit@mickey.themaw.net>
+         <158520021604.5325.4342529050022426912.stgit@mickey.themaw.net>
+         <20200327051928.i5xtvskvktbugifa@mayhem.atnf.CSIRO.AU>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.32.5 (3.32.5-1.fc30) 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Gautham R. Shenoy" <ego@linux.vnet.ibm.com>
+On Fri, 2020-03-27 at 05:19 +0000, McIntyre, Vincent (CASS, Marsfield)
+wrote:
+> One nit, below.
 
-Currently when CPU goes idle, we take a snapshot of PURR via
-pseries_idle_prolog() which is used at the CPU idle exit to compute
-the idle PURR cycles via the function pseries_idle_epilog().  Thus,
-the value of idle PURR cycle thus read before pseries_idle_prolog() and
-after pseries_idle_epilog() is always correct.
+Yeah, thanks for that, you effort looking at the patches is
+appreciated, I'll fix it.
 
-However, if we were to read the idle PURR cycles from an interrupt
-context between pseries_idle_prolog() and pseries_idle_epilog() (this will
-be done in a future patch), then, the value of the idle PURR thus read
-will not include the cycles spent in the most recent idle period.
-
-This patch addresses the issue by providing accessor function to read
-the idle PURR such such that it includes the cycles spent in the most
-recent idle period, if we read it between pseries_idle_prolog() and
-pseries_idle_epilog(). In order to achieve it, the patch saves the
-snapshot of PURR in pseries_idle_prolog() in a per-cpu variable,
-instead of on the stack, so that it can be accessed from an interrupt
-context.
-
-Signed-off-by: Gautham R. Shenoy <ego@linux.vnet.ibm.com>
----
- arch/powerpc/include/asm/idle.h        | 47 +++++++++++++++++++++++++++-------
- arch/powerpc/platforms/pseries/setup.c |  7 +++--
- drivers/cpuidle/cpuidle-pseries.c      | 15 +++++------
- 3 files changed, 47 insertions(+), 22 deletions(-)
-
-diff --git a/arch/powerpc/include/asm/idle.h b/arch/powerpc/include/asm/idle.h
-index 32064a4c..d4bfb6a 100644
---- a/arch/powerpc/include/asm/idle.h
-+++ b/arch/powerpc/include/asm/idle.h
-@@ -5,10 +5,27 @@
- #include <asm/paca.h>
- 
- #ifdef CONFIG_PPC_PSERIES
--static inline void pseries_idle_prolog(unsigned long *in_purr)
-+DECLARE_PER_CPU(u64, idle_entry_purr_snap);
-+
-+static inline void snapshot_purr_idle_entry(void)
-+{
-+	*this_cpu_ptr(&idle_entry_purr_snap) = mfspr(SPRN_PURR);
-+}
-+
-+static inline void update_idle_purr_accounting(void)
-+{
-+	u64 wait_cycles;
-+	u64 in_purr = *this_cpu_ptr(&idle_entry_purr_snap);
-+
-+	wait_cycles = be64_to_cpu(get_lppaca()->wait_state_cycles);
-+	wait_cycles += mfspr(SPRN_PURR) - in_purr;
-+	get_lppaca()->wait_state_cycles = cpu_to_be64(wait_cycles);
-+}
-+
-+static inline void pseries_idle_prolog(void)
- {
- 	ppc64_runlatch_off();
--	*in_purr = mfspr(SPRN_PURR);
-+	snapshot_purr_idle_entry();
- 	/*
- 	 * Indicate to the HV that we are idle. Now would be
- 	 * a good time to find other work to dispatch.
-@@ -16,16 +33,28 @@ static inline void pseries_idle_prolog(unsigned long *in_purr)
- 	get_lppaca()->idle = 1;
- }
- 
--static inline void pseries_idle_epilog(unsigned long in_purr)
-+static inline void pseries_idle_epilog(void)
- {
--	u64 wait_cycles;
--
--	wait_cycles = be64_to_cpu(get_lppaca()->wait_state_cycles);
--	wait_cycles += mfspr(SPRN_PURR) - in_purr;
--	get_lppaca()->wait_state_cycles = cpu_to_be64(wait_cycles);
-+	update_idle_purr_accounting();
- 	get_lppaca()->idle = 0;
--
- 	ppc64_runlatch_on();
- }
-+
-+static inline u64 read_this_idle_purr(void)
-+{
-+	/*
-+	 * If we are reading from an idle context, update the
-+	 * idle-purr cycles corresponding to the last idle period.
-+	 * Since the idle context is not yet over, take a fresh
-+	 * snapshot of the idle-purr.
-+	 */
-+	if (unlikely(get_lppaca()->idle == 1)) {
-+		update_idle_purr_accounting();
-+		snapshot_purr_idle_entry();
-+	}
-+
-+	return be64_to_cpu(get_lppaca()->wait_state_cycles);
-+}
-+
- #endif /* CONFIG_PPC_PSERIES */
- #endif
-diff --git a/arch/powerpc/platforms/pseries/setup.c b/arch/powerpc/platforms/pseries/setup.c
-index 2f53e6b..4905c96 100644
---- a/arch/powerpc/platforms/pseries/setup.c
-+++ b/arch/powerpc/platforms/pseries/setup.c
-@@ -318,10 +318,9 @@ static int alloc_dispatch_log_kmem_cache(void)
- }
- machine_early_initcall(pseries, alloc_dispatch_log_kmem_cache);
- 
-+DEFINE_PER_CPU(u64, idle_entry_purr_snap);
- static void pseries_lpar_idle(void)
- {
--	unsigned long in_purr;
--
- 	/*
- 	 * Default handler to go into low thread priority and possibly
- 	 * low power mode by ceding processor to hypervisor
-@@ -331,7 +330,7 @@ static void pseries_lpar_idle(void)
- 		return;
- 
- 	/* Indicate to hypervisor that we are idle. */
--	pseries_idle_prolog(&in_purr);
-+	pseries_idle_prolog();
- 
- 	/*
- 	 * Yield the processor to the hypervisor.  We return if
-@@ -342,7 +341,7 @@ static void pseries_lpar_idle(void)
- 	 */
- 	cede_processor();
- 
--	pseries_idle_epilog(in_purr);
-+	pseries_idle_epilog();
- }
- 
- /*
-diff --git a/drivers/cpuidle/cpuidle-pseries.c b/drivers/cpuidle/cpuidle-pseries.c
-index 46d5e05..6513ef2 100644
---- a/drivers/cpuidle/cpuidle-pseries.c
-+++ b/drivers/cpuidle/cpuidle-pseries.c
-@@ -36,12 +36,11 @@ static int snooze_loop(struct cpuidle_device *dev,
- 			struct cpuidle_driver *drv,
- 			int index)
- {
--	unsigned long in_purr;
- 	u64 snooze_exit_time;
- 
- 	set_thread_flag(TIF_POLLING_NRFLAG);
- 
--	pseries_idle_prolog(&in_purr);
-+	pseries_idle_prolog();
- 	local_irq_enable();
- 	snooze_exit_time = get_tb() + snooze_timeout;
- 
-@@ -65,7 +64,7 @@ static int snooze_loop(struct cpuidle_device *dev,
- 
- 	local_irq_disable();
- 
--	pseries_idle_epilog(in_purr);
-+	pseries_idle_epilog();
- 
- 	return index;
- }
-@@ -91,9 +90,8 @@ static int dedicated_cede_loop(struct cpuidle_device *dev,
- 				struct cpuidle_driver *drv,
- 				int index)
- {
--	unsigned long in_purr;
- 
--	pseries_idle_prolog(&in_purr);
-+	pseries_idle_prolog();
- 	get_lppaca()->donate_dedicated_cpu = 1;
- 
- 	HMT_medium();
-@@ -102,7 +100,7 @@ static int dedicated_cede_loop(struct cpuidle_device *dev,
- 	local_irq_disable();
- 	get_lppaca()->donate_dedicated_cpu = 0;
- 
--	pseries_idle_epilog(in_purr);
-+	pseries_idle_epilog();
- 
- 	return index;
- }
-@@ -111,9 +109,8 @@ static int shared_cede_loop(struct cpuidle_device *dev,
- 			struct cpuidle_driver *drv,
- 			int index)
- {
--	unsigned long in_purr;
- 
--	pseries_idle_prolog(&in_purr);
-+	pseries_idle_prolog();
- 
- 	/*
- 	 * Yield the processor to the hypervisor.  We return if
-@@ -125,7 +122,7 @@ static int shared_cede_loop(struct cpuidle_device *dev,
- 	check_and_cede_processor();
- 
- 	local_irq_disable();
--	pseries_idle_epilog(in_purr);
-+	pseries_idle_epilog();
- 
- 	return index;
- }
--- 
-1.9.4
+> Vince
+> 
+> On Thu, Mar 26, 2020 at 01:23:36PM +0800, Ian Kent wrote:
+> > The function autofs_mountpoint_changed() is unusual, add a comment
+> > about two cases for which it is used.
+> > 
+> > Signed-off-by: Ian Kent <raven@themaw.net>
+> > ---
+> > fs/autofs/root.c |   21 ++++++++++++++++++---
+> > 1 file changed, 18 insertions(+), 3 deletions(-)
+> > 
+> > diff --git a/fs/autofs/root.c b/fs/autofs/root.c
+> > index 308cc49aca1d..a972bbaecb46 100644
+> > --- a/fs/autofs/root.c
+> > +++ b/fs/autofs/root.c
+> > @@ -280,9 +280,24 @@ static struct dentry
+> > *autofs_mountpoint_changed(struct path *path)
+> > 	struct dentry *dentry = path->dentry;
+> > 	struct autofs_sb_info *sbi = autofs_sbi(dentry->d_sb);
+> > 
+> > -	/*
+> > -	 * If this is an indirect mount the dentry could have gone away
+> > -	 * as a result of an expire and a new one created.
+> > +	/* If this is an indirect mount the dentry could have gone away
+> > +	 * and a new one created.
+> > +	 *
+> > +	 * This is unusual and I can't remember the case for which it
+> > +	 * was originally added now. But a example of how this can
+> 
+> 'an' example
+> 
+> > +	 * happen is an autofs indirect mount that has the "browse"
+> > +	 * option set and also has the "symlink" option in the autofs
+> > +	 * map entry. In this case the daemon will remove the browse
+> > +	 * directory and create a symlink as the mount (pointing to a
+> > +	 * local path) leaving the struct path stale.
+> > +	 *
+> > +	 * Another not so obvious case is when a mount in an autofs
+> > +	 * indirect mount that uses the "nobrowse" option is being
+> > +	 * expired and the mount has been umounted but the mount point
+> > +	 * directory remains when a stat family system call is made.
+> > +	 * In this case the mount point is removed (by the daemon) and
+> > +	 * a new mount triggered leading to a stale dentry in the
+> > struct
+> > +	 * path of the waiting process.
+> > 	 */
+> > 	if (autofs_type_indirect(sbi->type) && d_unhashed(dentry)) {
+> > 		struct dentry *parent = dentry->d_parent;
+> > 
+> 
+> -- 
 
