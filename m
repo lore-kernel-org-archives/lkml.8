@@ -2,123 +2,310 @@ Return-Path: <SRS0=s8dx=5M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.7 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 348F0C43331
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 11:08:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9496C2D0E8
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 11:08:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 10B31206F1
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 11:08:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95AA520774
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 11:08:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="B5Zau70d"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727287AbgC0LH7 (ORCPT
+        id S1727347AbgC0LIh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Mar 2020 07:07:59 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:53045 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726275AbgC0LH7 (ORCPT
+        Fri, 27 Mar 2020 07:08:37 -0400
+Received: from us-smtp-delivery-74.mimecast.com ([63.128.21.74]:52700 "EHLO
+        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726275AbgC0LIh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Mar 2020 07:07:59 -0400
-Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tip-bot2@linutronix.de>)
-        id 1jHmqC-0004Xr-9v; Fri, 27 Mar 2020 12:07:56 +0100
-Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id D73081C03AB;
-        Fri, 27 Mar 2020 12:07:55 +0100 (CET)
-Date:   Fri, 27 Mar 2020 11:07:55 -0000
-From:   "tip-bot2 for H.J. Lu" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/build] x86, vmlinux.lds: Add RUNTIME_DISCARD_EXIT to
- generic DISCARDS
-Cc:     "H.J. Lu" <hjl.tools@gmail.com>, Borislav Petkov <bp@suse.de>,
-        Kees Cook <keescook@chromium.org>, x86 <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200326193021.255002-1-hjl.tools@gmail.com>
-References: <20200326193021.255002-1-hjl.tools@gmail.com>
-MIME-Version: 1.0
-Message-ID: <158530727545.28353.10694097580939655357.tip-bot2@tip-bot2>
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
+        Fri, 27 Mar 2020 07:08:37 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1585307315;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=fH4qLur4ON8NrF1LbJv92KKQt8OnmUmCge5BUQOrlww=;
+        b=B5Zau70dS0vDMSirYNrba0dxfR/bbeByY9tmyK5bQVzJgF60JN2ADA9dh5AsF+l3UcgCSJ
+        Tzie7EvpBAd4gc2AlDAZcL9om3+ZcG58XCfpsHPTgsJ4KfB9O94+vTscQpIA61yjyEuKO7
+        LDGUoYkP8ItrVcbEGdcrpE5o84x2Jus=
+Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
+ [209.85.128.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-462--Rzozcq9NAKX5PpqhoEVmA-1; Fri, 27 Mar 2020 07:08:34 -0400
+X-MC-Unique: -Rzozcq9NAKX5PpqhoEVmA-1
+Received: by mail-wm1-f71.google.com with SMTP id y1so4219771wmj.3
+        for <linux-kernel@vger.kernel.org>; Fri, 27 Mar 2020 04:08:33 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=fH4qLur4ON8NrF1LbJv92KKQt8OnmUmCge5BUQOrlww=;
+        b=Yd6NJvbUcUNYrFX6FtmHEpyRWI8C9VKxC8ELZbMYqfojFOQP/74MhosfIocVJZbHWR
+         6UrrMKjvs83onb97rz/qFE+PKnlxqNFTO+ocAbkL1LFewaUEaPzqPcvSvnbSZxothxxC
+         zaDtlOJfeOjC/XRnqNgGzY9zI8Jed+nzYsyxAd/Vmv0xyE82EeuxFacIZLNqlTqhBjCF
+         YotGrY85d+ajV7o4LJzVU7FeluMxwyWDclvQJ5FIL1YqKV/0aZ7i12A1e8WsiPiLky+b
+         sU6AoWwTt58yMxOwxaEAASUfYXET2WG60HHJuY+eZbYEW1ck2kSSEbXnfIQFp9YRAK92
+         UVJg==
+X-Gm-Message-State: ANhLgQ1iGRNC4tBrJ1p24emx6IU9hw27ihdczSCQn9hPrUVzsgvoRRfj
+        LFBXOlYAlSLc9neQk5rZpCFuQf9cRyvgjheASO4EHkLMJWIJKxJsJMSPR9Lj8WvmxABmxYzQwV2
+        +Klo1XMZHfZ8bQuepDqVgT/jL
+X-Received: by 2002:a1c:1dcf:: with SMTP id d198mr4799005wmd.121.1585307312613;
+        Fri, 27 Mar 2020 04:08:32 -0700 (PDT)
+X-Google-Smtp-Source: ADFU+vuEzqlTQiXs79xG0qkAVhK3xd73wNi/LIsyb+cuWBmIMTWVMduaiA44lR9eb/fWOVKNj2sAcw==
+X-Received: by 2002:a1c:1dcf:: with SMTP id d198mr4798979wmd.121.1585307312252;
+        Fri, 27 Mar 2020 04:08:32 -0700 (PDT)
+Received: from eperezma.remote.csb (37.143.78.188.dynamic.jazztel.es. [188.78.143.37])
+        by smtp.gmail.com with ESMTPSA id d206sm7729385wmf.29.2020.03.27.04.08.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 27 Mar 2020 04:08:31 -0700 (PDT)
+Message-ID: <d093c51e5af2e86c1c7af0b2ee469157e92d8366.camel@redhat.com>
+Subject: Re: vhost changes (batched) in linux-next after 12/13 trigger
+ random crashes in KVM guests after reboot
+From:   Eugenio =?ISO-8859-1?Q?P=E9rez?= <eperezma@redhat.com>
+To:     Christian Borntraeger <borntraeger@de.ibm.com>
+Cc:     "Michael S. Tsirkin" <mst@redhat.com>,
+        "virtualization@lists.linux-foundation.org" 
+        <virtualization@lists.linux-foundation.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        kvm list <kvm@vger.kernel.org>,
+        Halil Pasic <pasic@linux.ibm.com>,
+        Cornelia Huck <cohuck@redhat.com>
+Date:   Fri, 27 Mar 2020 12:08:29 +0100
+In-Reply-To: <1ee3a272-e391-e2e8-9cbb-5d3e2d40bec2@de.ibm.com>
+References: <20200107042401-mutt-send-email-mst@kernel.org>
+         <43a5dbaa-9129-e220-8483-45c60a82c945@de.ibm.com>
+         <e299afca8e22044916abbf9fbbd0bff6b0ee9e13.camel@redhat.com>
+         <4c3f70b7-723a-8b0f-ac49-babef1bcc180@de.ibm.com>
+         <50a79c3491ac483583c97df2fac29e2c3248fdea.camel@redhat.com>
+         <8fbbfb49-99d1-7fee-e713-d6d5790fe866@de.ibm.com>
+         <2364d0728c3bb4bcc0c13b591f774109a9274a30.camel@redhat.com>
+         <bb9fb726-306c-5330-05aa-a86bd1b18097@de.ibm.com>
+         <468983fad50a5e74a739f71487f0ea11e8d4dfd1.camel@redhat.com>
+         <2dc1df65-1431-3917-40e5-c2b12096e2a7@de.ibm.com>
+         <bd9c9b4d99abd20d5420583af5a4954ea1cf4618.camel@redhat.com>
+         <e11ba53c-a5fa-0518-2e06-9296897ed529@de.ibm.com>
+         <CAJaqyWfJFArAdpOwehTn5ci-frqai+pazGgcn2VvQSebqGRVtg@mail.gmail.com>
+         <80520391-d90d-e10d-a107-7a18f2810900@de.ibm.com>
+         <dabe59fe-e068-5935-f49e-bc1da3d8471a@de.ibm.com>
+         <35dca16b9a85eb203f35d3e55dcaa9d0dae5a922.camel@redhat.com>
+         <3144806d-436e-86a1-2e29-74f7027f7f0b@de.ibm.com>
+         <8e226821a8878f53585d967b8af547526d84c73e.camel@redhat.com>
+         <1ee3a272-e391-e2e8-9cbb-5d3e2d40bec2@de.ibm.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5 (3.28.5-6.el8) 
+Mime-Version: 1.0
 Content-Transfer-Encoding: 7bit
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the x86/build branch of tip:
+Hi Christian.
 
-Commit-ID:     84d5f77fc2ee4e010c2c037750e32f06e55224b0
-Gitweb:        https://git.kernel.org/tip/84d5f77fc2ee4e010c2c037750e32f06e55224b0
-Author:        H.J. Lu <hjl.tools@gmail.com>
-AuthorDate:    Thu, 26 Mar 2020 12:30:20 -07:00
-Committer:     Borislav Petkov <bp@suse.de>
-CommitterDate: Fri, 27 Mar 2020 11:52:11 +01:00
+Sorry for the late response. Could we try this one over eccb852f1fe6bede630e2e4f1a121a81e34354ab, and see if you still
+can reproduce the bug?
 
-x86, vmlinux.lds: Add RUNTIME_DISCARD_EXIT to generic DISCARDS
+Apart from that, could you print me the backtrace when qemu calls vhost_kernel_set_vring_base and
+vhost_kernel_get_vring_base functions?
 
-In the x86 kernel, .exit.text and .exit.data sections are discarded at
-runtime, not by the linker. Add RUNTIME_DISCARD_EXIT to generic DISCARDS
-and define it in the x86 kernel linker script to keep them.
+Thank you very much!
 
-The sections are added before the DISCARD directive so document here
-only the situation explicitly as this change doesn't have any effect on
-the generated kernel. Also, other architectures like ARM64 will use it
-too so generalize the approach with the RUNTIME_DISCARD_EXIT define.
-
- [ bp: Massage and extend commit message. ]
-
-Signed-off-by: H.J. Lu <hjl.tools@gmail.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Reviewed-by: Kees Cook <keescook@chromium.org>
-Link: https://lkml.kernel.org/r/20200326193021.255002-1-hjl.tools@gmail.com
----
- arch/x86/kernel/vmlinux.lds.S     |  1 +
- include/asm-generic/vmlinux.lds.h | 11 +++++++++--
- 2 files changed, 10 insertions(+), 2 deletions(-)
-
-diff --git a/arch/x86/kernel/vmlinux.lds.S b/arch/x86/kernel/vmlinux.lds.S
-index e3296aa..7206e1a 100644
---- a/arch/x86/kernel/vmlinux.lds.S
-+++ b/arch/x86/kernel/vmlinux.lds.S
-@@ -21,6 +21,7 @@
- #define LOAD_OFFSET __START_KERNEL_map
- #endif
+diff --git a/drivers/vhost/net.c b/drivers/vhost/net.c
+index e158159671fa..a1a4239512bb 100644
+--- a/drivers/vhost/net.c
++++ b/drivers/vhost/net.c
+@@ -1505,10 +1505,13 @@ static long vhost_net_set_backend(struct vhost_net *n, unsigned index, int fd)
  
-+#define RUNTIME_DISCARD_EXIT
- #define EMITS_PT_NOTE
- #define RO_EXCEPTION_TABLE_ALIGN	16
+ 	mutex_lock(&n->dev.mutex);
+ 	r = vhost_dev_check_owner(&n->dev);
+-	if (r)
++	if (r) {
++		pr_debug("vhost_dev_check_owner index=%u fd=%d rc r=%d", index, fd, r);
+ 		goto err;
++	}
  
-diff --git a/include/asm-generic/vmlinux.lds.h b/include/asm-generic/vmlinux.lds.h
-index e00f41a..2444336 100644
---- a/include/asm-generic/vmlinux.lds.h
-+++ b/include/asm-generic/vmlinux.lds.h
-@@ -894,10 +894,17 @@
-  * section definitions so that such archs put those in earlier section
-  * definitions.
-  */
-+#ifdef RUNTIME_DISCARD_EXIT
-+#define EXIT_DISCARDS
-+#else
-+#define EXIT_DISCARDS							\
-+	EXIT_TEXT							\
-+	EXIT_DATA
-+#endif
+ 	if (index >= VHOST_NET_VQ_MAX) {
++		pr_debug("vhost_dev_check_owner index=%u fd=%d MAX=%d", index, fd, VHOST_NET_VQ_MAX);
+ 		r = -ENOBUFS;
+ 		goto err;
+ 	}
+@@ -1518,22 +1521,26 @@ static long vhost_net_set_backend(struct vhost_net *n, unsigned index, int fd)
+ 
+ 	/* Verify that ring has been setup correctly. */
+ 	if (!vhost_vq_access_ok(vq)) {
++		pr_debug("vhost_net_set_backend index=%u fd=%d !vhost_vq_access_ok", index, fd);
+ 		r = -EFAULT;
+ 		goto err_vq;
+ 	}
+ 	sock = get_socket(fd);
+ 	if (IS_ERR(sock)) {
+ 		r = PTR_ERR(sock);
++		pr_debug("vhost_net_set_backend index=%u fd=%d get_socket err r=%d", index, fd, r);
+ 		goto err_vq;
+ 	}
+ 
+ 	/* start polling new socket */
+ 	oldsock = vq->private_data;
+ 	if (sock != oldsock) {
++		pr_debug("sock=%p != oldsock=%p index=%u fd=%d vq=%p", sock, oldsock, index, fd, vq);
+ 		ubufs = vhost_net_ubuf_alloc(vq,
+ 					     sock && vhost_sock_zcopy(sock));
+ 		if (IS_ERR(ubufs)) {
+ 			r = PTR_ERR(ubufs);
++			pr_debug("ubufs index=%u fd=%d err r=%d vq=%p", index, fd, r, vq);
+ 			goto err_ubufs;
+ 		}
+ 
+@@ -1541,11 +1548,15 @@ static long vhost_net_set_backend(struct vhost_net *n, unsigned index, int fd)
+ 		vq->private_data = sock;
+ 		vhost_net_buf_unproduce(nvq);
+ 		r = vhost_vq_init_access(vq);
+-		if (r)
++		if (r) {
++			pr_debug("init_access index=%u fd=%d r=%d vq=%p", index, fd, r, vq);
+ 			goto err_used;
++		}
+ 		r = vhost_net_enable_vq(n, vq);
+-		if (r)
++		if (r) {
++			pr_debug("enable_vq index=%u fd=%d r=%d vq=%p", index, fd, r, vq);
+ 			goto err_used;
++		}
+ 		if (index == VHOST_NET_VQ_RX)
+ 			nvq->rx_ring = get_tap_ptr_ring(fd);
+ 
+@@ -1559,6 +1570,8 @@ static long vhost_net_set_backend(struct vhost_net *n, unsigned index, int fd)
+ 
+ 	mutex_unlock(&vq->mutex);
+ 
++	pr_debug("sock=%p", sock);
 +
- #define DISCARDS							\
- 	/DISCARD/ : {							\
--	EXIT_TEXT							\
--	EXIT_DATA							\
-+	EXIT_DISCARDS							\
- 	EXIT_CALL							\
- 	*(.discard)							\
- 	*(.discard.*)							\
+ 	if (oldubufs) {
+ 		vhost_net_ubuf_put_wait_and_free(oldubufs);
+ 		mutex_lock(&vq->mutex);
+@@ -1712,6 +1725,9 @@ static long vhost_net_ioctl(struct file *f, unsigned int ioctl,
+ 	case VHOST_NET_SET_BACKEND:
+ 		if (copy_from_user(&backend, argp, sizeof backend))
+ 			return -EFAULT;
++		pr_debug("VHOST_NET_SET_BACKEND [b.index=%u][b.fd=%d]",
++			 backend.index, backend.fd);
++		dump_stack();
+ 		return vhost_net_set_backend(n, backend.index, backend.fd);
+ 	case VHOST_GET_FEATURES:
+ 		features = VHOST_NET_FEATURES;
+diff --git a/drivers/vhost/vhost.c b/drivers/vhost/vhost.c
+index b5a51b1f2e79..9dd0bcae0b22 100644
+--- a/drivers/vhost/vhost.c
++++ b/drivers/vhost/vhost.c
+@@ -372,6 +372,11 @@ static int vhost_worker(void *data)
+ 	return 0;
+ }
+ 
++static int vhost_vq_num_batch_descs(struct vhost_virtqueue *vq)
++{
++	return vq->max_descs - UIO_MAXIOV;
++}
++
+ static void vhost_vq_free_iovecs(struct vhost_virtqueue *vq)
+ {
+ 	kfree(vq->descs);
+@@ -394,7 +399,9 @@ static long vhost_dev_alloc_iovecs(struct vhost_dev *dev)
+ 	for (i = 0; i < dev->nvqs; ++i) {
+ 		vq = dev->vqs[i];
+ 		vq->max_descs = dev->iov_limit;
+-		vq->batch_descs = dev->iov_limit - UIO_MAXIOV;
++		if (vhost_vq_num_batch_descs(vq) < 0) {
++			return -EINVAL;
++		}
+ 		vq->descs = kmalloc_array(vq->max_descs,
+ 					  sizeof(*vq->descs),
+ 					  GFP_KERNEL);
+@@ -1642,15 +1649,27 @@ long vhost_vring_ioctl(struct vhost_dev *d, unsigned int ioctl, void __user *arg
+ 			r = -EINVAL;
+ 			break;
+ 		}
++
++		pr_debug(
++			"VHOST_SET_VRING_BASE [vq=%p][s.index=%u][s.num=%u][vq->avail_idx=%d][vq->last_avail_idx=%d][vq-
+>ndescs=%d][vq->first_desc=%d]",
++			vq, s.index, s.num, vq->avail_idx, vq->last_avail_idx,
++			vq->ndescs, vq->first_desc);
++		dump_stack();
+ 		vq->last_avail_idx = s.num;
+ 		/* Forget the cached index value. */
+ 		vq->avail_idx = vq->last_avail_idx;
++		vq->ndescs = vq->first_desc = 0;
+ 		break;
+ 	case VHOST_GET_VRING_BASE:
+ 		s.index = idx;
+ 		s.num = vq->last_avail_idx;
+ 		if (copy_to_user(argp, &s, sizeof s))
+ 			r = -EFAULT;
++		pr_debug(
++			"VHOST_GET_VRING_BASE [vq=%p][s.index=%u][s.num=%u][vq->avail_idx=%d][vq->last_avail_idx=%d][vq-
+>ndescs=%d][vq->first_desc=%d]",
++			vq, s.index, s.num, vq->avail_idx, vq->last_avail_idx,
++			vq->ndescs, vq->first_desc);
++		dump_stack();
+ 		break;
+ 	case VHOST_SET_VRING_KICK:
+ 		if (copy_from_user(&f, argp, sizeof f)) {
+@@ -2239,8 +2258,8 @@ static int fetch_buf(struct vhost_virtqueue *vq)
+ 		vq->avail_idx = vhost16_to_cpu(vq, avail_idx);
+ 
+ 		if (unlikely((u16)(vq->avail_idx - last_avail_idx) > vq->num)) {
+-			vq_err(vq, "Guest moved used index from %u to %u",
+-				last_avail_idx, vq->avail_idx);
++			vq_err(vq, "Guest moved vq %p used index from %u to %u",
++				vq, last_avail_idx, vq->avail_idx);
+ 			return -EFAULT;
+ 		}
+ 
+@@ -2316,6 +2335,9 @@ static int fetch_buf(struct vhost_virtqueue *vq)
+ 	BUG_ON(!(vq->used_flags & VRING_USED_F_NO_NOTIFY));
+ 
+ 	/* On success, increment avail index. */
++	pr_debug(
++		"[vq=%p][vq->last_avail_idx=%u][vq->avail_idx=%u][vq->ndescs=%d][vq->first_desc=%d]",
++		vq, vq->last_avail_idx, vq->avail_idx, vq->ndescs, vq->first_desc);
+ 	vq->last_avail_idx++;
+ 
+ 	return 0;
+@@ -2333,7 +2355,7 @@ static int fetch_descs(struct vhost_virtqueue *vq)
+ 	if (vq->ndescs)
+ 		return 0;
+ 
+-	while (!ret && vq->ndescs <= vq->batch_descs)
++	while (!ret && vq->ndescs <= vhost_vq_num_batch_descs(vq))
+ 		ret = fetch_buf(vq);
+ 
+ 	return vq->ndescs ? 0 : ret;
+@@ -2432,6 +2454,9 @@ EXPORT_SYMBOL_GPL(vhost_get_vq_desc);
+ /* Reverse the effect of vhost_get_vq_desc. Useful for error handling. */
+ void vhost_discard_vq_desc(struct vhost_virtqueue *vq, int n)
+ {
++	pr_debug(
++		"DISCARD [vq=%p][vq->last_avail_idx=%u][vq->avail_idx=%u][n=%d]",
++		vq, vq->last_avail_idx, vq->avail_idx, n);
+ 	vq->last_avail_idx -= n;
+ }
+ EXPORT_SYMBOL_GPL(vhost_discard_vq_desc);
+diff --git a/drivers/vhost/vhost.h b/drivers/vhost/vhost.h
+index 661088ae6dc7..e648b9b997d4 100644
+--- a/drivers/vhost/vhost.h
++++ b/drivers/vhost/vhost.h
+@@ -102,7 +102,6 @@ struct vhost_virtqueue {
+ 	int ndescs;
+ 	int first_desc;
+ 	int max_descs;
+-	int batch_descs;
+ 
+ 	const struct vhost_umem_node *meta_iotlb[VHOST_NUM_ADDRS];
+ 	struct file *kick;
+
