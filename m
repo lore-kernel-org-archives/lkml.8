@@ -2,168 +2,95 @@ Return-Path: <SRS0=s8dx=5M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25650C43331
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 01:12:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96DEDC43331
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 01:14:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 01A4E2070A
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 01:12:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5EF7D20714
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 01:14:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="aLOnc6z0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727720AbgC0BMX (ORCPT
+        id S1727763AbgC0BOX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 21:12:23 -0400
-Received: from mga05.intel.com ([192.55.52.43]:62947 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727509AbgC0BMX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 21:12:23 -0400
-IronPort-SDR: fx+cIexjz+VVKU4teuSpYs9KPUd2jYReK44axqCEiFKLdQMkD98M1fb2eNrAOYHjOkHfcAy3fD
- T819tgrBqJyw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Mar 2020 18:12:21 -0700
-IronPort-SDR: EPIhhFabr72O4/MWz1OkNdJSPZiFik9yhy8/ZXDy/KCxVUAqVRdYiEuyFH+lHQFUWMKSOu5Jlh
- GZu+NMzfGsPg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,310,1580803200"; 
-   d="scan'208";a="271387872"
-Received: from shao2-debian.sh.intel.com (HELO localhost) ([10.239.13.3])
-  by fmsmga004.fm.intel.com with ESMTP; 26 Mar 2020 18:12:20 -0700
-Date:   Fri, 27 Mar 2020 09:12:01 +0800
-From:   kbuild test robot <lkp@intel.com>
-To:     Colin King <colin.king@canonical.com>
-Cc:     kbuild-all@lists.01.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sekhar Nori <nsekhar@ti.com>, Roger Quadros <rogerq@ti.com>,
-        Felipe Balbi <felipe.balbi@linux.intel.com>,
-        Pawel Laszczak <pawell@cadence.com>, linux-usb@vger.kernel.org,
-        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [kbuild-all] [RFC PATCH v2] usb: cdns3: cdns3_clear_register_bit()
- can be static
-Message-ID: <20200327011201.GU11705@shao2-debian>
-References: <20200325125041.94769-1-colin.king@canonical.com>
+        Thu, 26 Mar 2020 21:14:23 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:35104 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727547AbgC0BOW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Mar 2020 21:14:22 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02R1AHAX057146;
+        Fri, 27 Mar 2020 01:14:19 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
+ from : references : date : in-reply-to : message-id : mime-version :
+ content-type; s=corp-2020-01-29;
+ bh=6s3AOLNIIg0oz6YOWQ14NEebEdTLo08QFpDiKkufNnU=;
+ b=aLOnc6z0/MUwTfKLwR9RlJTyGtlb1/Z0KPK95dGib7vFyxsguy1VmHrwOcQRq3/RIsFZ
+ TRZzJ56kWL2it6ieDyG4uzUBAKoNCE+rCy21jEmI7PUvztYbA3EUuuwj9tnDGPe3kFlj
+ 9o3o3ap/Iz4gfiu6V6d+ibMgc0oBOzC92Jp7Tteywf5cAzgtMg+wo3oy2raPvM6KSAM1
+ DuZ1JYnPir0mZ/uNJRHGZnUJZhCK3trGmRRyMiRYzYmPqQ7TrG1Injyja8/kiiVDnmDR
+ ZB/+qTW88Ex5aL/TFRt13rCC++jnbKdLMaC84/1eE7IzCEvo+vYPu13iPEVP/Xqu+wwX PQ== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by aserp2120.oracle.com with ESMTP id 2ywavmjtus-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 27 Mar 2020 01:14:19 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02R16eah071109;
+        Fri, 27 Mar 2020 01:12:19 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by aserp3020.oracle.com with ESMTP id 30073f1v13-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 27 Mar 2020 01:12:19 +0000
+Received: from abhmp0012.oracle.com (abhmp0012.oracle.com [141.146.116.18])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 02R1CIFN020611;
+        Fri, 27 Mar 2020 01:12:18 GMT
+Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 26 Mar 2020 18:12:18 -0700
+To:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Cc:     jejb@linux.ibm.com, martin.petersen@oracle.com,
+        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-janitors@vger.kernel.org
+Subject: Re: [PATCH] scsi: aha1740: Fix an errro handling path in 'aha1740_probe()'
+From:   "Martin K. Petersen" <martin.petersen@oracle.com>
+Organization: Oracle Corporation
+References: <20200228215948.7473-1-christophe.jaillet@wanadoo.fr>
+Date:   Thu, 26 Mar 2020 21:12:15 -0400
+In-Reply-To: <20200228215948.7473-1-christophe.jaillet@wanadoo.fr> (Christophe
+        JAILLET's message of "Fri, 28 Feb 2020 22:59:48 +0100")
+Message-ID: <yq1k136fvo0.fsf@oracle.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1.92 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200325125041.94769-1-colin.king@canonical.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9572 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=912 adultscore=0
+ suspectscore=0 mlxscore=0 phishscore=0 bulkscore=0 spamscore=0
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2003270008
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9572 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 malwarescore=0
+ priorityscore=1501 mlxscore=0 bulkscore=0 clxscore=1011 impostorscore=0
+ phishscore=0 suspectscore=0 mlxlogscore=989 spamscore=0 lowpriorityscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2003270008
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-Signed-off-by: kbuild test robot <lkp@intel.com>
----
- gadget.c |   32 ++++++++++++++++----------------
- 1 file changed, 16 insertions(+), 16 deletions(-)
+Christophe,
 
-diff --git a/drivers/usb/cdns3/gadget.c b/drivers/usb/cdns3/gadget.c
-index 372460ea4df9a..54a04614d336f 100644
---- a/drivers/usb/cdns3/gadget.c
-+++ b/drivers/usb/cdns3/gadget.c
-@@ -82,7 +82,7 @@ static int cdns3_ep_run_stream_transfer(struct cdns3_endpoint *priv_ep,
-  * @ptr: address of device controller register to be read and changed
-  * @mask: bits requested to clar
-  */
--void cdns3_clear_register_bit(void __iomem *ptr, u32 mask)
-+static void cdns3_clear_register_bit(void __iomem *ptr, u32 mask)
- {
- 	mask = readl(ptr) & ~mask;
- 	writel(mask, ptr);
-@@ -137,7 +137,7 @@ struct usb_request *cdns3_next_request(struct list_head *list)
-  *
-  * Returns buffer or NULL if no buffers in list
-  */
--struct cdns3_aligned_buf *cdns3_next_align_buf(struct list_head *list)
-+static struct cdns3_aligned_buf *cdns3_next_align_buf(struct list_head *list)
- {
- 	return list_first_entry_or_null(list, struct cdns3_aligned_buf, list);
- }
-@@ -148,7 +148,7 @@ struct cdns3_aligned_buf *cdns3_next_align_buf(struct list_head *list)
-  *
-  * Returns request or NULL if no requests in list
-  */
--struct cdns3_request *cdns3_next_priv_request(struct list_head *list)
-+static struct cdns3_request *cdns3_next_priv_request(struct list_head *list)
- {
- 	return list_first_entry_or_null(list, struct cdns3_request, list);
- }
-@@ -190,7 +190,7 @@ dma_addr_t cdns3_trb_virt_to_dma(struct cdns3_endpoint *priv_ep,
- 	return priv_ep->trb_pool_dma + offset;
- }
- 
--int cdns3_ring_size(struct cdns3_endpoint *priv_ep)
-+static int cdns3_ring_size(struct cdns3_endpoint *priv_ep)
- {
- 	switch (priv_ep->type) {
- 	case USB_ENDPOINT_XFER_ISOC:
-@@ -345,7 +345,7 @@ static void cdns3_ep_inc_deq(struct cdns3_endpoint *priv_ep)
- 	cdns3_ep_inc_trb(&priv_ep->dequeue, &priv_ep->ccs, priv_ep->num_trbs);
- }
- 
--void cdns3_move_deq_to_next_trb(struct cdns3_request *priv_req)
-+static void cdns3_move_deq_to_next_trb(struct cdns3_request *priv_req)
- {
- 	struct cdns3_endpoint *priv_ep = priv_req->priv_ep;
- 	int current_trb = priv_req->start_trb;
-@@ -511,9 +511,9 @@ static void cdns3_wa2_descmiss_copy_data(struct cdns3_endpoint *priv_ep,
- 	}
- }
- 
--struct usb_request *cdns3_wa2_gadget_giveback(struct cdns3_device *priv_dev,
--					      struct cdns3_endpoint *priv_ep,
--					      struct cdns3_request *priv_req)
-+static struct usb_request *cdns3_wa2_gadget_giveback(struct cdns3_device *priv_dev,
-+						     struct cdns3_endpoint *priv_ep,
-+						     struct cdns3_request *priv_req)
- {
- 	if (priv_ep->flags & EP_QUIRK_EXTRA_BUF_EN &&
- 	    priv_req->flags & REQUEST_INTERNAL) {
-@@ -551,9 +551,9 @@ struct usb_request *cdns3_wa2_gadget_giveback(struct cdns3_device *priv_dev,
- 	return &priv_req->request;
- }
- 
--int cdns3_wa2_gadget_ep_queue(struct cdns3_device *priv_dev,
--			      struct cdns3_endpoint *priv_ep,
--			      struct cdns3_request *priv_req)
-+static int cdns3_wa2_gadget_ep_queue(struct cdns3_device *priv_dev,
-+				     struct cdns3_endpoint *priv_ep,
-+				     struct cdns3_request *priv_req)
- {
- 	int deferred = 0;
- 
-@@ -836,7 +836,7 @@ void cdns3_gadget_giveback(struct cdns3_endpoint *priv_ep,
- 		cdns3_gadget_ep_free_request(&priv_ep->endpoint, request);
- }
- 
--void cdns3_wa1_restore_cycle_bit(struct cdns3_endpoint *priv_ep)
-+static void cdns3_wa1_restore_cycle_bit(struct cdns3_endpoint *priv_ep)
- {
- 	/* Work around for stale data address in TRB*/
- 	if (priv_ep->wa1_set) {
-@@ -1904,8 +1904,8 @@ static int cdns3_ep_onchip_buffer_reserve(struct cdns3_device *priv_dev,
- 	return 0;
- }
- 
--void cdns3_stream_ep_reconfig(struct cdns3_device *priv_dev,
--			      struct cdns3_endpoint *priv_ep)
-+static void cdns3_stream_ep_reconfig(struct cdns3_device *priv_dev,
-+				     struct cdns3_endpoint *priv_ep)
- {
- 	if (!priv_ep->use_streams || priv_dev->gadget.speed < USB_SPEED_SUPER)
- 		return;
-@@ -1925,8 +1925,8 @@ void cdns3_stream_ep_reconfig(struct cdns3_device *priv_dev,
- 			       EP_CFG_TDL_CHK | EP_CFG_SID_CHK);
- }
- 
--void cdns3_configure_dmult(struct cdns3_device *priv_dev,
--			   struct cdns3_endpoint *priv_ep)
-+static void cdns3_configure_dmult(struct cdns3_device *priv_dev,
-+				  struct cdns3_endpoint *priv_ep)
- {
- 	struct cdns3_usb_regs __iomem *regs = priv_dev->regs;
- 
+> If 'dma_map_single()' fails, the ref counted 'shpnt' will be decremented
+> twice because 'scsi_host_put()' is called in the if block, and in the
+> error handling path.
+
+Applied to 5.7/scsi-queue, thanks!
+
+-- 
+Martin K. Petersen	Oracle Linux Engineering
