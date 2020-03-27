@@ -2,208 +2,182 @@ Return-Path: <SRS0=s8dx=5M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBDBEC2D0E5
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 18:20:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42F27C43331
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 18:22:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C0BB2083E
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 18:20:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2093720B1F
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 18:22:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sent.com header.i=@sent.com header.b="K1Aqr2yp";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="PbQgh+kC"
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="M4d5Js+F"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727336AbgC0SUG (ORCPT
+        id S1727423AbgC0SWW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Mar 2020 14:20:06 -0400
-Received: from out1-smtp.messagingengine.com ([66.111.4.25]:49391 "EHLO
-        out1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726540AbgC0SUG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Mar 2020 14:20:06 -0400
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailout.nyi.internal (Postfix) with ESMTP id 336AE5C0374;
-        Fri, 27 Mar 2020 14:20:04 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute4.internal (MEProxy); Fri, 27 Mar 2020 14:20:04 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sent.com; h=from
-        :to:cc:subject:date:message-id:in-reply-to:references
-        :mime-version:content-type; s=fm3; bh=Ae+wDBwdK9LuAnNK88qLAHv7Ts
-        cxadUnsa9d0DLh8LA=; b=K1Aqr2ypgPUxoSNWd1pKXLGidEzowuJu3lydsJtIRM
-        AubH/5cGSXVPCjFWJN+ImPAnCX4kLX6yFLPmX0dSZffpbjf8bmD596N9W7obBlVr
-        xetMtFCUuXY2ZtwcY3ssSd8Vneon7zaswftv+DYXPUeWKh+NkhjU8ERQk4ncoyKO
-        xuU7PXKaCgto4c38UJE0qxTa3Ce/HrG9EaTTdqdpAwwFxjqMOUCfHFO7y+gg5dPF
-        cazP77LMOCKKPrRxLZdDB3InO8qHX97PbLZ4How23u2gn/EaLcOX2Pe4dqL4JKwk
-        vLjAqmUd+G4bJnM5mCgIYm7yHLI+xeDkPp4/DFxuHs5g==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=Ae+wDB
-        wdK9LuAnNK88qLAHv7TscxadUnsa9d0DLh8LA=; b=PbQgh+kCMUt5X29+O8lMnD
-        kI4Fb0mBs9eqAJ/mNg+fyi7gYYC3M6/tdP3+JcGvEhfNFHcWbNOSwxTr7qB3dM1j
-        kUR06vkPHLJwneL96yknbWGuzj1w8MKS23fnxRfbURFBnJnO1yR9BitY4nZ11sMu
-        Ix5FxqPUl8ymbqkf2S32UvtRAV7+8evDD0kTCDxE9/FE1AJ4R/9F1KxT0er9j+sy
-        6iWvTidcxK52TY/DygzvcNq7pjwrwRjaRERiXHIrk4ekhnPrgvl1+LWtedeiEKkX
-        j0IUbXNA9p7lxJ8CmMeZKA0+501xhB5iwbslr9Jgb3vblSxeO9GBxQ05EAP2HA7A
-        ==
-X-ME-Sender: <xms:00N-XvSG-48PA8WhrTAlLX06i269D1PGdf0_kMQIWpNWGqGghRaSlQ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrudehledguddtlecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
-    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
-    enucfjughrpefhvffufffokfgjfhggtgesghdtmherredtjeenucfhrhhomhepfdgkihcu
-    jggrnhdfuceoiihirdihrghnsehsvghnthdrtghomheqnecukfhppeejhedrieejrdelrd
-    dutdefnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhep
-    iihirdihrghnsehsvghnthdrtghomh
-X-ME-Proxy: <xmx:00N-XlCjbOuo29o3qRBhc7IZr4WjyIZKzJ4XQUNmQSeM9a88PaodGQ>
-    <xmx:00N-Xv1VZofh3JBSzsK3ZG3ky1fFW5PvcTClURf6QnvCVCUQcg_hRA>
-    <xmx:00N-XjX0DlK-s_K3Lodr0rGgX-xwxE2peRBoZD41obcksMkYSuyufw>
-    <xmx:1EN-Xl52NjmZEAnilEUqNPAkEEc7YQXWXlQ9qideFK4jlnph0hhCsw>
-Received: from [10.2.174.211] (c-75-67-9-103.hsd1.ma.comcast.net [75.67.9.103])
-        by mail.messagingengine.com (Postfix) with ESMTPA id BFC2F306C422;
-        Fri, 27 Mar 2020 14:20:02 -0400 (EDT)
-From:   "Zi Yan" <zi.yan@sent.com>
-To:     "Kirill A. Shutemov" <kirill@shutemov.name>
-Cc:     akpm@linux-foundation.org,
-        "Andrea Arcangeli" <aarcange@redhat.com>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-Subject: Re: [PATCH 4/7] khugepaged: Allow to callapse a page shared across
- fork
-Date:   Fri, 27 Mar 2020 14:19:50 -0400
-X-Mailer: MailMate (1.13.1r5680)
-Message-ID: <AD80A72A-8FB7-4F89-A2C9-CDD5C616A479@sent.com>
-In-Reply-To: <20200327170601.18563-5-kirill.shutemov@linux.intel.com>
-References: <20200327170601.18563-1-kirill.shutemov@linux.intel.com>
- <20200327170601.18563-5-kirill.shutemov@linux.intel.com>
+        Fri, 27 Mar 2020 14:22:22 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:50084 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726540AbgC0SWV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Mar 2020 14:22:21 -0400
+Received: from zn.tnic (p200300EC2F0CFA006896CC49A8ABCE42.dip0.t-ipconnect.de [IPv6:2003:ec:2f0c:fa00:6896:cc49:a8ab:ce42])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id B4D041EC0C8E;
+        Fri, 27 Mar 2020 19:22:19 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1585333339;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=drSOBuDYgdgFJzfGjBudh0HtMiYsOKLj9y49+Tznv9I=;
+        b=M4d5Js+FaY+Bzj3FgMg6Z9WqEvTRNgrRZSWl7HtrhC0vBQouLd0I2oImy+eYIFgGOWUMJT
+        ZK6ZzdeoIbeczUDKLYFVZ9MdjYt1S5Nf65LKVa2TQpjxZ3QXWIAvzhm71wS7SW9RQTH/Mn
+        qX8V5D+e8lDr+m7NxnbfQQkZ13uqcWQ=
+Date:   Fri, 27 Mar 2020 19:22:14 +0100
+From:   Borislav Petkov <bp@alien8.de>
+To:     Shiju Jose <shiju.jose@huawei.com>
+Cc:     linux-acpi@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, rjw@rjwysocki.net,
+        helgaas@kernel.org, lenb@kernel.org, james.morse@arm.com,
+        tony.luck@intel.com, gregkh@linuxfoundation.org,
+        zhangliguang@linux.alibaba.com, tglx@linutronix.de,
+        linuxarm@huawei.com, jonathan.cameron@huawei.com,
+        tanxiaofei@huawei.com, yangyicong@hisilicon.com
+Subject: Re: [PATCH v6 1/2] ACPI / APEI: Add support to notify the vendor
+ specific HW errors
+Message-ID: <20200327182214.GD8015@zn.tnic>
+References: <ShijuJose>
+ <20200325164223.650-1-shiju.jose@huawei.com>
+ <20200325164223.650-2-shiju.jose@huawei.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed;
- boundary="=_MailMate_80997A0A-BCA7-4724-8B72-2A1A1D67B3D7_=";
- micalg=pgp-sha512; protocol="application/pgp-signature"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200325164223.650-2-shiju.jose@huawei.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 3156 and 4880).
+On Wed, Mar 25, 2020 at 04:42:22PM +0000, Shiju Jose wrote:
+> Presently APEI does not support reporting the vendor specific
+> HW errors, received in the vendor defined table entries, to the
+> vendor drivers for any recovery.
+> 
+> This patch adds the support to register and unregister the
 
---=_MailMate_80997A0A-BCA7-4724-8B72-2A1A1D67B3D7_=
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Avoid having "This patch" or "This commit" in the commit message. It is
+tautologically useless.
 
-On 27 Mar 2020, at 13:05, Kirill A. Shutemov wrote:
+Also, do
 
-> The page can be included into collapse as long as it doesn't have extra=
+$ git grep 'This patch' Documentation/process
 
-> pins (from GUP or otherwise).
->
-> Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+for more details.
+
+> error handling function for the vendor specific HW errors and
+> notify the registered kernel driver.
+> 
+> Signed-off-by: Shiju Jose <shiju.jose@huawei.com>
 > ---
->  mm/khugepaged.c | 28 ++++++++++++++++------------
->  1 file changed, 16 insertions(+), 12 deletions(-)
->
-> diff --git a/mm/khugepaged.c b/mm/khugepaged.c
-> index 39e0994abeb8..b47edfe57f7b 100644
-> --- a/mm/khugepaged.c
-> +++ b/mm/khugepaged.c
-> @@ -581,18 +581,26 @@ static int __collapse_huge_page_isolate(struct vm=
-_area_struct *vma,
->  		}
->
->  		/*
-> -		 * cannot use mapcount: can't collapse if there's a gup pin.
-> -		 * The page must only be referenced by the scanned process
-> -		 * and page swap cache.
-> +		 * Check if the page has any GUP (or other external) pins.
-> +		 *
-> +		 * The page table that maps the page has been already unlinked
-> +		 * from the page table tree and this process cannot get
-> +		 * additinal pin on the page.
-> +		 *
-> +		 * New pins can come later if the page is shared across fork,
-> +		 * but not for the this process. It is fine. The other process
-> +		 * cannot write to the page, only trigger CoW.
->  		 */
-> -		if (page_count(page) !=3D 1 + PageSwapCache(page)) {
-> +		if (total_mapcount(page) + PageSwapCache(page) !=3D
-> +				page_count(page)) {
-
-Do you think having a function for this check would be better? Since the =
-check is used three times.
-
->  			/*
->  			 * Drain pagevec and retry just in case we can get rid
->  			 * of the extra pin, like in swapin case.
->  			 */
->  			lru_add_drain();
->  		}
-> -		if (page_count(page) !=3D 1 + PageSwapCache(page)) {
-> +		if (total_mapcount(page) + PageSwapCache(page) !=3D
-> +				page_count(page)) {
->  			unlock_page(page);
->  			result =3D SCAN_PAGE_COUNT;
->  			goto out;
-> @@ -680,7 +688,6 @@ static void __collapse_huge_page_copy(pte_t *pte, s=
-truct page *page,
+>  drivers/acpi/apei/ghes.c | 35 ++++++++++++++++++++++++++++++++++-
+>  drivers/ras/ras.c        |  5 +++--
+>  include/acpi/ghes.h      | 28 ++++++++++++++++++++++++++++
+>  include/linux/ras.h      |  6 ++++--
+>  include/ras/ras_event.h  |  7 +++++--
+>  5 files changed, 74 insertions(+), 7 deletions(-)
+> 
+> diff --git a/drivers/acpi/apei/ghes.c b/drivers/acpi/apei/ghes.c
+> index 24c9642e8fc7..d83f0b1aad0d 100644
+> --- a/drivers/acpi/apei/ghes.c
+> +++ b/drivers/acpi/apei/ghes.c
+> @@ -490,6 +490,32 @@ static void ghes_handle_aer(struct acpi_hest_generic_data *gdata)
+>  #endif
+>  }
+>  
+> +static ATOMIC_NOTIFIER_HEAD(ghes_event_notify_list);
+> +
+> +/**
+> + * ghes_register_event_notifier - register an event notifier
+> + * for the non-fatal HW errors.
+> + * @nb: pointer to the notifier_block structure of the event handler.
+> + *
+> + * return 0 : SUCCESS, non-zero : FAIL
+> + */
+> +int ghes_register_event_notifier(struct notifier_block *nb)
+> +{
+> +	return atomic_notifier_chain_register(&ghes_event_notify_list, nb);
+> +}
+> +EXPORT_SYMBOL_GPL(ghes_register_event_notifier);
+> +
+> +/**
+> + * ghes_unregister_event_notifier - unregister the previously
+> + * registered event notifier.
+> + * @nb: pointer to the notifier_block structure of the event handler.
+> + */
+> +void ghes_unregister_event_notifier(struct notifier_block *nb)
+> +{
+> +	atomic_notifier_chain_unregister(&ghes_event_notify_list, nb);
+> +}
+> +EXPORT_SYMBOL_GPL(ghes_unregister_event_notifier);
+> +
+>  static void ghes_do_proc(struct ghes *ghes,
+>  			 const struct acpi_hest_generic_status *estatus)
+>  {
+> @@ -526,10 +552,17 @@ static void ghes_do_proc(struct ghes *ghes,
+>  			log_arm_hw_error(err);
 >  		} else {
->  			src_page =3D pte_page(pteval);
->  			copy_user_highpage(page, src_page, address, vma);
-> -			VM_BUG_ON_PAGE(page_mapcount(src_page) !=3D 1, src_page);
+>  			void *err = acpi_hest_get_payload(gdata);
+> +			u8 error_handled = false;
+> +			int ret;
+> +
+> +			ret = atomic_notifier_call_chain(&ghes_event_notify_list, 0, gdata);
 
-Maybe replace it with this?
+Well, this is a notifier with standard name for a non-standard event.
+Not optimal.
 
-VM_BUG_ON_PAGE(page_mapcount(src_page) + PageSwapCache(src_page) !=3D pag=
-e_count(src_page), src_page);
+Why does only this event need a notifier? Because your driver is
+interested in only those events?
 
+> +			if (ret & NOTIFY_OK)
+> +				error_handled = true;
+>  
+>  			log_non_standard_event(sec_type, fru_id, fru_text,
+>  					       sec_sev, err,
+> -					       gdata->error_data_length);
+> +					       gdata->error_data_length,
+> +					       error_handled);
 
->  			release_pte_page(src_page);
->  			/*
->  			 * ptl mostly unnecessary, but preempt has to
-> @@ -1209,12 +1216,9 @@ static int khugepaged_scan_pmd(struct mm_struct =
-*mm,
->  			goto out_unmap;
->  		}
->
-> -		/*
-> -		 * cannot use mapcount: can't collapse if there's a gup pin.
-> -		 * The page must only be referenced by the scanned process
-> -		 * and page swap cache.
-> -		 */
-> -		if (page_count(page) !=3D 1 + PageSwapCache(page)) {
-> +		/* Check if the page has any GUP (or other external) pins */
-> +		if (total_mapcount(page) + PageSwapCache(page) !=3D
-> +				page_count(page)) {
->  			result =3D SCAN_PAGE_COUNT;
->  			goto out_unmap;
->  		}
-> -- =
+What's that error_handled thing for? That's just silly.
 
-> 2.26.0
+Your notifier returns NOTIFY_STOP when it has queued the error. If you
+don't want to log it, just test == NOTIFY_STOP and do not log it then.
 
-Thanks.
+Then your notifier callback is queuing the error into a kfifo for
+whatever reason and then scheduling a workqueue to handle it in user
+context...
 
-=E2=80=94
-Best Regards,
-Yan Zi
+So I'm thinking that it would be better if you:
 
---=_MailMate_80997A0A-BCA7-4724-8B72-2A1A1D67B3D7_=
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename=signature.asc
-Content-Type: application/pgp-signature; name=signature.asc
+* make that kfifo generic and part of ghes.c and queue all types of
+error records into it in ghes_do_proc() - not just the non-standard
+ones.
 
------BEGIN PGP SIGNATURE-----
+* then, when you're done queuing, you kick a workqueue.
 
-iQFEBAEBCgAuFiEEOXBxLIohamfZUwd5QYsvEZxOpswFAl5+Q8YQHHppLnlhbkBz
-ZW50LmNvbQAKCRBBiy8RnE6mzMUiCACSQ0+eDkMnjyy+ajzLsbTzYN30M5/XuDS4
-2iflrQbLK3OZDH5A/L6/3nW5drgfu0AV6opHNrsksfrw+ClQVrI2q19kz0uZJKj5
-KqAnN49evZTDdMZd64u4QR320fqNRLPN7tWRQ9Kzj/AwDVLG1GDQgCKfI7q/0CP0
-vIG1R6fkmOUz/6dQsqa+RYJJ6Wlg7oFWrSZNHCvHJ7d3N/goS41BQtyiW9n+fcj3
-VLjlgy2ljDUc6zOV2zUcR63CgKWxkhSVeIhmhfjJtnX2vKfrOgp6MPP6Pc49MeXx
-LQSp0oNZ6q7bPdkn6uJAI0e4qZDyJPQIeQO6vDABx1q1CiAJ1ZBB
-=/MsL
------END PGP SIGNATURE-----
+* that workqueue runs a normal, blocking notifier to which drivers
+register.
 
---=_MailMate_80997A0A-BCA7-4724-8B72-2A1A1D67B3D7_=--
+Your driver can register to that notifier too and do the normal handling
+then and not have this ad-hoc, semi-generic, semi-vendor-specific thing.
+
+Thx.
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
