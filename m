@@ -2,114 +2,70 @@ Return-Path: <SRS0=s8dx=5M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BC01C43331
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 00:33:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EA46C2D0E8
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 00:34:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D362020737
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 00:33:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="tOkfTkSB"
+	by mail.kernel.org (Postfix) with ESMTP id 1FAD520737
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 00:34:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727752AbgC0AdB (ORCPT
+        id S1727705AbgC0AeJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 20:33:01 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:46477 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727547AbgC0AdA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 20:33:00 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1585269180; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=HWFSGxDxH1xLw/mnlgsnciPmd1tg7V0DxLsgC5MxQz4=; b=tOkfTkSBmufS6t17TyGA6o7QKqfWnl0BvrA19WYetp3/B0YAZqt+AZBmmddEHqjHrGmJKEw6
- HEOXvRhrs5JJ1Xzcg1K6yfEHDTdMBQzNgWHRnQ/UkeygpMO59JuXJh5BuBsSji9J5ZYb98WP
- YxWrQhmqwmfSemmdulJCiljTmz4=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e7d49b0.7fb76e165c70-smtp-out-n05;
- Fri, 27 Mar 2020 00:32:48 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 1CC62C433D2; Fri, 27 Mar 2020 00:32:48 +0000 (UTC)
-Received: from [10.110.28.199] (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: wcheng)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 02DCEC433F2;
-        Fri, 27 Mar 2020 00:32:46 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 02DCEC433F2
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=wcheng@codeaurora.org
-Subject: Re: [PATCH v3 4/4] phy: qcom-qmp: Use proper PWRDOWN offset for
- sm8150 USB
-To:     agross@kernel.org, bjorn.andersson@linaro.org, kishon@ti.com,
-        robh+dt@kernel.org, mark.rutland@arm.com, p.zabel@pengutronix.de
-Cc:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org
-References: <1585158184-5907-1-git-send-email-wcheng@codeaurora.org>
- <1585158184-5907-5-git-send-email-wcheng@codeaurora.org>
-From:   Wesley Cheng <wcheng@codeaurora.org>
-Message-ID: <398efe83-ee2a-0b40-7423-0d0c386d65a9@codeaurora.org>
-Date:   Thu, 26 Mar 2020 17:32:46 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Thu, 26 Mar 2020 20:34:09 -0400
+Received: from namei.org ([65.99.196.166]:43916 "EHLO namei.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726359AbgC0AeJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Mar 2020 20:34:09 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by namei.org (8.14.4/8.14.4) with ESMTP id 02R0Xank018319;
+        Fri, 27 Mar 2020 00:33:36 GMT
+Date:   Fri, 27 Mar 2020 11:33:36 +1100 (AEDT)
+From:   James Morris <jmorris@namei.org>
+To:     KP Singh <kpsingh@chromium.org>
+cc:     linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        Brendan Jackman <jackmanb@google.com>,
+        Florent Revest <revest@google.com>,
+        Thomas Garnier <thgarnie@google.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Kees Cook <keescook@chromium.org>,
+        Paul Turner <pjt@google.com>, Jann Horn <jannh@google.com>,
+        Florent Revest <revest@chromium.org>,
+        Brendan Jackman <jackmanb@chromium.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH bpf-next v7 8/8] bpf: lsm: Add Documentation
+In-Reply-To: <20200326142823.26277-9-kpsingh@chromium.org>
+Message-ID: <alpine.LRH.2.21.2003271133130.17915@namei.org>
+References: <20200326142823.26277-1-kpsingh@chromium.org> <20200326142823.26277-9-kpsingh@chromium.org>
+User-Agent: Alpine 2.21 (LRH 202 2017-01-01)
 MIME-Version: 1.0
-In-Reply-To: <1585158184-5907-5-git-send-email-wcheng@codeaurora.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, 26 Mar 2020, KP Singh wrote:
+
+> From: KP Singh <kpsingh@google.com>
+> 
+> Document how eBPF programs (BPF_PROG_TYPE_LSM) can be loaded and
+> attached (BPF_LSM_MAC) to the LSM hooks.
+> 
+> Signed-off-by: KP Singh <kpsingh@google.com>
+> Reviewed-by: Brendan Jackman <jackmanb@google.com>
+> Reviewed-by: Florent Revest <revest@google.com>
+> Reviewed-by: Thomas Garnier <thgarnie@google.com>
 
 
-On 3/25/2020 10:43 AM, Wesley Cheng wrote:
-> The register map for SM8150 QMP USB SSPHY has moved
-> QPHY_POWER_DOWN_CONTROL to a different offset.  Allow for
-> an offset in the register table to override default value
-> if it is a DP capable PHY.
-> 
-> Signed-off-by: Wesley Cheng <wcheng@codeaurora.org>
-> ---
->  drivers/phy/qualcomm/phy-qcom-qmp.c | 4 ++++
->  1 file changed, 4 insertions(+)
-> 
-> diff --git a/drivers/phy/qualcomm/phy-qcom-qmp.c b/drivers/phy/qualcomm/phy-qcom-qmp.c
-> index cc04471..71a230a 100644
-> --- a/drivers/phy/qualcomm/phy-qcom-qmp.c
-> +++ b/drivers/phy/qualcomm/phy-qcom-qmp.c
-> @@ -164,6 +164,7 @@ enum qphy_reg_layout {
->  	[QPHY_SW_RESET]			= 0x00,
->  	[QPHY_START_CTRL]		= 0x44,
->  	[QPHY_PCS_STATUS]		= 0x14,
-> +	[QPHY_COM_POWER_DOWN_CONTROL]	= 0x40,
->  };
->  
->  static const unsigned int sdm845_ufsphy_regs_layout[] = {
-> @@ -1627,6 +1628,9 @@ static int qcom_qmp_phy_com_init(struct qmp_phy *qphy)
->  	if (cfg->has_phy_com_ctrl)
->  		qphy_setbits(serdes, cfg->regs[QPHY_COM_POWER_DOWN_CONTROL],
->  			     SW_PWRDN);
-> +	else if (!cfg->has_phy_com_ctrl && cfg->regs[QPHY_COM_POWER_DOWN_CONTROL])
-> +		qphy_setbits(pcs, cfg->regs[QPHY_COM_POWER_DOWN_CONTROL],
-> +			     cfg->pwrdn_ctrl);
->  	else
->  		qphy_setbits(pcs, QPHY_POWER_DOWN_CONTROL, cfg->pwrdn_ctrl);
->  
-> 
+Reviewed-by: James Morris <jamorris@linux.microsoft.com>
 
-Will add logic to the qcom_qmp_phy_com_exit() API as well to fix the
-power down offset if DP com is being used, and will check for
-has_phy_dp_com_ctrl instead of !has_phy_com_ctrl, as to ensure this only
-applies to PHYs that have DP COM.
 
 -- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+James Morris
+<jmorris@namei.org>
+
