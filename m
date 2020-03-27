@@ -2,136 +2,165 @@ Return-Path: <SRS0=s8dx=5M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.2 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 947EEC43331
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 19:38:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E037EC2D0E5
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 19:40:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 68BDA20663
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 19:38:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="RUaNUpoE"
+	by mail.kernel.org (Postfix) with ESMTP id C6E09206F1
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 19:40:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727549AbgC0TiA (ORCPT
+        id S1727593AbgC0Tk3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Mar 2020 15:38:00 -0400
-Received: from mout.gmx.net ([212.227.17.21]:36853 "EHLO mout.gmx.net"
+        Fri, 27 Mar 2020 15:40:29 -0400
+Received: from foss.arm.com ([217.140.110.172]:52252 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726738AbgC0TiA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Mar 2020 15:38:00 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1585337871;
-        bh=TarnDvK03R5OkAwxQLkYshS6zrE7QtGDv0yDW0/OpmU=;
-        h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
-        b=RUaNUpoEaB6PteNVLmClccvLXaT2/KjRwkUKp4U/TkJwEbYyZf/Mp4aZ8f/Sm2hdx
-         4J1MPuTG/rK0DpTkNJGq9mR6BwqbQMFYDbDMyzS1DA6nIsMD5jRqlguTWG9JU9petZ
-         k1srTGU5wSquc0t5LEo7y2KvXJYuhrC65HmOOQko=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from localhost.localdomain ([82.19.195.159]) by mail.gmx.com
- (mrgmx104 [212.227.17.174]) with ESMTPSA (Nemesis) id
- 1MK3Rm-1iwOrx1gyc-00LWIu; Fri, 27 Mar 2020 20:37:51 +0100
-From:   Alex Dewar <alex.dewar@gmx.co.uk>
-Cc:     Alex Dewar <alex.dewar@gmx.co.uk>, Jeff Dike <jdike@addtoit.com>,
-        Richard Weinberger <richard@nod.at>,
-        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
-        linux-um@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] um: Remove some unnecessary NULL checks in vector_user.c
-Date:   Fri, 27 Mar 2020 19:36:25 +0000
-Message-Id: <20200327193626.82329-1-alex.dewar@gmx.co.uk>
-X-Mailer: git-send-email 2.26.0
+        id S1726738AbgC0Tk2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Mar 2020 15:40:28 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C0D3730E;
+        Fri, 27 Mar 2020 12:40:27 -0700 (PDT)
+Received: from [10.57.60.204] (unknown [10.57.60.204])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id EB60E3F71E;
+        Fri, 27 Mar 2020 12:40:25 -0700 (PDT)
+Subject: Re: Re: [PATCH v2 3/3] driver core: Replace open-coded
+ list_last_entry()
+To:     Naresh Kamboju <naresh.kamboju@linaro.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Basil Eljuse <Basil.Eljuse@arm.com>,
+        lkft-triage@lists.linaro.org,
+        Linux-Next Mailing List <linux-next@vger.kernel.org>,
+        fntoth@gmail.com, Arnd Bergmann <arnd@arndb.de>,
+        Anders Roxell <anders.roxell@linaro.org>
+References: <20200324122023.9649-1-andriy.shevchenko@linux.intel.com>
+ <20200324122023.9649-3-andriy.shevchenko@linux.intel.com>
+ <CAJZ5v0gg=V8uDd4afJ3MULsgKYvWajKJioANk4jj7xEhBzrRrQ@mail.gmail.com>
+ <CA+G9fYvFnXqSnoQSJ-DkQvAFv87iWmhH6dT1N79qrq=Aeuv4rw@mail.gmail.com>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <028b636f-6e0f-c36a-aa4e-6a16d936fc6a@arm.com>
+Date:   Fri, 27 Mar 2020 19:40:25 +0000
+User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:kVSEqb+E7PCctOfuSvs+ejr1Qi393zTPSWxd19Z9576GecgGm7n
- foEqUO34lrbD8dF74F7iesFAz51fS8w/TkeQk8JH43ITcAC8RRw12fRrvv+tG5v7GIKrEjV
- F+EH+YXuos/y3U8NVnEUWSorfA8XeN3H1tw3BD5CtyRYSiQcoIE3T5WOkzit/iTU1stpVx2
- EoabZ6jpOHyx8ms0q8Zmw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:wym9GrTofkQ=:RmM4uceM7nIXWNuFgZreVv
- enZ7UYCyfpkqUUqUW/cetOvpm5p7u457rqrSajlZy9Wt21iK1ILrSbkAIJEQkX1S0JBSJQv+Y
- 0D7yujHwZPFTfDQj1pIoPs94oUL29xvB58NED+I42+dqEngYm9cxFb+2TqZ499+jz51zVcYRw
- kCaf/gnfk6KpTNLywwZlp1nEq4n1FhM9pQml+WxbOt/wM3eKeeF7OYjA2qlwD8Ogi9Ibok6uZ
- apJ9FdNiwfTvNoKgWRESz6yvyygUZaDFpFavIW7Pi1njR5u+PRYL6/37rFdgmpMFcqqPudCsn
- 8ccI8EktL+XFVssfHx9LA2a910n4POYdbkPpIlCAJVoAvf7oYrqTgrZKSe6hYcasBH0IxADOu
- NODhZzSXIMTOcFF1n6fW4iL4dTz2d/0T5v7jQNP1jtb4vWZFt1BUvqIsmtVzBOspPSHbQk7pT
- lyv2nF71oW106IId/xyEnAVBsneXw+22yiPvMgfkJDrCWEqT+LhGTxkKEm2Tv3BDP46YxT4X5
- YrX0/W0hJILILidnvJGimy5+Oc/LhQKu2Tfr/a0vZ0ZaG1mdfxwCzElnD4XgTU80P9jPR4QZg
- mumdhhvSB4QGHiwLxPIgfZ5J5MV4K/nrkv4H3sI6Dc9poHOh9JS1i3370WEMHjJv2VRasFqcj
- Cq92X4eTpGcl9onILqP79elsD8XeCWI3GwB8ssu/NZWwYISUcdPtZ9mb/84wct3JMevZNMroi
- kqK6hk6ZuDroMmhaQNi9QXyb5Tt00kJ56YROuXZsUDKycKI9zGV74zMpAnf416vSDQuawzMOS
- kAgipk6LK7InGU4p5eFy0zjnK0zEY0MIcWqRTqSFCCW1bpRHw8MygifSxeIDh9v8HHAJZHtOJ
- 9HSeSODrPnj0RMTrvfQwApPavXIm4WDI7I/+2PecVfS14lLM0ETOHgwG+M0Y0XBBI0eAcrvAh
- Z2jV7GzkLSxIaonyKRMiTn4tFtcSK8Ko7mwT1h/c3LTIV5gJ+8qAOXgNPYsEyOOesnbaoRsc8
- CT4OrTnW6Mdkyj35jiQGeskgfvu09/j8zbYIiq5MNDL4Disa0V57CC2uz5TFr2yXFUQ6gZUBF
- OUi3p13iJad1D3ogR3y9U1/CZUPQK1+gkdHJjouE3/CPmVDS4Y4cOk6LdlB3YnUxsbJdKTtu9
- 87+YytRBEz3UBTGwI4iikkLZERPsoUrdrJPZKX/q4M5qGURCw2dvZQ7rDoBa6ZtOWDYmfm/c4
- /xY793jGivdw1cQm0
-To:     unlisted-recipients:; (no To-header on input)
+In-Reply-To: <CA+G9fYvFnXqSnoQSJ-DkQvAFv87iWmhH6dT1N79qrq=Aeuv4rw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-kfree() already checks for null pointers, so additional checking is
-unnecessary.
+On 2020-03-27 5:56 pm, Naresh Kamboju wrote:
+> The kernel warning noticed on arm64 juno-r2 device running linux
+> next-20200326 and next-20200327
 
-Signed-off-by: Alex Dewar <alex.dewar@gmx.co.uk>
-=2D--
- arch/um/drivers/vector_user.c | 15 +++++----------
- 1 file changed, 5 insertions(+), 10 deletions(-)
+I suspect this is the correct expected behaviour manifesting. If you're 
+using the upstream juno-r2.dts, the power domain being waited for here 
+is provided by SCPI, however unless you're using an SCP firmware from at 
+least 3 years ago you won't actually have SCPI since they switched it to 
+the newer SCMI protocol, which is not yet supported upstream for Juno. 
+See what happened earlier in the log:
 
-diff --git a/arch/um/drivers/vector_user.c b/arch/um/drivers/vector_user.c
-index ddcd917be0af..aa28e9eecb7b 100644
-=2D-- a/arch/um/drivers/vector_user.c
-+++ b/arch/um/drivers/vector_user.c
-@@ -221,8 +221,7 @@ static struct vector_fds *user_init_tap_fds(struct arg=
-list *ifspec)
- 	return result;
- tap_cleanup:
- 	printk(UM_KERN_ERR "user_init_tap: init failed, error %d", fd);
--	if (result !=3D NULL)
--		kfree(result);
-+	kfree(result);
- 	return NULL;
- }
+[    2.741206] scpi_protocol scpi: incorrect or no SCP firmware found
+[    2.747586] scpi_protocol: probe of scpi failed with error -110
 
-@@ -266,8 +265,7 @@ static struct vector_fds *user_init_hybrid_fds(struct =
-arglist *ifspec)
- 	return result;
- hybrid_cleanup:
- 	printk(UM_KERN_ERR "user_init_hybrid: init failed");
--	if (result !=3D NULL)
--		kfree(result);
-+	kfree(result);
- 	return NULL;
- }
+Thus this is the "waiting for a dependency which will never appear" 
+case, for which I assume the warning is intentional, since the system is 
+essentially broken (i.e. the hardware/firmware doesn't actually match 
+what the DT describes).
 
-@@ -344,10 +342,8 @@ static struct vector_fds *user_init_unix_fds(struct a=
-rglist *ifspec, int id)
- unix_cleanup:
- 	if (fd >=3D 0)
- 		os_close_file(fd);
--	if (remote_addr !=3D NULL)
--		kfree(remote_addr);
--	if (result !=3D NULL)
--		kfree(result);
-+	kfree(remote_addr);
-+	kfree(result);
- 	return NULL;
- }
+Robin.
 
-@@ -382,8 +378,7 @@ static struct vector_fds *user_init_raw_fds(struct arg=
-list *ifspec)
- 	return result;
- raw_cleanup:
- 	printk(UM_KERN_ERR "user_init_raw: init failed, error %d", err);
--	if (result !=3D NULL)
--		kfree(result);
-+	kfree(result);
- 	return NULL;
- }
-
-=2D-
-2.26.0
-
+> [   36.077086] ------------[ cut here ]------------
+> [   36.081752] amba 20010000.etf: deferred probe timeout, ignoring dependency
+> [   36.081859] WARNING: CPU: 1 PID: 42 at drivers/base/dd.c:270
+> driver_deferred_probe_check_state+0x54/0x80
+> [   36.098242] Modules linked in: fuse
+> [   36.101753] CPU: 1 PID: 42 Comm: kworker/1:1 Not tainted
+> 5.6.0-rc7-next-20200327 #1
+> [   36.109427] Hardware name: ARM Juno development board (r2) (DT)
+> [   36.115372] Workqueue: events amba_deferred_retry_func
+> [   36.120526] pstate: 60000005 (nZCv daif -PAN -UAO)
+> [   36.125334] pc : driver_deferred_probe_check_state+0x54/0x80
+> [   36.131010] lr : driver_deferred_probe_check_state+0x54/0x80
+> [   36.136680] sp : ffff000934e0fae0
+> [   36.140001] x29: ffff000934e0fae0 x28: ffff000934db5608
+> [   36.145337] x27: ffffa00013c63240 x26: ffff000934f2a800
+> [   36.150668] x25: 0000000000000001 x24: fffffffffffffffe
+> [   36.155996] x23: ffff000934c6ab80 x22: ffffa00011b39ea0
+> [   36.161322] x21: ffff000934f2a800 x20: ffffa00011905fe0
+> [   36.166649] x19: ffff000934f2a800 x18: 0000000000000000
+> [   36.171974] x17: 0000000000000000 x16: 0000000000000000
+> [   36.177299] x15: 0000000000000000 x14: 003d090000000000
+> [   36.182625] x13: 00003d0900000000 x12: ffff9400027ef445
+> [   36.187952] x11: 1ffff400027ef444 x10: ffff9400027ef444
+> [   36.193278] x9 : dfffa00000000000 x8 : 0000000000000000
+> [   36.198603] x7 : 0000000000000001 x6 : ffffa00013f7a220
+> [   36.203929] x5 : 0000000000000004 x4 : dfffa00000000000
+> [   36.209255] x3 : ffffa000101a74ec x2 : ffff8001269c1f26
+> [   36.214581] x1 : da1107b7b6a8fb00 x0 : 0000000000000000
+> [   36.219906] Call trace:
+> [   36.222369]  driver_deferred_probe_check_state+0x54/0x80
+> [   36.227698]  __genpd_dev_pm_attach+0x264/0x2a0
+> [   36.232154]  genpd_dev_pm_attach+0x68/0x78
+> [   36.236265]  dev_pm_domain_attach+0x6c/0x70
+> [   36.240463]  amba_device_try_add+0xec/0x3f8
+> [   36.244659]  amba_deferred_retry_func+0x84/0x158
+> [   36.249301]  process_one_work+0x3f0/0x660
+> [   36.253326]  worker_thread+0x74/0x698
+> [   36.256997]  kthread+0x218/0x220
+> [   36.260236]  ret_from_fork+0x10/0x1c
+> [   36.263819] ---[ end trace c637c10e549bd716 ]---#
+> 
+> Full test log,
+> https://lkft.validation.linaro.org/scheduler/job/1317079#L981
+> 
+> On Tue, 24 Mar 2020 at 18:24, Rafael J. Wysocki <rafael@kernel.org> wrote:
+>>
+>> On Tue, Mar 24, 2020 at 1:20 PM Andy Shevchenko
+>> <andriy.shevchenko@linux.intel.com> wrote:
+>>>
+>>> There is a place in the code where open-coded version of list entry accessors
+>>> list_last_entry() is used.
+>>>
+>>> Replace that with the standard macro.
+>>>
+>>> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+>>
+>> Reviewed-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+>>
+>>> ---
+>>> v2: no change
+>>>   drivers/base/dd.c | 2 +-
+>>>   1 file changed, 1 insertion(+), 1 deletion(-)
+>>>
+>>> diff --git a/drivers/base/dd.c b/drivers/base/dd.c
+>>> index efd0e4c16ba5..27a4d51b5bba 100644
+>>> --- a/drivers/base/dd.c
+>>> +++ b/drivers/base/dd.c
+>>> @@ -1226,7 +1226,7 @@ void driver_detach(struct device_driver *drv)
+>>>                          spin_unlock(&drv->p->klist_devices.k_lock);
+>>>                          break;
+>>>                  }
+>>> -               dev_prv = list_entry(drv->p->klist_devices.k_list.prev,
+>>> +               dev_prv = list_last_entry(&drv->p->klist_devices.k_list,
+>>>                                       struct device_private,
+>>>                                       knode_driver.n_node);
+>>>                  dev = dev_prv->device;
+> 
+> metadata:
+>    git branch: master
+>    git repo: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
+>    git describe: next-20200327
+>    kernel-config:
+> https://builds.tuxbuild.com/nqmmxorUbC1qTWp42iEKjQ/kernel.config
+> 
+> 
