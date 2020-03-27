@@ -2,117 +2,167 @@ Return-Path: <SRS0=s8dx=5M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A643C2D0E5
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 22:45:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 146F1C2D0EC
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 22:45:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E59C2071B
+	by mail.kernel.org (Postfix) with ESMTP id DDD6C2073B
 	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 22:45:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="xSOnox+1"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585349105;
+	bh=7Zs/b+96WvUw27So2YKcRcWhDyAPTdzX/ZNYwXeNrqM=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=UeheEJDWwD9wwFhZh4SueiilIHr8PzLrDdp3GKX1lLPKctDgDNuD+6DEdTKZlVV5h
+	 O1uw1v4Y6cOVgytMwp1foS6YHlwMIeg1d+V56pYv4hTUQfF6RQZAFakxSV8+HIymBD
+	 Rn7NFpQetjBqvLAy7kEL8Dczuji/vpANmdlKmRjQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727725AbgC0WpD (ORCPT
+        id S1727774AbgC0WpE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Mar 2020 18:45:03 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:45195 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727639AbgC0WpD (ORCPT
+        Fri, 27 Mar 2020 18:45:04 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:45434 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727620AbgC0WpE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Mar 2020 18:45:03 -0400
-Received: by mail-ed1-f68.google.com with SMTP id u59so13206900edc.12
-        for <linux-kernel@vger.kernel.org>; Fri, 27 Mar 2020 15:45:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=/LGuc0QqW9HR71Y1NNbAkC8Bf5W/OzoGDIgpyPzWX5k=;
-        b=xSOnox+1TN9e9prVqWp62ZCF3N/UkOZnjrZvSo7uZZHGBIs480j52MjNHh+TbQoueQ
-         DVqn7TmWHGc3Nu/z7VBqVnEHJ53ndRea5gywFzuSDnMCz3fQdoR25ZMt2x7hb1P8V25W
-         IfO+S+4V7ixws6ZtcIaQArFxwnKE75D9vC1Pv246btnV03YxkXfMiIXaju+QBWEbPVsB
-         DiIOkT2ejeaX5DcN93WU5FVtzcD10HpTGZkIvQAEFX7710KHXupTRPnHnxtWOzTNw49a
-         aqS9exTHbBGD6cEnFFiMc2s1GchbIdLRf9tY1V4ACtXUnNZgNF5orFPB9hF8mjOeTCJC
-         Wkvg==
+        Fri, 27 Mar 2020 18:45:04 -0400
+Received: by mail-io1-f67.google.com with SMTP id a24so10928117iol.12;
+        Fri, 27 Mar 2020 15:45:03 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=/LGuc0QqW9HR71Y1NNbAkC8Bf5W/OzoGDIgpyPzWX5k=;
-        b=AdLP6TxYjbEtRmE4K+GFOjqmUCzGtyCzWKMwR4kI5yUmvXpAOT/4j/K8qF9nksO36q
-         zHnOCSYnsRkkwSc3oCISTDKp0M594pZ8Nb/wZ2wkA+4pHOi9b2psszPjAePpIlQXHNz9
-         e9IyY4t/R14gsOHlu9QgA1ijGXu14El74ytI9O/996faN+SC2NBWY5pBquinzZCSIqcs
-         4ZI/Uqrx3wtt5nnrXVD0zxELD2So+32SCLzl0LQkZuh7Aa2ABxOrbf+m9/JWctdKOQdW
-         rYm0Wg//Kew21CGq5/tbaY8HpjpA+ocE6N2sHI/KowmCkZuDZZPewDhw2P/G1IPoqKJA
-         QtTw==
-X-Gm-Message-State: ANhLgQ3rdMB3Nr8DLLvJVjVxce4Pqsf9A6MRtxTDlOW1Tior2idOhzyi
-        zsx/KpAHhH/dIeJBptqYSR4D7JFznHkSaH4sl7Sy
-X-Google-Smtp-Source: ADFU+vtPz2f20HeMrGRumvzvtd33Lj903GfTooGJ3K0DV5XYxoq4cFDiri2nBc6zrER/kask/V6CYP3kgc4C49YuTBQ=
-X-Received: by 2002:aa7:dd01:: with SMTP id i1mr1459195edv.164.1585349100363;
- Fri, 27 Mar 2020 15:45:00 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=u4k13uf5713DqF6VnWYY7OaKrDxuIhG+KLjykTCZmLE=;
+        b=Gv/I3R7+nOm+zatwFGKaLrr2HO4RHpM6Wiywg6KtnKTZacBCH/iLnHXPrVtmtU7U5R
+         fRMHJNwxU/jxQEYWXRPYwDdfk4SmpRIY4RrNXxfIxEv59Y/sAGxWJg5OGo3vl5gX722n
+         R6cKMvdscNifJPGOiQgDSfKP8U7oX6QB8PdhQeU/Fn80Pzcp2GAjphFe+aAjnnLsDss2
+         NYxpyvMbfS9mBpU3R1WEjTB07ymrXS+dfVUAq2x1W5cHXUfypR34+iORfI2A5XsfJEib
+         5Y1bNS9hclBlv/aSkn6OXx65/TU1lD0QaO5zPmUSpQqNiA9j9Ck3d1s6jvST9Tk1Fb8T
+         ePjQ==
+X-Gm-Message-State: ANhLgQ0NxNnuVl10UUWDG/OARaPvajEC8t/cZx1nbKfHmV7Dy5sCBO07
+        bDnIU5eTGVq5cgF1ygBwKmyLhpc=
+X-Google-Smtp-Source: ADFU+vsAE04nea1pFbNgX10KkqsBq3CtTvHBC//maalfcP/HRR+gaN6juo2FWt0zeUBHYvmVpvNbkQ==
+X-Received: by 2002:a6b:ed17:: with SMTP id n23mr871676iog.165.1585349103124;
+        Fri, 27 Mar 2020 15:45:03 -0700 (PDT)
+Received: from xps15.herring.priv ([64.188.179.250])
+        by smtp.googlemail.com with ESMTPSA id u125sm1838651ioe.24.2020.03.27.15.45.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 27 Mar 2020 15:45:02 -0700 (PDT)
+From:   Rob Herring <robh@kernel.org>
+To:     devicetree@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org,
+        =?UTF-8?q?Nuno=20S=C3=A1?= <nuno.sa@analog.com>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        linux-iio@vger.kernel.org
+Subject: [PATCH] dt-bindings: iio: Fix adi,ltc2983 uint64-matrix schema constraints
+Date:   Fri, 27 Mar 2020 16:45:01 -0600
+Message-Id: <20200327224501.18590-1-robh@kernel.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-References: <20200327174402.351334-1-colin.king@canonical.com>
-In-Reply-To: <20200327174402.351334-1-colin.king@canonical.com>
-From:   Paul Moore <paul@paul-moore.com>
-Date:   Fri, 27 Mar 2020 18:44:49 -0400
-Message-ID: <CAHC9VhQOdoNXHjymbMCh1p0Bun5+bzxykhWzPNtjcwoEJ0cAjA@mail.gmail.com>
-Subject: Re: [PATCH] selinux: clean up indentation issue with assignment statement
-To:     Colin King <colin.king@canonical.com>
-Cc:     Stephen Smalley <stephen.smalley.work@gmail.com>,
-        Eric Paris <eparis@parisplace.org>,
-        Ondrej Mosnacek <omosnace@redhat.com>, selinux@vger.kernel.org,
-        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 27, 2020 at 1:44 PM Colin King <colin.king@canonical.com> wrote:
->
-> From: Colin Ian King <colin.king@canonical.com>
->
-> The assignment of e->type_names is indented one level too deep,
-> clean this up by removing the extraneous tab.
->
-> Signed-off-by: Colin Ian King <colin.king@canonical.com>
-> ---
->  security/selinux/ss/policydb.c | 7 +++----
->  1 file changed, 3 insertions(+), 4 deletions(-)
+'minItems' and 'maxItems' apply at the same level as 'items' schemas as
+the keywords apply to arrays. What's currently defined is a 3
+dimensional matrix with the outer size being undefined. To fix this,
+minItems/maxItems needs to be moved up a level.
 
-I generally dislike style/formatting only changes, but one could argue
-that this is just plain wrong regardless of how you like your code to
-look.
+With this fixed, the example fails validation. For matrix types, the dts
+syntax must use brackets (<>) matching the schema definition. In this
+case, the inner array size is 2 elements, so let's add the correct
+bracketing.
 
-I also dislike merging changes into selinux/next when we are at -rc7,
-but this is trivial and obviously correct.
+Fixes: 3986a14870cb ("dt-bindings: iio: Add ltc2983 documentation")
+Cc: "Nuno Sá" <nuno.sa@analog.com>
+Cc: Jonathan Cameron <jic23@kernel.org>
+Cc: Hartmut Knaack <knaack.h@gmx.de>
+Cc: Lars-Peter Clausen <lars@metafoo.de>
+Cc: Peter Meerwald-Stadler <pmeerw@pmeerw.net>
+Cc: linux-iio@vger.kernel.org
+Signed-off-by: Rob Herring <robh@kernel.org>
+---
+I'll take this via the DT tree as I have another change this will 
+conflict.
 
-However, despite not wanting to merge this into selinux/next I decided
-to do just that - thanks for the fix. :)
+Rob
 
-> diff --git a/security/selinux/ss/policydb.c b/security/selinux/ss/policydb.c
-> index 932b2b9bcdb2..70ecdc78efbd 100644
-> --- a/security/selinux/ss/policydb.c
-> +++ b/security/selinux/ss/policydb.c
-> @@ -1219,10 +1219,9 @@ static int read_cons_helper(struct policydb *p,
->                                 if (rc)
->                                         return rc;
->                                 if (p->policyvers >=
-> -                                       POLICYDB_VERSION_CONSTRAINT_NAMES) {
-> -                                               e->type_names = kzalloc(sizeof
-> -                                               (*e->type_names),
-> -                                               GFP_KERNEL);
-> +                                   POLICYDB_VERSION_CONSTRAINT_NAMES) {
-> +                                       e->type_names = kzalloc(sizeof
-> +                                               (*e->type_names), GFP_KERNEL);
->                                         if (!e->type_names)
->                                                 return -ENOMEM;
->                                         type_set_init(e->type_names);
-> --
-> 2.25.1
+ .../bindings/iio/temperature/adi,ltc2983.yaml | 38 +++++++++----------
+ 1 file changed, 18 insertions(+), 20 deletions(-)
 
+diff --git a/Documentation/devicetree/bindings/iio/temperature/adi,ltc2983.yaml b/Documentation/devicetree/bindings/iio/temperature/adi,ltc2983.yaml
+index acc030c1b20e..8fb46de6641d 100644
+--- a/Documentation/devicetree/bindings/iio/temperature/adi,ltc2983.yaml
++++ b/Documentation/devicetree/bindings/iio/temperature/adi,ltc2983.yaml
+@@ -123,12 +123,11 @@ patternProperties:
+           sign.
+         allOf:
+           - $ref: /schemas/types.yaml#/definitions/uint64-matrix
++        minItems: 3
++        maxItems: 64
+         items:
+-          minItems: 3
+-          maxItems: 64
+-          items:
+-            minItems: 2
+-            maxItems: 2
++          minItems: 2
++          maxItems: 2
+ 
+   "^diode@":
+     type: object
+@@ -328,12 +327,11 @@ patternProperties:
+           78 and 79.
+         allOf:
+           - $ref: /schemas/types.yaml#/definitions/uint64-matrix
++        minItems: 3
++        maxItems: 64
+         items:
+-          minItems: 3
+-          maxItems: 64
+-          items:
+-            minItems: 2
+-            maxItems: 2
++          minItems: 2
++          maxItems: 2
+ 
+       adi,custom-steinhart:
+         description:
+@@ -465,16 +463,16 @@ examples:
+                         adi,sensor-type = <9>; //custom thermocouple
+                         adi,single-ended;
+                         adi,custom-thermocouple = /bits/ 64
+-                                 <(-50220000) 0
+-                                  (-30200000) 99100000
+-                                  (-5300000) 135400000
+-                                  0 273150000
+-                                  40200000 361200000
+-                                  55300000 522100000
+-                                  88300000 720300000
+-                                  132200000 811200000
+-                                  188700000 922500000
+-                                  460400000 1000000000>; //10 pairs
++                                 <(-50220000) 0>,
++                                 <(-30200000) 99100000>,
++                                 <(-5300000) 135400000>,
++                                 <0 273150000>,
++                                 <40200000 361200000>,
++                                 <55300000 522100000>,
++                                 <88300000 720300000>,
++                                 <132200000 811200000>,
++                                 <188700000 922500000>,
++                                 <460400000 1000000000>; //10 pairs
+                };
+ 
+         };
 -- 
-paul moore
-www.paul-moore.com
+2.20.1
+
