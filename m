@@ -2,133 +2,107 @@ Return-Path: <SRS0=s8dx=5M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93FDCC2D0E8
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 09:27:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C99EC2D0E7
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 09:27:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6AB1620705
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 09:27:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qclDenfH"
+	by mail.kernel.org (Postfix) with ESMTP id 602B020705
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 09:27:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727254AbgC0J1T (ORCPT
+        id S1727393AbgC0J1j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Mar 2020 05:27:19 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:33336 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725946AbgC0J1Q (ORCPT
+        Fri, 27 Mar 2020 05:27:39 -0400
+Received: from ZXSHCAS2.zhaoxin.com ([203.148.12.82]:20800 "EHLO
+        ZXSHCAS2.zhaoxin.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726698AbgC0J1j (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Mar 2020 05:27:16 -0400
-Received: by mail-oi1-f195.google.com with SMTP id m14so8251306oic.0;
-        Fri, 27 Mar 2020 02:27:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=mxJM5ZIhu7LpQ+5NV71sEjP70ux0ckHNNXazRf9xK2k=;
-        b=qclDenfHJNoe/IbZxPSfOepV1+OSvwFv2zwQd92O5HAfGOLqhoZDmdC5cKQ6tXtqDv
-         r9aF7m/wkriX8p0dI89Uj+oZ8xKuoXjKxkU0F02iKIfpjNBbI2cEKtNlVXfF9FugLVIA
-         ljpmEwXZzTrVQoLu/Xz37CPdnQqa+oku+v97n+FYIp6SkRhYY0bBq4R94hUB54htYP4m
-         9mHCZNoZ0F7DYNIbD3bC9N123yuXzAYbIM363NlRJrMmzlzyKQY3681J6v10P5h6FWyg
-         hGVbwkP6yhbRQSmLujKhFYgSg2bPcyvcwzonjl6bjmW0VCzoMzhO7KgXeKSDy8ffmKzp
-         Y50g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=mxJM5ZIhu7LpQ+5NV71sEjP70ux0ckHNNXazRf9xK2k=;
-        b=jvOXCowtkcJH4ecJ4eA8ZRIyxjmdagvlzLILJjFdDygefbf59JuXRbwlJ36eMFPIGq
-         QoARUIIR6Zo2sbxunBXtqUpBfVAWYzaCoiIQPnTnSShlQqhq+FqyW2+hYEu80k7KrzD6
-         s9ZW/IOjLrvvbAGd4ABb0ta4uenPMOwFa01vv7vXnokNBjXRkOqJKgvpa0+SAWX7KAhm
-         gmAJNQOqV89lTwSnYRQNpGgImkIEJdyhmspBUTTIxddJUAY5fwP7fiKT+QQKp5kQMYsL
-         alUArc8/MLzWk+0LDySlIxa/RcmFKfeaD8DaN/FdDFPJ0Fi9aFzerR5MxejmLFJ7jt2n
-         662Q==
-X-Gm-Message-State: ANhLgQ37qFsgPrjmpxUjh7NdVRY9slBI5mB0nVau2+CHn021b3lkIyci
-        P+DZ6UTgM3+7esFzAEamVXOhd1z81cvWJuSaMsM=
-X-Google-Smtp-Source: ADFU+vvxewAN9wA5TUvmoNDEwLFRuGiDSd8Fyty0Qven1rU+JHBVv9EW4qnwryLCjS/JFO3ppsHqsCEAN3uB3kOPAok=
-X-Received: by 2002:aca:f288:: with SMTP id q130mr3241437oih.33.1585301235733;
- Fri, 27 Mar 2020 02:27:15 -0700 (PDT)
+        Fri, 27 Mar 2020 05:27:39 -0400
+Received: from zxbjmbx1.zhaoxin.com (10.29.252.163) by ZXSHCAS2.zhaoxin.com
+ (10.28.252.162) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1261.35; Fri, 27 Mar
+ 2020 17:11:57 +0800
+Received: from raymond-pc.zhaoxin.com (10.29.28.62) by zxbjmbx1.zhaoxin.com
+ (10.29.252.163) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1261.35; Fri, 27 Mar
+ 2020 17:11:57 +0800
+From:   Raymond Pang <RaymondPang-oc@zhaoxin.com>
+To:     <bhelgaas@google.com>, <linux-pci@vger.kernel.org>
+CC:     <TonyWWang-oc@zhaoxin.com>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH 3/3] PCI: Add ACS quirk for Root/Downstream Ports
+Date:   Fri, 27 Mar 2020 17:11:48 +0800
+Message-ID: <20200327091148.5190-4-RaymondPang-oc@zhaoxin.com>
+X-Mailer: git-send-email 2.26.0
+In-Reply-To: <20200327091148.5190-1-RaymondPang-oc@zhaoxin.com>
+References: <20200327091148.5190-1-RaymondPang-oc@zhaoxin.com>
 MIME-Version: 1.0
-References: <1585290240-18643-1-git-send-email-wanpengli@tencent.com>
- <1585290240-18643-2-git-send-email-wanpengli@tencent.com> <87eete415a.fsf@vitty.brq.redhat.com>
-In-Reply-To: <87eete415a.fsf@vitty.brq.redhat.com>
-From:   Wanpeng Li <kernellwp@gmail.com>
-Date:   Fri, 27 Mar 2020 17:27:04 +0800
-Message-ID: <CANRm+CzHSTrGPpqxwzhtCvKtK-jpLvF=MvxVA06dCSAZbHgFng@mail.gmail.com>
-Subject: Re: [PATCH 2/2] KVM: LAPIC: Don't need to clear IPI delivery status
- for x2apic
-To:     Vitaly Kuznetsov <vkuznets@redhat.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>, kvm <kvm@vger.kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.29.28.62]
+X-ClientProxiedBy: ZXSHCAS2.zhaoxin.com (10.28.252.162) To
+ zxbjmbx1.zhaoxin.com (10.29.252.163)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 27 Mar 2020 at 17:07, Vitaly Kuznetsov <vkuznets@redhat.com> wrote:
->
-> Wanpeng Li <kernellwp@gmail.com> writes:
->
-> > From: Wanpeng Li <wanpengli@tencent.com>
-> >
-> > IPI delivery status field is not present for x2apic, don't need
-> > to clear IPI delivery status for x2apic.
-> >
-> > Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
-> > ---
-> >  arch/x86/kvm/lapic.c | 3 ++-
-> >  arch/x86/kvm/x86.c   | 1 -
-> >  2 files changed, 2 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/arch/x86/kvm/lapic.c b/arch/x86/kvm/lapic.c
-> > index 88929b1..f6d69e2 100644
-> > --- a/arch/x86/kvm/lapic.c
-> > +++ b/arch/x86/kvm/lapic.c
-> > @@ -1942,7 +1942,8 @@ int kvm_lapic_reg_write(struct kvm_lapic *apic, u32 reg, u32 val)
-> >       }
-> >       case APIC_ICR:
-> >               /* No delay here, so we always clear the pending bit */
->
-> 'Always' in the comment above now reads a bit odd, I'd suggest modifying
-> it to 'Immediately clear Delivery Status field in xAPIC mode' - or just
-> drop it altogeter.
+Many Zhaoxin Root Ports and Switch Downstream Ports do provide ACS-like
+capability but have no ACS Capability Structure. Peer-to-Peer
+transactions could be blocked between these ports, so add quirk
+to make devices behind them could be assigned to different IOMMU group.
 
-Thank you for your review, I guess Paolo can do it when apply.
+Signed-off-by: Raymond Pang <RaymondPang-oc@zhaoxin.com>
+---
+ drivers/pci/quirks.c | 26 ++++++++++++++++++++++++++
+ 1 file changed, 26 insertions(+)
 
-    Wanpeng
+diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+index 3f06496a3d4c..49cf6e943f16 100644
+--- a/drivers/pci/quirks.c
++++ b/drivers/pci/quirks.c
+@@ -4464,6 +4464,30 @@ static int pci_quirk_xgene_acs(struct pci_dev *dev, u16 acs_flags)
+ 	return pci_acs_ctrl_enabled(acs_flags,
+ 		PCI_ACS_SV | PCI_ACS_RR | PCI_ACS_CR | PCI_ACS_UF);
+ }
++
++/*
++ * Many Zhaoxin Root Ports and Switch Downstream Ports have no ACS capability.
++ * But the implementation could block peer-to-peer transactions between them
++ * and provide ACS-like functionality.
++ */
++static int  pci_quirk_zhaoxin_pcie_ports_acs(struct pci_dev *dev, u16 acs_flags)
++{
++
++	if (!pci_is_pcie(dev) ||
++	    ((pci_pcie_type(dev) != PCI_EXP_TYPE_ROOT_PORT) &&
++	     (pci_pcie_type(dev) != PCI_EXP_TYPE_DOWNSTREAM)))
++		return -ENOTTY;
++
++	switch (dev->device) {
++	case 0x0710 ... 0x071e:
++	case 0x0721:
++	case 0x0723 ... 0x0732:
++		return pci_acs_ctrl_enabled(acs_flags,
++			PCI_ACS_SV | PCI_ACS_RR | PCI_ACS_CR | PCI_ACS_UF);
++	}
++
++	return false;
++}
+ 
+ /*
+  * Many Intel PCH Root Ports do provide ACS-like features to disable peer
+@@ -4771,6 +4795,8 @@ static const struct pci_dev_acs_enabled {
+ 	{ PCI_VENDOR_ID_ZHAOXIN, 0x3038, pci_quirk_mf_endpoint_acs },
+ 	{ PCI_VENDOR_ID_ZHAOXIN, 0x3104, pci_quirk_mf_endpoint_acs },
+ 	{ PCI_VENDOR_ID_ZHAOXIN, 0x9083, pci_quirk_mf_endpoint_acs },
++	/* Zhaoxin Root/Downstream Ports */
++	{ PCI_VENDOR_ID_ZHAOXIN, PCI_ANY_ID, pci_quirk_zhaoxin_pcie_ports_acs },
+ 	{ 0 }
+ };
+ 
+-- 
+2.26.0
 
->
-> > -             val &= ~(1 << 12);
-> > +             if (!apic_x2apic_mode(apic))
-> > +                     val &= ~(1 << 12);
-> >               kvm_apic_send_ipi(apic, val, kvm_lapic_get_reg(apic, APIC_ICR2));
-> >               kvm_lapic_set_reg(apic, APIC_ICR, val);
-> >               break;
-> > diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-> > index 495709f..6ced0e1 100644
-> > --- a/arch/x86/kvm/x86.c
-> > +++ b/arch/x86/kvm/x86.c
-> > @@ -1562,7 +1562,6 @@ static int handle_fastpath_set_x2apic_icr_irqoff(struct kvm_vcpu *vcpu, u64 data
-> >               ((data & APIC_MODE_MASK) == APIC_DM_FIXED) &&
-> >               ((u32)(data >> 32) != X2APIC_BROADCAST)) {
-> >
-> > -             data &= ~(1 << 12);
-> >               kvm_apic_send_ipi(vcpu->arch.apic, (u32)data, (u32)(data >> 32));
-> >               kvm_lapic_set_reg(vcpu->arch.apic, APIC_ICR2, (u32)(data >> 32));
-> >               kvm_lapic_set_reg(vcpu->arch.apic, APIC_ICR, (u32)data);
->
-> Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
->
-> --
-> Vitaly
->
