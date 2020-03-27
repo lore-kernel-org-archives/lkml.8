@@ -2,109 +2,181 @@ Return-Path: <SRS0=s8dx=5M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0F0DC43331
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 12:04:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10186C2D0E5
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 12:04:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8452E2074F
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 12:04:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D09702074F
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 12:04:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="tw0546cz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726959AbgC0MEs (ORCPT
+        id S1727322AbgC0MEv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Mar 2020 08:04:48 -0400
-Received: from mx2.suse.de ([195.135.220.15]:35368 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726379AbgC0MEs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Mar 2020 08:04:48 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id C3F8FAE2B;
-        Fri, 27 Mar 2020 12:04:45 +0000 (UTC)
-Date:   Fri, 27 Mar 2020 13:04:44 +0100 (CET)
-From:   Miroslav Benes <mbenes@suse.cz>
-To:     Jessica Yu <jeyu@kernel.org>
-cc:     Peter Zijlstra <peterz@infradead.org>, x86@kernel.org,
-        linux-kernel@vger.kernel.org, rostedt@goodmis.org,
-        mhiramat@kernel.org, bristot@redhat.com, jbaron@akamai.com,
-        torvalds@linux-foundation.org, tglx@linutronix.de,
-        mingo@kernel.org, namit@vmware.com, hpa@zytor.com, luto@kernel.org,
-        ard.biesheuvel@linaro.org, jpoimboe@redhat.com
-Subject: Re: [RESEND][PATCH v3 03/17] module: Properly propagate MODULE_STATE_COMING
- failure
-In-Reply-To: <20200325173519.GA5415@linux-8ccs>
-Message-ID: <alpine.LSU.2.21.2003271257560.19979@pobox.suse.cz>
-References: <20200324135603.483964896@infradead.org> <20200324142245.445253190@infradead.org> <20200325173519.GA5415@linux-8ccs>
-User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
+        Fri, 27 Mar 2020 08:04:51 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:64771 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726540AbgC0MEt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Mar 2020 08:04:49 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1585310688; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=WKPprADW7GaHUNyw/PHeP+u/8K2DkZNryKIcozt3Bdo=; b=tw0546czURVt3JqUZKtGw/twd7Ptz4/6uvDLRZxi+GXrLKgnuQUZMfr3LbTDEY06h3t3YISA
+ h+gPRbwKvES5pC5gKXDPWMPkE+6JYaWdDRb9ju8DohRj/M0mJEZgtx+YEvk6p2ABnmbIdWyA
+ jhuAI4ij6cezN8jivdid8Wo5Ka4=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e7debd2.7feaa61c4998-smtp-out-n01;
+ Fri, 27 Mar 2020 12:04:34 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id DDDB3C43637; Fri, 27 Mar 2020 12:04:33 +0000 (UTC)
+Received: from [192.168.43.129] (unknown [106.222.5.70])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: mkshah)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 5F482C433D2;
+        Fri, 27 Mar 2020 12:04:29 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 5F482C433D2
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=mkshah@codeaurora.org
+Subject: Re: [PATCH v14 6/6] soc: qcom: rpmh-rsc: Allow using free WAKE TCS
+ for active request
+To:     Doug Anderson <dianders@chromium.org>
+Cc:     Stephen Boyd <swboyd@chromium.org>,
+        Evan Green <evgreen@chromium.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Andy Gross <agross@kernel.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        Lina Iyer <ilina@codeaurora.org>, lsrao@codeaurora.org
+References: <1585244270-637-1-git-send-email-mkshah@codeaurora.org>
+ <1585244270-637-7-git-send-email-mkshah@codeaurora.org>
+ <CAD=FV=Vbo3JC6mBJXq+q+DQPC_bbNtn3bbScG5N8wzJZm87YuA@mail.gmail.com>
+From:   Maulik Shah <mkshah@codeaurora.org>
+Message-ID: <8d19958d-7334-ca4e-d7ba-f5919a56b279@codeaurora.org>
+Date:   Fri, 27 Mar 2020 17:34:26 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <CAD=FV=Vbo3JC6mBJXq+q+DQPC_bbNtn3bbScG5N8wzJZm87YuA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Content-Language: en-GB
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 25 Mar 2020, Jessica Yu wrote:
+Hi,
 
-> +++ Peter Zijlstra [24/03/20 14:56 +0100]:
-> >Now that notifiers got unbroken; use the proper interface to handle
-> >notifier errors and propagate them.
-> >
-> >There were already MODULE_STATE_COMING notifiers that failed; notably:
-> >
-> > - jump_label_module_notifier()
-> > - tracepoint_module_notify()
-> > - bpf_event_notify()
-> >
-> >By propagating this error, we fix those users.
-> >
-> >Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-> >Cc: jeyu@kernel.org
-> >---
-> > kernel/module.c |   10 +++++++---
-> > 1 file changed, 7 insertions(+), 3 deletions(-)
-> >
-> >--- a/kernel/module.c
-> >+++ b/kernel/module.c
-> >@@ -3751,9 +3751,13 @@ static int prepare_coming_module(struct
-> >  if (err)
-> >   return err;
-> >
-> >-	blocking_notifier_call_chain(&module_notify_list,
-> >-				     MODULE_STATE_COMING, mod);
-> >-	return 0;
-> >+	err = blocking_notifier_call_chain_robust(&module_notify_list,
-> >+			MODULE_STATE_COMING, MODULE_STATE_GOING, mod);
-> >+	err = notifier_to_errno(err);
-> >+	if (err)
-> >+		klp_module_going(mod);
-> >+
-> >+	return err;
-> > }
-> >
-> > static int unknown_module_param_cb(char *param, char *val, const char
-> > *modname,
-> >
-> 
-> This looks fine to me - klp_module_going() is only called after
-> successful klp_module_coming(), and klp_module_going() is fine with
-> mod->state still being MODULE_STATE_COMING here. Would be good to have
-> livepatch folks double check.
+On 3/27/2020 3:16 AM, Doug Anderson wrote:
+> Hi,
+>
+> On Thu, Mar 26, 2020 at 10:38 AM Maulik Shah <mkshah@codeaurora.org> wrote:
+>> When there are more than one WAKE TCS available and there is no dedicated
+>> ACTIVE TCS available, invalidating all WAKE TCSes and waiting for current
+>> transfer to complete in first WAKE TCS blocks using another free WAKE TCS
+>> to complete current request.
+>>
+>> Remove rpmh_rsc_invalidate() to happen from tcs_write() when WAKE TCSes
+>> is re-purposed to be used for Active mode. Clear only currently used
+>> WAKE TCS's register configuration.
+>>
+>> Mark the caches as dirty so next time when rpmh_flush() is invoked it
+>> can invalidate and program cached sleep and wake sets again.
+>>
+>> Fixes: 2de4b8d33eab (drivers: qcom: rpmh-rsc: allow active requests from wake TCS)
+>> Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
+>> ---
+>>  drivers/soc/qcom/rpmh-rsc.c | 29 +++++++++++++++++++----------
+>>  1 file changed, 19 insertions(+), 10 deletions(-)
+>>
+>> diff --git a/drivers/soc/qcom/rpmh-rsc.c b/drivers/soc/qcom/rpmh-rsc.c
+>> index 8fa70b4..c0513af 100644
+>> --- a/drivers/soc/qcom/rpmh-rsc.c
+>> +++ b/drivers/soc/qcom/rpmh-rsc.c
+>> @@ -154,8 +154,9 @@ int rpmh_rsc_invalidate(struct rsc_drv *drv)
+>>  static struct tcs_group *get_tcs_for_msg(struct rsc_drv *drv,
+>>                                          const struct tcs_request *msg)
+>>  {
+>> -       int type, ret;
+>> +       int type;
+>>         struct tcs_group *tcs;
+>> +       unsigned long flags;
+>>
+>>         switch (msg->state) {
+>>         case RPMH_ACTIVE_ONLY_STATE:
+>> @@ -175,18 +176,18 @@ static struct tcs_group *get_tcs_for_msg(struct rsc_drv *drv,
+>>          * If we are making an active request on a RSC that does not have a
+>>          * dedicated TCS for active state use, then re-purpose a wake TCS to
+>>          * send active votes.
+>> -        * NOTE: The driver must be aware that this RSC does not have a
+>> -        * dedicated AMC, and therefore would invalidate the sleep and wake
+>> -        * TCSes before making an active state request.
+>> +        *
+>> +        * NOTE: Mark caches as dirty here since existing data in wake TCS will
+>> +        * be lost. rpmh_flush() will processed for dirty caches to restore
+>> +        * data.
+>>          */
+>>         tcs = get_tcs_of_type(drv, type);
+>>         if (msg->state == RPMH_ACTIVE_ONLY_STATE && !tcs->num_tcs) {
+>>                 tcs = get_tcs_of_type(drv, WAKE_TCS);
+>> -               if (tcs->num_tcs) {
+>> -                       ret = rpmh_rsc_invalidate(drv);
+>> -                       if (ret)
+>> -                               return ERR_PTR(ret);
+>> -               }
+>> +
+>> +               spin_lock_irqsave(&drv->client.cache_lock, flags);
+>> +               drv->client.dirty = true;
+>> +               spin_unlock_irqrestore(&drv->client.cache_lock, flags);
+> This seems like a huge abstraction violation.  
 
-Yes, it is ok.
+Agree that cache_lock and dirty flag are used in rpmh.c
 
-> Which reminds me - Miroslav had pointed
-> out in the past that if there is an error when calling the COMING
-> notifiers, the GOING notifiers will be called while the mod->state is
-> still MODULE_STATE_COMING. I've briefly looked through all the module
-> notifiers and it looks like nobody is looking at mod->state directly
-> at least.
+I will address this to either notify rpmh.c to mark it dirty or think of other solution.
 
-Thanks for double-checking. I triple-checked and yes, it should be fine. 
-All module notifiers check the value from the function parameter and not 
-mod->state directly.
+> Why can't rpmh_write()
+> / rpmh_write_async() / rpmh_write_batch() just always unconditionally
+> mark the cache dirty?  Are there really lots of cases when those calls
+> are made and they do nothing?
 
-Reviewed-by: Miroslav Benes <mbenes@suse.cz>
+At rpmh.c, it doesn't know that rpmh-rsc.c worked on borrowed TCS to finish the request.
 
-M
+We should not blindly mark caches dirty everytime.
+
+>
+>
+> Other than that this patch seems sane to me and addresses one of the
+> comments I had in:
+>
+> https://lore.kernel.org/r/CAD=FV=XmBQb8yfx14T-tMQ68F-h=3UHog744b3X3JZViu15+4g@mail.gmail.com
+>
+> ...interestingly after your patch I guess now I guess tcs_invalidate()
+> no longer needs spinlocks since it's only ever called from PM code on
+> the last CPU.  ...if you agree, I can always do it in my cleanup
+> series.  See:
+>
+> https://lore.kernel.org/r/CAD=FV=Xp1o68HnC2-hMnffDDsi+jjgc9pNrdNuypjQZbS5K4nQ@mail.gmail.com
+>
+> -Doug
+
+There are other RSCs which use same driver, so lets keep spinlock.
+
+I still didn't get chance to validate your patch (i will have update sometime next week), just to update I have never seen any issue internally
+
+using spin_lock even on nosmp case, that might require it to change to _irq_save/restore variant.
+
+Thanks,
+Maulik
+
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
