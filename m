@@ -2,163 +2,134 @@ Return-Path: <SRS0=s8dx=5M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AEAE4C2D0E5
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 15:27:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA4DBC2D0ED
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 15:28:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 855E22078B
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 15:27:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 86EC620748
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 15:28:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="refdVySV"
+	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="NH9IOM80"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727754AbgC0P1s (ORCPT
+        id S1727787AbgC0P2Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Mar 2020 11:27:48 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:38999 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727115AbgC0P1r (ORCPT
+        Fri, 27 Mar 2020 11:28:16 -0400
+Received: from ssl.serverraum.org ([176.9.125.105]:60325 "EHLO
+        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726770AbgC0P2P (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Mar 2020 11:27:47 -0400
-Received: by mail-wr1-f66.google.com with SMTP id p10so11881848wrt.6;
-        Fri, 27 Mar 2020 08:27:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=p68q7FxdWefV2R5Th1a0xfEDj3RdF6HgiFTN3ydE1vM=;
-        b=refdVySVw7A/pjOV9Yp6LwkjoZ3kUkwdbrOU9RndbtuC/4tsonratdUUCGBoTCY2SA
-         Yf6Po0lnXZFYZbqtXd7skSJWJuJbf/o6e937mRCKZoGUDJYNRZMLP+WymMaSNhbjmmbS
-         fIHfwH93KIL3cNCGlTm12gf4Su6YRF0RHYHOLIXOaycGKIco23qMNSAerS83e3cx7FDd
-         fQK5X7RjeRBcM41vyHmxrkpqjvoc4FQmKzz4VPHUBKSiP/0moJoylxpFDAG2jjHmOjgj
-         zxnDw4oXb0xWHMdKgtF7LHKxv5DKm9vKVCTQZAaDhh0VY+MbLfK0jxZP3N0+Fh6V8L+d
-         Fx+Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=p68q7FxdWefV2R5Th1a0xfEDj3RdF6HgiFTN3ydE1vM=;
-        b=j8AxawuObKpGuA+N0pG2BS6S8HKNUmsV2TET7bEiunrsFhLyKfiRCHpJZPukzQ8pBy
-         lZp+ou4Lv9oIDhTkZ/E1wdE/OgpbnmBDZ9i8yqqeanFi9aojiVsdCRZEGR4fbgea2px7
-         CfB+haabmmZqDGv7x4xPAdfpG44Vo4B0AY/JwFStbLHu38OJqYdL1P4Ew8igTKPNpqpS
-         N9iIlokWaWKYW6zH5K3IaptdpI91DwYfEyYDhZQdcmi2poNXvKi+qYtHjFAD2g5xOuZ/
-         crg5eU09ICUpn4VcAeA7uoHSDKyCBWtG8vRgnhQfFChRQ0yJY3DQel9MjMP7oqwURYRQ
-         haZg==
-X-Gm-Message-State: ANhLgQ0SerxTaEcaeACTIfgP1Vu9FnN1wFSvFPn6hh5eqi/+IW0Q7MLG
-        Ueev3edW+FhH3x3wwOcdXUzZPka/C/Zfub94Bp03uA==
-X-Google-Smtp-Source: ADFU+vsH3mqpR9Tp9Tb+v4FFlhiStOYYETN7n0scypKKrukFU3p0H5RC7vLX/Vov04v2FyQ0XBN+26FQKXcaZao+8qQ=
-X-Received: by 2002:a5d:6187:: with SMTP id j7mr16239644wru.419.1585322866189;
- Fri, 27 Mar 2020 08:27:46 -0700 (PDT)
+        Fri, 27 Mar 2020 11:28:15 -0400
+Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ssl.serverraum.org (Postfix) with ESMTPSA id EB34922FEC;
+        Fri, 27 Mar 2020 16:28:11 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
+        t=1585322892;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=eqUqITWsj9KDFGHrWeFv9QwKV40MUcbbCm0POjhjwys=;
+        b=NH9IOM80ezOu/xwgBZKQz57gkLeRbVpBO6uhULy0WRIQwRM6uLeXsXUIgRsya4g0GiBhLJ
+        V7nQFEI7obV92eVs8K0Ug7pHGzqpMHjtBP9MH2YUCHq5FqwNCeHAAxhU3Opxy1oqePUh8G
+        x9v49TPkEiJCurb1daDWtLGhW/jpfno=
 MIME-Version: 1.0
-References: <20200326211005.13301-1-wsa+renesas@sang-engineering.com>
- <20200326211005.13301-7-wsa+renesas@sang-engineering.com> <CADnq5_P07b-A-VawLTgiTMSdifxMbWS5kgQV_+0Bw2x_DQHATQ@mail.gmail.com>
- <20200327152535.GA2191@ravnborg.org>
-In-Reply-To: <20200327152535.GA2191@ravnborg.org>
-From:   Alex Deucher <alexdeucher@gmail.com>
-Date:   Fri, 27 Mar 2020 11:27:35 -0400
-Message-ID: <CADnq5_O-pXK1FeT1NfGBdXYZbqF6jmyXJNPgJt5qLaYMLiZy_Q@mail.gmail.com>
-Subject: Re: [PATCH 6/6] drm/radeon: convert to use i2c_new_client_device()
-To:     Sam Ravnborg <sam@ravnborg.org>
-Cc:     Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        amd-gfx list <amd-gfx@lists.freedesktop.org>,
-        David Airlie <airlied@linux.ie>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Maling list - DRI developers 
-        <dri-devel@lists.freedesktop.org>,
-        Linux I2C <linux-i2c@vger.kernel.org>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Fri, 27 Mar 2020 16:28:11 +0100
+From:   Michael Walle <michael@walle.cc>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        linux-gpio <linux-gpio@vger.kernel.org>,
+        linux-devicetree <devicetree@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, linux-hwmon@vger.kernel.org,
+        linux-pwm@vger.kernel.org,
+        LINUXWATCHDOG <linux-watchdog@vger.kernel.org>,
+        arm-soc <linux-arm-kernel@lists.infradead.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Lee Jones <lee.jones@linaro.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>
+Subject: Re: [PATCH 12/18] gpio: add support for the sl28cpld GPIO controller
+In-Reply-To: <CACRpkdbJ3DBO+W4P0n-CfZ1T3L8d_L0Nizra8frkv92XPXR4WA@mail.gmail.com>
+References: <20200317205017.28280-1-michael@walle.cc>
+ <20200317205017.28280-13-michael@walle.cc>
+ <CAMpxmJW770v6JLdveEe1hkgNEJByVyArhorSyUZBYOyFiVyOeg@mail.gmail.com>
+ <9c310f2a11913d4d089ef1b07671be00@walle.cc>
+ <CAMpxmJXmD-M+Wbj6=wgFgP2aDxbqDN=ceHi1XDun4iwdLm55Zg@mail.gmail.com>
+ <22944c9b62aa69da418de7766b7741bd@walle.cc>
+ <CACRpkdbJ3DBO+W4P0n-CfZ1T3L8d_L0Nizra8frkv92XPXR4WA@mail.gmail.com>
+Message-ID: <4d8d3bc26bdf73eb5c0e5851589fe085@walle.cc>
+X-Sender: michael@walle.cc
+User-Agent: Roundcube Webmail/1.3.10
+X-Spamd-Bar: +
+X-Rspamd-Server: web
+X-Rspamd-Queue-Id: EB34922FEC
+X-Spamd-Result: default: False [1.40 / 15.00];
+         FROM_HAS_DN(0.00)[];
+         TO_DN_SOME(0.00)[];
+         FREEMAIL_ENVRCPT(0.00)[gmail.com];
+         TO_MATCH_ENVRCPT_ALL(0.00)[];
+         TAGGED_RCPT(0.00)[dt];
+         MIME_GOOD(-0.10)[text/plain];
+         DKIM_SIGNED(0.00)[];
+         RCPT_COUNT_TWELVE(0.00)[21];
+         NEURAL_HAM(-0.00)[-0.548];
+         RCVD_COUNT_ZERO(0.00)[0];
+         FROM_EQ_ENVFROM(0.00)[];
+         MIME_TRACE(0.00)[0:+];
+         FREEMAIL_CC(0.00)[baylibre.com,vger.kernel.org,lists.infradead.org,kernel.org,suse.com,roeck-us.net,linaro.org,gmail.com,pengutronix.de,linux-watchdog.org,nxp.com,linutronix.de,lakedaemon.net];
+         MID_RHS_MATCH_FROM(0.00)[];
+         SUSPICIOUS_RECIPS(1.50)[]
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 27, 2020 at 11:25 AM Sam Ravnborg <sam@ravnborg.org> wrote:
->
-> On Fri, Mar 27, 2020 at 10:25:16AM -0400, Alex Deucher wrote:
-> > On Thu, Mar 26, 2020 at 5:35 PM Wolfram Sang
-> > <wsa+renesas@sang-engineering.com> wrote:
-> > >
-> > > Move away from the deprecated API.
-> > >
-> > > Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
-> >
-> > patches 1,6, are:
-> > Acked-by: Alex Deucher <alexander.deucher@amd.com>
-> Should we commit all to drm-misc-next?
+Am 2020-03-27 11:20, schrieb Linus Walleij:
+> On Thu, Mar 26, 2020 at 9:06 PM Michael Walle <michael@walle.cc> wrote:
+>> Am 2020-03-25 12:50, schrieb Bartosz Golaszewski:
+> 
+>> > In that case maybe you should use the disable_locking option in
+>> > regmap_config and provide your own callbacks that you can use in the
+>> > irqchip code too?
+>> 
+>> But how would that solve problem (1). And keep in mind, that the
+>> reqmap_irqchip is actually used for the interrupt controller, which
+>> is not this gpio controller.
+>> 
+>> Ie. the interrupt controller of the sl28cpld uses the regmap_irqchip
+>> and all interrupt phandles pointing to the interrupt controller will
+>> reference the toplevel node. Any phandles pointing to the gpio
+>> controller will reference the GPIO subnode.
+> 
+> Ideally we would create something generic that has been on my
+> mind for some time, like a generic GPIO regmap irqchip now that
+> there are a few controllers like that.
+> 
+> I don't know how feasible it is or how much work it would be. But
+> as with GPIO_GENERIC (for MMIO) it would be helpful since we
+> can then implement things like .set_multiple() and .get_multiple()
+> for everyone.
 
-I'm fine to see it go through whatever tree makes sense.
+For starters, would that be a drivers/gpio/gpio-regmap.c or a
+drivers/base/regmap/regmap-gpio.c? I would assume the first,
+because the stuff in drivers/base/regmap operates on a given
+regmap and we'd just be using one, correct? On the other hand
+there is also the reqmap-irq.c. But as pointed out before, it
+will add an interrupt controller to the regmap, not a device
+so to speak.
 
-Alex
-
-
->
->         Sam
->
->
-> >
-> > > ---
-> > >  drivers/gpu/drm/radeon/radeon_atombios.c | 4 ++--
-> > >  drivers/gpu/drm/radeon/radeon_combios.c  | 4 ++--
-> > >  2 files changed, 4 insertions(+), 4 deletions(-)
-> > >
-> > > diff --git a/drivers/gpu/drm/radeon/radeon_atombios.c b/drivers/gpu/drm/radeon/radeon_atombios.c
-> > > index 848ef68d9086..5d2591725189 100644
-> > > --- a/drivers/gpu/drm/radeon/radeon_atombios.c
-> > > +++ b/drivers/gpu/drm/radeon/radeon_atombios.c
-> > > @@ -2111,7 +2111,7 @@ static int radeon_atombios_parse_power_table_1_3(struct radeon_device *rdev)
-> > >                                                                     ucOverdriveThermalController];
-> > >                         info.addr = power_info->info.ucOverdriveControllerAddress >> 1;
-> > >                         strlcpy(info.type, name, sizeof(info.type));
-> > > -                       i2c_new_device(&rdev->pm.i2c_bus->adapter, &info);
-> > > +                       i2c_new_client_device(&rdev->pm.i2c_bus->adapter, &info);
-> > >                 }
-> > >         }
-> > >         num_modes = power_info->info.ucNumOfPowerModeEntries;
-> > > @@ -2351,7 +2351,7 @@ static void radeon_atombios_add_pplib_thermal_controller(struct radeon_device *r
-> > >                                 const char *name = pp_lib_thermal_controller_names[controller->ucType];
-> > >                                 info.addr = controller->ucI2cAddress >> 1;
-> > >                                 strlcpy(info.type, name, sizeof(info.type));
-> > > -                               i2c_new_device(&rdev->pm.i2c_bus->adapter, &info);
-> > > +                               i2c_new_client_device(&rdev->pm.i2c_bus->adapter, &info);
-> > >                         }
-> > >                 } else {
-> > >                         DRM_INFO("Unknown thermal controller type %d at 0x%02x %s fan control\n",
-> > > diff --git a/drivers/gpu/drm/radeon/radeon_combios.c b/drivers/gpu/drm/radeon/radeon_combios.c
-> > > index c3e49c973812..d3c04df7e75d 100644
-> > > --- a/drivers/gpu/drm/radeon/radeon_combios.c
-> > > +++ b/drivers/gpu/drm/radeon/radeon_combios.c
-> > > @@ -2704,7 +2704,7 @@ void radeon_combios_get_power_modes(struct radeon_device *rdev)
-> > >                                 const char *name = thermal_controller_names[thermal_controller];
-> > >                                 info.addr = i2c_addr >> 1;
-> > >                                 strlcpy(info.type, name, sizeof(info.type));
-> > > -                               i2c_new_device(&rdev->pm.i2c_bus->adapter, &info);
-> > > +                               i2c_new_client_device(&rdev->pm.i2c_bus->adapter, &info);
-> > >                         }
-> > >                 }
-> > >         } else {
-> > > @@ -2721,7 +2721,7 @@ void radeon_combios_get_power_modes(struct radeon_device *rdev)
-> > >                                 const char *name = "f75375";
-> > >                                 info.addr = 0x28;
-> > >                                 strlcpy(info.type, name, sizeof(info.type));
-> > > -                               i2c_new_device(&rdev->pm.i2c_bus->adapter, &info);
-> > > +                               i2c_new_client_device(&rdev->pm.i2c_bus->adapter, &info);
-> > >                                 DRM_INFO("Possible %s thermal controller at 0x%02x\n",
-> > >                                          name, info.addr);
-> > >                         }
-> > > --
-> > > 2.20.1
-> > >
-> > > _______________________________________________
-> > > dri-devel mailing list
-> > > dri-devel@lists.freedesktop.org
-> > > https://lists.freedesktop.org/mailman/listinfo/dri-devel
-> > _______________________________________________
-> > dri-devel mailing list
-> > dri-devel@lists.freedesktop.org
-> > https://lists.freedesktop.org/mailman/listinfo/dri-devel
+-michael
