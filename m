@@ -2,205 +2,101 @@ Return-Path: <SRS0=s8dx=5M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 600BDC43331
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 08:46:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3268CC43331
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 08:47:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C87120714
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 08:46:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 07DA120714
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 08:47:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="SnI+snLZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727347AbgC0Iqs (ORCPT
+        id S1727352AbgC0IrP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Mar 2020 04:46:48 -0400
-Received: from mga01.intel.com ([192.55.52.88]:42032 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726096AbgC0Iqr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Mar 2020 04:46:47 -0400
-IronPort-SDR: 7tyILDxBlZqJgoUoLMvR+Y5nxyU7Fpp0MSWQ5stwjoXVgFi8cwTSDdh887+NLuoEF5kJIFTxsb
- qrTTsO0boSww==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Mar 2020 01:46:47 -0700
-IronPort-SDR: spE80RhqPa7BhOMjk9uNEuWivCMu4iHwTxd7KwNmH+dDQ4HO0ZfoLXN7wnCPNZ2HJqCir5X7z0
- ZcQ8CTohXFjg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,311,1580803200"; 
-   d="scan'208";a="251080112"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga006.jf.intel.com with ESMTP; 27 Mar 2020 01:46:47 -0700
-Received: from [10.249.36.56] (abudanko-mobl.ccr.corp.intel.com [10.249.36.56])
-        by linux.intel.com (Postfix) with ESMTP id A65AE5805B4;
-        Fri, 27 Mar 2020 01:46:44 -0700 (PDT)
-Subject: [PATCH v1 2/8] perf evlist: implement control command handling
- functions
-From:   Alexey Budankov <alexey.budankov@linux.intel.com>
-To:     Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc:     Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-References: <825a5132-b58d-c0b6-b050-5a6040386ec7@linux.intel.com>
-Organization: Intel Corp.
-Message-ID: <1760b862-7a4a-3930-1a53-04667c71cf6f@linux.intel.com>
-Date:   Fri, 27 Mar 2020 11:46:43 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
-MIME-Version: 1.0
-In-Reply-To: <825a5132-b58d-c0b6-b050-5a6040386ec7@linux.intel.com>
-Content-Type: text/plain; charset=utf-8
+        Fri, 27 Mar 2020 04:47:15 -0400
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:59772 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725946AbgC0IrO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Mar 2020 04:47:14 -0400
+Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02R8gLtS031851;
+        Fri, 27 Mar 2020 09:47:02 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : subject :
+ date : message-id : references : in-reply-to : content-type : content-id :
+ content-transfer-encoding : mime-version; s=STMicroelectronics;
+ bh=YJw8XoTO1v1PRGqYcjUGZSKR+X2/a6Uk4mv/NSHkJo8=;
+ b=SnI+snLZWTU/DrJFlg1DOyaQQ0TcS9te3M3/UemSgMwEcK+W/YEWs45YsFX/iEMeZ8Th
+ RVi63AgBytgWVMQpl0mXOmy1H8Vq3o8qdBful3gsK9VR7ABDne1VWwlWw6T2PFmi+h3z
+ 2lxhYojVMu86AYcWR404xVcthmdBodsxAAT3JXns5rRdY4oTUX0fyKlt+bPfWaP3iRhb
+ wehSPUNKi+7Hf4r+R3zhRTJbdT8COLEukz/Ifpqp5M9fE+frmTmsEAPhN30R3y4tRM0e
+ H/vkrlbnoR5LvyfCOaMJiAzUH/aTyBoIUp5MC61QFtMibE3fBn3hBGN/eDQ0YqEAUl8V Og== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2ywappgpfx-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 27 Mar 2020 09:47:02 +0100
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id BD9BF100034;
+        Fri, 27 Mar 2020 09:47:01 +0100 (CET)
+Received: from Webmail-eu.st.com (sfhdag6node1.st.com [10.75.127.16])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id B138921F663;
+        Fri, 27 Mar 2020 09:47:01 +0100 (CET)
+Received: from SFHDAG6NODE3.st.com (10.75.127.18) by SFHDAG6NODE1.st.com
+ (10.75.127.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 27 Mar
+ 2020 09:47:01 +0100
+Received: from SFHDAG6NODE3.st.com ([fe80::d04:5337:ab17:b6f6]) by
+ SFHDAG6NODE3.st.com ([fe80::d04:5337:ab17:b6f6%20]) with mapi id
+ 15.00.1473.003; Fri, 27 Mar 2020 09:47:01 +0100
+From:   Patrice CHOTARD <patrice.chotard@st.com>
+To:     Alain Volmat <avolmat@me.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] i2c: i2c-st: fix missing struct parameter description
+Thread-Topic: [PATCH] i2c: i2c-st: fix missing struct parameter description
+Thread-Index: AQHWA7S25N2xB719JUWj+X22ne9jPKhcEGIA
+Date:   Fri, 27 Mar 2020 08:47:01 +0000
+Message-ID: <0b432170-8ae0-d5c3-7557-fe6d606782f7@st.com>
+References: <20200326212243.17363-1-avolmat@me.com>
+In-Reply-To: <20200326212243.17363-1-avolmat@me.com>
+Accept-Language: fr-FR, en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.75.127.51]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <679754E3029C214598936C34C70CF6F2@st.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.645
+ definitions=2020-03-27_02:2020-03-26,2020-03-27 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-Implement functions of initialization, finalization and processing
-of control commands coming from control file descriptors.
-
-Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
----
- tools/perf/util/evlist.c | 100 +++++++++++++++++++++++++++++++++++++++
- tools/perf/util/evlist.h |  12 +++++
- 2 files changed, 112 insertions(+)
-
-diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
-index 1afd87cfa027..56b01a22963b 100644
---- a/tools/perf/util/evlist.c
-+++ b/tools/perf/util/evlist.c
-@@ -1834,3 +1834,103 @@ void perf_evlist__stop_sb_thread(struct evlist *evlist)
- 	pthread_join(evlist->thread.th, NULL);
- 	evlist__delete(evlist);
- }
-+
-+int perf_evlist__initialize_ctlfd(struct evlist *evlist, int ctl_fd, int ctl_fd_ack)
-+{
-+	if (ctl_fd == -1) {
-+		pr_debug("Control descriptor is not initialized\n");
-+		return 0;
-+	}
-+
-+	evlist->ctl_fd_pos = perf_evlist__add_pollfd(&evlist->core, ctl_fd, NULL, POLLIN);
-+	if (evlist->ctl_fd_pos < 0) {
-+		evlist->ctl_fd_pos = -1;
-+		pr_err("Failed to add ctl fd entry: %m\n");
-+		return -1;
-+	}
-+
-+	evlist->ctl_fd = ctl_fd;
-+	evlist->ctl_fd_ack = ctl_fd_ack;
-+
-+	return 0;
-+}
-+
-+int perf_evlist__finalize_ctlfd(struct evlist *evlist)
-+{
-+	if (evlist->ctl_fd_pos == -1)
-+		return 0;
-+
-+	evlist->core.pollfd.entries[evlist->ctl_fd_pos].fd = -1;
-+	evlist->ctl_fd_pos = -1;
-+	evlist->ctl_fd_ack = -1;
-+	evlist->ctl_fd = -1;
-+
-+	return 0;
-+}
-+
-+static int perf_evlist__ctlfd_recv(struct evlist *evlist, enum evlist_ctl_cmd *cmd)
-+{
-+	int err;
-+	char buf[2];
-+
-+	err = read(evlist->ctl_fd, &buf, sizeof(buf));
-+	if (err > 0)
-+		*cmd = buf[0];
-+	else if (err == -1)
-+		pr_err("Failed to read from ctlfd %d: %m\n", evlist->ctl_fd);
-+
-+	return err;
-+}
-+
-+static int perf_evlist__ctlfd_ack(struct evlist *evlist)
-+{
-+	int err;
-+	char buf[2] = {CTL_CMD_ACK, '\n'};
-+
-+	if (evlist->ctl_fd_ack == -1)
-+		return 0;
-+
-+	err = write(evlist->ctl_fd_ack, buf, sizeof(buf));
-+	if (err == -1)
-+		pr_err("failed to write to ctl_ack_fd %d: %m\n", evlist->ctl_fd_ack);
-+
-+	return err;
-+}
-+
-+int perf_evlist__ctlfd_process(struct evlist *evlist, enum evlist_ctl_cmd *cmd)
-+{
-+	int err = 0;
-+	int ctlfd_pos = evlist->ctl_fd_pos;
-+	struct pollfd *entries = evlist->core.pollfd.entries;
-+
-+	if (!entries[ctlfd_pos].revents)
-+		return 0;
-+
-+	if (entries[ctlfd_pos].revents & POLLIN) {
-+		err = perf_evlist__ctlfd_recv(evlist, cmd);
-+		if (err > 0) {
-+			switch (*cmd) {
-+			case CTL_CMD_RESUME:
-+				evlist__enable(evlist);
-+				break;
-+			case CTL_CMD_PAUSE:
-+				evlist__disable(evlist);
-+				break;
-+			case CTL_CMD_ACK:
-+			case CTL_CMD_UNSUPPORTED:
-+			default:
-+				pr_debug("ctlfd: unsupported %d\n", *cmd);
-+				break;
-+			}
-+			if (!(*cmd == CTL_CMD_ACK || *cmd == CTL_CMD_UNSUPPORTED))
-+				perf_evlist__ctlfd_ack(evlist);
-+		}
-+	}
-+
-+	if (entries[ctlfd_pos].revents & (POLLHUP | POLLERR))
-+		perf_evlist__finalize_ctlfd(evlist);
-+	else
-+		entries[ctlfd_pos].revents = 0;
-+
-+	return err;
-+}
-diff --git a/tools/perf/util/evlist.h b/tools/perf/util/evlist.h
-index ac3dd895ef8f..a94b2993fafc 100644
---- a/tools/perf/util/evlist.h
-+++ b/tools/perf/util/evlist.h
-@@ -361,4 +361,16 @@ void perf_evlist__force_leader(struct evlist *evlist);
- struct evsel *perf_evlist__reset_weak_group(struct evlist *evlist,
- 						 struct evsel *evsel,
- 						bool close);
-+
-+enum evlist_ctl_cmd {
-+	CTL_CMD_UNSUPPORTED = 0,
-+	CTL_CMD_RESUME = 'r',
-+	CTL_CMD_PAUSE = 'p',
-+	CTL_CMD_ACK = 'a'
-+};
-+
-+int perf_evlist__initialize_ctlfd(struct evlist *evlist, int ctl_fd, int ctl_fd_ack);
-+int perf_evlist__finalize_ctlfd(struct evlist *evlist);
-+int perf_evlist__ctlfd_process(struct evlist *evlist, enum evlist_ctl_cmd *cmd);
-+
- #endif /* __PERF_EVLIST_H */
--- 
-2.24.1
-
-
+SGkgQWxhaW4NCg0KT24gMy8yNi8yMCAxMDoyMiBQTSwgQWxhaW4gVm9sbWF0IHdyb3RlOg0KPiBG
+aXggYSBtaXNzaW5nIHN0cnVjdCBwYXJhbWV0ZXIgZGVzY3JpcHRpb24gdG8gYWxsb3cNCj4gd2Fy
+bmluZyBmcmVlIFc9MSBjb21waWxhdGlvbi4NCj4NCj4gU2lnbmVkLW9mZi1ieTogQWxhaW4gVm9s
+bWF0IDxhdm9sbWF0QG1lLmNvbT4NCj4gLS0tDQo+ICBkcml2ZXJzL2kyYy9idXNzZXMvaTJjLXN0
+LmMgfCAxICsNCj4gIDEgZmlsZSBjaGFuZ2VkLCAxIGluc2VydGlvbigrKQ0KPg0KPiBkaWZmIC0t
+Z2l0IGEvZHJpdmVycy9pMmMvYnVzc2VzL2kyYy1zdC5jIGIvZHJpdmVycy9pMmMvYnVzc2VzL2ky
+Yy1zdC5jDQo+IGluZGV4IDU0ZTFmYzhhNDk1ZS4uZjdmN2I1YjY0NzIwIDEwMDY0NA0KPiAtLS0g
+YS9kcml2ZXJzL2kyYy9idXNzZXMvaTJjLXN0LmMNCj4gKysrIGIvZHJpdmVycy9pMmMvYnVzc2Vz
+L2kyYy1zdC5jDQo+IEBAIC00MzQsNiArNDM0LDcgQEAgc3RhdGljIHZvaWQgc3RfaTJjX3dyX2Zp
+bGxfdHhfZmlmbyhzdHJ1Y3Qgc3RfaTJjX2RldiAqaTJjX2RldikNCj4gIC8qKg0KPiAgICogc3Rf
+aTJjX3JkX2ZpbGxfdHhfZmlmbygpIC0gRmlsbCB0aGUgVHggRklGTyBpbiByZWFkIG1vZGUNCj4g
+ICAqIEBpMmNfZGV2OiBDb250cm9sbGVyJ3MgcHJpdmF0ZSBkYXRhDQo+ICsgKiBAbWF4OiBNYXhp
+bXVtIGFtb3VudCBvZiBkYXRhIHRvIGZpbGwgaW50byB0aGUgVHggRklGTw0KPiAgICoNCj4gICAq
+IFRoaXMgZnVuY3Rpb25zIGZpbGxzIHRoZSBUeCBGSUZPIHdpdGggZml4ZWQgcGF0dGVybiB3aGVu
+DQo+ICAgKiBpbiByZWFkIG1vZGUgdG8gdHJpZ2dlciBjbG9jay4NCg0KUmV2aWV3ZWQtYnk6IFBh
+dHJpY2UgQ2hvdGFyZCA8cGF0cmljZS5jaG90YXJkQHN0LmNvbT4NCg0KVGhhbmtzDQo=
