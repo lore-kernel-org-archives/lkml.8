@@ -2,129 +2,95 @@ Return-Path: <SRS0=s8dx=5M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AEBC7C2D0ED
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 16:58:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EA90C2D0ED
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 16:58:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 85BC820936
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 16:58:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 72F7920848
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 16:58:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tGAt2/cT"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="yVuqbZKy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727652AbgC0Q6h (ORCPT
+        id S1727714AbgC0Q6q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Mar 2020 12:58:37 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:45003 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727254AbgC0Q6g (ORCPT
+        Fri, 27 Mar 2020 12:58:46 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:51232 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727666AbgC0Q6p (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Mar 2020 12:58:36 -0400
-Received: by mail-wr1-f66.google.com with SMTP id m17so12202704wrw.11;
-        Fri, 27 Mar 2020 09:58:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=8myQ8m6QT+OfnFyYa3rJCzYETwGb1X4YRdpvRBB8Fjo=;
-        b=tGAt2/cTVP1pYV1Hni5tu/E1I7NppNmA3JxIKWeam/+KNZ5BIulpko2YIPWTTwH6GE
-         a017A53dyrMtd4azj6e/5cGI+i9S5xYVnQYXJ3r+GHgHsjG83k4K//k/XmD8t3/ZWlIz
-         hiW735EzVv3cNmXzOVMdOdIP1FxFp1Ci/z/qs0JIRzrE3OwMswRN6cOjWfMXpd/ZdxK5
-         dE94HtORG5Qc1DP4LUxUbEAYwFtfIpLQJ3JJcPO4P2i8hfVHAeyBG1nSZj0n1wGnIyTR
-         Drrjqy6kQoH3EGTPVFgF3nyLj0dPlZ2EmzO65FuCIlYeDspPXX11E0Zu6QjO4CIRnVc+
-         7h+Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=8myQ8m6QT+OfnFyYa3rJCzYETwGb1X4YRdpvRBB8Fjo=;
-        b=kmMOAl/glSEuWwTXD3GqPbJ4KpeyD4mlPpTAAPDcbFDEK1+iaunTSD4zFwRZc6Kvah
-         pIbgSbJuupYdJJ9fSHM0aWeb0H5qSicYTeetk7tHbQJ0YcxR5PAcYcX74udnwzVvnZc4
-         rRB7d58mXRSIPa504mGQOSry/FpGG6lqNw5BTreoExLQLrBaFS6gzSzL8ES6q90RtkUo
-         ory8tif/ZOlx52tGDEyiAerwM/UjjJpFOUwN37KhLmbSpUhTkuNtAxvAp+EhtMplT7Vy
-         sJ0ZUGxGMX+JUE1ynYzPoHjN/Npdmy5fNJa4h6/hQw0c7+/NTflq2HaO44E5JESGjByp
-         5r7Q==
-X-Gm-Message-State: ANhLgQ2RLVTF0JwvpwPCloRwJH00Hgki2S8gmUx/W+K6CaO3ygUpcoZK
-        NcRxa1CfdOwUsOLX2vCv3xN5FGLNaWaOvMEzkRE=
-X-Google-Smtp-Source: ADFU+vv/BmrwpACOCUazG3UpBbViq39YbY5NMBmmZ7/x6GugNATYQvg4phENFpn/2eUViu7WdDsWWpU0rYqQVWJBJTg=
-X-Received: by 2002:adf:ee12:: with SMTP id y18mr307207wrn.289.1585328315282;
- Fri, 27 Mar 2020 09:58:35 -0700 (PDT)
+        Fri, 27 Mar 2020 12:58:45 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02RGqbX9152085;
+        Fri, 27 Mar 2020 16:58:37 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
+ from : references : date : in-reply-to : message-id : mime-version :
+ content-type; s=corp-2020-01-29;
+ bh=E1IBgyBmgPnT6auNc6i8tq9aR2WR5dspiVufuuzLn4I=;
+ b=yVuqbZKyiU2ZMF/KHlT/8LSTgz9QHR2ctKba4GaoQ9s8NsrwsznHpIw4nOXDLtRe2GXV
+ kukMu8Q2bm2hL7HZJ2/alA1mpqeqJ1V2jFUx5qNvwCtpxNBndCt0j5Zq7PNdBT4vwfGl
+ sT/z9AOgjnreu/TgmStx6p0mudkUzSQKfnn2Fc/C0u70xiQAFEvI8tDNCCnVlacwCioS
+ cNwVxxOmOX1lTMIjmtuD1aHHgftHKWrV3KgcwRsXgMQ9PaGTzihy00sbV8buFv2QG2wN
+ 3W3Mry3NDw8yf5Re1tNMINSOb0Dm4FnPoRwf2tgrjFoihTQsFgkVwAwZwFbmmJAQRNcO uA== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2120.oracle.com with ESMTP id 3019vebc6j-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 27 Mar 2020 16:58:37 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02RGqnw8071976;
+        Fri, 27 Mar 2020 16:58:36 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by userp3030.oracle.com with ESMTP id 2yxw4w7c38-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 27 Mar 2020 16:58:36 +0000
+Received: from abhmp0004.oracle.com (abhmp0004.oracle.com [141.146.116.10])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 02RGwXDV005444;
+        Fri, 27 Mar 2020 16:58:34 GMT
+Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 27 Mar 2020 09:58:33 -0700
+To:     Alex Dewar <alex.dewar@gmx.co.uk>
+Cc:     Hannes Reinecke <hare@suse.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] scsi: aic7xxx: aic97xx: Remove FreeBSD-specific code
+From:   "Martin K. Petersen" <martin.petersen@oracle.com>
+Organization: Oracle Corporation
+References: <20200326193817.12568-1-alex.dewar@gmx.co.uk>
+Date:   Fri, 27 Mar 2020 12:58:30 -0400
+In-Reply-To: <20200326193817.12568-1-alex.dewar@gmx.co.uk> (Alex Dewar's
+        message of "Thu, 26 Mar 2020 19:38:17 +0000")
+Message-ID: <yq1mu81buq1.fsf@oracle.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1.92 (gnu/linux)
 MIME-Version: 1.0
-References: <20200311171422.10484-1-david@redhat.com>
-In-Reply-To: <20200311171422.10484-1-david@redhat.com>
-From:   Pankaj Gupta <pankaj.gupta.linux@gmail.com>
-Date:   Fri, 27 Mar 2020 17:58:24 +0100
-Message-ID: <CAM9Jb+g6DEL1=L1ESfW+Jnr_rfO5rEtOwnp10eCLpajaAv8wvg@mail.gmail.com>
-Subject: Re: [PATCH v2 00/10] virtio-mem: paravirtualized memory
-To:     David Hildenbrand <david@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        virtio-dev@lists.oasis-open.org,
-        virtualization@lists.linux-foundation.org, kvm@vger.kernel.org,
-        Michal Hocko <mhocko@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "Michael S . Tsirkin" <mst@redhat.com>,
-        Sebastien Boeuf <sebastien.boeuf@intel.com>,
-        Samuel Ortiz <samuel.ortiz@intel.com>,
-        Robert Bradford <robert.bradford@intel.com>,
-        Luiz Capitulino <lcapitulino@redhat.com>,
-        teawater <teawaterz@linux.alibaba.com>,
-        Igor Mammedov <imammedo@redhat.com>,
-        "Dr . David Alan Gilbert" <dgilbert@redhat.com>,
-        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
-        Alexander Potapenko <glider@google.com>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        Anthony Yznaga <anthony.yznaga@oracle.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Young <dyoung@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Juergen Gross <jgross@suse.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Len Brown <lenb@kernel.org>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Michal Hocko <mhocko@suse.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Oscar Salvador <osalvador@suse.com>,
-        Oscar Salvador <osalvador@suse.de>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>,
-        Pavel Tatashin <pavel.tatashin@microsoft.com>,
-        Pingfan Liu <kernelfans@gmail.com>, Qian Cai <cai@lca.pw>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Wei Yang <richard.weiyang@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9573 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 suspectscore=0
+ spamscore=0 mlxlogscore=999 adultscore=0 phishscore=0 mlxscore=0
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2003270146
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9573 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 impostorscore=0 phishscore=0
+ clxscore=1011 adultscore=0 spamscore=0 malwarescore=0 mlxlogscore=999
+ lowpriorityscore=0 bulkscore=0 priorityscore=1501 suspectscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2003270146
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi David,
 
-Trying to test the series with the Qemu branch(virtio-mem) mentioned.
-Unfortunately,
-not able to hotplug memory. Is anything changed from your previous posting
-or I am doing something wrong?
+Alex,
 
-After giving value to "requested-size", I see size as zero.
+> The file aic79xx_core.c still contains some FreeBSD-specific
+> code/macro guards,
 
-(qemu) qom-set vm0 requested-size 10G
-(qemu) info memory-devices
-Memory device [virtio-mem]: "vm0"
-  memaddr: 0x240000000
-  node: 0
-  requested-size: 10737418240
-  size: 0
-  max-size: 107374182400
-  block-size: 2097152
-  memdev: /objects/mem0
+aic7xxx_core.c needs the same change.
 
-Guest kernel: 5.6.0-rc4
-Using same Qemu commandline arguments mentioned in cover-letter.
-
-Thanks,
-Pankaj
+-- 
+Martin K. Petersen	Oracle Linux Engineering
