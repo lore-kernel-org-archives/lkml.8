@@ -2,110 +2,67 @@ Return-Path: <SRS0=s8dx=5M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52B69C2D0E7
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 03:50:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DEFEC2D0E7
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 03:55:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2A3DD20748
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 03:50:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="VM6BiVy3"
+	by mail.kernel.org (Postfix) with ESMTP id 35AC9206F6
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 03:55:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585281309;
+	bh=YUbNBibbfrmEl/1mIpfiUjinUfmzDp+tKjmtDUXetrw=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
+	b=ZMSHyYilVR+Ik6cixxXqLZ2338NlDLZyWVQXalBIVidP9QrFR/wgnU2OAc3441sh2
+	 0KRugTql87A9ufSYMkgL5FYStGI9bonQnaJwpGqLzHoEf2qFRxJXytAPZWsgT2C6x1
+	 1ym8VIDH+cOjErLBUolfqv9O8ast+mT16Wn09LKY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727770AbgC0Duv (ORCPT
+        id S1727696AbgC0DzI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 23:50:51 -0400
-Received: from mail-pj1-f66.google.com ([209.85.216.66]:37681 "EHLO
-        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727611AbgC0Duv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 23:50:51 -0400
-Received: by mail-pj1-f66.google.com with SMTP id o12so3260796pjs.2
-        for <linux-kernel@vger.kernel.org>; Thu, 26 Mar 2020 20:50:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=TQKnjjnnFIx9OEk2sWZkIOZkXlTkDKqAFTfhqeOjSAk=;
-        b=VM6BiVy3TJ+nvI5RskhEnSu7623UH7nfGrIKJl/ORWcGUF2lI8NS6I8irgEGdiq2XR
-         vQtfjqf0TEgiA7T7gZBHv/CnE5Ro1vv4s1pZ5MibeXU9lI+oA9gnFOS9VKYlCjJi+b7Q
-         3dJKWu+7FdIPsjaLQIzi//I9Vd3PCfFb2zs+c=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=TQKnjjnnFIx9OEk2sWZkIOZkXlTkDKqAFTfhqeOjSAk=;
-        b=etGdwU8qG8vYW3pLp2u02Ogazc2fg85Ohity8gYgHS3iO9YHYOWBjqKpcylejWzrji
-         OWQh1x8mC/gpcrwKWsDN3cGqPuXMPZnEzmx+xuwRl4axo6/5iPAr5PRkWGEYsGNYCxHp
-         yaWVNhpiDtqHg7PeqMq/JEoQ5cX0fVEaJZXzfpurnBG+NI8CAfW6rTQntuARnM9WY26R
-         31SvkIVDevB1J0S1/9GC6+0tkAZ18FDbrUUO4g2PaX2mgBzeP5ciccDGHNVel6FaszpT
-         2Uk+e6RwoeFt3Xo4Wxb2T2La6FuG8Gfofz1kGK/XBEr6+ASaexU9RBbXEAoe46+MXNnW
-         V3OQ==
-X-Gm-Message-State: ANhLgQ1iZP2A2W3Joo2SG+d19T6jB2bWKwTzkx8ktAQDcrhD2QJ5HUKB
-        3YvB5a6IXBNgYRuCjWHQdz/MUg==
-X-Google-Smtp-Source: ADFU+vsIQeYYJToUL3MPTGLgoCfpa8ooX6ORuBVJtQv23T7G5vwNOYygk3RRQrumo7g2y4wH6jmKwg==
-X-Received: by 2002:a17:90a:fb47:: with SMTP id iq7mr3767952pjb.191.1585281049760;
-        Thu, 26 Mar 2020 20:50:49 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id c1sm2672036pje.24.2020.03.26.20.50.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 26 Mar 2020 20:50:48 -0700 (PDT)
-Date:   Thu, 26 Mar 2020 20:50:47 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Vlastimil Babka <vbabka@suse.cz>
-Cc:     Luis Chamberlain <mcgrof@kernel.org>,
-        Iurii Zaikin <yzaikin@google.com>,
-        linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
-        linux-mm@kvack.org, Ivan Teterevkov <ivan.teterevkov@nutanix.com>,
-        Michal Hocko <mhocko@kernel.org>,
-        David Rientjes <rientjes@google.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        "Eric W . Biederman" <ebiederm@xmission.com>,
-        "Guilherme G . Piccoli" <gpiccoli@canonical.com>
-Subject: Re: [RFC v3 1/2] kernel/sysctl: support setting sysctl parameters
- from kernel command line
-Message-ID: <202003262048.70D845CDF@keescook>
-References: <20200326181606.7027-1-vbabka@suse.cz>
- <202003261256.950F1E5@keescook>
- <8afebb97-db51-5744-dca9-840dc60cd396@suse.cz>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <8afebb97-db51-5744-dca9-840dc60cd396@suse.cz>
+        Thu, 26 Mar 2020 23:55:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53256 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727509AbgC0DzH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Mar 2020 23:55:07 -0400
+Subject: Re: [git pull] Input updates for v5.6-rc7
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1585281307;
+        bh=YUbNBibbfrmEl/1mIpfiUjinUfmzDp+tKjmtDUXetrw=;
+        h=From:In-Reply-To:References:Date:To:Cc:From;
+        b=V2H+wWOzE/rdIhOx5nk6LWfn2oQFY6wkY4lZAxJ/lVlh2DWuWFPmQV6omXpWqL+Ne
+         HT62UbtnrN95GDVdVfam745LjZ3kFea9QBK27bAoMpUMjxH49Z94fU7hcuhDHyuvAA
+         HD+7c9P+fMUUGYpgafF6DZ40C7mfZ96QrM8xBz6I=
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <20200327023233.GA180354@dtor-ws>
+References: <20200327023233.GA180354@dtor-ws>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20200327023233.GA180354@dtor-ws>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/dtor/input.git for-linus
+X-PR-Tracked-Commit-Id: 4134252ab7e2c339a54302b88496cb5a89cdbaec
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: f3e69428b5e26b0851d7ef4c15859cffebf2b9de
+Message-Id: <158528130722.10723.5001510742544875460.pr-tracker-bot@kernel.org>
+Date:   Fri, 27 Mar 2020 03:55:07 +0000
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-kernel@vger.kernel.org, linux-input@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 26, 2020 at 11:08:40PM +0100, Vlastimil Babka wrote:
-> On 3/26/20 9:24 PM, Kees Cook wrote:
-> I didn't want to modify param for the sake of error prints, but perhaps
-> the replacements won't confuse system admin too much?
+The pull request you sent on Thu, 26 Mar 2020 19:32:33 -0700:
 
-Ah, fair enough. Should be fine to do it against "path" then. Ignore
-that bit from me. ;)
+> git://git.kernel.org/pub/scm/linux/kernel/git/dtor/input.git for-linus
 
-> >> +	filp_close(file, NULL);
-> > 
-> > Please check the return value of filp_close() and treat that as an error
-> > for this function too.
-> 
-> Well I could print it, but not much else? The unmount will probably fail
-> in that case?
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/f3e69428b5e26b0851d7ef4c15859cffebf2b9de
 
-Maybe? This is just a nit of mine from tracking horrible bugs that
-turned out to be unreported 'close' failures. :)
-
-> But I guess the "mount on first applicable argument" approach would work
-> with this scheme as well:
-> 
-> struct vfsmount *proc_mnt = NULL;
-> parse_args(..., &proc_mnt, ...)
-
-Yes please! That would be perfect. (And yeah, it's a sensible
-optimization to do it "as needed"; I hadn't thought of that.)
+Thank you!
 
 -- 
-Kees Cook
+Deet-doot-dot, I am a bot.
+https://korg.wiki.kernel.org/userdoc/prtracker
