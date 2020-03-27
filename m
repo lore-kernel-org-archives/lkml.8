@@ -1,161 +1,184 @@
-Return-Path: <SRS0=aGSP=5L=vger.kernel.org=linux-kernel-owner@kernel.org>
+Return-Path: <SRS0=s8dx=5M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB839C43331
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 23:56:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83B62C2D0E8
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 00:02:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8CDC120719
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 23:56:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F137206E6
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 00:02:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FiNWTQ9Y"
+	dkim=pass (1024-bit key) header.d=apertussolutions.com header.i=dpsmith@apertussolutions.com header.b="IAjnCQsn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727690AbgCZX4r (ORCPT
+        id S1727670AbgC0ACI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 19:56:47 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:54297 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726359AbgCZX4q (ORCPT
+        Thu, 26 Mar 2020 20:02:08 -0400
+Received: from sender4-of-o51.zoho.com ([136.143.188.51]:21187 "EHLO
+        sender4-of-o51.zoho.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726496AbgC0ACH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 19:56:46 -0400
-Received: by mail-wm1-f67.google.com with SMTP id c81so9692853wmd.4
-        for <linux-kernel@vger.kernel.org>; Thu, 26 Mar 2020 16:56:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=to:cc:from:subject:message-id:date:user-agent:mime-version
-         :content-language:content-transfer-encoding;
-        bh=gAEr5jp2XEj7VVG3HdFY5SCH2utiDXPEK5tBvBMTU7k=;
-        b=FiNWTQ9YItu+elqTtRpQQWir9JgQ+DTVA5NvlhVY3EJXbdVAuLbop4pt0P8Urq98Fq
-         JQbczruHkvbdY1DUcSZZHJsL9MiNUzkyTQONPlZ4Rx86JrUk4Hcaqy1HttTOx2S1VPWR
-         vItBUypGihPgL0woaheD7LlWbm6YJZBL1rruct8F3jrVZXEZsZzk1+Sz+3WybMNYhgfM
-         dWpiRhUALgVbLtoAIM3JghABbG1AAs3HuMeY0YG1m7pyKOhnx9xDx2hR2BYJ19MG3ajZ
-         gY+nL6lWVVrnXTZNb2UPnT4EUbPyg9sNigUiK3QhCSIAL3X9zkxFAaChVa+YQsWRAxyM
-         a9Lw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:to:cc:from:subject:message-id:date:user-agent
-         :mime-version:content-language:content-transfer-encoding;
-        bh=gAEr5jp2XEj7VVG3HdFY5SCH2utiDXPEK5tBvBMTU7k=;
-        b=j0olUc7umTJuuH30ApJUbJ9cQdDn/hP7zJ4AwQ+kSZmWp6k/PY2/juMieHOG7Oo/jd
-         LxumFBmnhL9HF8doYHfj/3WVfY4K1S8G9XDIaQLw+ww4Esi7CzaAWiXaTMxEJ+pt3qek
-         mPYjZwXZQao/IVXjffiSnMbUEcO5GVsNCOIsrLNk3pYU8kBg5MAjBaO86S7U4ZPurWBI
-         q/3+Cf3qXJ2n1cPxBnMbV7PH7cidCf9OjLuSuQC5UGUktavZQZLI6ej2GwfvH68isI0o
-         xWl/fS4mHn+hUV8Qt2A860Tpc9ZwIWvLHoi3OeYFZEKN/GAoLL0ugDaUeAafw9xIAmo1
-         9FfA==
-X-Gm-Message-State: ANhLgQ0bFNTz9RquPGSDOkLP6xe9k62f1XvppQf9UkkonL+C3FwCAisU
-        uBfp4ms7YU9lgAphTpyGNvnj5gBz
-X-Google-Smtp-Source: ADFU+vuthp4JtJwgFKaB9PfsFJgru1LE7g4aWnDrxTBRsTZ9Cijwhz/qr1e0E3KSjdKUTH/IjGP+7A==
-X-Received: by 2002:a1c:5544:: with SMTP id j65mr2462534wmb.60.1585267002172;
-        Thu, 26 Mar 2020 16:56:42 -0700 (PDT)
-Received: from ?IPv6:2003:ea:8f29:6000:d031:3b7b:1a72:8f94? (p200300EA8F296000D0313B7B1A728F94.dip0.t-ipconnect.de. [2003:ea:8f29:6000:d031:3b7b:1a72:8f94])
-        by smtp.googlemail.com with ESMTPSA id t10sm5790867wrx.38.2020.03.26.16.56.41
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 26 Mar 2020 16:56:41 -0700 (PDT)
-To:     Davidlohr Bueso <dave@stgolabs.net>,
-        Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-From:   Heiner Kallweit <hkallweit1@gmail.com>
-Subject: BUG: sleeping function called from invalid context at
- include/linux/percpu-rwsem.h:49
-Message-ID: <13ef34ef-edf7-67d3-693b-0d18b68ddd70@gmail.com>
-Date:   Fri, 27 Mar 2020 00:56:34 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+        Thu, 26 Mar 2020 20:02:07 -0400
+ARC-Seal: i=1; a=rsa-sha256; t=1585267299; cv=none; 
+        d=zohomail.com; s=zohoarc; 
+        b=Iik/EMFYA/BRZPTTYjWNSpHphP09ec659iE6zkTwVDN5UzL3nqnkEUpzUDszNCytXEo9XHsluySud1H7fKYvy+pBv++5U4nbyH4KBnIJ7iiFnzjea54PU74PCQYeE8czwxi+VdUQn7SjcKCeUfes+Ynq1IasbTdJJNVIHbLG7go=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+        t=1585267299; h=Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:To; 
+        bh=gpgrHbTKMpGvlF/cOdLBFGDblSWlR7M2TrT5Pzuv7Kc=; 
+        b=OAgFUTp8GPDNgyH7QvhCiQXvWjfwgt645GX4HFMxROR/s6t0aRjC+9i13zpUFWvdHh6I2H1Xb2QKbhcBLLfdwaxjGpSj9HG5/D1Xk87EKPrL9oM33Fj9vuanCElamzGqn2w0PJnxkZDQckl4SII7xd0wxT55tJbQTvk5TrHAtYA=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+        dkim=pass  header.i=apertussolutions.com;
+        spf=pass  smtp.mailfrom=dpsmith@apertussolutions.com;
+        dmarc=pass header.from=<dpsmith@apertussolutions.com> header.from=<dpsmith@apertussolutions.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1585267299;
+        s=zoho; d=apertussolutions.com; i=dpsmith@apertussolutions.com;
+        h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:In-Reply-To:Content-Type:Content-Transfer-Encoding;
+        bh=gpgrHbTKMpGvlF/cOdLBFGDblSWlR7M2TrT5Pzuv7Kc=;
+        b=IAjnCQsnz3tAhAyuZXBER1Q8CBarpbR8GW29CHuRKR+YrMkRAVtpXB6gJhtep4IQ
+        3naE1YHN4e5DYngcI4GtIF+AEUoUBUsx0WqI42Tq6QvQmM+g7OkWLaMvrUMszZt/xtJ
+        T/hoAMkzb+pLJRBqnkd+gxt0YP6fnr0+yO62khHg=
+Received: from [10.10.1.24] (c-73-129-47-101.hsd1.md.comcast.net [73.129.47.101]) by mx.zohomail.com
+        with SMTPS id 1585267297797390.842868960959; Thu, 26 Mar 2020 17:01:37 -0700 (PDT)
+Subject: Re: [RFC PATCH 00/12] x86: Trenchboot secure late launch Linux kernel
+ support
+To:     Andy Lutomirski <luto@kernel.org>,
+        Matthew Garrett <mjg59@google.com>
+Cc:     Daniel Kiper <daniel.kiper@oracle.com>,
+        Ross Philipson <ross.philipson@oracle.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        trenchboot-devel@googlegroups.com,
+        Ard Biesheuvel <ardb@kernel.org>, leif@nuviainc.com,
+        eric.snowberg@oracle.com, piotr.krol@3mdeb.com,
+        krystian.hebel@3mdeb.com, michal.zygowski@3mdeb.com,
+        James Bottomley <James.Bottomley@hansenpartnership.com>,
+        Andrew Cooper <andrew.cooper3@citrix.com>
+References: <CACdnJusd7m-c0zLmAjSq9Sb9HxyCkhyyp5W=4FMdysgu7_g=Sw@mail.gmail.com>
+ <BB670F86-9362-4A8C-8BE6-64A5AF9537A7@amacapital.net>
+ <CACdnJus6H3LQww8hkTMpPKN7u_sb1PXmgPwQOCSVZR_fi7GMrA@mail.gmail.com>
+ <CALCETrU4W7q=QyTX_iq_kN4nVK58WoOD0F_NBt7z8p7xiE7hfA@mail.gmail.com>
+ <CACdnJuu9sqzUWjPJRPOY6pKDJxTqwwf6NQEWQewXtufPQHikOg@mail.gmail.com>
+ <CALCETrVwqtpwBigzHJU7so=q0rJ2tUfxGKCJE7oY2RJA156wHg@mail.gmail.com>
+From:   "Daniel P. Smith" <dpsmith@apertussolutions.com>
+Message-ID: <011c91ac-f0e6-1d43-87ed-05d737ca632b@apertussolutions.com>
+Autocrypt: addr=dpsmith@apertussolutions.com; prefer-encrypt=mutual; keydata=
+ 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
+Date:   Thu, 26 Mar 2020 20:01:30 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.6.0
 MIME-Version: 1.0
+In-Reply-To: <CALCETrVwqtpwBigzHJU7so=q0rJ2tUfxGKCJE7oY2RJA156wHg@mail.gmail.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
+X-ZohoMailClient: External
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I just got the following on linux-next from March 25th. You dealt last with
-include/linux/percpu-rwsem.h, so you may have an idea where to look for the
-root cause.
+On 3/26/20 7:04 PM, Andy Lutomirski wrote:
+> On Thu, Mar 26, 2020 at 4:00 PM Matthew Garrett <mjg59@google.com> wrote:
+>>
+>> On Thu, Mar 26, 2020 at 3:52 PM Andy Lutomirski <luto@kernel.org> wrote:
+>>>
+>>> On Thu, Mar 26, 2020 at 2:28 PM Matthew Garrett <mjg59@google.com> wrot=
+e:
+>>>> https://trustedcomputinggroup.org/wp-content/uploads/TCG_PlatformReset=
+AttackMitigationSpecification_1.10_published.pdf
+>>>> - you want to protect in-memory secrets from a physically present
+>>>> attacker hitting the reset button, booting something else and just
+>>>> dumping RAM. This is avoided by setting a variable at boot time (in
+>>>> the boot stub), and then clearing it on reboot once the secrets have
+>>>> been cleared from RAM. If the variable isn't cleared, the firmware
+>>>> overwrites all RAM contents before booting anything else.
+>>>
+>>> I admit my information is rather dated, but I'm pretty sure that at
+>>> least some and possibly all TXT implementations solve this more
+>>> directly.  In particular, as I understand it, when you TXT-launch
+>>> anything, a nonvolatile flag in the chipset is set.  On reboot, the
+>>> chipset will not allow access to memory *at all* until an
+>>> authenticated code module wipes memory and clears that flag.
+>>
+>> Mm, yes, this one might be something we can just ignore in the TXT case.
+>>
+>>>> When you say "re-launch", you mean perform a second secure launch? I
+>>>> think that would work, as long as we could reconstruct an identical
+>>>> state to ensure that the PCR17 values matched - and that seems like a
+>>>> hard problem.
+>>>
+>>> Exactly.  I would hope that performing a second secure launch would
+>>> reproduce the same post-launch PCRs as the first launch.  If the
+>>> kernel were wise enough to record all PCR extensions, it could replay
+>>> them.
+>>
+>> That presumably depends on how much state is in the measured region -
+>> we can't just measure the code in order to assert that we're secure.
+>>
+>>> In any case, I'm kind of with Daniel here.  We survived for quite a
+>>> long time without EFI variables at all.  The ability to write them is
+>>> nice, and we certainly need some way, however awkward, to write them
+>>> on rare occasions, but I don't think we really need painless runtime
+>>> writes to EFI variables.
+>>
+>> I'm fine with a solution that involves jumping through some hoops, but
+>> it feels like simply supporting measuring and passing through the
+>> runtime services would be fine - if you want to keep them outside the
+>> TCB, build a kernel that doesn't have EFI runtime service support and
+>> skip that measurement?
+>=20
+> I'm certainly fine with the kernel allowing a mode like this.  At the
+> end of the day, anyone building something based on secure launch
+> should know what they're doing.
+>=20
+> On the other hand, unless I've missed something, we need to support a
+> transition from "secure" measured mode to unmeasured and back if we're
+> going to support secure launch and S3 at the same time. But maybe S3
+> is on its way out in favor of suspend-to-idle?
+>=20
 
+I didn't comment earlier on S3 and my view is that it is horrible when
+trying to deal with it from a security perspective. As a result I have
+been driven to the belief that you cannot assume your security posture
+is the same after S3 as it was before or that you even know what your
+posture is. On Intel we have the SEXIT instruction to signal that we are
+no longer in SMX which, in theory, blocks modification of DRTM PCRs.
+Thus SEXIT should be called before S3 and then when you come back one
+needs to then re-launch to get back to a known state of integrity.
 
-Mar 26 23:29:51 zotac kernel: BUG: kernel NULL pointer dereference, address: 0000000000000000
-Mar 26 23:29:51 zotac kernel: #PF: supervisor read access in kernel mode
-Mar 26 23:29:51 zotac kernel: #PF: error_code(0x0000) - not-present page
-Mar 26 23:29:51 zotac kernel: PGD 0 P4D 0
-Mar 26 23:29:51 zotac kernel: Oops: 0000 [#1] SMP
-Mar 26 23:29:51 zotac kernel: CPU: 2 PID: 2404 Comm: resolvconf Not tainted 5.6.0-rc7-next-20200325+ #1
-Mar 26 23:29:51 zotac kernel: Hardware name: NA ZBOX-CI327NANO-GS-01/ZBOX-CI327NANO-GS-01, BIOS 5.12 04/26/2018
-Mar 26 23:29:51 zotac kernel: RIP: 0010:link_path_walk.part.0+0x1c5/0x350
-Mar 26 23:29:51 zotac kernel: Code: 41 83 ef 01 31 f6 4c 89 f7 49 63 c7 48 8d 04 40 48 c1 e0 04 49 03 46 58 4c 8b 68 20 e8 84 fc ff ff 48 85 c0 75 5f 49 8b 46 08 <8b> 00 25 00 00 70 00 3d 00 00 20 00 0f 84 a5 fe ff ff 41 f6 46 38
-Mar 26 23:29:51 zotac kernel: RSP: 0018:ffffb272403c7ba8 EFLAGS: 00010246
-Mar 26 23:29:51 zotac kernel: RAX: 0000000000000000 RBX: fefefefefefefeff RCX: 0000000000000000
-Mar 26 23:29:51 zotac kernel: RDX: ffff9f21bab88000 RSI: ffffffffbea46aa0 RDI: ffff9f21bab88858
-Mar 26 23:29:51 zotac kernel: RBP: ffffb272403c7bf0 R08: 0000000000000001 R09: 0000000000000000
-Mar 26 23:29:51 zotac kernel: R10: 80800000007fffff R11: 0000000000000000 R12: 2f2f2f2f2f2f2f2f
-Mar 26 23:29:51 zotac kernel: R13: ffff9f21b9476243 R14: ffffb272403c7c30 R15: 0000000000000001
-Mar 26 23:29:51 zotac kernel: FS:  00007f464ebc8b80(0000) GS:ffff9f21bbd00000(0000) knlGS:0000000000000000
-Mar 26 23:29:51 zotac kernel: CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-Mar 26 23:29:51 zotac kernel: CR2: 0000000000000000 CR3: 0000000178b7d000 CR4: 00000000003406e0
-Mar 26 23:29:51 zotac kernel: Call Trace:
-Mar 26 23:29:51 zotac kernel:  path_lookupat.isra.0+0x3b/0x150
-Mar 26 23:29:51 zotac kernel:  filename_lookup+0xb4/0x140
-Mar 26 23:29:51 zotac kernel:  ? rcu_read_lock_sched_held+0x4a/0x80
-Mar 26 23:29:51 zotac kernel:  ? kmem_cache_alloc+0x24c/0x280
-Mar 26 23:29:51 zotac kernel:  kern_path+0x31/0x40
-Mar 26 23:29:51 zotac kernel:  unix_find_other+0x4f/0x2b0
-Mar 26 23:29:51 zotac kernel:  unix_stream_connect+0x115/0x6c4
-Mar 26 23:29:51 zotac kernel:  __sys_connect+0xec/0x110
-Mar 26 23:29:51 zotac kernel:  ? lockdep_hardirqs_on+0xf2/0x1a0
-Mar 26 23:29:51 zotac kernel:  __x64_sys_connect+0x19/0x20
-Mar 26 23:29:51 zotac kernel:  do_syscall_64+0x50/0x1e0
-Mar 26 23:29:51 zotac kernel:  entry_SYSCALL_64_after_hwframe+0x49/0xb3
-Mar 26 23:29:51 zotac kernel: RIP: 0033:0x7f464ed3b447
-Mar 26 23:29:51 zotac kernel: Code: 64 89 01 48 83 c8 ff c3 66 2e 0f 1f 84 00 00 00 00 00 90 f3 0f 1e fa 64 8b 04 25 18 00 00 00 85 c0 75 10 b8 2a 00 00 00 0f 05 <48> 3d 00 f0 ff ff 77 51 c3 48 83 ec 18 89 54 24 0c 48 89 34 24 89
-Mar 26 23:29:51 zotac kernel: RSP: 002b:00007ffd3daa5d88 EFLAGS: 00000246 ORIG_RAX: 000000000000002a
-Mar 26 23:29:51 zotac kernel: RAX: ffffffffffffffda RBX: 00007ffd3daa5d90 RCX: 00007f464ed3b447
-Mar 26 23:29:51 zotac kernel: RDX: 000000000000006e RSI: 00007ffd3daa5de0 RDI: 0000000000000003
-Mar 26 23:29:51 zotac kernel: RBP: 00007ffd3daa5e90 R08: 0000563ef84d0370 R09: 0000000000000400
-Mar 26 23:29:51 zotac kernel: R10: 0000000000000410 R11: 0000000000000246 R12: 0000000000000013
-Mar 26 23:29:51 zotac kernel: R13: 00007f464edc92a8 R14: 0000000000000003 R15: 0000000000000007
-Mar 26 23:29:51 zotac kernel: Modules linked in: snd_hda_codec_hdmi snd_hda_codec_realtek snd_hda_codec_generic vfat fat x86_pkg_temp_thermal coretemp aesni_intel glue_helper crypto_simd cryptd snd_hda_intel i915 snd_intel_dspcfg snd_hda_code>
-Mar 26 23:29:51 zotac kernel: CR2: 0000000000000000
-Mar 26 23:29:51 zotac kernel: ---[ end trace 5cf9f2658df059d3 ]---
-Mar 26 23:29:51 zotac kernel: RIP: 0010:link_path_walk.part.0+0x1c5/0x350
-Mar 26 23:29:51 zotac kernel: Code: 41 83 ef 01 31 f6 4c 89 f7 49 63 c7 48 8d 04 40 48 c1 e0 04 49 03 46 58 4c 8b 68 20 e8 84 fc ff ff 48 85 c0 75 5f 49 8b 46 08 <8b> 00 25 00 00 70 00 3d 00 00 20 00 0f 84 a5 fe ff ff 41 f6 46 38
-Mar 26 23:29:51 zotac kernel: RSP: 0018:ffffb272403c7ba8 EFLAGS: 00010246
-Mar 26 23:29:51 zotac kernel: RAX: 0000000000000000 RBX: fefefefefefefeff RCX: 0000000000000000
-Mar 26 23:29:51 zotac kernel: RDX: ffff9f21bab88000 RSI: ffffffffbea46aa0 RDI: ffff9f21bab88858
-Mar 26 23:29:51 zotac kernel: RBP: ffffb272403c7bf0 R08: 0000000000000001 R09: 0000000000000000
-Mar 26 23:29:51 zotac kernel: R10: 80800000007fffff R11: 0000000000000000 R12: 2f2f2f2f2f2f2f2f
-Mar 26 23:29:51 zotac kernel: R13: ffff9f21b9476243 R14: ffffb272403c7c30 R15: 0000000000000001
-Mar 26 23:29:51 zotac kernel: FS:  00007f464ebc8b80(0000) GS:ffff9f21bbd00000(0000) knlGS:0000000000000000
-Mar 26 23:29:51 zotac kernel: CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-Mar 26 23:29:51 zotac kernel: CR2: 0000000000000000 CR3: 0000000178b7d000 CR4: 00000000003406e0
-Mar 26 23:29:51 zotac kernel: BUG: sleeping function called from invalid context at include/linux/percpu-rwsem.h:49
-Mar 26 23:29:51 zotac kernel: in_atomic(): 0, irqs_disabled(): 1, non_block: 0, pid: 2404, name: resolvconf
-Mar 26 23:29:51 zotac kernel: INFO: lockdep is turned off.
-Mar 26 23:29:51 zotac kernel: irq event stamp: 2606
-Mar 26 23:29:51 zotac kernel: hardirqs last  enabled at (2605): [<ffffffffbdc52a5d>] handle_dots.part.0+0x1ad/0x5f0
-Mar 26 23:29:51 zotac kernel: hardirqs last disabled at (2606): [<ffffffffbda01e5d>] trace_hardirqs_off_thunk+0x1a/0x1c
-Mar 26 23:29:51 zotac kernel: softirqs last  enabled at (2598): [<ffffffffbe0c8c9b>] unix_create1+0x6b/0x210
-Mar 26 23:29:51 zotac kernel: softirqs last disabled at (2596): [<ffffffffbe0c8c9b>] unix_create1+0x6b/0x210
-Mar 26 23:29:51 zotac kernel: CPU: 2 PID: 2404 Comm: resolvconf Tainted: G      D           5.6.0-rc7-next-20200325+ #1
-Mar 26 23:29:51 zotac kernel: Hardware name: NA ZBOX-CI327NANO-GS-01/ZBOX-CI327NANO-GS-01, BIOS 5.12 04/26/2018
-Mar 26 23:29:51 zotac kernel: Call Trace:
-Mar 26 23:29:51 zotac kernel:  dump_stack+0x7a/0xb0
-Mar 26 23:29:51 zotac kernel:  ___might_sleep.cold+0xa6/0xb7
-Mar 26 23:29:51 zotac kernel:  __might_sleep+0x46/0x80
-Mar 26 23:29:51 zotac kernel:  exit_signals+0x2f/0x300
-Mar 26 23:29:51 zotac kernel:  do_exit+0xa4/0xb00
-Mar 26 23:29:51 zotac kernel:  rewind_stack_do_exit+0x17/0x20
-Mar 26 23:29:51 zotac kernel: RIP: 0033:0x7f464ed3b447
-Mar 26 23:29:51 zotac kernel: Code: 64 89 01 48 83 c8 ff c3 66 2e 0f 1f 84 00 00 00 00 00 90 f3 0f 1e fa 64 8b 04 25 18 00 00 00 85 c0 75 10 b8 2a 00 00 00 0f 05 <48> 3d 00 f0 ff ff 77 51 c3 48 83 ec 18 89 54 24 0c 48 89 34 24 89
-Mar 26 23:29:51 zotac kernel: RSP: 002b:00007ffd3daa5d88 EFLAGS: 00000246 ORIG_RAX: 000000000000002a
-Mar 26 23:29:51 zotac kernel: RAX: ffffffffffffffda RBX: 00007ffd3daa5d90 RCX: 00007f464ed3b447
-Mar 26 23:29:51 zotac kernel: RDX: 000000000000006e RSI: 00007ffd3daa5de0 RDI: 0000000000000003
-Mar 26 23:29:51 zotac kernel: RBP: 00007ffd3daa5e90 R08: 0000563ef84d0370 R09: 0000000000000400
-Mar 26 23:29:51 zotac kernel: R10: 0000000000000410 R11: 0000000000000246 R12: 0000000000000013
-Mar 26 23:29:51 zotac kernel: R13: 00007f464edc92a8 R14: 0000000000000003 R15: 0000000000000007
