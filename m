@@ -2,218 +2,186 @@ Return-Path: <SRS0=s8dx=5M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC903C43331
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 11:31:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DF1DC43331
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 11:33:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F25C206F1
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 11:31:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=themaw.net header.i=@themaw.net header.b="nExtzLP+";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="LrFD9aRo"
+	by mail.kernel.org (Postfix) with ESMTP id D31EA2072F
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 11:33:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727606AbgC0LbU (ORCPT
+        id S1727423AbgC0LdC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Mar 2020 07:31:20 -0400
-Received: from wout1-smtp.messagingengine.com ([64.147.123.24]:54533 "EHLO
-        wout1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726165AbgC0LbU (ORCPT
+        Fri, 27 Mar 2020 07:33:02 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:63894 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726540AbgC0LdC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Mar 2020 07:31:20 -0400
-Received: from compute2.internal (compute2.nyi.internal [10.202.2.42])
-        by mailout.west.internal (Postfix) with ESMTP id E3AE174B;
-        Fri, 27 Mar 2020 07:31:18 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute2.internal (MEProxy); Fri, 27 Mar 2020 07:31:19 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=themaw.net; h=
-        message-id:subject:from:to:cc:date:in-reply-to:references
-        :content-type:mime-version:content-transfer-encoding; s=fm2; bh=
-        1hM4zaFUD+y1ZvA24pWmEadgMLWG+fEgskEHsYlDjG4=; b=nExtzLP+eBMKhYvD
-        3snftiXF2+WMahRNtTlswZM28OcKrUix3DiQNE91fcR5Dc1rxBN97GKZWc5KDeVw
-        WZA3MuDOKNgHNgR3NbKuPKPRIjnb1srfHKE9wuLY5UWeueeYCU7iPKO52osa/GJn
-        9adalpwkJnFaKtq4d+ECCcfr3IXHQSqyX8nW3nEqlN/MY7/AjAUgSEQ9McwU7azr
-        bFQMZgRxE4xGhzHZTjWp404JmwLn56R0rfxRksApo9mQ0KbVyq4lciWlrbfi1RkM
-        rU3jKzTWaHPVO1rwoJH2VszYmI9Ynd7SL5TFMHXMnzcJyubKkaO5cTfP8oS04hKV
-        PlgWvA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:content-type
-        :date:from:in-reply-to:message-id:mime-version:references
-        :subject:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
-        :x-sasl-enc; s=fm2; bh=1hM4zaFUD+y1ZvA24pWmEadgMLWG+fEgskEHsYlDj
-        G4=; b=LrFD9aRoEVLCdt520lqRCVXJLZtFfvVxOi080/v2fMUTEWG+4KkOtazab
-        aeh/TrrGlhJAuCpIEt3QZphmQpLPjSMueHbaHtVgNFh7Msr3zGvQf59iI1FcdwPR
-        RA3lQ22im+s8vEP8PtYyTyC+dsriNTGe4kItnUyVWjNFS1g+6SUQbRHZtHTTQN/+
-        hkguH00UyWKbd5ZrepcQxTYSzwdlAkMebXXzgJAwNV86mvNWHVDHhF4RHsa7zIPq
-        gbcqLcBjKTPpjndtiRIdyMlI5HmjntBf0hA7cYt0du8B2JxbjSjdI5CuMirKHVbn
-        sytlSfvXsQIUTPCSHMqCD3mMH5LnA==
-X-ME-Sender: <xms:BeR9Xrkt2I6rmJ5_G0Td_hL7_VHqPX100tWOMbNT1i9d4LJQv-xfQQ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrudehledgvdeiucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepkffuhffvffgjfhgtfggggfesthejredttderjeenucfhrhhomhepkfgrnhcu
-    mfgvnhhtuceorhgrvhgvnhesthhhvghmrgifrdhnvghtqeenucfkphepuddukedrvddtle
-    drudeitddrvddtleenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhl
-    fhhrohhmpehrrghvvghnsehthhgvmhgrfidrnhgvth
-X-ME-Proxy: <xmx:BeR9Xlj-K08RI3Va5smOx1x5nGTE8ExvxRvB2lclpaC_LwnaSHM6_w>
-    <xmx:BeR9Xr0pKodIXYtDICBS5IcuAdcPm5FSB7ED6B4FJndVM9AOLOkKdw>
-    <xmx:BeR9XkOxtOVNV83X02AXvv1305D4miHR0MBf-6ejOEHDFy5Iu82mUQ>
-    <xmx:BuR9Xg2UuYnPduTieok5nCnKmiDNdC428c4Qtv4U3K_88KymSZphtw>
-Received: from mickey.themaw.net (unknown [118.209.160.209])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 92703306C1C8;
-        Fri, 27 Mar 2020 07:31:15 -0400 (EDT)
-Message-ID: <68080a34970fe41182494a85bcf6d53e75be6d89.camel@themaw.net>
-Subject: Re: [PATCH 3/4] vfs: check for autofs expiring dentry in
- follow_automount()
-From:   Ian Kent <raven@themaw.net>
-To:     "McIntyre, Vincent (CASS, Marsfield)" <Vincent.Mcintyre@csiro.au>
-Cc:     Al Viro <viro@ZenIV.linux.org.uk>,
-        autofs mailing list <autofs@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Kernel Mailing List <linux-kernel@vger.kernel.org>
-Date:   Fri, 27 Mar 2020 19:31:11 +0800
-In-Reply-To: <20200327051855.6o6y6l6b3gamlkji@mayhem.atnf.CSIRO.AU>
-References: <158520019862.5325.7856909810909592388.stgit@mickey.themaw.net>
-         <158520020932.5325.1998880625163566595.stgit@mickey.themaw.net>
-         <20200327051855.6o6y6l6b3gamlkji@mayhem.atnf.CSIRO.AU>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.32.5 (3.32.5-1.fc30) 
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Fri, 27 Mar 2020 07:33:02 -0400
+Received: from pps.filterd (m0187473.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02RBPcZv144906;
+        Fri, 27 Mar 2020 07:32:53 -0400
+Received: from ppma01dal.us.ibm.com (83.d6.3fa9.ip4.static.sl-reverse.com [169.63.214.131])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2ywek0taan-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 27 Mar 2020 07:32:52 -0400
+Received: from pps.filterd (ppma01dal.us.ibm.com [127.0.0.1])
+        by ppma01dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 02RBUwJv029825;
+        Fri, 27 Mar 2020 11:32:51 GMT
+Received: from b01cxnp23032.gho.pok.ibm.com (b01cxnp23032.gho.pok.ibm.com [9.57.198.27])
+        by ppma01dal.us.ibm.com with ESMTP id 2ywawmp7wp-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 27 Mar 2020 11:32:51 +0000
+Received: from b01ledav006.gho.pok.ibm.com (b01ledav006.gho.pok.ibm.com [9.57.199.111])
+        by b01cxnp23032.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 02RBWoxN55181718
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 27 Mar 2020 11:32:50 GMT
+Received: from b01ledav006.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id B71F3AC05E;
+        Fri, 27 Mar 2020 11:32:50 +0000 (GMT)
+Received: from b01ledav006.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 1974CAC059;
+        Fri, 27 Mar 2020 11:32:50 +0000 (GMT)
+Received: from sofia.ibm.com (unknown [9.85.72.108])
+        by b01ledav006.gho.pok.ibm.com (Postfix) with ESMTP;
+        Fri, 27 Mar 2020 11:32:50 +0000 (GMT)
+Received: by sofia.ibm.com (Postfix, from userid 1000)
+        id 657FE2E3B05; Fri, 27 Mar 2020 17:02:45 +0530 (IST)
+From:   "Gautham R. Shenoy" <ego@linux.vnet.ibm.com>
+To:     Nathan Lynch <nathanl@linux.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Vaidyanathan Srinivasan <svaidy@linux.vnet.ibm.com>,
+        Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>,
+        "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>,
+        Tyrel Datwyler <tyreld@linux.ibm.com>
+Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        "Gautham R. Shenoy" <ego@linux.vnet.ibm.com>
+Subject: [PATCH v4 3/6] powerpc/pseries: Account for SPURR ticks on idle CPUs
+Date:   Fri, 27 Mar 2020 17:02:37 +0530
+Message-Id: <1585308760-28792-4-git-send-email-ego@linux.vnet.ibm.com>
+X-Mailer: git-send-email 1.8.3.1
+In-Reply-To: <1585308760-28792-1-git-send-email-ego@linux.vnet.ibm.com>
+References: <1585308760-28792-1-git-send-email-ego@linux.vnet.ibm.com>
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.645
+ definitions=2020-03-27_03:2020-03-27,2020-03-27 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 clxscore=1015
+ suspectscore=0 spamscore=0 mlxscore=0 mlxlogscore=999 adultscore=0
+ bulkscore=0 phishscore=0 lowpriorityscore=0 priorityscore=1501
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2003270102
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2020-03-27 at 05:18 +0000, McIntyre, Vincent (CASS, Marsfield)
-wrote:
-> On Thu, Mar 26, 2020 at 01:23:29PM +0800, Ian Kent wrote:
-> > follow_automount() checks if a stat family system call path walk is
-> > being done on a positive dentry and and returns -EISDIR to indicate
-> > the dentry should be used as is without attempting an automount.
-> > 
-> > But if autofs is expiring the dentry at the time it should be
-> > remounted following the expire.
-> > 
-> > There are two cases, in the case of a "nobrowse" indirect autofs
-> > mount it would have been mounted on lookup anyway. In the case of
-> > a "browse" indirect or direct autofs mount re-mounting it will
-> > maintain the mount which is what user space would be expected.
-> > 
-> > This will defer expiration of the mount which might lead to mounts
-> > unexpectedly remaining mounted under heavy stat activity but
-> > there's
-> > no other choice in order to maintain consistency for user space.
-> > 
-> > Signed-off-by: Ian Kent <raven@themaw.net>
-> > ---
-> > fs/autofs/root.c |   10 +++++++++-
-> > fs/namei.c       |   13 +++++++++++--
-> > 2 files changed, 20 insertions(+), 3 deletions(-)
-> > 
-> > diff --git a/fs/autofs/root.c b/fs/autofs/root.c
-> > index a1c9c32e104f..308cc49aca1d 100644
-> > --- a/fs/autofs/root.c
-> > +++ b/fs/autofs/root.c
-> > @@ -406,9 +406,17 @@ static int autofs_d_manage(const struct path
-> > *path, bool rcu_walk)
-> > 
-> > 	/* Check for (possible) pending expire */
-> > 	if (ino->flags & AUTOFS_INF_WANT_EXPIRE) {
-> > +		/* dentry possibly going to be picked for expire,
-> > +		 * proceed to ref-walk mode.
-> > +		 */
-> > 		if (rcu_walk)
-> > 			return -ECHILD;
-> > -		return 0;
-> > +
-> > +		/* ref-walk mode, return 1 so follow_automount()
-> > +		 * can to wait on the expire outcome and possibly
-> 
-> 'can to wait' ?
-> Do you mean: "can wait", "will wait", "knows to wait",
-> or something else?
+From: "Gautham R. Shenoy" <ego@linux.vnet.ibm.com>
 
-Oops, yes, "can wait" is what that needs to be.
+On Pseries LPARs, to calculate utilization, we need to know the
+[S]PURR ticks when the CPUs were busy or idle.
 
-> 
-> > +		 * attempt a re-mount.
-> > +		 */
-> > +		return 1;
-> > 	}
-> > 
-> > 	/*
-> > diff --git a/fs/namei.c b/fs/namei.c
-> > index db6565c99825..34a03928d32d 100644
-> > --- a/fs/namei.c
-> > +++ b/fs/namei.c
-> > @@ -1227,11 +1227,20 @@ static int follow_automount(struct path
-> > *path, struct nameidata *nd,
-> > 	 * mounted directory.  Also, autofs may mark negative dentries
-> > 	 * as being automount points.  These will need the attentions
-> > 	 * of the daemon to instantiate them before they can be used.
-> > +	 *
-> > +	 * Also if ->d_manage() returns 1 the dentry transit needs
-> > +	 * managing, for autofs it tells us the dentry might be
-> > expired,
-> > +	 * so proceed to ->d_automount().
-> 
-> I'm wondering if this should be two sentences.
-> Does this version reflect reality?
-> 
-> +	 * Also if ->d_manage() returns 1 the dentry transit needs
-> +	 * to be managed. For autofs, a return of 1 tells us the
-> +	 * dentry might be expired, so proceed to ->d_automount().
+Via pseries_idle_prolog(), pseries_idle_epilog(), we track the idle
+PURR ticks in the VPA variable "wait_state_cycles". This patch extends
+the support to account for the idle SPURR ticks. It also provides an
+accessor function to accurately reads idle SPURR ticks.
 
-It does, I'll update that comment too.
+Signed-off-by: Gautham R. Shenoy <ego@linux.vnet.ibm.com>
+---
+ arch/powerpc/include/asm/idle.h        | 33 +++++++++++++++++++++++++++++++++
+ arch/powerpc/platforms/pseries/setup.c |  2 ++
+ 2 files changed, 35 insertions(+)
 
-Even mentioning the dentry needs to be managed is purely because
-that's what its been called, aka. ->d_manage().
-
-Just for info. this is meant to fix a case were a stat() family
-system call is being done at the same time the dentry is being
-expired (although statfs() is a bit different).
-
-This results in a ping/pong of returning the stat() of the
-mounted file system and stat of the autofs file system.
-
-What I'm trying to do is ensure a consistent stat() return
-based on the state of the mount at the time, at least to the
-extent that I can anyway.
-
-There are actually a number of cases and, unavoidably, there
-remains inconsistency because stat family system calls are not
-meant to trigger mounts to avoid mount storms. So they will still
-return the stat of the autofs file system if not mounted at the
-time of the call and the stat of the mounted file system if they
-do have an mount on them at the time.
-
-Thanks
-Ian
-
-> 
-> Kind regards
-> Vince
-> > 	 */
-> > 	if (!(nd->flags & (LOOKUP_PARENT | LOOKUP_DIRECTORY |
-> > 			   LOOKUP_OPEN | LOOKUP_CREATE |
-> > LOOKUP_AUTOMOUNT)) &&
-> > -	    path->dentry->d_inode)
-> > -		return -EISDIR;
-> > +	    path->dentry->d_inode) {
-> > +		if (path->dentry->d_flags & DCACHE_MANAGE_TRANSIT) {
-> > +			if (!path->dentry->d_op->d_manage(path, false))
-> > +				return -EISDIR;
-> > +		} else
-> > +			return -EISDIR;
-> > +	}
-> > 
-> > 	nd->total_link_count++;
-> > 	if (nd->total_link_count >= 40)
-> > 
-> 
-> -- 
+diff --git a/arch/powerpc/include/asm/idle.h b/arch/powerpc/include/asm/idle.h
+index d4bfb6a..accd1f5 100644
+--- a/arch/powerpc/include/asm/idle.h
++++ b/arch/powerpc/include/asm/idle.h
+@@ -5,13 +5,20 @@
+ #include <asm/paca.h>
+ 
+ #ifdef CONFIG_PPC_PSERIES
++DECLARE_PER_CPU(u64, idle_spurr_cycles);
+ DECLARE_PER_CPU(u64, idle_entry_purr_snap);
++DECLARE_PER_CPU(u64, idle_entry_spurr_snap);
+ 
+ static inline void snapshot_purr_idle_entry(void)
+ {
+ 	*this_cpu_ptr(&idle_entry_purr_snap) = mfspr(SPRN_PURR);
+ }
+ 
++static inline void snapshot_spurr_idle_entry(void)
++{
++	*this_cpu_ptr(&idle_entry_spurr_snap) = mfspr(SPRN_SPURR);
++}
++
+ static inline void update_idle_purr_accounting(void)
+ {
+ 	u64 wait_cycles;
+@@ -22,10 +29,19 @@ static inline void update_idle_purr_accounting(void)
+ 	get_lppaca()->wait_state_cycles = cpu_to_be64(wait_cycles);
+ }
+ 
++static inline void update_idle_spurr_accounting(void)
++{
++	u64 *idle_spurr_cycles_ptr = this_cpu_ptr(&idle_spurr_cycles);
++	u64 in_spurr = *this_cpu_ptr(&idle_entry_spurr_snap);
++
++	*idle_spurr_cycles_ptr += mfspr(SPRN_SPURR) - in_spurr;
++}
++
+ static inline void pseries_idle_prolog(void)
+ {
+ 	ppc64_runlatch_off();
+ 	snapshot_purr_idle_entry();
++	snapshot_spurr_idle_entry();
+ 	/*
+ 	 * Indicate to the HV that we are idle. Now would be
+ 	 * a good time to find other work to dispatch.
+@@ -36,6 +52,7 @@ static inline void pseries_idle_prolog(void)
+ static inline void pseries_idle_epilog(void)
+ {
+ 	update_idle_purr_accounting();
++	update_idle_spurr_accounting();
+ 	get_lppaca()->idle = 0;
+ 	ppc64_runlatch_on();
+ }
+@@ -56,5 +73,21 @@ static inline u64 read_this_idle_purr(void)
+ 	return be64_to_cpu(get_lppaca()->wait_state_cycles);
+ }
+ 
++static inline u64 read_this_idle_spurr(void)
++{
++	/*
++	 * If we are reading from an idle context, update the
++	 * idle-spurr cycles corresponding to the last idle period.
++	 * Since the idle context is not yet over, take a fresh
++	 * snapshot of the idle-spurr.
++	 */
++	if (get_lppaca()->idle == 1) {
++		update_idle_spurr_accounting();
++		snapshot_spurr_idle_entry();
++	}
++
++	return *this_cpu_ptr(&idle_spurr_cycles);
++}
++
+ #endif /* CONFIG_PPC_PSERIES */
+ #endif
+diff --git a/arch/powerpc/platforms/pseries/setup.c b/arch/powerpc/platforms/pseries/setup.c
+index 4905c96..1b55e80 100644
+--- a/arch/powerpc/platforms/pseries/setup.c
++++ b/arch/powerpc/platforms/pseries/setup.c
+@@ -318,7 +318,9 @@ static int alloc_dispatch_log_kmem_cache(void)
+ }
+ machine_early_initcall(pseries, alloc_dispatch_log_kmem_cache);
+ 
++DEFINE_PER_CPU(u64, idle_spurr_cycles);
+ DEFINE_PER_CPU(u64, idle_entry_purr_snap);
++DEFINE_PER_CPU(u64, idle_entry_spurr_snap);
+ static void pseries_lpar_idle(void)
+ {
+ 	/*
+-- 
+1.9.4
 
