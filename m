@@ -2,152 +2,215 @@ Return-Path: <SRS0=s8dx=5M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5D2CC43331
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 16:02:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC9B1C2D0E5
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 16:03:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A784920737
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 16:02:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A3AD2072F
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 16:03:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585325000;
+	bh=buElJtB4x/XrZOgypEpMPh22nhReLA0geldePbdmD4I=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=Zpq1GvpA3eiDR79+UgcI4Y5AsAtCj7V5gXsXbRTx+osRXUNOBYsHmVWqe6+SHGbVE
+	 TAn0VSqTwtawr4Q4JF37qJnW0WGdiVJ8kNSv+OYhKfIIOUB5/7ouaqo7LFLWkLFbar
+	 +fS8J9YgtHxpQjlDdyz9LmLeTm6aupzR7dqA3eWU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727749AbgC0QCQ (ORCPT
+        id S1727716AbgC0QDT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Mar 2020 12:02:16 -0400
-Received: from mga02.intel.com ([134.134.136.20]:31389 "EHLO mga02.intel.com"
+        Fri, 27 Mar 2020 12:03:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45004 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726333AbgC0QCQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Mar 2020 12:02:16 -0400
-IronPort-SDR: hKCHUVvVwrKIlBFV4QH7qB2q7IYJbTKVtua7rSbnB92WFJcExbBTiO7E57dvFO8jpMLGrtSNgB
- ibm9L/bcSp9w==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Mar 2020 09:02:15 -0700
-IronPort-SDR: xB2dVmSGKpWZumoZA4tldw1y68F80iVE6l1Sl7XNuAGzMoP4bmWRqTu/z4QoAm8CunjOIQYfNK
- rajAc6vD70+w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,313,1580803200"; 
-   d="scan'208";a="247925019"
-Received: from jacob-builder.jf.intel.com (HELO jacob-builder) ([10.7.199.155])
-  by orsmga003.jf.intel.com with ESMTP; 27 Mar 2020 09:02:15 -0700
-Date:   Fri, 27 Mar 2020 09:08:00 -0700
-From:   Jacob Pan <jacob.jun.pan@linux.intel.com>
-To:     "Tian, Kevin" <kevin.tian@intel.com>
-Cc:     Joerg Roedel <joro@8bytes.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Jean-Philippe Brucker <jean-philippe@linaro.com>,
-        "Liu, Yi L" <yi.l.liu@intel.com>,
-        "Raj, Ashok" <ashok.raj@intel.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Eric Auger <eric.auger@redhat.com>,
-        jacob.jun.pan@linux.intel.com
-Subject: Re: [PATCH 01/10] iommu/ioasid: Introduce system-wide capacity
-Message-ID: <20200327090800.64949170@jacob-builder>
-In-Reply-To: <AADFC41AFE54684AB9EE6CBC0274A5D19D7ED264@SHSMSX104.ccr.corp.intel.com>
-References: <1585158931-1825-1-git-send-email-jacob.jun.pan@linux.intel.com>
-        <1585158931-1825-2-git-send-email-jacob.jun.pan@linux.intel.com>
-        <AADFC41AFE54684AB9EE6CBC0274A5D19D7ED264@SHSMSX104.ccr.corp.intel.com>
-Organization: OTC
-X-Mailer: Claws Mail 3.13.2 (GTK+ 2.24.30; x86_64-pc-linux-gnu)
+        id S1726333AbgC0QDT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Mar 2020 12:03:19 -0400
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7A1A220716;
+        Fri, 27 Mar 2020 16:03:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1585324997;
+        bh=buElJtB4x/XrZOgypEpMPh22nhReLA0geldePbdmD4I=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=viFO5kDP/2s0/3AJx9TFLXHX6SV5+ibd4fa3+p65xOq3D6zaGzSmJwvR+YMS7agDw
+         52hjxt++Nekk6rPPLyuP2m6Hqm4Jn5G1fFpMR48LAHPBT00ULt4GWgmBUIsKIc9VvH
+         0WVB5OKiOkcJhJb7hWddUOndBUJwW3aaEynCjsss=
+Subject: Re: [RFC v3 0/3] Fix errors when try to build kvm selftests on
+ specified output
+To:     Xiaoyao Li <xiaoyao.li@intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Cc:     kvm@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-kernel@vger.kernel.org, shuah <shuah@kernel.org>
+References: <20200326030750.173972-1-xiaoyao.li@intel.com>
+ <41d5d89e-79c2-6f7d-de3e-ca3255e910e8@kernel.org>
+ <cb445047-ab84-0c49-cfba-ec6933971dc7@intel.com>
+From:   shuah <shuah@kernel.org>
+Message-ID: <71a5abdf-07b5-d927-1a08-de8019b3f39f@kernel.org>
+Date:   Fri, 27 Mar 2020 10:03:03 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <cb445047-ab84-0c49-cfba-ec6933971dc7@intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 27 Mar 2020 08:07:20 +0000
-"Tian, Kevin" <kevin.tian@intel.com> wrote:
-
-> > From: Jacob Pan <jacob.jun.pan@linux.intel.com>
-> > Sent: Thursday, March 26, 2020 1:55 AM
-> > 
-> > IOASID is a limited system-wide resource that can be allocated at
-> > runtime. This limitation can be enumerated during boot. For
-> > example, on x86 platforms, PCI Process Address Space ID (PASID)
-> > allocation uses IOASID service. The number of supported PASID bits
-> > are enumerated by extended capability register as defined in the
-> > VT-d spec.
-> > 
-> > This patch adds a helper to set the system capacity, it expected to
-> > be set during boot prior to any allocation request.
-> > 
-> > Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
-> > ---
-> >  drivers/iommu/ioasid.c | 15 +++++++++++++++
-> >  include/linux/ioasid.h |  5 ++++-
-> >  2 files changed, 19 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/drivers/iommu/ioasid.c b/drivers/iommu/ioasid.c
-> > index 0f8dd377aada..4026e52855b9 100644
-> > --- a/drivers/iommu/ioasid.c
-> > +++ b/drivers/iommu/ioasid.c
-> > @@ -17,6 +17,21 @@ struct ioasid_data {
-> >  	struct rcu_head rcu;
-> >  };
-> > 
-> > +static ioasid_t ioasid_capacity;
-> > +static ioasid_t ioasid_capacity_avail;
-> > +
-> > +/* System capacity can only be set once */
-> > +void ioasid_install_capacity(ioasid_t total)
-> > +{
-> > +	if (ioasid_capacity) {
-> > +		pr_warn("IOASID capacity already set at %d\n",
-> > ioasid_capacity);
-> > +		return;
-> > +	}
-> > +
-> > +	ioasid_capacity = ioasid_capacity_avail = total;
-> > +}
-> > +EXPORT_SYMBOL_GPL(ioasid_install_capacity);
-> > +  
+On 3/27/20 7:31 AM, Xiaoyao Li wrote:
+> On 3/27/2020 4:57 AM, shuah wrote:
+>> On 3/25/20 9:07 PM, Xiaoyao Li wrote:
+>>> Hi Shuah,
+>>>
+>>> Hope you're happy with this version that I only touch KVM's Makefile.
+>>>
+>>> I attempted to build KVM selftests on a specified dir, unfortunately
+>>> neither    "make O=/path/to/mydir TARGETS=kvm" in 
+>>> tools/testing/selftests, nor
+>>> "make OUTPUT=/path/to/mydir" in tools/testing/selftests/kvm work.
+>>>
+>>
+>> Why are you running "make OUTPUT=/path/to/mydir"
+>>
+>> It isn't correct.
 > 
-> From all the texts in this patch, looks ioasid_set_capacity might be
-> a better name?
+> So what's the meaning of
 > 
-That was my initial choice as well :), but it may get confused with
-ioasid_set.
-
-I will rephrase the text to avoid 'set'.
-
-> >  /*
-> >   * struct ioasid_allocator_data - Internal data structure to hold
-> > information
-> >   * about an allocator. There are two types of allocators:
-> > diff --git a/include/linux/ioasid.h b/include/linux/ioasid.h
-> > index 6f000d7a0ddc..9711fa0dc357 100644
-> > --- a/include/linux/ioasid.h
-> > +++ b/include/linux/ioasid.h
-> > @@ -40,7 +40,7 @@ void *ioasid_find(struct ioasid_set *set,
-> > ioasid_t ioasid, int ioasid_register_allocator(struct
-> > ioasid_allocator_ops *allocator); void
-> > ioasid_unregister_allocator(struct ioasid_allocator_ops
-> > *allocator); int ioasid_set_data(ioasid_t ioasid, void *data); -
-> > +void ioasid_install_capacity(ioasid_t total);
-> >  #else /* !CONFIG_IOASID */
-> >  static inline ioasid_t ioasid_alloc(struct ioasid_set *set,
-> > ioasid_t min, ioasid_t max, void *private)
-> > @@ -72,5 +72,8 @@ static inline int ioasid_set_data(ioasid_t
-> > ioasid, void *data)
-> >  	return -ENOTSUPP;
-> >  }
-> > 
-> > +static inline void ioasid_install_capacity(ioasid_t total)
-> > +{
-> > +}
-> >  #endif /* CONFIG_IOASID */
-> >  #endif /* __LINUX_IOASID_H */
-> > --
-> > 2.7.4  
+> ifeq (0,$(MAKELEVEL))
+>      ifeq ($(OUTPUT),)
+>      OUTPUT := $(shell pwd)
+>      DEFAULT_INSTALL_HDR_PATH := 1
+>      endif
+> endif
+> 
+> in lib.mk?
 > 
 
-[Jacob Pan]
+O is the variable for selftests Makefile and which is handled in
+lib.mk. OUTPUT is internal and shouldn't set when running make.
+
+>>
+>> make O=/path/to/mydir is what you have to use. Please main Makefile
+>> as well for O= and KBUILD_OUTPUT usages.
+>>
+>> Please see Documentation/dev-tools/kselftest.rst for use-cases.
+>>
+>> make O=/path/to/mydir TARGETS=kvm is a right use-case and I can see
+>> it will fail to create x86_64 directory.
+>>
+>> Let's start with the following two commands and try to fix the
+>> problems you are seeing.
+>>
+>> make O=/path/to/mydir in kvm directory (this is supported,
+>> however, the following command from the main Makefile is
+>> recommended use.)
+> 
+> Of course we can do this, but the "O=/path/to/mydir" only has effect on 
+> header install, the *.o files still generated in kvm/ directory.
+> 
+
+Right. That is what needs to be fixed. This is the reason for your
+source directory getting dirty when kvm test is built.
+
+> And kvm's INSTALL_HDR_PATH cannot find the right headers.
+> 
+> That's why I choose to use "OUTPUT=/somewhere"
+> 
+>>  From main Makefile in kernel srcdir
+>> make O=/path/to/mydir TARGETS=kvm
+> 
+> I guess "kernel srcdir" means "kselftest srcdir", i.e., 
+> tools/testing/selftests/ ?
+
+This is kernel source root directory. The command you would
+use is:
+
+make kselftest-all O=/path/to/mydir TARGETS=kvm
+
+> 
+> Well, as I said in the first place, I tried
+> 
+>      make O=/path/to/mydir TARGETS=kvm
+> 
+> but it doesn't work. So I did some fixup, and sent out the Patches.
+> 
+
+Right. It doesn't work for a couple of reasons:
+
+1. The Makefile doesn't create sub-dirs when build is relocatable.
+2. Makes source directory dirty.
+
+> If the patches are wrong, please point it out and give your comments how 
+> to make it right.
+> 
+
+The patches you sent are based on running the command with OUTPUT
+set. That is why I am asking you start with the right use-cases,
+and gave you pointers on tests to refer to that have sub-dirs
+and handle relocatable builds:
+
+futex
+arm64
+android
+
+>> Also, just build isn't sufficient for you to be able to run the
+>> tests.
+>>
+>> make kselftest-install O=/path/to/mydir TARGETS=kvm will generate
+>> run script.
+> 
+> This command also has the x86_64 directory not created issue.
+> Since it generates header files in kernel_src/usr/include, it doesn't 
+> have headers path issue. But as result, the kernel_src directory is not 
+> clean, this requires me to run "make mrproper", I *really* don't like it.
+> 
+> 
+
+If the test leverages lib.mk headers install logic correctly, you
+shouldn't see this problem.
+
+Yes. It does make the source directory dirty. That is the problem we
+have to fix. I am seeing issues the issue of x86_64 not being created
+in the case of relocatable builds.
+
+Thanks for working on this by the way. It is one of the tests that
+identified as the one doesn't support relocatable builds.
+
+You will see fixes to others I already fixed in
+
+https://git.kernel.org/pub/scm/linux/kernel/git/shuah/linux-kselftest.git/log/?h=next
+
+Start withe the following use0-cases to fix and then test your fixes
+for these use-cases. The goal is to be able to run kvm from target
+directory and source directory staying clean.
+
+You will have to build the kernel first in all of these cases.
+Let's use kselftest-install which is what you would need if you
+want build and then run tests later. Also assuming you are doing
+native build on x86_64.
+
+ From main kernel Makefile: (from kernel source root dir)
+
+Builds in the same source directory:
+make kselftest-install TARGETS=kvm
+
+Relocatable build: (from kernel source root dir)
+
+make O=/path/objdir  - build kernel
+make kselftest-install O=/path/objdir TARGETS=kvm
+
+ From tools/testing/selftests/kvm directory:
+make O=/path/objdir install
+
+Install step is important especially for relocatable builds,
+as it makes sure all run-time dependencies are copied to the
+target directory.
+
+thanks,
+-- Shuah
