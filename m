@@ -2,149 +2,132 @@ Return-Path: <SRS0=s8dx=5M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73491C2D0EC
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 12:40:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3CFDC43331
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 12:40:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A56E2083E
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 12:40:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 858DA2082D
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 12:40:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gSh1gE1Y"
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="UOUhz3V9";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="LR3psVpY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727674AbgC0MkL (ORCPT
+        id S1727703AbgC0MkV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Mar 2020 08:40:11 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:40293 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726540AbgC0MkK (ORCPT
+        Fri, 27 Mar 2020 08:40:21 -0400
+Received: from new1-smtp.messagingengine.com ([66.111.4.221]:50481 "EHLO
+        new1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726540AbgC0MkV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Mar 2020 08:40:10 -0400
-Received: by mail-wr1-f66.google.com with SMTP id u10so11220071wro.7;
-        Fri, 27 Mar 2020 05:40:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=jZHFiWax8vCvFZJl+Fo54qpkUa4Crpp6F75KMLPAOl8=;
-        b=gSh1gE1Yz3lU4ivwfNB+k/+ydo1wN4UNR3yIdL5Ae311j2ZRONhSmKEL4Ky00zVO6B
-         p0vDv3LMBMBcX+xF5JsE9FFLEdyuayAuxuq0YpBOgAmb3raaqn7Z8whvwmG9vrtg69Sw
-         JVrflaT1O86knx4zu6XIU0Eejx4mYm0i972UKLIL5VLuZXn8iDwOYswPEm8ujRc18Gem
-         xh/lXLvIGELQEAt8HWpSbDCq3Hg0FdLZTIL8+ioEaz1HZFt2on+nOGfEP9waji/lI16u
-         4MrrS89SWr5I8WQSRdQhEJlofDB46HDpTZksPP+H3HyWxr39RjXJM+14IMsqgzjwNtsl
-         wbqw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=jZHFiWax8vCvFZJl+Fo54qpkUa4Crpp6F75KMLPAOl8=;
-        b=hL/ey5hkDXc9vilE5RKInTrY1OmAai/Dvpyt7deZpbb7UIZpvSzWk0k3pPQIja3qZq
-         xJcVLCXd87sMXmkYHgKlOdPRdUlv8r30+nQ4q08vY8DfBjblR72i6A7JZOOGWnKaD2P2
-         I40TVky28tfoL++YazOXfhDuYOqTcunWr8qXzk8ojV9fKfy5lrhWX0IZnhM0dzbIgT32
-         tu9G3Mha8he8sgVc4qqTt6X/xcNc3g+b2OMedx1A+XuUH97dvivD3FQOVMNWWTtfoBZj
-         EYE1/NJZjF6b7chGPXCMulk/96R8R20/OXhun8genCNX/FbLZ1YEjV1skISDoQiU0V6X
-         gPnA==
-X-Gm-Message-State: ANhLgQ1gExEibaFXYCZB1xTCkg9p5N+CVZ5EvqA3b4DCuu8nKAomUwTU
-        liguFai9tfkTeDA/7jJkHIQ=
-X-Google-Smtp-Source: ADFU+vvKWziGHlMdvcuetUGwCoGi7eYH0NZ0+lmcZX0O4k6SAr9Vh6MW+2Mw+lx2eY1oQlgBl03rlQ==
-X-Received: by 2002:adf:ab12:: with SMTP id q18mr15276713wrc.148.1585312808970;
-        Fri, 27 Mar 2020 05:40:08 -0700 (PDT)
-Received: from [192.168.0.104] (p5B3F6E13.dip0.t-ipconnect.de. [91.63.110.19])
-        by smtp.gmail.com with ESMTPSA id u131sm8292883wmg.41.2020.03.27.05.40.07
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 27 Mar 2020 05:40:08 -0700 (PDT)
-Subject: Re: [PATCH v4 2/5] mfd: mp2629: Add support for mps battery charger
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     robh+dt@kernel.org, jic23@kernel.org, knaack.h@gmx.de,
-        lars@metafoo.de, pmeerw@pmeerw.net, sre@kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-iio@vger.kernel.org, linux-pm@vger.kernel.org,
-        andriy.shevchenko@linux.intel.com
-References: <20200322224626.13160-1-sravanhome@gmail.com>
- <20200322224626.13160-3-sravanhome@gmail.com> <20200327075541.GF603801@dell>
- <a6098b6a-2b2f-5279-f9fc-85201b9aabde@gmail.com> <20200327102221.GA3383@dell>
- <a679aba5-4cfb-1b6c-8cb0-dab3a644f3e7@gmail.com> <20200327112523.GC3383@dell>
-From:   saravanan sekar <sravanhome@gmail.com>
-Message-ID: <45f68c40-8e50-e0a2-a89a-b5a164d6b75c@gmail.com>
-Date:   Fri, 27 Mar 2020 13:40:07 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Fri, 27 Mar 2020 08:40:21 -0400
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailnew.nyi.internal (Postfix) with ESMTP id DE9E45804DE;
+        Fri, 27 Mar 2020 08:40:19 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute4.internal (MEProxy); Fri, 27 Mar 2020 08:40:19 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm2; bh=1tqKiAEDB3SfA9ydJP9wGmHNUkL
+        2GqCIV0IdId8UKpg=; b=UOUhz3V9BaHp3TKWPbT4JEaYXHiWQMrwJgyJn3V0Mnf
+        fAnhb0oylqQ6srUcpM5R5O1zxjvgDsVe/Gu9Wlvn9dUUIudziyFOaw6uuU/c/Y0A
+        D4weejIWXR2VI2cMMoy9Hvndsos3Fk0g8UjGaagIEfHM6e4at4FEQB0YoleW7uLD
+        QntHfam1Ek7riYHz+wx0oWiDBuESZyEUunVq3qRwrPPcLUIvQJSEs9JN11kUCwNy
+        yY1N1PU2PteWyFDjQaNPq0TgbNJX4yeKVgG2EqcsTN/5gxsIzyqIMREIU3nnSvYp
+        ebWRJWCOwA/QKBQX3yxUDzMqD7Evd+W2lvNh3YFizgQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=1tqKiA
+        EDB3SfA9ydJP9wGmHNUkL2GqCIV0IdId8UKpg=; b=LR3psVpYNXWKXgCJ/hZ1PH
+        Fn7BhmcKVYjCEJgsqYlqQwmYcNSr0VL5/2YVnu7mlQR86yv4oSMmX8QV1GiTDEvn
+        c/AH54APzJCDkhdgsgbMpeotrLDb0/r7FBehzTVtT00448A7vANEAqU08KK0jFFm
+        SeS818dLJ+ZguwBGNX72UlpXhY6ilkmQ9eYPNdQkcfNWAYD61YEo0YjQzVvJqtQy
+        9rJRqH+IHlNwM8Y5sh5bdypYooXMv8bESbrzXEn03Kwx1h6Iaged/3kYgt6Ypbyf
+        +wTV0xxUSM3HtfAtr09DnRVyaYxtPZf1TNTefWn4eh4VcgP7WEqVJXCit1u+bKDQ
+        ==
+X-ME-Sender: <xms:MvR9XsHxxrFVhdQnqxToeWQX52gjQfwXw7022_TFXhMKUqp30mybkw>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrudehledggeduucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepfffhvffukfhfgggtuggjsehgtderredttddvnecuhfhrohhmpeforgigihhm
+    vgcutfhiphgrrhguuceomhgrgihimhgvsegtvghrnhhordhtvggthheqnecukfhppeeltd
+    drkeelrdeikedrjeeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghi
+    lhhfrhhomhepmhgrgihimhgvsegtvghrnhhordhtvggthh
+X-ME-Proxy: <xmx:MvR9XlzrcvArZ_TJG7zm_IYkK4OrdF5Xv0p5VM2jhYOKAfLs49N9HQ>
+    <xmx:MvR9XtAgBTwPr0tyIcWYyPvVDiQOfPKcHtJUcn2G9R0L8mR693W74A>
+    <xmx:MvR9XkVIfSBoGtC-FB82UVZSmYxnXwBb0ckUahNrJxRIbz0ORBPfgQ>
+    <xmx:M_R9XuJ6Xqx9zYfBsydw7RMwWSTwoEbOK6IQvEvihp2sWWTNdRgyVw>
+Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 673F7328005D;
+        Fri, 27 Mar 2020 08:40:18 -0400 (EDT)
+Date:   Fri, 27 Mar 2020 13:40:14 +0100
+From:   Maxime Ripard <maxime@cerno.tech>
+To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Cc:     Eric Anholt <eric@anholt.net>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        linux-rpi-kernel@lists.infradead.org, f.fainelli@gmail.com,
+        Stefan Wahren <stefan.wahren@i2se.com>,
+        Dave Stevenson <dave.stevenson@raspberrypi.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] drm/vc4: Fix HDMI mode validation
+Message-ID: <20200327124014.cpadv7npw2q6iaxe@gilmour.lan>
+References: <20200326122001.22215-1-nsaenzjulienne@suse.de>
+ <65a2d18ec2b901c6a89acc091cf9573a98fda75f.camel@suse.de>
 MIME-Version: 1.0
-In-Reply-To: <20200327112523.GC3383@dell>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="d3kuexzosimwuvh5"
+Content-Disposition: inline
+In-Reply-To: <65a2d18ec2b901c6a89acc091cf9573a98fda75f.camel@suse.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Lee, Andy
 
-On 27/03/20 12:25 pm, Lee Jones wrote:
-> On Fri, 27 Mar 2020, saravanan sekar wrote:
->> On 27/03/20 11:22 am, Lee Jones wrote:
->>> Saravanan, Jonathan,
->>>
->>> On Fri, 27 Mar 2020, saravanan sekar wrote:
->>>> On 27/03/20 8:55 am, Lee Jones wrote:
->>>>> On Sun, 22 Mar 2020, Saravanan Sekar wrote:
->>>>>
->>>>>> mp2629 is a highly-integrated switching-mode battery charge management
->>>>>> device for single-cell Li-ion or Li-polymer battery.
->>>>>>
->>>>>> Add MFD core enables chip access for ADC driver for battery readings,
->>>>>> and a power supply battery-charger driver
->>>>>>
->>>>>> Signed-off-by: Saravanan Sekar <sravanhome@gmail.com>
->>>>>> ---
->>>>>>     drivers/mfd/Kconfig        |   9 +++
->>>>>>     drivers/mfd/Makefile       |   2 +
->>>>>>     drivers/mfd/mp2629.c       | 116 +++++++++++++++++++++++++++++++++++++
->>>>>>     include/linux/mfd/mp2629.h |  22 +++++++
->>>>>>     4 files changed, 149 insertions(+)
->>>>>>     create mode 100644 drivers/mfd/mp2629.c
->>>>>>     create mode 100644 include/linux/mfd/mp2629.h
-> [...]
+--d3kuexzosimwuvh5
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+On Fri, Mar 27, 2020 at 12:46:52PM +0100, Nicolas Saenz Julienne wrote:
+> Hi Daniel,
 >
->>>>>> +#ifndef __MP2629_H__
->>>>>> +#define __MP2629_H__
->>>>>> +
->>>>>> +#include <linux/types.h>
->>>>>> +
->>>>>> +struct device;
->>>>>> +struct regmap;
->>>>> Why not just add the includes?
->>>> Some more shared enum added in ADC driver
->>> Sorry?
->> I misunderstood your previous question that you are asking to remove this
->> mp2629.h file
->>
->> "No user here. (Hint: Use forward declaration of struct device instead)" -
->> review comments on V1 from Andy Shevchenko.
->> So remove the includes
-> So Andy has reviewed, but you still don't have him on Cc?
-Sorry one of his hint made me removed him in CC unknowingly.
-
-"For the future, hint:
-         scripts/get_maintainer.pl --git --git-min-percent=67 ..."
-
-My fault, added him in CC
-
-> How are we meant to continue the discussion?
+> On Thu, 2020-03-26 at 13:20 +0100, Nicolas Saenz Julienne wrote:
+> > Current mode validation impedes setting up some video modes which should
+> > be supported otherwise. Namely 1920x1200@60Hz.
+> >
+> > Fix this by lowering the minimum HDMI state machine clock to pixel clock
+> > ratio allowed.
+> >
+> > Fixes: 32e823c63e90 ("drm/vc4: Reject HDMI modes with too high of clocks")
+> > Reported-by: Stefan Wahren <stefan.wahren@i2se.com>
+> > Suggested-by: Dave Stevenson <dave.stevenson@raspberrypi.com>
+> > Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
 >
-> As a general rule I'm not a fan of forward declarations.
+> Would it be possible for you to take this in for v5.7 (or as a fix for v5.6,
+> but it seems a little late)?
 >
-> I think they should be avoided if at all possible.
-Ok will add includes
->>>>>> +struct mp2629_info {
->>>>>> +	struct device *dev;
->>>>>> +	struct regmap *regmap;
->>>>>> +};
->>>>>> +
->>>>>> +#endif
+> A device-tree patch I have to channel trough the SoC tree depends on this to
+> avoid regressions.
+
+I've applied it for 5.7-rc1
+
+Maxime
+
+--d3kuexzosimwuvh5
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXn30LgAKCRDj7w1vZxhR
+xdFnAP92Qdx8QTD2GVqLa6WYUZ7pal+vUrwn2B7IYbdrTLdT0wEAmrS2vU+cSXPL
+TCYxw+AgcSLS6vRP8BmHsIZxUMsAwwQ=
+=xO7w
+-----END PGP SIGNATURE-----
+
+--d3kuexzosimwuvh5--
