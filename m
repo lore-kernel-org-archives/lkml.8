@@ -2,220 +2,106 @@ Return-Path: <SRS0=s8dx=5M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AA3CC2D0EF
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 01:59:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3417C43331
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 02:09:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 305C720787
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 01:59:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8891D2074D
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 02:09:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="CZcI1dG2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727770AbgC0B7M (ORCPT
+        id S1727656AbgC0CJ5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 21:59:12 -0400
-Received: from labrats.qualcomm.com ([199.106.110.90]:12695 "EHLO
-        labrats.qualcomm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727607AbgC0B7L (ORCPT
+        Thu, 26 Mar 2020 22:09:57 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:44438 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726496AbgC0CJ5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 21:59:11 -0400
-IronPort-SDR: sceStHUxbTExeoMoi3X1XquwHPh1T9zG3OG+7wxL5o2k0kmfKdCWQWNesjUgHoPgZ/yAE9H3Co
- V3oKxvnY07z14QYfjtp7Uk2RFt+qGBnslg7XKoH5a9Gfh5t8qLJclqs9+IJriyKUUgusHxVpBz
- 7yIXTavOlaIstujGkUO6lVlynJUdAPKjOJkDn4aXOgTCvQRf09lVtD3QCqOrEErJw+gaDxQIG0
- GRX/xjcGVW4I49BDUdTcjbjG+7kVRMGyUoUfD7WVI63GMdPrGI0xZmv+lDdSlN8I29SPUbdWIU
- cSc=
-X-IronPort-AV: E=Sophos;i="5.72,307,1580803200"; 
-   d="scan'208";a="28616316"
-Received: from unknown (HELO ironmsg03-sd.qualcomm.com) ([10.53.140.143])
-  by labrats.qualcomm.com with ESMTP; 26 Mar 2020 02:26:06 -0700
-Received: from pacamara-linux.qualcomm.com ([192.168.140.135])
-  by ironmsg03-sd.qualcomm.com with ESMTP; 26 Mar 2020 02:26:05 -0700
-Received: by pacamara-linux.qualcomm.com (Postfix, from userid 359480)
-        id C69FF3AA6; Thu, 26 Mar 2020 02:26:05 -0700 (PDT)
-From:   Can Guo <cang@codeaurora.org>
-To:     asutoshd@codeaurora.org, nguyenb@codeaurora.org,
-        hongwus@codeaurora.org, rnayak@codeaurora.org,
-        linux-scsi@vger.kernel.org, kernel-team@android.com,
-        saravanak@google.com, salyzyn@google.com, cang@codeaurora.org
-Cc:     Subhash Jadavani <subhashj@codeaurora.org>,
-        Alim Akhtar <alim.akhtar@samsung.com>,
-        Avri Altman <avri.altman@wdc.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Stanley Chu <stanley.chu@mediatek.com>,
-        Bean Huo <beanhuo@micron.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        Venkat Gopalakrishnan <venkatg@codeaurora.org>,
-        Tomas Winkler <tomas.winkler@intel.com>,
-        linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v6 1/2] scsi: ufs: Clean up ufshcd_scale_clks() and clock scaling error out path
-Date:   Thu, 26 Mar 2020 02:25:40 -0700
-Message-Id: <1585214742-5466-2-git-send-email-cang@codeaurora.org>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1585214742-5466-1-git-send-email-cang@codeaurora.org>
-References: <1585214742-5466-1-git-send-email-cang@codeaurora.org>
+        Thu, 26 Mar 2020 22:09:57 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02R29O4R093133;
+        Fri, 27 Mar 2020 02:09:24 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
+ from : references : date : in-reply-to : message-id : mime-version :
+ content-type; s=corp-2020-01-29;
+ bh=rxzaK+xiGUSL37btO1mXcRHCm66XoUtPIcvuddLU4dQ=;
+ b=CZcI1dG2O5gWFo/ZIY08LAIe3NF1aL+GAIVKf1khvwpEMexJiuqgTUWkhxJwY2TOgrdY
+ NVyv3M1VIOgn829o6/TTJjs/cfJj3PYExNAixWXcA8qKZlWg/E/1Li6UdGmgyxwMdo+m
+ /gCIZ8p/Rc2JtjFEzSPR9VUXcsPl3Efv7UNZ3UtJM6WVQS2BdSfkCNZ0wFIk07zIagUs
+ IHSbZf9ThXISb2+y5YTus0EsOR6MWyVP7WzWLJnV4Xk0OeEBeMy5waucBGXjL+Cf3g03
+ zkMhnIBWipd8xcx9cORyDISacBVHZNDMdn4pH4H54BvS1vPBEU6Xr+Jg+kfa4H+vpv/R jw== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by aserp2120.oracle.com with ESMTP id 2ywavmjx64-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 27 Mar 2020 02:09:24 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02R28xkD052520;
+        Fri, 27 Mar 2020 02:09:23 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by aserp3030.oracle.com with ESMTP id 3006r9gemy-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 27 Mar 2020 02:09:23 +0000
+Received: from abhmp0006.oracle.com (abhmp0006.oracle.com [141.146.116.12])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 02R29K5N022279;
+        Fri, 27 Mar 2020 02:09:20 GMT
+Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 26 Mar 2020 19:09:17 -0700
+To:     Stanley Chu <stanley.chu@mediatek.com>
+Cc:     <linux-scsi@vger.kernel.org>, <martin.peter~sen@oracle.com>,
+        <avri.altman@wdc.com>, <alim.akhtar@samsung.com>,
+        <jejb@linux.ibm.com>, <bvanassche@acm.org>, <beanhuo@micron.com>,
+        <asutoshd@codeaurora.org>, <cang@codeaurora.org>,
+        <matthias.bgg@gmail.com>, <linux-mediatek@lists.infradead.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <kuohong.wang@mediatek.com>,
+        <peter.wang@mediatek.com>, <chun-hung.wu@mediatek.com>,
+        <andy.teng@mediatek.com>
+Subject: Re: [PATCH v7 0/7] scsi: ufs: some cleanups and make the delay for host enabling customizable
+From:   "Martin K. Petersen" <martin.petersen@oracle.com>
+Organization: Oracle Corporation
+References: <20200318104016.28049-1-stanley.chu@mediatek.com>
+Date:   Thu, 26 Mar 2020 22:09:12 -0400
+In-Reply-To: <20200318104016.28049-1-stanley.chu@mediatek.com> (Stanley Chu's
+        message of "Wed, 18 Mar 2020 18:40:09 +0800")
+Message-ID: <yq1y2rmeegn.fsf@oracle.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1.92 (gnu/linux)
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9572 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 adultscore=0 suspectscore=0
+ phishscore=0 spamscore=0 mlxscore=0 mlxlogscore=996 malwarescore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2003270015
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9572 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 malwarescore=0
+ priorityscore=1501 mlxscore=0 bulkscore=0 clxscore=1011 impostorscore=0
+ phishscore=0 suspectscore=0 mlxlogscore=999 spamscore=0 lowpriorityscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2003270015
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Subhash Jadavani <subhashj@codeaurora.org>
 
-This change introduces a func ufshcd_set_clk_freq() to explicitly
-set clock frequency so that it can be used in reset_and_resotre path and
-in ufshcd_scale_clks(). Meanwhile, this change cleans up the clock scaling
-error out path.
+Stanley,
 
-Fixes: a3cd5ec55f6c ("scsi: ufs: add load based scaling of UFS gear")
-Signed-off-by: Subhash Jadavani <subhashj@codeaurora.org>
-Signed-off-by: Can Guo <cang@codeaurora.org>
----
- drivers/scsi/ufs/ufshcd.c | 65 ++++++++++++++++++++++++++++++++---------------
- 1 file changed, 44 insertions(+), 21 deletions(-)
+> Stanley Chu (7):
+>   scsi: ufs: fix uninitialized tx_lanes in ufshcd_disable_tx_lcc()
+>   scsi: ufs: use an enum for host capabilities
+>   scsi: ufs: introduce common and flexible delay function
+>   scsi: ufs-mediatek: use common delay function for required places
+>   scsi: ufs: allow customized delay for host enabling
+>   scsi: ufs: make HCE polling more compact to improve initialization latency
+>   scsi: ufs-mediatek: customize the delay for host enabling
 
-diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
-index 2a2a63b..148e73a 100644
---- a/drivers/scsi/ufs/ufshcd.c
-+++ b/drivers/scsi/ufs/ufshcd.c
-@@ -855,28 +855,29 @@ static bool ufshcd_is_unipro_pa_params_tuning_req(struct ufs_hba *hba)
- 		return false;
- }
- 
--static int ufshcd_scale_clks(struct ufs_hba *hba, bool scale_up)
-+/**
-+ * ufshcd_set_clk_freq - set UFS controller clock frequencies
-+ * @hba: per adapter instance
-+ * @scale_up: If True, set max possible frequency othewise set low frequency
-+ *
-+ * Returns 0 if successful
-+ * Returns < 0 for any other errors
-+ */
-+static int ufshcd_set_clk_freq(struct ufs_hba *hba, bool scale_up)
- {
- 	int ret = 0;
- 	struct ufs_clk_info *clki;
- 	struct list_head *head = &hba->clk_list_head;
--	ktime_t start = ktime_get();
--	bool clk_state_changed = false;
- 
- 	if (list_empty(head))
- 		goto out;
- 
--	ret = ufshcd_vops_clk_scale_notify(hba, scale_up, PRE_CHANGE);
--	if (ret)
--		return ret;
--
- 	list_for_each_entry(clki, head, list) {
- 		if (!IS_ERR_OR_NULL(clki->clk)) {
- 			if (scale_up && clki->max_freq) {
- 				if (clki->curr_freq == clki->max_freq)
- 					continue;
- 
--				clk_state_changed = true;
- 				ret = clk_set_rate(clki->clk, clki->max_freq);
- 				if (ret) {
- 					dev_err(hba->dev, "%s: %s clk set rate(%dHz) failed, %d\n",
-@@ -895,7 +896,6 @@ static int ufshcd_scale_clks(struct ufs_hba *hba, bool scale_up)
- 				if (clki->curr_freq == clki->min_freq)
- 					continue;
- 
--				clk_state_changed = true;
- 				ret = clk_set_rate(clki->clk, clki->min_freq);
- 				if (ret) {
- 					dev_err(hba->dev, "%s: %s clk set rate(%dHz) failed, %d\n",
-@@ -914,11 +914,37 @@ static int ufshcd_scale_clks(struct ufs_hba *hba, bool scale_up)
- 				clki->name, clk_get_rate(clki->clk));
- 	}
- 
-+out:
-+	return ret;
-+}
-+
-+/**
-+ * ufshcd_scale_clks - scale up or scale down UFS controller clocks
-+ * @hba: per adapter instance
-+ * @scale_up: True if scaling up and false if scaling down
-+ *
-+ * Returns 0 if successful
-+ * Returns < 0 for any other errors
-+ */
-+static int ufshcd_scale_clks(struct ufs_hba *hba, bool scale_up)
-+{
-+	int ret = 0;
-+	ktime_t start = ktime_get();
-+
-+	ret = ufshcd_vops_clk_scale_notify(hba, scale_up, PRE_CHANGE);
-+	if (ret)
-+		goto out;
-+
-+	ret = ufshcd_set_clk_freq(hba, scale_up);
-+	if (ret)
-+		goto out;
-+
- 	ret = ufshcd_vops_clk_scale_notify(hba, scale_up, POST_CHANGE);
-+	if (ret)
-+		ufshcd_set_clk_freq(hba, !scale_up);
- 
- out:
--	if (clk_state_changed)
--		trace_ufshcd_profile_clk_scaling(dev_name(hba->dev),
-+	trace_ufshcd_profile_clk_scaling(dev_name(hba->dev),
- 			(scale_up ? "up" : "down"),
- 			ktime_to_us(ktime_sub(ktime_get(), start)), ret);
- 	return ret;
-@@ -1106,35 +1132,32 @@ static int ufshcd_devfreq_scale(struct ufs_hba *hba, bool scale_up)
- 
- 	ret = ufshcd_clock_scaling_prepare(hba);
- 	if (ret)
--		return ret;
-+		goto out;
- 
- 	/* scale down the gear before scaling down clocks */
- 	if (!scale_up) {
- 		ret = ufshcd_scale_gear(hba, false);
- 		if (ret)
--			goto out;
-+			goto out_unprepare;
- 	}
- 
- 	ret = ufshcd_scale_clks(hba, scale_up);
- 	if (ret) {
- 		if (!scale_up)
- 			ufshcd_scale_gear(hba, true);
--		goto out;
-+		goto out_unprepare;
- 	}
- 
- 	/* scale up the gear after scaling up clocks */
- 	if (scale_up) {
- 		ret = ufshcd_scale_gear(hba, true);
--		if (ret) {
-+		if (ret)
- 			ufshcd_scale_clks(hba, false);
--			goto out;
--		}
- 	}
- 
--	ret = ufshcd_vops_clk_scale_notify(hba, scale_up, POST_CHANGE);
--
--out:
-+out_unprepare:
- 	ufshcd_clock_scaling_unprepare(hba);
-+out:
- 	ufshcd_release(hba);
- 	return ret;
- }
-@@ -6251,7 +6274,7 @@ static int ufshcd_host_reset_and_restore(struct ufs_hba *hba)
- 	spin_unlock_irqrestore(hba->host->host_lock, flags);
- 
- 	/* scale up clocks to max frequency before full reinitialization */
--	ufshcd_scale_clks(hba, true);
-+	ufshcd_set_clk_freq(hba, true);
- 
- 	err = ufshcd_hba_enable(hba);
- 	if (err)
+Applied to 5.7/scsi-queue. Thanks!
+
 -- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, a Linux Foundation Collaborative Project.
-
+Martin K. Petersen	Oracle Linux Engineering
