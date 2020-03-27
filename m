@@ -2,159 +2,144 @@ Return-Path: <SRS0=s8dx=5M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F419C2D0E7
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 08:12:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B490DC43331
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 08:22:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DECFE20714
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 08:12:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 81CA7206E6
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 08:22:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="FIkCTT7E"
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="piqSM48R"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727115AbgC0IMB (ORCPT
+        id S1726165AbgC0IW1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Mar 2020 04:12:01 -0400
-Received: from mail-dm6nam11on2048.outbound.protection.outlook.com ([40.107.223.48]:5821
-        "EHLO NAM11-DM6-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725946AbgC0IMB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Mar 2020 04:12:01 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=UCReXxGq340eJFsmkDNj8iGSbPd+zeXM3pUQfJv+8zvdSvumeq4uyPb8piAyJSBnFgYpSBDDAtubu4j7QZzAdZE+tgOEt3a36qk4FBLeIHVyvtTTsR4KBjYl80rrEDvEa1Yje+mMWuGEgoT9nnTDba5D2/uO007Azo1ix8a98gYQxsjVUl6pyjShVPxkD5+J1ntEzevMRr0nbezVr01QudPzjaudrnVi/yveF5ECrPCjBFqgwrDOkBFA+DnU7AnH1NPgYpRk9dpyLf6J9yi+s+fZXSuhvU6GGmc3Sx9/6aX98XpqOmqv3nt5o+DfA1pfrskSXyz8HduoeDzEsdrz6Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=1/NJLPNih5qF607SUebxyV+1/Eyiq4tvyAl737UOGCg=;
- b=YiZEc2AIZDISCcAL4Vo+c8ibrQnlaxvNBc9ztv1O2mjmlvKFLJ4BXYRv0Z1BvwmP/5/oMHSdU5BzOpcmBN0c4Er9tArNNUDRUY5eUuYmJyOVRenlOLCSD/8DsSeAt3ZkbXDdS838VVAAATz4SHRn6zOS2gozn0eBOOhNTOZ0jt6Oxq3qrHbWgiW6QAyD1cgeSw3z1HkNpxzKXNWarkW0/0fBE+6Pkf1gHFvrgP0fym2x7Uh/5aYrqXSjtnGg2qgXy+Y3BjwHtWzluSEUNE4s0zElLa9fgTBA/+1SURtm7u0Y5z/Xmyly8/LxI97eSE2BznAz3uxz7epdUwsYv2ZMyw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=1/NJLPNih5qF607SUebxyV+1/Eyiq4tvyAl737UOGCg=;
- b=FIkCTT7EJ6Yzxt7er2G6X4utYqji0faCswRh5AqqXZM5qMwvTa6/SXAQFZ2s9CQQvxE8kAC9VIKTts9HpXmP9LtQPty3Sd2Zf2rbYb5XKev+muLCLuLCKjiLsTS9YfuPQ8IPRAhqZ0eLIN5dZq//gK6+5+nWqC3BnoSqpg/CZZk=
-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=Christian.Koenig@amd.com; 
-Received: from DM6PR12MB4401.namprd12.prod.outlook.com (2603:10b6:5:2a9::15)
- by DM6PR12MB3434.namprd12.prod.outlook.com (2603:10b6:5:3b::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2835.22; Fri, 27 Mar
- 2020 08:11:58 +0000
-Received: from DM6PR12MB4401.namprd12.prod.outlook.com
- ([fe80::f164:85c4:1b51:14d2]) by DM6PR12MB4401.namprd12.prod.outlook.com
- ([fe80::f164:85c4:1b51:14d2%4]) with mapi id 15.20.2856.019; Fri, 27 Mar 2020
- 08:11:58 +0000
-Subject: Re: [v4,1/3] drm/prime: use dma length macro when mapping sg
-To:     Marek Szyprowski <m.szyprowski@samsung.com>,
-        Shane Francis <bigbeeshane@gmail.com>,
-        dri-devel@lists.freedesktop.org
-Cc:     airlied@linux.ie, linux-kernel@vger.kernel.org,
-        amd-gfx-request@lists.freedesktop.org, alexander.deucher@amd.com
-References: <20200325090741.21957-2-bigbeeshane@gmail.com>
- <CGME20200327075458eucas1p2f1011560c5d2d2a754d2394f56367ebb@eucas1p2.samsung.com>
- <4aef60ff-d9e4-d3d0-1a28-8c2dc3b94271@samsung.com>
-From:   =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>
-Message-ID: <82df6735-1cf0-e31f-29cc-f7d07bdaf346@amd.com>
-Date:   Fri, 27 Mar 2020 09:11:52 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-In-Reply-To: <4aef60ff-d9e4-d3d0-1a28-8c2dc3b94271@samsung.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-ClientProxiedBy: FRYP281CA0013.DEUP281.PROD.OUTLOOK.COM (2603:10a6:d10::23)
- To DM6PR12MB4401.namprd12.prod.outlook.com (2603:10b6:5:2a9::15)
+        Fri, 27 Mar 2020 04:22:27 -0400
+Received: from mout.web.de ([212.227.15.3]:59205 "EHLO mout.web.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725946AbgC0IW1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Mar 2020 04:22:27 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1585297322;
+        bh=09xSHgI4+pz/lOuIHHd1hLw07vgXad9er5cWcbQjT2I=;
+        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
+        b=piqSM48RXiUJqrKsyM7bpYPWpWE3NpdVwQ21B5NZBWqVk2FMkm9dkO8DGryKPEFoi
+         sBOaOwJkcbnNfRybSl7Mp6VeSKd3/KQWGbUgbodcsdHmHCsJcrgrlz70weFtS8GQmG
+         CzgXKNUji5x9l5Msw23LnAZ0caTAgG6tQhvgVTrk=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.1.2] ([2.244.164.253]) by smtp.web.de (mrweb004
+ [213.165.67.108]) with ESMTPSA (Nemesis) id 0LyOuM-1jLT3f3qLe-015n27; Fri, 27
+ Mar 2020 09:22:02 +0100
+Subject: Re: [PATCH v2 05/10] mmap locking API: convert mmap_sem call sites
+ missed by coccinelle
+To:     Michel Lespinasse <walken@google.com>,
+        Coccinelle <cocci@systeme.lip6.fr>, linux-mm@kvack.org
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Laurent Dufour <ldufour@linux.ibm.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Matthew Wilcox <willy@infradead.org>,
+        Liam Howlett <Liam.Howlett@oracle.com>,
+        Jerome Glisse <jglisse@redhat.com>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        David Rientjes <rientjes@google.com>,
+        Hugh Dickins <hughd@google.com>, Ying Han <yinghan@google.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Andrew Morton <akpm@linux-foundation.org>
+References: <20200327021058.221911-1-walken@google.com>
+ <20200327021058.221911-6-walken@google.com>
+From:   Markus Elfring <Markus.Elfring@web.de>
+Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
+ 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 FEE=
+Message-ID: <554c16c7-cfad-2d36-d7ae-4c17190a2b50@web.de>
+Date:   Fri, 27 Mar 2020 09:21:59 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from [IPv6:2a02:908:1252:fb60:be8a:bd56:1f94:86e7] (2a02:908:1252:fb60:be8a:bd56:1f94:86e7) by FRYP281CA0013.DEUP281.PROD.OUTLOOK.COM (2603:10a6:d10::23) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2856.18 via Frontend Transport; Fri, 27 Mar 2020 08:11:56 +0000
-X-Originating-IP: [2a02:908:1252:fb60:be8a:bd56:1f94:86e7]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: ccbc7e0a-7416-4c8d-8202-08d7d22684ba
-X-MS-TrafficTypeDiagnostic: DM6PR12MB3434:|DM6PR12MB3434:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <DM6PR12MB34348A70078B9AF6F2ABA81583CC0@DM6PR12MB3434.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:10000;
-X-Forefront-PRVS: 0355F3A3AE
-X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(396003)(376002)(346002)(39860400002)(366004)(186003)(2906002)(53546011)(66556008)(2616005)(66476007)(16526019)(66946007)(81156014)(8676002)(8936002)(36756003)(110136005)(6486002)(52116002)(31686004)(6666004)(81166006)(5660300002)(4326008)(478600001)(316002)(86362001)(31696002);DIR:OUT;SFP:1101;SCL:1;SRVR:DM6PR12MB3434;H:DM6PR12MB4401.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;
-Received-SPF: None (protection.outlook.com: amd.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: yQxyOtsHmE42GbsrP8f0XBhN5qbfFGqa0o0neMdiWxJSDVWNylh5U46O4PJn6ASTDEgjL/FWQgXCkXvrnuNYHyHpyqgcJ8/2Kla3K6+jQYUgdw0F8qGbH/Oj9Fuf9NYkCGSqifJBpMyRX7AsaP7v/xYh8bEoCHo15dVEAb4vT6esMifDllpdF8WsUcT1kF1Cn1zLjP7jtdfpepB9DqaBw4UIE0OtCnCEl2kMAx9DAj3oqz62HYo8NcESILCib6zzlG3SuN4Br4ls1SQPrCbe8GcivvWcGP0S9Dy/fP1/UIoctzDjdzSRbqZTa+qT/0YMUSpkRS3TnVM7ykKs4hFH4f+QUQZ11eXT/yJHOQ7W4c3csuoZgznx+kpAOBIqQmoLqdSx3Op38Bo4wJCCrk/hv8ejoQm5HJ20V2XENAkCgYSsbmf/KYsKy4oEG/6l9EtM
-X-MS-Exchange-AntiSpam-MessageData: NKCC1pf/s/sLh4ovCZV53iiA9CWgmofkGup1YvdRqZ9ZPkRIRmIGYr6GQwv0bl39pmNGfYPZaP6mUWHFis4oFMJP092VpoGZ52nqt0SRPP7mbEOfHN8+drchC6m7BCwi7tbm2jf5sBqcmP30cBMXz3VRm7jookRrPSgjWiPZ/jh7FbaFNUlbcDlrQ3wpO2/gzbJ2uVb/ovjC5s0mrNj5mg==
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: ccbc7e0a-7416-4c8d-8202-08d7d22684ba
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Mar 2020 08:11:57.9096
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: MgNWpSTxxCawu9vyzrlFlGMyzkXyL/NpbcywY+hPtkLvgve87GDJzPoL7JVcLZLi
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB3434
+In-Reply-To: <20200327021058.221911-6-walken@google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+X-Provags-ID: V03:K1:/uC6/hsQfP2gaWqRYwVagI8UGJqU9uA4QIurdD3KAJZirSReeLy
+ iC+P3aIO7TjMfWknEcfxrtEWfAMe4q+dBNr/2lkJ4z0mDbOoznCFm6CiqXuIiF28vZ31csD
+ +CFyEecW4/M/2xUjmqEOhNHzBKEP4/wIi7pYoVrq71IAEY4NjSMwrtaVfyO6DtiiEwvsMyS
+ aI4DST4ofnTt3Ne0fgZ3A==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:P5oad6+qnTU=:Y0cdRzR5dzNPMgYQb4iijO
+ bnwi38gC4qyuYE1LljmdgpmGZODCla5jTmfm1cRDjed8dPkc++AO1k+wbz4YqHQYLRwL/qnJm
+ 0Wrutu4U7wU7wiw7UjQZB73qVm+fBU9M0pI1TkMwhNLqk0ZoiqVgDDOj3vXNNLqEJb979j/8c
+ ++G1EWeYs9HxE3/76wzzrnusR+1wSn3xWgBh22hgc7zlb2APIJy+XBP4Hp76XU610i9xqM53F
+ 6Hz0xdG5aojmZ3Al8ZqgIAPQYqrSkjmqrhhn3TYVADu4LOrPDzxNfb8BHNJyLR+P9fyIWI91x
+ ktcw/vpSZ1rHswuFMTeupOwUu2lMIvKMiX1vtj/muts6TH6OR30bx0JTIazmDMZElfC8Hpssj
+ w5dWGwqzVhS7M5MWx5qia/SafWRSjEyTmMyttcLawS3JxHGs2yWxwlaonLotba8JVlCqbKy+6
+ jDpcxyScd3h0mXV0Hu6k6rpervKVF/a7yU1pUYLWNZbzSBivCdxi1xTnhEyyVUCrCTDYqUvfb
+ G41XM9Q9xIZIBDXQZ92dzN/6H7vD45laxRiY5/9KNnNZIzLEXbgEwHyMvWWN+FQRf4J0U+waT
+ tD1KUuroZoEsMDSgvSGNpzyPn0BIkvYc0g12JGtyFY3KEuQlbuXWnAC9gYqzo5aZR8kJHRywO
+ lGyq/yqymeZ6V4Tf+Mp4Z7a7ueJuX/DOpJE/SVfOoo3va0EtOjSb6tjUkioVKViU+aeA/3vEd
+ o4K0HRfegdtYGJgOFPEv+yr70Mmpk9T/FNbPA6YT5HM0k9fBfusHi8xWdU/y/WSPEjPGfUhsD
+ /rqvio285+gc0gWWfhnqAkhiugri71rDwp/UFHET4B4lAXNOGqpyoERBO4D6qM2Nd+Khuf7wg
+ Vdi4NDLd4tDPBcxtW9UC1u75TJEuwMt1isgzy0AeUfVYHOc7z65UiVggJ3nhmYB+ULri9KQtR
+ HulKnQ9SEhohlFAFbdLnfrzwFCY4aXaMcwYKJtDffOtiry10yxqj5FHQ8C1tZI+W6VHb23/C0
+ oMe/iIcZq3uXs5V3BL2HAwTmrPkzqUX9ToL9AzGci1IcYwtXO8GQphMDdxXkv2QZOwxfq3/YO
+ jIXPabuDj+wf3rv31TEG/UKwKQVYKuCbWvNIWon3RXlu4vRazq0xxBiIdTCx4XhUY4Cl3UTgl
+ f4t9Q1m3rG6gNwX831HBNHco6dG1v6cKkrQmwa1jj2kj2EwHEj5D/8bzlyvU3UTS0wZa+/+Uo
+ TR+rZy/6ruqr8oqcd
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am 27.03.20 um 08:54 schrieb Marek Szyprowski:
-> Hi All,
->
-> On 2020-03-25 10:07, Shane Francis wrote:
->> As dma_map_sg can reorganize scatter-gather lists in a
->> way that can cause some later segments to be empty we should
->> always use the sg_dma_len macro to fetch the actual length.
->>
->> This could now be 0 and not need to be mapped to a page or
->> address array
->>
->> Signed-off-by: Shane Francis <bigbeeshane@gmail.com>
->> Reviewed-by: Michael J. Ruhl <michael.j.ruhl@intel.com>
-> This patch landed in linux-next 20200326 and it causes a kernel panic on
-> various Exynos SoC based boards.
->> ---
->>    drivers/gpu/drm/drm_prime.c | 2 +-
->>    1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/drivers/gpu/drm/drm_prime.c b/drivers/gpu/drm/drm_prime.c
->> index 86d9b0e45c8c..1de2cde2277c 100644
->> --- a/drivers/gpu/drm/drm_prime.c
->> +++ b/drivers/gpu/drm/drm_prime.c
->> @@ -967,7 +967,7 @@ int drm_prime_sg_to_page_addr_arrays(struct sg_table *sgt, struct page **pages,
->>    
->>    	index = 0;
->>    	for_each_sg(sgt->sgl, sg, sgt->nents, count) {
->> -		len = sg->length;
->> +		len = sg_dma_len(sg);
->>    		page = sg_page(sg);
->>    		addr = sg_dma_address(sg);
->>    
-> Sorry, but this code is wrong :(
+> Convert the last few remaining mmap_sem rwsem calls to use the new
+> mmap locking API. These were missed by coccinelle for some reason
 
-Well it is at least better than before because it makes most drivers 
-work correctly again.
+I find such a software situation still unfortunate.
 
-See we only fill the pages array because some drivers (like Exynos) are 
-still buggy and require this.
+* Should the data processing results be clarified any further
+  for the shown transformation approach?
 
-Accessing the pages of an DMA-buf imported sg_table is illegal and 
-should be fixed in the drivers.
+* Will additional improvements be considered?
 
-> [SNIP]
->
-> I will send a patch in a few minutes with the above fixed code.
-
-That is certainly a good idea for now, but could we also put on 
-somebodies todo list an item to fix Exynos?
-
-Thanks in advance,
-Christian.
-
->
-> Best regards
-
+Regards,
+Markus
