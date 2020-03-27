@@ -2,100 +2,190 @@ Return-Path: <SRS0=s8dx=5M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A74F1C2D0E8
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 10:08:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92422C43331
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 10:09:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7ED26206F8
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 10:08:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="LG3Ha+qs"
+	by mail.kernel.org (Postfix) with ESMTP id 68649206F8
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 10:09:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726465AbgC0KIw (ORCPT
+        id S1726758AbgC0KJJ convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Mar 2020 06:08:52 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:44136 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726027AbgC0KIw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Mar 2020 06:08:52 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=Ow9wspP4ZB5j6pWkHUXbOlu3r+KhuaS3yvNnb3J3+Xo=; b=LG3Ha+qssDr5iexXh9ZU+6Xv9r
-        jC2PwRQqxcOsjBKD6T5lOsXEYZM6LBXl7aHA3GfBQ7UmNDMSfvsk0/QXa080B3a1iSnnQRGrxIqz6
-        Q6im6mg0znSbenyQMfb4BPTFQOyPDC705a/N85eE2PyS282HqSvCExh+EeKL/cFzcuKF8pY5BBpSj
-        T+m9ThDURcPZyB+laOkgxBUDJDsm9g84EK/3PnCx3JB+NH56jpB7fcTc928AtV6x+QJKYnsrARVFp
-        BgCqNZKtHeJvVoykBq73cmZzeGjt8vG9KDLZqXpJvKusBdYL1OaObR/TBiBQMX5/tjhfzXBY6RKp2
-        cFEoZNdg==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jHluj-0003PM-Kh; Fri, 27 Mar 2020 10:08:33 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 6E21D3010C2;
-        Fri, 27 Mar 2020 11:08:31 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 474E129CA13C6; Fri, 27 Mar 2020 11:08:31 +0100 (CET)
-Date:   Fri, 27 Mar 2020 11:08:31 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Cc:     x86@kernel.org, linux-kernel@vger.kernel.org, rostedt@goodmis.org,
-        mhiramat@kernel.org, bristot@redhat.com, jbaron@akamai.com,
-        torvalds@linux-foundation.org, tglx@linutronix.de,
-        mingo@kernel.org, namit@vmware.com, hpa@zytor.com, luto@kernel.org,
-        ard.biesheuvel@linaro.org, jpoimboe@redhat.com
-Subject: Re: [RESEND][PATCH v3 14/17] static_call: Add static_cond_call()
-Message-ID: <20200327100831.GT20713@hirez.programming.kicks-ass.net>
-References: <20200324135603.483964896@infradead.org>
- <20200324142246.127013582@infradead.org>
- <10ef25bf-87df-6917-1d50-c29ece442766@rasmusvillemoes.dk>
+        Fri, 27 Mar 2020 06:09:09 -0400
+Received: from mga12.intel.com ([192.55.52.136]:12305 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726518AbgC0KJI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Mar 2020 06:09:08 -0400
+IronPort-SDR: lcsmUMpM/7wUXswxUciSPVrmLUIoghSo4QnKfN8hPlW6CJ/rixCAVWBa5LkqXbT+zNMyc5C/tr
+ kCJw41Lr2/Xw==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Mar 2020 03:09:08 -0700
+IronPort-SDR: vYNik5jRlOr1t9iI7u03fg1FpbbkeW0t06X+6TIFEEXJ5ibMLcNTeAMGrPiGEsY/K3vQlgNWh8
+ AaF9N4NHtYfQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,311,1580803200"; 
+   d="scan'208";a="239064083"
+Received: from fmsmsx108.amr.corp.intel.com ([10.18.124.206])
+  by fmsmga007.fm.intel.com with ESMTP; 27 Mar 2020 03:09:07 -0700
+Received: from fmsmsx605.amr.corp.intel.com (10.18.126.85) by
+ FMSMSX108.amr.corp.intel.com (10.18.124.206) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Fri, 27 Mar 2020 03:09:08 -0700
+Received: from fmsmsx605.amr.corp.intel.com (10.18.126.85) by
+ fmsmsx605.amr.corp.intel.com (10.18.126.85) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Fri, 27 Mar 2020 03:09:07 -0700
+Received: from shsmsx103.ccr.corp.intel.com (10.239.4.69) by
+ fmsmsx605.amr.corp.intel.com (10.18.126.85) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5
+ via Frontend Transport; Fri, 27 Mar 2020 03:09:07 -0700
+Received: from shsmsx104.ccr.corp.intel.com ([169.254.5.206]) by
+ SHSMSX103.ccr.corp.intel.com ([169.254.4.137]) with mapi id 14.03.0439.000;
+ Fri, 27 Mar 2020 18:09:05 +0800
+From:   "Tian, Kevin" <kevin.tian@intel.com>
+To:     Jacob Pan <jacob.jun.pan@linux.intel.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Jean-Philippe Brucker <jean-philippe@linaro.com>
+CC:     "Liu, Yi L" <yi.l.liu@intel.com>,
+        "Raj, Ashok" <ashok.raj@intel.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Eric Auger <eric.auger@redhat.com>
+Subject: RE: [PATCH 09/10] iommu/ioasid: Support ioasid_set quota adjustment
+Thread-Topic: [PATCH 09/10] iommu/ioasid: Support ioasid_set quota adjustment
+Thread-Index: AQHWAs3NK42wQfu7/kyYiimhS040MqhcOJaQ
+Date:   Fri, 27 Mar 2020 10:09:04 +0000
+Message-ID: <AADFC41AFE54684AB9EE6CBC0274A5D19D7ED605@SHSMSX104.ccr.corp.intel.com>
+References: <1585158931-1825-1-git-send-email-jacob.jun.pan@linux.intel.com>
+ <1585158931-1825-10-git-send-email-jacob.jun.pan@linux.intel.com>
+In-Reply-To: <1585158931-1825-10-git-send-email-jacob.jun.pan@linux.intel.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-product: dlpe-windows
+dlp-version: 11.2.0.6
+dlp-reaction: no-action
+x-originating-ip: [10.239.127.40]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <10ef25bf-87df-6917-1d50-c29ece442766@rasmusvillemoes.dk>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 27, 2020 at 12:37:35AM +0100, Rasmus Villemoes wrote:
-> On 24/03/2020 14.56, Peter Zijlstra wrote:
-> > Extend the static_call infrastructure to optimize the following common
-> > pattern:
-> > 
-> > 	if (func_ptr)
-> > 		func_ptr(args...)
-> > 
+> From: Jacob Pan <jacob.jun.pan@linux.intel.com>
+> Sent: Thursday, March 26, 2020 1:56 AM
 > 
-> > +#define DEFINE_STATIC_COND_CALL(name, _func)				\
-> > +	DECLARE_STATIC_CALL(name, _func);				\
-> > +	struct static_call_key STATIC_CALL_NAME(name) = {		\
-> > +		.func = NULL,						\
-> > +	}
-> > +
-> >  #define static_call(name)						\
-> >  	((typeof(STATIC_CALL_TRAMP(name))*)(STATIC_CALL_NAME(name).func))
-> >  
-> > +#define static_cond_call(name)						\
-> > +	if (STATIC_CALL_NAME(name).func)				\
-> > +		((typeof(STATIC_CALL_TRAMP(name))*)(STATIC_CALL_NAME(name).func))
-> > +
+> IOASID set is allocated with an initial quota, at runtime there may be
+> needs to balance IOASID resources among different VMs/sets.
 > 
-> What, apart from fear of being ridiculed by kernel folks, prevents the
-> compiler from reloading STATIC_CALL_NAME(name).func ? IOW, doesn't this
-> want a READ_ONCE somewhere?
 
-Hurmph.. I suspect you're quite right, but at the same time I can't seem
-to write a macro that does that :/ Let me try harder.
+I may overlook previous patches but I didn't see any place setting the
+initial quota...
 
-> And please remind me, what is the consensus for sizeof(long) loads: does
-> static_call() need load-tearing protection or not?
+> This patch adds a new API to adjust per set quota.
 
-We all like to believe compilers are broken when they tear naturally
-aligned words, but we're also not quite comfortable trusting that.
+since this is purely an internal kernel API, implies that the publisher
+(e.g. VFIO) is responsible for exposing its own uAPI to set the quota?
+
+> 
+> Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
+> ---
+>  drivers/iommu/ioasid.c | 44
+> ++++++++++++++++++++++++++++++++++++++++++++
+>  include/linux/ioasid.h |  6 ++++++
+>  2 files changed, 50 insertions(+)
+> 
+> diff --git a/drivers/iommu/ioasid.c b/drivers/iommu/ioasid.c
+> index 27dce2cb5af2..5ac28862a1db 100644
+> --- a/drivers/iommu/ioasid.c
+> +++ b/drivers/iommu/ioasid.c
+> @@ -578,6 +578,50 @@ void ioasid_free_set(int sid, bool destroy_set)
+>  }
+>  EXPORT_SYMBOL_GPL(ioasid_free_set);
+> 
+> +/**
+> + * ioasid_adjust_set - Adjust the quota of an IOASID set
+> + * @quota:	Quota allowed in this set
+> + * @sid:	IOASID set ID to be assigned
+> + *
+> + * Return 0 on success. If the new quota is smaller than the number of
+> + * IOASIDs already allocated, -EINVAL will be returned. No change will be
+> + * made to the existing quota.
+> + */
+> +int ioasid_adjust_set(int sid, int quota)
+> +{
+> +	struct ioasid_set_data *sdata;
+> +	int ret = 0;
+> +
+> +	mutex_lock(&ioasid_allocator_lock);
+> +	sdata = xa_load(&ioasid_sets, sid);
+> +	if (!sdata || sdata->nr_ioasids > quota) {
+> +		pr_err("Failed to adjust IOASID set %d quota %d\n",
+> +			sid, quota);
+> +		ret = -EINVAL;
+> +		goto done_unlock;
+> +	}
+> +
+> +	if (quota >= ioasid_capacity_avail) {
+> +		ret = -ENOSPC;
+> +		goto done_unlock;
+> +	}
+> +
+> +	/* Return the delta back to system pool */
+> +	ioasid_capacity_avail += sdata->size - quota;
+> +
+> +	/*
+> +	 * May have a policy to prevent giving all available IOASIDs
+> +	 * to one set. But we don't enforce here, it should be in the
+> +	 * upper layers.
+> +	 */
+> +	sdata->size = quota;
+> +
+> +done_unlock:
+> +	mutex_unlock(&ioasid_allocator_lock);
+> +
+> +	return ret;
+> +}
+> +EXPORT_SYMBOL_GPL(ioasid_adjust_set);
+> 
+>  /**
+>   * ioasid_find - Find IOASID data
+> diff --git a/include/linux/ioasid.h b/include/linux/ioasid.h
+> index 32d032913828..6e7de6fb91bf 100644
+> --- a/include/linux/ioasid.h
+> +++ b/include/linux/ioasid.h
+> @@ -73,6 +73,7 @@ int ioasid_alloc_set(struct ioasid_set *token, ioasid_t
+> quota, int *sid);
+>  void ioasid_free_set(int sid, bool destroy_set);
+>  int ioasid_find_sid(ioasid_t ioasid);
+>  int ioasid_notify(ioasid_t id, enum ioasid_notify_val cmd);
+> +int ioasid_adjust_set(int sid, int quota);
+> 
+>  #else /* !CONFIG_IOASID */
+>  static inline ioasid_t ioasid_alloc(int sid, ioasid_t min,
+> @@ -136,5 +137,10 @@ static inline int ioasid_alloc_system_set(int quota)
+>  	return -ENOTSUPP;
+>  }
+> 
+> +static inline int ioasid_adjust_set(int sid, int quota)
+> +{
+> +	return -ENOTSUPP;
+> +}
+> +
+>  #endif /* CONFIG_IOASID */
+>  #endif /* __LINUX_IOASID_H */
+> --
+> 2.7.4
+
