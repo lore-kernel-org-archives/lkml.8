@@ -6,85 +6,111 @@ X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47DF0C43331
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 10:19:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C05A1C43331
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 10:21:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0DA0D206E6
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 10:19:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 96B3020705
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 10:21:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="iZLH4CfW"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="BWdcmcSO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726333AbgC0KTl (ORCPT
+        id S1727115AbgC0KVM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Mar 2020 06:19:41 -0400
-Received: from mail-qk1-f173.google.com ([209.85.222.173]:41915 "EHLO
-        mail-qk1-f173.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726002AbgC0KTk (ORCPT
+        Fri, 27 Mar 2020 06:21:12 -0400
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:36631 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726379AbgC0KVM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Mar 2020 06:19:40 -0400
-Received: by mail-qk1-f173.google.com with SMTP id q188so10176342qke.8
-        for <linux-kernel@vger.kernel.org>; Fri, 27 Mar 2020 03:19:39 -0700 (PDT)
+        Fri, 27 Mar 2020 06:21:12 -0400
+Received: by mail-lf1-f68.google.com with SMTP id s1so7370578lfd.3
+        for <linux-kernel@vger.kernel.org>; Fri, 27 Mar 2020 03:21:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=content-transfer-encoding:from:mime-version:subject:date:message-id
-         :references:cc:in-reply-to:to;
-        bh=bdNljni0qGfsEsOjwWI52DzmcTz0dDp50+ihOjqpjX0=;
-        b=iZLH4CfWYW4cjqrXxp8hEXnciNngJ41CUmtDM46s1G8iLlpgwhFhPuhzn0OKbYGNyJ
-         UGC1Cau/q2B/nftm+byUQYU0u0cchFev0vLGr5uAr3C/EQWg9NodE14zhXNhcDGBywvA
-         ZkKf+4BeRxRAr1naEEHlSMu4DqYYO8fuk++LjVdW2mFMM/P/FH5/A1tHhn4kun9cl1S9
-         uaCJAnzjkm+41xPi1aDWg/RQDJVcl5A8TpSxIHVXjXSnmwf5dwxZKNwEVmmonwgfZlMj
-         Tlf5ASjwjGevoG7fD2coXYA6wyMti67P9S9eRoFw2GwPVEp1FkDjUgGOY3P60vRa84mB
-         8w7g==
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=TuB8BNTEMS6Xu4xWKK0GTpM0KTFJDSPd7CoTH260LEY=;
+        b=BWdcmcSOZAia9WokqOKv83FwargH+rfDXr2Mp0QwyZsT/mABCSd3y3ZMISvNsbmXhU
+         gQMIR1duY1UxdvKr1tbHQzNudMLJvKqINJWtOlrbk9+kwOmXToR95IOMrI3yVrYmqYw4
+         ERIXKr3kSqBiWHHSNhbcDl9Iko5A1Q0USZ7lVRGh7i4ZWuu8E4UBLvEJ0Rb7XNIkfIsy
+         aw8uoNh4prsuenO/RPpdtz/llUkVRpSahQ6WFiqcc4YqGBOhRx5YxeATNzXZkpF5gRXs
+         u9qzGndEeTvD5XvNeditQ2MMZ58/zYFaGXYoaCpP0AzoqV0GaxsvyztxFYEj52lAcoCH
+         pBJw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:content-transfer-encoding:from:mime-version
-         :subject:date:message-id:references:cc:in-reply-to:to;
-        bh=bdNljni0qGfsEsOjwWI52DzmcTz0dDp50+ihOjqpjX0=;
-        b=a3sHcXhTT5QrDcw/vC+5z8tppNIV/c3K760QFn5i4urgN/cnmUpyGeaIRSInwT9nTx
-         C+CfcGEi+mz/hdjfsOnH6bcJKqQwXRxHOPWINfGOqVuFgNLhxArIZXr2DVeQ7nxdsPrP
-         4KIZlOcirJ2jMHwYuEGKMiri1OaqsEOyzQVKwwnBZjnTVcRYXM0PIecufTe02auPYnza
-         G9TLfODu/+6vzflmWK4LF3E8674GKuguzZKq/gSfig8wbs+SvtMCwDGBOGrTivmkamPz
-         E9SbTzkMrvKvkEUPfM6npVavhUN+IfAXfzZ1W9kjNkhIT/vdLFWCtL+1sFT4mZn4qJAL
-         pUmw==
-X-Gm-Message-State: ANhLgQ0xfeLHVEi3TCU4A68DM9rrdRC3aXQVktkBnUoSkrFqCelB6DKV
-        YxyjRQNWe53q+gSIGUWJLVWTSw==
-X-Google-Smtp-Source: ADFU+vvbVg85P2Bvd+Adoz9kGHO7VQHW1wW4dWoGvBjjBK2nxq8lOhcDZ5inchpi2rrTC+0rJktKpg==
-X-Received: by 2002:a37:cc1:: with SMTP id 184mr13416103qkm.430.1585304379199;
-        Fri, 27 Mar 2020 03:19:39 -0700 (PDT)
-Received: from [192.168.1.183] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
-        by smtp.gmail.com with ESMTPSA id l45sm3639875qtb.8.2020.03.27.03.19.38
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 27 Mar 2020 03:19:38 -0700 (PDT)
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: quoted-printable
-From:   Qian Cai <cai@lca.pw>
-Mime-Version: 1.0 (1.0)
-Subject: Re: [PATCH -next] locking/percpu-rwsem: fix a task_struct refcount
-Date:   Fri, 27 Mar 2020 06:19:37 -0400
-Message-Id: <BB30C711-B54C-4D61-8BEE-A55F410C4178@lca.pw>
-References: <20200327093754.GS20713@hirez.programming.kicks-ass.net>
-Cc:     mingo@redhat.com, will@kernel.org, dbueso@suse.de,
-        juri.lelli@redhat.com, longman@redhat.com,
-        linux-kernel@vger.kernel.org
-In-Reply-To: <20200327093754.GS20713@hirez.programming.kicks-ass.net>
-To:     Peter Zijlstra <peterz@infradead.org>
-X-Mailer: iPhone Mail (17D50)
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=TuB8BNTEMS6Xu4xWKK0GTpM0KTFJDSPd7CoTH260LEY=;
+        b=rln4Yd7cKCiM7XyFwTcY1Fa7EA6Hj5H9otsTrpdNMgXDOGVxbx8Kq2q4AygdUu74Cl
+         ekfLWcbib3vC7fsbmzCOFfbg6t6dqJP9JAl+sPReNi5Szz0kHaGKxJjJbL30J88k+N5a
+         3mY0ryDOIOu7/b05kW4jzOaDmj5JEcrZ0kIqB8tzEIg7O8yvIhM2jl3H5b66X98UaHwO
+         dTAOtnB8en9CHmHoV77S1KWC3u+kC3rWmxFYOFSnJJvak3ET+6xQJTxyXy664mhFc/3d
+         Ey+Qg5p138DUY2yChhOt218cOJEvGjL2ZSZqbR3Ph76ys7yZx7vC91hFDswu/RY553xW
+         N8YA==
+X-Gm-Message-State: ANhLgQ3/NjOes02RkWEOr9HJo85T/8x7GE3YxIEKLdYq7FLJ5eOV6/Rt
+        CA/v4soNGQrfqUHMkfq2MuREGr0v+RlN/CeVjRs+vg==
+X-Google-Smtp-Source: ADFU+vtsIgqK8FyZODtKNKWKI1HxhtKduwTybRXQvKGmxQLsPLeMOqx9p3y4gdOqstKYu6oc3bIWeFZeiamysR3lBHg=
+X-Received: by 2002:a19:ac8:: with SMTP id 191mr8675462lfk.77.1585304468041;
+ Fri, 27 Mar 2020 03:21:08 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200317205017.28280-1-michael@walle.cc> <20200317205017.28280-13-michael@walle.cc>
+ <CAMpxmJW770v6JLdveEe1hkgNEJByVyArhorSyUZBYOyFiVyOeg@mail.gmail.com>
+ <9c310f2a11913d4d089ef1b07671be00@walle.cc> <CAMpxmJXmD-M+Wbj6=wgFgP2aDxbqDN=ceHi1XDun4iwdLm55Zg@mail.gmail.com>
+ <22944c9b62aa69da418de7766b7741bd@walle.cc>
+In-Reply-To: <22944c9b62aa69da418de7766b7741bd@walle.cc>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Fri, 27 Mar 2020 11:20:56 +0100
+Message-ID: <CACRpkdbJ3DBO+W4P0n-CfZ1T3L8d_L0Nizra8frkv92XPXR4WA@mail.gmail.com>
+Subject: Re: [PATCH 12/18] gpio: add support for the sl28cpld GPIO controller
+To:     Michael Walle <michael@walle.cc>
+Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        linux-gpio <linux-gpio@vger.kernel.org>,
+        linux-devicetree <devicetree@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, linux-hwmon@vger.kernel.org,
+        linux-pwm@vger.kernel.org,
+        LINUXWATCHDOG <linux-watchdog@vger.kernel.org>,
+        arm-soc <linux-arm-kernel@lists.infradead.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Lee Jones <lee.jones@linaro.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Mar 26, 2020 at 9:06 PM Michael Walle <michael@walle.cc> wrote:
+> Am 2020-03-25 12:50, schrieb Bartosz Golaszewski:
 
+> > In that case maybe you should use the disable_locking option in
+> > regmap_config and provide your own callbacks that you can use in the
+> > irqchip code too?
+>
+> But how would that solve problem (1). And keep in mind, that the
+> reqmap_irqchip is actually used for the interrupt controller, which
+> is not this gpio controller.
+>
+> Ie. the interrupt controller of the sl28cpld uses the regmap_irqchip
+> and all interrupt phandles pointing to the interrupt controller will
+> reference the toplevel node. Any phandles pointing to the gpio
+> controller will reference the GPIO subnode.
 
-> On Mar 27, 2020, at 5:37 AM, Peter Zijlstra <peterz@infradead.org> wrote:
->=20
-> If the trylock fails, someone else got the lock and we remain on the
-> waitqueue. It seems like a very bad idea to put the task while it
-> remains on the waitqueue, no?
+Ideally we would create something generic that has been on my
+mind for some time, like a generic GPIO regmap irqchip now that
+there are a few controllers like that.
 
-Interesting, I thought this was more straightforward to see, but I may be wr=
-ong as always. At the beginning of percpu_rwsem_wake_function() it calls get=
-_task_struct(), but if the trylock failed, it will remain in the waitqueue. H=
-owever, it will run percpu_rwsem_wake_function() again with get_task_struct(=
-) to increase the refcount. Can you enlighten me where it will call put_task=
-_struct() in waitqueue or elsewhere to balance the refcount in this case?=
+I don't know how feasible it is or how much work it would be. But
+as with GPIO_GENERIC (for MMIO) it would be helpful since we
+can then implement things like .set_multiple() and .get_multiple()
+for everyone.
+
+Yours,
+Linus Walleij
