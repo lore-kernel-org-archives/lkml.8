@@ -2,106 +2,96 @@ Return-Path: <SRS0=s8dx=5M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD6C8C2D0E7
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 09:54:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2966C43331
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 09:55:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 854C42071B
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 09:54:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585302891;
-	bh=zsAHFY8HYYi1pCUgG38aoKsgwN3WWwDDoEivELfqiDU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=nkcEZFEWYIF1xWCRwF8uOcRkTt7iA9FFE94kgmZ3GY3Uqva04bFKAUPsX+glL3fJv
-	 vIzUMUNOnaU3Takdks8yWc2EJCS09dcvJ9+3+eVjHxujViwJPt2sA/i+dwon4Om8/D
-	 ZB0X+hi+AauYyqEFXGCGFNDSWh2O0M/Pt8dl7TAI=
+	by mail.kernel.org (Postfix) with ESMTP id 6E15120578
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 09:55:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="CC4qD8sa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727247AbgC0Jyu (ORCPT
+        id S1727254AbgC0JzL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Mar 2020 05:54:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39558 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726168AbgC0Jyu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Mar 2020 05:54:50 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0DDC420578;
-        Fri, 27 Mar 2020 09:54:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585302889;
-        bh=zsAHFY8HYYi1pCUgG38aoKsgwN3WWwDDoEivELfqiDU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=KgT/fJ6hWwwiZFtxbE3ulRTspSgZCYIPpSSTg/5HLhkjAwiFvsywwHwnZAK1oe2v5
-         0O1n5knKyvTh75YkyA7t1M2Vn9RZhl/UkzJuVl/GyZ56aWAkR4FXYY9prUf+MCLjQJ
-         Rfw7GzamfClchGB2uyQ9yEwKizWbERO1XFRKcr+A=
-Date:   Fri, 27 Mar 2020 10:54:47 +0100
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Tejas Joglekar <Tejas.Joglekar@synopsys.com>
-Cc:     linux-usb@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        John Youn <John.Youn@synopsys.com>
-Subject: Re: [RESENDING RFC PATCH 1/4] dt-bindings: usb: Add
- snps,consolidate-sgl & consolidate-sgl
-Message-ID: <20200327095447.GA1698181@kroah.com>
-References: <cover.1585297723.git.joglekar@synopsys.com>
- <8a9ca8e08d7c4957789a209c77589f1aa4bd2f06.1585297723.git.joglekar@synopsys.com>
+        Fri, 27 Mar 2020 05:55:11 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:18979 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726002AbgC0JzL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Mar 2020 05:55:11 -0400
+X-UUID: 4558927e9ecd4cc6bc8cd68f84f4d65e-20200327
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=mhldOisu3DDCyVpCIZOg4fKzpce7E3Pq+4ZmOlXaB40=;
+        b=CC4qD8saT8cbcbSn6N+UrR+xOk3+pZ2+zXlyH63nEL132KY4vOmq8eXoD3BZDf0GblQgRoRG7Na30a3AP8GQxy6+RNzckyTuiXCSrx4IVbr533UHnCF6u9w56yf9QdN63+78jxZk8In1cUkGtibwpLWLQU7rPAJ+K75Tf7nwYrQ=;
+X-UUID: 4558927e9ecd4cc6bc8cd68f84f4d65e-20200327
+Received: from mtkcas07.mediatek.inc [(172.21.101.84)] by mailgw01.mediatek.com
+        (envelope-from <stanley.chu@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 1101273993; Fri, 27 Mar 2020 17:55:03 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by
+ mtkmbs08n2.mediatek.inc (172.21.101.56) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Fri, 27 Mar 2020 17:54:55 +0800
+Received: from [172.21.84.99] (172.21.84.99) by mtkcas07.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Fri, 27 Mar 2020 17:54:55 +0800
+Message-ID: <1585302896.4609.2.camel@mtksdccf07>
+Subject: RE: [PATCH v2 2/2] scsi: ufs-mediatek: add error recovery for
+ suspend and resume
+From:   Stanley Chu <stanley.chu@mediatek.com>
+To:     Avri Altman <Avri.Altman@wdc.com>
+CC:     "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
+        "alim.akhtar@samsung.com" <alim.akhtar@samsung.com>,
+        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
+        "beanhuo@micron.com" <beanhuo@micron.com>,
+        "asutoshd@codeaurora.org" <asutoshd@codeaurora.org>,
+        "cang@codeaurora.org" <cang@codeaurora.org>,
+        "matthias.bgg@gmail.com" <matthias.bgg@gmail.com>,
+        "bvanassche@acm.org" <bvanassche@acm.org>,
+        "linux-mediatek@lists.infradead.org" 
+        <linux-mediatek@lists.infradead.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kuohong.wang@mediatek.com" <kuohong.wang@mediatek.com>,
+        "peter.wang@mediatek.com" <peter.wang@mediatek.com>,
+        "chun-hung.wu@mediatek.com" <chun-hung.wu@mediatek.com>,
+        "andy.teng@mediatek.com" <andy.teng@mediatek.com>
+Date:   Fri, 27 Mar 2020 17:54:56 +0800
+In-Reply-To: <SN6PR04MB4640191B1F648C3D43BD9AF8FCCC0@SN6PR04MB4640.namprd04.prod.outlook.com>
+References: <20200326150747.11426-1-stanley.chu@mediatek.com>
+         <20200326150747.11426-3-stanley.chu@mediatek.com>
+         <SN6PR04MB4640191B1F648C3D43BD9AF8FCCC0@SN6PR04MB4640.namprd04.prod.outlook.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.2.3-0ubuntu6 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <8a9ca8e08d7c4957789a209c77589f1aa4bd2f06.1585297723.git.joglekar@synopsys.com>
+X-TM-SNTS-SMTP: B2902B3FD719266556EA2DD3FDCC2597BFDE148D1E39AB67CAC55E4472BE7D1A2000:8
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 27, 2020 at 03:11:56PM +0530, Tejas Joglekar wrote:
-> This commit adds the documentation for consolidate-sgl, and
-> snps,consolidate-sgl property. These when set enables the quirk for
-> XHCI driver for consolidation of sg list into a temporary buffer when small
-> buffer sizes are scattered over the sg list not making up to MPS or total
-> transfer size within TRB cache size with Synopsys xHC.
-> 
-> Signed-off-by: Tejas Joglekar <joglekar@synopsys.com>
-> ---
->  Documentation/devicetree/bindings/usb/dwc3.txt     | 3 +++
->  Documentation/devicetree/bindings/usb/usb-xhci.txt | 3 +++
->  2 files changed, 6 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/usb/dwc3.txt b/Documentation/devicetree/bindings/usb/dwc3.txt
-> index 9946ff9ba735..292d1f7969e4 100644
-> --- a/Documentation/devicetree/bindings/usb/dwc3.txt
-> +++ b/Documentation/devicetree/bindings/usb/dwc3.txt
-> @@ -104,6 +104,9 @@ Optional properties:
->  			this and tx-thr-num-pkt-prd to a valid, non-zero value
->  			1-16 (DWC_usb31 programming guide section 1.2.3) to
->  			enable periodic ESS TX threshold.
-> + - snps,consolidate-sgl: enable sg list consolidation - host mode only. Set to use
-> +			SG buffers of at least MPS size by consolidating smaller SG
-> +			buffers list into a single buffer.
->  
->   - <DEPRECATED> tx-fifo-resize: determines if the FIFO *has* to be reallocated.
->   - snps,incr-burst-type-adjustment: Value for INCR burst type of GSBUSCFG0
-> diff --git a/Documentation/devicetree/bindings/usb/usb-xhci.txt b/Documentation/devicetree/bindings/usb/usb-xhci.txt
-> index 3f378951d624..a90d853557ee 100644
-> --- a/Documentation/devicetree/bindings/usb/usb-xhci.txt
-> +++ b/Documentation/devicetree/bindings/usb/usb-xhci.txt
-> @@ -43,6 +43,9 @@ Optional properties:
->    - quirk-broken-port-ped: set if the controller has broken port disable mechanism
->    - imod-interval-ns: default interrupt moderation interval is 5000ns
->    - phys : see usb-hcd.yaml in the current directory
-> +  - consolidate-sgl: indicate if you need to consolidate sg list into a
-> +    temporary buffer when small SG buffer sizes does not make upto MPS
-> +    size or total transfer size across the TRB cache size.
+SGkgQXZyaSwNCg0KT24gRnJpLCAyMDIwLTAzLTI3IGF0IDA5OjIzICswMDAwLCBBdnJpIEFsdG1h
+biB3cm90ZToNCj4gPiANCj4gPiBPbmNlIGZhaWwgaGFwcGVucyBkdXJpbmcgc3VzcGVuZCBhbmQg
+cmVzdW1lIGZsb3cgaWYgdGhlIGRlc2lyZWQgbG93DQo+ID4gcG93ZXIgbGluayBzdGF0ZSBpcyBI
+OCwgbGluayByZWNvdmVyeSBpcyByZXF1aXJlZCBmb3IgTWVkaWFUZWsgVUZTDQo+ID4gY29udHJv
+bGxlci4NCj4gPiANCj4gPiBGb3IgcmVzdW1lIGZsb3csIHNpbmNlIHBvd2VyIGFuZCBjbG9ja3Mg
+YXJlIGFscmVhZHkgZW5hYmxlZCBiZWZvcmUNCj4gPiBpbnZva2luZyB2ZW5kb3IncyByZXN1bWUg
+Y2FsbGJhY2ssIHNpbXBseSB1c2luZyB1ZnNoY2RfbGlua19yZWNvdmVyeSgpDQo+ID4gaW5zaWRl
+IGNhbGxiYWNrIGlzIGZpbmUuDQo+ID4gDQo+ID4gRm9yIHN1c3BlbmQgZmxvdywgdGhlIGRldmlj
+ZSBwb3dlciBlbnRlcnMgbG93IHBvd2VyIG1vZGUgb3IgaXMgZGlzYWJsZWQNCj4gPiBiZWZvcmUg
+c3VzcGVuZCBjYWxsYmFjaywgdGh1cyB1ZnNoY2RfbGlua19yZWNvdmVyeSgpIGNhbiBub3QgYmUg
+ZGlyZWN0bHkNCj4gPiB1c2VkIGluIGNhbGxiYWNrLiBUbyBsZXZlcmFnZSBob3N0IHJlc2V0IGZs
+b3cgZHVyaW5nIHVmc2hjZF9zdXNwZW5kKCksDQo+ID4gc2V0IGxpbmsgYXMgb2ZmIHN0YXRlIGVu
+Zm9yY2VkbHkgDQo+IE5vdCBzdXJlIHRoaXMgaXMgYSBwcm9wZXIgRW5nbGlzaCwgYnV0IEknbSBu
+b3Qgc3VyZS4NCj4gDQo+IHRvIGxldCB1ZnNoY2RfaG9zdF9yZXNldF9hbmRfcmVzdG9yZSgpDQo+
+ID4gYmUgZXhlY3V0ZWQgYnkgdWZzaGNkX3N1c3BlbmQoKS4NCg0KVGhhbmtzIGZvciB5b3VyIHJl
+dmlldyEgSSB3aWxsIGZpeCB0aGlzIHNlbnRlbmNlIGluIG5leHQgdmVyc2lvbi4NCg0KU3Rhbmxl
+eSBDaHUNCg==
 
-Shouldn't this refer to the fact that the hardware is broken?  Otherwise
-why would anyone know if they should, or should not, enable this option?
-
-thanks,
-
-greg k-h
