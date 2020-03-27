@@ -2,91 +2,110 @@ Return-Path: <SRS0=s8dx=5M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5ACE2C2D0E8
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 12:58:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A39D1C43331
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 12:58:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 31AA3206F2
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 12:58:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7DFFB206F2
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 12:58:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727548AbgC0M6Y (ORCPT
+        id S1727655AbgC0M6u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Mar 2020 08:58:24 -0400
-Received: from mx2.suse.de ([195.135.220.15]:46202 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726165AbgC0M6Y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Mar 2020 08:58:24 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 7D2E6AC1D;
-        Fri, 27 Mar 2020 12:58:22 +0000 (UTC)
-Message-ID: <7b3f1bb70dd232a09851789fdaa5d7de957c9294.camel@suse.de>
-Subject: Re: [PATCH] ARM: dts: bcm283x: Use firmware PM driver for V3D
-From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        bcm-kernel-feedback-list@broadcom.com,
-        Stefan Wahren <stefan.wahren@i2se.com>,
-        Eric Anholt <eric@anholt.net>
-Cc:     wahrenst@gmx.net, devicetree@vger.kernel.org,
-        linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Date:   Fri, 27 Mar 2020 13:58:20 +0100
-In-Reply-To: <20200303173217.3987-1-nsaenzjulienne@suse.de>
-References: <20200303173217.3987-1-nsaenzjulienne@suse.de>
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-sr8I0z5hMln8enfhNN+B"
-User-Agent: Evolution 3.34.4 
+        Fri, 27 Mar 2020 08:58:50 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:57086 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727345AbgC0M6u (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Mar 2020 08:58:50 -0400
+Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02RCXLKh108552
+        for <linux-kernel@vger.kernel.org>; Fri, 27 Mar 2020 08:58:49 -0400
+Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 300jevacps-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Fri, 27 Mar 2020 08:58:48 -0400
+Received: from localhost
+        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <heiko.carstens@de.ibm.com>;
+        Fri, 27 Mar 2020 12:58:45 -0000
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
+        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Fri, 27 Mar 2020 12:58:42 -0000
+Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 02RCwfla42270880
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 27 Mar 2020 12:58:41 GMT
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id BF0A411C04A;
+        Fri, 27 Mar 2020 12:58:41 +0000 (GMT)
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 653B311C050;
+        Fri, 27 Mar 2020 12:58:41 +0000 (GMT)
+Received: from osiris (unknown [9.145.49.166])
+        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Fri, 27 Mar 2020 12:58:41 +0000 (GMT)
+Date:   Fri, 27 Mar 2020 13:58:40 +0100
+From:   Heiko Carstens <heiko.carstens@de.ibm.com>
+To:     Nathan Chancellor <natechancellor@gmail.com>
+Cc:     Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Julian Wiedmann <jwi@linux.ibm.com>,
+        Ursula Braun <ubraun@linux.ibm.com>,
+        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
+        clang-built-linux@googlegroups.com
+Subject: Re: [PATCH -next v2] s390/ism: Remove PM support
+References: <20200326190549.24565-1-natechancellor@gmail.com>
+ <20200326190741.24687-1-natechancellor@gmail.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200326190741.24687-1-natechancellor@gmail.com>
+X-TM-AS-GCONF: 00
+x-cbid: 20032712-0028-0000-0000-000003ECD70A
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20032712-0029-0000-0000-000024B24F2F
+Message-Id: <20200327125840.GA4109@osiris>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.645
+ definitions=2020-03-27_04:2020-03-27,2020-03-27 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 malwarescore=0
+ adultscore=0 phishscore=0 suspectscore=0 mlxlogscore=966 bulkscore=0
+ lowpriorityscore=0 priorityscore=1501 impostorscore=0 spamscore=0
+ clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2003270116
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Mar 26, 2020 at 12:07:44PM -0700, Nathan Chancellor wrote:
+> Clang warns:
+> 
+> drivers/s390/net/ism_drv.c:570:12: warning: unused function
+> 'ism_suspend' [-Wunused-function]
+> static int ism_suspend(struct device *dev)
+>            ^
+> drivers/s390/net/ism_drv.c:578:12: warning: unused function 'ism_resume'
+> [-Wunused-function]
+> static int ism_resume(struct device *dev)
+>            ^
+> 2 warnings generated.
+> 
+> When CONFIG_PM is unset, SIMPLE_DEV_PM_OPS does not use the suspend or
+> resume functions. Power management was recently ripped out of s390 so
+> CONFIG_PM will never be set and these functions will always be unused.
+> 
+> Remove them so that there is no more warning.
+> 
+> Link: https://github.com/ClangBuiltLinux/linux/issues/950
+> Fixes: 394216275c7d ("s390: remove broken hibernate / power management support")
+> Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
 
---=-sr8I0z5hMln8enfhNN+B
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Thank you, however there was already an identical patch from Ursula
+which was missing on our branch. It's now there:
 
-On Tue, 2020-03-03 at 18:32 +0100, Nicolas Saenz Julienne wrote:
-> The register based driver turned out to be unstable, specially on RPi3a+
-> but not limited to it. While a fix is being worked on, we roll back to
-> using firmware based scheme.
->=20
-> Fixes: e1dc2b2e1bef ("ARM: bcm283x: Switch V3D over to using the PM drive=
-r
-> instead of firmware")
-> Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-> ---
-
-Applied for-next.
-
-Regards,
-Nicolas
-
-
---=-sr8I0z5hMln8enfhNN+B
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl59+GwACgkQlfZmHno8
-x/5IZAf+Jssc7zy9oVNz9NTe7OmnW+X4UFITXiDV15LXlQWZ+vYugWzUMnIsEMI+
-sIAy/LJlkVWDb6F0vhl5eUif4e1ESSBQv7oMSSWQPZMff/Te4KC6a4JvrgFaFoke
-N+PPj1mfQsFAEdCt3wpBu5DBk2G8C/XQJWdNyitc0N5s2GHjREZdi2m61fLnUgKq
-BCRCLAo3HJ9kJYX4qwA0o8e83y0zdVF7/s5BvA4QbINxlRiYejqxQK6mTSc5VOM7
-MpCiTYjQVEXFJbDtrc+Pl6RoT9zSt7mJ/iaV7dNweASW0s+qGmJyW11QpRfKRQzl
-AKo+l+GxgdBcmWN9rnZ2MY+yqP1ZMA==
-=Jnbv
------END PGP SIGNATURE-----
-
---=-sr8I0z5hMln8enfhNN+B--
+https://git.kernel.org/pub/scm/linux/kernel/git/s390/linux.git/commit/?h=features&id=194f75706b86847d1b4237958f7d6bd7ea7baf42
 
