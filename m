@@ -2,104 +2,92 @@ Return-Path: <SRS0=s8dx=5M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1A0CC2D0EC
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 13:43:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A26BC2D0EC
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 13:47:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C632520658
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 13:43:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GKvNLfr9"
+	by mail.kernel.org (Postfix) with ESMTP id 54883208E4
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 13:47:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585316834;
+	bh=7Pepu9uT9jkfT1u0Lw+gmVZkqKbmxOrp/H5fM5L/zww=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=TnXCkTY2eDYDnezB0QIWSgDTOxfP8p3I33BIxW7YQMtQAY84zYaMDfKLySJWFSkio
+	 wUAAdx8wv7+PBQoHaewmHAfy2qsfy8Gi55CpVZS+br8ugs+NJGjGzC6B4O2TLUAmsF
+	 6e4Gze59ZKtAd6jr3l2SCvaeCj27NsPqKcbHglTQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727548AbgC0Nn5 (ORCPT
+        id S1727423AbgC0NrN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Mar 2020 09:43:57 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:32862 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726540AbgC0Nn5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Mar 2020 09:43:57 -0400
-Received: by mail-lj1-f195.google.com with SMTP id f20so10286022ljm.0;
-        Fri, 27 Mar 2020 06:43:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:from:to:cc:references:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=h3HMsR6HZU31G+xQ5I9GeaveOctSpxG3dZcbeLk7cIc=;
-        b=GKvNLfr95azbSrXv7DMgjchOFqCOYfl5grnsAA+bRFz4Y8CAnxX8hIy7GbIiGA7Jay
-         ouZ/DX2BUCgA5AT3f8ClxcDjBXt7/0xFWn1NZCynNwmEqvSI6f7+2yAYii4lz+G0I2wo
-         fGlOVaAlVe+kyJTmvrquB/unfkjv7JS7xysAzgUKeT10Ajb0n7xz8fMjf6y3Lb+6ZOOR
-         vGK1eBTQnXPYcuvwp3IoZLAfwTSFafGkxmm//RvwOfX5rKTBHZ/cl/CWhwqTpvrqxUNz
-         9fNbg3hRnCA/3bXyoGVJiPSo8cOjbBosw9oOTbAxSsS6MGzjOuNScX8eBazI6Jv7wygg
-         ynNA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=h3HMsR6HZU31G+xQ5I9GeaveOctSpxG3dZcbeLk7cIc=;
-        b=Sz5wTm66BsRZyycHMZ0vsCAt+Z6WAbnQYPOu/SI4L1AMdDrpdhv55GZOrgDEKWDnIV
-         p7JdCcJ1Qdrv2iYe89vZhNz/CVy05hpTP1IKOwICWErOwqPUk5DGqV+7apJGpRg0aBY2
-         exptjo8cO5jpGxqJpfLJAwg93Qq/pxjnnIxWkLPqxepipMFHiKR+WWmbyKs+2iw55xsO
-         VjkEZB+xxOw1DOpjvKvX4Vn/Lsn84E2NZy8twlqOSBAZb2D7AF7YzCZmFYAbrM5Iqfd+
-         xp9hzn4BXQUh+a8Zn7XlUwFV9y2aPqaVSUzBtsFeQrB+1dFwW9KR3lQksmyUKpA1iWVL
-         /dTg==
-X-Gm-Message-State: AGi0PuaZLgNpDJQ4OaG4sKDTnYk+Nvya7Zk/Kc5x5kgA0mG5VfSULuTG
-        IRfqhUwHbqJb4DYUMp1ESLI=
-X-Google-Smtp-Source: APiQypK3GwcTU1z2CorSBvReY5Rip+JCow1O1vGOD2yzZmUWOFpm6JEGznsM60IM52m//93WnEJQTQ==
-X-Received: by 2002:a2e:3012:: with SMTP id w18mr8713173ljw.100.1585316635323;
-        Fri, 27 Mar 2020 06:43:55 -0700 (PDT)
-Received: from [192.168.2.145] (ppp91-78-208-152.pppoe.mtu-net.ru. [91.78.208.152])
-        by smtp.googlemail.com with ESMTPSA id o192sm870042lfa.89.2020.03.27.06.43.54
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 27 Mar 2020 06:43:54 -0700 (PDT)
-Subject: Re: [PATCH v9 52/55] input: touchscreen: atmel_mxt_ts: Added sysfs
- entry for touchscreen status
-From:   Dmitry Osipenko <digetx@gmail.com>
-To:     "Wang, Jiada" <jiada_wang@mentor.com>, nick@shmanahar.org,
-        dmitry.torokhov@gmail.com, jikos@kernel.org,
-        benjamin.tissoires@redhat.com, bsz@semihalf.com,
-        rydberg@bitmath.org
-Cc:     linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
-        erosca@de.adit-jv.com, Andrew_Gabbasov@mentor.com
-References: <20200325133334.19346-1-jiada_wang@mentor.com>
- <20200325133334.19346-53-jiada_wang@mentor.com>
- <4aeda6f1-25d8-9437-5cd0-560e43dbe081@gmail.com>
- <b9368137-2fdc-558d-c27c-54d56950f7b8@mentor.com>
- <5b03bf10-d4f1-fb3d-4561-1097630c195a@gmail.com>
-Message-ID: <a7f77683-f86d-5e23-6afc-96834cbb55cc@gmail.com>
-Date:   Fri, 27 Mar 2020 16:43:53 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Fri, 27 Mar 2020 09:47:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57004 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726275AbgC0NrN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Mar 2020 09:47:13 -0400
+Received: from coco.lan (ip5f5ad4d8.dynamic.kabel-deutschland.de [95.90.212.216])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id CDAD8207FF;
+        Fri, 27 Mar 2020 13:47:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1585316832;
+        bh=7Pepu9uT9jkfT1u0Lw+gmVZkqKbmxOrp/H5fM5L/zww=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=r6jUV25hxb/sEpYPoqpJU1QKNzNxsiNj7D3JzeqbhGADUSCqB0TdMOv/B0ej8NnKt
+         8ShhDGrgzq2OzTXESqv5ic0ArU0UYXJimhf90bFpyTOWFd+yxw1BZ8equJV8WA0nz6
+         9BsPMjcC2cuum+Ix9ZoMEiSu1aq8DXrK5eOhZM30=
+Date:   Fri, 27 Mar 2020 14:47:07 +0100
+From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Subject: Re: [PATCH 12/17] gpio: gpiolib.c: fix a doc warning
+Message-ID: <20200327144707.3367e97d@coco.lan>
+In-Reply-To: <CACRpkdYrL02YHn5dPnh_Oz0Ysm5BxHrwQgwNMtsD55XGid_hCQ@mail.gmail.com>
+References: <cover.1584456635.git.mchehab+huawei@kernel.org>
+        <51197e3568f073e22c280f0584bfa20b44436708.1584456635.git.mchehab+huawei@kernel.org>
+        <CACRpkdYrL02YHn5dPnh_Oz0Ysm5BxHrwQgwNMtsD55XGid_hCQ@mail.gmail.com>
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <5b03bf10-d4f1-fb3d-4561-1097630c195a@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-27.03.2020 16:37, Dmitry Osipenko пишет:
-> 27.03.2020 15:49, Wang, Jiada пишет:
->>>> +static void mxt_watchdog_work(struct work_struct *work)
->>>> +{
->>>> +    struct mxt_data *data =
->>>> +        container_of(work, struct mxt_data, watchdog_work);
->>>> +    u16 info_buf;
->>>> +    int ret = 0;
->>>> +    u8 size = 2;
+Em Fri, 27 Mar 2020 11:22:52 +0100
+Linus Walleij <linus.walleij@linaro.org> escreveu:
 
-There is no need to initialize the ret variable.
+> On Tue, Mar 17, 2020 at 3:54 PM Mauro Carvalho Chehab
+> <mchehab+huawei@kernel.org> wrote:
+> 
+> > Use a different markup for the ERR_PTR, as %FOO doesn't work
+> > if there are parenthesis. So, use, instead:
+> >
+> >         ``ERR_PTR(-EINVAL)``
+> >
+> > This fixes the following warning:
+> >
+> >         ./drivers/gpio/gpiolib.c:139: WARNING: Inline literal start-string without end-string.
+> >
+> > Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>  
+> 
+> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+> 
+> Mauro are you merging this or do you want me to merge it?
 
->>>> +    if (data->suspended || data->in_bootloader)
->>>> +        return;
->>>> +
->>>> +    ret = __mxt_read_reg(data->client, 0, size, &info_buf);
+Feel free to merge it.
 
-The "size" argument could be replaced with "sizeof(info_buf)".
+My plan is to rebase my trees after the merge window, re-sending
+anything that got missed for them to be either applied directly
+or via the docs tree.
+
+Thanks,
+Mauro
