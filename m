@@ -2,106 +2,141 @@ Return-Path: <SRS0=s8dx=5M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98C02C43331
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 03:55:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5ACB3C43331
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 03:56:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 70F1E206F6
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 03:55:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gXlzeXeP"
+	by mail.kernel.org (Postfix) with ESMTP id 2C31F20748
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 03:56:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585281401;
+	bh=GqjGknKW+LWtyRnJLS/2mtOhqmCZ/NesFPuEQ6k+BGo=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=TfiMko/2Si9q4F9m8fSyhy7rMUhypCbATr5UXs7iINtruk0HKIMtJOGjZQKDeOdrl
+	 S1BwjJcB81drHL9pVxWIKZy/se3wjnmnP4uJCt6pVO0cA153HmxNPOwtXlZ5xA4Ckd
+	 EtDH6cOih/FAAUykoVqNURLRSaiKdoU7HbPfaOGQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727738AbgC0DzW (ORCPT
+        id S1727763AbgC0D4k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 23:55:22 -0400
-Received: from us-smtp-delivery-74.mimecast.com ([216.205.24.74]:37545 "EHLO
-        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727708AbgC0DzW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 23:55:22 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1585281321;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=jbUZbS8mLCFbjFYPv9xZPzpFZFr2HhSo9vjkHm0xqCQ=;
-        b=gXlzeXePmFHqig/8yhWymG6li82bxP13Op22VWGUeZWYuUOOPOsyO1KBlYw82AyEkOLanQ
-        VWjjqakE5lZsaLh4nFK4028NEIg0GkQlW+dTCTpBj13ogb4hFs8K01Q2irEjPDeLusObqS
-        UOWZ3hquEvn0Lo7GZyYcPmxGW29I4zs=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-359-FV5CEmW1NISu3HHUcOuYjQ-1; Thu, 26 Mar 2020 23:55:17 -0400
-X-MC-Unique: FV5CEmW1NISu3HHUcOuYjQ-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Thu, 26 Mar 2020 23:56:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53850 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727612AbgC0D4j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Mar 2020 23:56:39 -0400
+Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 0194518C43D6;
-        Fri, 27 Mar 2020 03:55:16 +0000 (UTC)
-Received: from treble (unknown [10.10.110.12])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 5792D9B93E;
-        Fri, 27 Mar 2020 03:55:14 +0000 (UTC)
-Date:   Thu, 26 Mar 2020 22:55:11 -0500
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: linux-next: Tree for Mar 18 (objtool)
-Message-ID: <20200327035511.7lqv5ij4e745vzv2@treble>
-References: <20200319174028.azzaisoj5gbss7zk@treble>
- <20200319174550.4wpx4j357nw67nzz@treble>
- <20200320082613.GA20696@hirez.programming.kicks-ass.net>
- <202003201131.9B688BC@keescook>
- <20200324164433.qusyu5h7ykx3f2bu@treble>
- <202003241105.4707F983@keescook>
- <20200324222406.zg6hylzqux353jhq@treble>
- <202003252251.771EF5EC5F@keescook>
- <20200326163110.n35lxcgkfcar7vd5@treble>
- <202003261133.814BEE9F@keescook>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <202003261133.814BEE9F@keescook>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+        by mail.kernel.org (Postfix) with ESMTPSA id 8275F206F6;
+        Fri, 27 Mar 2020 03:56:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1585281399;
+        bh=GqjGknKW+LWtyRnJLS/2mtOhqmCZ/NesFPuEQ6k+BGo=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=q3Uimh3yFVlrdf5OeeLNPcb/2GyZLAO8GIJ2YlEQ7+qOFE+1yZDEqB6bPD3F4oJRd
+         FUwao2D+NnXSYYob8oRoFVFY32vm3DWRfUFEkYW7DDHoAjgRaFC0sVB1apAvaLVqwB
+         zWRLOceLtK8QdqvJAbDFj72Yi6xjlC1pID0FrthU=
+Date:   Fri, 27 Mar 2020 12:56:33 +0900
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Joerg Roedel <joro@8bytes.org>
+Cc:     x86@kernel.org, hpa@zytor.com, Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Hellstrom <thellstrom@vmware.com>,
+        Jiri Slaby <jslaby@suse.cz>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Juergen Gross <jgross@suse.com>,
+        Kees Cook <keescook@chromium.org>,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        virtualization@lists.linux-foundation.org,
+        Joerg Roedel <jroedel@suse.de>
+Subject: Re: [PATCH 09/70] x86/insn: Add insn_rep_prefix() helper
+Message-Id: <20200327125633.ff660b1f4b14ca941fd1c799@kernel.org>
+In-Reply-To: <20200319091407.1481-10-joro@8bytes.org>
+References: <20200319091407.1481-1-joro@8bytes.org>
+        <20200319091407.1481-10-joro@8bytes.org>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 26, 2020 at 11:36:10AM -0700, Kees Cook wrote:
-> On Thu, Mar 26, 2020 at 11:31:10AM -0500, Josh Poimboeuf wrote:
-> > On Wed, Mar 25, 2020 at 10:57:02PM -0700, Kees Cook wrote:
-> > > > In the meantime I can still change objtool to ignore unreachable UD2s if
-> > > > there aren't any better ideas.
-> > > 
-> > > It'll still need the objtool change for CONFIG_UBSAN_TRAP, though based on
-> > > the clang bug discussion, I'll probably _also_ be adding CONFIG_UBSAN_WARN
-> > > which won't have an unreachable (and won't bloat the kernel). Testing
-> > > still under way... it is possible that CONFIG_UBSAN_TRAP will go away
-> > > in the future, though. If that happens, should I also remove the change
-> > > at that time?
-> > 
-> > I'll go ahead and make the patch and post it soon.  It should be pretty
-> > trivial.  We can always revert it if CONFIG_UBSAN_TRAP goes away.
+On Thu, 19 Mar 2020 10:13:06 +0100
+Joerg Roedel <joro@8bytes.org> wrote:
+
+> From: Joerg Roedel <jroedel@suse.de>
 > 
-> Awesome, thanks very much. After digging into the WARN-style option,
-> it seems that TRAP is unlikely to go away because it's Clang only;
-> GCC doesn't support the "minimal runtime" option. Yay compilers.
+> Add a function to check whether an instruction has a REP prefix.
+> 
+> Signed-off-by: Joerg Roedel <jroedel@suse.de>
+> ---
+>  arch/x86/include/asm/insn-eval.h |  1 +
+>  arch/x86/lib/insn-eval.c         | 24 ++++++++++++++++++++++++
+>  2 files changed, 25 insertions(+)
+> 
+> diff --git a/arch/x86/include/asm/insn-eval.h b/arch/x86/include/asm/insn-eval.h
+> index 1e343010129e..41dee0faae97 100644
+> --- a/arch/x86/include/asm/insn-eval.h
+> +++ b/arch/x86/include/asm/insn-eval.h
+> @@ -15,6 +15,7 @@
+>  #define INSN_CODE_SEG_OPND_SZ(params) (params & 0xf)
+>  #define INSN_CODE_SEG_PARAMS(oper_sz, addr_sz) (oper_sz | (addr_sz << 4))
+>  
+> +bool insn_rep_prefix(struct insn *insn);
 
-Oh well...
+Can you make it "insn_has_rep_prefix()"?
 
-> Anyway, I'll still get the WARN mode sent out. Thanks for looking at this;
-> can you CC me on the patch? I'm trying to get more familiar with objtool
-> so I don't have to bug you when objtool is angered by crazy stuff I do. ;)
+Thank you,
 
-Will do.  I know objtool tends to get in the way of adding cool features
-sometimes.  More eyes on the objtool code are definitely welcome.
+>  void __user *insn_get_addr_ref(struct insn *insn, struct pt_regs *regs);
+>  int insn_get_modrm_rm_off(struct insn *insn, struct pt_regs *regs);
+>  int insn_get_modrm_reg_off(struct insn *insn, struct pt_regs *regs);
+> diff --git a/arch/x86/lib/insn-eval.c b/arch/x86/lib/insn-eval.c
+> index f18260a19960..5d98dff5a2d7 100644
+> --- a/arch/x86/lib/insn-eval.c
+> +++ b/arch/x86/lib/insn-eval.c
+> @@ -53,6 +53,30 @@ static bool is_string_insn(struct insn *insn)
+>  	}
+>  }
+>  
+> +/**
+> + * insn_rep_prefix() - Determine if instruction has a REP prefix
+> + * @insn:	Instruction containing the prefix to inspect
+> + *
+> + * Returns:
+> + *
+> + * true if the instruction has a REP prefix, false if not.
+> + */
+> +bool insn_rep_prefix(struct insn *insn)
+> +{
+> +	int i;
+> +
+> +	insn_get_prefixes(insn);
+> +
+> +	for (i = 0; i < insn->prefixes.nbytes; i++) {
+> +		insn_byte_t p = insn->prefixes.bytes[i];
+> +
+> +		if (p == 0xf2 || p == 0xf3)
+> +			return true;
+> +	}
+> +
+> +	return false;
+> +}
+> +
+>  /**
+>   * get_seg_reg_override_idx() - obtain segment register override index
+>   * @insn:	Valid instruction with segment override prefixes
+> -- 
+> 2.17.1
+> 
+
 
 -- 
-Josh
-
+Masami Hiramatsu <mhiramat@kernel.org>
