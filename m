@@ -2,108 +2,109 @@ Return-Path: <SRS0=s8dx=5M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08822C2D0EC
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 13:51:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75F2CC2D0EC
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 14:01:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D83EE206F6
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 13:51:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C21B206F1
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 14:01:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Q4Y6MQ8M"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727548AbgC0NvE (ORCPT
+        id S1727354AbgC0OBa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Mar 2020 09:51:04 -0400
-Received: from mout.kundenserver.de ([217.72.192.73]:60299 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727242AbgC0NvD (ORCPT
+        Fri, 27 Mar 2020 10:01:30 -0400
+Received: from us-smtp-delivery-74.mimecast.com ([63.128.21.74]:54732 "EHLO
+        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726900AbgC0OB3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Mar 2020 09:51:03 -0400
-Received: from mail-qt1-f178.google.com ([209.85.160.178]) by
- mrelayeu.kundenserver.de (mreue107 [212.227.15.145]) with ESMTPSA (Nemesis)
- id 1MeC1p-1jpmpF1Dkt-00bKlk; Fri, 27 Mar 2020 14:51:02 +0100
-Received: by mail-qt1-f178.google.com with SMTP id 10so8554157qtp.1;
-        Fri, 27 Mar 2020 06:51:02 -0700 (PDT)
-X-Gm-Message-State: ANhLgQ3kECpU9S6Wb6XrTxkJMaTZTRurXZGwi74SaaSmHEErdlHsBzVJ
-        TAcGaByfyMq9s1HoPX+yYN++QM2VeZlkc3oLlqw=
-X-Google-Smtp-Source: ADFU+vshNURS/9HDv+oLa8JQm1ylr9owZmjcnTSkVVaH5iSMiWpwyPAHJ6GKmm1np7lsir9XH7ml3tLULZvcP2HhgCk=
-X-Received: by 2002:aed:3b4c:: with SMTP id q12mr13766906qte.18.1585317061089;
- Fri, 27 Mar 2020 06:51:01 -0700 (PDT)
+        Fri, 27 Mar 2020 10:01:29 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1585317689;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=nmGn2iu/6hb//kS/DiygB1sR/c0YTQN3IceTCMDHJQI=;
+        b=Q4Y6MQ8MtI0Dc3KPYFS70IytyzW90zN8cPLRhQvUpNiPSGhOVgXoAYwnsXoTX/s/JmFrX6
+        4Q3xCR58wuBX42kAV15IcW6K16WwAS/pPveOC8JqY45R33ZjJ+lDmJbOKSitYGVPpNWoO0
+        PhPtXdIUlCn+HL+idUAvFn1awmwFlIQ=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-30-IhFdegswPqOnvQl_xs_QBQ-1; Fri, 27 Mar 2020 10:01:25 -0400
+X-MC-Unique: IhFdegswPqOnvQl_xs_QBQ-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 331DC8018AB;
+        Fri, 27 Mar 2020 14:01:24 +0000 (UTC)
+Received: from horse.redhat.com (ovpn-117-99.rdu2.redhat.com [10.10.117.99])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 05F425DA81;
+        Fri, 27 Mar 2020 14:01:14 +0000 (UTC)
+Received: by horse.redhat.com (Postfix, from userid 10451)
+        id 3255B222D9D; Fri, 27 Mar 2020 10:01:14 -0400 (EDT)
+Date:   Fri, 27 Mar 2020 10:01:14 -0400
+From:   Vivek Goyal <vgoyal@redhat.com>
+To:     Liu Bo <bo.liu@linux.alibaba.com>
+Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-nvdimm@lists.01.org, virtio-fs@redhat.com, miklos@szeredi.hu,
+        stefanha@redhat.com, dgilbert@redhat.com, mst@redhat.com
+Subject: Re: [PATCH 20/20] fuse,virtiofs: Add logic to free up a memory range
+Message-ID: <20200327140114.GB32717@redhat.com>
+References: <20200304165845.3081-1-vgoyal@redhat.com>
+ <20200304165845.3081-21-vgoyal@redhat.com>
+ <20200326000904.GA34937@rsjd01523.et2sqa>
 MIME-Version: 1.0
-References: <20200327092741.1dbd3242@canb.auug.org.au> <20200327131831.GC2282366@ulmo>
-In-Reply-To: <20200327131831.GC2282366@ulmo>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Fri, 27 Mar 2020 14:50:45 +0100
-X-Gmail-Original-Message-ID: <CAK8P3a3At56pHFJNojHFa=CHQxSXT1dtYTr8_t34AOcooE_b+A@mail.gmail.com>
-Message-ID: <CAK8P3a3At56pHFJNojHFa=CHQxSXT1dtYTr8_t34AOcooE_b+A@mail.gmail.com>
-Subject: Re: linux-next: manual merge of the tegra tree with the arm-soc tree
-To:     Thierry Reding <treding@nvidia.com>
-Cc:     Olof Johansson <olof@lixom.net>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Colin Cross <ccross@android.com>,
-        ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Nagarjuna Kristam <nkristam@nvidia.com>,
-        JC Kuo <jckuo@nvidia.com>, Corentin Labbe <clabbe@baylibre.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:dNQpBz0UGSQQEBoCpfcR/7YzJDGh5st1/sA+hJoMw5gVYg2+9oe
- vrq6gOPxrgK5kdq1EW/ICqxmVdYW8jbAqB5xhSatq1YLqXRubDjzvaaDQkb3HWWWeO0sE2t
- 59ILrmzGw17JXE9TRU0hP4dmjLBjtZDT2cKro60jPHpsZEZayx99kQ2oi8Hei823u1dv8DY
- juOs5DYWT1nKKSJ/naB/g==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:cW6VpA138hQ=:SYgv7dpo8BwKhIta+HphPz
- Y5zjuHF5Znw57/lvMM+4eG/ZoKSDDSn1S5CPNKCMSEiEBKQya5Ndd2ECYmZupvXQTrwNICjjK
- HMCoJBdNmakAUDiFfc0P29GAr0fyHxCm3eNVsDr31MQKOYTy+H3e7WRZgG3+ZOg7oAvqCI4Zf
- ePyQYjbtKtOcjRzEiQX42XgYNnw8V6qoxlgVP7YDHLEzuq9PKqS1dr4130xm4iPauKyuA+mfA
- r6Rt3Q7ooK6693ZDOyfKC5Plo5tGMd7w06+WaaN9uShDmXZAv1rjI4FF2EdghZAK5gdb02/wk
- eieABsy7dsKx1RFHR100UfsmObccoen4m8qXotGsck3+XS11l8pcJq2KELnIULgKckaczFtwA
- uHxFuppsDVXAtSbV8kEfBfI4Uu4Q/Pi7fMKlQ+0e5FhdJFU34bsKiOCxcPZZLpKqLQgxyhFx8
- id8InO9+h21QNLtwXyp0yEWveNilZQL7BU3BgwnBGZIOv4RfTCr1I3sILKKcjQStcYebD+qTf
- XzuML9D80pXnskHZ1cVmEcB5g/u369n2Iq5TXIznCZQrhLcKpXnK3JrJeuFsLpUUxIjdF0lXU
- i/uhY3GS0MEgTHyYQ/+Ss+pxV9IoHi5k6FXILImzL6Awbk8GttAi6pewwn3Y5IXWZaMt1L+wU
- BjrVY550r1i88K1/OOZ6vp1VtcxUuksg/uPazKAn3Tk353dAEx+oEiNrFQqCD/a+1sEIt+9AW
- Hk+4/t43in3QCMZPSjtJ7AFS9M4SIcrUU8uZF7/3yyML5ChZzrnswNJq/AEcuNwkB/BjAmBxv
- fG1QpJQGGzYQjPin2eLdvaewrYpNsSyZQLtIJWyyiTrhvKKgcI=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200326000904.GA34937@rsjd01523.et2sqa>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 27, 2020 at 2:18 PM Thierry Reding <treding@nvidia.com> wrote:
-> On Fri, Mar 27, 2020 at 09:27:41AM +1100, Stephen Rothwell wrote:
-> > I fixed it up (I just used the version from the tegra tree) and can
-> > carry the fix as necessary. This is now fixed as far as linux-next is
-> > concerned, but any non trivial conflicts should be mentioned to your
-> > upstream maintainer when your tree is submitted for merging.  You may
-> > also want to consider cooperating with the maintainer of the conflicting
-> > tree to minimise any particularly complex conflicts.
->
-> Olof, Arnd,
->
-> There was a bit of back and forth on this because there happened to be a
-> conflict with the USB tree. I tried to clarify this as replies to the PR
-> request:
->
->         http://patchwork.ozlabs.org/patch/1254523/
->
-> But I suspect you may have missed those replies. The bottom line is,
-> there is a v2 of the pull request that has the patches that are now in
-> the Tegra tree. That's already part of a PR that went in through the USB
-> tree as a dependency to resolve the conflict.
->
-> So as a result there should be no need for ARM SoC to carry that PR. But
-> if you still want to merge it, please pull v2, which is here:
->
->         git://git.kernel.org/pub/scm/linux/kernel/git/tegra/linux.git tags/tegra-for-5.7-phy-v2
->
+On Thu, Mar 26, 2020 at 08:09:05AM +0800, Liu Bo wrote:
 
-It was almost at the top of the branch, so I ended up just taking it out now, it
-should be gone from the soc tree by tomorrow.
+[..]
+> > +/*
+> > + * Find first mapping in the tree and free it and return it. Do not add
+> > + * it back to free pool. If fault == true, this function should be called
+> > + * with fi->i_mmap_sem held.
+> > + */
+> > +static struct fuse_dax_mapping *inode_reclaim_one_dmap(struct fuse_conn *fc,
+> > +							 struct inode *inode,
+> > +							 bool fault)
+> > +{
+> > +	struct fuse_inode *fi = get_fuse_inode(inode);
+> > +	struct fuse_dax_mapping *dmap;
+> > +	int ret;
+> > +
+> > +	if (!fault)
+> > +		down_write(&fi->i_mmap_sem);
+> > +
+> > +	/*
+> > +	 * Make sure there are no references to inode pages using
+> > +	 * get_user_pages()
+> > +	 */
+> > +	ret = fuse_break_dax_layouts(inode, 0, 0);
+> 
+> Hi Vivek,
+> 
+> This patch is enabling inline reclaim for fault path, but fault path
+> has already holds a locked exceptional entry which I believe the above
+> fuse_break_dax_layouts() needs to wait for, can you please elaborate
+> on how this can be avoided?
+> 
 
-I think I managed to skip it as you asked on my first pass, but then failed to
-reread the message when I went through the remaining entries in patchwork.
+Hi Liubo,
 
-Clearly my tooling still needs  a bit of improvement.
+Can you please point to the exact lock you are referring to. I will
+check it out. Once we got rid of needing to take inode lock in
+reclaim path, that opended the door to do inline reclaim in fault
+path as well. But I was not aware of this exceptional entry lock.
 
-      Arnd
+Vivek
+
