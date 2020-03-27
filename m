@@ -2,130 +2,101 @@ Return-Path: <SRS0=s8dx=5M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45C18C43331
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 14:22:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 525CEC43331
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 14:22:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A4E120658
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 14:22:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585318954;
-	bh=TYBu9ieERy+Ta4ICp1zRuWs/eR3KjO5IyGqncme6DJc=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=APr8YSbV2ALILOJj5hhOGbWcDTvruqPA7sVoWl/mBDsFL/k2NLfd27TzGn4klczJx
-	 EBw3QRAxBTaPpfkt1a1/2vFaZhv58mcY9tNmMhJGyIAvxOLWntgPeRIx/9J9oDHz1L
-	 n4q24J74vm6Q/TKLOxNzyT/uRCicQvpJe7q78m/g=
+	by mail.kernel.org (Postfix) with ESMTP id 297322073B
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 14:22:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="P04eDa8u"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727287AbgC0OWd (ORCPT
+        id S1727593AbgC0OWy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Mar 2020 10:22:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49018 "EHLO mail.kernel.org"
+        Fri, 27 Mar 2020 10:22:54 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:34046 "EHLO vps0.lunn.ch"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726656AbgC0OWc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Mar 2020 10:22:32 -0400
-Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3D21120658
-        for <linux-kernel@vger.kernel.org>; Fri, 27 Mar 2020 14:22:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585318951;
-        bh=TYBu9ieERy+Ta4ICp1zRuWs/eR3KjO5IyGqncme6DJc=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=Qm0z3g39bQDBSrqz9++ujQKvtUBjNueacrWy37OBkqDntO3Gj19TmxguyvDh2QtRS
-         KCzt2L26ha+faOp2qd9QYuW2Ul6gL70onVm2ixDr0UmbDwUXTW7mtAgqj+0mQZiHtZ
-         ROBmTKm/m/ih1J4CnjeihLcTeQTZRL0j873B2/hU=
-Received: by mail-wr1-f52.google.com with SMTP id d5so11667647wrn.2
-        for <linux-kernel@vger.kernel.org>; Fri, 27 Mar 2020 07:22:31 -0700 (PDT)
-X-Gm-Message-State: ANhLgQ3D8+9wEHMAUTWUMuYm/bUOo3vmSPxWOUK+yOPvDJL+u2RG6Mn3
-        mx4F2WjoKpUg/ntjpVhPzZuqYIrwvXkGeXUt/A==
-X-Google-Smtp-Source: ADFU+vsE0Iq/qOsJLgem/9N0N8fAV8mgme65RNUzQmeCYNSDoKObf/LG9fWjTq9gzXMdb7KBtsJZ1NeEF0NZuYo0Rmc=
-X-Received: by 2002:a5d:414f:: with SMTP id c15mr16766117wrq.60.1585318949779;
- Fri, 27 Mar 2020 07:22:29 -0700 (PDT)
+        id S1726656AbgC0OWx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Mar 2020 10:22:53 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=U0es5eCjPHafmknYI44UIritcApZVL6ufHPKfH3LHp8=; b=P04eDa8uV9VPNA/3xDFaHSp7lu
+        PTChCW80xpzV6lIYT1iZfFj2B4jFIt5iRbfawNZSgHYK1l2bIRJQgP0ktBL/Tf9so2gmFp6xazFee
+        kRIRD6dSvVtcDK6pjzZmXw3K7HrUK3rGXWYJ6FAMgSVulG/K0G5QgFVSrtgfn6r4I32s=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
+        (envelope-from <andrew@lunn.ch>)
+        id 1jHpsj-0002C9-4p; Fri, 27 Mar 2020 15:22:45 +0100
+Date:   Fri, 27 Mar 2020 15:22:45 +0100
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Florinel Iordache <florinel.iordache@nxp.com>
+Cc:     davem@davemloft.net, netdev@vger.kernel.org, f.fainelli@gmail.com,
+        hkallweit1@gmail.com, linux@armlinux.org.uk,
+        devicetree@vger.kernel.org, linux-doc@vger.kernel.org,
+        robh+dt@kernel.org, mark.rutland@arm.com, kuba@kernel.org,
+        corbet@lwn.net, shawnguo@kernel.org, leoyang.li@nxp.com,
+        madalin.bucur@oss.nxp.com, ioana.ciornei@nxp.com,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next 6/9] net: phy: add backplane kr driver support
+Message-ID: <20200327142245.GF11004@lunn.ch>
+References: <1585230682-24417-1-git-send-email-florinel.iordache@nxp.com>
+ <1585230682-24417-7-git-send-email-florinel.iordache@nxp.com>
 MIME-Version: 1.0
-References: <20200326182742.487026-1-enric.balletbo@collabora.com>
-In-Reply-To: <20200326182742.487026-1-enric.balletbo@collabora.com>
-From:   Chun-Kuang Hu <chunkuang.hu@kernel.org>
-Date:   Fri, 27 Mar 2020 22:22:18 +0800
-X-Gmail-Original-Message-ID: <CAAOTY_9vCtr6Y3Geg3wJ7FjTdo6iPc+bdwtJKDZahJAY3Tih8Q@mail.gmail.com>
-Message-ID: <CAAOTY_9vCtr6Y3Geg3wJ7FjTdo6iPc+bdwtJKDZahJAY3Tih8Q@mail.gmail.com>
-Subject: Re: [PATCH] soc: mediatek: mtk-mmsys: Export ddp_dis/connect symbols
-To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Nicolas Boichat <drinkcat@chromium.org>,
-        Anders Roxell <anders.roxell@linaro.org>,
-        linux-mediatek@lists.infradead.org, hsinyi@chromium.org,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Collabora Kernel ML <kernel@collabora.com>,
-        linux-arm-kernel@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1585230682-24417-7-git-send-email-florinel.iordache@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi, Enric:
+> +/* Backplane custom logging */
+> +#define BPDEV_LOG(name) \
+> +	char log_buffer[LOG_BUFFER_SIZE]; \
+> +	va_list args; va_start(args, msg); \
+> +	vsnprintf(log_buffer, LOG_BUFFER_SIZE - 1, msg, args); \
+> +	if (!bpphy->attached_dev) \
+> +		dev_##name(&bpphy->mdio.dev, log_buffer); \
+> +	else \
+> +		dev_##name(&bpphy->mdio.dev, "%s: %s", \
+> +			netdev_name(bpphy->attached_dev), log_buffer); \
+> +	va_end(args)
 
-Enric Balletbo i Serra <enric.balletbo@collabora.com> =E6=96=BC 2020=E5=B9=
-=B43=E6=9C=8827=E6=97=A5 =E9=80=B1=E4=BA=94 =E4=B8=8A=E5=8D=882:28=E5=AF=AB=
-=E9=81=93=EF=BC=9A
->
-> When building on arm64 with allmodconfig or CONFIG_DRM_MEDIATEK=3Dm we se=
-e
-> the following error.
->
->   ERROR: modpost: "mtk_mmsys_ddp_disconnect"
->   [drivers/gpu/drm/mediatek/mediatek-drm.ko] undefined!
->   ERROR: modpost: "mtk_mmsys_ddp_connect"
->   [drivers/gpu/drm/mediatek/mediatek-drm.ko] undefined!
->
-> Export mtk_mmsys_ddp_connect and mtk_mmsys_ddp_disconnect symbols to be
-> able to be used for other modules.
->
+> +void bpdev_err(struct phy_device *bpphy, char *msg, ...)
+> +{
+> +	BPDEV_LOG(err);
+> +}
+> +EXPORT_SYMBOL(bpdev_err);
+> +
+> +void bpdev_warn(struct phy_device *bpphy, char *msg, ...)
+> +{
+> +	BPDEV_LOG(warn);
+> +}
+> +EXPORT_SYMBOL(bpdev_warn);
+> +
+> +void bpdev_info(struct phy_device *bpphy, char *msg, ...)
+> +{
+> +	BPDEV_LOG(info);
+> +}
+> +EXPORT_SYMBOL(bpdev_info);
+> +
+> +void bpdev_dbg(struct phy_device *bpphy, char *msg, ...)
+> +{
+> +	BPDEV_LOG(dbg);
+> +}
+> +EXPORT_SYMBOL(bpdev_dbg);
 
-Reviewed-by: Chun-Kuang Hu <chunkuang.hu@kernel.org>
+You are currently modelling this as a phydev. So please just use
+phydev_err(), phydev_info(), phydev_dbg() etc.
 
+Also, if you look at other PHY code, struct phy_device * is nearly
+always called phydev. Please try to be consistent with the existing
+code base.
 
-> Fixes: 396c3fccaf03 ("soc / drm: mediatek: Move routing control to mmsys =
-device")
-> Reported-by: Anders Roxell <anders.roxell@linaro.org>
-> Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
-> ---
->
->  drivers/soc/mediatek/mtk-mmsys.c | 2 ++
->  1 file changed, 2 insertions(+)
->
-> diff --git a/drivers/soc/mediatek/mtk-mmsys.c b/drivers/soc/mediatek/mtk-=
-mmsys.c
-> index 32a92ec447c5..05e322c9c301 100644
-> --- a/drivers/soc/mediatek/mtk-mmsys.c
-> +++ b/drivers/soc/mediatek/mtk-mmsys.c
-> @@ -259,6 +259,7 @@ void mtk_mmsys_ddp_connect(struct device *dev,
->                 writel_relaxed(reg, config_regs + addr);
->         }
->  }
-> +EXPORT_SYMBOL_GPL(mtk_mmsys_ddp_connect);
->
->  void mtk_mmsys_ddp_disconnect(struct device *dev,
->                               enum mtk_ddp_comp_id cur,
-> @@ -279,6 +280,7 @@ void mtk_mmsys_ddp_disconnect(struct device *dev,
->                 writel_relaxed(reg, config_regs + addr);
->         }
->  }
-> +EXPORT_SYMBOL_GPL(mtk_mmsys_ddp_disconnect);
->
->  static int mtk_mmsys_probe(struct platform_device *pdev)
->  {
-> --
-> 2.25.1
->
->
-> _______________________________________________
-> Linux-mediatek mailing list
-> Linux-mediatek@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-mediatek
+     Andrew
