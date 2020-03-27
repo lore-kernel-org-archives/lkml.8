@@ -4,37 +4,38 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CFA3AC2D0EF
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 09:34:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D4D3C43331
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 09:34:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 99FC120716
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 09:34:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 141FC20714
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 09:34:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726742AbgC0JeH (ORCPT
+        id S1727242AbgC0JeJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Mar 2020 05:34:07 -0400
-Received: from relmlor2.renesas.com ([210.160.252.172]:25118 "EHLO
-        relmlie6.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726002AbgC0JeG (ORCPT
+        Fri, 27 Mar 2020 05:34:09 -0400
+Received: from relmlor1.renesas.com ([210.160.252.171]:51108 "EHLO
+        relmlie5.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726168AbgC0JeH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Mar 2020 05:34:06 -0400
+        Fri, 27 Mar 2020 05:34:07 -0400
 X-IronPort-AV: E=Sophos;i="5.72,311,1580742000"; 
-   d="scan'208";a="42803707"
+   d="scan'208";a="43017754"
 Received: from unknown (HELO relmlir6.idc.renesas.com) ([10.200.68.152])
-  by relmlie6.idc.renesas.com with ESMTP; 27 Mar 2020 18:34:05 +0900
+  by relmlie5.idc.renesas.com with ESMTP; 27 Mar 2020 18:34:05 +0900
 Received: from localhost.localdomain (unknown [10.166.252.89])
-        by relmlir6.idc.renesas.com (Postfix) with ESMTP id 20137420E7D9;
+        by relmlir6.idc.renesas.com (Postfix) with ESMTP id 55A5C420D842;
         Fri, 27 Mar 2020 18:34:05 +0900 (JST)
 From:   Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 To:     kishon@ti.com, robh+dt@kernel.org
 Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
         linux-renesas-soc@vger.kernel.org,
         Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Subject: [PATCH v4 1/4] dt-bindings: phy: renesas: usb2-phy: convert bindings to json-schema
-Date:   Fri, 27 Mar 2020 18:33:53 +0900
-Message-Id: <1585301636-24399-2-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+Subject: [PATCH v4 3/4] dt-bindings: phy: renesas: usb3-phy: convert bindings to json-schema
+Date:   Fri, 27 Mar 2020 18:33:55 +0900
+Message-Id: <1585301636-24399-4-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1585301636-24399-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 References: <1585301636-24399-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
@@ -43,193 +44,145 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Convert Renesas R-Car generation 3 USB 2.0 PHY bindings documentation
+Convert Renesas R-Car generation 3 USB 3.0 PHY bindings documentation
 to json-schema.
 
 Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 Reviewed-by: Rob Herring <robh@kernel.org>
 Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 ---
- .../devicetree/bindings/phy/rcar-gen3-phy-usb2.txt |  70 -------------
- .../devicetree/bindings/phy/renesas,usb2-phy.yaml  | 116 +++++++++++++++++++++
- 2 files changed, 116 insertions(+), 70 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb2.txt
- create mode 100644 Documentation/devicetree/bindings/phy/renesas,usb2-phy.yaml
+ .../devicetree/bindings/phy/rcar-gen3-phy-usb3.txt | 52 ---------------
+ .../devicetree/bindings/phy/renesas,usb3-phy.yaml  | 78 ++++++++++++++++++++++
+ 2 files changed, 78 insertions(+), 52 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb3.txt
+ create mode 100644 Documentation/devicetree/bindings/phy/renesas,usb3-phy.yaml
 
-diff --git a/Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb2.txt b/Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb2.txt
+diff --git a/Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb3.txt b/Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb3.txt
 deleted file mode 100644
-index 7734b21..00000000
---- a/Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb2.txt
+index 0fe433b..00000000
+--- a/Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb3.txt
 +++ /dev/null
-@@ -1,70 +0,0 @@
--* Renesas R-Car generation 3 USB 2.0 PHY
+@@ -1,52 +0,0 @@
+-* Renesas R-Car generation 3 USB 3.0 PHY
 -
 -This file provides information on what the device node for the R-Car generation
--3, RZ/G1C, RZ/G2 and RZ/A2 USB 2.0 PHY contain.
+-3 and RZ/G2 USB 3.0 PHY contain.
+-If you want to enable spread spectrum clock (ssc), you should use USB_EXTAL
+-instead of USB3_CLK. However, if you don't want to these features, you don't
+-need this driver.
 -
 -Required properties:
--- compatible: "renesas,usb2-phy-r7s9210" if the device is a part of an R7S9210
+-- compatible: "renesas,r8a774a1-usb3-phy" if the device is a part of an R8A774A1
 -	      SoC.
--	      "renesas,usb2-phy-r8a77470" if the device is a part of an R8A77470
+-	      "renesas,r8a774b1-usb3-phy" if the device is a part of an R8A774B1
 -	      SoC.
--	      "renesas,usb2-phy-r8a774a1" if the device is a part of an R8A774A1
+-	      "renesas,r8a7795-usb3-phy" if the device is a part of an R8A7795
 -	      SoC.
--	      "renesas,usb2-phy-r8a774b1" if the device is a part of an R8A774B1
+-	      "renesas,r8a7796-usb3-phy" if the device is a part of an R8A7796
 -	      SoC.
--	      "renesas,usb2-phy-r8a774c0" if the device is a part of an R8A774C0
--	      SoC.
--	      "renesas,usb2-phy-r8a7795" if the device is a part of an R8A7795
--	      SoC.
--	      "renesas,usb2-phy-r8a7796" if the device is a part of an R8A7796
--	      SoC.
--	      "renesas,usb2-phy-r8a77965" if the device is a part of an
+-	      "renesas,r8a77965-usb3-phy" if the device is a part of an
 -	      R8A77965 SoC.
--	      "renesas,usb2-phy-r8a77990" if the device is a part of an
--	      R8A77990 SoC.
--	      "renesas,usb2-phy-r8a77995" if the device is a part of an
--	      R8A77995 SoC.
--	      "renesas,rcar-gen3-usb2-phy" for a generic R-Car Gen3, RZ/G2 or
--	      RZ/A2 compatible device.
+-	      "renesas,rcar-gen3-usb3-phy" for a generic R-Car Gen3 or RZ/G2
+-	      compatible device.
 -
 -	      When compatible with the generic version, nodes must list the
 -	      SoC-specific version corresponding to the platform first
 -	      followed by the generic version.
 -
--- reg: offset and length of the partial USB 2.0 Host register block.
--- clocks: clock phandle and specifier pair(s).
--- #phy-cells: see phy-bindings.txt in the same directory, must be <1> (and
--	      using <0> is deprecated).
--
--The phandle's argument in the PHY specifier is the INT_STATUS bit of controller:
--- 1 = USBH_INTA (OHCI)
--- 2 = USBH_INTB (EHCI)
--- 3 = UCOM_INT (OTG and BC)
+-- reg: offset and length of the USB 3.0 PHY register block.
+-- clocks: A list of phandles and clock-specifier pairs.
+-- clock-names: Name of the clocks.
+-  - The funcional clock must be "usb3-if".
+-  - The usb3's external clock must be "usb3s_clk".
+-  - The usb2's external clock must be "usb_extal". If you want to use the ssc,
+-    the clock-frequency must not be 0.
+-- #phy-cells: see phy-bindings.txt in the same directory, must be <0>.
 -
 -Optional properties:
--To use a USB channel where USB 2.0 Host and HSUSB (USB 2.0 Peripheral) are
--combined, the device tree node should set interrupt properties to use the
--channel as USB OTG:
--- interrupts: interrupt specifier for the PHY.
--- vbus-supply: Phandle to a regulator that provides power to the VBUS. This
--	       regulator will be managed during the PHY power on/off sequence.
--- renesas,no-otg-pins: boolean, specify when a board does not provide proper
--		       otg pins.
--- dr_mode: string, indicates the working mode for the PHY. Can be "host",
--           "peripheral", or "otg". Should be set if otg controller is not used.
--
+-- renesas,ssc-range: Enable/disable spread spectrum clock (ssc) by using
+-		     the following values as u32:
+-			- 0 (or the property doesn't exist): disable the ssc
+-			- 4980: enable the ssc as -4980 ppm
+-			- 4492: enable the ssc as -4492 ppm
+-			- 4003: enable the ssc as -4003 ppm
 -
 -Example (R-Car H3):
 -
--	usb-phy@ee080200 {
--		compatible = "renesas,usb2-phy-r8a7795", "renesas,rcar-gen3-usb2-phy";
--		reg = <0 0xee080200 0 0x700>;
--		interrupts = <GIC_SPI 108 IRQ_TYPE_LEVEL_HIGH>;
--		clocks = <&cpg CPG_MOD 703>;
+-	usb-phy@e65ee000 {
+-		compatible = "renesas,r8a7795-usb3-phy",
+-			     "renesas,rcar-gen3-usb3-phy";
+-		reg = <0 0xe65ee000 0 0x90>;
+-		clocks = <&cpg CPG_MOD 328>, <&usb3s0_clk>, <&usb_extal>;
+-		clock-names = "usb3-if", "usb3s_clk", "usb_extal";
 -	};
--
--	usb-phy@ee0a0200 {
--		compatible = "renesas,usb2-phy-r8a7795", "renesas,rcar-gen3-usb2-phy";
--		reg = <0 0xee0a0200 0 0x700>;
--		clocks = <&cpg CPG_MOD 702>;
--	};
-diff --git a/Documentation/devicetree/bindings/phy/renesas,usb2-phy.yaml b/Documentation/devicetree/bindings/phy/renesas,usb2-phy.yaml
+diff --git a/Documentation/devicetree/bindings/phy/renesas,usb3-phy.yaml b/Documentation/devicetree/bindings/phy/renesas,usb3-phy.yaml
 new file mode 100644
-index 00000000..7681e47
+index 00000000..edd5417
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/phy/renesas,usb2-phy.yaml
-@@ -0,0 +1,116 @@
++++ b/Documentation/devicetree/bindings/phy/renesas,usb3-phy.yaml
+@@ -0,0 +1,78 @@
 +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
 +%YAML 1.2
 +---
-+$id: http://devicetree.org/schemas/phy/renesas,usb2-phy.yaml#
++$id: http://devicetree.org/schemas/phy/renesas,usb3-phy.yaml#
 +$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+title: Renesas R-Car generation 3 USB 2.0 PHY
++title: Renesas R-Car generation 3 USB 3.0 PHY
 +
 +maintainers:
 +  - Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 +
 +properties:
 +  compatible:
-+    oneOf:
-+      - items:
-+          - const: renesas,usb2-phy-r8a77470 # RZ/G1C
-+
-+      - items:
-+          - enum:
-+              - renesas,usb2-phy-r7s9210  # RZ/A2
-+              - renesas,usb2-phy-r8a774a1 # RZ/G2M
-+              - renesas,usb2-phy-r8a774b1 # RZ/G2N
-+              - renesas,usb2-phy-r8a774c0 # RZ/G2E
-+              - renesas,usb2-phy-r8a7795  # R-Car H3
-+              - renesas,usb2-phy-r8a7796  # R-Car M3-W
-+              - renesas,usb2-phy-r8a77965 # R-Car M3-N
-+              - renesas,usb2-phy-r8a77990 # R-Car E3
-+              - renesas,usb2-phy-r8a77995 # R-Car D3
-+          - const: renesas,rcar-gen3-usb2-phy
++    items:
++      - enum:
++          - renesas,r8a774a1-usb3-phy # RZ/G2M
++          - renesas,r8a774b1-usb3-phy # RZ/G2N
++          - renesas,r8a7795-usb3-phy  # R-Car H3
++          - renesas,r8a7796-usb3-phy  # R-Car M3-W
++          - renesas,r8a77965-usb3-phy # R-Car M3-N
++      - const: renesas,rcar-gen3-usb3-phy
 +
 +  reg:
 +    maxItems: 1
 +
 +  clocks:
-+    minItems: 1
-+    maxItems: 2
++    minItems: 2
++    maxItems: 3
 +
 +  clock-names:
-+    minItems: 1
-+    maxItems: 2
++    # If you want to use the ssc, the clock-frequency of usb_extal
++    # must not be 0.
++    minItems: 2
++    maxItems: 3
 +    items:
-+      - const: fck
-+      - const: usb_x1
++      - const: usb3-if # The funcional clock
++      - const: usb3s_clk # The usb3's external clock
++      - const: usb_extal # The usb2's external clock
 +
 +  '#phy-cells':
-+    enum: [0, 1]  # and 0 is deprecated.
-+    description: |
-+      The phandle's argument in the PHY specifier is the INT_STATUS bit of
-+      controller.
-+      - 1 = USBH_INTA (OHCI)
-+      - 2 = USBH_INTB (EHCI)
-+      - 3 = UCOM_INT (OTG and BC)
-+
-+  interrupts:
-+    maxItems: 1
++    # see phy-bindings.txt in the same directory
++    const: 0
 +
 +  power-domains:
 +    maxItems: 1
 +
 +  resets:
-+    minItems: 1
-+    maxItems: 2
-+    items:
-+      - description: reset of USB 2.0 host side
-+      - description: reset of USB 2.0 peripheral side
++    maxItems: 1
 +
-+  vbus-supply:
++  renesas,ssc-range:
 +    description: |
-+      Phandle to a regulator that provides power to the VBUS. This regulator
-+      will be managed during the PHY power on/off sequence.
-+
-+  renesas,no-otg-pins:
-+    $ref: /schemas/types.yaml#/definitions/flag
-+    description: |
-+      specify when a board does not provide proper otg pins.
-+
-+  dr_mode: true
-+
-+if:
-+  properties:
-+    compatible:
-+      items:
-+        enum:
-+          - renesas,usb2-phy-r7s9210
-+then:
-+  required:
-+    - clock-names
++      Enable/disable spread spectrum clock (ssc). 0 or the property doesn't
++      exist means disabling the ssc. The actual value will be -<value> ppm.
++    allOf:
++      - $ref: /schemas/types.yaml#/definitions/uint32
++      - enum: [ 0, 4003, 4492, 4980 ]
 +
 +required:
 +  - compatible
 +  - reg
 +  - clocks
++  - clock-names
 +  - '#phy-cells'
 +
 +additionalProperties: false
@@ -237,22 +190,14 @@ index 00000000..7681e47
 +examples:
 +  - |
 +    #include <dt-bindings/clock/r8a7795-cpg-mssr.h>
-+    #include <dt-bindings/interrupt-controller/arm-gic.h>
 +    #include <dt-bindings/power/r8a7795-sysc.h>
 +
-+    usb-phy@ee080200 {
-+        compatible = "renesas,usb2-phy-r8a7795", "renesas,rcar-gen3-usb2-phy";
-+        reg = <0xee080200 0x700>;
-+        interrupts = <GIC_SPI 108 IRQ_TYPE_LEVEL_HIGH>;
-+        clocks = <&cpg CPG_MOD 703>;
-+        #phy-cells = <1>;
-+    };
-+
-+    usb-phy@ee0a0200 {
-+        compatible = "renesas,usb2-phy-r8a7795", "renesas,rcar-gen3-usb2-phy";
-+        reg = <0xee0a0200 0x700>;
-+        clocks = <&cpg CPG_MOD 702>;
-+        #phy-cells = <1>;
++    usb-phy@e65ee000 {
++        compatible = "renesas,r8a7795-usb3-phy", "renesas,rcar-gen3-usb3-phy";
++        reg = <0xe65ee000 0x90>;
++        clocks = <&cpg CPG_MOD 328>, <&usb3s0_clk>, <&usb_extal>;
++        clock-names = "usb3-if", "usb3s_clk", "usb_extal";
++        #phy-cells = <0>;
 +    };
 -- 
 2.7.4
