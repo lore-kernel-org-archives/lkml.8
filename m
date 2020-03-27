@@ -3,115 +3,118 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F33C8C43331
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 04:05:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 168EFC43331
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 04:06:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C1C8B2073E
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 04:05:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DCA012073E
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 04:06:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BrumY6/t"
+	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="RhdHyhJP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726193AbgC0EFq (ORCPT
+        id S1726360AbgC0EGR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Mar 2020 00:05:46 -0400
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:44863 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725822AbgC0EFq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Mar 2020 00:05:46 -0400
-Received: by mail-qk1-f195.google.com with SMTP id j4so9513299qkc.11;
-        Thu, 26 Mar 2020 21:05:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=GByrdXs6lcU5kCSOoxR0ATrYfBsPPkiO/r5cVnhRM/k=;
-        b=BrumY6/taf+vJ22SnRyZhu8VL/uvIlkZ5nGyN1Z2tO3Xa5r/K1Pz/+s+hXq+q1ODbl
-         y5Qy0GnSv0KSzloJXKu57s38KifyWL4IJ2b9ZGmZrhsMcdeNJq39uRa0OK4FACxyJxgZ
-         r1wWvNeri4P++8cT4k2cEMtKv4dJLaTG/nJU5RWtGfUPay//uKzgtLAJSgjj98TXWeyB
-         JWwp+aNBpWhHYFe5W2xyPqmHRyhl2RwMJQmWv4061eCHpgsosSYCCqfErLJ+8F/cpMkL
-         O6Ym4Wlm9ziVtgZGupnVHF0WjOKMafcxqJvA6njcQldmnlRIG6R44gLNHX08Wtj5iedg
-         2f/w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=GByrdXs6lcU5kCSOoxR0ATrYfBsPPkiO/r5cVnhRM/k=;
-        b=mkcEf0SIhyvNY62FeHu0k3XiPjPAYMu3kXBTkUVs3kmkBw9Ar0qZievqYZ35K22Hvv
-         gPI7mgze4yZDimlcltSnd8cgs+yBVQvZyIO2xzW6M8TN091R9z2bsnofd4lBQybe6h4t
-         dphBs56wmEf6wwGESfEcrtwt6A9vEnu10MoFVy689Y6wjm32AFtKJfgSTSKs3I974X/4
-         wQLsjeTQjeMaDlzYG0ZtI4bf5lls6FEnsN3nOabapsbORvKRB3zg3Eg/mKR0gZtiekQM
-         jgLLJ7r4JrlEr7byJRHHODMPkfFvhwZJ30CPSbiD3OnPUNNL8IiDeNOJQZZAQ8DNrbPA
-         D+MA==
-X-Gm-Message-State: ANhLgQ02c1ZBQk/8Xd4Uydhg+B1LKV8W0zD7kxe1Mu/Ty+bm/11+8WN0
-        3lfrv7aosM8qRPOWrALYHNU=
-X-Google-Smtp-Source: ADFU+vs+S6NHridaaaBDZTO/E9ZsShFQ3xAF7Ae2O/He6Gzy1qKxVW0mnafHU0aATRukIpfMciyoZQ==
-X-Received: by 2002:a37:a614:: with SMTP id p20mr12236940qke.114.1585281937701;
-        Thu, 26 Mar 2020 21:05:37 -0700 (PDT)
-Received: from localhost.localdomain ([168.181.48.248])
-        by smtp.gmail.com with ESMTPSA id q1sm3250572qtn.69.2020.03.26.21.05.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 26 Mar 2020 21:05:36 -0700 (PDT)
-Received: by localhost.localdomain (Postfix, from userid 1000)
-        id 24712C5CE4; Fri, 27 Mar 2020 01:05:34 -0300 (-03)
-Date:   Fri, 27 Mar 2020 01:05:34 -0300
-From:   Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
-To:     Qiujun Huang <hqjagain@gmail.com>
-Cc:     davem@davemloft.net, vyasevich@gmail.com, nhorman@tuxdriver.com,
-        kuba@kernel.org, linux-sctp@vger.kernel.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        anenbupt@gmail.com
-Subject: Re: [PATCH v6] sctp: fix refcount bug in sctp_wfree
-Message-ID: <20200327040534.GK3756@localhost.localdomain>
-References: <20200327030751.19404-1-hqjagain@gmail.com>
+        Fri, 27 Mar 2020 00:06:17 -0400
+Received: from ozlabs.org ([203.11.71.1]:46819 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725822AbgC0EGR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Mar 2020 00:06:17 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 48pSvf1RWFz9sSN;
+        Fri, 27 Mar 2020 15:06:06 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
+        s=201909; t=1585281973;
+        bh=kg/R97OXCQPDDw7FjCMRczi3AXDimlrIJshJ+0pnob4=;
+        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+        b=RhdHyhJPd79i6SoBIDesf0HUyhI9j0YvFvyFh9Gf/MXAKdkl710wlwwmaGbyJ6zh+
+         bivuu8WPX+4dFuoK0stxg431SLoKSzazK993OZta6D9Bo7/utRu7ukDFwmbhm/s0Lb
+         umLyukSNtKydfA0L0rpPhFpPoyHtlSPLlqg7yUhvyr6BW2dc7YUUU7Jh5hxOsepzLk
+         1atEgTiCDrRyWeXv3WYWvCb1kEuQ3c8HOEEa6hjRnD2CR7hK9GWRnmdXwB+8QH01Ad
+         +3De2LQ6NAOBujDlYtt0CxcL9YWGmSWUzht4KUV4r/QXPalxXplngcIyL/9uj0A3fI
+         nOXiUI31uJNVA==
+From:   Michael Ellerman <mpe@ellerman.id.au>
+To:     Clement Courbet <courbet@google.com>
+Cc:     Nathan Chancellor <natechancellor@gmail.com>,
+        Kees Cook <keescook@chromium.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Joe Perches <joe@perches.com>,
+        Bernd Petrovitsch <bernd@petrovitsch.priv.at>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        Segher Boessenkool <segher@kernel.crashing.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Allison Randal <allison@lohutok.net>,
+        Clement Courbet <courbet@google.com>,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        clang-built-linux@googlegroups.com
+Subject: Re: [PATCH]     x86: Alias memset to __builtin_memset.
+In-Reply-To: <20200326123841.134068-1-courbet@google.com>
+References: <20200323114207.222412-1-courbet@google.com> <20200326123841.134068-1-courbet@google.com>
+Date:   Fri, 27 Mar 2020 15:06:14 +1100
+Message-ID: <87a742wifd.fsf@mpe.ellerman.id.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200327030751.19404-1-hqjagain@gmail.com>
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 27, 2020 at 11:07:51AM +0800, Qiujun Huang wrote:
-> We should iterate over the datamsgs to move
-> all chunks(skbs) to newsk.
-> 
-> The following case cause the bug:
-> for the trouble SKB, it was in outq->transmitted list
-> 
-> sctp_outq_sack
->         sctp_check_transmitted
->                 SKB was moved to outq->sacked list
->         then throw away the sack queue
->                 SKB was deleted from outq->sacked
-> (but it was held by datamsg at sctp_datamsg_to_asoc
-> So, sctp_wfree was not called here)
-> 
-> then migrate happened
-> 
->         sctp_for_each_tx_datachunk(
->         sctp_clear_owner_w);
->         sctp_assoc_migrate();
->         sctp_for_each_tx_datachunk(
->         sctp_set_owner_w);
-> SKB was not in the outq, and was not changed to newsk
-> 
-> finally
-> 
-> __sctp_outq_teardown
->         sctp_chunk_put (for another skb)
->                 sctp_datamsg_put
->                         __kfree_skb(msg->frag_list)
->                                 sctp_wfree (for SKB)
-> 	SKB->sk was still oldsk (skb->sk != asoc->base.sk).
-> 
-> Reported-and-tested-by: syzbot+cea71eec5d6de256d54d@syzkaller.appspotmail.com
-> Signed-off-by: Qiujun Huang <hqjagain@gmail.com>
+Clement Courbet <courbet@google.com> writes:
+> I discussed with the original authors who added freestanding to our
+> build. It turns out that it was added globally but this was just to
+> to workaround powerpc not compiling under clang, but they felt the
+> fix was appropriate globally.
+>
+> Now Nick has dug up https://lkml.org/lkml/2019/8/29/1300, which
+> advises against freestanding. Also, I've did some research and
+> discovered that the original reason for using freestanding for
+> powerpc has been fixed here:
+> https://lore.kernel.org/linuxppc-dev/20191119045712.39633-3-natechancellor@gmail.com/
+>
+> I'm going to remove -ffreestanding from downstream, so we don't really need
+> this anymore, sorry for waisting people's time.
+>
+> I wonder if the freestanding fix from the aforementioned patch is really needed
+> though. I think that clang is actually right to point out the issue.
+> I don't see any reason why setjmp()/longjmp() are declared as taking longs
+> rather than ints. The implementation looks like it only ever propagates the
+> value (in longjmp) or sets it to 1 (in setjmp), and we only ever call longjmp
+> with integer parameters. But I'm not a PowerPC expert, so I might
+> be misreading the code.
+>
+>
+> So it seems that we could just remove freestanding altogether and rewrite the
+> code to:
+>
+> diff --git a/arch/powerpc/include/asm/setjmp.h b/arch/powerpc/include/asm/setjmp.h
+> index 279d03a1eec6..7941ae68fe21 100644
+> --- a/arch/powerpc/include/asm/setjmp.h
+> +++ b/arch/powerpc/include/asm/setjmp.h
+> @@ -12,7 +12,9 @@
+>
+>  #define JMP_BUF_LEN    23
+> -extern long setjmp(long *);
+> -extern void longjmp(long *, long);
+> +typedef long * jmp_buf;
+> +
+> +extern int setjmp(jmp_buf);
+> +extern void longjmp(jmp_buf, int);
+>
+> I'm happy to send a patch for this, and get rid of more -ffreestanding.
+> Opinions ?
 
-Acked-by: Marcelo Ricardo Leitner <mleitner@redhat.com>
-Thanks Qiujun.
+If it works then it looks like a much better fix than using -ffreestanding.
+
+Please submit a patch with a change log etc. and I'd be happy to merge
+it.
+
+cheers
