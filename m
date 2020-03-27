@@ -2,116 +2,265 @@ Return-Path: <SRS0=s8dx=5M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCBC2C2D0EC
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 15:33:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40A22C43331
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 15:35:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 892FF20578
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 15:33:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585323213;
-	bh=G5tUCjqdy/t+nE+obdoOgJNncNoC78Cx+sFinQYIUuI=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=zgsxZBvsThQJSchbVwO1eY0KRf4rZ6mrtoXrgcRggzc5eJyU72D2l8eKk+d43HSBy
-	 ocdXoOBw++LwtiOALLiLRjNT9bHJQWcg+MLmENAl9AeLLOatUG6EhbV1wIZYMXUj4K
-	 hDugxDglUlithqccnVkd/d3b3HAA4nLtljV4VEy0=
+	by mail.kernel.org (Postfix) with ESMTP id 0523420658
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 15:35:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RR1nu05L"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727370AbgC0Pdc (ORCPT
+        id S1727541AbgC0Pfb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Mar 2020 11:33:32 -0400
-Received: from foss.arm.com ([217.140.110.172]:46882 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726515AbgC0Pdc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Mar 2020 11:33:32 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B2E0031B;
-        Fri, 27 Mar 2020 08:33:31 -0700 (PDT)
-Received: from localhost (unknown [10.37.6.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 36BCF3F71F;
-        Fri, 27 Mar 2020 08:33:31 -0700 (PDT)
-Date:   Fri, 27 Mar 2020 15:33:29 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     Wolfram Sang <wsa+renesas@sang-engineering.com>
-Cc:     alsa-devel@alsa-project.org, Daniel Mack <daniel@zonque.org>,
-        Haojian Zhuang <haojian.zhuang@gmail.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        linux-arm-kernel@lists.infradead.org, linux-i2c@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>,
-        Robert Jarzmik <robert.jarzmik@free.fr>,
-        Takashi Iwai <tiwai@suse.com>
-Subject: Applied "ASoC: pxa: magician: convert to use i2c_new_client_device()" to the asoc tree
-In-Reply-To:  <20200326211010.13471-2-wsa+renesas@sang-engineering.com>
-Message-Id:  <applied-20200326211010.13471-2-wsa+renesas@sang-engineering.com>
-X-Patchwork-Hint: ignore
+        Fri, 27 Mar 2020 11:35:31 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:39599 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726515AbgC0Pfb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Mar 2020 11:35:31 -0400
+Received: by mail-ot1-f67.google.com with SMTP id x11so10127775otp.6;
+        Fri, 27 Mar 2020 08:35:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=m2VgctS9k0onJoQ+C26IEDnuG2AgnqBi68w0KHrlzNA=;
+        b=RR1nu05LuVJW27A/u2yx3lBIycNb4JHH7fREUrmFKI6nCA93RAiOdvMrCjUd1Cn4dP
+         euODJCmoiFPEA5UjaPnHxEspc1Vk558XbkOTd/QQXan3Dba2jDqMBmHCo3LLphfjut0a
+         V30dLmVmJEzZJ2ROeRwMj9Ci+6ccSstT/DOkknvfPbxzMlddz549IkDUWRjSvlZox1/J
+         1N84vH4ByD+Npmu7I7zGHL9q+LVtvrxP9MHo3CT+YcTYA5zPBIxE5iMBIFhzKvckVfUQ
+         IOicaQH7G8Fs26V41+7wbe4aVSoCCxStlYkdWyOpt4pJLEBIvtwYWvazG+T6ZyNh8FuH
+         xGzA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=m2VgctS9k0onJoQ+C26IEDnuG2AgnqBi68w0KHrlzNA=;
+        b=UZWzqN3rAXRDqeux74iiypbiCB79zF0KGiNQMEhnjDYBRgR9RS4dwRYwvCzYzuTgTV
+         cA1oUxFrNow0Fq4xC4EOw1SHzd4D5nuy2c9pZ5vw11xC2FgRy/kPo7Eb5HKkv6GZJuOy
+         LMbZYKOwW3z2HgE7AntbzLAulzY9tcuTe3oEUzDG597Vzp+8Mfmnb7HcsTqrNho6JDq1
+         2EAfSkrPqElyXmJ4tL974M7oTQZXGdcloUbpWLp9KdQCdX5FANmHzBIgXyD+qqrkIn00
+         XNcUP01QLWu77QHU+LCgOpglC1MIp/wGGVx0TZUCRCKi+WOq/MVntN8/jMXpL69yK+n7
+         xCtQ==
+X-Gm-Message-State: ANhLgQ2pIFTK9DAmB66iDSCSl5sUueF+tV7Kh7o7LEheNB/j6gyXykDk
+        +Bg+P0LaMO21Iajn/jJsuX0tPnPWpnNUvTuHm1o=
+X-Google-Smtp-Source: ADFU+vsUKu6cs4FScroGgeKtpc8cwJ46ysU1li4E5NRjEIjx2ULrApBboKPsivXVWH+9bvG1E75z/j5i8AVRisHGh5M=
+X-Received: by 2002:a4a:2c55:: with SMTP id o82mr9791474ooo.33.1585323329619;
+ Fri, 27 Mar 2020 08:35:29 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200318170638.18562-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20200318170638.18562-2-prabhakar.mahadev-lad.rj@bp.renesas.com> <20200319131312.GA3192108@oden.dyn.berto.se>
+In-Reply-To: <20200319131312.GA3192108@oden.dyn.berto.se>
+From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Date:   Fri, 27 Mar 2020 15:35:03 +0000
+Message-ID: <CA+V-a8sf3p8jDQ+WJhcZGHwhrWBO_DBVtZH0Y6n3k0_89tOU_A@mail.gmail.com>
+Subject: Re: [PATCH v3 1/2] media: rcar-vin: Add support for
+ MEDIA_BUS_FMT_SRGGB8_1X8 format
+To:     Niklas <niklas.soderlund@ragnatech.se>
+Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-media <linux-media@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The patch
+Hi Niklas,
 
-   ASoC: pxa: magician: convert to use i2c_new_client_device()
+On Thu, Mar 19, 2020 at 1:13 PM Niklas <niklas.soderlund@ragnatech.se> wrot=
+e:
+>
+> Hi Prabhakar,
+>
+> Thanks for your work.
+>
+> On 2020-03-18 17:06:37 +0000, Lad Prabhakar wrote:
+> > Add support for MEDIA_BUS_FMT_SRGGB8_1X8 format in rcar-vin by setting
+> > format type to RAW8 in VNMC register and appropriately setting the
+> > bpp, bytesperline to enable V4L2_PIX_FMT_SRGGB8.
+>
+> > For RAW8 format data is transferred by 4-Byte unit so VnIS register is
+> > configured accordingly.
+> >
+> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> > ---
+> >  drivers/media/platform/rcar-vin/rcar-core.c |  1 +
+> >  drivers/media/platform/rcar-vin/rcar-dma.c  | 11 ++++++++++-
+> >  drivers/media/platform/rcar-vin/rcar-v4l2.c |  4 ++++
+> >  3 files changed, 15 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/drivers/media/platform/rcar-vin/rcar-core.c b/drivers/medi=
+a/platform/rcar-vin/rcar-core.c
+> > index 7440c8965d27..76daf2fe5bcd 100644
+> > --- a/drivers/media/platform/rcar-vin/rcar-core.c
+> > +++ b/drivers/media/platform/rcar-vin/rcar-core.c
+> > @@ -469,6 +469,7 @@ static int rvin_parallel_subdevice_attach(struct rv=
+in_dev *vin,
+> >               case MEDIA_BUS_FMT_UYVY8_2X8:
+> >               case MEDIA_BUS_FMT_UYVY10_2X10:
+> >               case MEDIA_BUS_FMT_RGB888_1X24:
+> > +             case MEDIA_BUS_FMT_SRGGB8_1X8:
+>
+> This is wrong RAW formats are only supported on the CSI-2 interface and
+> not the parallel one. This line shall be dropped.
+>
+sure will drop this.
 
-has been applied to the asoc tree at
+> >                       vin->mbus_code =3D code.code;
+> >                       vin_dbg(vin, "Found media bus format for %s: %d\n=
+",
+> >                               subdev->name, vin->mbus_code);
+> > diff --git a/drivers/media/platform/rcar-vin/rcar-dma.c b/drivers/media=
+/platform/rcar-vin/rcar-dma.c
+> > index 1a30cd036371..ec7b49c0b281 100644
+> > --- a/drivers/media/platform/rcar-vin/rcar-dma.c
+> > +++ b/drivers/media/platform/rcar-vin/rcar-dma.c
+> > @@ -85,6 +85,7 @@
+> >  #define VNMC_INF_YUV8_BT601  (1 << 16)
+> >  #define VNMC_INF_YUV10_BT656 (2 << 16)
+> >  #define VNMC_INF_YUV10_BT601 (3 << 16)
+> > +#define VNMC_INF_RAW8                (4 << 16)
+> >  #define VNMC_INF_YUV16               (5 << 16)
+> >  #define VNMC_INF_RGB888              (6 << 16)
+> >  #define VNMC_VUP             (1 << 10)
+> > @@ -587,13 +588,14 @@ void rvin_crop_scale_comp(struct rvin_dev *vin)
+> >       rvin_write(vin, vin->crop.top, VNSLPRC_REG);
+> >       rvin_write(vin, vin->crop.top + vin->crop.height - 1, VNELPRC_REG=
+);
+> >
+> > -
+> >       /* TODO: Add support for the UDS scaler. */
+> >       if (vin->info->model !=3D RCAR_GEN3)
+> >               rvin_crop_scale_comp_gen2(vin);
+> >
+> >       fmt =3D rvin_format_from_pixel(vin, vin->format.pixelformat);
+> >       stride =3D vin->format.bytesperline / fmt->bpp;
+> > +     if (vin->format.pixelformat =3D=3D V4L2_PIX_FMT_SRGGB8)
+> > +             stride /=3D 2;
+>
+> I'm sorry this makes no sens to me.
+>
+> - The width of the image is number of pixels in the raw format.
+> - In memory each row is either is either RGRGRG... or GBGBGB...
+> - The pixel size is 1 byte per pixel.
+> - We calculate bytesperline as ALIGN(width, align) * bpp, where align is
+>   how much we need to "adjust" the width to match the VNIS_REG reg
+>   value.  We do this in rvin_format_bytesperline().
+> - We then remove bpp from bytesperline and we have a unit in pixels
+>   which is our stride.
+>
+> I can't see why you need to cut the stride in half. In my view you
+> should add a check for V4L2_PIX_FMT_SRGGB8 in rvin_format_bytesperline()
+> and pick an alignment value that matches the restrictions.
+>
+> I might miss something, but then I wish to learn.
+>
+I have replied for this issue on v2
+(https://lkml.org/lkml/2020/3/27/384) as the VIN
+processes RAW8 as 2 byte per pixel.
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git 
+> >       rvin_write(vin, stride, VNIS_REG);
+> >  }
+> >
+> > @@ -676,6 +678,9 @@ static int rvin_setup(struct rvin_dev *vin)
+> >
+> >               input_is_yuv =3D true;
+> >               break;
+> > +     case MEDIA_BUS_FMT_SRGGB8_1X8:
+> > +             vnmc |=3D VNMC_INF_RAW8;
+> > +             break;
+>
+> Here and ...
+>
+> >       default:
+> >               break;
+> >       }
+> > @@ -737,6 +742,9 @@ static int rvin_setup(struct rvin_dev *vin)
+> >       case V4L2_PIX_FMT_ABGR32:
+> >               dmr =3D VNDMR_A8BIT(vin->alpha) | VNDMR_EXRGB | VNDMR_DTM=
+D_ARGB;
+> >               break;
+> > +     case V4L2_PIX_FMT_SRGGB8:
+> > +             dmr =3D 0;
+> > +             break;
+>
+> ... here we have a new problem, sorry for not thinking of it before.
+>
+> Up until now the VIN was capable to convert any of its supported input
+> mbus formats to any of it's supported output pixel formats. With the
+> addition of RAW formats this is no longer true. This new restriction
+> needs to be added to the driver.
+>
+> Luck has it we can fix ...
+>
+> >       default:
+> >               vin_err(vin, "Invalid pixelformat (0x%x)\n",
+> >                       vin->format.pixelformat);
+> > @@ -1110,6 +1118,7 @@ static int rvin_mc_validate_format(struct rvin_de=
+v *vin, struct v4l2_subdev *sd,
+> >       case MEDIA_BUS_FMT_UYVY8_2X8:
+> >       case MEDIA_BUS_FMT_UYVY10_2X10:
+> >       case MEDIA_BUS_FMT_RGB888_1X24:
+> > +     case MEDIA_BUS_FMT_SRGGB8_1X8:
+> >               vin->mbus_code =3D fmt.format.code;
+>
+> ... this here by changes this to
+>
+>         switch (fmt.format.code) {
+>         case MEDIA_BUS_FMT_YUYV8_1X16:
+>         case MEDIA_BUS_FMT_UYVY8_1X16:
+>         case MEDIA_BUS_FMT_UYVY8_2X8:
+>         case MEDIA_BUS_FMT_UYVY10_2X10:
+>                 break;
+>         case MEDIA_BUS_FMT_RGB888_1X24:
+>                 if (vin->format.pixelformat !=3D V4L2_PIX_FMT_SRGGB8)
+>                     return -EPIPE:
+>                 break;
+>         default:
+>                 return -EPIPE;
+>         }
+>
+>         vin->mbus_code =3D fmt.format.code;
+>
+Will fix it as above.
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
+Cheers,
+--Prabhakar
 
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
-
-From 17fb5433150e8b0b4000a77a21055359a2eab534 Mon Sep 17 00:00:00 2001
-From: Wolfram Sang <wsa+renesas@sang-engineering.com>
-Date: Thu, 26 Mar 2020 22:10:10 +0100
-Subject: [PATCH] ASoC: pxa: magician: convert to use i2c_new_client_device()
-
-Move away from the deprecated API and return the shiny new ERRPTR where
-useful.
-
-Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
-Link: https://lore.kernel.org/r/20200326211010.13471-2-wsa+renesas@sang-engineering.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- sound/soc/pxa/magician.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/sound/soc/pxa/magician.c b/sound/soc/pxa/magician.c
-index 6483cff5b73d..3bafd86bfb93 100644
---- a/sound/soc/pxa/magician.c
-+++ b/sound/soc/pxa/magician.c
-@@ -358,10 +358,10 @@ static int __init magician_init(void)
- 	adapter = i2c_get_adapter(0);
- 	if (!adapter)
- 		return -ENODEV;
--	client = i2c_new_device(adapter, i2c_board_info);
-+	client = i2c_new_client_device(adapter, i2c_board_info);
- 	i2c_put_adapter(adapter);
--	if (!client)
--		return -ENODEV;
-+	if (IS_ERR(client))
-+		return PTR_ERR(client);
- 
- 	ret = gpio_request(EGPIO_MAGICIAN_SPK_POWER, "SPK_POWER");
- 	if (ret)
--- 
-2.20.1
-
+> >               break;
+> >       default:
+> > diff --git a/drivers/media/platform/rcar-vin/rcar-v4l2.c b/drivers/medi=
+a/platform/rcar-vin/rcar-v4l2.c
+> > index 5151a3cd8a6e..ca542219e8ae 100644
+> > --- a/drivers/media/platform/rcar-vin/rcar-v4l2.c
+> > +++ b/drivers/media/platform/rcar-vin/rcar-v4l2.c
+> > @@ -66,6 +66,10 @@ static const struct rvin_video_format rvin_formats[]=
+ =3D {
+> >               .fourcc                 =3D V4L2_PIX_FMT_ABGR32,
+> >               .bpp                    =3D 4,
+> >       },
+> > +     {
+> > +             .fourcc                 =3D V4L2_PIX_FMT_SRGGB8,
+> > +             .bpp                    =3D 1,
+> > +     },
+> >  };
+> >
+> >  const struct rvin_video_format *rvin_format_from_pixel(struct rvin_dev=
+ *vin,
+> > --
+> > 2.20.1
+> >
+>
+> --
+> Regards,
+> Niklas S=C3=B6derlund
