@@ -2,124 +2,115 @@ Return-Path: <SRS0=s8dx=5M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E865C43331
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 11:55:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D230DC43331
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 11:59:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A0D02074F
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 11:55:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A9891206DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 11:59:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727263AbgC0LzO convert rfc822-to-8bit (ORCPT
+        id S1726901AbgC0L7Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Mar 2020 07:55:14 -0400
-Received: from mga03.intel.com ([134.134.136.65]:46128 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726515AbgC0LzN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Mar 2020 07:55:13 -0400
-IronPort-SDR: B1VBVRAIByMa7IYEghXjJZ1oT+2wDvlUnJKAURN7/5oT4+xxK5jeuD5jrH/MmnXSjVbcF3Vpe7
- bevyU++o8w8A==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Mar 2020 04:55:13 -0700
-IronPort-SDR: cyFcDds1ROgm2J/9E0iDXPHdiZCj/JKszXXd6QBGBf3tRPxLR/DOCuIawDN3DWCwOzyUUh1myf
- rHIg33LIodog==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,312,1580803200"; 
-   d="scan'208";a="247863447"
-Received: from fmsmsx107.amr.corp.intel.com ([10.18.124.205])
-  by orsmga003.jf.intel.com with ESMTP; 27 Mar 2020 04:55:12 -0700
-Received: from fmsmsx161.amr.corp.intel.com (10.18.125.9) by
- fmsmsx107.amr.corp.intel.com (10.18.124.205) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Fri, 27 Mar 2020 04:55:12 -0700
-Received: from shsmsx101.ccr.corp.intel.com (10.239.4.153) by
- FMSMSX161.amr.corp.intel.com (10.18.125.9) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Fri, 27 Mar 2020 04:55:12 -0700
-Received: from shsmsx104.ccr.corp.intel.com ([169.254.5.206]) by
- SHSMSX101.ccr.corp.intel.com ([169.254.1.43]) with mapi id 14.03.0439.000;
- Fri, 27 Mar 2020 19:55:10 +0800
-From:   "Tian, Kevin" <kevin.tian@intel.com>
-To:     Jacob Pan <jacob.jun.pan@linux.intel.com>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        David Woodhouse <dwmw2@infradead.org>,
-        "Alex Williamson" <alex.williamson@redhat.com>,
-        Jean-Philippe Brucker <jean-philippe@linaro.com>
-CC:     "Liu, Yi L" <yi.l.liu@intel.com>,
-        "Raj, Ashok" <ashok.raj@intel.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Eric Auger <eric.auger@redhat.com>
-Subject: RE: [PATCH V10 04/11] iommu/vt-d: Use helper function to skip agaw
- for SL
-Thread-Topic: [PATCH V10 04/11] iommu/vt-d: Use helper function to skip agaw
- for SL
-Thread-Index: AQHV/w5fSzCgga8qmUGqovU+x6tW2KhcXtQQ
-Date:   Fri, 27 Mar 2020 11:55:09 +0000
-Message-ID: <AADFC41AFE54684AB9EE6CBC0274A5D19D7ED91C@SHSMSX104.ccr.corp.intel.com>
-References: <1584746861-76386-1-git-send-email-jacob.jun.pan@linux.intel.com>
- <1584746861-76386-5-git-send-email-jacob.jun.pan@linux.intel.com>
-In-Reply-To: <1584746861-76386-5-git-send-email-jacob.jun.pan@linux.intel.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-dlp-product: dlpe-windows
-dlp-version: 11.2.0.6
-dlp-reaction: no-action
-x-originating-ip: [10.239.127.40]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        Fri, 27 Mar 2020 07:59:16 -0400
+Received: from mout.kundenserver.de ([212.227.126.187]:49533 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726165AbgC0L7Q (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Mar 2020 07:59:16 -0400
+Received: from mail-qk1-f180.google.com ([209.85.222.180]) by
+ mrelayeu.kundenserver.de (mreue011 [212.227.15.129]) with ESMTPSA (Nemesis)
+ id 1M8hlZ-1jD8wF388P-004jIv for <linux-kernel@vger.kernel.org>; Fri, 27 Mar
+ 2020 12:59:14 +0100
+Received: by mail-qk1-f180.google.com with SMTP id d11so10431754qko.3
+        for <linux-kernel@vger.kernel.org>; Fri, 27 Mar 2020 04:59:14 -0700 (PDT)
+X-Gm-Message-State: ANhLgQ3f7zr3f4cOtpEWkBJeuRXX/sk5nkRn+ynjRGKOlJnZlQdLXFki
+        C+bhIddSLyaiEjPGaoZq4QfE1uTZrvrKr6ZF49I=
+X-Google-Smtp-Source: ADFU+vuE+pRxvTEA/tUOWrqhrw6Yo/aFYGbSxiy/A0Z97EJ0d/qGe5AGsH4sFBSJry+cXavGtFSTjhkWadU8yBY+3Dc=
+X-Received: by 2002:a37:6285:: with SMTP id w127mr13147141qkb.138.1585310353633;
+ Fri, 27 Mar 2020 04:59:13 -0700 (PDT)
 MIME-Version: 1.0
+References: <20200301122226.4068-1-afzal.mohd.ma@gmail.com>
+ <m3ftepbtxm.fsf@t19.piap.pl> <51cebbbb-3ba4-b336-82a9-abcc22f9a69c@gmail.com>
+ <20200304163412.GX37466@atomide.com> <20200313154520.GA5375@afzalpc>
+ <20200317043702.GA5852@afzalpc> <20200325114332.GA6337@afzalpc>
+ <20200327104635.GA7775@afzalpc> <CAK8P3a0kVvkCW+2eiyZTkfS=LqqnbeQS+S-os=vxhaYXCwLK+A@mail.gmail.com>
+ <20200327111012.GA8355@afzalpc> <20200327112913.GA8711@afzalpc>
+In-Reply-To: <20200327112913.GA8711@afzalpc>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Fri, 27 Mar 2020 12:58:57 +0100
+X-Gmail-Original-Message-ID: <CAK8P3a2sqika7=3D6Zgkz+v8HtGEc0q0+skWG8mSKuL+qSoYLw@mail.gmail.com>
+Message-ID: <CAK8P3a2sqika7=3D6Zgkz+v8HtGEc0q0+skWG8mSKuL+qSoYLw@mail.gmail.com>
+Subject: Re: [PATCH v3] ARM: replace setup_irq() by request_irq()
+To:     afzal mohammed <afzal.mohd.ma@gmail.com>
+List-Id: <soc.lore.kernel.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Tony Lindgren <tony@atomide.com>,
+        Alexander Sverdlin <alexander.sverdlin@gmail.com>,
+        =?UTF-8?Q?Krzysztof_Ha=C5=82asa?= <khalasa@piap.pl>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Lubomir Rintel <lkundrak@v3.sk>,
+        Gregory CLEMENT <gregory.clement@bootlin.com>,
+        Hartley Sweeten <hsweeten@visionengravers.com>,
+        Viresh Kumar <vireshk@kernel.org>,
+        Shiraz Hashim <shiraz.linux.kernel@gmail.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        SoC Team <soc@kernel.org>, arm-soc <arm@kernel.org>,
+        Olof Johansson <olof@lixom.net>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:eSpsFH22Zf29ANsZtvepCx5u7KMIPMMr9Nc+39smeQAqpCjEOff
+ SaBfaGwreUbb0Dzt8ABjevEHRyqEHhSE6L6InnWFzsUg60V2l5rI8fv0Nut5KIGpLz5i6n3
+ phLhObKV/AM7Z0lewcmwwEoVhArIzk0kZyXYAOQS+kjj8BdleSBik7IcFYQUsWB+y+pNC+4
+ Gt4oJYc3c1gJgNoVyqYSw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:x5prTMqlB4E=:7UvqZhZbxqc0vh9xs77Xiq
+ xOBxbPNEWag4zCMYudJag/OGvqq83/mELgf3vKUD/fN9I5RbvUQcanSOGi6Npr2ahNo2FyJCB
+ E28veyVUmZaUvPSWltTSswwmJM1UG3kTirX/kxqn4I5Li8MsInU+yVv6TjLz0hfKRsYy5U1ut
+ BMRs1bN9aZook1w/2AkTQM5KYSEO13z8LcSpQhOE2ZAKqzkTuiAGD22oC+xBINpfVOT5BBCTm
+ kCsKbL6038OMgTmDdTeJLNLsn18ZzcoXlGZDNKmAhpSZcrIOe0BrBOmgTtmjBP2TKBUOwUj0D
+ mm/Xmwn6xoJFfk94prno0e9aUNFwsBEf2wY5GOA2DZIcocYZgiUSk4eC4h3vA12Xc7HBZpHQa
+ ft+BkA6L8f1fPyIAxW3FQPC+9i+U7REKfTAgsVnYqQE3BvkZ+nHdLI3XewzTz6sCN85lSubfH
+ W5PoItJjnqxZupRQuywP7Khmu6e53cv6SUAcsgwKkbRolgfRa+1c9EaTKQ+tXdnvNNE+JMvbJ
+ MkWypHIT5/DlP2II63KcZKea0+gol9wSGQqf3VA9l8ZoaCOo8IXLHCK3i14DMC4TmqkhRMIYg
+ Dco8pycdL0CD6g6xmt6xCfrEYmXoB/q/CSitiV+25boQ3GhBJKhNPAN59EDs0JKJ8+HkQokQ6
+ o3uwJgYPeirhKB56uIQGwbqfmINecQ6slLE/rgavc2VaFFdrjEn3y9p37AhtJmd9z4kc6dUfn
+ brlhWgaRNtwjwyhDhLKRTEg5r8xyGrvDISp+4aCdPdijxHak7PvVtWtYjsFgiqRBHgw480Z1g
+ i4YHNcY0lIUKiFQqQmrdk4lsCRkwsJaHizNMXVdnJyOQypR+Qg=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> From: Jacob Pan <jacob.jun.pan@linux.intel.com>
-> Sent: Saturday, March 21, 2020 7:28 AM
-> 
-> Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
-> ---
->  drivers/iommu/intel-pasid.c | 14 ++++----------
->  1 file changed, 4 insertions(+), 10 deletions(-)
-> 
-> diff --git a/drivers/iommu/intel-pasid.c b/drivers/iommu/intel-pasid.c
-> index 191508c7c03e..9bdb7ee228b6 100644
-> --- a/drivers/iommu/intel-pasid.c
-> +++ b/drivers/iommu/intel-pasid.c
-> @@ -544,17 +544,11 @@ int intel_pasid_setup_second_level(struct
-> intel_iommu *iommu,
->  		return -EINVAL;
->  	}
-> 
-> -	/*
-> -	 * Skip top levels of page tables for iommu which has less agaw
-> -	 * than default. Unnecessary for PT mode.
-> -	 */
->  	pgd = domain->pgd;
-> -	for (agaw = domain->agaw; agaw > iommu->agaw; agaw--) {
-> -		pgd = phys_to_virt(dma_pte_addr(pgd));
-> -		if (!dma_pte_present(pgd)) {
-> -			dev_err(dev, "Invalid domain page table\n");
-> -			return -EINVAL;
-> -		}
-> +	agaw = iommu_skip_agaw(domain, iommu, &pgd);
-> +	if (agaw < 0) {
-> +		dev_err(dev, "Invalid domain page table\n");
-> +		return -EINVAL;
->  	}
+On Fri, Mar 27, 2020 at 12:29 PM afzal mohammed <afzal.mohd.ma@gmail.com> wrote:
+>
+> Hi Arnd,
+>
+> On Fri, Mar 27, 2020 at 04:40:12PM +0530, afzal mohammed wrote:
+> > On Fri, Mar 27, 2020 at 11:55:36AM +0100, Arnd Bergmann wrote:
+>
+> > > To make sure I get the right ones, could you bounce all the patches that are
+> > > still missing to soc@kernel.org to let them show up in patchwork?
+> >
+> > Done.
+>
+> Sorry, i first forwarded, after that i bounced all, but not able to
+> see the bounced ones in patchwork, only the forwarded ones.
 
-ok, I see how it is used. possibly combine last and this one together since
-it's mostly moving code...
+Right, I see the same thing. Unfortunately, the version I have now
+doesn't work easily in git-am.
 
-> 
->  	pgd_val = virt_to_phys(pgd);
-> --
-> 2.7.4
+> > If it helps, i can send the same patches w/ tags received as well.
+>
+> Let me know if if anything more needs to be done from my side.
 
+I can probably fix it up here, but it would help if you can resend the
+remaining patches using git-send-email with all the tags added in
+and the normal subject lines.
+
+      Arnd
