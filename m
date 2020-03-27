@@ -2,74 +2,173 @@ Return-Path: <SRS0=s8dx=5M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1C74C2D0E8
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 09:21:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8380C43331
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 09:22:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8826120705
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 09:21:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A17920717
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 09:22:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726450AbgC0JVW (ORCPT
+        id S1726661AbgC0JWT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Mar 2020 05:21:22 -0400
-Received: from mx2.suse.de ([195.135.220.15]:56504 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726002AbgC0JVW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Mar 2020 05:21:22 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 216EBB2C2;
-        Fri, 27 Mar 2020 09:21:20 +0000 (UTC)
+        Fri, 27 Mar 2020 05:22:19 -0400
+Received: from esa1.microchip.iphmx.com ([68.232.147.91]:12817 "EHLO
+        esa1.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725946AbgC0JWT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Mar 2020 05:22:19 -0400
+IronPort-SDR: e2ZmeRMDbZsA90/bG03CZ2fiOLxCd6/0Is+WTM6N2Evf468u8fOlXTNXjKOORpS1ykA75afUYA
+ yUPpIjqYEFPnWV+SU6RnRERi6tmfeai2YLT75/dPCtd34QFrNH5pPonw/baM8Osu72i/TTAFZI
+ XKEchyh+GFLFfFv2HBMAtS5chmr4YxLC9DFx8/xtAZxVDlg58gnnZKxDLpdr7Onie2+9Rsgo+T
+ E4/WX3IUE8tS5mRhGK/CcN+pth6vHLMR2p/6YwAEGY+sCW4TeDxSbytybvsCyercgEXhqd1ezv
+ r6k=
+X-IronPort-AV: E=Sophos;i="5.72,311,1580799600"; 
+   d="scan'208";a="73728093"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa1.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 27 Mar 2020 02:22:18 -0700
+Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
+ chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Fri, 27 Mar 2020 02:22:18 -0700
+Received: from soft-dev3.microsemi.net (10.10.115.15) by
+ chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server id
+ 15.1.1713.5 via Frontend Transport; Fri, 27 Mar 2020 02:22:15 -0700
+From:   Horatiu Vultur <horatiu.vultur@microchip.com>
+To:     <davem@davemloft.net>, <jiri@resnulli.us>, <ivecera@redhat.com>,
+        <kuba@kernel.org>, <roopa@cumulusnetworks.com>,
+        <nikolay@cumulusnetworks.com>, <olteanv@gmail.com>,
+        <andrew@lunn.ch>, <UNGLinuxDriver@microchip.com>,
+        <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
+        <bridge@lists.linux-foundation.org>
+CC:     Horatiu Vultur <horatiu.vultur@microchip.com>
+Subject: [RFC net-next v4 0/9] net: bridge: mrp: Add support for Media Redundancy Protocol(MRP)
 Date:   Fri, 27 Mar 2020 10:21:17 +0100
-From:   Jean Delvare <jdelvare@suse.de>
-To:     Tiezhu Yang <yangtiezhu@loongson.cn>
-Cc:     jiaxun.yang@flygoat.com, chenhc@lemote.com,
-        linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
-        lixuefeng@loongson.cn, paulburton@kernel.org, ralf@linux-mips.org,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-Subject: Re: [PATCH v3 1/2] firmware: dmi: Add macro
- SMBIOS_ENTRY_POINT_SCAN_START
-Message-ID: <20200327102117.2d8fb811@endymion>
-In-Reply-To: <623abcd1-7c5b-3cae-817b-fc993897b9a9@loongson.cn>
-References: <1580875713-18252-1-git-send-email-yangtiezhu@loongson.cn>
-        <8ee01022-d3d1-8145-1a0b-ba77c5bb7101@loongson.cn>
-        <20200326150716.47b4152f@endymion>
-        <623abcd1-7c5b-3cae-817b-fc993897b9a9@loongson.cn>
-Organization: SUSE Linux
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-suse-linux-gnu)
+Message-ID: <20200327092126.15407-1-horatiu.vultur@microchip.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 27 Mar 2020 09:21:17 +0800, Tiezhu Yang wrote:
-> On 03/26/2020 10:07 PM, Jean Delvare wrote:
-> > Hi Tiezhu,
-> >
-> > On Thu, 20 Feb 2020 10:43:56 +0800, Tiezhu Yang wrote:  
-> >> Since this patch is independent and it has no any negative influence,
-> >> could you apply it to your DMI tree first?  
-> > I've just queued your patch for kernel 5.6. Thanks for your
-> > contribution and sorry for the delay.
-> >  
-> 
-> Hi Jean,
-> 
-> Thank you very much, it has been merged into
-> mips-next and linux-next tree by Thomas about
-> three days ago, so you can drop it in your tree.
-> 
-> https://git.kernel.org/pub/scm/linux/kernel/git/mips/linux.git/commit/?id=3da27a4eb8c214d692e024473415fe7d2e88e7d7
-> https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/?id=3da27a4eb8c214d692e024473415fe7d2e88e7d7
+Media Redundancy Protocol is a data network protocol standardized by
+International Electrotechnical Commission as IEC 62439-2. It allows rings of
+Ethernet switches to overcome any single failure with recovery time faster than
+STP. It is primarily used in Industrial Ethernet applications.
 
-OK, I removed it from my dmi tree to avoid conflicts.
+Based on the previous RFC[1][2][3], the MRP state machine and all the timers
+were moved to userspace, except for the timers used to generate MRP Test frames.
+In this way the userspace doesn't know and should not know if the HW or the
+kernel will generate the MRP Test frames. The following changes were added to
+the bridge to support the MRP:
+- the existing netlink interface was extended with MRP support,
+- allow to detect when a MRP frame was received on a MRP ring port
+- allow MRP instance to forward/terminate MRP frames
+- generate MRP Test frames in case the HW doesn't have support for this
+
+To be able to offload MRP support to HW, the switchdev API  was extend.
+
+With these changes the userspace doesn't do the following because already the
+kernel/HW will do:
+- doesn't need to forward/terminate MRP frames
+- doesn't need to generate MRP Test frames
+- doesn't need to detect when the ring is open/closed.
+
+The userspace application that is using the new netlink can be found here[4].
+
+The current implementation both in kernel and userspace supports only 2 roles:
+  MRM - this one is responsible to send MRP_Test and MRP_Topo frames on both
+  ring ports. It needs to process MRP_Test to know if the ring is open or
+  closed. This operation is desired to be offloaded to the HW because it
+  requires to generate and process up to 4000 frames per second. Whenever it
+  detects that the ring is open it sends MRP_Topo frames to notify all MRC about
+  changes in the topology. MRM needs also to process MRP_LinkChange frames,
+  these frames are generated by the MRC. When the ring is open then the state
+  of both ports is to forward frames and when the ring is closed then the
+  secondary port is blocked.
+
+  MRC - this one is responsible to forward MRP frames between the ring ports.
+  In case one of the ring ports gets a link down or up, then MRC will generate
+  a MRP_LinkChange frames. This node should also process MRP_Topo frames and to
+  clear its FDB when it receives this frame.
+
+ Userspace
+               Deamon +----------+ Client
+                +
+                |
+ +--------------|-----------------------------------------+
+  Kernel        |
+                + Netlink
+
+                |                              + Interrupt
+                |                              |
+ +--------------|------------------------------|----------+
+  HW            | Switchdev                    |
+                +                              |
+
+The user interacts using the client (called 'mrp'), the client talks to the
+deamon (called 'mrp_server'), which talks with the kernel using netlink. The
+kernel will try to offload the requests to the HW via switchdev API.
+
+If this will be accepted then in the future the netlink interface can be
+expended with multiple attributes which are required by different roles of the
+MRP. Like Media Redundancy Automanager(MRA), Media Interconnect Manager(MIM) and
+Media Interconnect Client(MIC).
+
+[1] https://www.spinics.net/lists/netdev/msg623647.html
+[2] https://www.spinics.net/lists/netdev/msg624378.html
+[3] https://www.spinics.net/lists/netdev/msg627500.html
+[4] https://github.com/microchip-ung/mrp/tree/patch-v4
+
+-v3:
+  - move MRP state machine in userspace
+  - create generic netlink interface for configuring the HW using switchdev API
+
+-v2:
+  - extend switchdev API to offload to HW
+
+
+
+Horatiu Vultur (9):
+  bridge: uapi: mrp: Add mrp attributes.
+  bridge: mrp: Expose function br_mrp_port_open
+  bridge: mrp: Add MRP interface.
+  bridge: mrp: Implement netlink interface to configure MRP
+  switchdev: mrp: Extend switchdev API to offload MRP
+  bridge: switchdev: mrp Implement MRP API for switchdev
+  bridge: mrp: Connect MRP api with the switchev API
+  bridge: mrp: Integrate MRP into the bridge
+  bridge: mrp: Update Kconfig and Makefile
+
+ include/linux/if_bridge.h       |   1 +
+ include/linux/mrp_bridge.h      |  24 ++
+ include/net/switchdev.h         |  53 ++++
+ include/uapi/linux/if_bridge.h  |  42 +++
+ include/uapi/linux/if_ether.h   |   1 +
+ include/uapi/linux/mrp_bridge.h |  84 ++++++
+ net/bridge/Kconfig              |  12 +
+ net/bridge/Makefile             |   2 +
+ net/bridge/br_device.c          |   3 +
+ net/bridge/br_input.c           |   3 +
+ net/bridge/br_mrp.c             | 514 ++++++++++++++++++++++++++++++++
+ net/bridge/br_mrp_netlink.c     | 176 +++++++++++
+ net/bridge/br_mrp_switchdev.c   | 150 ++++++++++
+ net/bridge/br_netlink.c         |   5 +
+ net/bridge/br_private.h         |  22 ++
+ net/bridge/br_private_mrp.h     |  67 +++++
+ net/bridge/br_stp.c             |   6 +
+ 17 files changed, 1165 insertions(+)
+ create mode 100644 include/linux/mrp_bridge.h
+ create mode 100644 include/uapi/linux/mrp_bridge.h
+ create mode 100644 net/bridge/br_mrp.c
+ create mode 100644 net/bridge/br_mrp_netlink.c
+ create mode 100644 net/bridge/br_mrp_switchdev.c
+ create mode 100644 net/bridge/br_private_mrp.h
 
 -- 
-Jean Delvare
-SUSE L3 Support
+2.17.1
+
