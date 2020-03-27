@@ -2,72 +2,77 @@ Return-Path: <SRS0=s8dx=5M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40A22C43331
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 15:35:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C54E3C43331
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 15:35:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0523420658
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 15:35:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 92C2720658
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 15:35:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RR1nu05L"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="WQmCcaJL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727541AbgC0Pfb (ORCPT
+        id S1727607AbgC0Pfg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Mar 2020 11:35:31 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:39599 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726515AbgC0Pfb (ORCPT
+        Fri, 27 Mar 2020 11:35:36 -0400
+Received: from mail-vk1-f195.google.com ([209.85.221.195]:33725 "EHLO
+        mail-vk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726540AbgC0Pfb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 27 Mar 2020 11:35:31 -0400
-Received: by mail-ot1-f67.google.com with SMTP id x11so10127775otp.6;
-        Fri, 27 Mar 2020 08:35:30 -0700 (PDT)
+Received: by mail-vk1-f195.google.com with SMTP id f63so2793062vkh.0
+        for <linux-kernel@vger.kernel.org>; Fri, 27 Mar 2020 08:35:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc:content-transfer-encoding;
-        bh=m2VgctS9k0onJoQ+C26IEDnuG2AgnqBi68w0KHrlzNA=;
-        b=RR1nu05LuVJW27A/u2yx3lBIycNb4JHH7fREUrmFKI6nCA93RAiOdvMrCjUd1Cn4dP
-         euODJCmoiFPEA5UjaPnHxEspc1Vk558XbkOTd/QQXan3Dba2jDqMBmHCo3LLphfjut0a
-         V30dLmVmJEzZJ2ROeRwMj9Ci+6ccSstT/DOkknvfPbxzMlddz549IkDUWRjSvlZox1/J
-         1N84vH4ByD+Npmu7I7zGHL9q+LVtvrxP9MHo3CT+YcTYA5zPBIxE5iMBIFhzKvckVfUQ
-         IOicaQH7G8Fs26V41+7wbe4aVSoCCxStlYkdWyOpt4pJLEBIvtwYWvazG+T6ZyNh8FuH
-         xGzA==
+        bh=O9dJ6ogh71Pb5Yhc0YsPgqXvzYYmHlI805Hcr0oRvnk=;
+        b=WQmCcaJLCjH+Y/bk6cBwlM3vi2NSt+Eo1g09Ot+7fbNbJKYqBw6CjniZE7QcITNlPu
+         Bs6dlOdjHVOANKB+yfblfYscMNRyrifpLf0MH5dVuzCVI8MgPcxBQabIUqL1fBCk58TR
+         kpqgBgkEVlBTLhMSzoEnc6cL2KLN09JjGoH+mTCFxuuJa9ao12aXGjekqKJ6cSvs1jxV
+         VlEPO1mWVkD5bC6h6kwp/4C81u+OAZV1FZ8ZyGcbGGR6C9R7QNVmLGqPX7RE2R9Aq/SW
+         hGtXbdg6xyAJG9dDQrhv+GgzTS1QEYGxtrkzL02rWrEp85aIUjM3G5M6M8eDaJ1noWbc
+         AL7Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc:content-transfer-encoding;
-        bh=m2VgctS9k0onJoQ+C26IEDnuG2AgnqBi68w0KHrlzNA=;
-        b=UZWzqN3rAXRDqeux74iiypbiCB79zF0KGiNQMEhnjDYBRgR9RS4dwRYwvCzYzuTgTV
-         cA1oUxFrNow0Fq4xC4EOw1SHzd4D5nuy2c9pZ5vw11xC2FgRy/kPo7Eb5HKkv6GZJuOy
-         LMbZYKOwW3z2HgE7AntbzLAulzY9tcuTe3oEUzDG597Vzp+8Mfmnb7HcsTqrNho6JDq1
-         2EAfSkrPqElyXmJ4tL974M7oTQZXGdcloUbpWLp9KdQCdX5FANmHzBIgXyD+qqrkIn00
-         XNcUP01QLWu77QHU+LCgOpglC1MIp/wGGVx0TZUCRCKi+WOq/MVntN8/jMXpL69yK+n7
-         xCtQ==
-X-Gm-Message-State: ANhLgQ2pIFTK9DAmB66iDSCSl5sUueF+tV7Kh7o7LEheNB/j6gyXykDk
-        +Bg+P0LaMO21Iajn/jJsuX0tPnPWpnNUvTuHm1o=
-X-Google-Smtp-Source: ADFU+vsUKu6cs4FScroGgeKtpc8cwJ46ysU1li4E5NRjEIjx2ULrApBboKPsivXVWH+9bvG1E75z/j5i8AVRisHGh5M=
-X-Received: by 2002:a4a:2c55:: with SMTP id o82mr9791474ooo.33.1585323329619;
- Fri, 27 Mar 2020 08:35:29 -0700 (PDT)
+        bh=O9dJ6ogh71Pb5Yhc0YsPgqXvzYYmHlI805Hcr0oRvnk=;
+        b=UA+jZkJdAxAVPRy4O/nf1hazb6gLojmbRbxSpB+pUYHsJ5JjR+C2b2pY2g8b9nNuSF
+         uQQkum9Ls0dAQWG2Wc7SBpyH0+cjqXlZf5u5LDUcgQQl2slr5ay5zyc3VSwP8gllaeVz
+         3eYEBUk6OFOo7rGZsZRKobuCaQWGvCeo6y9V/Fwq/KdOJ8QPF5poxZ3ytr7w+GCWpLsL
+         6JbVpaT45rz3Blb9OF1zJTaTc8oPVwfKaROIEzQLNTlqu36kHJIZO2EQm/cjNKJYYM8d
+         FeyQ4z9aDlo66mcXrQzjUh0sRroywZER0U3yJSe4lSWQ1qnlv2a5M02Dp1Xvnu8H79Ka
+         pTRg==
+X-Gm-Message-State: ANhLgQ0rUYZnKEC+++61z4o18B67EP1wukZXo5ZG4rHo6FB0qJhDyQHk
+        cRzpMuOITje84pDmTH3KXv8cFa0bULlays46KdWbiuhOwKU=
+X-Google-Smtp-Source: ADFU+vtKz15viEUk4xOXDGYZGMYE5SXgcDqR/iXSCAChXlh2gnOavOfVTolvTnJ/rkcoYXRFryMu5lJ34uXAd7dKr3Q=
+X-Received: by 2002:a1f:2947:: with SMTP id p68mr11663597vkp.43.1585323330353;
+ Fri, 27 Mar 2020 08:35:30 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200318170638.18562-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20200318170638.18562-2-prabhakar.mahadev-lad.rj@bp.renesas.com> <20200319131312.GA3192108@oden.dyn.berto.se>
-In-Reply-To: <20200319131312.GA3192108@oden.dyn.berto.se>
-From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date:   Fri, 27 Mar 2020 15:35:03 +0000
-Message-ID: <CA+V-a8sf3p8jDQ+WJhcZGHwhrWBO_DBVtZH0Y6n3k0_89tOU_A@mail.gmail.com>
-Subject: Re: [PATCH v3 1/2] media: rcar-vin: Add support for
- MEDIA_BUS_FMT_SRGGB8_1X8 format
-To:     Niklas <niklas.soderlund@ragnatech.se>
-Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-media <linux-media@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+References: <20200325113407.26996-1-ulf.hansson@linaro.org>
+ <VI1PR04MB504097B40CE0B804FA60D67A90CF0@VI1PR04MB5040.eurprd04.prod.outlook.com>
+ <VI1PR04MB5040FFADA4F780422E208AC390CC0@VI1PR04MB5040.eurprd04.prod.outlook.com>
+In-Reply-To: <VI1PR04MB5040FFADA4F780422E208AC390CC0@VI1PR04MB5040.eurprd04.prod.outlook.com>
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+Date:   Fri, 27 Mar 2020 16:34:53 +0100
+Message-ID: <CAPDyKFr_yOmZ2MMvp=1krHejCRDRfhC0B+1icYR5xuZfhKy_ag@mail.gmail.com>
+Subject: Re: [PATCH 0/2] amba/platform: Initialize dma_parms at the bus level
+To:     BOUGH CHEN <haibo.chen@nxp.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>, Christoph Hellwig <hch@lst.de>,
+        Russell King <linux@armlinux.org.uk>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Vinod Koul <vkoul@kernel.org>,
+        Ludovic Barre <ludovic.barre@st.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
@@ -75,192 +80,158 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Niklas,
+On Fri, 27 Mar 2020 at 04:02, BOUGH CHEN <haibo.chen@nxp.com> wrote:
+>
+>
+> > -----Original Message-----
+> > From: BOUGH CHEN
+> > Sent: 2020=E5=B9=B43=E6=9C=8826=E6=97=A5 12:41
+> > To: Ulf Hansson <ulf.hansson@linaro.org>; Greg Kroah-Hartman
+> > <gregkh@linuxfoundation.org>; Rafael J . Wysocki <rafael@kernel.org>;
+> > linux-kernel@vger.kernel.org
+> > Cc: Arnd Bergmann <arnd@arndb.de>; Christoph Hellwig <hch@lst.de>;
+> > Russell King <linux@armlinux.org.uk>; Linus Walleij <linus.walleij@lina=
+ro.org>;
+> > Vinod Koul <vkoul@kernel.org>; Ludovic Barre <ludovic.barre@st.com>;
+> > linux-arm-kernel@lists.infradead.org; dmaengine@vger.kernel.org
+> > Subject: RE: [PATCH 0/2] amba/platform: Initialize dma_parms at the bus=
+ level
+> >
+> > > -----Original Message-----
+> > > From: Ulf Hansson <ulf.hansson@linaro.org>
+> > > Sent: 2020=E5=B9=B43=E6=9C=8825=E6=97=A5 19:34
+> > > To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>; Rafael J .
+> > > Wysocki <rafael@kernel.org>; linux-kernel@vger.kernel.org
+> > > Cc: Arnd Bergmann <arnd@arndb.de>; Christoph Hellwig <hch@lst.de>;
+> > > Russell King <linux@armlinux.org.uk>; Linus Walleij
+> > > <linus.walleij@linaro.org>; Vinod Koul <vkoul@kernel.org>; BOUGH CHEN
+> > > <haibo.chen@nxp.com>; Ludovic Barre <ludovic.barre@st.com>;
+> > > linux-arm-kernel@lists.infradead.org; dmaengine@vger.kernel.org; Ulf
+> > > Hansson <ulf.hansson@linaro.org>
+> > > Subject: [PATCH 0/2] amba/platform: Initialize dma_parms at the bus
+> > > level
+> > >
+> > > It's currently the amba/platform driver's responsibility to initializ=
+e
+> > > the pointer, dma_parms, for its corresponding struct device. The
+> > > benefit with this approach allows us to avoid the initialization and
+> > > to not waste memory for the struct device_dma_parameters, as this can
+> > > be decided on a case by case basis.
+> > >
+> > > However, it has turned out that this approach is not very practical.
+> > > Not only does it lead to open coding, but also to real errors. In
+> > > principle callers of
+> > > dma_set_max_seg_size() doesn't check the error code, but just assumes
+> > > it succeeds.
+> > >
+> > > For these reasons, this series initializes the dma_parms from the
+> > > amba/platform bus at the device registration point. This also follows
+> > > the way the PCI devices are being managed, see pci_device_add().
+> > >
+> > > If it turns out that this is an acceptable solution, we probably also
+> > > want the changes for stable, but I am not sure if it applies without =
+conflicts.
+> > >
+> > > The series is based on v5.6-rc7.
+> > >
+> >
+> > Hi Ulf,
+> >
+> > Since i.MXQM SMMU related code still not upstream yet, so I apply your
+> > patches on our internal Linux branch based on v5.4.24, and find it do n=
+ot work
+> > on my side. Maybe for platform core drivers, there is a gap between v5.=
+4.24
+> > and v5.6-rc7 which has the impact.
+> > I will try to put our SMMU related code into v5.6-rc7, then do the test=
+ again.
+> >
+> >
+>
+> Hi Ulf,
+>
+> On the latest Linux-next branch, the top commit 89295c59c1f063b533d071ca4=
+9d0fa0c0783ca6f (tag: next-20200326), after add your two patches, I just ad=
+d the simple debug code as following in the /driver/mmc/core/queue.c, but s=
+eems still not work as our expect, logically, it should work, so can you or=
+ anyone test on other platform? This seems weird.
 
-On Thu, Mar 19, 2020 at 1:13 PM Niklas <niklas.soderlund@ragnatech.se> wrot=
-e:
->
-> Hi Prabhakar,
->
-> Thanks for your work.
->
-> On 2020-03-18 17:06:37 +0000, Lad Prabhakar wrote:
-> > Add support for MEDIA_BUS_FMT_SRGGB8_1X8 format in rcar-vin by setting
-> > format type to RAW8 in VNMC register and appropriately setting the
-> > bpp, bytesperline to enable V4L2_PIX_FMT_SRGGB8.
->
-> > For RAW8 format data is transferred by 4-Byte unit so VnIS register is
-> > configured accordingly.
-> >
-> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> > ---
-> >  drivers/media/platform/rcar-vin/rcar-core.c |  1 +
-> >  drivers/media/platform/rcar-vin/rcar-dma.c  | 11 ++++++++++-
-> >  drivers/media/platform/rcar-vin/rcar-v4l2.c |  4 ++++
-> >  3 files changed, 15 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/drivers/media/platform/rcar-vin/rcar-core.c b/drivers/medi=
-a/platform/rcar-vin/rcar-core.c
-> > index 7440c8965d27..76daf2fe5bcd 100644
-> > --- a/drivers/media/platform/rcar-vin/rcar-core.c
-> > +++ b/drivers/media/platform/rcar-vin/rcar-core.c
-> > @@ -469,6 +469,7 @@ static int rvin_parallel_subdevice_attach(struct rv=
-in_dev *vin,
-> >               case MEDIA_BUS_FMT_UYVY8_2X8:
-> >               case MEDIA_BUS_FMT_UYVY10_2X10:
-> >               case MEDIA_BUS_FMT_RGB888_1X24:
-> > +             case MEDIA_BUS_FMT_SRGGB8_1X8:
->
-> This is wrong RAW formats are only supported on the CSI-2 interface and
-> not the parallel one. This line shall be dropped.
->
-sure will drop this.
+You are right, this doesn't work for platform devices being added
+through the OF path.
 
-> >                       vin->mbus_code =3D code.code;
-> >                       vin_dbg(vin, "Found media bus format for %s: %d\n=
-",
-> >                               subdev->name, vin->mbus_code);
-> > diff --git a/drivers/media/platform/rcar-vin/rcar-dma.c b/drivers/media=
-/platform/rcar-vin/rcar-dma.c
-> > index 1a30cd036371..ec7b49c0b281 100644
-> > --- a/drivers/media/platform/rcar-vin/rcar-dma.c
-> > +++ b/drivers/media/platform/rcar-vin/rcar-dma.c
-> > @@ -85,6 +85,7 @@
-> >  #define VNMC_INF_YUV8_BT601  (1 << 16)
-> >  #define VNMC_INF_YUV10_BT656 (2 << 16)
-> >  #define VNMC_INF_YUV10_BT601 (3 << 16)
-> > +#define VNMC_INF_RAW8                (4 << 16)
-> >  #define VNMC_INF_YUV16               (5 << 16)
-> >  #define VNMC_INF_RGB888              (6 << 16)
-> >  #define VNMC_VUP             (1 << 10)
-> > @@ -587,13 +588,14 @@ void rvin_crop_scale_comp(struct rvin_dev *vin)
-> >       rvin_write(vin, vin->crop.top, VNSLPRC_REG);
-> >       rvin_write(vin, vin->crop.top + vin->crop.height - 1, VNELPRC_REG=
-);
-> >
-> > -
-> >       /* TODO: Add support for the UDS scaler. */
-> >       if (vin->info->model !=3D RCAR_GEN3)
-> >               rvin_crop_scale_comp_gen2(vin);
-> >
-> >       fmt =3D rvin_format_from_pixel(vin, vin->format.pixelformat);
-> >       stride =3D vin->format.bytesperline / fmt->bpp;
-> > +     if (vin->format.pixelformat =3D=3D V4L2_PIX_FMT_SRGGB8)
-> > +             stride /=3D 2;
->
-> I'm sorry this makes no sens to me.
->
-> - The width of the image is number of pixels in the raw format.
-> - In memory each row is either is either RGRGRG... or GBGBGB...
-> - The pixel size is 1 byte per pixel.
-> - We calculate bytesperline as ALIGN(width, align) * bpp, where align is
->   how much we need to "adjust" the width to match the VNIS_REG reg
->   value.  We do this in rvin_format_bytesperline().
-> - We then remove bpp from bytesperline and we have a unit in pixels
->   which is our stride.
->
-> I can't see why you need to cut the stride in half. In my view you
-> should add a check for V4L2_PIX_FMT_SRGGB8 in rvin_format_bytesperline()
-> and pick an alignment value that matches the restrictions.
->
-> I might miss something, but then I wish to learn.
->
-I have replied for this issue on v2
-(https://lkml.org/lkml/2020/3/27/384) as the VIN
-processes RAW8 as 2 byte per pixel.
+In other words, of_platform_device_create_pdata() manually allocates
+the platform device and assigns it the &platform_bus_type, but without
+calling platform_device_add().
 
-> >       rvin_write(vin, stride, VNIS_REG);
-> >  }
-> >
-> > @@ -676,6 +678,9 @@ static int rvin_setup(struct rvin_dev *vin)
-> >
-> >               input_is_yuv =3D true;
-> >               break;
-> > +     case MEDIA_BUS_FMT_SRGGB8_1X8:
-> > +             vnmc |=3D VNMC_INF_RAW8;
-> > +             break;
->
-> Here and ...
->
-> >       default:
-> >               break;
-> >       }
-> > @@ -737,6 +742,9 @@ static int rvin_setup(struct rvin_dev *vin)
-> >       case V4L2_PIX_FMT_ABGR32:
-> >               dmr =3D VNDMR_A8BIT(vin->alpha) | VNDMR_EXRGB | VNDMR_DTM=
-D_ARGB;
-> >               break;
-> > +     case V4L2_PIX_FMT_SRGGB8:
-> > +             dmr =3D 0;
-> > +             break;
->
-> ... here we have a new problem, sorry for not thinking of it before.
->
-> Up until now the VIN was capable to convert any of its supported input
-> mbus formats to any of it's supported output pixel formats. With the
-> addition of RAW formats this is no longer true. This new restriction
-> needs to be added to the driver.
->
-> Luck has it we can fix ...
->
-> >       default:
-> >               vin_err(vin, "Invalid pixelformat (0x%x)\n",
-> >                       vin->format.pixelformat);
-> > @@ -1110,6 +1118,7 @@ static int rvin_mc_validate_format(struct rvin_de=
-v *vin, struct v4l2_subdev *sd,
-> >       case MEDIA_BUS_FMT_UYVY8_2X8:
-> >       case MEDIA_BUS_FMT_UYVY10_2X10:
-> >       case MEDIA_BUS_FMT_RGB888_1X24:
-> > +     case MEDIA_BUS_FMT_SRGGB8_1X8:
-> >               vin->mbus_code =3D fmt.format.code;
->
-> ... this here by changes this to
->
->         switch (fmt.format.code) {
->         case MEDIA_BUS_FMT_YUYV8_1X16:
->         case MEDIA_BUS_FMT_UYVY8_1X16:
->         case MEDIA_BUS_FMT_UYVY8_2X8:
->         case MEDIA_BUS_FMT_UYVY10_2X10:
->                 break;
->         case MEDIA_BUS_FMT_RGB888_1X24:
->                 if (vin->format.pixelformat !=3D V4L2_PIX_FMT_SRGGB8)
->                     return -EPIPE:
->                 break;
->         default:
->                 return -EPIPE;
->         }
->
->         vin->mbus_code =3D fmt.format.code;
->
-Will fix it as above.
+For amba, it works fine, as in that OF path, amba_device_add() is called. H=
+mm.
 
-Cheers,
---Prabhakar
+I re-spin this, to address the problem. Perhaps we simply need to use
+the ->probe() path.
 
-> >               break;
-> >       default:
-> > diff --git a/drivers/media/platform/rcar-vin/rcar-v4l2.c b/drivers/medi=
-a/platform/rcar-vin/rcar-v4l2.c
-> > index 5151a3cd8a6e..ca542219e8ae 100644
-> > --- a/drivers/media/platform/rcar-vin/rcar-v4l2.c
-> > +++ b/drivers/media/platform/rcar-vin/rcar-v4l2.c
-> > @@ -66,6 +66,10 @@ static const struct rvin_video_format rvin_formats[]=
- =3D {
-> >               .fourcc                 =3D V4L2_PIX_FMT_ABGR32,
-> >               .bpp                    =3D 4,
-> >       },
-> > +     {
-> > +             .fourcc                 =3D V4L2_PIX_FMT_SRGGB8,
-> > +             .bpp                    =3D 1,
-> > +     },
-> >  };
-> >
-> >  const struct rvin_video_format *rvin_format_from_pixel(struct rvin_dev=
- *vin,
-> > --
-> > 2.20.1
-> >
+Kind regards
+Uffe
+
 >
-> --
-> Regards,
-> Niklas S=C3=B6derlund
+> diff --git a/drivers/mmc/core/queue.c b/drivers/mmc/core/queue.c
+> index 25bee3daf9e2..f091280f7ffb 100644
+> --- a/drivers/mmc/core/queue.c
+> +++ b/drivers/mmc/core/queue.c
+> @@ -403,6 +403,13 @@ static void mmc_setup_queue(struct mmc_queue *mq, st=
+ruct mmc_card *card)
+>                 blk_queue_max_segment_size(mq->queue,
+>                         round_down(host->max_seg_size, block_size));
+>
+> +       pr_err("###### the max segment size is %d\n", queue_max_segment_s=
+ize(mq->queue));
+> +       if (host->parent->dma_parms) {
+> +                      pr_err("######### the dma parms has value\n");
+> +       } else if (!(host->parent->dma_parms)) {
+> +                      pr_err("######## the dma parms is zero!!\n");
+> +       }
+> +
+>         dma_set_max_seg_size(mmc_dev(host), queue_max_segment_size(mq->qu=
+eue));
+>
+>         INIT_WORK(&mq->recovery_work, mmc_mq_recovery_handler);
+>
+> Here is the log I got when system run, even after your patch, the dev->dm=
+a_parms is still NULL.
+> [    0.989853] mmc0: new HS400 MMC card at address 0001
+> [    0.995708] sdhci-esdhc-imx 30b50000.mmc: Got CD GPIO
+> [    0.999374] ###### the max segment size is 65024
+> [    1.008594] ######## the dma parms is zero!!
+> [    1.012875] mmcblk0: mmc0:0001 IB2932 29.2 GiB
+> [    1.017569] ###### the max segment size is 65024
+> [    1.022195] ######## the dma parms is zero!!
+> [    1.026479] mmcblk0boot0: mmc0:0001 IB2932 partition 1 4.00 MiB
+> [    1.032541] ###### the max segment size is 65024
+> [    1.035198] mmc1: SDHCI controller on 30b50000.mmc [30b50000.mmc] usin=
+g ADMA
+> [    1.037169] ######## the dma parms is zero!!
+> [    1.048493] mmcblk0boot1: mmc0:0001 IB2932 partition 2 4.00 MiB
+> [    1.054531] mmcblk0rpmb: mmc0:0001 IB2932 partition 3 4.00 MiB, charde=
+v (234:0)
+>
+>
+> Regards
+> Haibo Chen
+> > Best Regards
+> > Haibo Chen
+> >
+> > > Kind regards
+> > > Ulf Hansson
+> > >
+> > > Ulf Hansson (2):
+> > >   driver core: platform: Initialize dma_parms for platform devices
+> > >   amba: Initialize dma_parms for amba devices
+> > >
+> > >  drivers/amba/bus.c              | 2 ++
+> > >  drivers/base/platform.c         | 1 +
+> > >  include/linux/amba/bus.h        | 1 +
+> > >  include/linux/platform_device.h | 1 +
+> > >  4 files changed, 5 insertions(+)
+> > >
+> > > --
+> > > 2.20.1
+>
