@@ -2,200 +2,194 @@ Return-Path: <SRS0=s8dx=5M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 591DBC43331
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 16:17:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A790C2D0EE
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 16:23:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B39320658
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 16:17:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3563C20658
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 16:23:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mjFVfqnv"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="qlHuu19z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727799AbgC0QRn (ORCPT
+        id S1727725AbgC0QXe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Mar 2020 12:17:43 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:47058 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727560AbgC0QRm (ORCPT
+        Fri, 27 Mar 2020 12:23:34 -0400
+Received: from mailout2.w1.samsung.com ([210.118.77.12]:60813 "EHLO
+        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726333AbgC0QXd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Mar 2020 12:17:42 -0400
-Received: by mail-pg1-f196.google.com with SMTP id k191so4781304pgc.13
-        for <linux-kernel@vger.kernel.org>; Fri, 27 Mar 2020 09:17:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=jhwYADhdGcLZbWIzbwxBzjxRAObWsK9tu6OvJnZhgK8=;
-        b=mjFVfqnvAEAdGQxoWYIHbYy0+wwJhPKkgVBXpuF+JLGBQHrARncYWjhkj60r3u/Ohy
-         gMlDZxixdo2YrheHdj9PypFdZMB4paHUWQ0Dysvo3Dh5fJaL5hUpsnIv/KsaI/XPQ6VC
-         mXRHbbwQqeOtFbCLT6H5JqwjEOKjI4zV1UzKrgYsI+otvfieN3FwQ4AwuDFr19uD/GnN
-         N/soZ2oeh19LWDzC3NqMTPMWCHm0v4z9h5ktH+BeEw37BkMO5xVf+2faWKp6mI/nLwa0
-         AbLTb8CrC0uhcaCKalPUaZC0OYxrZqF3/lI5W6+/LkIN0haEj7jwE5xbAQreuF2zG7qP
-         VHag==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=jhwYADhdGcLZbWIzbwxBzjxRAObWsK9tu6OvJnZhgK8=;
-        b=n/bdYbUbecx8s6NXjHbp7v2HxUsDq/AIxo4D4XWEVrm4RKm98TkyFPW2F0YDHK7w+Z
-         3wSDQLRiyr9FDeWEUCQv0WexkUDGpk6CH22BkIgnQ+vSf4ey9JOtBn912msGhcrn03pZ
-         T9eirIU5N4CGzISQsT0SyueaeJM3KoAndkpoLFwRHP9tXRRa8NwBPOpCR5Igq4rLRDSk
-         QzY8BdFZ8gV+ThsAR31Nlfj9i18dO4bk9iohqQ42vT+NtiVd9hyGADJ6kTU7hPB9sAXT
-         kMLsAdeXGkuxB9iKbhKN7VSjgWirf6scFJHoEV2FuhyPBv++CNYHNM1jzOcJ+ApoOuEs
-         gkvQ==
-X-Gm-Message-State: ANhLgQ3lx3udJPom8t1BSBps/i6OCVHndm+9DHlYCJp8Y3wr66hSYsdE
-        8jnLPoyxdqgr4SJl4IeB9or81Q==
-X-Google-Smtp-Source: ADFU+vuHJjTwlUlAnTmVZwL7ukhLfqdQyllSGr+zoP1DUk27+DscTsfzu3LkM6z3KfW5PHAuL3zRCQ==
-X-Received: by 2002:a62:2cc3:: with SMTP id s186mr15383429pfs.236.1585325856083;
-        Fri, 27 Mar 2020 09:17:36 -0700 (PDT)
-Received: from xps15 (S0106002369de4dac.cg.shawcable.net. [68.147.8.254])
-        by smtp.gmail.com with ESMTPSA id d3sm4136628pjz.2.2020.03.27.09.17.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 27 Mar 2020 09:17:35 -0700 (PDT)
-Date:   Fri, 27 Mar 2020 10:17:33 -0600
-From:   Mathieu Poirier <mathieu.poirier@linaro.org>
-To:     Clement Leger <cleger@kalray.eu>
-Cc:     Ohad Ben-Cohen <ohad@wizery.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Patrice Chotard <patrice.chotard@st.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-stm32@st-md-mailman.stormreply.com
-Subject: Re: [PATCH] remoteproc: remove rproc_elf32_sanity_check
-Message-ID: <20200327161733.GA18041@xps15>
-References: <20200327084939.8321-1-cleger@kalray.eu>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200327084939.8321-1-cleger@kalray.eu>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Fri, 27 Mar 2020 12:23:33 -0400
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20200327162331euoutp02001d9bdedbcb6068a23e6f46ebc31af1~ANcpAcRb01293012930euoutp02h
+        for <linux-kernel@vger.kernel.org>; Fri, 27 Mar 2020 16:23:31 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20200327162331euoutp02001d9bdedbcb6068a23e6f46ebc31af1~ANcpAcRb01293012930euoutp02h
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1585326211;
+        bh=FNcGHf3TErelyQyr0Jn7U9qXzR3Cb8ZHEa9kuu5TYeA=;
+        h=From:To:Cc:Subject:Date:References:From;
+        b=qlHuu19zdZeIrsu0DMoKtCl0dHgdmwwydb48UMvM0E89/FHlQVLAuFaI3ocz+MH2w
+         huiwP0UImKHgwcTuwZgoHZVTbnx2AfGdWhzams0LXzvKh91WZBjzTk3Bq32BnhLCfu
+         C/JwW3JWgUH0JO/GoEMhgmDfIC32SnKCPOJ624v4=
+Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20200327162330eucas1p248c9d4d771ddacebcd39c77c7d91e700~ANcoFYz_K3181231812eucas1p28;
+        Fri, 27 Mar 2020 16:23:30 +0000 (GMT)
+Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
+        eusmges2new.samsung.com (EUCPMTA) with SMTP id CD.5D.60679.2882E7E5; Fri, 27
+        Mar 2020 16:23:30 +0000 (GMT)
+Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20200327162330eucas1p1b0413e0e9887aa76d3048f86d2166dcd~ANcnkxzW12015620156eucas1p1X;
+        Fri, 27 Mar 2020 16:23:30 +0000 (GMT)
+Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
+        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20200327162330eusmtrp1e3c051d09a2f3de797a2bf04d0500afc~ANcnj_tgS2160721607eusmtrp1_;
+        Fri, 27 Mar 2020 16:23:30 +0000 (GMT)
+X-AuditID: cbfec7f4-0cbff7000001ed07-b5-5e7e2882d3d4
+Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
+        eusmgms1.samsung.com (EUCPMTA) with SMTP id 86.9A.08375.1882E7E5; Fri, 27
+        Mar 2020 16:23:29 +0000 (GMT)
+Received: from AMDC2765.digital.local (unknown [106.120.51.73]) by
+        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20200327162329eusmtip29f9109aa332277093a721501edfa2888~ANcm1vZUK2356123561eusmtip27;
+        Fri, 27 Mar 2020 16:23:29 +0000 (GMT)
+From:   Marek Szyprowski <m.szyprowski@samsung.com>
+To:     dri-devel@lists.freedesktop.org, linux-samsung-soc@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
+        stable@vger.kernel.org,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Shane Francis <bigbeeshane@gmail.com>,
+        "Michael J . Ruhl" <michael.j.ruhl@intel.com>
+Subject: [PATCH v2] drm/prime: fix extracting of the DMA addresses from a
+ scatterlist
+Date:   Fri, 27 Mar 2020 17:21:26 +0100
+Message-Id: <20200327162126.29705-1-m.szyprowski@samsung.com>
+X-Mailer: git-send-email 2.17.1
+X-Brightmail-Tracker: H4sIAAAAAAAAA0VSa0hTURzn3Neu5ux6FTpUGM7sbWZFnOhpFNwkwj5JgsulNw2dxpaWZuVm
+        SWqJ2kNZIZtmvjJzrpkzrS1rDElLrSx6TXpZSc10pGS1eVd9+z35/Q8cGmcbydn0/tSDvCJV
+        liKhvAnj/YneUPWiY9IVFlUQOtNjw9CFF+0kai5vIpGqrQhDv40lOBoY/0qhftMlCpX3dmKo
+        seulCOkcNwj0sHUJysu/QiJt8xBAhi8l5GZf7mTfFMV1OLUE16Z5KeKqbg1jnL4+n+JanW9I
+        rsK2i3tdaMW4IkM94Fq6j3Df9YFRM2K81yfwKfszeEXYxjjvpIomO3bgpv/h9nMfyRxgmlkA
+        vGjIrIbvy2rIAuBNs0wtgG+6TB4yBqDurtpDvgPY26/G/lZM5l+UYNQA+GDKif2rDJZ8AO4U
+        xYTDgpECV0pEBzD7YDXujuBMLw5fvTWL3BF/JhoWT6gpNyaYEFioqyXcWMxsgJUVpZ6xebDh
+        +p3pMmT0InhX5RQJxlao/zEABOwPP1kNHn0u7D57mhAKuQDaexpFAjkNYL+63NNYB1/0TLqm
+        addNi2GTKUyQI2DzI8e0DBlfODji55ZxFyw1luGCLIan8lghvQBqrNf+zZof9uEC5qCuI3/6
+        XSwTCx8bCvFiEKj5v6UFoB7M4tOV8kReuTKVP7RcKZMr01MTl8enyfXA9Ym6f1nHbgLTz70W
+        wNBA4iOufXxUypKyDGWm3AIgjUsCxO92Z0tZcYIsM4tXpO1RpKfwSguYQxOSWeJVlcOxLJMo
+        O8gn8/wBXvHXxWiv2TkAtmi2VGWs9dEu++wrX9q6+rZ8vE76pCbi25rjk0EDtlA02u+4eC96
+        047yXMqhCXk6yZ2wRmwLrMxvqo7sgmHPk6PyTgR3DhntuXxyZK3K+XvUnOGXVh1blxlraxjM
+        YofPy19bbCuvDmcn7bQ/i5cOxc2/vD0mqCO4Z6ERZeUgCaFMkoUvwRVK2R8afjKsQAMAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFmpmkeLIzCtJLcpLzFFi42I5/e/4Pd1Gjbo4g/lPrC16z51ksph2Zzer
+        xcYZ61ktGnf2MVn83zaR2eLK1/dsFpd3zWGzmHF+H5PF2iN32S0WftzKYnFhu5ZFW+cyVosF
+        Gx8xWmx5M5HVgc+j9dJfNo+93xaweOycdZfdY/Gel0wem1Z1snls//aA1WPeyUCP+93HmTz6
+        tqxi9Nh8utrj8ya5AO4oPZui/NKSVIWM/OISW6VoQwsjPUNLCz0jE0s9Q2PzWCsjUyV9O5uU
+        1JzMstQifbsEvYx56x8yFewQrtg95QVrA+Mu/i5GTg4JAROJXQf/sXUxcnEICSxllNh6cxcj
+        REJG4uS0BlYIW1jiz7UuqKJPjBLtP9aBJdgEDCW63oIkODlEBDIk2idOZQaxmQWuM0sc/1cG
+        YgsLhEpM/TUJbCiLgKpE98IVLCA2r4CtxKJ5k5ggFshLrN5wgHkCI88CRoZVjCKppcW56bnF
+        hnrFibnFpXnpesn5uZsYgRGw7djPzTsYL20MPsQowMGoxMO74mptnBBrYllxZe4hRgkOZiUR
+        3qeRNXFCvCmJlVWpRfnxRaU5qcWHGE2Blk9klhJNzgdGZ15JvKGpobmFpaG5sbmxmYWSOG+H
+        wMEYIYH0xJLU7NTUgtQimD4mDk6pBkb+3PQfrksrrqzf5hCTwP/pyMfC+zOljruGC3Jv2pNg
+        xC0an70g8eU0Q986+ejcCXE663ecUu6x/+liuTGxd698Xa4Ux/z1zMf8RRX2qLE2//0v3aSV
+        WF/0ecXxdeanpZfrz1js9lVC2K/G6sneWU7bn/490LIhbaHJ9ZOPWzMUsvaaTTX//1mJpTgj
+        0VCLuag4EQCez0qLlgIAAA==
+X-CMS-MailID: 20200327162330eucas1p1b0413e0e9887aa76d3048f86d2166dcd
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20200327162330eucas1p1b0413e0e9887aa76d3048f86d2166dcd
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20200327162330eucas1p1b0413e0e9887aa76d3048f86d2166dcd
+References: <CGME20200327162330eucas1p1b0413e0e9887aa76d3048f86d2166dcd@eucas1p1.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 27, 2020 at 09:49:39AM +0100, Clement Leger wrote:
-> Since checks are present in the remoteproc elf loader before calling
-> da_to_va, loading a elf64 will work on 32bits flavors of kernel.
-> Indeed, if a segment size is larger than what size_t can hold, the
-> loader will return an error so the functionality is equivalent to
-> what exists today.
-> 
-> Signed-off-by: Clement Leger <cleger@kalray.eu>
-> ---
->  drivers/remoteproc/remoteproc_core.c       |  2 +-
->  drivers/remoteproc/remoteproc_elf_loader.c | 21 ---------------------
->  drivers/remoteproc/remoteproc_internal.h   |  1 -
->  drivers/remoteproc/st_remoteproc.c         |  2 +-
->  drivers/remoteproc/st_slim_rproc.c         |  2 +-
->  drivers/remoteproc/stm32_rproc.c           |  2 +-
->  6 files changed, 4 insertions(+), 26 deletions(-)
+Scatterlist elements contains both pages and DMA addresses, but one
+should not assume 1:1 relation between them. The sg->length is the size
+of the physical memory chunk described by the sg->page, while
+sg_dma_len(sg) is the size of the DMA (IO virtual) chunk described by
+the sg_dma_address(sg).
 
-Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+The proper way of extracting both: pages and DMA addresses of the whole
+buffer described by a scatterlist it to iterate independently over the
+sg->pages/sg->length and sg_dma_address(sg)/sg_dma_len(sg) entries.
 
-> 
-> diff --git a/drivers/remoteproc/remoteproc_core.c b/drivers/remoteproc/remoteproc_core.c
-> index a9ac1d01e09b..02ff076b0122 100644
-> --- a/drivers/remoteproc/remoteproc_core.c
-> +++ b/drivers/remoteproc/remoteproc_core.c
-> @@ -2069,7 +2069,7 @@ struct rproc *rproc_alloc(struct device *dev, const char *name,
->  		rproc->ops->parse_fw = rproc_elf_load_rsc_table;
->  		rproc->ops->find_loaded_rsc_table = rproc_elf_find_loaded_rsc_table;
->  		if (!rproc->ops->sanity_check)
-> -			rproc->ops->sanity_check = rproc_elf32_sanity_check;
-> +			rproc->ops->sanity_check = rproc_elf_sanity_check;
->  		rproc->ops->get_boot_addr = rproc_elf_get_boot_addr;
->  	}
->  
-> diff --git a/drivers/remoteproc/remoteproc_elf_loader.c b/drivers/remoteproc/remoteproc_elf_loader.c
-> index 16e2c496fd45..29034f99898d 100644
-> --- a/drivers/remoteproc/remoteproc_elf_loader.c
-> +++ b/drivers/remoteproc/remoteproc_elf_loader.c
-> @@ -112,27 +112,6 @@ int rproc_elf_sanity_check(struct rproc *rproc, const struct firmware *fw)
->  }
->  EXPORT_SYMBOL(rproc_elf_sanity_check);
->  
-> -/**
-> - * rproc_elf_sanity_check() - Sanity Check ELF32 firmware image
-> - * @rproc: the remote processor handle
-> - * @fw: the ELF32 firmware image
-> - *
-> - * Make sure this fw image is sane.
-> - */
-> -int rproc_elf32_sanity_check(struct rproc *rproc, const struct firmware *fw)
-> -{
-> -	int ret = rproc_elf_sanity_check(rproc, fw);
-> -
-> -	if (ret)
-> -		return ret;
-> -
-> -	if (fw_elf_get_class(fw) == ELFCLASS32)
-> -		return 0;
-> -
-> -	return -EINVAL;
-> -}
-> -EXPORT_SYMBOL(rproc_elf32_sanity_check);
-> -
->  /**
->   * rproc_elf_get_boot_addr() - Get rproc's boot address.
->   * @rproc: the remote processor handle
-> diff --git a/drivers/remoteproc/remoteproc_internal.h b/drivers/remoteproc/remoteproc_internal.h
-> index b389dc79da81..31994715fd43 100644
-> --- a/drivers/remoteproc/remoteproc_internal.h
-> +++ b/drivers/remoteproc/remoteproc_internal.h
-> @@ -54,7 +54,6 @@ void *rproc_da_to_va(struct rproc *rproc, u64 da, size_t len);
->  phys_addr_t rproc_va_to_pa(void *cpu_addr);
->  int rproc_trigger_recovery(struct rproc *rproc);
->  
-> -int rproc_elf32_sanity_check(struct rproc *rproc, const struct firmware *fw);
->  int rproc_elf_sanity_check(struct rproc *rproc, const struct firmware *fw);
->  u64 rproc_elf_get_boot_addr(struct rproc *rproc, const struct firmware *fw);
->  int rproc_elf_load_segments(struct rproc *rproc, const struct firmware *fw);
-> diff --git a/drivers/remoteproc/st_remoteproc.c b/drivers/remoteproc/st_remoteproc.c
-> index a6cbfa452764..a3268d95a50e 100644
-> --- a/drivers/remoteproc/st_remoteproc.c
-> +++ b/drivers/remoteproc/st_remoteproc.c
-> @@ -233,7 +233,7 @@ static const struct rproc_ops st_rproc_ops = {
->  	.parse_fw		= st_rproc_parse_fw,
->  	.load			= rproc_elf_load_segments,
->  	.find_loaded_rsc_table	= rproc_elf_find_loaded_rsc_table,
-> -	.sanity_check		= rproc_elf32_sanity_check,
-> +	.sanity_check		= rproc_elf_sanity_check,
->  	.get_boot_addr		= rproc_elf_get_boot_addr,
->  };
->  
-> diff --git a/drivers/remoteproc/st_slim_rproc.c b/drivers/remoteproc/st_slim_rproc.c
-> index 3cca8b65a8db..09bcb4d8b9e0 100644
-> --- a/drivers/remoteproc/st_slim_rproc.c
-> +++ b/drivers/remoteproc/st_slim_rproc.c
-> @@ -203,7 +203,7 @@ static const struct rproc_ops slim_rproc_ops = {
->  	.da_to_va       = slim_rproc_da_to_va,
->  	.get_boot_addr	= rproc_elf_get_boot_addr,
->  	.load		= rproc_elf_load_segments,
-> -	.sanity_check	= rproc_elf32_sanity_check,
-> +	.sanity_check	= rproc_elf_sanity_check,
->  };
->  
->  /**
-> diff --git a/drivers/remoteproc/stm32_rproc.c b/drivers/remoteproc/stm32_rproc.c
-> index 6a66dbf2df40..2e07a95439c8 100644
-> --- a/drivers/remoteproc/stm32_rproc.c
-> +++ b/drivers/remoteproc/stm32_rproc.c
-> @@ -505,7 +505,7 @@ static struct rproc_ops st_rproc_ops = {
->  	.load		= rproc_elf_load_segments,
->  	.parse_fw	= stm32_rproc_parse_fw,
->  	.find_loaded_rsc_table = rproc_elf_find_loaded_rsc_table,
-> -	.sanity_check	= rproc_elf32_sanity_check,
-> +	.sanity_check	= rproc_elf_sanity_check,
->  	.get_boot_addr	= rproc_elf_get_boot_addr,
->  };
->  
-> -- 
-> 2.17.1
-> 
+Fixes: 42e67b479eab ("drm/prime: use dma length macro when mapping sg")
+Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+Reviewed-by: Alex Deucher <alexander.deucher@amd.com>
+---
+ drivers/gpu/drm/drm_prime.c | 37 +++++++++++++++++++++++++------------
+ 1 file changed, 25 insertions(+), 12 deletions(-)
+
+diff --git a/drivers/gpu/drm/drm_prime.c b/drivers/gpu/drm/drm_prime.c
+index 1de2cde2277c..282774e469ac 100644
+--- a/drivers/gpu/drm/drm_prime.c
++++ b/drivers/gpu/drm/drm_prime.c
+@@ -962,27 +962,40 @@ int drm_prime_sg_to_page_addr_arrays(struct sg_table *sgt, struct page **pages,
+ 	unsigned count;
+ 	struct scatterlist *sg;
+ 	struct page *page;
+-	u32 len, index;
++	u32 page_len, page_index;
+ 	dma_addr_t addr;
++	u32 dma_len, dma_index;
+ 
+-	index = 0;
++	/*
++	 * Scatterlist elements contains both pages and DMA addresses, but
++	 * one shoud not assume 1:1 relation between them. The sg->length is
++	 * the size of the physical memory chunk described by the sg->page,
++	 * while sg_dma_len(sg) is the size of the DMA (IO virtual) chunk
++	 * described by the sg_dma_address(sg).
++	 */
++	page_index = 0;
++	dma_index = 0;
+ 	for_each_sg(sgt->sgl, sg, sgt->nents, count) {
+-		len = sg_dma_len(sg);
++		page_len = sg->length;
+ 		page = sg_page(sg);
++		dma_len = sg_dma_len(sg);
+ 		addr = sg_dma_address(sg);
+ 
+-		while (len > 0) {
+-			if (WARN_ON(index >= max_entries))
++		while (pages && page_len > 0) {
++			if (WARN_ON(page_index >= max_entries))
+ 				return -1;
+-			if (pages)
+-				pages[index] = page;
+-			if (addrs)
+-				addrs[index] = addr;
+-
++			pages[page_index] = page;
+ 			page++;
++			page_len -= PAGE_SIZE;
++			page_index++;
++		}
++		while (addrs && dma_len > 0) {
++			if (WARN_ON(dma_index >= max_entries))
++				return -1;
++			addrs[dma_index] = addr;
+ 			addr += PAGE_SIZE;
+-			len -= PAGE_SIZE;
+-			index++;
++			dma_len -= PAGE_SIZE;
++			dma_index++;
+ 		}
+ 	}
+ 	return 0;
+-- 
+2.17.1
+
