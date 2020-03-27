@@ -4,162 +4,315 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77A6FC2D0EC
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 01:46:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18004C43331
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 01:51:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 58F4C20787
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 01:46:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D51C22082D
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 01:51:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727740AbgC0BqV convert rfc822-to-8bit (ORCPT
+        id S1727749AbgC0Bvu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 21:46:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49032 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727122AbgC0BqV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 21:46:21 -0400
-Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 212C62070A;
-        Fri, 27 Mar 2020 01:46:19 +0000 (UTC)
-Date:   Thu, 26 Mar 2020 21:46:17 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     David Laight <David.Laight@ACULAB.COM>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-        Peter Wu <peter@lekensteyn.nl>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Tom Zanussi <zanussi@kernel.org>,
-        Shuah Khan <shuahkhan@gmail.com>, bpf <bpf@vger.kernel.org>
-Subject: Re: [PATCH 00/12 v2] ring-buffer/tracing: Remove disabling of ring
- buffer while reading trace file
-Message-ID: <20200326214617.697634f3@oasis.local.home>
-In-Reply-To: <2a7f96545945457cade216aa3c736bcc@AcuMS.aculab.com>
-References: <20200319232219.446480829@goodmis.org>
-        <2a7f96545945457cade216aa3c736bcc@AcuMS.aculab.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Thu, 26 Mar 2020 21:51:50 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:12198 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727122AbgC0Bvu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Mar 2020 21:51:50 -0400
+Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 20219DCF16047037E5AE;
+        Fri, 27 Mar 2020 09:51:47 +0800 (CST)
+Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
+ (10.3.19.212) with Microsoft SMTP Server (TLS) id 14.3.487.0; Fri, 27 Mar
+ 2020 09:51:44 +0800
+Subject: Re: [PATCH] f2fs: fix long latency due to discard during umount
+To:     Sahitya Tummala <stummala@codeaurora.org>
+CC:     Jaegeuk Kim <jaegeuk@kernel.org>,
+        <linux-f2fs-devel@lists.sourceforge.net>,
+        <linux-kernel@vger.kernel.org>
+References: <1584506689-5041-1-git-send-email-stummala@codeaurora.org>
+ <29d4adc4-482d-3d92-1470-3405989ea231@huawei.com>
+ <20200326133700.GR20234@codeaurora.org>
+From:   Chao Yu <yuchao0@huawei.com>
+Message-ID: <2b0d8d4c-a981-4edc-d8ca-fe199a63ea79@huawei.com>
+Date:   Fri, 27 Mar 2020 09:51:43 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 8BIT
+In-Reply-To: <20200326133700.GR20234@codeaurora.org>
+Content-Type: text/plain; charset="windows-1252"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.134.22.195]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 21 Mar 2020 19:13:51 +0000
-David Laight <David.Laight@ACULAB.COM> wrote:
-
-> From: Steven Rostedt
-> > Sent: 19 March 2020 23:22  
-> ...
-> > 
-> > This patch series attempts to satisfy that request, by creating a
-> > temporary buffer in each of the per cpu iterators to place the
-> > read event into, such that it can be passed to users without worrying
-> > about a writer to corrupt the event while it was being written out.
-> > It also uses the fact that the ring buffer is broken up into pages,
-> > where each page has its own timestamp that gets updated when a
-> > writer crosses over to it. By copying it to the temp buffer, and
-> > doing a "before and after" test of the time stamp with memory barriers,
-> > can allow the events to be saved.  
+On 2020/3/26 21:37, Sahitya Tummala wrote:
+> Hi Chao,
 > 
-> Does this mean the you will no longer be able to look at a snapshot
-> of the trace by running 'less trace' (and typically going to the end
-> to get info for all cpus).
+> On Thu, Mar 26, 2020 at 05:00:18PM +0800, Chao Yu wrote:
+>> Hi Sahitya,
+>>
+>> On 2020/3/18 12:44, Sahitya Tummala wrote:
+>>> F2FS already has a default timeout of 5 secs for discards that
+>>> can be issued during umount, but it can take more than the 5 sec
+>>> timeout if the underlying UFS device queue is already full and there
+>>> are no more available free tags to be used. In that case, submit_bio()
+>>> will wait for the already queued discard requests to complete to get
+>>> a free tag, which can potentially take way more than 5 sec.
+>>>
+>>> Fix this by submitting the discard requests with REQ_NOWAIT
+>>> flags during umount. This will return -EAGAIN for UFS queue/tag full
+>>> scenario without waiting in the context of submit_bio(). The FS can
+>>> then handle these requests by retrying again within the stipulated
+>>> discard timeout period to avoid long latencies.
+>>>
+>>> Signed-off-by: Sahitya Tummala <stummala@codeaurora.org>
+>>> ---
+>>> v2:
+>>> - Handle the case where a dc can have multiple bios associated with it
+>>>
+>>>  fs/f2fs/f2fs.h    |  1 +
+>>>  fs/f2fs/segment.c | 83 ++++++++++++++++++++++++++++++++++++++++++++++++-------
+>>>  2 files changed, 74 insertions(+), 10 deletions(-)
+>>>
+>>> diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
+>>> index 12a197e..67b8dcc 100644
+>>> --- a/fs/f2fs/f2fs.h
+>>> +++ b/fs/f2fs/f2fs.h
+>>> @@ -340,6 +340,7 @@ struct discard_cmd_control {
+>>>  	struct list_head pend_list[MAX_PLIST_NUM];/* store pending entries */
+>>>  	struct list_head wait_list;		/* store on-flushing entries */
+>>>  	struct list_head fstrim_list;		/* in-flight discard from fstrim */
+>>> +	struct list_head retry_list;		/* list of cmds to retry */
+>>>  	wait_queue_head_t discard_wait_queue;	/* waiting queue for wake-up */
+>>>  	unsigned int discard_wake;		/* to wake up discard thread */
+>>>  	struct mutex cmd_lock;
+>>> diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
+>>> index fb3e531..4162c76 100644
+>>> --- a/fs/f2fs/segment.c
+>>> +++ b/fs/f2fs/segment.c
+>>> @@ -1029,13 +1029,16 @@ static void f2fs_submit_discard_endio(struct bio *bio)
+>>>  	struct discard_cmd *dc = (struct discard_cmd *)bio->bi_private;
+>>>  	unsigned long flags;
+>>>  
+>>> -	dc->error = blk_status_to_errno(bio->bi_status);
+>>> -
+>>>  	spin_lock_irqsave(&dc->lock, flags);
+>>> +	if (!dc->error)
+>>> +		dc->error = blk_status_to_errno(bio->bi_status);
+>>> +
+>>>  	dc->bio_ref--;
+>>> -	if (!dc->bio_ref && dc->state == D_SUBMIT) {
+>>> -		dc->state = D_DONE;
+>>> -		complete_all(&dc->wait);
+>>> +	if (!dc->bio_ref) {
+>>> +		if (dc->error || dc->state == D_SUBMIT) {
+>>> +			dc->state = D_DONE;
+>>> +			complete_all(&dc->wait);
+>>> +		}
+>>>  	}
+>>>  	spin_unlock_irqrestore(&dc->lock, flags);
+>>>  	bio_put(bio);
+>>> @@ -1124,10 +1127,13 @@ static int __submit_discard_cmd(struct f2fs_sb_info *sbi,
+>>>  	struct discard_cmd_control *dcc = SM_I(sbi)->dcc_info;
+>>>  	struct list_head *wait_list = (dpolicy->type == DPOLICY_FSTRIM) ?
+>>>  					&(dcc->fstrim_list) : &(dcc->wait_list);
+>>> -	int flag = dpolicy->sync ? REQ_SYNC : 0;
+>>> -	block_t lstart, start, len, total_len;
+>>> +	int flag;
+>>> +	block_t lstart, start, len, total_len, orig_len;
+>>>  	int err = 0;
+>>>  
+>>> +	flag = dpolicy->sync ? REQ_SYNC : 0;
+>>> +	flag |= dpolicy->type == DPOLICY_UMOUNT ? REQ_NOWAIT : 0;
+>>> +
+>>>  	if (dc->state != D_PREP)
+>>>  		return 0;
+>>>  
+>>> @@ -1139,7 +1145,7 @@ static int __submit_discard_cmd(struct f2fs_sb_info *sbi,
+>>>  	lstart = dc->lstart;
+>>>  	start = dc->start;
+>>>  	len = dc->len;
+>>> -	total_len = len;
+>>> +	orig_len = total_len = len;
+>>>  
+>>>  	dc->len = 0;
+>>>  
+>>> @@ -1203,6 +1209,14 @@ static int __submit_discard_cmd(struct f2fs_sb_info *sbi,
+>>>  		bio->bi_end_io = f2fs_submit_discard_endio;
+>>>  		bio->bi_opf |= flag;
+>>>  		submit_bio(bio);
+>>> +		if (flag & REQ_NOWAIT) {
+>>> +			if (dc->error == -EAGAIN) {
+>>> +				dc->len = orig_len;
+>>> +				list_move(&dc->list, &dcc->retry_list);
+>>> +				err = dc->error;
+>>
+>> I encounter lots of dmesg, which should be printed by __remove_discard_cmd()
+>>
+>> F2FS-fs (dm-0): Issue discard(23552, 23552, 2) failed, ret: -11
+>>
+>> This should happen only if we didn't handle all discard in 5 seconds during
+>> umount.
+>>
+>> So I doubt we failed to move dc to retry_list, because after submit_bio(),
+>> end_io() is not called synchronously as the bio was just pluged?
+>>
+> This can happen if a discard cmd has multiple bios and at least 1 bio is 
+> already submitted and when submitting other bios, we encounter -EAGAIN.
+> In this case, this dc will be moved to retry_list and will be moved back
+> to dcc->pend_list only if the dc->bio_ref becomes 0 within 5 sec timeout.
+> If it doesn't become zero, then it will be left in retry_list itself, which
+> will be later removed from retry_list. Before removing from retry_list we 
+> will however ensure that submitted bio is done i.e., dc->bio_ref is 0, but
+> dc->error will be -EAGAIN as this dc could not be requeued/retried.
+> 
+> So this is expected, where it only means that this dc could not be
+> submitted/retried again within timeout. I think we can ignore
+> this -EAGAIN error in __remove_discard_cmd().
 
-I changed patch 9 to be this:
+With this patch, most of xfstest cases cost 5 * n second longer than before.
 
-It adds an option "pause-on-trace" that when set, will bring back the
-old behavior of pausing recording to the ring buffer when the trace
-file is open.
+E.g. generic/003, during umount(), we looped into retrying one bio
+submission.
 
-If needed, I can add a kernel command line option and a Kconfig that
-makes this set to true by default.
+[61279.829724] F2FS-fs (zram1): Found nat_bits in checkpoint
+[61279.885337] F2FS-fs (zram1): Mounted with checkpoint version = 5cf3cb8e
+[61281.912832] submit discard bio start [23555,1]
+[61281.912835] f2fs_submit_discard_endio [23555,1] err:-11
+[61281.912836] submit discard bio end [23555,1]
+[61281.912836] move dc to retry list [23555,1]
 
--- Steve
+...
 
-From 71f44d604e5b16cc239d6276b447a515448f582f Mon Sep 17 00:00:00 2001
-From: "Steven Rostedt (VMware)" <rostedt@goodmis.org>
-Date: Tue, 17 Mar 2020 17:32:31 -0400
-Subject: [PATCH] tracing: Do not disable tracing when reading the trace file
+[61286.881212] submit discard bio start [23555,1]
+[61286.881217] f2fs_submit_discard_endio [23555,1] err:-11
+[61286.881223] submit discard bio end [23555,1]
+[61286.881224] move dc to retry list [23555,1]
+[61286.905198] submit discard bio start [23555,1]
+[61286.905203] f2fs_submit_discard_endio [23555,1] err:-11
+[61286.905205] submit discard bio end [23555,1]
+[61286.905206] move dc to retry list [23555,1]
+[61286.929157] F2FS-fs (zram1): Issue discard(23555, 23555, 1) failed, ret: -11
 
-When opening the "trace" file, it is no longer necessary to disable tracing.
+Could you take a look at this issue?
 
-Note, a new option is created called "pause-on-trace", when set, will cause
-the trace file to emulate its original behavior.
+Thanks,
 
-Link: http://lkml.kernel.org/r/20200317213416.903351225@goodmis.org
-
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
----
- Documentation/trace/ftrace.rst | 6 ++++++
- kernel/trace/trace.c           | 9 ++++++---
- kernel/trace/trace.h           | 1 +
- 3 files changed, 13 insertions(+), 3 deletions(-)
-
-diff --git a/Documentation/trace/ftrace.rst b/Documentation/trace/ftrace.rst
-index 99a0890e20ec..c33950a35d65 100644
---- a/Documentation/trace/ftrace.rst
-+++ b/Documentation/trace/ftrace.rst
-@@ -1125,6 +1125,12 @@ Here are the available options:
- 	the trace displays additional information about the
- 	latency, as described in "Latency trace format".
- 
-+  pause-on-trace
-+	When set, opening the trace file for read, will pause
-+	writing to the ring buffer (as if tracing_on was set to zero).
-+	This simulates the original behavior of the trace file.
-+	When the file is closed, tracing will be enabled again.
-+
-   record-cmd
- 	When any event or tracer is enabled, a hook is enabled
- 	in the sched_switch trace point to fill comm cache
-diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index 47889123be7f..650fa81fffe8 100644
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -4273,8 +4273,11 @@ __tracing_open(struct inode *inode, struct file *file, bool snapshot)
- 	if (trace_clocks[tr->clock_id].in_ns)
- 		iter->iter_flags |= TRACE_FILE_TIME_IN_NS;
- 
--	/* stop the trace while dumping if we are not opening "snapshot" */
--	if (!iter->snapshot)
-+	/*
-+	 * If pause-on-trace is enabled, then stop the trace while
-+	 * dumping, unless this is the "snapshot" file
-+	 */
-+	if (!iter->snapshot && (tr->trace_flags & TRACE_ITER_PAUSE_ON_TRACE))
- 		tracing_stop_tr(tr);
- 
- 	if (iter->cpu_file == RING_BUFFER_ALL_CPUS) {
-@@ -4371,7 +4374,7 @@ static int tracing_release(struct inode *inode, struct file *file)
- 	if (iter->trace && iter->trace->close)
- 		iter->trace->close(iter);
- 
--	if (!iter->snapshot)
-+	if (!iter->snapshot && tr->stop_count)
- 		/* reenable tracing if it was previously enabled */
- 		tracing_start_tr(tr);
- 
-diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
-index c61e1b1c85a6..f37e05135986 100644
---- a/kernel/trace/trace.h
-+++ b/kernel/trace/trace.h
-@@ -1302,6 +1302,7 @@ extern int trace_get_user(struct trace_parser *parser, const char __user *ubuf,
- 		C(IRQ_INFO,		"irq-info"),		\
- 		C(MARKERS,		"markers"),		\
- 		C(EVENT_FORK,		"event-fork"),		\
-+		C(PAUSE_ON_TRACE,	"pause-on-trace"),	\
- 		FUNCTION_FLAGS					\
- 		FGRAPH_FLAGS					\
- 		STACK_FLAGS					\
--- 
-2.20.1
-
+> 
+> Thanks,
+> 
+>> Thanks,
+>>
+>>> +				break;
+>>> +			}
+>>> +		}
+>>>  
+>>>  		atomic_inc(&dcc->issued_discard);
+>>>  
+>>> @@ -1463,6 +1477,40 @@ static unsigned int __issue_discard_cmd_orderly(struct f2fs_sb_info *sbi,
+>>>  	return issued;
+>>>  }
+>>>  
+>>> +static bool __should_discard_retry(struct f2fs_sb_info *sbi,
+> s> > +		struct discard_policy *dpolicy)
+>>> +{
+>>> +	struct discard_cmd_control *dcc = SM_I(sbi)->dcc_info;
+>>> +	struct discard_cmd *dc, *tmp;
+>>> +	bool retry = false;
+>>> +	unsigned long flags;
+>>> +
+>>> +	if (dpolicy->type != DPOLICY_UMOUNT)
+>>> +		f2fs_bug_on(sbi, 1);
+>>> +
+>>> +	mutex_lock(&dcc->cmd_lock);
+>>> +	list_for_each_entry_safe(dc, tmp, &(dcc->retry_list), list) {
+>>> +		if (dpolicy->timeout != 0 &&
+>>> +			f2fs_time_over(sbi, dpolicy->timeout)) {
+>>> +			retry = false;
+>>> +			break;
+>>> +		}
+>>> +
+>>> +		spin_lock_irqsave(&dc->lock, flags);
+>>> +		if (!dc->bio_ref) {
+>>> +			dc->state = D_PREP;
+>>> +			dc->error = 0;
+>>> +			reinit_completion(&dc->wait);
+>>> +			__relocate_discard_cmd(dcc, dc);
+>>> +			retry = true;
+>>> +		}
+>>> +		spin_unlock_irqrestore(&dc->lock, flags);
+>>> +	}
+>>> +	mutex_unlock(&dcc->cmd_lock);
+>>> +
+>>> +	return retry;
+>>> +}
+>>> +
+>>>  static int __issue_discard_cmd(struct f2fs_sb_info *sbi,
+>>>  					struct discard_policy *dpolicy)
+>>>  {
+>>> @@ -1470,12 +1518,13 @@ static int __issue_discard_cmd(struct f2fs_sb_info *sbi,
+>>>  	struct list_head *pend_list;
+>>>  	struct discard_cmd *dc, *tmp;
+>>>  	struct blk_plug plug;
+>>> -	int i, issued = 0;
+>>> +	int i, err, issued = 0;
+>>>  	bool io_interrupted = false;
+>>>  
+>>>  	if (dpolicy->timeout != 0)
+>>>  		f2fs_update_time(sbi, dpolicy->timeout);
+>>>  
+>>> +retry:
+>>>  	for (i = MAX_PLIST_NUM - 1; i >= 0; i--) {
+>>>  		if (dpolicy->timeout != 0 &&
+>>>  				f2fs_time_over(sbi, dpolicy->timeout))
+>>> @@ -1509,7 +1558,10 @@ static int __issue_discard_cmd(struct f2fs_sb_info *sbi,
+>>>  				break;
+>>>  			}
+>>>  
+>>> -			__submit_discard_cmd(sbi, dpolicy, dc, &issued);
+>>> +			err = __submit_discard_cmd(sbi, dpolicy, dc, &issued);
+>>> +			if (err == -EAGAIN)
+>>> +				congestion_wait(BLK_RW_ASYNC,
+>>> +						DEFAULT_IO_TIMEOUT);
+>>>  
+>>>  			if (issued >= dpolicy->max_requests)
+>>>  				break;
+>>> @@ -1522,6 +1574,10 @@ static int __issue_discard_cmd(struct f2fs_sb_info *sbi,
+>>>  			break;
+>>>  	}
+>>>  
+>>> +	if (!list_empty(&dcc->retry_list) &&
+>>> +		__should_discard_retry(sbi, dpolicy))
+>>> +		goto retry;
+>>> +
+>>>  	if (!issued && io_interrupted)
+>>>  		issued = -1;
+>>>  
+>>> @@ -1613,6 +1669,12 @@ static unsigned int __wait_discard_cmd_range(struct f2fs_sb_info *sbi,
+>>>  		goto next;
+>>>  	}
+>>>  
+>>> +	if (dpolicy->type == DPOLICY_UMOUNT &&
+>>> +		!list_empty(&dcc->retry_list)) {
+>>> +		wait_list = &dcc->retry_list;
+>>> +		goto next;
+>>> +	}
+>>> +
+>>>  	return trimmed;
+>>>  }
+>>>  
+>>> @@ -2051,6 +2113,7 @@ static int create_discard_cmd_control(struct f2fs_sb_info *sbi)
+>>>  	for (i = 0; i < MAX_PLIST_NUM; i++)
+>>>  		INIT_LIST_HEAD(&dcc->pend_list[i]);
+>>>  	INIT_LIST_HEAD(&dcc->wait_list);
+>>> +	INIT_LIST_HEAD(&dcc->retry_list);
+>>>  	INIT_LIST_HEAD(&dcc->fstrim_list);
+>>>  	mutex_init(&dcc->cmd_lock);
+>>>  	atomic_set(&dcc->issued_discard, 0);
+>>>
+> 
