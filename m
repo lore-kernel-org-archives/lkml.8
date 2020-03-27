@@ -2,63 +2,65 @@ Return-Path: <SRS0=s8dx=5M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46791C43331
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 20:23:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5DB3C2D0E8
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 20:25:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C6C720714
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 20:23:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9DBD02071B
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 20:25:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="CSvH/Ub1"
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="NRA7NIyK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727701AbgC0UXF (ORCPT
+        id S1727639AbgC0UZV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Mar 2020 16:23:05 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:37434 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726710AbgC0UXE (ORCPT
+        Fri, 27 Mar 2020 16:25:21 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:40824 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727143AbgC0UZV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Mar 2020 16:23:04 -0400
-Received: by mail-ot1-f67.google.com with SMTP id g23so11165404otq.4
-        for <linux-kernel@vger.kernel.org>; Fri, 27 Mar 2020 13:23:04 -0700 (PDT)
+        Fri, 27 Mar 2020 16:25:21 -0400
+Received: by mail-ot1-f65.google.com with SMTP id r19so5310617otn.7
+        for <linux-kernel@vger.kernel.org>; Fri, 27 Mar 2020 13:25:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=broadcom.com; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=OFz97eXpjJf+7mUd4dNZdWEqJgglvlf1biCOfhwlvrw=;
-        b=CSvH/Ub1dezjRaHvNDRiXZX7jQJCKDFX+dMYut7M8RhokpljrMAVooMj1bo9SqDIb3
-         1ZaKfbVP4po180gn4uml+oUsHpx5MgITAEltFGisMTpSBUEnbhaUhi3JkPzSbjDauj6K
-         a+B+xGyeeYUdP+yk/txqFyw8E1pPKBrG4ME9k=
+        bh=akWa2ipvxDdFjzHuT26VN2IdHpNjEh3op9l8PYfCVA0=;
+        b=NRA7NIyKs9dvbrJdb5I0eFsmvwBuuz3f4W7KGO5Y6YsRY/dAZH+qXFQC1B/HIO8q90
+         Di99YhMlahViPssUjztq+3fKqXSiF5fbgKk+mOGT+o3FPZy1dk7n4dYfdnWMzt33uDxD
+         xxUKAC5cU66mNQjvtGbkHpDCaqZD7FA8potYQ=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=OFz97eXpjJf+7mUd4dNZdWEqJgglvlf1biCOfhwlvrw=;
-        b=gU815Hm6Tea3hkyyA935zOpJSf9v5jfGw6BYaksLguVguv6qfAndZnS+X1TFl9In4+
-         oZbwZoeWDCRTPhdi7gcVrkBKoyI+PLljAG/fad1284W2/Vi0zfpuKxDBPpMtCuWaGqPd
-         6W53gAktPChNBj0JQBAH5DbS48B4HZEkO8dtfkgVAv85xHBFVrbyCMRIoRiExHYiScZJ
-         QayuRDdPfoz2x7ztVJktinE0L7uhV7qfFwSF74Mi4vdy9rIaP3mTgWQQch6q61ikIzPe
-         tVO76FX7q9JqvyQoD5ooNf7zKMOUCtnwH3a8RJeCIs5+mpQ6AHWZIWcYuJO+/+l2coAR
-         5UWA==
-X-Gm-Message-State: ANhLgQ2vpTlTm2PPX8bFJrnZGjLQCoX9GkOTzgbI6GUEbDlpNz9BK9jJ
-        AH1kRiSx9FKIffAAmzHx475NVR9AhJinSDhm2mwO
-X-Google-Smtp-Source: ADFU+vvIa69JmP/eHtaUxuKh+BObIiRLVegX94oveThM6CY52unkByyBKrxVNAURHYXSfVWiT369OFTMKFjSimrf3G0=
-X-Received: by 2002:a05:6830:19ee:: with SMTP id t14mr375774ott.287.1585340583924;
- Fri, 27 Mar 2020 13:23:03 -0700 (PDT)
+        bh=akWa2ipvxDdFjzHuT26VN2IdHpNjEh3op9l8PYfCVA0=;
+        b=YounGtBMVUYhHGqhyn03JPyMOMWrk2G3OU/mC427y9zNvc1OgSNISrGo0DCDh4qEL8
+         g0IhC+udPuAvksMotdcDIHjdg7uj7XECbaR0lM/DE0hIAdAH1LZqibWXkgBe0zzVgJFX
+         987mdAiNniZS//YcyMq/MTBqA7I/j9U99wdLNd+hKldNqVqJDT6LsLToS2x2lzWBVMjd
+         L9DDBn7Qiay9MO7EeJQOyLzVxeBHL+gtzjl4ewwTS/NZVtB4CiyfqONGce26P8b0BEy3
+         F9TJ/OwoZj8rCQdOLQfKUoai8rQz1xQKp0f4ueGhPq0X4+RX6kLviCUXdjiLIPdvdR//
+         2fqg==
+X-Gm-Message-State: ANhLgQ0A7xjFzNlAvDLMklXAfkh0UK4/jktS8fe3tBiU6nAeNVp2WBC1
+        GDeR4t1Vb0LUKzw61Lx/KcxMC5E7ugFRsarIfAJo
+X-Google-Smtp-Source: ADFU+vtEIPmG+pfkHCSu82SSE3geeF9tI5kApWkuTOGuNqdr4Sq82a3K7dRYtvTWJOz2KWUcNK/35wGwBVO+Z9Sv9Ak=
+X-Received: by 2002:a05:6820:122:: with SMTP id i2mr1003546ood.73.1585340720551;
+ Fri, 27 Mar 2020 13:25:20 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200313141545.31943-1-alcooperx@gmail.com> <20200313161836.GX1922688@smile.fi.intel.com>
-In-Reply-To: <20200313161836.GX1922688@smile.fi.intel.com>
+References: <20200313141545.31943-1-alcooperx@gmail.com> <20200313141545.31943-2-alcooperx@gmail.com>
+ <20200313220202.GA23539@bogus>
+In-Reply-To: <20200313220202.GA23539@bogus>
 From:   Al Cooper <al.cooper@broadcom.com>
-Date:   Fri, 27 Mar 2020 16:22:52 -0400
-Message-ID: <CAGh=XAD63AhGRqvvNKfm2=0-bsZZdhtXcMDavR75BNzUd7UiOQ@mail.gmail.com>
-Subject: Re: [PATCH 0/4] Add XHCI, EHCI and OHCI support for Broadcom STB SoS's
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Date:   Fri, 27 Mar 2020 16:25:09 -0400
+Message-ID: <CAGh=XADV-wp_vggA=3Nf8wGdABvgkhVzpMjFg4XcdOukRoC6TA@mail.gmail.com>
+Subject: Re: [PATCH 1/4] dt-bindings: Add Broadcom STB USB support
+To:     Rob Herring <robh@kernel.org>
 Cc:     Al Cooper <alcooperx@gmail.com>, linux-kernel@vger.kernel.org,
         Alan Stern <stern@rowland.harvard.edu>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Arnd Bergmann <arnd@arndb.de>,
         Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
         BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
@@ -72,58 +74,41 @@ Cc:     Al Cooper <alcooperx@gmail.com>, linux-kernel@vger.kernel.org,
         "open list:USB SUBSYSTEM" <linux-usb@vger.kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Mathias Nyman <mathias.nyman@intel.com>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>, Rob Herring <robh@kernel.org>
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 13, 2020 at 12:18 PM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
+On Fri, Mar 13, 2020 at 6:02 PM Rob Herring <robh@kernel.org> wrote:
 >
-> On Fri, Mar 13, 2020 at 10:15:41AM -0400, Al Cooper wrote:
-> > This adds support for the XHCI, EHCI and OHCI host controllers found
-> > in Broadcom STB SoC's. These drivers depend on getting access to the
-> > new Broadcom STB USB PHY driver through a device-tree phandle and
-> > will fail if the driver is not available.
->
-> Hint to the future:
->
->         scripts/get_maintainer.pl --git --git-min-percent=67 ...
-
-Thanks, I'll use that in the future.
-
->
+> On Fri, 13 Mar 2020 10:15:42 -0400, Al Cooper wrote:
+> > Add DT bindings for Broadcom STB USB EHCI and XHCI drivers.
 > >
-> > Al Cooper (4):
-> >   dt-bindings: Add Broadcom STB USB support
-> >   usb: xhci: xhci-plat: Add support for Broadcom STB SoC's
-> >   usb: ehci: Add new EHCI driver for Broadcom STB SoC's
-> >   usb: host: Add ability to build new Broadcom STB USB drivers
+> > NOTE: The OHCI driver is not included because it uses the generic
+> >       platform driver.
 > >
-> >  .../bindings/usb/brcm,bcm7445-ehci.yaml       |  60 ++++
-> >  .../devicetree/bindings/usb/usb-xhci.txt      |   1 +
-> >  MAINTAINERS                                   |   9 +
-> >  drivers/usb/host/Kconfig                      |  20 ++
-> >  drivers/usb/host/Makefile                     |  20 +-
-> >  drivers/usb/host/ehci-brcm.c                  | 288 ++++++++++++++++++
-> >  drivers/usb/host/xhci-brcm.c                  |  16 +
-> >  drivers/usb/host/xhci-brcm.h                  |  16 +
-> >  drivers/usb/host/xhci-plat.c                  |  11 +
-> >  9 files changed, 435 insertions(+), 6 deletions(-)
+> > Signed-off-by: Al Cooper <alcooperx@gmail.com>
+> > ---
+> >  .../bindings/usb/brcm,bcm7445-ehci.yaml       | 60 +++++++++++++++++++
+> >  .../devicetree/bindings/usb/usb-xhci.txt      |  1 +
+> >  2 files changed, 61 insertions(+)
 > >  create mode 100644 Documentation/devicetree/bindings/usb/brcm,bcm7445-ehci.yaml
-> >  create mode 100644 drivers/usb/host/ehci-brcm.c
-> >  create mode 100644 drivers/usb/host/xhci-brcm.c
-> >  create mode 100644 drivers/usb/host/xhci-brcm.h
-> >
-> > --
-> > 2.17.1
 > >
 >
-> --
-> With Best Regards,
-> Andy Shevchenko
+> My bot found errors running 'make dt_binding_check' on your patch:
 >
+> Error: Documentation/devicetree/bindings/usb/brcm,bcm7445-ehci.example.dts:24.13-14 syntax error
+> FATAL ERROR: Unable to parse input tree
+> scripts/Makefile.lib:311: recipe for target 'Documentation/devicetree/bindings/usb/brcm,bcm7445-ehci.example.dt.yaml' failed
+> make[1]: *** [Documentation/devicetree/bindings/usb/brcm,bcm7445-ehci.example.dt.yaml] Error 1
+> make[1]: *** Waiting for unfinished jobs....
+> Makefile:1262: recipe for target 'dt_binding_check' failed
+> make: *** [dt_binding_check] Error 2
 >
+> See https://patchwork.ozlabs.org/patch/1254417
+> Please check and re-submit.
+
+I fixed this.
+Thanks
