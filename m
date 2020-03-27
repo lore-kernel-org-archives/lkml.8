@@ -2,119 +2,79 @@ Return-Path: <SRS0=s8dx=5M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 097C4C43331
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 13:03:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 998BDC43331
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 13:04:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D59132083E
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 13:03:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 320352082D
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 13:04:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="k3fAd+N3"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FUh66KIR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727705AbgC0NDe (ORCPT
+        id S1727639AbgC0NEe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Mar 2020 09:03:34 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:55452 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726758AbgC0NDe (ORCPT
+        Fri, 27 Mar 2020 09:04:34 -0400
+Received: from mail-pl1-f172.google.com ([209.85.214.172]:40368 "EHLO
+        mail-pl1-f172.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726165AbgC0NEd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Mar 2020 09:03:34 -0400
-Received: by mail-wm1-f65.google.com with SMTP id z5so11313590wml.5;
-        Fri, 27 Mar 2020 06:03:33 -0700 (PDT)
+        Fri, 27 Mar 2020 09:04:33 -0400
+Received: by mail-pl1-f172.google.com with SMTP id h11so3421761plk.7
+        for <linux-kernel@vger.kernel.org>; Fri, 27 Mar 2020 06:04:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=4sUrD9MyEjEQo8VVi0oe8ImEVPpX8XndbtrgsNn8Hro=;
-        b=k3fAd+N3UUPr5JqvkwyYIQ3I5rmkEDExPOKxSUbK2uVu95M6vI9Cc0n8/HWTVaB5w9
-         efRkMUWEMU8vjuR26ph/FAyyTJDcJteeNocO9z8kLNGaeMYi+ff6G0ZpB+d2XLqmVk9i
-         Ogkl+er3XssGB7nZ4L85DTPu6qAPIpySqEXeSzvQ8DfMjg2IjlQlyKwUrP6MJ/Nm9HXI
-         6rsqqHww23a5IdnfzQuZrxC3zYD4M2wbk+1HXItPIO3oiVD74QMIVMQ/HyXcbID3RB8u
-         vGbzNMusIAL00IxOlS8kw55LkxbzNuGo7dPE5zFFuKb85SYNgN0hwn4c389A9OKH0hPS
-         smsQ==
+        h=from:content-transfer-encoding:mime-version:subject:date:message-id
+         :cc:to;
+        bh=q44r5Q+/YW0pPASFunSH8/is4AigD9w8fhoq4iObmf8=;
+        b=FUh66KIRSsyppgFCztklvDnxVUlsFFj7xwV8t7uOBfqRHZKLOrYFXaVTQ/YId9bbwQ
+         kon9samDNmyPhm+TDNUVuzBveqiVo7lnEiizwYTVGLFP8W8t6uJRms3HWjqAzrUbRS4W
+         BPucVc+6xtDsQwtauIxQNIRqrHcP4EjgE6jCc1k3wI3pciykDoh5KJvsUg8UCiqtNUl1
+         GkukySkHQR5nOHmjr+voXbH885iVi7Yi5jy7ppfIpz+NmuPE0pgpUkoVVBNXOwWmfTHP
+         oivO2NF6BDJDcYnJdLGzDFio3oCDDo4kQIgoTui+XEfpJ1FCZhYnm4CYbUx+72Oo5Vtj
+         BK9Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=4sUrD9MyEjEQo8VVi0oe8ImEVPpX8XndbtrgsNn8Hro=;
-        b=cSQ+5TUi5j4tozKOB3h+ue+71PoZerOk7iyOz3S9U8wLpwecWmdL6cihjN+pvcwuQ4
-         E9oPz+Bze3B+m8b+97XsWDrsE7+DqADUavu23BK6Qyqu2BJGdJGzsw/r1N82Qu8Yd5V0
-         2s1gDcV9TrLXcSqhWf2tizAnmDpp7Tov3ENsl0gVcH0c/s+nbRxqtLSE1rGUOcB+KqKu
-         I2SF0BptWGG7XKbbh4Mp/WMNKxhN5NiqspZrLaZHKnmCFX+rtfAFfmof1BKFZhEvkc8E
-         +a84Db057xYwGLwzyjIKqqtRg8nasaptmmZ1qeym4yhCZi4SAs/0cZokiBBSzAoXE3At
-         ll9Q==
-X-Gm-Message-State: ANhLgQ2Zj3UOgFEyyT4jnQPjymJbMnD5hyQtbvN1L8qe3teOEMgS0aqw
-        CSwUhAcSXk1w+5VkFy4Rohw=
-X-Google-Smtp-Source: ADFU+vt4R8l6MctQ+O8OeALik5hRcIOsWR7Swbne1HmZmA6QJ6AaKwQ0Y/3YcOWeOBuZIUqrwzXQYg==
-X-Received: by 2002:a05:600c:257:: with SMTP id 23mr5479663wmj.155.1585314212411;
-        Fri, 27 Mar 2020 06:03:32 -0700 (PDT)
-Received: from [192.168.0.104] (p5B3F6E13.dip0.t-ipconnect.de. [91.63.110.19])
-        by smtp.gmail.com with ESMTPSA id f9sm8028235wrc.71.2020.03.27.06.03.31
+        h=x-gm-message-state:from:content-transfer-encoding:mime-version
+         :subject:date:message-id:cc:to;
+        bh=q44r5Q+/YW0pPASFunSH8/is4AigD9w8fhoq4iObmf8=;
+        b=jwC9UOggWYmSi1nWREZSxpup/yFwCKV40Hj1ATUQOF8s7sd4IN4h3Hg2AYihVNX9Cm
+         gt9YWVN3dN7jWk7l7iqVhE7EPbByjUh+D90enM18FPCcM3vVUWVt3Gb76cSjP9aVWuYm
+         cuyrMgCzAUvCXsyjxRWaPTMfvlO9yS6DJLorENUDnQjFJTH09c3cystBxIpOJMsBjX3O
+         7Wjk2yjrn3/xKEHdG/ng2H+hWWkw7MfWPPHnzfGJgruc6QHmxWo5SavIPkHpfvwvD4Yh
+         /LUYiSBq4yoFp8SRBtHl10U37TzFEMm+lUYuJjINmPum0fcsJUtAdgvKQXZleWPtZrgU
+         +Qog==
+X-Gm-Message-State: ANhLgQ3JdAhZRHXCykXcz6lAw2Ia6UMd7cRHq1sMq9axofxyf36clbpq
+        0QJ984S1bEo4l/rCCI7iUIU=
+X-Google-Smtp-Source: ADFU+vu34BMCCtFfrb13IfOiRfruxVrmzSTDA0w4QJGIBvogwAy1YMY9bKy7bPI06eaF2oLUk1s9/A==
+X-Received: by 2002:a17:902:9890:: with SMTP id s16mr12219469plp.77.1585314272338;
+        Fri, 27 Mar 2020 06:04:32 -0700 (PDT)
+Received: from ?IPv6:2600:6c52:7300:a0a:e9aa:10c3:6793:9b8d? ([2600:6c52:7300:a0a:e9aa:10c3:6793:9b8d])
+        by smtp.gmail.com with ESMTPSA id i124sm4091826pfg.14.2020.03.27.06.04.31
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 27 Mar 2020 06:03:31 -0700 (PDT)
-Subject: Re: [PATCH v4 2/5] mfd: mp2629: Add support for mps battery charger
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald <pmeerw@pmeerw.net>,
-        Sebastian Reichel <sre@kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-iio <linux-iio@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-References: <20200322224626.13160-1-sravanhome@gmail.com>
- <20200322224626.13160-3-sravanhome@gmail.com> <20200327075541.GF603801@dell>
- <a6098b6a-2b2f-5279-f9fc-85201b9aabde@gmail.com> <20200327102221.GA3383@dell>
- <a679aba5-4cfb-1b6c-8cb0-dab3a644f3e7@gmail.com> <20200327112523.GC3383@dell>
- <45f68c40-8e50-e0a2-a89a-b5a164d6b75c@gmail.com>
- <CAHp75VcAq-CwsXccbLVxEwGjZjNhdcbMyM-Y-=SEbmexBidCHw@mail.gmail.com>
-From:   saravanan sekar <sravanhome@gmail.com>
-Message-ID: <0f344b03-ce5e-4a31-5268-6db4266b352e@gmail.com>
-Date:   Fri, 27 Mar 2020 14:03:30 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
-MIME-Version: 1.0
-In-Reply-To: <CAHp75VcAq-CwsXccbLVxEwGjZjNhdcbMyM-Y-=SEbmexBidCHw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+        Fri, 27 Mar 2020 06:04:31 -0700 (PDT)
+From:   Billie Teall <billiejteall@gmail.com>
+X-Google-Original-From: Billie Teall <BilliejTeall@gmail.com>
+Content-Type: text/plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Mime-Version: 1.0 (1.0)
+Subject: Re: [PATCH v2 1/7] arm64: Introduce system_capabilities_finalized() marker
+Date:   Fri, 27 Mar 2020 06:04:30 -0700
+Message-Id: <279F99EB-1957-4A46-87CA-506CC749EC7F@gmail.com>
+Cc:     ard.biesheuvel@linaro.org, christoffer.dall@arm.com,
+        dave.martin@arm.com, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, mark.rutland@arm.com, maz@kernel.org,
+        suzuki.poulose@arm.com, will.deacon@arm.com, will@kernel.org
+To:     catalin.marinas@arm.com
+X-Mailer: iPhone Mail (17D50)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Andy,
+Zz
 
-On 27/03/20 1:56 pm, Andy Shevchenko wrote:
-> On Fri, Mar 27, 2020 at 2:41 PM saravanan sekar <sravanhome@gmail.com> wrote:
->> On 27/03/20 12:25 pm, Lee Jones wrote:
->>> On Fri, 27 Mar 2020, saravanan sekar wrote:
->>>> On 27/03/20 11:22 am, Lee Jones wrote:
->>> So Andy has reviewed, but you still don't have him on Cc?
->> Sorry one of his hint made me removed him in CC unknowingly.
->>
->> "For the future, hint:
->>           scripts/get_maintainer.pl --git --git-min-percent=67 ..."
->>
-> Perhaps I have to elaborate. The above hint for the initial submit.
-> Then the rule of thumb: Include reviewers into Cc (to the patches they
-> have reviewed), because you can't know their intention and maybe they
-> want to follow a development.
-Thanks for more details. Between Lee has not recommended "forward 
-declarations", the review comment
-you gave on my V1 patch (more info on previous email). Hope you agree 
-with the same.
->> My fault, added him in CC
-> No problem.
->
-> --
-> With Best Regards,
-> Andy Shevchenko
+Sent from my iPhone
