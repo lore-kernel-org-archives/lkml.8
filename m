@@ -2,59 +2,60 @@ Return-Path: <SRS0=s8dx=5M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E4D5C43331
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 06:24:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D79B1C2D0ED
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 06:24:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E293B20717
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 06:24:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ACC7F20716
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 06:24:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IQ2KiKpu"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cVo+9E2h"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726518AbgC0GYU (ORCPT
+        id S1727509AbgC0GYY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Mar 2020 02:24:20 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:36075 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726215AbgC0GYU (ORCPT
+        Fri, 27 Mar 2020 02:24:24 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:41175 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726215AbgC0GYX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Mar 2020 02:24:20 -0400
-Received: by mail-pl1-f196.google.com with SMTP id g2so3090296plo.3;
-        Thu, 26 Mar 2020 23:24:19 -0700 (PDT)
+        Fri, 27 Mar 2020 02:24:23 -0400
+Received: by mail-pl1-f193.google.com with SMTP id t16so3078011plr.8;
+        Thu, 26 Mar 2020 23:24:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=KxvtWHMTpXNJcpAcSzyia90JODer9a/KosglAsSw/h4=;
-        b=IQ2KiKpu4ddLFmRTmWjfg249VH+ZFwyu58/9gHxJ/emZHzab338EyOXqRlgwoZmCve
-         Fum5ZBGL7XnZiVeX076I66cpXM5trxBxFs4vRhRj6Mox4dqFrSe+7cpMKo5HIv4eT136
-         jeTZuuJup7J9WQHAiI55O/RrY891voTXSr/u6YBxwetmd84fTEKWEPF008/aqFZUk51q
-         XitBO64fN0M+X3F1P4uaPmnjDubfhKLIXZTDTGoP1vVTz6uyxCR6366oZOXFpdSrtm3o
-         PGBEfqAVrKzJkPHYg81nfyMQh4xuixVMhmfRLx70zXns78Xl1TZ/kPeK1wuBoJgBjS6v
-         WLMw==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=cRB5KVU8flbbfiX95l71SFIi4ntzX1dMuUx4bGKIqDM=;
+        b=cVo+9E2hHHRzQHJTWVEneSorc4gh9x0wMNISSKyll0TgdUKFvleZWSCIJNhP9KwSY6
+         pD6NKX/jpUy7sC2+4sLF/8DGSlzbTD+vjcXpAjR1Br1DzizBmxRKXUl9Qqf9B9WYyOat
+         slO66rM94qBoF7sFEhJTg+DdZAYZnaRXEkEW127twNx9xaaAiSnYjvm1e1urhxN1xqoe
+         1zi2u8RQaru0JXV1/avx70S3OrKfH6yoF8ctyh4dMkckkXuba9yK/rRXHcUTjgOqCT/N
+         CBQWAwVv8Fy5m5fC7/M8Yi+tVXC/gWavMsQAYQnlVG3fKaX2mfQ3ctcILa/8bjkGnHpI
+         y8lw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=KxvtWHMTpXNJcpAcSzyia90JODer9a/KosglAsSw/h4=;
-        b=Y7QZX6xDA7Z/eNg/yVFTvRrhH9tBnKWBF0YLCQGsKo0sPISgYAFmR+jdEsHl6EeqSN
-         nasEUyG71mceXLKOpyvZRpubP3qb36ebNk9mNWUUJc6z6YIeiJQiXBj/OjJFoE24ErHl
-         o8JbOAsR2JV1IFISQp1ZpnTBbfAe3nVBqIrkzxoYGcO1jLkTKE+HemN3meuLzdhaif2D
-         IJ2lBvriw1TZJiPLLNHvqzqkX7HKGcUhWaCp31UcrBJocyEN3VM5yiRYcwju+f3PlSFX
-         utlMcOOMF/KObDUnrpGzzKU+GjYFd5gR8pyqyZ6iwZUmDG+KXyqA2Z1NOf0kFwmVDJ41
-         BlZQ==
-X-Gm-Message-State: ANhLgQ35Bb429OdzFXYBuwGxlsnopucCRE4R4c7zGvewDK7qYqwDWgCv
-        bNXY58N6gyoVSuYaNO2JcZ2+Usom
-X-Google-Smtp-Source: ADFU+vvjua2b0xRBETCx8MIDDcQaAl6IilmVfMS0FYJKgP6FqbfNmkEsgcH3PEbAVcNL35CZ0lmf9A==
-X-Received: by 2002:a17:90a:e289:: with SMTP id d9mr4027778pjz.172.1585290258735;
-        Thu, 26 Mar 2020 23:24:18 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=cRB5KVU8flbbfiX95l71SFIi4ntzX1dMuUx4bGKIqDM=;
+        b=MUAAwku6ho2uxrxQUA5oNoqSMWBZxgEIt4+U53SoAcl2n41vYEsoMF3tlvIFS7+tsc
+         ZL2D7lRtiaygHlviTW5PmUNF8jIpReSzGENBLUP9hnrzsQ9LR7DtbRIrc15kwJC2k7bI
+         9IFtTTZuRvc0gFkcmWMAh85qjYFX5s4lhSJXR0PjLH2ySf1HrVJnXtx7gBgLiKFy1/9T
+         2bePy6qsUBekcydlZFgg+a37qWxzCiV3umJsMc9mTEBFKOyPksyaZNIfTVI6aeofzopv
+         fudri/zPRTjI+X1Jw+w1PcVO4Ud62JGKWbBT8VtIaLLl+w5RwKoLLK03CL9YZk2mbWlF
+         vkyw==
+X-Gm-Message-State: ANhLgQ3Ar1QteT8+9SmMhywyp7gWfdSXcU9mRKcgZIpHByCv0E1UXQee
+        a5mAb7NoqqC1AbhsiGt43meCRyjz
+X-Google-Smtp-Source: ADFU+vvXH26lmdQRHFtBd+cuhZLOY5ZhXl22R1Eq+0NX6XXjJAaO7iMU8+CBm698yNjV7POVcp3pjw==
+X-Received: by 2002:a17:90a:628a:: with SMTP id d10mr4195876pjj.25.1585290261458;
+        Thu, 26 Mar 2020 23:24:21 -0700 (PDT)
 Received: from localhost.localdomain ([103.7.29.6])
-        by smtp.googlemail.com with ESMTPSA id s4sm3262078pgm.18.2020.03.26.23.24.15
+        by smtp.googlemail.com with ESMTPSA id s4sm3262078pgm.18.2020.03.26.23.24.18
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Thu, 26 Mar 2020 23:24:17 -0700 (PDT)
+        Thu, 26 Mar 2020 23:24:21 -0700 (PDT)
 From:   Wanpeng Li <kernellwp@gmail.com>
 X-Google-Original-From: Wanpeng Li <wanpengli@tencent.com>
 To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
@@ -64,10 +65,12 @@ Cc:     Paolo Bonzini <pbonzini@redhat.com>,
         Wanpeng Li <wanpengli@tencent.com>,
         Jim Mattson <jmattson@google.com>,
         Joerg Roedel <joro@8bytes.org>
-Subject: [PATCH 1/2] KVM: X86: Filter the broadcast dest for IPI fastpath
-Date:   Fri, 27 Mar 2020 14:23:59 +0800
-Message-Id: <1585290240-18643-1-git-send-email-wanpengli@tencent.com>
+Subject: [PATCH 2/2] KVM: LAPIC: Don't need to clear IPI delivery status for x2apic
+Date:   Fri, 27 Mar 2020 14:24:00 +0800
+Message-Id: <1585290240-18643-2-git-send-email-wanpengli@tencent.com>
 X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1585290240-18643-1-git-send-email-wanpengli@tencent.com>
+References: <1585290240-18643-1-git-send-email-wanpengli@tencent.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -75,58 +78,41 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Wanpeng Li <wanpengli@tencent.com>
 
-Except destination shorthand, a destination value 0xffffffff is used to 
-broadcast interrupts, let's also filter this for single target IPI fastpath.
+IPI delivery status field is not present for x2apic, don't need 
+to clear IPI delivery status for x2apic.
 
 Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
 ---
- arch/x86/kvm/lapic.c | 3 ---
- arch/x86/kvm/lapic.h | 3 +++
- arch/x86/kvm/x86.c   | 3 ++-
- 3 files changed, 5 insertions(+), 4 deletions(-)
+ arch/x86/kvm/lapic.c | 3 ++-
+ arch/x86/kvm/x86.c   | 1 -
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/arch/x86/kvm/lapic.c b/arch/x86/kvm/lapic.c
-index a38f1a8..88929b1 100644
+index 88929b1..f6d69e2 100644
 --- a/arch/x86/kvm/lapic.c
 +++ b/arch/x86/kvm/lapic.c
-@@ -59,9 +59,6 @@
- #define MAX_APIC_VECTOR			256
- #define APIC_VECTORS_PER_REG		32
- 
--#define APIC_BROADCAST			0xFF
--#define X2APIC_BROADCAST		0xFFFFFFFFul
--
- static bool lapic_timer_advance_dynamic __read_mostly;
- #define LAPIC_TIMER_ADVANCE_ADJUST_MIN	100	/* clock cycles */
- #define LAPIC_TIMER_ADVANCE_ADJUST_MAX	10000	/* clock cycles */
-diff --git a/arch/x86/kvm/lapic.h b/arch/x86/kvm/lapic.h
-index bc76860..25b77a6 100644
---- a/arch/x86/kvm/lapic.h
-+++ b/arch/x86/kvm/lapic.h
-@@ -17,6 +17,9 @@
- #define APIC_BUS_CYCLE_NS       1
- #define APIC_BUS_FREQUENCY      (1000000000ULL / APIC_BUS_CYCLE_NS)
- 
-+#define APIC_BROADCAST			0xFF
-+#define X2APIC_BROADCAST		0xFFFFFFFFul
-+
- enum lapic_mode {
- 	LAPIC_MODE_DISABLED = 0,
- 	LAPIC_MODE_INVALID = X2APIC_ENABLE,
+@@ -1942,7 +1942,8 @@ int kvm_lapic_reg_write(struct kvm_lapic *apic, u32 reg, u32 val)
+ 	}
+ 	case APIC_ICR:
+ 		/* No delay here, so we always clear the pending bit */
+-		val &= ~(1 << 12);
++		if (!apic_x2apic_mode(apic))
++			val &= ~(1 << 12);
+ 		kvm_apic_send_ipi(apic, val, kvm_lapic_get_reg(apic, APIC_ICR2));
+ 		kvm_lapic_set_reg(apic, APIC_ICR, val);
+ 		break;
 diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index c4bb7d8..495709f 100644
+index 495709f..6ced0e1 100644
 --- a/arch/x86/kvm/x86.c
 +++ b/arch/x86/kvm/x86.c
-@@ -1559,7 +1559,8 @@ static int handle_fastpath_set_x2apic_icr_irqoff(struct kvm_vcpu *vcpu, u64 data
+@@ -1562,7 +1562,6 @@ static int handle_fastpath_set_x2apic_icr_irqoff(struct kvm_vcpu *vcpu, u64 data
+ 		((data & APIC_MODE_MASK) == APIC_DM_FIXED) &&
+ 		((u32)(data >> 32) != X2APIC_BROADCAST)) {
  
- 	if (((data & APIC_SHORT_MASK) == APIC_DEST_NOSHORT) &&
- 		((data & APIC_DEST_MASK) == APIC_DEST_PHYSICAL) &&
--		((data & APIC_MODE_MASK) == APIC_DM_FIXED)) {
-+		((data & APIC_MODE_MASK) == APIC_DM_FIXED) &&
-+		((u32)(data >> 32) != X2APIC_BROADCAST)) {
- 
- 		data &= ~(1 << 12);
+-		data &= ~(1 << 12);
  		kvm_apic_send_ipi(vcpu->arch.apic, (u32)data, (u32)(data >> 32));
+ 		kvm_lapic_set_reg(vcpu->arch.apic, APIC_ICR2, (u32)(data >> 32));
+ 		kvm_lapic_set_reg(vcpu->arch.apic, APIC_ICR, (u32)data);
 -- 
 2.7.4
 
