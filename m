@@ -2,188 +2,105 @@ Return-Path: <SRS0=s8dx=5M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56249C2D0E8
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 09:42:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 955E1C43331
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 09:42:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 363A720714
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 09:42:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6347E20714
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 09:42:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="B1wZOt6p"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727143AbgC0JmD convert rfc822-to-8bit (ORCPT
+        id S1726750AbgC0JmD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Fri, 27 Mar 2020 05:42:03 -0400
-Received: from mga03.intel.com ([134.134.136.65]:40233 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726133AbgC0JmD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+Received: from smtprelay-out1.synopsys.com ([149.117.73.133]:36342 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726115AbgC0JmD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 27 Mar 2020 05:42:03 -0400
-IronPort-SDR: L/bvx8oHHSS2zKOk6pZlTdljupUYYTpHVltGMfbPyE5U1HE7ZzZDOo8i3Icn9dG1gw12cFJVsk
- mqWkjrvEmL0Q==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Mar 2020 02:42:02 -0700
-IronPort-SDR: KQao65mOFi7EgkiDDxwh0udbLC5apBGXs2lMo4Yg7em70OoLWq7BNZhQQHtkaUhSOuc1wZ7ISs
- JOC6GQbqk+kw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,311,1580803200"; 
-   d="scan'208";a="271515549"
-Received: from fmsmsx103.amr.corp.intel.com ([10.18.124.201])
-  by fmsmga004.fm.intel.com with ESMTP; 27 Mar 2020 02:42:02 -0700
-Received: from fmsmsx114.amr.corp.intel.com (10.18.116.8) by
- FMSMSX103.amr.corp.intel.com (10.18.124.201) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Fri, 27 Mar 2020 02:42:01 -0700
-Received: from shsmsx153.ccr.corp.intel.com (10.239.6.53) by
- FMSMSX114.amr.corp.intel.com (10.18.116.8) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Fri, 27 Mar 2020 02:42:01 -0700
-Received: from shsmsx104.ccr.corp.intel.com ([169.254.5.206]) by
- SHSMSX153.ccr.corp.intel.com ([169.254.12.96]) with mapi id 14.03.0439.000;
- Fri, 27 Mar 2020 17:41:57 +0800
-From:   "Tian, Kevin" <kevin.tian@intel.com>
-To:     Jacob Pan <jacob.jun.pan@linux.intel.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Jean-Philippe Brucker <jean-philippe@linaro.com>
-CC:     "Liu, Yi L" <yi.l.liu@intel.com>,
-        "Raj, Ashok" <ashok.raj@intel.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Eric Auger <eric.auger@redhat.com>
-Subject: RE: [PATCH 05/10] iommu/ioasid: Create an IOASID set for host SVA
- use
-Thread-Topic: [PATCH 05/10] iommu/ioasid: Create an IOASID set for host SVA
- use
-Thread-Index: AQHWAs3KC1709AUDMEKcaU76snqwOKhcMJxw
-Date:   Fri, 27 Mar 2020 09:41:55 +0000
-Message-ID: <AADFC41AFE54684AB9EE6CBC0274A5D19D7ED4DA@SHSMSX104.ccr.corp.intel.com>
-References: <1585158931-1825-1-git-send-email-jacob.jun.pan@linux.intel.com>
- <1585158931-1825-6-git-send-email-jacob.jun.pan@linux.intel.com>
-In-Reply-To: <1585158931-1825-6-git-send-email-jacob.jun.pan@linux.intel.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-dlp-product: dlpe-windows
-dlp-version: 11.2.0.6
-dlp-reaction: no-action
-x-originating-ip: [10.239.127.40]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-MIME-Version: 1.0
+Received: from mailhost.synopsys.com (mdc-mailhost1.synopsys.com [10.225.0.209])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 18BB64068F;
+        Fri, 27 Mar 2020 09:42:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
+        t=1585302122; bh=5lvr85wmUB+ig2sjTf8GoiI7NOjmJtqmkcAiDXQQ+iE=;
+        h=Date:In-Reply-To:References:From:Subject:To:Cc:From;
+        b=B1wZOt6pr1GmQZBOfYyL6GDT84QfA2uWCxy6qb5oiHj5dWC4VVSITpzUIz47GmbE6
+         RNhcBq94gwBo7de+qS8l2YqD5NzZ2hQlRjxe3LaUZXXwhhPmWjwNyHX/1dF5g3dq6Z
+         bq3oIFGNv/oJTMQQ6pBkDWK+wHFzfbmnBtM0OYscfMKoDOp2j/UQq2pOdtU2JCnxUD
+         yCS7f+Mm73Ds+npbdbuKYNLPIJBl7onyH7S18AkRqP2PSS4dN9KCk7VUiZKmGpkIdO
+         CoAukWT0VIbpsx4Sw/Ag611E1o0aoJ3G19F1aAht1W2YmMQzYlaLymxXiEV65ULe2l
+         6MnBefEg3GaIw==
+Received: from tejas-VirtualBox (joglekar-e7480.internal.synopsys.com [10.146.16.182])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mailhost.synopsys.com (Postfix) with ESMTPSA id 446CFA005B;
+        Fri, 27 Mar 2020 09:41:58 +0000 (UTC)
+Received: by tejas-VirtualBox (sSMTP sendmail emulation); Fri, 27 Mar 2020 15:11:56 +0530
+Date:   Fri, 27 Mar 2020 15:11:56 +0530
+Message-Id:
+ <8a9ca8e08d7c4957789a209c77589f1aa4bd2f06.1585297723.git.joglekar@synopsys.com>
+In-Reply-To: <cover.1585297723.git.joglekar@synopsys.com>
+References: <cover.1585297723.git.joglekar@synopsys.com>
+From:   Tejas Joglekar <Tejas.Joglekar@synopsys.com>
+Subject: [RESENDING RFC PATCH 1/4] dt-bindings: usb: Add snps,consolidate-sgl & consolidate-sgl
+To:     Tejas Joglekar <Tejas.Joglekar@synopsys.com>,
+        linux-usb@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Cc:     John Youn <John.Youn@synopsys.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
+Message-ID: <20200327094156.nKO6qVohHZcNmBEhEglFxak_Pj27-KNL0lrDLrwiLpw@z>
 
-> From: Jacob Pan <jacob.jun.pan@linux.intel.com>
-> Sent: Thursday, March 26, 2020 1:55 AM
-> 
-> Bare metal SVA allocates IOASIDs for native process addresses. This
-> should be separated from VM allocated IOASIDs thus under its own set.
+This commit adds the documentation for consolidate-sgl, and
+snps,consolidate-sgl property. These when set enables the quirk for
+XHCI driver for consolidation of sg list into a temporary buffer when small
+buffer sizes are scattered over the sg list not making up to MPS or total
+transfer size within TRB cache size with Synopsys xHC.
 
-A curious question. Now bare metal SVA uses the system set and guest
-SVA uses dynamically-created set. Then do we still allow ioasid_alloc
-with a NULL set pointer?
+Signed-off-by: Tejas Joglekar <joglekar@synopsys.com>
+---
+ Documentation/devicetree/bindings/usb/dwc3.txt     | 3 +++
+ Documentation/devicetree/bindings/usb/usb-xhci.txt | 3 +++
+ 2 files changed, 6 insertions(+)
 
-> 
-> This patch creates a system IOASID set with its quota set to PID_MAX.
-> This is a reasonable default in that SVM capable devices can only bind
-> to limited user processes.
-> 
-> Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
-> ---
->  drivers/iommu/intel-iommu.c | 8 +++++++-
->  drivers/iommu/ioasid.c      | 9 +++++++++
->  include/linux/ioasid.h      | 9 +++++++++
->  3 files changed, 25 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
-> index ec3fc121744a..af7a1ef7b31e 100644
-> --- a/drivers/iommu/intel-iommu.c
-> +++ b/drivers/iommu/intel-iommu.c
-> @@ -3511,8 +3511,14 @@ static int __init init_dmars(void)
->  		goto free_iommu;
-> 
->  	/* PASID is needed for scalable mode irrespective to SVM */
-> -	if (intel_iommu_sm)
-> +	if (intel_iommu_sm) {
->  		ioasid_install_capacity(intel_pasid_max_id);
-> +		/* We should not run out of IOASIDs at boot */
-> +		if (ioasid_alloc_system_set(PID_MAX_DEFAULT)) {
-> +			pr_err("Failed to enable host PASID allocator\n");
-> +			intel_iommu_sm = 0;
-> +		}
-> +	}
-> 
->  	/*
->  	 * for each drhd
-> diff --git a/drivers/iommu/ioasid.c b/drivers/iommu/ioasid.c
-> index 6265d2dbbced..9135af171a7c 100644
-> --- a/drivers/iommu/ioasid.c
-> +++ b/drivers/iommu/ioasid.c
-> @@ -39,6 +39,9 @@ struct ioasid_data {
->  static ioasid_t ioasid_capacity;
->  static ioasid_t ioasid_capacity_avail;
-> 
-> +int system_ioasid_sid;
-> +static DECLARE_IOASID_SET(system_ioasid);
-> +
->  /* System capacity can only be set once */
->  void ioasid_install_capacity(ioasid_t total)
->  {
-> @@ -51,6 +54,12 @@ void ioasid_install_capacity(ioasid_t total)
->  }
->  EXPORT_SYMBOL_GPL(ioasid_install_capacity);
-> 
-> +int ioasid_alloc_system_set(int quota)
-> +{
-> +	return ioasid_alloc_set(&system_ioasid, quota, &system_ioasid_sid);
-> +}
-> +EXPORT_SYMBOL_GPL(ioasid_alloc_system_set);
-> +
->  /*
->   * struct ioasid_allocator_data - Internal data structure to hold information
->   * about an allocator. There are two types of allocators:
-> diff --git a/include/linux/ioasid.h b/include/linux/ioasid.h
-> index 8c82d2625671..097b1cc043a3 100644
-> --- a/include/linux/ioasid.h
-> +++ b/include/linux/ioasid.h
-> @@ -29,6 +29,9 @@ struct ioasid_allocator_ops {
->  	void *pdata;
->  };
-> 
-> +/* Shared IOASID set for reserved for host system use */
-> +extern int system_ioasid_sid;
-> +
->  #define DECLARE_IOASID_SET(name) struct ioasid_set name = { 0 }
-> 
->  #if IS_ENABLED(CONFIG_IOASID)
-> @@ -41,6 +44,7 @@ int ioasid_register_allocator(struct ioasid_allocator_ops
-> *allocator);
->  void ioasid_unregister_allocator(struct ioasid_allocator_ops *allocator);
->  int ioasid_attach_data(ioasid_t ioasid, void *data);
->  void ioasid_install_capacity(ioasid_t total);
-> +int ioasid_alloc_system_set(int quota);
->  int ioasid_alloc_set(struct ioasid_set *token, ioasid_t quota, int *sid);
->  void ioasid_free_set(int sid, bool destroy_set);
->  int ioasid_find_sid(ioasid_t ioasid);
-> @@ -88,5 +92,10 @@ static inline void ioasid_install_capacity(ioasid_t total)
->  {
->  }
-> 
-> +static inline int ioasid_alloc_system_set(int quota)
-> +{
-> +	return -ENOTSUPP;
-> +}
-> +
->  #endif /* CONFIG_IOASID */
->  #endif /* __LINUX_IOASID_H */
-> --
-> 2.7.4
+diff --git a/Documentation/devicetree/bindings/usb/dwc3.txt b/Documentation/devicetree/bindings/usb/dwc3.txt
+index 9946ff9ba735..292d1f7969e4 100644
+--- a/Documentation/devicetree/bindings/usb/dwc3.txt
++++ b/Documentation/devicetree/bindings/usb/dwc3.txt
+@@ -104,6 +104,9 @@ Optional properties:
+ 			this and tx-thr-num-pkt-prd to a valid, non-zero value
+ 			1-16 (DWC_usb31 programming guide section 1.2.3) to
+ 			enable periodic ESS TX threshold.
++ - snps,consolidate-sgl: enable sg list consolidation - host mode only. Set to use
++			SG buffers of at least MPS size by consolidating smaller SG
++			buffers list into a single buffer.
+ 
+  - <DEPRECATED> tx-fifo-resize: determines if the FIFO *has* to be reallocated.
+  - snps,incr-burst-type-adjustment: Value for INCR burst type of GSBUSCFG0
+diff --git a/Documentation/devicetree/bindings/usb/usb-xhci.txt b/Documentation/devicetree/bindings/usb/usb-xhci.txt
+index 3f378951d624..a90d853557ee 100644
+--- a/Documentation/devicetree/bindings/usb/usb-xhci.txt
++++ b/Documentation/devicetree/bindings/usb/usb-xhci.txt
+@@ -43,6 +43,9 @@ Optional properties:
+   - quirk-broken-port-ped: set if the controller has broken port disable mechanism
+   - imod-interval-ns: default interrupt moderation interval is 5000ns
+   - phys : see usb-hcd.yaml in the current directory
++  - consolidate-sgl: indicate if you need to consolidate sg list into a
++    temporary buffer when small SG buffer sizes does not make upto MPS
++    size or total transfer size across the TRB cache size.
+ 
+ additionally the properties from usb-hcd.yaml (in the current directory) are
+ supported.
+-- 
+2.11.0
 
