@@ -2,179 +2,93 @@ Return-Path: <SRS0=s8dx=5M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B343DC2D0F1
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 01:36:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 177BDC2D0EC
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 01:36:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 818E720774
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 01:36:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC13520787
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 01:36:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="b8YClyd+"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GnwZFUcQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727887AbgC0Bc7 (ORCPT
+        id S1727895AbgC0BeP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 21:32:59 -0400
-Received: from mail-pl1-f202.google.com ([209.85.214.202]:34913 "EHLO
-        mail-pl1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727854AbgC0Bc5 (ORCPT
+        Thu, 26 Mar 2020 21:34:15 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:40670 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727725AbgC0BeP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 21:32:57 -0400
-Received: by mail-pl1-f202.google.com with SMTP id a8so5869631plm.2
-        for <linux-kernel@vger.kernel.org>; Thu, 26 Mar 2020 18:32:56 -0700 (PDT)
+        Thu, 26 Mar 2020 21:34:15 -0400
+Received: by mail-pl1-f194.google.com with SMTP id h11so2852049plk.7;
+        Thu, 26 Mar 2020 18:34:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
-         :cc;
-        bh=1tcAWU23e/8ucRLXfB8Bf3DPNWWN2Xhk2IPOTZhBJdU=;
-        b=b8YClyd+joF1ICbitvFylO2DFCsO8F5g9Ec7xPO+DJ+873ECEI2/mwqWB4pYD4DbSI
-         cOELowT0Dia3PdQp60x/0qhnpins6s/pRVrr7F1eb2Sf4dfplZ/S5CtaLgBZ/XzQO9nQ
-         vY2PSMbyLbKl4bUY/qw7i9a+A/Moy94kiBd7+1qBBPEz6Ibp9uYCAWfDtFZwpEcU6e3P
-         G3K1XwvYbjaeA4ewI1B0tbBBFIWphbp2n/AxLIvWqhMUT/1wKJ/8e2j6A9IMv6caNbeV
-         yiKMlbkhoBZQcvbVdZWSAhMpDmc9wEd738zLIShROJRdsTHxnIK6H/paXuh+Gj+N6uKC
-         U7NA==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=uFKK0rmf3+J4yn+P1XSuUCuH04czYSHT54dW1GTJiIE=;
+        b=GnwZFUcQYqI7zQi8Mj3xiFnMlKQufDQ93cXDZ8zf6U9O+GeDp+srzeKk6whXoiKbNF
+         sRK3qhWoDl/jh9BNDeLaLwH3bldkPA8iDRhgD0YnlOJsjwdh3CmngZD6mx13U+Yz6K1U
+         amC6EC+ZdQJh5Ke6PhA9/6VbECAHdufuZxxO8Mgg/qOZ3iblvqfM5lOCpxUt+TtaNUrE
+         x0W9HL/B2CrUS2cNuJgWQ/1eaFtCJ12K0g6qOImoMvr3Q8hpVxmJu01ic8Ssc+OWQClb
+         k3zQbZhEJzWzzCKvA58nw2JH7w5bjEN5j2G0UBG3r3MvmWJhgS/wFWA/aBrX29hE4nKv
+         k2wA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=1tcAWU23e/8ucRLXfB8Bf3DPNWWN2Xhk2IPOTZhBJdU=;
-        b=oVLo2gI5qnh0RZGEu9DVa7B1bY753WqCVxWvGifVZzz5/jqtdP2bNEpod6yshJ/dKD
-         cuviu6HVtfztEdM4tzCuNEZee3i4bcoZSElB3NDYa7CRBeBLDgZVI509HPfLhVbyD9Mp
-         NCbZb+qeQzVpqNV8xCF8ertufGbV+tgt4Zo/bZx7WKEIfWVXVEjHgn8vfDMmn/s/RTuE
-         GfZgdCe0b2i2WT9ZAdH7s0+0cuvfsac1ImLoXQQ7cCtRMBEqcCaQjRk4jAQl6AtAJxVi
-         2XTSGRwT16IoZ/z0W1zTDIN6BpR0JGVuSQbws+DqLw1jMst7OkKBqiHQDAqc1bNvifzP
-         4Ctw==
-X-Gm-Message-State: ANhLgQ0VFlbXWt7vrQrdPUa61zWR7QrAhIKP390jggg9WCwHBY1omKWO
-        4f5zNR+0YKwaZQwRfj+qOROQJhXaM/FJ
-X-Google-Smtp-Source: ADFU+vvU0Pz1HEuo3Vn8SApjRgiPioPAG2esbBsxvbRVTv3Ql/N7mV0cmtlBo34yI1UQ8TltLwOz2yCR6d0N
-X-Received: by 2002:a17:90b:1b01:: with SMTP id nu1mr3059618pjb.129.1585272775898;
- Thu, 26 Mar 2020 18:32:55 -0700 (PDT)
-Date:   Thu, 26 Mar 2020 18:32:38 -0700
-In-Reply-To: <20200327013239.238182-1-rajatja@google.com>
-Message-Id: <20200327013239.238182-4-rajatja@google.com>
-Mime-Version: 1.0
-References: <20200327013239.238182-1-rajatja@google.com>
-X-Mailer: git-send-email 2.25.1.696.g5e7596f4ac-goog
-Subject: [PATCH v3 4/5] Input: atkbd: Receive and use physcode->keycode
- mapping from FW
-From:   Rajat Jain <rajatja@google.com>
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>, dtor@google.com,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Rajat Jain <rajatja@google.com>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Enrico Weigelt <info@metux.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Allison Randal <allison@lohutok.net>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Stephen Boyd <swboyd@chromium.org>,
-        linux-input@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, furquan@google.com,
-        dlaurie@google.com, bleung@google.com, zentaro@google.com,
-        dbehr@google.com
-Cc:     rajatxjain@gmail.com
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=uFKK0rmf3+J4yn+P1XSuUCuH04czYSHT54dW1GTJiIE=;
+        b=Os7es1srQc69wLcGIgQoX4r/U9QinaF0MoARUKD6fgpjHfpGOSg+PxloF/RC84Hd/A
+         O42IwGXuUnpNgVTUmhW5JW7Lio8J0xNzthHaIFIPhx/O+DXteMCI8VqQqDuCocevf7Gp
+         q04GWE1p4WSTPhCFMQhSEzPFTPFqERWQhwf7HQMA0P+mcujEJs43ywgXuoKmunStHewW
+         Sb5qcG5O6n0QAcMK1zeIhvO/KJVhjIAme8m0nDvl5mdUwmmkgPsBsHeGFSBtLxwtXTi7
+         Qa1eGdt9nz9YNMnYm92/JHM/QIQg+T2JnGAGARQRf/5chwg3cdbAhMl96S2hbsG2i+/j
+         he5w==
+X-Gm-Message-State: ANhLgQ2IKIlFtonPTX8OgV3ElU2po02+vClNz0vQSr/6vQsp69loU2D6
+        qLwRdNiw9Wvv8fBqNAAFxPc=
+X-Google-Smtp-Source: ADFU+vsvC/cghxY3m+o0RhnGEcQXGHPtloWMklG8ItXaIqS7q6X3VvXOGxG/X8J9PCt5lFl1gjG5Jw==
+X-Received: by 2002:a17:90a:f0c6:: with SMTP id fa6mr3140222pjb.5.1585272853380;
+        Thu, 26 Mar 2020 18:34:13 -0700 (PDT)
+Received: from localhost (c-73-241-114-122.hsd1.ca.comcast.net. [73.241.114.122])
+        by smtp.gmail.com with ESMTPSA id 193sm2724577pfa.182.2020.03.26.18.34.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 26 Mar 2020 18:34:12 -0700 (PDT)
+Date:   Thu, 26 Mar 2020 18:34:10 -0700
+From:   Richard Cochran <richardcochran@gmail.com>
+To:     Grygorii Strashko <grygorii.strashko@ti.com>
+Cc:     "David S . Miller" <davem@davemloft.net>,
+        Lokesh Vutla <lokeshvutla@ti.com>,
+        Tony Lindgren <tony@atomide.com>, Sekhar Nori <nsekhar@ti.com>,
+        Murali Karicheri <m-karicheri2@ti.com>,
+        netdev <netdev@vger.kernel.org>, linux-omap@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next v3 10/11] net: ethernet: ti: cpts: add support
+ for HW_TS_PUSH events
+Message-ID: <20200327013410.GC9677@localhost>
+References: <20200320194244.4703-1-grygorii.strashko@ti.com>
+ <20200320194244.4703-11-grygorii.strashko@ti.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200320194244.4703-11-grygorii.strashko@ti.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Allow the firmware to specify the mapping between the physical
-code and the linux keycode. This takes the form of a "keymap"
-property which is an array of u32 values, each value specifying
-mapping for a key.
+> +static int cpts_extts_enable(struct cpts *cpts, u32 index, int on)
+> +{
+> +	u32 v;
+> +
+> +	if (index >= cpts->info.n_ext_ts)
+> +		return -ENXIO;
 
-Signed-off-by: Rajat Jain <rajatja@google.com>
----
-v3: Don't save the FW mapping in atkbd device.
-v2: Remove the Change-Id from the commit log
+This check is already performed in ptp_chardev.c.
 
- drivers/input/keyboard/atkbd.c | 41 +++++++++++++++++++++++++++++++++-
- 1 file changed, 40 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/input/keyboard/atkbd.c b/drivers/input/keyboard/atkbd.c
-index 3b20aba1861cd..0afa6d5aec3b4 100644
---- a/drivers/input/keyboard/atkbd.c
-+++ b/drivers/input/keyboard/atkbd.c
-@@ -66,6 +66,9 @@ MODULE_PARM_DESC(terminal, "Enable break codes on an IBM Terminal keyboard conne
- 
- #define MAX_FUNCTION_ROW_KEYS	24
- 
-+#define PHYSCODE(keymap)	((keymap >> 16) & 0xFFFF)
-+#define KEYCODE(keymap)		(keymap & 0xFFFF)
-+
- /*
-  * Scancode to keycode tables. These are just the default setting, and
-  * are loadable via a userland utility.
-@@ -1032,6 +1035,38 @@ static unsigned int atkbd_oqo_01plus_scancode_fixup(struct atkbd *atkbd,
- 	return code;
- }
- 
-+static int atkbd_get_keymap_from_fwnode(struct atkbd *atkbd)
-+{
-+	struct device *dev = &atkbd->ps2dev.serio->dev;
-+	int i, n;
-+	u32 *ptr;
-+	u16 physcode, keycode;
-+
-+	/* Parse "keymap" property */
-+	n = device_property_count_u32(dev, "keymap");
-+	if (n <= 0 || n > ATKBD_KEYMAP_SIZE)
-+		return -ENXIO;
-+
-+	ptr = kcalloc(n, sizeof(u32), GFP_KERNEL);
-+	if (!ptr)
-+		return -ENOMEM;
-+
-+	if (device_property_read_u32_array(dev, "keymap", ptr, n)) {
-+		dev_err(dev, "problem parsing FW keymap property\n");
-+		kfree(ptr);
-+		return -EINVAL;
-+	}
-+
-+	memset(atkbd->keycode, 0, sizeof(atkbd->keycode));
-+	for (i = 0; i < n; i++) {
-+		physcode = PHYSCODE(ptr[i]);
-+		keycode = KEYCODE(ptr[i]);
-+		atkbd->keycode[physcode] = keycode;
-+	}
-+	kfree(ptr);
-+	return 0;
-+}
-+
- /*
-  * atkbd_set_keycode_table() initializes keyboard's keycode table
-  * according to the selected scancode set
-@@ -1039,13 +1074,16 @@ static unsigned int atkbd_oqo_01plus_scancode_fixup(struct atkbd *atkbd,
- 
- static void atkbd_set_keycode_table(struct atkbd *atkbd)
- {
-+	struct device *dev = &atkbd->ps2dev.serio->dev;
- 	unsigned int scancode;
- 	int i, j;
- 
- 	memset(atkbd->keycode, 0, sizeof(atkbd->keycode));
- 	bitmap_zero(atkbd->force_release_mask, ATKBD_KEYMAP_SIZE);
- 
--	if (atkbd->translated) {
-+	if (!atkbd_get_keymap_from_fwnode(atkbd)) {
-+		dev_dbg(dev, "Using FW keymap\n");
-+	} else if (atkbd->translated) {
- 		for (i = 0; i < 128; i++) {
- 			scancode = atkbd_unxlate_table[i];
- 			atkbd->keycode[i] = atkbd_set2_keycode[scancode];
-@@ -1173,6 +1211,7 @@ static void atkbd_parse_fwnode_data(struct serio *serio)
- 		atkbd->num_function_row_keys = n;
- 		dev_dbg(dev, "FW reported %d function-row key locations\n", n);
- 	}
-+
- }
- 
- /*
--- 
-2.25.1.696.g5e7596f4ac-goog
+Thanks,
+Richard
 
