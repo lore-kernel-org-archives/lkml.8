@@ -2,211 +2,66 @@ Return-Path: <SRS0=s8dx=5M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52B5FC2D0E8
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 08:31:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4912C43331
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 08:31:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2BFD32073E
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 08:31:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Re9nh7mY"
+	by mail.kernel.org (Postfix) with ESMTP id B3C2B20705
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 08:31:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727242AbgC0IbL (ORCPT
+        id S1726698AbgC0Ibu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Mar 2020 04:31:11 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:44771 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726360AbgC0IbL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Mar 2020 04:31:11 -0400
-Received: by mail-wr1-f65.google.com with SMTP id m17so10286284wrw.11
-        for <linux-kernel@vger.kernel.org>; Fri, 27 Mar 2020 01:31:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=7qMxcUuECzy6UW7EY22DAqOxFR3J+yYatNeUV89Utj0=;
-        b=Re9nh7mY7E2XnsoW7UqnE/ZbPpu/RAKnPlkcHVa+kmfTNDW7Q8B+tS5p7UHi+5cQzr
-         BoVPWRVPSDacWjh56gaT78/RFhIEV+yvCIrnphWAOihwXMbTJ3wEJabJ9p/kvd359VZW
-         DHiulHb5HIhXw2KzkMMZ/m6cgb0duHKD+TrVUQa4iTBBFWqefNuYnKCdHNTIOS8awbKW
-         ElPVI6HDUuw7o2+SI6O/SoB/QrV4uSimO/Lht54lGbHc5r0Jr0thhgokUFlgR3yS/VBV
-         LJQVP8XMaQrc+enAiFb6qurB13hn5fbTUYDDiEfWMdTFHH579thoAdWbrBFW7mHhF5DR
-         nkaw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=7qMxcUuECzy6UW7EY22DAqOxFR3J+yYatNeUV89Utj0=;
-        b=iSOKIeBTGCSF91DaoN03WdQd9SQry1TAyVOzxPONO+gBKlv8V1D9cwsZaRjXcllaR8
-         Alp33ReWexW5yQRHPESe28ciUmkcpunxKAn59Ge4tM1ua7Kh2f1T8ew6xKrevrzh8iZs
-         5xopsHPYw3CSXCxv5DXmatJ2E7/9dlltX5LSM54owdUfw4an6uHjZYSnaQmLhO1c6nVd
-         Qx6el5WY4HxQl2jy7+DL8utJ+HS5GCCwuF0W2wUBDkBH/AS7nVoZVdHXUEoB9Zb+MmKJ
-         WfRePfdDtgBQHZMC9eHK1xgK7ILjIHWTRogKilzBlu8DzQzgbYD739oUKaTttSdXEyWH
-         G3aw==
-X-Gm-Message-State: ANhLgQ0eKusVJV1/Fa7jclxnMz51ARtdXhbSNNbVz5pNMZVqsIubQ2yS
-        Y+kSfAfrXAOVJ8NcL+rOGlr36Q==
-X-Google-Smtp-Source: ADFU+vsnkuuXK5PCN3CGLGb7k6BWdwMd/4riN9BWBlsjaqEq6fO9cPeQcvyc9vM82ENDj4wZ1oJO+A==
-X-Received: by 2002:a5d:5141:: with SMTP id u1mr12997224wrt.146.1585297868413;
-        Fri, 27 Mar 2020 01:31:08 -0700 (PDT)
-Received: from dell ([95.149.164.95])
-        by smtp.gmail.com with ESMTPSA id q3sm7373231wru.87.2020.03.27.01.31.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 27 Mar 2020 01:31:07 -0700 (PDT)
-Date:   Fri, 27 Mar 2020 08:31:57 +0000
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Rob Herring <robh@kernel.org>
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Brian Masney <masneyb@onstation.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Guillaume La Roque <glaroque@baylibre.com>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Mark Brown <broonie@kernel.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Michael Hennerich <michael.hennerich@analog.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Zhang Rui <rui.zhang@intel.com>,
-        dri-devel@lists.freedesktop.org, linux-amlogic@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-iio@vger.kernel.org,
-        linux-media@vger.kernel.org, linux-pm@vger.kernel.org,
-        netdev@vger.kernel.org
-Subject: Re: [PATCH 4/4] dt-bindings: Add missing 'additionalProperties:
- false'
-Message-ID: <20200327083157.GI603801@dell>
-References: <20200325220542.19189-1-robh@kernel.org>
- <20200325220542.19189-5-robh@kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200325220542.19189-5-robh@kernel.org>
+        Fri, 27 Mar 2020 04:31:50 -0400
+Received: from mx2.suse.de ([195.135.220.15]:34568 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726115AbgC0Ibu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Mar 2020 04:31:50 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id CE789AD45;
+        Fri, 27 Mar 2020 08:31:48 +0000 (UTC)
+Date:   Fri, 27 Mar 2020 09:31:47 +0100
+Message-ID: <s5hbloifbbg.wl-tiwai@suse.de>
+From:   Takashi Iwai <tiwai@suse.de>
+To:     Kai-Heng Feng <kai.heng.feng@canonical.com>
+Cc:     <tiwai@suse.com>, Jaroslav Kysela <perex@perex.cz>,
+        Kailang Yang <kailang@realtek.com>,
+        Hui Wang <hui.wang@canonical.com>,
+        Jian-Hong Pan <jian-hong@endlessm.com>,
+        Tomas Espeleta <tomas.espeleta@gmail.com>,
+        Sergey Bostandzhyan <jin@mediatomb.cc>,
+        =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>,
+        Chris Chiu <chiu@endlessm.com>,
+        "moderated list:SOUND" <alsa-devel@alsa-project.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] ALSA: hda/realtek: Enable mute LED on an HP system
+In-Reply-To: <20200327044626.29582-1-kai.heng.feng@canonical.com>
+References: <20200327044626.29582-1-kai.heng.feng@canonical.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI/1.14.6 (Maruoka)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 Emacs/25.3
+ (x86_64-suse-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI 1.14.6 - "Maruoka")
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 25 Mar 2020, Rob Herring wrote:
-
-> Setting 'additionalProperties: false' is frequently omitted, but is
-> important in order to check that there aren't extra undocumented
-> properties in a binding.
+On Fri, 27 Mar 2020 05:46:25 +0100,
+Kai-Heng Feng wrote:
 > 
-> Ideally, we'd just add this automatically and make this the default, but
-> there's some cases where it doesn't work. For example, if a common
-> schema is referenced, then properties in the common schema aren't part
-> of what's considered for 'additionalProperties'. Also, sometimes there
-> are bus specific properties such as 'spi-max-frequency' that go into
-> bus child nodes, but aren't defined in the child node's schema.
+> The system in question uses ALC285, and it uses GPIO 0x04 to control its
+> mute LED.
 > 
-> So let's stick with the json-schema defined default and add
-> 'additionalProperties: false' where needed. This will be a continual
-> review comment and game of wack-a-mole.
+> The mic mute LED can be controlled by GPIO 0x01, however the system uses
+> DMIC so we should use that to control mic mute LED.
 > 
-> Signed-off-by: Rob Herring <robh@kernel.org>
-> ---
->  .../devicetree/bindings/arm/altera/socfpga-clk-manager.yaml    | 2 ++
->  .../bindings/arm/amlogic/amlogic,meson-gx-ao-secure.yaml       | 2 ++
->  Documentation/devicetree/bindings/arm/msm/qcom,llcc.yaml       | 2 ++
->  Documentation/devicetree/bindings/arm/renesas,prr.yaml         | 2 ++
->  .../devicetree/bindings/arm/samsung/exynos-chipid.yaml         | 2 ++
->  Documentation/devicetree/bindings/arm/samsung/pmu.yaml         | 2 ++
->  .../bindings/arm/samsung/samsung-secure-firmware.yaml          | 2 ++
->  .../devicetree/bindings/arm/stm32/st,stm32-syscon.yaml         | 2 ++
->  Documentation/devicetree/bindings/clock/fsl,plldig.yaml        | 2 ++
->  Documentation/devicetree/bindings/clock/imx8mn-clock.yaml      | 2 ++
->  Documentation/devicetree/bindings/clock/imx8mp-clock.yaml      | 2 ++
->  Documentation/devicetree/bindings/clock/milbeaut-clock.yaml    | 2 ++
->  Documentation/devicetree/bindings/clock/qcom,gcc-apq8064.yaml  | 2 ++
->  Documentation/devicetree/bindings/clock/qcom,gcc-ipq8074.yaml  | 2 ++
->  Documentation/devicetree/bindings/clock/qcom,gcc-msm8996.yaml  | 2 ++
->  Documentation/devicetree/bindings/clock/qcom,gcc-msm8998.yaml  | 2 ++
->  Documentation/devicetree/bindings/clock/qcom,gcc-qcs404.yaml   | 2 ++
->  Documentation/devicetree/bindings/clock/qcom,gcc-sc7180.yaml   | 2 ++
->  Documentation/devicetree/bindings/clock/qcom,gcc-sm8150.yaml   | 2 ++
->  Documentation/devicetree/bindings/clock/qcom,gcc.yaml          | 2 ++
->  Documentation/devicetree/bindings/clock/qcom,mmcc.yaml         | 2 ++
->  .../devicetree/bindings/clock/qcom,msm8998-gpucc.yaml          | 2 ++
->  Documentation/devicetree/bindings/clock/qcom,rpmhcc.yaml       | 2 ++
->  .../devicetree/bindings/clock/qcom,sc7180-dispcc.yaml          | 2 ++
->  Documentation/devicetree/bindings/clock/qcom,sc7180-gpucc.yaml | 2 ++
->  .../devicetree/bindings/clock/qcom,sc7180-videocc.yaml         | 2 ++
->  .../devicetree/bindings/clock/qcom,sdm845-dispcc.yaml          | 2 ++
->  Documentation/devicetree/bindings/clock/qcom,sdm845-gpucc.yaml | 2 ++
->  .../devicetree/bindings/clock/qcom,sdm845-videocc.yaml         | 2 ++
->  .../devicetree/bindings/display/amlogic,meson-vpu.yaml         | 2 ++
->  .../devicetree/bindings/dma/sifive,fu540-c000-pdma.yaml        | 2 ++
->  Documentation/devicetree/bindings/dsp/fsl,dsp.yaml             | 2 ++
->  Documentation/devicetree/bindings/eeprom/at24.yaml             | 2 ++
->  .../firmware/intel,ixp4xx-network-processing-engine.yaml       | 3 +++
->  .../devicetree/bindings/gpio/brcm,xgs-iproc-gpio.yaml          | 2 ++
->  .../devicetree/bindings/gpio/socionext,uniphier-gpio.yaml      | 2 ++
->  Documentation/devicetree/bindings/gpio/xylon,logicvc-gpio.yaml | 2 ++
->  Documentation/devicetree/bindings/gpu/arm,mali-bifrost.yaml    | 2 ++
->  Documentation/devicetree/bindings/gpu/arm,mali-midgard.yaml    | 2 ++
->  Documentation/devicetree/bindings/gpu/arm,mali-utgard.yaml     | 2 ++
->  Documentation/devicetree/bindings/gpu/samsung-rotator.yaml     | 2 ++
->  Documentation/devicetree/bindings/hwmon/adi,adm1177.yaml       | 2 ++
->  Documentation/devicetree/bindings/hwmon/adi,ltc2947.yaml       | 2 ++
->  Documentation/devicetree/bindings/hwmon/pmbus/ti,ucd90320.yaml | 2 ++
->  Documentation/devicetree/bindings/hwmon/ti,tmp513.yaml         | 2 ++
->  Documentation/devicetree/bindings/iio/accel/bosch,bma400.yaml  | 2 ++
->  Documentation/devicetree/bindings/iio/adc/adi,ad7780.yaml      | 2 ++
->  Documentation/devicetree/bindings/iio/adc/avia-hx711.yaml      | 2 ++
->  Documentation/devicetree/bindings/iio/adc/lltc,ltc2496.yaml    | 2 ++
->  .../devicetree/bindings/iio/adc/microchip,mcp3911.yaml         | 2 ++
->  .../devicetree/bindings/iio/adc/st,stm32-dfsdm-adc.yaml        | 2 ++
->  .../devicetree/bindings/iio/chemical/plantower,pms7003.yaml    | 2 ++
->  .../devicetree/bindings/iio/chemical/sensirion,sps30.yaml      | 2 ++
->  Documentation/devicetree/bindings/iio/dac/lltc,ltc1660.yaml    | 2 ++
->  Documentation/devicetree/bindings/iio/light/adux1020.yaml      | 2 ++
->  Documentation/devicetree/bindings/iio/light/bh1750.yaml        | 2 ++
->  Documentation/devicetree/bindings/iio/light/isl29018.yaml      | 2 ++
->  Documentation/devicetree/bindings/iio/light/noa1305.yaml       | 2 ++
->  Documentation/devicetree/bindings/iio/light/stk33xx.yaml       | 2 ++
->  Documentation/devicetree/bindings/iio/light/tsl2583.yaml       | 2 ++
->  Documentation/devicetree/bindings/iio/light/tsl2772.yaml       | 2 ++
->  Documentation/devicetree/bindings/iio/light/veml6030.yaml      | 2 ++
->  .../devicetree/bindings/iio/pressure/asc,dlhl60d.yaml          | 2 ++
->  Documentation/devicetree/bindings/iio/pressure/bmp085.yaml     | 2 ++
->  .../devicetree/bindings/iio/proximity/devantech-srf04.yaml     | 2 ++
->  .../devicetree/bindings/iio/proximity/parallax-ping.yaml       | 2 ++
->  .../devicetree/bindings/iio/temperature/adi,ltc2983.yaml       | 2 ++
->  Documentation/devicetree/bindings/input/gpio-vibrator.yaml     | 2 ++
->  Documentation/devicetree/bindings/input/max77650-onkey.yaml    | 3 +++
->  .../bindings/interrupt-controller/intel,ixp4xx-interrupt.yaml  | 2 ++
->  Documentation/devicetree/bindings/iommu/samsung,sysmmu.yaml    | 2 ++
->  Documentation/devicetree/bindings/leds/leds-max77650.yaml      | 3 +++
->  Documentation/devicetree/bindings/leds/rohm,bd71828-leds.yaml  | 3 +++
->  .../devicetree/bindings/mailbox/amlogic,meson-gxbb-mhu.yaml    | 2 ++
->  Documentation/devicetree/bindings/media/amlogic,gx-vdec.yaml   | 2 ++
->  .../devicetree/bindings/media/amlogic,meson-gx-ao-cec.yaml     | 2 ++
->  Documentation/devicetree/bindings/media/renesas,ceu.yaml       | 2 ++
+> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
 
->  Documentation/devicetree/bindings/mfd/max77650.yaml            | 2 ++
->  Documentation/devicetree/bindings/mfd/rohm,bd71828-pmic.yaml   | 2 ++
+Thanks, applied.
 
-Acked-by: Lee Jones <lee.jones@linaro.org>
 
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+Takashi
