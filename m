@@ -2,132 +2,105 @@ Return-Path: <SRS0=s8dx=5M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A774C2D0E5
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 10:47:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF5E2C2D0E8
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 10:49:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E1CDF20578
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 10:47:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B0B4020578
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 10:49:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="hM+Yevh6"
+	dkim=pass (1024-bit key) header.d=yadro.com header.i=@yadro.com header.b="Sagm9OPA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727639AbgC0Krz (ORCPT
+        id S1726465AbgC0Kt4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Mar 2020 06:47:55 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:57574 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726217AbgC0Krv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Mar 2020 06:47:51 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 02RAlhY6097373;
-        Fri, 27 Mar 2020 05:47:43 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1585306063;
-        bh=G2PeNFXIlh49kkAbF78SFuvq87XpXT6JK3fAAHXLKqc=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=hM+Yevh6Szat5wXmLuMuj5uxHyS5goOmJwzl5fJfyTzPRM847y5zzHMq3AxhEebQk
-         USl+e2U3csFZ3NJpIc7GiqlWAzIX40GiYH1RLp2AoVBByz60Xm0KeZb943yvdIHc0y
-         33jtk+LPBeowBfSBRMG5mpQcuE2aTAQE0SU4oZd4=
-Received: from DFLE101.ent.ti.com (dfle101.ent.ti.com [10.64.6.22])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 02RAlhpI094865
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 27 Mar 2020 05:47:43 -0500
-Received: from DFLE112.ent.ti.com (10.64.6.33) by DFLE101.ent.ti.com
- (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Fri, 27
- Mar 2020 05:47:43 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE112.ent.ti.com
- (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Fri, 27 Mar 2020 05:47:43 -0500
-Received: from a0393678ub.india.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 02RAlT8r128190;
-        Fri, 27 Mar 2020 05:47:40 -0500
-From:   Kishon Vijay Abraham I <kishon@ti.com>
-To:     Tom Joseph <tjoseph@cadence.com>, Rob Herring <robh+dt@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <amurray@thegoodpenguin.co.uk>
-CC:     Bjorn Helgaas <bhelgaas@google.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH 3/3] PCI: Cadence: Remove using "cdns,max-outbound-regions" DT property
-Date:   Fri, 27 Mar 2020 16:17:27 +0530
-Message-ID: <20200327104727.4708-4-kishon@ti.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200327104727.4708-1-kishon@ti.com>
-References: <20200327104727.4708-1-kishon@ti.com>
+        Fri, 27 Mar 2020 06:49:56 -0400
+Received: from mta-02.yadro.com ([89.207.88.252]:44062 "EHLO mta-01.yadro.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726217AbgC0Kt4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Mar 2020 06:49:56 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mta-01.yadro.com (Postfix) with ESMTP id 4C66D412D8;
+        Fri, 27 Mar 2020 10:49:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=yadro.com; h=
+        content-type:content-type:content-transfer-encoding:mime-version
+        :x-mailer:message-id:date:date:subject:subject:from:from
+        :received:received:received; s=mta-01; t=1585306193; x=
+        1587120594; bh=lRdmUQL7NNCaphqPAmWvICfX+JM+aLcQYGMvReOsaBQ=; b=S
+        agm9OPApza5MFrlvwHcQUqs0EYui+8/XQtFeKJlx1jxRCRiA0B3YM1VO6WFSHIJr
+        VYG/3YFWdV/RF9/aoxk1SzsNOuhhzlDd5C3K1w9jVk6l2ZATGoTGg3TE025PlJ2L
+        RXMpBRReochh7YZC67mBjLFiy71uKBOyHdO0Mt39S8=
+X-Virus-Scanned: amavisd-new at yadro.com
+Received: from mta-01.yadro.com ([127.0.0.1])
+        by localhost (mta-01.yadro.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id qy4-AHzAK_TC; Fri, 27 Mar 2020 13:49:53 +0300 (MSK)
+Received: from T-EXCH-02.corp.yadro.com (t-exch-02.corp.yadro.com [172.17.10.102])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mta-01.yadro.com (Postfix) with ESMTPS id CC32741276;
+        Fri, 27 Mar 2020 13:49:52 +0300 (MSK)
+Received: from localhost.yadro.com (10.199.0.42) by T-EXCH-02.corp.yadro.com
+ (172.17.10.102) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384_P384) id 15.1.669.32; Fri, 27
+ Mar 2020 13:49:53 +0300
+From:   Ivan Mikhaylov <i.mikhaylov@yadro.com>
+CC:     Ivan Mikhaylov <i.mikhaylov@yadro.com>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: [PATCH v4 0/2] iio: proximity: driver for vcnl3020
+Date:   Fri, 27 Mar 2020 13:49:52 +0300
+Message-ID: <20200327104954.27829-1-i.mikhaylov@yadro.com>
+X-Mailer: git-send-email 2.21.1
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+X-Originating-IP: [10.199.0.42]
+X-ClientProxiedBy: T-EXCH-01.corp.yadro.com (172.17.10.101) To
+ T-EXCH-02.corp.yadro.com (172.17.10.102)
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-"cdns,max-outbound-regions" device tree property provides the
-maximum number of outbound regions supported by the Host PCIe
-controller. However the outbound regions are configured based
-on what is populated in the "ranges" DT property.
-Avoid using two properties for configuring outbound regions and
-use only "ranges" property instead.
+Add proximity sensor driver for Vishay vcnl3020. Only on-demand
+measurement is supported for now.
 
-Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
----
- drivers/pci/controller/cadence/pcie-cadence-host.c | 6 ------
- drivers/pci/controller/cadence/pcie-cadence.h      | 2 --
- 2 files changed, 8 deletions(-)
+Changes from v3:
+   1. minor changes.
+   2. add i2c block to fix dts section in yaml.
 
-diff --git a/drivers/pci/controller/cadence/pcie-cadence-host.c b/drivers/pci/controller/cadence/pcie-cadence-host.c
-index 60f912a657b9..8f72967f298f 100644
---- a/drivers/pci/controller/cadence/pcie-cadence-host.c
-+++ b/drivers/pci/controller/cadence/pcie-cadence-host.c
-@@ -140,9 +140,6 @@ static int cdns_pcie_host_init_address_translation(struct cdns_pcie_rc *rc)
- 	for_each_of_pci_range(&parser, &range) {
- 		bool is_io;
- 
--		if (r >= rc->max_regions)
--			break;
--
- 		if ((range.flags & IORESOURCE_TYPE_BITS) == IORESOURCE_MEM)
- 			is_io = false;
- 		else if ((range.flags & IORESOURCE_TYPE_BITS) == IORESOURCE_IO)
-@@ -221,9 +218,6 @@ int cdns_pcie_host_setup(struct cdns_pcie_rc *rc)
- 	pcie = &rc->pcie;
- 	pcie->is_rc = true;
- 
--	rc->max_regions = 32;
--	of_property_read_u32(np, "cdns,max-outbound-regions", &rc->max_regions);
--
- 	if (!of_pci_dma_range_parser_init(&parser, np))
- 		if (of_pci_range_parser_one(&parser, &range))
- 			rc->no_bar_nbits = ilog2(range.size);
-diff --git a/drivers/pci/controller/cadence/pcie-cadence.h b/drivers/pci/controller/cadence/pcie-cadence.h
-index a2b28b912ca4..6bd89a21bb1c 100644
---- a/drivers/pci/controller/cadence/pcie-cadence.h
-+++ b/drivers/pci/controller/cadence/pcie-cadence.h
-@@ -251,7 +251,6 @@ struct cdns_pcie {
-  * @bus_range: first/last buses behind the PCIe host controller
-  * @cfg_base: IO mapped window to access the PCI configuration space of a
-  *            single function at a time
-- * @max_regions: maximum number of regions supported by the hardware
-  * @no_bar_nbits: Number of bits to keep for inbound (PCIe -> CPU) address
-  *                translation (nbits sets into the "no BAR match" register)
-  * @vendor_id: PCI vendor ID
-@@ -262,7 +261,6 @@ struct cdns_pcie_rc {
- 	struct resource		*cfg_res;
- 	struct resource		*bus_range;
- 	void __iomem		*cfg_base;
--	u32			max_regions;
- 	u32			no_bar_nbits;
- 	u16			vendor_id;
- 	u16			device_id;
+Changes from v2:
+   1. using regmap_read_poll_timeout instead of do-while in measurement
+      function.
+   2. change struct i2client* in vcnl3020_data to struct dev*
+   3. enable REGMAP_I2C in Kconfig
+
+Changes from v1:
+   1. using regmap interface instead of i2c_smbus_* calls.
+   2. switch from probe to probe_new.
+   3. s32/int32_t -> int
+
+Ivan Mikhaylov (2):
+  iio: proximity: provide device tree binding document
+  iio: proximity: Add driver support for vcnl3020 proximity sensor
+
+ .../bindings/iio/proximity/vcnl3020.yaml      |  52 ++++
+ drivers/iio/proximity/Kconfig                 |  11 +
+ drivers/iio/proximity/Makefile                |   1 +
+ drivers/iio/proximity/vcnl3020.c              | 232 ++++++++++++++++++
+ 4 files changed, 297 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/iio/proximity/vcnl3020.yaml
+ create mode 100644 drivers/iio/proximity/vcnl3020.c
+
 -- 
-2.17.1
+2.21.1
 
