@@ -8,63 +8,68 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AEC86C43331
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 21:24:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5E77C2D0E5
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 21:24:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 811022072F
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 21:24:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ADB112073B
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 21:24:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ef80zkdZ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hTeA/5vb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727820AbgC0VYj (ORCPT
+        id S1727833AbgC0VYm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Mar 2020 17:24:39 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:51925 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727754AbgC0VYb (ORCPT
+        Fri, 27 Mar 2020 17:24:42 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:51919 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727740AbgC0VYa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Mar 2020 17:24:31 -0400
-Received: by mail-wm1-f68.google.com with SMTP id c187so13035263wme.1
-        for <linux-kernel@vger.kernel.org>; Fri, 27 Mar 2020 14:24:31 -0700 (PDT)
+        Fri, 27 Mar 2020 17:24:30 -0400
+Received: by mail-wm1-f66.google.com with SMTP id c187so13035015wme.1
+        for <linux-kernel@vger.kernel.org>; Fri, 27 Mar 2020 14:24:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=gfukkDHwtKj4BKlXc/fjhSsSldS9nfyhxc+J7rLMUOQ=;
-        b=Ef80zkdZrF8agBFess6gmp2WYDfANzlCqZ5kc9TJFBJdhTDp8BBF/T2wvWSGKD2Ux+
-         1bydBbVa7LeAgNcbuVtVp8X7svWe5bBvxYNsJIQ/VLYzCrCpAbwPukCbJs+eu6CTtY4B
-         q7EKo0mkdJ20W4KVxCfqZmpORonw+voPf9/aoTIL04BSdjJD+EyO4sAx2yxwUXxSIS3p
-         DGZmGaMYb6IvzZtokwms7DMjPzf4OWW1OEZfxbKQzCo0gbZJ5A3LsLpe5HGdYo3MGWf3
-         LlHtE0QeyNBdvK66wGB7ZbrpToVwC6WDxeqWpPLjSdlgb/Wxw+g15hVsRgOVt8bdL75J
-         Si4w==
+        bh=2RL3xiN8W6cz7dfbCpGqvic4ZrO12rtINmJ/67vPTQI=;
+        b=hTeA/5vbANSKBOfgfgihFOWpSkJAhBcEKyTFX75mkuw1DQpvwgEkuL6EFYmAl6htpQ
+         DcmRDKfbqSSTKqm00O1zKpLZK6xjeZzH583LaLOJhBEFNy07lKRLuMNhxN/RXB8Yvq8z
+         +S9c49lQVipwVUFS5gZf2ZW8rTsrWIMb9R3x43IjatVoYkBpx1DUVol/SHLdYMNfrKQB
+         BUQscsqnBPxUfMyERtvtza1DV3cVHzqi/kgn8uT+Fx/yj66s5C6X1x+Jd5lEetNcoIsT
+         dy1ide/aQTtRUyfwpPZ3z015M8YlUhZ5NpIAqjbit5ZJ9TOHRe6ot8EL+nf+4tLEyimL
+         zYrw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=gfukkDHwtKj4BKlXc/fjhSsSldS9nfyhxc+J7rLMUOQ=;
-        b=f0jtotxu9sDdSRp6JHbH7LXtDm3Cz2ugmNR9pPr+REtDYPd+Vq1f6LIm5e9auLazQu
-         92c/WHnclAHpNZlgzsM4Ybu4BYA1MX2vtzM5L/Gq0lAHy1kWBylZHXbkGE4nrtupiPWF
-         +VIZBLgQj5rCi12K8vmfGYdfPelvgF/UjET7TPM2JNtN/VF4uF1nO2xBGSgDyzE5iOMp
-         S9UPXYjqkBIg9MNXOx+jD7I7FN0eWDPXSUGCRlF+WLx3tQzwh8esVH0lm7u7jLfmIMiU
-         HRfnMNRjR8OnX68VDNgY8LGiiHPtgXBt0qmdkr3M4eGGjfc4aNezDkN5JN8jVu0ZuD00
-         IyNQ==
-X-Gm-Message-State: ANhLgQ1Z9NfJs6GvbHxUZg/mr0/6uaxy8IySEhKGhqveI8waCf9RbgQA
-        U0khIbNdLfDAsV3dEoGLTQ==
-X-Google-Smtp-Source: ADFU+vvgKU83rENNsYeVyec3WQDUcJE4oHjBb7ESipJUBJQaN94MAD5Ej3+z+MCMbQSvq8bR5BESDw==
-X-Received: by 2002:a7b:c846:: with SMTP id c6mr639905wml.189.1585344270664;
-        Fri, 27 Mar 2020 14:24:30 -0700 (PDT)
+        bh=2RL3xiN8W6cz7dfbCpGqvic4ZrO12rtINmJ/67vPTQI=;
+        b=TqS3rb8dpYHseCV3tv1wkAfw3QuIBG4VBoe2l9ytW2hJVQHZVUGO5YmBpOqX0ouIgs
+         5Id2O/aJIoQyCafHhkNpxkRD1YFubBZIEmB5NR07KTccW160cpxdUQWWSRtI7RmLQEAS
+         c5UkNHBzhZ39EOUKTdxPmm53OG0v3ig4QV2l/bOjxzVtDjRe6oXrTFzpYUrM5UtExxfp
+         +WG6lwHOnoOiKzsWJkw3Rzp7MGLQraEBQgJomqJhRtx/Z/DhxhWfHQVXOTVxoTcr4hj/
+         Y6tXS9XtvkqgIMKdS6KiyK+6OjybbzlGmcu6WUInxSRX5dKKP9HMSaNzPYkB9NWW9SpR
+         Ghgg==
+X-Gm-Message-State: ANhLgQ2ewTCYnqzbrcjtJokzkNR0P8XDY2QMlwmUB71dLf1pbcG1fc/6
+        R4A9/rtVrUwcdZe/2dfewQ==
+X-Google-Smtp-Source: ADFU+vtwug51RoUyH5LzFvTkssv7ihCgoPrxnE2ed7vc1qPZLVwxHVvVdJHexLK6kUc7NQUPdIFcJg==
+X-Received: by 2002:a7b:c117:: with SMTP id w23mr755644wmi.26.1585344267401;
+        Fri, 27 Mar 2020 14:24:27 -0700 (PDT)
 Received: from ninjahost.lan (host-92-23-82-35.as13285.net. [92.23.82.35])
-        by smtp.gmail.com with ESMTPSA id h132sm10215141wmf.18.2020.03.27.14.24.29
+        by smtp.gmail.com with ESMTPSA id h132sm10215141wmf.18.2020.03.27.14.24.26
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 27 Mar 2020 14:24:30 -0700 (PDT)
+        Fri, 27 Mar 2020 14:24:27 -0700 (PDT)
 From:   Jules Irenge <jbi.octave@gmail.com>
 To:     julia.lawall@lip6.fr
-Cc:     boqun.feng@gmail.com, Steven Rostedt <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH 10/10] trace: Replace printk and WARN_ON with WARN
-Date:   Fri, 27 Mar 2020 21:23:57 +0000
-Message-Id: <20200327212358.5752-11-jbi.octave@gmail.com>
+Cc:     boqun.feng@gmail.com, Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+        linux-kernel@vger.kernel.org (open list:SCHEDULER)
+Subject: [PATCH 07/10] sched/fair: Replace 1 and 0 by boolean value
+Date:   Fri, 27 Mar 2020 21:23:54 +0000
+Message-Id: <20200327212358.5752-8-jbi.octave@gmail.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200327212358.5752-1-jbi.octave@gmail.com>
 References: <0/10>
@@ -76,29 +81,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Coccinelle suggests replacing printk and WARN_ON with WARN
+Coccinelle reports a warning at voluntary_active_balance
 
-SUGGESTION: printk + WARN_ON can be just WARN.
+WARNING: return of 0/1 in function voluntary_active_balance with return type bool
+
+To fix this, 1 is replaced by true and 0 by false.
+Given that voluntary_active_balance() is of bool type.
+This fixes the warnings.
+
 Signed-off-by: Jules Irenge <jbi.octave@gmail.com>
 ---
- kernel/trace/trace.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ kernel/sched/fair.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index 6b11e4e2150c..1fe31272ea73 100644
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -1799,9 +1799,7 @@ static int run_tracer_selftest(struct tracer *type)
- 	/* the test is responsible for resetting too */
- 	tr->current_trace = saved_tracer;
- 	if (ret) {
--		printk(KERN_CONT "FAILED!\n");
--		/* Add the warning after printing 'FAILED' */
--		WARN_ON(1);
-+		WARN(1, "FAILED!\n");
- 		return -1;
+diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+index c1217bfe5e81..b11bb08687a9 100644
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -9082,7 +9082,7 @@ voluntary_active_balance(struct lb_env *env)
+ 	struct sched_domain *sd = env->sd;
+ 
+ 	if (asym_active_balance(env))
+-		return 1;
++		return true;
+ 
+ 	/*
+ 	 * The dst_cpu is idle and the src_cpu CPU has only 1 CFS task.
+@@ -9094,13 +9094,13 @@ voluntary_active_balance(struct lb_env *env)
+ 	    (env->src_rq->cfs.h_nr_running == 1)) {
+ 		if ((check_cpu_capacity(env->src_rq, sd)) &&
+ 		    (capacity_of(env->src_cpu)*sd->imbalance_pct < capacity_of(env->dst_cpu)*100))
+-			return 1;
++			return true;
  	}
- 	/* Only reset on passing, to avoid touching corrupted buffers */
+ 
+ 	if (env->migration_type == migrate_misfit)
+-		return 1;
++		return true;
+ 
+-	return 0;
++	return false;
+ }
+ 
+ static int need_active_balance(struct lb_env *env)
 -- 
 2.25.1
 
