@@ -2,184 +2,126 @@ Return-Path: <SRS0=s8dx=5M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE96CC43331
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 15:29:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17F66C2D0E5
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 15:29:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8964920748
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 15:29:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E392820774
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 15:29:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="CosXR2MJ"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DuKrnVrT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727874AbgC0P3E (ORCPT
+        id S1727883AbgC0P3G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Mar 2020 11:29:04 -0400
-Received: from pandora.armlinux.org.uk ([78.32.30.218]:35816 "EHLO
-        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727731AbgC0P3A (ORCPT
+        Fri, 27 Mar 2020 11:29:06 -0400
+Received: from us-smtp-delivery-74.mimecast.com ([216.205.24.74]:59854 "EHLO
+        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727725AbgC0P3E (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Mar 2020 11:29:00 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=Bh2PgbYLfBfl9wWC6MpbC6nc2/y6kXZr0xP8G3jYT2Q=; b=CosXR2MJzHJpTA3wj2pJJohdn
-        /w1wU3lKnYz6VmQ8QZRiKi6lc+zPrgSQHGnOC4PGBwcr5c1mDGylsGY0pwzE80wPfzSMABZ+6UBMj
-        gVGaFbSdIF+QwyK7L9teiBZ8fTrsX/7N359Fy1F6KRJaRZETS73myABadC4R43mmMmtHvdoQNq9sm
-        933wmMVbxgpvyz70/XwHIBj8hhmc0hOWw0/cS8evPOssDG6CoC4wV/Vb7sInLArZ1VJ5sXejxW9kf
-        uQpzRmhdPmDqk2MCWH8lVT5BjmYobOeBvLfiuD22Nqv49UZgiHfum1qIyyXgcKvGSwxVEfsDLU0MW
-        qg1lUZ4Zg==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:42102)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1jHqui-0001qV-EU; Fri, 27 Mar 2020 15:28:52 +0000
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1jHquf-0004Ki-LV; Fri, 27 Mar 2020 15:28:49 +0000
-Date:   Fri, 27 Mar 2020 15:28:49 +0000
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Florinel Iordache <florinel.iordache@nxp.com>
-Cc:     Andrew Lunn <andrew@lunn.ch>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
-        "hkallweit1@gmail.com" <hkallweit1@gmail.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "kuba@kernel.org" <kuba@kernel.org>,
-        "corbet@lwn.net" <corbet@lwn.net>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        Leo Li <leoyang.li@nxp.com>,
-        "Madalin Bucur (OSS)" <madalin.bucur@oss.nxp.com>,
-        Ioana Ciornei <ioana.ciornei@nxp.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [EXT] Re: [PATCH net-next 2/9] dt-bindings: net: add backplane
- dt bindings
-Message-ID: <20200327152849.GP25745@shell.armlinux.org.uk>
-References: <1585230682-24417-1-git-send-email-florinel.iordache@nxp.com>
- <1585230682-24417-3-git-send-email-florinel.iordache@nxp.com>
- <20200327010411.GM3819@lunn.ch>
- <AM0PR04MB5443185A1236F621B9EC9873FBCC0@AM0PR04MB5443.eurprd04.prod.outlook.com>
+        Fri, 27 Mar 2020 11:29:04 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1585322943;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=c5+B4C2+5e2TyPoBaB+IOu52gh+Qc7weu81l9ECmgdY=;
+        b=DuKrnVrTuI/x8/jMFDI9rXHKHk+9/ggo3HIsCm9Bg9VhTBy0r2qI1k2ekUHwv8rfEBRPXe
+        JaOAOmZ75Wa5FoaNdRjcNLUfAo8xFuuEincCW7pAnu83nAS8Sw1Rkh/SYoBogflPD/KerA
+        fpLUYsCawhzu2wsf6CGuhcEWvh0km+M=
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
+ [209.85.128.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-411-UIoayCJBMl66j00nA6gbEQ-1; Fri, 27 Mar 2020 11:29:00 -0400
+X-MC-Unique: UIoayCJBMl66j00nA6gbEQ-1
+Received: by mail-wm1-f70.google.com with SMTP id y1so4505733wmj.3
+        for <linux-kernel@vger.kernel.org>; Fri, 27 Mar 2020 08:29:00 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=c5+B4C2+5e2TyPoBaB+IOu52gh+Qc7weu81l9ECmgdY=;
+        b=DU1zwzhJkx5P3X4XCuPUutdqiLg2OimUNWo7GbAwnghNXXs3EERdoDPWqCzWlKQsyv
+         vpLhZ4JHBBp0uL1i2Q/QpJA58G1TP4xc1/QjIMMeo3FFd8UaZz4CToqMaGkiaZXRAgFC
+         H8xhblS5r9th2J19nZMjPyJm1E1h9LlqPIUhDeBrIajshCW6VdGg7maal2FgF9Pv+NAk
+         ONWfncsDFf0BWYInl/+tQdkiNK04qaTC8Mb/5LinWuNmGHgHTAaI9SWMSl7ycKKqPblb
+         Lu+x8pVjkaxEVQjVDUHGVZfwW4Lwqi6AcnJjrcpMPlOSqfUOKlaYYxSyCZtooUO3kl7t
+         1+hQ==
+X-Gm-Message-State: ANhLgQ0XUFGCf6O09VRrJp8JPM/R0PtGUB63dJawAcr6Ooi3beHpTfXa
+        7zO+ON5L/TE4lvTdzag0fEoQG+Rn1NV9TU8bAQzz5xtfwG5DvgPAnNtxB7PApHW9SUHpyj0a3gC
+        tb0ggcOcICWl7mGiOXt6wEJXx
+X-Received: by 2002:a1c:197:: with SMTP id 145mr5789515wmb.42.1585322938404;
+        Fri, 27 Mar 2020 08:28:58 -0700 (PDT)
+X-Google-Smtp-Source: ADFU+vtzXVmK7AszkLRPPQuhSvaoR7KF0cl0sjzsfkv/NC7G43LpQRWyUXej2+pCODrXV30DdQaVCw==
+X-Received: by 2002:a1c:197:: with SMTP id 145mr5789499wmb.42.1585322938204;
+        Fri, 27 Mar 2020 08:28:58 -0700 (PDT)
+Received: from redfedo.redhat.com ([2a01:cb14:58d:8400:ecf6:58e2:9c06:a308])
+        by smtp.gmail.com with ESMTPSA id i8sm8906856wrb.41.2020.03.27.08.28.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 27 Mar 2020 08:28:56 -0700 (PDT)
+From:   Julien Thierry <jthierry@redhat.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     jpoimboe@redhat.com, peterz@infradead.org, raphael.gault@arm.com,
+        Julien Thierry <jthierry@redhat.com>
+Subject: [PATCH v2 03/10] objtool: check: Clean instruction state before each function validation
+Date:   Fri, 27 Mar 2020 15:28:40 +0000
+Message-Id: <20200327152847.15294-4-jthierry@redhat.com>
+X-Mailer: git-send-email 2.21.1
+In-Reply-To: <20200327152847.15294-1-jthierry@redhat.com>
+References: <20200327152847.15294-1-jthierry@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <AM0PR04MB5443185A1236F621B9EC9873FBCC0@AM0PR04MB5443.eurprd04.prod.outlook.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 27, 2020 at 03:00:22PM +0000, Florinel Iordache wrote:
-> > On Thu, Mar 26, 2020 at 03:51:15PM +0200, Florinel Iordache wrote:
-> > > Add ethernet backplane device tree bindings
-> > 
-> > > +  - |
-> > > +    /* Backplane configurations for specific setup */
-> > > +    &mdio9 {
-> > > +        bpphy6: ethernet-phy@0 {
-> > > +            compatible = "ethernet-phy-ieee802.3-c45";
-> > > +            reg = <0x0>;
-> > > +            lane-handle = <&lane_d>; /* use lane D */
-> > > +            eq-algorithm = "bee";
-> > > +            /* 10G Short cables setup: up to 30 cm cable */
-> > > +            eq-init = <0x2 0x5 0x29>;
-> > > +            eq-params = <0>;
-> > > +        };
-> > > +    };
-> > 
-> > So you are modelling this as just another PHY? Does the driver get loaded based
-> > on the PHY ID in registers 2 and 3? Does the standard define these IDs or are
-> > they vendor specific?
-> > 
-> > Thanks
-> >         Andrew
-> 
-> Hi Andrew,
-> Thank you all for the feedback.
-> I am currently working to address the entire feedback received 
-> so far for this new Backplane driver.
-> 
-> Yes, we are modelling backplane driver as a phy driver.
+When a function fails its validation, it might leave a stale state
+that will be used for the validation of other functions. That would
+cause false warnings on potentially valid functions.
 
-I think we need to think very carefully about that, and consider
-whether that really is a good idea.  phylib is currently built
-primarily around copper PHYs, although there are some which also
-support fiber as well in weird "non-standard" forms.
+Reset the instruction state before the validation of each individual
+function.
 
-What worries me is the situation which I've been working on, where
-we want access to the PCS PHYs, and we can't have the PCS PHYs
-represented as a phylib PHY because we may have a copper PHY behind
-the PCS PHY, and we want to be talking to the copper PHY in the
-first instance (the PCS PHY effectivel ybecomes a slave to the
-copper PHY.)
+Signed-off-by: Julien Thierry <jthierry@redhat.com>
+---
+ tools/objtool/check.c | 13 ++++++-------
+ 1 file changed, 6 insertions(+), 7 deletions(-)
 
-My worry is that we're ending up with conflicting implementations
-for the same hardware which may only end up causing problems down
-the line.
-
-Please can you look at my DPAA2 PCS series which has been previously
-posted to netdev - it's rather difficult to work out who in NXP should
-be copied, because that information is not visible to those of us in
-the community - we only find that out after someone inside NXP posts
-patches, and even then the MAINTAINERS file doesn't seem to get
-updated.
-
-It's also worth mentioning that on other SoCs, such as Marvell SoCs,
-the serdes and "PCS" are entirely separate hardware blocks, and the
-implementation in the kernel, which works very well, is to use the
-drivers/phy for the serdes/comphy as they call it, and the ethernet
-driver binds to the comphy to control the serdes settings, whereas
-the ethernet driver looks after the PCS.  I haven't been able to
-look at your code enough yet to work out if that would be possible.
-
-I also wonder whether we want a separate class of MDIO device for
-PCS PHYs, just as we have things like DSA switches implemented
-entirely separately from phylib - they're basically different sub-
-classes of a mdio device.
-
-I think we have around 20 or so weeks to hash this out, since it's
-clear that the 10gbase-kr (10GKR) phy interface mode can't be used
-until we've eliminated it from existing dts files.
-
-> The driver is loaded based on PHY ID in registers 2 and 3 which 
-> are specified by the standard but it is a vendor specific value: 
-> 32-Bit identifier composed of the 3rd through 24th bits of the 
-> Organizationally Unique Identifier (OUI) assigned to the device 
-> manufacturer by the IEEE, plus a six-bit model number, plus a 
-> four-bit revision number.
-> This is done in the device specific code and not in backplane 
-> generic driver.
-> You can check support for QorIQ devices where qoriq_backplane_driver 
-> is registered as a phy_driver:
->  
-> @file: qoriq_backplane.c
-> +static struct phy_driver qoriq_backplane_driver[] = {
-> +	{
-> +	.phy_id		= PCS_PHY_DEVICE_ID,
-> +	.name		= QORIQ_BACKPLANE_DRIVER_NAME,
-> +	.phy_id_mask	= PCS_PHY_DEVICE_ID_MASK,
-> +	.features       = BACKPLANE_FEATURES,
-> +	.probe          = qoriq_backplane_probe,
-> +	.remove         = backplane_remove,
-> +	.config_init    = qoriq_backplane_config_init,
-> +	.aneg_done      = backplane_aneg_done,
-> 
-> Here we register the particular phy device ID/mask and driver name 
-> specific for qoriq devices. 
-> Also we can use generic routines provided by generic backplane driver 
-> if they are suitable for particular qoriq device or otherwise we can use 
-> more specialized specific routines like: qoriq_backplane_config_init
-> 
-
+diff --git a/tools/objtool/check.c b/tools/objtool/check.c
+index 3ab87e3aa750..74353b2c39ce 100644
+--- a/tools/objtool/check.c
++++ b/tools/objtool/check.c
+@@ -2400,13 +2400,6 @@ static int validate_section(struct objtool_file *file, struct section *sec)
+ 	struct insn_state state;
+ 	int ret, warnings = 0;
+ 
+-	clear_insn_state(&state);
+-
+-	state.cfa = initial_func_cfi.cfa;
+-	memcpy(&state.regs, &initial_func_cfi.regs,
+-	       CFI_NUM_REGS * sizeof(struct cfi_reg));
+-	state.stack_size = initial_func_cfi.cfa.offset;
+-
+ 	list_for_each_entry(func, &sec->symbol_list, list) {
+ 		if (func->type != STT_FUNC)
+ 			continue;
+@@ -2424,6 +2417,12 @@ static int validate_section(struct objtool_file *file, struct section *sec)
+ 		if (!insn || insn->ignore || insn->visited)
+ 			continue;
+ 
++		clear_insn_state(&state);
++		state.cfa = initial_func_cfi.cfa;
++		memcpy(&state.regs, &initial_func_cfi.regs,
++		       CFI_NUM_REGS * sizeof(struct cfi_reg));
++		state.stack_size = initial_func_cfi.cfa.offset;
++
+ 		state.uaccess = func->uaccess_safe;
+ 
+ 		ret = validate_branch(file, func, insn, state);
 -- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 10.2Mbps down 587kbps up
+2.21.1
+
