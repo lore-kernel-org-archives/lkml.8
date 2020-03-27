@@ -4,41 +4,41 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77A7CC2D0E5
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 22:25:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D67AC2D0EC
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 22:25:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 450D520748
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 22:25:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 396A7208E4
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 22:25:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585347902;
-	bh=hSbQDuf8vTlOMjI6rgIo5X6FzzD0x98qmRWJGH4U1u8=;
+	s=default; t=1585347907;
+	bh=t2YKm8bgTn1HeOwZI5TULk2Ri2OZOPNEnL8cEhKP9zY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EIVY7dMVI0A6dxeC1b4tqo11zYa8a65UceuOCheqa09D7Uvjn13ATwuftxOgc33gY
-	 slg5Wtb7jr/jXOIb0pTb7Ho6NXltKXYu4udc0VYU9wsKeZ1BIUkWkPHZ8Rg/yNNu45
-	 XYzc2rDWL8oQSJz8ttLc8VK9a1+fU6gw6DF6hYYo=
+	b=JlGTfQ2J4gNN5Fqr4atgSTESIJAgQkmvfMPfaP1I7sTIM7BSvdouWGJ95uRfKo2fU
+	 xdEHs/LQ/bDEDG/DmLUyQQqv1Z6POMTwDLlxZT6wlhUqlU5VP6iFXVBIIe57cyuaUN
+	 1MiHhfK7uCWjwztJV6OSGHuBPriPEqT0+1IVQRu4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727794AbgC0WZB (ORCPT
+        id S1727849AbgC0WZF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Mar 2020 18:25:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42672 "EHLO mail.kernel.org"
+        Fri, 27 Mar 2020 18:25:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42870 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727769AbgC0WZA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Mar 2020 18:25:00 -0400
+        id S1727826AbgC0WZE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Mar 2020 18:25:04 -0400
 Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EA3EB20848;
-        Fri, 27 Mar 2020 22:24:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DB367212CC;
+        Fri, 27 Mar 2020 22:25:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585347900;
-        bh=hSbQDuf8vTlOMjI6rgIo5X6FzzD0x98qmRWJGH4U1u8=;
+        s=default; t=1585347904;
+        bh=t2YKm8bgTn1HeOwZI5TULk2Ri2OZOPNEnL8cEhKP9zY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TZz8x2vxqphiEoRCJJvKduyp1ubYwTV3PIUNII8/V6r+6c4/osMQMCNsyE39Y+aR4
-         0n5WT8u7UmxibCa/e6RR41OPZaS1c/p+HW3rMSZQHh6tLBMWJWW+PkiB1KkbjKjbCd
-         Aqa7mIqHDpPHCuUwMdIENFs5MfNWhZodjspTUZm8=
+        b=Muyr7dLy9Hc6fhxgL51My65Ccoo/mimhOlY6WJVTv/HKF7C814ZX0mKunEkurl+My
+         tQXf7OuwHjD7dlhItMMtI7arDTJhzOZ7JLLZaNa9EUMzdy+9MXw6ZgLiMEywNhyGuu
+         UGstMP4ufIt0Onphrneg+bAsnTJaW9Ag3BTzrqu8=
 From:   paulmck@kernel.org
 To:     rcu@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
@@ -48,9 +48,9 @@ Cc:     linux-kernel@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
         rostedt@goodmis.org, dhowells@redhat.com, edumazet@google.com,
         fweisbec@gmail.com, oleg@redhat.com, joel@joelfernandes.org,
         "Paul E. McKenney" <paulmck@kernel.org>
-Subject: [PATCH v3 tip/core/rcu 06/34] rcu: Reinstate synchronize_rcu_mult()
-Date:   Fri, 27 Mar 2020 15:24:28 -0700
-Message-Id: <20200327222456.12470-6-paulmck@kernel.org>
+Subject: [PATCH v3 tip/core/rcu 17/34] rcu-tasks: Move #ifdef into tasks.h
+Date:   Fri, 27 Mar 2020 15:24:39 -0700
+Message-Id: <20200327222456.12470-17-paulmck@kernel.org>
 X-Mailer: git-send-email 2.9.5
 In-Reply-To: <20200327222346.GA12082@paulmck-ThinkPad-P72>
 References: <20200327222346.GA12082@paulmck-ThinkPad-P72>
@@ -61,45 +61,52 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: "Paul E. McKenney" <paulmck@kernel.org>
 
-With the advent and likely usage of synchronize_rcu_rude(), there is
-again a need to wait on multiple types of RCU grace periods, for
-example, call_rcu_tasks() and call_rcu_tasks_rude().  This commit
-therefore reinstates synchronize_rcu_mult() in order to allow these
-grace periods to be straightforwardly waited on concurrently.
+This commit pushes the #ifdef CONFIG_TASKS_RCU_GENERIC from
+kernel/rcu/update.c to kernel/rcu/tasks.h in order to improve
+readability as more APIs are added.
 
 Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
 ---
- include/linux/rcupdate_wait.h | 19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
+ kernel/rcu/tasks.h  | 5 +++++
+ kernel/rcu/update.c | 4 ----
+ 2 files changed, 5 insertions(+), 4 deletions(-)
 
-diff --git a/include/linux/rcupdate_wait.h b/include/linux/rcupdate_wait.h
-index c0578ba..699b938 100644
---- a/include/linux/rcupdate_wait.h
-+++ b/include/linux/rcupdate_wait.h
-@@ -31,4 +31,23 @@ do {									\
+diff --git a/kernel/rcu/tasks.h b/kernel/rcu/tasks.h
+index fc7f116..b52a640 100644
+--- a/kernel/rcu/tasks.h
++++ b/kernel/rcu/tasks.h
+@@ -5,6 +5,7 @@
+  * Copyright (C) 2020 Paul E. McKenney
+  */
  
- #define wait_rcu_gp(...) _wait_rcu_gp(false, __VA_ARGS__)
++#ifdef CONFIG_TASKS_RCU_GENERIC
  
-+/**
-+ * synchronize_rcu_mult - Wait concurrently for multiple grace periods
-+ * @...: List of call_rcu() functions for different grace periods to wait on
-+ *
-+ * This macro waits concurrently for multiple types of RCU grace periods.
-+ * For example, synchronize_rcu_mult(call_rcu, call_rcu_tasks) would wait
-+ * on concurrent RCU and RCU-tasks grace periods.  Waiting on a given SRCU
-+ * domain requires you to write a wrapper function for that SRCU domain's
-+ * call_srcu() function, with this wrapper supplying the pointer to the
-+ * corresponding srcu_struct.
-+ *
-+ * The first argument tells Tiny RCU's _wait_rcu_gp() not to
-+ * bother waiting for RCU.  The reason for this is because anywhere
-+ * synchronize_rcu_mult() can be called is automatically already a full
-+ * grace period.
-+ */
-+#define synchronize_rcu_mult(...) \
-+	_wait_rcu_gp(IS_ENABLED(CONFIG_TINY_RCU), __VA_ARGS__)
+ ////////////////////////////////////////////////////////////////////////
+ //
+@@ -980,3 +981,7 @@ core_initcall(rcu_spawn_tasks_trace_kthread);
+ #else /* #ifdef CONFIG_TASKS_TRACE_RCU */
+ void exit_tasks_rcu_finish_trace(struct task_struct *t) { }
+ #endif /* #else #ifdef CONFIG_TASKS_TRACE_RCU */
 +
- #endif /* _LINUX_SCHED_RCUPDATE_WAIT_H */
++#else /* #ifdef CONFIG_TASKS_RCU_GENERIC */
++static inline void rcu_tasks_bootup_oddness(void) {}
++#endif /* #else #ifdef CONFIG_TASKS_RCU_GENERIC */
+diff --git a/kernel/rcu/update.c b/kernel/rcu/update.c
+index 16058a5..0fb2a9e 100644
+--- a/kernel/rcu/update.c
++++ b/kernel/rcu/update.c
+@@ -559,11 +559,7 @@ late_initcall(rcu_verify_early_boot_tests);
+ void rcu_early_boot_tests(void) {}
+ #endif /* CONFIG_PROVE_RCU */
+ 
+-#ifdef CONFIG_TASKS_RCU_GENERIC
+ #include "tasks.h"
+-#else /* #ifdef CONFIG_TASKS_RCU_GENERIC */
+-static inline void rcu_tasks_bootup_oddness(void) {}
+-#endif /* #else #ifdef CONFIG_TASKS_RCU_GENERIC */
+ 
+ #ifndef CONFIG_TINY_RCU
+ 
 -- 
 2.9.5
 
