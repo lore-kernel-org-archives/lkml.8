@@ -2,199 +2,194 @@ Return-Path: <SRS0=s8dx=5M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9549BC2D0E5
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 22:26:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01FB9C2D0E5
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 22:32:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B9792073E
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 22:26:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585348010;
-	bh=6d1D0Rshb2u0ZUDE2mYeK41UfkqufyeLpBXhCPgSxGA=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=P+8RUNvGvpKgYw8YXg7xuk7lszj7Z8y5gHTbpX8ybFjZed+bhuKGC9szh9pVlFUYr
-	 zm1OrKn7sBzhOmSFPQfDf/5Ao459AAOl+kR0BFs/DyWR2bmbyHm0MQNf/6W0yAqXwQ
-	 XbMYYMz0kKheTd0RDeQfDfZFOrAd5T/7AZz/ixL0=
+	by mail.kernel.org (Postfix) with ESMTP id CAC1C20663
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 22:32:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uhUfpfv1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727982AbgC0W0t (ORCPT
+        id S1727708AbgC0WcX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Mar 2020 18:26:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42480 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726781AbgC0WY7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Mar 2020 18:24:59 -0400
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 18B6B2073B;
-        Fri, 27 Mar 2020 22:24:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585347898;
-        bh=6d1D0Rshb2u0ZUDE2mYeK41UfkqufyeLpBXhCPgSxGA=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LeTI+1v2OAjQ6WVwX1GznIsgCQiPnTxtLH3QwIBOfWQvAYxDpjb0Ubn+v1edmpGFD
-         VSUGKILJyQ66rpxH9uYgTPkUBPfneGGZUrg6dQD4tyueVu0Q5dkwQo/Hm4UvCEYtUq
-         LoD9NlffiNELZKeKWR4egSFnqXjc8Pu+NAfs7YvU=
-From:   paulmck@kernel.org
-To:     rcu@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
-        jiangshanlai@gmail.com, dipankar@in.ibm.com,
-        akpm@linux-foundation.org, mathieu.desnoyers@efficios.com,
-        josh@joshtriplett.org, tglx@linutronix.de, peterz@infradead.org,
-        rostedt@goodmis.org, dhowells@redhat.com, edumazet@google.com,
-        fweisbec@gmail.com, oleg@redhat.com, joel@joelfernandes.org,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>
-Subject: [PATCH v3 tip/core/rcu 01/34] sched/core: Add function to sample state of locked-down task
-Date:   Fri, 27 Mar 2020 15:24:23 -0700
-Message-Id: <20200327222456.12470-1-paulmck@kernel.org>
-X-Mailer: git-send-email 2.9.5
-In-Reply-To: <20200327222346.GA12082@paulmck-ThinkPad-P72>
-References: <20200327222346.GA12082@paulmck-ThinkPad-P72>
+        Fri, 27 Mar 2020 18:32:23 -0400
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:41541 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726781AbgC0WcW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Mar 2020 18:32:22 -0400
+Received: by mail-ed1-f65.google.com with SMTP id v1so13210024edq.8;
+        Fri, 27 Mar 2020 15:32:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=PS7K5rF+Cg6On6T3DToyfe3R3dABZKL4am5J0GbhTdc=;
+        b=uhUfpfv1fHQDzSKiZvahUYHiOoF2HuQgzuE83x6rP4SAxvRKfVV29Os1SuqguMCqIo
+         n7FtXSqsPrizA2bWYlZqgJH9R5pbQDR2Y/zjaFsOCtsaY/ys/iTK0ADLKFG3+PGRGh/F
+         xIr2eTCKnTOoy4XHUpg50mXyOsd6Bi8gV9ufFexWeqMLPlh4DuJ69yu5JnN4OQKfjazd
+         lCDiTWcV2+x3ixrkMcD2mimcBvGmpRfHYMX32XlbIoGu6NSTmCg+tlkZK/3D/qegi5jD
+         GcOoZnubiVjCOFKZAnVsQUbDqkdyN/iVwqMMPAMu1/rqGpHqnAJnnH3XGw7P6BqfhWZx
+         zuyg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=PS7K5rF+Cg6On6T3DToyfe3R3dABZKL4am5J0GbhTdc=;
+        b=XcU4WI0n1FhswMRe64IKvYinIcj5H6A6ex+RwawWtSY9IHiMZch/O4FfuTIajwWSLs
+         mKEZz3QaWxM8bo4SJHmbzyOL+oUr9b+GjXKdmKHAqMjatBt6Wm9TBp3AGJMfDEeWPRrV
+         5jHz0tafcKJTQPyyfcy7SV2veH+8bqu6nQYiCHp0edPJIuAaO79IjqaAmvOTf1noExgF
+         G1Xy1x0ywMopWqI9o76zp15MoGmvgrcEmRmRmnqEiWKUATAWWFicqWuFuj4TwMC1ihgw
+         vmJaikr3QF/veOrBTJRBTX6r7vx95Eu7c5WYAhjZkcNZLHmdJMpPc0zinCaZRcd5j+iz
+         PfVw==
+X-Gm-Message-State: ANhLgQ2oClLWzGKQntNLTLOMhdAIZ6mHZkWyfTCCnf341xGdDwgmdKGd
+        i7DARoS4NyMV+4XBSHXVhLA=
+X-Google-Smtp-Source: ADFU+vtxilaq5/JJXYmsRylks0eE4gcJmXLVEWDGDi4/GpErXjHanhDXgc13g3q4tpCUIuuPtQGsyg==
+X-Received: by 2002:a05:6402:b14:: with SMTP id bm20mr1336170edb.365.1585348340310;
+        Fri, 27 Mar 2020 15:32:20 -0700 (PDT)
+Received: from Ansuel-XPS.localdomain (host203-232-dynamic.53-79-r.retail.telecomitalia.it. [79.53.232.203])
+        by smtp.googlemail.com with ESMTPSA id p8sm1056354edm.96.2020.03.27.15.32.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 27 Mar 2020 15:32:19 -0700 (PDT)
+From:   Ansuel Smith <ansuelsmth@gmail.com>
+To:     Andy Gross <agross@kernel.org>
+Cc:     Ajay Kishore <akisho@codeaurora.org>,
+        Ansuel Smith <ansuelsmth@gmail.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v3] pinctrl: qcom: use scm_call to route GPIO irq to Apps
+Date:   Fri, 27 Mar 2020 23:32:08 +0100
+Message-Id: <20200327223209.20409-1-ansuelsmth@gmail.com>
+X-Mailer: git-send-email 2.25.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Paul E. McKenney" <paulmck@kernel.org>
+From: Ajay Kishore <akisho@codeaurora.org>
 
-A running task's state can be sampled in a consistent manner (for example,
-for diagnostic purposes) simply by invoking smp_call_function_single()
-on its CPU, which may be obtained using task_cpu(), then having the
-IPI handler verify that the desired task is in fact still running.
-However, if the task is not running, this sampling can in theory be done
-immediately and directly.  In practice, the task might start running at
-any time, including during the sampling period.  Gaining a consistent
-sample of a not-running task therefore requires that something be done
-to lock down the target task's state.
+For IPQ806x targets, TZ protects the registers that are used to
+configure the routing of interrupts to a target processor.
+To resolve this, this patch uses scm call to route GPIO interrupts
+to application processor. Also the scm call interface is changed.
 
-This commit therefore adds a try_invoke_on_locked_down_task() function
-that invokes a specified function if the specified task can be locked
-down, returning true if successful and if the specified function returns
-true.  Otherwise this function simply returns false.  Given that the
-function passed to try_invoke_on_nonrunning_task() might be invoked with
-a runqueue lock held, that function had better be quite lightweight.
-
-The function is passed the target task's task_struct pointer and the
-argument passed to try_invoke_on_locked_down_task(), allowing easy access
-to task state and to a location for further variables to be passed in
-and out.
-
-Note that the specified function will be called even if the specified
-task is currently running.  The function can use ->on_rq and task_curr()
-to quickly and easily determine the task's state, and can return false
-if this state is not to the function's liking.  The caller of the
-try_invoke_on_locked_down_task() would then see the false return value,
-and could take appropriate action, for example, trying again later or
-sending an IPI if matters are more urgent.
-
-It is expected that use cases such as the RCU CPU stall warning code will
-simply return false if the task is currently running.  However, there are
-use cases involving nohz_full CPUs where the specified function might
-instead fall back to an alternative sampling scheme that relies on heavier
-synchronization (such as memory barriers) in the target task.
-
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Juri Lelli <juri.lelli@redhat.com>
-Cc: Vincent Guittot <vincent.guittot@linaro.org>
-Cc: Dietmar Eggemann <dietmar.eggemann@arm.com>
-Cc: Ben Segall <bsegall@google.com>
-Cc: Mel Gorman <mgorman@suse.de>
-[ paulmck: Apply feedback from Peter Zijlstra and Steven Rostedt. ]
-[ paulmck: Invoke if running to handle feedback from Mathieu Desnoyers. ]
-Reviewed-by: Joel Fernandes (Google) <joel@joelfernandes.org>
-Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
+Signed-off-by: Ajay Kishore <akisho@codeaurora.org>
+Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
 ---
- include/linux/wait.h |  2 ++
- kernel/sched/core.c  | 48 ++++++++++++++++++++++++++++++++++++++++++++++++
- 2 files changed, 50 insertions(+)
+v3:
+* Rename route_to_apps to intr_target_use_scm
+* Follow standard design and rename base_reg to phys_base
+* Add additional comments in route interrupts condition 
 
-diff --git a/include/linux/wait.h b/include/linux/wait.h
-index 3283c8d..e2bb8ed 100644
---- a/include/linux/wait.h
-+++ b/include/linux/wait.h
-@@ -1148,4 +1148,6 @@ int autoremove_wake_function(struct wait_queue_entry *wq_entry, unsigned mode, i
- 		(wait)->flags = 0;						\
- 	} while (0)
+v2:
+* Move static varibale in msm_pinctrl struct
+* Revert '4b024225c4a8 ("pinctrl: use devm_platform_ioremap_resource() to simplify code")'
+  to get base_reg addr
+
+ drivers/pinctrl/qcom/pinctrl-msm.c | 42 +++++++++++++++++++++++++-----
+ 1 file changed, 36 insertions(+), 6 deletions(-)
+
+diff --git a/drivers/pinctrl/qcom/pinctrl-msm.c b/drivers/pinctrl/qcom/pinctrl-msm.c
+index 9a8daa256a32..7d2a34beb1b6 100644
+--- a/drivers/pinctrl/qcom/pinctrl-msm.c
++++ b/drivers/pinctrl/qcom/pinctrl-msm.c
+@@ -22,6 +22,8 @@
+ #include <linux/reboot.h>
+ #include <linux/pm.h>
+ #include <linux/log2.h>
++#include <linux/qcom_scm.h>
++#include <linux/io.h>
  
-+bool try_invoke_on_locked_down_task(struct task_struct *p, bool (*func)(struct task_struct *t, void *arg), void *arg);
-+
- #endif /* _LINUX_WAIT_H */
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index 1a9983d..c37e99b 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -2574,6 +2574,8 @@ try_to_wake_up(struct task_struct *p, unsigned int state, int wake_flags)
- 	 *
- 	 * Pairs with the LOCK+smp_mb__after_spinlock() on rq->lock in
- 	 * __schedule().  See the comment for smp_mb__after_spinlock().
-+	 *
-+	 * A similar smb_rmb() lives in try_invoke_on_locked_down_task().
- 	 */
- 	smp_rmb();
- 	if (p->on_rq && ttwu_remote(p, wake_flags))
-@@ -2648,6 +2650,52 @@ try_to_wake_up(struct task_struct *p, unsigned int state, int wake_flags)
- }
+ #include <linux/soc/qcom/irq.h>
  
- /**
-+ * try_invoke_on_locked_down_task - Invoke a function on task in fixed state
-+ * @p: Process for which the function is to be invoked.
-+ * @func: Function to invoke.
-+ * @arg: Argument to function.
-+ *
-+ * If the specified task can be quickly locked into a definite state
-+ * (either sleeping or on a given runqueue), arrange to keep it in that
-+ * state while invoking @func(@arg).  This function can use ->on_rq and
-+ * task_curr() to work out what the state is, if required.  Given that
-+ * @func can be invoked with a runqueue lock held, it had better be quite
-+ * lightweight.
-+ *
-+ * Returns:
-+ *	@false if the task slipped out from under the locks.
-+ *	@true if the task was locked onto a runqueue or is sleeping.
-+ *		However, @func can override this by returning @false.
-+ */
-+bool try_invoke_on_locked_down_task(struct task_struct *p, bool (*func)(struct task_struct *t, void *arg), void *arg)
-+{
-+	bool ret = false;
-+	struct rq_flags rf;
-+	struct rq *rq;
+@@ -60,6 +62,8 @@ struct msm_pinctrl {
+ 	struct irq_chip irq_chip;
+ 	int irq;
+ 
++	bool intr_target_use_scm;
 +
-+	lockdep_assert_irqs_enabled();
-+	raw_spin_lock_irq(&p->pi_lock);
-+	if (p->on_rq) {
-+		rq = __task_rq_lock(p, &rf);
-+		if (task_rq(p) == rq)
-+			ret = func(p, arg);
-+		rq_unlock(rq, &rf);
-+	} else {
-+		switch (p->state) {
-+		case TASK_RUNNING:
-+		case TASK_WAKING:
-+			break;
-+		default:
-+			smp_rmb(); // See smp_rmb() comment in try_to_wake_up().
-+			if (!p->on_rq)
-+				ret = func(p, arg);
+ 	raw_spinlock_t lock;
+ 
+ 	DECLARE_BITMAP(dual_edge_irqs, MAX_NR_GPIO);
+@@ -68,6 +72,7 @@ struct msm_pinctrl {
+ 
+ 	const struct msm_pinctrl_soc_data *soc;
+ 	void __iomem *regs[MAX_NR_TILES];
++	u32 phys_base[MAX_NR_TILES];
+ };
+ 
+ #define MSM_ACCESSOR(name) \
+@@ -882,11 +887,31 @@ static int msm_gpio_irq_set_type(struct irq_data *d, unsigned int type)
+ 	else
+ 		clear_bit(d->hwirq, pctrl->dual_edge_irqs);
+ 
+-	/* Route interrupts to application cpu */
+-	val = msm_readl_intr_target(pctrl, g);
+-	val &= ~(7 << g->intr_target_bit);
+-	val |= g->intr_target_kpss_val << g->intr_target_bit;
+-	msm_writel_intr_target(val, pctrl, g);
++	/* Route interrupts to application cpu.
++	 * With intr_target_use_scm interrupts are routed to
++	 * application cpu using scm calls.
++	 */
++	if (pctrl->intr_target_use_scm) {
++		u32 addr = pctrl->phys_base[0] + g->intr_target_reg;
++		int ret;
++
++		qcom_scm_io_readl(addr, &val);
++
++		val &= ~(7 << g->intr_target_bit);
++		val |= g->intr_target_kpss_val << g->intr_target_bit;
++
++		ret = qcom_scm_io_writel(addr, val);
++		if (ret)
++			dev_err(pctrl->dev,
++				"Failed routing %lu interrupt to Apps proc",
++				d->hwirq);
 +		}
++	} else {
++		val = msm_readl_intr_target(pctrl, g);
++		val &= ~(7 << g->intr_target_bit);
++		val |= g->intr_target_kpss_val << g->intr_target_bit;
++		msm_writel_intr_target(val, pctrl, g);
 +	}
-+	raw_spin_unlock_irq(&p->pi_lock);
-+	return ret;
-+}
+ 
+ 	/* Update configuration for gpio.
+ 	 * RAW_STATUS_EN is left on for all gpio irqs. Due to the
+@@ -1241,6 +1266,9 @@ int msm_pinctrl_probe(struct platform_device *pdev,
+ 	pctrl->dev = &pdev->dev;
+ 	pctrl->soc = soc_data;
+ 	pctrl->chip = msm_gpio_template;
++	pctrl->intr_target_use_scm = of_device_is_compatible(
++					pctrl->dev->of_node,
++					"qcom,ipq8064-pinctrl");
+ 
+ 	raw_spin_lock_init(&pctrl->lock);
+ 
+@@ -1253,9 +1280,12 @@ int msm_pinctrl_probe(struct platform_device *pdev,
+ 				return PTR_ERR(pctrl->regs[i]);
+ 		}
+ 	} else {
+-		pctrl->regs[0] = devm_platform_ioremap_resource(pdev, 0);
++		res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
++		pctrl->regs[0] = devm_ioremap_resource(&pdev->dev, res);
+ 		if (IS_ERR(pctrl->regs[0]))
+ 			return PTR_ERR(pctrl->regs[0]);
 +
-+/**
-  * wake_up_process - Wake up a specific process
-  * @p: The process to be woken up.
-  *
++		pctrl->phys_base[0] = res->start;
+ 	}
+ 
+ 	msm_pinctrl_setup_pm_reset(pctrl);
 -- 
-2.9.5
+2.25.1
 
