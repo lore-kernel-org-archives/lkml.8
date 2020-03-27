@@ -2,90 +2,82 @@ Return-Path: <SRS0=s8dx=5M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7E9DC2D0F3
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 01:30:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ECC43C2D0EF
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 01:30:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7EFB720787
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 01:30:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HuWKfMMp"
+	by mail.kernel.org (Postfix) with ESMTP id B62D420787
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 01:30:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727851AbgC0B22 (ORCPT
+        id S1727826AbgC0B2F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 21:28:28 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:45680 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727696AbgC0B22 (ORCPT
+        Thu, 26 Mar 2020 21:28:05 -0400
+Received: from mail-io1-f69.google.com ([209.85.166.69]:51172 "EHLO
+        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727560AbgC0B2E (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 21:28:28 -0400
-Received: by mail-pg1-f193.google.com with SMTP id o26so3792831pgc.12;
-        Thu, 26 Mar 2020 18:28:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=tU4XA8irroYMzripT/awkGxqg4KUUGMF4aMQNnVQrEc=;
-        b=HuWKfMMp13GcvvShQD4GZ6Lo/bkghLBF2++b2dcgInZA0LVD1yZomRML9odZu51CAT
-         SZVFC57nqCpJ/AuVM4cMjWqK6bI/J3lnQ3y7frAGxd2Cbntuc9JjmZlmnSKoRnS0VyM/
-         nnk5K9g1ol4aEg8UXyI+K+yqnJnhikQ/JHkQaVZKBzpMVe8f0wEyslwaw7bWB2X1Cv+f
-         k3cjIwyBLJz4kuYrQzuUs04aESGP1e0D+GKTTS+oxVGd4e/nttc+DsyXcrBO0mYSDAvZ
-         hLevwAPRd7okUy6LT0Ocn9XxsXsIRhuiR35/g8F/IGYE73uwOycfLvPXzt3DqOGetry1
-         t9Lg==
+        Thu, 26 Mar 2020 21:28:04 -0400
+Received: by mail-io1-f69.google.com with SMTP id s2so7067358iot.17
+        for <linux-kernel@vger.kernel.org>; Thu, 26 Mar 2020 18:28:04 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=tU4XA8irroYMzripT/awkGxqg4KUUGMF4aMQNnVQrEc=;
-        b=Egw8WQbFKGQVbwcc3aTofml9mZZIQc1R0uZ5U+bWi2dreHnas57fzotN2dpO5eJD84
-         ryErC7Oqjg4RHGyY6aDVcnWGvtWroMbv4B55qLAhsLvobbQCi5extAbVBkDCwTMNsU1o
-         MkIMr1I0b07OCdz9NU3c19ZC0/mYhorfm79OSsP51G/QIdek+32CqIKzQOxSUHohD3qY
-         YkP1P1hTAZojqtDGyUxrhu5PGnCfO4zd8FPqQJb4aiCQ7leZ2/hSW7GUYqFbjYZO0Bb4
-         gSmHkoSCSIHX9r6LEIGt097KPRa45fBVDA34yU8WDblo67pN1wApZ47SToutHgH+AcLI
-         SIVg==
-X-Gm-Message-State: ANhLgQ1PoCL8nriWz8UmILACoF1d4/h6+jGwwYCkIxztizwk/21Lis4N
-        J3miTmuUlZNhCW9fVd9WssA=
-X-Google-Smtp-Source: ADFU+vvbJ14huQcPZe5YKPn+wUwRWgJM6wzrP5DkgRQsjFgr5CroWbeCJn+kp820/djlDMuzK9TdhA==
-X-Received: by 2002:aa7:87c1:: with SMTP id i1mr11486026pfo.44.1585272507083;
-        Thu, 26 Mar 2020 18:28:27 -0700 (PDT)
-Received: from localhost (c-73-241-114-122.hsd1.ca.comcast.net. [73.241.114.122])
-        by smtp.gmail.com with ESMTPSA id e6sm2649643pgu.44.2020.03.26.18.28.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 26 Mar 2020 18:28:26 -0700 (PDT)
-Date:   Thu, 26 Mar 2020 18:28:24 -0700
-From:   Richard Cochran <richardcochran@gmail.com>
-To:     Grygorii Strashko <grygorii.strashko@ti.com>
-Cc:     "David S . Miller" <davem@davemloft.net>,
-        Lokesh Vutla <lokeshvutla@ti.com>,
-        Tony Lindgren <tony@atomide.com>, Sekhar Nori <nsekhar@ti.com>,
-        Murali Karicheri <m-karicheri2@ti.com>,
-        netdev <netdev@vger.kernel.org>, linux-omap@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next v3 07/11] net: ethernet: ti: cpts: rework locking
-Message-ID: <20200327012824.GB9677@localhost>
-References: <20200320194244.4703-1-grygorii.strashko@ti.com>
- <20200320194244.4703-8-grygorii.strashko@ti.com>
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=fpOoO95ghuCLLCEIiKHNf1Vn4Rzo9M55/w0gJcRUpiM=;
+        b=LbhPRqVa/W5TYtBTr3FZvvIXEhYLI1uA660HUfr/OPSRU1ELxUbEILOXhsnn2C5YCr
+         PFojmyBJZ6RZlwxXZgAl+yCQ/wxIImPlM55TIR9/q/J5SCR+abNPBNA4zah6yZmikE5D
+         jUOXtMBWEbPvmRx04OQq8C2m0DsQqSuKCcv7roZznXYtEtFr+VbYik1KevMWgRALlwdu
+         s6ZGWTCh6/hcZS7FpeeK6Yr9SunxAsq48+wx3nGubZ19fmplgI9wFUx7l6sGME72rLXz
+         gEhmtWrfUDJWafkg+08lLGWtkWcS1uMhhAYvRluZJHmkBRBghmQUqoWUvveLemoAGn9i
+         dKpA==
+X-Gm-Message-State: ANhLgQ3dtppatSkZ44Yvtx7EmUkfK5zkoX+/9oKwHySPPFfkpyjAZwb+
+        T18l52AFVVc4XWH7r9YiA9qDYmhS6MVS4e9xmFTzHvSA5mfy
+X-Google-Smtp-Source: ADFU+vvuj9CdqnaKA39zoipe43VtYnqnycnu6XYDRVQ3pQdtkCj1GJ/YWcoFF34sHC9pd58juZJvz3MqwN724aP7IdgdRuetL7J1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200320194244.4703-8-grygorii.strashko@ti.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Received: by 2002:a92:9107:: with SMTP id t7mr11623063ild.140.1585272483961;
+ Thu, 26 Mar 2020 18:28:03 -0700 (PDT)
+Date:   Thu, 26 Mar 2020 18:28:03 -0700
+In-Reply-To: <00000000000047770d05a1c70ecb@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000004760b805a1cc03fc@google.com>
+Subject: Re: KASAN: null-ptr-deref Write in blk_mq_map_swqueue
+From:   syzbot <syzbot+313d95e8a7a49263f88d@syzkaller.appspotmail.com>
+To:     a@unstable.cc, axboe@kernel.dk, b.a.t.m.a.n@lists.open-mesh.org,
+        davem@davemloft.net, dongli.zhang@oracle.com,
+        linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mareklindner@neomailbox.ch,
+        netdev@vger.kernel.org, sven@narfation.org, sw@simonwunderlich.de,
+        syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 20, 2020 at 09:42:40PM +0200, Grygorii Strashko wrote:
-> Now spinlock is used to synchronize everything which is not required. Add
-> mutex and use to sync access to PTP interface and PTP worker and use
-> spinlock only to sync FIFO/events processing.
+syzbot has bisected this bug to:
 
-If you haven't already, I suggest testing this change with lockdep
-enabled.
+commit 768134d4f48109b90f4248feecbeeb7d684e410c
+Author: Jens Axboe <axboe@kernel.dk>
+Date:   Mon Nov 11 03:30:53 2019 +0000
 
-Thanks,
-Richard
+    io_uring: don't do flush cancel under inflight_lock
+
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=14233ef5e00000
+start commit:   1b649e0b Merge git://git.kernel.org/pub/scm/linux/kernel/g..
+git tree:       upstream
+final crash:    https://syzkaller.appspot.com/x/report.txt?x=16233ef5e00000
+console output: https://syzkaller.appspot.com/x/log.txt?x=12233ef5e00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=27392dd2975fd692
+dashboard link: https://syzkaller.appspot.com/bug?extid=313d95e8a7a49263f88d
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=13850447e00000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=119a26f5e00000
+
+Reported-by: syzbot+313d95e8a7a49263f88d@syzkaller.appspotmail.com
+Fixes: 768134d4f481 ("io_uring: don't do flush cancel under inflight_lock")
+
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
