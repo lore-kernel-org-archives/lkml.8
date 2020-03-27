@@ -2,119 +2,173 @@ Return-Path: <SRS0=s8dx=5M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41278C43331
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 07:56:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D38D2C43331
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 07:59:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E13D220705
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 07:56:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A420D206F2
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 07:59:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ryfx4Hft"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="PH8Cpe40"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726920AbgC0H4E (ORCPT
+        id S1726266AbgC0H7Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Mar 2020 03:56:04 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:33524 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725946AbgC0H4E (ORCPT
+        Fri, 27 Mar 2020 03:59:25 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:51658 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726106AbgC0H7Z (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Mar 2020 03:56:04 -0400
-Received: by mail-ed1-f68.google.com with SMTP id z65so10039687ede.0;
-        Fri, 27 Mar 2020 00:56:02 -0700 (PDT)
+        Fri, 27 Mar 2020 03:59:25 -0400
+Received: by mail-wm1-f68.google.com with SMTP id c187so10480462wme.1
+        for <linux-kernel@vger.kernel.org>; Fri, 27 Mar 2020 00:59:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=DOngrTjBMh1Wy5Q62zykbp/GEp/RVLEjSOAHb9wDE0c=;
-        b=ryfx4Hftnscsun3x0YRsp74LdqQiGv/vq2nUpom1Hz3IuxiKxC61rgDIm13OxGkthi
-         y1mIStVSphXp5/D8Dsk9k2T0tHZLc374B8qvpNTwvxhpmieYSLwjv1P7wD4iDN126CAj
-         KIXpaTHgVAq/+9kLhFyYBYMBpq1oEOClAiZERxUYwhfipTk0XlFHnOjj+CWczNIA8JQf
-         BOwWhdjL+Gjm6ScPcPyL2HjiL93loKaKQX8ZlQf8lgFXMxXpTFRDEAxd82euJGCEw3lY
-         xARqvWx2jaQ6hZiLQvkQoei6YvSBLT6kjGl1xX1ugQixeCZ8oGJb5J51IZenKRukYsrb
-         nt5Q==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=A3SXt9hKtlX1+t84Pw/hXlXdpS45L5XvfwgDMGD8Nko=;
+        b=PH8Cpe40EpSF7HB9AKeXxzJ1+XtwHVysz14bHbN16e+oAMowvX590ARQroH633UNUx
+         f+rXTFoH9FEkJAs7AxlbINo7Io1KUh/QFsEU8hRJ9UckHHvOyK7uT0gnRWIn3lTqIZY4
+         VszUzEF1c3iVwZtq8xr/Rt/1h927SDlUfEc3OYlTsKwkk+jjDeGWQGxXLmy6eLqf4h36
+         lsPty8cviKyEar+HtlgyOxKTG96MgoiP5Z5fmuckNar2L1b07WKA6JgNmp3TVlz0JHUy
+         MrUeIChjLJzTnqWcwr7loYjzbUPin3CRt93ie1JeIhqrWzu9HH6lGKmZfzWobXn9Sobi
+         rl0w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=DOngrTjBMh1Wy5Q62zykbp/GEp/RVLEjSOAHb9wDE0c=;
-        b=Ltg3u/CBwMhn8tsAqThcenad04eYruJtGRzow3Cb/hfQUrjfvATvcCG7R3LfXhc+QS
-         edULvuRsgXoo7xsb6zq9401Gd3ORdsnJGBV6L/Nn4oZ5n2VU45uZ3M4DQkLE4QKX/hXO
-         wCcRo2kyMKSqF16m6Bwczq1rkkqhQ1tP5xrC+8hYMgOtWjb+f5afe2fBoQ0nRMM/0KHE
-         XU8e1Mv7A0BsjNx00nD55Tzb3lTbGTII30NaBA58+KXSvWLlrsWISKTvP0oAFJO1kFB5
-         2PO+vKDRzlkxxQ+VulsEFhiEfRwqWBfrhU0jfnE0rssZmT2JpQ4hzB6sWtXG5Eo8omO3
-         32LQ==
-X-Gm-Message-State: ANhLgQ10r9f7vuaSuR6U/YylTf0sRL4rnmjUldUkWgA+pAeLphYBiGHL
-        cOebi/Z71kd1tcwB5oG8e38=
-X-Google-Smtp-Source: ADFU+vstx/W2tBPN+4MRXuf6ruZaoVkf6YjvrW6OBAO9GSINxibsBVs6wEpuM49d+z3UubAGouAUTA==
-X-Received: by 2002:a50:bb47:: with SMTP id y65mr9666906ede.204.1585295761754;
-        Fri, 27 Mar 2020 00:56:01 -0700 (PDT)
-Received: from localhost.localdomain (163.239.197.178.dynamic.wless.lssmb00p-cgnat.res.cust.swisscom.ch. [178.197.239.163])
-        by smtp.googlemail.com with ESMTPSA id b11sm718149edj.20.2020.03.27.00.56.00
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 27 Mar 2020 00:56:01 -0700 (PDT)
-From:   Jean-Philippe Menil <jpmenil@gmail.com>
-To:     alexei.starovoitov@gmail.com
-Cc:     kernel-janitors@vger.kernel.org, jpmenil@gmail.com,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>, netdev@vger.kernel.org,
-        bpf@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v3] bpf: fix build warning - missing prototype
-Date:   Fri, 27 Mar 2020 08:55:44 +0100
-Message-Id: <20200327075544.22814-1-jpmenil@gmail.com>
-X-Mailer: git-send-email 2.26.0
-In-Reply-To: <20200326235426.ei6ae2z5ek6uq3tt@ast-mbp>
-References: <20200326235426.ei6ae2z5ek6uq3tt@ast-mbp>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=A3SXt9hKtlX1+t84Pw/hXlXdpS45L5XvfwgDMGD8Nko=;
+        b=Ml1j8/Dcp1U/jY2bbE2uSFqASY5OYUnZq7H181Q5dkJK1omyfj57HVbvSCoFu1i6N6
+         6PcKbXvJQcZymKOPt8X4d4+Oywgl0GRJZIUqLZqUuyeWQJmQ+e+QldFSOJIc+faYrPk4
+         iyMCyQKsF+QF7Mfv5GUrC41fHj+BmVoN8hVSUa9G9wTL3EdaerG0iwCw1cQPDsdSOl0z
+         DzhdHkEQhxf8VxceMiMEfdOv6MrfU0ZRQ8oUb7KDqmMjh3MaCNq80Z2Ugy1b/ZMfRK2D
+         8UsWfx4J7tSGSpSXPuzx12N5pU1iOFMEnnO3IBF6YOFv5t8/DrOxN+2LK43D6sA9CHhx
+         8Y4w==
+X-Gm-Message-State: ANhLgQ1dk8ECWWHiW4ldFoyHESg/0qf0eAIAKnEFvEEs6zNAJuWVWF4N
+        BmW1ahg7mq4Ko2W66PHBpHBHZQ==
+X-Google-Smtp-Source: ADFU+vtuAAzt17YyAL9hR5KUBg7fm4k5jzYFnkXge0vitnHvBL5WZM5ArdCdYWMQtFG71oW2werRfw==
+X-Received: by 2002:a7b:ca52:: with SMTP id m18mr3951832wml.156.1585295963787;
+        Fri, 27 Mar 2020 00:59:23 -0700 (PDT)
+Received: from dell ([95.149.164.95])
+        by smtp.gmail.com with ESMTPSA id o9sm7378769wrx.48.2020.03.27.00.59.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 27 Mar 2020 00:59:22 -0700 (PDT)
+Date:   Fri, 27 Mar 2020 08:00:13 +0000
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Saravanan Sekar <sravanhome@gmail.com>
+Cc:     robh+dt@kernel.org, jic23@kernel.org, knaack.h@gmx.de,
+        lars@metafoo.de, pmeerw@pmeerw.net, sre@kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-iio@vger.kernel.org, linux-pm@vger.kernel.org
+Subject: Re: [PATCH v4 1/5] dt-bindings: mfd: add document bindings for mp2629
+Message-ID: <20200327080013.GG603801@dell>
+References: <20200322224626.13160-1-sravanhome@gmail.com>
+ <20200322224626.13160-2-sravanhome@gmail.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200322224626.13160-2-sravanhome@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix build warnings when building net/bpf/test_run.o with W=1 due
-to missing prototype for bpf_fentry_test{1..6}.
+On Sun, 22 Mar 2020, Saravanan Sekar wrote:
 
-Instead of declaring prototypes, turn off warnings with
-__diag_{push,ignore,pop} as pointed by Alexei.
+> Add device tree binding information for mp2629 mfd driver.
+> 
+> Signed-off-by: Saravanan Sekar <sravanhome@gmail.com>
+> ---
+>  .../devicetree/bindings/mfd/mps,mp2629.yaml   | 60 +++++++++++++++++++
+>  1 file changed, 60 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mfd/mps,mp2629.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/mfd/mps,mp2629.yaml b/Documentation/devicetree/bindings/mfd/mps,mp2629.yaml
+> new file mode 100644
+> index 000000000000..314309ea91ac
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mfd/mps,mp2629.yaml
+> @@ -0,0 +1,60 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/mfd/mps,mp2629.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
 
-Signed-off-by: Jean-Philippe Menil <jpmenil@gmail.com>
----
- net/bpf/test_run.c | 5 +++++
- 1 file changed, 5 insertions(+)
+Are these links supposed to work?
 
-diff --git a/net/bpf/test_run.c b/net/bpf/test_run.c
-index d555c0d8657d..cc1592413fc3 100644
---- a/net/bpf/test_run.c
-+++ b/net/bpf/test_run.c
-@@ -113,6 +113,9 @@ static int bpf_test_finish(const union bpf_attr *kattr,
-  * architecture dependent calling conventions. 7+ can be supported in the
-  * future.
-  */
-+__diag_push();
-+__diag_ignore(GCC, 8, "-Wmissing-prototypes",
-+	      "Global functions as their definitions will be in vmlinux BTF);
- int noinline bpf_fentry_test1(int a)
- {
- 	return a + 1;
-@@ -143,6 +146,8 @@ int noinline bpf_fentry_test6(u64 a, void *b, short c, int d, void *e, u64 f)
- 	return a + (long)b + c + d + (long)e + f;
- }
- 
-+__diag_pop();
-+
- static void *bpf_test_init(const union bpf_attr *kattr, u32 size,
- 			   u32 headroom, u32 tailroom)
- {
+> +title: MP2629 Battery Charger PMIC from Monolithic Power System.
+> +
+> +maintainers:
+> +  - Saravanan Sekar <sravanhome@gmail.com>
+> +
+> +description: |
+> +  MP2629 is an PMIC providing battery charging and power supply for smartphones,
+
+s/an/a/
+
+> +  wireless camera and portable devices. Chip is contrlled over I2C.
+
+Spell check!
+
+> +  The MFD device handles battery charger controller and ADC IIO device for
+> +  battery, system voltage
+
+MFD isn't a thing.  We made it up.  Please describe it as it is in the datasheet.
+
+> +properties:
+> +  compatible:
+> +    const: mps,mp2629
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +
+> +  interrupt-controller: true
+> +
+> +  "#interrupt-cells":
+> +    const: 2
+> +    description:
+> +      The first cell is the IRQ number, the second cell is the trigger type.
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - interrupts
+> +  - interrupt-controller
+> +  - "#interrupt-cells"
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/interrupt-controller/irq.h>
+> +    #include <dt-bindings/input/linux-event-codes.h>
+> +    i2c {
+
+i2c@0x????????
+
+> +        #address-cells = <1>;
+> +        #size-cells = <0>;
+> +
+> +        pmic@4b {
+> +            compatible = "mps,mp2629";
+> +            reg = <0x4b>;
+> +
+> +            interrupt-controller;
+> +            interrupt-parent = <&gpio2>;
+> +            #interrupt-cells = <2>;
+> +            interrupts = <3 IRQ_TYPE_LEVEL_HIGH>;
+> +        };
+> +    };
+
 -- 
-2.26.0
-
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
