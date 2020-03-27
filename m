@@ -2,97 +2,96 @@ Return-Path: <SRS0=s8dx=5M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 542ADC43331
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 03:33:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E8FAC43331
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 03:42:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 25BEB206DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 03:33:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="k/l+7EzR"
+	by mail.kernel.org (Postfix) with ESMTP id D3DA4206DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 03:42:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585280562;
+	bh=8u34eHWKBNx2JeO3g+EeJRwg0fp1Cp5/JoqbagZs+ik=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=tVrFri8Xhrzp9pgvk5bV989WdJvWcYydZ6q4r5h4eWGKbM/2WRaAL62nQuMVnOwDc
+	 uPxeWxPCNYC1kYhPRxlQ0/cN0MsYv3y7LGw7Kyb7GxaHX3/W3BCTw8D6Vr7kEz0PQU
+	 VzuEUgD/dfxDrzxWNShtdusYOpRkQDEIKlHfchX0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727703AbgC0Dc2 (ORCPT
+        id S1727702AbgC0Dml (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 23:32:28 -0400
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:38839 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727611AbgC0Dc1 (ORCPT
+        Thu, 26 Mar 2020 23:42:41 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:34980 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727509AbgC0Dml (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 23:32:27 -0400
-Received: by mail-qt1-f193.google.com with SMTP id z12so7533556qtq.5
-        for <linux-kernel@vger.kernel.org>; Thu, 26 Mar 2020 20:32:26 -0700 (PDT)
+        Thu, 26 Mar 2020 23:42:41 -0400
+Received: by mail-lj1-f195.google.com with SMTP id k21so8795955ljh.2
+        for <linux-kernel@vger.kernel.org>; Thu, 26 Mar 2020 20:42:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=r71azbnhZkfrbX5EBuBZs+Z142rnXfAai7VBmmvucRQ=;
-        b=k/l+7EzRvmXCev0yuQZ0c5mJXHjOLfvHQv5AbXX/oUQO+o9lT3gePYJcarWNlmcpCv
-         ClHFnZTbq4sfmSoo8TOlCB6tzUEW7P/5gEYXFW/YRX3Pkssb9HoAXHR4MzQS6h3cMcRV
-         nsx+2eXk4NImybe1UdIJbSYaSvypRWxcmZktI=
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=HIuSTObh7u09sifP9kfA0TVRhLTjLKAawBNoUe2zMHE=;
+        b=chenvtZL+Yxk5qS9Zfu5Vwb+nwNV5m1yqdKYF1CAdtQATbaS1Ct73A1/uBf8JlrXoi
+         JAqlbyc6kaqstdZVVtvXHAjCrbSLKYFO2D0lKo6netGufJ7fJ918bK08oGZC6ZhVq42V
+         bSwCF/SxhsBKLoOkSbaVx+Qaly0e452BSugwI=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=r71azbnhZkfrbX5EBuBZs+Z142rnXfAai7VBmmvucRQ=;
-        b=ftOFaVjuxW1AoQXyyuIBS/jRINyfj5NwTPJ6tCJ4oqE1HYXUfS7o9Wjyu9Q5yDwX2i
-         yRsFmYQZ21jaVSLMeN7fL9mjZSVXgNLL/h89/LNmrZsJZdztryzJJEbQ3wsSsGj7yw0o
-         UDfnBS9i6vrKQkphOT8i4zc4uDhusMpyfG6mcYG599XmtnOJs89HOyBQ4VR+CDf0j0Cc
-         agCHAUbgeNegq7mtyOOF/SKy3NRVG5AjcM1K1rK4a7RVw6SFtMjEHz5LmBhdb8Vd2YBO
-         6MJ0YUlj1gtP1QYdgZxDQkPxyhOC7fPoZf/YCnRnfNcUGaHfzCKjLPgzcvNC9qp9+PeU
-         oJkA==
-X-Gm-Message-State: ANhLgQ2bzeI1Ew4b9rAYLxO8Ian3aXnaOliP7lkV5wj8tvVJLAhfTwmh
-        xVyYWunuxhHDi2MyoQIw5va13A==
-X-Google-Smtp-Source: ADFU+vsTzsOQvgZZdj5qStX5c0xxObyeCKI3NnnQb0WpT0KdNeU7rXLEYJh4618T/wuDQOBRiFznkQ==
-X-Received: by 2002:ac8:1b46:: with SMTP id p6mr12221767qtk.369.1585279946428;
-        Thu, 26 Mar 2020 20:32:26 -0700 (PDT)
-Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
-        by smtp.gmail.com with ESMTPSA id 199sm2629376qkm.7.2020.03.26.20.32.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 26 Mar 2020 20:32:25 -0700 (PDT)
-Date:   Thu, 26 Mar 2020 23:32:25 -0400
-From:   Joel Fernandes <joel@joelfernandes.org>
-To:     Waiman Long <longman@redhat.com>
-Cc:     Tejun Heo <tj@kernel.org>, Sonny Rao <sonnyrao@google.com>,
-        linux-kernel@vger.kernel.org, Dmitry Shmidt <dimitrysh@google.com>,
-        Amit Pundir <amit.pundir@linaro.org>, kernel-team@android.com,
-        Jesse Barnes <jsbarnes@google.com>, vpillai@digitalocean.com,
-        Peter Zijlstra <peterz@infradead.org>,
-        Guenter Roeck <groeck@chromium.org>,
-        Greg Kerr <kerrnel@google.com>, cgroups@vger.kernel.org,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Li Zefan <lizefan@huawei.com>
-Subject: Re: [PATCH RFC] cpuset: Make cpusets get restored on hotplug
-Message-ID: <20200327033225.GA250520@google.com>
-References: <20200326191623.129285-1-joel@joelfernandes.org>
- <20200326192035.GO162390@mtj.duckdns.org>
- <20200326194448.GA133524@google.com>
- <972a5c1b-6721-ac20-cec5-617af67e617d@redhat.com>
- <CAPz6YkVUsDz456z8-X2G_EDd-uet1rRNnh2sDUpdcoWp_fkDDw@mail.gmail.com>
- <20200326201649.GQ162390@mtj.duckdns.org>
- <20200326202340.GA146657@google.com>
- <592d4120-0b42-4607-5efd-fb2d4d29f0cc@redhat.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=HIuSTObh7u09sifP9kfA0TVRhLTjLKAawBNoUe2zMHE=;
+        b=Msa3/4pvtcFQIbfyQByzq3kDBVSwpRJ9B6vHIkuVxKCFhZyCJVMBZhSlB98X74O5Ss
+         KbDc0/rB5T2RqBPxFkQno9Xj85Tb03O+SIm+MihxaLkrw101BtBNNXcfSMD3YIXALkzx
+         m0z7QFm4oS6HFHM6NfdMp3jVCBj1blgcRZUTjpeS7SXncT1V3hWDTIZiDFEHUulic6nM
+         YIvJiqaDe3L1hrXTEjbTMTM8mzhmMOliKTdZgpZFX8q0dfnacvLkyxLF9YIvYVntJ/rO
+         MUuzgrvWFILfTopuYGd1huQ+UIGFVyYsbMHYemDlhBYRxyGW+2MduaNoxBmLTm8wxt3n
+         AeDw==
+X-Gm-Message-State: AGi0Pubkh15n159Eew7jdRDDcOaPQKZIiKVmGPfaZVtZFpOYj9KGYhFy
+        ati1UM1jlRbH7CvK1umSqaaaJkq/w2M=
+X-Google-Smtp-Source: APiQypJGW1CI8WCdoKb1HD/8wQHi0MMyiMZEQea4JwwZaF21rAXdplB/QV4uAIU5LkiElKnfu7ntZA==
+X-Received: by 2002:a2e:9681:: with SMTP id q1mr7574804lji.179.1585280558622;
+        Thu, 26 Mar 2020 20:42:38 -0700 (PDT)
+Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com. [209.85.208.175])
+        by smtp.gmail.com with ESMTPSA id q10sm2404406lfa.29.2020.03.26.20.42.37
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 26 Mar 2020 20:42:37 -0700 (PDT)
+Received: by mail-lj1-f175.google.com with SMTP id n17so8769572lji.8
+        for <linux-kernel@vger.kernel.org>; Thu, 26 Mar 2020 20:42:37 -0700 (PDT)
+X-Received: by 2002:a2e:7c1a:: with SMTP id x26mr5825891ljc.209.1585280557026;
+ Thu, 26 Mar 2020 20:42:37 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <592d4120-0b42-4607-5efd-fb2d4d29f0cc@redhat.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+References: <20200323185057.GE23230@ZenIV.linux.org.uk> <20200323185127.252501-1-viro@ZenIV.linux.org.uk>
+ <20200323185127.252501-5-viro@ZenIV.linux.org.uk> <CAHk-=wgMmmnQTFT7U9+q2BsyV6Ge+LAnnhPmv0SUtFBV1D4tVw@mail.gmail.com>
+ <20200324020846.GG23230@ZenIV.linux.org.uk> <CAHk-=whTwaUZZ5Aj_Viapf2tdvcd65WdM4jjXJ3tdOTDmgkW0g@mail.gmail.com>
+ <20200324204246.GH23230@ZenIV.linux.org.uk> <CAHk-=whnTRF5yA2MrPGcmMm=hXaGHfC2HEDtNzA=_1=szhJ4-w@mail.gmail.com>
+ <20200327024227.GT23230@ZenIV.linux.org.uk>
+In-Reply-To: <20200327024227.GT23230@ZenIV.linux.org.uk>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Thu, 26 Mar 2020 20:42:21 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wjn9Ohb7TW3OxaS0MTURi=boXzk=0Lo0WT-pN2CPE9PzA@mail.gmail.com>
+Message-ID: <CAHk-=wjn9Ohb7TW3OxaS0MTURi=boXzk=0Lo0WT-pN2CPE9PzA@mail.gmail.com>
+Subject: Re: [RFC][PATCH 5/7] x86: convert arch_futex_atomic_op_inuser() to user_access_begin/user_access_end()
+To:     Al Viro <viro@zeniv.linux.org.uk>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 26, 2020 at 09:26:51PM -0400, Waiman Long wrote:
-[...]
-> I think the problem is that the v2_mode mount option is not that well
-> documented. Maybe I should send a patch to add some some description
-> about it in cgroup-v2.rst or cgroup-v1/cpusets.rst.
+Your threads are really hard to follow when you reply to an email in
+the middle of the previous series and make that reply be the cover
+letter for the next one.
 
-That is definitely worth it and I would fully support that.
+Anyway, apart from the problem with the futex series that I replied
+to, I don't see anything wrong.
 
-thanks,
+I will not boot with both series applied in a test-tree.
 
- - Joel
+Wish me luck.
 
+           Linus
