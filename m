@@ -2,27 +2,27 @@ Return-Path: <SRS0=s8dx=5M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7EDAC2D0E8
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 09:27:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24A00C43331
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 09:27:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A8A4120716
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 09:27:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 04A8420705
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 09:27:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726360AbgC0J1J (ORCPT
+        id S1726656AbgC0J1M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Mar 2020 05:27:09 -0400
-Received: from ZXSHCAS1.zhaoxin.com ([203.148.12.81]:56565 "EHLO
-        ZXSHCAS1.zhaoxin.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725946AbgC0J1J (ORCPT
+        Fri, 27 Mar 2020 05:27:12 -0400
+Received: from ZXSHCAS2.zhaoxin.com ([203.148.12.82]:20769 "EHLO
+        ZXSHCAS2.zhaoxin.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726002AbgC0J1K (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Mar 2020 05:27:09 -0400
-X-Greylist: delayed 906 seconds by postgrey-1.27 at vger.kernel.org; Fri, 27 Mar 2020 05:27:07 EDT
-Received: from zxbjmbx1.zhaoxin.com (10.29.252.163) by ZXSHCAS1.zhaoxin.com
- (10.28.252.161) with Microsoft SMTP Server (version=TLS1_2,
+        Fri, 27 Mar 2020 05:27:10 -0400
+Received: from zxbjmbx1.zhaoxin.com (10.29.252.163) by ZXSHCAS2.zhaoxin.com
+ (10.28.252.162) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1261.35; Fri, 27 Mar
  2020 17:11:56 +0800
 Received: from raymond-pc.zhaoxin.com (10.29.28.62) by zxbjmbx1.zhaoxin.com
@@ -32,10 +32,12 @@ Received: from raymond-pc.zhaoxin.com (10.29.28.62) by zxbjmbx1.zhaoxin.com
 From:   Raymond Pang <RaymondPang-oc@zhaoxin.com>
 To:     <bhelgaas@google.com>, <linux-pci@vger.kernel.org>
 CC:     <TonyWWang-oc@zhaoxin.com>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH 0/3] Add ACS quirk for Zhaoxin
-Date:   Fri, 27 Mar 2020 17:11:45 +0800
-Message-ID: <20200327091148.5190-1-RaymondPang-oc@zhaoxin.com>
+Subject: [PATCH 1/3] PCI: Add Zhaoxin Vendor ID
+Date:   Fri, 27 Mar 2020 17:11:46 +0800
+Message-ID: <20200327091148.5190-2-RaymondPang-oc@zhaoxin.com>
 X-Mailer: git-send-email 2.26.0
+In-Reply-To: <20200327091148.5190-1-RaymondPang-oc@zhaoxin.com>
+References: <20200327091148.5190-1-RaymondPang-oc@zhaoxin.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7BIT
 Content-Type:   text/plain; charset=US-ASCII
@@ -47,20 +49,26 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Lots of Zhaoxin PCIe components have no ACS Capability Structure,
-but do have ACS-like capability which ensures DMA isolation.
-This patch makes isolated devices could be directly assigned to
-different VMs through IOMMU.
+Add Zhaoxin Vendor ID to pci_ids.h
 
-Raymond Pang (3):
-  PCI: Add Zhaoxin Vendor ID
-  PCI: Add ACS quirk for Zhaoxin's multi-function devices
-  PCI: Add ACS quirk for Root/Downstream Ports
+Signed-off-by: Raymond Pang <RaymondPang-oc@zhaoxin.com>
+---
+ include/linux/pci_ids.h | 2 ++
+ 1 file changed, 2 insertions(+)
 
- drivers/pci/quirks.c    | 30 ++++++++++++++++++++++++++++++
- include/linux/pci_ids.h |  2 ++
- 2 files changed, 32 insertions(+)
-
+diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
+index 352c0d708720..6693cf561cd1 100644
+--- a/include/linux/pci_ids.h
++++ b/include/linux/pci_ids.h
+@@ -2583,6 +2583,8 @@
+ 
+ #define PCI_VENDOR_ID_AMAZON		0x1d0f
+ 
++#define PCI_VENDOR_ID_ZHAOXIN		0x1d17
++
+ #define PCI_VENDOR_ID_HYGON		0x1d94
+ 
+ #define PCI_VENDOR_ID_HXT		0x1dbf
 -- 
 2.26.0
 
