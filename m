@@ -2,88 +2,162 @@ Return-Path: <SRS0=s8dx=5M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 014D5C2D0EE
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 20:30:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E699C2D0E5
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 20:33:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD906208FE
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 20:30:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 718892072F
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 20:33:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727772AbgC0UaY (ORCPT
+        id S1727607AbgC0Udm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Mar 2020 16:30:24 -0400
-Received: from mga12.intel.com ([192.55.52.136]:51291 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726710AbgC0UaX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Mar 2020 16:30:23 -0400
-IronPort-SDR: jl4H+99Y0Bz5VfCL4MWl8dmxy/DMvnBe3TSqSgwfWRNXTBneDiiOUX/oEffM4ONe2OJHDmjQio
- tBaVSc6WzKeQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Mar 2020 13:30:22 -0700
-IronPort-SDR: gjhrgaRikKuLGoRzuJ9UaElWS0LV9pvmGcVha6M6+TR3bU/xjcqEMa7TdBQZXP88kGb5biaEp6
- ihEToXScSNGQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,313,1580803200"; 
-   d="scan'208";a="358592663"
-Received: from gayuk-dev-mach.sc.intel.com ([10.3.79.171])
-  by fmsmga001.fm.intel.com with ESMTP; 27 Mar 2020 13:30:22 -0700
-From:   Gayatri Kammela <gayatri.kammela@intel.com>
-To:     linux-pm@vger.kernel.org
-Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
-        lenb@kernel.org, dvhart@infradead.org, alex.hung@canonical.com,
-        rui.zhang@intel.com, daniel.lezcano@linaro.org,
-        amit.kucheria@verdurent.com, mika.westerberg@intel.com,
-        peterz@infradead.org, charles.d.prestopine@intel.com,
-        Gayatri Kammela <gayatri.kammela@intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Srinivas Pandruvada <srinivas.pandruvada@intel.com>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>
-Subject: [PATCH v1 2/3] platform/x86: intel-hid: fix: Update Tiger Lake ACPI device ID
-Date:   Fri, 27 Mar 2020 13:24:53 -0700
-Message-Id: <76d9ea413ccd72fd080fc3bf60aa02e3556d5e70.1585335927.git.gayatri.kammela@intel.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <cover.1585335927.git.gayatri.kammela@intel.com>
-References: <cover.1585335927.git.gayatri.kammela@intel.com>
-In-Reply-To: <cover.1585335927.git.gayatri.kammela@intel.com>
-References: <cover.1585335927.git.gayatri.kammela@intel.com>
+        Fri, 27 Mar 2020 16:33:42 -0400
+Received: from lists.gateworks.com ([108.161.130.12]:43551 "EHLO
+        lists.gateworks.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727349AbgC0Udm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Mar 2020 16:33:42 -0400
+Received: from 68-189-91-139.static.snlo.ca.charter.com ([68.189.91.139] helo=tharvey.pdc.gateworks.com)
+        by lists.gateworks.com with esmtp (Exim 4.82)
+        (envelope-from <tharvey@gateworks.com>)
+        id 1jHvhE-0006P8-Cf; Fri, 27 Mar 2020 20:35:16 +0000
+From:   Tim Harvey <tharvey@gateworks.com>
+To:     Lee Jones <lee.jones@linaro.org>, Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        linux-hwmon@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Robert Jones <rjones@gateworks.com>
+Cc:     Tim Harvey <tharvey@gateworks.com>
+Subject: [PATCH v8 0/3] Add support for the Gateworks System Controller
+Date:   Fri, 27 Mar 2020 13:33:31 -0700
+Message-Id: <1585341214-25285-1-git-send-email-tharvey@gateworks.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Tiger Lake's new unique ACPI device IDs for intel-hid driver is not
-valid because of missing 'C' in the ID. Fix the ID by updating it.
+This series adds support for the Gateworks System Controller used on Gateworks
+Laguna, Ventana, and Newport product families.
 
-After the update, the new ID should now look like
-INT1051 --> INTC1051
+The GSC is an MSP430 I2C slave controller whose firmware embeds the following
+features:
+ - I/O expander (16 GPIO's emulating a PCA955x)
+ - EEPROM (enumating AT24)
+ - RTC (enumating DS1672)
+ - HWMON
+ - Interrupt controller with tamper detect, user pushbotton
+ - Watchdog controller capable of full board power-cycle
+ - Power Control capable of full board power-cycle
 
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Srinivas Pandruvada <srinivas.pandruvada@intel.com>
-Cc: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-Suggested-by: Srinivas Pandruvada <srinivas.pandruvada@intel.com>
-Signed-off-by: Gayatri Kammela <gayatri.kammela@intel.com>
+see http://trac.gateworks.com/wiki/gsc for more details
 ---
- drivers/platform/x86/intel-hid.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+v8:
+ - mfd: whitespace fixes
+ - mfd: describe sub-devices in Kconfig
+ - mfd: add error print for invalid command
+ - mfd: update copyright
+ - mfd: use devm_of_platform_populate
+ - mfd: use probe_new
+ - mfd: move hwmon's regmap init to hwmon
+ - hwmon: move hwmon's regmap init to hwmon
+ - dt-bindings: add register to fan-controller node name
 
-diff --git a/drivers/platform/x86/intel-hid.c b/drivers/platform/x86/intel-hid.c
-index 43d590250228..c0a4696803eb 100644
---- a/drivers/platform/x86/intel-hid.c
-+++ b/drivers/platform/x86/intel-hid.c
-@@ -19,7 +19,7 @@ MODULE_LICENSE("GPL");
- MODULE_AUTHOR("Alex Hung");
- 
- static const struct acpi_device_id intel_hid_ids[] = {
--	{"INT1051", 0},
-+	{"INTC1051", 0},
- 	{"INT33D5", 0},
- 	{"", 0},
- };
+v7:
+ - dt-bindings: change divider from mili-ohms to ohms
+ - dt-bindings: add constraints for voltage divider and offset
+ - dt-bindings: remove unnecessary ref for offset
+ - dt-bindings: renamed fan to fan-controller and changed base prop to reg
+ - mfd:  remove irq from private data struct
+ - hwmon: fix whitespace in Kconfig
+ - hwmon: remove unnecessary device pointer in private data
+ - hwmon: change divider from mili-ohms to ohms
+ - hwmon: move fan base property to reg
+
+v6:
+ - hwmon: fix size of info field
+ - hwmon: improve pwm output control documentation
+ - hwmon: include unit suffix in divider and offset
+ - hwmon: change subnode name to gsc-adc
+ - hwmon: change to fan subnode
+ - hwmon: fix voltage offset
+ - dt-bindings: fix commit message typo
+ - dt-bindings: drop invalid description from #interrupt-cells property
+ - dt-bindings: fix adc pattern property
+ - dt-bindings: add unit suffix
+ - dt-bindings: replace hwmon/adc with adc/channel
+ - dt-bindings: changed adc type to gw,mode
+ - dt-bindings: add unit suffix and drop ref for voltage-divider
+ - dt-bindings: add unit suffix for voltage-offset
+ - dt-bindings: moved fan to its own subnode with base register
+
+v5:
+ - fix checkpatch issues
+ - fix dt_binding_check issues
+ - address feedback from v4
+
+v4:
+ - hwmon: move to using pwm<n>_auto_point<m>_{pwm,temp} for FAN PWM
+ - hwmon: remove unncessary resolution/scaling properties for ADCs
+ - bindings: update to yaml Documentation
+ - removed watchdog driver
+
+v3:
+ - removed unnecessary input driver
+ - added wdt driver
+ - bindings: encorporated feedback from mailng list
+ - hwmon:
+ - encoroprated feedback from mailng list
+ - added support for raw ADC voltage input used in newer GSC firmware
+
+v2:
+ - change license comment block style
+ - remove COMPILE_TEST
+ - fixed whitespace issues
+ - replaced a printk with dev_err
+ - remove DEBUG
+ - simplify regmap_bulk_read err check
+ - remove break after returns in switch statement
+ - fix fan setpoint buffer address
+ - remove unnecessary parens
+ - consistently use struct device *dev pointer
+ - add validation for hwmon child node props
+ - move parsing of of to own function
+ - use strlcpy to ensure null termination
+ - fix static array sizes and removed unnecessary initializers
+ - dynamically allocate channels
+ - fix fan input label
+ - support platform data
+
+Tim Harvey (3):
+  dt-bindings: mfd: Add Gateworks System Controller bindings
+  mfd: add Gateworks System Controller core driver
+  hwmon: add Gateworks System Controller support
+
+ .../devicetree/bindings/mfd/gateworks-gsc.yaml     | 194 +++++++++++
+ Documentation/hwmon/gsc-hwmon.rst                  |  53 +++
+ Documentation/hwmon/index.rst                      |   1 +
+ MAINTAINERS                                        |  11 +
+ drivers/hwmon/Kconfig                              |   9 +
+ drivers/hwmon/Makefile                             |   1 +
+ drivers/hwmon/gsc-hwmon.c                          | 385 +++++++++++++++++++++
+ drivers/mfd/Kconfig                                |  10 +
+ drivers/mfd/Makefile                               |   1 +
+ drivers/mfd/gateworks-gsc.c                        | 288 +++++++++++++++
+ include/linux/mfd/gsc.h                            |  73 ++++
+ include/linux/platform_data/gsc_hwmon.h            |  44 +++
+ 12 files changed, 1070 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mfd/gateworks-gsc.yaml
+ create mode 100644 Documentation/hwmon/gsc-hwmon.rst
+ create mode 100644 drivers/hwmon/gsc-hwmon.c
+ create mode 100644 drivers/mfd/gateworks-gsc.c
+ create mode 100644 include/linux/mfd/gsc.h
+ create mode 100644 include/linux/platform_data/gsc_hwmon.h
+
 -- 
-2.17.1
+2.7.4
 
