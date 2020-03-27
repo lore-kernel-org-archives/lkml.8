@@ -2,174 +2,92 @@ Return-Path: <SRS0=s8dx=5M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84BC2C43331
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 10:23:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB312C2D0E7
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 10:23:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F92520717
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 10:23:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8226120705
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 10:23:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="txdKACCd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726379AbgC0KXC (ORCPT
+        id S1726698AbgC0KXH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Mar 2020 06:23:02 -0400
-Received: from mga02.intel.com ([134.134.136.20]:13029 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726002AbgC0KXC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Mar 2020 06:23:02 -0400
-IronPort-SDR: atyEV/cYMmLhPZT0F4O6Jn2cCIDe7n2tWRT1Lxs7xtn9HZvCH0rGYwK295fd5cLJ6qzZhxr7M1
- 8r5zhsiWxSHw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Mar 2020 03:23:00 -0700
-IronPort-SDR: 6ZN8f+bSxYAMu9n5uXSQWg/zn0EJ8O2Dk24TSu6QUUHM+CHiqTAqF6gVQsnp4iSOViWy3BPlji
- tjSbyEo3RLYA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,311,1580803200"; 
-   d="scan'208";a="271529243"
-Received: from fmsmsx105.amr.corp.intel.com ([10.18.124.203])
-  by fmsmga004.fm.intel.com with ESMTP; 27 Mar 2020 03:23:00 -0700
-Received: from fmsmsx161.amr.corp.intel.com (10.18.125.9) by
- FMSMSX105.amr.corp.intel.com (10.18.124.203) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Fri, 27 Mar 2020 03:23:00 -0700
-Received: from shsmsx105.ccr.corp.intel.com (10.239.4.158) by
- FMSMSX161.amr.corp.intel.com (10.18.125.9) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Fri, 27 Mar 2020 03:23:00 -0700
-Received: from shsmsx104.ccr.corp.intel.com ([169.254.5.206]) by
- SHSMSX105.ccr.corp.intel.com ([169.254.11.144]) with mapi id 14.03.0439.000;
- Fri, 27 Mar 2020 18:22:57 +0800
-From:   "Tian, Kevin" <kevin.tian@intel.com>
-To:     Jacob Pan <jacob.jun.pan@linux.intel.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Jean-Philippe Brucker <jean-philippe@linaro.com>
-CC:     "Raj, Ashok" <ashok.raj@intel.com>,
-        Jonathan Cameron <jic23@kernel.org>
-Subject: RE: [PATCH 10/10] iommu/vt-d: Register PASID notifier for status
- change
-Thread-Topic: [PATCH 10/10] iommu/vt-d: Register PASID notifier for status
- change
-Thread-Index: AQHWAs3LAsvpFGSvTECBwK8sBN6czqhcOe4w
-Date:   Fri, 27 Mar 2020 10:22:57 +0000
-Message-ID: <AADFC41AFE54684AB9EE6CBC0274A5D19D7ED65A@SHSMSX104.ccr.corp.intel.com>
-References: <1585158931-1825-1-git-send-email-jacob.jun.pan@linux.intel.com>
- <1585158931-1825-11-git-send-email-jacob.jun.pan@linux.intel.com>
-In-Reply-To: <1585158931-1825-11-git-send-email-jacob.jun.pan@linux.intel.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-dlp-product: dlpe-windows
-dlp-version: 11.2.0.6
-dlp-reaction: no-action
-x-originating-ip: [10.239.127.40]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Fri, 27 Mar 2020 06:23:07 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:35665 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726418AbgC0KXH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Mar 2020 06:23:07 -0400
+Received: by mail-lj1-f193.google.com with SMTP id k21so9632634ljh.2
+        for <linux-kernel@vger.kernel.org>; Fri, 27 Mar 2020 03:23:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=/6+qsGlY5ufaYGYSvfi6R/XdWdgiZnQOUmk027h++wY=;
+        b=txdKACCdM7XXYtTJw1Cpjkvm6oyL7atR/RjEVZa4sh+MYp1TgRoMuB4B04Q0FgZjsv
+         y0KzVBiDt3Z1FhO2p8E+MU3YRMufVrRxCYmY7YjzjKWlGskcN+zZ06vyYjx+OiQr0UZ3
+         gpNercDKBycZnaS5EtnhmJ38FNp+YDDfQgGRFHKExKCyZWsHI9amhTlaUmujm60c5TI2
+         Ge3c0sBOTmyfm1JbVHfFedn9QZukp8yXjcH/fCQ5IpDzWxKthGjvXw00GQVULuC2mKz0
+         n2kpIEvWqRvtHSRWdfOvd0+a8KJf2vlqa1o2A7Quk9XZ2UFXj2EBVl8YdPspHfIuzTXf
+         v91A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=/6+qsGlY5ufaYGYSvfi6R/XdWdgiZnQOUmk027h++wY=;
+        b=jh60e2I3dE/f33qm7C2j/tj9+PS33wuwvNAls/Hzjr0cDMIgDctFruH7UmldwHeXKe
+         T/U5IoZlgnbXevm2pFegNfZni/y3he8YIdfVcY81DtX90AmKdlybc0n3dcI0c+VrY6U4
+         l8VF6+fViqKE8PjDl2sqHmSE64s8Q0cQwrJ6p6FpPuEg8wc7KdGXgWUvtFJ9SfnT6/Mz
+         DGkxj69HGS1EU3VPtrLzVVB/+N+gxYgXVdFdhlyarG3GviuR6D044Re1ELNO1ft8GFKy
+         U8i1O8BGBM1AQPrsw/BNtS0xz6N52jFQGphcEjBZkOAI6dpA8kqVpTaekWe4ovrZZ4zE
+         15kw==
+X-Gm-Message-State: AGi0PubgZD1r3wBif3Gb613DkCZAwHVtXKfyqtqdOdGAk8PHAl+64hg9
+        4Kh+WLy0M05/QDj4QexQiOgxxF0uiBHuM/1weeK1tg==
+X-Google-Smtp-Source: APiQypLAxlxUn/h9pbLaNqfw8TLuPxvnQJeZXEcak++olZSdCahmwgdRjDUQzOitW2xd7O4LOLGl+Jaw0WeumCFSA7U=
+X-Received: by 2002:a2e:5048:: with SMTP id v8mr7429532ljd.99.1585304583741;
+ Fri, 27 Mar 2020 03:23:03 -0700 (PDT)
 MIME-Version: 1.0
+References: <cover.1584456635.git.mchehab+huawei@kernel.org> <51197e3568f073e22c280f0584bfa20b44436708.1584456635.git.mchehab+huawei@kernel.org>
+In-Reply-To: <51197e3568f073e22c280f0584bfa20b44436708.1584456635.git.mchehab+huawei@kernel.org>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Fri, 27 Mar 2020 11:22:52 +0100
+Message-ID: <CACRpkdYrL02YHn5dPnh_Oz0Ysm5BxHrwQgwNMtsD55XGid_hCQ@mail.gmail.com>
+Subject: Re: [PATCH 12/17] gpio: gpiolib.c: fix a doc warning
+To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiBGcm9tOiBKYWNvYiBQYW4NCj4gU2VudDogVGh1cnNkYXksIE1hcmNoIDI2LCAyMDIwIDE6NTYg
-QU0NCj4gDQo+IEluIGJhcmUgbWV0YWwgU1ZBLCBJT01NVSBkcml2ZXIgZW5zdXJlcyB0aGF0IElP
-QVNJRCBmcmVlIGNhbGwgYWx3YXlzIGNvbWVzDQo+IGFmdGVyIElPQVNJRCB1bmJpbmQgb3BlcmF0
-aW9uLg0KPiANCj4gSG93ZXZlciwgZm9yIGd1ZXN0IFNWQSB0aGUgdW5iaW5kIGFuZCBmcmVlIGNh
-bGwgY29tZSBmcm9tIHVzZXIgc3BhY2UNCj4gdmlhIFZGSU8sIHdoaWNoIGNvdWxkIGJlIG91dCBv
-ZiBvcmRlci4gVGhpcyBwYXRjaCByZWdpc3RlcnMgYSBub3RpZmllcg0KPiBibG9jayBpbiBjYXNl
-IElPQVNJRCBmcmVlKCkgY29tZXMgYmVmb3JlIHVuYmluZCBzdWNoIHRoYXQgVlQtZCBkcml2ZXIN
-Cj4gY2FuIHRha2UgYWN0aW9uIHRvIGNsZWFuIHVwIFBBU0lEIGNvbnRleHQgYW5kIGRhdGEuDQoN
-CmNsZWFybHkgdGhlIHBhdGNoIGluY2x1ZGVzIG1vcmUgdGhhbiBhYm92ZSB1c2FnZS4gSXQgYWxz
-byBoYW5kbGVzIHRoZQ0KYmluZCB1c2FnZSB0byBub3RpZnkgS1ZNIGZvciBzZXR0aW5nIFBBU0lE
-IHRyYW5zbGF0aW9uIHRhYmxlLg0KDQo+IA0KPiBTaWduZWQtb2ZmLWJ5OiBMaXUgWWkgTCA8eWku
-bC5saXVAaW50ZWwuY29tPg0KPiBTaWduZWQtb2ZmLWJ5OiBKYWNvYiBQYW4gPGphY29iLmp1bi5w
-YW5AbGludXguaW50ZWwuY29tPg0KPiAtLS0NCj4gIGRyaXZlcnMvaW9tbXUvaW50ZWwtc3ZtLmMg
-ICB8IDY4DQo+ICsrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrLQ0K
-PiAgaW5jbHVkZS9saW51eC9pbnRlbC1pb21tdS5oIHwgIDEgKw0KPiAgMiBmaWxlcyBjaGFuZ2Vk
-LCA2OCBpbnNlcnRpb25zKCspLCAxIGRlbGV0aW9uKC0pDQo+IA0KPiBkaWZmIC0tZ2l0IGEvZHJp
-dmVycy9pb21tdS9pbnRlbC1zdm0uYyBiL2RyaXZlcnMvaW9tbXUvaW50ZWwtc3ZtLmMNCj4gaW5k
-ZXggZjUxMTg1NWQxODdiLi43NzlkZDJjNmY5ZTEgMTAwNjQ0DQo+IC0tLSBhL2RyaXZlcnMvaW9t
-bXUvaW50ZWwtc3ZtLmMNCj4gKysrIGIvZHJpdmVycy9pb21tdS9pbnRlbC1zdm0uYw0KPiBAQCAt
-MjMsNiArMjMsNyBAQA0KPiAgI2luY2x1ZGUgImludGVsLXBhc2lkLmgiDQo+IA0KPiAgc3RhdGlj
-IGlycXJldHVybl90IHBycV9ldmVudF90aHJlYWQoaW50IGlycSwgdm9pZCAqZCk7DQo+ICtzdGF0
-aWMgREVGSU5FX01VVEVYKHBhc2lkX211dGV4KTsNCj4gDQo+ICAjZGVmaW5lIFBSUV9PUkRFUiAw
-DQo+IA0KPiBAQCAtOTIsNiArOTMsNjUgQEAgc3RhdGljIGlubGluZSBib29sIGludGVsX3N2bV9j
-YXBhYmxlKHN0cnVjdA0KPiBpbnRlbF9pb21tdSAqaW9tbXUpDQo+ICAJcmV0dXJuIGlvbW11LT5m
-bGFncyAmIFZURF9GTEFHX1NWTV9DQVBBQkxFOw0KPiAgfQ0KPiANCj4gKyNkZWZpbmUgcGFzaWRf
-bG9ja19oZWxkKCkgbG9ja19pc19oZWxkKCZwYXNpZF9tdXRleC5kZXBfbWFwKQ0KPiArDQo+ICtz
-dGF0aWMgaW50IHBhc2lkX3N0YXR1c19jaGFuZ2Uoc3RydWN0IG5vdGlmaWVyX2Jsb2NrICpuYiwN
-Cj4gKwkJCQl1bnNpZ25lZCBsb25nIGNvZGUsIHZvaWQgKmRhdGEpDQo+ICt7DQo+ICsJc3RydWN0
-IGlvYXNpZF9uYl9hcmdzICphcmdzID0gKHN0cnVjdCBpb2FzaWRfbmJfYXJncyAqKWRhdGE7DQo+
-ICsJc3RydWN0IGludGVsX3N2bV9kZXYgKnNkZXY7DQo+ICsJc3RydWN0IGludGVsX3N2bSAqc3Zt
-Ow0KPiArCWludCByZXQgPSBOT1RJRllfRE9ORTsNCj4gKw0KPiArCWlmIChjb2RlID09IElPQVNJ
-RF9GUkVFKSB7DQo+ICsJCS8qDQo+ICsJCSAqIFVuYmluZCBhbGwgZGV2aWNlcyBhc3NvY2lhdGVk
-IHdpdGggdGhpcyBQQVNJRCB3aGljaCBpcw0KPiArCQkgKiBiZWluZyBmcmVlZCBieSBvdGhlciB1
-c2VycyBzdWNoIGFzIFZGSU8uDQo+ICsJCSAqLw0KPiArCQltdXRleF9sb2NrKCZwYXNpZF9tdXRl
-eCk7DQo+ICsJCXN2bSA9IGlvYXNpZF9maW5kKElOVkFMSURfSU9BU0lEX1NFVCwgYXJncy0+aWQs
-IE5VTEwpOw0KPiArCQlpZiAoIXN2bSB8fCAhc3ZtLT5pb21tdSkNCj4gKwkJCWdvdG8gZG9uZV91
-bmxvY2s7DQoNCnNob3VsZCB3ZSB0cmVhdCAhc3ZtLT5pb21tdSBhcyBhbiBlcnJvciBjb25kaXRp
-b24/IGlmIG5vdCwgZG8geW91IGhhdmUNCmFuIGV4YW1wbGUgd2hlbiBpdCBtYXkgb2NjdXIgaW4g
-bm9ybWFsIHNpdHVhdGlvbj8NCg0KPiArDQo+ICsJCWlmIChJU19FUlIoc3ZtKSkgew0KPiArCQkJ
-cmV0ID0gTk9USUZZX0JBRDsNCj4gKwkJCWdvdG8gZG9uZV91bmxvY2s7DQo+ICsJCX0NCg0Kc3Zt
-LT5pb21tdSBzaG91bGQgYmUgcmVmZXJlbmNlZCBhZnRlciBJU19FUlIgY2hlY2sNCg0KPiArDQo+
-ICsJCWxpc3RfZm9yX2VhY2hfZW50cnlfcmN1KHNkZXYsICZzdm0tPmRldnMsIGxpc3QsDQo+IHBh
-c2lkX2xvY2tfaGVsZCgpKSB7DQo+ICsJCQkvKiBEb2VzIG5vdCBwb2lzb24gZm9yd2FyZCBwb2lu
-dGVyICovDQo+ICsJCQlsaXN0X2RlbF9yY3UoJnNkZXYtPmxpc3QpOw0KPiArCQkJaW50ZWxfcGFz
-aWRfdGVhcl9kb3duX2VudHJ5KHN2bS0+aW9tbXUsIHNkZXYtDQo+ID5kZXYsDQo+ICsJCQkJCQkg
-ICAgc3ZtLT5wYXNpZCk7DQo+ICsJCQlrZnJlZV9yY3Uoc2RldiwgcmN1KTsNCj4gKw0KPiArCQkJ
-LyoNCj4gKwkJCSAqIEZyZWUgYmVmb3JlIHVuYmluZCBvbmx5IGhhcHBlbnMgd2l0aCBndWVzdA0K
-PiB1c2FnZWQNCj4gKwkJCSAqIGhvc3QgUEFTSURzLiBJT0FTSUQgZnJlZSB3aWxsIGRldGFjaCBw
-cml2YXRlIGRhdGENCj4gKwkJCSAqIGFuZCBmcmVlIHRoZSBJT0FTSUQgZW50cnkuDQoNCiJndWVz
-dCB1c2FnZWQgaG9zdCBQQVNJRHMiPw0KDQo+ICsJCQkgKi8NCj4gKwkJCWlmIChsaXN0X2VtcHR5
-KCZzdm0tPmRldnMpKQ0KPiArCQkJCWtmcmVlKHN2bSk7DQo+ICsJCX0NCj4gKwkJbXV0ZXhfdW5s
-b2NrKCZwYXNpZF9tdXRleCk7DQo+ICsNCj4gKwkJcmV0dXJuIE5PVElGWV9PSzsNCj4gKwl9DQo+
-ICsNCj4gK2RvbmVfdW5sb2NrOg0KPiArCW11dGV4X3VubG9jaygmcGFzaWRfbXV0ZXgpOw0KPiAr
-CXJldHVybiByZXQ7DQo+ICt9DQo+ICsNCj4gK3N0YXRpYyBzdHJ1Y3Qgbm90aWZpZXJfYmxvY2sg
-cGFzaWRfbmIgPSB7DQo+ICsJCS5ub3RpZmllcl9jYWxsID0gcGFzaWRfc3RhdHVzX2NoYW5nZSwN
-Cj4gK307DQo+ICsNCj4gK3ZvaWQgaW50ZWxfc3ZtX2FkZF9wYXNpZF9ub3RpZmllcih2b2lkKQ0K
-PiArew0KPiArCWlvYXNpZF9hZGRfbm90aWZpZXIoJnBhc2lkX25iKTsNCj4gK30NCj4gKw0KPiAg
-dm9pZCBpbnRlbF9zdm1fY2hlY2soc3RydWN0IGludGVsX2lvbW11ICppb21tdSkNCj4gIHsNCj4g
-IAlpZiAoIXBhc2lkX3N1cHBvcnRlZChpb21tdSkpDQo+IEBAIC0yMTksNyArMjc5LDYgQEAgc3Rh
-dGljIGNvbnN0IHN0cnVjdCBtbXVfbm90aWZpZXJfb3BzIGludGVsX21tdW9wcyA9DQo+IHsNCj4g
-IAkuaW52YWxpZGF0ZV9yYW5nZSA9IGludGVsX2ludmFsaWRhdGVfcmFuZ2UsDQo+ICB9Ow0KPiAN
-Cj4gLXN0YXRpYyBERUZJTkVfTVVURVgocGFzaWRfbXV0ZXgpOw0KPiAgc3RhdGljIExJU1RfSEVB
-RChnbG9iYWxfc3ZtX2xpc3QpOw0KPiANCj4gICNkZWZpbmUgZm9yX2VhY2hfc3ZtX2RldihzZGV2
-LCBzdm0sIGQpCQkJXA0KPiBAQCAtMzE5LDYgKzM3OCw3IEBAIGludCBpbnRlbF9zdm1fYmluZF9n
-cGFzaWQoc3RydWN0IGlvbW11X2RvbWFpbg0KPiAqZG9tYWluLA0KPiAgCQkJc3ZtLT5ncGFzaWQg
-PSBkYXRhLT5ncGFzaWQ7DQo+ICAJCQlzdm0tPmZsYWdzIHw9IFNWTV9GTEFHX0dVRVNUX1BBU0lE
-Ow0KPiAgCQl9DQo+ICsJCXN2bS0+aW9tbXUgPSBpb21tdTsNCg0KYWgsIGl0J3MgaW50ZXJlc3Rp
-bmcgdG8gc2VlIHdlIGhhdmUgYSBmaWVsZCBkZWZpbmVkIGJlZm9yZSBidXQgbmV2ZXIgdXNlZC4g
-8J+Yig0KDQo+IA0KPiAgCQlpb2FzaWRfYXR0YWNoX2RhdGEoZGF0YS0+aHBhc2lkLCBzdm0pOw0K
-PiAgCQlJTklUX0xJU1RfSEVBRF9SQ1UoJnN2bS0+ZGV2cyk7DQo+IEBAIC0zODMsNiArNDQzLDEx
-IEBAIGludCBpbnRlbF9zdm1fYmluZF9ncGFzaWQoc3RydWN0IGlvbW11X2RvbWFpbg0KPiAqZG9t
-YWluLA0KPiAgCX0NCj4gIAlzdm0tPmZsYWdzIHw9IFNWTV9GTEFHX0dVRVNUX01PREU7DQo+IA0K
-PiArCS8qDQo+ICsJICogTm90aWZ5IEtWTSBuZXcgaG9zdC1ndWVzdCBQQVNJRCBiaW5kIGlzIHJl
-YWR5LiBLVk0gd2lsbCBzZXQgdXANCj4gKwkgKiBQQVNJRCB0cmFuc2xhdGlvbiB0YWJsZSB0byBz
-dXBwb3J0IGd1ZXN0IEVOUUNNRC4NCj4gKwkgKi8NCg0Kc2hvdWxkIHRha2UgaXQgYXMgYW4gZXhh
-bXBsZSBpbnN0ZWFkIG9mIHRoZSBvbmx5IHBvc3NpYmxlIHVzYWdlLg0KDQo+ICsJaW9hc2lkX25v
-dGlmeShkYXRhLT5ocGFzaWQsIElPQVNJRF9CSU5EKTsNCj4gIAlpbml0X3JjdV9oZWFkKCZzZGV2
-LT5yY3UpOw0KPiAgCWxpc3RfYWRkX3JjdSgmc2Rldi0+bGlzdCwgJnN2bS0+ZGV2cyk7DQo+ICAg
-b3V0Og0KPiBAQCAtNDQwLDYgKzUwNSw3IEBAIGludCBpbnRlbF9zdm1fdW5iaW5kX2dwYXNpZChz
-dHJ1Y3QgZGV2aWNlICpkZXYsIGludA0KPiBwYXNpZCkNCj4gIAkJCQkgKiB1c2VkIGJ5IGFub3Ro
-ZXIuDQo+ICAJCQkJICovDQo+ICAJCQkJaW9hc2lkX2F0dGFjaF9kYXRhKHBhc2lkLCBOVUxMKTsN
-Cj4gKwkJCQlpb2FzaWRfbm90aWZ5KHBhc2lkLCBJT0FTSURfVU5CSU5EKTsNCj4gIAkJCQlrZnJl
-ZShzdm0pOw0KPiAgCQkJfQ0KPiAgCQl9DQo+IGRpZmYgLS1naXQgYS9pbmNsdWRlL2xpbnV4L2lu
-dGVsLWlvbW11LmggYi9pbmNsdWRlL2xpbnV4L2ludGVsLWlvbW11LmgNCj4gaW5kZXggZjg1MDRh
-OTgwOTgxLi42NDc5OTA2N2VhNTggMTAwNjQ0DQo+IC0tLSBhL2luY2x1ZGUvbGludXgvaW50ZWwt
-aW9tbXUuaA0KPiArKysgYi9pbmNsdWRlL2xpbnV4L2ludGVsLWlvbW11LmgNCj4gQEAgLTcwOCw2
-ICs3MDgsNyBAQCBleHRlcm4gc3RydWN0IGlvbW11X3N2YSAqDQo+ICBpbnRlbF9zdm1fYmluZChz
-dHJ1Y3QgZGV2aWNlICpkZXYsIHN0cnVjdCBtbV9zdHJ1Y3QgKm1tLCB2b2lkICpkcnZkYXRhKTsN
-Cj4gIGV4dGVybiB2b2lkIGludGVsX3N2bV91bmJpbmQoc3RydWN0IGlvbW11X3N2YSAqaGFuZGxl
-KTsNCj4gIGV4dGVybiBpbnQgaW50ZWxfc3ZtX2dldF9wYXNpZChzdHJ1Y3QgaW9tbXVfc3ZhICpo
-YW5kbGUpOw0KPiArZXh0ZXJuIHZvaWQgaW50ZWxfc3ZtX2FkZF9wYXNpZF9ub3RpZmllcih2b2lk
-KTsNCj4gDQo+ICBzdHJ1Y3Qgc3ZtX2Rldl9vcHM7DQo+IA0KPiAtLQ0KPiAyLjcuNA0KPiANCj4g
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18NCj4gaW9tbXUg
-bWFpbGluZyBsaXN0DQo+IGlvbW11QGxpc3RzLmxpbnV4LWZvdW5kYXRpb24ub3JnDQo+IGh0dHBz
-Oi8vbGlzdHMubGludXhmb3VuZGF0aW9uLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2lvbW11DQo=
+On Tue, Mar 17, 2020 at 3:54 PM Mauro Carvalho Chehab
+<mchehab+huawei@kernel.org> wrote:
+
+> Use a different markup for the ERR_PTR, as %FOO doesn't work
+> if there are parenthesis. So, use, instead:
+>
+>         ``ERR_PTR(-EINVAL)``
+>
+> This fixes the following warning:
+>
+>         ./drivers/gpio/gpiolib.c:139: WARNING: Inline literal start-string without end-string.
+>
+> Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+
+Mauro are you merging this or do you want me to merge it?
+
+Yours,
+Linus Walleij
