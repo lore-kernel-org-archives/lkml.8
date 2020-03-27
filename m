@@ -2,181 +2,137 @@ Return-Path: <SRS0=s8dx=5M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 949F5C2D0E7
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 04:54:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60EE1C2D0E7
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 05:07:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C7C6206DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 04:54:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 37A0120663
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 05:07:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=renesasgroup.onmicrosoft.com header.i=@renesasgroup.onmicrosoft.com header.b="DTsT9tZc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726920AbgC0Eyi (ORCPT
+        id S1726427AbgC0FHu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Mar 2020 00:54:38 -0400
-Received: from helcar.hmeau.com ([216.24.177.18]:57068 "EHLO fornost.hmeau.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726165AbgC0Eyi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Mar 2020 00:54:38 -0400
-Received: from gwarestrin.me.apana.org.au ([192.168.0.7] helo=gwarestrin.arnor.me.apana.org.au)
-        by fornost.hmeau.com with smtp (Exim 4.89 #2 (Debian))
-        id 1jHh0p-0000CC-OZ; Fri, 27 Mar 2020 15:54:32 +1100
-Received: by gwarestrin.arnor.me.apana.org.au (sSMTP sendmail emulation); Fri, 27 Mar 2020 15:54:31 +1100
-Date:   Fri, 27 Mar 2020 15:54:31 +1100
-From:   Herbert Xu <herbert@gondor.apana.org.au>
-To:     Andrey Smirnov <andrew.smirnov@gmail.com>
-Cc:     linux-crypto@vger.kernel.org, Chris Healy <cphealy@gmail.com>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Horia =?utf-8?Q?Geant=C4=83?= <horia.geanta@nxp.com>,
-        Iuliana Prodan <iuliana.prodan@nxp.com>,
-        linux-kernel@vger.kernel.org, linux-imx@nxp.com
-Subject: Re: [PATCH v9 0/9] enable CAAM's HWRNG as default
-Message-ID: <20200327045431.GC19912@gondor.apana.org.au>
-References: <20200319161233.8134-1-andrew.smirnov@gmail.com>
+        Fri, 27 Mar 2020 01:07:50 -0400
+Received: from mail-eopbgr1410109.outbound.protection.outlook.com ([40.107.141.109]:65280
+        "EHLO JPN01-OS2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725857AbgC0FHt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Mar 2020 01:07:49 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=X2EoXeSzTDPUmdfok449rzLvTmX3nrB8YU/DwQdxu6bSXbFgQF50pHj/f7jYkH5Pufe2XUQ4tlwu03R7DUuicWfCbio9ihNx5rEBkAflEIi6O9mxaJU265k/samtiz/IsXjacg0tuIsweK+Bazc80VnDoE4uc5zRyyFpBA8IjFPKudb40gf0TlZZOTUmhhv624vlJ5UPaHm2VGosIMtGBncwpwCOvN5C2c/Tz2GtI74GfgL3/05PGfUU9oB8e3Cnp+uhPjso72gUTM2ji+FdrMKT8YDkSsZuH1EyEnaGDWLXyxdUd3tKRv5w1bYwz1X6zo506YzOD20aGJlz8nsIkA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=pQYdIgGroBz4xTBQ5kqAHfAV7KNZojVRQjbYBg8b0JM=;
+ b=SCxqn6FKCTvIgEh7mjlFIrqvOo4KQnnF6EYGv6G0iGp0IO+4WZ7TwTWQl1/Ca8+Oc7GfmyPvVv9L+TxO4Hp0OqgB/Ws8bpgWxfrBpTxsTPguwEGniuVZ2FyylSyGod4Dpfbj2q2M8ytL29dGnZ+iTFOP/9wDLUivosecnStIAHxwKhK8dP89pNQsdy16fKrnNq/R/xrkopTij0R1dJ+MJmzVQ+JXCiHy8h0cvRmYW7BO36vbuV8GlTESpEx5RE4P0Fg+UgSLemuMqbjdX/6xzoBsgaG9hmmvSyJCp16juk1CO81ZaqxGa6XUDtWXA1RXf0aGh+HLcZXN3auPGjTu3Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=renesas.com; dmarc=pass action=none header.from=renesas.com;
+ dkim=pass header.d=renesas.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=renesasgroup.onmicrosoft.com; s=selector2-renesasgroup-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=pQYdIgGroBz4xTBQ5kqAHfAV7KNZojVRQjbYBg8b0JM=;
+ b=DTsT9tZcxKh8HSpasysOLOJua+ftdIGS+CEeClJM7kS+ByfzSCb2udZ9Y7hRF4Qic/tY+H7+VSmD8heqNtnh3l6zf5FvQuB9TzCjQThN83eF/6XF/zpoym0p5ozzDNxyMFDGqdFapB8CdHYuxN7xF/hs2EIjDVsiJaU/dIrRVkc=
+Received: from TYAPR01MB4544.jpnprd01.prod.outlook.com (20.179.175.203) by
+ TYAPR01MB4496.jpnprd01.prod.outlook.com (20.179.187.141) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2835.22; Fri, 27 Mar 2020 05:07:45 +0000
+Received: from TYAPR01MB4544.jpnprd01.prod.outlook.com
+ ([fe80::ed7f:1268:55a9:fc06]) by TYAPR01MB4544.jpnprd01.prod.outlook.com
+ ([fe80::ed7f:1268:55a9:fc06%4]) with mapi id 15.20.2835.023; Fri, 27 Mar 2020
+ 05:07:45 +0000
+From:   Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+To:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Rob Herring <robh+dt@kernel.org>
+CC:     "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-renesas-soc@vger.kernel.org" 
+        <linux-renesas-soc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH 0/2] dt-bindings: usb: generic-ehci/ohci: Document
+ power-domains property
+Thread-Topic: [PATCH 0/2] dt-bindings: usb: generic-ehci/ohci: Document
+ power-domains property
+Thread-Index: AQHWA4z554OB0l2bAUaJVd29DMFcUqhb4/DA
+Date:   Fri, 27 Mar 2020 05:07:43 +0000
+Message-ID: <TYAPR01MB4544C0AD1F363CD0B5D8F43AD8CC0@TYAPR01MB4544.jpnprd01.prod.outlook.com>
+References: <20200326163807.23216-1-geert+renesas@glider.be>
+In-Reply-To: <20200326163807.23216-1-geert+renesas@glider.be>
+Accept-Language: ja-JP, en-US
+Content-Language: ja-JP
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=yoshihiro.shimoda.uh@renesas.com; 
+x-originating-ip: [211.11.155.148]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 5918fa8c-4746-411e-4b16-08d7d20cc903
+x-ms-traffictypediagnostic: TYAPR01MB4496:
+x-microsoft-antispam-prvs: <TYAPR01MB449616195A4F745D1CE6DCBFD8CC0@TYAPR01MB4496.jpnprd01.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
+x-forefront-prvs: 0355F3A3AE
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(346002)(136003)(376002)(366004)(39860400002)(396003)(33656002)(86362001)(5660300002)(55016002)(7696005)(71200400001)(110136005)(8676002)(8936002)(81166006)(81156014)(66476007)(26005)(186003)(6506007)(66946007)(76116006)(66446008)(66556008)(4326008)(52536014)(64756008)(478600001)(9686003)(316002)(2906002)(54906003)(41533002);DIR:OUT;SFP:1102;SCL:1;SRVR:TYAPR01MB4496;H:TYAPR01MB4544.jpnprd01.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;
+received-spf: None (protection.outlook.com: renesas.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: HuXiDEX6KdGXBDyVRlD4r/xb1fdQiaUGOEyzOl/2mwiPMDtBVt76XhGOznW1k7f5wJXr7wyB4GnX2lxfoOeh6mbnyDrDX+GvaANagC3w0o20IxbLoGaaFYtDD5uucmW1QCQBNQJx9IgPQZ9eHv6qdYEVmleRGkkfZvD4zJLSl9reIlyOYMK7Tt6dLAvtrxHC3jL5tOBUcF5g+6/WBAo8Bf8MK3iRATsk7lDphBe9sjFw1WouWpTe06jkB/Od5aZw4oX2ofTOD+lb+jeaD9yQkDUTKQO/ynsPmu2o+yQpuNiMPqJnMyf23hzWTlsMCS0PihjhEGrwkKb/vCOzzlM6Pske4+w8dGP2iMnUMR/v52UIGyzuWRxyt3VegQveXHDYJIkDQegvdAc8UX1oVEOa9Ij6dwOLw3nN3Mc4Jt8ShzpepsoPSFKP3GMJg7n8+oegkmrQsVwNhxiZO+J1M7ppyBOm0EH2l6hKOPF1EovTsF07E87CNo+IDxnd9YVGMot+
+x-ms-exchange-antispam-messagedata: k4SjqomiKjmtclIK2FAEMM9Or03vLtRpL/WVJsmFiCTVq9f49mAS92JlV5rDYWOre2GTOQvt6SJNvfhsMAc5Uqgh7AzZ7teoH8ctEi8t6XPxOljdf7ejhGhqGY9bWd0s8KHlrn79J3e1FlPVxvwUOA==
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200319161233.8134-1-andrew.smirnov@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-OriginatorOrg: renesas.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5918fa8c-4746-411e-4b16-08d7d20cc903
+X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Mar 2020 05:07:44.6483
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 1wCuIXlRyJl/uor2wwRHj7iTtttPQiPpwvcqU2IYdnrgNphNRo5oXZjlFKbA0w7ahBAyEDK3U72Cq2f8lzC5jVGT+ABrvFjdqN4u5WotXDhr35ppC0zN3iAh1coJf9sb
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYAPR01MB4496
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 19, 2020 at 09:12:24AM -0700, Andrey Smirnov wrote:
-> Everyone:
-> 
-> This series is a continuation of original [discussion]. I don't know
-> if what's in the series is enough to use CAAMs HWRNG system wide, but
-> I am hoping that with enough iterations and feedback it will be.
-> 
-> Changes since [v1]:
-> 
->     - Original hw_random replaced with the one using output of TRNG directly
-> 
->     - SEC4 DRNG IP block exposed via crypto API
-> 
->     - Small fix regarding use of GFP_DMA added to the series
-> 
-> Chagnes since [v2]:
-> 
->     - msleep in polling loop to avoid wasting CPU cycles
-> 
->     - caam_trng_read() bails out early if 'wait' is set to 'false'
-> 
->     - fixed typo in ZII's name
-> 
-> Changes since [v3]:
-> 
->     - DRNG's .cra_name is now "stdrng"
-> 
->     - collected Reviewd-by tag from Lucas
-> 
->     - typo fixes in commit messages of the series
-> 
-> Changes since [v4]:
-> 
->     - Dropped "crypto: caam - RNG4 TRNG errata" and "crypto: caam -
->       enable prediction resistance in HRWNG" to limit the scope of the
->       series. Those two patches are not yet ready and can be submitted
->       separately later.
-> 
->     - Collected Tested-by from Chris
-> 
-> Changes since [v5]:
-> 
->     - Series is converted back to implementing HWRNG using a job ring
->       as per feedback from Horia.
-> 
-> Changes since [v6]:
-> 
->     - "crypto: caam - drop global context pointer and init_done"
->       changed to use devres group to allow freeing HWRNG resource
->       independently of the parent device lifecycle. Code to deal with
->       circular deallocation dependency is added as well
-> 
->     - Removed worker self-scheduling in "crypto: caam - simplify RNG
->       implementation". It didn't bring much value, but meant that
->       simple cleanup with just a call to flush_work() wasn't good
->       enough.
-> 
->     - Added a simple function with a FIXME item for MC firmware check in
->       "crypto: caam - enable prediction resistance in HRWNG"
-> 
->     - "crypto: caam - limit single JD RNG output to maximum of 16
->       bytes" now shrinks async FIFO size from 32K to 64 bytes, since
->       having a buffer that big doesn't seem to do any good given that
->       througput of TRNG
-> 
-> Changes since [v7]:
-> 
->     - Collected Reviewd-bys from Horia
-> 
->     - updated "crypto: caam - simplify RNG implementation" to drop
->       custom type and fix comments
-> 
->     - updated "crypto: caam - enable prediction resistance in HRWNG"
->       to integrate code from Andrei Botila
-> 
->     - updated "crypto: caam - drop global context pointer and
->       init_done" to use .priv instead of container_of for private data
->       pointer
-> 
-> Changes since [v8]
-> 
->     - Collected more Reviewd-bys from Horia
-> 
->     - Pulled "bus: fsl-mc: add api to retrieve mc version" into the set_
-> 
->     - Moved RNG quality setting back to "crypto: caam - limit single
->       JD RNG output to maximum of 16 bytes" where it belongs
-> 
->     - Fixed comparison and checkpatch warnings in "crypto: caam -
->       enable prediction resistance in HRWNG" per feedback from Horia
-> 
-> 
-> Feedback is welcome!
-> 
-> Thanks,
-> Andrey Smirnov
-> 
-> [discussion] https://patchwork.kernel.org/patch/9850669/
-> [v1] https://lore.kernel.org/lkml/20191029162916.26579-1-andrew.smirnov@gmail.com
-> [v2] https://lore.kernel.org/lkml/20191118153843.28136-1-andrew.smirnov@gmail.com
-> [v3] https://lore.kernel.org/lkml/20191120165341.32669-1-andrew.smirnov@gmail.com
-> [v4] https://lore.kernel.org/lkml/20191121155554.1227-1-andrew.smirnov@gmail.com
-> [v5] https://lore.kernel.org/lkml/20191203162357.21942-1-andrew.smirnov@gmail.com
-> [v6] https://lore.kernel.org/lkml/20200108154047.12526-1-andrew.smirnov@gmail.com
-> [v7] https://lore.kernel.org/lkml/20200127165646.19806-1-andrew.smirnov@gmail.com
-> [v8] https://lore.kernel.org/lkml/20200316150047.30828-1-andrew.smirnov@gmail.com
-> 
-> Andrei Botila (1):
->   bus: fsl-mc: add api to retrieve mc version
-> 
-> Andrey Smirnov (8):
->   crypto: caam - allocate RNG instantiation descriptor with GFP_DMA
->   crypto: caam - use struct hwrng's .init for initialization
->   crypto: caam - drop global context pointer and init_done
->   crypto: caam - simplify RNG implementation
->   crypto: caam - check if RNG job failed
->   crypto: caam - invalidate entropy register during RNG initialization
->   crypto: caam - enable prediction resistance in HRWNG
->   crypto: caam - limit single JD RNG output to maximum of 16 bytes
-> 
->  drivers/bus/fsl-mc/fsl-mc-bus.c |  33 +--
->  drivers/crypto/caam/Kconfig     |   1 +
->  drivers/crypto/caam/caamrng.c   | 405 ++++++++++++--------------------
->  drivers/crypto/caam/ctrl.c      |  88 +++++--
->  drivers/crypto/caam/desc.h      |   2 +
->  drivers/crypto/caam/intern.h    |   7 +-
->  drivers/crypto/caam/jr.c        |  13 +-
->  drivers/crypto/caam/regs.h      |   7 +-
->  include/linux/fsl/mc.h          |  16 ++
->  9 files changed, 276 insertions(+), 296 deletions(-)
+Hi Geert-san,
 
-All applied.  Thanks.
--- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+> From: Geert Uytterhoeven, Sent: Friday, March 27, 2020 1:38 AM
+>=20
+> 	Hi Greg, Rob,
+>=20
+> It is quite common for a generic EHCI or OHCI block to be embedded in an
+> SoC in its own power domain.  However, the current DT bindings do not
+> cover this yet, leading to "make dtbs_check" warnings like:
+>=20
+>     arch/arm64/boot/dts/renesas/r8a774a1-hihope-rzg2m.dt.yaml: usb@ee0800=
+00: 'power-domains' does not match any of the
+> regexes: 'pinctrl-[0-9]+'
+>     arch/arm64/boot/dts/renesas/r8a774a1-hihope-rzg2m.dt.yaml: usb@ee0801=
+00: 'power-domains' does not match any of the
+> regexes: 'pinctrl-[0-9]+'
+>=20
+> This patch series documents the optional presence of "power-domains"
+> properties in the EHCI and OHCI devices nodes, allowing the DTS writer
+> to describe the controllers' positions in the power hierarchy.
+>=20
+> Thanks!
+>=20
+> Geert Uytterhoeven (2):
+>   dt-bindings: usb: generic-ehci: Document power-domains property
+>   dt-bindings: usb: generic-ohci: Document power-domains property
+
+Thank you for the patches!
+
+Reviewed-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+
+Best regards,
+Yoshihiro Shimoda
+
