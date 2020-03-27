@@ -2,109 +2,94 @@ Return-Path: <SRS0=s8dx=5M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C811EC2D0EC
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 03:04:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDFC4C2D0EE
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 03:05:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E58A20787
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 03:04:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8BF9A20787
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Mar 2020 03:05:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585278290;
-	bh=V/fC1s0Q0SdYajkzSHAZo9jmk8ASCYhLB1BiZ+BO75U=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OfB8kEsquO+LfpYhzfUkoR0kkF4hWk2SgodtmUPG0pBPM/uAxNzBALYTNtcP1A98q
-	 kuLsctQjFMNpTnQWqUytDuRnpPwuIjK+wrBc5LtHBzv/XyoksLNAaJrEM3lrVfkdr1
-	 EFtjUV9P9Jh1JTtX/xoKODwXn8FEGjKhkqr7e/uE=
+	s=default; t=1585278317;
+	bh=YIf6aQbdkDH1cQnI7Mm8lvierFh+tPaKpJdINhnNVxg=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=DM///yN+G8aBRFHIz231/zSmpxHeGVynvNakHV+5OH4r+Y8oXa+1+0aLvuXAiv8Sm
+	 wTdIbvKqxt4qhBSLQaUBVlCU0tJ3ROLw0EL0dDNN+z/J2/giQ44xQ4lGpVRYpfNRjW
+	 81H/ShCkW033r/2NPvJMHKE22LqKIKVrWVIv+YH0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727907AbgC0DEt (ORCPT
+        id S1727911AbgC0DFQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 23:04:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42726 "EHLO mail.kernel.org"
+        Thu, 26 Mar 2020 23:05:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43572 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726496AbgC0DEb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 23:04:31 -0400
-Received: from wens.tw (mirror2.csie.ntu.edu.tw [140.112.30.76])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1726496AbgC0DFQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Mar 2020 23:05:16 -0400
+Received: from mail-qt1-f177.google.com (mail-qt1-f177.google.com [209.85.160.177])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ED7002082D;
-        Fri, 27 Mar 2020 03:04:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 621242083E;
+        Fri, 27 Mar 2020 03:05:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585278271;
-        bh=V/fC1s0Q0SdYajkzSHAZo9jmk8ASCYhLB1BiZ+BO75U=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=v+SPVg5T+ck0Nktn8JpcqtzoI88jHl5Up/wFoIQ0EGU4ST0H1f4h6X4hoS27uzP1F
-         z5iCMazRxImpPtRrTMmhw3Z9wgHjBvf6wmealZ+NZHsjLzRq0fYQQjZGjkeMbUL3h3
-         dZ1B59HZv+jOBdysdDqIC01TnGR3I+iPEY3H4sr4=
-Received: by wens.tw (Postfix, from userid 1000)
-        id 461785FDC0; Fri, 27 Mar 2020 11:04:26 +0800 (CST)
-From:   Chen-Yu Tsai <wens@kernel.org>
-To:     Heiko Stuebner <heiko@sntech.de>, Rob Herring <robh+dt@kernel.org>
-Cc:     Chen-Yu Tsai <wens@csie.org>, linux-rockchip@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 3/6] arm64: dts: rockchip: rk3328: drop non-existent gmac2phy pinmux options
-Date:   Fri, 27 Mar 2020 11:04:11 +0800
-Message-Id: <20200327030414.5903-4-wens@kernel.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200327030414.5903-1-wens@kernel.org>
-References: <20200327030414.5903-1-wens@kernel.org>
+        s=default; t=1585278315;
+        bh=YIf6aQbdkDH1cQnI7Mm8lvierFh+tPaKpJdINhnNVxg=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=gscSa0b2I4VjrlYCOv6soG876N5HH7XtFKOr7CVoyAdEubKbOAJ2tJIWrq1LDaPTv
+         2OgcQNdP2Smb82Ad4//KDNT/R+YSAMyUtelYOm0raw7jA6ZAs18OP02GBfdrLMIrk+
+         4mrxLpUGuZIV9KQiswZsEDoDT2LpjukSVdhCuT54=
+Received: by mail-qt1-f177.google.com with SMTP id c9so7493936qtw.7;
+        Thu, 26 Mar 2020 20:05:15 -0700 (PDT)
+X-Gm-Message-State: ANhLgQ3EcYiEJR8aTgYF3FBJe0EykJJSVmwDyCUv91OtZP/pPZ9JQ6K8
+        liKQAzEcFgKVaM6tnBMILar6ZpV7DqOb7rVOSQ==
+X-Google-Smtp-Source: ADFU+vslGC615com2rm1wCgzAp5WB2w4yiciuQ1qMy22ERjZcJ2jcVj8Uw6zWW9MVqImCv+H7p5eSrCRLUyipOXv8/Y=
+X-Received: by 2002:ac8:59:: with SMTP id i25mr12051193qtg.110.1585278314570;
+ Thu, 26 Mar 2020 20:05:14 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200325213439.16509-8-ezequiel@collabora.com> <20200326191343.1989-1-ezequiel@collabora.com>
+In-Reply-To: <20200326191343.1989-1-ezequiel@collabora.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Thu, 26 Mar 2020 21:05:03 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqJ4sLE8mf=Ssg3wxbpf-f65i+YRkCBj+8DVGPonRA0=9A@mail.gmail.com>
+Message-ID: <CAL_JsqJ4sLE8mf=Ssg3wxbpf-f65i+YRkCBj+8DVGPonRA0=9A@mail.gmail.com>
+Subject: Re: [PATCH v4] dt-bindings: rockchip-vpu: Convert bindings to json-schema
+To:     Ezequiel Garcia <ezequiel@collabora.com>
+Cc:     Linux Media Mailing List <linux-media@vger.kernel.org>,
+        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Tomasz Figa <tfiga@chromium.org>,
+        Nicolas Dufresne <nicolas@ndufresne.ca>,
+        Collabora Kernel ML <kernel@collabora.com>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Hans Verkuil <hverkuil@xs4all.nl>,
+        Alexandre Courbot <acourbot@chromium.org>,
+        Jeffrey Kardatzke <jkardatzke@chromium.org>,
+        Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chen-Yu Tsai <wens@csie.org>
+On Thu, Mar 26, 2020 at 1:14 PM Ezequiel Garcia <ezequiel@collabora.com> wrote:
+>
+> Convert Rockchip VPU (Hantro IP block) codec driver documentation to
+> json-schema.
+>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: Rob Herring <robh@kernel.org>
+> Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
+> ---
+> v4:
+> * Fix issues pointed out by Rob,
+>   and make sure now dt_binding_check passes.
+>
+>  .../bindings/media/rockchip-vpu.txt           | 43 -----------
+>  .../bindings/media/rockchip-vpu.yaml          | 74 +++++++++++++++++++
+>  MAINTAINERS                                   |  2 +-
+>  3 files changed, 75 insertions(+), 44 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/media/rockchip-vpu.txt
+>  create mode 100644 Documentation/devicetree/bindings/media/rockchip-vpu.yaml
 
-When gmac2phy was added, a whole bunch of pinmux options were added.
-Turns out some of these don't exist on the actual product, based on
-the publicly available TRM.
-
-Remove them.
-
-Signed-off-by: Chen-Yu Tsai <wens@csie.org>
----
- arch/arm64/boot/dts/rockchip/rk3328.dtsi | 16 ----------------
- 1 file changed, 16 deletions(-)
-
-diff --git a/arch/arm64/boot/dts/rockchip/rk3328.dtsi b/arch/arm64/boot/dts/rockchip/rk3328.dtsi
-index 7e88d88aab98..b861b4fd75e6 100644
---- a/arch/arm64/boot/dts/rockchip/rk3328.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3328.dtsi
-@@ -1794,10 +1794,6 @@ rmiim1_pins: rmiim1-pins {
- 		};
- 
- 		gmac2phy {
--			fephyled_speed100: fephyled-speed100 {
--				rockchip,pins = <0 RK_PD7 1 &pcfg_pull_none>;
--			};
--
- 			fephyled_speed10: fephyled-speed10 {
- 				rockchip,pins = <0 RK_PD6 1 &pcfg_pull_none>;
- 			};
-@@ -1806,18 +1802,6 @@ fephyled_duplex: fephyled-duplex {
- 				rockchip,pins = <0 RK_PD6 2 &pcfg_pull_none>;
- 			};
- 
--			fephyled_rxm0: fephyled-rxm0 {
--				rockchip,pins = <0 RK_PD5 1 &pcfg_pull_none>;
--			};
--
--			fephyled_txm0: fephyled-txm0 {
--				rockchip,pins = <0 RK_PD5 2 &pcfg_pull_none>;
--			};
--
--			fephyled_linkm0: fephyled-linkm0 {
--				rockchip,pins = <0 RK_PD4 1 &pcfg_pull_none>;
--			};
--
- 			fephyled_rxm1: fephyled-rxm1 {
- 				rockchip,pins = <2 RK_PD1 2 &pcfg_pull_none>;
- 			};
--- 
-2.25.1
-
+Reviewed-by: Rob Herring <robh@kernel.org>
