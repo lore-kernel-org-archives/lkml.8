@@ -2,214 +2,142 @@ Return-Path: <SRS0=NZ+o=5N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D298C2D0ED
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 13:39:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4D91C2D0E5
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 13:43:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE3C42073B
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 13:39:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585402743;
-	bh=xAFlyQu5GQ2i/oCi/YFOh4Dk91mW4Z9zh6ovMDcaCfI=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=qiT4qDlLpvVzBsGMhRXO3+7wheg+biHuvPEAZEuel8axjV3a2TyjENhq5D8oatW91
-	 EYUchgnnnmbvyajhu2mc8/3xzCM92vDsERP6Xz1M7P09glNc78wexXd6ufmGdmZsDv
-	 QeKysuw6m1yFWqv2Gq9lOmfNg8alrCOrif/WT3/s=
+	by mail.kernel.org (Postfix) with ESMTP id 93A8F20723
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 13:43:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726391AbgC1NjB (ORCPT
+        id S1726403AbgC1NnA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 28 Mar 2020 09:39:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41424 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726045AbgC1NjB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 28 Mar 2020 09:39:01 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5457B20723;
-        Sat, 28 Mar 2020 13:38:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585402740;
-        bh=xAFlyQu5GQ2i/oCi/YFOh4Dk91mW4Z9zh6ovMDcaCfI=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=NfA0Hv8t2jiov9tiUJgfQT4fgrO2qf8bB7sWT5y1ZXypRPCQner1voOHCB+lctxzV
-         yDPaPB54hD8xMvGe04cB5DLjU00vESplU2UZr3XsyqdGpVGJlpC8h6rQvZblDGOYGc
-         n0pQR1pxM8mIZKrfKKq//PIn5ZitzJwLWlYu965g=
-Date:   Sat, 28 Mar 2020 13:38:56 +0000
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Alexandru Ardelean <alexandru.ardelean@analog.com>
-Cc:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <lars@metafoo.de>
-Subject: Re: [PATCH v3] iio: adc: ad7793: use read_avail iio hook for scale
- available
-Message-ID: <20200328133856.7fdf34e3@archlinux>
-In-Reply-To: <20200322152656.41669-1-alexandru.ardelean@analog.com>
-References: <20200322152656.41669-1-alexandru.ardelean@analog.com>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Sat, 28 Mar 2020 09:43:00 -0400
+Received: from mail2-relais-roc.national.inria.fr ([192.134.164.83]:42773 "EHLO
+        mail2-relais-roc.national.inria.fr" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726290AbgC1NnA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 28 Mar 2020 09:43:00 -0400
+X-IronPort-AV: E=Sophos;i="5.72,316,1580770800"; 
+   d="scan'208";a="442756603"
+Received: from abo-173-121-68.mrs.modulonet.fr (HELO hadrien) ([85.68.121.173])
+  by mail2-relais-roc.national.inria.fr with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Mar 2020 14:42:57 +0100
+Date:   Sat, 28 Mar 2020 14:42:56 +0100 (CET)
+From:   Julia Lawall <julia.lawall@inria.fr>
+X-X-Sender: jll@hadrien
+To:     Markus Elfring <Markus.Elfring@web.de>
+cc:     Michel Lespinasse <walken@google.com>,
+        Coccinelle <cocci@systeme.lip6.fr>, linux-mm@kvack.org,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Hugh Dickins <hughd@google.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Liam Howlett <Liam.Howlett@oracle.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Matthew Wilcox <willy@infradead.org>,
+        Ying Han <yinghan@google.com>,
+        David Rientjes <rientjes@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Laurent Dufour <ldufour@linux.ibm.com>,
+        Vlastimil Babka <vbabka@suse.cz>
+Subject: Re: [Cocci] [v3 05/10] mmap locking API: Checking the Coccinelle
+ software
+In-Reply-To: <590dbec7-341a-3480-dd47-cb3c65b023c7@web.de>
+Message-ID: <alpine.DEB.2.21.2003281441040.3005@hadrien>
+References: <20200327225102.25061-1-walken@google.com> <20200327225102.25061-6-walken@google.com> <bc2980d7-b823-2fff-d29c-57dcbc9aaf27@web.de> <CANN689H=tjNi=g6M776qo8inr+OfAu8mtL5xsJpu4F=dB6R9zA@mail.gmail.com> <3c222f3c-c8e2-660a-a348-5f3583e7e036@web.de>
+ <CANN689HyS0dYWZw3AeWGBvN6_2G4hRDzjMJQ_adHMh0ZkiACYg@mail.gmail.com> <590dbec7-341a-3480-dd47-cb3c65b023c7@web.de>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/mixed; boundary="8323329-169149080-1585402977=:3005"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 22 Mar 2020 17:26:56 +0200
-Alexandru Ardelean <alexandru.ardelean@analog.com> wrote:
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-> This change uses the read_avail and '.info_mask_shared_by_type_available'
-> modifier to set the available scale.
-> Essentially, nothing changes to the driver's ABI.
-> 
-> The main idea for this patch is to remove the AD7793 driver from
-> checkpatch's radar. There have been about ~3 attempts to fix/break the
-> 'in_voltage-voltage_scale_available' attribute, because checkpatch assumed
-> it to be an arithmetic operation and people were trying to change that.
-> 
-> Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+--8323329-169149080-1585402977=:3005
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8BIT
 
-Applied thanks.  It almost seems a shame to remove the 'educational'
-potential of this one but I suppose we should be 'nice' :)
 
-Jonathan
 
-> ---
-> 
-> Changelog v2 -> v3:
-> * split from series https://patchwork.kernel.org/project/linux-iio/list/?series=259659
-> * moved -EINVAL return to default case
-> 
->  drivers/iio/adc/ad7793.c | 55 +++++++++++++++++++++++++++-------------
->  1 file changed, 37 insertions(+), 18 deletions(-)
-> 
-> diff --git a/drivers/iio/adc/ad7793.c b/drivers/iio/adc/ad7793.c
-> index 5592ae573e6b..7005bde50a76 100644
-> --- a/drivers/iio/adc/ad7793.c
-> +++ b/drivers/iio/adc/ad7793.c
-> @@ -354,29 +354,28 @@ static IIO_CONST_ATTR_SAMP_FREQ_AVAIL(
->  static IIO_CONST_ATTR_NAMED(sampling_frequency_available_ad7797,
->  	sampling_frequency_available, "123 62 50 33 17 16 12 10 8 6 4");
->  
-> -static ssize_t ad7793_show_scale_available(struct device *dev,
-> -			struct device_attribute *attr, char *buf)
-> +static int ad7793_read_avail(struct iio_dev *indio_dev,
-> +			     struct iio_chan_spec const *chan,
-> +			     const int **vals, int *type, int *length,
-> +			     long mask)
->  {
-> -	struct iio_dev *indio_dev = dev_to_iio_dev(dev);
->  	struct ad7793_state *st = iio_priv(indio_dev);
-> -	int i, len = 0;
->  
-> -	for (i = 0; i < ARRAY_SIZE(st->scale_avail); i++)
-> -		len += sprintf(buf + len, "%d.%09u ", st->scale_avail[i][0],
-> -			       st->scale_avail[i][1]);
-> -
-> -	len += sprintf(buf + len, "\n");
-> +	switch (mask) {
-> +	case IIO_CHAN_INFO_SCALE:
-> +		*vals = (int *)st->scale_avail;
-> +		*type = IIO_VAL_INT_PLUS_NANO;
-> +		/* Values are stored in a 2D matrix  */
-> +		*length = ARRAY_SIZE(st->scale_avail) * 2;
->  
-> -	return len;
-> +		return IIO_AVAIL_LIST;
-> +	default:
-> +		return -EINVAL;
-> +	}
->  }
->  
-> -static IIO_DEVICE_ATTR_NAMED(in_m_in_scale_available,
-> -		in_voltage-voltage_scale_available, S_IRUGO,
-> -		ad7793_show_scale_available, NULL, 0);
-> -
->  static struct attribute *ad7793_attributes[] = {
->  	&iio_const_attr_sampling_frequency_available.dev_attr.attr,
-> -	&iio_dev_attr_in_m_in_scale_available.dev_attr.attr,
->  	NULL
->  };
->  
-> @@ -534,6 +533,7 @@ static const struct iio_info ad7793_info = {
->  	.read_raw = &ad7793_read_raw,
->  	.write_raw = &ad7793_write_raw,
->  	.write_raw_get_fmt = &ad7793_write_raw_get_fmt,
-> +	.read_avail = ad7793_read_avail,
->  	.attrs = &ad7793_attribute_group,
->  	.validate_trigger = ad_sd_validate_trigger,
->  };
-> @@ -547,7 +547,7 @@ static const struct iio_info ad7797_info = {
->  };
->  
->  #define __AD7793_CHANNEL(_si, _channel1, _channel2, _address, _bits, \
-> -	_storagebits, _shift, _extend_name, _type, _mask_all) \
-> +	_storagebits, _shift, _extend_name, _type, _mask_type_av, _mask_all) \
->  	{ \
->  		.type = (_type), \
->  		.differential = (_channel2 == -1 ? 0 : 1), \
-> @@ -559,6 +559,7 @@ static const struct iio_info ad7797_info = {
->  		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW) | \
->  			BIT(IIO_CHAN_INFO_OFFSET), \
->  		.info_mask_shared_by_type = BIT(IIO_CHAN_INFO_SCALE), \
-> +		.info_mask_shared_by_type_available = (_mask_type_av), \
->  		.info_mask_shared_by_all = _mask_all, \
->  		.scan_index = (_si), \
->  		.scan_type = { \
-> @@ -574,23 +575,41 @@ static const struct iio_info ad7797_info = {
->  	_storagebits, _shift) \
->  	__AD7793_CHANNEL(_si, _channel1, _channel2, _address, _bits, \
->  		_storagebits, _shift, NULL, IIO_VOLTAGE, \
-> +		BIT(IIO_CHAN_INFO_SCALE), \
->  		BIT(IIO_CHAN_INFO_SAMP_FREQ))
->  
->  #define AD7793_SHORTED_CHANNEL(_si, _channel, _address, _bits, \
->  	_storagebits, _shift) \
->  	__AD7793_CHANNEL(_si, _channel, _channel, _address, _bits, \
->  		_storagebits, _shift, "shorted", IIO_VOLTAGE, \
-> +		BIT(IIO_CHAN_INFO_SCALE), \
->  		BIT(IIO_CHAN_INFO_SAMP_FREQ))
->  
->  #define AD7793_TEMP_CHANNEL(_si, _address, _bits, _storagebits, _shift) \
->  	__AD7793_CHANNEL(_si, 0, -1, _address, _bits, \
->  		_storagebits, _shift, NULL, IIO_TEMP, \
-> +		0, \
->  		BIT(IIO_CHAN_INFO_SAMP_FREQ))
->  
->  #define AD7793_SUPPLY_CHANNEL(_si, _channel, _address, _bits, _storagebits, \
->  	_shift) \
->  	__AD7793_CHANNEL(_si, _channel, -1, _address, _bits, \
->  		_storagebits, _shift, "supply", IIO_VOLTAGE, \
-> +		0, \
-> +		BIT(IIO_CHAN_INFO_SAMP_FREQ))
-> +
-> +#define AD7797_DIFF_CHANNEL(_si, _channel1, _channel2, _address, _bits, \
-> +	_storagebits, _shift) \
-> +	__AD7793_CHANNEL(_si, _channel1, _channel2, _address, _bits, \
-> +		_storagebits, _shift, NULL, IIO_VOLTAGE, \
-> +		0, \
-> +		BIT(IIO_CHAN_INFO_SAMP_FREQ))
-> +
-> +#define AD7797_SHORTED_CHANNEL(_si, _channel, _address, _bits, \
-> +	_storagebits, _shift) \
-> +	__AD7793_CHANNEL(_si, _channel, _channel, _address, _bits, \
-> +		_storagebits, _shift, "shorted", IIO_VOLTAGE, \
-> +		0, \
->  		BIT(IIO_CHAN_INFO_SAMP_FREQ))
->  
->  #define DECLARE_AD7793_CHANNELS(_name, _b, _sb, _s) \
-> @@ -620,8 +639,8 @@ const struct iio_chan_spec _name##_channels[] = { \
->  
->  #define DECLARE_AD7797_CHANNELS(_name, _b, _sb) \
->  const struct iio_chan_spec _name##_channels[] = { \
-> -	AD7793_DIFF_CHANNEL(0, 0, 0, AD7793_CH_AIN1P_AIN1M, (_b), (_sb), 0), \
-> -	AD7793_SHORTED_CHANNEL(1, 0, AD7793_CH_AIN1M_AIN1M, (_b), (_sb), 0), \
-> +	AD7797_DIFF_CHANNEL(0, 0, 0, AD7793_CH_AIN1P_AIN1M, (_b), (_sb), 0), \
-> +	AD7797_SHORTED_CHANNEL(1, 0, AD7793_CH_AIN1M_AIN1M, (_b), (_sb), 0), \
->  	AD7793_TEMP_CHANNEL(2, AD7793_CH_TEMP, (_b), (_sb), 0), \
->  	AD7793_SUPPLY_CHANNEL(3, 3, AD7793_CH_AVDD_MONITOR, (_b), (_sb), 0), \
->  	IIO_CHAN_SOFT_TIMESTAMP(4), \
+On Sat, 28 Mar 2020, Markus Elfring wrote:
 
+> >> How will corresponding software development resources evolve?
+> >
+> > I don't think I understand the question, or, actually, are you asking
+> > me or the coccinelle developers ?
+>
+> I hope that another communication approach can eventually increase
+> the chances for a better common understanding of development challenges.
+>
+> The code from a mentioned source file can be reduced to the following
+> test file.
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/arch/mips/mm/fault.c?id=69c5eea3128e775fd3c70ecf0098105d96dee330#n34
+>
+> // deleted part
+> static void __kprobes __do_page_fault(struct pt_regs *regs, unsigned long write,
+> 	unsigned long address)
+> {
+> 	struct vm_area_struct * vma = NULL;
+> 	struct task_struct *tsk = current;
+> 	struct mm_struct *mm = tsk->mm;
+> // deleted part
+> retry:
+> 	down_read(&mm->mmap_sem);
+> 	vma = find_vma(mm, address);
+> 	if (!vma)
+> 		goto bad_area;
+> // deleted part
+> }
+> // deleted part
+>
+>
+> Application of the software “Coccinelle 1.0.8-00029-ga549b9f0” (OCaml 4.10.0)
+>
+> elfring@Sonne:~/Projekte/Coccinelle/Probe> spatch --parse-c do_page_fault-excerpt3.c
+> …
+> NB total files = 1; perfect = 1; pbs = 0; timeout = 0; =========> 100%
+> nb good = 15,  nb passed = 1 =========> 6.25% passed
+> nb good = 15,  nb bad = 0 =========> 100.00% good or passed
+>
+>
+> The discussed transformation approach can also be reduced for a test
+> to the following script for the semantic patch language.
+>
+> @replacement@
+> expression x;
+> @@
+> -down_read
+> +mmap_read_lock
+>  (
+> - &
+>   x
+> - ->mmap_sem
+>  )
+>
+>
+> elfring@Sonne:~/Projekte/Coccinelle/Probe> spatch use_mmap_locking_API_3.cocci do_page_fault-excerpt3.c
+>
+>
+> The desired diff is not generated so far.
+> How would you like to fix this situation?
+
+Who exactly do you think "you" is?  I will look at it, but it is not very
+polite to ask a user of Coccinelle such a question.
+
+julia
+
+>
+> Regards,
+> Markus
+> _______________________________________________
+> Cocci mailing list
+> Cocci@systeme.lip6.fr
+> https://systeme.lip6.fr/mailman/listinfo/cocci
+>
+--8323329-169149080-1585402977=:3005--
