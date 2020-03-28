@@ -2,109 +2,190 @@ Return-Path: <SRS0=NZ+o=5N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0FA3C2D0E7
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 00:51:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D280C43331
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 00:59:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B64A02073B
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 00:51:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4BC4F206F6
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 00:59:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YXFopKyE"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="GmILO8fd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727121AbgC1Avz (ORCPT
+        id S1727028AbgC1A7Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Mar 2020 20:51:55 -0400
-Received: from us-smtp-delivery-74.mimecast.com ([216.205.24.74]:51163 "EHLO
-        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726134AbgC1Avz (ORCPT
+        Fri, 27 Mar 2020 20:59:24 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:21930 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726212AbgC1A7Y (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Mar 2020 20:51:55 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1585356714;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=AfM5YElagMxU4jLZCXpRalvLQEr9T943a/2CkE+p0+U=;
-        b=YXFopKyELcr8CdYO9bqv4rEas6AfrKUcAxx34sX5bfoW5EqU37VKQdIaTrv0u3l2cMTurz
-        NpGQqvH4OKAUwQvikxjYeIymo7BkDVoyHP6lfWeH/RHd0xBq99c71RRpP5wILhs27Ls3+i
-        W1Yis9MY1EdRe6J/JocyM0UxtyK4akM=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-67-RMN3DDxlMZGzXBqdzhX_SA-1; Fri, 27 Mar 2020 20:51:52 -0400
-X-MC-Unique: RMN3DDxlMZGzXBqdzhX_SA-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Fri, 27 Mar 2020 20:59:24 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1585357163; h=Message-Id: Date: Subject: Cc: To: From:
+ Sender; bh=ucG8qxJO8nRYPBhl/MNaG6lqgYMEuVpubS292bl3V6k=; b=GmILO8fd13mL9obHsHkxAaeaxhX5j1vWl2wTGuu7L4GY9ZvAInLasS9doKzXJVqGT0VMB6Zi
+ /6adCvEZfs1+My3J6CSKfTzS4IQaKm1zymxpviGKt8JpsAU42asf1SozzknJEl/Y7B5vuzGA
+ Nuxtev+4PPVQ/oN7ZYfpD/hou/E=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e7ea163.7f4e0c5056f8-smtp-out-n05;
+ Sat, 28 Mar 2020 00:59:15 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 71069C433BA; Sat, 28 Mar 2020 00:59:14 +0000 (UTC)
+Received: from rishabhb-linux.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id CA4931937FCE;
-        Sat, 28 Mar 2020 00:51:50 +0000 (UTC)
-Received: from localhost (ovpn-12-36.pek2.redhat.com [10.72.12.36])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 5563B60304;
-        Sat, 28 Mar 2020 00:51:47 +0000 (UTC)
-Date:   Sat, 28 Mar 2020 08:51:44 +0800
-From:   Baoquan He <bhe@redhat.com>
-To:     Wei Yang <richard.weiyang@gmail.com>
-Cc:     John Hubbard <jhubbard@nvidia.com>, akpm@linux-foundation.org,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org, jgg@ziepe.ca,
-        david@redhat.com
-Subject: Re: [Patch v2 2/2] mm/page_alloc.c: define node_order with all zero
-Message-ID: <20200328005144.GQ3039@MiWiFi-R3L-srv>
-References: <20200327220121.27823-1-richard.weiyang@gmail.com>
- <20200327220121.27823-2-richard.weiyang@gmail.com>
- <4c9d8138-d379-810f-64e7-0d018ed019df@nvidia.com>
- <20200328002616.kjtf7dpkqbugyzi2@master>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200328002616.kjtf7dpkqbugyzi2@master>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+        (Authenticated sender: rishabhb)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 744CFC433D2;
+        Sat, 28 Mar 2020 00:59:13 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 744CFC433D2
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=rishabhb@codeaurora.org
+From:   Rishabh Bhatnagar <rishabhb@codeaurora.org>
+To:     linux-kernel@vger.kernel.org, linux-remoteproc@vger.kernel.org,
+        bjorn.andersson@linaro.org
+Cc:     psodagud@codeaurora.org, tsoni@codeaurora.org,
+        sidgup@codeaurora.org, Rishabh Bhatnagar <rishabhb@codeaurora.org>
+Subject: [PATCH 1/2] remoteproc: qcom: Add bus scaling capability during bootup
+Date:   Fri, 27 Mar 2020 17:59:07 -0700
+Message-Id: <1585357147-4616-1-git-send-email-rishabhb@codeaurora.org>
+X-Mailer: git-send-email 1.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 03/28/20 at 12:26am, Wei Yang wrote:
-> On Fri, Mar 27, 2020 at 03:37:57PM -0700, John Hubbard wrote:
-> >On 3/27/20 3:01 PM, Wei Yang wrote:
-> >> Since we always clear node_order before getting it, we can leverage
-> >> compiler to do this instead of at run time.
-> >> 
-> >> Signed-off-by: Wei Yang <richard.weiyang@gmail.com>
-> >> ---
-> >>   mm/page_alloc.c | 3 +--
-> >>   1 file changed, 1 insertion(+), 2 deletions(-)
-> >> 
-> >> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-> >> index dfcf2682ed40..49dd1f25c000 100644
-> >> --- a/mm/page_alloc.c
-> >> +++ b/mm/page_alloc.c
-> >> @@ -5585,7 +5585,7 @@ static void build_thisnode_zonelists(pg_data_t *pgdat)
-> >>   static void build_zonelists(pg_data_t *pgdat)
-> >>   {
-> >> -	static int node_order[MAX_NUMNODES];
-> >> +	static int node_order[MAX_NUMNODES] = {0};
-> >
-> >
-> >Looks wrong: now the single instance of node_order is initialized just once by
-> >the compiler. And that means that only the first caller of this function
-> >gets a zeroed node_order array...
-> >
-> 
-> What a shame on me. You are right, I miss the static word. 
-> 
-> Well, then I am curious about why we want to define it as static. Each time we
-> call this function, node_order would be set to 0 and find_next_best_node()
-> would sort a proper value into it. I don't see the reason to reserve it in a
-> global area and be used next time.
-> 
-> My suggestion is to remove the static and define it {0} instead of memset
-> every time. Is my understanding correct here?
+During bootup since remote processors cannot request for
+additional bus bandwidth from the interconect framework,
+platform driver should provide the proxy resources. This
+is useful for scenarios where the Q6 tries to access the DDR
+memory in the initial stages of bootup. For e.g. during
+bootup or after recovery modem Q6 tries to zero out the bss
+section in the DDR. Since this is a big chunk of memory if
+don't bump up the bandwidth we might encounter timeout issues.
+This patch makes a proxy vote for maximizing the bus bandwidth
+during bootup and removes it once processor is up.
 
-Removing static looks good, the node_order is calculated on the basis of
-each node, it's useless for other node. It may be inherited from the old
-code where it's a static global variable.
+Signed-off-by: Rishabh Bhatnagar <rishabhb@codeaurora.org>
+---
+ drivers/remoteproc/qcom_q6v5_pas.c | 43 +++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 42 insertions(+), 1 deletion(-)
 
+diff --git a/drivers/remoteproc/qcom_q6v5_pas.c b/drivers/remoteproc/qcom_q6v5_pas.c
+index edf9d0e..8f5db8d 100644
+--- a/drivers/remoteproc/qcom_q6v5_pas.c
++++ b/drivers/remoteproc/qcom_q6v5_pas.c
+@@ -20,6 +20,7 @@
+ #include <linux/qcom_scm.h>
+ #include <linux/regulator/consumer.h>
+ #include <linux/remoteproc.h>
++#include <linux/interconnect.h>
+ #include <linux/soc/qcom/mdt_loader.h>
+ #include <linux/soc/qcom/smem.h>
+ #include <linux/soc/qcom/smem_state.h>
+@@ -28,6 +29,9 @@
+ #include "qcom_q6v5.h"
+ #include "remoteproc_internal.h"
+ 
++#define PIL_TZ_AVG_BW  0
++#define PIL_TZ_PEAK_BW UINT_MAX
++
+ struct adsp_data {
+ 	int crash_reason_smem;
+ 	const char *firmware_name;
+@@ -62,6 +66,7 @@ struct qcom_adsp {
+ 	int proxy_pd_count;
+ 
+ 	int pas_id;
++	struct icc_path *bus_client;
+ 	int crash_reason_smem;
+ 	bool has_aggre2_clk;
+ 
+@@ -124,6 +129,25 @@ static int adsp_load(struct rproc *rproc, const struct firmware *fw)
+ 
+ }
+ 
++static int do_bus_scaling(struct qcom_adsp *adsp, bool enable)
++{
++	int rc;
++	u32 avg_bw = enable ? PIL_TZ_AVG_BW : 0;
++	u32 peak_bw = enable ? PIL_TZ_PEAK_BW : 0;
++
++	if (adsp->bus_client) {
++		rc = icc_set_bw(adsp->bus_client, avg_bw, peak_bw);
++		if (rc) {
++			dev_err(adsp->dev, "bandwidth request failed(rc:%d)\n",
++				rc);
++			return rc;
++		}
++	} else
++		dev_info(adsp->dev, "Bus scaling not setup for %s\n",
++			adsp->rproc->name);
++	return 0;
++}
++
+ static int adsp_start(struct rproc *rproc)
+ {
+ 	struct qcom_adsp *adsp = (struct qcom_adsp *)rproc->priv;
+@@ -131,9 +155,13 @@ static int adsp_start(struct rproc *rproc)
+ 
+ 	qcom_q6v5_prepare(&adsp->q6v5);
+ 
++	ret = do_bus_scaling(adsp, true);
++	if (ret)
++		goto disable_irqs;
++
+ 	ret = adsp_pds_enable(adsp, adsp->active_pds, adsp->active_pd_count);
+ 	if (ret < 0)
+-		goto disable_irqs;
++		goto unscale_bus;
+ 
+ 	ret = adsp_pds_enable(adsp, adsp->proxy_pds, adsp->proxy_pd_count);
+ 	if (ret < 0)
+@@ -183,6 +211,8 @@ static int adsp_start(struct rproc *rproc)
+ 	adsp_pds_disable(adsp, adsp->proxy_pds, adsp->proxy_pd_count);
+ disable_active_pds:
+ 	adsp_pds_disable(adsp, adsp->active_pds, adsp->active_pd_count);
++unscale_bus:
++	do_bus_scaling(adsp, false);
+ disable_irqs:
+ 	qcom_q6v5_unprepare(&adsp->q6v5);
+ 
+@@ -198,6 +228,7 @@ static void qcom_pas_handover(struct qcom_q6v5 *q6v5)
+ 	clk_disable_unprepare(adsp->aggre2_clk);
+ 	clk_disable_unprepare(adsp->xo);
+ 	adsp_pds_disable(adsp, adsp->proxy_pds, adsp->proxy_pd_count);
++	do_bus_scaling(adsp, false);
+ }
+ 
+ static int adsp_stop(struct rproc *rproc)
+@@ -280,6 +311,14 @@ static int adsp_init_regulator(struct qcom_adsp *adsp)
+ 	return PTR_ERR_OR_ZERO(adsp->px_supply);
+ }
+ 
++static void adsp_init_bus_scaling(struct qcom_adsp *adsp)
++{
++	adsp->bus_client = of_icc_get(adsp->dev, NULL);
++	if (!adsp->bus_client)
++		dev_warn(adsp->dev, "%s: unable to get bus client \n",
++			__func__);
++}
++
+ static int adsp_pds_attach(struct device *dev, struct device **devs,
+ 			   char **pd_names)
+ {
+@@ -410,6 +449,8 @@ static int adsp_probe(struct platform_device *pdev)
+ 	if (ret)
+ 		goto free_rproc;
+ 
++	adsp_init_bus_scaling(adsp);
++
+ 	ret = adsp_pds_attach(&pdev->dev, adsp->active_pds,
+ 			      desc->active_pd_names);
+ 	if (ret < 0)
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
