@@ -2,118 +2,213 @@ Return-Path: <SRS0=NZ+o=5N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 969D6C2D0EB
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 16:31:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BE32C43331
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 16:32:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 664102073E
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 16:31:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="Godxthak"
+	by mail.kernel.org (Postfix) with ESMTP id 6AAF8206F6
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 16:32:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727306AbgC1Qbs (ORCPT
+        id S1727336AbgC1QcC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 28 Mar 2020 12:31:48 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:46706 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727183AbgC1Qbr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 28 Mar 2020 12:31:47 -0400
-Received: by mail-ot1-f66.google.com with SMTP id 111so13218945oth.13
-        for <linux-kernel@vger.kernel.org>; Sat, 28 Mar 2020 09:31:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Tepq1jSwDCN89tryT39lGx5t8RvfKo7KJYe9WreZN8E=;
-        b=Godxthakoj8WDjgl/1xUDzE5sUEkmS4LTviBbCzV6Ma0iDh5GdRhECpcZTGY2Edk7W
-         +klahkVThDTocA6UalroXBd3d/s1yNbA1MoKTHR6rFBKeI3CDoSMNENbizT8hyxv+Zk7
-         JFJYO5cqHODkH5KbjguHKYz6RZCBCYW+cVUwg=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Tepq1jSwDCN89tryT39lGx5t8RvfKo7KJYe9WreZN8E=;
-        b=tVgW3Pj9ECGYAIaNj2+Tk/JsiWDilnfcJrXYtsFvTPpB/dV1WqPtMmcjy1wzwn0h9I
-         xyVvRhZOw5vNg+EnekINpXhKQQCMdD01mJloVnUBiMVG+ZegriKbIYl00mvtDu1Bgg66
-         Is+SC2PF4fcC7KO2gQb0j1Yp6MyJhW6L/ZX2NXWDGcidK8yLPRq0862oCrkYz1rYMY6I
-         x6Ivc5pq56XFeXylV2TPrgsHYYPczK6buqRHBcyTvfSO45l6I7//HTaeTRQ0d7dF/kU8
-         IBHh9k6RQI3xYCBCsROr6+72BDQzHE+EC73oCZ7ozdrf5N9u1IiZ18h1AgCciEwnzyhZ
-         jzWQ==
-X-Gm-Message-State: ANhLgQ0JMoOsmjA81rfqVsHXuFuBmLbXXqu2/zjNIwDzxSexw0zgLRwj
-        gHrVh2C0IsGB3U1qO+Ubjns4jYmlnNDoUMCOTcXzkmuh
-X-Google-Smtp-Source: ADFU+vv7GkRqQqz0012YOeCZDSoBlbR6P9EsoxOSUlc+Q4oxoxo4uNEE60PtSV0CuFZ8fdglQmV2e/lzTkJgpD6++Zg=
-X-Received: by 2002:a9d:7696:: with SMTP id j22mr3344521otl.188.1585413105299;
- Sat, 28 Mar 2020 09:31:45 -0700 (PDT)
+        Sat, 28 Mar 2020 12:32:02 -0400
+Received: from mga07.intel.com ([134.134.136.100]:41730 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726205AbgC1QcB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 28 Mar 2020 12:32:01 -0400
+IronPort-SDR: R3J+PJG7vba9ujKPlC1WE5LfxgVHxoiSIyUunV7wm1ZuPRRG3PIHaVFh5UnvRx2duKuBYT2OaO
+ U/pnpiKQEEQg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Mar 2020 09:32:01 -0700
+IronPort-SDR: 3YgAP+y5LhQ1XSXQE7XhXK5YtO7kUL4CmFFbPQOqrtQr28IqWBb9cCKLsilwvR9TvVtYPeFnw8
+ R/X7tfLPu+NQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,317,1580803200"; 
+   d="scan'208";a="394686164"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
+  by orsmga004.jf.intel.com with ESMTP; 28 Mar 2020 09:32:01 -0700
+Date:   Sat, 28 Mar 2020 09:32:01 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Xiaoyao Li <xiaoyao.li@intel.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        hpa@zytor.com, x86@kernel.org, linux-kernel@vger.kernel.org,
+        Paolo Bonzini <pbonzini@redhat.com>, luto@kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Arvind Sankar <nivedita@alum.mit.edu>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Tony Luck <tony.luck@intel.com>
+Subject: Re: [PATCH v7 1/2] x86/split_lock: Rework the initialization flow of
+ split lock detection
+Message-ID: <20200328163201.GI8104@linux.intel.com>
+References: <20200325030924.132881-1-xiaoyao.li@intel.com>
+ <20200325030924.132881-2-xiaoyao.li@intel.com>
 MIME-Version: 1.0
-References: <20200328151511.22932-1-hqjagain@gmail.com>
-In-Reply-To: <20200328151511.22932-1-hqjagain@gmail.com>
-From:   Daniel Vetter <daniel.vetter@ffwll.ch>
-Date:   Sat, 28 Mar 2020 17:31:34 +0100
-Message-ID: <CAKMK7uF2mipUSr-XRESrRJ8JdOZCekNTCVsDPW5hNp-mWwPj6Q@mail.gmail.com>
-Subject: Re: [PATCH] fbcon: fix null-ptr-deref in fbcon_switch
-To:     Qiujun Huang <hqjagain@gmail.com>
-Cc:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        ghalat@redhat.com, dri-devel <dri-devel@lists.freedesktop.org>,
-        Linux Fbdev development list <linux-fbdev@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200325030924.132881-2-xiaoyao.li@intel.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Mar 28, 2020 at 4:15 PM Qiujun Huang <hqjagain@gmail.com> wrote:
-> Add check for vc_cons[logo_shown].d, as it can be released by
-> vt_ioctl(VT_DISALLOCATE).
+On Wed, Mar 25, 2020 at 11:09:23AM +0800, Xiaoyao Li wrote:
+>  static void __init split_lock_setup(void)
+>  {
+> +	enum split_lock_detect_state state = sld_warn;
+>  	char arg[20];
+>  	int i, ret;
+>  
+> -	setup_force_cpu_cap(X86_FEATURE_SPLIT_LOCK_DETECT);
+> -	sld_state = sld_warn;
+> +	if (!split_lock_verify_msr(false)) {
+> +		pr_info("MSR access failed: Disabled\n");
 
-Can you pls link to the syzbot report and distill the essence of the
-crash/issue here in the commit message? As-is a bit unclear what's
-going on. Patch itself looks correct.
+A few nits on the error handling.
 
-Thanks, Daniel
+The error message for this is a bit wonky, lots of colons and it's not
+super clear what "Disabled" refers to.
 
-> Reported-by: syzbot+732528bae351682f1f27@syzkaller.appspotmail.com
-> Signed-off-by: Qiujun Huang <hqjagain@gmail.com>
-> ---
->  drivers/video/fbdev/core/fbcon.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/video/fbdev/core/fbcon.c b/drivers/video/fbdev/core/fbcon.c
-> index bb6ae995c2e5..7ee0f7b55829 100644
-> --- a/drivers/video/fbdev/core/fbcon.c
-> +++ b/drivers/video/fbdev/core/fbcon.c
-> @@ -2254,7 +2254,7 @@ static int fbcon_switch(struct vc_data *vc)
->                 fbcon_update_softback(vc);
->         }
->
-> -       if (logo_shown >= 0) {
-> +       if (logo_shown >= 0 && vc_cons_allocated(logo_shown)) {
->                 struct vc_data *conp2 = vc_cons[logo_shown].d;
->
->                 if (conp2->vc_top == logo_lines
-> @@ -2852,7 +2852,7 @@ static void fbcon_scrolldelta(struct vc_data *vc, int lines)
->                         return;
->                 if (vc->vc_mode != KD_TEXT || !lines)
->                         return;
-> -               if (logo_shown >= 0) {
-> +               if (logo_shown >= 0 && vc_cons_allocated(logo_shown)) {
->                         struct vc_data *conp2 = vc_cons[logo_shown].d;
->
->                         if (conp2->vc_top == logo_lines
-> --
-> 2.17.1
->
+  [    0.000000] x86/split lock detection: MSR access failed: Disabled
+
+Maybe this, so that it reads "split lock detection disabled because the MSR
+access failed".
+
+		pr_info("Disabled, MSR access failed\n");
+
+And rather than duplicate the error message, maybe use a goto, e.g.
+
+	if (!split_lock_verify_msr(false))
+		goto msr_failed;
+
+	...
+
+	if (!split_lock_verify_msr(true))
+		goto msr_failed;
 
 
---
-Daniel Vetter
-Software Engineer, Intel Corporation
-+41 (0) 79 365 57 48 - http://blog.ffwll.ch
+> +		return;
+> +	}
+>  
+>  	ret = cmdline_find_option(boot_command_line, "split_lock_detect",
+>  				  arg, sizeof(arg));
+>  	if (ret >= 0) {
+>  		for (i = 0; i < ARRAY_SIZE(sld_options); i++) {
+>  			if (match_option(arg, ret, sld_options[i].option)) {
+> -				sld_state = sld_options[i].state;
+> +				state = sld_options[i].state;
+>  				break;
+>  			}
+>  		}
+>  	}
+>  
+> -	switch (sld_state) {
+> +	switch (state) {
+>  	case sld_off:
+>  		pr_info("disabled\n");
+> -		break;
+> -
+> +		return;
+>  	case sld_warn:
+>  		pr_info("warning about user-space split_locks\n");
+>  		break;
+> -
+>  	case sld_fatal:
+>  		pr_info("sending SIGBUS on user-space split_locks\n");
+>  		break;
+>  	}
+> +
+> +	if (!split_lock_verify_msr(true)) {
+> +		pr_info("MSR access failed: Disabled\n");
+> +		return;
+> +	}
+> +
+> +	sld_state = state;
+> +	setup_force_cpu_cap(X86_FEATURE_SPLIT_LOCK_DETECT);
+>  }
+>  
+>  /*
+> - * Locking is not required at the moment because only bit 29 of this
+> - * MSR is implemented and locking would not prevent that the operation
+> - * of one thread is immediately undone by the sibling thread.
+> - * Use the "safe" versions of rdmsr/wrmsr here because although code
+> - * checks CPUID and MSR bits to make sure the TEST_CTRL MSR should
+> - * exist, there may be glitches in virtualization that leave a guest
+> - * with an incorrect view of real h/w capabilities.
+> + * MSR_TEST_CTRL is per core, but we treat it like a per CPU MSR. Locking
+> + * is not implemented as one thread could undo the setting of the other
+> + * thread immediately after dropping the lock anyway.
+>   */
+> -static bool __sld_msr_set(bool on)
+> +static void sld_update_msr(bool on)
+>  {
+>  	u64 test_ctrl_val;
+>  
+> -	if (rdmsrl_safe(MSR_TEST_CTRL, &test_ctrl_val))
+> -		return false;
+> +	rdmsrl(MSR_TEST_CTRL, test_ctrl_val);
+>  
+>  	if (on)
+>  		test_ctrl_val |= MSR_TEST_CTRL_SPLIT_LOCK_DETECT;
+>  	else
+>  		test_ctrl_val &= ~MSR_TEST_CTRL_SPLIT_LOCK_DETECT;
+>  
+> -	return !wrmsrl_safe(MSR_TEST_CTRL, test_ctrl_val);
+> +	wrmsrl(MSR_TEST_CTRL, test_ctrl_val);
+>  }
+>  
+>  static void split_lock_init(void)
+>  {
+> -	if (sld_state == sld_off)
+> -		return;
+> -
+> -	if (__sld_msr_set(true))
+> -		return;
+> -
+> -	/*
+> -	 * If this is anything other than the boot-cpu, you've done
+> -	 * funny things and you get to keep whatever pieces.
+> -	 */
+> -	pr_warn("MSR fail -- disabled\n");
+> -	sld_state = sld_off;
+> +	split_lock_verify_msr(sld_state != sld_off);
+
+I think it'd be worth a WARN_ON() if this fails with sld_state != off.  If
+the WRMSR fails, then presumably SLD is off when it's expected to be on.
+The implied WARN on the unsafe WRMSR in sld_update_msr() won't fire unless
+a task generates an #AC on a non-buggy core and then gets migrated to the
+buggy core.  Even if the WARNs are redundant, if something is wrong it'd be
+a lot easier for a user to triage/debug if there is a WARN in boot as
+opposed to a runtime WARN that requires a misbehaving application and
+scheduler behavior.
+
+>  }
+>  
+>  bool handle_user_split_lock(struct pt_regs *regs, long error_code)
+> @@ -1071,7 +1083,7 @@ bool handle_user_split_lock(struct pt_regs *regs, long error_code)
+>  	 * progress and set TIF_SLD so the detection is re-enabled via
+>  	 * switch_to_sld() when the task is scheduled out.
+>  	 */
+> -	__sld_msr_set(false);
+> +	sld_update_msr(false);
+>  	set_tsk_thread_flag(current, TIF_SLD);
+>  	return true;
+>  }
+> @@ -1085,7 +1097,7 @@ bool handle_user_split_lock(struct pt_regs *regs, long error_code)
+>   */
+>  void switch_to_sld(unsigned long tifn)
+>  {
+> -	__sld_msr_set(!(tifn & _TIF_SLD));
+> +	sld_update_msr(!(tifn & _TIF_SLD));
+>  }
+>  
+>  #define SPLIT_LOCK_CPU(model) {X86_VENDOR_INTEL, 6, model, X86_FEATURE_ANY}
+> -- 
+> 2.20.1
+> 
