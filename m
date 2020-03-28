@@ -2,129 +2,96 @@ Return-Path: <SRS0=NZ+o=5N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86378C2D0EC
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 20:44:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76769C43331
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 20:50:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A904206F6
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 20:44:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F28C20714
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 20:50:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Vql+JZGS"
+	dkim=pass (1024-bit key) header.d=pobox.com header.i=@pobox.com header.b="qEkTFPur";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=fluxnic.net header.i=@fluxnic.net header.b="ypSwc9Ri"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727508AbgC1Un7 (ORCPT
+        id S1727308AbgC1Uuf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 28 Mar 2020 16:43:59 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:36265 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726976AbgC1Un6 (ORCPT
+        Sat, 28 Mar 2020 16:50:35 -0400
+Received: from pb-smtp1.pobox.com ([64.147.108.70]:62694 "EHLO
+        pb-smtp1.pobox.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727009AbgC1Uuf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 28 Mar 2020 16:43:58 -0400
-Received: by mail-pf1-f196.google.com with SMTP id i13so6456299pfe.3;
-        Sat, 28 Mar 2020 13:43:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=/KFYTP+4isYO+Nu64ocnQ9VsaDC4G9NxfTqcPGikuJs=;
-        b=Vql+JZGSmvAVWvNQMLCmmxOwBp8hkm1vmq2icYAMfmPekocTIe0TWnP0P1f66x72Rd
-         WRzklPFEhlDRhG05xIl3WKb/Ee33fkmUm7TL8DVm/6FJBJGDGqjGUuKZarRyKHrjx7FG
-         pv/qHWehTkswx9foPs0HByFifQef1fzxj708Tcktu74H664Dfsvk5+tjnq3EY2YNh5bm
-         +j0FI/Jqk7SSzZxV+4XR4ikkTRFdhcy9la5VCfAesdIOS0EcywrjCk0xvUkuTe5aP3sV
-         xuQGK8zyTub6rBEN2E6G+2+qhkiC7AH1sHF9iUEJ5SbFRLQFaR8hurdhVbApo/GlL1HY
-         gRnQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=/KFYTP+4isYO+Nu64ocnQ9VsaDC4G9NxfTqcPGikuJs=;
-        b=LqJ/RwGzYXyAVjfTT7GTjL4tGW8Gzn9zaI9mpijT9knmDA7128uK39uYEzYPZCOb/2
-         0G1qcn1b5V7WpUid4huMh3SrRQJ8tp/HOLBAIp0lMvkNfFiS5keD/ACWAS95hITLsG/c
-         FtuGpObzUeA3clM5WY/LtRFCZth4sP3hw+yrHJHOjJjWQGGRgHOoUeSx7+90a/zvbDSg
-         7Q8FUtCRzO0SgSvQA02zjKjJoxEU0J9dHJmhP8u5qhLf8qGicwWnnmxmwh487fMQ5Qyx
-         31ufDFBPQ0G8DU00JYv1Qy26iWmUjfkMNuP/gOZg0Zo/D3TSUfOSfMEeQ9zIqryAdo5l
-         A+kg==
-X-Gm-Message-State: ANhLgQ19Btc+QxSVy4QwOYL4diV2LxDbPhx7cn6e74/eHovsxPYaXG1V
-        mav0fCAW6Ll8qJoDO2G8rWlgQi7i+tNrCDJcBHY=
-X-Google-Smtp-Source: ADFU+vsKB4iGKQecF/EusqwlApCiHlWvxU386zM5SXxTzdTzlx3AyjA89liyhD5mK+CGJcFxZDYz9oJXwK1ffx2gimI=
-X-Received: by 2002:a63:798a:: with SMTP id u132mr6025684pgc.203.1585428237055;
- Sat, 28 Mar 2020 13:43:57 -0700 (PDT)
+        Sat, 28 Mar 2020 16:50:35 -0400
+Received: from pb-smtp1.pobox.com (unknown [127.0.0.1])
+        by pb-smtp1.pobox.com (Postfix) with ESMTP id 1100243590;
+        Sat, 28 Mar 2020 16:50:33 -0400 (EDT)
+        (envelope-from nico@fluxnic.net)
+DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=pobox.com; h=date:from:to
+        :cc:subject:in-reply-to:message-id:references:mime-version
+        :content-type; s=sasl; bh=MVnJ4eCCBFn2tIDbc7IaRiJ4y4k=; b=qEkTFP
+        urURuXj05IisyZUwOJbdNlYDNyKpD18kZK+S5iGfGsC9XophQUtpGtiwE24lK8FG
+        SG69eeCM8LWv/klhBJTtiYa3adCIAP6GLWPg+nEtGFd0G/IY8KAa7OfuTM+hIGqw
+        rGLvWbYaBqsvDjTFVium1K5Ameb0Tls4uj4jc=
+Received: from pb-smtp1.nyi.icgroup.com (unknown [127.0.0.1])
+        by pb-smtp1.pobox.com (Postfix) with ESMTP id 081854358F;
+        Sat, 28 Mar 2020 16:50:33 -0400 (EDT)
+        (envelope-from nico@fluxnic.net)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed; d=fluxnic.net;
+ h=date:from:to:cc:subject:in-reply-to:message-id:references:mime-version:content-type; s=2016-12.pbsmtp; bh=JASv01FUd5xtHan2jcoYVzXPo3Lp3q4mtypqVd9D1xs=; b=ypSwc9Riz3ofKU5sEtPdwWgP7uwl4R6V8NQJGeTqDgiOKLAV8zXV45VDpvBxBIlGtiiXcz+FxkvPA7daO0H29nlbOFJjvlqUH3dMwWXhRHxLgld0N+kzxGZtzol9BZHHnY/1h4g3/2+hrO1EgFrl/8U5o7AV7XRhi1C32STW8Hc=
+Received: from yoda.home (unknown [24.203.50.76])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by pb-smtp1.pobox.com (Postfix) with ESMTPSA id 631834358E;
+        Sat, 28 Mar 2020 16:50:32 -0400 (EDT)
+        (envelope-from nico@fluxnic.net)
+Received: from xanadu.home (xanadu.home [192.168.2.2])
+        by yoda.home (Postfix) with ESMTPSA id 721EC2DA0174;
+        Sat, 28 Mar 2020 16:50:31 -0400 (EDT)
+Date:   Sat, 28 Mar 2020 16:50:31 -0400 (EDT)
+From:   Nicolas Pitre <nico@fluxnic.net>
+To:     Adam Borowski <kilobyte@angband.pl>
+cc:     Chen Wandun <chenwandun@huawei.com>, jslaby@suse.com,
+        gregkh@linuxfoundation.org, daniel.vetter@ffwll.ch,
+        sam@ravnborg.org, b.zolnierkie@samsung.com, lukas@wunner.de,
+        ghalat@redhat.com, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH next] vt: fix a warning when kmalloc alloc large memory
+In-Reply-To: <20200328031257.GA30454@angband.pl>
+Message-ID: <nycvar.YSQ.7.76.2003281641230.2671@knanqh.ubzr>
+References: <20200328021340.27315-1-chenwandun@huawei.com> <nycvar.YSQ.7.76.2003272232340.2671@knanqh.ubzr> <20200328031257.GA30454@angband.pl>
+User-Agent: Alpine 2.21 (LFD 202 2017-01-01)
 MIME-Version: 1.0
-References: <cover.1585343507.git.gayatri.kammela@intel.com>
-In-Reply-To: <cover.1585343507.git.gayatri.kammela@intel.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Sat, 28 Mar 2020 22:43:44 +0200
-Message-ID: <CAHp75VcEO0udSzpWX14vaZcjLni2RA3NGXNqr50HMK=S7GWjxg@mail.gmail.com>
-Subject: Re: [PATCH v2 0/3] Fixes: update Tiger Lake ACPI device IDs
-To:     Gayatri Kammela <gayatri.kammela@intel.com>
-Cc:     Linux PM <linux-pm@vger.kernel.org>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Len Brown <lenb@kernel.org>,
-        Darren Hart <dvhart@infradead.org>,
-        Alex Hung <alex.hung@canonical.com>,
-        "Zhang, Rui" <rui.zhang@intel.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Amit Kucheria <amit.kucheria@verdurent.com>,
-        Mika Westerberg <mika.westerberg@intel.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        "Prestopine, Charles D" <charles.d.prestopine@intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Srinivas Pandruvada <srinivas.pandruvada@intel.com>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+X-Pobox-Relay-ID: C4076B7C-7135-11EA-AB05-C28CBED8090B-78420484!pb-smtp1.pobox.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 27, 2020 at 11:34 PM Gayatri Kammela
-<gayatri.kammela@intel.com> wrote:
->
-> Hi,
->
-> The hardware IDs for devices supported by Tiger Lake for various drivers
-> such as DPTF, fan, Intel thermal and intel-hid are added with missing 'C'
-> which makes them invalid. Hence fix these IDs by updating.
->
-> For instance, the updated ID now looks like
-> INT1047 --> INTC1047
->
-> Patch 1: Update Tiger Lake ACPI device IDs for DPTF and fan drivers
-> Patch 2: Update Tiger Lake ACPI device ID for intel-hid driver
-> Patch 3: Update Tiger Lake ACPI device IDs for thermal driver
->
+On Sat, 28 Mar 2020, Adam Borowski wrote:
 
-Please, keep the IDs sorted (INTC should go after INT, etc).
-Also I will need an Ack for patch 1 (at least).
+> On Fri, Mar 27, 2020 at 10:55:14PM -0400, Nicolas Pitre wrote:
+> > On Sat, 28 Mar 2020, Chen Wandun wrote:
+> > 
+> > > If the memory size that use kmalloc() to allocate exceed MAX_ORDER pages,
+> > > it will hit the WARN_ON_ONCE(!(gfp_mask & __GFP_NOWARN)), so add memory
+> > > allocation flag __GFP_NOWARN to silence a warning, othervise, it will
+> > > cause panic if panic_on_warn is enable.
+> > 
+> > Wow! How do you manage that? You need something like a 1024x1024 text 
+> > screen to get such a big memory allocation.
+> 
+> ioctl(VT_RESIZE) allows up to 32767x32767, unprivileged for a local user.
+> That's 4GB per console.
 
-> Changes since v1:
-> 1) Added fixes tag to each patch
->
-> Gayatri Kammela (3):
->   ACPI: fix: Update Tiger Lake ACPI device IDs
->   platform/x86: intel-hid: fix: Update Tiger Lake ACPI device ID
->   thermal: int340x_thermal: fix: Update Tiger Lake ACPI device IDs
->
->  drivers/acpi/device_pm.c                                | 2 +-
->  drivers/acpi/dptf/dptf_power.c                          | 2 +-
->  drivers/acpi/dptf/int340x_thermal.c                     | 8 ++++----
->  drivers/platform/x86/intel-hid.c                        | 2 +-
->  drivers/thermal/intel/int340x_thermal/int3400_thermal.c | 2 +-
->  drivers/thermal/intel/int340x_thermal/int3403_thermal.c | 2 +-
->  6 files changed, 9 insertions(+), 9 deletions(-)
->
-> Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> Cc: Srinivas Pandruvada <srinivas.pandruvada@intel.com>
-> Cc: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> --
-> 2.17.1
->
+In fact that's not exactly true. The code has this protection:
+
+        if (new_screen_size > (4 << 20))
+                return -EINVAL;
+
+The problem is with the unicode screen content whose buffer is larger 
+than the legacy glyph buffer. Still, the above test is a bit iffy as it 
+depends on the default MAX_ORDER value which is configurable.
 
 
--- 
-With Best Regards,
-Andy Shevchenko
+Nicolas
