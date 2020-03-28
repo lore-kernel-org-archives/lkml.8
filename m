@@ -2,99 +2,71 @@ Return-Path: <SRS0=NZ+o=5N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54E6FC2D0E7
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 03:06:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0226BC43331
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 03:13:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 30651206F1
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 03:06:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C8957206F1
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 03:13:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727355AbgC1DGj (ORCPT
+        id S1727067AbgC1DNR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Mar 2020 23:06:39 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:51310 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726291AbgC1DGj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Mar 2020 23:06:39 -0400
-Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 9190A9271D5AFA8BEF8B;
-        Sat, 28 Mar 2020 11:06:35 +0800 (CST)
-Received: from localhost (10.173.223.234) by DGGEMS410-HUB.china.huawei.com
- (10.3.19.210) with Microsoft SMTP Server id 14.3.487.0; Sat, 28 Mar 2020
- 11:06:28 +0800
-From:   YueHaibing <yuehaibing@huawei.com>
-To:     <netanel@amazon.com>, <akiyano@amazon.com>, <gtzalik@amazon.com>,
-        <saeedb@amazon.com>, <zorik@amazon.com>, <davem@davemloft.net>,
-        <sameehj@amazon.com>
-CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <bpf@vger.kernel.org>, YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH net-next] net: ena: Make some functions static
-Date:   Sat, 28 Mar 2020 11:06:20 +0800
-Message-ID: <20200328030620.22328-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.10.2.windows.1
+        Fri, 27 Mar 2020 23:13:17 -0400
+Received: from tartarus.angband.pl ([54.37.238.230]:47178 "EHLO
+        tartarus.angband.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726291AbgC1DNR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Mar 2020 23:13:17 -0400
+Received: from kilobyte by tartarus.angband.pl with local (Exim 4.92)
+        (envelope-from <kilobyte@angband.pl>)
+        id 1jI1u5-0007vu-4a; Sat, 28 Mar 2020 04:12:57 +0100
+Date:   Sat, 28 Mar 2020 04:12:57 +0100
+From:   Adam Borowski <kilobyte@angband.pl>
+To:     Nicolas Pitre <nico@fluxnic.net>
+Cc:     Chen Wandun <chenwandun@huawei.com>, jslaby@suse.com,
+        gregkh@linuxfoundation.org, daniel.vetter@ffwll.ch,
+        sam@ravnborg.org, b.zolnierkie@samsung.com, lukas@wunner.de,
+        ghalat@redhat.com, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH next] vt: fix a warning when kmalloc alloc large memory
+Message-ID: <20200328031257.GA30454@angband.pl>
+References: <20200328021340.27315-1-chenwandun@huawei.com>
+ <nycvar.YSQ.7.76.2003272232340.2671@knanqh.ubzr>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.173.223.234]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <nycvar.YSQ.7.76.2003272232340.2671@knanqh.ubzr>
+X-Junkbait: aaron@angband.pl, zzyx@angband.pl
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-SA-Exim-Connect-IP: <locally generated>
+X-SA-Exim-Mail-From: kilobyte@angband.pl
+X-SA-Exim-Scanned: No (on tartarus.angband.pl); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix sparse warnings:
+On Fri, Mar 27, 2020 at 10:55:14PM -0400, Nicolas Pitre wrote:
+> On Sat, 28 Mar 2020, Chen Wandun wrote:
+> 
+> > If the memory size that use kmalloc() to allocate exceed MAX_ORDER pages,
+> > it will hit the WARN_ON_ONCE(!(gfp_mask & __GFP_NOWARN)), so add memory
+> > allocation flag __GFP_NOWARN to silence a warning, othervise, it will
+> > cause panic if panic_on_warn is enable.
+> 
+> Wow! How do you manage that? You need something like a 1024x1024 text 
+> screen to get such a big memory allocation.
 
-drivers/net/ethernet/amazon/ena/ena_netdev.c:460:6: warning: symbol 'ena_xdp_exchange_program_rx_in_range' was not declared. Should it be static?
-drivers/net/ethernet/amazon/ena/ena_netdev.c:481:6: warning: symbol 'ena_xdp_exchange_program' was not declared. Should it be static?
-drivers/net/ethernet/amazon/ena/ena_netdev.c:1555:5: warning: symbol 'ena_xdp_handle_buff' was not declared. Should it be static?
+ioctl(VT_RESIZE) allows up to 32767x32767, unprivileged for a local user.
+That's 4GB per console.
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
----
- drivers/net/ethernet/amazon/ena/ena_netdev.c | 13 ++++++-------
- 1 file changed, 6 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/net/ethernet/amazon/ena/ena_netdev.c b/drivers/net/ethernet/amazon/ena/ena_netdev.c
-index 5703282aba8f..2cc765df8da3 100644
---- a/drivers/net/ethernet/amazon/ena/ena_netdev.c
-+++ b/drivers/net/ethernet/amazon/ena/ena_netdev.c
-@@ -457,10 +457,9 @@ static void ena_xdp_unregister_rxq_info(struct ena_ring *rx_ring)
- 	xdp_rxq_info_unreg(&rx_ring->xdp_rxq);
- }
- 
--void ena_xdp_exchange_program_rx_in_range(struct ena_adapter *adapter,
--					  struct bpf_prog *prog,
--					  int first,
--					  int count)
-+static void ena_xdp_exchange_program_rx_in_range(struct ena_adapter *adapter,
-+						 struct bpf_prog *prog,
-+						 int first, int count)
- {
- 	struct ena_ring *rx_ring;
- 	int i = 0;
-@@ -478,8 +477,8 @@ void ena_xdp_exchange_program_rx_in_range(struct ena_adapter *adapter,
- 	}
- }
- 
--void ena_xdp_exchange_program(struct ena_adapter *adapter,
--			      struct bpf_prog *prog)
-+static void ena_xdp_exchange_program(struct ena_adapter *adapter,
-+				     struct bpf_prog *prog)
- {
- 	struct bpf_prog *old_bpf_prog = xchg(&adapter->xdp_bpf_prog, prog);
- 
-@@ -1552,7 +1551,7 @@ static void ena_set_rx_hash(struct ena_ring *rx_ring,
- 	}
- }
- 
--int ena_xdp_handle_buff(struct ena_ring *rx_ring, struct xdp_buff *xdp)
-+static int ena_xdp_handle_buff(struct ena_ring *rx_ring, struct xdp_buff *xdp)
- {
- 	struct ena_rx_buffer *rx_info;
- 	int ret;
+Meow!
 -- 
-2.17.1
-
-
+⢀⣴⠾⠻⢶⣦⠀
+⣾⠁⢠⠒⠀⣿⡁ in the beginning was the boot and root floppies and they were good.
+⢿⡄⠘⠷⠚⠋⠀                                       -- <willmore> on #linux-sunxi
+⠈⠳⣄⠀⠀⠀⠀
