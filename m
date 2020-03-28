@@ -2,151 +2,237 @@ Return-Path: <SRS0=NZ+o=5N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1074FC2D0E8
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 05:17:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DC81C43331
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 05:39:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E6D1F206F6
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 05:17:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CAD57206F2
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 05:39:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726220AbgC1FKf (ORCPT
+        id S1725965AbgC1Fin (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 28 Mar 2020 01:10:35 -0400
-Received: from mta01.start.ca ([162.250.196.97]:44074 "EHLO mta01.start.ca"
+        Sat, 28 Mar 2020 01:38:43 -0400
+Received: from mga05.intel.com ([192.55.52.43]:27576 "EHLO mga05.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725372AbgC1FKf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 28 Mar 2020 01:10:35 -0400
-Received: from mta01.start.ca (localhost [127.0.0.1])
-        by mta01.start.ca (Postfix) with ESMTP id A946E4292B;
-        Sat, 28 Mar 2020 01:10:33 -0400 (EDT)
-Received: from localhost (dhcp-24-53-240-163.cable.user.start.ca [24.53.240.163])
-        by mta01.start.ca (Postfix) with ESMTPS id ADCD142928;
-        Sat, 28 Mar 2020 01:10:31 -0400 (EDT)
-From:   Nick Bowler <nbowler@draconx.ca>
-To:     linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     Sagi Grimberg <sagi@grimberg.me>,
-        Christoph Hellwig <hch@infradead.org>,
-        Keith Busch <kbusch@kernel.org>
-Subject: [PATCH v2 2/2] nvme: Fix compat address handling in several ioctls
-Date:   Sat, 28 Mar 2020 01:09:09 -0400
-Message-Id: <20200328050909.30639-3-nbowler@draconx.ca>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200328050909.30639-1-nbowler@draconx.ca>
-References: <20200328050909.30639-1-nbowler@draconx.ca>
+        id S1725372AbgC1Fin (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 28 Mar 2020 01:38:43 -0400
+IronPort-SDR: R824kiF46dhRxhx5oq7eZQP6gEeFAE1gaPElFZe2oe81Wf9QZVu789NsAV3rpzKbwc5Z8TYHdI
+ FUL0Fzu5NEBQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Mar 2020 22:38:40 -0700
+IronPort-SDR: p4R+MGyFIbQB6LfSrgLElLUjOc2O7a167fq9fPNhkmN3fVZUPjeG6CYN2VMDOC5GGh26SJrDnb
+ gtKSod0HMUsA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,315,1580803200"; 
+   d="scan'208";a="394586164"
+Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
+  by orsmga004.jf.intel.com with ESMTP; 27 Mar 2020 22:38:39 -0700
+Received: from kbuild by lkp-server01 with local (Exim 4.89)
+        (envelope-from <lkp@intel.com>)
+        id 1jI4B4-0008aP-J8; Sat, 28 Mar 2020 13:38:38 +0800
+Date:   Sat, 28 Mar 2020 13:38:32 +0800
+From:   kbuild test robot <lkp@intel.com>
+To:     "x86-ml" <x86@kernel.org>
+Cc:     linux-kernel@vger.kernel.org
+Subject: [tip:x86/build] BUILD SUCCESS
+ 72cb2113c1bbd82cf3e062a39ff2753ee9d3fae7
+Message-ID: <5e7ee2d8.U/bZWSAJhDXqEMcb%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Virus-Scanned: ClamAV using ClamSMTP
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On a 32-bit kernel, the upper bits of userspace addresses passed
-via various ioctls are silently ignored by the nvme driver.
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git  x86/build
+branch HEAD: 72cb2113c1bbd82cf3e062a39ff2753ee9d3fae7  vmlinux.lds: Discard .note.gnu.property sections in generic NOTES
 
-However on a 64-bit kernel running a compat task, these upper bits are
-not ignored and are in fact required to be zero for the ioctls to work.
+elapsed time: 730m
 
-Unfortunately, this difference matters.  32-bit smartctl submits the
-NVME_IOCTL_ADMIN_CMD ioctl with garbage in these upper bits because
-it seems the pointer value it puts into the nvme_passthru_cmd structure
-is sign extended.  This works fine on 32-bit kernels but fails on a
-64-bit one because (at least on my setup) the addresses smartctl uses
-are consistently above 2G.  For example:
+configs tested: 170
+configs skipped: 14
 
-  # smartctl -x /dev/nvme0n1
-  smartctl 7.1 2019-12-30 r5022 [x86_64-linux-5.5.11] (local build)
-  Copyright (C) 2002-19, Bruce Allen, Christian Franke, www.smartmontools.org
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-  Read NVMe Identify Controller failed: NVME_IOCTL_ADMIN_CMD: Bad address
+arm                              allmodconfig
+arm                               allnoconfig
+arm                              allyesconfig
+arm64                            allmodconfig
+arm64                             allnoconfig
+arm64                            allyesconfig
+arm                         at91_dt_defconfig
+arm                           efm32_defconfig
+arm                          exynos_defconfig
+arm                        multi_v5_defconfig
+arm                        multi_v7_defconfig
+arm                        shmobile_defconfig
+arm                           sunxi_defconfig
+arm64                               defconfig
+sparc                            allyesconfig
+parisc                generic-64bit_defconfig
+mips                              allnoconfig
+mips                      malta_kvm_defconfig
+um                           x86_64_defconfig
+sparc                               defconfig
+ia64                             allmodconfig
+i386                              allnoconfig
+i386                             alldefconfig
+i386                             allyesconfig
+i386                                defconfig
+ia64                             alldefconfig
+ia64                              allnoconfig
+ia64                             allyesconfig
+ia64                                defconfig
+c6x                              allyesconfig
+c6x                        evmc6678_defconfig
+nios2                         10m50_defconfig
+nios2                         3c120_defconfig
+openrisc                    or1ksim_defconfig
+openrisc                 simple_smp_defconfig
+xtensa                       common_defconfig
+xtensa                          iss_defconfig
+nds32                               defconfig
+nds32                             allnoconfig
+csky                                defconfig
+alpha                               defconfig
+h8300                       h8s-sim_defconfig
+h8300                     edosk2674_defconfig
+m68k                       m5475evb_defconfig
+m68k                             allmodconfig
+h8300                    h8300h-sim_defconfig
+m68k                           sun3_defconfig
+m68k                          multi_defconfig
+arc                              allyesconfig
+arc                                 defconfig
+microblaze                      mmu_defconfig
+microblaze                    nommu_defconfig
+powerpc                           allnoconfig
+powerpc                             defconfig
+powerpc                       ppc64_defconfig
+powerpc                          rhel-kconfig
+mips                           32r2_defconfig
+mips                         64r6el_defconfig
+mips                             allmodconfig
+mips                             allyesconfig
+mips                      fuloong2e_defconfig
+parisc                            allnoconfig
+parisc                           allyesconfig
+parisc                generic-32bit_defconfig
+x86_64               randconfig-a001-20200327
+x86_64               randconfig-a002-20200327
+x86_64               randconfig-a003-20200327
+i386                 randconfig-a001-20200327
+i386                 randconfig-a002-20200327
+i386                 randconfig-a003-20200327
+mips                 randconfig-a001-20200327
+nds32                randconfig-a001-20200327
+m68k                 randconfig-a001-20200327
+parisc               randconfig-a001-20200327
+alpha                randconfig-a001-20200327
+riscv                randconfig-a001-20200327
+h8300                randconfig-a001-20200327
+microblaze           randconfig-a001-20200327
+nios2                randconfig-a001-20200327
+c6x                  randconfig-a001-20200327
+sparc64              randconfig-a001-20200327
+s390                 randconfig-a001-20200327
+xtensa               randconfig-a001-20200327
+csky                 randconfig-a001-20200327
+openrisc             randconfig-a001-20200327
+sh                   randconfig-a001-20200327
+x86_64               randconfig-b001-20200327
+x86_64               randconfig-b002-20200327
+x86_64               randconfig-b003-20200327
+i386                 randconfig-b001-20200327
+i386                 randconfig-b002-20200327
+i386                 randconfig-b003-20200327
+x86_64               randconfig-b001-20200328
+x86_64               randconfig-b002-20200328
+x86_64               randconfig-b003-20200328
+i386                 randconfig-b001-20200328
+i386                 randconfig-b002-20200328
+i386                 randconfig-b003-20200328
+x86_64               randconfig-c001-20200327
+x86_64               randconfig-c002-20200327
+x86_64               randconfig-c003-20200327
+i386                 randconfig-c001-20200327
+i386                 randconfig-c002-20200327
+i386                 randconfig-c003-20200327
+x86_64               randconfig-d001-20200327
+x86_64               randconfig-d002-20200327
+x86_64               randconfig-d003-20200327
+i386                 randconfig-d001-20200327
+i386                 randconfig-d002-20200327
+i386                 randconfig-d003-20200327
+x86_64               randconfig-e001-20200327
+x86_64               randconfig-e002-20200327
+x86_64               randconfig-e003-20200327
+i386                 randconfig-e001-20200327
+i386                 randconfig-e002-20200327
+i386                 randconfig-e003-20200327
+x86_64               randconfig-f001-20200327
+x86_64               randconfig-f002-20200327
+x86_64               randconfig-f003-20200327
+i386                 randconfig-f001-20200327
+i386                 randconfig-f002-20200327
+i386                 randconfig-f003-20200327
+x86_64               randconfig-g001-20200327
+x86_64               randconfig-g002-20200327
+x86_64               randconfig-g003-20200327
+i386                 randconfig-g001-20200327
+i386                 randconfig-g002-20200327
+i386                 randconfig-g003-20200327
+x86_64               randconfig-h001-20200327
+x86_64               randconfig-h002-20200327
+x86_64               randconfig-h003-20200327
+i386                 randconfig-h001-20200327
+i386                 randconfig-h002-20200327
+i386                 randconfig-h003-20200327
+arc                  randconfig-a001-20200327
+arm                  randconfig-a001-20200327
+arm64                randconfig-a001-20200327
+ia64                 randconfig-a001-20200327
+powerpc              randconfig-a001-20200327
+sparc                randconfig-a001-20200327
+riscv                            allmodconfig
+riscv                             allnoconfig
+riscv                            allyesconfig
+riscv                               defconfig
+riscv                    nommu_virt_defconfig
+riscv                          rv32_defconfig
+s390                             alldefconfig
+s390                             allmodconfig
+s390                              allnoconfig
+s390                             allyesconfig
+s390                          debug_defconfig
+s390                                defconfig
+s390                       zfcpdump_defconfig
+sh                          rsk7269_defconfig
+sh                               allmodconfig
+sh                            titan_defconfig
+sh                  sh7785lcr_32bit_defconfig
+sh                                allnoconfig
+sparc64                          allmodconfig
+sparc64                           allnoconfig
+sparc64                          allyesconfig
+sparc64                             defconfig
+um                             i386_defconfig
+um                                  defconfig
+x86_64                              fedora-25
+x86_64                                  kexec
+x86_64                                    lkp
+x86_64                                   rhel
+x86_64                         rhel-7.2-clear
+x86_64                               rhel-7.6
 
-Since changing 32-bit kernels to actually check all of the submitted
-address bits now would break existing userspace, this patch fixes the
-compat problem by explicitly zeroing the upper bits in the compat case.
-This enables 32-bit smartctl to work on a 64-bit kernel.
-
-Signed-off-by: Nick Bowler <nbowler@draconx.ca>
 ---
- drivers/nvme/host/core.c | 28 +++++++++++++++++++++-------
- 1 file changed, 21 insertions(+), 7 deletions(-)
-
-diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
-index 9eccf56494de..f265ccd69dd7 100644
---- a/drivers/nvme/host/core.c
-+++ b/drivers/nvme/host/core.c
-@@ -6,6 +6,7 @@
- 
- #include <linux/blkdev.h>
- #include <linux/blk-mq.h>
-+#include <linux/compat.h>
- #include <linux/delay.h>
- #include <linux/errno.h>
- #include <linux/hdreg.h>
-@@ -1248,6 +1249,19 @@ static void nvme_enable_aen(struct nvme_ctrl *ctrl)
- 	queue_work(nvme_wq, &ctrl->async_event_work);
- }
- 
-+/*
-+ * Convert integer values from ioctl structures to user pointers, silently
-+ * ignoring the upper bits in the compat case to match behaviour of 32-bit
-+ * kernels.
-+ */
-+static void __user *nvme_to_user_ptr(uintptr_t ptrval)
-+{
-+	if (in_compat_syscall())
-+		ptrval = (compat_uptr_t)ptrval;
-+
-+	return (void __user *)ptrval;
-+}
-+
- static int nvme_submit_io(struct nvme_ns *ns, struct nvme_user_io __user *uio,
- 			  size_t uio_size)
- {
-@@ -1276,7 +1290,7 @@ static int nvme_submit_io(struct nvme_ns *ns, struct nvme_user_io __user *uio,
- 
- 	length = (io.nblocks + 1) << ns->lba_shift;
- 	meta_len = (io.nblocks + 1) * ns->ms;
--	metadata = (void __user *)(uintptr_t)io.metadata;
-+	metadata = nvme_to_user_ptr(io.metadata);
- 
- 	if (ns->ext) {
- 		length += meta_len;
-@@ -1299,7 +1313,7 @@ static int nvme_submit_io(struct nvme_ns *ns, struct nvme_user_io __user *uio,
- 	c.rw.appmask = cpu_to_le16(io.appmask);
- 
- 	return nvme_submit_user_cmd(ns->queue, &c,
--			(void __user *)(uintptr_t)io.addr, length,
-+			nvme_to_user_ptr(io.addr), length,
- 			metadata, meta_len, lower_32_bits(io.slba), NULL, 0);
- }
- 
-@@ -1419,9 +1433,9 @@ static int nvme_user_cmd(struct nvme_ctrl *ctrl, struct nvme_ns *ns,
- 
- 	effects = nvme_passthru_start(ctrl, ns, cmd.opcode);
- 	status = nvme_submit_user_cmd(ns ? ns->queue : ctrl->admin_q, &c,
--			(void __user *)(uintptr_t)cmd.addr, cmd.data_len,
--			(void __user *)(uintptr_t)cmd.metadata,
--			cmd.metadata_len, 0, &result, timeout);
-+			nvme_to_user_ptr(cmd.addr), cmd.data_len,
-+			nvme_to_user_ptr(cmd.metadata), cmd.metadata_len,
-+			0, &result, timeout);
- 	nvme_passthru_end(ctrl, effects);
- 
- 	if (status >= 0) {
-@@ -1466,8 +1480,8 @@ static int nvme_user_cmd64(struct nvme_ctrl *ctrl, struct nvme_ns *ns,
- 
- 	effects = nvme_passthru_start(ctrl, ns, cmd.opcode);
- 	status = nvme_submit_user_cmd(ns ? ns->queue : ctrl->admin_q, &c,
--			(void __user *)(uintptr_t)cmd.addr, cmd.data_len,
--			(void __user *)(uintptr_t)cmd.metadata, cmd.metadata_len,
-+			nvme_to_user_ptr(cmd.addr), cmd.data_len,
-+			nvme_to_user_ptr(cmd.metadata), cmd.metadata_len,
- 			0, &cmd.result, timeout);
- 	nvme_passthru_end(ctrl, effects);
- 
--- 
-2.24.1
-
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
