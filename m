@@ -7,50 +7,50 @@ X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA2D6C2D0E5
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 14:25:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5434BC2D0ED
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 14:26:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B6806206F6
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 14:25:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 20ED22073B
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 14:26:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585405557;
-	bh=20j5mAkNmazAVKkZVM1k5G9h1DducNS94PjQLeaP7gU=;
+	s=default; t=1585405584;
+	bh=4x4rXvtnC0B2Hl2G8lyRv7k0jB+8get01hPUdCAkHKk=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=AKIwW61YW8t0zv18bDNJnZAjtraiTXjB2oD629PHzExiZH0MVQp3kFN6B5yr/t01e
-	 YWGoOaPo4j32JXOrYoJJJ8jl4hsGBmICH+Yaq54PFsSX3/dmnMWkjRcZ8D8dzxsbJz
-	 TFsVms8lqoc9kdbRG1pezCRK9aeWumG+swCE2xH0=
+	b=M1Re3DToxGfW3Xe4ZrOs/keKuX9HMQfD8BOeQmS2Ef0E45dKnv2utJjy8YSuw6F0u
+	 8OyZKNa1uKFeK3/E/q99i8uyRXXp7yRjUcX+eobAPEDvmRowexo36RyM9vJpp4p7qd
+	 aAzQ+ylw00AGsSo3UlPppNEyXCGTYVsKYv2jffOM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726899AbgC1OZ4 (ORCPT
+        id S1727131AbgC1O0X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 28 Mar 2020 10:25:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53514 "EHLO mail.kernel.org"
+        Sat, 28 Mar 2020 10:26:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53718 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726325AbgC1OZ4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 28 Mar 2020 10:25:56 -0400
+        id S1726325AbgC1O0X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 28 Mar 2020 10:26:23 -0400
 Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3660620723;
-        Sat, 28 Mar 2020 14:25:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B6119206F6;
+        Sat, 28 Mar 2020 14:26:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585405555;
-        bh=20j5mAkNmazAVKkZVM1k5G9h1DducNS94PjQLeaP7gU=;
+        s=default; t=1585405582;
+        bh=4x4rXvtnC0B2Hl2G8lyRv7k0jB+8get01hPUdCAkHKk=;
         h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=OQzI4R9KbTPe+Um6UhltXpw0tkMJdYeJWwVuLhXVTjiLyfvTsBbJtr8tPK1iNK135
-         W0JqdXjDJPYrY9+B5mwFVxdK6iAkA/vQDpJUEzIK8wAyms+jF4NFLu87eX3EybxdZW
-         uN33eXuGDLnQl9fr+v039SFzORfZRtW7TKd0JvV8=
-Date:   Sat, 28 Mar 2020 14:25:51 +0000
+        b=gnyvH9YRef4E2bgvtoJjLHGCTTuXGfPGib0+f0GEaumolySRmZ5yKZP73qRSNef/z
+         HU1H5kGqWhhhukL3dRecgLCq8PA98BAEtAmtKPV3zHc9t907NNtbt8WgsFkgbjYZ/4
+         notdNfHnvaQs9j0d169c7V49wQmFEl06ms/x03a8=
+Date:   Sat, 28 Mar 2020 14:26:17 +0000
 From:   Jonathan Cameron <jic23@kernel.org>
 To:     Nishant Malpani <nish.malpani25@gmail.com>
 Cc:     andriy.shevchenko@linux.intel.com, joe@perches.com,
         knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net,
         linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 11/13] iio: light: st_uvis25_i2c: Use vsprintf
- extension %pe for symbolic error name
-Message-ID: <20200328142551.7c7c78bc@archlinux>
-In-Reply-To: <b48e846ee7f1fff6f05cd78cd7648f8b4228520d.1584897364.git.nish.malpani25@gmail.com>
+Subject: Re: [PATCH v2 13/13] iio: magn: bmc150: Use vsprintf extension %pe
+ for symbolic error name
+Message-ID: <20200328142617.50524604@archlinux>
+In-Reply-To: <aea18dc7c140eacaaba24b82ee7809196047c1e7.1584897364.git.nish.malpani25@gmail.com>
 References: <cover.1584897364.git.nish.malpani25@gmail.com>
-        <b48e846ee7f1fff6f05cd78cd7648f8b4228520d.1584897364.git.nish.malpani25@gmail.com>
+        <aea18dc7c140eacaaba24b82ee7809196047c1e7.1584897364.git.nish.malpani25@gmail.com>
 X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
@@ -60,7 +60,7 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 22 Mar 2020 22:53:13 +0530
+On Sun, 22 Mar 2020 22:53:15 +0530
 Nishant Malpani <nish.malpani25@gmail.com> wrote:
 
 > Utilize %pe format specifier from vsprintf while printing error logs
@@ -69,7 +69,8 @@ Nishant Malpani <nish.malpani25@gmail.com> wrote:
 > debugging.
 > 
 > Signed-off-by: Nishant Malpani <nish.malpani25@gmail.com>
-This one was already fixed up as well, so not applied.
+
+Applied,
 
 Thanks,
 
@@ -86,22 +87,22 @@ Jonathan
 > [1] https://marc.info/?l=linux-iio&m=158427554607223&w=2
 > [2] https://marc.info/?l=linux-iio&m=158481647605891&w=2
 > ---
->  drivers/iio/light/st_uvis25_i2c.c | 4 ++--
+>  drivers/iio/magnetometer/bmc150_magn_spi.c | 4 ++--
 >  1 file changed, 2 insertions(+), 2 deletions(-)
 > 
-> diff --git a/drivers/iio/light/st_uvis25_i2c.c b/drivers/iio/light/st_uvis25_i2c.c
-> index 4889bbeb0c73..801f754bc1a5 100644
-> --- a/drivers/iio/light/st_uvis25_i2c.c
-> +++ b/drivers/iio/light/st_uvis25_i2c.c
-> @@ -31,8 +31,8 @@ static int st_uvis25_i2c_probe(struct i2c_client *client,
+> diff --git a/drivers/iio/magnetometer/bmc150_magn_spi.c b/drivers/iio/magnetometer/bmc150_magn_spi.c
+> index ed9be0490d77..c6ed3ea8460a 100644
+> --- a/drivers/iio/magnetometer/bmc150_magn_spi.c
+> +++ b/drivers/iio/magnetometer/bmc150_magn_spi.c
+> @@ -22,8 +22,8 @@ static int bmc150_magn_spi_probe(struct spi_device *spi)
 >  
->  	regmap = devm_regmap_init_i2c(client, &st_uvis25_i2c_regmap_config);
+>  	regmap = devm_regmap_init_spi(spi, &bmc150_magn_regmap_config);
 >  	if (IS_ERR(regmap)) {
-> -		dev_err(&client->dev, "Failed to register i2c regmap %d\n",
+> -		dev_err(&spi->dev, "Failed to register spi regmap %d\n",
 > -			(int)PTR_ERR(regmap));
-> +		dev_err(&client->dev, "Failed to register i2c regmap: %pe\n",
+> +		dev_err(&spi->dev, "Failed to register spi regmap: %pe\n",
 > +			regmap);
 >  		return PTR_ERR(regmap);
 >  	}
->  
+>  	return bmc150_magn_probe(&spi->dev, regmap, spi->irq, id->name);
 
