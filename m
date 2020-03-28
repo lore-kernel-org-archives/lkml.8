@@ -2,137 +2,113 @@ Return-Path: <SRS0=NZ+o=5N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DD62C43331
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 18:21:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34EDDC2D0EC
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 18:21:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F33220714
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 18:21:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1024B20714
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 18:21:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="mZK8iXS6"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UZI3X69m"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726463AbgC1SVF (ORCPT
+        id S1726937AbgC1SV5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 28 Mar 2020 14:21:05 -0400
-Received: from mo4-p00-ob.smtp.rzone.de ([81.169.146.218]:36595 "EHLO
-        mo4-p00-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725807AbgC1SVE (ORCPT
+        Sat, 28 Mar 2020 14:21:57 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:38866 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725807AbgC1SV5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 28 Mar 2020 14:21:04 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1585419662;
-        s=strato-dkim-0002; d=goldelico.com;
-        h=To:References:Message-Id:Cc:Date:In-Reply-To:From:Subject:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=201XcJutOCoesKuDpsFmIpB9/9V6Sc+xigsUbwSoqqE=;
-        b=mZK8iXS6d3uECfaSCCGtjYfzTCR1+oMdgJhDYG0yxZmsfVyUqBcGxqHzSEDEWIDYTj
-        V3md6L+H9nBzkKFOeJPspkDihPpynJudihCkZYAIvTotOStuS8dC8qQlDhxo+IOg07HE
-        bzETk0lZZZUV2glEqbpGZz7tXiKEQIw6xLYkpBh3n0ZkJ5vcyn/jZZg5I5Qtos7t4zdo
-        naGo6bgKHqZ3y8UnkAtM8jf2YjWnU+FnXptBP8uQV80ZeNWbECRUExyp1oi/GafYYviF
-        c/TSlPv8OBDVNpdPoODfBQOetRTWQi+qJ5iAj6ExuGN4sVxb5HP8R9egrluNdQD3+ihG
-        mn8A==
-X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMgPgp8VKxflSZ1P34KBj5Qpw97WFDlWcXA4N8z4="
-X-RZG-CLASS-ID: mo00
-Received: from imac.fritz.box
-        by smtp.strato.de (RZmta 46.2.1 DYNA|AUTH)
-        with ESMTPSA id m02241w2SIL19Td
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (curve X9_62_prime256v1 with 256 ECDH bits, eq. 3072 bits RSA))
-        (Client did not present a certificate);
-        Sat, 28 Mar 2020 19:21:01 +0100 (CET)
-Subject: Re: CHKDT error by f95cad74acdb ("dt-bindings: clocks: Convert Allwinner legacy clocks to schemas")
-Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
+        Sat, 28 Mar 2020 14:21:57 -0400
+Received: by mail-wm1-f65.google.com with SMTP id f6so9719152wmj.3;
+        Sat, 28 Mar 2020 11:21:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=36XBR0ayoO3LyynzyStu6CZ4NUVnEty/c/VbR1WfpFE=;
+        b=UZI3X69mmnGAQ4hP4hkW1mgGCYCITVCQURFygZtw2TWAyg0MQ8EGxK/fHjjH2C3TE+
+         CYNFLLzjFUUi2YD/MTFP3Go+LHnrJf3Gl/tchMzoxlpNJae+hrfHDwDIb6OnZuNGvv9H
+         tvhDzlT0x67MmI0bQbBlcUhoxMs1f0BHnIp7U2y9mBjHaOrdxRNr6iR0wldcUl7NZdDC
+         89DsQryK/rpivmB/W+JTKk4jt+w8wZUYxmMk3A+uAkW0uDXWcRwKfdZwOlYXZcRzkFem
+         lk73E37fFg/bJa9sms3l3sa510MQhTo5WZgcisG/aGY66KeMcg97DpMCwjjxOUA1kq/7
+         wNsg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=36XBR0ayoO3LyynzyStu6CZ4NUVnEty/c/VbR1WfpFE=;
+        b=Uu0Ivy1BgwHq0I9pPJtuUEU8lKFwOuilh/RQf68rx1E+6x1jK9yyCLGHb1rflIa0Rg
+         t+/L2So07jRFG2c6dNn2n0sNg5/EFo+xsh6mhXBMpgd96RALN93U0khzmbXDFEDxsMKx
+         t3BaHr7wK+jU8fKE6wzDVPNbQQYNWg4i6Ff78AptouEhBKL9+qPDdmSpP2LMd7J25QvI
+         uYNIQIcKVDjACClXlJu8XcV4fYE48+6TMk0oi5who3h+7bxUlucU8tYoc+SHjD2Fktxi
+         DGYXl+v01cSGDJS+66KgjEBsCujRjrfiKXGtFR47Ha705OVQVoKuk08TzBA16DKgIc0P
+         aXdw==
+X-Gm-Message-State: ANhLgQ3KjgFW9jp9EBPdJPbj/VV0jf1Ve2Ln+o4CIPUCzfJ29IdBuGM0
+        pyMchGmf5Fss35v7c7WJIQc=
+X-Google-Smtp-Source: ADFU+vscLyKBnpRVmMVlrMguDDiQaM764E/7p0jcjKXkbzvYdw1ftiq2ch6FXj/TlQu9bo43ttL/Zg==
+X-Received: by 2002:a1c:dc55:: with SMTP id t82mr4702415wmg.6.1585419715066;
+        Sat, 28 Mar 2020 11:21:55 -0700 (PDT)
+Received: from andrea ([86.61.236.197])
+        by smtp.gmail.com with ESMTPSA id v21sm5309967wmh.26.2020.03.28.11.21.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 28 Mar 2020 11:21:54 -0700 (PDT)
+Date:   Sat, 28 Mar 2020 19:21:48 +0100
+From:   Andrea Parri <parri.andrea@gmail.com>
+To:     Vitaly Kuznetsov <vkuznets@redhat.com>
+Cc:     linux-kernel@vger.kernel.org,
+        "K . Y . Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>, linux-hyperv@vger.kernel.org,
+        Michael Kelley <mikelley@microsoft.com>,
+        Dexuan Cui <decui@microsoft.com>,
+        Boqun Feng <boqun.feng@gmail.com>
+Subject: Re: [RFC PATCH 03/11] Drivers: hv: vmbus: Replace the per-CPU
+ channel lists with a global array of channels
+Message-ID: <20200328182148.GA11210@andrea>
+References: <20200325225505.23998-1-parri.andrea@gmail.com>
+ <20200325225505.23998-4-parri.andrea@gmail.com>
+ <87y2rn4287.fsf@vitty.brq.redhat.com>
+ <20200326170518.GA14314@andrea>
+ <87pncz3tcn.fsf@vitty.brq.redhat.com>
+MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-From:   "H. Nikolaus Schaller" <hns@goldelico.com>
-In-Reply-To: <20200328182008.5ac2f99e@kemnade.info>
-Date:   Sat, 28 Mar 2020 19:21:01 +0100
-Cc:     Discussions about the Letux Kernel <letux-kernel@openphoenux.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Maxime Ripard <maxime@cerno.tech>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <EF62F8D0-A205-4D64-8540-44F843720797@goldelico.com>
-References: <A65A26D8-9F66-4D46-B1E1-84ECECF079E3@goldelico.com> <20200328182008.5ac2f99e@kemnade.info>
-To:     Andreas Kemnade <andreas@kemnade.info>
-X-Mailer: Apple Mail (2.3124)
+Content-Disposition: inline
+In-Reply-To: <87pncz3tcn.fsf@vitty.brq.redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+> Correct me if I'm wrong, but currently vmbus_chan_sched() accesses
+> per-cpu list of channels on the same CPU so we don't need a spinlock to
+> guarantee that during an interrupt we'll be able to see the update if it
+> happened before the interrupt (in chronological order). With a global
+> list of relids, who guarantees that an interrupt handler on another CPU
+> will actually see the modified list? 
 
-> Am 28.03.2020 um 18:20 schrieb Andreas Kemnade <andreas@kemnade.info>:
->=20
-> Hi Nikolaus,
->=20
-> On Sat, 28 Mar 2020 13:26:24 +0100
-> "H. Nikolaus Schaller" <hns@goldelico.com> wrote:
->=20
->> Hi Rob,
->> I am trying to check my new bindings with v5.6-rc7 but get this =
-before
->> the process tries mine:
->>=20
->> make dt_binding_check dtbs_check
->> ...
->>=20
->>  CHKDT   Documentation/devicetree/bindings/bus/renesas,bsc.yaml - due =
-to target missing
->>  CHKDT   Documentation/devicetree/bindings/bus/simple-pm-bus.yaml - =
-due to target missing
->>  CHKDT   =
-Documentation/devicetree/bindings/clock/allwinner,sun4i-a10-ahb-clk.yaml =
-- due to target missing
->> =
-/Volumes/CaseSensitive/master/Documentation/devicetree/bindings/clock/allw=
-inner,sun4i-a10-ahb-clk.yaml: Additional properties are not allowed =
-('deprecated' was unexpected)
->> make[2]: *** =
-[Documentation/devicetree/bindings/clock/allwinner,sun4i-a10-ahb-clk.examp=
-le.dts] Error 1
->> make[1]: *** [dt_binding_check] Error 2
->> make: *** [sub-make] Error 2
->>=20
->> What am I doing wrong?
->> Is there an option to skip such errors and continue?
->> Is there an option to just test my bindings and yaml file?
->>=20
-> maybe your tools are outdated, so rerun
->=20
-> pip3 install =
-git+https://github.com/devicetree-org/dt-schema.git@master
+Thanks for pointing this out!
 
-Yes, that one solves the problem!
+The offer/resume path presents implicit full memory barriers, program
+-order after the array store which should guarantee the visibility of
+the store to *all* CPUs before the offer/resume can complete (c.f.,
 
-A better error message of CHKDT would have been helpful. Or an =
-auto-update.
+  tools/memory-model/Documentation/explanation.txt, Sect. #13
 
-Now I just get a lot of messages like
+and assuming that the offer/resume for a channel must complete before
+the corresponding handler, which seems to be the case considered that
+some essential channel fields are initialized only later...)
 
-  CHKDT   =
-Documentation/devicetree/bindings/arm/sunxi/allwinner,sun4i-a10-mbus.yaml =
-- due to: =
-Documentation/devicetree/bindings/arm/sunxi/allwinner,sun4i-a10-mbus.yaml
-=
-Documentation/devicetree/bindings/arm/sunxi/allwinner,sun4i-a10-mbus.yaml:=
-: $id: relative path/filename doesn't match actual path or filename
-	expected: =
-http://devicetree.org/schemas/arm/sunxi/allwinner,sun4i-a10-mbus.yaml:#
-  CHKDT   =
-Documentation/devicetree/bindings/clock/allwinner,sun4i-a10-ahb-clk.yaml =
-- due to target missing
-=
-Documentation/devicetree/bindings/clock/allwinner,sun4i-a10-ahb-clk.yaml::=
- $id: relative path/filename doesn't match actual path or filename
-	expected: =
-http://devicetree.org/schemas/clock/allwinner,sun4i-a10-ahb-clk.yaml:#
-...
+IIUC, the spin lock approach you suggested will work and be "simpler";
+an obvious side effect would be, well, a global synchronization point
+in vmbus_chan_sched()...
 
-but they do not abort the process, except for an error found in my yaml =
-document.
-So now I can start debugging.
+Thoughts?
 
-BR and thanks,
-Nikolaus
-
+Thanks,
+  Andrea
