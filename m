@@ -2,143 +2,180 @@ Return-Path: <SRS0=NZ+o=5N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A62B4C2D0E5
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 21:23:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA894C2D0ED
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 21:23:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F9CE206E6
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 21:23:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EsqyKWY+"
+	by mail.kernel.org (Postfix) with ESMTP id 8991A206E6
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 21:23:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727484AbgC1VXU (ORCPT
+        id S1727675AbgC1VXr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 28 Mar 2020 17:23:20 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:35171 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727151AbgC1VXU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 28 Mar 2020 17:23:20 -0400
-Received: by mail-wm1-f68.google.com with SMTP id f74so5816012wmf.0;
-        Sat, 28 Mar 2020 14:23:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=XfZCAw3mx1VH8Q89oa0rqaHcmTmN+wwlGYRiFHc66EM=;
-        b=EsqyKWY+b1ErnScvE50klIUNK5IQjko+hO6dMBi20fAqFZg+kY8VQZTPqYkfSFNjCD
-         Hc4L2D63KLrGVyKhn26mMgwknO523QFvLRS6mhFKkHIZsuQ7gyiNlz02vtTsaFrrRGK1
-         hPyFMmVypyBxL/hc/b1mNl/xXcCispKsFjX2bLWZmkprhc4URV/u7SYibEojoaOtWFfT
-         Hot3xCxFShK8Klhoc7jPuoaPteXKy2QTAHqLhcaJWFO+ISvK7fFwop0h/Tl3IlshLIhs
-         eFYsAC733J/+P94YeTUgDg/8O+8KOIxGfhOqrEf2rcMzUJawpyJ+D2AcSJXgPmFsmX9b
-         /JKA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=XfZCAw3mx1VH8Q89oa0rqaHcmTmN+wwlGYRiFHc66EM=;
-        b=ddqq9bOvws04teBBGBRjDcodw4l0/USE4Z4G6rq+1GmVcZmv13Lfu3rywLR5LkiPey
-         Ak48VH7tOBb70S4Q9yVJ0LBdJn+Cnt/TPSN3x6mjsZEQmGDwNKq/p77hIWiJa/UcxWdh
-         FKrMB+0ntOmGtfsF1DFDAX+dYZzbcRL+rkeLrmyb3FF/bs81gEitWxXxF2rzpWY6cPC0
-         9QseuIEmaB292XoD+9NScDuHT0MBFiAnClJiOGHw+a6ewL9bCgG8+FeEfXJSSLXzs/Z+
-         CQ7ZHakNd9+O1COyJVIPj74xn4PkXSPyEySY4CmpEBGqscWcmw1j5EBoiyDftsUUwPzu
-         J9ag==
-X-Gm-Message-State: ANhLgQ03CKFwD3XxIhhVmd9RvZ20+HnK6OGN0N3YEoYp9Ic0U2GmeUH+
-        aWRSdi6mKwV/ajMOymNkQsg=
-X-Google-Smtp-Source: ADFU+vvAiYZf/IYzA5fxaGnYNv0X86Z6T7fDkR1sS4MKCo6tPVfB1D/leyGrwYl0zLlD2RY7i0pYYQ==
-X-Received: by 2002:a1c:4987:: with SMTP id w129mr5640004wma.168.1585430596134;
-        Sat, 28 Mar 2020 14:23:16 -0700 (PDT)
-Received: from eichest-laptop.local (77-57-203-148.dclient.hispeed.ch. [77.57.203.148])
-        by smtp.gmail.com with ESMTPSA id a10sm6227436wrm.87.2020.03.28.14.23.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 28 Mar 2020 14:23:15 -0700 (PDT)
-From:   eichest@gmail.com
-To:     Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>
-Cc:     Stefan Eichenberger <eichest@gmail.com>,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] arm64: dts: clearfog-gt-8k: fix ge phy reset pin
-Date:   Sat, 28 Mar 2020 22:21:16 +0100
-Message-Id: <20200328212115.12477-1-eichest@gmail.com>
-X-Mailer: git-send-email 2.20.1
+        Sat, 28 Mar 2020 17:23:47 -0400
+Received: from raptor.unsafe.ru ([5.9.43.93]:56566 "EHLO raptor.unsafe.ru"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727070AbgC1VXq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 28 Mar 2020 17:23:46 -0400
+Received: from comp-core-i7-2640m-0182e6 (ip-89-102-33-211.net.upcbroadband.cz [89.102.33.211])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by raptor.unsafe.ru (Postfix) with ESMTPSA id A2501209BD;
+        Sat, 28 Mar 2020 21:23:41 +0000 (UTC)
+Date:   Sat, 28 Mar 2020 22:23:36 +0100
+From:   Alexey Gladkov <gladkov.alexey@gmail.com>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        Linux API <linux-api@vger.kernel.org>,
+        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
+        Linux Security Module <linux-security-module@vger.kernel.org>,
+        Akinobu Mita <akinobu.mita@gmail.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Daniel Micay <danielmicay@gmail.com>,
+        Djalal Harouni <tixxdz@gmail.com>,
+        "Dmitry V . Levin" <ldv@altlinux.org>,
+        "Eric W . Biederman" <ebiederm@xmission.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        "J . Bruce Fields" <bfields@fieldses.org>,
+        Jeff Layton <jlayton@poochiereds.net>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Oleg Nesterov <oleg@redhat.com>
+Subject: Re: [PATCH v10 4/9] proc: instantiate only pids that we can ptrace
+ on 'hidepid=4' mount option
+Message-ID: <20200328212336.zyj5naxz4jc64tgp@comp-core-i7-2640m-0182e6>
+References: <20200327172331.418878-1-gladkov.alexey@gmail.com>
+ <20200327172331.418878-5-gladkov.alexey@gmail.com>
+ <202003281336.8354DB74@keescook>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <202003281336.8354DB74@keescook>
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.6.1 (raptor.unsafe.ru [5.9.43.93]); Sat, 28 Mar 2020 21:23:42 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stefan Eichenberger <eichest@gmail.com>
+On Sat, Mar 28, 2020 at 01:40:03PM -0700, Kees Cook wrote:
+> On Fri, Mar 27, 2020 at 06:23:26PM +0100, Alexey Gladkov wrote:
+> > If "hidepid=4" mount option is set then do not instantiate pids that
+> > we can not ptrace. "hidepid=4" means that procfs should only contain
+> > pids that the caller can ptrace.
+> > 
+> > Cc: Kees Cook <keescook@chromium.org>
+> > Cc: Andy Lutomirski <luto@kernel.org>
+> > Signed-off-by: Djalal Harouni <tixxdz@gmail.com>
+> > Reviewed-by: Alexey Dobriyan <adobriyan@gmail.com>
+> > Signed-off-by: Alexey Gladkov <gladkov.alexey@gmail.com>
+> > ---
+> >  fs/proc/base.c          | 15 +++++++++++++++
+> >  fs/proc/root.c          | 13 ++++++++++---
+> >  include/linux/proc_fs.h |  1 +
+> >  3 files changed, 26 insertions(+), 3 deletions(-)
+> > 
+> > diff --git a/fs/proc/base.c b/fs/proc/base.c
+> > index 43a28907baf9..1ebe9eba48ea 100644
+> > --- a/fs/proc/base.c
+> > +++ b/fs/proc/base.c
+> > @@ -701,6 +701,14 @@ static bool has_pid_permissions(struct proc_fs_info *fs_info,
+> >  				 struct task_struct *task,
+> >  				 int hide_pid_min)
+> >  {
+> > +	/*
+> > +	 * If 'hidpid' mount option is set force a ptrace check,
+> > +	 * we indicate that we are using a filesystem syscall
+> > +	 * by passing PTRACE_MODE_READ_FSCREDS
+> > +	 */
+> > +	if (fs_info->hide_pid == HIDEPID_NOT_PTRACEABLE)
+> > +		return ptrace_may_access(task, PTRACE_MODE_READ_FSCREDS);
+> > +
+> >  	if (fs_info->hide_pid < hide_pid_min)
+> >  		return true;
+> >  	if (in_group_p(fs_info->pid_gid))
+> > @@ -3319,7 +3327,14 @@ struct dentry *proc_pid_lookup(struct dentry *dentry, unsigned int flags)
+> >  	if (!task)
+> >  		goto out;
+> >  
+> > +	/* Limit procfs to only ptraceable tasks */
+> > +	if (fs_info->hide_pid == HIDEPID_NOT_PTRACEABLE) {
+> > +		if (!has_pid_permissions(fs_info, task, HIDEPID_NO_ACCESS))
+> > +			goto out_put_task;
+> > +	}
+> > +
+> >  	result = proc_pid_instantiate(dentry, task, NULL);
+> > +out_put_task:
+> >  	put_task_struct(task);
+> >  out:
+> >  	return result;
+> > diff --git a/fs/proc/root.c b/fs/proc/root.c
+> > index 616e8976185c..62eae22403d2 100644
+> > --- a/fs/proc/root.c
+> > +++ b/fs/proc/root.c
+> > @@ -47,6 +47,14 @@ static const struct fs_parameter_spec proc_fs_parameters[] = {
+> >  	{}
+> >  };
+> >  
+> > +static inline int valid_hidepid(unsigned int value)
+> > +{
+> > +	return (value == HIDEPID_OFF ||
+> > +		value == HIDEPID_NO_ACCESS ||
+> > +		value == HIDEPID_INVISIBLE ||
+> > +		value == HIDEPID_NOT_PTRACEABLE);
+> 
+> This likely easier to do with a ...MAX value? i.e.
+> 
+> 	return (value < HIDEPID_OFF || value >= HIDEPID_MAX);
+> 
+> > +}
+> > +
+> >  static int proc_parse_param(struct fs_context *fc, struct fs_parameter *param)
+> >  {
+> >  	struct proc_fs_context *ctx = fc->fs_private;
+> > @@ -63,10 +71,9 @@ static int proc_parse_param(struct fs_context *fc, struct fs_parameter *param)
+> >  		break;
+> >  
+> >  	case Opt_hidepid:
+> > +		if (!valid_hidepid(result.uint_32))
+> > +			return invalf(fc, "proc: unknown value of hidepid.\n");
+> >  		ctx->hidepid = result.uint_32;
+> > -		if (ctx->hidepid < HIDEPID_OFF ||
+> > -		    ctx->hidepid > HIDEPID_INVISIBLE)
+> > -			return invalfc(fc, "hidepid value must be between 0 and 2.\n");
+> >  		break;
+> >  
+> >  	default:
+> > diff --git a/include/linux/proc_fs.h b/include/linux/proc_fs.h
+> > index 7d852dbca253..21d19353fdc7 100644
+> > --- a/include/linux/proc_fs.h
+> > +++ b/include/linux/proc_fs.h
+> > @@ -32,6 +32,7 @@ enum {
+> >  	HIDEPID_OFF	  = 0,
+> >  	HIDEPID_NO_ACCESS = 1,
+> >  	HIDEPID_INVISIBLE = 2,
+> > +	HIDEPID_NOT_PTRACEABLE = 4, /* Limit pids to only ptraceable pids */
+> 
+> This isn't a bit field -- shouldn't this be "3"?
+> 
+> 	...
+> 	HIDEPID_NOT_PTRACEABLE = 3,
+> 	HIDEPID_MAX
+> 
+> etc?
 
-According to the ClearFog-GT-8K-rev-1_1-Simplified-Schematic the reset
-pin for the gigabit phy is MPP62 and not MPP43.
+I decided to choose 4 so that if later we need to be able to make a mask.
+I am not sure that this parameter will not have values that cannot be used
+together. Since now these parameters are becoming part of the public api,
+I decided to add flexibility.
 
-Signed-off-by: Stefan Eichenberger <eichest@gmail.com>
----
- .../dts/marvell/armada-8040-clearfog-gt-8k.dts     | 14 +++++++-------
- 1 file changed, 7 insertions(+), 7 deletions(-)
-
-diff --git a/arch/arm64/boot/dts/marvell/armada-8040-clearfog-gt-8k.dts b/arch/arm64/boot/dts/marvell/armada-8040-clearfog-gt-8k.dts
-index b90d78a5724b..d371d938b41e 100644
---- a/arch/arm64/boot/dts/marvell/armada-8040-clearfog-gt-8k.dts
-+++ b/arch/arm64/boot/dts/marvell/armada-8040-clearfog-gt-8k.dts
-@@ -144,7 +144,6 @@
- 	 * [35-38] CP0 I2C1 and I2C0
- 	 * [39] GPIO reset button
- 	 * [40,41] LED0 and LED1
--	 * [43] 1512 phy reset
- 	 * [47] USB VBUS EN (active low)
- 	 * [48] FAN PWM
- 	 * [49] SFP+ present signal
-@@ -155,6 +154,7 @@
- 	 * [54] NFC reset
- 	 * [55] Micro SD card detect
- 	 * [56-61] Micro SD
-+	 * [62] 1512 phy reset
- 	 */
- 
- 	cp0_pci0_reset_pins: pci0-reset-pins {
-@@ -197,11 +197,6 @@
- 		marvell,function = "gpio";
- 	};
- 
--	cp0_copper_eth_phy_reset: copper-eth-phy-reset {
--		marvell,pins = "mpp43";
--		marvell,function = "gpio";
--	};
--
- 	cp0_xhci_vbus_pins: xhci0-vbus-pins {
- 		marvell,pins = "mpp47";
- 		marvell,function = "gpio";
-@@ -232,6 +227,11 @@
- 			       "mpp60", "mpp61";
- 		marvell,function = "sdio";
- 	};
-+
-+	cp0_copper_eth_phy_reset: copper-eth-phy-reset {
-+		marvell,pins = "mpp62";
-+		marvell,function = "gpio";
-+	};
- };
- 
- &cp0_pcie0 {
-@@ -365,7 +365,7 @@
- 		reg = <0>;
- 		pinctrl-names = "default";
- 		pinctrl-0 = <&cp0_copper_eth_phy_reset>;
--		reset-gpios = <&cp0_gpio2 11 GPIO_ACTIVE_LOW>;
-+		reset-gpios = <&cp0_gpio2 30 GPIO_ACTIVE_LOW>;
- 		reset-assert-us = <10000>;
- 		reset-deassert-us = <10000>;
- 	};
 -- 
-2.20.1
+Rgrds, legion
 
