@@ -7,37 +7,38 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBAA9C43331
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 11:00:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AF71C2D0E5
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 11:00:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 994EF20716
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 11:00:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 635CC20716
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 11:00:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727732AbgC1LAY (ORCPT
+        id S1727718AbgC1LAX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 28 Mar 2020 07:00:24 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:55569 "EHLO
+        Sat, 28 Mar 2020 07:00:23 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:55574 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727307AbgC1LAH (ORCPT
+        with ESMTP id S1727335AbgC1LAH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 28 Mar 2020 07:00:07 -0400
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1jI9C9-0003cq-0p; Sat, 28 Mar 2020 12:00:05 +0100
+        id 1jI9C9-0003fn-Mv; Sat, 28 Mar 2020 12:00:05 +0100
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 7B2001C04CC;
-        Sat, 28 Mar 2020 11:59:59 +0100 (CET)
-Date:   Sat, 28 Mar 2020 10:59:59 -0000
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 42E3B1C04CF;
+        Sat, 28 Mar 2020 12:00:02 +0100 (CET)
+Date:   Sat, 28 Mar 2020 11:00:01 -0000
 From:   "tip-bot2 for Al Viro" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/cleanups] x86: get rid of get_user_ex() in restore_sigcontext()
+Subject: [tip: x86/cleanups] x86 user stack frame reads: switch to explicit
+ __get_user()
 Cc:     Al Viro <viro@zeniv.linux.org.uk>, x86 <x86@kernel.org>,
         LKML <linux-kernel@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <158539319916.28353.17090109980614474910.tip-bot2@tip-bot2>
+Message-ID: <158539320186.28353.832755417114718072.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -53,151 +54,139 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the x86/cleanups branch of tip:
 
-Commit-ID:     3add42c29cebb1d5f83c6205c59466a06ccf8da1
-Gitweb:        https://git.kernel.org/tip/3add42c29cebb1d5f83c6205c59466a06ccf8da1
+Commit-ID:     c8e3dd86600a1a7b165478cc626d69bf07967c15
+Gitweb:        https://git.kernel.org/tip/c8e3dd86600a1a7b165478cc626d69bf07967c15
 Author:        Al Viro <viro@zeniv.linux.org.uk>
-AuthorDate:    Sat, 15 Feb 2020 12:56:57 -05:00
+AuthorDate:    Sat, 15 Feb 2020 11:28:09 -05:00
 Committer:     Al Viro <viro@zeniv.linux.org.uk>
-CommitterDate: Wed, 18 Mar 2020 20:22:40 -04:00
+CommitterDate: Sat, 15 Feb 2020 17:26:26 -05:00
 
-x86: get rid of get_user_ex() in restore_sigcontext()
+x86 user stack frame reads: switch to explicit __get_user()
 
-Just do copyin into a local struct and be done with that - we are
-on a shallow stack here.
-
-[reworked by tglx, removing the macro horrors while we are touching that]
+rather than relying upon the magic in raw_copy_from_user()
 
 Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
 ---
- arch/x86/kernel/signal.c | 86 ++++++++++++++++-----------------------
- 1 file changed, 36 insertions(+), 50 deletions(-)
+ arch/x86/events/core.c         | 27 +++++++--------------------
+ arch/x86/include/asm/uaccess.h |  9 ---------
+ arch/x86/kernel/stacktrace.c   |  6 ++++--
+ 3 files changed, 11 insertions(+), 31 deletions(-)
 
-diff --git a/arch/x86/kernel/signal.c b/arch/x86/kernel/signal.c
-index 53ac66b..83563e9 100644
---- a/arch/x86/kernel/signal.c
-+++ b/arch/x86/kernel/signal.c
-@@ -47,24 +47,6 @@
- #include <asm/sigframe.h>
- #include <asm/signal.h>
+diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
+index 3bb738f..a619763 100644
+--- a/arch/x86/events/core.c
++++ b/arch/x86/events/core.c
+@@ -2490,7 +2490,7 @@ perf_callchain_user32(struct pt_regs *regs, struct perf_callchain_entry_ctx *ent
+ 	/* 32-bit process in 64-bit kernel. */
+ 	unsigned long ss_base, cs_base;
+ 	struct stack_frame_ia32 frame;
+-	const void __user *fp;
++	const struct stack_frame_ia32 __user *fp;
  
--#define COPY(x)			do {			\
--	get_user_ex(regs->x, &sc->x);			\
--} while (0)
+ 	if (!test_thread_flag(TIF_IA32))
+ 		return 0;
+@@ -2501,18 +2501,12 @@ perf_callchain_user32(struct pt_regs *regs, struct perf_callchain_entry_ctx *ent
+ 	fp = compat_ptr(ss_base + regs->bp);
+ 	pagefault_disable();
+ 	while (entry->nr < entry->max_stack) {
+-		unsigned long bytes;
+-		frame.next_frame     = 0;
+-		frame.return_address = 0;
 -
--#define GET_SEG(seg)		({			\
--	unsigned short tmp;				\
--	get_user_ex(tmp, &sc->seg);			\
--	tmp;						\
--})
--
--#define COPY_SEG(seg)		do {			\
--	regs->seg = GET_SEG(seg);			\
--} while (0)
--
--#define COPY_SEG_CPL3(seg)	do {			\
--	regs->seg = GET_SEG(seg) | 3;			\
--} while (0)
--
- #ifdef CONFIG_X86_64
- /*
-  * If regs->ss will cause an IRET fault, change it.  Otherwise leave it
-@@ -92,53 +74,58 @@ static void force_valid_ss(struct pt_regs *regs)
- 	    ar != (AR_DPL3 | AR_S | AR_P | AR_TYPE_RWDATA_EXPDOWN))
- 		regs->ss = __USER_DS;
- }
-+# define CONTEXT_COPY_SIZE	offsetof(struct sigcontext, reserved1)
-+#else
-+# define CONTEXT_COPY_SIZE	sizeof(struct sigcontext)
- #endif
+ 		if (!valid_user_frame(fp, sizeof(frame)))
+ 			break;
  
- static int restore_sigcontext(struct pt_regs *regs,
--			      struct sigcontext __user *sc,
-+			      struct sigcontext __user *usc,
- 			      unsigned long uc_flags)
+-		bytes = __copy_from_user_nmi(&frame.next_frame, fp, 4);
+-		if (bytes != 0)
++		if (__get_user(frame.next_frame, &fp->next_frame))
+ 			break;
+-		bytes = __copy_from_user_nmi(&frame.return_address, fp+4, 4);
+-		if (bytes != 0)
++		if (__get_user(frame.return_address, &fp->return_address))
+ 			break;
+ 
+ 		perf_callchain_store(entry, cs_base + frame.return_address);
+@@ -2533,7 +2527,7 @@ void
+ perf_callchain_user(struct perf_callchain_entry_ctx *entry, struct pt_regs *regs)
  {
--	unsigned long buf_val;
--	void __user *buf;
--	unsigned int tmpflags;
--	unsigned int err = 0;
-+	struct sigcontext sc;
+ 	struct stack_frame frame;
+-	const unsigned long __user *fp;
++	const struct stack_frame __user *fp;
  
- 	/* Always make any pending restarted system calls return -EINTR */
- 	current->restart_block.fn = do_no_restart_syscall;
+ 	if (perf_guest_cbs && perf_guest_cbs->is_in_guest()) {
+ 		/* TODO: We don't support guest os callchain now */
+@@ -2546,7 +2540,7 @@ perf_callchain_user(struct perf_callchain_entry_ctx *entry, struct pt_regs *regs
+ 	if (regs->flags & (X86_VM_MASK | PERF_EFLAGS_VM))
+ 		return;
  
--	get_user_try {
-+	if (copy_from_user(&sc, usc, CONTEXT_COPY_SIZE))
-+		return -EFAULT;
+-	fp = (unsigned long __user *)regs->bp;
++	fp = (void __user *)regs->bp;
  
- #ifdef CONFIG_X86_32
--		set_user_gs(regs, GET_SEG(gs));
--		COPY_SEG(fs);
--		COPY_SEG(es);
--		COPY_SEG(ds);
-+	set_user_gs(regs, sc.gs);
-+	regs->fs = sc.fs;
-+	regs->es = sc.es;
-+	regs->ds = sc.ds;
- #endif /* CONFIG_X86_32 */
+ 	perf_callchain_store(entry, regs->ip);
  
--		COPY(di); COPY(si); COPY(bp); COPY(sp); COPY(bx);
--		COPY(dx); COPY(cx); COPY(ip); COPY(ax);
-+	regs->bx = sc.bx;
-+	regs->cx = sc.cx;
-+	regs->dx = sc.dx;
-+	regs->si = sc.si;
-+	regs->di = sc.di;
-+	regs->bp = sc.bp;
-+	regs->ax = sc.ax;
-+	regs->sp = sc.sp;
-+	regs->ip = sc.ip;
+@@ -2558,19 +2552,12 @@ perf_callchain_user(struct perf_callchain_entry_ctx *entry, struct pt_regs *regs
  
- #ifdef CONFIG_X86_64
--		COPY(r8);
--		COPY(r9);
--		COPY(r10);
--		COPY(r11);
--		COPY(r12);
--		COPY(r13);
--		COPY(r14);
--		COPY(r15);
-+	regs->r8 = sc.r8;
-+	regs->r9 = sc.r9;
-+	regs->r10 = sc.r10;
-+	regs->r11 = sc.r11;
-+	regs->r12 = sc.r12;
-+	regs->r13 = sc.r13;
-+	regs->r14 = sc.r14;
-+	regs->r15 = sc.r15;
- #endif /* CONFIG_X86_64 */
- 
--		COPY_SEG_CPL3(cs);
--		COPY_SEG_CPL3(ss);
+ 	pagefault_disable();
+ 	while (entry->nr < entry->max_stack) {
+-		unsigned long bytes;
 -
--		get_user_ex(tmpflags, &sc->flags);
--		regs->flags = (regs->flags & ~FIX_EFLAGS) | (tmpflags & FIX_EFLAGS);
--		regs->orig_ax = -1;		/* disable syscall checks */
-+	/* Get CS/SS and force CPL3 */
-+	regs->cs = sc.cs | 0x03;
-+	regs->ss = sc.ss | 0x03;
+-		frame.next_frame	     = NULL;
+-		frame.return_address = 0;
+-
+ 		if (!valid_user_frame(fp, sizeof(frame)))
+ 			break;
  
--		get_user_ex(buf_val, &sc->fpstate);
--		buf = (void __user *)buf_val;
--	} get_user_catch(err);
-+	regs->flags = (regs->flags & ~FIX_EFLAGS) | (sc.flags & FIX_EFLAGS);
-+	/* disable syscall checks */
-+	regs->orig_ax = -1;
+-		bytes = __copy_from_user_nmi(&frame.next_frame, fp, sizeof(*fp));
+-		if (bytes != 0)
++		if (__get_user(frame.next_frame, &fp->next_frame))
+ 			break;
+-		bytes = __copy_from_user_nmi(&frame.return_address, fp + 1, sizeof(*fp));
+-		if (bytes != 0)
++		if (__get_user(frame.return_address, &fp->return_address))
+ 			break;
  
- #ifdef CONFIG_X86_64
- 	/*
-@@ -149,9 +136,8 @@ static int restore_sigcontext(struct pt_regs *regs,
- 		force_valid_ss(regs);
+ 		perf_callchain_store(entry, frame.return_address);
+diff --git a/arch/x86/include/asm/uaccess.h b/arch/x86/include/asm/uaccess.h
+index 61d93f0..ab8eab4 100644
+--- a/arch/x86/include/asm/uaccess.h
++++ b/arch/x86/include/asm/uaccess.h
+@@ -695,15 +695,6 @@ extern struct movsl_mask {
  #endif
  
--	err |= fpu__restore_sig(buf, IS_ENABLED(CONFIG_X86_32));
+ /*
+- * We rely on the nested NMI work to allow atomic faults from the NMI path; the
+- * nested NMI paths are careful to preserve CR2.
+- *
+- * Caller must use pagefault_enable/disable, or run in interrupt context,
+- * and also do a uaccess_ok() check
+- */
+-#define __copy_from_user_nmi __copy_from_user_inatomic
 -
--	return err;
-+	return fpu__restore_sig((void __user *)sc.fpstate,
-+			       IS_ENABLED(CONFIG_X86_32));
- }
+-/*
+  * The "unsafe" user accesses aren't really "unsafe", but the naming
+  * is a big fat warning: you have to not only do the access_ok()
+  * checking before using them, but you have to surround them with the
+diff --git a/arch/x86/kernel/stacktrace.c b/arch/x86/kernel/stacktrace.c
+index 2d6898c..6ad43fc 100644
+--- a/arch/x86/kernel/stacktrace.c
++++ b/arch/x86/kernel/stacktrace.c
+@@ -96,7 +96,8 @@ struct stack_frame_user {
+ };
  
- int setup_sigcontext(struct sigcontext __user *sc, void __user *fpstate,
+ static int
+-copy_stack_frame(const void __user *fp, struct stack_frame_user *frame)
++copy_stack_frame(const struct stack_frame_user __user *fp,
++		 struct stack_frame_user *frame)
+ {
+ 	int ret;
+ 
+@@ -105,7 +106,8 @@ copy_stack_frame(const void __user *fp, struct stack_frame_user *frame)
+ 
+ 	ret = 1;
+ 	pagefault_disable();
+-	if (__copy_from_user_inatomic(frame, fp, sizeof(*frame)))
++	if (__get_user(frame->next_fp, &fp->next_fp) ||
++	    __get_user(frame->ret_addr, &fp->ret_addr))
+ 		ret = 0;
+ 	pagefault_enable();
+ 
