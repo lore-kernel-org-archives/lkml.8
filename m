@@ -2,562 +2,197 @@ Return-Path: <SRS0=NZ+o=5N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00B2BC2D0EC
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 01:30:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56A61C2D0EF
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 01:30:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AAAB42074A
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 01:30:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C8A32074A
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 01:30:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HOxbjK3Z"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gwCB7KDL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727131AbgC1Bah (ORCPT
+        id S1727179AbgC1Ba6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Mar 2020 21:30:37 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:36794 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726212AbgC1Bag (ORCPT
+        Fri, 27 Mar 2020 21:30:58 -0400
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:39816 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726212AbgC1Ba6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Mar 2020 21:30:36 -0400
-Received: by mail-ed1-f68.google.com with SMTP id i7so8692384edq.3
-        for <linux-kernel@vger.kernel.org>; Fri, 27 Mar 2020 18:30:33 -0700 (PDT)
+        Fri, 27 Mar 2020 21:30:58 -0400
+Received: by mail-ed1-f66.google.com with SMTP id a43so13632549edf.6;
+        Fri, 27 Mar 2020 18:30:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=qLmHke+91sgGYhRG8At8XWtZySH3BnNOoTrgJXwzSjY=;
-        b=HOxbjK3Z9qfWMK2YYw9JsF+HGNtbA7OHAyMcLmH4K5WEpz2Em7bH+JJf+UtSjri7b5
-         kriGeztSwyrWClsyRk3hjR9+2I0V1yiapRz44XZm998xwZfK+JskkSUPx6M/mcA7mwHW
-         t3CUVbhqCYHUTHVealf45ZVTDJ+mJM2dKLdhkI6zpopWNafe0+XxKsOV94LyqZ1A+Gce
-         0UsfmI7aSvR2HGM/mLwagtm3C2EH+AdKvC440e9msGV2sA+QwaZuC1FXG3I3tCZuHhPU
-         NewXn4mL6a5BL3sSDxvxXEe1x0XyvFWRy9CX4VVIzNDqXwnoRuHwZyxRs09/lRZQ3aFW
-         VJKA==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=bqT8zHEhZa0RTlkhy4qKG7cq6fJlBsGhhqptNH72bxQ=;
+        b=gwCB7KDLeADAzzsrh+YqZNXm/L3tbs2cfx261Jhj5JAIZcswtA3RIDtgrAhsc3hm4Q
+         xdhoE3Bzep+rMZnFRy/9qOYWOjd8RabxRdyQ/42pX/WelJKFKqKe2toP5+1Wrz0r27LQ
+         NGpyT3RDBKnQTaGeYh4Cxc2ICvf+2fztyDv1cYZcHnQVDBjiZn0m4e3rzXYnl1EoASKj
+         OrVkJ8lnk0ETVCnl2rIIq8Oa7+FrHU7yjLmIeq5hLVW4ZwkBBuNrwsrvoQTQv5IgyrSo
+         M+BOwu06PKUQvxR/I5HEXru9WJNvAA2637OkiZd4SvJ8jFRoaTT1e8exxeifZC85PRFY
+         Ofiw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=qLmHke+91sgGYhRG8At8XWtZySH3BnNOoTrgJXwzSjY=;
-        b=j2BYzmCYsZsmwNgubu/u67hyopJdW80bxD7JFYTsyzV3kghYzSZwAyG42JSo+ZQN4x
-         0w49EwD6D6NqXvV6lCMG045LXRi7CGlYVBbWRClLa4WbaPPB3XSa7L5cOG9Shrvm/5vL
-         PcnJklG70Rhu9lbTUNjJBBJvNYVLdOb7rsIeD56bzQw84FrEdvAg0AHH//jIURzpViQ8
-         ByTldlokQoi8YyBXHA/7biI82VFuZnev1txGrUcYLm73uUzSLde1zJ9HAxfobdzZdDoz
-         KbBe+53/MxDMqYcBz27+W77eTQwYqAKHTYtEnpkuYjZuULQJmtpez+587i8mGKKWVgzt
-         xzYg==
-X-Gm-Message-State: ANhLgQ2jQCHui36JkY8gqWvI+MdWHMJsfMpAvCU8Za9yDFylU25yhwqG
-        ee2MblAJtoQr225+oOdjS6M9KTAHQ1JKNEljclc=
-X-Google-Smtp-Source: ADFU+vu4niBMIWNxZUvkpL7B0jDe2Da6uT6zyW75E8xLdUKruXK6NLVggOGcHqNDBrXS71aSkPEOHlvPK+b156e7z14=
-X-Received: by 2002:a17:906:aac8:: with SMTP id kt8mr1844635ejb.23.1585359032496;
- Fri, 27 Mar 2020 18:30:32 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=bqT8zHEhZa0RTlkhy4qKG7cq6fJlBsGhhqptNH72bxQ=;
+        b=WkduKmx5gnj+68sBYFMOjr7JpMc0kb4JgwMmISTNwWJbHMufhXafk5Lvza8rEmeKQ/
+         5auaslPeGFxGJxJKPRQPAiKW1XbyTcgUC/xG25xvmKiOQQIqgH/h8bqI1V2LLCVDCDJA
+         sjOgUImUtELyV7t/HYy00nn+zBAm6We4r6d40HjKvlgZ5w48VbBdJxhN4f4K58dQZFCc
+         OFgZZejvqeSgQx3Sm57tHMUlCyeRTKqHb63OMrLB7oS3FDIXswVNMIbzS+wQIw5xQaE6
+         j5PMPmWeSdEh+8zDX88uZ2htPLpEmUgod93VCmyNFn2QltKg+tufCSST1QsTfVEcvamE
+         74qg==
+X-Gm-Message-State: ANhLgQ2aUMhIE2vMS7dg3JmUg86h+t85vMQK/3E/dT8cL+eSnN+mKBKX
+        hUMTqYFrUp1G0w36ew8okJI=
+X-Google-Smtp-Source: ADFU+vuHCU4sQkngTx3NhSPPqw+wj0gPVgK3h4iCqKh/LSBgfZ5eSXC9N72wDi+q5ODUn/GOr84u2g==
+X-Received: by 2002:a17:906:360f:: with SMTP id q15mr1723087ejb.299.1585359054169;
+        Fri, 27 Mar 2020 18:30:54 -0700 (PDT)
+Received: from Ansuel-XPS.localdomain (host203-232-dynamic.53-79-r.retail.telecomitalia.it. [79.53.232.203])
+        by smtp.googlemail.com with ESMTPSA id v12sm1066560edw.51.2020.03.27.18.30.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 27 Mar 2020 18:30:53 -0700 (PDT)
+From:   Ansuel Smith <ansuelsmth@gmail.com>
+To:     Andy Gross <agross@kernel.org>
+Cc:     Ajay Kishore <akisho@codeaurora.org>,
+        Ansuel Smith <ansuelsmth@gmail.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v4] pinctrl: qcom: use scm_call to route GPIO irq to Apps
+Date:   Sat, 28 Mar 2020 02:30:35 +0100
+Message-Id: <20200328013034.20739-1-ansuelsmth@gmail.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-References: <20200327170601.18563-1-kirill.shutemov@linux.intel.com>
- <20200327170601.18563-7-kirill.shutemov@linux.intel.com> <CAHbLzkqvev+kRopVuLAgoAbv1-06gB5Cczo+yC+POqzrX9CnBA@mail.gmail.com>
- <20200328004352.ghjjm7tefkcstbup@box>
-In-Reply-To: <20200328004352.ghjjm7tefkcstbup@box>
-From:   Yang Shi <shy828301@gmail.com>
-Date:   Fri, 27 Mar 2020 18:30:20 -0700
-Message-ID: <CAHbLzkq+ine1k2YhDv+3dyZDX19OYrKBhjkdFzrGVjY=1Xprhw@mail.gmail.com>
-Subject: Re: [PATCH 6/7] thp: Change CoW semantics for anon-THP
-To:     "Kirill A. Shutemov" <kirill@shutemov.name>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Linux MM <linux-mm@kvack.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 27, 2020 at 5:43 PM Kirill A. Shutemov <kirill@shutemov.name> w=
-rote:
->
-> On Fri, Mar 27, 2020 at 01:07:34PM -0700, Yang Shi wrote:
-> > On Fri, Mar 27, 2020 at 10:06 AM Kirill A. Shutemov
-> > <kirill@shutemov.name> wrote:
-> > >
-> > > Currently we have different copy-on-write semantics for anon- and
-> > > file-THP. For anon-THP we try to allocate huge page on the write faul=
-t,
-> > > but on file-THP we split PMD and allocate 4k page.
-> >
-> > I agree this seems confusing.
-> >
-> > >
-> > > Arguably, file-THP semantics is more desirable: we don't necessary wa=
-nt
-> > > to unshare full PMD range from the parent on the first access. This i=
-s
-> > > the primary reason THP is unusable for some workloads, like Redis.
-> > >
-> > > The original THP refcounting didn't allow to have PTE-mapped compound
-> > > pages, so we had no options, but to allocate huge page on CoW (with
-> > > fallback to 512 4k pages).
-> > >
-> > > The current refcounting doesn't have such limitations and we can cut =
-a
-> > > lot of complex code out of fault path.
-> > >
-> > > khugepaged is now able to recover THP from such ranges if the
-> > > configuration allows.
-> >
-> > It looks this patch would just split the PMD then fallback to handle
-> > it on PTE level, it definitely simplify the code a lot. However it
-> > makes the use of THP depend on the productivity of khugepaged. And the
-> > success rate of THP allocation in khugepaged depends on defrag. But by
-> > default khugepaged runs at very low priority, so khugepaged defrag may
-> > result in priority inversion easily.
->
-> If you have a workload that may be hurt by such change, please get some
-> numbers. It would be interesting to see.
+From: Ajay Kishore <akisho@codeaurora.org>
 
-Please see the below splat:
+For IPQ806x targets, TZ protects the registers that are used to
+configure the routing of interrupts to a target processor.
+To resolve this, this patch uses scm call to route GPIO interrupts
+to application processor. Also the scm call interface is changed.
 
-[ 7417.871422] INFO: task /home/staragent:9088 blocked for more than
-1200 seconds.
-[ 7417.880501]       Tainted: G        W         4.19.91 #1
-[ 7417.889015] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs"
-disables this message.
-[ 7417.897373] /home/staragent D    0  9088      1 0x00000000
-[ 7417.905017] Call Trace:
-[ 7417.907898]  ? __schedule+0x3cf/0x660
-[ 7417.911988]  ? core_sys_select+0x1d2/0x270
-[ 7417.916562]  schedule+0x33/0xc0
-[ 7417.920205]  rwsem_down_read_failed+0x130/0x190
-[ 7417.925153]  ? call_rwsem_down_read_failed+0x14/0x30
-[ 7417.930648]  call_rwsem_down_read_failed+0x14/0x30
-[ 7417.935894]  down_read+0x1c/0x30
-[ 7417.939603]  __do_page_fault+0x435/0x4d0
-[ 7417.943984]  do_page_fault+0x32/0x110
-[ 7417.949315]  ? page_fault+0x8/0x30
-[ 7417.953189]  page_fault+0x1e/0x30
-[ 7417.956974] RIP: 0033:0x8063b0
-[ 7417.960582] Code: Bad RIP value.
+Signed-off-by: Ajay Kishore <akisho@codeaurora.org>
+Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+---
+v4:
+* Fix compilation error
 
-***  the task got current->mm->mmap_sem: 0xffff88a65ed02f80
-crash> bt ffff88a65ed02f80
-PID: 102341  TASK: ffff88a65ed02f80  CPU: 64  COMMAND: "/home/staragent"
- #0 [ffffc90021bd73e8] __schedule at ffffffff818436af
- #1 [ffffc90021bd7480] schedule at ffffffff81843973
- #2 [ffffc90021bd7498] rwsem_down_read_failed at ffffffff818472b0
- #3 [ffffc90021bd7540] call_rwsem_down_read_failed at ffffffff818393d4
- #4 [ffffc90021bd7588] down_read at ffffffff8184662c
- #5 [ffffc90021bd7598] page_lock_anon_vma_read at ffffffff81242d9c
- #6 [ffffc90021bd75c0] rmap_walk_anon at ffffffff8124154f
- #7 [ffffc90021bd7620] page_referenced at ffffffff8124350e
- #8 [ffffc90021bd7690] shrink_page_list at ffffffff8120b2f4
- #9 [ffffc90021bd7760] shrink_inactive_list at ffffffff8120c4c6
-#10 [ffffc90021bd7808] shrink_node_memcg at ffffffff8120cffa
-#11 [ffffc90021bd7910] shrink_node at ffffffff8120d534
-#12 [ffffc90021bd79a8] do_try_to_free_pages at ffffffff8120dac4
-#13 [ffffc90021bd7a10] try_to_free_pages at ffffffff8120dec4
-#14 [ffffc90021bd7aa8] __alloc_pages_slowpath at ffffffff811fa367
-#15 [ffffc90021bd7bd0] __alloc_pages_nodemask at ffffffff811fb116
-#16 [ffffc90021bd7c30] __do_page_cache_readahead at ffffffff812013c4
-#17 [ffffc90021bd7cc8] filemap_fault at ffffffff811ef652
-#18 [ffffc90021bd7d98] ext4_filemap_fault at ffffffffc030c48c [ext4]
-#19 [ffffc90021bd7db0] __do_fault at ffffffff81234cf0
-#20 [ffffc90021bd7dd0] __handle_mm_fault at ffffffff812337d8
-#21 [ffffc90021bd7e80] handle_mm_fault at ffffffff81233adc
-#22 [ffffc90021bd7eb0] __do_page_fault at ffffffff8106f084
-#23 [ffffc90021bd7f20] do_page_fault at ffffffff8106f342
-#24 [ffffc90021bd7f50] page_fault at ffffffff81a0112e
-    RIP: 00007f67de084e72  RSP: 00007f67677fddb8  RFLAGS: 00010206
-    RAX: 00007f67de084e72  RBX: 0000000002802310  RCX: 0000000000080000
-    RDX: 00007f67680008c0  RSI: 0000000000080000  RDI: 00007f67680008c0
-    RBP: 00007f67677fddf0   R8: 0000000000000000   R9: 00007f6768086460
-    R10: 00007f67677fdde0  R11: 00000000009b3ca8  R12: 0000000002802120
-    R13: 0000000002802768  R14: 0000000000000003  R15: 00007f67677fe700
-    ORIG_RAX: ffffffffffffffff  CS: 0033  SS: 002b
+v3:
+* Rename route_to_apps to intr_target_use_scm
+* Follow standard design and rename base_reg to phys_base
+* Add additional comments in route interrupts condition 
 
-*** staragent held mmap_sem and was doing memory reclaim, and was
-trying to acquire anon_vma lock.
+v2:
+* Move static varibale in msm_pinctrl struct
+* Revert '4b024225c4a8 ("pinctrl: use devm_platform_ioremap_resource() to simplify code")'
+  to get base_reg addr
 
-*** the anon_vma->root->rwsem is held by khugepaged
-crash> struct task_struct 0xffff88fe6f5dc740
-comm =3D =E2=80=9Ckhugepaged\000\000\000\000\000=E2=80=9D
-crash> bt 0xffff88fe6f5dc740
-PID: 504    TASK: ffff88fe6f5dc740  CPU: 34  COMMAND: "khugepaged"
- #0 [ffffc9000da2f630] __schedule at ffffffff818436af
- #1 [ffffc9000da2f6c8] _cond_resched at ffffffff81843c0d
- #2 [ffffc9000da2f6d8] rmap_walk_anon at ffffffff81241465
- #3 [ffffc9000da2f738] remove_migration_ptes at ffffffff8127129d
- #4 [ffffc9000da2f770] remap_page at ffffffff8127504f
- #5 [ffffc9000da2f788] split_huge_page_to_list at ffffffff8127a82a
- #6 [ffffc9000da2f810] shrink_page_list at ffffffff8120b3fc
- #7 [ffffc9000da2f8e0] shrink_inactive_list at ffffffff8120c4c6
- #8 [ffffc9000da2f988] shrink_node_memcg at ffffffff8120cffa
- #9 [ffffc9000da2fa90] shrink_node at ffffffff8120d534
-#10 [ffffc9000da2fb28] do_try_to_free_pages at ffffffff8120dac4
-#11 [ffffc9000da2fb90] try_to_free_pages at ffffffff8120dec4
-#12 [ffffc9000da2fc28] __alloc_pages_slowpath at ffffffff811fa367
-#13 [ffffc9000da2fd50] __alloc_pages_nodemask at ffffffff811fb116
-#14 [ffffc9000da2fdb0] khugepaged at ffffffff8127e478
-#15 [ffffc9000da2ff10] kthread at ffffffff810bcb75
-#16 [ffffc9000da2ff50] ret_from_fork at ffffffff81a001cf
+ drivers/pinctrl/qcom/pinctrl-msm.c | 42 +++++++++++++++++++++++++-----
+ 1 file changed, 36 insertions(+), 6 deletions(-)
 
-The system was overloaded and experiencing memory pressure. Releasing
-mmap_sem before doing any blocking operations could mitigate the
-problem, but the underlying priority inversion caused by khugepaged
-still exists.
+diff --git a/drivers/pinctrl/qcom/pinctrl-msm.c b/drivers/pinctrl/qcom/pinctrl-msm.c
+index 9a8daa256a32..7d2a34beb1b6 100644
+--- a/drivers/pinctrl/qcom/pinctrl-msm.c
++++ b/drivers/pinctrl/qcom/pinctrl-msm.c
+@@ -22,6 +22,8 @@
+ #include <linux/reboot.h>
+ #include <linux/pm.h>
+ #include <linux/log2.h>
++#include <linux/qcom_scm.h>
++#include <linux/io.h>
+ 
+ #include <linux/soc/qcom/irq.h>
+ 
+@@ -60,6 +62,8 @@ struct msm_pinctrl {
+ 	struct irq_chip irq_chip;
+ 	int irq;
+ 
++	bool intr_target_use_scm;
++
+ 	raw_spinlock_t lock;
+ 
+ 	DECLARE_BITMAP(dual_edge_irqs, MAX_NR_GPIO);
+@@ -68,6 +72,7 @@ struct msm_pinctrl {
+ 
+ 	const struct msm_pinctrl_soc_data *soc;
+ 	void __iomem *regs[MAX_NR_TILES];
++	u32 phys_base[MAX_NR_TILES];
+ };
+ 
+ #define MSM_ACCESSOR(name) \
+@@ -882,11 +887,30 @@ static int msm_gpio_irq_set_type(struct irq_data *d, unsigned int type)
+ 	else
+ 		clear_bit(d->hwirq, pctrl->dual_edge_irqs);
+ 
+-	/* Route interrupts to application cpu */
+-	val = msm_readl_intr_target(pctrl, g);
+-	val &= ~(7 << g->intr_target_bit);
+-	val |= g->intr_target_kpss_val << g->intr_target_bit;
+-	msm_writel_intr_target(val, pctrl, g);
++	/* Route interrupts to application cpu.
++	 * With intr_target_use_scm interrupts are routed to
++	 * application cpu using scm calls.
++	 */
++	if (pctrl->intr_target_use_scm) {
++		u32 addr = pctrl->phys_base[0] + g->intr_target_reg;
++		int ret;
++
++		qcom_scm_io_readl(addr, &val);
++
++		val &= ~(7 << g->intr_target_bit);
++		val |= g->intr_target_kpss_val << g->intr_target_bit;
++
++		ret = qcom_scm_io_writel(addr, val);
++		if (ret)
++			dev_err(pctrl->dev,
++				"Failed routing %lu interrupt to Apps proc",
++				d->hwirq);
++	} else {
++		val = msm_readl_intr_target(pctrl, g);
++		val &= ~(7 << g->intr_target_bit);
++		val |= g->intr_target_kpss_val << g->intr_target_bit;
++		msm_writel_intr_target(val, pctrl, g);
++	}
+ 
+ 	/* Update configuration for gpio.
+ 	 * RAW_STATUS_EN is left on for all gpio irqs. Due to the
+@@ -1241,6 +1266,9 @@ int msm_pinctrl_probe(struct platform_device *pdev,
+ 	pctrl->dev = &pdev->dev;
+ 	pctrl->soc = soc_data;
+ 	pctrl->chip = msm_gpio_template;
++	pctrl->intr_target_use_scm = of_device_is_compatible(
++					pctrl->dev->of_node,
++					"qcom,ipq8064-pinctrl");
+ 
+ 	raw_spin_lock_init(&pctrl->lock);
+ 
+@@ -1253,9 +1280,12 @@ int msm_pinctrl_probe(struct platform_device *pdev,
+ 				return PTR_ERR(pctrl->regs[i]);
+ 		}
+ 	} else {
+-		pctrl->regs[0] = devm_platform_ioremap_resource(pdev, 0);
++		res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
++		pctrl->regs[0] = devm_ioremap_resource(&pdev->dev, res);
+ 		if (IS_ERR(pctrl->regs[0]))
+ 			return PTR_ERR(pctrl->regs[0]);
++
++		pctrl->phys_base[0] = res->start;
+ 	}
+ 
+ 	msm_pinctrl_setup_pm_reset(pctrl);
+-- 
+2.25.1
 
-> > For example we saw THP split in reclaim path triggered by khugepaged
-> > held write anon_vma lock, but the other process which was doing
-> > reclaim too was blocked by anon_vma lock. Then the cond_resched() in
-> > rmap walk would make khugepaged preempted by all other processes
-> > easily so khugepaged may hold the anon_vma lock for indefinite time.
-> > Then we saw hung tasks.
->
-> Any chance you have a reproducer? I'm not sure I follow the problem, but
-> it's almost 4AM, so I'm slow.
-
-I don't have a stable reproducer.
-
->
-> > So we have khugepaged defrag disabled for some workloads to workaround
-> > the priority inversion problem. So, I'm concerned some processes may
-> > never get THP for some our workloads with this patch applied.
-> >
-> > The priority inversion caused by khugepaged was not very usual. Just
-> > my two cents.
-> >
-> > >
-> > > Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-> > > ---
-> > >  mm/huge_memory.c | 247 +++++----------------------------------------=
---
-> > >  1 file changed, 24 insertions(+), 223 deletions(-)
-> > >
-> > > diff --git a/mm/huge_memory.c b/mm/huge_memory.c
-> > > index ef6a6bcb291f..15b7a9c86b7c 100644
-> > > --- a/mm/huge_memory.c
-> > > +++ b/mm/huge_memory.c
-> > > @@ -1206,262 +1206,63 @@ void huge_pmd_set_accessed(struct vm_fault *=
-vmf, pmd_t orig_pmd)
-> > >         spin_unlock(vmf->ptl);
-> > >  }
-> > >
-> > > -static vm_fault_t do_huge_pmd_wp_page_fallback(struct vm_fault *vmf,
-> > > -                       pmd_t orig_pmd, struct page *page)
-> > > -{
-> > > -       struct vm_area_struct *vma =3D vmf->vma;
-> > > -       unsigned long haddr =3D vmf->address & HPAGE_PMD_MASK;
-> > > -       struct mem_cgroup *memcg;
-> > > -       pgtable_t pgtable;
-> > > -       pmd_t _pmd;
-> > > -       int i;
-> > > -       vm_fault_t ret =3D 0;
-> > > -       struct page **pages;
-> > > -       struct mmu_notifier_range range;
-> > > -
-> > > -       pages =3D kmalloc_array(HPAGE_PMD_NR, sizeof(struct page *),
-> > > -                             GFP_KERNEL);
-> > > -       if (unlikely(!pages)) {
-> > > -               ret |=3D VM_FAULT_OOM;
-> > > -               goto out;
-> > > -       }
-> > > -
-> > > -       for (i =3D 0; i < HPAGE_PMD_NR; i++) {
-> > > -               pages[i] =3D alloc_page_vma_node(GFP_HIGHUSER_MOVABLE=
-, vma,
-> > > -                                              vmf->address, page_to_=
-nid(page));
-> > > -               if (unlikely(!pages[i] ||
-> > > -                            mem_cgroup_try_charge_delay(pages[i], vm=
-a->vm_mm,
-> > > -                                    GFP_KERNEL, &memcg, false))) {
-> > > -                       if (pages[i])
-> > > -                               put_page(pages[i]);
-> > > -                       while (--i >=3D 0) {
-> > > -                               memcg =3D (void *)page_private(pages[=
-i]);
-> > > -                               set_page_private(pages[i], 0);
-> > > -                               mem_cgroup_cancel_charge(pages[i], me=
-mcg,
-> > > -                                               false);
-> > > -                               put_page(pages[i]);
-> > > -                       }
-> > > -                       kfree(pages);
-> > > -                       ret |=3D VM_FAULT_OOM;
-> > > -                       goto out;
-> > > -               }
-> > > -               set_page_private(pages[i], (unsigned long)memcg);
-> > > -       }
-> > > -
-> > > -       for (i =3D 0; i < HPAGE_PMD_NR; i++) {
-> > > -               copy_user_highpage(pages[i], page + i,
-> > > -                                  haddr + PAGE_SIZE * i, vma);
-> > > -               __SetPageUptodate(pages[i]);
-> > > -               cond_resched();
-> > > -       }
-> > > -
-> > > -       mmu_notifier_range_init(&range, MMU_NOTIFY_CLEAR, 0, vma, vma=
-->vm_mm,
-> > > -                               haddr, haddr + HPAGE_PMD_SIZE);
-> > > -       mmu_notifier_invalidate_range_start(&range);
-> > > -
-> > > -       vmf->ptl =3D pmd_lock(vma->vm_mm, vmf->pmd);
-> > > -       if (unlikely(!pmd_same(*vmf->pmd, orig_pmd)))
-> > > -               goto out_free_pages;
-> > > -       VM_BUG_ON_PAGE(!PageHead(page), page);
-> > > -
-> > > -       /*
-> > > -        * Leave pmd empty until pte is filled note we must notify he=
-re as
-> > > -        * concurrent CPU thread might write to new page before the c=
-all to
-> > > -        * mmu_notifier_invalidate_range_end() happens which can lead=
- to a
-> > > -        * device seeing memory write in different order than CPU.
-> > > -        *
-> > > -        * See Documentation/vm/mmu_notifier.rst
-> > > -        */
-> > > -       pmdp_huge_clear_flush_notify(vma, haddr, vmf->pmd);
-> > > -
-> > > -       pgtable =3D pgtable_trans_huge_withdraw(vma->vm_mm, vmf->pmd)=
-;
-> > > -       pmd_populate(vma->vm_mm, &_pmd, pgtable);
-> > > -
-> > > -       for (i =3D 0; i < HPAGE_PMD_NR; i++, haddr +=3D PAGE_SIZE) {
-> > > -               pte_t entry;
-> > > -               entry =3D mk_pte(pages[i], vma->vm_page_prot);
-> > > -               entry =3D maybe_mkwrite(pte_mkdirty(entry), vma);
-> > > -               memcg =3D (void *)page_private(pages[i]);
-> > > -               set_page_private(pages[i], 0);
-> > > -               page_add_new_anon_rmap(pages[i], vmf->vma, haddr, fal=
-se);
-> > > -               mem_cgroup_commit_charge(pages[i], memcg, false, fals=
-e);
-> > > -               lru_cache_add_active_or_unevictable(pages[i], vma);
-> > > -               vmf->pte =3D pte_offset_map(&_pmd, haddr);
-> > > -               VM_BUG_ON(!pte_none(*vmf->pte));
-> > > -               set_pte_at(vma->vm_mm, haddr, vmf->pte, entry);
-> > > -               pte_unmap(vmf->pte);
-> > > -       }
-> > > -       kfree(pages);
-> > > -
-> > > -       smp_wmb(); /* make pte visible before pmd */
-> > > -       pmd_populate(vma->vm_mm, vmf->pmd, pgtable);
-> > > -       page_remove_rmap(page, true);
-> > > -       spin_unlock(vmf->ptl);
-> > > -
-> > > -       /*
-> > > -        * No need to double call mmu_notifier->invalidate_range() ca=
-llback as
-> > > -        * the above pmdp_huge_clear_flush_notify() did already call =
-it.
-> > > -        */
-> > > -       mmu_notifier_invalidate_range_only_end(&range);
-> > > -
-> > > -       ret |=3D VM_FAULT_WRITE;
-> > > -       put_page(page);
-> > > -
-> > > -out:
-> > > -       return ret;
-> > > -
-> > > -out_free_pages:
-> > > -       spin_unlock(vmf->ptl);
-> > > -       mmu_notifier_invalidate_range_end(&range);
-> > > -       for (i =3D 0; i < HPAGE_PMD_NR; i++) {
-> > > -               memcg =3D (void *)page_private(pages[i]);
-> > > -               set_page_private(pages[i], 0);
-> > > -               mem_cgroup_cancel_charge(pages[i], memcg, false);
-> > > -               put_page(pages[i]);
-> > > -       }
-> > > -       kfree(pages);
-> > > -       goto out;
-> > > -}
-> > > -
-> > >  vm_fault_t do_huge_pmd_wp_page(struct vm_fault *vmf, pmd_t orig_pmd)
-> > >  {
-> > >         struct vm_area_struct *vma =3D vmf->vma;
-> > > -       struct page *page =3D NULL, *new_page;
-> > > -       struct mem_cgroup *memcg;
-> > > +       struct page *page;
-> > >         unsigned long haddr =3D vmf->address & HPAGE_PMD_MASK;
-> > > -       struct mmu_notifier_range range;
-> > > -       gfp_t huge_gfp;                 /* for allocation and charge =
-*/
-> > > -       vm_fault_t ret =3D 0;
-> > >
-> > >         vmf->ptl =3D pmd_lockptr(vma->vm_mm, vmf->pmd);
-> > >         VM_BUG_ON_VMA(!vma->anon_vma, vma);
-> > > +
-> > >         if (is_huge_zero_pmd(orig_pmd))
-> > > -               goto alloc;
-> > > +               goto fallback;
-> > > +
-> > >         spin_lock(vmf->ptl);
-> > > -       if (unlikely(!pmd_same(*vmf->pmd, orig_pmd)))
-> > > -               goto out_unlock;
-> > > +
-> > > +       if (unlikely(!pmd_same(*vmf->pmd, orig_pmd))) {
-> > > +               spin_unlock(vmf->ptl);
-> > > +               return 0;
-> > > +       }
-> > >
-> > >         page =3D pmd_page(orig_pmd);
-> > >         VM_BUG_ON_PAGE(!PageCompound(page) || !PageHead(page), page);
-> > > -       /*
-> > > -        * We can only reuse the page if nobody else maps the huge pa=
-ge or it's
-> > > -        * part.
-> > > -        */
-> > > +
-> > > +       /* Lock page for reuse_swap_page() */
-> > >         if (!trylock_page(page)) {
-> > >                 get_page(page);
-> > >                 spin_unlock(vmf->ptl);
-> > >                 lock_page(page);
-> > >                 spin_lock(vmf->ptl);
-> > >                 if (unlikely(!pmd_same(*vmf->pmd, orig_pmd))) {
-> > > +                       spin_unlock(vmf->ptl);
-> > >                         unlock_page(page);
-> > >                         put_page(page);
-> > > -                       goto out_unlock;
-> > > +                       return 0;
-> > >                 }
-> > >                 put_page(page);
-> > >         }
-> > > +
-> > > +       /*
-> > > +        * We can only reuse the page if nobody else maps the huge pa=
-ge or it's
-> > > +        * part.
-> > > +        */
-> > >         if (reuse_swap_page(page, NULL)) {
-> > >                 pmd_t entry;
-> > >                 entry =3D pmd_mkyoung(orig_pmd);
-> > >                 entry =3D maybe_pmd_mkwrite(pmd_mkdirty(entry), vma);
-> > >                 if (pmdp_set_access_flags(vma, haddr, vmf->pmd, entry=
-,  1))
-> > >                         update_mmu_cache_pmd(vma, vmf->address, vmf->=
-pmd);
-> > > -               ret |=3D VM_FAULT_WRITE;
-> > >                 unlock_page(page);
-> > > -               goto out_unlock;
-> > > -       }
-> > > -       unlock_page(page);
-> > > -       get_page(page);
-> > > -       spin_unlock(vmf->ptl);
-> > > -alloc:
-> > > -       if (__transparent_hugepage_enabled(vma) &&
-> > > -           !transparent_hugepage_debug_cow()) {
-> > > -               huge_gfp =3D alloc_hugepage_direct_gfpmask(vma);
-> > > -               new_page =3D alloc_hugepage_vma(huge_gfp, vma, haddr,=
- HPAGE_PMD_ORDER);
-> > > -       } else
-> > > -               new_page =3D NULL;
-> > > -
-> > > -       if (likely(new_page)) {
-> > > -               prep_transhuge_page(new_page);
-> > > -       } else {
-> > > -               if (!page) {
-> > > -                       split_huge_pmd(vma, vmf->pmd, vmf->address);
-> > > -                       ret |=3D VM_FAULT_FALLBACK;
-> > > -               } else {
-> > > -                       ret =3D do_huge_pmd_wp_page_fallback(vmf, ori=
-g_pmd, page);
-> > > -                       if (ret & VM_FAULT_OOM) {
-> > > -                               split_huge_pmd(vma, vmf->pmd, vmf->ad=
-dress);
-> > > -                               ret |=3D VM_FAULT_FALLBACK;
-> > > -                       }
-> > > -                       put_page(page);
-> > > -               }
-> > > -               count_vm_event(THP_FAULT_FALLBACK);
-> > > -               goto out;
-> > > -       }
-> > > -
-> > > -       if (unlikely(mem_cgroup_try_charge_delay(new_page, vma->vm_mm=
-,
-> > > -                                       huge_gfp, &memcg, true))) {
-> > > -               put_page(new_page);
-> > > -               split_huge_pmd(vma, vmf->pmd, vmf->address);
-> > > -               if (page)
-> > > -                       put_page(page);
-> > > -               ret |=3D VM_FAULT_FALLBACK;
-> > > -               count_vm_event(THP_FAULT_FALLBACK);
-> > > -               goto out;
-> > > -       }
-> > > -
-> > > -       count_vm_event(THP_FAULT_ALLOC);
-> > > -       count_memcg_events(memcg, THP_FAULT_ALLOC, 1);
-> > > -
-> > > -       if (!page)
-> > > -               clear_huge_page(new_page, vmf->address, HPAGE_PMD_NR)=
-;
-> > > -       else
-> > > -               copy_user_huge_page(new_page, page, vmf->address,
-> > > -                                   vma, HPAGE_PMD_NR);
-> > > -       __SetPageUptodate(new_page);
-> > > -
-> > > -       mmu_notifier_range_init(&range, MMU_NOTIFY_CLEAR, 0, vma, vma=
-->vm_mm,
-> > > -                               haddr, haddr + HPAGE_PMD_SIZE);
-> > > -       mmu_notifier_invalidate_range_start(&range);
-> > > -
-> > > -       spin_lock(vmf->ptl);
-> > > -       if (page)
-> > > -               put_page(page);
-> > > -       if (unlikely(!pmd_same(*vmf->pmd, orig_pmd))) {
-> > >                 spin_unlock(vmf->ptl);
-> > > -               mem_cgroup_cancel_charge(new_page, memcg, true);
-> > > -               put_page(new_page);
-> > > -               goto out_mn;
-> > > -       } else {
-> > > -               pmd_t entry;
-> > > -               entry =3D mk_huge_pmd(new_page, vma->vm_page_prot);
-> > > -               entry =3D maybe_pmd_mkwrite(pmd_mkdirty(entry), vma);
-> > > -               pmdp_huge_clear_flush_notify(vma, haddr, vmf->pmd);
-> > > -               page_add_new_anon_rmap(new_page, vma, haddr, true);
-> > > -               mem_cgroup_commit_charge(new_page, memcg, false, true=
-);
-> > > -               lru_cache_add_active_or_unevictable(new_page, vma);
-> > > -               set_pmd_at(vma->vm_mm, haddr, vmf->pmd, entry);
-> > > -               update_mmu_cache_pmd(vma, vmf->address, vmf->pmd);
-> > > -               if (!page) {
-> > > -                       add_mm_counter(vma->vm_mm, MM_ANONPAGES, HPAG=
-E_PMD_NR);
-> > > -               } else {
-> > > -                       VM_BUG_ON_PAGE(!PageHead(page), page);
-> > > -                       page_remove_rmap(page, true);
-> > > -                       put_page(page);
-> > > -               }
-> > > -               ret |=3D VM_FAULT_WRITE;
-> > > +               return VM_FAULT_WRITE;
-> > >         }
-> > > +
-> > > +       unlock_page(page);
-> > >         spin_unlock(vmf->ptl);
-> > > -out_mn:
-> > > -       /*
-> > > -        * No need to double call mmu_notifier->invalidate_range() ca=
-llback as
-> > > -        * the above pmdp_huge_clear_flush_notify() did already call =
-it.
-> > > -        */
-> > > -       mmu_notifier_invalidate_range_only_end(&range);
-> > > -out:
-> > > -       return ret;
-> > > -out_unlock:
-> > > -       spin_unlock(vmf->ptl);
-> > > -       return ret;
-> > > +fallback:
-> > > +       __split_huge_pmd(vma, vmf->pmd, vmf->address, false, NULL);
-> > > +       return VM_FAULT_FALLBACK;
-> > >  }
-> > >
-> > >  /*
-> > > --
-> > > 2.26.0
-> > >
-> > >
->
-> --
->  Kirill A. Shutemov
