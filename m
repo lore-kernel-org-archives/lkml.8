@@ -2,276 +2,143 @@ Return-Path: <SRS0=NZ+o=5N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.7 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56F59C2D0ED
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 21:15:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A62B4C2D0E5
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 21:23:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2555520723
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 21:15:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F9CE206E6
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 21:23:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EsqyKWY+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727635AbgC1VPF (ORCPT
+        id S1727484AbgC1VXU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 28 Mar 2020 17:15:05 -0400
-Received: from raptor.unsafe.ru ([5.9.43.93]:55574 "EHLO raptor.unsafe.ru"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727115AbgC1VPE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 28 Mar 2020 17:15:04 -0400
-Received: from comp-core-i7-2640m-0182e6 (ip-89-102-33-211.net.upcbroadband.cz [89.102.33.211])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        by raptor.unsafe.ru (Postfix) with ESMTPSA id 56D65209BD;
-        Sat, 28 Mar 2020 21:14:58 +0000 (UTC)
-Date:   Sat, 28 Mar 2020 22:14:53 +0100
-From:   Alexey Gladkov <gladkov.alexey@gmail.com>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        Linux API <linux-api@vger.kernel.org>,
-        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
-        Linux Security Module <linux-security-module@vger.kernel.org>,
-        Akinobu Mita <akinobu.mita@gmail.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Daniel Micay <danielmicay@gmail.com>,
-        Djalal Harouni <tixxdz@gmail.com>,
-        "Dmitry V . Levin" <ldv@altlinux.org>,
-        "Eric W . Biederman" <ebiederm@xmission.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        "J . Bruce Fields" <bfields@fieldses.org>,
-        Jeff Layton <jlayton@poochiereds.net>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Oleg Nesterov <oleg@redhat.com>
-Subject: Re: [PATCH v10 8/9] proc: use human-readable values for hidehid
-Message-ID: <20200328211453.w44fvkwleltnc2m7@comp-core-i7-2640m-0182e6>
-References: <20200327172331.418878-1-gladkov.alexey@gmail.com>
- <20200327172331.418878-9-gladkov.alexey@gmail.com>
- <202003281321.A69D9DE45@keescook>
+        Sat, 28 Mar 2020 17:23:20 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:35171 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727151AbgC1VXU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 28 Mar 2020 17:23:20 -0400
+Received: by mail-wm1-f68.google.com with SMTP id f74so5816012wmf.0;
+        Sat, 28 Mar 2020 14:23:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=XfZCAw3mx1VH8Q89oa0rqaHcmTmN+wwlGYRiFHc66EM=;
+        b=EsqyKWY+b1ErnScvE50klIUNK5IQjko+hO6dMBi20fAqFZg+kY8VQZTPqYkfSFNjCD
+         Hc4L2D63KLrGVyKhn26mMgwknO523QFvLRS6mhFKkHIZsuQ7gyiNlz02vtTsaFrrRGK1
+         hPyFMmVypyBxL/hc/b1mNl/xXcCispKsFjX2bLWZmkprhc4URV/u7SYibEojoaOtWFfT
+         Hot3xCxFShK8Klhoc7jPuoaPteXKy2QTAHqLhcaJWFO+ISvK7fFwop0h/Tl3IlshLIhs
+         eFYsAC733J/+P94YeTUgDg/8O+8KOIxGfhOqrEf2rcMzUJawpyJ+D2AcSJXgPmFsmX9b
+         /JKA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=XfZCAw3mx1VH8Q89oa0rqaHcmTmN+wwlGYRiFHc66EM=;
+        b=ddqq9bOvws04teBBGBRjDcodw4l0/USE4Z4G6rq+1GmVcZmv13Lfu3rywLR5LkiPey
+         Ak48VH7tOBb70S4Q9yVJ0LBdJn+Cnt/TPSN3x6mjsZEQmGDwNKq/p77hIWiJa/UcxWdh
+         FKrMB+0ntOmGtfsF1DFDAX+dYZzbcRL+rkeLrmyb3FF/bs81gEitWxXxF2rzpWY6cPC0
+         9QseuIEmaB292XoD+9NScDuHT0MBFiAnClJiOGHw+a6ewL9bCgG8+FeEfXJSSLXzs/Z+
+         CQ7ZHakNd9+O1COyJVIPj74xn4PkXSPyEySY4CmpEBGqscWcmw1j5EBoiyDftsUUwPzu
+         J9ag==
+X-Gm-Message-State: ANhLgQ03CKFwD3XxIhhVmd9RvZ20+HnK6OGN0N3YEoYp9Ic0U2GmeUH+
+        aWRSdi6mKwV/ajMOymNkQsg=
+X-Google-Smtp-Source: ADFU+vvAiYZf/IYzA5fxaGnYNv0X86Z6T7fDkR1sS4MKCo6tPVfB1D/leyGrwYl0zLlD2RY7i0pYYQ==
+X-Received: by 2002:a1c:4987:: with SMTP id w129mr5640004wma.168.1585430596134;
+        Sat, 28 Mar 2020 14:23:16 -0700 (PDT)
+Received: from eichest-laptop.local (77-57-203-148.dclient.hispeed.ch. [77.57.203.148])
+        by smtp.gmail.com with ESMTPSA id a10sm6227436wrm.87.2020.03.28.14.23.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 28 Mar 2020 14:23:15 -0700 (PDT)
+From:   eichest@gmail.com
+To:     Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>
+Cc:     Stefan Eichenberger <eichest@gmail.com>,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] arm64: dts: clearfog-gt-8k: fix ge phy reset pin
+Date:   Sat, 28 Mar 2020 22:21:16 +0100
+Message-Id: <20200328212115.12477-1-eichest@gmail.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <202003281321.A69D9DE45@keescook>
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.6.1 (raptor.unsafe.ru [5.9.43.93]); Sat, 28 Mar 2020 21:15:00 +0000 (UTC)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Mar 28, 2020 at 01:28:28PM -0700, Kees Cook wrote:
-> On Fri, Mar 27, 2020 at 06:23:30PM +0100, Alexey Gladkov wrote:
-> > The hidepid parameter values are becoming more and more and it becomes
-> > difficult to remember what each new magic number means.
-> > 
-> > Suggested-by: Andy Lutomirski <luto@kernel.org>
-> > Reviewed-by: Alexey Dobriyan <adobriyan@gmail.com>
-> > Signed-off-by: Alexey Gladkov <gladkov.alexey@gmail.com>
-> > ---
-> >  Documentation/filesystems/proc.txt | 52 +++++++++++++++---------------
-> >  fs/proc/inode.c                    | 13 +++++++-
-> >  fs/proc/root.c                     | 36 +++++++++++++++++++--
-> >  3 files changed, 71 insertions(+), 30 deletions(-)
-> > 
-> > diff --git a/Documentation/filesystems/proc.txt b/Documentation/filesystems/proc.txt
-> > index bd0e0ab85048..af47672cb2cb 100644
-> > --- a/Documentation/filesystems/proc.txt
-> > +++ b/Documentation/filesystems/proc.txt
-> > @@ -2025,28 +2025,28 @@ The following mount options are supported:
-> >  	gid=		Set the group authorized to learn processes information.
-> >  	subset=		Show only the specified subset of procfs.
-> >  
-> > -hidepid=0 means classic mode - everybody may access all /proc/<pid>/ directories
-> > -(default).
-> > -
-> > -hidepid=1 means users may not access any /proc/<pid>/ directories but their
-> > -own.  Sensitive files like cmdline, sched*, status are now protected against
-> > -other users.  This makes it impossible to learn whether any user runs
-> > -specific program (given the program doesn't reveal itself by its behaviour).
-> > -As an additional bonus, as /proc/<pid>/cmdline is unaccessible for other users,
-> > -poorly written programs passing sensitive information via program arguments are
-> > -now protected against local eavesdroppers.
-> > -
-> > -hidepid=2 means hidepid=1 plus all /proc/<pid>/ will be fully invisible to other
-> > -users.  It doesn't mean that it hides a fact whether a process with a specific
-> > -pid value exists (it can be learned by other means, e.g. by "kill -0 $PID"),
-> > -but it hides process' uid and gid, which may be learned by stat()'ing
-> > -/proc/<pid>/ otherwise.  It greatly complicates an intruder's task of gathering
-> > -information about running processes, whether some daemon runs with elevated
-> > -privileges, whether other user runs some sensitive program, whether other users
-> > -run any program at all, etc.
-> > -
-> > -hidepid=4 means that procfs should only contain /proc/<pid>/ directories
-> > -that the caller can ptrace.
-> > +hidepid=off or hidepid=0 means classic mode - everybody may access all
-> > +/proc/<pid>/ directories (default).
-> > +
-> > +hidepid=noaccess or hidepid=1 means users may not access any /proc/<pid>/
-> > +directories but their own.  Sensitive files like cmdline, sched*, status are now
-> > +protected against other users.  This makes it impossible to learn whether any
-> > +user runs specific program (given the program doesn't reveal itself by its
-> > +behaviour).  As an additional bonus, as /proc/<pid>/cmdline is unaccessible for
-> > +other users, poorly written programs passing sensitive information via program
-> > +arguments are now protected against local eavesdroppers.
-> > +
-> > +hidepid=invisible or hidepid=2 means hidepid=noaccess plus all /proc/<pid>/ will
-> > +be fully invisible to other users.  It doesn't mean that it hides a fact whether
-> > +a process with a specific pid value exists (it can be learned by other means,
-> > +e.g. by "kill -0 $PID"), but it hides process' uid and gid, which may be learned
-> > +by stat()'ing /proc/<pid>/ otherwise.  It greatly complicates an intruder's task
-> > +of gathering information about running processes, whether some daemon runs with
-> > +elevated privileges, whether other user runs some sensitive program, whether
-> > +other users run any program at all, etc.
-> > +
-> > +hidepid=ptraceable or hidepid=4 means that procfs should only contain
-> > +/proc/<pid>/ directories that the caller can ptrace.
-> >  
-> >  gid= defines a group authorized to learn processes information otherwise
-> >  prohibited by hidepid=.  If you use some daemon like identd which needs to learn
-> > @@ -2093,8 +2093,8 @@ creates a new procfs instance. Mount options affect own procfs instance.
-> >  It means that it became possible to have several procfs instances
-> >  displaying tasks with different filtering options in one pid namespace.
-> >  
-> > -# mount -o hidepid=2 -t proc proc /proc
-> > -# mount -o hidepid=1 -t proc proc /tmp/proc
-> > +# mount -o hidepid=invisible -t proc proc /proc
-> > +# mount -o hidepid=noaccess -t proc proc /tmp/proc
-> >  # grep ^proc /proc/mounts
-> > -proc /proc proc rw,relatime,hidepid=2 0 0
-> > -proc /tmp/proc proc rw,relatime,hidepid=1 0 0
-> > +proc /proc proc rw,relatime,hidepid=invisible 0 0
-> > +proc /tmp/proc proc rw,relatime,hidepid=noaccess 0 0
-> > diff --git a/fs/proc/inode.c b/fs/proc/inode.c
-> > index e6577ce6027b..f01fb4bed75c 100644
-> > --- a/fs/proc/inode.c
-> > +++ b/fs/proc/inode.c
-> > @@ -165,6 +165,17 @@ void proc_invalidate_siblings_dcache(struct hlist_head *inodes, spinlock_t *lock
-> >  		deactivate_super(old_sb);
-> >  }
-> >  
-> > +static inline const char *hidepid2str(int v)
-> > +{
-> > +	switch (v) {
-> > +		case HIDEPID_OFF: return "off";
-> > +		case HIDEPID_NO_ACCESS: return "noaccess";
-> > +		case HIDEPID_INVISIBLE: return "invisible";
-> > +		case HIDEPID_NOT_PTRACEABLE: return "ptraceable";
-> > +	}
-> > +	BUG();
-> 
-> Please don't use BUG()[1]. Add a default case with a warn and return
-> "unknown":
-> 
-> 	switch (v) {
-> 	case HIDEPID_OFF: return "off";
-> 	case HIDEPID_NO_ACCESS: return "noaccess";
-> 	case HIDEPID_INVISIBLE: return "invisible";
-> 	case HIDEPID_NOT_PTRACEABLE: return "ptraceable";
-> 	default:
-> 		WARN_ON_ONCE("bad hide_pid value: %d\n", v);
-> 		return "unknown";
-> 	}
-> 
-> [1] https://lore.kernel.org/lkml/202003141524.59C619B51A@keescook/
+From: Stefan Eichenberger <eichest@gmail.com>
 
-Make sense. I will change it.
+According to the ClearFog-GT-8K-rev-1_1-Simplified-Schematic the reset
+pin for the gigabit phy is MPP62 and not MPP43.
 
-> > +}
-> > +
-> >  static int proc_show_options(struct seq_file *seq, struct dentry *root)
-> >  {
-> >  	struct proc_fs_info *fs_info = proc_sb_info(root->d_sb);
-> > @@ -172,7 +183,7 @@ static int proc_show_options(struct seq_file *seq, struct dentry *root)
-> >  	if (!gid_eq(fs_info->pid_gid, GLOBAL_ROOT_GID))
-> >  		seq_printf(seq, ",gid=%u", from_kgid_munged(&init_user_ns, fs_info->pid_gid));
-> >  	if (fs_info->hide_pid != HIDEPID_OFF)
-> > -		seq_printf(seq, ",hidepid=%u", fs_info->hide_pid);
-> > +		seq_printf(seq, ",hidepid=%s", hidepid2str(fs_info->hide_pid));
-> >  	if (fs_info->pidonly != PROC_PIDONLY_OFF)
-> >  		seq_printf(seq, ",subset=pid");
-> >  
-> > diff --git a/fs/proc/root.c b/fs/proc/root.c
-> > index dbcd96f07c7a..ba782d6e6197 100644
-> > --- a/fs/proc/root.c
-> > +++ b/fs/proc/root.c
-> > @@ -45,7 +45,7 @@ enum proc_param {
-> >  
-> >  static const struct fs_parameter_spec proc_fs_parameters[] = {
-> >  	fsparam_u32("gid",	Opt_gid),
-> > -	fsparam_u32("hidepid",	Opt_hidepid),
-> > +	fsparam_string("hidepid",	Opt_hidepid),
-> >  	fsparam_string("subset",	Opt_subset),
-> >  	{}
-> >  };
-> > @@ -58,6 +58,35 @@ static inline int valid_hidepid(unsigned int value)
-> >  		value == HIDEPID_NOT_PTRACEABLE);
-> >  }
-> >  
-> > +static int proc_parse_hidepid_param(struct fs_context *fc, struct fs_parameter *param)
-> > +{
-> > +	struct proc_fs_context *ctx = fc->fs_private;
-> > +	struct fs_parameter_spec hidepid_u32_spec = fsparam_u32("hidepid", Opt_hidepid);
-> > +	struct fs_parse_result result;
-> > +	int base = (unsigned long)hidepid_u32_spec.data;
-> > +
-> > +	if (param->type != fs_value_is_string)
-> > +		return invalf(fc, "proc: unexpected type of hidepid value\n");
-> > +
-> > +	if (!kstrtouint(param->string, base, &result.uint_32)) {
-> > +		ctx->hidepid = result.uint_32;
-> 
-> This need to bounds-check the value with a call to valid_hidepid(), yes?
+Signed-off-by: Stefan Eichenberger <eichest@gmail.com>
+---
+ .../dts/marvell/armada-8040-clearfog-gt-8k.dts     | 14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
 
-The kstrtouint returns 0 on success and -ERANGE on overflow [1].
-
-[1] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/lib/kstrtox.c#n217
-
-> > +		return 0;
-> > +	}
-> > +
-> > +	if (!strcmp(param->string, "off"))
-> > +		ctx->hidepid = HIDEPID_OFF;
-> > +	else if (!strcmp(param->string, "noaccess"))
-> > +		ctx->hidepid = HIDEPID_NO_ACCESS;
-> > +	else if (!strcmp(param->string, "invisible"))
-> > +		ctx->hidepid = HIDEPID_INVISIBLE;
-> > +	else if (!strcmp(param->string, "ptraceable"))
-> > +		ctx->hidepid = HIDEPID_NOT_PTRACEABLE;
-> > +	else
-> > +		return invalf(fc, "proc: unknown value of hidepid - %s\n", param->string);
-> > +
-> > +	return 0;
-> > +}
-> > +
-> >  static int proc_parse_subset_param(struct fs_context *fc, char *value)
-> >  {
-> >  	struct proc_fs_context *ctx = fc->fs_private;
-> > @@ -97,9 +126,10 @@ static int proc_parse_param(struct fs_context *fc, struct fs_parameter *param)
-> >  		break;
-> >  
-> >  	case Opt_hidepid:
-> > -		if (!valid_hidepid(result.uint_32))
-> > +		if (proc_parse_hidepid_param(fc, param))
-> > +			return -EINVAL;
-> > +		if (!valid_hidepid(ctx->hidepid))
-> >  			return invalf(fc, "proc: unknown value of hidepid.\n");
-> > -		ctx->hidepid = result.uint_32;
-> >  		break;
-> >  
-> >  	case Opt_subset:
-> > -- 
-> > 2.25.2
-> > 
-> 
-> -- 
-> Kees Cook
-> 
-
+diff --git a/arch/arm64/boot/dts/marvell/armada-8040-clearfog-gt-8k.dts b/arch/arm64/boot/dts/marvell/armada-8040-clearfog-gt-8k.dts
+index b90d78a5724b..d371d938b41e 100644
+--- a/arch/arm64/boot/dts/marvell/armada-8040-clearfog-gt-8k.dts
++++ b/arch/arm64/boot/dts/marvell/armada-8040-clearfog-gt-8k.dts
+@@ -144,7 +144,6 @@
+ 	 * [35-38] CP0 I2C1 and I2C0
+ 	 * [39] GPIO reset button
+ 	 * [40,41] LED0 and LED1
+-	 * [43] 1512 phy reset
+ 	 * [47] USB VBUS EN (active low)
+ 	 * [48] FAN PWM
+ 	 * [49] SFP+ present signal
+@@ -155,6 +154,7 @@
+ 	 * [54] NFC reset
+ 	 * [55] Micro SD card detect
+ 	 * [56-61] Micro SD
++	 * [62] 1512 phy reset
+ 	 */
+ 
+ 	cp0_pci0_reset_pins: pci0-reset-pins {
+@@ -197,11 +197,6 @@
+ 		marvell,function = "gpio";
+ 	};
+ 
+-	cp0_copper_eth_phy_reset: copper-eth-phy-reset {
+-		marvell,pins = "mpp43";
+-		marvell,function = "gpio";
+-	};
+-
+ 	cp0_xhci_vbus_pins: xhci0-vbus-pins {
+ 		marvell,pins = "mpp47";
+ 		marvell,function = "gpio";
+@@ -232,6 +227,11 @@
+ 			       "mpp60", "mpp61";
+ 		marvell,function = "sdio";
+ 	};
++
++	cp0_copper_eth_phy_reset: copper-eth-phy-reset {
++		marvell,pins = "mpp62";
++		marvell,function = "gpio";
++	};
+ };
+ 
+ &cp0_pcie0 {
+@@ -365,7 +365,7 @@
+ 		reg = <0>;
+ 		pinctrl-names = "default";
+ 		pinctrl-0 = <&cp0_copper_eth_phy_reset>;
+-		reset-gpios = <&cp0_gpio2 11 GPIO_ACTIVE_LOW>;
++		reset-gpios = <&cp0_gpio2 30 GPIO_ACTIVE_LOW>;
+ 		reset-assert-us = <10000>;
+ 		reset-deassert-us = <10000>;
+ 	};
 -- 
-Rgrds, legion
+2.20.1
 
