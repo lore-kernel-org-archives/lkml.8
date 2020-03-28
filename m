@@ -2,96 +2,146 @@ Return-Path: <SRS0=NZ+o=5N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76769C43331
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 20:50:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CAE72C43331
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 21:13:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1F28C20714
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 20:50:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=pobox.com header.i=@pobox.com header.b="qEkTFPur";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=fluxnic.net header.i=@fluxnic.net header.b="ypSwc9Ri"
+	by mail.kernel.org (Postfix) with ESMTP id A70DC20716
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 21:13:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727308AbgC1Uuf (ORCPT
+        id S1727461AbgC1VMu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 28 Mar 2020 16:50:35 -0400
-Received: from pb-smtp1.pobox.com ([64.147.108.70]:62694 "EHLO
-        pb-smtp1.pobox.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727009AbgC1Uuf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 28 Mar 2020 16:50:35 -0400
-Received: from pb-smtp1.pobox.com (unknown [127.0.0.1])
-        by pb-smtp1.pobox.com (Postfix) with ESMTP id 1100243590;
-        Sat, 28 Mar 2020 16:50:33 -0400 (EDT)
-        (envelope-from nico@fluxnic.net)
-DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=pobox.com; h=date:from:to
-        :cc:subject:in-reply-to:message-id:references:mime-version
-        :content-type; s=sasl; bh=MVnJ4eCCBFn2tIDbc7IaRiJ4y4k=; b=qEkTFP
-        urURuXj05IisyZUwOJbdNlYDNyKpD18kZK+S5iGfGsC9XophQUtpGtiwE24lK8FG
-        SG69eeCM8LWv/klhBJTtiYa3adCIAP6GLWPg+nEtGFd0G/IY8KAa7OfuTM+hIGqw
-        rGLvWbYaBqsvDjTFVium1K5Ameb0Tls4uj4jc=
-Received: from pb-smtp1.nyi.icgroup.com (unknown [127.0.0.1])
-        by pb-smtp1.pobox.com (Postfix) with ESMTP id 081854358F;
-        Sat, 28 Mar 2020 16:50:33 -0400 (EDT)
-        (envelope-from nico@fluxnic.net)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed; d=fluxnic.net;
- h=date:from:to:cc:subject:in-reply-to:message-id:references:mime-version:content-type; s=2016-12.pbsmtp; bh=JASv01FUd5xtHan2jcoYVzXPo3Lp3q4mtypqVd9D1xs=; b=ypSwc9Riz3ofKU5sEtPdwWgP7uwl4R6V8NQJGeTqDgiOKLAV8zXV45VDpvBxBIlGtiiXcz+FxkvPA7daO0H29nlbOFJjvlqUH3dMwWXhRHxLgld0N+kzxGZtzol9BZHHnY/1h4g3/2+hrO1EgFrl/8U5o7AV7XRhi1C32STW8Hc=
-Received: from yoda.home (unknown [24.203.50.76])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by pb-smtp1.pobox.com (Postfix) with ESMTPSA id 631834358E;
-        Sat, 28 Mar 2020 16:50:32 -0400 (EDT)
-        (envelope-from nico@fluxnic.net)
-Received: from xanadu.home (xanadu.home [192.168.2.2])
-        by yoda.home (Postfix) with ESMTPSA id 721EC2DA0174;
-        Sat, 28 Mar 2020 16:50:31 -0400 (EDT)
-Date:   Sat, 28 Mar 2020 16:50:31 -0400 (EDT)
-From:   Nicolas Pitre <nico@fluxnic.net>
-To:     Adam Borowski <kilobyte@angband.pl>
-cc:     Chen Wandun <chenwandun@huawei.com>, jslaby@suse.com,
-        gregkh@linuxfoundation.org, daniel.vetter@ffwll.ch,
-        sam@ravnborg.org, b.zolnierkie@samsung.com, lukas@wunner.de,
-        ghalat@redhat.com, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH next] vt: fix a warning when kmalloc alloc large memory
-In-Reply-To: <20200328031257.GA30454@angband.pl>
-Message-ID: <nycvar.YSQ.7.76.2003281641230.2671@knanqh.ubzr>
-References: <20200328021340.27315-1-chenwandun@huawei.com> <nycvar.YSQ.7.76.2003272232340.2671@knanqh.ubzr> <20200328031257.GA30454@angband.pl>
-User-Agent: Alpine 2.21 (LFD 202 2017-01-01)
+        Sat, 28 Mar 2020 17:12:50 -0400
+Received: from mga17.intel.com ([192.55.52.151]:40684 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726604AbgC1VMu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 28 Mar 2020 17:12:50 -0400
+IronPort-SDR: 3P5UnqVVEyL9KYglzbEAIzoDnd40K/kFGXH1ex5xVKAkRbqQdF0x5BsdQDW8EmWBLr5Wn7A/vg
+ IaCm06uX+BYw==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Mar 2020 14:12:49 -0700
+IronPort-SDR: bnbXWG8s6q28X0226IZOO75NStnuUdLcMstgbqpglkjnuEl8RbOf218/ZUpviyZkyXa8oAvsLi
+ qKeK6K+FjpJw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,317,1580803200"; 
+   d="scan'208";a="447816206"
+Received: from ssafrin-mobl.ger.corp.intel.com (HELO [10.255.229.125]) ([10.255.229.125])
+  by fmsmga005.fm.intel.com with ESMTP; 28 Mar 2020 14:12:48 -0700
+Subject: Re: [PATCH v18 05/11] PCI/ERR: Remove service dependency in
+ pcie_do_recovery()
+To:     bhelgaas@google.com
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        ashok.raj@intel.com
+References: <cover.1585000084.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+ <60e02b87b526cdf2930400059d98704bf0a147d1.1585000084.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+From:   "Kuppuswamy, Sathyanarayanan" 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>
+Message-ID: <bcc1910b-90fe-25b5-3cee-8f9d7e83e45e@linux.intel.com>
+Date:   Sat, 28 Mar 2020 14:12:48 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Pobox-Relay-ID: C4076B7C-7135-11EA-AB05-C28CBED8090B-78420484!pb-smtp1.pobox.com
+In-Reply-To: <60e02b87b526cdf2930400059d98704bf0a147d1.1585000084.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 28 Mar 2020, Adam Borowski wrote:
+Hi Bjorn,
 
-> On Fri, Mar 27, 2020 at 10:55:14PM -0400, Nicolas Pitre wrote:
-> > On Sat, 28 Mar 2020, Chen Wandun wrote:
-> > 
-> > > If the memory size that use kmalloc() to allocate exceed MAX_ORDER pages,
-> > > it will hit the WARN_ON_ONCE(!(gfp_mask & __GFP_NOWARN)), so add memory
-> > > allocation flag __GFP_NOWARN to silence a warning, othervise, it will
-> > > cause panic if panic_on_warn is enable.
-> > 
-> > Wow! How do you manage that? You need something like a 1024x1024 text 
-> > screen to get such a big memory allocation.
+On 3/23/20 5:26 PM, sathyanarayanan.kuppuswamy@linux.intel.com wrote:
+> From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
 > 
-> ioctl(VT_RESIZE) allows up to 32767x32767, unprivileged for a local user.
-> That's 4GB per console.
 
-In fact that's not exactly true. The code has this protection:
-
-        if (new_screen_size > (4 << 20))
-                return -EINVAL;
-
-The problem is with the unicode screen content whose buffer is larger 
-than the legacy glyph buffer. Still, the above test is a bit iffy as it 
-depends on the default MAX_ORDER value which is configurable.
-
-
-Nicolas
+> +void pcie_do_recovery(struct pci_dev *dev,
+> +		      enum pci_channel_state state,
+> +		      pci_ers_result_t (*reset_link)(struct pci_dev *pdev))
+>   {
+>   	pci_ers_result_t status = PCI_ERS_RESULT_CAN_RECOVER;
+>   	struct pci_bus *bus;
+> @@ -206,9 +165,12 @@ void pcie_do_recovery(struct pci_dev *dev, enum pci_channel_state state,
+>   	pci_dbg(dev, "broadcast error_detected message\n");
+>   	if (state == pci_channel_io_frozen) {
+>   		pci_walk_bus(bus, report_frozen_detected, &status);
+> -		status = reset_link(dev, service);
+> -		if 		if (reset_link)
+			status = reset_link(dev);(status == PCI_ERS_RESULT_DISCONNECT
+> +		status = reset_link(dev);
+Above line needs to be replaced as below. Since there is a
+possibility reset_link can NULL (eventhough currently its
+not true).
+		if (reset_link)
+			status = reset_link(dev);
+Shall I submit another version to add above fix on top of
+our pci/edr branch ?
+> +		if ((status != PCI_ERS_RESULT_RECOVERED) &&
+> +		    (status != PCI_ERS_RESULT_NEED_RESET)) {
+> +			pci_dbg(dev, "link reset at upstream device failed\n");
+>   			goto failed;
+> +		}
+>   	} else {
+>   		pci_walk_bus(bus, report_normal_detected, &status);
+>   	}
+> diff --git a/drivers/pci/pcie/portdrv.h b/drivers/pci/pcie/portdrv.h
+> index 1e673619b101..64b5e081cdb2 100644
+> --- a/drivers/pci/pcie/portdrv.h
+> +++ b/drivers/pci/pcie/portdrv.h
+> @@ -92,9 +92,6 @@ struct pcie_port_service_driver {
+>   	/* Device driver may resume normal operations */
+>   	void (*error_resume)(struct pci_dev *dev);
+>   
+> -	/* Link Reset Capability - AER service driver specific */
+> -	pci_ers_result_t (*reset_link)(struct pci_dev *dev);
+> -
+>   	int port_type;  /* Type of the port this driver can handle */
+>   	u32 service;    /* Port service this device represents */
+>   
+> @@ -161,7 +158,5 @@ static inline int pcie_aer_get_firmware_first(struct pci_dev *pci_dev)
+>   }
+>   #endif
+>   
+> -struct pcie_port_service_driver *pcie_port_find_service(struct pci_dev *dev,
+> -							u32 service);
+>   struct device *pcie_port_find_device(struct pci_dev *dev, u32 service);
+>   #endif /* _PORTDRV_H_ */
+> diff --git a/drivers/pci/pcie/portdrv_core.c b/drivers/pci/pcie/portdrv_core.c
+> index 5075cb9e850c..50a9522ab07d 100644
+> --- a/drivers/pci/pcie/portdrv_core.c
+> +++ b/drivers/pci/pcie/portdrv_core.c
+> @@ -458,27 +458,6 @@ static int find_service_iter(struct device *device, void *data)
+>   	return 0;
+>   }
+>   
+> -/**
+> - * pcie_port_find_service - find the service driver
+> - * @dev: PCI Express port the service is associated with
+> - * @service: Service to find
+> - *
+> - * Find PCI Express port service driver associated with given service
+> - */
+> -struct pcie_port_service_driver *pcie_port_find_service(struct pci_dev *dev,
+> -							u32 service)
+> -{
+> -	struct pcie_port_service_driver *drv;
+> -	struct portdrv_service_data pdrvs;
+> -
+> -	pdrvs.drv = NULL;
+> -	pdrvs.service = service;
+> -	device_for_each_child(&dev->dev, &pdrvs, find_service_iter);
+> -
+> -	drv = pdrvs.drv;
+> -	return drv;
+> -}
+> -
+>   /**
+>    * pcie_port_find_device - find the struct device
+>    * @dev: PCI Express port the service is associated with
+> 
