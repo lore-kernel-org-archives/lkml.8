@@ -2,178 +2,219 @@ Return-Path: <SRS0=NZ+o=5N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66633C43331
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 19:09:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06EC6C43331
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 19:11:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2DE4920714
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 19:09:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jHFWWE4F"
+	by mail.kernel.org (Postfix) with ESMTP id C37EF20714
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 19:11:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727134AbgC1TF3 (ORCPT
+        id S1727125AbgC1TLr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 28 Mar 2020 15:05:29 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:45119 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726220AbgC1TF2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 28 Mar 2020 15:05:28 -0400
-Received: by mail-pl1-f196.google.com with SMTP id b9so4884777pls.12
-        for <linux-kernel@vger.kernel.org>; Sat, 28 Mar 2020 12:05:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=nTAzCGUSvJV4ncy7HJGaGxbbxkFN5aj53LA11biejuc=;
-        b=jHFWWE4FsMXTAti3zTrm9AsSkQYoGbPusIRxbAQ5zaMNQl5MgxO2+z14t8+Pcfhq1J
-         HXYwYsN/spsOQYG+lDxU4X2qxPQUJYSvOmaqIBXrQimUGJjlorci/nOs6DHmLGiao+LW
-         NBe3XaQndatNldhNUgxJeWu7nODnepv2kqdcYV/w2GiULlol/lEt8ymq0IlplWB8U+r8
-         taKKW53wRNa/3RdJKUM0GEHaTdMBO6eA7EB5AV+sSSEdj4EJkiLMgXyewRS2HuJX7vh5
-         M/WLTQSuEg6m+1Pj85t6uMwnIFy6tgHBttAoeUXbI/Htly9weUa5WN66O/KtO4OUylf3
-         C0nQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=nTAzCGUSvJV4ncy7HJGaGxbbxkFN5aj53LA11biejuc=;
-        b=DYSVWkPN0xnmwqSxtucJt2PSGv8I6jCI1qJWdCP7WIvNr4mLdWrw63spC5f7npcQ+q
-         xD8pO82aniq4xG/OOyBZAn1LillTypRY/mNhPd6Qb8lJC3dvRM63DMTp392Uc2iDNqFR
-         qKy0Ji2wxiKTV5++bOL9rsgQl72PQg4cni6IyhdIw8vAtTTAWJ2h2IMV/w++2WzavFvA
-         m6rV8PNRgrRMMbYNUc/Tm/3DByKa68SAYXvjrFHDN+urykYwLyBLGrTXgIxtciuC+ozX
-         f6oCFc/23OKwY9GsJmWAJf/ctbhDhiga7W88eGUwhn94kh8pJfvkf5dVeVWNLpsriRTt
-         MutA==
-X-Gm-Message-State: ANhLgQ1csZjisViJaIL29H6roDYVL29Ct4QpddLD0obj2xuWVaqSgaV6
-        DQk5xorY81I3qLBovdugza9asRt3n2EsILnO1o8=
-X-Google-Smtp-Source: ADFU+vsYgRDoa0Pgfpj2+O1rHrb7IVmlU2IVNWERmhlk+FmFmmJRzNmGNCAXNVdIJgFh7ady64c1DbwC7dDgLVPrfw4=
-X-Received: by 2002:a17:902:b28c:: with SMTP id u12mr4100082plr.262.1585422327086;
- Sat, 28 Mar 2020 12:05:27 -0700 (PDT)
+        Sat, 28 Mar 2020 15:11:47 -0400
+Received: from mga17.intel.com ([192.55.52.151]:59253 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725882AbgC1TLq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 28 Mar 2020 15:11:46 -0400
+IronPort-SDR: fTyCvMCNpI8P1AQEp+aqHVD85oUFxPkES4a/Z8dEHkLpvSk5xrc2halJSi6y9RMN7AidR1AUgd
+ O+1LmvUigOQQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Mar 2020 12:11:45 -0700
+IronPort-SDR: kho3stUoABUTzayTNWqJPu9YU9HzFpqcnuqKiyDWzpxHI5kj2qzmL0QvPpioCcEMTeh6nS6PDL
+ Lnz3BX8MVdXw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,317,1580803200"; 
+   d="scan'208";a="421478298"
+Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
+  by orsmga005.jf.intel.com with ESMTP; 28 Mar 2020 12:11:44 -0700
+Received: from kbuild by lkp-server01 with local (Exim 4.89)
+        (envelope-from <lkp@intel.com>)
+        id 1jIGrw-0008mT-2Z; Sun, 29 Mar 2020 03:11:44 +0800
+Date:   Sun, 29 Mar 2020 03:11:01 +0800
+From:   kbuild test robot <lkp@intel.com>
+To:     "x86-ml" <x86@kernel.org>
+Cc:     linux-kernel@vger.kernel.org
+Subject: [tip:x86/cleanups] BUILD SUCCESS
+ a2150327250efa866c412caee84aaf05ebff9a8f
+Message-ID: <5e7fa145.5gsByv5W/QySTmAW%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-References: <202003281643.02SGhJI8005124@sdf.org>
-In-Reply-To: <202003281643.02SGhJI8005124@sdf.org>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Sat, 28 Mar 2020 21:05:15 +0200
-Message-ID: <CAHp75VdM9gCC6YUDW0j82kvDMcdadRkYvo1UOMCcanYpXOK8ug@mail.gmail.com>
-Subject: Re: [RFC PATCH v1 32/50] lib/test*.c: Use prandom_u32_max()
-To:     George Spelvin <lkml@sdf.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Ferdinand Blomqvist <ferdinand.blomqvist@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Mar 28, 2020 at 6:47 PM George Spelvin <lkml@sdf.org> wrote:
->
-> lib/reed_solomon/test_rslib.c alreasy uses prandom_u32();
-> lib/test_hexdump.c and lib/test-string_helpers.c were using
-> get_random_int() % range, which is needlessly expensive for
-> test code.
->
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git  x86/cleanups
+branch HEAD: a2150327250efa866c412caee84aaf05ebff9a8f  Merge branch 'next.uaccess-2' of git://git.kernel.org/pub/scm/linux/kernel/git/viro/vfs into x86/cleanups
 
-Fine with me, FWIW,
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+elapsed time: 484m
 
-> Signed-off-by: George Spelvin <lkml@sdf.org>
-> Cc: Ferdinand Blomqvist <ferdinand.blomqvist@gmail.com>
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> Cc: Vitaly Kuznetsov <vkuznets@redhat.com>
-> ---
->  lib/reed_solomon/test_rslib.c |  4 ++--
->  lib/test-string_helpers.c     |  2 +-
->  lib/test_hexdump.c            | 10 +++++-----
->  3 files changed, 8 insertions(+), 8 deletions(-)
->
-> diff --git a/lib/reed_solomon/test_rslib.c b/lib/reed_solomon/test_rslib.c
-> index 4eb29f365ece0..58e767c142ef8 100644
-> --- a/lib/reed_solomon/test_rslib.c
-> +++ b/lib/reed_solomon/test_rslib.c
-> @@ -183,7 +183,7 @@ static int get_rcw_we(struct rs_control *rs, struct wspace *ws,
->
->                 do {
->                         /* Must not choose the same location twice */
-> -                       errloc = prandom_u32() % len;
-> +                       errloc = prandom_u32_max(len);
->                 } while (errlocs[errloc] != 0);
->
->                 errlocs[errloc] = 1;
-> @@ -194,7 +194,7 @@ static int get_rcw_we(struct rs_control *rs, struct wspace *ws,
->         for (i = 0; i < eras; i++) {
->                 do {
->                         /* Must not choose the same location twice */
-> -                       errloc = prandom_u32() % len;
-> +                       errloc = prandom_u32_max(len);
->                 } while (errlocs[errloc] != 0);
->
->                 derrlocs[i] = errloc;
-> diff --git a/lib/test-string_helpers.c b/lib/test-string_helpers.c
-> index 25b5cbfb7615b..3349f3ddc528c 100644
-> --- a/lib/test-string_helpers.c
-> +++ b/lib/test-string_helpers.c
-> @@ -398,7 +398,7 @@ static int __init test_string_helpers_init(void)
->         for (i = 0; i < UNESCAPE_ANY + 1; i++)
->                 test_string_unescape("unescape", i, false);
->         test_string_unescape("unescape inplace",
-> -                            get_random_int() % (UNESCAPE_ANY + 1), true);
-> +                            prandom_u32_max(UNESCAPE_ANY + 1), true);
->
->         /* Without dictionary */
->         for (i = 0; i < (ESCAPE_ANY_NP | ESCAPE_HEX) + 1; i++)
-> diff --git a/lib/test_hexdump.c b/lib/test_hexdump.c
-> index 5144899d3c6b8..54e4efb28b974 100644
-> --- a/lib/test_hexdump.c
-> +++ b/lib/test_hexdump.c
-> @@ -149,7 +149,7 @@ static void __init test_hexdump(size_t len, int rowsize, int groupsize,
->  static void __init test_hexdump_set(int rowsize, bool ascii)
->  {
->         size_t d = min_t(size_t, sizeof(data_b), rowsize);
-> -       size_t len = get_random_int() % d + 1;
-> +       size_t len = prandom_u32_max(d) + 1;
->
->         test_hexdump(len, rowsize, 4, ascii);
->         test_hexdump(len, rowsize, 2, ascii);
-> @@ -208,11 +208,11 @@ static void __init test_hexdump_overflow(size_t buflen, size_t len,
->  static void __init test_hexdump_overflow_set(size_t buflen, bool ascii)
->  {
->         unsigned int i = 0;
-> -       int rs = (get_random_int() % 2 + 1) * 16;
-> +       int rs = (prandom_u32() % 2 + 1) * 16;
->
->         do {
->                 int gs = 1 << i;
-> -               size_t len = get_random_int() % rs + gs;
-> +               size_t len = prandom_u32_max(rs) + gs;
->
->                 test_hexdump_overflow(buflen, rounddown(len, gs), rs, gs, ascii);
->         } while (i++ < 3);
-> @@ -223,11 +223,11 @@ static int __init test_hexdump_init(void)
->         unsigned int i;
->         int rowsize;
->
-> -       rowsize = (get_random_int() % 2 + 1) * 16;
-> +       rowsize = (prandom_u32() % 2 + 1) * 16;
->         for (i = 0; i < 16; i++)
->                 test_hexdump_set(rowsize, false);
->
-> -       rowsize = (get_random_int() % 2 + 1) * 16;
-> +       rowsize = (prandom_u32() % 2 + 1) * 16;
->         for (i = 0; i < 16; i++)
->                 test_hexdump_set(rowsize, true);
->
-> --
-> 2.26.0
->
+configs tested: 152
+configs skipped: 0
 
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
--- 
-With Best Regards,
-Andy Shevchenko
+arm64                            allyesconfig
+arm                              allyesconfig
+arm64                            allmodconfig
+arm64                             allnoconfig
+arm                               allnoconfig
+arm                           efm32_defconfig
+arm                         at91_dt_defconfig
+arm                        shmobile_defconfig
+arm64                               defconfig
+arm                          exynos_defconfig
+arm                        multi_v5_defconfig
+arm                           sunxi_defconfig
+arm                        multi_v7_defconfig
+sparc                            allyesconfig
+ia64                             alldefconfig
+s390                       zfcpdump_defconfig
+sparc64                             defconfig
+arc                                 defconfig
+riscv                    nommu_virt_defconfig
+i386                              allnoconfig
+i386                             allyesconfig
+i386                             alldefconfig
+i386                                defconfig
+ia64                             allmodconfig
+ia64                              allnoconfig
+ia64                             allyesconfig
+ia64                                defconfig
+arm                              allmodconfig
+nios2                         3c120_defconfig
+nios2                         10m50_defconfig
+c6x                        evmc6678_defconfig
+xtensa                          iss_defconfig
+c6x                              allyesconfig
+xtensa                       common_defconfig
+openrisc                 simple_smp_defconfig
+openrisc                    or1ksim_defconfig
+nds32                               defconfig
+nds32                             allnoconfig
+csky                                defconfig
+alpha                               defconfig
+h8300                       h8s-sim_defconfig
+h8300                     edosk2674_defconfig
+m68k                       m5475evb_defconfig
+m68k                             allmodconfig
+h8300                    h8300h-sim_defconfig
+m68k                           sun3_defconfig
+m68k                          multi_defconfig
+arc                              allyesconfig
+powerpc                             defconfig
+powerpc                       ppc64_defconfig
+powerpc                          rhel-kconfig
+microblaze                      mmu_defconfig
+microblaze                    nommu_defconfig
+powerpc                           allnoconfig
+mips                           32r2_defconfig
+mips                         64r6el_defconfig
+mips                             allmodconfig
+mips                              allnoconfig
+mips                             allyesconfig
+mips                      fuloong2e_defconfig
+mips                      malta_kvm_defconfig
+parisc                            allnoconfig
+parisc                           allyesconfig
+parisc                generic-32bit_defconfig
+parisc                generic-64bit_defconfig
+i386                 randconfig-a002-20200327
+i386                 randconfig-a001-20200327
+x86_64               randconfig-a002-20200327
+x86_64               randconfig-a001-20200327
+i386                 randconfig-a003-20200327
+x86_64               randconfig-a003-20200327
+mips                 randconfig-a001-20200327
+nds32                randconfig-a001-20200327
+m68k                 randconfig-a001-20200327
+parisc               randconfig-a001-20200327
+alpha                randconfig-a001-20200327
+riscv                randconfig-a001-20200327
+h8300                randconfig-a001-20200327
+microblaze           randconfig-a001-20200327
+nios2                randconfig-a001-20200327
+c6x                  randconfig-a001-20200327
+sparc64              randconfig-a001-20200327
+s390                 randconfig-a001-20200327
+xtensa               randconfig-a001-20200327
+csky                 randconfig-a001-20200327
+openrisc             randconfig-a001-20200327
+sh                   randconfig-a001-20200327
+i386                 randconfig-b003-20200327
+i386                 randconfig-b001-20200327
+x86_64               randconfig-b003-20200327
+i386                 randconfig-b002-20200327
+x86_64               randconfig-b002-20200327
+x86_64               randconfig-b001-20200327
+x86_64               randconfig-c003-20200327
+x86_64               randconfig-c001-20200327
+i386                 randconfig-c002-20200327
+x86_64               randconfig-c002-20200327
+i386                 randconfig-c003-20200327
+i386                 randconfig-c001-20200327
+i386                 randconfig-d003-20200327
+i386                 randconfig-d001-20200327
+x86_64               randconfig-d002-20200327
+x86_64               randconfig-d001-20200327
+i386                 randconfig-d002-20200327
+x86_64               randconfig-d003-20200327
+x86_64               randconfig-e001-20200327
+x86_64               randconfig-e003-20200327
+i386                 randconfig-e002-20200327
+i386                 randconfig-e003-20200327
+i386                 randconfig-e001-20200327
+x86_64               randconfig-e002-20200327
+i386                 randconfig-f001-20200327
+x86_64               randconfig-h003-20200327
+i386                 randconfig-h003-20200327
+i386                 randconfig-h001-20200327
+x86_64               randconfig-h001-20200327
+i386                 randconfig-h002-20200327
+arm                  randconfig-a001-20200327
+powerpc              randconfig-a001-20200327
+ia64                 randconfig-a001-20200327
+sparc                randconfig-a001-20200327
+arc                  randconfig-a001-20200327
+arm64                randconfig-a001-20200327
+riscv                            allmodconfig
+riscv                             allnoconfig
+riscv                            allyesconfig
+riscv                               defconfig
+riscv                          rv32_defconfig
+s390                             alldefconfig
+s390                             allmodconfig
+s390                              allnoconfig
+s390                             allyesconfig
+s390                          debug_defconfig
+s390                                defconfig
+sh                               allmodconfig
+sh                                allnoconfig
+sh                          rsk7269_defconfig
+sh                  sh7785lcr_32bit_defconfig
+sh                            titan_defconfig
+sparc                               defconfig
+sparc64                           allnoconfig
+sparc64                          allyesconfig
+sparc64                          allmodconfig
+um                           x86_64_defconfig
+um                             i386_defconfig
+um                                  defconfig
+x86_64                              fedora-25
+x86_64                                  kexec
+x86_64                                    lkp
+x86_64                                   rhel
+x86_64                         rhel-7.2-clear
+x86_64                               rhel-7.6
+
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
