@@ -2,149 +2,140 @@ Return-Path: <SRS0=NZ+o=5N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9552C2D0E5
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 12:27:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B35D7C43331
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 12:27:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 80389206F6
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 12:27:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585398423;
-	bh=D87NSl65Pg7fQlicMoYRQg+J9bitAiu/S9hoaFEs9Mk=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=IbIC58vCKfBrYNcNuVPP8J8nM8Ad2jG7ho9hfaMq80wm3frekdMjKL0WTi8BJbYOZ
-	 unuZirdeJhglhY/QFUb993vgBjSl+VjuEo0grwOPNHaSfr8qMvVpQZ0NMVIS+AmE5o
-	 oTvpeXpZcpXdm4vkt6fVYWQqnxq1nNryBL+pt0lI=
+	by mail.kernel.org (Postfix) with ESMTP id 82DEF20723
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 12:27:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="SmmEE0YZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726661AbgC1M1C (ORCPT
+        id S1726977AbgC1M1e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 28 Mar 2020 08:27:02 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:39716 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726271AbgC1M1C (ORCPT
+        Sat, 28 Mar 2020 08:27:34 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:44588 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726268AbgC1M1e (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 28 Mar 2020 08:27:02 -0400
-Received: by mail-ot1-f66.google.com with SMTP id x11so12745872otp.6;
-        Sat, 28 Mar 2020 05:27:01 -0700 (PDT)
+        Sat, 28 Mar 2020 08:27:34 -0400
+Received: by mail-lj1-f194.google.com with SMTP id p14so12925589lji.11
+        for <linux-kernel@vger.kernel.org>; Sat, 28 Mar 2020 05:27:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=4ZefhR0E03euYQPplWgD/MUqgsa6Q0Ji04STFlWdgEg=;
+        b=SmmEE0YZ9QIPA1i1pTx1mo30QLVV0objMkhszcqncFCexP7nncxpgMgGnDfUdx8kCv
+         f0B+w2oFRISBJCGCr+SVj0JGc/caxnIS73dhvz2W1zNF457USDmnmPnuiK3ubCeKNrxv
+         7z2rmPK7I67ZZf2Op923oFsB7ff2GX0/jnIHB7HDxyQOi9wd64VV0rGt/kaNp9qzCpb/
+         NKFu31NQuKHp0cXjW5TZTroWn/J6JH5AF1WnXl2IQ7CmKpjCk33uBoT+/u1Bvazut1XI
+         /7sZg37kfRIYIizcnNfW5/8T3ThcEOwtGBpWvoP0mu4iujU21fpn5XwuKYGBmLci2HTn
+         h1uA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=hqZqx/CZapn9pjHWc5U/GpwtVDNOyuhdLo9WIuYYHzs=;
-        b=EBXslbwSVxQMvD7p0Fbv8bGNpGGWlC//DVEBxK/Hd9yXzVb2V8nvzMQHAEvUeUOFXQ
-         pKbcvul8rR5aA5Uxm6uCiYiGJ3fd4FBxfiVBNIyvgBhohSrSKJePmamnJnO79p7OFnXm
-         NHA+6wRQd/kqPq6EB6L70zzDk2uAKGyZn6HFmyIYyTU3TV4bYtUvvFbB+C7/FGJ5tijc
-         bDGeLuSPSmMyJDOg58hQ1EAvKjKutruC03+a2S3xAxlKnd8OKZnBbF/a5PKbP62otpzy
-         QkhgsiiLkwvL3g64SGOSb1Op8KTBC3E1moJ5XLEvmuETeCMH8jl+1h93cuR6G+1iCImW
-         XK4g==
-X-Gm-Message-State: ANhLgQ3z/SqYdmRuaccjBmk7HVkJSp5dJ9YAVCg8udsWuWbLkN7aun1T
-        9mpqFf50X0+csyAWT8zHZOcwB+djWxe+5KjEkbw/oQ==
-X-Google-Smtp-Source: ADFU+vsArV3PTBfft2PPvi8tTIA1oPns/rtyEPF4hkM8KSyoQ62DSh333n/cvkQBgecEbD8PmQ+F31OqWR+fY+raqQ8=
-X-Received: by 2002:a05:6830:14cc:: with SMTP id t12mr2427440otq.118.1585398421290;
- Sat, 28 Mar 2020 05:27:01 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=4ZefhR0E03euYQPplWgD/MUqgsa6Q0Ji04STFlWdgEg=;
+        b=B/8d3vgahKHrr9kdcAWVUc/RdQX3G00rc6Rx4Cadq/+TkeMNYipmBPs/B8se6Z5369
+         vell4Eynsnq98MM7rzgP7Cxj7mgjtb+v68GEGf037IqV/N2UpG4armu72blvDiP6aUIh
+         lJvh7M+qyX8USO8LCDq1fu6SWspF3R+GruE9w8RnDycQWj+d9yUcows336w8YTIPzMZ8
+         /1KTxMgOnrH01Oy9kCiULjCVnlOLBL3zpqNzMROoDkq33gtlP/BGm9+VZSpZvbAkHwvb
+         A2u28jW9bZSKaRku+ushGT5sHGkkkeF/UehC3jCUTkLGEaWANgVtsMBbDSWpC9amMyhi
+         dohg==
+X-Gm-Message-State: AGi0PuZhrMmuDRrV5vKCEasmtPyT0SRiWK2GVKWjs5SjINDpnovBy2c4
+        bBQqBHmLhtwuiY/R/473OBI0rQ==
+X-Google-Smtp-Source: APiQypJdQnrTjffrG+IC37I+WDVy0NdER7UvNDXjFJ+siv9fUqXeXm5eXa+QVZYByhst3TrtEPzDqw==
+X-Received: by 2002:a2e:9c9:: with SMTP id 192mr1956710ljj.77.1585398451693;
+        Sat, 28 Mar 2020 05:27:31 -0700 (PDT)
+Received: from box.localdomain ([86.57.175.117])
+        by smtp.gmail.com with ESMTPSA id i11sm4337022lfo.84.2020.03.28.05.27.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 28 Mar 2020 05:27:31 -0700 (PDT)
+Received: by box.localdomain (Postfix, from userid 1000)
+        id 16BD0100D25; Sat, 28 Mar 2020 15:27:35 +0300 (+03)
+Date:   Sat, 28 Mar 2020 15:27:35 +0300
+From:   "Kirill A. Shutemov" <kirill@shutemov.name>
+To:     Yang Shi <shy828301@gmail.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Linux MM <linux-mm@kvack.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+Subject: Re: [PATCH 5/7] khugepaged: Allow to collapse PTE-mapped compound
+ pages
+Message-ID: <20200328122735.nzius2ikvnyvpf2f@box>
+References: <20200327170601.18563-1-kirill.shutemov@linux.intel.com>
+ <20200327170601.18563-6-kirill.shutemov@linux.intel.com>
+ <CAHbLzkoVq-ssduiPwdzcsL2bVhPwmw4X9ktAO0CYOVAi8H84oA@mail.gmail.com>
+ <20200328003424.kusu2xnhnlbmnfzl@box>
+ <CAHbLzkpV7=EGQVeEEZ_jhpWa-nnVkiZ4_Qa=0KoZCRntprWhgg@mail.gmail.com>
 MIME-Version: 1.0
-References: <1585232950-123704-1-git-send-email-zhangliguang@linux.alibaba.com>
-In-Reply-To: <1585232950-123704-1-git-send-email-zhangliguang@linux.alibaba.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Sat, 28 Mar 2020 13:26:48 +0100
-Message-ID: <CAJZ5v0iwZq-F=WAztLaLKBrU7UeWq_W5U+mTTvvpFo32y6COUA@mail.gmail.com>
-Subject: Re: [PATCH] ACPI / CPPC: clean up acpi_get_psd_map
-To:     luanshi <zhangliguang@linux.alibaba.com>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHbLzkpV7=EGQVeEEZ_jhpWa-nnVkiZ4_Qa=0KoZCRntprWhgg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 26, 2020 at 3:29 PM luanshi <zhangliguang@linux.alibaba.com> wrote:
->
-> This patch cleans up acpi_get_psd_map function. If got here,
-> variable all_cpu_data[] can't be NULL. Variable match_cpc_ptr has been
-> checked before, no need check again at the end of the funchtion. Then
-> some code logic should be optimized.
->
-> Signed-off-by: Liguang Zhang <zhangliguang@linux.alibaba.com>
-> ---
->  drivers/acpi/cppc_acpi.c | 33 +++++++--------------------------
->  1 file changed, 7 insertions(+), 26 deletions(-)
->
-> diff --git a/drivers/acpi/cppc_acpi.c b/drivers/acpi/cppc_acpi.c
-> index a1a858a..8b2e89c 100644
-> --- a/drivers/acpi/cppc_acpi.c
-> +++ b/drivers/acpi/cppc_acpi.c
-> @@ -438,13 +438,10 @@ int acpi_get_psd_map(struct cppc_cpudata **all_cpu_data)
->          * domain info.
->          */
->         for_each_possible_cpu(i) {
-> -               pr = all_cpu_data[i];
-> -               if (!pr)
-> -                       continue;
-> -
->                 if (cpumask_test_cpu(i, covered_cpus))
->                         continue;
->
-> +               pr = all_cpu_data[i];
->                 cpc_ptr = per_cpu(cpc_desc_ptr, i);
->                 if (!cpc_ptr) {
->                         retval = -EFAULT;
-> @@ -495,44 +492,28 @@ int acpi_get_psd_map(struct cppc_cpudata **all_cpu_data)
->                         cpumask_set_cpu(j, pr->shared_cpu_map);
->                 }
->
-> -               for_each_possible_cpu(j) {
-> +               for_each_cpu(j, pr->shared_cpu_map) {
->                         if (i == j)
->                                 continue;
->
->                         match_pr = all_cpu_data[j];
-> -                       if (!match_pr)
-> -                               continue;
-> -
-> -                       match_cpc_ptr = per_cpu(cpc_desc_ptr, j);
-> -                       if (!match_cpc_ptr) {
-> -                               retval = -EFAULT;
-> -                               goto err_ret;
-> -                       }
-> -
-> -                       match_pdomain = &(match_cpc_ptr->domain_info);
-> -                       if (match_pdomain->domain != pdomain->domain)
-> -                               continue;
-> -
->                         match_pr->shared_type = pr->shared_type;
->                         cpumask_copy(match_pr->shared_cpu_map,
->                                      pr->shared_cpu_map);
->                 }
->         }
-> +       goto out;
->
->  err_ret:
->         for_each_possible_cpu(i) {
->                 pr = all_cpu_data[i];
-> -               if (!pr)
-> -                       continue;
->
->                 /* Assume no coordination on any error parsing domain info */
-> -               if (retval) {
-> -                       cpumask_clear(pr->shared_cpu_map);
-> -                       cpumask_set_cpu(i, pr->shared_cpu_map);
-> -                       pr->shared_type = CPUFREQ_SHARED_TYPE_ALL;
-> -               }
-> +               cpumask_clear(pr->shared_cpu_map);
-> +               cpumask_set_cpu(i, pr->shared_cpu_map);
-> +               pr->shared_type = CPUFREQ_SHARED_TYPE_ALL;
->         }
-> -
-> +out:
->         free_cpumask_var(covered_cpus);
->         return retval;
->  }
-> --
+On Fri, Mar 27, 2020 at 06:09:38PM -0700, Yang Shi wrote:
+> On Fri, Mar 27, 2020 at 5:34 PM Kirill A. Shutemov <kirill@shutemov.name> wrote:
+> >
+> > On Fri, Mar 27, 2020 at 11:53:57AM -0700, Yang Shi wrote:
+> > > On Fri, Mar 27, 2020 at 10:06 AM Kirill A. Shutemov
+> > > <kirill@shutemov.name> wrote:
+> > > >
+> > > > We can collapse PTE-mapped compound pages. We only need to avoid
+> > > > handling them more than once: lock/unlock page only once if it's present
+> > > > in the PMD range multiple times as it handled on compound level. The
+> > > > same goes for LRU isolation and putpack.
+> > > >
+> > > > Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+> > > > ---
+> > > >  mm/khugepaged.c | 41 +++++++++++++++++++++++++++++++----------
+> > > >  1 file changed, 31 insertions(+), 10 deletions(-)
+> > > >
+> > > > diff --git a/mm/khugepaged.c b/mm/khugepaged.c
+> > > > index b47edfe57f7b..c8c2c463095c 100644
+> > > > --- a/mm/khugepaged.c
+> > > > +++ b/mm/khugepaged.c
+> > > > @@ -515,6 +515,17 @@ void __khugepaged_exit(struct mm_struct *mm)
+> > > >
+> > > >  static void release_pte_page(struct page *page)
+> > > >  {
+> > > > +       /*
+> > > > +        * We need to unlock and put compound page on LRU only once.
+> > > > +        * The rest of the pages have to be locked and not on LRU here.
+> > > > +        */
+> > > > +       VM_BUG_ON_PAGE(!PageCompound(page) &&
+> > > > +                       (!PageLocked(page) && PageLRU(page)), page);
+> > > > +
+> > > > +       if (!PageLocked(page))
+> > > > +               return;
+> > > > +
+> > > > +       page = compound_head(page);
+> > > >         dec_node_page_state(page, NR_ISOLATED_ANON + page_is_file_cache(page));
+> > >
+> > > We need count in the number of base pages. The same counter is
+> > > modified by vmscan in base page unit.
+> >
+> > Is it though? Where?
+> 
+> __mod_node_page_state(pgdat, NR_ISOLATED_ANON + file, nr_taken) in
+> vmscan.c, here nr_taken is nr_compound(page), so if it is THP the
+> number would be 512.
 
-Applied as 5.7 material with some changes in the changelog and subject, thanks!
+Could you point a particular codepath?
+
+> So in both inc and dec path of collapse PTE mapped THP, we should mod
+> nr_compound(page) too.
+
+I disagree. Compound page is represented by single entry on LRU, so it has
+to be counted once.
+
+-- 
+ Kirill A. Shutemov
