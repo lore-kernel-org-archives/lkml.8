@@ -2,118 +2,104 @@ Return-Path: <SRS0=NZ+o=5N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 692AEC43331
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 09:14:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B075EC2D0EC
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 09:15:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 43E4D2071B
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 09:14:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 866632072F
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 09:15:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="V85xWxIY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726316AbgC1JO3 (ORCPT
+        id S1726445AbgC1JP1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 28 Mar 2020 05:14:29 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:41424 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725865AbgC1JO2 (ORCPT
+        Sat, 28 Mar 2020 05:15:27 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:37190 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725865AbgC1JP1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 28 Mar 2020 05:14:28 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: eballetbo)
-        with ESMTPSA id F15282967C4
-Subject: Re: [PATCH v7 12/12] iio: cros_ec: flush as hwfifo attribute
-To:     Gwendal Grignou <gwendal@chromium.org>, bleung@chromium.org,
-        Jonathan.Cameron@huawei.com
-Cc:     linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200327223443.6006-1-gwendal@chromium.org>
- <20200327223443.6006-13-gwendal@chromium.org>
-From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Message-ID: <c3609af9-42a7-8d59-f0a4-9da3badc3668@collabora.com>
-Date:   Sat, 28 Mar 2020 10:14:23 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Sat, 28 Mar 2020 05:15:27 -0400
+Received: by mail-io1-f66.google.com with SMTP id q9so12446875iod.4;
+        Sat, 28 Mar 2020 02:15:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=saHwc+iPTg9mg/TKDP5qS7eXjj7tpT9oKu8R16Snw/0=;
+        b=V85xWxIYguZJQBlJDcV5H1vC4AZQ75o5IfGxxsNZEdxAxyTDRi/3VkUgdzV9fGrNQ4
+         QEn+RRB+UT6JfVPHNIwjNNvhFh3YuFNNEY1Y1anvR6+TGFnvb8iLdk4CXhxRuUV/mFoc
+         Nx4K0BFA9dCVbqd3DDYnQQM5U2TsQHJ5k8KIKqljnwARGdhfA/aWpnIuOPCHX1g2oAov
+         Ecvq+re8mOTiCop9zOauWtaVaFKp/9kJG/fkqy83JBoHCOwUwT8coHiWFwn23KxIY5a/
+         RlG2FZO3TzqTfjT3gYDXBt7q+WFD9uBWGTmy0Ye7witZAn3SPU+dQ4j7KVYRKh0jVHJu
+         NzfQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=saHwc+iPTg9mg/TKDP5qS7eXjj7tpT9oKu8R16Snw/0=;
+        b=MVBdkz4U0JvsH+UnZTgcuPdE94L+rAHBbMnAnxXVHjDRemZtIQ5dlh5uZaFLmwfutT
+         FYDP5ifBUIE8Hvvn+lm1hJtaIlrW40IkbwR3Fr+aiZE7ZU56teRZ2X7HGTIt6h3o3nFc
+         rXz0ByYhflnh/tespzoNNpuUHEkzR179t9drVHUnEv+vCDXXQUdH4Nkst/n93saPeiJM
+         bzJVYoZa5+lh8/oOXHnynCCRaBxJkhpUwEdw72SjohScxn0JppMWuMw49AZE0hifDuRm
+         NN6c8C6UpbpAXye0/wy4ehz7TOgmlLNYZZMClL6hTpTETxh1PiyUNjsyrBL+Oip0Oikz
+         q/+Q==
+X-Gm-Message-State: ANhLgQ2PSC2ILpib6i994M/NBGDir+OnaCAxLUjUsR+oeJ7epOdb9zVk
+        6TEht8PSU9xno7munf2jcAtyRk/FmKoLkFNOJCI=
+X-Google-Smtp-Source: ADFU+vvnmL98O7dcgjdDEy9H3WSnL/Fo8W+ud7liM4PMa4/hQ6d/GdCnO6D18JH0fPnE4akJt710QRYrN0uxiMCyk7Y=
+X-Received: by 2002:a02:4881:: with SMTP id p123mr2604324jaa.30.1585386925551;
+ Sat, 28 Mar 2020 02:15:25 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200327223443.6006-13-gwendal@chromium.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200327171030.30625-1-natechancellor@gmail.com>
+In-Reply-To: <20200327171030.30625-1-natechancellor@gmail.com>
+From:   Amir Goldstein <amir73il@gmail.com>
+Date:   Sat, 28 Mar 2020 12:15:14 +0300
+Message-ID: <CAOQ4uxjiRcCh-dQLYu6+Gx0u7urXT=Bsbdd8erfmmzfyU3G5UA@mail.gmail.com>
+Subject: Re: [PATCH -next] fanotify: Fix the checks in fanotify_fsid_equal
+To:     Nathan Chancellor <natechancellor@gmail.com>
+Cc:     Jan Kara <jack@suse.cz>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        clang-built-linux@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jonathan and Gwendal,
+On Fri, Mar 27, 2020 at 8:10 PM Nathan Chancellor
+<natechancellor@gmail.com> wrote:
+>
+> Clang warns:
+>
+> fs/notify/fanotify/fanotify.c:28:23: warning: self-comparison always
+> evaluates to true [-Wtautological-compare]
+>         return fsid1->val[0] == fsid1->val[0] && fsid2->val[1] == fsid2->val[1];
+>                              ^
+> fs/notify/fanotify/fanotify.c:28:57: warning: self-comparison always
+> evaluates to true [-Wtautological-compare]
+>         return fsid1->val[0] == fsid1->val[0] && fsid2->val[1] == fsid2->val[1];
+>                                                                ^
+> 2 warnings generated.
+>
+> The intention was clearly to compare val[0] and val[1] in the two
+> different fsid structs. Fix it otherwise this function always returns
+> true.
+>
+> Fixes: afc894c784c8 ("fanotify: Store fanotify handles differently")
+> Link: https://github.com/ClangBuiltLinux/linux/issues/952
+> Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+> ---
 
-On 27/3/20 23:34, Gwendal Grignou wrote:
-> Add buffer/hwfifo_flush. It is not part of the ABI, but it follows ST
-> and HID lead: Tells the sensor hub to send to the host all pending
-> sensor events.
-> 
-> Signed-off-by: Gwendal Grignou <gwendal@chromium.org>
+Ouch! Good catch!
 
-I need an Ack from Jonathan to pick this.
-
-Jonathan, once you are fine with it, do you mind if I take the full series
-through the platform chrome tree?
+It would have been quite hard to catch this with tests as
+non equal fsid and equal fid are quite rare in the wild.
+I will try to write some test with mounts of cloned loop devs.
 
 Thanks,
- Enric
-
-
-> ---
-> No changes in v7.
-> New in v6.
-> 
->  .../cros_ec_sensors/cros_ec_sensors_core.c    | 28 +++++++++++++++++++
->  1 file changed, 28 insertions(+)
-> 
-> diff --git a/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c b/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c
-> index c831915ca7e56..aaf124a82e0e4 100644
-> --- a/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c
-> +++ b/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c
-> @@ -113,6 +113,33 @@ static int cros_ec_sensor_set_ec_rate(struct cros_ec_sensors_core_state *st,
->  	return ret;
->  }
->  
-> +static ssize_t cros_ec_sensors_flush(struct device *dev,
-> +				     struct device_attribute *attr,
-> +				     const char *buf, size_t len)
-> +{
-> +	struct iio_dev *indio_dev = dev_to_iio_dev(dev);
-> +	struct cros_ec_sensors_core_state *st = iio_priv(indio_dev);
-> +	int ret = 0;
-> +	bool flush;
-> +
-> +	ret = strtobool(buf, &flush);
-> +	if (ret < 0)
-> +		return ret;
-> +	if (!flush)
-> +		return -EINVAL;
-> +
-> +	mutex_lock(&st->cmd_lock);
-> +	st->param.cmd = MOTIONSENSE_CMD_FIFO_FLUSH;
-> +	ret = cros_ec_motion_send_host_cmd(st, 0);
-> +	if (ret != 0)
-> +		dev_warn(&indio_dev->dev, "Unable to flush sensor\n");
-> +	mutex_unlock(&st->cmd_lock);
-> +	return ret ? ret : len;
-> +}
-> +
-> +static IIO_DEVICE_ATTR(hwfifo_flush, 0644, NULL,
-> +		       cros_ec_sensors_flush, 0);
-> +
->  static ssize_t cros_ec_sensor_set_report_latency(struct device *dev,
->  						 struct device_attribute *attr,
->  						 const char *buf, size_t len)
-> @@ -175,6 +202,7 @@ static ssize_t hwfifo_watermark_max_show(struct device *dev,
->  static IIO_DEVICE_ATTR_RO(hwfifo_watermark_max, 0);
->  
->  const struct attribute *cros_ec_sensor_fifo_attributes[] = {
-> +	&iio_dev_attr_hwfifo_flush.dev_attr.attr,
->  	&iio_dev_attr_hwfifo_timeout.dev_attr.attr,
->  	&iio_dev_attr_hwfifo_watermark_max.dev_attr.attr,
->  	NULL,
-> 
+Amir.
