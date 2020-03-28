@@ -2,257 +2,110 @@ Return-Path: <SRS0=NZ+o=5N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCB1EC2D0E5
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 11:14:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9880FC2D0ED
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 11:18:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A999420723
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 11:14:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585394099;
-	bh=gxsBGPQ+SZjadnosE9PH6kn6/CmHIYOSBaUfziJ2gCI=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=1/MEsPmKd8WH9w1PhV3AtCWUgCxjDSYkIresICPuqaPvPFwDrItmI1HNX5tqW9lN2
-	 1qMQEB52caCjW8Y/vwjxNuH7UvJifdDVtilEewuntnoUAFX7yuclAETGXCfFSr31Bu
-	 NaGFooY18wSacbOW5xg2dorZfRJBoxCFJqhavh24=
+	by mail.kernel.org (Postfix) with ESMTP id 6F880206E6
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 11:18:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="j/vurdna"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726307AbgC1LO6 (ORCPT
+        id S1726307AbgC1LSy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 28 Mar 2020 07:14:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43388 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725973AbgC1LO6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 28 Mar 2020 07:14:58 -0400
-Received: from localhost.localdomain (89.208.247.74.16clouds.com [89.208.247.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6D71F206E6;
-        Sat, 28 Mar 2020 11:14:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585394097;
-        bh=gxsBGPQ+SZjadnosE9PH6kn6/CmHIYOSBaUfziJ2gCI=;
-        h=From:To:Cc:Subject:Date:From;
-        b=MtRAG5dFfJ1sYbAWjk+gcvD/wWBxLrns5Qilq7PKUkMG22EWTNRMQYrgdN04983F4
-         rB6L4qjfZYwkXCSiD9JUiWqNlf9ujeFippcq8sZtOy/ZN9JRhMtPE857HeCoTFuwvT
-         7lgAte3yWb9TZFH4JUUTEE6zgX6goQ+Dbt7fxDj0=
-From:   guoren@kernel.org
-To:     gregkh@linuxfoundation.org, nivedita@alum.mit.edu
-Cc:     linux-kernel@vger.kernel.org, linux-csky@vger.kernel.org,
-        Guo Ren <guoren@linux.alibaba.com>
-Subject: [PATCH] csky: Fixup cpu speculative execution to IO area
-Date:   Sat, 28 Mar 2020 19:14:37 +0800
-Message-Id: <20200328111437.27838-1-guoren@kernel.org>
-X-Mailer: git-send-email 2.17.0
+        Sat, 28 Mar 2020 07:18:54 -0400
+Received: from mail-lj1-f181.google.com ([209.85.208.181]:38788 "EHLO
+        mail-lj1-f181.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725973AbgC1LSy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 28 Mar 2020 07:18:54 -0400
+Received: by mail-lj1-f181.google.com with SMTP id w1so12825737ljh.5;
+        Sat, 28 Mar 2020 04:18:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=mn1ytLBqSAPBNw3XMPojcu/ZhP1LOxFipDY249AI3+0=;
+        b=j/vurdna05CpEPiYbgWaMbXlO1MSn4s6AHli5VB0CRBQUIL3tn/IsFdGyopV0K3H6s
+         7AXxFX+50Ui0uBudNqvmSb7LA0mF2kQiib+sKXYdbh+5mqIYBcEOLY/SUc3u+xiIva+g
+         uFRxkAE4GSZyvbU3rtCg1qZSbURWZ5emEMzXelXG2ipoCL6yM0t4hnvH7V0csTnmXW6N
+         Q5A/5z0tjCD/X9qXmobQvxl+LKG4sq7eB5C8+Zb8GImVfabGY+co+ZWkPGW0asWwx95D
+         oHolnrdhO1IEHoQyfA2ta+ueYLSHBCQ4XzFRuPGIFFfF6BhTXsJZfD5bSkHLwSxUh/Kc
+         CMPw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=mn1ytLBqSAPBNw3XMPojcu/ZhP1LOxFipDY249AI3+0=;
+        b=klGhelfZQWCiOGhi4+xrkjdWC4r0/maTL9BSZyS59YAYkQnJYmcF4JAIv2mAhg4rQw
+         0xHIACIMf7Of0roqe7DAh8Ky5u0ijFhF0HfnX2aGS2Ydl6SSpd9Ip435N2W5Nfep93Od
+         yaiBLpT3DtbuYys2aD5oBX2eaKRUROxRGB0+p01MACVOl+Ol0UGRC9ECqC4aInvIEx+3
+         Q46ssZyY/PgJfjIZa3yWRCOZfNnFMFEUc6kBQRAjwPRZNvPv1X1ELRQrujNd3pyHV3dE
+         JCHYRTAjUCh6M4Cu+lYaw6YxP9FAOM1JFNERKJJy/Bjods/sNYNV6G/33iMEV1zmIrX0
+         40aw==
+X-Gm-Message-State: AGi0PubX4GhuJSoNQ4HxE9SJmNcjutodynaJTQeh1sLv5eP2wbNJ3eYt
+        daHj58eGKnzKBTdWQq+8ELNa2x6sK1apBS4jx6w=
+X-Google-Smtp-Source: APiQypLE0oLlT/o3yAjG6ThkJD82LP/2VPbDKk0L+GjVnht7omgSVfHwuAggLs+wNUYJlyQmbGiwLidjVdGS9lfq8T4=
+X-Received: by 2002:a2e:9105:: with SMTP id m5mr2054389ljg.37.1585394331360;
+ Sat, 28 Mar 2020 04:18:51 -0700 (PDT)
+MIME-Version: 1.0
+References: <CAHCN7xJSKH-gXA5ncFS3h6_2R28rn70O3HfT=ActS1XVgCFSeg@mail.gmail.com>
+In-Reply-To: <CAHCN7xJSKH-gXA5ncFS3h6_2R28rn70O3HfT=ActS1XVgCFSeg@mail.gmail.com>
+From:   Fabio Estevam <festevam@gmail.com>
+Date:   Sat, 28 Mar 2020 08:18:42 -0300
+Message-ID: <CAOMZO5CZX=C2zSjXV0LTvNvAyqWkzLgR=OoRS=uY1wa4rXshVg@mail.gmail.com>
+Subject: Re: i.MX8MN Errors on 5.6-RC7
+To:     Adam Ford <aford173@gmail.com>
+Cc:     arm-soc <linux-arm-kernel@lists.infradead.org>,
+        Adam Ford-BE <aford@beaconembedded.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Anson Huang <Anson.Huang@nxp.com>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Guo Ren <guoren@linux.alibaba.com>
+Hi Adam,
 
-For the memory size ( > 512MB, < 1GB), the MSA setting is:
+On Fri, Mar 27, 2020 at 11:50 PM Adam Ford <aford173@gmail.com> wrote:
+>
+> I am getting a few errors on the i.MX8MN:
+>
+> [    0.000368] Failed to get clock for /timer@306a0000
+> [    0.000380] Failed to initialize '/timer@306a0000': -22
+> [    7.203447] caam 30900000.caam: Failed to get clk 'ipg': -2
+> [    7.334741] caam 30900000.caam: Failed to request all necessary clocks
+> [    7.438651] caam: probe of 30900000.caam failed with error -2
+> [    7.854193] imx-cpufreq-dt: probe of imx-cpufreq-dt failed with error -2
+>
+> I was curious to know if anyone else is seeing similar errors.  I
+> already submitted a proposed fix for a DMA timeout (not shown here)
+> which matched work already done on i.MX8MQ and i.MX8MM.
+>
+> I am not seeing huge differences between 8MM and 8MN in the nodes
+> which address the timer, caam or imx-cpufreq-dt.
+>
+> If anyone has any suggestions, I'd love to try them.
 
- - SSEG0: PHY_START        , PHY_START + 512MB
- - SSEG1: PHY_START + 512MB, PHY_START + 1GB
+I don't have access to a i.MX8MN board at the moment, but I am
+wondering if the errors could be AT-F related.
 
-But the real memory is no more than 1GB, there is a gap between the
-end size of memory and border of 1GB. CPU could speculatively
-execute to that gap and if the gap of the bus couldn't respond to
-the CPU request, then the crash will happen.
+Which version do you use? Could you try
+https://source.codeaurora.org/external/imx/imx-atf/log/?h=imx_5.4.3_2.0.0
+?
 
-Now make the setting with:
+Regards,
 
- - SSEG0: PHY_START        , PHY_START + 512MB (no change)
- - SSEG1: Disabled (We use highmem to use the memory of 512MB~1GB)
-
-We also deprecated zhole_szie[] settings, it's only used by arm
-style CPUs. All memory gap should use Reserved setting of dts in
-csky system.
-
-Signed-off-by: Guo Ren <guoren@linux.alibaba.com>
----
- arch/csky/abiv1/inc/abi/entry.h |  5 +--
- arch/csky/abiv2/inc/abi/entry.h |  7 ++--
- arch/csky/kernel/head.S         |  5 +++
- arch/csky/kernel/setup.c        | 63 ++++++++-------------------------
- arch/csky/kernel/smp.c          |  3 ++
- 5 files changed, 25 insertions(+), 58 deletions(-)
-
-diff --git a/arch/csky/abiv1/inc/abi/entry.h b/arch/csky/abiv1/inc/abi/entry.h
-index f35a9f3315ee..5056ebb902d1 100644
---- a/arch/csky/abiv1/inc/abi/entry.h
-+++ b/arch/csky/abiv1/inc/abi/entry.h
-@@ -172,10 +172,7 @@
- 	addi	r6, 0xe
- 	cpwcr	r6, cpcr30
- 
--	lsri	r6, 28
--	addi	r6, 2
--	lsli	r6, 28
--	addi	r6, 0xe
-+	movi	r6, 0
- 	cpwcr	r6, cpcr31
- .endm
- 
-diff --git a/arch/csky/abiv2/inc/abi/entry.h b/arch/csky/abiv2/inc/abi/entry.h
-index 6a404393d0f4..a99aff555a0a 100644
---- a/arch/csky/abiv2/inc/abi/entry.h
-+++ b/arch/csky/abiv2/inc/abi/entry.h
-@@ -290,11 +290,8 @@
- 	addi	r6, 0x1ce
- 	mtcr	r6, cr<30, 15> /* Set MSA0 */
- 
--	lsri	r6, 28
--	addi	r6, 2
--	lsli	r6, 28
--	addi	r6, 0x1ce
--	mtcr	r6, cr<31, 15> /* Set MSA1 */
-+	movi    r6, 0
-+	mtcr	r6, cr<31, 15> /* Clr MSA1 */
- 
- 	/* enable MMU */
- 	mfcr    r6, cr18
-diff --git a/arch/csky/kernel/head.S b/arch/csky/kernel/head.S
-index 61989f9241c0..17ed9d250480 100644
---- a/arch/csky/kernel/head.S
-+++ b/arch/csky/kernel/head.S
-@@ -21,6 +21,11 @@ END(_start)
- ENTRY(_start_smp_secondary)
- 	SETUP_MMU
- 
-+	/* copy msa1 from CPU0 */
-+	lrw     r6, secondary_msa1
-+	ld.w	r6, (r6, 0)
-+	mtcr	r6, cr<31, 15>
-+
- 	/* set stack point */
- 	lrw     r6, secondary_stack
- 	ld.w	r6, (r6, 0)
-diff --git a/arch/csky/kernel/setup.c b/arch/csky/kernel/setup.c
-index 3821e55742f4..819a9a7bf786 100644
---- a/arch/csky/kernel/setup.c
-+++ b/arch/csky/kernel/setup.c
-@@ -24,26 +24,9 @@ struct screen_info screen_info = {
- };
- #endif
- 
--phys_addr_t __init_memblock memblock_end_of_REG0(void)
--{
--	return (memblock.memory.regions[0].base +
--		memblock.memory.regions[0].size);
--}
--
--phys_addr_t __init_memblock memblock_start_of_REG1(void)
--{
--	return memblock.memory.regions[1].base;
--}
--
--size_t __init_memblock memblock_size_of_REG1(void)
--{
--	return memblock.memory.regions[1].size;
--}
--
- static void __init csky_memblock_init(void)
- {
- 	unsigned long zone_size[MAX_NR_ZONES];
--	unsigned long zhole_size[MAX_NR_ZONES];
- 	signed long size;
- 
- 	memblock_reserve(__pa(_stext), _end - _stext);
-@@ -54,54 +37,36 @@ static void __init csky_memblock_init(void)
- 	memblock_dump_all();
- 
- 	memset(zone_size, 0, sizeof(zone_size));
--	memset(zhole_size, 0, sizeof(zhole_size));
- 
- 	min_low_pfn = PFN_UP(memblock_start_of_DRAM());
--	max_pfn	    = PFN_DOWN(memblock_end_of_DRAM());
--
--	max_low_pfn = PFN_UP(memblock_end_of_REG0());
--	if (max_low_pfn == 0)
--		max_low_pfn = max_pfn;
-+	max_low_pfn = max_pfn = PFN_DOWN(memblock_end_of_DRAM());
- 
- 	size = max_pfn - min_low_pfn;
- 
--	if (memblock.memory.cnt > 1) {
--		zone_size[ZONE_NORMAL]  =
--			PFN_DOWN(memblock_start_of_REG1()) - min_low_pfn;
--		zhole_size[ZONE_NORMAL] =
--			PFN_DOWN(memblock_start_of_REG1()) - max_low_pfn;
-+	if (size <= PFN_DOWN(SSEG_SIZE - PHYS_OFFSET_OFFSET))
-+		zone_size[ZONE_NORMAL] = size;
-+	else if (size < PFN_DOWN(LOWMEM_LIMIT - PHYS_OFFSET_OFFSET)) {
-+		zone_size[ZONE_NORMAL] =
-+				PFN_DOWN(SSEG_SIZE - PHYS_OFFSET_OFFSET);
-+		max_low_pfn = min_low_pfn + zone_size[ZONE_NORMAL];
- 	} else {
--		if (size <= PFN_DOWN(LOWMEM_LIMIT - PHYS_OFFSET_OFFSET))
--			zone_size[ZONE_NORMAL] = max_pfn - min_low_pfn;
--		else {
--			zone_size[ZONE_NORMAL] =
-+		zone_size[ZONE_NORMAL] =
- 				PFN_DOWN(LOWMEM_LIMIT - PHYS_OFFSET_OFFSET);
--			max_low_pfn = min_low_pfn + zone_size[ZONE_NORMAL];
--		}
-+		max_low_pfn = min_low_pfn + zone_size[ZONE_NORMAL];
-+		write_mmu_msa1(read_mmu_msa0() + SSEG_SIZE);
- 	}
- 
- #ifdef CONFIG_HIGHMEM
--	size = 0;
--	if (memblock.memory.cnt > 1) {
--		size = PFN_DOWN(memblock_size_of_REG1());
--		highstart_pfn = PFN_DOWN(memblock_start_of_REG1());
--	} else {
--		size = max_pfn - min_low_pfn -
--			PFN_DOWN(LOWMEM_LIMIT - PHYS_OFFSET_OFFSET);
--		highstart_pfn =  min_low_pfn +
--			PFN_DOWN(LOWMEM_LIMIT - PHYS_OFFSET_OFFSET);
--	}
--
--	if (size > 0)
--		zone_size[ZONE_HIGHMEM] = size;
-+	zone_size[ZONE_HIGHMEM] = max_pfn - max_low_pfn;
- 
--	highend_pfn = max_pfn;
-+	highstart_pfn = max_low_pfn;
-+	highend_pfn   = max_pfn;
- #endif
- 	memblock_set_current_limit(PFN_PHYS(max_low_pfn));
- 
- 	dma_contiguous_reserve(0);
- 
--	free_area_init_node(0, zone_size, min_low_pfn, zhole_size);
-+	free_area_init_node(0, zone_size, min_low_pfn, NULL);
- }
- 
- void __init setup_arch(char **cmdline_p)
-diff --git a/arch/csky/kernel/smp.c b/arch/csky/kernel/smp.c
-index df2e2174dbd0..b5c5bc3afeb5 100644
---- a/arch/csky/kernel/smp.c
-+++ b/arch/csky/kernel/smp.c
-@@ -159,6 +159,8 @@ volatile unsigned int secondary_hint;
- volatile unsigned int secondary_ccr;
- volatile unsigned int secondary_stack;
- 
-+unsigned long secondary_msa1;
-+
- int __cpu_up(unsigned int cpu, struct task_struct *tidle)
- {
- 	unsigned long mask = 1 << cpu;
-@@ -167,6 +169,7 @@ int __cpu_up(unsigned int cpu, struct task_struct *tidle)
- 		(unsigned int) task_stack_page(tidle) + THREAD_SIZE - 8;
- 	secondary_hint = mfcr("cr31");
- 	secondary_ccr  = mfcr("cr18");
-+	secondary_msa1 = read_mmu_msa1();
- 
- 	/*
- 	 * Because other CPUs are in reset status, we must flush data
--- 
-2.17.0
-
+Fabio Estevam
