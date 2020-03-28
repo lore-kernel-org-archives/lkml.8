@@ -2,128 +2,69 @@ Return-Path: <SRS0=NZ+o=5N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27AB6C43331
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 21:53:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A373C43331
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 21:54:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED47620732
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 21:53:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="alfNoYU8"
+	by mail.kernel.org (Postfix) with ESMTP id 5038020578
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 21:54:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727829AbgC1Vxw (ORCPT
+        id S1727842AbgC1VyQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 28 Mar 2020 17:53:52 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:34240 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726604AbgC1Vxw (ORCPT
+        Sat, 28 Mar 2020 17:54:16 -0400
+Received: from relay3-d.mail.gandi.net ([217.70.183.195]:48987 "EHLO
+        relay3-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727716AbgC1VyQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 28 Mar 2020 17:53:52 -0400
-Received: by mail-pl1-f194.google.com with SMTP id a23so5034884plm.1
-        for <linux-kernel@vger.kernel.org>; Sat, 28 Mar 2020 14:53:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=ovk2bmmHiHq0822krEgDFQkSPYt5Bktnb17JLm/lkJA=;
-        b=alfNoYU8g+4LyDehhJH9iGwAtea55N/Xy8WHF5I5hMwcVa8EuZTEWAbZ7eeEAtCAjD
-         1YoFtSlC3h2vBfbE0MPFBAhCW1HFfaZquUMB005WQh05V1HgCf9MnCioH/P0sUd516+4
-         DI0bMW4XCbsmAoMIv05h5N0yfwlGhX5+NtqUE=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=ovk2bmmHiHq0822krEgDFQkSPYt5Bktnb17JLm/lkJA=;
-        b=TvaM1b284JDG9puNV2kN1a+bOpuAzjZ98uIxY26VrZetlOr/yb9tW+XllwvTa/Qa7d
-         nsblpUdE+5eohO+TonQ67gRi1OeNjZe1RoBENfCLYIGPdtP7YcxVDKuSG+N2Du67sE7O
-         ypMX1B09R8FzuBWiS0OwYvIP7gdZopVXlizJMGCUGaDNx9IEoWhIRmQ6aKkRHqPpYh/o
-         494W3AwA+Q3Je3rtj7Ak0SLeLh+0maOOeRHxyAXw7hvcS0b+EiV78OYCEc1Q24bOHWu+
-         dpIHqmEY30lpGqQhfLzhVoSantEhN9C30OrkXidfPpJuSs9CRW1MNXyEEGCpNCxdvnR8
-         VT3g==
-X-Gm-Message-State: ANhLgQ2HgWy/inTw7BB7nBf3hbXzpxghcenLYV4snYzDn7Qho6qj53tA
-        lOAPZOdxYi+Ks8vY/ohcueKTDQ==
-X-Google-Smtp-Source: ADFU+vsfxLWSgTsJUgK14r0bXgUXWbEfwzw64SCYCXUXpSNDoac/nQTFCQ7zeikniIjgJ9mfpfaHkA==
-X-Received: by 2002:a17:90a:fd90:: with SMTP id cx16mr7121093pjb.41.1585432431548;
-        Sat, 28 Mar 2020 14:53:51 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id hg20sm6550839pjb.3.2020.03.28.14.53.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 28 Mar 2020 14:53:50 -0700 (PDT)
-Date:   Sat, 28 Mar 2020 14:53:49 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Alexey Gladkov <gladkov.alexey@gmail.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        Linux API <linux-api@vger.kernel.org>,
-        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
-        Linux Security Module <linux-security-module@vger.kernel.org>,
-        Akinobu Mita <akinobu.mita@gmail.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Daniel Micay <danielmicay@gmail.com>,
-        Djalal Harouni <tixxdz@gmail.com>,
-        "Dmitry V . Levin" <ldv@altlinux.org>,
-        "Eric W . Biederman" <ebiederm@xmission.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        "J . Bruce Fields" <bfields@fieldses.org>,
-        Jeff Layton <jlayton@poochiereds.net>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Oleg Nesterov <oleg@redhat.com>
-Subject: Re: [PATCH v10 7/9] proc: move hidepid values to uapi as they are
- user interface to mount
-Message-ID: <202003281453.CED94974@keescook>
-References: <20200327172331.418878-1-gladkov.alexey@gmail.com>
- <20200327172331.418878-8-gladkov.alexey@gmail.com>
- <202003281340.B73225DCC9@keescook>
- <20200328212547.xxiqxqhxzwp6w5n5@comp-core-i7-2640m-0182e6>
+        Sat, 28 Mar 2020 17:54:16 -0400
+X-Originating-IP: 50.39.173.182
+Received: from localhost (50-39-173-182.bvtn.or.frontiernet.net [50.39.173.182])
+        (Authenticated sender: josh@joshtriplett.org)
+        by relay3-d.mail.gandi.net (Postfix) with ESMTPSA id CD9A660004;
+        Sat, 28 Mar 2020 21:54:11 +0000 (UTC)
+Date:   Sat, 28 Mar 2020 14:54:01 -0700
+From:   Josh Triplett <josh@joshtriplett.org>
+To:     linux-ext4@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Theodore Ts'o <tytso@mit.edu>,
+        Andreas Dilger <adilger.kernel@dilger.ca>
+Subject: [PATCH] ext4: Fix incorrect group count in ext4_fill_super error
+ message
+Message-ID: <8b957cd1513fcc4550fe675c10bcce2175c33a49.1585431964.git.josh@joshtriplett.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200328212547.xxiqxqhxzwp6w5n5@comp-core-i7-2640m-0182e6>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Mar 28, 2020 at 10:25:47PM +0100, Alexey Gladkov wrote:
-> On Sat, Mar 28, 2020 at 01:41:02PM -0700, Kees Cook wrote:
->  > diff --git a/include/uapi/linux/proc_fs.h b/include/uapi/linux/proc_fs.h
-> > > new file mode 100644
-> > > index 000000000000..dc6d717aa6ec
-> > > --- /dev/null
-> > > +++ b/include/uapi/linux/proc_fs.h
-> > > @@ -0,0 +1,13 @@
-> > > +/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
-> > > +#ifndef _UAPI_PROC_FS_H
-> > > +#define _UAPI_PROC_FS_H
-> > > +
-> > > +/* definitions for hide_pid field */
-> > > +enum {
-> > > +	HIDEPID_OFF            = 0,
-> > > +	HIDEPID_NO_ACCESS      = 1,
-> > > +	HIDEPID_INVISIBLE      = 2,
-> > > +	HIDEPID_NOT_PTRACEABLE = 4,
-> > > +};
-> > > +
-> > > +#endif
-> > > -- 
-> > > 2.25.2
-> > > 
-> > 
-> > Should the numeric values still be UAPI if there is string parsing now?
-> 
-> I think yes, because these are still valid hidepid= values.
+ext4_fill_super doublechecks the number of groups before mounting; if
+that check fails, the resulting error message prints the group count
+from the ext4_sb_info sbi, which hasn't been set yet. Print the freshly
+computed group count instead (which at that point has just been computed
+in "blocks_count").
 
-But if we don't expose the values, we can do whatever we like with
-future numbers (e.g. the "is this a value or a bit field?" question).
+Signed-off-by: Josh Triplett <josh@joshtriplett.org>
+Fixes: 4ec1102813798 ("ext4: Add sanity checks for the superblock before mounting the filesystem")
+---
+ fs/ext4/super.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
+diff --git a/fs/ext4/super.c b/fs/ext4/super.c
+index 0c7c4adb664e..7f5f37653a03 100644
+--- a/fs/ext4/super.c
++++ b/fs/ext4/super.c
+@@ -4288,7 +4288,7 @@ static int ext4_fill_super(struct super_block *sb, void *data, int silent)
+ 	if (blocks_count > ((uint64_t)1<<32) - EXT4_DESC_PER_BLOCK(sb)) {
+ 		ext4_msg(sb, KERN_WARNING, "groups count too large: %u "
+ 		       "(block count %llu, first data block %u, "
+-		       "blocks per group %lu)", sbi->s_groups_count,
++		       "blocks per group %lu)", blocks_count,
+ 		       ext4_blocks_count(es),
+ 		       le32_to_cpu(es->s_first_data_block),
+ 		       EXT4_BLOCKS_PER_GROUP(sb));
 -- 
-Kees Cook
+2.26.0
