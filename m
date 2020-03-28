@@ -2,111 +2,80 @@ Return-Path: <SRS0=NZ+o=5N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D962DC2D0E8
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 23:43:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F0C6C43331
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 23:44:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AD59520748
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 23:43:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585438989;
-	bh=8F71ls7LTfaSvQwEnfaxYVz5lj1N1vsQKt2LOAk29EQ=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=QE/XND6n9jbRutRg8ORR1oA/dNcs2eUgv1AluaGMFUTFrpByf8RTq8Cp8gDJwW8fi
-	 3tvxUnYTUYhMJT4Gw0UCumpbiAWR5jAO/qdn4DYkUZo8uIB0/5jOjdwV9brzMoQjzZ
-	 +5iQ/EFqtt7jDIDUlSyH6KF2sxQZjr84vR5VEHM8=
+	by mail.kernel.org (Postfix) with ESMTP id EC84420748
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 23:44:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727701AbgC1XnI (ORCPT
+        id S1727729AbgC1XoL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 28 Mar 2020 19:43:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41314 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726604AbgC1XnH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 28 Mar 2020 19:43:07 -0400
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1555920716;
-        Sat, 28 Mar 2020 23:43:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585438987;
-        bh=8F71ls7LTfaSvQwEnfaxYVz5lj1N1vsQKt2LOAk29EQ=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=zWqeW4Byiv022nOtsnEbub+KQiNfiX4TOzaJ6hxmErzytUkabLE/2P9exka8iqCHN
-         SPWVGFClHCkP6cjo2UcQfAb4cdsKf5ARgo/kGQ85eNQiQfjuLkDAcwW8laqylZYJT/
-         RtS8GRPH5BHMybeHXQD3p4LJAjcsBwZ04ud9Bpac=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id 979A83522755; Sat, 28 Mar 2020 16:43:06 -0700 (PDT)
-Date:   Sat, 28 Mar 2020 16:43:06 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     "Joel Fernandes (Google)" <joel@joelfernandes.org>
-Cc:     linux-kernel@vger.kernel.org, Andy Lutomirski <luto@kernel.org>,
-        Frederic Weisbecker <fweisbec@gmail.com>, frextrite@gmail.com,
-        Ingo Molnar <mingo@redhat.com>,
-        Josh Triplett <josh@joshtriplett.org>, kernel-team@android.com,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        madhuparnabhowmik04@gmail.com,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        peterz@infradead.org, Petr Mladek <pmladek@suse.com>,
-        rcu@vger.kernel.org, rostedt@goodmis.org, tglx@linutronix.de,
-        vpillai@digitalocean.com
-Subject: Re: [PATCH v2 0/4] RCU dyntick nesting counter cleanups
-Message-ID: <20200328234306.GC19865@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20200328221703.48171-1-joel@joelfernandes.org>
+        Sat, 28 Mar 2020 19:44:11 -0400
+Received: from relay3-d.mail.gandi.net ([217.70.183.195]:52855 "EHLO
+        relay3-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726604AbgC1XoL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 28 Mar 2020 19:44:11 -0400
+X-Originating-IP: 50.39.173.182
+Received: from localhost (50-39-173-182.bvtn.or.frontiernet.net [50.39.173.182])
+        (Authenticated sender: josh@joshtriplett.org)
+        by relay3-d.mail.gandi.net (Postfix) with ESMTPSA id DCE9960005;
+        Sat, 28 Mar 2020 23:44:07 +0000 (UTC)
+Date:   Sat, 28 Mar 2020 16:43:58 -0700
+From:   Josh Triplett <josh@joshtriplett.org>
+To:     linux-ext4@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Theodore Ts'o <tytso@mit.edu>,
+        Andreas Dilger <adilger.kernel@dilger.ca>
+Subject: [PATCH v2] ext4: Fix incorrect group count in ext4_fill_super error
+ message
+Message-ID: <28c22b1845796e52b5fe2832432e859af023ee1b.1585438486.git.josh@joshtriplett.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200328221703.48171-1-joel@joelfernandes.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Mar 28, 2020 at 06:16:59PM -0400, Joel Fernandes (Google) wrote:
-> These patches clean up the usage of dynticks nesting counters simplifying the
-> code, while preserving the usecases.
-> 
-> It is a much needed simplification, makes the code less confusing, and prevents
-> future bugs such as those that arise from forgetting that the
-> dynticks_nmi_nesting counter is not a simple counter and can be "crowbarred" in
-> common situations.
-> 
-> rcutorture testing with all TREE RCU configurations succeed with
-> CONFIG_RCU_EQS_DEBUG=y and CONFIG_PROVE_LOCKING=y.
+ext4_fill_super doublechecks the number of groups before mounting; if
+that check fails, the resulting error message prints the group count
+from the ext4_sb_info sbi, which hasn't been set yet. Move the
+assignment to sbi->s_groups_count above its use in the error message.
 
-Heh!  We now have a three-way collision between Thomas's and Peter's
-series, the RCU Tasks Trace series, and this series.  ;-)
+Signed-off-by: Josh Triplett <josh@joshtriplett.org>
+Fixes: 4ec1102813798 ("ext4: Add sanity checks for the superblock before mounting the filesystem")
+---
+v2: Rather than using the computed group count value in blocks_count,
+move the assignment to sbi->s_groups_count up and keep using that. That
+makes the code, and the patch, simpler to read and understand.
 
-Remind me once v5.7-rc1 comes out and let's see what fits where.
+ fs/ext4/super.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-							Thanx, Paul
+diff --git a/fs/ext4/super.c b/fs/ext4/super.c
+index 0c7c4adb664e..6692bc48520a 100644
+--- a/fs/ext4/super.c
++++ b/fs/ext4/super.c
+@@ -4285,6 +4285,7 @@ static int ext4_fill_super(struct super_block *sb, void *data, int silent)
+ 			le32_to_cpu(es->s_first_data_block) +
+ 			EXT4_BLOCKS_PER_GROUP(sb) - 1);
+ 	do_div(blocks_count, EXT4_BLOCKS_PER_GROUP(sb));
++	sbi->s_groups_count = blocks_count;
+ 	if (blocks_count > ((uint64_t)1<<32) - EXT4_DESC_PER_BLOCK(sb)) {
+ 		ext4_msg(sb, KERN_WARNING, "groups count too large: %u "
+ 		       "(block count %llu, first data block %u, "
+@@ -4294,7 +4295,6 @@ static int ext4_fill_super(struct super_block *sb, void *data, int silent)
+ 		       EXT4_BLOCKS_PER_GROUP(sb));
+ 		goto failed_mount;
+ 	}
+-	sbi->s_groups_count = blocks_count;
+ 	sbi->s_blockfile_groups = min_t(ext4_group_t, sbi->s_groups_count,
+ 			(EXT4_MAX_BLOCK_FILE_PHYS / EXT4_BLOCKS_PER_GROUP(sb)));
+ 	if (((u64)sbi->s_groups_count * sbi->s_inodes_per_group) !=
+-- 
+2.26.0
 
-> v1->v2:
-> - Rebase on v5.6-rc6
-> 
-> Joel Fernandes (Google) (4):
-> Revert b8c17e6664c4 ("rcu: Maintain special bits at bottom of
-> ->dynticks counter")
-> rcu/tree: Add better tracing for dyntick-idle
-> rcu/tree: Clean up dynticks counter usage
-> rcu/tree: Remove dynticks_nmi_nesting counter
-> 
-> .../Data-Structures/Data-Structures.rst       |  31 +--
-> Documentation/RCU/stallwarn.txt               |   6 +-
-> include/linux/rcutiny.h                       |   3 -
-> include/trace/events/rcu.h                    |  29 +--
-> kernel/rcu/rcu.h                              |   4 -
-> kernel/rcu/tree.c                             | 188 +++++++-----------
-> kernel/rcu/tree.h                             |   4 +-
-> kernel/rcu/tree_stall.h                       |   4 +-
-> 8 files changed, 105 insertions(+), 164 deletions(-)
-> 
-> --
-> 2.26.0.rc2.310.g2932bb562d-goog
-> 
