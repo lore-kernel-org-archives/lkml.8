@@ -2,106 +2,115 @@ Return-Path: <SRS0=NZ+o=5N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20EBCC43331
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 02:32:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E007C43331
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 02:32:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E54FB206F6
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 02:32:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585362725;
-	bh=/4Bz7LG5WE/I5CYFHTtq+m9WVFUVTQlVLj707qlMNcA=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=PeQcTa2+vTB3W+h0tKZ8oA9qxqnXN11VZhOHkfSa+enER+vBDa5sJWZkoMuojnzwb
-	 Z/YAjaH3vOa6YIaw27bCftW6yaautOZvTfptufZg1NiovaNNeTvfNSZT34rkwLcpQB
-	 YQHShnl2gmZ+Ql9G+Lz2cHWJV9MNfdmfp7e2IvMM=
+	by mail.kernel.org (Postfix) with ESMTP id 02423206F6
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 02:32:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="t6SDPlkP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727148AbgC1CcD (ORCPT
+        id S1727191AbgC1CcH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Mar 2020 22:32:03 -0400
-Received: from conssluserg-03.nifty.com ([210.131.2.82]:49679 "EHLO
-        conssluserg-03.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726661AbgC1CcD (ORCPT
+        Fri, 27 Mar 2020 22:32:07 -0400
+Received: from gateway21.websitewelcome.com ([192.185.46.113]:48872 "EHLO
+        gateway21.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726661AbgC1CcG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Mar 2020 22:32:03 -0400
-Received: from mail-ua1-f54.google.com (mail-ua1-f54.google.com [209.85.222.54]) (authenticated)
-        by conssluserg-03.nifty.com with ESMTP id 02S2Vp09014469;
-        Sat, 28 Mar 2020 11:31:52 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-03.nifty.com 02S2Vp09014469
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1585362712;
-        bh=/ZEaW0yPGHKvef0V6hd8Q9DEEPXiu5PxlMmlJIXs6xg=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=pUU+MHCfWDegu6eR1u7P6awdMqkW6+AQBNAvPH/tcBtpk+V2qpXXqqyw/t8w4NwPG
-         9HEzb2yk3Ebm1VioHNLFCpGwdYmtGKWIhL7Dq6VAP+OfTCDBjWxE/CTrCe3UXr1qQI
-         Rv2k7LrFXAszfXsbsF4z6qUY2nDKCL2ihh6XLvnasN0nD1MbhLaOmsNmLgCrXwC2Qu
-         rbjhcMg2Jq7t7YQKHbgj4PnN2qCKjQHW+XLI/58XjgjM/ERDVnRx+wgIEkwj4ewT8b
-         ZJ96UytYxbpIyG6ea5bb8Rfvop6LunlFF9vqi/qcsLZf7IqcKVxJPwrrshXoSWNapB
-         ObbLTPRO5rluQ==
-X-Nifty-SrcIP: [209.85.222.54]
-Received: by mail-ua1-f54.google.com with SMTP id a6so4279463uao.2;
-        Fri, 27 Mar 2020 19:31:52 -0700 (PDT)
-X-Gm-Message-State: AGi0PuaXqWNX8xs/lAoLouTG6G8d/rJtgJcYtUtCbeWyfyjHo/Jdb4tw
-        S1o42suXAGoaZeY8j/kRDAUD43x78VKQGja0rZY=
-X-Google-Smtp-Source: APiQypK23EjdTQD1xVPdKR3KGXNRW+Ex1NC2FB1LcAQVe4qOJOwHDw8va0r/6dbcy2pP23EsKwTSvrlwuEN5LNQ6jKU=
-X-Received: by 2002:a9f:32da:: with SMTP id f26mr1521588uac.40.1585362710955;
- Fri, 27 Mar 2020 19:31:50 -0700 (PDT)
+        Fri, 27 Mar 2020 22:32:06 -0400
+Received: from cm11.websitewelcome.com (cm11.websitewelcome.com [100.42.49.5])
+        by gateway21.websitewelcome.com (Postfix) with ESMTP id 6E990400C8350
+        for <linux-kernel@vger.kernel.org>; Fri, 27 Mar 2020 21:32:05 -0500 (CDT)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id I1GXjJR6zSl8qI1GXjqH0U; Fri, 27 Mar 2020 21:32:05 -0500
+X-Authority-Reason: nr=8
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
+        Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=m7HVYDJnzCg+rsyE3gWKNJQWXD+U5W3Qjb0bzyPX+VI=; b=t6SDPlkPSAoKtD5BNbuwleOfsJ
+        0b8wfUDWk7K18AWjlzSg9qn3FwLIJthiFBxX8z0bnwW/zI3v1yvUtHBlMOaZaSBIF/JTy8khKotJ3
+        yPwA4dH6LU741d9pYYwAMoKuTfsbkVksa7uJii//UqC5YLv0FRmfPp10/uCEibs7FwwRCE6al+Lmd
+        bhWyJQfEJQCGDPfIhtbkixrNs0gJa22KI4dOnwF6Q//i6RT3aF3TjgBQ3l/3iEs4ndkqL5oOaYq2K
+        OQbIjfPUMbQcsgBRF2WcJx9QeOtvzRSrrVD9TAc/x1uhIcnhm9BzvW+QnbKhLgxrT9oK2ZNeRcahO
+        Zu0vnJOw==;
+Received: from cablelink-189-218-116-241.hosts.intercable.net ([189.218.116.241]:51192 helo=embeddedor)
+        by gator4166.hostgator.com with esmtpa (Exim 4.92)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1jI1GV-001EiJ-Ud; Fri, 27 Mar 2020 21:32:03 -0500
+Date:   Fri, 27 Mar 2020 21:35:39 -0500
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+To:     Lijun Ou <oulijun@huawei.com>,
+        "Wei Hu(Xavier)" <huwei87@hisilicon.com>,
+        Weihang Li <liweihang@huawei.com>,
+        Doug Ledford <dledford@redhat.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>, Xi Wang <wangxi11@huawei.com>
+Cc:     linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Subject: [PATCH v2][next] RDMA/hns: Fix uninitialized variable bug
+Message-ID: <20200328023539.GA32016@embeddedor>
 MIME-Version: 1.0
-References: <20200326192933.14091-1-david.engraf@sysgo.com>
-In-Reply-To: <20200326192933.14091-1-david.engraf@sysgo.com>
-From:   Masahiro Yamada <masahiroy@kernel.org>
-Date:   Sat, 28 Mar 2020 11:31:14 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAQ2Mojdcu7hg+_q5VopnDPEtx=LK9m-3df6m2TCncrNfA@mail.gmail.com>
-Message-ID: <CAK7LNAQ2Mojdcu7hg+_q5VopnDPEtx=LK9m-3df6m2TCncrNfA@mail.gmail.com>
-Subject: Re: [PATCH] kbuild: add outputmakefile to no-dot-config-targets
-To:     David Engraf <david.engraf@sysgo.com>
-Cc:     Michal Marek <michal.lkml@markovi.net>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 189.218.116.241
+X-Source-L: No
+X-Exim-ID: 1jI1GV-001EiJ-Ud
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: cablelink-189-218-116-241.hosts.intercable.net (embeddedor) [189.218.116.241]:51192
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 16
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 27, 2020 at 4:37 AM David Engraf <david.engraf@sysgo.com> wrote:
->
-> The target outputmakefile is used to generate a Makefile
-> for out-of-tree builds and does not depend on the kernel
-> configuration.
->
-> Signed-off-by: David Engraf <david.engraf@sysgo.com>
+There is a potential execution path in which variable *ret* is returned
+without being properly initialized, previously.
 
-Applied to linux-kbuild.
+Fix this by initializing variable *ret* to 0.
 
-Thanks.
+Addresses-Coverity-ID: 1491917 ("Uninitialized scalar variable")
+Fixes: 2f49de21f3e9 ("RDMA/hns: Optimize mhop get flow for multi-hop addressing")
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+---
+Changes in v2:
+ - Set ret to 0 instead of -ENODEV. Thanks Weihang Li, for the feedback.
 
+ drivers/infiniband/hw/hns/hns_roce_hem.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> ---
->  Makefile | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/Makefile b/Makefile
-> index e56bf7ef182d..45be0e5b0cef 100644
-> --- a/Makefile
-> +++ b/Makefile
-> @@ -255,7 +255,7 @@ clean-targets := %clean mrproper cleandocs
->  no-dot-config-targets := $(clean-targets) \
->                          cscope gtags TAGS tags help% %docs check% coccicheck \
->                          $(version_h) headers headers_% archheaders archscripts \
-> -                        %asm-generic kernelversion %src-pkg
-> +                        %asm-generic kernelversion %src-pkg outputmakefile
->  no-sync-config-targets := $(no-dot-config-targets) install %install \
->                            kernelrelease
->  single-targets := %.a %.i %.ko %.lds %.ll %.lst %.mod %.o %.s %.symtypes %/
-> --
-> 2.17.1
->
-
-
+diff --git a/drivers/infiniband/hw/hns/hns_roce_hem.c b/drivers/infiniband/hw/hns/hns_roce_hem.c
+index c96378718f88..263338b90d7a 100644
+--- a/drivers/infiniband/hw/hns/hns_roce_hem.c
++++ b/drivers/infiniband/hw/hns/hns_roce_hem.c
+@@ -603,7 +603,7 @@ static int set_mhop_hem(struct hns_roce_dev *hr_dev,
+ {
+ 	struct ib_device *ibdev = &hr_dev->ib_dev;
+ 	int step_idx;
+-	int ret;
++	int ret = 0;
+ 
+ 	if (index->inited & HEM_INDEX_L0) {
+ 		ret = hr_dev->hw->set_hem(hr_dev, table, obj, 0);
 -- 
-Best Regards
-Masahiro Yamada
+2.26.0
+
