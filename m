@@ -2,118 +2,203 @@ Return-Path: <SRS0=NZ+o=5N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MALFORMED_FREEMAIL,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A051C43331
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 12:00:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E2BCC43331
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 12:02:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C3E94206E6
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 12:00:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 11638206E6
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 12:02:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="W0wERdKV"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="SxxsC07b"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726369AbgC1MA4 (ORCPT
+        id S1726403AbgC1MC0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 28 Mar 2020 08:00:56 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:44521 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726045AbgC1MA4 (ORCPT
+        Sat, 28 Mar 2020 08:02:26 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:40799 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726268AbgC1MCZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 28 Mar 2020 08:00:56 -0400
-Received: by mail-wr1-f67.google.com with SMTP id m17so14907690wrw.11
-        for <linux-kernel@vger.kernel.org>; Sat, 28 Mar 2020 05:00:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:in-reply-to:message-id:references
-         :user-agent:mime-version;
-        bh=Rqn4yl76OrREiNZnQJmPD+oo2g6msHaIbhbXJHXi1Lw=;
-        b=W0wERdKVBixAngiGAQBPBAXwXdU9Mq3SR3umd3rubMrFchYhcFHkvj91+MRg+iNtia
-         ylf88hvgi5mKBUN0baXXdM1UKCICIERrbNDfpkJ9omRtzC1oD27s94pO4rvvAxgk4tNd
-         Mta8cz8608KkqnnoCWl1m1Ros8LLcnp25OKen4XskzJtHwB4MZQQ+UOnN4ccFW+FUJos
-         CCOQ6Xhvg+lUOlgKXFjq+7vOlUwrqlVNEWArgrGcj0qu4/QcX9emIYVJRPvmisL/nY1S
-         mi20iMS+IX2MJaZJUFnkxTofkNATjc0gG3rLru32zumJBPMqonzZ10XAXnBFPjNKgB6r
-         TYUg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:in-reply-to:message-id
-         :references:user-agent:mime-version;
-        bh=Rqn4yl76OrREiNZnQJmPD+oo2g6msHaIbhbXJHXi1Lw=;
-        b=L4mu+YfpNJA9TsiEOrL/rodlrc792InmdoXWmlCmkJVkUEygThpsaTkQ3Pr68NZSTL
-         ap67HsakyZIA7W6ITI/PiEdCJ5r2YdSFdf8zreN/zk0WlJ+rGyGujE1ojgB7tm1ew0fj
-         YRaVqmDstwsMj/UuUEZHLCeV/UcAadO4E5vrh1MU8QdyL5sFk59EmsMkhQmxAkYy0/kb
-         MHuTQ68trXVKW45vtIZjjI9awrsGF8Bg1xyTtsdDYZCBexO4IcaImKvudyIsnbBQZKXa
-         SHP55wMSf68i5bvVn39nOY0dGeilSZr8OZlliMbWGX6CVO24qGWO1cc0VPsonIsXj2pV
-         VpDA==
-X-Gm-Message-State: ANhLgQ2tnjMXA+ezKzbwszVhHWzwNMLWBfmQ6QuTJeRv04/Wn3tbOL/H
-        uxdNAU1SH4KMBeoYY6cawA==
-X-Google-Smtp-Source: ADFU+vvnEjscbcILXRu9PxtjHwX5KRoCwHy/IaxWCLq6aibTYPngbD4kPGWW08h6d9hx362nvT9UKQ==
-X-Received: by 2002:a5d:4611:: with SMTP id t17mr4856100wrq.16.1585396854006;
-        Sat, 28 Mar 2020 05:00:54 -0700 (PDT)
-Received: from ninjahost.lan (host-92-23-82-35.as13285.net. [92.23.82.35])
-        by smtp.gmail.com with ESMTPSA id l12sm12434087wrt.73.2020.03.28.05.00.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 28 Mar 2020 05:00:53 -0700 (PDT)
-From:   Jules Irenge <jbi.octave@gmail.com>
-X-Google-Original-From: Jules Irenge <maxx@ninjahost.lan>
-Date:   Sat, 28 Mar 2020 12:00:32 +0000 (GMT)
-To:     Steven Rostedt <rostedt@goodmis.org>
-cc:     Jules Irenge <jbi.octave@gmail.com>, julia.lawall@lip6.fr,
-        boqun.feng@gmail.com, Ingo Molnar <mingo@redhat.com>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 10/10] trace: Replace printk and WARN_ON with WARN
-In-Reply-To: <20200327185138.5e98e17b@gandalf.local.home>
-Message-ID: <alpine.LNX.2.21.1.2003281159330.20453@ninjahost.lan>
-References: <0/10> <20200327212358.5752-1-jbi.octave@gmail.com> <20200327212358.5752-11-jbi.octave@gmail.com> <20200327185138.5e98e17b@gandalf.local.home>
-User-Agent: Alpine 2.21.1 (LNX 202 2017-01-01)
+        Sat, 28 Mar 2020 08:02:25 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1585396944; h=Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Message-ID: Date: Subject: In-Reply-To: References: Cc:
+ To: From: Sender; bh=zzBLtQ+//D0bBXPqSlcrMZohpTUdmpgajv0NPqBclSs=; b=SxxsC07bvGzbSym97iDDF4zEvhx+ZBcVwrvOylbKv57w5omshM9yNSJouMPvddRVwZ9R7xko
+ 2w/EePezKmyMCgb8EESLcsLNjwPPhrZDepxGPsRk4Nn652qyILpvyBqNee6jRcsUx7D8ZOlX
+ eiAyHURpa/TSF88qfwygxR2xXi8=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e7f3cb9.7f7608415458-smtp-out-n04;
+ Sat, 28 Mar 2020 12:02:01 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id B2FFCC433F2; Sat, 28 Mar 2020 12:02:01 +0000 (UTC)
+Received: from Pillair (unknown [183.83.66.17])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: pillair)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 86CE5C433D2;
+        Sat, 28 Mar 2020 12:01:57 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 86CE5C433D2
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=pillair@codeaurora.org
+From:   <pillair@codeaurora.org>
+To:     "'Bjorn Andersson'" <bjorn.andersson@linaro.org>
+Cc:     <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>
+References: <1585219723-28323-1-git-send-email-pillair@codeaurora.org> <20200327230025.GJ5063@builder>
+In-Reply-To: <20200327230025.GJ5063@builder>
+Subject: RE: [PATCH v7] arm64: dts: qcom: sc7180: Add WCN3990 WLAN module device node
+Date:   Sat, 28 Mar 2020 17:31:52 +0530
+Message-ID: <000101d604f8$afc48220$0f4d8660$@codeaurora.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain;
+        charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+X-Mailer: Microsoft Outlook 16.0
+Thread-Index: AQFGsu5WNDBp+FP/TOeyoiVSrY11cwGGydAyqXBTCQA=
+Content-Language: en-us
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Bjorn,
+ Comments inline.
 
 
-On Fri, 27 Mar 2020, Steven Rostedt wrote:
-
-> On Fri, 27 Mar 2020 21:23:57 +0000
-> Jules Irenge <jbi.octave@gmail.com> wrote:
+> -----Original Message-----
+> From: Bjorn Andersson <bjorn.andersson@linaro.org>
+> Sent: Saturday, March 28, 2020 4:30 AM
+> To: Rakesh Pillai <pillair@codeaurora.org>
+> Cc: devicetree@vger.kernel.org; linux-arm-kernel@lists.infradead.org;
+linux-
+> kernel@vger.kernel.org; linux-arm-msm@vger.kernel.org
+> Subject: Re: [PATCH v7] arm64: dts: qcom: sc7180: Add WCN3990 WLAN
+> module device node
 > 
-> > Coccinelle suggests replacing printk and WARN_ON with WARN
-> > 
-> > SUGGESTION: printk + WARN_ON can be just WARN.
-> > Signed-off-by: Jules Irenge <jbi.octave@gmail.com>
+> On Thu 26 Mar 03:48 PDT 2020, Rakesh Pillai wrote:
+> 
+> > Add device node for the ath10k SNOC platform driver probe
+> > and add resources required for WCN3990 on sc7180 soc.
+> >
+> > Signed-off-by: Rakesh Pillai <pillair@codeaurora.org>
 > > ---
-> >  kernel/trace/trace.c | 4 +---
-> >  1 file changed, 1 insertion(+), 3 deletions(-)
-> > 
-> > diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-> > index 6b11e4e2150c..1fe31272ea73 100644
-> > --- a/kernel/trace/trace.c
-> > +++ b/kernel/trace/trace.c
-> > @@ -1799,9 +1799,7 @@ static int run_tracer_selftest(struct tracer *type)
-> >  	/* the test is responsible for resetting too */
-> >  	tr->current_trace = saved_tracer;
-> >  	if (ret) {
-> > -		printk(KERN_CONT "FAILED!\n");
-> > -		/* Add the warning after printing 'FAILED' */
+> >
+> > Depends on https://patchwork.kernel.org/patch/11455345/
+> > The above patch adds the dt-bindings for wifi-firmware
+> > subnode
+> > ---
+> >  arch/arm64/boot/dts/qcom/sc7180-idp.dts |  8 ++++++++
+> >  arch/arm64/boot/dts/qcom/sc7180.dtsi    | 27
+> +++++++++++++++++++++++++++
+> >  2 files changed, 35 insertions(+)
+> >
+> > diff --git a/arch/arm64/boot/dts/qcom/sc7180-idp.dts
+> b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
+> > index 043c9b9..a6168a4 100644
+> > --- a/arch/arm64/boot/dts/qcom/sc7180-idp.dts
+> > +++ b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
+> > @@ -327,6 +327,14 @@
+> >  	};
+> >  };
+> >
+> > +&wifi {
+> > +	status = "okay";
+> > +	qcom,msa-fixed-perm;
+> > +	wifi-firmware {
+> > +		iommus = <&apps_smmu 0xc2 0x1>;
 > 
-> NACK! Did you not read the above comment. The FAILED goes with another
-> print and should NOT be part of the WARN_ON.
+> How is sc7180 different from sdm845, where the iommus property goes
+> directly in the &wifi node?
+
+Sc7180 IDP is a target without TrustZone support and also with S2 IOMMU
+enabled.
+Since in Trustzone based targets, the iommu SID configuration was done by
+TZ, there was nothing required to be done by driver.
+But in non-TZ based targets, the IOMMU mappings need to be done by the
+driver.
+Since this is the mapping of the firmware memory and to keep it different
+from the driver memory access, a different device has been created for
+firmware and these SIDs are configured.
+
+The below ath10k series brings-in this support.
+https://patchwork.kernel.org/project/linux-wireless/list/?series=261367&stat
+e=* 
+
+Thanks,
+Rakesh Pillai.
+
 > 
-> -- Steve
+> Regards,
+> Bjorn
 > 
-> > -		WARN_ON(1);
-> > +		WARN(1, "FAILED!\n");
-> >  		return -1;
-> >  	}
-> >  	/* Only reset on passing, to avoid touching corrupted buffers */
-> 
-> 
-Thanks for the feedback, I will be more careful next time.
-Kind regards,
-Jules
+> > +	};
+> > +};
+> > +
+> >  /* PINCTRL - additions to nodes defined in sc7180.dtsi */
+> >
+> >  &qspi_clk {
+> > diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> > index 998f101..2745128 100644
+> > --- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> > +++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> > @@ -83,6 +83,11 @@
+> >  			reg = <0 0x8f600000 0 0x500000>;
+> >  			no-map;
+> >  		};
+> > +
+> > +		wlan_fw_mem: memory@94104000 {
+> > +			reg = <0 0x94104000 0 0x200000>;
+> > +			no-map;
+> > +		};
+> >  	};
+> >
+> >  	cpus {
+> > @@ -835,6 +840,28 @@
+> >  			};
+> >  		};
+> >
+> > +		wifi: wifi@18800000 {
+> > +			compatible = "qcom,wcn3990-wifi";
+> > +			reg = <0 0x18800000 0 0x800000>;
+> > +			reg-names = "membase";
+> > +			iommus = <&apps_smmu 0xc0 0x1>;
+> > +			interrupts =
+> > +				<GIC_SPI 414 IRQ_TYPE_LEVEL_HIGH /* CE0
+> */ >,
+> > +				<GIC_SPI 415 IRQ_TYPE_LEVEL_HIGH /* CE1
+> */ >,
+> > +				<GIC_SPI 416 IRQ_TYPE_LEVEL_HIGH /* CE2
+> */ >,
+> > +				<GIC_SPI 417 IRQ_TYPE_LEVEL_HIGH /* CE3
+> */ >,
+> > +				<GIC_SPI 418 IRQ_TYPE_LEVEL_HIGH /* CE4
+> */ >,
+> > +				<GIC_SPI 419 IRQ_TYPE_LEVEL_HIGH /* CE5
+> */ >,
+> > +				<GIC_SPI 420 IRQ_TYPE_LEVEL_HIGH /* CE6
+> */ >,
+> > +				<GIC_SPI 421 IRQ_TYPE_LEVEL_HIGH /* CE7
+> */ >,
+> > +				<GIC_SPI 422 IRQ_TYPE_LEVEL_HIGH /* CE8
+> */ >,
+> > +				<GIC_SPI 423 IRQ_TYPE_LEVEL_HIGH /* CE9
+> */ >,
+> > +				<GIC_SPI 424 IRQ_TYPE_LEVEL_HIGH /* CE10
+> */>,
+> > +				<GIC_SPI 425 IRQ_TYPE_LEVEL_HIGH /* CE11
+> */>;
+> > +			memory-region = <&wlan_fw_mem>;
+> > +			status = "disabled";
+> > +		};
+> > +
+> >  		config_noc: interconnect@1500000 {
+> >  			compatible = "qcom,sc7180-config-noc";
+> >  			reg = <0 0x01500000 0 0x28000>;
+> > --
+> > 2.7.4
