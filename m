@@ -2,109 +2,220 @@ Return-Path: <SRS0=NZ+o=5N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD347C43331
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 18:23:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90B3BC43331
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 18:26:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8269B20714
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 18:23:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="hypZZ56o"
+	by mail.kernel.org (Postfix) with ESMTP id 6A02320714
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 18:26:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727125AbgC1SXi (ORCPT
+        id S1727175AbgC1S0c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 28 Mar 2020 14:23:38 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:34907 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726497AbgC1SXi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 28 Mar 2020 14:23:38 -0400
-Received: by mail-ed1-f65.google.com with SMTP id a20so15747780edj.2
-        for <linux-kernel@vger.kernel.org>; Sat, 28 Mar 2020 11:23:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=R436PKaf7Me7i9Q+u1EyxQhECXtmveD85TYjBFq47Tw=;
-        b=hypZZ56oIK1R5yJZ8yM4evhkoSOKTKu4FO6ru0cfN+t1sEKakoBcMTsfznAy7BPK/I
-         +7t6SVe7/KDB9k4WIQfKr8OaB09sWme6xjjK5DEhXfHYTkHO6O3ntWdtxPxxx0uFy5WB
-         +plf1hd9cEYp7e590pGK6oO2PO2dZLXCMCIueB5ImbOsaznC4FfAtlPifo8t/O2mlh3I
-         V60Y8qXBZ0fKEzCw2ye/Zk1vFq4fiIB7PTP6KBHPA1XJ1hfvJenzYblr64fEBRD8IPAc
-         1trh8RBfBe0nZN05Otm863olSui4NnCehOCbtJY5tAYRnGhsrp9cw6wMaM9A6ozdDoCe
-         7RSg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=R436PKaf7Me7i9Q+u1EyxQhECXtmveD85TYjBFq47Tw=;
-        b=awfXPih/rhNbP7XnH/75VBX+GIDz2VJEqEYR27cyrDzBP5dr2iF2yCcN4TRH9gCEIt
-         N92mOroNnyupQfOB8EHouWudZLXJTyxdVxO0mZi5eX7C0wN7eVIBpqoGObqF4RxizG78
-         AqJ4WA26QETLO7q2L5sYINA1N/GGO66fh1a0cZCuWJJs6lqUIoAUAOzbf7kzA9/miRn3
-         0iGyRZh8tg8B1PaLKpHdtFR5UAya9UA6UPdfRFR1g6zeahJDTnEAhCNvnw9zji1Q9GJn
-         VUK3R1jkBpVLCNNzSzBfdDaMoFZ2K+BIVTfhbaUWF+meEyoIpHC6VZIpldnEd/dhzu7l
-         1Rpw==
-X-Gm-Message-State: ANhLgQ1z7Hf3OfHG67d6HvmAo0h4Gu1VUFZtNFSVJA3zWUl4J0VvClF/
-        rIrwUZv1tptz7PrPOY54NbNIkSJQaL6hZYKgNJ97VcdUlgQ=
-X-Google-Smtp-Source: ADFU+vscrzeh0HZ8Xsmgb8y7RdjhEQ38CYXQnm+4bw2bkwwkKqV8qCwiP3mwv5aMWlSG9MkFix6hAs2Z+UCEta+SWK4=
-X-Received: by 2002:a05:6402:b17:: with SMTP id bm23mr4599093edb.165.1585419815840;
- Sat, 28 Mar 2020 11:23:35 -0700 (PDT)
+        Sat, 28 Mar 2020 14:26:32 -0400
+Received: from mga11.intel.com ([192.55.52.93]:59931 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726445AbgC1S0c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 28 Mar 2020 14:26:32 -0400
+IronPort-SDR: w12XMlPxsEG7nrkMfX9FNJniJqsyXsZJOl6bsbS+MfVJ5bNb/ceLHyevMBF+qcmcPZ0AD6u3a6
+ tQv3FJZM0Vnw==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Mar 2020 11:26:31 -0700
+IronPort-SDR: Uv+OifZnoawvUHECe/GAv9j+IxCZMJerEK49v69mTC5jEVUus3bAfS2KWg101bG1t2EdX8EPvZ
+ VAy3ntVPC/bg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,317,1580803200"; 
+   d="scan'208";a="251464781"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
+  by orsmga006.jf.intel.com with ESMTP; 28 Mar 2020 11:26:31 -0700
+Date:   Sat, 28 Mar 2020 11:26:31 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        Junaid Shahid <junaids@google.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>
+Subject: Re: [PATCH 1/3] KVM: x86: introduce kvm_mmu_invalidate_gva
+Message-ID: <20200328182631.GQ8104@linux.intel.com>
+References: <20200326093516.24215-1-pbonzini@redhat.com>
+ <20200326093516.24215-2-pbonzini@redhat.com>
 MIME-Version: 1.0
-References: <202003281643.02SGhPmY017434@sdf.org>
-In-Reply-To: <202003281643.02SGhPmY017434@sdf.org>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Sat, 28 Mar 2020 11:23:24 -0700
-Message-ID: <CAPcyv4iagZy5m3FpMrQqyOi=_uCzqh5MjbW+J_xiHU1Z1BmF=g@mail.gmail.com>
-Subject: Re: [RFC PATCH v1 46/50] mm/shuffle.c: use get_random_max()
-To:     George Spelvin <lkml@sdf.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Qian Cai <cai@lca.pw>, Kees Cook <keescook@chromium.org>,
-        Michal Hocko <mhocko@suse.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linux MM <linux-mm@kvack.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200326093516.24215-2-pbonzini@redhat.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Mar 28, 2020 at 9:43 AM George Spelvin <lkml@sdf.org> wrote:
->
-> Now that we have it, this is an example of where it helps.
-
-I didn't get copied on the cover and this series does not seem to be
-threaded in a way lore can find the cover either:
-https://lore.kernel.org/r/202003281643.02SGhPmY017434@sdf.org
-
-Mind including a short blurb about what it is and why it helps in the changelog?
-
->
-> Signed-off-by: George Spelvin <lkml@sdf.org>
-> Cc: Dan Williams <dan.j.williams@intel.com>
-> Cc: Qian Cai <cai@lca.pw>
-> Cc: Kees Cook <keescook@chromium.org>
-> Cc: Michal Hocko <mhocko@suse.com>
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: linux-mm@kvack.org
+On Thu, Mar 26, 2020 at 05:35:14AM -0400, Paolo Bonzini wrote:
+> Wrap the combination of mmu->invlpg and kvm_x86_ops->tlb_flush_gva
+> into a new function.  This function also lets us specify the host PGD to
+> invalidate and also the MMU, both of which will be useful in fixing and
+> simplifying kvm_inject_emulated_page_fault.
+> 
+> A nested guest's MMU however has g_context->invlpg == NULL.  Instead of
+> setting it to nonpaging_invlpg, make kvm_mmu_invalidate_gva the only
+> entry point to mmu->invlpg and make a NULL invlpg pointer equivalent
+> to nonpaging_invlpg, saving a retpoline.
+> 
+> Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 > ---
->  mm/shuffle.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/mm/shuffle.c b/mm/shuffle.c
-> index b3fe97fd66541..e0ed247f8d907 100644
-> --- a/mm/shuffle.c
-> +++ b/mm/shuffle.c
-> @@ -135,7 +135,7 @@ void __meminit __shuffle_zone(struct zone *z)
->                          * in the zone.
->                          */
->                         j = z->zone_start_pfn +
-> -                               ALIGN_DOWN(get_random_long() % z->spanned_pages,
-> +                               ALIGN_DOWN(get_random_max(z->spanned_pages),
->                                                 order_pages);
->                         page_j = shuffle_valid_page(j, order);
->                         if (page_j && page_j != page_i)
-> --
-> 2.26.0
->
+>  arch/x86/include/asm/kvm_host.h |  2 +
+>  arch/x86/kvm/mmu/mmu.c          | 71 +++++++++++++++++++++------------
+>  2 files changed, 47 insertions(+), 26 deletions(-)
+> 
+> diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
+> index 328b1765ff76..f6a1ece1bb4a 100644
+> --- a/arch/x86/include/asm/kvm_host.h
+> +++ b/arch/x86/include/asm/kvm_host.h
+> @@ -1506,6 +1506,8 @@ int kvm_emulate_hypercall(struct kvm_vcpu *vcpu);
+>  int kvm_mmu_page_fault(struct kvm_vcpu *vcpu, gpa_t cr2_or_gpa, u64 error_code,
+>  		       void *insn, int insn_len);
+>  void kvm_mmu_invlpg(struct kvm_vcpu *vcpu, gva_t gva);
+> +void kvm_mmu_invalidate_gva(struct kvm_vcpu *vcpu, struct kvm_mmu *mmu,
+> +		            gva_t gva, unsigned long root_hpa);
+>  void kvm_mmu_invpcid_gva(struct kvm_vcpu *vcpu, gva_t gva, unsigned long pcid);
+>  void kvm_mmu_new_cr3(struct kvm_vcpu *vcpu, gpa_t new_cr3, bool skip_tlb_flush);
+>  
+> diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
+> index 560e85ebdf22..e26c9a583e75 100644
+> --- a/arch/x86/kvm/mmu/mmu.c
+> +++ b/arch/x86/kvm/mmu/mmu.c
+> @@ -2153,10 +2153,6 @@ static int nonpaging_sync_page(struct kvm_vcpu *vcpu,
+>  	return 0;
+>  }
+>  
+> -static void nonpaging_invlpg(struct kvm_vcpu *vcpu, gva_t gva, hpa_t root)
+> -{
+> -}
+> -
+>  static void nonpaging_update_pte(struct kvm_vcpu *vcpu,
+>  				 struct kvm_mmu_page *sp, u64 *spte,
+>  				 const void *pte)
+> @@ -4237,7 +4233,7 @@ static void nonpaging_init_context(struct kvm_vcpu *vcpu,
+>  	context->page_fault = nonpaging_page_fault;
+>  	context->gva_to_gpa = nonpaging_gva_to_gpa;
+>  	context->sync_page = nonpaging_sync_page;
+> -	context->invlpg = nonpaging_invlpg;
+> +	context->invlpg = NULL;
+>  	context->update_pte = nonpaging_update_pte;
+>  	context->root_level = 0;
+>  	context->shadow_root_level = PT32E_ROOT_LEVEL;
+> @@ -4928,7 +4924,7 @@ static void init_kvm_tdp_mmu(struct kvm_vcpu *vcpu)
+>  	context->mmu_role.as_u64 = new_role.as_u64;
+>  	context->page_fault = kvm_tdp_page_fault;
+>  	context->sync_page = nonpaging_sync_page;
+> -	context->invlpg = nonpaging_invlpg;
+> +	context->invlpg = NULL;
+>  	context->update_pte = nonpaging_update_pte;
+>  	context->shadow_root_level = kvm_x86_ops->get_tdp_level(vcpu);
+>  	context->direct_map = true;
+> @@ -5096,6 +5092,12 @@ static void init_kvm_nested_mmu(struct kvm_vcpu *vcpu)
+>  	g_context->get_pdptr         = kvm_pdptr_read;
+>  	g_context->inject_page_fault = kvm_inject_page_fault;
+>  
+> +	/*
+> +	 * L2 page tables are never shadowed, so there is no need to sync
+> +	 * SPTEs.
+> +	 */
+> +	g_context->invlpg            = NULL;
+> +
+>  	/*
+>  	 * Note that arch.mmu->gva_to_gpa translates l2_gpa to l1_gpa using
+>  	 * L1's nested page tables (e.g. EPT12). The nested translation
+> @@ -5497,37 +5499,54 @@ int kvm_mmu_page_fault(struct kvm_vcpu *vcpu, gpa_t cr2_or_gpa, u64 error_code,
+>  }
+>  EXPORT_SYMBOL_GPL(kvm_mmu_page_fault);
+>  
+> -void kvm_mmu_invlpg(struct kvm_vcpu *vcpu, gva_t gva)
+> +void kvm_mmu_invalidate_gva(struct kvm_vcpu *vcpu, struct kvm_mmu *mmu,
+> +		            gva_t gva, unsigned long root_hpa)
+
+As pointed out by the build bot, @root_hpa needs to be hpa_t.
+
+>  {
+> -	struct kvm_mmu *mmu = vcpu->arch.mmu;
+>  	int i;
+>  
+> -	/* INVLPG on a * non-canonical address is a NOP according to the SDM.  */
+> -	if (is_noncanonical_address(gva, vcpu))
+> +	/* It's actually a GPA for vcpu->arch.guest_mmu.  */
+> +	if (mmu != &vcpu->arch.guest_mmu) {
+
+Doesn't need to be addressed here, but this is not the first time in this
+series (the large TLB flushing series) that I've struggled to parse
+"guest_mmu".  Would it make sense to rename it something like nested_tdp_mmu
+or l2_tdp_mmu?
+
+A bit ugly, but it'd be nice to avoid the mental challenge of remembering
+that guest_mmu is in play if and only if nested TDP is enabled.
+
+> +		/* INVLPG on a non-canonical address is a NOP according to the SDM.  */
+> +		if (is_noncanonical_address(gva, vcpu))
+> +			return;
+> +
+> +		kvm_x86_ops->tlb_flush_gva(vcpu, gva);
+> +	}
+> +
+> +	if (!mmu->invlpg)
+>  		return;
+>  
+> -	mmu->invlpg(vcpu, gva, mmu->root_hpa);
+> +	if (root_hpa == INVALID_PAGE) {
+> +		mmu->invlpg(vcpu, gva, mmu->root_hpa);
+>  
+> -	/*
+> -	 * INVLPG is required to invalidate any global mappings for the VA,
+> -	 * irrespective of PCID. Since it would take us roughly similar amount
+> -	 * of work to determine whether any of the prev_root mappings of the VA
+> -	 * is marked global, or to just sync it blindly, so we might as well
+> -	 * just always sync it.
+> -	 *
+> -	 * Mappings not reachable via the current cr3 or the prev_roots will be
+> -	 * synced when switching to that cr3, so nothing needs to be done here
+> -	 * for them.
+> -	 */
+> -	for (i = 0; i < KVM_MMU_NUM_PREV_ROOTS; i++)
+> -		if (VALID_PAGE(mmu->prev_roots[i].hpa))
+> -			mmu->invlpg(vcpu, gva, mmu->prev_roots[i].hpa);
+> +		/*
+> +		 * INVLPG is required to invalidate any global mappings for the VA,
+> +		 * irrespective of PCID. Since it would take us roughly similar amount
+> +		 * of work to determine whether any of the prev_root mappings of the VA
+> +		 * is marked global, or to just sync it blindly, so we might as well
+> +		 * just always sync it.
+> +		 *
+> +		 * Mappings not reachable via the current cr3 or the prev_roots will be
+> +		 * synced when switching to that cr3, so nothing needs to be done here
+> +		 * for them.
+> +		 */
+> +		for (i = 0; i < KVM_MMU_NUM_PREV_ROOTS; i++)
+> +			if (VALID_PAGE(mmu->prev_roots[i].hpa))
+> +				mmu->invlpg(vcpu, gva, mmu->prev_roots[i].hpa);
+> +	} else {
+> +		mmu->invlpg(vcpu, gva, root_hpa);
+> +	}
+> +}
+> +EXPORT_SYMBOL_GPL(kvm_mmu_invalidate_gva);
+>  
+> -	kvm_x86_ops->tlb_flush_gva(vcpu, gva);
+> +void kvm_mmu_invlpg(struct kvm_vcpu *vcpu, gva_t gva)
+> +{
+> +	kvm_mmu_invalidate_gva(vcpu, vcpu->arch.mmu, gva, INVALID_PAGE);
+>  	++vcpu->stat.invlpg;
+>  }
+>  EXPORT_SYMBOL_GPL(kvm_mmu_invlpg);
+>  
+> +
+>  void kvm_mmu_invpcid_gva(struct kvm_vcpu *vcpu, gva_t gva, unsigned long pcid)
+>  {
+>  	struct kvm_mmu *mmu = vcpu->arch.mmu;
+> -- 
+> 2.18.2
+> 
+> 
