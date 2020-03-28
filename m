@@ -2,97 +2,104 @@ Return-Path: <SRS0=NZ+o=5N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 525F7C2D0ED
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 21:55:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27174C43331
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 21:59:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 287FF20732
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 21:55:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9236720716
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 21:59:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=pobox.com header.i=@pobox.com header.b="CCnptZX5";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=fluxnic.net header.i=@fluxnic.net header.b="VqzxExHh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727820AbgC1Vzw (ORCPT
+        id S1727829AbgC1V7a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 28 Mar 2020 17:55:52 -0400
-Received: from mga18.intel.com ([134.134.136.126]:18384 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727484AbgC1Vzv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 28 Mar 2020 17:55:51 -0400
-IronPort-SDR: jMwL8oLlxZWXVG7CfpkbPbLKtH2C2TbT2r6LgAp8S8NEX2RdDQhKhMYpn1cUoVwb4YDk8GWq0C
- Miq+cjtVJ+vg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Mar 2020 14:55:51 -0700
-IronPort-SDR: b6VcZ2A2a6MdrzFoVlo5Z9KXsPFNXA9DRFiw714UyVJBw/ATSfLQ9A9Mg03oADHPYV95I/J3lm
- sxnmRtzKaW/w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,317,1580803200"; 
-   d="scan'208";a="447822949"
-Received: from ssafrin-mobl.ger.corp.intel.com (HELO [10.255.229.125]) ([10.255.229.125])
-  by fmsmga005.fm.intel.com with ESMTP; 28 Mar 2020 14:55:50 -0700
-Subject: Re: [PATCH v18 05/11] PCI/ERR: Remove service dependency in
- pcie_do_recovery()
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        ashok.raj@intel.com
-References: <20200328213241.GA127815@google.com>
-From:   "Kuppuswamy, Sathyanarayanan" 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>
-Message-ID: <110653ad-fd8f-8047-62de-dd9ce2cb9d5f@linux.intel.com>
-Date:   Sat, 28 Mar 2020 14:55:50 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Sat, 28 Mar 2020 17:59:30 -0400
+Received: from pb-smtp2.pobox.com ([64.147.108.71]:54392 "EHLO
+        pb-smtp2.pobox.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727484AbgC1V7a (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 28 Mar 2020 17:59:30 -0400
+Received: from pb-smtp2.pobox.com (unknown [127.0.0.1])
+        by pb-smtp2.pobox.com (Postfix) with ESMTP id AB7885DF0E;
+        Sat, 28 Mar 2020 17:59:27 -0400 (EDT)
+        (envelope-from nico@fluxnic.net)
+DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=pobox.com; h=date:from:to
+        :cc:subject:message-id:mime-version:content-type; s=sasl; bh=dgf
+        WqgLTCrN+VlDEATqWy9fOblU=; b=CCnptZX5bYjc8MPRVVfYmeIBHcufNVEG54l
+        2j2B87mGcjERdMfHjMegHwxqoSY5LQ00DOJx2/pNJ3QB+hEzR3W3lpqnLDCzVhPW
+        DVaIX8aTh2dKLgU4y/A02CqOSGRJ2FSFB+jJ7F3H0kipbKqmINFBfSXQ7GWINIc1
+        4ligjSDA=
+Received: from pb-smtp2.nyi.icgroup.com (unknown [127.0.0.1])
+        by pb-smtp2.pobox.com (Postfix) with ESMTP id A21375DF0D;
+        Sat, 28 Mar 2020 17:59:27 -0400 (EDT)
+        (envelope-from nico@fluxnic.net)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed; d=fluxnic.net;
+ h=date:from:to:cc:subject:message-id:mime-version:content-type;
+ s=2016-12.pbsmtp; bh=hboGcD0CSWpZTZid8EN5p6L2AKFvA36jUPmev5j9F8I=;
+ b=VqzxExHh6a9ijv2T//5/Z1WbikPWsqrTuthGtrc+WdRnPPjjRc9QQL6cg0yJdlidsgUTzzgDz88GbQiOHVh6QNqdTlmea8TpyBQsrxnAOrTEnsJJIcJxQQofjqSkLhnWiWlR/s0GpDRyzCeWv1LRGVCFVazz4VRrwvSgOl50HiM=
+Received: from yoda.home (unknown [24.203.50.76])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by pb-smtp2.pobox.com (Postfix) with ESMTPSA id 064715DF0C;
+        Sat, 28 Mar 2020 17:59:27 -0400 (EDT)
+        (envelope-from nico@fluxnic.net)
+Received: from xanadu.home (xanadu.home [192.168.2.2])
+        by yoda.home (Postfix) with ESMTPSA id EF1182DA0174;
+        Sat, 28 Mar 2020 17:59:25 -0400 (EDT)
+Date:   Sat, 28 Mar 2020 17:59:25 -0400 (EDT)
+From:   Nicolas Pitre <nico@fluxnic.net>
+To:     gregkh@linuxfoundation.org
+cc:     Chen Wandun <chenwandun@huawei.com>,
+        Adam Borowski <kilobyte@angband.pl>, jslaby@suse.com,
+        daniel.vetter@ffwll.ch, sam@ravnborg.org, b.zolnierkie@samsung.com,
+        lukas@wunner.de, ghalat@redhat.com, linux-kernel@vger.kernel.org
+Subject: [PATCH] vt: don't use kmalloc() for the unicode screen buffer
+Message-ID: <nycvar.YSQ.7.76.2003281745280.2671@knanqh.ubzr>
+User-Agent: Alpine 2.21 (LFD 202 2017-01-01)
 MIME-Version: 1.0
-In-Reply-To: <20200328213241.GA127815@google.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=US-ASCII
+X-Pobox-Relay-ID: 6474F6CA-713F-11EA-84AA-D1361DBA3BAF-78420484!pb-smtp2.pobox.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Bjorn,
+Even if the actual screen size is bounded in vc_do_resize(), the unicode 
+buffer is still a little more than twice the size of the glyph buffer
+and may exceed MAX_ORDER down the kmalloc() path. This can be triggered
+from user space.
 
-On 3/28/20 2:32 PM, Bjorn Helgaas wrote:
-> On Sat, Mar 28, 2020 at 02:12:48PM -0700, Kuppuswamy, Sathyanarayanan wrote:
->> On 3/23/20 5:26 PM, sathyanarayanan.kuppuswamy@linux.intel.com wrote:
->>> From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
->>>
->>
->>> +void pcie_do_recovery(struct pci_dev *dev,
->>> +		      enum pci_channel_state state,
->>> +		      pci_ers_result_t (*reset_link)(struct pci_dev *pdev))
->>>    {
->>>    	pci_ers_result_t status = PCI_ERS_RESULT_CAN_RECOVER;
->>>    	struct pci_bus *bus;
->>> @@ -206,9 +165,12 @@ void pcie_do_recovery(struct pci_dev *dev, enum pci_channel_state state,
->>>    	pci_dbg(dev, "broadcast error_detected message\n");
->>>    	if (state == pci_channel_io_frozen) {
->>>    		pci_walk_bus(bus, report_frozen_detected, &status);
->>> -		status = reset_link(dev, service);
->>> -		if 		if (reset_link)
->> 			status = reset_link(dev);(status == PCI_ERS_RESULT_DISCONNECT
->>> +		status = reset_link(dev);
->> Above line needs to be replaced as below. Since there is a
->> possibility reset_link can NULL (eventhough currently its
->> not true).
->> 		if (reset_link)
->> 			status = reset_link(dev);
->> Shall I submit another version to add above fix on top of
->> our pci/edr branch ?
-> 
-> No, I can squash that in if needed.
-> 
-> But I don't actually think we *do* need it.  All the callers supply a
-> valid reset_link function pointer, and if somebody changes or adds a
-> new one that doesn't, I'd rather take the null pointer exception and
-> find out about it than silently ignore it.
-But the documentation says "If reset_link is not NULL, recovery function
-will use it to reset the link." It considers NULL as a possible case.
-So I think its better to allow that case with a pci_warn() message.
-> 
-> Bjorn
-> 
+Since there is no point having a physically contiguous buffer here, 
+let's avoid the above issue as well as reducing pressure on high order
+allocations by using vmalloc() instead.
+
+Signed-off-by: Nicolas Pitre <nico@fluxnic.net>
+Cc: <stable@vger.kernel.org>
+
+diff --git a/drivers/tty/vt/vt.c b/drivers/tty/vt/vt.c
+index 15d2769805..7c10edb648 100644
+--- a/drivers/tty/vt/vt.c
++++ b/drivers/tty/vt/vt.c
+@@ -350,7 +350,7 @@ static struct uni_screen *vc_uniscr_alloc(unsigned int cols, unsigned int rows)
+ 	/* allocate everything in one go */
+ 	memsize = cols * rows * sizeof(char32_t);
+ 	memsize += rows * sizeof(char32_t *);
+-	p = kmalloc(memsize, GFP_KERNEL);
++	p = vmalloc(memsize);
+ 	if (!p)
+ 		return NULL;
+ 
+@@ -366,7 +366,7 @@ static struct uni_screen *vc_uniscr_alloc(unsigned int cols, unsigned int rows)
+ 
+ static void vc_uniscr_set(struct vc_data *vc, struct uni_screen *new_uniscr)
+ {
+-	kfree(vc->vc_uni_screen);
++	vfree(vc->vc_uni_screen);
+ 	vc->vc_uni_screen = new_uniscr;
+ }
+ 
