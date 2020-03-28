@@ -2,127 +2,173 @@ Return-Path: <SRS0=NZ+o=5N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE81EC43331
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 00:30:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00B4DC2D0EC
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 00:33:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E5122071B
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 00:30:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C57752071B
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 00:33:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VhLwhXOB"
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="nPZnRtbF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727096AbgC1A1K (ORCPT
+        id S1727736AbgC1AdR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Mar 2020 20:27:10 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:35028 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726281AbgC1A1J (ORCPT
+        Fri, 27 Mar 2020 20:33:17 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:34171 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726318AbgC1AdR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Mar 2020 20:27:09 -0400
-Received: by mail-wm1-f65.google.com with SMTP id f74so3718648wmf.0
-        for <linux-kernel@vger.kernel.org>; Fri, 27 Mar 2020 17:27:07 -0700 (PDT)
+        Fri, 27 Mar 2020 20:33:17 -0400
+Received: by mail-wm1-f66.google.com with SMTP id 26so11336226wmk.1;
+        Fri, 27 Mar 2020 17:33:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:reply-to:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=8LHi7DWQnn+e9a15gIK55uU0ddOdIii2CVkZfDdCDGw=;
-        b=VhLwhXOBsuch1bQqvoTgNmV2RgWwgAOiNSPKmjAaqrtJMcSe9NnQE1w4AhXKOoGVBR
-         dX6TP1+ZI17vPScGA2Pwb0GxgVJhC/wpDvI3r/z/uMRnMIj8wTC8cCR0y5mN4X0/kHf4
-         TEUlKk1xsNssCKrUiQe4p1Uj7VlltSleAeY3SbwkkjC47ZbM1bDPAGT4ReHdqOgzW6Vn
-         325KKR3X1Er7sMrNq1IVfSVpWKNhVA15Q7MCdUFDP0xkAWFEBE1XEpBLpVUHsnqS36MD
-         b0BsKpWaNn0hlA0iFU0FB5SUMaF71xJKcGcUKL7voeDiIJmkZetcOzKRZFepPjewklA6
-         n55w==
+        d=googlemail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=UgeGmbbdDFZ1yAVuUZxJWJWTRxhx6kFSWvFuy98QK0Y=;
+        b=nPZnRtbFOHq4ABjsx+SU9IeWj4aOYkh8ly8h4RkOgvebzuMOaTJM5DD7Q/dPreyjQW
+         Gfi43dtogGfIJDRrknV6Y3rRRA8jRNnVBULu6pJnZgH7dsQIcLrYiRo1CqUKcPUzsgRS
+         a24hKjkakz+kdwazyHTsWpabSps8HkkjSJZEKq/9MIFt3c4dVMmlKv++3eoiZ8m52VYx
+         hxhfMxw1mscJ0+5XbGpctWjGsewc7ayCoQgKf5TIN6FgWD8loJDKArudcJ54nmeAniYx
+         jQBiTv/cmWToON4WGHPkoYvEHFvfv0RMGa02X0jGmI0HeJSlNFMN4WR788zNtgXUty+w
+         PyGw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:reply-to
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=8LHi7DWQnn+e9a15gIK55uU0ddOdIii2CVkZfDdCDGw=;
-        b=KOhFFQiVZ27coEZiDpYJr1CP0SLDRj8SQe3/JI8Gc5GUW5thOy9S+bnJRMzGT3mawq
-         VQFUl8FNp8mrZ8sa2CRr0X91Mgx5Jfflshp8h4rl55Sf+UNMd9Xx/a6TgEWPVt2yO5MB
-         H4CXXx9sPROaimtV7PS6KM23n4OkFohXofsv+qnDNEaCRsNZpNMCAjh2XbnM4bbx9Pov
-         aftkTej8p5U5QHWOMS/4SQ1nyfKCGn1omcvbJIHUQC8JVoE3686+9r23sL7TMXbsDoy3
-         GAAjxM14IcjOR0lrAoxEHzKz4a/k62ifh67Nr6lPSWEnfFVOlVbAW7NfA+YFPhhU8f7G
-         Yv/w==
-X-Gm-Message-State: ANhLgQ2peoIGPXGsEsiwjj/FREmzL7A19mvzRJBbcC7UhNZTAzXx3lLM
-        OckmDyF29cGd+275SYNt4JE=
-X-Google-Smtp-Source: ADFU+vtIG7Lc9lszQ0dy68T428hPdPwxI+HkbxJRRrAs84A6Tgz/onIC2eYUhG3xQ14RpiNpkqvQyQ==
-X-Received: by 2002:a05:600c:2101:: with SMTP id u1mr1339464wml.136.1585355227084;
-        Fri, 27 Mar 2020 17:27:07 -0700 (PDT)
-Received: from localhost ([185.92.221.13])
-        by smtp.gmail.com with ESMTPSA id e5sm10019240wru.92.2020.03.27.17.27.06
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 27 Mar 2020 17:27:06 -0700 (PDT)
-Date:   Sat, 28 Mar 2020 00:27:05 +0000
-From:   Wei Yang <richard.weiyang@gmail.com>
-To:     Jason Gunthorpe <jgg@ziepe.ca>
-Cc:     John Hubbard <jhubbard@nvidia.com>,
-        Wei Yang <richard.weiyang@gmail.com>,
-        akpm@linux-foundation.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, david@redhat.com
-Subject: Re: [Patch v2 2/2] mm/page_alloc.c: define node_order with all zero
-Message-ID: <20200328002705.hmo4tikax66o7zo3@master>
-Reply-To: Wei Yang <richard.weiyang@gmail.com>
-References: <20200327220121.27823-1-richard.weiyang@gmail.com>
- <20200327220121.27823-2-richard.weiyang@gmail.com>
- <4c9d8138-d379-810f-64e7-0d018ed019df@nvidia.com>
- <20200327231820.GA20941@ziepe.ca>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=UgeGmbbdDFZ1yAVuUZxJWJWTRxhx6kFSWvFuy98QK0Y=;
+        b=kv85tcSGa2fVSPKas6yqMfTKA9iDe0JcwjrEORvJNuQ5gdUnmptPyqgmvtPxBs3fMl
+         /5cgjHUYgF7I8wZXsXnkZdE5vpMmJIWPYycxb89ACubvWSXElbpFvpxculIigCBcw1wT
+         8tk5od/0CvUNV8hABD4w0b3HL1IvVg7rkbNjvyvwiWUTz6Z90hAKtujhGQDsocJJsnxK
+         roL7QeAoGR2d+kKHYWButNzMnIBedKOzwqFcA3mmnno2UQTwkaVia3Q2B2F7djxo6tR9
+         Met6bOlpsSjRKmQ5jIzHPsotznvSWhiS8jwdP2prLPseSnkXeLk27Fe+VkduJcGhcR9V
+         Vt/A==
+X-Gm-Message-State: ANhLgQ0w14Pax9aX5WtFgnqfBUm8amSsIL2d33M9A1lbi+yMLoHMgBP8
+        Xtnc+1TCYrwg5VQScBquC8I=
+X-Google-Smtp-Source: ADFU+vtqzsp3T8UdgcFLVAxXMJeOGibIYMJRJ7SnbYnOozzQNsMt93hZyHjEAUiApeeFFfY3Z/25Wg==
+X-Received: by 2002:a1c:4c05:: with SMTP id z5mr1369659wmf.162.1585355594476;
+        Fri, 27 Mar 2020 17:33:14 -0700 (PDT)
+Received: from localhost.localdomain (p200300F13710ED00428D5CFFFEB99DB8.dip0.t-ipconnect.de. [2003:f1:3710:ed00:428d:5cff:feb9:9db8])
+        by smtp.googlemail.com with ESMTPSA id f1sm10346246wrv.37.2020.03.27.17.33.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 27 Mar 2020 17:33:13 -0700 (PDT)
+From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+To:     linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-mmc@vger.kernel.org, ulf.hansson@linaro.org,
+        robh+dt@kernel.org
+Cc:     jianxin.pan@amlogic.com, mark.rutland@arm.com,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        lnykww@gmail.com, yinxin_1989@aliyun.com,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Subject: [PATCH v5 0/3] Amlogic 32-bit Meson SoC SDHC MMC controller driver
+Date:   Sat, 28 Mar 2020 01:32:46 +0100
+Message-Id: <20200328003249.1248978-1-martin.blumenstingl@googlemail.com>
+X-Mailer: git-send-email 2.26.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200327231820.GA20941@ziepe.ca>
-User-Agent: NeoMutt/20170113 (1.7.2)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 27, 2020 at 08:18:20PM -0300, Jason Gunthorpe wrote:
->On Fri, Mar 27, 2020 at 03:37:57PM -0700, John Hubbard wrote:
->> On 3/27/20 3:01 PM, Wei Yang wrote:
->> > Since we always clear node_order before getting it, we can leverage
->> > compiler to do this instead of at run time.
->> > 
->> > Signed-off-by: Wei Yang <richard.weiyang@gmail.com>
->> >   mm/page_alloc.c | 3 +--
->> >   1 file changed, 1 insertion(+), 2 deletions(-)
->> > 
->> > diff --git a/mm/page_alloc.c b/mm/page_alloc.c
->> > index dfcf2682ed40..49dd1f25c000 100644
->> > +++ b/mm/page_alloc.c
->> > @@ -5585,7 +5585,7 @@ static void build_thisnode_zonelists(pg_data_t *pgdat)
->> >   static void build_zonelists(pg_data_t *pgdat)
->> >   {
->> > -	static int node_order[MAX_NUMNODES];
->> > +	static int node_order[MAX_NUMNODES] = {0};
->> 
->> 
->> Looks wrong: now the single instance of node_order is initialized just once by
->> the compiler. And that means that only the first caller of this function
->> gets a zeroed node_order array...
->
->It is also redundant, all static data is 0 initialized in Linux and
->should not be explicitly initialized so it can remain in .bss
->
+Hello,
 
-Yeah, you are right. I missed the static word.
+this is the patchset for a driver for the Amlogic "SDHC" MMC controller
+found on Meson6, Meson8, Meson8b and Meson8m2 SoCs.
 
->> > @@ -5595,7 +5595,6 @@ static void build_zonelists(pg_data_t *pgdat)
->> >   	load = nr_online_nodes;
->> >   	prev_node = local_node;
->> > -	memset(node_order, 0, sizeof(node_order));
->> 
->> ...and all subsequent callers are left with whatever debris is remaining in
->> node_order. So this is not good.
->
->Indeed
->
->Jason
+The public S805 (Meson8b) datasheet has some documentation starting on
+page 74: [0]
+
+It's performance is still not as good as the driver from Amlogic's 3.10
+kernel, but it does not corrupt data anymore (as RFC v1 did).
+
+Special thanks to the people who supported me off-list - you are
+amazing and deserve to be mentioned here:
+- Xin Yin who helped me fix two more write corruption problems. I am
+  hoping that he will reply with Reviewed-by, Tested-by and Bug-fixed-by
+- Jianxin Pan for sharing some of the internal workings of this MMC
+  controller with me
+- Wei Wang for spotting the initial write corruption problem and helping
+  test this driver on his board. I have his permission to add his
+  Tested-by (off-list, he's Cc'ed so if there's any problem he can speak
+  up)
+
+
+Changes since v4 at [4]:
+- move the four clkin clock inputs to the start of the clock-names list
+  as suggested by Rob, affects patch #1
+- fixed #include statement in dt-bindings example in patch #1
+
+Changes since v3 at [3]:
+- split the clock bits into a separate clock controller driver because
+  of two reasons: 1) it keeps the MMC controller driver mostly clean of
+  the clock bits 2) the pure clock controller can use
+  devm_clk_hw_register() (instead of devm_clk_register(), which is
+  deprecated) and the MMC controller can act as a pure clock consumer.
+  This also affects the dt-bindings which is why I dropped Rob's
+  Reviewed-by. Thanks to Ulf for the suggestions
+
+Changes since v2 at [2]:
+- rebased on top of v5.5-rc1
+- added Rob's and Xin Yin's Reviewed-by and Tested-by (thank you!)
+- (note: Kevin had v2 of this series in -next for a few days so the
+   build test robots could play with it. I haven't received any negative
+   feedback in that time)
+
+Changes since RFC v1 at [1]:
+- don't set MESON_SDHC_MISC_MANUAL_STOP to fix one of three write
+  corruption problems. the out-of-tree 3.10 "reference" driver doesn't
+  set it either
+- check against data->flags instead of cmd->flags when testing for
+  MMC_DATA_WRITE as spotted by Xin Yin (many thanks!). This fixes
+  another write corruption problem
+- clear the FIFOs after successfully transferring data as suggested by
+  Xin Yin (many thanks!). This is what the 3.10 driver did and fixes yet
+  another write corruption problem
+- integrate the clock suggestions from Jianxin Pan so the driver is now
+  able to set up the clocks correctly for all known cases. documentation
+  is also added to the patch description. Thank you Jianxin for the
+  help!
+- set the correct max_busy_timeout as suggested by Jianxin Pan (thanks!)
+- convert the dt-bindings to .yaml (which is why I didn't add Rob's
+  Reviewed-by)
+- switch to struct clk_parent_data as part of newer common clock
+  framework APIs to simplify the clock setup
+- dropped CMD23 support because it seems to hurt read and write
+  performance by 10-20% in my tests. it's not clear why, but for now we
+  can live without this.
+- use devm_platform_ioremap_resource instead of open-coding it
+
+
+[0] https://dn.odroid.com/S805/Datasheet/S805_Datasheet%20V0.8%2020150126.pdf
+[1] https://patchwork.kernel.org/cover/11035505/
+[2] http://lists.infradead.org/pipermail/linux-amlogic/2019-November/014576.html
+[3] https://patchwork.kernel.org/cover/11283179/
+[4] https://patchwork.kernel.org/cover/11329017/
+
+Martin Blumenstingl (3):
+  dt-bindings: mmc: Document the Amlogic Meson SDHC MMC host controller
+  clk: meson: add a driver for the Meson8/8b/8m2 SDHC clock controller
+  mmc: host: meson-mx-sdhc: new driver for the Amlogic Meson SDHC host
+
+ .../bindings/mmc/amlogic,meson-mx-sdhc.yaml   |   83 ++
+ drivers/clk/meson/Kconfig                     |    9 +
+ drivers/clk/meson/Makefile                    |    1 +
+ drivers/clk/meson/meson-mx-sdhc.c             |  212 ++++
+ drivers/mmc/host/Kconfig                      |   14 +
+ drivers/mmc/host/Makefile                     |    1 +
+ drivers/mmc/host/meson-mx-sdhc.c              | 1064 +++++++++++++++++
+ .../dt-bindings/clock/meson-mx-sdhc-clkc.h    |    8 +
+ 8 files changed, 1392 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mmc/amlogic,meson-mx-sdhc.yaml
+ create mode 100644 drivers/clk/meson/meson-mx-sdhc.c
+ create mode 100644 drivers/mmc/host/meson-mx-sdhc.c
+ create mode 100644 include/dt-bindings/clock/meson-mx-sdhc-clkc.h
 
 -- 
-Wei Yang
-Help you, Help me
+2.26.0
+
