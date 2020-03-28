@@ -2,80 +2,93 @@ Return-Path: <SRS0=NZ+o=5N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F64CC2D0F0
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 07:11:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26CB5C2D0EB
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 07:18:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6BF242072F
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 07:11:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED71020716
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 07:18:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585379914;
+	bh=fopRQnzfuZZmkeKyFYK+9X+U66QuYhhnOGDinwvF0D0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=cRemmAPHIBxubEcamN1joHvzrwFp4gOY0ZVRxTOhGFS4MIv9gbOn4F6UgsrM1vLE+
+	 qIwiqHDdxqklde12uvq08bVOLHpAox752Mcq4zCR7hvTLyN+SSHoNWr31MbIkuXFKd
+	 ZK6uNpD3rxeYRpH0ot0P6PoflVjiuanUWglJ5hG4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727067AbgC1HLa (ORCPT
+        id S1726170AbgC1HSb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 28 Mar 2020 03:11:30 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:35076 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725372AbgC1HL3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 28 Mar 2020 03:11:29 -0400
-Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 7B2DBC5F8853D19168C9;
-        Sat, 28 Mar 2020 15:10:52 +0800 (CST)
-Received: from localhost.localdomain (10.69.192.56) by
- DGGEMS411-HUB.china.huawei.com (10.3.19.211) with Microsoft SMTP Server id
- 14.3.487.0; Sat, 28 Mar 2020 15:10:43 +0800
-From:   Huazhong Tan <tanhuazhong@huawei.com>
-To:     <davem@davemloft.net>
-CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <salil.mehta@huawei.com>, <yisen.zhuang@huawei.com>,
-        <linuxarm@huawei.com>, <kuba@kernel.org>,
-        Huazhong Tan <tanhuazhong@huawei.com>
-Subject: [PATCH net 0/4] net: hns3: fixes for -net
-Date:   Sat, 28 Mar 2020 15:09:54 +0800
-Message-ID: <1585379398-36224-1-git-send-email-tanhuazhong@huawei.com>
-X-Mailer: git-send-email 2.7.4
+        Sat, 28 Mar 2020 03:18:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59782 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725372AbgC1HSb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 28 Mar 2020 03:18:31 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 127DB20716;
+        Sat, 28 Mar 2020 07:18:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1585379910;
+        bh=fopRQnzfuZZmkeKyFYK+9X+U66QuYhhnOGDinwvF0D0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=zbkUekwSZrpAyJ+cqSsFaNK7G+QRKY3ESZtvptrtyX0IUtb2UiG5fWiXHB9bjOgEA
+         R0ApSP9Rui4R8co+SrOXQMxxdiBtrwx8V8EJ2viXLCJE6zu2B7KrbHj2LJ3BB8o/06
+         vvPzTbPm7pHKn0UhY8wZ20FdRhpCxarV8+nipG5M=
+Date:   Sat, 28 Mar 2020 08:18:27 +0100
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Marek Szyprowski <m.szyprowski@samsung.com>
+Cc:     dri-devel@lists.freedesktop.org, linux-samsung-soc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Shane Francis <bigbeeshane@gmail.com>,
+        "Michael J . Ruhl" <michael.j.ruhl@intel.com>
+Subject: Re: [PATCH v2] drm/prime: fix extracting of the DMA addresses from a
+ scatterlist
+Message-ID: <20200328071827.GA3648919@kroah.com>
+References: <CGME20200327162330eucas1p1b0413e0e9887aa76d3048f86d2166dcd@eucas1p1.samsung.com>
+ <20200327162126.29705-1-m.szyprowski@samsung.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.69.192.56]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200327162126.29705-1-m.szyprowski@samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patchset includes some bugfixes for the HNS3 ethernet driver.
+On Fri, Mar 27, 2020 at 05:21:26PM +0100, Marek Szyprowski wrote:
+> Scatterlist elements contains both pages and DMA addresses, but one
+> should not assume 1:1 relation between them. The sg->length is the size
+> of the physical memory chunk described by the sg->page, while
+> sg_dma_len(sg) is the size of the DMA (IO virtual) chunk described by
+> the sg_dma_address(sg).
+> 
+> The proper way of extracting both: pages and DMA addresses of the whole
+> buffer described by a scatterlist it to iterate independently over the
+> sg->pages/sg->length and sg_dma_address(sg)/sg_dma_len(sg) entries.
+> 
+> Fixes: 42e67b479eab ("drm/prime: use dma length macro when mapping sg")
+> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+> Reviewed-by: Alex Deucher <alexander.deucher@amd.com>
+> ---
+>  drivers/gpu/drm/drm_prime.c | 37 +++++++++++++++++++++++++------------
+>  1 file changed, 25 insertions(+), 12 deletions(-)
 
-[patch 1] removes flag WQ_MEM_RECLAIM flag when allocating WE,
-since it will cause a warning when the reset task flushes a IB's WQ.
+<formletter>
 
-[patch 2] adds a new DESC_TYPE_FRAGLIST_SKB type to handle the
-linear data of the fraglist SKB, since it is different with the frag
-data.
+This is not the correct way to submit patches for inclusion in the
+stable kernel tree.  Please read:
+    https://www.kernel.org/doc/html/latest/process/stable-kernel-rules.html
+for how to do this properly.
 
-[patch 3] adds different handings for RSS configuration when load
-or reset.
-
-[patch 4] fixes a link ksetting issue.
-
-Guangbin Huang (1):
-  net: hns3: fix set and get link ksettings issue
-
-Guojia Liao (1):
-  net: hns3: fix RSS config lost after VF reset.
-
-Huazhong Tan (1):
-  net: hns3: fix for fraglist SKB headlen not handling correctly
-
-Yunsheng Lin (1):
-  net: hns3: drop the WQ_MEM_RECLAIM flag when allocating WQ
-
- drivers/net/ethernet/hisilicon/hns3/hnae3.h        |  1 +
- drivers/net/ethernet/hisilicon/hns3/hns3_enet.c    | 18 ++++++--
- .../ethernet/hisilicon/hns3/hns3pf/hclge_main.c    | 10 +++-
- .../ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c  | 54 ++++++++++++----------
- 4 files changed, 51 insertions(+), 32 deletions(-)
-
--- 
-2.7.4
-
+</formletter>
