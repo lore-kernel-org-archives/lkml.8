@@ -2,113 +2,109 @@ Return-Path: <SRS0=NZ+o=5N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34EDDC2D0EC
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 18:21:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD347C43331
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 18:23:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1024B20714
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 18:21:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8269B20714
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 18:23:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UZI3X69m"
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="hypZZ56o"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726937AbgC1SV5 (ORCPT
+        id S1727125AbgC1SXi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 28 Mar 2020 14:21:57 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:38866 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725807AbgC1SV5 (ORCPT
+        Sat, 28 Mar 2020 14:23:38 -0400
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:34907 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726497AbgC1SXi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 28 Mar 2020 14:21:57 -0400
-Received: by mail-wm1-f65.google.com with SMTP id f6so9719152wmj.3;
-        Sat, 28 Mar 2020 11:21:55 -0700 (PDT)
+        Sat, 28 Mar 2020 14:23:38 -0400
+Received: by mail-ed1-f65.google.com with SMTP id a20so15747780edj.2
+        for <linux-kernel@vger.kernel.org>; Sat, 28 Mar 2020 11:23:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=36XBR0ayoO3LyynzyStu6CZ4NUVnEty/c/VbR1WfpFE=;
-        b=UZI3X69mmnGAQ4hP4hkW1mgGCYCITVCQURFygZtw2TWAyg0MQ8EGxK/fHjjH2C3TE+
-         CYNFLLzjFUUi2YD/MTFP3Go+LHnrJf3Gl/tchMzoxlpNJae+hrfHDwDIb6OnZuNGvv9H
-         tvhDzlT0x67MmI0bQbBlcUhoxMs1f0BHnIp7U2y9mBjHaOrdxRNr6iR0wldcUl7NZdDC
-         89DsQryK/rpivmB/W+JTKk4jt+w8wZUYxmMk3A+uAkW0uDXWcRwKfdZwOlYXZcRzkFem
-         lk73E37fFg/bJa9sms3l3sa510MQhTo5WZgcisG/aGY66KeMcg97DpMCwjjxOUA1kq/7
-         wNsg==
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=R436PKaf7Me7i9Q+u1EyxQhECXtmveD85TYjBFq47Tw=;
+        b=hypZZ56oIK1R5yJZ8yM4evhkoSOKTKu4FO6ru0cfN+t1sEKakoBcMTsfznAy7BPK/I
+         +7t6SVe7/KDB9k4WIQfKr8OaB09sWme6xjjK5DEhXfHYTkHO6O3ntWdtxPxxx0uFy5WB
+         +plf1hd9cEYp7e590pGK6oO2PO2dZLXCMCIueB5ImbOsaznC4FfAtlPifo8t/O2mlh3I
+         V60Y8qXBZ0fKEzCw2ye/Zk1vFq4fiIB7PTP6KBHPA1XJ1hfvJenzYblr64fEBRD8IPAc
+         1trh8RBfBe0nZN05Otm863olSui4NnCehOCbtJY5tAYRnGhsrp9cw6wMaM9A6ozdDoCe
+         7RSg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=36XBR0ayoO3LyynzyStu6CZ4NUVnEty/c/VbR1WfpFE=;
-        b=Uu0Ivy1BgwHq0I9pPJtuUEU8lKFwOuilh/RQf68rx1E+6x1jK9yyCLGHb1rflIa0Rg
-         t+/L2So07jRFG2c6dNn2n0sNg5/EFo+xsh6mhXBMpgd96RALN93U0khzmbXDFEDxsMKx
-         t3BaHr7wK+jU8fKE6wzDVPNbQQYNWg4i6Ff78AptouEhBKL9+qPDdmSpP2LMd7J25QvI
-         uYNIQIcKVDjACClXlJu8XcV4fYE48+6TMk0oi5who3h+7bxUlucU8tYoc+SHjD2Fktxi
-         DGYXl+v01cSGDJS+66KgjEBsCujRjrfiKXGtFR47Ha705OVQVoKuk08TzBA16DKgIc0P
-         aXdw==
-X-Gm-Message-State: ANhLgQ3KjgFW9jp9EBPdJPbj/VV0jf1Ve2Ln+o4CIPUCzfJ29IdBuGM0
-        pyMchGmf5Fss35v7c7WJIQc=
-X-Google-Smtp-Source: ADFU+vscLyKBnpRVmMVlrMguDDiQaM764E/7p0jcjKXkbzvYdw1ftiq2ch6FXj/TlQu9bo43ttL/Zg==
-X-Received: by 2002:a1c:dc55:: with SMTP id t82mr4702415wmg.6.1585419715066;
-        Sat, 28 Mar 2020 11:21:55 -0700 (PDT)
-Received: from andrea ([86.61.236.197])
-        by smtp.gmail.com with ESMTPSA id v21sm5309967wmh.26.2020.03.28.11.21.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 28 Mar 2020 11:21:54 -0700 (PDT)
-Date:   Sat, 28 Mar 2020 19:21:48 +0100
-From:   Andrea Parri <parri.andrea@gmail.com>
-To:     Vitaly Kuznetsov <vkuznets@redhat.com>
-Cc:     linux-kernel@vger.kernel.org,
-        "K . Y . Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>, linux-hyperv@vger.kernel.org,
-        Michael Kelley <mikelley@microsoft.com>,
-        Dexuan Cui <decui@microsoft.com>,
-        Boqun Feng <boqun.feng@gmail.com>
-Subject: Re: [RFC PATCH 03/11] Drivers: hv: vmbus: Replace the per-CPU
- channel lists with a global array of channels
-Message-ID: <20200328182148.GA11210@andrea>
-References: <20200325225505.23998-1-parri.andrea@gmail.com>
- <20200325225505.23998-4-parri.andrea@gmail.com>
- <87y2rn4287.fsf@vitty.brq.redhat.com>
- <20200326170518.GA14314@andrea>
- <87pncz3tcn.fsf@vitty.brq.redhat.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=R436PKaf7Me7i9Q+u1EyxQhECXtmveD85TYjBFq47Tw=;
+        b=awfXPih/rhNbP7XnH/75VBX+GIDz2VJEqEYR27cyrDzBP5dr2iF2yCcN4TRH9gCEIt
+         N92mOroNnyupQfOB8EHouWudZLXJTyxdVxO0mZi5eX7C0wN7eVIBpqoGObqF4RxizG78
+         AqJ4WA26QETLO7q2L5sYINA1N/GGO66fh1a0cZCuWJJs6lqUIoAUAOzbf7kzA9/miRn3
+         0iGyRZh8tg8B1PaLKpHdtFR5UAya9UA6UPdfRFR1g6zeahJDTnEAhCNvnw9zji1Q9GJn
+         VUK3R1jkBpVLCNNzSzBfdDaMoFZ2K+BIVTfhbaUWF+meEyoIpHC6VZIpldnEd/dhzu7l
+         1Rpw==
+X-Gm-Message-State: ANhLgQ1z7Hf3OfHG67d6HvmAo0h4Gu1VUFZtNFSVJA3zWUl4J0VvClF/
+        rIrwUZv1tptz7PrPOY54NbNIkSJQaL6hZYKgNJ97VcdUlgQ=
+X-Google-Smtp-Source: ADFU+vscrzeh0HZ8Xsmgb8y7RdjhEQ38CYXQnm+4bw2bkwwkKqV8qCwiP3mwv5aMWlSG9MkFix6hAs2Z+UCEta+SWK4=
+X-Received: by 2002:a05:6402:b17:: with SMTP id bm23mr4599093edb.165.1585419815840;
+ Sat, 28 Mar 2020 11:23:35 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87pncz3tcn.fsf@vitty.brq.redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <202003281643.02SGhPmY017434@sdf.org>
+In-Reply-To: <202003281643.02SGhPmY017434@sdf.org>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Sat, 28 Mar 2020 11:23:24 -0700
+Message-ID: <CAPcyv4iagZy5m3FpMrQqyOi=_uCzqh5MjbW+J_xiHU1Z1BmF=g@mail.gmail.com>
+Subject: Re: [RFC PATCH v1 46/50] mm/shuffle.c: use get_random_max()
+To:     George Spelvin <lkml@sdf.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Qian Cai <cai@lca.pw>, Kees Cook <keescook@chromium.org>,
+        Michal Hocko <mhocko@suse.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linux MM <linux-mm@kvack.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> Correct me if I'm wrong, but currently vmbus_chan_sched() accesses
-> per-cpu list of channels on the same CPU so we don't need a spinlock to
-> guarantee that during an interrupt we'll be able to see the update if it
-> happened before the interrupt (in chronological order). With a global
-> list of relids, who guarantees that an interrupt handler on another CPU
-> will actually see the modified list? 
+On Sat, Mar 28, 2020 at 9:43 AM George Spelvin <lkml@sdf.org> wrote:
+>
+> Now that we have it, this is an example of where it helps.
 
-Thanks for pointing this out!
+I didn't get copied on the cover and this series does not seem to be
+threaded in a way lore can find the cover either:
+https://lore.kernel.org/r/202003281643.02SGhPmY017434@sdf.org
 
-The offer/resume path presents implicit full memory barriers, program
--order after the array store which should guarantee the visibility of
-the store to *all* CPUs before the offer/resume can complete (c.f.,
+Mind including a short blurb about what it is and why it helps in the changelog?
 
-  tools/memory-model/Documentation/explanation.txt, Sect. #13
-
-and assuming that the offer/resume for a channel must complete before
-the corresponding handler, which seems to be the case considered that
-some essential channel fields are initialized only later...)
-
-IIUC, the spin lock approach you suggested will work and be "simpler";
-an obvious side effect would be, well, a global synchronization point
-in vmbus_chan_sched()...
-
-Thoughts?
-
-Thanks,
-  Andrea
+>
+> Signed-off-by: George Spelvin <lkml@sdf.org>
+> Cc: Dan Williams <dan.j.williams@intel.com>
+> Cc: Qian Cai <cai@lca.pw>
+> Cc: Kees Cook <keescook@chromium.org>
+> Cc: Michal Hocko <mhocko@suse.com>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: linux-mm@kvack.org
+> ---
+>  mm/shuffle.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/mm/shuffle.c b/mm/shuffle.c
+> index b3fe97fd66541..e0ed247f8d907 100644
+> --- a/mm/shuffle.c
+> +++ b/mm/shuffle.c
+> @@ -135,7 +135,7 @@ void __meminit __shuffle_zone(struct zone *z)
+>                          * in the zone.
+>                          */
+>                         j = z->zone_start_pfn +
+> -                               ALIGN_DOWN(get_random_long() % z->spanned_pages,
+> +                               ALIGN_DOWN(get_random_max(z->spanned_pages),
+>                                                 order_pages);
+>                         page_j = shuffle_valid_page(j, order);
+>                         if (page_j && page_j != page_i)
+> --
+> 2.26.0
+>
