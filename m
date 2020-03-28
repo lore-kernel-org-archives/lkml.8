@@ -2,72 +2,79 @@ Return-Path: <SRS0=NZ+o=5N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57C39C43331
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 11:35:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0084DC2D0E5
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 11:42:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2AE3B20723
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 11:35:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D4ABB206F6
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 11:42:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726290AbgC1Lf1 (ORCPT
+        id S1726295AbgC1Lmn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 28 Mar 2020 07:35:27 -0400
-Received: from eu-smtp-delivery-151.mimecast.com ([146.101.78.151]:24929 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726045AbgC1Lf0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 28 Mar 2020 07:35:26 -0400
-Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
- TLS) by relay.mimecast.com with ESMTP id
- uk-mta-125-qkvo3uitO7qMlqKi_GfSRQ-1; Sat, 28 Mar 2020 11:35:18 +0000
-X-MC-Unique: qkvo3uitO7qMlqKi_GfSRQ-1
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
- AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
- Server (TLS) id 15.0.1347.2; Sat, 28 Mar 2020 11:35:18 +0000
-Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
- AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
- Sat, 28 Mar 2020 11:35:18 +0000
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'Ian Rogers' <irogers@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        "Namhyung Kim" <namhyung@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     Stephane Eranian <eranian@google.com>
-Subject: RE: [PATCH v2] perf synthetic-events: save 4kb from 2 stack frames
-Thread-Topic: [PATCH v2] perf synthetic-events: save 4kb from 2 stack frames
-Thread-Index: AQHWBF1ClmZ8kVMsgU+5XAp+2PSCVahd4QHg
-Date:   Sat, 28 Mar 2020 11:35:18 +0000
-Message-ID: <44d864708b824179896928ad0b35b4e9@AcuMS.aculab.com>
-References: <20200327172914.28603-1-irogers@google.com>
-In-Reply-To: <20200327172914.28603-1-irogers@google.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        Sat, 28 Mar 2020 07:42:43 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:41632 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726045AbgC1Lmn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 28 Mar 2020 07:42:43 -0400
+Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 087B1A2EEB246432E288;
+        Sat, 28 Mar 2020 19:42:39 +0800 (CST)
+Received: from localhost (10.173.223.234) by DGGEMS409-HUB.china.huawei.com
+ (10.3.19.209) with Microsoft SMTP Server id 14.3.487.0; Sat, 28 Mar 2020
+ 19:42:28 +0800
+From:   YueHaibing <yuehaibing@huawei.com>
+To:     <dan.j.williams@intel.com>, <vkoul@kernel.org>,
+        <wangzhou1@hisilicon.com>, <qiuzhenfa@hisilicon.com>
+CC:     <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH -next] dmaengine: hisilicon: Fix build error without PCI_MSI
+Date:   Sat, 28 Mar 2020 19:41:33 +0800
+Message-ID: <20200328114133.17560-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: aculab.com
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.173.223.234]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RnJvbTogSWFuIFJvZ2Vycw0KPiBTZW50OiAyNyBNYXJjaCAyMDIwIDE3OjI5DQo+IA0KPiBSZXVz
-ZSBhbiBleGlzdGluZyBjaGFyIGJ1ZmZlciB0byBhdm9pZCB0d28gUEFUSF9NQVggc2l6ZWQgY2hh
-ciBidWZmZXJzLg0KPiBSZWR1Y2VzIHN0YWNrIGZyYW1lIHNpemVzIGJ5IDRrYi4NCg0KSXQncyB1
-c2Vyc3BhY2UsIGl0IHJlYWxseSBkb2Vzbid0IG1hdHRlci4NCg0KCURhdmlkDQoNCi0NClJlZ2lz
-dGVyZWQgQWRkcmVzcyBMYWtlc2lkZSwgQnJhbWxleSBSb2FkLCBNb3VudCBGYXJtLCBNaWx0b24g
-S2V5bmVzLCBNSzEgMVBULCBVSw0KUmVnaXN0cmF0aW9uIE5vOiAxMzk3Mzg2IChXYWxlcykNCg==
+If PCI_MSI is not set, building fais:
+
+drivers/dma/hisi_dma.c: In function ‘hisi_dma_free_irq_vectors’:
+drivers/dma/hisi_dma.c:138:2: error: implicit declaration of function ‘pci_free_irq_vectors’;
+ did you mean ‘pci_alloc_irq_vectors’? [-Werror=implicit-function-declaration]
+  pci_free_irq_vectors(data);
+  ^~~~~~~~~~~~~~~~~~~~
+
+Make HISI_DMA depends on PCI_MSI to fix this.
+
+Fixes: e9f08b65250d ("dmaengine: hisilicon: Add Kunpeng DMA engine support")
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+---
+ drivers/dma/Kconfig | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/dma/Kconfig b/drivers/dma/Kconfig
+index 092483644315..023db6883d05 100644
+--- a/drivers/dma/Kconfig
++++ b/drivers/dma/Kconfig
+@@ -241,7 +241,8 @@ config FSL_RAID
+ 
+ config HISI_DMA
+ 	tristate "HiSilicon DMA Engine support"
+-	depends on ARM64 || (COMPILE_TEST && PCI_MSI)
++	depends on ARM64 || COMPILE_TEST
++	depends on PCI_MSI
+ 	select DMA_ENGINE
+ 	select DMA_VIRTUAL_CHANNELS
+ 	help
+-- 
+2.17.1
+
 
