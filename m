@@ -2,69 +2,97 @@ Return-Path: <SRS0=NZ+o=5N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A373C43331
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 21:54:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 525F7C2D0ED
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 21:55:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5038020578
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 21:54:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 287FF20732
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 21:55:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727842AbgC1VyQ (ORCPT
+        id S1727820AbgC1Vzw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 28 Mar 2020 17:54:16 -0400
-Received: from relay3-d.mail.gandi.net ([217.70.183.195]:48987 "EHLO
-        relay3-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727716AbgC1VyQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 28 Mar 2020 17:54:16 -0400
-X-Originating-IP: 50.39.173.182
-Received: from localhost (50-39-173-182.bvtn.or.frontiernet.net [50.39.173.182])
-        (Authenticated sender: josh@joshtriplett.org)
-        by relay3-d.mail.gandi.net (Postfix) with ESMTPSA id CD9A660004;
-        Sat, 28 Mar 2020 21:54:11 +0000 (UTC)
-Date:   Sat, 28 Mar 2020 14:54:01 -0700
-From:   Josh Triplett <josh@joshtriplett.org>
-To:     linux-ext4@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Theodore Ts'o <tytso@mit.edu>,
-        Andreas Dilger <adilger.kernel@dilger.ca>
-Subject: [PATCH] ext4: Fix incorrect group count in ext4_fill_super error
- message
-Message-ID: <8b957cd1513fcc4550fe675c10bcce2175c33a49.1585431964.git.josh@joshtriplett.org>
+        Sat, 28 Mar 2020 17:55:52 -0400
+Received: from mga18.intel.com ([134.134.136.126]:18384 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727484AbgC1Vzv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 28 Mar 2020 17:55:51 -0400
+IronPort-SDR: jMwL8oLlxZWXVG7CfpkbPbLKtH2C2TbT2r6LgAp8S8NEX2RdDQhKhMYpn1cUoVwb4YDk8GWq0C
+ Miq+cjtVJ+vg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Mar 2020 14:55:51 -0700
+IronPort-SDR: b6VcZ2A2a6MdrzFoVlo5Z9KXsPFNXA9DRFiw714UyVJBw/ATSfLQ9A9Mg03oADHPYV95I/J3lm
+ sxnmRtzKaW/w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,317,1580803200"; 
+   d="scan'208";a="447822949"
+Received: from ssafrin-mobl.ger.corp.intel.com (HELO [10.255.229.125]) ([10.255.229.125])
+  by fmsmga005.fm.intel.com with ESMTP; 28 Mar 2020 14:55:50 -0700
+Subject: Re: [PATCH v18 05/11] PCI/ERR: Remove service dependency in
+ pcie_do_recovery()
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        ashok.raj@intel.com
+References: <20200328213241.GA127815@google.com>
+From:   "Kuppuswamy, Sathyanarayanan" 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>
+Message-ID: <110653ad-fd8f-8047-62de-dd9ce2cb9d5f@linux.intel.com>
+Date:   Sat, 28 Mar 2020 14:55:50 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+In-Reply-To: <20200328213241.GA127815@google.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-ext4_fill_super doublechecks the number of groups before mounting; if
-that check fails, the resulting error message prints the group count
-from the ext4_sb_info sbi, which hasn't been set yet. Print the freshly
-computed group count instead (which at that point has just been computed
-in "blocks_count").
+Hi Bjorn,
 
-Signed-off-by: Josh Triplett <josh@joshtriplett.org>
-Fixes: 4ec1102813798 ("ext4: Add sanity checks for the superblock before mounting the filesystem")
----
- fs/ext4/super.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/fs/ext4/super.c b/fs/ext4/super.c
-index 0c7c4adb664e..7f5f37653a03 100644
---- a/fs/ext4/super.c
-+++ b/fs/ext4/super.c
-@@ -4288,7 +4288,7 @@ static int ext4_fill_super(struct super_block *sb, void *data, int silent)
- 	if (blocks_count > ((uint64_t)1<<32) - EXT4_DESC_PER_BLOCK(sb)) {
- 		ext4_msg(sb, KERN_WARNING, "groups count too large: %u "
- 		       "(block count %llu, first data block %u, "
--		       "blocks per group %lu)", sbi->s_groups_count,
-+		       "blocks per group %lu)", blocks_count,
- 		       ext4_blocks_count(es),
- 		       le32_to_cpu(es->s_first_data_block),
- 		       EXT4_BLOCKS_PER_GROUP(sb));
--- 
-2.26.0
+On 3/28/20 2:32 PM, Bjorn Helgaas wrote:
+> On Sat, Mar 28, 2020 at 02:12:48PM -0700, Kuppuswamy, Sathyanarayanan wrote:
+>> On 3/23/20 5:26 PM, sathyanarayanan.kuppuswamy@linux.intel.com wrote:
+>>> From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+>>>
+>>
+>>> +void pcie_do_recovery(struct pci_dev *dev,
+>>> +		      enum pci_channel_state state,
+>>> +		      pci_ers_result_t (*reset_link)(struct pci_dev *pdev))
+>>>    {
+>>>    	pci_ers_result_t status = PCI_ERS_RESULT_CAN_RECOVER;
+>>>    	struct pci_bus *bus;
+>>> @@ -206,9 +165,12 @@ void pcie_do_recovery(struct pci_dev *dev, enum pci_channel_state state,
+>>>    	pci_dbg(dev, "broadcast error_detected message\n");
+>>>    	if (state == pci_channel_io_frozen) {
+>>>    		pci_walk_bus(bus, report_frozen_detected, &status);
+>>> -		status = reset_link(dev, service);
+>>> -		if 		if (reset_link)
+>> 			status = reset_link(dev);(status == PCI_ERS_RESULT_DISCONNECT
+>>> +		status = reset_link(dev);
+>> Above line needs to be replaced as below. Since there is a
+>> possibility reset_link can NULL (eventhough currently its
+>> not true).
+>> 		if (reset_link)
+>> 			status = reset_link(dev);
+>> Shall I submit another version to add above fix on top of
+>> our pci/edr branch ?
+> 
+> No, I can squash that in if needed.
+> 
+> But I don't actually think we *do* need it.  All the callers supply a
+> valid reset_link function pointer, and if somebody changes or adds a
+> new one that doesn't, I'd rather take the null pointer exception and
+> find out about it than silently ignore it.
+But the documentation says "If reset_link is not NULL, recovery function
+will use it to reset the link." It considers NULL as a possible case.
+So I think its better to allow that case with a pci_warn() message.
+> 
+> Bjorn
+> 
