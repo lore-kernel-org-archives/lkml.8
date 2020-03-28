@@ -2,245 +2,121 @@ Return-Path: <SRS0=NZ+o=5N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 167F0C2D0EE
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 00:12:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3520C43331
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 00:17:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DDBD22073B
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 00:12:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A2EA9206E6
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 00:17:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kWKBw9XS"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="tE2x0AnF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727620AbgC1AMY (ORCPT
+        id S1726781AbgC1ARa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Mar 2020 20:12:24 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:38321 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726134AbgC1AMI (ORCPT
+        Fri, 27 Mar 2020 20:17:30 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:52418 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726134AbgC1ARa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Mar 2020 20:12:08 -0400
-Received: by mail-wr1-f65.google.com with SMTP id s1so13863243wrv.5;
-        Fri, 27 Mar 2020 17:12:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=kTnjLrYsYt4B+T4Ejo8Od45MSJJPBaHihjlocyEYmSs=;
-        b=kWKBw9XSaCbUf7jt0UJih0nxefShjHK5VbXclcKjRDYjM/E8775ZAqkzpn6ACEd8Sy
-         mmuSnMzSjmKtwoElfeWftdMijPB0ZIRl3FnSN0c1cBch3wKYIVgfkZafwhMWN8QeolLk
-         rfgCl1QXOGnwZkqQsK6VcpGMLZIUFD3DCrChBYrwgARVZR5fVD2kproBnZyyW4fpp8WQ
-         3e7+jWRYaz0oZXL1ujTdvuDwxok4OTU2HJ/cjQdLCo/yjUStioxz5b9550wGMBKP708m
-         QCjvunlPn0CGgKruU5ZRMc5EdmBkknvD7l1MO5/kXhQA5DRQca6hasalBSYUetAI9xBm
-         nCCw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=kTnjLrYsYt4B+T4Ejo8Od45MSJJPBaHihjlocyEYmSs=;
-        b=B9WICn9f3CybOvMytfIJ2RmRfZlYtCQ5LOCKO5Kz9iZdUt25xlRzRync+NFaAvf/7f
-         awLauab+zTLiozOGRwZ4WxnbiWUvz/s1lgDfEWsnzadfsNTYRUvIFcO6UFW+8qAkaYVp
-         B0Jd0fm3bxZ2I5U0pWuyw+fuin1uJtYeVt3mLj0VffDi9LpddzzpoeMnVCXfXjOC582x
-         +0cW+jhzQlSIrGwdeldgnXGKZNFjuHgxyeS2Uk+M4qD6sKpGEIm1fkqfQWOFF8zKDOlF
-         FIFZjbTq1Z1l3wXVJcRZaumS76EwagkhGuG7Jm5Qa4JFEWyDnp2qyusHoFN7Oae51X3c
-         nMSQ==
-X-Gm-Message-State: ANhLgQ0c4T9EtSaIhKYubF1kCdKBBGwsqegVt4rWSv29Qb8R2E0Gsjd5
-        aS01/fW4wqCdVhiMyHAdcyc=
-X-Google-Smtp-Source: ADFU+vu95BEg1AdmXQaL6eSzOArJYSeamu9iKWrcfdGSjiE0tsyaUP7CDidxNci8/VqpMWgJ9owfew==
-X-Received: by 2002:adf:8164:: with SMTP id 91mr2039515wrm.422.1585354326726;
-        Fri, 27 Mar 2020 17:12:06 -0700 (PDT)
-Received: from localhost.localdomain (p5B3F7536.dip0.t-ipconnect.de. [91.63.117.54])
-        by smtp.gmail.com with ESMTPSA id 61sm11237956wrn.82.2020.03.27.17.12.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 27 Mar 2020 17:12:06 -0700 (PDT)
-From:   Saravanan Sekar <sravanhome@gmail.com>
-To:     lee.jones@linaro.org, andy.shevchenko@gmail.com,
-        robh+dt@kernel.org, jic23@kernel.org, knaack.h@gmx.de,
-        lars@metafoo.de, pmeerw@pmeerw.net, sre@kernel.org
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-iio@vger.kernel.org, linux-pm@vger.kernel.org,
-        Saravanan Sekar <sravanhome@gmail.com>
-Subject: [PATCH v5 2/5] mfd: mp2629: Add support for mps battery charger
-Date:   Sat, 28 Mar 2020 01:11:51 +0100
-Message-Id: <20200328001154.17313-3-sravanhome@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200328001154.17313-1-sravanhome@gmail.com>
-References: <20200328001154.17313-1-sravanhome@gmail.com>
+        Fri, 27 Mar 2020 20:17:30 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02S0ECts067141;
+        Sat, 28 Mar 2020 00:17:20 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2020-01-29;
+ bh=TkczSJTHT6DjomI7Gw7mr8sP9DJiwrHZ4XBhfGDHUog=;
+ b=tE2x0AnFwkzquTjPYPJtSSUOTIUr5cRQKsQ6brqtxlZahHmQiWQDNndbDOlVL4RCJPHr
+ rDFSGgqeERza5Cgh8aWadUkNKf0JpDP6ImP12/AkMx9+Z2AXtjfmhpDOVKYrdAtgavij
+ fyFSq3maRkdaitDBud33m1ofY85n+ll+p0YVa4XjNssXfzj8aaRwkrnP6oAi8vBJV5Gw
+ FfVQMyPnuyHcUUZPqBgFH0/9DCcmVbOgcKiav7bi8+CmhhsUY5ZNiL334z2u2klXxnD6
+ pbpcddjahDptASZ0UAYhMZaiTayoE65khSpAxJdCnOsE1n3x+6PgvmyxsQUlQ2WvFw7l LQ== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by aserp2120.oracle.com with ESMTP id 301m49hyy1-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sat, 28 Mar 2020 00:17:19 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02S0BmQ3110319;
+        Sat, 28 Mar 2020 00:17:19 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by userp3020.oracle.com with ESMTP id 3003gpy4q0-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sat, 28 Mar 2020 00:17:19 +0000
+Received: from abhmp0016.oracle.com (abhmp0016.oracle.com [141.146.116.22])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 02S0HGS6032130;
+        Sat, 28 Mar 2020 00:17:17 GMT
+Received: from ca-dmjordan1.us.oracle.com (/10.211.9.48)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 27 Mar 2020 17:17:16 -0700
+Date:   Fri, 27 Mar 2020 20:17:36 -0400
+From:   Daniel Jordan <daniel.m.jordan@oracle.com>
+To:     Shile Zhang <shile.zhang@linux.alibaba.com>
+Cc:     Pavel Tatashin <pasha.tatashin@soleen.com>,
+        Daniel Jordan <daniel.m.jordan@oracle.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Kirill Tkhai <ktkhai@virtuozzo.com>,
+        linux-mm <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3] mm: fix tick timer stall during deferred page init
+Message-ID: <20200328001736.pxcnabxvrr3d6bty@ca-dmjordan1.us.oracle.com>
+References: <20200311123848.118638-1-shile.zhang@linux.alibaba.com>
+ <20200319190512.cwnvgvv3upzcchkm@ca-dmjordan1.us.oracle.com>
+ <20200326185822.6n56yl2llvdranur@ca-dmjordan1.us.oracle.com>
+ <CA+CK2bDQ6qPfLsx=81L3_DVzvoCjkBRKvcw0Tz4Gd=Fd6pgQ3A@mail.gmail.com>
+ <427ce795-0274-56e5-16e4-7be00c7145f7@linux.alibaba.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <427ce795-0274-56e5-16e4-7be00c7145f7@linux.alibaba.com>
+User-Agent: NeoMutt/20180716
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9573 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 mlxlogscore=999 bulkscore=0
+ phishscore=0 adultscore=0 spamscore=0 malwarescore=0 suspectscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2003270199
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9573 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 clxscore=1015 bulkscore=0
+ impostorscore=0 suspectscore=0 spamscore=0 adultscore=0 phishscore=0
+ malwarescore=0 mlxlogscore=999 lowpriorityscore=0 priorityscore=1501
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2003270199
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-mp2629 is a highly-integrated switching-mode battery charge management
-device for single-cell Li-ion or Li-polymer battery.
+On Fri, Mar 27, 2020 at 12:39:18PM +0800, Shile Zhang wrote:
+> On 2020/3/27 03:36, Pavel Tatashin wrote:
+> > I agree with Daniel, we should look into approach where
+> > pgdat_resize_lock is taken only for the duration of updating tracking
+> > values such as pgdat->first_deferred_pfn (perhaps we would need to add
+> > another tracker that would show chunks that are currently being worked
+> > on).
+> > 
+> > The vast duration of struct page initialization process should happen
+> > outside of this lock, and only be taken when we update globally seen
+> > data structures: lists, tracking variables. This way we can solve
+> > several problems: 1. allow interrupt threads to grow zones if
+> > required. 2. keep jiffies happy. 3. allow future scaling when we will
+> > add inner node threads to initialize struct pages (i.e. ktasks from
+> > Daniel).
+> 
+> It make sense, looking forward to the inner node parallel init.
+> 
+> @Daniel
+> Is there schedule about ktasks?
 
-Add MFD core enables chip access for ADC driver for battery readings,
-and a power supply battery-charger driver
+Yep, and it's now padata multithreading instead of ktask since we already have
+'task' in the kernel.
 
-Signed-off-by: Saravanan Sekar <sravanhome@gmail.com>
----
- drivers/mfd/Kconfig        |  9 ++++
- drivers/mfd/Makefile       |  2 +
- drivers/mfd/mp2629.c       | 86 ++++++++++++++++++++++++++++++++++++++
- include/linux/mfd/mp2629.h | 20 +++++++++
- 4 files changed, 117 insertions(+)
- create mode 100644 drivers/mfd/mp2629.c
- create mode 100644 include/linux/mfd/mp2629.h
+Current plan is to start with users in the system context, that is those that
+don't require userland resource controls such as cgroup.  So I'll post a new
+version of this timestamp fix pretty soon and then likely post a series that
+multithreads page init.
 
-diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
-index 3c547ed575e6..85be799795aa 100644
---- a/drivers/mfd/Kconfig
-+++ b/drivers/mfd/Kconfig
-@@ -434,6 +434,15 @@ config MFD_MC13XXX_I2C
- 	help
- 	  Select this if your MC13xxx is connected via an I2C bus.
- 
-+config MFD_MP2629
-+	tristate "Monolithic power system MP2629 ADC and Battery charger"
-+	depends on I2C
-+	select REGMAP_I2C
-+	help
-+	  Select this option to enable support for monolithic power system
-+	  battery charger. This provides ADC, thermal, battery charger power
-+	  management functions on the systems.
-+
- config MFD_MXS_LRADC
- 	tristate "Freescale i.MX23/i.MX28 LRADC"
- 	depends on ARCH_MXS || COMPILE_TEST
-diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
-index f935d10cbf0f..d6c210f96d02 100644
---- a/drivers/mfd/Makefile
-+++ b/drivers/mfd/Makefile
-@@ -170,6 +170,8 @@ obj-$(CONFIG_MFD_MAX8925)	+= max8925.o
- obj-$(CONFIG_MFD_MAX8997)	+= max8997.o max8997-irq.o
- obj-$(CONFIG_MFD_MAX8998)	+= max8998.o max8998-irq.o
- 
-+obj-$(CONFIG_MFD_MP2629)	+= mp2629.o
-+
- pcf50633-objs			:= pcf50633-core.o pcf50633-irq.o
- obj-$(CONFIG_MFD_PCF50633)	+= pcf50633.o
- obj-$(CONFIG_PCF50633_ADC)	+= pcf50633-adc.o
-diff --git a/drivers/mfd/mp2629.c b/drivers/mfd/mp2629.c
-new file mode 100644
-index 000000000000..46242b1cdf24
---- /dev/null
-+++ b/drivers/mfd/mp2629.c
-@@ -0,0 +1,86 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+/*
-+ * MP2629 parent driver for ADC and battery charger
-+ *
-+ * Copyright 2020 Monolithic Power Systems, Inc
-+ *
-+ * Author: Saravanan Sekar <sravanhome@gmail.com>
-+ */
-+
-+#include <linux/i2c.h>
-+#include <linux/kernel.h>
-+#include <linux/mfd/core.h>
-+#include <linux/mfd/mp2629.h>
-+#include <linux/module.h>
-+#include <linux/platform_device.h>
-+#include <linux/regmap.h>
-+#include <linux/slab.h>
-+
-+enum {
-+	MP2629_MFD_ADC,
-+	MP2629_MFD_CHARGER,
-+	MP2629_MFD_MAX
-+};
-+
-+static const struct mfd_cell mp2629mfd[] = {
-+	[MP2629_MFD_ADC] = {
-+		.name = "mp2629_adc",
-+		.of_compatible = "mps,mp2629_adc",
-+	},
-+	[MP2629_MFD_CHARGER] = {
-+		.name = "mp2629_charger",
-+		.of_compatible = "mps,mp2629_charger",
-+	}
-+};
-+
-+static const struct regmap_config mp2629_regmap_config = {
-+	.reg_bits = 8,
-+	.val_bits = 8,
-+	.max_register = 0x17,
-+};
-+
-+static int mp2629_probe(struct i2c_client *client)
-+{
-+	struct mp2629_info *ddata;
-+	int ret;
-+
-+	ddata = devm_kzalloc(&client->dev, sizeof(*ddata), GFP_KERNEL);
-+	if (!ddata)
-+		return -ENOMEM;
-+
-+	ddata->dev = &client->dev;
-+	i2c_set_clientdata(client, ddata);
-+
-+	ddata->regmap = devm_regmap_init_i2c(client, &mp2629_regmap_config);
-+	if (IS_ERR(ddata->regmap)) {
-+		dev_err(ddata->dev, "Failed to allocate regmap!\n");
-+		return PTR_ERR(ddata->regmap);
-+	}
-+
-+	ret = devm_mfd_add_devices(ddata->dev, PLATFORM_DEVID_NONE, mp2629mfd,
-+				ARRAY_SIZE(mp2629mfd), NULL,
-+				0, NULL);
-+	if (ret)
-+		dev_err(ddata->dev, "Failed to register sub-devices %d\n", ret);
-+
-+	return ret;
-+}
-+
-+static const struct of_device_id mp2629_of_match[] = {
-+	{ .compatible = "mps,mp2629"},
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, mp2629_of_match);
-+
-+static struct i2c_driver mp2629_driver = {
-+	.driver = {
-+		.name = "mp2629",
-+		.of_match_table = mp2629_of_match,
-+	},
-+	.probe_new	= mp2629_probe,
-+};
-+module_i2c_driver(mp2629_driver);
-+
-+MODULE_AUTHOR("Saravanan Sekar <sravanhome@gmail.com>");
-+MODULE_DESCRIPTION("MP2629 Battery charger parent driver");
-+MODULE_LICENSE("GPL");
-diff --git a/include/linux/mfd/mp2629.h b/include/linux/mfd/mp2629.h
-new file mode 100644
-index 000000000000..7f071f1f352b
---- /dev/null
-+++ b/include/linux/mfd/mp2629.h
-@@ -0,0 +1,20 @@
-+/* SPDX-License-Identifier: GPL-2.0+ */
-+/*
-+ * register definitions for MP2629 charger
-+ *
-+ * Copyright 2020 Monolithic Power Systems, Inc
-+ */
-+
-+#ifndef __MP2629_H__
-+#define __MP2629_H__
-+
-+#include <linux/device.h>
-+#include <linux/regmap.h>
-+#include <linux/types.h>
-+
-+struct mp2629_info {
-+	struct device *dev;
-+	struct regmap *regmap;
-+};
-+
-+#endif
--- 
-2.17.1
-
+Future work is tentatively doing other system users, remote charging for the
+CPU controller, and then users that can be accounted with cgroup etc.
