@@ -2,162 +2,562 @@ Return-Path: <SRS0=NZ+o=5N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AACE4C2D0E7
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 01:30:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00B2BC2D0EC
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 01:30:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7FA622073B
+	by mail.kernel.org (Postfix) with ESMTP id AAAB42074A
 	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 01:30:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="RgiI7AVX"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HOxbjK3Z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727028AbgC1B2i (ORCPT
+        id S1727131AbgC1Bah (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Mar 2020 21:28:38 -0400
-Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:3975 "EHLO
-        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726225AbgC1B2i (ORCPT
+        Fri, 27 Mar 2020 21:30:37 -0400
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:36794 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726212AbgC1Bag (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Mar 2020 21:28:38 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e7ea8380000>; Fri, 27 Mar 2020 18:28:24 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Fri, 27 Mar 2020 18:28:37 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Fri, 27 Mar 2020 18:28:37 -0700
-Received: from [10.2.58.50] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Sat, 28 Mar
- 2020 01:28:37 +0000
-Subject: Re: [Patch v2 2/2] mm/page_alloc.c: define node_order with all zero
-To:     Wei Yang <richard.weiyang@gmail.com>
-CC:     <akpm@linux-foundation.org>, <linux-mm@kvack.org>,
-        <linux-kernel@vger.kernel.org>, <jgg@ziepe.ca>, <david@redhat.com>
-References: <20200327220121.27823-1-richard.weiyang@gmail.com>
- <20200327220121.27823-2-richard.weiyang@gmail.com>
- <4c9d8138-d379-810f-64e7-0d018ed019df@nvidia.com>
- <20200328002616.kjtf7dpkqbugyzi2@master>
- <97a6bf40-792b-6216-d35b-691027c85aad@nvidia.com>
- <20200328011031.olsaehwdev2gqdsn@master>
-From:   John Hubbard <jhubbard@nvidia.com>
-X-Nvconfidentiality: public
-Message-ID: <40facd34-40b2-0925-90ca-a4c53fc520e8@nvidia.com>
-Date:   Fri, 27 Mar 2020 18:28:36 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Fri, 27 Mar 2020 21:30:36 -0400
+Received: by mail-ed1-f68.google.com with SMTP id i7so8692384edq.3
+        for <linux-kernel@vger.kernel.org>; Fri, 27 Mar 2020 18:30:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=qLmHke+91sgGYhRG8At8XWtZySH3BnNOoTrgJXwzSjY=;
+        b=HOxbjK3Z9qfWMK2YYw9JsF+HGNtbA7OHAyMcLmH4K5WEpz2Em7bH+JJf+UtSjri7b5
+         kriGeztSwyrWClsyRk3hjR9+2I0V1yiapRz44XZm998xwZfK+JskkSUPx6M/mcA7mwHW
+         t3CUVbhqCYHUTHVealf45ZVTDJ+mJM2dKLdhkI6zpopWNafe0+XxKsOV94LyqZ1A+Gce
+         0UsfmI7aSvR2HGM/mLwagtm3C2EH+AdKvC440e9msGV2sA+QwaZuC1FXG3I3tCZuHhPU
+         NewXn4mL6a5BL3sSDxvxXEe1x0XyvFWRy9CX4VVIzNDqXwnoRuHwZyxRs09/lRZQ3aFW
+         VJKA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=qLmHke+91sgGYhRG8At8XWtZySH3BnNOoTrgJXwzSjY=;
+        b=j2BYzmCYsZsmwNgubu/u67hyopJdW80bxD7JFYTsyzV3kghYzSZwAyG42JSo+ZQN4x
+         0w49EwD6D6NqXvV6lCMG045LXRi7CGlYVBbWRClLa4WbaPPB3XSa7L5cOG9Shrvm/5vL
+         PcnJklG70Rhu9lbTUNjJBBJvNYVLdOb7rsIeD56bzQw84FrEdvAg0AHH//jIURzpViQ8
+         ByTldlokQoi8YyBXHA/7biI82VFuZnev1txGrUcYLm73uUzSLde1zJ9HAxfobdzZdDoz
+         KbBe+53/MxDMqYcBz27+W77eTQwYqAKHTYtEnpkuYjZuULQJmtpez+587i8mGKKWVgzt
+         xzYg==
+X-Gm-Message-State: ANhLgQ2jQCHui36JkY8gqWvI+MdWHMJsfMpAvCU8Za9yDFylU25yhwqG
+        ee2MblAJtoQr225+oOdjS6M9KTAHQ1JKNEljclc=
+X-Google-Smtp-Source: ADFU+vu4niBMIWNxZUvkpL7B0jDe2Da6uT6zyW75E8xLdUKruXK6NLVggOGcHqNDBrXS71aSkPEOHlvPK+b156e7z14=
+X-Received: by 2002:a17:906:aac8:: with SMTP id kt8mr1844635ejb.23.1585359032496;
+ Fri, 27 Mar 2020 18:30:32 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200328011031.olsaehwdev2gqdsn@master>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1585358904; bh=4ZdoLhpeCl5eOQ49GFbds6K+x5pnaKcmo16+au32dnM=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:X-Nvconfidentiality:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=RgiI7AVXQXAkRF6pVEN0tDCSFfXnakhk6m/mU7qN1FgbjQSK40jywNeTFGzlwtkHg
-         TrFoDlVMQZyLrYO1dZnp2ErM4roJuIW/2j/nqorFAb1WlG8wRpDmAIVuUKlFxWPHgM
-         8jmDG7iKqoJlHJvfGWhaLqdwUp1Nl2lz+bB5Y6ExaCWpYFDLZy0Di6P/CGsl3SYU1l
-         1q6VxwfQ3bC8I0070TXqmkdp5hBCXruocFzOwPmY3hEbwHd+K6fkNkvKi1GPrtamf4
-         X7uy9SVZ9UOePaPbkWHLOBRvSqKfVIIpwOnUmbFfEa+caMF7eouj6x4PjNgv/LC16W
-         pioJgsOMjajrA==
+References: <20200327170601.18563-1-kirill.shutemov@linux.intel.com>
+ <20200327170601.18563-7-kirill.shutemov@linux.intel.com> <CAHbLzkqvev+kRopVuLAgoAbv1-06gB5Cczo+yC+POqzrX9CnBA@mail.gmail.com>
+ <20200328004352.ghjjm7tefkcstbup@box>
+In-Reply-To: <20200328004352.ghjjm7tefkcstbup@box>
+From:   Yang Shi <shy828301@gmail.com>
+Date:   Fri, 27 Mar 2020 18:30:20 -0700
+Message-ID: <CAHbLzkq+ine1k2YhDv+3dyZDX19OYrKBhjkdFzrGVjY=1Xprhw@mail.gmail.com>
+Subject: Re: [PATCH 6/7] thp: Change CoW semantics for anon-THP
+To:     "Kirill A. Shutemov" <kirill@shutemov.name>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Linux MM <linux-mm@kvack.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/27/20 6:10 PM, Wei Yang wrote:
-...
->> It's not just about preserving the value. Sometimes it's about stack space.
->> Here's the trade-offs for static variables within a function:
->>
->> Advantages of static variables within a function (compared to non-static
->> variables, also within a function):
->> -----------------------------------
->>
->> * Doesn't use any of the scarce kernel stack space
->> * Preserves values (not always necessarily and advantage)
->>
->> Disadvantages:
->> -----------------------------------
->>
->> * Removes basic thread safety: multiple threads can no longer independently
->>   call the function without getting interaction, and generally that means
->>   data corruption.
->>
->> So here, I suspect that the original motivation was probably to conserve stack
->> space, and the author likely observed that there was no concurrency to worry
->> about: the function was only being called by one thread at a time.  Given those
->> constraints (which I haven't confirmed just yet, btw), a static function variable
->> fits well.
->>
->>>
->>> My suggestion is to remove the static and define it {0} instead of memset
->>> every time. Is my understanding correct here?
->>
->>
->> Not completely:
->>
->> a) First of all, "instead of memset every time" is a misconception, because
->>    there is still a memset happening every time with {0}. It's just that the
->>    compiler silently writes that code for you, and you don't see it on the
->>    screen. But it's still there.
->>
->> b) Switching away from a static to an on-stack variable requires that you first
->>    verify that stack space is not an issue. Or, if you determine that this
->>    function needs the per-thread isolation that a non-static variable provides,
->>    then you can switch to either an on-stack variable, or a *alloc() function.
->>
-> 
-> I think you get some point. While one more question about stack and static. If
-> one function is thread safe, which factor determines whether we choose on
-> stack value or static? Any reference size? It looks currently we don't have a
-> guide line for this.
-> 
+On Fri, Mar 27, 2020 at 5:43 PM Kirill A. Shutemov <kirill@shutemov.name> w=
+rote:
+>
+> On Fri, Mar 27, 2020 at 01:07:34PM -0700, Yang Shi wrote:
+> > On Fri, Mar 27, 2020 at 10:06 AM Kirill A. Shutemov
+> > <kirill@shutemov.name> wrote:
+> > >
+> > > Currently we have different copy-on-write semantics for anon- and
+> > > file-THP. For anon-THP we try to allocate huge page on the write faul=
+t,
+> > > but on file-THP we split PMD and allocate 4k page.
+> >
+> > I agree this seems confusing.
+> >
+> > >
+> > > Arguably, file-THP semantics is more desirable: we don't necessary wa=
+nt
+> > > to unshare full PMD range from the parent on the first access. This i=
+s
+> > > the primary reason THP is unusable for some workloads, like Redis.
+> > >
+> > > The original THP refcounting didn't allow to have PTE-mapped compound
+> > > pages, so we had no options, but to allocate huge page on CoW (with
+> > > fallback to 512 4k pages).
+> > >
+> > > The current refcounting doesn't have such limitations and we can cut =
+a
+> > > lot of complex code out of fault path.
+> > >
+> > > khugepaged is now able to recover THP from such ranges if the
+> > > configuration allows.
+> >
+> > It looks this patch would just split the PMD then fallback to handle
+> > it on PTE level, it definitely simplify the code a lot. However it
+> > makes the use of THP depend on the productivity of khugepaged. And the
+> > success rate of THP allocation in khugepaged depends on defrag. But by
+> > default khugepaged runs at very low priority, so khugepaged defrag may
+> > result in priority inversion easily.
+>
+> If you have a workload that may be hurt by such change, please get some
+> numbers. It would be interesting to see.
 
+Please see the below splat:
 
-There's not really any general guideline, but applying the points above (plus keeping
-in mind that kernel stack space is quite small) to each case, you'll come to a good
-answer.
+[ 7417.871422] INFO: task /home/staragent:9088 blocked for more than
+1200 seconds.
+[ 7417.880501]       Tainted: G        W         4.19.91 #1
+[ 7417.889015] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs"
+disables this message.
+[ 7417.897373] /home/staragent D    0  9088      1 0x00000000
+[ 7417.905017] Call Trace:
+[ 7417.907898]  ? __schedule+0x3cf/0x660
+[ 7417.911988]  ? core_sys_select+0x1d2/0x270
+[ 7417.916562]  schedule+0x33/0xc0
+[ 7417.920205]  rwsem_down_read_failed+0x130/0x190
+[ 7417.925153]  ? call_rwsem_down_read_failed+0x14/0x30
+[ 7417.930648]  call_rwsem_down_read_failed+0x14/0x30
+[ 7417.935894]  down_read+0x1c/0x30
+[ 7417.939603]  __do_page_fault+0x435/0x4d0
+[ 7417.943984]  do_page_fault+0x32/0x110
+[ 7417.949315]  ? page_fault+0x8/0x30
+[ 7417.953189]  page_fault+0x1e/0x30
+[ 7417.956974] RIP: 0033:0x8063b0
+[ 7417.960582] Code: Bad RIP value.
 
-In this case, if we really are only ever calling this function in one thread at a time,
-then it's probably best to let the "conserve stack space" point win. Which leads to
-just leaving the code nearly as-is. The only thing left to do would be to (optionally,
-because this is an exceedingly minor point) delete the arguably misleading "= {0}" part.
-And as Jason points out, doing so also moves node_order into .bss :
+***  the task got current->mm->mmap_sem: 0xffff88a65ed02f80
+crash> bt ffff88a65ed02f80
+PID: 102341  TASK: ffff88a65ed02f80  CPU: 64  COMMAND: "/home/staragent"
+ #0 [ffffc90021bd73e8] __schedule at ffffffff818436af
+ #1 [ffffc90021bd7480] schedule at ffffffff81843973
+ #2 [ffffc90021bd7498] rwsem_down_read_failed at ffffffff818472b0
+ #3 [ffffc90021bd7540] call_rwsem_down_read_failed at ffffffff818393d4
+ #4 [ffffc90021bd7588] down_read at ffffffff8184662c
+ #5 [ffffc90021bd7598] page_lock_anon_vma_read at ffffffff81242d9c
+ #6 [ffffc90021bd75c0] rmap_walk_anon at ffffffff8124154f
+ #7 [ffffc90021bd7620] page_referenced at ffffffff8124350e
+ #8 [ffffc90021bd7690] shrink_page_list at ffffffff8120b2f4
+ #9 [ffffc90021bd7760] shrink_inactive_list at ffffffff8120c4c6
+#10 [ffffc90021bd7808] shrink_node_memcg at ffffffff8120cffa
+#11 [ffffc90021bd7910] shrink_node at ffffffff8120d534
+#12 [ffffc90021bd79a8] do_try_to_free_pages at ffffffff8120dac4
+#13 [ffffc90021bd7a10] try_to_free_pages at ffffffff8120dec4
+#14 [ffffc90021bd7aa8] __alloc_pages_slowpath at ffffffff811fa367
+#15 [ffffc90021bd7bd0] __alloc_pages_nodemask at ffffffff811fb116
+#16 [ffffc90021bd7c30] __do_page_cache_readahead at ffffffff812013c4
+#17 [ffffc90021bd7cc8] filemap_fault at ffffffff811ef652
+#18 [ffffc90021bd7d98] ext4_filemap_fault at ffffffffc030c48c [ext4]
+#19 [ffffc90021bd7db0] __do_fault at ffffffff81234cf0
+#20 [ffffc90021bd7dd0] __handle_mm_fault at ffffffff812337d8
+#21 [ffffc90021bd7e80] handle_mm_fault at ffffffff81233adc
+#22 [ffffc90021bd7eb0] __do_page_fault at ffffffff8106f084
+#23 [ffffc90021bd7f20] do_page_fault at ffffffff8106f342
+#24 [ffffc90021bd7f50] page_fault at ffffffff81a0112e
+    RIP: 00007f67de084e72  RSP: 00007f67677fddb8  RFLAGS: 00010206
+    RAX: 00007f67de084e72  RBX: 0000000002802310  RCX: 0000000000080000
+    RDX: 00007f67680008c0  RSI: 0000000000080000  RDI: 00007f67680008c0
+    RBP: 00007f67677fddf0   R8: 0000000000000000   R9: 00007f6768086460
+    R10: 00007f67677fdde0  R11: 00000000009b3ca8  R12: 0000000002802120
+    R13: 0000000002802768  R14: 0000000000000003  R15: 00007f67677fe700
+    ORIG_RAX: ffffffffffffffff  CS: 0033  SS: 002b
 
-diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-index 4bd35eb83d34..cb4b07458249 100644
---- a/mm/page_alloc.c
-+++ b/mm/page_alloc.c
-@@ -5607,7 +5607,7 @@ static void build_thisnode_zonelists(pg_data_t *pgdat)
-  
-  static void build_zonelists(pg_data_t *pgdat)
-  {
--       static int node_order[MAX_NUMNODES] = {0};
-+       static int node_order[MAX_NUMNODES];
-         int node, load, nr_nodes = 0;
-         nodemask_t used_mask = NODE_MASK_NONE;
-         int local_node, prev_node;
+*** staragent held mmap_sem and was doing memory reclaim, and was
+trying to acquire anon_vma lock.
 
+*** the anon_vma->root->rwsem is held by khugepaged
+crash> struct task_struct 0xffff88fe6f5dc740
+comm =3D =E2=80=9Ckhugepaged\000\000\000\000\000=E2=80=9D
+crash> bt 0xffff88fe6f5dc740
+PID: 504    TASK: ffff88fe6f5dc740  CPU: 34  COMMAND: "khugepaged"
+ #0 [ffffc9000da2f630] __schedule at ffffffff818436af
+ #1 [ffffc9000da2f6c8] _cond_resched at ffffffff81843c0d
+ #2 [ffffc9000da2f6d8] rmap_walk_anon at ffffffff81241465
+ #3 [ffffc9000da2f738] remove_migration_ptes at ffffffff8127129d
+ #4 [ffffc9000da2f770] remap_page at ffffffff8127504f
+ #5 [ffffc9000da2f788] split_huge_page_to_list at ffffffff8127a82a
+ #6 [ffffc9000da2f810] shrink_page_list at ffffffff8120b3fc
+ #7 [ffffc9000da2f8e0] shrink_inactive_list at ffffffff8120c4c6
+ #8 [ffffc9000da2f988] shrink_node_memcg at ffffffff8120cffa
+ #9 [ffffc9000da2fa90] shrink_node at ffffffff8120d534
+#10 [ffffc9000da2fb28] do_try_to_free_pages at ffffffff8120dac4
+#11 [ffffc9000da2fb90] try_to_free_pages at ffffffff8120dec4
+#12 [ffffc9000da2fc28] __alloc_pages_slowpath at ffffffff811fa367
+#13 [ffffc9000da2fd50] __alloc_pages_nodemask at ffffffff811fb116
+#14 [ffffc9000da2fdb0] khugepaged at ffffffff8127e478
+#15 [ffffc9000da2ff10] kthread at ffffffff810bcb75
+#16 [ffffc9000da2ff50] ret_from_fork at ffffffff81a001cf
 
+The system was overloaded and experiencing memory pressure. Releasing
+mmap_sem before doing any blocking operations could mitigate the
+problem, but the underlying priority inversion caused by khugepaged
+still exists.
 
-Further note: On my current testing .config, I've got MAX_NUMNODES set to 64, which makes
-256 bytes required for node_order array. 256 bytes on a 16KB stack is a little bit above
-my mental watermark for "that's too much in today's kernels".
+> > For example we saw THP split in reclaim path triggered by khugepaged
+> > held write anon_vma lock, but the other process which was doing
+> > reclaim too was blocked by anon_vma lock. Then the cond_resched() in
+> > rmap walk would make khugepaged preempted by all other processes
+> > easily so khugepaged may hold the anon_vma lock for indefinite time.
+> > Then we saw hung tasks.
+>
+> Any chance you have a reproducer? I'm not sure I follow the problem, but
+> it's almost 4AM, so I'm slow.
 
+I don't have a stable reproducer.
 
-thanks,
--- 
-John Hubbard
-NVIDIA
-
-
+>
+> > So we have khugepaged defrag disabled for some workloads to workaround
+> > the priority inversion problem. So, I'm concerned some processes may
+> > never get THP for some our workloads with this patch applied.
+> >
+> > The priority inversion caused by khugepaged was not very usual. Just
+> > my two cents.
+> >
+> > >
+> > > Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+> > > ---
+> > >  mm/huge_memory.c | 247 +++++----------------------------------------=
+--
+> > >  1 file changed, 24 insertions(+), 223 deletions(-)
+> > >
+> > > diff --git a/mm/huge_memory.c b/mm/huge_memory.c
+> > > index ef6a6bcb291f..15b7a9c86b7c 100644
+> > > --- a/mm/huge_memory.c
+> > > +++ b/mm/huge_memory.c
+> > > @@ -1206,262 +1206,63 @@ void huge_pmd_set_accessed(struct vm_fault *=
+vmf, pmd_t orig_pmd)
+> > >         spin_unlock(vmf->ptl);
+> > >  }
+> > >
+> > > -static vm_fault_t do_huge_pmd_wp_page_fallback(struct vm_fault *vmf,
+> > > -                       pmd_t orig_pmd, struct page *page)
+> > > -{
+> > > -       struct vm_area_struct *vma =3D vmf->vma;
+> > > -       unsigned long haddr =3D vmf->address & HPAGE_PMD_MASK;
+> > > -       struct mem_cgroup *memcg;
+> > > -       pgtable_t pgtable;
+> > > -       pmd_t _pmd;
+> > > -       int i;
+> > > -       vm_fault_t ret =3D 0;
+> > > -       struct page **pages;
+> > > -       struct mmu_notifier_range range;
+> > > -
+> > > -       pages =3D kmalloc_array(HPAGE_PMD_NR, sizeof(struct page *),
+> > > -                             GFP_KERNEL);
+> > > -       if (unlikely(!pages)) {
+> > > -               ret |=3D VM_FAULT_OOM;
+> > > -               goto out;
+> > > -       }
+> > > -
+> > > -       for (i =3D 0; i < HPAGE_PMD_NR; i++) {
+> > > -               pages[i] =3D alloc_page_vma_node(GFP_HIGHUSER_MOVABLE=
+, vma,
+> > > -                                              vmf->address, page_to_=
+nid(page));
+> > > -               if (unlikely(!pages[i] ||
+> > > -                            mem_cgroup_try_charge_delay(pages[i], vm=
+a->vm_mm,
+> > > -                                    GFP_KERNEL, &memcg, false))) {
+> > > -                       if (pages[i])
+> > > -                               put_page(pages[i]);
+> > > -                       while (--i >=3D 0) {
+> > > -                               memcg =3D (void *)page_private(pages[=
+i]);
+> > > -                               set_page_private(pages[i], 0);
+> > > -                               mem_cgroup_cancel_charge(pages[i], me=
+mcg,
+> > > -                                               false);
+> > > -                               put_page(pages[i]);
+> > > -                       }
+> > > -                       kfree(pages);
+> > > -                       ret |=3D VM_FAULT_OOM;
+> > > -                       goto out;
+> > > -               }
+> > > -               set_page_private(pages[i], (unsigned long)memcg);
+> > > -       }
+> > > -
+> > > -       for (i =3D 0; i < HPAGE_PMD_NR; i++) {
+> > > -               copy_user_highpage(pages[i], page + i,
+> > > -                                  haddr + PAGE_SIZE * i, vma);
+> > > -               __SetPageUptodate(pages[i]);
+> > > -               cond_resched();
+> > > -       }
+> > > -
+> > > -       mmu_notifier_range_init(&range, MMU_NOTIFY_CLEAR, 0, vma, vma=
+->vm_mm,
+> > > -                               haddr, haddr + HPAGE_PMD_SIZE);
+> > > -       mmu_notifier_invalidate_range_start(&range);
+> > > -
+> > > -       vmf->ptl =3D pmd_lock(vma->vm_mm, vmf->pmd);
+> > > -       if (unlikely(!pmd_same(*vmf->pmd, orig_pmd)))
+> > > -               goto out_free_pages;
+> > > -       VM_BUG_ON_PAGE(!PageHead(page), page);
+> > > -
+> > > -       /*
+> > > -        * Leave pmd empty until pte is filled note we must notify he=
+re as
+> > > -        * concurrent CPU thread might write to new page before the c=
+all to
+> > > -        * mmu_notifier_invalidate_range_end() happens which can lead=
+ to a
+> > > -        * device seeing memory write in different order than CPU.
+> > > -        *
+> > > -        * See Documentation/vm/mmu_notifier.rst
+> > > -        */
+> > > -       pmdp_huge_clear_flush_notify(vma, haddr, vmf->pmd);
+> > > -
+> > > -       pgtable =3D pgtable_trans_huge_withdraw(vma->vm_mm, vmf->pmd)=
+;
+> > > -       pmd_populate(vma->vm_mm, &_pmd, pgtable);
+> > > -
+> > > -       for (i =3D 0; i < HPAGE_PMD_NR; i++, haddr +=3D PAGE_SIZE) {
+> > > -               pte_t entry;
+> > > -               entry =3D mk_pte(pages[i], vma->vm_page_prot);
+> > > -               entry =3D maybe_mkwrite(pte_mkdirty(entry), vma);
+> > > -               memcg =3D (void *)page_private(pages[i]);
+> > > -               set_page_private(pages[i], 0);
+> > > -               page_add_new_anon_rmap(pages[i], vmf->vma, haddr, fal=
+se);
+> > > -               mem_cgroup_commit_charge(pages[i], memcg, false, fals=
+e);
+> > > -               lru_cache_add_active_or_unevictable(pages[i], vma);
+> > > -               vmf->pte =3D pte_offset_map(&_pmd, haddr);
+> > > -               VM_BUG_ON(!pte_none(*vmf->pte));
+> > > -               set_pte_at(vma->vm_mm, haddr, vmf->pte, entry);
+> > > -               pte_unmap(vmf->pte);
+> > > -       }
+> > > -       kfree(pages);
+> > > -
+> > > -       smp_wmb(); /* make pte visible before pmd */
+> > > -       pmd_populate(vma->vm_mm, vmf->pmd, pgtable);
+> > > -       page_remove_rmap(page, true);
+> > > -       spin_unlock(vmf->ptl);
+> > > -
+> > > -       /*
+> > > -        * No need to double call mmu_notifier->invalidate_range() ca=
+llback as
+> > > -        * the above pmdp_huge_clear_flush_notify() did already call =
+it.
+> > > -        */
+> > > -       mmu_notifier_invalidate_range_only_end(&range);
+> > > -
+> > > -       ret |=3D VM_FAULT_WRITE;
+> > > -       put_page(page);
+> > > -
+> > > -out:
+> > > -       return ret;
+> > > -
+> > > -out_free_pages:
+> > > -       spin_unlock(vmf->ptl);
+> > > -       mmu_notifier_invalidate_range_end(&range);
+> > > -       for (i =3D 0; i < HPAGE_PMD_NR; i++) {
+> > > -               memcg =3D (void *)page_private(pages[i]);
+> > > -               set_page_private(pages[i], 0);
+> > > -               mem_cgroup_cancel_charge(pages[i], memcg, false);
+> > > -               put_page(pages[i]);
+> > > -       }
+> > > -       kfree(pages);
+> > > -       goto out;
+> > > -}
+> > > -
+> > >  vm_fault_t do_huge_pmd_wp_page(struct vm_fault *vmf, pmd_t orig_pmd)
+> > >  {
+> > >         struct vm_area_struct *vma =3D vmf->vma;
+> > > -       struct page *page =3D NULL, *new_page;
+> > > -       struct mem_cgroup *memcg;
+> > > +       struct page *page;
+> > >         unsigned long haddr =3D vmf->address & HPAGE_PMD_MASK;
+> > > -       struct mmu_notifier_range range;
+> > > -       gfp_t huge_gfp;                 /* for allocation and charge =
+*/
+> > > -       vm_fault_t ret =3D 0;
+> > >
+> > >         vmf->ptl =3D pmd_lockptr(vma->vm_mm, vmf->pmd);
+> > >         VM_BUG_ON_VMA(!vma->anon_vma, vma);
+> > > +
+> > >         if (is_huge_zero_pmd(orig_pmd))
+> > > -               goto alloc;
+> > > +               goto fallback;
+> > > +
+> > >         spin_lock(vmf->ptl);
+> > > -       if (unlikely(!pmd_same(*vmf->pmd, orig_pmd)))
+> > > -               goto out_unlock;
+> > > +
+> > > +       if (unlikely(!pmd_same(*vmf->pmd, orig_pmd))) {
+> > > +               spin_unlock(vmf->ptl);
+> > > +               return 0;
+> > > +       }
+> > >
+> > >         page =3D pmd_page(orig_pmd);
+> > >         VM_BUG_ON_PAGE(!PageCompound(page) || !PageHead(page), page);
+> > > -       /*
+> > > -        * We can only reuse the page if nobody else maps the huge pa=
+ge or it's
+> > > -        * part.
+> > > -        */
+> > > +
+> > > +       /* Lock page for reuse_swap_page() */
+> > >         if (!trylock_page(page)) {
+> > >                 get_page(page);
+> > >                 spin_unlock(vmf->ptl);
+> > >                 lock_page(page);
+> > >                 spin_lock(vmf->ptl);
+> > >                 if (unlikely(!pmd_same(*vmf->pmd, orig_pmd))) {
+> > > +                       spin_unlock(vmf->ptl);
+> > >                         unlock_page(page);
+> > >                         put_page(page);
+> > > -                       goto out_unlock;
+> > > +                       return 0;
+> > >                 }
+> > >                 put_page(page);
+> > >         }
+> > > +
+> > > +       /*
+> > > +        * We can only reuse the page if nobody else maps the huge pa=
+ge or it's
+> > > +        * part.
+> > > +        */
+> > >         if (reuse_swap_page(page, NULL)) {
+> > >                 pmd_t entry;
+> > >                 entry =3D pmd_mkyoung(orig_pmd);
+> > >                 entry =3D maybe_pmd_mkwrite(pmd_mkdirty(entry), vma);
+> > >                 if (pmdp_set_access_flags(vma, haddr, vmf->pmd, entry=
+,  1))
+> > >                         update_mmu_cache_pmd(vma, vmf->address, vmf->=
+pmd);
+> > > -               ret |=3D VM_FAULT_WRITE;
+> > >                 unlock_page(page);
+> > > -               goto out_unlock;
+> > > -       }
+> > > -       unlock_page(page);
+> > > -       get_page(page);
+> > > -       spin_unlock(vmf->ptl);
+> > > -alloc:
+> > > -       if (__transparent_hugepage_enabled(vma) &&
+> > > -           !transparent_hugepage_debug_cow()) {
+> > > -               huge_gfp =3D alloc_hugepage_direct_gfpmask(vma);
+> > > -               new_page =3D alloc_hugepage_vma(huge_gfp, vma, haddr,=
+ HPAGE_PMD_ORDER);
+> > > -       } else
+> > > -               new_page =3D NULL;
+> > > -
+> > > -       if (likely(new_page)) {
+> > > -               prep_transhuge_page(new_page);
+> > > -       } else {
+> > > -               if (!page) {
+> > > -                       split_huge_pmd(vma, vmf->pmd, vmf->address);
+> > > -                       ret |=3D VM_FAULT_FALLBACK;
+> > > -               } else {
+> > > -                       ret =3D do_huge_pmd_wp_page_fallback(vmf, ori=
+g_pmd, page);
+> > > -                       if (ret & VM_FAULT_OOM) {
+> > > -                               split_huge_pmd(vma, vmf->pmd, vmf->ad=
+dress);
+> > > -                               ret |=3D VM_FAULT_FALLBACK;
+> > > -                       }
+> > > -                       put_page(page);
+> > > -               }
+> > > -               count_vm_event(THP_FAULT_FALLBACK);
+> > > -               goto out;
+> > > -       }
+> > > -
+> > > -       if (unlikely(mem_cgroup_try_charge_delay(new_page, vma->vm_mm=
+,
+> > > -                                       huge_gfp, &memcg, true))) {
+> > > -               put_page(new_page);
+> > > -               split_huge_pmd(vma, vmf->pmd, vmf->address);
+> > > -               if (page)
+> > > -                       put_page(page);
+> > > -               ret |=3D VM_FAULT_FALLBACK;
+> > > -               count_vm_event(THP_FAULT_FALLBACK);
+> > > -               goto out;
+> > > -       }
+> > > -
+> > > -       count_vm_event(THP_FAULT_ALLOC);
+> > > -       count_memcg_events(memcg, THP_FAULT_ALLOC, 1);
+> > > -
+> > > -       if (!page)
+> > > -               clear_huge_page(new_page, vmf->address, HPAGE_PMD_NR)=
+;
+> > > -       else
+> > > -               copy_user_huge_page(new_page, page, vmf->address,
+> > > -                                   vma, HPAGE_PMD_NR);
+> > > -       __SetPageUptodate(new_page);
+> > > -
+> > > -       mmu_notifier_range_init(&range, MMU_NOTIFY_CLEAR, 0, vma, vma=
+->vm_mm,
+> > > -                               haddr, haddr + HPAGE_PMD_SIZE);
+> > > -       mmu_notifier_invalidate_range_start(&range);
+> > > -
+> > > -       spin_lock(vmf->ptl);
+> > > -       if (page)
+> > > -               put_page(page);
+> > > -       if (unlikely(!pmd_same(*vmf->pmd, orig_pmd))) {
+> > >                 spin_unlock(vmf->ptl);
+> > > -               mem_cgroup_cancel_charge(new_page, memcg, true);
+> > > -               put_page(new_page);
+> > > -               goto out_mn;
+> > > -       } else {
+> > > -               pmd_t entry;
+> > > -               entry =3D mk_huge_pmd(new_page, vma->vm_page_prot);
+> > > -               entry =3D maybe_pmd_mkwrite(pmd_mkdirty(entry), vma);
+> > > -               pmdp_huge_clear_flush_notify(vma, haddr, vmf->pmd);
+> > > -               page_add_new_anon_rmap(new_page, vma, haddr, true);
+> > > -               mem_cgroup_commit_charge(new_page, memcg, false, true=
+);
+> > > -               lru_cache_add_active_or_unevictable(new_page, vma);
+> > > -               set_pmd_at(vma->vm_mm, haddr, vmf->pmd, entry);
+> > > -               update_mmu_cache_pmd(vma, vmf->address, vmf->pmd);
+> > > -               if (!page) {
+> > > -                       add_mm_counter(vma->vm_mm, MM_ANONPAGES, HPAG=
+E_PMD_NR);
+> > > -               } else {
+> > > -                       VM_BUG_ON_PAGE(!PageHead(page), page);
+> > > -                       page_remove_rmap(page, true);
+> > > -                       put_page(page);
+> > > -               }
+> > > -               ret |=3D VM_FAULT_WRITE;
+> > > +               return VM_FAULT_WRITE;
+> > >         }
+> > > +
+> > > +       unlock_page(page);
+> > >         spin_unlock(vmf->ptl);
+> > > -out_mn:
+> > > -       /*
+> > > -        * No need to double call mmu_notifier->invalidate_range() ca=
+llback as
+> > > -        * the above pmdp_huge_clear_flush_notify() did already call =
+it.
+> > > -        */
+> > > -       mmu_notifier_invalidate_range_only_end(&range);
+> > > -out:
+> > > -       return ret;
+> > > -out_unlock:
+> > > -       spin_unlock(vmf->ptl);
+> > > -       return ret;
+> > > +fallback:
+> > > +       __split_huge_pmd(vma, vmf->pmd, vmf->address, false, NULL);
+> > > +       return VM_FAULT_FALLBACK;
+> > >  }
+> > >
+> > >  /*
+> > > --
+> > > 2.26.0
+> > >
+> > >
+>
+> --
+>  Kirill A. Shutemov
