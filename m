@@ -2,155 +2,107 @@ Return-Path: <SRS0=NZ+o=5N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F1DFC2D0EE
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 11:29:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F001C2D0E5
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 11:31:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D8925206CC
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 11:29:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="J7XK/uR9"
+	by mail.kernel.org (Postfix) with ESMTP id 5F528206CC
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 11:31:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727178AbgC1L3s (ORCPT
+        id S1726283AbgC1Lbv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 28 Mar 2020 07:29:48 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:42397 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726315AbgC1L3r (ORCPT
+        Sat, 28 Mar 2020 07:31:51 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:59312 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725973AbgC1Lbv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 28 Mar 2020 07:29:47 -0400
-Received: by mail-wr1-f68.google.com with SMTP id h15so14868352wrx.9;
-        Sat, 28 Mar 2020 04:29:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=48cUKb3hewA6YqxxcM8aRq1Cv5K4EWHquZ9kJ+7UoxA=;
-        b=J7XK/uR96SCZTbQlk5nx5a9xV0/oPjTVP6L+T791RLlhHdiAeFs/GwmPkcHngmgaGR
-         +Fjy4LENZQnIwA3gEmwwuLBtAeqeLdHljL/9qmaGka1WI57wWwzR+segwNCQW6ZlSfGG
-         PA9WYCZQ2QjuoyMTVkh4ivqRyvNBh13gmjvDipeiben/7eciS5nCvhahWJZ00F7Iq+xa
-         YDFGB+NjacR9xG3b28SpY22L86jMVeWKTV9sGRvzVDfbQJ6owCkP1GVX5iKMalmR3Ear
-         tRv+SkRfWds3vIP1zRbNlqXgmTXfs3SRSb0lxGM04zrvygExplOJMX1LBCj7K51P1ju4
-         goxA==
+        Sat, 28 Mar 2020 07:31:51 -0400
+Received: from mail-wr1-f70.google.com ([209.85.221.70])
+        by youngberry.canonical.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <andrea.righi@canonical.com>)
+        id 1jI9gr-0003tF-C4
+        for linux-kernel@vger.kernel.org; Sat, 28 Mar 2020 11:31:49 +0000
+Received: by mail-wr1-f70.google.com with SMTP id f8so6115042wrp.1
+        for <linux-kernel@vger.kernel.org>; Sat, 28 Mar 2020 04:31:49 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=48cUKb3hewA6YqxxcM8aRq1Cv5K4EWHquZ9kJ+7UoxA=;
-        b=aa9lcS2iBFs5InYerH5b1WEl3ANu4rLI8iMsV53v9pHnlRFKaRSuB1S0dFEBL2cx1y
-         7QYlO/ALKCKUMUu7RxcLr9t80/mp5hXuqxG7nyshBDEChPLCL5bewVJqi40L3NySluUC
-         VJUGFnz18VTqeRoY+VEMi4SafRJ82c5q2KS/F5dJtND5E2ZcHOXh+x/mBOc9dvRoKmqY
-         so6V1eWLZe3LByAdJiw1hOYk5SuZKQr3Ja5rq/ZhzfjP3dk7ilCOgWFHOiOGpxJahY+R
-         GwD6wol2mytoMcR8/bdi23dI2mw4GkWp7lYq674sw4Xy+45ZJZKfG/+2ic/tmSoU/Okv
-         6pvQ==
-X-Gm-Message-State: ANhLgQ1R2MpSIbcEc4vy7RuLW37bYDKIgUwA5ynszeaaC4Hvj+RPbTMS
-        4iB5Ze0Nl/w9600x/9796+wDp2rcXm4=
-X-Google-Smtp-Source: ADFU+vs4/LZ1qoi9tgNpOM9fvmW6ER9q3wSqLs/wu94Ztl/ULPfT1jcvMWdjNrRrQCO2/HtGqakGGA==
-X-Received: by 2002:a5d:4cc4:: with SMTP id c4mr4424245wrt.346.1585394984815;
-        Sat, 28 Mar 2020 04:29:44 -0700 (PDT)
-Received: from [192.168.0.104] (p5DCFFF1C.dip0.t-ipconnect.de. [93.207.255.28])
-        by smtp.gmail.com with ESMTPSA id m11sm12283575wmf.9.2020.03.28.04.29.43
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 28 Mar 2020 04:29:44 -0700 (PDT)
-Subject: Re: [PATCH v5 4/5] power: supply: Add support for mps mp2629 battery
- charger
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald <pmeerw@pmeerw.net>,
-        Sebastian Reichel <sre@kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-iio <linux-iio@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>
-References: <20200328001154.17313-1-sravanhome@gmail.com>
- <20200328001154.17313-5-sravanhome@gmail.com>
- <CAHp75VefP3oPyRJ=Z9Y5Wv3rSc-nJdKFLJ60YLdUbP5dFikS+w@mail.gmail.com>
-From:   saravanan sekar <sravanhome@gmail.com>
-Message-ID: <36892440-99b2-10e8-1d7c-dd8c97e03a39@gmail.com>
-Date:   Sat, 28 Mar 2020 12:29:43 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=Qqy0+XOT8WqhQrltX5gCRS9oS4phxUfRkeGmoD35Mjs=;
+        b=jzs68STnmZ5Twzhm8RVBNRNkwAlP+1b7Szd8TLYDjERWRb+HL82dMHyLE/HNvAZjYh
+         ytQ2pac8btyATdZdu+gTVaUVm4roEQJS8y1gtNzyW3ohpQTdp7WWMdtGppgTI291Fa8A
+         w5IrJeyh+Cxk0L82lZP/A5PUwcJj3Kmv0hvjDCNrNAeeLadZKnPYcUtZNbgQmtxySuWt
+         vEnaopzxQ4yOwIMi2Pfkx58aXaVcwem8ugxBMphmryiWb0/A+CiElLqOiADUU3pnVpXG
+         rbDHj629Ih9AGDo0KPByilJupE+u0RyegLPKp+1gg3y0Ix4CVV+hhfn1p5dbaSzpKHDm
+         2mxg==
+X-Gm-Message-State: ANhLgQ3r1W+kGRyGB9utIPho86QWdBVGJhm21HI4n2tsTAZUDbP3wYXP
+        IP1R29/6xmEThcVa0gQPlZ6VmwagPxd6oFx0fa2AMjEgd6qEReLr5xkFsqh49gZJNDYh4fVJC6Q
+        9Ux9W1gxl0JTcYBbwuEVrZJBxNSRVxH3wPnfmVqov8Q==
+X-Received: by 2002:a7b:ce81:: with SMTP id q1mr3551437wmj.156.1585395108831;
+        Sat, 28 Mar 2020 04:31:48 -0700 (PDT)
+X-Google-Smtp-Source: ADFU+vsG1dGyA/RHZAnl+8bj6tF2K1BBKGwMYgS9zLyphO5tObGfhkWizV9l3ZWrySWsH7pMn9qEzw==
+X-Received: by 2002:a7b:ce81:: with SMTP id q1mr3551418wmj.156.1585395108528;
+        Sat, 28 Mar 2020 04:31:48 -0700 (PDT)
+Received: from localhost ([95.239.127.44])
+        by smtp.gmail.com with ESMTPSA id o14sm11692573wmh.22.2020.03.28.04.31.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 28 Mar 2020 04:31:47 -0700 (PDT)
+Date:   Sat, 28 Mar 2020 12:31:45 +0100
+From:   Andrea Righi <andrea.righi@canonical.com>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Shuah Khan <shuah@kernel.org>, linux-kselftest@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] kselftest/runner: avoid using timeout when timeout is
+ disabled
+Message-ID: <20200328113145.GB1371917@xps-13>
+References: <20200327093620.GB1223497@xps-13>
+ <202003271208.0D9A3A48CC@keescook>
 MIME-Version: 1.0
-In-Reply-To: <CAHp75VefP3oPyRJ=Z9Y5Wv3rSc-nJdKFLJ60YLdUbP5dFikS+w@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <202003271208.0D9A3A48CC@keescook>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Andy,
+On Fri, Mar 27, 2020 at 12:28:05PM -0700, Kees Cook wrote:
+> On Fri, Mar 27, 2020 at 10:36:20AM +0100, Andrea Righi wrote:
+> > Avoid using /usr/bin/timeout unnecessarily if timeout is set to 0
+> > (disabled) in the "settings" file for a specific test.
+> 
+> That seems to be a reasonable optimization, sure.
+> 
+> > NOTE: without this change (and adding timeout=0 in the corresponding
+> > settings file - tools/testing/selftests/seccomp/settings) the
+> > seccomp_bpf selftest is always failing with a timeout event during the
+> > syscall_restart step.
+> 
+> This, however, is worrisome. I think there is something else wrong here.
+> I will investigate why the output of seccomp_bpf is weird when running
+> under the runner scripts. Hmmm. The output looks corrupted...
 
-On 28/03/20 12:02 pm, Andy Shevchenko wrote:
-> On Sat, Mar 28, 2020 at 2:12 AM Saravanan Sekar <sravanhome@gmail.com> wrote:
->> The mp2629 provides switching-mode battery charge management for
->> single-cell Li-ion or Li-polymer battery. Driver supports the
->> access/control input source and battery charging parameters.
-> ...
->
->> +#include <linux/module.h>
->> +#include <linux/of_device.h>
-> Missed header bits.h.
->
-> ...
->
->> +       ret = iio_read_channel_processed(charger->iiochan[ch], &chval);
->> +       if (ret < 0)
-> Is it possible to get positive returned value?
-Really not for processed
->> +               return ret;
-> ...
->
->> +       val->intval = (rval * props[fld].step) + props[fld].min;
-> Too many parentheses.
->
-> ...
->
->> +       return ((psp == POWER_SUPPLY_PROP_PRECHARGE_CURRENT) ||
->> +               (psp == POWER_SUPPLY_PROP_CHARGE_TERM_CURRENT) ||
->> +               (psp == POWER_SUPPLY_PROP_CONSTANT_CHARGE_CURRENT) ||
->> +               (psp == POWER_SUPPLY_PROP_CONSTANT_CHARGE_VOLTAGE));
-> Ditto.
-I think I misunderstood you previous review comment "Redundant 
-parentheses", no sure what is the expectation
->
-> ...
->
->> +       return ((psp == POWER_SUPPLY_PROP_INPUT_VOLTAGE_LIMIT) ||
->> +               (psp == POWER_SUPPLY_PROP_INPUT_CURRENT_LIMIT));
-> Ditto.
->
-> ...
->
->> +       return sprintf(buf, "%d mohm\n", rval);
-> Hmm... For units we usually have separate node, but it is up to
-> maintainer, I dunno what the common practice is there.
->
-> ...
->
->> +       int val;
->> +       int ret;
->> +
->> +       ret = kstrtoint(buf, 10, &val);
->> +       if (ret)
->> +               return ret;
->> +
->> +       if (val < 0 && val > 140)
-> What the point to convert negative values in the first place? kstrtouint()
-Done
->> +               return -ERANGE;
-> ...
->
->> +       struct power_supply_config psy_cfg = {NULL};
-> { 0 }
->
-NULL to make compiler happy.
+Running seccomp_bpf directly (without using runner.sh) shows this error:
+
+ $ sudo ./tools/testing/selftests/seccomp/seccomp_bpf
+ ...
+ seccomp_bpf.c:2839:global.syscall_restart:Expected true (1) == WIFSTOPPED(status) (0)
+ global.syscall_restart: Test terminated by assertion
+
+Instead, running it via /usr/bin/timeout (with timeout disabled):
+
+  $ sudo /usr/bin/timeout 0 ./tools/testing/selftests/seccomp/seccomp_bpf
+  ...
+  [ RUN      ] TSYNC.siblings_fail_prctl
+
+It gets stuck here forever, basically it's during the execution of
+syscall_restart().
+
+I'll investigate more later.
+
+Thanks,
+-Andrea
