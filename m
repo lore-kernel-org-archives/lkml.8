@@ -2,291 +2,218 @@ Return-Path: <SRS0=NZ+o=5N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EA2FC2D0E5
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 20:28:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14109C43331
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 20:29:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E310220732
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 20:28:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="O356OkPU"
+	by mail.kernel.org (Postfix) with ESMTP id D823A206F6
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 20:29:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727606AbgC1U2c (ORCPT
+        id S1727397AbgC1U32 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 28 Mar 2020 16:28:32 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:39323 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727484AbgC1U2c (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 28 Mar 2020 16:28:32 -0400
-Received: by mail-pg1-f193.google.com with SMTP id g32so509811pgb.6
-        for <linux-kernel@vger.kernel.org>; Sat, 28 Mar 2020 13:28:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=MUiWV4pjfeHPi8U1e/rHhzPVFQ2nBZ/K1op0DmSl2ak=;
-        b=O356OkPU3ESu244KOG9mhvpPy+52uafWy+esv/NqtJeU4HkZdS2FgU1+D6ku18Ey9U
-         WwE1swFtAGXf6jIcipRl3rxt7eSXUxtW5jNPJbCl+RWJmyxlvMgSIRn/BFX3k8XEF5Jz
-         fm+WSAuOQB8rXjlO7nq1GRvVm1DR6X/f6Bd1E=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=MUiWV4pjfeHPi8U1e/rHhzPVFQ2nBZ/K1op0DmSl2ak=;
-        b=t3QxNqfrJIdLcKRIGrHFaoP6jSh0uMfEzL2aZ3Jm+TN4sI+3zFZfvNv3PYZ9oAvYhK
-         Kbw4fnY7MiCDyAI9wVISFU+FzpXeRWSLzZ8K+eBYilg7hUpXR8siF+9SOjAyvw4m4xRB
-         XFUfX7NGgIlntQUMVwc0VNRkztxqAOp0vRrCLeuswUJgxGX27L9benq8rn6CmaXpZq1S
-         wVF/4E4O7CX14Zxv8PvVC9RiSlLlNCEqEtiJ+g0fr1OKk7F009GcOsLdYB1qdXahw6zP
-         XWHFOG0IsHrG1kpBwFzbGcHjjw7eKaMRff6SdXl9uHtIMnH24sNCbNO7z+Anbv9d8RKs
-         dVUg==
-X-Gm-Message-State: ANhLgQ0kh+5/SwTUjc4Adwk5mpdwdduvh/bpu98U4I2IgXe2t9yqo8yM
-        SE7YGFNZB4CI+BizOMtzp2FvOQ==
-X-Google-Smtp-Source: ADFU+vvfFxyZ2kTL+AiPQZIPrYo32pSmRxmE/hu6jvevOYpyed0FsDRABSVDRXjfu6Xe5G8kaOa63g==
-X-Received: by 2002:aa7:959a:: with SMTP id z26mr5695770pfj.211.1585427310147;
-        Sat, 28 Mar 2020 13:28:30 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id r63sm6926642pfr.42.2020.03.28.13.28.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 28 Mar 2020 13:28:29 -0700 (PDT)
-Date:   Sat, 28 Mar 2020 13:28:28 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Alexey Gladkov <gladkov.alexey@gmail.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        Linux API <linux-api@vger.kernel.org>,
-        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
-        Linux Security Module <linux-security-module@vger.kernel.org>,
-        Akinobu Mita <akinobu.mita@gmail.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Alexey Gladkov <legion@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Daniel Micay <danielmicay@gmail.com>,
-        Djalal Harouni <tixxdz@gmail.com>,
-        "Dmitry V . Levin" <ldv@altlinux.org>,
-        "Eric W . Biederman" <ebiederm@xmission.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        "J . Bruce Fields" <bfields@fieldses.org>,
-        Jeff Layton <jlayton@poochiereds.net>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Oleg Nesterov <oleg@redhat.com>
-Subject: Re: [PATCH v10 8/9] proc: use human-readable values for hidehid
-Message-ID: <202003281321.A69D9DE45@keescook>
-References: <20200327172331.418878-1-gladkov.alexey@gmail.com>
- <20200327172331.418878-9-gladkov.alexey@gmail.com>
+        Sat, 28 Mar 2020 16:29:28 -0400
+Received: from mga07.intel.com ([134.134.136.100]:52497 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726604AbgC1U32 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 28 Mar 2020 16:29:28 -0400
+IronPort-SDR: YMEu1IztNuhiM6Xw5CrFeZIUVgaiqgA/AK3j7Tytwe67E4lAV18WebTMQcXxTZFFYcJzqDbYjB
+ jsvwo+4CRJLg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Mar 2020 13:29:27 -0700
+IronPort-SDR: QRSoKqNo9fxti1cmIknyIPILKg+KeD934nVSb+83LaO4Qkog09TBxsw1xIKOCzQX42WaXvq5Bh
+ Kpp2FNaaVWWQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,317,1580803200"; 
+   d="scan'208";a="421493158"
+Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
+  by orsmga005.jf.intel.com with ESMTP; 28 Mar 2020 13:29:26 -0700
+Received: from kbuild by lkp-server01 with local (Exim 4.89)
+        (envelope-from <lkp@intel.com>)
+        id 1jII57-000GSb-M4; Sun, 29 Mar 2020 04:29:25 +0800
+Date:   Sun, 29 Mar 2020 04:28:26 +0800
+From:   kbuild test robot <lkp@intel.com>
+To:     "x86-ml" <x86@kernel.org>
+Cc:     linux-kernel@vger.kernel.org
+Subject: [tip:locking/core] BUILD SUCCESS
+ f1e67e355c2aafeddf1eac31335709236996d2fe
+Message-ID: <5e7fb36a./gZKUUFio6xex8An%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200327172331.418878-9-gladkov.alexey@gmail.com>
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 27, 2020 at 06:23:30PM +0100, Alexey Gladkov wrote:
-> The hidepid parameter values are becoming more and more and it becomes
-> difficult to remember what each new magic number means.
-> 
-> Suggested-by: Andy Lutomirski <luto@kernel.org>
-> Reviewed-by: Alexey Dobriyan <adobriyan@gmail.com>
-> Signed-off-by: Alexey Gladkov <gladkov.alexey@gmail.com>
-> ---
->  Documentation/filesystems/proc.txt | 52 +++++++++++++++---------------
->  fs/proc/inode.c                    | 13 +++++++-
->  fs/proc/root.c                     | 36 +++++++++++++++++++--
->  3 files changed, 71 insertions(+), 30 deletions(-)
-> 
-> diff --git a/Documentation/filesystems/proc.txt b/Documentation/filesystems/proc.txt
-> index bd0e0ab85048..af47672cb2cb 100644
-> --- a/Documentation/filesystems/proc.txt
-> +++ b/Documentation/filesystems/proc.txt
-> @@ -2025,28 +2025,28 @@ The following mount options are supported:
->  	gid=		Set the group authorized to learn processes information.
->  	subset=		Show only the specified subset of procfs.
->  
-> -hidepid=0 means classic mode - everybody may access all /proc/<pid>/ directories
-> -(default).
-> -
-> -hidepid=1 means users may not access any /proc/<pid>/ directories but their
-> -own.  Sensitive files like cmdline, sched*, status are now protected against
-> -other users.  This makes it impossible to learn whether any user runs
-> -specific program (given the program doesn't reveal itself by its behaviour).
-> -As an additional bonus, as /proc/<pid>/cmdline is unaccessible for other users,
-> -poorly written programs passing sensitive information via program arguments are
-> -now protected against local eavesdroppers.
-> -
-> -hidepid=2 means hidepid=1 plus all /proc/<pid>/ will be fully invisible to other
-> -users.  It doesn't mean that it hides a fact whether a process with a specific
-> -pid value exists (it can be learned by other means, e.g. by "kill -0 $PID"),
-> -but it hides process' uid and gid, which may be learned by stat()'ing
-> -/proc/<pid>/ otherwise.  It greatly complicates an intruder's task of gathering
-> -information about running processes, whether some daemon runs with elevated
-> -privileges, whether other user runs some sensitive program, whether other users
-> -run any program at all, etc.
-> -
-> -hidepid=4 means that procfs should only contain /proc/<pid>/ directories
-> -that the caller can ptrace.
-> +hidepid=off or hidepid=0 means classic mode - everybody may access all
-> +/proc/<pid>/ directories (default).
-> +
-> +hidepid=noaccess or hidepid=1 means users may not access any /proc/<pid>/
-> +directories but their own.  Sensitive files like cmdline, sched*, status are now
-> +protected against other users.  This makes it impossible to learn whether any
-> +user runs specific program (given the program doesn't reveal itself by its
-> +behaviour).  As an additional bonus, as /proc/<pid>/cmdline is unaccessible for
-> +other users, poorly written programs passing sensitive information via program
-> +arguments are now protected against local eavesdroppers.
-> +
-> +hidepid=invisible or hidepid=2 means hidepid=noaccess plus all /proc/<pid>/ will
-> +be fully invisible to other users.  It doesn't mean that it hides a fact whether
-> +a process with a specific pid value exists (it can be learned by other means,
-> +e.g. by "kill -0 $PID"), but it hides process' uid and gid, which may be learned
-> +by stat()'ing /proc/<pid>/ otherwise.  It greatly complicates an intruder's task
-> +of gathering information about running processes, whether some daemon runs with
-> +elevated privileges, whether other user runs some sensitive program, whether
-> +other users run any program at all, etc.
-> +
-> +hidepid=ptraceable or hidepid=4 means that procfs should only contain
-> +/proc/<pid>/ directories that the caller can ptrace.
->  
->  gid= defines a group authorized to learn processes information otherwise
->  prohibited by hidepid=.  If you use some daemon like identd which needs to learn
-> @@ -2093,8 +2093,8 @@ creates a new procfs instance. Mount options affect own procfs instance.
->  It means that it became possible to have several procfs instances
->  displaying tasks with different filtering options in one pid namespace.
->  
-> -# mount -o hidepid=2 -t proc proc /proc
-> -# mount -o hidepid=1 -t proc proc /tmp/proc
-> +# mount -o hidepid=invisible -t proc proc /proc
-> +# mount -o hidepid=noaccess -t proc proc /tmp/proc
->  # grep ^proc /proc/mounts
-> -proc /proc proc rw,relatime,hidepid=2 0 0
-> -proc /tmp/proc proc rw,relatime,hidepid=1 0 0
-> +proc /proc proc rw,relatime,hidepid=invisible 0 0
-> +proc /tmp/proc proc rw,relatime,hidepid=noaccess 0 0
-> diff --git a/fs/proc/inode.c b/fs/proc/inode.c
-> index e6577ce6027b..f01fb4bed75c 100644
-> --- a/fs/proc/inode.c
-> +++ b/fs/proc/inode.c
-> @@ -165,6 +165,17 @@ void proc_invalidate_siblings_dcache(struct hlist_head *inodes, spinlock_t *lock
->  		deactivate_super(old_sb);
->  }
->  
-> +static inline const char *hidepid2str(int v)
-> +{
-> +	switch (v) {
-> +		case HIDEPID_OFF: return "off";
-> +		case HIDEPID_NO_ACCESS: return "noaccess";
-> +		case HIDEPID_INVISIBLE: return "invisible";
-> +		case HIDEPID_NOT_PTRACEABLE: return "ptraceable";
-> +	}
-> +	BUG();
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git  locking/core
+branch HEAD: f1e67e355c2aafeddf1eac31335709236996d2fe  fs/buffer: Make BH_Uptodate_Lock bit_spin_lock a regular spinlock_t
 
-Please don't use BUG()[1]. Add a default case with a warn and return
-"unknown":
+elapsed time: 484m
 
-	switch (v) {
-	case HIDEPID_OFF: return "off";
-	case HIDEPID_NO_ACCESS: return "noaccess";
-	case HIDEPID_INVISIBLE: return "invisible";
-	case HIDEPID_NOT_PTRACEABLE: return "ptraceable";
-	default:
-		WARN_ON_ONCE("bad hide_pid value: %d\n", v);
-		return "unknown";
-	}
+configs tested: 151
+configs skipped: 0
 
-[1] https://lore.kernel.org/lkml/202003141524.59C619B51A@keescook/
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-> +}
-> +
->  static int proc_show_options(struct seq_file *seq, struct dentry *root)
->  {
->  	struct proc_fs_info *fs_info = proc_sb_info(root->d_sb);
-> @@ -172,7 +183,7 @@ static int proc_show_options(struct seq_file *seq, struct dentry *root)
->  	if (!gid_eq(fs_info->pid_gid, GLOBAL_ROOT_GID))
->  		seq_printf(seq, ",gid=%u", from_kgid_munged(&init_user_ns, fs_info->pid_gid));
->  	if (fs_info->hide_pid != HIDEPID_OFF)
-> -		seq_printf(seq, ",hidepid=%u", fs_info->hide_pid);
-> +		seq_printf(seq, ",hidepid=%s", hidepid2str(fs_info->hide_pid));
->  	if (fs_info->pidonly != PROC_PIDONLY_OFF)
->  		seq_printf(seq, ",subset=pid");
->  
-> diff --git a/fs/proc/root.c b/fs/proc/root.c
-> index dbcd96f07c7a..ba782d6e6197 100644
-> --- a/fs/proc/root.c
-> +++ b/fs/proc/root.c
-> @@ -45,7 +45,7 @@ enum proc_param {
->  
->  static const struct fs_parameter_spec proc_fs_parameters[] = {
->  	fsparam_u32("gid",	Opt_gid),
-> -	fsparam_u32("hidepid",	Opt_hidepid),
-> +	fsparam_string("hidepid",	Opt_hidepid),
->  	fsparam_string("subset",	Opt_subset),
->  	{}
->  };
-> @@ -58,6 +58,35 @@ static inline int valid_hidepid(unsigned int value)
->  		value == HIDEPID_NOT_PTRACEABLE);
->  }
->  
-> +static int proc_parse_hidepid_param(struct fs_context *fc, struct fs_parameter *param)
-> +{
-> +	struct proc_fs_context *ctx = fc->fs_private;
-> +	struct fs_parameter_spec hidepid_u32_spec = fsparam_u32("hidepid", Opt_hidepid);
-> +	struct fs_parse_result result;
-> +	int base = (unsigned long)hidepid_u32_spec.data;
-> +
-> +	if (param->type != fs_value_is_string)
-> +		return invalf(fc, "proc: unexpected type of hidepid value\n");
-> +
-> +	if (!kstrtouint(param->string, base, &result.uint_32)) {
-> +		ctx->hidepid = result.uint_32;
+arm64                            allyesconfig
+arm                              allyesconfig
+arm64                            allmodconfig
+arm                              allmodconfig
+arm64                             allnoconfig
+arm                               allnoconfig
+arm                           efm32_defconfig
+arm                         at91_dt_defconfig
+arm                        shmobile_defconfig
+arm64                               defconfig
+arm                          exynos_defconfig
+arm                        multi_v5_defconfig
+arm                           sunxi_defconfig
+arm                        multi_v7_defconfig
+sparc                            allyesconfig
+m68k                             allmodconfig
+sh                            titan_defconfig
+s390                       zfcpdump_defconfig
+mips                             allmodconfig
+m68k                          multi_defconfig
+nios2                         3c120_defconfig
+riscv                    nommu_virt_defconfig
+s390                             alldefconfig
+i386                              allnoconfig
+i386                             allyesconfig
+i386                             alldefconfig
+i386                                defconfig
+ia64                             allmodconfig
+ia64                                defconfig
+ia64                              allnoconfig
+ia64                             allyesconfig
+ia64                             alldefconfig
+nios2                         10m50_defconfig
+c6x                        evmc6678_defconfig
+xtensa                          iss_defconfig
+c6x                              allyesconfig
+xtensa                       common_defconfig
+openrisc                 simple_smp_defconfig
+openrisc                    or1ksim_defconfig
+nds32                               defconfig
+nds32                             allnoconfig
+csky                                defconfig
+alpha                               defconfig
+h8300                       h8s-sim_defconfig
+h8300                     edosk2674_defconfig
+m68k                       m5475evb_defconfig
+h8300                    h8300h-sim_defconfig
+m68k                           sun3_defconfig
+arc                                 defconfig
+arc                              allyesconfig
+powerpc                       ppc64_defconfig
+microblaze                      mmu_defconfig
+microblaze                    nommu_defconfig
+powerpc                           allnoconfig
+mips                      fuloong2e_defconfig
+mips                      malta_kvm_defconfig
+mips                             allyesconfig
+mips                         64r6el_defconfig
+mips                              allnoconfig
+mips                           32r2_defconfig
+parisc                            allnoconfig
+parisc                generic-64bit_defconfig
+parisc                generic-32bit_defconfig
+parisc                           allyesconfig
+i386                 randconfig-a002-20200327
+i386                 randconfig-a001-20200327
+x86_64               randconfig-a002-20200327
+x86_64               randconfig-a001-20200327
+i386                 randconfig-a003-20200327
+x86_64               randconfig-a003-20200327
+mips                 randconfig-a001-20200327
+nds32                randconfig-a001-20200327
+m68k                 randconfig-a001-20200327
+parisc               randconfig-a001-20200327
+alpha                randconfig-a001-20200327
+riscv                randconfig-a001-20200327
+c6x                  randconfig-a001-20200327
+h8300                randconfig-a001-20200327
+microblaze           randconfig-a001-20200327
+nios2                randconfig-a001-20200327
+sparc64              randconfig-a001-20200327
+s390                 randconfig-a001-20200327
+xtensa               randconfig-a001-20200327
+csky                 randconfig-a001-20200327
+openrisc             randconfig-a001-20200327
+sh                   randconfig-a001-20200327
+i386                 randconfig-b003-20200327
+i386                 randconfig-b001-20200327
+x86_64               randconfig-b003-20200327
+i386                 randconfig-b002-20200327
+x86_64               randconfig-b002-20200327
+x86_64               randconfig-b001-20200327
+x86_64               randconfig-c003-20200327
+x86_64               randconfig-c001-20200327
+i386                 randconfig-c002-20200327
+x86_64               randconfig-c002-20200327
+i386                 randconfig-c003-20200327
+i386                 randconfig-c001-20200327
+i386                 randconfig-d003-20200327
+i386                 randconfig-d001-20200327
+x86_64               randconfig-d002-20200327
+x86_64               randconfig-d001-20200327
+i386                 randconfig-d002-20200327
+x86_64               randconfig-d003-20200327
+x86_64               randconfig-e001-20200328
+i386                 randconfig-e002-20200328
+i386                 randconfig-e003-20200328
+x86_64               randconfig-e002-20200328
+i386                 randconfig-e001-20200328
+i386                 randconfig-f001-20200327
+i386                 randconfig-f003-20200327
+i386                 randconfig-f002-20200327
+x86_64               randconfig-f002-20200327
+x86_64               randconfig-f001-20200327
+x86_64               randconfig-h003-20200327
+i386                 randconfig-h003-20200327
+i386                 randconfig-h001-20200327
+x86_64               randconfig-h001-20200327
+i386                 randconfig-h002-20200327
+arm                  randconfig-a001-20200327
+ia64                 randconfig-a001-20200327
+sparc                randconfig-a001-20200327
+arc                  randconfig-a001-20200327
+riscv                            allyesconfig
+riscv                             allnoconfig
+riscv                               defconfig
+riscv                          rv32_defconfig
+riscv                            allmodconfig
+s390                          debug_defconfig
+s390                             allyesconfig
+s390                              allnoconfig
+s390                             allmodconfig
+s390                                defconfig
+sh                          rsk7269_defconfig
+sh                               allmodconfig
+sh                  sh7785lcr_32bit_defconfig
+sh                                allnoconfig
+sparc                               defconfig
+sparc64                             defconfig
+sparc64                           allnoconfig
+sparc64                          allyesconfig
+sparc64                          allmodconfig
+um                           x86_64_defconfig
+um                             i386_defconfig
+um                                  defconfig
+x86_64                              fedora-25
+x86_64                                  kexec
+x86_64                                    lkp
+x86_64                                   rhel
+x86_64                         rhel-7.2-clear
+x86_64                               rhel-7.6
 
-This need to bounds-check the value with a call to valid_hidepid(), yes?
-
-> +		return 0;
-> +	}
-> +
-> +	if (!strcmp(param->string, "off"))
-> +		ctx->hidepid = HIDEPID_OFF;
-> +	else if (!strcmp(param->string, "noaccess"))
-> +		ctx->hidepid = HIDEPID_NO_ACCESS;
-> +	else if (!strcmp(param->string, "invisible"))
-> +		ctx->hidepid = HIDEPID_INVISIBLE;
-> +	else if (!strcmp(param->string, "ptraceable"))
-> +		ctx->hidepid = HIDEPID_NOT_PTRACEABLE;
-> +	else
-> +		return invalf(fc, "proc: unknown value of hidepid - %s\n", param->string);
-> +
-> +	return 0;
-> +}
-> +
->  static int proc_parse_subset_param(struct fs_context *fc, char *value)
->  {
->  	struct proc_fs_context *ctx = fc->fs_private;
-> @@ -97,9 +126,10 @@ static int proc_parse_param(struct fs_context *fc, struct fs_parameter *param)
->  		break;
->  
->  	case Opt_hidepid:
-> -		if (!valid_hidepid(result.uint_32))
-> +		if (proc_parse_hidepid_param(fc, param))
-> +			return -EINVAL;
-> +		if (!valid_hidepid(ctx->hidepid))
->  			return invalf(fc, "proc: unknown value of hidepid.\n");
-> -		ctx->hidepid = result.uint_32;
->  		break;
->  
->  	case Opt_subset:
-> -- 
-> 2.25.2
-> 
-
--- 
-Kees Cook
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
