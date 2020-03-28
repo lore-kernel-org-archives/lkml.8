@@ -2,237 +2,150 @@ Return-Path: <SRS0=NZ+o=5N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DC81C43331
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 05:39:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8905C43331
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 05:52:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CAD57206F2
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 05:39:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6FFEF20716
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 05:52:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585374739;
+	bh=LtnFTNUcKwZCF8AvAKKaV0toLQZpXERZGFziz8e6ZbQ=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=qJwjMZBdjrIurdK68zsnMfFe1rmVujjQ5NbhLlWw1VeTVIwcnIyDa57cd4Vd7cODP
+	 iagDEozm9NzO1QsrOuPfQrhklfU7a8q9w8xC7/7Jpe8nucFmhcq6AHEs8xZ3eYRcWq
+	 dquYnjrNHtJ9obpLogdMeyKJDfQvDPDsjBAyVLc4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725965AbgC1Fin (ORCPT
+        id S1726087AbgC1FwS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 28 Mar 2020 01:38:43 -0400
-Received: from mga05.intel.com ([192.55.52.43]:27576 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725372AbgC1Fin (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 28 Mar 2020 01:38:43 -0400
-IronPort-SDR: R824kiF46dhRxhx5oq7eZQP6gEeFAE1gaPElFZe2oe81Wf9QZVu789NsAV3rpzKbwc5Z8TYHdI
- FUL0Fzu5NEBQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Mar 2020 22:38:40 -0700
-IronPort-SDR: p4R+MGyFIbQB6LfSrgLElLUjOc2O7a167fq9fPNhkmN3fVZUPjeG6CYN2VMDOC5GGh26SJrDnb
- gtKSod0HMUsA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,315,1580803200"; 
-   d="scan'208";a="394586164"
-Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
-  by orsmga004.jf.intel.com with ESMTP; 27 Mar 2020 22:38:39 -0700
-Received: from kbuild by lkp-server01 with local (Exim 4.89)
-        (envelope-from <lkp@intel.com>)
-        id 1jI4B4-0008aP-J8; Sat, 28 Mar 2020 13:38:38 +0800
-Date:   Sat, 28 Mar 2020 13:38:32 +0800
-From:   kbuild test robot <lkp@intel.com>
-To:     "x86-ml" <x86@kernel.org>
-Cc:     linux-kernel@vger.kernel.org
-Subject: [tip:x86/build] BUILD SUCCESS
- 72cb2113c1bbd82cf3e062a39ff2753ee9d3fae7
-Message-ID: <5e7ee2d8.U/bZWSAJhDXqEMcb%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        Sat, 28 Mar 2020 01:52:18 -0400
+Received: from conssluserg-05.nifty.com ([210.131.2.90]:16787 "EHLO
+        conssluserg-05.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725372AbgC1FwS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 28 Mar 2020 01:52:18 -0400
+Received: from mail-ua1-f53.google.com (mail-ua1-f53.google.com [209.85.222.53]) (authenticated)
+        by conssluserg-05.nifty.com with ESMTP id 02S5q9Ms022225;
+        Sat, 28 Mar 2020 14:52:09 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-05.nifty.com 02S5q9Ms022225
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1585374729;
+        bh=W82m+uPJj0ZNIAfNpMqLzdYQ4VZHAUDFKwdRLnvIJsg=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=I1lUm+kQTfX5zbBuK1fXkcmXGDRVdkuiPvAzVf4N5HmyPET2HczrfoaOu8gS7IVDH
+         uXNjATCNpNCWf6YaHuOeXfmaPjwL9gRhIFt2O4f6H6E/Yjs9YhlYEnqiEGOXVaTdCB
+         bcXg8WyYzBew9lzNZqaNgIqMkjYmZNqMhokbw4NKosGKrrH/WLLB6aS3vYvdVC9VQb
+         k0734S2/k4GIvrF99qH8j8lBhf3qnMfuFA2TzmiWE3QqSDa+U0DaFvQ4uLTWl7yJ+e
+         SIrRORLlaw42BTio0sXll1r+PEnqHKo8OIt2qOe/yJlLnF90dE+7Fs1AWvypgxn1DZ
+         TPHPAwpjKAuMA==
+X-Nifty-SrcIP: [209.85.222.53]
+Received: by mail-ua1-f53.google.com with SMTP id g24so4352840uan.10;
+        Fri, 27 Mar 2020 22:52:09 -0700 (PDT)
+X-Gm-Message-State: AGi0PuaziXokO0yvFOam8FgYnMfx+0Dme18In+czt3M1WmgEZouRh7G6
+        dORm7uyyY61Jgz+uqEn2Ixgjp8d5KosXkZiXEcY=
+X-Google-Smtp-Source: APiQypILE/tW/4qd4pKKajlOXtAV8ioqzFR3HUP4YwRg8dp254iEux1JLhKrO9n9lOCuaLJJKcAIk3yRBfwowhthINA=
+X-Received: by 2002:ab0:28d8:: with SMTP id g24mr1639878uaq.121.1585374728531;
+ Fri, 27 Mar 2020 22:52:08 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+References: <20200326055719.16755-1-masahiroy@kernel.org> <20200326055719.16755-4-masahiroy@kernel.org>
+In-Reply-To: <20200326055719.16755-4-masahiroy@kernel.org>
+From:   Masahiro Yamada <masahiroy@kernel.org>
+Date:   Sat, 28 Mar 2020 14:51:32 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAR2Vg-Z2TEfU5__d2T2cBmhbgngwdQE9tshAT2XJvB4Mw@mail.gmail.com>
+Message-ID: <CAK7LNAR2Vg-Z2TEfU5__d2T2cBmhbgngwdQE9tshAT2XJvB4Mw@mail.gmail.com>
+Subject: Re: [PATCH v2 4/4] kbuild: remove AS variable
+To:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
+Cc:     clang-built-linux <clang-built-linux@googlegroups.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git  x86/build
-branch HEAD: 72cb2113c1bbd82cf3e062a39ff2753ee9d3fae7  vmlinux.lds: Discard .note.gnu.property sections in generic NOTES
+On Thu, Mar 26, 2020 at 2:58 PM Masahiro Yamada <masahiroy@kernel.org> wrote:
+>
+> As commit 5ef872636ca7 ("kbuild: get rid of misleading $(AS) from
+> documents") noted, we rarely use $(AS) directly in the kernel build.
+>
+> Now that the only/last user of $(AS) in drivers/net/wan/Makefile was
+> converted to $(CC), $(AS) is no longer used in the build process.
+>
+> You can still pass in AS=clang, which is just a switch to turn on
+> the LLVM integrated assembler.
+>
+> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+> Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+> Tested-by: Nick Desaulniers <ndesaulniers@google.com>
+> Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
 
-elapsed time: 730m
 
-configs tested: 170
-configs skipped: 14
+I forgot to remove the export.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
 
-arm                              allmodconfig
-arm                               allnoconfig
-arm                              allyesconfig
-arm64                            allmodconfig
-arm64                             allnoconfig
-arm64                            allyesconfig
-arm                         at91_dt_defconfig
-arm                           efm32_defconfig
-arm                          exynos_defconfig
-arm                        multi_v5_defconfig
-arm                        multi_v7_defconfig
-arm                        shmobile_defconfig
-arm                           sunxi_defconfig
-arm64                               defconfig
-sparc                            allyesconfig
-parisc                generic-64bit_defconfig
-mips                              allnoconfig
-mips                      malta_kvm_defconfig
-um                           x86_64_defconfig
-sparc                               defconfig
-ia64                             allmodconfig
-i386                              allnoconfig
-i386                             alldefconfig
-i386                             allyesconfig
-i386                                defconfig
-ia64                             alldefconfig
-ia64                              allnoconfig
-ia64                             allyesconfig
-ia64                                defconfig
-c6x                              allyesconfig
-c6x                        evmc6678_defconfig
-nios2                         10m50_defconfig
-nios2                         3c120_defconfig
-openrisc                    or1ksim_defconfig
-openrisc                 simple_smp_defconfig
-xtensa                       common_defconfig
-xtensa                          iss_defconfig
-nds32                               defconfig
-nds32                             allnoconfig
-csky                                defconfig
-alpha                               defconfig
-h8300                       h8s-sim_defconfig
-h8300                     edosk2674_defconfig
-m68k                       m5475evb_defconfig
-m68k                             allmodconfig
-h8300                    h8300h-sim_defconfig
-m68k                           sun3_defconfig
-m68k                          multi_defconfig
-arc                              allyesconfig
-arc                                 defconfig
-microblaze                      mmu_defconfig
-microblaze                    nommu_defconfig
-powerpc                           allnoconfig
-powerpc                             defconfig
-powerpc                       ppc64_defconfig
-powerpc                          rhel-kconfig
-mips                           32r2_defconfig
-mips                         64r6el_defconfig
-mips                             allmodconfig
-mips                             allyesconfig
-mips                      fuloong2e_defconfig
-parisc                            allnoconfig
-parisc                           allyesconfig
-parisc                generic-32bit_defconfig
-x86_64               randconfig-a001-20200327
-x86_64               randconfig-a002-20200327
-x86_64               randconfig-a003-20200327
-i386                 randconfig-a001-20200327
-i386                 randconfig-a002-20200327
-i386                 randconfig-a003-20200327
-mips                 randconfig-a001-20200327
-nds32                randconfig-a001-20200327
-m68k                 randconfig-a001-20200327
-parisc               randconfig-a001-20200327
-alpha                randconfig-a001-20200327
-riscv                randconfig-a001-20200327
-h8300                randconfig-a001-20200327
-microblaze           randconfig-a001-20200327
-nios2                randconfig-a001-20200327
-c6x                  randconfig-a001-20200327
-sparc64              randconfig-a001-20200327
-s390                 randconfig-a001-20200327
-xtensa               randconfig-a001-20200327
-csky                 randconfig-a001-20200327
-openrisc             randconfig-a001-20200327
-sh                   randconfig-a001-20200327
-x86_64               randconfig-b001-20200327
-x86_64               randconfig-b002-20200327
-x86_64               randconfig-b003-20200327
-i386                 randconfig-b001-20200327
-i386                 randconfig-b002-20200327
-i386                 randconfig-b003-20200327
-x86_64               randconfig-b001-20200328
-x86_64               randconfig-b002-20200328
-x86_64               randconfig-b003-20200328
-i386                 randconfig-b001-20200328
-i386                 randconfig-b002-20200328
-i386                 randconfig-b003-20200328
-x86_64               randconfig-c001-20200327
-x86_64               randconfig-c002-20200327
-x86_64               randconfig-c003-20200327
-i386                 randconfig-c001-20200327
-i386                 randconfig-c002-20200327
-i386                 randconfig-c003-20200327
-x86_64               randconfig-d001-20200327
-x86_64               randconfig-d002-20200327
-x86_64               randconfig-d003-20200327
-i386                 randconfig-d001-20200327
-i386                 randconfig-d002-20200327
-i386                 randconfig-d003-20200327
-x86_64               randconfig-e001-20200327
-x86_64               randconfig-e002-20200327
-x86_64               randconfig-e003-20200327
-i386                 randconfig-e001-20200327
-i386                 randconfig-e002-20200327
-i386                 randconfig-e003-20200327
-x86_64               randconfig-f001-20200327
-x86_64               randconfig-f002-20200327
-x86_64               randconfig-f003-20200327
-i386                 randconfig-f001-20200327
-i386                 randconfig-f002-20200327
-i386                 randconfig-f003-20200327
-x86_64               randconfig-g001-20200327
-x86_64               randconfig-g002-20200327
-x86_64               randconfig-g003-20200327
-i386                 randconfig-g001-20200327
-i386                 randconfig-g002-20200327
-i386                 randconfig-g003-20200327
-x86_64               randconfig-h001-20200327
-x86_64               randconfig-h002-20200327
-x86_64               randconfig-h003-20200327
-i386                 randconfig-h001-20200327
-i386                 randconfig-h002-20200327
-i386                 randconfig-h003-20200327
-arc                  randconfig-a001-20200327
-arm                  randconfig-a001-20200327
-arm64                randconfig-a001-20200327
-ia64                 randconfig-a001-20200327
-powerpc              randconfig-a001-20200327
-sparc                randconfig-a001-20200327
-riscv                            allmodconfig
-riscv                             allnoconfig
-riscv                            allyesconfig
-riscv                               defconfig
-riscv                    nommu_virt_defconfig
-riscv                          rv32_defconfig
-s390                             alldefconfig
-s390                             allmodconfig
-s390                              allnoconfig
-s390                             allyesconfig
-s390                          debug_defconfig
-s390                                defconfig
-s390                       zfcpdump_defconfig
-sh                          rsk7269_defconfig
-sh                               allmodconfig
-sh                            titan_defconfig
-sh                  sh7785lcr_32bit_defconfig
-sh                                allnoconfig
-sparc64                          allmodconfig
-sparc64                           allnoconfig
-sparc64                          allyesconfig
-sparc64                             defconfig
-um                             i386_defconfig
-um                                  defconfig
-x86_64                              fedora-25
-x86_64                                  kexec
-x86_64                                    lkp
-x86_64                                   rhel
-x86_64                         rhel-7.2-clear
-x86_64                               rhel-7.6
 
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+
+@@ -472,7 +471,7 @@ KBUILD_LDFLAGS :=
+ GCC_PLUGINS_CFLAGS :=
+ CLANG_FLAGS :=
+
+-export ARCH SRCARCH CONFIG_SHELL BASH HOSTCC KBUILD_HOSTCFLAGS
+CROSS_COMPILE AS LD CC
++export ARCH SRCARCH CONFIG_SHELL BASH HOSTCC KBUILD_HOSTCFLAGS
+CROSS_COMPILE LD CC
+ export CPP AR NM STRIP OBJCOPY OBJDUMP OBJSIZE READELF PAHOLE LEX
+YACC AWK INSTALLKERNEL
+ export PERL PYTHON PYTHON3 CHECK CHECKFLAGS MAKE UTS_MACHINE HOSTCXX
+ export KBUILD_HOSTCXXFLAGS KBUILD_HOSTLDFLAGS KBUILD_HOSTLDLIBS LDFLAGS_MODULE
+
+
+
+
+
+> ---
+>
+> Changes in v2:
+>   - Fix breakage of CC=clang build
+>
+>  Makefile | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
+>
+> diff --git a/Makefile b/Makefile
+> index fcec84681e4e..2e12fa1cc8f3 100644
+> --- a/Makefile
+> +++ b/Makefile
+> @@ -405,7 +405,6 @@ KBUILD_HOSTLDFLAGS  := $(HOST_LFS_LDFLAGS) $(HOSTLDFLAGS)
+>  KBUILD_HOSTLDLIBS   := $(HOST_LFS_LIBS) $(HOSTLDLIBS)
+>
+>  # Make variables (CC, etc...)
+> -AS             = $(CROSS_COMPILE)as
+>  LD             = $(CROSS_COMPILE)ld
+>  CC             = $(CROSS_COMPILE)gcc
+>  CPP            = $(CC) -E
+> @@ -535,7 +534,7 @@ endif
+>  ifneq ($(GCC_TOOLCHAIN),)
+>  CLANG_FLAGS    += --gcc-toolchain=$(GCC_TOOLCHAIN)
+>  endif
+> -ifeq ($(shell $(AS) --version 2>&1 | head -n 1 | grep clang),)
+> +ifeq ($(if $(AS),$(shell $(AS) --version 2>&1 | head -n 1 | grep clang)),)
+>  CLANG_FLAGS    += -no-integrated-as
+>  endif
+>  CLANG_FLAGS    += -Werror=unknown-warning-option
+> --
+> 2.17.1
+>
+> --
+> You received this message because you are subscribed to the Google Groups "Clang Built Linux" group.
+> To unsubscribe from this group and stop receiving emails from it, send an email to clang-built-linux+unsubscribe@googlegroups.com.
+> To view this discussion on the web visit https://groups.google.com/d/msgid/clang-built-linux/20200326055719.16755-4-masahiroy%40kernel.org.
+
+
+
+-- 
+Best Regards
+Masahiro Yamada
