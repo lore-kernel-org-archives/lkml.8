@@ -2,130 +2,135 @@ Return-Path: <SRS0=NZ+o=5N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE3E0C2D0E5
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 18:56:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67348C2D0EC
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 18:59:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A5E76206F6
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 18:56:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3EDF0206F6
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 18:59:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uGwtTVYB"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="kktvz/xD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727179AbgC1S4w (ORCPT
+        id S1727067AbgC1S70 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 28 Mar 2020 14:56:52 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:33118 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726220AbgC1S4w (ORCPT
+        Sat, 28 Mar 2020 14:59:26 -0400
+Received: from mail-qt1-f201.google.com ([209.85.160.201]:53618 "EHLO
+        mail-qt1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726265AbgC1S7Z (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 28 Mar 2020 14:56:52 -0400
-Received: by mail-pg1-f195.google.com with SMTP id d17so6466108pgo.0;
-        Sat, 28 Mar 2020 11:56:51 -0700 (PDT)
+        Sat, 28 Mar 2020 14:59:25 -0400
+Received: by mail-qt1-f201.google.com with SMTP id v49so11289631qtc.20
+        for <linux-kernel@vger.kernel.org>; Sat, 28 Mar 2020 11:59:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=4HHlXxbXXtMBcda41lMVxwqCfKXpypsMxOoSrEjA1Ko=;
-        b=uGwtTVYBhkTB2izKKxsA2QIkU1+f13YKWrgXdavHLelUDiGAcbZSvfoo65pXoeezTv
-         xic/NWs3f+63xWk4uo5z2cdBrnnajWN2ZxZJNxkaK6LvKY0pilzfnfIcEcSNAhFEq2XB
-         O8oB6G0veXREa6kVtCn8tCsSLScqDv0Vq7SORhBCkcOqbljvf2ISvmRLODaIeGfk0gnO
-         syp2/kKI3mfNeAkHIZjIdnzmTBeljOgDVj4rSafWWLlfRMhCnsX3667qqSxUQNm59i7m
-         CyACq9GPYwIhG8NYDIrPQxh6ICCtGPOlR+UxSq4NW3nx/LK2Ggcrzdx62o1zjXv852RG
-         BQ3g==
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=rl7WtDkNIzzT60ikOJJ0txPNPltV1gR7r9BpQuGY/24=;
+        b=kktvz/xDC5Ag4Xmj8Jrm0AhTJwkFC/qsP3ICI3dL1lLCrOBa3csHUlKe52KKIgeqvE
+         +86bW8xHb9NQYofFO9FAGbuK06EQF0uVZDDcvX4dSpQt63uKvll77VmDU+cVnDEhYZ2g
+         BlEFOtQLAlKHaXDpfDsWKAtJDtClBjQ5cMyYKXBxNUPZqZVx6ckeTGFQlTTRaaolhiZC
+         GdH36ObUiOXvsyaTuMFD+0s22cNxXMU4n0XaRzN+pKzTgbimBzVLtDEPApgVsClTk4MC
+         OFL7DFFBF5iDe2EMb6o5ddUCtdLrsHHgBcy4g1wpQTXoBjvv4sWBuPMXvc/47au5mNg1
+         fGyQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=4HHlXxbXXtMBcda41lMVxwqCfKXpypsMxOoSrEjA1Ko=;
-        b=eG1K+AB/Q3l2XkQE0oACO5Mx0d7mPNuH5ZUsqHS7fZ58NLVN54mftmw6j15zDv0Zgz
-         M16aaQX4Wf+HCG2+AQAEH+pHzeDKQwMMDWrrYiWpx92gxUsBwYRk0Kcgp57ViYpn7GUf
-         3s/OETN1xHK6c66TD+HnQG1dJzpYvmotUPWJ9YU7Th6cKlJBmNSvo8z8QeTLJnL8ckAA
-         K8Q1LCc42tCAcFDQEE7wgpZcglSpp3++6KrZK88OEh2NTEGSviPVN6mkDUI/zC8Cj1a5
-         9nKbDl2sSFcDuGw4xozIScxjF2RG3kBkqOxxpMBO6XGSsdzu0DpwRSn32/FTqTNm3shY
-         /chg==
-X-Gm-Message-State: ANhLgQ0cvU9WjhOiXkz1ueKCmlsGf6atZJxbKI8SlEOJlXon9OehOcn0
-        V8oLAp6MRV3JcR5r2zp5igPGer74s+wusDL7vLY=
-X-Google-Smtp-Source: ADFU+vtIDt63eZ3/CBJTRiljKEiIFZZS8m8+DJZgk/QqIoOY2kD1gREKSfq7qKI5usQv3XhAIYh1EXCUbfK/aEpVoN4=
-X-Received: by 2002:a63:5859:: with SMTP id i25mr5290889pgm.74.1585421811018;
- Sat, 28 Mar 2020 11:56:51 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200327104954.27829-1-i.mikhaylov@yadro.com> <20200327104954.27829-3-i.mikhaylov@yadro.com>
- <20200328151102.4279cb42@archlinux>
-In-Reply-To: <20200328151102.4279cb42@archlinux>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Sat, 28 Mar 2020 20:56:39 +0200
-Message-ID: <CAHp75Vfo18+PD8N1WaonLDHv=QLOdb6xpD_grVVj02L=GtqNDA@mail.gmail.com>
-Subject: Re: [PATCH v4 2/2] iio: proximity: Add driver support for vcnl3020
- proximity sensor
-To:     Jonathan Cameron <jic23@kernel.org>
-Cc:     Ivan Mikhaylov <i.mikhaylov@yadro.com>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        linux-iio <linux-iio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=rl7WtDkNIzzT60ikOJJ0txPNPltV1gR7r9BpQuGY/24=;
+        b=PrtCWCMMiVZyyMMDf8jJ4KFo3R9KdGlFwZVCjRGsxw9RL4NuB2AeGGlfswvVJu0Z8e
+         QygekN6imY/GMTzUOBuouVaFewgIylQnwMVCCiWHGbWn1bY7PknTo/lpSnRNnX2unCOg
+         dDANKsOWA7YYUPHOsdktBROjrq1TW0Oll+3AJC3HYCYMSrTC4GQ/jPs3XFYGJKieMgdw
+         X5MEueXb2J0miLNhCYM5vohS0mvh0xHQP0x4WSX8Mbp8zNhEHSEJkJ6uSjSsm2arjnYq
+         dExT3Q4ipHUGU0nvdIH5WDa+staooDrr4K+BS4yxmt7uuJR4zvJ3cSjpUiI5vInp9hqd
+         XeKg==
+X-Gm-Message-State: ANhLgQ3xMEh/z4htKzwLp0f6Q38Ub+0vI6dH5TnYCU1Sp9FEcf43JICI
+        WmmJbR8YhS1KNz2vkDjlptzfwl0GdNU8
+X-Google-Smtp-Source: ADFU+vs2gnpUlOHy0fXAvwisX5Qfdkf3EWGsz6IBFlP2etVqkgtyIwl4tosOOeSYJ4Ov1RnVl30PVeeFZQ2t
+X-Received: by 2002:a05:620a:4d5:: with SMTP id 21mr4933357qks.433.1585421964138;
+ Sat, 28 Mar 2020 11:59:24 -0700 (PDT)
+Date:   Sat, 28 Mar 2020 11:59:12 -0700
+Message-Id: <20200328185916.98423-1-rajatja@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.26.0.rc2.310.g2932bb562d-goog
+Subject: [PATCH v4 1/5] input/serio/i8042: Attach fwnode to serio i8042 kbd device
+From:   Rajat Jain <rajatja@google.com>
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>, dtor@google.com,
+        Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>
+        Rajat Jain <rajatja@google.com>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Enrico Weigelt <info@metux.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Allison Randal <allison@lohutok.net>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Stephen Boyd <swboyd@chromium.org>,
+        linux-input@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, furquan@google.com,
+        dlaurie@google.com, bleung@google.com, zentaro@google.com,
+        dbehr@google.com
+Cc:     rajatxjain@gmail.com
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Mar 28, 2020 at 5:11 PM Jonathan Cameron <jic23@kernel.org> wrote:
-> On Fri, 27 Mar 2020 13:49:54 +0300
-> Ivan Mikhaylov <i.mikhaylov@yadro.com> wrote:
+Attach the firmware node to the serio i8042 kbd device so that device
+properties can be passed from the firmware.
 
-...
+Signed-off-by: Rajat Jain <rajatja@google.com>
+---
+v4: Same as v3
+v3: same as v2
+v2: Remove the Change-Id from the commit log
 
-> > Datasheet: http://www.vishay.com/docs/84150/vcnl3020.pdf
-> > Signed-off-by: Ivan Mikhaylov <i.mikhaylov@yadro.com>
-> A few things inline.
->
-> I note Andy suggested a Datasheet tag, but has it actually been
-> standardised?
+ drivers/input/serio/i8042-x86ia64io.h | 1 +
+ drivers/input/serio/i8042.c           | 3 +++
+ 2 files changed, 4 insertions(+)
 
-I don't think so, but I bet it's a good idea to have it.
-
-...
-
-> > +     rc = device_property_read_u32(data->dev, "led-current", &led_current);
->
-> The presence of a firmware read (dt / acpi etc) means that the i2c id table
-> isn't actually useful for probing.
-
-...in case if there are no defaults hard coded in the driver.
-
-> > +     if (rc) {
-> > +             dev_err(data->dev, "Couldn't get led current (%d)", rc);
-> > +             return rc;
-> > +     }
-
-...
-
-> > +     rc = regmap_read(data->regmap, VCNL_PS_RESULT_HI, &hi);
-> > +     if (rc)
-> > +             goto err_unlock;
-> > +     dev_dbg(data->dev, "result high byte 0x%x", hi);
-> > +
-> > +     rc = regmap_read(data->regmap, VCNL_PS_RESULT_LO, &lo);
-> > +     if (rc)
-> > +             goto err_unlock;
->
-> These are neigbouring registers.  Can you not get away with a bulk read?
-> The datasheet suggests the device does auto address incrementing.
->
-> If you do that, you can read directly into an __be16/__le16 (I haven't
-> checked which) and do an endian conversion to whatever the cpu is
-> using.
-
-Oh, indeed. How I missed this during my review? :-)
-
+diff --git a/drivers/input/serio/i8042-x86ia64io.h b/drivers/input/serio/i8042-x86ia64io.h
+index dc974c288e880..ed9ec4310d976 100644
+--- a/drivers/input/serio/i8042-x86ia64io.h
++++ b/drivers/input/serio/i8042-x86ia64io.h
+@@ -927,6 +927,7 @@ static int i8042_pnp_kbd_probe(struct pnp_dev *dev, const struct pnp_device_id *
+ 	}
+ 	i8042_pnp_id_to_string(dev->id, i8042_kbd_firmware_id,
+ 			       sizeof(i8042_kbd_firmware_id));
++	i8042_kbd_fwnode = dev_fwnode(&dev->dev);
+ 
+ 	/* Keyboard ports are always supposed to be wakeup-enabled */
+ 	device_set_wakeup_enable(&dev->dev, true);
+diff --git a/drivers/input/serio/i8042.c b/drivers/input/serio/i8042.c
+index 20ff2bed3917a..0dddf273afd94 100644
+--- a/drivers/input/serio/i8042.c
++++ b/drivers/input/serio/i8042.c
+@@ -21,6 +21,7 @@
+ #include <linux/i8042.h>
+ #include <linux/slab.h>
+ #include <linux/suspend.h>
++#include <linux/property.h>
+ 
+ #include <asm/io.h>
+ 
+@@ -124,6 +125,7 @@ MODULE_PARM_DESC(unmask_kbd_data, "Unconditional enable (may reveal sensitive da
+ static bool i8042_bypass_aux_irq_test;
+ static char i8042_kbd_firmware_id[128];
+ static char i8042_aux_firmware_id[128];
++static struct fwnode_handle *i8042_kbd_fwnode;
+ 
+ #include "i8042.h"
+ 
+@@ -1335,6 +1337,7 @@ static int __init i8042_create_kbd_port(void)
+ 	strlcpy(serio->phys, I8042_KBD_PHYS_DESC, sizeof(serio->phys));
+ 	strlcpy(serio->firmware_id, i8042_kbd_firmware_id,
+ 		sizeof(serio->firmware_id));
++	set_primary_fwnode(&serio->dev, i8042_kbd_fwnode);
+ 
+ 	port->serio = serio;
+ 	port->irq = I8042_KBD_IRQ;
 -- 
-With Best Regards,
-Andy Shevchenko
+2.26.0.rc2.310.g2932bb562d-goog
+
