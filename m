@@ -6,45 +6,45 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B491C43331
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 08:50:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73558C43331
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 08:50:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 654CF206F2
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 08:50:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5026920716
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 08:50:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726291AbgC1IuY (ORCPT
+        id S1726402AbgC1IuY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Sat, 28 Mar 2020 04:50:24 -0400
-Received: from isilmar-4.linta.de ([136.243.71.142]:48494 "EHLO
+Received: from isilmar-4.linta.de ([136.243.71.142]:48492 "EHLO
         isilmar-4.linta.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725973AbgC1IuX (ORCPT
+        with ESMTP id S1725947AbgC1IuY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 28 Mar 2020 04:50:23 -0400
+        Sat, 28 Mar 2020 04:50:24 -0400
 X-isilmar-external: YES
 X-isilmar-external: YES
 Received: from light.dominikbrodowski.net (brodo.linta [10.1.0.102])
-        by isilmar-4.linta.de (Postfix) with ESMTPSA id 62BC6200097;
+        by isilmar-4.linta.de (Postfix) with ESMTPSA id 59DC920008F;
         Sat, 28 Mar 2020 08:50:22 +0000 (UTC)
 Received: by light.dominikbrodowski.net (Postfix, from userid 1000)
-        id F0336202A2; Sat, 28 Mar 2020 09:17:01 +0100 (CET)
-Date:   Sat, 28 Mar 2020 09:17:01 +0100
+        id 8983C2029F; Sat, 28 Mar 2020 09:16:48 +0100 (CET)
+Date:   Sat, 28 Mar 2020 09:16:48 +0100
 From:   Dominik Brodowski <linux@dominikbrodowski.net>
 To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
 Cc:     linux-kernel@vger.kernel.org
-Subject: Re: [PATCH][next] pcmcia: cs_internal.h: Replace zero-length array
+Subject: Re: [PATCH][next] pcmcia: soc_common.h: Replace zero-length array
  with flexible-array member
-Message-ID: <20200328081701.GB144263@light.dominikbrodowski.net>
-References: <20200320221150.GA12353@embeddedor.com>
+Message-ID: <20200328081648.GA144263@light.dominikbrodowski.net>
+References: <20200320221323.GA12585@embeddedor.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200320221150.GA12353@embeddedor.com>
+In-Reply-To: <20200320221323.GA12585@embeddedor.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 20, 2020 at 05:12:42PM -0500, Gustavo A. R. Silva wrote:
+On Fri, Mar 20, 2020 at 05:13:23PM -0500, Gustavo A. R. Silva wrote:
 > The current codebase makes use of the zero-length array language
 > extension to the C90 standard, but the preferred mechanism to declare
 > variable-length types such as these ones is a flexible array member[1][2],
@@ -75,7 +75,7 @@ On Fri, Mar 20, 2020 at 05:12:42PM -0500, Gustavo A. R. Silva wrote:
 > 
 > Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
 
-Applied to pcmcia-next
+Applied to pcmcia-next.
 
 Thanks,
 	Dominik
