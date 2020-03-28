@@ -2,190 +2,153 @@ Return-Path: <SRS0=NZ+o=5N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D280C43331
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 00:59:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5523CC2D0EE
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 00:59:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4BC4F206F6
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 00:59:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A4352082F
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 00:59:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="GmILO8fd"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="nJsCH9lJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727028AbgC1A7Y (ORCPT
+        id S1727125AbgC1A7d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Mar 2020 20:59:24 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:21930 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726212AbgC1A7Y (ORCPT
+        Fri, 27 Mar 2020 20:59:33 -0400
+Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:5403 "EHLO
+        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727067AbgC1A7c (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Mar 2020 20:59:24 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1585357163; h=Message-Id: Date: Subject: Cc: To: From:
- Sender; bh=ucG8qxJO8nRYPBhl/MNaG6lqgYMEuVpubS292bl3V6k=; b=GmILO8fd13mL9obHsHkxAaeaxhX5j1vWl2wTGuu7L4GY9ZvAInLasS9doKzXJVqGT0VMB6Zi
- /6adCvEZfs1+My3J6CSKfTzS4IQaKm1zymxpviGKt8JpsAU42asf1SozzknJEl/Y7B5vuzGA
- Nuxtev+4PPVQ/oN7ZYfpD/hou/E=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e7ea163.7f4e0c5056f8-smtp-out-n05;
- Sat, 28 Mar 2020 00:59:15 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 71069C433BA; Sat, 28 Mar 2020 00:59:14 +0000 (UTC)
-Received: from rishabhb-linux.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: rishabhb)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 744CFC433D2;
-        Sat, 28 Mar 2020 00:59:13 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 744CFC433D2
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=rishabhb@codeaurora.org
-From:   Rishabh Bhatnagar <rishabhb@codeaurora.org>
-To:     linux-kernel@vger.kernel.org, linux-remoteproc@vger.kernel.org,
-        bjorn.andersson@linaro.org
-Cc:     psodagud@codeaurora.org, tsoni@codeaurora.org,
-        sidgup@codeaurora.org, Rishabh Bhatnagar <rishabhb@codeaurora.org>
-Subject: [PATCH 1/2] remoteproc: qcom: Add bus scaling capability during bootup
-Date:   Fri, 27 Mar 2020 17:59:07 -0700
-Message-Id: <1585357147-4616-1-git-send-email-rishabhb@codeaurora.org>
-X-Mailer: git-send-email 1.9.1
+        Fri, 27 Mar 2020 20:59:32 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e7ea1440000>; Fri, 27 Mar 2020 17:58:44 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Fri, 27 Mar 2020 17:59:31 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Fri, 27 Mar 2020 17:59:31 -0700
+Received: from [10.2.58.50] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Sat, 28 Mar
+ 2020 00:59:31 +0000
+Subject: Re: [Patch v2 2/2] mm/page_alloc.c: define node_order with all zero
+To:     Wei Yang <richard.weiyang@gmail.com>
+CC:     <akpm@linux-foundation.org>, <linux-mm@kvack.org>,
+        <linux-kernel@vger.kernel.org>, <jgg@ziepe.ca>, <david@redhat.com>
+References: <20200327220121.27823-1-richard.weiyang@gmail.com>
+ <20200327220121.27823-2-richard.weiyang@gmail.com>
+ <4c9d8138-d379-810f-64e7-0d018ed019df@nvidia.com>
+ <20200328002616.kjtf7dpkqbugyzi2@master>
+X-Nvconfidentiality: public
+From:   John Hubbard <jhubbard@nvidia.com>
+Message-ID: <97a6bf40-792b-6216-d35b-691027c85aad@nvidia.com>
+Date:   Fri, 27 Mar 2020 17:59:30 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
+MIME-Version: 1.0
+In-Reply-To: <20200328002616.kjtf7dpkqbugyzi2@master>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1585357124; bh=INqxeXB2KvcAJdTq0p9g/PfZMMiN/uXlz75p4EJ7hPs=;
+        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=nJsCH9lJyqVwPMxvMHCouIMuBEfMLTgEJeYW985LA03p5ko//MtAVptCTRQ8j2Lzd
+         s7gdUdfzfQrKXxva4KUKj2c5qI0VCIGbezMXpNRSp+M+ulwkMWxWjErbKTt2pWjsdV
+         L9lrXOJh8iiPFwS+njQbv77frNJmBYlUe//2yBJeI0ogZMfhqWK9O8bQqSxDnZBgm8
+         kOi9+CXUTp4c2tAfBic2Q0bzjraYuD3O3VO9XR8OC+yGhOs+HKhSK5mP4W5JfNgnuZ
+         9NL2/5XCLDMLUUz/XdyqPE2g67HmgfKHGWj2lfuC9nsZNzjfe0MGAX6T2hmvsjCVRL
+         bmTHuyL5GuPjw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-During bootup since remote processors cannot request for
-additional bus bandwidth from the interconect framework,
-platform driver should provide the proxy resources. This
-is useful for scenarios where the Q6 tries to access the DDR
-memory in the initial stages of bootup. For e.g. during
-bootup or after recovery modem Q6 tries to zero out the bss
-section in the DDR. Since this is a big chunk of memory if
-don't bump up the bandwidth we might encounter timeout issues.
-This patch makes a proxy vote for maximizing the bus bandwidth
-during bootup and removes it once processor is up.
+On 3/27/20 5:26 PM, Wei Yang wrote:
+> On Fri, Mar 27, 2020 at 03:37:57PM -0700, John Hubbard wrote:
+>> On 3/27/20 3:01 PM, Wei Yang wrote:
+>>> Since we always clear node_order before getting it, we can leverage
+>>> compiler to do this instead of at run time.
+>>>
+>>> Signed-off-by: Wei Yang <richard.weiyang@gmail.com>
+>>> ---
+>>>    mm/page_alloc.c | 3 +--
+>>>    1 file changed, 1 insertion(+), 2 deletions(-)
+>>>
+>>> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+>>> index dfcf2682ed40..49dd1f25c000 100644
+>>> --- a/mm/page_alloc.c
+>>> +++ b/mm/page_alloc.c
+>>> @@ -5585,7 +5585,7 @@ static void build_thisnode_zonelists(pg_data_t *pgdat)
+>>>    static void build_zonelists(pg_data_t *pgdat)
+>>>    {
+>>> -	static int node_order[MAX_NUMNODES];
+>>> +	static int node_order[MAX_NUMNODES] = {0};
+>>
+>>
+>> Looks wrong: now the single instance of node_order is initialized just once by
+>> the compiler. And that means that only the first caller of this function
+>> gets a zeroed node_order array...
+>>
+> 
+> What a shame on me. You are right, I miss the static word.
+> 
+> Well, then I am curious about why we want to define it as static. Each time we
+> call this function, node_order would be set to 0 and find_next_best_node()
+> would sort a proper value into it. I don't see the reason to reserve it in a
+> global area and be used next time.
 
-Signed-off-by: Rishabh Bhatnagar <rishabhb@codeaurora.org>
----
- drivers/remoteproc/qcom_q6v5_pas.c | 43 +++++++++++++++++++++++++++++++++++++-
- 1 file changed, 42 insertions(+), 1 deletion(-)
+It's not just about preserving the value. Sometimes it's about stack space.
+Here's the trade-offs for static variables within a function:
 
-diff --git a/drivers/remoteproc/qcom_q6v5_pas.c b/drivers/remoteproc/qcom_q6v5_pas.c
-index edf9d0e..8f5db8d 100644
---- a/drivers/remoteproc/qcom_q6v5_pas.c
-+++ b/drivers/remoteproc/qcom_q6v5_pas.c
-@@ -20,6 +20,7 @@
- #include <linux/qcom_scm.h>
- #include <linux/regulator/consumer.h>
- #include <linux/remoteproc.h>
-+#include <linux/interconnect.h>
- #include <linux/soc/qcom/mdt_loader.h>
- #include <linux/soc/qcom/smem.h>
- #include <linux/soc/qcom/smem_state.h>
-@@ -28,6 +29,9 @@
- #include "qcom_q6v5.h"
- #include "remoteproc_internal.h"
- 
-+#define PIL_TZ_AVG_BW  0
-+#define PIL_TZ_PEAK_BW UINT_MAX
-+
- struct adsp_data {
- 	int crash_reason_smem;
- 	const char *firmware_name;
-@@ -62,6 +66,7 @@ struct qcom_adsp {
- 	int proxy_pd_count;
- 
- 	int pas_id;
-+	struct icc_path *bus_client;
- 	int crash_reason_smem;
- 	bool has_aggre2_clk;
- 
-@@ -124,6 +129,25 @@ static int adsp_load(struct rproc *rproc, const struct firmware *fw)
- 
- }
- 
-+static int do_bus_scaling(struct qcom_adsp *adsp, bool enable)
-+{
-+	int rc;
-+	u32 avg_bw = enable ? PIL_TZ_AVG_BW : 0;
-+	u32 peak_bw = enable ? PIL_TZ_PEAK_BW : 0;
-+
-+	if (adsp->bus_client) {
-+		rc = icc_set_bw(adsp->bus_client, avg_bw, peak_bw);
-+		if (rc) {
-+			dev_err(adsp->dev, "bandwidth request failed(rc:%d)\n",
-+				rc);
-+			return rc;
-+		}
-+	} else
-+		dev_info(adsp->dev, "Bus scaling not setup for %s\n",
-+			adsp->rproc->name);
-+	return 0;
-+}
-+
- static int adsp_start(struct rproc *rproc)
- {
- 	struct qcom_adsp *adsp = (struct qcom_adsp *)rproc->priv;
-@@ -131,9 +155,13 @@ static int adsp_start(struct rproc *rproc)
- 
- 	qcom_q6v5_prepare(&adsp->q6v5);
- 
-+	ret = do_bus_scaling(adsp, true);
-+	if (ret)
-+		goto disable_irqs;
-+
- 	ret = adsp_pds_enable(adsp, adsp->active_pds, adsp->active_pd_count);
- 	if (ret < 0)
--		goto disable_irqs;
-+		goto unscale_bus;
- 
- 	ret = adsp_pds_enable(adsp, adsp->proxy_pds, adsp->proxy_pd_count);
- 	if (ret < 0)
-@@ -183,6 +211,8 @@ static int adsp_start(struct rproc *rproc)
- 	adsp_pds_disable(adsp, adsp->proxy_pds, adsp->proxy_pd_count);
- disable_active_pds:
- 	adsp_pds_disable(adsp, adsp->active_pds, adsp->active_pd_count);
-+unscale_bus:
-+	do_bus_scaling(adsp, false);
- disable_irqs:
- 	qcom_q6v5_unprepare(&adsp->q6v5);
- 
-@@ -198,6 +228,7 @@ static void qcom_pas_handover(struct qcom_q6v5 *q6v5)
- 	clk_disable_unprepare(adsp->aggre2_clk);
- 	clk_disable_unprepare(adsp->xo);
- 	adsp_pds_disable(adsp, adsp->proxy_pds, adsp->proxy_pd_count);
-+	do_bus_scaling(adsp, false);
- }
- 
- static int adsp_stop(struct rproc *rproc)
-@@ -280,6 +311,14 @@ static int adsp_init_regulator(struct qcom_adsp *adsp)
- 	return PTR_ERR_OR_ZERO(adsp->px_supply);
- }
- 
-+static void adsp_init_bus_scaling(struct qcom_adsp *adsp)
-+{
-+	adsp->bus_client = of_icc_get(adsp->dev, NULL);
-+	if (!adsp->bus_client)
-+		dev_warn(adsp->dev, "%s: unable to get bus client \n",
-+			__func__);
-+}
-+
- static int adsp_pds_attach(struct device *dev, struct device **devs,
- 			   char **pd_names)
- {
-@@ -410,6 +449,8 @@ static int adsp_probe(struct platform_device *pdev)
- 	if (ret)
- 		goto free_rproc;
- 
-+	adsp_init_bus_scaling(adsp);
-+
- 	ret = adsp_pds_attach(&pdev->dev, adsp->active_pds,
- 			      desc->active_pd_names);
- 	if (ret < 0)
+Advantages of static variables within a function (compared to non-static
+variables, also within a function):
+-----------------------------------
+
+* Doesn't use any of the scarce kernel stack space
+* Preserves values (not always necessarily and advantage)
+
+Disadvantages:
+-----------------------------------
+
+* Removes basic thread safety: multiple threads can no longer independently
+   call the function without getting interaction, and generally that means
+   data corruption.
+
+So here, I suspect that the original motivation was probably to conserve stack
+space, and the author likely observed that there was no concurrency to worry
+about: the function was only being called by one thread at a time.  Given those
+constraints (which I haven't confirmed just yet, btw), a static function variable
+fits well.
+
+> 
+> My suggestion is to remove the static and define it {0} instead of memset
+> every time. Is my understanding correct here?
+
+
+Not completely:
+
+a) First of all, "instead of memset every time" is a misconception, because
+    there is still a memset happening every time with {0}. It's just that the
+    compiler silently writes that code for you, and you don't see it on the
+    screen. But it's still there.
+
+b) Switching away from a static to an on-stack variable requires that you first
+    verify that stack space is not an issue. Or, if you determine that this
+    function needs the per-thread isolation that a non-static variable provides,
+    then you can switch to either an on-stack variable, or a *alloc() function.
+
+
+
+thanks,
 -- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+John Hubbard
+NVIDIA
