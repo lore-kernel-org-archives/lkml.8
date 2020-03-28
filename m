@@ -2,89 +2,164 @@ Return-Path: <SRS0=NZ+o=5N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 966A9C43331
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 23:00:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD54EC43331
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 23:08:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 679E5206F2
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 23:00:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A4841206F2
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 23:08:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=dilger-ca.20150623.gappssmtp.com header.i=@dilger-ca.20150623.gappssmtp.com header.b="WEcj+C2R"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727773AbgC1XAx (ORCPT
+        id S1727799AbgC1XH7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 28 Mar 2020 19:00:53 -0400
-Received: from raptor.unsafe.ru ([5.9.43.93]:39934 "EHLO raptor.unsafe.ru"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727175AbgC1XAw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 28 Mar 2020 19:00:52 -0400
-Received: from comp-core-i7-2640m-0182e6 (ip-89-102-33-211.net.upcbroadband.cz [89.102.33.211])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        by raptor.unsafe.ru (Postfix) with ESMTPSA id 4FE36209BD;
-        Sat, 28 Mar 2020 23:00:49 +0000 (UTC)
-Date:   Sun, 29 Mar 2020 00:00:46 +0100
-From:   Alexey Gladkov <gladkov.alexey@gmail.com>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        Linux API <linux-api@vger.kernel.org>,
-        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
-        Linux Security Module <linux-security-module@vger.kernel.org>,
-        Akinobu Mita <akinobu.mita@gmail.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Daniel Micay <danielmicay@gmail.com>,
-        Djalal Harouni <tixxdz@gmail.com>,
-        "Dmitry V . Levin" <ldv@altlinux.org>,
-        "Eric W . Biederman" <ebiederm@xmission.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        "J . Bruce Fields" <bfields@fieldses.org>,
-        Jeff Layton <jlayton@poochiereds.net>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Oleg Nesterov <oleg@redhat.com>
-Subject: Re: [PATCH v10 7/9] proc: move hidepid values to uapi as they are
- user interface to mount
-Message-ID: <20200328230046.v3qbffmbtl4sd7tg@comp-core-i7-2640m-0182e6>
-References: <20200327172331.418878-1-gladkov.alexey@gmail.com>
- <20200327172331.418878-8-gladkov.alexey@gmail.com>
- <202003281340.B73225DCC9@keescook>
- <20200328212547.xxiqxqhxzwp6w5n5@comp-core-i7-2640m-0182e6>
- <202003281453.CED94974@keescook>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <202003281453.CED94974@keescook>
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.6.1 (raptor.unsafe.ru [5.9.43.93]); Sat, 28 Mar 2020 23:00:49 +0000 (UTC)
+        Sat, 28 Mar 2020 19:07:59 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:36778 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727720AbgC1XH7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 28 Mar 2020 19:07:59 -0400
+Received: by mail-pl1-f193.google.com with SMTP id g2so5072244plo.3
+        for <linux-kernel@vger.kernel.org>; Sat, 28 Mar 2020 16:07:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=dilger-ca.20150623.gappssmtp.com; s=20150623;
+        h=from:message-id:mime-version:subject:date:in-reply-to:cc:to
+         :references;
+        bh=Cjtq4j90KL6u7el5sikBZ4NRH3Gu9CsbJFnMcZ93/58=;
+        b=WEcj+C2Rbw6f/llU0YfpA6O9Eili4XB7P77ZYMKWm/4O5FYn7bVR80/QOrukksrSnN
+         TE1ISS6hJ6fAaE/f/JB+0aPZXnNxI8OZ6Ik+Uj2MMERZ1FNf9LyWIPqsKPjL/ycZr6/4
+         u/1azjrdSa/LaLwHitS6vxWkoxW/vpgJkAJtV84j8TfoUzBnFuszcMw8ZRh3rd3NJWry
+         9yzK+pm61zEMnkhNT902insrYymeVBARPK1Ud7cGCC2qu2tgGW9VAuOmlXKDdWK2ldJw
+         g2EOdtfXwXDn7sa1c+FFnaReyUvB1DcelObekchvulSCjzZlWOK75yy6TZeCYrP0l239
+         yJMg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:message-id:mime-version:subject:date
+         :in-reply-to:cc:to:references;
+        bh=Cjtq4j90KL6u7el5sikBZ4NRH3Gu9CsbJFnMcZ93/58=;
+        b=bsWOeQ2FVFCBzQhrDTQ/8j79rS0d1FWQUpHDKsWPJaEcTcKZBw9McuG7ruNostaFJL
+         4kuQHi16MjaxCnm44gxrKn+0IA3Vlqbj0bN2N/160dflNzjjMtLurvx59xF1UnrDRS35
+         4P4XveHdyOWzEBXEqo87wyZgk9HjXzd5INuLJy9XGCHSBSwZAqAX6Rj0AflgKRH7JSAx
+         AU7qWlYOn800W1M1EXzPMT3ZLmvICivweXYal+fukPP9iCXe9OP1Ob1aiVRcKNvbd69k
+         T6Pi6XDVahuzUm68rAU/+tTEQ2LgDEY7L0VdEyWZ2rfpANHfCVIlN0sfPk97r4H8Tccx
+         Te8Q==
+X-Gm-Message-State: ANhLgQ2Sl2oCes1+T+BIIpDtsGCOvH+I6HKaGCySOTipYxJbAYEKmtND
+        smD7S0mEWVoNQxBnEN8z2wekaQ==
+X-Google-Smtp-Source: ADFU+vuO67OM/RJlBZgj2TYLGGKSVN48VEgEdelLbxP/i9CE9BdzbzePo8f0Ruev22XNDxWS+cGGhQ==
+X-Received: by 2002:a17:90a:2226:: with SMTP id c35mr7577249pje.2.1585436877875;
+        Sat, 28 Mar 2020 16:07:57 -0700 (PDT)
+Received: from [192.168.10.160] (S0106a84e3fe4b223.cg.shawcable.net. [70.77.216.213])
+        by smtp.gmail.com with ESMTPSA id 207sm5436236pgg.19.2020.03.28.16.07.56
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sat, 28 Mar 2020 16:07:57 -0700 (PDT)
+From:   Andreas Dilger <adilger@dilger.ca>
+Message-Id: <04E7F659-18B0-4CD2-8DE9-F69310BC3B06@dilger.ca>
+Content-Type: multipart/signed;
+ boundary="Apple-Mail=_2B7A53DC-1CFC-440F-9207-9F623ED30540";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
+Mime-Version: 1.0 (Mac OS X Mail 10.3 \(3273\))
+Subject: Re: [PATCH] ext4: Fix incorrect group count in ext4_fill_super error
+ message
+Date:   Sat, 28 Mar 2020 17:07:55 -0600
+In-Reply-To: <8b957cd1513fcc4550fe675c10bcce2175c33a49.1585431964.git.josh@joshtriplett.org>
+Cc:     linux-ext4@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Theodore Ts'o <tytso@mit.edu>,
+        Andreas Dilger <adilger.kernel@dilger.ca>
+To:     Josh Triplett <josh@joshtriplett.org>
+References: <8b957cd1513fcc4550fe675c10bcce2175c33a49.1585431964.git.josh@joshtriplett.org>
+X-Mailer: Apple Mail (2.3273)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Mar 28, 2020 at 02:53:49PM -0700, Kees Cook wrote:
-> > > > +/* definitions for hide_pid field */
-> > > > +enum {
-> > > > +	HIDEPID_OFF            = 0,
-> > > > +	HIDEPID_NO_ACCESS      = 1,
-> > > > +	HIDEPID_INVISIBLE      = 2,
-> > > > +	HIDEPID_NOT_PTRACEABLE = 4,
-> > > > +};
-> > > Should the numeric values still be UAPI if there is string parsing now?
-> > 
-> > I think yes, because these are still valid hidepid= values.
-> 
-> But if we don't expose the values, we can do whatever we like with
-> future numbers (e.g. the "is this a value or a bit field?" question).
 
-Alexey Dobriyan suggested to put these parameters into the UAPI and it
-makes sense because these are user parameters.
+--Apple-Mail=_2B7A53DC-1CFC-440F-9207-9F623ED30540
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain;
+	charset=us-ascii
 
--- 
-Rgrds, legion
+On Mar 28, 2020, at 3:54 PM, Josh Triplett <josh@joshtriplett.org> =
+wrote:
+>=20
+> ext4_fill_super doublechecks the number of groups before mounting; if
+> that check fails, the resulting error message prints the group count
+> from the ext4_sb_info sbi, which hasn't been set yet. Print the =
+freshly
+> computed group count instead (which at that point has just been =
+computed
+> in "blocks_count").
+>=20
+> Signed-off-by: Josh Triplett <josh@joshtriplett.org>
+> Fixes: 4ec1102813798 ("ext4: Add sanity checks for the superblock =
+before mounting the filesystem")
 
+Modulo the compiler warning pointed out by kbuild test robot, I think =
+the
+patch is correct, but was definitely confusing to read within the shown
+context, since "blocks_count" definitely doesn't seem to be "groups =
+count"
+(it *is* the "groups count", but is just used as a temporary variable).
+
+Reviewed-by: Andreas Dilger <adilger@dilger.ca>
+
+> ---
+> fs/ext4/super.c | 2 +-
+> 1 file changed, 1 insertion(+), 1 deletion(-)
+>=20
+> diff --git a/fs/ext4/super.c b/fs/ext4/super.c
+> index 0c7c4adb664e..7f5f37653a03 100644
+> --- a/fs/ext4/super.c
+> +++ b/fs/ext4/super.c
+> @@ -4288,7 +4288,7 @@ static int ext4_fill_super(struct super_block =
+*sb, void *data, int silent)
+> 	if (blocks_count > ((uint64_t)1<<32) - EXT4_DESC_PER_BLOCK(sb)) =
+{
+> 		ext4_msg(sb, KERN_WARNING, "groups count too large: %u "
+> 		       "(block count %llu, first data block %u, "
+> -		       "blocks per group %lu)", sbi->s_groups_count,
+> +		       "blocks per group %lu)", blocks_count,
+> 		       ext4_blocks_count(es),
+> 		       le32_to_cpu(es->s_first_data_block),
+> 		       EXT4_BLOCKS_PER_GROUP(sb));
+> --
+> 2.26.0
+
+
+Cheers, Andreas
+
+
+
+
+
+
+--Apple-Mail=_2B7A53DC-1CFC-440F-9207-9F623ED30540
+Content-Transfer-Encoding: 7bit
+Content-Disposition: attachment;
+	filename=signature.asc
+Content-Type: application/pgp-signature;
+	name=signature.asc
+Content-Description: Message signed with OpenPGP
+
+-----BEGIN PGP SIGNATURE-----
+Comment: GPGTools - http://gpgtools.org
+
+iQIzBAEBCAAdFiEEDb73u6ZejP5ZMprvcqXauRfMH+AFAl5/2MsACgkQcqXauRfM
+H+AnOA//V5uFfStVfTWVl2zs4J2jWpYVCG9kzT4xGrYRLk2srDgIklQessjbYYfb
+kXvYFep6nBH0IOc3Ry1goyuuU2HiuYNoQe/VC+Wk2azc1RrZ+1IeuZulWJxKgi5b
+DAAt0OvlnBRm6DnWB8183pjfrJVoVk+hdH4E0woSVsWb7L0THgp4b20btwd5jDD5
+o6a8pecxjuTzpyB3/eVB8LNu5Ja3TCXcaUpQrIFFnGWTRllj74AuglK9nASN62F/
+3ZRPHIVG/QOp/uc5Gpr1IB8lSkzG8ehKMgvS7HUB+6zymhmfx2+I+yB1SeAHYVQu
+sz4+9vZdpliyInpJDaZPPvOilY2c9zH5hK+LhXnENwbWQxRdxOPU3CjSumYO6spk
+/hj/UMcMx1JSDeEKq5CYokPfnZh0B6Qn/WjOsJobID0kM3d2c/5UbiITe3rZ/DkR
+bjSaVVlVQ5eZdT8NbOVJ/nmxlxhhHbOm3nA3sKIS47SBbKURseSKJI7LACYdJEN0
+/7xVU31zAw857nxMqInE53ghCVFLs8eXL6hsMSc1i7XWN/3hIUcGiGUNffESs7Rm
+OuzKT1n8tizaiUQxQNXeNU0bNyaF/TWdQSf9rnNJRou3OWjGEdHE59ObJF7cwRJa
+xZe1o5WqvRvj7eYQdqxAWtnmWwcQ5wkZTkWRW3kcU8Rzfdli9Gs=
+=p5gJ
+-----END PGP SIGNATURE-----
+
+--Apple-Mail=_2B7A53DC-1CFC-440F-9207-9F623ED30540--
