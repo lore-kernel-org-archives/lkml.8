@@ -2,105 +2,285 @@ Return-Path: <SRS0=NZ+o=5N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77858C43331
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 13:56:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA5EBC2D0ED
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 13:56:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C7AE20716
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 13:56:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A68B220716
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 13:56:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=draconx-ca.20150623.gappssmtp.com header.i=@draconx-ca.20150623.gappssmtp.com header.b="VC1e5z6o"
+	dkim=pass (2048-bit key) header.d=sartura-hr.20150623.gappssmtp.com header.i=@sartura-hr.20150623.gappssmtp.com header.b="Zj9977bH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726518AbgC1N4a (ORCPT
+        id S1727104AbgC1N4p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 28 Mar 2020 09:56:30 -0400
-Received: from mail-yb1-f195.google.com ([209.85.219.195]:44519 "EHLO
-        mail-yb1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726045AbgC1N43 (ORCPT
+        Sat, 28 Mar 2020 09:56:45 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:50710 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726045AbgC1N4p (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 28 Mar 2020 09:56:29 -0400
-Received: by mail-yb1-f195.google.com with SMTP id 11so6224086ybj.11
-        for <linux-kernel@vger.kernel.org>; Sat, 28 Mar 2020 06:56:29 -0700 (PDT)
+        Sat, 28 Mar 2020 09:56:45 -0400
+Received: by mail-wm1-f67.google.com with SMTP id d198so14639027wmd.0
+        for <linux-kernel@vger.kernel.org>; Sat, 28 Mar 2020 06:56:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=draconx-ca.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:in-reply-to:references:from:date:message-id:subject:to
-         :cc;
-        bh=ONdMAPyiB0FQN9RfNXQDWPw1B2SNFTDlbdPq+oteUP0=;
-        b=VC1e5z6odylqRXJ01LB/715zOmiuRw6n94RE+SFPg+ccDnVRWqdVq+IU3uxFNtOl69
-         uQmXJrW85p/GN7cX3/y/9sEdlMFPGgdJAZY/A8cUINEopka2hUcQSRHHFqpVdITaPKH4
-         0Gag/Fm3S7BYiMXl4z8awVZx2ohJB8jyaILnuLZy3rbncNhc/Z1U9yIfqWg18SmOecrT
-         NEB8KlC60vhC7cokGw6TtDlXR1nTJKHYUzk0poxHkP8fhfqhiJFMefgY04eqoiRiwSkq
-         CuvI5skXFIfWW86MsVmtOXkNcFYU/trSirOjFy+kyPhn78YDhTG4igc87sVuiZ2GT5eZ
-         FSug==
+        d=sartura-hr.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=NMjjibIIWKkjS3mT8K/LaAOt0umug6ECpFrUMrbf80Q=;
+        b=Zj9977bHjaB09yAPwDZyZzHGCvoSs+HuKu40DVFrBL6m5HHOFap7vzBixOfnMnvwij
+         dfHrqHrvmsvbPpci7d62jcfiL70Daz+0xw4quqpeO7lTqEu/9bMoHgSXpNvUuXuHMbI7
+         A15BLvvngWVwADRaarQJIckd8YldLeV49pllURCFP6ozg588tcIRtSwLf6CpBEC79kPc
+         UshHAAiGC4kVXvuqZO3GSW2HCXkYBDwZ2091G5eotPZ4e2KqLadqLA0wv27G5sFTMahP
+         /DRK/1R+X+jiUjHJv3vrlRvknlXjSrBV+ynPLd1GuCHBGkes9QPTR4iyKGf4WMvNNw+r
+         uz5Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:in-reply-to:references:from:date
-         :message-id:subject:to:cc;
-        bh=ONdMAPyiB0FQN9RfNXQDWPw1B2SNFTDlbdPq+oteUP0=;
-        b=kfzsqYcULHEuW3TpP9Mk/aUlOXjS87XiLqvQBnCWPBce4VdEJRBPEqMf2AuKwKrpkM
-         AM0Py34K3DZntHrJyeKuqaAXAZTRALxWeTtCc8OKoGqfbYgfFkaQnKOgCokU0JEutlK6
-         rKkAzE42LQqJAM4OHBLyT7RLLF5YnuXt0mEyWU/JCuCquRTi1XCe92qrWs7unrKo4qTB
-         BQSLJHKpWORypFX+EaeZyc+Q0ovOKMmiwYaqsq/SSH5ldbgAJJ/x5xeljBiPrGHDQzln
-         76vz9bhlCyD6Srgsao3nE5+tEjKbsIlbU5p4Lzx5km4J6/GP5HMwcV0I4l1a5GEkyAqg
-         PK6g==
-X-Gm-Message-State: ANhLgQ0PpZygdrJ7ij2rVw+9LruPvSegUVRmqtHwpVTpJ+4xIjwEZUk9
-        /2GmqAk5uhmYFDVYdVN3LymDla4zd5XDDfRk3AxUlg==
-X-Google-Smtp-Source: ADFU+vuRXCOQPyauFIJmv2m9SNnbV6hifB8BojlvTqloHfynOqJyE74a8eLVpc3XwnUnkij3d0BA0Bc1VMQYMk40TKM=
-X-Received: by 2002:a25:3701:: with SMTP id e1mr6170514yba.196.1585403788766;
- Sat, 28 Mar 2020 06:56:28 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=NMjjibIIWKkjS3mT8K/LaAOt0umug6ECpFrUMrbf80Q=;
+        b=hPLNl4v79LXt2MjgBif2jQMFkoJRyE9RG74g+Usf7oym8PooY/DAYHxMx9T1kKU8yy
+         A+y94lyGvDU9MMT5FkHp9gytOQhabLlnRyb6kudwH9wVvu544xVSwVBxKebAUrh9hj8M
+         WhP39qlgeC09MgQH0F4bEw+oH4u8ux+3otCQxvElDsooJuZaI9ibDNqh+HB/KBixbvzU
+         DfuXvtXy51Gk1q63Hag1ul2q9nGKFKIYMJ/qBnaVtaXe5rBPnPKxqASCOT4RbsoKpO9g
+         2kMnnRV+muwqZbrCOe0vZa27nWDshhYGtCkqu0qqbq5+Xd2DmUqoNVuBUCcB+BuUaMrj
+         36zQ==
+X-Gm-Message-State: ANhLgQ2iCWYtIbV+A+XcMYtax1RHMV8/9APO89WtLgzK26IpZfH3c3E2
+        lpYuewilKAf7YdHHU2a3N8NWe6OggD4=
+X-Google-Smtp-Source: ADFU+vucBnK4QBDQ0SlXaKME/T+OFBV0XfuTMEMJbY9YzNL1c1gitEsNS70qbDqQJ69i2Q64Mg41Jg==
+X-Received: by 2002:a05:600c:257:: with SMTP id 23mr4104677wmj.155.1585403802961;
+        Sat, 28 Mar 2020 06:56:42 -0700 (PDT)
+Received: from localhost.localdomain (dh207-96-177.xnet.hr. [88.207.96.177])
+        by smtp.googlemail.com with ESMTPSA id f12sm8461975wrm.94.2020.03.28.06.56.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 28 Mar 2020 06:56:42 -0700 (PDT)
+From:   Robert Marko <robert.marko@sartura.hr>
+To:     agross@kernel.org, bjorn.andersson@linaro.org, kishon@ti.com,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        robh+dt@kernel.org, devicetree@vger.kernel.org
+Cc:     John Crispin <john@phrozen.org>,
+        Robert Marko <robert.marko@sartura.hr>,
+        Luka Perkov <luka.perkov@sartura.hr>
+Subject: [PATCH v4 1/3] phy: add driver for Qualcomm IPQ40xx USB PHY
+Date:   Sat, 28 Mar 2020 14:53:47 +0100
+Message-Id: <20200328135345.695622-1-robert.marko@sartura.hr>
+X-Mailer: git-send-email 2.26.0
 MIME-Version: 1.0
-Received: by 2002:a25:1941:0:0:0:0:0 with HTTP; Sat, 28 Mar 2020 06:56:28
- -0700 (PDT)
-X-Originating-IP: [24.53.240.163]
-In-Reply-To: <20200328082601.GA7658@infradead.org>
-References: <20200328050909.30639-1-nbowler@draconx.ca> <20200328050909.30639-2-nbowler@draconx.ca>
- <20200328082601.GA7658@infradead.org>
-From:   Nick Bowler <nbowler@draconx.ca>
-Date:   Sat, 28 Mar 2020 09:56:28 -0400
-Message-ID: <CADyTPEyDbV9WiOc9SOFvzPX9ccd7mhGG_Fj8QNmxGEY9UgkiRQ@mail.gmail.com>
-Subject: Re: [PATCH v2 1/2] nvme: Fix compat NVME_IOCTL_SUBMIT_IO numbering
-To:     Christoph Hellwig <hch@infradead.org>
-Cc:     linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Sagi Grimberg <sagi@grimberg.me>,
-        Keith Busch <kbusch@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 28/03/2020, Christoph Hellwig <hch@infradead.org> wrote:
-> On Sat, Mar 28, 2020 at 01:09:08AM -0400, Nick Bowler wrote:
->> When __u64 has 64-bit alignment, the nvme_user_io structure has trailing
->> padding.  This causes problems in the compat case with 32-bit userspace
->> that has less strict alignment because the size of the structure differs.
->>
->> Since the NVME_IOCTL_SUBMIT_IO macro encodes the structure size itself,
->> the result is that this ioctl does not work at all in such a scenario:
->>
->>   # nvme read /dev/nvme0n1 -z 512
->>   submit-io: Inappropriate ioctl for device
->>
->> But by the same token, this makes it easy to handle both cases and
->> since the structures differ only in unused trailing padding bytes
->> we can simply not read those bytes.
->>
->> Signed-off-by: Nick Bowler <nbowler@draconx.ca>
->
-> I think we already have a similar patch titled
-> "nvme: Add compat_ioctl handler for NVME_IOCTL_SUBMIT_IO" in
-> linux-next, with the difference of actually implementing the
-> .compat_ioctl entry point.
+From: John Crispin <john@phrozen.org>
 
-OK, I found that one and it looks to solve the same problem.
+Add a driver to setup the USB phy on Qualcom Dakota SoCs.
+The driver sets up HS and SS phys.
 
-I'm not sure about copying the nonexistent trailing padding from 32-bit
-userspace but that may not be a problem in practice.
+Signed-off-by: John Crispin <john@phrozen.org>
+Signed-off-by: Robert Marko <robert.marko@sartura.hr>
+Cc: Luka Perkov <luka.perkov@sartura.hr>
+---
+Changes from v2 to v3:
+* Remove magic writes as they are not needed
+* Correct commit message
 
-So feel free to drop this patch.
+ drivers/phy/qualcomm/Kconfig                |   7 +
+ drivers/phy/qualcomm/Makefile               |   1 +
+ drivers/phy/qualcomm/phy-qcom-ipq4019-usb.c | 152 ++++++++++++++++++++
+ 3 files changed, 160 insertions(+)
+ create mode 100644 drivers/phy/qualcomm/phy-qcom-ipq4019-usb.c
 
-Thanks,
-  Nick
+diff --git a/drivers/phy/qualcomm/Kconfig b/drivers/phy/qualcomm/Kconfig
+index e46824da29f6..964bd5d784d2 100644
+--- a/drivers/phy/qualcomm/Kconfig
++++ b/drivers/phy/qualcomm/Kconfig
+@@ -18,6 +18,13 @@ config PHY_QCOM_APQ8064_SATA
+ 	depends on OF
+ 	select GENERIC_PHY
+ 
++config PHY_QCOM_IPQ4019_USB
++	tristate "Qualcomm IPQ4019 USB PHY module"
++	depends on OF && ARCH_QCOM
++	select GENERIC_PHY
++	help
++	  Support for the USB PHY on QCOM IPQ4019/Dakota chipsets.
++
+ config PHY_QCOM_IPQ806X_SATA
+ 	tristate "Qualcomm IPQ806x SATA SerDes/PHY driver"
+ 	depends on ARCH_QCOM
+diff --git a/drivers/phy/qualcomm/Makefile b/drivers/phy/qualcomm/Makefile
+index 283251d6a5d9..8afe6c4f5178 100644
+--- a/drivers/phy/qualcomm/Makefile
++++ b/drivers/phy/qualcomm/Makefile
+@@ -1,6 +1,7 @@
+ # SPDX-License-Identifier: GPL-2.0
+ obj-$(CONFIG_PHY_ATH79_USB)		+= phy-ath79-usb.o
+ obj-$(CONFIG_PHY_QCOM_APQ8064_SATA)	+= phy-qcom-apq8064-sata.o
++obj-$(CONFIG_PHY_QCOM_IPQ4019_USB)	+= phy-qcom-ipq4019-usb.o
+ obj-$(CONFIG_PHY_QCOM_IPQ806X_SATA)	+= phy-qcom-ipq806x-sata.o
+ obj-$(CONFIG_PHY_QCOM_PCIE2)		+= phy-qcom-pcie2.o
+ obj-$(CONFIG_PHY_QCOM_QMP)		+= phy-qcom-qmp.o
+diff --git a/drivers/phy/qualcomm/phy-qcom-ipq4019-usb.c b/drivers/phy/qualcomm/phy-qcom-ipq4019-usb.c
+new file mode 100644
+index 000000000000..7efebae6b6fd
+--- /dev/null
++++ b/drivers/phy/qualcomm/phy-qcom-ipq4019-usb.c
+@@ -0,0 +1,152 @@
++// SPDX-License-Identifier: GPL-2.0-or-later
++/*
++ * Copyright (C) 2018 John Crispin <john@phrozen.org>
++ *
++ * Based on code from
++ * Allwinner Technology Co., Ltd. <www.allwinnertech.com>
++ *
++ */
++
++#include <linux/delay.h>
++#include <linux/err.h>
++#include <linux/io.h>
++#include <linux/kernel.h>
++#include <linux/module.h>
++#include <linux/mutex.h>
++#include <linux/of_platform.h>
++#include <linux/phy/phy.h>
++#include <linux/platform_device.h>
++#include <linux/reset.h>
++
++struct ipq4019_usb_phy {
++	struct device		*dev;
++	struct phy		*phy;
++	void __iomem		*base;
++	struct reset_control	*por_rst;
++	struct reset_control	*srif_rst;
++};
++
++static int ipq4019_ss_phy_power_off(struct phy *_phy)
++{
++	struct ipq4019_usb_phy *phy = phy_get_drvdata(_phy);
++
++	reset_control_assert(phy->por_rst);
++	msleep(10);
++
++	return 0;
++}
++
++static int ipq4019_ss_phy_power_on(struct phy *_phy)
++{
++	struct ipq4019_usb_phy *phy = phy_get_drvdata(_phy);
++
++	ipq4019_ss_phy_power_off(_phy);
++
++	reset_control_deassert(phy->por_rst);
++
++	return 0;
++}
++
++static struct phy_ops ipq4019_usb_ss_phy_ops = {
++	.power_on	= ipq4019_ss_phy_power_on,
++	.power_off	= ipq4019_ss_phy_power_off,
++};
++
++static int ipq4019_hs_phy_power_off(struct phy *_phy)
++{
++	struct ipq4019_usb_phy *phy = phy_get_drvdata(_phy);
++
++	reset_control_assert(phy->por_rst);
++	msleep(10);
++
++	reset_control_assert(phy->srif_rst);
++	msleep(10);
++
++	return 0;
++}
++
++static int ipq4019_hs_phy_power_on(struct phy *_phy)
++{
++	struct ipq4019_usb_phy *phy = phy_get_drvdata(_phy);
++
++	ipq4019_hs_phy_power_off(_phy);
++
++	reset_control_deassert(phy->srif_rst);
++	msleep(10);
++
++	reset_control_deassert(phy->por_rst);
++
++	return 0;
++}
++
++static struct phy_ops ipq4019_usb_hs_phy_ops = {
++	.power_on	= ipq4019_hs_phy_power_on,
++	.power_off	= ipq4019_hs_phy_power_off,
++};
++
++static const struct of_device_id ipq4019_usb_phy_of_match[] = {
++	{ .compatible = "qcom,usb-hs-ipq4019-phy", .data = &ipq4019_usb_hs_phy_ops},
++	{ .compatible = "qcom,usb-ss-ipq4019-phy", .data = &ipq4019_usb_ss_phy_ops},
++	{ },
++};
++MODULE_DEVICE_TABLE(of, ipq4019_usb_phy_of_match);
++
++static int ipq4019_usb_phy_probe(struct platform_device *pdev)
++{
++	struct device *dev = &pdev->dev;
++	struct resource *res;
++	struct phy_provider *phy_provider;
++	struct ipq4019_usb_phy *phy;
++	const struct of_device_id *match;
++
++	match = of_match_device(ipq4019_usb_phy_of_match, &pdev->dev);
++	if (!match)
++		return -ENODEV;
++
++	phy = devm_kzalloc(dev, sizeof(*phy), GFP_KERNEL);
++	if (!phy)
++		return -ENOMEM;
++
++	phy->dev = &pdev->dev;
++	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
++	phy->base = devm_ioremap_resource(&pdev->dev, res);
++	if (IS_ERR(phy->base)) {
++		dev_err(dev, "failed to remap register memory\n");
++		return PTR_ERR(phy->base);
++	}
++
++	phy->por_rst = devm_reset_control_get(phy->dev, "por_rst");
++	if (IS_ERR(phy->por_rst)) {
++		if (PTR_ERR(phy->por_rst) != -EPROBE_DEFER)
++			dev_err(dev, "POR reset is missing\n");
++		return PTR_ERR(phy->por_rst);
++	}
++
++	phy->srif_rst = devm_reset_control_get_optional(phy->dev, "srif_rst");
++	if (IS_ERR(phy->srif_rst))
++		return PTR_ERR(phy->srif_rst);
++
++	phy->phy = devm_phy_create(dev, NULL, match->data);
++	if (IS_ERR(phy->phy)) {
++		dev_err(dev, "failed to create PHY\n");
++		return PTR_ERR(phy->phy);
++	}
++	phy_set_drvdata(phy->phy, phy);
++
++	phy_provider = devm_of_phy_provider_register(dev, of_phy_simple_xlate);
++
++	return PTR_ERR_OR_ZERO(phy_provider);
++}
++
++static struct platform_driver ipq4019_usb_phy_driver = {
++	.probe	= ipq4019_usb_phy_probe,
++	.driver = {
++		.of_match_table	= ipq4019_usb_phy_of_match,
++		.name  = "ipq4019-usb-phy",
++	}
++};
++module_platform_driver(ipq4019_usb_phy_driver);
++
++MODULE_DESCRIPTION("QCOM/IPQ4019 USB phy driver");
++MODULE_AUTHOR("John Crispin <john@phrozen.org>");
++MODULE_LICENSE("GPL v2");
+-- 
+2.26.0
+
