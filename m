@@ -2,167 +2,110 @@ Return-Path: <SRS0=NZ+o=5N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D179C43331
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 14:10:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1227DC2D0ED
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 14:11:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1573E206E6
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 14:10:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="Udp+Xn81"
+	by mail.kernel.org (Postfix) with ESMTP id DB58720723
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 14:11:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585404699;
+	bh=HUS3qRjvR0SEBD9zZKFHbXKAI6P1UowEvsgqIjSddhw=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=sY1eqDkOmc89M+VfQIk+s2tBM5PljRiUZyH5AOvlBG+u6H1LN7z21ZQ3oOgEHrRBU
+	 3fyRgIGfb3z4WWdj4kKDyxacXm9koCGgVA+ynWrvNQXH0ZXbD0VFu3fA61B2zzyfHn
+	 3Z8AKgdelJ6Mm3ZV9SP+gY30uXZSRQ4rvOOu/mZ4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726518AbgC1OKd (ORCPT
+        id S1726912AbgC1OLj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 28 Mar 2020 10:10:33 -0400
-Received: from mout.gmx.net ([212.227.17.22]:34143 "EHLO mout.gmx.net"
+        Sat, 28 Mar 2020 10:11:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48206 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726045AbgC1OKc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 28 Mar 2020 10:10:32 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1585404627;
-        bh=HIDEZKg7AykOfEpAZWMSjf5Y8O/Z/Xqtejc6v4E6QRk=;
-        h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
-        b=Udp+Xn81bCboKS40mWYPzQ2oJ4IYByLyE+QhmLLciiOhKPvJSfn0mEVr74XCtQQ2i
-         HPx9LVhXkrvEItXmjf0PdTinXJHeyPHasAPSUijqjD5cTZdCwLbxeN1pC/Tiarl+yV
-         msueYBTIQL91q2f9aMa/cwJk/QjKx4olbeZAvWos=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from localhost.localdomain ([83.52.229.196]) by mail.gmx.com
- (mrgmx105 [212.227.17.174]) with ESMTPSA (Nemesis) id
- 1MXp9Y-1ik2d43Vs4-00YEUC; Sat, 28 Mar 2020 15:10:27 +0100
-From:   Oscar Carter <oscar.carter@gmx.com>
-To:     Forest Bond <forest@alittletooquiet.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Oscar Carter <oscar.carter@gmx.com>,
-        Malcolm Priestley <tvboxspy@gmail.com>,
-        Quentin Deslandes <quentin.deslandes@itdev.co.uk>,
-        Amir Mahdi Ghorbanian <indigoomega021@gmail.com>,
-        Colin Ian King <colin.king@canonical.com>,
-        Gabriela Bittencourt <gabrielabittencourt00@gmail.com>,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] staging: vt6656: Use defines in preamble_type variables
-Date:   Sat, 28 Mar 2020 15:09:55 +0100
-Message-Id: <20200328140955.23615-1-oscar.carter@gmx.com>
-X-Mailer: git-send-email 2.20.1
+        id S1726045AbgC1OLi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 28 Mar 2020 10:11:38 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6F368206E6;
+        Sat, 28 Mar 2020 14:11:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1585404697;
+        bh=HUS3qRjvR0SEBD9zZKFHbXKAI6P1UowEvsgqIjSddhw=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=Q4yY4nmrRjznFaNP5NYRfLgAHK7HQitZYcxkr6qwxKQWVCF0Rbmq3IGUvLQ2DLw7F
+         sYZuZKhvqO4YS5lw97Bcwe01J0P7juY+9+TsB8QAKVEuXJCfkeoC4VrQpuMAFS83cg
+         8dM73SlSatcu1bW103ot6zgJjPYlsZ2SdYsIIXqo=
+Date:   Sat, 28 Mar 2020 14:11:33 +0000
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Nishant Malpani <nish.malpani25@gmail.com>
+Cc:     andriy.shevchenko@linux.intel.com, joe@perches.com,
+        knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net,
+        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 02/13] iio: st_sensors_i2c: Use vsprintf extension
+ %pe for symbolic error name
+Message-ID: <20200328141133.68d74286@archlinux>
+In-Reply-To: <1ac10121b5bd95fbba59d27482a77d55c2461230.1584897364.git.nish.malpani25@gmail.com>
+References: <cover.1584897364.git.nish.malpani25@gmail.com>
+        <1ac10121b5bd95fbba59d27482a77d55c2461230.1584897364.git.nish.malpani25@gmail.com>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:4qwPggfEBu5MUFm8FNxfZQgZqQe9rPwUA/31M3C/IRxc8RItije
- I35xUMIAB4igdortDKOqCpuJGMeIj6ezqh5dKEES/EW+gFOKdHCtwSpXAVIktUSuouEPXCE
- uT/cwNHuGXJWwe3IAEg8JC8FD/n4ATHWEKkokY1n6QZWxV5h72CnvMHfNbJsl5yhc8AUxwk
- wJO/uWLFs+KDoB4ebdTeQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:t+ipRfVZVbg=:KfY+aNl4fjMrZpVugqNWVW
- 8CsbQZoKPmTRR2udY+Pr9Y0xbIcYKu9e4N7nDuXsCoPqxmJzykzuVvek2UIHr/DgXIhzEHUr/
- D3lZbTF3w7zNzO5bXU7vz7Kki2erD23h7uU2UVvgnPdsK9BJP6NYXhmGBRgEs0ZaNJRquTVrO
- 7EwbXMz9P3UxdoK9KKVMRi/d/qpyxjnpZDzzbiEkTSJhSSz12yDlMMDlBOOItRtvOBfm1hyn/
- bQTeeTKLaLEiQythWX9AAe6eMmvLFebdH25jVtbgc/eDRGW42bhJSb+Ww8CChQUMA3q0TYYjf
- NT5W5LtJTxbscHAXp6Zqvg+OJJ0Ru/Vn1GjPRVFhJdXNwDWSzp5FIz8CyihUReOhkyESxw+sy
- vSi0vFPraCAxUpE0SuZ/0khbQXcxNEkyxjRmcaCU0HXbaDZ5C+6D0f0YdIPI7RA70OMgdmtQB
- qO72B+gUT/7Wq9oVEha9edKSw8BcTI2rcQhdd5Q1LS3eP5aySLsL/i5SfaiEJ6ZaaW2IxSaMg
- YWfOw8Qy3xCu5J4iw53jlrOw+Rz5Fmais90bU0wMDMdG+Qbc4mlgjp+iSS4Jzys5wCbFG6OGx
- iTpKkWdyZD8W3xisOTQTIFz1vIMYVzNhWAHFosUByDmovWOCuVS56wfipzp6qbRp6U6KnJJSf
- jGL6RHAI7C/goreakKWuKmABM0Bm+20Yjy5VwLCyEhzl3j6BQV+IU7aq1U491jmGfk5UdM+WT
- zDyXH1D5wGMgOtaESnUezfvnlJ/755ey/p+ychjiSNsMcKmY/XNvmh0IAaXqohZClBBxl/+BT
- jcELFuTAngIOEMtie6owwp+dvBd4Hq4vY2gf2CrgusWGkRrfwZzX1cmQ54n4viVfMgFxjIu5d
- kUsx+Xg8aPG2783bAmib2buWc4xxUMnVIO64r4Wx/vret3FTRoU44xj6O1SWdHaEM7MJ2LHxM
- 66aejWt2qvOvGUX3r7pWBmmqdTz18XEasmbjR6UY22/rMgYf/zBGdapAmyVDSH5aITMxf4DoB
- walEymN+udcVIBhygD/ssUdibAsx6REOqPAjvE3e73CLXw4nMK4LfgYNGf9+2pCgpivfsWSXf
- kVjHINxcwYUFM3YqFi5tSpBdel874hhIKurNeYJ+eIcTK3FosRmR707YZEbDH/SvrRhe6TpFb
- 4lANa1PFKUzAPZ1McPI2190ko1QtHAXKokFvQd1rsajQRXZ9mfUKdUGF+sIThhgDChywtzTFk
- 7uIyk2e/Tye6ki4So
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use the PREAMBLE_SHORT and PREAMBLE_LONG defines present in the file
-"baseband.h" to assign values to preamble_type variables. Also, use the
-same defines to make comparisons against this variables.
+On Sun, 22 Mar 2020 22:53:04 +0530
+Nishant Malpani <nish.malpani25@gmail.com> wrote:
 
-In this way, avoid the use of numerical literals or boolean values and
-make the code more clear.
+> Utilize %pe format specifier from vsprintf while printing error logs
+> with dev_err(). Discards the use of unnecessary explicit casting and
+> prints symbolic error name which might prove to be convenient during
+> debugging.
+> 
+> Signed-off-by: Nishant Malpani <nish.malpani25@gmail.com>
+This one doesn't apply because the original 'fix' that the whole series
+was based on from Andy has already been applied.
 
-Signed-off-by: Oscar Carter <oscar.carter@gmx.com>
-=2D--
- drivers/staging/vt6656/baseband.c | 8 ++++----
- drivers/staging/vt6656/main_usb.c | 6 +++---
- 2 files changed, 7 insertions(+), 7 deletions(-)
+Whilst you could propose a change on top of that it probably isn't
+worth the effort, so unless others disagree I'd just drop this one.
 
-diff --git a/drivers/staging/vt6656/baseband.c b/drivers/staging/vt6656/ba=
-seband.c
-index a19a563d8bcc..9bbafa7fff61 100644
-=2D-- a/drivers/staging/vt6656/baseband.c
-+++ b/drivers/staging/vt6656/baseband.c
-@@ -142,7 +142,7 @@ unsigned int vnt_get_frame_time(u8 preamble_type, u8 p=
-kt_type,
- 	rate =3D (unsigned int)vnt_frame_time[tx_rate];
+Thanks,
 
- 	if (tx_rate <=3D 3) {
--		if (preamble_type =3D=3D 1)
-+		if (preamble_type =3D=3D PREAMBLE_SHORT)
- 			preamble =3D 96;
- 		else
- 			preamble =3D 192;
-@@ -198,7 +198,7 @@ void vnt_get_phy_field(struct vnt_private *priv, u32 f=
-rame_length,
- 	case RATE_2M:
- 		count =3D bit_count / 2;
+Jonathan
 
--		if (preamble_type =3D=3D 1)
-+		if (preamble_type =3D=3D PREAMBLE_SHORT)
- 			phy->signal =3D 0x09;
- 		else
- 			phy->signal =3D 0x01;
-@@ -207,7 +207,7 @@ void vnt_get_phy_field(struct vnt_private *priv, u32 f=
-rame_length,
- 	case RATE_5M:
- 		count =3D DIV_ROUND_UP(bit_count * 10, 55);
-
--		if (preamble_type =3D=3D 1)
-+		if (preamble_type =3D=3D PREAMBLE_SHORT)
- 			phy->signal =3D 0x0a;
- 		else
- 			phy->signal =3D 0x02;
-@@ -224,7 +224,7 @@ void vnt_get_phy_field(struct vnt_private *priv, u32 f=
-rame_length,
- 				ext_bit =3D true;
- 		}
-
--		if (preamble_type =3D=3D 1)
-+		if (preamble_type =3D=3D PREAMBLE_SHORT)
- 			phy->signal =3D 0x0b;
- 		else
- 			phy->signal =3D 0x03;
-diff --git a/drivers/staging/vt6656/main_usb.c b/drivers/staging/vt6656/ma=
-in_usb.c
-index 8e7269c87ea9..dd89f98cc18c 100644
-=2D-- a/drivers/staging/vt6656/main_usb.c
-+++ b/drivers/staging/vt6656/main_usb.c
-@@ -99,7 +99,7 @@ static void vnt_set_options(struct vnt_private *priv)
- 	priv->op_mode =3D NL80211_IFTYPE_UNSPECIFIED;
- 	priv->bb_type =3D BBP_TYPE_DEF;
- 	priv->packet_type =3D priv->bb_type;
--	priv->preamble_type =3D 0;
-+	priv->preamble_type =3D PREAMBLE_LONG;
- 	priv->exist_sw_net_addr =3D false;
- }
-
-@@ -721,10 +721,10 @@ static void vnt_bss_info_changed(struct ieee80211_hw=
- *hw,
- 	if (changed & BSS_CHANGED_ERP_PREAMBLE) {
- 		if (conf->use_short_preamble) {
- 			vnt_mac_enable_barker_preamble_mode(priv);
--			priv->preamble_type =3D true;
-+			priv->preamble_type =3D PREAMBLE_SHORT;
- 		} else {
- 			vnt_mac_disable_barker_preamble_mode(priv);
--			priv->preamble_type =3D false;
-+			priv->preamble_type =3D PREAMBLE_LONG;
- 		}
- 	}
-
-=2D-
-2.20.1
+> ---
+> 
+> Changes in v2:
+>   - Rewrite commit subject line outlining the usage of %pe.
+>   - Add a separator between regmap and its error name.
+> 
+> Based on conversations in [1] & [2].
+> 
+> [1] https://marc.info/?l=linux-iio&m=158427554607223&w=2
+> [2] https://marc.info/?l=linux-iio&m=158481647605891&w=2
+> ---
+>  drivers/iio/common/st_sensors/st_sensors_i2c.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/iio/common/st_sensors/st_sensors_i2c.c b/drivers/iio/common/st_sensors/st_sensors_i2c.c
+> index 286830fb5d35..4f7ae273ac98 100644
+> --- a/drivers/iio/common/st_sensors/st_sensors_i2c.c
+> +++ b/drivers/iio/common/st_sensors/st_sensors_i2c.c
+> @@ -49,8 +49,8 @@ int st_sensors_i2c_configure(struct iio_dev *indio_dev,
+>  
+>  	sdata->regmap = devm_regmap_init_i2c(client, config);
+>  	if (IS_ERR(sdata->regmap)) {
+> -		dev_err(&client->dev, "Failed to register i2c regmap (%d)\n",
+> -			(int)PTR_ERR(sdata->regmap));
+> +		dev_err(&client->dev, "Failed to register i2c regmap: %pe\n",
+> +			sdata->regmap);
+>  		return PTR_ERR(sdata->regmap);
+>  	}
+>  
 
