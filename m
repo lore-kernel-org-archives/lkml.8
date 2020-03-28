@@ -2,188 +2,388 @@ Return-Path: <SRS0=NZ+o=5N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0EAFC43331
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 09:55:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75A45C43331
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 10:03:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 71C8C20716
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 09:55:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="l6xPybgj"
+	by mail.kernel.org (Postfix) with ESMTP id 372AC206F2
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 10:03:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726224AbgC1Jzc (ORCPT
+        id S1726225AbgC1KBr convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 28 Mar 2020 05:55:32 -0400
-Received: from mout.gmx.net ([212.227.15.15]:40407 "EHLO mout.gmx.net"
+        Sat, 28 Mar 2020 06:01:47 -0400
+Received: from mga03.intel.com ([134.134.136.65]:47542 "EHLO mga03.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725865AbgC1Jzb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 28 Mar 2020 05:55:31 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1585389319;
-        bh=GF5fOQBU8LcGvDbPJpFKcu8Xuvl8GxKStGoxi7M1Hps=;
-        h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
-        b=l6xPybgjMzn27Pf86wSYUTLvkQe3lOX0Ac9IXp8i+xeUrvHHLcEOpQbY/BzUe+GAj
-         Z9nLiR1wFuhJfakOPuStiKkynGBVKgqNan42hvgj/rzX4MHqHOOX7Z+8J9wdmjZZKC
-         Sk9Si+Dni+atCwarOcv2I0F/BqwvkP6RXvHtzvPA=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from localhost.localdomain ([83.52.229.196]) by mail.gmx.com
- (mrgmx005 [212.227.17.184]) with ESMTPSA (Nemesis) id
- 1MOzT4-1iss6U3upw-00PMkQ; Sat, 28 Mar 2020 10:55:19 +0100
-From:   Oscar Carter <oscar.carter@gmx.com>
-To:     Forest Bond <forest@alittletooquiet.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Malcolm Priestley <tvboxspy@gmail.com>,
-        Oscar Carter <oscar.carter@gmx.com>,
-        Quentin Deslandes <quentin.deslandes@itdev.co.uk>,
-        Amir Mahdi Ghorbanian <indigoomega021@gmail.com>,
-        Colin Ian King <colin.king@canonical.com>,
-        Gabriela Bittencourt <gabrielabittencourt00@gmail.com>,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
-        Dan Carpenter <dan.carpenter@oracle.com>
-Subject: [PATCH] staging: vt6656: Use defines in vnt_mac_reg_bits_* functions
-Date:   Sat, 28 Mar 2020 10:54:33 +0100
-Message-Id: <20200328095433.7879-1-oscar.carter@gmx.com>
-X-Mailer: git-send-email 2.20.1
+        id S1725865AbgC1KBq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 28 Mar 2020 06:01:46 -0400
+IronPort-SDR: PuKDkP/nENsRuj6xDgUo2sxVbCj62tJuCiiqvzMbnZk2wq+S5D4Qfr9BGhmzu8F/dVelVfk3Pj
+ Lm2mZizyMypg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Mar 2020 03:01:46 -0700
+IronPort-SDR: nTGV/oQljqm6AlgLwM971Fe6bQNXrc98YHV+PNYE8ODsTUeNSu4pZWrHw+ED+hr8g9HIIYjNyC
+ K8sOgTM6ccQg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,315,1580803200"; 
+   d="scan'208";a="394627158"
+Received: from fmsmsx105.amr.corp.intel.com ([10.18.124.203])
+  by orsmga004.jf.intel.com with ESMTP; 28 Mar 2020 03:01:45 -0700
+Received: from shsmsx151.ccr.corp.intel.com (10.239.6.50) by
+ FMSMSX105.amr.corp.intel.com (10.18.124.203) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Sat, 28 Mar 2020 03:01:45 -0700
+Received: from shsmsx104.ccr.corp.intel.com ([169.254.5.225]) by
+ SHSMSX151.ccr.corp.intel.com ([169.254.3.22]) with mapi id 14.03.0439.000;
+ Sat, 28 Mar 2020 18:01:42 +0800
+From:   "Tian, Kevin" <kevin.tian@intel.com>
+To:     Jacob Pan <jacob.jun.pan@linux.intel.com>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        David Woodhouse <dwmw2@infradead.org>,
+        "Alex Williamson" <alex.williamson@redhat.com>,
+        Jean-Philippe Brucker <jean-philippe@linaro.com>
+CC:     "Liu, Yi L" <yi.l.liu@intel.com>,
+        "Raj, Ashok" <ashok.raj@intel.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Eric Auger <eric.auger@redhat.com>
+Subject: RE: [PATCH V10 08/11] iommu/vt-d: Add svm/sva invalidate function
+Thread-Topic: [PATCH V10 08/11] iommu/vt-d: Add svm/sva invalidate function
+Thread-Index: AQHV/w5hchZ4XNV890+XBMGi6MGw3ahdsRPA
+Date:   Sat, 28 Mar 2020 10:01:42 +0000
+Message-ID: <AADFC41AFE54684AB9EE6CBC0274A5D19D7FA0AB@SHSMSX104.ccr.corp.intel.com>
+References: <1584746861-76386-1-git-send-email-jacob.jun.pan@linux.intel.com>
+ <1584746861-76386-9-git-send-email-jacob.jun.pan@linux.intel.com>
+In-Reply-To: <1584746861-76386-9-git-send-email-jacob.jun.pan@linux.intel.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-product: dlpe-windows
+dlp-version: 11.2.0.6
+dlp-reaction: no-action
+x-originating-ip: [10.239.127.40]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:812Pai66WVOzf4x7TeQ0az2SXkPT1AiBLUTVSXGCgdJkGxEFITZ
- 1XKFwyKGPvrKJiod7Lo4ekZPmjGk43JSxkUv3RbrsMEOSnIhmoRL/DVEZ1/T4EDA+8Mqk/H
- NqxxP2nbuxydqaEDFr7WbeUKA24KwB5MmcIRFd+sfi9rVPCPltxzOpHBdxyQWJdIPay5/LS
- U4VaIOP0XAo42qFr4iWVA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:hq4z73EcVdM=:5j1xCcPsUIvjTogKmTYrNy
- rRT0DDOQcFGWAd1rZAz5mecZdBwCNvhD6c9Q8Zvgids10YDrSQxW1q8kPKvW5r6fhxOKRwjRa
- 4YkcNbUIDj9MUqajUI45EWvddWT/xKrPxc/g7I9uuzw4yucOi0X1blUYnNNqv/4vFkkY2FV+K
- 7r+u77MM8hFHz67dupt3qhtJsidQ837wvadPG2BVkD86xWB/Vsh/webwc/l/bm8ohevObIsUH
- spoB93a+icJY/DHkXtGAtLIxOt1wSn2wQCEcWkFOePXUqnaal9KbxTXrqjmjENkGPfUCBd6sg
- 1vGNMH1DLGjuZ5pSryioAZM9K3XxMuMk9E6f9HHEUDxuvCzTIT8uvTG2bTbff8v3mbFCu+CS9
- q52QssciNwIhBrqTxYTVcptlRXil6nVDaMaLqYrDTCPAlrK7TFB75vLBjzjhyhn0gVRZK8l8J
- FS12/Xg817ijeYPnD+O3XQzySJOAqAGOr3yDI3TD8p1BoyvXpOTEGVGgSxUfKAhEJdNyTZaIQ
- 8dTPGOAGP3OjUA1RLno1/7chavtWDkn+OPKiJMJUF1C5SadY5qLXwfsrZesp06oYjQaUO7ksf
- 6z5EsV+cmUAXaCTQWGuDhDES3d1K9xBZk8zCrilkzpnVDfAVn+PxKTAjjKdL9mudmKI1woMaC
- TZzV4x1mfQ99HViwccfxBd3KVeL9NwY54R/Q6uatkI/S4mzQ/daEbLzwXzts3rX9ozQIa2Ppy
- s+IwUlhoL2SLx7xFCT0ErUxqsm/5VXKPGzXXZ7KePx+HTqmedAtBejLR7cwpPoQU31TDB3jJ0
- 1NWTnmDbx9sQiJtKX7liYhXhOKcRfddT4bhtdJ+WmEzmHYYp1su1JLp7TgeXJgd9dd2fIGNfP
- AXz/WhlwTt3Kr8SGES5gCyeKkZhRo5us/qhqmkpOZLiqS5CysrKUvaIqOLzg8XEHrD9urFnOb
- 6IOndMOHnGNgvyfN+FOYhlEzdWLHCN/hf2k1coagkMI4yqDbapDr8ecRWXqWYxJgT8ueiB26t
- fyl8mCEZv4zikeTbM42eVr7tboyoWT37Klg97c91EXFB8fKHiXMk4MhODzIO+Oxpfqf8f+w/9
- dIDoLdgHMp9EZOYBpRPgnI+1KTjRF/11DlPreE/cJzYQf+wG5603EhSFfKAbGkWAe/l7POWB4
- m2GRnN0LotDezwAdwvaYNjFRGTjXv0HNHMPatlsIb5RL6hYFpKproGLdVruE99j2sUCWrWU9+
- Ufxa8g3mRd9goKULo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Define the necessary bits in the CHANNEL, PAPEDELAY and GPIOCTL0
-registers to can use them in the calls to vnt_mac_reg_bits_on and
-vnt_mac_reg_bits_off functions. In this way, avoid the use of BIT()
-macros and clarify the code.
+> From: Jacob Pan <jacob.jun.pan@linux.intel.com>
+> Sent: Saturday, March 21, 2020 7:28 AM
+> 
+> When Shared Virtual Address (SVA) is enabled for a guest OS via
+> vIOMMU, we need to provide invalidation support at IOMMU API and driver
+> level. This patch adds Intel VT-d specific function to implement
+> iommu passdown invalidate API for shared virtual address.
+> 
+> The use case is for supporting caching structure invalidation
+> of assigned SVM capable devices. Emulated IOMMU exposes queue
 
-Fixes: 3017e587e368 ("staging: vt6656: Use BIT() macro in vnt_mac_reg_bits=
-_* functions")
-Suggested-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: Oscar Carter <oscar.carter@gmx.com>
-=2D--
- drivers/staging/vt6656/baseband.c |  6 ++++--
- drivers/staging/vt6656/card.c     |  3 +--
- drivers/staging/vt6656/mac.h      | 12 ++++++++++++
- drivers/staging/vt6656/main_usb.c |  2 +-
- 4 files changed, 18 insertions(+), 5 deletions(-)
+emulated IOMMU -> vIOMMU, since virito-iommu could use the
+interface as well.
 
-diff --git a/drivers/staging/vt6656/baseband.c b/drivers/staging/vt6656/ba=
-seband.c
-index a19a563d8bcc..dd3c3bf5e8b5 100644
-=2D-- a/drivers/staging/vt6656/baseband.c
-+++ b/drivers/staging/vt6656/baseband.c
-@@ -442,7 +442,8 @@ int vnt_vt3184_init(struct vnt_private *priv)
- 		if (ret)
- 			goto end;
+> invalidation capability and passes down all descriptors from the guest
+> to the physical IOMMU.
+> 
+> The assumption is that guest to host device ID mapping should be
+> resolved prior to calling IOMMU driver. Based on the device handle,
+> host IOMMU driver can replace certain fields before submit to the
+> invalidation queue.
+> 
+> ---
+> v7 review fixed in v10
+> ---
+> 
+> Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
+> Signed-off-by: Ashok Raj <ashok.raj@intel.com>
+> Signed-off-by: Liu, Yi L <yi.l.liu@intel.com>
+> ---
+>  drivers/iommu/intel-iommu.c | 182
+> ++++++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 182 insertions(+)
+> 
+> diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
+> index b1477cd423dd..a76afb0fd51a 100644
+> --- a/drivers/iommu/intel-iommu.c
+> +++ b/drivers/iommu/intel-iommu.c
+> @@ -5619,6 +5619,187 @@ static void
+> intel_iommu_aux_detach_device(struct iommu_domain *domain,
+>  	aux_domain_remove_dev(to_dmar_domain(domain), dev);
+>  }
+> 
+> +/*
+> + * 2D array for converting and sanitizing IOMMU generic TLB granularity to
+> + * VT-d granularity. Invalidation is typically included in the unmap operation
+> + * as a result of DMA or VFIO unmap. However, for assigned devices guest
+> + * owns the first level page tables. Invalidations of translation caches in the
+> + * guest are trapped and passed down to the host.
+> + *
+> + * vIOMMU in the guest will only expose first level page tables, therefore
+> + * we do not include IOTLB granularity for request without PASID (second
+> level).
 
--		ret =3D vnt_mac_reg_bits_on(priv, MAC_REG_PAPEDELAY, BIT(0));
-+		ret =3D vnt_mac_reg_bits_on(priv, MAC_REG_PAPEDELAY,
-+					  PAPEDELAY_B0);
- 		if (ret)
- 			goto end;
- 	} else if (priv->rf_type =3D=3D RF_VT3226D0) {
-@@ -451,7 +452,8 @@ int vnt_vt3184_init(struct vnt_private *priv)
- 		if (ret)
- 			goto end;
+I would revise above as "We do not support IOTLB granularity for request 
+without PASID (second level), therefore any vIOMMU implementation that
+exposes the SVA capability to the guest should only expose the first level
+page tables, implying all invalidation requests from the guest will include
+a valid PASID"
 
--		ret =3D vnt_mac_reg_bits_on(priv, MAC_REG_PAPEDELAY, BIT(0));
-+		ret =3D vnt_mac_reg_bits_on(priv, MAC_REG_PAPEDELAY,
-+					  PAPEDELAY_B0);
- 		if (ret)
- 			goto end;
- 	}
-diff --git a/drivers/staging/vt6656/card.c b/drivers/staging/vt6656/card.c
-index dc3ab10eb630..b88de0042b9d 100644
-=2D-- a/drivers/staging/vt6656/card.c
-+++ b/drivers/staging/vt6656/card.c
-@@ -64,8 +64,7 @@ void vnt_set_channel(struct vnt_private *priv, u32 conne=
-ction_channel)
- 	vnt_mac_reg_bits_on(priv, MAC_REG_MACCR, MACCR_CLRNAV);
+> + *
+> + * For example, to find the VT-d granularity encoding for IOTLB
+> + * type and page selective granularity within PASID:
+> + * X: indexed by iommu cache type
+> + * Y: indexed by enum iommu_inv_granularity
+> + * [IOMMU_CACHE_INV_TYPE_IOTLB][IOMMU_INV_GRANU_ADDR]
+> + *
+> + * Granu_map array indicates validity of the table. 1: valid, 0: invalid
+> + *
+> + */
+> +const static int
+> inv_type_granu_map[IOMMU_CACHE_INV_TYPE_NR][IOMMU_INV_GRANU_
+> NR] = {
+> +	/*
+> +	 * PASID based IOTLB invalidation: PASID selective (per PASID),
+> +	 * page selective (address granularity)
+> +	 */
+> +	{0, 1, 1},
+> +	/* PASID based dev TLBs, only support all PASIDs or single PASID */
+> +	{1, 1, 0},
 
- 	/* Set Channel[7] =3D 0 to tell H/W channel is changing now. */
--	vnt_mac_reg_bits_off(priv, MAC_REG_CHANNEL,
--			     (BIT(7) | BIT(5) | BIT(4)));
-+	vnt_mac_reg_bits_off(priv, MAC_REG_CHANNEL, CHANNEL_B7_B5_B4);
+Is this combination correct? when single PASID is being specified, it is 
+essentially a page-selective invalidation since you need provide Address
+and Size. 
 
- 	vnt_control_out(priv, MESSAGE_TYPE_SELECT_CHANNEL,
- 			connection_channel, 0, 0, NULL);
-diff --git a/drivers/staging/vt6656/mac.h b/drivers/staging/vt6656/mac.h
-index c532b27de37f..f61b6595defb 100644
-=2D-- a/drivers/staging/vt6656/mac.h
-+++ b/drivers/staging/vt6656/mac.h
-@@ -295,11 +295,20 @@
- #define BBREGCTL_REGR		BIT(1)
- #define BBREGCTL_REGW		BIT(0)
+> +	/* PASID cache */
 
-+/* Bits in the CHANNEL register */
-+#define CHANNEL_B7		BIT(7)
-+#define CHANNEL_B5		BIT(5)
-+#define CHANNEL_B4		BIT(4)
-+#define CHANNEL_B7_B5_B4	(CHANNEL_B7 | CHANNEL_B5 | CHANNEL_B4)
-+
- /* Bits in the IFREGCTL register */
- #define IFREGCTL_DONE		BIT(2)
- #define IFREGCTL_IFRF		BIT(1)
- #define IFREGCTL_REGW		BIT(0)
+PASID cache is fully managed by the host. Guest PASID cache invalidation
+is interpreted by vIOMMU for bind and unbind operations. I don't think
+we should accept any PASID cache invalidation from userspace or guest.
 
-+/* Bits in the PAPEDELAY register */
-+#define PAPEDELAY_B0		BIT(0)
-+
- /* Bits in the SOFTPWRCTL register */
- #define SOFTPWRCTL_RFLEOPT	BIT(3)
- #define SOFTPWRCTL_TXPEINV	BIT(1)
-@@ -311,6 +320,9 @@
- #define SOFTPWRCTL_SWPE1	BIT(1)
- #define SOFTPWRCTL_SWPE3	BIT(0)
+> +	{1, 1, 0}
+> +};
+> +
+> +const static int
+> inv_type_granu_table[IOMMU_CACHE_INV_TYPE_NR][IOMMU_INV_GRANU
+> _NR] = {
+> +	/* PASID based IOTLB */
+> +	{0, QI_GRAN_NONG_PASID, QI_GRAN_PSI_PASID},
+> +	/* PASID based dev TLBs */
+> +	{QI_DEV_IOTLB_GRAN_ALL, QI_DEV_IOTLB_GRAN_PASID_SEL, 0},
+> +	/* PASID cache */
+> +	{QI_PC_ALL_PASIDS, QI_PC_PASID_SEL, 0},
+> +};
+> +
+> +static inline int to_vtd_granularity(int type, int granu, int *vtd_granu)
+> +{
+> +	if (type >= IOMMU_CACHE_INV_TYPE_NR || granu >=
+> IOMMU_INV_GRANU_NR ||
+> +		!inv_type_granu_map[type][granu])
+> +		return -EINVAL;
+> +
+> +	*vtd_granu = inv_type_granu_table[type][granu];
+> +
 
-+/* Bits in the GPIOCTL0 register */
-+#define GPIOCTL0_B0		BIT(0)
-+
- /* Bits in the GPIOCTL1 register */
- #define GPIO3_MD		BIT(5)
- #define GPIO3_DATA		BIT(6)
-diff --git a/drivers/staging/vt6656/main_usb.c b/drivers/staging/vt6656/ma=
-in_usb.c
-index 8e7269c87ea9..aa9c1fccc134 100644
-=2D-- a/drivers/staging/vt6656/main_usb.c
-+++ b/drivers/staging/vt6656/main_usb.c
-@@ -366,7 +366,7 @@ static int vnt_init_registers(struct vnt_private *priv=
-)
- 	if (ret)
- 		goto end;
+btw do we really need both map and table here? Can't we just
+use one table with unsupported granularity marked as a special
+value?
 
--	ret =3D vnt_mac_reg_bits_on(priv, MAC_REG_GPIOCTL0, BIT(0));
-+	ret =3D vnt_mac_reg_bits_on(priv, MAC_REG_GPIOCTL0, GPIOCTL0_B0);
- 	if (ret)
- 		goto end;
+> +	return 0;
+> +}
+> +
+> +static inline u64 to_vtd_size(u64 granu_size, u64 nr_granules)
+> +{
+> +	u64 nr_pages = (granu_size * nr_granules) >> VTD_PAGE_SHIFT;
+> +
+> +	/* VT-d size is encoded as 2^size of 4K pages, 0 for 4k, 9 for 2MB, etc.
+> +	 * IOMMU cache invalidate API passes granu_size in bytes, and
+> number of
+> +	 * granu size in contiguous memory.
+> +	 */
+> +	return order_base_2(nr_pages);
+> +}
+> +
+> +#ifdef CONFIG_INTEL_IOMMU_SVM
+> +static int intel_iommu_sva_invalidate(struct iommu_domain *domain,
+> +		struct device *dev, struct iommu_cache_invalidate_info
+> *inv_info)
+> +{
+> +	struct dmar_domain *dmar_domain = to_dmar_domain(domain);
+> +	struct device_domain_info *info;
+> +	struct intel_iommu *iommu;
+> +	unsigned long flags;
+> +	int cache_type;
+> +	u8 bus, devfn;
+> +	u16 did, sid;
+> +	int ret = 0;
+> +	u64 size = 0;
+> +
+> +	if (!inv_info || !dmar_domain ||
+> +		inv_info->version !=
+> IOMMU_CACHE_INVALIDATE_INFO_VERSION_1)
+> +		return -EINVAL;
+> +
+> +	if (!dev || !dev_is_pci(dev))
+> +		return -ENODEV;
+> +
+> +	iommu = device_to_iommu(dev, &bus, &devfn);
+> +	if (!iommu)
+> +		return -ENODEV;
+> +
+> +	spin_lock_irqsave(&device_domain_lock, flags);
+> +	spin_lock(&iommu->lock);
+> +	info = iommu_support_dev_iotlb(dmar_domain, iommu, bus, devfn);
+> +	if (!info) {
+> +		ret = -EINVAL;
+> +		goto out_unlock;
 
-=2D-
-2.20.1
+-ENOTSUPP?
+
+> +	}
+> +	did = dmar_domain->iommu_did[iommu->seq_id];
+> +	sid = PCI_DEVID(bus, devfn);
+> +
+> +	/* Size is only valid in non-PASID selective invalidation */
+> +	if (inv_info->granularity != IOMMU_INV_GRANU_PASID)
+> +		size = to_vtd_size(inv_info->addr_info.granule_size,
+> +				   inv_info->addr_info.nb_granules);
+> +
+> +	for_each_set_bit(cache_type, (unsigned long *)&inv_info->cache,
+> IOMMU_CACHE_INV_TYPE_NR) {
+> +		int granu = 0;
+> +		u64 pasid = 0;
+> +
+> +		ret = to_vtd_granularity(cache_type, inv_info->granularity,
+> &granu);
+> +		if (ret) {
+> +			pr_err("Invalid cache type and granu
+> combination %d/%d\n", cache_type,
+> +				inv_info->granularity);
+> +			break;
+> +		}
+> +
+> +		/* PASID is stored in different locations based on granularity
+> */
+> +		if (inv_info->granularity == IOMMU_INV_GRANU_PASID &&
+> +			inv_info->pasid_info.flags &
+> IOMMU_INV_PASID_FLAGS_PASID)
+> +			pasid = inv_info->pasid_info.pasid;
+> +		else if (inv_info->granularity == IOMMU_INV_GRANU_ADDR
+> &&
+> +			inv_info->addr_info.flags &
+> IOMMU_INV_ADDR_FLAGS_PASID)
+> +			pasid = inv_info->addr_info.pasid;
+> +		else {
+> +			pr_err("Cannot find PASID for given cache type and
+> granularity\n");
+> +			break;
+> +		}
+> +
+> +		switch (BIT(cache_type)) {
+> +		case IOMMU_CACHE_INV_TYPE_IOTLB:
+> +			if ((inv_info->granularity !=
+> IOMMU_INV_GRANU_PASID) &&
+
+granularity == IOMMU_INV_GRANU_ADDR? otherwise it's unclear
+why IOMMU_INV_GRANU_DOMAIN also needs size check.
+
+> +				size && (inv_info->addr_info.addr &
+> ((BIT(VTD_PAGE_SHIFT + size)) - 1))) {
+> +				pr_err("Address out of range, 0x%llx, size
+> order %llu\n",
+> +					inv_info->addr_info.addr, size);
+> +				ret = -ERANGE;
+> +				goto out_unlock;
+> +			}
+> +
+> +			qi_flush_piotlb(iommu, did,
+> +					pasid,
+> +					mm_to_dma_pfn(inv_info-
+> >addr_info.addr),
+> +					(granu == QI_GRAN_NONG_PASID) ? -
+> 1 : 1 << size,
+> +					inv_info->addr_info.flags &
+> IOMMU_INV_ADDR_FLAGS_LEAF);
+> +
+> +			/*
+> +			 * Always flush device IOTLB if ATS is enabled since
+> guest
+> +			 * vIOMMU exposes CM = 1, no device IOTLB flush
+> will be passed
+> +			 * down.
+> +			 */
+
+Does VT-d spec mention that no device IOTLB flush is required when CM=1?
+
+> +			if (info->ats_enabled) {
+> +				qi_flush_dev_iotlb_pasid(iommu, sid, info-
+> >pfsid,
+> +						pasid, info->ats_qdep,
+> +						inv_info->addr_info.addr,
+> size,
+> +						granu);
+> +			}
+> +			break;
+> +		case IOMMU_CACHE_INV_TYPE_DEV_IOTLB:
+> +			if (info->ats_enabled) {
+> +				qi_flush_dev_iotlb_pasid(iommu, sid, info-
+> >pfsid,
+> +						inv_info->addr_info.pasid,
+> info->ats_qdep,
+> +						inv_info->addr_info.addr,
+> size,
+> +						granu);
+
+I'm confused here. There are two granularities allowed for devtlb, but here
+you only handle one of them?
+
+> +			} else
+> +				pr_warn("Passdown device IOTLB flush w/o
+> ATS!\n");
+> +
+> +			break;
+> +		case IOMMU_CACHE_INV_TYPE_PASID:
+> +			qi_flush_pasid_cache(iommu, did, granu, inv_info-
+> >pasid_info.pasid);
+> +
+
+as earlier comment, we shouldn't allow userspace or guest to invalidate
+PASID cache
+
+> +			break;
+> +		default:
+> +			dev_err(dev, "Unsupported IOMMU invalidation
+> type %d\n",
+> +				cache_type);
+> +			ret = -EINVAL;
+> +		}
+> +	}
+> +out_unlock:
+> +	spin_unlock(&iommu->lock);
+> +	spin_unlock_irqrestore(&device_domain_lock, flags);
+> +
+> +	return ret;
+> +}
+> +#endif
+> +
+>  static int intel_iommu_map(struct iommu_domain *domain,
+>  			   unsigned long iova, phys_addr_t hpa,
+>  			   size_t size, int iommu_prot, gfp_t gfp)
+> @@ -6204,6 +6385,7 @@ const struct iommu_ops intel_iommu_ops = {
+>  	.is_attach_deferred	= intel_iommu_is_attach_deferred,
+>  	.pgsize_bitmap		= INTEL_IOMMU_PGSIZES,
+>  #ifdef CONFIG_INTEL_IOMMU_SVM
+> +	.cache_invalidate	= intel_iommu_sva_invalidate,
+>  	.sva_bind_gpasid	= intel_svm_bind_gpasid,
+>  	.sva_unbind_gpasid	= intel_svm_unbind_gpasid,
+>  #endif
+> --
+> 2.7.4
 
