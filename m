@@ -2,208 +2,258 @@ Return-Path: <SRS0=NZ+o=5N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACE69C43331
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 21:44:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29662C43331
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 21:46:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7464A20714
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 21:44:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585431847;
-	bh=QaY36iHTP79UXqax0r/o+p3Tdr+Do9OjGBasmRH9CJQ=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=0c7GfNs/HJl2sokz4DTeX03K1OZ7NEfcrf8Kj1AJQ6lNfsh/7xelhPORualeaxAD/
-	 Iq7/hb6nUog0EhbrB7p+tPKyZAVHTsgSenREBEQvHrvXwb8wogsrKxOObovehXlsvD
-	 kDxYH2hA0Ks41v7ZCn2yCIneXQBJ7rqk1584rSVk=
+	by mail.kernel.org (Postfix) with ESMTP id DC68720716
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 21:46:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727732AbgC1Vny (ORCPT
+        id S1727750AbgC1VqB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 28 Mar 2020 17:43:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58350 "EHLO mail.kernel.org"
+        Sat, 28 Mar 2020 17:46:01 -0400
+Received: from mga12.intel.com ([192.55.52.136]:13793 "EHLO mga12.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726604AbgC1Vny (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 28 Mar 2020 17:43:54 -0400
-Received: from localhost (mobile-166-175-186-165.mycingular.net [166.175.186.165])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BF6AA20714;
-        Sat, 28 Mar 2020 21:43:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585431833;
-        bh=QaY36iHTP79UXqax0r/o+p3Tdr+Do9OjGBasmRH9CJQ=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=LOC7m60ErlmVKIHpqS6IGVg09QIRI+KWlV23XfdE/LDM/AVIzeMQQEtkewcu0w8+K
-         9LbrEFqgaK9RJHLEAoVlr/EpRSf4KY5Rjxnij0DxcLrSlubxckNVqB0QJZr6TXuO1v
-         Lji//GS8YpneAyl9c7FkuaEVu7wHHSbnrQSF9QBw=
-Date:   Sat, 28 Mar 2020 16:43:51 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Jon Derrick <jonathan.derrick@intel.com>
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Andy Shevchenko <andriy.shevchenko@intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Pawel Baldysiak <pawel.baldysiak@intel.com>,
-        Sinan Kaya <okaya@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Keith Busch <kbusch@kernel.org>,
-        Alexandru Gagniuc <mr.nuke.me@gmail.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Russell King <rmk+kernel@armlinux.org.uk>
-Subject: Re: [RFC 2/9] PCI: pci-bridge-emul: Eliminate reserved member
-Message-ID: <20200328214351.GA129854@google.com>
+        id S1726604AbgC1VqB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 28 Mar 2020 17:46:01 -0400
+IronPort-SDR: NZYKA3BftvO5ApvQsRwAaqglx8j0tIGdOtcFT/72KNI1hsxBb6jDa7kSemadkbi1tSnimfZtaK
+ tw/z/zwvQw0Q==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Mar 2020 14:46:00 -0700
+IronPort-SDR: mibbMQNGdpY5ItVkCGkudoivlRchJoz7ufs3F25gOm02kNDwChWTXF+mueZ/rSKglQG6GbQDp9
+ iNB6Aio/5ssg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,317,1580803200"; 
+   d="scan'208";a="449382593"
+Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
+  by fmsmga006.fm.intel.com with ESMTP; 28 Mar 2020 14:45:58 -0700
+Received: from kbuild by lkp-server01 with local (Exim 4.89)
+        (envelope-from <lkp@intel.com>)
+        id 1jIJHC-0002Kd-49; Sun, 29 Mar 2020 05:45:58 +0800
+Date:   Sun, 29 Mar 2020 05:45:40 +0800
+From:   kbuild test robot <lkp@intel.com>
+To:     "Paul E. McKenney" <paulmck@kernel.org>
+Cc:     linux-kernel@vger.kernel.org
+Subject: [rcu:master] BUILD SUCCESS
+ 26b3b819bbe7f54f24036876e67bf371759175a1
+Message-ID: <5e7fc584.DUPnfUrc/l45gNME%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1581120007-5280-3-git-send-email-jonathan.derrick@intel.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[+cc Thomas, Russell]
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/paulmck/linux-rcu.git  master
+branch HEAD: 26b3b819bbe7f54f24036876e67bf371759175a1  Merge branch 'kcsan-dev.2020.03.25a' into HEAD
 
-On Fri, Feb 07, 2020 at 05:00:00PM -0700, Jon Derrick wrote:
-> Assume any bit not in the Read-Only, Read-Write, or Write-1-to-Clear
-> behavior masks is a Reserved bit and should return 0 on reads.
+elapsed time: 732m
 
-This also seems like it makes sense on its own, especially if you can
-include a spec citation.
+configs tested: 191
+configs skipped: 0
 
-> Signed-off-by: Jon Derrick <jonathan.derrick@intel.com>
-> ---
->  drivers/pci/pci-bridge-emul.c | 28 +++++++++++-----------------
->  1 file changed, 11 insertions(+), 17 deletions(-)
-> 
-> diff --git a/drivers/pci/pci-bridge-emul.c b/drivers/pci/pci-bridge-emul.c
-> index d065c2a..e0567ca 100644
-> --- a/drivers/pci/pci-bridge-emul.c
-> +++ b/drivers/pci/pci-bridge-emul.c
-> @@ -24,6 +24,15 @@
->  #define PCI_CAP_PCIE_START	PCI_BRIDGE_CONF_END
->  #define PCI_CAP_PCIE_END	(PCI_CAP_PCIE_START + PCI_EXP_SLTSTA2 + 2)
->  
-> +/**
-> + * struct pci_bridge_reg_behavior - register bits behaviors
-> + * @ro:		Read-Only bits
-> + * @rw:		Read-Write bits
-> + * @w1c:	Write-1-to-Clear bits
-> + *
-> + * Reads and Writes will be filtered by specified behavior. All other bits not
-> + * declared are assumed 'Reserved' and will return 0 on reads.
-> + */
->  struct pci_bridge_reg_behavior {
->  	/* Read-only bits */
->  	u32 ro;
-> @@ -33,9 +42,6 @@ struct pci_bridge_reg_behavior {
->  
->  	/* Write-1-to-clear bits */
->  	u32 w1c;
-> -
-> -	/* Reserved bits (hardwired to 0) */
-> -	u32 rsvd;
->  };
->  
->  static const struct pci_bridge_reg_behavior pci_regs_behavior[] = {
-> @@ -49,7 +55,6 @@ struct pci_bridge_reg_behavior {
->  			PCI_COMMAND_FAST_BACK) |
->  		       (PCI_STATUS_CAP_LIST | PCI_STATUS_66MHZ |
->  			PCI_STATUS_FAST_BACK | PCI_STATUS_DEVSEL_MASK) << 16),
-> -		.rsvd = GENMASK(15, 10) | ((BIT(6) | GENMASK(3, 0)) << 16),
->  		.w1c = (PCI_STATUS_PARITY |
->  			PCI_STATUS_SIG_TARGET_ABORT |
->  			PCI_STATUS_REC_TARGET_ABORT |
-> @@ -106,8 +111,6 @@ struct pci_bridge_reg_behavior {
->  			PCI_STATUS_REC_MASTER_ABORT |
->  			PCI_STATUS_SIG_SYSTEM_ERROR |
->  			PCI_STATUS_DETECTED_PARITY) << 16,
-> -
-> -		.rsvd = ((BIT(6) | GENMASK(4, 0)) << 16),
->  	},
->  
->  	[PCI_MEMORY_BASE / 4] = {
-> @@ -140,12 +143,10 @@ struct pci_bridge_reg_behavior {
->  
->  	[PCI_CAPABILITY_LIST / 4] = {
->  		.ro = GENMASK(7, 0),
-> -		.rsvd = GENMASK(31, 8),
->  	},
->  
->  	[PCI_ROM_ADDRESS1 / 4] = {
->  		.rw = GENMASK(31, 11) | BIT(0),
-> -		.rsvd = GENMASK(10, 1),
->  	},
->  
->  	/*
-> @@ -168,8 +169,6 @@ struct pci_bridge_reg_behavior {
->  		.ro = (GENMASK(15, 8) | ((PCI_BRIDGE_CTL_FAST_BACK) << 16)),
->  
->  		.w1c = BIT(10) << 16,
-> -
-> -		.rsvd = (GENMASK(15, 12) | BIT(4)) << 16,
->  	},
->  };
->  
-> @@ -196,13 +195,11 @@ struct pci_bridge_reg_behavior {
->  		 */
->  		.w1c = (BIT(6) | GENMASK(3, 0)) << 16,
->  		.ro = GENMASK(5, 4) << 16,
-> -		.rsvd = GENMASK(15, 7) << 16,
->  	},
->  
->  	[PCI_EXP_LNKCAP / 4] = {
->  		/* All bits are RO, except bit 23 which is reserved */
->  		.ro = lower_32_bits(~BIT(23)),
-> -		.rsvd = BIT(23),
->  	},
->  
->  	[PCI_EXP_LNKCTL / 4] = {
-> @@ -216,7 +213,6 @@ struct pci_bridge_reg_behavior {
->  		.rw = GENMASK(15, 14) | GENMASK(11, 3) | GENMASK(1, 0),
->  		.ro = GENMASK(13, 0) << 16,
->  		.w1c = GENMASK(15, 14) << 16,
-> -		.rsvd = GENMASK(13, 12) | BIT(2),
->  	},
->  
->  	[PCI_EXP_SLTCAP / 4] = {
-> @@ -234,7 +230,6 @@ struct pci_bridge_reg_behavior {
->  		.rw = GENMASK(14, 0),
->  		.w1c = (BIT(8) | GENMASK(4, 0)) << 16,
->  		.ro = GENMASK(7, 5) << 16,
-> -		.rsvd = BIT(15) | (GENMASK(15, 9) << 16),
->  	},
->  
->  	[PCI_EXP_RTCTL / 4] = {
-> @@ -246,7 +241,6 @@ struct pci_bridge_reg_behavior {
->  		 */
->  		.rw = GENMASK(4, 0),
->  		.ro = BIT(0) << 16,
-> -		.rsvd = GENMASK(15, 5) | (GENMASK(15, 1) << 16),
->  	},
->  
->  	[PCI_EXP_RTSTA / 4] = {
-> @@ -256,7 +250,6 @@ struct pci_bridge_reg_behavior {
->  		 */
->  		.ro = BIT(17) | GENMASK(15, 0),
->  		.w1c = BIT(16),
-> -		.rsvd = GENMASK(31, 18),
->  	},
->  };
->  
-> @@ -364,7 +357,8 @@ int pci_bridge_emul_conf_read(struct pci_bridge_emul *bridge, int where,
->  	 * Make sure we never return any reserved bit with a value
->  	 * different from 0.
->  	 */
-> -	*value &= ~behavior[reg / 4].rsvd;
-> +	*value &= behavior[reg / 4].ro | behavior[reg / 4].rw |
-> +		  behavior[reg / 4].w1c;
->  
->  	if (size == 1)
->  		*value = (*value >> (8 * (where & 3))) & 0xff;
-> -- 
-> 1.8.3.1
-> 
+The following configs have been built successfully.
+More configs may be tested in the coming days.
+
+arm                              allmodconfig
+arm                               allnoconfig
+arm                              allyesconfig
+arm64                            allmodconfig
+arm64                             allnoconfig
+arm64                            allyesconfig
+sparc                            allyesconfig
+arm                        multi_v7_defconfig
+mips                      fuloong2e_defconfig
+sparc64                             defconfig
+arm                        multi_v5_defconfig
+parisc                            allnoconfig
+ia64                             alldefconfig
+s390                       zfcpdump_defconfig
+microblaze                      mmu_defconfig
+sh                            titan_defconfig
+arm                          exynos_defconfig
+m68k                          multi_defconfig
+h8300                       h8s-sim_defconfig
+mips                              allnoconfig
+riscv                    nommu_virt_defconfig
+riscv                            allmodconfig
+arc                                 defconfig
+i386                              allnoconfig
+i386                             alldefconfig
+i386                             allyesconfig
+i386                                defconfig
+ia64                             allmodconfig
+ia64                              allnoconfig
+ia64                             allyesconfig
+ia64                                defconfig
+c6x                              allyesconfig
+c6x                        evmc6678_defconfig
+nios2                         10m50_defconfig
+nios2                         3c120_defconfig
+openrisc                    or1ksim_defconfig
+openrisc                 simple_smp_defconfig
+xtensa                       common_defconfig
+xtensa                          iss_defconfig
+nds32                               defconfig
+nds32                             allnoconfig
+csky                                defconfig
+alpha                               defconfig
+h8300                     edosk2674_defconfig
+m68k                       m5475evb_defconfig
+m68k                             allmodconfig
+h8300                    h8300h-sim_defconfig
+m68k                           sun3_defconfig
+mips                           32r2_defconfig
+mips                         64r6el_defconfig
+mips                             allmodconfig
+mips                             allyesconfig
+mips                      malta_kvm_defconfig
+parisc                           allyesconfig
+parisc                generic-32bit_defconfig
+parisc                generic-64bit_defconfig
+i386                 randconfig-a002-20200327
+i386                 randconfig-a001-20200327
+x86_64               randconfig-a002-20200327
+x86_64               randconfig-a001-20200327
+i386                 randconfig-a003-20200327
+x86_64               randconfig-a003-20200327
+alpha                randconfig-a001-20200327
+m68k                 randconfig-a001-20200327
+mips                 randconfig-a001-20200327
+nds32                randconfig-a001-20200327
+parisc               randconfig-a001-20200327
+alpha                randconfig-a001-20200329
+m68k                 randconfig-a001-20200329
+mips                 randconfig-a001-20200329
+nds32                randconfig-a001-20200329
+parisc               randconfig-a001-20200329
+riscv                randconfig-a001-20200329
+c6x                  randconfig-a001-20200327
+h8300                randconfig-a001-20200327
+microblaze           randconfig-a001-20200327
+nios2                randconfig-a001-20200327
+sparc64              randconfig-a001-20200327
+c6x                  randconfig-a001-20200329
+h8300                randconfig-a001-20200329
+microblaze           randconfig-a001-20200329
+nios2                randconfig-a001-20200329
+sparc64              randconfig-a001-20200329
+csky                 randconfig-a001-20200327
+openrisc             randconfig-a001-20200327
+s390                 randconfig-a001-20200327
+sh                   randconfig-a001-20200327
+xtensa               randconfig-a001-20200327
+x86_64               randconfig-b001-20200327
+x86_64               randconfig-b002-20200327
+x86_64               randconfig-b003-20200327
+i386                 randconfig-b001-20200327
+i386                 randconfig-b002-20200327
+i386                 randconfig-b003-20200327
+x86_64               randconfig-c003-20200327
+x86_64               randconfig-c001-20200327
+i386                 randconfig-c002-20200327
+x86_64               randconfig-c002-20200327
+i386                 randconfig-c003-20200327
+i386                 randconfig-c001-20200327
+x86_64               randconfig-c001-20200329
+x86_64               randconfig-c002-20200329
+x86_64               randconfig-c003-20200329
+i386                 randconfig-c001-20200329
+i386                 randconfig-c002-20200329
+i386                 randconfig-c003-20200329
+x86_64               randconfig-d001-20200327
+x86_64               randconfig-d002-20200327
+x86_64               randconfig-d003-20200327
+i386                 randconfig-d001-20200327
+i386                 randconfig-d002-20200327
+i386                 randconfig-d003-20200327
+x86_64               randconfig-d001-20200329
+x86_64               randconfig-d002-20200329
+x86_64               randconfig-d003-20200329
+i386                 randconfig-d001-20200329
+i386                 randconfig-d002-20200329
+i386                 randconfig-d003-20200329
+x86_64               randconfig-e001-20200328
+x86_64               randconfig-e002-20200328
+x86_64               randconfig-e003-20200328
+i386                 randconfig-e001-20200328
+i386                 randconfig-e002-20200328
+i386                 randconfig-e003-20200328
+x86_64               randconfig-e001-20200329
+x86_64               randconfig-e002-20200329
+x86_64               randconfig-e003-20200329
+i386                 randconfig-e001-20200329
+i386                 randconfig-e002-20200329
+i386                 randconfig-e003-20200329
+x86_64               randconfig-e001-20200327
+x86_64               randconfig-e002-20200327
+x86_64               randconfig-e003-20200327
+i386                 randconfig-e001-20200327
+i386                 randconfig-e002-20200327
+i386                 randconfig-e003-20200327
+x86_64               randconfig-f001-20200327
+x86_64               randconfig-f002-20200327
+x86_64               randconfig-f003-20200327
+i386                 randconfig-f001-20200327
+i386                 randconfig-f002-20200327
+i386                 randconfig-f003-20200327
+x86_64               randconfig-g001-20200327
+x86_64               randconfig-g002-20200327
+x86_64               randconfig-g003-20200327
+i386                 randconfig-g001-20200327
+i386                 randconfig-g002-20200327
+i386                 randconfig-g003-20200327
+x86_64               randconfig-h001-20200327
+x86_64               randconfig-h002-20200327
+x86_64               randconfig-h003-20200327
+i386                 randconfig-h001-20200327
+i386                 randconfig-h002-20200327
+i386                 randconfig-h003-20200327
+x86_64               randconfig-h001-20200329
+x86_64               randconfig-h002-20200329
+x86_64               randconfig-h003-20200329
+i386                 randconfig-h001-20200329
+i386                 randconfig-h002-20200329
+i386                 randconfig-h003-20200329
+arm                  randconfig-a001-20200327
+arm64                randconfig-a001-20200327
+ia64                 randconfig-a001-20200327
+powerpc              randconfig-a001-20200327
+riscv                             allnoconfig
+riscv                            allyesconfig
+riscv                               defconfig
+riscv                          rv32_defconfig
+s390                          debug_defconfig
+s390                             allyesconfig
+s390                              allnoconfig
+s390                             allmodconfig
+s390                             alldefconfig
+s390                                defconfig
+sh                               allmodconfig
+sh                                allnoconfig
+sh                          rsk7269_defconfig
+sh                  sh7785lcr_32bit_defconfig
+sparc                               defconfig
+sparc64                          allmodconfig
+sparc64                           allnoconfig
+sparc64                          allyesconfig
+um                           x86_64_defconfig
+um                             i386_defconfig
+um                                  defconfig
+x86_64                              fedora-25
+x86_64                                  kexec
+x86_64                                    lkp
+x86_64                                   rhel
+x86_64                         rhel-7.2-clear
+x86_64                               rhel-7.6
+
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
