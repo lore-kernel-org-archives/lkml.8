@@ -2,110 +2,108 @@ Return-Path: <SRS0=NZ+o=5N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.7 required=3.0 tests=DATE_IN_PAST_96_XX,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12F64C43331
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 17:07:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79A30C2D0EB
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 17:08:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D90A220714
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 17:07:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5099020714
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 17:08:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Y8Eee9yH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726445AbgC1RHP (ORCPT
+        id S1726661AbgC1RIm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 28 Mar 2020 13:07:15 -0400
-Received: from mx.sdf.org ([205.166.94.20]:62766 "EHLO mx.sdf.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725807AbgC1RHP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 28 Mar 2020 13:07:15 -0400
-Received: from sdf.org (IDENT:lkml@sdf.lonestar.org [205.166.94.16])
-        by mx.sdf.org (8.15.2/8.14.5) with ESMTPS id 02SH7E98002914
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits) verified NO);
-        Sat, 28 Mar 2020 17:07:15 GMT
-Received: (from lkml@localhost)
-        by sdf.org (8.15.2/8.12.8/Submit) id 02SH7EEB025951;
-        Sat, 28 Mar 2020 17:07:14 GMT
-Message-Id: <202003281707.02SH7EEB025951@sdf.org>
-From:   George Spelvin <lkml@sdf.org>
-Date:   Sun, 8 Mar 2020 09:44:59 -0400
-Subject: [RFC PATCH v1 04/50] batman-adv: fix batadv_nc_random_weight_tq
+        Sat, 28 Mar 2020 13:08:42 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:52902 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725807AbgC1RIm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 28 Mar 2020 13:08:42 -0400
+Received: by mail-wm1-f68.google.com with SMTP id z18so14957405wmk.2;
+        Sat, 28 Mar 2020 10:08:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=evb87b2PRODTBIGoW+B/Zw5HYh8w8zLjNwYe5uvzeJU=;
+        b=Y8Eee9yHbo1U/yQOxMNbjUlTMoYlmDd7XtCqICdB3jIP1dxyC7QOZTfwtbD19MvYu8
+         RROwcPNPxt67II/GNY0SoYDDEMtEr+GOMpx0iPKz6FZnxzwUd/wMPAcunVMZTqfxkSRD
+         XjDKkkQrCQX3EVUayrsolwnEdyRMF9JwdA7wYJDfPdvzjZrG0UCSG2WH1LnmYZ3Emknn
+         u9dyehFXPVOmxt1OuUWOCfSio6bFCf45dZOl5IhTVg2tD//pDtETjP6c4etM1hl0BLUT
+         HjpvwPY8NFrM2bz3VoJntOq9PH7cvNwCWhTmpCElOcnZcAuQY6OqjGZ/jJnO1wK8uZbO
+         k1Mg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=evb87b2PRODTBIGoW+B/Zw5HYh8w8zLjNwYe5uvzeJU=;
+        b=ghMAyOxDY+WgOz6dajlPjmy4Hj0devAs37OYoTCenLTDOnXggV/3AgKou1LES7Vi/R
+         8jibycavAn3zy/C+zNSQZKi67B7Aq0UNgCaTQp5uGc6jNAlIhuG2ZkFPMowC6iL3byt1
+         v92vnXDe87tOn6CNsRz4HabXicqGgW7XJLdkwJUTd5HgvnrKp2lca/GYJmfdCn46mwCW
+         eZLg//73lnYIwieVFZMuJnDQpKaO9fz6W77kR+rvMIDcy2RBm8d2NUgbBuHefc0LSA/e
+         UUnetpJY4Bgy1Y5lDEdKUBHSKlh4/dMmzdUnVPu08jd3R+1axv8bG/2GmNhjnRyi+pHv
+         Vg3A==
+X-Gm-Message-State: ANhLgQ1C62cz2wNzvLb4+E694Ik/Ysb+FovSJvF6DpkBpDD4HA4e2vLU
+        y2fP/+C0upKAgRwbfeVECwU=
+X-Google-Smtp-Source: ADFU+vsQpQQL0S3SZ+aSF+Rr7t8Z92M+KlYVkPRDGBYiN1ydw6X+V84Gl3QhGDyA9ncc1p4krJ8bHw==
+X-Received: by 2002:a1c:750f:: with SMTP id o15mr4630124wmc.110.1585415319413;
+        Sat, 28 Mar 2020 10:08:39 -0700 (PDT)
+Received: from andrea ([86.61.236.197])
+        by smtp.gmail.com with ESMTPSA id 98sm13964670wrk.52.2020.03.28.10.08.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 28 Mar 2020 10:08:38 -0700 (PDT)
+Date:   Sat, 28 Mar 2020 18:08:33 +0100
+From:   Andrea Parri <parri.andrea@gmail.com>
+To:     Vitaly Kuznetsov <vkuznets@redhat.com>
+Cc:     Dexuan Cui <decui@microsoft.com>,
+        "K . Y . Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>, linux-hyperv@vger.kernel.org,
+        Michael Kelley <mikelley@microsoft.com>,
+        Boqun Feng <boqun.feng@gmail.com>, linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH 02/11] Drivers: hv: vmbus: Don't bind the
+ offer&rescind works to a specific CPU
+Message-ID: <20200328170833.GA10153@andrea>
+References: <20200325225505.23998-1-parri.andrea@gmail.com>
+ <20200325225505.23998-3-parri.andrea@gmail.com>
+ <871rpf5hhm.fsf@vitty.brq.redhat.com>
+ <20200326154710.GA13711@andrea>
+ <87sghv3u4a.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-To:     linux-kernel@vger.kernel.org, lkml@sdf.org
-Cc:     Martin Hundeboll <martin@hundeboll.net>,
-        Marek Lindner <mareklindner@neomailbox.ch>,
-        Simon Wunderlich <sw@simonwunderlich.de>,
-        Antonio Quartulli <a@unstable.cc>,
-        Sven Eckelmann <sven@narfation.org>,
-        b.a.t.m.a.n@diktynna.open-mesh.org
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87sghv3u4a.fsf@vitty.brq.redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-and change to pseudorandom numbers, as this is a traffic
-dithering operation that doesn't need crypto-grade.
+> In case we believe that OFFER -> RESCINF sequence is always ordered
+> by the host AND we don't care about other offers in the queue the
+> suggested locking is OK: we're guaranteed to process RESCIND after we
+> finished processing OFFER for the same channel. However, waiting for
+> 'offer_in_progress == 0' looks fishy so I'd suggest we at least add a
+> comment explaining that the wait is only needed to serialize us with
+> possible OFFER for the same channel - and nothing else. I'd personally
+> still slightly prefer the algorythm I suggested as it guarantees we take
+> channel_mutex with offer_in_progress == 0 -- even if there are no issues
+> we can think of today (not strongly though).
 
-The previous code operated in 4 steps:
-1) Generate a random byte 0 <= rand_tq <= 255
-2) Multiply it by BATADV_TQ_MAX_VALUE - tq
-3) Divide by 255 (= BATADV_TQ_MAX_VALUE)
-4) Return BATADV_TQ_MAX_VALUE - rand_tq
+Does it?  offer_in_progress is incremented without channel_mutex...
 
-This would apperar to scale (BATADV_TQ_MAX_VALUE - tq) by a random
-value between 0/255 and 255/255.
+IAC, I have no objections to apply the changes you suggested.  To avoid
+misunderstandings: vmbus_bus_suspend() presents a similar usage...  Are
+you suggesting that I apply similar changes there?
 
-But!  The intermediate value between steps 3 and 4 is stored in a u8
-variable.  So it's truncated, and most of the time, is less than
-255, after which the division produces 0.  Specifically, if tq is
-odd, the product is always even, and can never be 255.  If tq is
-even, there's exactly one random byte value that will produce
-a product byte of 255.
+Alternatively:  FWIW, the comment in vmbus_onoffer_rescind() does refer
+to "The offer msg and the corresponding rescind msg...".  I am all ears
+if you have any concrete suggestions to improve these comments.
 
-Thus, the return value is 255 (511/512 of the time) or 254 (1/512
-of the time).
-
-If we assume that the truncation is a bug, and the code is meant to
-scale the input, a simpler way of looking at it is that it's
-returning a random value between tq and BATADV_TQ_MAX_VALUE,
-inclusive.
-
-Well, we have an optimized function for doing just that.
-
-Signed-off-by: George Spelvin <lkml@sdf.org>
-Cc: Martin Hundebøll <martin@hundeboll.net>
-Cc: Marek Lindner <mareklindner@neomailbox.ch>
-Cc: Simon Wunderlich <sw@simonwunderlich.de>
-Cc: Antonio Quartulli <a@unstable.cc>
-Cc: Sven Eckelmann <sven@narfation.org>
-Cc: b.a.t.m.a.n@lists.open-mesh.org
----
- net/batman-adv/network-coding.c | 9 +--------
- 1 file changed, 1 insertion(+), 8 deletions(-)
-
-diff --git a/net/batman-adv/network-coding.c b/net/batman-adv/network-coding.c
-index 580609389f0f7..70e3b161c6635 100644
---- a/net/batman-adv/network-coding.c
-+++ b/net/batman-adv/network-coding.c
-@@ -1009,15 +1009,8 @@ static struct batadv_nc_path *batadv_nc_get_path(struct batadv_priv *bat_priv,
-  */
- static u8 batadv_nc_random_weight_tq(u8 tq)
- {
--	u8 rand_val, rand_tq;
--
--	get_random_bytes(&rand_val, sizeof(rand_val));
--
- 	/* randomize the estimated packet loss (max TQ - estimated TQ) */
--	rand_tq = rand_val * (BATADV_TQ_MAX_VALUE - tq);
--
--	/* normalize the randomized packet loss */
--	rand_tq /= BATADV_TQ_MAX_VALUE;
-+	u8 rand_tq = prandom_u32_max(BATADV_TQ_MAX_VALUE + 1 - tq);
- 
- 	/* convert to (randomized) estimated tq again */
- 	return BATADV_TQ_MAX_VALUE - rand_tq;
--- 
-2.26.0
-
+Thanks,
+  Andrea
