@@ -2,117 +2,142 @@ Return-Path: <SRS0=NZ+o=5N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F32B9C2D0E5
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 18:44:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07409C2D0E5
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 18:48:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CEB1B206F6
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 18:44:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D4FBF2071B
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 18:48:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ouDCjhKF"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FAnNodzh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727125AbgC1So2 (ORCPT
+        id S1727131AbgC1Ssa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 28 Mar 2020 14:44:28 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:40248 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725882AbgC1So2 (ORCPT
+        Sat, 28 Mar 2020 14:48:30 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:32925 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725807AbgC1Ssa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 28 Mar 2020 14:44:28 -0400
-Received: by mail-pg1-f195.google.com with SMTP id t24so6431050pgj.7;
-        Sat, 28 Mar 2020 11:44:27 -0700 (PDT)
+        Sat, 28 Mar 2020 14:48:30 -0400
+Received: by mail-wm1-f68.google.com with SMTP id w25so9811569wmi.0;
+        Sat, 28 Mar 2020 11:48:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=AEgBW9QQu99a2sai4d1Uz2IOeiRHB8mBntj4/oX3if8=;
-        b=ouDCjhKFXNz0qHg97LSTL9LtxoMEHHt5XmMHY0O3JWTXTX6KVUoBbbKGEaRoe4suqH
-         Bgodh/bhOWuh+Uw5ZYeUQDC/rlML9443WQkuM+KCmxxhjELg+7MhD0Lq4BubKI4pnMJo
-         ZfzaEEDCyNKntZ4F6dUb4Vs7Vd7wELm98oGUZpswTvhm/Q/HA/SIavwXKsKEUe8xWMC5
-         veV78phgOYhrh7JtLFf0oynNemIhylY0qL9bQa33NeSOWpUu5C2XlY98iV+luNSHwaoY
-         omgLIxik4AauciZPkWxYN3o5K2+dsH2puaV0rjGc9TgHCkoqYwbi0M9EoN+qXpWdHwjE
-         0FQQ==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=tOei2YQniXuHVvMeLn98ZdGRwvsGFEJYezja8ozJozM=;
+        b=FAnNodzh68ETUiCajl/JsdQraytI4kITdAV+85hXmyoqiqCr8T78k+3oGKJ6unQ5zV
+         Q7eUwe88KJsoYQ4Xeyu+Qc7E2aXPZEar10Zuvxm30vC8PvxSHdJsRCAIEWW/FMtVCUKF
+         2xxCpSSr+sVEe+5LCWw1KiHCYBIrLV7Su6rsg296RyuDxeIpnR53lA5D0qR3zyXwIdDN
+         YrHbQAr7xfiUwW0Tc1vbViXohlbUWYMm+dNShjaSB3w6cpP/LPXnnruiQMrw/o0irnSR
+         Lp0dneIUvEv5fz7wbJ2jb//0iWFZplNo9CvkrLnB5c7KOeDgqT7fbK3rWBagPE5Zdvd2
+         OaXA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=AEgBW9QQu99a2sai4d1Uz2IOeiRHB8mBntj4/oX3if8=;
-        b=dlULcW7kqArkv4j7DbmJHfUyFt4GbrAIHzZoQXfR5O0KPH5B5AnwTAcncNaFqFEVpX
-         E06XRhfASd74n30kpgSPaPpHVmBaBLt+px8+yi8pR7hgadhBmUQCTHhKh1tNu1WMoqhI
-         lDCteVz/OpqrfBGWA/RbIUR3ff2nD+Sx9UV0M/JPG8cQhJ+SRpI1r4rrer1+FSjPyjmt
-         VeEqSsRWljlBN2KVDVSN3aycD6igJwP4ma3Mvrl0g2YhdQdJPnONRNf7PjBI/HyGtcMX
-         EQD63CYD89GYsxCokQz3zNESrVGi8rfUyaKRbrjrep+wPSwdFUH98NHgOSjYWMJnmHSV
-         MNAw==
-X-Gm-Message-State: ANhLgQ0zqf6VJTpoj7dsR+EApo/YZ7PAutSsnW6U+DNXAiGhilaWc+z2
-        uSUMvyc/sLqWtu8CQdiYr6SPqoo11DKGOgLdJ4w=
-X-Google-Smtp-Source: ADFU+vuLh8bWhofnY0uetIzib0+lVHRoBH+mcX9y4a5vGukmUlw/9WY99xY/uiIsg6cXSU/IMm9zO7gbPWfER27vvoc=
-X-Received: by 2002:a05:6a00:2b4:: with SMTP id q20mr5459087pfs.36.1585421066788;
- Sat, 28 Mar 2020 11:44:26 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=tOei2YQniXuHVvMeLn98ZdGRwvsGFEJYezja8ozJozM=;
+        b=mkCbQ00R0Z21TGNE4W88zdR/bXo3d483n/0paccjOr9JpsaxUjqj9fYt//wzoA+FMo
+         M9+d5i21i67QILSKQ36nJTX8nb20MZ/bAqCjL9y8tdLc1I5eTZtxSJek560C4J0CeRJ+
+         LCx4j3PSmOf1PGlCz3dK3N2t8OyKe2GZzgFEUSkPvOX4Hzr6Ns64EXf9krW5r/fS9hLr
+         EKt6UfqdXVLCSLK1FseSlVyfM/saarNPS4GusDnE8QMX0sfJw7vr7uhDISXj9GWeR/+X
+         DVwD2WvaDsa0ToTpib/XZBjJgwT5TgjByWfXjf3t8hhjFshprqn0WEBxjZOgV35EQLUF
+         03rQ==
+X-Gm-Message-State: ANhLgQ3ZCVukY3ku3S/6zD2R49rp7y74GTh3suV6e65GaLb5hk6esqWF
+        BFYtpek7OCPtMzVtQj9cT24=
+X-Google-Smtp-Source: ADFU+vv2qwkmDjkusKl24Gkfw777pvkdWdovaDV/iONenbQ65Y4yKRkcpSRdtoA4HtWrFi/lCS7yPQ==
+X-Received: by 2002:a1c:3241:: with SMTP id y62mr5125014wmy.66.1585421307800;
+        Sat, 28 Mar 2020 11:48:27 -0700 (PDT)
+Received: from andrea ([86.61.236.197])
+        by smtp.gmail.com with ESMTPSA id w9sm15221280wrk.18.2020.03.28.11.48.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 28 Mar 2020 11:48:27 -0700 (PDT)
+Date:   Sat, 28 Mar 2020 19:48:21 +0100
+From:   Andrea Parri <parri.andrea@gmail.com>
+To:     Vitaly Kuznetsov <vkuznets@redhat.com>
+Cc:     Dexuan Cui <decui@microsoft.com>,
+        Michael Kelley <mikelley@microsoft.com>,
+        "K . Y . Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>, linux-hyperv@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Boqun Feng <boqun.feng@gmail.com>
+Subject: Re: [RFC PATCH 10/11] Drivers: hv: vmbus: Introduce the
+ CHANNELMSG_MODIFYCHANNEL message type
+Message-ID: <20200328184821.GA12184@andrea>
+References: <20200325225505.23998-1-parri.andrea@gmail.com>
+ <20200325225505.23998-11-parri.andrea@gmail.com>
+ <87v9mr41j4.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
-References: <20200328001154.17313-1-sravanhome@gmail.com> <20200328001154.17313-5-sravanhome@gmail.com>
- <CAHp75VefP3oPyRJ=Z9Y5Wv3rSc-nJdKFLJ60YLdUbP5dFikS+w@mail.gmail.com> <36892440-99b2-10e8-1d7c-dd8c97e03a39@gmail.com>
-In-Reply-To: <36892440-99b2-10e8-1d7c-dd8c97e03a39@gmail.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Sat, 28 Mar 2020 20:44:14 +0200
-Message-ID: <CAHp75VdAfiSjkHhTnghZ__WAJCJTGSWBprJBPNmpkxZTjZuVgQ@mail.gmail.com>
-Subject: Re: [PATCH v5 4/5] power: supply: Add support for mps mp2629 battery charger
-To:     saravanan sekar <sravanhome@gmail.com>
-Cc:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald <pmeerw@pmeerw.net>,
-        Sebastian Reichel <sre@kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-iio <linux-iio@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87v9mr41j4.fsf@vitty.brq.redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Mar 28, 2020 at 1:29 PM saravanan sekar <sravanhome@gmail.com> wrote:
-> On 28/03/20 12:02 pm, Andy Shevchenko wrote:
-> > On Sat, Mar 28, 2020 at 2:12 AM Saravanan Sekar <sravanhome@gmail.com> wrote:
-
-...
-
-> >> +       val->intval = (rval * props[fld].step) + props[fld].min;
-> > Too many parentheses.
+On Thu, Mar 26, 2020 at 03:46:23PM +0100, Vitaly Kuznetsov wrote:
+> "Andrea Parri (Microsoft)" <parri.andrea@gmail.com> writes:
+> 
+> > VMBus version 4.1 and later support the CHANNELMSG_MODIFYCHANNEL(22)
+> > message type which can be used to request Hyper-V to change the vCPU
+> > that a channel will interrupt.
 > >
-> > ...
+> > Introduce the CHANNELMSG_MODIFYCHANNEL message type, and define the
+> > vmbus_send_modifychannel() function to send CHANNELMSG_MODIFYCHANNEL
+> > requests to the host via a hypercall.  The function is then used to
+> > define a sysfs "store" operation, which allows to change the (v)CPU
+> > the channel will interrupt by using the sysfs interface.  The feature
+> > can be used for load balancing or other purposes.
 > >
-> >> +       return ((psp == POWER_SUPPLY_PROP_PRECHARGE_CURRENT) ||
-> >> +               (psp == POWER_SUPPLY_PROP_CHARGE_TERM_CURRENT) ||
-> >> +               (psp == POWER_SUPPLY_PROP_CONSTANT_CHARGE_CURRENT) ||
-> >> +               (psp == POWER_SUPPLY_PROP_CONSTANT_CHARGE_VOLTAGE));
-> > Ditto.
-> I think I misunderstood you previous review comment "Redundant
-> parentheses", no sure what is the expectation
-
-(At least) surrounding pair is not needed, return (a == b) || (c == d);
-
-> > ...
+> > One interesting catch here is that Hyper-V can *not* currently ACK
+> > CHANNELMSG_MODIFYCHANNEL messages with the promise that (after the ACK
+> > is sent) the channel won't send any more interrupts to the "old" CPU.
 > >
-> >> +       return ((psp == POWER_SUPPLY_PROP_INPUT_VOLTAGE_LIMIT) ||
-> >> +               (psp == POWER_SUPPLY_PROP_INPUT_CURRENT_LIMIT));
-> > Ditto.
-
-...
-
-> >> +       struct power_supply_config psy_cfg = {NULL};
-> > { 0 }
+> > The peculiarity of the CHANNELMSG_MODIFYCHANNEL messages is problematic
+> > if the user want to take a CPU offline, since we don't want to take a
+> > CPU offline (and, potentially, "lose" channel interrupts on such CPU)
+> > if the host is still processing a CHANNELMSG_MODIFYCHANNEL message
+> > associated to that CPU.
 > >
-> NULL to make compiler happy.
+> > It is worth mentioning, however, that we have been unable to observe
+> > the above mentioned "race": in all our tests, CHANNELMSG_MODIFYCHANNEL
+> > requests appeared *as if* they were processed synchronously by the
+> > host.
+> 
+> Hyper-V engineers never want to make our lifes easier :-)
 
-Hmm... Can you share warning / error compiler issued in 0 case?
+Haha.  I'd say more exciting!  ;-) ;-)
 
--- 
-With Best Regards,
-Andy Shevchenko
+
+> I can only think of a 'lazy' approach to setting channel CPU affinity:
+> we actually re-assign it to the target CPU when we receive first
+> interrupt there - but it's not very different from re-assigning it there
+> but still handling interrupts on the old CPU like you do.
+
+Interesting!  I'm wondering whether it'd make sense to use a similar
+approach to (lazily) "unblock" the "old" CPUs; let me think more...
+
+
+> One more thing: it was already discussed several times but we never get
+> to it. I think this question was even raised on Michael's latest
+> 'Hyper-V on ARM' submission. What about implmenting a Hyper-V specific
+> IRQ chip which would now support setting CPU affinity? The greatest
+> benefit is that we don't need new tools to do e.g. load balancing,
+> irqbalance will just work.
+
+Thank you for the suggestions; TBH, I haven't considered such approach
+so far (and I'd need more time to come up with an informed comment...)
+
+OTOH, I had some initial investigations about the current (in-kernel)
+balancing scheme/init_vp_index() and possible improvements/extensions
+there...  Hopefully another, follow-up series to come soon!
+
+Thanks,
+  Andrea
