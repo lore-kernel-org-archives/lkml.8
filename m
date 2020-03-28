@@ -2,108 +2,169 @@ Return-Path: <SRS0=NZ+o=5N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79A30C2D0EB
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 17:08:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE431C2D0EB
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 17:10:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5099020714
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 17:08:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Y8Eee9yH"
+	by mail.kernel.org (Postfix) with ESMTP id A531620714
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 17:10:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585415412;
+	bh=/PDxSJeJ79NjGwLm/F9FHx5ygVoffePbLoemN5Auc04=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=yXEH9d7USb66l2h+nVOCrj05anjXuggrDITvl+2F89EgTTxffxkCL2Diy8vxT5Zah
+	 TKC+Kxj9mq3HhlEdGtiO/+gyNGld8hXiEWs8/iDBKhGOWkwG5g/WfPfGLShBmb53Ul
+	 /5QHAOpm5RcaaORsGqfB+ICFkZdwVp3ku68u2Z9M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726661AbgC1RIm (ORCPT
+        id S1727020AbgC1RKL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 28 Mar 2020 13:08:42 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:52902 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725807AbgC1RIm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 28 Mar 2020 13:08:42 -0400
-Received: by mail-wm1-f68.google.com with SMTP id z18so14957405wmk.2;
-        Sat, 28 Mar 2020 10:08:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=evb87b2PRODTBIGoW+B/Zw5HYh8w8zLjNwYe5uvzeJU=;
-        b=Y8Eee9yHbo1U/yQOxMNbjUlTMoYlmDd7XtCqICdB3jIP1dxyC7QOZTfwtbD19MvYu8
-         RROwcPNPxt67II/GNY0SoYDDEMtEr+GOMpx0iPKz6FZnxzwUd/wMPAcunVMZTqfxkSRD
-         XjDKkkQrCQX3EVUayrsolwnEdyRMF9JwdA7wYJDfPdvzjZrG0UCSG2WH1LnmYZ3Emknn
-         u9dyehFXPVOmxt1OuUWOCfSio6bFCf45dZOl5IhTVg2tD//pDtETjP6c4etM1hl0BLUT
-         HjpvwPY8NFrM2bz3VoJntOq9PH7cvNwCWhTmpCElOcnZcAuQY6OqjGZ/jJnO1wK8uZbO
-         k1Mg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=evb87b2PRODTBIGoW+B/Zw5HYh8w8zLjNwYe5uvzeJU=;
-        b=ghMAyOxDY+WgOz6dajlPjmy4Hj0devAs37OYoTCenLTDOnXggV/3AgKou1LES7Vi/R
-         8jibycavAn3zy/C+zNSQZKi67B7Aq0UNgCaTQp5uGc6jNAlIhuG2ZkFPMowC6iL3byt1
-         v92vnXDe87tOn6CNsRz4HabXicqGgW7XJLdkwJUTd5HgvnrKp2lca/GYJmfdCn46mwCW
-         eZLg//73lnYIwieVFZMuJnDQpKaO9fz6W77kR+rvMIDcy2RBm8d2NUgbBuHefc0LSA/e
-         UUnetpJY4Bgy1Y5lDEdKUBHSKlh4/dMmzdUnVPu08jd3R+1axv8bG/2GmNhjnRyi+pHv
-         Vg3A==
-X-Gm-Message-State: ANhLgQ1C62cz2wNzvLb4+E694Ik/Ysb+FovSJvF6DpkBpDD4HA4e2vLU
-        y2fP/+C0upKAgRwbfeVECwU=
-X-Google-Smtp-Source: ADFU+vsQpQQL0S3SZ+aSF+Rr7t8Z92M+KlYVkPRDGBYiN1ydw6X+V84Gl3QhGDyA9ncc1p4krJ8bHw==
-X-Received: by 2002:a1c:750f:: with SMTP id o15mr4630124wmc.110.1585415319413;
-        Sat, 28 Mar 2020 10:08:39 -0700 (PDT)
-Received: from andrea ([86.61.236.197])
-        by smtp.gmail.com with ESMTPSA id 98sm13964670wrk.52.2020.03.28.10.08.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 28 Mar 2020 10:08:38 -0700 (PDT)
-Date:   Sat, 28 Mar 2020 18:08:33 +0100
-From:   Andrea Parri <parri.andrea@gmail.com>
-To:     Vitaly Kuznetsov <vkuznets@redhat.com>
-Cc:     Dexuan Cui <decui@microsoft.com>,
-        "K . Y . Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>, linux-hyperv@vger.kernel.org,
-        Michael Kelley <mikelley@microsoft.com>,
-        Boqun Feng <boqun.feng@gmail.com>, linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH 02/11] Drivers: hv: vmbus: Don't bind the
- offer&rescind works to a specific CPU
-Message-ID: <20200328170833.GA10153@andrea>
-References: <20200325225505.23998-1-parri.andrea@gmail.com>
- <20200325225505.23998-3-parri.andrea@gmail.com>
- <871rpf5hhm.fsf@vitty.brq.redhat.com>
- <20200326154710.GA13711@andrea>
- <87sghv3u4a.fsf@vitty.brq.redhat.com>
+        Sat, 28 Mar 2020 13:10:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38280 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725807AbgC1RKL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 28 Mar 2020 13:10:11 -0400
+Received: from localhost (mobile-166-175-186-165.mycingular.net [166.175.186.165])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 95F1920714;
+        Sat, 28 Mar 2020 17:10:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1585415410;
+        bh=/PDxSJeJ79NjGwLm/F9FHx5ygVoffePbLoemN5Auc04=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=hz+ILYiDBU7PcTEWKnkbjqw5j1r2Lz7kwrDL4Mb76RrGXCPvw4mdIA/Xml+U4W3QY
+         g9H/TcYXsCkVdOiO2236ByX1fmKazptpbGt0BiAEHmK5SuLfg0slTK2n4sRXhv8YPm
+         BqyX8gd+jVdhkaR9FEhN53Ee0vgQVuRvk6ozPf7o=
+Date:   Sat, 28 Mar 2020 12:10:07 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     "Kuppuswamy, Sathyanarayanan" 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        ashok.raj@intel.com
+Subject: Re: [PATCH v18 03/11] PCI/DPC: Fix DPC recovery issue in non hotplug
+ case
+Message-ID: <20200328171007.GA49779@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <87sghv3u4a.fsf@vitty.brq.redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <e5af8e6e-ce37-eba4-330e-94b43bd0adb7@linux.intel.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> In case we believe that OFFER -> RESCINF sequence is always ordered
-> by the host AND we don't care about other offers in the queue the
-> suggested locking is OK: we're guaranteed to process RESCIND after we
-> finished processing OFFER for the same channel. However, waiting for
-> 'offer_in_progress == 0' looks fishy so I'd suggest we at least add a
-> comment explaining that the wait is only needed to serialize us with
-> possible OFFER for the same channel - and nothing else. I'd personally
-> still slightly prefer the algorythm I suggested as it guarantees we take
-> channel_mutex with offer_in_progress == 0 -- even if there are no issues
-> we can think of today (not strongly though).
+On Tue, Mar 24, 2020 at 06:17:44PM -0700, Kuppuswamy, Sathyanarayanan wrote:
+> On 3/24/20 4:49 PM, Bjorn Helgaas wrote:
+> > I don't understand why hotplug is relevant here.  This path
+> > (dpc_reset_link()) is only used for downstream ports that support DPC.
+> > DPC has already disabled the link, which resets everything below the
+> > port, regardless of whether the port supports hotplug.
+> > 
+> > I do see that PCI_ERS_RESULT_NEED_RESET seems to promise a lot more
+> > than it actually *does*.  The doc (pci-error-recovery.rst) says
+> > .error_detected() can return PCI_ERS_RESULT_NEED_RESET to *request* a
+> > slot reset.  But if that happens, pcie_do_recovery() doesn't do a
+> > reset at all.  It calls the driver's .slot_reset() method, which tells
+> > the driver "we've reset your device; please re-initialize the
+> > hardware."
+> > 
+> > I guess this abuses PCI_ERS_RESULT_NEED_RESET by taking advantage of
+> > that implementation deficiency in pcie_do_recovery(): we know the
+> > downstream devices have already been reset via DPC, and returning
+> > PCI_ERS_RESULT_NEED_RESET means we'll call .slot_reset() to tell the
+> > driver about that reset.
+> > 
+> > I can see how this achieves the desired result, but if/when we fix
+> > pcie_do_recovery() to actually *do* the reset promised by
+> > PCI_ERS_RESULT_NEED_RESET, we will be doing *two* resets: the first
+> > via DPC and a second via whatever slot reset mechanism
+> > pcie_do_recovery() would use.
+>
+> When we fix this issue, if we make sure the reset logic is
+> implemented before we call .reset_link callback we should be
+> able to avoid resetting the device twice. Before we call DPC
+> .reset_link callback, the device link will not up and hence we
+> should not able to reset it.
+>
+> > So I guess the real issue (as you allude to in the commit log) is that
+> > we rely on hotplug to unbind/rebind the driver, and without hotplug we
+> > need to at least tell the driver the device was reset.
+>
+> Agree
+>
+> > I'll try to expand the comment here so it reminds me what's going on
+> > when we have to look at this again:)   Let me know if I'm on the right
+> > track.
+>
+> Yes, your understanding is correct.
 
-Does it?  offer_in_progress is incremented without channel_mutex...
+OK, thanks.  I'm still uncomfortable with this issue, so I think I'm
+going to apply this series but omit this patch.  Here's why:
 
-IAC, I have no objections to apply the changes you suggested.  To avoid
-misunderstandings: vmbus_bus_suspend() presents a similar usage...  Are
-you suggesting that I apply similar changes there?
+1) The fact that resets may cause hotplug events isn't specific to
+DPC, so I don't think dpc_reset_link() is the right place.  For
+instance, aer_root_reset() ultimately does a secondary bus reset.  The
+pci_slot_reset() -> pciehp_reset_slot() path goes to some trouble to
+ignore the resulting hotplug event, but the pci_bus_reset() path does
+not.
 
-Alternatively:  FWIW, the comment in vmbus_onoffer_rescind() does refer
-to "The offer msg and the corresponding rescind msg...".  I am all ears
-if you have any concrete suggestions to improve these comments.
+2) I'm not convinced that "hotplug_is_native()" is the correct test.
+Even if we're using ACPI hotplug (acpiphp), that will detach the
+drivers and remove the devices, won't it?
 
-Thanks,
-  Andrea
+I considered something like the patch below, which partly addresses my
+first concern, but not the second.  Even the first one is awfully
+messy because of the different ways the aer_root_reset() path can
+work.
+
+
+PCI/ERR: Skip driver callbacks if reset causes hotplug remove/add
+
+diff --git a/drivers/pci/pcie/err.c b/drivers/pci/pcie/err.c
+index 1ac57e9e1e71..000551a06013 100644
+--- a/drivers/pci/pcie/err.c
++++ b/drivers/pci/pcie/err.c
+@@ -208,6 +208,18 @@ void pcie_do_recovery(struct pci_dev *dev, enum pci_channel_state state,
+ 		status = reset_link(dev, service);
+ 		if (status != PCI_ERS_RESULT_RECOVERED)
+ 			goto failed;
++
++		/*
++		 * If pdev supports hotplug, a link reset causes a hotplug
++		 * remove event.  If we have a hotplug driver, it will
++		 * detach all drivers of downstream devices and remove the
++		 * devices, so we can't call any driver error recovery
++		 * callbacks.  Bringing the link back up causes a hotplug
++		 * add event, and the devices should be re-enumerated and
++		 * the drivers re-attached.
++		 */
++		if (hotplug_is_native(pdev))
++			goto succeeded;
+ 	} else {
+ 		pci_walk_bus(bus, report_normal_detected, &status);
+ 	}
+@@ -224,7 +236,11 @@ void pcie_do_recovery(struct pci_dev *dev, enum pci_channel_state state,
+ 		 * functions to reset slot before calling
+ 		 * drivers' slot_reset callbacks?
+ 		 */
++		pci_warn(pdev, "driver requested reset, but that's not implemented\n");
+ 		status = PCI_ERS_RESULT_RECOVERED;
++	}
++
++	if (status == PCI_ERS_RESULT_RECOVERED) {
+ 		pci_dbg(dev, "broadcast slot_reset message\n");
+ 		pci_walk_bus(bus, report_slot_reset, &status);
+ 	}
+@@ -235,6 +251,7 @@ void pcie_do_recovery(struct pci_dev *dev, enum pci_channel_state state,
+ 	pci_dbg(dev, "broadcast resume message\n");
+ 	pci_walk_bus(bus, report_resume, &status);
+ 
++succeeded:
+ 	pci_aer_clear_device_status(dev);
+ 	pci_cleanup_aer_uncorrect_error_status(dev);
+ 	pci_info(dev, "device recovery successful\n");
