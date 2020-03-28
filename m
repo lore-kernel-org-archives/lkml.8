@@ -2,201 +2,99 @@ Return-Path: <SRS0=NZ+o=5N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 451E8C2D0ED
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 22:26:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EE0DC2D0ED
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 22:30:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 105422073E
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 22:26:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 71E2D20732
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 22:30:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="R6dijiNn"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="DFo7Iydl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727755AbgC1W0q (ORCPT
+        id S1727787AbgC1Wa0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 28 Mar 2020 18:26:46 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:33217 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726604AbgC1W0q (ORCPT
+        Sat, 28 Mar 2020 18:30:26 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:35280 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727588AbgC1Wa0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 28 Mar 2020 18:26:46 -0400
-Received: by mail-pg1-f195.google.com with SMTP id d17so6669119pgo.0
-        for <linux-kernel@vger.kernel.org>; Sat, 28 Mar 2020 15:26:45 -0700 (PDT)
+        Sat, 28 Mar 2020 18:30:26 -0400
+Received: by mail-wr1-f65.google.com with SMTP id d5so16406921wrn.2
+        for <linux-kernel@vger.kernel.org>; Sat, 28 Mar 2020 15:30:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=I449BRJgedsSivIUojFSGlUr7SW0PD6XbCp1RY7ckCM=;
-        b=R6dijiNnIGvlrdz/LQlTPtBAm1fuVdrIyT1rEN6d57HB22MPKyolrj2fViPcfIP+zy
-         4O+MU80uB8/DRKyPw/z9pKEG01b2k8uwV9fqfkgdZdfNg+pUP51naSDHX1bXEnkzR+io
-         yMlJpSHEuuISEw4k/+SDzjTgDqEmje8AQuNos=
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=dXJuf2d61/8VVRTPBrmoNd9kHkfvBJR4eW3rH5y+FIU=;
+        b=DFo7Iydl8YwLfZxc2DLYtdcLmKa0XDIFKr95+X2iKt8uf+XyU60KPDk8AaAr9fOWP6
+         16L/XsZ1lN7J4YqSsAZCHcGs8P3OdQtLqKHaYOTN0ZLZUHikJvcjESR1TIa+idWQudiY
+         pR4TUEEW51zfyzcbcyulaG8fqY/4+gJMO2x/Y=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=I449BRJgedsSivIUojFSGlUr7SW0PD6XbCp1RY7ckCM=;
-        b=rwh/Cjbonv8m5Kdb+VSMxXBKB4deirTgal3+F02deN6WS0w2JlcsboRmt2tTN3s2Tb
-         RXgv6xWukduft+3I3Q+pGfW/3SpgS6ckLiI1uHNrS0BvlG1h1RyaTVF/Rv7Fja4BCjA0
-         uO7zMede4zRI1qIMjok10LyUesjzOxL5RXMNMIcAmQBYWGYp5a8tqbaTfXsIK0qHBl8a
-         0xqOGn4KRBTYC1PTaQTkj2Ho6UF44/6vF1eDw15rxJOCQiszGxxqx1mLrOCcEoYu4sPf
-         axtDfVAMWJucS3h0zwDYL3e13LIUxkQKb0Mb7RoTOCBgMEVcFwx+qVZbckBNkys+mZCP
-         kSpg==
-X-Gm-Message-State: AGi0PuY9UlXPdMpE7K4bgA5gO0SWdFCA7BeZObzvtTgw2NE0IUT6P3rb
-        urrr8tMGCdmUSrJ3/AHJc/ViUWwgdr4=
-X-Google-Smtp-Source: APiQypKzsQBsasJUhTY1iSTW4oocv7YTHqUrrfDWiF0W34WrwDjKao4vSCoTbxgj3zPXUf3E+WdlUQ==
-X-Received: by 2002:a63:5744:: with SMTP id h4mr2535885pgm.235.1585434404738;
-        Sat, 28 Mar 2020 15:26:44 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id o15sm1812220pgj.60.2020.03.28.15.26.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 28 Mar 2020 15:26:43 -0700 (PDT)
-Date:   Sat, 28 Mar 2020 15:26:42 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Elena Reshetova <elena.reshetova@intel.com>, x86@kernel.org,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Potapenko <glider@google.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Jann Horn <jannh@google.com>,
-        "Perla, Enrico" <enrico.perla@intel.com>,
-        kernel-hardening@lists.openwall.com,
-        linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 4/5] x86/entry: Enable random_kstack_offset support
-Message-ID: <202003281520.A9BFF461@keescook>
-References: <20200324203231.64324-1-keescook@chromium.org>
- <20200324203231.64324-5-keescook@chromium.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=dXJuf2d61/8VVRTPBrmoNd9kHkfvBJR4eW3rH5y+FIU=;
+        b=DrHTjml2FgpolsZsfgFD1zVDKDMOvV/J0M7nPXcYBeaoyhuMoG9C0P08EVb62stmPy
+         st3mNwIbFXAdMmi1D7qSnfYP/5W2wYCnS0g9/mLB+zazEmplaIIYeKSxZvUjhP60+TfS
+         lXmTykdDkA78V2jdp0/Kg5Qp1XZzqzYSz1i5xvP/Td4oz8wNFKERkywlwOz4vYyGpOeU
+         ilururhAbyVJ9blvNd3SiY/QoxJHQHLOnp4p7U9ICK1/yW+oEjJNbiL3XMcNTSFDnNDW
+         epqyCbqv/9N6LwgVIV/9JvY3WLF5aMLY3XH+VmfwZNYKX+sSYiURn18BLP9/84+uZGil
+         hm/A==
+X-Gm-Message-State: ANhLgQ18doylBFACzPSDXiJZW8BODvIWw5LNNI6ZuIUQQlbAf5H8k/OO
+        R3fuox5OkEZCcSMuLdY/w5Ul4EP0PdNeKcST/WMl/Q==
+X-Google-Smtp-Source: ADFU+vulCziRFDJbIJ694ouqZtPpGPxGPDaurIMchBqU6/L0KIgWi8FFPyh3yqIaaooUdMm1rEUFxDNgE/x8ObAMY5k=
+X-Received: by 2002:adf:e48c:: with SMTP id i12mr6643082wrm.173.1585434623969;
+ Sat, 28 Mar 2020 15:30:23 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200324203231.64324-5-keescook@chromium.org>
+References: <20200327192854.31150-1-kpsingh@chromium.org> <4e5a09bb-04c4-39b8-10d4-59496ffb5eee@iogearbox.net>
+ <20200328195636.GA95544@google.com> <202003281449.333BDAF6@keescook>
+In-Reply-To: <202003281449.333BDAF6@keescook>
+From:   KP Singh <kpsingh@chromium.org>
+Date:   Sat, 28 Mar 2020 23:30:13 +0100
+Message-ID: <CACYkzJ4v_X87-+GCE++g0_BkcJWFhbNePAMQmH8Ccgq7id-akA@mail.gmail.com>
+Subject: Re: [PATCH bpf-next v8 0/8] MAC and Audit policy using eBPF (KRSI)
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Daniel Borkmann <daniel@iogearbox.net>,
+        open list <linux-kernel@vger.kernel.org>,
+        bpf <bpf@vger.kernel.org>,
+        Linux Security Module list 
+        <linux-security-module@vger.kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        James Morris <jmorris@namei.org>, Paul Turner <pjt@google.com>,
+        Jann Horn <jannh@google.com>,
+        Florent Revest <revest@chromium.org>,
+        Brendan Jackman <jackmanb@chromium.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 24, 2020 at 01:32:30PM -0700, Kees Cook wrote:
-> Allow for a randomized stack offset on a per-syscall basis, with roughly
-> 5 bits of entropy.
-> 
-> Signed-off-by: Kees Cook <keescook@chromium.org>
-> ---
->  arch/x86/Kconfig        |  1 +
->  arch/x86/entry/common.c | 12 +++++++++++-
->  2 files changed, 12 insertions(+), 1 deletion(-)
-> 
-> diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-> index beea77046f9b..b9d449581eb6 100644
-> --- a/arch/x86/Kconfig
-> +++ b/arch/x86/Kconfig
-> @@ -150,6 +150,7 @@ config X86
->  	select HAVE_ARCH_TRANSPARENT_HUGEPAGE
->  	select HAVE_ARCH_TRANSPARENT_HUGEPAGE_PUD if X86_64
->  	select HAVE_ARCH_VMAP_STACK		if X86_64
-> +	select HAVE_ARCH_RANDOMIZE_KSTACK_OFFSET
->  	select HAVE_ARCH_WITHIN_STACK_FRAMES
->  	select HAVE_ASM_MODVERSIONS
->  	select HAVE_CMPXCHG_DOUBLE
-> diff --git a/arch/x86/entry/common.c b/arch/x86/entry/common.c
-> index 9747876980b5..086d7af570af 100644
-> --- a/arch/x86/entry/common.c
-> +++ b/arch/x86/entry/common.c
-> @@ -26,6 +26,7 @@
->  #include <linux/livepatch.h>
->  #include <linux/syscalls.h>
->  #include <linux/uaccess.h>
-> +#include <linux/randomize_kstack.h>
->  
->  #include <asm/desc.h>
->  #include <asm/traps.h>
-> @@ -189,6 +190,13 @@ __visible inline void prepare_exit_to_usermode(struct pt_regs *regs)
->  	lockdep_assert_irqs_disabled();
->  	lockdep_sys_exit();
->  
-> +	/*
-> +	 * x86_64 stack alignment means 3 bits are ignored, so keep
-> +	 * the top 5 bits. x86_32 needs only 2 bits of alignment, so
-> +	 * the top 6 bits will be used.
-> +	 */
-> +	choose_random_kstack_offset(rdtsc() & 0xFF);
-> +
->  	cached_flags = READ_ONCE(ti->flags);
->  
->  	if (unlikely(cached_flags & EXIT_TO_USERMODE_LOOP_FLAGS))
-> @@ -283,6 +291,7 @@ __visible void do_syscall_64(unsigned long nr, struct pt_regs *regs)
->  {
->  	struct thread_info *ti;
->  
-> +	add_random_kstack_offset();
->  	enter_from_user_mode();
->  	local_irq_enable();
->  	ti = current_thread_info();
+On Sat, Mar 28, 2020 at 10:50 PM Kees Cook <keescook@chromium.org> wrote:
+>
+> On Sat, Mar 28, 2020 at 08:56:36PM +0100, KP Singh wrote:
+> > Since the attachment succeeds and the hook does not get called, it
+> > seems like "bpf" LSM is not being initialized and the hook, although
+> > present, does not get called.
+> >
+> > This indicates that "bpf" is not in CONFIG_LSM. It should, however, be
+> > there by default as we added it to default value of CONFIG_LSM and
+> > also for other DEFAULT_SECURITY_* options.
+> >
+> > Let me know if that's the case and it fixes it.
+>
+> Is the selftest expected to at least fail cleanly (i.e. not segfault)
 
-So, I got an email from 0day that this caused a performance regression[1]
-with things _turned off_. On closer examination:
+I am not sure where the crash comes from, it does not look like it's test_lsm,
+it seems to happen in test_overhead. Both seem to run fine for me.
 
-Before (objdump -dS vmlinux):
+- KP
 
-__visible void do_syscall_64(unsigned long nr, struct pt_regs *regs)
-{
-ffffffff81003920:       41 54                   push   %r12
-ffffffff81003922:       55                      push   %rbp
-ffffffff81003923:       48 89 f5                mov    %rsi,%rbp
-ffffffff81003926:       53                      push   %rbx
-ffffffff81003927:       48 89 fb                mov    %rdi,%rbx
-        struct thread_info *ti;
-
-        enter_from_user_mode();
-        local_irq_enable();
-...
-
-
-After:
-
-__visible void do_syscall_64(unsigned long nr, struct pt_regs *regs)
-{ 
-ffffffff81003960:       55                      push   %rbp
-ffffffff81003961:       48 89 e5                mov    %rsp,%rbp
-ffffffff81003964:       41 55                   push   %r13
-ffffffff81003966:       41 54                   push   %r12
-ffffffff81003968:       49 89 f4                mov    %rsi,%r12
-ffffffff8100396b:       53                      push   %rbx
-ffffffff8100396c:       48 89 fb                mov    %rdi,%rbx
-ffffffff8100396f:       48 83 ec 08             sub    $0x8,%rsp
-ffffffff81003973:       65 48 8b 04 25 28 00    mov    %gs:0x28,%rax
-ffffffff8100397a:       00 00 
-ffffffff8100397c:       48 89 45 e0             mov    %rax,-0x20(%rbp)
-ffffffff81003980:       31 c0                   xor    %eax,%eax
-        asm_volatile_goto("1:"
-ffffffff81003982:       0f 1f 44 00 00          nopl   0x0(%rax,%rax,1)
-        struct thread_info *ti;
-
-        add_random_kstack_offset();
-        enter_from_user_mode();
-        local_irq_enable();
-
-The "nopl" there is the static_branch code that I'd expect. However, the
-preample is quite different. *drum roll* Anyone else recognize %gs:0x28?
-
-That's the stack canary. :P It seems that GCC views this as an array:
-
-                char *ptr = __builtin_alloca(offset & 0x3FF);
-                asm volatile("" : "=m"(*ptr));
-
-because it's locally allocated on the stack. *face palm*
-
-I'll go figure out a way to fix this...
-
--Kees
-
-[1] https://lore.kernel.org/lkml/202003281505.0F481D3@keescook/
-
--- 
-Kees Cook
+> when the BPF LSF is not built into the kernel?
+>
+> --
+> Kees Cook
