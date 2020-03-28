@@ -2,89 +2,149 @@ Return-Path: <SRS0=NZ+o=5N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10447C43331
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 12:26:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9552C2D0E5
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 12:27:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 45CCB2073B
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 12:26:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="l1mm2gYY"
+	by mail.kernel.org (Postfix) with ESMTP id 80389206F6
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 12:27:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585398423;
+	bh=D87NSl65Pg7fQlicMoYRQg+J9bitAiu/S9hoaFEs9Mk=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=IbIC58vCKfBrYNcNuVPP8J8nM8Ad2jG7ho9hfaMq80wm3frekdMjKL0WTi8BJbYOZ
+	 unuZirdeJhglhY/QFUb993vgBjSl+VjuEo0grwOPNHaSfr8qMvVpQZ0NMVIS+AmE5o
+	 oTvpeXpZcpXdm4vkt6fVYWQqnxq1nNryBL+pt0lI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726947AbgC1M03 (ORCPT
+        id S1726661AbgC1M1C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 28 Mar 2020 08:26:29 -0400
-Received: from mo4-p00-ob.smtp.rzone.de ([85.215.255.22]:28527 "EHLO
-        mo4-p00-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726518AbgC1M01 (ORCPT
+        Sat, 28 Mar 2020 08:27:02 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:39716 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726271AbgC1M1C (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 28 Mar 2020 08:26:27 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1585398385;
-        s=strato-dkim-0002; d=goldelico.com;
-        h=To:Message-Id:Cc:Date:From:Subject:X-RZG-CLASS-ID:X-RZG-AUTH:From:
-        Subject:Sender;
-        bh=RRAAjZ7ibcbK3nazLeHJkueAnEPgXuK0f3ZKyFebqYw=;
-        b=l1mm2gYYE4tZVc3EqsoJzlNPnB9wcBUnzmsc8RDTw6+QgEuJdZ6A9sAk86QYnqjXYg
-        T/xn2fKVsU5mjqCZmGU+0lxhl9p7Zsso5UGqQJrcaoDgDu7u05c3mpFFx5zzAnySI0MF
-        U6+lKt4C46OCxaKoVr19jQ2x8o8GYPRINq0FjR52TUMaPK/PlOfHLaJa6A7hVlPKfUKZ
-        89ySalSilms06UzcPTllWb/wkPvMj5bHPWaScICB3tzHVGmGtdmMy1vgw8WXr6Dx9Rom
-        /kKdP8e7DT2bx5iUvhx4SiUKOQ81KNlKraqVqnsi0nNim7ywSmGsk6yVXRzGdZe7zH1a
-        8Cjw==
-X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMgPgp8VKxflSZ1P34KBj5Qpw97WFDlWcXA4N8z4="
-X-RZG-CLASS-ID: mo00
-Received: from imac.fritz.box
-        by smtp.strato.de (RZmta 46.2.1 DYNA|AUTH)
-        with ESMTPSA id m02241w2SCQP8yj
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (curve X9_62_prime256v1 with 256 ECDH bits, eq. 3072 bits RSA))
-        (Client did not present a certificate);
-        Sat, 28 Mar 2020 13:26:25 +0100 (CET)
-Content-Type: text/plain; charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
-Subject: CHKDT error by f95cad74acdb ("dt-bindings: clocks: Convert Allwinner legacy clocks to schemas")
-From:   "H. Nikolaus Schaller" <hns@goldelico.com>
-Date:   Sat, 28 Mar 2020 13:26:24 +0100
-Cc:     Discussions about the Letux Kernel <letux-kernel@openphoenux.org>,
+        Sat, 28 Mar 2020 08:27:02 -0400
+Received: by mail-ot1-f66.google.com with SMTP id x11so12745872otp.6;
+        Sat, 28 Mar 2020 05:27:01 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=hqZqx/CZapn9pjHWc5U/GpwtVDNOyuhdLo9WIuYYHzs=;
+        b=EBXslbwSVxQMvD7p0Fbv8bGNpGGWlC//DVEBxK/Hd9yXzVb2V8nvzMQHAEvUeUOFXQ
+         pKbcvul8rR5aA5Uxm6uCiYiGJ3fd4FBxfiVBNIyvgBhohSrSKJePmamnJnO79p7OFnXm
+         NHA+6wRQd/kqPq6EB6L70zzDk2uAKGyZn6HFmyIYyTU3TV4bYtUvvFbB+C7/FGJ5tijc
+         bDGeLuSPSmMyJDOg58hQ1EAvKjKutruC03+a2S3xAxlKnd8OKZnBbF/a5PKbP62otpzy
+         QkhgsiiLkwvL3g64SGOSb1Op8KTBC3E1moJ5XLEvmuETeCMH8jl+1h93cuR6G+1iCImW
+         XK4g==
+X-Gm-Message-State: ANhLgQ3z/SqYdmRuaccjBmk7HVkJSp5dJ9YAVCg8udsWuWbLkN7aun1T
+        9mpqFf50X0+csyAWT8zHZOcwB+djWxe+5KjEkbw/oQ==
+X-Google-Smtp-Source: ADFU+vsArV3PTBfft2PPvi8tTIA1oPns/rtyEPF4hkM8KSyoQ62DSh333n/cvkQBgecEbD8PmQ+F31OqWR+fY+raqQ8=
+X-Received: by 2002:a05:6830:14cc:: with SMTP id t12mr2427440otq.118.1585398421290;
+ Sat, 28 Mar 2020 05:27:01 -0700 (PDT)
+MIME-Version: 1.0
+References: <1585232950-123704-1-git-send-email-zhangliguang@linux.alibaba.com>
+In-Reply-To: <1585232950-123704-1-git-send-email-zhangliguang@linux.alibaba.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Sat, 28 Mar 2020 13:26:48 +0100
+Message-ID: <CAJZ5v0iwZq-F=WAztLaLKBrU7UeWq_W5U+mTTvvpFo32y6COUA@mail.gmail.com>
+Subject: Re: [PATCH] ACPI / CPPC: clean up acpi_get_psd_map
+To:     luanshi <zhangliguang@linux.alibaba.com>
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <A65A26D8-9F66-4D46-B1E1-84ECECF079E3@goldelico.com>
-To:     Rob Herring <robh+dt@kernel.org>, Maxime Ripard <maxime@cerno.tech>
-X-Mailer: Apple Mail (2.3124)
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Rob,
-I am trying to check my new bindings with v5.6-rc7 but get this before
-the process tries mine:
+On Thu, Mar 26, 2020 at 3:29 PM luanshi <zhangliguang@linux.alibaba.com> wrote:
+>
+> This patch cleans up acpi_get_psd_map function. If got here,
+> variable all_cpu_data[] can't be NULL. Variable match_cpc_ptr has been
+> checked before, no need check again at the end of the funchtion. Then
+> some code logic should be optimized.
+>
+> Signed-off-by: Liguang Zhang <zhangliguang@linux.alibaba.com>
+> ---
+>  drivers/acpi/cppc_acpi.c | 33 +++++++--------------------------
+>  1 file changed, 7 insertions(+), 26 deletions(-)
+>
+> diff --git a/drivers/acpi/cppc_acpi.c b/drivers/acpi/cppc_acpi.c
+> index a1a858a..8b2e89c 100644
+> --- a/drivers/acpi/cppc_acpi.c
+> +++ b/drivers/acpi/cppc_acpi.c
+> @@ -438,13 +438,10 @@ int acpi_get_psd_map(struct cppc_cpudata **all_cpu_data)
+>          * domain info.
+>          */
+>         for_each_possible_cpu(i) {
+> -               pr = all_cpu_data[i];
+> -               if (!pr)
+> -                       continue;
+> -
+>                 if (cpumask_test_cpu(i, covered_cpus))
+>                         continue;
+>
+> +               pr = all_cpu_data[i];
+>                 cpc_ptr = per_cpu(cpc_desc_ptr, i);
+>                 if (!cpc_ptr) {
+>                         retval = -EFAULT;
+> @@ -495,44 +492,28 @@ int acpi_get_psd_map(struct cppc_cpudata **all_cpu_data)
+>                         cpumask_set_cpu(j, pr->shared_cpu_map);
+>                 }
+>
+> -               for_each_possible_cpu(j) {
+> +               for_each_cpu(j, pr->shared_cpu_map) {
+>                         if (i == j)
+>                                 continue;
+>
+>                         match_pr = all_cpu_data[j];
+> -                       if (!match_pr)
+> -                               continue;
+> -
+> -                       match_cpc_ptr = per_cpu(cpc_desc_ptr, j);
+> -                       if (!match_cpc_ptr) {
+> -                               retval = -EFAULT;
+> -                               goto err_ret;
+> -                       }
+> -
+> -                       match_pdomain = &(match_cpc_ptr->domain_info);
+> -                       if (match_pdomain->domain != pdomain->domain)
+> -                               continue;
+> -
+>                         match_pr->shared_type = pr->shared_type;
+>                         cpumask_copy(match_pr->shared_cpu_map,
+>                                      pr->shared_cpu_map);
+>                 }
+>         }
+> +       goto out;
+>
+>  err_ret:
+>         for_each_possible_cpu(i) {
+>                 pr = all_cpu_data[i];
+> -               if (!pr)
+> -                       continue;
+>
+>                 /* Assume no coordination on any error parsing domain info */
+> -               if (retval) {
+> -                       cpumask_clear(pr->shared_cpu_map);
+> -                       cpumask_set_cpu(i, pr->shared_cpu_map);
+> -                       pr->shared_type = CPUFREQ_SHARED_TYPE_ALL;
+> -               }
+> +               cpumask_clear(pr->shared_cpu_map);
+> +               cpumask_set_cpu(i, pr->shared_cpu_map);
+> +               pr->shared_type = CPUFREQ_SHARED_TYPE_ALL;
+>         }
+> -
+> +out:
+>         free_cpumask_var(covered_cpus);
+>         return retval;
+>  }
+> --
 
-make dt_binding_check dtbs_check
-...
-
-  CHKDT   Documentation/devicetree/bindings/bus/renesas,bsc.yaml - due =
-to target missing
-  CHKDT   Documentation/devicetree/bindings/bus/simple-pm-bus.yaml - due =
-to target missing
-  CHKDT   =
-Documentation/devicetree/bindings/clock/allwinner,sun4i-a10-ahb-clk.yaml =
-- due to target missing
-=
-/Volumes/CaseSensitive/master/Documentation/devicetree/bindings/clock/allw=
-inner,sun4i-a10-ahb-clk.yaml: Additional properties are not allowed =
-('deprecated' was unexpected)
-make[2]: *** =
-[Documentation/devicetree/bindings/clock/allwinner,sun4i-a10-ahb-clk.examp=
-le.dts] Error 1
-make[1]: *** [dt_binding_check] Error 2
-make: *** [sub-make] Error 2
-
-What am I doing wrong?
-Is there an option to skip such errors and continue?
-Is there an option to just test my bindings and yaml file?
-
-BR and thanks,
-Nikolaus Schaller
-
+Applied as 5.7 material with some changes in the changelog and subject, thanks!
