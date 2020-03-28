@@ -2,123 +2,101 @@ Return-Path: <SRS0=NZ+o=5N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EAD1C2D0EC
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 11:06:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF337C43331
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 11:06:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 251A520723
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 11:06:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BlQDoAVc"
+	by mail.kernel.org (Postfix) with ESMTP id ABEC920723
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 11:06:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727308AbgC1LGe (ORCPT
+        id S1727376AbgC1LGl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 28 Mar 2020 07:06:34 -0400
-Received: from mail-pj1-f66.google.com ([209.85.216.66]:37129 "EHLO
-        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726378AbgC1LGa (ORCPT
+        Sat, 28 Mar 2020 07:06:41 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:55614 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726252AbgC1LGU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 28 Mar 2020 07:06:30 -0400
-Received: by mail-pj1-f66.google.com with SMTP id o12so4904064pjs.2;
-        Sat, 28 Mar 2020 04:06:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=xwqIvEeP3Vt3fTQGzaeqWDuGXBUR2dpVD8iwb1hKRFg=;
-        b=BlQDoAVcKEIX+ETSBr03c2Puity6qf9d6K9OBD3OtsxsQZLxW5IhSDKjVrPEBfNk10
-         CwyHZ3nCrFC52cW9XrOPw9iBUu5CkzfmshjLxSuB7NuOEsWYCWt0NTif/MD7DFh19ipM
-         msgL3vMzJkgTC10KlD1f0NsmVIH0WKuuZ1oT1YEpXRDUo75cHdA+LoCYdtfSY02D3vdw
-         HWCXdFCcCIT0pO4i2UqnSjpSN5wwGBzBqkwNpdzCgtzvhch5qojUKRD4+QiBP/xLNrib
-         O108y4Bfpw5fYpW4tTBlSvKY1g6WQ9Rmaoi3syW0FQZf2BNj21lpiKG+IFbLtSS2v2n7
-         Uq1g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=xwqIvEeP3Vt3fTQGzaeqWDuGXBUR2dpVD8iwb1hKRFg=;
-        b=aSFTgRbQ8S3C/epn8V+C/7R9bTJLM7oINBkiSZhRF0ytB7A3ccbw5FypU39HRT1JiL
-         3T+fG0I5dfQZJUeGBI9aJl1PkH7TJxahOoSHgSTScAO9Q1Mr3uX95U48QK85sEnqy2Dq
-         P83t3WkOrlgmj9ooxU5BzzmYYyicnhkLp38GqPzUsVxfw467sSU6r0LOmbyZwfINLzKb
-         RESRYO3n19OkpGug36BwahA33O+axZd92pFiieY6HThUEMYsYqDQzeJXzoHA5K1M1E2Z
-         SI0HPWdfOxNJ28CsC67L6YW5+9bqzXiyZzhpMzuE/5gbv6efCT/stPCWrQBh/HJmDGaf
-         Mvrw==
-X-Gm-Message-State: ANhLgQ0q57exw0PObnDgOyKt89/4r3E0JF1PE3kT+I4TIVgI6y01n6rW
-        KFFbWjReXzpIZRCgqOfRzJ5LnCpilgLskJDYyPI=
-X-Google-Smtp-Source: ADFU+vsuOxLwPs1LAFXP4cwwIfR7SDP2dGQkWujS045o80/7BRwgtQyckb3WD2wg8wY/W9HD7HKLYfi4zo6W4CJOZCE=
-X-Received: by 2002:a17:902:5acb:: with SMTP id g11mr3566387plm.18.1585393589055;
- Sat, 28 Mar 2020 04:06:29 -0700 (PDT)
+        Sat, 28 Mar 2020 07:06:20 -0400
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1jI9IA-0003tS-9U; Sat, 28 Mar 2020 12:06:18 +0100
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id D983E1C03A9;
+        Sat, 28 Mar 2020 12:06:17 +0100 (CET)
+Date:   Sat, 28 Mar 2020 11:06:17 -0000
+From:   "tip-bot2 for Al Viro" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: locking/core] x86: don't reload after cmpxchg in
+ unsafe_atomic_op2() loop
+Cc:     Al Viro <viro@zeniv.linux.org.uk>, x86 <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
 MIME-Version: 1.0
-References: <20200328001154.17313-1-sravanhome@gmail.com> <20200328001154.17313-3-sravanhome@gmail.com>
- <CAHp75Vdc4MxMnmd_h6eFfZAji=4fir7x7bq2MX1q50nAQ1eJ=Q@mail.gmail.com> <23c39834-c2d9-5634-b9d7-8f9e16194752@gmail.com>
-In-Reply-To: <23c39834-c2d9-5634-b9d7-8f9e16194752@gmail.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Sat, 28 Mar 2020 13:06:17 +0200
-Message-ID: <CAHp75VcAh07Kb+G5HoZfgWwKTCfRHLcX7nD=g8r3+z5sm4u-dQ@mail.gmail.com>
-Subject: Re: [PATCH v5 2/5] mfd: mp2629: Add support for mps battery charger
-To:     saravanan sekar <sravanhome@gmail.com>
-Cc:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald <pmeerw@pmeerw.net>,
-        Sebastian Reichel <sre@kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-iio <linux-iio@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Message-ID: <158539357755.28353.1367590741418303273.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Mar 28, 2020 at 12:51 PM saravanan sekar <sravanhome@gmail.com> wrote:
->
-> Hi Andy,
->
-> On 28/03/20 11:45 am, Andy Shevchenko wrote:
-> > On Sat, Mar 28, 2020 at 2:12 AM Saravanan Sekar <sravanhome@gmail.com> wrote:
-> >> mp2629 is a highly-integrated switching-mode battery charge management
-> >> device for single-cell Li-ion or Li-polymer battery.
-> >>
-> >> Add MFD core enables chip access for ADC driver for battery readings,
-> >> and a power supply battery-charger driver
-> > ...
-> >
-> >> +#ifndef __MP2629_H__
-> >> +#define __MP2629_H__
-> >> +#include <linux/device.h>
-> >> +#include <linux/regmap.h>
-> >> +#include <linux/types.h>
-> > None of these header is in use here.
-> >
-> > struct device;
-> > struct regmap;
-> >
-> > would be enough.
->
-> Yesterday I conveyed to you that Lee is not recommended to use forward
-> declaration and asked me
->
-> to use includes, then you agreed with the same. Again same comments !!
-> sorry I am lost.
+The following commit has been merged into the locking/core branch of tip:
 
-Ah, okay. I missed that.
-But types.h is still not needed, all data types are provided either by
-C or by rest two headers.
+Commit-ID:     8aef36dacb3a932cb77da8bb7eb21a154babd0b8
+Gitweb:        https://git.kernel.org/tip/8aef36dacb3a932cb77da8bb7eb21a154babd0b8
+Author:        Al Viro <viro@zeniv.linux.org.uk>
+AuthorDate:    Thu, 26 Mar 2020 17:34:40 -04:00
+Committer:     Al Viro <viro@zeniv.linux.org.uk>
+CommitterDate: Fri, 27 Mar 2020 23:58:54 -04:00
 
-> >> +struct mp2629_info {
-> >> +       struct device *dev;
-> >> +       struct regmap *regmap;
-> >> +};
-> >> +
-> >> +#endif
+x86: don't reload after cmpxchg in unsafe_atomic_op2() loop
 
--- 
-With Best Regards,
-Andy Shevchenko
+lock cmpxchg leaves the current value in eax; no need to reload it.
+
+Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
+---
+ arch/x86/include/asm/futex.h | 16 ++++++++--------
+ 1 file changed, 8 insertions(+), 8 deletions(-)
+
+diff --git a/arch/x86/include/asm/futex.h b/arch/x86/include/asm/futex.h
+index 53c07ab..5ff7626 100644
+--- a/arch/x86/include/asm/futex.h
++++ b/arch/x86/include/asm/futex.h
+@@ -34,17 +34,17 @@ do {								\
+ do {								\
+ 	int oldval = 0, ret, tem;				\
+ 	asm volatile("1:\tmovl	%2, %0\n"			\
+-		     "\tmovl\t%0, %3\n"				\
++		     "2:\tmovl\t%0, %3\n"			\
+ 		     "\t" insn "\n"				\
+-		     "2:\t" LOCK_PREFIX "cmpxchgl %3, %2\n"	\
+-		     "\tjnz\t1b\n"				\
+-		     "3:\n"					\
++		     "3:\t" LOCK_PREFIX "cmpxchgl %3, %2\n"	\
++		     "\tjnz\t2b\n"				\
++		     "4:\n"					\
+ 		     "\t.section .fixup,\"ax\"\n"		\
+-		     "4:\tmov\t%5, %1\n"			\
+-		     "\tjmp\t3b\n"				\
++		     "5:\tmov\t%5, %1\n"			\
++		     "\tjmp\t4b\n"				\
+ 		     "\t.previous\n"				\
+-		     _ASM_EXTABLE_UA(1b, 4b)			\
+-		     _ASM_EXTABLE_UA(2b, 4b)			\
++		     _ASM_EXTABLE_UA(1b, 5b)			\
++		     _ASM_EXTABLE_UA(3b, 5b)			\
+ 		     : "=&a" (oldval), "=&r" (ret),		\
+ 		       "+m" (*uaddr), "=&r" (tem)		\
+ 		     : "r" (oparg), "i" (-EFAULT), "1" (0));	\
