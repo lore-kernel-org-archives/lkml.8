@@ -2,158 +2,109 @@ Return-Path: <SRS0=NZ+o=5N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE50DC2D0ED
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 21:51:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CE14C43331
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 21:52:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 84B222073E
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 21:51:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585432287;
-	bh=8h5MsYYWkNcSL4OubFDXcc0F978HmedvepZsUALWoEU=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=2a6rtJD45wMGfQmTmKOLfovXKJnKkBEwEW4Iz5wPyJgaKpJLnKFSlf54YE8CYhyXt
-	 Gs5rou/K7bEboIRw/gVr6yxApyZ2Xmmai/gufVM4Z57VpFzMpP1s1riC8LHBMVEVR4
-	 G/buBNP1IEYe9Fsx0y/HyzRvNei16WvozB2kfTNE=
+	by mail.kernel.org (Postfix) with ESMTP id 5C7F320732
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 21:52:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Rq3TMeuP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727803AbgC1Vv0 (ORCPT
+        id S1727820AbgC1Vw6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 28 Mar 2020 17:51:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59412 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727484AbgC1Vv0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 28 Mar 2020 17:51:26 -0400
-Received: from localhost (mobile-166-175-186-165.mycingular.net [166.175.186.165])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0621B20732;
-        Sat, 28 Mar 2020 21:51:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585432285;
-        bh=8h5MsYYWkNcSL4OubFDXcc0F978HmedvepZsUALWoEU=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=cRDvGcQ5sKmFI1wvckXef/UmsLyDz683poYpZdmP44iYJhkeapeO/gIAQdLb0AGO1
-         EybQIC+BUEGOaP2uTO8s72JhRXDklLPLrUnvx2zNt0VB2JUrXe3cxXGZNnA9M4YlFR
-         ew3bvM0qnp6FBoddWJ91MN1Wm1BqKELJ+X3m8nig=
-Date:   Sat, 28 Mar 2020 16:51:23 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Jon Derrick <jonathan.derrick@intel.com>
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Andy Shevchenko <andriy.shevchenko@intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Pawel Baldysiak <pawel.baldysiak@intel.com>,
-        Sinan Kaya <okaya@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Keith Busch <kbusch@kernel.org>,
-        Alexandru Gagniuc <mr.nuke.me@gmail.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Stuart Hayes <stuart.w.hayes@gmail.com>,
-        Lukas Wunner <lukas@wunner.de>
-Subject: Re: [RFC 0/9] PCIe Hotplug Slot Emulation driver
-Message-ID: <20200328215123.GA130140@google.com>
+        Sat, 28 Mar 2020 17:52:58 -0400
+Received: from mail-pj1-f68.google.com ([209.85.216.68]:52961 "EHLO
+        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727796AbgC1Vw6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 28 Mar 2020 17:52:58 -0400
+Received: by mail-pj1-f68.google.com with SMTP id ng8so5680565pjb.2
+        for <linux-kernel@vger.kernel.org>; Sat, 28 Mar 2020 14:52:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=NCEn6jiYkuBInipnn6zCj3DDSQcSKN3aqUSzXbErLKE=;
+        b=Rq3TMeuPbUxxPHxnu2HIoc61sTFjgLQaNuXNOiePL7aKZf69jQ+dFmmXivkyriybNW
+         vgQPzAGLknpxdaaBjXnKSMKfGascpAM2sveRdm1tiga7RQ5eBW5zwWegcXEF3OuBmBHO
+         GYik2IFuQR2m0KTYbl2FbSa8Eqyejs4hrgep4=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=NCEn6jiYkuBInipnn6zCj3DDSQcSKN3aqUSzXbErLKE=;
+        b=oV5JndJK0qBFh77H2slfNXV+VvSf+Vo7i03XS+lQ/WSV91brwLgqbfKRVbwOJHQ684
+         K8nnxSyPW7LkKb5mQ7oDrEJtC6ZSg89iuuFHIRO6+wA2C5a7fIzYzibc18NFNdQ8eCHY
+         vSSr/wBFlpuswWldQ5HF6Fv1XHGFOaLZIwlgL+WoEpCnfgxBJdMOnfY9BLhmgb2Kdhtl
+         A3k/luwH+GQ4yq0Pt9S1AGnUl1wZ/+ZhqvS10fEYS/9tS+OlXoBT8jnFnNKG/kfLuGkY
+         XMPDAf/PIEwnYqBw/fUGUfH5BsbNFdSqDYKwzRRJpQoZMtaolh5DVjatpHZapNBTeW36
+         O0+g==
+X-Gm-Message-State: ANhLgQ15feEQq6RmXaFzl/F4BYv+5nLlbwjpBGa6SnraHFwNuSs111mQ
+        jnz4v+95djXBHiipyjJiJaYLzg==
+X-Google-Smtp-Source: ADFU+vuQs9Pb6Y6ncTb5sBNwy1tSr0+fCbtZKLnv4G2coXixK0YG2/jVjP1gF9qzdCIgU8SdYOki7g==
+X-Received: by 2002:a17:90a:368f:: with SMTP id t15mr7297208pjb.23.1585432376997;
+        Sat, 28 Mar 2020 14:52:56 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id i189sm6840804pfc.148.2020.03.28.14.52.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 28 Mar 2020 14:52:56 -0700 (PDT)
+Date:   Sat, 28 Mar 2020 14:52:55 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Alexey Gladkov <gladkov.alexey@gmail.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        Linux API <linux-api@vger.kernel.org>,
+        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
+        Linux Security Module <linux-security-module@vger.kernel.org>,
+        Akinobu Mita <akinobu.mita@gmail.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Daniel Micay <danielmicay@gmail.com>,
+        Djalal Harouni <tixxdz@gmail.com>,
+        "Dmitry V . Levin" <ldv@altlinux.org>,
+        "Eric W . Biederman" <ebiederm@xmission.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        "J . Bruce Fields" <bfields@fieldses.org>,
+        Jeff Layton <jlayton@poochiereds.net>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Oleg Nesterov <oleg@redhat.com>
+Subject: Re: [PATCH v10 8/9] proc: use human-readable values for hidehid
+Message-ID: <202003281451.88C7CBD23C@keescook>
+References: <20200327172331.418878-1-gladkov.alexey@gmail.com>
+ <20200327172331.418878-9-gladkov.alexey@gmail.com>
+ <202003281321.A69D9DE45@keescook>
+ <20200328211453.w44fvkwleltnc2m7@comp-core-i7-2640m-0182e6>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1581120007-5280-1-git-send-email-jonathan.derrick@intel.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+In-Reply-To: <20200328211453.w44fvkwleltnc2m7@comp-core-i7-2640m-0182e6>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[+cc Stuart, Lukas]
+On Sat, Mar 28, 2020 at 10:14:53PM +0100, Alexey Gladkov wrote:
+> On Sat, Mar 28, 2020 at 01:28:28PM -0700, Kees Cook wrote:
+> > On Fri, Mar 27, 2020 at 06:23:30PM +0100, Alexey Gladkov wrote:
+> > > [...]
+> > > +	if (!kstrtouint(param->string, base, &result.uint_32)) {
+> > > +		ctx->hidepid = result.uint_32;
+> > 
+> > This need to bounds-check the value with a call to valid_hidepid(), yes?
+> 
+> The kstrtouint returns 0 on success and -ERANGE on overflow [1].
 
-On Fri, Feb 07, 2020 at 04:59:58PM -0700, Jon Derrick wrote:
-> This set adds an emulation driver for PCIe Hotplug. There may be platforms with
-> specific configurations that can support hotplug but don't provide the logical
-> slot hotplug hardware. For instance, the platform may use an
-> electrically-tolerant interposer between the slot and the device.
-> 
-> This driver utilizes the pci-bridge-emul architecture to manage register reads
-> and writes. The underlying functionality of the hotplug emulation driver uses
-> the Data Link Layer Link Active Reporting mechanism in a polling loop, but can
-> tolerate other event sources such as AER or DPC.
-> 
-> When enabled and a slot is managed by the driver, all port services are managed
-> by the kernel. This is done to ensure that firmware hotplug and error
-> architecture does not (correctly) halt/machine check the system when hotplug is
-> performed on a non-hotplug slot.
-> 
-> The driver offers two active mode: Auto and Force.
-> auto: The driver will bind to non-hotplug slots
-> force: The driver will bind to all slots and overrides the slot's services
-> 
-> There are three kernel params:
-> pciehp.pciehp_emul_mode={off, auto, force}
-> pciehp.pciehp_emul_time=<msecs polling time> (def 1000, min 100, max 60000)
-> pciehp.pciehp_emul_ports=<PCI [S]BDF/ID format string>
-> 
-> The pciehp_emul_ports kernel parameter takes a semi-colon tokenized string
-> representing PCI [S]BDFs and IDs. The pciehp_emul_mode will then be applied to
-> only those slots, leaving other slots unmanaged by pciehp_emul.
-> 
-> The string follows the pci_dev_str_match() format:
-> 
->   [<domain>:]<bus>:<device>.<func>[/<device>.<func>]*
->   pci:<vendor>:<device>[:<subvendor>:<subdevice>]
-> 
-> When using the path format, the path for the device can be obtained
-> using 'lspci -t' and further specified using the upstream bridge and the
-> downstream port's device-function to be more robust against bus
-> renumbering.
-> 
-> When using the vendor-device format, a value of '0' in any field acts as
-> a wildcard for that field, matching all values.
-> 
-> The driver is enabled with CONFIG_HOTPLUG_PCI_PCIE_EMUL=y.
-> 
-> The driver should be considered 'use at own risk' unless the platform/hardware
-> vendor recommends this mode.
+No, I mean, hidepid cannot be just any uint32 value. It must be in the
+enum. Is that checked somewhere else? It looked like the call to
+valid_hidepid() was removed.
 
-There's a lot of good work in here, and I don't claim to understand
-the use case and all the benefits.
-
-But it seems like quite a lot of additional code and complexity in an
-area that's already pretty subtle, so I'm not yet convinced that it's
-all worthwhile.
-
-It seems like this would rely on Data Link Layer Link Active
-Reporting.  Is that something we could add to pciehp as a generic
-feature without making a separate driver for it?  I haven't looked at
-this for a while, but I would assume that if we find out that a link
-went down, pciehp could/should be smart enough to notice that even if
-it didn't come via the usual pciehp Slot Status path.
-
-> Jon Derrick (9):
->   PCI: pci-bridge-emul: Update PCIe register behaviors
->   PCI: pci-bridge-emul: Eliminate reserved member
->   PCI: pci-bridge-emul: Provide a helper to set behavior
->   PCI: pciehp: Indirect slot register operations
->   PCI: Add pcie_port_slot_emulated stub
->   PCI: pciehp: Expose the poll loop to other drivers
->   PCI: Move pci_dev_str_match to search.c
->   PCI: pciehp: Add hotplug slot emulation driver
->   PCI: pciehp: Wire up pcie_port_emulate_slot and pciehp_emul
-> 
->  drivers/pci/hotplug/Makefile      |   4 +
->  drivers/pci/hotplug/pciehp.h      |  28 +++
->  drivers/pci/hotplug/pciehp_emul.c | 378 ++++++++++++++++++++++++++++++++++++++
->  drivers/pci/hotplug/pciehp_hpc.c  | 136 ++++++++++----
->  drivers/pci/pci-acpi.c            |   3 +
->  drivers/pci/pci-bridge-emul.c     |  95 +++++-----
->  drivers/pci/pci-bridge-emul.h     |  10 +
->  drivers/pci/pci.c                 | 163 ----------------
->  drivers/pci/pcie/Kconfig          |  14 ++
->  drivers/pci/pcie/portdrv_core.c   |  14 +-
->  drivers/pci/probe.c               |   2 +-
->  drivers/pci/search.c              | 162 ++++++++++++++++
->  include/linux/pci.h               |   8 +
->  13 files changed, 775 insertions(+), 242 deletions(-)
->  create mode 100644 drivers/pci/hotplug/pciehp_emul.c
-> 
-> -- 
-> 1.8.3.1
-> 
+-- 
+Kees Cook
