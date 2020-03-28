@@ -2,79 +2,118 @@ Return-Path: <SRS0=NZ+o=5N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0084DC2D0E5
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 11:42:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCF26C43331
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 11:50:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D4ABB206F6
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 11:42:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A4E9620723
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 11:50:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="wruyawcv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726295AbgC1Lmn (ORCPT
+        id S1726295AbgC1Lu2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 28 Mar 2020 07:42:43 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:41632 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726045AbgC1Lmn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 28 Mar 2020 07:42:43 -0400
-Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 087B1A2EEB246432E288;
-        Sat, 28 Mar 2020 19:42:39 +0800 (CST)
-Received: from localhost (10.173.223.234) by DGGEMS409-HUB.china.huawei.com
- (10.3.19.209) with Microsoft SMTP Server id 14.3.487.0; Sat, 28 Mar 2020
- 19:42:28 +0800
-From:   YueHaibing <yuehaibing@huawei.com>
-To:     <dan.j.williams@intel.com>, <vkoul@kernel.org>,
-        <wangzhou1@hisilicon.com>, <qiuzhenfa@hisilicon.com>
-CC:     <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH -next] dmaengine: hisilicon: Fix build error without PCI_MSI
-Date:   Sat, 28 Mar 2020 19:41:33 +0800
-Message-ID: <20200328114133.17560-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.10.2.windows.1
+        Sat, 28 Mar 2020 07:50:28 -0400
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:43879 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726045AbgC1Lu2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 28 Mar 2020 07:50:28 -0400
+Received: by mail-qk1-f193.google.com with SMTP id o10so13739042qki.10
+        for <linux-kernel@vger.kernel.org>; Sat, 28 Mar 2020 04:50:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=joelfernandes.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=PXOaWkf6K2Whqr4tczFKE+1Lhm0x7YcGQ6GGzYXABXQ=;
+        b=wruyawcvW8FYxDeUaH/b3sR9f8qVFJNMds5GXrlnCIL4b4t3MHPibhHne7Za5AesWp
+         +oZnYwJyHBF7rLaEj3+xRg7T5fJxnvcgCaXvzW/j0ZoW8S8LGz7HY/9cmXGJaWBhgnkX
+         3ev0sjOfZuxAiXphJs4iPsEiSx26FWby11+kM=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=PXOaWkf6K2Whqr4tczFKE+1Lhm0x7YcGQ6GGzYXABXQ=;
+        b=kc/3WGMAw27ASTkCxb6tLOAszH9GBoXO5zPaLZG5XgrU87HAUQh89bM9XYVoBsmu/6
+         aupO7ZnuUYn3qjIiuONE3o/Be9fpzV0JKbFV8BdRdC88jqTuehr55v2P6qT6HunjH5AJ
+         wbk7lJRO6RVZFQzI8oGynVeiRcZhnnIgb0ObxvfNvIoasEOoLI0RgB9x/uMtE3Jkbe0K
+         R9Fe+bLocZUJP035ghfZYPCW/d/f7fnVdHaCkewYSCt76MfultunJkdJpoNghs4ox7V/
+         ZS3OsyCS1wNa8fK016x8MSUkBMkTSmykwky3UuuzG782QdjIVMbi9xq1LLgbcVEAxQMF
+         dvTQ==
+X-Gm-Message-State: ANhLgQ20X+aRxybXACmG5aAIDumu57uu2JuJYicVRcvigdtGcRSdyrVj
+        FADjM3nFIhxrB4lS8zsaWCrnIQ==
+X-Google-Smtp-Source: ADFU+vuJZg9x4i3uIawWWwhUP6qOTLg47eTiVN4Q7Bu5YZJWAls9LsVdqiTybdkCsbmFuWW5s7NtMg==
+X-Received: by 2002:a37:4d88:: with SMTP id a130mr1086530qkb.443.1585396227212;
+        Sat, 28 Mar 2020 04:50:27 -0700 (PDT)
+Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
+        by smtp.gmail.com with ESMTPSA id q1sm6610470qtn.69.2020.03.28.04.50.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 28 Mar 2020 04:50:26 -0700 (PDT)
+Date:   Sat, 28 Mar 2020 07:50:26 -0400
+From:   Joel Fernandes <joel@joelfernandes.org>
+To:     Waiman Long <longman@redhat.com>
+Cc:     Tejun Heo <tj@kernel.org>, Li Zefan <lizefan@huawei.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Jonathan Corbet <corbet@lwn.net>, linux-kernel@vger.kernel.org,
+        cgroups@vger.kernel.org, linux-doc@vger.kernel.org,
+        Sonny Rao <sonnyrao@google.com>
+Subject: Re: [PATCH] docs: cgroup-v1: Document the cpuset_v2_mode mount option
+Message-ID: <20200328115026.GA135587@google.com>
+References: <20200328014748.24140-1-longman@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.173.223.234]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200328014748.24140-1-longman@redhat.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If PCI_MSI is not set, building fais:
+On Fri, Mar 27, 2020 at 09:47:48PM -0400, Waiman Long wrote:
+> The cpuset in cgroup v1 accepts a special "cpuset_v2_mode" mount
+> option that make cpuset.cpus and cpuset.mems behave more like those in
+> cgroup v2.  Document it to make other people more aware of this feature
+> that can be useful in some circumstances.
+> 
+> Signed-off-by: Waiman Long <longman@redhat.com>
 
-drivers/dma/hisi_dma.c: In function ‘hisi_dma_free_irq_vectors’:
-drivers/dma/hisi_dma.c:138:2: error: implicit declaration of function ‘pci_free_irq_vectors’;
- did you mean ‘pci_alloc_irq_vectors’? [-Werror=implicit-function-declaration]
-  pci_free_irq_vectors(data);
-  ^~~~~~~~~~~~~~~~~~~~
+Acked-by: Joel Fernandes (Google) <joel@joelfernandes.org>
 
-Make HISI_DMA depends on PCI_MSI to fix this.
+thanks,
 
-Fixes: e9f08b65250d ("dmaengine: hisilicon: Add Kunpeng DMA engine support")
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
----
- drivers/dma/Kconfig | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ - Joel
 
-diff --git a/drivers/dma/Kconfig b/drivers/dma/Kconfig
-index 092483644315..023db6883d05 100644
---- a/drivers/dma/Kconfig
-+++ b/drivers/dma/Kconfig
-@@ -241,7 +241,8 @@ config FSL_RAID
- 
- config HISI_DMA
- 	tristate "HiSilicon DMA Engine support"
--	depends on ARM64 || (COMPILE_TEST && PCI_MSI)
-+	depends on ARM64 || COMPILE_TEST
-+	depends on PCI_MSI
- 	select DMA_ENGINE
- 	select DMA_VIRTUAL_CHANNELS
- 	help
--- 
-2.17.1
-
-
+> ---
+>  Documentation/admin-guide/cgroup-v1/cpusets.rst | 11 +++++++++++
+>  1 file changed, 11 insertions(+)
+> 
+> diff --git a/Documentation/admin-guide/cgroup-v1/cpusets.rst b/Documentation/admin-guide/cgroup-v1/cpusets.rst
+> index 86a6ae995d54..7ade3abd342a 100644
+> --- a/Documentation/admin-guide/cgroup-v1/cpusets.rst
+> +++ b/Documentation/admin-guide/cgroup-v1/cpusets.rst
+> @@ -223,6 +223,17 @@ cpu_online_mask using a CPU hotplug notifier, and the mems file
+>  automatically tracks the value of node_states[N_MEMORY]--i.e.,
+>  nodes with memory--using the cpuset_track_online_nodes() hook.
+>  
+> +The cpuset.effective_cpus and cpuset.effective_mems files are
+> +normally read-only copies of cpuset.cpus and cpuset.mems files
+> +respectively.  If the cpuset cgroup filesystem is mounted with the
+> +special "cpuset_v2_mode" option, the behavior of these files will become
+> +similar to the corresponding files in cpuset v2.  In other words, hotplug
+> +events will not change cpuset.cpus and cpuset.mems.  Those events will
+> +only affect cpuset.effective_cpus and cpuset.effective_mems which show
+> +the actual cpus and memory nodes that are currently used by this cpuset.
+> +See Documentation/admin-guide/cgroup-v2.rst for more information about
+> +cpuset v2 behavior.
+> +
+>  
+>  1.4 What are exclusive cpusets ?
+>  --------------------------------
+> -- 
+> 2.18.1
+> 
