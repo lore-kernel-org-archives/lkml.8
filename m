@@ -2,83 +2,69 @@ Return-Path: <SRS0=NZ+o=5N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.7 required=3.0 tests=DATE_IN_PAST_96_XX,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E5FEC2D0EF
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 16:45:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 278B5C43331
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 16:45:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 52D5D206DB
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 16:45:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F3006206DB
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 16:45:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585413914;
+	bh=tqdp2wKhFV4knnpcP0aT3RoHSlH9cDcNmpdI3uugVJ8=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
+	b=gB/g1imxMMwoP15517RAI3j+QXBmWMQtoIG20opdpWXbEK1ApjZU7+6uKAmZLOzAq
+	 cPyiSsTnbc1DDSRfHYA6nUPpyHdAfP2bLJEq5cJ8WDRttoqlBnZycGqiDariesH3xy
+	 r0AB1QBl5cJ4X9A6pYdDPkQ3yJhGUk7uiMqpOGSQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727831AbgC1QpJ (ORCPT
+        id S1728097AbgC1QpM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 28 Mar 2020 12:45:09 -0400
-Received: from mx.sdf.org ([205.166.94.20]:49937 "EHLO mx.sdf.org"
+        Sat, 28 Mar 2020 12:45:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58928 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727829AbgC1Qno (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 28 Mar 2020 12:43:44 -0400
-Received: from sdf.org (IDENT:lkml@sdf.lonestar.org [205.166.94.16])
-        by mx.sdf.org (8.15.2/8.14.5) with ESMTPS id 02SGhPra027632
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits) verified NO);
-        Sat, 28 Mar 2020 16:43:25 GMT
-Received: (from lkml@localhost)
-        by sdf.org (8.15.2/8.12.8/Submit) id 02SGhPH7029961;
-        Sat, 28 Mar 2020 16:43:25 GMT
-Message-Id: <202003281643.02SGhPH7029961@sdf.org>
-From:   George Spelvin <lkml@sdf.org>
-Date:   Fri, 29 Nov 2019 17:16:39 -0500
-Subject: [RFC PATCH v1 47/50] kernel/bpf/core.c: Use get_random_max32()
-To:     linux-kernel@vger.kernel.org, lkml@sdf.org
-Cc:     Daniel Borkmann <daniel@iogearbox.net>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>, bpf@vger.kernel.org,
-        netdev@vger.kernel.org
+        id S1727627AbgC1QpI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 28 Mar 2020 12:45:08 -0400
+Subject: Re: [GIT PULL] SCSI fixes for 5.6-rc7
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1585413908;
+        bh=tqdp2wKhFV4knnpcP0aT3RoHSlH9cDcNmpdI3uugVJ8=;
+        h=From:In-Reply-To:References:Date:To:Cc:From;
+        b=WYypd4GcssSnK7bQByMec6LFgUxftINIvf6CPM9KSVh+w5eCCWVTm3kZcxpuafbzf
+         ej7n3FMIQFkCgq7AmU515KuT1yvKtfwKjasMxQ3D0ygIjZf9I6kvtgIk0yfpH699w/
+         WIM0lhb25KxTbQRLWjPTlkAlxoDWajP4UjSA0Cac=
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <1585409145.15200.3.camel@HansenPartnership.com>
+References: <1585409145.15200.3.camel@HansenPartnership.com>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <1585409145.15200.3.camel@HansenPartnership.com>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/jejb/scsi.git scsi-fixes
+X-PR-Tracked-Commit-Id: ea697a8bf5a4161e59806fab14f6e4a46dc7dcb0
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 83fd69c93340177dcd66fd26ce6441fb581c1dbf
+Message-Id: <158541390804.15046.4391656669881129761.pr-tracker-bot@kernel.org>
+Date:   Sat, 28 Mar 2020 16:45:08 +0000
+To:     James Bottomley <James.Bottomley@HansenPartnership.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-scsi <linux-scsi@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Smaller, faster, and a smidge more uniform than %.
+The pull request you sent on Sat, 28 Mar 2020 08:25:45 -0700:
 
-Signed-off-by: George Spelvin <lkml@sdf.org>
-Cc: Daniel Borkmann <daniel@iogearbox.net>
-Cc: Alexei Starovoitov <ast@kernel.org>
-Cc: Martin KaFai Lau <kafai@fb.com>
-Cc: Song Liu <songliubraving@fb.com>
-Cc: Yonghong Song <yhs@fb.com>
-Cc: Andrii Nakryiko <andriin@fb.com>
-Cc: bpf@vger.kernel.org
-Cc: netdev@vger.kernel.org
----
- kernel/bpf/core.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+> git://git.kernel.org/pub/scm/linux/kernel/git/jejb/scsi.git scsi-fixes
 
-diff --git a/kernel/bpf/core.c b/kernel/bpf/core.c
-index af6b738cf435c..61713a7f73d85 100644
---- a/kernel/bpf/core.c
-+++ b/kernel/bpf/core.c
-@@ -874,7 +874,7 @@ bpf_jit_binary_alloc(unsigned int proglen, u8 **image_ptr,
- 	hdr->pages = pages;
- 	hole = min_t(unsigned int, size - (proglen + sizeof(*hdr)),
- 		     PAGE_SIZE - sizeof(*hdr));
--	start = (get_random_int() % hole) & ~(alignment - 1);
-+	start = get_random_max32(hole) & ~(alignment - 1);
- 
- 	/* Leave a random number of instructions before BPF code. */
- 	*image_ptr = &hdr->image[start];
-@@ -947,7 +947,7 @@ static int bpf_jit_blind_insn(const struct bpf_insn *from,
- 			      bool emit_zext)
- {
- 	struct bpf_insn *to = to_buff;
--	u32 imm_rnd = get_random_int();
-+	u32 imm_rnd = get_random_u32();
- 	s16 off;
- 
- 	BUILD_BUG_ON(BPF_REG_AX  + 1 != MAX_BPF_JIT_REG);
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/83fd69c93340177dcd66fd26ce6441fb581c1dbf
+
+Thank you!
+
 -- 
-2.26.0
-
+Deet-doot-dot, I am a bot.
+https://korg.wiki.kernel.org/userdoc/prtracker
