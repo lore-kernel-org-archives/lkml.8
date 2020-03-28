@@ -2,201 +2,237 @@ Return-Path: <SRS0=NZ+o=5N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D05C7C2D0EC
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC0ABC43331
 	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 10:20:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A678020716
+	by mail.kernel.org (Postfix) with ESMTP id 7C38420717
 	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 10:20:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="pzeBx3E1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726268AbgC1KUI (ORCPT
+        id S1726202AbgC1KSw convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 28 Mar 2020 06:20:08 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:36986 "EHLO pegase1.c-s.fr"
+        Sat, 28 Mar 2020 06:18:52 -0400
+Received: from mga03.intel.com ([134.134.136.65]:48320 "EHLO mga03.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725937AbgC1KUI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 28 Mar 2020 06:20:08 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 48qF8j331szB09ZZ;
-        Sat, 28 Mar 2020 11:20:05 +0100 (CET)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=pzeBx3E1; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id WhdGRgIvWAGP; Sat, 28 Mar 2020 11:20:05 +0100 (CET)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 48qF8j1h2rzB09ZY;
-        Sat, 28 Mar 2020 11:20:05 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1585390805; bh=VxACPXV9Gk3PymTU0gGYQHtOnnL8iszZZtDxu9OZ0d0=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=pzeBx3E1l4DxzUlqcR7ySE/cgizPmWuiUQIqjWW1w+yk3T8JBL7PtAs33jhcZDPl6
-         f5Vjk7Nh8jaQ55EQV5espmk+CG9w7kDXQ7Rn3BPZ/w1S8VMPe9IknH41sTZR11XDNg
-         0Wfj7lY+WzhQUYIAeG7NM6zRaLfQgfVg0Cow0Lf8=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 56DCA8B76B;
-        Sat, 28 Mar 2020 11:20:06 +0100 (CET)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id 7Hr0kWPiW8Oy; Sat, 28 Mar 2020 11:20:06 +0100 (CET)
-Received: from pc16570vm.idsi0.si.c-s.fr (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 4F6668B75B;
-        Sat, 28 Mar 2020 11:20:05 +0100 (CET)
-Subject: Re: [PATCH 1/1] ppc/crash: Skip spinlocks during crash
-To:     Leonardo Bras <leonardo@linux.ibm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Enrico Weigelt <info@metux.net>,
-        Allison Randal <allison@lohutok.net>,
-        Thomas Gleixner <tglx@linutronix.de>
-Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-References: <20200326222836.501404-1-leonardo@linux.ibm.com>
- <af505ef0-e0df-e0aa-bb83-3ed99841f151@c-s.fr>
- <56965ad674071181548d5ed4fb7c8fa08061b591.camel@linux.ibm.com>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Message-ID: <4759f5e9-24a6-7710-86a0-c8e45f5decb7@c-s.fr>
-Date:   Sat, 28 Mar 2020 10:19:52 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.7.0
-MIME-Version: 1.0
-In-Reply-To: <56965ad674071181548d5ed4fb7c8fa08061b591.camel@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+        id S1725973AbgC1KSv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 28 Mar 2020 06:18:51 -0400
+IronPort-SDR: CDetSSF5pgytrTelfsbOuOfJKVpi6NA0xvpXIL0yoFI2OsofkHsu8FUAwwilTRTNAp3Dha+WX0
+ 71AjI7aadXPQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Mar 2020 03:18:51 -0700
+IronPort-SDR: 6TLXjdCgJm76oiGhIztihN1Zcus13c+IQlK4rKUh+9hyDIydlM9113zuPmVNdIMPJwq2tskEHU
+ kNL4eCVKi8Nw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,316,1580803200"; 
+   d="scan'208";a="248132943"
+Received: from fmsmsx106.amr.corp.intel.com ([10.18.124.204])
+  by orsmga003.jf.intel.com with ESMTP; 28 Mar 2020 03:18:50 -0700
+Received: from fmsmsx604.amr.corp.intel.com (10.18.126.84) by
+ FMSMSX106.amr.corp.intel.com (10.18.124.204) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Sat, 28 Mar 2020 03:18:50 -0700
+Received: from fmsmsx604.amr.corp.intel.com (10.18.126.84) by
+ fmsmsx604.amr.corp.intel.com (10.18.126.84) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Sat, 28 Mar 2020 03:18:49 -0700
+Received: from shsmsx107.ccr.corp.intel.com (10.239.4.96) by
+ fmsmsx604.amr.corp.intel.com (10.18.126.84) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5
+ via Frontend Transport; Sat, 28 Mar 2020 03:18:49 -0700
+Received: from shsmsx104.ccr.corp.intel.com ([169.254.5.225]) by
+ SHSMSX107.ccr.corp.intel.com ([169.254.9.191]) with mapi id 14.03.0439.000;
+ Sat, 28 Mar 2020 18:08:52 +0800
+From:   "Tian, Kevin" <kevin.tian@intel.com>
+To:     Jacob Pan <jacob.jun.pan@linux.intel.com>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        David Woodhouse <dwmw2@infradead.org>,
+        "Alex Williamson" <alex.williamson@redhat.com>,
+        Jean-Philippe Brucker <jean-philippe@linaro.com>
+CC:     "Liu, Yi L" <yi.l.liu@intel.com>,
+        "Raj, Ashok" <ashok.raj@intel.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Eric Auger <eric.auger@redhat.com>
+Subject: RE: [PATCH V10 10/11] iommu/vt-d: Enlightened PASID allocation
+Thread-Topic: [PATCH V10 10/11] iommu/vt-d: Enlightened PASID allocation
+Thread-Index: AQHV/w5iiZKRdi7L1UuU5LlV/2W3nKhd0n8A
+Date:   Sat, 28 Mar 2020 10:08:52 +0000
+Message-ID: <AADFC41AFE54684AB9EE6CBC0274A5D19D7FA10F@SHSMSX104.ccr.corp.intel.com>
+References: <1584746861-76386-1-git-send-email-jacob.jun.pan@linux.intel.com>
+ <1584746861-76386-11-git-send-email-jacob.jun.pan@linux.intel.com>
+In-Reply-To: <1584746861-76386-11-git-send-email-jacob.jun.pan@linux.intel.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-product: dlpe-windows
+dlp-version: 11.2.0.6
+dlp-reaction: no-action
+x-originating-ip: [10.239.127.40]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+MIME-Version: 1.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Leonardo,
-
-On 03/27/2020 03:51 PM, Leonardo Bras wrote:
-> Hello Christophe, thanks for the feedback.
+> From: Jacob Pan <jacob.jun.pan@linux.intel.com>
+> Sent: Saturday, March 21, 2020 7:28 AM
 > 
-> I noticed an error in this patch and sent a v2, that can be seen here:
-> http://patchwork.ozlabs.org/patch/1262468/
+> From: Lu Baolu <baolu.lu@linux.intel.com>
 > 
-> Comments inline::
+> Enabling IOMMU in a guest requires communication with the host
+> driver for certain aspects. Use of PASID ID to enable Shared Virtual
+> Addressing (SVA) requires managing PASID's in the host. VT-d 3.0 spec
+> provides a Virtual Command Register (VCMD) to facilitate this.
+> Writes to this register in the guest are trapped by QEMU which
+> proxies the call to the host driver.
+
+Qemu -> vIOMMU
+
 > 
-> On Fri, 2020-03-27 at 07:50 +0100, Christophe Leroy wrote:
->>> @@ -142,6 +144,8 @@ static inline void arch_spin_lock(arch_spinlock_t *lock)
->>>    		if (likely(__arch_spin_trylock(lock) == 0))
->>>    			break;
->>>    		do {
->>> +			if (unlikely(crash_skip_spinlock))
->>> +				return;
+> This virtual command interface consists of a capability register,
+> a virtual command register, and a virtual response register. Refer
+> to section 10.4.42, 10.4.43, 10.4.44 for more information.
 > 
-> Complete function for reference:
-> static inline void arch_spin_lock(arch_spinlock_t *lock)
-> {
-> 	while (1) {
-> 		if (likely(__arch_spin_trylock(lock) == 0))
-> 			break;
-> 		do {
-> 			if (unlikely(crash_skip_spinlock))
-> 				return;
-> 			HMT_low();
-> 			if (is_shared_processor())
-> 				splpar_spin_yield(lock);
-> 		} while (unlikely(lock->slock != 0));
-> 		HMT_medium();
-> 	}
-> }
+> This patch adds the enlightened PASID allocation/free interfaces
+> via the virtual command interface.
 > 
->> You are adding a test that reads a global var in the middle of a so hot
->> path ? That must kill performance.
+> Cc: Ashok Raj <ashok.raj@intel.com>
+> Cc: Jacob Pan <jacob.jun.pan@linux.intel.com>
+> Cc: Kevin Tian <kevin.tian@intel.com>
+> Signed-off-by: Liu Yi L <yi.l.liu@intel.com>
+> Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
+> Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
+> Reviewed-by: Eric Auger <eric.auger@redhat.com>
+> ---
+>  drivers/iommu/intel-pasid.c | 57
+> +++++++++++++++++++++++++++++++++++++++++++++
+>  drivers/iommu/intel-pasid.h | 13 ++++++++++-
+>  include/linux/intel-iommu.h |  1 +
+>  3 files changed, 70 insertions(+), 1 deletion(-)
 > 
-> I thought it would, in worst case scenario, increase a maximum delay of
-> an arch_spin_lock() call 1 spin cycle. Here is what I thought:
+> diff --git a/drivers/iommu/intel-pasid.c b/drivers/iommu/intel-pasid.c
+> index 9f6d07410722..e87ad67aad36 100644
+> --- a/drivers/iommu/intel-pasid.c
+> +++ b/drivers/iommu/intel-pasid.c
+> @@ -27,6 +27,63 @@
+>  static DEFINE_SPINLOCK(pasid_lock);
+>  u32 intel_pasid_max_id = PASID_MAX;
 > 
-> - If the lock is already free, it would change nothing,
-> - Otherwise, the lock will wait.
-> - Waiting cycle just got bigger.
-> - Worst case scenario: running one more cycle, given lock->slock can
-> turn to 0 just after checking.
+> +int vcmd_alloc_pasid(struct intel_iommu *iommu, unsigned int *pasid)
+> +{
+> +	unsigned long flags;
+> +	u8 status_code;
+> +	int ret = 0;
+> +	u64 res;
+> +
+> +	raw_spin_lock_irqsave(&iommu->register_lock, flags);
+> +	dmar_writeq(iommu->reg + DMAR_VCMD_REG,
+> VCMD_CMD_ALLOC);
+> +	IOMMU_WAIT_OP(iommu, DMAR_VCRSP_REG, dmar_readq,
+> +		      !(res & VCMD_VRSP_IP), res);
+> +	raw_spin_unlock_irqrestore(&iommu->register_lock, flags);
+> +
+> +	status_code = VCMD_VRSP_SC(res);
+> +	switch (status_code) {
+> +	case VCMD_VRSP_SC_SUCCESS:
+> +		*pasid = VCMD_VRSP_RESULT_PASID(res);
+> +		break;
+> +	case VCMD_VRSP_SC_NO_PASID_AVAIL:
+> +		pr_info("IOMMU: %s: No PASID available\n", iommu->name);
+> +		ret = -ENOSPC;
+> +		break;
+> +	default:
+> +		ret = -ENODEV;
+> +		pr_warn("IOMMU: %s: Unexpected error code %d\n",
+> +			iommu->name, status_code);
+> +	}
+> +
+> +	return ret;
+> +}
+> +
+> +void vcmd_free_pasid(struct intel_iommu *iommu, unsigned int pasid)
+> +{
+> +	unsigned long flags;
+> +	u8 status_code;
+> +	u64 res;
+> +
+> +	raw_spin_lock_irqsave(&iommu->register_lock, flags);
+> +	dmar_writeq(iommu->reg + DMAR_VCMD_REG,
+> +		    VCMD_CMD_OPERAND(pasid) | VCMD_CMD_FREE);
+> +	IOMMU_WAIT_OP(iommu, DMAR_VCRSP_REG, dmar_readq,
+> +		      !(res & VCMD_VRSP_IP), res);
+> +	raw_spin_unlock_irqrestore(&iommu->register_lock, flags);
+> +
+> +	status_code = VCMD_VRSP_SC(res);
+> +	switch (status_code) {
+> +	case VCMD_VRSP_SC_SUCCESS:
+> +		break;
+> +	case VCMD_VRSP_SC_INVALID_PASID:
+> +		pr_info("IOMMU: %s: Invalid PASID\n", iommu->name);
+> +		break;
+> +	default:
+> +		pr_warn("IOMMU: %s: Unexpected error code %d\n",
+> +			iommu->name, status_code);
+> +	}
+> +}
+> +
+>  /*
+>   * Per device pasid table management:
+>   */
+> diff --git a/drivers/iommu/intel-pasid.h b/drivers/iommu/intel-pasid.h
+> index 698015ee3f04..cd3d63f3e936 100644
+> --- a/drivers/iommu/intel-pasid.h
+> +++ b/drivers/iommu/intel-pasid.h
+> @@ -23,6 +23,16 @@
+>  #define is_pasid_enabled(entry)		(((entry)->lo >> 3) & 0x1)
+>  #define get_pasid_dir_size(entry)	(1 << ((((entry)->lo >> 9) & 0x7) + 7))
 > 
-> Could you please point where I failed to see the performance penalty?
-> (I need to get better at this :) )
+> +/* Virtual command interface for enlightened pasid management. */
+> +#define VCMD_CMD_ALLOC			0x1
+> +#define VCMD_CMD_FREE			0x2
+> +#define VCMD_VRSP_IP			0x1
+> +#define VCMD_VRSP_SC(e)			(((e) >> 1) & 0x3)
+> +#define VCMD_VRSP_SC_SUCCESS		0
+> +#define VCMD_VRSP_SC_NO_PASID_AVAIL	1
+> +#define VCMD_VRSP_SC_INVALID_PASID	1
+> +#define VCMD_VRSP_RESULT_PASID(e)	(((e) >> 8) & 0xfffff)
+> +#define VCMD_CMD_OPERAND(e)		((e) << 8)
+>  /*
+>   * Domain ID reserved for pasid entries programmed for first-level
+>   * only and pass-through transfer modes.
+> @@ -113,5 +123,6 @@ int intel_pasid_setup_nested(struct intel_iommu
+> *iommu,
+>  			int addr_width);
+>  void intel_pasid_tear_down_entry(struct intel_iommu *iommu,
+>  				 struct device *dev, int pasid);
+> -
+> +int vcmd_alloc_pasid(struct intel_iommu *iommu, unsigned int *pasid);
+> +void vcmd_free_pasid(struct intel_iommu *iommu, unsigned int pasid);
+>  #endif /* __INTEL_PASID_H */
+> diff --git a/include/linux/intel-iommu.h b/include/linux/intel-iommu.h
+> index ccbf164fb711..9cbf5357138b 100644
+> --- a/include/linux/intel-iommu.h
+> +++ b/include/linux/intel-iommu.h
+> @@ -169,6 +169,7 @@
+>  #define ecap_smpwc(e)		(((e) >> 48) & 0x1)
+>  #define ecap_flts(e)		(((e) >> 47) & 0x1)
+>  #define ecap_slts(e)		(((e) >> 46) & 0x1)
+> +#define ecap_vcs(e)		(((e) >> 44) & 0x1)
+>  #define ecap_smts(e)		(((e) >> 43) & 0x1)
+>  #define ecap_dit(e)		((e >> 41) & 0x1)
+>  #define ecap_pasid(e)		((e >> 40) & 0x1)
+> --
+> 2.7.4
 
-You are right that when the lock is free, it changes nothing. However 
-when it is not, it is not just one cycle.
+Reviewed-by: Kevin Tian <kevin.tian@intel.com>
 
-Here is arch_spin_lock() without your patch:
-
-00000440 <my_lock>:
-  440:	39 40 00 01 	li      r10,1
-  444:	7d 20 18 28 	lwarx   r9,0,r3
-  448:	2c 09 00 00 	cmpwi   r9,0
-  44c:	40 82 00 10 	bne     45c <my_lock+0x1c>
-  450:	7d 40 19 2d 	stwcx.  r10,0,r3
-  454:	40 a2 ff f0 	bne     444 <my_lock+0x4>
-  458:	4c 00 01 2c 	isync
-  45c:	2f 89 00 00 	cmpwi   cr7,r9,0
-  460:	4d be 00 20 	bclr+   12,4*cr7+eq
-  464:	7c 21 0b 78 	mr      r1,r1
-  468:	81 23 00 00 	lwz     r9,0(r3)
-  46c:	2f 89 00 00 	cmpwi   cr7,r9,0
-  470:	40 be ff f4 	bne     cr7,464 <my_lock+0x24>
-  474:	7c 42 13 78 	mr      r2,r2
-  478:	7d 20 18 28 	lwarx   r9,0,r3
-  47c:	2c 09 00 00 	cmpwi   r9,0
-  480:	40 82 00 10 	bne     490 <my_lock+0x50>
-  484:	7d 40 19 2d 	stwcx.  r10,0,r3
-  488:	40 a2 ff f0 	bne     478 <my_lock+0x38>
-  48c:	4c 00 01 2c 	isync
-  490:	2f 89 00 00 	cmpwi   cr7,r9,0
-  494:	40 be ff d0 	bne     cr7,464 <my_lock+0x24>
-  498:	4e 80 00 20 	blr
-
-Here is arch_spin_lock() with your patch. I enclose with === what comes 
-in addition:
-
-00000440 <my_lock>:
-  440:	39 40 00 01 	li      r10,1
-  444:	7d 20 18 28 	lwarx   r9,0,r3
-  448:	2c 09 00 00 	cmpwi   r9,0
-  44c:	40 82 00 10 	bne     45c <my_lock+0x1c>
-  450:	7d 40 19 2d 	stwcx.  r10,0,r3
-  454:	40 a2 ff f0 	bne     444 <my_lock+0x4>
-  458:	4c 00 01 2c 	isync
-  45c:	2f 89 00 00 	cmpwi   cr7,r9,0
-  460:	4d be 00 20 	bclr+   12,4*cr7+eq
-=====================================================
-  464:	3d 40 00 00 	lis     r10,0
-			466: R_PPC_ADDR16_HA	crash_skip_spinlock
-  468:	39 4a 00 00 	addi    r10,r10,0
-			46a: R_PPC_ADDR16_LO	crash_skip_spinlock
-  46c:	39 00 00 01 	li      r8,1
-  470:	89 2a 00 00 	lbz     r9,0(r10)
-  474:	2f 89 00 00 	cmpwi   cr7,r9,0
-  478:	4c 9e 00 20 	bnelr   cr7
-=====================================================
-  47c:	7c 21 0b 78 	mr      r1,r1
-  480:	81 23 00 00 	lwz     r9,0(r3)
-  484:	2f 89 00 00 	cmpwi   cr7,r9,0
-  488:	40 be ff f4 	bne     cr7,47c <my_lock+0x3c>
-  48c:	7c 42 13 78 	mr      r2,r2
-  490:	7d 20 18 28 	lwarx   r9,0,r3
-  494:	2c 09 00 00 	cmpwi   r9,0
-  498:	40 82 00 10 	bne     4a8 <my_lock+0x68>
-  49c:	7d 00 19 2d 	stwcx.  r8,0,r3
-  4a0:	40 a2 ff f0 	bne     490 <my_lock+0x50>
-  4a4:	4c 00 01 2c 	isync
-  4a8:	2f 89 00 00 	cmpwi   cr7,r9,0
-  4ac:	40 be ff c4 	bne     cr7,470 <my_lock+0x30>
-  4b0:	4e 80 00 20 	blr
-
-
-Christophe
