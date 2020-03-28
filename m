@@ -6,35 +6,35 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B76BC2D0E8
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 07:11:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DDCCBC2D0EB
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 07:11:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DD50420714
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 07:11:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B0F7A20714
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 07:11:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726290AbgC1HK7 (ORCPT
+        id S1726389AbgC1HLB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 28 Mar 2020 03:10:59 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:35080 "EHLO huawei.com"
+        Sat, 28 Mar 2020 03:11:01 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:35122 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725810AbgC1HK6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 28 Mar 2020 03:10:58 -0400
+        id S1725372AbgC1HLB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 28 Mar 2020 03:11:01 -0400
 Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 80EF058DE3AC0FEF6455;
+        by Forcepoint Email with ESMTP id 921D39C350A7386A4097;
         Sat, 28 Mar 2020 15:10:52 +0800 (CST)
 Received: from localhost.localdomain (10.69.192.56) by
  DGGEMS411-HUB.china.huawei.com (10.3.19.211) with Microsoft SMTP Server id
- 14.3.487.0; Sat, 28 Mar 2020 15:10:44 +0800
+ 14.3.487.0; Sat, 28 Mar 2020 15:10:43 +0800
 From:   Huazhong Tan <tanhuazhong@huawei.com>
 To:     <davem@davemloft.net>
 CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <salil.mehta@huawei.com>, <yisen.zhuang@huawei.com>,
         <linuxarm@huawei.com>, <kuba@kernel.org>,
-        Guojia Liao <liaoguojia@huawei.com>,
+        Yunsheng Lin <linyunsheng@huawei.com>,
         Huazhong Tan <tanhuazhong@huawei.com>
-Subject: [PATCH net 3/4] net: hns3: fix RSS config lost after VF reset.
-Date:   Sat, 28 Mar 2020 15:09:57 +0800
-Message-ID: <1585379398-36224-4-git-send-email-tanhuazhong@huawei.com>
+Subject: [PATCH net 1/4] net: hns3: drop the WQ_MEM_RECLAIM flag when allocating WQ
+Date:   Sat, 28 Mar 2020 15:09:55 +0800
+Message-ID: <1585379398-36224-2-git-send-email-tanhuazhong@huawei.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1585379398-36224-1-git-send-email-tanhuazhong@huawei.com>
 References: <1585379398-36224-1-git-send-email-tanhuazhong@huawei.com>
@@ -47,120 +47,110 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Guojia Liao <liaoguojia@huawei.com>
+From: Yunsheng Lin <linyunsheng@huawei.com>
 
-Currently, VF's RSS configuration would be set to default
-after VF reset, the the user's one will loss.
+The WQ in hns3 driver is allocated with WQ_MEM_RECLAIM flag
+in order to guarantee forward progress, which may cause hns3'
+WQ_MEM_RECLAIM WQ flushing infiniband' !WQ_MEM_RECLAIM WQ
+warning:
 
-To fix it, this patch separates hclgevf_rss_init_hw() into
-two parts, one sets up the default RSS configuration and
-just be called when driver loading, one configures the hardware
-and be called by driver loading or reset.
+[11246.200168] hns3 0000:bd:00.1: Reset done, hclge driver initialization finished.
+[11246.209979] hns3 0000:bd:00.1 eth7: net open
+[11246.227608] ------------[ cut here ]------------
+[11246.237370] workqueue: WQ_MEM_RECLAIM hclge:hclge_service_task [hclge] is flushing !WQ_MEM_RECLAIM infiniband:0x0
+[11246.237391] WARNING: CPU: 50 PID: 2279 at ./kernel/workqueue.c:2605 check_flush_dependency+0xcc/0x140
+[11246.260412] Modules linked in: hclgevf hns_roce_hw_v2 rdma_test(O) hns3 xt_CHECKSUM iptable_mangle xt_conntrack ipt_REJECT nf_reject_ipv4 ebtable_filter ebtables ip6table_filter ip6_tables iptable_filter bpfilter vfio_iommu_type1 vfio_pci vfio_virqfd vfio ib_isert iscsi_target_mod ib_ipoib ib_umad rpcrdma ib_iser libiscsi scsi_transport_iscsi aes_ce_blk crypto_simd cryptd aes_ce_cipher sunrpc nls_iso8859_1 crct10dif_ce ghash_ce sha2_ce sha256_arm64 sha1_ce joydev input_leds hid_generic usbkbd usbmouse sbsa_gwdt usbhid usb_storage hid ses hclge hisi_zip hisi_hpre hisi_sec2 hnae3 hisi_qm ahci hisi_trng_v2 evbug uacce rng_core gpio_dwapb autofs4 hisi_sas_v3_hw megaraid_sas hisi_sas_main libsas scsi_transport_sas [last unloaded: hns_roce_hw_v2]
+[11246.325742] CPU: 50 PID: 2279 Comm: kworker/50:0 Kdump: loaded Tainted: G           O      5.4.0-rc4+ #1
+[11246.335181] Hardware name: Huawei TaiShan 200 (Model 2280)/BC82AMDD, BIOS 2280-V2 CS V3.B140.01 12/18/2019
+[11246.344802] Workqueue: hclge hclge_service_task [hclge]
+[11246.350007] pstate: 60c00009 (nZCv daif +PAN +UAO)
+[11246.354779] pc : check_flush_dependency+0xcc/0x140
+[11246.359549] lr : check_flush_dependency+0xcc/0x140
+[11246.364317] sp : ffff800268a73990
+[11246.367618] x29: ffff800268a73990 x28: 0000000000000001
+[11246.372907] x27: ffffcbe4f5868000 x26: ffffcbe4f5541000
+[11246.378196] x25: 00000000000000b8 x24: ffff002fdd0ff868
+[11246.383483] x23: ffff002fdd0ff800 x22: ffff2027401ba600
+[11246.388770] x21: 0000000000000000 x20: ffff002fdd0ff800
+[11246.394059] x19: ffff202719293b00 x18: ffffcbe4f5541948
+[11246.399347] x17: 000000006f8ad8dd x16: 0000000000000002
+[11246.404634] x15: ffff8002e8a734f7 x14: 6c66207369205d65
+[11246.409922] x13: 676c63685b206b73 x12: 61745f6563697672
+[11246.415208] x11: 65735f65676c6368 x10: 3a65676c6368204d
+[11246.420494] x9 : 49414c4345525f4d x8 : 6e6162696e69666e
+[11246.425782] x7 : 69204d49414c4345 x6 : ffffcbe4f5765145
+[11246.431068] x5 : 0000000000000000 x4 : 0000000000000000
+[11246.436355] x3 : 0000000000000030 x2 : 00000000ffffffff
+[11246.441642] x1 : 3349eb1ac5310100 x0 : 0000000000000000
+[11246.446928] Call trace:
+[11246.449363]  check_flush_dependency+0xcc/0x140
+[11246.453785]  flush_workqueue+0x110/0x410
+[11246.457691]  ib_cache_cleanup_one+0x54/0x468
+[11246.461943]  __ib_unregister_device+0x70/0xa8
+[11246.466279]  ib_unregister_device+0x2c/0x40
+[11246.470455]  hns_roce_exit+0x34/0x198 [hns_roce_hw_v2]
+[11246.475571]  __hns_roce_hw_v2_uninit_instance.isra.56+0x3c/0x58 [hns_roce_hw_v2]
+[11246.482934]  hns_roce_hw_v2_reset_notify+0xd8/0x210 [hns_roce_hw_v2]
+[11246.489261]  hclge_notify_roce_client+0x84/0xe0 [hclge]
+[11246.494464]  hclge_reset_rebuild+0x60/0x730 [hclge]
+[11246.499320]  hclge_reset_service_task+0x400/0x5a0 [hclge]
+[11246.504695]  hclge_service_task+0x54/0x698 [hclge]
+[11246.509464]  process_one_work+0x15c/0x458
+[11246.513454]  worker_thread+0x144/0x520
+[11246.517186]  kthread+0xfc/0x128
+[11246.520314]  ret_from_fork+0x10/0x18
+[11246.523873] ---[ end trace eb980723699c2585 ]---
+[11246.528710] hns3 0000:bd:00.2: Func clear success after reset.
+[11246.528747] hns3 0000:bd:00.0: Func clear success after reset.
+[11246.907710] hns3 0000:bd:00.1 eth7: link up
 
-Fixes: d97b30721301 ("net: hns3: Add RSS tuples support for VF")
-Signed-off-by: Guojia Liao <liaoguojia@huawei.com>
+According to [1] and [2]:
+
+There seems to be no specific guidance about how to handling the
+forward progress guarantee of network device's WQ yet, and other
+network device's WQ seem to be marked with WQ_MEM_RECLAIM without
+a clear reason.
+
+So this patch removes the WQ_MEM_RECLAIM flag when allocating WQ
+to aviod the above warning.
+
+1. https://www.spinics.net/lists/netdev/msg631646.html
+2. https://www.spinics.net/lists/netdev/msg632097.html
+
+Fixes: 0ea68902256e ("net: hns3: allocate WQ with WQ_MEM_RECLAIM flag")
+Signed-off-by: Yunsheng Lin <linyunsheng@huawei.com>
 Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
 ---
- .../ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c  | 52 ++++++++++++----------
- 1 file changed, 28 insertions(+), 24 deletions(-)
+ drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c   | 2 +-
+ drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
+index d3b0cd7..b351807 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
+@@ -10666,7 +10666,7 @@ static int hclge_init(void)
+ {
+ 	pr_info("%s is initializing\n", HCLGE_NAME);
+ 
+-	hclge_wq = alloc_workqueue("%s", WQ_MEM_RECLAIM, 0, HCLGE_NAME);
++	hclge_wq = alloc_workqueue("%s", 0, 0, HCLGE_NAME);
+ 	if (!hclge_wq) {
+ 		pr_err("%s: failed to create workqueue\n", HCLGE_NAME);
+ 		return -ENOMEM;
 diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c b/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c
-index 3c58f0b..768240f 100644
+index 0510d85..3c58f0b 100644
 --- a/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c
 +++ b/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c
-@@ -2124,50 +2124,51 @@ static int hclgevf_config_gro(struct hclgevf_dev *hdev, bool en)
- 	return ret;
- }
- 
--static int hclgevf_rss_init_hw(struct hclgevf_dev *hdev)
-+static void hclgevf_rss_init_cfg(struct hclgevf_dev *hdev)
+@@ -3188,7 +3188,7 @@ static int hclgevf_init(void)
  {
- 	struct hclgevf_rss_cfg *rss_cfg = &hdev->rss_cfg;
--	int ret;
-+	struct hclgevf_rss_tuple_cfg *tuple_sets;
- 	u32 i;
+ 	pr_info("%s is initializing\n", HCLGEVF_NAME);
  
-+	rss_cfg->hash_algo = HCLGEVF_RSS_HASH_ALGO_TOEPLITZ;
- 	rss_cfg->rss_size = hdev->nic.kinfo.rss_size;
--
-+	tuple_sets = &rss_cfg->rss_tuple_sets;
- 	if (hdev->pdev->revision >= 0x21) {
- 		rss_cfg->hash_algo = HCLGEVF_RSS_HASH_ALGO_SIMPLE;
- 		memcpy(rss_cfg->rss_hash_key, hclgevf_hash_key,
- 		       HCLGEVF_RSS_KEY_SIZE);
- 
-+		tuple_sets->ipv4_tcp_en = HCLGEVF_RSS_INPUT_TUPLE_OTHER;
-+		tuple_sets->ipv4_udp_en = HCLGEVF_RSS_INPUT_TUPLE_OTHER;
-+		tuple_sets->ipv4_sctp_en = HCLGEVF_RSS_INPUT_TUPLE_SCTP;
-+		tuple_sets->ipv4_fragment_en = HCLGEVF_RSS_INPUT_TUPLE_OTHER;
-+		tuple_sets->ipv6_tcp_en = HCLGEVF_RSS_INPUT_TUPLE_OTHER;
-+		tuple_sets->ipv6_udp_en = HCLGEVF_RSS_INPUT_TUPLE_OTHER;
-+		tuple_sets->ipv6_sctp_en = HCLGEVF_RSS_INPUT_TUPLE_SCTP;
-+		tuple_sets->ipv6_fragment_en = HCLGEVF_RSS_INPUT_TUPLE_OTHER;
-+	}
-+
-+	/* Initialize RSS indirect table */
-+	for (i = 0; i < HCLGEVF_RSS_IND_TBL_SIZE; i++)
-+		rss_cfg->rss_indirection_tbl[i] = i % rss_cfg->rss_size;
-+}
-+
-+static int hclgevf_rss_init_hw(struct hclgevf_dev *hdev)
-+{
-+	struct hclgevf_rss_cfg *rss_cfg = &hdev->rss_cfg;
-+	int ret;
-+
-+	if (hdev->pdev->revision >= 0x21) {
- 		ret = hclgevf_set_rss_algo_key(hdev, rss_cfg->hash_algo,
- 					       rss_cfg->rss_hash_key);
- 		if (ret)
- 			return ret;
- 
--		rss_cfg->rss_tuple_sets.ipv4_tcp_en =
--					HCLGEVF_RSS_INPUT_TUPLE_OTHER;
--		rss_cfg->rss_tuple_sets.ipv4_udp_en =
--					HCLGEVF_RSS_INPUT_TUPLE_OTHER;
--		rss_cfg->rss_tuple_sets.ipv4_sctp_en =
--					HCLGEVF_RSS_INPUT_TUPLE_SCTP;
--		rss_cfg->rss_tuple_sets.ipv4_fragment_en =
--					HCLGEVF_RSS_INPUT_TUPLE_OTHER;
--		rss_cfg->rss_tuple_sets.ipv6_tcp_en =
--					HCLGEVF_RSS_INPUT_TUPLE_OTHER;
--		rss_cfg->rss_tuple_sets.ipv6_udp_en =
--					HCLGEVF_RSS_INPUT_TUPLE_OTHER;
--		rss_cfg->rss_tuple_sets.ipv6_sctp_en =
--					HCLGEVF_RSS_INPUT_TUPLE_SCTP;
--		rss_cfg->rss_tuple_sets.ipv6_fragment_en =
--					HCLGEVF_RSS_INPUT_TUPLE_OTHER;
--
- 		ret = hclgevf_set_rss_input_tuple(hdev, rss_cfg);
- 		if (ret)
- 			return ret;
- 	}
- 
--	/* Initialize RSS indirect table */
--	for (i = 0; i < HCLGEVF_RSS_IND_TBL_SIZE; i++)
--		rss_cfg->rss_indirection_tbl[i] = i % rss_cfg->rss_size;
--
- 	ret = hclgevf_set_rss_indir_table(hdev);
- 	if (ret)
- 		return ret;
-@@ -2764,6 +2765,7 @@ static int hclgevf_init_hdev(struct hclgevf_dev *hdev)
- 		goto err_config;
- 
- 	/* Initialize RSS for this VF */
-+	hclgevf_rss_init_cfg(hdev);
- 	ret = hclgevf_rss_init_hw(hdev);
- 	if (ret) {
- 		dev_err(&hdev->pdev->dev,
-@@ -2936,6 +2938,8 @@ static int hclgevf_set_channels(struct hnae3_handle *handle, u32 new_tqps_num,
- 	for (i = 0; i < HCLGEVF_RSS_IND_TBL_SIZE; i++)
- 		rss_indir[i] = i % kinfo->rss_size;
- 
-+	hdev->rss_cfg.rss_size = kinfo->rss_size;
-+
- 	ret = hclgevf_set_rss(handle, rss_indir, NULL, 0);
- 	if (ret)
- 		dev_err(&hdev->pdev->dev, "set rss indir table fail, ret=%d\n",
+-	hclgevf_wq = alloc_workqueue("%s", WQ_MEM_RECLAIM, 0, HCLGEVF_NAME);
++	hclgevf_wq = alloc_workqueue("%s", 0, 0, HCLGEVF_NAME);
+ 	if (!hclgevf_wq) {
+ 		pr_err("%s: failed to create workqueue\n", HCLGEVF_NAME);
+ 		return -ENOMEM;
 -- 
 2.7.4
 
