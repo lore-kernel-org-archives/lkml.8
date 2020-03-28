@@ -2,89 +2,102 @@ Return-Path: <SRS0=NZ+o=5N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19BA6C2D0E8
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 07:30:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC3E8C2D0EF
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 07:32:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE18220714
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 07:30:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A1BDE20714
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 07:32:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jl9qdfm3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726211AbgC1Has (ORCPT
+        id S1726268AbgC1Hc6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 28 Mar 2020 03:30:48 -0400
-Received: from smtp02.smtpout.orange.fr ([80.12.242.124]:34055 "EHLO
-        smtp.smtpout.orange.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725865AbgC1Has (ORCPT
+        Sat, 28 Mar 2020 03:32:58 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:44271 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725372AbgC1Hc5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 28 Mar 2020 03:30:48 -0400
-Received: from localhost.localdomain ([90.126.162.40])
-        by mwinf5d37 with ME
-        id KjWj2200B0scBcy03jWj1E; Sat, 28 Mar 2020 08:30:46 +0100
-X-ME-Helo: localhost.localdomain
-X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
-X-ME-Date: Sat, 28 Mar 2020 08:30:46 +0100
-X-ME-IP: 90.126.162.40
-From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-To:     selvin.xavier@broadcom.com, devesh.sharma@broadcom.com,
-        dledford@redhat.com, jgg@ziepe.ca, leon@kernel.org,
-        colin.king@canonical.com, roland@purestorage.com
-Cc:     linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-janitors@vger.kernel.org,
-        Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Subject: [PATCH] RDMA/ocrdma: Fix an off-by-one issue in 'ocrdma_add_stat'
-Date:   Sat, 28 Mar 2020 08:30:40 +0100
-Message-Id: <20200328073040.24429-1-christophe.jaillet@wanadoo.fr>
-X-Mailer: git-send-email 2.20.1
+        Sat, 28 Mar 2020 03:32:57 -0400
+Received: by mail-pl1-f193.google.com with SMTP id h11so4392377plr.11;
+        Sat, 28 Mar 2020 00:32:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=+lojOXOS3R1T9zdX8YSaUVNPC+Uk4217Q9UeUwGqUmA=;
+        b=jl9qdfm3jYBUJpt5JTOg0fpX+frk2U8CDB7NHla700eqbFzeaU5ddRrnkF9ulMws0I
+         c9g6XZd+U1YMZF9/3LdLKd5v8wOHCvTpOK+41v0dC3rQjbl2zkCOwiKzOqyresW/3Mhq
+         BcOd0bkAnUi+Zs7kVOtOgih+P95QQehDeut+bVNmK8w/pAqzhJa2/sY/cLipp5Rtomn+
+         y0jJ0Kfcg23Own5fnZnDcgXrP0oJy8MDqN1sdD4UE300VgF+beh9dCTKovy8+8QPgJF7
+         tM2KC+Uqrh6IJRCMsJf7pzvSFnZ37F703JjyJuB4ywUQrA0N8cjQpQZ/4AufrBOA8und
+         kRiA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=+lojOXOS3R1T9zdX8YSaUVNPC+Uk4217Q9UeUwGqUmA=;
+        b=LmvbnGAlNDuMYFNySrwUmk0uxaqmUv49/BwweWRxwmsT8ZPRAG+3SBgqVjXpZIFaqb
+         HoBCm7B7pW0MdQonNxGrQoL5xT9jBz84pbfYKlvBBdJd89AA0le8liiLImr4JgNhBJQG
+         q6WeX0myYrfzNeXV7HMFXf95wGk9iLdBiZHaTatg7CW0OcFpJxR+sKcuIfa5Un6aCA7L
+         kekuX/G5QhZVbp+lO+wJtfssFfuM8ooCctubvzbZEYeDxg4+5N0euIBZK19lhcI0tUSF
+         BQ0iFsArpkM4n4e9KCNsyC8i+87FBiwEbfsybkvJUU6p6gOUSFgRi/uhgkfRWtQmkOQF
+         Wbuw==
+X-Gm-Message-State: ANhLgQ0ug1tS/tTgyZaJLmvcBQnjaHH4qLyQqSklC4EJHgk8smQLVP5E
+        N5HJ9L62TBH/HnF1l/raEe0=
+X-Google-Smtp-Source: ADFU+vvZAKeuGMHdxTRxMDuAgPAhSOtHeclFmaO/lZBPjDGm3MtGtV8wn85/n9JVZFDDDkLW/Z1SiA==
+X-Received: by 2002:a17:90b:4906:: with SMTP id kr6mr3699363pjb.13.1585380776339;
+        Sat, 28 Mar 2020 00:32:56 -0700 (PDT)
+Received: from localhost ([49.205.220.152])
+        by smtp.gmail.com with ESMTPSA id 132sm5624219pfc.183.2020.03.28.00.32.55
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Sat, 28 Mar 2020 00:32:55 -0700 (PDT)
+Date:   Sat, 28 Mar 2020 13:02:53 +0530
+From:   afzal mohammed <afzal.mohd.ma@gmail.com>
+To:     Brian Cain <bcain@codeaurora.org>
+Cc:     'Thomas Gleixner' <tglx@linutronix.de>,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, x86@kernel.org,
+        linux-sh@vger.kernel.org, linux-s390@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-parisc@vger.kernel.org,
+        linux-mips@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
+        linux-ia64@vger.kernel.org, linux-hexagon@vger.kernel.org,
+        linux-c6x-dev@linux-c6x.org, linux-omap@vger.kernel.org,
+        linux-alpha@vger.kernel.org
+Subject: Re: [PATCH 0/6] Kill setup_irq()
+Message-ID: <20200328073253.GA5250@afzalpc>
+References: <20200321174303.GA7930@afzalpc>
+ <cover.1585320721.git.afzal.mohd.ma@gmail.com>
+ <059b01d604ab$637355b0$2a5a0110$@codeaurora.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <059b01d604ab$637355b0$2a5a0110$@codeaurora.org>
+User-Agent: Mutt/1.9.3 (2018-01-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There is an off-by-one issue when checking if there is enough space in the
-output buffer, because we must keep some place for a final '\0'.
+Hi Brian,
 
-While at it:
-   - Use 'scnprintf' instead of 'snprintf' in order to avoid a superfluous
-    'strlen'
-   - avoid some useless initializations
-   - avoida hard coded buffer size that can be computed at built time.
+On Fri, Mar 27, 2020 at 09:48:38PM -0500, Brian Cain wrote:
 
-Fixes: a51f06e1679e ("RDMA/ocrdma: Query controller information")
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
----
-The '\0' comes from memset(..., 0, ...) in all callers.
-This could be also avoided if needed.
----
- drivers/infiniband/hw/ocrdma/ocrdma_stats.c | 9 ++++-----
- 1 file changed, 4 insertions(+), 5 deletions(-)
+> > Note 2: hexagon final image creation fails even w/o my patch
 
-diff --git a/drivers/infiniband/hw/ocrdma/ocrdma_stats.c b/drivers/infiniband/hw/ocrdma/ocrdma_stats.c
-index 5f831e3bdbad..614a449e6b87 100644
---- a/drivers/infiniband/hw/ocrdma/ocrdma_stats.c
-+++ b/drivers/infiniband/hw/ocrdma/ocrdma_stats.c
-@@ -49,13 +49,12 @@ static struct dentry *ocrdma_dbgfs_dir;
- static int ocrdma_add_stat(char *start, char *pcur,
- 				char *name, u64 count)
- {
--	char buff[128] = {0};
--	int cpy_len = 0;
-+	char buff[128];
-+	int cpy_len;
- 
--	snprintf(buff, 128, "%s: %llu\n", name, count);
--	cpy_len = strlen(buff);
-+	cpy_len = scnprintf(buff, sizeof(buff), "%s: %llu\n", name, count);
- 
--	if (pcur + cpy_len > start + OCRDMA_MAX_DBGFS_MEM) {
-+	if (pcur + cpy_len >= start + OCRDMA_MAX_DBGFS_MEM) {
- 		pr_err("%s: No space in stats buff\n", __func__);
- 		return 0;
- 	}
--- 
-2.20.1
+> 	What's the nature of the failure in "Note 2"?
 
+drivers/base/firmware_loader/main.o: In function `fw_is_builtin_firmware':
+/devel/src/kernel6/drivers/base/firmware_loader/main.c:132:(.text+0xc8): relocation truncated to fit: R_HEX_16_X against symbol `__start_builtin_fw' defined in .modinfo section in .tmp_vmlinux1
+Makefile:1077: recipe for target 'vmlinux' failed
+make: *** [vmlinux] Error 1
+
+[ i had deleted the toolchain earlier, since you asked, download again &
+checked ]
+
+Regards
+afzal
