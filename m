@@ -2,130 +2,117 @@ Return-Path: <SRS0=NZ+o=5N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CDB1C43331
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 18:41:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F32B9C2D0E5
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 18:44:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A393206E6
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 18:41:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CEB1B206F6
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 18:44:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ouDCjhKF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726977AbgC1Slu (ORCPT
+        id S1727125AbgC1So2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 28 Mar 2020 14:41:50 -0400
-Received: from mga01.intel.com ([192.55.52.88]:22605 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725882AbgC1Slt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 28 Mar 2020 14:41:49 -0400
-IronPort-SDR: RlnRSN+pyFK1kJegySdbJRIBypfNEwgGSlc6LdmKhwyzxjn4gGfIDxYmuU3QwMWuv6LAsAgQjm
- 8SkshtvpcDKg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Mar 2020 11:41:49 -0700
-IronPort-SDR: sdpObI+vzRvcuRArPN5Pm5hmAeAQrvPL3U7SKzrdF68D/YCGs2cDX1gUBFBJWLb3bsQ/A4O34P
- pXiU6CCLVbTw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,317,1580803200"; 
-   d="scan'208";a="236953833"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
-  by orsmga007.jf.intel.com with ESMTP; 28 Mar 2020 11:41:49 -0700
-Date:   Sat, 28 Mar 2020 11:41:49 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        Junaid Shahid <junaids@google.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>
-Subject: Re: [PATCH 2/3] KVM: x86: cleanup kvm_inject_emulated_page_fault
-Message-ID: <20200328184149.GS8104@linux.intel.com>
-References: <20200326093516.24215-1-pbonzini@redhat.com>
- <20200326093516.24215-3-pbonzini@redhat.com>
+        Sat, 28 Mar 2020 14:44:28 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:40248 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725882AbgC1So2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 28 Mar 2020 14:44:28 -0400
+Received: by mail-pg1-f195.google.com with SMTP id t24so6431050pgj.7;
+        Sat, 28 Mar 2020 11:44:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=AEgBW9QQu99a2sai4d1Uz2IOeiRHB8mBntj4/oX3if8=;
+        b=ouDCjhKFXNz0qHg97LSTL9LtxoMEHHt5XmMHY0O3JWTXTX6KVUoBbbKGEaRoe4suqH
+         Bgodh/bhOWuh+Uw5ZYeUQDC/rlML9443WQkuM+KCmxxhjELg+7MhD0Lq4BubKI4pnMJo
+         ZfzaEEDCyNKntZ4F6dUb4Vs7Vd7wELm98oGUZpswTvhm/Q/HA/SIavwXKsKEUe8xWMC5
+         veV78phgOYhrh7JtLFf0oynNemIhylY0qL9bQa33NeSOWpUu5C2XlY98iV+luNSHwaoY
+         omgLIxik4AauciZPkWxYN3o5K2+dsH2puaV0rjGc9TgHCkoqYwbi0M9EoN+qXpWdHwjE
+         0FQQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=AEgBW9QQu99a2sai4d1Uz2IOeiRHB8mBntj4/oX3if8=;
+        b=dlULcW7kqArkv4j7DbmJHfUyFt4GbrAIHzZoQXfR5O0KPH5B5AnwTAcncNaFqFEVpX
+         E06XRhfASd74n30kpgSPaPpHVmBaBLt+px8+yi8pR7hgadhBmUQCTHhKh1tNu1WMoqhI
+         lDCteVz/OpqrfBGWA/RbIUR3ff2nD+Sx9UV0M/JPG8cQhJ+SRpI1r4rrer1+FSjPyjmt
+         VeEqSsRWljlBN2KVDVSN3aycD6igJwP4ma3Mvrl0g2YhdQdJPnONRNf7PjBI/HyGtcMX
+         EQD63CYD89GYsxCokQz3zNESrVGi8rfUyaKRbrjrep+wPSwdFUH98NHgOSjYWMJnmHSV
+         MNAw==
+X-Gm-Message-State: ANhLgQ0zqf6VJTpoj7dsR+EApo/YZ7PAutSsnW6U+DNXAiGhilaWc+z2
+        uSUMvyc/sLqWtu8CQdiYr6SPqoo11DKGOgLdJ4w=
+X-Google-Smtp-Source: ADFU+vuLh8bWhofnY0uetIzib0+lVHRoBH+mcX9y4a5vGukmUlw/9WY99xY/uiIsg6cXSU/IMm9zO7gbPWfER27vvoc=
+X-Received: by 2002:a05:6a00:2b4:: with SMTP id q20mr5459087pfs.36.1585421066788;
+ Sat, 28 Mar 2020 11:44:26 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200326093516.24215-3-pbonzini@redhat.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+References: <20200328001154.17313-1-sravanhome@gmail.com> <20200328001154.17313-5-sravanhome@gmail.com>
+ <CAHp75VefP3oPyRJ=Z9Y5Wv3rSc-nJdKFLJ60YLdUbP5dFikS+w@mail.gmail.com> <36892440-99b2-10e8-1d7c-dd8c97e03a39@gmail.com>
+In-Reply-To: <36892440-99b2-10e8-1d7c-dd8c97e03a39@gmail.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Sat, 28 Mar 2020 20:44:14 +0200
+Message-ID: <CAHp75VdAfiSjkHhTnghZ__WAJCJTGSWBprJBPNmpkxZTjZuVgQ@mail.gmail.com>
+Subject: Re: [PATCH v5 4/5] power: supply: Add support for mps mp2629 battery charger
+To:     saravanan sekar <sravanhome@gmail.com>
+Cc:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald <pmeerw@pmeerw.net>,
+        Sebastian Reichel <sre@kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-iio <linux-iio@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 26, 2020 at 05:35:15AM -0400, Paolo Bonzini wrote:
-> To reconstruct the kvm_mmu to be used for page fault injection, we
-> can simply use fault->nested_page_fault.  This matches how
-> fault->nested_page_fault is assigned in the first place by
-> FNAME(walk_addr_generic).
-> 
-> Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
-> ---
->  arch/x86/kvm/mmu/mmu.c         | 6 ------
->  arch/x86/kvm/mmu/paging_tmpl.h | 2 +-
->  arch/x86/kvm/x86.c             | 7 +++----
->  3 files changed, 4 insertions(+), 11 deletions(-)
-> 
-> diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
-> index e26c9a583e75..6250e31ac617 100644
-> --- a/arch/x86/kvm/mmu/mmu.c
-> +++ b/arch/x86/kvm/mmu/mmu.c
-> @@ -4353,12 +4353,6 @@ static unsigned long get_cr3(struct kvm_vcpu *vcpu)
->  	return kvm_read_cr3(vcpu);
->  }
->  
-> -static void inject_page_fault(struct kvm_vcpu *vcpu,
-> -			      struct x86_exception *fault)
-> -{
-> -	vcpu->arch.mmu->inject_page_fault(vcpu, fault);
-> -}
-> -
->  static bool sync_mmio_spte(struct kvm_vcpu *vcpu, u64 *sptep, gfn_t gfn,
->  			   unsigned int access, int *nr_present)
->  {
-> diff --git a/arch/x86/kvm/mmu/paging_tmpl.h b/arch/x86/kvm/mmu/paging_tmpl.h
-> index 1ddbfff64ccc..ae646acf6703 100644
-> --- a/arch/x86/kvm/mmu/paging_tmpl.h
-> +++ b/arch/x86/kvm/mmu/paging_tmpl.h
-> @@ -812,7 +812,7 @@ static int FNAME(page_fault)(struct kvm_vcpu *vcpu, gpa_t addr, u32 error_code,
->  	if (!r) {
->  		pgprintk("%s: guest page fault\n", __func__);
->  		if (!prefault)
-> -			inject_page_fault(vcpu, &walker.fault);
-> +			kvm_inject_emulated_page_fault(vcpu, &walker.fault);
->  
->  		return RET_PF_RETRY;
->  	}
-> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-> index 64ed6e6e2b56..522905523bf0 100644
-> --- a/arch/x86/kvm/x86.c
-> +++ b/arch/x86/kvm/x86.c
-> @@ -614,12 +614,11 @@ EXPORT_SYMBOL_GPL(kvm_inject_page_fault);
->  bool kvm_inject_emulated_page_fault(struct kvm_vcpu *vcpu,
->  				    struct x86_exception *fault)
->  {
-> +	struct kvm_mmu *fault_mmu;
->  	WARN_ON_ONCE(fault->vector != PF_VECTOR);
->  
-> -	if (mmu_is_nested(vcpu) && !fault->nested_page_fault)
-> -		vcpu->arch.nested_mmu.inject_page_fault(vcpu, fault);
-> -	else
-> -		vcpu->arch.mmu->inject_page_fault(vcpu, fault);
-> +	fault_mmu = fault->nested_page_fault ? vcpu->arch.mmu : vcpu->arch.walk_mmu;
+On Sat, Mar 28, 2020 at 1:29 PM saravanan sekar <sravanhome@gmail.com> wrote:
+> On 28/03/20 12:02 pm, Andy Shevchenko wrote:
+> > On Sat, Mar 28, 2020 at 2:12 AM Saravanan Sekar <sravanhome@gmail.com> wrote:
 
-Apparently I'm in a nitpicky mood.  IMO, a newline after the colon is
-easier to parse
+...
 
-	fault_mmu = fault->nested_page_fault ? vcpu->arch.mmu :
-					       vcpu->arch.walk_mmu;
+> >> +       val->intval = (rval * props[fld].step) + props[fld].min;
+> > Too many parentheses.
+> >
+> > ...
+> >
+> >> +       return ((psp == POWER_SUPPLY_PROP_PRECHARGE_CURRENT) ||
+> >> +               (psp == POWER_SUPPLY_PROP_CHARGE_TERM_CURRENT) ||
+> >> +               (psp == POWER_SUPPLY_PROP_CONSTANT_CHARGE_CURRENT) ||
+> >> +               (psp == POWER_SUPPLY_PROP_CONSTANT_CHARGE_VOLTAGE));
+> > Ditto.
+> I think I misunderstood you previous review comment "Redundant
+> parentheses", no sure what is the expectation
 
-FWIW, I really like that "inject into the nested_mmu if it's not a nested
-page fault" logic goes away.  That trips me up every time I look at it.
+(At least) surrounding pair is not needed, return (a == b) || (c == d);
 
-> +	fault_mmu->inject_page_fault(vcpu, fault);
->  
->  	return fault->nested_page_fault;
->  }
-> -- 
-> 2.18.2
-> 
-> 
+> > ...
+> >
+> >> +       return ((psp == POWER_SUPPLY_PROP_INPUT_VOLTAGE_LIMIT) ||
+> >> +               (psp == POWER_SUPPLY_PROP_INPUT_CURRENT_LIMIT));
+> > Ditto.
+
+...
+
+> >> +       struct power_supply_config psy_cfg = {NULL};
+> > { 0 }
+> >
+> NULL to make compiler happy.
+
+Hmm... Can you share warning / error compiler issued in 0 case?
+
+-- 
+With Best Regards,
+Andy Shevchenko
