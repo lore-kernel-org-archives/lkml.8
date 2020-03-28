@@ -2,59 +2,69 @@ Return-Path: <SRS0=NZ+o=5N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EBBEC2D0E5
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 17:31:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12DBDC43331
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 17:32:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 66E38206DB
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 17:31:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585416699;
-	bh=vG64A0FZ/wyL1OcvxNk+CZBzjwTgOgIwdp7k4GCvs6A=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=ZshBvDWH46DlVYe85D6nVKJG5PtgeW0g5cPA720t1zURo56Fh2PKG5uYl2/IKLEYs
-	 1Jc1s+hMTxlBVc8TENT87h4nfi9OHXzJpNhDLJ5u1oEbzXERNp7P+7v06T0/DspgOw
-	 QFNDs3HJjHpGZu1X+7yp9wta3L6D7fpNj49EQ6bc=
+	by mail.kernel.org (Postfix) with ESMTP id D4F95206DB
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 17:32:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=networkplumber-org.20150623.gappssmtp.com header.i=@networkplumber-org.20150623.gappssmtp.com header.b="P1k0Hfvq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726445AbgC1Rbh (ORCPT
+        id S1726497AbgC1Rci (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 28 Mar 2020 13:31:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45512 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725807AbgC1Rbh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 28 Mar 2020 13:31:37 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 82208206DB;
-        Sat, 28 Mar 2020 17:31:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585416696;
-        bh=vG64A0FZ/wyL1OcvxNk+CZBzjwTgOgIwdp7k4GCvs6A=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=UsHokRD9QbPm4IQfC3LcYutgvPiC6kVQHgDpmVxCG3k+v7UDLNfBrmh7WDZjNP5uB
-         FsDLp6LSaDTeH+/uInypdmApoB+gI4QXJ6EsYlclo2IL49L0H59lP9FICBmjLxIjrE
-         o44LAH91Jlux5JXzv1nji/Ej/PxzZ+xtxxkS8QSI=
-Date:   Sat, 28 Mar 2020 17:31:32 +0000
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     <Eugen.Hristev@microchip.com>
-Cc:     <linux-iio@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <Ludovic.Desroches@microchip.com>,
-        <alexandru.ardelean@analog.com>
-Subject: Re: [PATCH v3 1/3] iio: adc: at91-sama5d2_adc: fix differential
- channels in triggered mode
-Message-ID: <20200328173132.25f7e1d8@archlinux>
-In-Reply-To: <5c0829d6-3b8d-0efc-0ffc-042727cb9115@microchip.com>
-References: <1580216189-27418-1-git-send-email-eugen.hristev@microchip.com>
-        <1580216189-27418-2-git-send-email-eugen.hristev@microchip.com>
-        <20200202110206.7326ce4d@archlinux>
-        <5c0829d6-3b8d-0efc-0ffc-042727cb9115@microchip.com>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Sat, 28 Mar 2020 13:32:38 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:43350 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725807AbgC1Rci (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 28 Mar 2020 13:32:38 -0400
+Received: by mail-pl1-f195.google.com with SMTP id v23so4783400ply.10
+        for <linux-kernel@vger.kernel.org>; Sat, 28 Mar 2020 10:32:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=networkplumber-org.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=LhPTIU6n0d3O11Wq7TaGqTOuV9fHfpwlilc1QaSmJpQ=;
+        b=P1k0HfvqMT/LirZboobUICcpQvpWdebV1z44t8h1Ix8PyMTTrwsgiqTbe5eGdW2t65
+         xDYkHMLC4zsOkc18/ulToI4l9KB/6R3jc9vwTzMECeCKm+2+xVZ3H9t8J3VFpqyRrvXR
+         kso3nxeo+yFcSWVW1A/jCozUSAGFyvyyW931gu42gykYEwuB2rNyVMDWz4YF+vZWOO7a
+         HpdCH+qz5iV9XsEGgYWTuTpE0tST4kTVapnDsBhg+rW2pQfY1LesWitcHNBjzHJ1PzIg
+         EsloynNQn0KKzIdeZoWbU7HjEJ20ME91cXDFxuYlt9nJJt0is7EDWU/97aMdgocW14OC
+         Hc3w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=LhPTIU6n0d3O11Wq7TaGqTOuV9fHfpwlilc1QaSmJpQ=;
+        b=L7ZiWnfx4/a+sJyGVjAijDccaD5P5RtlJo6tQy/cDh02u8NlByhnGH8L8VxLzyCMCs
+         yja1Rw7eL+aaqOX+wNzcgz5Jl7gCWWyAQDUgvyGvldS1y+IzF/LI4aiDtEtM4FOGwtTB
+         hAtNhY4AuqMGUAkDg1XSp0iMRklnJOqsatsYPhw/ElpnT69Sg++9t7bYMWOf+eeZOOeM
+         n6vCBPQliK0jDyc7zcVKtXhH7hb8ViFftKLWTtTFO2R8GQ09P+Le4p0I6WdnKHibRqp5
+         Leq3SYi4MadxFdE2NRltMKrBa+9kCkhyWA90swt5NA1FA1qXSrGne7yhackYFRzjvWDj
+         U8OA==
+X-Gm-Message-State: ANhLgQ3rpGdlbzFJ8/CegJnbrjw1nXi6mIizJzCin++UxeJSlj7m6o21
+        tdkgXGEwcxiq2KQ7IOFfBV++CA==
+X-Google-Smtp-Source: ADFU+vtCwdClxheDTbIdAt1kuEXbadxU8E5OSbHzeZ/kjipg+VHLHpgTza9c6AmX2mrVsrup7bU/4A==
+X-Received: by 2002:a17:90a:a10f:: with SMTP id s15mr6027530pjp.40.1585416757208;
+        Sat, 28 Mar 2020 10:32:37 -0700 (PDT)
+Received: from hermes.lan (204-195-22-127.wavecable.com. [204.195.22.127])
+        by smtp.gmail.com with ESMTPSA id h26sm6551618pfr.134.2020.03.28.10.32.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 28 Mar 2020 10:32:36 -0700 (PDT)
+Date:   Sat, 28 Mar 2020 10:32:29 -0700
+From:   Stephen Hemminger <stephen@networkplumber.org>
+To:     George Spelvin <lkml@sdf.org>
+Cc:     linux-kernel@vger.kernel.org,
+        Hannes Frederic Sowa <hannes@stressinduktion.org>
+Subject: Re: [RFC PATCH v1 09/50] <linux/random.h> prandom_u32_max() for
+ power-of-2 ranges
+Message-ID: <20200328103229.132a047f@hermes.lan>
+In-Reply-To: <202003281643.02SGh9n2025458@sdf.org>
+References: <202003281643.02SGh9n2025458@sdf.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
@@ -63,90 +73,29 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 23 Mar 2020 10:42:19 +0000
-<Eugen.Hristev@microchip.com> wrote:
+On Sat, 16 Mar 2019 02:32:04 -0400
+George Spelvin <lkml@sdf.org> wrote:
 
-> On 02.02.2020 13:02, Jonathan Cameron wrote:
-> > On Tue, 28 Jan 2020 12:57:39 +0000
-> > <Eugen.Hristev@microchip.com> wrote:
-> >   
-> >> From: Eugen Hristev <eugen.hristev@microchip.com>
-> >>
-> >> The differential channels require writing the channel offset register (COR).
-> >> Otherwise they do not work in differential mode.
-> >> The configuration of COR is missing in triggered mode.
-> >>
-> >> Fixes: 5e1a1da0f8c9 ("iio: adc: at91-sama5d2_adc: add hw trigger and buffer support")
-> >> Signed-off-by: Eugen Hristev <eugen.hristev@microchip.com>  
-> > Applied to the fixes-togreg branch of iio.git.  Normally I avoid rebasing that
-> > branch but I may do so this time given it's currently mid merge window.
-> > 
-> > The other two patches will have to wait for this one to get upstream of
-> > my togreg branch which will take a few weeks.
-> > 
-> > Please give me a poke if I seem to have forgotten about them!
-> >   
-> 
-> Poke !
-Timings have gone badly this cycle I'm afraid, so whilst it's made it
-into staging/staging-next, I'm not going to be rebasing togreg
-until after a pull request to Greg KH.  The timing issue was
-I didn't get one out before staging most likely closed (one week
-ahead of the window opening which it will probably do tomorrow).
+> +static inline u32 prandom_u32_max(u32 range)
+>  {
+> -	return (u32)(((u64) prandom_u32() * ep_ro) >> 32);
+> +	/*
+> +	 * If the range is a compile-time constant power of 2, then use
+> +	 * a simple shift.  This is mathematically equivalent to the
+> +	 * multiplication, but GCC 8.3 doesn't optimize that perfectly.
+> +	 *
+> +	 * We could do an AND with a mask, but
+> +	 * 1) The shift is the same speed on a decent CPU,
+> +	 * 2) It's generally smaller code (smaller immediate), and
+> +	 * 3) Many PRNGs have trouble with their low-order bits;
+> +	 *    using the msbits is generaly preferred.
+> +	 */
+> +	if (__builtin_constant_p(range) && (range & (range - 1)) == 0)
+> +		return prandom_u32() / (u32)(0x100000000 / range);
+> +	else
+> +		return reciprocal_scale(prandom_u32(), range);
 
-So this will have to wait at least a few weeks more.
 
-Sorry for the delay.
-
-Jonathan
-
-> 
-> Eugen
-> 
-> > Thanks,
-> > 
-> > Jonathan
-> >   
-> >> ---
-> >> Changes in v2:
-> >> - moved to the start of the list
-> >>
-> >>   drivers/iio/adc/at91-sama5d2_adc.c | 15 +++++++++++++++
-> >>   1 file changed, 15 insertions(+)
-> >>
-> >> diff --git a/drivers/iio/adc/at91-sama5d2_adc.c b/drivers/iio/adc/at91-sama5d2_adc.c
-> >> index e1850f3..2a6950a 100644
-> >> --- a/drivers/iio/adc/at91-sama5d2_adc.c
-> >> +++ b/drivers/iio/adc/at91-sama5d2_adc.c
-> >> @@ -723,6 +723,7 @@ static int at91_adc_configure_trigger(struct iio_trigger *trig, bool state)
-> >>
-> >>        for_each_set_bit(bit, indio->active_scan_mask, indio->num_channels) {
-> >>                struct iio_chan_spec const *chan = at91_adc_chan_get(indio, bit);
-> >> +             u32 cor;
-> >>
-> >>                if (!chan)
-> >>                        continue;
-> >> @@ -732,6 +733,20 @@ static int at91_adc_configure_trigger(struct iio_trigger *trig, bool state)
-> >>                        continue;
-> >>
-> >>                if (state) {
-> >> +                     cor = at91_adc_readl(st, AT91_SAMA5D2_COR);
-> >> +
-> >> +                     if (chan->differential)
-> >> +                             cor |= (BIT(chan->channel) |
-> >> +                                     BIT(chan->channel2)) <<
-> >> +                                     AT91_SAMA5D2_COR_DIFF_OFFSET;
-> >> +                     else
-> >> +                             cor &= ~(BIT(chan->channel) <<
-> >> +                                    AT91_SAMA5D2_COR_DIFF_OFFSET);
-> >> +
-> >> +                     at91_adc_writel(st, AT91_SAMA5D2_COR, cor);
-> >> +             }
-> >> +
-> >> +             if (state) {
-> >>                        at91_adc_writel(st, AT91_SAMA5D2_CHER,
-> >>                                        BIT(chan->channel));
-> >>                        /* enable irq only if not using DMA */  
-> >   
-> 
-
+The optimization is good, but I don't thin that the compiler
+is able to propogate the constant property into the function.
+Did you actually check the generated code.
