@@ -2,264 +2,91 @@ Return-Path: <SRS0=NZ+o=5N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D340CC2D0EC
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 19:58:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C19FC2D0E5
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 19:59:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A0D35206F6
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 19:58:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6276A2071B
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 19:59:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585425576;
+	bh=Qj/IrxEUrTlO01aVKjX/HLCY5OaDZhl6OPgn/ojV58k=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=nLCBC02STtjTwVm2IQ+2DE+KAaTzARn2Jcad7Py8zOQkwQk65x3OWk3LGEgKxL1Iw
+	 y3jDyxc+29jEadKl8FfZXnSBha2CF+2C4tklPlk9dAI7DFr24sHyMx5UId7TWPypfe
+	 2oG2lwpdI6KutCDetTGTZ9AmV/M+4ZENJUzzwzvI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727469AbgC1T6I (ORCPT
+        id S1727504AbgC1T7f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 28 Mar 2020 15:58:08 -0400
-Received: from netrider.rowland.org ([192.131.102.5]:46043 "HELO
-        netrider.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with SMTP id S1727247AbgC1T6I (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 28 Mar 2020 15:58:08 -0400
-Received: (qmail 13939 invoked by uid 500); 28 Mar 2020 15:58:07 -0400
-Received: from localhost (sendmail-bs@127.0.0.1)
-  by localhost with SMTP; 28 Mar 2020 15:58:07 -0400
-Date:   Sat, 28 Mar 2020 15:58:07 -0400 (EDT)
-From:   Alan Stern <stern@rowland.harvard.edu>
-X-X-Sender: stern@netrider.rowland.org
-To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
-cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Qais Yousef <qais.yousef@arm.com>,
-        USB list <linux-usb@vger.kernel.org>,
-        Linux-pm mailing list <linux-pm@vger.kernel.org>,
-        Kernel development list <linux-kernel@vger.kernel.org>
-Subject: Re: lockdep warning in urb.c:363 usb_submit_urb
-In-Reply-To: <10243663.e30Z2V8kAt@kreacher>
-Message-ID: <Pine.LNX.4.44L0.2003281432130.9749-100000@netrider.rowland.org>
+        Sat, 28 Mar 2020 15:59:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52586 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726981AbgC1T7f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 28 Mar 2020 15:59:35 -0400
+Received: from localhost (mobile-166-175-186-165.mycingular.net [166.175.186.165])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 19A06206E6;
+        Sat, 28 Mar 2020 19:59:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1585425574;
+        bh=Qj/IrxEUrTlO01aVKjX/HLCY5OaDZhl6OPgn/ojV58k=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=ram8R/hVH3t8q4JC9mluTDr9CBxoglo0di72qnNIZtRoirOglWN8O6nWs7oK2JgiC
+         nRbgMGdqri5yFMz0cvwDUcDyRinRKWUeNG286NCjrV6yP7aS9Gmaaz7U8x9f/vomgX
+         Kj+VnbjVWjPKMiQbdf7WIt6hXEhiYwjMBuKKpUQw=
+Date:   Sat, 28 Mar 2020 14:59:32 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Kelsey <skunberg.kelsey@gmail.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-pci@vger.kernel.org,
+        Kelsey Skunberg <kelsey.skunberg@gmail.com>,
+        rbilovol@cisco.com, stable <stable@vger.kernel.org>,
+        Don Dutile <ddutile@redhat.com>,
+        Ruslan Bilovol <ruslan.bilovol@gmail.com>,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        Bodong Wang <bodong@mellanox.com>
+Subject: Re: [Linux-kernel-mentees] [PATCH v2] PCI: sysfs: Change bus_rescan
+ and dev_rescan to rescan
+Message-ID: <20200328195932.GA96482@google.com>
 MIME-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAFVqi1R0Cc4+wqwCr9-8HoTU+6cShzorD44YzDNyex+jv1dztA@mail.gmail.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 28 Mar 2020, Rafael J. Wysocki wrote:
+On Thu, Mar 26, 2020 at 12:29:11AM -0600, Kelsey wrote:
+> On Wed, Mar 25, 2020 at 4:10 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
 
-> On Friday, March 27, 2020 9:45:09 PM CET Alan Stern wrote:
-
-> > Raphael, I've been going over the PM core code, trying to figure out
-> > what it's really doing.  It's kind of a mess.
+> > Thanks for taking care of this!  Two questions:
+> >
+> > 1) You supplied permissions of 0220, but DEVICE_ATTR_WO()
+> > uses__ATTR_WO(), which uses 0200.  Shouldn't we keep 0200?
+> >
 > 
-> Well, sorry about that. 
+> Good catch. Before changing to DEVICE_ATTR_WO(), the permissions used
+> was (S_IWUSR | S_IWGRP), which would be 0220. This means the
+> permissions were mistakenly changed from 0220 to 0200 in the same
+> patch:
 > 
-> > A large part of the problem is related to an inconsistency between the
-> > documentation and the code.  include/linux/pm.h says that
-> > DPM_FLAG_SMART_SUSPEND tells bus types and PM domains about what the
-> > driver wants.  This strongly implies that the PM core will ignore
-> > SMART_SUSPEND.  But in fact the core does check that flag and takes its
-> > own actions if the device has no subsystem-level callbacks!
+> commit 4e2b79436e4f ("PCI: sysfs: Change DEVICE_ATTR() to DEVICE_ATTR_WO()")
 > 
-> Right, which is because in those cases there is no "middle layer" between
-> the driver and the core and if you want the driver to work both with
-> something like genpd or the ACPI PM domain and without anything like that,
-> the core needs to take those actions for consistency.
-
-Sure, the core is acting as a proxy for the missing subsystem
-callbacks.  Still, it should be documented properly.
-
-Also, couldn't we simplify the behavior?  Right now the core checks
-that there are no subsystem-level callbacks for any of _early, _late,
-and _noirq variants before skipping a callback.  Couldn't we forget
-about all that checking and simply skip the device-level callbacks?  
-(Yes, I realize this could lead to inconsistent behavior if the
-subsystem has some callbacks defined but not others -- but subsystems
-should never do that, at least, not if it would lead to trouble.)
-
-Another issue is that the documentation exists in two separate places:
-include/linux/pm.h and Documentation/driver-api/devices.rst (plus a
-brief mention in Documentation/power/runtime_pm.rst).  This leads to
-incompleteness and inconsistencies.  Ideally there would be a complete
-explanation in one place (probably the devices.rst file) and the others
-would refer to it.
-
-> > Furthermore, the PM core's actions don't seem to make sense.  If the
-> > flag is set and the device is runtime-suspended when the system sleep
-> > begins, the core will skip issuing the suspend_late and suspend_noirq
-> > callbacks to the driver.  But it doesn't skip issuing the suspend
-> > callback!  I can't figure that out.
+> To verify DEVICE_ATTR_WO() is using __ATTR_WO() can be seen in
+> /include/linux/device.h
+> To verify permissions for __ATTR_WO() is 0200 can be seen in
+> /inlcude/linux/sysfs.h
 > 
-> That's because if the core gets to executing ->suspend_late, PM-runtime has
-> been disabled for the device and if the device is runtime-suspended at that
-> point, so (at least if SMART_SUSPEND is set for the device) there is no reason
-> to do anything more to it.
+> These attributes had permissions 0220 when first being introduced and
+> before the above mentioned patch, so I'm on the side to believe that
+> 0220 should be used.
 
-But if SMART_SUSPEND is set and the device is runtime-suspended, why 
-issue the ->suspend callback?  Why not just do pm_runtime_disable() 
-then (to prevent the device from resuming) and skip the callback?
-
-> > Furthermore, the decisions about
-> > whether to skip the resume_noirq, resume_early, and resume callbacks
-> > are based on different criteria from the decisions on the suspend side.
-> 
-> Right, because there are drivers that don't want devices to stay in suspend
-> after system resume even though they have been left in suspend by it.
-
-This suggests that sometimes we may want to issue non-matching 
-callbacks.  For example, ->resume_noirq, ->resume_early, and ->resume
-but not ->suspend, ->suspend_late, or ->suspend_noirq.  Is that what 
-you are saying?
-
-> Arguably, they could be left in suspend and then resumed after the completion
-> of system suspend, but that would add quite a bit of latency if the device
-> needs to be accessed right after the system suspend is complete.
-> 
-> > That's not all: The SMART_SUSPEND decisions completely ignore the value
-> > of DPM_FLAG_NEVER_SKIP!  NEVER_SKIP affects only the direct_completion
-> > pathway.
-> 
-> As documented AFAICS.
-
-But highly confusing.  Maybe we can change the name to, say, 
-DPM_FLAG_NO_DIRECT_COMPLETE.
-
-> > SMART_SUSPEND seems to have two different meanings.  (1) If the device 
-> > is already in runtime suspend when a system sleep starts, skip the 
-> > suspend_late and suspend_noirq callbacks.  (2) Under certain (similar) 
-> > circumstances, skip the resume callbacks.  The documentation only 
-> > mentions (1) but the code also handles (2).
-> 
-> That's because (2) is the THAW case and I was distracted before I got
-> to documenting it properly.  Sorry.
-> 
-> The problem is that if you leave the device in runtime suspend, calling
-> ->freeze_late() or ->freeze_noirq() on it is not useful and if you have
-> skipped those, running the corresponding "thaw" callbacks is not useful
-> either (what would they do, specifically?).
-> 
-> There is a whole problem of whether or not devices should be left in
-> runtime suspend during hibernation and I have not had a chance to get
-> to the bottom of that yet.
-
-Not only that.  The distinction between SMART_SUSPEND and
-direct_complete is rather subtle, and it doesn't seem to be carefully
-explained anywhere.  In fact, I'm not sure I understand it myself.  :-)
-For example, the direct_complete mechanism is very careful about not
-leaving a device in runtime suspend if a descendant (or other dependent
-device) will remain active.  Does SMART_SUSPEND behave similarly?  If
-so, it isn't documented.
-
-Besides, it seems like a mistake to try controlling (1) and (2)  
-together (i.e., with one flag).  Can we do a better job of
-separating the functions of SMART_SUSPEND and LEAVE_SUSPENDED?
-
-> > Other things in there also seem strange.  device_prepare() does a
-> > WARN_ON if either SMART_SUSPEND or LEAVE_SUSPENDED is set and the
-> > device is not runtime-PM-enabled.  That's understandable, but it's also
-> > racy.
-> 
-> I guess you mean the check in device_prepare().
-> 
-> > A system sleep can begin at any time; how can a driver know when
-> > it is safe to disable a device's runtime PM briefly?
-> 
-> Well, fair enough, but then I'm not sure if there is a good place for this
-> check at all, because drivers can briefly disable PM-runtime at any time in
-> theory.
-
-There probably isn't a good place for it.  We could just get rid of the 
-WARN.  I've never heard of it triggering.
-
-> > When device_prepare() calculates the power.direct_complete flag, it
-> > checks to see whether the device is currently in runtime suspend in
-> > some cases but not in others, as in the code added by your commit
-> > c62ec4610c40 ("PM / core:  Fix direct_complete handling for devices
-> > with no callbacks").  Since the runtime-PM state is going to checked in
-> > __device_suspend() anyway, we shouldn't need to check it here at all.
-> 
-> I guess the point is that in theory the device can be runtime-suspended
-> between device_prepare() and _device_suspend(), is by checking the status
-> in the former, we lose the opportunity to leave it in suspend if that
-> happens.
-> 
-> OK, fair enough.
-> 
-> > At a couple of points in the code, THAW and RESTORE events are each
-> > treatedly specially, with no explanation.
-> 
-> Right, which is related to the kind of work in progress situation regarding
-> the flags and hibernation mentioned above.  Again, sorry about that.
-
-I haven't thought about those issues as much as you have.  Still, it 
-seems obvious that the FREEZE/THAW phases should be very happy to leave 
-devices in runtime suspend throughout (without even worrying about 
-wakeup settings), and the RESTORE phase should always bring everything 
-back out of runtime suspend.
-
-What to do during the POWEROFF phase isn't so clear, because it depends
-on how the platform handles the poweroff transition.
-
-> > The power.may_skip_resume flag is used in only one place, when 
-> > LEAVE_SUSPENDED is set and there are subsystem-level callbacks.  In 
-> > particular, it is _not_ used by dev_pm_may_skip_resume().  That seems 
-> > highly suspicious at best.
-> 
-> That's because it's for the middle-layer (subsystem-level) code to let the
-> core know that skipping the resume would be OK.
-> 
-> The core doesn't need that flag when it decides by itself.
-
-This may be another situation where changing a name would make things
-clearer.  One doesn't immediately recognize that
-dev_pm_may_skip_resume() applies only in cases where there is no
-subsystem-level callback.
-
-> > I think it would be worthwhile to expend some serious effort
-> > straightening all this stuff out.  Perhaps we could start with a more
-> > explicit description of what is supposed to happen at each step.  
-> > (Things to be careful about include phrases like "leave suspended",
-> > which is not the same as "don't call the resume callbacks", even though
-> > the two are easily conflated.)
-> > 
-> > What do you think?
-> 
-> I am certainly not going to reject any help. :-)
-> 
-> Also, I'm not against clarifying anything that is not clear enough.
-
-Okay, let's start with direct_complete.  The direct_complete mechanism
-is applied to the SUSPEND and RESUME phases under the following
-conditions:
-
-	DPM_FLAG_NEVER_SKIP (or better, DPM_FLAG_NO_DIRECT_COMPLETE)
-	is clear;  [Incidentally, since a driver can set this flag 
-	whenever its ->prepare routine returns 0, why do we need
-	DPM_FLAG_SMART_PREPARE?]
-
-	Either the device has no system-PM callbacks at all or else the
-	->prepare callback returns a positive value;
-
-	All of the device's descendants and dependents also want to use
-	direct_complete;
-
-	Neither the device nor any of its descendants/dependents is
-	enabled for wakeup;
-
-	The device is runtime suspended just before the ->suspend
-	callback would normally be issued.
-
-When the mechanism applies, none of the suspend or resume callbacks (in
-any of their normal, _early, _late, or _noirq variants) are issued,
-only ->complete.  Consequently the device remains in runtime suspend
-throughout the system sleep.
-
-Currently, direct_complete is never applied during any of the system
-hibernation phases (FREEZE, THAW, POWEROFF, RESTORE).  This may change
-in the future.
-
-Is this description correct and complete?  Can you give a similarly
-succinct outline for how SMART_SUSPEND and LEAVE_SUSPENDED should work?  
-And also describe how they differ from direct_complete and how they
-interact with it?  (For example, how does setting both flags differ 
-from returning a positive value from ->prepare?)
-
-Alan Stern
-
+I'm not sure it was a mistake that 4e2b79436e4f changed from 0220 to
+200 or not.  I'd say __ATTR_WO (0200) is the "standard" one, and we
+should have a special reason to use 0220.
