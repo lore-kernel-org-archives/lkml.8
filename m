@@ -2,284 +2,122 @@ Return-Path: <SRS0=NZ+o=5N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63432C43331
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 00:09:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54D6CC2D0EC
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 00:12:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 24747206F1
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 00:09:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 28CCD206F1
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 00:12:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="j+Mw1x/m"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="szKTbn7J"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727070AbgC1AJy (ORCPT
+        id S1727131AbgC1AMG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Mar 2020 20:09:54 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:38099 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726212AbgC1AJx (ORCPT
+        Fri, 27 Mar 2020 20:12:06 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:45431 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726134AbgC1AMF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Mar 2020 20:09:53 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1585354192; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=GvtVp/Yj12asfGB13WaSH0CdXh3O49A0v11XieSOvUo=;
- b=j+Mw1x/m8dHgj01WdtSJvRrgVoL9D2hHA6SPJ/fTtZBttKbVgvUYMYgjqawp53NGvyIO3p3p
- I0AowGKvoeGIbuPQO+ZbpleFzrnfGZ++npA6U7gy3q9p5aYAl+UrnbGDVKOnH2wVogejREAB
- CUMXC9oFtOKk567q5fmuuworgbg=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e7e95c6.7fbd61360688-smtp-out-n04;
- Sat, 28 Mar 2020 00:09:42 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 6239DC43637; Sat, 28 Mar 2020 00:09:42 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: rishabhb)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 68060C433F2;
-        Sat, 28 Mar 2020 00:09:41 +0000 (UTC)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 8bit
-Date:   Fri, 27 Mar 2020 17:09:41 -0700
-From:   rishabhb@codeaurora.org
-To:     =?UTF-8?Q?Cl=C3=A9ment_Leger?= <cleger@kalrayinc.com>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-remoteproc <linux-remoteproc@vger.kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Ohad Ben-Cohen <ohad@wizery.com>, psodagud@codeaurora.org,
-        tsoni@codeaurora.org, sidgup@codeaurora.org
-Subject: Re: [PATCH 1/2] remoteproc: Add userspace char device driver
-In-Reply-To: <1233159221.12306373.1585244277714.JavaMail.zimbra@kalray.eu>
-References: <1585241440-7572-1-git-send-email-rishabhb@codeaurora.org>
- <1585241440-7572-2-git-send-email-rishabhb@codeaurora.org>
- <1233159221.12306373.1585244277714.JavaMail.zimbra@kalray.eu>
-Message-ID: <679f34c02ed9842dd71af2033d610f9a@codeaurora.org>
-X-Sender: rishabhb@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+        Fri, 27 Mar 2020 20:12:05 -0400
+Received: by mail-wr1-f65.google.com with SMTP id t7so13812882wrw.12;
+        Fri, 27 Mar 2020 17:12:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=ETNuk5HoFRvajcPB5SGInXBPTRaocJmabwQ1Y7pZBVg=;
+        b=szKTbn7Jiys934mZuxreqLLDFQrlEVHV/AofHqRdBXdaHFq6+Pua50d4ivqc9PL5qg
+         zZ+YfUqR/nYf3ck6yyOt1vOjn6w1UdkKL2+UgdJk8totMH2ndHqWQqZAR2CTBr+jIetc
+         4GLiuTqXtcX1xgMUyEEUxmfWk/EK7SRca4o6l8wrIaaYvrbmczx0mJUBqeH85RDzwcaB
+         nlR9RdemOAKNJObKVj7xNvbsDOUtZwNR+aAIouAQWrCjgO3tbzdb2nfb10VH7MXQr+i7
+         NSKQwq1Jo6gST/SBpnTP4OE2EDg4Y+XLLM7u66a3QGtyc+OGNMIt7QhVt0RtYGC4PiwU
+         7k+Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=ETNuk5HoFRvajcPB5SGInXBPTRaocJmabwQ1Y7pZBVg=;
+        b=kZFTonwd8zOhLEs9bEjyv54o74S0U9DrVp+2baSrvHmNBH6Bw42y4oUFFZ+gIpyAz0
+         HprWTlYwm9HA/vQSoprv7wXVxqsSAfhIORD3oR9/+Ec5vi1mF5UJ9NpL++gGW9eDgA66
+         dxFHlFKnGiEILEYl6XIr6zQ5AA2P70kU9dFXvDxk0rx+nUu92l3UNUmBbydXtkz5X6kY
+         /SSwMk7mxrEaVvZorS4yEUjervD7spr076OW1yXC6K7ZvwWq10L3/Pbu9SFvQNCOyFFC
+         xWd41XKKJ6ZdP9S8TYJU+Z/yklK6EZ/uidD0dX5LF5y/B6fo92DwoegBQgKO5J3Om5pR
+         PQ2w==
+X-Gm-Message-State: ANhLgQ0KED/oyICmHeneUYxfEUdFf2TVpGdyFsWlWkYLzsBNkPGMZh2q
+        I1Su8z97wjnOzGmehP6YtGqvcBXsZpc=
+X-Google-Smtp-Source: ADFU+vvGP/WBIzxxjjBTJSg0UHtTPuXBpCde+gIzwWpVYnjVPJ1UEIOppTESL3dr3zDiVzMU6zZgtg==
+X-Received: by 2002:adf:a387:: with SMTP id l7mr2086993wrb.250.1585354323958;
+        Fri, 27 Mar 2020 17:12:03 -0700 (PDT)
+Received: from localhost.localdomain (p5B3F7536.dip0.t-ipconnect.de. [91.63.117.54])
+        by smtp.gmail.com with ESMTPSA id 61sm11237956wrn.82.2020.03.27.17.12.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 27 Mar 2020 17:12:03 -0700 (PDT)
+From:   Saravanan Sekar <sravanhome@gmail.com>
+To:     lee.jones@linaro.org, andy.shevchenko@gmail.com,
+        robh+dt@kernel.org, jic23@kernel.org, knaack.h@gmx.de,
+        lars@metafoo.de, pmeerw@pmeerw.net, sre@kernel.org
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-iio@vger.kernel.org, linux-pm@vger.kernel.org,
+        Saravanan Sekar <sravanhome@gmail.com>
+Subject: [PATCH v5 0/5] Add battery charger driver support for MP2629
+Date:   Sat, 28 Mar 2020 01:11:49 +0100
+Message-Id: <20200328001154.17313-1-sravanhome@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-03-26 10:37, Clément Leger wrote:
-> Hi Rishabh,
-> 
-> While being interesting to have a such a userspace interface, I have
-> some remarks.
-> 
-> ----- On 26 Mar, 2020, at 17:50, Rishabh Bhatnagar
-> rishabhb@codeaurora.org wrote:
-> 
->> Add the driver for creating the character device interface for
->> userspace applications. The character device interface can be used
->> in order to boot up and shutdown the remote processor.
->> This might be helpful for remote processors that are booted by
->> userspace applications and need to shutdown when the application
->> crahes/shutsdown.
->> 
->> Change-Id: If23c8986272bb7c943eb76665f127ff706f12394
->> Signed-off-by: Rishabh Bhatnagar <rishabhb@codeaurora.org>
->> ---
->> drivers/remoteproc/Makefile               |  1 +
->> drivers/remoteproc/remoteproc_internal.h  |  6 +++
->> drivers/remoteproc/remoteproc_userspace.c | 90 
->> +++++++++++++++++++++++++++++++
->> include/linux/remoteproc.h                |  2 +
->> 4 files changed, 99 insertions(+)
->> create mode 100644 drivers/remoteproc/remoteproc_userspace.c
->> 
->> diff --git a/drivers/remoteproc/Makefile b/drivers/remoteproc/Makefile
->> index e30a1b1..facb3fa 100644
->> --- a/drivers/remoteproc/Makefile
->> +++ b/drivers/remoteproc/Makefile
->> @@ -7,6 +7,7 @@ obj-$(CONFIG_REMOTEPROC)		+= remoteproc.o
->> remoteproc-y				:= remoteproc_core.o
->> remoteproc-y				+= remoteproc_debugfs.o
->> remoteproc-y				+= remoteproc_sysfs.o
->> +remoteproc-y				+= remoteproc_userspace.o
->> remoteproc-y				+= remoteproc_virtio.o
->> remoteproc-y				+= remoteproc_elf_loader.o
->> obj-$(CONFIG_IMX_REMOTEPROC)		+= imx_rproc.o
->> diff --git a/drivers/remoteproc/remoteproc_internal.h
->> b/drivers/remoteproc/remoteproc_internal.h
->> index 493ef92..97513ba 100644
->> --- a/drivers/remoteproc/remoteproc_internal.h
->> +++ b/drivers/remoteproc/remoteproc_internal.h
->> @@ -47,6 +47,9 @@ struct dentry *rproc_create_trace_file(const char 
->> *name,
->> struct rproc *rproc,
->> int rproc_init_sysfs(void);
->> void rproc_exit_sysfs(void);
->> 
->> +void rproc_init_cdev(void);
->> +void rproc_exit_cdev(void);
->> +
->> void rproc_free_vring(struct rproc_vring *rvring);
->> int rproc_alloc_vring(struct rproc_vdev *rvdev, int i);
->> 
->> @@ -63,6 +66,9 @@ struct resource_table 
->> *rproc_elf_find_loaded_rsc_table(struct
->> rproc *rproc,
->> struct rproc_mem_entry *
->> rproc_find_carveout_by_name(struct rproc *rproc, const char *name, 
->> ...);
->> 
->> +/* from remoteproc_userspace.c */
->> +int rproc_char_device_add(struct rproc *rproc);
->> +
->> static inline
->> int rproc_fw_sanity_check(struct rproc *rproc, const struct firmware 
->> *fw)
->> {
->> diff --git a/drivers/remoteproc/remoteproc_userspace.c
->> b/drivers/remoteproc/remoteproc_userspace.c
->> new file mode 100644
->> index 0000000..2ef7679
->> --- /dev/null
->> +++ b/drivers/remoteproc/remoteproc_userspace.c
->> @@ -0,0 +1,90 @@
->> +// SPDX-License-Identifier: GPL-2.0-only
->> +/*
->> + * Character device interface driver for Remoteproc framework.
->> + *
->> + * Copyright (c) 2020, The Linux Foundation. All rights reserved.
->> + */
->> +
->> +#include <linux/module.h>
->> +#include <linux/fs.h>
->> +#include <linux/cdev.h>
->> +#include <linux/mutex.h>
->> +#include <linux/remoteproc.h>
->> +
->> +#include "remoteproc_internal.h"
->> +
->> +#define NUM_RPROC_DEVICES	64
->> +static dev_t rproc_cdev;
->> +static DEFINE_IDA(cdev_minor_ida);
->> +
->> +static int rproc_open(struct inode *inode, struct file *file)
->> +{
->> +	struct rproc *rproc;
->> +
->> +	rproc = container_of(inode->i_cdev, struct rproc, char_dev);
->> +	if (!rproc)
->> +		return -EINVAL;
->> +
->> +	return rproc_boot(rproc);
->> +}
-> 
-> What happens if multiple user open this chardev ? Apparently,
-> rproc_boot returns 0 if already powered_up, so the next user won't know
-> what is the state of the rproc.
-> Exclusive access could probably be a good idea.
-Since it is synchronized inside rproc_boot multiple users simultaneously
-calling open shouldn't be a problem. If it is one after the other then
-second caller will get result as 0 and assume that rproc booted 
-successfully.
-That is the expected flow right?
-> 
->> +
->> +static int rproc_release(struct inode *inode, struct file *file)
->> +{
->> +	struct rproc *rproc;
->> +
->> +	rproc = container_of(inode->i_cdev, struct rproc, char_dev);
->> +	if (!rproc)
->> +		return -EINVAL;
->> +
->> +	rproc_shutdown(rproc);
->> +
->> +	return 0;
->> +}
->> +
->> +static const struct file_operations rproc_fops = {
->> +	.open = rproc_open,
->> +	.release = rproc_release,
->> +};
->> +
->> +int rproc_char_device_add(struct rproc *rproc)
->> +{
->> +	int ret, minor;
->> +	dev_t cdevt;
->> +
->> +	minor = ida_simple_get(&cdev_minor_ida, 0, NUM_RPROC_DEVICES,
->> +			GFP_KERNEL);
->> +	if (minor < 0) {
->> +	pr_err("%s: No more minor numbers left! rc:%d\n", __func__,
->> +							minor);
->> +		return -ENODEV;
->> +	}
-> 
-> How can you make the link between the chardev and the device instance ?
-I do this rproc->dev.devt = cdevt. Let me know of there is a better way
-to do this?
-> In our case, we have several remoteproc instances and thus we will end
-> up having multiple chardev.
-> 
-> Regards,
-> 
-> Clément
-> 
-rproc_char_device_add will be called for each remoteproc that is
-added. So we will have one char dev per remoteproc.
->> +
->> +	cdev_init(&rproc->char_dev, &rproc_fops);
->> +	rproc->char_dev.owner = THIS_MODULE;
->> +
->> +	cdevt = MKDEV(MAJOR(rproc_cdev), minor);
->> +	ret = cdev_add(&rproc->char_dev, cdevt, 1);
->> +	if (ret < 0)
->> +		ida_simple_remove(&cdev_minor_ida, minor);
->> +
->> +	rproc->dev.devt = cdevt;
->> +
->> +	return ret;
->> +}
->> +
->> +void __init rproc_init_cdev(void)
->> +{
->> +	int ret;
->> +
->> +	ret = alloc_chrdev_region(&rproc_cdev, 0, NUM_RPROC_DEVICES, 
->> "rproc");
->> +	if (ret < 0) {
->> +		pr_err("Failed to alloc rproc_cdev region, err %d\n", ret);
->> +		return;
->> +	}
->> +}
->> +
->> +void __exit rproc_exit_cdev(void)
->> +{
->> +	unregister_chrdev_region(MKDEV(MAJOR(rproc_cdev), 0),
->> +				NUM_RPROC_DEVICES);
->> +}
->> diff --git a/include/linux/remoteproc.h b/include/linux/remoteproc.h
->> index 16ad666..c4ca796 100644
->> --- a/include/linux/remoteproc.h
->> +++ b/include/linux/remoteproc.h
->> @@ -37,6 +37,7 @@
->> 
->> #include <linux/types.h>
->> #include <linux/mutex.h>
->> +#include <linux/cdev.h>
->> #include <linux/virtio.h>
->> #include <linux/completion.h>
->> #include <linux/idr.h>
->> @@ -514,6 +515,7 @@ struct rproc {
->> 	bool auto_boot;
->> 	struct list_head dump_segments;
->> 	int nb_vdev;
->> +	struct cdev char_dev;
->> };
->> 
->> /**
->> --
->> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora 
->> Forum,
->> a Linux Foundation Collaborative Project
+changes in v5:
+ - removed platfrom data stored in mfd and directly accessed mfd struct in child
+ - fixed spell check and capitalization in mfd and documentation
+
+changes in v4:
+ - fixed capitalization in mfg Kconfig and documentation
+
+changes in v3:
+ - regmap for children passed using platform data and remove mfd driver info
+   access directly from children
+
+changes in v2:
+ - removed EXPORT_SYMBOL of register set/get helper
+ - regmap bit filed used, fixed other review comments
+
+This patch series add support for Battery charger control driver for Monolithic
+Power System's MP2629 chipset, includes MFD driver for ADC battery & input
+power supply measurement and battery charger control driver.
+
+Thanks,
+Saravanan
+
+Saravanan Sekar (5):
+  dt-bindings: mfd: add document bindings for mp2629
+  mfd: mp2629: Add support for mps battery charger
+  iio: adc: mp2629: Add support for mp2629 ADC driver
+  power: supply: Add support for mps mp2629 battery charger
+  MAINTAINERS: Add entry for mp2629 Battery Charger driver
+
+ .../devicetree/bindings/mfd/mps,mp2629.yaml   |  60 ++
+ MAINTAINERS                                   |   5 +
+ drivers/iio/adc/Kconfig                       |  10 +
+ drivers/iio/adc/Makefile                      |   1 +
+ drivers/iio/adc/mp2629_adc.c                  | 209 ++++++
+ drivers/mfd/Kconfig                           |   9 +
+ drivers/mfd/Makefile                          |   2 +
+ drivers/mfd/mp2629.c                          |  86 +++
+ drivers/power/supply/Kconfig                  |  10 +
+ drivers/power/supply/Makefile                 |   1 +
+ drivers/power/supply/mp2629_charger.c         | 686 ++++++++++++++++++
+ include/linux/mfd/mp2629.h                    |  29 +
+ 12 files changed, 1108 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mfd/mps,mp2629.yaml
+ create mode 100644 drivers/iio/adc/mp2629_adc.c
+ create mode 100644 drivers/mfd/mp2629.c
+ create mode 100644 drivers/power/supply/mp2629_charger.c
+ create mode 100644 include/linux/mfd/mp2629.h
+
+-- 
+2.17.1
+
