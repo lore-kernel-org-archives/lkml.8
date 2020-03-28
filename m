@@ -2,285 +2,103 @@ Return-Path: <SRS0=NZ+o=5N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 755B9C43331
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 19:19:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2487FC43331
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 19:21:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 46E05206E6
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 19:19:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E129C206E6
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 19:21:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="hQ6CxFS/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727167AbgC1TTP (ORCPT
+        id S1727176AbgC1TV5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 28 Mar 2020 15:19:15 -0400
-Received: from smtprelay0238.hostedemail.com ([216.40.44.238]:44710 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725807AbgC1TTO (ORCPT
+        Sat, 28 Mar 2020 15:21:57 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:57138 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726751AbgC1TV5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 28 Mar 2020 15:19:14 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay01.hostedemail.com (Postfix) with ESMTP id 6E1DC100E8420;
-        Sat, 28 Mar 2020 19:19:12 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: egg02_1607af1e1a855
-X-Filterd-Recvd-Size: 8678
-Received: from XPS-9350.home (unknown [47.151.136.130])
-        (Authenticated sender: joe@perches.com)
-        by omf09.hostedemail.com (Postfix) with ESMTPA;
-        Sat, 28 Mar 2020 19:19:11 +0000 (UTC)
-Message-ID: <197b261122fc6a751a163545044195f2d98d79dc.camel@perches.com>
-Subject: Re: [PATCH v2 4/5] staging: rtl8712: fix multiline derefernce
- warning
-From:   Joe Perches <joe@perches.com>
-To:     aimannajjar <aiman.najjar@hurranet.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Larry Finger <Larry.Finger@lwfinger.net>,
-        Florian Schilhabel <florian.c.schilhabel@googlemail.com>,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Date:   Sat, 28 Mar 2020 12:17:19 -0700
-In-Reply-To: <beb6c8c826cdda751f29f985f2b5dedfd2f87914.1585353747.git.aiman.najjar@hurranet.com>
-References: <20200327080429.GB1627562@kroah.com>
-         <cover.1585353747.git.aiman.najjar@hurranet.com>
-         <beb6c8c826cdda751f29f985f2b5dedfd2f87914.1585353747.git.aiman.najjar@hurranet.com>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.34.1-2 
+        Sat, 28 Mar 2020 15:21:57 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:Cc:From:References:To:
+        Subject:Sender:Reply-To:Content-ID:Content-Description;
+        bh=V/dqXbIkvlLRHwSTVCJaQGAGws4sXl8nCiGBMMHev8Y=; b=hQ6CxFS/MpFp7tJXVz8ZW9IjKN
+        ot1jxHe5xGMxdkveaEsSLhMsiDk7Ng+W+2shgzRZmf/5TJz8KvW2bgFe50l6epSV36X5NMGjk3ws3
+        5MBoCIqy3J4g+435JLdRTgOfTbpTezACw4o70wbDBpOBMv6xLXN1GlPV3iqRDBA7Aa8URSPUll5ya
+        wT8zmYoh+FzBzGkHLN0xngxyVz57IZAVCiTQFdaA/l38qg2CWsSXgd1XxZmmapZL6g970ZKCzMpE0
+        FZi9YUC9lPA1MjpClYT6QRmQBTo6xU9jOcjtmHXrquXxtbVLQKVw8pyPIdV5X186S7PPCt+FestgV
+        lNOFwjuw==;
+Received: from [2601:1c0:6280:3f0::19c2]
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jIH1o-0005EL-QB; Sat, 28 Mar 2020 19:21:56 +0000
+Subject: Re: Weird issue with epoll and kernel >= 5.0
+To:     Omar Kilani <omar.kilani@gmail.com>, linux-kernel@vger.kernel.org
+References: <CA+8F9hhy=WPMJLQ3Ya_w4O6xyWk7KsXi=YJofmyC577_UJTutA@mail.gmail.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Cc:     Davidlohr Bueso <dave@stgolabs.net>
+Message-ID: <34206eb5-1280-4aac-9a50-76f967646ca1@infradead.org>
+Date:   Sat, 28 Mar 2020 12:21:55 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
+In-Reply-To: <CA+8F9hhy=WPMJLQ3Ya_w4O6xyWk7KsXi=YJofmyC577_UJTutA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2020-03-27 at 20:08 -0400, aimannajjar wrote:
-> This patch fixes the following checkpatch warning in
-> rtl8712x_xmit.c:
+On 3/28/20 11:10 AM, Omar Kilani wrote:
+> Hi there,
 > 
-> WARNING: Avoid multiple line dereference - prefer 'psta->sta_xmitpriv.txseq_tid[pattrib->priority]'
-> 544: FILE: drivers/staging//rtl8712/rtl871x_xmit.c:544:
-> +				pattrib->seqnum = psta->sta_xmitpriv.
-> +						 txseq_tid[pattrib->priority];
-
-It's always better to try to make the code clearer than
-merely shut up checkpatch bleats.
-
-> diff --git a/drivers/staging/rtl8712/rtl871x_xmit.c b/drivers/staging/rtl8712/rtl871x_xmit.c
-[]
-> @@ -479,70 +479,70 @@ static int make_wlanhdr(struct _adapter *padapter, u8 *hdr,
->  	__le16 *fctrl = &pwlanhdr->frame_ctl;
->  
->  	memset(hdr, 0, WLANHDR_OFFSET);
-> -	SetFrameSubType(fctrl, pattrib->subtype);
-> -	if (pattrib->subtype & WIFI_DATA_TYPE) {
-> +	SetFrameSubType(fctrl, pattr->subtype);
-> +	if (pattr->subtype & WIFI_DATA_TYPE) {
+> I've observed an issue with epoll and kernels 5.0 and above when a
+> system is generating a lot of epoll events.
 > 
+> I see this issue with nginx and jvm / netty based apps (using the
+> jvm's native epoll support as well as netty's own optimized epoll
+> support) but *not* with haproxy (?).
+> 
+> I'm not really sure what the actual problem is (nginx complains about
+> epoll_wait with a generic error), but it doesn't happen on 4.19.x and
+> lower.
+> 
+> I thought it was a netty problem at first and opened this ticket:
+> 
+> https://github.com/netty/netty/issues/8999
+> 
+> But then saw the same issue in nginx.
+> 
+> I haven't debugged a kernel issue in something like 20 years so I'm
+> not really sure where to start myself.
+> 
+> I'd be more than happy to provide my test case that has a very quick
+> repro to anyone who needs it.
 
-The whole following block could be outdented one level
-by changing this test to
+Hi,
+Please do.
 
-	if (!(pattr->subtype & WIFI_DATA_TYPE))
-		return 0;
+> Also happy to provide a VM/machine with enough CPUs to trigger it
+> easily (it seems to happen quicker with more CPUs present) to test
+> with.
 
->  		if (check_fwstate(pmlmepriv,  WIFI_STATION_STATE)) {
->  			/* to_ds = 1, fr_ds = 0; */
->  			SetToDs(fctrl);
->  			memcpy(pwlanhdr->addr1, get_bssid(pmlmepriv),
->  				ETH_ALEN);
-The repetitive call to get_bssid(pmlmepriv) could be saved
-by performing it outside this test
 
-	u8 bssid = get_bssid(pmlmepriv);
+There have been around 10 changes in fs/eventpoll.c since v5.0 was
+released in March, 2019, so it would be helpful if you could test
+the latest mainline kernel to see if the problem is still present.
 
-and then using bssid in each memcpy/ether_addr_copy
+Hm, it looks like you have identified this commit:
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?h=v5.1-rc5&id=c5a282e9635e9c7382821565083db5d260085e3e
+as the/a problem.
 
-> -			memcpy(pwlanhdr->addr2, pattrib->src, ETH_ALEN);
-> -			memcpy(pwlanhdr->addr3, pattrib->dst, ETH_ALEN);
-> +			memcpy(pwlanhdr->addr2, pattr->src, ETH_ALEN);
-> +			memcpy(pwlanhdr->addr3, pattr->dst, ETH_ALEN);
+I have Cc-ed the patch author also.
 
-All of these memcpy could probably use ether_addr_copy if
-
-	struct pkt_attrib {
-		...
-		u8      dst[ETH_ALEN];
-		...
-	};
-
-was changed to 
-
-		u8	dst[ETH_ALEN] __aligned(2);
-		
-
-so these would be
-
-			ether_addr_copy(pwlanhdr->addr2, pattr->src);
-
-and pwlanhdr isn't a particularly valuable name
-for an automatic either.  It's hungarian like.
-
-So I would suggest something like the below that
-avoids any long lines instead and also removes
-unnecessary multi-line statements without renaming.
-
----
- drivers/staging/rtl8712/rtl871x_xmit.c | 123 ++++++++++++++++-----------------
- drivers/staging/rtl8712/rtl871x_xmit.h |   2 +-
- 2 files changed, 61 insertions(+), 64 deletions(-)
-
-diff --git a/drivers/staging/rtl8712/rtl871x_xmit.c b/drivers/staging/rtl8712/rtl871x_xmit.c
-index f0b853..3961dae 100644
---- a/drivers/staging/rtl8712/rtl871x_xmit.c
-+++ b/drivers/staging/rtl8712/rtl871x_xmit.c
-@@ -477,75 +477,72 @@ static int make_wlanhdr(struct _adapter *padapter, u8 *hdr,
- 	struct mlme_priv *pmlmepriv = &padapter->mlmepriv;
- 	struct qos_priv *pqospriv = &pmlmepriv->qospriv;
- 	__le16 *fctrl = &pwlanhdr->frame_ctl;
-+	u8 *bssid;
- 
- 	memset(hdr, 0, WLANHDR_OFFSET);
- 	SetFrameSubType(fctrl, pattrib->subtype);
--	if (pattrib->subtype & WIFI_DATA_TYPE) {
--		if (check_fwstate(pmlmepriv,  WIFI_STATION_STATE)) {
--			/* to_ds = 1, fr_ds = 0; */
--			SetToDs(fctrl);
--			memcpy(pwlanhdr->addr1, get_bssid(pmlmepriv),
--				ETH_ALEN);
--			memcpy(pwlanhdr->addr2, pattrib->src, ETH_ALEN);
--			memcpy(pwlanhdr->addr3, pattrib->dst, ETH_ALEN);
--		} else if (check_fwstate(pmlmepriv, WIFI_AP_STATE)) {
--			/* to_ds = 0, fr_ds = 1; */
--			SetFrDs(fctrl);
--			memcpy(pwlanhdr->addr1, pattrib->dst, ETH_ALEN);
--			memcpy(pwlanhdr->addr2, get_bssid(pmlmepriv),
--				ETH_ALEN);
--			memcpy(pwlanhdr->addr3, pattrib->src, ETH_ALEN);
--		} else if (check_fwstate(pmlmepriv, WIFI_ADHOC_STATE) ||
--			   check_fwstate(pmlmepriv,
--					 WIFI_ADHOC_MASTER_STATE)) {
--			memcpy(pwlanhdr->addr1, pattrib->dst, ETH_ALEN);
--			memcpy(pwlanhdr->addr2, pattrib->src, ETH_ALEN);
--			memcpy(pwlanhdr->addr3, get_bssid(pmlmepriv),
--				ETH_ALEN);
--		} else if (check_fwstate(pmlmepriv, WIFI_MP_STATE)) {
--			memcpy(pwlanhdr->addr1, pattrib->dst, ETH_ALEN);
--			memcpy(pwlanhdr->addr2, pattrib->src, ETH_ALEN);
--			memcpy(pwlanhdr->addr3, get_bssid(pmlmepriv),
--				ETH_ALEN);
--		} else {
--			return -EINVAL;
--		}
-+	if (!(pattrib->subtype & WIFI_DATA_TYPE))
-+		return 0;
- 
--		if (pattrib->encrypt)
--			SetPrivacy(fctrl);
--		if (pqospriv->qos_option) {
--			qc = (unsigned short *)(hdr + pattrib->hdrlen - 2);
--			if (pattrib->priority)
--				SetPriority(qc, pattrib->priority);
--			SetAckpolicy(qc, pattrib->ack_policy);
--		}
--		/* TODO: fill HT Control Field */
--		/* Update Seq Num will be handled by f/w */
--		{
--			struct sta_info *psta;
--			bool bmcst = is_multicast_ether_addr(pattrib->ra);
--
--			if (pattrib->psta) {
--				psta = pattrib->psta;
--			} else {
--				if (bmcst)
--					psta = r8712_get_bcmc_stainfo(padapter);
--				else
--					psta =
--					 r8712_get_stainfo(&padapter->stapriv,
--					 pattrib->ra);
--			}
--			if (psta) {
--				psta->sta_xmitpriv.txseq_tid
--						  [pattrib->priority]++;
--				psta->sta_xmitpriv.txseq_tid[pattrib->priority]
--						   &= 0xFFF;
--				pattrib->seqnum = psta->sta_xmitpriv.
--						  txseq_tid[pattrib->priority];
--				SetSeqNum(hdr, pattrib->seqnum);
--			}
-+	bssid = get_bssid(pmlmepriv);
-+
-+	if (check_fwstate(pmlmepriv,  WIFI_STATION_STATE)) {
-+		/* to_ds = 1, fr_ds = 0; */
-+		SetToDs(fctrl);
-+		ether_addr_copy(pwlanhdr->addr1, bssid);
-+		ether_addr_copy(pwlanhdr->addr2, pattrib->src);
-+		ether_addr_copy(pwlanhdr->addr3, pattrib->dst);
-+	} else if (check_fwstate(pmlmepriv, WIFI_AP_STATE)) {
-+		/* to_ds = 0, fr_ds = 1; */
-+		SetFrDs(fctrl);
-+		ether_addr_copy(pwlanhdr->addr1, pattrib->dst);
-+		ether_addr_copy(pwlanhdr->addr2, bssid);
-+		ether_addr_copy(pwlanhdr->addr3, pattrib->src);
-+	} else if (check_fwstate(pmlmepriv, WIFI_ADHOC_STATE) ||
-+		   check_fwstate(pmlmepriv, WIFI_ADHOC_MASTER_STATE)) {
-+		ether_addr_copy(pwlanhdr->addr1, pattrib->dst);
-+		ether_addr_copy(pwlanhdr->addr2, pattrib->src);
-+		ether_addr_copy(pwlanhdr->addr3, bssid);
-+	} else if (check_fwstate(pmlmepriv, WIFI_MP_STATE)) {
-+		ether_addr_copy(pwlanhdr->addr1, pattrib->dst);
-+		ether_addr_copy(pwlanhdr->addr2, pattrib->src);
-+		ether_addr_copy(pwlanhdr->addr3, bssid);
-+	} else {
-+		return -EINVAL;
-+	}
-+
-+	if (pattrib->encrypt)
-+		SetPrivacy(fctrl);
-+	if (pqospriv->qos_option) {
-+		qc = (unsigned short *)(hdr + pattrib->hdrlen - 2);
-+		if (pattrib->priority)
-+			SetPriority(qc, pattrib->priority);
-+		SetAckpolicy(qc, pattrib->ack_policy);
-+	}
-+	/* TODO: fill HT Control Field */
-+	/* Update Seq Num will be handled by f/w */
-+	{
-+		struct sta_info *psta;
-+		bool bmcst = is_multicast_ether_addr(pattrib->ra);
-+
-+		if (pattrib->psta)
-+			psta = pattrib->psta;
-+		else if (bmcst)
-+			psta = r8712_get_bcmc_stainfo(padapter);
-+		else
-+			psta = r8712_get_stainfo(&padapter->stapriv,
-+						 pattrib->ra);
-+
-+		if (psta) {
-+			u16 *txtid = psta->sta_xmitpriv.txseq_tid;
-+
-+			txtid[pattrib->priority]++;
-+			txtid[pattrib->priority] &= 0xFFF;
-+			pattrib->seqnum = txtid[pattrib->priority];
-+			SetSeqNum(hdr, pattrib->seqnum);
- 		}
- 	}
-+
- 	return 0;
- }
- 
-diff --git a/drivers/staging/rtl8712/rtl871x_xmit.h b/drivers/staging/rtl8712/rtl871x_xmit.h
-index f227828..c0c0c7 100644
---- a/drivers/staging/rtl8712/rtl871x_xmit.h
-+++ b/drivers/staging/rtl8712/rtl871x_xmit.h
-@@ -115,7 +115,7 @@ struct pkt_attrib {
- 	u8	icv_len;
- 	unsigned char iv[8];
- 	unsigned char icv[8];
--	u8	dst[ETH_ALEN];
-+	u8	dst[ETH_ALEN] __aligned(2);	/* for ether_addr_copy */
- 	u8	src[ETH_ALEN];
- 	u8	ta[ETH_ALEN];
- 	u8	ra[ETH_ALEN];
-
+-- 
+~Randy
 
