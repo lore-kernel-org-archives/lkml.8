@@ -2,71 +2,140 @@ Return-Path: <SRS0=NZ+o=5N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0226BC43331
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 03:13:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FA0BC2D0EB
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 03:43:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C8957206F1
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 03:13:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E99B52073B
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 03:43:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YK5ZxzEo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727067AbgC1DNR (ORCPT
+        id S1727101AbgC1Dnh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Mar 2020 23:13:17 -0400
-Received: from tartarus.angband.pl ([54.37.238.230]:47178 "EHLO
-        tartarus.angband.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726291AbgC1DNR (ORCPT
+        Fri, 27 Mar 2020 23:43:37 -0400
+Received: from mail-il1-f195.google.com ([209.85.166.195]:46937 "EHLO
+        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726225AbgC1Dnh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Mar 2020 23:13:17 -0400
-Received: from kilobyte by tartarus.angband.pl with local (Exim 4.92)
-        (envelope-from <kilobyte@angband.pl>)
-        id 1jI1u5-0007vu-4a; Sat, 28 Mar 2020 04:12:57 +0100
-Date:   Sat, 28 Mar 2020 04:12:57 +0100
-From:   Adam Borowski <kilobyte@angband.pl>
-To:     Nicolas Pitre <nico@fluxnic.net>
-Cc:     Chen Wandun <chenwandun@huawei.com>, jslaby@suse.com,
-        gregkh@linuxfoundation.org, daniel.vetter@ffwll.ch,
-        sam@ravnborg.org, b.zolnierkie@samsung.com, lukas@wunner.de,
-        ghalat@redhat.com, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH next] vt: fix a warning when kmalloc alloc large memory
-Message-ID: <20200328031257.GA30454@angband.pl>
-References: <20200328021340.27315-1-chenwandun@huawei.com>
- <nycvar.YSQ.7.76.2003272232340.2671@knanqh.ubzr>
+        Fri, 27 Mar 2020 23:43:37 -0400
+Received: by mail-il1-f195.google.com with SMTP id i75so3469647ild.13;
+        Fri, 27 Mar 2020 20:43:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=UVK15i028mkx0jMpDy93kqL7jNl1F+KutZZLwGaGO80=;
+        b=YK5ZxzEo6HEEiK1jDNDS80yDjdrmaTfHno66iowxJhYWqC0NRswO5iVrywDnKCJsh6
+         KeuIkxgEW5X8Ct/nVCwy2pEdUvyrlVNk8o0cid9q4ON1b6sNEAl3ixsrPyWa9CLfcbmM
+         t80TVvuLimGb794UdrWiOy7mzoYijdA1/RV5uVItkeGDa7TKUAhP1ZPsBYu0dE6Uc5RI
+         wloO5fqvW1+8lx8050cqx/gpJuURq2W49w04ra0Nbc9SLaAlYsgU66vEdUlyzn3kvrDl
+         Eh9Fcj60DWW3b9jI3Y1qSdt2lb0zggNPaeH+koVPY8C/PVaKx6AIOu4u8Ve6g40Pp1+U
+         5OTg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=UVK15i028mkx0jMpDy93kqL7jNl1F+KutZZLwGaGO80=;
+        b=fkoltFwCVx+dw+nJFEcejCdKLfZ9lSZyMmdRfIJfmjiKUOoLFiJmplFQv4K5jalZ9M
+         XKkeLyzSVLFLlju6dwkKL3mYXahomXMQsGyhoKl2RP6s6Ev8WPhyjK4CvLggGjeVzIFd
+         OaZZSOwbp3UGT9zKKPNfHgQHNtj6QvprtSXobEs+VjVUiZ2hQIEcQrhckgfY3gSJrKH8
+         WNjq5Xaqwoye7F+2g7jHH5+rfLuwHb+2NJxmEvhuc0HcOOu0ldT+bpehKA7hEhCSvrLc
+         iiYrhVK9L4zvqnsrJUI8G1w5x1cT6kDF4HNYoVx/5qwoTLhFTMrvDYP70Vxbh19oQbQr
+         qzCQ==
+X-Gm-Message-State: ANhLgQ2fDDMauAhePvoncmdy+tK7oQrVPSrGS2Kn2fTC+BmKEs0I+RaP
+        aBsDqFSo2FECy9LJiTQhYwqJ8zB1Md48ISGnvFez41Ju
+X-Google-Smtp-Source: ADFU+vvrTjRJAhD7aKWKIBES9XdTRJeSXRCB+0DdH2aQVrMCxPqgOw/bsGRDKE8GVKnrhAQIwquJP/XPFaeajb5G488=
+X-Received: by 2002:a92:96c6:: with SMTP id g189mr2199320ilh.276.1585367015881;
+ Fri, 27 Mar 2020 20:43:35 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <nycvar.YSQ.7.76.2003272232340.2671@knanqh.ubzr>
-X-Junkbait: aaron@angband.pl, zzyx@angband.pl
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-SA-Exim-Connect-IP: <locally generated>
-X-SA-Exim-Mail-From: kilobyte@angband.pl
-X-SA-Exim-Scanned: No (on tartarus.angband.pl); SAEximRunCond expanded to false
+References: <20200225161201.1975-1-git@andred.net> <20200225161201.1975-6-git@andred.net>
+ <VI1PR0402MB3485A743C94442533B6840F298E70@VI1PR0402MB3485.eurprd04.prod.outlook.com>
+In-Reply-To: <VI1PR0402MB3485A743C94442533B6840F298E70@VI1PR0402MB3485.eurprd04.prod.outlook.com>
+From:   Adam Ford <aford173@gmail.com>
+Date:   Fri, 27 Mar 2020 22:43:24 -0500
+Message-ID: <CAHCN7x+NJLaKF9SfHw9sDpw6zDUGs_TuD_co7USjQ5hgFDeaHg@mail.gmail.com>
+Subject: Re: [PATCH v2 6/6] Input: snvs_pwrkey - only IRQ_HANDLED for our own events
+To:     Horia Geanta <horia.geanta@nxp.com>
+Cc:     =?UTF-8?Q?Andr=C3=A9_Draszik?= <git@andred.net>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        Aymen Sghaier <aymen.sghaier@nxp.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Anson Huang <anson.huang@nxp.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
+        Robin Gong <yibin.gong@nxp.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 27, 2020 at 10:55:14PM -0400, Nicolas Pitre wrote:
-> On Sat, 28 Mar 2020, Chen Wandun wrote:
-> 
-> > If the memory size that use kmalloc() to allocate exceed MAX_ORDER pages,
-> > it will hit the WARN_ON_ONCE(!(gfp_mask & __GFP_NOWARN)), so add memory
-> > allocation flag __GFP_NOWARN to silence a warning, othervise, it will
-> > cause panic if panic_on_warn is enable.
-> 
-> Wow! How do you manage that? You need something like a 1024x1024 text 
-> screen to get such a big memory allocation.
+On Mon, Mar 2, 2020 at 3:22 AM Horia Geanta <horia.geanta@nxp.com> wrote:
+>
+> On 2/25/2020 6:12 PM, Andr=C3=A9 Draszik wrote:
+> > The snvs_pwrkey shares the SNVS LPSR status register with the snvs_rtc.
+> >
+> > This driver here should only return IRQ_HANDLED if the status register
+> > indicates that the event we're handling in the irq handler was genuinel=
+y
+> > intended for this driver. Otheriwse the interrupt subsystem will
+> > assume the interrupt was handled successfully even though it wasn't
+> > at all.
+> >
+> > Signed-off-by: Andr=C3=A9 Draszik <git@andred.net>
+> > Cc: "Horia Geant=C4=83" <horia.geanta@nxp.com>
+> > Cc: Aymen Sghaier <aymen.sghaier@nxp.com>
+> > Cc: Herbert Xu <herbert@gondor.apana.org.au>
+> > Cc: "David S. Miller" <davem@davemloft.net>
+> > Cc: Rob Herring <robh+dt@kernel.org>
+> > Cc: Mark Rutland <mark.rutland@arm.com>
+> > Cc: Shawn Guo <shawnguo@kernel.org>
+> > Cc: Sascha Hauer <s.hauer@pengutronix.de>
+> > Cc: Pengutronix Kernel Team <kernel@pengutronix.de>
+> > Cc: Fabio Estevam <festevam@gmail.com>
+> > Cc: NXP Linux Team <linux-imx@nxp.com>
+> > Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+> > Cc: Anson Huang <Anson.Huang@nxp.com>
+> > Cc: Robin Gong <yibin.gong@nxp.com>
+> > Cc: linux-crypto@vger.kernel.org
+> > Cc: devicetree@vger.kernel.org
+> > Cc: linux-arm-kernel@lists.infradead.org
+> > Cc: linux-input@vger.kernel.org
+> For patches 2-6:
+> Reviewed-by: Horia Geant=C4=83 <horia.geanta@nxp.com>
+>
+> Also imx8mn.dtsi and imx8mp.dtsi will have to be updated.
 
-ioctl(VT_RESIZE) allows up to 32767x32767, unprivileged for a local user.
-That's 4GB per console.
+Is there an update coming for the 8mn family?  I am seeing it not wake
+from the power key, and I was hoping to resolve that before i make a
+push to submit a new 8MN board for review.
 
+thanks
 
-Meow!
--- 
-⢀⣴⠾⠻⢶⣦⠀
-⣾⠁⢠⠒⠀⣿⡁ in the beginning was the boot and root floppies and they were good.
-⢿⡄⠘⠷⠚⠋⠀                                       -- <willmore> on #linux-sunxi
-⠈⠳⣄⠀⠀⠀⠀
+adam
+>
+> Thanks,
+> Horia
+>
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
