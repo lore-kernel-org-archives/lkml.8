@@ -2,69 +2,89 @@ Return-Path: <SRS0=NZ+o=5N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35F0CC43331
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 07:27:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19BA6C2D0E8
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 07:30:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 05C7B20748
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 07:27:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE18220714
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 07:30:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726186AbgC1H1u (ORCPT
+        id S1726211AbgC1Has (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 28 Mar 2020 03:27:50 -0400
-Received: from smtp.domeneshop.no ([194.63.252.55]:34389 "EHLO
-        smtp.domeneshop.no" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725372AbgC1H1u (ORCPT
+        Sat, 28 Mar 2020 03:30:48 -0400
+Received: from smtp02.smtpout.orange.fr ([80.12.242.124]:34055 "EHLO
+        smtp.smtpout.orange.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725865AbgC1Has (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 28 Mar 2020 03:27:50 -0400
-Received: from [2a02:fe0:c700:2:781f:1a82:338:d2b7] (port=52524)
-        by smtp.domeneshop.no with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <Sami_Lands_Medias@samilands.eu>)
-        id 1jI5si-0004QW-HA
-        for linux-kernel@vger.kernel.org; Sat, 28 Mar 2020 08:27:48 +0100
-To:     linux-kernel@vger.kernel.org
-From:   Sami Lands Medias <Sami_Lands_Medias@samilands.eu>
-Subject: I/T LX, a fair pay unix-derivative.
-Message-ID: <d9b3cb76-e322-ea25-3898-908103cafc27@samilands.eu>
-Date:   Sat, 28 Mar 2020 08:27:35 +0100
-User-Agent: Mozilla/5.0 (Windows NT 6.1; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Sat, 28 Mar 2020 03:30:48 -0400
+Received: from localhost.localdomain ([90.126.162.40])
+        by mwinf5d37 with ME
+        id KjWj2200B0scBcy03jWj1E; Sat, 28 Mar 2020 08:30:46 +0100
+X-ME-Helo: localhost.localdomain
+X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
+X-ME-Date: Sat, 28 Mar 2020 08:30:46 +0100
+X-ME-IP: 90.126.162.40
+From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+To:     selvin.xavier@broadcom.com, devesh.sharma@broadcom.com,
+        dledford@redhat.com, jgg@ziepe.ca, leon@kernel.org,
+        colin.king@canonical.com, roland@purestorage.com
+Cc:     linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-janitors@vger.kernel.org,
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Subject: [PATCH] RDMA/ocrdma: Fix an off-by-one issue in 'ocrdma_add_stat'
+Date:   Sat, 28 Mar 2020 08:30:40 +0100
+Message-Id: <20200328073040.24429-1-christophe.jaillet@wanadoo.fr>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-And working for sami-development, really is the same as EU principles 
-and the €. A sign already on our keyboards, being the economy we want, 
-going back to fair pay principles origin in Adams Tablet, (The Dispilio 
-Artifact).
+There is an off-by-one issue when checking if there is enough space in the
+output buffer, because we must keep some place for a final '\0'.
 
-Put yourself right back the best of unix-derivative of this, and be a 
-bit already there! All developments respected to now, with some 
-tightening up of code and distro, and integration with an online € 
-currency being perfect. And I know EU works on the digial side of things 
-here.
+While at it:
+   - Use 'scnprintf' instead of 'snprintf' in order to avoid a superfluous
+    'strlen'
+   - avoid some useless initializations
+   - avoida hard coded buffer size that can be computed at built time.
 
-https://www.youtube.com/watch?v=Tnr427PW32s
+Fixes: a51f06e1679e ("RDMA/ocrdma: Query controller information")
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+---
+The '\0' comes from memset(..., 0, ...) in all callers.
+This could be also avoided if needed.
+---
+ drivers/infiniband/hw/ocrdma/ocrdma_stats.c | 9 ++++-----
+ 1 file changed, 4 insertions(+), 5 deletions(-)
 
-This is definately what is happening these days, people.
+diff --git a/drivers/infiniband/hw/ocrdma/ocrdma_stats.c b/drivers/infiniband/hw/ocrdma/ocrdma_stats.c
+index 5f831e3bdbad..614a449e6b87 100644
+--- a/drivers/infiniband/hw/ocrdma/ocrdma_stats.c
++++ b/drivers/infiniband/hw/ocrdma/ocrdma_stats.c
+@@ -49,13 +49,12 @@ static struct dentry *ocrdma_dbgfs_dir;
+ static int ocrdma_add_stat(char *start, char *pcur,
+ 				char *name, u64 count)
+ {
+-	char buff[128] = {0};
+-	int cpy_len = 0;
++	char buff[128];
++	int cpy_len;
+ 
+-	snprintf(buff, 128, "%s: %llu\n", name, count);
+-	cpy_len = strlen(buff);
++	cpy_len = scnprintf(buff, sizeof(buff), "%s: %llu\n", name, count);
+ 
+-	if (pcur + cpy_len > start + OCRDMA_MAX_DBGFS_MEM) {
++	if (pcur + cpy_len >= start + OCRDMA_MAX_DBGFS_MEM) {
+ 		pr_err("%s: No space in stats buff\n", __func__);
+ 		return 0;
+ 	}
+-- 
+2.20.1
 
-Meaning a good unix-derivate I have called I/T LX.
-
-So anyone wanting this should move their efforts to I/T LX.
-
-Meaning globally a leading I/T culture to follow, and good for all.
-
-- "One Dewa Without Company".
-
-Serene Greeings,
-Ywe Cærlyn,
-Lead Philosophy and Research
-I/T LX.
