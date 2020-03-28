@@ -2,248 +2,124 @@ Return-Path: <SRS0=NZ+o=5N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50E75C2D0EC
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 19:22:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25D14C43331
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 19:34:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1EC2D206E6
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 19:22:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 03AEE20675
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 19:34:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727306AbgC1TV7 (ORCPT
+        id S1727192AbgC1TeQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 28 Mar 2020 15:21:59 -0400
-Received: from mga04.intel.com ([192.55.52.120]:46376 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727137AbgC1TV6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 28 Mar 2020 15:21:58 -0400
-IronPort-SDR: u15Ft/txgzEcZp20fmsPPG3jlomvt3U7sVK3SYEruBgSCim36EzHja9tNEyz10Jpn83rrQvMBc
- rLrBIV7WYAEg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Mar 2020 12:21:57 -0700
-IronPort-SDR: XADm0rG478qX7k09MwWQqIFoTkH406br+77fpM61egxXCEJG4NaityPnSPgqg7IbEYetZQdO2A
- pBo5A7n45y7A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,317,1580803200"; 
-   d="scan'208";a="239394731"
-Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
-  by fmsmga007.fm.intel.com with ESMTP; 28 Mar 2020 12:21:56 -0700
-Received: from kbuild by lkp-server01 with local (Exim 4.89)
-        (envelope-from <lkp@intel.com>)
-        id 1jIH1n-000ABl-Hq; Sun, 29 Mar 2020 03:21:55 +0800
-Date:   Sun, 29 Mar 2020 03:21:21 +0800
-From:   kbuild test robot <lkp@intel.com>
-To:     "x86-ml" <x86@kernel.org>
-Cc:     linux-kernel@vger.kernel.org
-Subject: [tip:x86/boot] BUILD SUCCESS
- c90beea22a2bece4b0bbb39789bf835504421594
-Message-ID: <5e7fa3b1.AWHMYZthPVO5euOH%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        Sat, 28 Mar 2020 15:34:16 -0400
+Received: from mail-io1-f71.google.com ([209.85.166.71]:40178 "EHLO
+        mail-io1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725807AbgC1TeP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 28 Mar 2020 15:34:15 -0400
+Received: by mail-io1-f71.google.com with SMTP id z207so12043947iof.7
+        for <linux-kernel@vger.kernel.org>; Sat, 28 Mar 2020 12:34:14 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=4Os1MQqVuaKZJ0/BSQ1InJnVUdjOicbnDIstLCvCWnA=;
+        b=CdOwQfLWuKfufCWhmAbKdZmVcut5NkUixZeWkUusFlS6xeBbB9Yx1X0I7zuMowa6GJ
+         zpG91Uk9kZYh9knNKDCi+Blsuf7P6xjjDJ4CGG72z1df6pkBRHgxSmzf5idLYoyIvGTR
+         QpWIQFQXkaYov0fTINIvaD/kNrIoGDqzps8HRAr16olv1mMSOpnXKeS99rs0C+dhR0Ip
+         DCUdhGft0SqjSU7G/jmsS5lquREH7YZtPFZ2REKhEsmArJ6rqn+u+4CEFLBRkM3ZVwpm
+         /JU0om68MmxSiHcY5CNhsXHB4S3xy+ZNp9xEMK1H30VB+iVqNIK2xyLraYOwpF7hgBob
+         FACw==
+X-Gm-Message-State: ANhLgQ3bEqkt3TcFTotBA8speV3ZSYuS5Z/ENYPOnLD/Vm3RQXw5V4Cv
+        Fdt6TOV6Sv5oXfZBXaMtRk9HsJGXdMWWFBZkwM1L4vukaU19
+X-Google-Smtp-Source: ADFU+vsIsXLgbI69/vNR4Nu3B0uA4LMKFeIF5T4v0xmTaXDHRSy8yoAiq7xfpRPEKXf3x7pwt46Yp4d0bgC7qJg34w3kqDkFY6/n
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+X-Received: by 2002:a92:cad2:: with SMTP id m18mr4909534ilq.8.1585424054487;
+ Sat, 28 Mar 2020 12:34:14 -0700 (PDT)
+Date:   Sat, 28 Mar 2020 12:34:14 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000960ee605a1ef4d4e@google.com>
+Subject: general protection fault in do_syscall_64
+From:   syzbot <syzbot+f9b2c53f55a9270fc778@syzkaller.appspotmail.com>
+To:     bp@alien8.de, hpa@zytor.com, linux-kernel@vger.kernel.org,
+        luto@kernel.org, mingo@redhat.com, syzkaller-bugs@googlegroups.com,
+        tglx@linutronix.de, x86@kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git  x86/boot
-branch HEAD: c90beea22a2bece4b0bbb39789bf835504421594  x86/boot/compressed: Fix debug_puthex() parameter type
+Hello,
 
-elapsed time: 480m
+syzbot found the following crash on:
 
-configs tested: 181
-configs skipped: 0
+HEAD commit:    69c5eea3 Merge branch 'parisc-5.6-2' of git://git.kernel.o..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=14d3517be00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=4ac76c43beddbd9
+dashboard link: https://syzkaller.appspot.com/bug?extid=f9b2c53f55a9270fc778
+compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=15059d05e00000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=16e5d5a3e00000
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+f9b2c53f55a9270fc778@syzkaller.appspotmail.com
 
-arm                              allmodconfig
-arm                               allnoconfig
-arm                              allyesconfig
-arm64                            allmodconfig
-arm64                             allnoconfig
-arm64                            allyesconfig
-arm                           efm32_defconfig
-arm                         at91_dt_defconfig
-arm                        shmobile_defconfig
-arm64                               defconfig
-arm                          exynos_defconfig
-arm                        multi_v5_defconfig
-arm                           sunxi_defconfig
-arm                        multi_v7_defconfig
-sparc                            allyesconfig
-m68k                             allmodconfig
-sh                            titan_defconfig
-s390                       zfcpdump_defconfig
-mips                             allmodconfig
-m68k                          multi_defconfig
-nios2                         3c120_defconfig
-riscv                            allmodconfig
-c6x                              allyesconfig
-arc                                 defconfig
-sparc64                             defconfig
-riscv                    nommu_virt_defconfig
-s390                             alldefconfig
-i386                              allnoconfig
-i386                             alldefconfig
-i386                             allyesconfig
-i386                                defconfig
-ia64                             alldefconfig
-ia64                             allmodconfig
-ia64                              allnoconfig
-ia64                             allyesconfig
-ia64                                defconfig
-nios2                         10m50_defconfig
-c6x                        evmc6678_defconfig
-xtensa                          iss_defconfig
-xtensa                       common_defconfig
-openrisc                 simple_smp_defconfig
-openrisc                    or1ksim_defconfig
-nds32                               defconfig
-nds32                             allnoconfig
-csky                                defconfig
-alpha                               defconfig
-h8300                       h8s-sim_defconfig
-h8300                     edosk2674_defconfig
-m68k                       m5475evb_defconfig
-h8300                    h8300h-sim_defconfig
-m68k                           sun3_defconfig
-arc                              allyesconfig
-powerpc                             defconfig
-powerpc                       ppc64_defconfig
-powerpc                          rhel-kconfig
-microblaze                      mmu_defconfig
-microblaze                    nommu_defconfig
-powerpc                           allnoconfig
-mips                           32r2_defconfig
-mips                         64r6el_defconfig
-mips                              allnoconfig
-mips                             allyesconfig
-mips                      fuloong2e_defconfig
-mips                      malta_kvm_defconfig
-parisc                            allnoconfig
-parisc                           allyesconfig
-parisc                generic-32bit_defconfig
-parisc                generic-64bit_defconfig
-i386                 randconfig-a002-20200327
-i386                 randconfig-a001-20200327
-x86_64               randconfig-a002-20200327
-x86_64               randconfig-a001-20200327
-i386                 randconfig-a003-20200327
-x86_64               randconfig-a003-20200327
-alpha                randconfig-a001-20200327
-m68k                 randconfig-a001-20200327
-mips                 randconfig-a001-20200327
-nds32                randconfig-a001-20200327
-parisc               randconfig-a001-20200327
-alpha                randconfig-a001-20200329
-m68k                 randconfig-a001-20200329
-mips                 randconfig-a001-20200329
-nds32                randconfig-a001-20200329
-parisc               randconfig-a001-20200329
-riscv                randconfig-a001-20200329
-riscv                randconfig-a001-20200327
-c6x                  randconfig-a001-20200327
-h8300                randconfig-a001-20200327
-microblaze           randconfig-a001-20200327
-nios2                randconfig-a001-20200327
-sparc64              randconfig-a001-20200327
-c6x                  randconfig-a001-20200329
-h8300                randconfig-a001-20200329
-microblaze           randconfig-a001-20200329
-nios2                randconfig-a001-20200329
-sparc64              randconfig-a001-20200329
-csky                 randconfig-a001-20200327
-openrisc             randconfig-a001-20200327
-s390                 randconfig-a001-20200327
-sh                   randconfig-a001-20200327
-xtensa               randconfig-a001-20200327
-i386                 randconfig-b003-20200327
-i386                 randconfig-b001-20200327
-x86_64               randconfig-b003-20200327
-i386                 randconfig-b002-20200327
-x86_64               randconfig-b002-20200327
-x86_64               randconfig-b001-20200327
-x86_64               randconfig-c003-20200327
-x86_64               randconfig-c001-20200327
-i386                 randconfig-c002-20200327
-x86_64               randconfig-c002-20200327
-i386                 randconfig-c003-20200327
-i386                 randconfig-c001-20200327
-i386                 randconfig-d003-20200327
-i386                 randconfig-d001-20200327
-x86_64               randconfig-d002-20200327
-x86_64               randconfig-d001-20200327
-i386                 randconfig-d002-20200327
-x86_64               randconfig-d003-20200327
-x86_64               randconfig-e001-20200328
-x86_64               randconfig-e002-20200328
-x86_64               randconfig-e003-20200328
-i386                 randconfig-e001-20200328
-i386                 randconfig-e002-20200328
-i386                 randconfig-e003-20200328
-x86_64               randconfig-e001-20200327
-x86_64               randconfig-e003-20200327
-i386                 randconfig-e002-20200327
-i386                 randconfig-e003-20200327
-i386                 randconfig-e001-20200327
-x86_64               randconfig-e002-20200327
-x86_64               randconfig-f001-20200327
-x86_64               randconfig-f002-20200327
-x86_64               randconfig-f003-20200327
-i386                 randconfig-f001-20200327
-i386                 randconfig-f002-20200327
-i386                 randconfig-f003-20200327
-x86_64               randconfig-g001-20200327
-x86_64               randconfig-g002-20200327
-x86_64               randconfig-g003-20200327
-i386                 randconfig-g001-20200327
-i386                 randconfig-g002-20200327
-i386                 randconfig-g003-20200327
-x86_64               randconfig-h003-20200327
-i386                 randconfig-h003-20200327
-i386                 randconfig-h001-20200327
-x86_64               randconfig-h001-20200327
-i386                 randconfig-h002-20200327
-x86_64               randconfig-h002-20200327
-arm                  randconfig-a001-20200327
-powerpc              randconfig-a001-20200327
-ia64                 randconfig-a001-20200327
-sparc                randconfig-a001-20200327
-arc                  randconfig-a001-20200327
-arm64                randconfig-a001-20200327
-riscv                             allnoconfig
-riscv                            allyesconfig
-riscv                               defconfig
-riscv                          rv32_defconfig
-s390                          debug_defconfig
-s390                             allyesconfig
-s390                              allnoconfig
-s390                             allmodconfig
-s390                                defconfig
-sh                               allmodconfig
-sh                                allnoconfig
-sh                          rsk7269_defconfig
-sh                  sh7785lcr_32bit_defconfig
-sparc                               defconfig
-sparc64                           allnoconfig
-sparc64                          allyesconfig
-sparc64                          allmodconfig
-um                           x86_64_defconfig
-um                             i386_defconfig
-um                                  defconfig
-x86_64                                   rhel
-x86_64                               rhel-7.6
-x86_64                         rhel-7.2-clear
-x86_64                                    lkp
-x86_64                              fedora-25
-x86_64                                  kexec
+general protection fault, probably for non-canonical address 0x1ffffffff1215a85: 0000 [#1] PREEMPT SMP KASAN
+CPU: 1 PID: 7207 Comm: syz-executor045 Not tainted 5.6.0-rc7-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+RIP: 0010:__read_once_size include/linux/compiler.h:199 [inline]
+RIP: 0010:do_syscall_64+0x5f/0x1b0 arch/x86/entry/common.c:289
+Code: 48 c7 c7 28 d4 0a 89 e8 bf 5d b0 00 48 83 3d af 5b 0a 08 00 0f 84 58 01 00 00 fb 66 0f 1f 44 00 00 65 48 8b 1c 25 c0 1d 02 00 <48> 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+RSP: 0018:ffffc90001617f28 EFLAGS: 00010282
+RAX: 1ffffffff1215a85 RBX: ffff888095530380 RCX: ffff888095530380
+RDX: dffffc0000000000 RSI: 0000000000000000 RDI: ffff888095530bc4
+RBP: 0000000000000000 R08: ffffffff817a2210 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000023
+R13: dffffc0000000000 R14: ffffc90001617f58 R15: 0000000000000000
+FS:  0000000001333880(0000) GS:ffff8880ae900000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007f87bf9aae78 CR3: 00000000a6a3f000 CR4: 00000000001406e0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x4454e1
+Code: 75 14 b8 23 00 00 00 0f 05 48 3d 01 f0 ff ff 0f 83 64 1f fc ff c3 48 83 ec 08 e8 9a 42 00 00 48 89 04 24 b8 23 00 00 00 0f 05 <48> 8b 3c 24 48 89 c2 e8 e3 42 00 00 48 89 d0 48 83 c4 08 48 3d 01
+RSP: 002b:00007ffd72d164b0 EFLAGS: 00000293 ORIG_RAX: 0000000000000023
+RAX: ffffffffffffffda RBX: 000000000000000c RCX: 00000000004454e1
+RDX: 0000000000000000 RSI: 0000000000000000 RDI: 00007ffd72d164c0
+RBP: 00000000006dbc20 R08: 0000000000000000 R09: 0000000000000000
+R10: 00007ffd72d164e0 R11: 0000000000000293 R12: 0000000000000000
+R13: 00000000006dbc2c R14: 000000000000000a R15: 0000000000000000
+Modules linked in:
+---[ end trace 3da67f82bf6bae14 ]---
+RIP: 0010:__read_once_size include/linux/compiler.h:199 [inline]
+RIP: 0010:do_syscall_64+0x5f/0x1b0 arch/x86/entry/common.c:289
+Code: 48 c7 c7 28 d4 0a 89 e8 bf 5d b0 00 48 83 3d af 5b 0a 08 00 0f 84 58 01 00 00 fb 66 0f 1f 44 00 00 65 48 8b 1c 25 c0 1d 02 00 <48> 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+RSP: 0018:ffffc90001617f28 EFLAGS: 00010282
+RAX: 1ffffffff1215a85 RBX: ffff888095530380 RCX: ffff888095530380
+RDX: dffffc0000000000 RSI: 0000000000000000 RDI: ffff888095530bc4
+RBP: 0000000000000000 R08: ffffffff817a2210 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000023
+R13: dffffc0000000000 R14: ffffc90001617f58 R15: 0000000000000000
+FS:  0000000001333880(0000) GS:ffff8880ae900000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007f87bf9aae78 CR3: 00000000a6a3f000 CR4: 00000000001406e0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+
 
 ---
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
