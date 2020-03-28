@@ -8,61 +8,61 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 266BCC2D0E8
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 08:52:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31121C43331
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 08:52:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EC9A4206F2
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 08:52:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 076A020716
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 08:52:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AEmiAiE+"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vMP8/BQA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727167AbgC1Iwy (ORCPT
+        id S1727193AbgC1Iw4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 28 Mar 2020 04:52:54 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:55610 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726466AbgC1Iww (ORCPT
+        Sat, 28 Mar 2020 04:52:56 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:38061 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726316AbgC1Iwy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 28 Mar 2020 04:52:52 -0400
-Received: by mail-wm1-f66.google.com with SMTP id z5so14086918wml.5
-        for <linux-kernel@vger.kernel.org>; Sat, 28 Mar 2020 01:52:51 -0700 (PDT)
+        Sat, 28 Mar 2020 04:52:54 -0400
+Received: by mail-wm1-f67.google.com with SMTP id f6so8670384wmj.3
+        for <linux-kernel@vger.kernel.org>; Sat, 28 Mar 2020 01:52:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=nnCKRfRYRVtQ8LCYwwqPwbfqWqGkXGfrBnpMFb83p/0=;
-        b=AEmiAiE+gXoOFUd/+f6z1lJgmklaBWp7mSYZAcf1oHaH6nIpLr5uPH7Dt/K2nnofWP
-         NQrD1gBuhHQ3WgJOThcjfwEF2kxSprkzKybcUgayXPlkQDON9XZxPGuUMvxonWLGHSEl
-         uMQKocKbTVKATxN4vQiISNPnGc6o69lB2x/Mgqk4z05RdtTfI2LPZG6o7jENB7o0J0Nz
-         gtlCHywyRdjHAHkj8Z7h2wHFPlK9iBNRRuu383YEYkoAiVSGObtcbsQGQQVcN7nou+SC
-         Djl8wcoIxgGz6sYMDdaaDeGZsCdABLjIIte4UMbOewFh92xn8mrBuiyB7EB5/Zc6hURB
-         yAvQ==
+        bh=QFx2SvxjuM8tE54W6RW3E84IYMCe6MfkwCtMSoI/4p4=;
+        b=vMP8/BQAFLQ8VvClMhcoO3IYuDH/LvWr7JZU/piKMWD5TW1fLKoy8q2DYAgHqu85fC
+         IhowxOxuR+SHHJcmg71uyYaQ8gndSfOkVRF9xQa/w0Tkmvs3fU+69GGHz2VXsj/6mqz6
+         bUh6JyJaqN0uqT1j+a0inItKz8yYPoK8Y3Ngxc4eefTgJeyMvfpMpnDDo6b0ajvLNzxU
+         GrMkzQNFJ99DU5WSPrjEoC9W1Sqs/zp82ZvR4vgGgCewSc6RtE7Z8hEcQ7+KV4NL2TYv
+         Kz7sxcbwKqFnIM2wAC44/cqHlKybbJ5JR5nT+xyxNl3SCoVNNCLzxztX3GJYHHFt8ElO
+         +iRw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=nnCKRfRYRVtQ8LCYwwqPwbfqWqGkXGfrBnpMFb83p/0=;
-        b=QS4BrnTCOk+GqgwdYiPJ+YgTNRMyIOLMwlAvGuXv7kl4S2bhOCYCq4Hrp1KK9X2UHu
-         m7greuzoNDQsmwBKLfRB8o5hexpgSH6bejzSr4zMavg48bNVndi5VA1L2tTZN0Fhqz47
-         LjM+eNPYVWMbPhM2Nzgi5napP+kSLeXW7Q+AxVe9495D22iG5kk/Lb4D5OOPW5vFkssc
-         VjjkJWhkGl1a3T/fmSsfJDMbr8pkUpF7lUAPg9tStEcPj6ZpXX8wjgFlUGLv8Qp6/y3L
-         ON4sPgH8PHCHERDV1flF3UQb5h/1PPai7vam04pepwXFsaVhDOCEa3gHlF3sRH9S5qqb
-         OZsA==
-X-Gm-Message-State: ANhLgQ1+fbvlh3DTKp+29yVQdXVFK+LLHjDFXsIXE9FkqiGeIJunp/K6
-        ZdfeYkx3UG/rWh+uK0YH8xotyGYj
-X-Google-Smtp-Source: ADFU+vsbB6gteDp8LJES5mWWiU5xeHdLsz4mEPPsFTp6xlGpsPdnRRrVa9fJ81N2I4dBFcP0ruXFSA==
-X-Received: by 2002:a05:600c:da:: with SMTP id u26mr2986988wmm.117.1585385570019;
-        Sat, 28 Mar 2020 01:52:50 -0700 (PDT)
+        bh=QFx2SvxjuM8tE54W6RW3E84IYMCe6MfkwCtMSoI/4p4=;
+        b=Z30yVqXmpfqd4tGVo3YHFA51yTT+T12qUanBtH18E6L9JNSCqA2U0gc9ifdsSYQNSZ
+         GvIIihUcsTwV9kVlXqMSmR4w2Km6AZBT9CkZqgffGoFu0Aep72ybNabJOCki0S7eNSF3
+         sFgw0BkOQ8Qax9g4mHV3tq5VtJgNuxjXJD1W6f/yaiP/Gru3xZ9hMbo2UioZA99q6I/9
+         gl4l3ClGXdui8eXrDU6gVOWCR4I12Ns46ZQiW5bocT4BgKzXNkUwDz1WTa1YIht52FcT
+         Gnj6uoyIBmMrD0TCfrrBk7YjiMDdHHzHkHBhB1IQ30hcwkdcNIcRlIt+Z1wq+CPlsrT4
+         V+7w==
+X-Gm-Message-State: ANhLgQ11o2mha8ZyKIcsfDiXvox3Rb9Y1/GT0A069tm+nlRtHEAjphjO
+        sggpcvS/ZnrWDyCVKUaNAiP1G/r6
+X-Google-Smtp-Source: ADFU+vvwncRynA3CsJPrEjFwSOleCojRfO7y8bwh3yU0zeJH737bON/bnM0d5Sj0K5/qy5A/D0rKBQ==
+X-Received: by 2002:a7b:c18e:: with SMTP id y14mr63081wmi.99.1585385571801;
+        Sat, 28 Mar 2020 01:52:51 -0700 (PDT)
 Received: from ogabbay-VM.habana-labs.com ([31.154.190.6])
-        by smtp.gmail.com with ESMTPSA id k15sm11908683wrm.55.2020.03.28.01.52.48
+        by smtp.gmail.com with ESMTPSA id k15sm11908683wrm.55.2020.03.28.01.52.50
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 28 Mar 2020 01:52:49 -0700 (PDT)
+        Sat, 28 Mar 2020 01:52:50 -0700 (PDT)
 From:   Oded Gabbay <oded.gabbay@gmail.com>
 To:     linux-kernel@vger.kernel.org, oshpigelman@habana.ai,
         ttayar@habana.ai
 Cc:     gregkh@linuxfoundation.org
-Subject: [PATCH 5/6] habanalabs: print warning when reset is requested
-Date:   Sat, 28 Mar 2020 11:52:37 +0300
-Message-Id: <20200328085238.3428-5-oded.gabbay@gmail.com>
+Subject: [PATCH 6/6] habanalabs: increase timeout during reset
+Date:   Sat, 28 Mar 2020 11:52:38 +0300
+Message-Id: <20200328085238.3428-6-oded.gabbay@gmail.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200328085238.3428-1-oded.gabbay@gmail.com>
 References: <20200328085238.3428-1-oded.gabbay@gmail.com>
@@ -71,37 +71,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When the system administrator asks the driver to soft or hard reset the
-device through sysfs, the driver should display a warning in the kernel log
-to explain why it suddenly resets the device.
+When doing training, the DL framework (e.g. tensorflow) performs hundreds
+of thousands of memory allocations and mappings. In case the driver needs
+to perform hard-reset during training, the driver kills the application and
+unmaps all those memory allocations. Unfortunately, because of that large
+amount of mappings, the driver isn't able to do that in the current timeout
+(5 seconds). Therefore, increase the timeout significantly to 30 seconds
+to avoid situation where the driver resets the device with active mappings,
+which sometime can cause a kernel bug.
+
+BTW, it doesn't mean we will spend all the 30 seconds because the reset
+thread checks every one second if the unmap operation is done.
 
 Signed-off-by: Oded Gabbay <oded.gabbay@gmail.com>
 ---
- drivers/misc/habanalabs/sysfs.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/misc/habanalabs/habanalabs.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/misc/habanalabs/sysfs.c b/drivers/misc/habanalabs/sysfs.c
-index 4cd622b017b9..e478a191e5f5 100644
---- a/drivers/misc/habanalabs/sysfs.c
-+++ b/drivers/misc/habanalabs/sysfs.c
-@@ -183,6 +183,8 @@ static ssize_t soft_reset_store(struct device *dev,
- 		goto out;
- 	}
+diff --git a/drivers/misc/habanalabs/habanalabs.h b/drivers/misc/habanalabs/habanalabs.h
+index 199f7835ae46..6c54d0ba0a1d 100644
+--- a/drivers/misc/habanalabs/habanalabs.h
++++ b/drivers/misc/habanalabs/habanalabs.h
+@@ -23,7 +23,7 @@
  
-+	dev_warn(hdev->dev, "Soft-Reset requested through sysfs\n");
-+
- 	hl_device_reset(hdev, false, false);
+ #define HL_MMAP_CB_MASK			(0x8000000000000000ull >> PAGE_SHIFT)
  
- out:
-@@ -204,6 +206,8 @@ static ssize_t hard_reset_store(struct device *dev,
- 		goto out;
- 	}
+-#define HL_PENDING_RESET_PER_SEC	5
++#define HL_PENDING_RESET_PER_SEC	30
  
-+	dev_warn(hdev->dev, "Hard-Reset requested through sysfs\n");
-+
- 	hl_device_reset(hdev, true, false);
+ #define HL_DEVICE_TIMEOUT_USEC		1000000 /* 1 s */
  
- out:
 -- 
 2.17.1
 
