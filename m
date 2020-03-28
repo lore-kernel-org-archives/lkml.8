@@ -2,101 +2,111 @@ Return-Path: <SRS0=NZ+o=5N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6C51C43331
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 22:16:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04FB5C2D0ED
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 22:17:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA11D20714
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 22:16:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585433785;
-	bh=C3N216/JfJaoLoGd2sDefW9PZOHe9O9wFOHK7f5ETwQ=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=pXDnwplNhdB6VuVIkSdyKRxHzEZhpi/8EWOYr4gNHy9otb/UqAjDQx/fvX4LbRuJg
-	 G6b1TGdKpkJXsnKGlxSrjb136CIas3IEoy/jzKyQomd9/tI3rWJ0Fxwf2w8IX/9K9g
-	 LLLzAKYmZ/OGFsSXggiBfOb0uMnit18Ahsraji18=
+	by mail.kernel.org (Postfix) with ESMTP id CDF032074A
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 22:17:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="vQejaGRu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727820AbgC1WQU (ORCPT
+        id S1727830AbgC1WRM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 28 Mar 2020 18:16:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35188 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726604AbgC1WQU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 28 Mar 2020 18:16:20 -0400
-Received: from localhost (mobile-166-175-186-165.mycingular.net [166.175.186.165])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A04F620714;
-        Sat, 28 Mar 2020 22:16:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585433780;
-        bh=C3N216/JfJaoLoGd2sDefW9PZOHe9O9wFOHK7f5ETwQ=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=cFpQ4wFE82XHF8Cdp5hTa5afofQ5E8jbYrm7PSocGaR6OOBnDML1j7t75CjPm72XO
-         UhlrdRNJNFBwjvwbqqlQFVhBH93nHfcFVs4sG2IFWPNWby8coDcLU5u0iUZea9AXhp
-         ktqZiDvjwWokXOQX2qULooeyxYeVIWBR3lrk9TFA=
-Date:   Sat, 28 Mar 2020 17:16:18 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     "Kuppuswamy, Sathyanarayanan" 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        ashok.raj@intel.com
-Subject: Re: [PATCH v18 05/11] PCI/ERR: Remove service dependency in
- pcie_do_recovery()
-Message-ID: <20200328221618.GA135902@google.com>
+        Sat, 28 Mar 2020 18:17:12 -0400
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:40712 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727070AbgC1WRL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 28 Mar 2020 18:17:11 -0400
+Received: by mail-qk1-f196.google.com with SMTP id l25so15053319qki.7
+        for <linux-kernel@vger.kernel.org>; Sat, 28 Mar 2020 15:17:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=joelfernandes.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=xweZZ/PuKU5Urwn8I1bvMApWVXFcICm6DizzqOoCjjA=;
+        b=vQejaGRuzZaYEdUfpeVw5viLB+lXkY1ZmIG1vaVtWbvquj0mZ+fuxuLtgAfauu6p5O
+         bCnpf2KXc20JxOIUfcd9GP0lywaG3C69TCW3MKyYmix0FlL6nA0Aos3oU6Uxfk/1b92O
+         rHsJirApnyffucCa5R5FDSFtI7ahBD2GhPR2U=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=xweZZ/PuKU5Urwn8I1bvMApWVXFcICm6DizzqOoCjjA=;
+        b=BH1Nm8REHje8PCTiJoMHl+67tJ2O/MWa3tLzbXfXKK0UZbjJnoUpbVdXu0I77MPf4I
+         zgyrtIHqFaX29asKlulM/EZ3dO9MzfCsUBcJ1g0F4kfZBXrAFB1R5h2Wa/vZSVIOK65m
+         5hw1PbeJPd05JfLnq1H5YEkWcqBJVdfAWExu58xlj2eL6pglsitDpoT/uCgmR5gjsykq
+         uoHWitzW+o/B+dnE9CkpYqCRj5HKR0dHJH042v+5rPyV3q1VtG3GLhNYO3RlgHKPgaCa
+         MVq/yVIlrqCYHyxUh68FFSeittrskRhat3sWsz17HqghWMgJSF2mjOlx6usxjp/KFVq7
+         ncXg==
+X-Gm-Message-State: ANhLgQ1qwHpVBeSZ9lBt+W6AA3dGMcbqhisq9kwAed0yjdRTQOcexymU
+        JTYakTGmfVKhUqi13O0zISgB+YDh/DU=
+X-Google-Smtp-Source: ADFU+vtchfIp7MmRr0BM5PqLR1+Vw2vhF6c1g65ZAGsKGxM2eB+Hd0x3Kd62RhbRwuOKLHSL8x65+Q==
+X-Received: by 2002:a05:620a:12bc:: with SMTP id x28mr5493168qki.175.1585433830370;
+        Sat, 28 Mar 2020 15:17:10 -0700 (PDT)
+Received: from joelaf.cam.corp.google.com ([2620:15c:6:12:9c46:e0da:efbf:69cc])
+        by smtp.gmail.com with ESMTPSA id k66sm6742950qke.10.2020.03.28.15.17.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 28 Mar 2020 15:17:09 -0700 (PDT)
+From:   "Joel Fernandes (Google)" <joel@joelfernandes.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     "Joel Fernandes (Google)" <joel@joelfernandes.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Frederic Weisbecker <fweisbec@gmail.com>, frextrite@gmail.com,
+        Ingo Molnar <mingo@redhat.com>,
+        Josh Triplett <josh@joshtriplett.org>, kernel-team@android.com,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        madhuparnabhowmik04@gmail.com,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        "Paul E. McKenney" <paulmck@kernel.org>, peterz@infradead.org,
+        Petr Mladek <pmladek@suse.com>, rcu@vger.kernel.org,
+        rostedt@goodmis.org, tglx@linutronix.de, vpillai@digitalocean.com
+Subject: [PATCH v2 0/4] RCU dyntick nesting counter cleanups
+Date:   Sat, 28 Mar 2020 18:16:59 -0400
+Message-Id: <20200328221703.48171-1-joel@joelfernandes.org>
+X-Mailer: git-send-email 2.26.0.rc2.310.g2932bb562d-goog
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <110653ad-fd8f-8047-62de-dd9ce2cb9d5f@linux.intel.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Mar 28, 2020 at 02:55:50PM -0700, Kuppuswamy, Sathyanarayanan wrote:
-> On 3/28/20 2:32 PM, Bjorn Helgaas wrote:
-> > On Sat, Mar 28, 2020 at 02:12:48PM -0700, Kuppuswamy, Sathyanarayanan wrote:
-> > > On 3/23/20 5:26 PM, sathyanarayanan.kuppuswamy@linux.intel.com wrote:
-> > > > From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-> > > > 
-> > > 
-> > > > +void pcie_do_recovery(struct pci_dev *dev,
-> > > > +		      enum pci_channel_state state,
-> > > > +		      pci_ers_result_t (*reset_link)(struct pci_dev *pdev))
-> > > >    {
-> > > >    	pci_ers_result_t status = PCI_ERS_RESULT_CAN_RECOVER;
-> > > >    	struct pci_bus *bus;
-> > > > @@ -206,9 +165,12 @@ void pcie_do_recovery(struct pci_dev *dev, enum pci_channel_state state,
-> > > >    	pci_dbg(dev, "broadcast error_detected message\n");
-> > > >    	if (state == pci_channel_io_frozen) {
-> > > >    		pci_walk_bus(bus, report_frozen_detected, &status);
-> > > > -		status = reset_link(dev, service);
-> > > > -		if 		if (reset_link)
-> > > 			status = reset_link(dev);(status == PCI_ERS_RESULT_DISCONNECT
-> > > > +		status = reset_link(dev);
-> > > Above line needs to be replaced as below. Since there is a
-> > > possibility reset_link can NULL (eventhough currently its
-> > > not true).
-> > > 		if (reset_link)
-> > > 			status = reset_link(dev);
-> > > Shall I submit another version to add above fix on top of
-> > > our pci/edr branch ?
-> > 
-> > No, I can squash that in if needed.
-> > 
-> > But I don't actually think we *do* need it.  All the callers supply a
-> > valid reset_link function pointer, and if somebody changes or adds a
-> > new one that doesn't, I'd rather take the null pointer exception and
-> > find out about it than silently ignore it.
->
-> But the documentation says "If reset_link is not NULL, recovery function
-> will use it to reset the link." It considers NULL as a possible case.
-> So I think its better to allow that case with a pci_warn() message.
+These patches clean up the usage of dynticks nesting counters simplifying the
+code, while preserving the usecases.
 
-I think we should rework the documentation to remove that.
-pcie_do_recovery() is internal to the PCI core and not directly
-relevant to drivers.
+It is a much needed simplification, makes the code less confusing, and prevents
+future bugs such as those that arise from forgetting that the
+dynticks_nmi_nesting counter is not a simple counter and can be "crowbarred" in
+common situations.
+
+rcutorture testing with all TREE RCU configurations succeed with
+CONFIG_RCU_EQS_DEBUG=y and CONFIG_PROVE_LOCKING=y.
+
+v1->v2:
+- Rebase on v5.6-rc6
+
+Joel Fernandes (Google) (4):
+Revert b8c17e6664c4 ("rcu: Maintain special bits at bottom of
+->dynticks counter")
+rcu/tree: Add better tracing for dyntick-idle
+rcu/tree: Clean up dynticks counter usage
+rcu/tree: Remove dynticks_nmi_nesting counter
+
+.../Data-Structures/Data-Structures.rst       |  31 +--
+Documentation/RCU/stallwarn.txt               |   6 +-
+include/linux/rcutiny.h                       |   3 -
+include/trace/events/rcu.h                    |  29 +--
+kernel/rcu/rcu.h                              |   4 -
+kernel/rcu/tree.c                             | 188 +++++++-----------
+kernel/rcu/tree.h                             |   4 +-
+kernel/rcu/tree_stall.h                       |   4 +-
+8 files changed, 105 insertions(+), 164 deletions(-)
+
+--
+2.26.0.rc2.310.g2932bb562d-goog
+
