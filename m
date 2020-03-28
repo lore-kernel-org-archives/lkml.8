@@ -2,79 +2,93 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F066DC2D0F2
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 16:09:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83AEDC43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 16:10:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C4CC9206CC
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 16:09:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5FD1220784
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 16:10:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731265AbgCaQJ0 (ORCPT
+        id S1731226AbgCaQKP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 12:09:26 -0400
-Received: from mga01.intel.com ([192.55.52.88]:23356 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730562AbgCaQJT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 12:09:19 -0400
-IronPort-SDR: Oqt7jqI4OYv0nI0hb0piT23/oUyZqITWnvwSMoblVP7/fV8y7cZdwReYvL4UMrUc/VxhlPgfb+
- Z+VQE8VE6sRQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Mar 2020 09:08:58 -0700
-IronPort-SDR: QSuPW6bkwG/dYUfgWTD/KCA25/nrY67YBweQXGuqLF58LNrzZlKCG2vttELzB6YwrT4VgAQRr9
- PGXXQjI3aaiQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,328,1580803200"; 
-   d="scan'208";a="395549170"
-Received: from marshy.an.intel.com ([10.122.105.159])
-  by orsmga004.jf.intel.com with ESMTP; 31 Mar 2020 09:08:57 -0700
-From:   richard.gong@linux.intel.com
-To:     mdf@kernel.org, gregkh@linuxfoundation.org
-Cc:     linux-kernel@vger.kernel.org, dinguyen@kernel.org,
-        richard.gong@linux.intel.com, Richard Gong <richard.gong@intel.com>
-Subject: [PATCHv1] firmware: fpga: replace the error codes with the standard ones 
-Date:   Tue, 31 Mar 2020 11:25:21 -0500
-Message-Id: <1585671922-9754-1-git-send-email-richard.gong@linux.intel.com>
-X-Mailer: git-send-email 2.7.4
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+        Tue, 31 Mar 2020 12:10:15 -0400
+Received: from labrats.qualcomm.com ([199.106.110.90]:36630 "EHLO
+        labrats.qualcomm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730562AbgCaQKO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Mar 2020 12:10:14 -0400
+IronPort-SDR: 4cDDdotfZSrOFGqJiolPY42RKaKNCZFWr+ijJBDeoMtBy5Dvxkom/Sj9Tm1Vy0v8fUM5QpbtW2
+ fh+lXzG4U4cBb2L6v3R2JsTKQ6HElj/+RsxEcVODq4Vw1f/o6PHjLU5FHMiZP57Z0OjtAQW740
+ fzO+bAQAnm7VCYkyJM4kYtyJXCuuSO2dNCN+B9vXz5XL8YMlGz5auQ2TyUapusc0RrGtEf4bNS
+ 76/z7o9dMoHFwGyTf79UQKW+wat6IGc2zB/wwX6eA4x37t85uwzIhcAAfyISfdJcwQTDguBjqK
+ NJo=
+X-IronPort-AV: E=Sophos;i="5.72,314,1580803200"; 
+   d="scan'208";a="28621129"
+Received: from unknown (HELO ironmsg03-sd.qualcomm.com) ([10.53.140.143])
+  by labrats.qualcomm.com with ESMTP; 27 Mar 2020 19:27:37 -0700
+Received: from pacamara-linux.qualcomm.com ([192.168.140.135])
+  by ironmsg03-sd.qualcomm.com with ESMTP; 27 Mar 2020 19:27:36 -0700
+Received: by pacamara-linux.qualcomm.com (Postfix, from userid 359480)
+        id AF31C3ABE; Fri, 27 Mar 2020 19:27:36 -0700 (PDT)
+From:   Can Guo <cang@codeaurora.org>
+To:     asutoshd@codeaurora.org, nguyenb@codeaurora.org,
+        hongwus@codeaurora.org, rnayak@codeaurora.org,
+        linux-scsi@vger.kernel.org, kernel-team@android.com,
+        saravanak@google.com, salyzyn@google.com, cang@codeaurora.org
+Cc:     Alim Akhtar <alim.akhtar@samsung.com>,
+        Avri Altman <avri.altman@wdc.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Stanley Chu <stanley.chu@mediatek.com>,
+        Bean Huo <beanhuo@micron.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        Venkat Gopalakrishnan <venkatg@codeaurora.org>,
+        Tomas Winkler <tomas.winkler@intel.com>,
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH v1 1/1] scsi: ufs: full reinit upon resume if link was off
+Date:   Fri, 27 Mar 2020 19:27:31 -0700
+Message-Id: <1585362454-5413-1-git-send-email-cang@codeaurora.org>
+X-Mailer: git-send-email 1.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Richard Gong <richard.gong@intel.com>
+From: Asutosh Das <asutoshd@codeaurora.org>
 
-The Intel service layer driver has defined error codes for the
-specific services, which started from FPGA configuration then RSU
-(Remote Status Update).
+During suspend, if the link is put to off, it would require
+a full initialization during resume. This patch resets and
+restores both the hba and the card during initialization.
 
-Intel service layer driver should define the standard error codes
-rather than keep adding more error codes for the new services.
+Signed-off-by: Asutosh Das <asutoshd@codeaurora.org>
+Signed-off-by: Can Guo <cang@codeaurora.org>
+---
+ drivers/scsi/ufs/ufshcd.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-The standard error codes will be used by all the clients of Intel service
-layer driver.
-
-Replace FPGA and RSU specific error codes with Intel service layer’s
-Common error codes.
-
-All changes need to be in one patch, otherwise it will break bisection.
-
-Richard Gong (1):
-  firmware: fpga: replace the error codes with the standard ones
-
- drivers/firmware/stratix10-rsu.c                   | 10 +--
- drivers/firmware/stratix10-svc.c                   | 62 ++++++-------------
- drivers/fpga/stratix10-soc.c                       | 25 +++-----
- include/linux/firmware/intel/stratix10-smc.h       | 49 +++++++--------
- .../linux/firmware/intel/stratix10-svc-client.h    | 71 +++++++++-------------
- 5 files changed, 84 insertions(+), 133 deletions(-)
-
+diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
+index f19a11e..21e41e5 100644
+--- a/drivers/scsi/ufs/ufshcd.c
++++ b/drivers/scsi/ufs/ufshcd.c
+@@ -8007,9 +8007,13 @@ static int ufshcd_resume(struct ufs_hba *hba, enum ufs_pm_op pm_op)
+ 		else
+ 			goto vendor_suspend;
+ 	} else if (ufshcd_is_link_off(hba)) {
+-		ret = ufshcd_host_reset_and_restore(hba);
+ 		/*
+-		 * ufshcd_host_reset_and_restore() should have already
++		 * A full initialization of the host and the device is required
++		 * since the link was put to off during suspend.
++		 */
++		ret = ufshcd_reset_and_restore(hba);
++		/*
++		 * ufshcd_reset_and_restore() should have already
+ 		 * set the link state as active
+ 		 */
+ 		if (ret || !ufshcd_is_link_active(hba))
 -- 
-2.7.4
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, a Linux Foundation Collaborative Project.
 
