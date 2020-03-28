@@ -6,93 +6,107 @@ X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E099C43331
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 23:41:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D962DC2D0E8
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 23:43:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 55C5D2074F
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 23:41:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD59520748
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 23:43:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585438862;
-	bh=079x/adYayaXUe+4YHk2yhLPqwGm/hssdsj88iHVaPs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=KbLLvOsH5dE5+Xm6mwm69RfLfdXo4oK2Ujw/pgYO7RJdrUmAoQT2wVZbU27HQA1Lr
-	 sEnXIja4ZiNPaDBEX2AGmHO8IonMi3BGkHptaL//UVjpLFUtAKuyZqSO7DWZqEsM7x
-	 R9HRsdGGtv/e1VQGD9500cJSimjl5RWaFs9ijo7o=
+	s=default; t=1585438989;
+	bh=8F71ls7LTfaSvQwEnfaxYVz5lj1N1vsQKt2LOAk29EQ=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=QE/XND6n9jbRutRg8ORR1oA/dNcs2eUgv1AluaGMFUTFrpByf8RTq8Cp8gDJwW8fi
+	 3tvxUnYTUYhMJT4Gw0UCumpbiAWR5jAO/qdn4DYkUZo8uIB0/5jOjdwV9brzMoQjzZ
+	 +5iQ/EFqtt7jDIDUlSyH6KF2sxQZjr84vR5VEHM8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727697AbgC1XlB (ORCPT
+        id S1727701AbgC1XnI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 28 Mar 2020 19:41:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40778 "EHLO mail.kernel.org"
+        Sat, 28 Mar 2020 19:43:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41314 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726604AbgC1XlB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 28 Mar 2020 19:41:01 -0400
-Received: from pali.im (pali.im [31.31.79.79])
+        id S1726604AbgC1XnH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 28 Mar 2020 19:43:07 -0400
+Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 677EA20748;
-        Sat, 28 Mar 2020 23:41:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1555920716;
+        Sat, 28 Mar 2020 23:43:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585438860;
-        bh=079x/adYayaXUe+4YHk2yhLPqwGm/hssdsj88iHVaPs=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=s/NzA/oaAuwwudo9NSRfHSLGvC8fLeDOxdW5/lREDdTZa1A3l2DE2Qx/E3RSNMQVe
-         o5rm3fxRLtiYxJV0FohHU3WA4NhLUG8Z+wEu2Ob5+nfd6OnSjjhwHvUux5hAebWRs0
-         LI54CzfOBS+uv/xXMhe3liwOhxis0oQ/SqPTLPnQ=
-Received: by pali.im (Postfix)
-        id 67DD07B5; Sun, 29 Mar 2020 00:40:57 +0100 (CET)
-Date:   Sun, 29 Mar 2020 00:40:57 +0100
-From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
-To:     Al Viro <viro@zeniv.linux.org.uk>
-Cc:     Namjae Jeon <namjae.jeon@samsung.com>,
-        Sungjong Seo <sj1557.seo@samsung.com>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/4] exfat: Simplify exfat_utf8_d_hash() for code points
- above U+FFFF
-Message-ID: <20200328234057.dh23w255eaag2glg@pali>
-References: <20200317222555.29974-1-pali@kernel.org>
- <20200317222555.29974-2-pali@kernel.org>
- <20200318000925.GB23230@ZenIV.linux.org.uk>
- <20200318093251.bgxd3l5om4zlm3br@pali>
+        s=default; t=1585438987;
+        bh=8F71ls7LTfaSvQwEnfaxYVz5lj1N1vsQKt2LOAk29EQ=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=zWqeW4Byiv022nOtsnEbub+KQiNfiX4TOzaJ6hxmErzytUkabLE/2P9exka8iqCHN
+         SPWVGFClHCkP6cjo2UcQfAb4cdsKf5ARgo/kGQ85eNQiQfjuLkDAcwW8laqylZYJT/
+         RtS8GRPH5BHMybeHXQD3p4LJAjcsBwZ04ud9Bpac=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id 979A83522755; Sat, 28 Mar 2020 16:43:06 -0700 (PDT)
+Date:   Sat, 28 Mar 2020 16:43:06 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     "Joel Fernandes (Google)" <joel@joelfernandes.org>
+Cc:     linux-kernel@vger.kernel.org, Andy Lutomirski <luto@kernel.org>,
+        Frederic Weisbecker <fweisbec@gmail.com>, frextrite@gmail.com,
+        Ingo Molnar <mingo@redhat.com>,
+        Josh Triplett <josh@joshtriplett.org>, kernel-team@android.com,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        madhuparnabhowmik04@gmail.com,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        peterz@infradead.org, Petr Mladek <pmladek@suse.com>,
+        rcu@vger.kernel.org, rostedt@goodmis.org, tglx@linutronix.de,
+        vpillai@digitalocean.com
+Subject: Re: [PATCH v2 0/4] RCU dyntick nesting counter cleanups
+Message-ID: <20200328234306.GC19865@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20200328221703.48171-1-joel@joelfernandes.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200318093251.bgxd3l5om4zlm3br@pali>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20200328221703.48171-1-joel@joelfernandes.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wednesday 18 March 2020 10:32:51 Pali Rohár wrote:
-> On Wednesday 18 March 2020 00:09:25 Al Viro wrote:
-> > On Tue, Mar 17, 2020 at 11:25:52PM +0100, Pali Rohár wrote:
-> > > Function partial_name_hash() takes long type value into which can be stored
-> > > one Unicode code point. Therefore conversion from UTF-32 to UTF-16 is not
-> > > needed.
-> > 
-> > Hmm...  You might want to update the comment in stringhash.h...
+On Sat, Mar 28, 2020 at 06:16:59PM -0400, Joel Fernandes (Google) wrote:
+> These patches clean up the usage of dynticks nesting counters simplifying the
+> code, while preserving the usecases.
 > 
-> Well, initially I have not looked at hashing functions deeply. Used
-> hashing function in stringhash.h is defined as:
+> It is a much needed simplification, makes the code less confusing, and prevents
+> future bugs such as those that arise from forgetting that the
+> dynticks_nmi_nesting counter is not a simple counter and can be "crowbarred" in
+> common situations.
 > 
-> static inline unsigned long
-> partial_name_hash(unsigned long c, unsigned long prevhash)
-> {
-> 	return (prevhash + (c << 4) + (c >> 4)) * 11;
-> }
-> 
-> I guess it was designed for 8bit types, not for long (64bit types) and
-> I'm not sure how effective it is even for 16bit types for which it is
-> already used.
-> 
-> So question is, what should we do for either 21bit number (one Unicode
-> code point = equivalent of UTF-32) or for sequence of 16bit numbers
-> (UTF-16)?
-> 
-> Any opinion?
+> rcutorture testing with all TREE RCU configurations succeed with
+> CONFIG_RCU_EQS_DEBUG=y and CONFIG_PROVE_LOCKING=y.
 
-So what to do with that hashing function?
+Heh!  We now have a three-way collision between Thomas's and Peter's
+series, the RCU Tasks Trace series, and this series.  ;-)
 
-Anyway, "[PATCH 4/4] exfat: Fix discard support" should be reviewed as
-currently discard support in exfat is broken.
+Remind me once v5.7-rc1 comes out and let's see what fits where.
+
+							Thanx, Paul
+
+> v1->v2:
+> - Rebase on v5.6-rc6
+> 
+> Joel Fernandes (Google) (4):
+> Revert b8c17e6664c4 ("rcu: Maintain special bits at bottom of
+> ->dynticks counter")
+> rcu/tree: Add better tracing for dyntick-idle
+> rcu/tree: Clean up dynticks counter usage
+> rcu/tree: Remove dynticks_nmi_nesting counter
+> 
+> .../Data-Structures/Data-Structures.rst       |  31 +--
+> Documentation/RCU/stallwarn.txt               |   6 +-
+> include/linux/rcutiny.h                       |   3 -
+> include/trace/events/rcu.h                    |  29 +--
+> kernel/rcu/rcu.h                              |   4 -
+> kernel/rcu/tree.c                             | 188 +++++++-----------
+> kernel/rcu/tree.h                             |   4 +-
+> kernel/rcu/tree_stall.h                       |   4 +-
+> 8 files changed, 105 insertions(+), 164 deletions(-)
+> 
+> --
+> 2.26.0.rc2.310.g2932bb562d-goog
+> 
