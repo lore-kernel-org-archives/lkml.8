@@ -2,134 +2,134 @@ Return-Path: <SRS0=NZ+o=5N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C2AFC2D0E5
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 15:19:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79B4CC43331
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 15:25:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 042FB2073B
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 15:19:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585408775;
-	bh=3FpOqlp62zWsadRbpg8ISDnWML7ZQ6fDKR5Cz7RJ+g8=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=d9YucXDVVIYMFvFXlP+52yxRYnYqNSih/HrbUD160N5jDe44ecQVeaz5rhjABwgco
-	 DwuyOosYOwGsSwtRbNfjHORgBbWL1/X+K5glWqu2+DI8KJHWyWL9bxyE83nD5Iq0fz
-	 2leDiLf4eAIq9eBMR9RCX1nrCCoVI2R8MWrsoZQY=
+	by mail.kernel.org (Postfix) with ESMTP id 368AA20716
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 15:25:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="ufXO40vN";
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="CKm3/sKW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727067AbgC1PTe (ORCPT
+        id S1726947AbgC1PZu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 28 Mar 2020 11:19:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35680 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726290AbgC1PTd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 28 Mar 2020 11:19:33 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        Sat, 28 Mar 2020 11:25:50 -0400
+Received: from bedivere.hansenpartnership.com ([66.63.167.143]:56560 "EHLO
+        bedivere.hansenpartnership.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725807AbgC1PZt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 28 Mar 2020 11:25:49 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by bedivere.hansenpartnership.com (Postfix) with ESMTP id 4D9038EE182;
+        Sat, 28 Mar 2020 08:25:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
+        s=20151216; t=1585409149;
+        bh=7ol25urUbt6cSQxZY2to1Yas4j/y3AL+k7+hznk8G0k=;
+        h=Subject:From:To:Cc:Date:From;
+        b=ufXO40vNUXvjmP6zq45Oq+xBMt3IYmqyBzxidj4D0WZiREa6hqATUYVX8hA8EVlPx
+         +89ZXfN/hTgMdFi3LqI/lxADZApgroLv4qNkq9M6O7Eq1j+caAE42vP57DCB8ezHUA
+         P0VsqMNPCoWLNiFFwHaTVFf0ByDD7aGL8l8ajiH8=
+Received: from bedivere.hansenpartnership.com ([127.0.0.1])
+        by localhost (bedivere.hansenpartnership.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id AHvwi3JfKNAC; Sat, 28 Mar 2020 08:25:48 -0700 (PDT)
+Received: from [153.66.254.194] (unknown [50.35.76.230])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 70B7B20716;
-        Sat, 28 Mar 2020 15:19:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585408772;
-        bh=3FpOqlp62zWsadRbpg8ISDnWML7ZQ6fDKR5Cz7RJ+g8=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=z1PRnsmUmGISBlei7hEHBrqg8rGQ1FABnyjr2RG6UbhySsO8mypi7rlSYlh1A95eV
-         JDDM02bi57ZWMGxQGGU9QL5da7q4a9PYSMYY65Uv9weJsugR+HPoXC4tLXbLzl5+SE
-         ahJf0wcXi2hM9GjOVUjDFhwvj/UBNxlCCw+q/6H0=
-Date:   Sat, 28 Mar 2020 15:19:28 +0000
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Mike Looijmans <mike.looijmans@topic.nl>
-Cc:     devicetree@vger.kernel.org, linux-iio@vger.kernel.org,
-        linux-kernel@vger.kernel.org, knaack.h@gmx.de, lars@metafoo.de,
-        pmeerw@pmeerw.net, robh+dt@kernel.org, mark.rutland@arm.com
-Subject: Re: [PATCH v2] dt-bindings: iio: accel: Add bmi088 accelerometer
- bindings
-Message-ID: <20200328151928.12f5517e@archlinux>
-In-Reply-To: <20200323095551.23500-1-mike.looijmans@topic.nl>
-References: <20200323095551.23500-1-mike.looijmans@topic.nl>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+        by bedivere.hansenpartnership.com (Postfix) with ESMTPSA id D14B18EE111;
+        Sat, 28 Mar 2020 08:25:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
+        s=20151216; t=1585409147;
+        bh=7ol25urUbt6cSQxZY2to1Yas4j/y3AL+k7+hznk8G0k=;
+        h=Subject:From:To:Cc:Date:From;
+        b=CKm3/sKW+PbI19924tZmS+he76JP0rtTTjXUOJx2nHH9UitI6XztPmbyscq5bXHcy
+         +vRDhpyT08zTiBQtxm9d7oIZ72pJDgLLtLv2HUiUnmfSmoxaYUtZ9+h6ubQiDzeRhP
+         TDEasqZvQzJb4rhP33mnPUA6xksuEXU0CNHGrDJo=
+Message-ID: <1585409145.15200.3.camel@HansenPartnership.com>
+Subject: [GIT PULL] SCSI fixes for 5.6-rc7
+From:   James Bottomley <James.Bottomley@HansenPartnership.com>
+To:     Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-scsi <linux-scsi@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Date:   Sat, 28 Mar 2020 08:25:45 -0700
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.26.6 
+Mime-Version: 1.0
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 23 Mar 2020 10:55:51 +0100
-Mike Looijmans <mike.looijmans@topic.nl> wrote:
+Two small fixes, one in drivers (qla2xxx) and one in the core (sd) to
+try to cope with USB enclosures that silently change reported
+parameters.
 
-> This adds the device-tree bindings for the Bosch Sensortec BMI088 IMU,
-> the accelerometer part.
-> 
-> Signed-off-by: Mike Looijmans <mike.looijmans@topic.nl>
-Hi Mike
+The patch is available here:
 
-The binding should look to be as complete as possible, independent on what
-we are actually using in the driver.
+git://git.kernel.org/pub/scm/linux/kernel/git/jejb/scsi.git scsi-fixes
 
-A quick glance at the datasheet shows me this device has 2 interrupt lines
-dedicated to the accelerometer and 2 power supplies, vddio and vdd.
+The short changelog is:
 
-Interrupt lines for flexible parts like this are fiddly to do, so take
-a look at how we do this in other drivers.  Hmm. the interrupt line to set
-a tag is 'interesting'.  I'd ignore that for now...
+Arun Easi (1):
+      scsi: qla2xxx: Fix I/Os being passed down when FC device is being deleted
 
-> ---
-> v2: convert to yaml format
-> 
->  .../bindings/iio/accel/bosch,bmi088.yaml      | 38 +++++++++++++++++++
->  1 file changed, 38 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/accel/bosch,bmi088.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/iio/accel/bosch,bmi088.yaml b/Documentation/devicetree/bindings/iio/accel/bosch,bmi088.yaml
-> new file mode 100644
-> index 000000000000..715f79c3b2a9
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iio/accel/bosch,bmi088.yaml
-> @@ -0,0 +1,38 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/iio/accel/bosch,bma400.yaml#
+Martin K. Petersen (1):
+      scsi: sd: Fix optimal I/O size for devices that change reported values
 
-Should reflect the compatible so include the accel part.
+And the diffstat:
 
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Bosch BMI088 IMU accelerometer part
-> +
-> +maintainers:
-> +  - Mike Looijmans <mike.looijmans@topic.nl>
-> +
-> +description: |
-> +  Acceleration part of the IMU sensor with an SPI interface
-> +
-> +  Specifications about the sensor can be found at:
-> +    https://www.bosch-sensortec.com/media/boschsensortec/downloads/datasheets/bst-bmi088-ds001.pdf
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - bosch,bmi088_accel
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +
-> +examples:
-> +  - |
-> +  spi {
-> +    bmi088_accel@1 {
-> +      compatible = "bosch,bmi088_accel";
-> +      reg = <1>;
-> +      spi-max-frequency = <10000000>;
-> +    };
-> +  };
+ drivers/scsi/qla2xxx/qla_os.c | 4 ++--
+ drivers/scsi/sd.c             | 4 +++-
+ 2 files changed, 5 insertions(+), 3 deletions(-)
 
+With full diff below.
+
+James
+
+---
+
+diff --git a/drivers/scsi/qla2xxx/qla_os.c b/drivers/scsi/qla2xxx/qla_os.c
+index b520a980d1dc..7a94e1171c72 100644
+--- a/drivers/scsi/qla2xxx/qla_os.c
++++ b/drivers/scsi/qla2xxx/qla_os.c
+@@ -864,7 +864,7 @@ qla2xxx_queuecommand(struct Scsi_Host *host, struct scsi_cmnd *cmd)
+ 		goto qc24_fail_command;
+ 	}
+ 
+-	if (atomic_read(&fcport->state) != FCS_ONLINE) {
++	if (atomic_read(&fcport->state) != FCS_ONLINE || fcport->deleted) {
+ 		if (atomic_read(&fcport->state) == FCS_DEVICE_DEAD ||
+ 			atomic_read(&base_vha->loop_state) == LOOP_DEAD) {
+ 			ql_dbg(ql_dbg_io, vha, 0x3005,
+@@ -946,7 +946,7 @@ qla2xxx_mqueuecommand(struct Scsi_Host *host, struct scsi_cmnd *cmd,
+ 		goto qc24_fail_command;
+ 	}
+ 
+-	if (atomic_read(&fcport->state) != FCS_ONLINE) {
++	if (atomic_read(&fcport->state) != FCS_ONLINE || fcport->deleted) {
+ 		if (atomic_read(&fcport->state) == FCS_DEVICE_DEAD ||
+ 			atomic_read(&base_vha->loop_state) == LOOP_DEAD) {
+ 			ql_dbg(ql_dbg_io, vha, 0x3077,
+diff --git a/drivers/scsi/sd.c b/drivers/scsi/sd.c
+index 8ca9299ffd36..2710a0e5ae6d 100644
+--- a/drivers/scsi/sd.c
++++ b/drivers/scsi/sd.c
+@@ -3169,9 +3169,11 @@ static int sd_revalidate_disk(struct gendisk *disk)
+ 	if (sd_validate_opt_xfer_size(sdkp, dev_max)) {
+ 		q->limits.io_opt = logical_to_bytes(sdp, sdkp->opt_xfer_blocks);
+ 		rw_max = logical_to_sectors(sdp, sdkp->opt_xfer_blocks);
+-	} else
++	} else {
++		q->limits.io_opt = 0;
+ 		rw_max = min_not_zero(logical_to_sectors(sdp, dev_max),
+ 				      (sector_t)BLK_DEF_MAX_SECTORS);
++	}
+ 
+ 	/* Do not exceed controller limit */
+ 	rw_max = min(rw_max, queue_max_hw_sectors(q));
