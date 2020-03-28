@@ -7,37 +7,37 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A338FC43331
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 11:00:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 367B5C2D0EC
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 11:00:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8083020936
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 11:00:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D1F4620723
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 11:00:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727144AbgC1LAC (ORCPT
+        id S1727178AbgC1LAD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 28 Mar 2020 07:00:02 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:55516 "EHLO
+        Sat, 28 Mar 2020 07:00:03 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:55531 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726244AbgC1K76 (ORCPT
+        with ESMTP id S1726781AbgC1LAB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 28 Mar 2020 06:59:58 -0400
+        Sat, 28 Mar 2020 07:00:01 -0400
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1jI9C0-0003bN-P7; Sat, 28 Mar 2020 11:59:56 +0100
+        id 1jI9C3-0003cU-G8; Sat, 28 Mar 2020 11:59:59 +0100
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 5F7191C0470;
-        Sat, 28 Mar 2020 11:59:56 +0100 (CET)
-Date:   Sat, 28 Mar 2020 10:59:56 -0000
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 174471C0483;
+        Sat, 28 Mar 2020 11:59:59 +0100 (CET)
+Date:   Sat, 28 Mar 2020 10:59:58 -0000
 From:   "tip-bot2 for Al Viro" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/cleanups] x86: ia32_setup_frame(): consolidate uaccess areas
+Subject: [tip: x86/cleanups] x86: kill get_user_{try,catch,ex}
 Cc:     Al Viro <viro@zeniv.linux.org.uk>, x86 <x86@kernel.org>,
         LKML <linux-kernel@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <158539319604.28353.1393436657593143514.tip-bot2@tip-bot2>
+Message-ID: <158539319874.28353.518154111372597104.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -53,90 +53,101 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the x86/cleanups branch of tip:
 
-Commit-ID:     e2390741053e4931841650b5eadac32697aa88aa
-Gitweb:        https://git.kernel.org/tip/e2390741053e4931841650b5eadac32697aa88aa
+Commit-ID:     77f3c6166ddc7567455b244074b3ebb63862b56f
+Gitweb:        https://git.kernel.org/tip/77f3c6166ddc7567455b244074b3ebb63862b56f
 Author:        Al Viro <viro@zeniv.linux.org.uk>
-AuthorDate:    Sat, 15 Feb 2020 19:36:40 -05:00
+AuthorDate:    Sat, 15 Feb 2020 13:26:51 -05:00
 Committer:     Al Viro <viro@zeniv.linux.org.uk>
-CommitterDate: Thu, 26 Mar 2020 14:39:38 -04:00
+CommitterDate: Wed, 18 Mar 2020 20:35:35 -04:00
 
-x86: ia32_setup_frame(): consolidate uaccess areas
+x86: kill get_user_{try,catch,ex}
 
-Currently we have user_access block, followed by __put_user(),
-deciding what the restorer will be and finally a put_user_try
-block.
-
-Moving the calculation of restorer first allows the rest
-(actual copyout work) to coalesce into a single user_access block.
+no users left
 
 Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
 ---
- arch/x86/ia32/ia32_signal.c | 39 +++++++++++-------------------------
- 1 file changed, 12 insertions(+), 27 deletions(-)
+ arch/x86/include/asm/uaccess.h | 54 +---------------------------------
+ 1 file changed, 54 deletions(-)
 
-diff --git a/arch/x86/ia32/ia32_signal.c b/arch/x86/ia32/ia32_signal.c
-index 799ca5b..7018c2c 100644
---- a/arch/x86/ia32/ia32_signal.c
-+++ b/arch/x86/ia32/ia32_signal.c
-@@ -236,7 +236,6 @@ int ia32_setup_frame(int sig, struct ksignal *ksig,
- {
- 	struct sigframe_ia32 __user *frame;
- 	void __user *restorer;
--	int err = 0;
- 	void __user *fp = NULL;
+diff --git a/arch/x86/include/asm/uaccess.h b/arch/x86/include/asm/uaccess.h
+index 1cfa33b..4dc5acc 100644
+--- a/arch/x86/include/asm/uaccess.h
++++ b/arch/x86/include/asm/uaccess.h
+@@ -335,12 +335,9 @@ do {									\
+ 		       "i" (errret), "0" (retval));			\
+ })
  
- 	/* copy_to_user optimizes that into a single 8 byte store */
-@@ -252,21 +251,6 @@ int ia32_setup_frame(int sig, struct ksignal *ksig,
+-#define __get_user_asm_ex_u64(x, ptr)			(x) = __get_user_bad()
+ #else
+ #define __get_user_asm_u64(x, ptr, retval, errret) \
+ 	 __get_user_asm(x, ptr, retval, "q", "", "=r", errret)
+-#define __get_user_asm_ex_u64(x, ptr) \
+-	 __get_user_asm_ex(x, ptr, "q", "", "=r")
+ #endif
  
- 	frame = get_sigframe(ksig, regs, sizeof(*frame), &fp);
+ #define __get_user_size(x, ptr, size, retval, errret)			\
+@@ -378,41 +375,6 @@ do {									\
+ 		     : "=r" (err), ltype(x)				\
+ 		     : "m" (__m(addr)), "i" (errret), "0" (err))
  
--	if (!access_ok(frame, sizeof(*frame)))
--		return -EFAULT;
+-/*
+- * This doesn't do __uaccess_begin/end - the exception handling
+- * around it must do that.
+- */
+-#define __get_user_size_ex(x, ptr, size)				\
+-do {									\
+-	__chk_user_ptr(ptr);						\
+-	switch (size) {							\
+-	case 1:								\
+-		__get_user_asm_ex(x, ptr, "b", "b", "=q");		\
+-		break;							\
+-	case 2:								\
+-		__get_user_asm_ex(x, ptr, "w", "w", "=r");		\
+-		break;							\
+-	case 4:								\
+-		__get_user_asm_ex(x, ptr, "l", "k", "=r");		\
+-		break;							\
+-	case 8:								\
+-		__get_user_asm_ex_u64(x, ptr);				\
+-		break;							\
+-	default:							\
+-		(x) = __get_user_bad();					\
+-	}								\
+-} while (0)
 -
--	if (__put_user(sig, &frame->sig))
--		return -EFAULT;
+-#define __get_user_asm_ex(x, addr, itype, rtype, ltype)			\
+-	asm volatile("1:	mov"itype" %1,%"rtype"0\n"		\
+-		     "2:\n"						\
+-		     ".section .fixup,\"ax\"\n"				\
+-                     "3:xor"itype" %"rtype"0,%"rtype"0\n"		\
+-		     "  jmp 2b\n"					\
+-		     ".previous\n"					\
+-		     _ASM_EXTABLE_EX(1b, 3b)				\
+-		     : ltype(x) : "m" (__m(addr)))
 -
--	if (!user_access_begin(&frame->sc, sizeof(struct sigcontext_32)))
--		return -EFAULT;
--
--	unsafe_put_sigcontext32(&frame->sc, fp, regs, set, Efault);
--	user_access_end();
--
--	if (__put_user(set->sig[1], &frame->extramask[0]))
--		return -EFAULT;
--
- 	if (ksig->ka.sa.sa_flags & SA_RESTORER) {
- 		restorer = ksig->ka.sa.sa_restorer;
- 	} else {
-@@ -278,19 +262,20 @@ int ia32_setup_frame(int sig, struct ksignal *ksig,
- 			restorer = &frame->retcode;
- 	}
+ #define __put_user_nocheck(x, ptr, size)			\
+ ({								\
+ 	__label__ __pu_label;					\
+@@ -540,22 +502,6 @@ struct __large_struct { unsigned long buf[100]; };
+ #define __put_user(x, ptr)						\
+ 	__put_user_nocheck((__typeof__(*(ptr)))(x), (ptr), sizeof(*(ptr)))
  
--	put_user_try {
--		put_user_ex(ptr_to_compat(restorer), &frame->pretcode);
+-/*
+- * {get|put}_user_try and catch
+- *
+- * get_user_try {
+- *	get_user_ex(...);
+- * } get_user_catch(err)
+- */
+-#define get_user_try		uaccess_try_nospec
+-#define get_user_catch(err)	uaccess_catch(err)
 -
--		/*
--		 * These are actually not used anymore, but left because some
--		 * gdb versions depend on them as a marker.
--		 */
--		put_user_ex(*((u64 *)&code), (u64 __user *)frame->retcode);
--	} put_user_catch(err);
+-#define get_user_ex(x, ptr)	do {					\
+-	unsigned long __gue_val;					\
+-	__get_user_size_ex((__gue_val), (ptr), (sizeof(*(ptr))));	\
+-	(x) = (__force __typeof__(*(ptr)))__gue_val;			\
+-} while (0)
 -
--	if (err)
-+	if (!user_access_begin(frame, sizeof(*frame)))
- 		return -EFAULT;
+ #define put_user_try		uaccess_try
+ #define put_user_catch(err)	uaccess_catch(err)
  
-+	unsafe_put_user(sig, &frame->sig, Efault);
-+	unsafe_put_sigcontext32(&frame->sc, fp, regs, set, Efault);
-+	unsafe_put_user(set->sig[1], &frame->extramask[0], Efault);
-+	unsafe_put_user(ptr_to_compat(restorer), &frame->pretcode, Efault);
-+	/*
-+	 * These are actually not used anymore, but left because some
-+	 * gdb versions depend on them as a marker.
-+	 */
-+	unsafe_put_user(*((u64 *)&code), (u64 __user *)frame->retcode, Efault);
-+	user_access_end();
-+
- 	/* Set up registers for signal handler */
- 	regs->sp = (unsigned long) frame;
- 	regs->ip = (unsigned long) ksig->ka.sa.sa_handler;
