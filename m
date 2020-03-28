@@ -2,130 +2,141 @@ Return-Path: <SRS0=NZ+o=5N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14E51C2D0E5
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 17:54:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FF73C2D0EC
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 18:07:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E077920717
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 17:54:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585418068;
-	bh=MEfK/Wd6je8M1cHxqH0HG5AU8WTrpsQp30mt+xBLJCc=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=xUUQxkdP2fnP19IEu1mZAi9Zuy/pWOeiPe0/fIlk7wXRW8/X+pEEb6rO0c+ctH+cb
-	 ARUiR/kQYRllbNz5qu6DpCwFXObDJsSYik8ldZ2URFxgozICLqJaNkBwBzo62pBdkb
-	 BjG/IhP5X44myv5HVkxzUkspyakjx1LFsHSRpb94=
+	by mail.kernel.org (Postfix) with ESMTP id 06FC820717
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 18:07:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726769AbgC1Ry1 (ORCPT
+        id S1726518AbgC1SHT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 28 Mar 2020 13:54:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52822 "EHLO mail.kernel.org"
+        Sat, 28 Mar 2020 14:07:19 -0400
+Received: from mx.sdf.org ([205.166.94.20]:54286 "EHLO mx.sdf.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726265AbgC1Ry0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 28 Mar 2020 13:54:26 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1DDCE20714;
-        Sat, 28 Mar 2020 17:54:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585418066;
-        bh=MEfK/Wd6je8M1cHxqH0HG5AU8WTrpsQp30mt+xBLJCc=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=IlsMp9NNHsDb+NZj7iT15hk97roZTcS2isuGdoh64AOrdGScrsa326RlRqdJw6ddV
-         S6e2OyQ7IBbsy44BQcxGPSyLZ7uhd3rjZPmM1e2jrRanqi7hbaHh/12E0GuHFcPjHu
-         SJhgHqiMcwfsZhDqykwDO/1ypuJ71x66vVhKbs2A=
-Date:   Sat, 28 Mar 2020 17:54:21 +0000
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     "Sa, Nuno" <Nuno.Sa@analog.com>
-Cc:     Rohit Sarkar <rohitsarkar5398@gmail.com>,
-        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Bogdan, Dragos" <Dragos.Bogdan@analog.com>
-Subject: Re: [PATCH] iio: temperature: ltc2983: remove redundant comparison
- to bool
-Message-ID: <20200328175421.605c7eae@archlinux>
-In-Reply-To: <BN6PR03MB3347A202426BE1F409B3A68599CD0@BN6PR03MB3347.namprd03.prod.outlook.com>
-References: <5e7ef454.1c69fb81.56770.82c7@mx.google.com>
-        <BN6PR03MB3347A202426BE1F409B3A68599CD0@BN6PR03MB3347.namprd03.prod.outlook.com>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        id S1725807AbgC1SHT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 28 Mar 2020 14:07:19 -0400
+Received: from sdf.org (IDENT:lkml@sdf.lonestar.org [205.166.94.16])
+        by mx.sdf.org (8.15.2/8.14.5) with ESMTPS id 02SI7B3a022693
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits) verified NO);
+        Sat, 28 Mar 2020 18:07:11 GMT
+Received: (from lkml@localhost)
+        by sdf.org (8.15.2/8.12.8/Submit) id 02SI7BeD000981;
+        Sat, 28 Mar 2020 18:07:11 GMT
+Date:   Sat, 28 Mar 2020 18:07:11 +0000
+From:   George Spelvin <lkml@SDF.ORG>
+To:     Stephen Hemminger <stephen@networkplumber.org>
+Cc:     linux-kernel@vger.kernel.org,
+        Hannes Frederic Sowa <hannes@stressinduktion.org>,
+        lkml@sdf.org
+Subject: Re: [RFC PATCH v1 09/50] <linux/random.h> prandom_u32_max() for
+ power-of-2 ranges
+Message-ID: <20200328180711.GC5859@SDF.ORG>
+References: <202003281643.02SGh9n2025458@sdf.org>
+ <20200328103229.132a047f@hermes.lan>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200328103229.132a047f@hermes.lan>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 28 Mar 2020 09:43:58 +0000
-"Sa, Nuno" <Nuno.Sa@analog.com> wrote:
+On Sat, Mar 28, 2020 at 10:32:29AM -0700, Stephen Hemminger wrote:
+> On Sat, 16 Mar 2019 02:32:04 -0400
+> George Spelvin <lkml@sdf.org> wrote:
+> 
+>> +static inline u32 prandom_u32_max(u32 range)
+>>  {
+>> -	return (u32)(((u64) prandom_u32() * ep_ro) >> 32);
+>> +	/*
+>> +	 * If the range is a compile-time constant power of 2, then use
+>> +	 * a simple shift.  This is mathematically equivalent to the
+>> +	 * multiplication, but GCC 8.3 doesn't optimize that perfectly.
+>> +	 *
+>> +	 * We could do an AND with a mask, but
+>> +	 * 1) The shift is the same speed on a decent CPU,
+>> +	 * 2) It's generally smaller code (smaller immediate), and
+>> +	 * 3) Many PRNGs have trouble with their low-order bits;
+>> +	 *    using the msbits is generaly preferred.
+>> +	 */
+>> +	if (__builtin_constant_p(range) && (range & (range - 1)) == 0)
+>> +		return prandom_u32() / (u32)(0x100000000 / range);
+>> +	else
+>> +		return reciprocal_scale(prandom_u32(), range);
 
-> > -----Original Message-----
-> > From: Rohit Sarkar <rohitsarkar5398@gmail.com>
-> > Sent: Samstag, 28. M=C3=A4rz 2020 07:53
-> > To: linux-iio@vger.kernel.org
-> > Cc: Sa, Nuno <Nuno.Sa@analog.com>; rohitsarkar5398@gmail.com;
-> > jic23@kernel.org; Hartmut Knaack <knaack.h@gmx.de>; Lars-Peter Clausen
-> > <lars@metafoo.de>; Peter Meerwald-Stadler <pmeerw@pmeerw.net>; linux-
-> > iio@vger.kernel.org; linux-kernel@vger.kernel.org; Bogdan, Dragos
-> > <Dragos.Bogdan@analog.com>
-> > Subject: [PATCH] iio: temperature: ltc2983: remove redundant comparison=
- to
-> > bool
-> >=20
-> >=20
-> > Remove redundant comparison to a boolean variable.
-> >=20
-> > Fixes coccinelle warning:
-> > drivers/iio/temperature//ltc2983.c:393:20-32: WARNING: Comparison to
-> > bool
-> > drivers/iio/temperature//ltc2983.c:394:20-32: WARNING: Comparison to
-> > bool
-> >=20
-> > Signed-off-by: Rohit Sarkar <rohitsarkar5398@gmail.com>
-> > ---
-> >  drivers/iio/temperature/ltc2983.c | 4 ++--
-> >  1 file changed, 2 insertions(+), 2 deletions(-)
-> >=20
-> > diff --git a/drivers/iio/temperature/ltc2983.c
-> > b/drivers/iio/temperature/ltc2983.c
-> > index d39c0d6b77f1..8976e8d59826 100644
-> > --- a/drivers/iio/temperature/ltc2983.c
-> > +++ b/drivers/iio/temperature/ltc2983.c
-> > @@ -390,8 +390,8 @@ static struct ltc2983_custom_sensor
-> > *__ltc2983_custom_sensor_new(
-> >  	 * For custom steinhart, the full u32 is taken. For all the others
-> >  	 * the MSB is discarded.
-> >  	 */
-> > -	const u8 n_size =3D (is_steinhart =3D=3D true) ? 4 : 3;
-> > -	const u8 e_size =3D (is_steinhart =3D=3D true) ? sizeof(u32) : sizeof=
-(u64);
-> > +	const u8 n_size =3D is_steinhart ? 4 : 3;
-> > +	const u8 e_size =3D is_steinhart ? sizeof(u32) : sizeof(u64);
-> >=20
-> >  	n_entries =3D of_property_count_elems_of_size(np, propname, e_size);
-> >  	/* n_entries must be an even number */
-> > -- =20
->=20
-> Acked-by: Nuno S=C3=A1 <nuno.sa@analog.com>
->=20
+> The optimization is good, but I don't think that the compiler
+> is able to propogate the constant property into the function.
+> Did you actually check the generated code?
 
-Applied to the togreg branch of iio.git and pushed out as testing for the
-autobuilders to play with it.
+Yes, I checked repeatedly during development.  I just rechecked the
+exact code (it's been a while), and verified that
 
-Thanks,
+unsigned foo(void)
+{
+	return prandom_u32_max(256);
+}
 
-Jonathan
+compiles to
+foo:
+.LFB1:
+	.cfi_startproc
+	subq	$8, %rsp
+	.cfi_def_cfa_offset 16
+	call	prandom_u32@PLT
+	shrl	$24, %eax
+	addq	$8, %rsp
+	.cfi_def_cfa_offset 8
+	ret
+	.cfi_endproc
+.LFE1:
+	.size	foo, .-foo
 
+But you prompted me to check a few other architectures, and
+it's true for them too.  E.g. m68k:
 
-> Thanks,
-> Nuno S=C3=A1
->=20
+foo:
+        jsr prandom_u32
+        moveq #24,%d1
+        lsr.l %d1,%d0
+        rts
 
+(68k is one architecture where the mask is faster than the shift,
+so I could handle it separately, but it makes the code even uglier.
+Basically, use masks for small ranges, and shifts for large ranges,
+and an arch-dependent threshold that depends on the available
+immediate constant range.)
+
+ARM, PowerPC, and MIPS all have some hideously large function preamble
+code, but the core is a right shift.  E.g.
+
+foo:
+.LFB1:
+	.cfi_startproc
+	stwu 1,-16(1)
+	.cfi_def_cfa_offset 16
+	mflr 0
+	.cfi_register 65, 0
+	bcl 20,31,.L2
+.L2:
+	stw 30,8(1)
+	.cfi_offset 30, -8
+	mflr 30
+	addis 30,30,.LCTOC1-.L2@ha
+	stw 0,20(1)
+	addi 30,30,.LCTOC1-.L2@l
+	.cfi_offset 65, 4
+	bl prandom_u32+32768@plt
+	lwz 0,20(1)
+	lwz 30,8(1)
+	addi 1,1,16
+	.cfi_restore 30
+	.cfi_def_cfa_offset 0
+	srwi 3,3,24
+	mtlr 0
+	.cfi_restore 65
+	blr
