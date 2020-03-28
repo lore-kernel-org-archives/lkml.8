@@ -2,139 +2,83 @@ Return-Path: <SRS0=NZ+o=5N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FF5AC43331
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 09:48:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD11BC2D0E8
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 09:53:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5AEA120716
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 09:48:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uyFI8ztN"
+	by mail.kernel.org (Postfix) with ESMTP id B324520716
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 09:53:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726224AbgC1Jsk (ORCPT
+        id S1726290AbgC1JxS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 28 Mar 2020 05:48:40 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:39589 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725937AbgC1Jsj (ORCPT
+        Sat, 28 Mar 2020 05:53:18 -0400
+Received: from smtp04.smtpout.orange.fr ([80.12.242.126]:45554 "EHLO
+        smtp.smtpout.orange.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726164AbgC1JxR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 28 Mar 2020 05:48:39 -0400
-Received: by mail-pg1-f196.google.com with SMTP id b22so5916873pgb.6;
-        Sat, 28 Mar 2020 02:48:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=tOjJX6xRnffKPc3AqETnscSj7oMhWI6lRH93RVQJDlQ=;
-        b=uyFI8ztNJVNwUQlPh4HA75vk9sdQBxm5rfANauCha0igSDcmjfOSNUz70Y5rqAGBKP
-         OClqS+G272PsaxBWysW0wn6HNyBuADJqOgNRsxrwcyXznMNhfzfr1BUESoOduri6yJ0U
-         EPuqcGSeG3a81GcVIT8/u/CC1n2lhhTuVmdJqyAfodp/TdoAnZIm9XZxaO+XUjqBOosb
-         TO9G4yGtlNtCFweOiSG0UktrHDzLnMoCf2SwEia6yeU93b1i7EBoJrl29Rord2OEeA+J
-         CGT1XkDBGeLl7zXh6aiqxu3jjGEngCB6Inxi3mLPbj2/YPCSUw99OdPL7uH09jf66Bl+
-         ocoA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=tOjJX6xRnffKPc3AqETnscSj7oMhWI6lRH93RVQJDlQ=;
-        b=hSjzOYO5S1hntAFuSBVWCb9PAkFjmGuT//k30/JzEGyJS1cxpsJnzLTQxRSBSzwn9/
-         ScZ8/o+LPjI6qtzF+7gn7wq9uqaHyVAGWnPLDYgZYKcv8ckOfFIVMM6CoiuItlIDKnI7
-         Z679I6CfKPIVa0eRfr6qWwGRX6gl7p37yEtnQB9z6zP0+JhtDXdgNkZw8PcKdaKSYEif
-         +pBiKUszEkQCm7gI7qYujQ5I27KMdo6xe4TZ4aa68pIP4WEU91y/ivOUpC/t8Pj8Z9nx
-         ADzLsm0tFS+roVzLIEwr7/9Xe/twhKOK4ONAG6bOzsleOyAWGoa6YXNtIgFA+wEoq33E
-         uKPQ==
-X-Gm-Message-State: AGi0Pub2Eka3Yfg8B/VFhgj1tOC47xsOxP68GNoIYlUVC7pXJlWrTdwb
-        bWz3AyyvuVhBYpb488PebM8=
-X-Google-Smtp-Source: APiQypJllSfWfd4/UNQBwV9uQZrsenXv5PSlErXgpKWR1rpectgzO4p5/brh2hpH5eAzA7o39/br0Q==
-X-Received: by 2002:aa7:838e:: with SMTP id u14mr239769pfm.212.1585388918591;
-        Sat, 28 Mar 2020 02:48:38 -0700 (PDT)
-Received: from nishad ([106.51.232.103])
-        by smtp.gmail.com with ESMTPSA id i4sm5418198pjg.4.2020.03.28.02.48.35
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Sat, 28 Mar 2020 02:48:38 -0700 (PDT)
-Date:   Sat, 28 Mar 2020 15:18:32 +0530
-From:   Nishad Kamdar <nishadkamdar@gmail.com>
-To:     Minas Harutyunyan <hminas@synopsys.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Joe Perches <joe@perches.com>
-Cc:     linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] USB: dwc2: Use the correct style for SPDX License Identifier
-Message-ID: <20200328094828.GA5016@nishad>
+        Sat, 28 Mar 2020 05:53:17 -0400
+Received: from localhost.localdomain ([90.126.162.40])
+        by mwinf5d59 with ME
+        id KltC2200B0scBcy03ltC7b; Sat, 28 Mar 2020 10:53:15 +0100
+X-ME-Helo: localhost.localdomain
+X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
+X-ME-Date: Sat, 28 Mar 2020 10:53:15 +0100
+X-ME-IP: 90.126.162.40
+From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+To:     andrew@lunn.ch, vivien.didelot@gmail.com, davem@davemloft.net,
+        kuba@kernel.org
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-janitors@vger.kernel.org,
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Subject: [PATCH] net: dsa: Simplify 'dsa_tag_protocol_to_str()'
+Date:   Sat, 28 Mar 2020 10:53:09 +0100
+Message-Id: <20200328095309.27389-1-christophe.jaillet@wanadoo.fr>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch corrects the SPDX License Identifier style in
-header files related to DesignWare USB2 DRD Core Support.
-For C header files Documentation/process/license-rules.rst
-mandates C-like comments (opposed to C source files where
-C++ style should be used).
+There is no point in preparing the module name in a buffer. The format
+string can be passed diectly to 'request_module()'.
 
-Changes made by using a script provided by Joe Perches here:
-https://lkml.org/lkml/2019/2/7/46.
+This axes a few lines of code and cleans a few things:
+   - max len for a driver name is MODULE_NAME_LEN wich is ~ 60 chars,
+     not 128. It would be down-sized in 'request_module()'
+   - we should pass the total size of the buffer to 'snprintf()', not the
+     size minus 1
 
-Suggested-by: Joe Perches <joe@perches.com>
-Signed-off-by: Nishad Kamdar <nishadkamdar@gmail.com>
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 ---
- drivers/usb/dwc2/core.h  | 2 +-
- drivers/usb/dwc2/debug.h | 2 +-
- drivers/usb/dwc2/hcd.h   | 2 +-
- drivers/usb/dwc2/hw.h    | 2 +-
- 4 files changed, 4 insertions(+), 4 deletions(-)
+This was introduced in 367561753144 ("dsa: Make use of the list of tag drivers")
+---
+ net/dsa/dsa.c | 6 +-----
+ 1 file changed, 1 insertion(+), 5 deletions(-)
 
-diff --git a/drivers/usb/dwc2/core.h b/drivers/usb/dwc2/core.h
-index 99b0bdfe0012..668d1ad646a4 100644
---- a/drivers/usb/dwc2/core.h
-+++ b/drivers/usb/dwc2/core.h
-@@ -1,4 +1,4 @@
--// SPDX-License-Identifier: (GPL-2.0+ OR BSD-3-Clause)
-+/* SPDX-License-Identifier: (GPL-2.0+ OR BSD-3-Clause) */
- /*
-  * core.h - DesignWare HS OTG Controller common declarations
-  *
-diff --git a/drivers/usb/dwc2/debug.h b/drivers/usb/dwc2/debug.h
-index a8c565b6bc34..47252c56d410 100644
---- a/drivers/usb/dwc2/debug.h
-+++ b/drivers/usb/dwc2/debug.h
-@@ -1,4 +1,4 @@
--// SPDX-License-Identifier: GPL-2.0
-+/* SPDX-License-Identifier: GPL-2.0 */
- /*
-  * debug.h - Designware USB2 DRD controller debug header
-  *
-diff --git a/drivers/usb/dwc2/hcd.h b/drivers/usb/dwc2/hcd.h
-index 1224fa9df604..ea02ee63ac6d 100644
---- a/drivers/usb/dwc2/hcd.h
-+++ b/drivers/usb/dwc2/hcd.h
-@@ -1,4 +1,4 @@
--// SPDX-License-Identifier: (GPL-2.0+ OR BSD-3-Clause)
-+/* SPDX-License-Identifier: (GPL-2.0+ OR BSD-3-Clause) */
- /*
-  * hcd.h - DesignWare HS OTG Controller host-mode declarations
-  *
-diff --git a/drivers/usb/dwc2/hw.h b/drivers/usb/dwc2/hw.h
-index c4027bbcedec..864b76a0b954 100644
---- a/drivers/usb/dwc2/hw.h
-+++ b/drivers/usb/dwc2/hw.h
-@@ -1,4 +1,4 @@
--// SPDX-License-Identifier: (GPL-2.0+ OR BSD-3-Clause)
-+/* SPDX-License-Identifier: (GPL-2.0+ OR BSD-3-Clause) */
- /*
-  * hw.h - DesignWare HS OTG Controller hardware definitions
-  *
+diff --git a/net/dsa/dsa.c b/net/dsa/dsa.c
+index 17281fec710c..ee2610c4d46a 100644
+--- a/net/dsa/dsa.c
++++ b/net/dsa/dsa.c
+@@ -88,13 +88,9 @@ const struct dsa_device_ops *dsa_tag_driver_get(int tag_protocol)
+ {
+ 	struct dsa_tag_driver *dsa_tag_driver;
+ 	const struct dsa_device_ops *ops;
+-	char module_name[128];
+ 	bool found = false;
+ 
+-	snprintf(module_name, 127, "%s%d", DSA_TAG_DRIVER_ALIAS,
+-		 tag_protocol);
+-
+-	request_module(module_name);
++	request_module("%s%d", DSA_TAG_DRIVER_ALIAS, tag_protocol);
+ 
+ 	mutex_lock(&dsa_tag_drivers_lock);
+ 	list_for_each_entry(dsa_tag_driver, &dsa_tag_drivers_list, list) {
 -- 
-2.17.1
+2.20.1
 
