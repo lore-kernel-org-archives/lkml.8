@@ -2,218 +2,207 @@ Return-Path: <SRS0=NZ+o=5N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14109C43331
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 20:29:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F5F4C2D0EC
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 20:40:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D823A206F6
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 20:29:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 09614206F6
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 20:40:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="dhUsz2w4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727397AbgC1U32 (ORCPT
+        id S1727486AbgC1UkH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 28 Mar 2020 16:29:28 -0400
-Received: from mga07.intel.com ([134.134.136.100]:52497 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726604AbgC1U32 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 28 Mar 2020 16:29:28 -0400
-IronPort-SDR: YMEu1IztNuhiM6Xw5CrFeZIUVgaiqgA/AK3j7Tytwe67E4lAV18WebTMQcXxTZFFYcJzqDbYjB
- jsvwo+4CRJLg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Mar 2020 13:29:27 -0700
-IronPort-SDR: QRSoKqNo9fxti1cmIknyIPILKg+KeD934nVSb+83LaO4Qkog09TBxsw1xIKOCzQX42WaXvq5Bh
- Kpp2FNaaVWWQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,317,1580803200"; 
-   d="scan'208";a="421493158"
-Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
-  by orsmga005.jf.intel.com with ESMTP; 28 Mar 2020 13:29:26 -0700
-Received: from kbuild by lkp-server01 with local (Exim 4.89)
-        (envelope-from <lkp@intel.com>)
-        id 1jII57-000GSb-M4; Sun, 29 Mar 2020 04:29:25 +0800
-Date:   Sun, 29 Mar 2020 04:28:26 +0800
-From:   kbuild test robot <lkp@intel.com>
-To:     "x86-ml" <x86@kernel.org>
-Cc:     linux-kernel@vger.kernel.org
-Subject: [tip:locking/core] BUILD SUCCESS
- f1e67e355c2aafeddf1eac31335709236996d2fe
-Message-ID: <5e7fb36a./gZKUUFio6xex8An%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        Sat, 28 Mar 2020 16:40:07 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:41109 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727176AbgC1UkH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 28 Mar 2020 16:40:07 -0400
+Received: by mail-pg1-f194.google.com with SMTP id b1so6560113pgm.8
+        for <linux-kernel@vger.kernel.org>; Sat, 28 Mar 2020 13:40:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=j/EFDB2Q5SPOwwmNnuRi1C0YdHPQQMO4+uXHwaQqTxw=;
+        b=dhUsz2w4MYgWNyj6hE0ZxIborPPRKatAyXIJTKPJASqYLflpcsqRqPljXfYVH69gv5
+         nnJW6IxDRIPKIyNzwlx+CweVYdI11EHzTdgUHboAK33tWNrpDyi4uVGp2X6inCFH/tiC
+         z+C9sh8/fYNrrLzd9ef8KuywghePkxJQCkmqM=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=j/EFDB2Q5SPOwwmNnuRi1C0YdHPQQMO4+uXHwaQqTxw=;
+        b=QdUNGggXl+az62LIm/muKWtareCYmSuafXcYCE4orYOW+1rtP0VxTajiFX/Tiy8Jca
+         JZ4V7oRzmu+CK45XWqLXqrH9I3IIruugTm4Jj84WqrnwC6ytn+Te/WguALgs3wuALWeh
+         +SM3irt8zZlt9VHAZGaMYvKGuw/MLMj90NjmCS8Cqu0CBExvSWD4H6ZOqNv05FFAfmXh
+         zPb8xnbCITHAxcF4yFJeXHvon3ry6ZGX4eoqJ0T+p00YE/+8emjS6PuoYGMNxkqt40Vw
+         jy1LvD11ektdXL23zegrYhj2NLwTWNqZuwkdMAFKbfpQa9Kuhz+04exZkj9qE98MOr1d
+         long==
+X-Gm-Message-State: ANhLgQ0jF9Q8vTbNNJTJXmTm3GwkwMq+zkOm61hJDSeZp8YxsAjwbEKp
+        baPD3qOmCFhg7KXfNIHpURssFg==
+X-Google-Smtp-Source: ADFU+vs6+/SpRmPEoOYQ3qzPgEH3AqddrEIOW9lIgqivUrhiB+kQch1HS6U8Q/6IiCIGdFtx3L4pZQ==
+X-Received: by 2002:a63:be49:: with SMTP id g9mr5799185pgo.30.1585428005574;
+        Sat, 28 Mar 2020 13:40:05 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id r29sm6413311pgm.17.2020.03.28.13.40.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 28 Mar 2020 13:40:04 -0700 (PDT)
+Date:   Sat, 28 Mar 2020 13:40:03 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Alexey Gladkov <gladkov.alexey@gmail.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        Linux API <linux-api@vger.kernel.org>,
+        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
+        Linux Security Module <linux-security-module@vger.kernel.org>,
+        Akinobu Mita <akinobu.mita@gmail.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Alexey Gladkov <legion@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Daniel Micay <danielmicay@gmail.com>,
+        Djalal Harouni <tixxdz@gmail.com>,
+        "Dmitry V . Levin" <ldv@altlinux.org>,
+        "Eric W . Biederman" <ebiederm@xmission.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        "J . Bruce Fields" <bfields@fieldses.org>,
+        Jeff Layton <jlayton@poochiereds.net>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Oleg Nesterov <oleg@redhat.com>
+Subject: Re: [PATCH v10 4/9] proc: instantiate only pids that we can ptrace
+ on 'hidepid=4' mount option
+Message-ID: <202003281336.8354DB74@keescook>
+References: <20200327172331.418878-1-gladkov.alexey@gmail.com>
+ <20200327172331.418878-5-gladkov.alexey@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+In-Reply-To: <20200327172331.418878-5-gladkov.alexey@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git  locking/core
-branch HEAD: f1e67e355c2aafeddf1eac31335709236996d2fe  fs/buffer: Make BH_Uptodate_Lock bit_spin_lock a regular spinlock_t
+On Fri, Mar 27, 2020 at 06:23:26PM +0100, Alexey Gladkov wrote:
+> If "hidepid=4" mount option is set then do not instantiate pids that
+> we can not ptrace. "hidepid=4" means that procfs should only contain
+> pids that the caller can ptrace.
+> 
+> Cc: Kees Cook <keescook@chromium.org>
+> Cc: Andy Lutomirski <luto@kernel.org>
+> Signed-off-by: Djalal Harouni <tixxdz@gmail.com>
+> Reviewed-by: Alexey Dobriyan <adobriyan@gmail.com>
+> Signed-off-by: Alexey Gladkov <gladkov.alexey@gmail.com>
+> ---
+>  fs/proc/base.c          | 15 +++++++++++++++
+>  fs/proc/root.c          | 13 ++++++++++---
+>  include/linux/proc_fs.h |  1 +
+>  3 files changed, 26 insertions(+), 3 deletions(-)
+> 
+> diff --git a/fs/proc/base.c b/fs/proc/base.c
+> index 43a28907baf9..1ebe9eba48ea 100644
+> --- a/fs/proc/base.c
+> +++ b/fs/proc/base.c
+> @@ -701,6 +701,14 @@ static bool has_pid_permissions(struct proc_fs_info *fs_info,
+>  				 struct task_struct *task,
+>  				 int hide_pid_min)
+>  {
+> +	/*
+> +	 * If 'hidpid' mount option is set force a ptrace check,
+> +	 * we indicate that we are using a filesystem syscall
+> +	 * by passing PTRACE_MODE_READ_FSCREDS
+> +	 */
+> +	if (fs_info->hide_pid == HIDEPID_NOT_PTRACEABLE)
+> +		return ptrace_may_access(task, PTRACE_MODE_READ_FSCREDS);
+> +
+>  	if (fs_info->hide_pid < hide_pid_min)
+>  		return true;
+>  	if (in_group_p(fs_info->pid_gid))
+> @@ -3319,7 +3327,14 @@ struct dentry *proc_pid_lookup(struct dentry *dentry, unsigned int flags)
+>  	if (!task)
+>  		goto out;
+>  
+> +	/* Limit procfs to only ptraceable tasks */
+> +	if (fs_info->hide_pid == HIDEPID_NOT_PTRACEABLE) {
+> +		if (!has_pid_permissions(fs_info, task, HIDEPID_NO_ACCESS))
+> +			goto out_put_task;
+> +	}
+> +
+>  	result = proc_pid_instantiate(dentry, task, NULL);
+> +out_put_task:
+>  	put_task_struct(task);
+>  out:
+>  	return result;
+> diff --git a/fs/proc/root.c b/fs/proc/root.c
+> index 616e8976185c..62eae22403d2 100644
+> --- a/fs/proc/root.c
+> +++ b/fs/proc/root.c
+> @@ -47,6 +47,14 @@ static const struct fs_parameter_spec proc_fs_parameters[] = {
+>  	{}
+>  };
+>  
+> +static inline int valid_hidepid(unsigned int value)
+> +{
+> +	return (value == HIDEPID_OFF ||
+> +		value == HIDEPID_NO_ACCESS ||
+> +		value == HIDEPID_INVISIBLE ||
+> +		value == HIDEPID_NOT_PTRACEABLE);
 
-elapsed time: 484m
+This likely easier to do with a ...MAX value? i.e.
 
-configs tested: 151
-configs skipped: 0
+	return (value < HIDEPID_OFF || value >= HIDEPID_MAX);
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+> +}
+> +
+>  static int proc_parse_param(struct fs_context *fc, struct fs_parameter *param)
+>  {
+>  	struct proc_fs_context *ctx = fc->fs_private;
+> @@ -63,10 +71,9 @@ static int proc_parse_param(struct fs_context *fc, struct fs_parameter *param)
+>  		break;
+>  
+>  	case Opt_hidepid:
+> +		if (!valid_hidepid(result.uint_32))
+> +			return invalf(fc, "proc: unknown value of hidepid.\n");
+>  		ctx->hidepid = result.uint_32;
+> -		if (ctx->hidepid < HIDEPID_OFF ||
+> -		    ctx->hidepid > HIDEPID_INVISIBLE)
+> -			return invalfc(fc, "hidepid value must be between 0 and 2.\n");
+>  		break;
+>  
+>  	default:
+> diff --git a/include/linux/proc_fs.h b/include/linux/proc_fs.h
+> index 7d852dbca253..21d19353fdc7 100644
+> --- a/include/linux/proc_fs.h
+> +++ b/include/linux/proc_fs.h
+> @@ -32,6 +32,7 @@ enum {
+>  	HIDEPID_OFF	  = 0,
+>  	HIDEPID_NO_ACCESS = 1,
+>  	HIDEPID_INVISIBLE = 2,
+> +	HIDEPID_NOT_PTRACEABLE = 4, /* Limit pids to only ptraceable pids */
 
-arm64                            allyesconfig
-arm                              allyesconfig
-arm64                            allmodconfig
-arm                              allmodconfig
-arm64                             allnoconfig
-arm                               allnoconfig
-arm                           efm32_defconfig
-arm                         at91_dt_defconfig
-arm                        shmobile_defconfig
-arm64                               defconfig
-arm                          exynos_defconfig
-arm                        multi_v5_defconfig
-arm                           sunxi_defconfig
-arm                        multi_v7_defconfig
-sparc                            allyesconfig
-m68k                             allmodconfig
-sh                            titan_defconfig
-s390                       zfcpdump_defconfig
-mips                             allmodconfig
-m68k                          multi_defconfig
-nios2                         3c120_defconfig
-riscv                    nommu_virt_defconfig
-s390                             alldefconfig
-i386                              allnoconfig
-i386                             allyesconfig
-i386                             alldefconfig
-i386                                defconfig
-ia64                             allmodconfig
-ia64                                defconfig
-ia64                              allnoconfig
-ia64                             allyesconfig
-ia64                             alldefconfig
-nios2                         10m50_defconfig
-c6x                        evmc6678_defconfig
-xtensa                          iss_defconfig
-c6x                              allyesconfig
-xtensa                       common_defconfig
-openrisc                 simple_smp_defconfig
-openrisc                    or1ksim_defconfig
-nds32                               defconfig
-nds32                             allnoconfig
-csky                                defconfig
-alpha                               defconfig
-h8300                       h8s-sim_defconfig
-h8300                     edosk2674_defconfig
-m68k                       m5475evb_defconfig
-h8300                    h8300h-sim_defconfig
-m68k                           sun3_defconfig
-arc                                 defconfig
-arc                              allyesconfig
-powerpc                       ppc64_defconfig
-microblaze                      mmu_defconfig
-microblaze                    nommu_defconfig
-powerpc                           allnoconfig
-mips                      fuloong2e_defconfig
-mips                      malta_kvm_defconfig
-mips                             allyesconfig
-mips                         64r6el_defconfig
-mips                              allnoconfig
-mips                           32r2_defconfig
-parisc                            allnoconfig
-parisc                generic-64bit_defconfig
-parisc                generic-32bit_defconfig
-parisc                           allyesconfig
-i386                 randconfig-a002-20200327
-i386                 randconfig-a001-20200327
-x86_64               randconfig-a002-20200327
-x86_64               randconfig-a001-20200327
-i386                 randconfig-a003-20200327
-x86_64               randconfig-a003-20200327
-mips                 randconfig-a001-20200327
-nds32                randconfig-a001-20200327
-m68k                 randconfig-a001-20200327
-parisc               randconfig-a001-20200327
-alpha                randconfig-a001-20200327
-riscv                randconfig-a001-20200327
-c6x                  randconfig-a001-20200327
-h8300                randconfig-a001-20200327
-microblaze           randconfig-a001-20200327
-nios2                randconfig-a001-20200327
-sparc64              randconfig-a001-20200327
-s390                 randconfig-a001-20200327
-xtensa               randconfig-a001-20200327
-csky                 randconfig-a001-20200327
-openrisc             randconfig-a001-20200327
-sh                   randconfig-a001-20200327
-i386                 randconfig-b003-20200327
-i386                 randconfig-b001-20200327
-x86_64               randconfig-b003-20200327
-i386                 randconfig-b002-20200327
-x86_64               randconfig-b002-20200327
-x86_64               randconfig-b001-20200327
-x86_64               randconfig-c003-20200327
-x86_64               randconfig-c001-20200327
-i386                 randconfig-c002-20200327
-x86_64               randconfig-c002-20200327
-i386                 randconfig-c003-20200327
-i386                 randconfig-c001-20200327
-i386                 randconfig-d003-20200327
-i386                 randconfig-d001-20200327
-x86_64               randconfig-d002-20200327
-x86_64               randconfig-d001-20200327
-i386                 randconfig-d002-20200327
-x86_64               randconfig-d003-20200327
-x86_64               randconfig-e001-20200328
-i386                 randconfig-e002-20200328
-i386                 randconfig-e003-20200328
-x86_64               randconfig-e002-20200328
-i386                 randconfig-e001-20200328
-i386                 randconfig-f001-20200327
-i386                 randconfig-f003-20200327
-i386                 randconfig-f002-20200327
-x86_64               randconfig-f002-20200327
-x86_64               randconfig-f001-20200327
-x86_64               randconfig-h003-20200327
-i386                 randconfig-h003-20200327
-i386                 randconfig-h001-20200327
-x86_64               randconfig-h001-20200327
-i386                 randconfig-h002-20200327
-arm                  randconfig-a001-20200327
-ia64                 randconfig-a001-20200327
-sparc                randconfig-a001-20200327
-arc                  randconfig-a001-20200327
-riscv                            allyesconfig
-riscv                             allnoconfig
-riscv                               defconfig
-riscv                          rv32_defconfig
-riscv                            allmodconfig
-s390                          debug_defconfig
-s390                             allyesconfig
-s390                              allnoconfig
-s390                             allmodconfig
-s390                                defconfig
-sh                          rsk7269_defconfig
-sh                               allmodconfig
-sh                  sh7785lcr_32bit_defconfig
-sh                                allnoconfig
-sparc                               defconfig
-sparc64                             defconfig
-sparc64                           allnoconfig
-sparc64                          allyesconfig
-sparc64                          allmodconfig
-um                           x86_64_defconfig
-um                             i386_defconfig
-um                                  defconfig
-x86_64                              fedora-25
-x86_64                                  kexec
-x86_64                                    lkp
-x86_64                                   rhel
-x86_64                         rhel-7.2-clear
-x86_64                               rhel-7.6
+This isn't a bit field -- shouldn't this be "3"?
 
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+	...
+	HIDEPID_NOT_PTRACEABLE = 3,
+	HIDEPID_MAX
+
+etc?
+
+>  };
+>  
+>  struct proc_fs_info {
+> -- 
+> 2.25.2
+> 
+
+-- 
+Kees Cook
