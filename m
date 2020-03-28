@@ -2,103 +2,132 @@ Return-Path: <SRS0=NZ+o=5N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCED4C43331
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 17:37:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9E73C2D0EC
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 17:45:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F013206DB
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 17:37:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 84FDD20717
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 17:45:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585417540;
+	bh=4/8LQolKu8so+6XDSEG5uJlSl9nM13HcF/vq2+oIHWk=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=W3Q3aTpCq/wFb6zsmXOdeJLlLne7B3UDlOWnVJSwQV23bcM20ABi2Dr9vG7Y3O97J
+	 a+6Lg8vqKKwAPfEKCNGxRjBehCOqNgBK/8B5QQ6f3HmlSVDn+PQr+EXe5VY1AiMSyw
+	 RIut9bnQ03ltXIRkKLHYZipGz6PUYDhpvenilOG4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726518AbgC1Rhn (ORCPT
+        id S1726389AbgC1Rpj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 28 Mar 2020 13:37:43 -0400
-Received: from mx.sdf.org ([205.166.94.20]:58571 "EHLO mx.sdf.org"
+        Sat, 28 Mar 2020 13:45:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49200 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725807AbgC1Rhm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 28 Mar 2020 13:37:42 -0400
-Received: from sdf.org (IDENT:lkml@sdf.lonestar.org [205.166.94.16])
-        by mx.sdf.org (8.15.2/8.14.5) with ESMTPS id 02SHbC9e005749
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits) verified NO);
-        Sat, 28 Mar 2020 17:37:12 GMT
-Received: (from lkml@localhost)
-        by sdf.org (8.15.2/8.12.8/Submit) id 02SHbC1h016215;
-        Sat, 28 Mar 2020 17:37:12 GMT
-Date:   Sat, 28 Mar 2020 17:37:12 +0000
-From:   George Spelvin <lkml@SDF.ORG>
-To:     Maciej Zenczykowski <maze@google.com>
-Cc:     Kernel hackers <linux-kernel@vger.kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        Linux NetDev <netdev@vger.kernel.org>, lkml@sdf.org
-Subject: Re: [RFC PATCH v1 18/50] net/ipv6/addrconf.c: Use prandom_u32_max
- for rfc3315 backoff time computation
-Message-ID: <20200328173712.GB5859@SDF.ORG>
-References: <202003281643.02SGhD4n009959@sdf.org>
- <CANP3RGean6M7PuTMXKJrXSdU+2RgzqsoEvnQK5C0RFoXGfFwBA@mail.gmail.com>
+        id S1725807AbgC1Rpj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 28 Mar 2020 13:45:39 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id EEBF920714;
+        Sat, 28 Mar 2020 17:45:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1585417538;
+        bh=4/8LQolKu8so+6XDSEG5uJlSl9nM13HcF/vq2+oIHWk=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=2bjGQxo9mlXE9D3DGo4/rulDrFofQ+KoAww6tvgNtpbtLnNBifhG07biYFLrWZu+G
+         ABxZOtNXNxI5R77jk3VF1t3m7QPqE9Wa1rI5PBYKvjFEvDyibxRaXi+6Ng2HAvSazR
+         X9sioDYR52VC9XCWbpa8hwqaheYFYW53Xx1e1WmU=
+Date:   Sat, 28 Mar 2020 17:45:34 +0000
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Rohit Sarkar <rohitsarkar5398@gmail.com>,
+        linux-iio@vger.kernel.org, Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Jean-Baptiste Maneyrol <jmaneyrol@invensense.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] iio: imu: inv_mpu6050: add debugfs register r/w
+ interface
+Message-ID: <20200328174534.6851a9c0@archlinux>
+In-Reply-To: <20200327131901.GW1922688@smile.fi.intel.com>
+References: <5e7dfb41.1c69fb81.cc4bb.042f@mx.google.com>
+        <20200327131901.GW1922688@smile.fi.intel.com>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CANP3RGean6M7PuTMXKJrXSdU+2RgzqsoEvnQK5C0RFoXGfFwBA@mail.gmail.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Mar 28, 2020 at 09:56:58AM -0700, Maciej ?enczykowski wrote:
->>         /* multiply 'initial retransmission time' by 0.9 .. 1.1 */
->> -       u64 tmp = (900000 + prandom_u32() % 200001) * (u64)irt;
->> -       do_div(tmp, 1000000);
->> -       return (s32)tmp;
->> +       s32 range = irt / 5;
->> +       return irt - (s32)(range/2) + (s32)prandom_u32_max(range);
+On Fri, 27 Mar 2020 15:19:01 +0200
+Andy Shevchenko <andriy.shevchenko@linux.intel.com> wrote:
+
+> On Fri, Mar 27, 2020 at 06:40:23PM +0530, Rohit Sarkar wrote:
+> > The debugfs interface provides direct access to read and write device
+> > registers if debugfs is enabled.
+> > 
+> > Signed-off-by: Rohit Sarkar <rohitsarkar5398@gmail.com>
+> > ---
+> > Changelog v1->v2
+> > * grab a lock to protect driver state
+> > * add a comma at the end of structure member initialisation
+> > 
+> >  drivers/iio/imu/inv_mpu6050/inv_mpu_core.c | 19 +++++++++++++++++++
+> >  1 file changed, 19 insertions(+)
+> > 
+> > diff --git a/drivers/iio/imu/inv_mpu6050/inv_mpu_core.c b/drivers/iio/imu/inv_mpu6050/inv_mpu_core.c
+> > index 7cb9ff3d3e94..381a3fb09858 100644
+> > --- a/drivers/iio/imu/inv_mpu6050/inv_mpu_core.c
+> > +++ b/drivers/iio/imu/inv_mpu6050/inv_mpu_core.c
+> > @@ -1248,12 +1248,31 @@ static const struct attribute_group inv_attribute_group = {
+> >  	.attrs = inv_attributes
+> >  };
+> >  
+> > +static int inv_mpu6050_reg_access(struct iio_dev *indio_dev,
+> > +				  unsigned int reg,
+> > +				  unsigned int writeval,
+> > +				  unsigned int *readval)
+> > +{
+> > +	struct inv_mpu6050_state *st = iio_priv(indio_dev);  
 > 
-> The cast on range/2 looks entirely spurious
-
-You're absolutely right; sorry about that.  I was trying to
-preserve the previous code's mixture of signed and unsigned types
-and managed to confuse myself.
-
-(I think I got distracted researching whether the inputs could be
-negative.)
-
->>         /* multiply 'retransmission timeout' by 1.9 .. 2.1 */
->> -       u64 tmp = (1900000 + prandom_u32() % 200001) * (u64)rt;
->> -       do_div(tmp, 1000000);
->> -       if ((s32)tmp > mrt) {
->> +       s32 range = rt / 5;
->> +       s32 tmp = 2*rt - (s32)(range/2) + (s32)prandom_u32_max(range);
+> > +	int ret = 0;  
 > 
-> Here as well.  Honestly the cast on prandom might also not be
-> necessary, but that at least has a reason.
+> Assignment is redundant, but I think maintainers may update this when applying.
 
-The whole thing should go.   How about just doing it all in unsigned:
+Fixed up and applied to the togreg branch of iio.git and pushed
+out as testing for the autobuilders to play with it.
 
-static inline s32 rfc3315_s14_backoff_init(s32 irt)
-{
-	/* multiply 'initial retransmission time' by 0.9 .. 1.1 */
-	u32 range = irt / 5u;
-	return irt - range/2 + prandom_u32_max(range);
-}
+Jonathan
 
-static inline s32 rfc3315_s14_backoff_update(s32 rt, s32 mrt)
-{
-	/* multiply 'retransmission timeout' by 1.9 .. 2.1 */
-	 u32 range = rt / 5u;
-	 u32 tmp = 2u*rt - range/2 + prandom_u32_max(range);
-	 if (tmp > mrt) {
-		 /* multiply 'maximum retransmission time' by 0.9 .. 1.1 */
-		  range = mrt / 5u;
-		  tmp = mrt - range/2 + prandom_u32_max(range);
-	}
-	return tmp;
-}
+> 
+> > +
+> > +	mutex_lock(&st->lock);
+> > +	if (readval)
+> > +		ret = regmap_read(st->map, reg, readval);
+> > +	else
+> > +		ret = regmap_write(st->map, reg, writeval);
+> > +	mutex_unlock(&st->lock);
+> > +
+> > +	return ret;
+> > +}
+> > +
+> >  static const struct iio_info mpu_info = {
+> >  	.read_raw = &inv_mpu6050_read_raw,
+> >  	.write_raw = &inv_mpu6050_write_raw,
+> >  	.write_raw_get_fmt = &inv_write_raw_get_fmt,
+> >  	.attrs = &inv_attribute_group,
+> >  	.validate_trigger = inv_mpu6050_validate_trigger,
+> > +	.debugfs_reg_access = &inv_mpu6050_reg_access,
+> >  };
+> >  
+> >  /**
+> > -- 
+> > 2.23.0.385.gbc12974a89
+> >   
+> 
 
-That lets "range/2" be implemented as a 1-bit shift.
-
-An interesting question for the latter is whether
-"prandom_u32_max(range) - range/2" can be considered a common
-subexpression, or is they have to be *independent* random values.
