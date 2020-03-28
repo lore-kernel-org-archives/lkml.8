@@ -2,84 +2,143 @@ Return-Path: <SRS0=NZ+o=5N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C00C3C43331
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 20:03:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 001FFC2D0EC
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 20:06:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8260C20714
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 20:03:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD20E2071B
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 20:06:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585425824;
-	bh=2RE27pBV+J0beJOE//pS//H1FUDSi+8wfa7mLlayF24=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=ir5pzw9zRFITRJoFhVckx4bJyiVQ15g9u9X8C+gH7kqdm74DxzGgDZcTOa9bO3bCY
-	 jvVk6H9QsrAXePyBObx2RUWI4z50oRPDKcE4qL2eY+dLldLt4WzaGXtYWXFvTNYxcU
-	 HwpKx2XACMVmQVfFPR+a/8vnqr5lCyqCmjWEv/HY=
+	s=default; t=1585425997;
+	bh=B6FtBp+Kqnrr1x0jjJQnixnajydww8BM+vQDsjzdV4Q=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=gnAooSDCQQZDt3bPoGUtuUs6BS1J9BJGTxXqEvOr+Ks14j6j8jMY7r7NHsHlsZcCN
+	 joEhtHD3PogmXTUnh5oH+GUekCIyLcd6pjIm1htfGlKuwrOVu5HN0Kz1z9UVUmNf0Y
+	 F9fKqbGuME6vFywpxuL10pz6JFpbQJXPJliTEpSE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727387AbgC1UDn (ORCPT
+        id S1727484AbgC1UGg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 28 Mar 2020 16:03:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53072 "EHLO mail.kernel.org"
+        Sat, 28 Mar 2020 16:06:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53562 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726976AbgC1UDn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 28 Mar 2020 16:03:43 -0400
-Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
+        id S1726976AbgC1UGg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 28 Mar 2020 16:06:36 -0400
+Received: from localhost (mobile-166-175-186-165.mycingular.net [166.175.186.165])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 522A9206E6;
-        Sat, 28 Mar 2020 20:03:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2A103206E6;
+        Sat, 28 Mar 2020 20:06:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585425822;
-        bh=2RE27pBV+J0beJOE//pS//H1FUDSi+8wfa7mLlayF24=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=n7unn6Y+WsoRTcvhACJO3Saj8WOgkedFr4D8hFntwXp08pLVToFJhe7xQmOe3ClcF
-         AOE8MfqJsKVePsx7MdhWomgS1/s0+cBewzUnvh7PYENmWAk0xFs53tEv9JgXdblBs4
-         Z5oWWUMSiZbAgyB21DSQbbM2R0trxLKYRHThFwJc=
-Date:   Sat, 28 Mar 2020 13:03:41 -0700
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     David Ahern <dsahern@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, Yafang Shao <laoar.shao@gmail.com>,
-        Johannes Berg <johannes@sipsolutions.net>,
-        Shailabh Nagar <nagar@watson.ibm.com>
-Subject: Re: [PATCH] getdelays: Fix netlink attribute length
-Message-Id: <20200328130341.a23be12b3a0f4cf0288a0d84@linux-foundation.org>
-In-Reply-To: <20200327173111.63922-1-dsahern@kernel.org>
-References: <20200327173111.63922-1-dsahern@kernel.org>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        s=default; t=1585425995;
+        bh=B6FtBp+Kqnrr1x0jjJQnixnajydww8BM+vQDsjzdV4Q=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=Qd/zSnxFEl0abPfcWo6gRSzrSZZkcwrZmB6C9HPDpLawRVL+DDjkVJC8Cpmt5WF6w
+         4QGFmMCNE6+pf6T24if73Y1YLHiQSGisuKL1fBO6cwd/gwNTw12A1BMejm113uK/eU
+         JlTxFv2R3UEtRiNGE7C50UFi2CQZ6EOfornWg3Sg=
+Date:   Sat, 28 Mar 2020 15:06:33 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Greg KH <greg@kroah.com>
+Cc:     Kelsey Skunberg <skunberg.kelsey@gmail.com>,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        Kelsey Skunberg <kelsey.skunberg@gmail.com>,
+        rbilovol@cisco.com, stable <stable@vger.kernel.org>,
+        ddutile@redhat.com, ruslan.bilovol@gmail.com,
+        linux-kernel-mentees@lists.linuxfoundation.org, bodong@mellanox.com
+Subject: Re: [Linux-kernel-mentees] [PATCH v2] PCI: sysfs: Change bus_rescan
+ and dev_rescan to rescan
+Message-ID: <20200328200633.GA102137@google.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200326063524.GA922107@kroah.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 27 Mar 2020 11:31:11 -0600 David Ahern <dsahern@kernel.org> wrote:
-
-> A recent change to the netlink code:
->   6e237d099fac ("netlink: Relax attr validation for fixed length types")
-> logs a warning when programs send messages with invalid attributes
-> (e.g., wrong length for a u32). Yafang reported this error message
-> for tools/accounting/getdelays.c.
+On Thu, Mar 26, 2020 at 07:35:24AM +0100, Greg KH wrote:
+> On Wed, Mar 25, 2020 at 05:10:33PM -0500, Bjorn Helgaas wrote:
+> > -static DEVICE_ATTR_WO(dev_rescan);
+> > +static struct device_attribute dev_attr_dev_rescan = __ATTR(rescan, 0200, NULL,
+> > +							    dev_rescan_store);
 > 
-> send_cmd() is wrongly adding 1 to the attribute length. As noted in
-> include/uapi/linux/netlink.h nla_len should be NLA_HDRLEN + payload
-> length, so drop the +1.
+> Oops, this should just be DEVICE_ATTR(), no need for __ATTR() as this
+> isn't a kobject-only file.
+> 
+> So how about:
+> 
+> static DEVICE_ATTR(rescan, 0200, NULL, dev_rescan_store);
 
-Thanks.
+I don' think DEVICE_ATTR() works in this case because it uses the
+first argument ("rescan") to build both the C symbol for the
+device_attribute struct and the sysfs filename.
 
-> Fixes: 9e06d3f9f6b1 ("per task delay accounting taskstats interface: documentation fix")
-> Signed-off-by: David Ahern <dsahern@kernel.org>
-> Tested-by: Yafang Shao <laoar.shao@gmail.com>
+There are two instances in this file.  The two sysfs "rescan" files
+are not a problem, but the two "dev_attr_rescan_name" C symbols *are*.
+We could resolve that by putting the bus attributes in a different
+source file than the dev attributes, but it doesn't seem worth it now.
 
-I'll add Reported-by: as well.
+I tentatively have the patch below on pci/misc.  I dropped the
+tested-by and reviewed-by because I didn't want to put words in your
+mouths :)
 
-> Cc: Johannes Berg <johannes@sipsolutions.net>
-> Cc: Shailabh Nagar <nagar@watson.ibm.com>
+Bjorn
 
-Is this worth a cc:stable?
+commit bce34ce1806e ("PCI: sysfs: Revert "rescan" file renames")
+Author: Kelsey Skunberg <kelsey.skunberg@gmail.com>
+Date:   Wed Mar 25 09:17:08 2020 -0600
 
+    PCI: sysfs: Revert "rescan" file renames
+    
+    We changed these sysfs filenames:
+    
+      .../pci_bus/<domain:bus>/rescan  ->  .../pci_bus/<domain:bus>/bus_rescan
+      .../<domain:bus:dev.fn>/rescan   ->  .../<domain:bus:dev.fn>/dev_rescan
+    
+    and Ruslan reported [1] that this broke a userspace application.
+    
+    Revert these name changes so both files are named "rescan" again.
+    
+    Note that we have to use __ATTR() to assign custom C symbols, i.e.,
+    "struct device_attribute <symbol>".
+    
+    [1] https://lore.kernel.org/r/CAB=otbSYozS-ZfxB0nCiNnxcbqxwrHOSYxJJtDKa63KzXbXgpw@mail.gmail.com
+    
+    [bhelgaas: commit log, use __ATTR() both places so we don't have to rename
+    the attributes]
+    Fixes: 8bdfa145f582 ("PCI: sysfs: Define device attributes with DEVICE_ATTR*()")
+    Fixes: 4e2b79436e4f ("PCI: sysfs: Change DEVICE_ATTR() to DEVICE_ATTR_WO()")
+    Link: https://lore.kernel.org/r/20200325151708.32612-1-skunberg.kelsey@gmail.com
+    Signed-off-by: Kelsey Skunberg <kelsey.skunberg@gmail.com>
+    Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+    Cc: stable@vger.kernel.org	# v5.4+
 
+diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
+index 13f766db0684..335dd6fbf039 100644
+--- a/drivers/pci/pci-sysfs.c
++++ b/drivers/pci/pci-sysfs.c
+@@ -464,7 +464,8 @@ static ssize_t dev_rescan_store(struct device *dev,
+ 	}
+ 	return count;
+ }
+-static DEVICE_ATTR_WO(dev_rescan);
++static struct device_attribute dev_attr_dev_rescan = __ATTR(rescan, 0200, NULL,
++							    dev_rescan_store);
+ 
+ static ssize_t remove_store(struct device *dev, struct device_attribute *attr,
+ 			    const char *buf, size_t count)
+@@ -501,7 +502,8 @@ static ssize_t bus_rescan_store(struct device *dev,
+ 	}
+ 	return count;
+ }
+-static DEVICE_ATTR_WO(bus_rescan);
++static struct device_attribute dev_attr_bus_rescan = __ATTR(rescan, 0200, NULL,
++							    bus_rescan_store);
+ 
+ #if defined(CONFIG_PM) && defined(CONFIG_ACPI)
+ static ssize_t d3cold_allowed_store(struct device *dev,
