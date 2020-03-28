@@ -7,38 +7,37 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD7B7C2D0EC
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 11:00:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10C15C2D0EE
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 11:00:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8460320723
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 11:00:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E4FB420716
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 11:00:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727635AbgC1LAM (ORCPT
+        id S1727526AbgC1LAL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 28 Mar 2020 07:00:12 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:55582 "EHLO
+        Sat, 28 Mar 2020 07:00:11 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:55577 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727386AbgC1LAJ (ORCPT
+        with ESMTP id S1727355AbgC1LAI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 28 Mar 2020 07:00:09 -0400
+        Sat, 28 Mar 2020 07:00:08 -0400
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1jI9CA-0003ex-QI; Sat, 28 Mar 2020 12:00:06 +0100
+        id 1jI9C7-0003c9-4b; Sat, 28 Mar 2020 12:00:03 +0100
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id D4D201C04CE;
-        Sat, 28 Mar 2020 12:00:00 +0100 (CET)
-Date:   Sat, 28 Mar 2020 11:00:00 -0000
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id C0A3F1C03A9;
+        Sat, 28 Mar 2020 11:59:57 +0100 (CET)
+Date:   Sat, 28 Mar 2020 10:59:57 -0000
 From:   "tip-bot2 for Al Viro" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/cleanups] x86: get rid of small constant size cases in
- raw_copy_{to,from}_user()
+Subject: [tip: x86/cleanups] x86: switch ia32_setup_sigcontext() to unsafe_put_user()
 Cc:     Al Viro <viro@zeniv.linux.org.uk>, x86 <x86@kernel.org>,
         LKML <linux-kernel@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <158539320051.28353.7961284449453218037.tip-bot2@tip-bot2>
+Message-ID: <158539319742.28353.12586384356823817522.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -54,207 +53,93 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the x86/cleanups branch of tip:
 
-Commit-ID:     4b842e4e25b12951fa10dedb4bc16bc47e3b850c
-Gitweb:        https://git.kernel.org/tip/4b842e4e25b12951fa10dedb4bc16bc47e3b850c
+Commit-ID:     d2d2728d161cbc52739d823a7fb76f3ba2fb3519
+Gitweb:        https://git.kernel.org/tip/d2d2728d161cbc52739d823a7fb76f3ba2fb3519
 Author:        Al Viro <viro@zeniv.linux.org.uk>
-AuthorDate:    Sat, 15 Feb 2020 11:46:30 -05:00
+AuthorDate:    Sat, 15 Feb 2020 17:41:04 -05:00
 Committer:     Al Viro <viro@zeniv.linux.org.uk>
-CommitterDate: Wed, 18 Mar 2020 15:53:25 -04:00
+CommitterDate: Wed, 18 Mar 2020 20:40:56 -04:00
 
-x86: get rid of small constant size cases in raw_copy_{to,from}_user()
-
-Very few call sites where that would be triggered remain, and none
-of those is anywhere near hot enough to bother.
+x86: switch ia32_setup_sigcontext() to unsafe_put_user()
 
 Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
 ---
- arch/x86/include/asm/uaccess.h    |  12 +---
- arch/x86/include/asm/uaccess_32.h |  27 +-------
- arch/x86/include/asm/uaccess_64.h | 108 +-----------------------------
- 3 files changed, 2 insertions(+), 145 deletions(-)
+ arch/x86/ia32/ia32_signal.c | 64 ++++++++++++++++++------------------
+ 1 file changed, 33 insertions(+), 31 deletions(-)
 
-diff --git a/arch/x86/include/asm/uaccess.h b/arch/x86/include/asm/uaccess.h
-index ab8eab4..1cfa33b 100644
---- a/arch/x86/include/asm/uaccess.h
-+++ b/arch/x86/include/asm/uaccess.h
-@@ -378,18 +378,6 @@ do {									\
- 		     : "=r" (err), ltype(x)				\
- 		     : "m" (__m(addr)), "i" (errret), "0" (err))
- 
--#define __get_user_asm_nozero(x, addr, err, itype, rtype, ltype, errret)	\
--	asm volatile("\n"						\
--		     "1:	mov"itype" %2,%"rtype"1\n"		\
--		     "2:\n"						\
--		     ".section .fixup,\"ax\"\n"				\
--		     "3:	mov %3,%0\n"				\
--		     "	jmp 2b\n"					\
--		     ".previous\n"					\
--		     _ASM_EXTABLE_UA(1b, 3b)				\
--		     : "=r" (err), ltype(x)				\
--		     : "m" (__m(addr)), "i" (errret), "0" (err))
+diff --git a/arch/x86/ia32/ia32_signal.c b/arch/x86/ia32/ia32_signal.c
+index 23e2c55..af673ec 100644
+--- a/arch/x86/ia32/ia32_signal.c
++++ b/arch/x86/ia32/ia32_signal.c
+@@ -158,38 +158,40 @@ static int ia32_setup_sigcontext(struct sigcontext_32 __user *sc,
+ 				 void __user *fpstate,
+ 				 struct pt_regs *regs, unsigned int mask)
+ {
+-	int err = 0;
 -
+-	put_user_try {
+-		put_user_ex(get_user_seg(gs), (unsigned int __user *)&sc->gs);
+-		put_user_ex(get_user_seg(fs), (unsigned int __user *)&sc->fs);
+-		put_user_ex(get_user_seg(ds), (unsigned int __user *)&sc->ds);
+-		put_user_ex(get_user_seg(es), (unsigned int __user *)&sc->es);
+-
+-		put_user_ex(regs->di, &sc->di);
+-		put_user_ex(regs->si, &sc->si);
+-		put_user_ex(regs->bp, &sc->bp);
+-		put_user_ex(regs->sp, &sc->sp);
+-		put_user_ex(regs->bx, &sc->bx);
+-		put_user_ex(regs->dx, &sc->dx);
+-		put_user_ex(regs->cx, &sc->cx);
+-		put_user_ex(regs->ax, &sc->ax);
+-		put_user_ex(current->thread.trap_nr, &sc->trapno);
+-		put_user_ex(current->thread.error_code, &sc->err);
+-		put_user_ex(regs->ip, &sc->ip);
+-		put_user_ex(regs->cs, (unsigned int __user *)&sc->cs);
+-		put_user_ex(regs->flags, &sc->flags);
+-		put_user_ex(regs->sp, &sc->sp_at_signal);
+-		put_user_ex(regs->ss, (unsigned int __user *)&sc->ss);
+-
+-		put_user_ex(ptr_to_compat(fpstate), &sc->fpstate);
+-
+-		/* non-iBCS2 extensions.. */
+-		put_user_ex(mask, &sc->oldmask);
+-		put_user_ex(current->thread.cr2, &sc->cr2);
+-	} put_user_catch(err);
++	if (!user_access_begin(sc, sizeof(struct sigcontext_32)))
++		return -EFAULT;
+ 
+-	return err;
++	unsafe_put_user(get_user_seg(gs), (unsigned int __user *)&sc->gs, Efault);
++	unsafe_put_user(get_user_seg(fs), (unsigned int __user *)&sc->fs, Efault);
++	unsafe_put_user(get_user_seg(ds), (unsigned int __user *)&sc->ds, Efault);
++	unsafe_put_user(get_user_seg(es), (unsigned int __user *)&sc->es, Efault);
++
++	unsafe_put_user(regs->di, &sc->di, Efault);
++	unsafe_put_user(regs->si, &sc->si, Efault);
++	unsafe_put_user(regs->bp, &sc->bp, Efault);
++	unsafe_put_user(regs->sp, &sc->sp, Efault);
++	unsafe_put_user(regs->bx, &sc->bx, Efault);
++	unsafe_put_user(regs->dx, &sc->dx, Efault);
++	unsafe_put_user(regs->cx, &sc->cx, Efault);
++	unsafe_put_user(regs->ax, &sc->ax, Efault);
++	unsafe_put_user(current->thread.trap_nr, &sc->trapno, Efault);
++	unsafe_put_user(current->thread.error_code, &sc->err, Efault);
++	unsafe_put_user(regs->ip, &sc->ip, Efault);
++	unsafe_put_user(regs->cs, (unsigned int __user *)&sc->cs, Efault);
++	unsafe_put_user(regs->flags, &sc->flags, Efault);
++	unsafe_put_user(regs->sp, &sc->sp_at_signal, Efault);
++	unsafe_put_user(regs->ss, (unsigned int __user *)&sc->ss, Efault);
++
++	unsafe_put_user(ptr_to_compat(fpstate), &sc->fpstate, Efault);
++
++	/* non-iBCS2 extensions.. */
++	unsafe_put_user(mask, &sc->oldmask, Efault);
++	unsafe_put_user(current->thread.cr2, &sc->cr2, Efault);
++	user_access_end();
++	return 0;
++Efault:
++	user_access_end();
++	return -EFAULT;
+ }
+ 
  /*
-  * This doesn't do __uaccess_begin/end - the exception handling
-  * around it must do that.
-diff --git a/arch/x86/include/asm/uaccess_32.h b/arch/x86/include/asm/uaccess_32.h
-index ba2dc19..388a406 100644
---- a/arch/x86/include/asm/uaccess_32.h
-+++ b/arch/x86/include/asm/uaccess_32.h
-@@ -23,33 +23,6 @@ raw_copy_to_user(void __user *to, const void *from, unsigned long n)
- static __always_inline unsigned long
- raw_copy_from_user(void *to, const void __user *from, unsigned long n)
- {
--	if (__builtin_constant_p(n)) {
--		unsigned long ret;
--
--		switch (n) {
--		case 1:
--			ret = 0;
--			__uaccess_begin_nospec();
--			__get_user_asm_nozero(*(u8 *)to, from, ret,
--					      "b", "b", "=q", 1);
--			__uaccess_end();
--			return ret;
--		case 2:
--			ret = 0;
--			__uaccess_begin_nospec();
--			__get_user_asm_nozero(*(u16 *)to, from, ret,
--					      "w", "w", "=r", 2);
--			__uaccess_end();
--			return ret;
--		case 4:
--			ret = 0;
--			__uaccess_begin_nospec();
--			__get_user_asm_nozero(*(u32 *)to, from, ret,
--					      "l", "k", "=r", 4);
--			__uaccess_end();
--			return ret;
--		}
--	}
- 	return __copy_user_ll(to, (__force const void *)from, n);
- }
- 
-diff --git a/arch/x86/include/asm/uaccess_64.h b/arch/x86/include/asm/uaccess_64.h
-index 5cd1caa..bc10e3d 100644
---- a/arch/x86/include/asm/uaccess_64.h
-+++ b/arch/x86/include/asm/uaccess_64.h
-@@ -65,117 +65,13 @@ copy_to_user_mcsafe(void *to, const void *from, unsigned len)
- static __always_inline __must_check unsigned long
- raw_copy_from_user(void *dst, const void __user *src, unsigned long size)
- {
--	int ret = 0;
--
--	if (!__builtin_constant_p(size))
--		return copy_user_generic(dst, (__force void *)src, size);
--	switch (size) {
--	case 1:
--		__uaccess_begin_nospec();
--		__get_user_asm_nozero(*(u8 *)dst, (u8 __user *)src,
--			      ret, "b", "b", "=q", 1);
--		__uaccess_end();
--		return ret;
--	case 2:
--		__uaccess_begin_nospec();
--		__get_user_asm_nozero(*(u16 *)dst, (u16 __user *)src,
--			      ret, "w", "w", "=r", 2);
--		__uaccess_end();
--		return ret;
--	case 4:
--		__uaccess_begin_nospec();
--		__get_user_asm_nozero(*(u32 *)dst, (u32 __user *)src,
--			      ret, "l", "k", "=r", 4);
--		__uaccess_end();
--		return ret;
--	case 8:
--		__uaccess_begin_nospec();
--		__get_user_asm_nozero(*(u64 *)dst, (u64 __user *)src,
--			      ret, "q", "", "=r", 8);
--		__uaccess_end();
--		return ret;
--	case 10:
--		__uaccess_begin_nospec();
--		__get_user_asm_nozero(*(u64 *)dst, (u64 __user *)src,
--			       ret, "q", "", "=r", 10);
--		if (likely(!ret))
--			__get_user_asm_nozero(*(u16 *)(8 + (char *)dst),
--				       (u16 __user *)(8 + (char __user *)src),
--				       ret, "w", "w", "=r", 2);
--		__uaccess_end();
--		return ret;
--	case 16:
--		__uaccess_begin_nospec();
--		__get_user_asm_nozero(*(u64 *)dst, (u64 __user *)src,
--			       ret, "q", "", "=r", 16);
--		if (likely(!ret))
--			__get_user_asm_nozero(*(u64 *)(8 + (char *)dst),
--				       (u64 __user *)(8 + (char __user *)src),
--				       ret, "q", "", "=r", 8);
--		__uaccess_end();
--		return ret;
--	default:
--		return copy_user_generic(dst, (__force void *)src, size);
--	}
-+	return copy_user_generic(dst, (__force void *)src, size);
- }
- 
- static __always_inline __must_check unsigned long
- raw_copy_to_user(void __user *dst, const void *src, unsigned long size)
- {
--	int ret = 0;
--
--	if (!__builtin_constant_p(size))
--		return copy_user_generic((__force void *)dst, src, size);
--	switch (size) {
--	case 1:
--		__uaccess_begin();
--		__put_user_asm(*(u8 *)src, (u8 __user *)dst,
--			      ret, "b", "b", "iq", 1);
--		__uaccess_end();
--		return ret;
--	case 2:
--		__uaccess_begin();
--		__put_user_asm(*(u16 *)src, (u16 __user *)dst,
--			      ret, "w", "w", "ir", 2);
--		__uaccess_end();
--		return ret;
--	case 4:
--		__uaccess_begin();
--		__put_user_asm(*(u32 *)src, (u32 __user *)dst,
--			      ret, "l", "k", "ir", 4);
--		__uaccess_end();
--		return ret;
--	case 8:
--		__uaccess_begin();
--		__put_user_asm(*(u64 *)src, (u64 __user *)dst,
--			      ret, "q", "", "er", 8);
--		__uaccess_end();
--		return ret;
--	case 10:
--		__uaccess_begin();
--		__put_user_asm(*(u64 *)src, (u64 __user *)dst,
--			       ret, "q", "", "er", 10);
--		if (likely(!ret)) {
--			asm("":::"memory");
--			__put_user_asm(4[(u16 *)src], 4 + (u16 __user *)dst,
--				       ret, "w", "w", "ir", 2);
--		}
--		__uaccess_end();
--		return ret;
--	case 16:
--		__uaccess_begin();
--		__put_user_asm(*(u64 *)src, (u64 __user *)dst,
--			       ret, "q", "", "er", 16);
--		if (likely(!ret)) {
--			asm("":::"memory");
--			__put_user_asm(1[(u64 *)src], 1 + (u64 __user *)dst,
--				       ret, "q", "", "er", 8);
--		}
--		__uaccess_end();
--		return ret;
--	default:
--		return copy_user_generic((__force void *)dst, src, size);
--	}
-+	return copy_user_generic((__force void *)dst, src, size);
- }
- 
- static __always_inline __must_check
