@@ -6,32 +6,32 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3CCCC43331
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 16:44:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 211A3C2D0EB
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 16:44:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A5822206F6
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 16:44:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 01A1B206F6
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 16:44:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727969AbgC1QoF (ORCPT
+        id S1727979AbgC1QoH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 28 Mar 2020 12:44:05 -0400
-Received: from mga14.intel.com ([192.55.52.115]:39979 "EHLO mga14.intel.com"
+        Sat, 28 Mar 2020 12:44:07 -0400
+Received: from mga14.intel.com ([192.55.52.115]:39985 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727944AbgC1QoB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1727951AbgC1QoB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 28 Mar 2020 12:44:01 -0400
-IronPort-SDR: pup0b7g/gkJr5q9fXAFiA+xNw8OKR1vb2pTRrhA8B35R7umn4ES9/q2TDcgSjgePLs7ELJW3Bd
- R78V4YI9Gj0w==
+IronPort-SDR: JH015GfkQNe7R5i9s5uAt/RmwnNl2JjEiKuPkh2Fww7ql8ukslKD56RrqnD89spYIdG9rX4yko
+ lkrotWIxpixQ==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga005.fm.intel.com ([10.253.24.32])
   by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Mar 2020 09:43:59 -0700
-IronPort-SDR: 98lrM6BRev5n00SzJfdmrS3VBwqnldZQ5KAtfQzjiLdfceKDT/z0v/kkFTtr23EU8d4Am1XOu7
- 32F6cGXZpbIQ==
+IronPort-SDR: 4kmXup3fXjGiqEGSPQKZgCpaI0HHS7StNFhatMZcE9M35j/rmKBRS9W17eDbYpJ60qPsvG7O96
+ KF0TFZVjn3hA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.72,317,1580803200"; 
-   d="scan'208";a="447771182"
+   d="scan'208";a="447771187"
 Received: from yyu32-desk.sc.intel.com ([143.183.136.146])
-  by fmsmga005.fm.intel.com with ESMTP; 28 Mar 2020 09:43:58 -0700
+  by fmsmga005.fm.intel.com with ESMTP; 28 Mar 2020 09:43:59 -0700
 From:   Yu-cheng Yu <yu-cheng.yu@intel.com>
 To:     linux-kernel@vger.kernel.org, x86@kernel.org,
         "H. Peter Anvin" <hpa@zytor.com>,
@@ -47,9 +47,9 @@ To:     linux-kernel@vger.kernel.org, x86@kernel.org,
         Fenghua Yu <fenghua.yu@intel.com>,
         Peter Zijlstra <peterz@infradead.org>
 Cc:     Yu-cheng Yu <yu-cheng.yu@intel.com>
-Subject: [PATCH v3 08/10] x86/fpu: Introduce copy_supervisor_to_kernel()
-Date:   Sat, 28 Mar 2020 09:43:05 -0700
-Message-Id: <20200328164307.17497-9-yu-cheng.yu@intel.com>
+Subject: [PATCH v3 10/10] x86/fpu/xstate: Restore supervisor states for signal return
+Date:   Sat, 28 Mar 2020 09:43:07 -0700
+Message-Id: <20200328164307.17497-11-yu-cheng.yu@intel.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20200328164307.17497-1-yu-cheng.yu@intel.com>
 References: <20200328164307.17497-1-yu-cheng.yu@intel.com>
@@ -60,152 +60,109 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The XSAVES instruction takes a mask and saves only the features specified
-in that mask.  The kernel normally specifies that all features be saved.
+As described in the previous patch, the signal return fast path directly
+restores user states from the user buffer.  Once that succeeds, restore
+supervisor states (but only when they are not yet restored).
 
-XSAVES also unconditionally uses the "compacted format" which means that
-all specified features are saved next to each other in memory.  If a
-feature is removed from the mask, all the features after it will "move
-up" into earlier locations in the buffer.
+For the slow path, save supervisor states to preserve them across context
+switches, and restore after the user states are restored.
 
-Introduce copy_supervisor_to_kernel(), which saves only supervisor states
-and then moves those states into the standard location where they are
-normally found.
+The previous version has the overhead of an XSAVES in both the fast and the
+slow paths.  It is addressed as the following:
+
+- In the fast path, only do an XRSTORS.
+- In the slow path, do a supervisor-state-only XSAVES, and relocate the
+  buffer contents.
+
+Some thoughts in the implementation:
+
+- In the slow path, can any supervisor state become stale between
+  save/restore?
+
+  Answer: set_thread_flag(TIF_NEED_FPU_LOAD) protects the xstate buffer.
+
+- In the slow path, can any code reference a stale supervisor state
+  register between save/restore?
+
+  Answer: In the current lazy-restore scheme, any reference to xstate
+  registers needs fpregs_lock()/fpregs_unlock() and __fpregs_load_activate().
+
+- Are there other options?
+
+  One other option is eagerly restoring all supervisor states.
+
+  Currently, CET user-mode states and ENQCMD's PASID do not need to be
+  eagerly restored.  The upcoming CET kernel-mode states (24 bytes) need
+  to be eagerly restored.  To me, eagerly restoring all supervisor states
+  adds more overhead then benefit at this point.
+
+v3:
+- Change copy_xregs_to_kernel() to copy_supervisor_to_kernel(), which is
+  introduced in a previous patch.
+- Update commit log.
 
 Signed-off-by: Yu-cheng Yu <yu-cheng.yu@intel.com>
+Reviewed-by: Dave Hansen <dave.hansen@linux.intel.com>
 ---
- arch/x86/include/asm/fpu/xstate.h |  1 +
- arch/x86/kernel/fpu/xstate.c      | 84 +++++++++++++++++++++++++++++++
- 2 files changed, 85 insertions(+)
+ arch/x86/kernel/fpu/signal.c | 27 ++++++++++++++++++++++-----
+ 1 file changed, 22 insertions(+), 5 deletions(-)
 
-diff --git a/arch/x86/include/asm/fpu/xstate.h b/arch/x86/include/asm/fpu/xstate.h
-index 92104b298d77..422d8369012a 100644
---- a/arch/x86/include/asm/fpu/xstate.h
-+++ b/arch/x86/include/asm/fpu/xstate.h
-@@ -75,6 +75,7 @@ int copy_xstate_to_kernel(void *kbuf, struct xregs_state *xsave, unsigned int of
- int copy_xstate_to_user(void __user *ubuf, struct xregs_state *xsave, unsigned int offset, unsigned int size);
- int copy_kernel_to_xstate(struct xregs_state *xsave, const void *kbuf);
- int copy_user_to_xstate(struct xregs_state *xsave, const void __user *ubuf);
-+void copy_supervisor_to_kernel(struct xregs_state *xsave);
- 
- /* Validate an xstate header supplied by userspace (ptrace or sigreturn) */
- int validate_user_xstate_header(const struct xstate_header *hdr);
-diff --git a/arch/x86/kernel/fpu/xstate.c b/arch/x86/kernel/fpu/xstate.c
-index 28e8229b23a7..7d0a9f878b26 100644
---- a/arch/x86/kernel/fpu/xstate.c
-+++ b/arch/x86/kernel/fpu/xstate.c
-@@ -62,6 +62,7 @@ u64 xfeatures_mask_all __read_mostly;
- static unsigned int xstate_offsets[XFEATURE_MAX] = { [ 0 ... XFEATURE_MAX - 1] = -1};
- static unsigned int xstate_sizes[XFEATURE_MAX]   = { [ 0 ... XFEATURE_MAX - 1] = -1};
- static unsigned int xstate_comp_offsets[XFEATURE_MAX] = { [ 0 ... XFEATURE_MAX - 1] = -1};
-+static unsigned int xstate_supervisor_only_offsets[XFEATURE_MAX] = { [ 0 ... XFEATURE_MAX - 1] = -1};
- 
- /*
-  * The XSAVE area of kernel can be in standard or compacted format;
-@@ -392,6 +393,33 @@ static void __init setup_xstate_comp_offsets(void)
+diff --git a/arch/x86/kernel/fpu/signal.c b/arch/x86/kernel/fpu/signal.c
+index 545ca4314096..4dad5afc938d 100644
+--- a/arch/x86/kernel/fpu/signal.c
++++ b/arch/x86/kernel/fpu/signal.c
+@@ -347,6 +347,11 @@ static int __fpu__restore_sig(void __user *buf, void __user *buf_fx, int size)
+ 		ret = copy_user_to_fpregs_zeroing(buf_fx, user_xfeatures, fx_only);
+ 		pagefault_enable();
+ 		if (!ret) {
++			/* Restore supervisor states */
++			if (test_thread_flag(TIF_NEED_FPU_LOAD) &&
++			    xfeatures_mask_supervisor())
++				copy_kernel_to_xregs(&fpu->state.xsave,
++						     xfeatures_mask_supervisor());
+ 			fpregs_mark_activate();
+ 			fpregs_unlock();
+ 			return 0;
+@@ -364,14 +369,21 @@ static int __fpu__restore_sig(void __user *buf, void __user *buf_fx, int size)
  	}
- }
  
-+/*
-+ * Setup offsets of a supervisor-state-only XSAVES buffer:
-+ *
-+ * The offsets stored in xstate_comp_offsets[] only work for one specific
-+ * value of the Requested Feature BitMap (RFBM).  In cases where a different
-+ * RFBM value is used, a different set of offsets is required.  This set of
-+ * offsets is for when RFBM=xfeatures_mask_supervisor().
-+ */
-+static void __init setup_supervisor_only_offsets(void)
-+{
-+	unsigned int next_offset;
-+	int i;
-+
-+	next_offset = FXSAVE_SIZE + XSAVE_HDR_SIZE;
-+
-+	for (i = FIRST_EXTENDED_XFEATURE; i < XFEATURE_MAX; i++) {
-+		if (!xfeature_enabled(i) || !xfeature_is_supervisor(i))
-+			continue;
-+
-+		if (xfeature_is_aligned(i))
-+			next_offset = ALIGN(next_offset, 64);
-+
-+		xstate_supervisor_only_offsets[i] = next_offset;
-+		next_offset += xstate_sizes[i];
+ 	/*
+-	 * The current state of the FPU registers does not matter. By setting
+-	 * TIF_NEED_FPU_LOAD unconditionally it is ensured that the our xstate
+-	 * is not modified on context switch and that the xstate is considered
++	 * Supervisor states are not modified by user space input.  Save
++	 * current supervisor states first.
++	 * By setting TIF_NEED_FPU_LOAD it is ensured that our xstate is
++	 * not modified on context switch and that the xstate is considered
+ 	 * to be loaded again on return to userland (overriding last_cpu avoids
+ 	 * the optimisation).
+ 	 */
+-	set_thread_flag(TIF_NEED_FPU_LOAD);
++	fpregs_lock();
++	if (!test_thread_flag(TIF_NEED_FPU_LOAD)) {
++		if (xfeatures_mask_supervisor())
++			copy_supervisor_to_kernel(&fpu->state.xsave);
++		set_thread_flag(TIF_NEED_FPU_LOAD);
 +	}
-+}
-+
- /*
-  * Print out xstate component offsets and sizes
-  */
-@@ -790,6 +818,7 @@ void __init fpu__init_system_xstate(void)
- 	fpu__init_prepare_fx_sw_frame();
- 	setup_init_fpu_buf();
- 	setup_xstate_comp_offsets();
-+	setup_supervisor_only_offsets();
- 	print_xstate_offset_size();
+ 	__fpu_invalidate_fpregs_state(fpu);
++	fpregs_unlock();
  
- 	pr_info("x86/fpu: Enabled xstate features 0x%llx, context size is %d bytes, using '%s' format.\n",
-@@ -1257,6 +1286,61 @@ int copy_user_to_xstate(struct xregs_state *xsave, const void __user *ubuf)
- 	return 0;
- }
+ 	if (use_xsave() && !fx_only) {
+ 		u64 init_bv = xfeatures_mask_user() & ~user_xfeatures;
+@@ -393,7 +405,12 @@ static int __fpu__restore_sig(void __user *buf, void __user *buf_fx, int size)
+ 		fpregs_lock();
+ 		if (unlikely(init_bv))
+ 			copy_kernel_to_xregs(&init_fpstate.xsave, init_bv);
+-		ret = copy_kernel_to_xregs_err(&fpu->state.xsave, user_xfeatures);
++		/*
++		 * Restore previously saved supervisor xstates along with
++		 * copied-in user xstates.
++		 */
++		ret = copy_kernel_to_xregs_err(&fpu->state.xsave,
++					       user_xfeatures | xfeatures_mask_supervisor());
  
-+/*
-+ * Save only supervisor states to the kernel buffer.  This blows away all
-+ * old states, and is intended to be used only in __fpu__restore_sig(), where
-+ * user states are restored from the user buffer.
-+ */
-+void copy_supervisor_to_kernel(struct xregs_state *xstate)
-+{
-+	struct xstate_header *header;
-+	u64 max_bit, min_bit;
-+	u32 lmask, hmask;
-+	int err, i;
-+
-+	if (WARN_ON(!boot_cpu_has(X86_FEATURE_XSAVES)))
-+		return;
-+
-+	if (!xfeatures_mask_supervisor())
-+		return;
-+
-+	max_bit = __fls(xfeatures_mask_supervisor());
-+	min_bit = __ffs(xfeatures_mask_supervisor());
-+
-+	lmask = xfeatures_mask_supervisor();
-+	hmask = xfeatures_mask_supervisor() >> 32;
-+	XSTATE_OP(XSAVES, xstate, lmask, hmask, err);
-+
-+	/* We should never fault when copying to a kernel buffer: */
-+	if (WARN_ON_FPU(err))
-+		return;
-+
-+	/*
-+	 * At this point, the buffer has only supervisor states and must be
-+	 * converted back to normal kernel format.
-+	 */
-+	header = &xstate->header;
-+	header->xcomp_bv |= xfeatures_mask_all;
-+
-+	/*
-+	 * This only moves states up in the buffer.  Start with
-+	 * the last state and move backwards so that states are
-+	 * not overwritten until after they are moved.  Note:
-+	 * memmove() allows overlapping src/dst buffers.
-+	 */
-+	for (i = max_bit; i >= min_bit; i--) {
-+		u8 *xbuf = (u8 *)xstate;
-+
-+		if (!((header->xfeatures >> i) & 1))
-+			continue;
-+
-+		/* Move xfeature 'i' into its normal location */
-+		memmove(xbuf + xstate_comp_offsets[i],
-+			xbuf + xstate_supervisor_only_offsets[i],
-+			xstate_sizes[i]);
-+	}
-+}
-+
- #ifdef CONFIG_PROC_PID_ARCH_STATUS
- /*
-  * Report the amount of time elapsed in millisecond since last AVX512
+ 	} else if (use_fxsr()) {
+ 		ret = __copy_from_user(&fpu->state.fxsave, buf_fx, state_size);
 -- 
 2.21.0
 
