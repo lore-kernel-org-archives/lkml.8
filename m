@@ -2,98 +2,134 @@ Return-Path: <SRS0=NZ+o=5N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF42CC43331
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 15:15:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C2AFC2D0E5
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 15:19:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 92D0A20716
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 15:15:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JH8pKoaV"
+	by mail.kernel.org (Postfix) with ESMTP id 042FB2073B
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 15:19:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585408775;
+	bh=3FpOqlp62zWsadRbpg8ISDnWML7ZQ6fDKR5Cz7RJ+g8=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=d9YucXDVVIYMFvFXlP+52yxRYnYqNSih/HrbUD160N5jDe44ecQVeaz5rhjABwgco
+	 DwuyOosYOwGsSwtRbNfjHORgBbWL1/X+K5glWqu2+DI8KJHWyWL9bxyE83nD5Iq0fz
+	 2leDiLf4eAIq9eBMR9RCX1nrCCoVI2R8MWrsoZQY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727131AbgC1PP4 (ORCPT
+        id S1727067AbgC1PTe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 28 Mar 2020 11:15:56 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:35923 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725807AbgC1PPz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 28 Mar 2020 11:15:55 -0400
-Received: by mail-wm1-f67.google.com with SMTP id g62so15980843wme.1
-        for <linux-kernel@vger.kernel.org>; Sat, 28 Mar 2020 08:15:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=/c3uFVYUYQl/2XwBUimjSFjQvuiMRfSeEykM9N3l/I8=;
-        b=JH8pKoaVaZS2J6ZoIu6qROkA7P8WHyc9ogiGRDBk3Np3vSo3wt0gSEM0W/vx3cIN0t
-         /6yWD1DRFKp2WvJmZpxp2XjwVUtdFUqXXrOjgM5rGrcSnKyj3g+75WvT6mKPO/PwMqpS
-         fYH6fApK1aslfPnW8GtHi/SrKZdGQg4/VbQoLajkYpLuADKLo2YOEJtV9iJe5kJx5iTr
-         Iwz/NRnjTfSwr2ZH9QHnixEgCIJF9SJ1B1yveVIVAFXvc3wCtf52rOJCmjCTicvzo2yU
-         A2LrFYcmwWZgAQVD9NhvEUNau9hYi8s80G6MdgXlIpgEuCDiGSHfUZNkmDAsl4btk98I
-         j10Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=/c3uFVYUYQl/2XwBUimjSFjQvuiMRfSeEykM9N3l/I8=;
-        b=EvH5uH2nWAoSY7PAj8YN6tL0lYk0kwJ9+azkt/eQ+YEiC06urPm0n0Hsj3+jKFm5Ym
-         XPbtZXzPKi7n8jn/FDSGxJeB99W++8Z2josLJQQPIqsJQj1uc8f/leg4M4T5KzXgiSu2
-         Kt6S4hPRk5jWBfQSQ0INL7CFKfcZPaAd/qUxLHN+/ns3H3deixrUlf8UroC9wD+Yn4Kk
-         8z8KULONh0eTqf39oY3ubuLDKiUBZ/4guIdoii/MFLU6mD4svWBo9FtCl1UBsrymsmFV
-         GbjDrZ4TFd57h5moF7GGn+jIufJMbg2RjW0zUe9qh1RiXmn0rRK1ONPtsGXDlQNlvBTh
-         4trw==
-X-Gm-Message-State: ANhLgQ2PYqrqj3ONUNWt28TmcM9VCemVYw/OXQZmWdymXtxkeU7DTPFd
-        +V5Sb4YN2Dnoz/bGZsuUIoQ=
-X-Google-Smtp-Source: ADFU+vtPbs4QlSi8mM/oGtaMDDmrCshfozdELZ+oX2z1vJJhlFbjHXNTskIEua0Q9Y80pyqtygO7/A==
-X-Received: by 2002:a1c:8149:: with SMTP id c70mr4277679wmd.123.1585408552450;
-        Sat, 28 Mar 2020 08:15:52 -0700 (PDT)
-Received: from linux.user.selfnet.de ([2001:7c7:212a:d400:d0b1:54e8:4350:d529])
-        by smtp.googlemail.com with ESMTPSA id 5sm10321488wrs.20.2020.03.28.08.15.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 28 Mar 2020 08:15:52 -0700 (PDT)
-From:   SandeshKenjanaAshok <sandeshkenjanaashok@gmail.com>
-Cc:     sandeshkenjanaashok@gmail.com,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        =?UTF-8?q?Arve=20Hj=C3=B8nnev=C3=A5g?= <arve@android.com>,
-        Todd Kjos <tkjos@android.com>,
-        Martijn Coenen <maco@android.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Christian Brauner <christian@brauner.io>,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] staging: android: ashmem: Declared file operation with const keyword
-Date:   Sat, 28 Mar 2020 16:15:23 +0100
-Message-Id: <20200328151523.17516-1-sandeshkenjanaashok@gmail.com>
-X-Mailer: git-send-email 2.17.1
-To:     unlisted-recipients:; (no To-header on input)
+        Sat, 28 Mar 2020 11:19:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35680 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726290AbgC1PTd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 28 Mar 2020 11:19:33 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 70B7B20716;
+        Sat, 28 Mar 2020 15:19:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1585408772;
+        bh=3FpOqlp62zWsadRbpg8ISDnWML7ZQ6fDKR5Cz7RJ+g8=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=z1PRnsmUmGISBlei7hEHBrqg8rGQ1FABnyjr2RG6UbhySsO8mypi7rlSYlh1A95eV
+         JDDM02bi57ZWMGxQGGU9QL5da7q4a9PYSMYY65Uv9weJsugR+HPoXC4tLXbLzl5+SE
+         ahJf0wcXi2hM9GjOVUjDFhwvj/UBNxlCCw+q/6H0=
+Date:   Sat, 28 Mar 2020 15:19:28 +0000
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Mike Looijmans <mike.looijmans@topic.nl>
+Cc:     devicetree@vger.kernel.org, linux-iio@vger.kernel.org,
+        linux-kernel@vger.kernel.org, knaack.h@gmx.de, lars@metafoo.de,
+        pmeerw@pmeerw.net, robh+dt@kernel.org, mark.rutland@arm.com
+Subject: Re: [PATCH v2] dt-bindings: iio: accel: Add bmi088 accelerometer
+ bindings
+Message-ID: <20200328151928.12f5517e@archlinux>
+In-Reply-To: <20200323095551.23500-1-mike.looijmans@topic.nl>
+References: <20200323095551.23500-1-mike.looijmans@topic.nl>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Warning found by checkpatch.pl script.
+On Mon, 23 Mar 2020 10:55:51 +0100
+Mike Looijmans <mike.looijmans@topic.nl> wrote:
 
-Signed-off-by: SandeshKenjanaAshok <sandeshkenjanaashok@gmail.com>
----
- drivers/staging/android/ashmem.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> This adds the device-tree bindings for the Bosch Sensortec BMI088 IMU,
+> the accelerometer part.
+> 
+> Signed-off-by: Mike Looijmans <mike.looijmans@topic.nl>
+Hi Mike
 
-diff --git a/drivers/staging/android/ashmem.c b/drivers/staging/android/ashmem.c
-index 8044510d8ec6..fbb6ac9ba1ab 100644
---- a/drivers/staging/android/ashmem.c
-+++ b/drivers/staging/android/ashmem.c
-@@ -367,7 +367,7 @@ ashmem_vmfile_get_unmapped_area(struct file *file, unsigned long addr,
- 
- static int ashmem_mmap(struct file *file, struct vm_area_struct *vma)
- {
--	static struct file_operations vmfile_fops;
-+	static const struct file_operations vmfile_fops;
- 	struct ashmem_area *asma = file->private_data;
- 	int ret = 0;
- 
--- 
-2.17.1
+The binding should look to be as complete as possible, independent on what
+we are actually using in the driver.
+
+A quick glance at the datasheet shows me this device has 2 interrupt lines
+dedicated to the accelerometer and 2 power supplies, vddio and vdd.
+
+Interrupt lines for flexible parts like this are fiddly to do, so take
+a look at how we do this in other drivers.  Hmm. the interrupt line to set
+a tag is 'interesting'.  I'd ignore that for now...
+
+> ---
+> v2: convert to yaml format
+> 
+>  .../bindings/iio/accel/bosch,bmi088.yaml      | 38 +++++++++++++++++++
+>  1 file changed, 38 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/iio/accel/bosch,bmi088.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/iio/accel/bosch,bmi088.yaml b/Documentation/devicetree/bindings/iio/accel/bosch,bmi088.yaml
+> new file mode 100644
+> index 000000000000..715f79c3b2a9
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/iio/accel/bosch,bmi088.yaml
+> @@ -0,0 +1,38 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/iio/accel/bosch,bma400.yaml#
+
+Should reflect the compatible so include the accel part.
+
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Bosch BMI088 IMU accelerometer part
+> +
+> +maintainers:
+> +  - Mike Looijmans <mike.looijmans@topic.nl>
+> +
+> +description: |
+> +  Acceleration part of the IMU sensor with an SPI interface
+> +
+> +  Specifications about the sensor can be found at:
+> +    https://www.bosch-sensortec.com/media/boschsensortec/downloads/datasheets/bst-bmi088-ds001.pdf
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - bosch,bmi088_accel
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +
+> +examples:
+> +  - |
+> +  spi {
+> +    bmi088_accel@1 {
+> +      compatible = "bosch,bmi088_accel";
+> +      reg = <1>;
+> +      spi-max-frequency = <10000000>;
+> +    };
+> +  };
 
