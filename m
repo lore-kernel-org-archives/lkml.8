@@ -2,163 +2,132 @@ Return-Path: <SRS0=NZ+o=5N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	HK_RANDOM_FROM,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C97CEC2D0EC
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 08:51:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B954FC43331
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 08:52:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A90CF206F2
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 08:51:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6EEF3206F2
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 08:52:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZqtRAXEc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726497AbgC1Ivv (ORCPT
+        id S1726661AbgC1Iwm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 28 Mar 2020 04:51:51 -0400
-Received: from mga09.intel.com ([134.134.136.24]:27699 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726271AbgC1Ivv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 28 Mar 2020 04:51:51 -0400
-IronPort-SDR: m8kvRmMkW39MJBLjWsF9Jfpa4EG8Uw6SCybEJvZmxwZWd0vI/E2GWpcjvySGhyNcQPp3IH1899
- AAb3zzwbwBbw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Mar 2020 01:51:50 -0700
-IronPort-SDR: DnFNzJoKKx4pybnpmbugiNxSEoGLALF6L+Ygzs6p+mB+mGRbQu39tKO1jT86ZiXlwnsVWxtQa7
- 4DLnc1OpyAjQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,315,1580803200"; 
-   d="scan'208";a="394616392"
-Received: from xiaoyaol-mobl.ccr.corp.intel.com (HELO [10.249.174.239]) ([10.249.174.239])
-  by orsmga004.jf.intel.com with ESMTP; 28 Mar 2020 01:51:48 -0700
-Subject: Re: [RFC v3 0/3] Fix errors when try to build kvm selftests on
- specified output
-To:     shuah <shuah@kernel.org>, Paolo Bonzini <pbonzini@redhat.com>
-Cc:     kvm@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200326030750.173972-1-xiaoyao.li@intel.com>
- <41d5d89e-79c2-6f7d-de3e-ca3255e910e8@kernel.org>
- <cb445047-ab84-0c49-cfba-ec6933971dc7@intel.com>
- <71a5abdf-07b5-d927-1a08-de8019b3f39f@kernel.org>
-From:   Xiaoyao Li <xiaoyao.li@intel.com>
-Message-ID: <77ad35cf-6332-9381-200e-40b6a3d18070@intel.com>
-Date:   Sat, 28 Mar 2020 16:51:47 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
-MIME-Version: 1.0
-In-Reply-To: <71a5abdf-07b5-d927-1a08-de8019b3f39f@kernel.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+        Sat, 28 Mar 2020 04:52:42 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:42791 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726202AbgC1Iwm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 28 Mar 2020 04:52:42 -0400
+Received: by mail-wr1-f65.google.com with SMTP id h15so14528784wrx.9
+        for <linux-kernel@vger.kernel.org>; Sat, 28 Mar 2020 01:52:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=3AEQAcypEG7YogV8HmIRZ50gECqZh9q92MAZBge2+YU=;
+        b=ZqtRAXEcQ7PFW8yW8RYy9xR2yQrRRu+GitcHg92Wc0vQcd8CQSPhIwL6RtFg1OJNUo
+         FE5nowMs45s8+uFFvO/uy92hKaEDTm1XyN4WNGoNVsvSj1FI0uK1hD3WdeS1NbJT7znE
+         EQtGk4jWn+K3x7L9WkCse46QKVzrYeJAqC+5OYLgKXGqluFp9gVWuWFCUJ8gi7Gr/Gx1
+         C4VUyYfYi9vuAku+tFTWy+OuxpSKSQiu4XZICe8B1KOK0Bfd5K9tmiJvBiewL3opm8M2
+         1P6sT//zEB+X4oTiR+hnmeVAa3ljYfWDswcFR7YNLH0t8wEzYWJns2u53UtwPfaLpON8
+         UBqQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=3AEQAcypEG7YogV8HmIRZ50gECqZh9q92MAZBge2+YU=;
+        b=furYHctHhDKwveNB2ccSZ2dYx3Sh7alZsSoKPGDPROfKClpugDapuC5r+HLl2WKiTR
+         ITp7B6Mcg5X64a+xYqYx4zmoJpuGfSbFhoYUk+RnMxqU3iINxTSN8C3vE2uoY9aIbUmf
+         mwYpQBM5DwOcpVg5rHnjVc1uxqJaQIGFdUlwSkauwsduxk0HMGF8uSwar9vuf5ZIZ0vJ
+         8J4M8z0YtSYwtGUg2f33iO3Q2PXGMLlNKRo1iCjWyrLQG/DWd3F7PKdmtTQGj6161nIf
+         AJt05LEoGhpUIfEwKQfH5YBzJV5v1UHf9g4rXxPFEww5I/XKqxCKJ0SYJLgDN9tDdXQt
+         Wh/w==
+X-Gm-Message-State: ANhLgQ21Y6bhOiyCvZ3toglBEEpryYmg3rnD2vPeQgCADoPPP/m9JEQf
+        hSV15lanlJhNp7HSSWRaqghybUFW
+X-Google-Smtp-Source: ADFU+vsB9xDO9cnmZ4F16dn1N7fnG9PegS4u1mn7UcXHit1GMb6Gy9S/Oykb5EKCmHtjsQvYh4M41Q==
+X-Received: by 2002:a5d:4648:: with SMTP id j8mr3871892wrs.202.1585385560083;
+        Sat, 28 Mar 2020 01:52:40 -0700 (PDT)
+Received: from ogabbay-VM.habana-labs.com ([31.154.190.6])
+        by smtp.gmail.com with ESMTPSA id k15sm11908683wrm.55.2020.03.28.01.52.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 28 Mar 2020 01:52:38 -0700 (PDT)
+From:   Oded Gabbay <oded.gabbay@gmail.com>
+To:     linux-kernel@vger.kernel.org, oshpigelman@habana.ai,
+        ttayar@habana.ai
+Cc:     gregkh@linuxfoundation.org
+Subject: [PATCH 1/6] habanalabs: don't wait for ASIC CPU after reset
+Date:   Sat, 28 Mar 2020 11:52:33 +0300
+Message-Id: <20200328085238.3428-1-oded.gabbay@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/28/2020 12:03 AM, shuah wrote:
-> On 3/27/20 7:31 AM, Xiaoyao Li wrote:
->> On 3/27/2020 4:57 AM, shuah wrote:
->>> On 3/25/20 9:07 PM, Xiaoyao Li wrote:
-> The patches you sent are based on running the command with OUTPUT
-> set. 
+Upon reset of the ASIC, the driver would have waited for the CPU to come
+out of reset before finishing the reset process. This was done for the
+purpose of making the CPU available to answer FLR requests. However, when a
+VM shuts down, the driver isn't removed so a reset never happens.
+Therefore, remove this waiting period as we don't need it.
 
-The issues are also there when I use
+Signed-off-by: Oded Gabbay <oded.gabbay@gmail.com>
+---
+ drivers/misc/habanalabs/goya/goya.c  | 24 ------------------------
+ drivers/misc/habanalabs/goya/goyaP.h |  2 +-
+ 2 files changed, 1 insertion(+), 25 deletions(-)
 
-   make O=/somewher TARGETS=kvm
+diff --git a/drivers/misc/habanalabs/goya/goya.c b/drivers/misc/habanalabs/goya/goya.c
+index 68f065607544..db125cf80850 100644
+--- a/drivers/misc/habanalabs/goya/goya.c
++++ b/drivers/misc/habanalabs/goya/goya.c
+@@ -2684,30 +2684,6 @@ static void goya_hw_fini(struct hl_device *hdev, bool hard_reset)
+ 					HW_CAP_MMU | HW_CAP_TPC_MBIST |
+ 					HW_CAP_GOLDEN | HW_CAP_TPC);
+ 	memset(goya->events_stat, 0, sizeof(goya->events_stat));
+-
+-	if (!hdev->pldm) {
+-		int rc;
+-		/* In case we are running inside VM and the VM is
+-		 * shutting down, we need to make sure CPU boot-loader
+-		 * is running before we can continue the VM shutdown.
+-		 * That is because the VM will send an FLR signal that
+-		 * we must answer
+-		 */
+-		dev_info(hdev->dev,
+-			"Going to wait up to %ds for CPU boot loader\n",
+-			GOYA_CPU_TIMEOUT_USEC / 1000 / 1000);
+-
+-		rc = hl_poll_timeout(
+-			hdev,
+-			mmPSOC_GLOBAL_CONF_WARM_REBOOT,
+-			status,
+-			(status == CPU_BOOT_STATUS_DRAM_RDY),
+-			10000,
+-			GOYA_CPU_TIMEOUT_USEC);
+-		if (rc)
+-			dev_err(hdev->dev,
+-				"failed to wait for CPU boot loader\n");
+-	}
+ }
+ 
+ int goya_suspend(struct hl_device *hdev)
+diff --git a/drivers/misc/habanalabs/goya/goyaP.h b/drivers/misc/habanalabs/goya/goyaP.h
+index c3230cb6e25c..1555d03e3cb2 100644
+--- a/drivers/misc/habanalabs/goya/goyaP.h
++++ b/drivers/misc/habanalabs/goya/goyaP.h
+@@ -45,7 +45,7 @@
+ 
+ #define CORESIGHT_TIMEOUT_USEC		100000		/* 100 ms */
+ 
+-#define GOYA_CPU_TIMEOUT_USEC		10000000	/* 10s */
++#define GOYA_CPU_TIMEOUT_USEC		15000000	/* 15s */
+ 
+ #define TPC_ENABLED_MASK		0xFF
+ 
+-- 
+2.17.1
 
-from tools/testing/selftests/ directory,
-
-Is it the right usecase?
-
-> That is why I am asking you start with the right use-cases,
-> and gave you pointers on tests to refer to that have sub-dirs
-> and handle relocatable builds:
-> 
-> futex
-> arm64
-> android
-
-I have read the Makefile in futex, arm64, android to learn how they
-deal with subdir, they have Makefile in subdir but kvm doesn't.
-
-I just want to create the subdir as easy as possible, so I follow the 
-method how to create subdir for LIBKVM_OBJ in kvm.
-
-If you dislike it way you can reply it Patch 1 to disclaim clear what 
-you want to fix the subdir.
-
->>> Also, just build isn't sufficient for you to be able to run the
->>> tests.
->>>
->>> make kselftest-install O=/path/to/mydir TARGETS=kvm will generate
->>> run script.
->>
->> This command also has the x86_64 directory not created issue.
->> Since it generates header files in kernel_src/usr/include, it doesn't 
->> have headers path issue. But as result, the kernel_src directory is 
->> not clean, this requires me to run "make mrproper", I *really* don't 
->> like it.
->>
->>
-> 
-> If the test leverages lib.mk headers install logic correctly, you
-> shouldn't see this problem.
-> 
-> Yes. It does make the source directory dirty. That is the problem we
-> have to fix. I am seeing issues the issue of x86_64 not being created
-> in the case of relocatable builds.
-> 
-> Thanks for working on this by the way. It is one of the tests that
-> identified as the one doesn't support relocatable builds.
-> 
-> You will see fixes to others I already fixed in
-> 
-> https://git.kernel.org/pub/scm/linux/kernel/git/shuah/linux-kselftest.git/log/?h=next 
-> 
-> 
-> Start withe the following use0-cases to fix and then test your fixes
-> for these use-cases. The goal is to be able to run kvm from target
-> directory and source directory staying clean.
-> 
-> You will have to build the kernel first in all of these cases.
-> Let's use kselftest-install which is what you would need if you
-> want build and then run tests later. Also assuming you are doing
-> native build on x86_64.
-> 
->  From main kernel Makefile: (from kernel source root dir)
-> 
-> Builds in the same source directory:
-> make kselftest-install TARGETS=kvm
-> 
-> Relocatable build: (from kernel source root dir)
-> 
-> make O=/path/objdir  - build kernel
-> make kselftest-install O=/path/objdir TARGETS=kvm
-
-I don't want to build kernel at all.
-
->  From tools/testing/selftests/kvm directory:
-> make O=/path/objdir install
-
-Oh no. This needs to define INSTALL_PATH, and I don't want to install.
-I just want to build the testcase of kvm to anywhere else to make srcdir 
-clean.
-
-Besides this command make both kernel src and selftest/kvm dirty.
-
-> Install step is important especially for relocatable builds,
-> as it makes sure all run-time dependencies are copied to the
-> target directory.
-> 
-
-OK.
-
-So, again.
-
-is
-
-   make O=/tmp/kvm-selftest -C tools/testing/selftests \
-        TARGETS=kvm install INSTALL_PATH=/home/lxy/kvm-selftest
-
-the right command for me to start on?
