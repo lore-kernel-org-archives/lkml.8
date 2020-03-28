@@ -2,67 +2,92 @@ Return-Path: <SRS0=NZ+o=5N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4063EC43331
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 22:34:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE448C2D0ED
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 22:40:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1954A2073E
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 22:34:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A20C2073E
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 22:40:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727842AbgC1Wea (ORCPT
+        id S1727848AbgC1WkZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 28 Mar 2020 18:34:30 -0400
-Received: from relay5-d.mail.gandi.net ([217.70.183.197]:50115 "EHLO
-        relay5-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727151AbgC1We3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 28 Mar 2020 18:34:29 -0400
-X-Originating-IP: 50.39.173.182
-Received: from localhost (50-39-173-182.bvtn.or.frontiernet.net [50.39.173.182])
-        (Authenticated sender: josh@joshtriplett.org)
-        by relay5-d.mail.gandi.net (Postfix) with ESMTPSA id E4C8A1C0004;
-        Sat, 28 Mar 2020 22:34:25 +0000 (UTC)
-Date:   Sat, 28 Mar 2020 15:34:15 -0700
-From:   Josh Triplett <josh@joshtriplett.org>
-To:     linux-ext4@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Theodore Ts'o <tytso@mit.edu>,
-        Andreas Dilger <adilger.kernel@dilger.ca>
-Subject: [PATCH] ext4: Fix incorrect inodes per group in error message
-Message-ID: <8be03355983a08e5d4eed480944613454d7e2550.1585434649.git.josh@joshtriplett.org>
+        Sat, 28 Mar 2020 18:40:25 -0400
+Received: from mga05.intel.com ([192.55.52.43]:28826 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727737AbgC1WkZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 28 Mar 2020 18:40:25 -0400
+IronPort-SDR: NWJ5JxbmEykzMLfV6hRa4gMXdKuOqe4iD7eTengiiKXwEoVN415ppYeIAk++Db9rU6q6tMqys9
+ jm0VqboEN7cQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Mar 2020 15:40:24 -0700
+IronPort-SDR: JPpyxVS1t/VJvBHHFPlmvo87pu9QHSkNMQIScJL0nbw9KeTl7VDQZBpFH0JmzHhn9cAFpDuf1D
+ TSJOSGo2/IIA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,318,1580803200"; 
+   d="scan'208";a="447830562"
+Received: from ssafrin-mobl.ger.corp.intel.com (HELO [10.255.229.125]) ([10.255.229.125])
+  by fmsmga005.fm.intel.com with ESMTP; 28 Mar 2020 15:40:24 -0700
+Subject: Re: [PATCH v18 03/11] PCI/DPC: Fix DPC recovery issue in non hotplug
+ case
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        ashok.raj@intel.com
+References: <20200328222111.GA136384@google.com>
+From:   "Kuppuswamy, Sathyanarayanan" 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>
+Message-ID: <621ef46b-3556-e667-3982-16f3c908a793@linux.intel.com>
+Date:   Sat, 28 Mar 2020 15:40:23 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+In-Reply-To: <20200328222111.GA136384@google.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If ext4_fill_super detects an invalid number of inodes per group, the
-resulting error message printed the number of blocks per group, rather
-than the number of inodes per group. Fix it to print the correct value.
 
-Signed-off-by: Josh Triplett <josh@joshtriplett.org>
-Fixes: cd6bb35bf7f6d ("ext4: use more strict checks for inodes_per_block on mount")
----
- fs/ext4/super.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/ext4/super.c b/fs/ext4/super.c
-index 0c7c4adb664e..c50922fa780a 100644
---- a/fs/ext4/super.c
-+++ b/fs/ext4/super.c
-@@ -4157,7 +4157,7 @@ static int ext4_fill_super(struct super_block *sb, void *data, int silent)
- 	if (sbi->s_inodes_per_group < sbi->s_inodes_per_block ||
- 	    sbi->s_inodes_per_group > blocksize * 8) {
- 		ext4_msg(sb, KERN_ERR, "invalid inodes per group: %lu\n",
--			 sbi->s_blocks_per_group);
-+			 sbi->s_inodes_per_group);
- 		goto failed_mount;
- 	}
- 	sbi->s_itb_per_group = sbi->s_inodes_per_group /
--- 
-2.26.0
-
+On 3/28/20 3:21 PM, Bjorn Helgaas wrote:
+>>> OK, thanks.  I'm still uncomfortable with this issue, so I think I'm
+>>> going to apply this series but omit this patch.  Here's why:
+>>>
+>>> 1) The fact that resets may cause hotplug events isn't specific to
+>>> DPC, so I don't think dpc_reset_link() is the right place.  For
+>>> instance, aer_root_reset() ultimately does a secondary bus reset.
+>> Agree. Reset is common for pci_channel_io_frozen errors. I did not
+>> look into aer_root_reset() implementation. So if state
+>> is pci_channel_io_frozen then we can assume the slot has been
+>> reseted.
+>>   The
+>>> pci_slot_reset() -> pciehp_reset_slot() path goes to some trouble to
+>>> ignore the resulting hotplug event, but the pci_bus_reset() path does
+>>> not.
+>>>
+>>> 2) I'm not convinced that "hotplug_is_native()" is the correct test.
+>>> Even if we're using ACPI hotplug (acpiphp), that will detach the
+>>> drivers and remove the devices, won't it?
+>> Yes, agreed. It does not handle ACPI hotplug case. In case of
+>> ACPI hotplug, native_pcie_hotplug = 0. May be we need a new helper
+>> function. hotplug_is_enabled() ?
+> I'm not proposing the patch below to be applied.  I only included it
+> as an idea of where the hotplug testing should be.
+> 
+> I'm proposing to merge the pci/edr branch as-is, without these two
+> patches:
+> 
+>    PCI: move {pciehp,shpchp}_is_native() definitions to pci.c
+>    PCI/DPC: Fix DPC recovery issue in non hotplug case
+> 
+> accepting that we still have some issues in the non-hotplug case that
+> we can fix later.
+Ok. I am fine with it. Thanks for working on it.
+> 
