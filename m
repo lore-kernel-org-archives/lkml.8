@@ -2,160 +2,147 @@ Return-Path: <SRS0=NZ+o=5N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33A11C2D0E5
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 14:55:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E0BDC2D0E5
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 15:06:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0959F20723
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 14:55:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585407342;
-	bh=sTN/yOwC7X0uLoNfJ9ADxa7Cha6qzKRX2MNvBqrW41M=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=tb/gbVZagyfFu2eelIjfuzi7vzOk5n1roamto1ZBKkJ4SS6z465BpAGpzqqlLfhHw
-	 Oj8RL5t3YizC/YpdPhOOcUNHgWgBVeSjk5BJxFiWfoRnEkSN/9f2Ftwz3+ChYiKWHn
-	 5RX/4GMa6AmHaOFvvKIMQ3P7bzXqWDK08dYEfqj0=
+	by mail.kernel.org (Postfix) with ESMTP id 0C01D2074F
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 15:06:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pAerVg/B"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727009AbgC1Ozj (ORCPT
+        id S1726889AbgC1PG6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 28 Mar 2020 10:55:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57124 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726463AbgC1Ozj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 28 Mar 2020 10:55:39 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 672F3206F2;
-        Sat, 28 Mar 2020 14:55:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585407338;
-        bh=sTN/yOwC7X0uLoNfJ9ADxa7Cha6qzKRX2MNvBqrW41M=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=OLbqOcprrVgGuO5bodcCM4BQ/l6Al3r3Ww9tqVljQ+YOVriGez5jmY1ilVGbU2RI5
-         MChEZD5Ex6p5UEOCJnpXSy5lxMIhODy/AjtkuYZUqKSGeRKbL3lIcZMxkM+9QwpTWp
-         JAFwjKLwtTg54ZMiipEWS13nL6qBWSgBuz5DeViE=
-Date:   Sat, 28 Mar 2020 14:55:33 +0000
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Ivan Mikhaylov <i.mikhaylov@yadro.com>
-Cc:     Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+        Sat, 28 Mar 2020 11:06:58 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:36074 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726325AbgC1PG5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 28 Mar 2020 11:06:57 -0400
+Received: by mail-wm1-f66.google.com with SMTP id g62so15964094wme.1;
+        Sat, 28 Mar 2020 08:06:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=mVgDlbMGn4jDqjs9njtSrU27RzsFbT7yecFsuKk/EMo=;
+        b=pAerVg/BGNM5T+nr0f/WwdO9Sh/P7G2ATAgE4lNBidp3VyZgVp8LxhD/XwzK89hnOg
+         usJIzU/qodT0h2/Ns64sdH7qoMADJVl1greGt5bNdBrkcwZNycbXnMB/r6C6JVPHpXYW
+         iqrRSrSaKFt5OnMOScfOa1ul6/G4lV9C7GNgn7942i6w3uiUEKLh94YFaYDItSpPvIXq
+         IM1KSp/5JglcqNsNCNMGy/rrO8yDQ52qTNFUDuzNTulArfyjtbDQRavO1TgYHyyFOWbe
+         8OochIAY/vIUTK3+Vk47IkLWBpTG9nemLY0y5+ewYu/PRwOACY6Rnomm2wmlQvwvQA3d
+         zIyg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=mVgDlbMGn4jDqjs9njtSrU27RzsFbT7yecFsuKk/EMo=;
+        b=ZiK/pDqHN6xwYLxztHhgYY8CEP2EGRcYSj8dGzF+Zjks2qmBLRNN0jL7vqUgSyqdVo
+         9Xm6IiuH2Ef2XAtyGF7AJAuPN2JRR3cWr66xVB8ADYqwNAdu4G4p4mj89PdZiQdJNTBS
+         p1lB9ueu8PNUgRbLSMboRGlRGaDifMum3KyuGh2Rytz8TVBpxhJsU/YHllwtXQ4sSNZ7
+         D4no0WK0cXhrmQUCedb8co/SP10dqq9mdHEX3z5AqJgzeE11BZDI7mLSOl2C0LPOPCsH
+         83kyy8VOk0BXvLD6ycNe1g7pocRgxvBtjLv/XdrMkW+fyuqfX5QgdlZSwGM/AB59hlt7
+         5U7g==
+X-Gm-Message-State: ANhLgQ2aZdmXNVVDr5toiltBH8gj0YTwmzBkZ76J2jCFR3qo4aJQ568n
+        1bygwxcJwC1X+0+MJ/cLcHM=
+X-Google-Smtp-Source: ADFU+vteJ7u8UrlhBBVMg4JqNC0kDksrUoieeVxPUbKA/6mGuyk6Ju6nrOnD4bcgifgNuy3cdqORtg==
+X-Received: by 2002:a1c:790e:: with SMTP id l14mr3968340wme.146.1585408016017;
+        Sat, 28 Mar 2020 08:06:56 -0700 (PDT)
+Received: from debian64.daheim (p5B0D73FB.dip0.t-ipconnect.de. [91.13.115.251])
+        by smtp.gmail.com with ESMTPSA id y11sm4695479wmi.13.2020.03.28.08.06.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 28 Mar 2020 08:06:55 -0700 (PDT)
+Received: from localhost.daheim ([127.0.0.1] helo=debian64.localnet)
+        by debian64.daheim with esmtp (Exim 4.93)
+        (envelope-from <chunkeey@gmail.com>)
+        id 1jID30-0006Y1-43; Sat, 28 Mar 2020 16:06:54 +0100
+From:   Christian Lamparter <chunkeey@gmail.com>
+To:     linuxppc-dev@lists.ozlabs.org,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Enrico Weigelt <info@metux.net>,
+        Mark Brown <broonie@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+Cc:     Christophe Leroy <christophe.leroy@c-s.fr>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        linux-kernel@vger.kernel.org,
+        "David S. Miller" <davem@davemloft.net>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Matt Porter <mporter@kernel.crashing.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Paul Mackerras <paulus@samba.org>,
         Rob Herring <robh+dt@kernel.org>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH v4 1/2] iio: proximity: provide device tree binding
- document
-Message-ID: <20200328145533.35f77e48@archlinux>
-In-Reply-To: <20200327104954.27829-2-i.mikhaylov@yadro.com>
-References: <20200327104954.27829-1-i.mikhaylov@yadro.com>
-        <20200327104954.27829-2-i.mikhaylov@yadro.com>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Sasha Levin <sashal@kernel.org>,
+        DTML <devicetree@vger.kernel.org>, ewald_comhaire@hotmail.com
+Subject: Re: [PATCH 0/2] powerpc: Remove support for ppc405/440 Xilinx platforms
+Date:   Sat, 28 Mar 2020 16:06:54 +0100
+Message-ID: <2194609.nAEUQZTCmX@debian64>
+In-Reply-To: <b5adcc7a-9d10-d75f-50e3-9c150a7b4989@c-s.fr>
+References: <cover.1585311091.git.michal.simek@xilinx.com> <20200327141434.GA1922688@smile.fi.intel.com> <b5adcc7a-9d10-d75f-50e3-9c150a7b4989@c-s.fr>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="iso-8859-1"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 27 Mar 2020 13:49:53 +0300
-Ivan Mikhaylov <i.mikhaylov@yadro.com> wrote:
+(Sorry for the bounces, yes my smarthost mail setup breaks from time to time
+and I had to cut the CC since it complained about the length.)
 
-> Mostly standard i2c driver with some additional led-current option
-> for vcnl3020.
-> 
-> Signed-off-by: Ivan Mikhaylov <i.mikhaylov@yadro.com>
+On Saturday, 28 March 2020 12:17:58 CET Christophe Leroy wrote:
+>=20
+> Le 27/03/2020 =E0 15:14, Andy Shevchenko a =E9crit :
+>> On Fri, Mar 27, 2020 at 02:22:55PM +0100, Arnd Bergmann wrote:
+>>> On Fri, Mar 27, 2020 at 2:15 PM Andy Shevchenko
+>>> <andriy.shevchenko@linux.intel.com> wrote:
+>>>> On Fri, Mar 27, 2020 at 03:10:26PM +0200, Andy Shevchenko wrote:
+>>>>> On Fri, Mar 27, 2020 at 01:54:33PM +0100, Arnd Bergmann wrote:
+>>>>>> On Fri, Mar 27, 2020 at 1:12 PM Michal Simek=20
+>>>>>> <michal.simek@xilinx.com> wrote:
+>>>>>> It does raise a follow-up question about ppc40x though: is it time to
+>>>>>> retire all of it?
+>>>>>
+>>>>> Who knows?
+>>>>>
+>>>>> I have in possession nice WD My Book Live, based on this=20
+>>>>> architecture, and I won't it gone from modern kernel support.
+>>>>> OTOH I understand that amount of real users not too big.
+Hm, can't add much to Xilinx ppc405/440 removal patch debate.=20
 
-A few things inline.
+But as for the APM82181 with it's PPC464:
 
-Thanks,
+The last time I checked was with 5.6-rc4, it worked fine on the APM82181
+(a MyBook Live) device. I've made a "build your own powerpc debian sid"
+image thing that takes the latest kernel git and up-to-date packages
+from debian ports (they still make powerpc packages!):=20
+<https://github.com/chunkeey/mbl-debian> .
 
-Jonathan
+Though, this is small potatoes. There exists a much more popular project
+by Ewald Comhaire (CCed): <https://github.com/ewaldc/My-Book-Live>
+that serves the largest userbase:
+<https://community.wd.com/c/wd-legacy-products>
 
-> ---
->  .../bindings/iio/proximity/vcnl3020.yaml      | 52 +++++++++++++++++++
->  1 file changed, 52 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/proximity/vcnl3020.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/iio/proximity/vcnl3020.yaml b/Documentation/devicetree/bindings/iio/proximity/vcnl3020.yaml
-> new file mode 100644
-> index 000000000000..116aa0e0174d
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iio/proximity/vcnl3020.yaml
-> @@ -0,0 +1,52 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/iio/proximity/vcnl3020.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Integrated Proximity Sensor With Infrared Emitter
-> +
-> +maintainers:
-> +  - Ivan Mikhaylov <i.mikhaylov@yadro.com>
-> +
-> +description: |
-> +  The VCNL3020 is a fully integrated proximity sensor. Fully integrated means
-> +  that the infrared emitter is included in the package. It has 16-bit
-> +  resolution. It includes a signal processing IC and features standard I2C
-> +  communication interface. It features an interrupt function.
-> +
-> +  Specifications about the devices can be found at:
-> +  https://www.vishay.com/docs/84150/vcnl3020.pdf
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - vishay,vcnl3020
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  led-current:
-> +    description:
+I guess we should think about upstreaming the MyBook Live DTS. Problem here
+is that we deviated a bit from the canyonlands.dts/bluestone.dts structure
+by having a skeleton apm82181.dtsi with most of the SoC defintition and a
+wd-mybooklive.dts for the device.
 
-Given it has real values, that would be human readable, lets use them!
-Also I don't think this is a standard binding so also need a vendor
-prefix.
+<https://github.com/chunkeey/mbl-debian/blob/master/dts/apm82181.dtsi>=20
+<https://github.com/chunkeey/mbl-debian/blob/master/dts/wd-mybooklive.dts>
 
-vishay,led-current-microamp taking
-0, 10, 20, 30 etc..
+Cheers,
+Christian
 
-Threat it as an enum with all the values listed and we can also enforce
-that it is a valid value via the binding.
 
-> +        IR LED current value with valid Range = 0 to 20d. e.g. 0 = 0 mA,
-> +        1 = 10 mA, 20 = 200 mA (2 = 20 mA = DEFAULT). LED Current is
-> +        limited to 200 mA for values higher than decimal 20.
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - led-current
-
-You list a default above so is it required?
-
-> +
-> +examples:
-> +  - |
-> +    i2c {
-> +
-> +        #address-cells = <1>;
-> +        #size-cells = <0>;
-> +
-> +        iio-proximity@13 {
-
-just proximity.  IIO is a linux concept, devicetree is general.
-
-> +              compatible = "vishay,vcnl3020";
-> +              reg = <0x13>;
-> +              led-current = <0x14>;
-> +        };
-> +    };
 
