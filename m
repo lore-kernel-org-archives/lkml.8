@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A233EC2D0E5
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 11:00:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DE5AC43331
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 11:00:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7505A20716
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 11:00:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 61B2F20723
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 11:00:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727809AbgC1LAm (ORCPT
+        id S1727830AbgC1LAr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 28 Mar 2020 07:00:42 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:55521 "EHLO
+        Sat, 28 Mar 2020 07:00:47 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:55506 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726252AbgC1LAA (ORCPT
+        with ESMTP id S1726283AbgC1K76 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 28 Mar 2020 07:00:00 -0400
+        Sat, 28 Mar 2020 06:59:58 -0400
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1jI9C1-0003bj-Ba; Sat, 28 Mar 2020 11:59:57 +0100
+        id 1jI9Bz-0003aY-J5; Sat, 28 Mar 2020 11:59:55 +0100
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id E5AA61C03A9;
-        Sat, 28 Mar 2020 11:59:56 +0100 (CET)
-Date:   Sat, 28 Mar 2020 10:59:56 -0000
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 21C2D1C0470;
+        Sat, 28 Mar 2020 11:59:55 +0100 (CET)
+Date:   Sat, 28 Mar 2020 10:59:54 -0000
 From:   "tip-bot2 for Al Viro" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/cleanups] x86: ia32_setup_sigcontext(): lift
- user_access_{begin,end}() into the callers
+Subject: [tip: x86/cleanups] x86: setup_sigcontext(): list
+ user_access_{begin,end}() into callers
 Cc:     Al Viro <viro@zeniv.linux.org.uk>, x86 <x86@kernel.org>,
         LKML <linux-kernel@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <158539319646.28353.9974291268181855968.tip-bot2@tip-bot2>
+Message-ID: <158539319474.28353.12890016664132767553.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -54,145 +54,160 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the x86/cleanups branch of tip:
 
-Commit-ID:     44a1d996325982025eefcdc50b636ab83e813372
-Gitweb:        https://git.kernel.org/tip/44a1d996325982025eefcdc50b636ab83e813372
+Commit-ID:     b00d8f8f0b2b39223c3fd6713d318aba95420264
+Gitweb:        https://git.kernel.org/tip/b00d8f8f0b2b39223c3fd6713d318aba95420264
 Author:        Al Viro <viro@zeniv.linux.org.uk>
-AuthorDate:    Sat, 15 Feb 2020 18:46:02 -05:00
+AuthorDate:    Sat, 15 Feb 2020 21:12:26 -05:00
 Committer:     Al Viro <viro@zeniv.linux.org.uk>
-CommitterDate: Thu, 26 Mar 2020 14:35:43 -04:00
+CommitterDate: Thu, 26 Mar 2020 14:56:59 -04:00
 
-x86: ia32_setup_sigcontext(): lift user_access_{begin,end}() into the callers
+x86: setup_sigcontext(): list user_access_{begin,end}() into callers
 
-What's left is just a sequence of stores to userland addresses, with all
-error handling, etc. done out of line.  Calling that from user_access block
-is safe, but rather than teaching objtool to recognize it as such we can
-just make it always_inline - it is small enough and has few enough callers,
-for the space savings not to be an issue.
-
-	Rename the sucker to __unsafe_setup_sigcontext32() and provide
-unsafe_put_sigcontext32() with usual kind of semantics.
+Similar to ia32_setup_sigcontext() change several commits ago, make it
+__always_inline.  In cases when there is a user_access_{begin,end}()
+section nearby, just move the call over there.
 
 Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
 ---
- arch/x86/ia32/ia32_signal.c | 44 ++++++++++++++++++++++--------------
- 1 file changed, 28 insertions(+), 16 deletions(-)
+ arch/x86/kernel/signal.c | 45 ++++++++++++++++++++-------------------
+ 1 file changed, 24 insertions(+), 21 deletions(-)
 
-diff --git a/arch/x86/ia32/ia32_signal.c b/arch/x86/ia32/ia32_signal.c
-index a96995a..799ca5b 100644
---- a/arch/x86/ia32/ia32_signal.c
-+++ b/arch/x86/ia32/ia32_signal.c
-@@ -154,13 +154,11 @@ badframe:
+diff --git a/arch/x86/kernel/signal.c b/arch/x86/kernel/signal.c
+index 8b879fd..f4fb00b 100644
+--- a/arch/x86/kernel/signal.c
++++ b/arch/x86/kernel/signal.c
+@@ -140,12 +140,10 @@ static int restore_sigcontext(struct pt_regs *regs,
+ 			       IS_ENABLED(CONFIG_X86_32));
+ }
  
- #define get_user_seg(seg)	({ unsigned int v; savesegment(seg, v); v; })
- 
--static int ia32_setup_sigcontext(struct sigcontext_32 __user *sc,
--				 void __user *fpstate,
--				 struct pt_regs *regs, unsigned int mask)
+-static int setup_sigcontext(struct sigcontext __user *sc, void __user *fpstate,
 +static __always_inline int
-+__unsafe_setup_sigcontext32(struct sigcontext_32 __user *sc,
-+			    void __user *fpstate,
-+			    struct pt_regs *regs, unsigned int mask)
++__unsafe_setup_sigcontext(struct sigcontext __user *sc, void __user *fpstate,
+ 		     struct pt_regs *regs, unsigned long mask)
  {
--	if (!user_access_begin(sc, sizeof(struct sigcontext_32)))
+-	if (!user_access_begin(sc, sizeof(struct sigcontext)))
 -		return -EFAULT;
 -
- 	unsafe_put_user(get_user_seg(gs), (unsigned int __user *)&sc->gs, Efault);
- 	unsafe_put_user(get_user_seg(fs), (unsigned int __user *)&sc->fs, Efault);
- 	unsafe_put_user(get_user_seg(ds), (unsigned int __user *)&sc->ds, Efault);
-@@ -187,13 +185,18 @@ static int ia32_setup_sigcontext(struct sigcontext_32 __user *sc,
+ #ifdef CONFIG_X86_32
+ 	unsafe_put_user(get_user_gs(regs),
+ 				  (unsigned int __user *)&sc->gs, Efault);
+@@ -194,13 +192,17 @@ static int setup_sigcontext(struct sigcontext __user *sc, void __user *fpstate,
  	/* non-iBCS2 extensions.. */
  	unsafe_put_user(mask, &sc->oldmask, Efault);
  	unsafe_put_user(current->thread.cr2, &sc->cr2, Efault);
 -	user_access_end();
  	return 0;
-+
  Efault:
 -	user_access_end();
  	return -EFAULT;
  }
  
-+#define unsafe_put_sigcontext32(sc, fp, regs, set, label)		\
++#define unsafe_put_sigcontext(sc, fp, regs, set, label)			\
 +do {									\
-+	if (__unsafe_setup_sigcontext32(sc, fp, regs, set->sig[0]))	\
++	if (__unsafe_setup_sigcontext(sc, fp, regs, set->sig[0]))	\
 +		goto label;						\
-+} while(0)
++} while(0);
 +
  /*
-  * Determine which stack to use..
+  * Set up a signal frame.
   */
-@@ -234,7 +237,7 @@ int ia32_setup_frame(int sig, struct ksignal *ksig,
- 	struct sigframe_ia32 __user *frame;
+@@ -301,9 +303,9 @@ __setup_frame(int sig, struct ksignal *ksig, sigset_t *set,
+ 	struct sigframe __user *frame;
  	void __user *restorer;
  	int err = 0;
 -	void __user *fpstate = NULL;
 +	void __user *fp = NULL;
  
- 	/* copy_to_user optimizes that into a single 8 byte store */
- 	static const struct {
-@@ -247,7 +250,7 @@ int ia32_setup_frame(int sig, struct ksignal *ksig,
- 		0x80cd,		/* int $0x80 */
- 	};
- 
--	frame = get_sigframe(ksig, regs, sizeof(*frame), &fpstate);
-+	frame = get_sigframe(ksig, regs, sizeof(*frame), &fp);
+-	frame = get_sigframe(&ksig->ka, regs, sizeof(*frame), &fpstate);
++	frame = get_sigframe(&ksig->ka, regs, sizeof(*frame), &fp);
  
  	if (!access_ok(frame, sizeof(*frame)))
  		return -EFAULT;
-@@ -255,9 +258,12 @@ int ia32_setup_frame(int sig, struct ksignal *ksig,
+@@ -311,8 +313,10 @@ __setup_frame(int sig, struct ksignal *ksig, sigset_t *set,
  	if (__put_user(sig, &frame->sig))
  		return -EFAULT;
  
--	if (ia32_setup_sigcontext(&frame->sc, fpstate, regs, set->sig[0]))
-+	if (!user_access_begin(&frame->sc, sizeof(struct sigcontext_32)))
+-	if (setup_sigcontext(&frame->sc, fpstate, regs, set->sig[0]))
++	if (!user_access_begin(&frame->sc, sizeof(struct sigcontext)))
  		return -EFAULT;
- 
-+	unsafe_put_sigcontext32(&frame->sc, fp, regs, set, Efault);
++	unsafe_put_sigcontext(&frame->sc, fp, regs, set, Efault);
 +	user_access_end();
-+
+ 
  	if (__put_user(set->sig[1], &frame->extramask[0]))
  		return -EFAULT;
- 
-@@ -301,6 +307,9 @@ int ia32_setup_frame(int sig, struct ksignal *ksig,
- 	regs->ss = __USER32_DS;
+@@ -353,6 +357,10 @@ __setup_frame(int sig, struct ksignal *ksig, sigset_t *set,
+ 	regs->cs = __USER_CS;
  
  	return 0;
++
 +Efault:
 +	user_access_end();
 +	return -EFAULT;
  }
  
- int ia32_setup_rt_frame(int sig, struct ksignal *ksig,
-@@ -309,7 +318,7 @@ int ia32_setup_rt_frame(int sig, struct ksignal *ksig,
- 	struct rt_sigframe_ia32 __user *frame;
+ static int __setup_rt_frame(int sig, struct ksignal *ksig,
+@@ -361,9 +369,9 @@ static int __setup_rt_frame(int sig, struct ksignal *ksig,
+ 	struct rt_sigframe __user *frame;
  	void __user *restorer;
  	int err = 0;
 -	void __user *fpstate = NULL;
 +	void __user *fp = NULL;
  
- 	/* __copy_to_user optimizes that into a single 8 byte store */
- 	static const struct {
-@@ -324,7 +333,7 @@ int ia32_setup_rt_frame(int sig, struct ksignal *ksig,
- 		0,
- 	};
- 
--	frame = get_sigframe(ksig, regs, sizeof(*frame), &fpstate);
-+	frame = get_sigframe(ksig, regs, sizeof(*frame), &fp);
+-	frame = get_sigframe(&ksig->ka, regs, sizeof(*frame), &fpstate);
++	frame = get_sigframe(&ksig->ka, regs, sizeof(*frame), &fp);
  
  	if (!user_access_begin(frame, sizeof(*frame)))
  		return -EFAULT;
-@@ -355,9 +364,12 @@ int ia32_setup_rt_frame(int sig, struct ksignal *ksig,
- 	unsafe_put_user(*((u64 *)&code), (u64 __user *)frame->retcode, Efault);
+@@ -395,13 +403,11 @@ static int __setup_rt_frame(int sig, struct ksignal *ksig,
+ 	 * signal handler stack frames.
+ 	 */
+ 	unsafe_put_user(*((u64 *)&rt_retcode), (u64 *)frame->retcode, Efault);
++	unsafe_put_sigcontext(&frame->uc.uc_mcontext, fp, regs, set, Efault);
  	user_access_end();
+ 	
+ 	err |= copy_siginfo_to_user(&frame->info, &ksig->info);
+-	err |= setup_sigcontext(&frame->uc.uc_mcontext, fpstate,
+-				regs, set->sig[0]);
+ 	err |= __copy_to_user(&frame->uc.uc_sigmask, set, sizeof(*set));
+-
+ 	if (err)
+ 		return -EFAULT;
  
--	err |= __copy_siginfo_to_user32(&frame->info, &ksig->info, false);
--	err |= ia32_setup_sigcontext(&frame->uc.uc_mcontext, fpstate,
--				     regs, set->sig[0]);
-+	if (__copy_siginfo_to_user32(&frame->info, &ksig->info, false))
-+		return -EFAULT;
-+	if (!user_access_begin(&frame->uc.uc_mcontext, sizeof(struct sigcontext_32)))
-+		return -EFAULT;
-+	unsafe_put_sigcontext32(&frame->uc.uc_mcontext, fp, regs, set, Efault);
-+	user_access_end();
+@@ -472,9 +478,8 @@ static int __setup_rt_frame(int sig, struct ksignal *ksig,
+ 	/* Set up to return from userspace.  If provided, use a stub
+ 	   already in userspace.  */
+ 	unsafe_put_user(ksig->ka.sa.sa_restorer, &frame->pretcode, Efault);
++	unsafe_put_sigcontext(&frame->uc.uc_mcontext, fp, regs, set, Efault);
+ 	user_access_end();
+-
+-	err |= setup_sigcontext(&frame->uc.uc_mcontext, fp, regs, set->sig[0]);
+ 	err |= __put_user(set->sig[0], &frame->uc.uc_sigmask.sig[0]);
+ 
+ 	if (err)
+@@ -532,12 +537,12 @@ static int x32_setup_rt_frame(struct ksignal *ksig,
+ 	unsigned long uc_flags;
+ 	void __user *restorer;
+ 	int err = 0;
+-	void __user *fpstate = NULL;
++	void __user *fp = NULL;
+ 
+ 	if (!(ksig->ka.sa.sa_flags & SA_RESTORER))
+ 		return -EFAULT;
+ 
+-	frame = get_sigframe(&ksig->ka, regs, sizeof(*frame), &fpstate);
++	frame = get_sigframe(&ksig->ka, regs, sizeof(*frame), &fp);
+ 
+ 	if (!access_ok(frame, sizeof(*frame)))
+ 		return -EFAULT;
+@@ -559,10 +564,8 @@ static int x32_setup_rt_frame(struct ksignal *ksig,
+ 	unsafe_put_user(0, &frame->uc.uc__pad0, Efault);
+ 	restorer = ksig->ka.sa.sa_restorer;
+ 	unsafe_put_user(restorer, (unsigned long __user *)&frame->pretcode, Efault);
++	unsafe_put_sigcontext(&frame->uc.uc_mcontext, fp, regs, set, Efault);
+ 	user_access_end();
+-
+-	err |= setup_sigcontext(&frame->uc.uc_mcontext, fpstate,
+-				regs, set->sig[0]);
  	err |= __put_user(*(__u64 *)set, (__u64 __user *)&frame->uc.uc_sigmask);
  
  	if (err)
