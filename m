@@ -2,161 +2,108 @@ Return-Path: <SRS0=NZ+o=5N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67EBEC2D0EB
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 14:42:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2655BC43331
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 14:43:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E15B20723
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 14:42:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585406562;
-	bh=HKMwuYbUTGNEue8ByOr11Gad1bKuwOOXaGWjoM3Duto=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=FWiq1UQ8FK6E36OI103tMr2p46BR+HYztObBqD/nCIC2y21afLn0pf8BqNZTujv1s
-	 48byngGv8jukgUNPmVv0k12ZNux0+a4pZh1+TdgfhBaOW56swb9cG0asEmYXNbFHJt
-	 TcJms0tL6S88Dl6XGA2BefBcq/k0Pau6tg2cet+Q=
+	by mail.kernel.org (Postfix) with ESMTP id EAE5B20716
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 14:43:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BSsqhZeI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726981AbgC1Omk (ORCPT
+        id S1727131AbgC1On0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 28 Mar 2020 10:42:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55242 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725807AbgC1Omk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 28 Mar 2020 10:42:40 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5780520716;
-        Sat, 28 Mar 2020 14:42:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585406559;
-        bh=HKMwuYbUTGNEue8ByOr11Gad1bKuwOOXaGWjoM3Duto=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=LJ3dDIVgO/sUSb70eqKyqIO4JP3Ycun+z0o6nYYyvUngU/ubADp/Iepozv5BtG2Ft
-         UxsUleu1GgXab5BeddFWeLOa3ZBZtHCna9wox5q3ls59xlcldQYacasEO6DU/XThrr
-         jG0d9nVeAODgNqeTABfnXcArt6L/aX1x7p64uz50=
-Date:   Sat, 28 Mar 2020 14:42:34 +0000
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Saravanan Sekar <sravanhome@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald <pmeerw@pmeerw.net>,
-        Sebastian Reichel <sre@kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-iio <linux-iio@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>
-Subject: Re: [PATCH v4 3/5] iio: adc: mp2629: Add support for mp2629 ADC
- driver
-Message-ID: <20200328144234.081b964f@archlinux>
-In-Reply-To: <CAHp75VfauHuAv1Wr=7ga=G+6JOYXuop_oyXiwmQgKeB2e_z=tQ@mail.gmail.com>
-References: <20200322224626.13160-1-sravanhome@gmail.com>
-        <20200322224626.13160-4-sravanhome@gmail.com>
-        <CAHp75VfauHuAv1Wr=7ga=G+6JOYXuop_oyXiwmQgKeB2e_z=tQ@mail.gmail.com>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Sat, 28 Mar 2020 10:43:26 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:44680 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725807AbgC1On0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 28 Mar 2020 10:43:26 -0400
+Received: by mail-wr1-f68.google.com with SMTP id m17so15214549wrw.11;
+        Sat, 28 Mar 2020 07:43:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=/2SFge/OdI1F8toHlmSSduR6vURBBGjynFQSbrlzXYo=;
+        b=BSsqhZeIQw2hreUjt12CyIbXJE5/JfOfn8ZMxQUXwOmt4N60nxhcd2zUF8lNYol44g
+         JifG2Qcu4wCFExZTmmBap7gF05fngPYfrC/TXWgD5bbu3jnqu96YX0g95Q8sAMuzMumD
+         qaZL610CZYSq4JeYF+ZIvr7dZoWD2ojEmNcgQRgy+Ed0OleVQLxupORQaEMzmkKUUov/
+         3nYXOHsizmdWW2R0i8grGzxoJlAFFRr4IpuhValols/me2eANB7vayKX29m2BSLqO9eL
+         57Q6S1xNETxYO1O+dnVN/ggyyekxoMoffqEigQV03JLpXVGXfLIp4S458CfV1U9fUDZ6
+         zMrw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=/2SFge/OdI1F8toHlmSSduR6vURBBGjynFQSbrlzXYo=;
+        b=TDzFVgCsPq8PQ8NfO9hd0p+kfOyoBvUJhtUe9K50EvlILqCTly+GnX9DDblNfDXyZk
+         0bYTaq13/Hov3fvNga0orOG0vIyF0f24ys3dX5szPqHOZoLpS6FkQlmVgIkbNh6wiesD
+         4XocpJ3qrE1lS7JDpm7m8EpF1aybpYpOsqcIrGTnxcE7E6Sg/KGM1F33cg6SKTwe3J45
+         ZqjYXD99XON4xD/BlDwBWoRc/+sNAKsq+rRZnxu9IJq/HUsH1dnzsPwyVSgjxOGlgr9e
+         qNckr2jfcLIalK0s/6jLKzHE8ZidZ5GKdnPQfN9gTWAkxcUqNyfzPbIlNxVIyhIT/uq2
+         MVMg==
+X-Gm-Message-State: ANhLgQ3i/pWUu1sQfOsIXIxnvuFyjY2VBs0vIIcxmHoNF//qphMJTUS+
+        zXxfvDj0FvlTU+a3ZJALDus=
+X-Google-Smtp-Source: ADFU+vv2yZhWereLXqJ6pe5il7BA2inBYqd9HZht8WcTZT+wAFgTcNGXBqPQwf7j2EAnolzDiXl6UA==
+X-Received: by 2002:adf:8182:: with SMTP id 2mr4913477wra.37.1585406601132;
+        Sat, 28 Mar 2020 07:43:21 -0700 (PDT)
+Received: from felia.fritz.box ([2001:16b8:2dbb:cb00:7d36:e5ed:6ff6:44e4])
+        by smtp.gmail.com with ESMTPSA id k133sm12661570wma.11.2020.03.28.07.43.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 28 Mar 2020 07:43:20 -0700 (PDT)
+From:   Lukas Bulwahn <lukas.bulwahn@gmail.com>
+To:     Hans Ulli Kroll <ulli.kroll@googlemail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Arnd Bergmann <arnd@arndb.de>
+Cc:     linux-arm-kernel@lists.infradead.org,
+        Joe Perches <joe@perches.com>, kernel-janitors@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Lukas Bulwahn <lukas.bulwahn@gmail.com>
+Subject: [PATCH] MAINTAINERS: clarify maintenance of Gemini SoC driver
+Date:   Sat, 28 Mar 2020 15:43:06 +0100
+Message-Id: <20200328144306.574-1-lukas.bulwahn@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 23 Mar 2020 01:32:34 +0200
-Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
+Commit 68198dca4569 ("soc: Add SoC driver for Gemini") introduced a Gemini
+SoC driver, but did not add the driver to the existing ARM/CORTINA SYSTEMS
+GEMINI ARM ARCHITECTURE entry in MAINTAINERS.
 
-> On Mon, Mar 23, 2020 at 12:47 AM Saravanan Sekar <sravanhome@gmail.com> wrote:
-> >
-> > Add support for 8-bit resolution ADC readings for input power
-> > supply and battery charging measurement. Provides voltage, current
-> > readings to mp2629 power supply driver.  
-> 
-> ...
-> 
-> > +#include <linux/platform_device.h>  
-> 
-> > +#include <linux/of_device.h>  
-> 
-> Don't see users of it.
-> 
-> > +#include <linux/module.h>
-> > +#include <linux/mutex.h>
-> > +#include <linux/regulator/consumer.h>  
-> 
-> > +#include <linux/sysfs.h>  
-> 
-> Any users?
-> 
-> > +#include <linux/regmap.h>  
-> 
-> Perhaps ordered?
-> 
-> > +#include <linux/iio/iio.h>
-> > +#include <linux/iio/machine.h>
-> > +#include <linux/iio/driver.h>  
-> 
-> + blank line?
-> 
-> > +#include <linux/mfd/mp2629.h>  
-> 
-> ...
-> 
-> > +static int mp2629_read_raw(struct iio_dev *indio_dev,
-> > +                       struct iio_chan_spec const *chan,
-> > +                       int *val, int *val2, long mask)
-> > +{
-> > +       struct mp2629_adc *info = iio_priv(indio_dev);
-> > +       unsigned int rval;
-> > +       int ret;
-> > +
-> > +       switch (mask) {
-> > +       case IIO_CHAN_INFO_RAW:
-> > +               ret = regmap_read(info->regmap, chan->address, &rval);
-> > +               if (ret < 0)
-> > +                       return ret;
-> > +
-> > +               if (chan->address == MP2629_INPUT_VOLT)  
-> 
-> > +                       rval &= 0x7f;  
-> 
-> GENMASK() ?
-> 
-> > +               *val = rval;
-> > +               return IIO_VAL_INT;  
-> 
-> > +       return 0;
-> > +}  
-> 
-> ...
-> 
-> > +       void **pdata = pdev->dev.platform_data;  
-> 
-> Same Qs as per other patch.
-> 
-> ...
-> 
-> > +       indio_dev->dev.of_node = pdev->dev.of_node;  
-> 
-> Jonathan, doesn't IIO core do this for all?
->
+Hence, this driver was considered to be part of "THE REST".
 
-Nope.  I'm not totally sure it's always safe to do so
-as we have some weird parent structures in some cases.
-A quick grep suggests that we may be fine though, or
-alternatively be able to get away with a set it if not
-already set approach.
+Clarify now that this driver is maintained by the ARM/CORTINA SYSTEMS
+GEMINI ARM ARCHITECTURE maintainers.
 
-I'll take a look when I get some time. It would be nice
-to clean this up.
+This was identified with a small script that finds all files only
+belonging to "THE REST" according to the current MAINTAINERS file, and I
+acted upon its output.
 
-Jonathan
+Signed-off-by: Lukas Bulwahn <lukas.bulwahn@gmail.com>
+---
+applies cleanly on current master and next-20200327
 
+ MAINTAINERS | 1 +
+ 1 file changed, 1 insertion(+)
 
-
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 8b8abe756ae0..ae02568afa25 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -1729,6 +1729,7 @@ F:	arch/arm/mach-gemini/
+ F:	drivers/net/ethernet/cortina/
+ F:	drivers/pinctrl/pinctrl-gemini.c
+ F:	drivers/rtc/rtc-ftrtc010.c
++F:	drivers/soc/gemini/
+ 
+ ARM/CSR SIRFPRIMA2 MACHINE SUPPORT
+ M:	Barry Song <baohua@kernel.org>
+-- 
+2.17.1
 
