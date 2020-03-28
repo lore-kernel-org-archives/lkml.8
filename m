@@ -2,256 +2,130 @@ Return-Path: <SRS0=NZ+o=5N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 239C9C2D0EE
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 18:50:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE3E0C2D0E5
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 18:56:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E6738206F6
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 18:50:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A5E76206F6
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 18:56:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kCwiVp/A"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uGwtTVYB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727406AbgC1Sum (ORCPT
+        id S1727179AbgC1S4w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 28 Mar 2020 14:50:42 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:45231 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726389AbgC1Sul (ORCPT
+        Sat, 28 Mar 2020 14:56:52 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:33118 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726220AbgC1S4w (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 28 Mar 2020 14:50:41 -0400
-Received: by mail-wr1-f65.google.com with SMTP id t7so15750837wrw.12;
-        Sat, 28 Mar 2020 11:50:39 -0700 (PDT)
+        Sat, 28 Mar 2020 14:56:52 -0400
+Received: by mail-pg1-f195.google.com with SMTP id d17so6466108pgo.0;
+        Sat, 28 Mar 2020 11:56:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=T9X4TQZ9K4JIEIm2tTNHBEPbE51dAYWSay3gWxgKRNs=;
-        b=kCwiVp/Aze/2Pz7pZ5u6zXqyH0ixIlIESCCbTmsnAhtzGVP4BjcD2vSLt3RUTmenUE
-         h3oSaKufL43z2+hyQJMp9s0PQ7Bdl5G7NsOErjnuRVDakMxpsFS5Rkhsopb/aYfhiMrS
-         O+WIXx6M9ljIbOThh8zSecrerqXk8+H08qlklrjkRmFDJAqMNJoxwMS8xe0O7SPgNRYV
-         EAc5MTdaG1sZNkZx9WkIHBYUn5oNSXWWCGm6zcQIUPJFJpRDSxe7UVk65FxJqHPXREvw
-         x1GNBceWinUmIRkZZBgvkNJTz6gnwd42ePJVma7ldyMTmqSDLuXcHahqh9MrCyrAk21Y
-         vqeQ==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=4HHlXxbXXtMBcda41lMVxwqCfKXpypsMxOoSrEjA1Ko=;
+        b=uGwtTVYBhkTB2izKKxsA2QIkU1+f13YKWrgXdavHLelUDiGAcbZSvfoo65pXoeezTv
+         xic/NWs3f+63xWk4uo5z2cdBrnnajWN2ZxZJNxkaK6LvKY0pilzfnfIcEcSNAhFEq2XB
+         O8oB6G0veXREa6kVtCn8tCsSLScqDv0Vq7SORhBCkcOqbljvf2ISvmRLODaIeGfk0gnO
+         syp2/kKI3mfNeAkHIZjIdnzmTBeljOgDVj4rSafWWLlfRMhCnsX3667qqSxUQNm59i7m
+         CyACq9GPYwIhG8NYDIrPQxh6ICCtGPOlR+UxSq4NW3nx/LK2Ggcrzdx62o1zjXv852RG
+         BQ3g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=T9X4TQZ9K4JIEIm2tTNHBEPbE51dAYWSay3gWxgKRNs=;
-        b=Y8jQdVO8biniuJPAtDKYnhUY+B81CXgZ5XUC/bF/eLmizUcKNAYvm/v0B9Ka6K7/Gt
-         f6z9viEBon203mUl833IyrOQH4SJ0yYQqXj0QRrwip9rjTF1AgEBrHOMc/ybWPHWsCbE
-         MTow9jbyjKVBJXzd2e4jZ3Pistc5m2qD09OHAF6o2pV/ZYQoKq84UqyHSG6h+1fmeZ9r
-         ryWowGXKx9xYY0OAarhLn+OZIHcW0INZL0zcFx5R2VNZdWLFVy8FiLHB5xRfVWMUAdxJ
-         d5ljUY5C9YpiqKdFBw57wgOa47otSu3hfIzDi/yxahgQ279fyjhSoLAKNdw9Zx+9MKzl
-         8JFw==
-X-Gm-Message-State: ANhLgQ1pBDjjzNsxCwi6s200ReVbtWY95kexBFoklwpPSO3YHnISUeXy
-        TaYKI0BeUP7/gcOrk7/yjF8=
-X-Google-Smtp-Source: ADFU+vtui0abJnpIDHZiXzdCeHgOGtzqxSZ1ihNtfRBfNsrqjM4GsNkVn7Srfc6pNQ5QBiD6F6Djgg==
-X-Received: by 2002:adf:eb48:: with SMTP id u8mr5912021wrn.283.1585421438782;
-        Sat, 28 Mar 2020 11:50:38 -0700 (PDT)
-Received: from andrea ([86.61.236.197])
-        by smtp.gmail.com with ESMTPSA id j11sm2607703wmi.33.2020.03.28.11.50.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 28 Mar 2020 11:50:38 -0700 (PDT)
-Date:   Sat, 28 Mar 2020 19:50:35 +0100
-From:   Andrea Parri <parri.andrea@gmail.com>
-To:     Vitaly Kuznetsov <vkuznets@redhat.com>
-Cc:     Dexuan Cui <decui@microsoft.com>,
-        "K . Y . Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>, linux-hyperv@vger.kernel.org,
-        Michael Kelley <mikelley@microsoft.com>,
-        Boqun Feng <boqun.feng@gmail.com>, linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH 01/11] Drivers: hv: vmbus: Always handle the VMBus
- messages on CPU0
-Message-ID: <20200328185035.GB12184@andrea>
-References: <20200325225505.23998-1-parri.andrea@gmail.com>
- <20200325225505.23998-2-parri.andrea@gmail.com>
- <874kub5i02.fsf@vitty.brq.redhat.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=4HHlXxbXXtMBcda41lMVxwqCfKXpypsMxOoSrEjA1Ko=;
+        b=eG1K+AB/Q3l2XkQE0oACO5Mx0d7mPNuH5ZUsqHS7fZ58NLVN54mftmw6j15zDv0Zgz
+         M16aaQX4Wf+HCG2+AQAEH+pHzeDKQwMMDWrrYiWpx92gxUsBwYRk0Kcgp57ViYpn7GUf
+         3s/OETN1xHK6c66TD+HnQG1dJzpYvmotUPWJ9YU7Th6cKlJBmNSvo8z8QeTLJnL8ckAA
+         K8Q1LCc42tCAcFDQEE7wgpZcglSpp3++6KrZK88OEh2NTEGSviPVN6mkDUI/zC8Cj1a5
+         9nKbDl2sSFcDuGw4xozIScxjF2RG3kBkqOxxpMBO6XGSsdzu0DpwRSn32/FTqTNm3shY
+         /chg==
+X-Gm-Message-State: ANhLgQ0cvU9WjhOiXkz1ueKCmlsGf6atZJxbKI8SlEOJlXon9OehOcn0
+        V8oLAp6MRV3JcR5r2zp5igPGer74s+wusDL7vLY=
+X-Google-Smtp-Source: ADFU+vtIDt63eZ3/CBJTRiljKEiIFZZS8m8+DJZgk/QqIoOY2kD1gREKSfq7qKI5usQv3XhAIYh1EXCUbfK/aEpVoN4=
+X-Received: by 2002:a63:5859:: with SMTP id i25mr5290889pgm.74.1585421811018;
+ Sat, 28 Mar 2020 11:56:51 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <874kub5i02.fsf@vitty.brq.redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200327104954.27829-1-i.mikhaylov@yadro.com> <20200327104954.27829-3-i.mikhaylov@yadro.com>
+ <20200328151102.4279cb42@archlinux>
+In-Reply-To: <20200328151102.4279cb42@archlinux>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Sat, 28 Mar 2020 20:56:39 +0200
+Message-ID: <CAHp75Vfo18+PD8N1WaonLDHv=QLOdb6xpD_grVVj02L=GtqNDA@mail.gmail.com>
+Subject: Re: [PATCH v4 2/2] iio: proximity: Add driver support for vcnl3020
+ proximity sensor
+To:     Jonathan Cameron <jic23@kernel.org>
+Cc:     Ivan Mikhaylov <i.mikhaylov@yadro.com>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        linux-iio <linux-iio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 26, 2020 at 03:05:17PM +0100, Vitaly Kuznetsov wrote:
-> "Andrea Parri (Microsoft)" <parri.andrea@gmail.com> writes:
-> 
-> > A Linux guest have to pick a "connect CPU" to communicate with the
-> > Hyper-V host.  This CPU can not be taken offline because Hyper-V does
-> > not provide a way to change that CPU assignment.
-> >
-> > Current code sets the connect CPU to whatever CPU ends up running the
-> > function vmbus_negotiate_version(), and this will generate problems if
-> > that CPU is taken offine.
-> >
-> > Establish CPU0 as the connect CPU, and add logics to prevents the
-> > connect CPU from being taken offline.   We could pick some other CPU,
-> > and we could pick that "other CPU" dynamically if there was a reason to
-> > do so at some point in the future.  But for now, #defining the connect
-> > CPU to 0 is the most straightforward and least complex solution.
-> >
-> > While on this, add inline comments explaining "why" offer and rescind
-> > messages should not be handled by a same serialized work queue.
-> >
-> > Suggested-by: Dexuan Cui <decui@microsoft.com>
-> > Signed-off-by: Andrea Parri (Microsoft) <parri.andrea@gmail.com>
-> > ---
-> >  drivers/hv/connection.c   | 20 +-------------------
-> >  drivers/hv/hv.c           |  7 +++++++
-> >  drivers/hv/hyperv_vmbus.h | 11 ++++++-----
-> >  drivers/hv/vmbus_drv.c    | 20 +++++++++++++++++---
-> >  4 files changed, 31 insertions(+), 27 deletions(-)
-> >
-> > diff --git a/drivers/hv/connection.c b/drivers/hv/connection.c
-> > index 74e77de89b4f3..f4bd306d2cef9 100644
-> > --- a/drivers/hv/connection.c
-> > +++ b/drivers/hv/connection.c
-> > @@ -69,7 +69,6 @@ MODULE_PARM_DESC(max_version,
-> >  int vmbus_negotiate_version(struct vmbus_channel_msginfo *msginfo, u32 version)
-> >  {
-> >  	int ret = 0;
-> > -	unsigned int cur_cpu;
-> >  	struct vmbus_channel_initiate_contact *msg;
-> >  	unsigned long flags;
-> >  
-> > @@ -102,24 +101,7 @@ int vmbus_negotiate_version(struct vmbus_channel_msginfo *msginfo, u32 version)
-> >  
-> >  	msg->monitor_page1 = virt_to_phys(vmbus_connection.monitor_pages[0]);
-> >  	msg->monitor_page2 = virt_to_phys(vmbus_connection.monitor_pages[1]);
-> > -	/*
-> > -	 * We want all channel messages to be delivered on CPU 0.
-> > -	 * This has been the behavior pre-win8. This is not
-> > -	 * perf issue and having all channel messages delivered on CPU 0
-> > -	 * would be ok.
-> > -	 * For post win8 hosts, we support receiving channel messagges on
-> > -	 * all the CPUs. This is needed for kexec to work correctly where
-> > -	 * the CPU attempting to connect may not be CPU 0.
-> > -	 */
-> > -	if (version >= VERSION_WIN8_1) {
-> > -		cur_cpu = get_cpu();
-> > -		msg->target_vcpu = hv_cpu_number_to_vp_number(cur_cpu);
-> > -		vmbus_connection.connect_cpu = cur_cpu;
-> > -		put_cpu();
-> > -	} else {
-> > -		msg->target_vcpu = 0;
-> > -		vmbus_connection.connect_cpu = 0;
-> > -	}
-> > +	msg->target_vcpu = hv_cpu_number_to_vp_number(VMBUS_CONNECT_CPU);
-> >  
-> >  	/*
-> >  	 * Add to list before we send the request since we may
-> > diff --git a/drivers/hv/hv.c b/drivers/hv/hv.c
-> > index 6098e0cbdb4b0..e2b3310454640 100644
-> > --- a/drivers/hv/hv.c
-> > +++ b/drivers/hv/hv.c
-> > @@ -249,6 +249,13 @@ int hv_synic_cleanup(unsigned int cpu)
-> >  	bool channel_found = false;
-> >  	unsigned long flags;
-> >  
-> > +	/*
-> > +	 * Hyper-V does not provide a way to change the connect CPU once
-> > +	 * it is set; we must prevent the connect CPU from going offline.
-> > +	 */
-> > +	if (cpu == VMBUS_CONNECT_CPU)
-> > +		return -EBUSY;
+On Sat, Mar 28, 2020 at 5:11 PM Jonathan Cameron <jic23@kernel.org> wrote:
+> On Fri, 27 Mar 2020 13:49:54 +0300
+> Ivan Mikhaylov <i.mikhaylov@yadro.com> wrote:
+
+...
+
+> > Datasheet: http://www.vishay.com/docs/84150/vcnl3020.pdf
+> > Signed-off-by: Ivan Mikhaylov <i.mikhaylov@yadro.com>
+> A few things inline.
+>
+> I note Andy suggested a Datasheet tag, but has it actually been
+> standardised?
+
+I don't think so, but I bet it's a good idea to have it.
+
+...
+
+> > +     rc = device_property_read_u32(data->dev, "led-current", &led_current);
+>
+> The presence of a firmware read (dt / acpi etc) means that the i2c id table
+> isn't actually useful for probing.
+
+...in case if there are no defaults hard coded in the driver.
+
+> > +     if (rc) {
+> > +             dev_err(data->dev, "Couldn't get led current (%d)", rc);
+> > +             return rc;
+> > +     }
+
+...
+
+> > +     rc = regmap_read(data->regmap, VCNL_PS_RESULT_HI, &hi);
+> > +     if (rc)
+> > +             goto err_unlock;
+> > +     dev_dbg(data->dev, "result high byte 0x%x", hi);
 > > +
-> >  	/*
-> >  	 * Search for channels which are bound to the CPU we're about to
-> >  	 * cleanup. In case we find one and vmbus is still connected we need to
-> > diff --git a/drivers/hv/hyperv_vmbus.h b/drivers/hv/hyperv_vmbus.h
-> > index 70b30e223a578..67fb1edcbf527 100644
-> > --- a/drivers/hv/hyperv_vmbus.h
-> > +++ b/drivers/hv/hyperv_vmbus.h
-> > @@ -212,12 +212,13 @@ enum vmbus_connect_state {
-> >  
-> >  #define MAX_SIZE_CHANNEL_MESSAGE	HV_MESSAGE_PAYLOAD_BYTE_COUNT
-> >  
-> > -struct vmbus_connection {
-> > -	/*
-> > -	 * CPU on which the initial host contact was made.
-> > -	 */
-> > -	int connect_cpu;
-> > +/*
-> > + * The CPU that Hyper-V will interrupt for VMBUS messages, such as
-> > + * CHANNELMSG_OFFERCHANNEL and CHANNELMSG_RESCIND_CHANNELOFFER.
-> > + */
-> > +#define VMBUS_CONNECT_CPU	0
-> >  
-> > +struct vmbus_connection {
-> >  	u32 msg_conn_id;
-> >  
-> >  	atomic_t offer_in_progress;
-> > diff --git a/drivers/hv/vmbus_drv.c b/drivers/hv/vmbus_drv.c
-> > index 029378c27421d..7600615e13754 100644
-> > --- a/drivers/hv/vmbus_drv.c
-> > +++ b/drivers/hv/vmbus_drv.c
-> > @@ -1056,14 +1056,28 @@ void vmbus_on_msg_dpc(unsigned long data)
-> >  			/*
-> >  			 * If we are handling the rescind message;
-> >  			 * schedule the work on the global work queue.
-> > +			 *
-> > +			 * The OFFER message and the RESCIND message should
-> > +			 * not be handled by the same serialized work queue,
-> > +			 * because the OFFER handler may call vmbus_open(),
-> > +			 * which tries to open the channel by sending an
-> > +			 * OPEN_CHANNEL message to the host and waits for
-> > +			 * the host's response; however, if the host has
-> > +			 * rescinded the channel before it receives the
-> > +			 * OPEN_CHANNEL message, the host just silently
-> > +			 * ignores the OPEN_CHANNEL message; as a result,
-> > +			 * the guest's OFFER handler hangs for ever, if we
-> > +			 * handle the RESCIND message in the same serialized
-> > +			 * work queue: the RESCIND handler can not start to
-> > +			 * run before the OFFER handler finishes.
-> >  			 */
-> > -			schedule_work_on(vmbus_connection.connect_cpu,
-> > +			schedule_work_on(VMBUS_CONNECT_CPU,
-> >  					 &ctx->work);
-> >  			break;
-> >  
-> >  		case CHANNELMSG_OFFERCHANNEL:
-> >  			atomic_inc(&vmbus_connection.offer_in_progress);
-> > -			queue_work_on(vmbus_connection.connect_cpu,
-> > +			queue_work_on(VMBUS_CONNECT_CPU,
-> >  				      vmbus_connection.work_queue,
-> >  				      &ctx->work);
-> >  			break;
-> > @@ -1110,7 +1124,7 @@ static void vmbus_force_channel_rescinded(struct vmbus_channel *channel)
-> >  
-> >  	INIT_WORK(&ctx->work, vmbus_onmessage_work);
-> >  
-> > -	queue_work_on(vmbus_connection.connect_cpu,
-> > +	queue_work_on(VMBUS_CONNECT_CPU,
-> >  		      vmbus_connection.work_queue,
-> >  		      &ctx->work);
-> >  }
-> 
-> I tried to refresh my memory on why 'connect_cpu' was introduced and it
-> all comes down to the following commit:
-> 
-> commit 7268644734f6a300353a4c4ff8bf3e013ba80f89
-> Author: Alex Ng <alexng@microsoft.com>
-> Date:   Fri Feb 26 15:13:22 2016 -0800
-> 
->     Drivers: hv: vmbus: Support kexec on ws2012 r2 and above
-> 
-> which for some unknown reason kept hardcoding '0' for pre-win2012-r2 (
-> hv_context.vp_index[smp_processor_id()] in all cases would do exactly
-> the same I guess ). Later, 'connect_cpu' appeared just to remember our
-> choice, I can't see why we didn't go with CPU0 for simplicity.
-> 
-> Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+> > +     rc = regmap_read(data->regmap, VCNL_PS_RESULT_LO, &lo);
+> > +     if (rc)
+> > +             goto err_unlock;
+>
+> These are neigbouring registers.  Can you not get away with a bulk read?
+> The datasheet suggests the device does auto address incrementing.
+>
+> If you do that, you can read directly into an __be16/__le16 (I haven't
+> checked which) and do an endian conversion to whatever the cpu is
+> using.
 
-Applied!  Thanks again for the review and all the suggestions,
+Oh, indeed. How I missed this during my review? :-)
 
-  Andrea
+-- 
+With Best Regards,
+Andy Shevchenko
