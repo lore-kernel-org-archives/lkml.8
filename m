@@ -2,102 +2,121 @@ Return-Path: <SRS0=NZ+o=5N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5054C43331
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 21:46:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0219CC43331
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 21:48:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA20220716
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 21:46:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qTskBs0Y"
+	by mail.kernel.org (Postfix) with ESMTP id C4AA020723
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 21:48:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585432134;
+	bh=G8OwioppXxivUN+lG+9D9zomyy4zRkwKcraq37im1go=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=NsyqBf9taZMVk8d4bvZMzjGNfbK6usAFlDOAofh12JYM4FR0Sc233uw6L2hVUyYqk
+	 UA6fhPhZpwvRBTMqR9MbpYDOg0OWIcaQ++avYPWjABjCd29K7uvHr6Bcs+AyDxv3Sq
+	 tl0qJxkCy8k3DVEY/3TyX9neh9VM3ss2a6t592oc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727770AbgC1Vqq (ORCPT
+        id S1727775AbgC1Vsx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 28 Mar 2020 17:46:46 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:39162 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726604AbgC1Vqq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 28 Mar 2020 17:46:46 -0400
-Received: by mail-ot1-f67.google.com with SMTP id x11so13871624otp.6
-        for <linux-kernel@vger.kernel.org>; Sat, 28 Mar 2020 14:46:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=nPXNxsOZ3C7pRcm5mKIgZGPNm3UgML/++VJMRLMb3AI=;
-        b=qTskBs0YmHh+tZEs84jHvRBn/43ZsP4wf1/5WCdmRZJ0AsdWtvM4X04ADXXYAcSi8J
-         iLeuHFAS97j2PhIz3A+o9X0tQ/qo19nMFjGDx6kweTbNWQ50pCz+FFZgDHYxQEo+Bf8I
-         KKUuqmBa53G1zkdO2LnPVx68/t2Gv3WUSP5Bks4cKmZuNLvUKbX4MoFxbGSp4N1a6BzK
-         etcXqxEdv4quoP2Hoh5SAao+bAcBWdrE3l+d7oJgXG6uYq5vqlxRy3VS6HN7x0VDW6fR
-         E1+45JyNk1fHKvAP1+4FzhLZHmRRJ3WLvm2JmPvMcfbDLCdja5/kOaJcDfF4c8pPwly9
-         xgcw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=nPXNxsOZ3C7pRcm5mKIgZGPNm3UgML/++VJMRLMb3AI=;
-        b=g7w/JA66qWhOaC9P88jIIgE6QOjyT4t5wumRQvOR1i2N0MC2IOqYexNBQdknhHFpba
-         Odbt2DBQeDcmq8TjCzS9nSmyhRl+GRWgKMBIN9xGDAJp+raFcDAm5TIg2ln98Nzg5IYz
-         nGhoIZduelZsujNTNthxDnJvDhXE24IAHRt4L+GqL5EIrs9HZMxuA7WVKYJWlRGNeels
-         G4IeA+m0NOg0BR9baooEvl0u4N7uW/W5G5xjQD7iIl2z05NWZK2pxV2YI/varIr7oZLr
-         tUpho/accs4X9LfFI+PFgL7eyOoW2oUh4ccnYHcFYgu5HKXxqGeXsh9tNx0XlQM21fLC
-         LJ8g==
-X-Gm-Message-State: ANhLgQ2uuLTPBuSo5HBvOFaCOSonCEH3gWs7iVeoEgi1wgSLTQ363F6y
-        vfjBIf1zV5R490sqn9DuTU7Ra1OEx+kle6GszH+MCg==
-X-Google-Smtp-Source: ADFU+vvO4/e4aHB57owXkNgpgc4HV0D0tikOOK0ubtXnhm0OhkMPch3zJcOJ9Q4m/i7MsgSphG9JBcOGlz6Ynv6bL7Q=
-X-Received: by 2002:a9d:42f:: with SMTP id 44mr3947412otc.236.1585432003872;
- Sat, 28 Mar 2020 14:46:43 -0700 (PDT)
+        Sat, 28 Mar 2020 17:48:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58998 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726604AbgC1Vsx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 28 Mar 2020 17:48:53 -0400
+Received: from mail-qt1-f173.google.com (mail-qt1-f173.google.com [209.85.160.173])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0E60420723
+        for <linux-kernel@vger.kernel.org>; Sat, 28 Mar 2020 21:48:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1585432132;
+        bh=G8OwioppXxivUN+lG+9D9zomyy4zRkwKcraq37im1go=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=cHUPlg9VZTn2bJ3i8ZyCnu962Xsyf8HfiUrJ8sWmLDcvS6Mkvc8/7ZlePscswR5w/
+         eMPuQ4q5O3KTBNwy+oQ/j4CLYgvLvchVHCnOIQcYt6PRiI/aLGUUJT1s/zlLfB9mAJ
+         tK7v5LANHo4Djl8CRzBycEqGWS/PdVb9dETZQMEk=
+Received: by mail-qt1-f173.google.com with SMTP id t9so11879543qto.9
+        for <linux-kernel@vger.kernel.org>; Sat, 28 Mar 2020 14:48:52 -0700 (PDT)
+X-Gm-Message-State: ANhLgQ3wFb8Wrf+2Lcwo29WMxQS7OwjA2RyeV+y1diWFaJLyrMsdq9rO
+        3HZl+56CX3cr5nR/0Dn+8+1Fxm77bxSvV1GI9w==
+X-Google-Smtp-Source: ADFU+vuPFCy1Urrihp7eFA6SCEIvNd1NQ0YUXPZL7dUqBIvYG02ICZLR/KjsqSl0X1vqh04JtYeHrgdNFC79KTMJZB0=
+X-Received: by 2002:aed:3461:: with SMTP id w88mr5617911qtd.143.1585432131157;
+ Sat, 28 Mar 2020 14:48:51 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200327170132.17275-1-grant.likely@arm.com> <CAGETcx8CJqMQaHBj1r5MhNBTw7Smz4BRHPkB0kCUCJPSmW6KwA@mail.gmail.com>
- <2885b440-77a5-f2be-7524-d5fba2b0c08a@arm.com> <CAGETcx_0=W6P_Zf-6fvDfncXUrPvt31bf6de-RWwHaXtwJizmQ@mail.gmail.com>
- <20200328110351.4e50491e@lwn.net>
-In-Reply-To: <20200328110351.4e50491e@lwn.net>
-From:   Saravana Kannan <saravanak@google.com>
-Date:   Sat, 28 Mar 2020 14:46:07 -0700
-Message-ID: <CAGETcx_Y-S=tAZiiymB2qWdx0uKzoDnGcmPoOr8EkOUsi6A0mg@mail.gmail.com>
-Subject: Re: [PATCH] Add documentation on meaning of -EPROBE_DEFER
-To:     Jonathan Corbet <corbet@lwn.net>
-Cc:     Grant Likely <grant.likely@arm.com>,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, nd@arm.com,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+References: <A65A26D8-9F66-4D46-B1E1-84ECECF079E3@goldelico.com>
+ <20200328182008.5ac2f99e@kemnade.info> <EF62F8D0-A205-4D64-8540-44F843720797@goldelico.com>
+In-Reply-To: <EF62F8D0-A205-4D64-8540-44F843720797@goldelico.com>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Sat, 28 Mar 2020 15:48:40 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqLv5sS50ocg85+7C6PhK97GAbOE+6tk1gS4wvzQjnfGNA@mail.gmail.com>
+Message-ID: <CAL_JsqLv5sS50ocg85+7C6PhK97GAbOE+6tk1gS4wvzQjnfGNA@mail.gmail.com>
+Subject: Re: CHKDT error by f95cad74acdb ("dt-bindings: clocks: Convert
+ Allwinner legacy clocks to schemas")
+To:     "H. Nikolaus Schaller" <hns@goldelico.com>
+Cc:     Andreas Kemnade <andreas@kemnade.info>,
+        Discussions about the Letux Kernel 
+        <letux-kernel@openphoenux.org>, Maxime Ripard <maxime@cerno.tech>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Mar 28, 2020 at 10:03 AM Jonathan Corbet <corbet@lwn.net> wrote:
+On Sat, Mar 28, 2020 at 12:21 PM H. Nikolaus Schaller <hns@goldelico.com> wrote:
 >
-> On Fri, 27 Mar 2020 16:55:34 -0700
-> Saravana Kannan <saravanak@google.com> wrote:
 >
-> > > > The infinite loop is a current implementation behavior. Not an
-> > > > intentional choice. So, maybe we can say the behavior is undefined
-> > > > instead?
-> > >
-> > > If you feel strongly about it, but I don't have any problem with
-> > > documenting it as the current implementation behaviour, and then
-> > > changing the text if that ever changes.
+> > Am 28.03.2020 um 18:20 schrieb Andreas Kemnade <andreas@kemnade.info>:
 > >
-> > Assuming Greg is okay with this doc update, I'm kinda leaning towards
-> > "undefined" because if documented as "infinite loop" people might be
-> > hesitant towards removing that behavior. But I'll let Greg make the
-> > final call. Not going to NACK for this point.
+> > Hi Nikolaus,
+> >
+> > On Sat, 28 Mar 2020 13:26:24 +0100
+> > "H. Nikolaus Schaller" <hns@goldelico.com> wrote:
+> >
+> >> Hi Rob,
+> >> I am trying to check my new bindings with v5.6-rc7 but get this before
+> >> the process tries mine:
+> >>
+> >> make dt_binding_check dtbs_check
+> >> ...
+> >>
+> >>  CHKDT   Documentation/devicetree/bindings/bus/renesas,bsc.yaml - due to target missing
+> >>  CHKDT   Documentation/devicetree/bindings/bus/simple-pm-bus.yaml - due to target missing
+> >>  CHKDT   Documentation/devicetree/bindings/clock/allwinner,sun4i-a10-ahb-clk.yaml - due to target missing
+> >> /Volumes/CaseSensitive/master/Documentation/devicetree/bindings/clock/allwinner,sun4i-a10-ahb-clk.yaml: Additional properties are not allowed ('deprecated' was unexpected)
+> >> make[2]: *** [Documentation/devicetree/bindings/clock/allwinner,sun4i-a10-ahb-clk.example.dts] Error 1
+> >> make[1]: *** [dt_binding_check] Error 2
+> >> make: *** [sub-make] Error 2
+> >>
+> >> What am I doing wrong?
+> >> Is there an option to skip such errors and continue?
+> >> Is there an option to just test my bindings and yaml file?
+> >>
+> > maybe your tools are outdated, so rerun
+> >
+> > pip3 install git+https://github.com/devicetree-org/dt-schema.git@master
 >
-> FWIW, kernel developers have to cope with enough trouble from "undefined
-> behavior" already; I don't think we should really be adding that to our
-> own docs.  We can certainly document the infinite loop behavior as being
-> not guaranteed as part of the API if we're worried that somebody might
-> start to rely on it...:)
+> Yes, that one solves the problem!
+>
+> A better error message of CHKDT would have been helpful. Or an auto-update.
 
-Ok, all of you have convinced me of the error of my ways. :)
+If you know of a "python way" to do auto/self updating I'd like to
+know. I looked a while back and didn't find anything. I'm working on a
+version check so I can enforce/warn on a minimum version which should
+help some.
 
-Thanks,
-Saravana
+> Now I just get a lot of messages like
+>
+>   CHKDT   Documentation/devicetree/bindings/arm/sunxi/allwinner,sun4i-a10-mbus.yaml - due to: Documentation/devicetree/bindings/arm/sunxi/allwinner,sun4i-a10-mbus.yaml
+> Documentation/devicetree/bindings/arm/sunxi/allwinner,sun4i-a10-mbus.yaml:: $id: relative path/filename doesn't match actual path or filename
+>         expected: http://devicetree.org/schemas/arm/sunxi/allwinner,sun4i-a10-mbus.yaml:#
+>   CHKDT   Documentation/devicetree/bindings/clock/allwinner,sun4i-a10-ahb-clk.yaml - due to target missing
+> Documentation/devicetree/bindings/clock/allwinner,sun4i-a10-ahb-clk.yaml:: $id: relative path/filename doesn't match actual path or filename
+>         expected: http://devicetree.org/schemas/clock/allwinner,sun4i-a10-ahb-clk.yaml:#
+
+Should be fixed if you are on a current rc.
+
+Rob
