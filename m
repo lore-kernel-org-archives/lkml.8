@@ -2,97 +2,112 @@ Return-Path: <SRS0=NZ+o=5N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6825EC2D0EF
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 12:58:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38D5BC43331
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 13:02:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3AD30207FF
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 12:58:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 06A70206F6
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 13:02:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726751AbgC1M62 (ORCPT
+        id S1726391AbgC1NCQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 28 Mar 2020 08:58:28 -0400
-Received: from cloudserver094114.home.pl ([79.96.170.134]:43401 "EHLO
-        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726268AbgC1M61 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 28 Mar 2020 08:58:27 -0400
-Received: from 185.80.35.16 (185.80.35.16) (HELO kreacher.localnet)
- by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.341)
- id 5bf184116b0b3e6b; Sat, 28 Mar 2020 13:58:24 +0100
-From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To:     Linux PM <linux-pm@vger.kernel.org>
-Cc:     Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Giovanni Gherdovich <ggherdovich@suse.cz>,
-        Doug Smythies <dsmythies@telus.net>
-Subject: [PATCH 1/2] cpufreq: intel_pstate: Select schedutil as the default governor
-Date:   Sat, 28 Mar 2020 13:57:06 +0100
-Message-ID: <2084178.yfvgZJeXvx@kreacher>
-In-Reply-To: <2016232.ihCVsphvri@kreacher>
-References: <2016232.ihCVsphvri@kreacher>
+        Sat, 28 Mar 2020 09:02:16 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:56746 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726225AbgC1NCP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 28 Mar 2020 09:02:15 -0400
+Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id CC0D1DB02DE44016DCAE;
+        Sat, 28 Mar 2020 21:01:26 +0800 (CST)
+Received: from use12-sp2.huawei.com (10.67.189.174) by
+ DGGEMS404-HUB.china.huawei.com (10.3.19.204) with Microsoft SMTP Server id
+ 14.3.487.0; Sat, 28 Mar 2020 21:01:20 +0800
+From:   Xiaoming Ni <nixiaoming@huawei.com>
+To:     <miquel.raynal@bootlin.com>, <richard@nod.at>, <vigneshr@ti.com>
+CC:     <nixiaoming@huawei.com>, <linux-mtd@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <wangle6@huawei.com>,
+        <zhangweimin12@huawei.com>, <yebin10@huawei.com>,
+        <houtao1@huawei.com>
+Subject: [PATCH] mtd:clear cache_state to avoid writing to bad clocks repeatedly
+Date:   Sat, 28 Mar 2020 21:01:17 +0800
+Message-ID: <1585400477-65705-1-git-send-email-nixiaoming@huawei.com>
+X-Mailer: git-send-email 1.8.5.6
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain
+X-Originating-IP: [10.67.189.174]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+The function call process is as follows:
+	mtd_blktrans_work()
+	  while (1)
+	    do_blktrans_request()
+	      mtdblock_writesect()
+	        do_cached_write()
+	          write_cached_data() /*if cache_state is STATE_DIRTY*/
+	            erase_write()
 
-Modify cpufreq Kconfig to select schedutil as the default governor
-if the intel_pstate driver has been selected and SMP support is
-enabled (because schedutil depends on SMP).
+write_cached_data() returns failure without modifying cache_state
+and cache_offset. so when do_cached_write() is called again,
+write_cached_data() will be called again to perform erase_write()
+on the same cache_offset.
 
-Also select schedutil as well as the performance governor from the
-intel_pstate Kconfig section to ensure the equivalence of the passive
-and active mode governor configuration options.
+but if this cache_offset points to a bad block, erase_write() will
+always return -EIO. Writing to this mtdblk is equivalent to losing
+the current data, and repeatedly writing to the bad block.
 
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Repeatedly writing a bad block has no real benefits,
+but brings some negative effects:
+1 Lost subsequent data
+2 Loss of flash device life
+3 erase_write() bad blocks are very time-consuming. for example:
+	the function do_erase_oneblock() in chips/cfi_cmdset_0020.c or
+	chips/cfi_cmdset_0002.c may take more than 20 seconds to return
+
+Therefore, when erase_write() returns -EIO in write_cached_data(),
+clear cache_state to avoid writing to bad clocks repeatedly.
+
+Signed-off-by: Xiaoming Ni <nixiaoming@huawei.com>
 ---
- drivers/cpufreq/Kconfig     | 3 ++-
- drivers/cpufreq/Kconfig.x86 | 2 ++
- 2 files changed, 4 insertions(+), 1 deletion(-)
+ drivers/mtd/mtdblock.c | 11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/cpufreq/Kconfig b/drivers/cpufreq/Kconfig
-index bff5295016ae..9f0e7e79ed14 100644
---- a/drivers/cpufreq/Kconfig
-+++ b/drivers/cpufreq/Kconfig
-@@ -37,10 +37,11 @@ config CPU_FREQ_STAT
- choice
- 	prompt "Default CPUFreq governor"
- 	default CPU_FREQ_DEFAULT_GOV_USERSPACE if ARM_SA1100_CPUFREQ || ARM_SA1110_CPUFREQ
-+	default CPU_FREQ_DEFAULT_GOV_SCHEDUTIL if X86_INTEL_PSTATE && SMP
- 	default CPU_FREQ_DEFAULT_GOV_PERFORMANCE
- 	help
- 	  This option sets which CPUFreq governor shall be loaded at
--	  startup. If in doubt, select 'performance'.
-+	  startup. If in doubt, use the default setting.
+diff --git a/drivers/mtd/mtdblock.c b/drivers/mtd/mtdblock.c
+index 078e0f6..98c25d6 100644
+--- a/drivers/mtd/mtdblock.c
++++ b/drivers/mtd/mtdblock.c
+@@ -89,8 +89,6 @@ static int write_cached_data (struct mtdblk_dev *mtdblk)
  
- config CPU_FREQ_DEFAULT_GOV_PERFORMANCE
- 	bool "performance"
-diff --git a/drivers/cpufreq/Kconfig.x86 b/drivers/cpufreq/Kconfig.x86
-index a6528388952e..758c69a2e1bf 100644
---- a/drivers/cpufreq/Kconfig.x86
-+++ b/drivers/cpufreq/Kconfig.x86
-@@ -8,6 +8,8 @@ config X86_INTEL_PSTATE
- 	depends on X86
- 	select ACPI_PROCESSOR if ACPI
- 	select ACPI_CPPC_LIB if X86_64 && ACPI && SCHED_MC_PRIO
-+	select CPU_FREQ_GOV_PERFORMANCE
-+	select CPU_FREQ_GOV_SCHEDUTIL if SMP
- 	help
- 	  This driver provides a P state for Intel core processors.
- 	  The driver implements an internal governor and will become
+ 	ret = erase_write (mtd, mtdblk->cache_offset,
+ 			   mtdblk->cache_size, mtdblk->cache_data);
+-	if (ret)
+-		return ret;
+ 
+ 	/*
+ 	 * Here we could arguably set the cache state to STATE_CLEAN.
+@@ -98,9 +96,14 @@ static int write_cached_data (struct mtdblk_dev *mtdblk)
+ 	 * be notified if this content is altered on the flash by other
+ 	 * means.  Let's declare it empty and leave buffering tasks to
+ 	 * the buffer cache instead.
++	 *
++	 * if this cache_offset points to a bad block
++	 * data cannot be written to the device.
++	 * clear cache_state to avoid writing to bad clocks repeatedly
+ 	 */
+-	mtdblk->cache_state = STATE_EMPTY;
+-	return 0;
++	if (ret == 0 || ret == -EIO)
++		mtdblk->cache_state = STATE_EMPTY;
++	return ret;
+ }
+ 
+ 
 -- 
-2.16.4
-
-
-
+1.8.5.6
 
