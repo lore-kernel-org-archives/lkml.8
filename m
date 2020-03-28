@@ -2,181 +2,129 @@ Return-Path: <SRS0=NZ+o=5N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C02D3C43331
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 15:28:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CEAD7C2D0E5
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 15:34:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 88CE8207FF
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 15:28:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UKSBMGAL"
+	by mail.kernel.org (Postfix) with ESMTP id A6073207FF
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 15:34:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585409675;
+	bh=fULbPKjOq4E91nu36KHICTyk0L3t37HcS6E+MYTYkbE=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=w+niR4EvW6TbmpgJ7fACvIHpFgqP1ftA9WtxcFoJ8lR1WegoUp84sNX74/PcCrXnF
+	 jV0rp7ONXcKcuzW0WmqoX4UEe1efskJosk8KmLhyei3XdW5/3x9/sk/oIKMKy8vaAr
+	 oSDxJsSm7ak50EriNW5Rob1nsZWBh2lRLg3LpBTI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727302AbgC1P2D (ORCPT
+        id S1727028AbgC1Pee (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 28 Mar 2020 11:28:03 -0400
-Received: from us-smtp-delivery-74.mimecast.com ([63.128.21.74]:55947 "EHLO
-        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727148AbgC1P17 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 28 Mar 2020 11:27:59 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1585409278;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         references:references; bh=E6R+2cTMmywbuz7qW69vCKU2mmpRr6JrLiKhWYDI1s4=;
-        b=UKSBMGAL87KrMZkaeqVojTE6n3bFMBmGDTS+qLkxV62Xxhq0oRzhOMZzy1dxewR+zP4fAD
-        rk99gWUIQC5s19G8lzRVBnisQsK4VDmjAbc1UxyAZf8M4VOjbazaqof1KcKA1YPiBnQRw3
-        OSj4T8HY63kHfkr/x31JJqOr0f/LkMU=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-138-IXy0Z7PNPC-1q_oLVLtVgQ-1; Sat, 28 Mar 2020 11:27:54 -0400
-X-MC-Unique: IXy0Z7PNPC-1q_oLVLtVgQ-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Sat, 28 Mar 2020 11:34:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40214 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725807AbgC1Pee (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 28 Mar 2020 11:34:34 -0400
+Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id AFACC800D5C;
-        Sat, 28 Mar 2020 15:27:52 +0000 (UTC)
-Received: from fuller.cnet (ovpn-116-11.gru2.redhat.com [10.97.116.11])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 1ACB819C7F;
-        Sat, 28 Mar 2020 15:27:52 +0000 (UTC)
-Received: by fuller.cnet (Postfix, from userid 1000)
-        id 511314198B3C; Sat, 28 Mar 2020 12:27:27 -0300 (-03)
-Message-ID: <20200328152503.225876188@redhat.com>
-User-Agent: quilt/0.66
-Date:   Sat, 28 Mar 2020 12:21:19 -0300
-From:   Marcelo Tosatti <mtosatti@redhat.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Frederic Weisbecker <fweisbec@gmail.com>,
-        Chris Friesen <chris.friesen@windriver.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Jim Somerville <Jim.Somerville@windriver.com>,
-        Christoph Lameter <cl@linux.com>,
-        Marcelo Tosatti <mtosatti@redhat.com>
-Subject: [patch 2/3] isolcpus: affine kernel threads to specified cpumask
-References: <20200328152117.881555226@redhat.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id 276DA20716;
+        Sat, 28 Mar 2020 15:34:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1585409673;
+        bh=fULbPKjOq4E91nu36KHICTyk0L3t37HcS6E+MYTYkbE=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=Gf8YTMZrXX2dXhuLYBTp0EM6GbhACYRF8tkujSja7iWA3za3kgF3tp5U4uWmIoqDF
+         Nu996ShHrubW9w1q7i6BNmXUaexpzq1WWDEfzbHXidoS76GzkT5LwatjcmPqP423CB
+         3GszUhROM1m76SqM6WIMGIe05i6aossoiFz1IqO8=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id E6C3F35226C6; Sat, 28 Mar 2020 08:34:32 -0700 (PDT)
+Date:   Sat, 28 Mar 2020 08:34:32 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Joel Fernandes <joel@joelfernandes.org>
+Cc:     Steven Rostedt <rostedt@goodmis.org>, rcu@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
+        jiangshanlai@gmail.com, dipankar@in.ibm.com,
+        akpm@linux-foundation.org, mathieu.desnoyers@efficios.com,
+        josh@joshtriplett.org, tglx@linutronix.de, peterz@infradead.org,
+        dhowells@redhat.com, edumazet@google.com, fweisbec@gmail.com,
+        oleg@redhat.com, Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+        Andrii Nakryiko <andriin@fb.com>
+Subject: Re: [PATCH RFC v2 tip/core/rcu 14/22] rcu-tasks: Add an RCU Tasks
+ Trace to simplify protection of tracing hooks
+Message-ID: <20200328153432.GB19865@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20200319001024.GA28798@paulmck-ThinkPad-P72>
+ <20200319001100.24917-14-paulmck@kernel.org>
+ <20200319154239.6d67877d@gandalf.local.home>
+ <20200320002813.GL3199@paulmck-ThinkPad-P72>
+ <20200319204838.1f78152a@gandalf.local.home>
+ <20200320024152.GM3199@paulmck-ThinkPad-P72>
+ <20200328140635.GA201808@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200328140635.GA201808@google.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is a kernel enhancement to configure the cpu affinity of kernel threads via kernel boot option isolcpus=no_kthreads,<isolcpus_params>,<cpulist>
+On Sat, Mar 28, 2020 at 10:06:35AM -0400, Joel Fernandes wrote:
+> On Thu, Mar 19, 2020 at 07:41:53PM -0700, Paul E. McKenney wrote:
+> > On Thu, Mar 19, 2020 at 08:48:38PM -0400, Steven Rostedt wrote:
+> > > On Thu, 19 Mar 2020 17:28:13 -0700
+> > > "Paul E. McKenney" <paulmck@kernel.org> wrote:
+> > > 
+> > > > Good point.  If interrupts are disabled, it will need to use some
+> > > > other mechanism.  One approach is irqwork.  Another is a timer.
+> > > > 
+> > > > Suggestions?
+> > > 
+> > > Ftrace and perf use irq_work, I would think that should work here too.
+> > 
+> > Sounds good, will give it a go!  And thank you for catching this!
+> 
+> Since the the Tasks-RCU holdout thread is supposed to wake up periodically to
+> scan holdout tasks anyway, can it not detect the end of the Trace-RCU grace
+> period on its next wake up? Sorry if I missed something.
 
-When this option is specified, the cpumask is immediately applied upon
-thread launch. This does not affect kernel threads that specify cpu
-and node.
+It could, and that was how it was structured in the first version.
+The reason for the timed waits is to be able to print stall warnings.
 
-This allows CPU isolation (that is not allowing certain threads
-to execute on certain CPUs) without using the isolcpus=domain parameter,
-making it possible to enable load balancing on such CPUs
-during runtime (see kernel-parameters.txt).
+So here is the (abbreviated) sequence of events:
 
-Note-1: this is based off on Wind River's patch at
-https://github.com/starlingx-staging/stx-integ/blob/master/kernel/kernel-std/centos/patches/affine-compute-kernel-threads.patch
+o	Callbacks appear, waking the kthread.
 
-Difference being that this patch is limited to modifying
-kernel thread cpumask: Behaviour of other threads can
-be controlled via cgroups or sched_setaffinity.
+o	The kthread moves the callbacks to a private list
+	and starts the grace period.
 
-Note-2: Wind River's patch was based off Christoph Lameter's patch at
-https://lwn.net/Articles/565932/ with the only difference being
-the kernel parameter changed from kthread to kthread_cpus.
+o	The kthread scans the tasklist, moving tasks that need
+	further processing to the holdout list.  Note that these
+	tasks are holding out from being checked, not necessarily
+	from being in a quiescent state.
 
-Signed-off-by: Marcelo Tosatti <mtosatti@redhat.com>
+	Note also that tasks that are checked and found to be in
+	a read-side critical section are only added to the holdout
+	list if their state cannot be modified.
 
----
- Documentation/admin-guide/kernel-parameters.txt |    8 ++++++++
- include/linux/sched/isolation.h                 |    1 +
- kernel/kthread.c                                |    6 ++++--
- kernel/sched/isolation.c                        |    6 ++++++
- 4 files changed, 19 insertions(+), 2 deletions(-)
+o	The kthreads repeatedly scans the holdout list.  Once a
+	task has been successfully checked, it is removed from
+	the holdout list.
 
-Index: linux-2.6/Documentation/admin-guide/kernel-parameters.txt
-===================================================================
---- linux-2.6.orig/Documentation/admin-guide/kernel-parameters.txt
-+++ linux-2.6/Documentation/admin-guide/kernel-parameters.txt
-@@ -1959,6 +1959,14 @@
- 			  the CPU affinity syscalls or cpuset.
- 			  <cpu number> begins at 0 and the maximum value is
- 			  "number of CPUs in system - 1".
-+			  When using cpusets, use the isolcpus option "kthread"
-+			  to avoid creation of kernel threads on isolated CPUs.
-+
-+			kthread
-+			  Adjust the CPU affinity mask of unbound kernel threads to
-+			  not contain CPUs on the isolated list. This complements
-+			  the isolation provided by the cpusets mechanism described
-+			  above and by managed_irq option.
- 
- 			managed_irq
- 
-Index: linux-2.6/include/linux/sched/isolation.h
-===================================================================
---- linux-2.6.orig/include/linux/sched/isolation.h
-+++ linux-2.6/include/linux/sched/isolation.h
-@@ -14,6 +14,7 @@ enum hk_flags {
- 	HK_FLAG_DOMAIN		= (1 << 5),
- 	HK_FLAG_WQ		= (1 << 6),
- 	HK_FLAG_MANAGED_IRQ	= (1 << 7),
-+	HK_FLAG_KTHREAD		= (1 << 8),
- };
- 
- #ifdef CONFIG_CPU_ISOLATION
-Index: linux-2.6/kernel/kthread.c
-===================================================================
---- linux-2.6.orig/kernel/kthread.c
-+++ linux-2.6/kernel/kthread.c
-@@ -23,6 +23,7 @@
- #include <linux/ptrace.h>
- #include <linux/uaccess.h>
- #include <linux/numa.h>
-+#include <linux/sched/isolation.h>
- #include <trace/events/sched.h>
- 
- static DEFINE_SPINLOCK(kthread_create_lock);
-@@ -347,7 +348,8 @@ struct task_struct *__kthread_create_on_
- 		 * The kernel thread should not inherit these properties.
- 		 */
- 		sched_setscheduler_nocheck(task, SCHED_NORMAL, &param);
--		set_cpus_allowed_ptr(task, cpu_possible_mask);
-+		set_cpus_allowed_ptr(task,
-+				     housekeeping_cpumask(HK_FLAG_KTHREAD));
- 	}
- 	kfree(create);
- 	return task;
-@@ -572,7 +574,7 @@ int kthreadd(void *unused)
- 	/* Setup a clean context for our children to inherit. */
- 	set_task_comm(tsk, "kthreadd");
- 	ignore_signals(tsk);
--	set_cpus_allowed_ptr(tsk, cpu_possible_mask);
-+	set_cpus_allowed_ptr(tsk, housekeeping_cpumask(HK_FLAG_KTHREAD));
- 	set_mems_allowed(node_states[N_MEMORY]);
- 
- 	current->flags |= PF_NOFREEZE;
-Index: linux-2.6/kernel/sched/isolation.c
-===================================================================
---- linux-2.6.orig/kernel/sched/isolation.c
-+++ linux-2.6/kernel/sched/isolation.c
-@@ -169,6 +169,12 @@ static int __init housekeeping_isolcpus_
- 			continue;
- 		}
- 
-+		if (!strncmp(str, "kthread,", 8)) {
-+			str += 8;
-+			flags |= HK_FLAG_KTHREAD;
-+			continue;
-+		}
-+
- 		pr_warn("isolcpus: Error, unknown flag\n");
- 		return 0;
- 	}
+o	When the holdout list is empty, the kthread stops scanning it.
 
+o	However, the grace period is not necessarily over because some of
+	the previously tasks might still be in their read-side critical
+	sections.
 
+	So, as noted above, the kthread does timed waits for the
+	count of such tasks to go to zero, printing stall warnings
+	along the way if it takes too long.
+
+Or am I missing your point?
+
+							Thanx, Paul
