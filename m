@@ -2,227 +2,179 @@ Return-Path: <SRS0=NZ+o=5N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E809BC43331
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 02:23:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40400C43331
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 02:25:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A7C8D2073B
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 02:23:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585362229;
-	bh=9SyyNJQ551wcLPZuze7Msf9nptXknPKp7+kLiUy5mNM=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=W80T0DaavZMCaFb79XBdpNQ/zjLSysX02VDVy8y1CH6+RfEttwifLMQ4ewqkmEton
-	 JsNhLQowjFve47WM6Lff0dH5RoWvLGN9qKLWwfBubESSOXKFeJPcvlO46j7B43Rq8k
-	 efiAMkLd8PX3Zk40nPe62NEfPFdRajBru0g37mBk=
+	by mail.kernel.org (Postfix) with ESMTP id C4956206F1
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 02:25:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="wUXWpGq3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727026AbgC1CXr (ORCPT
+        id S1727121AbgC1CZs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Mar 2020 22:23:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:32780 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726225AbgC1CXq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Mar 2020 22:23:46 -0400
-Received: from mail-qk1-f182.google.com (mail-qk1-f182.google.com [209.85.222.182])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E589720787;
-        Sat, 28 Mar 2020 02:23:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585362226;
-        bh=9SyyNJQ551wcLPZuze7Msf9nptXknPKp7+kLiUy5mNM=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=OA9bzh2hvCOeM5UktIFR7/hwpiRQUAL209ENdzPc/ovDV1FSlFZJAVrPU5iZTyPE8
-         Dt8svm+XgdKVRrMd0UWXYJBUM6k+jH7yyS2GFaNYxX44XPJIRXPykpdOgC6CRSxUoB
-         2WQq2SjMVEAZIURBCCBvdfbd8RFXhlD0Ryo9Bqdg=
-Received: by mail-qk1-f182.google.com with SMTP id d11so13037259qko.3;
-        Fri, 27 Mar 2020 19:23:45 -0700 (PDT)
-X-Gm-Message-State: ANhLgQ0ThBrwIZQf+JXX+H05WCq4X3NBwWMz7UGXluadIkEbxEKri6Rh
-        OJbUyzQxfQT+uy0x+nU4I8QXINwIjaNoIqyRSg==
-X-Google-Smtp-Source: ADFU+vvtX7zCw9efC6XfKe33KfCp+spF2jPIpj0KYLSwK2zxx76WAsVXS1fMj8C04Y6nBp+ZNKzRDwKPKAONixt0M04=
-X-Received: by 2002:a37:aa92:: with SMTP id t140mr2105160qke.119.1585362224945;
- Fri, 27 Mar 2020 19:23:44 -0700 (PDT)
+        Fri, 27 Mar 2020 22:25:48 -0400
+Received: from gateway31.websitewelcome.com ([192.185.143.38]:47520 "EHLO
+        gateway31.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726781AbgC1CZs (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Mar 2020 22:25:48 -0400
+Received: from cm11.websitewelcome.com (cm11.websitewelcome.com [100.42.49.5])
+        by gateway31.websitewelcome.com (Postfix) with ESMTP id 119BD1CC62
+        for <linux-kernel@vger.kernel.org>; Fri, 27 Mar 2020 21:25:47 -0500 (CDT)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id I1AQjJN2NSl8qI1ARjqCz7; Fri, 27 Mar 2020 21:25:47 -0500
+X-Authority-Reason: nr=8
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=OCElGlRCPKdivR/buoo/fd1feEKsBKHPOmzCMciDMnc=; b=wUXWpGq3fEuAaowciXyySyKEts
+        6lGnrJOkAo9dVU+0MFp2CX/04tUmKhD/jf4Kya5r+YqttOmiUaRATJvpzHpTiQdIObn28FJOn2RWV
+        iwQdc7FFUY7HDaO/gOlhJuHEoexFinDbmmJrSXOcqPFMx2CosAQqumgeyLkPIOr/ohyjkRxeO46nm
+        EemErcPePKcpRxNVYAXWD0Djy47qsl5zYz8+nr6Y2MsgTH367sC/CEFV4/HcdfCAjatIaXjHaA1Zb
+        vO8M492kbI74S5sWu8jRaFiKNhMjwo9gO8G393JiOMuk+flFVzmn5hDF25ZVEwRPAfB4ulIfo1k8T
+        FbKEYp+w==;
+Received: from cablelink-189-218-116-241.hosts.intercable.net ([189.218.116.241]:42282 helo=[192.168.0.21])
+        by gator4166.hostgator.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
+        (Exim 4.92)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1jI1AQ-001AuF-Ii; Fri, 27 Mar 2020 21:25:46 -0500
+Subject: Re: [PATCH][next] RDMA/hns: Fix uninitialized variable bug
+To:     liweihang <liweihang@huawei.com>, oulijun <oulijun@huawei.com>,
+        "Huwei (Xavier)" <huwei87@hisilicon.com>,
+        Doug Ledford <dledford@redhat.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        "wangxi (M)" <wangxi11@huawei.com>
+Cc:     "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20200327193142.GA32547@embeddedor>
+ <B82435381E3B2943AA4D2826ADEF0B3A022B739C@DGGEML502-MBS.china.huawei.com>
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Autocrypt: addr=gustavo@embeddedor.com; keydata=
+ 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
+ VtSixD1uOgytAP7RWS474w==
+Message-ID: <36a775c2-2d8c-e735-b4fe-f6cd45b00e3e@embeddedor.com>
+Date:   Fri, 27 Mar 2020 21:28:31 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-References: <20200111052125.238212-1-saravanak@google.com> <158460766637.28353.11325960928759668587.tip-bot2@tip-bot2>
- <20200324175955.GA16972@arm.com> <CAGETcx8Qhy3y66vJyi8kRvg1+hXf-goDvyty-bsG5qFrA-CKgg@mail.gmail.com>
- <CAGETcx80wvGnS0-MwJ9M9RR9Mny0jmmep+JfwaUJUOR2bfJYsQ@mail.gmail.com>
- <87lfnoxg2a.fsf@nanos.tec.linutronix.de> <CAGETcx_3GSKmSveiGrM2vQp=q57iZYc0T4ELMY7Zw8UwzPEnYA@mail.gmail.com>
- <87imirxv57.fsf@nanos.tec.linutronix.de> <CAL_JsqLas2mi-kTrEY=9vnopU57qwJNDtvui0erMghfG4-pOZw@mail.gmail.com>
- <CAGETcx_MC7weVSYF9CpWt_5Otf3G1Hd75Z8_0LcN0SS42UDyJw@mail.gmail.com>
-In-Reply-To: <CAGETcx_MC7weVSYF9CpWt_5Otf3G1Hd75Z8_0LcN0SS42UDyJw@mail.gmail.com>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Fri, 27 Mar 2020 20:23:32 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqJoyAJuKaYayStiTNKqDJhfHfXFzqMiCmX9_2YmAoPcMA@mail.gmail.com>
-Message-ID: <CAL_JsqJoyAJuKaYayStiTNKqDJhfHfXFzqMiCmX9_2YmAoPcMA@mail.gmail.com>
-Subject: Re: [tip: timers/core] clocksource/drivers/timer-probe: Avoid
- creating dead devices
-To:     Saravana Kannan <saravanak@google.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ionela Voinescu <ionela.voinescu@arm.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        linux-tip-commits@vger.kernel.org, x86 <x86@kernel.org>,
-        Liviu Dudau <liviu.dudau@arm.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Jon Hunter <jonathanh@nvidia.com>,
-        Pawel Moll <pawel.moll@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <B82435381E3B2943AA4D2826ADEF0B3A022B739C@DGGEML502-MBS.china.huawei.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 189.218.116.241
+X-Source-L: No
+X-Exim-ID: 1jI1AQ-001AuF-Ii
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: cablelink-189-218-116-241.hosts.intercable.net ([192.168.0.21]) [189.218.116.241]:42282
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 8
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 26, 2020 at 12:09 PM Saravana Kannan <saravanak@google.com> wrote:
->
-> On Thu, Mar 26, 2020 at 8:02 AM Rob Herring <robh+dt@kernel.org> wrote:
-> >
-> > On Thu, Mar 26, 2020 at 4:34 AM Thomas Gleixner <tglx@linutronix.de> wrote:
-> > >
-> > > Saravana Kannan <saravanak@google.com> writes:
-> > > > On Wed, Mar 25, 2020 at 2:47 PM Thomas Gleixner <tglx@linutronix.de> wrote:
-> > > >
-> > > >> Saravana Kannan <saravanak@google.com> writes:
-> > > >> > On Tue, Mar 24, 2020 at 11:34 AM Saravana Kannan <saravanak@google.com> wrote:
-> > > >> > I took a closer look. So two different drivers [1] [2] are saying they
-> > > >> > know how to handle "arm,vexpress-sysreg" and are expecting to run at
-> > > >> > the same time. That seems a bit unusual to me. I wonder if this is a
-> > > >> > violation of the device-driver model because this expectation would
-> > > >> > never be allowed if these device drivers were actual drivers
-> > > >> > registered with driver-core. But that's a discussion for another time.
-> > > >> >
-> > > >> > To fix this issue you are facing, this patch should work:
-> > > >> > https://lore.kernel.org/lkml/20200324195302.203115-1-saravanak@google.com/T/#u
-> > > >>
-> > > >> Sorry, that's not a fix. That's a crude hack.
-> > > >
-> > > > If device nodes are being handled by drivers without binding a driver
-> > > > to struct devices, then not setting OF_POPULATED is wrong. So the
-> > > > original patch sets it. There are also very valid reasons for allowing
-> > > > OF_POPULATED to be cleared by a driver as discussed here [1].
-> > > >
-> > > > The approach of the original patch (setting the flag and letting the
-> > > > driver sometimes clear it) is also followed by many other frameworks
-> > > > like irq, clk, i2c, etc. Even ingenic-timer.c already does it for the
-> > > > exact same reason.
-> > > >
-> > > > So, why is the vexpress fix a crude hack?
-> > >
-> > > If it's the right thing to do and accepted by the DT folks, then the
-> > > changelog should provide a proper explanation for it. The one you
-> > > provided just baffles me. Plus the clearing of the flag really needs a
-> > > big fat comment.
-> >
-> > IMO, commit 4f41fe386a946 should be reverted and be done with it.
-> > There's no way the timer core can know whether a specific node should
-> > be scanned or not. If you really want to avoid a struct device, then
-> > set OF_POPULATED in specific timer drivers. But I'd rather not see
-> > more places mucking with OF_POPULATED. It's really only bus code that
-> > should be touching it.
->
-> Since most drivers don't need the struct device, my patch sets the
-> flag in the timer core. And for the few exception cases where the
-> device is needed, we can clear the flag in the driver. That'll reduce
-> the number of places mucking with OF_POPULATED.
->
-> Does this seem okay to you?
 
-No. Like I said, I prefer fewer cases of these flags being mucked with.
 
-There are some other ways to solve this. Add a new "ignore" flag. That
-would be somewhat better as OF_POPULATED is not necessarily static
-(overlays!). Another way would be changing 'status' property to
-something other than 'okay'.
+On 3/27/20 21:15, liweihang wrote:
+> On 2020/3/28 3:28, Gustavo A. R. Silva wrote:
+>> There is a potential execution path in which variable *ret* is returned
+>> without being properly initialized, previously.
+>>
+>> Fix this by initializing variable *ret* to -ENODEV.
+>>
+>> Addresses-Coverity-ID: 1491917 ("Uninitialized scalar variable")
+>> Fixes: 2f49de21f3e9 ("RDMA/hns: Optimize mhop get flow for multi-hop addressing")
+>> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+>> ---
+>>  drivers/infiniband/hw/hns/hns_roce_hem.c | 2 +-
+>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/infiniband/hw/hns/hns_roce_hem.c b/drivers/infiniband/hw/hns/hns_roce_hem.c
+>> index c96378718f88..3fd8100c2b56 100644
+>> --- a/drivers/infiniband/hw/hns/hns_roce_hem.c
+>> +++ b/drivers/infiniband/hw/hns/hns_roce_hem.c
+>> @@ -603,7 +603,7 @@ static int set_mhop_hem(struct hns_roce_dev *hr_dev,
+>>  {
+>>  	struct ib_device *ibdev = &hr_dev->ib_dev;
+>>  	int step_idx;
+>> -	int ret;
+>> +	int ret = -ENODEV;
+>>  
+>>  	if (index->inited & HEM_INDEX_L0) {
+>>  		ret = hr_dev->hw->set_hem(hr_dev, table, obj, 0);
+>>
+> 
+> Hi Gustavo,
+> 
 
-> > Is having a struct device really a problem? If we want to save memory
-> > usage, I have some ideas that would save much more than 1 or 2 struct
-> > devices.
->
-> Keep in mind that struct devices cost more than one struct device of
-> memory. They also create a bunch of sysfs nodes, uevents, etc.
+Hi Weihang,
 
-Having the device in sysfs could be argued to be a feature.
+> Thanks for your modification. But I check the code and I think "ret"
+> should be initialized to 0, which means no need to set hem and it is
+> not an error.
+> 
 
-How much memory would we be saving? Is this really the biggest problem
-we have for something that's been this way for at least 10 years now.
+Oh, I see. Thanks for the feedback. I'll send v2 shortly.
 
-> > > It still does not make any sense to me.
-> > >
-> > > arm,vexpress-sysreg is a MFD device, so can the ARM people please
-> > > explain, why the sched clock part is not just another MFD sub-device or
-> > > simply has it's own DT match?
-> >
-> > The issue is DT nodes and Linux drivers aren't necessarily 1-1. That
-> > would be nice, but hardware is messy and DT doesn't abstract that
-> > away. If we tried to always make things 1-1, then if/when the Linux
-> > driver structure changes we'd have to change the DT.
->
-> I agree with this. I'm definitely not asking to create a node just
-> because we want another struct device.
->
-> > If we decided to
-> > add a node now, we'd still have to support the old DT for backwards
-> > compatibility.
->
-> Right, I agree it's too late to fix this DT for vexpress-sysreg now.
->
-> > We also have to consider the structure for another OS
-> > may be different.
-> >
-> > Generally, if I see a node with a compatible only it gets NAKed as
-> > that's a sure sign of someone just trying to bind a driver and not
-> > describing the h/w. We only do MFD sub-devices if those devices
-> > provide or consume other DT resources.
->
-> If we have a timer MFD, it'd technically consume a fixed-clock and not
-> be empty. vexpress-sysreg just assumes the clock is 24 MHz right now.
-
-Possibly. Depends if only the timer uses the clock or all the other
-functions use the clock.
-
-If only someone had said the clock should be in DT [1].
-
-> My point about the vexpress DT nodes being weird is not about Linux
-> devices, rather it's that:
-> 1. It's already a MFD
-> 2. Most of the functions are separated clearly into their functional
-> device nodes
-> 3. However, the timer functionality is combined with the parent MFD
-> device when the parent MFD device implements a completely separate
-> function (gpio?). Why?
-
-Looking at the history, it doesn't look like this got much review and
-it would look a bit different if we were starting over. In any case, a
-node for just a counter register seems like overkill. I often get
-these MFD or system controller bindings piecemeal, so it's hard to
-make any intelligent design decisions.
-
-Actually, the fact that sched clock support was added later on without
-doing a DT change was probably the main thing this binding got right.
-
-> If one wants to split out the functions, do it fully. If one wants it
-> all under one mega driver (ugh!) then combine it all. Going halfway
-> causes these weird issues. That's my complaint about how the DT layout
-> is for this device.
-
-It's not how the binding is split, but that the functions are split
-between a non-driver thing and driver things.
-
-> Having said all that, I'd rather manipulate the OF_POPULATED flag than
-> break DT backward compatibility at this point.
->
-> But in general, I think we should try to reject two separate drivers
-> claiming to be compatible with the same device and expecting to work
-> at the same time. That's just weird.
-
-If we had 2 proper drivers, we wouldn't be having this conversation.
-It's not a problem to have multiple child drivers for a single DT node
-when everything is a proper driver. We do that all the time.
-
-Rob
-
-[1] https://lkml.org/lkml/2014/4/16/422
+Thanks
+--
+Gustavo
