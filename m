@@ -2,95 +2,116 @@ Return-Path: <SRS0=NZ+o=5N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4D67C43331
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 01:48:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23758C2D0ED
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 01:53:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A3DA206F6
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 01:48:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EBC3F206F6
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 01:53:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="X7+NWtTs"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dKsVu3U9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727115AbgC1BsH (ORCPT
+        id S1727070AbgC1Bx5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Mar 2020 21:48:07 -0400
-Received: from us-smtp-delivery-74.mimecast.com ([216.205.24.74]:27324 "EHLO
-        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726518AbgC1BsH (ORCPT
+        Fri, 27 Mar 2020 21:53:57 -0400
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:40235 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726212AbgC1Bx5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Mar 2020 21:48:07 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1585360085;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc; bh=R6EnIywgtvf71A2eQ8RWwmDn7nSMDNR47JwHxvv8GsI=;
-        b=X7+NWtTsgdFWthWLiMy2kAlqVQdrtr4X7XsLBEwOYpwXDyRsJKiim3HN0klMl144iWu5Di
-        lkkU6Qykahs2DLZvp2y3bfWQIBPhRhJPA3fSpI32c/XXQeli6VZffl3jgJLVBioOTenI50
-        Qnp82FxtYOIoycwbfk0iIdibUcZOr3k=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-447-dVaTkxRaP7SZ50bnrInFFw-1; Fri, 27 Mar 2020 21:48:02 -0400
-X-MC-Unique: dVaTkxRaP7SZ50bnrInFFw-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 6186D190B2A7;
-        Sat, 28 Mar 2020 01:47:59 +0000 (UTC)
-Received: from llong.com (ovpn-117-95.rdu2.redhat.com [10.10.117.95])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 7301810016DA;
-        Sat, 28 Mar 2020 01:47:55 +0000 (UTC)
-From:   Waiman Long <longman@redhat.com>
-To:     Tejun Heo <tj@kernel.org>, Li Zefan <lizefan@huawei.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Jonathan Corbet <corbet@lwn.net>
-Cc:     linux-kernel@vger.kernel.org, cgroups@vger.kernel.org,
-        linux-doc@vger.kernel.org, Joel Fernandes <joel@joelfernandes.org>,
-        Sonny Rao <sonnyrao@google.com>,
-        Waiman Long <longman@redhat.com>
-Subject: [PATCH] docs: cgroup-v1: Document the cpuset_v2_mode mount option
-Date:   Fri, 27 Mar 2020 21:47:48 -0400
-Message-Id: <20200328014748.24140-1-longman@redhat.com>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+        Fri, 27 Mar 2020 21:53:57 -0400
+Received: by mail-ed1-f66.google.com with SMTP id w26so13678484edu.7;
+        Fri, 27 Mar 2020 18:53:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Pi7H1Ajr6bMiyo1A76OQeaQ+kStGGuPp2rRUkY34J+0=;
+        b=dKsVu3U9Skfh/V4Y98tY+UkG1iu89G7w6W9xFiKgbBH3J2WA0eww4U645YJSvJwPjc
+         ijE+oCEEyaDqLAUTNvpl+CO1dW4pFL1bYPy3A5qOdn4UNK9IApTJ5s9fR/IUROkb0y1C
+         vpNG3Up050LqakRSWF5PSrR89lwpt1o2QSRr1x7tqY2o/kK6WkdhDW249USC2hj15dAB
+         ebft4/PvcrtmvNJImcuq1mOnLT25mo6D2VOaHf3Yrli2brGv8kX4733/eXFEh4Jjdg8m
+         zNq2hVAAYdSUOw05O5ZeAtVcPPWK7Xio5WdMHXTwmjEKmf2AUvtcjjcyPk19lFMEHuVp
+         WgKw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Pi7H1Ajr6bMiyo1A76OQeaQ+kStGGuPp2rRUkY34J+0=;
+        b=mkXqqUyjgtudRmnQVzxK67aHBCPAgeoOlTBh/Gvo63YiOfGRmrBDmBzC8ImwOXsZ8j
+         Rbb1iWg3+J089ZhznAbVAD+9QbpBFbgIWm+YoREYKufxy+jIrE8v7VTLJEgi2CE85g0/
+         fBMFrhZcQO7/DxkbXc95oS05HBRfQh39rDbTzw7kd+THCQvj8yeW2EzOiMuvj9dtC+kY
+         EiDYMbdSBmlQrS/BjjIhtWQgI3nojNGgmVATn+kcdk44YBjvE8KyAVARsrRPGk+Ru5xo
+         bji+xd0qg1kOXBJu55CzTLuKdtRX1pW0yZw3x9VuDj66hu7i6jJ1QivCsb/GzblJhpvb
+         3ZpA==
+X-Gm-Message-State: ANhLgQ02NdCutydKi6RXoxMQvW2aNF17rf+14L2hv/FnlabpQW8siGNt
+        J/VQxnJ+2yJLXcOutVzafN2ucvBUOlcm1kLDdRo=
+X-Google-Smtp-Source: ADFU+vsvILa3PT8XxzuSZHQ/kr7rcKC6H72nvPxy3U9RYV/qYBFlLjgvVfwmeqbbemT53KphYXqjasieKh843Fbf4d0=
+X-Received: by 2002:aa7:dcc9:: with SMTP id w9mr1925720edu.145.1585360434676;
+ Fri, 27 Mar 2020 18:53:54 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200323225254.12759-1-grygorii.strashko@ti.com> <20200326.200136.1601946994817303021.davem@davemloft.net>
+In-Reply-To: <20200326.200136.1601946994817303021.davem@davemloft.net>
+From:   Vladimir Oltean <olteanv@gmail.com>
+Date:   Sat, 28 Mar 2020 03:53:43 +0200
+Message-ID: <CA+h21hr8G24ddEgAbU_TfoNAe0fqUJ0_Uyp54Gxn5cvPrM6u9g@mail.gmail.com>
+Subject: Re: [PATCH net-next v6 00/11] net: ethernet: ti: add networking
+ support for k3 am65x/j721e soc
+To:     David Miller <davem@davemloft.net>
+Cc:     Grygorii Strashko <grygorii.strashko@ti.com>,
+        peter.ujfalusi@ti.com, Rob Herring <robh@kernel.org>,
+        t-kristo@ti.com, netdev <netdev@vger.kernel.org>, rogerq@ti.com,
+        devicetree@vger.kernel.org, Jakub Kicinski <kuba@kernel.org>,
+        Murali Karicheri <m-karicheri2@ti.com>, nsekhar@ti.com,
+        kishon@ti.com, lkml <linux-kernel@vger.kernel.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The cpuset in cgroup v1 accepts a special "cpuset_v2_mode" mount
-option that make cpuset.cpus and cpuset.mems behave more like those in
-cgroup v2.  Document it to make other people more aware of this feature
-that can be useful in some circumstances.
+Hi David,
 
-Signed-off-by: Waiman Long <longman@redhat.com>
----
- Documentation/admin-guide/cgroup-v1/cpusets.rst | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+On Fri, 27 Mar 2020 at 05:02, David Miller <davem@davemloft.net> wrote:
+>
+> From: Grygorii Strashko <grygorii.strashko@ti.com>
+> Date: Tue, 24 Mar 2020 00:52:43 +0200
+>
+> > This v6 series adds basic networking support support TI K3 AM654x/J721E SoC which
+> > have integrated Gigabit Ethernet MAC (Media Access Controller) into device MCU
+> > domain and named MCU_CPSW0 (CPSW2G NUSS).
+>  ...
+>
+> Series applied, thank you.
 
-diff --git a/Documentation/admin-guide/cgroup-v1/cpusets.rst b/Documentation/admin-guide/cgroup-v1/cpusets.rst
-index 86a6ae995d54..7ade3abd342a 100644
---- a/Documentation/admin-guide/cgroup-v1/cpusets.rst
-+++ b/Documentation/admin-guide/cgroup-v1/cpusets.rst
-@@ -223,6 +223,17 @@ cpu_online_mask using a CPU hotplug notifier, and the mems file
- automatically tracks the value of node_states[N_MEMORY]--i.e.,
- nodes with memory--using the cpuset_track_online_nodes() hook.
- 
-+The cpuset.effective_cpus and cpuset.effective_mems files are
-+normally read-only copies of cpuset.cpus and cpuset.mems files
-+respectively.  If the cpuset cgroup filesystem is mounted with the
-+special "cpuset_v2_mode" option, the behavior of these files will become
-+similar to the corresponding files in cpuset v2.  In other words, hotplug
-+events will not change cpuset.cpus and cpuset.mems.  Those events will
-+only affect cpuset.effective_cpus and cpuset.effective_mems which show
-+the actual cpus and memory nodes that are currently used by this cpuset.
-+See Documentation/admin-guide/cgroup-v2.rst for more information about
-+cpuset v2 behavior.
-+
- 
- 1.4 What are exclusive cpusets ?
- --------------------------------
--- 
-2.18.1
+The build is now broken on net-next:
 
+arch/arm64/boot/dts/ti/k3-j721e-mcu-wakeup.dtsi:303.23-309.6: ERROR
+(phandle_references):
+/interconnect@100000/interconnect@28380000/ethernet@46000000/ethernet-ports/port@1:
+Reference to non-existent node
+or label "mcu_conf"
+
+  also defined at
+arch/arm64/boot/dts/ti/k3-j721e-common-proc-board.dts:471.13-474.3
+arch/arm64/boot/dts/ti/k3-j721e-mcu-wakeup.dtsi:303.23-309.6: ERROR
+(phandle_references):
+/interconnect@100000/interconnect@28380000/ethernet@46000000/ethernet-ports/port@1:
+Reference to non-existent node
+or label "phy_gmii_sel"
+
+  also defined at
+arch/arm64/boot/dts/ti/k3-j721e-common-proc-board.dts:471.13-474.3
+
+As Grygorii said:
+
+Patches 1-6 are intended for netdev, Patches 7-11 are intended for K3 Platform
+tree and provided here for testing purposes.
+
+Regards,
+-Vladimir
