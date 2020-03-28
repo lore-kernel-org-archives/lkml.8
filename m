@@ -2,186 +2,264 @@ Return-Path: <SRS0=NZ+o=5N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C851DC2D0EC
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 19:56:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D340CC2D0EC
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 19:58:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 96C45206F6
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 19:56:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="j83qG6wi"
+	by mail.kernel.org (Postfix) with ESMTP id A0D35206F6
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 19:58:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727401AbgC1T4l (ORCPT
+        id S1727469AbgC1T6I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 28 Mar 2020 15:56:41 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:37909 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726497AbgC1T4l (ORCPT
+        Sat, 28 Mar 2020 15:58:08 -0400
+Received: from netrider.rowland.org ([192.131.102.5]:46043 "HELO
+        netrider.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with SMTP id S1727247AbgC1T6I (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 28 Mar 2020 15:56:41 -0400
-Received: by mail-wm1-f66.google.com with SMTP id f6so9970351wmj.3
-        for <linux-kernel@vger.kernel.org>; Sat, 28 Mar 2020 12:56:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=RaAner1AOy6mqRxgg2s6OrVjNWEeXrUvVQ99ZwBacLY=;
-        b=j83qG6wi8FIVqxHB6qtn71NfG8/D64pOANqSOp43lzviKNip7DW6ja7q0RUBFEWDt9
-         2qRLkPeJzAuE70oECTtOchfpQpUZVJuRpiXtDT5LxoUxTZQv0ZlkwNgp0Nzk4wbDrMI6
-         1A0Mfd0tSNraiuW9a9o7EI1TosBTOTlHz5Nc4=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=RaAner1AOy6mqRxgg2s6OrVjNWEeXrUvVQ99ZwBacLY=;
-        b=UJvsJ4URKXTFRrt3usGetfT33F9C2jEXN+wyJ8+nY33enDH5YAUooZgKc4bHiQPUMw
-         ao7+NO1pe+n6mK/grRoSbcR+d78CWqwhmDfecQ6WpBmb53k4+JKT6nMym/PvMDvPxGEy
-         qMZc39UMRFyfI279x35ciuwZa9L5YUH3ll65QBBdhoqrVIqFUWnHWMZ/yIyGdRuX/0YT
-         vOgRuABnA7mD7Iluib+JoHAqdyMsXYYyIs+SG9fSt1JifoXUD+Ob/ri2BSAEyPRPT8YU
-         MQ/MGpIZXURYAyKCXpUZlGP2zTeMJrktz6sYgY2LF/TBhJo9xEWxl4ong/VaTseYsicc
-         ElzQ==
-X-Gm-Message-State: ANhLgQ2he9A0ZLEWPVOFPNYrKRwPIaSkQs+iL/yaz3F1mdDYYuaje0i1
-        M7AaSXRpkAZUu5CSwir9kcRgkA==
-X-Google-Smtp-Source: ADFU+vvaYd97z0o5WsUXqObkXdOSUk66yt71KeGEJtWcfmHE/YKKvWPVUVfd0xksvz+KE13VM1E8og==
-X-Received: by 2002:a1c:3586:: with SMTP id c128mr5091509wma.82.1585425398431;
-        Sat, 28 Mar 2020 12:56:38 -0700 (PDT)
-Received: from google.com ([2a00:79e0:42:204:8a21:ba0c:bb42:75ec])
-        by smtp.gmail.com with ESMTPSA id s11sm14547650wrw.58.2020.03.28.12.56.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 28 Mar 2020 12:56:37 -0700 (PDT)
-From:   KP Singh <kpsingh@chromium.org>
-X-Google-Original-From: KP Singh <kpsingh>
-Date:   Sat, 28 Mar 2020 20:56:36 +0100
-To:     Daniel Borkmann <daniel@iogearbox.net>
-Cc:     KP Singh <kpsingh@chromium.org>, linux-kernel@vger.kernel.org,
-        bpf@vger.kernel.org, linux-security-module@vger.kernel.org,
-        Alexei Starovoitov <ast@kernel.org>,
-        James Morris <jmorris@namei.org>,
-        Kees Cook <keescook@chromium.org>,
-        Paul Turner <pjt@google.com>, Jann Horn <jannh@google.com>,
-        Florent Revest <revest@chromium.org>,
-        Brendan Jackman <jackmanb@chromium.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH bpf-next v8 0/8] MAC and Audit policy using eBPF (KRSI)
-Message-ID: <20200328195636.GA95544@google.com>
-References: <20200327192854.31150-1-kpsingh@chromium.org>
- <4e5a09bb-04c4-39b8-10d4-59496ffb5eee@iogearbox.net>
+        Sat, 28 Mar 2020 15:58:08 -0400
+Received: (qmail 13939 invoked by uid 500); 28 Mar 2020 15:58:07 -0400
+Received: from localhost (sendmail-bs@127.0.0.1)
+  by localhost with SMTP; 28 Mar 2020 15:58:07 -0400
+Date:   Sat, 28 Mar 2020 15:58:07 -0400 (EDT)
+From:   Alan Stern <stern@rowland.harvard.edu>
+X-X-Sender: stern@netrider.rowland.org
+To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
+cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Qais Yousef <qais.yousef@arm.com>,
+        USB list <linux-usb@vger.kernel.org>,
+        Linux-pm mailing list <linux-pm@vger.kernel.org>,
+        Kernel development list <linux-kernel@vger.kernel.org>
+Subject: Re: lockdep warning in urb.c:363 usb_submit_urb
+In-Reply-To: <10243663.e30Z2V8kAt@kreacher>
+Message-ID: <Pine.LNX.4.44L0.2003281432130.9749-100000@netrider.rowland.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <4e5a09bb-04c4-39b8-10d4-59496ffb5eee@iogearbox.net>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 28-Mar 18:18, Daniel Borkmann wrote:
-> Hey KP,
+On Sat, 28 Mar 2020, Rafael J. Wysocki wrote:
+
+> On Friday, March 27, 2020 9:45:09 PM CET Alan Stern wrote:
+
+> > Raphael, I've been going over the PM core code, trying to figure out
+> > what it's really doing.  It's kind of a mess.
 > 
-> On 3/27/20 8:28 PM, KP Singh wrote:
-> > From: KP Singh <kpsingh@google.com>
-> > 
-> > # v7 -> v8
-> > 
-> >    https://lore.kernel.org/bpf/20200326142823.26277-1-kpsingh@chromium.org/
-> > 
-> > * Removed CAP_MAC_ADMIN check from bpf_lsm_verify_prog. LSMs can add it
-> >    in their own bpf_prog hook. This can be revisited as a separate patch.
-> > * Added Andrii and James' Ack/Review tags.
-> > * Fixed an indentation issue and missing newlines in selftest error
-> >    a cases.
-> > * Updated a comment as suggested by Alexei.
-> > * Updated the documentation to use the newer libbpf API and some other
-> >    fixes.
-> > * Rebase
-> > 
-> > # v6 -> v7
-> > 
-> >    https://lore.kernel.org/bpf/20200325152629.6904-1-kpsingh@chromium.org/
-> > 
-> [...]
-> > KP Singh (8):
-> >    bpf: Introduce BPF_PROG_TYPE_LSM
-> >    security: Refactor declaration of LSM hooks
-> >    bpf: lsm: provide attachment points for BPF LSM programs
-> >    bpf: lsm: Implement attach, detach and execution
-> >    bpf: lsm: Initialize the BPF LSM hooks
-> >    tools/libbpf: Add support for BPF_PROG_TYPE_LSM
-> >    bpf: lsm: Add selftests for BPF_PROG_TYPE_LSM
-> >    bpf: lsm: Add Documentation
+> Well, sorry about that. 
 > 
-> I was about to apply, but then I'm getting the following selftest issue on
-> the added LSM one, ptal:
+> > A large part of the problem is related to an inconsistency between the
+> > documentation and the code.  include/linux/pm.h says that
+> > DPM_FLAG_SMART_SUSPEND tells bus types and PM domains about what the
+> > driver wants.  This strongly implies that the PM core will ignore
+> > SMART_SUSPEND.  But in fact the core does check that flag and takes its
+> > own actions if the device has no subsystem-level callbacks!
 > 
-> # ./test_progs
-> [...]
-> #65/1 test_global_func1.o:OK
-> #65/2 test_global_func2.o:OK
-> #65/3 test_global_func3.o:OK
-> #65/4 test_global_func4.o:OK
-> #65/5 test_global_func5.o:OK
-> #65/6 test_global_func6.o:OK
-> #65/7 test_global_func7.o:OK
-> #65 test_global_funcs:OK
-> test_test_lsm:PASS:skel_load 0 nsec
-> test_test_lsm:PASS:attach 0 nsec
-> test_test_lsm:PASS:exec_cmd 0 nsec
-> test_test_lsm:FAIL:bprm_count bprm_count = 0
-> test_test_lsm:FAIL:heap_mprotect want errno=EPERM, got 22
+> Right, which is because in those cases there is no "middle layer" between
+> the driver and the core and if you want the driver to work both with
+> something like genpd or the ACPI PM domain and without anything like that,
+> the core needs to take those actions for consistency.
 
-The test seems to pass for me [classic, "works on my machine" ;)]
+Sure, the core is acting as a proxy for the missing subsystem
+callbacks.  Still, it should be documented properly.
 
-  ./test_progs -t test_lsm
-  #66 test_lsm:OK
-  Summary: 1/0 PASSED, 0 SKIPPED, 0 FAILED
+Also, couldn't we simplify the behavior?  Right now the core checks
+that there are no subsystem-level callbacks for any of _early, _late,
+and _noirq variants before skipping a callback.  Couldn't we forget
+about all that checking and simply skip the device-level callbacks?  
+(Yes, I realize this could lead to inconsistent behavior if the
+subsystem has some callbacks defined but not others -- but subsystems
+should never do that, at least, not if it would lead to trouble.)
 
-and also in the complete run of test_progs.
+Another issue is that the documentation exists in two separate places:
+include/linux/pm.h and Documentation/driver-api/devices.rst (plus a
+brief mention in Documentation/power/runtime_pm.rst).  This leads to
+incompleteness and inconsistencies.  Ideally there would be a complete
+explanation in one place (probably the devices.rst file) and the others
+would refer to it.
 
-Since the attachment succeeds and the hook does not get called, it
-seems like "bpf" LSM is not being initialized and the hook, although
-present, does not get called.
-
-This indicates that "bpf" is not in CONFIG_LSM. It should, however, be
-there by default as we added it to default value of CONFIG_LSM and
-also for other DEFAULT_SECURITY_* options.
-
-Let me know if that's the case and it fixes it.
-
-- KP
-
-> #66 test_lsm:FAIL
-> test_test_overhead:PASS:obj_open_file 0 nsec
-> test_test_overhead:PASS:find_probe 0 nsec
-> test_test_overhead:PASS:find_probe 0 nsec
-> test_test_overhead:PASS:find_probe 0 nsec
-> test_test_overhead:PASS:find_probe 0 nsec
-> test_test_overhead:PASS:find_probe 0 nsec
-> Caught signal #11!
-> Stack trace:
-> ./test_progs(crash_handler+0x31)[0x56100f25eb51]
-> /lib/x86_64-linux-gnu/libpthread.so.0(+0x12890)[0x7f9d8d225890]
-> /lib/x86_64-linux-gnu/libc.so.6(+0x18ef2d)[0x7f9d8cfb0f2d]
-> /lib/x86_64-linux-gnu/libc.so.6(__libc_calloc+0x372)[0x7f9d8cebc3a2]
-> /usr/local/lib/libelf.so.1(+0x33ce)[0x7f9d8d85a3ce]
-> /usr/local/lib/libelf.so.1(+0x3fb2)[0x7f9d8d85afb2]
-> ./test_progs(btf__parse_elf+0x15d)[0x56100f27a141]
-> ./test_progs(libbpf_find_kernel_btf+0x169)[0x56100f27ee83]
-> ./test_progs(+0x43906)[0x56100f266906]
-> ./test_progs(bpf_object__load_xattr+0xe5)[0x56100f26e93c]
-> ./test_progs(bpf_object__load+0x47)[0x56100f26eafd]
-> ./test_progs(test_test_overhead+0x252)[0x56100f24a922]
-> ./test_progs(main+0x212)[0x56100f22f772]
-> /lib/x86_64-linux-gnu/libc.so.6(__libc_start_main+0xe7)[0x7f9d8ce43b97]
-> ./test_progs(_start+0x2a)[0x56100f22f8fa]
-> Segmentation fault (core dumped)
-> #
+> > Furthermore, the PM core's actions don't seem to make sense.  If the
+> > flag is set and the device is runtime-suspended when the system sleep
+> > begins, the core will skip issuing the suspend_late and suspend_noirq
+> > callbacks to the driver.  But it doesn't skip issuing the suspend
+> > callback!  I can't figure that out.
 > 
-> (Before the series, it runs through fine on my side.)
+> That's because if the core gets to executing ->suspend_late, PM-runtime has
+> been disabled for the device and if the device is runtime-suspended at that
+> point, so (at least if SMART_SUSPEND is set for the device) there is no reason
+> to do anything more to it.
+
+But if SMART_SUSPEND is set and the device is runtime-suspended, why 
+issue the ->suspend callback?  Why not just do pm_runtime_disable() 
+then (to prevent the device from resuming) and skip the callback?
+
+> > Furthermore, the decisions about
+> > whether to skip the resume_noirq, resume_early, and resume callbacks
+> > are based on different criteria from the decisions on the suspend side.
 > 
-> Thanks,
-> Daniel
+> Right, because there are drivers that don't want devices to stay in suspend
+> after system resume even though they have been left in suspend by it.
+
+This suggests that sometimes we may want to issue non-matching 
+callbacks.  For example, ->resume_noirq, ->resume_early, and ->resume
+but not ->suspend, ->suspend_late, or ->suspend_noirq.  Is that what 
+you are saying?
+
+> Arguably, they could be left in suspend and then resumed after the completion
+> of system suspend, but that would add quite a bit of latency if the device
+> needs to be accessed right after the system suspend is complete.
+> 
+> > That's not all: The SMART_SUSPEND decisions completely ignore the value
+> > of DPM_FLAG_NEVER_SKIP!  NEVER_SKIP affects only the direct_completion
+> > pathway.
+> 
+> As documented AFAICS.
+
+But highly confusing.  Maybe we can change the name to, say, 
+DPM_FLAG_NO_DIRECT_COMPLETE.
+
+> > SMART_SUSPEND seems to have two different meanings.  (1) If the device 
+> > is already in runtime suspend when a system sleep starts, skip the 
+> > suspend_late and suspend_noirq callbacks.  (2) Under certain (similar) 
+> > circumstances, skip the resume callbacks.  The documentation only 
+> > mentions (1) but the code also handles (2).
+> 
+> That's because (2) is the THAW case and I was distracted before I got
+> to documenting it properly.  Sorry.
+> 
+> The problem is that if you leave the device in runtime suspend, calling
+> ->freeze_late() or ->freeze_noirq() on it is not useful and if you have
+> skipped those, running the corresponding "thaw" callbacks is not useful
+> either (what would they do, specifically?).
+> 
+> There is a whole problem of whether or not devices should be left in
+> runtime suspend during hibernation and I have not had a chance to get
+> to the bottom of that yet.
+
+Not only that.  The distinction between SMART_SUSPEND and
+direct_complete is rather subtle, and it doesn't seem to be carefully
+explained anywhere.  In fact, I'm not sure I understand it myself.  :-)
+For example, the direct_complete mechanism is very careful about not
+leaving a device in runtime suspend if a descendant (or other dependent
+device) will remain active.  Does SMART_SUSPEND behave similarly?  If
+so, it isn't documented.
+
+Besides, it seems like a mistake to try controlling (1) and (2)  
+together (i.e., with one flag).  Can we do a better job of
+separating the functions of SMART_SUSPEND and LEAVE_SUSPENDED?
+
+> > Other things in there also seem strange.  device_prepare() does a
+> > WARN_ON if either SMART_SUSPEND or LEAVE_SUSPENDED is set and the
+> > device is not runtime-PM-enabled.  That's understandable, but it's also
+> > racy.
+> 
+> I guess you mean the check in device_prepare().
+> 
+> > A system sleep can begin at any time; how can a driver know when
+> > it is safe to disable a device's runtime PM briefly?
+> 
+> Well, fair enough, but then I'm not sure if there is a good place for this
+> check at all, because drivers can briefly disable PM-runtime at any time in
+> theory.
+
+There probably isn't a good place for it.  We could just get rid of the 
+WARN.  I've never heard of it triggering.
+
+> > When device_prepare() calculates the power.direct_complete flag, it
+> > checks to see whether the device is currently in runtime suspend in
+> > some cases but not in others, as in the code added by your commit
+> > c62ec4610c40 ("PM / core:  Fix direct_complete handling for devices
+> > with no callbacks").  Since the runtime-PM state is going to checked in
+> > __device_suspend() anyway, we shouldn't need to check it here at all.
+> 
+> I guess the point is that in theory the device can be runtime-suspended
+> between device_prepare() and _device_suspend(), is by checking the status
+> in the former, we lose the opportunity to leave it in suspend if that
+> happens.
+> 
+> OK, fair enough.
+> 
+> > At a couple of points in the code, THAW and RESTORE events are each
+> > treatedly specially, with no explanation.
+> 
+> Right, which is related to the kind of work in progress situation regarding
+> the flags and hibernation mentioned above.  Again, sorry about that.
+
+I haven't thought about those issues as much as you have.  Still, it 
+seems obvious that the FREEZE/THAW phases should be very happy to leave 
+devices in runtime suspend throughout (without even worrying about 
+wakeup settings), and the RESTORE phase should always bring everything 
+back out of runtime suspend.
+
+What to do during the POWEROFF phase isn't so clear, because it depends
+on how the platform handles the poweroff transition.
+
+> > The power.may_skip_resume flag is used in only one place, when 
+> > LEAVE_SUSPENDED is set and there are subsystem-level callbacks.  In 
+> > particular, it is _not_ used by dev_pm_may_skip_resume().  That seems 
+> > highly suspicious at best.
+> 
+> That's because it's for the middle-layer (subsystem-level) code to let the
+> core know that skipping the resume would be OK.
+> 
+> The core doesn't need that flag when it decides by itself.
+
+This may be another situation where changing a name would make things
+clearer.  One doesn't immediately recognize that
+dev_pm_may_skip_resume() applies only in cases where there is no
+subsystem-level callback.
+
+> > I think it would be worthwhile to expend some serious effort
+> > straightening all this stuff out.  Perhaps we could start with a more
+> > explicit description of what is supposed to happen at each step.  
+> > (Things to be careful about include phrases like "leave suspended",
+> > which is not the same as "don't call the resume callbacks", even though
+> > the two are easily conflated.)
+> > 
+> > What do you think?
+> 
+> I am certainly not going to reject any help. :-)
+> 
+> Also, I'm not against clarifying anything that is not clear enough.
+
+Okay, let's start with direct_complete.  The direct_complete mechanism
+is applied to the SUSPEND and RESUME phases under the following
+conditions:
+
+	DPM_FLAG_NEVER_SKIP (or better, DPM_FLAG_NO_DIRECT_COMPLETE)
+	is clear;  [Incidentally, since a driver can set this flag 
+	whenever its ->prepare routine returns 0, why do we need
+	DPM_FLAG_SMART_PREPARE?]
+
+	Either the device has no system-PM callbacks at all or else the
+	->prepare callback returns a positive value;
+
+	All of the device's descendants and dependents also want to use
+	direct_complete;
+
+	Neither the device nor any of its descendants/dependents is
+	enabled for wakeup;
+
+	The device is runtime suspended just before the ->suspend
+	callback would normally be issued.
+
+When the mechanism applies, none of the suspend or resume callbacks (in
+any of their normal, _early, _late, or _noirq variants) are issued,
+only ->complete.  Consequently the device remains in runtime suspend
+throughout the system sleep.
+
+Currently, direct_complete is never applied during any of the system
+hibernation phases (FREEZE, THAW, POWEROFF, RESTORE).  This may change
+in the future.
+
+Is this description correct and complete?  Can you give a similarly
+succinct outline for how SMART_SUSPEND and LEAVE_SUSPENDED should work?  
+And also describe how they differ from direct_complete and how they
+interact with it?  (For example, how does setting both flags differ 
+from returning a positive value from ->prepare?)
+
+Alan Stern
+
