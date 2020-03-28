@@ -2,141 +2,96 @@ Return-Path: <SRS0=NZ+o=5N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FF73C2D0EC
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 18:07:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 243DBC43331
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 18:10:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 06FC820717
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 18:07:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EEFEC206F6
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 18:10:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="o4RIFLxF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726518AbgC1SHT (ORCPT
+        id S1726781AbgC1SKk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 28 Mar 2020 14:07:19 -0400
-Received: from mx.sdf.org ([205.166.94.20]:54286 "EHLO mx.sdf.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725807AbgC1SHT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 28 Mar 2020 14:07:19 -0400
-Received: from sdf.org (IDENT:lkml@sdf.lonestar.org [205.166.94.16])
-        by mx.sdf.org (8.15.2/8.14.5) with ESMTPS id 02SI7B3a022693
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits) verified NO);
-        Sat, 28 Mar 2020 18:07:11 GMT
-Received: (from lkml@localhost)
-        by sdf.org (8.15.2/8.12.8/Submit) id 02SI7BeD000981;
-        Sat, 28 Mar 2020 18:07:11 GMT
-Date:   Sat, 28 Mar 2020 18:07:11 +0000
-From:   George Spelvin <lkml@SDF.ORG>
-To:     Stephen Hemminger <stephen@networkplumber.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Hannes Frederic Sowa <hannes@stressinduktion.org>,
-        lkml@sdf.org
-Subject: Re: [RFC PATCH v1 09/50] <linux/random.h> prandom_u32_max() for
- power-of-2 ranges
-Message-ID: <20200328180711.GC5859@SDF.ORG>
-References: <202003281643.02SGh9n2025458@sdf.org>
- <20200328103229.132a047f@hermes.lan>
+        Sat, 28 Mar 2020 14:10:40 -0400
+Received: from mail-ot1-f49.google.com ([209.85.210.49]:39392 "EHLO
+        mail-ot1-f49.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725807AbgC1SKk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 28 Mar 2020 14:10:40 -0400
+Received: by mail-ot1-f49.google.com with SMTP id x11so13458420otp.6
+        for <linux-kernel@vger.kernel.org>; Sat, 28 Mar 2020 11:10:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:from:date:message-id:subject:to;
+        bh=+YZxsPbDfbTvVgTH0HDYH7I/GL19/iF9GQHFSWLmIBw=;
+        b=o4RIFLxFkz3KrsoLX3a2xu1JmUKvrZLBOuCPqqxM7CF3PMSyzBm7PYu4PNkRNsyaAN
+         pvpei2GoiO5e616tuJas/nRtCseC+2fZQt6fgYYc478b6jGQztimvhEcWzEtbZa9XyWO
+         wX32NrRyS6U03F5A+JW9f9sM6HD0wIX/pPY0JnWWuCsodW2bTX/4RbV42HMtEBXqX6dE
+         mrMLGTydE/PZH2fAJ5RVfq+prBhl30DuPMwYryD341dKzdh1c1ikro0mdkyEqPA9pgEG
+         oQGjSpre+BRMbKYopgFdQYNE3VuGGrDnw9Rrv+v143T7qaAmAYvdfKceOVLsI/Qy4SSR
+         5soQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
+        bh=+YZxsPbDfbTvVgTH0HDYH7I/GL19/iF9GQHFSWLmIBw=;
+        b=KkQGTmTn6RJ0r1rv34mEPpxugsqLo6/6145pL7iLxXtxXy8gRRjIHdNzADJl1EIyDH
+         9yE2/OrCuD9+3UD5vCm1GunIo2vcVBqDapbLVo1ZmMjpHka59EDd4OANinkPe6/Fc+Hg
+         frlf/z1XnqmvhyZ8xc7EMBsHFDaZJvpH+oeSTYq3f+Op5HwByVuMVvIt+6aq9g7JjslD
+         QDwX4YBkbLFoXlmmMp7StzdZdwQzdniYR1izkqP95uGejsqHU/IvfmGD17j82A5klViF
+         qWiK5HjdD7GCG0VrzgWl1nVbFudc6KKJagywxahEprw5ipMjPcVysH2s5xWFgrRh8ylO
+         FowQ==
+X-Gm-Message-State: ANhLgQ01QZ5IlmemOsawq5GgDc9DHMf7CL0CERUWNwOPGARKmklnNyPG
+        sDcq+cpC3z5SHSruNhijgo5rwte1i2fazfPa5DCEthZlIU4=
+X-Google-Smtp-Source: ADFU+vsh3VADX6sDL+UXZNiO+lMo+UjTXOfiR+aFfL3IjDEaLkhfY1EzG2l5AdkmxOFjrNuFYQ0f1Y1d6iTdSMDqTI0=
+X-Received: by 2002:a4a:d746:: with SMTP id h6mr4090800oot.21.1585419039477;
+ Sat, 28 Mar 2020 11:10:39 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200328103229.132a047f@hermes.lan>
+From:   Omar Kilani <omar.kilani@gmail.com>
+Date:   Sat, 28 Mar 2020 11:10:28 -0700
+Message-ID: <CA+8F9hhy=WPMJLQ3Ya_w4O6xyWk7KsXi=YJofmyC577_UJTutA@mail.gmail.com>
+Subject: Weird issue with epoll and kernel >= 5.0
+To:     linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Mar 28, 2020 at 10:32:29AM -0700, Stephen Hemminger wrote:
-> On Sat, 16 Mar 2019 02:32:04 -0400
-> George Spelvin <lkml@sdf.org> wrote:
-> 
->> +static inline u32 prandom_u32_max(u32 range)
->>  {
->> -	return (u32)(((u64) prandom_u32() * ep_ro) >> 32);
->> +	/*
->> +	 * If the range is a compile-time constant power of 2, then use
->> +	 * a simple shift.  This is mathematically equivalent to the
->> +	 * multiplication, but GCC 8.3 doesn't optimize that perfectly.
->> +	 *
->> +	 * We could do an AND with a mask, but
->> +	 * 1) The shift is the same speed on a decent CPU,
->> +	 * 2) It's generally smaller code (smaller immediate), and
->> +	 * 3) Many PRNGs have trouble with their low-order bits;
->> +	 *    using the msbits is generaly preferred.
->> +	 */
->> +	if (__builtin_constant_p(range) && (range & (range - 1)) == 0)
->> +		return prandom_u32() / (u32)(0x100000000 / range);
->> +	else
->> +		return reciprocal_scale(prandom_u32(), range);
+Hi there,
 
-> The optimization is good, but I don't think that the compiler
-> is able to propogate the constant property into the function.
-> Did you actually check the generated code?
+I've observed an issue with epoll and kernels 5.0 and above when a
+system is generating a lot of epoll events.
 
-Yes, I checked repeatedly during development.  I just rechecked the
-exact code (it's been a while), and verified that
+I see this issue with nginx and jvm / netty based apps (using the
+jvm's native epoll support as well as netty's own optimized epoll
+support) but *not* with haproxy (?).
 
-unsigned foo(void)
-{
-	return prandom_u32_max(256);
-}
+I'm not really sure what the actual problem is (nginx complains about
+epoll_wait with a generic error), but it doesn't happen on 4.19.x and
+lower.
 
-compiles to
-foo:
-.LFB1:
-	.cfi_startproc
-	subq	$8, %rsp
-	.cfi_def_cfa_offset 16
-	call	prandom_u32@PLT
-	shrl	$24, %eax
-	addq	$8, %rsp
-	.cfi_def_cfa_offset 8
-	ret
-	.cfi_endproc
-.LFE1:
-	.size	foo, .-foo
+I thought it was a netty problem at first and opened this ticket:
 
-But you prompted me to check a few other architectures, and
-it's true for them too.  E.g. m68k:
+https://github.com/netty/netty/issues/8999
 
-foo:
-        jsr prandom_u32
-        moveq #24,%d1
-        lsr.l %d1,%d0
-        rts
+But then saw the same issue in nginx.
 
-(68k is one architecture where the mask is faster than the shift,
-so I could handle it separately, but it makes the code even uglier.
-Basically, use masks for small ranges, and shifts for large ranges,
-and an arch-dependent threshold that depends on the available
-immediate constant range.)
+I haven't debugged a kernel issue in something like 20 years so I'm
+not really sure where to start myself.
 
-ARM, PowerPC, and MIPS all have some hideously large function preamble
-code, but the core is a right shift.  E.g.
+I'd be more than happy to provide my test case that has a very quick
+repro to anyone who needs it.
 
-foo:
-.LFB1:
-	.cfi_startproc
-	stwu 1,-16(1)
-	.cfi_def_cfa_offset 16
-	mflr 0
-	.cfi_register 65, 0
-	bcl 20,31,.L2
-.L2:
-	stw 30,8(1)
-	.cfi_offset 30, -8
-	mflr 30
-	addis 30,30,.LCTOC1-.L2@ha
-	stw 0,20(1)
-	addi 30,30,.LCTOC1-.L2@l
-	.cfi_offset 65, 4
-	bl prandom_u32+32768@plt
-	lwz 0,20(1)
-	lwz 30,8(1)
-	addi 1,1,16
-	.cfi_restore 30
-	.cfi_def_cfa_offset 0
-	srwi 3,3,24
-	mtlr 0
-	.cfi_restore 65
-	blr
+Also happy to provide a VM/machine with enough CPUs to trigger it
+easily (it seems to happen quicker with more CPUs present) to test
+with.
+
+Thanks!
+
+Regards,
+Omar
