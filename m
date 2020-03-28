@@ -2,70 +2,73 @@ Return-Path: <SRS0=NZ+o=5N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1792EC43331
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 11:22:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F4FBC43331
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 11:23:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E6BE1206E6
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 11:22:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F0AB720732
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 11:23:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726518AbgC1LWP (ORCPT
+        id S1726403AbgC1LXF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 28 Mar 2020 07:22:15 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:55652 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725973AbgC1LWP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 28 Mar 2020 07:22:15 -0400
-Received: from [5.158.153.52] (helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1jI9XY-000480-BR; Sat, 28 Mar 2020 12:22:12 +0100
-Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
-        id A1A231040C1; Sat, 28 Mar 2020 12:22:11 +0100 (CET)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Jules Irenge <jbi.octave@gmail.com>, julia.lawall@lip6.fr
-Cc:     boqun.feng@gmail.com, Armijn Hemel <armijn@tjaldur.nl>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Muchun Song <smuchun@gmail.com>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 05/10] softirq: Replace BUG() after if statement with BUG_ON
-In-Reply-To: <20200327212358.5752-6-jbi.octave@gmail.com>
-References: <20200327212358.5752-1-jbi.octave@gmail.com> <20200327212358.5752-6-jbi.octave@gmail.com>
-Date:   Sat, 28 Mar 2020 12:22:11 +0100
-Message-ID: <871rpcyba4.fsf@nanos.tec.linutronix.de>
+        Sat, 28 Mar 2020 07:23:05 -0400
+Received: from a.mx.secunet.com ([62.96.220.36]:33316 "EHLO a.mx.secunet.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725973AbgC1LXF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 28 Mar 2020 07:23:05 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by a.mx.secunet.com (Postfix) with ESMTP id D0B382026E;
+        Sat, 28 Mar 2020 12:23:03 +0100 (CET)
+X-Virus-Scanned: by secunet
+Received: from a.mx.secunet.com ([127.0.0.1])
+        by localhost (a.mx.secunet.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id oQgVZv6pDhUT; Sat, 28 Mar 2020 12:23:03 +0100 (CET)
+Received: from mail-essen-01.secunet.de (mail-essen-01.secunet.de [10.53.40.204])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by a.mx.secunet.com (Postfix) with ESMTPS id 68F54201E4;
+        Sat, 28 Mar 2020 12:23:03 +0100 (CET)
+Received: from mbx-dresden-01.secunet.de (10.53.40.199) by
+ MAIL-ESSEN-01.secunet.de (10.53.40.204) with Microsoft SMTP Server (TLS) id
+ 14.3.487.0; Sat, 28 Mar 2020 12:23:03 +0100
+Received: from gauss2.secunet.de (10.182.7.193) by mbx-dresden-01.secunet.de
+ (10.53.40.199) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1979.3; Sat, 28 Mar
+ 2020 12:23:02 +0100
+Received: by gauss2.secunet.de (Postfix, from userid 1000)      id 1433931801E6;
+ Sat, 28 Mar 2020 12:23:02 +0100 (CET)
+Date:   Sat, 28 Mar 2020 12:23:02 +0100
+From:   Steffen Klassert <steffen.klassert@secunet.com>
+To:     YueHaibing <yuehaibing@huawei.com>
+CC:     <herbert@gondor.apana.org.au>, <davem@davemloft.net>,
+        <kuba@kernel.org>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH net-next] xfrm: policy: Remove obsolete WARN while xfrm
+ policy inserting
+Message-ID: <20200328112302.GA13121@gauss3.secunet.de>
+References: <20200327123443.12408-1-yuehaibing@huawei.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20200327123443.12408-1-yuehaibing@huawei.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-ClientProxiedBy: cas-essen-01.secunet.de (10.53.40.201) To
+ mbx-dresden-01.secunet.de (10.53.40.199)
+X-EXCLAIMER-MD-CONFIG: 2c86f778-e09b-4440-8b15-867914633a10
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Jules,
+On Fri, Mar 27, 2020 at 08:34:43PM +0800, YueHaibing wrote:
+> Since commit 7cb8a93968e3 ("xfrm: Allow inserting policies with matching
+> mark and different priorities"), we allow duplicate policies with
+> different priority, this WARN is not needed any more.
 
-Jules Irenge <jbi.octave@gmail.com> writes:
-> Coccinelle reports a warning tasklet_action_common()
->
-> WARNING: Use BUG_ON instead of if condition followed by BUG
->
-> To fix this, BUG() is replaced by BUG_ON() with the recommended
-> suggestion
+Can you please describe a bit more detailed why this warning
+can't trigger anymore?
 
-Well, the suggestion is wrong to begin with. The suggestion should be:
-
-      Is this BUG() actually necessary and is this the only way to deal
-      with this problem?
-
-Only if that question can be answered with yes, then the recommended
-replacement is ok.
-
-BUG() is the last resort and each and every instance wants to be looked
-at and not mechanically changed to some 'better' version of it.
-
-Thanks,
-
-        tglx
+Thanks!
