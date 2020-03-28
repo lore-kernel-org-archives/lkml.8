@@ -2,504 +2,137 @@ Return-Path: <SRS0=NZ+o=5N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66001C43331
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 18:17:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DD62C43331
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 18:21:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 199C020714
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 18:17:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F33220714
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 18:21:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="RkKAzv7q"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="mZK8iXS6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726604AbgC1SRl (ORCPT
+        id S1726463AbgC1SVF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 28 Mar 2020 14:17:41 -0400
-Received: from mout.gmx.net ([212.227.17.20]:43097 "EHLO mout.gmx.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726220AbgC1SRk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 28 Mar 2020 14:17:40 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1585419453;
-        bh=8ClDFE5jb+D6WSqrYcYwBB3UMbtyV3apdX6dVPxKzro=;
-        h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
-        b=RkKAzv7q1RFhXp+JE7EQOC9SrlCodxCVizulEnOAVVk3IV6/QNhftUYCskrt32qFL
-         SrkTa434F0Lf8PwamryZgwVEvchTks/FCLChl9FLJcM9ZNtLDd3b3NtjPAYWdHTTn7
-         ZxwjHlQ6bLhV3x6991SjByjovGQd4KsQEVvA9Nsc=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from localhost.localdomain ([83.52.229.196]) by mail.gmx.com
- (mrgmx104 [212.227.17.174]) with ESMTPSA (Nemesis) id
- 1MvK4f-1jZVtN3fsX-00rHzd; Sat, 28 Mar 2020 19:17:33 +0100
-From:   Oscar Carter <oscar.carter@gmx.com>
-To:     Forest Bond <forest@alittletooquiet.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Oscar Carter <oscar.carter@gmx.com>,
-        Malcolm Priestley <tvboxspy@gmail.com>,
-        Quentin Deslandes <quentin.deslandes@itdev.co.uk>,
-        Amir Mahdi Ghorbanian <indigoomega021@gmail.com>,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] staging: vt6656: Refactor the vnt_update_pre_ed_threshold function
-Date:   Sat, 28 Mar 2020 19:17:06 +0100
-Message-Id: <20200328181706.14276-1-oscar.carter@gmx.com>
-X-Mailer: git-send-email 2.20.1
-MIME-Version: 1.0
+        Sat, 28 Mar 2020 14:21:05 -0400
+Received: from mo4-p00-ob.smtp.rzone.de ([81.169.146.218]:36595 "EHLO
+        mo4-p00-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725807AbgC1SVE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 28 Mar 2020 14:21:04 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1585419662;
+        s=strato-dkim-0002; d=goldelico.com;
+        h=To:References:Message-Id:Cc:Date:In-Reply-To:From:Subject:
+        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
+        bh=201XcJutOCoesKuDpsFmIpB9/9V6Sc+xigsUbwSoqqE=;
+        b=mZK8iXS6d3uECfaSCCGtjYfzTCR1+oMdgJhDYG0yxZmsfVyUqBcGxqHzSEDEWIDYTj
+        V3md6L+H9nBzkKFOeJPspkDihPpynJudihCkZYAIvTotOStuS8dC8qQlDhxo+IOg07HE
+        bzETk0lZZZUV2glEqbpGZz7tXiKEQIw6xLYkpBh3n0ZkJ5vcyn/jZZg5I5Qtos7t4zdo
+        naGo6bgKHqZ3y8UnkAtM8jf2YjWnU+FnXptBP8uQV80ZeNWbECRUExyp1oi/GafYYviF
+        c/TSlPv8OBDVNpdPoODfBQOetRTWQi+qJ5iAj6ExuGN4sVxb5HP8R9egrluNdQD3+ihG
+        mn8A==
+X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMgPgp8VKxflSZ1P34KBj5Qpw97WFDlWcXA4N8z4="
+X-RZG-CLASS-ID: mo00
+Received: from imac.fritz.box
+        by smtp.strato.de (RZmta 46.2.1 DYNA|AUTH)
+        with ESMTPSA id m02241w2SIL19Td
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (curve X9_62_prime256v1 with 256 ECDH bits, eq. 3072 bits RSA))
+        (Client did not present a certificate);
+        Sat, 28 Mar 2020 19:21:01 +0100 (CET)
+Subject: Re: CHKDT error by f95cad74acdb ("dt-bindings: clocks: Convert Allwinner legacy clocks to schemas")
+Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
+Content-Type: text/plain; charset=us-ascii
+From:   "H. Nikolaus Schaller" <hns@goldelico.com>
+In-Reply-To: <20200328182008.5ac2f99e@kemnade.info>
+Date:   Sat, 28 Mar 2020 19:21:01 +0100
+Cc:     Discussions about the Letux Kernel <letux-kernel@openphoenux.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Maxime Ripard <maxime@cerno.tech>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:6wF4kJiH5B1RFFkaEFpYdT+DGqXNheQYuV0ArwKuD7MrY4UcAMb
- TKBhovAJ5S2QtIMKshVTdD7M/1XC92uKlBri7nzTNelsw6uUsuxlpQpBIOMBbBnTfnfM3mx
- uBzyuCxMEvFGJyhiY0d1XjjGdCT6XoGBhC3A8tC6bQ5+p4qUZsbwffpaCui/UlwYrhlJatR
- wAbaPvRC8z8EUiUpfXWLQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:O/yTV3qRnN0=:uL8r9Uu/ngFkqmCQAlkZBt
- C5M1+gmfMUulCSGsTwFf1MwNlC5JbaVobd9QcO+71gc9WjMArUT+W5bINfZ37GE2386blqkrM
- o4F0u86ReYr9O4IgCdjmmf5Z2nY2CE+jQ5aSo/yaU2J5Ouyb8Le9s57hG3tPZVhcxKKt3laMK
- o592g+ojZv0hPs9qZFIMH0KcNJAgbZjZCg28TMPuiZb0u1kAui8zJ7pm0FXP1n5FWTyg5oq2p
- rJmLLi6K4fB01PsfV1xgz9yg3O7S7CQQb//dq7iXuwnj3no74LqVqprjU4HP1/MIhOOH909et
- CLur2nsGD52PB4VR35DWKEdaYwYaSZOyqgJb/wYe0kBrmZ4cNrRBujwYLGAjCZtyDRRot7n52
- fAraMYeG1I9Gc88qpqNSzZQWKCubXGw0fMFHpBwx8cTN5ukIpN/CsYSDWcG2b6pb5vlw9MooK
- E3AzvWA8djnoIynGm/BFNv5DgkOIPNzZjKr6BtMh4FL/GnuNdMNZR3nhj4MKS4tZEkfqxTxiY
- a4uTg53sK8m7+GcMOgcb2EeZaqDCp669F07EY1zBbzdgt4ohYkXnGPRR4XaZuwCluZyjrQBvs
- BjDaQxQ79b9ApExqIz4dWaqqDsNjfySd2ZkJgZ3KWyvt4iDXuQHfzaQw0iOkAX+2/VZtbuLoi
- uNk+MJWT6Nrhu7Ac7wa6flAP5mLKtAaQLAXr377AzLdk6i7E0zpgTK/5KDPax4lYMtZYPii8I
- jgkEXw/X6vVthfZz4xeEr7he9/kh3r4hQ6NAFe1Xd3O0MxYyEatfhgSqvpRr1Z4mZ3UnYNsg9
- xEYCsm1qaTP9i7l4aCyU2F39rCluWQWP33yBhid0JEtnobSLb1rDVHE3ez5aFO+jTDkQxvnbG
- YnoQamyk1+1cZYYPrusPevcd+WGtvLcwK3gjgkW5grOqzuGA/LKc196NObXix9RfMwXyCJctR
- z8EPeeZAro3427sb2vg/MIy1MNxz1lFpxKz4f3Rs+LJrDfOM+paCe+CpcfV0G4thwDm27FxBJ
- dK80aLF55d4ndViUVwcli6rMjXIY0iShtfK/WBAvUSkElCDQWOPAdif2mp7PRDd4ZpD1RPyK8
- 9L0KN/Qe1TRDQOmqvG3Mg+5kL99aVni27GMGsiPbuxfqJatickMAPKCP2h5u4vuGyZcLXwVWo
- eWEJJUMTQdiOpHXHdvhYP4QF2CUKyXtnYhk+CqX33PZV9pBKhS+DkuVOLRX4ETQifBGbUADBh
- Bocq7bNrZhx5NrZm6
+Message-Id: <EF62F8D0-A205-4D64-8540-44F843720797@goldelico.com>
+References: <A65A26D8-9F66-4D46-B1E1-84ECECF079E3@goldelico.com> <20200328182008.5ac2f99e@kemnade.info>
+To:     Andreas Kemnade <andreas@kemnade.info>
+X-Mailer: Apple Mail (2.3124)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Create three arrays with the threshold data use in the switch statement
-of the vnt_update_pre_ed_threshold function. These three arrays contains
-elements of struct vnt_threshold new type.
 
-Create a for loop in the vnt_update_pre_ed_threshold function to do
-exactly the same that the if-elseif-else statements in the switch
-statement.
+> Am 28.03.2020 um 18:20 schrieb Andreas Kemnade <andreas@kemnade.info>:
+>=20
+> Hi Nikolaus,
+>=20
+> On Sat, 28 Mar 2020 13:26:24 +0100
+> "H. Nikolaus Schaller" <hns@goldelico.com> wrote:
+>=20
+>> Hi Rob,
+>> I am trying to check my new bindings with v5.6-rc7 but get this =
+before
+>> the process tries mine:
+>>=20
+>> make dt_binding_check dtbs_check
+>> ...
+>>=20
+>>  CHKDT   Documentation/devicetree/bindings/bus/renesas,bsc.yaml - due =
+to target missing
+>>  CHKDT   Documentation/devicetree/bindings/bus/simple-pm-bus.yaml - =
+due to target missing
+>>  CHKDT   =
+Documentation/devicetree/bindings/clock/allwinner,sun4i-a10-ahb-clk.yaml =
+- due to target missing
+>> =
+/Volumes/CaseSensitive/master/Documentation/devicetree/bindings/clock/allw=
+inner,sun4i-a10-ahb-clk.yaml: Additional properties are not allowed =
+('deprecated' was unexpected)
+>> make[2]: *** =
+[Documentation/devicetree/bindings/clock/allwinner,sun4i-a10-ahb-clk.examp=
+le.dts] Error 1
+>> make[1]: *** [dt_binding_check] Error 2
+>> make: *** [sub-make] Error 2
+>>=20
+>> What am I doing wrong?
+>> Is there an option to skip such errors and continue?
+>> Is there an option to just test my bindings and yaml file?
+>>=20
+> maybe your tools are outdated, so rerun
+>=20
+> pip3 install =
+git+https://github.com/devicetree-org/dt-schema.git@master
 
-Also, remove the if check against the !cr_201 && !cr_206 due to now it
-is replace by the NULL check against the threshold pointer. When this
-pointer is NULL means that the cr_201 and cr_206 variables have not been
-assigned, that is the same that the old comparison against cr_201 and
-cr_206 due to these variables were initialized with 0.
+Yes, that one solves the problem!
 
-The statistics of the old baseband object file are:
+A better error message of CHKDT would have been helpful. Or an =
+auto-update.
 
-section              size   addr
-.text                3415      0
-.data                 576      0
-.bss                    0      0
-.rodata               120      0
-.comment               45      0
-.note.GNU-stack         0      0
-.note.gnu.property     28      0
-Total                4184
+Now I just get a lot of messages like
 
-The statistics of the new baseband object file are:
+  CHKDT   =
+Documentation/devicetree/bindings/arm/sunxi/allwinner,sun4i-a10-mbus.yaml =
+- due to: =
+Documentation/devicetree/bindings/arm/sunxi/allwinner,sun4i-a10-mbus.yaml
+=
+Documentation/devicetree/bindings/arm/sunxi/allwinner,sun4i-a10-mbus.yaml:=
+: $id: relative path/filename doesn't match actual path or filename
+	expected: =
+http://devicetree.org/schemas/arm/sunxi/allwinner,sun4i-a10-mbus.yaml:#
+  CHKDT   =
+Documentation/devicetree/bindings/clock/allwinner,sun4i-a10-ahb-clk.yaml =
+- due to target missing
+=
+Documentation/devicetree/bindings/clock/allwinner,sun4i-a10-ahb-clk.yaml::=
+ $id: relative path/filename doesn't match actual path or filename
+	expected: =
+http://devicetree.org/schemas/clock/allwinner,sun4i-a10-ahb-clk.yaml:#
+...
 
-section              size   addr
-.text                2209      0
-.data                 576      0
-.bss                    0      0
-.rodata               344      0
-.comment               45      0
-.note.GNU-stack         0      0
-.note.gnu.property     28      0
-Total                3202
+but they do not abort the process, except for an error found in my yaml =
+document.
+So now I can start debugging.
 
-With this refactoring it increase a little the readonly data but it
-decrease much more the .text section. This refactoring decrease the
-footprint and makes the code more clear.
-
-Signed-off-by: Oscar Carter <oscar.carter@gmx.com>
-=2D--
- drivers/staging/vt6656/baseband.c | 335 +++++++++---------------------
- 1 file changed, 100 insertions(+), 235 deletions(-)
-
-diff --git a/drivers/staging/vt6656/baseband.c b/drivers/staging/vt6656/ba=
-seband.c
-index a19a563d8bcc..e03f83e1c394 100644
-=2D-- a/drivers/staging/vt6656/baseband.c
-+++ b/drivers/staging/vt6656/baseband.c
-@@ -115,6 +115,86 @@ static const u16 vnt_frame_time[MAX_RATE] =3D {
- 	10, 20, 55, 110, 24, 36, 48, 72, 96, 144, 192, 216
- };
-
-+struct vnt_threshold {
-+	u8 bb_pre_ed_rssi;
-+	u8 cr_201;
-+	u8 cr_206;
-+};
-+
-+static const struct vnt_threshold al2230_vnt_threshold[] =3D {
-+	{0, 0x00, 0x30},	/* Max sensitivity */
-+	{68, 0x00, 0x36},
-+	{67, 0x00, 0x43},
-+	{66, 0x00, 0x51},
-+	{65, 0x00, 0x62},
-+	{64, 0x00, 0x79},
-+	{63, 0x00, 0x93},
-+	{62, 0x00, 0xb9},
-+	{61, 0x00, 0xe3},
-+	{60, 0x01, 0x18},
-+	{59, 0x01, 0x54},
-+	{58, 0x01, 0xa0},
-+	{57, 0x02, 0x20},
-+	{56, 0x02, 0xa0},
-+	{55, 0x03, 0x00},
-+	{53, 0x06, 0x00},
-+	{51, 0x09, 0x00},
-+	{49, 0x0e, 0x00},
-+	{47, 0x15, 0x00},
-+	{46, 0x1a, 0x00},
-+	{45, 0xff, 0x00}
-+};
-+
-+static const struct vnt_threshold vt3226_vnt_threshold[] =3D {
-+	{0, 0x00, 0x24},	/* Max sensitivity */
-+	{68, 0x00, 0x2d},
-+	{67, 0x00, 0x36},
-+	{66, 0x00, 0x43},
-+	{65, 0x00, 0x52},
-+	{64, 0x00, 0x68},
-+	{63, 0x00, 0x80},
-+	{62, 0x00, 0x9c},
-+	{61, 0x00, 0xc0},
-+	{60, 0x00, 0xea},
-+	{59, 0x01, 0x30},
-+	{58, 0x01, 0x70},
-+	{57, 0x01, 0xb0},
-+	{56, 0x02, 0x30},
-+	{55, 0x02, 0xc0},
-+	{53, 0x04, 0x00},
-+	{51, 0x07, 0x00},
-+	{49, 0x0a, 0x00},
-+	{47, 0x11, 0x00},
-+	{45, 0x18, 0x00},
-+	{43, 0x26, 0x00},
-+	{42, 0x36, 0x00},
-+	{41, 0xff, 0x00}
-+};
-+
-+static const struct vnt_threshold vt3342_vnt_threshold[] =3D {
-+	{0, 0x00, 0x38},	/* Max sensitivity */
-+	{66, 0x00, 0x43},
-+	{65, 0x00, 0x52},
-+	{64, 0x00, 0x68},
-+	{63, 0x00, 0x80},
-+	{62, 0x00, 0x9c},
-+	{61, 0x00, 0xc0},
-+	{60, 0x00, 0xea},
-+	{59, 0x01, 0x30},
-+	{58, 0x01, 0x70},
-+	{57, 0x01, 0xb0},
-+	{56, 0x02, 0x30},
-+	{55, 0x02, 0xc0},
-+	{53, 0x04, 0x00},
-+	{51, 0x07, 0x00},
-+	{49, 0x0a, 0x00},
-+	{47, 0x11, 0x00},
-+	{45, 0x18, 0x00},
-+	{43, 0x26, 0x00},
-+	{42, 0x36, 0x00},
-+	{41, 0xff, 0x00}
-+};
-+
- /*
-  * Description: Calculate data frame transmitting time
-  *
-@@ -572,254 +652,42 @@ int vnt_exit_deep_sleep(struct vnt_private *priv)
-
- void vnt_update_pre_ed_threshold(struct vnt_private *priv, int scanning)
- {
--	u8 cr_201 =3D 0x0, cr_206 =3D 0x0;
-+	const struct vnt_threshold *threshold =3D NULL;
-+	u8 length;
-+	u8 cr_201, cr_206;
- 	u8 ed_inx =3D priv->bb_pre_ed_index;
-
- 	switch (priv->rf_type) {
- 	case RF_AL2230:
- 	case RF_AL2230S:
- 	case RF_AIROHA7230:
--		if (scanning) { /* Max sensitivity */
--			ed_inx =3D 0;
--			cr_206 =3D 0x30;
--			break;
--		}
--
--		if (priv->bb_pre_ed_rssi <=3D 45) {
--			ed_inx =3D 20;
--			cr_201 =3D 0xff;
--		} else if (priv->bb_pre_ed_rssi <=3D 46) {
--			ed_inx =3D 19;
--			cr_201 =3D 0x1a;
--		} else if (priv->bb_pre_ed_rssi <=3D 47) {
--			ed_inx =3D 18;
--			cr_201 =3D 0x15;
--		} else if (priv->bb_pre_ed_rssi <=3D 49) {
--			ed_inx =3D 17;
--			cr_201 =3D 0xe;
--		} else if (priv->bb_pre_ed_rssi <=3D 51) {
--			ed_inx =3D 16;
--			cr_201 =3D 0x9;
--		} else if (priv->bb_pre_ed_rssi <=3D 53) {
--			ed_inx =3D 15;
--			cr_201 =3D 0x6;
--		} else if (priv->bb_pre_ed_rssi <=3D 55) {
--			ed_inx =3D 14;
--			cr_201 =3D 0x3;
--		} else if (priv->bb_pre_ed_rssi <=3D 56) {
--			ed_inx =3D 13;
--			cr_201 =3D 0x2;
--			cr_206 =3D 0xa0;
--		} else if (priv->bb_pre_ed_rssi <=3D 57) {
--			ed_inx =3D 12;
--			cr_201 =3D 0x2;
--			cr_206 =3D 0x20;
--		} else if (priv->bb_pre_ed_rssi <=3D 58) {
--			ed_inx =3D 11;
--			cr_201 =3D 0x1;
--			cr_206 =3D 0xa0;
--		} else if (priv->bb_pre_ed_rssi <=3D 59) {
--			ed_inx =3D 10;
--			cr_201 =3D 0x1;
--			cr_206 =3D 0x54;
--		} else if (priv->bb_pre_ed_rssi <=3D 60) {
--			ed_inx =3D 9;
--			cr_201 =3D 0x1;
--			cr_206 =3D 0x18;
--		} else if (priv->bb_pre_ed_rssi <=3D 61) {
--			ed_inx =3D 8;
--			cr_206 =3D 0xe3;
--		} else if (priv->bb_pre_ed_rssi <=3D 62) {
--			ed_inx =3D 7;
--			cr_206 =3D 0xb9;
--		} else if (priv->bb_pre_ed_rssi <=3D 63) {
--			ed_inx =3D 6;
--			cr_206 =3D 0x93;
--		} else if (priv->bb_pre_ed_rssi <=3D 64) {
--			ed_inx =3D 5;
--			cr_206 =3D 0x79;
--		} else if (priv->bb_pre_ed_rssi <=3D 65) {
--			ed_inx =3D 4;
--			cr_206 =3D 0x62;
--		} else if (priv->bb_pre_ed_rssi <=3D 66) {
--			ed_inx =3D 3;
--			cr_206 =3D 0x51;
--		} else if (priv->bb_pre_ed_rssi <=3D 67) {
--			ed_inx =3D 2;
--			cr_206 =3D 0x43;
--		} else if (priv->bb_pre_ed_rssi <=3D 68) {
--			ed_inx =3D 1;
--			cr_206 =3D 0x36;
--		} else {
--			ed_inx =3D 0;
--			cr_206 =3D 0x30;
--		}
-+		threshold =3D al2230_vnt_threshold;
-+		length =3D ARRAY_SIZE(al2230_vnt_threshold);
- 		break;
-
- 	case RF_VT3226:
- 	case RF_VT3226D0:
--		if (scanning)	{ /* Max sensitivity */
--			ed_inx =3D 0;
--			cr_206 =3D 0x24;
--			break;
--		}
--
--		if (priv->bb_pre_ed_rssi <=3D 41) {
--			ed_inx =3D 22;
--			cr_201 =3D 0xff;
--		} else if (priv->bb_pre_ed_rssi <=3D 42) {
--			ed_inx =3D 21;
--			cr_201 =3D 0x36;
--		} else if (priv->bb_pre_ed_rssi <=3D 43) {
--			ed_inx =3D 20;
--			cr_201 =3D 0x26;
--		} else if (priv->bb_pre_ed_rssi <=3D 45) {
--			ed_inx =3D 19;
--			cr_201 =3D 0x18;
--		} else if (priv->bb_pre_ed_rssi <=3D 47) {
--			ed_inx =3D 18;
--			cr_201 =3D 0x11;
--		} else if (priv->bb_pre_ed_rssi <=3D 49) {
--			ed_inx =3D 17;
--			cr_201 =3D 0xa;
--		} else if (priv->bb_pre_ed_rssi <=3D 51) {
--			ed_inx =3D 16;
--			cr_201 =3D 0x7;
--		} else if (priv->bb_pre_ed_rssi <=3D 53) {
--			ed_inx =3D 15;
--			cr_201 =3D 0x4;
--		} else if (priv->bb_pre_ed_rssi <=3D 55) {
--			ed_inx =3D 14;
--			cr_201 =3D 0x2;
--			cr_206 =3D 0xc0;
--		} else if (priv->bb_pre_ed_rssi <=3D 56) {
--			ed_inx =3D 13;
--			cr_201 =3D 0x2;
--			cr_206 =3D 0x30;
--		} else if (priv->bb_pre_ed_rssi <=3D 57) {
--			ed_inx =3D 12;
--			cr_201 =3D 0x1;
--			cr_206 =3D 0xb0;
--		} else if (priv->bb_pre_ed_rssi <=3D 58) {
--			ed_inx =3D 11;
--			cr_201 =3D 0x1;
--			cr_206 =3D 0x70;
--		} else if (priv->bb_pre_ed_rssi <=3D 59) {
--			ed_inx =3D 10;
--			cr_201 =3D 0x1;
--			cr_206 =3D 0x30;
--		} else if (priv->bb_pre_ed_rssi <=3D 60) {
--			ed_inx =3D 9;
--			cr_206 =3D 0xea;
--		} else if (priv->bb_pre_ed_rssi <=3D 61) {
--			ed_inx =3D 8;
--			cr_206 =3D 0xc0;
--		} else if (priv->bb_pre_ed_rssi <=3D 62) {
--			ed_inx =3D 7;
--			cr_206 =3D 0x9c;
--		} else if (priv->bb_pre_ed_rssi <=3D 63) {
--			ed_inx =3D 6;
--			cr_206 =3D 0x80;
--		} else if (priv->bb_pre_ed_rssi <=3D 64) {
--			ed_inx =3D 5;
--			cr_206 =3D 0x68;
--		} else if (priv->bb_pre_ed_rssi <=3D 65) {
--			ed_inx =3D 4;
--			cr_206 =3D 0x52;
--		} else if (priv->bb_pre_ed_rssi <=3D 66) {
--			ed_inx =3D 3;
--			cr_206 =3D 0x43;
--		} else if (priv->bb_pre_ed_rssi <=3D 67) {
--			ed_inx =3D 2;
--			cr_206 =3D 0x36;
--		} else if (priv->bb_pre_ed_rssi <=3D 68) {
--			ed_inx =3D 1;
--			cr_206 =3D 0x2d;
--		} else {
--			ed_inx =3D 0;
--			cr_206 =3D 0x24;
--		}
-+		threshold =3D vt3226_vnt_threshold;
-+		length =3D ARRAY_SIZE(vt3226_vnt_threshold);
- 		break;
-
- 	case RF_VT3342A0:
--		if (scanning) { /* need Max sensitivity */
--			ed_inx =3D 0;
--			cr_206 =3D 0x38;
--			break;
--		}
--
--		if (priv->bb_pre_ed_rssi <=3D 41) {
--			ed_inx =3D 20;
--			cr_201 =3D 0xff;
--		} else if (priv->bb_pre_ed_rssi <=3D 42) {
--			ed_inx =3D 19;
--			cr_201 =3D 0x36;
--		} else if (priv->bb_pre_ed_rssi <=3D 43) {
--			ed_inx =3D 18;
--			cr_201 =3D 0x26;
--		} else if (priv->bb_pre_ed_rssi <=3D 45) {
--			ed_inx =3D 17;
--			cr_201 =3D 0x18;
--		} else if (priv->bb_pre_ed_rssi <=3D 47) {
--			ed_inx =3D 16;
--			cr_201 =3D 0x11;
--		} else if (priv->bb_pre_ed_rssi <=3D 49) {
--			ed_inx =3D 15;
--			cr_201 =3D 0xa;
--		} else if (priv->bb_pre_ed_rssi <=3D 51) {
--			ed_inx =3D 14;
--			cr_201 =3D 0x7;
--		} else if (priv->bb_pre_ed_rssi <=3D 53) {
--			ed_inx =3D 13;
--			cr_201 =3D 0x4;
--		} else if (priv->bb_pre_ed_rssi <=3D 55) {
--			ed_inx =3D 12;
--			cr_201 =3D 0x2;
--			cr_206 =3D 0xc0;
--		} else if (priv->bb_pre_ed_rssi <=3D 56) {
--			ed_inx =3D 11;
--			cr_201 =3D 0x2;
--			cr_206 =3D 0x30;
--		} else if (priv->bb_pre_ed_rssi <=3D 57) {
--			ed_inx =3D 10;
--			cr_201 =3D 0x1;
--			cr_206 =3D 0xb0;
--		} else if (priv->bb_pre_ed_rssi <=3D 58) {
--			ed_inx =3D 9;
--			cr_201 =3D 0x1;
--			cr_206 =3D 0x70;
--		} else if (priv->bb_pre_ed_rssi <=3D 59) {
--			ed_inx =3D 8;
--			cr_201 =3D 0x1;
--			cr_206 =3D 0x30;
--		} else if (priv->bb_pre_ed_rssi <=3D 60) {
--			ed_inx =3D 7;
--			cr_206 =3D 0xea;
--		} else if (priv->bb_pre_ed_rssi <=3D 61) {
--			ed_inx =3D 6;
--			cr_206 =3D 0xc0;
--		} else if (priv->bb_pre_ed_rssi <=3D 62) {
--			ed_inx =3D 5;
--			cr_206 =3D 0x9c;
--		} else if (priv->bb_pre_ed_rssi <=3D 63) {
--			ed_inx =3D 4;
--			cr_206 =3D 0x80;
--		} else if (priv->bb_pre_ed_rssi <=3D 64) {
--			ed_inx =3D 3;
--			cr_206 =3D 0x68;
--		} else if (priv->bb_pre_ed_rssi <=3D 65) {
--			ed_inx =3D 2;
--			cr_206 =3D 0x52;
--		} else if (priv->bb_pre_ed_rssi <=3D 66) {
--			ed_inx =3D 1;
--			cr_206 =3D 0x43;
--		} else {
--			ed_inx =3D 0;
--			cr_206 =3D 0x38;
--		}
-+		threshold =3D vt3342_vnt_threshold;
-+		length =3D ARRAY_SIZE(vt3342_vnt_threshold);
- 		break;
- 	}
-
-+	if (!threshold)
-+		return;
-+
-+	for (ed_inx =3D scanning ? 0 : length - 1; ed_inx > 0; ed_inx--) {
-+		if (priv->bb_pre_ed_rssi <=3D threshold[ed_inx].bb_pre_ed_rssi)
-+			break;
-+	}
-+
-+	cr_201 =3D threshold[ed_inx].cr_201;
-+	cr_206 =3D threshold[ed_inx].cr_206;
-+
- 	if (ed_inx =3D=3D priv->bb_pre_ed_index && !scanning)
- 		return;
-
-@@ -828,9 +696,6 @@ void vnt_update_pre_ed_threshold(struct vnt_private *p=
-riv, int scanning)
- 	dev_dbg(&priv->usb->dev, "%s bb_pre_ed_rssi %d\n",
- 		__func__, priv->bb_pre_ed_rssi);
-
--	if (!cr_201 && !cr_206)
--		return;
--
- 	vnt_control_out_u8(priv, MESSAGE_REQUEST_BBREG, 0xc9, cr_201);
- 	vnt_control_out_u8(priv, MESSAGE_REQUEST_BBREG, 0xce, cr_206);
- }
-=2D-
-2.20.1
+BR and thanks,
+Nikolaus
 
