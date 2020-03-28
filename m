@@ -2,91 +2,84 @@ Return-Path: <SRS0=NZ+o=5N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1403FC2D0EC
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 11:03:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBA76C43331
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 11:06:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CEF3D20716
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 11:03:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bd7U7zB7"
+	by mail.kernel.org (Postfix) with ESMTP id 83D762082E
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 11:06:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726604AbgC1LDk (ORCPT
+        id S1726325AbgC1LGT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 28 Mar 2020 07:03:40 -0400
-Received: from mail-pj1-f65.google.com ([209.85.216.65]:35915 "EHLO
-        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725973AbgC1LDj (ORCPT
+        Sat, 28 Mar 2020 07:06:19 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:55611 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726199AbgC1LGT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 28 Mar 2020 07:03:39 -0400
-Received: by mail-pj1-f65.google.com with SMTP id nu11so4905671pjb.1;
-        Sat, 28 Mar 2020 04:03:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=/2cYRHxrVTMN93XPhLaHucAiNCsPMIFVMOC8DyU7FT0=;
-        b=bd7U7zB7Lkd8f4SzL1To6hUBcjX34t0QuZPNnYhf56HYdc0lGJkLM+fCtEhnwRb8OL
-         GZGW6Zqf21OK1AMKPT9GCSYbQLcZt82Mt05HIPwuiOIX5e2W3be2g8Xb6HVunmzonAoO
-         XRgyz/+PypftLC+5ncPl98dHx7iZI9P8LutD4UYvSIlAEfWyM5plDQNCf2uoqCxxHu1C
-         03PBoSjna7rs7LG/N17u5l98R+ZesnGylQM9EdE/eVCIgQ9DzQYD1GGh0aotzktj7o2j
-         FddImm9fxUJE5TrbSp3Zw470oOZgVg9HULXLmZ+kNByotFICKe3rnGizsuxORO1oWGZF
-         T1Bg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=/2cYRHxrVTMN93XPhLaHucAiNCsPMIFVMOC8DyU7FT0=;
-        b=YGw2BZUtm2CZx1HYOrP0x3mNb0TEBIRHN71XzL+Gq7I7uY8l6Aeq7tqvujyiF/6mVt
-         YLGcS2KdqADlKikpz4GGYvzHbnWj1VDiRs4016Y4jup2ZYuj998OroogYJpedBTpERED
-         xmquUyWwzizxRugswIQDD0Ve7XNycA32Py4C/MNGjND104cqvKsYXRaVwmXe490JVX0W
-         jYjf9+3RgUiK89Tda17avZseGKuUYN+p4AEN8NxoUO0pEz6e3Jm7Ao52QZpAhYkxo1MR
-         hvE91B6v6nLQbP4pJf24BkdFd4/P5nIJbIe4P4VE6k67C+ireY4QNgmNs0lwh1E5m6XX
-         dkcw==
-X-Gm-Message-State: ANhLgQ072FH7mgooaR/tV0mdv1HnBfWPmIApyI/uHWYt22CFxGFXVL63
-        +CrCJfaRzIUDgpcDgoViwxSnICrll1PSGhDfjYA=
-X-Google-Smtp-Source: ADFU+vtqrUvwa+xJ7s/nPsOqfyNXGInz7edr1LHUXfuJWdpCmq/QCDSEXbngGm7/fdrbTiSSe2kWfP4oFqHfKp6V4+s=
-X-Received: by 2002:a17:90a:3602:: with SMTP id s2mr4313231pjb.143.1585393417957;
- Sat, 28 Mar 2020 04:03:37 -0700 (PDT)
+        Sat, 28 Mar 2020 07:06:19 -0400
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1jI9I9-0003tF-Qo; Sat, 28 Mar 2020 12:06:17 +0100
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 760DF1C0470;
+        Sat, 28 Mar 2020 12:06:17 +0100 (CET)
+Date:   Sat, 28 Mar 2020 11:06:17 -0000
+From:   "tip-bot2 for Al Viro" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: locking/core] generic arch_futex_atomic_op_inuser() doesn't
+ need access_ok()
+Cc:     Al Viro <viro@zeniv.linux.org.uk>, x86 <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
 MIME-Version: 1.0
-References: <20200328001154.17313-1-sravanhome@gmail.com> <20200328001154.17313-5-sravanhome@gmail.com>
- <CAHp75VefP3oPyRJ=Z9Y5Wv3rSc-nJdKFLJ60YLdUbP5dFikS+w@mail.gmail.com>
-In-Reply-To: <CAHp75VefP3oPyRJ=Z9Y5Wv3rSc-nJdKFLJ60YLdUbP5dFikS+w@mail.gmail.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Sat, 28 Mar 2020 13:03:26 +0200
-Message-ID: <CAHp75VfQXdBaEHSOcj474Mj1NieU4h=2y7JrgVpKMsQq_NeMbA@mail.gmail.com>
-Subject: Re: [PATCH v5 4/5] power: supply: Add support for mps mp2629 battery charger
-To:     Saravanan Sekar <sravanhome@gmail.com>
-Cc:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald <pmeerw@pmeerw.net>,
-        Sebastian Reichel <sre@kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-iio <linux-iio@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Message-ID: <158539357704.28353.3797286562782090252.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Mar 28, 2020 at 1:02 PM Andy Shevchenko
-<andy.shevchenko@gmail.com> wrote:
-> On Sat, Mar 28, 2020 at 2:12 AM Saravanan Sekar <sravanhome@gmail.com> wrote:
+The following commit has been merged into the locking/core branch of tip:
 
-> > +#include <linux/of_device.h>
+Commit-ID:     a251b2d513ea4116ddb5487610e4b4048c7aa397
+Gitweb:        https://git.kernel.org/tip/a251b2d513ea4116ddb5487610e4b4048c7aa397
+Author:        Al Viro <viro@zeniv.linux.org.uk>
+AuthorDate:    Tue, 18 Feb 2020 12:19:23 -05:00
+Committer:     Al Viro <viro@zeniv.linux.org.uk>
+CommitterDate: Fri, 27 Mar 2020 23:58:55 -04:00
 
-Forget to tell, I haven't found evidence of the above being used.
+generic arch_futex_atomic_op_inuser() doesn't need access_ok()
 
-> Missed header bits.h.
+uses get_user() and put_user() for memory accesses
 
--- 
-With Best Regards,
-Andy Shevchenko
+Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
+---
+ include/asm-generic/futex.h | 2 --
+ 1 file changed, 2 deletions(-)
+
+diff --git a/include/asm-generic/futex.h b/include/asm-generic/futex.h
+index 3eab7ba..f4c3470 100644
+--- a/include/asm-generic/futex.h
++++ b/include/asm-generic/futex.h
+@@ -33,8 +33,6 @@ arch_futex_atomic_op_inuser(int op, u32 oparg, int *oval, u32 __user *uaddr)
+ 	int oldval, ret;
+ 	u32 tmp;
+ 
+-	if (!access_ok(uaddr, sizeof(u32)))
+-		return -EFAULT;
+ 	preempt_disable();
+ 
+ 	ret = -EFAULT;
