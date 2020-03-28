@@ -2,179 +2,162 @@ Return-Path: <SRS0=NZ+o=5N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40400C43331
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 02:25:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67489C2D0ED
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 02:31:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C4956206F1
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 02:25:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D4AB206F6
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 02:31:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="wUXWpGq3"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="QsHumuai"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727121AbgC1CZs (ORCPT
+        id S1727067AbgC1CbO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Mar 2020 22:25:48 -0400
-Received: from gateway31.websitewelcome.com ([192.185.143.38]:47520 "EHLO
-        gateway31.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726781AbgC1CZs (ORCPT
+        Fri, 27 Mar 2020 22:31:14 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:42788 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726661AbgC1CbN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Mar 2020 22:25:48 -0400
-Received: from cm11.websitewelcome.com (cm11.websitewelcome.com [100.42.49.5])
-        by gateway31.websitewelcome.com (Postfix) with ESMTP id 119BD1CC62
-        for <linux-kernel@vger.kernel.org>; Fri, 27 Mar 2020 21:25:47 -0500 (CDT)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id I1AQjJN2NSl8qI1ARjqCz7; Fri, 27 Mar 2020 21:25:47 -0500
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=OCElGlRCPKdivR/buoo/fd1feEKsBKHPOmzCMciDMnc=; b=wUXWpGq3fEuAaowciXyySyKEts
-        6lGnrJOkAo9dVU+0MFp2CX/04tUmKhD/jf4Kya5r+YqttOmiUaRATJvpzHpTiQdIObn28FJOn2RWV
-        iwQdc7FFUY7HDaO/gOlhJuHEoexFinDbmmJrSXOcqPFMx2CosAQqumgeyLkPIOr/ohyjkRxeO46nm
-        EemErcPePKcpRxNVYAXWD0Djy47qsl5zYz8+nr6Y2MsgTH367sC/CEFV4/HcdfCAjatIaXjHaA1Zb
-        vO8M492kbI74S5sWu8jRaFiKNhMjwo9gO8G393JiOMuk+flFVzmn5hDF25ZVEwRPAfB4ulIfo1k8T
-        FbKEYp+w==;
-Received: from cablelink-189-218-116-241.hosts.intercable.net ([189.218.116.241]:42282 helo=[192.168.0.21])
-        by gator4166.hostgator.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
-        (Exim 4.92)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1jI1AQ-001AuF-Ii; Fri, 27 Mar 2020 21:25:46 -0500
-Subject: Re: [PATCH][next] RDMA/hns: Fix uninitialized variable bug
-To:     liweihang <liweihang@huawei.com>, oulijun <oulijun@huawei.com>,
-        "Huwei (Xavier)" <huwei87@hisilicon.com>,
-        Doug Ledford <dledford@redhat.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        "wangxi (M)" <wangxi11@huawei.com>
-Cc:     "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <20200327193142.GA32547@embeddedor>
- <B82435381E3B2943AA4D2826ADEF0B3A022B739C@DGGEML502-MBS.china.huawei.com>
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Autocrypt: addr=gustavo@embeddedor.com; keydata=
- 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
- VtSixD1uOgytAP7RWS474w==
-Message-ID: <36a775c2-2d8c-e735-b4fe-f6cd45b00e3e@embeddedor.com>
-Date:   Fri, 27 Mar 2020 21:28:31 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Fri, 27 Mar 2020 22:31:13 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1585362672; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=Of5ocX2I8A4I7iRsteJ/OLVXwTCgwzzL3AIvQdlsXYI=;
+ b=QsHumuaiwx9AxmA6uF6ZfdomG2ngpNiVjV2SlNl7KYRgekqZqtssUEfnml2c4iQWmELA3/Ku
+ 7ArbZ7Djz2JV53LH8ZrDH5fEqB/i2HX5ed+MsJW9i9QyA4+CyYgazhnIURqlrsuTkFcCLiLq
+ PjfZ6dtYP4fwFe0napR/HvuzcXc=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e7eb6e2.7ff3070eb298-smtp-out-n03;
+ Sat, 28 Mar 2020 02:30:58 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 939D4C44791; Sat, 28 Mar 2020 02:30:56 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: cang)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id EA983C433D2;
+        Sat, 28 Mar 2020 02:30:54 +0000 (UTC)
 MIME-Version: 1.0
-In-Reply-To: <B82435381E3B2943AA4D2826ADEF0B3A022B739C@DGGEML502-MBS.china.huawei.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
 Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 189.218.116.241
-X-Source-L: No
-X-Exim-ID: 1jI1AQ-001AuF-Ii
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: cablelink-189-218-116-241.hosts.intercable.net ([192.168.0.21]) [189.218.116.241]:42282
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 8
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+Date:   Sat, 28 Mar 2020 10:30:54 +0800
+From:   Can Guo <cang@codeaurora.org>
+To:     Stanley Chu <stanley.chu@mediatek.com>
+Cc:     linux-scsi@vger.kernel.org, martin.petersen@oracle.com,
+        avri.altman@wdc.com, alim.akhtar@samsung.com, jejb@linux.ibm.com,
+        beanhuo@micron.com, asutoshd@codeaurora.org,
+        matthias.bgg@gmail.com, bvanassche@acm.org,
+        linux-mediatek@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        kuohong.wang@mediatek.com, peter.wang@mediatek.com,
+        chun-hung.wu@mediatek.com, andy.teng@mediatek.com
+Subject: Re: [PATCH v1 1/1] scsi: ufs: set device as active power mode after
+ resetting device
+In-Reply-To: <d5096a58cce94669fef459834134ffab@codeaurora.org>
+References: <20200327095835.10293-1-stanley.chu@mediatek.com>
+ <d5096a58cce94669fef459834134ffab@codeaurora.org>
+Message-ID: <354de5d2a3bc4d19d2972885fa9189d1@codeaurora.org>
+X-Sender: cang@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Stanley,
 
-
-On 3/27/20 21:15, liweihang wrote:
-> On 2020/3/28 3:28, Gustavo A. R. Silva wrote:
->> There is a potential execution path in which variable *ret* is returned
->> without being properly initialized, previously.
->>
->> Fix this by initializing variable *ret* to -ENODEV.
->>
->> Addresses-Coverity-ID: 1491917 ("Uninitialized scalar variable")
->> Fixes: 2f49de21f3e9 ("RDMA/hns: Optimize mhop get flow for multi-hop addressing")
->> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+On 2020-03-28 10:14, Can Guo wrote:
+> On 2020-03-27 17:58, Stanley Chu wrote:
+>> Currently ufshcd driver assumes that bInitPowerMode parameter
+>> is not changed by any vendors thus device power mode can be set as
+>> "Active" during initialization.
+>> 
+>> According to UFS JEDEC specification, device power mode shall be
+>> "Active" after HW Reset is triggered if the bInitPowerMode parameter
+>> in Device Descriptor is default value.
+>> 
+>> By above description, we can set device power mode as "Active" after
+>> device reset is triggered by vendor's callback. With this change,
+>> the link startup performance can be improved in some cases
+>> by not setting link_startup_again as true in ufshcd_link_startup().
+>> 
+>> Signed-off-by: Stanley Chu <stanley.chu@mediatek.com>
 >> ---
->>  drivers/infiniband/hw/hns/hns_roce_hem.c | 2 +-
->>  1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/drivers/infiniband/hw/hns/hns_roce_hem.c b/drivers/infiniband/hw/hns/hns_roce_hem.c
->> index c96378718f88..3fd8100c2b56 100644
->> --- a/drivers/infiniband/hw/hns/hns_roce_hem.c
->> +++ b/drivers/infiniband/hw/hns/hns_roce_hem.c
->> @@ -603,7 +603,7 @@ static int set_mhop_hem(struct hns_roce_dev *hr_dev,
+>>  drivers/scsi/ufs/ufshcd.c | 13 -------------
+>>  drivers/scsi/ufs/ufshcd.h | 14 ++++++++++++++
+>>  2 files changed, 14 insertions(+), 13 deletions(-)
+>> 
+>> diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
+>> index 227660a1a446..f0a35b289b7c 100644
+>> --- a/drivers/scsi/ufs/ufshcd.c
+>> +++ b/drivers/scsi/ufs/ufshcd.c
+>> @@ -171,19 +171,6 @@ enum {
+>>  #define ufshcd_clear_eh_in_progress(h) \
+>>  	((h)->eh_flags &= ~UFSHCD_EH_IN_PROGRESS)
+>> 
+>> -#define ufshcd_set_ufs_dev_active(h) \
+>> -	((h)->curr_dev_pwr_mode = UFS_ACTIVE_PWR_MODE)
+>> -#define ufshcd_set_ufs_dev_sleep(h) \
+>> -	((h)->curr_dev_pwr_mode = UFS_SLEEP_PWR_MODE)
+>> -#define ufshcd_set_ufs_dev_poweroff(h) \
+>> -	((h)->curr_dev_pwr_mode = UFS_POWERDOWN_PWR_MODE)
+>> -#define ufshcd_is_ufs_dev_active(h) \
+>> -	((h)->curr_dev_pwr_mode == UFS_ACTIVE_PWR_MODE)
+>> -#define ufshcd_is_ufs_dev_sleep(h) \
+>> -	((h)->curr_dev_pwr_mode == UFS_SLEEP_PWR_MODE)
+>> -#define ufshcd_is_ufs_dev_poweroff(h) \
+>> -	((h)->curr_dev_pwr_mode == UFS_POWERDOWN_PWR_MODE)
+>> -
+>>  struct ufs_pm_lvl_states ufs_pm_lvl_states[] = {
+>>  	{UFS_ACTIVE_PWR_MODE, UIC_LINK_ACTIVE_STATE},
+>>  	{UFS_ACTIVE_PWR_MODE, UIC_LINK_HIBERN8_STATE},
+>> diff --git a/drivers/scsi/ufs/ufshcd.h b/drivers/scsi/ufs/ufshcd.h
+>> index b7bd81795c24..7a9d1d170719 100644
+>> --- a/drivers/scsi/ufs/ufshcd.h
+>> +++ b/drivers/scsi/ufs/ufshcd.h
+>> @@ -129,6 +129,19 @@ enum uic_link_state {
+>>  #define ufshcd_set_link_hibern8(hba) ((hba)->uic_link_state = \
+>>  				    UIC_LINK_HIBERN8_STATE)
+>> 
+>> +#define ufshcd_set_ufs_dev_active(h) \
+>> +	((h)->curr_dev_pwr_mode = UFS_ACTIVE_PWR_MODE)
+>> +#define ufshcd_set_ufs_dev_sleep(h) \
+>> +	((h)->curr_dev_pwr_mode = UFS_SLEEP_PWR_MODE)
+>> +#define ufshcd_set_ufs_dev_poweroff(h) \
+>> +	((h)->curr_dev_pwr_mode = UFS_POWERDOWN_PWR_MODE)
+>> +#define ufshcd_is_ufs_dev_active(h) \
+>> +	((h)->curr_dev_pwr_mode == UFS_ACTIVE_PWR_MODE)
+>> +#define ufshcd_is_ufs_dev_sleep(h) \
+>> +	((h)->curr_dev_pwr_mode == UFS_SLEEP_PWR_MODE)
+>> +#define ufshcd_is_ufs_dev_poweroff(h) \
+>> +	((h)->curr_dev_pwr_mode == UFS_POWERDOWN_PWR_MODE)
+>> +
+>>  /*
+>>   * UFS Power management levels.
+>>   * Each level is in increasing order of power savings.
+>> @@ -1091,6 +1104,7 @@ static inline void
+>> ufshcd_vops_device_reset(struct ufs_hba *hba)
 >>  {
->>  	struct ib_device *ibdev = &hr_dev->ib_dev;
->>  	int step_idx;
->> -	int ret;
->> +	int ret = -ENODEV;
->>  
->>  	if (index->inited & HEM_INDEX_L0) {
->>  		ret = hr_dev->hw->set_hem(hr_dev, table, obj, 0);
->>
+>>  	if (hba->vops && hba->vops->device_reset) {
+>>  		hba->vops->device_reset(hba);
+>> +		ufshcd_set_ufs_dev_active(hba);
+>>  		ufshcd_update_reg_hist(&hba->ufs_stats.dev_reset, 0);
+>>  	}
+>>  }
 > 
-> Hi Gustavo,
-> 
+> Reviewed-by: Can Guo <cang@codeaurora.org>
 
-Hi Weihang,
+I guess what you also want my patch -
 
-> Thanks for your modification. But I check the code and I think "ret"
-> should be initialized to 0, which means no need to set hem and it is
-> not an error.
-> 
+"scsi: ufs: full reinit upon resume if link was off"
 
-Oh, I see. Thanks for the feedback. I'll send v2 shortly.
+Please help review it, thanks.
 
-Thanks
---
-Gustavo
+Best regard,
+Can Guo.
