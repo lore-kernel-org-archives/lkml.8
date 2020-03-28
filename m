@@ -2,118 +2,161 @@ Return-Path: <SRS0=NZ+o=5N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36C89C2D0EC
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 18:36:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75F85C43331
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 18:37:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1362D20732
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 18:36:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 453AF206E6
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 18:37:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Bjn3/ZMS"
+	dkim=pass (1024-bit key) header.d=os.amperecomputing.com header.i=@os.amperecomputing.com header.b="O9kWWN13"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726977AbgC1Sgz (ORCPT
+        id S1727358AbgC1ShJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 28 Mar 2020 14:36:55 -0400
-Received: from mail-il1-f195.google.com ([209.85.166.195]:36136 "EHLO
-        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725882AbgC1Sgz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 28 Mar 2020 14:36:55 -0400
-Received: by mail-il1-f195.google.com with SMTP id p13so11910901ilp.3;
-        Sat, 28 Mar 2020 11:36:54 -0700 (PDT)
+        Sat, 28 Mar 2020 14:37:09 -0400
+Received: from mail-eopbgr700111.outbound.protection.outlook.com ([40.107.70.111]:17121
+        "EHLO NAM04-SN1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725807AbgC1ShI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 28 Mar 2020 14:37:08 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=V/tELEFHQYCbrYQTb3qGclLjO8WllotaHxa2+iqtqkZsKsCBNaeYTKqbZGAkX63xRl1qfmth0zUsM2MKT3/i8fVPohW+c2rKh34mUvUPUdpRYOqoIjl2MU9uPhsh1RPuSbkHKP4W1s81hVmNm2IUmEv8Zt6JyClDCQaTZ/doJhxwHPdAXjbU9Quf1Tb7yS3iXR4wr4LQ8M+i2PpFP0pFNKMud3A31hIRIAf56l0jXVdM4XDrJZCW+Mx8zDmf7JpynxxJsXOsX5d2KOHxTrj4+6Nb/OPCaBsAB2Vniyrfw4jGlM2QCPA6NAy53mHpVDLCTtmScc6LPr1kPKQ4oR9BCA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=GmNQA4m/DeOFszZX6hu4Z9niLSnudNQ9GkwoK+sQBwc=;
+ b=dVhlF4JlD5g+uaj+bGo7wA6Y+B9k9FnfnR49LSFHgxoQTGdmEli07q/iKzeQcSi/PrxLGjK3T5wo3lqY4TKLoNZd3zbRaHJE3Sp3+hVI3/mY+rTmrKioqFyxowsvBaR1U45DLOjSEkKqdTVI/PdR0PXIh2M1wiARHAK24ES4tYNNe0pZoXb8TMahasufqYRigM5QwseXrHznNA9mcKTOnvGvq1wTdMEue0Hr//wfB/uBI11bGoHWV7Rey463b9N1OQpBXXsySA2brHfi1VlocdSoMKvYIeKjzPfih0zbzT9lRYGc8P/9M2hKx5wCejTgSz9Rk7BHlsxkqcnvikIHVA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=os.amperecomputing.com; dmarc=pass action=none
+ header.from=os.amperecomputing.com; dkim=pass
+ header.d=os.amperecomputing.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=0HI24KR/yCjlJFsLLO6kOQCApuZY67HrR4f/HELwj00=;
-        b=Bjn3/ZMSjI5MgkcB5gKK6N4zFjMVoFTSxcltL3PA99UZvBgXDgAOataat0yBdZVoqE
-         NH/0OggUWvfgrio+/Usro0z9coMiVVo64z+Ln5aQgcxfw4feFgn+HtkwH7mrWJCnPGE2
-         HKqmsQoZGerQe6AjWMGTP1n8+SNzk6IVEChHV39pY8GLRUYnLiJwMUAZxqCourq0RyLY
-         pCPSDwMaFYSKYZfU+gkFh+BeUED8m5CfdGuTbfJazHFg5insTKlELMAZGfCPaPk0Aqk9
-         NYm6bxxNZc3SqBkQRE300iLkiF0BDCxKz1y/Kd2Stf2b1/BQQJeA1JOGYlS/PLRrlncv
-         0qzQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=0HI24KR/yCjlJFsLLO6kOQCApuZY67HrR4f/HELwj00=;
-        b=lx26CZDDaML69rm41uVuGH7igx2oQdBRE729WG+s4SyP3PetmO8v5YxJfbJP/wlX1s
-         yIJQGHwRK1/xr48KpCfh56rzCPKIZ2lpX2A+P9aqLmePRfDgJtvHActpu15urhU8D/QE
-         Bjy7ZIajen0HhTtEKPo8431KmoYJcTH2F9obnxPeHffw522OMHbOpcJzDOaCxihDKH0E
-         4i2xEKWCegmEQmtTj53XfTz6WlzRgdKoXzKwq93zx+IUrLaKk2zeGhcIXiIpVqpD2OCu
-         /5phwqTTRDYVbsjUmjE4I1aBUSF8QUgStUuYeitVLLIpn155MVUxWX4gP2PsOnGdne0t
-         kbcw==
-X-Gm-Message-State: ANhLgQ1Y8YFkpd8WOpjDv7I9SmraoLxTmxtVjei006DeWBgcjn4MW823
-        wgl0XUgS+teLAeS0tuI+5mivLeIFROq39sSOy44=
-X-Google-Smtp-Source: ADFU+vvj7xBW8YgzYefpKHgpnS8IasnPvFs7tQ1xw3iG07/FjIZop9WE6ytmhD+MGsO5JAtYB+aIgp90MlIPv8WqjKo=
-X-Received: by 2002:a92:cb49:: with SMTP id f9mr4613117ilq.193.1585420613730;
- Sat, 28 Mar 2020 11:36:53 -0700 (PDT)
+ d=os.amperecomputing.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=GmNQA4m/DeOFszZX6hu4Z9niLSnudNQ9GkwoK+sQBwc=;
+ b=O9kWWN13Liq8fy9/K8RBPMiamZMA9ixrF3a6wCQzpXeMSpHkVPOLmqv0uSptH7UAooaq5t8J7gJVSg0Cr7Ccuz33FK3/M2b9KSQ3LIm5P7lLdJz3+QPh1p79ALm8CeehfcqLkP5x1lVkYGf+6jaz1D3fb5hH9NWAQYXONPfHRP8=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=hoan@os.amperecomputing.com; 
+Received: from BYAPR01MB5494.prod.exchangelabs.com (2603:10b6:a03:127::30) by
+ BYAPR01MB4423.prod.exchangelabs.com (2603:10b6:a03:97::33) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2856.19; Sat, 28 Mar 2020 18:36:27 +0000
+Received: from BYAPR01MB5494.prod.exchangelabs.com
+ ([fe80::a979:b2e2:fdaf:1ccb]) by BYAPR01MB5494.prod.exchangelabs.com
+ ([fe80::a979:b2e2:fdaf:1ccb%6]) with mapi id 15.20.2835.026; Sat, 28 Mar 2020
+ 18:36:25 +0000
+Subject: Re: [PATCH] arm64: Kconfig: Enable NODES_SPAN_OTHER_NODES config for
+ NUMA
+To:     Catalin Marinas <catalin.marinas@arm.com>
+Cc:     Will Deacon <will@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        patches@os.amperecomputing.com
+References: <1580759714-4614-1-git-send-email-Hoan@os.amperecomputing.com>
+ <20200206102340.GA17074@willie-the-truck>
+ <c85dbc06-a72b-9c98-fe41-b25069114b2f@os.amperecomputing.com>
+ <20200311112700.GD3216816@arrakis.emea.arm.com>
+From:   Hoan Tran <hoan@os.amperecomputing.com>
+Message-ID: <6a01350d-1fde-f8cd-ecac-471b1a4697b3@os.amperecomputing.com>
+Date:   Sat, 28 Mar 2020 11:36:22 -0700
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
+ Gecko/20100101 Thunderbird/68.6.0
+In-Reply-To: <20200311112700.GD3216816@arrakis.emea.arm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: CY4PR22CA0073.namprd22.prod.outlook.com
+ (2603:10b6:903:ad::11) To BYAPR01MB5494.prod.exchangelabs.com
+ (2603:10b6:a03:127::30)
 MIME-Version: 1.0
-References: <CGME20200327162330eucas1p1b0413e0e9887aa76d3048f86d2166dcd@eucas1p1.samsung.com>
- <20200327162126.29705-1-m.szyprowski@samsung.com> <14063C7AD467DE4B82DEDB5C278E8663FFFBFCE1@fmsmsx107.amr.corp.intel.com>
-In-Reply-To: <14063C7AD467DE4B82DEDB5C278E8663FFFBFCE1@fmsmsx107.amr.corp.intel.com>
-From:   Shane Francis <bigbeeshane@gmail.com>
-Date:   Sat, 28 Mar 2020 18:36:42 +0000
-Message-ID: <CABnpCuBLkk2RQovNmcx1U9+oou18cmrd71eQ8=O=ELOM_NcjSA@mail.gmail.com>
-Subject: Re: [PATCH v2] drm/prime: fix extracting of the DMA addresses from a scatterlist
-To:     "Ruhl, Michael J" <michael.j.ruhl@intel.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>
-Cc:     "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "linux-samsung-soc@vger.kernel.org" 
-        <linux-samsung-soc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Alex Deucher <alexander.deucher@amd.com>
-Content-Type: text/plain; charset="UTF-8"
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from [192.168.0.138] (67.161.31.237) by CY4PR22CA0073.namprd22.prod.outlook.com (2603:10b6:903:ad::11) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2856.20 via Frontend Transport; Sat, 28 Mar 2020 18:36:24 +0000
+X-Originating-IP: [67.161.31.237]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 3eac1394-ac19-4a00-9167-08d7d346ebb5
+X-MS-TrafficTypeDiagnostic: BYAPR01MB4423:
+X-Microsoft-Antispam-PRVS: <BYAPR01MB442316F14D2B564805D4733EF1CD0@BYAPR01MB4423.prod.exchangelabs.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:6430;
+X-Forefront-PRVS: 03569407CC
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR01MB5494.prod.exchangelabs.com;PTR:;CAT:NONE;SFTY:;SFS:(10019020)(4636009)(346002)(376002)(366004)(39830400003)(136003)(396003)(26005)(53546011)(66946007)(66476007)(16576012)(66556008)(316002)(52116002)(6916009)(966005)(5660300002)(478600001)(16526019)(2616005)(6486002)(8936002)(31696002)(107886003)(81156014)(86362001)(4326008)(31686004)(956004)(186003)(81166006)(8676002)(2906002);DIR:OUT;SFP:1102;
+Received-SPF: None (protection.outlook.com: os.amperecomputing.com does not
+ designate permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 5o3L8GvAVJDZ9Znc3ewigiJ15W9NHr26JWkC40n0kFuGGJGGGQ2tA/w/a6l3Bnaps+f1zPZXisNHZYz5SdoUNsJ8qjuSOTKCK+7g2sDuZ3UaH4gNJq/ra+ULrruBHugV9/aiKnL6pvHPKl8/ak/P1RD1/ZqZVShzigLMi2UzHMxJ6Nn58W19zp0iYCQRPHZ8c0hxMPurv2Br3rnPS7B+agd9jfcF1peCtFjA3nlqjCLm7Jp11nOZ04PUn0vlmoQVB92kG1BW6cyKpnBvC+gaIgne8KJfXDligRDkV4gc88+KmPqBW3DNCU+esL7cPzBRw8HCwhQlDNxEeBOowoOUCGbamJS9oMqWQEt6gbSHCYeA5l5i8xZQbTYb+EDFArhm04ZevX3cal0fsYE4fJYf1p36VGrNCDEavIA2xosNZLy/8wBMkC9xhriZOSUggSWTd+BbJRlADm6v6yBW3yokS/QQJ5TcEIOntky/jYQkq9KjXvURFKka1lhDMTbURNMySs2zFMBytrHRLZZZlav2Ig==
+X-MS-Exchange-AntiSpam-MessageData: c2VxZX02ewI3CBvQrNERPKX6JkCE3RZ26CnlmbqK85TA9plihFrjdBaIVSeRlhWRQyxVTpuSQ/64DTtRWo/RCXMXqQPp/OY8jiEMRfHJHlPRL+1+G4Ab8Eis5nU/dpamvFfMMiL65qLk3pP0u+KBMA==
+X-MS-Exchange-Transport-Forked: True
+X-OriginatorOrg: os.amperecomputing.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3eac1394-ac19-4a00-9167-08d7d346ebb5
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Mar 2020 18:36:25.4429
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3bc2b170-fd94-476d-b0ce-4229bdc904a7
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: Cxpvm4EI9+38Nd8yfxhclSccZsSCbD/rmO9uIqtq6vZI7qQBbLkrrqrZ58VN+dUEOsz/KvzoacrWcK7oKb7hMQO0Zx5LNdbpeu7hdOIn0Ec=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR01MB4423
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 27, 2020 at 6:31 PM Ruhl, Michael J
-<michael.j.ruhl@intel.com> wrote:
-> Is there an example of what the scatterlist would look like in this case?
->
-> Does each SG entry always have the page and dma info? or could you have
-> entries that have page information only, and entries that have dma info only?
->
-> If the same entry has different size info (page_len = PAGE_SIZE,
-> dma_len = 4 * PAGE_SIZE?), are we guaranteed that the arrays (page and addrs) have
-> been sized correctly?
->
-> Just trying to get my head wrapped around this.
->
-> Thanks,
->
-> Mike
->
+Hi Catalin,
 
-My understanding is that page_len and dma_len in this case could have
-different values (looking at iommu_dma_map_sg within dma-iommu.c),
-this seems to add some padding calculated by using the device iova
-domain to s_length but sg_dma_len is set to the original length
 
-The scatterlists table can also get reduced down within
-"__finalise_sg" possibly causing (if reduced) the dma_len of the last
-table elements to be 0 (page_len would not be 0 in this case).
+On 3/11/20 4:27 AM, Catalin Marinas wrote:
+> On Thu, Feb 06, 2020 at 12:01:19PM -0800, Hoan Tran wrote:
+>> Hi Will,
+>>
+>> On 2/6/20 2:23 AM, Will Deacon wrote:
+>>> On Mon, Feb 03, 2020 at 11:55:14AM -0800, Hoan Tran wrote:
+>>>> Some NUMA nodes have memory ranges that span other nodes.
+>>>> Even though a pfn is valid and between a node's start and end pfns,
+>>>> it may not reside on that node.
+>>>>
+>>>> This patch enables NODES_SPAN_OTHER_NODES config for NUMA to support
+>>>> this type of NUMA layout.
+>>>>
+>>>> Signed-off-by: Hoan Tran <Hoan@os.amperecomputing.com>
+>>>> ---
+>>>>    arch/arm64/Kconfig | 7 +++++++
+>>>>    1 file changed, 7 insertions(+)
+>>>>
+>>>> diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+>>>> index e688dfa..939d28f 100644
+>>>> --- a/arch/arm64/Kconfig
+>>>> +++ b/arch/arm64/Kconfig
+>>>> @@ -959,6 +959,13 @@ config NEED_PER_CPU_EMBED_FIRST_CHUNK
+>>>>    config HOLES_IN_ZONE
+>>>>    	def_bool y
+>>>> +# Some NUMA nodes have memory ranges that span other nodes.
+>>>> +# Even though a pfn is valid and between a node's start and end pfns,
+>>>> +# it may not reside on that node.
+>>>> +config NODES_SPAN_OTHER_NODES
+>>>> +	def_bool y
+>>>> +	depends on ACPI_NUMA
+>>>> +
+>>>
+>>> I thought we agreed to do this in the core code?
+>>>
+>>> https://lore.kernel.org/lkml/1562887528-5896-1-git-send-email-Hoan@os.amperecomputing.com
+>>
+>> Yes, but it looks like Thomas didn't agree to apply this patch into
+>> x86.
+>>
+>> https://lore.kernel.org/lkml/alpine.DEB.2.21.1907152042110.1767@nanos.tec.linutronix.de/
+> 
+> Was it a clear statement that such change will not make it to x86 or a
+> request for improving the patch or the description? I'd suggest you
+> update the x86 patch comment to include the rationale as per your reply
+> to Thomas and post a new version of the generic series. If Thomas (or
+> the mm folk) reject it again, we'll revisit the arm64-specific thread.
 
-Documentation around looping & accessing scatterlists in DMA-API.txt
-states that  sg_dma_address() and sg_dma_len() should be used when
-accessing addr and len rather than sg->address and sg->length.
+Yes, I have just sent out a new patch for mm core.
 
-Maybe it would be worth splitting this out into 2 functions to avoid
-potential issues with the above use case ?
+Regards
+Hoan
 
-Regards,
-
-Shane Francis
+> 
