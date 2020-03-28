@@ -2,128 +2,198 @@ Return-Path: <SRS0=NZ+o=5N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.2 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84DEAC43331
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 19:41:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A2ACC43331
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 19:53:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6064A206F2
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 19:41:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 51D64206F6
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 19:53:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JBcSEl5O"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727175AbgC1TlG (ORCPT
+        id S1727330AbgC1Tx6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 28 Mar 2020 15:41:06 -0400
-Received: from sauhun.de ([88.99.104.3]:58344 "EHLO pokefinder.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725807AbgC1TlF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 28 Mar 2020 15:41:05 -0400
-Received: from localhost (p5486CEA0.dip0.t-ipconnect.de [84.134.206.160])
-        by pokefinder.org (Postfix) with ESMTPSA id DDE7A2C1F57;
-        Sat, 28 Mar 2020 20:41:03 +0100 (CET)
-Date:   Sat, 28 Mar 2020 20:41:03 +0100
-From:   Wolfram Sang <wsa@the-dreams.de>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Peter Rosin <peda@axentia.se>,
-        Bartosz Golaszewski <brgl@bgdev.pl>
-Subject: [PULL REQUEST] i2c for 5.6
-Message-ID: <20200328194059.GA1632@kunai>
+        Sat, 28 Mar 2020 15:53:58 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:45061 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726981AbgC1Tx5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 28 Mar 2020 15:53:57 -0400
+Received: by mail-oi1-f193.google.com with SMTP id l22so12026239oii.12;
+        Sat, 28 Mar 2020 12:53:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=NSGii26mjz2GbRfXuI9GdKWKXO3EKbaZ2YcgLef0z1M=;
+        b=JBcSEl5OaB0xLPzVCwwVB6wAco0wSHH3GuEkqXqb0gzGRn5O1IXFtfGlcwJGnFg2ah
+         KyUnUuicvCP1p0BBGAT5ukyON3xbjdIlWSsz4Kr4G+D9X/qkvoFsE5uy0kOfigQqktnz
+         aQdD0eYs/D/mosgROtjLHBE01yQ65lI1i5xLoYG3wvuQD6Alp57H98LO9jReht6Vdjaf
+         vCXv2SxA+ZVjPT5nqyQXOLRab5bsf3L+I38ILFlxgl0ZY9vKUFlnbq2QkpJJxNiGab9d
+         u6ix93mSsD2QKc0RBwDudqJoBAxrHTip8zkDmI4kEJf7xM3hXPec4GtWZ6Mrx0FTBE8S
+         b7/g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=NSGii26mjz2GbRfXuI9GdKWKXO3EKbaZ2YcgLef0z1M=;
+        b=pZZAPxrop9tpujscpk1tZz/vMyIDPz3OrJV7Egxsxr6L7ZMYVA8VwQlSIgnoBKMbyn
+         fMfVjUmbIAgwf9uGD5j1UfvnSiX4sCM+PyFBZxvG0xmVoMfFjiZ1aH7MHEjdtjgdNw9g
+         3SZYIuglAua5gEL6kRHlE1E1QIT+ZksgHRa+veAh7HQfkAQk1oTGqJnmtolQlUjGTkbM
+         JRFgTb4oCLAUADDhbp7XgDJg95Trlf7WeyyNnUUW545/rmokOcUI70OT9gXNv9iU12hE
+         Tp6lO8GXEUpGk5/lnNaSNIfqOLmXls9tDEGUZSt6r2DXwbUgNH5wdy3dQx2kmMsYE1ih
+         SHvg==
+X-Gm-Message-State: ANhLgQ3Bamo/0iL3EYC+6PLtAQRIlcnOg3V10Dt7PAH/329OfcKburlg
+        6IsQHdHf5Obh0n3nvCxBmGPqYVcy3TV50k750GQ=
+X-Google-Smtp-Source: ADFU+vsgokPGvH1o8RU0G0zljPIpDdJwtA6WmoJoFnXBhgdhpNNYd6jwDERiqmPldDZfVApLggznBqxkFFbatWDEf+I=
+X-Received: by 2002:aca:4b56:: with SMTP id y83mr3307244oia.142.1585425235301;
+ Sat, 28 Mar 2020 12:53:55 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="wac7ysb48OaltWcw"
-Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <000000000000742e9e05a10170bc@google.com> <87a74arown.fsf@nanos.tec.linutronix.de>
+ <CAM_iQpV3S0xv5xzSrA5COYa3uyy_TBGpDA9Wcj9Qt_vn1n3jBQ@mail.gmail.com>
+ <87ftdypyec.fsf@nanos.tec.linutronix.de> <CAM_iQpVR8Ve3Jy8bb9VB6RcQ=p22ZTyTqjxJxL11RZmO7rkWeg@mail.gmail.com>
+ <875zeuftwm.fsf@nanos.tec.linutronix.de> <CAM_iQpWkNJ+yQ1g+pdkhJBCZ-CJfUGGpvJqOz1JH7LPVtqbRxg@mail.gmail.com>
+ <20200325185815.GW19865@paulmck-ThinkPad-P72>
+In-Reply-To: <20200325185815.GW19865@paulmck-ThinkPad-P72>
+From:   Cong Wang <xiyou.wangcong@gmail.com>
+Date:   Sat, 28 Mar 2020 12:53:43 -0700
+Message-ID: <CAM_iQpU+1as_RAE64wfq+rWcCb16_amFP3V4rZVFRr29SfwD4Q@mail.gmail.com>
+Subject: Re: WARNING: ODEBUG bug in tcindex_destroy_work (3)
+To:     "Paul E . McKenney" <paulmck@kernel.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        syzbot <syzbot+46f513c3033d592409d2@syzkaller.appspotmail.com>,
+        David Miller <davem@davemloft.net>,
+        Jamal Hadi Salim <jhs@mojatatu.com>,
+        Jiri Pirko <jiri@resnulli.us>,
+        Jakub Kicinski <kuba@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux Kernel Network Developers <netdev@vger.kernel.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Mar 25, 2020 at 11:58 AM Paul E. McKenney <paulmck@kernel.org> wrote:
+>
+> On Wed, Mar 25, 2020 at 11:36:16AM -0700, Cong Wang wrote:
+> > On Mon, Mar 23, 2020 at 6:01 PM Thomas Gleixner <tglx@linutronix.de> wrote:
+> > >
+> > > Cong Wang <xiyou.wangcong@gmail.com> writes:
+> > > > On Mon, Mar 23, 2020 at 2:14 PM Thomas Gleixner <tglx@linutronix.de> wrote:
+> > > >> > We use an ordered workqueue for tc filters, so these two
+> > > >> > works are executed in the same order as they are queued.
+> > > >>
+> > > >> The workqueue is ordered, but look how the work is queued on the work
+> > > >> queue:
+> > > >>
+> > > >> tcf_queue_work()
+> > > >>   queue_rcu_work()
+> > > >>     call_rcu(&rwork->rcu, rcu_work_rcufn);
+> > > >>
+> > > >> So after the grace period elapses rcu_work_rcufn() queues it in the
+> > > >> actual work queue.
+> > > >>
+> > > >> Now tcindex_destroy() is invoked via tcf_proto_destroy() which can be
+> > > >> invoked from preemtible context. Now assume the following:
+> > > >>
+> > > >> CPU0
+> > > >>   tcf_queue_work()
+> > > >>     tcf_queue_work(&r->rwork, tcindex_destroy_rexts_work);
+> > > >>
+> > > >> -> Migration
+> > > >>
+> > > >> CPU1
+> > > >>    tcf_queue_work(&p->rwork, tcindex_destroy_work);
+> > > >>
+> > > >> So your RCU callbacks can be placed on different CPUs which obviously
+> > > >> has no ordering guarantee at all. See also:
+> > > >
+> > > > Good catch!
+> > > >
+> > > > I thought about this when I added this ordered workqueue, but it
+> > > > seems I misinterpret max_active, so despite we have max_active==1,
+> > > > more than 1 work could still be queued on different CPU's here.
+> > >
+> > > The workqueue is not the problem. it works perfectly fine. The way how
+> > > the work gets queued is the issue.
+> >
+> > Well, a RCU work is also a work, so the ordered workqueue should
+> > apply to RCU works too, from users' perspective. Users should not
+> > need to learn queue_rcu_work() is actually a call_rcu() which does
+> > not guarantee the ordering for an ordered workqueue.
+>
+> And the workqueues might well guarantee the ordering in cases where the
+> pair of RCU callbacks are invoked in a known order.  But that workqueues
+> ordering guarantee does not extend upstream to RCU, nor do I know of a
+> reasonable way to make this happen within the confines of RCU.
+>
+> If you have ideas, please do not keep them a secret, but please also
+> understand that call_rcu() must meet some pretty severe performance and
+> scalability constraints.
+>
+> I suppose that queue_rcu_work() could track outstanding call_rcu()
+> invocations, and (one way or another) defer the second queue_rcu_work()
+> if a first one is still pending from the current task, but that might not
+> make the common-case user of queue_rcu_work() all that happy.  But perhaps
+> there is a way to restrict these semantics to ordered workqueues.  In that
+> case, one could imagine the second and subsequent too-quick call to
+> queue_rcu_work() using the rcu_head structure's ->next field to queue these
+> too-quick callbacks, and then having rcu_work_rcufn() check for queued
+> too-quick callbacks, queuing the first one.
+>
+> But I must defer to Tejun on this one.
+>
+> And one additional caution...  This would meter out ordered
+> queue_rcu_work() requests at a rate of no faster than one per RCU
+> grace period.  The queue might build up, resulting in long delays.
+> Are you sure that your use case can live with this?
 
---wac7ysb48OaltWcw
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+I don't know, I guess we might be able to add a call_rcu() takes a cpu
+as a parameter so that all of these call_rcu() callbacks will be queued
+on a same CPU thusly guarantees the ordering. But of course we
+need to figure out which cpu to use. :)
 
-Linus,
-
-I2C has three more driver bugfixes for you, and two doc improvements
-fixing build warnings while we are here.
-
-Please pull.
-
-Thanks,
-
-   Wolfram
+Just my two cents.
 
 
-The following changes since commit fb33c6510d5595144d585aa194d377cf74d31911:
+>
+> > > > I don't know how to fix this properly, I think essentially RCU work
+> > > > should be guaranteed the same ordering with regular work. But this
+> > > > seems impossible unless RCU offers some API to achieve that.
+> > >
+> > > I don't think that's possible w/o putting constraints on the flexibility
+> > > of RCU (Paul of course might disagree).
+> > >
+> > > I assume that the filters which hang of tcindex_data::perfect and
+> > > tcindex_data:p must be freed before tcindex_data, right?
+> > >
+> > > Refcounting of tcindex_data should do the trick. I.e. any element which
+> > > you add to a tcindex_data instance takes a refcount and when that is
+> > > destroyed then the rcu/work callback drops a reference which once it
+> > > reaches 0 triggers tcindex_data to be freed.
+> >
+> > Yeah, but the problem is more than just tcindex filter, we have many
+> > places make the same assumption of ordering.
+>
+> But don't you also have a situation where there might be a large group
+> of queue_rcu_work() invocations whose order doesn't matter, followed by a
+> single queue_rcu_work() invocation that must be ordered after the earlier
+> group?  If so, ordering -all- of these invocations might be overkill.
+>
+> Or did I misread your code?
 
-  Linux 5.6-rc6 (2020-03-15 15:01:23 -0700)
+You are right. Previously I thought all non-trivial tc filters would need
+to address this ordering bug, but it turns out probably only tcindex
+needs it, because most of them actually use linked lists. As long as
+we remove the entry from the list before tcf_queue_work(), it is fine
+to free the list head before each entry in the list.
 
-are available in the Git repository at:
+I just sent out a minimal fix using the refcnt.
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/wsa/linux.git i2c/for-current
-
-for you to fetch changes up to 14c1fe699cad9cb0acda4559c584f136d18fea50:
-
-  i2c: pca-platform: Use platform_irq_get_optional (2020-03-28 05:03:17 +0100)
-
-----------------------------------------------------------------
-Alain Volmat (1):
-      i2c: st: fix missing struct parameter description
-
-Chris Packham (1):
-      i2c: pca-platform: Use platform_irq_get_optional
-
-Chuhong Yuan (1):
-      i2c: hix5hd2: add missed clk_disable_unprepare in remove
-
-Kai-Heng Feng (1):
-      i2c: nvidia-gpu: Handle timeout correctly in gpu_i2c_check_status()
-
-Mauro Carvalho Chehab (1):
-      i2c: fix a doc warning
-
-
-with much appreciated quality assurance from
-----------------------------------------------------------------
-Ajay Gupta (2):
-      (Rev.) i2c: nvidia-gpu: Handle timeout correctly in gpu_i2c_check_status()
-      (Test) i2c: nvidia-gpu: Handle timeout correctly in gpu_i2c_check_status()
-
-Andy Shevchenko (1):
-      (Rev.) i2c: nvidia-gpu: Handle timeout correctly in gpu_i2c_check_status()
-
-Patrice Chotard (1):
-      (Rev.) i2c: st: fix missing struct parameter description
-
- drivers/i2c/busses/i2c-hix5hd2.c      |  1 +
- drivers/i2c/busses/i2c-nvidia-gpu.c   | 20 ++++++++------------
- drivers/i2c/busses/i2c-pca-platform.c |  2 +-
- drivers/i2c/busses/i2c-st.c           |  1 +
- include/linux/i2c.h                   |  4 ++--
- 5 files changed, 13 insertions(+), 15 deletions(-)
-
---wac7ysb48OaltWcw
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl5/qEsACgkQFA3kzBSg
-KbbiQg//UzpfE121KV3F7OUw3dwk1En3i69/9EIyJ8s/ivrVCntCMFJWAh38cHnL
-tj+aclUL6I1+LJfhOGSQdCSSs7JT9vrRh7VlFdYRnckWeaPqpCURxAhseH970wT0
-74cD6tS5lTCrgVl/Nvp35EJQrV827URkzM5wRhLnqehrB8PcZ+ZQ53iPe13nJNMO
-AgEDw0jwrv9HfcjWVDIU4sIi8hIVoRoDa99tRmaLs+oXCK5tF5onibBNkPe9UkjI
-zNfsoCUqvdN84RnCmr+wSQwA845Mlgre+yOx1KffFUddtfVbV14IMdhGtjGA7ZCx
-TfReYxJfD4MP3Ara2iT1qZYExv5jakLCrneyzeW2P79M9JM8QU0XiSxvdKLQl8zQ
-t2jOlua8jTkcEgRY87Mh2he+PZgy9KWY6Wp4Gm+0GJRcohLQWYlo6LRx2rzN87Hf
-FbBehZHnbCYpReFIWCiWUJoIyyCYe2l0uUaZcvtdw5dbZZ9riknJjJfvhPNNJRwY
-XBIUMBLpTcrsRv8Q4BX4msMb5Zu1iPwqYMJ37WDiQW0puJBCUC32RzXr+8sP+oIO
-pUQla9UXLpC5HazV1llyYYot1D5rw9zHv+lYN9uLTLwYnjFzG2mkRGRhiqLZKKEO
-YVwlU3hu7mPyeM16djrmdaRHYjgQKoFHzASSrbEK+djUMHjJRi4=
-=1Pp0
------END PGP SIGNATURE-----
-
---wac7ysb48OaltWcw--
+Thanks!
