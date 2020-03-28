@@ -6,30 +6,30 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09C86C43331
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 16:44:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F2DEC2D0E5
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 16:44:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CFE88206F6
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 16:44:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E9E102073E
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 16:44:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728031AbgC1Qo1 (ORCPT
+        id S1727946AbgC1Qo3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 28 Mar 2020 12:44:27 -0400
-Received: from mga14.intel.com ([192.55.52.115]:39985 "EHLO mga14.intel.com"
+        Sat, 28 Mar 2020 12:44:29 -0400
+Received: from mga14.intel.com ([192.55.52.115]:39979 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727892AbgC1QoB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 28 Mar 2020 12:44:01 -0400
-IronPort-SDR: WTRNRXFcjJGz1aOQtSMSaoNuoTrtaIWS6dMpRVkNtS2EuunMaOkQMUv15YcqsEy3mDVm/h3ipB
- A+5nX57ZmMxg==
+        id S1727941AbgC1QoA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 28 Mar 2020 12:44:00 -0400
+IronPort-SDR: iXoGO/acT6T13GlqdleofNGkz5GiazcGLP7j+UXVKjUdddMvo9Gh+dRqIwpmnv3OjVtpAY6cs8
+ IJ8m3vVnY3xg==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Mar 2020 09:43:59 -0700
-IronPort-SDR: SdGokYdutrkh7muRZKTD8uLS4BGv9nABmxBsyKvY78eKn5Rw5R9w//vc1XZd7FZMrUJtUW0LgZ
- UGwtIlpexqOw==
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Mar 2020 09:43:58 -0700
+IronPort-SDR: 8maBhhk/FYHHZQppkm8zX1JOKaTxlPLCUAOgw8N/G6IlZxPFb1yEorhZ7vCKWJFG9eg2PpBQZc
+ dU0hgqKpa0iw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.72,317,1580803200"; 
-   d="scan'208";a="447771185"
+   d="scan'208";a="447771173"
 Received: from yyu32-desk.sc.intel.com ([143.183.136.146])
   by fmsmga005.fm.intel.com with ESMTP; 28 Mar 2020 09:43:58 -0700
 From:   Yu-cheng Yu <yu-cheng.yu@intel.com>
@@ -47,9 +47,9 @@ To:     linux-kernel@vger.kernel.org, x86@kernel.org,
         Fenghua Yu <fenghua.yu@intel.com>,
         Peter Zijlstra <peterz@infradead.org>
 Cc:     Yu-cheng Yu <yu-cheng.yu@intel.com>
-Subject: [PATCH v3 09/10] x86/fpu/xstate: Preserve supervisor states for slow path of __fpu__restore_sig()
-Date:   Sat, 28 Mar 2020 09:43:06 -0700
-Message-Id: <20200328164307.17497-10-yu-cheng.yu@intel.com>
+Subject: [PATCH v3 06/10] x86/fpu/xstate: Update sanitize_restored_xstate() for supervisor xstates
+Date:   Sat, 28 Mar 2020 09:43:03 -0700
+Message-Id: <20200328164307.17497-7-yu-cheng.yu@intel.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20200328164307.17497-1-yu-cheng.yu@intel.com>
 References: <20200328164307.17497-1-yu-cheng.yu@intel.com>
@@ -60,136 +60,134 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The signal return code is responsible for taking an XSAVE buffer present
-in user memory and loading it into the hardware registers.  This
-operation only affects user XSAVE state and never affects supervisor state.
+The function sanitize_restored_xstate() sanitizes user xstates of an XSAVE
+buffer by setting the buffer's header->xfeatures to the input 'xfeatures',
+effectively resetting features not in 'xfeatures' back to the init state.
 
-The fast path through this code simply points XRSTOR directly at the
-user buffer.  However, due to page faults, this XRSTOR can fail.  If it
-fails, the signal return code falls back to a slow path which can
-tolerate page faults.
+When supervisor xstates are introduced, it is necessary to make sure only
+user xstates are sanitized.  Ensure supervisor bits in header->xfeatures
+stay set and supervisor states are not modified.
 
-That slow path copies the xfeatures one by one out of the user buffer
-into the task's fpu state area.  However, by being in a context where it
-can handle page faults, the code can also schedule.  That exposes us to
-the whims of the lazy-fpu-load code.  That code currently can not
-comprehend valid fpregs (the supervisor state) mixed with the *not*
-valid user fpregs.  To do that, we would need to track whether
-individual XSAVE components had valid fpregs or fpstate.
+To make names clear, also:
 
-If we left the current code in place, the context-switch code would
-think it has an up-to-date fpstate and would fail to save the supervisor
-state when scheduling the task out.  When scheduling back in, it would
-likely restore stale supervisor state.
+- Rename the function to sanitize_restored_user_xstate().
+- Rename input parameter 'xfeatures' to 'xfeatures_from_user'.
+- In __fpu__restore_sig(), rename 'xfeatures' to 'user_xfeatures'.
 
-To fix that, we need to save the supervisor state before the slow path.
-That way, the supervisor state is always up-to-date and the task can
-survive being scheduled.
-
-Modify copy_user_to_fpregs_zeroing() so that if it fails, fpregs are not
-zeroed, and there is no need for fpregs_deactivate() and supervisor states
-are preserved.
-
-Move set_thread_flag(TIF_NEED_FPU_LOAD) to the slow path.  Without doing
-this, the fast path also needs supervisor states to be saved first.
+v3:
+- Change xfeatures_user to user_xfeatures.
 
 Signed-off-by: Yu-cheng Yu <yu-cheng.yu@intel.com>
+Reviewed-by: Dave Hansen <dave.hansen@linux.intel.com>
 ---
- arch/x86/kernel/fpu/signal.c | 53 +++++++++++++++++++-----------------
- 1 file changed, 28 insertions(+), 25 deletions(-)
+ arch/x86/kernel/fpu/signal.c | 37 +++++++++++++++++++++++-------------
+ 1 file changed, 24 insertions(+), 13 deletions(-)
 
 diff --git a/arch/x86/kernel/fpu/signal.c b/arch/x86/kernel/fpu/signal.c
-index d09d72334a12..545ca4314096 100644
+index cd6eafba12da..d09d72334a12 100644
 --- a/arch/x86/kernel/fpu/signal.c
 +++ b/arch/x86/kernel/fpu/signal.c
-@@ -262,19 +262,23 @@ sanitize_restored_user_xstate(union fpregs_state *state,
- static int copy_user_to_fpregs_zeroing(void __user *buf, u64 xbv, int fx_only)
+@@ -211,9 +211,9 @@ int copy_fpstate_to_sigframe(void __user *buf, void __user *buf_fx, int size)
+ }
+ 
+ static inline void
+-sanitize_restored_xstate(union fpregs_state *state,
+-			 struct user_i387_ia32_struct *ia32_env,
+-			 u64 xfeatures, int fx_only)
++sanitize_restored_user_xstate(union fpregs_state *state,
++			      struct user_i387_ia32_struct *ia32_env,
++			      u64 xfeatures_from_user, int fx_only)
  {
- 	u64 init_bv;
-+	int r;
+ 	struct xregs_state *xsave = &state->xsave;
+ 	struct xstate_header *header = &xsave->header;
+@@ -226,13 +226,22 @@ sanitize_restored_xstate(union fpregs_state *state,
+ 		 */
  
- 	if (use_xsave()) {
- 		if (fx_only) {
- 			init_bv = xfeatures_mask_user() & ~XFEATURE_MASK_FPSSE;
- 
--			copy_kernel_to_xregs(&init_fpstate.xsave, init_bv);
--			return copy_user_to_fxregs(buf);
-+			r = copy_user_to_fxregs(buf);
-+			if (!r)
-+				copy_kernel_to_xregs(&init_fpstate.xsave, init_bv);
-+			return r;
- 		} else {
- 			init_bv = xfeatures_mask_user() & ~xbv;
- 
--			if (unlikely(init_bv))
-+			r = copy_user_to_xregs(buf, xbv);
-+			if (!r && unlikely(init_bv))
- 				copy_kernel_to_xregs(&init_fpstate.xsave, init_bv);
--			return copy_user_to_xregs(buf, xbv);
-+			return r;
- 		}
- 	} else if (use_fxsr()) {
- 		return copy_user_to_fxregs(buf);
-@@ -327,28 +331,10 @@ static int __fpu__restore_sig(void __user *buf, void __user *buf_fx, int size)
- 		}
- 	}
- 
--	/*
--	 * The current state of the FPU registers does not matter. By setting
--	 * TIF_NEED_FPU_LOAD unconditionally it is ensured that the our xstate
--	 * is not modified on context switch and that the xstate is considered
--	 * to be loaded again on return to userland (overriding last_cpu avoids
--	 * the optimisation).
--	 */
--	set_thread_flag(TIF_NEED_FPU_LOAD);
--	__fpu_invalidate_fpregs_state(fpu);
--
- 	if ((unsigned long)buf_fx % 64)
- 		fx_only = 1;
--	/*
--	 * For 32-bit frames with fxstate, copy the fxstate so it can be
--	 * reconstructed later.
--	 */
--	if (ia32_fxstate) {
--		ret = __copy_from_user(&env, buf, sizeof(env));
--		if (ret)
--			goto err_out;
--		envp = &env;
--	} else {
-+
-+	if (!ia32_fxstate) {
  		/*
- 		 * Attempt to restore the FPU registers directly from user
- 		 * memory. For that to succeed, the user access cannot cause
-@@ -365,10 +351,27 @@ static int __fpu__restore_sig(void __user *buf, void __user *buf_fx, int size)
- 			fpregs_unlock();
- 			return 0;
- 		}
--		fpregs_deactivate(fpu);
- 		fpregs_unlock();
-+	} else {
-+		/*
-+		 * For 32-bit frames with fxstate, copy the fxstate so it can
-+		 * be reconstructed later.
-+		 */
-+		ret = __copy_from_user(&env, buf, sizeof(env));
-+		if (ret)
-+			goto err_out;
-+		envp = &env;
+-		 * Init the state that is not present in the memory
+-		 * layout and not enabled by the OS.
++		 * 'xfeatures_from_user' might have bits clear which are
++		 * set in header->xfeatures. This represents features that
++		 * were in init state prior to a signal delivery, and need
++		 * to be reset back to the init state.  Clear any user
++		 * feature bits which are set in the kernel buffer to get
++		 * them back to the init state.
++		 *
++		 * Supervisor state is unchanged by input from userspace.
++		 * Ensure supervisor state bits stay set and supervisor
++		 * state is not modified.
+ 		 */
+ 		if (fx_only)
+ 			header->xfeatures = XFEATURE_MASK_FPSSE;
+ 		else
+-			header->xfeatures &= xfeatures;
++			header->xfeatures &= xfeatures_from_user |
++					     xfeatures_mask_supervisor();
  	}
  
-+	/*
-+	 * The current state of the FPU registers does not matter. By setting
-+	 * TIF_NEED_FPU_LOAD unconditionally it is ensured that the our xstate
-+	 * is not modified on context switch and that the xstate is considered
-+	 * to be loaded again on return to userland (overriding last_cpu avoids
-+	 * the optimisation).
-+	 */
-+	set_thread_flag(TIF_NEED_FPU_LOAD);
-+	__fpu_invalidate_fpregs_state(fpu);
+ 	if (use_fxsr()) {
+@@ -281,7 +290,7 @@ static int __fpu__restore_sig(void __user *buf, void __user *buf_fx, int size)
+ 	struct task_struct *tsk = current;
+ 	struct fpu *fpu = &tsk->thread.fpu;
+ 	struct user_i387_ia32_struct env;
+-	u64 xfeatures = 0;
++	u64 user_xfeatures = 0;
+ 	int fx_only = 0;
+ 	int ret = 0;
+ 
+@@ -314,7 +323,7 @@ static int __fpu__restore_sig(void __user *buf, void __user *buf_fx, int size)
+ 			trace_x86_fpu_xstate_check_failed(fpu);
+ 		} else {
+ 			state_size = fx_sw_user.xstate_size;
+-			xfeatures = fx_sw_user.xfeatures;
++			user_xfeatures = fx_sw_user.xfeatures;
+ 		}
+ 	}
+ 
+@@ -349,7 +358,7 @@ static int __fpu__restore_sig(void __user *buf, void __user *buf_fx, int size)
+ 		 */
+ 		fpregs_lock();
+ 		pagefault_disable();
+-		ret = copy_user_to_fpregs_zeroing(buf_fx, xfeatures, fx_only);
++		ret = copy_user_to_fpregs_zeroing(buf_fx, user_xfeatures, fx_only);
+ 		pagefault_enable();
+ 		if (!ret) {
+ 			fpregs_mark_activate();
+@@ -362,7 +371,7 @@ static int __fpu__restore_sig(void __user *buf, void __user *buf_fx, int size)
+ 
  
  	if (use_xsave() && !fx_only) {
- 		u64 init_bv = xfeatures_mask_user() & ~user_xfeatures;
+-		u64 init_bv = xfeatures_mask_user() & ~xfeatures;
++		u64 init_bv = xfeatures_mask_user() & ~user_xfeatures;
+ 
+ 		if (using_compacted_format()) {
+ 			ret = copy_user_to_xstate(&fpu->state.xsave, buf_fx);
+@@ -375,12 +384,13 @@ static int __fpu__restore_sig(void __user *buf, void __user *buf_fx, int size)
+ 		if (ret)
+ 			goto err_out;
+ 
+-		sanitize_restored_xstate(&fpu->state, envp, xfeatures, fx_only);
++		sanitize_restored_user_xstate(&fpu->state, envp, user_xfeatures,
++					      fx_only);
+ 
+ 		fpregs_lock();
+ 		if (unlikely(init_bv))
+ 			copy_kernel_to_xregs(&init_fpstate.xsave, init_bv);
+-		ret = copy_kernel_to_xregs_err(&fpu->state.xsave, xfeatures);
++		ret = copy_kernel_to_xregs_err(&fpu->state.xsave, user_xfeatures);
+ 
+ 	} else if (use_fxsr()) {
+ 		ret = __copy_from_user(&fpu->state.fxsave, buf_fx, state_size);
+@@ -389,7 +399,8 @@ static int __fpu__restore_sig(void __user *buf, void __user *buf_fx, int size)
+ 			goto err_out;
+ 		}
+ 
+-		sanitize_restored_xstate(&fpu->state, envp, xfeatures, fx_only);
++		sanitize_restored_user_xstate(&fpu->state, envp,
++					      user_xfeatures, fx_only);
+ 
+ 		fpregs_lock();
+ 		if (use_xsave()) {
 -- 
 2.21.0
 
