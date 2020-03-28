@@ -2,111 +2,141 @@ Return-Path: <SRS0=NZ+o=5N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32CA7C2D0EE
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 10:45:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94511C2D0EC
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 10:48:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 065C320578
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 10:45:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vd+Cb+zM"
+	by mail.kernel.org (Postfix) with ESMTP id 744C520578
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 10:48:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726353AbgC1Kpo (ORCPT
+        id S1726291AbgC1KsU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 28 Mar 2020 06:45:44 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:36120 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726045AbgC1Kpn (ORCPT
+        Sat, 28 Mar 2020 06:48:20 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:55476 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726156AbgC1KsT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 28 Mar 2020 06:45:43 -0400
-Received: by mail-pf1-f194.google.com with SMTP id i13so5863071pfe.3;
-        Sat, 28 Mar 2020 03:45:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=RukT/AsNxTsj07Q4HN6VwGWP+3cVI4PVAl2WbnFXBpI=;
-        b=vd+Cb+zMmgqs2ObKAxYxSs8+PITxbH9LgVigA4nV84ah1k2O37DyEWAgzgQROXuvsn
-         MZg8neG+WdTywOz4UrCRhe9YAqBkjWSCyExR487PzLTSrajIkABCAkHgzxI95f2/vMtp
-         W5UyB0h4GQWv/EcLrGBf8NkRnJy4Gra75wav6gui+NtZQHvIlP78j8l1dtBrwkWltATO
-         JM2vHGhGtxK1l9Y0z/SudM2PkyP3g1i8GlE5xaX5zP5vpGyx7nxaWn41fr8/z5J0+csh
-         2+fPzsk773RtPV6WM5LWCH5W6FHeEZ0WlJ1XR4QlFvkIsKIG/K65bg3Q5/6YVbshUACr
-         B20Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=RukT/AsNxTsj07Q4HN6VwGWP+3cVI4PVAl2WbnFXBpI=;
-        b=eNdfsmIAMSpTMClbbfooVHgsQpzF7wPohM41cGRczs7D84FBS1etYnX6CC/CterISW
-         aWuWwlujyhy0GBTzP5uCqv/tnyo9sHOgAbLfzE+fl6+N4zy2VEYiho4F7+EHya/uPhzi
-         kHZ295E3KKlRqMbZc+7dELd7OoB/EFMKfC+KAbATHT/sVT9Fj0VNs8z+SZlpQMqt7tFh
-         hXylJ1vbIFs/lpGxCnh/5zWKMKAIdeiCIK+j7ir8KAJb0svufQJlG8WRUaMPbr0z9GHq
-         MlZg4uLwkQAYgbeBi80KbC5dpux//JxTKv/r1uWgLv2nl6MKrug41LCiqSr0ZolvOF2y
-         4sFQ==
-X-Gm-Message-State: ANhLgQ0v/oRZsF74qfG1g2XO/1ei5gR6FRcupN0VqpkuF2MI5OxQjq0F
-        UvEFVdMh/DPfadSgbA2tf33SiE3V0lO0u85RCOY=
-X-Google-Smtp-Source: ADFU+vu2zqVAQGh1j/qEr7LmshE0N+ohFw4ESZyZiR1C2rZjMfayj2Sg/HcofZVHte/2UykmaKsNC1qTOn9LXOdqtcQ=
-X-Received: by 2002:a63:798a:: with SMTP id u132mr3905322pgc.203.1585392342491;
- Sat, 28 Mar 2020 03:45:42 -0700 (PDT)
+        Sat, 28 Mar 2020 06:48:19 -0400
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1jI90g-0003T6-0F; Sat, 28 Mar 2020 11:48:14 +0100
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 932E11C03A9;
+        Sat, 28 Mar 2020 11:48:13 +0100 (CET)
+Date:   Sat, 28 Mar 2020 10:48:13 -0000
+From:   "tip-bot2 for Thomas Gleixner" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: smp/core] cpu/hotplug: Ignore pm_wakeup_pending() for
+ disable_nonboot_cpus()
+Cc:     Boqun Feng <boqun.feng@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Pavankumar Kondeti <pkondeti@codeaurora.org>,
+        stable@vger.kernel.org, x86 <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <874kuaxdiz.fsf@nanos.tec.linutronix.de>
+References: <874kuaxdiz.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-References: <20200328001154.17313-1-sravanhome@gmail.com> <20200328001154.17313-3-sravanhome@gmail.com>
-In-Reply-To: <20200328001154.17313-3-sravanhome@gmail.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Sat, 28 Mar 2020 12:45:31 +0200
-Message-ID: <CAHp75Vdc4MxMnmd_h6eFfZAji=4fir7x7bq2MX1q50nAQ1eJ=Q@mail.gmail.com>
-Subject: Re: [PATCH v5 2/5] mfd: mp2629: Add support for mps battery charger
-To:     Saravanan Sekar <sravanhome@gmail.com>
-Cc:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald <pmeerw@pmeerw.net>,
-        Sebastian Reichel <sre@kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-iio <linux-iio@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Message-ID: <158539249320.28353.17099278442328307370.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Mar 28, 2020 at 2:12 AM Saravanan Sekar <sravanhome@gmail.com> wrote:
->
-> mp2629 is a highly-integrated switching-mode battery charge management
-> device for single-cell Li-ion or Li-polymer battery.
->
-> Add MFD core enables chip access for ADC driver for battery readings,
-> and a power supply battery-charger driver
+The following commit has been merged into the smp/core branch of tip:
 
-...
+Commit-ID:     e98eac6ff1b45e4e73f2e6031b37c256ccb5d36b
+Gitweb:        https://git.kernel.org/tip/e98eac6ff1b45e4e73f2e6031b37c256ccb5d36b
+Author:        Thomas Gleixner <tglx@linutronix.de>
+AuthorDate:    Fri, 27 Mar 2020 12:06:44 +01:00
+Committer:     Thomas Gleixner <tglx@linutronix.de>
+CommitterDate: Sat, 28 Mar 2020 11:42:55 +01:00
 
-> +#ifndef __MP2629_H__
-> +#define __MP2629_H__
+cpu/hotplug: Ignore pm_wakeup_pending() for disable_nonboot_cpus()
 
-> +#include <linux/device.h>
-> +#include <linux/regmap.h>
-> +#include <linux/types.h>
+A recent change to freeze_secondary_cpus() which added an early abort if a
+wakeup is pending missed the fact that the function is also invoked for
+shutdown, reboot and kexec via disable_nonboot_cpus().
 
-None of these header is in use here.
+In case of disable_nonboot_cpus() the wakeup event needs to be ignored as
+the purpose is to terminate the currently running kernel.
 
-struct device;
-struct regmap;
+Add a 'suspend' argument which is only set when the freeze is in context of
+a suspend operation. If not set then an eventually pending wakeup event is
+ignored.
 
-would be enough.
+Fixes: a66d955e910a ("cpu/hotplug: Abort disabling secondary CPUs if wakeup is pending")
+Reported-by: Boqun Feng <boqun.feng@gmail.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Cc: Pavankumar Kondeti <pkondeti@codeaurora.org>
+Cc: stable@vger.kernel.org
+Link: https://lkml.kernel.org/r/874kuaxdiz.fsf@nanos.tec.linutronix.de
 
-> +struct mp2629_info {
-> +       struct device *dev;
-> +       struct regmap *regmap;
-> +};
-> +
-> +#endif
 
--- 
-With Best Regards,
-Andy Shevchenko
+---
+ include/linux/cpu.h | 12 +++++++++---
+ kernel/cpu.c        |  4 ++--
+ 2 files changed, 11 insertions(+), 5 deletions(-)
+
+diff --git a/include/linux/cpu.h b/include/linux/cpu.h
+index 9ead281..beaed2d 100644
+--- a/include/linux/cpu.h
++++ b/include/linux/cpu.h
+@@ -144,12 +144,18 @@ static inline void get_online_cpus(void) { cpus_read_lock(); }
+ static inline void put_online_cpus(void) { cpus_read_unlock(); }
+ 
+ #ifdef CONFIG_PM_SLEEP_SMP
+-extern int freeze_secondary_cpus(int primary);
++int __freeze_secondary_cpus(int primary, bool suspend);
++static inline int freeze_secondary_cpus(int primary)
++{
++	return __freeze_secondary_cpus(primary, true);
++}
++
+ static inline int disable_nonboot_cpus(void)
+ {
+-	return freeze_secondary_cpus(0);
++	return __freeze_secondary_cpus(0, false);
+ }
+-extern void enable_nonboot_cpus(void);
++
++void enable_nonboot_cpus(void);
+ 
+ static inline int suspend_disable_secondary_cpus(void)
+ {
+diff --git a/kernel/cpu.c b/kernel/cpu.c
+index 3084849..12ae636 100644
+--- a/kernel/cpu.c
++++ b/kernel/cpu.c
+@@ -1327,7 +1327,7 @@ void bringup_nonboot_cpus(unsigned int setup_max_cpus)
+ #ifdef CONFIG_PM_SLEEP_SMP
+ static cpumask_var_t frozen_cpus;
+ 
+-int freeze_secondary_cpus(int primary)
++int __freeze_secondary_cpus(int primary, bool suspend)
+ {
+ 	int cpu, error = 0;
+ 
+@@ -1352,7 +1352,7 @@ int freeze_secondary_cpus(int primary)
+ 		if (cpu == primary)
+ 			continue;
+ 
+-		if (pm_wakeup_pending()) {
++		if (suspend && pm_wakeup_pending()) {
+ 			pr_info("Wakeup pending. Abort CPU freeze\n");
+ 			error = -EBUSY;
+ 			break;
