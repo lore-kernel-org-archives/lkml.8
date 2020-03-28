@@ -2,197 +2,214 @@ Return-Path: <SRS0=NZ+o=5N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4FD7C2D0E5
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 13:30:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D298C2D0ED
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 13:39:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 95C4D20838
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 13:30:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Eb4Ag3N7"
+	by mail.kernel.org (Postfix) with ESMTP id DE3C42073B
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 13:39:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585402743;
+	bh=xAFlyQu5GQ2i/oCi/YFOh4Dk91mW4Z9zh6ovMDcaCfI=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=qiT4qDlLpvVzBsGMhRXO3+7wheg+biHuvPEAZEuel8axjV3a2TyjENhq5D8oatW91
+	 EYUchgnnnmbvyajhu2mc8/3xzCM92vDsERP6Xz1M7P09glNc78wexXd6ufmGdmZsDv
+	 QeKysuw6m1yFWqv2Gq9lOmfNg8alrCOrif/WT3/s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726411AbgC1Naf (ORCPT
+        id S1726391AbgC1NjB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 28 Mar 2020 09:30:35 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:37171 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726045AbgC1Naf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 28 Mar 2020 09:30:35 -0400
-Received: by mail-lf1-f65.google.com with SMTP id j11so10153136lfg.4;
-        Sat, 28 Mar 2020 06:30:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=message-id:subject:from:to:cc:date:in-reply-to:references
-         :user-agent:mime-version:content-transfer-encoding;
-        bh=fpTSSh5tRpcFW0jsHvOATJRcyb91oxueGaMFFSV1vFE=;
-        b=Eb4Ag3N7bVLIE8P2nqKmqwIgtQ/mRsSq3LqTMcUzn9Lok+qeOu7vS5eZ7arSpVa9bZ
-         OGilMipCBgUQx5zzq8QT/fgJgdFhuOTlOUWEGxYxyxORXVL9Qfbwb6aBHyFzJWoSf3QM
-         +matoSkgAthKaHGj7Ub+6QkYHmRTSelDPzlE+JFEiJ/CGKpgNUPoHHkJHc2JANBKki/F
-         IM0Go9udle+p5LQcwgExMEOjTan9cgaxuQ51T6Cz21DVc6wvUy3OPZ7SzgYRqTmE5ZBD
-         jgSyDocQ29ekqhnT0kw5d3FFla8ikPr+cpwlC9qdyt1d+zRDWfZR3QR1k1JZ5c1zoM2o
-         xyRw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:user-agent:mime-version:content-transfer-encoding;
-        bh=fpTSSh5tRpcFW0jsHvOATJRcyb91oxueGaMFFSV1vFE=;
-        b=Zd3gjnS/kAIh9tCXGFpt4a530dS/RSbKI1ERHJn9xLcE4UlTuMo+6731cxjw7kQ5uO
-         1RJH/LInLL4DQYL6tawxgJjddaZA7JBzc7+69BlvTs9sTu0uIL2FNIr13eP9k6t7uE9U
-         GEITer002jpn0Yo07sPhj7Ppn8Obw8j/wGSejDTuflyCJyAn8qNwMX5p21ZdLFaEI2Yd
-         DOba2Br+ywj9ar/va4XHFdHNna54G9q/Kot0xPmjHNLY5txViIMoeWCW4MWBtW0opv7/
-         JsoZqgRUNG8cSXPuBcvERQYjijTR3ft5CezSQKbJZrkI/LfIn2YyCJIDFR/TJU0gdA5M
-         aVFg==
-X-Gm-Message-State: AGi0PuYSE63QoJuUjwATfNLslyIn48BYevrKiOxTl8ze/C+03B7ys9Ph
-        77Cl07Rw92rcUNPYNhKie6c=
-X-Google-Smtp-Source: APiQypL1izzm57YETsCZdu0nqNghep3RFILqeIvIMSa2s1rNdZBiMtx2esbl9T6Q7UrptjZF/I8wvA==
-X-Received: by 2002:a19:c507:: with SMTP id w7mr1473474lfe.131.1585402231872;
-        Sat, 28 Mar 2020 06:30:31 -0700 (PDT)
-Received: from pablo-laptop ([2a02:a315:5445:5300:4fd:4b14:6ece:986c])
-        by smtp.googlemail.com with ESMTPSA id q10sm4441444lfa.29.2020.03.28.06.30.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 28 Mar 2020 06:30:31 -0700 (PDT)
-Message-ID: <ac67cfc3736cf50c716b823a59af878d59b7198f.camel@gmail.com>
-Subject: Re: [PATCH v4 5/5] arm64: dts: Add node for ufs exynos7
-From:   =?UTF-8?Q?Pawe=C5=82?= Chmiel <pawel.mikolaj.chmiel@gmail.com>
-To:     Alim Akhtar <alim.akhtar@samsung.com>, robh+dt@kernel.org,
-        devicetree@vger.kernel.org, linux-scsi@vger.kernel.org
-Cc:     krzk@kernel.org, avri.altman@wdc.com, martin.petersen@oracle.com,
-        kwmad.kim@samsung.com, stanley.chu@mediatek.com,
-        cang@codeaurora.org, linux-samsung-soc@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Date:   Sat, 28 Mar 2020 14:30:29 +0100
-In-Reply-To: <20200327170638.17670-6-alim.akhtar@samsung.com>
-References: <20200327170638.17670-1-alim.akhtar@samsung.com>
-         <CGME20200327171423epcas5p485d227f19e45999ad9b42b21d2864e4a@epcas5p4.samsung.com>
-         <20200327170638.17670-6-alim.akhtar@samsung.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.34.1-2 
+        Sat, 28 Mar 2020 09:39:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41424 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726045AbgC1NjB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 28 Mar 2020 09:39:01 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5457B20723;
+        Sat, 28 Mar 2020 13:38:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1585402740;
+        bh=xAFlyQu5GQ2i/oCi/YFOh4Dk91mW4Z9zh6ovMDcaCfI=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=NfA0Hv8t2jiov9tiUJgfQT4fgrO2qf8bB7sWT5y1ZXypRPCQner1voOHCB+lctxzV
+         yDPaPB54hD8xMvGe04cB5DLjU00vESplU2UZr3XsyqdGpVGJlpC8h6rQvZblDGOYGc
+         n0pQR1pxM8mIZKrfKKq//PIn5ZitzJwLWlYu965g=
+Date:   Sat, 28 Mar 2020 13:38:56 +0000
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Alexandru Ardelean <alexandru.ardelean@analog.com>
+Cc:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <lars@metafoo.de>
+Subject: Re: [PATCH v3] iio: adc: ad7793: use read_avail iio hook for scale
+ available
+Message-ID: <20200328133856.7fdf34e3@archlinux>
+In-Reply-To: <20200322152656.41669-1-alexandru.ardelean@analog.com>
+References: <20200322152656.41669-1-alexandru.ardelean@analog.com>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2020-03-27 at 22:36 +0530, Alim Akhtar wrote:
-> Adding dt node foe UFS and UFS-PHY for exynos7 SoC.
+On Sun, 22 Mar 2020 17:26:56 +0200
+Alexandru Ardelean <alexandru.ardelean@analog.com> wrote:
+
+> This change uses the read_avail and '.info_mask_shared_by_type_available'
+> modifier to set the available scale.
+> Essentially, nothing changes to the driver's ABI.
 > 
-> Signed-off-by: Alim Akhtar <alim.akhtar@samsung.com>
+> The main idea for this patch is to remove the AD7793 driver from
+> checkpatch's radar. There have been about ~3 attempts to fix/break the
+> 'in_voltage-voltage_scale_available' attribute, because checkpatch assumed
+> it to be an arithmetic operation and people were trying to change that.
+> 
+> Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+
+Applied thanks.  It almost seems a shame to remove the 'educational'
+potential of this one but I suppose we should be 'nice' :)
+
+Jonathan
+
 > ---
->  .../boot/dts/exynos/exynos7-espresso.dts      | 16 +++++++
->  arch/arm64/boot/dts/exynos/exynos7.dtsi       | 43 ++++++++++++++++++-
->  2 files changed, 57 insertions(+), 2 deletions(-)
 > 
-> diff --git a/arch/arm64/boot/dts/exynos/exynos7-espresso.dts b/arch/arm64/boot/dts/exynos/exynos7-espresso.dts
-> index 7af288fa9475..b59a0a32620a 100644
-> --- a/arch/arm64/boot/dts/exynos/exynos7-espresso.dts
-> +++ b/arch/arm64/boot/dts/exynos/exynos7-espresso.dts
-> @@ -406,6 +406,22 @@
->  	};
+> Changelog v2 -> v3:
+> * split from series https://patchwork.kernel.org/project/linux-iio/list/?series=259659
+> * moved -EINVAL return to default case
+> 
+>  drivers/iio/adc/ad7793.c | 55 +++++++++++++++++++++++++++-------------
+>  1 file changed, 37 insertions(+), 18 deletions(-)
+> 
+> diff --git a/drivers/iio/adc/ad7793.c b/drivers/iio/adc/ad7793.c
+> index 5592ae573e6b..7005bde50a76 100644
+> --- a/drivers/iio/adc/ad7793.c
+> +++ b/drivers/iio/adc/ad7793.c
+> @@ -354,29 +354,28 @@ static IIO_CONST_ATTR_SAMP_FREQ_AVAIL(
+>  static IIO_CONST_ATTR_NAMED(sampling_frequency_available_ad7797,
+>  	sampling_frequency_available, "123 62 50 33 17 16 12 10 8 6 4");
+>  
+> -static ssize_t ad7793_show_scale_available(struct device *dev,
+> -			struct device_attribute *attr, char *buf)
+> +static int ad7793_read_avail(struct iio_dev *indio_dev,
+> +			     struct iio_chan_spec const *chan,
+> +			     const int **vals, int *type, int *length,
+> +			     long mask)
+>  {
+> -	struct iio_dev *indio_dev = dev_to_iio_dev(dev);
+>  	struct ad7793_state *st = iio_priv(indio_dev);
+> -	int i, len = 0;
+>  
+> -	for (i = 0; i < ARRAY_SIZE(st->scale_avail); i++)
+> -		len += sprintf(buf + len, "%d.%09u ", st->scale_avail[i][0],
+> -			       st->scale_avail[i][1]);
+> -
+> -	len += sprintf(buf + len, "\n");
+> +	switch (mask) {
+> +	case IIO_CHAN_INFO_SCALE:
+> +		*vals = (int *)st->scale_avail;
+> +		*type = IIO_VAL_INT_PLUS_NANO;
+> +		/* Values are stored in a 2D matrix  */
+> +		*length = ARRAY_SIZE(st->scale_avail) * 2;
+>  
+> -	return len;
+> +		return IIO_AVAIL_LIST;
+> +	default:
+> +		return -EINVAL;
+> +	}
+>  }
+>  
+> -static IIO_DEVICE_ATTR_NAMED(in_m_in_scale_available,
+> -		in_voltage-voltage_scale_available, S_IRUGO,
+> -		ad7793_show_scale_available, NULL, 0);
+> -
+>  static struct attribute *ad7793_attributes[] = {
+>  	&iio_const_attr_sampling_frequency_available.dev_attr.attr,
+> -	&iio_dev_attr_in_m_in_scale_available.dev_attr.attr,
+>  	NULL
 >  };
 >  
-> +&ufs {
-> +	status = "okay";
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&ufs_rst_n &ufs_refclk_out>;
-> +	ufs,pwr-attr-mode = "FAST";
-> +	ufs,pwr-attr-lane = <2>;
-> +	ufs,pwr-attr-gear = <2>;
-> +	ufs,pwr-attr-hs-series = "HS_rate_b";
-> +	ufs-rx-adv-fine-gran-sup_en = <1>;
-> +	ufs-rx-adv-fine-gran-step = <3>;
-> +	ufs-rx-adv-min-activate-time-cap = <9>;
-> +	ufs-pa-granularity = <6>;
-> +	ufs-pa-tacctivate = <3>;
-> +	ufs-pa-hibern8time = <20>;
-> +};
-> +
->  &usbdrd_phy {
->  	vbus-supply = <&usb30_vbus_reg>;
->  	vbus-boost-supply = <&usb3drd_boost_5v>;
-> diff --git a/arch/arm64/boot/dts/exynos/exynos7.dtsi b/arch/arm64/boot/dts/exynos/exynos7.dtsi
-> index 5558045637ac..9d16c90edd07 100644
-> --- a/arch/arm64/boot/dts/exynos/exynos7.dtsi
-> +++ b/arch/arm64/boot/dts/exynos/exynos7.dtsi
-> @@ -220,9 +220,14 @@
->  			#clock-cells = <1>;
->  			clocks = <&fin_pll>, <&clock_top1 DOUT_ACLK_FSYS1_200>,
->  				 <&clock_top1 DOUT_SCLK_MMC0>,
-> -				 <&clock_top1 DOUT_SCLK_MMC1>;
-> +				 <&clock_top1 DOUT_SCLK_MMC1>,
-> +				 <&clock_top1 DOUT_SCLK_UFSUNIPRO20>,
-> +				 <&clock_top1 DOUT_SCLK_PHY_FSYS1>,
-> +				 <&clock_top1 DOUT_SCLK_PHY_FSYS1_26M>;
->  			clock-names = "fin_pll", "dout_aclk_fsys1_200",
-> -				      "dout_sclk_mmc0", "dout_sclk_mmc1";
-> +				      "dout_sclk_mmc0", "dout_sclk_mmc1",
-> +				      "dout_sclk_ufsunipro20", "dout_sclk_phy_fsys1",
-> +				      "dout_sclk_phy_fsys1_26m";
->  		};
+> @@ -534,6 +533,7 @@ static const struct iio_info ad7793_info = {
+>  	.read_raw = &ad7793_read_raw,
+>  	.write_raw = &ad7793_write_raw,
+>  	.write_raw_get_fmt = &ad7793_write_raw_get_fmt,
+> +	.read_avail = ad7793_read_avail,
+>  	.attrs = &ad7793_attribute_group,
+>  	.validate_trigger = ad_sd_validate_trigger,
+>  };
+> @@ -547,7 +547,7 @@ static const struct iio_info ad7797_info = {
+>  };
 >  
->  		serial_0: serial@13630000 {
-> @@ -601,6 +606,40 @@
->  			};
->  		};
+>  #define __AD7793_CHANNEL(_si, _channel1, _channel2, _address, _bits, \
+> -	_storagebits, _shift, _extend_name, _type, _mask_all) \
+> +	_storagebits, _shift, _extend_name, _type, _mask_type_av, _mask_all) \
+>  	{ \
+>  		.type = (_type), \
+>  		.differential = (_channel2 == -1 ? 0 : 1), \
+> @@ -559,6 +559,7 @@ static const struct iio_info ad7797_info = {
+>  		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW) | \
+>  			BIT(IIO_CHAN_INFO_OFFSET), \
+>  		.info_mask_shared_by_type = BIT(IIO_CHAN_INFO_SCALE), \
+> +		.info_mask_shared_by_type_available = (_mask_type_av), \
+>  		.info_mask_shared_by_all = _mask_all, \
+>  		.scan_index = (_si), \
+>  		.scan_type = { \
+> @@ -574,23 +575,41 @@ static const struct iio_info ad7797_info = {
+>  	_storagebits, _shift) \
+>  	__AD7793_CHANNEL(_si, _channel1, _channel2, _address, _bits, \
+>  		_storagebits, _shift, NULL, IIO_VOLTAGE, \
+> +		BIT(IIO_CHAN_INFO_SCALE), \
+>  		BIT(IIO_CHAN_INFO_SAMP_FREQ))
 >  
-> +		ufs: ufs@15570000 {
-> +			compatible = "samsung,exynos7-ufs";
-> +			#address-cells = <1>;
-> +			#size-cells = <1>;
-> +			ranges;
-> +			reg = <0x15570000 0x100>,  /* 0: HCI standard */
-> +				<0x15570100 0x100>,  /* 1: Vendor specificed */
-> +				<0x15571000 0x200>,  /* 2: UNIPRO */
-> +				<0x15572000 0x300>;  /* 3: UFS protector */
-> +			reg-names = "hci", "vs_hci", "unipro", "ufsp";
-> +			interrupts = <GIC_SPI 200 IRQ_TYPE_LEVEL_HIGH>;
-> +			clocks = <&clock_fsys1 ACLK_UFS20_LINK>,
-> +				<&clock_fsys1 SCLK_UFSUNIPRO20_USER>;
-> +			clock-names = "core_clk", "sclk_unipro_main";
-> +			freq-table-hz = <0 0>, <0 0>;
-> +			pclk-freq-avail-range = <70000000 133000000>;
-> +			ufs,pwr-local-l2-timer = <8000 28000 20000>;
-> +			ufs,pwr-remote-l2-timer = <12000 32000 16000>;
-> +			phys = <&ufs_phy>;
-> +			phy-names = "ufs-phy";
-> +			status = "disabled";
-> +		};
+>  #define AD7793_SHORTED_CHANNEL(_si, _channel, _address, _bits, \
+>  	_storagebits, _shift) \
+>  	__AD7793_CHANNEL(_si, _channel, _channel, _address, _bits, \
+>  		_storagebits, _shift, "shorted", IIO_VOLTAGE, \
+> +		BIT(IIO_CHAN_INFO_SCALE), \
+>  		BIT(IIO_CHAN_INFO_SAMP_FREQ))
+>  
+>  #define AD7793_TEMP_CHANNEL(_si, _address, _bits, _storagebits, _shift) \
+>  	__AD7793_CHANNEL(_si, 0, -1, _address, _bits, \
+>  		_storagebits, _shift, NULL, IIO_TEMP, \
+> +		0, \
+>  		BIT(IIO_CHAN_INFO_SAMP_FREQ))
+>  
+>  #define AD7793_SUPPLY_CHANNEL(_si, _channel, _address, _bits, _storagebits, \
+>  	_shift) \
+>  	__AD7793_CHANNEL(_si, _channel, -1, _address, _bits, \
+>  		_storagebits, _shift, "supply", IIO_VOLTAGE, \
+> +		0, \
+> +		BIT(IIO_CHAN_INFO_SAMP_FREQ))
 > +
-> +		ufs_phy: ufs-phy@0x15571800 {
-> +			compatible = "samsung,exynos7-ufs-phy";
-> +			reg = <0x15571800 0x240>;
-> +			reg-names = "phy-pma";
-> +			samsung,pmu-syscon = <&pmu_system_controller>;
-> +			#phy-cells = <0>;
-> +			clocks = <&clock_fsys1 MOUT_FSYS1_PHYCLK_SEL1>,
-> +				<&clock_top1 CLK_SCLK_PHY_FSYS1_26M>;
-> +			clock-names = "ref_clk_parent", "ref_clk";
-Hi
-Is this correct (aren't child and parent clock swapped)?
-This will set MOUT_FSYS1_PHYCLK_SEL1 to be parent clock of
-CLK_SCLK_PHY_FSYS1_26M.
-I've tested this on Exynos7420 (which looks like can use the same clock
-driver as exynos7) and after adding some debug code (because currently
-we're not handling result of samsung_ufs_phy_clks_init) i got
-
-samsung-ufs-phy 15571800.ufs-phy: clk_set_parent result: -22
-
-On vendor sources for this device, driver was setting
-CLK_SCLK_PHY_FSYS1_26M to be parent of MOUT_FSYS1_PHYCLK_SEL1, and then
-it did run without error.
-
-samsung-ufs-phy 15571800.ufs-phy: clk_set_parent result: 0
-
-Also looking at clk-exynos7 driver seems to confirm this.
-
-> +		};
+> +#define AD7797_DIFF_CHANNEL(_si, _channel1, _channel2, _address, _bits, \
+> +	_storagebits, _shift) \
+> +	__AD7793_CHANNEL(_si, _channel1, _channel2, _address, _bits, \
+> +		_storagebits, _shift, NULL, IIO_VOLTAGE, \
+> +		0, \
+> +		BIT(IIO_CHAN_INFO_SAMP_FREQ))
 > +
->  		usbdrd_phy: phy@15500000 {
->  			compatible = "samsung,exynos7-usbdrd-phy";
->  			reg = <0x15500000 0x100>;
+> +#define AD7797_SHORTED_CHANNEL(_si, _channel, _address, _bits, \
+> +	_storagebits, _shift) \
+> +	__AD7793_CHANNEL(_si, _channel, _channel, _address, _bits, \
+> +		_storagebits, _shift, "shorted", IIO_VOLTAGE, \
+> +		0, \
+>  		BIT(IIO_CHAN_INFO_SAMP_FREQ))
+>  
+>  #define DECLARE_AD7793_CHANNELS(_name, _b, _sb, _s) \
+> @@ -620,8 +639,8 @@ const struct iio_chan_spec _name##_channels[] = { \
+>  
+>  #define DECLARE_AD7797_CHANNELS(_name, _b, _sb) \
+>  const struct iio_chan_spec _name##_channels[] = { \
+> -	AD7793_DIFF_CHANNEL(0, 0, 0, AD7793_CH_AIN1P_AIN1M, (_b), (_sb), 0), \
+> -	AD7793_SHORTED_CHANNEL(1, 0, AD7793_CH_AIN1M_AIN1M, (_b), (_sb), 0), \
+> +	AD7797_DIFF_CHANNEL(0, 0, 0, AD7793_CH_AIN1P_AIN1M, (_b), (_sb), 0), \
+> +	AD7797_SHORTED_CHANNEL(1, 0, AD7793_CH_AIN1M_AIN1M, (_b), (_sb), 0), \
+>  	AD7793_TEMP_CHANNEL(2, AD7793_CH_TEMP, (_b), (_sb), 0), \
+>  	AD7793_SUPPLY_CHANNEL(3, 3, AD7793_CH_AVDD_MONITOR, (_b), (_sb), 0), \
+>  	IIO_CHAN_SOFT_TIMESTAMP(4), \
 
