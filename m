@@ -2,174 +2,106 @@ Return-Path: <SRS0=NZ+o=5N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFD36C2D0E5
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 16:54:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FFE0C43331
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 16:57:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D12F206F6
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 16:54:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585414463;
-	bh=40r1l9mcdBUk5jg2yFANBM1CqwC81fi6zrWp9U/3P58=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=DmWOGRMjn50NJV9XjYj3jW7Lu+8sWllZfoKoYkL891oJnFhFgBiRormtQ8JvT6BAZ
-	 oauCRSveNeOOcjNreyabLKgEBZd8GEZ6z4CEUKPGCaK50YmD7uNxHnN8eRd69WG282
-	 igNMyt0ceRw/rEb3zNkdQ6ZLlS6MXwAQ05IMcoQc=
+	by mail.kernel.org (Postfix) with ESMTP id CD73E206DB
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 16:57:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="IpFBqYyd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726403AbgC1QyW (ORCPT
+        id S1726482AbgC1Q5K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 28 Mar 2020 12:54:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33270 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725882AbgC1QyW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 28 Mar 2020 12:54:22 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 15056206DB;
-        Sat, 28 Mar 2020 16:54:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585414461;
-        bh=40r1l9mcdBUk5jg2yFANBM1CqwC81fi6zrWp9U/3P58=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=wD9SGskxMvyCE/JITbcLRzKht8D7FRqqeHrJAvklxfjYuqrHcgOtyOs77YmRBPC3B
-         y50Yf4L6ZzQnG7krEiWs1EriFb8k0WkzALQDEnLpsfMV2W2K+SHnMz+n+MAj3OvHL9
-         /lfn52yA+rxbSdwz8UUrk/oeYERNeyAg0Zgy5i+o=
-Date:   Sat, 28 Mar 2020 16:54:10 +0000
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Jishnu Prakash <jprakash@codeaurora.org>
-Cc:     agross@kernel.org, bjorn.andersson@linaro.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mka@chromium.org, linus.walleij@linaro.org, sboyd@codeaurora.org,
-        Jonathan.Cameron@huawei.com, smohanad@codeaurora.org,
-        kgunda@codeaurora.org, aghayal@codeaurora.org,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>, linux-iio@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-arm-msm-owner@vger.kernel.org
-Subject: Re: [PATCH 2/3] iio: adc: Add PMIC7 ADC bindings
-Message-ID: <20200328165410.7db48818@archlinux>
-In-Reply-To: <1585064650-16235-3-git-send-email-jprakash@codeaurora.org>
-References: <1585064650-16235-1-git-send-email-jprakash@codeaurora.org>
-        <1585064650-16235-3-git-send-email-jprakash@codeaurora.org>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Sat, 28 Mar 2020 12:57:10 -0400
+Received: from mail-vs1-f65.google.com ([209.85.217.65]:45908 "EHLO
+        mail-vs1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726225AbgC1Q5K (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 28 Mar 2020 12:57:10 -0400
+Received: by mail-vs1-f65.google.com with SMTP id x82so8209227vsc.12
+        for <linux-kernel@vger.kernel.org>; Sat, 28 Mar 2020 09:57:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=UhiFJBSZNtYSvVSvHZmFB6j429D2Xk9a0RkMHEiXG8c=;
+        b=IpFBqYydKO4X5tjZdF6/ZSTKxEeM4WlIS+ChGXQtJZy6GTvXCdyL5j9abJnkh8lpj7
+         YbRntbJc/li2sXz0p7VnDRVStfetfIIK0Z3oxhLGQMrur1diTBse//y5dNZauZQlUqTA
+         2TtgDESP1R/glkc4qtp1x4YUlOMl0OAqyXob9jKHbQCpN7/hq3LZTYnjiHDIk+Zjr/Pl
+         sFK+0fNSiKD2CSd2FTJNczajwXqS3XXlxFJ6MQzTfx5NeZYfnJOym/rJ6TVAzEITpO1B
+         pOp5DoGZTulkPH2QHCIlixDZpKmc7+9d/Fok2RouVJjxvZzbbFObc9o//WOUHJBGf/Os
+         1znA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=UhiFJBSZNtYSvVSvHZmFB6j429D2Xk9a0RkMHEiXG8c=;
+        b=EB7elC6f2/Tt/zRIyl4da04L9Bu4R66K56Yr9ddAzFgluRl2QO/sowv0u1zjKdOaFI
+         yqq2fhgKo/xozBPMc7dwHeqoo1SReIGhsdmFXk464p9Qy/mX3xDX51ypdJuD7h0bYozk
+         Jy/me93e034rOZbzdLPXNT8QAr5v2YUoJyq1w44b6FagpkMRd6V3etEFHtUfNEoifMMT
+         rsFiF2ka+8AWAlq7Ft8IMtKqQc9XJY6CE0V/Apex8AdId9VFHfNGbAdG/0SDQgx834HH
+         cgjXOeiLkEZgzzWdyKvdl/ObyoiJs3Ba6EknCvGzalne4RGS0+KkOpRDxpohnNoRWJxq
+         fVyA==
+X-Gm-Message-State: AGi0PuakM7MD7+CduQ5CtCSxLvIFZlXGMpNRxgO20Wrei2uyHyLJ+IpS
+        zj2txjXoHmPtqmW2wlKqicqidN9SOffOBsOEXJNg7bzoYaA=
+X-Google-Smtp-Source: APiQypKJX0cgH9UX1zvl/KxFagV/iiKpTIDbbtgps7O8QHhbwEjork3xVWP02RmgYM8BlCpeFiPmZ92wI/HPw/80J8Q=
+X-Received: by 2002:a67:ec81:: with SMTP id h1mr2530828vsp.96.1585414629166;
+ Sat, 28 Mar 2020 09:57:09 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <202003281643.02SGhD4n009959@sdf.org>
+In-Reply-To: <202003281643.02SGhD4n009959@sdf.org>
+From:   =?UTF-8?Q?Maciej_=C5=BBenczykowski?= <maze@google.com>
+Date:   Sat, 28 Mar 2020 09:56:58 -0700
+Message-ID: <CANP3RGean6M7PuTMXKJrXSdU+2RgzqsoEvnQK5C0RFoXGfFwBA@mail.gmail.com>
+Subject: Re: [RFC PATCH v1 18/50] net/ipv6/addrconf.c: Use prandom_u32_max for
+ rfc3315 backoff time computation
+To:     George Spelvin <lkml@sdf.org>
+Cc:     Kernel hackers <linux-kernel@vger.kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        Linux NetDev <netdev@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 24 Mar 2020 21:14:09 +0530
-Jishnu Prakash <jprakash@codeaurora.org> wrote:
+>         /* multiply 'initial retransmission time' by 0.9 .. 1.1 */
+> -       u64 tmp = (900000 + prandom_u32() % 200001) * (u64)irt;
+> -       do_div(tmp, 1000000);
+> -       return (s32)tmp;
+> +       s32 range = irt / 5;
+> +       return irt - (s32)(range/2) + (s32)prandom_u32_max(range);
 
-> Add documentation for PMIC7 ADC peripheral. For PMIC7 ADC, all SW
-> communication to ADC goes through PMK8350, which communicates with
-> other PMICs through PBS.
-> 
-> Signed-off-by: Jishnu Prakash <jprakash@codeaurora.org>
-> ---
->  .../bindings/iio/adc/qcom,spmi-vadc.yaml           | 28 ++++++++++++++++------
->  1 file changed, 21 insertions(+), 7 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/iio/adc/qcom,spmi-vadc.yaml b/Documentation/devicetree/bindings/iio/adc/qcom,spmi-vadc.yaml
-> index 72db14c..20f010c 100644
-> --- a/Documentation/devicetree/bindings/iio/adc/qcom,spmi-vadc.yaml
-> +++ b/Documentation/devicetree/bindings/iio/adc/qcom,spmi-vadc.yaml
-> @@ -13,7 +13,7 @@ maintainers:
->  description: |
->    SPMI PMIC voltage ADC (VADC) provides interface to clients to read
->    voltage. The VADC is a 15-bit sigma-delta ADC.
-> -  SPMI PMIC5 voltage ADC (ADC) provides interface to clients to read
-> +  SPMI PMIC5/PMIC7 voltage ADC (ADC) provides interface to clients to read
->    voltage. The VADC is a 16-bit sigma-delta ADC.
->  
->  properties:
-> @@ -23,6 +23,7 @@ properties:
->        - qcom,spmi-adc5
->        - qcom,spmi-adc-rev2
->        - qcom,pms405-adc
-> +      - qcom,spmi-adc7
->  
->    reg:
->      description: VADC base address in the SPMI PMIC register map
-> @@ -65,6 +66,8 @@ patternProperties:
->          description: |
->            ADC channel number.
->            See include/dt-bindings/iio/qcom,spmi-vadc.h
-> +          For PMIC7 ADC, the channel numbers are specified separately per PMIC
-> +          in the PMIC-specific files in include/dt-bindings/iio/.
+The cast on range/2 looks entirely spurious
 
-That makes me thing we really should have separate compatibles.  The
-parts clearly have differences, even if we haven't needed to use them
-explicitly as yet.
+>         /* multiply 'retransmission timeout' by 1.9 .. 2.1 */
+> -       u64 tmp = (1900000 + prandom_u32() % 200001) * (u64)rt;
+> -       do_div(tmp, 1000000);
+> -       if ((s32)tmp > mrt) {
+> +       s32 range = rt / 5;
+> +       s32 tmp = 2*rt - (s32)(range/2) + (s32)prandom_u32_max(range);
 
->  
->        label:
->          description: |
-> @@ -72,7 +75,7 @@ patternProperties:
->              For thermistor inputs connected to generic AMUX or GPIO inputs
->              these can vary across platform for the same pins. Hence select
->              the platform schematics name for this channel. It is required
-> -            for "qcom,spmi-adc5" and "qcom,spmi-adc-rev2".
-> +            for "qcom,spmi-adc5", "qcom,spmi-adc7" and "qcom,spmi-adc-rev2".
->          allOf:
->            - $ref: /schemas/types.yaml#/definitions/string
->  
-> @@ -85,6 +88,8 @@ patternProperties:
->                of 512 will be used.
->              - For compatible property "qcom,spmi-adc5", valid values are 250, 420
->                and 840. If property is not found, default value of 840 is used.
-> +            - For compatible property "qcom,spmi-adc7", valid values are 85, 340
-> +              and 1360. If property is not found, default value of 1360 is used.
->              - For compatible property "qcom,spmi-adc-rev2", valid values are 256,
->                512 and 1024. If property is not present, default value is 1024.
->          allOf:
-> @@ -109,11 +114,11 @@ patternProperties:
->                channel calibration. If property is not found, channel will be
->                calibrated with 0.625V and 1.25V reference channels, also
->                known as absolute calibration.
-> -            - For compatible property "qcom,spmi-adc5" and "qcom,spmi-adc-rev2",
-> -              if this property is specified VADC will use the VDD reference (1.875V)
-> -              and GND for channel calibration. If property is not found, channel
-> -              will be calibrated with 0V and 1.25V reference channels, also known
-> -              as absolute calibration.
-> +            - For compatible property "qcom,spmi-adc5", "qcom,spmi-adc7" and
-> +              "qcom,spmi-adc-rev2", if this property is specified VADC will use
-> +              the VDD reference (1.875V) and GND for channel calibration. If
-> +              property is not found, channel will be calibrated with 0V and 1.25V
-> +              reference channels, also known as absolute calibration.
->          type: boolean
->  
->        qcom,hw-settle-time:
-> @@ -135,6 +140,12 @@ patternProperties:
->                Certain controller digital versions have valid values of
->                15, 100, 200, 300, 400, 500, 600, 700, 1, 2, 4, 8, 16, 32, 64, 128 ms
->                If property is not found, channel will use 15us.
-> +            - For compatible property "qcom,spmi-adc7", delay = 15us for
-> +              value 0, 100us * (value) for values < 8, 1ms for value 8
-> +              and 2ms * (value - 8) otherwise.
-> +              Valid values are: 15, 100, 200, 300, 400, 500, 600, 700, 1000, 2000,
-> +              4000, 8000, 16000, 32000, 64000, 128000 us.
-> +              If property is not found, channel will use 15us.
->          allOf:
->            - $ref: /schemas/types.yaml#/definitions/uint32
->  
-> @@ -147,6 +158,9 @@ patternProperties:
->              - For compatible property "qcom,spmi-vadc", valid values
->                are: 1, 2, 4, 8, 16, 32, 64, 128, 256, 512
->                If property is not found, 1 sample will be used.
-> +            - For compatible property "qcom,spmi-adc5", "qcom,spmi-adc7"
-> +              and "qcom,spmi-adc-rev2", valid values are: 1, 2, 4, 8, 16.
-> +              If property is not found, 1 sample will be used.
->          allOf:
->            - $ref: /schemas/types.yaml#/definitions/uint32
->  
+Here as well.  Honestly the cast on prandom might also not be
+necessary, but that at least has a reason.
 
+> +       if (tmp > mrt) {
+>                 /* multiply 'maximum retransmission time' by 0.9 .. 1.1 */
+> -               tmp = (900000 + prandom_u32() % 200001) * (u64)mrt;
+> -               do_div(tmp, 1000000);
+> +               range = mrt / 5;
+> +               tmp = mrt - (s32)(range/2) + (s32)prandom_u32_max(range);
+
+Ditto.
+
+>         }
+>         return (s32)tmp;
+>  }
+
+- Maciej
