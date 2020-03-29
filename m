@@ -2,83 +2,164 @@ Return-Path: <SRS0=I467=5O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8D71C43331
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 21:57:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2D46C43331
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 22:05:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B24B20784
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 21:57:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C21F520748
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 22:05:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SKXvn45U"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="JdHU3Yx4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729182AbgC2V5o (ORCPT
+        id S1729220AbgC2WFk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Mar 2020 17:57:44 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:44563 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728966AbgC2V5n (ORCPT
+        Sun, 29 Mar 2020 18:05:40 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:55312 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728823AbgC2WFk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Mar 2020 17:57:43 -0400
-Received: by mail-wr1-f67.google.com with SMTP id m17so18862304wrw.11
-        for <linux-kernel@vger.kernel.org>; Sun, 29 Mar 2020 14:57:42 -0700 (PDT)
+        Sun, 29 Mar 2020 18:05:40 -0400
+Received: by mail-wm1-f68.google.com with SMTP id z5so17760979wml.5
+        for <linux-kernel@vger.kernel.org>; Sun, 29 Mar 2020 15:05:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=AdH+2Sp8+LCQmdv9cJRBn8nCYFyRth49aJu0RLYZRyg=;
-        b=SKXvn45UOfjWlUjmdFc0n9z3vSowX79jBA3X7UhZI5XH/zK/HEwfMUu/NXfMnDFyxA
-         w4tU3AGaTG5epfNu5vCpUzfWHtl5ejAo2Fr9AySqHpzpMBKrIzE9spVaNICgkjLv0wPW
-         ql37IRwlmz5m+kZPZ5aYPd1UwDjNQEpNOLt1P+0h+1zLJSpjt8mxtjn83Eq0jqJvwxNb
-         alZuo48lb4PEuU/BHSDtkHMWNyyLYCnMItSTpXtntGEyz3XID8qpJ9IyD25An5QLWk/j
-         gIN5Xn0Zi3lLoMdEkCW44GCTz6HRXNi0gVvULbWeKY5vLVzDW+gZYbZxJ1qiTfg4qNy2
-         vhSQ==
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=l9DHmEiKz6yupqFx9WrHI0MsNMx9mQaRHcz2cqVdZLE=;
+        b=JdHU3Yx4CotTcRuN+C3coH9IrxLwc1AwW8NiUAnWcmXk5TtrHAGjqQBn0silebw7J4
+         l4XGe0eMFs6Ui8GRvWBNUzK78urjhmai4UQb5Q90tDnbsBecUdLbd8X/WzhJ9rcVg3WT
+         APZELnnGVyOYgnnyTYUlLXPgMr9EgpodhFeWe7BdvrFMz9LSGkQb+hXBrOnbFQRxBkQN
+         RejdWpQJlcbotPcQFz4Ok7AZMiuNr3GDHz8A5JnAf/mYY9yeuyjX9RKQSgVWrU/+/ocf
+         n+EJ603uDEC/JleiXvZL0Nny0W16xAFn8s9G/1ZcS3jdv3eLNJ5RbYyxEbLTqN/7fCgN
+         flzA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=AdH+2Sp8+LCQmdv9cJRBn8nCYFyRth49aJu0RLYZRyg=;
-        b=P52kqSZtJuDOJcj19ZPIM5zPpetzvxjYO1xTrPMG36EGMOMXVViSVHe4oPYnVjsMIT
-         HveT+x5qzQoll7V0xVoIrdlSFXAfVqUQhrrLE1CdcYGVNU46A6CH1Z2T1xN2gK6xKkUX
-         HO/BJHUjBYXC8OnIGlFC0l19vUN12kgMHGR+Q4Y+EJ1cQhLHpiCLYjiXuFYHZHjV8R9b
-         YAPKm8e2OUnDn945EWQBC+lylfkgV2MA6GKtwcmbmZ/BO24GhGoT3QStqxTxztca6pEN
-         AZhU0vLa2HBr3fnfDpl2Obz2+OE78dmMYcsadm6tv8uuBR0c3Z2ehXIC24GAW4EaWDd2
-         BgNg==
-X-Gm-Message-State: ANhLgQ2HMJzghRZzPpw+6PkVXF9WwOX+TEhNrgr1nCoG/nTx4FXyrcfu
-        gEy+i2kCh/HJnWNqu7Ob8WWiLLAIuXRPzARozy7g0hqh
-X-Google-Smtp-Source: ADFU+vtvOe3EElWdk61gCrkYLK9KKQ5cxVkJkiKNS1Zdj/8ck13QHJe7rUazLAJhN6CPFy4vdlgjJJgZDpWQq9A85zI=
-X-Received: by 2002:a5d:4885:: with SMTP id g5mr11055550wrq.93.1585519061682;
- Sun, 29 Mar 2020 14:57:41 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200327193626.82329-1-alex.dewar@gmx.co.uk>
-In-Reply-To: <20200327193626.82329-1-alex.dewar@gmx.co.uk>
-From:   Richard Weinberger <richard.weinberger@gmail.com>
-Date:   Sun, 29 Mar 2020 23:57:30 +0200
-Message-ID: <CAFLxGvxy8Bc_rb_UKFhxRQ2ttVA1Rk-WqJ=_NYpCUXz2kaq3-A@mail.gmail.com>
-Subject: Re: [PATCH] um: Remove some unnecessary NULL checks in vector_user.c
-To:     Alex Dewar <alex.dewar@gmx.co.uk>
-Cc:     Richard Weinberger <richard@nod.at>, Jeff Dike <jdike@addtoit.com>,
-        linux-um <linux-um@lists.infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Anton Ivanov <anton.ivanov@cambridgegreys.com>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=l9DHmEiKz6yupqFx9WrHI0MsNMx9mQaRHcz2cqVdZLE=;
+        b=GnQg+qkAbpMdMS7kEeTDqV/vHNGR90ooo4hVcwP6kRyYhujJR5fvmGBlQTdCKyql3X
+         0vsYX7qF5K9rPqq8RAGNmqma7OqHDu+qoYtX6/zfAEov9NtwbjGjkRqyPkEWQhV9SasX
+         Jc9GkDqb/9+uv59VXp8IEy6F5N7RpcNDrjOFayq0ULBajnXzhCxxhRz1VGUnzvelKvzg
+         MPZhnanIFzKtTqfIUQVSW4/VAjvBaJl6obtCFjm2zZuPrWFB4sFif+oMYdx24hZrBR7F
+         3J2kOtulbg2RewUAHiVHJipuAt4T8bK1R/lIqCksYKzbydMrsHBJsgPezqac7O5KK6ty
+         A3RA==
+X-Gm-Message-State: ANhLgQ0km+nbEq2eK/DSAh4oXdmunCIGj7yzi+Tk/f131S0/eVuLJyyD
+        6kuNs7tq61ym+jI6LI0M1IYRsA==
+X-Google-Smtp-Source: ADFU+vs9p9+pplq0E9rosSzTu+qVht5suK/2lWGberAjg4WP9toV2lrY6CJKiOWPz50Xv1bXJ2K65A==
+X-Received: by 2002:a05:600c:21da:: with SMTP id x26mr9651227wmj.47.1585519538542;
+        Sun, 29 Mar 2020 15:05:38 -0700 (PDT)
+Received: from localhost.localdomain ([2a01:e34:ed2f:f020:78b1:4459:6959:42d0])
+        by smtp.gmail.com with ESMTPSA id j188sm20026740wmj.36.2020.03.29.15.05.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 29 Mar 2020 15:05:37 -0700 (PDT)
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+To:     rafael@kernel.org, robh@kernel.org
+Cc:     daniel.lezcano@linaro.org, "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        linux-pm@vger.kernel.org (open list:POWER MANAGEMENT CORE),
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH V2 1/4] powercap/drivers/idle_inject: Specify idle state max latency
+Date:   Mon, 30 Mar 2020 00:03:17 +0200
+Message-Id: <20200329220324.8785-1-daniel.lezcano@linaro.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 27, 2020 at 8:38 PM Alex Dewar <alex.dewar@gmx.co.uk> wrote:
->
-> kfree() already checks for null pointers, so additional checking is
-> unnecessary.
->
-> Signed-off-by: Alex Dewar <alex.dewar@gmx.co.uk>
+Currently the idle injection framework uses the play_idle() function
+which puts the current CPU in an idle state. The idle state is the
+deepest one, as specified by the latency constraint when calling the
+subsequent play_idle_precise() function with the INT_MAX.
 
-Applied, thanks!
+The idle_injection is used by the cpuidle_cooling device which
+computes the idle / run duration to mitigate the temperature by
+injecting idle cycles. The cooling device has no control on the depth
+of the idle state.
 
+Allow finer control of the idle injection mechanism by allowing to
+specify the latency for the idle state. Thus the cooling device has
+the ability to have a guarantee on the exit latency of the idle states
+it is injecting.
+
+Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+---
+  - V2:
+    - Remove the get_latency helper
+
+---
+ drivers/powercap/idle_inject.c | 16 +++++++++++++++-
+ include/linux/idle_inject.h    |  4 ++++
+ 2 files changed, 19 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/powercap/idle_inject.c b/drivers/powercap/idle_inject.c
+index cd1270614cc6..49f42c475620 100644
+--- a/drivers/powercap/idle_inject.c
++++ b/drivers/powercap/idle_inject.c
+@@ -61,12 +61,14 @@ struct idle_inject_thread {
+  * @timer: idle injection period timer
+  * @idle_duration_us: duration of CPU idle time to inject
+  * @run_duration_us: duration of CPU run time to allow
++ * @latency_us: max allowed latency
+  * @cpumask: mask of CPUs affected by idle injection
+  */
+ struct idle_inject_device {
+ 	struct hrtimer timer;
+ 	unsigned int idle_duration_us;
+ 	unsigned int run_duration_us;
++	unsigned int latency_us;
+ 	unsigned long int cpumask[0];
+ };
+ 
+@@ -138,7 +140,8 @@ static void idle_inject_fn(unsigned int cpu)
+ 	 */
+ 	iit->should_run = 0;
+ 
+-	play_idle(READ_ONCE(ii_dev->idle_duration_us));
++	play_idle_precise(READ_ONCE(ii_dev->idle_duration_us) * NSEC_PER_USEC,
++			  READ_ONCE(ii_dev->latency_us) * NSEC_PER_USEC);
+ }
+ 
+ /**
+@@ -169,6 +172,16 @@ void idle_inject_get_duration(struct idle_inject_device *ii_dev,
+ 	*idle_duration_us = READ_ONCE(ii_dev->idle_duration_us);
+ }
+ 
++/**
++ * idle_inject_set_latency - set the maximum latency allowed
++ * @latency_us: set the latency requirement for the idle state
++ */
++void idle_inject_set_latency(struct idle_inject_device *ii_dev,
++			     unsigned int latency_us)
++{
++	WRITE_ONCE(ii_dev->latency_us, latency_us);
++}
++
+ /**
+  * idle_inject_start - start idle injections
+  * @ii_dev: idle injection control device structure
+@@ -297,6 +310,7 @@ struct idle_inject_device *idle_inject_register(struct cpumask *cpumask)
+ 	cpumask_copy(to_cpumask(ii_dev->cpumask), cpumask);
+ 	hrtimer_init(&ii_dev->timer, CLOCK_MONOTONIC, HRTIMER_MODE_REL);
+ 	ii_dev->timer.function = idle_inject_timer_fn;
++	ii_dev->latency_us = UINT_MAX;
+ 
+ 	for_each_cpu(cpu, to_cpumask(ii_dev->cpumask)) {
+ 
+diff --git a/include/linux/idle_inject.h b/include/linux/idle_inject.h
+index a445cd1a36c5..91a8612b8bf9 100644
+--- a/include/linux/idle_inject.h
++++ b/include/linux/idle_inject.h
+@@ -26,4 +26,8 @@ void idle_inject_set_duration(struct idle_inject_device *ii_dev,
+ void idle_inject_get_duration(struct idle_inject_device *ii_dev,
+ 				 unsigned int *run_duration_us,
+ 				 unsigned int *idle_duration_us);
++
++void idle_inject_set_latency(struct idle_inject_device *ii_dev,
++			     unsigned int latency_ns);
++
+ #endif /* __IDLE_INJECT_H__ */
 -- 
-Thanks,
-//richard
+2.17.1
+
