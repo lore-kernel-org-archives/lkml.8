@@ -2,77 +2,58 @@ Return-Path: <SRS0=I467=5O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58D1BC43331
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 18:11:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C65EC43331
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 18:11:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2CF6920732
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 18:11:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5CA5E20732
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 18:11:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728460AbgC2SLQ (ORCPT
+        id S1728469AbgC2SLz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Mar 2020 14:11:16 -0400
-Received: from mail-io1-f69.google.com ([209.85.166.69]:38159 "EHLO
-        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727485AbgC2SLP (ORCPT
+        Sun, 29 Mar 2020 14:11:55 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:56773 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727485AbgC2SLy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Mar 2020 14:11:15 -0400
-Received: by mail-io1-f69.google.com with SMTP id x20so13960341iox.5
-        for <linux-kernel@vger.kernel.org>; Sun, 29 Mar 2020 11:11:14 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=81BJfnvpz7+QIAwvMXaIXwe3R1xdn6P0qK1QBQghjnI=;
-        b=ErTEqfTMae9rPpNfugOZbZxM/W4aDmPEvBhxXVq/GbVQq92wA+zF1ZRvaabNpL6XqY
-         sF0ksg/zjE7Xc2nBoSoQUPZyxPjpDzW5yu96mjxbiQcel6jfQ4u6TouN0nzNbSNoZTLi
-         6q1ngdMq1+BlZI4iH4cE3kzU4YMmmLJY3uvDSRrIu0/olVafHRJP0+vlFyHJbmKU03p3
-         IrVKmg+5Z76NdkekMLy+degGWrEqkt+H6aJA8Lb5TeamJrJs2EU4CqL2lb1Q2907OP1C
-         uI0S9Zo96+mKCRisQJ/zRMAYIP9JsP0NuCuam/Dk85x3XwgxMjCKXw7tv5vPRTAoDm8I
-         GWOQ==
-X-Gm-Message-State: ANhLgQ10uMBG/iB3MXpafPq48crzDy5AMiiGma1uqsPJjlfKIvFDQxSB
-        N6+a0wE/n4beuXMhxMxBz6cRYJ72nO1mk0HowM6GVABsa5+y
-X-Google-Smtp-Source: ADFU+vv+HB6gjSuQyA1L4PL0sV2FlE268CcDRuShvfruag44vM36H7l3edSEZCBP68E/BskRafdGlNaLBf9osP0IBa/s3Vp5//5S
+        Sun, 29 Mar 2020 14:11:54 -0400
+Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1jIcPY-0000GE-Q6; Sun, 29 Mar 2020 20:11:52 +0200
+Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
+        id 489B2101175; Sun, 29 Mar 2020 20:11:52 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     afzal mohammed <afzal.mohd.ma@gmail.com>
+Cc:     linux-kernel@vger.kernel.org
+Subject: Re: Pending setup_irq() removal patches & core removal
+In-Reply-To: <20200329162919.GA5317@afzalpc>
+References: <20200329162919.GA5317@afzalpc>
+Date:   Sun, 29 Mar 2020 20:11:52 +0200
+Message-ID: <87ftdrvxnb.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-X-Received: by 2002:a92:8c45:: with SMTP id o66mr8261072ild.236.1585505473523;
- Sun, 29 Mar 2020 11:11:13 -0700 (PDT)
-Date:   Sun, 29 Mar 2020 11:11:13 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <00000000000089f61b05a20242f3@google.com>
-Subject: upstream build error (9)
-From:   syzbot <syzbot+cfc21ef9f8637dfa50f9@syzkaller.appspotmail.com>
-To:     linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+afzal mohammed <afzal.mohd.ma@gmail.com> writes:
+> i have sent the pending setup_irq() cleanup patches & the core removal
+> patch,
+>
+> https://lkml.kernel.org/r/cover.1585320721.git.afzal.mohd.ma@gmail.com
+>
+> sending this mail in case you missed noticing it as it was a bit deep in
+> the v1 thread (wasn't sure whether to send it as a new thread or as a
+> reply to v1, since you had replied on v1 though v2 was available at
+> that time, the patches were sent as a reply to v1 thread)
 
-syzbot found the following crash on:
-
-HEAD commit:    76ccd234 Merge branch 'perf-urgent-for-linus' of git://git..
-git tree:       upstream
-kernel config:  https://syzkaller.appspot.com/x/.config?x=27bbeba43f06f835
-dashboard link: https://syzkaller.appspot.com/bug?extid=cfc21ef9f8637dfa50f9
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-userspace arch: i386
-
-Unfortunately, I don't have any reproducer for this crash yet.
-
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+cfc21ef9f8637dfa50f9@syzkaller.appspotmail.com
-
-timedout ["make" "oldconfig" "CC=/syzkaller/gcc/bin/gcc" "-j96"]
-
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+They are on my radar.
