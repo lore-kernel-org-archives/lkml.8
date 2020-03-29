@@ -2,127 +2,110 @@ Return-Path: <SRS0=I467=5O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7616C2D0ED
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 09:21:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFC38C43331
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 09:22:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AD22B20787
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 09:21:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9FE0420732
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 09:22:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FnIrRA8B"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="seiBEgEW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727882AbgC2JVR (ORCPT
+        id S1727909AbgC2JWj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Mar 2020 05:21:17 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:40603 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727397AbgC2JVR (ORCPT
+        Sun, 29 Mar 2020 05:22:39 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:37254 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727286AbgC2JWj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Mar 2020 05:21:17 -0400
-Received: by mail-wm1-f67.google.com with SMTP id a81so17746581wmf.5;
-        Sun, 29 Mar 2020 02:21:14 -0700 (PDT)
+        Sun, 29 Mar 2020 05:22:39 -0400
+Received: by mail-pf1-f194.google.com with SMTP id h72so7021665pfe.4;
+        Sun, 29 Mar 2020 02:22:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=x53chI72Z4A5z3wT784xdPISVx+MMGzvobvSOBptE6g=;
-        b=FnIrRA8BoFYj2RWpJ93LBznjfYgaBi8gS487V11zI073uv6ZjT6fmm2u9BwonL5VUY
-         1lGpxYjz+TIxyNeexabK4v9UKbHKki3PAxlmGGSGPym4tXG6GL1sgKoUPvHghFBMX7JM
-         cPrLvxLtKm6Jm6ODZv4owOGZOISVkpaMaKg4C3KjcC4DVJl04WBoljGuF7CgjTWMSWjm
-         mzddCajS+9G3olNXVUMPSs0AN5m2ylu5FhOkM1Bj843r3zZQ6Z/oswLxMm66QsiRVlKF
-         dpKQiYNzboWBbY2lPXnN7hqU3YhEoeBT8TojL85NRefvN2VUSAQgdxyNfcC5t8nG+zIy
-         m1WA==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=1hCX0Eu5BSFoHJWyRefAvnMuTN8T0slwSrNK+D8BVUE=;
+        b=seiBEgEWo89G0cm4eLCRBhoG4Ilds9sW/UkUVahSr62V/bc68xt4FSrpnMVkw8BfJn
+         SO8C+hWFr7MqBP927XPkgd1v5y+scKb3sdMF15SV9rB60OKms3nLkpWT/7LpeBYmTx8T
+         5MZ2mRL/6P8rvgoMzla/a+Wl1XOW4dHDbn0pXPmU/uibNDN+JK2J1blSPVOMMEyPC+py
+         NLawegDjyJ203XfGz6tILqTQPOzGBBFiy9IiaXDbsJQFs2cI81MQw9gW6l4zRcpzMFPQ
+         K5jmOkIUmQrD0ABHxXfFEG6P+rX2v6oke5jSor4qvAI1G3hOQZ09GYU377NQXRtPDM/e
+         a/PA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=x53chI72Z4A5z3wT784xdPISVx+MMGzvobvSOBptE6g=;
-        b=nsjCtmXJCbl4qZnj/tMwA19oBYjXUTGILpxk0uLmubew96RrR5KLoYtzKR0Y7t3lzE
-         7+OUw6vmBz/YlK5u0eli9dBN0gz48Oz2wNx7ivGvXsDoBlg2hAhMiVXExqAiUXOLOy3v
-         OAb8rZBIUbC8RHsb5HLlDXUA/Si0Jpi1Rq8paa+6yJJAfk3PpumovTtcKlcPvTY2ZFsJ
-         Q+AjxdtmouSu4TwXUfBgr+Ff0ZU5ZgNmZjMGpTvVgaqd18RS5L7ul62LzPnwW9OWAf+F
-         SC1fkuSGKupiunfpKtXkYDitbS11zlWARwT86A9Lp3C0l9EZbxKw6KGVbIFvD+D+0xV0
-         G25Q==
-X-Gm-Message-State: ANhLgQ1XD17eded0dJFoNeFB0fEXVLpQJDcJpN9cym+osPf56t++SA/p
-        dfHqqhueFlQ2CGGj7CI8b4o=
-X-Google-Smtp-Source: ADFU+vtjvZzrvTpz+nRmLxc2pCZraCHS4XlmLXYuXqI1Tsm2DenOisGvZgfCT5iEiIBT6h0G/5Oq0g==
-X-Received: by 2002:a1c:b7c2:: with SMTP id h185mr7752149wmf.67.1585473673928;
-        Sun, 29 Mar 2020 02:21:13 -0700 (PDT)
-Received: from eichest-laptop (77-57-203-148.dclient.hispeed.ch. [77.57.203.148])
-        by smtp.gmail.com with ESMTPSA id x1sm9392665wmj.24.2020.03.29.02.21.13
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=1hCX0Eu5BSFoHJWyRefAvnMuTN8T0slwSrNK+D8BVUE=;
+        b=hI9Vb/eNTK0LCsNVvriupsby62+XLxDhaYR5fUIC9Yyg4B97WGEhwQYBfZ4nSEz3TI
+         4oZbYTbFubR8H6avy4Fy+5mfeQ/Ur2zMh31BmVWViH3+pzG0TwcRiW3MbUvMC0oe8XsD
+         c+Hm1DVnunLD8RciWW3yAQHZABCEPfgrljDpsVBxzMnNa5CcnS1eOg1GH/FkH2YnchYt
+         ny2xYlEtRaFQqWz53Auncz4Qx2L+lN6ILXVZECFhtL+6ws3FLU+oMQPN1je/vHp04sE2
+         tr7xE2Y3uU9xx5uSh/IeKE2WEq1rqy4lT39azQcm37VfcSmyW+fFRNawMLHyUlpZSD3J
+         5lrg==
+X-Gm-Message-State: ANhLgQ3pr+J7IVhnKhfOAj5qbruR5bsJD9zBveLafq38rrPZfrH2G3CG
+        JTak3F3HNuo8au/p5HJPPqE=
+X-Google-Smtp-Source: ADFU+vs2xioDwndYreFjtqUiqCO2dHroI6mYZCs+EpeXHdChdsMV8FKCH9+T0VoQFeFpcNj8WaZt5A==
+X-Received: by 2002:a65:5a87:: with SMTP id c7mr7664384pgt.237.1585473758132;
+        Sun, 29 Mar 2020 02:22:38 -0700 (PDT)
+Received: from OptiPlexFedora.fios-router.home ([47.144.161.84])
+        by smtp.gmail.com with ESMTPSA id b3sm7366962pgs.69.2020.03.29.02.22.37
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 29 Mar 2020 02:21:13 -0700 (PDT)
-Date:   Sun, 29 Mar 2020 11:20:33 +0200
-From:   Stefan Eichenberger <eichest@gmail.com>
-To:     Rabeeh Khoury <rabeeh@solid-run.com>
-Cc:     Baruch Siach <baruch@tkos.co.il>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Russell King <linux@armlinux.org.uk>
-Subject: Re: [PATCH] arm64: dts: clearfog-gt-8k: fix ge phy reset pin
-Message-ID: <20200329092032.GA4620@eichest-laptop>
-References: <20200328212115.12477-1-eichest@gmail.com>
- <877dz3el4k.fsf@tarshish>
- <CA+j0otmO9QEKuYGk54wO_su0Kyzdxaf9ZB34SMBXQEih+46qRw@mail.gmail.com>
+        Sun, 29 Mar 2020 02:22:37 -0700 (PDT)
+From:   "John B. Wyatt IV" <jbwyatt4@gmail.com>
+To:     outreachy-kernel@googlegroups.com,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Payal Kshirsagar <payal.s.kshirsagar.98@gmail.com>,
+        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
+Cc:     "John B. Wyatt IV" <jbwyatt4@gmail.com>
+Subject: [PATCH] staging: fbtft: Replace udelay with preferred usleep_range
+Date:   Sun, 29 Mar 2020 02:22:04 -0700
+Message-Id: <20200329092204.770405-1-jbwyatt4@gmail.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CA+j0otmO9QEKuYGk54wO_su0Kyzdxaf9ZB34SMBXQEih+46qRw@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Rabeeh and Baruch
+Fix style issue with usleep_range being reported as preferred over
+udelay.
 
-On Sun, Mar 29, 2020 at 11:42:35AM +0300, Rabeeh Khoury wrote:
-> On Sun, Mar 29, 2020 at 9:22 AM Baruch Siach <baruch@tkos.co.il> wrote:
-> >
-> > Hi Stefan,
-> >
-> > On Sun, Mar 29 2020, eichest@gmail.com wrote:
-> > > From: Stefan Eichenberger <eichest@gmail.com>
-> > >
-> > > According to the ClearFog-GT-8K-rev-1_1-Simplified-Schematic the reset
-> > > pin for the gigabit phy is MPP62 and not MPP43.
-> >
-> > Have you tested that on real hardware?
-> >
-> > The 1Gb PHY reset on my Clearfog GT-8K is connected to MPP43. Russell's
-> > commit 46f94c7818e7 ("arm64: dts: clearfog-gt-8k: set gigabit PHY reset
-> > deassert delay") indicates that this is the case on his board as well.
-> >
-> > In case there was a hardware change between board revisions, we need
-> > another dtb for that revision.
-> 
-> It's a bug in the simplified schematics since that schematics is based
-> on rev 1.0 and not rev 1.1 as claimed.
-> 
-> In rev 1.0; the 1Gbps phy reset was connected to MPP62; but that MPP
-> is not functional as a GPIO when selecting MPP[56:61] as SD card.
-> Due to that we manually rewired ALL rev 1.0 PCBs 1Gbps phy to be
-> connected to MPP43 via R8038 pads.
-> 
-> Rev 1.1 fixes this by that by disconnecting 1Gbps phy reset from MPP62
-> and wiring it to MPP43.
-> So basically rev 1.0 and rev 1.1 are compatible software wise. We will
-> fix the schematics.
+Issue reported by checkpatch.
 
-Ahh now I see, I didn't enable the phy driver when I did the test with
-the default devicetree and then when I changed the devicetree I also
-enabled the driver, that's my fault.
+Please review.
 
-Sorry for the confusion... I can confirm that it works with MPP43.
-Thanks for the clarification!
+As written in Documentation/timers/timers-howto.rst udelay is the
+generally preferred API. hrtimers, as noted in the docs, may be too
+expensive for this short timer.
 
-Regards,
-Stefan
+Are the docs out of date, or, is this a checkpatch issue?
+
+Signed-off-by: John B. Wyatt IV <jbwyatt4@gmail.com>
+---
+ drivers/staging/fbtft/fb_agm1264k-fl.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/staging/fbtft/fb_agm1264k-fl.c b/drivers/staging/fbtft/fb_agm1264k-fl.c
+index eeeeec97ad27..019c8cce6bab 100644
+--- a/drivers/staging/fbtft/fb_agm1264k-fl.c
++++ b/drivers/staging/fbtft/fb_agm1264k-fl.c
+@@ -85,7 +85,7 @@ static void reset(struct fbtft_par *par)
+ 	dev_dbg(par->info->device, "%s()\n", __func__);
+ 
+ 	gpiod_set_value(par->gpio.reset, 0);
+-	udelay(20);
++	usleep_range(20, 20);
+ 	gpiod_set_value(par->gpio.reset, 1);
+ 	mdelay(120);
+ }
+-- 
+2.25.1
+
