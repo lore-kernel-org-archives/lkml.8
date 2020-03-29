@@ -2,114 +2,135 @@ Return-Path: <SRS0=I467=5O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EAF2C43331
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 03:00:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB2A0C2D0EB
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 03:11:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1E8D0206DB
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 03:00:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 91D9920717
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 03:11:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="nEBs34CU"
+	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="m1tGNjwy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727191AbgC2DAK (ORCPT
+        id S1727335AbgC2DLz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 28 Mar 2020 23:00:10 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:58074 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726316AbgC2DAK (ORCPT
+        Sat, 28 Mar 2020 23:11:55 -0400
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:36415 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727048AbgC2DLz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 28 Mar 2020 23:00:10 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=tzQQI4sPYIQBmBbwCro/n16BP95THEmRO7t6mifRML4=; b=nEBs34CUPbdlvIX+D+1uQ1RH24
-        Ej5dOZ3lLrQuut9PtYNGkXA3koeQSQDdqMsYWaMEp38KgpDHYt8XQzVxIL0+LIbI71dtFlnqUNYUI
-        +b8YfoGgqyK7V3Q2hkO5qRe9i9vorjXPJjM783KKCNLoKzNKArwYEbKteh5/DeRV/STBoJRPsqniL
-        vyEcyBq095i2wwMZa3rKCvmt4CciHoEdoxVj9OjEF170WeNqffsvP+GXUqd9RDH5LkA9FKVqR4F1I
-        VHwBcBcQA7Rtrf8fWswpp038xYh+MxshHzYqQ2kP4XDg9Gu+3InwGR63sWP94CEsMbluooRi8qUR0
-        HrUD8Z/g==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jIOAs-0002Hp-Jl; Sun, 29 Mar 2020 02:59:46 +0000
-Date:   Sat, 28 Mar 2020 19:59:46 -0700
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Alastair D'Silva <alastair@d-silva.org>
-Cc:     "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
-        Oliver O'Halloran <oohall@gmail.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Frederic Barrat <fbarrat@linux.ibm.com>,
-        Andrew Donnellan <ajd@linux.ibm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Rob Herring <robh@kernel.org>,
-        Anton Blanchard <anton@ozlabs.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>,
-        Madhavan Srinivasan <maddy@linux.vnet.ibm.com>,
-        =?iso-8859-1?Q?C=E9dric?= Le Goater <clg@kaod.org>,
-        Anju T Sudhakar <anju@linux.vnet.ibm.com>,
-        Hari Bathini <hbathini@linux.ibm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Greg Kurz <groug@kaod.org>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Alexey Kardashevskiy <aik@ozlabs.ru>,
-        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-nvdimm@lists.01.org, linux-mm@kvack.org
-Subject: Re: [PATCH v4 10/25] nvdimm: Add driver for OpenCAPI Persistent
- Memory
-Message-ID: <20200329025946.GU22483@bombadil.infradead.org>
-References: <20200327071202.2159885-1-alastair@d-silva.org>
- <20200327071202.2159885-11-alastair@d-silva.org>
- <20200329025617.GT22483@bombadil.infradead.org>
+        Sat, 28 Mar 2020 23:11:55 -0400
+Received: by mail-ed1-f68.google.com with SMTP id i7so11743522edq.3
+        for <linux-kernel@vger.kernel.org>; Sat, 28 Mar 2020 20:11:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=QCNJAUmnzDN9FZcZL525t31JITbaUoqdlbI+Ngrcb2Q=;
+        b=m1tGNjwy+SOvZqLF6fO17u3ClF2d67j8aXHoHY1dw1Akc1hbsGxDZMYPC2VBMObQfV
+         ova0wmjBzwcmQkBSnqv1BIYenDPMnjgFm5l+U579QF6Ziw8gRaW1IHMK5R1Rkqof/jk0
+         k02MdWhDxlczwjxkzuy/MjRfDqDVz1w8DE1pf8DCkRBRStH3S/Cj8rVhzHPa6zewSMbN
+         41OZmsDyXigpVVvfjIF7+bCqUWin8T2D0rE08sf8lEvHTDizePb4Hxf11vCqV7lbLwlN
+         nyaZ+aCdVU80g51lvj3HKJl/l7o6U5YZsi89i6/CssH3Nr+hTKMar4D17vXJEeLcmBTm
+         ScOA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=QCNJAUmnzDN9FZcZL525t31JITbaUoqdlbI+Ngrcb2Q=;
+        b=KWsNTgiqlaemJyt/e0okZYR4viLMvCPwXUjF3EKlUq9L8aKZfCHi0WBUS+S7WXUm2X
+         H6FZwv5huu3FRDFpJAZSMg1zQynsr/0bbpKE+LUryMSigWcuqD7laAlzaYz3mrfvF28y
+         gAPIVB9hg7bteJhAkdPPk7rh3L90cip7xKKEbHt9hmfSdcVI2IgcYimRrbrttgshu3fT
+         s19VJGoeV6aiPNlJtWoRTvlGEAXSqrgsDSG2GqWkWG95xn/8K+UwL5ndxA9wWQkvHQBZ
+         FyuWdSkvwv/j4TSky/di6o3mSK6qyIlPccMah1knLqsYGXQha1GNAjV4E5WeckZwT8Mz
+         3JeA==
+X-Gm-Message-State: ANhLgQ0E6bxvWCPMFD0jdl48zntjdlB/kj1LnnPvDUEEG8jQfFG7bHP9
+        b1jPBhqkzG7XvwnBpZwBDV7sC9GfBBbpdgpzG2qy
+X-Google-Smtp-Source: ADFU+vsO3z8fR85BdzrdW8wO5Ic5j66UK7NtBXWnojiKMj/pMltL8hW55ibXGgej7CzgWStIAOOuND+xZVVbglX1ybU=
+X-Received: by 2002:a17:906:1993:: with SMTP id g19mr5774145ejd.70.1585451512568;
+ Sat, 28 Mar 2020 20:11:52 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200329025617.GT22483@bombadil.infradead.org>
+References: <20200312193037.2tb5f53yeisfq4ta@madcap2.tricolour.ca>
+ <CAHC9VhQoVOzy_b9W6h+kmizKr1rPkC4cy5aYoKT2i0ZgsceNDg@mail.gmail.com>
+ <20200313185900.y44yvrfm4zxa5lfk@madcap2.tricolour.ca> <CAHC9VhR2zCCE5bjH75rSwfLC7TJGFj4RBnrtcOoUiqVp9q5TaA@mail.gmail.com>
+ <20200318212630.mw2geg4ykhnbtr3k@madcap2.tricolour.ca> <CAHC9VhRYvGAru3aOMwWKCCWDktS+2pGr+=vV4SjHW_0yewD98A@mail.gmail.com>
+ <20200318215550.es4stkjwnefrfen2@madcap2.tricolour.ca> <CAHC9VhSdDDP7Ec-w61NhGxZG5ZiekmrBCAg=Y=VJvEZcgQh46g@mail.gmail.com>
+ <20200319220249.jyr6xmwvflya5mks@madcap2.tricolour.ca> <CAHC9VhR84aN72yNB_j61zZgrQV1y6yvrBLNY7jp7BqQiEDL+cw@mail.gmail.com>
+ <20200324210152.5uydf3zqi3dwshfu@madcap2.tricolour.ca>
+In-Reply-To: <20200324210152.5uydf3zqi3dwshfu@madcap2.tricolour.ca>
+From:   Paul Moore <paul@paul-moore.com>
+Date:   Sat, 28 Mar 2020 23:11:41 -0400
+Message-ID: <CAHC9VhTQUnVhoN3JXTAQ7ti+nNLfGNVXhT6D-GYJRSpJHCwDRg@mail.gmail.com>
+Subject: Re: [PATCH ghak90 V8 07/16] audit: add contid support for signalling
+ the audit daemon
+To:     Richard Guy Briggs <rgb@redhat.com>
+Cc:     nhorman@tuxdriver.com, linux-api@vger.kernel.org,
+        containers@lists.linux-foundation.org,
+        LKML <linux-kernel@vger.kernel.org>, dhowells@redhat.com,
+        linux-audit@redhat.com, netfilter-devel@vger.kernel.org,
+        ebiederm@xmission.com, simo@redhat.com, netdev@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, Eric Paris <eparis@parisplace.org>,
+        mpatel@redhat.com, Serge Hallyn <serge@hallyn.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Mar 28, 2020 at 07:56:17PM -0700, Matthew Wilcox wrote:
-> On Fri, Mar 27, 2020 at 06:11:47PM +1100, Alastair D'Silva wrote:
-> > +static struct mutex minors_idr_lock;
-> > +static struct idr minors_idr;
-> ...
-> > +	mutex_lock(&minors_idr_lock);
-> > +	minor = idr_alloc(&minors_idr, ocxlpmem, 0, NUM_MINORS, GFP_KERNEL);
-> > +	mutex_unlock(&minors_idr_lock);
-> ...
-> > +	mutex_lock(&minors_idr_lock);
-> > +	idr_remove(&minors_idr, MINOR(ocxlpmem->dev.devt));
-> > +	mutex_unlock(&minors_idr_lock);
-> ...
-> > +	mutex_init(&minors_idr_lock);
-> > +	idr_init(&minors_idr);
-> 
-> Unless you look up ocxlpmem by minor number later in the patch series (and
-> most of the series didn't make it to my mailbox), this can just be an ida.
-> 
-> static DEFINE_IDA(minors);
-> ...
-> minor = ida_alloc_max(&minors, NUM_MINORS, GFP_KERNEL);
+On Tue, Mar 24, 2020 at 5:02 PM Richard Guy Briggs <rgb@redhat.com> wrote:
+> On 2020-03-23 20:16, Paul Moore wrote:
+> > On Thu, Mar 19, 2020 at 6:03 PM Richard Guy Briggs <rgb@redhat.com> wrote:
+> > > On 2020-03-18 18:06, Paul Moore wrote:
+> >
+> > ...
+> >
+> > > > I hope we can do better than string manipulations in the kernel.  I'd
+> > > > much rather defer generating the ACID list (if possible), than
+> > > > generating a list only to keep copying and editing it as the record is
+> > > > sent.
+> > >
+> > > At the moment we are stuck with a string-only format.
+> >
+> > Yes, we are.  That is another topic, and another set of changes I've
+> > been deferring so as to not disrupt the audit container ID work.
+> >
+> > I was thinking of what we do inside the kernel between when the record
+> > triggering event happens and when we actually emit the record to
+> > userspace.  Perhaps we collect the ACID information while the event is
+> > occurring, but we defer generating the record until later when we have
+> > a better understanding of what should be included in the ACID list.
+> > It is somewhat similar (but obviously different) to what we do for
+> > PATH records (we collect the pathname info when the path is being
+> > resolved).
+>
+> Ok, now I understand your concern.
+>
+> In the case of NETFILTER_PKT records, the CONTAINER_ID record is the
+> only other possible record and they are generated at the same time with
+> a local context.
+>
+> In the case of any event involving a syscall, that CONTAINER_ID record
+> is generated at the time of the rest of the event record generation at
+> syscall exit.
+>
+> The others are only generated when needed, such as the sig2 reply.
+>
+> We generally just store the contobj pointer until we actually generate
+> the CONTAINER_ID (or CONTAINER_OP) record.
 
-Oops.  NUM_MINORS - 1.  Or #define MAX_MINOR 255 since you only seem to use
-NUM_MINORS in this one place.
+Perhaps I'm remembering your latest spin of these patches incorrectly,
+but there is still a big gap between when the record is generated and
+when it is sent up to the audit daemon.  Most importantly in that gap
+is the whole big queue/multicast/unicast mess.
 
-> ...
-> ida_free(&minors, MINOR(ocxlpmem->dev.devt));
-> ...
-> and you can drop the dynamic initialisation.  And the mutex.
+You don't need to show me code, but I would like to see some sort of
+plan for dealing with multiple nested audit daemons.  Basically I just
+want to make sure we aren't painting ourselves into a corner with this
+approach; and if for some horrible reason we are, I at least want us
+to be aware of what we are getting ourselves into.
+
+-- 
+paul moore
+www.paul-moore.com
