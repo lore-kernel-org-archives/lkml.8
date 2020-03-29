@@ -2,191 +2,260 @@ Return-Path: <SRS0=I467=5O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2FD5C2D0E9
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 15:00:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74D2CC2D0E9
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 15:01:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F67D206F6
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 15:00:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="l1WgTAtH"
+	by mail.kernel.org (Postfix) with ESMTP id 4B9D7206F6
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 15:01:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728270AbgC2PA2 (ORCPT
+        id S1728289AbgC2PBq convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Mar 2020 11:00:28 -0400
-Received: from mail-qv1-f67.google.com ([209.85.219.67]:35263 "EHLO
-        mail-qv1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727888AbgC2PA1 (ORCPT
+        Sun, 29 Mar 2020 11:01:46 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:55576 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727888AbgC2PBp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Mar 2020 11:00:27 -0400
-Received: by mail-qv1-f67.google.com with SMTP id q73so7588270qvq.2;
-        Sun, 29 Mar 2020 08:00:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=rGYXAWrsWIiLxM6vPsIDZ7Rl8wO5mf18IjFe9bRFrdY=;
-        b=l1WgTAtHA2qzsTMjg9bSRxPYSmVkj+ocQcmwqNeUWqzZT2PrDU2wmSkTOXNlk8pnSd
-         Ke7q89sT/A+PdbS//C2wAsaMuxtRZtlrDcy8IL4pNhieSbhK23liAHwCIhCZtvInOXnS
-         u3UqZr/0kItiLH3hsZdHySOupM06YTyY5KhWD/OHjdAufCynTaCvMhOHwgFxv84hroTa
-         9nKqcuSGBUXYSNZQkY/8FyLK6SbjbQjcyOCxdBiqBErl6VnKiQhm9uZibZA/VBzP28mJ
-         QZSlwbziG0QbzcDWqjM8FI7mzOBKdxqqFc061tjkiYsS38AUSYvSl1mbnwQ5qen9bfbO
-         itpw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=rGYXAWrsWIiLxM6vPsIDZ7Rl8wO5mf18IjFe9bRFrdY=;
-        b=l/tN06zE6P6TJY+08nTpTmK8Z0+IaTnoP7acsMvv0gEV8WXeBOSmC35j5TUb/aZkxQ
-         BXKgJECvglVl0/CRYWQRc+JgI03Df6IHocMdlBAymrZ8rzqlM5Ub2+XZ3pa6oc0LWAH8
-         USdD88Ih/8ns0+PlOmRfMmiaVU5jsnw2FotEHpKX7D/5i2NdM06+Gy0olz7aHm75zUlT
-         AG9hn2s+eR9URJJ4hiZIcMxox0h2KxXWuOOPabVQW16xCz8tDtS4YdZnQRJczyeBHE1Y
-         L2fHDBqBRuccE9sHHNAW4iboRuc00YS2drF28dLVKkPW3zll8P7ycq/EN5sch5GfV8d6
-         0fvA==
-X-Gm-Message-State: ANhLgQ3DTYgKdeeiqSQO7Xru163OtyPnXyNQ0l2RHsvQVQ8oWhRF6yB1
-        mSzwHYmiBaTZFu+RdweYR2I=
-X-Google-Smtp-Source: ADFU+vtYT62GFNGeoVetw+nZmaRphF0bJ+n5GbMC9MYWFGp7A0ljCgjR4ff4KGTtPm64IJAKsM79Iw==
-X-Received: by 2002:ad4:4364:: with SMTP id u4mr7593136qvt.58.1585494026561;
-        Sun, 29 Mar 2020 08:00:26 -0700 (PDT)
-Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
-        by smtp.gmail.com with ESMTPSA id l62sm5281385qte.52.2020.03.29.08.00.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 29 Mar 2020 08:00:26 -0700 (PDT)
-From:   Arvind Sankar <nivedita@alum.mit.edu>
-X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
-Date:   Sun, 29 Mar 2020 11:00:24 -0400
-To:     Vlastimil Babka <vbabka@suse.cz>
-Cc:     Luis Chamberlain <mcgrof@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Iurii Zaikin <yzaikin@google.com>,
-        linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
-        linux-mm@kvack.org, Ivan Teterevkov <ivan.teterevkov@nutanix.com>,
-        Michal Hocko <mhocko@kernel.org>,
-        David Rientjes <rientjes@google.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        "Eric W . Biederman" <ebiederm@xmission.com>,
-        "Guilherme G . Piccoli" <gpiccoli@canonical.com>
-Subject: Re: [RFC v2 2/2] kernel/sysctl: support handling command line aliases
-Message-ID: <20200329150022.GA823603@rani.riverdale.lan>
-References: <20200325120345.12946-1-vbabka@suse.cz>
- <20200325120345.12946-2-vbabka@suse.cz>
+        Sun, 29 Mar 2020 11:01:45 -0400
+Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02TEanoD195107
+        for <linux-kernel@vger.kernel.org>; Sun, 29 Mar 2020 11:01:44 -0400
+Received: from smtp.notes.na.collabserv.com (smtp.notes.na.collabserv.com [192.155.248.67])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 30206wcvhw-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Sun, 29 Mar 2020 11:01:44 -0400
+Received: from localhost
+        by smtp.notes.na.collabserv.com with smtp.notes.na.collabserv.com ESMTP
+        for <linux-kernel@vger.kernel.org> from <BMT@zurich.ibm.com>;
+        Sun, 29 Mar 2020 15:01:43 -0000
+Received: from us1a3-smtp05.a3.dal06.isc4sb.com (10.146.71.159)
+        by smtp.notes.na.collabserv.com (10.106.227.16) with smtp.notes.na.collabserv.com ESMTP;
+        Sun, 29 Mar 2020 15:01:37 -0000
+Received: from us1a3-mail162.a3.dal06.isc4sb.com ([10.146.71.4])
+          by us1a3-smtp05.a3.dal06.isc4sb.com
+          with ESMTP id 2020032915013628-285089 ;
+          Sun, 29 Mar 2020 15:01:36 +0000 
+In-Reply-To: <202003281643.02SGhN9T020186@sdf.org>
+Subject: Re: [RFC PATCH v1 42/50] drivers/ininiband: Use get_random_u32()
+From:   "Bernard Metzler" <BMT@zurich.ibm.com>
+To:     "George Spelvin" <lkml@sdf.org>
+Cc:     linux-kernel@vger.kernel.org, "Doug Ledford" <dledford@redhat.com>,
+        "Jason Gunthorpe" <jgg@mellanox.com>, linux-rdma@vger.kernel.org,
+        "Faisal Latif" <faisal.latif@intel.com>,
+        "Shiraz Saleem" <shiraz.saleem@intel.com>,
+        "Bart Van Assche" <bvanassche@acm.org>
+Date:   Sun, 29 Mar 2020 15:01:36 +0000
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200325120345.12946-2-vbabka@suse.cz>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Sensitivity: 
+Importance: Normal
+X-Priority: 3 (Normal)
+References: <202003281643.02SGhN9T020186@sdf.org>
+X-Mailer: IBM iNotes ($HaikuForm 1054.1) | IBM Domino Build
+ SCN1812108_20180501T0841_FP64 March 05, 2020 at 12:58
+X-LLNOutbound: False
+X-Disclaimed: 26727
+X-TNEFEvaluated: 1
+Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=UTF-8
+x-cbid: 20032915-7279-0000-0000-000002561FD4
+X-IBM-SpamModules-Scores: BY=0; FL=0; FP=0; FZ=0; HX=0; KW=0; PH=0;
+ SC=0.40962; ST=0; TS=0; UL=0; ISC=; MB=0.004176
+X-IBM-SpamModules-Versions: BY=3.00012839; HX=3.00000242; KW=3.00000007;
+ PH=3.00000004; SC=3.00000293; SDB=6.01354713; UDB=6.00722867; IPR=6.01137129;
+ MB=3.00031446; MTD=3.00000008; XFM=3.00000015; UTC=2020-03-29 15:01:42
+X-IBM-AV-DETECTION: SAVI=unsuspicious REMOTE=unsuspicious XFE=unused
+X-IBM-AV-VERSION: SAVI=2020-03-29 11:43:32 - 6.00011176
+x-cbparentid: 20032915-7280-0000-0000-00004F3820AE
+Message-Id: <OF05D43316.2F69D46F-ON0025853A.00513FE8-0025853A.00528B66@notes.na.collabserv.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.645
+ definitions=2020-03-29_04:2020-03-27,2020-03-29 signatures=0
+X-Proofpoint-Spam-Reason: safe
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 25, 2020 at 01:03:45PM +0100, Vlastimil Babka wrote:
-> We can now handle sysctl parameters on kernel command line, but historically
-> some parameters introduced their own command line equivalent, which we don't
-> want to remove for compatibility reasons. We can however convert them to the
-> generic infrastructure with a table translating the legacy command line
-> parameters to their sysctl names, and removing the one-off param handlers.
-> 
-> This patch adds the support and makes the first conversion to demonstrate it,
-> on the (deprecated) numa_zonelist_order parameter.
-> 
-> Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
-> ---
->  kernel/sysctl.c | 39 +++++++++++++++++++++++++++++++++++----
->  mm/page_alloc.c |  9 ---------
->  2 files changed, 35 insertions(+), 13 deletions(-)
-> 
-> diff --git a/kernel/sysctl.c b/kernel/sysctl.c
-> index 18c7f5606d55..fd72853396f9 100644
-> --- a/kernel/sysctl.c
-> +++ b/kernel/sysctl.c
-> @@ -1971,6 +1971,22 @@ static struct ctl_table dev_table[] = {
->  	{ }
->  };
->  
-> +struct sysctl_alias {
-> +	char *kernel_param;
-> +	char *sysctl_param;
-> +};
-> +
-> +/*
-> + * Historically some settings had both sysctl and a command line parameter.
-> + * With the generic sysctl. parameter support, we can handle them at a single
-> + * place and only keep the historical name for compatibility. This is not meant
-> + * to add brand new aliases.
-> + */
-> +static struct sysctl_alias sysctl_aliases[] = {
-> +	{"numa_zonelist_order",		"vm.numa_zonelist_order" },
-> +	{ }
-> +};
-> +
->  int __init sysctl_init(void)
->  {
->  	struct ctl_table_header *hdr;
-> @@ -1980,6 +1996,18 @@ int __init sysctl_init(void)
->  	return 0;
->  }
->  
-> +char *sysctl_find_alias(char *param)
+-----"George Spelvin" <lkml@sdf.org> wrote: -----
 
-This function should probably be declared static?
-
-> +{
-> +	struct sysctl_alias *alias;
-> +
-> +	for (alias = &sysctl_aliases[0]; alias->kernel_param != NULL; alias++) {
-> +		if (strcmp(alias->kernel_param, param) == 0)
-> +			return alias->sysctl_param;
-> +	}
-> +
-> +	return NULL;
-> +}
-> +
->  /* Set sysctl value passed on kernel command line. */
->  int process_sysctl_arg(char *param, char *val,
->  			       const char *unused, void *arg)
-> @@ -1990,10 +2018,13 @@ int process_sysctl_arg(char *param, char *val,
->  	loff_t ppos = 0;
->  	struct ctl_table *ctl, *found = NULL;
->  
-> -	if (strncmp(param, "sysctl.", sizeof("sysctl.") - 1))
-> -		return 0;
-> -
-> -	param += sizeof("sysctl.") - 1;
-> +	if (strncmp(param, "sysctl.", sizeof("sysctl.") - 1) == 0) {
-> +		param += sizeof("sysctl.") - 1;
-> +	} else {
-> +		param = sysctl_find_alias(param);
-> +		if (!param)
-> +			return 0;
-> +	}
->  
->  	remaining = param;
->  	ctl = &sysctl_base_table[0];
-> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-> index 3c4eb750a199..de7a134b1b8a 100644
-> --- a/mm/page_alloc.c
-> +++ b/mm/page_alloc.c
-> @@ -5460,15 +5460,6 @@ static int __parse_numa_zonelist_order(char *s)
->  	return 0;
->  }
->  
-> -static __init int setup_numa_zonelist_order(char *s)
-> -{
-> -	if (!s)
-> -		return 0;
-> -
-> -	return __parse_numa_zonelist_order(s);
-> -}
-> -early_param("numa_zonelist_order", setup_numa_zonelist_order);
-> -
->  char numa_zonelist_order[] = "Node";
->  
->  /*
-> -- 
-> 2.25.1
+>To: linux-kernel@vger.kernel.org, lkml@sdf.org
+>From: "George Spelvin" <lkml@sdf.org>
+>Date: 03/28/2020 05:43PM
+>Cc: "Doug Ledford" <dledford@redhat.com>, "Jason Gunthorpe"
+><jgg@mellanox.com>, linux-rdma@vger.kernel.org, "Faisal Latif"
+><faisal.latif@intel.com>, "Shiraz Saleem" <shiraz.saleem@intel.com>,
+>"Bart Van Assche" <bvanassche@acm.org>, "Bernard Metzler"
+><bmt@zurich.ibm.com>
+>Subject: [EXTERNAL] [RFC PATCH v1 42/50] drivers/ininiband: Use
+>get_random_u32()
+>
+>There's no need to get_random_bytes() into a temporary buffer.
+>
+>This is not a no-brainer change; get_random_u32() has slightly weaker
+>security guarantees, but code like this is the classic example of
+>when
+>it's appropriate: the random value is stored in the kernel for as
+>long
+>as it's valuable.
+>
+>TODO: Could any of the call sites be further weakened to
+>prandom_u32()?
+>If we're randomizing to avoid collisions with a *cooperating* (as
+>opposed
+>to malicious) partner, we don't need cryptographic strength.
+>
+>Signed-off-by: George Spelvin <lkml@sdf.org>
+>Cc: Doug Ledford <dledford@redhat.com>
+>Cc: Jason Gunthorpe <jgg@mellanox.com>
+>Cc: linux-rdma@vger.kernel.org
+>Cc: Faisal Latif <faisal.latif@intel.com>
+>Cc: Shiraz Saleem <shiraz.saleem@intel.com>
+>Cc: Bart Van Assche <bvanassche@acm.org>
+>Cc: Bernard Metzler <bmt@zurich.ibm.com>
+>---
+> drivers/infiniband/core/cm.c              | 2 +-
+> drivers/infiniband/core/cma.c             | 3 +--
+> drivers/infiniband/core/sa_query.c        | 2 +-
+> drivers/infiniband/hw/i40iw/i40iw_verbs.c | 2 +-
+> drivers/infiniband/sw/siw/siw_mem.c       | 9 ++-------
+> drivers/infiniband/sw/siw/siw_verbs.c     | 2 +-
+> drivers/infiniband/ulp/srp/ib_srp.c       | 3 +--
+> 7 files changed, 8 insertions(+), 15 deletions(-)
+>
+>diff --git a/drivers/infiniband/core/cm.c
+>b/drivers/infiniband/core/cm.c
+>index 4decc1d4cc997..8af4368faf8ee 100644
+>--- a/drivers/infiniband/core/cm.c
+>+++ b/drivers/infiniband/core/cm.c
+>@@ -4449,7 +4449,7 @@ static int __init ib_cm_init(void)
+> 	cm.remote_qp_table = RB_ROOT;
+> 	cm.remote_sidr_table = RB_ROOT;
+> 	xa_init_flags(&cm.local_id_table, XA_FLAGS_ALLOC |
+>XA_FLAGS_LOCK_IRQ);
+>-	get_random_bytes(&cm.random_id_operand, sizeof
+>cm.random_id_operand);
+>+	cm.random_id_operand = (__force __be32)get_random_u32();
+> 	INIT_LIST_HEAD(&cm.timewait_list);
 > 
+> 	ret = class_register(&cm_class);
+>diff --git a/drivers/infiniband/core/cma.c
+>b/drivers/infiniband/core/cma.c
+>index a5874d2fac54e..1fce71e625c15 100644
+>--- a/drivers/infiniband/core/cma.c
+>+++ b/drivers/infiniband/core/cma.c
+>@@ -873,9 +873,8 @@ struct rdma_cm_id *__rdma_create_id(struct net
+>*net,
+> 	mutex_init(&id_priv->handler_mutex);
+> 	INIT_LIST_HEAD(&id_priv->listen_list);
+> 	INIT_LIST_HEAD(&id_priv->mc_list);
+>-	get_random_bytes(&id_priv->seq_num, sizeof id_priv->seq_num);
+>+	id_priv->seq_num = get_random_u32() & 0x00ffffff;
+> 	id_priv->id.route.addr.dev_addr.net = get_net(net);
+>-	id_priv->seq_num &= 0x00ffffff;
+> 
+> 	return &id_priv->id;
+> }
+>diff --git a/drivers/infiniband/core/sa_query.c
+>b/drivers/infiniband/core/sa_query.c
+>index 30d4c126a2db0..0db882e247234 100644
+>--- a/drivers/infiniband/core/sa_query.c
+>+++ b/drivers/infiniband/core/sa_query.c
+>@@ -2426,7 +2426,7 @@ int ib_sa_init(void)
+> {
+> 	int ret;
+> 
+>-	get_random_bytes(&tid, sizeof tid);
+>+	tid = get_random_u32();
+> 
+> 	atomic_set(&ib_nl_sa_request_seq, 0);
+> 
+>diff --git a/drivers/infiniband/hw/i40iw/i40iw_verbs.c
+>b/drivers/infiniband/hw/i40iw/i40iw_verbs.c
+>index dbd96d029d8bd..4c62b3a4f4233 100644
+>--- a/drivers/infiniband/hw/i40iw/i40iw_verbs.c
+>+++ b/drivers/infiniband/hw/i40iw/i40iw_verbs.c
+>@@ -1262,7 +1262,7 @@ static u32 i40iw_create_stag(struct
+>i40iw_device *iwdev)
+> 	u8 consumer_key;
+> 	int ret;
+> 
+>-	get_random_bytes(&random, sizeof(random));
+>+	random = get_random_u32();
+> 	consumer_key = (u8)random;
+> 
+> 	driver_key = random & ~iwdev->mr_stagmask;
+>diff --git a/drivers/infiniband/sw/siw/siw_mem.c
+>b/drivers/infiniband/sw/siw/siw_mem.c
+>index e99983f076631..50c84f6a98e51 100644
+>--- a/drivers/infiniband/sw/siw/siw_mem.c
+>+++ b/drivers/infiniband/sw/siw/siw_mem.c
+>@@ -21,10 +21,7 @@
+> int siw_mem_add(struct siw_device *sdev, struct siw_mem *m)
+> {
+> 	struct xa_limit limit = XA_LIMIT(1, 0x00ffffff);
+>-	u32 id, next;
+>-
+>-	get_random_bytes(&next, 4);
+>-	next &= 0x00ffffff;
+>+	u32 id, next = get_random_u32() & 0x00ffffff;
+> 
+> 	if (xa_alloc_cyclic(&sdev->mem_xa, &id, m, limit, &next,
+> 	    GFP_KERNEL) < 0)
+>@@ -107,9 +104,7 @@ int siw_mr_add_mem(struct siw_mr *mr, struct
+>ib_pd *pd, void *mem_obj,
+> 	kref_init(&mem->ref);
+> 
+> 	mr->mem = mem;
+>-
+>-	get_random_bytes(&next, 4);
+>-	next &= 0x00ffffff;
+>+	next = get_random_u32() & 0x00ffffff;
+> 
+> 	if (xa_alloc_cyclic(&sdev->mem_xa, &id, mem, limit, &next,
+> 	    GFP_KERNEL) < 0) {
+>diff --git a/drivers/infiniband/sw/siw/siw_verbs.c
+>b/drivers/infiniband/sw/siw/siw_verbs.c
+>index 5fd6d6499b3d7..42f3ced4ca7c7 100644
+>--- a/drivers/infiniband/sw/siw/siw_verbs.c
+>+++ b/drivers/infiniband/sw/siw/siw_verbs.c
+>@@ -1139,7 +1139,7 @@ int siw_create_cq(struct ib_cq *base_cq, const
+>struct ib_cq_init_attr *attr,
+> 		rv = -ENOMEM;
+> 		goto err_out;
+> 	}
+>-	get_random_bytes(&cq->id, 4);
+>+	cq->id = get_random_u32();
+> 	siw_dbg(base_cq->device, "new CQ [%u]\n", cq->id);
+> 
+> 	spin_lock_init(&cq->lock);
+>diff --git a/drivers/infiniband/ulp/srp/ib_srp.c
+>b/drivers/infiniband/ulp/srp/ib_srp.c
+>index cd1181c39ed29..2a954db0d6b55 100644
+>--- a/drivers/infiniband/ulp/srp/ib_srp.c
+>+++ b/drivers/infiniband/ulp/srp/ib_srp.c
+>@@ -903,8 +903,7 @@ static int srp_send_req(struct srp_rdma_ch *ch,
+>uint32_t max_iu_len,
+> 		req->ib_param.primary_path = &ch->ib_cm.path;
+> 		req->ib_param.alternate_path = NULL;
+> 		req->ib_param.service_id = target->ib_cm.service_id;
+>-		get_random_bytes(&req->ib_param.starting_psn, 4);
+>-		req->ib_param.starting_psn &= 0xffffff;
+>+		req->ib_param.starting_psn = get_random_u32() & 0xffffff;
+> 		req->ib_param.qp_num = ch->qp->qp_num;
+> 		req->ib_param.qp_type = ch->qp->qp_type;
+> 		req->ib_param.local_cm_response_timeout = subnet_timeout + 2;
+>-- 
+>2.26.0
+>
+>
+
+Speaking for the siw driver only, these two changes are looking
+good to me. What is needed is a pseudo-random number, not
+to easy to guess for the application. get_random_u32() provides that.
+
+Thanks!
+
+Reviewed-by: Bernard Metzler <bmt@zurich.ibm.com>
+
