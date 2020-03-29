@@ -2,99 +2,191 @@ Return-Path: <SRS0=I467=5O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	HK_RANDOM_FROM,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DC0DC43331
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 14:59:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2FD5C2D0E9
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 15:00:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3B004206F6
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 14:59:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F67D206F6
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 15:00:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="l1WgTAtH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728237AbgC2O7U (ORCPT
+        id S1728270AbgC2PA2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Mar 2020 10:59:20 -0400
-Received: from mail.fudan.edu.cn ([202.120.224.73]:57656 "EHLO fudan.edu.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727488AbgC2O7T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Mar 2020 10:59:19 -0400
-Received: from localhost.localdomain (unknown [120.229.255.87])
-        by app2 (Coremail) with SMTP id XQUFCgBXXUWxt4BeeJuFAA--.1822S3;
-        Sun, 29 Mar 2020 22:59:00 +0800 (CST)
-From:   Xiyu Yang <xiyuyang19@fudan.edu.cn>
-To:     John Johansen <john.johansen@canonical.com>,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     xiyuyang19@fudan.edu.cn, yuanxzhang@fudan.edu.cn, kjlu@umn.edu,
-        Xin Tan <tanxin.ctf@gmail.com>
-Subject: [PATCH] apparmor: fix potential label refcnt leak in aa_change_profile
-Date:   Sun, 29 Mar 2020 22:57:41 +0800
-Message-Id: <1585493861-9867-1-git-send-email-xiyuyang19@fudan.edu.cn>
-X-Mailer: git-send-email 2.7.4
-X-CM-TRANSID: XQUFCgBXXUWxt4BeeJuFAA--.1822S3
-X-Coremail-Antispam: 1UD129KBjvJXoW7KryfGF47WF4fCr45WrW5trb_yoW8GrWDpF
-        47KF1UGFs5tFy2kF4Dta13urWak397Xr1Yva9xu3yUZrW5JayDXw1a9r17WryrurykAwsx
-        tFWayF9Y9w1UC3JanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUUkK14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-        rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-        1l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4U
-        JVW0owA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
-        Cq3wAac4AC62xK8xCEY4vEwIxC4wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC
-        0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr
-        1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IE
-        rcIFxwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14
-        v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkG
-        c2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI
-        0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6rW3Jr0E3s1lIxAIcVC2z280aVAFwI0_Jr0_
-        Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7VUbHa0D
-        UUUUU==
-X-CM-SenderInfo: irzsiiysuqikmy6i3vldqovvfxof0/
+        Sun, 29 Mar 2020 11:00:28 -0400
+Received: from mail-qv1-f67.google.com ([209.85.219.67]:35263 "EHLO
+        mail-qv1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727888AbgC2PA1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Mar 2020 11:00:27 -0400
+Received: by mail-qv1-f67.google.com with SMTP id q73so7588270qvq.2;
+        Sun, 29 Mar 2020 08:00:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=rGYXAWrsWIiLxM6vPsIDZ7Rl8wO5mf18IjFe9bRFrdY=;
+        b=l1WgTAtHA2qzsTMjg9bSRxPYSmVkj+ocQcmwqNeUWqzZT2PrDU2wmSkTOXNlk8pnSd
+         Ke7q89sT/A+PdbS//C2wAsaMuxtRZtlrDcy8IL4pNhieSbhK23liAHwCIhCZtvInOXnS
+         u3UqZr/0kItiLH3hsZdHySOupM06YTyY5KhWD/OHjdAufCynTaCvMhOHwgFxv84hroTa
+         9nKqcuSGBUXYSNZQkY/8FyLK6SbjbQjcyOCxdBiqBErl6VnKiQhm9uZibZA/VBzP28mJ
+         QZSlwbziG0QbzcDWqjM8FI7mzOBKdxqqFc061tjkiYsS38AUSYvSl1mbnwQ5qen9bfbO
+         itpw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=rGYXAWrsWIiLxM6vPsIDZ7Rl8wO5mf18IjFe9bRFrdY=;
+        b=l/tN06zE6P6TJY+08nTpTmK8Z0+IaTnoP7acsMvv0gEV8WXeBOSmC35j5TUb/aZkxQ
+         BXKgJECvglVl0/CRYWQRc+JgI03Df6IHocMdlBAymrZ8rzqlM5Ub2+XZ3pa6oc0LWAH8
+         USdD88Ih/8ns0+PlOmRfMmiaVU5jsnw2FotEHpKX7D/5i2NdM06+Gy0olz7aHm75zUlT
+         AG9hn2s+eR9URJJ4hiZIcMxox0h2KxXWuOOPabVQW16xCz8tDtS4YdZnQRJczyeBHE1Y
+         L2fHDBqBRuccE9sHHNAW4iboRuc00YS2drF28dLVKkPW3zll8P7ycq/EN5sch5GfV8d6
+         0fvA==
+X-Gm-Message-State: ANhLgQ3DTYgKdeeiqSQO7Xru163OtyPnXyNQ0l2RHsvQVQ8oWhRF6yB1
+        mSzwHYmiBaTZFu+RdweYR2I=
+X-Google-Smtp-Source: ADFU+vtYT62GFNGeoVetw+nZmaRphF0bJ+n5GbMC9MYWFGp7A0ljCgjR4ff4KGTtPm64IJAKsM79Iw==
+X-Received: by 2002:ad4:4364:: with SMTP id u4mr7593136qvt.58.1585494026561;
+        Sun, 29 Mar 2020 08:00:26 -0700 (PDT)
+Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
+        by smtp.gmail.com with ESMTPSA id l62sm5281385qte.52.2020.03.29.08.00.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 29 Mar 2020 08:00:26 -0700 (PDT)
+From:   Arvind Sankar <nivedita@alum.mit.edu>
+X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
+Date:   Sun, 29 Mar 2020 11:00:24 -0400
+To:     Vlastimil Babka <vbabka@suse.cz>
+Cc:     Luis Chamberlain <mcgrof@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Iurii Zaikin <yzaikin@google.com>,
+        linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
+        linux-mm@kvack.org, Ivan Teterevkov <ivan.teterevkov@nutanix.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        "Eric W . Biederman" <ebiederm@xmission.com>,
+        "Guilherme G . Piccoli" <gpiccoli@canonical.com>
+Subject: Re: [RFC v2 2/2] kernel/sysctl: support handling command line aliases
+Message-ID: <20200329150022.GA823603@rani.riverdale.lan>
+References: <20200325120345.12946-1-vbabka@suse.cz>
+ <20200325120345.12946-2-vbabka@suse.cz>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200325120345.12946-2-vbabka@suse.cz>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-aa_change_profile() invokes aa_get_current_label(), which returns
-a reference of the current task's label.
+On Wed, Mar 25, 2020 at 01:03:45PM +0100, Vlastimil Babka wrote:
+> We can now handle sysctl parameters on kernel command line, but historically
+> some parameters introduced their own command line equivalent, which we don't
+> want to remove for compatibility reasons. We can however convert them to the
+> generic infrastructure with a table translating the legacy command line
+> parameters to their sysctl names, and removing the one-off param handlers.
+> 
+> This patch adds the support and makes the first conversion to demonstrate it,
+> on the (deprecated) numa_zonelist_order parameter.
+> 
+> Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
+> ---
+>  kernel/sysctl.c | 39 +++++++++++++++++++++++++++++++++++----
+>  mm/page_alloc.c |  9 ---------
+>  2 files changed, 35 insertions(+), 13 deletions(-)
+> 
+> diff --git a/kernel/sysctl.c b/kernel/sysctl.c
+> index 18c7f5606d55..fd72853396f9 100644
+> --- a/kernel/sysctl.c
+> +++ b/kernel/sysctl.c
+> @@ -1971,6 +1971,22 @@ static struct ctl_table dev_table[] = {
+>  	{ }
+>  };
+>  
+> +struct sysctl_alias {
+> +	char *kernel_param;
+> +	char *sysctl_param;
+> +};
+> +
+> +/*
+> + * Historically some settings had both sysctl and a command line parameter.
+> + * With the generic sysctl. parameter support, we can handle them at a single
+> + * place and only keep the historical name for compatibility. This is not meant
+> + * to add brand new aliases.
+> + */
+> +static struct sysctl_alias sysctl_aliases[] = {
+> +	{"numa_zonelist_order",		"vm.numa_zonelist_order" },
+> +	{ }
+> +};
+> +
+>  int __init sysctl_init(void)
+>  {
+>  	struct ctl_table_header *hdr;
+> @@ -1980,6 +1996,18 @@ int __init sysctl_init(void)
+>  	return 0;
+>  }
+>  
+> +char *sysctl_find_alias(char *param)
 
-According to the comment of aa_get_current_label(), the returned
-reference must be put with aa_put_label().
-However, when the original object pointed by "label" becomes
-unreachable because aa_change_profile() returns or a new object
-is assigned to "label", reference count increased by
-aa_get_current_label() is not decreased, causing a refcnt leak.
+This function should probably be declared static?
 
-Fix this by calling aa_put_label() before the original object pointed
-by "label" becomes unreachable.
-
-Signed-off-by: Xiyu Yang <xiyuyang19@fudan.edu.cn>
-Signed-off-by: Xin Tan <tanxin.ctf@gmail.com>
----
- security/apparmor/domain.c | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/security/apparmor/domain.c b/security/apparmor/domain.c
-index 6ceb74e0f789..b99145ae34c0 100644
---- a/security/apparmor/domain.c
-+++ b/security/apparmor/domain.c
-@@ -1328,6 +1328,7 @@ int aa_change_profile(const char *fqname, int flags)
- 		ctx->nnp = aa_get_label(label);
- 
- 	if (!fqname || !*fqname) {
-+		aa_put_label(label);
- 		AA_DEBUG("no profile name");
- 		return -EINVAL;
- 	}
-@@ -1346,6 +1347,7 @@ int aa_change_profile(const char *fqname, int flags)
- 			op = OP_CHANGE_PROFILE;
- 	}
- 
-+	aa_put_label(label);
- 	label = aa_get_current_label();
- 
- 	if (*fqname == '&') {
--- 
-2.7.4
-
+> +{
+> +	struct sysctl_alias *alias;
+> +
+> +	for (alias = &sysctl_aliases[0]; alias->kernel_param != NULL; alias++) {
+> +		if (strcmp(alias->kernel_param, param) == 0)
+> +			return alias->sysctl_param;
+> +	}
+> +
+> +	return NULL;
+> +}
+> +
+>  /* Set sysctl value passed on kernel command line. */
+>  int process_sysctl_arg(char *param, char *val,
+>  			       const char *unused, void *arg)
+> @@ -1990,10 +2018,13 @@ int process_sysctl_arg(char *param, char *val,
+>  	loff_t ppos = 0;
+>  	struct ctl_table *ctl, *found = NULL;
+>  
+> -	if (strncmp(param, "sysctl.", sizeof("sysctl.") - 1))
+> -		return 0;
+> -
+> -	param += sizeof("sysctl.") - 1;
+> +	if (strncmp(param, "sysctl.", sizeof("sysctl.") - 1) == 0) {
+> +		param += sizeof("sysctl.") - 1;
+> +	} else {
+> +		param = sysctl_find_alias(param);
+> +		if (!param)
+> +			return 0;
+> +	}
+>  
+>  	remaining = param;
+>  	ctl = &sysctl_base_table[0];
+> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+> index 3c4eb750a199..de7a134b1b8a 100644
+> --- a/mm/page_alloc.c
+> +++ b/mm/page_alloc.c
+> @@ -5460,15 +5460,6 @@ static int __parse_numa_zonelist_order(char *s)
+>  	return 0;
+>  }
+>  
+> -static __init int setup_numa_zonelist_order(char *s)
+> -{
+> -	if (!s)
+> -		return 0;
+> -
+> -	return __parse_numa_zonelist_order(s);
+> -}
+> -early_param("numa_zonelist_order", setup_numa_zonelist_order);
+> -
+>  char numa_zonelist_order[] = "Node";
+>  
+>  /*
+> -- 
+> 2.25.1
+> 
