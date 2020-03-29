@@ -2,110 +2,138 @@ Return-Path: <SRS0=I467=5O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3CBFC2D0EB
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 10:19:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BB1AC2D0EB
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 10:27:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AAD7A20732
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 10:19:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D645E206DB
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 10:27:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585477163;
-	bh=zucRSTGGzuFkVabCQezWqRiMwAZFZTLz64620KT1MlI=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=kzBEwka14mnr472htsCpsqlUwza8O1SgLFMfUD1cT+ohSZJnB0QVp94GfYoKE/V6Y
-	 Q5hP4OKhJJVZoNA/cuC6V3H4A+LT33w3YKUElQ7BHulfjvFyFdIrRrnXCNrsBcLZbM
-	 4iRyAc7ARoOB8BjJJbhVELd9VvIgko/MAL867474=
+	s=default; t=1585477648;
+	bh=f3MF2NNJAi4232pZYddjeL7pVm1fUChXOUZS+6fT5iE=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:List-ID:From;
+	b=e840ua84kMkpPh/IUuh4VYybWYGc0sy80wF9pYpPeU/h7i6G1m1y/bLwO+N6EV/cY
+	 aWkg2vYB5W2HptB7pHVrk6Dy3MmO09c3RTPmx5viEOV7BFqdX6JMDX4bg23pfNgwah
+	 gkolYMhE5j+CaHVzOlJuVzJ4MLnwQHDABOHfK03E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727956AbgC2KTV (ORCPT
+        id S1727990AbgC2K11 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Mar 2020 06:19:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56446 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727639AbgC2KTV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Mar 2020 06:19:21 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 92D0D20732;
-        Sun, 29 Mar 2020 10:19:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585477160;
-        bh=zucRSTGGzuFkVabCQezWqRiMwAZFZTLz64620KT1MlI=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=Ht87FUpI68j2yRsicb5MfQNxxsKNdJueCA2Kr8EY9Gnu9vDvz/SI2nKl9yYqhb23t
-         PECULlATF27BhYfK/jq22ikq8j0PkTp0/4u4EgJCxW6TU82prPIpldpekC2LpkY07r
-         NaWwz/H/iSJFmPBTYSNtFMzH0g0yjYkze3E3Lqe0=
-Date:   Sun, 29 Mar 2020 11:19:15 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>
-Cc:     "robh@kernel.org" <robh@kernel.org>,
-        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
-        "Grozav, Andrei" <Andrei.Grozav@analog.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Hennerich, Michael" <Michael.Hennerich@analog.com>,
-        "Nagy, Laszlo" <Laszlo.Nagy@analog.com>,
-        "Csomortani, Istvan" <Istvan.Csomortani@analog.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "Bogdan, Dragos" <Dragos.Bogdan@analog.com>,
-        "Costina, Adrian" <Adrian.Costina@analog.com>
-Subject: Re: [PATCH v13 8/8] dt-bindings: iio: adc: add bindings doc for
- AD9467 ADC
-Message-ID: <20200329111915.0a3211bb@archlinux>
-In-Reply-To: <17a99874285734496a97d271dda7368b40e88255.camel@analog.com>
-References: <20200324134636.64643-1-alexandru.ardelean@analog.com>
-        <20200324134636.64643-9-alexandru.ardelean@analog.com>
-        <20200326185616.GA2673@bogus>
-        <17a99874285734496a97d271dda7368b40e88255.camel@analog.com>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Sun, 29 Mar 2020 06:27:27 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:46030 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726087AbgC2K11 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Mar 2020 06:27:27 -0400
+Received: by mail-lf1-f67.google.com with SMTP id v4so11416843lfo.12;
+        Sun, 29 Mar 2020 03:27:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:to:cc:subject:in-reply-to:references:date:message-id
+         :mime-version;
+        bh=f3MF2NNJAi4232pZYddjeL7pVm1fUChXOUZS+6fT5iE=;
+        b=u/0FHKWybogy8QjgF5XOPOnq6ZQ++zbVLRSpEGOAD8nPhRH8j6BvrM6Oah/6z1wZdW
+         cXW/UPpXVD9aAR9tAF6c4obpaaiM2nf4qbQO38L7Vz9TSeph2TpfButEUIY3Tdyu25pZ
+         qEwwp+YfDTw6bYdIgzSDPNm1RRhURaEcFix/7BPokCr3mQHLKIjWyVzjUGef+4UxwtQN
+         cl3mHgqtRhc87IIS9YDBxeUKLrNcDtIYxIivJm3jOVBYHK02maEllWHfgCAvQwZmFzmT
+         vu93NXEdhRXh0OFKqQsULxejesCn4Hcj/BhYDpII8rA57l2Cpg3KVeLydlh2OkAIzRgx
+         JIRA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:to:cc:subject:in-reply-to:references
+         :date:message-id:mime-version;
+        bh=f3MF2NNJAi4232pZYddjeL7pVm1fUChXOUZS+6fT5iE=;
+        b=rtp5jpRl3MYAtjmZRqOj/XRzbMTcKGdPMJiofhEeWPsB3nHUwl84Gn1HUGgsD1END3
+         UXPnj2jJqi8IWxhnWjAm1AKCj8NMQw7YKnAurdx+YbBqG62GFrp7umfUrQqYe78I32dq
+         pCfIKF967WzpsgXzq+9EZNBgMBu+eDOPA0wdfixxQxzSErf0eQqdfu9LH+x0/s3UVpdC
+         oV1I63D1O5VNSrtQYrx5pdX67aVwnHDeDTrdxe9TKd8TU7mCxe1utw0WtdRTWIhcT8f4
+         KTp6HZatfRkuF36To8KwiBWx+YvX85M1qsg1hmfoq+pIpvlXUZuep5rf95RRkmgGW8JV
+         WMVA==
+X-Gm-Message-State: AGi0PuYE3xUNLF8RjtlFIgicaLBefGJ+CVz56R+m0EVpooa95G/+S722
+        EThGeJETBnIjEIkCrTV/q4k=
+X-Google-Smtp-Source: APiQypLLAsw2f8SLVBZufs8bmyHwdQV0ZPvofG06Wa5VjHYfv4kHchwFrnk+SVdoLMHuhn893zG8ug==
+X-Received: by 2002:a19:6406:: with SMTP id y6mr5000126lfb.125.1585477644797;
+        Sun, 29 Mar 2020 03:27:24 -0700 (PDT)
+Received: from saruman (91-155-214-58.elisa-laajakaista.fi. [91.155.214.58])
+        by smtp.gmail.com with ESMTPSA id j16sm1931138ljg.98.2020.03.29.03.27.22
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Sun, 29 Mar 2020 03:27:23 -0700 (PDT)
+From:   Felipe Balbi <balbi@kernel.org>
+To:     Sandeep Maheswaram <sanm@codeaurora.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Doug Anderson <dianders@chromium.org>,
+        Matthias Kaehlcke <mka@chromium.org>
+Cc:     linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Manu Gautam <mgautam@codeaurora.org>,
+        Sandeep Maheswaram <sanm@codeaurora.org>
+Subject: Re: [PATCH v5 0/2] Add USB DWC3 support for SC7180
+In-Reply-To: <1585206368-685-1-git-send-email-sanm@codeaurora.org>
+References: <1585206368-685-1-git-send-email-sanm@codeaurora.org>
+Date:   Sun, 29 Mar 2020 13:27:18 +0300
+Message-ID: <875zenfoc9.fsf@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; boundary="=-=-=";
+        micalg=pgp-sha256; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 26 Mar 2020 19:45:39 +0000
-"Ardelean, Alexandru" <alexandru.Ardelean@analog.com> wrote:
+--=-=-=
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 
-> On Thu, 2020-03-26 at 12:56 -0600, Rob Herring wrote:
-> > On Tue, 24 Mar 2020 15:46:36 +0200, Alexandru Ardelean wrote:  
-> > > This change adds the binding doc for the AD9467 ADC.
-> > > 
-> > > Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
-> > > ---
-> > >  .../bindings/iio/adc/adi,ad9467.yaml          | 65 +++++++++++++++++++
-> > >  1 file changed, 65 insertions(+)
-> > >  create mode 100644
-> > > Documentation/devicetree/bindings/iio/adc/adi,ad9467.yaml
-> > >   
-> > 
-> > Please add Acked-by/Reviewed-by tags when posting new versions. However,
-> > there's no need to repost patches *only* to add the tags. The upstream
-> > maintainer will do that for acks received on the version they apply.
-> > 
-> > If a tag was not added on purpose, please state why and what changed.  
-> 
-> My bad. Apologies for that.
-> No idea how I missed adding this. Especially since I already know that I should
-> add it.
-> 
-> I guess I got mixed up with too many branches and not paying attention.
-Fixed the missing tag from Rob and whole series applied to the togreg branch of
-iio.git.  Pushed out as testing for the autobuilders to poke at it.
+Sandeep Maheswaram <sanm@codeaurora.org> writes:
 
-Exposing the dma buffer stuff to the autobuilders is great. So far the only
-issue was that patch I took yesterday where we need to rethink things.
-However, that's just my sanity check local build so I'm sure we broke
-some obscure architecture :)
+> Converting dt binding to yaml.
+> Adding compatible for SC7180 in dt bindings.
+>
+> Changes in v5:
+> Addressed the comments from Stephen in yaml file.
+>
+> Changes in v4:
+> Addressed the comments from Doug in yaml file.
+>
+> Changes in v3:
+> Dropped the patch for adding the compatible in dwc3 driver from the serie=
+s.
+> Addressed the comments from Doug in yaml file.
+>
+> Changes in v2:
+> Sorted the compatible in dwc3 driver.
+> Converted dt binding to yaml.
+> Added compatible in yaml.
 
-Thanks,
+now queued for v5.8
 
-Jonathan
+=2D-=20
+balbi
 
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
 
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEElLzh7wn96CXwjh2IzL64meEamQYFAl6AeAYACgkQzL64meEa
+mQZE8A//adSbSBMaJegP9rkwyzjwC90gjKyrrsGUqrP1dEc9oCNIs9MlmTRYnOrN
+XEhJ8d8oXGMDZ+fxcVl0Vkvqxl0S6SVTHeL9fe8KsOTDsPWCDktJqwxs9haeYdul
+YHis8uRjHKDfDJXsEqGEkllNrYMUxBumN/JPTvo138LIMcVhEDRk5TvtDWD1gGXO
+pMk+q3a1p01ec35+wkjuiafAMaMsDNjBQ29r5ESTu7U5iGhgSecPT7XaTKh4RU63
+rMsKKydGb47Jml0e6Ppz46bP7nw3vXAreSBekmK/AR/o8xREMhQddEwOtKdvxPcP
+wmbQuqz+58XuH2QlSHYOp36glPyDxV+2m65KvqeG0mnaxJ99J5URAvSOp7pdccXH
+9Kbfudi8OPoMBRM8D475epJUCYZYGEiAEY4rlVCg51dBYic74xYXecTwjvNC5tr5
+wjSDxz/QrmeYNR5o8C2pBQEw811/NMfHrstiIIyU53/p51pxvi0EAm0ZbaY76jqG
+zsoOGx/7sroJVvpK8xaHOxe9I7u7s0AO4oO1Hfx8x182W3G2VZ6KEvKUiCwmejq2
+7qdB88yyX7EE76CKJDOpxItutjEP38dXPjmbIHX+Uq2Qde5RbfnWav+aNtSVXU1J
+1IIW6Ap4ucNURLp6Ytx+aglapseOz+HkPS4yw3P/56ldfWckQyc=
+=31p8
+-----END PGP SIGNATURE-----
+--=-=-=--
