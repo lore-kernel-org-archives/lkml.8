@@ -2,100 +2,101 @@ Return-Path: <SRS0=I467=5O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F31DDC2D0E7
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 09:40:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 777BEC43331
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 09:41:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C932220732
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 09:40:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585474807;
-	bh=fZx8d3Yegoa/gkblvUC3Z2gOoaGWoaO7VSLCX/1FrKA=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=FLm8LAAXIP+TqE5O/QCYYJZovpQXfYE3srujOtOmeZxGiU7lF4uHSRVUFctejqsOV
-	 WBDnE79/hyE9oy4jtAaLZtuUOuoyGLzzdy9E1ypALWtQqucmeFPFp6nOSJ42BSS93C
-	 oXjUh6EO3/Ym7Yelm+IPBbh2KVEfk6/Ht1GhA+Ts=
+	by mail.kernel.org (Postfix) with ESMTP id 4A8AB206DB
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 09:41:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="JD9x2z+x"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727947AbgC2JkG (ORCPT
+        id S1727948AbgC2JlE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Mar 2020 05:40:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49228 "EHLO mail.kernel.org"
+        Sun, 29 Mar 2020 05:41:04 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:6110 "EHLO pegase1.c-s.fr"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727286AbgC2JkF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Mar 2020 05:40:05 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6D288206DB;
-        Sun, 29 Mar 2020 09:40:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585474805;
-        bh=fZx8d3Yegoa/gkblvUC3Z2gOoaGWoaO7VSLCX/1FrKA=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=wScFJMRoh4MtVrQgJFhJS2DiUS5pFlWgRZQjApYdkCP0vn8zKlIFBRxb+iyXUr1vU
-         Zq0Kz/mNSfCmgCW24V/ERC+OUdMT/5ERzhdJdg7ZiJUHV41l81Km0VTzafKJj2tV/M
-         Ln77THD0s8mJceG1YXQoCPNEVc8t5Dsr/qJ8iODs=
-Date:   Sun, 29 Mar 2020 10:40:01 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Alexandru Ardelean <alexandru.ardelean@analog.com>
-Cc:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <lars@metafoo.de>
-Subject: Re: [PATCH] iio: buffer: drop left-over 'stufftoread' field
-Message-ID: <20200329104001.6b62b4ab@archlinux>
-In-Reply-To: <20200328163421.69784-1-alexandru.ardelean@analog.com>
-References: <20200328163421.69784-1-alexandru.ardelean@analog.com>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        id S1727397AbgC2JlD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Mar 2020 05:41:03 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 48qrF70qgKz9tyY0;
+        Sun, 29 Mar 2020 11:40:59 +0200 (CEST)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=JD9x2z+x; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id W2DKOqpYvs0k; Sun, 29 Mar 2020 11:40:59 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 48qrF66qzKz9tyXy;
+        Sun, 29 Mar 2020 11:40:58 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1585474859; bh=9Ex3O+iluoexmpGb+PEB5x2/IMSdkbD5UGZNuiYc8UI=;
+        h=From:Subject:To:Cc:Date:From;
+        b=JD9x2z+x1Fdqj6pXC/MT1KrW50s81K/1H4B1yO35cf1HCqE/W8y37LwrmymhK/FBj
+         d6fIe0YvTLR9yqVq6YzTVbhqrF64ud8ChFXgtcezg/iNRAucb5lnhZH72cCdFmedYj
+         1iO0c+HhCMYbjNBMFkbrhbbFciPfgQZ8Be2iXr4k=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id DC5188B770;
+        Sun, 29 Mar 2020 11:41:01 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id STH3M_JcQ2vg; Sun, 29 Mar 2020 11:41:01 +0200 (CEST)
+Received: from pc16570vm.idsi0.si.c-s.fr (unknown [192.168.4.90])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 954998B752;
+        Sun, 29 Mar 2020 11:41:01 +0200 (CEST)
+Received: by pc16570vm.idsi0.si.c-s.fr (Postfix, from userid 0)
+        id 4CDA965653; Sun, 29 Mar 2020 09:41:01 +0000 (UTC)
+Message-Id: <dff05b59a161434a546010507000816750073f28.1585474724.git.christophe.leroy@c-s.fr>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Subject: [PATCH 01/12] powerpc/52xx: Blacklist functions running with MMU
+ disabled for kprobe
+To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        naveen.n.rao@linux.vnet.ibm.com
+Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Date:   Sun, 29 Mar 2020 09:41:01 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 28 Mar 2020 18:34:21 +0200
-Alexandru Ardelean <alexandru.ardelean@analog.com> wrote:
+kprobe does not handle events happening in real mode, all
+functions running with MMU disabled have to be blacklisted.
 
-> This seems like a left-over from a7348347ba8a4 ("staging:iio: Add polling
-> of events on the ring access chrdev.").
-> 
-> Then it was moved into the sca3000 driver around 9dd4694dafbd8 ("iio:
-> staging: sca3000: hide stufftoread logic"), and that one seemed to be the
-> only user of this.
-> 
-> Then it eventually was no longer used after 152a6a884ae1
-> ("staging:iio:accel:sca3000 move to hybrid hard / soft buffer design.")
-> 
-> Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
-Oops.
+Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+---
+ arch/powerpc/platforms/52xx/lite5200_sleep.S | 2 ++
+ 1 file changed, 2 insertions(+)
 
-Applied to the togreg branch of iio.git and pushed out as testing for
-the autobuilders to play with it.
-
-Thanks,
-
-Jonathan
-
-> ---
->  include/linux/iio/buffer_impl.h | 3 ---
->  1 file changed, 3 deletions(-)
-> 
-> diff --git a/include/linux/iio/buffer_impl.h b/include/linux/iio/buffer_impl.h
-> index a4d2d8061ef6..1e7edf6bed96 100644
-> --- a/include/linux/iio/buffer_impl.h
-> +++ b/include/linux/iio/buffer_impl.h
-> @@ -115,9 +115,6 @@ struct iio_buffer {
->  	 */
->  	struct attribute_group scan_el_group;
->  
-> -	/* @stufftoread: Flag to indicate new data. */
-> -	bool stufftoread;
-> -
->  	/* @attrs: Standard attributes of the buffer. */
->  	const struct attribute **attrs;
->  
+diff --git a/arch/powerpc/platforms/52xx/lite5200_sleep.S b/arch/powerpc/platforms/52xx/lite5200_sleep.S
+index 3a9969c429b3..70083649c9ea 100644
+--- a/arch/powerpc/platforms/52xx/lite5200_sleep.S
++++ b/arch/powerpc/platforms/52xx/lite5200_sleep.S
+@@ -248,6 +248,7 @@ mmu_on:
+ 
+ 
+ 	blr
++_ASM_NOKPROBE_SYMBOL(lite5200_wakeup)
+ 
+ 
+ /* ---------------------------------------------------------------------- */
+@@ -391,6 +392,7 @@ restore_regs:
+ 	LOAD_SPRN(TBWU,  0x5b);
+ 
+ 	blr
++_ASM_NOKPROBE_SYMBOL(restore_regs)
+ 
+ 
+ 
+-- 
+2.25.0
 
