@@ -2,159 +2,199 @@ Return-Path: <SRS0=I467=5O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20B18C43331
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 10:36:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44FDAC43331
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 10:37:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E5CC420675
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 10:36:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585478199;
-	bh=Io8+jAiHEbJYEt/DyVZFmpPHOSq9d/2sdPcr0EXpShw=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:List-ID:From;
-	b=ly03MARaemV8nXlCwTm8juDHg36e4QQB6DPUZ93s1FxLrlqgwGbt85no17kt8esF7
-	 vGyy0iZprcwHPcyBFd3XxxVDca/GeaP7siu/tc2J0dLYmBrkRCqd9Bo++zYl7kmVSa
-	 GYR2zpPolklXiFSpfl/dTk+BXUmsmo2KZIWHodOw=
+	by mail.kernel.org (Postfix) with ESMTP id 224E920675
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 10:37:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728004AbgC2Kgh (ORCPT
+        id S1728023AbgC2KhV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Mar 2020 06:36:37 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:44421 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727869AbgC2Kgh (ORCPT
+        Sun, 29 Mar 2020 06:37:21 -0400
+Received: from mail2-relais-roc.national.inria.fr ([192.134.164.83]:27248 "EHLO
+        mail2-relais-roc.national.inria.fr" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727791AbgC2KhV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Mar 2020 06:36:37 -0400
-Received: by mail-lj1-f193.google.com with SMTP id p14so14699488lji.11;
-        Sun, 29 Mar 2020 03:36:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:in-reply-to:references:date:message-id
-         :mime-version;
-        bh=cEsIe8nn/S1lT0wrpqG10UN56pPApRKTKN29r4c4Uu8=;
-        b=ZKWeswJz2TjBGfAJe3HbiPdCAr3SAOh2sPYa0TzzpncnDPFVrILal0hxoCJog0t8uW
-         Ksu4ct+oISI8eYATUgwqFuctJVD+KM7iKyZxVXe6YYDS4CZdzrQz1vO69vhpLgDNTOnC
-         hDj0hOnVAqkxHlO8Xmejq8lhPxTij/tFHZdUk9SoBRTyC6c4LRMIGBl5EBpvcy8zXG/u
-         fRTlspMAYfdgBtudbe90nhcleTSmtaNEOLtkQwXErND9RjiUQAyk3IZv0FB6ev9pfkWG
-         uRLIRt55E0sMNw78VnDLg9bTubhpd4oEruWQPDd1RTBqejrRw8hMrd52fbX/Y9hPVl3I
-         intA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:in-reply-to:references
-         :date:message-id:mime-version;
-        bh=cEsIe8nn/S1lT0wrpqG10UN56pPApRKTKN29r4c4Uu8=;
-        b=D++lF5XdlOBUV86ZeIj38uxVCy55oImZP/pRiiH7EbQcy+OXJMq1nh0LE8Hn6WZoF/
-         piNObpNn7vIUv4Vge2Iq3qtawhtD95fbMTAvnVK7J281mSxRzoFrhEKM+oL0+cEIZYYv
-         Bkd3PfRU5MSRF+bWteAQ5BYH+ZCOEHKZTtMDMjFBJI8MZcaBOWh3PYV5MjWmr7ITEOEX
-         XaMx6VJ1uvebxx/4BpqjbqJsGHpmrZczrbtnVyVWPY4a32lIpSwxax9kS2YcFZ+6qM2p
-         d3/ZwF5E0wFwdoAQuijxpz69TreiJh1xQHFdoPrWK/qjSuLSXeFvthWiVjaJNhU7lNB+
-         qvJQ==
-X-Gm-Message-State: AGi0PuaQuxYGEbLZv2vDIgsr9hUxFWCV5FYUwxOZYoT+mTxt/NZBGie4
-        yuz8RJCenTaQb6EhlfsTPO27a3nLpnN8QQ==
-X-Google-Smtp-Source: APiQypJThIFhVwSBsidNoBC3qKZrQY2GoxPRqD+WnxsypL80S0UNgy5WV/AaIIZEVzJM6IJFC8PXkw==
-X-Received: by 2002:a2e:8954:: with SMTP id b20mr4134503ljk.176.1585478194949;
-        Sun, 29 Mar 2020 03:36:34 -0700 (PDT)
-Received: from saruman (91-155-214-58.elisa-laajakaista.fi. [91.155.214.58])
-        by smtp.gmail.com with ESMTPSA id k3sm5332976lji.43.2020.03.29.03.36.33
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Sun, 29 Mar 2020 03:36:34 -0700 (PDT)
-From:   Felipe Balbi <balbi@kernel.org>
-To:     Neil Armstrong <narmstrong@baylibre.com>, kishon@ti.com,
-        khilman@baylibre.com, martin.blumenstingl@googlemail.com
-Cc:     Neil Armstrong <narmstrong@baylibre.com>,
-        linux-amlogic@lists.infradead.org, linux-usb@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 00/14] usb: dwc3: meson: add OTG support for GXL/GXM
-In-Reply-To: <20200326134507.4808-1-narmstrong@baylibre.com>
-References: <20200326134507.4808-1-narmstrong@baylibre.com>
-Date:   Sun, 29 Mar 2020 13:36:28 +0300
-Message-ID: <87v9mne9cj.fsf@kernel.org>
+        Sun, 29 Mar 2020 06:37:21 -0400
+X-IronPort-AV: E=Sophos;i="5.72,319,1580770800"; 
+   d="scan'208";a="442809216"
+Received: from abo-173-121-68.mrs.modulonet.fr (HELO hadrien) ([85.68.121.173])
+  by mail2-relais-roc.national.inria.fr with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Mar 2020 12:37:18 +0200
+Date:   Sun, 29 Mar 2020 12:37:18 +0200 (CEST)
+From:   Julia Lawall <julia.lawall@inria.fr>
+X-X-Sender: jll@hadrien
+To:     Soumyajit Deb <debsoumyajit100@gmail.com>
+cc:     John Wyatt <jbwyatt4@gmail.com>, outreachy-kernel@googlegroups.com,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Payal Kshirsagar <payal.s.kshirsagar.98@gmail.com>,
+        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
+Subject: Re: [Outreachy kernel] [PATCH] staging: fbtft: Replace udelay with
+ preferred usleep_range
+In-Reply-To: <CAMS7mKBEhqFat8fWi=QiFwfLV9+skwi1hE-swg=XxU48zk=_tQ@mail.gmail.com>
+Message-ID: <alpine.DEB.2.21.2003291235590.2990@hadrien>
+References: <20200329092204.770405-1-jbwyatt4@gmail.com> <alpine.DEB.2.21.2003291127230.2990@hadrien> <2fccf96c3754e6319797a10856e438e023f734a7.camel@gmail.com> <alpine.DEB.2.21.2003291144460.2990@hadrien>
+ <CAMS7mKBEhqFat8fWi=QiFwfLV9+skwi1hE-swg=XxU48zk=_tQ@mail.gmail.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha256; protocol="application/pgp-signature"
+Content-Type: multipart/mixed; boundary="8323329-1337720750-1585478238=:2990"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
+
+--8323329-1337720750-1585478238=:2990
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 
 
-Hi,
 
-Neil Armstrong <narmstrong@baylibre.com> writes:
-> The USB support was initialy done with a set of PHYs and dwc3-of-simple
-> because the architecture of the USB complex was not understood correctly
-> at the time (and proper documentation was missing...).
+On Sun, 29 Mar 2020, Soumyajit Deb wrote:
+
+> I had the same doubt the other day about the replacement of udelay() with
+> usleep_range(). The corresponding range for the single argument value of
+> udelay() is quite confusing as I couldn't decide the range. But as much as I
+> noticed checkpatch.pl gives warning for replacing udelay() with
+> usleep_range() by checking the argument value of udelay(). In the
+> documentation, it is written udelay() should be used for a sleep time of at
+> most 10 microseconds but between 10 microseconds and 20 milliseconds,
+> usleep_range() should be used. 
+> I think the range is code specific and will depend on what range is
+> acceptable and doesn't break the code.
+>  Please correct me if I am wrong.
+
+The range depends on the associated hardware.  Just because checkpatch
+suggests something doesn't mean that it is easy to address the problem.
+
+julia
+
 >
-> But with the G12A family, the USB complex was correctly understood and
-> implemented correctly.
-> But seems the G12A architecture was derived for the GXL USB architecture,
-> with minor differences and looks we can share most of the USB DWC3 glue
-> driver.
+> More clarification on this issue will be helpful.
 >
-> This patchset refactors and adds callbacks to handle the architecture
-> difference while keeping the main code shared.
+> On Sun, 29 Mar 2020, 15:17 Julia Lawall, <julia.lawall@inria.fr> wrote:
 >
-> The main difference is that on GXL/GXM the USB2 PHY control registers
-> are mixed with the PHY registers (we already handle correctly), and
-> the GLUE registers are allmost (99%) the same as G12A.
 >
-> But, the GXL/GXM HW is buggy, here are the quirks :
-> - for the DWC2 controller to reset correctly, the GLUE mux must be switch=
-ed
->   to peripheral when the DWC2 controller probes. For now it's handled by =
-simply
->   switching to device when probing the subnodes, but it may be not enough
-> - when manually switching from Host to Device when the USB port is not
->   populated (should not happen with proper Micro-USB/USB-C OTG switch), it
->   makes the DWC3 to crash. The only way to avoid that is to use the Host
->   Disconnect bit to disconnect the DWC3 controller from the port, but we =
-can't
->   recover the Host functionnality unless resetting the DWC3 controller.
->   This bit is set when only manual switch is done, and a warning is print=
-ed
->   on manual switching.
+>       On Sun, 29 Mar 2020, John Wyatt wrote:
 >
-> The patches 1-9 should be applied first, then either waiting the next rel=
-ease
-> or if the usb maintainer can provide us a stable tag, we can use it to me=
-rge
-> the DT and bindings.
+>       > On Sun, 2020-03-29 at 11:28 +0200, Julia Lawall wrote:
+>       > >
+>       > > On Sun, 29 Mar 2020, John B. Wyatt IV wrote:
+>       > >
+>       > > > Fix style issue with usleep_range being reported as
+>       preferred over
+>       > > > udelay.
+>       > > >
+>       > > > Issue reported by checkpatch.
+>       > > >
+>       > > > Please review.
+>       > > >
+>       > > > As written in Documentation/timers/timers-howto.rst udelay
+>       is the
+>       > > > generally preferred API. hrtimers, as noted in the docs,
+>       may be too
+>       > > > expensive for this short timer.
+>       > > >
+>       > > > Are the docs out of date, or, is this a checkpatch issue?
+>       > > >
+>       > > > Signed-off-by: John B. Wyatt IV <jbwyatt4@gmail.com>
+>       > > > ---
+>       > > >  drivers/staging/fbtft/fb_agm1264k-fl.c | 2 +-
+>       > > >  1 file changed, 1 insertion(+), 1 deletion(-)
+>       > > >
+>       > > > diff --git a/drivers/staging/fbtft/fb_agm1264k-fl.c
+>       > > > b/drivers/staging/fbtft/fb_agm1264k-fl.c
+>       > > > index eeeeec97ad27..019c8cce6bab 100644
+>       > > > --- a/drivers/staging/fbtft/fb_agm1264k-fl.c
+>       > > > +++ b/drivers/staging/fbtft/fb_agm1264k-fl.c
+>       > > > @@ -85,7 +85,7 @@ static void reset(struct fbtft_par *par)
+>       > > >   dev_dbg(par->info->device, "%s()\n", __func__);
+>       > > >
+>       > > >   gpiod_set_value(par->gpio.reset, 0);
+>       > > > - udelay(20);
+>       > > > + usleep_range(20, 20);
+>       > >
+>       > > usleep_range should have a range, eg usleep_range(50,
+>       100);.  But it
+>       > > is
+>       > > hard to know a priori what the range should be.  So it is
+>       probably
+>       > > better
+>       > > to leave the code alone.
+>       >
+>       > Understood.
+>       >
+>       > With the question I wrote in the commit message:
+>       >
+>       > "As written in Documentation/timers/timers-howto.rst udelay is
+>       the
+>       > generally preferred API. hrtimers, as noted in the docs, may
+>       be too
+>       > expensive for this short timer.
+>       >
+>       > Are the docs out of date, or, is this a checkpatch issue?"
+>       >
+>       > Is usleep_range too expensive for this operation?
+>       >
+>       > Why does checkpatch favor usleep_range while the docs favor
+>       udelay?
 >
-> Changes since v1 at [1]:
-> - Fixed DT bindings to take in account usb2-phy2 on GXM
-> - Added comment in patch2
-> - Fixed patch 5 and moved fix out
-> - Collected tags
-> - Lower DT patch changes, switch p20x-q20x port B as OTG by default
-
-patches 1-6 are applied to my testing/next
-
-=2D-=20
-balbi
-
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEElLzh7wn96CXwjh2IzL64meEamQYFAl6Aei4ACgkQzL64meEa
-mQaamxAAwuHxU4drRBYL0UhnH4ujHmfw9zVuZeEVjxAf0eTeCXjxw0u76bgZlbm1
-z407kK9bU2znxIUFAEtYZ8SNuPQcnGkEkJBRIAKr9sBlcoqnVl0I6UCCgpAhZh0P
-/Mkpea+QjUrtIgojPkyM9xnxi42+JwBT6S+rGqgq9KulVVC5TzNWTY5b3IvlJinW
-7OruoTHahtfiVqSi5DOzzNRsWvX6R6JolMq8wsa1KOQiVnlB0GTLJFqf8TKrZgWn
-/PQpbbhk5MUnDgUTIaOWYbfcJrUZd4yt0kkgH8tO3jIH8getvK3JKgZcrsQQ2em6
-gmXrQ+o64TaJ+5RFNMJknhcMfnB5jKCAWj8FVHB2P/wOFt1eHu6XOIxBozraEkYW
-OEa+3RNEFilashPRbm7plsHlqQX98HpliM2+p7mtcgTjWKJeDRMiBc2RXqd8SKcp
-U7kwWYGv6BZ/EVncImIHgVJ2uTvriB+yeUuMVrZU8u/Rr3eRaOHikb/KJANh00k/
-UlpxS89UD2zAd+HT3BqVYuzvtoKJOYO8z0d6DlvV/bzaxSOpWoIFNEL8tGjGDRtu
-R9HlOcqhoi3amtqVFMR+huIB6ZQIcilLcNA+1mzxwq0qXyVNA+oyY2dskRhgoV+t
-kFZs/a6g4e5bN8HxaWdDeEdWgts/Cmz+A4PfCTsD26XKggaw8f4=
-=uyGs
------END PGP SIGNATURE-----
---=-=-=--
+>       I don't know the answer in detail, but it is quite possible that
+>       checkpatch doesn't pay any attention to the delay argument. 
+>       Checkpatch is
+>       a perl script that highlights things that may be of concern.  It
+>       is not a
+>       precise static analsis tool.
+>
+>       As a matter of form, all of your Please review comments should
+>       have been
+>       put below the ---.  Currently, if someone had wanted to apply
+>       the patch,
+>       you would make them do extra work to remove this information.
+>
+>       julia
+>
+>       >
+>       > >
+>       > > julia
+>       > >
+>       > > >   gpiod_set_value(par->gpio.reset, 1);
+>       > > >   mdelay(120);
+>       > > >  }
+>       > > > --
+>       > > > 2.25.1
+>       > > >
+>       > > > --
+>       > > > You received this message because you are subscribed to
+>       the Google
+>       > > > Groups "outreachy-kernel" group.
+>       > > > To unsubscribe from this group and stop receiving emails
+>       from it,
+>       > > > send an email to
+>       outreachy-kernel+unsubscribe@googlegroups.com.
+>       > > > To view this discussion on the web visit
+>       > > >https://groups.google.com/d/msgid/outreachy-kernel/20200329092204.770405-1-
+>       jbwyatt4%40gmail.com
+>       > > > .
+>       > > >
+>       >
+>       >
+>
+>       --
+>       You received this message because you are subscribed to the
+>       Google Groups "outreachy-kernel" group.
+>       To unsubscribe from this group and stop receiving emails from
+>       it, send an email to
+>       outreachy-kernel+unsubscribe@googlegroups.com.
+>       To view this discussion on the web visithttps://groups.google.com/d/msgid/outreachy-kernel/alpine.DEB.2.21.20032911
+>       44460.2990%40hadrien.
+>
+>
+>
+--8323329-1337720750-1585478238=:2990--
