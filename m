@@ -2,157 +2,79 @@ Return-Path: <SRS0=I467=5O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F19DC2D0E9
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 03:49:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7768C43331
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 04:00:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE739206DB
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 03:49:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="dVpyXFVg"
+	by mail.kernel.org (Postfix) with ESMTP id 8AD0720659
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 04:00:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727355AbgC2DtM (ORCPT
+        id S1726315AbgC2EAQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 28 Mar 2020 23:49:12 -0400
-Received: from mail-mw2nam10on2131.outbound.protection.outlook.com ([40.107.94.131]:4608
-        "EHLO NAM10-MW2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726315AbgC2DtM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 28 Mar 2020 23:49:12 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=XlTscLzQHkPhJ5e702bgWeV6k0LewU/N6gCQTFQdEfPvnKF7oqoAck5IXcCKxLu/hYDJRtFwIAJ8IGgS1Po/uRCP6SIzG9zXh5OxlWtz9NWuaE/J/lWZ7h4n/Klkdqu5oCEWt14olWRzXVSfFgOXySlHg5LUGSERiIXkJ5IwxGudMEiPkdRm3/JEIijxFyPe03Z7YmfOOisUyrXbCK/pz6A3jK9f7iPjKtmzwer9FLRei+ue/yBbj81pLo4DnWdBybeMKg+QIUYYNuegHFSECC+jTew63s326w+UG6gNObbKZTfHTN2gv99PClRSYKKxg6OfpTuuyRdu6pzrlC6e3A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=iUJQGZH1WHvybcDiZXPxvagzrgfXY32dKjHb674YKfw=;
- b=XsvtlOCK+ltJyAHXJIINBJUs9rH7MO3MnXmGG35oy9H89RYg43G/DLhRS3qFu/1LSKOHU6dFuV6WrpgRQnNISFEyW97wuOharHjIPkUMSpcbuPbZvhstGIGsp0k44vsm5+y6ZI9n3XrN0ErRJOUXy3PMWh9mUHYEDgI2WZqa/NceJ+Jna3g0JVSB+9DgGgDIMbamn5CJQD1S0deiKxrLRm223712S0RbXuzjZDMXtz1lDBtsvKvOudAltFWhWJrAlsGdQOblOQQS//WPr1TnKXcqQxUwLQJYpGEarhR1h/O/XupzbWlTDIKIjdeC8WjeXw71BL/jQ6QzNAUjWNt6zA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=iUJQGZH1WHvybcDiZXPxvagzrgfXY32dKjHb674YKfw=;
- b=dVpyXFVg4iAaAnr4IRzuRPxTufHZ7yl+WG+TJ7/BWmQMBwY9/5jMJpXRunqWPCaRvcdpwSnxwX5T4PTWEHaQyY/ZakyDMjf/pXfrKtRxDwoluMNGSQ0+uy98/D9YtxF7WG5LjkadjeCk4RPmj9dav6SoThLCjameompwzxCzYbU=
-Received: from MW2PR2101MB1052.namprd21.prod.outlook.com (2603:10b6:302:a::16)
- by MW2PR2101MB0971.namprd21.prod.outlook.com (2603:10b6:302:4::20) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2878.11; Sun, 29 Mar
- 2020 03:49:06 +0000
-Received: from MW2PR2101MB1052.namprd21.prod.outlook.com
- ([fe80::71ee:121:71bd:6156]) by MW2PR2101MB1052.namprd21.prod.outlook.com
- ([fe80::71ee:121:71bd:6156%8]) with mapi id 15.20.2878.007; Sun, 29 Mar 2020
- 03:49:06 +0000
-From:   Michael Kelley <mikelley@microsoft.com>
-To:     Andrea Parri <parri.andrea@gmail.com>,
-        vkuznets <vkuznets@redhat.com>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        Dexuan Cui <decui@microsoft.com>,
-        Boqun Feng <boqun.feng@gmail.com>
-Subject: RE: [RFC PATCH 03/11] Drivers: hv: vmbus: Replace the per-CPU channel
- lists with a global array of channels
-Thread-Topic: [RFC PATCH 03/11] Drivers: hv: vmbus: Replace the per-CPU
- channel lists with a global array of channels
-Thread-Index: AQHWAvico4ZmXIW+OUuJvbv+arPat6ha8H0AgAArBQCAAAqNAIADL3wAgACc9cA=
-Date:   Sun, 29 Mar 2020 03:49:06 +0000
-Message-ID: <MW2PR2101MB10521D93B6CDE4D7D9C435E3D7CA0@MW2PR2101MB1052.namprd21.prod.outlook.com>
-References: <20200325225505.23998-1-parri.andrea@gmail.com>
- <20200325225505.23998-4-parri.andrea@gmail.com>
- <87y2rn4287.fsf@vitty.brq.redhat.com> <20200326170518.GA14314@andrea>
- <87pncz3tcn.fsf@vitty.brq.redhat.com> <20200328182148.GA11210@andrea>
-In-Reply-To: <20200328182148.GA11210@andrea>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=mikelley@ntdev.microsoft.com;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2020-03-29T03:49:04.0457472Z;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
- Information Protection;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=7884bb8a-3bb6-4bfe-a2ef-c7cca989fdbc;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=mikelley@microsoft.com; 
-x-originating-ip: [24.22.167.197]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 0b83ae07-9496-42b7-d6bc-08d7d3942133
-x-ms-traffictypediagnostic: MW2PR2101MB0971:|MW2PR2101MB0971:|MW2PR2101MB0971:
-x-ms-exchange-transport-forked: True
-x-ld-processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
-x-microsoft-antispam-prvs: <MW2PR2101MB0971FE06C4BDC772A26356DAD7CA0@MW2PR2101MB0971.namprd21.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8882;
-x-forefront-prvs: 035748864E
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW2PR2101MB1052.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10019020)(4636009)(376002)(396003)(39860400002)(366004)(136003)(346002)(26005)(6506007)(66946007)(8990500004)(316002)(33656002)(7696005)(54906003)(110136005)(82950400001)(478600001)(52536014)(66446008)(10290500003)(76116006)(64756008)(5660300002)(66556008)(4326008)(66476007)(8936002)(81166006)(9686003)(186003)(71200400001)(8676002)(81156014)(55016002)(86362001)(82960400001)(2906002);DIR:OUT;SFP:1102;
-received-spf: None (protection.outlook.com: microsoft.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 7OQODSsOKjEuZQAeGzF+hX2vgAAYEQIm/PoHDNnZF4rTh3FuOUQliPB0l8+dA1HLSko3Jy6bPKeeJPmJMZkfugnrwFhDU0JFONbyqMI9iIVk6COTf2BsbGmQJa0bc/A8hUKIQEpwo/k/loZVvxf6dGYeS308wQb8/71jHwqPsAg2xdDdid9uS8B7J9iaLxDBzNKJvo798ce1A4O1F+vq1xpdSTW6BuYcKxa1UVnC03pjUc8IUf8QCtti4ob9QfDzgMJlBXA1vtR3dB4kFWBNDYCdJlVNdwH63rT7SFibgt6hiYJGvQJcfrl8E3hE3i7uOPoms0P4mZrAwOMH2AiwrIKytjx5R7t1DtJ2jFhUC2UCPt+TqK1Xvun03OFuDYnwzRPuJXVkWr2erjHDXKm/rWXQAp3/CBflB8+swyulfpYFrjl3h/kep++r5Ko1a03E
-x-ms-exchange-antispam-messagedata: YrnrubL5k0QfS+oSoNu8TXJWy9aPX6FFqaJK0JBvdWMUe/Z/8m29iHxcxlQjkdxPMnZChUVmVC9Q3Kp7WpX7QMcOQpvDIEjZnstBHV/JbR9oVNpl0GUqsyr0AwLv7jJQR3/c3xc9lb1QFYdr8J69GA==
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Sun, 29 Mar 2020 00:00:16 -0400
+Received: from mx.sdf.org ([205.166.94.20]:52679 "EHLO mx.sdf.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725379AbgC2EAQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Mar 2020 00:00:16 -0400
+Received: from sdf.org (IDENT:lkml@sdf.lonestar.org [205.166.94.16])
+        by mx.sdf.org (8.15.2/8.14.5) with ESMTPS id 02T40C6E028586
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits) verified NO);
+        Sun, 29 Mar 2020 04:00:13 GMT
+Received: (from lkml@localhost)
+        by sdf.org (8.15.2/8.12.8/Submit) id 02T40CNt013009;
+        Sun, 29 Mar 2020 04:00:12 GMT
+Date:   Sun, 29 Mar 2020 04:00:12 +0000
+From:   George Spelvin <lkml@SDF.ORG>
+To:     Andreas Dilger <adilger@dilger.ca>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "Theodore Ts'o" <tytso@mit.edu>,
+        linux-ext4 <linux-ext4@vger.kernel.org>, lkml@sdf.org
+Subject: Re: [RFC PATCH v1 08/50] fs/ext4/ialloc.c: Replace % with
+ reciprocal_scale() TO BE VERIFIED
+Message-ID: <20200329040012.GB11951@SDF.ORG>
+References: <202003281643.02SGh9vH007105@sdf.org>
+ <9A60C390-349E-4A90-A812-F04EB5A82136@dilger.ca>
+ <20200328231536.GA11951@SDF.ORG>
+ <EC88E8EB-7303-45FB-85B9-A007FBE5F5A0@dilger.ca>
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0b83ae07-9496-42b7-d6bc-08d7d3942133
-X-MS-Exchange-CrossTenant-originalarrivaltime: 29 Mar 2020 03:49:06.1430
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: yk8BW7I985oVuv5OBZfFA6msKX6125MZOZjtfI58Uypic5S0IAHC2fQtHwoeNPNIy/fHV3i2JufVH4SOxamumDyEC4Fx49DIRMJB8LagNpU=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW2PR2101MB0971
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <EC88E8EB-7303-45FB-85B9-A007FBE5F5A0@dilger.ca>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andrea Parri <parri.andrea@gmail.com> Sent: Saturday, March 28, 2020 =
-11:22 AM
->=20
-> > Correct me if I'm wrong, but currently vmbus_chan_sched() accesses
-> > per-cpu list of channels on the same CPU so we don't need a spinlock to
-> > guarantee that during an interrupt we'll be able to see the update if i=
-t
-> > happened before the interrupt (in chronological order). With a global
-> > list of relids, who guarantees that an interrupt handler on another CPU
-> > will actually see the modified list?
->=20
-> Thanks for pointing this out!
->=20
-> The offer/resume path presents implicit full memory barriers, program
-> -order after the array store which should guarantee the visibility of
-> the store to *all* CPUs before the offer/resume can complete (c.f.,
->=20
->   tools/memory-model/Documentation/explanation.txt, Sect. #13
->=20
-> and assuming that the offer/resume for a channel must complete before
-> the corresponding handler, which seems to be the case considered that
-> some essential channel fields are initialized only later...)
->=20
-> IIUC, the spin lock approach you suggested will work and be "simpler";
-> an obvious side effect would be, well, a global synchronization point
-> in vmbus_chan_sched()...
->=20
-> Thoughts?
->=20
+On Sat, Mar 28, 2020 at 06:10:11PM -0600, Andreas Dilger wrote:
+> On Mar 28, 2020, at 5:15 PM, George Spelvin <lkml@SDF.ORG> wrote:
+>> Also, we could, if desired, eliminate the i variable entirely
+>> using the fact that we have a copy of the starting position cached
+>> in parent_group.  I.e.
+>> 
+>> 		g = parent_group = reciprocal_scale(grp, ngroups);
+>> -		for (i = 0; i < ngroups; i++, ++g == ngroups && (g = 0)) {
+>> +		do {
+>> 			...
+>> -		}
+>> +			if (++g == ngroups)
+>> +				g = 0;
+>> +		} while (g != parent_group);
 
-Note that this global array is accessed overwhelmingly with reads.  Once
-The system is initialized, channels only rarely come-or-go, so writes will
-be rare.  So the array can be cached in all CPUs, and we need to avoid
-any global synchronization points.  Leveraging the full semantics of the
-memory model (across all architectures) seems like the right approach
-to preserve a high level of concurrency.
+> I was looking at whether we could use a for-loop without "i"?  Something like:
+> 
+> 	for (g = parent_group + 1; g != parent_group; ++g >= ngroups && (g = 0))
+> 
+> The initial group is parent_group + 1, to avoid special-casing when the
+> initial parent_group = 0 (which would prevent the loop from terminating).
 
-Michael
+That's the first option I presented, above.  Since a for() loop
+tests before each iteration, if the counter is strictly modulo
+ngroups, there's no way to execute the loop body more than ngroups-1
+times.
+
+That's why I changed to do{}while(), which has a minimum of 1 (it can't
+handle ngroups == 0), but can mimic the current loop's execution
+perfectly (no initial +1 offset).
