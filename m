@@ -2,177 +2,153 @@ Return-Path: <SRS0=I467=5O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB244C43331
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 00:34:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13158C43331
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 00:37:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 67A0F206CC
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 00:34:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="YZWIpXz7"
+	by mail.kernel.org (Postfix) with ESMTP id CFFC2206CC
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 00:37:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585442259;
+	bh=Qlp6BZ4t5XQH9C8jwKsJerUmPblT2TiEfFWsOARzxZs=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=wqKjn0Xcs5QyTtedpS5OAkq80RQukkeaMcKX+6CG+HQx966E14sfjfAoGlQJB/3qq
+	 qXO6KUAUHBqLAonxbXY0Opcnb7vs1eBzHpe43RzYLFVcnMpZtyRwxyrrqAG5VQscZH
+	 ppwalvL3ysoFYQB9oJYvaT66FiUuwNgDtsUp47Ts=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727755AbgC2AeB (ORCPT
+        id S1727773AbgC2Ahi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 28 Mar 2020 20:34:01 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:36255 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727466AbgC2AeB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 28 Mar 2020 20:34:01 -0400
-Received: by mail-io1-f65.google.com with SMTP id d15so13883641iog.3
-        for <linux-kernel@vger.kernel.org>; Sat, 28 Mar 2020 17:34:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=PZOXxamCEJ4pJQooOY8Vo9spEOaO/1ETCDCanMSNcIk=;
-        b=YZWIpXz7N7ebsVBY4gyw5EFXHKkiS+YuFdw2uOvHgijvEPadY8XY+aWz8gap8wk7Rp
-         7rzRxoip3d5JH6174iB0QAB6qeheTN1A2boFICYooUJjV/i54iTeGsXZ/WtY7jW/TndZ
-         c3lnf6UaJX0DJaqaLLDOx9vwp6EFCTOxHJ2rM=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=PZOXxamCEJ4pJQooOY8Vo9spEOaO/1ETCDCanMSNcIk=;
-        b=QdTUag6Xab+jRQrb1AUDfl3LnVLla1fass0LqyAxNW95m2ngPvqCeFgPQeCswAjJg4
-         qvxVgxBTNPttkW+LQgR2uRS0cDruQ2Ij9ntZNlTsDZHfXhc0ODw13AWNyBL9lBsXkmrY
-         m/mWYCNDaAdYKXbMTQKCDHTLga9q+TycvC46PIjn9vpvjbDp3wi5Io4O76y6cvrhklAO
-         6vxKbUY32Wsvgzf2pe4wfiLbPG4ajqOTnYqw+mINYr6v7RVEI+eOOAlEWe4FgiXvz1a1
-         MRF5o0mxb0SUejjCyKNuFbgCSh2aZuVZyR5BDip6jsX82ENh0CEKGumDYPn7allBI7DY
-         2ndw==
-X-Gm-Message-State: ANhLgQ1sOr/Bc4IccgMbb5oJA5QG6/dXUkvyzdI5O91EwmmYQCLpZJdo
-        qHRU0iM6C0FbrkSyYfRUQTG0bHIGcJcn4Ynj1FAfag==
-X-Google-Smtp-Source: ADFU+vtZgYpobw5MVLLk+5ci/NZSPJCUPVLm2Mda0qDub/Gv1hERtB9YqQQsjao4KhMhGyeptUfOXId1MzgtQD7vZeE=
-X-Received: by 2002:a05:6638:733:: with SMTP id j19mr5300490jad.131.1585442039546;
- Sat, 28 Mar 2020 17:33:59 -0700 (PDT)
+        Sat, 28 Mar 2020 20:37:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47704 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727491AbgC2Ahh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 28 Mar 2020 20:37:37 -0400
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6EB982076E
+        for <linux-kernel@vger.kernel.org>; Sun, 29 Mar 2020 00:37:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1585442256;
+        bh=Qlp6BZ4t5XQH9C8jwKsJerUmPblT2TiEfFWsOARzxZs=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=NgCXivyvkn8UwbtGnZXrue2/vpMxe7MI1ssZ9c7wzzkxxBeFvrGLl3dRf18cJvULj
+         TxIdfQTtXX4jXJWsgWEiiuLQ3+HlTNtxwo7BK7b389kvVVtxZevU3h3acUtWiJZ1HO
+         wUg3cXQveat/9ahOR4hsM0Ac7lDLSiq5cxxOaB0M=
+Received: by mail-wm1-f43.google.com with SMTP id d198so15857034wmd.0
+        for <linux-kernel@vger.kernel.org>; Sat, 28 Mar 2020 17:37:36 -0700 (PDT)
+X-Gm-Message-State: ANhLgQ2yW2ij1xKWfCUkBP2iTl0BCJJCG19YOeRUkLntaFxs76YI+BiV
+        KwCql5Ki1tnfku0w1hG+4kgU8XDYXADZ6WTVTBpQbg==
+X-Google-Smtp-Source: ADFU+vu7ohbD1F++3/l1oonpWI/O7Y/x7HTLga+w/7WcQZ+TQ37tVQLWtyjq0lFNZ2riZY1yh9je0TJyqg/gpbxmwUU=
+X-Received: by 2002:a05:600c:cc:: with SMTP id u12mr5917421wmm.176.1585442254786;
+ Sat, 28 Mar 2020 17:37:34 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200327223443.6006-1-gwendal@chromium.org> <20200327223443.6006-13-gwendal@chromium.org>
- <20200328172256.583b483e@archlinux>
-In-Reply-To: <20200328172256.583b483e@archlinux>
-From:   Gwendal Grignou <gwendal@chromium.org>
-Date:   Sat, 28 Mar 2020 17:33:48 -0700
-Message-ID: <CAPUE2usGMaqieLW+L_Axou1GoVVOEnWDd6huAsqY21iKnMDPzQ@mail.gmail.com>
-Subject: Re: [PATCH v7 12/12] iio: cros_ec: flush as hwfifo attribute
-To:     Jonathan Cameron <jic23@jic23.retrosnub.co.uk>
-Cc:     Benson Leung <bleung@chromium.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        linux-iio <linux-iio@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
+References: <000000000000960ee605a1ef4d4e@google.com>
+In-Reply-To: <000000000000960ee605a1ef4d4e@google.com>
+From:   Andy Lutomirski <luto@kernel.org>
+Date:   Sat, 28 Mar 2020 17:37:23 -0700
+X-Gmail-Original-Message-ID: <CALCETrVR_qcUPpi2=5QYUVu8VugouYcJ_j4R2jsG4QzggowGsA@mail.gmail.com>
+Message-ID: <CALCETrVR_qcUPpi2=5QYUVu8VugouYcJ_j4R2jsG4QzggowGsA@mail.gmail.com>
+Subject: framebuffer bug (Re: general protection fault in do_syscall_64)
+To:     syzbot <syzbot+f9b2c53f55a9270fc778@syzkaller.appspotmail.com>,
+        Linux Fbdev development list <linux-fbdev@vger.kernel.org>
+Cc:     Borislav Petkov <bp@alien8.de>, "H. Peter Anvin" <hpa@zytor.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Andrew Lutomirski <luto@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        syzkaller-bugs@googlegroups.com,
+        Thomas Gleixner <tglx@linutronix.de>, X86 ML <x86@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Mar 28, 2020 at 10:22 AM Jonathan Cameron
-<jic23@jic23.retrosnub.co.uk> wrote:
+On Sat, Mar 28, 2020 at 12:34 PM syzbot
+<syzbot+f9b2c53f55a9270fc778@syzkaller.appspotmail.com> wrote:
 >
-> On Fri, 27 Mar 2020 15:34:43 -0700
-> Gwendal Grignou <gwendal@chromium.org> wrote:
+> Hello,
 >
-> > Add buffer/hwfifo_flush. It is not part of the ABI, but it follows ST
-> > and HID lead: Tells the sensor hub to send to the host all pending
-> > sensor events.
-> >
-> > Signed-off-by: Gwendal Grignou <gwendal@chromium.org>
+> syzbot found the following crash on:
 >
-> Unless I'm missing something there aren't any other drivers providing
-> an explicit flush attribute.
-The flush attribute comes from a  requirement from Android to ask the
-sensorhub to flush the samples still in its FIFO queue. (see
-https://source.android.com/devices/sensors/hal-interface#flush_sensor)
-It has been implemented in the ST Android HAL, which expects a
-hw_fifo_flush attribute.:
-https://github.com/STMicroelectronics/STMems_Android_Sensor_HAL_IIO/blob/STMems_Android_Sensor_HAL_IIO/src/utils.cpp#L31
+> HEAD commit:    69c5eea3 Merge branch 'parisc-5.6-2' of git://git.kernel.o..
+> git tree:       upstream
+> console output: https://syzkaller.appspot.com/x/log.txt?x=14d3517be00000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=4ac76c43beddbd9
+> dashboard link: https://syzkaller.appspot.com/bug?extid=f9b2c53f55a9270fc778
+> compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=15059d05e00000
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=16e5d5a3e00000
+>
+> IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> Reported-by: syzbot+f9b2c53f55a9270fc778@syzkaller.appspotmail.com
 
-But I misread kernel ST code; as you said, the request to flush
-appends only when the buffer is enabled/disabled or the sensor
-suspended, it is not exposed to user space.
+Hi framebuffer people-
 
-For Bosh sensor : there is a patch that was proposed a while back:
-"http://lkml.iu.edu/hypermail/linux/kernel/1504.3/03270.html", but it
-never reached mainline.
+Somewhere in the framebuffer code is a horrible bug that spews zeros
+over kernel memory (including text, suggesting a *physical* memory
+overrun).  My suspicion is that there is insufficient validation in
+the ioctls that set font parameters.
 
-For HID, the attribute is defined in the HID specification (31C) :
-https://www.usb.org/sites/default/files/hutrr59_-_usages_for_wearables_0.pdf
-but I could not find a publicly available proposed change request that uses it.
+Could someone who is actually familiar with this code take a look?
 
-Anyhow, it was a mistake to put this patch in the current patch set. I
-need it on chromebook for supporting Android, but it should be
-discussed more widely to have it part of the ABI, or define a better
-solution.
+--Andy
 
-> The nearest equivalent is the flush
-> callback which reads out stuff that is in a fifo to be read, but which
-> hasn't yet reached a watermark to trigger normal readback.
 >
-> Can we do something similar here?
+> general protection fault, probably for non-canonical address 0x1ffffffff1215a85: 0000 [#1] PREEMPT SMP KASAN
+> CPU: 1 PID: 7207 Comm: syz-executor045 Not tainted 5.6.0-rc7-syzkaller #0
+> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+> RIP: 0010:__read_once_size include/linux/compiler.h:199 [inline]
+> RIP: 0010:do_syscall_64+0x5f/0x1b0 arch/x86/entry/common.c:289
+> Code: 48 c7 c7 28 d4 0a 89 e8 bf 5d b0 00 48 83 3d af 5b 0a 08 00 0f 84 58 01 00 00 fb 66 0f 1f 44 00 00 65 48 8b 1c 25 c0 1d 02 00 <48> 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+> RSP: 0018:ffffc90001617f28 EFLAGS: 00010282
+> RAX: 1ffffffff1215a85 RBX: ffff888095530380 RCX: ffff888095530380
+> RDX: dffffc0000000000 RSI: 0000000000000000 RDI: ffff888095530bc4
+> RBP: 0000000000000000 R08: ffffffff817a2210 R09: 0000000000000000
+> R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000023
+> R13: dffffc0000000000 R14: ffffc90001617f58 R15: 0000000000000000
+> FS:  0000000001333880(0000) GS:ffff8880ae900000(0000) knlGS:0000000000000000
+> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> CR2: 00007f87bf9aae78 CR3: 00000000a6a3f000 CR4: 00000000001406e0
+> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+> Call Trace:
+>  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+> RIP: 0033:0x4454e1
+> Code: 75 14 b8 23 00 00 00 0f 05 48 3d 01 f0 ff ff 0f 83 64 1f fc ff c3 48 83 ec 08 e8 9a 42 00 00 48 89 04 24 b8 23 00 00 00 0f 05 <48> 8b 3c 24 48 89 c2 e8 e3 42 00 00 48 89 d0 48 83 c4 08 48 3d 01
+> RSP: 002b:00007ffd72d164b0 EFLAGS: 00000293 ORIG_RAX: 0000000000000023
+> RAX: ffffffffffffffda RBX: 000000000000000c RCX: 00000000004454e1
+> RDX: 0000000000000000 RSI: 0000000000000000 RDI: 00007ffd72d164c0
+> RBP: 00000000006dbc20 R08: 0000000000000000 R09: 0000000000000000
+> R10: 00007ffd72d164e0 R11: 0000000000000293 R12: 0000000000000000
+> R13: 00000000006dbc2c R14: 000000000000000a R15: 0000000000000000
+> Modules linked in:
+> ---[ end trace 3da67f82bf6bae14 ]---
+> RIP: 0010:__read_once_size include/linux/compiler.h:199 [inline]
+> RIP: 0010:do_syscall_64+0x5f/0x1b0 arch/x86/entry/common.c:289
+> Code: 48 c7 c7 28 d4 0a 89 e8 bf 5d b0 00 48 83 3d af 5b 0a 08 00 0f 84 58 01 00 00 fb 66 0f 1f 44 00 00 65 48 8b 1c 25 c0 1d 02 00 <48> 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+> RSP: 0018:ffffc90001617f28 EFLAGS: 00010282
+> RAX: 1ffffffff1215a85 RBX: ffff888095530380 RCX: ffff888095530380
+> RDX: dffffc0000000000 RSI: 0000000000000000 RDI: ffff888095530bc4
+> RBP: 0000000000000000 R08: ffffffff817a2210 R09: 0000000000000000
+> R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000023
+> R13: dffffc0000000000 R14: ffffc90001617f58 R15: 0000000000000000
+> FS:  0000000001333880(0000) GS:ffff8880ae900000(0000) knlGS:0000000000000000
+> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> CR2: 00007f87bf9aae78 CR3: 00000000a6a3f000 CR4: 00000000001406e0
+> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
 >
-> If not this needs ABI documentation in Documentation/ABI/testing/...
-> I'm not keen on it in becoming general ABI unless I'm missing a
-> strong argument in favour of it.
 >
-> Jonathan
-Thank you for your support,
-Gwendal.
+> ---
+> This bug is generated by a bot. It may contain errors.
+> See https://goo.gl/tpsmEJ for more information about syzbot.
+> syzbot engineers can be reached at syzkaller@googlegroups.com.
 >
->
-> > ---
-> > No changes in v7.
-> > New in v6.
-> >
-> >  .../cros_ec_sensors/cros_ec_sensors_core.c    | 28 +++++++++++++++++++
-> >  1 file changed, 28 insertions(+)
-> >
-> > diff --git a/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c b/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c
-> > index c831915ca7e56..aaf124a82e0e4 100644
-> > --- a/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c
-> > +++ b/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c
-> > @@ -113,6 +113,33 @@ static int cros_ec_sensor_set_ec_rate(struct cros_ec_sensors_core_state *st,
-> >       return ret;
-> >  }
-> >
-> > +static ssize_t cros_ec_sensors_flush(struct device *dev,
-> > +                                  struct device_attribute *attr,
-> > +                                  const char *buf, size_t len)
-> > +{
-> > +     struct iio_dev *indio_dev = dev_to_iio_dev(dev);
-> > +     struct cros_ec_sensors_core_state *st = iio_priv(indio_dev);
-> > +     int ret = 0;
-> > +     bool flush;
-> > +
-> > +     ret = strtobool(buf, &flush);
-> > +     if (ret < 0)
-> > +             return ret;
-> > +     if (!flush)
-> > +             return -EINVAL;
-> > +
-> > +     mutex_lock(&st->cmd_lock);
-> > +     st->param.cmd = MOTIONSENSE_CMD_FIFO_FLUSH;
-> > +     ret = cros_ec_motion_send_host_cmd(st, 0);
-> > +     if (ret != 0)
-> > +             dev_warn(&indio_dev->dev, "Unable to flush sensor\n");
-> > +     mutex_unlock(&st->cmd_lock);
-> > +     return ret ? ret : len;
-> > +}
-> > +
-> > +static IIO_DEVICE_ATTR(hwfifo_flush, 0644, NULL,
-> > +                    cros_ec_sensors_flush, 0);
-> > +
-> >  static ssize_t cros_ec_sensor_set_report_latency(struct device *dev,
-> >                                                struct device_attribute *attr,
-> >                                                const char *buf, size_t len)
-> > @@ -175,6 +202,7 @@ static ssize_t hwfifo_watermark_max_show(struct device *dev,
-> >  static IIO_DEVICE_ATTR_RO(hwfifo_watermark_max, 0);
-> >
-> >  const struct attribute *cros_ec_sensor_fifo_attributes[] = {
-> > +     &iio_dev_attr_hwfifo_flush.dev_attr.attr,
-> >       &iio_dev_attr_hwfifo_timeout.dev_attr.attr,
-> >       &iio_dev_attr_hwfifo_watermark_max.dev_attr.attr,
-> >       NULL,
->
+> syzbot will keep track of this bug report. See:
+> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+> syzbot can test patches for this bug, for details see:
+> https://goo.gl/tpsmEJ#testing-patches
