@@ -4,73 +4,68 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 451D3C2D0F3
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 17:36:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABBE5C2D0ED
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 17:38:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 071E52076A
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 17:36:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E45D20732
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 17:38:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="NRWEiUWc"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="POPb1cV4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728542AbgC2Rgp (ORCPT
+        id S1728415AbgC2Rih (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Mar 2020 13:36:45 -0400
-Received: from mo4-p02-ob.smtp.rzone.de ([85.215.255.83]:12476 "EHLO
-        mo4-p02-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728285AbgC2RgK (ORCPT
+        Sun, 29 Mar 2020 13:38:37 -0400
+Received: from mo4-p04-ob.smtp.rzone.de ([85.215.255.124]:15229 "EHLO
+        mo4-p04-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728065AbgC2Rih (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Mar 2020 13:36:10 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1585503366;
+        Sun, 29 Mar 2020 13:38:37 -0400
+X-Greylist: delayed 9448 seconds by postgrey-1.27 at vger.kernel.org; Sun, 29 Mar 2020 13:38:36 EDT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1585503515;
         s=strato-dkim-0002; d=goldelico.com;
         h=References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
         X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=Zg1B2MSlw8LBkeQrcB+SbHPflxN5qiikKNdtggvwHAA=;
-        b=NRWEiUWc6buewPunl3ymSwFnhaLwWhtkGxTYzBZ7KNJpA3LvwjYMif4MkLTTqppEtF
-        jNUjgmVmOy3FbrJPfizy4KjC+oF3S9xamG209PGfLABs0aeJH2OJrG7ctO52ujrB+vH6
-        fHWGQoGoCvAMx0Ugb28zoQyFZ2wAwGSM2a8ri/sbNfI9NKBAW4jfKKbesQLDyxNNefzf
-        FYbx5/o16a5VT+FIwqUkBqiIF2m/f9MUbwu0/n2XvnN82+rakrOBjOu67aNpf+9lXWJj
-        OCSoT8lrwpvphmkQ4mQQ6mKbO7+2bibOPoC6h/L6jDXorZ2qnFZNJ28khftdHiDQah0d
-        8Ihg==
+        bh=Yq6hgnjHR7Rm0pXOfRm3OsZIBIP2cqxLTjaSlwPQ/iI=;
+        b=POPb1cV4hHie+Wp6icQgK6xx70rLGEelAMnog00Jvd4Rgfu8wlqEohkQnQ1tSydbiT
+        Aadr2sZMG3AKLtu3rRy4IpV/28ZJMG0vfAo+ObWl/LvhbYa0m+agU8UrzfveBD4boHui
+        e/yAW+KGxCNuvcGZFPF/wAVOCoYbQ6pXdpxlCUkILhOUcyW/cSdXosXgkQ0BsxTIK7mC
+        0BBQMtSzXZ4w20ZRfTBxH0jqLdZLf361aq6llmuMuPe+FhUBImlWY06bou2pEqN5L+W1
+        bxbbm5xj8LXVwORBzDpq3M+B4BKc7mcuZMvPpoebv2BMj4VlY/S64+KdUSBr94cN2gAN
+        IZjg==
 X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMhflhwDubTJ9o12DNOsPj0pDz2rsNxxv"
 X-RZG-CLASS-ID: mo00
 Received: from iMac.fritz.box
         by smtp.strato.de (RZmta 46.2.1 DYNA|AUTH)
-        with ESMTPSA id m02241w2THZvBM8
+        with ESMTPSA id m02241w2THcTBMm
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
         (Client did not present a certificate);
-        Sun, 29 Mar 2020 19:35:57 +0200 (CEST)
+        Sun, 29 Mar 2020 19:38:29 +0200 (CEST)
 From:   "H. Nikolaus Schaller" <hns@goldelico.com>
-To:     Paul Cercueil <paul@crapouillou.net>,
-        Paul Boddie <paul@boddie.org.uk>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
+To:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
         Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
+        =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Paul Cercueil <paul@crapouillou.net>,
         Ralf Baechle <ralf@linux-mips.org>,
         Paul Burton <paulburton@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Andi Kleen <ak@linux.intel.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
+        James Hogan <jhogan@kernel.org>
+Cc:     Philipp Rossak <embed3d@gmail.com>,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
+        openpvrsgx-devgroup@letux.org, letux-kernel@openphoenux.org,
+        kernel@pyra-handheld.com, linux-mips@vger.kernel.org,
         "H. Nikolaus Schaller" <hns@goldelico.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Kees Cook <keescook@chromium.org>
-Cc:     dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
-        linux-gpio@vger.kernel.org, letux-kernel@openphoenux.org,
-        mips-creator-ci20-dev@googlegroups.com,
-        Rob Herring <robh@kernel.org>
-Subject: [RFC v3 1/8] dt-bindings: display: convert ingenic,lcd.txt to ingenic,lcd.yaml
-Date:   Sun, 29 Mar 2020 19:35:47 +0200
-Message-Id: <a75c77fa8528f44832993f9780ae4ea409125a90.1585503354.git.hns@goldelico.com>
+        "Andrew F . Davis" <afd@ti.com>
+Subject: [PATCH v5 4/8] ARM: DTS: omap34xx: add sgx gpu child node
+Date:   Sun, 29 Mar 2020 19:38:22 +0200
+Message-Id: <126157dffb9761ce785a1892c25ff2306f26fc3a.1585503505.git.hns@goldelico.com>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <cover.1585503354.git.hns@goldelico.com>
-References: <cover.1585503354.git.hns@goldelico.com>
+In-Reply-To: <cover.1585503505.git.hns@goldelico.com>
+References: <cover.1585503505.git.hns@goldelico.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -78,209 +73,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-and add compatible: jz4780-lcd, including an example how to
-configure both lcd controllers.
+and add interrupt.
 
-Also fix the clock names and examples.
+According to omap3530 TRM the SGX register block is 64kB.
+See: 13.4  SGX Register Mapping, Table 13-2
 
-Based on work by Paul Cercueil <paul@crapouillou.net> and
-Sam Ravnborg <sam@ravnborg.org>
-
+Reported-by: Andrew F. Davis <afd@ti.com>	# register size
+Tested-by: H. Nikolaus Schaller <hns@goldelico.com> # OpenPandora 600 MHz.
 Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
-Cc: Rob Herring <robh@kernel.org>
-Cc: devicetree@vger.kernel.org
 ---
- .../bindings/display/ingenic,lcd.txt          |  45 ------
- .../bindings/display/ingenic,lcd.yaml         | 128 ++++++++++++++++++
- 2 files changed, 128 insertions(+), 45 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/display/ingenic,lcd.txt
- create mode 100644 Documentation/devicetree/bindings/display/ingenic,lcd.yaml
+ arch/arm/boot/dts/omap34xx.dtsi | 11 ++++++-----
+ 1 file changed, 6 insertions(+), 5 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/display/ingenic,lcd.txt b/Documentation/devicetree/bindings/display/ingenic,lcd.txt
-deleted file mode 100644
-index 01e3261defb6..000000000000
---- a/Documentation/devicetree/bindings/display/ingenic,lcd.txt
-+++ /dev/null
-@@ -1,45 +0,0 @@
--Ingenic JZ47xx LCD driver
--
--Required properties:
--- compatible: one of:
--  * ingenic,jz4740-lcd
--  * ingenic,jz4725b-lcd
--  * ingenic,jz4770-lcd
--- reg: LCD registers location and length
--- clocks: LCD pixclock and device clock specifiers.
--	   The device clock is only required on the JZ4740.
--- clock-names: "lcd_pclk" and "lcd"
--- interrupts: Specifies the interrupt line the LCD controller is connected to.
--
--Example:
--
--panel {
--	compatible = "sharp,ls020b1dd01d";
--
--	backlight = <&backlight>;
--	power-supply = <&vcc>;
--
--	port {
--		panel_input: endpoint {
--			remote-endpoint = <&panel_output>;
--		};
--	};
--};
--
--
--lcd: lcd-controller@13050000 {
--	compatible = "ingenic,jz4725b-lcd";
--	reg = <0x13050000 0x1000>;
--
--	interrupt-parent = <&intc>;
--	interrupts = <31>;
--
--	clocks = <&cgu JZ4725B_CLK_LCD>;
--	clock-names = "lcd";
--
--	port {
--		panel_output: endpoint {
--			remote-endpoint = <&panel_input>;
--		};
--	};
--};
-diff --git a/Documentation/devicetree/bindings/display/ingenic,lcd.yaml b/Documentation/devicetree/bindings/display/ingenic,lcd.yaml
-new file mode 100644
-index 000000000000..8b6467cfc191
---- /dev/null
-+++ b/Documentation/devicetree/bindings/display/ingenic,lcd.yaml
-@@ -0,0 +1,128 @@
-+# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/display/ingenic,lcd.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Bindings for Ingenic JZ4780 LCD Controller
-+
-+maintainers:
-+  - Paul Cercueil <paul@crapouillou.net>
-+
-+description: |
-+  LCD Controller is the Display Controller for the Ingenic JZ47xx SoC
-+
-+properties:
-+  compatible:
-+    oneOf:
-+     - const: ingenic,jz4725b-lcd
-+     - const: ingenic,jz4740-lcd
-+     - const: ingenic,jz4770-lcd
-+     - const: ingenic,jz4780-lcd
-+
-+  reg:
-+    maxItems: 1
-+    description: LCD registers location and length
-+
-+  interrupts:
-+    maxItems: 1
-+    description: Specifies the interrupt provided by parent
-+
-+  clocks:
-+    maxItems: 2
-+    description: Clock specifiers for LCD pixclock and device clock.
-+      The device clock is only required on the JZ4740 and JZ4780
-+
-+  clock-names:
-+    items:
-+      - const: lcd
-+      - const: lcd_pclk
-+
-+  port:
-+    type: object
-+    description: |
-+      A port node with endpoint definitions as defined in
-+      Documentation/devicetree/bindings/media/video-interfaces.txt
-+
-+required:
-+    - compatible
-+    - reg
-+    - interrupts
-+    - clocks
-+    - clock-names
-+    - port
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/clock/jz4725b-cgu.h>
-+
-+    panel {
-+      compatible = "sharp,ls020b1dd01d";
-+
-+      backlight = <&backlight>;
-+      power-supply = <&vcc>;
-+
-+      port {
-+        panel_input: endpoint {
-+          remote-endpoint = <&panel_output>;
-+          };
-+        };
-+      };
-+
-+    lcd: lcd-controller@13050000 {
-+      compatible = "ingenic,jz4725b-lcd";
-+      reg = <0x13050000 0x1000>;
-+
-+      interrupt-parent = <&intc>;
-+      interrupts = <31>;
-+
-+      clocks = <&cgu JZ4725B_CLK_LCD>;
-+      clock-names = "lcd", "lcd_pclk";
-+
-+      port {
-+        panel_output: endpoint {
-+          remote-endpoint = <&panel_input>;
-+          };
-+        };
-+      };
-+
-+  - |
-+    #include <dt-bindings/clock/jz4780-cgu.h>
-+
-+    lcdc0: lcdc0@13050000 {
-+        compatible = "ingenic,jz4780-lcd";
-+        reg = <0x13050000 0x1800>;
-+
-+        clocks = <&cgu JZ4780_CLK_TVE>, <&cgu JZ4780_CLK_LCD0PIXCLK>;
-+        clock-names = "lcd", "lcd_pclk";
-+
-+        interrupt-parent = <&intc>;
-+        interrupts = <31>;
-+
-+        jz4780_lcd_out: port {
-+            #address-cells = <1>;
-+            #size-cells = <0>;
-+
-+            jz4780_out_hdmi: endpoint@0 {
-+                reg = <0>;
-+                remote-endpoint = <&hdmi_in_lcd>;
-+            };
-+        };
-+    };
-+
-+    lcdc1: lcdc1@130a0000 {
-+        compatible = "ingenic,jz4780-lcd";
-+        reg = <0x130a0000 0x1800>;
-+
-+        clocks = <&cgu JZ4780_CLK_TVE>, <&cgu JZ4780_CLK_LCD1PIXCLK>;
-+        clock-names = "lcd", "lcd_pclk";
-+
-+        interrupt-parent = <&intc>;
-+        interrupts = <31>;
-+
-+        status = "disabled";
-+    };
-+
-+...
+diff --git a/arch/arm/boot/dts/omap34xx.dtsi b/arch/arm/boot/dts/omap34xx.dtsi
+index c4dd9801840d..51c60ee2b68d 100644
+--- a/arch/arm/boot/dts/omap34xx.dtsi
++++ b/arch/arm/boot/dts/omap34xx.dtsi
+@@ -167,12 +167,13 @@ sgx_module: target-module@50000000 {
+ 			clock-names = "fck", "ick";
+ 			#address-cells = <1>;
+ 			#size-cells = <1>;
+-			ranges = <0 0x50000000 0x4000>;
++			ranges = <0 0x50000000 0x10000>;
+ 
+-			/*
+-			 * Closed source PowerVR driver, no child device
+-			 * binding or driver in mainline
+-			 */
++			gpu: gpu@0 {
++				compatible = "ti,omap3-sgx530-121", "img,sgx530-121", "img,sgx530";
++				reg = <0x0 0x10000>;	/* 64kB */
++				interrupts = <21>;
++			};
+ 		};
+ 	};
+ 
 -- 
 2.25.1
 
