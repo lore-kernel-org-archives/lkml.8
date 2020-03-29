@@ -2,143 +2,177 @@ Return-Path: <SRS0=I467=5O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5250BC2D0EB
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 00:19:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB244C43331
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 00:34:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 27B262074F
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 00:19:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 67A0F206CC
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 00:34:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WcNn9SNf"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="YZWIpXz7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727793AbgC2ATk (ORCPT
+        id S1727755AbgC2AeB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 28 Mar 2020 20:19:40 -0400
-Received: from us-smtp-delivery-74.mimecast.com ([63.128.21.74]:42105 "EHLO
-        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727701AbgC2ATj (ORCPT
+        Sat, 28 Mar 2020 20:34:01 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:36255 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727466AbgC2AeB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 28 Mar 2020 20:19:39 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1585441178;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=vaewZEk2eYYox9uyi7WlaKYkj/uEgqOwrp4YGqapC0o=;
-        b=WcNn9SNfjezooIP5MAhyf/waif40iq0ONlfoDqpEs9aPT4FYBiVR/R8hYNpgCOmXBWqi9b
-        rCe68x3RbGg3E6uW7lvT/c2Uuemof1CUdfPEirmMv7wFksc0G24a+Fsy+wbvbMGgJz+hBx
-        /ffV/ibuD1maGgJug6LPOmfg/Awndd8=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-16-ivzlOkrCNy-K-x1Z03nVDw-1; Sat, 28 Mar 2020 20:19:34 -0400
-X-MC-Unique: ivzlOkrCNy-K-x1Z03nVDw-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A0BD918A8C80;
-        Sun, 29 Mar 2020 00:19:29 +0000 (UTC)
-Received: from localhost (ovpn-12-30.pek2.redhat.com [10.72.12.30])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 5B78510013A1;
-        Sun, 29 Mar 2020 00:19:27 +0000 (UTC)
-Date:   Sun, 29 Mar 2020 08:19:24 +0800
-From:   Baoquan He <bhe@redhat.com>
-To:     Hoan Tran <Hoan@os.amperecomputing.com>
-Cc:     Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@suse.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Oscar Salvador <osalvador@suse.de>,
-        Pavel Tatashin <pavel.tatashin@microsoft.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        "open list:MEMORY MANAGEMENT" <linux-mm@kvack.org>,
-        linux-arm-kernel@lists.infradead.org, linux-s390@vger.kernel.org,
-        sparclinux@vger.kernel.org, x86@kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        lho@amperecomputing.com, mmorana@amperecomputing.com
-Subject: Re: [PATCH v3 0/5] mm: Enable CONFIG_NODES_SPAN_OTHER_NODES by
- default for NUMA
-Message-ID: <20200329001924.GS3039@MiWiFi-R3L-srv>
-References: <1585420282-25630-1-git-send-email-Hoan@os.amperecomputing.com>
+        Sat, 28 Mar 2020 20:34:01 -0400
+Received: by mail-io1-f65.google.com with SMTP id d15so13883641iog.3
+        for <linux-kernel@vger.kernel.org>; Sat, 28 Mar 2020 17:34:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=PZOXxamCEJ4pJQooOY8Vo9spEOaO/1ETCDCanMSNcIk=;
+        b=YZWIpXz7N7ebsVBY4gyw5EFXHKkiS+YuFdw2uOvHgijvEPadY8XY+aWz8gap8wk7Rp
+         7rzRxoip3d5JH6174iB0QAB6qeheTN1A2boFICYooUJjV/i54iTeGsXZ/WtY7jW/TndZ
+         c3lnf6UaJX0DJaqaLLDOx9vwp6EFCTOxHJ2rM=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=PZOXxamCEJ4pJQooOY8Vo9spEOaO/1ETCDCanMSNcIk=;
+        b=QdTUag6Xab+jRQrb1AUDfl3LnVLla1fass0LqyAxNW95m2ngPvqCeFgPQeCswAjJg4
+         qvxVgxBTNPttkW+LQgR2uRS0cDruQ2Ij9ntZNlTsDZHfXhc0ODw13AWNyBL9lBsXkmrY
+         m/mWYCNDaAdYKXbMTQKCDHTLga9q+TycvC46PIjn9vpvjbDp3wi5Io4O76y6cvrhklAO
+         6vxKbUY32Wsvgzf2pe4wfiLbPG4ajqOTnYqw+mINYr6v7RVEI+eOOAlEWe4FgiXvz1a1
+         MRF5o0mxb0SUejjCyKNuFbgCSh2aZuVZyR5BDip6jsX82ENh0CEKGumDYPn7allBI7DY
+         2ndw==
+X-Gm-Message-State: ANhLgQ1sOr/Bc4IccgMbb5oJA5QG6/dXUkvyzdI5O91EwmmYQCLpZJdo
+        qHRU0iM6C0FbrkSyYfRUQTG0bHIGcJcn4Ynj1FAfag==
+X-Google-Smtp-Source: ADFU+vtZgYpobw5MVLLk+5ci/NZSPJCUPVLm2Mda0qDub/Gv1hERtB9YqQQsjao4KhMhGyeptUfOXId1MzgtQD7vZeE=
+X-Received: by 2002:a05:6638:733:: with SMTP id j19mr5300490jad.131.1585442039546;
+ Sat, 28 Mar 2020 17:33:59 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1585420282-25630-1-git-send-email-Hoan@os.amperecomputing.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+References: <20200327223443.6006-1-gwendal@chromium.org> <20200327223443.6006-13-gwendal@chromium.org>
+ <20200328172256.583b483e@archlinux>
+In-Reply-To: <20200328172256.583b483e@archlinux>
+From:   Gwendal Grignou <gwendal@chromium.org>
+Date:   Sat, 28 Mar 2020 17:33:48 -0700
+Message-ID: <CAPUE2usGMaqieLW+L_Axou1GoVVOEnWDd6huAsqY21iKnMDPzQ@mail.gmail.com>
+Subject: Re: [PATCH v7 12/12] iio: cros_ec: flush as hwfifo attribute
+To:     Jonathan Cameron <jic23@jic23.retrosnub.co.uk>
+Cc:     Benson Leung <bleung@chromium.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        linux-iio <linux-iio@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 03/28/20 at 11:31am, Hoan Tran wrote:
-> In NUMA layout which nodes have memory ranges that span across other nodes,
-> the mm driver can detect the memory node id incorrectly.
-> 
-> For example, with layout below
-> Node 0 address: 0000 xxxx 0000 xxxx
-> Node 1 address: xxxx 1111 xxxx 1111
+On Sat, Mar 28, 2020 at 10:22 AM Jonathan Cameron
+<jic23@jic23.retrosnub.co.uk> wrote:
+>
+> On Fri, 27 Mar 2020 15:34:43 -0700
+> Gwendal Grignou <gwendal@chromium.org> wrote:
+>
+> > Add buffer/hwfifo_flush. It is not part of the ABI, but it follows ST
+> > and HID lead: Tells the sensor hub to send to the host all pending
+> > sensor events.
+> >
+> > Signed-off-by: Gwendal Grignou <gwendal@chromium.org>
+>
+> Unless I'm missing something there aren't any other drivers providing
+> an explicit flush attribute.
+The flush attribute comes from a  requirement from Android to ask the
+sensorhub to flush the samples still in its FIFO queue. (see
+https://source.android.com/devices/sensors/hal-interface#flush_sensor)
+It has been implemented in the ST Android HAL, which expects a
+hw_fifo_flush attribute.:
+https://github.com/STMicroelectronics/STMems_Android_Sensor_HAL_IIO/blob/STMems_Android_Sensor_HAL_IIO/src/utils.cpp#L31
 
-Sorry, I read this example several times, but still don't get what it
-means. Can it be given with real hex number address as an exmaple? I
-mean just using the memory layout you have seen from some systems. The
-change looks interesting though.
+But I misread kernel ST code; as you said, the request to flush
+appends only when the buffer is enabled/disabled or the sensor
+suspended, it is not exposed to user space.
 
-> 
-> Note:
->  - Memory from low to high
->  - 0/1: Node id
->  - x: Invalid memory of a node
-> 
-> When mm probes the memory map, without CONFIG_NODES_SPAN_OTHER_NODES
-> config, mm only checks the memory validity but not the node id.
-> Because of that, Node 1 also detects the memory from node 0 as below
-> when it scans from the start address to the end address of node 1.
-> 
-> Node 0 address: 0000 xxxx xxxx xxxx
-> Node 1 address: xxxx 1111 1111 1111
-> 
-> This layout could occur on any architecture. Most of them enables
-> this config by default with CONFIG_NUMA. This patch, by default, enables
-> CONFIG_NODES_SPAN_OTHER_NODES or uses early_pfn_in_nid() for NUMA.
-> 
-> v3:
->  * Revise the patch description
-> 
-> V2:
->  * Revise the patch description
-> 
-> Hoan Tran (5):
->   mm: Enable CONFIG_NODES_SPAN_OTHER_NODES by default for NUMA
->   powerpc: Kconfig: Remove CONFIG_NODES_SPAN_OTHER_NODES
->   x86: Kconfig: Remove CONFIG_NODES_SPAN_OTHER_NODES
->   sparc: Kconfig: Remove CONFIG_NODES_SPAN_OTHER_NODES
->   s390: Kconfig: Remove CONFIG_NODES_SPAN_OTHER_NODES
-> 
->  arch/powerpc/Kconfig | 9 ---------
->  arch/s390/Kconfig    | 8 --------
->  arch/sparc/Kconfig   | 9 ---------
->  arch/x86/Kconfig     | 9 ---------
->  mm/page_alloc.c      | 2 +-
->  5 files changed, 1 insertion(+), 36 deletions(-)
-> 
-> -- 
-> 1.8.3.1
-> 
-> 
+For Bosh sensor : there is a patch that was proposed a while back:
+"http://lkml.iu.edu/hypermail/linux/kernel/1504.3/03270.html", but it
+never reached mainline.
 
+For HID, the attribute is defined in the HID specification (31C) :
+https://www.usb.org/sites/default/files/hutrr59_-_usages_for_wearables_0.pdf
+but I could not find a publicly available proposed change request that uses it.
+
+Anyhow, it was a mistake to put this patch in the current patch set. I
+need it on chromebook for supporting Android, but it should be
+discussed more widely to have it part of the ABI, or define a better
+solution.
+
+> The nearest equivalent is the flush
+> callback which reads out stuff that is in a fifo to be read, but which
+> hasn't yet reached a watermark to trigger normal readback.
+>
+> Can we do something similar here?
+>
+> If not this needs ABI documentation in Documentation/ABI/testing/...
+> I'm not keen on it in becoming general ABI unless I'm missing a
+> strong argument in favour of it.
+>
+> Jonathan
+Thank you for your support,
+Gwendal.
+>
+>
+> > ---
+> > No changes in v7.
+> > New in v6.
+> >
+> >  .../cros_ec_sensors/cros_ec_sensors_core.c    | 28 +++++++++++++++++++
+> >  1 file changed, 28 insertions(+)
+> >
+> > diff --git a/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c b/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c
+> > index c831915ca7e56..aaf124a82e0e4 100644
+> > --- a/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c
+> > +++ b/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c
+> > @@ -113,6 +113,33 @@ static int cros_ec_sensor_set_ec_rate(struct cros_ec_sensors_core_state *st,
+> >       return ret;
+> >  }
+> >
+> > +static ssize_t cros_ec_sensors_flush(struct device *dev,
+> > +                                  struct device_attribute *attr,
+> > +                                  const char *buf, size_t len)
+> > +{
+> > +     struct iio_dev *indio_dev = dev_to_iio_dev(dev);
+> > +     struct cros_ec_sensors_core_state *st = iio_priv(indio_dev);
+> > +     int ret = 0;
+> > +     bool flush;
+> > +
+> > +     ret = strtobool(buf, &flush);
+> > +     if (ret < 0)
+> > +             return ret;
+> > +     if (!flush)
+> > +             return -EINVAL;
+> > +
+> > +     mutex_lock(&st->cmd_lock);
+> > +     st->param.cmd = MOTIONSENSE_CMD_FIFO_FLUSH;
+> > +     ret = cros_ec_motion_send_host_cmd(st, 0);
+> > +     if (ret != 0)
+> > +             dev_warn(&indio_dev->dev, "Unable to flush sensor\n");
+> > +     mutex_unlock(&st->cmd_lock);
+> > +     return ret ? ret : len;
+> > +}
+> > +
+> > +static IIO_DEVICE_ATTR(hwfifo_flush, 0644, NULL,
+> > +                    cros_ec_sensors_flush, 0);
+> > +
+> >  static ssize_t cros_ec_sensor_set_report_latency(struct device *dev,
+> >                                                struct device_attribute *attr,
+> >                                                const char *buf, size_t len)
+> > @@ -175,6 +202,7 @@ static ssize_t hwfifo_watermark_max_show(struct device *dev,
+> >  static IIO_DEVICE_ATTR_RO(hwfifo_watermark_max, 0);
+> >
+> >  const struct attribute *cros_ec_sensor_fifo_attributes[] = {
+> > +     &iio_dev_attr_hwfifo_flush.dev_attr.attr,
+> >       &iio_dev_attr_hwfifo_timeout.dev_attr.attr,
+> >       &iio_dev_attr_hwfifo_watermark_max.dev_attr.attr,
+> >       NULL,
+>
