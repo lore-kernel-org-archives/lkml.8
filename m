@@ -2,463 +2,374 @@ Return-Path: <SRS0=I467=5O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 757F6C43331
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 12:43:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 065B4C2D0E9
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 12:48:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2AFAD20714
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 12:43:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BCA372074A
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 12:48:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="K+aDKjZx"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EJzCH+kB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728184AbgC2MnC (ORCPT
+        id S1728173AbgC2Mr7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Mar 2020 08:43:02 -0400
-Received: from us-smtp-delivery-74.mimecast.com ([216.205.24.74]:37436 "EHLO
-        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728112AbgC2MnC (ORCPT
+        Sun, 29 Mar 2020 08:47:59 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:53862 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727875AbgC2Mr7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Mar 2020 08:43:02 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1585485779;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=OF/D8EHGbyytv/23CLJxE5IcP7q9D311Sz/Dbk9y8I4=;
-        b=K+aDKjZx6xa7rRZYzSYWPfZIlukxEYDhbxDiSX3x1x3nJELRjkAgDhmPu0J8cQJ4x4VwYh
-        21qJKZVjuLxmcTLFMWXt11X68D2HTMTB+hksZeVFgL28nD574FKyiEurF8MH2+XSn56XBV
-        hXfKAgKydP9ZyxnBKHAdnMlDU6VbsFY=
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
- [209.85.221.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-67-buZRYxBKMMqqtEm3R4aq-w-1; Sun, 29 Mar 2020 08:42:50 -0400
-X-MC-Unique: buZRYxBKMMqqtEm3R4aq-w-1
-Received: by mail-wr1-f71.google.com with SMTP id c8so6523453wru.20
-        for <linux-kernel@vger.kernel.org>; Sun, 29 Mar 2020 05:42:50 -0700 (PDT)
+        Sun, 29 Mar 2020 08:47:59 -0400
+Received: by mail-wm1-f66.google.com with SMTP id b12so16707921wmj.3;
+        Sun, 29 Mar 2020 05:47:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=jRVF1bo6PI0lBFNzYTz6pYAuahARppVlslCm99RAEO0=;
+        b=EJzCH+kBf71D6LKmH2igO9agoI2s6IHLIWBEntZZkSrr3eengkJOBDMwBbJl0jdfPT
+         QGBQSD1jAczjKk10Fgm5cGIow/tJqrU60GKa9fgJBmTKf/ro5cEd5hDdHTuAzFG2AioZ
+         QAGZj7kU48uB9EqkZCs7pAJSmBCzoPu2VbOIUkkoTG63d13cML9PR3DYa9PTIc7010/o
+         qzOlQZfaFUpYzV1tVHSVvGDWpC+1xcK7K3nvS7M0UmWILsPCgBul3tDK8jrjejt/GNSg
+         jQW8RA0N1GMrfrJ8Fz7SETIM0XJI7oaY/pb/28NVhk2B2qwLQYVZCngEQRoo0JWejqqE
+         siFA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=OF/D8EHGbyytv/23CLJxE5IcP7q9D311Sz/Dbk9y8I4=;
-        b=YdgANhByesuHucCf8/A0PvwmktwG3x/6a9QO/FIC6NAYEGSGKz0a9CJNx419NA6KP0
-         T0A1E1OWUiQpbcSHKAheTmNro+7ZOHuXh5bIrEBE1XYMeYE8WL9lWL4HAWkH5pK2McJQ
-         HCuJq6v60Hgogpd+jSlLkqKNGLdfmFS04VZi4qX8nQTN5e+Uo4sxXjGUFu168gbXErf8
-         4MRqfuUq8ldZC/CxRT/Fv6C0ySzZ6HL2Q41CFDuMlIW3VBHnLejurxpXPqt9Fvj7BPwa
-         aF1J7y8eJmsivrEyyevO/v76FGRX4TCgp0dbOk32sKtb4swn8muRqKe3OUTuw6PNmTHB
-         2MbA==
-X-Gm-Message-State: ANhLgQ169owN7NEf+U3yUiYK0S7iKkIPr2frCHJdgcFGEiKpvXJJN7zr
-        L1He6j0xwfkFTaxjzAflHFR36AVbs2wHjsl7XFUkzSqqQtuYlp1stBTk5/h7EipnqZrlCOvLuzX
-        T5DXPqxbidTN/ad1qzGF/fyc5
-X-Received: by 2002:adf:8341:: with SMTP id 59mr9611704wrd.314.1585485769455;
-        Sun, 29 Mar 2020 05:42:49 -0700 (PDT)
-X-Google-Smtp-Source: ADFU+vuUFOEjwNZKluUO33xv4QW+AxNoll3waC6BIkZh6y3l9o4Q5V/nH3vJXhpgtcmzq+mccXvnBw==
-X-Received: by 2002:adf:8341:: with SMTP id 59mr9611667wrd.314.1585485769030;
-        Sun, 29 Mar 2020 05:42:49 -0700 (PDT)
-Received: from redhat.com (bzq-79-183-139-129.red.bezeqint.net. [79.183.139.129])
-        by smtp.gmail.com with ESMTPSA id z21sm16557440wmf.28.2020.03.29.05.42.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 29 Mar 2020 05:42:48 -0700 (PDT)
-Date:   Sun, 29 Mar 2020 08:42:43 -0400
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     David Hildenbrand <david@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        virtio-dev@lists.oasis-open.org,
-        virtualization@lists.linux-foundation.org, kvm@vger.kernel.org,
-        Michal Hocko <mhocko@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Sebastien Boeuf <sebastien.boeuf@intel.com>,
-        Samuel Ortiz <samuel.ortiz@intel.com>,
-        Robert Bradford <robert.bradford@intel.com>,
-        Luiz Capitulino <lcapitulino@redhat.com>,
-        Pankaj Gupta <pankaj.gupta.linux@gmail.com>,
-        teawater <teawaterz@linux.alibaba.com>,
-        Igor Mammedov <imammedo@redhat.com>,
-        "Dr . David Alan Gilbert" <dgilbert@redhat.com>,
-        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
-        Alexander Potapenko <glider@google.com>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        Anthony Yznaga <anthony.yznaga@oracle.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Young <dyoung@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Juergen Gross <jgross@suse.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Len Brown <lenb@kernel.org>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Michal Hocko <mhocko@suse.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Oscar Salvador <osalvador@suse.com>,
-        Oscar Salvador <osalvador@suse.de>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>,
-        Pavel Tatashin <pavel.tatashin@microsoft.com>,
-        Pingfan Liu <kernelfans@gmail.com>, Qian Cai <cai@lca.pw>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Wei Yang <richard.weiyang@gmail.com>
-Subject: Re: [PATCH v2 00/10] virtio-mem: paravirtualized memory
-Message-ID: <20200329084128-mutt-send-email-mst@kernel.org>
-References: <20200311171422.10484-1-david@redhat.com>
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=jRVF1bo6PI0lBFNzYTz6pYAuahARppVlslCm99RAEO0=;
+        b=lcXs7AeFMxg90B+97peggQWy2zYNE9oLfNX9XXegmJSgh8FXw2rTylzBqwX3DBbqO7
+         gItr5hbHqwfpxj24vAKXsFFUXuvtvi+zwOolEaRH+vr4P/gE5kSHgNLmWT7SKcXCLjQ6
+         8GAtWFWqkq5KEKHWxjPBLdiLMBZz71HuSdS2S/tO3VHAc1ivWhwAchUG9LOFmDjXA7V6
+         j5Mo5xcZrbj2wmQPuVxfId4ZegTxAIhgHarqgpVkLY03ao6FAAonOZFSm1bse60O8Qo9
+         DESzwkOOeykjBMdn9oWmoo/e2LQfEYcq5f118N/sPO/BNdKmm/fn3kAC4Q64fG8qHZIi
+         MEPA==
+X-Gm-Message-State: ANhLgQ1/wQvsReE0CSPuwTAU2GGxdr0LRcY5RGJAGhRHVLfa/Qb+5Dfm
+        wdkLYtcyC/8IXQPnmbuRAvk=
+X-Google-Smtp-Source: ADFU+vs0gvdmi9WeG+NlVXzXlrW7r9jGDY7a9jN2Gr4+zITgAy7L2sJZ/WJa5lyfOkm5DcX3McWTZw==
+X-Received: by 2002:a7b:cbce:: with SMTP id n14mr912657wmi.100.1585486075980;
+        Sun, 29 Mar 2020 05:47:55 -0700 (PDT)
+Received: from [192.168.1.23] (afdc26.neoplus.adsl.tpnet.pl. [95.49.80.26])
+        by smtp.gmail.com with ESMTPSA id r15sm18375204wra.19.2020.03.29.05.47.54
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 29 Mar 2020 05:47:55 -0700 (PDT)
+Subject: Re: [PATCH v18 4/4] leds: multicolor: Introduce a multicolor class
+ definition
+To:     Dan Murphy <dmurphy@ti.com>, pavel@ucw.cz
+Cc:     linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Greg KH <gregkh@linuxfoundation.org>
+References: <20200324181434.24721-1-dmurphy@ti.com>
+ <20200324181434.24721-5-dmurphy@ti.com>
+ <f43bf4c5-948d-b87f-9b95-98fcfeaae2fa@gmail.com>
+ <9a707fe6-31c6-da9e-9372-51ca21bf3c88@ti.com>
+From:   Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Autocrypt: addr=jacek.anaszewski@gmail.com; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <1263c2f9-3cb3-f919-cce8-53201d64e121@gmail.com>
+Date:   Sun, 29 Mar 2020 14:47:53 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200311171422.10484-1-david@redhat.com>
+In-Reply-To: <9a707fe6-31c6-da9e-9372-51ca21bf3c88@ti.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 11, 2020 at 06:14:12PM +0100, David Hildenbrand wrote:
-> This series is based on latest linux-next. The patches are located at:
->     https://github.com/davidhildenbrand/linux.git virtio-mem-v2
-> 
-> I now have acks for all !virtio-mem changes. I'll be happy to get review
-> feedback, testing reports, etc. for the virtio-mem changes. If there are
-> no further comments, I guess this is good to go as a v1 soon.
+Dan,
 
-I'd like to queue it for merge after the release. If you feel it's ready
-please ping me after the release to help make sure it didn't get
-dropped.  I see there were some reports about people having trouble
-using this, pls keep working on this meanwhile.
+On 3/28/20 10:31 PM, Dan Murphy wrote:
+> Jacek
+> 
+> Thanks for the review
+> 
+> On 3/28/20 9:03 AM, Jacek Anaszewski wrote:
+>> Hi Dan,
+>>
+>> Thanks for the update. The picture would be more complete if
+>> the patch set contained a client though.
+> 
+> I was going to send the ones I did but they are pretty dirty from a code
+> stand point.
+> 
+> Besides I would expect the framework to change which then changes the
+> driver code.
+> 
+>> Anyway, please find my review remarks below.
+>>
+>> On 3/24/20 7:14 PM, Dan Murphy wrote:
+>>> Introduce a multicolor class that groups colored LEDs
+>>> within a LED node.
+>>>
+[...]
+>>> +What:        /sys/class/leds/<led>/color_max_intensity
+>>> +Date:        March 2020
+>>> +KernelVersion:    5.8
+>>> +Contact:    Dan Murphy <dmurphy@ti.com>
+>>> +Description:    read
+>>> +        Maximum intensity level for the LED color within the array.
+>>> +        The max intensities for each color must be entered based on the
+>>> +        color_index array.
+>> I wonder if we should mention here that each LED within a cluster should
+>> have the same maximum intensity for linear color lightness calculation
+>> via brightness file.
+> 
+> Does it really have to?
 
-Thanks!
+Say we have two LEDs:
 
+red, intensity = 255, max_intensity = 255
+green, intensity = 15, max_intensity = 15
 
-> The basic idea of virtio-mem is to provide a flexible,
-> cross-architecture memory hot(un)plug solution that avoids many limitations
-> imposed by existing technologies, architectures, and interfaces. More
-> details can be found below and in linked material.
-> 
-> It's currently only enabled for x86-64, however, should theoretically work
-> on any architecture that supports virtio and implements memory hot(un)plug
-> under Linux - like s390x, powerpc64, and arm64. On x86-64, it is currently
-> possible to add/remove memory to the system in >= 4MB granularity.
-> Memory hotplug works very reliably. For memory unplug, there are no
-> guarantees how much memory can actually get unplugged, it depends on the
-> setup (especially: fragmentation of physical memory).
-> 
-> I am currently getting the QEMU side into shape (which will be posted as
-> RFC soon, see below for a link to the current state). Experimental Kata
-> support is in the works [4]. Also, a cloud-hypervisor implementation is
-> under discussion [5].
-> 
-> --------------------------------------------------------------------------
-> 1. virtio-mem
-> --------------------------------------------------------------------------
-> 
-> The basic idea behind virtio-mem was presented at KVM Forum 2018. The
-> slides can be found at [1]. The previous RFC can be found at [2]. The
-> first RFC can be found at [3]. However, the concept evolved over time. The
-> KVM Forum slides roughly match the current design.
-> 
-> Patch #2 ("virtio-mem: Paravirtualized memory hotplug") contains quite some
-> information, especially in "include/uapi/linux/virtio_mem.h":
-> 
->     Each virtio-mem device manages a dedicated region in physical address
->     space. Each device can belong to a single NUMA node, multiple devices
->     for a single NUMA node are possible. A virtio-mem device is like a
->     "resizable DIMM" consisting of small memory blocks that can be plugged
->     or unplugged. The device driver is responsible for (un)plugging memory
->     blocks on demand.
-> 
->     Virtio-mem devices can only operate on their assigned memory region in
->     order to (un)plug memory. A device cannot (un)plug memory belonging to
->     other devices.
-> 
->     The "region_size" corresponds to the maximum amount of memory that can
->     be provided by a device. The "size" corresponds to the amount of memory
->     that is currently plugged. "requested_size" corresponds to a request
->     from the device to the device driver to (un)plug blocks. The
->     device driver should try to (un)plug blocks in order to reach the
->     "requested_size". It is impossible to plug more memory than requested.
-> 
->     The "usable_region_size" represents the memory region that can actually
->     be used to (un)plug memory. It is always at least as big as the
->     "requested_size" and will grow dynamically. It will only shrink when
->     explicitly triggered (VIRTIO_MEM_REQ_UNPLUG).
-> 
->     There are no guarantees what will happen if unplugged memory is
->     read/written. Such memory should, in general, not be touched. E.g.,
->     even writing might succeed, but the values will simply be discarded at
->     random points in time.
-> 
->     It can happen that the device cannot process a request, because it is
->     busy. The device driver has to retry later.
-> 
->     Usually, during system resets all memory will get unplugged, so the
->     device driver can start with a clean state. However, in specific
->     scenarios (if the device is busy) it can happen that the device still
->     has memory plugged. The device driver can request to unplug all memory
->     (VIRTIO_MEM_REQ_UNPLUG) - which might take a while to succeed if the
->     device is busy.
-> 
-> --------------------------------------------------------------------------
-> 2. Linux Implementation
-> --------------------------------------------------------------------------
-> 
-> Memory blocks (e.g., 128MB) are added/removed on demand. Within these
-> memory blocks, subblocks (e.g., 4MB) are plugged/unplugged. The sizes
-> depend on the target architecture, MAX_ORDER, pageblock_order, and
-> the block size of a virtio-mem device.
-> 
-> add_memory()/try_remove_memory() is used to add/remove memory blocks.
-> virtio-mem will not online memory blocks itself. This has to be done by
-> user space, or configured into the kernel
-> (CONFIG_MEMORY_HOTPLUG_DEFAULT_ONLINE). virtio-mem will only unplug memory
-> that was online to the ZONE_NORMAL. Memory is suggested to be onlined to
-> the ZONE_NORMAL for now.
-> 
-> The memory hotplug notifier is used to properly synchronize against
-> onlining/offlining of memory blocks and to track the states of memory
-> blocks (including the zone memory blocks are onlined to).
-> 
-> The set_online_page() callback is used to keep unplugged subblocks
-> of a memory block fake-offline when onlining the memory block.
-> generic_online_page() is used to fake-online plugged subblocks. This
-> handling is similar to the Hyper-V balloon driver.
-> 
-> PG_offline is used to mark unplugged subblocks as offline, so e.g.,
-> dumping tools (makedumpfile) will skip these pages. This is similar to
-> other balloon drivers like virtio-balloon and Hyper-V.
-> 
-> Memory offlining code is extended to allow drivers to drop their reference
-> to PG_offline pages when MEM_GOING_OFFLINE, so these pages can be skipped
-> when offlining memory blocks. This allows to offline memory blocks that
-> have partially unplugged (allocated e.g., via alloc_contig_range())
-> subblocks - or are completely unplugged.
-> 
-> alloc_contig_range()/free_contig_range() [now exposed] is used to
-> unplug/plug subblocks of memory blocks the are already exposed to Linux.
-> 
-> offline_and_remove_memory() [new] is used to offline a fully unplugged
-> memory block and remove it from Linux.
-> 
-> --------------------------------------------------------------------------
-> 3. Changes v1 -> v2
-> --------------------------------------------------------------------------
-> 
-> - "virtio-mem: Paravirtualized memory hotplug"
-> -- Use "__u64" and friends in uapi header
-> -- Split out ACPI PXM handling
-> - "virtio-mem: Allow to specify an ACPI PXM as nid"
-> -- Squash of the ACPI PXM handling and previous "ACPI: NUMA: export
->    pxm_to_node"
-> - "virtio-mem: Paravirtualized memory hotunplug part 2"
-> -- Squashed previous "mm: Export alloc_contig_range() /
->    free_contig_range()"
-> - "virtio-mem: Allow to offline partially unplugged memory blocks"
-> -- WARN and dump_page() in case somebody has a reference to an unplugged
->    page
-> - "virtio-mem: Better retry handling"
-> -- Use retry interval of 5s -> 5m
-> - Tweaked some patch descriptions
-> 
-> --------------------------------------------------------------------------
-> 4. Future work
-> --------------------------------------------------------------------------
-> 
-> One of the next TODO things besides the QEMU part is writing a virtio-mem
-> spec - however, that might still take some time.
-> 
-> virtio-mem extensions (via new feature flags):
-> - Indicate the guest status (e.g., initialized, working, all memory is
->   busy when unplugging, too many memory blocks are offline when plugging,
->   etc.)
-> - Guest-triggered shrinking of the usable region (e.g., whenever the
->   highest memory block is removed).
-> - Exchange of plugged<->unplugged block for defragmentation.
-> 
-> Memory hotplug:
-> - Reduce the amount of memory resources if that tunes out to be an
->   issue. Or try to speed up relevant code paths to deal with many
->   resources.
-> - Allocate vmemmap from added memory.
-> 
-> Memory hotunplug:
-> - Performance improvements:
-> -- Sense (lockless) if it make sense to try alloc_contig_range() at all
->    before directly trying to isolate and taking locks.
-> -- Try to unplug bigger chunks within a memory block first.
-> - Make unplug more likely to succeed:
-> -- There are various idea to limit fragmentation on memory block
->    granularity. (e.g., ZONE_PREFER_MOVABLE and smart balancing)
-> -- Allocate vmemmap from added memory.
-> - OOM handling, e.g., via an OOM handler/shrinker.
-> - Defragmentation
-> - Support for < MAX_ORDER - 1 blocks (esp. pageblock_order)
-> 
-> --------------------------------------------------------------------------
-> 5. Example Usage
-> --------------------------------------------------------------------------
-> 
-> A QEMU implementation (without protection of unplugged memory, but with
-> resizable memory regions and optimized migration) is available at (kept
-> updated):
->     https://github.com/davidhildenbrand/qemu.git virtio-mem
-> 
-> Start QEMU with two virtio-mem devices (one per NUMA node):
->  $ qemu-system-x86_64 -m 4G,maxmem=204G \
->   -smp sockets=2,cores=2 \
->   -numa node,nodeid=0,cpus=0-1 -numa node,nodeid=1,cpus=2-3 \
->   [...]
->   -object memory-backend-ram,id=mem0,size=100G,managed-size=on \
->   -device virtio-mem-pci,id=vm0,memdev=mem0,node=0,requested-size=0M \
->   -object memory-backend-ram,id=mem1,size=100G,managed-size=on \
->   -device virtio-mem-pci,id=vm1,memdev=mem1,node=1,requested-size=1G
-> 
-> Query the configuration:
->  QEMU 4.2.50 monitor - type 'help' for more information
->  (qemu) info memory-devices
->  Memory device [virtio-mem]: "vm0"
->    memaddr: 0x140000000
->    node: 0
->    requested-size: 0
->    size: 0
->    max-size: 107374182400
->    block-size: 2097152
->    memdev: /objects/mem0
->  Memory device [virtio-mem]: "vm1"
->    memaddr: 0x1a40000000
->    node: 1
->    requested-size: 1073741824
->    size: 1073741824
->    max-size: 107374182400
->    block-size: 2097152
->    memdev: /objects/mem1
-> 
-> Add some memory to node 0:
->  QEMU 4.2.50 monitor - type 'help' for more information
->  (qemu) qom-set vm0 requested-size 1G
-> 
-> Remove some memory from node 1:
->  QEMU 4.2.50 monitor - type 'help' for more information
->  (qemu) qom-set vm1 requested-size 64M
-> 
-> Query the configuration again:
->  QEMU 4.2.50 monitor - type 'help' for more information
->  (qemu) info memory-devices
->  Memory device [virtio-mem]: "vm0"
->    memaddr: 0x140000000
->    node: 0
->    requested-size: 1073741824
->    size: 1073741824
->    max-size: 107374182400
->    block-size: 2097152
->    memdev: /objects/mem0
->  Memory device [virtio-mem]: "vm1"
->    memaddr: 0x1a40000000
->    node: 1
->    requested-size: 67108864
->    size: 67108864
->    max-size: 107374182400
->    block-size: 2097152
->    memdev: /objects/mem1
-> 
-> --------------------------------------------------------------------------
-> 6. Q/A
-> --------------------------------------------------------------------------
-> 
-> Q: Why add/remove parts ("subblocks") of memory blocks/sections?
-> A: Flexibility (section size depends on the architecture) - e.g., some
->    architectures have a section size of 2GB. Also, the memory block size
->    is variable (e.g., on x86-64). I want to avoid any such restrictions.
->    Some use cases want to add/remove memory in smaller granularity to a
->    VM (e.g., the Hyper-V balloon also implements this) - especially smaller
->    VMs like used for kata containers. Also, on memory unplug, it is more
->    reliable to free-up and unplug multiple small chunks instead
->    of one big chunk. E.g., if one page of a DIMM is either unmovable or
->    pinned, the DIMM can't get unplugged. This approach is basically a
->    compromise between DIMM-based memory hot(un)plug and balloon
->    inflation/deflation, which works mostly on page granularity.
-> 
-> Q: Why care about memory blocks?
-> A: They are the way to tell user space about new memory. This way,
->    memory can get onlined/offlined by user space. Also, e.g., kdump
->    relies on udev events to reload kexec when memory blocks are
->    onlined/offlined. Memory blocks are the "real" memory hot(un)plug
->    granularity. Everything that's smaller has to be emulated "on top".
-> 
-> Q: Won't memory unplug of subblocks fragment memory?
-> A: Yes and no. Unplugging e.g., >=4MB subblocks on x86-64 will not really
->    fragment memory like unplugging random pages like a balloon driver does.
->    Buddy merging will not be limited. However, any allocation that requires
->    bigger consecutive memory chunks (e.g., gigantic pages) might observe
->    the fragmentation. Possible solutions: Allocate gigantic huge pages
->    before unplugging memory, don't unplug memory, combine virtio-mem with
->    DIMM based memory or bigger initial memory. Remember, a virtio-mem
->    device will only unplug on the memory range it manages, not on other
->    DIMMs. Unplug of single memory blocks will result in similar
->    fragmentation in respect to gigantic huge pages.
-> 
-> Q: How reliable is memory unplug?
-> A: There are no guarantees on how much memory can get unplugged
->    again. However, it is more likely to find 4MB chunks to unplug than
->    e.g., 128MB chunks. If memory is terribly fragmented, there is nothing
->    we can do - for now. I consider memory hotplug the first primary use
->    of virtio-mem. Memory unplug might usually work, but we want to improve
->    the performance and the amount of memory we can actually unplug later.
-> 
-> Q: Why not unplug from the ZONE_MOVABLE?
-> A: Unplugged memory chunks are unmovable. Unmovable data must not end up
->    on the ZONE_MOVABLE - similar to gigantic pages - they will never be
->    allocated from ZONE_MOVABLE. virtio-mem added memory can be onlined
->    to the ZONE_MOVABLE, but subblocks will not get unplugged from it.
-> 
-> Q: How big should the initial (!virtio-mem) memory of a VM be?
-> A: virtio-mem memory will not go to the DMA zones. So to avoid running out
->    of DMA memory, I suggest something like 2-3GB on x86-64. But many
->    VMs can most probably deal with less DMA memory - depends on the use
->    case.
-> 
-> [1] https://events.linuxfoundation.org/wp-content/uploads/2017/12/virtio-mem-Paravirtualized-Memory-David-Hildenbrand-Red-Hat-1.pdf
-> [2] https://lkml.kernel.org/r/20190919142228.5483-1-david@redhat.com
-> [3] https://lkml.kernel.org/r/547865a9-d6c2-7140-47e2-5af01e7d761d@redhat.com
-> [4] https://github.com/kata-containers/documentation/pull/592
-> [5] https://github.com/cloud-hypervisor/cloud-hypervisor/pull/837
-> 
-> Cc: Sebastien Boeuf <sebastien.boeuf@intel.com>
-> Cc: Samuel Ortiz <samuel.ortiz@intel.com>
-> Cc: Robert Bradford <robert.bradford@intel.com>
-> Cc: Luiz Capitulino <lcapitulino@redhat.com>
-> Cc: Pankaj Gupta <pankaj.gupta.linux@gmail.com>
-> Cc: teawater <teawaterz@linux.alibaba.com>
-> Cc: Igor Mammedov <imammedo@redhat.com>
-> Cc: Dr. David Alan Gilbert <dgilbert@redhat.com>
-> 
-> David Hildenbrand (10):
->   virtio-mem: Paravirtualized memory hotplug
->   virtio-mem: Allow to specify an ACPI PXM as nid
->   virtio-mem: Paravirtualized memory hotunplug part 1
->   virtio-mem: Paravirtualized memory hotunplug part 2
->   mm: Allow to offline unmovable PageOffline() pages via
->     MEM_GOING_OFFLINE
->   virtio-mem: Allow to offline partially unplugged memory blocks
->   mm/memory_hotplug: Introduce offline_and_remove_memory()
->   virtio-mem: Offline and remove completely unplugged memory blocks
->   virtio-mem: Better retry handling
->   MAINTAINERS: Add myself as virtio-mem maintainer
-> 
->  MAINTAINERS                     |    7 +
->  drivers/acpi/numa/srat.c        |    1 +
->  drivers/virtio/Kconfig          |   18 +
->  drivers/virtio/Makefile         |    1 +
->  drivers/virtio/virtio_mem.c     | 1910 +++++++++++++++++++++++++++++++
->  include/linux/memory_hotplug.h  |    1 +
->  include/linux/page-flags.h      |   10 +
->  include/uapi/linux/virtio_ids.h |    1 +
->  include/uapi/linux/virtio_mem.h |  208 ++++
->  mm/memory_hotplug.c             |   81 +-
->  mm/page_alloc.c                 |   26 +
->  mm/page_isolation.c             |    9 +
->  12 files changed, 2263 insertions(+), 10 deletions(-)
->  create mode 100644 drivers/virtio/virtio_mem.c
->  create mode 100644 include/uapi/linux/virtio_mem.h
-> 
-> -- 
-> 2.24.1
+If setting global brightness to 127 we have:
 
+led[red].brightness = 127 * 255 / 255 = 127
+led[green].brightness = 127 * 15 / 15 = 15 (cut down to max_intensity)
+
+Clearly for green LED you're not getting a value being a half of
+the intensity range.
+
+In addition to my previous statement, global max_brightness
+should also have the same value as all max color intensities.
+
+[...]
+>>> +Directory Layout Example
+>>> +========================
+>>> +root:/sys/class/leds/multicolor:grouped_leds# ls -lR
+>>> +-rw-r--r--    1 root     root          4096 Oct 19 16:16 brightness
+>>> +-r--r--r--    1 root     root          4096 Oct 19 16:16 color_index
+>>> +-rw-r--r--    1 root     root          4096 Oct 19 16:16
+>>> color_intensity
+>>> +-r--r--r--    1 root     root          4096 Oct 19 16:16
+>>> color_max_intensity
+>>> +-r--r--r--    1 root     root          4096 Oct 19 16:16 num_color_leds
+>>> +
+>>> +Multicolor Class Brightness Control
+>>> +===================================
+>>> +The multiclor class framework will calculate each monochrome LEDs
+>>> intensity.
+>>> +
+>>> +The brightness level for each LED is calculated based on the color LED
+>>> +intensity setting divided by the color LED max intensity setting
+>>> multiplied by
+>>> +the requested brightness.
+>>> +
+>>> +led_brightness = brightness * color_intensity/color_max_intensity
+>> Maybe some pseudo code would allow for better understanding here:
+>>
+>> for color in color_intensity
+>>      led[color].brightness = brightness *
+>>     led[color].intensity / led[color].max_intensity
+> I think this would be fine at least there is a documented equation. I
+> don't think we need to document the code.
+
+You mean what would be fine - my or your solution ? :-)
+
+[...]
+>>> +static ssize_t color_intensity_store(struct device *dev,
+>>> +                struct device_attribute *intensity_attr,
+>>> +                const char *buf, size_t size)
+>>> +{
+>>> +    struct led_classdev *led_cdev = dev_get_drvdata(dev);
+>>> +    struct led_classdev_mc *priv = lcdev_to_mccdev(led_cdev);
+>>> +    int nrchars, offset = 0;
+>>> +    int intensity_value[LED_COLOR_ID_MAX];
+>>> +    int i;
+>>> +    ssize_t ret;
+>>> +
+>>> +    mutex_lock(&led_cdev->led_access);
+>>> +
+>>> +    for (i = 0; i < priv->num_colors; i++) {
+>>> +        ret = sscanf(buf + offset, "%i%n",
+>>> +                 &intensity_value[i], &nrchars);
+>>> +        if (ret != 1) {
+>>> +            dev_err(led_cdev->dev,
+>>> +                "Incorrect number of LEDs expected %i values
+>>> intensity was not applied\n",
+>>> +                priv->num_colors);
+>>> +            goto err_out;
+>>> +        }
+>>> +        offset += nrchars;
+>>> +    }
+>> I've just realized that moving to single color_intensity file
+>> doesn't allow setting all colors together with new brightness
+>> atomically. In effect, we will need to pass brightness to this file too,
+>> if we want to avoid "interesting" latching via brightenss file.
+>>
+>> Then we would need to call led_set_brightness() from here as well.
+> 
+> Why?  This just caches the intensity of each colored LED.  Then the
+> actual brightness is calculated only when the brightness file is updated.
+
+And this is wrong. We should be able to set the color with a single
+write.
+
+> This would be an automatic update of the LED and that is not the intent
+> of the intensity file per the documentation.
+
+Documentation needs to be changed then.
+
+> The user should be able to set the colors x number of times before the
+> LED group is actually updated with the brightness.
+
+What benefit would stem from that? In fact we should be able to
+atomically set color in two ways, either via brightness or via
+color_intensity file.
+
+But in previous message I unnecessarily proposed the addition
+of brightness to the color_intensity interface. It is not needed
+since updating color intensities should be considered as setting
+entirely new color and that should reset global brightness to
+max_brightness.
+
+Therefore here we should call at the end:
+
+led_set_brightness(led_cdev, led_cdev->max_brightness);
+
+That will update each color LED with new brightness values which
+will correspond exactly to the color intensities just written.
+
+[...]
+>>> diff --git a/include/linux/led-class-multicolor.h
+>>> b/include/linux/led-class-multicolor.h
+>>> new file mode 100644
+>>> index 000000000000..bfbde2e98340
+>>> --- /dev/null
+>>> +++ b/include/linux/led-class-multicolor.h
+>>> @@ -0,0 +1,124 @@
+>>> +/* SPDX-License-Identifier: GPL-2.0 */
+>>> +/* LED Multicolor class interface
+>>> + * Copyright (C) 2019 Texas Instruments Incorporated -
+>>> http://www.ti.com/
+>>> + */
+>>> +
+>>> +#ifndef __LINUX_MULTICOLOR_LEDS_H_INCLUDED
+>>> +#define __LINUX_MULTICOLOR_LEDS_H_INCLUDED
+>>> +
+>>> +#include <linux/leds.h>
+>>> +#include <dt-bindings/leds/common.h>
+>>> +
+>>> +struct led_classdev_mc {
+>>> +    /* led class device */
+>>> +    struct led_classdev led_cdev;
+>>> +
+>>> +    struct device_attribute color_max_intensity_attr;
+>>> +    struct device_attribute color_intensity_attr;
+>>> +    struct device_attribute color_index_attr;
+>> These are no longer needed as you define attrs statically.
+> Ack
+>>> +
+>>> +    int color_brightness[LED_COLOR_ID_MAX];
+>>> +
+>>> +    int color_led_intensity[LED_COLOR_ID_MAX];
+>>> +    int color_led_max_intensity[LED_COLOR_ID_MAX];
+>>> +    const char *color_index[LED_COLOR_ID_MAX];
+>> I think that we should get back to the available_colors bitmask
+>> and allow the framework to allocate arrays by itself.
+>> And yes, all the above should be pointers.
+>>
+>> Driver would only need to set led_mcdev->available_colors bits.
+> 
+> Nack to the available_colors.  I did this originally and the issue is
+> that the driver sets the bits in available_colors and no matter what the
+> order is in the DT file the indexing is always red green and blue per
+> the LED_COLORS array.  The framework has no legitimate way to know the
+> order in which the colors were added.
+> 
+> This posed an issue with the LP55xx code as the RGB was defined with
+> different colors assigned to different channels.  Green was 0 blue was 2
+> and red was 6.  So the driver would have to map the channels to the
+> colors.  In forcing the device driver to set the color index it can then
+> map the output channels itself.  The framework should not care what
+> channel is for what color.  In either case the device driver will need
+> to store the color index mapped to the channel output but having the
+> index to color being a 1-1 mapping made the code much simpler for the
+> device driver.
+> 
+> Basically it turned out to be a simple for loop that just stored both
+> channel and color as opposed to having to re-map the colors to indexes.
+> 
+> So for the LP55xx I can get an index of green, blue red and that maps to
+> the channels per the DT.  I don't think the framework should enforce a
+> standard color index array ordering.
+
+OK, if that indeed helps simplifying the code on the driver side.
+But maybe it would be possible to come up with some generic helpers
+for color sub-LEDs initialization?
+
+> If we use the available_colors we don't even need the color_index and we
+> can just pass the available_colors to the user space as a u32 and let
+> the user space figure what colors are available. Which means the user
+> space would assume the order per the LED_COLORS array.
+
+Sysfs should be rather human readable so this would not necessarily
+need to be the case.
+
+-- 
+Best regards,
+Jacek Anaszewski
