@@ -2,79 +2,125 @@ Return-Path: <SRS0=I467=5O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7768C43331
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 04:00:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73AA9C43331
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 04:01:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8AD0720659
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 04:00:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4475520659
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 04:01:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="jAqvOvuM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726315AbgC2EAQ (ORCPT
+        id S1727144AbgC2EBU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Mar 2020 00:00:16 -0400
-Received: from mx.sdf.org ([205.166.94.20]:52679 "EHLO mx.sdf.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725379AbgC2EAQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Mar 2020 00:00:16 -0400
-Received: from sdf.org (IDENT:lkml@sdf.lonestar.org [205.166.94.16])
-        by mx.sdf.org (8.15.2/8.14.5) with ESMTPS id 02T40C6E028586
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits) verified NO);
-        Sun, 29 Mar 2020 04:00:13 GMT
-Received: (from lkml@localhost)
-        by sdf.org (8.15.2/8.12.8/Submit) id 02T40CNt013009;
-        Sun, 29 Mar 2020 04:00:12 GMT
-Date:   Sun, 29 Mar 2020 04:00:12 +0000
-From:   George Spelvin <lkml@SDF.ORG>
-To:     Andreas Dilger <adilger@dilger.ca>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "Theodore Ts'o" <tytso@mit.edu>,
-        linux-ext4 <linux-ext4@vger.kernel.org>, lkml@sdf.org
-Subject: Re: [RFC PATCH v1 08/50] fs/ext4/ialloc.c: Replace % with
- reciprocal_scale() TO BE VERIFIED
-Message-ID: <20200329040012.GB11951@SDF.ORG>
-References: <202003281643.02SGh9vH007105@sdf.org>
- <9A60C390-349E-4A90-A812-F04EB5A82136@dilger.ca>
- <20200328231536.GA11951@SDF.ORG>
- <EC88E8EB-7303-45FB-85B9-A007FBE5F5A0@dilger.ca>
+        Sun, 29 Mar 2020 00:01:20 -0400
+Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:6495 "EHLO
+        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725379AbgC2EBU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Mar 2020 00:01:20 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e801d600002>; Sat, 28 Mar 2020 21:00:32 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Sat, 28 Mar 2020 21:01:19 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Sat, 28 Mar 2020 21:01:19 -0700
+Received: from [10.2.58.50] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Sun, 29 Mar
+ 2020 04:00:26 +0000
+Subject: Re: [Patch v3] mm/page_alloc.c: use NODE_MASK_NONE define used_mask
+To:     Wei Yang <richard.weiyang@gmail.com>, <akpm@linux-foundation.org>
+CC:     <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>,
+        <jgg@ziepe.ca>, <david@redhat.com>, <bhe@redhat.com>
+References: <20200329024217.5199-1-richard.weiyang@gmail.com>
+From:   John Hubbard <jhubbard@nvidia.com>
+X-Nvconfidentiality: public
+Message-ID: <8d6a1cd3-75cf-78c3-b83b-c5208a209f65@nvidia.com>
+Date:   Sat, 28 Mar 2020 21:00:26 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <EC88E8EB-7303-45FB-85B9-A007FBE5F5A0@dilger.ca>
+In-Reply-To: <20200329024217.5199-1-richard.weiyang@gmail.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1585454432; bh=5Fs3IE4i4iRLLBVddscrDk15dILBhHBWSFTEWwaYXSE=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:X-Nvconfidentiality:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=jAqvOvuMCuHbRMVfkrvc7NXqjfZYe7GA1kK6eR/W3qwFw9E5dbiyJW2a+LGbPfZaF
+         3cGLy2B/TKxRXIxTKRcGcVW/uBjF0HD+QGjs09u7il5QpX+Sgr4VwD6XhCf5EqVDtd
+         0PMY/9DoADs9Dm7w7NRTdIloOvXv5W5sDkvHjDTejNw5yTL2GuJkOAR4nblEC4oqsU
+         9Jdhdql+ZWjFo+m1dCEwNikBv6DZpJpiGSaw0aeIVD6jYh+uSf+bW5vq05w/UTGwEu
+         zavroNvgEMrAehJOmOleZtqO/vHMWfAA6pRwg9HZaT2HnDdDHnkBMLlX26FaaENAJk
+         vxKMVgZfKgsug==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Mar 28, 2020 at 06:10:11PM -0600, Andreas Dilger wrote:
-> On Mar 28, 2020, at 5:15 PM, George Spelvin <lkml@SDF.ORG> wrote:
->> Also, we could, if desired, eliminate the i variable entirely
->> using the fact that we have a copy of the starting position cached
->> in parent_group.  I.e.
->> 
->> 		g = parent_group = reciprocal_scale(grp, ngroups);
->> -		for (i = 0; i < ngroups; i++, ++g == ngroups && (g = 0)) {
->> +		do {
->> 			...
->> -		}
->> +			if (++g == ngroups)
->> +				g = 0;
->> +		} while (g != parent_group);
+On 3/28/20 7:42 PM, Wei Yang wrote:
+> For all 0 nodemask_t, we have already define macro NODE_MASK_NONE.
+> Leverage this to define an all clear nodemask.
 
-> I was looking at whether we could use a for-loop without "i"?  Something like:
+It would be a little clearer if you used wording more like this:
+
+Subject: [Patch v3] mm/page_alloc.c: use NODE_MASK_NONE in build_zonelists()
+
+Slightly simplify the code by initializing user_mask with
+NODE_MASK_NONE, instead of later calling nodes_clear(). This saves
+a line of code.
+
+
 > 
-> 	for (g = parent_group + 1; g != parent_group; ++g >= ngroups && (g = 0))
+> Signed-off-by: Wei Yang <richard.weiyang@gmail.com>
 > 
-> The initial group is parent_group + 1, to avoid special-casing when the
-> initial parent_group = 0 (which would prevent the loop from terminating).
+> ---
+> v3: adjust the commit log a little
+> v2: use NODE_MASK_NONE as suggested by David Hildenbrand
+> ---
+>   mm/page_alloc.c | 3 +--
+>   1 file changed, 1 insertion(+), 2 deletions(-)
+> 
+> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+> index ef790dfad6aa..dfcf2682ed40 100644
+> --- a/mm/page_alloc.c
+> +++ b/mm/page_alloc.c
+> @@ -5587,14 +5587,13 @@ static void build_zonelists(pg_data_t *pgdat)
+>   {
+>   	static int node_order[MAX_NUMNODES];
+>   	int node, load, nr_nodes = 0;
+> -	nodemask_t used_mask;
+> +	nodemask_t used_mask = NODE_MASK_NONE;
+>   	int local_node, prev_node;
+>   
+>   	/* NUMA-aware ordering of nodes */
+>   	local_node = pgdat->node_id;
+>   	load = nr_online_nodes;
+>   	prev_node = local_node;
+> -	nodes_clear(used_mask);
+>   
+>   	memset(node_order, 0, sizeof(node_order));
+>   	while ((node = find_next_best_node(local_node, &used_mask)) >= 0) {
+> 
 
-That's the first option I presented, above.  Since a for() loop
-tests before each iteration, if the counter is strictly modulo
-ngroups, there's no way to execute the loop body more than ngroups-1
-times.
+Honestly, I don't think it's really worth doing a patch for this, but
+there's nothing wrong with the diff, so:
 
-That's why I changed to do{}while(), which has a minimum of 1 (it can't
-handle ngroups == 0), but can mimic the current loop's execution
-perfectly (no initial +1 offset).
+Reviewed-by: John Hubbard <jhubbard@nvidia.com>
+
+
+thanks,
+-- 
+John Hubbard
+NVIDIA
