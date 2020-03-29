@@ -2,111 +2,97 @@ Return-Path: <SRS0=I467=5O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 093E1C2D0ED
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 09:27:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6B5AC43331
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 09:28:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D375F20732
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 09:27:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585474032;
-	bh=p1dnSJJEqRK9BrL5kAdwlm93iK6znjQUpSF3jkakrNA=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=ZZimVM5rTrEBgtAklQJeDLKM663MvI52Y51aK4KmsdBuy0qoaa+Jp06Kp5SnckqD+
-	 fd6kXVhm73tHMJ+XzWlkhJetBN/KFwmj5ebgbI7BzhfOIvP/+a7AWplyqnpQV5i4wc
-	 P8Tjpp3on0zSkfIzqrgSaxzye0xvXnrKVCbfGmKM=
+	by mail.kernel.org (Postfix) with ESMTP id A7C1B20732
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 09:28:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727924AbgC2J1L (ORCPT
+        id S1727928AbgC2J2f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Mar 2020 05:27:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45934 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727286AbgC2J1L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Mar 2020 05:27:11 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9C767206CC;
-        Sun, 29 Mar 2020 09:27:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585474030;
-        bh=p1dnSJJEqRK9BrL5kAdwlm93iK6znjQUpSF3jkakrNA=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=IKp5bJEaibdjMIMmaU7HweCZT4awde5YYEeZfcDEWgoRWPWEi+uxmUWb+M+RI6Mhh
-         MOcZofql85HkHAfbArZsph+COwCIU6qr6j3Mk0KYsv41gQFcqQ5gOPkmnPN4jOKcw/
-         PVEIIyPgIkNgKH0BbSAMlBu1NNRmubVfPF7tobuA=
-Date:   Sun, 29 Mar 2020 10:27:05 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Guido =?UTF-8?B?R8O8bnRoZXI=?= <agx@sigxcpu.org>
-Cc:     Tomas Novotny <tomas@novotny.cz>, Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        "Angus Ainslie (Purism)" <angus@akkea.ca>,
-        Marco Felsch <m.felsch@pengutronix.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Nishant Malpani <nish.malpani25@gmail.com>
-Subject: Re: [PATCH v3 4/4] Documentation: ABI: document IIO
- in_proximity_near_level file
-Message-ID: <20200329102705.0a69000c@archlinux>
-In-Reply-To: <bffa50e16f64df2a97913d9a9e87481c6e7e4852.1585134362.git.agx@sigxcpu.org>
-References: <cover.1585134362.git.agx@sigxcpu.org>
-        <bffa50e16f64df2a97913d9a9e87481c6e7e4852.1585134362.git.agx@sigxcpu.org>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Sun, 29 Mar 2020 05:28:35 -0400
+Received: from mail2-relais-roc.national.inria.fr ([192.134.164.83]:26519 "EHLO
+        mail2-relais-roc.national.inria.fr" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727286AbgC2J2f (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Mar 2020 05:28:35 -0400
+X-IronPort-AV: E=Sophos;i="5.72,319,1580770800"; 
+   d="scan'208";a="442805364"
+Received: from abo-173-121-68.mrs.modulonet.fr (HELO hadrien) ([85.68.121.173])
+  by mail2-relais-roc.national.inria.fr with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Mar 2020 11:28:33 +0200
+Date:   Sun, 29 Mar 2020 11:28:33 +0200 (CEST)
+From:   Julia Lawall <julia.lawall@inria.fr>
+X-X-Sender: jll@hadrien
+To:     "John B. Wyatt IV" <jbwyatt4@gmail.com>
+cc:     outreachy-kernel@googlegroups.com,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Payal Kshirsagar <payal.s.kshirsagar.98@gmail.com>,
+        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
+Subject: Re: [Outreachy kernel] [PATCH] staging: fbtft: Replace udelay with
+ preferred usleep_range
+In-Reply-To: <20200329092204.770405-1-jbwyatt4@gmail.com>
+Message-ID: <alpine.DEB.2.21.2003291127230.2990@hadrien>
+References: <20200329092204.770405-1-jbwyatt4@gmail.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 25 Mar 2020 12:09:08 +0100
-Guido G=C3=BCnther <agx@sigxcpu.org> wrote:
 
-> The vcnl4000 IIO driver introduced a new attribute
-> "in_proximity_near_level".  This adds it to the list of documented ABI
-> for sysfs-bus-iio.
 
-Description and patch title are now wrong due to dropping the _
+On Sun, 29 Mar 2020, John B. Wyatt IV wrote:
 
-I can fix that up whilst applying if nothing else comes up.
-
-The rest of the series looks good to me, just giving time
-for others to comment before taking this.
-
-Thanks,
-
-Jonathan
-
->=20
-> Signed-off-by: Guido G=C3=BCnther <agx@sigxcpu.org>
+> Fix style issue with usleep_range being reported as preferred over
+> udelay.
+>
+> Issue reported by checkpatch.
+>
+> Please review.
+>
+> As written in Documentation/timers/timers-howto.rst udelay is the
+> generally preferred API. hrtimers, as noted in the docs, may be too
+> expensive for this short timer.
+>
+> Are the docs out of date, or, is this a checkpatch issue?
+>
+> Signed-off-by: John B. Wyatt IV <jbwyatt4@gmail.com>
 > ---
->  Documentation/ABI/testing/sysfs-bus-iio-proximity | 10 ++++++++++
->  1 file changed, 10 insertions(+)
->  create mode 100644 Documentation/ABI/testing/sysfs-bus-iio-proximity
->=20
-> diff --git a/Documentation/ABI/testing/sysfs-bus-iio-proximity b/Document=
-ation/ABI/testing/sysfs-bus-iio-proximity
-> new file mode 100644
-> index 000000000000..2172f3bb9c64
-> --- /dev/null
-> +++ b/Documentation/ABI/testing/sysfs-bus-iio-proximity
-> @@ -0,0 +1,10 @@
-> +What:		/sys/bus/iio/devices/iio:deviceX/in_proximity_nearlevel
-> +Date:		March 2020
-> +KernelVersion:	5.7
-> +Contact:	linux-iio@vger.kernel.org
-> +Description:
-> +		Near level for proximity sensors. This is a single integer
-> +		value that tells user space when an object should be
-> +		considered close to the device. If the value read from the
-> +		sensor is above or equal to the value in this file an object
-> +		should typically be considered near.
+>  drivers/staging/fbtft/fb_agm1264k-fl.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/staging/fbtft/fb_agm1264k-fl.c b/drivers/staging/fbtft/fb_agm1264k-fl.c
+> index eeeeec97ad27..019c8cce6bab 100644
+> --- a/drivers/staging/fbtft/fb_agm1264k-fl.c
+> +++ b/drivers/staging/fbtft/fb_agm1264k-fl.c
+> @@ -85,7 +85,7 @@ static void reset(struct fbtft_par *par)
+>  	dev_dbg(par->info->device, "%s()\n", __func__);
+>
+>  	gpiod_set_value(par->gpio.reset, 0);
+> -	udelay(20);
+> +	usleep_range(20, 20);
 
+usleep_range should have a range, eg usleep_range(50, 100);.  But it is
+hard to know a priori what the range should be.  So it is probably better
+to leave the code alone.
+
+julia
+
+>  	gpiod_set_value(par->gpio.reset, 1);
+>  	mdelay(120);
+>  }
+> --
+> 2.25.1
+>
+> --
+> You received this message because you are subscribed to the Google Groups "outreachy-kernel" group.
+> To unsubscribe from this group and stop receiving emails from it, send an email to outreachy-kernel+unsubscribe@googlegroups.com.
+> To view this discussion on the web visit https://groups.google.com/d/msgid/outreachy-kernel/20200329092204.770405-1-jbwyatt4%40gmail.com.
+>
