@@ -2,107 +2,154 @@ Return-Path: <SRS0=I467=5O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-10.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF5C3C43331
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 01:30:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E133C43331
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 01:39:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 92E57206E6
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 01:30:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="Y1BLDeev"
+	by mail.kernel.org (Postfix) with ESMTP id E1224206E6
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 01:39:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727806AbgC2BaC (ORCPT
+        id S1727850AbgC2Bj0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 28 Mar 2020 21:30:02 -0400
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:6805 "EHLO
-        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727722AbgC2BaC (ORCPT
+        Sat, 28 Mar 2020 21:39:26 -0400
+Received: from shards.monkeyblade.net ([23.128.96.9]:51234 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727725AbgC2Bj0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 28 Mar 2020 21:30:02 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e7ff9ea0000>; Sat, 28 Mar 2020 18:29:14 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Sat, 28 Mar 2020 18:30:01 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Sat, 28 Mar 2020 18:30:01 -0700
-Received: from [10.2.58.50] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Sun, 29 Mar
- 2020 01:30:01 +0000
-Subject: Re: [Patch v2 2/2] mm/page_alloc.c: define node_order with all zero
-To:     Wei Yang <richard.weiyang@gmail.com>
-CC:     <akpm@linux-foundation.org>, <linux-mm@kvack.org>,
-        <linux-kernel@vger.kernel.org>, <jgg@ziepe.ca>, <david@redhat.com>
-References: <20200327220121.27823-1-richard.weiyang@gmail.com>
- <20200327220121.27823-2-richard.weiyang@gmail.com>
- <4c9d8138-d379-810f-64e7-0d018ed019df@nvidia.com>
- <20200328002616.kjtf7dpkqbugyzi2@master>
- <97a6bf40-792b-6216-d35b-691027c85aad@nvidia.com>
- <20200328011031.olsaehwdev2gqdsn@master>
- <40facd34-40b2-0925-90ca-a4c53fc520e8@nvidia.com>
- <20200328025605.cpnbnavl27pphr7g@master>
-From:   John Hubbard <jhubbard@nvidia.com>
-X-Nvconfidentiality: public
-Message-ID: <b1b41da1-2ced-8bb8-7162-e5c820543244@nvidia.com>
-Date:   Sat, 28 Mar 2020 18:30:00 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
-MIME-Version: 1.0
-In-Reply-To: <20200328025605.cpnbnavl27pphr7g@master>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
+        Sat, 28 Mar 2020 21:39:26 -0400
+Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id EB6A1158CB9B0;
+        Sat, 28 Mar 2020 18:39:25 -0700 (PDT)
+Date:   Sat, 28 Mar 2020 18:39:23 -0700 (PDT)
+Message-Id: <20200328.183923.1567579026552407300.davem@davemloft.net>
+To:     torvalds@linux-foundation.org
+CC:     akpm@linux-foundation.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [GIT] Networking
+From:   David Miller <davem@davemloft.net>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1585445354; bh=9sORjZpObiNxVTBG6AeMlZWTC5Qzs8EADfHHkxo4EYU=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:X-Nvconfidentiality:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=Y1BLDeevZe4MEpmaZ9f8mxKfm9/zUS8O5oXF091zN16cu8aNF5zOCrzYgWDVUp4bS
-         u478hEEb4Y5Cp7o+LLZPU3gLn3JXIetcZbIrv830nO7LeEdpdkL2JFnMg4j7PWIuVT
-         PnrVzHwn2x2MQls1OGXOg3+g3/fR1ZJAPwZRJiFhv206m9XdMxiJozT/C3J6glePl/
-         0mR4FlEW8eow9kp4blILusi3iqv+fhOzSqAeKfYvqreupOS41VzgnuLglxR5JzNLyp
-         QUGuAPmVlIBB3zuSTWduioVQfeNZFyVTbcuLdtahApeFalHWwWGUxXuC/8x28MBeEp
-         HiuGjC6nH8wQQ==
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Sat, 28 Mar 2020 18:39:26 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/27/20 7:56 PM, Wei Yang wrote:
-...
->> Further note: On my current testing .config, I've got MAX_NUMNODES set to 64, which makes
->> 256 bytes required for node_order array. 256 bytes on a 16KB stack is a little bit above
->> my mental watermark for "that's too much in today's kernels".
->>
-> 
-> Thanks for your explanation. I would keep this in mind.
-> 
-> Now I have one more question, hope it won't sound silly. (16KB / 256) = 64,
-> this means if each function call takes 256 space on stack, the max call depth
-> is 64. So how deep a kernel function call would be? or expected to be?
->
 
-64 is quite a bit deeper call depth than we expect to see. So 256 bytes on the stack
-is not completely indefensible, but it's getting close. But worse, that's just an
-example based on my .config choices. And (as Baoquan just pointed out) it can be much
-bigger. (And the .config variable is an exponent, not linear, so it gets exciting fast.)
-In fact, you could overrun the stack directly, with say CONFIG_NODES_SHIFT = 14.
+1) Fix memory leak in vti6, from Torsten Hilbrich.
 
-  
-> Also because of the limit space on stack, recursive function is not welcome in
-> kernel neither. Am I right?
-> 
-Yes, that is correct.
+2) Fix double free in xfrm_policy_timer, from YueHaibing.
 
-thanks,
--- 
-John Hubbard
-NVIDIA
+3) NL80211_ATTR_CHANNEL_WIDTH attribute is put with wrong type,
+   from Johannes Berg.
+
+4) Wrong allocation failure check in qlcnic driver, from Xu Wang.
+
+5) Get ks8851-ml IO operations right, for real this time, from
+   Marek Vasut.
+
+Please pull, thanks a lot!
+
+The following changes since commit 1b649e0bcae71c118c1333e02249a7510ba7f70a:
+
+  Merge git://git.kernel.org/pub/scm/linux/kernel/git/netdev/net (2020-03-25 13:58:05 -0700)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/netdev/net.git 
+
+for you to fetch changes up to a0ba26f37ea04e025a793ef5e5ac809221728ecb:
+
+  Merge git://git.kernel.org/pub/scm/linux/kernel/git/bpf/bpf (2020-03-27 16:18:51 -0700)
+
+----------------------------------------------------------------
+David S. Miller (3):
+      Merge tag 'mac80211-for-net-2020-03-26' of git://git.kernel.org/.../jberg/mac80211
+      Merge branch 'master' of git://git.kernel.org/.../klassert/ipsec
+      Merge git://git.kernel.org/.../bpf/bpf
+
+Greg Kroah-Hartman (2):
+      bpf: Explicitly memset the bpf_attr structure
+      bpf: Explicitly memset some bpf info structures declared on the stack
+
+Heiner Kallweit (1):
+      r8169: fix PHY driver check on platforms w/o module softdeps
+
+Ido Schimmel (1):
+      mlxsw: spectrum_mr: Fix list iteration in error path
+
+Ilan Peer (1):
+      cfg80211: Do not warn on same channel at the end of CSA
+
+Johannes Berg (5):
+      nl80211: fix NL80211_ATTR_CHANNEL_WIDTH attribute type
+      ieee80211: fix HE SPR size calculation
+      mac80211: drop data frames without key on encrypted links
+      mac80211: mark station unauthorized before key removal
+      mac80211: set IEEE80211_TX_CTRL_PORT_CTRL_PROTO for nl80211 TX
+
+Jouni Malinen (1):
+      mac80211: Check port authorization in the ieee80211_tx_dequeue() case
+
+Madhuparna Bhowmik (1):
+      ipv6: xfrm6_tunnel.c: Use built-in RCU list checking
+
+Marek Vasut (1):
+      net: ks8851-ml: Fix IO operations, again
+
+Martin KaFai Lau (1):
+      bpf: Sanitize the bpf_struct_ops tcp-cc name
+
+Nicolas Dichtel (1):
+      vti[6]: fix packet tx through bpf_redirect() in XinY cases
+
+Raed Salem (1):
+      xfrm: handle NETDEV_UNREGISTER for xfrm device
+
+Torsten Hilbrich (1):
+      vti6: Fix memory leak of skb if input policy check fails
+
+Xin Long (3):
+      xfrm: fix uctx len check in verify_sec_ctx_len
+      xfrm: add the missing verify_sec_ctx_len check in xfrm_add_acquire
+      esp: remove the skb from the chain when it's enqueued in cryptd_wq
+
+Xu Wang (1):
+      qlcnic: Fix bad kzalloc null test
+
+YueHaibing (1):
+      xfrm: policy: Fix doulbe free in xfrm_policy_timer
+
+ drivers/net/ethernet/mellanox/mlxsw/spectrum_mr.c     |  8 ++++----
+ drivers/net/ethernet/micrel/ks8851_mll.c              | 56 ++++++++++++++++++++++++++++++++++++++++++++++++++++----
+ drivers/net/ethernet/qlogic/qlcnic/qlcnic_83xx_init.c |  2 +-
+ drivers/net/ethernet/realtek/r8169_main.c             | 16 +++++++---------
+ include/linux/bpf.h                                   |  1 +
+ include/linux/ieee80211.h                             |  4 ++--
+ kernel/bpf/btf.c                                      |  3 ++-
+ kernel/bpf/syscall.c                                  | 34 ++++++++++++++++++++--------------
+ net/ipv4/Kconfig                                      |  1 +
+ net/ipv4/bpf_tcp_ca.c                                 |  7 ++-----
+ net/ipv4/ip_vti.c                                     | 38 ++++++++++++++++++++++++++++++--------
+ net/ipv6/ip6_vti.c                                    | 34 ++++++++++++++++++++++++++--------
+ net/ipv6/xfrm6_tunnel.c                               |  2 +-
+ net/mac80211/debugfs_sta.c                            |  3 ++-
+ net/mac80211/key.c                                    | 20 ++++++++++++--------
+ net/mac80211/sta_info.c                               |  7 ++++++-
+ net/mac80211/sta_info.h                               |  1 +
+ net/mac80211/tx.c                                     | 39 +++++++++++++++++++++++++++++++++------
+ net/wireless/nl80211.c                                |  2 +-
+ net/wireless/scan.c                                   |  6 +++++-
+ net/xfrm/xfrm_device.c                                |  9 +++++----
+ net/xfrm/xfrm_policy.c                                |  2 ++
+ net/xfrm/xfrm_user.c                                  |  6 +++++-
+ 23 files changed, 221 insertions(+), 80 deletions(-)
