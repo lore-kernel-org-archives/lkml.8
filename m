@@ -2,58 +2,60 @@ Return-Path: <SRS0=I467=5O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C380EC43331
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 00:53:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A539C2D0EB
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 00:53:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B47F206CC
+	by mail.kernel.org (Postfix) with ESMTP id E136E206CC
 	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 00:53:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kHlvkKtz"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sgQcGJDB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727794AbgC2AxE (ORCPT
+        id S1727841AbgC2AxG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 28 Mar 2020 20:53:04 -0400
-Received: from mail-wm1-f52.google.com ([209.85.128.52]:38298 "EHLO
-        mail-wm1-f52.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727620AbgC2AxD (ORCPT
+        Sat, 28 Mar 2020 20:53:06 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:40419 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727620AbgC2AxG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 28 Mar 2020 20:53:03 -0400
-Received: by mail-wm1-f52.google.com with SMTP id f6so10578945wmj.3;
-        Sat, 28 Mar 2020 17:53:02 -0700 (PDT)
+        Sat, 28 Mar 2020 20:53:06 -0400
+Received: by mail-wm1-f67.google.com with SMTP id a81so17165889wmf.5;
+        Sat, 28 Mar 2020 17:53:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=Na7wyrzT+k3IFcky+igmTe2zIXXsrDMhUb6NMdBSDCk=;
-        b=kHlvkKtzYXJazfO1xiqET5xMF9bj8hEkhwoheKaJLlz15q/T7PmQrOX4wWP8zW9l7+
-         Uz5oytDcceY5gWg3UsgNx+ZNiegbQSgISWXkvJvPPM3xop7ue85/UtaoCamukbRveR7d
-         cInhnxid5XuGQK96V1R5ZmEL3c9y9VhxUotUZwT6yrVruZ/UDCuPOVt92/NqBF0rJ06R
-         k3vCaKuj4vwPa2ktHTVNMOQIgmxiUbMK0Q9ZS/AuEmT/C6PjZxGyk6IvjWAWV5vfhiEq
-         eM0LiKB2vnjKSGlckYwLnU3oUYV0Zk6NkdfzKMyriCX+web4HAxo8KQFFT2v4b7M2Nm8
-         6fvA==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=YBK8RiOpgGzr1OscuGx7qp2rLPh/wW8dimuyWNZJk5E=;
+        b=sgQcGJDB0rhZIeLJ1pO9ttydCABPZm7wbUvOa1VDtl+XcLIqbPCIstT/DNIXprSy6u
+         5iBrs8TKUHHc6Ha8Sg86BjcgZrYuhO5LuzM7KspjUAyA6vyBL1Dbap1irsL7K4LehAwN
+         sI4laFD28L8DRXjkABI8zN/BHi90SCgDnu6PtaCEd0J3WUfM0r51yNOMVyMwt0Z2jiFQ
+         gADTNHPkLFcQFRnhnXhry5GHLH5BkxsR3/2CWJXlO48Rts5mvHjhWlnJdpmIgo7TfznH
+         db/IEc1MN6EvUy30bCIrCnBqkp94rcaObUSZFc7vAqtbw32S2hLkapQuneEjRyfugzeT
+         htKQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=Na7wyrzT+k3IFcky+igmTe2zIXXsrDMhUb6NMdBSDCk=;
-        b=rTHcPPGkSETJyUaJW/XA1XU2LXczk5MHXkS6blJSdCiwh2QXE29Jl/XGY+v8bfobY6
-         TRLMHmDP3edPt6s8W+jC/6qSeFflPo1KBVs/tV+yhKf5GSlYqUTqRjcNX8/KNgikZHTH
-         a/ODCyS03v6YtNHsWV+DchIZdDCP2SKe32qeRTIE5IY3f4KvOp3yhirg2FjAgQCT7P6e
-         KCJqsTma+KqhnjCIYezP4dE8iqVzT3C5oALPX65iDjTI4mzUhMuZSoEk37wbUg2pYUZ1
-         7tEJjB0NpgS07pXTELgT9cUn5a63Bh9vgXMU59MF+ylBz20ZCK1BLgm82r05NGmz76/0
-         vP8w==
-X-Gm-Message-State: ANhLgQ2yQb3AOrCz3K259uPOCdOTBMoEtoSfYM8Wz7d3+BNAjIJU402n
-        j3e3M9oABgoxtoNXMx7nqOs=
-X-Google-Smtp-Source: ADFU+vtZ4vmRDf+LHAwqfxnoVrDp7wIAEERU48jBEdKltGdY3MgKV5t0qR6Vs2+SJLi2tIo5CKt6Dw==
-X-Received: by 2002:a1c:6146:: with SMTP id v67mr6312334wmb.78.1585443181188;
-        Sat, 28 Mar 2020 17:53:01 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=YBK8RiOpgGzr1OscuGx7qp2rLPh/wW8dimuyWNZJk5E=;
+        b=bkX1oGshrQjF4wBpp3tOj8gIeau4wdHjf3s4g1CJrkSTGw/N4QJ5Ws6roEl1GR5FsI
+         qsqNXGPHGG17nS9vjHFv6ZDHrQlBoJ0SgYjBUL3jOhmguUcJGodYajl1jsXfRipyyChj
+         FTtk2HhwwsqcRu4xC08Zb0NDGbKepvIrfeO92DIwTyDbdrxcpCmtK6Z8rYBVFPXvUpqC
+         2IGzCKWjO7TIhfBPLxTVzX67v8RxZn42MhwBSEEkVN68GRw7eMN5anv6w0hnzLy5o4Zs
+         bA7C04VCUlEdJg30AYSrRwDfWv9ScnMuL6xVjOjmPiXUYZt2xnpm9oFh2CL0XuWV8h/X
+         VijQ==
+X-Gm-Message-State: ANhLgQ2lkzzcZMzzjANIOqnDW/GH9EUAJwLMAEADLhfgORRxJm0bxuKX
+        AMPmgBZTNsM/Hqu9U2Wy8FqY+WSyEziTp1+D
+X-Google-Smtp-Source: ADFU+vuRYOlu3HH+Xn0GbNrMtH36SYitmTrsrZdfeRry6LeDjttlQkW4gvOzuGkQvTayEC+QUynVPQ==
+X-Received: by 2002:a7b:c3c1:: with SMTP id t1mr5866719wmj.17.1585443184051;
+        Sat, 28 Mar 2020 17:53:04 -0700 (PDT)
 Received: from localhost.localdomain (5-12-96-237.residential.rdsnet.ro. [5.12.96.237])
-        by smtp.gmail.com with ESMTPSA id l1sm8292652wme.14.2020.03.28.17.52.59
+        by smtp.gmail.com with ESMTPSA id l1sm8292652wme.14.2020.03.28.17.53.02
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 28 Mar 2020 17:53:00 -0700 (PDT)
+        Sat, 28 Mar 2020 17:53:03 -0700 (PDT)
 From:   Vladimir Oltean <olteanv@gmail.com>
 To:     andrew@lunn.ch, f.fainelli@gmail.com, vivien.didelot@gmail.com,
         davem@davemloft.net
@@ -64,10 +66,12 @@ Cc:     jiri@resnulli.us, idosch@idosch.org, kuba@kernel.org,
         joergen.andreasen@microchip.com, UNGLinuxDriver@microchip.com,
         yangbo.lu@nxp.com, alexandru.marginean@nxp.com, po.liu@nxp.com,
         claudiu.manoil@nxp.com, leoyang.li@nxp.com
-Subject: [PATCH net-next 0/6] Port and flow policers for DSA (SJA1105, Felix/Ocelot)
-Date:   Sun, 29 Mar 2020 02:51:56 +0200
-Message-Id: <20200329005202.17926-1-olteanv@gmail.com>
+Subject: [PATCH net-next 2/6] net: dsa: refactor matchall mirred action to separate function
+Date:   Sun, 29 Mar 2020 02:51:58 +0200
+Message-Id: <20200329005202.17926-3-olteanv@gmail.com>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200329005202.17926-1-olteanv@gmail.com>
+References: <20200329005202.17926-1-olteanv@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -75,59 +79,124 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Vladimir Oltean <vladimir.oltean@nxp.com>
 
-This series adds support for 2 types of policers:
- - port policers, via tc matchall filter
- - flow policers, via tc flower filter
-for 2 DSA drivers:
- - sja1105
- - felix/ocelot
+Make room for other actions for the matchall filter by keeping the
+mirred argument parsing self-contained in its own function.
 
-First we start with ocelot/felix. Prior to this patch, the ocelot core
-library currently only supported:
-- Port policers
-- Flow-based dropping and trapping
-But the felix wrapper could not actually use the port policers due to
-missing linkage and support in the DSA core. So one of the patches
-addresses exactly that limitation by adding the missing support to the
-DSA core. The other patch for felix flow policers (via the VCAP IS2
-engine) is actually in the ocelot library itself, since the linkage with
-the ocelot flower classifier has already been done in an earlier patch
-set.
+Signed-off-by: Vladimir Oltean <vladimir.oltean@nxp.com>
+---
+The diff for this patch does not look amazing..
 
-Then with the newly added .port_policer_add and .port_policer_del, we
-can also start supporting the L2 policers on sja1105.
+ net/dsa/slave.c | 70 ++++++++++++++++++++++++++++---------------------
+ 1 file changed, 40 insertions(+), 30 deletions(-)
 
-Then, for full functionality of these L2 policers on sja1105, we also
-implement a more limited set of flow-based policing keys for this
-switch, namely for broadcast and VLAN PCP.
-
-Vladimir Oltean (5):
-  net: dsa: refactor matchall mirred action to separate function
-  net: dsa: add port policers
-  net: dsa: felix: add port policers
-  net: dsa: sja1105: add configuration of port policers
-  net: dsa: sja1105: add broadcast and per-traffic class policers
-
-Xiaoliang Yang (1):
-  net: mscc: ocelot: add action of police on vcap_is2
-
- drivers/net/dsa/ocelot/felix.c            |  24 ++
- drivers/net/dsa/sja1105/Makefile          |   1 +
- drivers/net/dsa/sja1105/sja1105.h         |  40 +++
- drivers/net/dsa/sja1105/sja1105_flower.c  | 340 ++++++++++++++++++++++
- drivers/net/dsa/sja1105/sja1105_main.c    | 136 +++++++--
- drivers/net/ethernet/mscc/ocelot_ace.c    |  64 +++-
- drivers/net/ethernet/mscc/ocelot_ace.h    |   4 +
- drivers/net/ethernet/mscc/ocelot_flower.c |   9 +
- drivers/net/ethernet/mscc/ocelot_police.c |  27 ++
- drivers/net/ethernet/mscc/ocelot_police.h |  11 +-
- drivers/net/ethernet/mscc/ocelot_tc.c     |   2 +-
- include/net/dsa.h                         |  13 +-
- include/soc/mscc/ocelot.h                 |   9 +
- net/dsa/slave.c                           | 145 ++++++---
- 14 files changed, 742 insertions(+), 83 deletions(-)
- create mode 100644 drivers/net/dsa/sja1105/sja1105_flower.c
-
+diff --git a/net/dsa/slave.c b/net/dsa/slave.c
+index 8ced165a7908..e6040a11bd83 100644
+--- a/net/dsa/slave.c
++++ b/net/dsa/slave.c
+@@ -842,24 +842,27 @@ dsa_slave_mall_tc_entry_find(struct net_device *dev, unsigned long cookie)
+ 	return NULL;
+ }
+ 
+-static int dsa_slave_add_cls_matchall(struct net_device *dev,
+-				      struct tc_cls_matchall_offload *cls,
+-				      bool ingress)
++static int
++dsa_slave_add_cls_matchall_mirred(struct net_device *dev,
++				  struct tc_cls_matchall_offload *cls,
++				  bool ingress)
+ {
+ 	struct dsa_port *dp = dsa_slave_to_port(dev);
+ 	struct dsa_slave_priv *p = netdev_priv(dev);
++	struct dsa_mall_mirror_tc_entry *mirror;
+ 	struct dsa_mall_tc_entry *mall_tc_entry;
+-	__be16 protocol = cls->common.protocol;
+ 	struct dsa_switch *ds = dp->ds;
+ 	struct flow_action_entry *act;
+ 	struct dsa_port *to_dp;
+-	int err = -EOPNOTSUPP;
++	int err;
++
++	act = &cls->rule->action.entries[0];
+ 
+ 	if (!ds->ops->port_mirror_add)
+ 		return err;
+ 
+-	if (!flow_offload_has_one_action(&cls->rule->action))
+-		return err;
++	if (!act->dev)
++		return -EINVAL;
+ 
+ 	if (!flow_action_basic_hw_stats_check(&cls->rule->action,
+ 					      cls->common.extack))
+@@ -867,38 +870,45 @@ static int dsa_slave_add_cls_matchall(struct net_device *dev,
+ 
+ 	act = &cls->rule->action.entries[0];
+ 
+-	if (act->id == FLOW_ACTION_MIRRED && protocol == htons(ETH_P_ALL)) {
+-		struct dsa_mall_mirror_tc_entry *mirror;
++	if (!dsa_slave_dev_check(act->dev))
++		return -EOPNOTSUPP;
+ 
+-		if (!act->dev)
+-			return -EINVAL;
++	mall_tc_entry = kzalloc(sizeof(*mall_tc_entry), GFP_KERNEL);
++	if (!mall_tc_entry)
++		return -ENOMEM;
+ 
+-		if (!dsa_slave_dev_check(act->dev))
+-			return -EOPNOTSUPP;
++	mall_tc_entry->cookie = cls->cookie;
++	mall_tc_entry->type = DSA_PORT_MALL_MIRROR;
++	mirror = &mall_tc_entry->mirror;
+ 
+-		mall_tc_entry = kzalloc(sizeof(*mall_tc_entry), GFP_KERNEL);
+-		if (!mall_tc_entry)
+-			return -ENOMEM;
++	to_dp = dsa_slave_to_port(act->dev);
+ 
+-		mall_tc_entry->cookie = cls->cookie;
+-		mall_tc_entry->type = DSA_PORT_MALL_MIRROR;
+-		mirror = &mall_tc_entry->mirror;
++	mirror->to_local_port = to_dp->index;
++	mirror->ingress = ingress;
+ 
+-		to_dp = dsa_slave_to_port(act->dev);
++	err = ds->ops->port_mirror_add(ds, dp->index, mirror, ingress);
++	if (err) {
++		kfree(mall_tc_entry);
++		return err;
++	}
+ 
+-		mirror->to_local_port = to_dp->index;
+-		mirror->ingress = ingress;
++	list_add_tail(&mall_tc_entry->list, &p->mall_tc_list);
+ 
+-		err = ds->ops->port_mirror_add(ds, dp->index, mirror, ingress);
+-		if (err) {
+-			kfree(mall_tc_entry);
+-			return err;
+-		}
++	return err;
++}
+ 
+-		list_add_tail(&mall_tc_entry->list, &p->mall_tc_list);
+-	}
++static int dsa_slave_add_cls_matchall(struct net_device *dev,
++				      struct tc_cls_matchall_offload *cls,
++				      bool ingress)
++{
++	int err = -EOPNOTSUPP;
+ 
+-	return 0;
++	if (cls->common.protocol == htons(ETH_P_ALL) &&
++	    flow_offload_has_one_action(&cls->rule->action) &&
++	    cls->rule->action.entries[0].id == FLOW_ACTION_MIRRED)
++		err = dsa_slave_add_cls_matchall_mirred(dev, cls, ingress);
++
++	return err;
+ }
+ 
+ static void dsa_slave_del_cls_matchall(struct net_device *dev,
 -- 
 2.17.1
 
