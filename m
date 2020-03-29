@@ -2,108 +2,119 @@ Return-Path: <SRS0=I467=5O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F51CC43331
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 18:32:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2E20C43331
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 18:43:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F31E206DB
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 18:32:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 824F9206DB
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 18:43:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=agner.ch header.i=@agner.ch header.b="foiZtoQO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728566AbgC2ScU (ORCPT
+        id S1728564AbgC2SnK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Mar 2020 14:32:20 -0400
-Received: from eu-smtp-delivery-151.mimecast.com ([146.101.78.151]:55838 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727506AbgC2ScT (ORCPT
+        Sun, 29 Mar 2020 14:43:10 -0400
+Received: from mail.kmu-office.ch ([178.209.48.109]:34786 "EHLO
+        mail.kmu-office.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727606AbgC2SnK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Mar 2020 14:32:19 -0400
-Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
- TLS) by relay.mimecast.com with ESMTP id
- uk-mta-221-F3kvLTyUN4CuXFOWfNh4Zw-1; Sun, 29 Mar 2020 19:32:16 +0100
-X-MC-Unique: F3kvLTyUN4CuXFOWfNh4Zw-1
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
- AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
- Server (TLS) id 15.0.1347.2; Sun, 29 Mar 2020 19:32:10 +0100
-Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
- AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
- Sun, 29 Mar 2020 19:32:10 +0100
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'Linus Torvalds' <torvalds@linux-foundation.org>
-CC:     Andy Lutomirski <luto@amacapital.net>,
-        Ingo Molnar <mingo@kernel.org>,
-        "Al Viro" <viro@zeniv.linux.org.uk>,
-        Thomas Gleixner <tglx@linutronix.de>, X86 ML <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Borislav Petkov <bp@alien8.de>
-Subject: RE: [RFC][PATCH 01/22] x86 user stack frame reads: switch to explicit
- __get_user()
-Thread-Topic: [RFC][PATCH 01/22] x86 user stack frame reads: switch to
- explicit __get_user()
-Thread-Index: AQHWBeo2BuGXOsXgxk+vqOM7n5IKaahf05lg///2sYCAABJhQP//8waAgAAUc7A=
-Date:   Sun, 29 Mar 2020 18:32:10 +0000
-Message-ID: <e7845564e66f41ccabbf6c23b28966ec@AcuMS.aculab.com>
-References: <20200323183620.GD23230@ZenIV.linux.org.uk>
- <20200323183819.250124-1-viro@ZenIV.linux.org.uk>
- <20200328104857.GA93574@gmail.com>
- <20200328115936.GA23230@ZenIV.linux.org.uk>
- <20200329092602.GB93574@gmail.com>
- <CALCETrX=nXN14fqu-yEMGwwN-vdSz=-0C3gcOMucmxrCUpevdA@mail.gmail.com>
- <489c9af889954649b3453e350bab6464@AcuMS.aculab.com>
- <CAHk-=whDAxb+83gYCv4=-armoqXQXgzshaVCCe9dNXZb9G_CxQ@mail.gmail.com>
- <9352bc55302d4589aaf2461c7b85fb6b@AcuMS.aculab.com>
- <CAHk-=wjEf+0sBkPFKWpYZK_ygS9=ig3KTZkDe5jkDj+v8i7B+w@mail.gmail.com>
-In-Reply-To: <CAHk-=wjEf+0sBkPFKWpYZK_ygS9=ig3KTZkDe5jkDj+v8i7B+w@mail.gmail.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        Sun, 29 Mar 2020 14:43:10 -0400
+Received: from zyt.lan (unknown [IPv6:2a02:169:3df5::564])
+        by mail.kmu-office.ch (Postfix) with ESMTPSA id 3EF795C0870;
+        Sun, 29 Mar 2020 20:43:08 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=agner.ch; s=dkim;
+        t=1585507388;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:
+         content-transfer-encoding:content-transfer-encoding:in-reply-to:
+         references; bh=lnu+KMdllhKFSlzHplG4kJn5iW0F84lGeX1xzZIYAts=;
+        b=foiZtoQOanmpdsMLM7SK+Zq7g/PZANc15HdoUTRqh11ZXs6xG/hcNgTzKX9K3M3dzSQl+B
+        E0s3+n6Y6SAAYDbC7tfRDGKSsqrApx10VlZuX4uqzEm8WNv4VqtqZg0ZcwHiKOqCWC9+Q+
+        BGbSPocVZYMxBX8j6qjL6Jd9Be7VxT8=
+From:   Stefan Agner <stefan@agner.ch>
+To:     linux@armlinux.org.uk
+Cc:     arnd@arndb.de, ard.biesheuvel@linaro.org, robin.murphy@arm.com,
+        yamada.masahiro@socionext.com, ndesaulniers@google.com,
+        manojgupta@google.com, jiancai@google.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        clang-built-linux@googlegroups.com, Stefan Agner <stefan@agner.ch>
+Subject: [PATCH v2] ARM: warn if pre-UAL assembler syntax is used
+Date:   Sun, 29 Mar 2020 20:43:04 +0200
+Message-Id: <a651d5eaf312c771c9d2e0160ddd905550bbd4e3.1585507235.git.stefan@agner.ch>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: aculab.com
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: base64
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RnJvbTogTGludXMgVG9ydmFsZHMNCj4gU2VudDogMjkgTWFyY2ggMjAyMCAxOToxNg0KPiBPbiBT
-dW4sIE1hciAyOSwgMjAyMCBhdCAxMTowMyBBTSBEYXZpZCBMYWlnaHQgPERhdmlkLkxhaWdodEBh
-Y3VsYWIuY29tPiB3cm90ZToNCj4gPg0KPiA+ID4gVGhhdCdzIGhvdyBnZXRfdXNlcigpIGFscmVh
-ZHkgd29ya3MuDQo+ID4gPg0KPiA+ID4gSXQgaXMgYSBwb2x5bW9ycGhpYyBmdW5jdGlvbiAoZG9u
-ZSB1c2luZyBtYWNyb3MsIHNpemVvZigpIGFuZCB1Z2x5DQo+ID4gPiBjb21waWxlciB0cmlja3Mp
-IHRoYXQgZ2VuZXJhdGVzIGEgY2FsbCwgeWVzLiBCdXQgaXQncyBub3QgYSBub3JtYWwgQw0KPiA+
-ID4gY2FsbC4gT24geDg2LTY0LCBpdCByZXR1cm5zIHRoZSBlcnJvciBjb2RlIGluICVyYXgsIGFu
-ZCB0aGUgdmFsdWUgaW4NCj4gPiA+ICVyZHgNCj4gPg0KPiA+IEkgbXVzdCBiZSBtaXMtcmVtZW1i
-ZXJpbmcgdGhlIG9iamVjdCBjb2RlIGZyb20gbGFzdCB0aW1lDQo+ID4gSSBsb29rZWQgYXQgaXQu
-DQo+IA0KPiBPbiBhbiBvYmplY3QgY29kZSBsZXZlbCwgdGhlIGVuZCByZXN1bHQgYWN0dWFsbHkg
-YWxtb3N0IGxvb2tzIGxpa2UgYQ0KPiBub3JtYWwgY2FsbCwgdW50aWwgeW91IHN0YXJ0IGxvb2tp
-bmcgYXQgdGhlIGV4YWN0IHJlZ2lzdGVyIHBhc3NpbmcNCj4gZGV0YWlscy4NCj4gDQo+IE9uIGEg
-c291cmNlIGxldmVsLCBpdCdzIGFueXRoaW5nIGJ1dC4NCj4gDQo+IFRoaXMgaXMgImdldF91c2Vy
-KCkiIG9uIHg4NjoNCj4gDQo+ICAgI2RlZmluZSBnZXRfdXNlcih4LCBwdHIpICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIFwNCj4gICAoeyAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgXA0K
-PiAgICAgICAgIGludCBfX3JldF9ndTsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICBcDQo+ICAgICAgICAgcmVnaXN0ZXIgX19pbnR0eXBlKCoocHRyKSkg
-X192YWxfZ3UgYXNtKCIlIl9BU01fRFgpOyAgICAgICAgICAgIFwNCj4gICAgICAgICBfX2Noa191
-c2VyX3B0cihwdHIpOyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-XA0KPiAgICAgICAgIG1pZ2h0X2ZhdWx0KCk7ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICBcDQo+ICAgICAgICAgYXNtIHZvbGF0aWxlKCJjYWxsIF9fZ2V0
-X3VzZXJfJVA0IiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIFwNCj4gICAgICAgICAgICAg
-ICAgICAgICAgOiAiPWEiIChfX3JldF9ndSksICI9ciIgKF9fdmFsX2d1KSwgICAgICAgICAgICAg
-ICAgXA0KPiAgICAgICAgICAgICAgICAgICAgICAgICBBU01fQ0FMTF9DT05TVFJBSU5UICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICBcDQo+ICAgICAgICAgICAgICAgICAgICAgIDogIjAiIChw
-dHIpLCAiaSIgKHNpemVvZigqKHB0cikpKSk7ICAgICAgICAgICAgICAgIFwNCj4gICAgICAgICAo
-eCkgPSAoX19mb3JjZSBfX3R5cGVvZl9fKCoocHRyKSkpIF9fdmFsX2d1OyAgICAgICAgICAgICAg
-ICAgICAgXA0KPiAgICAgICAgIF9fYnVpbHRpbl9leHBlY3QoX19yZXRfZ3UsIDApOyAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICBcDQo+ICAgfSkNCg0KQ2FuJ3QgeW91IHNpbXBsaWZ5
-IHRoYXQgYnkgdXNpbmcgdGhlID1kIGNvbnN0cmFpbnQgcmF0aGVyDQp0aGFuIHJlbHlpbmcgb24g
-YSBhc20gcmVnaXN0ZXIgdmFyaWFibGUuDQoNCglEYXZpZA0KDQotDQpSZWdpc3RlcmVkIEFkZHJl
-c3MgTGFrZXNpZGUsIEJyYW1sZXkgUm9hZCwgTW91bnQgRmFybSwgTWlsdG9uIEtleW5lcywgTUsx
-IDFQVCwgVUsNClJlZ2lzdHJhdGlvbiBObzogMTM5NzM4NiAoV2FsZXMpDQo=
+Remove the -mno-warn-deprecated assembler flag to make sure the GNU
+assembler warns in case non-unified syntax is used.
+
+This also prevents a warning when building with Clang and enabling its
+integrated assembler:
+clang-10: error: unsupported argument '-mno-warn-deprecated' to option 'Wa,'
+
+GCC before 5.1 emits pre-UAL assembler. This can lead to warnings if
+inline assembler explicitly switches to unified syntax by using the
+".syntax unified" directive (e.g. arch/arm/include/asm/unified.h).
+Hence keep the flag for GCC versions before 5.1.
+
+This is a second attempt of commit e8c24bbda7d5 ("ARM: 8846/1: warn if
+divided syntax assembler is used") which has subsequently been reverted
+with commit b752bb405a13 ("Revert "ARM: 8846/1: warn if divided syntax
+assembler is used"").
+
+Signed-off-by: Stefan Agner <stefan@agner.ch>
+---
+Changes in v2:
+- Reference revert commit b752bb405a13 ("Revert "ARM: 8846/1: warn if
+  divided syntax assembler is used"")
+- Reword commit message
+
+ arch/arm/Makefile | 14 +++++++++-----
+ 1 file changed, 9 insertions(+), 5 deletions(-)
+
+diff --git a/arch/arm/Makefile b/arch/arm/Makefile
+index 1fc32b611f8a..b37bb985a3c2 100644
+--- a/arch/arm/Makefile
++++ b/arch/arm/Makefile
+@@ -119,21 +119,25 @@ ifeq ($(CONFIG_CC_IS_CLANG),y)
+ CFLAGS_ABI	+= -meabi gnu
+ endif
+ 
+-# Accept old syntax despite ".syntax unified"
+-AFLAGS_NOWARN	:=$(call as-option,-Wa$(comma)-mno-warn-deprecated,-Wa$(comma)-W)
+-
+ ifeq ($(CONFIG_THUMB2_KERNEL),y)
+-CFLAGS_ISA	:=-mthumb -Wa,-mimplicit-it=always $(AFLAGS_NOWARN)
++CFLAGS_ISA	:=-mthumb -Wa,-mimplicit-it=always
+ AFLAGS_ISA	:=$(CFLAGS_ISA) -Wa$(comma)-mthumb
+ # Work around buggy relocation from gas if requested:
+ ifeq ($(CONFIG_THUMB2_AVOID_R_ARM_THM_JUMP11),y)
+ KBUILD_CFLAGS_MODULE	+=-fno-optimize-sibling-calls
+ endif
+ else
+-CFLAGS_ISA	:=$(call cc-option,-marm,) $(AFLAGS_NOWARN)
++CFLAGS_ISA	:=$(call cc-option,-marm,)
+ AFLAGS_ISA	:=$(CFLAGS_ISA)
+ endif
+ 
++ifeq ($(CONFIG_CC_IS_GCC),y)
++ifeq ($(call cc-ifversion, -lt, 0501, y), y)
++# GCC <5.1 emits pre-UAL code and causes assembler warnings, suppress them
++CFLAGS_ISA	+=$(call as-option,-Wa$(comma)-mno-warn-deprecated,-Wa$(comma)-W)
++endif
++endif
++
+ # Need -Uarm for gcc < 3.x
+ KBUILD_CFLAGS	+=$(CFLAGS_ABI) $(CFLAGS_ISA) $(arch-y) $(tune-y) $(call cc-option,-mshort-load-bytes,$(call cc-option,-malignment-traps,)) -msoft-float -Uarm
+ KBUILD_AFLAGS	+=$(CFLAGS_ABI) $(AFLAGS_ISA) $(arch-y) $(tune-y) -include asm/unified.h -msoft-float
+-- 
+2.25.1
 
