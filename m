@@ -2,89 +2,98 @@ Return-Path: <SRS0=I467=5O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F9A4C43331
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 21:42:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29400C43331
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 21:54:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE6F220714
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 21:42:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F2AC320774
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 21:54:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729098AbgC2Vmj (ORCPT
+        id S1729101AbgC2VyL convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Mar 2020 17:42:39 -0400
-Received: from outgoing-auth-1.mit.edu ([18.9.28.11]:41767 "EHLO
-        outgoing.mit.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727370AbgC2Vmj (ORCPT
+        Sun, 29 Mar 2020 17:54:11 -0400
+Received: from lithops.sigma-star.at ([195.201.40.130]:35326 "EHLO
+        lithops.sigma-star.at" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729040AbgC2VyL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Mar 2020 17:42:39 -0400
-Received: from callcc.thunk.org (pool-72-93-95-157.bstnma.fios.verizon.net [72.93.95.157])
-        (authenticated bits=0)
-        (User authenticated as tytso@ATHENA.MIT.EDU)
-        by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id 02TLgFDb018135
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Sun, 29 Mar 2020 17:42:15 -0400
-Received: by callcc.thunk.org (Postfix, from userid 15806)
-        id E7763420EBA; Sun, 29 Mar 2020 17:42:14 -0400 (EDT)
-Date:   Sun, 29 Mar 2020 17:42:14 -0400
-From:   "Theodore Y. Ts'o" <tytso@mit.edu>
-To:     George Spelvin <lkml@SDF.ORG>
-Cc:     David Laight <David.Laight@ACULAB.COM>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Qian Cai <cai@lca.pw>, Kees Cook <keescook@chromium.org>,
-        Michal Hocko <mhocko@suse.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linux MM <linux-mm@kvack.org>
-Subject: Re: [RFC PATCH v1 00/52] Audit kernel random number use
-Message-ID: <20200329214214.GB768293@mit.edu>
-References: <202003281643.02SGhPmY017434@sdf.org>
- <CAPcyv4iagZy5m3FpMrQqyOi=_uCzqh5MjbW+J_xiHU1Z1BmF=g@mail.gmail.com>
- <20200328182817.GE5859@SDF.ORG>
- <98bd30f23b374ccbb61dd46125dc9669@AcuMS.aculab.com>
- <20200329174122.GD4675@SDF.ORG>
+        Sun, 29 Mar 2020 17:54:11 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by lithops.sigma-star.at (Postfix) with ESMTP id A76B160D0874;
+        Sun, 29 Mar 2020 23:54:08 +0200 (CEST)
+Received: from lithops.sigma-star.at ([127.0.0.1])
+        by localhost (lithops.sigma-star.at [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id jNc3WgwF_MAg; Sun, 29 Mar 2020 23:54:07 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+        by lithops.sigma-star.at (Postfix) with ESMTP id 64BC16091853;
+        Sun, 29 Mar 2020 23:54:07 +0200 (CEST)
+Received: from lithops.sigma-star.at ([127.0.0.1])
+        by localhost (lithops.sigma-star.at [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id TqkE4nhMYMmY; Sun, 29 Mar 2020 23:54:07 +0200 (CEST)
+Received: from lithops.sigma-star.at (lithops.sigma-star.at [195.201.40.130])
+        by lithops.sigma-star.at (Postfix) with ESMTP id 3533860D0872;
+        Sun, 29 Mar 2020 23:54:07 +0200 (CEST)
+Date:   Sun, 29 Mar 2020 23:54:07 +0200 (CEST)
+From:   Richard Weinberger <richard@nod.at>
+To:     anton ivanov <anton.ivanov@cambridgegreys.com>
+Cc:     Brendan Higgins <brendanhiggins@google.com>,
+        Jeff Dike <jdike@addtoit.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        James McMechan <james_mcmechan@hotmail.com>,
+        linux-um <linux-um@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        davidgow <davidgow@google.com>
+Message-ID: <606921391.56755.1585518847045.JavaMail.zimbra@nod.at>
+In-Reply-To: <7f8b86f1-3759-c9ff-6216-a7104edb8030@cambridgegreys.com>
+References: <20200124221401.210449-1-brendanhiggins@google.com> <CAFd5g44eznV-9cPf4JVpsJo93+R8YCqUwBqRf+PbjaRMizy1aQ@mail.gmail.com> <7f8b86f1-3759-c9ff-6216-a7104edb8030@cambridgegreys.com>
+Subject: Re: [PATCH v3] uml: make CONFIG_STATIC_LINK actually static
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200329174122.GD4675@SDF.ORG>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8BIT
+X-Originating-IP: [195.201.40.130]
+X-Mailer: Zimbra 8.8.12_GA_3807 (ZimbraWebClient - FF68 (Linux)/8.8.12_GA_3809)
+Thread-Topic: make CONFIG_STATIC_LINK actually static
+Thread-Index: TqGQUOqF7TCvWDerkItHXFGdXoxNQw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Mar 29, 2020 at 05:41:22PM +0000, George Spelvin wrote:
-> > Using xor was particularly stupid.
-> > The whole generator was then linear and trivially reversable.
-> > Just using addition would have made it much stronger.
+----- Ursprüngliche Mail -----
+> Von: "anton ivanov" <anton.ivanov@cambridgegreys.com>
+> An: "Brendan Higgins" <brendanhiggins@google.com>, "Jeff Dike" <jdike@addtoit.com>, "richard" <richard@nod.at>, "Geert
+> Uytterhoeven" <geert@linux-m68k.org>, "James McMechan" <james_mcmechan@hotmail.com>
+> CC: "linux-um" <linux-um@lists.infradead.org>, "linux-kernel" <linux-kernel@vger.kernel.org>, "davidgow"
+> <davidgow@google.com>
+> Gesendet: Samstag, 8. Februar 2020 08:56:58
+> Betreff: Re: [PATCH v3] uml: make CONFIG_STATIC_LINK actually static
+
+> On 08/02/2020 01:07, Brendan Higgins wrote:
+>> On Fri, Jan 24, 2020 at 2:14 PM Brendan Higgins
+>> <brendanhiggins@google.com> wrote:
+>>>
+>>> Currently, CONFIG_STATIC_LINK can be enabled with options which cannot
+>>> be statically linked, namely UML_NET_VECTOR, UML_NET_VDE, and
+>>> UML_NET_PCAP; this is because glibc tries to load NSS which does not
+>>> support being statically linked. So make CONFIG_STATIC_LINK depend on
+>>> !UML_NET_VECTOR && !UML_NET_VDE && !UML_NET_PCAP.
+>>>
+>>> Link:
+>>> https://lore.kernel.org/lkml/f658f317-be54-ed75-8296-c373c2dcc697@cambridgegreys.com/#t
+>>> Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
+>>> ---
+>> 
+>> Ping.
 > 
-> I considered changing it to addition (actually, add pairs and XOR the 
-> sums), but that would break its self-test.  And once I'd done that,
-> there are much better possibilities.
+> ICMP echo reply,
 > 
-> Actually, addition doesn't make it *much* stronger.  To start
-> with, addition and xor are the same thing at the lsbit, so
-> observing 113 lsbits gives you a linear decoding problem.
+> I thought I acked it :)
+> 
+> If not - apologies.
 
-David,
+Applied, thanks!
 
-If anyone is trying to rely on prandom_u32() as being "strong" in any
-sense of the word in terms of being reversable by attacker --- they
-shouldn't be using prandom_u32().  That's going to be true no matter
-*what* algorithm we use.
-
-Better distribution?  Sure.  Making prandom_u32() faster?  Absolutely;
-that's its primary Raison d'Etre.
-
-George,
-
-Did you send the full set of patches to a single mailing list?  Or can
-you make it available on a git tree somewhere?  I've y seen this
-message plus the ext4 related change, and I can't find the full patch
-series anywhere.  If you can send the next version such that it's
-fully cc'ed to linux-kernel, that would be really helpful.
-
-Thanks!!
-
-						- Ted
+Thanks,
+//richard
