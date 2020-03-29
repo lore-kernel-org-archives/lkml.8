@@ -7,39 +7,39 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1159AC43331
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 20:27:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A00FC43331
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 20:27:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E105A20748
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 20:27:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7522E20748
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 20:27:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729064AbgC2U1T (ORCPT
+        id S1729073AbgC2U1X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Mar 2020 16:27:19 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:57028 "EHLO
+        Sun, 29 Mar 2020 16:27:23 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:57026 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728881AbgC2U03 (ORCPT
+        with ESMTP id S1728880AbgC2U01 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Mar 2020 16:26:29 -0400
+        Sun, 29 Mar 2020 16:26:27 -0400
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1jIeVh-0001Rf-NT; Sun, 29 Mar 2020 22:26:21 +0200
+        id 1jIeVl-0001TN-Ef; Sun, 29 Mar 2020 22:26:25 +0200
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 9E73D1C0470;
-        Sun, 29 Mar 2020 22:26:17 +0200 (CEST)
-Date:   Sun, 29 Mar 2020 20:26:17 -0000
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 1C1AB1C0334;
+        Sun, 29 Mar 2020 22:26:20 +0200 (CEST)
+Date:   Sun, 29 Mar 2020 20:26:19 -0000
 From:   "tip-bot2 for Marc Zyngier" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: irq/core] irqchip/gic-v3: Use SGIs without active state if offered
-Cc:     Marc Zyngier <maz@kernel.org>, Zenghui Yu <yuzenghui@huawei.com>,
-        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200304203330.4967-2-maz@kernel.org>
-References: <20200304203330.4967-2-maz@kernel.org>
+Subject: [tip: irq/core] irqchip/atmel-aic: Fix irq_retrigger callback return value
+Cc:     Marc Zyngier <maz@kernel.org>, x86 <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <20200310184921.23552-2-maz@kernel.org>
+References: <20200310184921.23552-2-maz@kernel.org>
 MIME-Version: 1.0
-Message-ID: <158551357719.28353.15287980899679490964.tip-bot2@tip-bot2>
+Message-ID: <158551357965.28353.10773665129651597686.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -55,90 +55,36 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the irq/core branch of tip:
 
-Commit-ID:     0b04758b002bde9434053be2fff8064ac3d9d8bb
-Gitweb:        https://git.kernel.org/tip/0b04758b002bde9434053be2fff8064ac3d9d8bb
+Commit-ID:     7177144a54f594f8815b777ae647e58b07c03f86
+Gitweb:        https://git.kernel.org/tip/7177144a54f594f8815b777ae647e58b07c03f86
 Author:        Marc Zyngier <maz@kernel.org>
-AuthorDate:    Wed, 04 Mar 2020 20:33:08 
+AuthorDate:    Tue, 10 Mar 2020 18:49:18 
 Committer:     Marc Zyngier <maz@kernel.org>
-CommitterDate: Thu, 19 Mar 2020 11:11:21 
+CommitterDate: Mon, 16 Mar 2020 15:48:54 
 
-irqchip/gic-v3: Use SGIs without active state if offered
+irqchip/atmel-aic: Fix irq_retrigger callback return value
 
-To allow the direct injection of SGIs into a guest, the GICv4.1
-architecture has to sacrifice the Active state so that SGIs look
-a lot like LPIs (they are injected by the same mechanism).
-
-In order not to break existing software, the architecture gives
-offers guests OSs the choice: SGIs with or without an active
-state. It is the hypervisors duty to honor the guest's choice.
-
-For this, the architecture offers a discovery bit indicating whether
-the GIC supports GICv4.1 SGIs (GICD_TYPER2.nASSGIcap), and another
-bit indicating whether the guest wants Active-less SGIs or not
-(controlled by GICD_CTLR.nASSGIreq).
-
-A hypervisor not supporting GICv4.1 SGIs would leave nASSGIcap
-clear, and a guest not knowing about GICv4.1 SGIs (or definitely
-wanting an Active state) would leave nASSGIreq clear (both being
-thankfully backward compatible with older revisions of the GIC).
-
-Since Linux is perfectly happy without an active state on SGIs,
-inform the hypervisor that we'll use that if offered.
+The irq_retrigger callback is supposed to return 0 when retrigger
+has failed, and a non-zero value otherwise. Tell the core code
+that the driver has succedded in using the HW to retrigger the
+interrupt.
 
 Signed-off-by: Marc Zyngier <maz@kernel.org>
-Reviewed-by: Zenghui Yu <yuzenghui@huawei.com>
-Link: https://lore.kernel.org/r/20200304203330.4967-2-maz@kernel.org
+Link: https://lore.kernel.org/r/20200310184921.23552-2-maz@kernel.org
 ---
- drivers/irqchip/irq-gic-v3.c       | 10 ++++++++--
- include/linux/irqchip/arm-gic-v3.h |  2 ++
- 2 files changed, 10 insertions(+), 2 deletions(-)
+ drivers/irqchip/irq-atmel-aic.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/irqchip/irq-gic-v3.c b/drivers/irqchip/irq-gic-v3.c
-index c1f7af9..b6b0f86 100644
---- a/drivers/irqchip/irq-gic-v3.c
-+++ b/drivers/irqchip/irq-gic-v3.c
-@@ -723,6 +723,7 @@ static void __init gic_dist_init(void)
- 	unsigned int i;
- 	u64 affinity;
- 	void __iomem *base = gic_data.dist_base;
-+	u32 val;
+diff --git a/drivers/irqchip/irq-atmel-aic.c b/drivers/irqchip/irq-atmel-aic.c
+index bb1ad45..2c999dc 100644
+--- a/drivers/irqchip/irq-atmel-aic.c
++++ b/drivers/irqchip/irq-atmel-aic.c
+@@ -83,7 +83,7 @@ static int aic_retrigger(struct irq_data *d)
+ 	irq_reg_writel(gc, d->mask, AT91_AIC_ISCR);
+ 	irq_gc_unlock(gc);
  
- 	/* Disable the distributor */
- 	writel_relaxed(0, base + GICD_CTLR);
-@@ -755,9 +756,14 @@ static void __init gic_dist_init(void)
- 	/* Now do the common stuff, and wait for the distributor to drain */
- 	gic_dist_config(base, GIC_LINE_NR, gic_dist_wait_for_rwp);
+-	return 0;
++	return 1;
+ }
  
-+	val = GICD_CTLR_ARE_NS | GICD_CTLR_ENABLE_G1A | GICD_CTLR_ENABLE_G1;
-+	if (gic_data.rdists.gicd_typer2 & GICD_TYPER2_nASSGIcap) {
-+		pr_info("Enabling SGIs without active state\n");
-+		val |= GICD_CTLR_nASSGIreq;
-+	}
-+
- 	/* Enable distributor with ARE, Group1 */
--	writel_relaxed(GICD_CTLR_ARE_NS | GICD_CTLR_ENABLE_G1A | GICD_CTLR_ENABLE_G1,
--		       base + GICD_CTLR);
-+	writel_relaxed(val, base + GICD_CTLR);
- 
- 	/*
- 	 * Set all global interrupts to the boot CPU only. ARE must be
-diff --git a/include/linux/irqchip/arm-gic-v3.h b/include/linux/irqchip/arm-gic-v3.h
-index 83439bf..c29a026 100644
---- a/include/linux/irqchip/arm-gic-v3.h
-+++ b/include/linux/irqchip/arm-gic-v3.h
-@@ -57,6 +57,7 @@
- #define GICD_SPENDSGIR			0x0F20
- 
- #define GICD_CTLR_RWP			(1U << 31)
-+#define GICD_CTLR_nASSGIreq		(1U << 8)
- #define GICD_CTLR_DS			(1U << 6)
- #define GICD_CTLR_ARE_NS		(1U << 4)
- #define GICD_CTLR_ENABLE_G1A		(1U << 1)
-@@ -90,6 +91,7 @@
- #define GICD_TYPER_ESPIS(typer)						\
- 	(((typer) & GICD_TYPER_ESPI) ? GICD_TYPER_SPIS((typer) >> 27) : 0)
- 
-+#define GICD_TYPER2_nASSGIcap		(1U << 8)
- #define GICD_TYPER2_VIL			(1U << 7)
- #define GICD_TYPER2_VID			GENMASK(4, 0)
- 
+ static int aic_set_type(struct irq_data *d, unsigned type)
