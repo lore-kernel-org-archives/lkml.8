@@ -2,165 +2,422 @@ Return-Path: <SRS0=I467=5O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A8FCC43331
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 01:41:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AB59C43331
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 01:57:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 20C34206E6
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 01:41:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="ITfzU0iO"
+	by mail.kernel.org (Postfix) with ESMTP id BA7F3206DB
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 01:57:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585447061;
+	bh=m6GeRNzMV+n66WbbdFTmYTDWDOZ3an6fi8lQEe9vRa8=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=CB9MBXSLpXV9PGcj10KTHGg7lBU5GsGXvWuzYvIHHdBXX3eARy2/80e7TMY+mxjU8
+	 qB4U6Md3zqmDjKKaQfPWe7f09fCvvDMVVUNh70ETHzhbklGyw1pQ8dTQpmlzR51HUp
+	 wl5LVq7awHrDvSyvi0tNIUIQ+q0hArApjk/xgQ5A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727875AbgC2BlM (ORCPT
+        id S1727821AbgC2B5i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 28 Mar 2020 21:41:12 -0400
-Received: from mail-eopbgr50062.outbound.protection.outlook.com ([40.107.5.62]:36838
-        "EHLO EUR03-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727733AbgC2BlM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 28 Mar 2020 21:41:12 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=KEMrEbdNe2qwv8QD5ENxGWgT6FLKjlfOmfKCK1G21RsNmTxmGV6aj98OUztyQEoZXrydRSvfPakX7ySieVVErqy+gnZP9kMj8HIspqhaqsmdrOT1oKzF562Q/auytE7H071huTBlXHqnmtFZfK+dCsc+QwxoeDnzZqqJegE5cd/Vyq+IIFAEmW2Is7TbMdriHuY/5gkfAXbmeUxNrbdtmHihpxmcXiBM/28qrLrsGQ8uraMEwDa7369bjEuSXBWjIbW71ymU/fve2w+VK5uSWovfpwSWxp6RCSjbL4h1tKmCjy0/F6ohLTdYxKiGH798wvrtH2VVbwyD6Umi20n7Ug==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=jK4ETLV7LtTkUbStcjpSETxD8G6FMhxYqO+kLEQFC8g=;
- b=eIT/QQ2BIEFcv+KWbB66AeZLJ3/kHhkXYrbippHfX9yQhEbfTOzPhcNdK0vfa66B2Jxjry+DLbTZCHNvOXoQ15tRztvDZrPqQMMhbmbc9yOx+hfZQtfJLWB46s5M8P9YXfo96NS4HQhtsy8wVh3mzH/Pr1LqQaJjyr5qaHXzYZlrqWYTrhBbvzCsaQYa6u9fpZ2VsIKK4Gd5dWpgTUHD4yi7V6LzE1bnX/uWej/o1HoRIo0FsYS3TVHGkbj+GfZdqIJj2qG5M6Qduc1K2AidRuu/Yf97lRR60yZz0zLUQvhF6CzJUcCp6MjyKCJO1kAlEm7IX917P0f4Pqqbwh5y6w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=jK4ETLV7LtTkUbStcjpSETxD8G6FMhxYqO+kLEQFC8g=;
- b=ITfzU0iOc8ZZ0qA7CrWwFL3JWV3XWB8SPBxKT21umpINgF9pB85bF7ksAM8LwwsB2FGIOPRYh1E0vtrubePGI4boL4Rr0MPFFg2+wqFMCg4AkmAth/4aY9sTiA2/hhlwMT1xFI+ojQB9mG4W7r4JN8XjuUL2AZBWpOnp2hpqOKQ=
-Received: from DB8PR04MB6426.eurprd04.prod.outlook.com (20.179.249.138) by
- DB8PR04MB6730.eurprd04.prod.outlook.com (20.179.249.157) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2856.20; Sun, 29 Mar 2020 01:41:07 +0000
-Received: from DB8PR04MB6426.eurprd04.prod.outlook.com
- ([fe80::5130:da14:4c4f:3e2f]) by DB8PR04MB6426.eurprd04.prod.outlook.com
- ([fe80::5130:da14:4c4f:3e2f%5]) with mapi id 15.20.2856.019; Sun, 29 Mar 2020
- 01:41:07 +0000
-From:   Xiaoliang Yang <xiaoliang.yang_1@nxp.com>
-To:     Vladimir Oltean <olteanv@gmail.com>
-CC:     "David S. Miller" <davem@davemloft.net>,
-        netdev <netdev@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>,
-        Horatiu Vultur <horatiu.vultur@microchip.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        "Allan W. Nielsen" <allan.nielsen@microchip.com>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        Joergen Andreasen <joergen.andreasen@microchip.com>,
-        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
-        "Y.b. Lu" <yangbo.lu@nxp.com>,
-        Alexandru Marginean <alexandru.marginean@nxp.com>,
-        Po Liu <po.liu@nxp.com>,
-        Claudiu Manoil <claudiu.manoil@nxp.com>,
-        Vladimir Oltean <vladimir.oltean@nxp.com>,
-        Leo Li <leoyang.li@nxp.com>,
-        Florian Fainelli <f.fainelli@gmail.com>
-Subject: RE: [EXT] Re: [net-next,v1] net: mscc: ocelot: add action of police
- on vcap_is2
-Thread-Topic: [EXT] Re: [net-next,v1] net: mscc: ocelot: add action of police
- on vcap_is2
-Thread-Index: AQHWBP4zQ7VVONeLtUqudLfMovlkOaheBakAgAC5o4CAAAo6QA==
-Date:   Sun, 29 Mar 2020 01:41:07 +0000
-Message-ID: <DB8PR04MB64264BF8BDFA26590409F40EF0CA0@DB8PR04MB6426.eurprd04.prod.outlook.com>
-References: <20200328123739.45247-1-xiaoliang.yang_1@nxp.com>
- <CA+h21hpQO=KACy9yKCmOVQenyyoTjLyFD4mX3Cj7PCQnxCB8sA@mail.gmail.com>
- <CA+h21hpBfey-uWrusfDsh7oWocV-sQLBqoYGrhzYuQM8qZdegg@mail.gmail.com>
-In-Reply-To: <CA+h21hpBfey-uWrusfDsh7oWocV-sQLBqoYGrhzYuQM8qZdegg@mail.gmail.com>
-Accept-Language: zh-CN, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=xiaoliang.yang_1@nxp.com; 
-x-originating-ip: [115.171.229.245]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 1b330d6f-b4e6-493a-0d0a-08d7d3824067
-x-ms-traffictypediagnostic: DB8PR04MB6730:|DB8PR04MB6730:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DB8PR04MB6730478A79B9271B2AA8BE14F0CA0@DB8PR04MB6730.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-forefront-prvs: 035748864E
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB8PR04MB6426.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10009020)(4636009)(346002)(39850400004)(136003)(396003)(366004)(376002)(7416002)(2906002)(71200400001)(33656002)(8676002)(4326008)(6506007)(53546011)(7696005)(9686003)(81166006)(81156014)(8936002)(55016002)(966005)(52536014)(86362001)(6916009)(316002)(54906003)(5660300002)(478600001)(45080400002)(26005)(66476007)(64756008)(76116006)(66556008)(66446008)(186003)(66946007)(142933001);DIR:OUT;SFP:1101;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: Q+k7IUUVzpDBtshQ40gZkFoy7lfvriAXgBC1ytoAh6o9YX7hzDkjuCtq+SW3slWOYJ7VjsmbARHoVFxcfKyOUV29yLX7kjoH8LkKytlEONZ2xvEzHU3tXJb2kBV4gO7qjo0pZy19xXeKOLEQ23NceODYwqXAMsQKWpZhfqhk2zOHobSwx4zsgik4kvsfGQ5SdYipDc6iPNriIpVDEHyA9EvIQ0Q7Ruvhcwtket+EZpJP9vPB9fDocsoQ3wWpXkGvOvOguF3mj2koP0A7L6uQb5ZhOFbgwQGjOqP4TUSM7OfuXHHL4SBepeic8K6DcpDXmN7DyZq9y4oYhm9QjCKbWpQ2U48qOF1El9nu2qqtu7DRq4JnZvT7nqZDvSjQv2AQX6lnFzAIlkKmcM3+zUBeP44vpEgocOaixg6TIwfqmXDbrvnK5EdmAv+ne1i8u0c1goB/xSZPtR4IaJ24p97SMK1BgkRm+87cF3ApKhP0jCriv2G8pTHOl9fluEqA7aeFwvtP+78iA6UkBx9qYC734GHARZG/txL9i3Po+NQPMbbqeIWd43Kttj8uMK/JG20XGSKZP7+l9hFc67FqcUB+qg==
-x-ms-exchange-antispam-messagedata: /jlz8+35uxpGBRxGOuq1obwHPMaGdYsWGyMgSnxkYUn0ewPlRcJ4J9oSQBo7mEvDXYmcnHi7V3go5DBf7MHDgIOfO/0VNAPrlDs76Qc2BZ6K9Mps7VhzROdjAQoNXtAbaf9ZozxKw+i50EeukK6OVw==
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Sat, 28 Mar 2020 21:57:38 -0400
+Received: from conssluserg-02.nifty.com ([210.131.2.81]:38729 "EHLO
+        conssluserg-02.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727791AbgC2B5h (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 28 Mar 2020 21:57:37 -0400
+Received: from mail-vs1-f45.google.com (mail-vs1-f45.google.com [209.85.217.45]) (authenticated)
+        by conssluserg-02.nifty.com with ESMTP id 02T1vQJE006896;
+        Sun, 29 Mar 2020 10:57:27 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-02.nifty.com 02T1vQJE006896
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1585447047;
+        bh=oMdZgRwA3al/jFx6COVLMolJ0bnHiv2oH48zwHS3juc=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=r6TyiNkfCKnUpPvDWb3oaTAG7Ex7ZdHH3aSai8e5Y1fsZT0aJqUVlI31tDfIcpff2
+         Q49JNJ5/GRU4J8IQ6/Vk90jsG6BSYvtnNY59a2uc27M84rZ5I2NOOiwEkfsEVM5Gkz
+         CdS6JMnm+60Pa7ymPO22ilKArFZ2tpkf624bFS7xbcBAEDMSlbvVyTB8USvx1QBLHl
+         sLsM/P+6ivVRGMcVD93cnsSN9hgxz+379t1FJO4PcG2U1Xf7Xvyv7R1UtDGmNJVA4r
+         eYYikbJKwUbaHhiaLxt6skRLiG66eFWdLvqzyHyU02dTkkJD8s4Kjvw2C3cuxTfEaF
+         bxR2rKXeuy5lA==
+X-Nifty-SrcIP: [209.85.217.45]
+Received: by mail-vs1-f45.google.com with SMTP id s10so8759475vsi.9;
+        Sat, 28 Mar 2020 18:57:26 -0700 (PDT)
+X-Gm-Message-State: AGi0PuYjByWOaYVW9EbEAkhSrHZIMwjSxNvYFWJgsgcKiZrqMixahID1
+        ypJx4C39fbC/5SsC39EMayh/3F4gqBH1BTmrNPU=
+X-Google-Smtp-Source: APiQypJ/C1ZaRHEVzrS5VdE59VWNKF5xxFuhlxnvFA8hnYcX8HqJnY4fu0AdhZwCHV805rp538sYZhhNK9vL5qIJZik=
+X-Received: by 2002:a67:6542:: with SMTP id z63mr4135422vsb.179.1585447045756;
+ Sat, 28 Mar 2020 18:57:25 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1b330d6f-b4e6-493a-0d0a-08d7d3824067
-X-MS-Exchange-CrossTenant-originalarrivaltime: 29 Mar 2020 01:41:07.4819
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: z1XQkrAmB+QhtDEk1D620sHa1rJXP5KEkkBrSV666lT5jxqcEo4G0reNu1mEG56FeEZu8dgpAxyVHyHDXiz9hPo6aguTNn5f64JUm4AfOb4=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB8PR04MB6730
+References: <20200317202404.GA20746@ubuntu-m2-xlarge-x86> <20200317215515.226917-1-ndesaulniers@google.com>
+ <20200327224246.GA12350@ubuntu-m2-xlarge-x86> <CAK7LNAShb1gWuZyycLAGWm19EWn17zeNcmdPyqu1o=K9XrfJbg@mail.gmail.com>
+In-Reply-To: <CAK7LNAShb1gWuZyycLAGWm19EWn17zeNcmdPyqu1o=K9XrfJbg@mail.gmail.com>
+From:   Masahiro Yamada <masahiroy@kernel.org>
+Date:   Sun, 29 Mar 2020 10:56:49 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAQ3=jUu4aa=JQB8wErUGDd-Vr=cX_yZSdP_uAP6kWZ=pw@mail.gmail.com>
+Message-ID: <CAK7LNAQ3=jUu4aa=JQB8wErUGDd-Vr=cX_yZSdP_uAP6kWZ=pw@mail.gmail.com>
+Subject: Re: [PATCH v2] Makefile.llvm: simplify LLVM build
+To:     Nathan Chancellor <natechancellor@gmail.com>
+Cc:     Nick Desaulniers <ndesaulniers@google.com>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Sandeep Patil <sspatil@google.com>
+Content-Type: multipart/mixed; boundary="000000000000f9953d05a1f4a7d0"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgVmxhZGltaXIsDQoNClRoYW5rcywgeW91IGFyZSByaWdodCwgdGhlIHBhdGNoIG5lZWQgdG8g
-Y2hhbmdlIHJ1bGUtPnBvbCB0byB0bXAtPnBvbC4gSSBoYXZlIHNlZW4geW91ciBwYXRjaCBzZXJp
-ZXMsIGl0J3MgYmV0dGVyIHRvIGFkZCB0aGlzIHBhdGNoIHRvIHlvdXIgcGF0Y2ggc2VyaWVzLg0K
-DQpSZWdhcmRzLA0KWGlhb2xpYW5nIFlhbmcNCg0KLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0N
-CkZyb206IFZsYWRpbWlyIE9sdGVhbiA8b2x0ZWFudkBnbWFpbC5jb20+IA0KU2VudDogMjAyMOW5
-tDPmnIgyOeaXpSA4OjU1DQpUbzogWGlhb2xpYW5nIFlhbmcgPHhpYW9saWFuZy55YW5nXzFAbnhw
-LmNvbT4NCkNjOiBEYXZpZCBTLiBNaWxsZXIgPGRhdmVtQGRhdmVtbG9mdC5uZXQ+OyBuZXRkZXYg
-PG5ldGRldkB2Z2VyLmtlcm5lbC5vcmc+OyBsa21sIDxsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwu
-b3JnPjsgSXZhbiBLaG9yb256aHVrIDxpdmFuLmtob3JvbnpodWtAbGluYXJvLm9yZz47IEhvcmF0
-aXUgVnVsdHVyIDxob3JhdGl1LnZ1bHR1ckBtaWNyb2NoaXAuY29tPjsgQWxleGFuZHJlIEJlbGxv
-bmkgPGFsZXhhbmRyZS5iZWxsb25pQGJvb3RsaW4uY29tPjsgQW5kcmV3IEx1bm4gPGFuZHJld0Bs
-dW5uLmNoPjsgQWxsYW4gVy4gTmllbHNlbiA8YWxsYW4ubmllbHNlbkBtaWNyb2NoaXAuY29tPjsg
-Vml2aWVuIERpZGVsb3QgPHZpdmllbi5kaWRlbG90QGdtYWlsLmNvbT47IEpvZXJnZW4gQW5kcmVh
-c2VuIDxqb2VyZ2VuLmFuZHJlYXNlbkBtaWNyb2NoaXAuY29tPjsgTWljcm9jaGlwIExpbnV4IERy
-aXZlciBTdXBwb3J0IDxVTkdMaW51eERyaXZlckBtaWNyb2NoaXAuY29tPjsgWS5iLiBMdSA8eWFu
-Z2JvLmx1QG54cC5jb20+OyBBbGV4YW5kcnUgTWFyZ2luZWFuIDxhbGV4YW5kcnUubWFyZ2luZWFu
-QG54cC5jb20+OyBQbyBMaXUgPHBvLmxpdUBueHAuY29tPjsgQ2xhdWRpdSBNYW5vaWwgPGNsYXVk
-aXUubWFub2lsQG54cC5jb20+OyBWbGFkaW1pciBPbHRlYW4gPHZsYWRpbWlyLm9sdGVhbkBueHAu
-Y29tPjsgTGVvIExpIDxsZW95YW5nLmxpQG54cC5jb20+OyBGbG9yaWFuIEZhaW5lbGxpIDxmLmZh
-aW5lbGxpQGdtYWlsLmNvbT4NClN1YmplY3Q6IFtFWFRdIFJlOiBbbmV0LW5leHQsdjFdIG5ldDog
-bXNjYzogb2NlbG90OiBhZGQgYWN0aW9uIG9mIHBvbGljZSBvbiB2Y2FwX2lzMg0KDQpDYXV0aW9u
-OiBFWFQgRW1haWwNCg0KT24gU2F0LCAyOCBNYXIgMjAyMCBhdCAxNTo1MCwgVmxhZGltaXIgT2x0
-ZWFuIDxvbHRlYW52QGdtYWlsLmNvbT4gd3JvdGU6DQo+DQo+IEhpIFhpYW9saWFuZywNCj4NCj4g
-VGhhbmtzIGZvciB0aGUgcGF0Y2guIEkndmUgdGVzdGVkIGl0LCBidXQgc2FkbHksIGFzLWlzIGl0
-IGRvZXNuJ3QgY29tcGlsZS4NCj4gQnV0IHRoZW4gYWdhaW4sIG5ldC1uZXh0IGRvZXNuJ3QgY29t
-cGlsZSBlaXRoZXIsIHNvIHRoZXJlLi4uDQo+DQo+IE9uIFNhdCwgMjggTWFyIDIwMjAgYXQgMTQ6
-NDEsIFhpYW9saWFuZyBZYW5nIDx4aWFvbGlhbmcueWFuZ18xQG54cC5jb20+IHdyb3RlOg0KPiA+
-DQo+ID4gT2NlbG90IGhhcyAzODQgcG9saWNlcnMgdGhhdCBjYW4gYmUgYWxsb2NhdGVkIHRvIGlu
-Z3Jlc3MgcG9ydHMsIFFvUyANCj4gPiBjbGFzc2VzIHBlciBwb3J0LCBhbmQgVkNBUCBJUzIgZW50
-cmllcy4gb2NlbG90X3BvbGljZS5jIHN1cHBvcnRzIHRvIA0KPiA+IHNldCBwb2xpY2VycyB3aGlj
-aCBjYW4gYmUgYWxsb2NhdGVkIHRvIHBvbGljZSBhY3Rpb24gb2YgVkNBUCBJUzIuIFdlIA0KPiA+
-IGFsbG9jYXRlIHBvbGljZXJzIGZyb20gbWF4aW11bSBwb2xfaWQsIGFuZCBkZWNyZWFzZSB0aGUg
-cG9sX2lkIHdoZW4gDQo+ID4gYWRkIGEgbmV3IHZjYXBfaXMyIGVudHJ5IHdoaWNoIGlzIHBvbGlj
-ZSBhY3Rpb24uDQo+ID4NCj4gPiBTaWduZWQtb2ZmLWJ5OiBYaWFvbGlhbmcgWWFuZyA8eGlhb2xp
-YW5nLnlhbmdfMUBueHAuY29tPg0KPiA+IC0tLQ0KW3NuaXBdDQo+DQo+IEZvciB3aGF0IGl0J3Mg
-d29ydGgsIEkgYW0gcHJlcGFyaW5nIGFub3RoZXIgcGF0Y2ggc2VyaWVzIGZvciBwb3J0IA0KPiBw
-b2xpY2VycyBpbiBEU0EsIGFuZCBJJ20ga2VlcGluZyB5b3VyIHBhdGNoIGluIG15IHRyZWUgYW5k
-IHJlYmFzaW5nIG9uIA0KPiB0b3Agb2YgaXQuIERlcGVuZGluZyBvbiBob3cgdGhpbmdzIGdvIHdp
-dGggcmV2aWV3LCBkbyB5b3UgbWluZCBpZiBJIA0KPiBqdXN0IHRha2UgeW91ciBwYXRjaCB0byBh
-ZGRyZXNzIG90aGVyIHJlY2VpdmVkIGZlZWRiYWNrLCBhbmQgcmVwb3N0IA0KPiB5b3VyIGZsb3ct
-YmFzZWQgcG9saWNlcnMgdG9nZXRoZXIgd2l0aCBteSBwb3J0LWJhc2VkIHBvbGljZXJzPw0KPg0K
-PiBSZWdhcmRzLA0KPiAtVmxhZGltaXINCg0KSSB0b29rIHRoZSBsaWJlcnR5IHRvIHJlcG9zdCB5
-b3VyIHBhdGNoIHdpdGggdGhlIGNvbXBpbGF0aW9uIGVycm9yIGZpeGVkLCBhcyBwYXJ0IG9mIHRo
-aXMgc2VyaWVzOg0KaHR0cHM6Ly9ldXIwMS5zYWZlbGlua3MucHJvdGVjdGlvbi5vdXRsb29rLmNv
-bS8/dXJsPWh0dHBzJTNBJTJGJTJGcGF0Y2h3b3JrLm96bGFicy5vcmclMkZwYXRjaCUyRjEyNjMz
-NTglMkYmYW1wO2RhdGE9MDIlN0MwMSU3Q3hpYW9saWFuZy55YW5nXzElNDBueHAuY29tJTdDYjlk
-NTZlZTU4ODVkNGViNDFlZjcwOGQ3ZDM3YmNlNmIlN0M2ODZlYTFkM2JjMmI0YzZmYTkyY2Q5OWM1
-YzMwMTYzNSU3QzAlN0MwJTdDNjM3MjEwNDAxMDMyMzIxMTcxJmFtcDtzZGF0YT1hWGZ6dGp4QUhn
-MEpKd2llWlFTbVNOZTV0WWZ0SnlWWVM1TU15NjZhd1VVJTNEJmFtcDtyZXNlcnZlZD0wDQoNClNv
-IHRoaXMgcGF0Y2ggaXMgbm93IHN1cGVyc2VkZWQuDQoNClRoYW5rcywNCi1WbGFkaW1pcg0K
+--000000000000f9953d05a1f4a7d0
+Content-Type: text/plain; charset="UTF-8"
+
+On Sat, Mar 28, 2020 at 1:54 PM Masahiro Yamada <masahiroy@kernel.org> wrote:
+>
+> On Sat, Mar 28, 2020 at 7:42 AM Nathan Chancellor
+> <natechancellor@gmail.com> wrote:
+> >
+> > Sorry for the delay in review :(
+> >
+> > On Tue, Mar 17, 2020 at 02:55:15PM -0700, Nick Desaulniers wrote:
+> > > Prior to this patch, building the Linux kernel with Clang
+> > > looked like:
+> > >
+> > > $ make CC=clang
+> > >
+> > > or when cross compiling:
+> > >
+> > > $ ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- make CC=clang
+> > >
+> > > which got very verbose and unwieldy when using all of LLVM's substitutes
+> > > for GNU binutils:
+> > >
+> > > $ ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- make CC=clang AS=clang \
+> > >   LD=ld.lld AR=llvm-ar NM=llvm-nm STRIP=llvm-strip \
+> > >   OBJCOPY=llvm-objcopy OBJDUMP=llvm-objdump OBJSIZE=llvm-objsize \
+> > >   READELF=llvm-readelf HOSTCC=clang HOSTCXX=clang++ HOSTAR=llvm-ar \
+> > >   HOSTLD=ld.lld
+> > >
+> > > This change adds a new Makefile under scripts/ which will be included in
+> > > the top level Makefile AFTER CC and friends are set, in order to make
+> > > the use of LLVM utilities when building a Linux kernel more ergonomic.
+> > >
+> > > With this patch, the above now looks like:
+> > >
+> > > $ ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- make LLVM=y
+> > >
+> > > Then you can "opt out" of certain LLVM utilities explicitly:
+> > >
+> > > $ ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- make LLVM=y AS=as
+> > >
+> > > will instead invoke arm-linux-gnueabihf-as in place of clang for AS.
+> > >
+> > > Or when not cross compiling:
+> > >
+> > > $ make LLVM=y AS=as
+> > >
+> > > This would make it more verbose to opt into just one tool from LLVM, but
+> > > this patch doesn't actually break the old style; just leave off LLVM=y.
+> > > Also, LLVM=y CC=clang would wind up prefixing clang with $CROSS_COMPILE.
+> > > In that case, it's recommended to just drop LLVM=y and use the old
+> > > style. So LLVM=y can be thought of as default to LLVM with explicit opt
+> > > ins for GNU, vs the current case of default to GNU and opt in for LLVM.
+> > >
+> > > A key part of the design of this patch is to be minimally invasive to
+> > > the top level Makefile and not break existing workflows. We could get
+> > > more aggressive, but I'd prefer to save larger refactorings for another
+> > > day.
+> > >
+> > > Finally, some linux distributions package specific versions of LLVM
+> > > utilities with naming conventions that use the version as a suffix, ie.
+> > > clang-11.  In that case, you can use LLVM=<number> and that number will
+> > > be used as a suffix. Example:
+> > >
+> > > $ make LLVM=11
+> > >
+> > > will invoke clang-11, ld.lld-11, llvm-objcopy-11, etc.
+> > >
+> > > About the script:
+> > > The pattern used in the script is in the form:
+> > >
+> > > ifeq "$(origin $(CC))" "file"
+> > > $(CC) := $(clang)
+> > > else
+> > > override $(CC) := $(CROSS_COMPILE)$(CC)
+> > > endif
+> > >
+> > > "Metaprogramming" (eval) is used to template the above to make it more
+> > > concise for specifying all of the substitutions.
+> > >
+> > > The "origin" of a variable tracks whether a variable was explicitly set
+> > > via "command line", "environment", was defined earlier via Makefile
+> > > "file", was provided by "default", or was "undefined".
+> > >
+> > > Variable assignment in GNU Make has some special and complicated rules.
+> > >
+> > > If the variable was set earlier explicitly in the Makefile, we can
+> > > simply reassign a new value to it. If a variable was unspecified, then
+> > > earlier assignments were executed and change the origin to file.
+> > > Otherwise, the variable was explicitly specified.
+> > >
+> > > If a variable's "origin" was "command line" or "environment",
+> > > non-"override" assignments are not executed. The "override" directive
+> > > forces the assignment regardless of "origin".
+> > >
+> > > Some tips I found useful for debugging for future travelers:
+> > >
+> > > $(info $$origin of $$CC is $(origin CC))
+> > >
+> > > at the start of the new script for all of the variables can help you
+> > > understand "default" vs "undefined" variable origins.
+> > >
+> > > $(info $$CC is [${CC}])
+> > >
+> > > in the top level Makefile after including the new script, for all of the
+> > > variables can help you check that they're being set as expected.
+> > >
+> > > Link: https://www.gnu.org/software/make/manual/html_node/Eval-Function.html
+> > > Link: https://www.gnu.org/software/make/manual/html_node/Origin-Function.html
+> > > Link: https://www.gnu.org/software/make/manual/html_node/Implicit-Variables.html
+> > > Link: https://www.gnu.org/software/make/manual/html_node/Override-Directive.html
+> > > Suggested-by: Nathan Chancellor <natechancellor@gmail.com>
+> > > Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
+> > > ---
+> > > Changes V1 -> V2:
+> > > * Rather than LLVM=1, use LLVM=y to enable all.
+> > > * LLVM=<anything other than y> becomes a suffix, LLVM_SUFFIX.
+> > > * strip has to be used on the LLVM_SUFFIX to avoid an extra whitespace.
+> > >
+> > >
+> > >  Makefile              |  4 ++++
+> > >  scripts/Makefile.llvm | 30 ++++++++++++++++++++++++++++++
+> > >  2 files changed, 34 insertions(+)
+> > >  create mode 100644 scripts/Makefile.llvm
+> > >
+> > > diff --git a/Makefile b/Makefile
+> > > index 402f276da062..72ec9dfea15e 100644
+> > > --- a/Makefile
+> > > +++ b/Makefile
+> > > @@ -475,6 +475,10 @@ KBUILD_LDFLAGS :=
+> > >  GCC_PLUGINS_CFLAGS :=
+> > >  CLANG_FLAGS :=
+> > >
+> > > +ifneq ($(LLVM),)
+> > > +include scripts/Makefile.llvm
+> > > +endif
+> > > +
+> > >  export ARCH SRCARCH CONFIG_SHELL BASH HOSTCC KBUILD_HOSTCFLAGS CROSS_COMPILE AS LD CC
+> > >  export CPP AR NM STRIP OBJCOPY OBJDUMP OBJSIZE READELF PAHOLE LEX YACC AWK INSTALLKERNEL
+> > >  export PERL PYTHON PYTHON3 CHECK CHECKFLAGS MAKE UTS_MACHINE HOSTCXX
+> > > diff --git a/scripts/Makefile.llvm b/scripts/Makefile.llvm
+> > > new file mode 100644
+> > > index 000000000000..0bab45a100a3
+> > > --- /dev/null
+> > > +++ b/scripts/Makefile.llvm
+> > > @@ -0,0 +1,30 @@
+> > > +LLVM_SUFFIX=
+> > > +
+> > > +ifneq ($(LLVM),y)
+> > > +LLVM_SUFFIX += -$(LLVM)
+> > > +endif
+> > > +
+> > > +define META_set =
+> > > +ifeq "$(origin $(1))" "file"
+> > > +$(1) := $(2)$(strip $(LLVM_SUFFIX))
+> > > +else
+> > > +override $(1) := $(CROSS_COMPILE)$($(1))
+> > > +endif
+> > > +endef
+> > > +
+> > > +$(eval $(call META_set,CC,clang))
+> > > +$(eval $(call META_set,AS,clang))
+> > > +$(eval $(call META_set,LD,ld.lld))
+> > > +$(eval $(call META_set,AR,llvm-ar))
+> > > +$(eval $(call META_set,NM,llvm-nm))
+> > > +$(eval $(call META_set,STRIP,llvm-strip))
+> > > +$(eval $(call META_set,OBJCOPY,llvm-objcopy))
+> > > +$(eval $(call META_set,OBJDUMP,llvm-objdump))
+> > > +$(eval $(call META_set,OBJSIZE,llvm-objsize))
+> > > +$(eval $(call META_set,READELF,llvm-readelf))
+> > > +$(eval $(call META_set,HOSTCC,clang))
+> > > +$(eval $(call META_set,HOSTCXX,clang++))
+> > > +$(eval $(call META_set,HOSTAR,llvm-ar))
+> > > +$(eval $(call META_set,HOSTLD,ld.lld))
+> > > +
+> > > +## TODO: HOSTAR, HOSTLD in tools/objtool/Makefile
+> > > --
+
+
+I also had planned to provide a single switch to change
+all the tool defaults to LLVM.
+
+So, supporting 'LLVM' is fine, but I'd rather want this
+look symmetrical, and easy to understand.
+
+CPP        = $(CC) -E
+ifneq ($(LLVM),)
+CC         = $(LLVM_DIR)clang
+LD         = $(LLVM_DIR)ld.lld
+AR         = $(LLVM_DIR)llvm-ar
+NM         = $(LLVM_DIR)llvm-nm
+OBJCOPY    = $(LLVM_DIR)llvm-objcopy
+OBJDUMP    = $(LLVM_DIR)llvm-objdump
+READELF    = $(LLVM_DIR)llvm-readelf
+OBJSIZE    = $(LLVM_DIR)llvm-size
+STRIP      = $(LLVM_DIR)llvm-strip
+else
+CC         = $(CROSS_COMPILE)gcc
+LD         = $(CROSS_COMPILE)ld
+AR         = $(CROSS_COMPILE)ar
+NM         = $(CROSS_COMPILE)nm
+OBJCOPY    = $(CROSS_COMPILE)objcopy
+OBJDUMP    = $(CROSS_COMPILE)objdump
+READELF    = $(CROSS_COMPILE)readelf
+OBJSIZE    = $(CROSS_COMPILE)size
+STRIP      = $(CROSS_COMPILE)strip
+endif
+
+
+
+I attached two patches.
+Comments appreciated.
+
+-- 
+Best Regards
+Masahiro Yamada
+
+--000000000000f9953d05a1f4a7d0
+Content-Type: text/x-patch; charset="US-ASCII"; 
+	name="0002-kbuild-change-the-default-of-HOST-CC-CXX-to-cc-and-c.patch"
+Content-Disposition: attachment; 
+	filename="0002-kbuild-change-the-default-of-HOST-CC-CXX-to-cc-and-c.patch"
+Content-Transfer-Encoding: base64
+Content-ID: <f_k8cdxehi1>
+X-Attachment-Id: f_k8cdxehi1
+
+RnJvbSBmM2E2MjBhYmVlNWUyNmRkYTA0ZjdhNzQ3YTU0YWIwNzVmNDViNzBkIE1vbiBTZXAgMTcg
+MDA6MDA6MDAgMjAwMQpGcm9tOiBNYXNhaGlybyBZYW1hZGEgPG1hc2FoaXJveUBrZXJuZWwub3Jn
+PgpEYXRlOiBTYXQsIDI4IE1hciAyMDIwIDE4OjU3OjI1ICswOTAwClN1YmplY3Q6IFtQQVRDSCAy
+LzJdIGtidWlsZDogY2hhbmdlIHRoZSBkZWZhdWx0IG9mIEhPU1R7Q0MsQ1hYfSB0byBjYyBhbmQg
+YysrCgpJIGhhdmUgYmVlbiB0aGlua2luZyBob3cgdG8gY2F0ZXIgdG8gdGhvc2Ugd2hvIHdhbnQg
+dG8gYnVpbGQgaG9zdApwcm9ncmFtcyB3aXRoIENsYW5nLgoKV2UgY291bGQgdXNlIHRoZSB2YXJp
+YWJsZSAnTExWTScgdG8gc3dpdGNoIHRoZSBkZWZhdWx0IG9mIEhPU1R7Q0MsQ1hYfToKCiAgaWZu
+ZXEgKCQoTExWTSksKQogIEhPU1RDQyAgICAgICA9IGNsYW5nCiAgSE9TVENYWCAgICAgID0gY2xh
+bmcrKwogIGVsc2UKICBIT1NUQ0MgICAgICAgPSBnY2MKICBIT1NUQ1hYICAgICAgPSBnKysKICBl
+bmRpZgoKQnV0LCBJIGRvIG5vdCBrbm93IGhvdyBtYW55IHBlb3BsZSBjYXJlIGFib3V0IHRoaXMu
+IFRoZXJlIGlzIG5vIHRyaWNreQpjb2RlIGluIHVzZXJzcGFjZSBwcm9ncmFtcywgYW5kIHdlIGtu
+b3cgd2UgY2FuIGNvbXBpbGUgdGhlbSB3aXRoIEdDQywKQ2xhbmcsIG9yIHdoYXRldmVyLiBObyBt
+YXR0ZXIgd2hhdCB5b3UgdXNlIGZvciBob3N0IHByb2dyYW1zLCBpdCBtYWtlcwpubyBkaWZmZXJl
+bmNlIHRvIHRoZSBrZXJuZWwgaXRzZWxmLgoKSWYgeW91IGFyZSBzbyBhZGRpY3RlZCB0byBMTFZN
+IG9yIGlmIHlvdSBhcmUgdXNpbmcgYSBzeXN0ZW0gd2l0aCBubyBHQ0MKaW5zdGFsbGF0aW9uLCBw
+cm9iYWJseSB5b3UgaGFkIGFscmVhZHkgaGFkICdjYycgYW5kICdjKysnIHBvaW50IHRvIENsYW5n
+LgoKU28sIGFub3RoZXIgYXBwcm9hY2ggaXMgdG8ganVzdCBsZWF2ZSB0aGlzIHVwIHRvIHRoZSBz
+eXN0ZW0uIFlvdSBjYW4KbWFudWFsbHkgc2V0IHVwIHN5bWxpbmtzLCBvciBtYXliZSB5b3VyIGRp
+c3RybyBwcm92aWRlcyAnYWx0ZXJuYXRpdmVzJy4KCiAgJCB1cGRhdGUtYWx0ZXJuYXRpdmVzIC0t
+bGlzdCBjYwogIC91c3IvYmluL2NsYW5nCiAgL3Vzci9iaW4vZ2NjCiAgJCB1cGRhdGUtYWx0ZXJu
+YXRpdmVzIC0tbGlzdCBjKysKICAvdXNyL2Jpbi9jbGFuZysrCiAgL3Vzci9iaW4vZysrCgpJIGhh
+dmUgbm8gaWRlYSB3aGF0IHRvIGRvIGZvciB0b29scy9vYmp0b29sL01ha2VmaWxlLCB3aGljaCB1
+c2VzIEhPU1RBUgphbmQgSE9TVExELCBidXQgdGhpcyBpcyBiZWNhdXNlIG9ianRvb2wgaW50ZW50
+aW9uYWxseSBvcHRzIG91dCBLYnVpbGQuCklmIG9ianRvb2wgaXMgd2lsbGluZyB0byBqb2luIHRo
+ZSBLYnVpbGQgaW5mcmFzdHJ1Y3R1cmUsIGEgcGF0Y2ggZXhpc3RzOgoKICBodHRwczovL3BhdGNo
+d29yay5rZXJuZWwub3JnL3BhdGNoLzEwODM5MDUxLwoKU2lnbmVkLW9mZi1ieTogTWFzYWhpcm8g
+WWFtYWRhIDxtYXNhaGlyb3lAa2VybmVsLm9yZz4KLS0tCiBNYWtlZmlsZSB8IDQgKystLQogMSBm
+aWxlIGNoYW5nZWQsIDIgaW5zZXJ0aW9ucygrKSwgMiBkZWxldGlvbnMoLSkKCmRpZmYgLS1naXQg
+YS9NYWtlZmlsZSBiL01ha2VmaWxlCmluZGV4IGYxOTJmOWJkODM0My4uZWNkZDM0YWQwNzUwIDEw
+MDY0NAotLS0gYS9NYWtlZmlsZQorKysgYi9NYWtlZmlsZQpAQCAtMzk5LDggKzM5OSw4IEBAIEhP
+U1RfTEZTX0NGTEFHUyA6PSAkKHNoZWxsIGdldGNvbmYgTEZTX0NGTEFHUyAyPi9kZXYvbnVsbCkK
+IEhPU1RfTEZTX0xERkxBR1MgOj0gJChzaGVsbCBnZXRjb25mIExGU19MREZMQUdTIDI+L2Rldi9u
+dWxsKQogSE9TVF9MRlNfTElCUyA6PSAkKHNoZWxsIGdldGNvbmYgTEZTX0xJQlMgMj4vZGV2L251
+bGwpCiAKLUhPU1RDQyAgICAgICA9IGdjYwotSE9TVENYWCAgICAgID0gZysrCitIT1NUQ0MgICAg
+ICAgPSBjYworSE9TVENYWCAgICAgID0gYysrCiBLQlVJTERfSE9TVENGTEFHUyAgIDo9IC1XYWxs
+IC1XbWlzc2luZy1wcm90b3R5cGVzIC1Xc3RyaWN0LXByb3RvdHlwZXMgLU8yIFwKIAkJLWZvbWl0
+LWZyYW1lLXBvaW50ZXIgLXN0ZD1nbnU4OSAkKEhPU1RfTEZTX0NGTEFHUykgXAogCQkkKEhPU1RD
+RkxBR1MpCi0tIAoyLjE3LjEKCg==
+--000000000000f9953d05a1f4a7d0
+Content-Type: text/x-patch; charset="US-ASCII"; 
+	name="0001-kbuild-support-LLVM-to-switch-the-default-tools-to-C.patch"
+Content-Disposition: attachment; 
+	filename="0001-kbuild-support-LLVM-to-switch-the-default-tools-to-C.patch"
+Content-Transfer-Encoding: base64
+Content-ID: <f_k8cdxegu0>
+X-Attachment-Id: f_k8cdxegu0
+
+RnJvbSA2NjIwZjEzODA3YjQ2NmM1ZTRhZjA4YjJkNWQzM2Y1YTQzM2IxZTNmIE1vbiBTZXAgMTcg
+MDA6MDA6MDAgMjAwMQpGcm9tOiBNYXNhaGlybyBZYW1hZGEgPG1hc2FoaXJveUBrZXJuZWwub3Jn
+PgpEYXRlOiBTYXQsIDI4IE1hciAyMDIwIDE1OjU0OjQ3ICswOTAwClN1YmplY3Q6IFtQQVRDSCAx
+LzJdIGtidWlsZDogc3VwcG9ydCAnTExWTScgdG8gc3dpdGNoIHRoZSBkZWZhdWx0IHRvb2xzIHRv
+CiBDbGFuZy9MTFZNCgpBcyBEb2N1bWVudGF0aW9uL2tidWlsZC9sbHZtLnJzdCBpbXBsaWVzLCBi
+dWlsZGluZyB0aGUga2VybmVsIHdpdGggYQpmdWxsIHNldCBvZiBMTFZNIHRvb2xzIGdldHMgdmVy
+eSB2ZXJib3NlIGFuZCB1bndpZWxkeS4KClByb3ZpZGUgYSBzaW5nbGUgc3dpdGNoICdMTFZNJyB0
+byB1c2UgQ2xhbmcgYW5kIExMVk0gdG9vbHMgaW5zdGVhZCBvZgpHQ0MgYW5kIEJpbnV0aWxzLiBZ
+b3UgY2FuIHBhc3MgTExWTT0xIGZyb20gdGhlIGNvbW1hbmQgbGluZSBvciBhcyBhbgplbnZpcm9u
+bWVudCB2YXJpYWJsZS4gVGhlbiwgS2J1aWxkIHdpbGwgdXNlIExMVk0gdG9vbGNoYWlucyBpbiB5
+b3VyClBBVEggZW52aXJvbm1lbnQuIFRoaXMgbWF5IG5vdCBiZSBjb252ZW5pZW50IGlmIHlvdSBo
+YXZlIG11bHRpcGxlCnZlcnNpb25zIG9mIExMVk0uCgpDUk9TU19DT01QSUxFIGlzIHVzZWQgdG8g
+c3BlY2lmeSBub3Qgb25seSB0aGUgdG9vbCBwcmVmaXgsIGJ1dCBhbHNvCnRoZSBkaXJlY3Rvcnkg
+cGF0aCB0byB0aGUgdG9vbHMuIEZvciBleGFtcGxlLAoKICAkIG1ha2UgQVJDSD1hcm02NCBDUk9T
+U19DT01QSUxFPS9wYXRoL3RvL215L2djYy9iaW4vYWFyY2g2NC1saW51eC1nbnUtCgpUbyBzdXBw
+b3J0IGEgc2ltaWxhciBmbG93LCB0aGlzIGNvbW1pdCBhZGRzIGFub3RoZXIgdmFyaWFibGUsIExM
+Vk1fRElSLAp0byBwb2ludCB0byB0aGUgc3BlY2lmaWMgaW5zdGFsbGF0aW9uIG9mIExMVk06Cgog
+ICQgbWFrZSBMTFZNPTEgTExWTV9ESVI9L3BhdGgvdG8vbXkvbGx2bS9iaW4vCgpJdCBtaWdodCBi
+ZSB0ZWRpb3VzIHRvIHNldCB0d28gdmFyaWFibGVzLiBTbywgdGhlIGZvbGxvd2luZyBpcyB0aGUK
+c2hvcnRoYW5kOgoKICAkIG1ha2UgTExWTT0vcGF0aC90by9teS9sbHZtL2Jpbi8KClBsZWFzZSBu
+b3RlIExMVk09MSBkb2VzIG5vdCB0dXJuIG9uIHRoZSBMTFZNIGludGVncmF0ZWQgYXNzZW1ibGVy
+LgpZb3UgbmVlZCB0byBwYXNzIEFTPWNsYW5nIHRvIHVzZSBpdC4gV2hlbiB0aGUgdXBzdHJlYW0g
+a2VybmVsIGlzCnJlYWR5IGZvciB0aGUgaW50ZWdyYXRlZCBhc3NlbWJsZXIsIHdlIGNhbiBtYWtl
+IGl0IGRlZmF1bHQuIFdlIHdpbGwKZ2V0IHJpZCBvZiAtLW5vLWludGVncmF0ZWQtYXMsIHRoZW4g
+Q1JPU1NfQ09NUElMRSB3aWxsIGJlIG5vIGxvbmdlcgpuZWVkZWQuIFRoZSAtLXRhcmdldCBvcHRp
+b24gd2lsbCBiZSBzcGVjaWZpZWQgYnkgb3RoZXIgbWVhbnMuCgpTaWduZWQtb2ZmLWJ5OiBNYXNh
+aGlybyBZYW1hZGEgPG1hc2FoaXJveUBrZXJuZWwub3JnPgotLS0KIERvY3VtZW50YXRpb24va2J1
+aWxkL2tidWlsZC5yc3QgfCAgNiArKysrKysKIERvY3VtZW50YXRpb24va2J1aWxkL2xsdm0ucnN0
+ICAgfCAgNSArKysrKwogTWFrZWZpbGUgICAgICAgICAgICAgICAgICAgICAgICB8IDI5ICsrKysr
+KysrKysrKysrKysrKysrKysrKystLS0tCiAzIGZpbGVzIGNoYW5nZWQsIDM2IGluc2VydGlvbnMo
+KyksIDQgZGVsZXRpb25zKC0pCgpkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9rYnVpbGQva2J1
+aWxkLnJzdCBiL0RvY3VtZW50YXRpb24va2J1aWxkL2tidWlsZC5yc3QKaW5kZXggZjFlNWRjZTg2
+YWY3Li4zOWJiMzYzNmU0ZjQgMTAwNjQ0Ci0tLSBhL0RvY3VtZW50YXRpb24va2J1aWxkL2tidWls
+ZC5yc3QKKysrIGIvRG9jdW1lbnRhdGlvbi9rYnVpbGQva2J1aWxkLnJzdApAQCAtMjYyLDMgKzI2
+Miw5IEBAIEtCVUlMRF9CVUlMRF9VU0VSLCBLQlVJTERfQlVJTERfSE9TVAogVGhlc2UgdHdvIHZh
+cmlhYmxlcyBhbGxvdyB0byBvdmVycmlkZSB0aGUgdXNlckBob3N0IHN0cmluZyBkaXNwbGF5ZWQg
+ZHVyaW5nCiBib290IGFuZCBpbiAvcHJvYy92ZXJzaW9uLiBUaGUgZGVmYXVsdCB2YWx1ZSBpcyB0
+aGUgb3V0cHV0IG9mIHRoZSBjb21tYW5kcwogd2hvYW1pIGFuZCBob3N0LCByZXNwZWN0aXZlbHku
+CisKK0xMVk0KKy0tLS0KK0lmIHRoaXMgdmFyaWFibGUgaXMgc2V0IHRvIDEsIEtidWlsZCB3aWxs
+IHVzZSBDbGFuZyBhbmQgTExWTSB1dGlsaXRpZXMgaW5zdGVhZAorb2YgR0NDIGFuZCBHTlUgYmlu
+dXRpbHMgdG8gYnVpbGQgdGhlIGtlcm5lbC4KK0lmIHNldCB0byBhIHZhbHVlIG90aGVyIHRoYW4g
+MSwgaXQgcG9pbnRzIHRvIGRpcmVjdG9yeSBwYXRoIHRvIExMVk0gdG8gYmUgdXNlZC4KZGlmZiAt
+LWdpdCBhL0RvY3VtZW50YXRpb24va2J1aWxkL2xsdm0ucnN0IGIvRG9jdW1lbnRhdGlvbi9rYnVp
+bGQvbGx2bS5yc3QKaW5kZXggZDZjNzllYjRlMjNlLi40NjAyMzY5ZjZhNGYgMTAwNjQ0Ci0tLSBh
+L0RvY3VtZW50YXRpb24va2J1aWxkL2xsdm0ucnN0CisrKyBiL0RvY3VtZW50YXRpb24va2J1aWxk
+L2xsdm0ucnN0CkBAIC01NSw2ICs1NSwxMSBAQCBhZGRpdGlvbmFsIHBhcmFtZXRlcnMgdG8gYG1h
+a2VgLgogCSAgUkVBREVMRj1sbHZtLXJlYWRlbGYgSE9TVENDPWNsYW5nIEhPU1RDWFg9Y2xhbmcr
+KyBIT1NUQVI9bGx2bS1hciBcXAogCSAgSE9TVExEPWxkLmxsZAogCitZb3UgY2FuIHVzZSBhIHNp
+bmdsZSBzd2l0Y2ggYExMVk09MWAgdG8gdXNlIExMVk0gdXRpbGl0aWVzIGJ5IGRlZmF1bHQgKGV4
+Y2VwdAorZm9yIGJ1aWxkaW5nIGhvc3QgcHJvZ3JhbXMpLgorCisJbWFrZSBMTFZNPTEgSE9TVEND
+PWNsYW5nIEhPU1RDWFg9Y2xhbmcrKyBIT1NUQVI9bGx2bS1hciBIT1NUTEQ9bGQubGxkCisKIEdl
+dHRpbmcgSGVscAogLS0tLS0tLS0tLS0tCiAKZGlmZiAtLWdpdCBhL01ha2VmaWxlIGIvTWFrZWZp
+bGUKaW5kZXggYTNiYzhiYzU2MmVlLi5mMTkyZjliZDgzNDMgMTAwNjQ0Ci0tLSBhL01ha2VmaWxl
+CisrKyBiL01ha2VmaWxlCkBAIC00MDgsMTcgKzQwOCwzOCBAQCBLQlVJTERfSE9TVENYWEZMQUdT
+IDo9IC1PMiAkKEhPU1RfTEZTX0NGTEFHUykgJChIT1NUQ1hYRkxBR1MpCiBLQlVJTERfSE9TVExE
+RkxBR1MgIDo9ICQoSE9TVF9MRlNfTERGTEFHUykgJChIT1NUTERGTEFHUykKIEtCVUlMRF9IT1NU
+TERMSUJTICAgOj0gJChIT1NUX0xGU19MSUJTKSAkKEhPU1RMRExJQlMpCiAKKyMgTExWTT0xIHRl
+bGxzIEtidWlsZCB0byB1c2UgQ2xhbmcgYW5kIExMVk0gdXRpbGl0aWVzIGJ5IGRlZmF1bHQuCisj
+IFlvdSBjYW4gc3RpbGwgb3ZlcnJpZGUgQ0MsIExELCBldGMuIGluZGl2aWR1YWxseSBpZiBkZXNp
+cmVkLgorIworIyBJZiBMTFZNIGlzIHNldCB0byBhIHZhbHVlIG90aGVyIHRoYW4gMSwgaXQgaXMg
+c2V0IHRvIExMVk1fRElSLAorIyB3aGljaCBpcyB1c2VmdWwgdG8gc2VsZWN0IGEgc3BlY2lmaWMg
+TExWTSBpbnN0YWxsYXRpb24uCitpZm5lcSAoJChmaWx0ZXItb3V0IDEsJChMTFZNKSksKQorTExW
+TV9ESVIgOj0gJChMTFZNKQorZW5kaWYKKwogIyBNYWtlIHZhcmlhYmxlcyAoQ0MsIGV0Yy4uLikK
+LUxECQk9ICQoQ1JPU1NfQ09NUElMRSlsZAotQ0MJCT0gJChDUk9TU19DT01QSUxFKWdjYwogQ1BQ
+CQk9ICQoQ0MpIC1FCitpZm5lcSAoJChMTFZNKSwpCitDQwkJPSAkKExMVk1fRElSKWNsYW5nCitM
+RAkJPSAkKExMVk1fRElSKWxkLmxsZAorQVIJCT0gJChMTFZNX0RJUilsbHZtLWFyCitOTQkJPSAk
+KExMVk1fRElSKWxsdm0tbm0KK09CSkNPUFkJCT0gJChMTFZNX0RJUilsbHZtLW9iamNvcHkKK09C
+SkRVTVAJCT0gJChMTFZNX0RJUilsbHZtLW9iamR1bXAKK1JFQURFTEYJCT0gJChMTFZNX0RJUils
+bHZtLXJlYWRlbGYKK09CSlNJWkUJCT0gJChMTFZNX0RJUilsbHZtLXNpemUKK1NUUklQCQk9ICQo
+TExWTV9ESVIpbGx2bS1zdHJpcAorZWxzZQorQ0MJCT0gJChDUk9TU19DT01QSUxFKWdjYworTEQJ
+CT0gJChDUk9TU19DT01QSUxFKWxkCiBBUgkJPSAkKENST1NTX0NPTVBJTEUpYXIKIE5NCQk9ICQo
+Q1JPU1NfQ09NUElMRSlubQotU1RSSVAJCT0gJChDUk9TU19DT01QSUxFKXN0cmlwCiBPQkpDT1BZ
+CQk9ICQoQ1JPU1NfQ09NUElMRSlvYmpjb3B5CiBPQkpEVU1QCQk9ICQoQ1JPU1NfQ09NUElMRSlv
+YmpkdW1wCi1PQkpTSVpFCQk9ICQoQ1JPU1NfQ09NUElMRSlzaXplCiBSRUFERUxGCQk9ICQoQ1JP
+U1NfQ09NUElMRSlyZWFkZWxmCitPQkpTSVpFCQk9ICQoQ1JPU1NfQ09NUElMRSlzaXplCitTVFJJ
+UAkJPSAkKENST1NTX0NPTVBJTEUpc3RyaXAKK2VuZGlmCiBQQUhPTEUJCT0gcGFob2xlCiBMRVgJ
+CT0gZmxleAogWUFDQwkJPSBiaXNvbgotLSAKMi4xNy4xCgo=
+--000000000000f9953d05a1f4a7d0--
