@@ -2,139 +2,87 @@ Return-Path: <SRS0=I467=5O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58DBCC2D0E9
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 13:46:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23168C2D0E5
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 13:56:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2DCFD2073B
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 13:46:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=metafoo.de header.i=@metafoo.de header.b="KPclBmXc"
+	by mail.kernel.org (Postfix) with ESMTP id EE5D82073B
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 13:56:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585490208;
+	bh=xc/YsL22+xvtRonmC6Bol59woO+qBjPIQufFfO9npSM=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=DLoV/RjYtJAwLU0wZr/hIg3mkQJRJp8zopxCPWUeZCeqJFxeZ85/jF3Aa0owxrVEz
+	 vWX29zHiQxdG8BtH36g+qCK0+XnBGmnPri5HLzIakhDfndLUj3f/F6RqrUtHLLHF8L
+	 HG4t2RaMwlenR3zC3fEKOHvVVdhiekKnFRqPPmeQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728203AbgC2NqY (ORCPT
+        id S1728216AbgC2N4q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Mar 2020 09:46:24 -0400
-Received: from www381.your-server.de ([78.46.137.84]:60640 "EHLO
-        www381.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727903AbgC2NqX (ORCPT
+        Sun, 29 Mar 2020 09:56:46 -0400
+Received: from mail-oi1-f171.google.com ([209.85.167.171]:44548 "EHLO
+        mail-oi1-f171.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727903AbgC2N4p (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Mar 2020 09:46:23 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=metafoo.de;
-         s=default2002; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:
-        MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender:Reply-To:
-        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-        Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=KnCgqqdWyNK62dUdcWZxkpPXuIoCWmgb+CFyMmoZanM=; b=KPclBmXcudrmQ8TN6TD61WVVkC
-        yVD9ejfhiE/AWKXSFZRXUMwtf+CMCycy7ppYJ+hzcvKahpLT3qExBev/ASrRZdyoCJkVbYZj46U/5
-        gDANJWNErFRwmsT5EgpVw0Kd3wgQpUezyZfT7N0BWtdmfEdVlDVYopMjYCbbbpyDjILdnbU0Iwjl4
-        fKlgpVolErNwfrSDRc9tNvPGFm6ChDraLGqL08vd9QgZKY6rJED5hMBke1wCDDRk8fFjvutoSDBJi
-        EHqNQygebjSmyVUqrDmUtaVOMk7Vj30JeB//iDT3GmeeoeBQ1OYq41os+saaPa7seMzS4gjU0VZSP
-        LpGa5QOQ==;
-Received: from sslproxy06.your-server.de ([78.46.172.3])
-        by www381.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.89_1)
-        (envelope-from <lars@metafoo.de>)
-        id 1jIYGY-0002vF-Gv; Sun, 29 Mar 2020 15:46:19 +0200
-Received: from [82.135.74.134] (helo=[192.168.178.20])
-        by sslproxy06.your-server.de with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <lars@metafoo.de>)
-        id 1jIYGY-000RHr-5p; Sun, 29 Mar 2020 15:46:18 +0200
-Subject: Re: [PATCH 0/2] use DEFINE_DEBUGFS_ATTRIBUTE instead of
- DEFINE_SIMPLE_ATTRIBUTE
-To:     Rohit Sarkar <rohitsarkar5398@gmail.com>,
-        Jonathan Cameron <jic23@kernel.org>
-Cc:     linux-iio@vger.kernel.org, dragos.bogdan@analog.com,
-        Michael Hennerich <Michael.Hennerich@analog.com>,
-        Stefan Popa <stefan.popa@analog.com>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        linux-kernel@vger.kernel.org,
-        "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>,
-        zhong jiang <zhongjiang@huawei.com>
-References: <20200328063456.24012-1-rohitsarkar5398@gmail.com>
- <20200329103818.2fce9529@archlinux>
- <5e8087e3.1c69fb81.13d97.448d@mx.google.com>
-From:   Lars-Peter Clausen <lars@metafoo.de>
-Message-ID: <8d861c54-75be-589a-9e71-cd30cbde84d3@metafoo.de>
-Date:   Sun, 29 Mar 2020 15:46:17 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Sun, 29 Mar 2020 09:56:45 -0400
+Received: by mail-oi1-f171.google.com with SMTP id v134so13327309oie.11;
+        Sun, 29 Mar 2020 06:56:44 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=xc/YsL22+xvtRonmC6Bol59woO+qBjPIQufFfO9npSM=;
+        b=bj4O/Z4/SlexbgiYzMTWApxSZRp7pLkurxSJ+5l7y9lZvxSBkaoTG7bHPL7i/5vc4t
+         nAEqzPpTUgNMf8/7ZBgr7fwa2ynjA6+tEKatO1TxZ/HYidZQpGoXhYMMsVtRjt+mQEqg
+         krnwKo6//SgFdhqo5ZvCTZ9PlOL5K+cT4SOOMCIW6prjMOI1cIlK7BpRlRatcSDjlC8j
+         M4EI2qpFYTjUlCkXNrEOeTnr+iPQkCFHtaspDoMMwRyPHVBG8XtmI78TeGIB4AGZciq0
+         nsOHmz+ijA7Sw7XhnnGZlO2zgInnPjqaId4rCrpRol3pY5OVfmK4YtllqUaXXVGvRcp5
+         NzwA==
+X-Gm-Message-State: ANhLgQ000O6rqJZk07rMoSki3Go0yPCec82bLLYnypfkEiBt5q+LDSxf
+        Dgi2Y8XHrnAq4foAwWVAcJHWdSeCQhpddzlXuJk=
+X-Google-Smtp-Source: ADFU+vuAPXvZuTFrPg0P26FMXoSrwWtTlPV65QUUwTX5E8ZDQPZw4waandbicfWWTX3OHlLtZAcfPi1cVmjZh5d9ts0=
+X-Received: by 2002:aca:5155:: with SMTP id f82mr5003191oib.103.1585490203653;
+ Sun, 29 Mar 2020 06:56:43 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <5e8087e3.1c69fb81.13d97.448d@mx.google.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Authenticated-Sender: lars@metafoo.de
-X-Virus-Scanned: Clear (ClamAV 0.102.2/25765/Sat Mar 28 14:16:42 2020)
+References: <10243663.e30Z2V8kAt@kreacher> <Pine.LNX.4.44L0.2003281432130.9749-100000@netrider.rowland.org>
+ <CAJZ5v0igUZnqFLcOhruDSNjv0HqCsy64tmYWyTX98xEc9cH14g@mail.gmail.com>
+In-Reply-To: <CAJZ5v0igUZnqFLcOhruDSNjv0HqCsy64tmYWyTX98xEc9cH14g@mail.gmail.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Sun, 29 Mar 2020 15:56:32 +0200
+Message-ID: <CAJZ5v0horQNK4EBnNyFAz1gCe=SKJ_f9-5yiMeP=Scq31gscQg@mail.gmail.com>
+Subject: Re: lockdep warning in urb.c:363 usb_submit_urb
+To:     Alan Stern <stern@rowland.harvard.edu>
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Qais Yousef <qais.yousef@arm.com>,
+        USB list <linux-usb@vger.kernel.org>,
+        Linux-pm mailing list <linux-pm@vger.kernel.org>,
+        Kernel development list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/29/20 1:34 PM, Rohit Sarkar wrote:
-> On Sun, Mar 29, 2020 at 10:38:18AM +0100, Jonathan Cameron wrote:
->> On Sat, 28 Mar 2020 12:04:53 +0530
->> Rohit Sarkar <rohitsarkar5398@gmail.com> wrote:
->>
->>> The debugfs_create_file_unsafe method does not protect the fops given to
->>> it from file removal. It must be used with DEFINE_DEBUGFS_ATTRIBUTE
->>> which makes the fops aware of the file lifetime.
->>>
->>> Further using DEFINE_DEBUGFS_ATTRIBUTE along with
->>> debugfs_create_file_unsafe significantly reduces the overhead introduced by
->>> debugfs_create_file which creates a lifetime managing proxy around each
->>> fops handed in. Refer [1] for more on this.
->>>
->>> Fixes the following warnings reported by coccinelle:
->>> drivers/iio/imu//adis16460.c:126:0-23: WARNING: adis16460_flash_count_fops should be defined with DEFINE_DEBUGFS_ATTRIBUTE
->>> drivers/iio/imu//adis16460.c:108:0-23: WARNING: adis16460_product_id_fops should be defined with DEFINE_DEBUGFS_ATTRIBUTE
->>> drivers/iio/imu//adis16460.c:90:0-23: WARNING: adis16460_serial_number_fops should be defined with DEFINE_DEBUGFS_ATTRIBUTE
->>> drivers/iio/imu//adis16400.c:278:0-23: WARNING: adis16400_flash_count_fops should be defined with DEFINE_DEBUGFS_ATTRIBUTE
->>> drivers/iio/imu//adis16400.c:261:0-23: WARNING: adis16400_product_id_fops should be defined with DEFINE_DEBUGFS_ATTRIBUTE
->>>
->>> [1]: https://lists.gt.net/linux/kernel/2369498
->>>
->>> Rohit Sarkar (2):
->>>    iio: imu: adis16400: use DEFINE_DEBUGFS_ATTRIBUTE instead of
->>>      DEFINE_SIMPLE_ATTRIBUTE
->>>    iio: imu: adis16460: use DEFINE_DEBUGFS_ATTRIBUTE instead of
->>>      DEFINE_SIMPLE_ATTRIBUTE
->>>
->>>   drivers/iio/imu/adis16400.c | 4 ++--
->>>   drivers/iio/imu/adis16460.c | 6 +++---
->>>   2 files changed, 5 insertions(+), 5 deletions(-)
->>>
->> Hi Rohit,
-> Hey,
->> You've opened a can of worms with this one.  There as a previous series
->> posted doing exactly this change back in 2019 by Zhong Jiang (cc'd)
->>
->> At the time I did a bit of looking into why this had been universally taken
->> up cross tree and turned out there are some potential issues.
->>
->> Alexandru added it to the list of things to test, but I guess it got
->> buried under other work and is still outstanding.
->>
->> https://lkml.org/lkml/2019/10/30/144
-> Acc. to the patch by Zhong this change kind of comes off as a cosmetic
-> change as in the commit message he mentions "it is more clear".
+On Sun, Mar 29, 2020 at 11:16 AM Rafael J. Wysocki <rafael@kernel.org> wrote:
 >
-> But there is certainly more to it than that:
-> In the current scenario since we are using debugfs_create_file_unsafe
-> the file has no protection whatsoever against removal.
 
-The drivers you are patching all use debugfs_create_file() as far as I 
-can see.
+[cut]
 
-The way I understand it using DEFINE_DEBUGFS_ATTRIBUTE without switching 
-to debugfs_create_file_unsafe() will not make a difference. There will 
-only be more overhead since the files are protected twice.
+> >
+> > But if SMART_SUSPEND is set and the device is runtime-suspended, why
+> > issue the ->suspend callback?
+>
+> The driver itself or the middle-layer may want to resume the device.
+>
+> Arguably, it may do that in ->prepare() too,
 
-- Lars
+Not really.
 
+The problem is that that device_prepare() is executed synchronously
+for all devices, so if multiple devices needed to be resumed, the
+latency would accumulate if that happened in device_prepare().
 
+Cheers!
