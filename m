@@ -2,137 +2,125 @@ Return-Path: <SRS0=I467=5O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A989AC43331
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 21:26:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C73EFC43331
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 21:34:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7AA3420748
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 21:26:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95E37206DB
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 21:34:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fBwZoN4N"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728998AbgC2V0X (ORCPT
+        id S1729015AbgC2VeH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Mar 2020 17:26:23 -0400
-Received: from mx.sdf.org ([205.166.94.20]:57945 "EHLO mx.sdf.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728769AbgC2V0W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Mar 2020 17:26:22 -0400
-Received: from sdf.org (IDENT:lkml@sdf.lonestar.org [205.166.94.16])
-        by mx.sdf.org (8.15.2/8.14.5) with ESMTPS id 02TLIFW9002042
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits) verified NO);
-        Sun, 29 Mar 2020 21:18:15 GMT
-Received: (from lkml@localhost)
-        by sdf.org (8.15.2/8.12.8/Submit) id 02TLIFVM019351;
-        Sun, 29 Mar 2020 21:18:15 GMT
-Date:   Sun, 29 Mar 2020 21:18:14 +0000
-From:   George Spelvin <lkml@SDF.ORG>
-To:     James Bottomley <James.Bottomley@HansenPartnership.com>
-Cc:     Takashi Iwai <tiwai@suse.de>, linux-kernel@vger.kernel.org,
-        Hannes Reinecke <hare@suse.de>, linux-scsi@vger.kernel.org,
-        Marek Lindner <mareklindner@neomailbox.ch>,
-        Simon Wunderlich <sw@simonwunderlich.de>,
-        Antonio Quartulli <a@unstable.cc>,
-        Sven Eckelmann <sven@narfation.org>,
-        Johannes Berg <johannes@sipsolutions.net>,
-        linux-wireless@vger.kernel.org, Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org,
-        lkml@sdf.org
-Subject: Re: [RFC PATCH v1 13/50] Avoid some useless msecs/jiffies conversions
-Message-ID: <20200329211316.GG4675@SDF.ORG>
-References: <202003281643.02SGhBrh000992@sdf.org>
- <s5ho8sfd2dk.wl-tiwai@suse.de>
- <20200329121129.GC11951@SDF.ORG>
- <s5h7dz3ccea.wl-tiwai@suse.de>
- <20200329175032.GE4675@SDF.ORG>
- <1585505807.4510.1.camel@HansenPartnership.com>
+        Sun, 29 Mar 2020 17:34:07 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:35631 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727370AbgC2VeG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Mar 2020 17:34:06 -0400
+Received: by mail-wm1-f67.google.com with SMTP id f74so8327521wmf.0
+        for <linux-kernel@vger.kernel.org>; Sun, 29 Mar 2020 14:34:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=UYYymRN1K169Z7gNSCvqd3FjnJg3VLBy6qvkZ/F2c3c=;
+        b=fBwZoN4NdJySdoYnzO17+ef9G1oyuWbg2GdXXl5Uhud7wGkWIGuIxAEnyQB0rdCaTB
+         eWQR5NKDqflIVxS1fo/ODgS+2Lz3hQwZZdY3pADWCstf/SOttIIIdBX22YRjilQPJIRd
+         jKgYgQN5ZOTmCNjKGVCA/18D3rPesM+oQCes8GCJpAH77HHqm+DglwPF7h0ZQPu+O9BJ
+         CMzV0eoVor1clhL7H9kMhrnEpyDsBsdcs1h8lxQjLGK3qIebVDRKJdNXavNoQDxCIYFF
+         KGvDRQMRDFGcMbPkAC8Nhboqxq6xLWfw//Xf/dtt6XojByjHZuuVFqDZ3peuo1/tkKVK
+         vyyQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=UYYymRN1K169Z7gNSCvqd3FjnJg3VLBy6qvkZ/F2c3c=;
+        b=Vqj2AfLiaik4ZZZC2oXbfqNfx5oVPGFVhnzH0PsM42BU0iSzg/eQkEcqI8IzrR4ffL
+         c5NArDmixRIL/IHA2IhW/DTuYdalX1MmCNMyhB0HWa5GtJL1OUJc60mO6WgKoUu9pEQ0
+         M/uEEV1+swRExBRxqcYDO4yU4AiyhCX8d4qxLtO1UpSGST1kvUSNB8labTkXDGf55XEB
+         csu5mmgfxJi4rJ7hxk9BTOawCnpnCuQmiyPAzPDvEL43CS0n0SNEJ1slFxQCwAfULfId
+         MzAmXRm/v4vDHWxjUP6WqHBkUXPyjQ4hoDR+lnrG/lnX3JKjGSr1qBWEPghvosiBWY4+
+         q1Kw==
+X-Gm-Message-State: ANhLgQ39wzZXSw+25JwdNv7tPlkY7FuYQeNcNhma3KYbW4jgmiMsXXLd
+        ImjooZSOnVByYPF+O0/i3jS6nOToA9GarxXG+Yw=
+X-Google-Smtp-Source: ADFU+vuLjfoldny3m1JWulHO6TuKShC4MkYuMXyqzLelccEgNlHrwFZvAwuWcZ6U3v7MTT7a7wrtygDTnxJ45HE3FBA=
+X-Received: by 2002:a7b:c050:: with SMTP id u16mr10754316wmc.68.1585517642786;
+ Sun, 29 Mar 2020 14:34:02 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1585505807.4510.1.camel@HansenPartnership.com>
+References: <20200130192226.2776-1-krzk@kernel.org> <6e686a54-2e1c-b690-d465-369e0d712bba@cambridgegreys.com>
+In-Reply-To: <6e686a54-2e1c-b690-d465-369e0d712bba@cambridgegreys.com>
+From:   Richard Weinberger <richard.weinberger@gmail.com>
+Date:   Sun, 29 Mar 2020 23:33:51 +0200
+Message-ID: <CAFLxGvyPRUPkEdntpiN34sviz4D275E_bYCqi0hkwmycZ+ZvTQ@mail.gmail.com>
+Subject: Re: [PATCH] um: configs: Cleanup CONFIG_IOSCHED_CFQ
+To:     Anton Ivanov <anton.ivanov@cambridgegreys.com>
+Cc:     Krzysztof Kozlowski <krzk@kernel.org>,
+        Jeff Dike <jdike@addtoit.com>,
+        Richard Weinberger <richard@nod.at>,
+        linux-um <linux-um@lists.infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Mar 29, 2020 at 11:16:47AM -0700, James Bottomley wrote:
-> On Sun, 2020-03-29 at 17:50 +0000, George Spelvin wrote:
->> On Sun, Mar 29, 2020 at 07:13:33PM +0200, Takashi Iwai wrote:
->>> Fair enough.  But it's still a question whether an open code X * HZ
->>> is good at all...
->> 
->> I'm sorry, I don't understand what you mean by "good at all" here.
->> The value computed is exactly the same.
-> 
-> I think he means what the compiler does with it.
-> 
-> We all assume that msecs_to_jiffies is properly optimized so there
-> should be no need to open code it like you're proposing.  So firstly
-> can you produce the assembly that shows the worse output from
-> msecs_to_jiffies?  If there is a problem, then we should be fixing it
-> in msecs_to_jiffies, not adding open coding.
+On Mon, Feb 10, 2020 at 3:41 PM Anton Ivanov
+<anton.ivanov@cambridgegreys.com> wrote:
+>
+>
+>
+> On 30/01/2020 19:22, Krzysztof Kozlowski wrote:
+> > CONFIG_IOSCHED_CFQ is since commit f382fb0bcef4 ("block: remove legacy
+> > IO schedulers").
+> >
+> > The IOSCHED_BFQ seems to replace IOSCHED_CFQ so select it in configs
+> > previously choosing the latter.
+> >
+> > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> > ---
+> >   arch/um/configs/i386_defconfig   | 2 +-
+> >   arch/um/configs/x86_64_defconfig | 2 +-
+> >   2 files changed, 2 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/arch/um/configs/i386_defconfig b/arch/um/configs/i386_defconfig
+> > index 73e98bb57bf5..fb51bd206dbe 100644
+> > --- a/arch/um/configs/i386_defconfig
+> > +++ b/arch/um/configs/i386_defconfig
+> > @@ -26,7 +26,7 @@ CONFIG_SLAB=y
+> >   CONFIG_MODULES=y
+> >   CONFIG_MODULE_UNLOAD=y
+> >   # CONFIG_BLK_DEV_BSG is not set
+> > -CONFIG_IOSCHED_CFQ=m
+> > +CONFIG_IOSCHED_BFQ=m
+> >   CONFIG_SSL=y
+> >   CONFIG_NULL_CHAN=y
+> >   CONFIG_PORT_CHAN=y
+> > diff --git a/arch/um/configs/x86_64_defconfig b/arch/um/configs/x86_64_defconfig
+> > index 3281d7600225..477b87317424 100644
+> > --- a/arch/um/configs/x86_64_defconfig
+> > +++ b/arch/um/configs/x86_64_defconfig
+> > @@ -24,7 +24,7 @@ CONFIG_SLAB=y
+> >   CONFIG_MODULES=y
+> >   CONFIG_MODULE_UNLOAD=y
+> >   # CONFIG_BLK_DEV_BSG is not set
+> > -CONFIG_IOSCHED_CFQ=m
+> > +CONFIG_IOSCHED_BFQ=m
+> >   CONFIG_SSL=y
+> >   CONFIG_NULL_CHAN=y
+> >   CONFIG_PORT_CHAN=y
+> >
+>
+> Acked-by: Anton Ivanov <anton.ivanov@cambridgegreys.com>
 
-Fair enough.  For the two alternative functions:
+Applied, thanks!
 
-#include <linux/jiffies.h>
-
-unsigned long timeout1(unsigned seconds)
-{
-	return jiffies + msecs_to_jiffies(seconds * 1000);
-}
-
-unsigned long timeout2(unsigned seconds)
-{
-	return jiffies + seconds * HZ;
-}
-
-compiled with Kbuild, the object code produced is:
-
-Disassembly of section .text:
-
-0000000000000000 <timeout1>:
-   0:	69 ff e8 03 00 00       imul   $0x3e8,%edi,%edi
-   6:	e8 00 00 00 00          callq  b <timeout1+0xb>
-                        7: R_X86_64_PLT32       __msecs_to_jiffies-0x4
-   b:	49 89 c0                mov    %rax,%r8
-   e:	48 8b 05 00 00 00 00    mov    0x0(%rip),%rax        # 15 
-<timeout1+0x15>
-                        11: R_X86_64_PC32       jiffies-0x4
-  15:	4c 01 c0                add    %r8,%rax
-  18:	c3                      retq   
-  19:	0f 1f 80 00 00 00 00    nopl   0x0(%rax)
-
-0000000000000020 <timeout2>:
-  20:	48 8b 15 00 00 00 00    mov    0x0(%rip),%rdx        # 27 
-<timeout2+0x7>
-                        23: R_X86_64_PC32       jiffies-0x4
-  27:	69 c7 2c 01 00 00       imul   $0x12c,%edi,%eax
-  2d:	48 01 d0                add    %rdx,%rax
-  30:	c3                      retq   
-
-This is the type of code I replaced: code where the number of seconds
-is not known at compile time.  Notice how the first multiplies by 1000
-and then calls __msecs_to_jiffies.  The second multiplies by 300 and
-makes no function call.
-
-__msecs_to_jiffies (from kernel/time/time.o) is:
-
-0000000000000100 <__msecs_to_jiffies>:
-     100:	48 b8 fe ff ff ff ff    movabs $0x3ffffffffffffffe,%rax
-     107:	ff ff 3f 
-     10a:	85 ff                   test   %edi,%edi
-     10c:	78 1c                   js     12a 
-<__msecs_to_jiffies+0x2a>
-     10e:	b8 9a 99 99 99          mov    $0x9999999a,%eax
-     113:	89 ff                   mov    %edi,%edi
-     115:	48 0f af f8             imul   %rax,%rdi
-     119:	48 b8 cc cc cc cc 01    movabs $0x1cccccccc,%rax
-     120:	00 00 00 
-     123:	48 01 f8                add    %rdi,%rax
-     126:	48 c1 e8 21             shr    $0x21,%rax
-     12a:	c3                      retq   
-     12b:	0f 1f 44 00 00          nopl   0x0(%rax,%rax,1)
-
-I didn't try to replace code that uses compile-time constant arguments
-such as include/linux/ceph/libceph.h.
+-- 
+Thanks,
+//richard
