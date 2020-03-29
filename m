@@ -2,335 +2,256 @@ Return-Path: <SRS0=I467=5O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FD8FC43331
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 11:09:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0211C43331
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 11:10:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4067620675
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 11:09:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585480177;
-	bh=Wyqkj707GIH3QRpORcHJpy1lDgKv/eZLDAjDiXyvgss=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=gQgUd+bjeHg4VGw9Z6kpidYXBWrgehyodthNn5Nd1oCeUqOayYjZQ0hphn3Q6GCZ+
-	 ut195ZcSF/hvd0HOf4BSaAQfxEC+RnGbCWPVTMYnqt3ZosaXNlHJBuQPnpEPapyKJQ
-	 lu5c+CTmuARtaxLqEPDVG9xvfnBG8hVkMbRTMeP4=
+	by mail.kernel.org (Postfix) with ESMTP id 560AD20757
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 11:10:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nCv/zjYj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728102AbgC2LJg (ORCPT
+        id S1728106AbgC2LKv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Mar 2020 07:09:36 -0400
-Received: from conuserg-12.nifty.com ([210.131.2.79]:43416 "EHLO
-        conuserg-12.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727772AbgC2LJg (ORCPT
+        Sun, 29 Mar 2020 07:10:51 -0400
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:38109 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727875AbgC2LKu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Mar 2020 07:09:36 -0400
-Received: from grover.flets-west.jp (softbank126093124033.bbtec.net [126.93.124.33]) (authenticated)
-        by conuserg-12.nifty.com with ESMTP id 02TB8bBL015176;
-        Sun, 29 Mar 2020 20:08:37 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-12.nifty.com 02TB8bBL015176
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1585480118;
-        bh=Cg7R3QJRPJ95+EKclm15FSW94MAoCe16bg0O8GfIt6U=;
-        h=From:To:Cc:Subject:Date:From;
-        b=jPBCBrQDgnG0wdLPf2EwTGBqVSyXOaUNUQzjq4HgBBPA21LgFK5bai0aDGVKBTSt5
-         7X/LRZx+E0XEUwIUv0tjoIW6lzZP6i37e+E6SAUNuoxS6b1EIJCyDSWRAT6pOrg+jF
-         ZeUbQ1MltPJ+4TFw+v3+4NaX58Qb3RHjUjX4xdClHB4Iy71rj0qovkY9FkkLqBSocQ
-         M3WUSabsnrbI3XWTvnyDKD7VpBfeufdnHvdiW4brIpPhtUKg/EumiwVPx86Um4Vfqb
-         koFSWlEuo43Bn32swWPcZFrWZ3T62rPjyix8aib4fcdCnR3G39lm3UZawAoguesq+6
-         4sUNzMxqg9XZQ==
-X-Nifty-SrcIP: [126.93.124.33]
-From:   Masahiro Yamada <masahiroy@kernel.org>
-To:     linux-kbuild@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, Kees Cook <keescook@chromium.org>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Emese Revfy <re.emese@gmail.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        kernel-hardening@lists.openwall.com
-Subject: [PATCH] gcc-plugins: drop support for GCC <= 4.7
-Date:   Sun, 29 Mar 2020 20:08:32 +0900
-Message-Id: <20200329110832.19961-1-masahiroy@kernel.org>
-X-Mailer: git-send-email 2.17.1
+        Sun, 29 Mar 2020 07:10:50 -0400
+Received: by mail-ed1-f65.google.com with SMTP id e5so17343091edq.5;
+        Sun, 29 Mar 2020 04:10:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=q/yD6c2PKgnHnFk14kJeOz5sQTjlHMyFhj12xzI5L0o=;
+        b=nCv/zjYj0AUp65ssXNemevbr+jeDmSSwzv4oAtnNOcoHqkNMcQzwvIuXHE6fYpivQb
+         GSrWblRItvs7fcqn4bukBOyHksiwt9kRibYK263UxHKRrX6TTCpeF6UC6jFnrqEjmW33
+         Sw+YFWhYjz6I2Rpi2HOjejms1jXVnCyLWHZalL31bvPmH94hQBVkbKfZFdyH6/sK21Wh
+         swl0rYIuWAnvQJ8/+Gfmo77cnhZqDKGYDR6HBL4J0+tm0P0xORA91IwDrPfifNar55HZ
+         yXFUoCXxglhXpVmbhccVFJ6QJKrWdBsVzRvYMyeBw/QD2Gt1NCttjnzBJDlDF7ZKsq8f
+         YVqA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=q/yD6c2PKgnHnFk14kJeOz5sQTjlHMyFhj12xzI5L0o=;
+        b=LOn3I3r5IH99U1ilmptpbHybRNHOrcSWSJE+1Hbn3VtEZ23qoLG3omznw95lMhQY1I
+         7hyQZ3754OhYC14HaTN16FXp8wwe8ztjT/Dqeny6GG3KfWBzYTjF/1k5PAv5DFCgU1iN
+         0re68VkB+uO0X/eFp3f5ve2zhP6VpTUaXfG1XODxA5DPpaBzBNbU6XbMf9i6x7iYdhJY
+         Nrt8sIHAyKhHNFbeEWMPAx2Lhr9uq9HURQOa+fVYLymSvw+c6I/sLF1pfWYNDjEsPF7b
+         XViEPw+fzsEVQ8TxiROYeZGp5YR7rwHQZqVSkBojt9YJxodNekNBoFBJvjIne4SX5tsa
+         VMng==
+X-Gm-Message-State: ANhLgQ07hjKO3rut040H/rxZsGz7jgTRDPYJg20GixAAK9g+DgKceGVe
+        Un+iO+VqL2jpcFkMLgiaUg5ShI+JpQUhwH8v03s=
+X-Google-Smtp-Source: ADFU+vsDm9GauYwVXKaXdiyRF3Jkg1Et1z1n1m9pmfXiLZIsRJTvcvT5vO2BBXUETEC4Y9NJbEsQCvdM+qBdJT7ljro=
+X-Received: by 2002:a17:906:449:: with SMTP id e9mr6493292eja.239.1585480248014;
+ Sun, 29 Mar 2020 04:10:48 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200329005202.17926-1-olteanv@gmail.com> <20200329005202.17926-5-olteanv@gmail.com>
+In-Reply-To: <20200329005202.17926-5-olteanv@gmail.com>
+From:   Vladimir Oltean <olteanv@gmail.com>
+Date:   Sun, 29 Mar 2020 14:10:36 +0300
+Message-ID: <CA+h21hrBnn5t9ckiyPxeVbkhypCPX4d-pqRm6Gk=1sTm-NdORQ@mail.gmail.com>
+Subject: Re: [PATCH net-next 4/6] net: dsa: felix: add port policers
+To:     Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+Cc:     Jiri Pirko <jiri@resnulli.us>, Ido Schimmel <idosch@idosch.org>,
+        Jakub Kicinski <kuba@kernel.org>,
+        netdev <netdev@vger.kernel.org>,
+        Xiaoliang Yang <xiaoliang.yang_1@nxp.com>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Horatiu Vultur <horatiu.vultur@microchip.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        "Allan W. Nielsen" <allan.nielsen@microchip.com>,
+        Joergen Andreasen <joergen.andreasen@microchip.com>,
+        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
+        "Y.b. Lu" <yangbo.lu@nxp.com>,
+        Alexandru Marginean <alexandru.marginean@nxp.com>,
+        Po Liu <po.liu@nxp.com>,
+        Claudiu Manoil <claudiu.manoil@nxp.com>,
+        Li Yang <leoyang.li@nxp.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Nobody was opposed to raising minimum GCC version to 4.8 [1]
-So, we will drop GCC <= 4.7 support sooner or later.
+On Sun, 29 Mar 2020 at 02:53, Vladimir Oltean <olteanv@gmail.com> wrote:
+>
+> From: Vladimir Oltean <vladimir.oltean@nxp.com>
+>
+> This patch is a trivial passthrough towards the ocelot library, which
+> support port policers since commit 2c1d029a017f ("net: mscc: ocelot:
+> Implement port policers via tc command").
+>
+> Some data structure conversion between the DSA core and the Ocelot
+> library is necessary, for policer parameters.
+>
+> Signed-off-by: Vladimir Oltean <vladimir.oltean@nxp.com>
+> ---
+>  drivers/net/dsa/ocelot/felix.c            | 24 +++++++++++++++++++++++
+>  drivers/net/ethernet/mscc/ocelot_police.c |  3 +++
+>  drivers/net/ethernet/mscc/ocelot_police.h | 10 ----------
+>  drivers/net/ethernet/mscc/ocelot_tc.c     |  2 +-
+>  include/soc/mscc/ocelot.h                 |  8 ++++++++
+>  5 files changed, 36 insertions(+), 11 deletions(-)
+>
+> diff --git a/drivers/net/dsa/ocelot/felix.c b/drivers/net/dsa/ocelot/felix.c
+> index eef9fa812a3c..7f7dd6736051 100644
+> --- a/drivers/net/dsa/ocelot/felix.c
+> +++ b/drivers/net/dsa/ocelot/felix.c
+> @@ -14,6 +14,7 @@
+>  #include <linux/of_net.h>
+>  #include <linux/pci.h>
+>  #include <linux/of.h>
+> +#include <net/pkt_sched.h>
+>  #include <net/dsa.h>
+>  #include "felix.h"
+>
+> @@ -651,6 +652,27 @@ static int felix_cls_flower_stats(struct dsa_switch *ds, int port,
+>         return ocelot_cls_flower_stats(ocelot, port, cls, ingress);
+>  }
+>
+> +static int felix_port_policer_add(struct dsa_switch *ds, int port,
+> +                                 struct dsa_mall_policer_tc_entry *policer)
+> +{
+> +       struct ocelot *ocelot = ds->priv;
+> +       struct ocelot_policer pol = {
+> +               .rate = div_u64(policer->rate_bytes_per_sec, 1000) * 8,
+> +               .burst = div_u64(policer->rate_bytes_per_sec *
+> +                                PSCHED_NS2TICKS(policer->burst),
+> +                                PSCHED_TICKS_PER_SEC),
+> +       };
+> +
+> +       return ocelot_port_policer_add(ocelot, port, &pol);
+> +}
+> +
+> +static void felix_port_policer_del(struct dsa_switch *ds, int port)
+> +{
+> +       struct ocelot *ocelot = ds->priv;
+> +
+> +       ocelot_port_policer_del(ocelot, port);
+> +}
+> +
+>  static const struct dsa_switch_ops felix_switch_ops = {
+>         .get_tag_protocol       = felix_get_tag_protocol,
+>         .setup                  = felix_setup,
+> @@ -684,6 +706,8 @@ static const struct dsa_switch_ops felix_switch_ops = {
+>         .port_txtstamp          = felix_txtstamp,
+>         .port_change_mtu        = felix_change_mtu,
+>         .port_max_mtu           = felix_get_max_mtu,
+> +       .port_policer_add       = felix_port_policer_add,
+> +       .port_policer_del       = felix_port_policer_del,
+>         .cls_flower_add         = felix_cls_flower_add,
+>         .cls_flower_del         = felix_cls_flower_del,
+>         .cls_flower_stats       = felix_cls_flower_stats,
+> diff --git a/drivers/net/ethernet/mscc/ocelot_police.c b/drivers/net/ethernet/mscc/ocelot_police.c
+> index 8d25b2706ff0..2e1d8e187332 100644
+> --- a/drivers/net/ethernet/mscc/ocelot_police.c
+> +++ b/drivers/net/ethernet/mscc/ocelot_police.c
+> @@ -4,6 +4,7 @@
+>   * Copyright (c) 2019 Microsemi Corporation
+>   */
+>
+> +#include <soc/mscc/ocelot.h>
+>  #include "ocelot_police.h"
+>
+>  enum mscc_qos_rate_mode {
+> @@ -203,6 +204,7 @@ int ocelot_port_policer_add(struct ocelot *ocelot, int port,
+>
+>         return 0;
+>  }
+> +EXPORT_SYMBOL(ocelot_port_policer_add);
+>
+>  int ocelot_port_policer_del(struct ocelot *ocelot, int port)
+>  {
+> @@ -225,6 +227,7 @@ int ocelot_port_policer_del(struct ocelot *ocelot, int port)
+>
+>         return 0;
+>  }
+> +EXPORT_SYMBOL(ocelot_port_policer_del);
+>
+>  int ocelot_ace_policer_add(struct ocelot *ocelot, u32 pol_ix,
+>                            struct ocelot_policer *pol)
+> diff --git a/drivers/net/ethernet/mscc/ocelot_police.h b/drivers/net/ethernet/mscc/ocelot_police.h
+> index 22025cce0a6a..792abd28010a 100644
+> --- a/drivers/net/ethernet/mscc/ocelot_police.h
+> +++ b/drivers/net/ethernet/mscc/ocelot_police.h
+> @@ -9,16 +9,6 @@
+>
+>  #include "ocelot.h"
+>
+> -struct ocelot_policer {
+> -       u32 rate; /* kilobit per second */
+> -       u32 burst; /* bytes */
+> -};
+> -
+> -int ocelot_port_policer_add(struct ocelot *ocelot, int port,
+> -                           struct ocelot_policer *pol);
+> -
+> -int ocelot_port_policer_del(struct ocelot *ocelot, int port);
+> -
+>  int ocelot_ace_policer_add(struct ocelot *ocelot, u32 pol_ix,
+>                            struct ocelot_policer *pol);
+>
+> diff --git a/drivers/net/ethernet/mscc/ocelot_tc.c b/drivers/net/ethernet/mscc/ocelot_tc.c
+> index 3ff5ef41eccf..d326e231f0ad 100644
+> --- a/drivers/net/ethernet/mscc/ocelot_tc.c
+> +++ b/drivers/net/ethernet/mscc/ocelot_tc.c
+> @@ -4,8 +4,8 @@
+>   * Copyright (c) 2019 Microsemi Corporation
+>   */
+>
+> +#include <soc/mscc/ocelot.h>
+>  #include "ocelot_tc.h"
+> -#include "ocelot_police.h"
+>  #include "ocelot_ace.h"
+>  #include <net/pkt_cls.h>
+>
+> diff --git a/include/soc/mscc/ocelot.h b/include/soc/mscc/ocelot.h
+> index 3db66638a3b2..ca49f7a114de 100644
+> --- a/include/soc/mscc/ocelot.h
+> +++ b/include/soc/mscc/ocelot.h
+> @@ -555,6 +555,11 @@ struct ocelot {
+>         struct ptp_pin_desc             ptp_pins[OCELOT_PTP_PINS_NUM];
+>  };
+>
 
-We always use C++ compiler for building plugins for GCC >= 4.8.
+Oops, it looks like I had Yangbo's patch in my tree, and the ptp_pins
+are messing with this patch's context, causing it to fail to apply
+cleanly:
+https://patchwork.ozlabs.org/patch/1258827/
+I think I need to send a v2 for this. Sorry.
 
-This commit drops the plugin support for GCC <= 4.7 a bit earlier,
-which allows us to dump lots of code.
+> +struct ocelot_policer {
+> +       u32 rate; /* kilobit per second */
+> +       u32 burst; /* bytes */
+> +};
+> +
+>  #define ocelot_read_ix(ocelot, reg, gi, ri) __ocelot_read_ix(ocelot, reg, reg##_GSZ * (gi) + reg##_RSZ * (ri))
+>  #define ocelot_read_gix(ocelot, reg, gi) __ocelot_read_ix(ocelot, reg, reg##_GSZ * (gi))
+>  #define ocelot_read_rix(ocelot, reg, ri) __ocelot_read_ix(ocelot, reg, reg##_RSZ * (ri))
+> @@ -624,6 +629,9 @@ int ocelot_port_add_txtstamp_skb(struct ocelot_port *ocelot_port,
+>  void ocelot_get_txtstamp(struct ocelot *ocelot);
+>  void ocelot_port_set_maxlen(struct ocelot *ocelot, int port, size_t sdu);
+>  int ocelot_get_max_mtu(struct ocelot *ocelot, int port);
+> +int ocelot_port_policer_add(struct ocelot *ocelot, int port,
+> +                           struct ocelot_policer *pol);
+> +int ocelot_port_policer_del(struct ocelot *ocelot, int port);
+>  int ocelot_cls_flower_replace(struct ocelot *ocelot, int port,
+>                               struct flow_cls_offload *f, bool ingress);
+>  int ocelot_cls_flower_destroy(struct ocelot *ocelot, int port,
+> --
+> 2.17.1
+>
 
-[1] https://lkml.org/lkml/2020/1/23/545
-
-Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
----
-
-This patch depends on this:
-https://patchwork.kernel.org/patch/11456871/
-
- scripts/Kconfig.include      |  3 --
- scripts/Makefile.build       |  2 +-
- scripts/Makefile.clean       |  1 -
- scripts/Makefile.host        | 23 +--------------
- scripts/gcc-plugin.sh        | 55 +++---------------------------------
- scripts/gcc-plugins/Kconfig  | 12 ++------
- scripts/gcc-plugins/Makefile | 21 ++++----------
- 7 files changed, 14 insertions(+), 103 deletions(-)
-
-diff --git a/scripts/Kconfig.include b/scripts/Kconfig.include
-index 496d11c92c97..033f6efd92d3 100644
---- a/scripts/Kconfig.include
-+++ b/scripts/Kconfig.include
-@@ -42,9 +42,6 @@ $(error-if,$(failure,command -v $(LD)),linker '$(LD)' not found)
- # Fail if the linker is gold as it's not capable of linking the kernel proper
- $(error-if,$(success, $(LD) -v | grep -q gold), gold linker '$(LD)' not supported)
- 
--# gcc version including patch level
--gcc-version := $(shell,$(srctree)/scripts/gcc-version.sh $(CC))
--
- # machine bit flags
- #  $(m32-flag): -m32 if the compiler supports it, or an empty string otherwise.
- #  $(m64-flag): -m64 if the compiler supports it, or an empty string otherwise.
-diff --git a/scripts/Makefile.build b/scripts/Makefile.build
-index 356601994f3a..9fcbfac15d1d 100644
---- a/scripts/Makefile.build
-+++ b/scripts/Makefile.build
-@@ -46,7 +46,7 @@ include $(kbuild-file)
- include scripts/Makefile.lib
- 
- # Do not include host rules unless needed
--ifneq ($(hostprogs)$(hostlibs-y)$(hostlibs-m)$(hostcxxlibs-y)$(hostcxxlibs-m),)
-+ifneq ($(hostprogs)$(hostcxxlibs-y)$(hostcxxlibs-m),)
- include scripts/Makefile.host
- endif
- 
-diff --git a/scripts/Makefile.clean b/scripts/Makefile.clean
-index 1e4206566a82..075f0cc2d8d7 100644
---- a/scripts/Makefile.clean
-+++ b/scripts/Makefile.clean
-@@ -30,7 +30,6 @@ subdir-ymn	:= $(addprefix $(obj)/,$(subdir-ymn))
- __clean-files	:= $(extra-y) $(extra-m) $(extra-)       \
- 		   $(always) $(always-y) $(always-m) $(always-) $(targets) $(clean-files)   \
- 		   $(hostprogs) $(hostprogs-y) $(hostprogs-m) $(hostprogs-) \
--		   $(hostlibs-y) $(hostlibs-m) $(hostlibs-) \
- 		   $(hostcxxlibs-y) $(hostcxxlibs-m)
- 
- __clean-files   := $(filter-out $(no-clean-files), $(__clean-files))
-diff --git a/scripts/Makefile.host b/scripts/Makefile.host
-index 3b7121d43324..2045855d0b75 100644
---- a/scripts/Makefile.host
-+++ b/scripts/Makefile.host
-@@ -39,7 +39,6 @@ $(obj)/%.tab.c $(obj)/%.tab.h: $(src)/%.y FORCE
- # They are linked as C++ code to the executable qconf
- 
- __hostprogs := $(sort $(hostprogs))
--host-cshlib := $(sort $(hostlibs-y) $(hostlibs-m))
- host-cxxshlib := $(sort $(hostcxxlibs-y) $(hostcxxlibs-m))
- 
- # C code
-@@ -63,7 +62,6 @@ host-cxxmulti	:= $(foreach m,$(__hostprogs),$(if $($(m)-cxxobjs),$(m)))
- host-cxxobjs	:= $(sort $(foreach m,$(host-cxxmulti),$($(m)-cxxobjs)))
- 
- # Object (.o) files used by the shared libaries
--host-cshobjs	:= $(sort $(foreach m,$(host-cshlib),$($(m:.so=-objs))))
- host-cxxshobjs	:= $(sort $(foreach m,$(host-cxxshlib),$($(m:.so=-objs))))
- 
- host-csingle	:= $(addprefix $(obj)/,$(host-csingle))
-@@ -71,9 +69,7 @@ host-cmulti	:= $(addprefix $(obj)/,$(host-cmulti))
- host-cobjs	:= $(addprefix $(obj)/,$(host-cobjs))
- host-cxxmulti	:= $(addprefix $(obj)/,$(host-cxxmulti))
- host-cxxobjs	:= $(addprefix $(obj)/,$(host-cxxobjs))
--host-cshlib	:= $(addprefix $(obj)/,$(host-cshlib))
- host-cxxshlib	:= $(addprefix $(obj)/,$(host-cxxshlib))
--host-cshobjs	:= $(addprefix $(obj)/,$(host-cshobjs))
- host-cxxshobjs	:= $(addprefix $(obj)/,$(host-cxxshobjs))
- 
- #####
-@@ -140,13 +136,6 @@ quiet_cmd_host-cxxobjs	= HOSTCXX $@
- $(host-cxxobjs): $(obj)/%.o: $(src)/%.cc FORCE
- 	$(call if_changed_dep,host-cxxobjs)
- 
--# Compile .c file, create position independent .o file
--# host-cshobjs -> .o
--quiet_cmd_host-cshobjs	= HOSTCC  -fPIC $@
--      cmd_host-cshobjs	= $(HOSTCC) $(hostc_flags) -fPIC -c -o $@ $<
--$(host-cshobjs): $(obj)/%.o: $(src)/%.c FORCE
--	$(call if_changed_dep,host-cshobjs)
--
- # Compile .c file, create position independent .o file
- # Note that plugin capable gcc versions can be either C or C++ based
- # therefore plugin source files have to be compilable in both C and C++ mode.
-@@ -157,16 +146,6 @@ quiet_cmd_host-cxxshobjs	= HOSTCXX -fPIC $@
- $(host-cxxshobjs): $(obj)/%.o: $(src)/%.c FORCE
- 	$(call if_changed_dep,host-cxxshobjs)
- 
--# Link a shared library, based on position independent .o files
--# *.o -> .so shared library (host-cshlib)
--quiet_cmd_host-cshlib	= HOSTLLD -shared $@
--      cmd_host-cshlib	= $(HOSTCC) $(KBUILD_HOSTLDFLAGS) -shared -o $@ \
--			  $(addprefix $(obj)/, $($(target-stem)-objs)) \
--			  $(KBUILD_HOSTLDLIBS) $(HOSTLDLIBS_$(target-stem).so)
--$(host-cshlib): FORCE
--	$(call if_changed,host-cshlib)
--$(call multi_depend, $(host-cshlib), .so, -objs)
--
- # Link a shared library, based on position independent .o files
- # *.o -> .so shared library (host-cxxshlib)
- quiet_cmd_host-cxxshlib	= HOSTLLD -shared $@
-@@ -178,4 +157,4 @@ $(host-cxxshlib): FORCE
- $(call multi_depend, $(host-cxxshlib), .so, -objs)
- 
- targets += $(host-csingle)  $(host-cmulti) $(host-cobjs)\
--	   $(host-cxxmulti) $(host-cxxobjs) $(host-cshlib) $(host-cshobjs) $(host-cxxshlib) $(host-cxxshobjs)
-+	   $(host-cxxmulti) $(host-cxxobjs) $(host-cxxshlib) $(host-cxxshobjs)
-diff --git a/scripts/gcc-plugin.sh b/scripts/gcc-plugin.sh
-index d3caefe53eab..b79fd0bea838 100755
---- a/scripts/gcc-plugin.sh
-+++ b/scripts/gcc-plugin.sh
-@@ -1,49 +1,14 @@
- #!/bin/sh
- # SPDX-License-Identifier: GPL-2.0
--srctree=$(dirname "$0")
--
--SHOW_ERROR=
--if [ "$1" = "--show-error" ] ; then
--	SHOW_ERROR=1
--	shift || true
--fi
--
--gccplugins_dir=$($3 -print-file-name=plugin)
--plugincc=$($1 -E -x c++ - -o /dev/null -I"${srctree}"/gcc-plugins -I"${gccplugins_dir}"/include 2>&1 <<EOF
--#include "gcc-common.h"
--#if BUILDING_GCC_VERSION >= 4008 || defined(ENABLE_BUILD_WITH_CXX)
--#warning $2 CXX
--#else
--#warning $1 CC
--#endif
--EOF
--)
- 
--if [ $? -ne 0 ]
--then
--	if [ -n "$SHOW_ERROR" ] ; then
--		echo "${plugincc}" >&2
--	fi
--	exit 1
--fi
-+set -e
- 
--case "$plugincc" in
--	*"$1 CC"*)
--		echo "$1"
--		exit 0
--		;;
--
--	*"$2 CXX"*)
--		# the c++ compiler needs another test, see below
--		;;
-+srctree=$(dirname "$0")
- 
--	*)
--		exit 1
--		;;
--esac
-+gccplugins_dir=$($* -print-file-name=plugin)
- 
- # we need a c++ compiler that supports the designated initializer GNU extension
--plugincc=$($2 -c -x c++ -std=gnu++98 - -fsyntax-only -I"${srctree}"/gcc-plugins -I"${gccplugins_dir}"/include 2>&1 <<EOF
-+$HOSTCC -c -x c++ -std=gnu++98 - -fsyntax-only -I $srctree/gcc-plugins -I $gccplugins_dir/include 2>/dev/null <<EOF
- #include "gcc-common.h"
- class test {
- public:
-@@ -52,15 +17,3 @@ public:
- 	.test = 1
- };
- EOF
--)
--
--if [ $? -eq 0 ]
--then
--	echo "$2"
--	exit 0
--fi
--
--if [ -n "$SHOW_ERROR" ] ; then
--	echo "${plugincc}" >&2
--fi
--exit 1
-diff --git a/scripts/gcc-plugins/Kconfig b/scripts/gcc-plugins/Kconfig
-index 7b63c819610c..a857d69322b4 100644
---- a/scripts/gcc-plugins/Kconfig
-+++ b/scripts/gcc-plugins/Kconfig
-@@ -1,13 +1,4 @@
- # SPDX-License-Identifier: GPL-2.0-only
--preferred-plugin-hostcc := $(if-success,[ $(gcc-version) -ge 40800 ],$(HOSTCXX),$(HOSTCC))
--
--config PLUGIN_HOSTCC
--	string
--	default "$(shell,$(srctree)/scripts/gcc-plugin.sh "$(preferred-plugin-hostcc)" "$(HOSTCXX)" "$(CC)")" if CC_IS_GCC
--	help
--	  Host compiler used to build GCC plugins.  This can be $(HOSTCXX),
--	  $(HOSTCC), or a null string if GCC plugin is unsupported.
--
- config HAVE_GCC_PLUGINS
- 	bool
- 	help
-@@ -17,7 +8,8 @@ config HAVE_GCC_PLUGINS
- menuconfig GCC_PLUGINS
- 	bool "GCC plugins"
- 	depends on HAVE_GCC_PLUGINS
--	depends on PLUGIN_HOSTCC != ""
-+	depends on CC_IS_GCC && GCC_VERSION >= 40800
-+	depends on $(success,$(srctree)/scripts/gcc-plugin.sh $(CC))
- 	default y
- 	help
- 	  GCC plugins are loadable modules that provide extra features to the
-diff --git a/scripts/gcc-plugins/Makefile b/scripts/gcc-plugins/Makefile
-index efff00959a9c..f22858b2c3d6 100644
---- a/scripts/gcc-plugins/Makefile
-+++ b/scripts/gcc-plugins/Makefile
-@@ -1,18 +1,9 @@
- # SPDX-License-Identifier: GPL-2.0
--PLUGINCC := $(CONFIG_PLUGIN_HOSTCC:"%"=%)
- GCC_PLUGINS_DIR := $(shell $(CC) -print-file-name=plugin)
- 
--ifeq ($(PLUGINCC),$(HOSTCC))
--  HOSTLIBS := hostlibs
--  HOST_EXTRACFLAGS += -I$(GCC_PLUGINS_DIR)/include -I$(src) -std=gnu99 -ggdb
--  export HOST_EXTRACFLAGS
--else
--  HOSTLIBS := hostcxxlibs
--  HOST_EXTRACXXFLAGS += -I$(GCC_PLUGINS_DIR)/include -I$(src) -std=gnu++98 -fno-rtti
--  HOST_EXTRACXXFLAGS += -fno-exceptions -fasynchronous-unwind-tables -ggdb
--  HOST_EXTRACXXFLAGS += -Wno-narrowing -Wno-unused-variable -Wno-c++11-compat
--  export HOST_EXTRACXXFLAGS
--endif
-+HOST_EXTRACXXFLAGS += -I$(GCC_PLUGINS_DIR)/include -I$(src) -std=gnu++98 -fno-rtti
-+HOST_EXTRACXXFLAGS += -fno-exceptions -fasynchronous-unwind-tables -ggdb
-+HOST_EXTRACXXFLAGS += -Wno-narrowing -Wno-unused-variable -Wno-c++11-compat
- 
- $(obj)/randomize_layout_plugin.o: $(objtree)/$(obj)/randomize_layout_seed.h
- quiet_cmd_create_randomize_layout_seed = GENSEED $@
-@@ -22,9 +13,9 @@ $(objtree)/$(obj)/randomize_layout_seed.h: FORCE
- 	$(call if_changed,create_randomize_layout_seed)
- targets = randomize_layout_seed.h randomize_layout_hash.h
- 
--$(HOSTLIBS)-y := $(foreach p,$(GCC_PLUGIN),$(if $(findstring /,$(p)),,$(p)))
--always-y := $($(HOSTLIBS)-y)
-+hostcxxlibs-y := $(foreach p,$(GCC_PLUGIN),$(if $(findstring /,$(p)),,$(p)))
-+always-y := $(hostcxxlibs-y)
- 
--$(foreach p,$($(HOSTLIBS)-y:%.so=%),$(eval $(p)-objs := $(p).o))
-+$(foreach p,$(hostcxxlibs-y:%.so=%),$(eval $(p)-objs := $(p).o))
- 
- clean-files += *.so
--- 
-2.17.1
-
+Thanks,
+-Vladimir
