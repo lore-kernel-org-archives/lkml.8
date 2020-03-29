@@ -2,165 +2,258 @@ Return-Path: <SRS0=I467=5O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06CB1C2D0EE
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 11:05:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E654C2D0EB
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 11:07:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DBA7020757
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 11:05:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1AF8A20675
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 11:07:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="CcC2pIQR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728099AbgC2LFK (ORCPT
+        id S1728022AbgC2LHf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Mar 2020 07:05:10 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:42061 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727875AbgC2LFI (ORCPT
+        Sun, 29 Mar 2020 07:07:35 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:26276 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727938AbgC2LHf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Mar 2020 07:05:08 -0400
-Received: from dude.hi.pengutronix.de ([2001:67c:670:100:1d::7])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ore@pengutronix.de>)
-        id 1jIVkS-0006s2-Qt; Sun, 29 Mar 2020 13:05:00 +0200
-Received: from ore by dude.hi.pengutronix.de with local (Exim 4.92)
-        (envelope-from <ore@pengutronix.de>)
-        id 1jIVkQ-00015E-4v; Sun, 29 Mar 2020 13:04:58 +0200
-From:   Oleksij Rempel <o.rempel@pengutronix.de>
-To:     Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>
-Cc:     Oleksij Rempel <o.rempel@pengutronix.de>, kernel@pengutronix.de,
-        netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-imx@nxp.com,
-        Fabio Estevam <festevam@gmail.com>,
-        David Jander <david@protonic.nl>,
-        Russell King <linux@armlinux.org.uk>
-Subject: [PATCH v2] ARM: imx: allow to disable board specific PHY fixups
-Date:   Sun, 29 Mar 2020 13:04:57 +0200
-Message-Id: <20200329110457.4113-1-o.rempel@pengutronix.de>
-X-Mailer: git-send-email 2.26.0.rc2
+        Sun, 29 Mar 2020 07:07:35 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1585480055; h=Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Message-ID: Date: Subject: In-Reply-To: References: Cc:
+ To: From: Sender; bh=hbFsvwoybyQrzSjd5fOsfde02T95Q4Rlx3aKtpKf5b8=; b=CcC2pIQR4jJESsd7RQvydlOnfPQepFROVIs6ljLZ91KhUCXnTtrr2Udy1KDmv0BgEyMDlVVb
+ ifebJLcjLR9Q0mcfFckObaAcj38bRxkiAsOOTs+pATKyo8QivgZ8IWMTU0+uQ61h8LiqG9co
+ X6dmEfOcwAFgM/BedQx/e2ZuLLQ=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e808174.7f4ebdcceed8-smtp-out-n01;
+ Sun, 29 Mar 2020 11:07:32 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id C14C7C433F2; Sun, 29 Mar 2020 11:07:31 +0000 (UTC)
+Received: from Pillair (unknown [183.83.66.17])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: pillair)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 7AE87C433D2;
+        Sun, 29 Mar 2020 11:07:28 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 7AE87C433D2
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=pillair@codeaurora.org
+From:   <pillair@codeaurora.org>
+To:     "'Bjorn Andersson'" <bjorn.andersson@linaro.org>
+Cc:     <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>
+References: <1585219723-28323-1-git-send-email-pillair@codeaurora.org> <20200327230025.GJ5063@builder> <000101d604f8$afc48220$0f4d8660$@codeaurora.org> <20200328183055.GA663905@yoga>
+In-Reply-To: <20200328183055.GA663905@yoga>
+Subject: RE: [PATCH v7] arm64: dts: qcom: sc7180: Add WCN3990 WLAN module device node
+Date:   Sun, 29 Mar 2020 16:37:25 +0530
+Message-ID: <000301d605ba$3d034a10$b709de30$@codeaurora.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::7
-X-SA-Exim-Mail-From: ore@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Type: text/plain;
+        charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+X-Mailer: Microsoft Outlook 16.0
+Thread-Index: AQFGsu5WNDBp+FP/TOeyoiVSrY11cwGGydAyAh9ckM8BjsJxYqlUZtlw
+Content-Language: en-us
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-All PHY fixups located in imx and mxs machine code are PHY and/or board
-specific. Never the less, they are applied to all boards independent on
-how related PHY is actually connected. As result:
-- we have boards with wrong PHY defaults which are not overwritten or
-  not properly handled by PHY drivers.
-- Some PHY driver changes was never tested and bugs was never detected
-  due the fixups.
-- Same PHY specific errata was fixed by SoC specific fixup, so the same
-  issues should be investigated again after switching to different SoC
-  on same board.
+Hi Bjorn,
 
-Since removing this fixups will brake may existing boards, we'll provide a
-Kconfig option which can be used by kernel developers and system integrators.
+> -----Original Message-----
+> From: Bjorn Andersson <bjorn.andersson@linaro.org>
+> Sent: Sunday, March 29, 2020 12:01 AM
+> To: pillair@codeaurora.org
+> Cc: devicetree@vger.kernel.org; linux-arm-kernel@lists.infradead.org;
+linux-
+> kernel@vger.kernel.org; linux-arm-msm@vger.kernel.org
+> Subject: Re: [PATCH v7] arm64: dts: qcom: sc7180: Add WCN3990 WLAN
+> module device node
+> 
+> On Sat 28 Mar 05:01 PDT 2020, pillair@codeaurora.org wrote:
+> 
+> > Hi Bjorn,
+> >  Comments inline.
+> >
+> >
+> > > -----Original Message-----
+> > > From: Bjorn Andersson <bjorn.andersson@linaro.org>
+> > > Sent: Saturday, March 28, 2020 4:30 AM
+> > > To: Rakesh Pillai <pillair@codeaurora.org>
+> > > Cc: devicetree@vger.kernel.org; linux-arm-kernel@lists.infradead.org;
+> > linux-
+> > > kernel@vger.kernel.org; linux-arm-msm@vger.kernel.org
+> > > Subject: Re: [PATCH v7] arm64: dts: qcom: sc7180: Add WCN3990 WLAN
+> > > module device node
+> > >
+> > > On Thu 26 Mar 03:48 PDT 2020, Rakesh Pillai wrote:
+> > >
+> > > > Add device node for the ath10k SNOC platform driver probe
+> > > > and add resources required for WCN3990 on sc7180 soc.
+> > > >
+> > > > Signed-off-by: Rakesh Pillai <pillair@codeaurora.org>
+> > > > ---
+> > > >
+> > > > Depends on https://patchwork.kernel.org/patch/11455345/
+> > > > The above patch adds the dt-bindings for wifi-firmware
+> > > > subnode
+> > > > ---
+> > > >  arch/arm64/boot/dts/qcom/sc7180-idp.dts |  8 ++++++++
+> > > >  arch/arm64/boot/dts/qcom/sc7180.dtsi    | 27
+> > > +++++++++++++++++++++++++++
+> > > >  2 files changed, 35 insertions(+)
+> > > >
+> > > > diff --git a/arch/arm64/boot/dts/qcom/sc7180-idp.dts
+> > > b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
+> > > > index 043c9b9..a6168a4 100644
+> > > > --- a/arch/arm64/boot/dts/qcom/sc7180-idp.dts
+> > > > +++ b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
+> > > > @@ -327,6 +327,14 @@
+> > > >  	};
+> > > >  };
+> > > >
+> > > > +&wifi {
+> > > > +	status = "okay";
+> > > > +	qcom,msa-fixed-perm;
+> > > > +	wifi-firmware {
+> > > > +		iommus = <&apps_smmu 0xc2 0x1>;
+> > >
+> > > How is sc7180 different from sdm845, where the iommus property goes
+> > > directly in the &wifi node?
+> >
+> > Sc7180 IDP is a target without TrustZone support and also with S2 IOMMU
+> > enabled.
+> > Since in Trustzone based targets, the iommu SID configuration was done
+by
+> > TZ, there was nothing required to be done by driver.
+> > But in non-TZ based targets, the IOMMU mappings need to be done by the
+> > driver.
+> > Since this is the mapping of the firmware memory and to keep it
+different
+> > from the driver memory access, a different device has been created for
+> > firmware and these SIDs are configured.
+> >
+> 
+> I see, I missed the fact that 0xc0:1 is used in the &wifi node itself.
+> 
+> So to confirm, we have streams 0xc0 and 0xc1 for data pipes and 0xc2 and
+> 0xc3 for some form of firmware access? And in the normal Qualcomm design
+> implementation the 0c2/0xc3 stream mapping is setup by TZ, and hidden
+> from Linux using the SMMU virtualisation?
+> 
+> 
+> Would have been nice to have some better mechanism for describing
+> multi-connected hardware block, than to sprinkle dummy nodes all over
+> the DT...
 
-Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
----
- arch/arm/mach-imx/mach-imx6q.c  |  3 ++-
- arch/arm/mach-imx/mach-imx6sx.c |  3 ++-
- arch/arm/mach-imx/mach-imx7d.c  |  3 ++-
- arch/arm/mach-mxs/mach-mxs.c    |  3 ++-
- drivers/net/phy/Kconfig         | 16 ++++++++++++++++
- 5 files changed, 24 insertions(+), 4 deletions(-)
+Yes, this is the firmware memory. This method is followed in the venus video
+driver
+https://patchwork.kernel.org/patch/11315765/
 
-diff --git a/arch/arm/mach-imx/mach-imx6q.c b/arch/arm/mach-imx/mach-imx6q.c
-index edd26e0ffeec..aabf0d8c23a9 100644
---- a/arch/arm/mach-imx/mach-imx6q.c
-+++ b/arch/arm/mach-imx/mach-imx6q.c
-@@ -162,7 +162,8 @@ static int ar8035_phy_fixup(struct phy_device *dev)
- 
- static void __init imx6q_enet_phy_init(void)
- {
--	if (IS_BUILTIN(CONFIG_PHYLIB)) {
-+	if (IS_BUILTIN(CONFIG_PHYLIB) &&
-+	    IS_BUILTIN(CONFIG_DEPRECATED_PHY_FIXUPS)) {
- 		phy_register_fixup_for_uid(PHY_ID_KSZ9021, MICREL_PHY_ID_MASK,
- 				ksz9021rn_phy_fixup);
- 		phy_register_fixup_for_uid(PHY_ID_KSZ9031, MICREL_PHY_ID_MASK,
-diff --git a/arch/arm/mach-imx/mach-imx6sx.c b/arch/arm/mach-imx/mach-imx6sx.c
-index d5310bf307ff..fdd9bef27625 100644
---- a/arch/arm/mach-imx/mach-imx6sx.c
-+++ b/arch/arm/mach-imx/mach-imx6sx.c
-@@ -35,7 +35,8 @@ static int ar8031_phy_fixup(struct phy_device *dev)
- #define PHY_ID_AR8031   0x004dd074
- static void __init imx6sx_enet_phy_init(void)
- {
--	if (IS_BUILTIN(CONFIG_PHYLIB))
-+	if (IS_BUILTIN(CONFIG_PHYLIB) &&
-+	    IS_BUILTIN(CONFIG_DEPRECATED_PHY_FIXUPS))
- 		phy_register_fixup_for_uid(PHY_ID_AR8031, 0xffffffff,
- 					   ar8031_phy_fixup);
- }
-diff --git a/arch/arm/mach-imx/mach-imx7d.c b/arch/arm/mach-imx/mach-imx7d.c
-index ebb27592a9f7..1d3d67c247a3 100644
---- a/arch/arm/mach-imx/mach-imx7d.c
-+++ b/arch/arm/mach-imx/mach-imx7d.c
-@@ -49,7 +49,8 @@ static int bcm54220_phy_fixup(struct phy_device *dev)
- 
- static void __init imx7d_enet_phy_init(void)
- {
--	if (IS_BUILTIN(CONFIG_PHYLIB)) {
-+	if (IS_BUILTIN(CONFIG_PHYLIB) &&
-+	    IS_BUILTIN(CONFIG_DEPRECATED_PHY_FIXUPS)) {
- 		phy_register_fixup_for_uid(PHY_ID_AR8031, 0xffffffff,
- 					   ar8031_phy_fixup);
- 		phy_register_fixup_for_uid(PHY_ID_BCM54220, 0xffffffff,
-diff --git a/arch/arm/mach-mxs/mach-mxs.c b/arch/arm/mach-mxs/mach-mxs.c
-index c109f47e9cbc..b4b631242080 100644
---- a/arch/arm/mach-mxs/mach-mxs.c
-+++ b/arch/arm/mach-mxs/mach-mxs.c
-@@ -257,7 +257,8 @@ static void __init apx4devkit_init(void)
- {
- 	enable_clk_enet_out();
- 
--	if (IS_BUILTIN(CONFIG_PHYLIB))
-+	if (IS_BUILTIN(CONFIG_PHYLIB) &&
-+	    IS_BUILTIN(CONFIG_DEPRECATED_PHY_FIXUPS))
- 		phy_register_fixup_for_uid(PHY_ID_KSZ8051, MICREL_PHY_ID_MASK,
- 					   apx4devkit_phy_fixup);
- }
-diff --git a/drivers/net/phy/Kconfig b/drivers/net/phy/Kconfig
-index 9dabe03a668c..f54428ddf058 100644
---- a/drivers/net/phy/Kconfig
-+++ b/drivers/net/phy/Kconfig
-@@ -249,6 +249,22 @@ config LED_TRIGGER_PHY
- 		<Speed in megabits>Mbps OR <Speed in gigabits>Gbps OR link
- 		for any speed known to the PHY.
- 
-+config DEPRECATED_PHY_FIXUPS
-+	bool "Enable deprecated PHY fixups"
-+	default y
-+	---help---
-+	  In the early days it was common practice to configure PHYs by adding a
-+	  phy_register_fixup*() in the machine code. This practice turned out to
-+	  be potentially dangerous, because:
-+	  - it affects all PHYs in the system
-+	  - these register changes are usually not preserved during PHY reset
-+	    or suspend/resume cycle.
-+	  - it complicates debugging, since these configuration changes were not
-+	    done by the actual PHY driver.
-+	  This option allows to disable all fixups which are identified as
-+	  potentially harmful and give the developers a chance to implement the
-+	  proper configuration via the device tree (e.g.: phy-mode) and/or the
-+	  related PHY drivers.
- 
- comment "MII PHY device drivers"
- 
--- 
-2.26.0.rc2
+Do you suggest following some other mechanism ?
 
+Thanks,
+Rakesh Pillai.
+
+> 
+> Regards,
+> Bjorn
+> 
+> > The below ath10k series brings-in this support.
+> > https://patchwork.kernel.org/project/linux-
+> wireless/list/?series=261367&stat
+> > e=*
+> >
+> > Thanks,
+> > Rakesh Pillai.
+> >
+> > >
+> > > Regards,
+> > > Bjorn
+> > >
+> > > > +	};
+> > > > +};
+> > > > +
+> > > >  /* PINCTRL - additions to nodes defined in sc7180.dtsi */
+> > > >
+> > > >  &qspi_clk {
+> > > > diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> > > b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> > > > index 998f101..2745128 100644
+> > > > --- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> > > > +++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> > > > @@ -83,6 +83,11 @@
+> > > >  			reg = <0 0x8f600000 0 0x500000>;
+> > > >  			no-map;
+> > > >  		};
+> > > > +
+> > > > +		wlan_fw_mem: memory@94104000 {
+> > > > +			reg = <0 0x94104000 0 0x200000>;
+> > > > +			no-map;
+> > > > +		};
+> > > >  	};
+> > > >
+> > > >  	cpus {
+> > > > @@ -835,6 +840,28 @@
+> > > >  			};
+> > > >  		};
+> > > >
+> > > > +		wifi: wifi@18800000 {
+> > > > +			compatible = "qcom,wcn3990-wifi";
+> > > > +			reg = <0 0x18800000 0 0x800000>;
+> > > > +			reg-names = "membase";
+> > > > +			iommus = <&apps_smmu 0xc0 0x1>;
+> > > > +			interrupts =
+> > > > +				<GIC_SPI 414 IRQ_TYPE_LEVEL_HIGH /*
+CE0
+> > > */ >,
+> > > > +				<GIC_SPI 415 IRQ_TYPE_LEVEL_HIGH /*
+CE1
+> > > */ >,
+> > > > +				<GIC_SPI 416 IRQ_TYPE_LEVEL_HIGH /*
+CE2
+> > > */ >,
+> > > > +				<GIC_SPI 417 IRQ_TYPE_LEVEL_HIGH /*
+CE3
+> > > */ >,
+> > > > +				<GIC_SPI 418 IRQ_TYPE_LEVEL_HIGH /*
+CE4
+> > > */ >,
+> > > > +				<GIC_SPI 419 IRQ_TYPE_LEVEL_HIGH /*
+CE5
+> > > */ >,
+> > > > +				<GIC_SPI 420 IRQ_TYPE_LEVEL_HIGH /*
+CE6
+> > > */ >,
+> > > > +				<GIC_SPI 421 IRQ_TYPE_LEVEL_HIGH /*
+CE7
+> > > */ >,
+> > > > +				<GIC_SPI 422 IRQ_TYPE_LEVEL_HIGH /*
+CE8
+> > > */ >,
+> > > > +				<GIC_SPI 423 IRQ_TYPE_LEVEL_HIGH /*
+CE9
+> > > */ >,
+> > > > +				<GIC_SPI 424 IRQ_TYPE_LEVEL_HIGH /*
+CE10
+> > > */>,
+> > > > +				<GIC_SPI 425 IRQ_TYPE_LEVEL_HIGH /*
+CE11
+> > > */>;
+> > > > +			memory-region = <&wlan_fw_mem>;
+> > > > +			status = "disabled";
+> > > > +		};
+> > > > +
+> > > >  		config_noc: interconnect@1500000 {
+> > > >  			compatible = "qcom,sc7180-config-noc";
+> > > >  			reg = <0 0x01500000 0 0x28000>;
+> > > > --
+> > > > 2.7.4
