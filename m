@@ -2,142 +2,373 @@ Return-Path: <SRS0=I467=5O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	HK_RANDOM_FROM,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB026C43331
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 09:13:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF995C2D0ED
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 09:17:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A96820675
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 09:13:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 827FD206CC
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 09:17:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585473423;
+	bh=W7K6g7L9UJzkqu2VXkgR3JYjp0eLa7DNvi4DTHrxZhg=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=IgxLB7LDYp58Nq2B1x/5Bn5f/pCff1E94CjdcxkU7VEVLtPa97xojRTAl+FIt6pMI
+	 fZAR5Ni3jD0Dr7eett1WBDxHaUllGCbG/4xBdziPb7UBvP24mZeIr/yE4mJ7UwXaBN
+	 wv0VdipvZuep7TiOOwpRM1Nh6TsN8xoQz2daK4Fs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727872AbgC2JN2 (ORCPT
+        id S1727898AbgC2JRB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Mar 2020 05:13:28 -0400
-Received: from mga01.intel.com ([192.55.52.88]:16808 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727772AbgC2JN2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Mar 2020 05:13:28 -0400
-IronPort-SDR: x0C9mPzMu1gC4NAwHL3HwjUN8RnTZk8lvBP1432dVrKD7JbPabqFX09ufP0GuPKnJvFeFjAlZ0
- TI/nv5iWw9Yg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Mar 2020 02:13:27 -0700
-IronPort-SDR: jH37F2LboNIJIKtOVgFW9v/vR4xm6nRh4WvBixPk7Wfi0B4GL+u5XabM83K6yT8DRzP3bTLlie
- OHrdYS8Qk03w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,319,1580803200"; 
-   d="scan'208";a="272059284"
-Received: from xiaoyaol-mobl.ccr.corp.intel.com (HELO [10.255.31.41]) ([10.255.31.41])
-  by fmsmga004.fm.intel.com with ESMTP; 29 Mar 2020 02:13:23 -0700
-Subject: Re: [PATCH v7 2/2] x86/split_lock: Avoid runtime reads of the
- TEST_CTRL MSR
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        hpa@zytor.com, x86@kernel.org, linux-kernel@vger.kernel.org,
-        Paolo Bonzini <pbonzini@redhat.com>, luto@kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Tony Luck <tony.luck@intel.com>
-References: <20200325030924.132881-1-xiaoyao.li@intel.com>
- <20200325030924.132881-3-xiaoyao.li@intel.com>
- <20200328163412.GJ8104@linux.intel.com>
-From:   Xiaoyao Li <xiaoyao.li@intel.com>
-Message-ID: <e641c746-0dde-cfb8-ea23-45c011174b08@intel.com>
-Date:   Sun, 29 Mar 2020 17:13:23 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Sun, 29 Mar 2020 05:17:01 -0400
+Received: from mail-ot1-f42.google.com ([209.85.210.42]:39338 "EHLO
+        mail-ot1-f42.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727882AbgC2JRB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Mar 2020 05:17:01 -0400
+Received: by mail-ot1-f42.google.com with SMTP id x11so14733722otp.6;
+        Sun, 29 Mar 2020 02:17:00 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=xykCpromuQR95NLU7MsG8/68KlGhBUSrihEYbjYys3U=;
+        b=J7GlxKU8UHuhTHaNCk1VJETO0wKdIpx9hfg7TgLpZoPwcMOMBAySLf4C6c6JYQj24X
+         kuRIIl245cC1d66zghPAJVndkHqJr6movngQga955kmA7JnmSYWqCBEP8qNkWWNfWAnw
+         HuTgdK6UHhSOn4MW3BvGcFzV+mo/uKSxO2AuWlF2Ddb3Dvmk4zBpjT4Fih6DCj3tpq22
+         RZgdy5zvIExViO9HrERTqdiWvNSRHc2P+7ZBBcOED+Q7d1B0CEQ7lLpI2MJBzzhlqwEX
+         IQDNm8KmRaCLfZSztITb5+Mppw5jvU6zn2+9e+aq1/uwlHOB5UmkOc9caQXJOUDeAYEs
+         f+tg==
+X-Gm-Message-State: ANhLgQ3bzwkB/S7AmLjVHM4l3LZvlQwGU5c6n/6fGm7Xbk69ze/sOcr7
+        tsjnrmZGDgAJGDIFPdUr5wry5zjTOAqHPO9dDudDjRlu
+X-Google-Smtp-Source: ADFU+vt9jzZatB0LI4JqEaCdSDfChawOZgGlZabSZph+/MZPMSSZYFuXWoqFdD1isg3VrB0LcPl73LEIOY6QJO+7DlU=
+X-Received: by 2002:a9d:1d07:: with SMTP id m7mr4955234otm.167.1585473419648;
+ Sun, 29 Mar 2020 02:16:59 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200328163412.GJ8104@linux.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <10243663.e30Z2V8kAt@kreacher> <Pine.LNX.4.44L0.2003281432130.9749-100000@netrider.rowland.org>
+In-Reply-To: <Pine.LNX.4.44L0.2003281432130.9749-100000@netrider.rowland.org>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Sun, 29 Mar 2020 11:16:48 +0200
+Message-ID: <CAJZ5v0igUZnqFLcOhruDSNjv0HqCsy64tmYWyTX98xEc9cH14g@mail.gmail.com>
+Subject: Re: lockdep warning in urb.c:363 usb_submit_urb
+To:     Alan Stern <stern@rowland.harvard.edu>
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Qais Yousef <qais.yousef@arm.com>,
+        USB list <linux-usb@vger.kernel.org>,
+        Linux-pm mailing list <linux-pm@vger.kernel.org>,
+        Kernel development list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/29/2020 12:34 AM, Sean Christopherson wrote:
-> On Wed, Mar 25, 2020 at 11:09:24AM +0800, Xiaoyao Li wrote:
->> In a context switch from a task that is detecting split locks
->> to one that is not (or vice versa) we need to update the TEST_CTRL
->> MSR. Currently this is done with the common sequence:
->> 	read the MSR
->> 	flip the bit
->> 	write the MSR
->> in order to avoid changing the value of any reserved bits in the MSR.
->>
->> Cache unused and reserved bits of TEST_CTRL MSR with SPLIT_LOCK_DETECT
->> bit cleared during initialization, so we can avoid an expensive RDMSR
->> instruction during context switch.
->>
->> Suggested-by: Sean Christopherson <sean.j.christopherson@intel.com>
->> Originally-by: Tony Luck <tony.luck@intel.com>
->> Signed-off-by: Xiaoyao Li <xiaoyao.li@intel.com>
->> ---
->>   arch/x86/kernel/cpu/intel.c | 9 ++++-----
->>   1 file changed, 4 insertions(+), 5 deletions(-)
->>
->> diff --git a/arch/x86/kernel/cpu/intel.c b/arch/x86/kernel/cpu/intel.c
->> index deb5c42c2089..1f414578899c 100644
->> --- a/arch/x86/kernel/cpu/intel.c
->> +++ b/arch/x86/kernel/cpu/intel.c
->> @@ -45,6 +45,7 @@ enum split_lock_detect_state {
->>    * split lock detect, unless there is a command line override.
->>    */
->>   static enum split_lock_detect_state sld_state __ro_after_init = sld_off;
->> +static u64 msr_test_ctrl_cache __ro_after_init;
-> 
-> What about using "msr_test_ctrl_base_value", or something along those lines?
-> "cache" doesn't make it clear that SPLIT_LOCK_DETECT is guaranteed to be
-> zero in this variable.
-> 
->>   
->>   /*
->>    * Processors which have self-snooping capability can handle conflicting
->> @@ -1037,6 +1038,8 @@ static void __init split_lock_setup(void)
->>   		break;
->>   	}
->>   
->> +	rdmsrl(MSR_TEST_CTRL, msr_test_ctrl_cache);
-> 
-> If we're going to bother skipping the RDMSR if state=sld_off on the command
-> line then it also makes sense to skip it if enabling fails, i.e. move this
-> below split_lock_verify_msr(true).
+On Sat, Mar 28, 2020 at 8:58 PM Alan Stern <stern@rowland.harvard.edu> wrote:
+>
+> On Sat, 28 Mar 2020, Rafael J. Wysocki wrote:
+>
+> > On Friday, March 27, 2020 9:45:09 PM CET Alan Stern wrote:
+>
+> > > Raphael, I've been going over the PM core code, trying to figure out
+> > > what it's really doing.  It's kind of a mess.
+> >
+> > Well, sorry about that.
+> >
+> > > A large part of the problem is related to an inconsistency between the
+> > > documentation and the code.  include/linux/pm.h says that
+> > > DPM_FLAG_SMART_SUSPEND tells bus types and PM domains about what the
+> > > driver wants.  This strongly implies that the PM core will ignore
+> > > SMART_SUSPEND.  But in fact the core does check that flag and takes its
+> > > own actions if the device has no subsystem-level callbacks!
+> >
+> > Right, which is because in those cases there is no "middle layer" between
+> > the driver and the core and if you want the driver to work both with
+> > something like genpd or the ACPI PM domain and without anything like that,
+> > the core needs to take those actions for consistency.
+>
+> Sure, the core is acting as a proxy for the missing subsystem
+> callbacks.  Still, it should be documented properly.
+>
+> Also, couldn't we simplify the behavior?  Right now the core checks
+> that there are no subsystem-level callbacks for any of _early, _late,
+> and _noirq variants before skipping a callback.  Couldn't we forget
+> about all that checking and simply skip the device-level callbacks?
+> (Yes, I realize this could lead to inconsistent behavior if the
+> subsystem has some callbacks defined but not others -- but subsystems
+> should never do that, at least, not if it would lead to trouble.)
 
-OK.
+In quite a few cases the middle layer has nothing specific to do in a
+given phase of suspend/resume, but the driver may.
 
-Then, the sld bit is 1 for msr_test_ctrl_base_value. Do you think 
-"msr_test_ctrl_base_value" still make sense?
+Subsystems haven't been required to provide callbacks for all phases
+so far, so this change would require some modifications in there.
 
-or we keep the "else" branch in sld_update_msr() to not rely on the sld 
-bit in the base_value?
+I actually prefer the core to do more, even if that means more
+complexity in it, to avoid possible subtle differences in behavior
+between subsystems.
 
->> +
->>   	if (!split_lock_verify_msr(true)) {
->>   		pr_info("MSR access failed: Disabled\n");
->>   		return;
->> @@ -1053,14 +1056,10 @@ static void __init split_lock_setup(void)
->>    */
->>   static void sld_update_msr(bool on)
->>   {
->> -	u64 test_ctrl_val;
->> -
->> -	rdmsrl(MSR_TEST_CTRL, test_ctrl_val);
->> +	u64 test_ctrl_val = msr_test_ctrl_cache;
->>   
->>   	if (on)
->>   		test_ctrl_val |= MSR_TEST_CTRL_SPLIT_LOCK_DETECT;
->> -	else
->> -		test_ctrl_val &= ~MSR_TEST_CTRL_SPLIT_LOCK_DETECT;
->>   
->>   	wrmsrl(MSR_TEST_CTRL, test_ctrl_val);
->>   }
->> -- 
->> 2.20.1
->>
+> Another issue is that the documentation exists in two separate places:
+> include/linux/pm.h and Documentation/driver-api/devices.rst (plus a
+> brief mention in Documentation/power/runtime_pm.rst).  This leads to
+> incompleteness and inconsistencies.  Ideally there would be a complete
+> explanation in one place (probably the devices.rst file) and the others
+> would refer to it.
 
+OK
+
+> > > Furthermore, the PM core's actions don't seem to make sense.  If the
+> > > flag is set and the device is runtime-suspended when the system sleep
+> > > begins, the core will skip issuing the suspend_late and suspend_noirq
+> > > callbacks to the driver.  But it doesn't skip issuing the suspend
+> > > callback!  I can't figure that out.
+> >
+> > That's because if the core gets to executing ->suspend_late, PM-runtime has
+> > been disabled for the device and if the device is runtime-suspended at that
+> > point, so (at least if SMART_SUSPEND is set for the device) there is no reason
+> > to do anything more to it.
+>
+> But if SMART_SUSPEND is set and the device is runtime-suspended, why
+> issue the ->suspend callback?
+
+The driver itself or the middle-layer may want to resume the device.
+
+Arguably, it may do that in ->prepare() too, but see below.
+
+> Why not just do pm_runtime_disable()
+> then (to prevent the device from resuming) and skip the callback?
+
+Because another driver may want to runtime-resume that device in order
+to use it for something before ->suspend_late().  Of course, you may
+argue that this means a missing device link or similar, so it is not
+clear-cut.
+
+The general rule is that "synchronous" PM-runtime can be expected to
+work before ->suspend_late(), so ->suspend() callbacks should be able
+to use it safely in all cases in principle.
+
+That expectation goes against direct_complete in some cases, so
+drivers need to set NEVER_SKIP (or whatever it will be called in the
+future) to avoid that problem.
+
+> > > Furthermore, the decisions about
+> > > whether to skip the resume_noirq, resume_early, and resume callbacks
+> > > are based on different criteria from the decisions on the suspend side.
+> >
+> > Right, because there are drivers that don't want devices to stay in suspend
+> > after system resume even though they have been left in suspend by it.
+>
+> This suggests that sometimes we may want to issue non-matching
+> callbacks.  For example, ->resume_noirq, ->resume_early, and ->resume
+> but not ->suspend, ->suspend_late, or ->suspend_noirq.  Is that what
+> you are saying?
+
+Yes.
+
+As per devices.rst:
+
+"the driver must be prepared to
+cope with the invocation of its system-wide resume callbacks back-to-back with
+its ``->runtime_suspend`` one (without the intervening ``->runtime_resume`` and
+so on) and the final state of the device must reflect the "active" runtime PM
+status in that case."
+
+> > Arguably, they could be left in suspend and then resumed after the completion
+> > of system suspend, but that would add quite a bit of latency if the device
+> > needs to be accessed right after the system suspend is complete.
+> >
+> > > That's not all: The SMART_SUSPEND decisions completely ignore the value
+> > > of DPM_FLAG_NEVER_SKIP!  NEVER_SKIP affects only the direct_completion
+> > > pathway.
+> >
+> > As documented AFAICS.
+>
+> But highly confusing.  Maybe we can change the name to, say,
+> DPM_FLAG_NO_DIRECT_COMPLETE.
+
+Sure, if that helps. :-)
+
+> > > SMART_SUSPEND seems to have two different meanings.  (1) If the device
+> > > is already in runtime suspend when a system sleep starts, skip the
+> > > suspend_late and suspend_noirq callbacks.  (2) Under certain (similar)
+> > > circumstances, skip the resume callbacks.  The documentation only
+> > > mentions (1) but the code also handles (2).
+> >
+> > That's because (2) is the THAW case and I was distracted before I got
+> > to documenting it properly.  Sorry.
+> >
+> > The problem is that if you leave the device in runtime suspend, calling
+> > ->freeze_late() or ->freeze_noirq() on it is not useful and if you have
+> > skipped those, running the corresponding "thaw" callbacks is not useful
+> > either (what would they do, specifically?).
+> >
+> > There is a whole problem of whether or not devices should be left in
+> > runtime suspend during hibernation and I have not had a chance to get
+> > to the bottom of that yet.
+>
+> Not only that.  The distinction between SMART_SUSPEND and
+> direct_complete is rather subtle, and it doesn't seem to be carefully
+> explained anywhere.  In fact, I'm not sure I understand it myself.  :-)
+> For example, the direct_complete mechanism is very careful about not
+> leaving a device in runtime suspend if a descendant (or other dependent
+> device) will remain active.  Does SMART_SUSPEND behave similarly?  If
+> so, it isn't documented.
+
+The difference is that SMART_SUSPEND allows the ->suspend callback to
+be invoked which may decide to resume the device (or reconfigure it
+for system wakeup if that doesn't require resuming it).  IOW, this
+means "I can cope with a runtime-suspended device going forward".
+[But if the device is still runtime-suspended during ->suspend_late(),
+its configuration is regarded as "final".]
+
+In turn, direct_complete means something like "if this device is
+runtime-suspended, leave it as is and don't touch it during the whole
+suspend-resume cycle".
+
+> Besides, it seems like a mistake to try controlling (1) and (2)
+> together (i.e., with one flag).  Can we do a better job of
+> separating the functions of SMART_SUSPEND and LEAVE_SUSPENDED?
+>
+> > > Other things in there also seem strange.  device_prepare() does a
+> > > WARN_ON if either SMART_SUSPEND or LEAVE_SUSPENDED is set and the
+> > > device is not runtime-PM-enabled.  That's understandable, but it's also
+> > > racy.
+> >
+> > I guess you mean the check in device_prepare().
+> >
+> > > A system sleep can begin at any time; how can a driver know when
+> > > it is safe to disable a device's runtime PM briefly?
+> >
+> > Well, fair enough, but then I'm not sure if there is a good place for this
+> > check at all, because drivers can briefly disable PM-runtime at any time in
+> > theory.
+>
+> There probably isn't a good place for it.  We could just get rid of the
+> WARN.  I've never heard of it triggering.
+
+OK
+
+> > > When device_prepare() calculates the power.direct_complete flag, it
+> > > checks to see whether the device is currently in runtime suspend in
+> > > some cases but not in others, as in the code added by your commit
+> > > c62ec4610c40 ("PM / core:  Fix direct_complete handling for devices
+> > > with no callbacks").  Since the runtime-PM state is going to checked in
+> > > __device_suspend() anyway, we shouldn't need to check it here at all.
+> >
+> > I guess the point is that in theory the device can be runtime-suspended
+> > between device_prepare() and _device_suspend(), is by checking the status
+> > in the former, we lose the opportunity to leave it in suspend if that
+> > happens.
+> >
+> > OK, fair enough.
+> >
+> > > At a couple of points in the code, THAW and RESTORE events are each
+> > > treatedly specially, with no explanation.
+> >
+> > Right, which is related to the kind of work in progress situation regarding
+> > the flags and hibernation mentioned above.  Again, sorry about that.
+>
+> I haven't thought about those issues as much as you have.  Still, it
+> seems obvious that the FREEZE/THAW phases should be very happy to leave
+> devices in runtime suspend throughout (without even worrying about
+> wakeup settings), and the RESTORE phase should always bring everything
+> back out of runtime suspend.
+
+These were exactly my original thoughts, but then when I started to
+consider possible interactions the restore kernel (which also carries
+out the "freeze" transition before jumping into the image kernel), it
+became less clear.
+
+The concerns is basically whether or not attempting to power on
+devices that are already powered on can always be guaranteed to work.
+
+> What to do during the POWEROFF phase isn't so clear, because it depends
+> on how the platform handles the poweroff transition.
+
+POWEROFF is exactly analogous to SUSPEND AFAICS.
+
+> > > The power.may_skip_resume flag is used in only one place, when
+> > > LEAVE_SUSPENDED is set and there are subsystem-level callbacks.  In
+> > > particular, it is _not_ used by dev_pm_may_skip_resume().  That seems
+> > > highly suspicious at best.
+> >
+> > That's because it's for the middle-layer (subsystem-level) code to let the
+> > core know that skipping the resume would be OK.
+> >
+> > The core doesn't need that flag when it decides by itself.
+>
+> This may be another situation where changing a name would make things
+> clearer.  One doesn't immediately recognize that
+> dev_pm_may_skip_resume() applies only in cases where there is no
+> subsystem-level callback.
+
+Fair enough.
+
+> > > I think it would be worthwhile to expend some serious effort
+> > > straightening all this stuff out.  Perhaps we could start with a more
+> > > explicit description of what is supposed to happen at each step.
+> > > (Things to be careful about include phrases like "leave suspended",
+> > > which is not the same as "don't call the resume callbacks", even though
+> > > the two are easily conflated.)
+> > >
+> > > What do you think?
+> >
+> > I am certainly not going to reject any help. :-)
+> >
+> > Also, I'm not against clarifying anything that is not clear enough.
+>
+> Okay, let's start with direct_complete.  The direct_complete mechanism
+> is applied to the SUSPEND and RESUME phases under the following
+> conditions:
+>
+>         DPM_FLAG_NEVER_SKIP (or better, DPM_FLAG_NO_DIRECT_COMPLETE)
+>         is clear;  [Incidentally, since a driver can set this flag
+>         whenever its ->prepare routine returns 0, why do we need
+>         DPM_FLAG_SMART_PREPARE?]
+
+Because the former allows the driver to avoid providing a ->prepare
+callback always returning 1.
+
+>         Either the device has no system-PM callbacks at all or else the
+>         ->prepare callback returns a positive value;
+
+Why so?
+
+>         All of the device's descendants and dependents also want to use
+>         direct_complete;
+
+Yes.
+
+>         Neither the device nor any of its descendants/dependents is
+>         enabled for wakeup;
+
+Yes.
+
+>         The device is runtime suspended just before the ->suspend
+>         callback would normally be issued.
+
+Yes.
+
+> When the mechanism applies, none of the suspend or resume callbacks (in
+> any of their normal, _early, _late, or _noirq variants) are issued,
+> only ->complete.  Consequently the device remains in runtime suspend
+> throughout the system sleep.
+>
+> Currently, direct_complete is never applied during any of the system
+> hibernation phases (FREEZE, THAW, POWEROFF, RESTORE).  This may change
+> in the future.
+>
+> Is this description correct and complete?
+
+It is mostly. :-)
+
+> Can you give a similarly
+> succinct outline for how SMART_SUSPEND and LEAVE_SUSPENDED should work?
+> And also describe how they differ from direct_complete and how they
+> interact with it?  (For example, how does setting both flags differ
+> from returning a positive value from ->prepare?)
+
+I will, but I need some time to do that.  Stay tuned.
+
+Cheers!
