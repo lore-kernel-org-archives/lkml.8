@@ -2,75 +2,234 @@ Return-Path: <SRS0=I467=5O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=FAKE_REPLY_C,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C858DC2D0E5
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 19:23:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53FA6C2D0E5
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 19:36:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A9FC120675
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 19:23:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 231C420748
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 19:36:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="s2cFM7cJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728602AbgC2TXB (ORCPT
+        id S1728584AbgC2Tgu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Mar 2020 15:23:01 -0400
-Received: from mail.computer-surgery.co.uk ([82.69.253.61]:60075 "EHLO
-        nicole.computer-surgery.co.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727370AbgC2TXB (ORCPT
+        Sun, 29 Mar 2020 15:36:50 -0400
+Received: from mo4-p01-ob.smtp.rzone.de ([85.215.255.51]:34982 "EHLO
+        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727330AbgC2Tgu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Mar 2020 15:23:01 -0400
-X-Greylist: delayed 2565 seconds by postgrey-1.27 at vger.kernel.org; Sun, 29 Mar 2020 15:23:00 EDT
-Received: from [10.94.89.11] (helo=kilburn)
-        by nicole.computer-surgery.co.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.84_2)
-        (envelope-from <roger@gammascience.co.uk>)
-        id 1jIcqy-0006gg-30; Sun, 29 Mar 2020 19:40:12 +0100
-Received: from roger by kilburn with local (Exim 4.92)
-        (envelope-from <roger@kilburn.gammascience.co.uk>)
-        id 1jIcqs-00033T-8L; Sun, 29 Mar 2020 18:40:06 +0000
-Date:   Sun, 29 Mar 2020 18:40:06 +0000
-From:   Roger Gammans <rgammans@gammascience.co.uk>
-To:     Sandeep Singh <Sandeep.Singh@amd.com>
-Cc:     linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-input@vger.kernel.org
-Subject: Re: [PATCH v4 4/4] SFH: Create HID report to Enable support of AMD
- sensor fusion Hub (SFH)
-Message-ID: <20200329184006.GA8199@kilburn.gammascience.co.uk>
+        Sun, 29 Mar 2020 15:36:50 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1585510605;
+        s=strato-dkim-0002; d=goldelico.com;
+        h=Message-Id:Date:Subject:Cc:To:From:X-RZG-CLASS-ID:X-RZG-AUTH:From:
+        Subject:Sender;
+        bh=LGEWryyfK/Q4YmTBmmWe/YtpTjCpoE18SQ1zSiub5+0=;
+        b=s2cFM7cJN9nbvSDJSp/eLgprnBwpBxsxEjT7gCAEW8qExxHQaoy0uho/CSyfUdEOFH
+        B686KYlnjKdv9gVgE4PcFXnhZjYDvUl/ZV23FClJaNGAc92EuCVKQwcPX4MEgw76AcPo
+        JdN2ldRGsBKnP1llv+Cyqtssabi6LBaKmo29aELnRclTIkstnk2yU6MH9G/BwhEaULcL
+        CrIloBljC/twBts0MD1zLz4yhmXnfKBiCcpMpu+NPfIo9rOZ3goYDSxYdrL7qg+itLXK
+        B7r2F4/gTZ3c34duRily4VUd/GixwfxlTGgrZ4uWrTJ9/UJjxsZiaM75m3g9UN9Vcy7t
+        C3CA==
+X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMhflhwDubTJ9o12DNOsPj0pDz2rsNxxv"
+X-RZG-CLASS-ID: mo00
+Received: from iMac.fritz.box
+        by smtp.strato.de (RZmta 46.2.1 DYNA|AUTH)
+        with ESMTPSA id m02241w2TJaTBbV
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
+        (Client did not present a certificate);
+        Sun, 29 Mar 2020 21:36:29 +0200 (CEST)
+From:   "H. Nikolaus Schaller" <hns@goldelico.com>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Sebastian Reichel <sre@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        letux-kernel@openphoenux.org, kernel@pyra-handheld.com,
+        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
+        "H. Nikolaus Schaller" <hns@goldelico.com>
+Subject: [RFC] dt-bindings.yaml: power: supply: add bindings for TI bq24296/7
+Date:   Sun, 29 Mar 2020 21:36:29 +0200
+Message-Id: <7d7602574b5eda80bd1d40f79854ba3670201c6e.1585510588.git.hns@goldelico.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=UTF8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 27, 2020 at 05:10:57AM +0000, Sandeep Singh wrote:
+This is an attempt to define a schema for the bq24296/7
+charger and power supply controllers with battery monitoring
+and OTG booster.
 
-> From: Sandeep Singh <sandeep.singh@amd.com>
-> 
-> +#include "amd_sfh_hid_report_descriptor.h"
-> +#include "amd_mp2_pcie.h"
+We model it as a dual regulator because it can generate
+a VSYS (with controllable voltage) and optionally an
+OTG voltage either from the battery or from external power
+supply.
 
-I had to change the last line to 
+This scheme works well with e.g. the dwc3 setup of the
+OMAP5 to turn on OTG regulator on demand.
 
-  #include "../amd_mp2_pcie.h"
+The DT should provide a reference to a monitored battery
+description so that initial and operation parameters
+of the battery can be specified to control the charger
+parameters.
 
-to make it compile out of tree. After that I got a clean compile.
+To support different initial charging current for USB
+and AC charger mode, an optional gpio should be provided
+that the driver can use to set defaults.
 
-Also I don't seem to be getting any data through
-to monitor-sensor in user space when I do install it, but I am
-gettting logs of log messages similar to this:
+A driver is available and working for several years,
+but the bindings should be clarified first.
 
- pcie_mp2_amd 0000:04:00.7: AMD-Vi: Event logged [IO_PAGE_FAULT domain=0x000c address=0x5267f000 flags=0x0020]
- pcie_mp2_amd 0000:04:00.7: AMD-Vi: Event logged [IO_PAGE_FAULT domain=0x000c address=0x5267f000 flags=0x0020]
+The example shows what we are successfully using for
+the working system.
 
-This is compiled against the debian 5.4.0 kernel, on a
-     HP ENVY x360 Convertible 15-ds0xxx, SKU 6TD07EA#ABU
+Since the omap5 Pyra Handheld is not yet in the DTS tree,
+there would be no explicit user of this driver. So
+the plan is to submit a full patch set for the Pyra
+later.
 
-I can run other tests or try other kernels if you think it might help,
-let me know what you need.
+Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
+---
+ .../bindings/power/supply/bq2429x.yaml        | 122 ++++++++++++++++++
+ 1 file changed, 122 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/power/supply/bq2429x.yaml
 
+diff --git a/Documentation/devicetree/bindings/power/supply/bq2429x.yaml b/Documentation/devicetree/bindings/power/supply/bq2429x.yaml
+new file mode 100644
+index 000000000000..1b31ece4026e
+--- /dev/null
++++ b/Documentation/devicetree/bindings/power/supply/bq2429x.yaml
+@@ -0,0 +1,122 @@
++# SPDX-License-Identifier: GPL-2.0
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/power/supply/bq2429x.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: TI bq24296/24297 and MPS MP2624 Li-Ion Charger with OTG booster
++
++maintainers:
++  - H. Nikolaus Schaller <hns@goldelico.com>
++
++description: |+
++  This binding will support the bq24296 and bq24297.
++  There are other ICs in the same family but those have
++  not been addressed.
++  The MP2624 is very similar to the bq24297 but not exactly
++  identical.
++  This chip is used by the OMAP5 based Pyra-Handheld.
++
++properties:
++  compatible:
++    oneOf:
++      - const: mps,mp2624
++      - const: ti,bq24296
++      - const: ti,bq24297
++
++  reg:
++    const: 0x6b
++
++  interrupts:
++    minItems: 1
++
++  monitored-battery:
++    - description: phandle to the battery node
++    - allOf:
++      - $ref: /schemas/types.yaml#/definitions/phandle
++# QUESTION : how can we correctly describe that we support only the following phandle properties and ignore the others?
++    - enum:
++      - voltage-max-design-microvolt:
++        - default: 4200000
++      - voltage-min-design-microvolt:
++        - default: 3200000
++      - constant-charge-current-max-microamp:
++        - default: as defined by boot loader
++      - precharge-current-microamp:
++        - default: 128000
++      - charge-term-current-microamp:
++        - default: 128000
++
++  regulators:
++    minItems: 2
++    maxItems: 2
++    items:
++# QUESTION: can we specify that these are to be regulator nodes?
++      - description: |
++          two regulator child nodes for
++          [0] vsys (battery or usb input -> system output)
++          [1] otg (battery input -> usb output).
++
++  dc-det-gpios:
++    items:
++# QUESTION: how do we specify that it should be a gpio?
++      - description: gpio for detecting two different DC sources
++      - default: use usb-input-current-microamp only
++
++  ti,usb-input-current-microamp:
++    items:
++      - description: initial current for USB source (if dc-det is 0)
++      - default: value as defined by boot loader
++
++  ti,adp-input-current-microamp:
++    items:
++      - description: initial current for other source (if dc-det is 1)
++      - default: 2048000µA
++
++required:
++  - compatible
++  - reg
++  - interrupts
++  - regulators
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/interrupt-controller/irq.h>
++
++    bat: battery {
++      compatible = "simple-battery", "pyra-battery";
++      voltage-min-design-microvolt = <3200000>;
++      voltage-max-design-microvolt = <4200000>;
++      energy-full-design-microwatt-hours = <22200000>;
++      charge-full-design-microamp-hours = <6000000>;
++      charge-term-current-microamp = <128000>;
++      constant-charge-current-max-microamp = <1000000>;
++    };
++
++    bq24297@6b {
++      compatible = "ti,bq24297";
++      reg = <0x6b>;
++      monitored-battery = <&bat>;
++      interrupt-parent = <&gpio99>;
++      interrupts = <(1*8+3) IRQ_TYPE_EDGE_FALLING>;   /* P13 */
++      regulators {
++        vsys_reg: vsys_regulator {
++          regulator-compatible = "bq2429x-vsys";
++          regulator-name = "vsys";
++          regulator-min-microvolt = <3500000>;
++          regulator-max-microvolt = <4200000>;
++          regulator-always-on;
++          regulator-boot-on;
++        };
++        otg_reg: otg_regulator {
++          regulator-compatible = "bq2429x-otg";
++          regulator-name = "otg";
++          regulator-min-microvolt = <4900000>;
++          regulator-max-microvolt = <5100000>;
++        };
++      };
++    };
++
++...
 -- 
-Roger Gammans
+2.25.1
+
