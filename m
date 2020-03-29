@@ -2,167 +2,109 @@ Return-Path: <SRS0=I467=5O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13DC4C43331
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 18:16:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AFD9C43331
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 18:16:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D01102073E
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 18:16:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585505801;
-	bh=pSzpTRlriCgM4k/h8B3zFSb4NLIKkBZ4eow4C6fr6Wk=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=RruMmuZ9H30ztBAX1ScprI3XolvPpbM3SAGo/f1BEfC4mQn7AXsrhMHqPXtpSJSS1
-	 zhoGSSKOiOLMp99dYzv5EeS6a8qgGXd74zonuGxAHHYT5z98Yjx2sO8cOnCUQj5hSx
-	 hSwGgc2pDyRPVqcXoFLVkYbfINNDfF4RDhioy8mQ=
+	by mail.kernel.org (Postfix) with ESMTP id 5A72320732
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 18:16:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="AwaSoiQm";
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="scU+Uulm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728483AbgC2SQk (ORCPT
+        id S1728520AbgC2SQv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Mar 2020 14:16:40 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:41710 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727506AbgC2SQk (ORCPT
+        Sun, 29 Mar 2020 14:16:51 -0400
+Received: from bedivere.hansenpartnership.com ([66.63.167.143]:41566 "EHLO
+        bedivere.hansenpartnership.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727506AbgC2SQv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Mar 2020 14:16:40 -0400
-Received: by mail-lf1-f65.google.com with SMTP id z23so12151619lfh.8
-        for <linux-kernel@vger.kernel.org>; Sun, 29 Mar 2020 11:16:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=+p2OwdEH3KOQt7UScUIEx2C+Hv3WCMmiopajHPvFEzc=;
-        b=TEnX/1oGd0WrxjO90s1W75xZ4j/3mxfYUZZqQ1cVXy0s5ncLrAPaNiD1TKrNAUIb7b
-         1nj9qPlZrlGMa3Eern3Gq9aE89JzCVM/fFIYH9oxprYJTP2bPfnPWAnhKrwl1dYWg+ab
-         t63T2jdrZaxiUjhSnoGBD7DiKOpaU6X7/VSkc=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=+p2OwdEH3KOQt7UScUIEx2C+Hv3WCMmiopajHPvFEzc=;
-        b=WBWVbipdsdmjmH/as2wkdTaHz3oe2APZMvwZ6D2ucfsyiKgT0xzx16aQVGI9p7Lvwc
-         f1izWw3UfqDg2yDwj0rbJ36MZjO4ZepAPTNChPuwqA/Ez4mw6udbLuMFtG7wciqwjPmc
-         xSXapiKfV2YOi+DzpnoP29l+QJy6X8570+T3xgghPts+2tJwqxi8ufVqBdDfhXhkCH+G
-         WUsqtVTf4VUFi3j45PfRft2O1GBjhmwEpyi72JX9z4xt/NHdJhJP8ncvo8xd42GdyD9s
-         DkHKoYq49B41l/7XhQ83j9HiTkMM5lGMS8+lbvhMOu5rG1mYj9UgtzbUcWlplQuNuaRY
-         xivg==
-X-Gm-Message-State: AGi0PuarIVfOIhbinqifLJRdZ+h3zK8ovHACKhzHGdz0fsuh6bO8NY/U
-        j5Gc4bN0JDgM7DyTT79yW8A7qv5I5J0=
-X-Google-Smtp-Source: APiQypLX5Pq4x4WZRupDYbV05TKmFgG6O2cgFx0NsXhIpl8CIB0e5fGe9/7MmMTkFdXP5jfRg1gVXQ==
-X-Received: by 2002:a19:4c44:: with SMTP id z65mr5953095lfa.203.1585505796419;
-        Sun, 29 Mar 2020 11:16:36 -0700 (PDT)
-Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com. [209.85.167.48])
-        by smtp.gmail.com with ESMTPSA id v12sm5870697ljh.6.2020.03.29.11.16.35
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 29 Mar 2020 11:16:35 -0700 (PDT)
-Received: by mail-lf1-f48.google.com with SMTP id n20so12108694lfl.10
-        for <linux-kernel@vger.kernel.org>; Sun, 29 Mar 2020 11:16:35 -0700 (PDT)
-X-Received: by 2002:a19:7f96:: with SMTP id a144mr5872846lfd.31.1585505795085;
- Sun, 29 Mar 2020 11:16:35 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200323183620.GD23230@ZenIV.linux.org.uk> <20200323183819.250124-1-viro@ZenIV.linux.org.uk>
- <20200328104857.GA93574@gmail.com> <20200328115936.GA23230@ZenIV.linux.org.uk>
- <20200329092602.GB93574@gmail.com> <CALCETrX=nXN14fqu-yEMGwwN-vdSz=-0C3gcOMucmxrCUpevdA@mail.gmail.com>
- <489c9af889954649b3453e350bab6464@AcuMS.aculab.com> <CAHk-=whDAxb+83gYCv4=-armoqXQXgzshaVCCe9dNXZb9G_CxQ@mail.gmail.com>
- <9352bc55302d4589aaf2461c7b85fb6b@AcuMS.aculab.com>
-In-Reply-To: <9352bc55302d4589aaf2461c7b85fb6b@AcuMS.aculab.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Sun, 29 Mar 2020 11:16:19 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wjEf+0sBkPFKWpYZK_ygS9=ig3KTZkDe5jkDj+v8i7B+w@mail.gmail.com>
-Message-ID: <CAHk-=wjEf+0sBkPFKWpYZK_ygS9=ig3KTZkDe5jkDj+v8i7B+w@mail.gmail.com>
-Subject: Re: [RFC][PATCH 01/22] x86 user stack frame reads: switch to explicit __get_user()
-To:     David Laight <David.Laight@aculab.com>
-Cc:     Andy Lutomirski <luto@amacapital.net>,
-        Ingo Molnar <mingo@kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Thomas Gleixner <tglx@linutronix.de>, X86 ML <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Borislav Petkov <bp@alien8.de>
+        Sun, 29 Mar 2020 14:16:51 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by bedivere.hansenpartnership.com (Postfix) with ESMTP id 1A29F8EE3FB;
+        Sun, 29 Mar 2020 11:16:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
+        s=20151216; t=1585505810;
+        bh=rBvSkEZqenHlElaAoaY3uIGBSF/hz4P4ALj5BPOQHd8=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=AwaSoiQmg6hmeQbTt1xr9B09pgLQ+Iw5OlB8ltxyEVnlGLh4SbRra2jPM9eAS1c6S
+         lfjJiFM0YxHdA2lBgT5uYEEyqRZWKIjYYyLFwYaLLc4bzYJYL9HJVgSv+NLuamKgUJ
+         dxWeLxccmARVeoKF+pAsxaPsYfGYzRPTQS4U35EA=
+Received: from bedivere.hansenpartnership.com ([127.0.0.1])
+        by localhost (bedivere.hansenpartnership.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id 7D53_2EYtwap; Sun, 29 Mar 2020 11:16:49 -0700 (PDT)
+Received: from [153.66.254.194] (unknown [50.35.76.230])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by bedivere.hansenpartnership.com (Postfix) with ESMTPSA id 148728EE109;
+        Sun, 29 Mar 2020 11:16:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
+        s=20151216; t=1585505809;
+        bh=rBvSkEZqenHlElaAoaY3uIGBSF/hz4P4ALj5BPOQHd8=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=scU+UulmbouSY9Sirt+FkSSwoV2JzDPqQb5aY8N7+68p+LrjSRWQBBN9KuxCOebLV
+         +6mt2oJZ14HHJRPk5MJFc0M9sByCZGG5CpOYWRuhMzuQ3xO0YKMOTudmKzZKFQG25Y
+         JENhpDxxEfju16KggGq6CkHEh1lNAM325v+r6Czg=
+Message-ID: <1585505807.4510.1.camel@HansenPartnership.com>
+Subject: Re: [RFC PATCH v1 13/50] Avoid some useless msecs/jiffies
+ conversions
+From:   James Bottomley <James.Bottomley@HansenPartnership.com>
+To:     George Spelvin <lkml@SDF.ORG>, Takashi Iwai <tiwai@suse.de>
+Cc:     linux-kernel@vger.kernel.org, Hannes Reinecke <hare@suse.de>,
+        linux-scsi@vger.kernel.org,
+        Marek Lindner <mareklindner@neomailbox.ch>,
+        Simon Wunderlich <sw@simonwunderlich.de>,
+        Antonio Quartulli <a@unstable.cc>,
+        Sven Eckelmann <sven@narfation.org>,
+        b.a.t.m.a.n@diktynna.open-mesh.org,
+        Johannes Berg <johannes@sipsolutions.net>,
+        linux-wireless@vger.kernel.org, Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org
+Date:   Sun, 29 Mar 2020 11:16:47 -0700
+In-Reply-To: <20200329175032.GE4675@SDF.ORG>
+References: <202003281643.02SGhBrh000992@sdf.org>
+         <s5ho8sfd2dk.wl-tiwai@suse.de> <20200329121129.GC11951@SDF.ORG>
+         <s5h7dz3ccea.wl-tiwai@suse.de> <20200329175032.GE4675@SDF.ORG>
 Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.26.6 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Mar 29, 2020 at 11:03 AM David Laight <David.Laight@aculab.com> wrote:
->
-> > That's how get_user() already works.
-> >
-> > It is a polymorphic function (done using macros, sizeof() and ugly
-> > compiler tricks) that generates a call, yes. But it's not a normal C
-> > call. On x86-64, it returns the error code in %rax, and the value in
-> > %rdx
->
-> I must be mis-remembering the object code from last time
-> I looked at it.
+On Sun, 2020-03-29 at 17:50 +0000, George Spelvin wrote:
+> On Sun, Mar 29, 2020 at 07:13:33PM +0200, Takashi Iwai wrote:
+> > On Sun, 29 Mar 2020 14:11:29 +0200, George Spelvin wrote:
+> > > On Sun, Mar 29, 2020 at 09:52:23AM +0200, Takashi Iwai wrote:
+> > > > I thought the compiler already optimizes to the constant
+> > > > calculation
+> > > > for the above case?
+> > > 
+> > > It optimizes that if the entire argument, including "seconds", is
+> > > a compile-time constant.
+> > > 
+> > > However, given "msecs_to_jiffies(hdev->rpa_timeout * 1000);",
+> > > the computatin is non-trivial.
+> > 
+> > Fair enough.  But it's still a question whether an open code X * HZ
+> > is
+> > good at all...
+> 
+> I'm sorry, I don't understand what you mean by "good at all" here.
+> The value computed is exactly the same.
 
-On an object code level, the end result actually almost looks like a
-normal call, until you start looking at the exact register passing
-details.
+I think he means what the compiler does with it.
 
-On a source level, it's anything but.
+We all assume that msecs_to_jiffies is properly optimized so there
+should be no need to open code it like you're proposing.  So firstly
+can you produce the assembly that shows the worse output from
+msecs_to_jiffies?  If there is a problem, then we should be fixing it
+in msecs_to_jiffies, not adding open coding.
 
-This is "get_user()" on x86:
+James
 
-  #define get_user(x, ptr)                                              \
-  ({                                                                    \
-        int __ret_gu;                                                   \
-        register __inttype(*(ptr)) __val_gu asm("%"_ASM_DX);            \
-        __chk_user_ptr(ptr);                                            \
-        might_fault();                                                  \
-        asm volatile("call __get_user_%P4"                              \
-                     : "=a" (__ret_gu), "=r" (__val_gu),                \
-                        ASM_CALL_CONSTRAINT                             \
-                     : "0" (ptr), "i" (sizeof(*(ptr))));                \
-        (x) = (__force __typeof__(*(ptr))) __val_gu;                    \
-        __builtin_expect(__ret_gu, 0);                                  \
-  })
-
-and all it actually *generates* is that single "call" instruction, so
-the only code you see from the above mess in the object file (assuming
-you don't have debugging enabled that expands "might_fault()" into a
-lot of checking code) is something like this:
-
-        call __get_user_4
-
-with the input address being in %rax (which is also the returning
-error code), and the value of 'x' being in %rdx.
-
-The above macro looks a bit messy, but that's actually hiding some of
-the real complexity (that "__inttype()" thing is a mess of compiler
-tricks in itself, as is the magical ASM_CALL_CONSTRAINT thing, along
-with the magic that goes into a 64-bit return value on x86-32 which is
-implicit in the magical register asm() definition).
-
-The uaccess code is a lot of complex macros and inline functions to
-make it all work well.
-
-Al's uaccess cleanups (which should be in the next merge window) help
-a _lot_. Not with the get_user() above (that is already about as
-simple as it can get), but with a lot of the other crazy special cases
-that we had grown over the years.
-
-My current "unsafe_get_user() using clang and 'asm goto' with outpus"
-patch is on top of Al's patches exactly because it was cleaner to do
-with all of his cleanups.
-
-But that magical asm-goto-with-outputs patch probably won't land
-upstream for a couple of years.
-
-I had the unsafe_put_user() patches to use 'asm goto' in a local
-branch for almost three years before I made them official. See commit
-a959dc88f9c8 ("Use __put_user_goto in __put_user_size() and
-unsafe_put_user()") and notice how it has an author date of May, 2016,
-but was only committed January 2019.
-
-I basically waited until "asm goto" was something we could rely on
-(and used for other reasons).
-
-I suspect something very similar will happen with unsafe_get_user(). I
-have a patch if people want to play with it, but right now it's a
-"this relies on an unreleased version of clang to even work".
-
-                      Linus
