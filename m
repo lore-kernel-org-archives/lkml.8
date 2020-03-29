@@ -7,41 +7,42 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16396C2D0EE
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 20:26:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07C96C2D0E5
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 20:26:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C99EF21841
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 20:26:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA87220748
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 20:26:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728845AbgC2U0X (ORCPT
+        id S1728869AbgC2U0Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Mar 2020 16:26:23 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:56943 "EHLO
+        Sun, 29 Mar 2020 16:26:24 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:56953 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728794AbgC2U0R (ORCPT
+        with ESMTP id S1728814AbgC2U0T (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Mar 2020 16:26:17 -0400
+        Sun, 29 Mar 2020 16:26:19 -0400
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1jIeVZ-0001Lm-Ja; Sun, 29 Mar 2020 22:26:13 +0200
+        id 1jIeVc-0001MC-Vq; Sun, 29 Mar 2020 22:26:17 +0200
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 3AF8F1C0450;
-        Sun, 29 Mar 2020 22:26:10 +0200 (CEST)
-Date:   Sun, 29 Mar 2020 20:26:09 -0000
-From:   "tip-bot2 for luanshi" <tip-bot2@linutronix.de>
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 919DE1C0470;
+        Sun, 29 Mar 2020 22:26:11 +0200 (CEST)
+Date:   Sun, 29 Mar 2020 20:26:11 -0000
+From:   "tip-bot2 for Michal Simek" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: irq/core] irqchip/gic-v3: Move irq_domain_update_bus_token to
- after checking for NULL domain
-Cc:     Liguang Zhang <zhangliguang@linux.alibaba.com>,
-        Marc Zyngier <maz@kernel.org>, x86 <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <1583983255-44115-1-git-send-email-zhangliguang@linux.alibaba.com>
-References: <1583983255-44115-1-git-send-email-zhangliguang@linux.alibaba.com>
+Subject: [tip: irq/core] irqchip/xilinx: Fill error code when irq domain
+ registration fails
+Cc:     Michal Simek <michal.simek@xilinx.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Stefan Asserhall <stefan.asserhall@xilinx.com>,
+        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <20200317125600.15913-3-mubin.usman.sayyed@xilinx.com>
+References: <20200317125600.15913-3-mubin.usman.sayyed@xilinx.com>
 MIME-Version: 1.0
-Message-ID: <158551356984.28353.11059083385737598395.tip-bot2@tip-bot2>
+Message-ID: <158551357125.28353.14243002761268594399.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -57,43 +58,34 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the irq/core branch of tip:
 
-Commit-ID:     eeaa4b24e5032707ee4286b6a2bcc5fb85eba4a4
-Gitweb:        https://git.kernel.org/tip/eeaa4b24e5032707ee4286b6a2bcc5fb85eba4a4
-Author:        luanshi <zhangliguang@linux.alibaba.com>
-AuthorDate:    Thu, 12 Mar 2020 11:20:55 +08:00
+Commit-ID:     c74038baa9bccac76344b7215a55be136c81dfc3
+Gitweb:        https://git.kernel.org/tip/c74038baa9bccac76344b7215a55be136c81dfc3
+Author:        Michal Simek <michal.simek@xilinx.com>
+AuthorDate:    Tue, 17 Mar 2020 18:25:58 +05:30
 Committer:     Marc Zyngier <maz@kernel.org>
 CommitterDate: Sun, 22 Mar 2020 11:52:53 
 
-irqchip/gic-v3: Move irq_domain_update_bus_token to after checking for NULL domain
+irqchip/xilinx: Fill error code when irq domain registration fails
 
-irq_domain_update_bus_token should be called after checking for NULL
-domain.
+There is no ret filled in case of irq_domain_add_linear() failure.
 
-Signed-off-by: Liguang Zhang <zhangliguang@linux.alibaba.com>
+Signed-off-by: Michal Simek <michal.simek@xilinx.com>
 Signed-off-by: Marc Zyngier <maz@kernel.org>
-Link: https://lore.kernel.org/r/1583983255-44115-1-git-send-email-zhangliguang@linux.alibaba.com
+Reviewed-by: Stefan Asserhall <stefan.asserhall@xilinx.com>
+Link: https://lore.kernel.org/r/20200317125600.15913-3-mubin.usman.sayyed@xilinx.com
 ---
- drivers/irqchip/irq-gic-v3.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/irqchip/irq-xilinx-intc.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/irqchip/irq-gic-v3.c b/drivers/irqchip/irq-gic-v3.c
-index c1f7af9..8e5dd96 100644
---- a/drivers/irqchip/irq-gic-v3.c
-+++ b/drivers/irqchip/irq-gic-v3.c
-@@ -1581,7 +1581,6 @@ static int __init gic_init_bases(void __iomem *dist_base,
- 
- 	gic_data.domain = irq_domain_create_tree(handle, &gic_irq_domain_ops,
- 						 &gic_data);
--	irq_domain_update_bus_token(gic_data.domain, DOMAIN_BUS_WIRED);
- 	gic_data.rdists.rdist = alloc_percpu(typeof(*gic_data.rdists.rdist));
- 	gic_data.rdists.has_rvpeid = true;
- 	gic_data.rdists.has_vlpis = true;
-@@ -1592,6 +1591,8 @@ static int __init gic_init_bases(void __iomem *dist_base,
- 		goto out_free;
+diff --git a/drivers/irqchip/irq-xilinx-intc.c b/drivers/irqchip/irq-xilinx-intc.c
+index 34593fa..1d3d273 100644
+--- a/drivers/irqchip/irq-xilinx-intc.c
++++ b/drivers/irqchip/irq-xilinx-intc.c
+@@ -228,6 +228,7 @@ static int __init xilinx_intc_of_init(struct device_node *intc,
+ 						  &xintc_irq_domain_ops, irqc);
+ 	if (!irqc->root_domain) {
+ 		pr_err("irq-xilinx: Unable to create IRQ domain\n");
++		ret = -EINVAL;
+ 		goto error;
  	}
  
-+	irq_domain_update_bus_token(gic_data.domain, DOMAIN_BUS_WIRED);
-+
- 	gic_data.has_rss = !!(typer & GICD_TYPER_RSS);
- 	pr_info("Distributor has %sRange Selector support\n",
- 		gic_data.has_rss ? "" : "no ");
