@@ -2,166 +2,119 @@ Return-Path: <SRS0=I467=5O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2221C2D0E8
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 02:14:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DE67C43331
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 02:28:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7EAE2206DB
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 02:14:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F646206DB
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 02:28:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=who-t.net header.i=@who-t.net header.b="alMsCvOg";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="XwMIsDms"
+	dkim=pass (1024-bit key) header.d=pobox.com header.i=@pobox.com header.b="GlgXIdd5";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=fluxnic.net header.i=@fluxnic.net header.b="19+QgvAr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726937AbgC2COs (ORCPT
+        id S1726912AbgC2CZR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 28 Mar 2020 22:14:48 -0400
-Received: from new1-smtp.messagingengine.com ([66.111.4.221]:40221 "EHLO
-        new1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726415AbgC2COs (ORCPT
+        Sat, 28 Mar 2020 22:25:17 -0400
+Received: from pb-smtp20.pobox.com ([173.228.157.52]:62499 "EHLO
+        pb-smtp20.pobox.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726315AbgC2CZR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 28 Mar 2020 22:14:48 -0400
-Received: from compute7.internal (compute7.nyi.internal [10.202.2.47])
-        by mailnew.nyi.internal (Postfix) with ESMTP id C4CBC5800F5;
-        Sat, 28 Mar 2020 22:14:46 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute7.internal (MEProxy); Sat, 28 Mar 2020 22:14:46 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=who-t.net; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm2; bh=wTD+T1CAWA95GSB8FoKIclW2PuZ
-        N3aFveLSHwbRJVfY=; b=alMsCvOgGLttqkyTufc9znSAh5DSu2/TcauIuQrBdqh
-        78r/11Y9Hd7vQ+ihW9S2zQrSTnZtArfN7IGuKn1pIagmpQ7+FZGN6rm7lICq2T6R
-        nWD9VvTNUqfkOcczicu0xL9Sb7MrJ8krW7i8wnu7NKasIOmmqu8XcCUNY1VyvYi8
-        3x3g1/vG8mQeplObKqKZrClWr1uVpk2kmKRFszmap52Q27jPwt7c61i4Fy5P+u0R
-        ZgAzUBgLPBmrjrXUKGwF/mWL7WtP29+xYlGPeyyYOMQ0noiJqIx02nO84w2+zO3Q
-        AOXyOuyQ2i6hW+jPhU+OYswd0dANbzGpF8nZf25+Blg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=wTD+T1
-        CAWA95GSB8FoKIclW2PuZN3aFveLSHwbRJVfY=; b=XwMIsDmsWrozRUwc7geEmx
-        jrv9/g9ZgGJ+z6p/Rbnz0A9QGgneyAqkPoPOcetTjoGxjcCveFUVG4OdMTHr67G7
-        3FechneAyJXnPVK78pBB30hEgIbDR+zKTx4LgViKths9NQhyWaAaW3gFo9EdzVUB
-        fJ/T+hRSKr6BU+F8p8mdTUD5g7E+6tP0Gm3BH/KjW4KXZ+7yVg9a0Ws7KW1S8S4U
-        biL4N9dfcpxcRRZwlSsKawa4TwpMpf8Dc7S2F8cGwD8AyLFk/m6BadtTj04U0EWy
-        8z/Yzmn3xmZn1vv8ihUdAkRajaysfOPc8ZpwxPquF9nCJfmp1s+3VpCdK7y79K0A
-        ==
-X-ME-Sender: <xms:lASAXtQosBd8cbHmk0MNO1DWieMPfKInMywSg0rg-oYCriFtv5lt7Q>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrudeivddggeeiucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhvffukfhfgggtuggjsehttdertddttddvnecuhfhrohhmpefrvghtvghr
-    ucfjuhhtthgvrhgvrhcuoehpvghtvghrrdhhuhhtthgvrhgvrhesfihhohdqthdrnhgvth
-    eqnecukfhppeduudejrddvtddrjedurddutdelnecuvehluhhsthgvrhfuihiivgeptden
-    ucfrrghrrghmpehmrghilhhfrhhomhepphgvthgvrhdrhhhuthhtvghrvghrseifhhhoqd
-    htrdhnvght
-X-ME-Proxy: <xmx:lASAXrDPRHfFRdiMmSwnUiaHA18XsEjsexPmKpWTTsiBW9kiVdFfvA>
-    <xmx:lASAXt16z3LK9MNDweboMyfa82z4INwtQLmSf2QE8iHA5qq4WKBITw>
-    <xmx:lASAXpXndEMBmEYijj27PFqgza7EbOuexXY2uhXt3IvXgiIQiggzHw>
-    <xmx:lgSAXp9AA8DmN2Y6b0MZ2SvrFM2kTaA6lZh8xpQFsCXwRxTBOqiuog>
-Received: from jelly (117-20-71-109.751447.bne.nbn.aussiebb.net [117.20.71.109])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 8237B3280060;
-        Sat, 28 Mar 2020 22:14:41 -0400 (EDT)
-Date:   Sun, 29 Mar 2020 12:14:36 +1000
-From:   Peter Hutterer <peter.hutterer@who-t.net>
-To:     Johnny Chuang <johnny.chuang.emc@gmail.com>
-Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        linux-kernel@vger.kernel.org, linux-input@vger.kernel.org,
-        Rob Schonberger <robsc@google.com>,
-        Johnny Chuang <johnny.chuang@emc.com.tw>,
-        James Chen <james.chen@emc.com.tw>,
-        Jennifer Tsai <jennifer.tsai@emc.com.tw>,
-        Paul Liang <paul.liang@emc.com.tw>,
-        Jeff Chuang <jeff.chuang@emc.com.tw>
-Subject: Re: [PATCH] Input: elants_i2c - support palm detection
-Message-ID: <20200329021436.GA68168@jelly>
-References: <1585209525-6047-1-git-send-email-johnny.chuang.emc@gmail.com>
+        Sat, 28 Mar 2020 22:25:17 -0400
+Received: from pb-smtp20.pobox.com (unknown [127.0.0.1])
+        by pb-smtp20.pobox.com (Postfix) with ESMTP id AEF20C368B;
+        Sat, 28 Mar 2020 22:25:16 -0400 (EDT)
+        (envelope-from nico@fluxnic.net)
+DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=pobox.com; h=date:from:to
+        :cc:subject:in-reply-to:message-id:references:mime-version
+        :content-type; s=sasl; bh=485fjb41sdCpYdGKN+gsj9JL99A=; b=GlgXId
+        d5Keu3nBE6AsHOSEQjkXiJxHQyU8XI6YhO5yDvlPR0X4nTuxbks5hvIl0AAYnIL+
+        YECaR+/FCFv7JIIOk03upmxr4LOyDtJ7/XymBw59Fv/WlbPzzKpulAc73icRqcPH
+        JZTi0B+0AAfai/64A/zNrMsTXIMHWVfjLmVfo=
+Received: from pb-smtp20.sea.icgroup.com (unknown [127.0.0.1])
+        by pb-smtp20.pobox.com (Postfix) with ESMTP id A5220C368A;
+        Sat, 28 Mar 2020 22:25:16 -0400 (EDT)
+        (envelope-from nico@fluxnic.net)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed; d=fluxnic.net;
+ h=date:from:to:cc:subject:in-reply-to:message-id:references:mime-version:content-type; s=2016-12.pbsmtp; bh=zjHpEBHranZMY7AxPpaXoMY2MwJSJYWzjiVSpEtjaKs=; b=19+QgvArpH5Nfm6+L5Gg40HcDBTwpCYQ4d8TA7G8JApY/u3WWhXrfeIq0a+Nz8vhGS46ubZUHV47A72DxSYKFahFYZgYqGu3tG6X+2bFKsQ/ZRLLo8wevjTlgF1vl3QewA50Vv4HC0NIp1OHNg3DKlgdxxcITvOOOIJJ1sTJjQM=
+Received: from yoda.home (unknown [24.203.50.76])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by pb-smtp20.pobox.com (Postfix) with ESMTPSA id A0FA7C3688;
+        Sat, 28 Mar 2020 22:25:13 -0400 (EDT)
+        (envelope-from nico@fluxnic.net)
+Received: from xanadu.home (xanadu.home [192.168.2.2])
+        by yoda.home (Postfix) with ESMTPSA id C33842DA0174;
+        Sat, 28 Mar 2020 22:25:11 -0400 (EDT)
+Date:   Sat, 28 Mar 2020 22:25:11 -0400 (EDT)
+From:   Nicolas Pitre <nico@fluxnic.net>
+To:     gregkh@linuxfoundation.org
+cc:     Chen Wandun <chenwandun@huawei.com>,
+        Adam Borowski <kilobyte@angband.pl>, jslaby@suse.com,
+        daniel.vetter@ffwll.ch, sam@ravnborg.org, b.zolnierkie@samsung.com,
+        lukas@wunner.de, ghalat@redhat.com, linux-kernel@vger.kernel.org
+Subject: [PATCH v2] vt: don't use kmalloc() for the unicode screen buffer
+In-Reply-To: <nycvar.YSQ.7.76.2003281745280.2671@knanqh.ubzr>
+Message-ID: <nycvar.YSQ.7.76.2003282214210.2671@knanqh.ubzr>
+References: <nycvar.YSQ.7.76.2003281745280.2671@knanqh.ubzr>
+User-Agent: Alpine 2.21 (LFD 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1585209525-6047-1-git-send-email-johnny.chuang.emc@gmail.com>
+Content-Type: text/plain; charset=US-ASCII
+X-Pobox-Relay-ID: 8563157C-7164-11EA-B568-B0405B776F7B-78420484!pb-smtp20.pobox.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 26, 2020 at 03:58:45PM +0800, Johnny Chuang wrote:
-> From: Johnny Chuang <johnny.chuang@emc.com.tw>
-> 
-> Elan define finger/palm detection on the least significant bit of byte 33.
-> The default value is 1 for all firmwares, which report as MT_TOOL_FINGER.
-> If firmware support palm detection, the bit will change to 0 and
-> report as MT_TOOL_PALM when firmware detecting palm.
-> 
-> Signed-off-by: Johnny Chuang <johnny.chuang@emc.com.tw>
-> ---
->  drivers/input/touchscreen/elants_i2c.c | 11 ++++++++++-
->  1 file changed, 10 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/input/touchscreen/elants_i2c.c b/drivers/input/touchscreen/elants_i2c.c
-> index 14c577c..3b4d9eb3 100644
-> --- a/drivers/input/touchscreen/elants_i2c.c
-> +++ b/drivers/input/touchscreen/elants_i2c.c
-> @@ -73,6 +73,7 @@
->  #define FW_POS_STATE		1
->  #define FW_POS_TOTAL		2
->  #define FW_POS_XY		3
-> +#define FW_POS_TOOL_TYPE	33
->  #define FW_POS_CHECKSUM		34
->  #define FW_POS_WIDTH		35
->  #define FW_POS_PRESSURE		45
-> @@ -842,6 +843,7 @@ static void elants_i2c_mt_event(struct elants_data *ts, u8 *buf)
->  {
->  	struct input_dev *input = ts->input;
->  	unsigned int n_fingers;
-> +	unsigned int tool_type;
->  	u16 finger_state;
->  	int i;
->  
-> @@ -852,6 +854,12 @@ static void elants_i2c_mt_event(struct elants_data *ts, u8 *buf)
->  	dev_dbg(&ts->client->dev,
->  		"n_fingers: %u, state: %04x\n",  n_fingers, finger_state);
->  
-> +	/* Note: all fingers have the same tool type */
-> +	if (buf[FW_POS_TOOL_TYPE] & 0x01)
-> +		tool_type = MT_TOOL_FINGER;
-> +	else
-> +		tool_type = MT_TOOL_PALM;
-> +
->  	for (i = 0; i < MAX_CONTACT_NUM && n_fingers; i++) {
->  		if (finger_state & 1) {
->  			unsigned int x, y, p, w;
-> @@ -867,7 +875,7 @@ static void elants_i2c_mt_event(struct elants_data *ts, u8 *buf)
->  				i, x, y, p, w);
->  
->  			input_mt_slot(input, i);
-> -			input_mt_report_slot_state(input, MT_TOOL_FINGER, true);
-> +			input_mt_report_slot_state(input, tool_type, true);
->  			input_event(input, EV_ABS, ABS_MT_POSITION_X, x);
->  			input_event(input, EV_ABS, ABS_MT_POSITION_Y, y);
->  			input_event(input, EV_ABS, ABS_MT_PRESSURE, p);
-> @@ -1307,6 +1315,7 @@ static int elants_i2c_probe(struct i2c_client *client,
->  	input_set_abs_params(ts->input, ABS_MT_POSITION_Y, 0, ts->y_max, 0, 0);
->  	input_set_abs_params(ts->input, ABS_MT_TOUCH_MAJOR, 0, 255, 0, 0);
->  	input_set_abs_params(ts->input, ABS_MT_PRESSURE, 0, 255, 0, 0);
-> +	input_set_abs_params(ts->input, ABS_MT_TOOL_TYPE, 0, MT_TOOL_MAX, 0, 0);
+Even if the actual screen size is bounded in vc_do_resize(), the unicode 
+buffer is still a little more than twice the size of the glyph buffer
+and may exceed MAX_ORDER down the kmalloc() path. This can be triggered
+from user space.
 
-if you're only reporting pen and palm, can we set this to MT_TOOL_PALM
-instead? Otherwise you're indicating you may also send MT_TOOL_DIAL which is
-unlikely on this hardware :)
+Since there is no point having a physically contiguous buffer here, 
+let's avoid the above issue as well as reducing pressure on high order
+allocations by using vmalloc() instead.
 
-Reviewed-by: Peter Hutterer <peter.hutterer@who-t.net> otherwise
+Signed-off-by: Nicolas Pitre <nico@fluxnic.net>
+Cc: <stable@vger.kernel.org>
 
-Cheers,
-   Peter
+---
 
->  	input_abs_set_res(ts->input, ABS_MT_POSITION_X, ts->x_res);
->  	input_abs_set_res(ts->input, ABS_MT_POSITION_Y, ts->y_res);
->  	input_abs_set_res(ts->input, ABS_MT_TOUCH_MAJOR, 1);
-> -- 
-> 2.7.4
-> 
+Changes since v1:
+
+- Added missing include, found by kbuild test robot.
+  Strange that my own build doesn't complain.
+
+diff --git a/drivers/tty/vt/vt.c b/drivers/tty/vt/vt.c
+index 15d2769805..d9eb5661e9 100644
+--- a/drivers/tty/vt/vt.c
++++ b/drivers/tty/vt/vt.c
+@@ -81,6 +81,7 @@
+ #include <linux/errno.h>
+ #include <linux/kd.h>
+ #include <linux/slab.h>
++#include <linux/vmalloc.h>
+ #include <linux/major.h>
+ #include <linux/mm.h>
+ #include <linux/console.h>
+@@ -350,7 +351,7 @@ static struct uni_screen *vc_uniscr_alloc(unsigned int cols, unsigned int rows)
+ 	/* allocate everything in one go */
+ 	memsize = cols * rows * sizeof(char32_t);
+ 	memsize += rows * sizeof(char32_t *);
+-	p = kmalloc(memsize, GFP_KERNEL);
++	p = vmalloc(memsize);
+ 	if (!p)
+ 		return NULL;
+ 
+@@ -366,7 +367,7 @@ static struct uni_screen *vc_uniscr_alloc(unsigned int cols, unsigned int rows)
+ 
+ static void vc_uniscr_set(struct vc_data *vc, struct uni_screen *new_uniscr)
+ {
+-	kfree(vc->vc_uni_screen);
++	vfree(vc->vc_uni_screen);
+ 	vc->vc_uni_screen = new_uniscr;
+ }
+ 
