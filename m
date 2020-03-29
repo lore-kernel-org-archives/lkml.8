@@ -2,171 +2,139 @@ Return-Path: <SRS0=I467=5O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4EC9C2D0E7
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 10:37:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A835FC2D0EB
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 10:40:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 76FB32073B
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 10:37:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YZtvYKa6"
+	by mail.kernel.org (Postfix) with ESMTP id 7B16E20675
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 10:40:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585478429;
+	bh=dGGs0TXmmRf7o18Q34+pjHjUNL7N+3oQgkyC8gFRxU8=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:List-ID:From;
+	b=S2UAYw6OZ85s11LP6YwjB5Z+A8c3vUKBkUnG3/H2iKjYC0W2eJEcWKxQkCt/0pqqO
+	 dWxP9qin5de1/yBv5RdYwLNd6LYDy+Kwm/0O/CASLWOONE5YM3A7wSIktrJzOJsrrl
+	 PCKUnF9Y+qNhZn/yrmjLz02zbaixIFjj2CMAJ94g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728045AbgC2Kh6 (ORCPT
+        id S1728060AbgC2Kk2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Mar 2020 06:37:58 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:52314 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727791AbgC2Kh6 (ORCPT
+        Sun, 29 Mar 2020 06:40:28 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:39410 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727972AbgC2Kk2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Mar 2020 06:37:58 -0400
-Received: by mail-wm1-f68.google.com with SMTP id z18so16534300wmk.2;
-        Sun, 29 Mar 2020 03:37:56 -0700 (PDT)
+        Sun, 29 Mar 2020 06:40:28 -0400
+Received: by mail-lj1-f195.google.com with SMTP id i20so14741555ljn.6;
+        Sun, 29 Mar 2020 03:40:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=71RlhCSY8oNNUxnE6bOWCXws7Gp/rPuisSxtRcSLemY=;
-        b=YZtvYKa698h+YWJETGtThKPWyClMiN3dTJaekhReiBHmyxVGVuu9cA+QnomoZFeRJC
-         AgocSSl59oiolVhdq5Y4jf8X9+Fazyy54pafM/roUfKuSD9k2NjL067ZKwNESP82WBwC
-         NLphcV1Hr3ETawfKgOGgv8HrKjzGMlVXZtWUvyApPf8mm+x1cTXR3ZYAVtyD83aaN8Yc
-         97RcdB1QEnincTtBPv+OE9rFfFjVs+Ap5z169xTIUKlIyBQ6pmBzzgRXVt0rpxK24NvA
-         9Htk6d/NBwCUNyAMnauO1MksLAyIRNtNmP5dCKBOr9TOmmzszwgzNKcUcFvY/FH1sTNQ
-         OaGA==
+        h=sender:from:to:cc:subject:in-reply-to:references:date:message-id
+         :mime-version;
+        bh=cLd4jAW1CkiWfOdvU5YJozN1+eqFB+wBsib3kn53+6s=;
+        b=dm0ClfSTfp5auucokso1ShyuPYJmEmuB0gC5oXfHLt2rim5iTVMnaV3ST7SW3AvSF2
+         os/JHItuTfKDWk+aMV+XwZgFlvO9td0Oq5mzDSq2wkdAuqgkl3rgYV4MDmluakyNMMll
+         0QhyESMiwMhHObq187yOIvpSKXNClv+KktCC85f0KR6B8m2MjtJpO82/twM4rRMO1IAO
+         xcNqZEj9GyVNpsdHwtnmCOPJADHU9Mux2LR7+EIOmaJ1+Klbl2Ug3GJXAH0u8ehCbenp
+         oZiax0Zi5rDkzNIyxNvmzx9BR2roduGe/I7E04UXs578igYjrLbolxezGEWItZi4Dxs+
+         ntrQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=71RlhCSY8oNNUxnE6bOWCXws7Gp/rPuisSxtRcSLemY=;
-        b=tsuYU8Gz7sOaD0Uj9i63ozjlrayQNYS3YMOoJeKZdDdxuhN5AwIM9MXNk7w0TASYsd
-         /j9xSipPwZ5bR39nIMHSzHfhasya8wZYkQ8e4zVDru5TwJaCUxw6VOZG+booOlBY8lza
-         eaIIdPNxSAf3yl5wJ2Xce1GOvBitZTX9iSkPRCn2gFxVouRmLSNxVlk89JZqaCNww64e
-         ubLEmhg5+iIQ3D2JQ5efJkXnLnPM0AWTqMr3RMsBe507q3+IlEzn80aG8ekaPjPyDgUA
-         GJTpBDTOiW61j0LM//IH0Z1IkuqGKHI8U7d7AJMuCDfAQEC44VurNN2At8r9A5KvWlkb
-         DESA==
-X-Gm-Message-State: ANhLgQ0wmG7vekIxcuIGNEXkg7LPyZ9GMGhjPWL7FVyC1MHKwMfzCvTj
-        po5B7YGkuCErQdhutFff5ievzYoY
-X-Google-Smtp-Source: ADFU+vuSdRNxHZDjZD9gGezVPtBI3guMBw8gt4hGVsgmP/7sbPLnEBYFnRwcxUI5IBtFdsedAafigw==
-X-Received: by 2002:a1c:68d5:: with SMTP id d204mr7904068wmc.15.1585478275203;
-        Sun, 29 Mar 2020 03:37:55 -0700 (PDT)
-Received: from [192.168.0.104] (p5B3F6BD9.dip0.t-ipconnect.de. [91.63.107.217])
-        by smtp.gmail.com with ESMTPSA id l17sm17383372wrm.57.2020.03.29.03.37.54
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 29 Mar 2020 03:37:54 -0700 (PDT)
-Subject: Re: [PATCH v4 3/5] iio: adc: mp2629: Add support for mp2629 ADC
- driver
-To:     Jonathan Cameron <jic23@kernel.org>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald <pmeerw@pmeerw.net>,
-        Sebastian Reichel <sre@kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-iio <linux-iio@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>
-References: <20200322224626.13160-1-sravanhome@gmail.com>
- <20200322224626.13160-4-sravanhome@gmail.com>
- <CAHp75VfauHuAv1Wr=7ga=G+6JOYXuop_oyXiwmQgKeB2e_z=tQ@mail.gmail.com>
- <20200328144234.081b964f@archlinux>
-From:   saravanan sekar <sravanhome@gmail.com>
-Message-ID: <d6852a20-157b-ea51-7def-f11b5d1c81fe@gmail.com>
-Date:   Sun, 29 Mar 2020 12:37:53 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        h=x-gm-message-state:sender:from:to:cc:subject:in-reply-to:references
+         :date:message-id:mime-version;
+        bh=cLd4jAW1CkiWfOdvU5YJozN1+eqFB+wBsib3kn53+6s=;
+        b=Q1Kr+NR12qnqow2iQ3ojxR/V626zajsuVfiOHiYhKjBVBGUJNDV0fMBCxRG7KN/kzO
+         7ardr/1HU6hX41QbzXXl6g6PqDo8xe7ampCu58LB68mbx7d5jmBEDeCXcNtmt2tdzydJ
+         1zkblcvVSQABHGyxfFMnrpZY+RuNhBBg96Zo7OY5K8ZxoAh0gZnOFhKHZwRjGy3pOfYi
+         qeLMGxN3zTb0gziqnEfdfOi8S9goGGUqCzxxhiuV4d9T21MDuSETagQwPhOKox/aDf85
+         UBI07A0VDoT8zqgz1xEh7lxXiYgAngtujDrs6sJ9D3cm5e76jOpdWKuLjPBMSNiuMQZq
+         szOg==
+X-Gm-Message-State: AGi0Pubqtapuhh0RJzH68peuMyYMlbwUazw6fdqeOCUe+yammIkSx6wE
+        6OG31aHrh7oteS1XI3A+pnU=
+X-Google-Smtp-Source: APiQypJ2UR9ZPg/MS3H9/fw9Gka6zO3w8P5ly+EDlgQ6gkwx3ZkJirsEqeRB+HxBsqzsvB41V4fYoQ==
+X-Received: by 2002:a2e:9bc6:: with SMTP id w6mr3036925ljj.105.1585478425309;
+        Sun, 29 Mar 2020 03:40:25 -0700 (PDT)
+Received: from saruman (91-155-214-58.elisa-laajakaista.fi. [91.155.214.58])
+        by smtp.gmail.com with ESMTPSA id e4sm54430lfn.80.2020.03.29.03.40.23
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Sun, 29 Mar 2020 03:40:24 -0700 (PDT)
+From:   Felipe Balbi <balbi@kernel.org>
+To:     Nagarjuna Kristam <nkristam@nvidia.com>, kishon@ti.com,
+        robh+dt@kernel.org, thierry.reding@gmail.com, jonathanh@nvidia.com,
+        gregkh@linuxfoundation.org
+Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-usb@vger.kernel.org,
+        jckuo@nvidia.com, Nagarjuna Kristam <nkristam@nvidia.com>
+Subject: Re: [PATCH V1 0/8] Tegra XUSB charger detect support
+In-Reply-To: <1584527467-8058-1-git-send-email-nkristam@nvidia.com>
+References: <1584527467-8058-1-git-send-email-nkristam@nvidia.com>
+Date:   Sun, 29 Mar 2020 13:40:20 +0300
+Message-ID: <87pncve963.fsf@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20200328144234.081b964f@archlinux>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+Content-Type: multipart/signed; boundary="=-=-=";
+        micalg=pgp-sha256; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Andy,
+--=-=-=
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 
-On 28/03/20 3:42 pm, Jonathan Cameron wrote:
-> On Mon, 23 Mar 2020 01:32:34 +0200
-> Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
+Nagarjuna Kristam <nkristam@nvidia.com> writes:
+
+> This patch series adds charger detect support on XUSB hardware used in
+> Tegra210 and Tegra186 SoCs.
 >
->> On Mon, Mar 23, 2020 at 12:47 AM Saravanan Sekar <sravanhome@gmail.com> wrote:
->>> Add support for 8-bit resolution ADC readings for input power
->>> supply and battery charging measurement. Provides voltage, current
->>> readings to mp2629 power supply driver.
->> ...
->>
->>> +#include <linux/platform_device.h>
->>> +#include <linux/of_device.h>
->> Don't see users of it.
-Forgot to reply, its needed since I used struct of_device
-"error: field name not in record or union initializer
-   { .compatible = "mps,mp2629_charger"},"
->>> +#include <linux/module.h>
->>> +#include <linux/mutex.h>
->>> +#include <linux/regulator/consumer.h>
->>> +#include <linux/sysfs.h>
->> Any users?
->>
->>> +#include <linux/regmap.h>
->> Perhaps ordered?
->>
->>> +#include <linux/iio/iio.h>
->>> +#include <linux/iio/machine.h>
->>> +#include <linux/iio/driver.h>
->> + blank line?
->>
->>> +#include <linux/mfd/mp2629.h>
->> ...
->>
->>> +static int mp2629_read_raw(struct iio_dev *indio_dev,
->>> +                       struct iio_chan_spec const *chan,
->>> +                       int *val, int *val2, long mask)
->>> +{
->>> +       struct mp2629_adc *info = iio_priv(indio_dev);
->>> +       unsigned int rval;
->>> +       int ret;
->>> +
->>> +       switch (mask) {
->>> +       case IIO_CHAN_INFO_RAW:
->>> +               ret = regmap_read(info->regmap, chan->address, &rval);
->>> +               if (ret < 0)
->>> +                       return ret;
->>> +
->>> +               if (chan->address == MP2629_INPUT_VOLT)
->>> +                       rval &= 0x7f;
->> GENMASK() ?
->>
->>> +               *val = rval;
->>> +               return IIO_VAL_INT;
->>> +       return 0;
->>> +}
->> ...
->>
->>> +       void **pdata = pdev->dev.platform_data;
->> Same Qs as per other patch.
->>
->> ...
->>
->>> +       indio_dev->dev.of_node = pdev->dev.of_node;
->> Jonathan, doesn't IIO core do this for all?
->>
-> Nope.  I'm not totally sure it's always safe to do so
-> as we have some weird parent structures in some cases.
-> A quick grep suggests that we may be fine though, or
-> alternatively be able to get away with a set it if not
-> already set approach.
+> This patchset is composed with :
+>  - dt bindings of XUSB Pad Controller
+>  - Tegra XUSB device mode driver to add vbus_draw support=20
+>  - Tegra PHY driver for charger detect support
 >
-> I'll take a look when I get some time. It would be nice
-> to clean this up.
+> Tests done:
+>  - Connect USB cable from ubuntu host to micro-B port of DUT to detect
+>    SDP_TYPE charger
+>  - Connect USB cable from external powered USB hub(which inturn connects
+>    to ubuntu host) to micro-B port of DUT to detect CDP_TYPE charger.
+>  - Connect USB cable from USB charger to micro-B port of DUT to detect
+>    DCP_TYPE charger.
+> DUT: Jetson-tx1, Jetson tx2.
 >
-> Jonathan
->
->
->
->
+> Nagarjuna Kristam (8):
+>   dt-bindings: phy: tegra-xusb: Add charger-detect property
+>   usb: gadget: tegra-xudc: Add vbus_draw support
+>   phy: tegra: xusb: Add support for UTMI pad power control
+>   phy: tegra: xusb: Add USB2 pad power control support for Tegra210
+>   phy: tegra: xusb: Add soc ops API to enable UTMI PAD protection
+>   phy: tegra: xusb: Add support for charger detect
+>   phy: tegra: xusb: Enable charger detect for Tegra186
+>   phy: tegra: xusb: Enable charger detect for Tegra210
+
+this doesn't apply cleanly. Could you resend after -rc1 is tagged?
+
+=2D-=20
+balbi
+
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEElLzh7wn96CXwjh2IzL64meEamQYFAl6AexQACgkQzL64meEa
+mQb9iBAAxsX46m3Wb6n/G0SmCS87nlApHiAUph+Y4vsHrBEEbBreJ6oaRfetkkXi
+WR/jDBxFbY6ZlmTVsS30bLx6m/X1wIhcd2oHrH5D17c5uRP/vPAQx+3hYBu5jHmi
+V3Qi2CnULKp3RzKZnBO53PSMosIJvHWyycl9bX8D4NQ6bggDkKtAqverxld1aNOo
+9UcxkeJc+xujlpLB64L8JRAPFbde3ZpI8pwT9H5ZYqaT1Zv/wVvj2MEBhUxYTppl
+xP9A0mJlNXxv2ASJ7rXtDu/tqpXSHGK7YxiTi/NhiWOl0sWeHhHJPQkpK/AfUN9W
+EB5/1o4T0Z5RrmmYLqvTPfO8pZjI8JWiClRA5ZEi4GdNCIotGdMybmOiCVV70Elt
+OqhudkdhWM/XjK9vk1xrPrYjfF3EMqZVF+HFxOGCJEbQoBjV2TAwBBAIZBLDC7zV
+E5DUTkhZq9P22nq2s3b4lvRq72Ubr6w4v5yCTCvVJcGbjJUVP77QJthDkmR2Drnk
+f/rQoTribuTT1WqaOyw0y2GTwe1meO900OJ8tSmx4Ydiia7qhErQms6eyDnPZkaC
+SGiZM8uGVUPI8HE3bgxKb4sMfqTfN5JEFxMKLxmrB++CP7gMASVZZhUVA1S/abfY
+f/wDWgw9fNu96pxC5FBlAiN6juqXspYbTDGZguBgnzg2fnpFJzA=
+=9c+2
+-----END PGP SIGNATURE-----
+--=-=-=--
