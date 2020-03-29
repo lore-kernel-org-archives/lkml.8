@@ -2,181 +2,155 @@ Return-Path: <SRS0=I467=5O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 489FCC43331
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 16:36:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34C52C2D0ED
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 16:44:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B8D2206CC
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 16:36:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B019206F6
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 16:44:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585499814;
-	bh=FMzyHZQaNh9rSSnGoV0uK9HGlBSqJz8wecfpivb2vYg=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=YSURw+505bZzcXmkf545oQndfE9sD0xEvv4O+7I/eTZnAjz36DdYZsONjY2rlW8Cb
-	 RIvv4k/NZPQpYvmLUTreR9gSiY9J0zjAYoQlrr0imqczERZSE4xCNLQfJ7jDOiVhGl
-	 2Azplv4KWIOcIODAS4szKvc9dnX9A1gZjdzEo/Mo=
+	s=default; t=1585500242;
+	bh=XlV166F2I6QWzShIWal68+LYAdyEdVn+wfqluo1OQkc=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:List-ID:From;
+	b=MBeH7FMxnGLxxNhldTF+yeMGPzTAVVvJa8gNgk2UyYui4kRiw4ugNFO+Iz2+b2jrG
+	 UoymD41iOJcHgcr7MGBsio6ASI0kIsm0StBOZ9YUkGN8YQ5NxzgsiZQ+GCEV9Y/l72
+	 g8Ynoz5CoPr4LQVNliqqlrzY1A53UTvJtnKYUbKI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728327AbgC2Qgx (ORCPT
+        id S1728362AbgC2QoB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Mar 2020 12:36:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43644 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727903AbgC2Qgw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Mar 2020 12:36:52 -0400
-Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D11E9206CC
-        for <linux-kernel@vger.kernel.org>; Sun, 29 Mar 2020 16:36:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585499812;
-        bh=FMzyHZQaNh9rSSnGoV0uK9HGlBSqJz8wecfpivb2vYg=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=hogt6nvF+ZaFYDAazFk65Zjw5Up7FM+iupEhANbB/cOf98Ud9e79zXQJp/NYMgKBq
-         0/iYCjBFXpTiTIyvSCzh5Ct6xwLR4N1VOozp/2EAYOrUFmIkYJkhVBKHefY0+DOgIb
-         GFkyGPC5J8BvcRMRwOOc7RatjFHsjxjFc+RzCgcI=
-Received: by mail-wr1-f43.google.com with SMTP id h15so18035450wrx.9
-        for <linux-kernel@vger.kernel.org>; Sun, 29 Mar 2020 09:36:51 -0700 (PDT)
-X-Gm-Message-State: ANhLgQ1oEi6SrK/s03eQx0bHIvlBs3ggKG/XtLTvAiDi7L3vaIWUpNeX
-        QK04xZZbwa2rfvrTtJG2+CoAsSZ1/DA5qKQZUWk=
-X-Google-Smtp-Source: ADFU+vuus+o0GpiyX8baecbejTCjcCtvVBUtlbFTDdt2Qa53S2dQx5EulLtLeeYPyI20IUp/svWt9yF+mHdeaiQGGpo=
-X-Received: by 2002:a5d:6906:: with SMTP id t6mr5654950wru.64.1585499810267;
- Sun, 29 Mar 2020 09:36:50 -0700 (PDT)
+        Sun, 29 Mar 2020 12:44:01 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:38931 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727903AbgC2QoA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Mar 2020 12:44:00 -0400
+Received: by mail-lf1-f67.google.com with SMTP id h6so6201335lfp.6;
+        Sun, 29 Mar 2020 09:43:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:to:cc:subject:in-reply-to:references:date:message-id
+         :mime-version;
+        bh=0c8uaPF3N+GHT2An6yhCZHffyUb6jdEEzTgcTDxgCps=;
+        b=Sos5BixyOxY5FOSKR6fW9+gG4JgIChPoNbwTsGqRNCTKgr+Vz33SJIYj0Bk7+0B15F
+         OXO37FxGUBMoYY52xYMaRPZJSb5mtvy6ibiUy0iGVj/1p0PK34UU2zlMzMZ5JeTzq5bl
+         DrfF3TI4UV6e7pAvqArl8o1RndG45a1StLIzIK0/7LtmshRyOq/XncQ7FturJTb2OLGJ
+         caw1LXGQSE+Cx5Y2grTFRXgAUOUPHFm+lOYRiMaOPTXqCDk+yziISv6r/19FO1r16qE/
+         mXRp7lW0RHMRCsHC22q4Z9kwwx5jTt2LGAzE627IqVNyHKmTIG72j1Vww8xlaEK2A1Q5
+         YCIg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:to:cc:subject:in-reply-to:references
+         :date:message-id:mime-version;
+        bh=0c8uaPF3N+GHT2An6yhCZHffyUb6jdEEzTgcTDxgCps=;
+        b=spzJRSsIpDhBRFHgY3snRisRTaUIEnYYU+VjZxON6ZEnKGf3v59i0USwxr54mqI/i6
+         w100tfrM89QPH4bUDY3+MEUQbDj1qxvD+lvR5x4q0QGcgKwFwNB6CWUeIBKKnBHPfvMj
+         +9rKsgj+xwyoFzDN10lfOuKFgRNV38muC3k8pCv8KdWC5sqIcKmuj3jLMwYD4yXITmVK
+         t6Qs12UrxFQ3cJhb0tCpxHWBCBPowPpRdqy0kny0v+x58JU0pT62g1ocTruMldkAGPQh
+         tENjSrvS9qHhtcAi77Wu3WlJ+I7u7EU03I9Eq61wf5+pXVRosC3acCO3eAUUAPQPkijy
+         krRQ==
+X-Gm-Message-State: AGi0Puav4mcwRlCert1e3KbPUPITWXixsVZnapKMWo3B2jeWxiXM9dPp
+        ehuVbdcAxag3XT6qqGkVylA=
+X-Google-Smtp-Source: APiQypKBkS2c+nq8k4EGh/prRPLtE8K0t6Qsi9F9MT91f58F6gHa4TL7qK6SLkkRbrLJAYdJEGGbLg==
+X-Received: by 2002:a19:7e01:: with SMTP id z1mr5600821lfc.196.1585500237140;
+        Sun, 29 Mar 2020 09:43:57 -0700 (PDT)
+Received: from saruman (91-155-214-58.elisa-laajakaista.fi. [91.155.214.58])
+        by smtp.gmail.com with ESMTPSA id 64sm5713315ljj.41.2020.03.29.09.43.55
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Sun, 29 Mar 2020 09:43:56 -0700 (PDT)
+From:   Felipe Balbi <balbi@kernel.org>
+To:     Nathan Chancellor <natechancellor@gmail.com>
+Cc:     Ashwini Pahuja <ashwini.linux@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+        clang-built-linux@googlegroups.com
+Subject: Re: [PATCH RESEND] usb: gadget: udc: bdc: Remove unnecessary NULL checks in bdc_req_complete
+In-Reply-To: <20200329144703.GA9720@ubuntu-m2-xlarge-x86>
+References: <87zhc0j2qi.fsf@kernel.org> <20200329011246.27599-1-natechancellor@gmail.com> <871rpb4nd1.fsf@kernel.org> <20200329144703.GA9720@ubuntu-m2-xlarge-x86>
+Date:   Sun, 29 Mar 2020 19:43:52 +0300
+Message-ID: <87mu7zdsc7.fsf@kernel.org>
 MIME-Version: 1.0
-References: <20200327030414.5903-2-wens@kernel.org> <684a08e6-7dfe-4cb1-2ae5-c1fb4128976b@gmail.com>
-In-Reply-To: <684a08e6-7dfe-4cb1-2ae5-c1fb4128976b@gmail.com>
-From:   Chen-Yu Tsai <wens@kernel.org>
-Date:   Mon, 30 Mar 2020 00:36:37 +0800
-X-Gmail-Original-Message-ID: <CAGb2v65ayZwN14S-Pzu2ip1K=fgzTbNB=ZzUcpou-jtv8m6vBA@mail.gmail.com>
-Message-ID: <CAGb2v65ayZwN14S-Pzu2ip1K=fgzTbNB=ZzUcpou-jtv8m6vBA@mail.gmail.com>
-Subject: Re: [PATCH 1/6] arm64: dts: rockchip: rk3399-roc-pc: Fix MMC
- numbering for LED triggers
-To:     Johan Jonker <jbx6244@gmail.com>,
-        =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>
-Cc:     Chen-Yu Tsai <wens@kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        Rob Herring <robh+dt@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; boundary="=-=-=";
+        micalg=pgp-sha256; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 27, 2020 at 5:58 PM Johan Jonker <jbx6244@gmail.com> wrote:
->
-> Hi Chen-Yu Tsai,
->
-> The led node names need some changes.
-> 'linux,default-trigger' value does not fit.
->
-> From leds-gpio.yaml:
->
-> patternProperties:
->   # The first form is preferred, but fall back to just 'led' anywhere in the
->   # node name to at least catch some child nodes.
->   "(^led-[0-9a-f]$|led)":
->     type: object
->
-> Rename led nodenames to 'led-0' form
->
-> Also include all mail lists found with:
-> ./scripts/get_maintainer.pl --nogit-fallback --nogit
->
-> devicetree@vger.kernel.org
+--=-=-=
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 
-Oops...
 
-> If you like change the rest of dts with leds as well...
+Hi,
+
+Nathan Chancellor <natechancellor@gmail.com> writes:
+>> > When building with Clang + -Wtautological-pointer-compare:
+>> >
+>> > drivers/usb/gadget/udc/bdc/bdc_ep.c:543:28: warning: comparison of
+>> > address of 'req->queue' equal to a null pointer is always false
+>> > [-Wtautological-pointer-compare]
+>> >         if (req =3D=3D NULL  || &req->queue =3D=3D NULL || &req->usb_r=
+eq =3D=3D NULL)
+>> >                              ~~~~~^~~~~    ~~~~
+>> > drivers/usb/gadget/udc/bdc/bdc_ep.c:543:51: warning: comparison of
+>> > address of 'req->usb_req' equal to a null pointer is always false
+>> > [-Wtautological-pointer-compare]
+>> >         if (req =3D=3D NULL  || &req->queue =3D=3D NULL || &req->usb_r=
+eq =3D=3D NULL)
+>> >                                                     ~~~~~^~~~~~~    ~~=
+~~
+>> > 2 warnings generated.
+>> >
+>> > As it notes, these statements will always evaluate to false so remove
+>> > them.
+>> >
+>> > Fixes: efed421a94e6 ("usb: gadget: Add UDC driver for Broadcom USB3.0 =
+device controller IP BDC")
+>> > Link: https://github.com/ClangBuiltLinux/linux/issues/749
+>> > Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+>>=20
+>> It's now in my queue for v5.8. It doesn't really look like a bug fix, so
+>> it's not going in during v5.7-rc
+>>=20
+>> --=20
+>> balbi
 >
->   DTC     arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dt.yaml
->   CHECK   arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dt.yaml
-> arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dt.yaml: leds:
-> yellow-led:linux,default-trigger:0: 'mmc0' is not one of ['backlight',
-> 'default-on', 'heartbeat', 'disk-activity', 'ide-disk', 'timer', 'pattern']
-> arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dt.yaml: leds:
-> diy-led:linux,default-trigger:0: 'mmc1' is not one of ['backlight',
-> 'default-on', 'heartbeat', 'disk-activity', 'ide-disk', 'timer', 'pattern']
->   DTC     arch/arm64/boot/dts/rockchip/rk3399-roc-pc-mezzanine.dt.yaml
->   CHECK   arch/arm64/boot/dts/rockchip/rk3399-roc-pc-mezzanine.dt.yaml
-> arch/arm64/boot/dts/rockchip/rk3399-roc-pc-mezzanine.dt.yaml: leds:
-> diy-led:linux,default-trigger:0: 'mmc2' is not one of ['backlight',
-> 'default-on', 'heartbeat', 'disk-activity', 'ide-disk', 'timer', 'pattern']
-> arch/arm64/boot/dts/rockchip/rk3399-roc-pc-mezzanine.dt.yaml: leds:
-> yellow-led:linux,default-trigger:0: 'mmc1' is not one of ['backlight',
-> 'default-on', 'heartbeat', 'disk-activity', 'ide-disk', 'timer', 'pattern']
+> Thank you for picking it up. It would be nice to see it in 5.7 since
+> we're enabling this warning and this is one of two outstanding
+> instances in -next and the other one's patch has been picked up plus the
+> patch itself is rather benign. Not to mention that I did send this patch
+> back in October. However, when it is merged into Linus' tree is
+> ultimately your call so I won't argue as long as it gets there
+> eventually.
 
-Maybe we should just get rid of linux,default-trigger then?
+If Greg's okay with this patch going in during v5.7-rc, I can send it as
+a fix, no worries. Greg?
 
-Heiko?
+=2D-=20
+balbi
 
-ChenYu
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
 
-> make -k ARCH=arm64 dtbs_check
-> DT_SCHEMA_FILES=Documentation/devicetree/bindings/leds/leds-gpio.yaml
->
-> > From: Chen-Yu Tsai <wens@csie.org>
-> >
-> > With SDIO now enabled, the numbering of the existing MMC host controllers
-> > gets incremented by 1, as the SDIO host is the first one.
-> >
-> > Increment the numbering of the MMC LED triggers to match.
-> >
-> > Fixes: cf3c5397835f ("arm64: dts: rockchip: Enable sdio0 and uart0 on rk3399-roc-pc-mezzanine")
-> > Signed-off-by: Chen-Yu Tsai <wens@csie.org>
-> > ---
-> >  arch/arm64/boot/dts/rockchip/rk3399-roc-pc-mezzanine.dts | 8 ++++++++
-> >  arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dtsi          | 4 ++--
-> >  2 files changed, 10 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/arch/arm64/boot/dts/rockchip/rk3399-roc-pc-mezzanine.dts b/arch/arm64/boot/dts/rockchip/rk3399-roc-pc-mezzanine.dts
-> > index 2acb3d500fb9..f0686fc276be 100644
-> > --- a/arch/arm64/boot/dts/rockchip/rk3399-roc-pc-mezzanine.dts
-> > +++ b/arch/arm64/boot/dts/rockchip/rk3399-roc-pc-mezzanine.dts
-> > @@ -38,6 +38,10 @@ vcc3v3_pcie: vcc3v3-pcie {
-> >       };
-> >  };
-> >
-> > +&diy_led {
-> > +     linux,default-trigger = "mmc2";
-> > +};
-> > +
-> >  &pcie_phy {
-> >       status = "okay";
-> >  };
-> > @@ -91,3 +95,7 @@ &uart0 {
-> >       pinctrl-0 = <&uart0_xfer &uart0_cts &uart0_rts>;
-> >       status = "okay";
-> >  };
-> > +
-> > +&yellow_led {
-> > +     linux,default-trigger = "mmc1";
-> > +};
-> > diff --git a/arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dtsi b/arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dtsi
-> > index 9f225e9c3d54..bc060ac7972d 100644
-> > --- a/arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dtsi
-> > +++ b/arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dtsi
-> > @@ -70,14 +70,14 @@ work-led {
-> >                       linux,default-trigger = "heartbeat";
-> >               };
-> >
-> > -             diy-led {
-> > +             diy_led: diy-led {
-> >                       label = "red:diy";
-> >                       gpios = <&gpio0 RK_PB5 GPIO_ACTIVE_HIGH>;
-> >                       default-state = "off";
-> >                       linux,default-trigger = "mmc1";
-> >               };
-> >
-> > -             yellow-led {
-> > +             yellow_led: yellow-led {
-> >                       label = "yellow:yellow-led";
-> >                       gpios = <&gpio0 RK_PA2 GPIO_ACTIVE_HIGH>;
-> >                       default-state = "off";
-> > --
-> > 2.25.1
->
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEElLzh7wn96CXwjh2IzL64meEamQYFAl6A0EgACgkQzL64meEa
+mQZiEw/+JF2SkxE/JgJAs1X5mOvM/c8aF7iFlroAgAhXO5LZL5YZiVOoNCd2UJdp
+6VHA/jwvOtRStwzeSLleFAoyF8wozzp4REfUNyIogW6bwOHcb9T36Nn5rguSEaPN
+t/g9kBb3CbfrQ8Wejfl7xINPN6NYaW2wqUbqPVUDEX0bGFCrXWWBn4o8vVlNtvZ2
+cxwcuEOScN7o7rfrwqii1VHngY8CxHjl02yJ2F8Fcc+8rD0lCdNUB6DemSgBgFEk
+HeEmZoCb5hjpXGc8obbStT0Ie9Rut9ItgA3XxoL4cFhIa5i3UUV+Mq9qXHY+W4It
++jhW1hK1fL+CEu+BlXb3AELgNOaxbDDwuXJMKuCbNnnP6z/4uOHjE4fxSKoUnFCw
+XFCforp3+hheFJPlB8e+fNd+hjsWv6ipI4tuEL1mrpnXu3d2U3toTlDCNyTciy3J
+sDg9TouHZqXOATisL1qPi2cFtdfUEGhVTuYbYGWUJA86f3IHVUmjU9LIJ4YmlEtI
+5aQr7nsIkF0ERGCt56DcKD7DJxNI29dMWYPw5SCSOjN8mQ4elxoBekLCtYRdNrGh
+EKmoP6TQuiPbndOzbNPuehQoDCoXao+4YfSubUfXQi484q0+DzAjQidcIJGV3efu
+D+Sjn7bi/T0ngvHHYVZot4gXukoOIu9xwZrKLVM6mbCckIH2qrM=
+=U6ai
+-----END PGP SIGNATURE-----
+--=-=-=--
