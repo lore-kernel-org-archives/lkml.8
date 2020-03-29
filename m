@@ -2,76 +2,74 @@ Return-Path: <SRS0=I467=5O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 179E7C2D0E8
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 00:10:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFA97C2D0E8
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 00:11:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E1569206F2
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 00:10:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A6369206F2
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 00:11:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=dilger-ca.20150623.gappssmtp.com header.i=@dilger-ca.20150623.gappssmtp.com header.b="mDpWYevu"
+	dkim=pass (2048-bit key) header.d=dilger-ca.20150623.gappssmtp.com header.i=@dilger-ca.20150623.gappssmtp.com header.b="S4z4bs8U"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727793AbgC2AKR (ORCPT
+        id S1727799AbgC2ALK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 28 Mar 2020 20:10:17 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:36519 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727452AbgC2AKQ (ORCPT
+        Sat, 28 Mar 2020 20:11:10 -0400
+Received: from mail-pj1-f66.google.com ([209.85.216.66]:52822 "EHLO
+        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727620AbgC2ALK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 28 Mar 2020 20:10:16 -0400
-Received: by mail-pl1-f196.google.com with SMTP id g2so5120486plo.3
-        for <linux-kernel@vger.kernel.org>; Sat, 28 Mar 2020 17:10:14 -0700 (PDT)
+        Sat, 28 Mar 2020 20:11:10 -0400
+Received: by mail-pj1-f66.google.com with SMTP id ng8so5782600pjb.2
+        for <linux-kernel@vger.kernel.org>; Sat, 28 Mar 2020 17:11:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=dilger-ca.20150623.gappssmtp.com; s=20150623;
         h=from:message-id:mime-version:subject:date:in-reply-to:cc:to
          :references;
-        bh=vxJbPwA8dn/KP4vFKPLIlIiqHMusiErlAxUBEJjgiMo=;
-        b=mDpWYevu7fHR9ahQLIPqBxHgZaN5j8dtF+UWxYIbRXwec/MXpGlaDRKC0LNwFuDDKK
-         oEYVRZ7gouW5W8M6IT2AzBu+RB1LrK+HNQaebpQ1P3FtKAxGH69hEhEoX+vKGB5WNIY1
-         /jcQjRrD5qCowuM6C0GdO6L+YM9US2aojqRHWqtQdaA8lmYT0N6Ilxzmp07v5tpHivsb
-         SlIk6duVfRaQixfrPaADpVWNbMkeG6ZiOotxjEEJGjgOZJDsfCBgWCKRRkzHo7vEgt41
-         Vjzal9cvPqWH/u0FP3XPbHybg/UMNMKgEE+lcAwzcqkP9xivlJX/IoO7i8kZxE529kvy
-         tHRA==
+        bh=m3IIXaok1mlnP58ZyOoBrKQ2Q9MybBOnEC9ZyN9UEYI=;
+        b=S4z4bs8UmE1mLktnBE93Xu9Wqa4wliQzOSVnSC1hxrBP+9sa3nmNvy7nCbzsLnRBnH
+         o3ZzoWD+f+KmzCIThMWg6tqdK5WSttU7jzCMyhDsHWFBXf1KaqHfbl+Jdz+eR03hbNKV
+         DcRx4sMxMrwaOKXTMNH2fw9vxkkuJLFs4eypbm0ixD3wgRvc4mUQ4Kbpj48wVhGYGG9g
+         aHI4cAfaqJZBwBF+znP0PKJfKxup+9gRhQqC6cBT5XHVvvczJqerXykHRTIdMWVgbfb+
+         fKVZX0Bzoc6WYsmrf365iAsOm5zGMokVXsSdY13k0lxD09Ete9i8/LPDUzF2p11h6nOR
+         LDSA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:message-id:mime-version:subject:date
          :in-reply-to:cc:to:references;
-        bh=vxJbPwA8dn/KP4vFKPLIlIiqHMusiErlAxUBEJjgiMo=;
-        b=WUtUdNLgT59ti5HsW7Kf2cz8bEKjR2R2tdSLraHC9PnnrECk97hzpEmPoY5nmThRh1
-         nRkT0XFUmqg5MSp5ushEzcdeUSCXCqaB64/dzpSnvuMUSlY32WyQTiReTyYyfrOr14w+
-         Gwh7o33+H/25vwjfdOC2W7MHghiG9qMifc/ZfXzN9IcqKPns99keRt/hHqQd0S3D4Bg/
-         MGLf9wgZSYX/33/b7l4JUt4tKzZxTb65ny91jfbP7Og6mEsf8zzXsJq/luj067CVfNRN
-         LrpDMIzS0tOipp+L3oLjPBInr4vLbC3YCiyysRF+ApVyKLCYunHPQvunzSBh1VX+KGnM
-         Csgw==
-X-Gm-Message-State: ANhLgQ3TcwNOYeYK1n7f4LDgZnymKxS0/UGvaPH65uz754sSAzNdrGBM
-        r7vnv8vb2Ej1nR6XRUzo8bqxYxGMpbw=
-X-Google-Smtp-Source: ADFU+vvwkoIjRAVqjofdqaROQEZ/oY9wC5pkRltbDAAb+28mQ1hbBAvoHf4IhGmIiUwxO398uZpTdA==
-X-Received: by 2002:a17:90b:8d2:: with SMTP id ds18mr6829273pjb.186.1585440614201;
-        Sat, 28 Mar 2020 17:10:14 -0700 (PDT)
+        bh=m3IIXaok1mlnP58ZyOoBrKQ2Q9MybBOnEC9ZyN9UEYI=;
+        b=detxHesvxV4icQEotQUkxWCnXeOEpjwUUgIsA3K0DpO02mRRZDyfgBm0zlQ3ePSJX0
+         oyvmtcX8ER0pkE7fzX977NQv9MhbyYwEk7CePSPgF438r9qSGW/wQTlU+rCP8umDdfVH
+         qS0vn0lyPD9Qu+z7L0pnam9DyaFOyUJpv6xSJlWrZUwjlVzcKtbJDtanRIH7UYQE2uj0
+         +2s5m0dCRSMbm4f9c8k7e2e/+lp1gsc/91gdxHpBOZwd5dX/Grd/w6ZMLGjlIGoV/0IB
+         SB35O7Lg/08bY0Wb/TTcuFlI5gSLKODqNg7YogwE1KEj7vnNBPZrAHNhVfCkfG1pk0J7
+         ZbFw==
+X-Gm-Message-State: ANhLgQ3aKmBygRjgdLIt8V1RqmlrtxWY+lM0+AGcPuJ/2x5HafNHOURR
+        VgYnL4L+wFjaPm4hAGJHriFEBw==
+X-Google-Smtp-Source: ADFU+vuR8gj+QxbQC4ohUiQPzgRhWu4l3hbnAi32Cgd25oBaBtJ6UOMopi1MHhHIeAHrFXZC2NWnug==
+X-Received: by 2002:a17:902:c595:: with SMTP id p21mr6044148plx.17.1585440668255;
+        Sat, 28 Mar 2020 17:11:08 -0700 (PDT)
 Received: from [192.168.10.160] (S0106a84e3fe4b223.cg.shawcable.net. [70.77.216.213])
-        by smtp.gmail.com with ESMTPSA id q80sm4325780pfc.17.2020.03.28.17.10.12
+        by smtp.gmail.com with ESMTPSA id q80sm4325780pfc.17.2020.03.28.17.11.07
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 28 Mar 2020 17:10:13 -0700 (PDT)
+        Sat, 28 Mar 2020 17:11:07 -0700 (PDT)
 From:   Andreas Dilger <adilger@dilger.ca>
-Message-Id: <EC88E8EB-7303-45FB-85B9-A007FBE5F5A0@dilger.ca>
+Message-Id: <6E5C5364-4659-4EE4-87A6-A4A90FF3BE47@dilger.ca>
 Content-Type: multipart/signed;
- boundary="Apple-Mail=_98918D26-6166-4EBB-A347-3496E7D1D550";
+ boundary="Apple-Mail=_E06348CF-6ECA-4914-A92E-6A337DB8E42C";
  protocol="application/pgp-signature"; micalg=pgp-sha256
 Mime-Version: 1.0 (Mac OS X Mail 10.3 \(3273\))
-Subject: Re: [RFC PATCH v1 08/50] fs/ext4/ialloc.c: Replace % with
- reciprocal_scale() TO BE VERIFIED
-Date:   Sat, 28 Mar 2020 18:10:11 -0600
-In-Reply-To: <20200328231536.GA11951@SDF.ORG>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Theodore Ts'o <tytso@mit.edu>,
-        linux-ext4 <linux-ext4@vger.kernel.org>
-To:     George Spelvin <lkml@SDF.ORG>
-References: <202003281643.02SGh9vH007105@sdf.org>
- <9A60C390-349E-4A90-A812-F04EB5A82136@dilger.ca>
- <20200328231536.GA11951@SDF.ORG>
+Subject: Re: [PATCH v2] ext4: Fix incorrect group count in ext4_fill_super
+ error message
+Date:   Sat, 28 Mar 2020 18:11:06 -0600
+In-Reply-To: <28c22b1845796e52b5fe2832432e859af023ee1b.1585438486.git.josh@joshtriplett.org>
+Cc:     linux-ext4 <linux-ext4@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Theodore Ts'o <tytso@mit.edu>
+To:     Josh Triplett <josh@joshtriplett.org>
+References: <28c22b1845796e52b5fe2832432e859af023ee1b.1585438486.git.josh@joshtriplett.org>
 X-Mailer: Apple Mail (2.3273)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -79,69 +77,66 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---Apple-Mail=_98918D26-6166-4EBB-A347-3496E7D1D550
+--Apple-Mail=_E06348CF-6ECA-4914-A92E-6A337DB8E42C
 Content-Transfer-Encoding: quoted-printable
 Content-Type: text/plain;
 	charset=us-ascii
 
-On Mar 28, 2020, at 5:15 PM, George Spelvin <lkml@SDF.ORG> wrote:
->=20
-> On Sat, Mar 28, 2020 at 04:56:17PM -0600, Andreas Dilger wrote:
->>=20
->> So I think the current patch is fine.  The for-loop construct of
->> using "++g =3D=3D ngroups && (g =3D 0)" to wrap "g" around is new to =
-me,
->> but looks correct.
->>=20
->> Reviewed-by: Andreas Dilger <adilger@dilger.ca>
->=20
-> Thank you.  Standing back and looking from higher altitude, I missed
-> a second modulo at fallback_retry: which should be made consistent,
-> so I need a one re-spin.
->=20
-> Also, we could, if desired, eliminate the i variable entirely
-> using the fact that we have a copy of the starting position cached
-> in parent_group.  I.e.
->=20
-> 		g =3D parent_group =3D reciprocal_scale(grp, ngroups);
-> -		for (i =3D 0; i < ngroups; i++, ++g =3D=3D ngroups && (g =
-=3D 0)) {
-> +		do {
-> 			...
-> -		}
-> +			if (++g =3D=3D ngroups)
-> +				g =3D 0;
-> +		} while (g !=3D parent_group);
->=20
-> Or perhaps the following would be simpler, replacing the modulo
-> with a conditional subtract:
->=20
-> -		g =3D parent_group =3D reciprocal_scale(grp, ngroups);
-> +		parent_group =3D reciprocal_scale(grp, ngroups);
-> -		for (i =3D 0; i < ngroups; i++, ++g =3D=3D ngroups && (g =
-=3D 0)) {
-> +		for (i =3D 0; i < ngroups; i++) {
-> +			g =3D parent_group + i;
-> +			if (g >=3D ngroups)
-> +				g -=3D ngroups;
->=20
-> The conditional branch starts out always false, and ends up always =
-true,
-> but except for a few bobbles when it switches, branch prediction =
-should
-> handle it very well.
->=20
-> Any preference?
 
-I was looking at whether we could use a for-loop without "i"?  Something =
-like:
+> On Mar 28, 2020, at 5:43 PM, Josh Triplett <josh@joshtriplett.org> =
+wrote:
+>=20
+> ext4_fill_super doublechecks the number of groups before mounting; if
+> that check fails, the resulting error message prints the group count
+> from the ext4_sb_info sbi, which hasn't been set yet. Move the
+> assignment to sbi->s_groups_count above its use in the error message.
+>=20
+> Signed-off-by: Josh Triplett <josh@joshtriplett.org>
+> Fixes: 4ec1102813798 ("ext4: Add sanity checks for the superblock =
+before mounting the filesystem")
 
-	for (g =3D parent_group + 1; g !=3D parent_group; ++g >=3D =
-ngroups && (g =3D 0))
+Much better, thanks.
 
-The initial group is parent_group + 1, to avoid special-casing when the
-initial parent_group =3D 0 (which would prevent the loop from =
-terminating).
+Reviewed-by: Andreas Dilger <adilger@dilger.ca>
+
+> ---
+> v2: Rather than using the computed group count value in blocks_count,
+> move the assignment to sbi->s_groups_count up and keep using that. =
+That
+> makes the code, and the patch, simpler to read and understand.
+>=20
+> fs/ext4/super.c | 2 +-
+> 1 file changed, 1 insertion(+), 1 deletion(-)
+>=20
+> diff --git a/fs/ext4/super.c b/fs/ext4/super.c
+> index 0c7c4adb664e..6692bc48520a 100644
+> --- a/fs/ext4/super.c
+> +++ b/fs/ext4/super.c
+> @@ -4285,6 +4285,7 @@ static int ext4_fill_super(struct super_block =
+*sb, void *data, int silent)
+> 			le32_to_cpu(es->s_first_data_block) +
+> 			EXT4_BLOCKS_PER_GROUP(sb) - 1);
+> 	do_div(blocks_count, EXT4_BLOCKS_PER_GROUP(sb));
+> +	sbi->s_groups_count =3D blocks_count;
+> 	if (blocks_count > ((uint64_t)1<<32) - EXT4_DESC_PER_BLOCK(sb)) =
+{
+> 		ext4_msg(sb, KERN_WARNING, "groups count too large: %u "
+> 		       "(block count %llu, first data block %u, "
+> @@ -4294,7 +4295,6 @@ static int ext4_fill_super(struct super_block =
+*sb, void *data, int silent)
+> 		       EXT4_BLOCKS_PER_GROUP(sb));
+> 		goto failed_mount;
+> 	}
+> -	sbi->s_groups_count =3D blocks_count;
+> 	sbi->s_blockfile_groups =3D min_t(ext4_group_t, =
+sbi->s_groups_count,
+> 			(EXT4_MAX_BLOCK_FILE_PHYS / =
+EXT4_BLOCKS_PER_GROUP(sb)));
+> 	if (((u64)sbi->s_groups_count * sbi->s_inodes_per_group) !=3D
+> --
+> 2.26.0
+>=20
+
 
 Cheers, Andreas
 
@@ -150,7 +145,7 @@ Cheers, Andreas
 
 
 
---Apple-Mail=_98918D26-6166-4EBB-A347-3496E7D1D550
+--Apple-Mail=_E06348CF-6ECA-4914-A92E-6A337DB8E42C
 Content-Transfer-Encoding: 7bit
 Content-Disposition: attachment;
 	filename=signature.asc
@@ -161,19 +156,19 @@ Content-Description: Message signed with OpenPGP
 -----BEGIN PGP SIGNATURE-----
 Comment: GPGTools - http://gpgtools.org
 
-iQIzBAEBCAAdFiEEDb73u6ZejP5ZMprvcqXauRfMH+AFAl5/52MACgkQcqXauRfM
-H+D/LhAAidMTHxiYEIscM4C0DDkX5We7BDxxtxI66C8RWtGjHFkEkpaQiIPpc+Ck
-wuJG92tkWRU/9ntXF+NqDPGwWZ78twhAtxDcLNztIqWhcJ53pdgrXZ4ReTL2S9m/
-81M96JMwTngpojH+CZbsrEfq64YzY0ASLZsTG67hXHl8Nb/ZXdEXYdwXegl/biHh
-e2tq4BBvmdgUztxEnOncAi4WyzUU/xVPU+YYLWhgHCTwG29HHN+130VkSibZYKTt
-j8X0/1xAtaOlt/KdKXJMm+rdaWHkYee2PqCvLhjUUwv4drUHjCZ8eo7D4ZbJZaX9
-TQHaVpEyvlqG6ZdTAafr0sONK0Ep6Xb66ZuQDj6zjlm6Nn6/rG42dLPhT+SMftWy
-/juaAu1JohzqV108Elzp5eNuEJEJWczsMKUAmVnQ5K2LaASpZRWWmLC3lrmledKH
-G0XWwc/FPV6H2pzWdi/EbHmkF9zna5uZEDCul62iDMsdsRK9h0sxmdP9H20jrrXi
-rXK9WdwKsJYngJFDAa1nRi0Iux4OJ/5lZvLUzJNGZGnAnbnGNZKYFcBu5fJr/ent
-JJZyLeWr7QiAgwqZX3Sk16/6KPBZfslrcHhFeBZY9KPVAorXRGM+XDEQy5+CwaDq
-xAaWC3KN26fDWN1BjSZTf/MjmDBmGxtLdqnotTOrrh6qJSTeHvs=
-=1bvk
+iQIzBAEBCAAdFiEEDb73u6ZejP5ZMprvcqXauRfMH+AFAl5/55oACgkQcqXauRfM
+H+AMBBAAj/LTh6Lrtt4OLeNDp8cLpEbYJB9ZBhvtDN0S5GVtI1QSolGejY4Oyxnz
+E6kwyPccmveo9fQZf6ljfIqlCfa+noVXoHocgLLa8Ky6jZokcpXsF1Dx6qjJHhfD
+7DIRxiyMXRJj3hAimAVpscUGpDD+URTVFvDqdHyFy2mVPe7/5vAFPin82L69MTwj
+qMUH1B55k42dcgRPeMSsguuxW/AJeMyEj8zaw0R1zjOj/Itl/rHJbWHEzgMKrAIh
+QEcqjhHy+kk/5MPKyfWS/tseNN7nCr0sAQWTxxeJTBh8/Ut8ZQyWGOuNejVyS5T7
+wje9AcHbqc+ZFnPYXg9XE+/f9uzgiY/i+AlDasLOJVhig3Prcn/iqA03p/BUlXW0
+C81ZwERlWnriwh1Rq31LRfGELl5SBawsSQimkceUNt+fpLFYKw8enIV55uxHip5i
++VFLzuj22xrBmcycQGHxh+J9oVU6974QKcP4GGDnPhg22VDqiTj20pKuCusR1y2B
+QXlYZmONh+WPlzkEbvkdjiCrMitqjO807n12unAbwjdjILgmhXwlu2YGle839RQ+
+97EAW7pG8+9VivFJjfXbKni3GUZtzq6BiY2iN5bYyL/a1iL/aZvpG+cVJ8YnWYXg
+YGOZaIgjFOo9QsNI2+3RUIRDMrJbfsG8JcqiD+zR2VRYwaHk9lA=
+=LAwm
 -----END PGP SIGNATURE-----
 
---Apple-Mail=_98918D26-6166-4EBB-A347-3496E7D1D550--
+--Apple-Mail=_E06348CF-6ECA-4914-A92E-6A337DB8E42C--
