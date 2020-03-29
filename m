@@ -2,245 +2,88 @@ Return-Path: <SRS0=I467=5O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55C1EC43331
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 17:36:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E73EC2D0EF
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 17:36:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2095B20732
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 17:36:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="ZG+jTwkR"
+	by mail.kernel.org (Postfix) with ESMTP id 7718620732
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 17:36:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585503390;
+	bh=6wxbCjirdqbP/pGYVxk7caFB7gSjiRZxZxMElokEkBo=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=w9hiw4dUn2alf4f5S72JKugu+yAdvetIXr4PKVnyybC3XbKZU49VNz3XVRm5UjYw1
+	 rfebxWvFTRmL+KT6hs3HXg3HOa6KBiYfkozn+j7+MKkq1SM0QyVvBB+5ghCu673n2q
+	 h5C6OYp9A9mYxjzI0F133x5HhFtl6jShJq0fY+xI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728514AbgC2Rg0 (ORCPT
+        id S1728536AbgC2Rg3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Mar 2020 13:36:26 -0400
-Received: from mo4-p03-ob.smtp.rzone.de ([85.215.255.102]:18351 "EHLO
-        mo4-p03-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728375AbgC2RgL (ORCPT
+        Sun, 29 Mar 2020 13:36:29 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:34132 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728502AbgC2RgX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Mar 2020 13:36:11 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1585503368;
-        s=strato-dkim-0002; d=goldelico.com;
-        h=References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=E2J7ulfwfwYYWP68U4fy5BH/ranjAplIVWf+4HrUCO8=;
-        b=ZG+jTwkRUHiRw59z2TEIb+1A1VYUigrxHWGlVqh0NLh5ev9dmF9viyavtn4MYBUnPZ
-        TXHjAfyKgwFROJWY/OOxxC7biAOEr+gadsQB+yWkpzsRG5l1u0h/TtQf/0Y0KsRuFo0A
-        cVcWrLKaaDZP3ARelDFvqHNI0BocJUhGQq7nvUOT0UTaylstM+uiLvQSvtN4CdcJkg3l
-        ZKDkc0AY11RzEkjoeodIY/+hRCDHsnZ5P4HkemqYrycqWxWn1DzFW5mR2SQmS2NuP5k9
-        47xiQo01zMSQdlUqx2Kh5wtrPwYEBWPlThh6A/PZKaW0XHAWOiYWZxL2j2G7ufiXpDyl
-        kBWw==
-X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMhflhwDubTJ9o12DNOsPj0pDz2rsNxxv"
-X-RZG-CLASS-ID: mo00
-Received: from iMac.fritz.box
-        by smtp.strato.de (RZmta 46.2.1 DYNA|AUTH)
-        with ESMTPSA id m02241w2THa0BME
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
-        (Client did not present a certificate);
-        Sun, 29 Mar 2020 19:36:00 +0200 (CEST)
-From:   "H. Nikolaus Schaller" <hns@goldelico.com>
-To:     Paul Cercueil <paul@crapouillou.net>,
-        Paul Boddie <paul@boddie.org.uk>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paulburton@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Andi Kleen <ak@linux.intel.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        "H. Nikolaus Schaller" <hns@goldelico.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Kees Cook <keescook@chromium.org>
-Cc:     dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
-        linux-gpio@vger.kernel.org, letux-kernel@openphoenux.org,
-        mips-creator-ci20-dev@googlegroups.com
-Subject: [RFC v3 5/8] drm: ingenic: add jz4780 Synopsys HDMI driver
-Date:   Sun, 29 Mar 2020 19:35:51 +0200
-Message-Id: <510efd8440388859510cc6f19440cf233f72e894.1585503354.git.hns@goldelico.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <cover.1585503354.git.hns@goldelico.com>
-References: <cover.1585503354.git.hns@goldelico.com>
+        Sun, 29 Mar 2020 13:36:23 -0400
+Received: by mail-lj1-f195.google.com with SMTP id p10so15257255ljn.1
+        for <linux-kernel@vger.kernel.org>; Sun, 29 Mar 2020 10:36:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=TcQyEoLt4UUXsWctY014kOQhUrjNRd8NgK7mJY68Kfo=;
+        b=c4S1GUo66CLKHtqWZrJ08l45GfFbSoNmJq7+Mk864e3HFM1z96Vt0icYOjO/zZ3OFq
+         dBmL3o8LzCXTrZx1pkWS9af6uT+g/QoAwSjdZAillv4v0C46jeVFnvQdf6JM3fhEQtpr
+         cGu5GjFuFXwCQ6z4lyM8GSScBIie8CSmYDIeQ=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=TcQyEoLt4UUXsWctY014kOQhUrjNRd8NgK7mJY68Kfo=;
+        b=sw6baUC3oi4bufpBH71TWGnvGICpNo+uuYK8l+kY1Ep2QOWvXzFRXvtxi1JVfygz3I
+         kkru/arMnPFGk6XOQLBmQXtUO/myq4oR8nkn3H/pEnsX0xJCbQlT5sytgmFK3oBgtmBD
+         G4N7yzldWx/ucVyeXxDR8ka9c1l2ccoUgMc1a6uRngaw2mb40DadaovnFOXHbTXt5MQF
+         nyXSOtWt9TdaNwxuz6g5REp0HXXwaVhaQpixXFXMvh7CP3Uqp5S/cQeOlOtpDdnllpBO
+         xrmynNz2Es48F9aFbWhLW23EtN54I+MGhIrkPmdKjrcRrLe+mueE9Qb0F0VvMW5GMPxq
+         idxQ==
+X-Gm-Message-State: AGi0PuapUVj8rbBuaGzNJSDZMw8ePXp4Q0LqwZlNavAFuCoiXzHUoDHC
+        F73g+9Y0Nc+5MphYjDBX390VIMXtyL8=
+X-Google-Smtp-Source: APiQypIJxFJLQ06KVHcT7Kj5e5Z2mhcURiIiR5AzVE3k6e/W52jp0CMvsEJvZSJ+wZ/7eH9f1h8tfw==
+X-Received: by 2002:a05:651c:289:: with SMTP id b9mr5244710ljo.44.1585503379745;
+        Sun, 29 Mar 2020 10:36:19 -0700 (PDT)
+Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com. [209.85.208.177])
+        by smtp.gmail.com with ESMTPSA id l21sm7460542lfh.63.2020.03.29.10.36.18
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 29 Mar 2020 10:36:19 -0700 (PDT)
+Received: by mail-lj1-f177.google.com with SMTP id g27so15418496ljn.10
+        for <linux-kernel@vger.kernel.org>; Sun, 29 Mar 2020 10:36:18 -0700 (PDT)
+X-Received: by 2002:a05:651c:50e:: with SMTP id o14mr4888740ljp.241.1585503378519;
+ Sun, 29 Mar 2020 10:36:18 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <158549780513.2870.9873806112977909523.tglx@nanos.tec.linutronix.de>
+ <158549780514.2870.16142335615120539835.tglx@nanos.tec.linutronix.de>
+In-Reply-To: <158549780514.2870.16142335615120539835.tglx@nanos.tec.linutronix.de>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Sun, 29 Mar 2020 10:36:02 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wj0fy5-mMkfVTLd4thU7R28Zp5rFGQBLWeqbd_7PyD=hg@mail.gmail.com>
+Message-ID: <CAHk-=wj0fy5-mMkfVTLd4thU7R28Zp5rFGQBLWeqbd_7PyD=hg@mail.gmail.com>
+Subject: Re: [GIT pull] perf/urgent for v5.6
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "the arch/x86 maintainers" <x86@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Paul Boddie <paul@boddie.org.uk>
+On Sun, Mar 29, 2020 at 9:03 AM Thomas Gleixner <tglx@linutronix.de> wrote:
+>
+> please pull the latest perf/urgent branch from:
 
-A specialisation of the generic Synopsys HDMI driver is employed for JZ4780
-HDMI support. This requires a new driver, plus device tree and configuration
-modifications.
+Also already sent and merged on Tuesday (commit 76ccd234269b).
 
-Signed-off-by: Paul Boddie <paul@boddie.org.uk>
-Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
----
- drivers/gpu/drm/ingenic/Kconfig          |   8 ++
- drivers/gpu/drm/ingenic/Makefile         |   1 +
- drivers/gpu/drm/ingenic/dw_hdmi-jz4780.c | 120 +++++++++++++++++++++++
- 3 files changed, 129 insertions(+)
- create mode 100644 drivers/gpu/drm/ingenic/dw_hdmi-jz4780.c
-
-diff --git a/drivers/gpu/drm/ingenic/Kconfig b/drivers/gpu/drm/ingenic/Kconfig
-index d82c3d37ec9c..44bfd0d35af1 100644
---- a/drivers/gpu/drm/ingenic/Kconfig
-+++ b/drivers/gpu/drm/ingenic/Kconfig
-@@ -14,3 +14,11 @@ config DRM_INGENIC
- 	  Choose this option for DRM support for the Ingenic SoCs.
- 
- 	  If M is selected the module will be called ingenic-drm.
-+
-+config DRM_DW_HDMI_JZ4780
-+	tristate "HDMI Support for Ingenic JZ4780"
-+	depends on DRM_INGENIC
-+	depends on OF
-+	select DRM_DW_HDMI
-+	help
-+	  Choose this option for HDMI output from the Ingenic JZ4780.
-diff --git a/drivers/gpu/drm/ingenic/Makefile b/drivers/gpu/drm/ingenic/Makefile
-index 11cac42ce0bb..238383de63c7 100644
---- a/drivers/gpu/drm/ingenic/Makefile
-+++ b/drivers/gpu/drm/ingenic/Makefile
-@@ -1 +1,2 @@
- obj-$(CONFIG_DRM_INGENIC) += ingenic-drm.o
-+obj-$(CONFIG_DRM_DW_HDMI_JZ4780) += dw_hdmi-jz4780.o
-diff --git a/drivers/gpu/drm/ingenic/dw_hdmi-jz4780.c b/drivers/gpu/drm/ingenic/dw_hdmi-jz4780.c
-new file mode 100644
-index 000000000000..fa379e337263
---- /dev/null
-+++ b/drivers/gpu/drm/ingenic/dw_hdmi-jz4780.c
-@@ -0,0 +1,120 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/* Copyright (C) 2011-2013 Freescale Semiconductor, Inc.
-+ * Copyright (C) 2019 Paul Boddie <paul@boddie.org.uk>
-+ *
-+ * Derived from dw_hdmi-imx.c with i.MX portions removed.
-+ * Probe and remove operations derived from rcar_dw_hdmi.c.
-+ */
-+
-+#include <linux/module.h>
-+#include <linux/platform_device.h>
-+#include <linux/regmap.h>
-+
-+#include <drm/bridge/dw_hdmi.h>
-+#include <drm/drm_of.h>
-+
-+static const struct dw_hdmi_mpll_config jz4780_mpll_cfg[] = {
-+	{ 45250000,  { { 0x01e0, 0x0000 },
-+		       { 0x21e1, 0x0000 },
-+		       { 0x41e2, 0x0000 } } },
-+	{ 92500000,  { { 0x0140, 0x0005 },
-+		       { 0x2141, 0x0005 },
-+		       { 0x4142, 0x0005 } } },
-+	{ 148500000, { { 0x00a0, 0x000a },
-+		       { 0x20a1, 0x000a },
-+		       { 0x40a2, 0x000a } } },
-+	{ 216000000, { { 0x00a0, 0x000a },
-+		       { 0x2001, 0x000f },
-+		       { 0x4002, 0x000f } } },
-+	{ ~0UL,      { { 0x0000, 0x0000 },
-+		       { 0x0000, 0x0000 },
-+		       { 0x0000, 0x0000 } } }
-+};
-+
-+static const struct dw_hdmi_curr_ctrl jz4780_cur_ctr[] = {
-+	/*pixelclk     bpp8    bpp10   bpp12 */
-+	{ 54000000,  { 0x091c, 0x091c, 0x06dc } },
-+	{ 58400000,  { 0x091c, 0x06dc, 0x06dc } },
-+	{ 72000000,  { 0x06dc, 0x06dc, 0x091c } },
-+	{ 74250000,  { 0x06dc, 0x0b5c, 0x091c } },
-+	{ 118800000, { 0x091c, 0x091c, 0x06dc } },
-+	{ 216000000, { 0x06dc, 0x0b5c, 0x091c } },
-+	{ ~0UL,      { 0x0000, 0x0000, 0x0000 } },
-+};
-+
-+/*
-+ * Resistance term 133Ohm Cfg
-+ * PREEMP config 0.00
-+ * TX/CK level 10
-+ */
-+static const struct dw_hdmi_phy_config jz4780_phy_config[] = {
-+	/*pixelclk   symbol   term   vlev */
-+	{ 216000000, 0x800d, 0x0005, 0x01ad},
-+	{ ~0UL,      0x0000, 0x0000, 0x0000}
-+};
-+
-+static enum drm_mode_status
-+jz4780_hdmi_mode_valid(struct drm_connector *con,
-+		       const struct drm_display_mode *mode)
-+{
-+	if (mode->clock < 13500)
-+		return MODE_CLOCK_LOW;
-+	/* FIXME: Hardware is capable of 270MHz, but setup data is missing. */
-+	if (mode->clock > 216000)
-+		return MODE_CLOCK_HIGH;
-+
-+	return MODE_OK;
-+}
-+
-+static struct dw_hdmi_plat_data jz4780_dw_hdmi_plat_data = {
-+	.mpll_cfg   = jz4780_mpll_cfg,
-+	.cur_ctr    = jz4780_cur_ctr,
-+	.phy_config = jz4780_phy_config,
-+	.mode_valid = jz4780_hdmi_mode_valid,
-+};
-+
-+static const struct of_device_id jz4780_dw_hdmi_dt_ids[] = {
-+	{ .compatible = "ingenic,jz4780-dw-hdmi" },
-+	{ /* Sentinel */ },
-+};
-+MODULE_DEVICE_TABLE(of, jz4780_dw_hdmi_dt_ids);
-+
-+static int jz4780_dw_hdmi_probe(struct platform_device *pdev)
-+{
-+	struct dw_hdmi *hdmi;
-+
-+	hdmi = dw_hdmi_probe(pdev, &jz4780_dw_hdmi_plat_data);
-+	if (IS_ERR(hdmi))
-+		return PTR_ERR(hdmi);
-+
-+	platform_set_drvdata(pdev, hdmi);
-+
-+	return 0;
-+}
-+
-+static int jz4780_dw_hdmi_remove(struct platform_device *pdev)
-+{
-+	struct dw_hdmi *hdmi = platform_get_drvdata(pdev);
-+
-+	dw_hdmi_remove(hdmi);
-+
-+	return 0;
-+}
-+
-+static struct platform_driver jz4780_dw_hdmi_platform_driver = {
-+	.probe  = jz4780_dw_hdmi_probe,
-+	.remove = jz4780_dw_hdmi_remove,
-+	.driver = {
-+		.name = "dw-hdmi-jz4780",
-+		.of_match_table = jz4780_dw_hdmi_dt_ids,
-+	},
-+};
-+
-+module_platform_driver(jz4780_dw_hdmi_platform_driver);
-+
-+MODULE_AUTHOR("Andy Yan <andy.yan@rock-chips.com>");
-+MODULE_AUTHOR("Yakir Yang <ykk@rock-chips.com>");
-+MODULE_AUTHOR("Paul Boddie <paul@boddie.org.uk>");
-+MODULE_DESCRIPTION("Ingenic JZ4780 DW-HDMI Driver Extension");
-+MODULE_LICENSE("GPL");
-+MODULE_ALIAS("platform:dw-hdmi-jz4780");
--- 
-2.25.1
-
+             Linus
