@@ -7,40 +7,41 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC9C6C2D0E5
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 20:28:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41C24C43331
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 20:28:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C222020784
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 20:28:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1409220781
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 20:28:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728792AbgC2U0Q (ORCPT
+        id S1729170AbgC2U2V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Mar 2020 16:26:16 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:56904 "EHLO
+        Sun, 29 Mar 2020 16:28:21 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:56926 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727728AbgC2U0M (ORCPT
+        with ESMTP id S1728736AbgC2U0O (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Mar 2020 16:26:12 -0400
+        Sun, 29 Mar 2020 16:26:14 -0400
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1jIeVT-0001JJ-Ex; Sun, 29 Mar 2020 22:26:07 +0200
+        id 1jIeVX-0001M9-Je; Sun, 29 Mar 2020 22:26:11 +0200
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 0BA341C0334;
-        Sun, 29 Mar 2020 22:26:07 +0200 (CEST)
-Date:   Sun, 29 Mar 2020 20:26:06 -0000
-From:   "tip-bot2 for Marc Zyngier" <tip-bot2@linutronix.de>
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 2EEBC1C0451;
+        Sun, 29 Mar 2020 22:26:11 +0200 (CEST)
+Date:   Sun, 29 Mar 2020 20:26:10 -0000
+From:   "tip-bot2 for Michal Simek" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: irq/core] irqchip/gic-v4.1: Move doorbell management to the
- GICv4 abstraction layer
-Cc:     Marc Zyngier <maz@kernel.org>, Zenghui Yu <yuzenghui@huawei.com>,
+Subject: [tip: irq/core] irqchip/xilinx: Enable generic irq multi handler
+Cc:     Michal Simek <michal.simek@xilinx.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Stefan Asserhall <stefan.asserhall@xilinx.com>,
         x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200304203330.4967-14-maz@kernel.org>
-References: <20200304203330.4967-14-maz@kernel.org>
+In-Reply-To: <20200317125600.15913-4-mubin.usman.sayyed@xilinx.com>
+References: <20200317125600.15913-4-mubin.usman.sayyed@xilinx.com>
 MIME-Version: 1.0
-Message-ID: <158551356668.28353.2398446991207213078.tip-bot2@tip-bot2>
+Message-ID: <158551357076.28353.1716269552245308352.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -56,219 +57,151 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the irq/core branch of tip:
 
-Commit-ID:     ae699ad348cdcd416cbf28e8a02fc468780161f7
-Gitweb:        https://git.kernel.org/tip/ae699ad348cdcd416cbf28e8a02fc468780161f7
-Author:        Marc Zyngier <maz@kernel.org>
-AuthorDate:    Wed, 04 Mar 2020 20:33:20 
+Commit-ID:     a0789993bf8266e62fea6b4613945ba081c71e7d
+Gitweb:        https://git.kernel.org/tip/a0789993bf8266e62fea6b4613945ba081c71e7d
+Author:        Michal Simek <michal.simek@xilinx.com>
+AuthorDate:    Tue, 17 Mar 2020 18:25:59 +05:30
 Committer:     Marc Zyngier <maz@kernel.org>
-CommitterDate: Tue, 24 Mar 2020 12:15:51 
+CommitterDate: Sun, 22 Mar 2020 11:52:53 
 
-irqchip/gic-v4.1: Move doorbell management to the GICv4 abstraction layer
+irqchip/xilinx: Enable generic irq multi handler
 
-In order to hide some of the differences between v4.0 and v4.1, move
-the doorbell management out of the KVM code, and into the GICv4-specific
-layer. This allows the calling code to ask for the doorbell when blocking,
-and otherwise to leave the doorbell permanently disabled.
+Register default arch handler via driver instead of directly pointing to
+xilinx intc controller. This patch makes architecture code more generic.
 
-This matches the v4.1 code perfectly, and only results in a minor
-refactoring of the v4.0 code.
+Driver calls generic domain specific irq handler which does the most of
+things self. Also get rid of concurrent_irq counting which hasn't been
+exported anywhere.
+Based on this loop was also optimized by using do/while loop instead of
+goto loop.
 
+Signed-off-by: Michal Simek <michal.simek@xilinx.com>
 Signed-off-by: Marc Zyngier <maz@kernel.org>
-Reviewed-by: Zenghui Yu <yuzenghui@huawei.com>
-Link: https://lore.kernel.org/r/20200304203330.4967-14-maz@kernel.org
+Reviewed-by: Stefan Asserhall <stefan.asserhall@xilinx.com>
+Link: https://lore.kernel.org/r/20200317125600.15913-4-mubin.usman.sayyed@xilinx.com
 ---
- drivers/irqchip/irq-gic-v4.c       | 45 ++++++++++++++++++++++++++---
- include/kvm/arm_vgic.h             |  1 +-
- include/linux/irqchip/arm-gic-v4.h |  3 +-
- virt/kvm/arm/vgic/vgic-v3.c        |  4 ++-
- virt/kvm/arm/vgic/vgic-v4.c        | 34 +++++++++-------------
- 5 files changed, 61 insertions(+), 26 deletions(-)
+ arch/microblaze/Kconfig           |  2 ++-
+ arch/microblaze/include/asm/irq.h |  3 +---
+ arch/microblaze/kernel/irq.c      | 21 +-------------------
+ drivers/irqchip/irq-xilinx-intc.c | 34 +++++++++++++++++-------------
+ 4 files changed, 23 insertions(+), 37 deletions(-)
 
-diff --git a/drivers/irqchip/irq-gic-v4.c b/drivers/irqchip/irq-gic-v4.c
-index c01910d..117ba6d 100644
---- a/drivers/irqchip/irq-gic-v4.c
-+++ b/drivers/irqchip/irq-gic-v4.c
-@@ -87,6 +87,11 @@ static struct irq_domain *gic_domain;
- static const struct irq_domain_ops *vpe_domain_ops;
- static const struct irq_domain_ops *sgi_domain_ops;
+diff --git a/arch/microblaze/Kconfig b/arch/microblaze/Kconfig
+index 6a331bd..242f58e 100644
+--- a/arch/microblaze/Kconfig
++++ b/arch/microblaze/Kconfig
+@@ -47,6 +47,8 @@ config MICROBLAZE
+ 	select CPU_NO_EFFICIENT_FFS
+ 	select MMU_GATHER_NO_RANGE if MMU
+ 	select SPARSE_IRQ
++	select GENERIC_IRQ_MULTI_HANDLER
++	select HANDLE_DOMAIN_IRQ
  
-+static bool has_v4_1(void)
-+{
-+	return !!sgi_domain_ops;
-+}
-+
- int its_alloc_vcpu_irqs(struct its_vm *vm)
+ # Endianness selection
+ choice
+diff --git a/arch/microblaze/include/asm/irq.h b/arch/microblaze/include/asm/irq.h
+index eac2fb4..5166f08 100644
+--- a/arch/microblaze/include/asm/irq.h
++++ b/arch/microblaze/include/asm/irq.h
+@@ -14,7 +14,4 @@
+ struct pt_regs;
+ extern void do_IRQ(struct pt_regs *regs);
+ 
+-/* should be defined in each interrupt controller driver */
+-extern unsigned int xintc_get_irq(void);
+-
+ #endif /* _ASM_MICROBLAZE_IRQ_H */
+diff --git a/arch/microblaze/kernel/irq.c b/arch/microblaze/kernel/irq.c
+index 903dad8..0b37dde 100644
+--- a/arch/microblaze/kernel/irq.c
++++ b/arch/microblaze/kernel/irq.c
+@@ -20,29 +20,10 @@
+ #include <linux/irqchip.h>
+ #include <linux/of_irq.h>
+ 
+-static u32 concurrent_irq;
+-
+ void __irq_entry do_IRQ(struct pt_regs *regs)
  {
- 	int vpe_base_irq, i;
-@@ -139,18 +144,50 @@ static int its_send_vpe_cmd(struct its_vpe *vpe, struct its_cmd_info *info)
- 	return irq_set_vcpu_affinity(vpe->irq, info);
+-	unsigned int irq;
+-	struct pt_regs *old_regs = set_irq_regs(regs);
+ 	trace_hardirqs_off();
+-
+-	irq_enter();
+-	irq = xintc_get_irq();
+-next_irq:
+-	BUG_ON(!irq);
+-	generic_handle_irq(irq);
+-
+-	irq = xintc_get_irq();
+-	if (irq != -1U) {
+-		pr_debug("next irq: %d\n", irq);
+-		++concurrent_irq;
+-		goto next_irq;
+-	}
+-
+-	irq_exit();
+-	set_irq_regs(old_regs);
++	handle_arch_irq(regs);
+ 	trace_hardirqs_on();
  }
  
--int its_schedule_vpe(struct its_vpe *vpe, bool on)
-+int its_make_vpe_non_resident(struct its_vpe *vpe, bool db)
+diff --git a/drivers/irqchip/irq-xilinx-intc.c b/drivers/irqchip/irq-xilinx-intc.c
+index 1d3d273..ea74181 100644
+--- a/drivers/irqchip/irq-xilinx-intc.c
++++ b/drivers/irqchip/irq-xilinx-intc.c
+@@ -124,20 +124,6 @@ static unsigned int xintc_get_irq_local(struct xintc_irq_chip *irqc)
+ 	return irq;
+ }
+ 
+-unsigned int xintc_get_irq(void)
+-{
+-	unsigned int irq = -1;
+-	u32 hwirq;
+-
+-	hwirq = xintc_read(primary_intc, IVR);
+-	if (hwirq != -1U)
+-		irq = irq_find_mapping(primary_intc->root_domain, hwirq);
+-
+-	pr_debug("irq-xilinx: hwirq=%d, irq=%d\n", hwirq, irq);
+-
+-	return irq;
+-}
+-
+ static int xintc_map(struct irq_domain *d, unsigned int irq, irq_hw_number_t hw)
  {
--	struct its_cmd_info info;
-+	struct irq_desc *desc = irq_to_desc(vpe->irq);
-+	struct its_cmd_info info = { };
- 	int ret;
+ 	struct xintc_irq_chip *irqc = d->host_data;
+@@ -177,6 +163,25 @@ static void xil_intc_irq_handler(struct irq_desc *desc)
+ 	chained_irq_exit(chip, desc);
+ }
  
- 	WARN_ON(preemptible());
- 
--	info.cmd_type = on ? SCHEDULE_VPE : DESCHEDULE_VPE;
-+	info.cmd_type = DESCHEDULE_VPE;
-+	if (has_v4_1()) {
-+		/* GICv4.1 can directly deal with doorbells */
-+		info.req_db = db;
-+	} else {
-+		/* Undo the nested disable_irq() calls... */
-+		while (db && irqd_irq_disabled(&desc->irq_data))
-+			enable_irq(vpe->irq);
-+	}
++static void xil_intc_handle_irq(struct pt_regs *regs)
++{
++	u32 hwirq;
++	struct xintc_irq_chip *irqc = primary_intc;
 +
-+	ret = its_send_vpe_cmd(vpe, &info);
-+	if (!ret)
-+		vpe->resident = false;
++	do {
++		hwirq = xintc_read(irqc, IVR);
++		if (likely(hwirq != -1U)) {
++			int ret;
 +
-+	return ret;
++			ret = handle_domain_irq(irqc->root_domain, hwirq, regs);
++			WARN_ONCE(ret, "Unhandled HWIRQ %d\n", hwirq);
++			continue;
++		}
++
++		break;
++	} while (1);
 +}
 +
-+int its_make_vpe_resident(struct its_vpe *vpe, bool g0en, bool g1en)
-+{
-+	struct its_cmd_info info = { };
-+	int ret;
-+
-+	WARN_ON(preemptible());
-+
-+	info.cmd_type = SCHEDULE_VPE;
-+	if (has_v4_1()) {
-+		info.g0en = g0en;
-+		info.g1en = g1en;
-+	} else {
-+		/* Disabled the doorbell, as we're about to enter the guest */
-+		disable_irq_nosync(vpe->irq);
-+	}
- 
- 	ret = its_send_vpe_cmd(vpe, &info);
- 	if (!ret)
--		vpe->resident = on;
-+		vpe->resident = true;
- 
- 	return ret;
- }
-diff --git a/include/kvm/arm_vgic.h b/include/kvm/arm_vgic.h
-index 9d53f54..6345790 100644
---- a/include/kvm/arm_vgic.h
-+++ b/include/kvm/arm_vgic.h
-@@ -70,6 +70,7 @@ struct vgic_global {
- 
- 	/* Hardware has GICv4? */
- 	bool			has_gicv4;
-+	bool			has_gicv4_1;
- 
- 	/* GIC system register CPU interface */
- 	struct static_key_false gicv3_cpuif;
-diff --git a/include/linux/irqchip/arm-gic-v4.h b/include/linux/irqchip/arm-gic-v4.h
-index 1b34100..34ed4b5 100644
---- a/include/linux/irqchip/arm-gic-v4.h
-+++ b/include/linux/irqchip/arm-gic-v4.h
-@@ -125,7 +125,8 @@ struct its_cmd_info {
- 
- int its_alloc_vcpu_irqs(struct its_vm *vm);
- void its_free_vcpu_irqs(struct its_vm *vm);
--int its_schedule_vpe(struct its_vpe *vpe, bool on);
-+int its_make_vpe_resident(struct its_vpe *vpe, bool g0en, bool g1en);
-+int its_make_vpe_non_resident(struct its_vpe *vpe, bool db);
- int its_invall_vpe(struct its_vpe *vpe);
- int its_map_vlpi(int irq, struct its_vlpi_map *map);
- int its_get_vlpi(int irq, struct its_vlpi_map *map);
-diff --git a/virt/kvm/arm/vgic/vgic-v3.c b/virt/kvm/arm/vgic/vgic-v3.c
-index f45635a..1bc09b5 100644
---- a/virt/kvm/arm/vgic/vgic-v3.c
-+++ b/virt/kvm/arm/vgic/vgic-v3.c
-@@ -595,7 +595,9 @@ int vgic_v3_probe(const struct gic_kvm_info *info)
- 	/* GICv4 support? */
- 	if (info->has_v4) {
- 		kvm_vgic_global_state.has_gicv4 = gicv4_enable;
--		kvm_info("GICv4 support %sabled\n",
-+		kvm_vgic_global_state.has_gicv4_1 = info->has_v4_1 && gicv4_enable;
-+		kvm_info("GICv4%s support %sabled\n",
-+			 kvm_vgic_global_state.has_gicv4_1 ? ".1" : "",
- 			 gicv4_enable ? "en" : "dis");
+ static int __init xilinx_intc_of_init(struct device_node *intc,
+ 					     struct device_node *parent)
+ {
+@@ -246,6 +251,7 @@ static int __init xilinx_intc_of_init(struct device_node *intc,
+ 	} else {
+ 		primary_intc = irqc;
+ 		irq_set_default_host(primary_intc->root_domain);
++		set_handle_irq(xil_intc_handle_irq);
  	}
  
-diff --git a/virt/kvm/arm/vgic/vgic-v4.c b/virt/kvm/arm/vgic/vgic-v4.c
-index 46f8755..1eb0f8c 100644
---- a/virt/kvm/arm/vgic/vgic-v4.c
-+++ b/virt/kvm/arm/vgic/vgic-v4.c
-@@ -67,10 +67,10 @@
-  * it. And if we've migrated our vcpu from one CPU to another, we must
-  * tell the ITS (so that the messages reach the right redistributor).
-  * This is done in two steps: first issue a irq_set_affinity() on the
-- * irq corresponding to the vcpu, then call its_schedule_vpe(). You
-- * must be in a non-preemptible context. On exit, another call to
-- * its_schedule_vpe() tells the redistributor that we're done with the
-- * vcpu.
-+ * irq corresponding to the vcpu, then call its_make_vpe_resident().
-+ * You must be in a non-preemptible context. On exit, a call to
-+ * its_make_vpe_non_resident() tells the redistributor that we're done
-+ * with the vcpu.
-  *
-  * Finally, the doorbell handling: Each vcpu is allocated an interrupt
-  * which will fire each time a VLPI is made pending whilst the vcpu is
-@@ -86,7 +86,8 @@ static irqreturn_t vgic_v4_doorbell_handler(int irq, void *info)
- 	struct kvm_vcpu *vcpu = info;
- 
- 	/* We got the message, no need to fire again */
--	if (!irqd_irq_disabled(&irq_to_desc(irq)->irq_data))
-+	if (!kvm_vgic_global_state.has_gicv4_1 &&
-+	    !irqd_irq_disabled(&irq_to_desc(irq)->irq_data))
- 		disable_irq_nosync(irq);
- 
- 	vcpu->arch.vgic_cpu.vgic_v3.its_vpe.pending_last = true;
-@@ -199,19 +200,11 @@ void vgic_v4_teardown(struct kvm *kvm)
- int vgic_v4_put(struct kvm_vcpu *vcpu, bool need_db)
- {
- 	struct its_vpe *vpe = &vcpu->arch.vgic_cpu.vgic_v3.its_vpe;
--	struct irq_desc *desc = irq_to_desc(vpe->irq);
- 
- 	if (!vgic_supports_direct_msis(vcpu->kvm) || !vpe->resident)
- 		return 0;
- 
--	/*
--	 * If blocking, a doorbell is required. Undo the nested
--	 * disable_irq() calls...
--	 */
--	while (need_db && irqd_irq_disabled(&desc->irq_data))
--		enable_irq(vpe->irq);
--
--	return its_schedule_vpe(vpe, false);
-+	return its_make_vpe_non_resident(vpe, need_db);
- }
- 
- int vgic_v4_load(struct kvm_vcpu *vcpu)
-@@ -232,18 +225,19 @@ int vgic_v4_load(struct kvm_vcpu *vcpu)
- 	if (err)
- 		return err;
- 
--	/* Disabled the doorbell, as we're about to enter the guest */
--	disable_irq_nosync(vpe->irq);
--
--	err = its_schedule_vpe(vpe, true);
-+	err = its_make_vpe_resident(vpe, false, vcpu->kvm->arch.vgic.enabled);
- 	if (err)
- 		return err;
- 
- 	/*
- 	 * Now that the VPE is resident, let's get rid of a potential
--	 * doorbell interrupt that would still be pending.
-+	 * doorbell interrupt that would still be pending. This is a
-+	 * GICv4.0 only "feature"...
- 	 */
--	return irq_set_irqchip_state(vpe->irq, IRQCHIP_STATE_PENDING, false);
-+	if (!kvm_vgic_global_state.has_gicv4_1)
-+		err = irq_set_irqchip_state(vpe->irq, IRQCHIP_STATE_PENDING, false);
-+
-+	return err;
- }
- 
- static struct vgic_its *vgic_get_its(struct kvm *kvm,
+ 	return 0;
