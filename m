@@ -2,125 +2,126 @@ Return-Path: <SRS0=I467=5O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6B3AC43331
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 07:35:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31E8BC43331
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 07:38:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 745EE206E6
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 07:35:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E872E206E6
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 07:38:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585467533;
+	bh=nmrrAYfVEzsqFqU7BQ15GFfiG+yun3zA2CK8iQdAQFo=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:List-ID:From;
+	b=K4PKyx2982RCg4NHn4wnK8DIQn9tyiTZJVYlNjSnntcLa1IzIfqcBlGP/kjUgoJFO
+	 QdaRY6mCUvNcOYDtdtE/U2TJOh+cwgunGWIgXeA5TQ1UBQRfOPSdvL/1UYCGFjCNAf
+	 a+oD13XF7FRp+P9VzWIV+QBI3KZRNebDiNUDd1Pk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727557AbgC2Hfx (ORCPT
+        id S1727702AbgC2Hiv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Mar 2020 03:35:53 -0400
-Received: from mga01.intel.com ([192.55.52.88]:11649 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726342AbgC2Hfx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Mar 2020 03:35:53 -0400
-IronPort-SDR: eB54OcCA0/HKv3ALiPj2Urc2gaqyI2Gn+MYW4E4sX8tPLwfwPzZzVITMK7a39K3iMAkacxardS
- gGkFh33WzOVg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Mar 2020 00:35:53 -0700
-IronPort-SDR: FjWvP1xi9YludaFnGgcfP59D58Ut974bJyTxqpEAKHMvjg6Ta2KiTb67BmFIsnsRPHhXaK+dpQ
- +6rv20iStvdg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,319,1580803200"; 
-   d="scan'208";a="358885404"
-Received: from blu2-mobl3.ccr.corp.intel.com (HELO [10.254.210.24]) ([10.254.210.24])
-  by fmsmga001.fm.intel.com with ESMTP; 29 Mar 2020 00:35:50 -0700
-Cc:     baolu.lu@linux.intel.com, "Liu, Yi L" <yi.l.liu@intel.com>,
-        "Raj, Ashok" <ashok.raj@intel.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Jonathan Cameron <jic23@kernel.org>
-Subject: Re: [PATCH V10 04/11] iommu/vt-d: Use helper function to skip agaw
- for SL
-To:     Auger Eric <eric.auger@redhat.com>,
-        "Tian, Kevin" <kevin.tian@intel.com>,
-        Jacob Pan <jacob.jun.pan@linux.intel.com>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Jean-Philippe Brucker <jean-philippe@linaro.com>
-References: <1584746861-76386-1-git-send-email-jacob.jun.pan@linux.intel.com>
- <1584746861-76386-5-git-send-email-jacob.jun.pan@linux.intel.com>
- <AADFC41AFE54684AB9EE6CBC0274A5D19D7ED91C@SHSMSX104.ccr.corp.intel.com>
- <310693c3-9bd2-a764-2053-cd785d329ee6@redhat.com>
-From:   Lu Baolu <baolu.lu@linux.intel.com>
-Message-ID: <527a5b65-e7df-1281-beee-208d156bee01@linux.intel.com>
-Date:   Sun, 29 Mar 2020 15:35:49 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Sun, 29 Mar 2020 03:38:51 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:37575 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727335AbgC2Hiv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Mar 2020 03:38:51 -0400
+Received: by mail-lj1-f196.google.com with SMTP id r24so14531558ljd.4;
+        Sun, 29 Mar 2020 00:38:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:to:cc:subject:in-reply-to:references:date:message-id
+         :mime-version;
+        bh=nmrrAYfVEzsqFqU7BQ15GFfiG+yun3zA2CK8iQdAQFo=;
+        b=vUkO5Br3+j9smAk3sxUis0Cz1x9A4Ia+XO3h/kqEP/KMQU1oXk+xI1HW15E7V4cvSL
+         DszCgHhVgiEU69nvCkkPvT+WRo5p5ux7ggTvEPH0QFEFSfC/OLhGIERjGxmzpiZPMRJP
+         NQeyYd+eOcjsIf2AXBIevikgix+lOtuJntFTaOoFtYm03vsdD4AIp3/OclKye9Ai4/Qx
+         VrdwBGEdK2CtMxD9BgoKFDe1i0QwFiOD7tjRriI3gRBTwo4vjHjmUyxCWj+jRlQj6zi0
+         NL3MrTNn9klJiLtzXEwt6B8O5nB6tc0KO0y43aY60ZWpVBMfY2gCQzF1LfuWKbz2u2dx
+         QbyQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:to:cc:subject:in-reply-to:references
+         :date:message-id:mime-version;
+        bh=nmrrAYfVEzsqFqU7BQ15GFfiG+yun3zA2CK8iQdAQFo=;
+        b=RgU/1ZSDrPSMvooABOXTk9XpkjH6RWjSYULc8jJey72Z3Q9O7xViBY+Pqs42WN8DbC
+         nXwVawGR8UfkIFLqZ6BwhdcO+k6Xi99exrPw8FieKgersz49dOkGadSiKJrq625v5X+W
+         mvmnBM2Bf16CMKgplEpJ3Cm3LpldgPetHrhiMTtKhRo5KWR20YMzp0c+OnEHfDy2cA/B
+         G+x55pCFsTTyEk8dEHyUqv4/+7rISQx2sQGGkQjkfUreqKeuBptPRQwe8iaWVGZvwLwV
+         pV1OM3Gnb+TfUkt0uE4x0AZ8Z1YJyT6dqKeUFVCpky3aY3YIvSGhL97Li6zx/DuVFqTv
+         nkjg==
+X-Gm-Message-State: AGi0PuZLU0i9JfdIXf1cGs4KdGXTjvpkUf0K56QNDtrOWy7HyTk14ZFt
+        UhPhbj/Sissrx2neQeMKgPumMAk4IBuw9w==
+X-Google-Smtp-Source: APiQypLLu3qcqBRxOgcjs2usRagdq/INw77TTMj+efa7knJdkpkhCGW2WS2p7Er+MAPsKlIncu1Z9A==
+X-Received: by 2002:a2e:b04d:: with SMTP id d13mr4088141ljl.278.1585467528898;
+        Sun, 29 Mar 2020 00:38:48 -0700 (PDT)
+Received: from saruman (91-155-214-58.elisa-laajakaista.fi. [91.155.214.58])
+        by smtp.gmail.com with ESMTPSA id a10sm5689013lfg.33.2020.03.29.00.38.47
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Sun, 29 Mar 2020 00:38:48 -0700 (PDT)
+From:   Felipe Balbi <balbi@kernel.org>
+To:     Nishad Kamdar <nishadkamdar@gmail.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Joe Perches <joe@perches.com>
+Cc:     linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] USB: gadget: Use the correct style for SPDX License Identifier
+In-Reply-To: <20200328111112.GA7219@nishad>
+References: <20200328111112.GA7219@nishad>
+Date:   Sun, 29 Mar 2020 10:38:43 +0300
+Message-ID: <877dz34nlo.fsf@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <310693c3-9bd2-a764-2053-cd785d329ee6@redhat.com>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; boundary="=-=-=";
+        micalg=pgp-sha256; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/3/28 0:05, Auger Eric wrote:
-> Hi Jacob,
-> 
-> On 3/27/20 12:55 PM, Tian, Kevin wrote:
->>> From: Jacob Pan<jacob.jun.pan@linux.intel.com>
->>> Sent: Saturday, March 21, 2020 7:28 AM
->>>
->>> Signed-off-by: Jacob Pan<jacob.jun.pan@linux.intel.com>
->>> ---
->>>   drivers/iommu/intel-pasid.c | 14 ++++----------
->>>   1 file changed, 4 insertions(+), 10 deletions(-)
->>>
->>> diff --git a/drivers/iommu/intel-pasid.c b/drivers/iommu/intel-pasid.c
->>> index 191508c7c03e..9bdb7ee228b6 100644
->>> --- a/drivers/iommu/intel-pasid.c
->>> +++ b/drivers/iommu/intel-pasid.c
->>> @@ -544,17 +544,11 @@ int intel_pasid_setup_second_level(struct
->>> intel_iommu *iommu,
->>>   		return -EINVAL;
->>>   	}
->>>
->>> -	/*
->>> -	 * Skip top levels of page tables for iommu which has less agaw
->>> -	 * than default. Unnecessary for PT mode.
->>> -	 */
->>>   	pgd = domain->pgd;
->>> -	for (agaw = domain->agaw; agaw > iommu->agaw; agaw--) {
->>> -		pgd = phys_to_virt(dma_pte_addr(pgd));
->>> -		if (!dma_pte_present(pgd)) {
->>> -			dev_err(dev, "Invalid domain page table\n");
->>> -			return -EINVAL;
->>> -		}
->>> +	agaw = iommu_skip_agaw(domain, iommu, &pgd);
->>> +	if (agaw < 0) {
->>> +		dev_err(dev, "Invalid domain page table\n");
-> is the dev_err() really requested. I see in domain_setup_first_level(),
-> there is none.
->>> +		return -EINVAL;
->>>   	}
->> ok, I see how it is used. possibly combine last and this one together since
->> it's mostly moving code...
-> I tend to agree with Kevin. May be better squash the 2 patches. Also not
-> sure the inline of iommu_skip_agaw() is meaningful then. Also Add commit
-> messages on the resulting patch.
-> 
-> Note domain_setup_first_level() also could use the helper while we are
-> it (if declaration moved to common helper). Only the error code differs
-> in case !dma_pte_present(pgd), ie. -ENOMEM. May be good to align.
-> 
-> Otherwise those stuff may be done in a fixup patch.
+--=-=-=
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 
-Agreed. Will squash these 2 patches with a meaningful commit message. As
-for using this helper in other files, like domain_setup_first_level(),
-we need more review and test efforts, hence it's better to put it in a
-followup patch.
+Nishad Kamdar <nishadkamdar@gmail.com> writes:
 
-Best regards,
-baolu
+> This patch corrects the SPDX License Identifier style in
+> header files related to USB peripheral controller drivers.
+> For C header files Documentation/process/license-rules.rst
+> mandates C-like comments (opposed to C source files where
+> C++ style should be used).
+>
+> Changes made by using a script provided by Joe Perches here:
+> https://lkml.org/lkml/2019/2/7/46.
+>
+> Suggested-by: Joe Perches <joe@perches.com>
+> Signed-off-by: Nishad Kamdar <nishadkamdar@gmail.com>
+
+Thanks, it's now in my queue for v5.8
+
+=2D-=20
+balbi
+
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEElLzh7wn96CXwjh2IzL64meEamQYFAl6AUIMACgkQzL64meEa
+mQawYA/9Hbd80EhX+J5aV/4oQyE5Jibk/WK9fgAIsH6zfZ8ghPYFexbb7TFBrtGG
+zS5OghuXHaVvNYvC9bS8Y2Hd2cSU/BwbYoiAqHBwgIY0/NZhu6F+c7syBxGwLcPE
+y4wG8FDXLIsJd3J4lw5qij1BnGHsIjTuksWP67gRFnw4bZydFBnwU0oMVSoZz4eD
+X//28JxDpRM4PAyWq/ndRMY1eL63p/kr2l1K9QFkdqA1xDCUll6X1FnWtdIj8ifD
+cK1BC2h/FaQvl+dWTE2O2CwG46uDqDMtNRdOVhncL9wAQyGfP/9X10ZRn67XOdAZ
+5vov/cQHjyt+XOyMxC8YacTG5nuKL6gJNvEKOcYEkmOqfOAHrfI3Yo6jriCZal/w
+1UFPohw+3fjeVL0MSUglbwss7yocbAeVRjHsK4yy+5NnJhZvmv1m9Ee0Ojc3bQbB
+svEM9vPzU7GJ5ENMCYd356ypTE1aFzRqvneleDbaNJwbnapa7rnL8JXpshzG5k57
+HTGEGn9qgKD6tBncCMuQlzNhwFaRfEOQk/ZbhJPs9W4o2j5Xx8C5C2sLH73ikIWl
+K8D32b78ZPfiab5Ltmn0baQ29BH50wp25dqyD+bBhlRgQmkLJkSXbdg0d1VCl8ua
+QxaAgUuE4oq0zXjLyPmykG4LiokadeHBL4M12Vh2AfuKXs5aQoM=
+=yrIC
+-----END PGP SIGNATURE-----
+--=-=-=--
