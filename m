@@ -2,172 +2,181 @@ Return-Path: <SRS0=I467=5O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4B0BC43331
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 12:49:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D418C43331
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 12:49:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 97689206DB
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 12:49:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 58248206DB
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 12:49:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=vanguardiasur-com-ar.20150623.gappssmtp.com header.i=@vanguardiasur-com-ar.20150623.gappssmtp.com header.b="OV6apK94"
+	dkim=pass (1024-bit key) header.d=cumulusnetworks.com header.i=@cumulusnetworks.com header.b="CyeDmqtM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728196AbgC2Mt0 (ORCPT
+        id S1728200AbgC2Mte (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Mar 2020 08:49:26 -0400
-Received: from mail-ua1-f67.google.com ([209.85.222.67]:41685 "EHLO
-        mail-ua1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727875AbgC2Mt0 (ORCPT
+        Sun, 29 Mar 2020 08:49:34 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:35861 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728087AbgC2Mtd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Mar 2020 08:49:26 -0400
-Received: by mail-ua1-f67.google.com with SMTP id f9so5265513uaq.8
-        for <linux-kernel@vger.kernel.org>; Sun, 29 Mar 2020 05:49:24 -0700 (PDT)
+        Sun, 29 Mar 2020 08:49:33 -0400
+Received: by mail-lf1-f67.google.com with SMTP id u15so2512383lfi.3
+        for <linux-kernel@vger.kernel.org>; Sun, 29 Mar 2020 05:49:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=vanguardiasur-com-ar.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=BKv2gz0DsjMaF/Mz7s/wYq0JAaZxqtaW8p9A6zy8BFw=;
-        b=OV6apK94OvbjCTyL09DesQB0SGgOwrppqY2YP/LjETv74YzrTmpIDpOJvWHmExwB5h
-         LEoKJC806ZLIUlLPiq3RkMBDaGuD8ZCBKoxvdDFoObgNlAKC0np2EsVRE/zgl3K3wXha
-         gyT7VJMqwPu3Q31eiNmUmfT93kaqIlzUT2abneF2X/hIuNkAGpfmJexsRq6+MbVRc4US
-         XfzakhQbczj1TwgBERsCHFHtbguGFH5fiSqeXMMym9U5wctQjZJOFfEO6D3rBoLsjQv+
-         suHSUhgH38T9k3dspbM2gHSZlz+0qPi1Mjx23D80lVdRUZzJwlggKN525bcgVLQGAYqH
-         YMfw==
+        d=cumulusnetworks.com; s=google;
+        h=subject:from:to:cc:references:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=hep468mUU9yjlk0lo8Ll5NEANamiPkdiFkjeWP+RKOo=;
+        b=CyeDmqtM4uJuQfEsdFN2pxNtv24FmO35iNKb9pPGIpeJC8n4rN8U7q15dMWHoZMDO+
+         ywVrdsftEj1zMNJWgoLCkqXyE92t8IRXh/LjHnCsqB8IGlbwr6PA6d1wushJAYORhEZf
+         lm5u0E1xYZc85rd7FFTC3pBUaFsYqoWIPEZY0=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=BKv2gz0DsjMaF/Mz7s/wYq0JAaZxqtaW8p9A6zy8BFw=;
-        b=e8sKuq1achowcr5IGwJdsesXF0sBghEuUCHBuiyuXvbUm7xmRAcMS0IlcnbEYQpTlv
-         AJxTBtU0Vo/1Kz09/KrFx0eBS55Mh/Fz76G0ATtgrFRGdNIeQtKaFn8JHNFh3WOreHX/
-         doTq6xJ/roM9Os/khMhs4h14M4IWewo4Ir+jSdouRmzKzMUM2wqaWPN62VuTIfoOrs8l
-         YT8Gqb8A54ZG5n5sHvC3GygcMlNh/9m9seR7BADIiweleC2MJx0HykXCrUXwMqK3hU4w
-         52tV+BtvlJOpzEP/7DyWs3N+3pFxkmOa3DAdqGL63k/n48O31nTyvpu3Ly1FJcVFCtHU
-         0rpA==
-X-Gm-Message-State: AGi0PuaX4yWLH19jTOIvtxYBqGv/BMNajfR+mMoRslO3ac+mywjiyUu3
-        qKNzoNMXkKLggMQzJpPYmYQ9Ywd/hh7aTxZcYrWwjQ==
-X-Google-Smtp-Source: APiQypIsvN8DwSOa1DIIz7+YdpInfhwNZ+d14wjLvIXeAdQOQVTDA/uPRVxymSqmuAcTfP5nsyfk8CXNY8UbA5IjZWk=
-X-Received: by 2002:ab0:2b97:: with SMTP id q23mr4929382uar.74.1585486163437;
- Sun, 29 Mar 2020 05:49:23 -0700 (PDT)
+        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=hep468mUU9yjlk0lo8Ll5NEANamiPkdiFkjeWP+RKOo=;
+        b=JgnXgBBQP7nl7czKFXg0OlO6LrJyrf9Roc70wXkA5p/jD+SYnwNGf/pxq9OKqF60AA
+         puBukMTXJXQ/VXwgapUzGheKg6MhozUBWcSHA+pU8YrR2LPBHIc2NXxtbwDA++qjoPfj
+         hCMv1Vsk5f5XJ5WGMmocvoSibYTGoGgZD/rfrUJmDplry1rCl62fHEHAzvmA54dtGnOm
+         c/OwScmIc5IxYUG2xq7p+GGJwijJ49K30TXAjm4/f3f/8VQ3MtEq08UOX1zniDB2M9Pi
+         SDERf8L3AEvJhScZR1I/MRDDEle4BVy8Y4iDHZgNLv409Q00SDkV4SuJGAuwtt5/0dGD
+         WBYg==
+X-Gm-Message-State: AGi0Pua4n2HZ72PaTznH8bxi1nl7HNGesyW3aQGqBpK+LR8k7L0aNYdZ
+        mbOhz0Csb9hwUuz88WGGpmvyMQ==
+X-Google-Smtp-Source: APiQypIChhd1CI++6HYRSgbFJY8jDrKq1kWctdVyV8E9PxZB8J/CiDMMxUXQ3elJ+KxJ7RGBcFPefw==
+X-Received: by 2002:ac2:48b3:: with SMTP id u19mr5166575lfg.84.1585486170611;
+        Sun, 29 Mar 2020 05:49:30 -0700 (PDT)
+Received: from [192.168.0.109] (84-238-136-197.ip.btc-net.bg. [84.238.136.197])
+        by smtp.gmail.com with ESMTPSA id n23sm5416058lji.59.2020.03.29.05.49.28
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 29 Mar 2020 05:49:29 -0700 (PDT)
+Subject: Re: [PATCH net-next 6/6] net: dsa: sja1105: add broadcast and
+ per-traffic class policers
+From:   Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
+To:     Vladimir Oltean <olteanv@gmail.com>,
+        Ido Schimmel <idosch@idosch.org>
+Cc:     Roopa Prabhu <roopa@cumulusnetworks.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jiri Pirko <jiri@resnulli.us>,
+        Jakub Kicinski <kuba@kernel.org>,
+        netdev <netdev@vger.kernel.org>,
+        Xiaoliang Yang <xiaoliang.yang_1@nxp.com>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Horatiu Vultur <horatiu.vultur@microchip.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        "Allan W. Nielsen" <allan.nielsen@microchip.com>,
+        Joergen Andreasen <joergen.andreasen@microchip.com>,
+        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
+        "Y.b. Lu" <yangbo.lu@nxp.com>,
+        Alexandru Marginean <alexandru.marginean@nxp.com>,
+        Po Liu <po.liu@nxp.com>,
+        Claudiu Manoil <claudiu.manoil@nxp.com>,
+        Li Yang <leoyang.li@nxp.com>
+References: <20200329005202.17926-1-olteanv@gmail.com>
+ <20200329005202.17926-7-olteanv@gmail.com>
+ <20200329095712.GA2188467@splinter>
+ <CA+h21hoybhxhR3KgfRkAaKyPPJPesbGLWDaDp5O_2yTz05y5jQ@mail.gmail.com>
+ <CA+h21hoBp6=Zyc3mX3BVguVs0f8Un6-A3pk9YaZKPgs0efTi3g@mail.gmail.com>
+ <cd6f4e55-ff5b-5f64-8211-61b4d87b1f0f@cumulusnetworks.com>
+Message-ID: <469feba1-6e3a-712b-e080-681f3addf74c@cumulusnetworks.com>
+Date:   Sun, 29 Mar 2020 15:49:27 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-References: <20200327151951.18111-1-ricardo.canuelo@collabora.com>
- <20200327154345.GA3971@ninjato> <CAGAzgsqJznZi83ijxCgQg463Q4AnwiNX-a0Q9+Og9MW5OJ4Vew@mail.gmail.com>
-In-Reply-To: <CAGAzgsqJznZi83ijxCgQg463Q4AnwiNX-a0Q9+Og9MW5OJ4Vew@mail.gmail.com>
-From:   Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>
-Date:   Sun, 29 Mar 2020 09:49:10 -0300
-Message-ID: <CAAEAJfCzquaiCkjxXYOJRH8tpGRkHJBSWnFD--S=C7uAvHwqUg@mail.gmail.com>
-Subject: Re: [PATCH] i2c: enable async suspend/resume on i2c devices
-To:     "dbasehore ." <dbasehore@chromium.org>
-Cc:     Wolfram Sang <wsa@the-dreams.de>,
-        =?UTF-8?Q?Ricardo_Ca=C3=B1uelo?= <ricardo.canuelo@collabora.com>,
-        linux-i2c@vger.kernel.org, Guenter Roeck <groeck@chromium.org>,
-        Linux-pm mailing list <linux-pm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        kernel@collabora.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <cd6f4e55-ff5b-5f64-8211-61b4d87b1f0f@cumulusnetworks.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Derek,
+On 29/03/2020 15:02, Nikolay Aleksandrov wrote:
+> On 29/03/2020 14:46, Vladimir Oltean wrote:
+>> On Sun, 29 Mar 2020 at 14:37, Vladimir Oltean <olteanv@gmail.com> wrote:
+>>>
+>>> On Sun, 29 Mar 2020 at 12:57, Ido Schimmel <idosch@idosch.org> wrote:
+>>>>
+>>>> + Nik, Roopa
+>>>>
+>>>> On Sun, Mar 29, 2020 at 02:52:02AM +0200, Vladimir Oltean wrote:
+>>>>> From: Vladimir Oltean <vladimir.oltean@nxp.com>
+> [snip]
+>>>> In the past I was thinking about ways to implement this in Linux. The
+>>>> only place in the pipeline where packets are actually classified to
+>>>> broadcast / unknown unicast / multicast is at bridge ingress. Therefore,
+>>>
+>>> Actually I think only 'unknown unicast' is tricky here, and indeed the
+>>> bridge driver is the only place in the software datapath that would
+>>> know that.
+> 
+> Yep, unknown unicast is hard to pass outside of the bridge, especially at ingress
+> where the bridge hasn't been hit yet. One possible solution is to expose a function
+> from the bridge which can make such a decision at the cost of 1 more fdb hash lookup,
+> but if the packet is going to hit the bridge anyway that cost won't be that high
+> since it will have to do the same. We already have some internal bridge functionality
+> exposed for netfilter, tc and some drivers so it would be in line with that.
+> I haven't looked into how feasible the above is, so I'm open to other ideas (the
+> bridge_slave functions for example, we've discussed such extensions before in other
+> contexts). But I think this can be much simpler if we just expose the unknown unicast
+> information, the mcast/bcast can be decided by the classifier already or with very
+> little change. I think such exposed function can be useful to netfilter as well.
+> 
 
-On Fri, 27 Mar 2020 at 17:26, dbasehore . <dbasehore@chromium.org> wrote:
->
-> On Fri, Mar 27, 2020 at 8:43 AM Wolfram Sang <wsa@the-dreams.de> wrote:
-> >
-> > On Fri, Mar 27, 2020 at 04:19:51PM +0100, Ricardo Ca=C3=B1uelo wrote:
-> > > This enables the async suspend property for i2c devices. This reduces
-> > > the suspend/resume time considerably on platforms with multiple i2c
-> > > devices (such as a trackpad or touchscreen).
-> > >
-> > > (am from https://patchwork.ozlabs.org/patch/949922/)
-> > >
-> > > Signed-off-by: Derek Basehore <dbasehore@chromium.org>
-> > > Reviewed-on: https://chromium-review.googlesource.com/1152411
-> > > Tested-by: Venkateswarlu V Vinjamuri <venkateswarlu.v.vinjamuri@intel=
-.com>
-> > > Reviewed-by: Venkateswarlu V Vinjamuri <venkateswarlu.v.vinjamuri@int=
-el.com>
-> > > Reviewed-by: Justin TerAvest <teravest@chromium.org>
-> > > Signed-off-by: Guenter Roeck <groeck@chromium.org>
-> > > Signed-off-by: Ricardo Ca=C3=B1uelo <ricardo.canuelo@collabora.com>
-> > > ---
-> >
-> > Adding linux-pm to CC. I don't know much about internals of async
-> > suspend. Is there a guide like "what every maintainer needs to know
-> > about"?
->
-> For more details, you can look at the function dpm_resume in the
-> drivers/base/power/main.c file and follow from there.
->
-> I can't find anything in Documentation/, so here's a short overview:
-> Async devices have suspend/resume callbacks scheduled via
-> async_schedule at every step (normal, late, noirq, etc.) for
-> suspending/resuming devices. We wait for all device callbacks to
-> complete at the end of each of these steps before moving onto the next
-> one. This means that you won't have a resume_early callback running
-> when you start the normal device resume callbacks.
->
-> The async callbacks still wait individually for children on suspend
-> and parents on resume to complete their own callbacks before calling
-> their own. Because some dependencies may not be tracked by the
-> parent/child graph (or other unknown reasons), async is off by
-> default.
->
-> Enabling async is a confirmation that all dependencies to other
-> devices are properly tracked, whether through the parent/child
-> relationship or otherwise.
->
+Of course along with the unknown unicast, we should include unknown multicast.
 
-Have you noticed the async sysfs attribute [1]?
+>>> I know very little about frame classification in the Linux network
+>>> stack, but would it be possible to introduce a match key in tc-flower
+>>> for whether packets have a known destination or not?
+>>>
+>>>> my thinking was to implement these storm control policers as a
+>>>> "bridge_slave" operation. It can then be offloaded to capable drivers
+>>>> via the switchdev framework.
+>>>>
+>>>
+>>> I think it would be a bit odd to duplicate tc functionality in the
+>>> bridge sysfs. I don't have a better suggestion though.
+>>>
+>>
+>> Not to mention that for hardware like this, to have the same level of
+>> flexibility via a switchdev control would mean to duplicate quite a
+>> lot of tc functionality. On this 5-port switch I can put a shared
+>> broadcast policer on 2 ports (via the ingress_block functionality),
+>> and individual policers on the other 3, and the bandwidth budgeting is
+>> separate. I can only assume that there are more switches out there
+>> that allow this.
+>>>>>> I think that if we have this implemented in the Linux bridge, then your
+>>>> patch can be used to support the policing of broadcast packets while
+>>>> returning an error if user tries to police unknown unicast or multicast
+>>>> packets.
+>>>
+>>> So even if the Linux bridge gains these knobs for flood policers,
+>>> still have the dst_mac ff:ff:ff:ff:ff:ff as a valid way to configure
+>>> one of those knobs?
+>>>
+>>>> Or maybe the hardware you are working with supports these types
+>>>> as well?
+>>>
+>>> Nope, on this hardware it's just broadcast, I just checked that. Which
+>>> simplifies things quite a bit.
+>>>
+>>>>
+>>>> WDYT?
+>>>>
+>>>
+>>> I don't know.
+>>>
+>>> Thanks,
+>>> -Vladimir
+>>
+>> -Vladimir
+>>
+> 
 
-Given this allows userspace to enable the async suspend/resume,
-wouldn't it be simpler to just do that in userspace, on the
-platforms you want to target (e.g. Apollolake Chromebook devices, and so on=
-) ?
-
-Thanks,
-Ezequiel
-
-[1] Documentation/ABI/testing/sysfs-devices-power
-
-> >
-> > > This patch was originally created for chromeos some time ago and I'm
-> > > evaluating if it's a good candidate for upstreaming.
-> > >
-> > > By the looks of it I think it was done with chromebooks in mind, but
-> > > AFAICT this would impact every i2c client in every platform, so I'd l=
-ike
-> > > to know your opinion about it.
-> > >
-> > > As far as I know there was no further investigation or testing on it,=
- so
-> > > I don't know if it was tested on any other hardware.
-> > >
-> > > Best,
-> > > Ricardo
-> > >
-> > >  drivers/i2c/i2c-core-base.c | 1 +
-> > >  1 file changed, 1 insertion(+)
-> > >
-> > > diff --git a/drivers/i2c/i2c-core-base.c b/drivers/i2c/i2c-core-base.=
-c
-> > > index cefad0881942..643bc0fe0281 100644
-> > > --- a/drivers/i2c/i2c-core-base.c
-> > > +++ b/drivers/i2c/i2c-core-base.c
-> > > @@ -769,6 +769,7 @@ i2c_new_client_device(struct i2c_adapter *adap, s=
-truct i2c_board_info const *inf
-> > >       client->dev.of_node =3D of_node_get(info->of_node);
-> > >       client->dev.fwnode =3D info->fwnode;
-> > >
-> > > +     device_enable_async_suspend(&client->dev);
-> > >       i2c_dev_set_name(adap, client, info);
-> > >
-> > >       if (info->properties) {
-> > > --
-> > > 2.18.0
-> > >
