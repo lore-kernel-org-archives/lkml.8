@@ -2,131 +2,138 @@ Return-Path: <SRS0=I467=5O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDB64C2D0E5
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 11:49:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15F1EC43331
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 11:52:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A5B3120675
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 11:49:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D4CD620774
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 11:52:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="boOnn0D/"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WJhBdZAS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728134AbgC2Ltb (ORCPT
+        id S1728149AbgC2LwT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Mar 2020 07:49:31 -0400
-Received: from us-smtp-delivery-74.mimecast.com ([63.128.21.74]:34563 "EHLO
-        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728071AbgC2Ltb (ORCPT
+        Sun, 29 Mar 2020 07:52:19 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:44998 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728044AbgC2LwT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Mar 2020 07:49:31 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1585482570;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=Z3uSqDxAG/8s/s7cz44Y2/i4LCDpCHA9j5Si4puA7U0=;
-        b=boOnn0D/JfyJ1aF6HMIKAdXnrcNKV0egy0IY95A2jxP/Y3gWQ0uRYSiGFYp5K0pdKaoBKG
-        v33M0EQsycGaXf1zqJvvMDwUdkS/u4R9U9q68JLHne7QfxPrAp+9GR753EZeQzlq8Joy/T
-        xNdee+AyC4ExGlSc9j1hsMJ49ZhRonE=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-476-nScPeJ1_M7e5LCrej9pc6Q-1; Sun, 29 Mar 2020 07:49:28 -0400
-X-MC-Unique: nScPeJ1_M7e5LCrej9pc6Q-1
-Received: by mail-wr1-f72.google.com with SMTP id e10so8350570wru.6
-        for <linux-kernel@vger.kernel.org>; Sun, 29 Mar 2020 04:49:27 -0700 (PDT)
+        Sun, 29 Mar 2020 07:52:19 -0400
+Received: by mail-wr1-f65.google.com with SMTP id m17so17450495wrw.11;
+        Sun, 29 Mar 2020 04:52:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=f1hjWQ0VpwwG+vtkKj0P9tGfDlVpUagazi+4VPhlgcc=;
+        b=WJhBdZASkPc2a16jpH2meYRTTE/0QbpY+ClOMtx6kHEDXiPplaaN25hrq/1r6PfOBh
+         Dks+Db3UU7Bat9gvr4/Rf1UBgsXM2NOvzj5VDJeAr6htHXKjIGyzxz2kibbmVr7j4qZ9
+         t4L6oVJdqvObxW/z0ihOVEenX+hJHa6t3lT421xi6FdmL7oWtD0NXiuroX68NNOi67Ud
+         7p7OS0jsfaTri0WQcvTIqFsiBrG2Ed7X4C0J2ZOZ0iB/o7NPFikFi9JjbIYWo+jkMKbI
+         oEm+y0ZAo1ymw3che08X+egbXNxhaLRtRr29qaJuQWc3LavHT4y7xjr30ukorrmlAZ5K
+         NJYA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=Z3uSqDxAG/8s/s7cz44Y2/i4LCDpCHA9j5Si4puA7U0=;
-        b=fowlc7+wWMTB33mPpGU4sU5tmGGJ9UTdqN2dUvWcob0CzoEkgK+UEsB/nzckK2Xh+y
-         2HIS5Q/nvhePGSeJFYVAr+5gEKoJ692CEtd36/14bh4d9FKsCi6PIv9syZcSTLJIRX5R
-         QlHmvE0oSYpwahCBBGF9Mqy3C60ZC2LMN0QMego8u0kKbGY0jTkTI6W1j5R0RYkIC3co
-         m5aJgvs9HaV5/y09imXCK2yBnlyOtKZObrtqVx7AeyCcnD68X4V3tu1jqwdMKiQM8a4V
-         CWyMSvHYGl1cSG8MHmdls3iEKgPMPZNdLqu3dzKy/1gy39yI/FwZEhzZNmqsG7ktq1Uz
-         I6Ew==
-X-Gm-Message-State: ANhLgQ22RqqqSs9iUI0DNJwZRHY6PgxIyCaTezW5X/QrDhw/P0/KCZps
-        1R7eQdEAJYg3z6G+LeM9+qUGkLxtTav+rG4TxYhTE25oS5GmNb/sOUohMSaBSP3ckKLpHlLCqCu
-        aRsag51UD4kAFJ2xaD5rCPjYs
-X-Received: by 2002:a1c:3241:: with SMTP id y62mr8524814wmy.66.1585482567003;
-        Sun, 29 Mar 2020 04:49:27 -0700 (PDT)
-X-Google-Smtp-Source: ADFU+vv7BukqLWASNd56mdBXcWIrZDO3DRdR8zJ4m6ol8Bj23sHTGubRNiILOzZ0ywfXFDGVJH4UAA==
-X-Received: by 2002:a1c:3241:: with SMTP id y62mr8524804wmy.66.1585482566822;
-        Sun, 29 Mar 2020 04:49:26 -0700 (PDT)
-Received: from redhat.com (bzq-79-183-139-129.red.bezeqint.net. [79.183.139.129])
-        by smtp.gmail.com with ESMTPSA id 19sm3668516wmi.32.2020.03.29.04.49.25
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=f1hjWQ0VpwwG+vtkKj0P9tGfDlVpUagazi+4VPhlgcc=;
+        b=aDllgC0Az8qlPzVOdni3r/JPuC9QXvAssN359hVv0b51OK7rVk3x41NxrHdQ+omesZ
+         x0Dmc2PLmehco8yF0f6j0GFCmTd83NDhku+t0lp2z85/6NVtCUvCeC9+0u2+GrvxW111
+         f0ciGH51eWwOPe8afymNCp2Zd0DGtk53E+EZMCzzPvYDkyh+Al9Eo0nf6WZNm002M/gA
+         Y+S7HQzhquNa2ej9YOe/Vz5ryAL1wMI2NXj8iofJGTRjdtYufhgztjz21/q+1xyRWsIR
+         UmxjyFj3UBFmZ44MKJ4du5Ryjjk3f5rJkuEyW8aDcr2kSO9+Ma62hE/iQZjilpTrUYdg
+         AAHA==
+X-Gm-Message-State: ANhLgQ3RloQ7AWwho6iSoLnWTA7rDIKqkd5skp6/ZjPUSBLbZX5GEv3+
+        vMEg+gX19hQnZwyrNfRrl7A=
+X-Google-Smtp-Source: ADFU+vvsYHg0S/NfJXJATtai7aumc5Ci7xZ3WKrLq+Ia1r36SpdRohFwPos7nxdiRLop3mAvM0p3ig==
+X-Received: by 2002:adf:fc51:: with SMTP id e17mr2824269wrs.2.1585482735741;
+        Sun, 29 Mar 2020 04:52:15 -0700 (PDT)
+Received: from localhost.localdomain (5-12-96-237.residential.rdsnet.ro. [5.12.96.237])
+        by smtp.gmail.com with ESMTPSA id 5sm14424108wrs.20.2020.03.29.04.52.14
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 29 Mar 2020 04:49:26 -0700 (PDT)
-Date:   Sun, 29 Mar 2020 07:49:23 -0400
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     Eugenio =?iso-8859-1?Q?P=E9rez?= <eperezma@redhat.com>
-Cc:     "virtualization@lists.linux-foundation.org" 
-        <virtualization@lists.linux-foundation.org>,
-        Halil Pasic <pasic@linux.ibm.com>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        kvm list <kvm@vger.kernel.org>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 0/6] vhost: Reset batched descriptors on SET_VRING_BASE
- call
-Message-ID: <20200329074023-mutt-send-email-mst@kernel.org>
-References: <20200329113359.30960-1-eperezma@redhat.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200329113359.30960-1-eperezma@redhat.com>
+        Sun, 29 Mar 2020 04:52:15 -0700 (PDT)
+From:   Vladimir Oltean <olteanv@gmail.com>
+To:     andrew@lunn.ch, f.fainelli@gmail.com, vivien.didelot@gmail.com,
+        davem@davemloft.net
+Cc:     jiri@resnulli.us, idosch@idosch.org, kuba@kernel.org,
+        netdev@vger.kernel.org, xiaoliang.yang_1@nxp.com,
+        linux-kernel@vger.kernel.org, horatiu.vultur@microchip.com,
+        alexandre.belloni@bootlin.com, allan.nielsen@microchip.com,
+        joergen.andreasen@microchip.com, UNGLinuxDriver@microchip.com,
+        yangbo.lu@nxp.com, alexandru.marginean@nxp.com, po.liu@nxp.com,
+        claudiu.manoil@nxp.com, leoyang.li@nxp.com,
+        nikolay@cumulusnetworks.com, roopa@cumulusnetworks.com
+Subject: [PATCH v2 net-next 0/6] Port and flow policers for DSA (SJA1105, Felix/Ocelot)
+Date:   Sun, 29 Mar 2020 14:51:56 +0300
+Message-Id: <20200329115202.16348-1-olteanv@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Mar 29, 2020 at 01:33:53PM +0200, Eugenio Pérez wrote:
-> Vhost did not reset properly the batched descriptors on SET_VRING_BASE event. Because of that, is possible to return an invalid descriptor to the guest.
-> This series ammend this, and creates a test to assert correct behavior. To do that, they need to expose a new function in virtio_ring, virtqueue_reset_free_head. Not sure if this can be avoided.
+From: Vladimir Oltean <vladimir.oltean@nxp.com>
 
-Question: why not reset the batch when private_data changes?
-At the moment both net and scsi poke at private data directly,
-if they do this through a wrapper we can use that to
-1. check that vq mutex is taken properly
-2. reset batching
+This series adds support for 2 types of policers:
+ - port policers, via tc matchall filter
+ - flow policers, via tc flower filter
+for 2 DSA drivers:
+ - sja1105
+ - felix/ocelot
 
-This seems like a slightly better API
+First we start with ocelot/felix. Prior to this patch, the ocelot core
+library currently only supported:
+- Port policers
+- Flow-based dropping and trapping
+But the felix wrapper could not actually use the port policers due to
+missing linkage and support in the DSA core. So one of the patches
+addresses exactly that limitation by adding the missing support to the
+DSA core. The other patch for felix flow policers (via the VCAP IS2
+engine) is actually in the ocelot library itself, since the linkage with
+the ocelot flower classifier has already been done in an earlier patch
+set.
 
-> 
-> Also, change from https://lkml.org/lkml/2020/3/27/108 is not included, that avoids to update a variable in a loop where it can be updated once.
-> 
-> This is meant to be applied on top of eccb852f1fe6bede630e2e4f1a121a81e34354ab in git.kernel.org/pub/scm/linux/kernel/git/mst/vhost.git, and some commits should be squashed with that series.
+Then with the newly added .port_policer_add and .port_policer_del, we
+can also start supporting the L2 policers on sja1105.
 
-Thanks a lot! I'll apply this for now so Christian can start testing,
-but I'd like the comment above addressed before I push this to Linus.
+Then, for full functionality of these L2 policers on sja1105, we also
+implement a more limited set of flow-based policing keys for this
+switch, namely for broadcast and VLAN PCP.
 
-> Eugenio Pérez (6):
->   tools/virtio: Add --batch option
->   tools/virtio: Add --batch=random option
->   tools/virtio: Add --reset=random
->   tools/virtio: Make --reset reset ring idx
->   vhost: Delete virtqueue batch_descs member
->   fixup! vhost: batching fetches
-> 
->  drivers/vhost/test.c         |  57 ++++++++++++++++
->  drivers/vhost/test.h         |   1 +
->  drivers/vhost/vhost.c        |  12 +++-
->  drivers/vhost/vhost.h        |   1 -
->  drivers/virtio/virtio_ring.c |  18 +++++
->  include/linux/virtio.h       |   2 +
->  tools/virtio/linux/virtio.h  |   2 +
->  tools/virtio/virtio_test.c   | 123 +++++++++++++++++++++++++++++++----
->  8 files changed, 201 insertions(+), 15 deletions(-)
-> 
-> -- 
-> 2.18.1
+Series version 1 was submitted here:
+https://patchwork.ozlabs.org/cover/1263353/
+
+Nothing functional changed in v2, only a rebase.
+
+Vladimir Oltean (5):
+  net: dsa: refactor matchall mirred action to separate function
+  net: dsa: add port policers
+  net: dsa: felix: add port policers
+  net: dsa: sja1105: add configuration of port policers
+  net: dsa: sja1105: add broadcast and per-traffic class policers
+
+Xiaoliang Yang (1):
+  net: mscc: ocelot: add action of police on vcap_is2
+
+ drivers/net/dsa/ocelot/felix.c            |  24 ++
+ drivers/net/dsa/sja1105/Makefile          |   1 +
+ drivers/net/dsa/sja1105/sja1105.h         |  40 +++
+ drivers/net/dsa/sja1105/sja1105_flower.c  | 340 ++++++++++++++++++++++
+ drivers/net/dsa/sja1105/sja1105_main.c    | 136 +++++++--
+ drivers/net/ethernet/mscc/ocelot_ace.c    |  64 +++-
+ drivers/net/ethernet/mscc/ocelot_ace.h    |   4 +
+ drivers/net/ethernet/mscc/ocelot_flower.c |   9 +
+ drivers/net/ethernet/mscc/ocelot_police.c |  27 ++
+ drivers/net/ethernet/mscc/ocelot_police.h |  11 +-
+ drivers/net/ethernet/mscc/ocelot_tc.c     |   2 +-
+ include/net/dsa.h                         |  13 +-
+ include/soc/mscc/ocelot.h                 |   9 +
+ net/dsa/slave.c                           | 145 ++++++---
+ 14 files changed, 742 insertions(+), 83 deletions(-)
+ create mode 100644 drivers/net/dsa/sja1105/sja1105_flower.c
+
+-- 
+2.17.1
 
