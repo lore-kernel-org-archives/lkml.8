@@ -7,42 +7,42 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87077C2D0E5
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 18:59:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A642C2D0E5
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 18:59:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4FD2420732
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 18:59:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3093B20732
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 18:59:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=hurranet.com header.i=aiman.najjar@hurranet.com header.b="UfZUyxH+"
+	dkim=pass (1024-bit key) header.d=hurranet.com header.i=aiman.najjar@hurranet.com header.b="Up9cF14+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728624AbgC2S73 (ORCPT
+        id S1728639AbgC2S7j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Mar 2020 14:59:29 -0400
-Received: from sender4-op-o14.zoho.com ([136.143.188.14]:17457 "EHLO
+        Sun, 29 Mar 2020 14:59:39 -0400
+Received: from sender4-op-o14.zoho.com ([136.143.188.14]:17464 "EHLO
         sender4-op-o14.zoho.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726283AbgC2S72 (ORCPT
+        with ESMTP id S1726283AbgC2S7i (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Mar 2020 14:59:28 -0400
-ARC-Seal: i=1; a=rsa-sha256; t=1585508340; cv=none; 
+        Sun, 29 Mar 2020 14:59:38 -0400
+ARC-Seal: i=1; a=rsa-sha256; t=1585508342; cv=none; 
         d=zohomail.com; s=zohoarc; 
-        b=eqhdibtFvn3qt2Eb++DEvnmy4c+vluwIlqMi35NdykSlyl0Nz5F6R5xyXdXR4yq6Q1gAIfoDjPmQXWe1epHrYDTKBDtXb1c52sUwCOIFSYGJgFTqnAA+qbvo41CwS0oLtbvc2BV3DzkGdrRGj1hZx3ch02ovD5fDdRFHeNZnHiw=
+        b=lTBFEV+X/tcnM+VxzuTY2S7SM/5KWyG3JimUZXjTdQSWy4ekXbaDBeMW+61FaN9gNSLPb9zQHTNxvKScSKy7F3XPzyUI+DJbmPphlLEPlBxkSszHbOiNgrmt9QM+vHOtk1Zk6msfPqoTed6Va9OAXtw0XtqvWbkodUTA4Xlwv3Y=
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-        t=1585508340; h=Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:To; 
-        bh=MuiLiAsrA5upVzkJTPsQoyFumgH4t0lXkV3qC5Ts/8I=; 
-        b=cfL2dzhj2NhoGonxnCyLviBuweGcZMLoikEauRsx5K6zZ5lbiG7t4weEAmZta1HCyh3CPbjbbRKe3ctZyyDIS6b/YYMs35phkrMpbcUHT1qzTmA/XRBFx7A1cjM+J6XniPzVN5OjdN/C4rsxvD7ZtF6x5msKvmwrz2G/uIkVRJo=
+        t=1585508342; h=Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:To; 
+        bh=St1J3cpslT5D0Lw0G4GIQcvm66Y3QaXPFrFkRhU5Rww=; 
+        b=BfQ6XFHQy4YNthH30AAUyE41GgeTCSNooxuBwhYwLfeQBHe2FBHM5EIhCbWRxL3LLHqHqx1MKfE8qlNXcWpE2qZXVITxBdC2CNeWkK2GwRIVVXU0qGxhVU31ldrj9eUPXvcycA8LDKbsPQIm1QB9lgQKp2cJHsazBz34bdCRq8g=
 ARC-Authentication-Results: i=1; mx.zohomail.com;
         dkim=pass  header.i=hurranet.com;
         spf=pass  smtp.mailfrom=aiman.najjar@hurranet.com;
         dmarc=pass header.from=<aiman.najjar@hurranet.com> header.from=<aiman.najjar@hurranet.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1585508340;
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1585508342;
         s=zoho; d=hurranet.com; i=aiman.najjar@hurranet.com;
         h=From:To:Cc:Message-ID:Subject:Date:In-Reply-To:References:MIME-Version:Content-Transfer-Encoding:Content-Type;
-        bh=MuiLiAsrA5upVzkJTPsQoyFumgH4t0lXkV3qC5Ts/8I=;
-        b=UfZUyxH+UiH9C/xRm5HdM4ypKq8swoO16sHdFuLkg07DYRG5t/Ir6bGeuC5TCj03
-        TJnCheWa+yfQ4v5m4O6H3effAqKpWbxOA2de3h4VV4fSr5hAeZfLoB/rc78uBg8NFoV
-        ODOuty420Mnd8zUkj5S/VBUx4ufMIuPlz4caPJK8=
+        bh=St1J3cpslT5D0Lw0G4GIQcvm66Y3QaXPFrFkRhU5Rww=;
+        b=Up9cF14+1cmTGr6iJz0qkr8Q30oLTXrPSAZVZlF5d6GsOleFruYO9bYmnDX69039
+        uMUQXx6FADKsNCzrYdCansiRzoE/45sRP5ff2kQqJ9aDD2D7JqRl8UmxG/oZurjY7xF
+        q6BNJiygaHmk6xwQM5da9WHX/TeMEAMdrqLcyVEM=
 Received: from kernel-dev (097-100-022-132.res.spectrum.com [97.100.22.132]) by mx.zohomail.com
-        with SMTPS id 1585508338369107.26816775653185; Sun, 29 Mar 2020 11:58:58 -0700 (PDT)
+        with SMTPS id 1585508341334564.6734790799218; Sun, 29 Mar 2020 11:59:01 -0700 (PDT)
 From:   Aiman Najjar <aiman.najjar@hurranet.com>
 To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Larry Finger <Larry.Finger@lwfinger.net>,
@@ -50,9 +50,9 @@ To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
 Cc:     Aiman Najjar <aiman.najjar@hurranet.com>,
         Joe Perches <joe@perches.com>
-Message-ID: <275773a0379e4a03839cd832d2ed952fd7bfee48.1585508171.git.aiman.najjar@hurranet.com>
-Subject: [PATCH v3 4/5] staging:rtl8712: code improvements to make_wlanhdr
-Date:   Sun, 29 Mar 2020 14:57:46 -0400
+Message-ID: <98805a72b92e9bbf933e05b827d27944663b7bc1.1585508171.git.aiman.najjar@hurranet.com>
+Subject: [PATCH v3 5/5] staging: rtl8712:fix multiline derefernce warnings
+Date:   Sun, 29 Mar 2020 14:57:47 -0400
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <cover.1585508171.git.aiman.najjar@hurranet.com>
 References: <cover.1585508171.git.aiman.najjar@hurranet.com>
@@ -65,172 +65,77 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-1. Refactor make_wlanhdr to improve code style.
-2. Use ether_addr_copy instead of memcpy to copy addresses.
+This patch fixes remaining checkpatch warnings
+in rtl871x_xmit.c:
 
-Suggested-by: Joe Perches <joe@perches.com>
+WARNING: Avoid multiple line dereference - prefer 'psecuritypriv->PrivacyKe=
+yIndex'
+636: FILE: drivers/staging//rtl8712/rtl871x_xmit.c:636:
++=09=09=09=09=09      (u8)psecuritypriv->
++=09=09=09=09=09      PrivacyKeyIndex);
+
+WARNING: Avoid multiple line dereference - prefer 'psecuritypriv->XGrpKeyid=
+'
+643: FILE: drivers/staging//rtl8712/rtl871x_xmit.c:643:
++=09=09=09=09=09=09   (u8)psecuritypriv->
++=09=09=09=09=09=09   XGrpKeyid);
+
+WARNING: Avoid multiple line dereference - prefer 'psecuritypriv->XGrpKeyid=
+'
+652: FILE: drivers/staging//rtl8712/rtl871x_xmit.c:652:
++=09=09=09=09=09=09   (u8)psecuritypriv->
++=09=09=09=09=09=09   XGrpKeyid);
+
 Signed-off-by: Aiman Najjar <aiman.najjar@hurranet.com>
 ---
- drivers/staging/rtl8712/rtl871x_xmit.c | 123 ++++++++++++-------------
- drivers/staging/rtl8712/rtl871x_xmit.h |   2 +-
- 2 files changed, 61 insertions(+), 64 deletions(-)
+ drivers/staging/rtl8712/rtl871x_xmit.c | 11 ++++-------
+ 1 file changed, 4 insertions(+), 7 deletions(-)
 
 diff --git a/drivers/staging/rtl8712/rtl871x_xmit.c b/drivers/staging/rtl87=
 12/rtl871x_xmit.c
-index 0f789c821552..21026297413c 100644
+index 21026297413c..2f0d0ffa6fae 100644
 --- a/drivers/staging/rtl8712/rtl871x_xmit.c
 +++ b/drivers/staging/rtl8712/rtl871x_xmit.c
-@@ -477,75 +477,72 @@ static int make_wlanhdr(struct _adapter *padapter, u8=
- *hdr,
- =09struct mlme_priv *pmlmepriv =3D &padapter->mlmepriv;
- =09struct qos_priv *pqospriv =3D &pmlmepriv->qospriv;
- =09__le16 *fctrl =3D &pwlanhdr->frame_ctl;
-+=09u8 *bssid;
-=20
- =09memset(hdr, 0, WLANHDR_OFFSET);
- =09SetFrameSubType(fctrl, pattrib->subtype);
--=09if (pattrib->subtype & WIFI_DATA_TYPE) {
--=09=09if (check_fwstate(pmlmepriv,  WIFI_STATION_STATE)) {
--=09=09=09/* to_ds =3D 1, fr_ds =3D 0; */
--=09=09=09SetToDs(fctrl);
--=09=09=09memcpy(pwlanhdr->addr1, get_bssid(pmlmepriv),
--=09=09=09=09ETH_ALEN);
--=09=09=09memcpy(pwlanhdr->addr2, pattrib->src, ETH_ALEN);
--=09=09=09memcpy(pwlanhdr->addr3, pattrib->dst, ETH_ALEN);
--=09=09} else if (check_fwstate(pmlmepriv, WIFI_AP_STATE)) {
--=09=09=09/* to_ds =3D 0, fr_ds =3D 1; */
--=09=09=09SetFrDs(fctrl);
--=09=09=09memcpy(pwlanhdr->addr1, pattrib->dst, ETH_ALEN);
--=09=09=09memcpy(pwlanhdr->addr2, get_bssid(pmlmepriv),
--=09=09=09=09ETH_ALEN);
--=09=09=09memcpy(pwlanhdr->addr3, pattrib->src, ETH_ALEN);
--=09=09} else if (check_fwstate(pmlmepriv, WIFI_ADHOC_STATE) ||
--=09=09=09   check_fwstate(pmlmepriv,
--=09=09=09=09=09 WIFI_ADHOC_MASTER_STATE)) {
--=09=09=09memcpy(pwlanhdr->addr1, pattrib->dst, ETH_ALEN);
--=09=09=09memcpy(pwlanhdr->addr2, pattrib->src, ETH_ALEN);
--=09=09=09memcpy(pwlanhdr->addr3, get_bssid(pmlmepriv),
--=09=09=09=09ETH_ALEN);
--=09=09} else if (check_fwstate(pmlmepriv, WIFI_MP_STATE)) {
--=09=09=09memcpy(pwlanhdr->addr1, pattrib->dst, ETH_ALEN);
--=09=09=09memcpy(pwlanhdr->addr2, pattrib->src, ETH_ALEN);
--=09=09=09memcpy(pwlanhdr->addr3, get_bssid(pmlmepriv),
--=09=09=09=09ETH_ALEN);
--=09=09} else {
--=09=09=09return -EINVAL;
--=09=09}
-+=09if (!(pattrib->subtype & WIFI_DATA_TYPE))
-+=09=09return 0;
-=20
--=09=09if (pattrib->encrypt)
--=09=09=09SetPrivacy(fctrl);
--=09=09if (pqospriv->qos_option) {
--=09=09=09qc =3D (unsigned short *)(hdr + pattrib->hdrlen - 2);
--=09=09=09if (pattrib->priority)
--=09=09=09=09SetPriority(qc, pattrib->priority);
--=09=09=09SetAckpolicy(qc, pattrib->ack_policy);
--=09=09}
--=09=09/* TODO: fill HT Control Field */
--=09=09/* Update Seq Num will be handled by f/w */
--=09=09{
--=09=09=09struct sta_info *psta;
--=09=09=09bool bmcst =3D is_multicast_ether_addr(pattrib->ra);
--
--=09=09=09if (pattrib->psta) {
--=09=09=09=09psta =3D pattrib->psta;
--=09=09=09} else {
--=09=09=09=09if (bmcst)
--=09=09=09=09=09psta =3D r8712_get_bcmc_stainfo(padapter);
--=09=09=09=09else
--=09=09=09=09=09psta =3D
--=09=09=09=09=09 r8712_get_stainfo(&padapter->stapriv,
--=09=09=09=09=09 pattrib->ra);
--=09=09=09}
--=09=09=09if (psta) {
--=09=09=09=09psta->sta_xmitpriv.txseq_tid
--=09=09=09=09=09=09  [pattrib->priority]++;
--=09=09=09=09psta->sta_xmitpriv.txseq_tid[pattrib->priority]
--=09=09=09=09=09=09   &=3D 0xFFF;
--=09=09=09=09pattrib->seqnum =3D psta->sta_xmitpriv.
--=09=09=09=09=09=09  txseq_tid[pattrib->priority];
--=09=09=09=09SetSeqNum(hdr, pattrib->seqnum);
--=09=09=09}
-+=09bssid =3D get_bssid(pmlmepriv);
-+
-+=09if (check_fwstate(pmlmepriv,  WIFI_STATION_STATE)) {
-+=09=09/* to_ds =3D 1, fr_ds =3D 0; */
-+=09=09SetToDs(fctrl);
-+=09=09ether_addr_copy(pwlanhdr->addr1, bssid);
-+=09=09ether_addr_copy(pwlanhdr->addr2, pattrib->src);
-+=09=09ether_addr_copy(pwlanhdr->addr3, pattrib->dst);
-+=09} else if (check_fwstate(pmlmepriv, WIFI_AP_STATE)) {
-+=09=09/* to_ds =3D 0, fr_ds =3D 1; */
-+=09=09SetFrDs(fctrl);
-+=09=09ether_addr_copy(pwlanhdr->addr1, pattrib->dst);
-+=09=09ether_addr_copy(pwlanhdr->addr2, bssid);
-+=09=09ether_addr_copy(pwlanhdr->addr3, pattrib->src);
-+=09} else if (check_fwstate(pmlmepriv, WIFI_ADHOC_STATE) ||
-+=09=09   check_fwstate(pmlmepriv, WIFI_ADHOC_MASTER_STATE)) {
-+=09=09ether_addr_copy(pwlanhdr->addr1, pattrib->dst);
-+=09=09ether_addr_copy(pwlanhdr->addr2, pattrib->src);
-+=09=09ether_addr_copy(pwlanhdr->addr3, bssid);
-+=09} else if (check_fwstate(pmlmepriv, WIFI_MP_STATE)) {
-+=09=09ether_addr_copy(pwlanhdr->addr1, pattrib->dst);
-+=09=09ether_addr_copy(pwlanhdr->addr2, pattrib->src);
-+=09=09ether_addr_copy(pwlanhdr->addr3, bssid);
-+=09} else {
-+=09=09return -EINVAL;
-+=09}
-+
-+=09if (pattrib->encrypt)
-+=09=09SetPrivacy(fctrl);
-+=09if (pqospriv->qos_option) {
-+=09=09qc =3D (unsigned short *)(hdr + pattrib->hdrlen - 2);
-+=09=09if (pattrib->priority)
-+=09=09=09SetPriority(qc, pattrib->priority);
-+=09=09SetAckpolicy(qc, pattrib->ack_policy);
-+=09}
-+=09/* TODO: fill HT Control Field */
-+=09/* Update Seq Num will be handled by f/w */
-+=09{
-+=09=09struct sta_info *psta;
-+=09=09bool bmcst =3D is_multicast_ether_addr(pattrib->ra);
-+
-+=09=09if (pattrib->psta)
-+=09=09=09psta =3D pattrib->psta;
-+=09=09else if (bmcst)
-+=09=09=09psta =3D r8712_get_bcmc_stainfo(padapter);
-+=09=09else
-+=09=09=09psta =3D r8712_get_stainfo(&padapter->stapriv,
-+=09=09=09=09=09=09 pattrib->ra);
-+
-+=09=09if (psta) {
-+=09=09=09u16 *txtid =3D psta->sta_xmitpriv.txseq_tid;
-+
-+=09=09=09txtid[pattrib->priority]++;
-+=09=09=09txtid[pattrib->priority] &=3D 0xFFF;
-+=09=09=09pattrib->seqnum =3D txtid[pattrib->priority];
-+=09=09=09SetSeqNum(hdr, pattrib->seqnum);
- =09=09}
- =09}
-+
- =09return 0;
- }
-=20
-diff --git a/drivers/staging/rtl8712/rtl871x_xmit.h b/drivers/staging/rtl87=
-12/rtl871x_xmit.h
-index f227828094bf..c0c0c781fe17 100644
---- a/drivers/staging/rtl8712/rtl871x_xmit.h
-+++ b/drivers/staging/rtl8712/rtl871x_xmit.h
-@@ -115,7 +115,7 @@ struct pkt_attrib {
- =09u8=09icv_len;
- =09unsigned char iv[8];
- =09unsigned char icv[8];
--=09u8=09dst[ETH_ALEN];
-+=09u8=09dst[ETH_ALEN] __aligned(2);=09/* for ether_addr_copy */
- =09u8=09src[ETH_ALEN];
- =09u8=09ta[ETH_ALEN];
- =09u8=09ra[ETH_ALEN];
+@@ -586,7 +586,7 @@ sint r8712_xmitframe_coalesce(struct _adapter *padapter=
+, _pkt *pkt,
+ =09addr_t addr;
+ =09u8 *pframe, *mem_start, *ptxdesc;
+ =09struct sta_info=09=09*psta;
+-=09struct security_priv=09*psecuritypriv =3D &padapter->securitypriv;
++=09struct security_priv=09*psecpriv =3D &padapter->securitypriv;
+ =09struct mlme_priv=09*pmlmepriv =3D &padapter->mlmepriv;
+ =09struct xmit_priv=09*pxmitpriv =3D &padapter->xmitpriv;
+ =09struct pkt_attrib=09*pattrib =3D &pxmitframe->attrib;
+@@ -629,15 +629,13 @@ sint r8712_xmitframe_coalesce(struct _adapter *padapt=
+er, _pkt *pkt,
+ =09=09=09=09case _WEP40_:
+ =09=09=09=09case _WEP104_:
+ =09=09=09=09=09WEP_IV(pattrib->iv, psta->txpn,
+-=09=09=09=09=09       (u8)psecuritypriv->
+-=09=09=09=09=09       PrivacyKeyIndex);
++=09=09=09=09=09       (u8)psecpriv->PrivacyKeyIndex);
+ =09=09=09=09=09break;
+ =09=09=09=09case _TKIP_:
+ =09=09=09=09=09if (bmcst)
+ =09=09=09=09=09=09TKIP_IV(pattrib->iv,
+ =09=09=09=09=09=09    psta->txpn,
+-=09=09=09=09=09=09    (u8)psecuritypriv->
+-=09=09=09=09=09=09    XGrpKeyid);
++=09=09=09=09=09=09    (u8)psecpriv->XGrpKeyid);
+ =09=09=09=09=09else
+ =09=09=09=09=09=09TKIP_IV(pattrib->iv, psta->txpn,
+ =09=09=09=09=09=09=090);
+@@ -645,8 +643,7 @@ sint r8712_xmitframe_coalesce(struct _adapter *padapter=
+, _pkt *pkt,
+ =09=09=09=09case _AES_:
+ =09=09=09=09=09if (bmcst)
+ =09=09=09=09=09=09AES_IV(pattrib->iv, psta->txpn,
+-=09=09=09=09=09=09    (u8)psecuritypriv->
+-=09=09=09=09=09=09    XGrpKeyid);
++=09=09=09=09=09=09    (u8)psecpriv->XGrpKeyid);
+ =09=09=09=09=09else
+ =09=09=09=09=09=09AES_IV(pattrib->iv, psta->txpn,
+ =09=09=09=09=09=09       0);
 --=20
 2.20.1
 
