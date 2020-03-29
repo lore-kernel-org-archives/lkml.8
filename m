@@ -2,153 +2,313 @@ Return-Path: <SRS0=I467=5O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13158C43331
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 00:37:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B25C5C2D0F0
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 00:44:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CFFC2206CC
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 00:37:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585442259;
-	bh=Qlp6BZ4t5XQH9C8jwKsJerUmPblT2TiEfFWsOARzxZs=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=wqKjn0Xcs5QyTtedpS5OAkq80RQukkeaMcKX+6CG+HQx966E14sfjfAoGlQJB/3qq
-	 qXO6KUAUHBqLAonxbXY0Opcnb7vs1eBzHpe43RzYLFVcnMpZtyRwxyrrqAG5VQscZH
-	 ppwalvL3ysoFYQB9oJYvaT66FiUuwNgDtsUp47Ts=
+	by mail.kernel.org (Postfix) with ESMTP id 88D58206F2
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 00:44:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="AjJRdfkQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727773AbgC2Ahi (ORCPT
+        id S1727803AbgC2AoF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 28 Mar 2020 20:37:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47704 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727491AbgC2Ahh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 28 Mar 2020 20:37:37 -0400
-Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6EB982076E
-        for <linux-kernel@vger.kernel.org>; Sun, 29 Mar 2020 00:37:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585442256;
-        bh=Qlp6BZ4t5XQH9C8jwKsJerUmPblT2TiEfFWsOARzxZs=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=NgCXivyvkn8UwbtGnZXrue2/vpMxe7MI1ssZ9c7wzzkxxBeFvrGLl3dRf18cJvULj
-         TxIdfQTtXX4jXJWsgWEiiuLQ3+HlTNtxwo7BK7b389kvVVtxZevU3h3acUtWiJZ1HO
-         wUg3cXQveat/9ahOR4hsM0Ac7lDLSiq5cxxOaB0M=
-Received: by mail-wm1-f43.google.com with SMTP id d198so15857034wmd.0
-        for <linux-kernel@vger.kernel.org>; Sat, 28 Mar 2020 17:37:36 -0700 (PDT)
-X-Gm-Message-State: ANhLgQ2yW2ij1xKWfCUkBP2iTl0BCJJCG19YOeRUkLntaFxs76YI+BiV
-        KwCql5Ki1tnfku0w1hG+4kgU8XDYXADZ6WTVTBpQbg==
-X-Google-Smtp-Source: ADFU+vu7ohbD1F++3/l1oonpWI/O7Y/x7HTLga+w/7WcQZ+TQ37tVQLWtyjq0lFNZ2riZY1yh9je0TJyqg/gpbxmwUU=
-X-Received: by 2002:a05:600c:cc:: with SMTP id u12mr5917421wmm.176.1585442254786;
- Sat, 28 Mar 2020 17:37:34 -0700 (PDT)
+        Sat, 28 Mar 2020 20:44:05 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:50864 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727733AbgC2AoE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 28 Mar 2020 20:44:04 -0400
+Received: by mail-wm1-f67.google.com with SMTP id d198so15866657wmd.0
+        for <linux-kernel@vger.kernel.org>; Sat, 28 Mar 2020 17:44:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=7blgUyFIIrVXU7X0EuWXVRLnZG5tDffRat1rkTfOq9s=;
+        b=AjJRdfkQK8V4rv3MT1CVxj4JrgZcIhoGpKGyfWFmCWrjLPX/2nygmTAyrJentmQgwl
+         wOVz5/ddR+u5hODxWWjJvvqNinCFomAtxS0qnh083h29aQVL2b6LJZD6hYslnqEcFODf
+         AmWI/Vf8nLLSjwP5QAzxfjFhuADPBlOo+ZOQU=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=7blgUyFIIrVXU7X0EuWXVRLnZG5tDffRat1rkTfOq9s=;
+        b=J5EqoWmaSbknnpQRH/sTLny1MAjaxy9STki4QpgFYFokNaFnkyAlZZXjdqn0hsnxG4
+         4mCaLlkzmYn7xVwEl50I9FPKuMGJ++GMpAmIyybOwulWAe+QwjCUG4CSfgPSBP7/DkBu
+         NEGgBX3vnJhFF7RBA4LvKamDkrjYMAJ/OAKfzWUl6QAq5UIMTiVZBRb1ZlBE3l8cOrWZ
+         DEJNpxS2WYvJdBKOrZeVgx4tzb9s07bhu53b69fhGgrEb6HGwb7XW3U2HBS9HUZo9v3o
+         KpUS0cKt8jKuXSSzsauxrZhcjD7+DDUfQoYHheQr1n0omlHJZDVPoFmpX3HwmTP96VYB
+         WXnA==
+X-Gm-Message-State: ANhLgQ1W0PfE0IhL3pQnLNeD3x1GzvMwV+7uu2dCNgM08ETCT2SPSMGM
+        gjNoSCIVAR4yv4RMjPgDG6Hax/5QhSk=
+X-Google-Smtp-Source: ADFU+vsL+qLjVbG8SMz9ihKx6LI3nR88tJEyib4a8xe5jE1xDVwCLBnUeZwN6Bnvnv/Sq15klHmMYA==
+X-Received: by 2002:a05:600c:224d:: with SMTP id a13mr5897964wmm.53.1585442641569;
+        Sat, 28 Mar 2020 17:44:01 -0700 (PDT)
+Received: from kpsingh-kernel.localdomain (77-56-209-237.dclient.hispeed.ch. [77.56.209.237])
+        by smtp.gmail.com with ESMTPSA id e5sm14577647wru.92.2020.03.28.17.44.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 28 Mar 2020 17:44:01 -0700 (PDT)
+From:   KP Singh <kpsingh@chromium.org>
+To:     linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
+        linux-security-module@vger.kernel.org
+Cc:     Brendan Jackman <jackmanb@google.com>,
+        Florent Revest <revest@google.com>,
+        Thomas Garnier <thgarnie@google.com>,
+        Yonghong Song <yhs@fb.com>, Andrii Nakryiko <andriin@fb.com>,
+        James Morris <jamorris@linux.microsoft.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        James Morris <jmorris@namei.org>,
+        Kees Cook <keescook@chromium.org>,
+        Paul Turner <pjt@google.com>, Jann Horn <jannh@google.com>,
+        Florent Revest <revest@chromium.org>,
+        Brendan Jackman <jackmanb@chromium.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH bpf-next v9 1/8] bpf: Introduce BPF_PROG_TYPE_LSM
+Date:   Sun, 29 Mar 2020 01:43:49 +0100
+Message-Id: <20200329004356.27286-2-kpsingh@chromium.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200329004356.27286-1-kpsingh@chromium.org>
+References: <20200329004356.27286-1-kpsingh@chromium.org>
 MIME-Version: 1.0
-References: <000000000000960ee605a1ef4d4e@google.com>
-In-Reply-To: <000000000000960ee605a1ef4d4e@google.com>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Sat, 28 Mar 2020 17:37:23 -0700
-X-Gmail-Original-Message-ID: <CALCETrVR_qcUPpi2=5QYUVu8VugouYcJ_j4R2jsG4QzggowGsA@mail.gmail.com>
-Message-ID: <CALCETrVR_qcUPpi2=5QYUVu8VugouYcJ_j4R2jsG4QzggowGsA@mail.gmail.com>
-Subject: framebuffer bug (Re: general protection fault in do_syscall_64)
-To:     syzbot <syzbot+f9b2c53f55a9270fc778@syzkaller.appspotmail.com>,
-        Linux Fbdev development list <linux-fbdev@vger.kernel.org>
-Cc:     Borislav Petkov <bp@alien8.de>, "H. Peter Anvin" <hpa@zytor.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Andrew Lutomirski <luto@kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        syzkaller-bugs@googlegroups.com,
-        Thomas Gleixner <tglx@linutronix.de>, X86 ML <x86@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Mar 28, 2020 at 12:34 PM syzbot
-<syzbot+f9b2c53f55a9270fc778@syzkaller.appspotmail.com> wrote:
->
-> Hello,
->
-> syzbot found the following crash on:
->
-> HEAD commit:    69c5eea3 Merge branch 'parisc-5.6-2' of git://git.kernel.o..
-> git tree:       upstream
-> console output: https://syzkaller.appspot.com/x/log.txt?x=14d3517be00000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=4ac76c43beddbd9
-> dashboard link: https://syzkaller.appspot.com/bug?extid=f9b2c53f55a9270fc778
-> compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=15059d05e00000
-> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=16e5d5a3e00000
->
-> IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> Reported-by: syzbot+f9b2c53f55a9270fc778@syzkaller.appspotmail.com
+From: KP Singh <kpsingh@google.com>
 
-Hi framebuffer people-
+Introduce types and configs for bpf programs that can be attached to
+LSM hooks. The programs can be enabled by the config option
+CONFIG_BPF_LSM.
 
-Somewhere in the framebuffer code is a horrible bug that spews zeros
-over kernel memory (including text, suggesting a *physical* memory
-overrun).  My suspicion is that there is insufficient validation in
-the ioctls that set font parameters.
+Signed-off-by: KP Singh <kpsingh@google.com>
+Reviewed-by: Brendan Jackman <jackmanb@google.com>
+Reviewed-by: Florent Revest <revest@google.com>
+Reviewed-by: Thomas Garnier <thgarnie@google.com>
+Acked-by: Yonghong Song <yhs@fb.com>
+Acked-by: Andrii Nakryiko <andriin@fb.com>
+Acked-by: James Morris <jamorris@linux.microsoft.com>
+---
+ MAINTAINERS                    |  1 +
+ include/linux/bpf.h            |  3 +++
+ include/linux/bpf_types.h      |  4 ++++
+ include/uapi/linux/bpf.h       |  2 ++
+ init/Kconfig                   | 12 ++++++++++++
+ kernel/bpf/Makefile            |  1 +
+ kernel/bpf/bpf_lsm.c           | 17 +++++++++++++++++
+ kernel/trace/bpf_trace.c       | 12 ++++++------
+ tools/include/uapi/linux/bpf.h |  2 ++
+ tools/lib/bpf/libbpf_probes.c  |  1 +
+ 10 files changed, 49 insertions(+), 6 deletions(-)
+ create mode 100644 kernel/bpf/bpf_lsm.c
 
-Could someone who is actually familiar with this code take a look?
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 5dbee41045bc..3197fe9256b2 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -3147,6 +3147,7 @@ R:	Martin KaFai Lau <kafai@fb.com>
+ R:	Song Liu <songliubraving@fb.com>
+ R:	Yonghong Song <yhs@fb.com>
+ R:	Andrii Nakryiko <andriin@fb.com>
++R:	KP Singh <kpsingh@chromium.org>
+ L:	netdev@vger.kernel.org
+ L:	bpf@vger.kernel.org
+ T:	git git://git.kernel.org/pub/scm/linux/kernel/git/bpf/bpf.git
+diff --git a/include/linux/bpf.h b/include/linux/bpf.h
+index 372708eeaecd..3bde59a8453b 100644
+--- a/include/linux/bpf.h
++++ b/include/linux/bpf.h
+@@ -1515,6 +1515,9 @@ extern const struct bpf_func_proto bpf_tcp_sock_proto;
+ extern const struct bpf_func_proto bpf_jiffies64_proto;
+ extern const struct bpf_func_proto bpf_get_ns_current_pid_tgid_proto;
+ 
++const struct bpf_func_proto *bpf_tracing_func_proto(
++	enum bpf_func_id func_id, const struct bpf_prog *prog);
++
+ /* Shared helpers among cBPF and eBPF. */
+ void bpf_user_rnd_init_once(void);
+ u64 bpf_user_rnd_u32(u64 r1, u64 r2, u64 r3, u64 r4, u64 r5);
+diff --git a/include/linux/bpf_types.h b/include/linux/bpf_types.h
+index c81d4ece79a4..ba0c2d56f8a3 100644
+--- a/include/linux/bpf_types.h
++++ b/include/linux/bpf_types.h
+@@ -70,6 +70,10 @@ BPF_PROG_TYPE(BPF_PROG_TYPE_STRUCT_OPS, bpf_struct_ops,
+ 	      void *, void *)
+ BPF_PROG_TYPE(BPF_PROG_TYPE_EXT, bpf_extension,
+ 	      void *, void *)
++#ifdef CONFIG_BPF_LSM
++BPF_PROG_TYPE(BPF_PROG_TYPE_LSM, lsm,
++	       void *, void *)
++#endif /* CONFIG_BPF_LSM */
+ #endif
+ 
+ BPF_MAP_TYPE(BPF_MAP_TYPE_ARRAY, array_map_ops)
+diff --git a/include/uapi/linux/bpf.h b/include/uapi/linux/bpf.h
+index 222ba11966e3..f1fbc36f58d3 100644
+--- a/include/uapi/linux/bpf.h
++++ b/include/uapi/linux/bpf.h
+@@ -181,6 +181,7 @@ enum bpf_prog_type {
+ 	BPF_PROG_TYPE_TRACING,
+ 	BPF_PROG_TYPE_STRUCT_OPS,
+ 	BPF_PROG_TYPE_EXT,
++	BPF_PROG_TYPE_LSM,
+ };
+ 
+ enum bpf_attach_type {
+@@ -211,6 +212,7 @@ enum bpf_attach_type {
+ 	BPF_TRACE_FENTRY,
+ 	BPF_TRACE_FEXIT,
+ 	BPF_MODIFY_RETURN,
++	BPF_LSM_MAC,
+ 	__MAX_BPF_ATTACH_TYPE
+ };
+ 
+diff --git a/init/Kconfig b/init/Kconfig
+index 20a6ac33761c..deae572d1927 100644
+--- a/init/Kconfig
++++ b/init/Kconfig
+@@ -1616,6 +1616,18 @@ config KALLSYMS_BASE_RELATIVE
+ # end of the "standard kernel features (expert users)" menu
+ 
+ # syscall, maps, verifier
++
++config BPF_LSM
++	bool "LSM Instrumentation with BPF"
++	depends on BPF_SYSCALL
++	depends on SECURITY
++	depends on BPF_JIT
++	help
++	  Enables instrumentation of the security hooks with eBPF programs for
++	  implementing dynamic MAC and Audit Policies.
++
++	  If you are unsure how to answer this question, answer N.
++
+ config BPF_SYSCALL
+ 	bool "Enable bpf() system call"
+ 	select BPF
+diff --git a/kernel/bpf/Makefile b/kernel/bpf/Makefile
+index 046ce5d98033..f2d7be596966 100644
+--- a/kernel/bpf/Makefile
++++ b/kernel/bpf/Makefile
+@@ -29,4 +29,5 @@ obj-$(CONFIG_DEBUG_INFO_BTF) += sysfs_btf.o
+ endif
+ ifeq ($(CONFIG_BPF_JIT),y)
+ obj-$(CONFIG_BPF_SYSCALL) += bpf_struct_ops.o
++obj-${CONFIG_BPF_LSM} += bpf_lsm.o
+ endif
+diff --git a/kernel/bpf/bpf_lsm.c b/kernel/bpf/bpf_lsm.c
+new file mode 100644
+index 000000000000..82875039ca90
+--- /dev/null
++++ b/kernel/bpf/bpf_lsm.c
+@@ -0,0 +1,17 @@
++// SPDX-License-Identifier: GPL-2.0
++
++/*
++ * Copyright (C) 2020 Google LLC.
++ */
++
++#include <linux/filter.h>
++#include <linux/bpf.h>
++#include <linux/btf.h>
++
++const struct bpf_prog_ops lsm_prog_ops = {
++};
++
++const struct bpf_verifier_ops lsm_verifier_ops = {
++	.get_func_proto = bpf_tracing_func_proto,
++	.is_valid_access = btf_ctx_access,
++};
+diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
+index e619eedb5919..37ffceab608f 100644
+--- a/kernel/trace/bpf_trace.c
++++ b/kernel/trace/bpf_trace.c
+@@ -779,8 +779,8 @@ static const struct bpf_func_proto bpf_send_signal_thread_proto = {
+ 	.arg1_type	= ARG_ANYTHING,
+ };
+ 
+-static const struct bpf_func_proto *
+-tracing_func_proto(enum bpf_func_id func_id, const struct bpf_prog *prog)
++const struct bpf_func_proto *
++bpf_tracing_func_proto(enum bpf_func_id func_id, const struct bpf_prog *prog)
+ {
+ 	switch (func_id) {
+ 	case BPF_FUNC_map_lookup_elem:
+@@ -865,7 +865,7 @@ kprobe_prog_func_proto(enum bpf_func_id func_id, const struct bpf_prog *prog)
+ 		return &bpf_override_return_proto;
+ #endif
+ 	default:
+-		return tracing_func_proto(func_id, prog);
++		return bpf_tracing_func_proto(func_id, prog);
+ 	}
+ }
+ 
+@@ -975,7 +975,7 @@ tp_prog_func_proto(enum bpf_func_id func_id, const struct bpf_prog *prog)
+ 	case BPF_FUNC_get_stack:
+ 		return &bpf_get_stack_proto_tp;
+ 	default:
+-		return tracing_func_proto(func_id, prog);
++		return bpf_tracing_func_proto(func_id, prog);
+ 	}
+ }
+ 
+@@ -1082,7 +1082,7 @@ pe_prog_func_proto(enum bpf_func_id func_id, const struct bpf_prog *prog)
+ 	case BPF_FUNC_read_branch_records:
+ 		return &bpf_read_branch_records_proto;
+ 	default:
+-		return tracing_func_proto(func_id, prog);
++		return bpf_tracing_func_proto(func_id, prog);
+ 	}
+ }
+ 
+@@ -1210,7 +1210,7 @@ raw_tp_prog_func_proto(enum bpf_func_id func_id, const struct bpf_prog *prog)
+ 	case BPF_FUNC_get_stack:
+ 		return &bpf_get_stack_proto_raw_tp;
+ 	default:
+-		return tracing_func_proto(func_id, prog);
++		return bpf_tracing_func_proto(func_id, prog);
+ 	}
+ }
+ 
+diff --git a/tools/include/uapi/linux/bpf.h b/tools/include/uapi/linux/bpf.h
+index 222ba11966e3..f1fbc36f58d3 100644
+--- a/tools/include/uapi/linux/bpf.h
++++ b/tools/include/uapi/linux/bpf.h
+@@ -181,6 +181,7 @@ enum bpf_prog_type {
+ 	BPF_PROG_TYPE_TRACING,
+ 	BPF_PROG_TYPE_STRUCT_OPS,
+ 	BPF_PROG_TYPE_EXT,
++	BPF_PROG_TYPE_LSM,
+ };
+ 
+ enum bpf_attach_type {
+@@ -211,6 +212,7 @@ enum bpf_attach_type {
+ 	BPF_TRACE_FENTRY,
+ 	BPF_TRACE_FEXIT,
+ 	BPF_MODIFY_RETURN,
++	BPF_LSM_MAC,
+ 	__MAX_BPF_ATTACH_TYPE
+ };
+ 
+diff --git a/tools/lib/bpf/libbpf_probes.c b/tools/lib/bpf/libbpf_probes.c
+index b782ebef6ac9..2c92059c0c90 100644
+--- a/tools/lib/bpf/libbpf_probes.c
++++ b/tools/lib/bpf/libbpf_probes.c
+@@ -108,6 +108,7 @@ probe_load(enum bpf_prog_type prog_type, const struct bpf_insn *insns,
+ 	case BPF_PROG_TYPE_TRACING:
+ 	case BPF_PROG_TYPE_STRUCT_OPS:
+ 	case BPF_PROG_TYPE_EXT:
++	case BPF_PROG_TYPE_LSM:
+ 	default:
+ 		break;
+ 	}
+-- 
+2.20.1
 
---Andy
-
->
-> general protection fault, probably for non-canonical address 0x1ffffffff1215a85: 0000 [#1] PREEMPT SMP KASAN
-> CPU: 1 PID: 7207 Comm: syz-executor045 Not tainted 5.6.0-rc7-syzkaller #0
-> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-> RIP: 0010:__read_once_size include/linux/compiler.h:199 [inline]
-> RIP: 0010:do_syscall_64+0x5f/0x1b0 arch/x86/entry/common.c:289
-> Code: 48 c7 c7 28 d4 0a 89 e8 bf 5d b0 00 48 83 3d af 5b 0a 08 00 0f 84 58 01 00 00 fb 66 0f 1f 44 00 00 65 48 8b 1c 25 c0 1d 02 00 <48> 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-> RSP: 0018:ffffc90001617f28 EFLAGS: 00010282
-> RAX: 1ffffffff1215a85 RBX: ffff888095530380 RCX: ffff888095530380
-> RDX: dffffc0000000000 RSI: 0000000000000000 RDI: ffff888095530bc4
-> RBP: 0000000000000000 R08: ffffffff817a2210 R09: 0000000000000000
-> R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000023
-> R13: dffffc0000000000 R14: ffffc90001617f58 R15: 0000000000000000
-> FS:  0000000001333880(0000) GS:ffff8880ae900000(0000) knlGS:0000000000000000
-> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> CR2: 00007f87bf9aae78 CR3: 00000000a6a3f000 CR4: 00000000001406e0
-> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-> Call Trace:
->  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-> RIP: 0033:0x4454e1
-> Code: 75 14 b8 23 00 00 00 0f 05 48 3d 01 f0 ff ff 0f 83 64 1f fc ff c3 48 83 ec 08 e8 9a 42 00 00 48 89 04 24 b8 23 00 00 00 0f 05 <48> 8b 3c 24 48 89 c2 e8 e3 42 00 00 48 89 d0 48 83 c4 08 48 3d 01
-> RSP: 002b:00007ffd72d164b0 EFLAGS: 00000293 ORIG_RAX: 0000000000000023
-> RAX: ffffffffffffffda RBX: 000000000000000c RCX: 00000000004454e1
-> RDX: 0000000000000000 RSI: 0000000000000000 RDI: 00007ffd72d164c0
-> RBP: 00000000006dbc20 R08: 0000000000000000 R09: 0000000000000000
-> R10: 00007ffd72d164e0 R11: 0000000000000293 R12: 0000000000000000
-> R13: 00000000006dbc2c R14: 000000000000000a R15: 0000000000000000
-> Modules linked in:
-> ---[ end trace 3da67f82bf6bae14 ]---
-> RIP: 0010:__read_once_size include/linux/compiler.h:199 [inline]
-> RIP: 0010:do_syscall_64+0x5f/0x1b0 arch/x86/entry/common.c:289
-> Code: 48 c7 c7 28 d4 0a 89 e8 bf 5d b0 00 48 83 3d af 5b 0a 08 00 0f 84 58 01 00 00 fb 66 0f 1f 44 00 00 65 48 8b 1c 25 c0 1d 02 00 <48> 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-> RSP: 0018:ffffc90001617f28 EFLAGS: 00010282
-> RAX: 1ffffffff1215a85 RBX: ffff888095530380 RCX: ffff888095530380
-> RDX: dffffc0000000000 RSI: 0000000000000000 RDI: ffff888095530bc4
-> RBP: 0000000000000000 R08: ffffffff817a2210 R09: 0000000000000000
-> R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000023
-> R13: dffffc0000000000 R14: ffffc90001617f58 R15: 0000000000000000
-> FS:  0000000001333880(0000) GS:ffff8880ae900000(0000) knlGS:0000000000000000
-> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> CR2: 00007f87bf9aae78 CR3: 00000000a6a3f000 CR4: 00000000001406e0
-> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
->
->
-> ---
-> This bug is generated by a bot. It may contain errors.
-> See https://goo.gl/tpsmEJ for more information about syzbot.
-> syzbot engineers can be reached at syzkaller@googlegroups.com.
->
-> syzbot will keep track of this bug report. See:
-> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-> syzbot can test patches for this bug, for details see:
-> https://goo.gl/tpsmEJ#testing-patches
