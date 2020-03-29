@@ -2,199 +2,171 @@ Return-Path: <SRS0=I467=5O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44FDAC43331
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 10:37:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4EC9C2D0E7
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 10:37:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 224E920675
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 10:37:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 76FB32073B
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 10:37:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YZtvYKa6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728023AbgC2KhV (ORCPT
+        id S1728045AbgC2Kh6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Mar 2020 06:37:21 -0400
-Received: from mail2-relais-roc.national.inria.fr ([192.134.164.83]:27248 "EHLO
-        mail2-relais-roc.national.inria.fr" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727791AbgC2KhV (ORCPT
+        Sun, 29 Mar 2020 06:37:58 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:52314 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727791AbgC2Kh6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Mar 2020 06:37:21 -0400
-X-IronPort-AV: E=Sophos;i="5.72,319,1580770800"; 
-   d="scan'208";a="442809216"
-Received: from abo-173-121-68.mrs.modulonet.fr (HELO hadrien) ([85.68.121.173])
-  by mail2-relais-roc.national.inria.fr with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Mar 2020 12:37:18 +0200
-Date:   Sun, 29 Mar 2020 12:37:18 +0200 (CEST)
-From:   Julia Lawall <julia.lawall@inria.fr>
-X-X-Sender: jll@hadrien
-To:     Soumyajit Deb <debsoumyajit100@gmail.com>
-cc:     John Wyatt <jbwyatt4@gmail.com>, outreachy-kernel@googlegroups.com,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Payal Kshirsagar <payal.s.kshirsagar.98@gmail.com>,
-        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Subject: Re: [Outreachy kernel] [PATCH] staging: fbtft: Replace udelay with
- preferred usleep_range
-In-Reply-To: <CAMS7mKBEhqFat8fWi=QiFwfLV9+skwi1hE-swg=XxU48zk=_tQ@mail.gmail.com>
-Message-ID: <alpine.DEB.2.21.2003291235590.2990@hadrien>
-References: <20200329092204.770405-1-jbwyatt4@gmail.com> <alpine.DEB.2.21.2003291127230.2990@hadrien> <2fccf96c3754e6319797a10856e438e023f734a7.camel@gmail.com> <alpine.DEB.2.21.2003291144460.2990@hadrien>
- <CAMS7mKBEhqFat8fWi=QiFwfLV9+skwi1hE-swg=XxU48zk=_tQ@mail.gmail.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Sun, 29 Mar 2020 06:37:58 -0400
+Received: by mail-wm1-f68.google.com with SMTP id z18so16534300wmk.2;
+        Sun, 29 Mar 2020 03:37:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=71RlhCSY8oNNUxnE6bOWCXws7Gp/rPuisSxtRcSLemY=;
+        b=YZtvYKa698h+YWJETGtThKPWyClMiN3dTJaekhReiBHmyxVGVuu9cA+QnomoZFeRJC
+         AgocSSl59oiolVhdq5Y4jf8X9+Fazyy54pafM/roUfKuSD9k2NjL067ZKwNESP82WBwC
+         NLphcV1Hr3ETawfKgOGgv8HrKjzGMlVXZtWUvyApPf8mm+x1cTXR3ZYAVtyD83aaN8Yc
+         97RcdB1QEnincTtBPv+OE9rFfFjVs+Ap5z169xTIUKlIyBQ6pmBzzgRXVt0rpxK24NvA
+         9Htk6d/NBwCUNyAMnauO1MksLAyIRNtNmP5dCKBOr9TOmmzszwgzNKcUcFvY/FH1sTNQ
+         OaGA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=71RlhCSY8oNNUxnE6bOWCXws7Gp/rPuisSxtRcSLemY=;
+        b=tsuYU8Gz7sOaD0Uj9i63ozjlrayQNYS3YMOoJeKZdDdxuhN5AwIM9MXNk7w0TASYsd
+         /j9xSipPwZ5bR39nIMHSzHfhasya8wZYkQ8e4zVDru5TwJaCUxw6VOZG+booOlBY8lza
+         eaIIdPNxSAf3yl5wJ2Xce1GOvBitZTX9iSkPRCn2gFxVouRmLSNxVlk89JZqaCNww64e
+         ubLEmhg5+iIQ3D2JQ5efJkXnLnPM0AWTqMr3RMsBe507q3+IlEzn80aG8ekaPjPyDgUA
+         GJTpBDTOiW61j0LM//IH0Z1IkuqGKHI8U7d7AJMuCDfAQEC44VurNN2At8r9A5KvWlkb
+         DESA==
+X-Gm-Message-State: ANhLgQ0wmG7vekIxcuIGNEXkg7LPyZ9GMGhjPWL7FVyC1MHKwMfzCvTj
+        po5B7YGkuCErQdhutFff5ievzYoY
+X-Google-Smtp-Source: ADFU+vuSdRNxHZDjZD9gGezVPtBI3guMBw8gt4hGVsgmP/7sbPLnEBYFnRwcxUI5IBtFdsedAafigw==
+X-Received: by 2002:a1c:68d5:: with SMTP id d204mr7904068wmc.15.1585478275203;
+        Sun, 29 Mar 2020 03:37:55 -0700 (PDT)
+Received: from [192.168.0.104] (p5B3F6BD9.dip0.t-ipconnect.de. [91.63.107.217])
+        by smtp.gmail.com with ESMTPSA id l17sm17383372wrm.57.2020.03.29.03.37.54
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 29 Mar 2020 03:37:54 -0700 (PDT)
+Subject: Re: [PATCH v4 3/5] iio: adc: mp2629: Add support for mp2629 ADC
+ driver
+To:     Jonathan Cameron <jic23@kernel.org>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald <pmeerw@pmeerw.net>,
+        Sebastian Reichel <sre@kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-iio <linux-iio@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>
+References: <20200322224626.13160-1-sravanhome@gmail.com>
+ <20200322224626.13160-4-sravanhome@gmail.com>
+ <CAHp75VfauHuAv1Wr=7ga=G+6JOYXuop_oyXiwmQgKeB2e_z=tQ@mail.gmail.com>
+ <20200328144234.081b964f@archlinux>
+From:   saravanan sekar <sravanhome@gmail.com>
+Message-ID: <d6852a20-157b-ea51-7def-f11b5d1c81fe@gmail.com>
+Date:   Sun, 29 Mar 2020 12:37:53 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323329-1337720750-1585478238=:2990"
+In-Reply-To: <20200328144234.081b964f@archlinux>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+Hi Andy,
 
---8323329-1337720750-1585478238=:2990
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
-
-
-
-On Sun, 29 Mar 2020, Soumyajit Deb wrote:
-
-> I had the same doubt the other day about the replacement of udelay() with
-> usleep_range(). The corresponding range for the single argument value of
-> udelay() is quite confusing as I couldn't decide the range. But as much as I
-> noticed checkpatch.pl gives warning for replacing udelay() with
-> usleep_range() by checking the argument value of udelay(). In the
-> documentation, it is written udelay() should be used for a sleep time of at
-> most 10 microseconds but between 10 microseconds and 20 milliseconds,
-> usleep_range() should be used. 
-> I think the range is code specific and will depend on what range is
-> acceptable and doesn't break the code.
->  Please correct me if I am wrong.
-
-The range depends on the associated hardware.  Just because checkpatch
-suggests something doesn't mean that it is easy to address the problem.
-
-julia
-
+On 28/03/20 3:42 pm, Jonathan Cameron wrote:
+> On Mon, 23 Mar 2020 01:32:34 +0200
+> Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
 >
-> More clarification on this issue will be helpful.
+>> On Mon, Mar 23, 2020 at 12:47 AM Saravanan Sekar <sravanhome@gmail.com> wrote:
+>>> Add support for 8-bit resolution ADC readings for input power
+>>> supply and battery charging measurement. Provides voltage, current
+>>> readings to mp2629 power supply driver.
+>> ...
+>>
+>>> +#include <linux/platform_device.h>
+>>> +#include <linux/of_device.h>
+>> Don't see users of it.
+Forgot to reply, its needed since I used struct of_device
+"error: field name not in record or union initializer
+   { .compatible = "mps,mp2629_charger"},"
+>>> +#include <linux/module.h>
+>>> +#include <linux/mutex.h>
+>>> +#include <linux/regulator/consumer.h>
+>>> +#include <linux/sysfs.h>
+>> Any users?
+>>
+>>> +#include <linux/regmap.h>
+>> Perhaps ordered?
+>>
+>>> +#include <linux/iio/iio.h>
+>>> +#include <linux/iio/machine.h>
+>>> +#include <linux/iio/driver.h>
+>> + blank line?
+>>
+>>> +#include <linux/mfd/mp2629.h>
+>> ...
+>>
+>>> +static int mp2629_read_raw(struct iio_dev *indio_dev,
+>>> +                       struct iio_chan_spec const *chan,
+>>> +                       int *val, int *val2, long mask)
+>>> +{
+>>> +       struct mp2629_adc *info = iio_priv(indio_dev);
+>>> +       unsigned int rval;
+>>> +       int ret;
+>>> +
+>>> +       switch (mask) {
+>>> +       case IIO_CHAN_INFO_RAW:
+>>> +               ret = regmap_read(info->regmap, chan->address, &rval);
+>>> +               if (ret < 0)
+>>> +                       return ret;
+>>> +
+>>> +               if (chan->address == MP2629_INPUT_VOLT)
+>>> +                       rval &= 0x7f;
+>> GENMASK() ?
+>>
+>>> +               *val = rval;
+>>> +               return IIO_VAL_INT;
+>>> +       return 0;
+>>> +}
+>> ...
+>>
+>>> +       void **pdata = pdev->dev.platform_data;
+>> Same Qs as per other patch.
+>>
+>> ...
+>>
+>>> +       indio_dev->dev.of_node = pdev->dev.of_node;
+>> Jonathan, doesn't IIO core do this for all?
+>>
+> Nope.  I'm not totally sure it's always safe to do so
+> as we have some weird parent structures in some cases.
+> A quick grep suggests that we may be fine though, or
+> alternatively be able to get away with a set it if not
+> already set approach.
 >
-> On Sun, 29 Mar 2020, 15:17 Julia Lawall, <julia.lawall@inria.fr> wrote:
+> I'll take a look when I get some time. It would be nice
+> to clean this up.
 >
->
->       On Sun, 29 Mar 2020, John Wyatt wrote:
->
->       > On Sun, 2020-03-29 at 11:28 +0200, Julia Lawall wrote:
->       > >
->       > > On Sun, 29 Mar 2020, John B. Wyatt IV wrote:
->       > >
->       > > > Fix style issue with usleep_range being reported as
->       preferred over
->       > > > udelay.
->       > > >
->       > > > Issue reported by checkpatch.
->       > > >
->       > > > Please review.
->       > > >
->       > > > As written in Documentation/timers/timers-howto.rst udelay
->       is the
->       > > > generally preferred API. hrtimers, as noted in the docs,
->       may be too
->       > > > expensive for this short timer.
->       > > >
->       > > > Are the docs out of date, or, is this a checkpatch issue?
->       > > >
->       > > > Signed-off-by: John B. Wyatt IV <jbwyatt4@gmail.com>
->       > > > ---
->       > > >  drivers/staging/fbtft/fb_agm1264k-fl.c | 2 +-
->       > > >  1 file changed, 1 insertion(+), 1 deletion(-)
->       > > >
->       > > > diff --git a/drivers/staging/fbtft/fb_agm1264k-fl.c
->       > > > b/drivers/staging/fbtft/fb_agm1264k-fl.c
->       > > > index eeeeec97ad27..019c8cce6bab 100644
->       > > > --- a/drivers/staging/fbtft/fb_agm1264k-fl.c
->       > > > +++ b/drivers/staging/fbtft/fb_agm1264k-fl.c
->       > > > @@ -85,7 +85,7 @@ static void reset(struct fbtft_par *par)
->       > > >   dev_dbg(par->info->device, "%s()\n", __func__);
->       > > >
->       > > >   gpiod_set_value(par->gpio.reset, 0);
->       > > > - udelay(20);
->       > > > + usleep_range(20, 20);
->       > >
->       > > usleep_range should have a range, eg usleep_range(50,
->       100);.  But it
->       > > is
->       > > hard to know a priori what the range should be.  So it is
->       probably
->       > > better
->       > > to leave the code alone.
->       >
->       > Understood.
->       >
->       > With the question I wrote in the commit message:
->       >
->       > "As written in Documentation/timers/timers-howto.rst udelay is
->       the
->       > generally preferred API. hrtimers, as noted in the docs, may
->       be too
->       > expensive for this short timer.
->       >
->       > Are the docs out of date, or, is this a checkpatch issue?"
->       >
->       > Is usleep_range too expensive for this operation?
->       >
->       > Why does checkpatch favor usleep_range while the docs favor
->       udelay?
->
->       I don't know the answer in detail, but it is quite possible that
->       checkpatch doesn't pay any attention to the delay argument. 
->       Checkpatch is
->       a perl script that highlights things that may be of concern.  It
->       is not a
->       precise static analsis tool.
->
->       As a matter of form, all of your Please review comments should
->       have been
->       put below the ---.  Currently, if someone had wanted to apply
->       the patch,
->       you would make them do extra work to remove this information.
->
->       julia
->
->       >
->       > >
->       > > julia
->       > >
->       > > >   gpiod_set_value(par->gpio.reset, 1);
->       > > >   mdelay(120);
->       > > >  }
->       > > > --
->       > > > 2.25.1
->       > > >
->       > > > --
->       > > > You received this message because you are subscribed to
->       the Google
->       > > > Groups "outreachy-kernel" group.
->       > > > To unsubscribe from this group and stop receiving emails
->       from it,
->       > > > send an email to
->       outreachy-kernel+unsubscribe@googlegroups.com.
->       > > > To view this discussion on the web visit
->       > > >https://groups.google.com/d/msgid/outreachy-kernel/20200329092204.770405-1-
->       jbwyatt4%40gmail.com
->       > > > .
->       > > >
->       >
->       >
->
->       --
->       You received this message because you are subscribed to the
->       Google Groups "outreachy-kernel" group.
->       To unsubscribe from this group and stop receiving emails from
->       it, send an email to
->       outreachy-kernel+unsubscribe@googlegroups.com.
->       To view this discussion on the web visithttps://groups.google.com/d/msgid/outreachy-kernel/alpine.DEB.2.21.20032911
->       44460.2990%40hadrien.
+> Jonathan
 >
 >
 >
---8323329-1337720750-1585478238=:2990--
+>
