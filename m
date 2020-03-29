@@ -2,119 +2,102 @@ Return-Path: <SRS0=I467=5O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2E20C43331
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 18:43:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97C78C2D0E5
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 18:43:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 824F9206DB
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 18:43:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=agner.ch header.i=@agner.ch header.b="foiZtoQO"
+	by mail.kernel.org (Postfix) with ESMTP id 79F19207FF
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 18:43:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728564AbgC2SnK (ORCPT
+        id S1728655AbgC2SnW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Mar 2020 14:43:10 -0400
-Received: from mail.kmu-office.ch ([178.209.48.109]:34786 "EHLO
-        mail.kmu-office.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727606AbgC2SnK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Mar 2020 14:43:10 -0400
-Received: from zyt.lan (unknown [IPv6:2a02:169:3df5::564])
-        by mail.kmu-office.ch (Postfix) with ESMTPSA id 3EF795C0870;
-        Sun, 29 Mar 2020 20:43:08 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=agner.ch; s=dkim;
-        t=1585507388;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:
-         content-transfer-encoding:content-transfer-encoding:in-reply-to:
-         references; bh=lnu+KMdllhKFSlzHplG4kJn5iW0F84lGeX1xzZIYAts=;
-        b=foiZtoQOanmpdsMLM7SK+Zq7g/PZANc15HdoUTRqh11ZXs6xG/hcNgTzKX9K3M3dzSQl+B
-        E0s3+n6Y6SAAYDbC7tfRDGKSsqrApx10VlZuX4uqzEm8WNv4VqtqZg0ZcwHiKOqCWC9+Q+
-        BGbSPocVZYMxBX8j6qjL6Jd9Be7VxT8=
-From:   Stefan Agner <stefan@agner.ch>
-To:     linux@armlinux.org.uk
-Cc:     arnd@arndb.de, ard.biesheuvel@linaro.org, robin.murphy@arm.com,
-        yamada.masahiro@socionext.com, ndesaulniers@google.com,
-        manojgupta@google.com, jiancai@google.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        clang-built-linux@googlegroups.com, Stefan Agner <stefan@agner.ch>
-Subject: [PATCH v2] ARM: warn if pre-UAL assembler syntax is used
-Date:   Sun, 29 Mar 2020 20:43:04 +0200
-Message-Id: <a651d5eaf312c771c9d2e0160ddd905550bbd4e3.1585507235.git.stefan@agner.ch>
-X-Mailer: git-send-email 2.25.1
+        Sun, 29 Mar 2020 14:43:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42908 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728596AbgC2SnS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Mar 2020 14:43:18 -0400
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9311820781;
+        Sun, 29 Mar 2020 18:43:17 +0000 (UTC)
+Received: from rostedt by gandalf.local.home with local (Exim 4.93)
+        (envelope-from <rostedt@goodmis.org>)
+        id 1jIctw-002FtS-FY; Sun, 29 Mar 2020 14:43:16 -0400
+Message-Id: <20200329184316.377567650@goodmis.org>
+User-Agent: quilt/0.65
+Date:   Sun, 29 Mar 2020 14:42:58 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Ingo Molnar <mingo@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: [for-next][PATCH 06/21] ring-buffer: Add page_stamp to iterator for synchronization
+References: <20200329184252.289087453@goodmis.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Remove the -mno-warn-deprecated assembler flag to make sure the GNU
-assembler warns in case non-unified syntax is used.
+From: "Steven Rostedt (VMware)" <rostedt@goodmis.org>
 
-This also prevents a warning when building with Clang and enabling its
-integrated assembler:
-clang-10: error: unsupported argument '-mno-warn-deprecated' to option 'Wa,'
+Have the ring_buffer_iter structure contain a page_stamp, such that it can
+be used to see if the writer entered the page the iterator is on. When going
+to a new page, the iterator will record the time stamp of that page. When
+reading events, it can copy the event to an internal buffer on the iterator
+(to be implemented later), then check the page's time stamp with its own to
+see if the writer entered the page. If so, it will need to try to read the
+event again.
 
-GCC before 5.1 emits pre-UAL assembler. This can lead to warnings if
-inline assembler explicitly switches to unified syntax by using the
-".syntax unified" directive (e.g. arch/arm/include/asm/unified.h).
-Hence keep the flag for GCC versions before 5.1.
+Link: http://lkml.kernel.org/r/20200317213416.163549674@goodmis.org
 
-This is a second attempt of commit e8c24bbda7d5 ("ARM: 8846/1: warn if
-divided syntax assembler is used") which has subsequently been reverted
-with commit b752bb405a13 ("Revert "ARM: 8846/1: warn if divided syntax
-assembler is used"").
-
-Signed-off-by: Stefan Agner <stefan@agner.ch>
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 ---
-Changes in v2:
-- Reference revert commit b752bb405a13 ("Revert "ARM: 8846/1: warn if
-  divided syntax assembler is used"")
-- Reword commit message
+ kernel/trace/ring_buffer.c | 10 +++++++---
+ 1 file changed, 7 insertions(+), 3 deletions(-)
 
- arch/arm/Makefile | 14 +++++++++-----
- 1 file changed, 9 insertions(+), 5 deletions(-)
-
-diff --git a/arch/arm/Makefile b/arch/arm/Makefile
-index 1fc32b611f8a..b37bb985a3c2 100644
---- a/arch/arm/Makefile
-+++ b/arch/arm/Makefile
-@@ -119,21 +119,25 @@ ifeq ($(CONFIG_CC_IS_CLANG),y)
- CFLAGS_ABI	+= -meabi gnu
- endif
+diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
+index f57eeaa80e3e..e689bdcb53e8 100644
+--- a/kernel/trace/ring_buffer.c
++++ b/kernel/trace/ring_buffer.c
+@@ -507,6 +507,7 @@ struct ring_buffer_iter {
+ 	struct buffer_page		*cache_reader_page;
+ 	unsigned long			cache_read;
+ 	u64				read_stamp;
++	u64				page_stamp;
+ };
  
--# Accept old syntax despite ".syntax unified"
--AFLAGS_NOWARN	:=$(call as-option,-Wa$(comma)-mno-warn-deprecated,-Wa$(comma)-W)
--
- ifeq ($(CONFIG_THUMB2_KERNEL),y)
--CFLAGS_ISA	:=-mthumb -Wa,-mimplicit-it=always $(AFLAGS_NOWARN)
-+CFLAGS_ISA	:=-mthumb -Wa,-mimplicit-it=always
- AFLAGS_ISA	:=$(CFLAGS_ISA) -Wa$(comma)-mthumb
- # Work around buggy relocation from gas if requested:
- ifeq ($(CONFIG_THUMB2_AVOID_R_ARM_THM_JUMP11),y)
- KBUILD_CFLAGS_MODULE	+=-fno-optimize-sibling-calls
- endif
- else
--CFLAGS_ISA	:=$(call cc-option,-marm,) $(AFLAGS_NOWARN)
-+CFLAGS_ISA	:=$(call cc-option,-marm,)
- AFLAGS_ISA	:=$(CFLAGS_ISA)
- endif
+ /**
+@@ -1959,7 +1960,7 @@ static void rb_inc_iter(struct ring_buffer_iter *iter)
+ 	else
+ 		rb_inc_page(cpu_buffer, &iter->head_page);
  
-+ifeq ($(CONFIG_CC_IS_GCC),y)
-+ifeq ($(call cc-ifversion, -lt, 0501, y), y)
-+# GCC <5.1 emits pre-UAL code and causes assembler warnings, suppress them
-+CFLAGS_ISA	+=$(call as-option,-Wa$(comma)-mno-warn-deprecated,-Wa$(comma)-W)
-+endif
-+endif
-+
- # Need -Uarm for gcc < 3.x
- KBUILD_CFLAGS	+=$(CFLAGS_ABI) $(CFLAGS_ISA) $(arch-y) $(tune-y) $(call cc-option,-mshort-load-bytes,$(call cc-option,-malignment-traps,)) -msoft-float -Uarm
- KBUILD_AFLAGS	+=$(CFLAGS_ABI) $(AFLAGS_ISA) $(arch-y) $(tune-y) -include asm/unified.h -msoft-float
+-	iter->read_stamp = iter->head_page->page->time_stamp;
++	iter->page_stamp = iter->read_stamp = iter->head_page->page->time_stamp;
+ 	iter->head = 0;
+ }
+ 
+@@ -3551,10 +3552,13 @@ static void rb_iter_reset(struct ring_buffer_iter *iter)
+ 	iter->cache_reader_page = iter->head_page;
+ 	iter->cache_read = cpu_buffer->read;
+ 
+-	if (iter->head)
++	if (iter->head) {
+ 		iter->read_stamp = cpu_buffer->read_stamp;
+-	else
++		iter->page_stamp = cpu_buffer->reader_page->page->time_stamp;
++	} else {
+ 		iter->read_stamp = iter->head_page->page->time_stamp;
++		iter->page_stamp = iter->read_stamp;
++	}
+ }
+ 
+ /**
 -- 
 2.25.1
+
 
