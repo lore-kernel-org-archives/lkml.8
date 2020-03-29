@@ -6,71 +6,74 @@ X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40D2CC43331
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 20:17:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67FE2C43331
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 20:19:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0626720748
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 20:17:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JX5yxLW3"
+	by mail.kernel.org (Postfix) with ESMTP id 3C0A920748
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 20:19:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585513149;
+	bh=gzFxmXM9Xs5fdU1VQ7CsU1YQH05YqOZmBU9LVgUyiRY=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=GOmckbaCMKXhSPdA0LFZHzTyhOwTUomOmEScqF9X1/SkRVQgCDpta2iw9L3r8Y4g4
+	 ct6xGacu1VIiFQS0tqUnrUChBdqaucMceitCOMqRL3oVr8m3eJhGPuMahAk6NwBIW5
+	 ZNksZDG2eLSnVQDRoBepWpdtg2Mc6Oyy0Y7FpDIo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728637AbgC2UR4 (ORCPT
+        id S1728681AbgC2UTH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Mar 2020 16:17:56 -0400
-Received: from us-smtp-delivery-74.mimecast.com ([63.128.21.74]:22353 "EHLO
-        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728481AbgC2URz (ORCPT
+        Sun, 29 Mar 2020 16:19:07 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:46632 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728481AbgC2UTH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Mar 2020 16:17:55 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1585513074;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=5YQVKx16TS+5clxSLtkXpe8YoP0huXDFkfGYX4zkxME=;
-        b=JX5yxLW3vmMR/kxT8cEtrTDSmVqwfhy781f2LVtzKtwSM8p21+vnvXpg5NUCJDSi+4h0B+
-        HG9D/bomo91Gp5iYW6W6aS5asyb6wjSCJV3qXYzSFGwiq+aD5WCrJ7G6ARog2Uzv0bvcMf
-        Xdls9p1rRJ5C+1kfw8rlbU+5HzIn3+s=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-56-PcG6bRu1NJORZ_S4r-Yp5w-1; Sun, 29 Mar 2020 16:17:50 -0400
-X-MC-Unique: PcG6bRu1NJORZ_S4r-Yp5w-1
-Received: by mail-wm1-f70.google.com with SMTP id u6so931072wmm.6
-        for <linux-kernel@vger.kernel.org>; Sun, 29 Mar 2020 13:17:49 -0700 (PDT)
+        Sun, 29 Mar 2020 16:19:07 -0400
+Received: by mail-lf1-f66.google.com with SMTP id q5so12301320lfb.13
+        for <linux-kernel@vger.kernel.org>; Sun, 29 Mar 2020 13:19:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=w8lE84NI1cL59u/KthhlQ8Af9PEIK30oQOH90kdvtn8=;
+        b=cpg506iB8SOhnj7ZbK4G34NSdESJO+2VG90dBY6R8angEfpZUFvoW/zG4GYaa6Kmnt
+         ZPRV8WatmmcRF4nlIlxorVllw6HV5fcFCULUzWwfI1QO3Q84zdWBXrCL2dc7+g662iLu
+         IRELBwyagYyzGFysU2njrUepcsCW1xuVrYmg8=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:content-transfer-encoding:from:mime-version
-         :subject:date:message-id:references:cc:in-reply-to:to;
-        bh=5YQVKx16TS+5clxSLtkXpe8YoP0huXDFkfGYX4zkxME=;
-        b=ESXaDetHv6zDPT7AnGnTRl14LuO2uVDwfIEBtOD+Xo5CcK4ZRkukx5repM/WxBYnvQ
-         ygBoFEmZ4L8Rs7tkzOZhiUPuyxf4ceH6lewvH4eVacuChJcYIen6LpT8TO0QdwgrfARU
-         OztGKy90FjWGmMyLqYo9/2S3oJkkjNwlA/t6sdSNwAA7ls0IHqq9rEfdW/DohXf6etQb
-         Yiqx0xqnP1Im4dX3WD41iMX4fvMZ+TF4JI+IV4APjvCKzW/B+F2+9zbdqfXj7VpaW71l
-         Ho6JIUA4XDu4W2plPh02s2xyMT/epuKR/53DDUiMccneGvYwgYUC5IAdEfEsRjRifAJH
-         twXw==
-X-Gm-Message-State: ANhLgQ2PevOfRcUAAZEg/l37ARGRA65AG75l1bPLCbsd990hSBuLcCOM
-        uwC/frw7Zu/WrPz0sDRr41DeUciZBSrwuLIHD/QvM3SSKDT1bdls5Vy3KS+PwRxvh0Qhc713I+R
-        s335kOACG3SCrLAkzvvEoXKlJ
-X-Received: by 2002:a5d:4cc4:: with SMTP id c4mr11020549wrt.346.1585513068823;
-        Sun, 29 Mar 2020 13:17:48 -0700 (PDT)
-X-Google-Smtp-Source: ADFU+vvGOR9hvsxil64/+f2JpUGFAdf8Qlt+ucWEguEIT6KS905fdsOrxkr5UEtxCIOY0arEv/XlQQ==
-X-Received: by 2002:a5d:4cc4:: with SMTP id c4mr11020522wrt.346.1585513068448;
-        Sun, 29 Mar 2020 13:17:48 -0700 (PDT)
-Received: from [192.168.3.122] (p4FF23127.dip0.t-ipconnect.de. [79.242.49.39])
-        by smtp.gmail.com with ESMTPSA id j11sm18440236wrt.14.2020.03.29.13.17.46
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=w8lE84NI1cL59u/KthhlQ8Af9PEIK30oQOH90kdvtn8=;
+        b=pr6ZyprP0pqT4gb64V0XoEHhsplN8t2w/5hZ9hHjziBjpAjmrLs/WcrlTopu1rLmzq
+         q5RJZAmsvaPmzrHWvZw/7nyp90rfpIjoHMxH9vDJpfB1aRtIAW1XUCfRKRgGQl8AN8Q8
+         U4Xh8PVxvCUVbiAWdUHTEmgHVGp0sAKiTbv5XKApr9L9TMKS4FqfI6V/+Wb7zDurssg6
+         YQTR6HJ8Oe/XY+H4jLo9Bqklbr1KHHFlP6Go0V/82Wr3xALDo6zjfbuB2xH7W+4UdWV6
+         HrAWT/kC13rUNT+o+UWg6wPEA565zokbKCyh32v4NXzJ53Eoe5/sm/quphzBMhnx50nm
+         RQZQ==
+X-Gm-Message-State: AGi0Pubx4BO5Z6h7/pj+cUzmX4gBoAjhqMsBZypWxSNXVM00yEvRfMOw
+        Fui1cwXPpI8dsEx1RmPEznYnFizoWNI=
+X-Google-Smtp-Source: APiQypKa1acATMeDTUlhMTIqqJEGnKXNaxUo9+2UltqWgmwnTbNm/JIXGulWvb+HfRZ/Bce7UEcvKQ==
+X-Received: by 2002:a19:4c44:: with SMTP id z65mr6163699lfa.203.1585513142779;
+        Sun, 29 Mar 2020 13:19:02 -0700 (PDT)
+Received: from mail-lf1-f54.google.com (mail-lf1-f54.google.com. [209.85.167.54])
+        by smtp.gmail.com with ESMTPSA id v22sm5962145ljj.67.2020.03.29.13.19.01
+        for <linux-kernel@vger.kernel.org>
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 29 Mar 2020 13:17:46 -0700 (PDT)
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-From:   David Hildenbrand <david@redhat.com>
-Mime-Version: 1.0 (1.0)
-Subject: Re: [PATCH v2 1/2] mm/memory_hotplug: simplify calculation of number of pages in __remove_pages()
-Date:   Sun, 29 Mar 2020 22:17:46 +0200
-Message-Id: <DFA2A279-A6B4-4F0C-A8B9-38E1A7A6B400@redhat.com>
-References: <CAHk-=wjEk_smqiRh4-JosHsRxzhedJddGf5EQV0JxqZtHYMdkA@mail.gmail.com>
-Cc:     David Hildenbrand <david@redhat.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Sun, 29 Mar 2020 13:19:02 -0700 (PDT)
+Received: by mail-lf1-f54.google.com with SMTP id s13so1174901lfb.9
+        for <linux-kernel@vger.kernel.org>; Sun, 29 Mar 2020 13:19:01 -0700 (PDT)
+X-Received: by 2002:a19:7f96:: with SMTP id a144mr6077406lfd.31.1585513141215;
+ Sun, 29 Mar 2020 13:19:01 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200228095819.10750-1-david@redhat.com> <20200228095819.10750-2-david@redhat.com>
+ <dca485fe-7024-392b-f51c-cd54550317ff@redhat.com> <CAHk-=wjEk_smqiRh4-JosHsRxzhedJddGf5EQV0JxqZtHYMdkA@mail.gmail.com>
+In-Reply-To: <CAHk-=wjEk_smqiRh4-JosHsRxzhedJddGf5EQV0JxqZtHYMdkA@mail.gmail.com>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Sun, 29 Mar 2020 13:18:45 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wj1K5rsyoPps3H5QW_KOxtDQ8zPJ-bc-BmYjT4jXU_7Og@mail.gmail.com>
+Message-ID: <CAHk-=wj1K5rsyoPps3H5QW_KOxtDQ8zPJ-bc-BmYjT4jXU_7Og@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] mm/memory_hotplug: simplify calculation of number
+ of pages in __remove_pages()
+To:     David Hildenbrand <david@redhat.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
         Linux-MM <linux-mm@kvack.org>,
         Segher Boessenkool <segher@kernel.crashing.org>,
         Andrew Morton <akpm@linux-foundation.org>,
@@ -78,82 +81,44 @@ Cc:     David Hildenbrand <david@redhat.com>,
         Michal Hocko <mhocko@kernel.org>, Baoquan He <bhe@redhat.com>,
         Dan Williams <dan.j.williams@intel.com>,
         Wei Yang <richardw.yang@linux.intel.com>
-In-Reply-To: <CAHk-=wjEk_smqiRh4-JosHsRxzhedJddGf5EQV0JxqZtHYMdkA@mail.gmail.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-X-Mailer: iPhone Mail (17D50)
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Sun, Mar 29, 2020 at 1:09 PM Linus Torvalds
+<torvalds@linux-foundation.org> wrote:
+>
+> In contrast, look at the email that Andrew sent me and that I complained about:
+>
+>    https://lore.kernel.org/linux-mm/20200329021719.MBKzW0xSl%25akpm@linux-foundation.org/
 
+Hmm. I'm trying to figure out how and where Andrew got the original from you.
 
-> Am 29.03.2020 um 22:10 schrieb Linus Torvalds <torvalds@linux-foundation.o=
-rg>:
->=20
-> =EF=BB=BFOn Sun, Mar 29, 2020 at 12:19 PM David Hildenbrand <david@redhat.=
-com> wrote:
->>=20
->> This patch seems to have another of these weird MIME crap in it. (my
->> other patches in -next seem to be fine)
->>=20
->> See
->>=20
->> https://lore.kernel.org/linux-mm/20200228095819.10750-2-david@redhat.com/=
-raw
->=20
-> That email actually looks fine.
->=20
-> Yes, it has that
->=20
->   fro=3D
->   m
->=20
-> pattern, but it also has
->=20
->   Content-Transfer-Encoding: quoted-printable
->=20
-> so the recipient should be doing the right thing with that pattern.
->=20
-> The patch itself also has MIME encoding in it:
->=20
->   - cur_nr_pages =3D3D min(end_pfn - pfn, -(pfn | PAGE_SECTION_MASK));
->   + cur_nr_pages =3D3D min(end_pfn - pfn,
->=20
-> so the patch wouldn't even apply unless the recipient did the proper
-> MIME decode of the message.
->=20
-> That's also why the non-raw message looks fine:
->=20
->  https://lore.kernel.org/linux-mm/20200228095819.10750-2-david@redhat.com/=
+There's
 
->=20
-> because the raw message data has the proper encoding information.
->=20
-> In contrast, look at the email that Andrew sent me and that I complained a=
-bout:
->=20
->   https://lore.kernel.org/linux-mm/20200329021719.MBKzW0xSl%25akpm@linux-f=
-oundation.org/
->=20
-> and notice how that *non-raw* email has that
->=20
->   Withou=3D
->   t
->=20
-> pattern in it. And when you look at the raw one:
->=20
->  https://lore.kernel.org/linux-mm/20200329021719.MBKzW0xSl%25akpm@linux-fo=
-undation.org/raw
->=20
-> it has no content transfer encoding line in the headers.
+  https://lore.kernel.org/linux-mm/20200124155336.17126-1-david@redhat.com/raw
 
-Interesting, at least the patch in -next is messed up. I remember Andrew ada=
-pted some scripts, maybe this is a leftover.
+but again, that one actually looks fine. It has that
 
-Cheers!
+   Content-Transfer-Encoding: quoted-printable
 
->=20
->                 Linus
->=20
+header line, but it doesn't even have the "=\n" pattern in the text at
+all. It does have MIME encoding in the patch, but that's all fine.
 
+Then there's a new version:
+
+   https://lore.kernel.org/linux-mm/20200128093542.6908-1-david@redhat.com/raw
+
+and that one *does* have the "Withou=\nt" pattern in it. But it still
+has the proper
+
+   Content-Transfer-Encoding: quoted-printable
+
+in it, so the recipient should decode it just fine (and again, you can
+see that in the non-raw email - it looks just fine).
+
+So your emails on lore look fine. I'm not seeing how that got corrupted.
+
+               Linus
