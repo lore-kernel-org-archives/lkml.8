@@ -2,193 +2,96 @@ Return-Path: <SRS0=I467=5O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D596EC2D0E9
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 14:22:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C719C2D0E9
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 14:36:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B246C2082F
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 14:22:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E5FB2073B
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 14:36:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="E4V7eq1o"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728263AbgC2OWM (ORCPT
+        id S1728293AbgC2OgX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Mar 2020 10:22:12 -0400
-Received: from foss.arm.com ([217.140.110.172]:58914 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727488AbgC2OWL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Mar 2020 10:22:11 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A5D9C31B;
-        Sun, 29 Mar 2020 07:22:10 -0700 (PDT)
-Received: from [10.163.1.70] (unknown [10.163.1.70])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 542D63F68F;
-        Sun, 29 Mar 2020 07:22:01 -0700 (PDT)
-From:   Anshuman Khandual <anshuman.khandual@arm.com>
-Subject: Re: [PATCH V2 0/3] mm/debug: Add more arch page table helper tests
-To:     Christophe Leroy <christophe.leroy@c-s.fr>, linux-mm@kvack.org
-Cc:     Jonathan Corbet <corbet@lwn.net>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Vineet Gupta <vgupta@synopsys.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "Kirill A . Shutemov" <kirill@shutemov.name>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        linux-snps-arc@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        linux-riscv@lists.infradead.org, x86@kernel.org,
-        linux-doc@vger.kernel.org, linux-arch@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <1585027375-9997-1-git-send-email-anshuman.khandual@arm.com>
- <2bb4badc-2b7a-e15d-a99b-b1bd38c9d9bf@arm.com>
- <a46d18ed-8911-1ec3-c32f-58b6e0d959d7@c-s.fr>
- <9675882f-0ec5-5e46-551f-dd3aa38bf8d8@arm.com>
- <ef28cb75-40b8-5ab5-83ba-84fd4384c7c5@c-s.fr>
-Message-ID: <bf4558b2-1fe9-f0cc-3e6f-34bdf3734056@arm.com>
-Date:   Sun, 29 Mar 2020 19:51:54 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        Sun, 29 Mar 2020 10:36:23 -0400
+Received: from mail-qv1-f68.google.com ([209.85.219.68]:41332 "EHLO
+        mail-qv1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728265AbgC2OgX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Mar 2020 10:36:23 -0400
+Received: by mail-qv1-f68.google.com with SMTP id t4so3359914qvz.8
+        for <linux-kernel@vger.kernel.org>; Sun, 29 Mar 2020 07:36:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=cKOBNOm+rZ4d9bR4WUxBUh48pKmpl3L3aadgBjJl+N8=;
+        b=E4V7eq1ostoW8XvR/+TcPp3WLl+0AsNGFLPZolKW+6UAzuHq0nIwhJofnwf75MXvhx
+         V5VFktaQ/RFJ7WLlRaYuosKbFpb/u2/+ftvTUeVT3WSUs5JMLFeMMdKcK5aGP/8wEnBX
+         jrie7KaCbvO5vv+N4ampsWV62mSaqJ50zqUdRO09QM2UrGY3vmqlWjd44YHJxQJvMoyE
+         vRkzwGHrkwt5hEqlQjsNOQOj99n7gHAe2pLxY5AaUnodVokOYtZ5N/wJR7Cj2tvNOiIJ
+         3pbAB4p6UaIRd1qyu79XwptQkSA0kF5kBJFTqp3dfyBvY+fmmiVh24u6jUgQcWJVIsx/
+         g1Sw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=cKOBNOm+rZ4d9bR4WUxBUh48pKmpl3L3aadgBjJl+N8=;
+        b=mn0qiSYmrPWsVLEtkFxsoToRUAuXqZ0pr9QubszriaPjTI2bFjWj1RTuLFVcQnRp4W
+         dUKUWu8huT94HScQAhRPI/NoDY/AFEA49c8mbXxqZScSH4B1Aqt1fvLUKigoUUpM5Mcm
+         faFw2/fArnegpApjkEvmnqXWpChHRHmOWRJEgjkdeKG45TzLumgu56uNMDjmxAagrmwW
+         qqBVi8UNYOh2WvYc3HQxwEI5zb8T0aCS5fkYw/EehxvHf5LimY61+H0Kgvop7pT00wkx
+         r1UlN/JGpYNnuCXo8mUXFSQVNY8jzrTpwTzWS2nuWNjAKfzhCgdhjWVhALwC+tKKSWSM
+         nm4w==
+X-Gm-Message-State: ANhLgQ2HolR0gLlRi3kFR2GJ33Fy4lP3LZehFx6QGWCXTIzasVabw4HH
+        lK51ZlQHheOM58yK7x93L2s+tA==
+X-Google-Smtp-Source: ADFU+vv1Y8n2FMzImT66FeDLKS+HztLgbMDaezhyrCdeeCVde2jHORL6B8fuxvpM6NiRUgVO2VgkXg==
+X-Received: by 2002:ad4:4847:: with SMTP id t7mr7798301qvy.237.1585492582171;
+        Sun, 29 Mar 2020 07:36:22 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-142-68-57-212.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.57.212])
+        by smtp.gmail.com with ESMTPSA id l7sm7982342qkb.47.2020.03.29.07.36.21
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Sun, 29 Mar 2020 07:36:21 -0700 (PDT)
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1jIZ2z-0000k2-2n; Sun, 29 Mar 2020 11:36:21 -0300
+Date:   Sun, 29 Mar 2020 11:36:21 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     George Spelvin <lkml@sdf.org>
+Cc:     linux-kernel@vger.kernel.org, Doug Ledford <dledford@redhat.com>,
+        linux-rdma@vger.kernel.org, Faisal Latif <faisal.latif@intel.com>,
+        Shiraz Saleem <shiraz.saleem@intel.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        Bernard Metzler <bmt@zurich.ibm.com>
+Subject: Re: [RFC PATCH v1 42/50] drivers/ininiband: Use get_random_u32()
+Message-ID: <20200329143621.GF20941@ziepe.ca>
+References: <202003281643.02SGhN9T020186@sdf.org>
 MIME-Version: 1.0
-In-Reply-To: <ef28cb75-40b8-5ab5-83ba-84fd4384c7c5@c-s.fr>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <202003281643.02SGhN9T020186@sdf.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Aug 21, 2019 at 08:21:45PM -0400, George Spelvin wrote:
+> There's no need to get_random_bytes() into a temporary buffer.
+> 
+> This is not a no-brainer change; get_random_u32() has slightly weaker
+> security guarantees, but code like this is the classic example of when
+> it's appropriate: the random value is stored in the kernel for as long
+> as it's valuable.
 
-On 03/27/2020 12:30 PM, Christophe Leroy wrote:
-> 
-> 
-> On 03/27/2020 06:46 AM, Anshuman Khandual wrote:
->>
->> On 03/26/2020 08:53 PM, Christophe Leroy wrote:
->>>
->>>
->>> Le 26/03/2020 à 03:23, Anshuman Khandual a écrit :
->>>>
->>>>
->>>> On 03/24/2020 10:52 AM, Anshuman Khandual wrote:
->>>>> This series adds more arch page table helper tests. The new tests here are
->>>>> either related to core memory functions and advanced arch pgtable helpers.
->>>>> This also creates a documentation file enlisting all expected semantics as
->>>>> suggested by Mike Rapoport (https://lkml.org/lkml/2020/1/30/40).
->>>>>
->>>>> This series has been tested on arm64 and x86 platforms.
->>>>
->>>> If folks can test these patches out on remaining ARCH_HAS_DEBUG_VM_PGTABLE
->>>> enabled platforms i.e s390, arc, powerpc (32 and 64), that will be really
->>>> appreciated. Thank you.
->>>>
->>>
->>> On powerpc 8xx (PPC32), I get:
->>>
->>> [   53.338368] debug_vm_pgtable: debug_vm_pgtable: Validating architecture page table helpers
->>> [   53.347403] ------------[ cut here ]------------
->>> [   53.351832] WARNING: CPU: 0 PID: 1 at mm/debug_vm_pgtable.c:647 debug_vm_pgtable+0x280/0x3f4
->>
->> mm/debug_vm_pgtable.c:647 ?
->>
->> With the following commits in place
->>
->> 53a8338ce (HEAD) Documentation/mm: Add descriptions for arch page table helper
->> 5d4913fc1 mm/debug: Add tests validating arch advanced page table helpers
->> bcaf120a7 mm/debug: Add tests validating arch page table helpers for core features
->> d6ed5a4a5 x86/memory: Drop pud_mknotpresent()
->> 0739d1f8d mm/debug: Add tests validating architecture page table helpers
->> 16fbf79b0 (tag: v5.6-rc7) Linux 5.6-rc7
-> 
-> I have:
-> 
-> facaa5eb5909 (HEAD -> helpers0) mm/debug: Add tests validating arch advanced page table helpers
-> 6389fed515fc mm/debug: Add tests validating arch page table helpers for core features
-> dc14ecc8b94e mm/debug: add tests validating architecture page table helpers
-> c6624071c338 (origin/merge, merge) Automatic merge of branches 'master', 'next' and 'fixes' into merge
-> 58e05c5508e6 Automatic merge of branches 'master', 'next' and 'fixes' into merge
-> 1b649e0bcae7 (origin/master, origin/HEAD) Merge git://git.kernel.org/pub/scm/linux/kernel/git/netdev/net
-> 
-> origin is https://git.kernel.org/pub/scm/linux/kernel/git/powerpc/linux.git
-> 
-> I can't see your last patch in powerpc mailing list (https://patchwork.ozlabs.org/project/linuxppc-dev/list/?series=166237)
+The mechanical transformation looks OK, but can someone who knows the
+RNG confirm this statement?
 
-My bad, did not update the last patch with required lists (will fix).
+Many of these places are being used in network related contexts, I
+suspect the value here is often less about secrecy, more about
+unguessability.
 
-> 
->>
->> mm/debug_vm_pgtable.c:647 is here.
-> 
-> Line 647 is:
-> 
->     WARN_ON(!pte_same(pte, __swp_entry_to_pte(swp)));
-
-Both set of definitions suggest that the last three bits (if present)
-on the PTE will be discarded during PTE->SWP->PTE conversion which
-might be leading to this mismatch and subsequent failure.
-
-arch/powerpc/include/asm/nohash/32/pgtable.h
-arch/powerpc/include/asm/book3s/32/pgtable.h
-
-#define __pte_to_swp_entry(pte)         ((swp_entry_t) { pte_val(pte) >> 3 })
-#define __swp_entry_to_pte(x)           ((pte_t) { (x).val << 3 })
-
-Also there are some more architectures (microblaze, sh, etc) where these
-conversions are not always preserving. On powerpc64, it sets back _PAGE_PTE
-irrespective of whether the bit was originally set or not.
-
-Probably it is wrong to expect that PTE->SWP->PTE conversion will be always
-preserving. So wondering if it is worth changing this test to accommodate
-all such architectures or just drop it instead.
-
-> 
-> 
->>
->> #ifdef CONFIG_ARCH_ENABLE_THP_MIGRATION
->> static void __init pmd_swap_tests(unsigned long pfn, pgprot_t prot)
->> {
->>          swp_entry_t swp;
->>          pmd_t pmd;  -----------------------------> Line #647
->>
->>          pmd = pfn_pmd(pfn, prot);
->>          swp = __pmd_to_swp_entry(pmd);
->>          WARN_ON(!pmd_same(pmd, __swp_entry_to_pmd(swp)));
->> }
->> #else
->> static void __init pmd_swap_tests(unsigned long pfn, pgprot_t prot) { }
->> #end
->>
->> Did I miss something ?
->>
-> 
-> [...]
-> 
->> Could you please point me to the exact test which is failing ?
->>
->>> [   53.519778] Freeing unused kernel memory: 608K
->>>
->>>
->> So I assume that the system should have come till runtime just fine apart from
->> the above warning message because.
->>
-> 
-> Yes it boots fine otherwise.
-
-Cool, that is good to know.
-
-> 
-> Christophe
-> 
+Jason
