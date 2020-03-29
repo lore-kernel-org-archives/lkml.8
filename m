@@ -2,133 +2,136 @@ Return-Path: <SRS0=I467=5O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79755C2D0EE
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 10:34:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72747C2D0E7
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 10:35:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 360B8207FF
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 10:34:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cw+9tTm5"
+	by mail.kernel.org (Postfix) with ESMTP id 47F7020675
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 10:35:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585478112;
+	bh=VZb1AfKfLRj9i2noeV282Qx0noCiipydqn+qVo/7/5Q=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:List-ID:From;
+	b=qB0L7fE+CL2la8/nNKKrVKxbiDnLJ/ApQ0Uxwnx9vdnr26pQUh6FtG0vjNYJYHE3d
+	 NrMf9BGWqAu1OkhxY/fO1ejOcUEsFLQY2O3Fg3QGLEV1Wk+mDJBIwRI8Epx3R0Tt2P
+	 /kieXnL8/fY6wjEdTcUgBILIYKET3ocWErdBbVyw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727995AbgC2KeJ (ORCPT
+        id S1728001AbgC2KfL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Mar 2020 06:34:09 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:37348 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727869AbgC2KeI (ORCPT
+        Sun, 29 Mar 2020 06:35:11 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:33062 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727869AbgC2KfK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Mar 2020 06:34:08 -0400
-Received: by mail-wm1-f68.google.com with SMTP id d1so17849441wmb.2;
-        Sun, 29 Mar 2020 03:34:07 -0700 (PDT)
+        Sun, 29 Mar 2020 06:35:10 -0400
+Received: by mail-lj1-f196.google.com with SMTP id f20so14761259ljm.0;
+        Sun, 29 Mar 2020 03:35:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=FlZLcBO7OYWRZLM3fnAWMQqlsSHKvKFSKGsey7ScD04=;
-        b=cw+9tTm5CubLPa3eNghOc8/tTgz+aoRUpcGucXULJ+ldNN6QMblIQREQsUok7XYMIk
-         ha8w9p/gRDaqa39YyCeDLhRrDkt+4q+bHhHtN1N5r/GB16h5vWpaDBRYq4cWDVmCYbtI
-         LhoMLLqgM8i5JmFitQATyqoECAHnFf8DB64QFr5DeCzSyG+T485qKEWYkcGar4TPwGiY
-         D+wex9yiUq1JIyfCngOdQ58Es1pLoMF8r5KRRprvGxH8cYXUJVe2Erpsw/XHx+u9FUF8
-         Jwc3wa+e+SyDOdX3wuMhA3LWBEcccWUM7IcZdEcO1cggFTiCyd66cxF+BcCFlodaCNzn
-         aB8g==
+        h=sender:from:to:cc:subject:in-reply-to:references:date:message-id
+         :mime-version;
+        bh=VZb1AfKfLRj9i2noeV282Qx0noCiipydqn+qVo/7/5Q=;
+        b=nDMkANrF8lq0pvR1cZw6m71QuW1v/Qsxgva5CcrRtYJk2EdRpv23zGxomyVfvelanZ
+         qGne3mDHTHhNLXrKWO0eFjqOnshQZBlgY4vM4pD8j2LvMt1BpYaqn6rAFPKqjao7rXsv
+         dYrzqolHS6zxy8VKsb534noN/lrMMf2CdEWeNLbpmNG2GOXQOd5Pe+ZyA/qkEs3u/wOw
+         pYd4r+jmI0W5CiZeyJJ143JlO5sDSNBKKWklcw5xzeB2whyYT/NNl7DxrhKvoNK26Rx/
+         xQSLWCv7yR1hD0SrJ6H8QPawPf8nudVVVedtZFhp9KaF4vT8jwz47XI1IpWwyORH3nQr
+         HTUQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=FlZLcBO7OYWRZLM3fnAWMQqlsSHKvKFSKGsey7ScD04=;
-        b=ujmJuJs5r470oALl5YZ+q1uC6o3mEjbeVopOl/2G/c7wY0z7Ia7nek6b/EIyzD8DwH
-         c8kkE33pZJG9VFN3sgw+5VNEy2OmYhlpOznz6A/5amavW+xWbIMzjQC4dxV2PQpf8fyp
-         IzPed1VJJPRWlOXXYikEGIypMkc0TxOcbiqZfV2TG2/MzJQluzwbF1BZw+iig76qxbcy
-         53QeGxLovPExByoBeYsPRPVMMUD3f0aDcAQ62/J+dtIjiDpDvVO+94eHcEc9Upz8P7un
-         ByajeBbwDMYEl9dQlU3w0zKXhO6PfswHUZXknB6VsixQ32QSmNq3M6MsyMNlETIY2foj
-         TPyw==
-X-Gm-Message-State: ANhLgQ0Ks7qGMJ/n3cVEm+zZRyrAwvAQT9Mnad1gAh/1vhI11UuA8bUW
-        so1SdlhnDNJ1KtdNk65Oz/gQuRR3
-X-Google-Smtp-Source: ADFU+vsgvkJcM76vOwqLH3zSNrn5alEJfrSXUpOh5ObS7Qs3iQPqty7+fqs4pAtBixLWjHiL2dqujw==
-X-Received: by 2002:a7b:c0d1:: with SMTP id s17mr7685443wmh.58.1585478046213;
-        Sun, 29 Mar 2020 03:34:06 -0700 (PDT)
-Received: from [192.168.0.104] (p5B3F6BD9.dip0.t-ipconnect.de. [91.63.107.217])
-        by smtp.gmail.com with ESMTPSA id m19sm16289545wml.48.2020.03.29.03.34.04
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 29 Mar 2020 03:34:05 -0700 (PDT)
-Subject: Re: [PATCH v5 4/5] power: supply: Add support for mps mp2629 battery
- charger
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald <pmeerw@pmeerw.net>,
-        Sebastian Reichel <sre@kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-iio <linux-iio@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>
-References: <20200328001154.17313-1-sravanhome@gmail.com>
- <20200328001154.17313-5-sravanhome@gmail.com>
- <CAHp75VefP3oPyRJ=Z9Y5Wv3rSc-nJdKFLJ60YLdUbP5dFikS+w@mail.gmail.com>
- <36892440-99b2-10e8-1d7c-dd8c97e03a39@gmail.com>
- <CAHp75VdAfiSjkHhTnghZ__WAJCJTGSWBprJBPNmpkxZTjZuVgQ@mail.gmail.com>
-From:   saravanan sekar <sravanhome@gmail.com>
-Message-ID: <3d811222-68fa-0992-eeeb-97d1c6d09608@gmail.com>
-Date:   Sun, 29 Mar 2020 12:34:04 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        h=x-gm-message-state:sender:from:to:cc:subject:in-reply-to:references
+         :date:message-id:mime-version;
+        bh=VZb1AfKfLRj9i2noeV282Qx0noCiipydqn+qVo/7/5Q=;
+        b=LTWQWMX6bbt43OhKKo3orDtmTB7rimceKr3Q7Sz5NaH/sFbxGOYSDa0KwEyNnO0s5j
+         GxDWtJWdu+O+2bv51G+51wJKew8ppoJeU0//ZbZ3WRbz6NPOQtJDS9rzsm5/j2wfrvU6
+         qGqoVlGALIzLOrgOLRT+jTSrJWZsNrnsfVHzr0fPPruBwBvhSH0AdHcmlkj4Bfp6he96
+         AVWB6KYOZd6QvN39eVVy1lFcgKcTZLrW8zZt1FelOdg4pXn0tKj5kyfw4rme3XD/7xaN
+         tXLylKg0oCms4snC/+eRQ/SRzLX4XzxqtNTrdZCWLN5pHfHJ+YymRf723SNPL1oizgSh
+         nseg==
+X-Gm-Message-State: AGi0Pual86t1alm1yw08AN4e1XH6DB6IxNkaLPwn/KVnLSMOmyWRKXgv
+        /ssf+HtPtDGk51TSI2h2d2YHDKpu4e7OKA==
+X-Google-Smtp-Source: APiQypKBx3zbW5qwWIsqD9EM1rU4FvVNPAUSElOJ5CRSofQwV9r0M7sICdD307OhFZzVsNJNPXTzlA==
+X-Received: by 2002:a2e:9586:: with SMTP id w6mr4373232ljh.133.1585478109014;
+        Sun, 29 Mar 2020 03:35:09 -0700 (PDT)
+Received: from saruman (91-155-214-58.elisa-laajakaista.fi. [91.155.214.58])
+        by smtp.gmail.com with ESMTPSA id z1sm1514968lfe.49.2020.03.29.03.35.08
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Sun, 29 Mar 2020 03:35:08 -0700 (PDT)
+From:   Felipe Balbi <balbi@kernel.org>
+To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Neil Armstrong <narmstrong@baylibre.com>
+Cc:     kishon@ti.com, khilman@baylibre.com,
+        linux-amlogic@lists.infradead.org, linux-usb@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 06/14] usb: dwc3: meson-g12a: refactor usb2 phy init
+In-Reply-To: <CAFBinCCVTP+MrLq1O0m1pcvLo6WSXyXpTtWMEQQxOuraN+yA0w@mail.gmail.com>
+References: <20200326134507.4808-1-narmstrong@baylibre.com> <20200326134507.4808-7-narmstrong@baylibre.com> <CAFBinCCVTP+MrLq1O0m1pcvLo6WSXyXpTtWMEQQxOuraN+yA0w@mail.gmail.com>
+Date:   Sun, 29 Mar 2020 13:35:04 +0300
+Message-ID: <87zhbze9ev.fsf@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <CAHp75VdAfiSjkHhTnghZ__WAJCJTGSWBprJBPNmpkxZTjZuVgQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Type: multipart/signed; boundary="=-=-=";
+        micalg=pgp-sha256; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Andy,
+--=-=-=
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 
-On 28/03/20 7:44 pm, Andy Shevchenko wrote:
-> On Sat, Mar 28, 2020 at 1:29 PM saravanan sekar <sravanhome@gmail.com> wrote:
->> On 28/03/20 12:02 pm, Andy Shevchenko wrote:
->>> On Sat, Mar 28, 2020 at 2:12 AM Saravanan Sekar <sravanhome@gmail.com> wrote:
-> ...
->
->>>> +       val->intval = (rval * props[fld].step) + props[fld].min;
->>> Too many parentheses.
->>>
->>> ...
->>>
->>>> +       return ((psp == POWER_SUPPLY_PROP_PRECHARGE_CURRENT) ||
->>>> +               (psp == POWER_SUPPLY_PROP_CHARGE_TERM_CURRENT) ||
->>>> +               (psp == POWER_SUPPLY_PROP_CONSTANT_CHARGE_CURRENT) ||
->>>> +               (psp == POWER_SUPPLY_PROP_CONSTANT_CHARGE_VOLTAGE));
->>> Ditto.
->> I think I misunderstood you previous review comment "Redundant
->> parentheses", no sure what is the expectation
-> (At least) surrounding pair is not needed, return (a == b) || (c == d);
-ok, I will remove outer ().
->>> ...
->>>
->>>> +       return ((psp == POWER_SUPPLY_PROP_INPUT_VOLTAGE_LIMIT) ||
->>>> +               (psp == POWER_SUPPLY_PROP_INPUT_CURRENT_LIMIT));
->>> Ditto.
-> ...
->
->>>> +       struct power_supply_config psy_cfg = {NULL};
->>> { 0 }
->>>
->> NULL to make compiler happy.
-> Hmm... Can you share warning / error compiler issued in 0 case?
->
-Please see the 0-day warning.
 
-"Reported-by: kbuild test robot <lkp@intel.com>
-sparse warnings: (new ones prefixed by >>)
- >> drivers/power/supply/mp2629_charger.c:584:47: sparse: sparse: Using 
-plain integer as NULL pointer"
+Hi,
 
+Martin Blumenstingl <martin.blumenstingl@googlemail.com> writes:
+
+> Hi Neil,
+>
+> On Thu, Mar 26, 2020 at 2:45 PM Neil Armstrong <narmstrong@baylibre.com> =
+wrote:
+>>
+>> Refactor the USB2 PHY init code patch to handle the Amlogic GXL/GXM
+>> not having the PHY mode control registers in the Glue but in the PHY
+>> registers.
+>>
+>> The Amlogic GXL/GXM will call phy_set_mode() instead of programming the
+>> PHY mode control registers, thus add two new callbacks to the SoC match
+>> data.
+>>
+>> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+> checkpatch reports that five lines need to be checked.
+> these all look valid (for example: "Alignment should match open parenthes=
+is")
+>
+> with these addressed:
+> Reviewed-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+
+That's a CHECK, only shows with --strict. drivers/usb/ ignores those for
+the most part.
+
+=2D-=20
+balbi
+
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEElLzh7wn96CXwjh2IzL64meEamQYFAl6AedgACgkQzL64meEa
+mQbodA//VwUAbPvOPF986Bz7VX5RkvL58wf09qnwm0ENuJKT1UA8iwdt+72lvoa9
+Nbj1TYTd3d4wT3Hd5MDRgPGb3HaOKUQ6ouQr6mSnWD9Qq2NbODKighWGl3UDYwCx
+6cbe9lllE6yoenGtJ9R4VUMa+UnlHetdg14ukiEMLFipgcmPALUkaghD38aZ0Fxo
+/ARman65bgvoKBpJtD4KBzggm1Y93e3ckojM8FKiVFTrixq28hiZC2PqCLRnJ5SG
+GfB9YSxJ5ONvrWeb8ReBd4LGCZvXOmniJtDbUGC7OAuAt6Aced5aGwT/xyQDJyCc
+fGveU2syqx16Eb7kiIQ2ViQUZidpl78fQo0FNXz+vDRfg9s2cRKafgpnYEV+BG8G
+WNiKVdLmB9tu+oRlSy2om0uxU3JcvpoVrWwIYivvppu7j+xgQM0ryzIgAMZ6Dz1z
+H9F/7ttjyn0VbrkvIpzcRdS9Vkp+JYOch0zP/Ym7IePXD2N5WVsoWLECAgpnFitJ
+cQvn3BX7zgJ+ZNTrMFkNqzuzUczAKXfKYMyfhfFtmG7IPvgmheABnLihkTQ4ezOQ
++zi58Uzewg6i+JYTNN2Myg9GaR34PoXT4/9iisjqvEv0hzF8Y8zpw07nqV3X7G6T
+u0EP1/sS82rRixzko/l5L1JKJCspyUwdyyq7NZNHQ8usUhNrAa8=
+=MQ9G
+-----END PGP SIGNATURE-----
+--=-=-=--
