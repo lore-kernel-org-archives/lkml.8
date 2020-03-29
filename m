@@ -2,317 +2,404 @@ Return-Path: <SRS0=I467=5O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F863C2D0E5
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 15:20:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14E62C43331
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 15:34:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E824020578
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 15:20:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B757A20733
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 15:34:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="kjnXnxv/"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hNpxXm4h"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728250AbgC2PUu (ORCPT
+        id S1728249AbgC2Pec (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Mar 2020 11:20:50 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:36352 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728080AbgC2PUu (ORCPT
+        Sun, 29 Mar 2020 11:34:32 -0400
+Received: from us-smtp-delivery-74.mimecast.com ([63.128.21.74]:26496 "EHLO
+        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727933AbgC2Pec (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Mar 2020 11:20:50 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 02TFKdm9006689;
-        Sun, 29 Mar 2020 10:20:39 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1585495239;
-        bh=opppOPkT1iAvpXGqX1KWIYDk1ZCLfBICfdiebBaS9HA=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=kjnXnxv/NrO4qY9/37GRBUI6S7mKTBBObIK4D3D6JpVqAiSwhcSdUUR76POiaJDLI
-         E49LlBmv98rHth0UnfQHaEisMarC7BX1K+VfSD/4dv+/mOZA4DoOaCCPm3RvECF+Gr
-         c5uz80gbWyEz63jqE9eUeP72eGS3J97LW8SGHKgc=
-Received: from DLEE108.ent.ti.com (dlee108.ent.ti.com [157.170.170.38])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 02TFKdIT087506;
-        Sun, 29 Mar 2020 10:20:39 -0500
-Received: from DLEE103.ent.ti.com (157.170.170.33) by DLEE108.ent.ti.com
- (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Sun, 29
- Mar 2020 10:20:38 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE103.ent.ti.com
- (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Sun, 29 Mar 2020 10:20:38 -0500
-Received: from [10.250.52.63] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 02TFKc50019039;
-        Sun, 29 Mar 2020 10:20:38 -0500
-Subject: Re: [PATCH v18 4/4] leds: multicolor: Introduce a multicolor class
- definition
-To:     Jacek Anaszewski <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>
-CC:     <linux-leds@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Greg KH <gregkh@linuxfoundation.org>
-References: <20200324181434.24721-1-dmurphy@ti.com>
- <20200324181434.24721-5-dmurphy@ti.com>
- <f43bf4c5-948d-b87f-9b95-98fcfeaae2fa@gmail.com>
- <9a707fe6-31c6-da9e-9372-51ca21bf3c88@ti.com>
- <1263c2f9-3cb3-f919-cce8-53201d64e121@gmail.com>
-From:   Dan Murphy <dmurphy@ti.com>
-Message-ID: <0e782f2d-2968-50c0-bf34-7ee781014ef8@ti.com>
-Date:   Sun, 29 Mar 2020 10:14:53 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Sun, 29 Mar 2020 11:34:32 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1585496070;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=Gr8qyUskxguDCiKHpXkMO/Amtup15DW+EgxPTyiCN+0=;
+        b=hNpxXm4hjjMexuF2+qM462iATGdx9cIY9ePTCfM90YFforo92TFis6oP79WNNLEPz1WITY
+        Xzda5VaWZsuSTQKf0jVrd4pg/vhYKBHXWRvxWDDiUbDudN0CVK/nBg8tKjt64yjmb8aiB4
+        h6zNFn+SL63C/5KGUDEVEOrZUfhWY14=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-382-2HAWSRdyORuChJUHi3Y0GQ-1; Sun, 29 Mar 2020 11:34:26 -0400
+X-MC-Unique: 2HAWSRdyORuChJUHi3Y0GQ-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id BB0A7800D5B;
+        Sun, 29 Mar 2020 15:34:24 +0000 (UTC)
+Received: from [10.36.112.58] (ovpn-112-58.ams2.redhat.com [10.36.112.58])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id C1E1360BEC;
+        Sun, 29 Mar 2020 15:34:16 +0000 (UTC)
+Subject: Re: [PATCH V10 08/11] iommu/vt-d: Add svm/sva invalidate function
+To:     "Tian, Kevin" <kevin.tian@intel.com>,
+        Jacob Pan <jacob.jun.pan@linux.intel.com>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Jean-Philippe Brucker <jean-philippe@linaro.com>
+Cc:     "Liu, Yi L" <yi.l.liu@intel.com>,
+        "Raj, Ashok" <ashok.raj@intel.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Jonathan Cameron <jic23@kernel.org>
+References: <1584746861-76386-1-git-send-email-jacob.jun.pan@linux.intel.com>
+ <1584746861-76386-9-git-send-email-jacob.jun.pan@linux.intel.com>
+ <AADFC41AFE54684AB9EE6CBC0274A5D19D7FA0AB@SHSMSX104.ccr.corp.intel.com>
+From:   Auger Eric <eric.auger@redhat.com>
+Message-ID: <3215b83c-81f7-a30f-fe82-a51f29d7b874@redhat.com>
+Date:   Sun, 29 Mar 2020 17:34:15 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.4.0
 MIME-Version: 1.0
-In-Reply-To: <1263c2f9-3cb3-f919-cce8-53201d64e121@gmail.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <AADFC41AFE54684AB9EE6CBC0274A5D19D7FA0AB@SHSMSX104.ccr.corp.intel.com>
+Content-Type: text/plain; charset=windows-1252
 Content-Language: en-US
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Jacek
+Hi,
 
-On 3/29/20 7:47 AM, Jacek Anaszewski wrote:
-> Dan,
->
-> On 3/28/20 10:31 PM, Dan Murphy wrote:
->> Jacek
+On 3/28/20 11:01 AM, Tian, Kevin wrote:
+>> From: Jacob Pan <jacob.jun.pan@linux.intel.com>
+>> Sent: Saturday, March 21, 2020 7:28 AM
 >>
->> Thanks for the review
+>> When Shared Virtual Address (SVA) is enabled for a guest OS via
+>> vIOMMU, we need to provide invalidation support at IOMMU API and driver
+>> level. This patch adds Intel VT-d specific function to implement
+>> iommu passdown invalidate API for shared virtual address.
 >>
->> On 3/28/20 9:03 AM, Jacek Anaszewski wrote:
->>> Hi Dan,
->>>
->>> Thanks for the update. The picture would be more complete if
->>> the patch set contained a client though.
->> I was going to send the ones I did but they are pretty dirty from a code
->> stand point.
+>> The use case is for supporting caching structure invalidation
+>> of assigned SVM capable devices. Emulated IOMMU exposes queue
+> 
+> emulated IOMMU -> vIOMMU, since virito-iommu could use the
+> interface as well.
+> 
+>> invalidation capability and passes down all descriptors from the guest
+>> to the physical IOMMU.
 >>
->> Besides I would expect the framework to change which then changes the
->> driver code.
+>> The assumption is that guest to host device ID mapping should be
+>> resolved prior to calling IOMMU driver. Based on the device handle,
+>> host IOMMU driver can replace certain fields before submit to the
+>> invalidation queue.
 >>
->>> Anyway, please find my review remarks below.
->>>
->>> On 3/24/20 7:14 PM, Dan Murphy wrote:
->>>> Introduce a multicolor class that groups colored LEDs
->>>> within a LED node.
->>>>
-> [...]
->>>> +What:        /sys/class/leds/<led>/color_max_intensity
->>>> +Date:        March 2020
->>>> +KernelVersion:    5.8
->>>> +Contact:    Dan Murphy <dmurphy@ti.com>
->>>> +Description:    read
->>>> +        Maximum intensity level for the LED color within the array.
->>>> +        The max intensities for each color must be entered based on the
->>>> +        color_index array.
->>> I wonder if we should mention here that each LED within a cluster should
->>> have the same maximum intensity for linear color lightness calculation
->>> via brightness file.
->> Does it really have to?
-> Say we have two LEDs:
->
-> red, intensity = 255, max_intensity = 255
-> green, intensity = 15, max_intensity = 15
->
-> If setting global brightness to 127 we have:
->
-> led[red].brightness = 127 * 255 / 255 = 127
-> led[green].brightness = 127 * 15 / 15 = 15 (cut down to max_intensity)
->
-> Clearly for green LED you're not getting a value being a half of
-> the intensity range.
->
-> In addition to my previous statement, global max_brightness
-> should also have the same value as all max color intensities.
-OK I will update the code and docs to indicate max_intensity should 
-equal max_brightness.
->
-> [...]
->>>> +Directory Layout Example
->>>> +========================
->>>> +root:/sys/class/leds/multicolor:grouped_leds# ls -lR
->>>> +-rw-r--r--    1 root     root          4096 Oct 19 16:16 brightness
->>>> +-r--r--r--    1 root     root          4096 Oct 19 16:16 color_index
->>>> +-rw-r--r--    1 root     root          4096 Oct 19 16:16
->>>> color_intensity
->>>> +-r--r--r--    1 root     root          4096 Oct 19 16:16
->>>> color_max_intensity
->>>> +-r--r--r--    1 root     root          4096 Oct 19 16:16 num_color_leds
->>>> +
->>>> +Multicolor Class Brightness Control
->>>> +===================================
->>>> +The multiclor class framework will calculate each monochrome LEDs
->>>> intensity.
->>>> +
->>>> +The brightness level for each LED is calculated based on the color LED
->>>> +intensity setting divided by the color LED max intensity setting
->>>> multiplied by
->>>> +the requested brightness.
->>>> +
->>>> +led_brightness = brightness * color_intensity/color_max_intensity
->>> Maybe some pseudo code would allow for better understanding here:
->>>
->>> for color in color_intensity
->>>       led[color].brightness = brightness *
->>>      led[color].intensity / led[color].max_intensity
->> I think this would be fine at least there is a documented equation. I
->> don't think we need to document the code.
-> You mean what would be fine - my or your solution ? :-)
-My solution is probably good enough for documentation
->
-> [...]
->>>> +static ssize_t color_intensity_store(struct device *dev,
->>>> +                struct device_attribute *intensity_attr,
->>>> +                const char *buf, size_t size)
->>>> +{
->>>> +    struct led_classdev *led_cdev = dev_get_drvdata(dev);
->>>> +    struct led_classdev_mc *priv = lcdev_to_mccdev(led_cdev);
->>>> +    int nrchars, offset = 0;
->>>> +    int intensity_value[LED_COLOR_ID_MAX];
->>>> +    int i;
->>>> +    ssize_t ret;
->>>> +
->>>> +    mutex_lock(&led_cdev->led_access);
->>>> +
->>>> +    for (i = 0; i < priv->num_colors; i++) {
->>>> +        ret = sscanf(buf + offset, "%i%n",
->>>> +                 &intensity_value[i], &nrchars);
->>>> +        if (ret != 1) {
->>>> +            dev_err(led_cdev->dev,
->>>> +                "Incorrect number of LEDs expected %i values
->>>> intensity was not applied\n",
->>>> +                priv->num_colors);
->>>> +            goto err_out;
->>>> +        }
->>>> +        offset += nrchars;
->>>> +    }
->>> I've just realized that moving to single color_intensity file
->>> doesn't allow setting all colors together with new brightness
->>> atomically. In effect, we will need to pass brightness to this file too,
->>> if we want to avoid "interesting" latching via brightenss file.
->>>
->>> Then we would need to call led_set_brightness() from here as well.
->> Why?  This just caches the intensity of each colored LED.  Then the
->> actual brightness is calculated only when the brightness file is updated.
-> And this is wrong. We should be able to set the color with a single
-> write.
-
-Well that is a change in philosophy and direction from the prior patches.
-
-You only wanted the LEDs to update when the brightness file was written. 
-Why the change in stance?
-
->> This would be an automatic update of the LED and that is not the intent
->> of the intensity file per the documentation.
-> Documentation needs to be changed then.
->
->> The user should be able to set the colors x number of times before the
->> LED group is actually updated with the brightness.
-> What benefit would stem from that? In fact we should be able to
-> atomically set color in two ways, either via brightness or via
-> color_intensity file.
->
-> But in previous message I unnecessarily proposed the addition
-> of brightness to the color_intensity interface. It is not needed
-> since updating color intensities should be considered as setting
-> entirely new color and that should reset global brightness to
-> max_brightness.
->
-> Therefore here we should call at the end:
->
-> led_set_brightness(led_cdev, led_cdev->max_brightness);
->
-> That will update each color LED with new brightness values which
-> will correspond exactly to the color intensities just written.
->
-> [...]
->>>> diff --git a/include/linux/led-class-multicolor.h
->>>> b/include/linux/led-class-multicolor.h
->>>> new file mode 100644
->>>> index 000000000000..bfbde2e98340
->>>> --- /dev/null
->>>> +++ b/include/linux/led-class-multicolor.h
->>>> @@ -0,0 +1,124 @@
->>>> +/* SPDX-License-Identifier: GPL-2.0 */
->>>> +/* LED Multicolor class interface
->>>> + * Copyright (C) 2019 Texas Instruments Incorporated -
->>>> http://www.ti.com/
->>>> + */
->>>> +
->>>> +#ifndef __LINUX_MULTICOLOR_LEDS_H_INCLUDED
->>>> +#define __LINUX_MULTICOLOR_LEDS_H_INCLUDED
->>>> +
->>>> +#include <linux/leds.h>
->>>> +#include <dt-bindings/leds/common.h>
->>>> +
->>>> +struct led_classdev_mc {
->>>> +    /* led class device */
->>>> +    struct led_classdev led_cdev;
->>>> +
->>>> +    struct device_attribute color_max_intensity_attr;
->>>> +    struct device_attribute color_intensity_attr;
->>>> +    struct device_attribute color_index_attr;
->>> These are no longer needed as you define attrs statically.
->> Ack
->>>> +
->>>> +    int color_brightness[LED_COLOR_ID_MAX];
->>>> +
->>>> +    int color_led_intensity[LED_COLOR_ID_MAX];
->>>> +    int color_led_max_intensity[LED_COLOR_ID_MAX];
->>>> +    const char *color_index[LED_COLOR_ID_MAX];
->>> I think that we should get back to the available_colors bitmask
->>> and allow the framework to allocate arrays by itself.
->>> And yes, all the above should be pointers.
->>>
->>> Driver would only need to set led_mcdev->available_colors bits.
->> Nack to the available_colors.  I did this originally and the issue is
->> that the driver sets the bits in available_colors and no matter what the
->> order is in the DT file the indexing is always red green and blue per
->> the LED_COLORS array.  The framework has no legitimate way to know the
->> order in which the colors were added.
+>> ---
+>> v7 review fixed in v10
+>> ---
 >>
->> This posed an issue with the LP55xx code as the RGB was defined with
->> different colors assigned to different channels.  Green was 0 blue was 2
->> and red was 6.  So the driver would have to map the channels to the
->> colors.  In forcing the device driver to set the color index it can then
->> map the output channels itself.  The framework should not care what
->> channel is for what color.  In either case the device driver will need
->> to store the color index mapped to the channel output but having the
->> index to color being a 1-1 mapping made the code much simpler for the
->> device driver.
+>> Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
+>> Signed-off-by: Ashok Raj <ashok.raj@intel.com>
+>> Signed-off-by: Liu, Yi L <yi.l.liu@intel.com>
+>> ---
+>>  drivers/iommu/intel-iommu.c | 182
+>> ++++++++++++++++++++++++++++++++++++++++++++
+>>  1 file changed, 182 insertions(+)
 >>
->> Basically it turned out to be a simple for loop that just stored both
->> channel and color as opposed to having to re-map the colors to indexes.
+>> diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
+>> index b1477cd423dd..a76afb0fd51a 100644
+>> --- a/drivers/iommu/intel-iommu.c
+>> +++ b/drivers/iommu/intel-iommu.c
+>> @@ -5619,6 +5619,187 @@ static void
+>> intel_iommu_aux_detach_device(struct iommu_domain *domain,
+>>  	aux_domain_remove_dev(to_dmar_domain(domain), dev);
+>>  }
 >>
->> So for the LP55xx I can get an index of green, blue red and that maps to
->> the channels per the DT.  I don't think the framework should enforce a
->> standard color index array ordering.
-> OK, if that indeed helps simplifying the code on the driver side.
-> But maybe it would be possible to come up with some generic helpers
-> for color sub-LEDs initialization?
+>> +/*
+>> + * 2D array for converting and sanitizing IOMMU generic TLB granularity to
+>> + * VT-d granularity. Invalidation is typically included in the unmap operation
+>> + * as a result of DMA or VFIO unmap. However, for assigned devices guest
+>> + * owns the first level page tables. Invalidations of translation caches in the
+>> + * guest are trapped and passed down to the host.
+>> + *
+>> + * vIOMMU in the guest will only expose first level page tables, therefore
+>> + * we do not include IOTLB granularity for request without PASID (second
+>> level).
+> 
+> I would revise above as "We do not support IOTLB granularity for request 
+> without PASID (second level), therefore any vIOMMU implementation that
+> exposes the SVA capability to the guest should only expose the first level
+> page tables, implying all invalidation requests from the guest will include
+> a valid PASID"
+> 
+>> + *
+>> + * For example, to find the VT-d granularity encoding for IOTLB
+>> + * type and page selective granularity within PASID:
+>> + * X: indexed by iommu cache type
+>> + * Y: indexed by enum iommu_inv_granularity
+>> + * [IOMMU_CACHE_INV_TYPE_IOTLB][IOMMU_INV_GRANU_ADDR]
+>> + *
+>> + * Granu_map array indicates validity of the table. 1: valid, 0: invalid
+>> + *
+>> + */
+>> +const static int
+>> inv_type_granu_map[IOMMU_CACHE_INV_TYPE_NR][IOMMU_INV_GRANU_
+>> NR] = {
+>> +	/*
+>> +	 * PASID based IOTLB invalidation: PASID selective (per PASID),
+>> +	 * page selective (address granularity)
+>> +	 */
+>> +	{0, 1, 1},
+>> +	/* PASID based dev TLBs, only support all PASIDs or single PASID */
+>> +	{1, 1, 0},
+> 
+> Is this combination correct? when single PASID is being specified, it is 
+> essentially a page-selective invalidation since you need provide Address
+> and Size. 
+Isn't it the same when G=1? Still the addr/size is used. Doesn't it
+correspond to IOMMU_INV_GRANU_ADDR with IOMMU_INV_ADDR_FLAGS_PASID flag
+unset?
 
-Well the only helpers I can think of is a DT helper to parse the 
-Multicolor child nodes.  But that maybe more complicated for the LP55xx 
-as the children have additional
+so {0, 0, 1}?
 
-properties to parse through.  But the multicolor framework can parse the 
-color and channel which means we would have to mandate the use of a 
-specific common property node like
+Thanks
 
-led_sources even if it is just a single channel.
+Eric
 
->> If we use the available_colors we don't even need the color_index and we
->> can just pass the available_colors to the user space as a u32 and let
->> the user space figure what colors are available. Which means the user
->> space would assume the order per the LED_COLORS array.
-> Sysfs should be rather human readable so this would not necessarily
-> need to be the case.
->
-That is what I was thinking as well.
-
-Dan
+> 
+>> +	/* PASID cache */
+> 
+> PASID cache is fully managed by the host. Guest PASID cache invalidation
+> is interpreted by vIOMMU for bind and unbind operations. I don't think
+> we should accept any PASID cache invalidation from userspace or guest.
+> 
+>> +	{1, 1, 0}
+>> +};
+>> +
+>> +const static int
+>> inv_type_granu_table[IOMMU_CACHE_INV_TYPE_NR][IOMMU_INV_GRANU
+>> _NR] = {
+>> +	/* PASID based IOTLB */
+>> +	{0, QI_GRAN_NONG_PASID, QI_GRAN_PSI_PASID},
+>> +	/* PASID based dev TLBs */
+>> +	{QI_DEV_IOTLB_GRAN_ALL, QI_DEV_IOTLB_GRAN_PASID_SEL, 0},
+>> +	/* PASID cache */
+>> +	{QI_PC_ALL_PASIDS, QI_PC_PASID_SEL, 0},
+>> +};
+>> +
+>> +static inline int to_vtd_granularity(int type, int granu, int *vtd_granu)
+>> +{
+>> +	if (type >= IOMMU_CACHE_INV_TYPE_NR || granu >=
+>> IOMMU_INV_GRANU_NR ||
+>> +		!inv_type_granu_map[type][granu])
+>> +		return -EINVAL;
+>> +
+>> +	*vtd_granu = inv_type_granu_table[type][granu];
+>> +
+> 
+> btw do we really need both map and table here? Can't we just
+> use one table with unsupported granularity marked as a special
+> value?
+> 
+>> +	return 0;
+>> +}
+>> +
+>> +static inline u64 to_vtd_size(u64 granu_size, u64 nr_granules)
+>> +{
+>> +	u64 nr_pages = (granu_size * nr_granules) >> VTD_PAGE_SHIFT;
+>> +
+>> +	/* VT-d size is encoded as 2^size of 4K pages, 0 for 4k, 9 for 2MB, etc.
+>> +	 * IOMMU cache invalidate API passes granu_size in bytes, and
+>> number of
+>> +	 * granu size in contiguous memory.
+>> +	 */
+>> +	return order_base_2(nr_pages);
+>> +}
+>> +
+>> +#ifdef CONFIG_INTEL_IOMMU_SVM
+>> +static int intel_iommu_sva_invalidate(struct iommu_domain *domain,
+>> +		struct device *dev, struct iommu_cache_invalidate_info
+>> *inv_info)
+>> +{
+>> +	struct dmar_domain *dmar_domain = to_dmar_domain(domain);
+>> +	struct device_domain_info *info;
+>> +	struct intel_iommu *iommu;
+>> +	unsigned long flags;
+>> +	int cache_type;
+>> +	u8 bus, devfn;
+>> +	u16 did, sid;
+>> +	int ret = 0;
+>> +	u64 size = 0;
+>> +
+>> +	if (!inv_info || !dmar_domain ||
+>> +		inv_info->version !=
+>> IOMMU_CACHE_INVALIDATE_INFO_VERSION_1)
+>> +		return -EINVAL;
+>> +
+>> +	if (!dev || !dev_is_pci(dev))
+>> +		return -ENODEV;
+>> +
+>> +	iommu = device_to_iommu(dev, &bus, &devfn);
+>> +	if (!iommu)
+>> +		return -ENODEV;
+>> +
+>> +	spin_lock_irqsave(&device_domain_lock, flags);
+>> +	spin_lock(&iommu->lock);
+>> +	info = iommu_support_dev_iotlb(dmar_domain, iommu, bus, devfn);
+>> +	if (!info) {
+>> +		ret = -EINVAL;
+>> +		goto out_unlock;
+> 
+> -ENOTSUPP?
+> 
+>> +	}
+>> +	did = dmar_domain->iommu_did[iommu->seq_id];
+>> +	sid = PCI_DEVID(bus, devfn);
+>> +
+>> +	/* Size is only valid in non-PASID selective invalidation */
+>> +	if (inv_info->granularity != IOMMU_INV_GRANU_PASID)
+>> +		size = to_vtd_size(inv_info->addr_info.granule_size,
+>> +				   inv_info->addr_info.nb_granules);
+>> +
+>> +	for_each_set_bit(cache_type, (unsigned long *)&inv_info->cache,
+>> IOMMU_CACHE_INV_TYPE_NR) {
+>> +		int granu = 0;
+>> +		u64 pasid = 0;
+>> +
+>> +		ret = to_vtd_granularity(cache_type, inv_info->granularity,
+>> &granu);
+>> +		if (ret) {
+>> +			pr_err("Invalid cache type and granu
+>> combination %d/%d\n", cache_type,
+>> +				inv_info->granularity);
+>> +			break;
+>> +		}
+>> +
+>> +		/* PASID is stored in different locations based on granularity
+>> */
+>> +		if (inv_info->granularity == IOMMU_INV_GRANU_PASID &&
+>> +			inv_info->pasid_info.flags &
+>> IOMMU_INV_PASID_FLAGS_PASID)
+>> +			pasid = inv_info->pasid_info.pasid;
+>> +		else if (inv_info->granularity == IOMMU_INV_GRANU_ADDR
+>> &&
+>> +			inv_info->addr_info.flags &
+>> IOMMU_INV_ADDR_FLAGS_PASID)
+>> +			pasid = inv_info->addr_info.pasid;
+>> +		else {
+>> +			pr_err("Cannot find PASID for given cache type and
+>> granularity\n");
+>> +			break;
+>> +		}
+>> +
+>> +		switch (BIT(cache_type)) {
+>> +		case IOMMU_CACHE_INV_TYPE_IOTLB:
+>> +			if ((inv_info->granularity !=
+>> IOMMU_INV_GRANU_PASID) &&
+> 
+> granularity == IOMMU_INV_GRANU_ADDR? otherwise it's unclear
+> why IOMMU_INV_GRANU_DOMAIN also needs size check.
+> 
+>> +				size && (inv_info->addr_info.addr &
+>> ((BIT(VTD_PAGE_SHIFT + size)) - 1))) {
+>> +				pr_err("Address out of range, 0x%llx, size
+>> order %llu\n",
+>> +					inv_info->addr_info.addr, size);
+>> +				ret = -ERANGE;
+>> +				goto out_unlock;
+>> +			}
+>> +
+>> +			qi_flush_piotlb(iommu, did,
+>> +					pasid,
+>> +					mm_to_dma_pfn(inv_info-
+>>> addr_info.addr),
+>> +					(granu == QI_GRAN_NONG_PASID) ? -
+>> 1 : 1 << size,
+>> +					inv_info->addr_info.flags &
+>> IOMMU_INV_ADDR_FLAGS_LEAF);
+>> +
+>> +			/*
+>> +			 * Always flush device IOTLB if ATS is enabled since
+>> guest
+>> +			 * vIOMMU exposes CM = 1, no device IOTLB flush
+>> will be passed
+>> +			 * down.
+>> +			 */
+> 
+> Does VT-d spec mention that no device IOTLB flush is required when CM=1?
+> 
+>> +			if (info->ats_enabled) {
+>> +				qi_flush_dev_iotlb_pasid(iommu, sid, info-
+>>> pfsid,
+>> +						pasid, info->ats_qdep,
+>> +						inv_info->addr_info.addr,
+>> size,
+>> +						granu);
+>> +			}
+>> +			break;
+>> +		case IOMMU_CACHE_INV_TYPE_DEV_IOTLB:
+>> +			if (info->ats_enabled) {
+>> +				qi_flush_dev_iotlb_pasid(iommu, sid, info-
+>>> pfsid,
+>> +						inv_info->addr_info.pasid,
+>> info->ats_qdep,
+>> +						inv_info->addr_info.addr,
+>> size,
+>> +						granu);
+> 
+> I'm confused here. There are two granularities allowed for devtlb, but here
+> you only handle one of them?
+> 
+>> +			} else
+>> +				pr_warn("Passdown device IOTLB flush w/o
+>> ATS!\n");
+>> +
+>> +			break;
+>> +		case IOMMU_CACHE_INV_TYPE_PASID:
+>> +			qi_flush_pasid_cache(iommu, did, granu, inv_info-
+>>> pasid_info.pasid);
+>> +
+> 
+> as earlier comment, we shouldn't allow userspace or guest to invalidate
+> PASID cache
+> 
+>> +			break;
+>> +		default:
+>> +			dev_err(dev, "Unsupported IOMMU invalidation
+>> type %d\n",
+>> +				cache_type);
+>> +			ret = -EINVAL;
+>> +		}
+>> +	}
+>> +out_unlock:
+>> +	spin_unlock(&iommu->lock);
+>> +	spin_unlock_irqrestore(&device_domain_lock, flags);
+>> +
+>> +	return ret;
+>> +}
+>> +#endif
+>> +
+>>  static int intel_iommu_map(struct iommu_domain *domain,
+>>  			   unsigned long iova, phys_addr_t hpa,
+>>  			   size_t size, int iommu_prot, gfp_t gfp)
+>> @@ -6204,6 +6385,7 @@ const struct iommu_ops intel_iommu_ops = {
+>>  	.is_attach_deferred	= intel_iommu_is_attach_deferred,
+>>  	.pgsize_bitmap		= INTEL_IOMMU_PGSIZES,
+>>  #ifdef CONFIG_INTEL_IOMMU_SVM
+>> +	.cache_invalidate	= intel_iommu_sva_invalidate,
+>>  	.sva_bind_gpasid	= intel_svm_bind_gpasid,
+>>  	.sva_unbind_gpasid	= intel_svm_unbind_gpasid,
+>>  #endif
+>> --
+>> 2.7.4
+> 
 
