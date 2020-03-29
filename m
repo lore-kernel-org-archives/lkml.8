@@ -2,242 +2,611 @@ Return-Path: <SRS0=I467=5O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFACDC43331
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 09:56:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81E1EC43331
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 09:57:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F3C020675
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 09:56:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3902020675
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 09:57:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="bWBcgspM"
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="dvKOVjxy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727911AbgC2Jz7 (ORCPT
+        id S1727944AbgC2J5U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Mar 2020 05:55:59 -0400
-Received: from mailout1.w1.samsung.com ([210.118.77.11]:52895 "EHLO
-        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727828AbgC2Jz6 (ORCPT
+        Sun, 29 Mar 2020 05:57:20 -0400
+Received: from new3-smtp.messagingengine.com ([66.111.4.229]:50023 "EHLO
+        new3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727801AbgC2J5T (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Mar 2020 05:55:58 -0400
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20200329095555euoutp01164243b337835a9640e49d83ece273e4~AvcyrZx4X2544025440euoutp01V
-        for <linux-kernel@vger.kernel.org>; Sun, 29 Mar 2020 09:55:55 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20200329095555euoutp01164243b337835a9640e49d83ece273e4~AvcyrZx4X2544025440euoutp01V
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1585475755;
-        bh=ZE/8RPCzXsNKOub72kPPybyFco+1U8wUJ08oc7Pxotc=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=bWBcgspMolpapA2FIPkBywqcySqyokj9lx2m1Ya71GO8I80yNVv2lvjwmS9CZaew5
-         MQ9THwdjlTaLsP3iFEVWwjisXhlS/Y5+QYyOTDzs4Gn5pX3SUvD2AsaSGqQAjWDGHB
-         9Hm2oOEFFqdaKlMtFZAiZHS0wKKTD2I2Vqz2EzLw=
-Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20200329095555eucas1p2b56dc2cdb4c4e2a30541b88a186b6f5a~AvcyRlgA82895928959eucas1p21;
-        Sun, 29 Mar 2020 09:55:55 +0000 (GMT)
-Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
-        eusmges3new.samsung.com (EUCPMTA) with SMTP id C2.1A.60698.AA0708E5; Sun, 29
-        Mar 2020 10:55:55 +0100 (BST)
-Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-        20200329095554eucas1p2153edb2d11e85bb092aea8562a9357d5~AvcxlcMzH1913719137eucas1p2F;
-        Sun, 29 Mar 2020 09:55:54 +0000 (GMT)
-Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
-        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20200329095554eusmtrp14d379a191ac3af5df37b5a5e6c8ed976~AvcxkwYM82129621296eusmtrp14;
-        Sun, 29 Mar 2020 09:55:54 +0000 (GMT)
-X-AuditID: cbfec7f5-a0fff7000001ed1a-6b-5e8070aa4035
-Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
-        eusmgms1.samsung.com (EUCPMTA) with SMTP id 7A.A2.08375.AA0708E5; Sun, 29
-        Mar 2020 10:55:54 +0100 (BST)
-Received: from [106.210.88.143] (unknown [106.210.88.143]) by
-        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20200329095553eusmtip2904d1afdb45fd775b0d195520eb39bae~Avcwz3tQu0515205152eusmtip2U;
-        Sun, 29 Mar 2020 09:55:53 +0000 (GMT)
-Subject: Re: [PATCH v2] drm/prime: fix extracting of the DMA addresses from
- a scatterlist
-To:     "Ruhl, Michael J" <michael.j.ruhl@intel.com>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "linux-samsung-soc@vger.kernel.org" 
-        <linux-samsung-soc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Cc:     "stable@vger.kernel.org" <stable@vger.kernel.org>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Shane Francis <bigbeeshane@gmail.com>
-From:   Marek Szyprowski <m.szyprowski@samsung.com>
-Message-ID: <8a09916d-5413-f9a8-bafa-2d8f0b8f892f@samsung.com>
-Date:   Sun, 29 Mar 2020 11:55:45 +0200
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
-        Thunderbird/68.6.0
+        Sun, 29 Mar 2020 05:57:19 -0400
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailnew.nyi.internal (Postfix) with ESMTP id 0BD7A580212;
+        Sun, 29 Mar 2020 05:57:17 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute4.internal (MEProxy); Sun, 29 Mar 2020 05:57:17 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=iWxxGB
+        L1kCtssZ5aQ3QVfsxtREKdcNxWil9x11ZeHCQ=; b=dvKOVjxyx78p/qM8h69mof
+        w0PZJWTNXMg8cZFLPpBp4mWiHjeZ7L4qQS2BPqioK7lAP6wQ9PnmqP5NHlv9bFe2
+        iWKbX09cp5/OY7nQ9eHtyT20686iccu26ApipMttqxTugSZsFlPlvvUZHbbThFLa
+        0PgEQ9qsPC2k+zT8grNhzDEppvh7u55R2A4BgEp1IQjFiQDz27W4qu5KUjAY85iy
+        ntxtBWS7uCS0k8He4al2A3RsEUTOteYjja1tqv7e4lAhYc/J3GWMwO4pYWVNAtmw
+        I1yEd7rMi3BYsM2yfLZQNtqam1QqvRkxmsqG3Qbv4wJC/nnQL3PyMH53ImHW6Ggg
+        ==
+X-ME-Sender: <xms:-3CAXqnJF6jxthKcexLJdqZDuDKRrImK2rFQvsOOvOS4M7weEtcRDg>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrudeifedgvdegucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepfffhvffukfhfgggtuggjsehttdertddttddvnecuhfhrohhmpefkughoucfu
+    tghhihhmmhgvlhcuoehiughoshgthhesihguohhstghhrdhorhhgqeenucffohhmrghinh
+    eptghumhhulhhushhnvghtfihorhhkshdrtghomhenucfkphepjeelrddukedurddufedv
+    rdduledunecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomh
+    epihguohhstghhsehiughoshgthhdrohhrgh
+X-ME-Proxy: <xmx:-3CAXjJk7AS40oa5ljQzwdnfm3a_OaVALpiKTQnTdttVhtYYw92N3w>
+    <xmx:-3CAXtSZ8s-uoi8HPtF_-vjeyyt6pUzkVJPp1LzbtRd-yFjrKm2I3A>
+    <xmx:-3CAXhSfq9KALvKQ2uCh8EO5FDrPjPISJV4S08xUUDBr_JRix4-WHg>
+    <xmx:_HCAXgXgcyp7ZLMq4aoftJu5CSZC4kDZglp1jurIccFMH5DlO7njWw>
+Received: from localhost (bzq-79-181-132-191.red.bezeqint.net [79.181.132.191])
+        by mail.messagingengine.com (Postfix) with ESMTPA id CEA6E306C7CC;
+        Sun, 29 Mar 2020 05:57:14 -0400 (EDT)
+Date:   Sun, 29 Mar 2020 12:57:12 +0300
+From:   Ido Schimmel <idosch@idosch.org>
+To:     Vladimir Oltean <olteanv@gmail.com>, nikolay@cumulusnetworks.com,
+        roopa@cumulusnetworks.com
+Cc:     andrew@lunn.ch, f.fainelli@gmail.com, vivien.didelot@gmail.com,
+        davem@davemloft.net, jiri@resnulli.us, kuba@kernel.org,
+        netdev@vger.kernel.org, xiaoliang.yang_1@nxp.com,
+        linux-kernel@vger.kernel.org, horatiu.vultur@microchip.com,
+        alexandre.belloni@bootlin.com, allan.nielsen@microchip.com,
+        joergen.andreasen@microchip.com, UNGLinuxDriver@microchip.com,
+        yangbo.lu@nxp.com, alexandru.marginean@nxp.com, po.liu@nxp.com,
+        claudiu.manoil@nxp.com, leoyang.li@nxp.com
+Subject: Re: [PATCH net-next 6/6] net: dsa: sja1105: add broadcast and
+ per-traffic class policers
+Message-ID: <20200329095712.GA2188467@splinter>
+References: <20200329005202.17926-1-olteanv@gmail.com>
+ <20200329005202.17926-7-olteanv@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <14063C7AD467DE4B82DEDB5C278E8663FFFBFCE1@fmsmsx107.amr.corp.intel.com>
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Brightmail-Tracker: H4sIAAAAAAAAA02SfyyUcRzH+z7Pc889TqfH0XymUl1pY0uMrWdlytbaU39UVv+Eri6e0eLY
-        naOrtsiPuJRkQ5eF2tCVMxzyIxuaI0VS+iWia/Irs8OWUN09/fDf5/39vD7vz+e9fSlcYha4
-        UmcUcZxSIY+SkiKitv17z/YHsYky74lSxFzr7sSY3IFGAVOZXyFgkuqvY8zP2myceTU3TTJ9
-        DQUkk9/TjDHFMzUE86LOk0nLKBEwRZUjiDFOZgv2itnUl0sk+3i+iGDrdR+F7L2mMYyt0meQ
-        bN38JwF7pzOIHbpqwtjrRj1iq7susJYqtyP2wSL/cC7qTDyn3BFwShRpWRokYi1bz9Vo27BE
-        dN9NiygKaD8o7knQIhElocsQFLZMCnkxi+DJQjLBCwuCpucVpBbZ2SZyk1JxvlGK4M2SFuPF
-        NALDazNmpZzoEBhYMBDW2plOxmA485AVwulMHEZLBnFrg6R9QDultdmK6QDQpRTYBgjaHSxL
-        1kPsqLV0KPS2ZQl4xhE6b5ltjB19DNqHDDYGpzdC3VQBztcu8N5caLsI6AwKjCWDGJ90H1zL
-        2sFHcIJxk1HI1+uhKyeT4PlkBMPd5UJeZCLou5yPeGo3DHQvkFYjnPaAioY/RoFQ2TtD8v4O
-        8HbKkb/BAW7W5uH8sxjS0yQ8vQ10JsO/tS0vXuI3kFS3IpluRRrdijS6/3uLEKFHLpxaFR3B
-        qXwVXIKXSh6tUisivMJioqvQ77/XtWyae4SaF0+3IppC0tVib80lmUQgj1dpolsRULjUWUwe
-        TpRJxOFyzXlOGXNSqY7iVK1oHUVIXcS+d8dOSOgIeRx3luNiOeXfLkbZuSaitI5G+HBr1xd9
-        SNCaSM3Eu2ANGsPjNs+6u29oGq9OWf3ZmOUcFqNduHd7s8OzUaeaUO+nfdzhavXOEX/S45vX
-        w+PfUuzD/cSyXjJn/4y6f0/U16yOKxe7k/aUHWjY5HkjfWJ/unC+YzrQeWQ5L/XCj1VNWxaV
-        XeXB/e6TR4MUB3VJUkIVKffxxJUq+S+w4yurdwMAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrJIsWRmVeSWpSXmKPExsVy+t/xe7qrChriDH40iVj0njvJZDHtzm5W
-        i40z1rNaNO7sY7L4v20is8WVr+/ZLC7vmsNmMeP8PiaLhR+3slhc2K5l0da5jNViwcZHjBZb
-        3kxkdeD1aL30l81j77cFLB47Z91l91i85yWTx6ZVnWwe2789YPWYdzLQ4373cSaPvi2rGD02
-        n672+LxJLoA7Ss+mKL+0JFUhI7+4xFYp2tDCSM/Q0kLPyMRSz9DYPNbKyFRJ384mJTUnsyy1
-        SN8uQS/j8997LAWfVSq2dh1mamBcKdfFyMkhIWAiMa2xlbmLkYtDSGApo8SK922MEAkZiZPT
-        GlghbGGJP9e62CCK3jJKzDt6kgkkISwQLbFu20qwbhGBZiaJgy+6WEEcZoE+Zok39ycwQbTc
-        ZpTY1NoPNpdNwFCi6y3ILE4OXgE7iVktc1hAbBYBVYnPf9+wg9iiAjESP/d0sUDUCEqcnPkE
-        zOYUCJE4dn8dWA2zgJnEvM0PmSFseYntb+dA2eISt57MZ5rAKDQLSfssJC2zkLTMQtKygJFl
-        FaNIamlxbnpusaFecWJucWleul5yfu4mRmC0bzv2c/MOxksbgw8xCnAwKvHwGlTWxwmxJpYV
-        V+YeYpTgYFYS4WXzb4gT4k1JrKxKLcqPLyrNSS0+xGgK9NxEZinR5HxgIsoriTc0NTS3sDQ0
-        NzY3NrNQEuftEDgYIySQnliSmp2aWpBaBNPHxMEp1cDoHpG78GBamta32yVpmw1ePtp3KpbD
-        R73/wKfDTjm2GfXHc6KkJ0177yz2Qlqt9mPZ/p+yzr0xq06/Ke6vspY6ea59llbV55a9Au0M
-        bTsSDW0tVx8MmxHRvaTGQU5uR9a0P0fThdV239m9ptLakVm644jJ6SW3K88qLYhefXH5BgnT
-        Wvlfk72UWIozEg21mIuKEwErd8d6DAMAAA==
-X-CMS-MailID: 20200329095554eucas1p2153edb2d11e85bb092aea8562a9357d5
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20200327162330eucas1p1b0413e0e9887aa76d3048f86d2166dcd
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20200327162330eucas1p1b0413e0e9887aa76d3048f86d2166dcd
-References: <CGME20200327162330eucas1p1b0413e0e9887aa76d3048f86d2166dcd@eucas1p1.samsung.com>
-        <20200327162126.29705-1-m.szyprowski@samsung.com>
-        <14063C7AD467DE4B82DEDB5C278E8663FFFBFCE1@fmsmsx107.amr.corp.intel.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200329005202.17926-7-olteanv@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Michael,
++ Nik, Roopa
 
-On 2020-03-27 19:31, Ruhl, Michael J wrote:
->> -----Original Message-----
->> From: Marek Szyprowski <m.szyprowski@samsung.com>
->> Sent: Friday, March 27, 2020 12:21 PM
->> To: dri-devel@lists.freedesktop.org; linux-samsung-soc@vger.kernel.org;
->> linux-kernel@vger.kernel.org
->> Cc: Marek Szyprowski <m.szyprowski@samsung.com>;
->> stable@vger.kernel.org; Bartlomiej Zolnierkiewicz
->> <b.zolnierkie@samsung.com>; Maarten Lankhorst
->> <maarten.lankhorst@linux.intel.com>; Maxime Ripard
->> <mripard@kernel.org>; Thomas Zimmermann <tzimmermann@suse.de>;
->> David Airlie <airlied@linux.ie>; Daniel Vetter <daniel@ffwll.ch>; Alex Deucher
->> <alexander.deucher@amd.com>; Shane Francis <bigbeeshane@gmail.com>;
->> Ruhl, Michael J <michael.j.ruhl@intel.com>
->> Subject: [PATCH v2] drm/prime: fix extracting of the DMA addresses from a
->> scatterlist
->>
->> Scatterlist elements contains both pages and DMA addresses, but one
->> should not assume 1:1 relation between them. The sg->length is the size
->> of the physical memory chunk described by the sg->page, while
->> sg_dma_len(sg) is the size of the DMA (IO virtual) chunk described by
->> the sg_dma_address(sg).
->>
->> The proper way of extracting both: pages and DMA addresses of the whole
->> buffer described by a scatterlist it to iterate independently over the
->> sg->pages/sg->length and sg_dma_address(sg)/sg_dma_len(sg) entries.
->>
->> Fixes: 42e67b479eab ("drm/prime: use dma length macro when mapping sg")
->> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
->> Reviewed-by: Alex Deucher <alexander.deucher@amd.com>
->> ---
->> drivers/gpu/drm/drm_prime.c | 37 +++++++++++++++++++++++++-----------
->> -
->> 1 file changed, 25 insertions(+), 12 deletions(-)
->>
->> diff --git a/drivers/gpu/drm/drm_prime.c b/drivers/gpu/drm/drm_prime.c
->> index 1de2cde2277c..282774e469ac 100644
->> --- a/drivers/gpu/drm/drm_prime.c
->> +++ b/drivers/gpu/drm/drm_prime.c
->> @@ -962,27 +962,40 @@ int drm_prime_sg_to_page_addr_arrays(struct
->> sg_table *sgt, struct page **pages,
->> 	unsigned count;
->> 	struct scatterlist *sg;
->> 	struct page *page;
->> -	u32 len, index;
->> +	u32 page_len, page_index;
->> 	dma_addr_t addr;
->> +	u32 dma_len, dma_index;
->>
->> -	index = 0;
->> +	/*
->> +	 * Scatterlist elements contains both pages and DMA addresses, but
->> +	 * one shoud not assume 1:1 relation between them. The sg->length
->> is
->> +	 * the size of the physical memory chunk described by the sg->page,
->> +	 * while sg_dma_len(sg) is the size of the DMA (IO virtual) chunk
->> +	 * described by the sg_dma_address(sg).
->> +	 */
-> Is there an example of what the scatterlist would look like in this case?
+On Sun, Mar 29, 2020 at 02:52:02AM +0200, Vladimir Oltean wrote:
+> From: Vladimir Oltean <vladimir.oltean@nxp.com>
+> 
+> This patch adds complete support for manipulating the L2 Policing Tables
+> from this switch. There are 45 table entries, one entry per each port
+> and traffic class, and one dedicated entry for broadcast traffic for
+> each ingress port.
+> 
+> Policing entries are shareable, and we use this functionality to support
+> shared block filters.
+> 
+> We are modeling broadcast policers as simple tc-flower matches on
+> dst_mac. As for the traffic class policers, the switch only deduces the
+> traffic class from the VLAN PCP field, so it makes sense to model this
+> as a tc-flower match on vlan_prio.
+> 
+> How to limit broadcast traffic coming from all front-panel ports to a
+> cumulated total of 10 Mbit/s:
+> 
+> tc qdisc add dev sw0p0 ingress_block 1 clsact
+> tc qdisc add dev sw0p1 ingress_block 1 clsact
+> tc qdisc add dev sw0p2 ingress_block 1 clsact
+> tc qdisc add dev sw0p3 ingress_block 1 clsact
+> tc filter add block 1 flower skip_sw dst_mac ff:ff:ff:ff:ff:ff \
+> 	action police rate 10mbit burst 64k
+> 
+> How to limit traffic with VLAN PCP 0 (also includes untagged traffic) to
+> 100 Mbit/s on port 0 only:
+> 
+> tc filter add dev sw0p0 ingress protocol 802.1Q flower skip_sw \
+> 	vlan_prio 0 action police rate 100mbit burst 64k
+> 
+> The broadcast, VLAN PCP and port policers are compatible with one
+> another (can be installed at the same time on a port).
 
-DMA framework or IOMMU is allowed to join consecutive chunks while 
-mapping if such operation is supported by the hw. Here is the example:
+Hi Vladimir,
 
-Lets assume that we have a scatterlist with 4 4KiB pages of the physical 
-addresses: 0x12000000, 0x13011000, 0x13012000, 0x11011000. The total 
-size of the buffer is 16KiB. After mapping this scatterlist to a device 
-behind an IOMMU it may end up as a contiguous buffer in the DMA (IOVA) 
-address space. at 0xf0010000. The scatterlist will look like this:
+Some switches have a feature called "storm control". It allows one to
+police incoming BUM traffic. See this entry from Cumulus Linux
+documentation:
 
-sg[0].page = 0x12000000
-sg[0].len = 4096
-sg[0].dma_addr = 0xf0010000
-sg[0].dma_len = 16384
-sg[1].page = 0x13011000
-sg[1].len = 4096
-sg[1].dma_addr = 0
-sg[1].dma_len = 0
-sg[2].page = 0x13012000
-sg[2].len = 4096
-sg[2].dma_addr = 0
-sg[2].dma_len = 0
-sg[3].page = 0x11011000
-sg[3].len = 4096
-sg[3].dma_addr = 0
-sg[3].dma_len = 0
+https://docs.cumulusnetworks.com/cumulus-linux-40/Layer-2/Spanning-Tree-and-Rapid-Spanning-Tree/#storm-control
 
-(I've intentionally wrote page as physical address to make it easier to 
-understand, in real SGs it is stored a struct page pointer).
+In the past I was thinking about ways to implement this in Linux. The
+only place in the pipeline where packets are actually classified to
+broadcast / unknown unicast / multicast is at bridge ingress. Therefore,
+my thinking was to implement these storm control policers as a
+"bridge_slave" operation. It can then be offloaded to capable drivers
+via the switchdev framework.
 
-> Does each SG entry always have the page and dma info? or could you have
-> entries that have page information only, and entries that have dma info only?
-When SG is not mapped yet it contains only the ->pages and ->len 
-entries. I'm not aware of the SGs with the DMA information only, but in 
-theory it might be possible to have such.
-> If the same entry has different size info (page_len = PAGE_SIZE,
-> dma_len = 4 * PAGE_SIZE?), are we guaranteed that the arrays (page and addrs) have
-> been sized correctly?
+I think that if we have this implemented in the Linux bridge, then your
+patch can be used to support the policing of broadcast packets while
+returning an error if user tries to police unknown unicast or multicast
+packets. Or maybe the hardware you are working with supports these types
+as well?
 
-There are always no more DMA related entries than the phys pages. If 
-there is 1:1 mapping between physical memory and DMA (IOVA) space, then 
-each SG entry will have len == dma_len, and dma_addr will be describing 
-the same as page entry. DMA mapping framework is allowed only to join 
-entries while mapping to DMA (IOVA).
+WDYT?
 
-> Just trying to get my head wrapped around this.
-
-Sure, I hope my explanation helps a bit.
-
-Best regards
--- 
-Marek Szyprowski, PhD
-Samsung R&D Institute Poland
-
+> 
+> Signed-off-by: Vladimir Oltean <vladimir.oltean@nxp.com>
+> ---
+>  drivers/net/dsa/sja1105/Makefile         |   1 +
+>  drivers/net/dsa/sja1105/sja1105.h        |  40 +++
+>  drivers/net/dsa/sja1105/sja1105_flower.c | 340 +++++++++++++++++++++++
+>  drivers/net/dsa/sja1105/sja1105_main.c   |   4 +
+>  4 files changed, 385 insertions(+)
+>  create mode 100644 drivers/net/dsa/sja1105/sja1105_flower.c
+> 
+> diff --git a/drivers/net/dsa/sja1105/Makefile b/drivers/net/dsa/sja1105/Makefile
+> index 66161e874344..8943d8d66f2b 100644
+> --- a/drivers/net/dsa/sja1105/Makefile
+> +++ b/drivers/net/dsa/sja1105/Makefile
+> @@ -4,6 +4,7 @@ obj-$(CONFIG_NET_DSA_SJA1105) += sja1105.o
+>  sja1105-objs := \
+>      sja1105_spi.o \
+>      sja1105_main.o \
+> +    sja1105_flower.o \
+>      sja1105_ethtool.o \
+>      sja1105_clocking.o \
+>      sja1105_static_config.o \
+> diff --git a/drivers/net/dsa/sja1105/sja1105.h b/drivers/net/dsa/sja1105/sja1105.h
+> index d97d4699104e..8b60dbd567f2 100644
+> --- a/drivers/net/dsa/sja1105/sja1105.h
+> +++ b/drivers/net/dsa/sja1105/sja1105.h
+> @@ -19,6 +19,7 @@
+>   * The passed parameter is in multiples of 1 ms.
+>   */
+>  #define SJA1105_AGEING_TIME_MS(ms)	((ms) / 10)
+> +#define SJA1105_NUM_L2_POLICERS		45
+>  
+>  typedef enum {
+>  	SPI_READ = 0,
+> @@ -95,6 +96,36 @@ struct sja1105_info {
+>  	const char *name;
+>  };
+>  
+> +enum sja1105_rule_type {
+> +	SJA1105_RULE_BCAST_POLICER,
+> +	SJA1105_RULE_TC_POLICER,
+> +};
+> +
+> +struct sja1105_rule {
+> +	struct list_head list;
+> +	unsigned long cookie;
+> +	unsigned long port_mask;
+> +	enum sja1105_rule_type type;
+> +
+> +	union {
+> +		/* SJA1105_RULE_BCAST_POLICER */
+> +		struct {
+> +			int sharindx;
+> +		} bcast_pol;
+> +
+> +		/* SJA1105_RULE_TC_POLICER */
+> +		struct {
+> +			int sharindx;
+> +			int tc;
+> +		} tc_pol;
+> +	};
+> +};
+> +
+> +struct sja1105_flow_block {
+> +	struct list_head rules;
+> +	bool l2_policer_used[SJA1105_NUM_L2_POLICERS];
+> +};
+> +
+>  struct sja1105_private {
+>  	struct sja1105_static_config static_config;
+>  	bool rgmii_rx_delay[SJA1105_NUM_PORTS];
+> @@ -103,6 +134,7 @@ struct sja1105_private {
+>  	struct gpio_desc *reset_gpio;
+>  	struct spi_device *spidev;
+>  	struct dsa_switch *ds;
+> +	struct sja1105_flow_block flow_block;
+>  	struct sja1105_port ports[SJA1105_NUM_PORTS];
+>  	/* Serializes transmission of management frames so that
+>  	 * the switch doesn't confuse them with one another.
+> @@ -222,4 +254,12 @@ size_t sja1105pqrs_mac_config_entry_packing(void *buf, void *entry_ptr,
+>  size_t sja1105pqrs_avb_params_entry_packing(void *buf, void *entry_ptr,
+>  					    enum packing_op op);
+>  
+> +/* From sja1105_flower.c */
+> +int sja1105_cls_flower_del(struct dsa_switch *ds, int port,
+> +			   struct flow_cls_offload *cls, bool ingress);
+> +int sja1105_cls_flower_add(struct dsa_switch *ds, int port,
+> +			   struct flow_cls_offload *cls, bool ingress);
+> +void sja1105_flower_setup(struct dsa_switch *ds);
+> +void sja1105_flower_teardown(struct dsa_switch *ds);
+> +
+>  #endif
+> diff --git a/drivers/net/dsa/sja1105/sja1105_flower.c b/drivers/net/dsa/sja1105/sja1105_flower.c
+> new file mode 100644
+> index 000000000000..5288a722e625
+> --- /dev/null
+> +++ b/drivers/net/dsa/sja1105/sja1105_flower.c
+> @@ -0,0 +1,340 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/* Copyright 2020, NXP Semiconductors
+> + */
+> +#include "sja1105.h"
+> +
+> +static struct sja1105_rule *sja1105_rule_find(struct sja1105_private *priv,
+> +					      unsigned long cookie)
+> +{
+> +	struct sja1105_rule *rule;
+> +
+> +	list_for_each_entry(rule, &priv->flow_block.rules, list)
+> +		if (rule->cookie == cookie)
+> +			return rule;
+> +
+> +	return NULL;
+> +}
+> +
+> +static int sja1105_find_free_l2_policer(struct sja1105_private *priv)
+> +{
+> +	int i;
+> +
+> +	for (i = 0; i < SJA1105_NUM_L2_POLICERS; i++)
+> +		if (!priv->flow_block.l2_policer_used[i])
+> +			return i;
+> +
+> +	return -1;
+> +}
+> +
+> +static int sja1105_setup_bcast_policer(struct sja1105_private *priv,
+> +				       struct netlink_ext_ack *extack,
+> +				       unsigned long cookie, int port,
+> +				       u64 rate_bytes_per_sec,
+> +				       s64 burst)
+> +{
+> +	struct sja1105_rule *rule = sja1105_rule_find(priv, cookie);
+> +	struct sja1105_l2_policing_entry *policing;
+> +	bool new_rule = false;
+> +	unsigned long p;
+> +	int rc;
+> +
+> +	if (!rule) {
+> +		rule = kzalloc(sizeof(*rule), GFP_KERNEL);
+> +		if (!rule)
+> +			return -ENOMEM;
+> +
+> +		rule->cookie = cookie;
+> +		rule->type = SJA1105_RULE_BCAST_POLICER;
+> +		rule->bcast_pol.sharindx = sja1105_find_free_l2_policer(priv);
+> +		new_rule = true;
+> +	}
+> +
+> +	if (rule->bcast_pol.sharindx == -1) {
+> +		NL_SET_ERR_MSG_MOD(extack, "No more L2 policers free");
+> +		rc = -ENOSPC;
+> +		goto out;
+> +	}
+> +
+> +	policing = priv->static_config.tables[BLK_IDX_L2_POLICING].entries;
+> +
+> +	if (policing[(SJA1105_NUM_PORTS * SJA1105_NUM_TC) + port].sharindx != port) {
+> +		NL_SET_ERR_MSG_MOD(extack,
+> +				   "Port already has a broadcast policer");
+> +		rc = -EEXIST;
+> +		goto out;
+> +	}
+> +
+> +	rule->port_mask |= BIT(port);
+> +
+> +	/* Make the broadcast policers of all ports attached to this block
+> +	 * point to the newly allocated policer
+> +	 */
+> +	for_each_set_bit(p, &rule->port_mask, SJA1105_NUM_PORTS) {
+> +		int bcast = (SJA1105_NUM_PORTS * SJA1105_NUM_TC) + p;
+> +
+> +		policing[bcast].sharindx = rule->bcast_pol.sharindx;
+> +	}
+> +
+> +	policing[rule->bcast_pol.sharindx].rate = div_u64(rate_bytes_per_sec *
+> +							  512, 1000000);
+> +	policing[rule->bcast_pol.sharindx].smax = div_u64(rate_bytes_per_sec *
+> +							  PSCHED_NS2TICKS(burst),
+> +							  PSCHED_TICKS_PER_SEC);
+> +	/* TODO: support per-flow MTU */
+> +	policing[rule->bcast_pol.sharindx].maxlen = VLAN_ETH_FRAME_LEN +
+> +						    ETH_FCS_LEN;
+> +
+> +	rc = sja1105_static_config_reload(priv, SJA1105_BEST_EFFORT_POLICING);
+> +
+> +out:
+> +	if (rc == 0 && new_rule) {
+> +		priv->flow_block.l2_policer_used[rule->bcast_pol.sharindx] = true;
+> +		list_add(&rule->list, &priv->flow_block.rules);
+> +	} else if (new_rule) {
+> +		kfree(rule);
+> +	}
+> +
+> +	return rc;
+> +}
+> +
+> +static int sja1105_setup_tc_policer(struct sja1105_private *priv,
+> +				    struct netlink_ext_ack *extack,
+> +				    unsigned long cookie, int port, int tc,
+> +				    u64 rate_bytes_per_sec,
+> +				    s64 burst)
+> +{
+> +	struct sja1105_rule *rule = sja1105_rule_find(priv, cookie);
+> +	struct sja1105_l2_policing_entry *policing;
+> +	bool new_rule = false;
+> +	unsigned long p;
+> +	int rc;
+> +
+> +	if (!rule) {
+> +		rule = kzalloc(sizeof(*rule), GFP_KERNEL);
+> +		if (!rule)
+> +			return -ENOMEM;
+> +
+> +		rule->cookie = cookie;
+> +		rule->type = SJA1105_RULE_TC_POLICER;
+> +		rule->tc_pol.sharindx = sja1105_find_free_l2_policer(priv);
+> +		rule->tc_pol.tc = tc;
+> +		new_rule = true;
+> +	}
+> +
+> +	if (rule->tc_pol.sharindx == -1) {
+> +		NL_SET_ERR_MSG_MOD(extack, "No more L2 policers free");
+> +		rc = -ENOSPC;
+> +		goto out;
+> +	}
+> +
+> +	policing = priv->static_config.tables[BLK_IDX_L2_POLICING].entries;
+> +
+> +	if (policing[(port * SJA1105_NUM_TC) + tc].sharindx != port) {
+> +		NL_SET_ERR_MSG_MOD(extack,
+> +				   "Port-TC pair already has an L2 policer");
+> +		rc = -EEXIST;
+> +		goto out;
+> +	}
+> +
+> +	rule->port_mask |= BIT(port);
+> +
+> +	/* Make the policers for traffic class @tc of all ports attached to
+> +	 * this block point to the newly allocated policer
+> +	 */
+> +	for_each_set_bit(p, &rule->port_mask, SJA1105_NUM_PORTS) {
+> +		int index = (p * SJA1105_NUM_TC) + tc;
+> +
+> +		policing[index].sharindx = rule->tc_pol.sharindx;
+> +	}
+> +
+> +	policing[rule->tc_pol.sharindx].rate = div_u64(rate_bytes_per_sec *
+> +						       512, 1000000);
+> +	policing[rule->tc_pol.sharindx].smax = div_u64(rate_bytes_per_sec *
+> +						       PSCHED_NS2TICKS(burst),
+> +						       PSCHED_TICKS_PER_SEC);
+> +	/* TODO: support per-flow MTU */
+> +	policing[rule->tc_pol.sharindx].maxlen = VLAN_ETH_FRAME_LEN +
+> +						 ETH_FCS_LEN;
+> +
+> +	rc = sja1105_static_config_reload(priv, SJA1105_BEST_EFFORT_POLICING);
+> +
+> +out:
+> +	if (rc == 0 && new_rule) {
+> +		priv->flow_block.l2_policer_used[rule->tc_pol.sharindx] = true;
+> +		list_add(&rule->list, &priv->flow_block.rules);
+> +	} else if (new_rule) {
+> +		kfree(rule);
+> +	}
+> +
+> +	return rc;
+> +}
+> +
+> +static int sja1105_flower_parse_policer(struct sja1105_private *priv, int port,
+> +					struct netlink_ext_ack *extack,
+> +					struct flow_cls_offload *cls,
+> +					u64 rate_bytes_per_sec,
+> +					s64 burst)
+> +{
+> +	struct flow_rule *rule = flow_cls_offload_flow_rule(cls);
+> +	struct flow_dissector *dissector = rule->match.dissector;
+> +
+> +	if (dissector->used_keys &
+> +	    ~(BIT(FLOW_DISSECTOR_KEY_BASIC) |
+> +	      BIT(FLOW_DISSECTOR_KEY_CONTROL) |
+> +	      BIT(FLOW_DISSECTOR_KEY_VLAN) |
+> +	      BIT(FLOW_DISSECTOR_KEY_ETH_ADDRS))) {
+> +		NL_SET_ERR_MSG_MOD(extack,
+> +				   "Unsupported keys used");
+> +		return -EOPNOTSUPP;
+> +	}
+> +
+> +	if (flow_rule_match_key(rule, FLOW_DISSECTOR_KEY_BASIC)) {
+> +		struct flow_match_basic match;
+> +
+> +		flow_rule_match_basic(rule, &match);
+> +		if (match.key->n_proto) {
+> +			NL_SET_ERR_MSG_MOD(extack,
+> +					   "Matching on protocol not supported");
+> +			return -EOPNOTSUPP;
+> +		}
+> +	}
+> +
+> +	if (flow_rule_match_key(rule, FLOW_DISSECTOR_KEY_ETH_ADDRS)) {
+> +		u8 bcast[] = {0xff, 0xff, 0xff, 0xff, 0xff, 0xff};
+> +		u8 null[] = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
+> +		struct flow_match_eth_addrs match;
+> +
+> +		flow_rule_match_eth_addrs(rule, &match);
+> +
+> +		if (!ether_addr_equal_masked(match.key->src, null,
+> +					     match.mask->src)) {
+> +			NL_SET_ERR_MSG_MOD(extack,
+> +					   "Matching on source MAC not supported");
+> +			return -EOPNOTSUPP;
+> +		}
+> +
+> +		if (!ether_addr_equal_masked(match.key->dst, bcast,
+> +					     match.mask->dst)) {
+> +			NL_SET_ERR_MSG_MOD(extack,
+> +					   "Only matching on broadcast DMAC is supported");
+> +			return -EOPNOTSUPP;
+> +		}
+> +
+> +		return sja1105_setup_bcast_policer(priv, extack, cls->cookie,
+> +						   port, rate_bytes_per_sec,
+> +						   burst);
+> +	}
+> +
+> +	if (flow_rule_match_key(rule, FLOW_DISSECTOR_KEY_VLAN)) {
+> +		struct flow_match_vlan match;
+> +
+> +		flow_rule_match_vlan(rule, &match);
+> +
+> +		if (match.key->vlan_id & match.mask->vlan_id) {
+> +			NL_SET_ERR_MSG_MOD(extack,
+> +					   "Matching on VID is not supported");
+> +			return -EOPNOTSUPP;
+> +		}
+> +
+> +		if (match.mask->vlan_priority != 0x7) {
+> +			NL_SET_ERR_MSG_MOD(extack,
+> +					   "Masked matching on PCP is not supported");
+> +			return -EOPNOTSUPP;
+> +		}
+> +
+> +		return sja1105_setup_tc_policer(priv, extack, cls->cookie, port,
+> +						match.key->vlan_priority,
+> +						rate_bytes_per_sec,
+> +						burst);
+> +	}
+> +
+> +	NL_SET_ERR_MSG_MOD(extack, "Not matching on any known key");
+> +	return -EOPNOTSUPP;
+> +}
+> +
+> +int sja1105_cls_flower_add(struct dsa_switch *ds, int port,
+> +			   struct flow_cls_offload *cls, bool ingress)
+> +{
+> +	struct flow_rule *rule = flow_cls_offload_flow_rule(cls);
+> +	struct netlink_ext_ack *extack = cls->common.extack;
+> +	struct sja1105_private *priv = ds->priv;
+> +	const struct flow_action_entry *act;
+> +	int rc = -EOPNOTSUPP, i;
+> +
+> +	flow_action_for_each(i, act, &rule->action) {
+> +		switch (act->id) {
+> +		case FLOW_ACTION_POLICE:
+> +			rc = sja1105_flower_parse_policer(priv, port, extack, cls,
+> +							  act->police.rate_bytes_ps,
+> +							  act->police.burst);
+> +			break;
+> +		default:
+> +			NL_SET_ERR_MSG_MOD(extack,
+> +					   "Action not supported");
+> +			break;
+> +		}
+> +	}
+> +
+> +	return rc;
+> +}
+> +
+> +int sja1105_cls_flower_del(struct dsa_switch *ds, int port,
+> +			   struct flow_cls_offload *cls, bool ingress)
+> +{
+> +	struct sja1105_private *priv = ds->priv;
+> +	struct sja1105_rule *rule = sja1105_rule_find(priv, cls->cookie);
+> +	struct sja1105_l2_policing_entry *policing;
+> +	int old_sharindx;
+> +
+> +	if (!rule)
+> +		return 0;
+> +
+> +	policing = priv->static_config.tables[BLK_IDX_L2_POLICING].entries;
+> +
+> +	if (rule->type == SJA1105_RULE_BCAST_POLICER) {
+> +		int bcast = (SJA1105_NUM_PORTS * SJA1105_NUM_TC) + port;
+> +
+> +		old_sharindx = policing[bcast].sharindx;
+> +		policing[bcast].sharindx = port;
+> +	} else if (rule->type == SJA1105_RULE_TC_POLICER) {
+> +		int index = (port * SJA1105_NUM_TC) + rule->tc_pol.tc;
+> +
+> +		old_sharindx = policing[index].sharindx;
+> +		policing[index].sharindx = port;
+> +	} else {
+> +		return -EINVAL;
+> +	}
+> +
+> +	rule->port_mask &= ~BIT(port);
+> +	if (!rule->port_mask) {
+> +		priv->flow_block.l2_policer_used[old_sharindx] = false;
+> +		list_del(&rule->list);
+> +		kfree(rule);
+> +	}
+> +
+> +	return sja1105_static_config_reload(priv, SJA1105_BEST_EFFORT_POLICING);
+> +}
+> +
+> +void sja1105_flower_setup(struct dsa_switch *ds)
+> +{
+> +	struct sja1105_private *priv = ds->priv;
+> +	int port;
+> +
+> +	INIT_LIST_HEAD(&priv->flow_block.rules);
+> +
+> +	for (port = 0; port < SJA1105_NUM_PORTS; port++)
+> +		priv->flow_block.l2_policer_used[port] = true;
+> +}
+> +
+> +void sja1105_flower_teardown(struct dsa_switch *ds)
+> +{
+> +	struct sja1105_private *priv = ds->priv;
+> +	struct sja1105_rule *rule;
+> +	struct list_head *pos, *n;
+> +
+> +	list_for_each_safe(pos, n, &priv->flow_block.rules) {
+> +		rule = list_entry(pos, struct sja1105_rule, list);
+> +		list_del(&rule->list);
+> +		kfree(rule);
+> +	}
+> +}
+> diff --git a/drivers/net/dsa/sja1105/sja1105_main.c b/drivers/net/dsa/sja1105/sja1105_main.c
+> index 81d2e5e5ce96..472f4eb20c49 100644
+> --- a/drivers/net/dsa/sja1105/sja1105_main.c
+> +++ b/drivers/net/dsa/sja1105/sja1105_main.c
+> @@ -2021,6 +2021,7 @@ static void sja1105_teardown(struct dsa_switch *ds)
+>  			kthread_destroy_worker(sp->xmit_worker);
+>  	}
+>  
+> +	sja1105_flower_teardown(ds);
+>  	sja1105_tas_teardown(ds);
+>  	sja1105_ptp_clock_unregister(ds);
+>  	sja1105_static_config_free(&priv->static_config);
+> @@ -2356,6 +2357,8 @@ static const struct dsa_switch_ops sja1105_switch_ops = {
+>  	.port_mirror_del	= sja1105_mirror_del,
+>  	.port_policer_add	= sja1105_port_policer_add,
+>  	.port_policer_del	= sja1105_port_policer_del,
+> +	.cls_flower_add		= sja1105_cls_flower_add,
+> +	.cls_flower_del		= sja1105_cls_flower_del,
+>  };
+>  
+>  static int sja1105_check_device_id(struct sja1105_private *priv)
+> @@ -2459,6 +2462,7 @@ static int sja1105_probe(struct spi_device *spi)
+>  	mutex_init(&priv->mgmt_lock);
+>  
+>  	sja1105_tas_setup(ds);
+> +	sja1105_flower_setup(ds);
+>  
+>  	rc = dsa_register_switch(priv->ds);
+>  	if (rc)
+> -- 
+> 2.17.1
+> 
