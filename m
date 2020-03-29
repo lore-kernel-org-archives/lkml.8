@@ -2,176 +2,155 @@ Return-Path: <SRS0=I467=5O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	HK_RANDOM_FROM,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4C60C43331
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 12:02:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E4D8C43331
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 12:08:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B051420733
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 12:02:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=cumulusnetworks.com header.i=@cumulusnetworks.com header.b="C5SDUba+"
+	by mail.kernel.org (Postfix) with ESMTP id 6CB1B20733
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 12:08:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728095AbgC2MCU (ORCPT
+        id S1728140AbgC2MIz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Mar 2020 08:02:20 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:47067 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727965AbgC2MCU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Mar 2020 08:02:20 -0400
-Received: by mail-lj1-f196.google.com with SMTP id r7so7179015ljg.13
-        for <linux-kernel@vger.kernel.org>; Sun, 29 Mar 2020 05:02:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cumulusnetworks.com; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=Cq8VIxSwvwCSuQt3WNmGkXzcdrs0outzKbdn+QVFL8s=;
-        b=C5SDUba+Fkoy2P8Hc0dS+/pcVzsmUR1V/3qsUjGDQcKAG56T6DUtDJZu9YY9ZF0ezZ
-         jwyEZ/VxLc7emmpUOm9NmpFXL1VUTcgnX2CFb5pdV/GhJ6XlGtOMa+NsBF5KLRkbu/NQ
-         X5O9GNW0nyM/erPBbBpkQYzj11e9iTQZG83xs=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=Cq8VIxSwvwCSuQt3WNmGkXzcdrs0outzKbdn+QVFL8s=;
-        b=hXh88xjcEtkAvLSe67K3JgnNsbDyVJK4WNBvSgSO7t9d9lOyBuxBlbY78Eu8TBuoRU
-         198W49CWbyln1i5IDYxpLOMfT38Stcyim4LdVtwWE7WNH5nEmqfqLlPEki08vfXKQ/5m
-         Og+bfuM3zCJlB5/nTXyYp6xXPK8y5xjkZ3cWwRZopzhHK0wkqj94xZKMA4RyEeOt/QAD
-         dAJQJpEZ/EKvtRKfIz1jtKxw4FE79HTLTV2ewuVWPys8jtf/9fJ6ND2H9D82OCFDX9Kq
-         O8RFGZ8BXTeZG+wINLQvyaLPZMGLTclFb6jA66Qtp5EGG714rECXjXy1srb8KbmyuB5x
-         jhbA==
-X-Gm-Message-State: AGi0PubpSeVbKal7L4/eKsPdoDtka//fvT+hlh+MWgiHp6fw29dJ5yJC
-        mn+Jwq0Isrm4EhNQnexEfjZF8g==
-X-Google-Smtp-Source: APiQypI89yqc93TSmOnJWJRnO43OWKFd7LoI5Egh4hYQIX5SifepNeFGxejqT6E5UbsuaJHsMVdoRA==
-X-Received: by 2002:a2e:9586:: with SMTP id w6mr4514883ljh.133.1585483337920;
-        Sun, 29 Mar 2020 05:02:17 -0700 (PDT)
-Received: from [192.168.0.109] (84-238-136-197.ip.btc-net.bg. [84.238.136.197])
-        by smtp.gmail.com with ESMTPSA id c13sm5328557ljj.37.2020.03.29.05.02.15
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 29 Mar 2020 05:02:17 -0700 (PDT)
-Subject: Re: [PATCH net-next 6/6] net: dsa: sja1105: add broadcast and
- per-traffic class policers
-To:     Vladimir Oltean <olteanv@gmail.com>,
-        Ido Schimmel <idosch@idosch.org>
-Cc:     Roopa Prabhu <roopa@cumulusnetworks.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jiri Pirko <jiri@resnulli.us>,
-        Jakub Kicinski <kuba@kernel.org>,
-        netdev <netdev@vger.kernel.org>,
-        Xiaoliang Yang <xiaoliang.yang_1@nxp.com>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Horatiu Vultur <horatiu.vultur@microchip.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        "Allan W. Nielsen" <allan.nielsen@microchip.com>,
-        Joergen Andreasen <joergen.andreasen@microchip.com>,
-        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
-        "Y.b. Lu" <yangbo.lu@nxp.com>,
-        Alexandru Marginean <alexandru.marginean@nxp.com>,
-        Po Liu <po.liu@nxp.com>,
-        Claudiu Manoil <claudiu.manoil@nxp.com>,
-        Li Yang <leoyang.li@nxp.com>
-References: <20200329005202.17926-1-olteanv@gmail.com>
- <20200329005202.17926-7-olteanv@gmail.com>
- <20200329095712.GA2188467@splinter>
- <CA+h21hoybhxhR3KgfRkAaKyPPJPesbGLWDaDp5O_2yTz05y5jQ@mail.gmail.com>
- <CA+h21hoBp6=Zyc3mX3BVguVs0f8Un6-A3pk9YaZKPgs0efTi3g@mail.gmail.com>
-From:   Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
-Message-ID: <cd6f4e55-ff5b-5f64-8211-61b4d87b1f0f@cumulusnetworks.com>
-Date:   Sun, 29 Mar 2020 15:02:14 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Sun, 29 Mar 2020 08:08:55 -0400
+Received: from mail.fudan.edu.cn ([202.120.224.73]:37937 "EHLO fudan.edu.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727938AbgC2MIz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Mar 2020 08:08:55 -0400
+Received: from localhost (unknown [120.229.255.87])
+        by app2 (Coremail) with SMTP id XQUFCgA3F0i3j4BeU62DAA--.2132S2;
+        Sun, 29 Mar 2020 20:08:25 +0800 (CST)
+Date:   Sun, 29 Mar 2020 20:08:22 +0800
+From:   Xiyu Yang <xiyuyang19@fudan.edu.cn>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Alexios Zavras <alexios.zavras@intel.com>,
+        Allison Randal <allison@lohutok.net>,
+        Adit Ranadive <aditr@vmware.com>,
+        Jorgen Hansen <jhansen@vmware.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Vishnu DASA <vdasa@vmware.com>, linux-kernel@vger.kernel.org,
+        yuanxzhang@fudan.edu.cn, kjlu@umn.edu,
+        Xin Tan <tanxin.ctf@gmail.com>
+Subject: Re: [PATCH v2] VMCI: Fix NULL pointer dereference on context ptr
+Message-ID: <20200329120822.GA7610@sherlly>
+References: <1584951832-120773-1-git-send-email-xiyuyang19@fudan.edu.cn>
+ <20200323085241.GA342330@kroah.com>
 MIME-Version: 1.0
-In-Reply-To: <CA+h21hoBp6=Zyc3mX3BVguVs0f8Un6-A3pk9YaZKPgs0efTi3g@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200323085241.GA342330@kroah.com>
+X-CM-TRANSID: XQUFCgA3F0i3j4BeU62DAA--.2132S2
+X-Coremail-Antispam: 1UD129KBjvJXoWxXF1DuF17Xr43Zw1kuw4kZwb_yoW5XF1kpF
+        43Wa92yF18GFy5tayqy3WYvryFgw1fZFyqyw1qga45Zry7KFnrWr17KayYyr9xuF4Fy347
+        AF1Y9a43XrZ8C3JanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUUvlb7Iv0xC_Cr1lb4IE77IF4wAFF20E14v26r4j6ryUM7CY07I2
+        0VC2zVCF04k26cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rw
+        A2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xII
+        jxv20xvEc7CjxVAFwI0_Cr1j6rxdM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I
+        8E87Iv6xkF7I0E14v26rxl6s0DM2vYz4IE04k24VAvwVAKI4IrM2AIxVAIcxkEcVAq07x2
+        0xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18Mc
+        Ij6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lFIxG
+        xcIEc7CjxVA2Y2ka0xkIwI1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr
+        1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE
+        14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7
+        IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWrZr1j6s0DMIIF0xvE
+        x4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvj
+        DU0xZFpf9x07j1iihUUUUU=
+X-CM-SenderInfo: irzsiiysuqikmy6i3vldqovvfxof0/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 29/03/2020 14:46, Vladimir Oltean wrote:
-> On Sun, 29 Mar 2020 at 14:37, Vladimir Oltean <olteanv@gmail.com> wrote:
->>
->> On Sun, 29 Mar 2020 at 12:57, Ido Schimmel <idosch@idosch.org> wrote:
->>>
->>> + Nik, Roopa
->>>
->>> On Sun, Mar 29, 2020 at 02:52:02AM +0200, Vladimir Oltean wrote:
->>>> From: Vladimir Oltean <vladimir.oltean@nxp.com>
-[snip]
->>> In the past I was thinking about ways to implement this in Linux. The
->>> only place in the pipeline where packets are actually classified to
->>> broadcast / unknown unicast / multicast is at bridge ingress. Therefore,
->>
->> Actually I think only 'unknown unicast' is tricky here, and indeed the
->> bridge driver is the only place in the software datapath that would
->> know that.
+On Mon, Mar 23, 2020 at 09:52:41AM +0100, Greg Kroah-Hartman wrote:
+> On Mon, Mar 23, 2020 at 04:22:33PM +0800, Xiyu Yang wrote:
+> > A NULL vmci_ctx object may pass to vmci_ctx_put() from its callers.
+> 
+> Are you sure this can happen?
 
-Yep, unknown unicast is hard to pass outside of the bridge, especially at ingress
-where the bridge hasn't been hit yet. One possible solution is to expose a function
-from the bridge which can make such a decision at the cost of 1 more fdb hash lookup,
-but if the packet is going to hit the bridge anyway that cost won't be that high
-since it will have to do the same. We already have some internal bridge functionality
-exposed for netfilter, tc and some drivers so it would be in line with that.
-I haven't looked into how feasible the above is, so I'm open to other ideas (the
-bridge_slave functions for example, we've discussed such extensions before in other
-contexts). But I think this can be much simpler if we just expose the unknown unicast
-information, the mcast/bcast can be decided by the classifier already or with very
-little change. I think such exposed function can be useful to netfilter as well.
+Yes. We reviewed all callers of vmci_ctx_put(), and confirmed that 
+at least 3 callers may pass a NULL vmci_ctx object to vmci_ctx_put().
+ 
+Given the following qp_broker_attach() as an example, we find 
+vmci_ctx_get() may return NULL, as confirmed the NULL check performed 
+by vmci_ctx_supports_host_qp(). 
+Thus, we believe a NULL check for vmci_ctx_put() is also necessary.
 
->> I know very little about frame classification in the Linux network
->> stack, but would it be possible to introduce a match key in tc-flower
->> for whether packets have a known destination or not?
->>
->>> my thinking was to implement these storm control policers as a
->>> "bridge_slave" operation. It can then be offloaded to capable drivers
->>> via the switchdev framework.
->>>
->>
->> I think it would be a bit odd to duplicate tc functionality in the
->> bridge sysfs. I don't have a better suggestion though.
->>
+void qp_broker_attach(struct qp_broker_entry *entry,...)
+{
+	...
+	create_context = vmci_ctx_get(entry->create_id); /* may be NULL */
+	supports_host_qp = vmci_ctx_supports_host_qp(create_context); /* do NULL-check inside */ 
+	vmci_ctx_put(create_context);  /* lack NULL-check */ 
+	...
+}
+
+bool vmci_ctx_supports_host_qp(struct vmci_ctx *context)
+{
+	/* NULL-check before pointer dereference */
+	return context && context->user_version >= VMCI_VERSION_HOSTQP;  
+}
+
+void vmci_ctx_put(struct vmci_ctx *context)
+{
+	/* A potential NULL pointer will be accessed to get context's refcount field */
+	kref_put(&context->kref, ctx_free_ctx);
+}
+
+Similary situtations are confirmed for other two callers of vmci_ctx_put(): 
+qp_detatch_host_work(), qp_alloc_host_work(). 
+
+static int qp_detatch_host_work(struct vmci_handle handle)
+{
+	int result;
+	struct vmci_ctx *context;
+
+	context = vmci_ctx_get(VMCI_HOST_CONTEXT_ID); /* may be NULL */
+	result = vmci_qp_broker_detach(handle, context); /* do NULL-check inside */
+	vmci_ctx_put(context); /* lack NULL-check */
+	return result;
+}
+
+static int qp_alloc_host_work(...)
+{
+	...
+	context = vmci_ctx_get(VMCI_HOST_CONTEXT_ID); /* may be NULL */
+	...
+	result = qp_broker_alloc(...,context,...); /* if context == NULL, result != VMCI_SUCCESS */
+	if (result == VMCI_SUCCESS) {
+		...
+	} else {
+		*handle = VMCI_INVALID_HANDLE;
+		pr_devel("queue pair broker failed to alloc (result=%d)\n",
+			 result);
+	}
+	vmci_ctx_put(context); /* lack NULL-check */
+	return result;
+}
+
+Considering vmci_ctx_supports_host_qp() performs an internal 
+NULL check on vmci_ctx pointer, is it also appropriate to 
+perform the NULL check inside vmci_ctx_put()?
+
 > 
-> Not to mention that for hardware like this, to have the same level of
-> flexibility via a switchdev control would mean to duplicate quite a
-> lot of tc functionality. On this 5-port switch I can put a shared
-> broadcast policer on 2 ports (via the ingress_block functionality),
-> and individual policers on the other 3, and the bandwidth budgeting is
-> separate. I can only assume that there are more switches out there
-> that allow this.
+> > Add a NULL check to prevent NULL pointer dereference.
+> > 
+> > Signed-off-by: Xiyu Yang <xiyuyang19@fudan.edu.cn>
+> > Signed-off-by: Xin Tan <tanxin.ctf@gmail.com>
+> > ---
+> >  drivers/misc/vmw_vmci/vmci_context.c | 3 ++-
+> >  1 file changed, 2 insertions(+), 1 deletion(-)
 > 
->>> I think that if we have this implemented in the Linux bridge, then your
->>> patch can be used to support the policing of broadcast packets while
->>> returning an error if user tries to police unknown unicast or multicast
->>> packets.
->>
->> So even if the Linux bridge gains these knobs for flood policers,
->> still have the dst_mac ff:ff:ff:ff:ff:ff as a valid way to configure
->> one of those knobs?
->>
->>> Or maybe the hardware you are working with supports these types
->>> as well?
->>
->> Nope, on this hardware it's just broadcast, I just checked that. Which
->> simplifies things quite a bit.
->>
->>>
->>> WDYT?
->>>
->>
->> I don't know.
->>
->> Thanks,
->> -Vladimir
+> What changed from v1?
 > 
-> -Vladimir
+> Always put that below the --- line.
 > 
+> Please fix up and send a v3.
+> 
+> thanks,
+> 
+> greg k-h
 
