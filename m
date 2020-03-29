@@ -2,125 +2,96 @@ Return-Path: <SRS0=I467=5O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73AA9C43331
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 04:01:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2972C43331
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 04:27:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4475520659
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 04:01:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F6E720733
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 04:27:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="jAqvOvuM"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IMLmQy0h"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727144AbgC2EBU (ORCPT
+        id S1727144AbgC2E1B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Mar 2020 00:01:20 -0400
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:6495 "EHLO
-        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725379AbgC2EBU (ORCPT
+        Sun, 29 Mar 2020 00:27:01 -0400
+Received: from mail-lf1-f42.google.com ([209.85.167.42]:38113 "EHLO
+        mail-lf1-f42.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726160AbgC2E1B (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Mar 2020 00:01:20 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e801d600002>; Sat, 28 Mar 2020 21:00:32 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Sat, 28 Mar 2020 21:01:19 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Sat, 28 Mar 2020 21:01:19 -0700
-Received: from [10.2.58.50] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Sun, 29 Mar
- 2020 04:00:26 +0000
-Subject: Re: [Patch v3] mm/page_alloc.c: use NODE_MASK_NONE define used_mask
-To:     Wei Yang <richard.weiyang@gmail.com>, <akpm@linux-foundation.org>
-CC:     <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>,
-        <jgg@ziepe.ca>, <david@redhat.com>, <bhe@redhat.com>
-References: <20200329024217.5199-1-richard.weiyang@gmail.com>
-From:   John Hubbard <jhubbard@nvidia.com>
-X-Nvconfidentiality: public
-Message-ID: <8d6a1cd3-75cf-78c3-b83b-c5208a209f65@nvidia.com>
-Date:   Sat, 28 Mar 2020 21:00:26 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Sun, 29 Mar 2020 00:27:01 -0400
+Received: by mail-lf1-f42.google.com with SMTP id c5so11148749lfp.5
+        for <linux-kernel@vger.kernel.org>; Sat, 28 Mar 2020 21:26:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=DKuqxQAQBeNQgytSbEVjMMvxTA8MJGsKh7TmTVm7ZJc=;
+        b=IMLmQy0h7+NFb4TXAkQcgd5on9TbLSHa1cyg2ahHZKjC/WRq2IKlflcbs3dcRxp+zS
+         60UnnDISwHmvPiq87KC1rTcw/rf5tkr7aMNLqB1AHPPmd3zlbggc+ntKn7x9+fYXtQgX
+         moHi1zsj/w4aqUsBGOYeOLDVLiO/bv9ccMsR+Y8hpbzAYnThZXjnZhOf4Bc5f1VNGKbT
+         wg48wn3HjXZ9AZdPANGQN64mmv4pE3hAgLlFByuFZUXUidiMcdUnop/ZpF9+xXG0jeLP
+         5VEK0Y0sW7azSdRpzGGu+I5rPT8ruFv5iznzZCVXVByXR06R2uKeWu+PIhGGs5eh8DZr
+         8ORA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=DKuqxQAQBeNQgytSbEVjMMvxTA8MJGsKh7TmTVm7ZJc=;
+        b=gqNi7yg4mQHx9vOZKrQX/kmk5fdx/fYcHWvMnaXw6Hj/nFYYLAf00b2NCfibxbFWRQ
+         DPEBwDp30VfTQCGoMQkqe5kmSS6dPq462//uVqFujaI38bisnO8uZl2JnHANx0t9GpDb
+         /CraYwOMbEf4ZPde5W45cbcqXUIagrZeE5HTZXXDVtoMNfIl/WifAePa8Z0t4y2C0fKQ
+         bBLIUTAnQWv/NfELI9rTDvWiUSL70kWsos2GU0PnCG0Oh4pFlR2R3QVCM9HLQoKw5M1H
+         PLWZcoQnjKtNKfRKPO+8f4lB1nE3cetFWEkfs8a9iq4EDzF6kJaOeNyrrHfsUPMvx4eE
+         G/kA==
+X-Gm-Message-State: AGi0PuYUsiI153Hda5paUeDE7E6A90ABbhoIQ3cLGKeLTTir5tiQAiyn
+        j25np32ot3Wq7u2TBVX+cLvSZoAJCaAFQVQounw=
+X-Google-Smtp-Source: APiQypIGauvW1Q31v5Y/4O3X0ow7r2dOeJqgNLLWJlBdJ44AGF74HGkgEB4uww9f74C9kIuLFnzdNny5o9M5vHHloZ8=
+X-Received: by 2002:ac2:48b3:: with SMTP id u19mr4229181lfg.84.1585456018710;
+ Sat, 28 Mar 2020 21:26:58 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200329024217.5199-1-richard.weiyang@gmail.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1585454432; bh=5Fs3IE4i4iRLLBVddscrDk15dILBhHBWSFTEWwaYXSE=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:X-Nvconfidentiality:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=jAqvOvuMCuHbRMVfkrvc7NXqjfZYe7GA1kK6eR/W3qwFw9E5dbiyJW2a+LGbPfZaF
-         3cGLy2B/TKxRXIxTKRcGcVW/uBjF0HD+QGjs09u7il5QpX+Sgr4VwD6XhCf5EqVDtd
-         0PMY/9DoADs9Dm7w7NRTdIloOvXv5W5sDkvHjDTejNw5yTL2GuJkOAR4nblEC4oqsU
-         9Jdhdql+ZWjFo+m1dCEwNikBv6DZpJpiGSaw0aeIVD6jYh+uSf+bW5vq05w/UTGwEu
-         zavroNvgEMrAehJOmOleZtqO/vHMWfAA6pRwg9HZaT2HnDdDHnkBMLlX26FaaENAJk
-         vxKMVgZfKgsug==
+References: <1585140388-61802-1-git-send-email-aubrey.li@intel.com> <20200328132325.GC11705@shao2-debian>
+In-Reply-To: <20200328132325.GC11705@shao2-debian>
+From:   Aubrey Li <aubrey.intel@gmail.com>
+Date:   Sun, 29 Mar 2020 12:26:41 +0800
+Message-ID: <CAERHkrukPEO_sCiOS_YWnVPvFrHUbL10oov6hd_UVZ9PdvchkQ@mail.gmail.com>
+Subject: Re: [sched/fair] 59901cb452: netperf.Throughput_Mbps -27.3% regression
+To:     kernel test robot <rong.a.chen@intel.com>
+Cc:     Aubrey Li <aubrey.li@intel.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>, dietmar.eggemann@arm.com,
+        Steven Rostedt <rostedt@goodmis.org>, bsegall@google.com,
+        mgorman@suse.de,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        Vineeth Remanan Pillai <vpillai@digitalocean.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Aubrey Li <aubrey.li@linux.intel.com>, lkp@lists.01.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/28/20 7:42 PM, Wei Yang wrote:
-> For all 0 nodemask_t, we have already define macro NODE_MASK_NONE.
-> Leverage this to define an all clear nodemask.
+On Sat, Mar 28, 2020 at 9:24 PM kernel test robot <rong.a.chen@intel.com> wrote:
+>
+> Greeting,
+>
+> FYI, we noticed a -27.3% regression of netperf.Throughput_Mbps due to commit:
+>
+>
+> commit: 59901cb4520c44bfce81f523bc61e7284a931ad1 ("[PATCH] sched/fair: Don't pull task if local group is more loaded than busiest group")
 
-It would be a little clearer if you used wording more like this:
+Thanks for the report, Robot, ;-)
 
-Subject: [Patch v3] mm/page_alloc.c: use NODE_MASK_NONE in build_zonelists()
+This patch is abandoned, and replaced by another one:
 
-Slightly simplify the code by initializing user_mask with
-NODE_MASK_NONE, instead of later calling nodes_clear(). This saves
-a line of code.
+- [PATCH] sched/fair: Fix negative imbalance in imbalance calculation
 
-
-> 
-> Signed-off-by: Wei Yang <richard.weiyang@gmail.com>
-> 
-> ---
-> v3: adjust the commit log a little
-> v2: use NODE_MASK_NONE as suggested by David Hildenbrand
-> ---
->   mm/page_alloc.c | 3 +--
->   1 file changed, 1 insertion(+), 2 deletions(-)
-> 
-> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-> index ef790dfad6aa..dfcf2682ed40 100644
-> --- a/mm/page_alloc.c
-> +++ b/mm/page_alloc.c
-> @@ -5587,14 +5587,13 @@ static void build_zonelists(pg_data_t *pgdat)
->   {
->   	static int node_order[MAX_NUMNODES];
->   	int node, load, nr_nodes = 0;
-> -	nodemask_t used_mask;
-> +	nodemask_t used_mask = NODE_MASK_NONE;
->   	int local_node, prev_node;
->   
->   	/* NUMA-aware ordering of nodes */
->   	local_node = pgdat->node_id;
->   	load = nr_online_nodes;
->   	prev_node = local_node;
-> -	nodes_clear(used_mask);
->   
->   	memset(node_order, 0, sizeof(node_order));
->   	while ((node = find_next_best_node(local_node, &used_mask)) >= 0) {
-> 
-
-Honestly, I don't think it's really worth doing a patch for this, but
-there's nothing wrong with the diff, so:
-
-Reviewed-by: John Hubbard <jhubbard@nvidia.com>
-
-
-thanks,
--- 
-John Hubbard
-NVIDIA
+Thanks,
+-Aubrey
