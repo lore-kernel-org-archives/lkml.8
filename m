@@ -2,223 +2,167 @@ Return-Path: <SRS0=I467=5O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA18AC2D0ED
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 18:15:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13DC4C43331
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 18:16:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 83DF920732
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 18:15:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D01102073E
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 18:16:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585505801;
+	bh=pSzpTRlriCgM4k/h8B3zFSb4NLIKkBZ4eow4C6fr6Wk=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=RruMmuZ9H30ztBAX1ScprI3XolvPpbM3SAGo/f1BEfC4mQn7AXsrhMHqPXtpSJSS1
+	 zhoGSSKOiOLMp99dYzv5EeS6a8qgGXd74zonuGxAHHYT5z98Yjx2sO8cOnCUQj5hSx
+	 hSwGgc2pDyRPVqcXoFLVkYbfINNDfF4RDhioy8mQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728495AbgC2SP1 (ORCPT
+        id S1728483AbgC2SQk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Mar 2020 14:15:27 -0400
-Received: from mga07.intel.com ([134.134.136.100]:44179 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728467AbgC2SP0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Mar 2020 14:15:26 -0400
-IronPort-SDR: ZMkTX2Kgrv7lyLMK1XvzqsjyDA9JPY0RcFDVrA6+SYNnt9pybPk2s3RVV/Rbsx67sIE2446sMA
- AISwQSnKTqUg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Mar 2020 11:15:25 -0700
-IronPort-SDR: weiJzZT1yFramlBJR8mVx6fZ1VHjtOf5DO+SqCpl8nK2HhqaNSZqeDg6MSxnItdKSAc8Bz0awv
- s7Zf2AWTa89g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,321,1580803200"; 
-   d="scan'208";a="448015309"
-Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
-  by fmsmga005.fm.intel.com with ESMTP; 29 Mar 2020 11:15:23 -0700
-Received: from kbuild by lkp-server01 with local (Exim 4.89)
-        (envelope-from <lkp@intel.com>)
-        id 1jIcSx-0003Mx-BF; Mon, 30 Mar 2020 02:15:23 +0800
-Date:   Mon, 30 Mar 2020 02:14:36 +0800
-From:   kbuild test robot <lkp@intel.com>
-To:     "x86-ml" <x86@kernel.org>
-Cc:     linux-kernel@vger.kernel.org
-Subject: [tip:master] BUILD SUCCESS
- 7840d727918081dd283823d31f7f5dd281f86f52
-Message-ID: <5e80e58c.Eu8+w7lFYzi9eYC5%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        Sun, 29 Mar 2020 14:16:40 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:41710 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727506AbgC2SQk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Mar 2020 14:16:40 -0400
+Received: by mail-lf1-f65.google.com with SMTP id z23so12151619lfh.8
+        for <linux-kernel@vger.kernel.org>; Sun, 29 Mar 2020 11:16:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=+p2OwdEH3KOQt7UScUIEx2C+Hv3WCMmiopajHPvFEzc=;
+        b=TEnX/1oGd0WrxjO90s1W75xZ4j/3mxfYUZZqQ1cVXy0s5ncLrAPaNiD1TKrNAUIb7b
+         1nj9qPlZrlGMa3Eern3Gq9aE89JzCVM/fFIYH9oxprYJTP2bPfnPWAnhKrwl1dYWg+ab
+         t63T2jdrZaxiUjhSnoGBD7DiKOpaU6X7/VSkc=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=+p2OwdEH3KOQt7UScUIEx2C+Hv3WCMmiopajHPvFEzc=;
+        b=WBWVbipdsdmjmH/as2wkdTaHz3oe2APZMvwZ6D2ucfsyiKgT0xzx16aQVGI9p7Lvwc
+         f1izWw3UfqDg2yDwj0rbJ36MZjO4ZepAPTNChPuwqA/Ez4mw6udbLuMFtG7wciqwjPmc
+         xSXapiKfV2YOi+DzpnoP29l+QJy6X8570+T3xgghPts+2tJwqxi8ufVqBdDfhXhkCH+G
+         WUsqtVTf4VUFi3j45PfRft2O1GBjhmwEpyi72JX9z4xt/NHdJhJP8ncvo8xd42GdyD9s
+         DkHKoYq49B41l/7XhQ83j9HiTkMM5lGMS8+lbvhMOu5rG1mYj9UgtzbUcWlplQuNuaRY
+         xivg==
+X-Gm-Message-State: AGi0PuarIVfOIhbinqifLJRdZ+h3zK8ovHACKhzHGdz0fsuh6bO8NY/U
+        j5Gc4bN0JDgM7DyTT79yW8A7qv5I5J0=
+X-Google-Smtp-Source: APiQypLX5Pq4x4WZRupDYbV05TKmFgG6O2cgFx0NsXhIpl8CIB0e5fGe9/7MmMTkFdXP5jfRg1gVXQ==
+X-Received: by 2002:a19:4c44:: with SMTP id z65mr5953095lfa.203.1585505796419;
+        Sun, 29 Mar 2020 11:16:36 -0700 (PDT)
+Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com. [209.85.167.48])
+        by smtp.gmail.com with ESMTPSA id v12sm5870697ljh.6.2020.03.29.11.16.35
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 29 Mar 2020 11:16:35 -0700 (PDT)
+Received: by mail-lf1-f48.google.com with SMTP id n20so12108694lfl.10
+        for <linux-kernel@vger.kernel.org>; Sun, 29 Mar 2020 11:16:35 -0700 (PDT)
+X-Received: by 2002:a19:7f96:: with SMTP id a144mr5872846lfd.31.1585505795085;
+ Sun, 29 Mar 2020 11:16:35 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+References: <20200323183620.GD23230@ZenIV.linux.org.uk> <20200323183819.250124-1-viro@ZenIV.linux.org.uk>
+ <20200328104857.GA93574@gmail.com> <20200328115936.GA23230@ZenIV.linux.org.uk>
+ <20200329092602.GB93574@gmail.com> <CALCETrX=nXN14fqu-yEMGwwN-vdSz=-0C3gcOMucmxrCUpevdA@mail.gmail.com>
+ <489c9af889954649b3453e350bab6464@AcuMS.aculab.com> <CAHk-=whDAxb+83gYCv4=-armoqXQXgzshaVCCe9dNXZb9G_CxQ@mail.gmail.com>
+ <9352bc55302d4589aaf2461c7b85fb6b@AcuMS.aculab.com>
+In-Reply-To: <9352bc55302d4589aaf2461c7b85fb6b@AcuMS.aculab.com>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Sun, 29 Mar 2020 11:16:19 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wjEf+0sBkPFKWpYZK_ygS9=ig3KTZkDe5jkDj+v8i7B+w@mail.gmail.com>
+Message-ID: <CAHk-=wjEf+0sBkPFKWpYZK_ygS9=ig3KTZkDe5jkDj+v8i7B+w@mail.gmail.com>
+Subject: Re: [RFC][PATCH 01/22] x86 user stack frame reads: switch to explicit __get_user()
+To:     David Laight <David.Laight@aculab.com>
+Cc:     Andy Lutomirski <luto@amacapital.net>,
+        Ingo Molnar <mingo@kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Thomas Gleixner <tglx@linutronix.de>, X86 ML <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Borislav Petkov <bp@alien8.de>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git  master
-branch HEAD: 7840d727918081dd283823d31f7f5dd281f86f52  Merge branch 'efi/core'
+On Sun, Mar 29, 2020 at 11:03 AM David Laight <David.Laight@aculab.com> wrote:
+>
+> > That's how get_user() already works.
+> >
+> > It is a polymorphic function (done using macros, sizeof() and ugly
+> > compiler tricks) that generates a call, yes. But it's not a normal C
+> > call. On x86-64, it returns the error code in %rax, and the value in
+> > %rdx
+>
+> I must be mis-remembering the object code from last time
+> I looked at it.
 
-elapsed time: 481m
+On an object code level, the end result actually almost looks like a
+normal call, until you start looking at the exact register passing
+details.
 
-configs tested: 156
-configs skipped: 0
+On a source level, it's anything but.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+This is "get_user()" on x86:
 
-arm                              allmodconfig
-arm                               allnoconfig
-arm                              allyesconfig
-arm64                            allmodconfig
-arm64                             allnoconfig
-arm64                            allyesconfig
-arm                           efm32_defconfig
-arm                         at91_dt_defconfig
-arm                        shmobile_defconfig
-arm64                               defconfig
-arm                          exynos_defconfig
-arm                        multi_v5_defconfig
-arm                           sunxi_defconfig
-arm                        multi_v7_defconfig
-sparc                            allyesconfig
-microblaze                    nommu_defconfig
-nds32                             allnoconfig
-parisc                generic-32bit_defconfig
-parisc                            allnoconfig
-powerpc                       ppc64_defconfig
-mips                             allyesconfig
-nds32                               defconfig
-nios2                         10m50_defconfig
-parisc                           allyesconfig
-m68k                       m5475evb_defconfig
-xtensa                          iss_defconfig
-s390                              allnoconfig
-h8300                     edosk2674_defconfig
-s390                             alldefconfig
-m68k                          multi_defconfig
-arc                              allyesconfig
-i386                              allnoconfig
-i386                             alldefconfig
-i386                             allyesconfig
-i386                                defconfig
-ia64                             allmodconfig
-ia64                                defconfig
-ia64                              allnoconfig
-ia64                             allyesconfig
-ia64                             alldefconfig
-c6x                              allyesconfig
-c6x                        evmc6678_defconfig
-nios2                         3c120_defconfig
-openrisc                    or1ksim_defconfig
-openrisc                 simple_smp_defconfig
-xtensa                       common_defconfig
-csky                                defconfig
-alpha                               defconfig
-h8300                    h8300h-sim_defconfig
-h8300                       h8s-sim_defconfig
-m68k                             allmodconfig
-m68k                           sun3_defconfig
-arc                                 defconfig
-powerpc                             defconfig
-powerpc                          rhel-kconfig
-microblaze                      mmu_defconfig
-powerpc                           allnoconfig
-mips                           32r2_defconfig
-mips                         64r6el_defconfig
-mips                             allmodconfig
-mips                              allnoconfig
-mips                      fuloong2e_defconfig
-mips                      malta_kvm_defconfig
-parisc                generic-64bit_defconfig
-alpha                randconfig-a001-20200329
-m68k                 randconfig-a001-20200329
-mips                 randconfig-a001-20200329
-nds32                randconfig-a001-20200329
-parisc               randconfig-a001-20200329
-riscv                randconfig-a001-20200329
-h8300                randconfig-a001-20200329
-nios2                randconfig-a001-20200329
-microblaze           randconfig-a001-20200329
-sparc64              randconfig-a001-20200329
-c6x                  randconfig-a001-20200329
-csky                 randconfig-a001-20200329
-openrisc             randconfig-a001-20200329
-s390                 randconfig-a001-20200329
-sh                   randconfig-a001-20200329
-xtensa               randconfig-a001-20200329
-x86_64               randconfig-b001-20200329
-x86_64               randconfig-b002-20200329
-x86_64               randconfig-b003-20200329
-i386                 randconfig-b001-20200329
-i386                 randconfig-b002-20200329
-i386                 randconfig-b003-20200329
-x86_64               randconfig-c001-20200329
-x86_64               randconfig-c002-20200329
-x86_64               randconfig-c003-20200329
-i386                 randconfig-c001-20200329
-i386                 randconfig-c002-20200329
-i386                 randconfig-c003-20200329
-i386                 randconfig-d003-20200329
-i386                 randconfig-d001-20200329
-x86_64               randconfig-d002-20200329
-i386                 randconfig-d002-20200329
-x86_64               randconfig-d001-20200329
-x86_64               randconfig-d003-20200329
-x86_64               randconfig-e001-20200329
-x86_64               randconfig-e002-20200329
-x86_64               randconfig-e003-20200329
-i386                 randconfig-e001-20200329
-i386                 randconfig-e002-20200329
-i386                 randconfig-e003-20200329
-i386                 randconfig-f001-20200329
-i386                 randconfig-f003-20200329
-i386                 randconfig-f002-20200329
-x86_64               randconfig-f002-20200329
-x86_64               randconfig-f001-20200329
-i386                 randconfig-g003-20200329
-x86_64               randconfig-g002-20200329
-i386                 randconfig-g002-20200329
-i386                 randconfig-g001-20200329
-x86_64               randconfig-g001-20200329
-x86_64               randconfig-h002-20200329
-x86_64               randconfig-h003-20200329
-i386                 randconfig-h003-20200329
-x86_64               randconfig-h001-20200329
-i386                 randconfig-h001-20200329
-i386                 randconfig-h002-20200329
-arc                  randconfig-a001-20200329
-arm                  randconfig-a001-20200329
-arm64                randconfig-a001-20200329
-ia64                 randconfig-a001-20200329
-powerpc              randconfig-a001-20200329
-sparc                randconfig-a001-20200329
-riscv                            allmodconfig
-riscv                             allnoconfig
-riscv                            allyesconfig
-riscv                               defconfig
-riscv                    nommu_virt_defconfig
-riscv                          rv32_defconfig
-s390                             allmodconfig
-s390                             allyesconfig
-s390                          debug_defconfig
-s390                                defconfig
-s390                       zfcpdump_defconfig
-sh                               allmodconfig
-sh                                allnoconfig
-sh                          rsk7269_defconfig
-sh                  sh7785lcr_32bit_defconfig
-sh                            titan_defconfig
-sparc                               defconfig
-sparc64                          allmodconfig
-sparc64                           allnoconfig
-sparc64                          allyesconfig
-sparc64                             defconfig
-um                           x86_64_defconfig
-um                             i386_defconfig
-um                                  defconfig
-x86_64                              fedora-25
-x86_64                                  kexec
-x86_64                                    lkp
-x86_64                                   rhel
-x86_64                         rhel-7.2-clear
-x86_64                               rhel-7.6
+  #define get_user(x, ptr)                                              \
+  ({                                                                    \
+        int __ret_gu;                                                   \
+        register __inttype(*(ptr)) __val_gu asm("%"_ASM_DX);            \
+        __chk_user_ptr(ptr);                                            \
+        might_fault();                                                  \
+        asm volatile("call __get_user_%P4"                              \
+                     : "=a" (__ret_gu), "=r" (__val_gu),                \
+                        ASM_CALL_CONSTRAINT                             \
+                     : "0" (ptr), "i" (sizeof(*(ptr))));                \
+        (x) = (__force __typeof__(*(ptr))) __val_gu;                    \
+        __builtin_expect(__ret_gu, 0);                                  \
+  })
 
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+and all it actually *generates* is that single "call" instruction, so
+the only code you see from the above mess in the object file (assuming
+you don't have debugging enabled that expands "might_fault()" into a
+lot of checking code) is something like this:
+
+        call __get_user_4
+
+with the input address being in %rax (which is also the returning
+error code), and the value of 'x' being in %rdx.
+
+The above macro looks a bit messy, but that's actually hiding some of
+the real complexity (that "__inttype()" thing is a mess of compiler
+tricks in itself, as is the magical ASM_CALL_CONSTRAINT thing, along
+with the magic that goes into a 64-bit return value on x86-32 which is
+implicit in the magical register asm() definition).
+
+The uaccess code is a lot of complex macros and inline functions to
+make it all work well.
+
+Al's uaccess cleanups (which should be in the next merge window) help
+a _lot_. Not with the get_user() above (that is already about as
+simple as it can get), but with a lot of the other crazy special cases
+that we had grown over the years.
+
+My current "unsafe_get_user() using clang and 'asm goto' with outpus"
+patch is on top of Al's patches exactly because it was cleaner to do
+with all of his cleanups.
+
+But that magical asm-goto-with-outputs patch probably won't land
+upstream for a couple of years.
+
+I had the unsafe_put_user() patches to use 'asm goto' in a local
+branch for almost three years before I made them official. See commit
+a959dc88f9c8 ("Use __put_user_goto in __put_user_size() and
+unsafe_put_user()") and notice how it has an author date of May, 2016,
+but was only committed January 2019.
+
+I basically waited until "asm goto" was something we could rely on
+(and used for other reasons).
+
+I suspect something very similar will happen with unsafe_get_user(). I
+have a patch if people want to play with it, but right now it's a
+"this relies on an unreleased version of clang to even work".
+
+                      Linus
