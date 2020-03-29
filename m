@@ -2,95 +2,143 @@ Return-Path: <SRS0=I467=5O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A356C2D0EB
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 11:34:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6050BC2D0EB
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 11:35:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5228820774
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 11:34:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 37E62206DB
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 11:35:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Ps0Qb/Mf"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TzvY4+lT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728198AbgC2Les (ORCPT
+        id S1728213AbgC2LfC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Mar 2020 07:34:48 -0400
-Received: from us-smtp-delivery-74.mimecast.com ([63.128.21.74]:31788 "EHLO
-        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728171AbgC2Leq (ORCPT
+        Sun, 29 Mar 2020 07:35:02 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:46485 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728108AbgC2LfB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Mar 2020 07:34:46 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1585481685;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=VZwSHSfoVZBLh2uVqxeFvTZlYVnfU5BIn50vsgPZBrY=;
-        b=Ps0Qb/MfRGA6dEcZ6QSjdIyXovwRN4bvQQ6+XlRZsIg6LLnTVfY3wmtyj5WuURXRX0H+tl
-        mobZulr//sSAyF4ap3/ikde6aiBazIk2lwu0GI1HJo959ypWfZOSleAAvRf+3X+0rHfoJx
-        biLD8BMf2GdjqiG79PsOMSJmUu/Gajg=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-78-69s3iLlsOYC-Ei4_8RmrFQ-1; Sun, 29 Mar 2020 07:34:43 -0400
-X-MC-Unique: 69s3iLlsOYC-Ei4_8RmrFQ-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 01B71477;
-        Sun, 29 Mar 2020 11:34:42 +0000 (UTC)
-Received: from eperezma.remote.csb (ovpn-112-95.ams2.redhat.com [10.36.112.95])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 66FC85C1B5;
-        Sun, 29 Mar 2020 11:34:38 +0000 (UTC)
-From:   =?UTF-8?q?Eugenio=20P=C3=A9rez?= <eperezma@redhat.com>
-To:     "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     "virtualization@lists.linux-foundation.org" 
-        <virtualization@lists.linux-foundation.org>,
-        Halil Pasic <pasic@linux.ibm.com>,
-        =?UTF-8?q?Eugenio=20P=C3=A9rez?= <eperezma@redhat.com>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        kvm list <kvm@vger.kernel.org>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: [PATCH 6/6] fixup! vhost: batching fetches
-Date:   Sun, 29 Mar 2020 13:33:59 +0200
-Message-Id: <20200329113359.30960-7-eperezma@redhat.com>
-In-Reply-To: <20200329113359.30960-1-eperezma@redhat.com>
-References: <20200329113359.30960-1-eperezma@redhat.com>
+        Sun, 29 Mar 2020 07:35:01 -0400
+Received: by mail-pl1-f195.google.com with SMTP id s23so5515780plq.13;
+        Sun, 29 Mar 2020 04:35:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=message-id:date:from:to:cc:subject:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=3U2zGu5EljoEhInngF/MGy98drO8oW8eURU26m47lps=;
+        b=TzvY4+lTJF2CwQProk5NFI9gwDe3ezuDrAgm0eiPalqwD0YZphnZjL1mhD1irNIfCu
+         OQ+CXZHVbnkWSsfHL4LbXFzXDdZ9y3VQLtXa4V6NSW7ro/lmCpgvYxENt1PAx6ikmSeA
+         vTpxzX7VItnu+O8XxhjWxh1aPf4laQZlAPtBnxPhpMXiTeBOyfY4TrUXiUdvX8JG9l2o
+         pRCxJTM3Fd5THks2AAa3AyYv0GQfszgzQq4LCIRXqrHzF0aLYaPLG46CCJ99o74Q6Az1
+         C2s+dQdE/Siltzp4E7pz3/ds8zZFNn79z6/fXy2EsUq1HjE9jwd/ItKyJcoF0gt5lfQ6
+         bY3A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:date:from:to:cc:subject:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=3U2zGu5EljoEhInngF/MGy98drO8oW8eURU26m47lps=;
+        b=tNqdAoeBIeunsqYwN/6feaePyBA8r7c9TpAdYSwxTeZxWnlNt765EXiIHBNNz19EaI
+         FJUEzTtChe2YOqUHDstzHIkCb/hQWpz7nRyjx441++bWJ18ZC0VTbiX8CU7K/w34xo2s
+         0MgLGxaEY6AJQw04an+4JzkHs+zAZHGC460n8UErygWHPMVxUIGSDoOgUmHae4y/dAPx
+         7ZRgfyjDWwhvtAdHldSLq8smO9nEe24WMJMPJBVrBhFlDYUBEfJP8vSUefAyqFrZU/IO
+         1jbWqRGIg0Z7yLB5HTuzgyJALGcdYcptgh2sYQJ1e/tR/mhQY5sS6oJTS8OMyghHMVbf
+         Go8w==
+X-Gm-Message-State: ANhLgQ21x73j59tvArUJqTwvUvq7ly3ndI8aSpblI4H6jyzmVgJr8srP
+        mW9MmoYARxrnabPhvhGxq5g=
+X-Google-Smtp-Source: ADFU+vtPceFIaWh3aJr0XVdTwVl7niibGUIx3WXzqSISGf9LEkmeNM+MRNqbmWde7Ju8vSNiwXqfdQ==
+X-Received: by 2002:a17:902:449:: with SMTP id 67mr7611883ple.339.1585481700644;
+        Sun, 29 Mar 2020 04:35:00 -0700 (PDT)
+Received: from SARKAR ([2401:4900:331f:aaac:2ce4:2642:30f:c482])
+        by smtp.gmail.com with ESMTPSA id w127sm7909245pfb.70.2020.03.29.04.34.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 29 Mar 2020 04:34:59 -0700 (PDT)
+Message-ID: <5e8087e3.1c69fb81.13d97.448d@mx.google.com>
+X-Google-Original-Message-ID: <20200329113451.GB8353@rohitsarkar5398@gmail.com>
+Date:   Sun, 29 Mar 2020 17:04:51 +0530
+From:   Rohit Sarkar <rohitsarkar5398@gmail.com>
+To:     Jonathan Cameron <jic23@kernel.org>
+Cc:     linux-iio@vger.kernel.org, dragos.bogdan@analog.com,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Michael Hennerich <Michael.Hennerich@analog.com>,
+        Stefan Popa <stefan.popa@analog.com>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        linux-kernel@vger.kernel.org,
+        "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>,
+        zhong jiang <zhongjiang@huawei.com>
+Subject: Re: [PATCH 0/2] use DEFINE_DEBUGFS_ATTRIBUTE instead of
+ DEFINE_SIMPLE_ATTRIBUTE
+References: <20200328063456.24012-1-rohitsarkar5398@gmail.com>
+ <20200329103818.2fce9529@archlinux>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200329103818.2fce9529@archlinux>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Old code did not take into account the _SET_BASE ioctl.
+On Sun, Mar 29, 2020 at 10:38:18AM +0100, Jonathan Cameron wrote:
+> On Sat, 28 Mar 2020 12:04:53 +0530
+> Rohit Sarkar <rohitsarkar5398@gmail.com> wrote:
+> 
+> > The debugfs_create_file_unsafe method does not protect the fops given to
+> > it from file removal. It must be used with DEFINE_DEBUGFS_ATTRIBUTE
+> > which makes the fops aware of the file lifetime.
+> > 
+> > Further using DEFINE_DEBUGFS_ATTRIBUTE along with
+> > debugfs_create_file_unsafe significantly reduces the overhead introduced by
+> > debugfs_create_file which creates a lifetime managing proxy around each
+> > fops handed in. Refer [1] for more on this.
+> > 
+> > Fixes the following warnings reported by coccinelle:
+> > drivers/iio/imu//adis16460.c:126:0-23: WARNING: adis16460_flash_count_fops should be defined with DEFINE_DEBUGFS_ATTRIBUTE
+> > drivers/iio/imu//adis16460.c:108:0-23: WARNING: adis16460_product_id_fops should be defined with DEFINE_DEBUGFS_ATTRIBUTE
+> > drivers/iio/imu//adis16460.c:90:0-23: WARNING: adis16460_serial_number_fops should be defined with DEFINE_DEBUGFS_ATTRIBUTE
+> > drivers/iio/imu//adis16400.c:278:0-23: WARNING: adis16400_flash_count_fops should be defined with DEFINE_DEBUGFS_ATTRIBUTE
+> > drivers/iio/imu//adis16400.c:261:0-23: WARNING: adis16400_product_id_fops should be defined with DEFINE_DEBUGFS_ATTRIBUTE
+> > 
+> > [1]: https://lists.gt.net/linux/kernel/2369498
+> > 
+> > Rohit Sarkar (2):
+> >   iio: imu: adis16400: use DEFINE_DEBUGFS_ATTRIBUTE instead of
+> >     DEFINE_SIMPLE_ATTRIBUTE
+> >   iio: imu: adis16460: use DEFINE_DEBUGFS_ATTRIBUTE instead of
+> >     DEFINE_SIMPLE_ATTRIBUTE
+> > 
+> >  drivers/iio/imu/adis16400.c | 4 ++--
+> >  drivers/iio/imu/adis16460.c | 6 +++---
+> >  2 files changed, 5 insertions(+), 5 deletions(-)
+> > 
+> Hi Rohit,
+Hey, 
+> You've opened a can of worms with this one.  There as a previous series
+> posted doing exactly this change back in 2019 by Zhong Jiang (cc'd)
+> 
+> At the time I did a bit of looking into why this had been universally taken
+> up cross tree and turned out there are some potential issues.
+> 
+> Alexandru added it to the list of things to test, but I guess it got
+> buried under other work and is still outstanding.
+> 
+> https://lkml.org/lkml/2019/10/30/144
+Acc. to the patch by Zhong this change kind of comes off as a cosmetic
+change as in the commit message he mentions "it is more clear". 
 
-Signed-off-by: Eugenio P=C3=A9rez <eperezma@redhat.com>
----
- drivers/vhost/vhost.c | 1 +
- 1 file changed, 1 insertion(+)
+But there is certainly more to it than that:
+In the current scenario since we are using debugfs_create_file_unsafe
+the file has no protection whatsoever against removal. 
+> Has Greg KH raising the point that file reference counting is changed (as you
+> mention) but that can cause subtle bugs.  It 'might' be fine but is
+> definitely one that needs a tested-by from someone with the hardware.
+Sure that makes sense. 
+> Jonathan
 
-diff --git a/drivers/vhost/vhost.c b/drivers/vhost/vhost.c
-index 5f84f29b6c47..1646b1ce312a 100644
---- a/drivers/vhost/vhost.c
-+++ b/drivers/vhost/vhost.c
-@@ -1652,6 +1652,7 @@ long vhost_vring_ioctl(struct vhost_dev *d, unsigne=
-d int ioctl, void __user *arg
- 		vq->last_avail_idx =3D s.num;
- 		/* Forget the cached index value. */
- 		vq->avail_idx =3D vq->last_avail_idx;
-+		vq->ndescs =3D vq->first_desc =3D 0;
- 		break;
- 	case VHOST_GET_VRING_BASE:
- 		s.index =3D idx;
---=20
-2.18.1
-
+Thanks,
+Rohit
