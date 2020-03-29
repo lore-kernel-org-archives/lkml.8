@@ -2,139 +2,81 @@ Return-Path: <SRS0=I467=5O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4D13C2D0F0
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 22:34:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EA58C43331
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 22:42:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B7B420735
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 22:34:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XkqBLo7B"
+	by mail.kernel.org (Postfix) with ESMTP id 3E74220735
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 22:42:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729107AbgC2Wef (ORCPT
+        id S1728931AbgC2Wmv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Mar 2020 18:34:35 -0400
-Received: from us-smtp-delivery-74.mimecast.com ([63.128.21.74]:45526 "EHLO
-        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728842AbgC2Wed (ORCPT
+        Sun, 29 Mar 2020 18:42:51 -0400
+Received: from relay1-d.mail.gandi.net ([217.70.183.193]:21487 "EHLO
+        relay1-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728473AbgC2Wmv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Mar 2020 18:34:33 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1585521272;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=3+ZOHsYN5eO6apwqHDZCTtdl6HvugNVY/bn8g6JeuAk=;
-        b=XkqBLo7B3eryxSkOrJTqaixmIAq3qH/EnLEjeSAMVdEwYDA34y41Q6pgEg5K4nlfv2Iei5
-        UqNg+d0V7BoVWRyH8dF6YfxMzyEg0GaEygzy4w0IOaNJxjlDvAcXhDhi94r37WEhF2GWnK
-        oQ2QKWBlk6Rbq1hGfRZWYf+9UZ9KCMQ=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-464-zHoEi5pCNXyMGY86fbqrog-1; Sun, 29 Mar 2020 18:34:28 -0400
-X-MC-Unique: zHoEi5pCNXyMGY86fbqrog-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 41D091005516;
-        Sun, 29 Mar 2020 22:34:27 +0000 (UTC)
-Received: from x1.localdomain.com (ovpn-112-12.ams2.redhat.com [10.36.112.12])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 891CB5DA66;
-        Sun, 29 Mar 2020 22:34:25 +0000 (UTC)
-From:   Hans de Goede <hdegoede@redhat.com>
-To:     "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>
-Cc:     Hans de Goede <hdegoede@redhat.com>, linux-acpi@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "5 . 4+" <stable@vger.kernel.org>
-Subject: [PATCH 5.6 regression fix 2/2] platform/x86: intel_int0002_vgpio: Use acpi_s2idle_register_wake_callback
-Date:   Mon, 30 Mar 2020 00:34:19 +0200
-Message-Id: <20200329223419.122796-3-hdegoede@redhat.com>
-In-Reply-To: <20200329223419.122796-1-hdegoede@redhat.com>
-References: <20200329223419.122796-1-hdegoede@redhat.com>
+        Sun, 29 Mar 2020 18:42:51 -0400
+X-Originating-IP: 86.202.105.35
+Received: from localhost (lfbn-lyo-1-9-35.w86-202.abo.wanadoo.fr [86.202.105.35])
+        (Authenticated sender: alexandre.belloni@bootlin.com)
+        by relay1-d.mail.gandi.net (Postfix) with ESMTPSA id 49110240005;
+        Sun, 29 Mar 2020 22:42:49 +0000 (UTC)
+From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
+To:     Support Opensource <support.opensource@diasemi.com>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>
+Cc:     Adam Thomson <Adam.Thomson.Opensource@diasemi.com>,
+        linux-rtc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2] rtc: da9052: convert to devm_rtc_allocate_device
+Date:   Mon, 30 Mar 2020 00:42:40 +0200
+Message-Id: <20200329224240.776568-1-alexandre.belloni@bootlin.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The Power Management Events (PMEs) the INT0002 driver listens for get
-signalled by the Power Management Controller (PMC) using the same IRQ
-as used for the ACPI SCI.
+This allows further improvement of the driver.
 
-Since commit fdde0ff8590b ("ACPI: PM: s2idle: Prevent spurious SCIs from
-waking up the system") the SCI triggering without there being a wakeup
-cause recognized by the ACPI sleep code will no longer wakeup the system.
-
-This breaks PMEs / wakeups signalled to the INT0002 driver, the system
-never leaves the s2idle_loop() now.
-
-Use acpi_s2idle_register_wake_callback to register a function which
-checks the GPE0a_STS register for a PME and trigger a wakeup when a
-PME has been signalled.
-
-With this new mechanism the pm_wakeup_hard_event() call is no longer
-necessary, so remove it and also remove the matching device_init_wakeup()
-calls.
-
-Fixes: fdde0ff8590b ("ACPI: PM: s2idle: Prevent spurious SCIs from waking=
- up the system")
-Cc: 5.4+ <stable@vger.kernel.org> # 5.4+
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
 ---
- drivers/platform/x86/intel_int0002_vgpio.c | 14 ++++++++++----
- 1 file changed, 10 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/platform/x86/intel_int0002_vgpio.c b/drivers/platfor=
-m/x86/intel_int0002_vgpio.c
-index f14e2c5f9da5..3c70694188fe 100644
---- a/drivers/platform/x86/intel_int0002_vgpio.c
-+++ b/drivers/platform/x86/intel_int0002_vgpio.c
-@@ -122,11 +122,17 @@ static irqreturn_t int0002_irq(int irq, void *data)
- 	generic_handle_irq(irq_find_mapping(chip->irq.domain,
- 					    GPE0A_PME_B0_VIRT_GPIO_PIN));
-=20
--	pm_wakeup_hard_event(chip->parent);
+Changes in v2:
+ - avoid reordering rtc registration and irq request.
+
+ drivers/rtc/rtc-da9052.c | 10 +++++++---
+ 1 file changed, 7 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/rtc/rtc-da9052.c b/drivers/rtc/rtc-da9052.c
+index 204eb7cf1aa4..e76561b8ad4c 100644
+--- a/drivers/rtc/rtc-da9052.c
++++ b/drivers/rtc/rtc-da9052.c
+@@ -298,12 +298,16 @@ static int da9052_rtc_probe(struct platform_device *pdev)
+ 		rtc_err(rtc, "Failed to disable TICKS: %d\n", ret);
+ 
+ 	device_init_wakeup(&pdev->dev, true);
+-	rtc->rtc = devm_rtc_device_register(&pdev->dev, pdev->name,
+-				       &da9052_rtc_ops, THIS_MODULE);
 -
- 	return IRQ_HANDLED;
- }
-=20
-+static bool int0002_check_wake(void *data)
-+{
-+	u32 gpe_sts_reg;
++	rtc->rtc = devm_rtc_allocate_device(&pdev->dev);
+ 	if (IS_ERR(rtc->rtc))
+ 		return PTR_ERR(rtc->rtc);
+ 
++	rtc->rtc->ops = &da9052_rtc_ops;
 +
-+	gpe_sts_reg =3D inl(GPE0A_STS_PORT);
-+	return (gpe_sts_reg & GPE0A_PME_B0_STS_BIT);
-+}
++	ret = rtc_register_device(rtc->rtc);
++	if (ret)
++		return ret;
 +
- static struct irq_chip int0002_byt_irqchip =3D {
- 	.name			=3D DRV_NAME,
- 	.irq_ack		=3D int0002_irq_ack,
-@@ -220,13 +226,13 @@ static int int0002_probe(struct platform_device *pd=
-ev)
- 		return ret;
- 	}
-=20
--	device_init_wakeup(dev, true);
-+	acpi_s2idle_register_wake_callback(irq, int0002_check_wake, NULL);
- 	return 0;
- }
-=20
- static int int0002_remove(struct platform_device *pdev)
- {
--	device_init_wakeup(&pdev->dev, false);
-+	acpi_s2idle_unregister_wake_callback(int0002_check_wake, NULL);
- 	return 0;
- }
-=20
---=20
-2.26.0
+ 	ret = da9052_request_irq(rtc->da9052, DA9052_IRQ_ALARM, "ALM",
+ 				da9052_rtc_irq, rtc);
+ 	if (ret != 0) {
+-- 
+2.25.1
 
