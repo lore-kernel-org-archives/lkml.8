@@ -2,107 +2,98 @@ Return-Path: <SRS0=I467=5O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 917DEC43331
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 09:57:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7D86C43331
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 09:57:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 64BD3206DB
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 09:57:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PlBBbPjo"
+	by mail.kernel.org (Postfix) with ESMTP id 8B3D820675
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 09:57:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585475866;
+	bh=pyqkwg7+NdzzGNrT9rgcJIqmjn1T/lyVAWcXSX9NTDA=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=Ki50I4r9kuvHtDoCUpY1aVrIX4fN9HG4FGqO9/xQ98nbpbLkq0GUu16SIoY7bnvwV
+	 x5C0MUmzDJ3MHNyK+2UBDYrlPxgGCZbpU6uC+SVuJ2AT4CbxXN88ZlPCjJ8tJxqcQ+
+	 Non6b4fqsvWf6psjtvTxVoWqlkTcL7kNz9L96urY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727968AbgC2J51 (ORCPT
+        id S1727983AbgC2J5j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Mar 2020 05:57:27 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:34539 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727801AbgC2J50 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Mar 2020 05:57:26 -0400
-Received: by mail-wm1-f66.google.com with SMTP id 26so13568275wmk.1;
-        Sun, 29 Mar 2020 02:57:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=X5/ybwGZw15O183cB6hxraMKImcCya/+VsT5AgJC+wk=;
-        b=PlBBbPjoSfFFs7coNzHn9y18vAv7tg8/gEY0ie5YIkK13kmI6SbdzQoLrfMgSy8Rm5
-         M6+sZHbgLbuUP3x7Yi4JOEBmBfnVda+LdwY0Bj/l8h0ZA7GwdUMMPV9FgLFKvYJaQfy9
-         dD02x2Np6E67W8gO2RBaVF56KZAtqp1CEFtuUIbWKhYVCXseO4V7/kzmWJsWVWZ9RPT2
-         MTCiMRujzIQ9JvGhJ3qoItKdllyaL5MnMUvQlC6O810X5BaS9f5mhH3x/grKuoDdvGDe
-         vVpv82zY7bvOSu48mbqHv8jw67oBX8GWFwfg19KElJa2K4zU3TB3rSUoXgPMAwgFG8Mf
-         gAFQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=X5/ybwGZw15O183cB6hxraMKImcCya/+VsT5AgJC+wk=;
-        b=RjTPodOzR2L1LgbTkhVJsXChm5yVKwBDYjkSP/GbrfFU8seZpO4AOu0k0Fe2JIR9Fn
-         elB3Fz1S8tBRZ1Hof+vetTypWGygPTO1hvkYyxULxIUyQQpVM9NhNSz16VbcLAlDkI5w
-         G90Ga4lR6YWx+NlnNFXzORsGKXtmQCSFgleNF2Mpw8ZyUsx4q7crM443EvYSViKURiiQ
-         iqarTFySWxOWHCDsLTaeXMgCUMX9H7xOpQiJGla7Ib6xZ4octAIvdy4X3/ABQoZojJZ3
-         lQxC0p8dFf8Cdhb3TFGPiJeXhJ+G0oxwQJO/GCWTFpGoahTr0fKxoo8UfcLdWSd+5/t2
-         Ucsw==
-X-Gm-Message-State: ANhLgQ2co2mxzxvNFinH4jYjq6dLnlreWxlOjRf2aNeqf0XhUkds67/i
-        MamJSnfAbbCGGSTZeF78RrZBYByeKS/x6BFJ6PI2tx6LzaNQwA==
-X-Google-Smtp-Source: ADFU+vt/KWuDksi8mUndNDmzSr2QWqqKzTuw0aQvhAAxtapcUeVPe+tjCaP46IlOCkv0ET3XIlL1gz6wNhFoqGMdrKY=
-X-Received: by 2002:a1c:1942:: with SMTP id 63mr4990909wmz.133.1585475844683;
- Sun, 29 Mar 2020 02:57:24 -0700 (PDT)
+        Sun, 29 Mar 2020 05:57:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52898 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727801AbgC2J5i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Mar 2020 05:57:38 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id BFD3520675;
+        Sun, 29 Mar 2020 09:57:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1585475857;
+        bh=pyqkwg7+NdzzGNrT9rgcJIqmjn1T/lyVAWcXSX9NTDA=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=PwqCrr7vnz4T0XKia7xKuKD6Al6Exm48qFPgQRTnAIwGlFGf6WQIwO7yuBzBkie5V
+         Sgwe/WsUVje38l3MV0usQO243dnTlVYaBDhqe90WbcD3vXhVcn/VFXISHf3X4gn6ST
+         6cKa58mv4Ae4qBRv4YcnGl40OIkfTnl6Yzoh/xDk=
+Date:   Sun, 29 Mar 2020 10:57:32 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Alexandru Ardelean <alexandru.ardelean@analog.com>
+Cc:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <robh+dt@kernel.org>,
+        <Laszlo.Nagy@analog.com>, <Andrei.Grozav@analog.com>,
+        <Michael.Hennerich@analog.com>, <Istvan.Csomortani@analog.com>,
+        <Adrian.Costina@analog.com>, <Dragos.Bogdan@analog.com>
+Subject: Re: [PATCH v13 1/8] include: fpga: adi-axi-common.h: fixup
+ whitespace tab -> space
+Message-ID: <20200329105732.479d090f@archlinux>
+In-Reply-To: <20200324134636.64643-2-alexandru.ardelean@analog.com>
+References: <20200324134636.64643-1-alexandru.ardelean@analog.com>
+        <20200324134636.64643-2-alexandru.ardelean@analog.com>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-References: <20200319203427.2259891-1-martin.blumenstingl@googlemail.com>
- <20200319203427.2259891-3-martin.blumenstingl@googlemail.com>
- <CAKGbVbtKqdCEcawkjG=7TRd30df6GJ+gagV_JegntyqRpzC4cg@mail.gmail.com>
- <CAKGbVbvAvk0L5sGQmuqfxeL6AwtVnSsYyCp6YBYV6ZHKepWBXg@mail.gmail.com> <CAFBinCDUhVaky6EUA7dOAhAZM9itbydQ+w=0P-1m2u0o0HUUeA@mail.gmail.com>
-In-Reply-To: <CAFBinCDUhVaky6EUA7dOAhAZM9itbydQ+w=0P-1m2u0o0HUUeA@mail.gmail.com>
-From:   Qiang Yu <yuq825@gmail.com>
-Date:   Sun, 29 Mar 2020 17:57:13 +0800
-Message-ID: <CAKGbVbsHXUhpaU34ovRPqc51LSavERUzMySx3hG7AqdO-oobHw@mail.gmail.com>
-Subject: Re: [PATCH v4 2/2] drm/lima: Add optional devfreq and cooling device support
-To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Cc:     dri-devel <dri-devel@lists.freedesktop.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
-        Rob Herring <robh@kernel.org>,
-        Steven Price <steven.price@arm.com>,
-        Alyssa Rosenzweig <alyssa.rosenzweig@collabora.com>,
-        "open list:ARM/Amlogic Meson..." <linux-amlogic@lists.infradead.org>,
-        linux-rockchip@lists.infradead.org, Chen-Yu Tsai <wens@csie.org>,
-        linux-pm@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I'm not the maintainer of patch 1 file, so please contact:
-  - Rob Herring <robh@kernel.org>
-  - Maxime Ripard <maxime.ripard@free-electrons.com>
-  - Heiko Stuebner <heiko@sntech.de>
-to review and apply patch 1.
+On Tue, 24 Mar 2020 15:46:29 +0200
+Alexandru Ardelean <alexandru.ardelean@analog.com> wrote:
 
-Regards,
-Qiang
+> The initial version use a tab between '#define' & 'ADI_AXI_REG_VERSION'.
+> This changes it to space. The change is purely cosmetic.
+> 
+> Acked-by: Moritz Fischer <mdf@kernel.org>
+> Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
 
-On Sat, Mar 28, 2020 at 6:20 PM Martin Blumenstingl
-<martin.blumenstingl@googlemail.com> wrote:
->
-> On Sat, Mar 28, 2020 at 9:40 AM Qiang Yu <yuq825@gmail.com> wrote:
-> >
-> > Applied to drm-misc-next.
-> thank you!
->
-> regarding patch #1 - can you apply this as well?
-> patch #1 just takes this midgard change [0] and ports it to utgard
->
->
-> Thank you!
-> Martin
->
->
-> [0] https://cgit.freedesktop.org/drm/drm-misc/commit/Documentation/devicetree/bindings/gpu?id=982c0500fd1a8012c31d3c9dd8de285129904656
+Applied to the togreg branch of iio.git and pushed out as testing
+for the autobuilders to play with it.  Note this won't make the coming
+merge window.
+
+Thanks,
+
+Jonathan
+
+> ---
+>  include/linux/fpga/adi-axi-common.h | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/include/linux/fpga/adi-axi-common.h b/include/linux/fpga/adi-axi-common.h
+> index 7fc95d5c95bb..ebd4e07ae3d8 100644
+> --- a/include/linux/fpga/adi-axi-common.h
+> +++ b/include/linux/fpga/adi-axi-common.h
+> @@ -11,7 +11,7 @@
+>  #ifndef ADI_AXI_COMMON_H_
+>  #define ADI_AXI_COMMON_H_
+>  
+> -#define	ADI_AXI_REG_VERSION			0x0000
+> +#define ADI_AXI_REG_VERSION			0x0000
+>  
+>  #define ADI_AXI_PCORE_VER(major, minor, patch)	\
+>  	(((major) << 16) | ((minor) << 8) | (patch))
+
