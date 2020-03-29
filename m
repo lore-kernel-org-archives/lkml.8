@@ -2,258 +2,348 @@ Return-Path: <SRS0=I467=5O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E654C2D0EB
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 11:07:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8CF6C43331
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 11:08:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1AF8A20675
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 11:07:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 66E6520675
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 11:08:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="CcC2pIQR"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SMcgba5q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728022AbgC2LHf (ORCPT
+        id S1728068AbgC2LIL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Mar 2020 07:07:35 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:26276 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727938AbgC2LHf (ORCPT
+        Sun, 29 Mar 2020 07:08:11 -0400
+Received: from us-smtp-delivery-74.mimecast.com ([63.128.21.74]:29913 "EHLO
+        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726087AbgC2LIK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Mar 2020 07:07:35 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1585480055; h=Content-Transfer-Encoding: Content-Type:
- MIME-Version: Message-ID: Date: Subject: In-Reply-To: References: Cc:
- To: From: Sender; bh=hbFsvwoybyQrzSjd5fOsfde02T95Q4Rlx3aKtpKf5b8=; b=CcC2pIQR4jJESsd7RQvydlOnfPQepFROVIs6ljLZ91KhUCXnTtrr2Udy1KDmv0BgEyMDlVVb
- ifebJLcjLR9Q0mcfFckObaAcj38bRxkiAsOOTs+pATKyo8QivgZ8IWMTU0+uQ61h8LiqG9co
- X6dmEfOcwAFgM/BedQx/e2ZuLLQ=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e808174.7f4ebdcceed8-smtp-out-n01;
- Sun, 29 Mar 2020 11:07:32 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id C14C7C433F2; Sun, 29 Mar 2020 11:07:31 +0000 (UTC)
-Received: from Pillair (unknown [183.83.66.17])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: pillair)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 7AE87C433D2;
-        Sun, 29 Mar 2020 11:07:28 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 7AE87C433D2
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=pillair@codeaurora.org
-From:   <pillair@codeaurora.org>
-To:     "'Bjorn Andersson'" <bjorn.andersson@linaro.org>
-Cc:     <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>
-References: <1585219723-28323-1-git-send-email-pillair@codeaurora.org> <20200327230025.GJ5063@builder> <000101d604f8$afc48220$0f4d8660$@codeaurora.org> <20200328183055.GA663905@yoga>
-In-Reply-To: <20200328183055.GA663905@yoga>
-Subject: RE: [PATCH v7] arm64: dts: qcom: sc7180: Add WCN3990 WLAN module device node
-Date:   Sun, 29 Mar 2020 16:37:25 +0530
-Message-ID: <000301d605ba$3d034a10$b709de30$@codeaurora.org>
+        Sun, 29 Mar 2020 07:08:10 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1585480088;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=so6oPgpGKXRDWC0ZEKgrl5SvpE7BFfs77Lp0kYlyQR0=;
+        b=SMcgba5q3pPZkPwFsrQxXfhzpw5pnSeqiO0ZdeGlLFq/bBGLXdqWb2+ha0n+kan1Eih0tE
+        uCaNaIdIWUXXCot6+P+w/J7HBqf3D2qeXugS35E3r+JnxJ9Yac6N656UuG0s1IkNfXpGOl
+        etel+aR9mFk+q+q/y+SIBPYnf8P6Fp0=
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
+ [209.85.221.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-66-48tSwVEXNiCg1kT0S-exgQ-1; Sun, 29 Mar 2020 07:07:50 -0400
+X-MC-Unique: 48tSwVEXNiCg1kT0S-exgQ-1
+Received: by mail-wr1-f71.google.com with SMTP id b2so7854874wrq.8
+        for <linux-kernel@vger.kernel.org>; Sun, 29 Mar 2020 04:07:50 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=so6oPgpGKXRDWC0ZEKgrl5SvpE7BFfs77Lp0kYlyQR0=;
+        b=DaKpJFStlmIxWebjOlJtLWylkIzs4O/x+lgeF9dM3eFZ3+K9W5HeFAkmUm6fTOze8r
+         oT9t4JAKB4nEShXITk4CfdP/Bt57yYXI/VOwkvcgdgxwcIcmIayAPqa7gv38Bq76Lypd
+         5L2PNbKRu9Llhf8mjcrFvHJiLq0CIIefA5Qnhux4HCwQR1v4R8GYZbE8Mop8I5DYqRFD
+         hZLNyXZBkZv9OT+RYs/DwT7S8CqCaSgBKu+4yXwIpqZ9LepBuwlEfZnK6VLh855BrBi8
+         IY3XO4LBVVEqPG/pDZ5ey/vMX5pdFdYL8b7kZhssvwC0+aOBkXAJgZv0c66YbEt6F2o0
+         2vwg==
+X-Gm-Message-State: ANhLgQ02UklelHgTsuSREIU7OLI1ZL8rdpjQoTFl4GfMKTfYrq7VFxlg
+        HtFucBQs3EGPttmxctLo4cPE/VbE1/aZhakjcuX4Nvx6D+PFZAQrg8N6iBIWZH9WtI9/vvK3h8c
+        GbTLNB4UZXZfmrUZrQ1g99Rl9
+X-Received: by 2002:a05:600c:2294:: with SMTP id 20mr7856646wmf.130.1585480069501;
+        Sun, 29 Mar 2020 04:07:49 -0700 (PDT)
+X-Google-Smtp-Source: ADFU+vtpmHc7q71tZfa52hDIsGADz+VywTxSJQggO2ClhV/khVUbvfqHvN2yv7TOjCs3h8ScGHU9Tg==
+X-Received: by 2002:a05:600c:2294:: with SMTP id 20mr7856614wmf.130.1585480069192;
+        Sun, 29 Mar 2020 04:07:49 -0700 (PDT)
+Received: from redhat.com (bzq-79-183-139-129.red.bezeqint.net. [79.183.139.129])
+        by smtp.gmail.com with ESMTPSA id t21sm16054780wmt.43.2020.03.29.04.07.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 29 Mar 2020 04:07:48 -0700 (PDT)
+Date:   Sun, 29 Mar 2020 07:07:44 -0400
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     Jason Wang <jasowang@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
+        jgg@mellanox.com, maxime.coquelin@redhat.com,
+        cunming.liang@intel.com, zhihong.wang@intel.com,
+        rob.miller@broadcom.com, xiao.w.wang@intel.com,
+        lingshan.zhu@intel.com, eperezma@redhat.com, lulu@redhat.com,
+        parav@mellanox.com, kevin.tian@intel.com, stefanha@redhat.com,
+        rdunlap@infradead.org, hch@infradead.org, aadam@redhat.com,
+        jiri@mellanox.com, shahafs@mellanox.com, hanand@xilinx.com,
+        mhabets@solarflare.com, gdawar@xilinx.com, saugatm@xilinx.com,
+        vmireyno@marvell.com, zhangweining@ruijie.com.cn
+Subject: Re: [PATCH V9 0/9] vDPA support
+Message-ID: <20200329070130-mutt-send-email-mst@kernel.org>
+References: <20200326140125.19794-1-jasowang@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain;
-        charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-X-Mailer: Microsoft Outlook 16.0
-Thread-Index: AQFGsu5WNDBp+FP/TOeyoiVSrY11cwGGydAyAh9ckM8BjsJxYqlUZtlw
-Content-Language: en-us
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200326140125.19794-1-jasowang@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Bjorn,
+On Thu, Mar 26, 2020 at 10:01:16PM +0800, Jason Wang wrote:
+> Hi all:
+> 
+> This is an update version of vDPA support in kernel.
 
-> -----Original Message-----
-> From: Bjorn Andersson <bjorn.andersson@linaro.org>
-> Sent: Sunday, March 29, 2020 12:01 AM
-> To: pillair@codeaurora.org
-> Cc: devicetree@vger.kernel.org; linux-arm-kernel@lists.infradead.org;
-linux-
-> kernel@vger.kernel.org; linux-arm-msm@vger.kernel.org
-> Subject: Re: [PATCH v7] arm64: dts: qcom: sc7180: Add WCN3990 WLAN
-> module device node
-> 
-> On Sat 28 Mar 05:01 PDT 2020, pillair@codeaurora.org wrote:
-> 
-> > Hi Bjorn,
-> >  Comments inline.
-> >
-> >
-> > > -----Original Message-----
-> > > From: Bjorn Andersson <bjorn.andersson@linaro.org>
-> > > Sent: Saturday, March 28, 2020 4:30 AM
-> > > To: Rakesh Pillai <pillair@codeaurora.org>
-> > > Cc: devicetree@vger.kernel.org; linux-arm-kernel@lists.infradead.org;
-> > linux-
-> > > kernel@vger.kernel.org; linux-arm-msm@vger.kernel.org
-> > > Subject: Re: [PATCH v7] arm64: dts: qcom: sc7180: Add WCN3990 WLAN
-> > > module device node
-> > >
-> > > On Thu 26 Mar 03:48 PDT 2020, Rakesh Pillai wrote:
-> > >
-> > > > Add device node for the ath10k SNOC platform driver probe
-> > > > and add resources required for WCN3990 on sc7180 soc.
-> > > >
-> > > > Signed-off-by: Rakesh Pillai <pillair@codeaurora.org>
-> > > > ---
-> > > >
-> > > > Depends on https://patchwork.kernel.org/patch/11455345/
-> > > > The above patch adds the dt-bindings for wifi-firmware
-> > > > subnode
-> > > > ---
-> > > >  arch/arm64/boot/dts/qcom/sc7180-idp.dts |  8 ++++++++
-> > > >  arch/arm64/boot/dts/qcom/sc7180.dtsi    | 27
-> > > +++++++++++++++++++++++++++
-> > > >  2 files changed, 35 insertions(+)
-> > > >
-> > > > diff --git a/arch/arm64/boot/dts/qcom/sc7180-idp.dts
-> > > b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
-> > > > index 043c9b9..a6168a4 100644
-> > > > --- a/arch/arm64/boot/dts/qcom/sc7180-idp.dts
-> > > > +++ b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
-> > > > @@ -327,6 +327,14 @@
-> > > >  	};
-> > > >  };
-> > > >
-> > > > +&wifi {
-> > > > +	status = "okay";
-> > > > +	qcom,msa-fixed-perm;
-> > > > +	wifi-firmware {
-> > > > +		iommus = <&apps_smmu 0xc2 0x1>;
-> > >
-> > > How is sc7180 different from sdm845, where the iommus property goes
-> > > directly in the &wifi node?
-> >
-> > Sc7180 IDP is a target without TrustZone support and also with S2 IOMMU
-> > enabled.
-> > Since in Trustzone based targets, the iommu SID configuration was done
-by
-> > TZ, there was nothing required to be done by driver.
-> > But in non-TZ based targets, the IOMMU mappings need to be done by the
-> > driver.
-> > Since this is the mapping of the firmware memory and to keep it
-different
-> > from the driver memory access, a different device has been created for
-> > firmware and these SIDs are configured.
-> >
-> 
-> I see, I missed the fact that 0xc0:1 is used in the &wifi node itself.
-> 
-> So to confirm, we have streams 0xc0 and 0xc1 for data pipes and 0xc2 and
-> 0xc3 for some form of firmware access? And in the normal Qualcomm design
-> implementation the 0c2/0xc3 stream mapping is setup by TZ, and hidden
-> from Linux using the SMMU virtualisation?
-> 
-> 
-> Would have been nice to have some better mechanism for describing
-> multi-connected hardware block, than to sprinkle dummy nodes all over
-> the DT...
+OK I put these in my next tree, with an eye towards merging them in 5.7.
+Many thanks to everyone who reviewed the patches, especially to Jason
+Gunthorpe for reviewing multiple versions of the patches, helping locate
+and address the issues.
 
-Yes, this is the firmware memory. This method is followed in the venus video
-driver
-https://patchwork.kernel.org/patch/11315765/
 
-Do you suggest following some other mechanism ?
-
-Thanks,
-Rakesh Pillai.
-
+> vDPA device is a device that uses a datapath which complies with the
+> virtio specifications with vendor specific control path. vDPA devices
+> can be both physically located on the hardware or emulated by
+> software. vDPA hardware devices are usually implemented through PCIE
+> with the following types:
 > 
-> Regards,
-> Bjorn
+> - PF (Physical Function) - A single Physical Function
+> - VF (Virtual Function) - Device that supports single root I/O
+>   virtualization (SR-IOV). Its Virtual Function (VF) represents a
+>   virtualized instance of the device that can be assigned to different
+>   partitions
+> - ADI (Assignable Device Interface) and its equivalents - With
+>   technologies such as Intel Scalable IOV, a virtual device (VDEV)
+>   composed by host OS utilizing one or more ADIs. Or its equivalent
+>   like SF (Sub function) from Mellanox.
 > 
-> > The below ath10k series brings-in this support.
-> > https://patchwork.kernel.org/project/linux-
-> wireless/list/?series=261367&stat
-> > e=*
-> >
-> > Thanks,
-> > Rakesh Pillai.
-> >
-> > >
-> > > Regards,
-> > > Bjorn
-> > >
-> > > > +	};
-> > > > +};
-> > > > +
-> > > >  /* PINCTRL - additions to nodes defined in sc7180.dtsi */
-> > > >
-> > > >  &qspi_clk {
-> > > > diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi
-> > > b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-> > > > index 998f101..2745128 100644
-> > > > --- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
-> > > > +++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-> > > > @@ -83,6 +83,11 @@
-> > > >  			reg = <0 0x8f600000 0 0x500000>;
-> > > >  			no-map;
-> > > >  		};
-> > > > +
-> > > > +		wlan_fw_mem: memory@94104000 {
-> > > > +			reg = <0 0x94104000 0 0x200000>;
-> > > > +			no-map;
-> > > > +		};
-> > > >  	};
-> > > >
-> > > >  	cpus {
-> > > > @@ -835,6 +840,28 @@
-> > > >  			};
-> > > >  		};
-> > > >
-> > > > +		wifi: wifi@18800000 {
-> > > > +			compatible = "qcom,wcn3990-wifi";
-> > > > +			reg = <0 0x18800000 0 0x800000>;
-> > > > +			reg-names = "membase";
-> > > > +			iommus = <&apps_smmu 0xc0 0x1>;
-> > > > +			interrupts =
-> > > > +				<GIC_SPI 414 IRQ_TYPE_LEVEL_HIGH /*
-CE0
-> > > */ >,
-> > > > +				<GIC_SPI 415 IRQ_TYPE_LEVEL_HIGH /*
-CE1
-> > > */ >,
-> > > > +				<GIC_SPI 416 IRQ_TYPE_LEVEL_HIGH /*
-CE2
-> > > */ >,
-> > > > +				<GIC_SPI 417 IRQ_TYPE_LEVEL_HIGH /*
-CE3
-> > > */ >,
-> > > > +				<GIC_SPI 418 IRQ_TYPE_LEVEL_HIGH /*
-CE4
-> > > */ >,
-> > > > +				<GIC_SPI 419 IRQ_TYPE_LEVEL_HIGH /*
-CE5
-> > > */ >,
-> > > > +				<GIC_SPI 420 IRQ_TYPE_LEVEL_HIGH /*
-CE6
-> > > */ >,
-> > > > +				<GIC_SPI 421 IRQ_TYPE_LEVEL_HIGH /*
-CE7
-> > > */ >,
-> > > > +				<GIC_SPI 422 IRQ_TYPE_LEVEL_HIGH /*
-CE8
-> > > */ >,
-> > > > +				<GIC_SPI 423 IRQ_TYPE_LEVEL_HIGH /*
-CE9
-> > > */ >,
-> > > > +				<GIC_SPI 424 IRQ_TYPE_LEVEL_HIGH /*
-CE10
-> > > */>,
-> > > > +				<GIC_SPI 425 IRQ_TYPE_LEVEL_HIGH /*
-CE11
-> > > */>;
-> > > > +			memory-region = <&wlan_fw_mem>;
-> > > > +			status = "disabled";
-> > > > +		};
-> > > > +
-> > > >  		config_noc: interconnect@1500000 {
-> > > >  			compatible = "qcom,sc7180-config-noc";
-> > > >  			reg = <0 0x01500000 0 0x28000>;
-> > > > --
-> > > > 2.7.4
+> >From a driver's perspective, depends on how and where the DMA
+> translation is done, vDPA devices are split into two types:
+> 
+> - Platform specific DMA translation - From the driver's perspective,
+>   the device can be used on a platform where device access to data in
+>   memory is limited and/or translated. An example is a PCIE vDPA whose
+>   DMA request was tagged via a bus (e.g PCIE) specific way. DMA
+>   translation and protection are done at PCIE bus IOMMU level.
+> - Device specific DMA translation - The device implements DMA
+>   isolation and protection through its own logic. An example is a vDPA
+>   device which uses on-chip IOMMU.
+> 
+> To hide the differences and complexity of the above types for a vDPA
+> device/IOMMU options and in order to present a generic virtio device
+> to the upper layer, a device agnostic framework is required.
+> 
+> This series introduces a software vDPA bus which abstracts the
+> common attributes of vDPA device, vDPA bus driver and the
+> communication method, the bus operations (vdpa_config_ops) between the
+> vDPA device abstraction and the vDPA bus driver. This allows multiple
+> types of drivers to be used for vDPA device like the virtio_vdpa and
+> vhost_vdpa driver to operate on the bus and allow vDPA device could be
+> used by either kernel virtio driver or userspace vhost drivers as:
+> 
+>    virtio drivers  vhost drivers
+>           |             |
+>     [virtio bus]   [vhost uAPI]
+>           |             |
+>    virtio device   vhost device
+>    virtio_vdpa drv vhost_vdpa drv
+>              \       /
+>             [vDPA bus]
+>                  |
+>             vDPA device
+>             hardware drv
+>                  |
+>             [hardware bus]
+>                  |
+>             vDPA hardware
+> 
+> virtio_vdpa driver is a transport implementation for kernel virtio
+> drivers on top of vDPA bus operations. An alternative is to refactor
+> virtio bus which is sub-optimal since the bus and drivers are designed
+> to be use by kernel subsystem, a non-trivial major refactoring is
+> needed which may impact a brunches of drivers and devices
+> implementation inside the kernel. Using a new transport may grealy
+> simply both the design and changes.
+> 
+> vhost_vdpa driver is a new type of vhost device which allows userspace
+> vhost drivers to use vDPA devices via vhost uAPI (with minor
+> extension). This help to minimize the changes of existed vhost drivers
+> for using vDPA devices.
+> 
+> With the abstraction of vDPA bus and vDPA bus operations, the
+> difference and complexity of the under layer hardware is hidden from
+> upper layer. The vDPA bus drivers on top can use a unified
+> vdpa_config_ops to control different types of vDPA device.
+> 
+> Two drivers were implemented with the framework introduced in this
+> series:
+> 
+> - Intel IFC VF driver which depends on the platform IOMMU for DMA
+>   translation
+> - VDPA simulator which is a software test device with an emulated
+>   onchip IOMMU
+> 
+> Future work:
+> 
+> - direct doorbell mapping support
+> - control virtqueue support
+> - dirty page tracking support
+> - direct interrupt support
+> - management API (devlink)
+> 
+> Please review.
+> 
+> Thanks
+> 
+> Changes from V8:
+> 
+> - switch to use devres for PCI resoureces of IFCVF (Jason)
+> - require the caller of vdap_alloc_device() to use "struct foo"
+>   instead of foo (Jason)
+> - some tweaks on the IFCVF driver
+> 
+> Changes from V7:
+> 
+> - refine kconfig to solve the dependency issues on archs that lacks of
+>   CONFIG_VIRTUALIZATION (kbuild)
+> 
+> Changes from V6:
+> 
+> - vdpa_alloc_device() will allocate parent strcture (Jason)
+> - remove the vdpa core dev info in IFCVF patch (Jason)
+> - provide a free method in the vdpa bus operations for drivet to free
+>   private data
+> - switch to use new layout in vdapsim and IFCVF
+> - make IFCVF depends on PCI_MSI (kbuild)
+> - some tweaks on the IFCVF driver
+> 
+> Changes from V5:
+> 
+> - include Intel IFCVF driver and vhost-vdpa drivers
+> - add the platform IOMMU support for vhost-vdpa
+> - check the return value of dev_set_name() (Jason)
+> - various tweaks and fixes
+> 
+> Changes from V4:
+> 
+> - use put_device() instead of kfree when fail to register virtio
+>   device (Jason)
+> - simplify the error handling when allocating vdpasim device (Jason)
+> - don't use device_for_each_child() during module exit (Jason)
+> - correct the error checking for vdpa_alloc_device() (Harpreet, Lingshan)
+> 
+> Changes from V3:
+> 
+> - various Kconfig fixes (Randy)
+> 
+> Changes from V2:
+> 
+> - release idr in the release function for put_device() unwind (Jason)
+> - don't panic when fail to register vdpa bus (Jason)
+> - use unsigned int instead of int for ida (Jason)
+> - fix the wrong commit log in virito_vdpa patches (Jason)
+> - make vdpa_sim depends on RUNTIME_TESTING_MENU (Michael)
+> - provide a bus release function for vDPA device (Jason)
+> - fix the wrong unwind when creating devices for vDPA simulator (Jason)
+> - move vDPA simulator to a dedicated directory (Lingshan)
+> - cancel the work before release vDPA simulator
+> 
+> Changes from V1:
+> 
+> - drop sysfs API, leave the management interface to future development
+>   (Michael)
+> - introduce incremental DMA ops (dma_map/dma_unmap) (Michael)
+> - introduce dma_device and use it instead of parent device for doing
+>   IOMMU or DMA from bus driver (Michael, Jason, Ling Shan, Tiwei)
+> - accept parent device and dma device when register vdpa device
+> - coding style and compile fixes (Randy)
+> - using vdpa_xxx instead of xxx_vdpa (Jason)
+> - ove vDPA accessors to header and make it static inline (Jason)
+> - split vdp_register_device() into two helpers vdpa_init_device() and
+>   vdpa_register_device() which allows intermediate step to be done (Jason)
+> - warn on invalidate queue state when fail to creating virtqueue (Jason)
+> - make to_virtio_vdpa_device() static (Jason)
+> - use kmalloc/kfree instead of devres for virtio vdpa device (Jason)
+> - avoid using cast in vdpa bus function (Jason)
+> - introduce module_vdpa_driver and fix module refcnt (Jason)
+> - fix returning freed address in vdapsim coherent DMA addr allocation (Dan)
+> - various other fixes and tweaks
+> 
+> V8: https://lkml.org/lkml/2020/3/25/125
+> V7: https://lkml.org/lkml/2020/3/24/21
+> V6: https://lkml.org/lkml/2020/3/18/88
+> V5: https://lkml.org/lkml/2020/2/26/58
+> V4: https://lkml.org/lkml/2020/2/20/59
+> V3: https://lkml.org/lkml/2020/2/19/1347
+> V2: https://lkml.org/lkml/2020/2/9/275
+> V1: https://lkml.org/lkml/2020/1/16/353
+> 
+> Jason Wang (7):
+>   vhost: refine vhost and vringh kconfig
+>   vhost: allow per device message handler
+>   vhost: factor out IOTLB
+>   vringh: IOTLB support
+>   vDPA: introduce vDPA bus
+>   virtio: introduce a vDPA based transport
+>   vdpasim: vDPA device simulator
+> 
+> Tiwei Bie (1):
+>   vhost: introduce vDPA-based backend
+> 
+> Zhu Lingshan (1):
+>   virtio: Intel IFC VF driver for VDPA
+> 
+>  MAINTAINERS                             |   2 +
+>  arch/arm/kvm/Kconfig                    |   2 -
+>  arch/arm64/kvm/Kconfig                  |   2 -
+>  arch/mips/kvm/Kconfig                   |   2 -
+>  arch/powerpc/kvm/Kconfig                |   2 -
+>  arch/s390/kvm/Kconfig                   |   4 -
+>  arch/x86/kvm/Kconfig                    |   4 -
+>  drivers/Kconfig                         |   2 +
+>  drivers/misc/mic/Kconfig                |   4 -
+>  drivers/net/caif/Kconfig                |   4 -
+>  drivers/vhost/Kconfig                   |  42 +-
+>  drivers/vhost/Kconfig.vringh            |   6 -
+>  drivers/vhost/Makefile                  |   6 +
+>  drivers/vhost/iotlb.c                   | 177 +++++
+>  drivers/vhost/net.c                     |   5 +-
+>  drivers/vhost/scsi.c                    |   2 +-
+>  drivers/vhost/vdpa.c                    | 883 ++++++++++++++++++++++++
+>  drivers/vhost/vhost.c                   | 233 +++----
+>  drivers/vhost/vhost.h                   |  45 +-
+>  drivers/vhost/vringh.c                  | 421 ++++++++++-
+>  drivers/vhost/vsock.c                   |   2 +-
+>  drivers/virtio/Kconfig                  |  15 +
+>  drivers/virtio/Makefile                 |   2 +
+>  drivers/virtio/vdpa/Kconfig             |  37 +
+>  drivers/virtio/vdpa/Makefile            |   4 +
+>  drivers/virtio/vdpa/ifcvf/Makefile      |   3 +
+>  drivers/virtio/vdpa/ifcvf/ifcvf_base.c  | 389 +++++++++++
+>  drivers/virtio/vdpa/ifcvf/ifcvf_base.h  | 118 ++++
+>  drivers/virtio/vdpa/ifcvf/ifcvf_main.c  | 435 ++++++++++++
+>  drivers/virtio/vdpa/vdpa.c              | 180 +++++
+>  drivers/virtio/vdpa/vdpa_sim/Makefile   |   2 +
+>  drivers/virtio/vdpa/vdpa_sim/vdpa_sim.c | 629 +++++++++++++++++
+>  drivers/virtio/virtio_vdpa.c            | 396 +++++++++++
+>  include/linux/vdpa.h                    | 253 +++++++
+>  include/linux/vhost_iotlb.h             |  47 ++
+>  include/linux/vringh.h                  |  36 +
+>  include/uapi/linux/vhost.h              |  24 +
+>  include/uapi/linux/vhost_types.h        |   8 +
+>  38 files changed, 4180 insertions(+), 248 deletions(-)
+>  delete mode 100644 drivers/vhost/Kconfig.vringh
+>  create mode 100644 drivers/vhost/iotlb.c
+>  create mode 100644 drivers/vhost/vdpa.c
+>  create mode 100644 drivers/virtio/vdpa/Kconfig
+>  create mode 100644 drivers/virtio/vdpa/Makefile
+>  create mode 100644 drivers/virtio/vdpa/ifcvf/Makefile
+>  create mode 100644 drivers/virtio/vdpa/ifcvf/ifcvf_base.c
+>  create mode 100644 drivers/virtio/vdpa/ifcvf/ifcvf_base.h
+>  create mode 100644 drivers/virtio/vdpa/ifcvf/ifcvf_main.c
+>  create mode 100644 drivers/virtio/vdpa/vdpa.c
+>  create mode 100644 drivers/virtio/vdpa/vdpa_sim/Makefile
+>  create mode 100644 drivers/virtio/vdpa/vdpa_sim/vdpa_sim.c
+>  create mode 100644 drivers/virtio/virtio_vdpa.c
+>  create mode 100644 include/linux/vdpa.h
+>  create mode 100644 include/linux/vhost_iotlb.h
+> 
+> -- 
+> 2.20.1
+
