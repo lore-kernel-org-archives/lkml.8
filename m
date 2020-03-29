@@ -2,67 +2,61 @@ Return-Path: <SRS0=I467=5O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31592C2D0ED
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 16:08:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A965C43331
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 16:09:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0ED802073B
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 16:08:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 492642073B
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 16:09:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="UXmhU7T8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728352AbgC2QIb (ORCPT
+        id S1728363AbgC2QJG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Mar 2020 12:08:31 -0400
-Received: from mx.sdf.org ([205.166.94.20]:49464 "EHLO mx.sdf.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728209AbgC2QIa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Mar 2020 12:08:30 -0400
-Received: from sdf.org (IDENT:lkml@sdf.lonestar.org [205.166.94.16])
-        by mx.sdf.org (8.15.2/8.14.5) with ESMTPS id 02TG8Qck019212
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits) verified NO);
-        Sun, 29 Mar 2020 16:08:26 GMT
-Received: (from lkml@localhost)
-        by sdf.org (8.15.2/8.12.8/Submit) id 02TG8P1Q026937;
-        Sun, 29 Mar 2020 16:08:25 GMT
-Date:   Sun, 29 Mar 2020 16:08:25 +0000
-From:   George Spelvin <lkml@SDF.ORG>
-To:     Jason Gunthorpe <jgg@ziepe.ca>
-Cc:     linux-kernel@vger.kernel.org,
-        Dennis Dalessandro <dennis.dalessandro@intel.com>,
-        Mike Marciniszyn <mike.marciniszyn@intel.com>,
-        linux-rdma@vger.kernel.org, lkml@sdf.org
-Subject: Re: [RFC PATCH v1 01/50] IB/qib: Delete struct qib_ivdev.qp_rnd
-Message-ID: <20200329160825.GA4675@SDF.ORG>
-References: <202003281643.02SGh6eG002694@sdf.org>
- <20200329141710.GE20941@ziepe.ca>
+        Sun, 29 Mar 2020 12:09:06 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:48942 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728209AbgC2QJG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Mar 2020 12:09:06 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=19Szx/bVByD1ghQE1BjAko3auE4LJvT1UW4NfdM+INk=; b=UXmhU7T8G2RkDxr6KRK+J4nIXw
+        w+T+Nau/44IRWZWA3n6teQCWFV76Xtrrn7hZSP5Wfgld+zZd4EJHxnF4quBm5kxxMtf+T1o5ZTz1V
+        61bgGK+nJjhajcyxqbbqgjjwO0uO1OsnfWhfXN4rCND3DuroaFBjQZv6HqHMqsKrdOL1lP5ea/NeO
+        822vbvyK2jc8pb7NDlouQwGjc/+D5aNnjp6ynED5xO9dC66nVoJzvlMchpEjoCFCxs7Eb7f5/8UQY
+        28s8Jw4IiUW1prNk3RCwd48IuWygocFy9O3C3jlK4Gnm8PZude1vWyXYEN6ZrLKZevFNhhY4ojyTJ
+        Os9ohYkw==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jIaUc-0007Nx-N8; Sun, 29 Mar 2020 16:08:58 +0000
+Date:   Sun, 29 Mar 2020 09:08:58 -0700
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Jaewon Kim <jaewon31.kim@samsung.com>
+Cc:     walken@google.com, bp@suse.de, akpm@linux-foundation.org,
+        srostedt@vmware.com, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, jaewon31.kim@gmail.com
+Subject: Re: [PATCH v3 2/2] mm: mmap: add trace point of vm_unmapped_area
+Message-ID: <20200329160858.GV22483@bombadil.infradead.org>
+References: <20200320055823.27089-1-jaewon31.kim@samsung.com>
+ <CGME20200320055839epcas1p189100549687530619d8a19919e8b5de0@epcas1p1.samsung.com>
+ <20200320055823.27089-3-jaewon31.kim@samsung.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200329141710.GE20941@ziepe.ca>
+In-Reply-To: <20200320055823.27089-3-jaewon31.kim@samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Mar 29, 2020 at 11:17:10AM -0300, Jason Gunthorpe wrote:
-> You need to do a better job sending your patches, this is not
-> threaded, and not cc'd to linux-rdma, so it doesn't show in the
-> patchworks.
+On Fri, Mar 20, 2020 at 02:58:23PM +0900, Jaewon Kim wrote:
+> +	TP_printk("addr=%lx err=%ld total_vm=0x%lx flags=0x%lx len=0x%lx lo=0x%lx hi=0x%lx mask=0x%lx ofs=0x%lx\n",
 
-Indeed; mea culpa.  I forgot the magic option to git-format-patch.
+Shouldn't addr be printed as 0x%lx?  I think it's arguable whether to print
+len as %ld or 0x%lx.
 
-Unfortunately, such things tend to get noticed only after the e-mail
-has been sent and one has embarrassed oneself publicly.  :-(
-
-> In general, do not send such large series for things that are not
-> connected. Send small cleanups like this properly and directly so they
-> can be applied.
-
-They're all concpetually connected, but yes.
-
-> I took care of it this time, so applied to the rdma tree as it is
-> obviously correct.
-
-I will drop it from my series, thank you!
