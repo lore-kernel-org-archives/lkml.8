@@ -2,122 +2,105 @@ Return-Path: <SRS0=I467=5O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1B83C43331
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 11:32:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F71CC2D0EB
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 11:34:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 89C4720784
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 11:32:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585481528;
-	bh=G9LizEvn8FPzHqXSN1EWnZ+UxxFXTRBcA7ICqVWuWU0=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=tLfr963J1Nirlyru2n6tsX4nrjA6QBKxruhs+GZug3QjeTm5uC+KonM7lc2iVdnSc
-	 YqFp3Q2xlbzHir4Jt/aXWDdEzrrrPxqFVloB0nFC0MDvyspKGw69NDTjdUvtTyKbEk
-	 KYee5BtQeZ7SBop6JPUe3yM+G/ShSelyTKKFnqJ4=
+	by mail.kernel.org (Postfix) with ESMTP id 57547206DB
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 11:34:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="He/no2RA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728012AbgC2LcH (ORCPT
+        id S1728083AbgC2LeQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Mar 2020 07:32:07 -0400
-Received: from conssluserg-04.nifty.com ([210.131.2.83]:63710 "EHLO
-        conssluserg-04.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727875AbgC2LcH (ORCPT
+        Sun, 29 Mar 2020 07:34:16 -0400
+Received: from us-smtp-delivery-74.mimecast.com ([63.128.21.74]:55113 "EHLO
+        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727875AbgC2LeQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Mar 2020 07:32:07 -0400
-Received: from mail-vs1-f41.google.com (mail-vs1-f41.google.com [209.85.217.41]) (authenticated)
-        by conssluserg-04.nifty.com with ESMTP id 02TBW3pD010445;
-        Sun, 29 Mar 2020 20:32:04 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-04.nifty.com 02TBW3pD010445
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1585481524;
-        bh=7dJHfr2LzJ7oqZtL5ADchvZm+cCmIsPEjQ2cJQ3Gn+s=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=aJ2dtpoFcRwdlHCcHrCkUadX5HAP3XjMFVEdIZK4/8y1C/T+TCmvZWD/Hb52E+oWz
-         kgOj2BnOiK9k3GrJPpgmz+GriPLCva5ALvSXFfiAZWefzD7ijw98XvdUOlq0Drt2s6
-         HlK4NzgmINSGYoaZ/S/nO78ohYXHeh0qf6ezvFt0uM2vGaGGJJP7lVKnxmIYdMPEh+
-         wYGYYZiOoT0n2LsRX1sTyhnZIzBQzgECrzXh6gAXsQ0njOFA8D8fUkrFCZoCsEtP8d
-         AT10cjGG5UHr1zJOZzDhZ1rcWAXO7Ggf/gO48UTuN4e1Nki1iJZ02/IPRBtOPwC6ie
-         c+F5Efgab/cRw==
-X-Nifty-SrcIP: [209.85.217.41]
-Received: by mail-vs1-f41.google.com with SMTP id z125so9119694vsb.13;
-        Sun, 29 Mar 2020 04:32:04 -0700 (PDT)
-X-Gm-Message-State: AGi0PubDGcTHO8p1QwSbRmXHQP6SCESCd99VBSUcOsJ/foRrOhOggrV0
-        2ZIJs3PC9U2RydIS++CMSfjQw5z6nNIOEOSk1jY=
-X-Google-Smtp-Source: APiQypL503oKQ4coHqRYgxfFJnNdWa7wgDfkabbS4Do8+Pa6D0D/Lqv+3J4gB6BELjorl8yu4UVwBomdq2awy+JhUv0=
-X-Received: by 2002:a67:3201:: with SMTP id y1mr5074418vsy.54.1585481522839;
- Sun, 29 Mar 2020 04:32:02 -0700 (PDT)
+        Sun, 29 Mar 2020 07:34:16 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1585481655;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=ViPGPqwEgspRtJgmZ4rE2OqFoX1oHWclqobpFUgHsnM=;
+        b=He/no2RAPkfymhV+3KbcSW24BNsO8sYmihMdWTVOIwLmI7MHQowgaFCJeI492JWjDGaJgY
+        E/IB8www1NV0Gac9ERd3sZwBosPtBsTXwlsbdtv1fsSl2KiKIQs6vnvmV4WcO3i3Zy4HpG
+        XnKKEplZo7LfetEPxAeUtNAFwn3AJIw=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-224-gzzDmRD2MRCIB1hML660mw-1; Sun, 29 Mar 2020 07:34:11 -0400
+X-MC-Unique: gzzDmRD2MRCIB1hML660mw-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id EA33118B5F69;
+        Sun, 29 Mar 2020 11:34:09 +0000 (UTC)
+Received: from eperezma.remote.csb (ovpn-112-95.ams2.redhat.com [10.36.112.95])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 393DB5C1BE;
+        Sun, 29 Mar 2020 11:34:03 +0000 (UTC)
+From:   =?UTF-8?q?Eugenio=20P=C3=A9rez?= <eperezma@redhat.com>
+To:     "Michael S. Tsirkin" <mst@redhat.com>
+Cc:     "virtualization@lists.linux-foundation.org" 
+        <virtualization@lists.linux-foundation.org>,
+        Halil Pasic <pasic@linux.ibm.com>,
+        =?UTF-8?q?Eugenio=20P=C3=A9rez?= <eperezma@redhat.com>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        kvm list <kvm@vger.kernel.org>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: [PATCH 0/6] vhost: Reset batched descriptors on SET_VRING_BASE call
+Date:   Sun, 29 Mar 2020 13:33:53 +0200
+Message-Id: <20200329113359.30960-1-eperezma@redhat.com>
 MIME-Version: 1.0
-References: <20200326194155.29107-1-natechancellor@gmail.com>
-In-Reply-To: <20200326194155.29107-1-natechancellor@gmail.com>
-From:   Masahiro Yamada <masahiroy@kernel.org>
-Date:   Sun, 29 Mar 2020 20:31:26 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAQ8uHtuhd7DiGGOLbkEX524rPjfUuWAHjU-_92Ow3_1Pg@mail.gmail.com>
-Message-ID: <CAK7LNAQ8uHtuhd7DiGGOLbkEX524rPjfUuWAHjU-_92Ow3_1Pg@mail.gmail.com>
-Subject: Re: [PATCH v2] kbuild: Enable -Wtautological-compare
-To:     Nathan Chancellor <natechancellor@gmail.com>
-Cc:     Michal Marek <michal.lkml@markovi.net>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 27, 2020 at 4:42 AM Nathan Chancellor
-<natechancellor@gmail.com> wrote:
->
-> Currently, we disable -Wtautological-compare, which in turn disables a
-> bunch of more specific tautological comparison warnings that are useful
-> for the kernel such as -Wtautological-bitwise-compare. See clang's
-> documentation below for the other warnings that are suppressed by
-> -Wtautological-compare. Now that all of the major/noisy warnings have
-> been fixed, enable -Wtautological-compare so that more issues can be
-> caught at build time by various continuous integration setups.
->
-> -Wtautological-constant-out-of-range-compare is kept disabled under a
-> normal build but visible at W=1 because there are places in the kernel
-> where a constant or variable size can change based on the kernel
-> configuration. These are not fixed in a clean/concise way and the ones
-> I have audited so far appear to be harmless. It is not a subgroup but
-> rather just one warning so we do not lose out on much coverage by
-> default.
->
-> Link: https://github.com/ClangBuiltLinux/linux/issues/488
-> Link: http://releases.llvm.org/10.0.0/tools/clang/docs/DiagnosticsReference.html#wtautological-compare
-> Link: https://bugs.llvm.org/show_bug.cgi?id=42666
-> Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-> ---
->
-> v1 -> v2: https://lore.kernel.org/lkml/20200219045423.54190-7-natechancellor@gmail.com/
->
-> * Expand commit message a bit by adding more reasoning behind change.
-> * Disable -Wtautological-constant-out-of-range-compare under a normal
->   build but allow it to show up at W=1 for easy auditing.
->
-> I hope this can be accepted for 5.7. There are two warnings that I see
-> still across a bunch of allyesconfig/allmodconfig builds that have
-> patches sent but not accepted. I will ping them today.
->
-> * https://lore.kernel.org/lkml/20191023002014.22571-1-natechancellor@gmail.com/
-> * https://lore.kernel.org/lkml/20200220051011.26113-1-natechancellor@gmail.com/
+Vhost did not reset properly the batched descriptors on SET_VRING_BASE ev=
+ent. Because of that, is possible to return an invalid descriptor to the =
+guest.
 
+This series ammend this, and creates a test to assert correct behavior. T=
+o do that, they need to expose a new function in virtio_ring, virtqueue_r=
+eset_free_head. Not sure if this can be avoided.
 
-OK, I will queue this up and send it to Linus
-in the second week of MW.
+Also, change from https://lkml.org/lkml/2020/3/27/108 is not included, th=
+at avoids to update a variable in a loop where it can be updated once.
 
-I hope all warnings will be fixed by that time.
+This is meant to be applied on top of eccb852f1fe6bede630e2e4f1a121a81e34=
+354ab in git.kernel.org/pub/scm/linux/kernel/git/mst/vhost.git, and some =
+commits should be squashed with that series.
 
+Eugenio P=C3=A9rez (6):
+  tools/virtio: Add --batch option
+  tools/virtio: Add --batch=3Drandom option
+  tools/virtio: Add --reset=3Drandom
+  tools/virtio: Make --reset reset ring idx
+  vhost: Delete virtqueue batch_descs member
+  fixup! vhost: batching fetches
 
+ drivers/vhost/test.c         |  57 ++++++++++++++++
+ drivers/vhost/test.h         |   1 +
+ drivers/vhost/vhost.c        |  12 +++-
+ drivers/vhost/vhost.h        |   1 -
+ drivers/virtio/virtio_ring.c |  18 +++++
+ include/linux/virtio.h       |   2 +
+ tools/virtio/linux/virtio.h  |   2 +
+ tools/virtio/virtio_test.c   | 123 +++++++++++++++++++++++++++++++----
+ 8 files changed, 201 insertions(+), 15 deletions(-)
 
--- 
-Best Regards
-Masahiro Yamada
+--=20
+2.18.1
+
