@@ -2,29 +2,29 @@ Return-Path: <SRS0=I467=5O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D95BC43331
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 16:25:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83BCCC2D0ED
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 16:25:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CF3C420733
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 16:25:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6542D20733
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 16:25:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728392AbgC2QZw (ORCPT
+        id S1728377AbgC2QZw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Sun, 29 Mar 2020 12:25:52 -0400
-Received: from ip-78-45-52-129.net.upcbroadband.cz ([78.45.52.129]:52680 "EHLO
+Received: from ip-78-45-52-129.net.upcbroadband.cz ([78.45.52.129]:52668 "EHLO
         ixit.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728291AbgC2QZv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728209AbgC2QZv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Sun, 29 Mar 2020 12:25:51 -0400
 Received: from localhost.localdomain (227.146.230.94.awnet.cz [94.230.146.227])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
         (No client certificate requested)
-        by ixit.cz (Postfix) with ESMTPSA id EB9792497C;
-        Sun, 29 Mar 2020 18:16:54 +0200 (CEST)
+        by ixit.cz (Postfix) with ESMTPSA id 3A33A24975;
+        Sun, 29 Mar 2020 18:16:25 +0200 (CEST)
 From:   David Heidelberg <david@ixit.cz>
 To:     Sebastian Reichel <sre@kernel.org>,
         Jonghwa Lee <jonghwa3.lee@samsung.com>,
@@ -36,13 +36,12 @@ To:     Sebastian Reichel <sre@kernel.org>,
         mika.westerberg@linux.intel.com, ramakrishna.pallala@intel.com,
         Dmitry Osipenko <digetx@gmail.com>, linux-pm@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Cc:     David Heidelberg <david@ixit.cz>
-Subject: [PATCH 1/9] power: supply: smb347-charger: IRQSTAT_D is volatile
-Date:   Sun, 29 Mar 2020 18:15:44 +0200
-Message-Id: <20200329161552.215075-2-david@ixit.cz>
+Cc:     David Heidelberg <david@ixit.cz>, Rob Herring <robh+dt@kernel.org>,
+        devicetree@vger.kernel.org
+Subject: [PATCH 0/9] Summit SMB3xx driver & device-tree
+Date:   Sun, 29 Mar 2020 18:15:43 +0200
+Message-Id: <20200329161552.215075-1-david@ixit.cz>
 X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200329161552.215075-1-david@ixit.cz>
-References: <20200329161552.215075-1-david@ixit.cz>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -50,32 +49,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dmitry Osipenko <digetx@gmail.com>
+We gathered existing patches, fixed and improved what we could and
+final result is an working charging driver with device-tree support for
+Nexus 7.
 
-Fix failure when USB cable is connected:
-smb347 2-006a: reading IRQSTAT_D failed
+At this moment charging works with:
+ - Nexus 7 2012 (grouper and tilapia)
+ - Nexus 7 2013 (flo and deb)
+ - ... and there is more devices equiped with these chargers.
 
-Fixes: 1502cfe19bac ("smb347-charger: Fix battery status reporting logic for charger faults")
+David Heidelberg (7):
+  power: supply: smb347-charger: Add delay before getting IRQSTAT
+  power: supply: smb347-charger: Use resource-managed API
+  dt-bindings: power: supply: Add device-tree binding for Summit SMB3xx
+  power: supply: smb347-charger: Implement device-tree support
+  power: supply: smb347-charger: Support SMB345 and SMB358
+  power: supply: smb347-charger: Remove virtual smb347-battery
+  arm: dts: qcom: apq8064-nexus7: Add smb345 charger node
 
-Tested-by: David Heidelberg <david@ixit.cz>
-Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
-Signed-off-by: David Heidelberg <david@ixit.cz>
----
- drivers/power/supply/smb347-charger.c | 1 +
- 1 file changed, 1 insertion(+)
+Dmitry Osipenko (2):
+  power: supply: smb347-charger: IRQSTAT_D is volatile
+  power: supply: smb347-charger: Replace mutex with IRQ disable/enable
 
-diff --git a/drivers/power/supply/smb347-charger.c b/drivers/power/supply/smb347-charger.c
-index c1d124b8be0c..d102921b3ab2 100644
---- a/drivers/power/supply/smb347-charger.c
-+++ b/drivers/power/supply/smb347-charger.c
-@@ -1138,6 +1138,7 @@ static bool smb347_volatile_reg(struct device *dev, unsigned int reg)
- 	switch (reg) {
- 	case IRQSTAT_A:
- 	case IRQSTAT_C:
-+	case IRQSTAT_D:
- 	case IRQSTAT_E:
- 	case IRQSTAT_F:
- 	case STAT_A:
+ .../power/supply/summit,smb347-charger.yaml   | 224 ++++++++
+ .../boot/dts/qcom-apq8064-asus-nexus7-flo.dts |  22 +-
+ drivers/power/supply/Kconfig                  |   6 +-
+ drivers/power/supply/smb347-charger.c         | 510 +++++++++---------
+ .../dt-bindings/power/summit,smb347-charger.h |  19 +
+ 5 files changed, 526 insertions(+), 255 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/power/supply/summit,smb347-charger.yaml
+ create mode 100644 include/dt-bindings/power/summit,smb347-charger.h
+
 -- 
 2.25.0
 
