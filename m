@@ -2,111 +2,134 @@ Return-Path: <SRS0=I467=5O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DEDB1C2D0E5
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 18:44:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F173C2D0E5
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 18:45:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C0908207FF
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 18:44:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC1B62076A
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 18:45:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=meresinski.eu header.i=tomasz@meresinski.eu header.b="NPVa0VJs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728787AbgC2Sob (ORCPT
+        id S1728550AbgC2SpZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Mar 2020 14:44:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42862 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728580AbgC2SnR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Mar 2020 14:43:17 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 45E60208E0;
-        Sun, 29 Mar 2020 18:43:17 +0000 (UTC)
-Received: from rostedt by gandalf.local.home with local (Exim 4.93)
-        (envelope-from <rostedt@goodmis.org>)
-        id 1jIctw-002FsQ-6Y; Sun, 29 Mar 2020 14:43:16 -0400
-Message-Id: <20200329184316.090316350@goodmis.org>
-User-Agent: quilt/0.65
-Date:   Sun, 29 Mar 2020 14:42:56 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Ingo Molnar <mingo@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: [for-next][PATCH 04/21] ring-buffer: Have ring_buffer_empty() not depend on tracing stopped
-References: <20200329184252.289087453@goodmis.org>
+        Sun, 29 Mar 2020 14:45:25 -0400
+Received: from sender4-of-o54.zoho.com ([136.143.188.54]:21408 "EHLO
+        sender4-of-o54.zoho.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728419AbgC2SpY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Mar 2020 14:45:24 -0400
+X-Greylist: delayed 904 seconds by postgrey-1.27 at vger.kernel.org; Sun, 29 Mar 2020 14:45:24 EDT
+ARC-Seal: i=1; a=rsa-sha256; t=1585506615; cv=none; 
+        d=zohomail.com; s=zohoarc; 
+        b=Gnz5i7zHhx3IcbvzMlmWDQnrh0sR4zto57trVmDlWHXCoqi97GnlySWHSZwCHJVpXxoFxxRJFA79+Sc5jtaOmw+XvgCCYJ+/+0MwR4/FDAPoxnr9MYfGZTiif69skBq6lg81l31e2A840IhfQHOnnL3tSAiOKo9SPbBuV59nW1g=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+        t=1585506615; h=Content-Type:Content-Transfer-Encoding:Cc:Date:From:MIME-Version:Message-ID:Subject:To; 
+        bh=hqPCegPJeX/Ry7agpxmBok0vX/8k1cwBMc60UNQIMGc=; 
+        b=jo1R6Ef+IV8X1KTtlIbl0iRh/hm9GeB8s4e+1FU5zCAwpXTUftK1eue2XMTj6uXlnad1dGpqe5GxCMZw+TzUoeN0dEqjDKEWuzEVnFSi5b4k3WyelLDhAtSNzVRkic2XQfQjMfXCq1GUmSDWx5JZ5xwGaW2+9NzqNtf/LizNSKo=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+        dkim=pass  header.i=meresinski.eu;
+        spf=pass  smtp.mailfrom=tomasz@meresinski.eu;
+        dmarc=pass header.from=<tomasz@meresinski.eu> header.from=<tomasz@meresinski.eu>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1585506615;
+        s=zoho; d=meresinski.eu; i=tomasz@meresinski.eu;
+        h=From:To:Cc:Message-ID:Subject:Date:MIME-Version:Content-Type:Content-Transfer-Encoding;
+        bh=hqPCegPJeX/Ry7agpxmBok0vX/8k1cwBMc60UNQIMGc=;
+        b=NPVa0VJstiyOaSTToNKVS1OU5UupuHHoOwXKsojUesZJEyO6AjsT9x+LpBgGB+g7
+        FV40TBOIguUZqNmzN1m3xIT6UwxwkoPsjtjotCgu8sdDKX6dyk1ms0NMeVlCubtbLz5
+        3M3VnGm/UMbnk0rKuSOKgg/R76LSXWGiCMCNR0kg=
+Received: from localhost.localdomain (78-11-200-65.static.ip.netia.com.pl [78.11.200.65]) by mx.zohomail.com
+        with SMTPS id 1585506613099417.6913837527152; Sun, 29 Mar 2020 11:30:13 -0700 (PDT)
+From:   =?UTF-8?q?Tomasz=20Meresi=C5=84ski?= <tomasz@meresinski.eu>
+To:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-api@vger.kernel.org
+Cc:     davem@davemloft.net, kuba@kernel.org,
+        =?UTF-8?q?Tomasz=20Meresi=C5=84ski?= <tomasz@meresinski.eu>
+Message-ID: <20200329182503.754-1-tomasz@meresinski.eu>
+Subject: [PATCH RFC net-next] af_unix: eof in recvmsg after shutdown for nonblocking dgram socket
+Date:   Sun, 29 Mar 2020 20:25:03 +0200
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-ZohoMailClient: External
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Steven Rostedt (VMware)" <rostedt@goodmis.org>
+Calling recvmsg() after shutdown(SHUT_RD) is a some kind of undocumented
+behaviour. For blocking socket it just returns 0 (EOF), but for nonblocking
+socket it returns -EAGAIN. It can cause some event loops to infinitely wait
+for an event on this socket (https://github.com/tokio-rs/tokio/issues/1679)
 
-It was complained about that when the trace file is read, that the tracing
-is disabled, as the iterator expects writing to the buffer it reads is not
-updated. Several steps are needed to make the iterator handle a writer,
-by testing if things have changed as it reads.
+Simple Python test case:
+| import socket
+|
+| print('BLOCKING TEST')
+| a =3D socket.socket(family=3Dsocket.AF_UNIX, type=3Dsocket.SOCK_DGRAM)
+| a.shutdown(socket.SHUT_RD)
+|
+| result =3D a.recv(1)
+| print('recv result ', result)
+|
+| a.close()
+|
+| print('NONBLOCKING TEST')
+| type =3D socket.SOCK_DGRAM | socket.SOCK_NONBLOCK
+| a =3D socket.socket(family=3Dsocket.AF_UNIX, type=3Dtype)
+| a.shutdown(socket.SHUT_RD)
+|
+| try:
+|     result =3D a.recv(1)
+| except BlockingIOError:
+|     print('Got Blocking IO Error')
+| else:
+|     print('recv result ', result)
+|
+| a.close()
 
-This step is to make ring_buffer_empty() expect the buffer to be changing.
-Note if the current location of the iterator is overwritten, then it will
-return false as new data is being added. Note, that this means that data
-will be skipped.
-
-Link: http://lkml.kernel.org/r/20200317213415.870741809@goodmis.org
-
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Signed-off-by: Tomasz Meresi=C5=84ski <tomasz@meresinski.eu>
 ---
- kernel/trace/ring_buffer.c | 25 +++++++++++++++++++++++--
- 1 file changed, 23 insertions(+), 2 deletions(-)
+I'm not so sure about this patch because it can be called userspace API bre=
+ak.=20
+This sequence is now some kind of undefined behaviour - it's documented now=
+here.
+In the first place, I think that shutdown(SHUT_RD) should fail here as it d=
+oes with AF_INET dgram socket.
+On the other hand, there may be some user of this kind of shutdown() behavi=
+our so it'd be too risky.
 
-diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-index 61f0e92ace99..1718520a2809 100644
---- a/kernel/trace/ring_buffer.c
-+++ b/kernel/trace/ring_buffer.c
-@@ -3590,16 +3590,37 @@ int ring_buffer_iter_empty(struct ring_buffer_iter *iter)
- 	struct buffer_page *reader;
- 	struct buffer_page *head_page;
- 	struct buffer_page *commit_page;
-+	struct buffer_page *curr_commit_page;
- 	unsigned commit;
-+	u64 curr_commit_ts;
-+	u64 commit_ts;
- 
- 	cpu_buffer = iter->cpu_buffer;
--
--	/* Remember, trace recording is off when iterator is in use */
- 	reader = cpu_buffer->reader_page;
- 	head_page = cpu_buffer->head_page;
- 	commit_page = cpu_buffer->commit_page;
-+	commit_ts = commit_page->page->time_stamp;
-+
-+	/*
-+	 * When the writer goes across pages, it issues a cmpxchg which
-+	 * is a mb(), which will synchronize with the rmb here.
-+	 * (see rb_tail_page_update())
-+	 */
-+	smp_rmb();
- 	commit = rb_page_commit(commit_page);
-+	/* We want to make sure that the commit page doesn't change */
-+	smp_rmb();
-+
-+	/* Make sure commit page didn't change */
-+	curr_commit_page = READ_ONCE(cpu_buffer->commit_page);
-+	curr_commit_ts = READ_ONCE(curr_commit_page->page->time_stamp);
-+
-+	/* If the commit page changed, then there's more data */
-+	if (curr_commit_page != commit_page ||
-+	    curr_commit_ts != commit_ts)
-+		return 0;
- 
-+	/* Still racy, as it may return a false positive, but that's OK */
- 	return ((iter->head_page == commit_page && iter->head == commit) ||
- 		(iter->head_page == reader && commit_page == head_page &&
- 		 head_page->read == commit &&
--- 
-2.25.1
+The problem here is that EAGAIN errno is used in event loops as we should w=
+ait for the next events indicator.
+It's not true here because there won't be any new events with this socket a=
+s it's shut down.
+
+ net/unix/af_unix.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
+
+diff --git a/net/unix/af_unix.c b/net/unix/af_unix.c
+index 3385a7a0b231..9458b11289c2 100644
+--- a/net/unix/af_unix.c
++++ b/net/unix/af_unix.c
+@@ -2123,9 +2123,8 @@ static int unix_dgram_recvmsg(struct socket *sock, st=
+ruct msghdr *msg,
+=20
+ =09if (!skb) { /* implies iolock unlocked */
+ =09=09unix_state_lock(sk);
+-=09=09/* Signal EOF on disconnected non-blocking SEQPACKET socket. */
+-=09=09if (sk->sk_type =3D=3D SOCK_SEQPACKET && err =3D=3D -EAGAIN &&
+-=09=09    (sk->sk_shutdown & RCV_SHUTDOWN))
++=09=09/* Signal EOF on disconnected socket. */
++=09=09if (err =3D=3D -EAGAIN && (sk->sk_shutdown & RCV_SHUTDOWN))
+ =09=09=09err =3D 0;
+ =09=09unix_state_unlock(sk);
+ =09=09goto out;
+--=20
+2.17.1
 
 
