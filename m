@@ -2,95 +2,99 @@ Return-Path: <SRS0=I467=5O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E455C2D0EB
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 21:15:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52E53C2D0E5
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 21:19:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E31F520748
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 21:15:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 27DEB206E6
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 21:19:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="CHWU70aj"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="LK/4nFQ6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728921AbgC2VPd (ORCPT
+        id S1728924AbgC2VTm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Mar 2020 17:15:33 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:58904 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727591AbgC2VPd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Mar 2020 17:15:33 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 02TLFSvv009477;
-        Sun, 29 Mar 2020 16:15:28 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1585516528;
-        bh=VDHI+u/3jcLeo7Mq1p0Hr9RPLGrkWC+gdwwXLAu5otQ=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=CHWU70aj90hjceNa4Uwb0OGwyTFRBaImDRQ4sV8hi5m0uJQfFXWtpKelcIj3sep3B
-         JVnDzb2+y92DnEVuN9080nFSOL+S7zJQc5hXIXt4RvGwMs6CD5zHQcpNb94bh8Ex1f
-         evEPTvYlUrmCg9vfg32TNcELIrFwDMzbAmp+d5t0=
-Received: from DFLE108.ent.ti.com (dfle108.ent.ti.com [10.64.6.29])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 02TLFSUR098090
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Sun, 29 Mar 2020 16:15:28 -0500
-Received: from DFLE107.ent.ti.com (10.64.6.28) by DFLE108.ent.ti.com
- (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Sun, 29
- Mar 2020 16:15:28 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE107.ent.ti.com
- (10.64.6.28) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Sun, 29 Mar 2020 16:15:28 -0500
-Received: from [10.250.52.63] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 02TLFSOl008105;
-        Sun, 29 Mar 2020 16:15:28 -0500
-Subject: Re: [PATCH v18 4/4] leds: multicolor: Introduce a multicolor class
- definition
-To:     Jacek Anaszewski <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>
-CC:     <linux-leds@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Greg KH <gregkh@linuxfoundation.org>
-References: <20200324181434.24721-1-dmurphy@ti.com>
- <20200324181434.24721-5-dmurphy@ti.com>
- <f43bf4c5-948d-b87f-9b95-98fcfeaae2fa@gmail.com>
- <9a707fe6-31c6-da9e-9372-51ca21bf3c88@ti.com>
- <1263c2f9-3cb3-f919-cce8-53201d64e121@gmail.com>
- <0e782f2d-2968-50c0-bf34-7ee781014ef8@ti.com>
- <ea7915a1-91ea-43d5-2e96-99d1ecc49875@gmail.com>
-From:   Dan Murphy <dmurphy@ti.com>
-Message-ID: <0db08bd0-ae6f-049a-7970-cbaf2b1654e3@ti.com>
-Date:   Sun, 29 Mar 2020 16:09:43 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Sun, 29 Mar 2020 17:19:42 -0400
+Received: from ozlabs.org ([203.11.71.1]:53997 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728724AbgC2VTl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Mar 2020 17:19:41 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 48r7lF61nRz9sQt;
+        Mon, 30 Mar 2020 08:19:37 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1585516779;
+        bh=KrulLFYhw16y1Ijj99I4oFWmBWK32BI6QI2Vfin53Bc=;
+        h=Date:From:To:Cc:Subject:From;
+        b=LK/4nFQ6nWpRmO2eXt/bWBq0FU+ELYAenhhf+WYKk4WkmCNzowu17wHtiog7h+GKx
+         2cqrhGIZJ15mZ4gVI2fBMN3/eZXc2lTz131aZGEwsWVWWv/+HfHkRmJUVGqOBz9zYV
+         L4/COFvzifAHJLRUu+k+6omjXf+5je2iLkMp98ShIHOg3POoFumHXFAuzCFQXmKFi4
+         g7onvC4t4ZtGFp4NiOsqvYQ5Up+shPjq6LrmbZz43oJvbwScSZpChjEVxlnUJNqxo2
+         3lcePpJVyNzyacihYiDYPQZZFQpsId0DG8cwEchhmlOKULzzhAP+AmRYaKxi66KF/b
+         VqfM2NfQafc0w==
+Date:   Mon, 30 Mar 2020 08:19:35 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Benson Leung <bleung@google.com>,
+        Guenter Roeck <groeck@chromium.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Gwendal Grignou <gwendal@chromium.org>
+Subject: linux-next: Fixes tag needs some work in the chrome-platform tree
+Message-ID: <20200330081935.5bd8364a@canb.auug.org.au>
 MIME-Version: 1.0
-In-Reply-To: <ea7915a1-91ea-43d5-2e96-99d1ecc49875@gmail.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: multipart/signed; boundary="Sig_/zdEPmWHZEidqE6zaOqi9FP_";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Jacek
+--Sig_/zdEPmWHZEidqE6zaOqi9FP_
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-On 3/29/20 1:43 PM, Jacek Anaszewski wrote:
-> Dan,
->
-> On 3/29/20 5:14 PM, Dan Murphy wrote:
-<snip>
->
->> Dan
->>
-I will wait to hear from Pavel on this patchset since the array 
-definition was something he was asking for.
+Hi all,
 
-Need to make sure this was his intent on wanting the array vs the sysfs 
-interfaces otherwise the changes maybe futile in nature.
+In commit
 
-Dan
+  5ca22c7cae55 ("iio: cros_ec: Use Hertz as unit for sampling frequency")
 
+Fixes tag
+
+  Fixes: ae7b02ad2f32 ("iio: common: cros_ec_sensors: Expose
+
+has these problem(s):
+
+  - Subject has leading but no trailing parentheses
+  - Subject has leading but no trailing quotes
+
+Please do not split Fixes tags over more than one line.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/zdEPmWHZEidqE6zaOqi9FP_
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl6BEOcACgkQAVBC80lX
+0GzsEQf9E1jw1P8aiKWQyTTnMi+CFk+IJgr1RowDzU70cYLngbUv5fM8JK/7IqdB
+1TS0o/e+k4QnHxN6LecbvLlwn/AHYNzYG+QKkCHlRDTx+qv4C76CO4y1ODT6TXmq
+XYdn6xt744/Bj3hH3ho5V7wA7mx0fBa6uMpxOsft2Z8IfJo9N7IwkhMQkru6bgto
+5k+gHVB6H8cuwpx4OW6HS+tsbVyKYNDpJneIbQ/gAVySoYRwocgp3GeMap7xjsbg
+rYvojXKJiKJLLrfkfzpjBvi6ehnU/MWDBUCQloo1zSzf6H0q1ci7SeAj8VjWPTj2
+OedpWv+Ia7mHQPQcn1OHjodcqcRYJA==
+=/4Uv
+-----END PGP SIGNATURE-----
+
+--Sig_/zdEPmWHZEidqE6zaOqi9FP_--
