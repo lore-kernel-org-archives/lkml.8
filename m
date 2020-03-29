@@ -2,199 +2,131 @@ Return-Path: <SRS0=I467=5O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D596CC43331
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 11:46:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDB64C2D0E5
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 11:49:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8FFC420675
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 11:46:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A5B3120675
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 11:49:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hvjEbv9B"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="boOnn0D/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728100AbgC2Lqa (ORCPT
+        id S1728134AbgC2Ltb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Mar 2020 07:46:30 -0400
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:43049 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727772AbgC2Lqa (ORCPT
+        Sun, 29 Mar 2020 07:49:31 -0400
+Received: from us-smtp-delivery-74.mimecast.com ([63.128.21.74]:34563 "EHLO
+        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728071AbgC2Ltb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Mar 2020 07:46:30 -0400
-Received: by mail-ed1-f67.google.com with SMTP id bd14so17343384edb.10;
-        Sun, 29 Mar 2020 04:46:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=kWqBhqN9W4UoJNuckL4CJb3lLsiw0Kie1I4t1l/WfLc=;
-        b=hvjEbv9B4eBj4Hq4xeNNYSLh5YGTKm3/Rab7Q0VkqbssGbIel0QLt1BJXvASEfnPUp
-         OCRL0U12jYDfseKnSYHf95bcOrnMlvzz1DqUGHriKWnKgMUbxqkmX5EIi2FHhyrIQceJ
-         6avqa7Bw9iEbpWFxEaQmI8GRV9wSW8nm5AKURKXbSnfAKS1w8gwYUlK9xUhfNmoDdKZO
-         uyZcqKG6Nm4jPHft+X5su/2GVREbIuvBKXBrXFlBuDLPJNv44rMQmHuseJdsVmlHDgGV
-         0T8TOi5eXr/+Y2Qe+0s0SNTLufDoL5xc1W2qkIY9KB9afaqU3V1kE8/qLqjpX4Tc31eX
-         AyUg==
+        Sun, 29 Mar 2020 07:49:31 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1585482570;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=Z3uSqDxAG/8s/s7cz44Y2/i4LCDpCHA9j5Si4puA7U0=;
+        b=boOnn0D/JfyJ1aF6HMIKAdXnrcNKV0egy0IY95A2jxP/Y3gWQ0uRYSiGFYp5K0pdKaoBKG
+        v33M0EQsycGaXf1zqJvvMDwUdkS/u4R9U9q68JLHne7QfxPrAp+9GR753EZeQzlq8Joy/T
+        xNdee+AyC4ExGlSc9j1hsMJ49ZhRonE=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-476-nScPeJ1_M7e5LCrej9pc6Q-1; Sun, 29 Mar 2020 07:49:28 -0400
+X-MC-Unique: nScPeJ1_M7e5LCrej9pc6Q-1
+Received: by mail-wr1-f72.google.com with SMTP id e10so8350570wru.6
+        for <linux-kernel@vger.kernel.org>; Sun, 29 Mar 2020 04:49:27 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=kWqBhqN9W4UoJNuckL4CJb3lLsiw0Kie1I4t1l/WfLc=;
-        b=PFx6gUYydBZT8X5CIJ5umGtZ7rLEwgTj4cLoP4dd0CvaTgiANZ07WzHVFd48ajPM1h
-         CxaByvm/u/8gSOYjJ3yW6j2B2uwk6L5t0OWaG/8G22ZgohZrSjJXHOyDpeA4d8SbVoqu
-         M58lrA+eVIU3bukPHP9RkexETFjef3+ECwrx7YPezzl9kg7lfcENioezsED62nLBEmLz
-         zUP4VA2Bn/kwqwe3SJMPS8JTtE97m0D8grdmXu1gZ3jcP+qi5vd+jxw7qfghx+Geu7cW
-         6F0wavOSBsXc8Xr/j8o5UeSkb0kU3ih8CTPjFYeniW6J9iFpR335/nf8f0DNh9WCLT2T
-         O75A==
-X-Gm-Message-State: ANhLgQ10iA+5rzCmuZQEb+aQGVU2k0RFm24ZN9Hu7cIzTRcpaWhQnYzt
-        s4FM7aJeKrLUFvjJ6ym/P4fzm6SqihLCxPjyxrw=
-X-Google-Smtp-Source: ADFU+vsD0Mox8k19o8ZLL4i5bopF42KYZQDFmsDhweJ7kA9PqoM3a+j6D7zWl/0Sjdjq6QbBQPUjw/nSpwlmHbykmTw=
-X-Received: by 2002:a17:906:449:: with SMTP id e9mr6569538eja.239.1585482387103;
- Sun, 29 Mar 2020 04:46:27 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=Z3uSqDxAG/8s/s7cz44Y2/i4LCDpCHA9j5Si4puA7U0=;
+        b=fowlc7+wWMTB33mPpGU4sU5tmGGJ9UTdqN2dUvWcob0CzoEkgK+UEsB/nzckK2Xh+y
+         2HIS5Q/nvhePGSeJFYVAr+5gEKoJ692CEtd36/14bh4d9FKsCi6PIv9syZcSTLJIRX5R
+         QlHmvE0oSYpwahCBBGF9Mqy3C60ZC2LMN0QMego8u0kKbGY0jTkTI6W1j5R0RYkIC3co
+         m5aJgvs9HaV5/y09imXCK2yBnlyOtKZObrtqVx7AeyCcnD68X4V3tu1jqwdMKiQM8a4V
+         CWyMSvHYGl1cSG8MHmdls3iEKgPMPZNdLqu3dzKy/1gy39yI/FwZEhzZNmqsG7ktq1Uz
+         I6Ew==
+X-Gm-Message-State: ANhLgQ22RqqqSs9iUI0DNJwZRHY6PgxIyCaTezW5X/QrDhw/P0/KCZps
+        1R7eQdEAJYg3z6G+LeM9+qUGkLxtTav+rG4TxYhTE25oS5GmNb/sOUohMSaBSP3ckKLpHlLCqCu
+        aRsag51UD4kAFJ2xaD5rCPjYs
+X-Received: by 2002:a1c:3241:: with SMTP id y62mr8524814wmy.66.1585482567003;
+        Sun, 29 Mar 2020 04:49:27 -0700 (PDT)
+X-Google-Smtp-Source: ADFU+vv7BukqLWASNd56mdBXcWIrZDO3DRdR8zJ4m6ol8Bj23sHTGubRNiILOzZ0ywfXFDGVJH4UAA==
+X-Received: by 2002:a1c:3241:: with SMTP id y62mr8524804wmy.66.1585482566822;
+        Sun, 29 Mar 2020 04:49:26 -0700 (PDT)
+Received: from redhat.com (bzq-79-183-139-129.red.bezeqint.net. [79.183.139.129])
+        by smtp.gmail.com with ESMTPSA id 19sm3668516wmi.32.2020.03.29.04.49.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 29 Mar 2020 04:49:26 -0700 (PDT)
+Date:   Sun, 29 Mar 2020 07:49:23 -0400
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     Eugenio =?iso-8859-1?Q?P=E9rez?= <eperezma@redhat.com>
+Cc:     "virtualization@lists.linux-foundation.org" 
+        <virtualization@lists.linux-foundation.org>,
+        Halil Pasic <pasic@linux.ibm.com>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        kvm list <kvm@vger.kernel.org>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 0/6] vhost: Reset batched descriptors on SET_VRING_BASE
+ call
+Message-ID: <20200329074023-mutt-send-email-mst@kernel.org>
+References: <20200329113359.30960-1-eperezma@redhat.com>
 MIME-Version: 1.0
-References: <20200329005202.17926-1-olteanv@gmail.com> <20200329005202.17926-7-olteanv@gmail.com>
- <20200329095712.GA2188467@splinter> <CA+h21hoybhxhR3KgfRkAaKyPPJPesbGLWDaDp5O_2yTz05y5jQ@mail.gmail.com>
-In-Reply-To: <CA+h21hoybhxhR3KgfRkAaKyPPJPesbGLWDaDp5O_2yTz05y5jQ@mail.gmail.com>
-From:   Vladimir Oltean <olteanv@gmail.com>
-Date:   Sun, 29 Mar 2020 14:46:16 +0300
-Message-ID: <CA+h21hoBp6=Zyc3mX3BVguVs0f8Un6-A3pk9YaZKPgs0efTi3g@mail.gmail.com>
-Subject: Re: [PATCH net-next 6/6] net: dsa: sja1105: add broadcast and
- per-traffic class policers
-To:     Ido Schimmel <idosch@idosch.org>
-Cc:     Nikolay Aleksandrov <nikolay@cumulusnetworks.com>,
-        Roopa Prabhu <roopa@cumulusnetworks.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jiri Pirko <jiri@resnulli.us>,
-        Jakub Kicinski <kuba@kernel.org>,
-        netdev <netdev@vger.kernel.org>,
-        Xiaoliang Yang <xiaoliang.yang_1@nxp.com>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Horatiu Vultur <horatiu.vultur@microchip.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        "Allan W. Nielsen" <allan.nielsen@microchip.com>,
-        Joergen Andreasen <joergen.andreasen@microchip.com>,
-        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
-        "Y.b. Lu" <yangbo.lu@nxp.com>,
-        Alexandru Marginean <alexandru.marginean@nxp.com>,
-        Po Liu <po.liu@nxp.com>,
-        Claudiu Manoil <claudiu.manoil@nxp.com>,
-        Li Yang <leoyang.li@nxp.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200329113359.30960-1-eperezma@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 29 Mar 2020 at 14:37, Vladimir Oltean <olteanv@gmail.com> wrote:
->
-> On Sun, 29 Mar 2020 at 12:57, Ido Schimmel <idosch@idosch.org> wrote:
-> >
-> > + Nik, Roopa
-> >
-> > On Sun, Mar 29, 2020 at 02:52:02AM +0200, Vladimir Oltean wrote:
-> > > From: Vladimir Oltean <vladimir.oltean@nxp.com>
-> > >
-> > > This patch adds complete support for manipulating the L2 Policing Tables
-> > > from this switch. There are 45 table entries, one entry per each port
-> > > and traffic class, and one dedicated entry for broadcast traffic for
-> > > each ingress port.
-> > >
-> > > Policing entries are shareable, and we use this functionality to support
-> > > shared block filters.
-> > >
-> > > We are modeling broadcast policers as simple tc-flower matches on
-> > > dst_mac. As for the traffic class policers, the switch only deduces the
-> > > traffic class from the VLAN PCP field, so it makes sense to model this
-> > > as a tc-flower match on vlan_prio.
-> > >
-> > > How to limit broadcast traffic coming from all front-panel ports to a
-> > > cumulated total of 10 Mbit/s:
-> > >
-> > > tc qdisc add dev sw0p0 ingress_block 1 clsact
-> > > tc qdisc add dev sw0p1 ingress_block 1 clsact
-> > > tc qdisc add dev sw0p2 ingress_block 1 clsact
-> > > tc qdisc add dev sw0p3 ingress_block 1 clsact
-> > > tc filter add block 1 flower skip_sw dst_mac ff:ff:ff:ff:ff:ff \
-> > >       action police rate 10mbit burst 64k
-> > >
-> > > How to limit traffic with VLAN PCP 0 (also includes untagged traffic) to
-> > > 100 Mbit/s on port 0 only:
-> > >
-> > > tc filter add dev sw0p0 ingress protocol 802.1Q flower skip_sw \
-> > >       vlan_prio 0 action police rate 100mbit burst 64k
-> > >
-> > > The broadcast, VLAN PCP and port policers are compatible with one
-> > > another (can be installed at the same time on a port).
-> >
-> > Hi Vladimir,
-> >
-> > Some switches have a feature called "storm control". It allows one to
-> > police incoming BUM traffic.
->
-> Yes, I am aware.
-> DPAA2 switches have a single (as far as I am aware) knob for 'flood
-> policers', and Ocelot has individual 'storm policers' for unknown
-> unicast, for multicast, broadcast and for 'learn frames'.
->
-> > See this entry from Cumulus Linux
-> > documentation:
-> >
-> > https://docs.cumulusnetworks.com/cumulus-linux-40/Layer-2/Spanning-Tree-and-Rapid-Spanning-Tree/#storm-control
-> >
-> > In the past I was thinking about ways to implement this in Linux. The
-> > only place in the pipeline where packets are actually classified to
-> > broadcast / unknown unicast / multicast is at bridge ingress. Therefore,
->
-> Actually I think only 'unknown unicast' is tricky here, and indeed the
-> bridge driver is the only place in the software datapath that would
-> know that.
-> I know very little about frame classification in the Linux network
-> stack, but would it be possible to introduce a match key in tc-flower
-> for whether packets have a known destination or not?
->
-> > my thinking was to implement these storm control policers as a
-> > "bridge_slave" operation. It can then be offloaded to capable drivers
-> > via the switchdev framework.
-> >
->
-> I think it would be a bit odd to duplicate tc functionality in the
-> bridge sysfs. I don't have a better suggestion though.
->
+On Sun, Mar 29, 2020 at 01:33:53PM +0200, Eugenio Pérez wrote:
+> Vhost did not reset properly the batched descriptors on SET_VRING_BASE event. Because of that, is possible to return an invalid descriptor to the guest.
+> This series ammend this, and creates a test to assert correct behavior. To do that, they need to expose a new function in virtio_ring, virtqueue_reset_free_head. Not sure if this can be avoided.
 
-Not to mention that for hardware like this, to have the same level of
-flexibility via a switchdev control would mean to duplicate quite a
-lot of tc functionality. On this 5-port switch I can put a shared
-broadcast policer on 2 ports (via the ingress_block functionality),
-and individual policers on the other 3, and the bandwidth budgeting is
-separate. I can only assume that there are more switches out there
-that allow this.
+Question: why not reset the batch when private_data changes?
+At the moment both net and scsi poke at private data directly,
+if they do this through a wrapper we can use that to
+1. check that vq mutex is taken properly
+2. reset batching
 
-> > I think that if we have this implemented in the Linux bridge, then your
-> > patch can be used to support the policing of broadcast packets while
-> > returning an error if user tries to police unknown unicast or multicast
-> > packets.
->
-> So even if the Linux bridge gains these knobs for flood policers,
-> still have the dst_mac ff:ff:ff:ff:ff:ff as a valid way to configure
-> one of those knobs?
->
-> > Or maybe the hardware you are working with supports these types
-> > as well?
->
-> Nope, on this hardware it's just broadcast, I just checked that. Which
-> simplifies things quite a bit.
->
-> >
-> > WDYT?
-> >
->
-> I don't know.
->
-> Thanks,
-> -Vladimir
+This seems like a slightly better API
 
--Vladimir
+> 
+> Also, change from https://lkml.org/lkml/2020/3/27/108 is not included, that avoids to update a variable in a loop where it can be updated once.
+> 
+> This is meant to be applied on top of eccb852f1fe6bede630e2e4f1a121a81e34354ab in git.kernel.org/pub/scm/linux/kernel/git/mst/vhost.git, and some commits should be squashed with that series.
+
+Thanks a lot! I'll apply this for now so Christian can start testing,
+but I'd like the comment above addressed before I push this to Linus.
+
+> Eugenio Pérez (6):
+>   tools/virtio: Add --batch option
+>   tools/virtio: Add --batch=random option
+>   tools/virtio: Add --reset=random
+>   tools/virtio: Make --reset reset ring idx
+>   vhost: Delete virtqueue batch_descs member
+>   fixup! vhost: batching fetches
+> 
+>  drivers/vhost/test.c         |  57 ++++++++++++++++
+>  drivers/vhost/test.h         |   1 +
+>  drivers/vhost/vhost.c        |  12 +++-
+>  drivers/vhost/vhost.h        |   1 -
+>  drivers/virtio/virtio_ring.c |  18 +++++
+>  include/linux/virtio.h       |   2 +
+>  tools/virtio/linux/virtio.h  |   2 +
+>  tools/virtio/virtio_test.c   | 123 +++++++++++++++++++++++++++++++----
+>  8 files changed, 201 insertions(+), 15 deletions(-)
+> 
+> -- 
+> 2.18.1
+
