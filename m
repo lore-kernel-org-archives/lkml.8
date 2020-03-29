@@ -2,128 +2,129 @@ Return-Path: <SRS0=I467=5O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C525FC43331
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 20:28:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81720C43331
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 20:32:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A4350207FF
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 20:28:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F4F720748
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 20:32:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="AbaUTddb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729018AbgC2U2g (ORCPT
+        id S1728810AbgC2Ucm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Mar 2020 16:28:36 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:56919 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727719AbgC2U0N (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Mar 2020 16:26:13 -0400
-Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tip-bot2@linutronix.de>)
-        id 1jIeVW-0001LQ-4j; Sun, 29 Mar 2020 22:26:10 +0200
-Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id BF6CE1C0334;
-        Sun, 29 Mar 2020 22:26:09 +0200 (CEST)
-Date:   Sun, 29 Mar 2020 20:26:09 -0000
-From:   "tip-bot2 for Marek Vasut" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: irq/core] irqchip/stm32: Retrigger both in eoi and unmask callbacks
-Cc:     Marek Vasut <marex@denx.de>, Marc Zyngier <maz@kernel.org>,
-        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200323235132.530550-1-marex@denx.de>
-References: <20200323235132.530550-1-marex@denx.de>
+        Sun, 29 Mar 2020 16:32:42 -0400
+Received: from ozlabs.org ([203.11.71.1]:57915 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727370AbgC2Ucl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Mar 2020 16:32:41 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 48r6j235X1z9sRN;
+        Mon, 30 Mar 2020 07:32:38 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1585513959;
+        bh=wtdE/xlqjJigILuC52/ujbxaiSyFTL1AhRTSlpQdnnM=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=AbaUTddb47juNzth6lZa+NH56Eg7RuaCRJtp2nagH/0oG1OIHbFPC4URcbaBYxGnQ
+         WBxXKWEc3igs/Zx8Rk574Q3yGaDrWAddEJuALT/uW5glh1XggiPpVl7kHp3WY8d/Jm
+         pjpZuRqL2na7CDrcAPgp+xWbpmAGyn6F0OkSSESorOPSQ6Jyl+OXXxO9xwAVl3b837
+         8UVue+8QXFmOBoORBX8Jknc3Yrw8jsbBa8xaiBHWCX9U7p2/lym6BwptzCc3ZYmgOH
+         daFHFPtdWMD0GM1qfz7Uy8Ep791bEjrboagTy2VEFDKAhX0Z41DzE1Q3vSU02v3+KC
+         2+VLjPx/vremQ==
+Date:   Mon, 30 Mar 2020 07:32:31 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Nathan Chancellor <natechancellor@gmail.com>
+Cc:     Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Ohad Ben-Cohen <ohad@wizery.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-next@vger.kernel.org
+Subject: Re: Build failure in omap_remoteproc due to 02e6d546e3bd
+Message-ID: <20200330073231.6e04035e@canb.auug.org.au>
+In-Reply-To: <20200327185055.GA22438@ubuntu-m2-xlarge-x86>
+References: <20200327185055.GA22438@ubuntu-m2-xlarge-x86>
 MIME-Version: 1.0
-Message-ID: <158551356939.28353.3524136454839534794.tip-bot2@tip-bot2>
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: multipart/signed; boundary="Sig_/n6aWScVd=OTDo0fxVhMctuB";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the irq/core branch of tip:
+--Sig_/n6aWScVd=OTDo0fxVhMctuB
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Commit-ID:     00760d3cd9de2ccee6b73e30b53e71704a99209e
-Gitweb:        https://git.kernel.org/tip/00760d3cd9de2ccee6b73e30b53e71704a99209e
-Author:        Marek Vasut <marex@denx.de>
-AuthorDate:    Tue, 24 Mar 2020 00:51:32 +01:00
-Committer:     Marc Zyngier <maz@kernel.org>
-CommitterDate: Tue, 24 Mar 2020 11:12:34 
+Hi Nathan,
 
-irqchip/stm32: Retrigger both in eoi and unmask callbacks
+On Fri, 27 Mar 2020 11:50:55 -0700 Nathan Chancellor <natechancellor@gmail.=
+com> wrote:
+>
+> Apologies if this has already been reported, I did not see anything in
+> the archives. On next-20200327, I see the following build error:
+>=20
+> drivers/remoteproc/omap_remoteproc.c:174:44: error: too many arguments
+> to function call, expected 2, have 3
+>         timer->timer_ops->set_load(timer->odt, 0, 0);
+>         ~~~~~~~~~~~~~~~~~~~~~~~~~~                ^
+> 1 error generated.
+>=20
+> This is due to commit 02e6d546e3bd ("clocksource/drivers/timer-ti-dm:
+> Enable autoreload in set_pwm") in the clockevents tree interacting with
+> commit e28edc571925 ("remoteproc/omap: Request a timer(s) for remoteproc
+> usage") from the rpmsg tree.
+>=20
+> Something like the diff below should resolve it but it cannot be applied
+> to the rpmsg tree because it does not have the clockevents change. It
+> will have to be applied by Linus as a merge fixup.
+>=20
+> Stephen, would you mind applying this to whichever merge happens second?
+>=20
+> Cheers,
+> Nathan
+>=20
+> diff --git a/drivers/remoteproc/omap_remoteproc.c b/drivers/remoteproc/om=
+ap_remoteproc.c
+> index cdb546f7232e..6955fab0a78b 100644
+> --- a/drivers/remoteproc/omap_remoteproc.c
+> +++ b/drivers/remoteproc/omap_remoteproc.c
+> @@ -171,7 +171,7 @@ static int omap_rproc_request_timer(struct device *de=
+v, struct device_node *np,
+>  	}
+> =20
+>  	/* clean counter, remoteproc code will set the value */
+> -	timer->timer_ops->set_load(timer->odt, 0, 0);
+> +	timer->timer_ops->set_load(timer->odt, 0);
+> =20
+>  	return 0;
+>  }
 
-Sampling the IRQ line state in EOI and retriggering the interrupt to
-work around missing level-triggered interrupt support only works for
-non-threaded interrupts. Threaded interrupts must be retriggered the
-same way in unmask callback.
+Thanks, I will use that as a merge fix up from today.
 
-Signed-off-by: Marek Vasut <marex@denx.de>
-[maz: fixed missing static attribute]
-Signed-off-by: Marc Zyngier <maz@kernel.org>
-Link: https://lore.kernel.org/r/20200323235132.530550-1-marex@denx.de
----
- drivers/pinctrl/stm32/pinctrl-stm32.c | 18 ++++++++++++++----
- 1 file changed, 14 insertions(+), 4 deletions(-)
+--=20
+Cheers,
+Stephen Rothwell
 
-diff --git a/drivers/pinctrl/stm32/pinctrl-stm32.c b/drivers/pinctrl/stm32/pinctrl-stm32.c
-index d330b30..af3b24f 100644
---- a/drivers/pinctrl/stm32/pinctrl-stm32.c
-+++ b/drivers/pinctrl/stm32/pinctrl-stm32.c
-@@ -304,18 +304,22 @@ static const struct gpio_chip stm32_gpio_template = {
- 	.get_direction		= stm32_gpio_get_direction,
- };
- 
--void stm32_gpio_irq_eoi(struct irq_data *d)
-+static void stm32_gpio_irq_trigger(struct irq_data *d)
- {
- 	struct stm32_gpio_bank *bank = d->domain->host_data;
- 	int level;
- 
--	irq_chip_eoi_parent(d);
--
- 	/* If level interrupt type then retrig */
- 	level = stm32_gpio_get(&bank->gpio_chip, d->hwirq);
- 	if ((level == 0 && bank->irq_type[d->hwirq] == IRQ_TYPE_LEVEL_LOW) ||
- 	    (level == 1 && bank->irq_type[d->hwirq] == IRQ_TYPE_LEVEL_HIGH))
- 		irq_chip_retrigger_hierarchy(d);
-+}
-+
-+static void stm32_gpio_irq_eoi(struct irq_data *d)
-+{
-+	irq_chip_eoi_parent(d);
-+	stm32_gpio_irq_trigger(d);
- };
- 
- static int stm32_gpio_set_type(struct irq_data *d, unsigned int type)
-@@ -371,12 +375,18 @@ static void stm32_gpio_irq_release_resources(struct irq_data *irq_data)
- 	gpiochip_unlock_as_irq(&bank->gpio_chip, irq_data->hwirq);
- }
- 
-+static void stm32_gpio_irq_unmask(struct irq_data *d)
-+{
-+	irq_chip_unmask_parent(d);
-+	stm32_gpio_irq_trigger(d);
-+}
-+
- static struct irq_chip stm32_gpio_irq_chip = {
- 	.name		= "stm32gpio",
- 	.irq_eoi	= stm32_gpio_irq_eoi,
- 	.irq_ack	= irq_chip_ack_parent,
- 	.irq_mask	= irq_chip_mask_parent,
--	.irq_unmask	= irq_chip_unmask_parent,
-+	.irq_unmask	= stm32_gpio_irq_unmask,
- 	.irq_set_type	= stm32_gpio_set_type,
- 	.irq_set_wake	= irq_chip_set_wake_parent,
- 	.irq_request_resources = stm32_gpio_irq_request_resources,
+--Sig_/n6aWScVd=OTDo0fxVhMctuB
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl6BBeAACgkQAVBC80lX
+0Gz/tQf+Jak6uV9MnoCsyPrLx1fCq0oYPt8FVj/npVTYLTuEFiwKn3i7vXHVdFw4
+vEzpW0ZtPrccyWk8gEwksLrhbwYZNt40Pzy9pEjlPjRIj3fWhRJI6bJmaZXyhM31
++u785y0yaX8nxjZIihxu7ghuWbLx11iCgTDunvBvhv/xVrrCPmbtuY4xMzDKt1va
+OiHnGDfuOiENQckikS4gR6s1C1P97QHKSYSLyGhiB4DUuykzVQGqEPbfo2/WkfsP
+cVnA+Wgf0+iHEc74LAb5JGqDsfkGZohoqiVKswBdPe1NKwmJQM2OMZksUMKpaUzN
+1o7g+18wyHN9AdTmP9vMjZusY4q1Hw==
+=eV0w
+-----END PGP SIGNATURE-----
+
+--Sig_/n6aWScVd=OTDo0fxVhMctuB--
