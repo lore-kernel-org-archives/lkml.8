@@ -7,40 +7,39 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D139C2D0E5
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 20:28:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C525FC43331
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 20:28:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C16A20784
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 20:28:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A4350207FF
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 20:28:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729193AbgC2U2d (ORCPT
+        id S1729018AbgC2U2g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Mar 2020 16:28:33 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:56922 "EHLO
+        Sun, 29 Mar 2020 16:28:36 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:56919 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728719AbgC2U0N (ORCPT
+        with ESMTP id S1727719AbgC2U0N (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sun, 29 Mar 2020 16:26:13 -0400
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1jIeVU-0001KW-Oc; Sun, 29 Mar 2020 22:26:08 +0200
+        id 1jIeVW-0001LQ-4j; Sun, 29 Mar 2020 22:26:10 +0200
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 5E3841C0450;
-        Sun, 29 Mar 2020 22:26:08 +0200 (CEST)
-Date:   Sun, 29 Mar 2020 20:26:08 -0000
-From:   "tip-bot2 for Marc Zyngier" <tip-bot2@linutronix.de>
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id BF6CE1C0334;
+        Sun, 29 Mar 2020 22:26:09 +0200 (CEST)
+Date:   Sun, 29 Mar 2020 20:26:09 -0000
+From:   "tip-bot2 for Marek Vasut" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: irq/core] irqchip/gic-v4.1: Plumb mask/unmask SGI callbacks
-Cc:     Marc Zyngier <maz@kernel.org>, Zenghui Yu <yuzenghui@huawei.com>,
-        Eric Auger <eric.auger@redhat.com>, x86 <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200304203330.4967-11-maz@kernel.org>
-References: <20200304203330.4967-11-maz@kernel.org>
+Subject: [tip: irq/core] irqchip/stm32: Retrigger both in eoi and unmask callbacks
+Cc:     Marek Vasut <marex@denx.de>, Marc Zyngier <maz@kernel.org>,
+        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <20200323235132.530550-1-marex@denx.de>
+References: <20200323235132.530550-1-marex@denx.de>
 MIME-Version: 1.0
-Message-ID: <158551356804.28353.15755655132659131079.tip-bot2@tip-bot2>
+Message-ID: <158551356939.28353.3524136454839534794.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -56,59 +55,75 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the irq/core branch of tip:
 
-Commit-ID:     b4e8d644ec623cbb66f192a7fefbd0a66e314be8
-Gitweb:        https://git.kernel.org/tip/b4e8d644ec623cbb66f192a7fefbd0a66e314be8
-Author:        Marc Zyngier <maz@kernel.org>
-AuthorDate:    Wed, 04 Mar 2020 20:33:17 
+Commit-ID:     00760d3cd9de2ccee6b73e30b53e71704a99209e
+Gitweb:        https://git.kernel.org/tip/00760d3cd9de2ccee6b73e30b53e71704a99209e
+Author:        Marek Vasut <marex@denx.de>
+AuthorDate:    Tue, 24 Mar 2020 00:51:32 +01:00
 Committer:     Marc Zyngier <maz@kernel.org>
-CommitterDate: Tue, 24 Mar 2020 12:05:09 
+CommitterDate: Tue, 24 Mar 2020 11:12:34 
 
-irqchip/gic-v4.1: Plumb mask/unmask SGI callbacks
+irqchip/stm32: Retrigger both in eoi and unmask callbacks
 
-Implement mask/unmask for virtual SGIs by calling into the
-configuration helper.
+Sampling the IRQ line state in EOI and retriggering the interrupt to
+work around missing level-triggered interrupt support only works for
+non-threaded interrupts. Threaded interrupts must be retriggered the
+same way in unmask callback.
 
+Signed-off-by: Marek Vasut <marex@denx.de>
+[maz: fixed missing static attribute]
 Signed-off-by: Marc Zyngier <maz@kernel.org>
-Reviewed-by: Zenghui Yu <yuzenghui@huawei.com>
-Reviewed-by: Eric Auger <eric.auger@redhat.com>
-Link: https://lore.kernel.org/r/20200304203330.4967-11-maz@kernel.org
+Link: https://lore.kernel.org/r/20200323235132.530550-1-marex@denx.de
 ---
- drivers/irqchip/irq-gic-v3-its.c | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
+ drivers/pinctrl/stm32/pinctrl-stm32.c | 18 ++++++++++++++----
+ 1 file changed, 14 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/irqchip/irq-gic-v3-its.c b/drivers/irqchip/irq-gic-v3-its.c
-index 28c856a..bc6666a 100644
---- a/drivers/irqchip/irq-gic-v3-its.c
-+++ b/drivers/irqchip/irq-gic-v3-its.c
-@@ -3944,6 +3944,22 @@ static void its_configure_sgi(struct irq_data *d, bool clear)
- 	its_send_single_vcommand(find_4_1_its(), its_build_vsgi_cmd, &desc);
- }
- 
-+static void its_sgi_mask_irq(struct irq_data *d)
-+{
-+	struct its_vpe *vpe = irq_data_get_irq_chip_data(d);
-+
-+	vpe->sgi_config[d->hwirq].enabled = false;
-+	its_configure_sgi(d, false);
-+}
-+
-+static void its_sgi_unmask_irq(struct irq_data *d)
-+{
-+	struct its_vpe *vpe = irq_data_get_irq_chip_data(d);
-+
-+	vpe->sgi_config[d->hwirq].enabled = true;
-+	its_configure_sgi(d, false);
-+}
-+
- static int its_sgi_set_affinity(struct irq_data *d,
- 				const struct cpumask *mask_val,
- 				bool force)
-@@ -3958,6 +3974,8 @@ static int its_sgi_set_affinity(struct irq_data *d,
- 
- static struct irq_chip its_sgi_irq_chip = {
- 	.name			= "GICv4.1-sgi",
-+	.irq_mask		= its_sgi_mask_irq,
-+	.irq_unmask		= its_sgi_unmask_irq,
- 	.irq_set_affinity	= its_sgi_set_affinity,
+diff --git a/drivers/pinctrl/stm32/pinctrl-stm32.c b/drivers/pinctrl/stm32/pinctrl-stm32.c
+index d330b30..af3b24f 100644
+--- a/drivers/pinctrl/stm32/pinctrl-stm32.c
++++ b/drivers/pinctrl/stm32/pinctrl-stm32.c
+@@ -304,18 +304,22 @@ static const struct gpio_chip stm32_gpio_template = {
+ 	.get_direction		= stm32_gpio_get_direction,
  };
  
+-void stm32_gpio_irq_eoi(struct irq_data *d)
++static void stm32_gpio_irq_trigger(struct irq_data *d)
+ {
+ 	struct stm32_gpio_bank *bank = d->domain->host_data;
+ 	int level;
+ 
+-	irq_chip_eoi_parent(d);
+-
+ 	/* If level interrupt type then retrig */
+ 	level = stm32_gpio_get(&bank->gpio_chip, d->hwirq);
+ 	if ((level == 0 && bank->irq_type[d->hwirq] == IRQ_TYPE_LEVEL_LOW) ||
+ 	    (level == 1 && bank->irq_type[d->hwirq] == IRQ_TYPE_LEVEL_HIGH))
+ 		irq_chip_retrigger_hierarchy(d);
++}
++
++static void stm32_gpio_irq_eoi(struct irq_data *d)
++{
++	irq_chip_eoi_parent(d);
++	stm32_gpio_irq_trigger(d);
+ };
+ 
+ static int stm32_gpio_set_type(struct irq_data *d, unsigned int type)
+@@ -371,12 +375,18 @@ static void stm32_gpio_irq_release_resources(struct irq_data *irq_data)
+ 	gpiochip_unlock_as_irq(&bank->gpio_chip, irq_data->hwirq);
+ }
+ 
++static void stm32_gpio_irq_unmask(struct irq_data *d)
++{
++	irq_chip_unmask_parent(d);
++	stm32_gpio_irq_trigger(d);
++}
++
+ static struct irq_chip stm32_gpio_irq_chip = {
+ 	.name		= "stm32gpio",
+ 	.irq_eoi	= stm32_gpio_irq_eoi,
+ 	.irq_ack	= irq_chip_ack_parent,
+ 	.irq_mask	= irq_chip_mask_parent,
+-	.irq_unmask	= irq_chip_unmask_parent,
++	.irq_unmask	= stm32_gpio_irq_unmask,
+ 	.irq_set_type	= stm32_gpio_set_type,
+ 	.irq_set_wake	= irq_chip_set_wake_parent,
+ 	.irq_request_resources = stm32_gpio_irq_request_resources,
