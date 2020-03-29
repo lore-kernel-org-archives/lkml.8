@@ -2,140 +2,90 @@ Return-Path: <SRS0=I467=5O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96119C43331
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 17:39:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D9CFC43331
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 17:41:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C5272073E
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 17:39:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="m0QHDHF+"
+	by mail.kernel.org (Postfix) with ESMTP id 57B3520714
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 17:41:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728459AbgC2Rik (ORCPT
+        id S1728448AbgC2RlR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Mar 2020 13:38:40 -0400
-Received: from mo4-p04-ob.smtp.rzone.de ([85.215.255.121]:30757 "EHLO
-        mo4-p04-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727933AbgC2Rii (ORCPT
+        Sun, 29 Mar 2020 13:41:17 -0400
+Received: from eu-smtp-delivery-151.mimecast.com ([146.101.78.151]:36204 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727933AbgC2RlR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Mar 2020 13:38:38 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1585503516;
-        s=strato-dkim-0002; d=goldelico.com;
-        h=Message-Id:Date:Subject:Cc:To:From:X-RZG-CLASS-ID:X-RZG-AUTH:From:
-        Subject:Sender;
-        bh=R1w1keMan8GZ4iGSxV6rA+DYe4euaOTpkYDsZPH99so=;
-        b=m0QHDHF+15VNDxx9/hyYLn/SoIrHayXduQtb1eeutSTZUM7Ua9CSpIr24HK5p59Q1x
-        4LvKWd9nF7XrMv4h6YDbtpIHQDQ0fL4Bd401/cBVyLUKQ+S8f2Qa6/M5Ws6xguz8wGti
-        9DUlfDO2gwOaJTwriHFaq0NtajlwezlFihL+kN7vQvMWpWByDVhYRu58J5pbNrxyWdt1
-        vCVPyZzWKAnMjglPCOIsoZGtNTMb4DcpE1dwjd6+jTAPlrkPN8GNe1LKZPX/wr8AqntI
-        WhIdqSJq73RIrM5AakSkxulKVdnrYmb7zjpuDLdoE6CsDV3sQ2H3Cg/U0MzCLBcWaDm4
-        7eMQ==
-X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMhflhwDubTJ9o12DNOsPj0pDz2rsNxxv"
-X-RZG-CLASS-ID: mo00
-Received: from iMac.fritz.box
-        by smtp.strato.de (RZmta 46.2.1 DYNA|AUTH)
-        with ESMTPSA id m02241w2THcQBMi
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
-        (Client did not present a certificate);
-        Sun, 29 Mar 2020 19:38:26 +0200 (CEST)
-From:   "H. Nikolaus Schaller" <hns@goldelico.com>
-To:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Paul Cercueil <paul@crapouillou.net>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paulburton@kernel.org>,
-        James Hogan <jhogan@kernel.org>
-Cc:     Philipp Rossak <embed3d@gmail.com>,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
-        openpvrsgx-devgroup@letux.org, letux-kernel@openphoenux.org,
-        kernel@pyra-handheld.com, linux-mips@vger.kernel.org,
-        "H. Nikolaus Schaller" <hns@goldelico.com>
-Subject: [PATCH v5 0/8] ARM/MIPS: DTS: add child nodes describing the PVRSGX GPU present in some OMAP SoC and JZ4780 (and many more)
-Date:   Sun, 29 Mar 2020 19:38:18 +0200
-Message-Id: <cover.1585503505.git.hns@goldelico.com>
-X-Mailer: git-send-email 2.25.1
+        Sun, 29 Mar 2020 13:41:17 -0400
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-69-rWJvp-xpNwCNUPO9Bg3Gnw-1; Sun, 29 Mar 2020 18:41:13 +0100
+X-MC-Unique: rWJvp-xpNwCNUPO9Bg3Gnw-1
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
+ Server (TLS) id 15.0.1347.2; Sun, 29 Mar 2020 18:41:12 +0100
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Sun, 29 Mar 2020 18:41:12 +0100
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Andy Lutomirski' <luto@amacapital.net>,
+        Ingo Molnar <mingo@kernel.org>
+CC:     Al Viro <viro@zeniv.linux.org.uk>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>, X86 ML <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Borislav Petkov <bp@alien8.de>
+Subject: RE: [RFC][PATCH 01/22] x86 user stack frame reads: switch to explicit
+ __get_user()
+Thread-Topic: [RFC][PATCH 01/22] x86 user stack frame reads: switch to
+ explicit __get_user()
+Thread-Index: AQHWBeo2BuGXOsXgxk+vqOM7n5IKaahf05lg
+Date:   Sun, 29 Mar 2020 17:41:12 +0000
+Message-ID: <489c9af889954649b3453e350bab6464@AcuMS.aculab.com>
+References: <20200323183620.GD23230@ZenIV.linux.org.uk>
+ <20200323183819.250124-1-viro@ZenIV.linux.org.uk>
+ <20200328104857.GA93574@gmail.com>
+ <20200328115936.GA23230@ZenIV.linux.org.uk>
+ <20200329092602.GB93574@gmail.com>
+ <CALCETrX=nXN14fqu-yEMGwwN-vdSz=-0C3gcOMucmxrCUpevdA@mail.gmail.com>
+In-Reply-To: <CALCETrX=nXN14fqu-yEMGwwN-vdSz=-0C3gcOMucmxrCUpevdA@mail.gmail.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: aculab.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* reworked YAML bindings to pass dt_binding_check and be better grouped
-* rename all nodes to "gpu: gpu@<address>"
-* removed "img,sgx5" from example - suggested by Rob Herring <robh+dt@kernel.org>
-
-PATCH V4 2019-12-17 19:02:11:
-* MIPS: DTS: jz4780: removed "img,sgx5" from bindings
-* YAML bindings: updated according to suggestions by Rob Herring
-* MIPS: DTS: jz4780: insert-sorted gpu node by register address - suggested by Paul Cercueil
-
-PATCH V3 2019-11-24 12:40:33:
-* reworked YAML format with help by Rob Herring
-* removed .txt binding document
-* change compatible "ti,am335x-sgx" to "ti,am3352-sgx" - suggested by Tony Lindgren
-
-PATCH V2 2019-11-07 12:06:17:
-* tried to convert bindings to YAML format - suggested by Rob Herring
-* added JZ4780 DTS node (proven to load the driver)
-* removed timer and img,cores properties until we know we really need them - suggested by Rob Herring
-
-PATCH V1 2019-10-18 20:46:35:
-
-This patch series defines child nodes for the SGX5xx interface inside
-different SoC so that a driver can be found and probed by the
-compatible strings and can retrieve information about the SGX revision
-that is included in a specific SoC. It also defines the interrupt number
-to be used by the SGX driver.
-
-There is currently no mainline driver for these GPUs, but a project [1]
-is ongoing with the goal to get the open-source part as provided by TI/IMG
-and others into drivers/gpu/drm/pvrsgx.
-
-The kernel modules built from this project have successfully demonstrated
-to work with the DTS definitions from this patch set on AM335x BeagleBone
-Black, DM3730 and OMAP5 Pyra and Droid 4. They partially work on OMAP3530 and
-PandaBoard ES but that is likely a problem in the kernel driver or the
-(non-free) user-space libraries and binaries.
-
-Wotk for JZ4780 (CI20 board) is in progress and there is potential to extend
-this work to e.g. BananaPi-M3 (A83) and  some Intel Poulsbo and CedarView
-devices.
-
-[1]: https://github.com/openpvrsgx-devgroup
-
-
-H. Nikolaus Schaller (8):
-  dt-bindings: add img,pvrsgx.yaml for Imagination GPUs
-  ARM: DTS: am33xx: add sgx gpu child node
-  ARM: DTS: am3517: add sgx gpu child node
-  ARM: DTS: omap34xx: add sgx gpu child node
-  ARM: DTS: omap36xx: add sgx gpu child node
-  ARM: DTS: omap4: add sgx gpu child node
-  ARM: DTS: omap5: add sgx gpu child node
-  MIPS: DTS: jz4780: add sgx gpu node
-
- .../devicetree/bindings/gpu/img,pvrsgx.yaml   | 109 ++++++++++++++++++
- arch/arm/boot/dts/am33xx.dtsi                 |  11 +-
- arch/arm/boot/dts/am3517.dtsi                 |   9 +-
- arch/arm/boot/dts/omap34xx.dtsi               |  11 +-
- arch/arm/boot/dts/omap36xx.dtsi               |   9 +-
- arch/arm/boot/dts/omap4.dtsi                  |  11 +-
- arch/arm/boot/dts/omap4470.dts                |  15 +++
- arch/arm/boot/dts/omap5.dtsi                  |  11 +-
- arch/mips/boot/dts/ingenic/jz4780.dtsi        |  11 ++
- 9 files changed, 169 insertions(+), 28 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/gpu/img,pvrsgx.yaml
- create mode 100644 arch/arm/boot/dts/omap4470.dts
-
--- 
-2.25.1
+RnJvbTogQW5keSBMdXRvbWlyc2tpDQo+IFNlbnQ6IDI5IE1hcmNoIDIwMjAgMTc6NTENCi4uDQo+
+IE15IGluY2xpbmlhdGlvbiBpcyB0byBqdXN0IGdldCByaWQgb2YgdGhlIF9fZ2V0X3VzZXIoKS1z
+dHlsZSBBUElzLg0KPiBUaGVyZSBzaG91bGRuJ3QgYmUgYW55IF9fZ2V0X3VzZXIoKSBjYWxscyB0
+aGF0IGNhbid0IGJlIGRpcmVjdGx5DQo+IHJlcGxhY2VkIGJ5IGdldF91c2VyKCksIGFuZCBhIHNp
+bmdsZSBpbnRlZ2VyIGNvbXBhcmlzb24gaXMgbm90IHRoYXQNCj4gZXhwZW5zaXZlLiAgT24gU01B
+UCBzeXN0ZW1zLCB0aGUgc3BlZWR1cCBvZiBfX2dldF91c2VyIHZzIGdldF91c2VyIGlzDQo+IG5l
+Z2xpZ2libGUuDQoNCk9uIHg4Ni02NCAoYXQgbGVhc3QpIF9fZ2V0X3VzZXIoKSBpcyBpbmxpbmVk
+IGJ1dCBnZXRfdXNlcigpIGlzbid0Lg0KU2luY2UgZ2V0X3VzZXIoKSBoYXMgdG8gcmV0dXJuIHR3
+byB2YWx1ZXMsIG9uZSB3aWxsIGFsd2F5cyBiZQ0KYSAodXN1YWxseSkgb24tc3RhY2sgcmVhbCBt
+ZW1vcnkgbG9jYXRpb24gcmF0aGVyIHRoYW4gYSByZWdpc3Rlci4NCkZvciBmcmVxdWVudGx5IHVz
+ZSBjb2RlIHBhdGhzIHRoaXMgbWF5IGJlIG1lYXN1cmFibGUuDQpJJ20gdGhpbmtpbmcgb2YgdGhp
+bmdzIGxpa2UgZXBvbGxfd2FpdCgpIHdyaXRpbmcgb3V0IGV2ZW50cy4NCihhbHRob3VnaCB0aGF0
+IGlzIGEgcHV0X3VzZXIoKSBsb29wLi4uKQ0KDQpJdCBtYXkgYmUgd29ydGggaW1wbGVtZW50aW5n
+IGdldF91c2VyKCkgYXMgYW4gaW5saW5lDQpmdW5jdGlvbiB0aGF0IHdyaXRlcyB0aGUgcmVzdWx0
+IG9mIGFjY2Vzc19vaygpIHRvIGENCidieSByZWZlcmVuY2UnIHBhcmFtZXRlciBhbmQgdGhlbiBy
+ZXR1cm5zIHRoZSB2YWx1ZQ0KZnJvbSBhbiAncmVhbCcgX19nZXRfdXNlcigpIGZ1bmN0aW9uLg0K
+VGhlIGNvbXBpbGVyIHdpbGwgdGhlbiBvcHRpbWlzZSBhd2F5IHRoZSBtZW1vcnkgcmVmZXJlbmNl
+Lg0KDQoJRGF2aWQNCg0KLQ0KUmVnaXN0ZXJlZCBBZGRyZXNzIExha2VzaWRlLCBCcmFtbGV5IFJv
+YWQsIE1vdW50IEZhcm0sIE1pbHRvbiBLZXluZXMsIE1LMSAxUFQsIFVLDQpSZWdpc3RyYXRpb24g
+Tm86IDEzOTczODYgKFdhbGVzKQ0K
 
