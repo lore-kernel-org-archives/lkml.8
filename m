@@ -2,139 +2,110 @@ Return-Path: <SRS0=I467=5O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D4C7C43331
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 22:07:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E3BCC43331
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 22:12:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 504AD20774
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 22:07:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ncVvgdou"
+	by mail.kernel.org (Postfix) with ESMTP id 0F53720748
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 22:12:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585519971;
+	bh=j1QS8umrZrjMUQJAYFyVQmb46JyiZIsFexFPY07e1y0=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=q+YQ7Wb9cP0Xaf7oYfCbjQNNmUSY2EKfi8lMLwzwx5/4o2NaKI4M7xJuKcpHmBALO
+	 ezr0+cOYLNR5gHjN4uVXVfb67ZZ/ozTh0V/fl1nX8dAf7IAuxHjjzzSk0Q3th1inow
+	 LRqB2tz367N1/yXXrSgBVoGW7jEywd9BnNtPjDxU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729256AbgC2WHW (ORCPT
+        id S1728615AbgC2WMu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Mar 2020 18:07:22 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:43588 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729154AbgC2WHV (ORCPT
+        Sun, 29 Mar 2020 18:12:50 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:44170 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727903AbgC2WMt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Mar 2020 18:07:21 -0400
-Received: by mail-wr1-f65.google.com with SMTP id m11so13052629wrx.10
-        for <linux-kernel@vger.kernel.org>; Sun, 29 Mar 2020 15:07:20 -0700 (PDT)
+        Sun, 29 Mar 2020 18:12:49 -0400
+Received: by mail-lj1-f194.google.com with SMTP id p14so15981801lji.11
+        for <linux-kernel@vger.kernel.org>; Sun, 29 Mar 2020 15:12:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=1LHaTJUSb6YlKNJo8uEXGOXHLnntD8wG0lKLYJJal8o=;
-        b=ncVvgdoulw7o7+hBR1P2C+5Gs5JoBGlqRw0Sy1xicTm6q81nvOAS+m7a5UAWRL9hRH
-         yEbh65k8Qx8xlZhH0t43wKusHLa9vKtTn3P+o7chr1k8b9HOg212dwNDe5UIqqTkPvM5
-         NjK59RhAv/AjjS9C+ePeOxUTr8KWfjEGW0BnrhZMLZGYwJHih6Qa7NlJ/q3h/TBv2CvI
-         qzt8o6Axgo5Rp3OXRAuFzRgZOB7AaPhJpa0QD51Rx0V4DJiIolUALmRUp3al9xzVNBGD
-         TgMdtaHIkMZxLrKJPW3dDuRzt6b6bi9q5B+CInP1E93ReaqlZkh762PlTAokY1xMgBP/
-         HxFw==
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Lf4B+cUpy3zLX5w5D1ihgybvJqfLV1dlANhZhAEv/0Q=;
+        b=gOuqbZqb513wbd8Kp8EPzxWuXeiO9OH9KxNOC4/uBi+QGly/O+zPq7Ansd0vrhdHsk
+         kNVBYNcxdt0ISCrxLv53bhl3jHgaPDfodxJzKPz31KQnt9QYAYh0Uv/l5TVQ/IBTZ/0+
+         59f3jmm1GHgT31k/aOfmRHeAymETtM6OdIFqg=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=1LHaTJUSb6YlKNJo8uEXGOXHLnntD8wG0lKLYJJal8o=;
-        b=Dy0BnKZ026E9BIhvzy9ueopaZGFrjOF60mSEKIOaW+YUvhv2gIs99AlWGOWJ3s1PfH
-         EqXmLJ7W5B0kGuec9ddNLIE0TRHNR3pqfo42i5Q6rGb3E/sU9UHV/XBDjiC+N5vwShkV
-         a1HChE2M100rZ1+xQevR2F7Dp/tO5bQHfUOcg2arKLXuDbgqvzmOzV8jTjddata5Gqfj
-         V4AcEiS1u3S/0lVugPJELwUGefW2blmirslGctLAqG3WzUQ2PDaHn0mzEK+CiJUv7pCc
-         7YRfqz14piA7PANjNR2SUXqfgC17EbVyihrw54ZhhWLymg4skVIQxFbzE8zmmvItiF36
-         LZKw==
-X-Gm-Message-State: ANhLgQ0xGtp/d3CRRL4PkU5gde7CZxQE2GpU0FXza/Q2DVVGdUZ4aVk2
-        Vq62Nu2mMZOyhlBr0nnS451WHQ==
-X-Google-Smtp-Source: ADFU+vuZAg1AC05bxtW27+WzlliBGq0FOpLpXh2o2GNXEgxWNashf38ZSEyqqKofOBjuURsc40gIDw==
-X-Received: by 2002:a5d:4d07:: with SMTP id z7mr11842551wrt.92.1585519639340;
-        Sun, 29 Mar 2020 15:07:19 -0700 (PDT)
-Received: from localhost.localdomain ([2a01:e34:ed2f:f020:78b1:4459:6959:42d0])
-        by smtp.gmail.com with ESMTPSA id j188sm20026740wmj.36.2020.03.29.15.07.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 29 Mar 2020 15:07:18 -0700 (PDT)
-From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-To:     rafael@kernel.org, robh@kernel.org
-Cc:     daniel.lezcano@linaro.org, "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        linux-pm@vger.kernel.org (open list:CPU IDLE TIME MANAGEMENT FRAMEWORK),
-        linux-kernel@vger.kernel.org (open list),
-        linux-arm-kernel@lists.infradead.org (open list:CPUIDLE DRIVER - ARM
-        PSCI)
-Subject: [PATCH 4/4] thermal: cpuidle: Register cpuidle cooling device
-Date:   Mon, 30 Mar 2020 00:03:20 +0200
-Message-Id: <20200329220324.8785-4-daniel.lezcano@linaro.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200329220324.8785-1-daniel.lezcano@linaro.org>
-References: <20200329220324.8785-1-daniel.lezcano@linaro.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Lf4B+cUpy3zLX5w5D1ihgybvJqfLV1dlANhZhAEv/0Q=;
+        b=hiyCNxITw4XUz9JhvXyFhQUBM2ywh3Rgnc+Bn9N3jxbQ4996BxEBz0wj5OCzonjkux
+         UGGqeiNdpJYRdQKvmeQ75VIyOrBxTavFV7syyDOgGzNjjMsyT6jX5FHrQXhB3sn6tDOJ
+         jOyfN2dnz1S2zI2fJ/6FkFC8r70bTLmjmPbOvBFUG7TRVpXcVczSlkSZfdhOfzZSqlmw
+         0jt1vU6wfJD85bUCaP+nnQgfH1gFomt4FkA6Jr15YxZihYecnof4Ky+LGE+7mNdc20uB
+         6Y26/ZGCwLMxEv8mb5JaAEg3Ia2wB5ReNY2B+xlyPrDaxSa/n4d/mGwTnwGs0azr1zMp
+         euyQ==
+X-Gm-Message-State: AGi0PuZLNBNHd07EFKeXAy7mEYbHPKYNb7epv2lgyH1j19faCobCnnax
+        bH/lNmcTlJ4okYJuMx3NKH2nQRB9XNc=
+X-Google-Smtp-Source: APiQypLwZj9oo5SLlCTP5n0JkOE6QL/cw1InjC1qSGCxjEgFb61lxTc2fcap+APPct8nLhgj7OvDBA==
+X-Received: by 2002:a2e:94c8:: with SMTP id r8mr5464060ljh.28.1585519966601;
+        Sun, 29 Mar 2020 15:12:46 -0700 (PDT)
+Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com. [209.85.208.175])
+        by smtp.gmail.com with ESMTPSA id i18sm6992270lfe.15.2020.03.29.15.12.45
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 29 Mar 2020 15:12:45 -0700 (PDT)
+Received: by mail-lj1-f175.google.com with SMTP id r7so8341477ljg.13
+        for <linux-kernel@vger.kernel.org>; Sun, 29 Mar 2020 15:12:45 -0700 (PDT)
+X-Received: by 2002:a2e:b4cb:: with SMTP id r11mr5651376ljm.201.1585519964848;
+ Sun, 29 Mar 2020 15:12:44 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200323183620.GD23230@ZenIV.linux.org.uk> <20200323183819.250124-1-viro@ZenIV.linux.org.uk>
+ <20200328104857.GA93574@gmail.com> <20200328115936.GA23230@ZenIV.linux.org.uk>
+ <20200329092602.GB93574@gmail.com> <CALCETrX=nXN14fqu-yEMGwwN-vdSz=-0C3gcOMucmxrCUpevdA@mail.gmail.com>
+ <489c9af889954649b3453e350bab6464@AcuMS.aculab.com> <CAHk-=whDAxb+83gYCv4=-armoqXQXgzshaVCCe9dNXZb9G_CxQ@mail.gmail.com>
+ <9352bc55302d4589aaf2461c7b85fb6b@AcuMS.aculab.com> <CAHk-=wjEf+0sBkPFKWpYZK_ygS9=ig3KTZkDe5jkDj+v8i7B+w@mail.gmail.com>
+ <CALCETrXWKE8RMX-mZ=p5T19sfS8Rn+1b_EtJz4TXbmf57_aY5g@mail.gmail.com> <CAHk-=wi74U0VLhHLBUqRPrPgercnAdt_8cJ_vjwcTeMzEwocnw@mail.gmail.com>
+In-Reply-To: <CAHk-=wi74U0VLhHLBUqRPrPgercnAdt_8cJ_vjwcTeMzEwocnw@mail.gmail.com>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Sun, 29 Mar 2020 15:12:29 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wgmkAvRqOe9B6Nt3X8yFtiFHshoTU2B9tn2hvPug2Wc-Q@mail.gmail.com>
+Message-ID: <CAHk-=wgmkAvRqOe9B6Nt3X8yFtiFHshoTU2B9tn2hvPug2Wc-Q@mail.gmail.com>
+Subject: Re: [RFC][PATCH 01/22] x86 user stack frame reads: switch to explicit __get_user()
+To:     Andy Lutomirski <luto@kernel.org>
+Cc:     David Laight <David.Laight@aculab.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Thomas Gleixner <tglx@linutronix.de>, X86 ML <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Borislav Petkov <bp@alien8.de>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The cpuidle driver can be used as a cooling device by injecting idle
-cycles. The DT binding for the idle state added an optional
+On Sun, Mar 29, 2020 at 3:06 PM Linus Torvalds
+<torvalds@linux-foundation.org> wrote:
+>
+> Anyway, just in case people want to see it, I'm attaching my current
+> unconditional patch.
 
-When the property is set, register the cpuidle driver with the idle
-state node pointer as a cooling device. The thermal framework will do
-the association automatically with the thermal zone via the
-cooling-device defined in the device tree cooling-maps section.
+Side note: I've actually been running variations of this patch for a
+couple of months now, so it's even tested, but I debugged one of the
+problems with the clang asm goto support it exposed only this last
+week. I thought it was a problem with my patch for the longest time,
+and couldn't figure it out.
 
-Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
----
- drivers/cpuidle/cpuidle-arm.c  | 5 +++++
- drivers/cpuidle/cpuidle-psci.c | 5 +++++
- 2 files changed, 10 insertions(+)
+So to work it needs tip-of-tree clang *and* an additional llvm bugfix
+from Nick Desaulniers for that problem I reported that hasn't landed
+yet.
 
-diff --git a/drivers/cpuidle/cpuidle-arm.c b/drivers/cpuidle/cpuidle-arm.c
-index 9e5156d39627..2406ac0ae134 100644
---- a/drivers/cpuidle/cpuidle-arm.c
-+++ b/drivers/cpuidle/cpuidle-arm.c
-@@ -8,6 +8,7 @@
- 
- #define pr_fmt(fmt) "CPUidle arm: " fmt
- 
-+#include <linux/cpu_cooling.h>
- #include <linux/cpuidle.h>
- #include <linux/cpumask.h>
- #include <linux/cpu_pm.h>
-@@ -124,6 +125,10 @@ static int __init arm_idle_init_cpu(int cpu)
- 	if (ret)
- 		goto out_kfree_drv;
- 
-+	ret = cpuidle_cooling_register(drv);
-+	if (ret)
-+		pr_err("Failed to register the idle cooling device: %d\n", ret);
-+
- 	return 0;
- 
- out_kfree_drv:
-diff --git a/drivers/cpuidle/cpuidle-psci.c b/drivers/cpuidle/cpuidle-psci.c
-index edd7a54ef0d3..8e805bff646f 100644
---- a/drivers/cpuidle/cpuidle-psci.c
-+++ b/drivers/cpuidle/cpuidle-psci.c
-@@ -9,6 +9,7 @@
- #define pr_fmt(fmt) "CPUidle PSCI: " fmt
- 
- #include <linux/cpuhotplug.h>
-+#include <linux/cpu_cooling.h>
- #include <linux/cpuidle.h>
- #include <linux/cpumask.h>
- #include <linux/cpu_pm.h>
-@@ -305,6 +306,10 @@ static int __init psci_idle_init_cpu(int cpu)
- 	if (ret)
- 		goto out_kfree_drv;
- 
-+	ret = cpuidle_cooling_register(drv);
-+	if (ret)
-+		pr_err("Failed to register the idle cooling device: %d\n", ret);
-+
- 	return 0;
- 
- out_kfree_drv:
--- 
-2.17.1
+So I included that patch just for people to look at. If you actually
+want to test it, I can send you Nick's llvm fix too, and you need to
+have the ability to build your own clang.
 
+                 Linus
