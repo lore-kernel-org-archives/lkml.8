@@ -2,159 +2,88 @@ Return-Path: <SRS0=I467=5O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7749C2D0E8
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 03:17:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F3A0C43331
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 03:19:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A415C206F2
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 03:17:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="hUOW7wlG"
+	by mail.kernel.org (Postfix) with ESMTP id 43B7E206F2
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 03:19:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727639AbgC2DRa (ORCPT
+        id S1727121AbgC2DTP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 28 Mar 2020 23:17:30 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:42664 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726899AbgC2DR3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 28 Mar 2020 23:17:29 -0400
-Received: by mail-ed1-f65.google.com with SMTP id cw6so15978557edb.9
-        for <linux-kernel@vger.kernel.org>; Sat, 28 Mar 2020 20:17:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=73jM7UJ1SiInp3qgWBqwVopBoGUW8da3yGoLPO2s510=;
-        b=hUOW7wlGLFSvtHFZFzYEk7uCZM0H4qRyVG1Nq3cJ6E529xu/itB2Sw5XZwbQ+u0atq
-         IyUnfYEn/D0SlrwCk47/eOrsUScgL3N5AGSU1dSkADlcDK/uKgu0oxbrZ7a+4AuMZ3/i
-         u+eRvLFW/3YH6/NomvPTj4lTDuRjf4b8+lzYhV5sdgOcQV5z633Ayp/5ldFb0ouvIGof
-         /UFc5isFg/YJtxKJ3Lma2Q7GC1+Cogl7V2tEkB04nQPioaCwIH+ECkq5ZE4XVZ6Ih5Vv
-         wIA1iofcg4YPsZ2gIQ5fdRfyxTKX/BpU+PLevB4xhg1RS674R3j7mNprN6l2A7i+2HnX
-         C7lg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=73jM7UJ1SiInp3qgWBqwVopBoGUW8da3yGoLPO2s510=;
-        b=Kqwms59gyHvrBg0Xg2HlTwHZH+cXuENTdfrv8gE4YT/iDMEnj9ttyDzVQAOdxCUL/x
-         QrKKsazhMa74pq2pw3ofsWHVmSItooP7eARZVATf2jgbnbhMU6jqBDpChJZdLXZ5jT7Z
-         Fz9i2TQGkC19q8eynyL0SHFJwNI/ohzr4vnAAHc3IcfR1YkEDp62QjNX7qlurm5w2OCw
-         6GMsFGsyIHyADcJXqXRcRC7T6vS//xdLvC/nA7VQc7qoBmHXjV9ZN7wd4OgbavJbEjSE
-         8yYLOn2OpCig9VeS4vwjz97y35QnYlOT6SLI7Cjxs1QKsxyM572ZbgeFOepI0BUh3sEw
-         2ryA==
-X-Gm-Message-State: ANhLgQ0nHd++IzebXkQgaCE6QQy+S6fLfUUma0erB2FDy/Ema7HfpIIK
-        Q6zHuPVMC80XsLelJ2Sb2EuIkrcQ0PYQrYiZNS87
-X-Google-Smtp-Source: ADFU+vv/MFU+PUL6L3fWaCWJ+SsYWlwfM5jrj3x9inQIKOJr3keTEJ5GXU9ljVx28Cw+08JkBWPGuLw/MRT/qz+R/UQ=
-X-Received: by 2002:aa7:d2cb:: with SMTP id k11mr6032886edr.128.1585451846873;
- Sat, 28 Mar 2020 20:17:26 -0700 (PDT)
-MIME-Version: 1.0
-References: <3142237.YMNxv0uec1@x2> <CAHC9VhTiCHQbp2SwK0Xb1QgpUZxOQ26JKKPsVGT0ZvMqx28oPQ@mail.gmail.com>
- <20200312202733.7kli64zsnqc4mrd2@madcap2.tricolour.ca> <CAHC9VhS9DtxJ4gvOfMRnzoo6ccGJVKL+uZYe6qqH+SPqD8r01Q@mail.gmail.com>
- <20200313192306.wxey3wn2h4htpccm@madcap2.tricolour.ca> <CAHC9VhQKOpVWxDg-tWuCWV22QRu8P_NpFKme==0Ot1RQKa_DWA@mail.gmail.com>
- <20200318214154.ycxy5dl4pxno6fvi@madcap2.tricolour.ca> <CAHC9VhSuMnd3-ci2Bx-xJ0yscQ=X8ZqFAcNPKpbh_ZWN3FJcuQ@mail.gmail.com>
- <20200319214759.qgxt2sfkmd6srdol@madcap2.tricolour.ca> <CAHC9VhTp25OAaTO5UMft0OzUZ=oQpZFjebkjjQP0-NrPp0bNAg@mail.gmail.com>
- <20200325122903.obkpyog7fjabzrpf@madcap2.tricolour.ca>
-In-Reply-To: <20200325122903.obkpyog7fjabzrpf@madcap2.tricolour.ca>
-From:   Paul Moore <paul@paul-moore.com>
-Date:   Sat, 28 Mar 2020 23:17:15 -0400
-Message-ID: <CAHC9VhTuYYqAtoNAKLX3qja6DnqEbFuHchi9ESwbcb5WC_Mvtw@mail.gmail.com>
-Subject: Re: [PATCH ghak90 V8 07/16] audit: add contid support for signalling
- the audit daemon
-To:     Richard Guy Briggs <rgb@redhat.com>
-Cc:     Steve Grubb <sgrubb@redhat.com>, linux-audit@redhat.com,
-        nhorman@tuxdriver.com, linux-api@vger.kernel.org,
-        containers@lists.linux-foundation.org,
-        LKML <linux-kernel@vger.kernel.org>, dhowells@redhat.com,
-        netfilter-devel@vger.kernel.org, ebiederm@xmission.com,
-        simo@redhat.com, netdev@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, Eric Paris <eparis@parisplace.org>,
-        mpatel@redhat.com, Serge Hallyn <serge@hallyn.com>
-Content-Type: text/plain; charset="UTF-8"
+        Sat, 28 Mar 2020 23:19:15 -0400
+Received: from cnc.isely.net ([75.149.91.89]:54423 "EHLO cnc.isely.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726315AbgC2DTP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 28 Mar 2020 23:19:15 -0400
+X-Greylist: delayed 304 seconds by postgrey-1.27 at vger.kernel.org; Sat, 28 Mar 2020 23:19:14 EDT
+Received: from ts3-dock2.isely.net (ts3-dock2.isely.net [::ffff:192.168.23.14])
+  (AUTH: PLAIN isely, TLS: TLSv1/SSLv3,256bits,DHE-RSA-AES256-GCM-SHA384)
+  by cnc.isely.net with ESMTPSA; Sat, 28 Mar 2020 22:14:09 -0500
+  id 0000000000146015.000000005E801281.00004342
+Date:   Sat, 28 Mar 2020 22:14:09 -0500 (CDT)
+From:   Mike Isely <isely@isely.net>
+To:     Wolfram Sang <wsa+renesas@sang-engineering.com>
+cc:     linux-i2c@vger.kernel.org,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-media@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Mike Isely <isely@isely.net>
+Subject: Re: [PATCH 6/6] media: usb: pvrusb2: convert to use
+ i2c_new_client_device()
+In-Reply-To: <20200326210947.12747-7-wsa+renesas@sang-engineering.com>
+Message-ID: <alpine.DEB.2.21.2003282213550.11595@sheridan.isely.net>
+References: <20200326210947.12747-1-wsa+renesas@sang-engineering.com> <20200326210947.12747-7-wsa+renesas@sang-engineering.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 25, 2020 at 8:29 AM Richard Guy Briggs <rgb@redhat.com> wrote:
-> On 2020-03-20 17:56, Paul Moore wrote:
-> > On Thu, Mar 19, 2020 at 5:48 PM Richard Guy Briggs <rgb@redhat.com> wrote:
-> > > On 2020-03-18 17:47, Paul Moore wrote:
-> > > > On Wed, Mar 18, 2020 at 5:42 PM Richard Guy Briggs <rgb@redhat.com> wrote:
-> > > > > On 2020-03-18 17:01, Paul Moore wrote:
-> > > > > > On Fri, Mar 13, 2020 at 3:23 PM Richard Guy Briggs <rgb@redhat.com> wrote:
-> > > > > > > On 2020-03-13 12:42, Paul Moore wrote:
-> > > > > >
-> > > > > > ...
-> > > > > >
-> > > > > > > > The thread has had a lot of starts/stops, so I may be repeating a
-> > > > > > > > previous suggestion, but one idea would be to still emit a "death
-> > > > > > > > record" when the final task in the audit container ID does die, but
-> > > > > > > > block the particular audit container ID from reuse until it the
-> > > > > > > > SIGNAL2 info has been reported.  This gives us the timely ACID death
-> > > > > > > > notification while still preventing confusion and ambiguity caused by
-> > > > > > > > potentially reusing the ACID before the SIGNAL2 record has been sent;
-> > > > > > > > there is a small nit about the ACID being present in the SIGNAL2
-> > > > > > > > *after* its death, but I think that can be easily explained and
-> > > > > > > > understood by admins.
-> > > > > > >
-> > > > > > > Thinking quickly about possible technical solutions to this, maybe it
-> > > > > > > makes sense to have two counters on a contobj so that we know when the
-> > > > > > > last process in that container exits and can issue the death
-> > > > > > > certificate, but we still block reuse of it until all further references
-> > > > > > > to it have been resolved.  This will likely also make it possible to
-> > > > > > > report the full contid chain in SIGNAL2 records.  This will eliminate
-> > > > > > > some of the issues we are discussing with regards to passing a contobj
-> > > > > > > vs a contid to the audit_log_contid function, but won't eliminate them
-> > > > > > > all because there are still some contids that won't have an object
-> > > > > > > associated with them to make it impossible to look them up in the
-> > > > > > > contobj lists.
-> > > > > >
-> > > > > > I'm not sure you need a full second counter, I imagine a simple flag
-> > > > > > would be okay.  I think you just something to indicate that this ACID
-> > > > > > object is marked as "dead" but it still being held for sanity reasons
-> > > > > > and should not be reused.
-> > > > >
-> > > > > Ok, I see your point.  This refcount can be changed to a flag easily
-> > > > > enough without change to the api if we can be sure that more than one
-> > > > > signal can't be delivered to the audit daemon *and* collected by sig2.
-> > > > > I'll have a more careful look at the audit daemon code to see if I can
-> > > > > determine this.
-> > > >
-> > > > Maybe I'm not understanding your concern, but this isn't really
-> > > > different than any of the other things we track for the auditd signal
-> > > > sender, right?  If we are worried about multiple signals being sent
-> > > > then it applies to everything, not just the audit container ID.
-> > >
-> > > Yes, you are right.  In all other cases the information is simply
-> > > overwritten.  In the case of the audit container identifier any
-> > > previous value is put before a new one is referenced, so only the last
-> > > signal is kept.  So, we only need a flag.  Does a flag implemented with
-> > > a rcu-protected refcount sound reasonable to you?
-> >
-> > Well, if I recall correctly you still need to fix the locking in this
-> > patchset so until we see what that looks like it is hard to say for
-> > certain.  Just make sure that the flag is somehow protected from
-> > races; it is probably a lot like the "valid" flags you sometimes see
-> > with RCU protected lists.
->
-> This is like looking for a needle in a haystack.  Can you point me to
-> some code that does "valid" flags with RCU protected lists.
 
-Sigh.  Come on Richard, you've been playing in the kernel for some
-time now.  I can't think of one off the top of my head as I write
-this, but there are several resources that deal with RCU protected
-lists in the kernel, Google is your friend and Documentation/RCU is
-your friend.
+Acked-by: Mike Isely <isely@pobox.com>
 
-Spending time to learn how RCU works and how to use it properly is not
-time wasted.  It's a tricky thing to get right (I have to refresh my
-memory on some of the more subtle details each time I write/review RCU
-code), but it's very cool when done correctly.
+On Thu, 26 Mar 2020, Wolfram Sang wrote:
+
+> Move away from the deprecated API.
+> 
+> Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+> ---
+>  drivers/media/usb/pvrusb2/pvrusb2-i2c-core.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/media/usb/pvrusb2/pvrusb2-i2c-core.c b/drivers/media/usb/pvrusb2/pvrusb2-i2c-core.c
+> index 275394bafe7d..63db04fe12d3 100644
+> --- a/drivers/media/usb/pvrusb2/pvrusb2-i2c-core.c
+> +++ b/drivers/media/usb/pvrusb2/pvrusb2-i2c-core.c
+> @@ -564,7 +564,7 @@ static void pvr2_i2c_register_ir(struct pvr2_hdw *hdw)
+>  		strscpy(info.type, "ir_video", I2C_NAME_SIZE);
+>  		pvr2_trace(PVR2_TRACE_INFO, "Binding %s to i2c address 0x%02x.",
+>  			   info.type, info.addr);
+> -		i2c_new_device(&hdw->i2c_adap, &info);
+> +		i2c_new_client_device(&hdw->i2c_adap, &info);
+>  		break;
+>  	case PVR2_IR_SCHEME_ZILOG:     /* HVR-1950 style */
+>  	case PVR2_IR_SCHEME_24XXX_MCE: /* 24xxx MCE device */
+> @@ -579,7 +579,7 @@ static void pvr2_i2c_register_ir(struct pvr2_hdw *hdw)
+>  		strscpy(info.type, "ir_z8f0811_haup", I2C_NAME_SIZE);
+>  		pvr2_trace(PVR2_TRACE_INFO, "Binding %s to i2c address 0x%02x.",
+>  			   info.type, info.addr);
+> -		i2c_new_device(&hdw->i2c_adap, &info);
+> +		i2c_new_client_device(&hdw->i2c_adap, &info);
+>  		break;
+>  	default:
+>  		/* The device either doesn't support I2C-based IR or we
+> 
 
 -- 
-paul moore
-www.paul-moore.com
+
+Mike Isely
+isely @ isely (dot) net
+PGP: 03 54 43 4D 75 E5 CC 92 71 16 01 E2 B5 F5 C1 E8
