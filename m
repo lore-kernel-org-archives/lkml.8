@@ -2,49 +2,69 @@ Return-Path: <SRS0=I467=5O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA3FAC2D0E5
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 22:43:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9B62C43331
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 22:45:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8BFB620735
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 22:43:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 71CA920733
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 22:45:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="lT23Oz0U"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="ScK3vVXJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729264AbgC2Wnl (ORCPT
+        id S1728927AbgC2Wp4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Mar 2020 18:43:41 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:44722 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728473AbgC2Wnk (ORCPT
+        Sun, 29 Mar 2020 18:45:56 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:37366 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727591AbgC2Wpz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Mar 2020 18:43:40 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:MIME-Version:Date:Message-ID:Subject:From:To:Sender:Reply-To:Cc:
-        Content-ID:Content-Description:In-Reply-To:References;
-        bh=UDBIjlOAQk+mnZ7ZAGKtT2jL+XhYMKPhsPSuI+yZrAs=; b=lT23Oz0U0JkWWopp4ezoeVdxmv
-        oVOqCQj0EF/fZvSHwYI0x8/Yu3pjnm2i3SKIlLjtZcWGAi9xDKvTD0g/wG5jqSftPgreR/RZAlhfs
-        NAu12TDR6LdbRhrM0LN+E3E0DJ43w4JD22RpBc1zYxbn5E5bWzdjdEnMqQTRrtcAY5EvRdnB5catY
-        JawiPGKo0ePRZBjUFmlOBCDwEyiuaXA1hxz9WLF4htyfCnEawynfXTGYQ/d38wjUzNV+7swmiwEZ1
-        e0ws4CdANaw8pseqFxssH4AUnRe0mQLpMUxtpDS94arowBgOQiGWxf/15be/FK3XmCJ1dOf/WS5gZ
-        8ahX8O3A==;
-Received: from [2601:1c0:6280:3f0::2824]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jIgeP-0003YS-7f; Sun, 29 Mar 2020 22:43:29 +0000
-To:     linux-media <linux-media@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-uvc-devel@lists.sourceforge.net,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Subject: uvcvideo: shift exponent -7 is negative
-Message-ID: <1cdc4409-2113-cfe5-7eb2-6b1a6671e262@infradead.org>
-Date:   Sun, 29 Mar 2020 15:43:28 -0700
+        Sun, 29 Mar 2020 18:45:55 -0400
+Received: by mail-pl1-f196.google.com with SMTP id x1so5969403plm.4
+        for <linux-kernel@vger.kernel.org>; Sun, 29 Mar 2020 15:45:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=to:cc:from:subject:message-id:date:user-agent:mime-version
+         :content-language:content-transfer-encoding;
+        bh=0t271x+DU0Atpe8UaNyBG8lIiHoWr2mHJuNedMwC03c=;
+        b=ScK3vVXJs6qew1oyLLHQqcw27RzNAijmKHi6W3XA0kAFbzGOnLE9frpJYqMUMgPIvE
+         fVKwl2GKTZZygosnXnVqSlAiExVvGw1t8S8FHc1MhH7jMCSkU8HTcX2VS2qFzinGUiBw
+         zhTCRUbsrlUQ+Q402W4/3zUJXTJZ6ibp5/CThCJNSSe2y0h621hZDAmLYZuL7gL/0HMV
+         Af/Z/4MF059M7SlLq4SJgBrvLypLXIskxhDCi0PAvNG+PiSwwJ516czAHzElzgFO9L6Z
+         NgJGjatmSFfx0juo2MzJ6j2aMnzxx9UsxUhMsirvXMjUIHf4706x+ePRye+SuZEu6W5M
+         aWfQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:to:cc:from:subject:message-id:date:user-agent
+         :mime-version:content-language:content-transfer-encoding;
+        bh=0t271x+DU0Atpe8UaNyBG8lIiHoWr2mHJuNedMwC03c=;
+        b=B68UdKEPSOD6e/L2yOA1jYru09nY/nrMqtV9G5FXOoZ1S+J8xhLjkdrj+g75/h9oJI
+         Z22d18pGRt9PRWsX4Rc6HD5USyAyF3VPyK+GfFJZdVxrWq67AGePovGpShPNDHz3V9Bx
+         csdaUvbPdVSFY27zd/f8i6n9PItQW8oA62wzqeMKfyo4X4nYuZApdBEs2slbR2mywi1d
+         6YE3Ca5A6hRR/+uGDpN1nRq+VOo6gfTnVFjAt1uMtbfxRbJuooLItIqlihgkQk9tPk3F
+         4atJTHmevQ00yWr6apCTGhQrdAoLsJUxzwJziOk01ikOHULQ257TaS37HrvweL0QEiEd
+         O/7A==
+X-Gm-Message-State: AGi0PubXi3RxIcYjjSeDIqYfX2hrhMFksi9qQTsB7JdCFFYoTzFiHNNN
+        rmGVCaL2//Z+/uCAfwwxa5Fyh96yPPi7Tg==
+X-Google-Smtp-Source: APiQypLecVMbWWNlrL4dt6DJMNsMZUKkDmdVS2Cc9Ivv5ofvRZaImeatR9Cvae6Zqkowi22cH4y0DQ==
+X-Received: by 2002:a17:902:59c6:: with SMTP id d6mr4586617plj.207.1585521954231;
+        Sun, 29 Mar 2020 15:45:54 -0700 (PDT)
+Received: from [192.168.1.188] ([66.219.217.145])
+        by smtp.gmail.com with ESMTPSA id r7sm8729672pfg.38.2020.03.29.15.45.52
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 29 Mar 2020 15:45:53 -0700 (PDT)
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     IDE/ATA development list <linux-ide@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+From:   Jens Axboe <axboe@kernel.dk>
+Subject: [GIT PULL] libata changes for 5.7-rc
+Message-ID: <d5c6ff8b-f82c-f609-0257-66fb6fbeb331@kernel.dk>
+Date:   Sun, 29 Mar 2020 16:45:51 -0600
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+ Thunderbird/68.4.1
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
@@ -54,57 +74,104 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is kernel version 5.6-rc6.
+Hi Linus,
 
-UBSAN detected a bad shift value:
+Here are the libata changes for this merge window. This pull request
+contains:
 
-[  511.693411] UBSAN: Undefined behaviour in ../drivers/media/usb/uvc/uvc_ctrl.c:781:13
-[  511.694043] shift exponent -7 is negative
-[  511.694405] CPU: 2 PID: 1006 Comm: motv Tainted: G            E     5.6.0-rc6 #8
-[  511.695409] Hardware name: TOSHIBA PORTEGE R835/Portable PC, BIOS Version 4.10   01/08/2013
-[  511.696034] Call Trace:
-[  511.696278]  dump_stack+0x96/0xca
-[  511.696654]  ubsan_epilogue+0x9/0x26
-[  511.697289]  __ubsan_handle_shift_out_of_bounds.cold+0x4c/0xf9
-[  511.697779]  ? uvc_query_ctrl+0x4a/0x80 [uvcvideo]
-[  511.698559]  uvc_get_le_value.cold+0x58/0x9f [uvcvideo]
-[  511.698788]  ? uvc_set_le_value+0xe0/0xe0 [uvcvideo]
-[  511.699795]  __uvc_query_v4l2_ctrl+0x36c/0x590 [uvcvideo]
-[  511.700178]  ? uvc_ctrl_populate_cache+0x3b0/0x3b0 [uvcvideo]
-[  511.700654]  ? uvc_find_control+0xf0/0x1a0 [uvcvideo]
-[  511.701550]  ? __uvc_find_control+0x170/0x170 [uvcvideo]
-[  511.701781]  ? ksys_ioctl+0xa7/0xd0
-[  511.702433]  uvc_query_v4l2_ctrl+0xad/0x100 [uvcvideo]
-[  511.702779]  ? uvc_ctrl_init_xu_ctrl+0x6d0/0x6d0 [uvcvideo]
-[  511.703663]  ? __might_sleep+0x6e/0xe0
-[  511.703800]  uvc_ioctl_queryctrl+0x28/0x30 [uvcvideo]
-[  511.704814]  v4l_queryctrl+0xa8/0xe0 [videodev]
-[  511.705066]  __video_do_ioctl+0x72c/0x8a0 [videodev]
-[  511.705564]  ? video_put_user+0x380/0x380 [videodev]
-[  511.706289]  ? __kasan_slab_free+0x131/0x160
-[  511.706655]  ? kasan_slab_free+0xe/0x10
-[  511.707161]  ? kfree+0xae/0x2e0
-[  511.707432]  video_usercopy+0x20a/0x690 [videodev]
-[  511.707921]  ? video_put_user+0x380/0x380 [videodev]
-[  511.709064]  ? v4l_enumstd+0x40/0x40 [videodev]
-[  511.709289]  ? do_fcntl+0x903/0xa30
-[  511.709647]  ? lock_contended+0x5f0/0x5f0
-[  511.710165]  ? f_getown+0x60/0x60
-[  511.710433]  video_ioctl2+0x10/0x20 [videodev]
-[  511.710918]  v4l2_ioctl+0x10a/0x150 [videodev]
-[  511.711919]  ksys_ioctl+0xa7/0xd0
-[  511.712045]  __x64_sys_ioctl+0x3e/0x50
-[  511.712409]  do_syscall_64+0x6d/0x240
-[  511.712898]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
-[  511.714036] RIP: 0033:0x7f9531e84f59
-[  511.714152] Code: 00 c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 44 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 8b 0d 07 4f 0c 00 f7 d8 64 89 01 48
-[  511.716910] RSP: 002b:00007fff21180d18 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
-[  511.717784] RAX: ffffffffffffffda RBX: 000055e3b563d540 RCX: 00007f9531e84f59
-[  511.718534] RDX: 000055e3b5638d90 RSI: 00000000c0445624 RDI: 0000000000000004
-[  511.719034] RBP: 00007f9530d82de0 R08: 00000000ffffffff R09: 0000000000000008
-[  511.719767] R10: 00000000ffffffff R11: 0000000000000246 R12: 000055e3b5638d90
-[  511.721034] R13: 0000000000000004 R14: 000000000098090c R15: 00007f9530dea1a0
-[  511.721735] ================================================================================
+- Series from Bart, making the libata code smaller on PATA only setups.
+  This is useful for smaller/embedded use cases, and will help us move
+  some of those off drivers/ide.
+
+- Kill unused BPRINTK() (Hannes)
+
+- Add various Comet Lake ahci PCI ids (Kai-Heng, Mika)
+
+- Fix for a double scsi_host_put() in error handling (John)
+
+- Use scnprintf (Takashi)
+
+- Assign OF node to the SCSI device (Linus)
+
+Please pull!
+
+
+  git://git.kernel.dk/linux-block.git tags/for-5.7/libata-2020-03-29
+
+
+----------------------------------------------------------------
+Bartlomiej Zolnierkiewicz (27):
+      ata: remove stale maintainership information from core code
+      ata: expose ncq_enable_prio sysfs attribute only on NCQ capable hosts
+      ata: make SATA_PMP option selectable only if any SATA host driver is enabled
+      sata_promise: use ata_cable_sata()
+      ata: simplify ata_scsiop_inq_89()
+      ata: use COMMAND_LINE_SIZE for ata_force_param_buf[] size
+      ata: optimize struct ata_force_param size
+      ata: optimize ata_scsi_rbuf[] size
+      ata: move EXPORT_SYMBOL_GPL()s close to exported code
+      ata: remove EXPORT_SYMBOL_GPL()s not used by modules
+      ata: fix CodingStyle issues in PATA timings code
+      ata: separate PATA timings code from libata-core.c
+      ata: add CONFIG_SATA_HOST=n version of ata_ncq_enabled()
+      ata: let compiler optimize out ata_dev_config_ncq() on non-SATA hosts
+      ata: let compiler optimize out ata_eh_set_lpm() on non-SATA hosts
+      ata: start separating SATA specific code from libata-core.c
+      ata: move sata_scr_*() to libata-sata.c
+      ata: move *sata_set_spd*() to libata-sata.c
+      ata: move sata_link_{debounce,resume}() to libata-sata.c
+      ata: move sata_link_hardreset() to libata-sata.c
+      ata: move ata_qc_complete_multiple() to libata-sata.c
+      ata: move sata_deb_timing_*() to libata-sata.c
+      ata: start separating SATA specific code from libata-scsi.c
+      ata: move ata_sas_*() to libata-sata.c
+      ata: start separating SATA specific code from libata-eh.c
+      ata: move ata_eh_analyze_ncq_error() & co. to libata-sata.c
+      ata: make "libata.force" kernel parameter optional
+
+Hannes Reinecke (1):
+      libata: drop BPRINTK()
+
+John Garry (1):
+      libata: Remove extra scsi_host_put() in ata_scsi_add_hosts()
+
+Kai-Heng Feng (1):
+      ahci: Add Intel Comet Lake H RAID PCI ID
+
+Linus Walleij (1):
+      libata: Assign OF node to the SCSI device
+
+Mika Westerberg (2):
+      ahci: Add Intel Comet Lake PCH-H PCI ID
+      ahci: Add Intel Comet Lake PCH-V PCI ID
+
+Takashi Iwai (1):
+      libata: transport: Use scnprintf() for avoiding potential buffer overflow
+
+Tiezhu Yang (2):
+      PCI: Add Loongson vendor ID
+      AHCI: Add support for Loongson 7A1000 SATA controller
+
+ drivers/ata/Kconfig               |   77 ++
+ drivers/ata/Makefile              |    2 +
+ drivers/ata/ahci.c                |   10 +
+ drivers/ata/libata-core.c         | 1126 +++-------------------------
+ drivers/ata/libata-eh.c           |  224 +-----
+ drivers/ata/libata-pata-timings.c |  192 +++++
+ drivers/ata/libata-sata.c         | 1483 +++++++++++++++++++++++++++++++++++++
+ drivers/ata/libata-scsi.c         |  583 ++-------------
+ drivers/ata/libata-sff.c          |    4 -
+ drivers/ata/libata-transport.c    |   10 +-
+ drivers/ata/libata.h              |   25 +-
+ drivers/ata/sata_promise.c        |    8 +-
+ drivers/scsi/Kconfig              |    1 +
+ drivers/scsi/libsas/Kconfig       |    1 +
+ include/linux/libata.h            |  174 +++--
+ include/linux/pci_ids.h           |    2 +
+ 16 files changed, 2065 insertions(+), 1857 deletions(-)
+ create mode 100644 drivers/ata/libata-pata-timings.c
+ create mode 100644 drivers/ata/libata-sata.c
 
 -- 
-~Randy
+Jens Axboe
+
