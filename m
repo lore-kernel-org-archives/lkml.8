@@ -2,144 +2,98 @@ Return-Path: <SRS0=I467=5O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 975C7C2D0EE
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 17:18:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DCA81C43331
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 17:25:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 664692073B
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 17:18:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 985B22076E
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 17:25:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="a4VluhOb"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="D3+qiGb+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728435AbgC2RSC (ORCPT
+        id S1728366AbgC2RZS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Mar 2020 13:18:02 -0400
-Received: from mail-pj1-f65.google.com ([209.85.216.65]:39399 "EHLO
-        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728379AbgC2RSB (ORCPT
+        Sun, 29 Mar 2020 13:25:18 -0400
+Received: from mail-qv1-f73.google.com ([209.85.219.73]:40510 "EHLO
+        mail-qv1-f73.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728065AbgC2RZS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Mar 2020 13:18:01 -0400
-Received: by mail-pj1-f65.google.com with SMTP id z3so5751833pjr.4
-        for <linux-kernel@vger.kernel.org>; Sun, 29 Mar 2020 10:18:00 -0700 (PDT)
+        Sun, 29 Mar 2020 13:25:18 -0400
+Received: by mail-qv1-f73.google.com with SMTP id z2so12396213qvw.7
+        for <linux-kernel@vger.kernel.org>; Sun, 29 Mar 2020 10:25:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=1VdjSPPRhlOBu7W9s+NexDovrzvWntWGJmIdhHoxZAQ=;
-        b=a4VluhObQuJFb8SVMTjUUnyaHON/TeGQbbeStEeHeBcJegBh1n4OVsHdtsIfVjvse5
-         IbvBFPybuUVOSQC5Fxd7Qc5iEqcrp89RD74YyUyxSTdpfuKOOp0DVATyIlxcyzQfmBWr
-         zEFxYeTsBKcYbSpW7IIWW+VqW4tsstUSA4qE0=
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=EC/U461+gwqn24yReon8yuub2CQF5dEI1L4tqKNZnTU=;
+        b=D3+qiGb+3Bos7ak2NV7SPB2wSBA7O6UYjsdYqSqqTW0qI1xFsj24CB46jbyNPOzQzD
+         kxVd6jzoq8yWYR9vl0gRZsQUmbyLROevCX/VRrkmXfRYmpms1C3vaWjXmASNRZCSjuZ9
+         32/kJfzyaau4ebwaCnyCOCSWYs/QTEvDRjL8K1FLpZH+ui6qlSJ/A3jiaBGeI3MBZlw2
+         zH7k5tU8uAVLZ0KdXJYS9itVwkI2VLtwGVyF0ht7hU0X3iZer7fZ2+usvnADH84r+ExB
+         cWseU1S/1vktGRyzTu4ncrzmxH3z7u4oN6z3K6SLGvMaq5WtZK74t4+ltmEXuVdvXPps
+         g9Mg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=1VdjSPPRhlOBu7W9s+NexDovrzvWntWGJmIdhHoxZAQ=;
-        b=eJTTIcn39fopeVdskzOd2H3W94BKyCMvb6MmbaRDk5Xz5Q0egAXEbva+49kIHiMIHg
-         rJKrwNL6m+ISXvWDCYI/tuKJ0OcgcICKfKOAv2IkMh9Vzu2AmNYo/AaNw+F8F0VyeLNq
-         bkY7pIAJ/2TSJvvXhykEFtHJg8t+Z6opg4ot9tryvgo17UHUNZnUsLHVO5az94cYLnuC
-         FCKXMhPPWNiMMzhkD7pdECiHWM4bszN/REeD6VBcR7yAEvYx+1eByieEKbFOyQjwK9M1
-         RDme8/9UzUnLPD6k6L03S6rrOZMQs5iyI3KqT8HND2MFhg1Xj2AYuVV/rhV8t5KYzZcd
-         tDzg==
-X-Gm-Message-State: ANhLgQ2alG+b1OI5dHwi8mgZWHKxX/GE3Vmcqgq1iEe5K27U2vyoiL28
-        u/TGJy1FtJ/a4BM2wLRI7oOVuQ==
-X-Google-Smtp-Source: ADFU+vsiB7DX7YoDE8Qsn1o3o8N1nnCf0ZGMiEPaCNY3wHCH2wyiT2nAj/cJUqGyY0agzks/DRDjjA==
-X-Received: by 2002:a17:90a:b702:: with SMTP id l2mr11203973pjr.22.1585502280189;
-        Sun, 29 Mar 2020 10:18:00 -0700 (PDT)
-Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
-        by smtp.gmail.com with ESMTPSA id t2sm4016414pfh.157.2020.03.29.10.17.58
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 29 Mar 2020 10:17:59 -0700 (PDT)
-Date:   Sun, 29 Mar 2020 10:17:56 -0700
-From:   Matthias Kaehlcke <mka@chromium.org>
-To:     Sandeep Maheswaram <sanm@codeaurora.org>,
-        Felipe Balbi <balbi@kernel.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Felipe Balbi <balbi@kernel.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Doug Anderson <dianders@chromium.org>,
-        linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Manu Gautam <mgautam@codeaurora.org>,
-        Chandana Kishori Chiluveru <cchiluve@codeaurora.org>
-Subject: Re: [PATCH v6 2/4] usb: dwc3: qcom: Add interconnect support in dwc3
- driver
-Message-ID: <20200329171756.GA199755@google.com>
-References: <1585302203-11008-1-git-send-email-sanm@codeaurora.org>
- <1585302203-11008-3-git-send-email-sanm@codeaurora.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <1585302203-11008-3-git-send-email-sanm@codeaurora.org>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=EC/U461+gwqn24yReon8yuub2CQF5dEI1L4tqKNZnTU=;
+        b=Lcsl856VW9coN1J+azDt81UOZgF8Dm6FSFhb/D9Fqk3yN4v0vlNl2Pbw/lJl0kJ2i2
+         qOWxu5+iBFYt828+y+i0unWUWiHq+NRRUoehNOVPTtMm7LdXBlQ6K0/fpkLb/95HZAHu
+         cvUhH8IG0S2DFDl+yhbi0PukXwfmRugbuGqnlnbKm9lbleN92CFFM8Kz1vsrBsuOwlj2
+         CB7fcrLv97/iWHVmkua6wYCh8GM/opTesYPprmo8aZN/X3TTazQslSHQDHWQ2yzVqKtw
+         1re6ZhwADlNUfTy+D5No2+B5ZeqKAujEpgbWrX4HRe3GC8jJZMttmwcrUktddUOtnSuG
+         59yA==
+X-Gm-Message-State: ANhLgQ0Lm7yiaEOeSpZpWjTgHVpsX7BAkTm+UbRLYsLKz1nqKC51drNW
+        JSG9uAFUa6myDXKVPlnj6M9Ld8bpv7q+
+X-Google-Smtp-Source: ADFU+vu4i10Gh7yzTZjhEUSWpfFGbE9wnvJi0F1/Eqla5s2nPiUeLOuYWg+8TH7Uxa2JwOKGt/539wJnHXuV
+X-Received: by 2002:ac8:7b26:: with SMTP id l6mr8405402qtu.64.1585502717195;
+ Sun, 29 Mar 2020 10:25:17 -0700 (PDT)
+Date:   Sun, 29 Mar 2020 10:25:13 -0700
+Message-Id: <20200329172513.133548-1-rajatja@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.26.0.rc2.310.g2932bb562d-goog
+Subject: [PATCH v2] Input: input-event-codes.h: Update the license
+From:   Rajat Jain <rajatja@google.com>
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Rajat Jain <rajatja@google.com>,
+        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     rajatxjain@gmail.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Replace the
+/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
+with
+/* SPDX-License-Identifier: GPL-2.0-only WITH Linux-syscall-note */
 
-On Fri, Mar 27, 2020 at 03:13:21PM +0530, Sandeep Maheswaram wrote:
-> Add interconnect support in dwc3-qcom driver to vote for bus
-> bandwidth.
-> 
-> This requires for two different paths - from USB master to
-> DDR slave. The other is from APPS master to USB slave.
-> 
-> Signed-off-by: Sandeep Maheswaram <sanm@codeaurora.org>
-> Signed-off-by: Chandana Kishori Chiluveru <cchiluve@codeaurora.org>
-> Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
-> ---
->  drivers/usb/dwc3/dwc3-qcom.c | 128 ++++++++++++++++++++++++++++++++++++++++++-
->  1 file changed, 126 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/usb/dwc3/dwc3-qcom.c b/drivers/usb/dwc3/dwc3-qcom.c
-> index 1dfd024..7e85fe6 100644
-> --- a/drivers/usb/dwc3/dwc3-qcom.c
-> +++ b/drivers/usb/dwc3/dwc3-qcom.c
->
-> ...
->
-> +/* To disable an interconnect, we just set its bandwidth to 0 */
-> +static int dwc3_qcom_interconnect_disable(struct dwc3_qcom *qcom)
-> +{
-> +	int ret;
-> +
-> +	ret = icc_set_bw(qcom->usb_ddr_icc_path, 0, 0);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = icc_set_bw(qcom->apps_usb_icc_path, 0, 0);
-> +	if (ret)
-> +		goto err_reenable_memory_path;
-> +
-> +	return 0;
-> +
-> +	/* Re-enable things in the event of an error */
-> +err_reenable_memory_path:
-> +	ret = dwc3_qcom_interconnect_enable(qcom);
+to help coreboot community consume this file without relaxing their
+licensing requirements.
 
-This overwrites the error that led to the execution of this code path.
-The function should return original error, not the result of the
-_interconnect_enable() call.
+Signed-off-by: Rajat Jain <rajatja@google.com>
+---
+V2: Update the commit log
 
-I saw Felipe queued the patch for v5.8. I think the main options to fix this
-are:
+ include/uapi/linux/input-event-codes.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-- a v6 of this patch to replace v5 in Felipe's tree (which IIUC will be rebased
-  anyway once there is a v5.7-rc)
-- send the fix as a separate patch
-- Felipe amends the patch in his tree
+diff --git a/include/uapi/linux/input-event-codes.h b/include/uapi/linux/input-event-codes.h
+index 6923dc7e02982..b6a835d378263 100644
+--- a/include/uapi/linux/input-event-codes.h
++++ b/include/uapi/linux/input-event-codes.h
+@@ -1,4 +1,4 @@
+-/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
++/* SPDX-License-Identifier: GPL-2.0-only WITH Linux-syscall-note */
+ /*
+  * Input event codes
+  *
+-- 
+2.26.0.rc2.310.g2932bb562d-goog
 
-Felipe, what would work best for you?
-
-Thanks
-
-Matthias
