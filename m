@@ -7,40 +7,40 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CAF3C43331
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 20:26:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BD67C2D0E5
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 20:26:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 70F2A208E4
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 20:26:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3CE6720774
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 20:26:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728822AbgC2U0S (ORCPT
+        id S1728844AbgC2U0T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Mar 2020 16:26:18 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:56927 "EHLO
+        Sun, 29 Mar 2020 16:26:19 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:56924 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728741AbgC2U0O (ORCPT
+        with ESMTP id S1728725AbgC2U0O (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sun, 29 Mar 2020 16:26:14 -0400
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1jIeVV-0001L8-Ly; Sun, 29 Mar 2020 22:26:09 +0200
+        id 1jIeVT-0001Jx-Qc; Sun, 29 Mar 2020 22:26:07 +0200
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 4F2681C0450;
-        Sun, 29 Mar 2020 22:26:09 +0200 (CEST)
-Date:   Sun, 29 Mar 2020 20:26:08 -0000
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 79EDA1C0450;
+        Sun, 29 Mar 2020 22:26:07 +0200 (CEST)
+Date:   Sun, 29 Mar 2020 20:26:07 -0000
 From:   "tip-bot2 for Marc Zyngier" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: irq/core] irqchip/gic-v4.1: Plumb skeletal VSGI irqchip
+Subject: [tip: irq/core] irqchip/gic-v4.1: Plumb set_vcpu_affinity SGI callbacks
 Cc:     Marc Zyngier <maz@kernel.org>, Zenghui Yu <yuzenghui@huawei.com>,
         Eric Auger <eric.auger@redhat.com>, x86 <x86@kernel.org>,
         LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200304203330.4967-9-maz@kernel.org>
-References: <20200304203330.4967-9-maz@kernel.org>
+In-Reply-To: <20200304203330.4967-13-maz@kernel.org>
+References: <20200304203330.4967-13-maz@kernel.org>
 MIME-Version: 1.0
-Message-ID: <158551356896.28353.3454353621794553121.tip-bot2@tip-bot2>
+Message-ID: <158551356712.28353.4186925292743494121.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -56,180 +56,87 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the irq/core branch of tip:
 
-Commit-ID:     166cba71818cd49d7d815fdc6f97c63395e94fc5
-Gitweb:        https://git.kernel.org/tip/166cba71818cd49d7d815fdc6f97c63395e94fc5
+Commit-ID:     05d32df13c6b3c0850b68928048536e9a736d520
+Gitweb:        https://git.kernel.org/tip/05d32df13c6b3c0850b68928048536e9a736d520
 Author:        Marc Zyngier <maz@kernel.org>
-AuthorDate:    Wed, 04 Mar 2020 20:33:15 
+AuthorDate:    Wed, 04 Mar 2020 20:33:19 
 Committer:     Marc Zyngier <maz@kernel.org>
-CommitterDate: Tue, 24 Mar 2020 12:05:04 
+CommitterDate: Tue, 24 Mar 2020 12:15:51 
 
-irqchip/gic-v4.1: Plumb skeletal VSGI irqchip
+irqchip/gic-v4.1: Plumb set_vcpu_affinity SGI callbacks
 
-Since GICv4.1 has the capability to inject 16 SGIs into each VPE,
-and that I'm keen not to invent too many specific interfaces to
-manipulate these interrupts, let's pretend that each of these SGIs
-is an actual Linux interrupt.
+Just like for vLPIs, there is some configuration information that cannot
+be directly communicated through the normal irqchip API, and we have to
+use our good old friend set_vcpu_affinity as a side-band communication
+mechanism.
 
-For that matter, let's introduce a minimal irqchip and irqdomain
-setup that will get fleshed up in the following patches.
+This is used to configure group and priority for a given vSGI.
 
 Signed-off-by: Marc Zyngier <maz@kernel.org>
 Reviewed-by: Zenghui Yu <yuzenghui@huawei.com>
 Reviewed-by: Eric Auger <eric.auger@redhat.com>
-Link: https://lore.kernel.org/r/20200304203330.4967-9-maz@kernel.org
+Link: https://lore.kernel.org/r/20200304203330.4967-13-maz@kernel.org
 ---
- drivers/irqchip/irq-gic-v3-its.c   | 75 ++++++++++++++++++++++++++++-
- drivers/irqchip/irq-gic-v4.c       |  8 ++-
- include/linux/irqchip/arm-gic-v4.h |  9 ++-
- 3 files changed, 88 insertions(+), 4 deletions(-)
+ drivers/irqchip/irq-gic-v3-its.c   | 18 ++++++++++++++++++
+ include/linux/irqchip/arm-gic-v4.h |  5 +++++
+ 2 files changed, 23 insertions(+)
 
 diff --git a/drivers/irqchip/irq-gic-v3-its.c b/drivers/irqchip/irq-gic-v3-its.c
-index 54d6fdf..c9c8121 100644
+index c614f0c..aae5332 100644
 --- a/drivers/irqchip/irq-gic-v3-its.c
 +++ b/drivers/irqchip/irq-gic-v3-its.c
-@@ -3870,6 +3870,72 @@ static struct irq_chip its_vpe_4_1_irq_chip = {
- 	.irq_set_vcpu_affinity	= its_vpe_4_1_set_vcpu_affinity,
- };
- 
-+static int its_sgi_set_affinity(struct irq_data *d,
-+				const struct cpumask *mask_val,
-+				bool force)
-+{
-+	/*
-+	 * There is no notion of affinity for virtual SGIs, at least
-+	 * not on the host (since they can only be targetting a vPE).
-+	 * Tell the kernel we've done whatever it asked for.
-+	 */
-+	return IRQ_SET_MASK_OK;
-+}
-+
-+static struct irq_chip its_sgi_irq_chip = {
-+	.name			= "GICv4.1-sgi",
-+	.irq_set_affinity	= its_sgi_set_affinity,
-+};
-+
-+static int its_sgi_irq_domain_alloc(struct irq_domain *domain,
-+				    unsigned int virq, unsigned int nr_irqs,
-+				    void *args)
-+{
-+	struct its_vpe *vpe = args;
-+	int i;
-+
-+	/* Yes, we do want 16 SGIs */
-+	WARN_ON(nr_irqs != 16);
-+
-+	for (i = 0; i < 16; i++) {
-+		vpe->sgi_config[i].priority = 0;
-+		vpe->sgi_config[i].enabled = false;
-+		vpe->sgi_config[i].group = false;
-+
-+		irq_domain_set_hwirq_and_chip(domain, virq + i, i,
-+					      &its_sgi_irq_chip, vpe);
-+		irq_set_status_flags(virq + i, IRQ_DISABLE_UNLAZY);
-+	}
-+
-+	return 0;
-+}
-+
-+static void its_sgi_irq_domain_free(struct irq_domain *domain,
-+				    unsigned int virq,
-+				    unsigned int nr_irqs)
-+{
-+	/* Nothing to do */
-+}
-+
-+static int its_sgi_irq_domain_activate(struct irq_domain *domain,
-+				       struct irq_data *d, bool reserve)
-+{
-+	return 0;
-+}
-+
-+static void its_sgi_irq_domain_deactivate(struct irq_domain *domain,
-+					  struct irq_data *d)
-+{
-+	/* Nothing to do */
-+}
-+
-+static const struct irq_domain_ops its_sgi_domain_ops = {
-+	.alloc		= its_sgi_irq_domain_alloc,
-+	.free		= its_sgi_irq_domain_free,
-+	.activate	= its_sgi_irq_domain_activate,
-+	.deactivate	= its_sgi_irq_domain_deactivate,
-+};
-+
- static int its_vpe_id_alloc(void)
- {
- 	return ida_simple_get(&its_vpeid_ida, 0, ITS_MAX_VPEID, GFP_KERNEL);
-@@ -4912,8 +4978,15 @@ int __init its_init(struct fwnode_handle *handle, struct rdists *rdists,
- 		rdists->has_rvpeid = false;
- 
- 	if (has_v4 & rdists->has_vlpis) {
-+		const struct irq_domain_ops *sgi_ops;
-+
-+		if (has_v4_1)
-+			sgi_ops = &its_sgi_domain_ops;
-+		else
-+			sgi_ops = NULL;
-+
- 		if (its_init_vpe_domain() ||
--		    its_init_v4(parent_domain, &its_vpe_domain_ops)) {
-+		    its_init_v4(parent_domain, &its_vpe_domain_ops, sgi_ops)) {
- 			rdists->has_vlpis = false;
- 			pr_err("ITS: Disabling GICv4 support\n");
- 		}
-diff --git a/drivers/irqchip/irq-gic-v4.c b/drivers/irqchip/irq-gic-v4.c
-index 4596992..c01910d 100644
---- a/drivers/irqchip/irq-gic-v4.c
-+++ b/drivers/irqchip/irq-gic-v4.c
-@@ -85,6 +85,7 @@
- 
- static struct irq_domain *gic_domain;
- static const struct irq_domain_ops *vpe_domain_ops;
-+static const struct irq_domain_ops *sgi_domain_ops;
- 
- int its_alloc_vcpu_irqs(struct its_vm *vm)
- {
-@@ -216,12 +217,15 @@ int its_prop_update_vlpi(int irq, u8 config, bool inv)
- 	return irq_set_vcpu_affinity(irq, &info);
+@@ -4047,6 +4047,23 @@ out:
+ 	return 0;
  }
  
--int its_init_v4(struct irq_domain *domain, const struct irq_domain_ops *ops)
-+int its_init_v4(struct irq_domain *domain,
-+		const struct irq_domain_ops *vpe_ops,
-+		const struct irq_domain_ops *sgi_ops)
- {
- 	if (domain) {
- 		pr_info("ITS: Enabling GICv4 support\n");
- 		gic_domain = domain;
--		vpe_domain_ops = ops;
-+		vpe_domain_ops = vpe_ops;
-+		sgi_domain_ops = sgi_ops;
- 		return 0;
- 	}
++static int its_sgi_set_vcpu_affinity(struct irq_data *d, void *vcpu_info)
++{
++	struct its_vpe *vpe = irq_data_get_irq_chip_data(d);
++	struct its_cmd_info *info = vcpu_info;
++
++	switch (info->cmd_type) {
++	case PROP_UPDATE_VSGI:
++		vpe->sgi_config[d->hwirq].priority = info->priority;
++		vpe->sgi_config[d->hwirq].group = info->group;
++		its_configure_sgi(d, false);
++		return 0;
++
++	default:
++		return -EINVAL;
++	}
++}
++
+ static struct irq_chip its_sgi_irq_chip = {
+ 	.name			= "GICv4.1-sgi",
+ 	.irq_mask		= its_sgi_mask_irq,
+@@ -4054,6 +4071,7 @@ static struct irq_chip its_sgi_irq_chip = {
+ 	.irq_set_affinity	= its_sgi_set_affinity,
+ 	.irq_set_irqchip_state	= its_sgi_set_irqchip_state,
+ 	.irq_get_irqchip_state	= its_sgi_get_irqchip_state,
++	.irq_set_vcpu_affinity	= its_sgi_set_vcpu_affinity,
+ };
  
+ static int its_sgi_irq_domain_alloc(struct irq_domain *domain,
 diff --git a/include/linux/irqchip/arm-gic-v4.h b/include/linux/irqchip/arm-gic-v4.h
-index 439963f..44e8c19 100644
+index 44e8c19..1b34100 100644
 --- a/include/linux/irqchip/arm-gic-v4.h
 +++ b/include/linux/irqchip/arm-gic-v4.h
-@@ -49,6 +49,11 @@ struct its_vpe {
+@@ -103,6 +103,7 @@ enum its_vcpu_info_cmd_type {
+ 	SCHEDULE_VPE,
+ 	DESCHEDULE_VPE,
+ 	INVALL_VPE,
++	PROP_UPDATE_VSGI,
+ };
+ 
+ struct its_cmd_info {
+@@ -115,6 +116,10 @@ struct its_cmd_info {
+ 			bool		g0en;
+ 			bool		g1en;
  		};
- 		/* GICv4.1 implementations */
- 		struct {
-+			struct {
-+				u8	priority;
-+				bool	enabled;
-+				bool	group;
-+			}			sgi_config[16];
- 			atomic_t vmapp_count;
- 		};
++		struct {
++			u8		priority;
++			bool		group;
++		};
  	};
-@@ -123,6 +128,8 @@ int its_unmap_vlpi(int irq);
- int its_prop_update_vlpi(int irq, u8 config, bool inv);
+ };
  
- struct irq_domain_ops;
--int its_init_v4(struct irq_domain *domain, const struct irq_domain_ops *ops);
-+int its_init_v4(struct irq_domain *domain,
-+		const struct irq_domain_ops *vpe_ops,
-+		const struct irq_domain_ops *sgi_ops);
- 
- #endif
