@@ -2,88 +2,125 @@ Return-Path: <SRS0=I467=5O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BCC0C43331
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 14:37:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B360CC43331
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 14:47:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B4B92073B
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 14:37:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 89F8F20733
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 14:47:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="V+giDJM9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728284AbgC2Ohw (ORCPT
+        id S1728265AbgC2OrG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Mar 2020 10:37:52 -0400
-Received: from foss.arm.com ([217.140.110.172]:59190 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727488AbgC2Ohv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Mar 2020 10:37:51 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E3FAC31B;
-        Sun, 29 Mar 2020 07:37:50 -0700 (PDT)
-Received: from [10.163.1.70] (unknown [10.163.1.70])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6C1943F68F;
-        Sun, 29 Mar 2020 07:37:44 -0700 (PDT)
-Subject: Re: [mm/debug] f8bf55f05f: BUG:non-zero_pgtables_bytes_on_freeing_mm
-To:     kernel test robot <lkp@intel.com>
-Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Qian Cai <cai@lca.pw>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Vineet Gupta <vgupta@synopsys.com>,
-        Will Deacon <will@kernel.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "Kirill A. Shutemov" <kirill@shutemov.name>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>, lkp@lists.01.org
-References: <20200328130737.GA11705@shao2-debian>
-From:   Anshuman Khandual <anshuman.khandual@arm.com>
-Message-ID: <fb14237e-f973-bc34-4981-280ba5e1eb92@arm.com>
-Date:   Sun, 29 Mar 2020 20:07:38 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        Sun, 29 Mar 2020 10:47:06 -0400
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:38587 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727488AbgC2OrG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Mar 2020 10:47:06 -0400
+Received: by mail-oi1-f196.google.com with SMTP id w2so13449322oic.5;
+        Sun, 29 Mar 2020 07:47:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=2XAc+r1WXKheiyXAD+tO9YztVYErGlJXr5LD1cuVbdk=;
+        b=V+giDJM9hafx0Gt/bGQh4dA3RbMgq2ZwWSGnSxdc35Rjixbay2fbmMrKwa7OvZv4oG
+         lLNU0Z5V3lGhcxr2mxK7rsZNxoc3tk/Dh60BoKCbtmV8EpLz7+2JYPt4PhW66Oye7T7z
+         6DPKlSvF87TvLU+YNzf0YtbKMB/ZrmcJ5N5eJjr+26leq4FrxkDmrjVvUPjwWKFH2viq
+         9JipFFPnT/rASEzJcIc3BeN92mK0b8TlzG+k0VesdiJRl2q25UKfHiZzwNJR0AUQJpjW
+         jpR7xYAwqaBqTZi0YMqGMxTxWPCi1b8meNyVmTNT1UHIAp4QAd1bzBjtsQnSNWqRNIHJ
+         BAvQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=2XAc+r1WXKheiyXAD+tO9YztVYErGlJXr5LD1cuVbdk=;
+        b=oUPjj8dLld23WWaFPya0T8MFWtApo1R0SVZgCDPNniQMOC19C7Ct4xuXZvrAYErgDc
+         kl1PVhjiUtPaRX8HJoI4/UBbWi3hNeVVtY7AjiFHhWuPgPQR+BovB1OnwK+CoLMQUSLl
+         vZBRZe2Au0WKH4myE7EieoieL614HeMiQd9/kxclVWm03kwYcLdeAFCHfymLRUdpqcmd
+         cycPlYneQJGMPI0uLhvLH5sWHl548dTDeIi1/4IVd3kVXX5Ag6EHPyWkQoAy06dexg/I
+         iFy2P9dZn+PD4XjsjXW388jh/6r0c8DYWXFlfI9UNCueNkyXTBOTabvrzX8dMxDYrC5U
+         YQjA==
+X-Gm-Message-State: ANhLgQ3i04PgMepxHSTf3pIrg+CROlYkK7ncVmFc8dT5/+STxHdUhc8V
+        JASrs+SNQv1LcSXNlPAMJ9E=
+X-Google-Smtp-Source: ADFU+vsrm8bF82HNWyt+p2He4J7b65vFnhlfXTVbvRrKA3Swz9X01pci1jsivdX3hFEhX9P4YQAyKA==
+X-Received: by 2002:aca:aa55:: with SMTP id t82mr4958005oie.147.1585493225116;
+        Sun, 29 Mar 2020 07:47:05 -0700 (PDT)
+Received: from ubuntu-m2-xlarge-x86 ([2604:1380:4111:8b00::1])
+        by smtp.gmail.com with ESMTPSA id d21sm1743653otp.39.2020.03.29.07.47.04
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Sun, 29 Mar 2020 07:47:04 -0700 (PDT)
+Date:   Sun, 29 Mar 2020 07:47:03 -0700
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     Felipe Balbi <balbi@kernel.org>
+Cc:     Ashwini Pahuja <ashwini.linux@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+        clang-built-linux@googlegroups.com
+Subject: Re: [PATCH RESEND] usb: gadget: udc: bdc: Remove unnecessary NULL
+ checks in bdc_req_complete
+Message-ID: <20200329144703.GA9720@ubuntu-m2-xlarge-x86>
+References: <87zhc0j2qi.fsf@kernel.org>
+ <20200329011246.27599-1-natechancellor@gmail.com>
+ <871rpb4nd1.fsf@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20200328130737.GA11705@shao2-debian>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <871rpb4nd1.fsf@kernel.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Sun, Mar 29, 2020 at 10:43:54AM +0300, Felipe Balbi wrote:
+> 
+> Hi Nathan,
+> 
+> Nathan Chancellor <natechancellor@gmail.com> writes:
+> 
+> > When building with Clang + -Wtautological-pointer-compare:
+> >
+> > drivers/usb/gadget/udc/bdc/bdc_ep.c:543:28: warning: comparison of
+> > address of 'req->queue' equal to a null pointer is always false
+> > [-Wtautological-pointer-compare]
+> >         if (req == NULL  || &req->queue == NULL || &req->usb_req == NULL)
+> >                              ~~~~~^~~~~    ~~~~
+> > drivers/usb/gadget/udc/bdc/bdc_ep.c:543:51: warning: comparison of
+> > address of 'req->usb_req' equal to a null pointer is always false
+> > [-Wtautological-pointer-compare]
+> >         if (req == NULL  || &req->queue == NULL || &req->usb_req == NULL)
+> >                                                     ~~~~~^~~~~~~    ~~~~
+> > 2 warnings generated.
+> >
+> > As it notes, these statements will always evaluate to false so remove
+> > them.
+> >
+> > Fixes: efed421a94e6 ("usb: gadget: Add UDC driver for Broadcom USB3.0 device controller IP BDC")
+> > Link: https://github.com/ClangBuiltLinux/linux/issues/749
+> > Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+> 
+> It's now in my queue for v5.8. It doesn't really look like a bug fix, so
+> it's not going in during v5.7-rc
+> 
+> -- 
+> balbi
 
-On 03/28/2020 06:37 PM, kernel test robot wrote:
-> [    9.304270] debug_vm_pgtable: debug_vm_pgtable: Validating architecture page table helpers
-> [    9.306147] random: get_random_u32 called from debug_vm_pgtable+0x2c/0x6a5 with crng_init=1
-> [    9.306206] BUG: non-zero pgtables_bytes on freeing mm: -4096
+Thank you for picking it up. It would be nice to see it in 5.7 since
+we're enabling this warning and this is one of two outstanding
+instances in -next and the other one's patch has been picked up plus the
+patch itself is rather benign. Not to mention that I did send this patch
+back in October. However, when it is merged into Linus' tree is
+ultimately your call so I won't argue as long as it gets there
+eventually.
 
-This problem is on i386 platform via CONFIG_EXPERT with CONFIG_X86_PAE
-still enabled. This particular configuration is not supported (even if
-it could be tested via CONFIG_EXPERT) with ARCH_HAS_DEBUG_VM_PGTABLE.
-
-diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-index beea77046f9b..df8a19e52e82 100644
---- a/arch/x86/Kconfig
-+++ b/arch/x86/Kconfig
-@@ -61,6 +61,7 @@  config X86
- 	select ARCH_CLOCKSOURCE_INIT
- 	select ARCH_HAS_ACPI_TABLE_UPGRADE	if ACPI
- 	select ARCH_HAS_DEBUG_VIRTUAL
-+	select ARCH_HAS_DEBUG_VM_PGTABLE	if !X86_PAE
- 	select ARCH_HAS_DEVMEM_IS_ALLOWED
- 	select ARCH_HAS_ELF_RANDOMIZE
- 	select ARCH_HAS_FAST_MULTIPLIER
+Cheers,
+Nathan
