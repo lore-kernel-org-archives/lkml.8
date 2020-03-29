@@ -7,41 +7,41 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E0EEC43331
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 20:27:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EC63C2D0E5
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 20:27:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 50B2820781
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 20:27:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B53520781
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 20:27:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729028AbgC2U1I (ORCPT
+        id S1729041AbgC2U1J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Mar 2020 16:27:08 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:57043 "EHLO
+        Sun, 29 Mar 2020 16:27:09 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:57040 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728893AbgC2U0a (ORCPT
+        with ESMTP id S1728891AbgC2U0a (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sun, 29 Mar 2020 16:26:30 -0400
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1jIeVn-0001Uu-Bs; Sun, 29 Mar 2020 22:26:27 +0200
+        id 1jIeVm-0001UQ-PE; Sun, 29 Mar 2020 22:26:26 +0200
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 1282C1C07F8;
-        Sun, 29 Mar 2020 22:26:22 +0200 (CEST)
-Date:   Sun, 29 Mar 2020 20:26:21 -0000
-From:   "tip-bot2 for Atish Patra" <tip-bot2@linutronix.de>
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 0C6191C07F3;
+        Sun, 29 Mar 2020 22:26:21 +0200 (CEST)
+Date:   Sun, 29 Mar 2020 20:26:20 -0000
+From:   "tip-bot2 for Lukas Wunner" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: irq/core] irqchip/sifive-plic: Enable/Disable external
- interrupts upon cpu online/offline
-Cc:     Atish Patra <atish.patra@wdc.com>, Marc Zyngier <maz@kernel.org>,
-        Anup Patel <anup@brainfault.org>, x86 <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200302231146.15530-2-atish.patra@wdc.com>
-References: <20200302231146.15530-2-atish.patra@wdc.com>
+Subject: [tip: irq/core] irqchip/bcm2835: Quiesce IRQs left enabled by bootloader
+Cc:     Lukas Wunner <lukas@wunner.de>, Marc Zyngier <maz@kernel.org>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <f97868ba4e9b86ddad71f44ec9d8b3b7d8daa1ea.1582618537.git.lukas@wunner.de>
+References: <f97868ba4e9b86ddad71f44ec9d8b3b7d8daa1ea.1582618537.git.lukas@wunner.de>
 MIME-Version: 1.0
-Message-ID: <158551358168.28353.9864458380650988997.tip-bot2@tip-bot2>
+Message-ID: <158551358063.28353.14980225519315478462.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -57,145 +57,91 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the irq/core branch of tip:
 
-Commit-ID:     ccbe80bad571c2f967ad42b25bbb3ef7a4a24705
-Gitweb:        https://git.kernel.org/tip/ccbe80bad571c2f967ad42b25bbb3ef7a4a24705
-Author:        Atish Patra <atish.patra@wdc.com>
-AuthorDate:    Mon, 02 Mar 2020 15:11:45 -08:00
+Commit-ID:     bd59b343a9c902c522f006e6d71080f4893bbf42
+Gitweb:        https://git.kernel.org/tip/bd59b343a9c902c522f006e6d71080f4893bbf42
+Author:        Lukas Wunner <lukas@wunner.de>
+AuthorDate:    Tue, 25 Feb 2020 10:50:41 +01:00
 Committer:     Marc Zyngier <maz@kernel.org>
 CommitterDate: Mon, 16 Mar 2020 15:48:54 
 
-irqchip/sifive-plic: Enable/Disable external interrupts upon cpu online/offline
+irqchip/bcm2835: Quiesce IRQs left enabled by bootloader
 
-Currently, PLIC threshold is only initialized once in the beginning.
-However, threshold can be set to disabled if a CPU is marked offline with
-CPU hotplug feature. This will not allow to change the irq affinity to a
-CPU that just came online.
+Per the spec, the BCM2835's IRQs are all disabled when coming out of
+power-on reset.  Its IRQ driver assumes that's still the case when the
+kernel boots and does not perform any initialization of the registers.
+However the Raspberry Pi Foundation's bootloader leaves the USB
+interrupt enabled when handing over control to the kernel.
 
-Add PLIC specific CPU hotplug callbacks and enable the threshold when a CPU
-comes online. Take this opportunity to move the external interrupt enable
-code from trap init to PLIC driver as well. On cpu offline path, the driver
-performs the exact opposite operations i.e. disable the interrupt and
-the threshold.
+Quiesce IRQs and the FIQ if they were left enabled and log a message to
+let users know that they should update the bootloader once a fixed
+version is released.
 
-Signed-off-by: Atish Patra <atish.patra@wdc.com>
+If the USB interrupt is not quiesced and the USB driver later on claims
+the FIQ (as it does on the Raspberry Pi Foundation's downstream kernel),
+interrupt latency for all other peripherals increases and occasional
+lockups occur.  That's because both the FIQ and the normal USB interrupt
+fire simultaneously:
+
+On a multicore Raspberry Pi, if normal interrupts are routed to CPU 0
+and the FIQ to CPU 1 (hardcoded in the Foundation's kernel), then a USB
+interrupt causes CPU 0 to spin in bcm2836_chained_handle_irq() until the
+FIQ on CPU 1 has cleared it.  Other peripherals' interrupts are starved
+as long.  I've seen CPU 0 blocked for up to 2.9 msec.  eMMC throughput
+on a Compute Module 3 irregularly dips to 23.0 MB/s without this commit
+but remains relatively constant at 23.5 MB/s with this commit.
+
+The lockups occur when CPU 0 receives a USB interrupt while holding a
+lock which CPU 1 is trying to acquire while the FIQ is temporarily
+disabled on CPU 1.  At best users get RCU CPU stall warnings, but most
+of the time the system just freezes.
+
+Fixes: 89214f009c1d ("ARM: bcm2835: add interrupt controller driver")
+Signed-off-by: Lukas Wunner <lukas@wunner.de>
 Signed-off-by: Marc Zyngier <maz@kernel.org>
-Reviewed-by: Anup Patel <anup@brainfault.org>
-Link: https://lore.kernel.org/r/20200302231146.15530-2-atish.patra@wdc.com
+Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+Reviewed-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Link: https://lore.kernel.org/r/f97868ba4e9b86ddad71f44ec9d8b3b7d8daa1ea.1582618537.git.lukas@wunner.de
 ---
- arch/riscv/kernel/traps.c         |  2 +-
- drivers/irqchip/irq-sifive-plic.c | 38 ++++++++++++++++++++++++++----
- include/linux/cpuhotplug.h        |  1 +-
- 3 files changed, 36 insertions(+), 5 deletions(-)
+ drivers/irqchip/irq-bcm2835.c | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
 
-diff --git a/arch/riscv/kernel/traps.c b/arch/riscv/kernel/traps.c
-index ffb3d94..55ea614 100644
---- a/arch/riscv/kernel/traps.c
-+++ b/arch/riscv/kernel/traps.c
-@@ -157,5 +157,5 @@ void __init trap_init(void)
- 	/* Set the exception vector address */
- 	csr_write(CSR_TVEC, &handle_exception);
- 	/* Enable interrupts */
--	csr_write(CSR_IE, IE_SIE | IE_EIE);
-+	csr_write(CSR_IE, IE_SIE);
- }
-diff --git a/drivers/irqchip/irq-sifive-plic.c b/drivers/irqchip/irq-sifive-plic.c
-index aa4af88..7c7f373 100644
---- a/drivers/irqchip/irq-sifive-plic.c
-+++ b/drivers/irqchip/irq-sifive-plic.c
-@@ -4,6 +4,7 @@
-  * Copyright (C) 2018 Christoph Hellwig
-  */
- #define pr_fmt(fmt) "plic: " fmt
-+#include <linux/cpu.h>
- #include <linux/interrupt.h>
- #include <linux/io.h>
- #include <linux/irq.h>
-@@ -55,6 +56,9 @@
- #define     CONTEXT_THRESHOLD		0x00
- #define     CONTEXT_CLAIM		0x04
+diff --git a/drivers/irqchip/irq-bcm2835.c b/drivers/irqchip/irq-bcm2835.c
+index 418245d..a1e004a 100644
+--- a/drivers/irqchip/irq-bcm2835.c
++++ b/drivers/irqchip/irq-bcm2835.c
+@@ -61,6 +61,7 @@
+ 					| SHORTCUT1_MASK | SHORTCUT2_MASK)
  
-+#define	PLIC_DISABLE_THRESHOLD		0xf
-+#define	PLIC_ENABLE_THRESHOLD		0
-+
- static void __iomem *plic_regs;
+ #define REG_FIQ_CONTROL		0x0c
++#define FIQ_CONTROL_ENABLE	BIT(7)
  
- struct plic_handler {
-@@ -230,6 +234,32 @@ static int plic_find_hart_id(struct device_node *node)
- 	return -1;
- }
- 
-+static void plic_set_threshold(struct plic_handler *handler, u32 threshold)
-+{
-+	/* priority must be > threshold to trigger an interrupt */
-+	writel(threshold, handler->hart_base + CONTEXT_THRESHOLD);
-+}
-+
-+static int plic_dying_cpu(unsigned int cpu)
-+{
-+	struct plic_handler *handler = this_cpu_ptr(&plic_handlers);
-+
-+	csr_clear(CSR_IE, IE_EIE);
-+	plic_set_threshold(handler, PLIC_DISABLE_THRESHOLD);
-+
-+	return 0;
-+}
-+
-+static int plic_starting_cpu(unsigned int cpu)
-+{
-+	struct plic_handler *handler = this_cpu_ptr(&plic_handlers);
-+
-+	csr_set(CSR_IE, IE_EIE);
-+	plic_set_threshold(handler, PLIC_ENABLE_THRESHOLD);
-+
-+	return 0;
-+}
-+
- static int __init plic_init(struct device_node *node,
- 		struct device_node *parent)
+ #define NR_BANKS		3
+ #define IRQS_PER_BANK		32
+@@ -135,6 +136,7 @@ static int __init armctrl_of_init(struct device_node *node,
  {
-@@ -267,7 +297,6 @@ static int __init plic_init(struct device_node *node,
- 		struct plic_handler *handler;
- 		irq_hw_number_t hwirq;
- 		int cpu, hartid;
--		u32 threshold = 0;
+ 	void __iomem *base;
+ 	int irq, b, i;
++	u32 reg;
  
- 		if (of_irq_parse_one(node, i, &parent)) {
- 			pr_err("failed to parse parent for context %d.\n", i);
-@@ -301,7 +330,7 @@ static int __init plic_init(struct device_node *node,
- 		handler = per_cpu_ptr(&plic_handlers, cpu);
- 		if (handler->present) {
- 			pr_warn("handler already present for context %d.\n", i);
--			threshold = 0xffffffff;
-+			plic_set_threshold(handler, PLIC_DISABLE_THRESHOLD);
- 			goto done;
+ 	base = of_iomap(node, 0);
+ 	if (!base)
+@@ -157,6 +159,19 @@ static int __init armctrl_of_init(struct device_node *node,
+ 				handle_level_irq);
+ 			irq_set_probe(irq);
  		}
- 
-@@ -313,13 +342,14 @@ static int __init plic_init(struct device_node *node,
- 			plic_regs + ENABLE_BASE + i * ENABLE_PER_HART;
- 
- done:
--		/* priority must be > threshold to trigger an interrupt */
--		writel(threshold, handler->hart_base + CONTEXT_THRESHOLD);
- 		for (hwirq = 1; hwirq <= nr_irqs; hwirq++)
- 			plic_toggle(handler, hwirq, 0);
- 		nr_handlers++;
++
++		reg = readl_relaxed(intc.enable[b]);
++		if (reg) {
++			writel_relaxed(reg, intc.disable[b]);
++			pr_err(FW_BUG "Bootloader left irq enabled: "
++			       "bank %d irq %*pbl\n", b, IRQS_PER_BANK, &reg);
++		}
++	}
++
++	reg = readl_relaxed(base + REG_FIQ_CONTROL);
++	if (reg & FIQ_CONTROL_ENABLE) {
++		writel_relaxed(0, base + REG_FIQ_CONTROL);
++		pr_err(FW_BUG "Bootloader left fiq enabled\n");
  	}
  
-+	cpuhp_setup_state(CPUHP_AP_IRQ_SIFIVE_PLIC_STARTING,
-+				  "irqchip/sifive/plic:starting",
-+				  plic_starting_cpu, plic_dying_cpu);
- 	pr_info("mapped %d interrupts with %d handlers for %d contexts.\n",
- 		nr_irqs, nr_handlers, nr_contexts);
- 	set_handle_irq(plic_handle_irq);
-diff --git a/include/linux/cpuhotplug.h b/include/linux/cpuhotplug.h
-index d37c17e..77d70b6 100644
---- a/include/linux/cpuhotplug.h
-+++ b/include/linux/cpuhotplug.h
-@@ -102,6 +102,7 @@ enum cpuhp_state {
- 	CPUHP_AP_IRQ_ARMADA_XP_STARTING,
- 	CPUHP_AP_IRQ_BCM2836_STARTING,
- 	CPUHP_AP_IRQ_MIPS_GIC_STARTING,
-+	CPUHP_AP_IRQ_SIFIVE_PLIC_STARTING,
- 	CPUHP_AP_ARM_MVEBU_COHERENCY,
- 	CPUHP_AP_MICROCODE_LOADER,
- 	CPUHP_AP_PERF_X86_AMD_UNCORE_STARTING,
+ 	if (is_2836) {
