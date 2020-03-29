@@ -7,39 +7,40 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3DD2C43331
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 20:26:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69806C2D0E5
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 20:26:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE02B21556
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 20:26:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4699720784
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 20:26:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728937AbgC2U0g (ORCPT
+        id S1728952AbgC2U0i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Mar 2020 16:26:36 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:57054 "EHLO
+        Sun, 29 Mar 2020 16:26:38 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:57060 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728900AbgC2U0c (ORCPT
+        with ESMTP id S1728855AbgC2U0c (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sun, 29 Mar 2020 16:26:32 -0400
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1jIeVp-0001Vs-8e; Sun, 29 Mar 2020 22:26:29 +0200
+        id 1jIeVo-0001Vc-N7; Sun, 29 Mar 2020 22:26:28 +0200
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 70C871C0470;
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 05D0A1C0451;
         Sun, 29 Mar 2020 22:26:23 +0200 (CEST)
-Date:   Sun, 29 Mar 2020 20:26:23 -0000
-From:   "tip-bot2 for Anson Huang" <tip-bot2@linutronix.de>
+Date:   Sun, 29 Mar 2020 20:26:22 -0000
+From:   "tip-bot2 for Geert Uytterhoeven" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: irq/core] irqchip: Add COMPILE_TEST support for IMX_INTMUX
-Cc:     Anson Huang <Anson.Huang@nxp.com>, Marc Zyngier <maz@kernel.org>,
-        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <1583588547-7164-1-git-send-email-Anson.Huang@nxp.com>
-References: <1583588547-7164-1-git-send-email-Anson.Huang@nxp.com>
+Subject: [tip: irq/core] irqchip/renesas-intc-irqpin: Restore devm_ioremap() alignment
+Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Marc Zyngier <maz@kernel.org>, x86 <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <20200212084744.9376-1-geert+renesas@glider.be>
+References: <20200212084744.9376-1-geert+renesas@glider.be>
 MIME-Version: 1.0
-Message-ID: <158551358309.28353.13146480838541421693.tip-bot2@tip-bot2>
+Message-ID: <158551358260.28353.10168267569059278546.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -55,35 +56,36 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the irq/core branch of tip:
 
-Commit-ID:     66968d7dfc3f545185236ba7814f3a056f6b5099
-Gitweb:        https://git.kernel.org/tip/66968d7dfc3f545185236ba7814f3a056f6b5099
-Author:        Anson Huang <Anson.Huang@nxp.com>
-AuthorDate:    Sat, 07 Mar 2020 21:42:27 +08:00
+Commit-ID:     bc714c8bd4b7f1f29f9b15d79211c5fb3aa63c4d
+Gitweb:        https://git.kernel.org/tip/bc714c8bd4b7f1f29f9b15d79211c5fb3aa63c4d
+Author:        Geert Uytterhoeven <geert+renesas@glider.be>
+AuthorDate:    Wed, 12 Feb 2020 09:47:44 +01:00
 Committer:     Marc Zyngier <maz@kernel.org>
 CommitterDate: Sun, 08 Mar 2020 14:25:46 
 
-irqchip: Add COMPILE_TEST support for IMX_INTMUX
+irqchip/renesas-intc-irqpin: Restore devm_ioremap() alignment
 
-Add COMPILE_TEST support to IMX_INTMUX driver for better compile
-testing coverage.
+Restore alignment of the continuation of the devm_ioremap() call in
+intc_irqpin_probe().
 
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+Fixes: 4bdc0d676a643140 ("remove ioremap_nocache and devm_ioremap_nocache")
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 Signed-off-by: Marc Zyngier <maz@kernel.org>
-Link: https://lore.kernel.org/r/1583588547-7164-1-git-send-email-Anson.Huang@nxp.com
+Link: https://lore.kernel.org/r/20200212084744.9376-1-geert+renesas@glider.be
 ---
- drivers/irqchip/Kconfig | 2 +-
+ drivers/irqchip/irq-renesas-intc-irqpin.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/irqchip/Kconfig b/drivers/irqchip/Kconfig
-index 6d39773..24fe087 100644
---- a/drivers/irqchip/Kconfig
-+++ b/drivers/irqchip/Kconfig
-@@ -458,7 +458,7 @@ config IMX_IRQSTEER
- 	  Support for the i.MX IRQSTEER interrupt multiplexer/remapper.
+diff --git a/drivers/irqchip/irq-renesas-intc-irqpin.c b/drivers/irqchip/irq-renesas-intc-irqpin.c
+index 6e5e317..3819185 100644
+--- a/drivers/irqchip/irq-renesas-intc-irqpin.c
++++ b/drivers/irqchip/irq-renesas-intc-irqpin.c
+@@ -461,7 +461,7 @@ static int intc_irqpin_probe(struct platform_device *pdev)
+ 		}
  
- config IMX_INTMUX
--	def_bool y if ARCH_MXC
-+	def_bool y if ARCH_MXC || COMPILE_TEST
- 	select IRQ_DOMAIN
- 	help
- 	  Support for the i.MX INTMUX interrupt multiplexer.
+ 		i->iomem = devm_ioremap(dev, io[k]->start,
+-						resource_size(io[k]));
++					resource_size(io[k]));
+ 		if (!i->iomem) {
+ 			dev_err(dev, "failed to remap IOMEM\n");
+ 			ret = -ENXIO;
