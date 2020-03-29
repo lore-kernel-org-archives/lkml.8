@@ -2,94 +2,101 @@ Return-Path: <SRS0=I467=5O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F44DC43331
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 17:36:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D4DAC2D0E5
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 17:36:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E74F220732
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 17:36:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585503370;
-	bh=p0JODZV+62POhj069QxDJjgdpXxtTBmJYP/AqliDC4g=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=kc0nmknKW3SUgza1dJxxNqf3J9dSC1SLnSBE4SDXT/iVtCXlvyjF9tciwoUWRx68k
-	 ug6hEAuhVj/WHrS3DtNhmjKqactLA5LE1cEADVW8oex+OSqpQ/O6giiMlsxXdNDlwa
-	 UYqoW3B89mFr0YdeXZtV+4PnVCuqvnZ/Xj9IQdMo=
+	by mail.kernel.org (Postfix) with ESMTP id E7E6B2073E
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 17:36:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="ZW157KiE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728329AbgC2Re1 (ORCPT
+        id S1728432AbgC2RgJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Mar 2020 13:34:27 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:46298 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727933AbgC2Re0 (ORCPT
+        Sun, 29 Mar 2020 13:36:09 -0400
+Received: from mo4-p02-ob.smtp.rzone.de ([85.215.255.83]:17458 "EHLO
+        mo4-p02-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727933AbgC2RgJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Mar 2020 13:34:26 -0400
-Received: by mail-lj1-f196.google.com with SMTP id r7so7817502ljg.13
-        for <linux-kernel@vger.kernel.org>; Sun, 29 Mar 2020 10:34:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=uF9ju1VXjYMdKAq7SYnU4SKEXhGZYS4gUazfdnb0Iv8=;
-        b=X0ytTSPzpoiXAuUiU+FOLPgIBg2tMnUBEy6YmzKbNk3TPoZ8rR4vp8K3MKE3TLGyfB
-         tZ5sgEHNwUJHmB6iqy/G36WYjTSaSFkZXEt7VVe0f9rHHZ+HVVmhx7c7smnFsdelQsZx
-         ATJMbSrFSl2IFNWyfIHWPnZMQWjUneHs7abQQ=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=uF9ju1VXjYMdKAq7SYnU4SKEXhGZYS4gUazfdnb0Iv8=;
-        b=poyPIQaR7S9CC/WxM4OkdhZF/eRi3bGNkynGDGzN7z+xQv76oy+A+ELOMgyM82gZSn
-         wyVh2ZBfpBq6R8sL2PkEiflxzIVZcqoKoIhjx/JgnzPXKK90lCOY5/pk1p22gksvcJ/l
-         k1JaVXPd3S7XtrngiOnTCqq5ybNOlSLSSq0qpkj0yTZczc08kIkcP05uy4oWM8OaLVp6
-         nzjjp4atGD3KkezVVwXq2+SBG9V6fG/I04y+0mRL4jqzTYYV3ZIpq0maWFTR6eS8tsRc
-         gHo12G9X1Q3q9tHhz8+XV6PovWo1wZr3ehL6raIOfBi4eiNEf9NM0Ex7N/9t8aCiIHTP
-         hfLg==
-X-Gm-Message-State: AGi0Pub6yXRYvPfyiIPhxa/WlXR71FrPf3tN0WeGz04npQskBCe9eN0V
-        pP3FWiieLCTYi8nzIXlsGlsGy1Ul1HQ=
-X-Google-Smtp-Source: APiQypJmVuOCcCRIg2uTvTdTBT7uws+WjGEFUQhIWWhgN+Y912dqye2w0Pgncd/MOtqE5ko8PhJgTw==
-X-Received: by 2002:a2e:b521:: with SMTP id z1mr5264770ljm.19.1585503263728;
-        Sun, 29 Mar 2020 10:34:23 -0700 (PDT)
-Received: from mail-lj1-f173.google.com (mail-lj1-f173.google.com. [209.85.208.173])
-        by smtp.gmail.com with ESMTPSA id j14sm6525142lfc.32.2020.03.29.10.34.22
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 29 Mar 2020 10:34:22 -0700 (PDT)
-Received: by mail-lj1-f173.google.com with SMTP id r7so7817423ljg.13
-        for <linux-kernel@vger.kernel.org>; Sun, 29 Mar 2020 10:34:22 -0700 (PDT)
-X-Received: by 2002:a2e:9b8e:: with SMTP id z14mr5057608lji.150.1585503262229;
- Sun, 29 Mar 2020 10:34:22 -0700 (PDT)
+        Sun, 29 Mar 2020 13:36:09 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1585503366;
+        s=strato-dkim-0002; d=goldelico.com;
+        h=References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
+        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
+        bh=3bPEDGqyJOBTZ1dmWLnKidK90rqP4ViQpq+Ni8TIszo=;
+        b=ZW157KiEkI5Si2uEU7hBYeSSWdMfQqWLNbSYPBaIr7XsFuBNC2tLGKrC2Al6NNoG+j
+        wGxFGfRF25h+nPIEyFdOGZctkTEvsM66xCTHObdx2xQyjQqt1eQv9fP+nhmZBsHs1eYp
+        /NZaA+I8QDBYYnipKxkV+ZUGGwbCbD/YGazyA3HXXFQ5XyWTRC+rjuzlHRk7quI5a1Ht
+        Df1AiCJZZEWtcEFyMVgyBCdDK20K/fw3BeOQw6Me42OtTKkxWiNZSZCHexna7wMcGDda
+        15tIUp2VGq8hhLTYZYsX6EKrGt1qKjOMGfg7P2vRmGaHE+85iOQaDuIESxTmrK/B0HyX
+        Nllw==
+X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMhflhwDubTJ9o12DNOsPj0pDz2rsNxxv"
+X-RZG-CLASS-ID: mo00
+Received: from iMac.fritz.box
+        by smtp.strato.de (RZmta 46.2.1 DYNA|AUTH)
+        with ESMTPSA id m02241w2THZwBM9
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
+        (Client did not present a certificate);
+        Sun, 29 Mar 2020 19:35:58 +0200 (CEST)
+From:   "H. Nikolaus Schaller" <hns@goldelico.com>
+To:     Paul Cercueil <paul@crapouillou.net>,
+        Paul Boddie <paul@boddie.org.uk>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paulburton@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Andi Kleen <ak@linux.intel.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        "H. Nikolaus Schaller" <hns@goldelico.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Kees Cook <keescook@chromium.org>
+Cc:     dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
+        linux-gpio@vger.kernel.org, letux-kernel@openphoenux.org,
+        mips-creator-ci20-dev@googlegroups.com
+Subject: [RFC v3 2/8] drm: ingenic-drm: add MODULE_DEVICE_TABLE
+Date:   Sun, 29 Mar 2020 19:35:48 +0200
+Message-Id: <02c8f35fde969fd852a62740b4fa8a01c53b79ef.1585503354.git.hns@goldelico.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <cover.1585503354.git.hns@goldelico.com>
+References: <cover.1585503354.git.hns@goldelico.com>
 MIME-Version: 1.0
-References: <158549780513.2870.9873806112977909523.tglx@nanos.tec.linutronix.de>
- <158549780514.2870.1236107824707197925.tglx@nanos.tec.linutronix.de>
-In-Reply-To: <158549780514.2870.1236107824707197925.tglx@nanos.tec.linutronix.de>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Sun, 29 Mar 2020 10:34:06 -0700
-X-Gmail-Original-Message-ID: <CAHk-=whTDGWiaBcUfx2UhffL8FAPZ2Qy4dzmAcVoB+_=0vvx3w@mail.gmail.com>
-Message-ID: <CAHk-=whTDGWiaBcUfx2UhffL8FAPZ2Qy4dzmAcVoB+_=0vvx3w@mail.gmail.com>
-Subject: Re: [GIT pull] x86/urgent for v5.6
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "the arch/x86 maintainers" <x86@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Mar 29, 2020 at 9:03 AM Thomas Gleixner <tglx@linutronix.de> wrote:
->
-> please pull the latest x86/urgent branch from:
->
->    git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86-urgent-2020-03-29
+so that the driver can load by matching the device tree
+if compiled as module.
 
-Heh. I already got this from Ingo, where it was "x86-urgent-for-linus"
-and merged on Tuesday: commit 3f3ee43a4623 ("Merge branch
-'x86-urgent-for-linus' of
-git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip")
+Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
+---
+ drivers/gpu/drm/ingenic/ingenic-drm.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-              Linus
+diff --git a/drivers/gpu/drm/ingenic/ingenic-drm.c b/drivers/gpu/drm/ingenic/ingenic-drm.c
+index 6d47ef7b148c..bcba2f024842 100644
+--- a/drivers/gpu/drm/ingenic/ingenic-drm.c
++++ b/drivers/gpu/drm/ingenic/ingenic-drm.c
+@@ -843,6 +843,7 @@ static const struct of_device_id ingenic_drm_of_match[] = {
+ 	{ .compatible = "ingenic,jz4770-lcd", .data = &jz4770_soc_info },
+ 	{ /* sentinel */ },
+ };
++MODULE_DEVICE_TABLE(of, ingenic_drm_of_match);
+ 
+ static struct platform_driver ingenic_drm_driver = {
+ 	.driver = {
+-- 
+2.25.1
+
