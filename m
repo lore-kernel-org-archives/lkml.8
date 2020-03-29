@@ -2,119 +2,167 @@ Return-Path: <SRS0=I467=5O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FAB6C43331
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 08:57:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87693C2D0EE
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 09:02:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 09E4820714
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 08:57:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E31E20716
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 09:02:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LQu+EVoL"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="07E0C60Q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727867AbgC2I45 (ORCPT
+        id S1727879AbgC2JCC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Mar 2020 04:56:57 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:42846 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727639AbgC2I45 (ORCPT
+        Sun, 29 Mar 2020 05:02:02 -0400
+Received: from pandora.armlinux.org.uk ([78.32.30.218]:34368 "EHLO
+        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727504AbgC2JCB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Mar 2020 04:56:57 -0400
-Received: by mail-lj1-f195.google.com with SMTP id q19so14536267ljp.9;
-        Sun, 29 Mar 2020 01:56:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=j9mujlxbObmOJIv9aY8Pv9+f4Diabo1dscBEk1uTFZ8=;
-        b=LQu+EVoLSJKX0tHv/setWOeqwKWK+bWXztDRZ5UJroVq+XxYPRIhA9sSrTKTT2ibEY
-         yB/6BCgeWRViYpqnPuBKAerGApUXQnxeG+X0WoOXn5axXbeok3hIPq11BbkPWdqDreNy
-         /THe8rlu1cI4/e6WfTUHpVqpotR7Dd2kDsVzvcEwWWDOrSWFxb3Ds6YKGThFJab8ivoO
-         daDXvYPXRAlZnzHQkB1KpdXtMB27sAdYXiBCqIHlCU7kRjveZm5jDb8J670PFFxPt6uL
-         QZDBl8oREV/wjQydRKzSSOW2PiVRbx1TEAU8mPdrUnCkZsHza59pbO832vXPFQSv8D2S
-         Vpjw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=j9mujlxbObmOJIv9aY8Pv9+f4Diabo1dscBEk1uTFZ8=;
-        b=UeZNDZoG9lVqwRuuvTroGUnrGmT8JFLm4RGCz/IGwN2dH1qQduP6If64RWUz6oJ7po
-         9AVLJvTacHPWVlgwWckLl8jmhM2m2nyRL5r9kog3VGuGssr6x44c5mf2laHYe8CqjQ3R
-         zmgb2io9zw/inau6balF54ECJuc4WAcLudt1ibGaoWBaQxI3a8DbZoXDLK3uAUJ+EHZ3
-         3ItOYI6/z+gChCQj8ZUKVjesSoKwhAHAG1Tjbh5AteN7O6qytaQ7awDKCWu0U3eTkFhc
-         j8mfeA2c8truX0nb2wDsicCidLQKzyX+VZbDpMjXusMak92l0D5sbkOlEk97l8XI4SPk
-         Bu7Q==
-X-Gm-Message-State: AGi0PuZ+74ys6IDemHrKRQ2U3YqhGnPwZ2lW7XcOkF04XWiqYzDI8xLD
-        UFlZyx1zDQax3QEG/jVlQkI=
-X-Google-Smtp-Source: APiQypILmyETDoZAWXoLBcXENwr7izGJwTkjiZlQpOLwdm0cfT9q3DBAk44CF2QOzRRtVdc3Nvj7nA==
-X-Received: by 2002:a05:651c:1108:: with SMTP id d8mr4072521ljo.198.1585472214451;
-        Sun, 29 Mar 2020 01:56:54 -0700 (PDT)
-Received: from localhost (n112120135125.netvigator.com. [112.120.135.125])
-        by smtp.gmail.com with ESMTPSA id g18sm3797574lfh.1.2020.03.29.01.56.53
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Sun, 29 Mar 2020 01:56:53 -0700 (PDT)
-From:   Qiujun Huang <hqjagain@gmail.com>
-To:     b.zolnierkie@samsung.com
-Cc:     daniel.vetter@ffwll.ch, maarten.lankhorst@linux.intel.com,
-        sam@ravnborg.org, daniel.thompson@linaro.org, ghalat@redhat.com,
-        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Qiujun Huang <hqjagain@gmail.com>
-Subject: [PATCH v2] fbcon: fix null-ptr-deref in fbcon_switch
-Date:   Sun, 29 Mar 2020 16:56:47 +0800
-Message-Id: <20200329085647.25133-1-hqjagain@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Sun, 29 Mar 2020 05:02:01 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=H5gHcZt58ItxyBwqaqxZtntJGLmB68FixgDVNtg8rCs=; b=07E0C60Qj23SXfi8N3GXmOZby
+        1Hyu8JB6hjpqjVbF5nzJMATZNq7dhhOrute0Hyn00mXx80gRd3XdzNmtNIB7nMSCmCpqz/nl08AKK
+        k1ebxfRQ6/3jvcJ8JxSft+oWkYRLzN+rYGQSWCgltsgB5q00nYWgXMBVfU/01oeqtBL0/X2uY3nhQ
+        JnhwCkHDAK8MiExjdHJYTM3b6Axw22rJUXByf/MjgCz8FrU0I4zTKHPujP4vBVO717XpEHcoxQ0CS
+        1NQdgGPYuNbi/nYU5+y4A7xknuGQUU48hKfDeJcl5SMYOTxLyOHU1dWcoSIlUAF9W4fyPRR5IXt6x
+        rG5MBnaKA==;
+Received: from shell.armlinux.org.uk ([2002:4e20:1eda:1:5054:ff:fe00:4ec]:38708)
+        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.90_1)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1jITpB-0003yK-JF; Sun, 29 Mar 2020 10:01:45 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1jITp6-000650-KD; Sun, 29 Mar 2020 10:01:40 +0100
+Date:   Sun, 29 Mar 2020 10:01:40 +0100
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     Florinel Iordache <florinel.iordache@nxp.com>
+Cc:     Andrew Lunn <andrew@lunn.ch>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
+        "hkallweit1@gmail.com" <hkallweit1@gmail.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "kuba@kernel.org" <kuba@kernel.org>,
+        "corbet@lwn.net" <corbet@lwn.net>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        Leo Li <leoyang.li@nxp.com>,
+        "Madalin Bucur (OSS)" <madalin.bucur@oss.nxp.com>,
+        Ioana Ciornei <ioana.ciornei@nxp.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [EXT] Re: [PATCH net-next 3/9] net: phy: add kr phy connection
+ type
+Message-ID: <20200329090140.GW25745@shell.armlinux.org.uk>
+References: <1585230682-24417-1-git-send-email-florinel.iordache@nxp.com>
+ <1585230682-24417-4-git-send-email-florinel.iordache@nxp.com>
+ <20200327001515.GL3819@lunn.ch>
+ <AM0PR04MB54435F251B435789A435A0BBFBCA0@AM0PR04MB5443.eurprd04.prod.outlook.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <AM0PR04MB54435F251B435789A435A0BBFBCA0@AM0PR04MB5443.eurprd04.prod.outlook.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Set logo_shown to FBCON_LOGO_CANSHOW when the vc was deallocated.
+On Sun, Mar 29, 2020 at 08:22:10AM +0000, Florinel Iordache wrote:
+> > On Thu, Mar 26, 2020 at 03:51:16PM +0200, Florinel Iordache wrote:
+> > > Add support for backplane kr phy connection types currently available
+> > > (10gbase-kr, 40gbase-kr4) and the required phylink updates (cover all
+> > > the cases for KR modes which are clause 45 compatible to correctly
+> > > assign phy_interface and phylink#supported)
+> > >
+> > > Signed-off-by: Florinel Iordache <florinel.iordache@nxp.com>
+> > > ---
+> > >  drivers/net/phy/phylink.c | 15 ++++++++++++---
+> > >  include/linux/phy.h       |  6 +++++-
+> > >  2 files changed, 17 insertions(+), 4 deletions(-)
+> > >
+> > > diff --git a/drivers/net/phy/phylink.c b/drivers/net/phy/phylink.c
+> > > index fed0c59..db1bb87 100644
+> > > --- a/drivers/net/phy/phylink.c
+> > > +++ b/drivers/net/phy/phylink.c
+> > > @@ -4,6 +4,7 @@
+> > >   * technologies such as SFP cages where the PHY is hot-pluggable.
+> > >   *
+> > >   * Copyright (C) 2015 Russell King
+> > > + * Copyright 2020 NXP
+> > >   */
+> > >  #include <linux/ethtool.h>
+> > >  #include <linux/export.h>
+> > > @@ -303,7 +304,6 @@ static int phylink_parse_mode(struct phylink *pl, struct
+> > fwnode_handle *fwnode)
+> > >                       break;
+> > >
+> > >               case PHY_INTERFACE_MODE_USXGMII:
+> > > -             case PHY_INTERFACE_MODE_10GKR:
+> > 
+> > We might have a backwards compatibility issue here. If i remember correctly,
+> > there are some boards out in the wild using PHY_INTERFACE_MODE_10GKR not
+> > PHY_INTERFACE_MODE_10GBASER.
+> > 
+> > See e0f909bc3a242296da9ccff78277f26d4883a79d
+> > 
+> > Russell, what do you say about this?
+> > 
+> >          Andrew
+> 
+> Ethernet interface nomenclature is using the following terminology:
+> e.g. 10GBase-KR: data rate (10G),  modulation type (Base = Baseband),
+> medium type (K = BacKplane), physical layer encoding scheme
+> (R = scRambling/descRambling using 64b/66b encoding that allows for
+> Ethernet framing at a rate of 10.3125 Gbit/s)
+> So 10GBase-R name provide information only about the data rate and
+> the encoding scheme without specifying the interface medium.
+> 10GBase-R is a family of many different standards specified for
+> several different physical medium for copper and optical fiber like
+> for example:
+> 	10GBase-SR: Short range (over fiber)
+> 	10GBase-LR: Long reach (over fiber)
+> 	10GBase-LRM: Long reach multi-mode (over fiber)
+> 	10GBase-ER: Extended reach (over fiber)
+> 	10GBase-CR: 10G over copper
+> 	10GBase-KR: Backplane
+> 
+> 10GBase-KR represents Ethernet operation over electrical backplanes on
+> single lane and uses the same physical layer encoding as 10GBase-LR/ER/SR
+> defined in IEEE802.3 Clause 49. 
 
-syzkaller report: https://lkml.org/lkml/2020/3/27/403
-general protection fault, probably for non-canonical address
-0xdffffc000000006c: 0000 [#1] SMP KASAN
-KASAN: null-ptr-deref in range [0x0000000000000360-0x0000000000000367]
-RIP: 0010:fbcon_switch+0x28f/0x1740
-drivers/video/fbdev/core/fbcon.c:2260
+I'm not sure why NXP folk think that they have to keep explaining this
+to us.  You do not.
 
-Call Trace:
-redraw_screen+0x2a8/0x770 drivers/tty/vt/vt.c:1008
-vc_do_resize+0xfe7/0x1360 drivers/tty/vt/vt.c:1295
-fbcon_init+0x1221/0x1ab0 drivers/video/fbdev/core/fbcon.c:1219
-visual_init+0x305/0x5c0 drivers/tty/vt/vt.c:1062
-do_bind_con_driver+0x536/0x890 drivers/tty/vt/vt.c:3542
-do_take_over_console+0x453/0x5b0 drivers/tty/vt/vt.c:4122
-do_fbcon_takeover+0x10b/0x210 drivers/video/fbdev/core/fbcon.c:588
-fbcon_fb_registered+0x26b/0x340 drivers/video/fbdev/core/fbcon.c:3259
-do_register_framebuffer drivers/video/fbdev/core/fbmem.c:1664 [inline]
-register_framebuffer+0x56e/0x980 drivers/video/fbdev/core/fbmem.c:1832
-dlfb_usb_probe.cold+0x1743/0x1ba3 drivers/video/fbdev/udlfb.c:1735
-usb_probe_interface+0x310/0x800 drivers/usb/core/driver.c:374
+> So prior to my change, phy_interface_t provided both enumerators which is correct:
+> 	PHY_INTERFACE_MODE_10GBASER
+> 	PHY_INTERFACE_MODE_10GKR
+> Perhaps PHY_INTERFACE_MODE_10GKR was not used before because Backplane
+> support was not available and all 10GBase-R family of interfaces should
+> be using PHY_INTERFACE_MODE_10GBASER.
 
-accessing vc_cons[logo_shown].d->vc_top causes the bug.
+What you are missing is that PHY_INTERFACE_MODE_10GKR was introduced
+first and used _incorrectly_.  We are currently mid-transition to
+correct that mistake.
 
-Reported-by: syzbot+732528bae351682f1f27@syzkaller.appspotmail.com
-Signed-off-by: Qiujun Huang <hqjagain@gmail.com>
----
- drivers/video/fbdev/core/fbcon.c | 3 +++
- 1 file changed, 3 insertions(+)
+While we are in transition, PHY_INTERFACE_MODE_10GKR can _not_ be used
+correctly, and nothing NXP or anyone else says will change that fact
+until the transition has been completed.
 
-diff --git a/drivers/video/fbdev/core/fbcon.c b/drivers/video/fbdev/core/fbcon.c
-index bb6ae995c2e5..5eb3fc90f9f6 100644
---- a/drivers/video/fbdev/core/fbcon.c
-+++ b/drivers/video/fbdev/core/fbcon.c
-@@ -1283,6 +1283,9 @@ static void fbcon_deinit(struct vc_data *vc)
- 	if (!con_is_bound(&fb_con))
- 		fbcon_exit();
- 
-+	if (vc->vc_num == logo_shown)
-+		logo_shown = FBCON_LOGO_CANSHOW;
-+
- 	return;
- }
- 
+In kernel land, we do not intentionally regress platforms, even if we
+have made a mistake.
+
 -- 
-2.17.1
-
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 10.2Mbps down 587kbps up
