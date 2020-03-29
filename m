@@ -7,40 +7,41 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C32CFC43331
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 20:26:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 998B7C2D0E5
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 20:26:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A26920781
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 20:26:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7849B20781
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 20:26:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728984AbgC2U0r (ORCPT
+        id S1728992AbgC2U0t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Mar 2020 16:26:47 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:57096 "EHLO
+        Sun, 29 Mar 2020 16:26:49 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:57093 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728946AbgC2U0i (ORCPT
+        with ESMTP id S1728900AbgC2U0i (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sun, 29 Mar 2020 16:26:38 -0400
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1jIeVt-0001VF-0v; Sun, 29 Mar 2020 22:26:33 +0200
+        id 1jIeVq-0001X9-R1; Sun, 29 Mar 2020 22:26:31 +0200
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 80E0A1C0450;
-        Sun, 29 Mar 2020 22:26:22 +0200 (CEST)
-Date:   Sun, 29 Mar 2020 20:26:22 -0000
-From:   "tip-bot2 for afzal mohammed" <tip-bot2@linutronix.de>
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 7928C1C07A5;
+        Sun, 29 Mar 2020 22:26:24 +0200 (CEST)
+Date:   Sun, 29 Mar 2020 20:26:24 -0000
+From:   "tip-bot2 for Alexandre Torgue" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: irq/core] irqchip: Replace setup_irq() by request_irq()
-Cc:     afzal mohammed <afzal.mohd.ma@gmail.com>,
-        Marc Zyngier <maz@kernel.org>, x86 <x86@kernel.org>,
+Subject: [tip: irq/core] pinctrl: stm32: Add level interrupt support to gpio irq chip
+Cc:     Alexandre Torgue <alexandre.torgue@st.com>,
+        Marc Zyngier <maz@kernel.org>, Marek Vasut <marex@denx.de>,
+        Linus Walleij <linus.walleij@linaro.org>, x86 <x86@kernel.org>,
         LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200304004839.4729-1-afzal.mohd.ma@gmail.com>
-References: <20200304004839.4729-1-afzal.mohd.ma@gmail.com>
+In-Reply-To: <20200219143229.18084-3-alexandre.torgue@st.com>
+References: <20200219143229.18084-3-alexandre.torgue@st.com>
 MIME-Version: 1.0
-Message-ID: <158551358214.28353.15463615152083988179.tip-bot2@tip-bot2>
+Message-ID: <158551358409.28353.6617704278446088456.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -56,98 +57,99 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the irq/core branch of tip:
 
-Commit-ID:     2ef1cb763d92f3e212005fcf5dcc713eaf42b257
-Gitweb:        https://git.kernel.org/tip/2ef1cb763d92f3e212005fcf5dcc713eaf42b257
-Author:        afzal mohammed <afzal.mohd.ma@gmail.com>
-AuthorDate:    Wed, 04 Mar 2020 06:18:38 +05:30
+Commit-ID:     47beed513a85b3561e74cbb4dd7af848716fa4e0
+Gitweb:        https://git.kernel.org/tip/47beed513a85b3561e74cbb4dd7af848716fa4e0
+Author:        Alexandre Torgue <alexandre.torgue@st.com>
+AuthorDate:    Wed, 19 Feb 2020 15:32:29 +01:00
 Committer:     Marc Zyngier <maz@kernel.org>
-CommitterDate: Sun, 08 Mar 2020 14:25:46 
+CommitterDate: Sun, 08 Mar 2020 14:25:45 
 
-irqchip: Replace setup_irq() by request_irq()
+pinctrl: stm32: Add level interrupt support to gpio irq chip
 
-request_irq() is preferred over setup_irq(). Invocations of setup_irq()
-occur after memory allocators are ready.
+GPIO hardware block is directly linked to EXTI block but EXTI handles
+external interrupts only on edge. To be able to handle GPIO interrupt on
+level a "hack" is done in gpio irq chip: parent interrupt (exti irq chip)
+is retriggered following interrupt type and gpio line value.
 
-Per tglx[1], setup_irq() existed in olden days when allocators were not
-ready by the time early interrupts were initialized.
-
-Hence replace setup_irq() by request_irq().
-
-[1] https://lkml.kernel.org/r/alpine.DEB.2.20.1710191609480.1971@nanos
-
-Signed-off-by: afzal mohammed <afzal.mohd.ma@gmail.com>
+Signed-off-by: Alexandre Torgue <alexandre.torgue@st.com>
 Signed-off-by: Marc Zyngier <maz@kernel.org>
-Link: https://lore.kernel.org/r/20200304004839.4729-1-afzal.mohd.ma@gmail.com
+Tested-by: Marek Vasut <marex@denx.de>
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+Link: https://lore.kernel.org/r/20200219143229.18084-3-alexandre.torgue@st.com
 ---
- drivers/irqchip/irq-i8259.c   | 16 ++++++----------
- drivers/irqchip/irq-ingenic.c |  9 +++------
- 2 files changed, 9 insertions(+), 16 deletions(-)
+ drivers/pinctrl/stm32/pinctrl-stm32.c | 45 ++++++++++++++++++++++++--
+ 1 file changed, 43 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/irqchip/irq-i8259.c b/drivers/irqchip/irq-i8259.c
-index d000870..b6f6aa7 100644
---- a/drivers/irqchip/irq-i8259.c
-+++ b/drivers/irqchip/irq-i8259.c
-@@ -268,15 +268,6 @@ static void init_8259A(int auto_eoi)
- 	raw_spin_unlock_irqrestore(&i8259A_lock, flags);
- }
+diff --git a/drivers/pinctrl/stm32/pinctrl-stm32.c b/drivers/pinctrl/stm32/pinctrl-stm32.c
+index 2d5e043..d330b30 100644
+--- a/drivers/pinctrl/stm32/pinctrl-stm32.c
++++ b/drivers/pinctrl/stm32/pinctrl-stm32.c
+@@ -92,6 +92,7 @@ struct stm32_gpio_bank {
+ 	u32 bank_nr;
+ 	u32 bank_ioport_nr;
+ 	u32 pin_backup[STM32_GPIO_PINS_PER_BANK];
++	u8 irq_type[STM32_GPIO_PINS_PER_BANK];
+ };
  
--/*
-- * IRQ2 is cascade interrupt to second interrupt controller
-- */
--static struct irqaction irq2 = {
--	.handler = no_action,
--	.name = "cascade",
--	.flags = IRQF_NO_THREAD,
--};
--
- static struct resource pic1_io_resource = {
- 	.name = "pic1",
- 	.start = PIC_MASTER_CMD,
-@@ -311,6 +302,10 @@ static const struct irq_domain_ops i8259A_ops = {
-  */
- struct irq_domain * __init __init_i8259_irqs(struct device_node *node)
+ struct stm32_pinctrl {
+@@ -303,6 +304,46 @@ static const struct gpio_chip stm32_gpio_template = {
+ 	.get_direction		= stm32_gpio_get_direction,
+ };
+ 
++void stm32_gpio_irq_eoi(struct irq_data *d)
++{
++	struct stm32_gpio_bank *bank = d->domain->host_data;
++	int level;
++
++	irq_chip_eoi_parent(d);
++
++	/* If level interrupt type then retrig */
++	level = stm32_gpio_get(&bank->gpio_chip, d->hwirq);
++	if ((level == 0 && bank->irq_type[d->hwirq] == IRQ_TYPE_LEVEL_LOW) ||
++	    (level == 1 && bank->irq_type[d->hwirq] == IRQ_TYPE_LEVEL_HIGH))
++		irq_chip_retrigger_hierarchy(d);
++};
++
++static int stm32_gpio_set_type(struct irq_data *d, unsigned int type)
++{
++	struct stm32_gpio_bank *bank = d->domain->host_data;
++	u32 parent_type;
++
++	switch (type) {
++	case IRQ_TYPE_EDGE_RISING:
++	case IRQ_TYPE_EDGE_FALLING:
++	case IRQ_TYPE_EDGE_BOTH:
++		parent_type = type;
++		break;
++	case IRQ_TYPE_LEVEL_HIGH:
++		parent_type = IRQ_TYPE_EDGE_RISING;
++		break;
++	case IRQ_TYPE_LEVEL_LOW:
++		parent_type = IRQ_TYPE_EDGE_FALLING;
++		break;
++	default:
++		return -EINVAL;
++	}
++
++	bank->irq_type[d->hwirq] = type;
++
++	return irq_chip_set_type_parent(d, parent_type);
++};
++
+ static int stm32_gpio_irq_request_resources(struct irq_data *irq_data)
  {
-+	/*
-+	 * PIC_CASCADE_IR is cascade interrupt to second interrupt controller
-+	 */
-+	int irq = I8259A_IRQ_BASE + PIC_CASCADE_IR;
- 	struct irq_domain *domain;
+ 	struct stm32_gpio_bank *bank = irq_data->domain->host_data;
+@@ -332,11 +373,11 @@ static void stm32_gpio_irq_release_resources(struct irq_data *irq_data)
  
- 	insert_resource(&ioport_resource, &pic1_io_resource);
-@@ -323,7 +318,8 @@ struct irq_domain * __init __init_i8259_irqs(struct device_node *node)
- 	if (!domain)
- 		panic("Failed to add i8259 IRQ domain");
- 
--	setup_irq(I8259A_IRQ_BASE + PIC_CASCADE_IR, &irq2);
-+	if (request_irq(irq, no_action, IRQF_NO_THREAD, "cascade", NULL))
-+		pr_err("Failed to register cascade interrupt\n");
- 	register_syscore_ops(&i8259_syscore_ops);
- 	return domain;
- }
-diff --git a/drivers/irqchip/irq-ingenic.c b/drivers/irqchip/irq-ingenic.c
-index c5589ee..9f3da42 100644
---- a/drivers/irqchip/irq-ingenic.c
-+++ b/drivers/irqchip/irq-ingenic.c
-@@ -58,11 +58,6 @@ static irqreturn_t intc_cascade(int irq, void *data)
- 	return IRQ_HANDLED;
- }
- 
--static struct irqaction intc_cascade_action = {
--	.handler = intc_cascade,
--	.name = "SoC intc cascade interrupt",
--};
--
- static int __init ingenic_intc_of_init(struct device_node *node,
- 				       unsigned num_chips)
- {
-@@ -130,7 +125,9 @@ static int __init ingenic_intc_of_init(struct device_node *node,
- 		irq_reg_writel(gc, IRQ_MSK(32), JZ_REG_INTC_SET_MASK);
- 	}
- 
--	setup_irq(parent_irq, &intc_cascade_action);
-+	if (request_irq(parent_irq, intc_cascade, 0,
-+			"SoC intc cascade interrupt", NULL))
-+		pr_err("Failed to register SoC intc cascade interrupt\n");
- 	return 0;
- 
- out_domain_remove:
+ static struct irq_chip stm32_gpio_irq_chip = {
+ 	.name		= "stm32gpio",
+-	.irq_eoi	= irq_chip_eoi_parent,
++	.irq_eoi	= stm32_gpio_irq_eoi,
+ 	.irq_ack	= irq_chip_ack_parent,
+ 	.irq_mask	= irq_chip_mask_parent,
+ 	.irq_unmask	= irq_chip_unmask_parent,
+-	.irq_set_type	= irq_chip_set_type_parent,
++	.irq_set_type	= stm32_gpio_set_type,
+ 	.irq_set_wake	= irq_chip_set_wake_parent,
+ 	.irq_request_resources = stm32_gpio_irq_request_resources,
+ 	.irq_release_resources = stm32_gpio_irq_release_resources,
