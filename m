@@ -2,114 +2,165 @@ Return-Path: <SRS0=I467=5O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CC8EC43331
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 11:05:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06CB1C2D0EE
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 11:05:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D487020675
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 11:05:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585479904;
-	bh=9F4CtilIXwlAIMYP9eolAk4v42+p3v3qHvldoye/EYY=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=rAwXX47qBwP9tePpm+A3XfgLHFvrOxuMo75DjM3aeQdFRe83SzbtUElQeYdY2sugy
-	 ny30ETWjTMNJfiUlycKoRx2hLpYp+XP01slfCKgza2Kuo3qxtC1uI4rkiKgnOwtAoN
-	 e40+jvjgKil3KaPkyV2+jpv+dsu1vgLxrmbSF++Q=
+	by mail.kernel.org (Postfix) with ESMTP id DBA7020757
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 11:05:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728073AbgC2LFD (ORCPT
+        id S1728099AbgC2LFK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Mar 2020 07:05:03 -0400
-Received: from conssluserg-04.nifty.com ([210.131.2.83]:22887 "EHLO
-        conssluserg-04.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727875AbgC2LFD (ORCPT
+        Sun, 29 Mar 2020 07:05:10 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:42061 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727875AbgC2LFI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Mar 2020 07:05:03 -0400
-Received: from mail-vs1-f45.google.com (mail-vs1-f45.google.com [209.85.217.45]) (authenticated)
-        by conssluserg-04.nifty.com with ESMTP id 02TB4oUV031333;
-        Sun, 29 Mar 2020 20:04:51 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-04.nifty.com 02TB4oUV031333
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1585479891;
-        bh=CZAmvYzErNjohE2ADOOoYKCxYdv4vojfbTYidYBQq1Y=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=qSVFHnIIJnBUjLMS19vCe82bGiz9+8Q/kU6nr+DoilpyKEKa47A0mjbQjjaUdRqsA
-         +NIP9MNPShJN/4pHZjZZsz8wSgewg6yxu0AbQO6V6sdY5UpqSaCYp5FW3p8HyVksJN
-         dv0kU0IIorFxlDYUlBqYegu4o3gCQem4XKUvYArmUwpGexUuEs6KYNsL1Vnn6W1HMC
-         z5Mm8lctTDtW5ABVSGLlYf/RxaoqUDeHR0VCMFnBCozN9LZONIpTO034NwPhxAUAQ/
-         BLAqo0bjZ5uCSZUm67v4p55mf3WzyW7Xk9f1mliOFIO/hz4rWqdZuRscWD7frpptrw
-         mlg263302QbKg==
-X-Nifty-SrcIP: [209.85.217.45]
-Received: by mail-vs1-f45.google.com with SMTP id u11so9162806vsg.2;
-        Sun, 29 Mar 2020 04:04:51 -0700 (PDT)
-X-Gm-Message-State: AGi0PuaqlSAKqJIJURE/LbTE8Z4tGvIUzNS+kfX4HcpreEsdZH9PPa0X
-        pX1bDmMa/IXI5s3z19RbIQHKV2gAjCsr6swdfhM=
-X-Google-Smtp-Source: APiQypLko5mdsw5ozmMfBLEpr95LzigdeNWgB5ufKaG/GiPb+WkiNKTf7WbJ1iHXvX0yrsN3B4dkgtViqohO/kWsPYU=
-X-Received: by 2002:a67:8745:: with SMTP id j66mr4371097vsd.181.1585479890191;
- Sun, 29 Mar 2020 04:04:50 -0700 (PDT)
+        Sun, 29 Mar 2020 07:05:08 -0400
+Received: from dude.hi.pengutronix.de ([2001:67c:670:100:1d::7])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ore@pengutronix.de>)
+        id 1jIVkS-0006s2-Qt; Sun, 29 Mar 2020 13:05:00 +0200
+Received: from ore by dude.hi.pengutronix.de with local (Exim 4.92)
+        (envelope-from <ore@pengutronix.de>)
+        id 1jIVkQ-00015E-4v; Sun, 29 Mar 2020 13:04:58 +0200
+From:   Oleksij Rempel <o.rempel@pengutronix.de>
+To:     Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>
+Cc:     Oleksij Rempel <o.rempel@pengutronix.de>, kernel@pengutronix.de,
+        netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-imx@nxp.com,
+        Fabio Estevam <festevam@gmail.com>,
+        David Jander <david@protonic.nl>,
+        Russell King <linux@armlinux.org.uk>
+Subject: [PATCH v2] ARM: imx: allow to disable board specific PHY fixups
+Date:   Sun, 29 Mar 2020 13:04:57 +0200
+Message-Id: <20200329110457.4113-1-o.rempel@pengutronix.de>
+X-Mailer: git-send-email 2.26.0.rc2
 MIME-Version: 1.0
-References: <20200325031433.28223-1-masahiroy@kernel.org> <20200325031433.28223-2-masahiroy@kernel.org>
- <202003251906.973AD868@keescook>
-In-Reply-To: <202003251906.973AD868@keescook>
-From:   Masahiro Yamada <masahiroy@kernel.org>
-Date:   Sun, 29 Mar 2020 20:04:14 +0900
-X-Gmail-Original-Message-ID: <CAK7LNARRZ3_z6tjuGJ=PUw5JUtP5AM31wYpr0mnn9yq6VfzQOA@mail.gmail.com>
-Message-ID: <CAK7LNARRZ3_z6tjuGJ=PUw5JUtP5AM31wYpr0mnn9yq6VfzQOA@mail.gmail.com>
-Subject: Re: [PATCH 2/2] kbuild: add -Wall to KBUILD_HOSTCXXFLAGS
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        Emese Revfy <re.emese@gmail.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::7
+X-SA-Exim-Mail-From: ore@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 26, 2020 at 11:06 AM Kees Cook <keescook@chromium.org> wrote:
->
-> On Wed, Mar 25, 2020 at 12:14:32PM +0900, Masahiro Yamada wrote:
-> > Add -Wall to catch more warnings for C++ host programs.
-> >
-> > When I submitted the previous version, the 0-day bot reported
-> > -Wc++11-compat warnings for old GCC:
-> >
-> >   HOSTCXX -fPIC scripts/gcc-plugins/latent_entropy_plugin.o
-> > In file included from /usr/lib/gcc/x86_64-linux-gnu/4.8/plugin/include/tm.h:28:0,
-> >                  from scripts/gcc-plugins/gcc-common.h:15,
-> >                  from scripts/gcc-plugins/latent_entropy_plugin.c:78:
-> > /usr/lib/gcc/x86_64-linux-gnu/4.8/plugin/include/config/elfos.h:102:21: warning: C++11 requires a space between string literal and macro [-Wc++11-compat]
-> >     fprintf ((FILE), "%s"HOST_WIDE_INT_PRINT_UNSIGNED"\n",\
-> >                      ^
-> > /usr/lib/gcc/x86_64-linux-gnu/4.8/plugin/include/config/elfos.h:170:24: warning: C++11 requires a space between string literal and macro [-Wc++11-compat]
-> >        fprintf ((FILE), ","HOST_WIDE_INT_PRINT_UNSIGNED",%u\n",  \
-> >                         ^
-> > In file included from /usr/lib/gcc/x86_64-linux-gnu/4.8/plugin/include/tm.h:42:0,
-> >                  from scripts/gcc-plugins/gcc-common.h:15,
-> >                  from scripts/gcc-plugins/latent_entropy_plugin.c:78:
-> > /usr/lib/gcc/x86_64-linux-gnu/4.8/plugin/include/defaults.h:126:24: warning: C++11 requires a space between string literal and macro [-Wc++11-compat]
-> >        fprintf ((FILE), ","HOST_WIDE_INT_PRINT_UNSIGNED",%u\n",  \
-> >                         ^
-> >
-> > The source of the warnings is in the plugin headers, so we have no
-> > control of it. I just suppressed them by adding -Wno-c++11-compat to
-> > scripts/gcc-plugins/Makefile.
-> >
-> > Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
->
-> Acked-by: Kees Cook <keescook@chromium.org>
->
-> -Kees
+All PHY fixups located in imx and mxs machine code are PHY and/or board
+specific. Never the less, they are applied to all boards independent on
+how related PHY is actually connected. As result:
+- we have boards with wrong PHY defaults which are not overwritten or
+  not properly handled by PHY drivers.
+- Some PHY driver changes was never tested and bugs was never detected
+  due the fixups.
+- Same PHY specific errata was fixed by SoC specific fixup, so the same
+  issues should be investigated again after switching to different SoC
+  on same board.
 
+Since removing this fixups will brake may existing boards, we'll provide a
+Kconfig option which can be used by kernel developers and system integrators.
 
-Applied to linux-kbuild.
+Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
+---
+ arch/arm/mach-imx/mach-imx6q.c  |  3 ++-
+ arch/arm/mach-imx/mach-imx6sx.c |  3 ++-
+ arch/arm/mach-imx/mach-imx7d.c  |  3 ++-
+ arch/arm/mach-mxs/mach-mxs.c    |  3 ++-
+ drivers/net/phy/Kconfig         | 16 ++++++++++++++++
+ 5 files changed, 24 insertions(+), 4 deletions(-)
 
-
-
+diff --git a/arch/arm/mach-imx/mach-imx6q.c b/arch/arm/mach-imx/mach-imx6q.c
+index edd26e0ffeec..aabf0d8c23a9 100644
+--- a/arch/arm/mach-imx/mach-imx6q.c
++++ b/arch/arm/mach-imx/mach-imx6q.c
+@@ -162,7 +162,8 @@ static int ar8035_phy_fixup(struct phy_device *dev)
+ 
+ static void __init imx6q_enet_phy_init(void)
+ {
+-	if (IS_BUILTIN(CONFIG_PHYLIB)) {
++	if (IS_BUILTIN(CONFIG_PHYLIB) &&
++	    IS_BUILTIN(CONFIG_DEPRECATED_PHY_FIXUPS)) {
+ 		phy_register_fixup_for_uid(PHY_ID_KSZ9021, MICREL_PHY_ID_MASK,
+ 				ksz9021rn_phy_fixup);
+ 		phy_register_fixup_for_uid(PHY_ID_KSZ9031, MICREL_PHY_ID_MASK,
+diff --git a/arch/arm/mach-imx/mach-imx6sx.c b/arch/arm/mach-imx/mach-imx6sx.c
+index d5310bf307ff..fdd9bef27625 100644
+--- a/arch/arm/mach-imx/mach-imx6sx.c
++++ b/arch/arm/mach-imx/mach-imx6sx.c
+@@ -35,7 +35,8 @@ static int ar8031_phy_fixup(struct phy_device *dev)
+ #define PHY_ID_AR8031   0x004dd074
+ static void __init imx6sx_enet_phy_init(void)
+ {
+-	if (IS_BUILTIN(CONFIG_PHYLIB))
++	if (IS_BUILTIN(CONFIG_PHYLIB) &&
++	    IS_BUILTIN(CONFIG_DEPRECATED_PHY_FIXUPS))
+ 		phy_register_fixup_for_uid(PHY_ID_AR8031, 0xffffffff,
+ 					   ar8031_phy_fixup);
+ }
+diff --git a/arch/arm/mach-imx/mach-imx7d.c b/arch/arm/mach-imx/mach-imx7d.c
+index ebb27592a9f7..1d3d67c247a3 100644
+--- a/arch/arm/mach-imx/mach-imx7d.c
++++ b/arch/arm/mach-imx/mach-imx7d.c
+@@ -49,7 +49,8 @@ static int bcm54220_phy_fixup(struct phy_device *dev)
+ 
+ static void __init imx7d_enet_phy_init(void)
+ {
+-	if (IS_BUILTIN(CONFIG_PHYLIB)) {
++	if (IS_BUILTIN(CONFIG_PHYLIB) &&
++	    IS_BUILTIN(CONFIG_DEPRECATED_PHY_FIXUPS)) {
+ 		phy_register_fixup_for_uid(PHY_ID_AR8031, 0xffffffff,
+ 					   ar8031_phy_fixup);
+ 		phy_register_fixup_for_uid(PHY_ID_BCM54220, 0xffffffff,
+diff --git a/arch/arm/mach-mxs/mach-mxs.c b/arch/arm/mach-mxs/mach-mxs.c
+index c109f47e9cbc..b4b631242080 100644
+--- a/arch/arm/mach-mxs/mach-mxs.c
++++ b/arch/arm/mach-mxs/mach-mxs.c
+@@ -257,7 +257,8 @@ static void __init apx4devkit_init(void)
+ {
+ 	enable_clk_enet_out();
+ 
+-	if (IS_BUILTIN(CONFIG_PHYLIB))
++	if (IS_BUILTIN(CONFIG_PHYLIB) &&
++	    IS_BUILTIN(CONFIG_DEPRECATED_PHY_FIXUPS))
+ 		phy_register_fixup_for_uid(PHY_ID_KSZ8051, MICREL_PHY_ID_MASK,
+ 					   apx4devkit_phy_fixup);
+ }
+diff --git a/drivers/net/phy/Kconfig b/drivers/net/phy/Kconfig
+index 9dabe03a668c..f54428ddf058 100644
+--- a/drivers/net/phy/Kconfig
++++ b/drivers/net/phy/Kconfig
+@@ -249,6 +249,22 @@ config LED_TRIGGER_PHY
+ 		<Speed in megabits>Mbps OR <Speed in gigabits>Gbps OR link
+ 		for any speed known to the PHY.
+ 
++config DEPRECATED_PHY_FIXUPS
++	bool "Enable deprecated PHY fixups"
++	default y
++	---help---
++	  In the early days it was common practice to configure PHYs by adding a
++	  phy_register_fixup*() in the machine code. This practice turned out to
++	  be potentially dangerous, because:
++	  - it affects all PHYs in the system
++	  - these register changes are usually not preserved during PHY reset
++	    or suspend/resume cycle.
++	  - it complicates debugging, since these configuration changes were not
++	    done by the actual PHY driver.
++	  This option allows to disable all fixups which are identified as
++	  potentially harmful and give the developers a chance to implement the
++	  proper configuration via the device tree (e.g.: phy-mode) and/or the
++	  related PHY drivers.
+ 
+ comment "MII PHY device drivers"
+ 
 -- 
-Best Regards
-Masahiro Yamada
+2.26.0.rc2
+
