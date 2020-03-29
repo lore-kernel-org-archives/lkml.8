@@ -2,138 +2,110 @@ Return-Path: <SRS0=I467=5O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.2 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83186C2D0EB
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 10:09:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3CBFC2D0EB
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 10:19:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 63DA420732
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 10:09:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AAD7A20732
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 10:19:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585477163;
+	bh=zucRSTGGzuFkVabCQezWqRiMwAZFZTLz64620KT1MlI=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=kzBEwka14mnr472htsCpsqlUwza8O1SgLFMfUD1cT+ohSZJnB0QVp94GfYoKE/V6Y
+	 Q5hP4OKhJJVZoNA/cuC6V3H4A+LT33w3YKUElQ7BHulfjvFyFdIrRrnXCNrsBcLZbM
+	 4iRyAc7ARoOB8BjJJbhVELd9VvIgko/MAL867474=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727939AbgC2KJO (ORCPT
+        id S1727956AbgC2KTV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Mar 2020 06:09:14 -0400
-Received: from jabberwock.ucw.cz ([46.255.230.98]:56014 "EHLO
-        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726087AbgC2KJO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Mar 2020 06:09:14 -0400
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id 785261C0323; Sun, 29 Mar 2020 12:09:12 +0200 (CEST)
-Date:   Sun, 29 Mar 2020 12:09:11 +0200
-From:   Pavel Machek <pavel@denx.de>
-To:     Pavel Machek <pavel@denx.de>
-Cc:     Steven Rostedt <rostedt@goodmis.org>,
-        ben.hutchings@codethink.co.uk, Chris.Paterson2@renesas.com,
-        bigeasy@linutronix.de, LKML <linux-kernel@vger.kernel.org>,
-        linux-rt-users <linux-rt-users@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Carsten Emde <C.Emde@osadl.org>,
-        John Kacur <jkacur@redhat.com>,
-        Julia Cartwright <julia@ni.com>,
-        Daniel Wagner <wagi@monom.org>,
-        Tom Zanussi <zanussi@kernel.org>,
-        "Srivatsa S. Bhat" <srivatsa@csail.mit.edu>
-Subject: 4.4-rt ... seems to have same ireqwork problem was Re: 4.19.106-rt44
- -- boot problems with irqwork: push most work into softirq context
-Message-ID: <20200329100911.GA6044@duo.ucw.cz>
-References: <20200228170837.3fe8bb57@gandalf.local.home>
- <20200319214835.GA29781@duo.ucw.cz>
- <20200319232225.GA7878@duo.ucw.cz>
- <20200319204859.5011a488@gandalf.local.home>
- <20200320195432.GA12666@duo.ucw.cz>
- <20200320160545.26a65de3@gandalf.local.home>
- <20200321224339.GA20728@duo.ucw.cz>
- <20200321230028.GA22058@duo.ucw.cz>
+        Sun, 29 Mar 2020 06:19:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56446 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727639AbgC2KTV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Mar 2020 06:19:21 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 92D0D20732;
+        Sun, 29 Mar 2020 10:19:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1585477160;
+        bh=zucRSTGGzuFkVabCQezWqRiMwAZFZTLz64620KT1MlI=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=Ht87FUpI68j2yRsicb5MfQNxxsKNdJueCA2Kr8EY9Gnu9vDvz/SI2nKl9yYqhb23t
+         PECULlATF27BhYfK/jq22ikq8j0PkTp0/4u4EgJCxW6TU82prPIpldpekC2LpkY07r
+         NaWwz/H/iSJFmPBTYSNtFMzH0g0yjYkze3E3Lqe0=
+Date:   Sun, 29 Mar 2020 11:19:15 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>
+Cc:     "robh@kernel.org" <robh@kernel.org>,
+        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
+        "Grozav, Andrei" <Andrei.Grozav@analog.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Hennerich, Michael" <Michael.Hennerich@analog.com>,
+        "Nagy, Laszlo" <Laszlo.Nagy@analog.com>,
+        "Csomortani, Istvan" <Istvan.Csomortani@analog.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "Bogdan, Dragos" <Dragos.Bogdan@analog.com>,
+        "Costina, Adrian" <Adrian.Costina@analog.com>
+Subject: Re: [PATCH v13 8/8] dt-bindings: iio: adc: add bindings doc for
+ AD9467 ADC
+Message-ID: <20200329111915.0a3211bb@archlinux>
+In-Reply-To: <17a99874285734496a97d271dda7368b40e88255.camel@analog.com>
+References: <20200324134636.64643-1-alexandru.ardelean@analog.com>
+        <20200324134636.64643-9-alexandru.ardelean@analog.com>
+        <20200326185616.GA2673@bogus>
+        <17a99874285734496a97d271dda7368b40e88255.camel@analog.com>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="xHFwDpU9dbj6ez1V"
-Content-Disposition: inline
-In-Reply-To: <20200321230028.GA22058@duo.ucw.cz>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, 26 Mar 2020 19:45:39 +0000
+"Ardelean, Alexandru" <alexandru.Ardelean@analog.com> wrote:
 
---xHFwDpU9dbj6ez1V
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> On Thu, 2020-03-26 at 12:56 -0600, Rob Herring wrote:
+> > On Tue, 24 Mar 2020 15:46:36 +0200, Alexandru Ardelean wrote:  
+> > > This change adds the binding doc for the AD9467 ADC.
+> > > 
+> > > Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+> > > ---
+> > >  .../bindings/iio/adc/adi,ad9467.yaml          | 65 +++++++++++++++++++
+> > >  1 file changed, 65 insertions(+)
+> > >  create mode 100644
+> > > Documentation/devicetree/bindings/iio/adc/adi,ad9467.yaml
+> > >   
+> > 
+> > Please add Acked-by/Reviewed-by tags when posting new versions. However,
+> > there's no need to repost patches *only* to add the tags. The upstream
+> > maintainer will do that for acks received on the version they apply.
+> > 
+> > If a tag was not added on purpose, please state why and what changed.  
+> 
+> My bad. Apologies for that.
+> No idea how I missed adding this. Especially since I already know that I should
+> add it.
+> 
+> I guess I got mixed up with too many branches and not paying attention.
+Fixed the missing tag from Rob and whole series applied to the togreg branch of
+iio.git.  Pushed out as testing for the autobuilders to poke at it.
 
-Hi!
+Exposing the dma buffer stuff to the autobuilders is great. So far the only
+issue was that patch I took yesterday where we need to rethink things.
+However, that's just my sanity check local build so I'm sure we broke
+some obscure architecture :)
 
-> > > > > Does this patch help? =20
-> > > >=20
-> > > > I don't think so. It also failed, and the failure seems to be
-> > > > identical to me.
-> > > >=20
-> > > > https://gitlab.com/cip-project/cip-kernel/linux-cip/tree/ci/pavel/l=
-inux-cip
-> > > > https://lava.ciplatform.org/scheduler/job/13110
-> > > >=20
-> > >=20
-> > > Can you send me a patch that shows the difference between the revert =
-that
-> > > you say works, and the upstream v4.19-rt tree (let me know which vers=
-ion
-> > > of v4.19-rt you are basing it on).
-> >=20
-> > I was using -rt44, and yes, I can probably generate better diffs.
-> >=20
-> > But I guess I found it with code review: how does this look to you? I
-> > applied it on top of your fix, and am testing. 2 successes so far.
->=20
-> And I'd recommend some kind of cleanup on top. The code is really
-> "interesting" and we don't want to have two copies. Totally untested.
->=20
-> Looking at the code, it could be probably cleaned up further.
+Thanks,
 
-It seems 4.4 branch has same problem. Unfortunately, our testing lab
-does not help in this case, so .. this is completely untested. Problem
-was found by code inspection.
-
-Best regards,
-								Pavel
-
-Signed-off-by: Pavel Machek <pavel@denx.de>
-Fixes: fc9f4631a290 ("irqwork: push most work into softirq context")
-
-diff --git a/kernel/irq_work.c b/kernel/irq_work.c
-index 2899ba0d23d1..19896e6f1b2a 100644
---- a/kernel/irq_work.c
-+++ b/kernel/irq_work.c
-@@ -78,7 +78,8 @@ bool irq_work_queue_on(struct irq_work *work, int cpu)
- 	if (!irq_work_claim(work))
- 		return false;
-=20
--	if (IS_ENABLED(CONFIG_PREEMPT_RT_FULL) && !(work->flags & IRQ_WORK_HARD_I=
-RQ))
-+	if ((IS_ENABLED(CONFIG_PREEMPT_RT_FULL) && !(work->flags & IRQ_WORK_HARD_=
-IRQ))
-+	    || (work->flags & IRQ_WORK_LAZY))
- 		list =3D &per_cpu(lazy_list, cpu);
- 	else
- 		list =3D &per_cpu(raised_list, cpu);
+Jonathan
 
 
-
---=20
-DENX Software Engineering GmbH,      Managing Director: Wolfgang Denk
-HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
-
---xHFwDpU9dbj6ez1V
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCXoBzxwAKCRAw5/Bqldv6
-8nrJAJ45k6f/RGYw8Bj5B9J1rR8AeBQOpQCgr0dyWzkNL64ZIzwXYSCHeGsupRc=
-=jzfE
------END PGP SIGNATURE-----
-
---xHFwDpU9dbj6ez1V--
