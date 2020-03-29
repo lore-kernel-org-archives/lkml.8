@@ -6,35 +6,35 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7929C2D0EE
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 18:43:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 756A4C2D0EB
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 18:43:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B272C207FF
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 18:43:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D8A2207FF
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 18:43:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728665AbgC2SnX (ORCPT
+        id S1728674AbgC2SnY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Mar 2020 14:43:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42876 "EHLO mail.kernel.org"
+        Sun, 29 Mar 2020 14:43:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42948 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728587AbgC2SnS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728606AbgC2SnS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Sun, 29 Mar 2020 14:43:18 -0400
 Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6BA73208FE;
+        by mail.kernel.org (Postfix) with ESMTPSA id CF7A220842;
         Sun, 29 Mar 2020 18:43:17 +0000 (UTC)
 Received: from rostedt by gandalf.local.home with local (Exim 4.93)
         (envelope-from <rostedt@goodmis.org>)
-        id 1jIctw-002Fsw-B8; Sun, 29 Mar 2020 14:43:16 -0400
-Message-Id: <20200329184316.229427404@goodmis.org>
+        id 1jIctw-002FuU-Oz; Sun, 29 Mar 2020 14:43:16 -0400
+Message-Id: <20200329184316.644936337@goodmis.org>
 User-Agent: quilt/0.65
-Date:   Sun, 29 Mar 2020 14:42:57 -0400
+Date:   Sun, 29 Mar 2020 14:43:00 -0400
 From:   Steven Rostedt <rostedt@goodmis.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Ingo Molnar <mingo@kernel.org>,
         Andrew Morton <akpm@linux-foundation.org>
-Subject: [for-next][PATCH 05/21] ring-buffer: Rename ring_buffer_read() to read_buffer_iter_advance()
+Subject: [for-next][PATCH 08/21] ring-buffer: Do not die if rb_iter_peek() fails more than thrice
 References: <20200329184252.289087453@goodmis.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -45,125 +45,61 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: "Steven Rostedt (VMware)" <rostedt@goodmis.org>
 
-When the ring buffer was first created, the iterator followed the normal
-producer/consumer operations where it had both a peek() operation, that just
-returned the event at the current location, and a read(), that would return
-the event at the current location and also increment the iterator such that
-the next peek() or read() will return the next event.
+As the iterator will be reading a live buffer, and if the event being read
+is on a page that a writer crosses, it will fail and try again, the
+condition in rb_iter_peek() that only allows a retry to happen three times
+is no longer valid. Allow rb_iter_peek() to retry more than three times
+without killing the ring buffer, but only if rb_iter_head_event() had failed
+at least once.
 
-The only use of the ring_buffer_read() is currently to move the iterator to
-the next location and nothing now actually reads the event it returns.
-Rename this function to its actual use case to ring_buffer_iter_advance(),
-which also adds the "iter" part to the name, which is more meaningful. As
-the timestamp returned by ring_buffer_read() was never used, there's no
-reason that this new version should bother having returning it. It will also
-become a void function.
-
-Link: http://lkml.kernel.org/r/20200317213416.018928618@goodmis.org
+Link: http://lkml.kernel.org/r/20200317213416.452888193@goodmis.org
 
 Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 ---
- include/linux/ring_buffer.h          |  3 +--
- kernel/trace/ring_buffer.c           | 23 ++++++-----------------
- kernel/trace/trace.c                 |  4 ++--
- kernel/trace/trace_functions_graph.c |  2 +-
- 4 files changed, 10 insertions(+), 22 deletions(-)
+ kernel/trace/ring_buffer.c | 13 ++++++++++---
+ 1 file changed, 10 insertions(+), 3 deletions(-)
 
-diff --git a/include/linux/ring_buffer.h b/include/linux/ring_buffer.h
-index df0124eabece..0ae603b79b0e 100644
---- a/include/linux/ring_buffer.h
-+++ b/include/linux/ring_buffer.h
-@@ -135,8 +135,7 @@ void ring_buffer_read_finish(struct ring_buffer_iter *iter);
- 
- struct ring_buffer_event *
- ring_buffer_iter_peek(struct ring_buffer_iter *iter, u64 *ts);
--struct ring_buffer_event *
--ring_buffer_read(struct ring_buffer_iter *iter, u64 *ts);
-+void ring_buffer_iter_advance(struct ring_buffer_iter *iter);
- void ring_buffer_iter_reset(struct ring_buffer_iter *iter);
- int ring_buffer_iter_empty(struct ring_buffer_iter *iter);
- 
 diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-index 1718520a2809..f57eeaa80e3e 100644
+index 3d718add73c1..475338fda969 100644
 --- a/kernel/trace/ring_buffer.c
 +++ b/kernel/trace/ring_buffer.c
-@@ -4318,35 +4318,24 @@ ring_buffer_read_finish(struct ring_buffer_iter *iter)
- EXPORT_SYMBOL_GPL(ring_buffer_read_finish);
+@@ -4012,6 +4012,7 @@ rb_iter_peek(struct ring_buffer_iter *iter, u64 *ts)
+ 	struct ring_buffer_per_cpu *cpu_buffer;
+ 	struct ring_buffer_event *event;
+ 	int nr_loops = 0;
++	bool failed = false;
  
- /**
-- * ring_buffer_read - read the next item in the ring buffer by the iterator
-+ * ring_buffer_iter_advance - advance the iterator to the next location
-  * @iter: The ring buffer iterator
-- * @ts: The time stamp of the event read.
-  *
-- * This reads the next event in the ring buffer and increments the iterator.
-+ * Move the location of the iterator such that the next read will
-+ * be the next location of the iterator.
-  */
--struct ring_buffer_event *
--ring_buffer_read(struct ring_buffer_iter *iter, u64 *ts)
-+void ring_buffer_iter_advance(struct ring_buffer_iter *iter)
- {
--	struct ring_buffer_event *event;
- 	struct ring_buffer_per_cpu *cpu_buffer = iter->cpu_buffer;
- 	unsigned long flags;
+ 	if (ts)
+ 		*ts = 0;
+@@ -4038,10 +4039,14 @@ rb_iter_peek(struct ring_buffer_iter *iter, u64 *ts)
+ 	 * to a data event, we should never loop more than three times.
+ 	 * Once for going to next page, once on time extend, and
+ 	 * finally once to get the event.
+-	 * (We never hit the following condition more than thrice).
++	 * We should never hit the following condition more than thrice,
++	 * unless the buffer is very small, and there's a writer
++	 * that is causing the reader to fail getting an event.
+ 	 */
+-	if (RB_WARN_ON(cpu_buffer, ++nr_loops > 3))
++	if (++nr_loops > 3) {
++		RB_WARN_ON(cpu_buffer, !failed);
+ 		return NULL;
++	}
  
- 	raw_spin_lock_irqsave(&cpu_buffer->reader_lock, flags);
-- again:
--	event = rb_iter_peek(iter, ts);
--	if (!event)
--		goto out;
--
--	if (event->type_len == RINGBUF_TYPE_PADDING)
--		goto again;
- 
- 	rb_advance_iter(iter);
-- out:
--	raw_spin_unlock_irqrestore(&cpu_buffer->reader_lock, flags);
- 
--	return event;
-+	raw_spin_unlock_irqrestore(&cpu_buffer->reader_lock, flags);
- }
--EXPORT_SYMBOL_GPL(ring_buffer_read);
-+EXPORT_SYMBOL_GPL(ring_buffer_iter_advance);
- 
- /**
-  * ring_buffer_size - return the size of the ring buffer (in bytes)
-diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index 819e31d0d66c..47889123be7f 100644
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -3378,7 +3378,7 @@ static void trace_iterator_increment(struct trace_iterator *iter)
- 
- 	iter->idx++;
- 	if (buf_iter)
--		ring_buffer_read(buf_iter, NULL);
-+		ring_buffer_iter_advance(buf_iter);
- }
- 
- static struct trace_entry *
-@@ -3562,7 +3562,7 @@ void tracing_iter_reset(struct trace_iterator *iter, int cpu)
- 		if (ts >= iter->array_buffer->time_start)
- 			break;
- 		entries++;
--		ring_buffer_read(buf_iter, NULL);
-+		ring_buffer_iter_advance(buf_iter);
+ 	if (rb_per_cpu_empty(cpu_buffer))
+ 		return NULL;
+@@ -4052,8 +4057,10 @@ rb_iter_peek(struct ring_buffer_iter *iter, u64 *ts)
  	}
  
- 	per_cpu_ptr(iter->array_buffer->data, cpu)->skipped_entries = entries;
-diff --git a/kernel/trace/trace_functions_graph.c b/kernel/trace/trace_functions_graph.c
-index 7d71546ba00a..4a9c49c08ec9 100644
---- a/kernel/trace/trace_functions_graph.c
-+++ b/kernel/trace/trace_functions_graph.c
-@@ -482,7 +482,7 @@ get_return_for_leaf(struct trace_iterator *iter,
+ 	event = rb_iter_head_event(iter);
+-	if (!event)
++	if (!event) {
++		failed = true;
+ 		goto again;
++	}
  
- 	/* this is a leaf, now advance the iterator */
- 	if (ring_iter)
--		ring_buffer_read(ring_iter, NULL);
-+		ring_buffer_iter_advance(ring_iter);
- 
- 	return next;
- }
+ 	switch (event->type_len) {
+ 	case RINGBUF_TYPE_PADDING:
 -- 
 2.25.1
 
