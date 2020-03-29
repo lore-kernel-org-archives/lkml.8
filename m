@@ -2,105 +2,91 @@ Return-Path: <SRS0=I467=5O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01E84C43331
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 23:29:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7EE8C43331
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 23:37:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C091E20733
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 23:29:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B204820733
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 23:37:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727705AbgC2X3s (ORCPT
+        id S1727192AbgC2Xgj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Mar 2020 19:29:48 -0400
-Received: from mailoutvs3.siol.net ([185.57.226.194]:44343 "EHLO mail.siol.net"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727263AbgC2X3s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Mar 2020 19:29:48 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by mail.siol.net (Postfix) with ESMTP id A502E521FBD;
-        Mon, 30 Mar 2020 01:29:44 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at psrvmta11.zcs-production.pri
-Received: from mail.siol.net ([127.0.0.1])
-        by localhost (psrvmta11.zcs-production.pri [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id ZWF0-JOzCeTW; Mon, 30 Mar 2020 01:29:44 +0200 (CEST)
-Received: from mail.siol.net (localhost [127.0.0.1])
-        by mail.siol.net (Postfix) with ESMTPS id 4DA5D521FD4;
-        Mon, 30 Mar 2020 01:29:44 +0200 (CEST)
-Received: from jernej-laptop.localnet (cpe-194-152-20-232.static.triera.net [194.152.20.232])
-        (Authenticated sender: jernej.skrabec@siol.net)
-        by mail.siol.net (Postfix) with ESMTPA id 934CE521FBD;
-        Mon, 30 Mar 2020 01:29:42 +0200 (CEST)
-From:   Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec@siol.net>
-To:     Andrzej Hajda <a.hajda@samsung.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>, Torsten Duwe <duwe@lst.de>,
-        Maxime Ripard <maxime@cerno.tech>,
-        Icenowy Zheng <icenowy@aosc.io>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Samuel Holland <samuel@sholland.org>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        Vasily Khoruzhick <anarsoul@gmail.com>
-Cc:     Vasily Khoruzhick <anarsoul@gmail.com>
-Subject: Re: [PATCH] drm/bridge: anx6345: set correct BPC for display_info of connector
-Date:   Mon, 30 Mar 2020 01:29:42 +0200
-Message-ID: <11490050.O9o76ZdvQC@jernej-laptop>
-In-Reply-To: <20200329222253.2941405-1-anarsoul@gmail.com>
-References: <20200329222253.2941405-1-anarsoul@gmail.com>
+        Sun, 29 Mar 2020 19:36:39 -0400
+Received: from mail-out.m-online.net ([212.18.0.10]:58778 "EHLO
+        mail-out.m-online.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726032AbgC2Xgj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Mar 2020 19:36:39 -0400
+Received: from frontend01.mail.m-online.net (unknown [192.168.8.182])
+        by mail-out.m-online.net (Postfix) with ESMTP id 48rBnD51Mwz1rlhj;
+        Mon, 30 Mar 2020 01:36:32 +0200 (CEST)
+Received: from localhost (dynscan1.mnet-online.de [192.168.6.70])
+        by mail.m-online.net (Postfix) with ESMTP id 48rBnD2Smhz1qqkB;
+        Mon, 30 Mar 2020 01:36:32 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at mnet-online.de
+Received: from mail.mnet-online.de ([192.168.8.182])
+        by localhost (dynscan1.mail.m-online.net [192.168.6.70]) (amavisd-new, port 10024)
+        with ESMTP id tu7qrZhZFbeu; Mon, 30 Mar 2020 01:36:31 +0200 (CEST)
+X-Auth-Info: TuBlfyg55OdrcAq2t30Y8Fj8aDbl6+CnTBYSKAxGkzg=
+Received: from [IPv6:::1] (unknown [195.140.253.167])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.mnet-online.de (Postfix) with ESMTPSA;
+        Mon, 30 Mar 2020 01:36:31 +0200 (CEST)
+Subject: Re: [02/12] mfd: stm32-fmc2: add STM32 FMC2 controller driver
+To:     Christophe Kerello <christophe.kerello@st.com>,
+        miquel.raynal@bootlin.com, richard@nod.at, vigneshr@ti.com,
+        lee.jones@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com,
+        tony@atomide.com
+Cc:     linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com
+References: <1584975532-8038-1-git-send-email-christophe.kerello@st.com>
+ <1584975532-8038-3-git-send-email-christophe.kerello@st.com>
+From:   Marek Vasut <marex@denx.de>
+Message-ID: <a989ce31-740d-8f0f-4c55-026c65259104@denx.de>
+Date:   Mon, 30 Mar 2020 01:36:30 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+In-Reply-To: <1584975532-8038-3-git-send-email-christophe.kerello@st.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi!
+On 3/23/20 3:58 PM, Christophe Kerello wrote:
+> The driver adds the support for the STMicroelectronics FMC2 controller
+> found on STM32MP SOCs.
+> 
+> The FMC2 functional block makes the interface with: synchronous and
+> asynchronous static memories (such as PSNOR, PSRAM or other
+> memory-mapped peripherals) and NAND flash memories.
+> 
+> Signed-off-by: Christophe Kerello <christophe.kerello@st.com>
+[...]
+> +static const struct of_device_id stm32_fmc2_match[] = {
+> +	{.compatible = "st,stm32mp1-fmc2"},
 
-Dne ponedeljek, 30. marec 2020 ob 00:22:53 CEST je Vasily Khoruzhick 
-napisal(a):
-> Some drivers (e.g. sun4i-drm) need this info to decide whether they
-> need to enable dithering. Currently driver reports what panel supports
-> and if panel supports 8 we don't get dithering enabled.
-> 
-> Hardcode BPC to 6 for now since that's the only BPC
-> that driver supports.
+stm32mp151.dtsi uses "st,stm32mp15-fmc2" compatible string for FMC (with
+extra "5" in the string).
 
-Acked-by: Jernej Skrabec <jernej.skrabec@siol.net>
-
-Best regards,
-Jernej
-
-> 
-> Fixes: 6aa192698089 ("drm/bridge: Add Analogix anx6345 support")
-> Signed-off-by: Vasily Khoruzhick <anarsoul@gmail.com>
-> ---
->  drivers/gpu/drm/bridge/analogix/analogix-anx6345.c | 3 +++
->  1 file changed, 3 insertions(+)
-> 
-> diff --git a/drivers/gpu/drm/bridge/analogix/analogix-anx6345.c
-> b/drivers/gpu/drm/bridge/analogix/analogix-anx6345.c index
-> d7cb10c599a3..ea5de9395662 100644
-> --- a/drivers/gpu/drm/bridge/analogix/analogix-anx6345.c
-> +++ b/drivers/gpu/drm/bridge/analogix/analogix-anx6345.c
-> @@ -494,6 +494,9 @@ static int anx6345_get_modes(struct drm_connector
-> *connector)
-> 
->  	num_modes += drm_add_edid_modes(connector, anx6345->edid);
-> 
-> +	/* Driver currently supports only 6bpc */
-> +	connector->display_info.bpc = 6;
+> +	{}
+> +};
+> +MODULE_DEVICE_TABLE(of, stm32_fmc2_match);
 > +
->  unlock:
->  	if (power_off)
->  		anx6345_poweroff(anx6345);
-
-
-
-
+> +static struct platform_driver stm32_fmc2_driver = {
+> +	.probe	= stm32_fmc2_probe,
+> +	.driver	= {
+> +		.name = "stm32_fmc2",
+> +		.of_match_table = stm32_fmc2_match,
+> +		.pm = &stm32_fmc2_pm_ops,
+> +	},
+> +};
+> +module_platform_driver(stm32_fmc2_driver);
+[...]
