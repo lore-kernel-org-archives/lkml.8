@@ -2,141 +2,93 @@ Return-Path: <SRS0=I467=5O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.2 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10C1CC43331
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 08:43:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20A53C2D0ED
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 08:50:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D7C66206CC
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 08:43:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nTg8tyH+"
+	by mail.kernel.org (Postfix) with ESMTP id 01D6920714
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 08:50:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727873AbgC2Inf (ORCPT
+        id S1727843AbgC2IuQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Mar 2020 04:43:35 -0400
-Received: from mail-pj1-f65.google.com ([209.85.216.65]:38578 "EHLO
-        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726957AbgC2Inf (ORCPT
+        Sun, 29 Mar 2020 04:50:16 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:48330 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727286AbgC2IuP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Mar 2020 04:43:35 -0400
-Received: by mail-pj1-f65.google.com with SMTP id m15so5897686pje.3
-        for <linux-kernel@vger.kernel.org>; Sun, 29 Mar 2020 01:43:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Id8d23gHqbRL99BSISU6PhbbkVYUSOo5XcJrW6d+fG4=;
-        b=nTg8tyH+FegLXOkebwiGJ2y9whQZ/BxUnZJf/tkkoeL2aw3TZOllyMdv0NSpfV9cEm
-         MHJFWMcK3dkxiL5EnQ48t+1t2c0xQDnT3yr/gVUAr8sSTS70FQQI6VI6jxGSuXiMGzoJ
-         trkwSu6ZaJXH72eyjvNobSkiz060K1jBvdfqbpYE/FBTo0sKuvxPNGZVNiurkFt43s9Q
-         Rz5YLdooUXeUK+8V1/Xp9fxGm94aacy4hSkV9z7i+8OXWkxmwdmzNuQ3aIGppdSm1Nng
-         ruUN5weC++HGmv7H972u2CwQ6MpeqIBgClgA7q8vHiBQ8nI0+Ktle5mEXpnBxC5mJssN
-         /etQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Id8d23gHqbRL99BSISU6PhbbkVYUSOo5XcJrW6d+fG4=;
-        b=r+3CCiEwo2atZP2I6hSDh6Uol49dEQNAt1D36VFJk4QVg7mcE53YTLVL5rn49swKzJ
-         8RDF4UtUAKDLqhcR1BYiNh9Uu1EfOH6TMUCCG2a3k/v6FfNW37vDBdluweVkeqqTOOLV
-         NZeap4Rg9l2ouDCa318chA4sp3owxTrETzfPtvduPdnpTTUrC3dl37vPYP3YseC909AY
-         zRv90IFs1/Bk9eO7t9TPAAEV+1rhMDQS63Q6hjVqTCwcHvLMMrMp3ksPGXAr/tn26f4W
-         trPHDtnHDCAWHTPiNV6+CzLeihgYh3jWdRGY+G+kZgA9z0lZIaW1BY9i+YuTYub8xOSi
-         F5xg==
-X-Gm-Message-State: ANhLgQ2tb2KJxJX6rRRs/q/fczfD2GYcUuUw4mQU/f5kTKh/JTA1yXb3
-        2sNWM3Vsp85d7YTHD0yRado=
-X-Google-Smtp-Source: ADFU+vsb7aOT1SwSB0fURY5Khnfm+kq8VNwOxOdMweq/f7MvFzJXDZPEJZvBmotlqmuMF/tQwam/rA==
-X-Received: by 2002:a17:90a:b003:: with SMTP id x3mr9264046pjq.140.1585471414051;
-        Sun, 29 Mar 2020 01:43:34 -0700 (PDT)
-Received: from OptiPlexFedora.fios-router.home ([47.144.161.84])
-        by smtp.gmail.com with ESMTPSA id w2sm1525487pff.195.2020.03.29.01.43.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 29 Mar 2020 01:43:33 -0700 (PDT)
-From:   "John B. Wyatt IV" <jbwyatt4@gmail.com>
-To:     outreachy-kernel@googlegroups.com,
-        Julia Lawall <julia.lawall@inria.fr>,
-        Stefano Brivio <sbrivio@redhat.com>,
-        Forest Bond <forest@alittletooquiet.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Quentin Deslandes <quentin.deslandes@itdev.co.uk>,
-        Colin Ian King <colin.king@canonical.com>,
-        Malcolm Priestley <tvboxspy@gmail.com>,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Cc:     "John B. Wyatt IV" <jbwyatt4@gmail.com>
-Subject: [PATCH v3] staging: vt6656: add error code handling to unused variable
-Date:   Sun, 29 Mar 2020 01:43:20 -0700
-Message-Id: <20200329084320.619503-1-jbwyatt4@gmail.com>
-X-Mailer: git-send-email 2.25.1
+        Sun, 29 Mar 2020 04:50:15 -0400
+Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:b93f:9fae:b276:a89a])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: bbrezillon)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 3514B29054B;
+        Sun, 29 Mar 2020 09:50:14 +0100 (BST)
+Date:   Sun, 29 Mar 2020 10:50:07 +0200
+From:   Boris Brezillon <boris.brezillon@collabora.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-i3c <linux-i3c@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Vitor Soares <vitor.soares@synopsys.com>,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>
+Subject: [GIT PULL] i3c: Changes for 5.7
+Message-ID: <20200329104816.5cbdb74f@collabora.com>
+Organization: Collabora
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add error code handling to unused 'ret' variable that was never used.
-Return an error code from functions called within vnt_radio_power_on.
+Hello Linus,
 
-Issue reported by coccinelle (coccicheck).
+Here is the I3C PR for 5.7.
 
-Suggested-by: Quentin Deslandes <quentin.deslandes@itdev.co.uk>
-Suggested-by: Stefano Brivio <sbrivio@redhat.com>
-Signed-off-by: John B. Wyatt IV <jbwyatt4@gmail.com>
----
-v3: Forgot to add v2 code changes to commit.
+Best Regards,
 
-v2: Replace goto statements with return.
-    Remove last if check because it was unneeded.
-    Suggested-by: Julia Lawall <julia.lawall@inria.fr>
+Boris
 
- drivers/staging/vt6656/card.c | 18 +++++++++++-------
- 1 file changed, 11 insertions(+), 7 deletions(-)
+The following changes since commit bb6d3fb354c5ee8d6bde2d576eb7220ea09862b9:
 
-diff --git a/drivers/staging/vt6656/card.c b/drivers/staging/vt6656/card.c
-index dc3ab10eb630..239012539e73 100644
---- a/drivers/staging/vt6656/card.c
-+++ b/drivers/staging/vt6656/card.c
-@@ -723,9 +723,13 @@ int vnt_radio_power_on(struct vnt_private *priv)
- {
- 	int ret = 0;
- 
--	vnt_exit_deep_sleep(priv);
-+	ret = vnt_exit_deep_sleep(priv);
-+	if (ret)
-+		return ret;
- 
--	vnt_mac_reg_bits_on(priv, MAC_REG_HOSTCR, HOSTCR_RXON);
-+	ret = vnt_mac_reg_bits_on(priv, MAC_REG_HOSTCR, HOSTCR_RXON);
-+	if (ret)
-+		return ret;
- 
- 	switch (priv->rf_type) {
- 	case RF_AL2230:
-@@ -734,14 +738,14 @@ int vnt_radio_power_on(struct vnt_private *priv)
- 	case RF_VT3226:
- 	case RF_VT3226D0:
- 	case RF_VT3342A0:
--		vnt_mac_reg_bits_on(priv, MAC_REG_SOFTPWRCTL,
--				    (SOFTPWRCTL_SWPE2 | SOFTPWRCTL_SWPE3));
-+		ret = vnt_mac_reg_bits_on(priv, MAC_REG_SOFTPWRCTL,
-+					 (SOFTPWRCTL_SWPE2 | SOFTPWRCTL_SWPE3));
- 		break;
- 	}
-+	if (ret)
-+		return ret;
- 
--	vnt_mac_reg_bits_off(priv, MAC_REG_GPIOCTL1, GPIO3_INTMD);
--
--	return ret;
-+	return vnt_mac_reg_bits_off(priv, MAC_REG_GPIOCTL1, GPIO3_INTMD);
- }
- 
- void vnt_set_bss_mode(struct vnt_private *priv)
--- 
-2.25.1
+  Linux 5.6-rc1 (2020-02-09 16:08:48 -0800)
 
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/i3c/linux.git tags/i3c/for-5.7
+
+for you to fetch changes up to c4b9de11d0101792c4d5458b18581f4f527862d1:
+
+  i3c: convert to use i2c_new_client_device() (2020-03-29 10:35:50 +0200)
+
+----------------------------------------------------------------
+* Fix driver auto-probing related issues
+* Stop using the deprecated i2c_new_device() function
+* Replace zero-length array with flexible-array member
+
+----------------------------------------------------------------
+Boris Brezillon (4):
+      i3c: Fix MODALIAS uevents
+      i3c: Add a modalias sysfs attribute
+      i3c: Generate aliases for i3c modules
+      i3c: Simplify i3c_device_match_id()
+
+Gustavo A. R. Silva (1):
+      i3c: master: Replace zero-length array with flexible-array member
+
+Wolfram Sang (2):
+      i3c: master: no need to iterate master device twice
+      i3c: convert to use i2c_new_client_device()
+
+ drivers/i3c/device.c                 | 50 ++++++++++++++++++++++----------------------------
+ drivers/i3c/master.c                 | 28 +++++++++++++++++++++++++---
+ drivers/i3c/master/dw-i3c-master.c   |  2 +-
+ drivers/i3c/master/i3c-master-cdns.c |  2 +-
+ scripts/mod/devicetable-offsets.c    |  7 +++++++
+ scripts/mod/file2alias.c             | 19 +++++++++++++++++++
+ 6 files changed, 75 insertions(+), 33 deletions(-)
