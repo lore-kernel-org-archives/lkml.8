@@ -2,244 +2,225 @@ Return-Path: <SRS0=I467=5O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58D8EC2D0F1
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 12:31:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 675B7C43331
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 12:36:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 30DA22076E
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 12:31:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 30A7220714
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 12:36:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GS2coSV0"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JizUFo5c"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728241AbgC2Mb0 (ORCPT
+        id S1728126AbgC2MgU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Mar 2020 08:31:26 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:45042 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728190AbgC2MbX (ORCPT
+        Sun, 29 Mar 2020 08:36:20 -0400
+Received: from us-smtp-delivery-74.mimecast.com ([216.205.24.74]:26709 "EHLO
+        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727985AbgC2MgU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Mar 2020 08:31:23 -0400
-Received: by mail-wr1-f65.google.com with SMTP id m17so17519023wrw.11;
-        Sun, 29 Mar 2020 05:31:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=6JHVvWyjCIClbMe3qA+hwkoKr1pqM/u0MjtagCuJzWg=;
-        b=GS2coSV0Ia+k6CEHUACGbbzNV1WJJflWMxQTfHSjwgORxyoNy0KYjKAxsEcecnO4uI
-         7nGhTjjZDUro1ijSYdY3+qhko/j0DCjHoS3DoJjTn6BRENXbCqyOJYNLkASahpP44D/c
-         zEA+9TsbS+X6Txay9o78DmlSSJQv0hcRIGFJkg2WQQozBJURZm/qUBRuNXEFREUtaVYb
-         F6qr3sSgJmDieoxEcc8yy7bA0n4QYhQYAefeCTu+FopQNylgu3BoRUpF/kjRJvV82W3X
-         p3oqKxxurPLnTe8OPTJEzUoFdn3gDE+q4UliIGfhJ4DyagDY9S5wN9OeIvTOzZUoJVpd
-         eaWg==
+        Sun, 29 Mar 2020 08:36:20 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1585485378;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=hwBJNIszh6TC6VU12FXZ4Vd7wn8RSesK/NNxIOU/Few=;
+        b=JizUFo5cFKkxzL4LRZrTJcKZhdhom9B/wprXZek6ztCFTHLJBLf3oiAVqYApwdTXvr3XMR
+        pCQErbFBu9G295U3KXPz016IbylfFJanPWcEp+JGcBV4bIauOJ7WcI1iF88KBqHSUB6bVS
+        Gv5+hxsNRXGtxYnMLdIXdhQ4vD+5SKM=
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
+ [209.85.221.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-309-MZ2_qOXaNPGOa1LwY9B53Q-1; Sun, 29 Mar 2020 08:36:16 -0400
+X-MC-Unique: MZ2_qOXaNPGOa1LwY9B53Q-1
+Received: by mail-wr1-f71.google.com with SMTP id f15so8461918wrt.4
+        for <linux-kernel@vger.kernel.org>; Sun, 29 Mar 2020 05:36:16 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=6JHVvWyjCIClbMe3qA+hwkoKr1pqM/u0MjtagCuJzWg=;
-        b=D6mWLxTV7badflBfq6o4rCFfFJeDQRoOwjYYeUU4ViRVdQgNbozNCd0ON6i1bbm6yM
-         AWsX/z4iIZaNf81bzngewyKJn76xJvRgF6TeE51o2sPKLwYnMGKwLAIrHgO+9ryIW4Ps
-         fJO0y4HIfY7wVOdEWupt90qvAf4lz3oyKcm4rpmlXrFVm4IQM58KWAjX2jKsdfGp2vB7
-         DfwVLx0cDmPGwjUeUqXOmyD72FmlVjcrv20VcyyT2C6cH45UZDrChohleZbA8wfb7IAR
-         9yva0Fm28j303WhyoWnaEsw3ch2pivpNWme19Wg1oTRpFxeOV2Q0pDcvLCmjq/rT0dC2
-         1K1w==
-X-Gm-Message-State: ANhLgQ2bzkmtNvvC9CXr69qpPVxdXvn8L/wioXn/4RsSK8rddku1zDS5
-        ozNc6P9BnIeiQb0G9gc1ZTQ=
-X-Google-Smtp-Source: ADFU+vtASPaBoA0ZlG0D4yOABB50aEuSguJWuKm66wTqqbZky5lB2QXy+ktUPr/nbOzDaTyeB0lbrw==
-X-Received: by 2002:a05:6000:1090:: with SMTP id y16mr9124165wrw.281.1585485080148;
-        Sun, 29 Mar 2020 05:31:20 -0700 (PDT)
-Received: from localhost.localdomain (p5B3F6BD9.dip0.t-ipconnect.de. [91.63.107.217])
-        by smtp.gmail.com with ESMTPSA id f9sm17259108wrc.71.2020.03.29.05.31.18
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=hwBJNIszh6TC6VU12FXZ4Vd7wn8RSesK/NNxIOU/Few=;
+        b=ohLxCFgz7Ook8G6OTWrj61gLp6qilHPz5vYpCjhM+P0P8qujTOsR48f5eHVAJ8118y
+         zaBSEf65axj/z6Kgedb9gYBauqIS2UY15mUQJc1Fy9NvnPia0cHVSb3rKZvotY6U0goN
+         qV9IlBCMxjrgPuknRmF45tjmSKyF+3a9qjbleC9Tggk43DSYdYnB+8qcbVXPbjyiBB6t
+         1BoCU2i1qn+2ggq06eHoeoiz82137Y6NNZRPrH14LFn8l5sgPcxshB0rDd6sOucxUrKQ
+         rA62/X1auNb+8IIVwWFt3oYg1p5xr1aiarxVVZHrLFDHpYa93CCLn5M8cv29K/iOEOb2
+         ejBw==
+X-Gm-Message-State: ANhLgQ39olCXmVfvmZAVVc3UyqMOW40N7mQMXlpSWIprGUdoIHw8c6an
+        F1qeLr2ByV5/32Wy4bfVe9L4VnBlaNhVQa+S3RklSodf6Cco6x7qLz2dnxgr+pYMPsbl1X3q1Xg
+        96QrId9wrqfRe3bkw4/UmVaL0
+X-Received: by 2002:a1c:f70a:: with SMTP id v10mr8143939wmh.72.1585485375627;
+        Sun, 29 Mar 2020 05:36:15 -0700 (PDT)
+X-Google-Smtp-Source: ADFU+vuI9saIsl2zcWQGqaeDKgmx/oMIL5wQ54Rlrl1U1iP0jFOdf2pPLW21ixwNKW8n8TFOnKAcZQ==
+X-Received: by 2002:a1c:f70a:: with SMTP id v10mr8143921wmh.72.1585485375355;
+        Sun, 29 Mar 2020 05:36:15 -0700 (PDT)
+Received: from redhat.com (bzq-79-183-139-129.red.bezeqint.net. [79.183.139.129])
+        by smtp.gmail.com with ESMTPSA id b187sm17230248wmc.14.2020.03.29.05.36.13
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 29 Mar 2020 05:31:19 -0700 (PDT)
-From:   Saravanan Sekar <sravanhome@gmail.com>
-To:     lee.jones@linaro.org, andy.shevchenko@gmail.com,
-        robh+dt@kernel.org, jic23@kernel.org, knaack.h@gmx.de,
-        lars@metafoo.de, pmeerw@pmeerw.net, sre@kernel.org
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-iio@vger.kernel.org, linux-pm@vger.kernel.org,
-        Saravanan Sekar <sravanhome@gmail.com>
-Subject: [PATCH v6 2/5] mfd: mp2629: Add support for mps battery charger
-Date:   Sun, 29 Mar 2020 14:31:07 +0200
-Message-Id: <20200329123110.26482-3-sravanhome@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200329123110.26482-1-sravanhome@gmail.com>
-References: <20200329123110.26482-1-sravanhome@gmail.com>
+        Sun, 29 Mar 2020 05:36:14 -0700 (PDT)
+Date:   Sun, 29 Mar 2020 08:36:12 -0400
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     Eugenio =?iso-8859-1?Q?P=E9rez?= <eperezma@redhat.com>
+Cc:     "virtualization@lists.linux-foundation.org" 
+        <virtualization@lists.linux-foundation.org>,
+        Halil Pasic <pasic@linux.ibm.com>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        kvm list <kvm@vger.kernel.org>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 4/6] tools/virtio: Make --reset reset ring idx
+Message-ID: <20200329083047-mutt-send-email-mst@kernel.org>
+References: <20200329113359.30960-1-eperezma@redhat.com>
+ <20200329113359.30960-5-eperezma@redhat.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200329113359.30960-5-eperezma@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-mp2629 is a highly-integrated switching-mode battery charge management
-device for single-cell Li-ion or Li-polymer battery.
+On Sun, Mar 29, 2020 at 01:33:57PM +0200, Eugenio Pérez wrote:
+> Signed-off-by: Eugenio Pérez <eperezma@redhat.com>
+> ---
+>  drivers/virtio/virtio_ring.c | 18 ++++++++++++++++++
+>  include/linux/virtio.h       |  2 ++
+>  tools/virtio/linux/virtio.h  |  2 ++
+>  tools/virtio/virtio_test.c   | 28 +++++++++++++++++++++++++++-
+>  4 files changed, 49 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/virtio/virtio_ring.c b/drivers/virtio/virtio_ring.c
+> index 867c7ebd3f10..aba44ac3f0d6 100644
+> --- a/drivers/virtio/virtio_ring.c
+> +++ b/drivers/virtio/virtio_ring.c
+> @@ -1810,6 +1810,24 @@ int virtqueue_add_inbuf_ctx(struct virtqueue *vq,
+>  }
+>  EXPORT_SYMBOL_GPL(virtqueue_add_inbuf_ctx);
+>  
+> +void virtqueue_reset_free_head(struct virtqueue *_vq)
+> +{
+> +	struct vring_virtqueue *vq = to_vvq(_vq);
+> +
+> +	// vq->last_used_idx = 0;
+> +	vq->num_added = 0;
+> +
+> +	vq->split.queue_size_in_bytes = 0;
+> +	vq->split.avail_flags_shadow = 0;
+> +	vq->split.avail_idx_shadow = 0;
+> +
+> +	memset(vq->split.desc_state, 0, vq->split.vring.num *
+> +			sizeof(struct vring_desc_state_split));
+> +
+> +	vq->free_head = 0;
+> +}
+> +EXPORT_SYMBOL_GPL(virtqueue_reset_free_head);
+> +
+>  /**
+>   * virtqueue_kick_prepare - first half of split virtqueue_kick call.
+>   * @_vq: the struct virtqueue
 
-Add MFD core enables chip access for ADC driver for battery readings,
-and a power supply battery-charger driver
+Add documentation please. When should this be called?
+If it's just for testing, we can put this within some ifdef
+that only triggers when building the test ...
 
-Signed-off-by: Saravanan Sekar <sravanhome@gmail.com>
----
- drivers/mfd/Kconfig        |  9 ++++
- drivers/mfd/Makefile       |  2 +
- drivers/mfd/mp2629.c       | 86 ++++++++++++++++++++++++++++++++++++++
- include/linux/mfd/mp2629.h | 19 +++++++++
- 4 files changed, 116 insertions(+)
- create mode 100644 drivers/mfd/mp2629.c
- create mode 100644 include/linux/mfd/mp2629.h
 
-diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
-index 3c547ed575e6..85be799795aa 100644
---- a/drivers/mfd/Kconfig
-+++ b/drivers/mfd/Kconfig
-@@ -434,6 +434,15 @@ config MFD_MC13XXX_I2C
- 	help
- 	  Select this if your MC13xxx is connected via an I2C bus.
- 
-+config MFD_MP2629
-+	tristate "Monolithic power system MP2629 ADC and Battery charger"
-+	depends on I2C
-+	select REGMAP_I2C
-+	help
-+	  Select this option to enable support for monolithic power system
-+	  battery charger. This provides ADC, thermal, battery charger power
-+	  management functions on the systems.
-+
- config MFD_MXS_LRADC
- 	tristate "Freescale i.MX23/i.MX28 LRADC"
- 	depends on ARCH_MXS || COMPILE_TEST
-diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
-index f935d10cbf0f..d6c210f96d02 100644
---- a/drivers/mfd/Makefile
-+++ b/drivers/mfd/Makefile
-@@ -170,6 +170,8 @@ obj-$(CONFIG_MFD_MAX8925)	+= max8925.o
- obj-$(CONFIG_MFD_MAX8997)	+= max8997.o max8997-irq.o
- obj-$(CONFIG_MFD_MAX8998)	+= max8998.o max8998-irq.o
- 
-+obj-$(CONFIG_MFD_MP2629)	+= mp2629.o
-+
- pcf50633-objs			:= pcf50633-core.o pcf50633-irq.o
- obj-$(CONFIG_MFD_PCF50633)	+= pcf50633.o
- obj-$(CONFIG_PCF50633_ADC)	+= pcf50633-adc.o
-diff --git a/drivers/mfd/mp2629.c b/drivers/mfd/mp2629.c
-new file mode 100644
-index 000000000000..46242b1cdf24
---- /dev/null
-+++ b/drivers/mfd/mp2629.c
-@@ -0,0 +1,86 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+/*
-+ * MP2629 parent driver for ADC and battery charger
-+ *
-+ * Copyright 2020 Monolithic Power Systems, Inc
-+ *
-+ * Author: Saravanan Sekar <sravanhome@gmail.com>
-+ */
-+
-+#include <linux/i2c.h>
-+#include <linux/kernel.h>
-+#include <linux/mfd/core.h>
-+#include <linux/mfd/mp2629.h>
-+#include <linux/module.h>
-+#include <linux/platform_device.h>
-+#include <linux/regmap.h>
-+#include <linux/slab.h>
-+
-+enum {
-+	MP2629_MFD_ADC,
-+	MP2629_MFD_CHARGER,
-+	MP2629_MFD_MAX
-+};
-+
-+static const struct mfd_cell mp2629mfd[] = {
-+	[MP2629_MFD_ADC] = {
-+		.name = "mp2629_adc",
-+		.of_compatible = "mps,mp2629_adc",
-+	},
-+	[MP2629_MFD_CHARGER] = {
-+		.name = "mp2629_charger",
-+		.of_compatible = "mps,mp2629_charger",
-+	}
-+};
-+
-+static const struct regmap_config mp2629_regmap_config = {
-+	.reg_bits = 8,
-+	.val_bits = 8,
-+	.max_register = 0x17,
-+};
-+
-+static int mp2629_probe(struct i2c_client *client)
-+{
-+	struct mp2629_info *ddata;
-+	int ret;
-+
-+	ddata = devm_kzalloc(&client->dev, sizeof(*ddata), GFP_KERNEL);
-+	if (!ddata)
-+		return -ENOMEM;
-+
-+	ddata->dev = &client->dev;
-+	i2c_set_clientdata(client, ddata);
-+
-+	ddata->regmap = devm_regmap_init_i2c(client, &mp2629_regmap_config);
-+	if (IS_ERR(ddata->regmap)) {
-+		dev_err(ddata->dev, "Failed to allocate regmap!\n");
-+		return PTR_ERR(ddata->regmap);
-+	}
-+
-+	ret = devm_mfd_add_devices(ddata->dev, PLATFORM_DEVID_NONE, mp2629mfd,
-+				ARRAY_SIZE(mp2629mfd), NULL,
-+				0, NULL);
-+	if (ret)
-+		dev_err(ddata->dev, "Failed to register sub-devices %d\n", ret);
-+
-+	return ret;
-+}
-+
-+static const struct of_device_id mp2629_of_match[] = {
-+	{ .compatible = "mps,mp2629"},
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, mp2629_of_match);
-+
-+static struct i2c_driver mp2629_driver = {
-+	.driver = {
-+		.name = "mp2629",
-+		.of_match_table = mp2629_of_match,
-+	},
-+	.probe_new	= mp2629_probe,
-+};
-+module_i2c_driver(mp2629_driver);
-+
-+MODULE_AUTHOR("Saravanan Sekar <sravanhome@gmail.com>");
-+MODULE_DESCRIPTION("MP2629 Battery charger parent driver");
-+MODULE_LICENSE("GPL");
-diff --git a/include/linux/mfd/mp2629.h b/include/linux/mfd/mp2629.h
-new file mode 100644
-index 000000000000..06985e41fc6f
---- /dev/null
-+++ b/include/linux/mfd/mp2629.h
-@@ -0,0 +1,19 @@
-+/* SPDX-License-Identifier: GPL-2.0+ */
-+/*
-+ * register definitions for MP2629 charger
-+ *
-+ * Copyright 2020 Monolithic Power Systems, Inc
-+ */
-+
-+#ifndef __MP2629_H__
-+#define __MP2629_H__
-+
-+#include <linux/device.h>
-+#include <linux/regmap.h>
-+
-+struct mp2629_info {
-+	struct device *dev;
-+	struct regmap *regmap;
-+};
-+
-+#endif
--- 
-2.17.1
+> diff --git a/include/linux/virtio.h b/include/linux/virtio.h
+> index 15f906e4a748..286a0048fbeb 100644
+> --- a/include/linux/virtio.h
+> +++ b/include/linux/virtio.h
+> @@ -58,6 +58,8 @@ int virtqueue_add_sgs(struct virtqueue *vq,
+>  		      void *data,
+>  		      gfp_t gfp);
+>  
+> +void virtqueue_reset_free_head(struct virtqueue *vq);
+> +
+>  bool virtqueue_kick(struct virtqueue *vq);
+>  
+>  bool virtqueue_kick_prepare(struct virtqueue *vq);
+> diff --git a/tools/virtio/linux/virtio.h b/tools/virtio/linux/virtio.h
+> index b751350d4ce8..cf2e9ccf4de2 100644
+> --- a/tools/virtio/linux/virtio.h
+> +++ b/tools/virtio/linux/virtio.h
+> @@ -43,6 +43,8 @@ int virtqueue_add_inbuf(struct virtqueue *vq,
+>  			void *data,
+>  			gfp_t gfp);
+>  
+> +void virtqueue_reset_free_head(struct virtqueue *vq);
+> +
+>  bool virtqueue_kick(struct virtqueue *vq);
+>  
+>  void *virtqueue_get_buf(struct virtqueue *vq, unsigned int *len);
+> diff --git a/tools/virtio/virtio_test.c b/tools/virtio/virtio_test.c
+> index 93d81cd64ba0..bf21ece30594 100644
+> --- a/tools/virtio/virtio_test.c
+> +++ b/tools/virtio/virtio_test.c
+> @@ -49,6 +49,7 @@ struct vdev_info {
+>  
+>  static const struct vhost_vring_file no_backend = { .fd = -1 },
+>  				     backend = { .fd = 1 };
+> +static const struct vhost_vring_state null_state = {};
+>  
+>  bool vq_notify(struct virtqueue *vq)
+>  {
+> @@ -218,10 +219,33 @@ static void run_test(struct vdev_info *dev, struct vq_info *vq,
+>  			}
+>  
+>  			if (reset) {
+> +				struct vhost_vring_state s = { .index = 0 };
+> +				int i;
+> +				vq->vring.avail->idx = 0;
+> +				vq->vq->num_free = vq->vring.num;
+> +
+> +				// Put everything in free lists.
+> +				for (i = 0; i < vq->vring.num-1; i++)
+> +					vq->vring.desc[i].next =
+> +						cpu_to_virtio16(&dev->vdev,
+> +								i + 1);
+> +				vq->vring.desc[vq->vring.num-1].next = 0;
+> +				virtqueue_reset_free_head(vq->vq);
+> +
+
+
+Hmm this is poking at internal vq format ...
+
+
+> +				r = ioctl(dev->control, VHOST_GET_VRING_BASE,
+> +					  &s);
+> +				assert(!r);
+> +
+> +				s.num = 0;
+> +				r = ioctl(dev->control, VHOST_SET_VRING_BASE,
+> +					  &null_state);
+> +				assert(!r);
+> +
+>  				r = ioctl(dev->control, VHOST_TEST_SET_BACKEND,
+>  					  &backend);
+>  				assert(!r);
+>  
+> +				started = completed;
+>                                  while (completed > next_reset)
+>  					next_reset += completed;
+>  			}
+> @@ -243,7 +267,9 @@ static void run_test(struct vdev_info *dev, struct vq_info *vq,
+>  	test = 0;
+>  	r = ioctl(dev->control, VHOST_TEST_RUN, &test);
+>  	assert(r >= 0);
+> -	fprintf(stderr, "spurious wakeups: 0x%llx\n", spurious);
+> +	fprintf(stderr,
+> +		"spurious wakeups: 0x%llx started=0x%lx completed=0x%lx\n",
+> +		spurious, started, completed);
+>  }
+>  
+>  const char optstring[] = "h";
+> -- 
+> 2.18.1
 
