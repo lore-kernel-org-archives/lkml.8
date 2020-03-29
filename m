@@ -2,176 +2,161 @@ Return-Path: <SRS0=I467=5O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9B62C43331
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 22:45:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90EA6C2D0E9
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 22:50:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 71CA920733
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 22:45:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="ScK3vVXJ"
+	by mail.kernel.org (Postfix) with ESMTP id 70B2220733
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 22:50:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728927AbgC2Wp4 (ORCPT
+        id S1729022AbgC2WuS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Mar 2020 18:45:56 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:37366 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727591AbgC2Wpz (ORCPT
+        Sun, 29 Mar 2020 18:50:18 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:57188 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727591AbgC2WuR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Mar 2020 18:45:55 -0400
-Received: by mail-pl1-f196.google.com with SMTP id x1so5969403plm.4
-        for <linux-kernel@vger.kernel.org>; Sun, 29 Mar 2020 15:45:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=to:cc:from:subject:message-id:date:user-agent:mime-version
-         :content-language:content-transfer-encoding;
-        bh=0t271x+DU0Atpe8UaNyBG8lIiHoWr2mHJuNedMwC03c=;
-        b=ScK3vVXJs6qew1oyLLHQqcw27RzNAijmKHi6W3XA0kAFbzGOnLE9frpJYqMUMgPIvE
-         fVKwl2GKTZZygosnXnVqSlAiExVvGw1t8S8FHc1MhH7jMCSkU8HTcX2VS2qFzinGUiBw
-         zhTCRUbsrlUQ+Q402W4/3zUJXTJZ6ibp5/CThCJNSSe2y0h621hZDAmLYZuL7gL/0HMV
-         Af/Z/4MF059M7SlLq4SJgBrvLypLXIskxhDCi0PAvNG+PiSwwJ516czAHzElzgFO9L6Z
-         NgJGjatmSFfx0juo2MzJ6j2aMnzxx9UsxUhMsirvXMjUIHf4706x+ePRye+SuZEu6W5M
-         aWfQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:to:cc:from:subject:message-id:date:user-agent
-         :mime-version:content-language:content-transfer-encoding;
-        bh=0t271x+DU0Atpe8UaNyBG8lIiHoWr2mHJuNedMwC03c=;
-        b=B68UdKEPSOD6e/L2yOA1jYru09nY/nrMqtV9G5FXOoZ1S+J8xhLjkdrj+g75/h9oJI
-         Z22d18pGRt9PRWsX4Rc6HD5USyAyF3VPyK+GfFJZdVxrWq67AGePovGpShPNDHz3V9Bx
-         csdaUvbPdVSFY27zd/f8i6n9PItQW8oA62wzqeMKfyo4X4nYuZApdBEs2slbR2mywi1d
-         6YE3Ca5A6hRR/+uGDpN1nRq+VOo6gfTnVFjAt1uMtbfxRbJuooLItIqlihgkQk9tPk3F
-         4atJTHmevQ00yWr6apCTGhQrdAoLsJUxzwJziOk01ikOHULQ257TaS37HrvweL0QEiEd
-         O/7A==
-X-Gm-Message-State: AGi0PubXi3RxIcYjjSeDIqYfX2hrhMFksi9qQTsB7JdCFFYoTzFiHNNN
-        rmGVCaL2//Z+/uCAfwwxa5Fyh96yPPi7Tg==
-X-Google-Smtp-Source: APiQypLecVMbWWNlrL4dt6DJMNsMZUKkDmdVS2Cc9Ivv5ofvRZaImeatR9Cvae6Zqkowi22cH4y0DQ==
-X-Received: by 2002:a17:902:59c6:: with SMTP id d6mr4586617plj.207.1585521954231;
-        Sun, 29 Mar 2020 15:45:54 -0700 (PDT)
-Received: from [192.168.1.188] ([66.219.217.145])
-        by smtp.gmail.com with ESMTPSA id r7sm8729672pfg.38.2020.03.29.15.45.52
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 29 Mar 2020 15:45:53 -0700 (PDT)
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     IDE/ATA development list <linux-ide@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-From:   Jens Axboe <axboe@kernel.dk>
-Subject: [GIT PULL] libata changes for 5.7-rc
-Message-ID: <d5c6ff8b-f82c-f609-0257-66fb6fbeb331@kernel.dk>
-Date:   Sun, 29 Mar 2020 16:45:51 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Sun, 29 Mar 2020 18:50:17 -0400
+Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1jIgkv-0003TB-BJ; Mon, 30 Mar 2020 00:50:13 +0200
+Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
+        id D0BCF101150; Mon, 30 Mar 2020 00:50:12 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     "Michael Kerrisk \(man-pages\)" <mtk.manpages@gmail.com>,
+        "devi R.K" <devi.feb27@gmail.com>
+Cc:     mtk.manpages@gmail.com, linux-man@vger.kernel.org,
+        lkml <linux-kernel@vger.kernel.org>, arul.jeniston@gmail.com
+Subject: Re: [PATCH] timerfd_create.2: Included return value 0
+In-Reply-To: <3cbd0919-c82a-cb21-c10f-0498433ba5d1@gmail.com>
+References: <CAJymdbxJNag1W0vR9Ysm7_y91HwLAu4QaSMKZbed4emT1DYvww@mail.gmail.com> <55aa30be-5894-ae52-ffd4-5f2a82aa5ad5@gmail.com> <CAJymdbwfm7EypQfXRqWZHbfj2SKk7PCP7SMccz6bmJWSauDqPQ@mail.gmail.com> <CAJymdby8pDASq5Xv7DeTJ5cq1NXPe1jUWwApxZ5o-huaEXUrjw@mail.gmail.com> <3cbd0919-c82a-cb21-c10f-0498433ba5d1@gmail.com>
+Date:   Mon, 30 Mar 2020 00:50:12 +0200
+Message-ID: <87a73ywzbv.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+Micheal,
 
-Here are the libata changes for this merge window. This pull request
-contains:
+"Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com> writes:
+> [Greetings, Thomas; now I recall a conversation we had in Lyon :-) ]
 
-- Series from Bart, making the libata code smaller on PATA only setups.
-  This is useful for smaller/embedded use cases, and will help us move
-  some of those off drivers/ide.
+Hehe.
 
-- Kill unused BPRINTK() (Hannes)
+> I think this patch does not really capture the details
+> properly. The immediately preceding paragraph says:
+>
+>          If  the  associated  clock  is  either  CLOCK_REALTIME   or
+>          CLOCK_REALTIME_ALARM,     the     timer     is     absolute
+>          (TFD_TIMER_ABSTIME), and the  flag  TFD_TIMER_CANCEL_ON_SET
+>          was  specified when calling timerfd_settime(), then read(2)
+>          fails with the  error  ECANCELED  if  the  real-time  clock
+>          undergoes a discontinuous change.  (This allows the reading
+>          application to discover such discontinuous changes  to  the
+>          clock.)
+>
+> Following on from that, I think we should have a pargraph that says
+> something like:
+>
+>          If  the  associated  clock  is  either  CLOCK_REALTIME   or
+>          CLOCK_REALTIME_ALARM,     the     timer     is     absolute
+>          (TFD_TIMER_ABSTIME), and the  flag  TFD_TIMER_CANCEL_ON_SET
+>          was not specified when calling timerfd_settime(), then a
+>          discontinuous negative change to the clock 
+>          (e.g., clock_settime(2)) may cause read(2) to unblock, but
+>          return a value of 0 (i.e., no bytes read), if the clock
+>          change occurs after the time expired, but before the
+>          read(2) on the timerfd file descriptor.
 
-- Add various Comet Lake ahci PCI ids (Kai-Heng, Mika)
+Yes, that's correct. Accurate as always!
 
-- Fix for a double scsi_host_put() in error handling (John)
+This is pretty much in line with clock_nanosleep(CLOCK_REALTIME,
+TIMER_ABSTIME) which has a similar problem vs. observability in user
+space.
 
-- Use scnprintf (Takashi)
+clock_nanosleep(2) mutters:
 
-- Assign OF node to the SCSI device (Linus)
+  "POSIX.1 specifies that after changing the value of the CLOCK_REALTIME
+   clock via clock_settime(2), the new clock value shall be used to
+   determine the time at which a thread blocked on an absolute
+   clock_nanosleep() will wake up; if the new clock value falls past the
+   end of the sleep interval, then the clock_nanosleep() call will return
+   immediately."
 
-Please pull!
+which can be interpreted as guarantee that clock_nanosleep() never
+returns prematurely, i.e. the assert() in the below code would indicate
+a kernel failure:
 
+   ret = clock_nanosleep(CLOCK_REALTIME, TIMER_ABSTIME, &expiry, NULL);
+   if (!ret) {
+         clock_gettime(CLOCK_REALTIME, &now);
+         assert(now >= expiry);
+   }
 
-  git://git.kernel.dk/linux-block.git tags/for-5.7/libata-2020-03-29
+But that assert can trigger when CLOCK_REALTIME was modified after the
+timer fired and the kernel decided to wake up the task and let it return
+to user space.
 
+   clock_nanosleep(..., &expiry)
+     arm_timer(expires);
+     schedule();
 
-----------------------------------------------------------------
-Bartlomiej Zolnierkiewicz (27):
-      ata: remove stale maintainership information from core code
-      ata: expose ncq_enable_prio sysfs attribute only on NCQ capable hosts
-      ata: make SATA_PMP option selectable only if any SATA host driver is enabled
-      sata_promise: use ata_cable_sata()
-      ata: simplify ata_scsiop_inq_89()
-      ata: use COMMAND_LINE_SIZE for ata_force_param_buf[] size
-      ata: optimize struct ata_force_param size
-      ata: optimize ata_scsi_rbuf[] size
-      ata: move EXPORT_SYMBOL_GPL()s close to exported code
-      ata: remove EXPORT_SYMBOL_GPL()s not used by modules
-      ata: fix CodingStyle issues in PATA timings code
-      ata: separate PATA timings code from libata-core.c
-      ata: add CONFIG_SATA_HOST=n version of ata_ncq_enabled()
-      ata: let compiler optimize out ata_dev_config_ncq() on non-SATA hosts
-      ata: let compiler optimize out ata_eh_set_lpm() on non-SATA hosts
-      ata: start separating SATA specific code from libata-core.c
-      ata: move sata_scr_*() to libata-sata.c
-      ata: move *sata_set_spd*() to libata-sata.c
-      ata: move sata_link_{debounce,resume}() to libata-sata.c
-      ata: move sata_link_hardreset() to libata-sata.c
-      ata: move ata_qc_complete_multiple() to libata-sata.c
-      ata: move sata_deb_timing_*() to libata-sata.c
-      ata: start separating SATA specific code from libata-scsi.c
-      ata: move ata_sas_*() to libata-sata.c
-      ata: start separating SATA specific code from libata-eh.c
-      ata: move ata_eh_analyze_ncq_error() & co. to libata-sata.c
-      ata: make "libata.force" kernel parameter optional
+   -> timer interrupt
+      now = ktime_get_real();
+      if (expires <= now)
+              -------------------------------- After this point
+         wakeup();                             clock_settime(2) or
+                                               adjtimex(2) which
+                                               makes CLOCK_REALTIME
+                                               jump back far enough will
+                                               cause the above assert
+                                               to trigger.
 
-Hannes Reinecke (1):
-      libata: drop BPRINTK()
+   ...
+   return from syscall (retval == 0)
 
-John Garry (1):
-      libata: Remove extra scsi_host_put() in ata_scsi_add_hosts()
+There is no guarantee against clock_settime() coming after the
+wakeup. Even if we put another check into the return to user path then
+we won't catch a clock_settime() which comes right after that and before
+user space invokes clock_gettime().
 
-Kai-Heng Feng (1):
-      ahci: Add Intel Comet Lake H RAID PCI ID
+POSIX spec Issue 7 (2018 edition) says:
 
-Linus Walleij (1):
-      libata: Assign OF node to the SCSI device
+ The suspension for the absolute clock_nanosleep() function (that is,
+ with the TIMER_ABSTIME flag set) shall be in effect at least until the
+ value of the corresponding clock reaches the absolute time specified by
+ rqtp.
 
-Mika Westerberg (2):
-      ahci: Add Intel Comet Lake PCH-H PCI ID
-      ahci: Add Intel Comet Lake PCH-V PCI ID
+And that's what the kernel implements for clock_nanosleep() and timerfd
+behaves exactly the same way.
 
-Takashi Iwai (1):
-      libata: transport: Use scnprintf() for avoiding potential buffer overflow
+The wakeup of the waiter, i.e. task blocked in clock_nanosleep(2),
+read(2), poll(2), is not happening _before_ the absolute time specified
+is reached.
 
-Tiezhu Yang (2):
-      PCI: Add Loongson vendor ID
-      AHCI: Add support for Loongson 7A1000 SATA controller
+If clock_settime() happens right before the expiry check, then it does
+the right thing, but any modification to the clock after the wakeup
+cannot be mitigated. At least not in a way which would make the assert()
+in the example code above a reliable indicator for a kernel fail.
 
- drivers/ata/Kconfig               |   77 ++
- drivers/ata/Makefile              |    2 +
- drivers/ata/ahci.c                |   10 +
- drivers/ata/libata-core.c         | 1126 +++-------------------------
- drivers/ata/libata-eh.c           |  224 +-----
- drivers/ata/libata-pata-timings.c |  192 +++++
- drivers/ata/libata-sata.c         | 1483 +++++++++++++++++++++++++++++++++++++
- drivers/ata/libata-scsi.c         |  583 ++-------------
- drivers/ata/libata-sff.c          |    4 -
- drivers/ata/libata-transport.c    |   10 +-
- drivers/ata/libata.h              |   25 +-
- drivers/ata/sata_promise.c        |    8 +-
- drivers/scsi/Kconfig              |    1 +
- drivers/scsi/libsas/Kconfig       |    1 +
- include/linux/libata.h            |  174 +++--
- include/linux/pci_ids.h           |    2 +
- 16 files changed, 2065 insertions(+), 1857 deletions(-)
- create mode 100644 drivers/ata/libata-pata-timings.c
- create mode 100644 drivers/ata/libata-sata.c
+That's the reason why I rejected the attempt to mitigate that particular
+0 tick issue in timerfd as it would just scratch a particular itch but
+still not provide any guarantee. So having the '0' return documented is
+the right way to go.
 
--- 
-Jens Axboe
+Thanks,
+
+        tglx
+
 
