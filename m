@@ -2,94 +2,185 @@ Return-Path: <SRS0=I467=5O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54F81C2D0EB
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 20:21:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C557C43331
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 20:26:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B50E20748
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 20:21:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2832B20B80
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 20:26:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728755AbgC2UVz (ORCPT
+        id S1728554AbgC2U0L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Mar 2020 16:21:55 -0400
-Received: from relay5-d.mail.gandi.net ([217.70.183.197]:53763 "EHLO
-        relay5-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728393AbgC2UVz (ORCPT
+        Sun, 29 Mar 2020 16:26:11 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:56900 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726283AbgC2U0K (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Mar 2020 16:21:55 -0400
-X-Originating-IP: 50.39.173.182
-Received: from localhost (50-39-173-182.bvtn.or.frontiernet.net [50.39.173.182])
-        (Authenticated sender: josh@joshtriplett.org)
-        by relay5-d.mail.gandi.net (Postfix) with ESMTPSA id 6362E1C0003;
-        Sun, 29 Mar 2020 20:21:50 +0000 (UTC)
-Date:   Sun, 29 Mar 2020 13:21:41 -0700
-From:   Josh Triplett <josh@joshtriplett.org>
-To:     Theodore Ts'o <tytso@mit.edu>,
-        Andreas Dilger <adilger.kernel@dilger.ca>
-Cc:     linux-ext4@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] ext4: Fix return-value types in several function
- documentation comments
-Message-ID: <60a3f4996f4932c45515aaa6b75ca42f2a78ec9b.1585512514.git.josh@joshtriplett.org>
+        Sun, 29 Mar 2020 16:26:10 -0400
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1jIeVS-0001JG-Vr; Sun, 29 Mar 2020 22:26:07 +0200
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 8E0CF1C0451;
+        Sun, 29 Mar 2020 22:26:06 +0200 (CEST)
+Date:   Sun, 29 Mar 2020 20:26:06 -0000
+From:   "tip-bot2 for Marc Zyngier" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: irq/core] irqchip/gic-v4.1: Add VSGI allocation/teardown
+Cc:     Marc Zyngier <maz@kernel.org>, Zenghui Yu <yuzenghui@huawei.com>,
+        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <20200304203330.4967-15-maz@kernel.org>
+References: <20200304203330.4967-15-maz@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Message-ID: <158551356619.28353.3805591305388999695.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The documentation comments for ext4_read_block_bitmap_nowait and
-ext4_read_inode_bitmap describe them as returning NULL on error, but
-they return an ERR_PTR on error; update the documentation to match.
+The following commit has been merged into the irq/core branch of tip:
 
-The documentation comment for ext4_wait_block_bitmap describes it as
-returning 1 on error, but it returns -errno on error; update the
-documentation to match.
+Commit-ID:     6d31b6ff985dbd144b2c4d519cf573b8f81865d9
+Gitweb:        https://git.kernel.org/tip/6d31b6ff985dbd144b2c4d519cf573b8f81865d9
+Author:        Marc Zyngier <maz@kernel.org>
+AuthorDate:    Wed, 04 Mar 2020 20:33:21 
+Committer:     Marc Zyngier <maz@kernel.org>
+CommitterDate: Tue, 24 Mar 2020 12:15:51 
 
-Signed-off-by: Josh Triplett <josh@joshtriplett.org>
+irqchip/gic-v4.1: Add VSGI allocation/teardown
+
+Allocate per-VPE SGIs when initializing the GIC-specific part of the
+VPE data structure.
+
+Signed-off-by: Marc Zyngier <maz@kernel.org>
+Reviewed-by: Zenghui Yu <yuzenghui@huawei.com>
+Link: https://lore.kernel.org/r/20200304203330.4967-15-maz@kernel.org
 ---
- fs/ext4/balloc.c | 4 ++--
- fs/ext4/ialloc.c | 2 +-
- 2 files changed, 3 insertions(+), 3 deletions(-)
+ drivers/irqchip/irq-gic-v4.c       | 68 ++++++++++++++++++++++++++++-
+ include/linux/irqchip/arm-gic-v4.h |  2 +-
+ 2 files changed, 69 insertions(+), 1 deletion(-)
 
-diff --git a/fs/ext4/balloc.c b/fs/ext4/balloc.c
-index 8fd0b3cdab4c..9a296008cf90 100644
---- a/fs/ext4/balloc.c
-+++ b/fs/ext4/balloc.c
-@@ -410,7 +410,7 @@ static int ext4_validate_block_bitmap(struct super_block *sb,
-  * Read the bitmap for a given block_group,and validate the
-  * bits for block/inode/inode tables are set in the bitmaps
-  *
-- * Return buffer_head on success or NULL in case of failure.
-+ * Return buffer_head on success or an ERR_PTR in case of failure.
-  */
- struct buffer_head *
- ext4_read_block_bitmap_nowait(struct super_block *sb, ext4_group_t block_group)
-@@ -502,7 +502,7 @@ ext4_read_block_bitmap_nowait(struct super_block *sb, ext4_group_t block_group)
- 	return ERR_PTR(err);
+diff --git a/drivers/irqchip/irq-gic-v4.c b/drivers/irqchip/irq-gic-v4.c
+index 117ba6d..99b33f6 100644
+--- a/drivers/irqchip/irq-gic-v4.c
++++ b/drivers/irqchip/irq-gic-v4.c
+@@ -92,6 +92,47 @@ static bool has_v4_1(void)
+ 	return !!sgi_domain_ops;
  }
  
--/* Returns 0 on success, 1 on error */
-+/* Returns 0 on success, -errno on error */
- int ext4_wait_block_bitmap(struct super_block *sb, ext4_group_t block_group,
- 			   struct buffer_head *bh)
++static int its_alloc_vcpu_sgis(struct its_vpe *vpe, int idx)
++{
++	char *name;
++	int sgi_base;
++
++	if (!has_v4_1())
++		return 0;
++
++	name = kasprintf(GFP_KERNEL, "GICv4-sgi-%d", task_pid_nr(current));
++	if (!name)
++		goto err;
++
++	vpe->fwnode = irq_domain_alloc_named_id_fwnode(name, idx);
++	if (!vpe->fwnode)
++		goto err;
++
++	kfree(name);
++	name = NULL;
++
++	vpe->sgi_domain = irq_domain_create_linear(vpe->fwnode, 16,
++						   sgi_domain_ops, vpe);
++	if (!vpe->sgi_domain)
++		goto err;
++
++	sgi_base = __irq_domain_alloc_irqs(vpe->sgi_domain, -1, 16,
++					       NUMA_NO_NODE, vpe,
++					       false, NULL);
++	if (sgi_base <= 0)
++		goto err;
++
++	return 0;
++
++err:
++	if (vpe->sgi_domain)
++		irq_domain_remove(vpe->sgi_domain);
++	if (vpe->fwnode)
++		irq_domain_free_fwnode(vpe->fwnode);
++	kfree(name);
++	return -ENOMEM;
++}
++
+ int its_alloc_vcpu_irqs(struct its_vm *vm)
  {
-diff --git a/fs/ext4/ialloc.c b/fs/ext4/ialloc.c
-index f95ee99091e4..86a96dca9ebf 100644
---- a/fs/ext4/ialloc.c
-+++ b/fs/ext4/ialloc.c
-@@ -113,7 +113,7 @@ static int ext4_validate_inode_bitmap(struct super_block *sb,
-  * Read the inode allocation bitmap for a given block_group, reading
-  * into the specified slot in the superblock's bitmap cache.
-  *
-- * Return buffer_head of bitmap on success or NULL.
-+ * Return buffer_head of bitmap on success, or an ERR_PTR on error.
-  */
- static struct buffer_head *
- ext4_read_inode_bitmap(struct super_block *sb, ext4_group_t block_group)
--- 
-2.26.0
-
+ 	int vpe_base_irq, i;
+@@ -118,8 +159,13 @@ int its_alloc_vcpu_irqs(struct its_vm *vm)
+ 	if (vpe_base_irq <= 0)
+ 		goto err;
+ 
+-	for (i = 0; i < vm->nr_vpes; i++)
++	for (i = 0; i < vm->nr_vpes; i++) {
++		int ret;
+ 		vm->vpes[i]->irq = vpe_base_irq + i;
++		ret = its_alloc_vcpu_sgis(vm->vpes[i], i);
++		if (ret)
++			goto err;
++	}
+ 
+ 	return 0;
+ 
+@@ -132,8 +178,28 @@ err:
+ 	return -ENOMEM;
+ }
+ 
++static void its_free_sgi_irqs(struct its_vm *vm)
++{
++	int i;
++
++	if (!has_v4_1())
++		return;
++
++	for (i = 0; i < vm->nr_vpes; i++) {
++		unsigned int irq = irq_find_mapping(vm->vpes[i]->sgi_domain, 0);
++
++		if (WARN_ON(!irq))
++			continue;
++
++		irq_domain_free_irqs(irq, 16);
++		irq_domain_remove(vm->vpes[i]->sgi_domain);
++		irq_domain_free_fwnode(vm->vpes[i]->fwnode);
++	}
++}
++
+ void its_free_vcpu_irqs(struct its_vm *vm)
+ {
++	its_free_sgi_irqs(vm);
+ 	irq_domain_free_irqs(vm->vpes[0]->irq, vm->nr_vpes);
+ 	irq_domain_remove(vm->domain);
+ 	irq_domain_free_fwnode(vm->fwnode);
+diff --git a/include/linux/irqchip/arm-gic-v4.h b/include/linux/irqchip/arm-gic-v4.h
+index 34ed4b5..b120a01 100644
+--- a/include/linux/irqchip/arm-gic-v4.h
++++ b/include/linux/irqchip/arm-gic-v4.h
+@@ -49,6 +49,8 @@ struct its_vpe {
+ 		};
+ 		/* GICv4.1 implementations */
+ 		struct {
++			struct fwnode_handle	*fwnode;
++			struct irq_domain	*sgi_domain;
+ 			struct {
+ 				u8	priority;
+ 				bool	enabled;
