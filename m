@@ -2,241 +2,193 @@ Return-Path: <SRS0=I467=5O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EBDBC43331
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 14:21:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D596EC2D0E9
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 14:22:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BFAFA206F6
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 14:21:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="kWTBYxtS"
+	by mail.kernel.org (Postfix) with ESMTP id B246C2082F
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 14:22:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727969AbgC2OVV (ORCPT
+        id S1728263AbgC2OWM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Mar 2020 10:21:21 -0400
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:44324 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727488AbgC2OVV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Mar 2020 10:21:21 -0400
-Received: by mail-qt1-f196.google.com with SMTP id x16so12878870qts.11
-        for <linux-kernel@vger.kernel.org>; Sun, 29 Mar 2020 07:21:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=nXUC1MVbi+z6Rv23uiR8EhlUtj/t8HhT3DxP1bbv+sY=;
-        b=kWTBYxtSorIDi0Gjbxl8w6CE7EK26WlBnDsV5QzvSDziachQHDyhY9j+1iKfZ+2IlW
-         2T/D2q+3siRYHTKHO/XPWDsjrWerPjUVnu4NpJ5wv/egCgIkPE9+ff+d4MJ7JGxnz0x7
-         111BjcMN46sG8gi0sK1Fgkg1Q3tyc5i72SEDxxE3AvirboRxV9kQjOFDW6Dce33/ZjnM
-         aGrDyiZIubaX2zavD/W++zoO55+njgoDKWlSppzeTbjjYNptRStrRqDcqzins4HuSFqb
-         2r49O6yxslPHzWsghy7PEQd+Oi+9DzlCpf26zbjMfgUGMfG9+en+pNvdXe6lKuj4QNZG
-         PHAw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=nXUC1MVbi+z6Rv23uiR8EhlUtj/t8HhT3DxP1bbv+sY=;
-        b=Ct11853d3PykPymvPSQzPL1mhaBLe1gf1PJxQ4M82HdyjulM+rwhKLk7WaSuxYnPxX
-         2VRRlSkx5sKsxNsQUuzkqMP/oq1U2j4G17JPkgx5QNj/10FxchElX8FsBOk6eBybY/Kh
-         rv1QW4a3AsXiVCpfXfY70mMauT/nMsv/2zYro5xEHOXy/c2ls47Yg9OXBsAPxgauk4qU
-         tis0SI+lpZgtBrRKdBe/wqO94JkatBf7j0NaYx5olkmCPyAR4OdzpwZN2u99Cx2uo+CV
-         rLKitZwqhMxyi+XY5UcFvfW6ILJrsix01N0/o6AcSuu160yxJk/b6o8RVhcQsYDarCkt
-         VpXQ==
-X-Gm-Message-State: ANhLgQ36YT0WUSWsxqOfZndmC3RBWsAWzylWVFTWY52cstppufS+Bmr5
-        zeM+zjtctwrtci1m0QiBzPi11A==
-X-Google-Smtp-Source: ADFU+vuWYDMBZLdoGp6yvSuVcivv0AwVNsM2YeqQCzXbT01OYT7J+Y/nL/DYweoz/gHDas2EkhQVmQ==
-X-Received: by 2002:ac8:748d:: with SMTP id v13mr7904876qtq.390.1585491679676;
-        Sun, 29 Mar 2020 07:21:19 -0700 (PDT)
-Received: from ovpn-66-196.rdu2.redhat.com (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
-        by smtp.gmail.com with ESMTPSA id 60sm8515717qtb.95.2020.03.29.07.21.18
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 29 Mar 2020 07:21:19 -0700 (PDT)
-From:   Qian Cai <cai@lca.pw>
-To:     tglx@linutronix.de
-Cc:     mingo@redhat.com, bp@alien8.de, rjw@rjwysocki.net, lenb@kernel.org,
-        peterz@infradead.org, linux-acpi@vger.kernel.org, x86@kernel.org,
-        linux-kernel@vger.kernel.org, Qian Cai <cai@lca.pw>
-Subject: [PATCH v2] x86/acpi: fix a deadlock with cpu hotplug
-Date:   Sun, 29 Mar 2020 10:21:09 -0400
-Message-Id: <20200329142109.1501-1-cai@lca.pw>
-X-Mailer: git-send-email 2.21.0 (Apple Git-122.2)
+        Sun, 29 Mar 2020 10:22:12 -0400
+Received: from foss.arm.com ([217.140.110.172]:58914 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727488AbgC2OWL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Mar 2020 10:22:11 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A5D9C31B;
+        Sun, 29 Mar 2020 07:22:10 -0700 (PDT)
+Received: from [10.163.1.70] (unknown [10.163.1.70])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 542D63F68F;
+        Sun, 29 Mar 2020 07:22:01 -0700 (PDT)
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+Subject: Re: [PATCH V2 0/3] mm/debug: Add more arch page table helper tests
+To:     Christophe Leroy <christophe.leroy@c-s.fr>, linux-mm@kvack.org
+Cc:     Jonathan Corbet <corbet@lwn.net>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Vineet Gupta <vgupta@synopsys.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "Kirill A . Shutemov" <kirill@shutemov.name>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        linux-snps-arc@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org,
+        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+        linux-riscv@lists.infradead.org, x86@kernel.org,
+        linux-doc@vger.kernel.org, linux-arch@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <1585027375-9997-1-git-send-email-anshuman.khandual@arm.com>
+ <2bb4badc-2b7a-e15d-a99b-b1bd38c9d9bf@arm.com>
+ <a46d18ed-8911-1ec3-c32f-58b6e0d959d7@c-s.fr>
+ <9675882f-0ec5-5e46-551f-dd3aa38bf8d8@arm.com>
+ <ef28cb75-40b8-5ab5-83ba-84fd4384c7c5@c-s.fr>
+Message-ID: <bf4558b2-1fe9-f0cc-3e6f-34bdf3734056@arm.com>
+Date:   Sun, 29 Mar 2020 19:51:54 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
+In-Reply-To: <ef28cb75-40b8-5ab5-83ba-84fd4384c7c5@c-s.fr>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Similar to the commit 0266d81e9bf5 ("acpi/processor: Prevent cpu hotplug
-deadlock") except this is for acpi_processor_ffh_cstate_probe():
 
-"The problem is that the work is scheduled on the current CPU from the
-hotplug thread associated with that CPU.
+On 03/27/2020 12:30 PM, Christophe Leroy wrote:
+> 
+> 
+> On 03/27/2020 06:46 AM, Anshuman Khandual wrote:
+>>
+>> On 03/26/2020 08:53 PM, Christophe Leroy wrote:
+>>>
+>>>
+>>> Le 26/03/2020 à 03:23, Anshuman Khandual a écrit :
+>>>>
+>>>>
+>>>> On 03/24/2020 10:52 AM, Anshuman Khandual wrote:
+>>>>> This series adds more arch page table helper tests. The new tests here are
+>>>>> either related to core memory functions and advanced arch pgtable helpers.
+>>>>> This also creates a documentation file enlisting all expected semantics as
+>>>>> suggested by Mike Rapoport (https://lkml.org/lkml/2020/1/30/40).
+>>>>>
+>>>>> This series has been tested on arm64 and x86 platforms.
+>>>>
+>>>> If folks can test these patches out on remaining ARCH_HAS_DEBUG_VM_PGTABLE
+>>>> enabled platforms i.e s390, arc, powerpc (32 and 64), that will be really
+>>>> appreciated. Thank you.
+>>>>
+>>>
+>>> On powerpc 8xx (PPC32), I get:
+>>>
+>>> [   53.338368] debug_vm_pgtable: debug_vm_pgtable: Validating architecture page table helpers
+>>> [   53.347403] ------------[ cut here ]------------
+>>> [   53.351832] WARNING: CPU: 0 PID: 1 at mm/debug_vm_pgtable.c:647 debug_vm_pgtable+0x280/0x3f4
+>>
+>> mm/debug_vm_pgtable.c:647 ?
+>>
+>> With the following commits in place
+>>
+>> 53a8338ce (HEAD) Documentation/mm: Add descriptions for arch page table helper
+>> 5d4913fc1 mm/debug: Add tests validating arch advanced page table helpers
+>> bcaf120a7 mm/debug: Add tests validating arch page table helpers for core features
+>> d6ed5a4a5 x86/memory: Drop pud_mknotpresent()
+>> 0739d1f8d mm/debug: Add tests validating architecture page table helpers
+>> 16fbf79b0 (tag: v5.6-rc7) Linux 5.6-rc7
+> 
+> I have:
+> 
+> facaa5eb5909 (HEAD -> helpers0) mm/debug: Add tests validating arch advanced page table helpers
+> 6389fed515fc mm/debug: Add tests validating arch page table helpers for core features
+> dc14ecc8b94e mm/debug: add tests validating architecture page table helpers
+> c6624071c338 (origin/merge, merge) Automatic merge of branches 'master', 'next' and 'fixes' into merge
+> 58e05c5508e6 Automatic merge of branches 'master', 'next' and 'fixes' into merge
+> 1b649e0bcae7 (origin/master, origin/HEAD) Merge git://git.kernel.org/pub/scm/linux/kernel/git/netdev/net
+> 
+> origin is https://git.kernel.org/pub/scm/linux/kernel/git/powerpc/linux.git
+> 
+> I can't see your last patch in powerpc mailing list (https://patchwork.ozlabs.org/project/linuxppc-dev/list/?series=166237)
 
-It's not required to invoke these functions via the workqueue because
-the hotplug thread runs on the target CPU already.
+My bad, did not update the last patch with required lists (will fix).
 
-Check whether current is a per cpu thread pinned on the target CPU and
-invoke the function directly to avoid the workqueue."
+> 
+>>
+>> mm/debug_vm_pgtable.c:647 is here.
+> 
+> Line 647 is:
+> 
+>     WARN_ON(!pte_same(pte, __swp_entry_to_pte(swp)));
 
-Since CONFIG_ACPI_PROCESSOR (for cstate.c) selects
-CONFIG_ACPI_CPU_FREQ_PSS (for processor_throttling.c) on x86, just
-make call_on_cpu() a static inline function from processor_throttling.c
-and use it in cstate.c.
+Both set of definitions suggest that the last three bits (if present)
+on the PTE will be discarded during PTE->SWP->PTE conversion which
+might be leading to this mismatch and subsequent failure.
 
- WARNING: possible circular locking dependency detected
- ------------------------------------------------------
- cpuhp/1/15 is trying to acquire lock:
- ffffc90003447a28 ((work_completion)(&wfc.work)){+.+.}-{0:0}, at: __flush_work+0x4c6/0x630
+arch/powerpc/include/asm/nohash/32/pgtable.h
+arch/powerpc/include/asm/book3s/32/pgtable.h
 
- but task is already holding lock:
- ffffffffafa1c0e8 (cpuidle_lock){+.+.}-{3:3}, at: cpuidle_pause_and_lock+0x17/0x20
+#define __pte_to_swp_entry(pte)         ((swp_entry_t) { pte_val(pte) >> 3 })
+#define __swp_entry_to_pte(x)           ((pte_t) { (x).val << 3 })
 
- which lock already depends on the new lock.
+Also there are some more architectures (microblaze, sh, etc) where these
+conversions are not always preserving. On powerpc64, it sets back _PAGE_PTE
+irrespective of whether the bit was originally set or not.
 
- the existing dependency chain (in reverse order) is:
+Probably it is wrong to expect that PTE->SWP->PTE conversion will be always
+preserving. So wondering if it is worth changing this test to accommodate
+all such architectures or just drop it instead.
 
- -> #1 (cpu_hotplug_lock){++++}-{0:0}:
- cpus_read_lock+0x3e/0xc0
- irq_calc_affinity_vectors+0x5f/0x91
- __pci_enable_msix_range+0x10f/0x9a0
- pci_alloc_irq_vectors_affinity+0x13e/0x1f0
- pci_alloc_irq_vectors_affinity at drivers/pci/msi.c:1208
- pqi_ctrl_init+0x72f/0x1618 [smartpqi]
- pqi_pci_probe.cold.63+0x882/0x892 [smartpqi]
- local_pci_probe+0x7a/0xc0
- work_for_cpu_fn+0x2e/0x50
- process_one_work+0x57e/0xb90
- worker_thread+0x363/0x5b0
- kthread+0x1f4/0x220
- ret_from_fork+0x27/0x50
+> 
+> 
+>>
+>> #ifdef CONFIG_ARCH_ENABLE_THP_MIGRATION
+>> static void __init pmd_swap_tests(unsigned long pfn, pgprot_t prot)
+>> {
+>>          swp_entry_t swp;
+>>          pmd_t pmd;  -----------------------------> Line #647
+>>
+>>          pmd = pfn_pmd(pfn, prot);
+>>          swp = __pmd_to_swp_entry(pmd);
+>>          WARN_ON(!pmd_same(pmd, __swp_entry_to_pmd(swp)));
+>> }
+>> #else
+>> static void __init pmd_swap_tests(unsigned long pfn, pgprot_t prot) { }
+>> #end
+>>
+>> Did I miss something ?
+>>
+> 
+> [...]
+> 
+>> Could you please point me to the exact test which is failing ?
+>>
+>>> [   53.519778] Freeing unused kernel memory: 608K
+>>>
+>>>
+>> So I assume that the system should have come till runtime just fine apart from
+>> the above warning message because.
+>>
+> 
+> Yes it boots fine otherwise.
 
- -> #0 ((work_completion)(&wfc.work)){+.+.}-{0:0}:
- __lock_acquire+0x2244/0x32a0
- lock_acquire+0x1a2/0x680
- __flush_work+0x4e6/0x630
- work_on_cpu+0x114/0x160
- acpi_processor_ffh_cstate_probe+0x129/0x250
- acpi_processor_evaluate_cst+0x4c8/0x580
- acpi_processor_get_power_info+0x86/0x740
- acpi_processor_hotplug+0xc3/0x140
- acpi_soft_cpu_online+0x102/0x1d0
- cpuhp_invoke_callback+0x197/0x1120
- cpuhp_thread_fun+0x252/0x2f0
- smpboot_thread_fn+0x255/0x440
- kthread+0x1f4/0x220
- ret_from_fork+0x27/0x50
+Cool, that is good to know.
 
- other info that might help us debug this:
-
- Chain exists of:
- (work_completion)(&wfc.work) --> cpuhp_state-up --> cpuidle_lock
-
- Possible unsafe locking scenario:
-
- CPU0                    CPU1
- ----                    ----
- lock(cpuidle_lock);
-                         lock(cpuhp_state-up);
-                         lock(cpuidle_lock);
- lock((work_completion)(&wfc.work));
-
- *** DEADLOCK ***
-
- 3 locks held by cpuhp/1/15:
- #0: ffffffffaf51ab10 (cpu_hotplug_lock){++++}-{0:0}, at: cpuhp_thread_fun+0x69/0x2f0
- #1: ffffffffaf51ad40 (cpuhp_state-up){+.+.}-{0:0}, at: cpuhp_thread_fun+0x69/0x2f0
- #2: ffffffffafa1c0e8 (cpuidle_lock){+.+.}-{3:3}, at: cpuidle_pause_and_lock+0x17/0x20
-
- Call Trace:
- dump_stack+0xa0/0xea
- print_circular_bug.cold.52+0x147/0x14c
- check_noncircular+0x295/0x2d0
- __lock_acquire+0x2244/0x32a0
- lock_acquire+0x1a2/0x680
- __flush_work+0x4e6/0x630
- work_on_cpu+0x114/0x160
- acpi_processor_ffh_cstate_probe+0x129/0x250
- acpi_processor_evaluate_cst+0x4c8/0x580
- acpi_processor_get_power_info+0x86/0x740
- acpi_processor_hotplug+0xc3/0x140
- acpi_soft_cpu_online+0x102/0x1d0
- cpuhp_invoke_callback+0x197/0x1120
- cpuhp_thread_fun+0x252/0x2f0
- smpboot_thread_fn+0x255/0x440
- kthread+0x1f4/0x220
- ret_from_fork+0x27/0x50
-
-Signed-off-by: Qian Cai <cai@lca.pw>
----
-
-v2:
-Make call_on_cpu() a static inline function to avoid a compilation
-error when ACPI_PROCESSOR=m thanks to lkp@intel.com.
-
- arch/x86/kernel/acpi/cstate.c       |  3 ++-
- drivers/acpi/processor_throttling.c |  7 -------
- include/acpi/processor.h            | 10 ++++++++++
- 3 files changed, 12 insertions(+), 8 deletions(-)
-
-diff --git a/arch/x86/kernel/acpi/cstate.c b/arch/x86/kernel/acpi/cstate.c
-index caf2edccbad2..49ae4e1ac9cd 100644
---- a/arch/x86/kernel/acpi/cstate.c
-+++ b/arch/x86/kernel/acpi/cstate.c
-@@ -161,7 +161,8 @@ int acpi_processor_ffh_cstate_probe(unsigned int cpu,
- 
- 	/* Make sure we are running on right CPU */
- 
--	retval = work_on_cpu(cpu, acpi_processor_ffh_cstate_probe_cpu, cx);
-+	retval = call_on_cpu(cpu, acpi_processor_ffh_cstate_probe_cpu, cx,
-+			     false);
- 	if (retval == 0) {
- 		/* Use the hint in CST */
- 		percpu_entry->states[cx->index].eax = cx->address;
-diff --git a/drivers/acpi/processor_throttling.c b/drivers/acpi/processor_throttling.c
-index 532a1ae3595a..a0bd56ece3ff 100644
---- a/drivers/acpi/processor_throttling.c
-+++ b/drivers/acpi/processor_throttling.c
-@@ -897,13 +897,6 @@ static long __acpi_processor_get_throttling(void *data)
- 	return pr->throttling.acpi_processor_get_throttling(pr);
- }
- 
--static int call_on_cpu(int cpu, long (*fn)(void *), void *arg, bool direct)
--{
--	if (direct || (is_percpu_thread() && cpu == smp_processor_id()))
--		return fn(arg);
--	return work_on_cpu(cpu, fn, arg);
--}
--
- static int acpi_processor_get_throttling(struct acpi_processor *pr)
- {
- 	if (!pr)
-diff --git a/include/acpi/processor.h b/include/acpi/processor.h
-index 47805172e73d..770d226b22f2 100644
---- a/include/acpi/processor.h
-+++ b/include/acpi/processor.h
-@@ -297,6 +297,16 @@ static inline void acpi_processor_ffh_cstate_enter(struct acpi_processor_cx
- }
- #endif
- 
-+#ifdef CONFIG_ACPI_CPU_FREQ_PSS
-+static inline int call_on_cpu(int cpu, long (*fn)(void *), void *arg,
-+			      bool direct)
-+{
-+	if (direct || (is_percpu_thread() && cpu == smp_processor_id()))
-+		return fn(arg);
-+	return work_on_cpu(cpu, fn, arg);
-+}
-+#endif
-+
- /* in processor_perflib.c */
- 
- #ifdef CONFIG_CPU_FREQ
--- 
-2.21.0 (Apple Git-122.2)
-
+> 
+> Christophe
+> 
