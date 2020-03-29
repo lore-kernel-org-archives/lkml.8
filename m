@@ -2,154 +2,126 @@ Return-Path: <SRS0=I467=5O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 742CEC2D0EE
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 12:25:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 122FAC2D0E5
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 12:31:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B2952073B
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 12:25:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D860520714
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 12:31:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VHUz0MaS"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="D8GnJcap"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728141AbgC2MZP (ORCPT
+        id S1728188AbgC2MbT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Mar 2020 08:25:15 -0400
-Received: from us-smtp-delivery-74.mimecast.com ([216.205.24.74]:52126 "EHLO
-        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728035AbgC2MZO (ORCPT
+        Sun, 29 Mar 2020 08:31:19 -0400
+Received: from mail-wr1-f50.google.com ([209.85.221.50]:46686 "EHLO
+        mail-wr1-f50.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727901AbgC2MbT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Mar 2020 08:25:14 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1585484712;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=7vKFOd347o9WoHxHI6B5j1Zjim146jeGZmfmqH7fBaE=;
-        b=VHUz0MaS4vNfPH/0cf3Zf+xwu5h5sHffUwCSz0zS8j0A333VSbvBkh+hV+phUmhOyoRAxJ
-        pNoJ+h/8MkpqRgeZfUFfJCLw0I4zWZi2ikLj+inNBjpba1JmErmu7Up7Ojaf1fo03fa8LU
-        neMk6zH/1A0wjNvjjeARfeaFcCYywO0=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-381-rzRsFZ8PPjGXGwyfzw4NMw-1; Sun, 29 Mar 2020 08:25:10 -0400
-X-MC-Unique: rzRsFZ8PPjGXGwyfzw4NMw-1
-Received: by mail-wr1-f72.google.com with SMTP id t25so6047565wrb.16
-        for <linux-kernel@vger.kernel.org>; Sun, 29 Mar 2020 05:25:10 -0700 (PDT)
+        Sun, 29 Mar 2020 08:31:19 -0400
+Received: by mail-wr1-f50.google.com with SMTP id j17so17501993wru.13;
+        Sun, 29 Mar 2020 05:31:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=DLCZrMaHPWvggXWGu2AXl1Ge3rACIAAO1GldAOLGL4c=;
+        b=D8GnJcapGvU+PH3ZGmoLH0c0D7CaY3o1I9yCeVLNijTY653KJ6m1smTyZk0kI7LbiZ
+         le1syhZ99k5PTKiGbVPIUzG1K751wEzAqMhJPngYRoGqI1xYrJxqJj5R/97HKJURHPLt
+         nXsEyFobsd3z8Pqyi8AH6gG6ksHgtV3S1/DVDk+0wJMcBYNjmq+qVLiSReNYZGC0ETAR
+         h5KIHN7yHs0LfSmR/1fXIJlYfFtKEu5O6L+i8OUnYWv+77Blm/WX9MwO+kPJ7rskvc6d
+         lcUuv5OeFglESH+3XV26F1vYODWrSO8WOfWQf+9SiSdT5J4mon7vo9yNjjLn9AJC3jVB
+         vb+Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=7vKFOd347o9WoHxHI6B5j1Zjim146jeGZmfmqH7fBaE=;
-        b=HzqLDPLfNQaqsPuKMrPTT3gEblmJiVAUhhkO5QMGY0fDHelvE79lZJkjR3y7uHTZaX
-         2Ephn8Vp+uOjiXwBdUynXTk5P3LW8aM/k9sg4nEYBMGwuKL4URfSBuNZ6mOc47TvvtqF
-         LqKZbfdc40E0nqc4Ym/bq8yQTQ6rk4OfVhYGX7MwHv0mOCzlBTTMF3nTzJfx/B/u22Yo
-         nGwQU8Y1hLikb1/5M9qq46iU2N39s8x+80QohtRWlhNTEdpEe2A425mKQjVrNwF8AVJe
-         D3uINKKI06E7zksFT2Xrcx1OB0Taqu3YbEwLU2MnQ0aqhJXCOBK90QbO6/sqA+NQrUlJ
-         dXxg==
-X-Gm-Message-State: ANhLgQ3pWEKhw3bh2yqcbFNsnaf0HDGND0f4BRzw0lXI8H2R1Bc5V2oC
-        dYK0tZ0k59I9uHc7qQkT9uVcU/Y8VmHWpPz2L9zfxiEAAO7qMwcwlAQTELX9+PGPF35nPZQsXHs
-        Kf2tFKKvn8GhZ6YjQGGQhVHYw
-X-Received: by 2002:adf:e942:: with SMTP id m2mr9560604wrn.364.1585484709219;
-        Sun, 29 Mar 2020 05:25:09 -0700 (PDT)
-X-Google-Smtp-Source: ADFU+vuHbrAQAMGspN3vkSyUCV4rlxQ2qSDmnNPRnKfein9CsAMF+8qjUPe34LCmI1NXow9ZnUY3qA==
-X-Received: by 2002:adf:e942:: with SMTP id m2mr9560582wrn.364.1585484708917;
-        Sun, 29 Mar 2020 05:25:08 -0700 (PDT)
-Received: from redhat.com (bzq-79-183-139-129.red.bezeqint.net. [79.183.139.129])
-        by smtp.gmail.com with ESMTPSA id z129sm16715180wmb.7.2020.03.29.05.25.07
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=DLCZrMaHPWvggXWGu2AXl1Ge3rACIAAO1GldAOLGL4c=;
+        b=AyoSzHU84YpJYbvM+APfR0gpGnXgMQwWWDXeIGiXlKKUBVt3E3Vc9xyGgqNTRqQxjc
+         OJonSYMh0DbkbyibVBJFx7c74TEOCDn6u6+u9pNVcdn2rRfiS9TEmeHTOAK51aJQXVhg
+         sYVCCXz7MevmnK5ckXJtk6MgDKFhO9eRuD9D23TOB1tNzCoiZbGDddksd1yU67BNzIbr
+         PG63AQGXuYDHDaan1ya5Jc28RLspHjiTvll1i5SWm79BRQGVsx+0EoGJfN6T90QZ9cwa
+         znxyUrQUVtTl3LhvSqhR2Bzvg7X2goj3HPevhPASdOOgS9Ll25Ufy09Ii5rAycJUX/EQ
+         KqVA==
+X-Gm-Message-State: ANhLgQ0oSw7bvDZJWkHQVx9HpaSscqkJ9MEjR8h4kU8qOckZxQY9Ai2D
+        rPAJZzR0L/QDOsMzdWumS5LG2NUl01M=
+X-Google-Smtp-Source: ADFU+vvVzVBCsunK/Zx2Of6dHq6E4OhDh0yMUD+R2tH7v0oSXW4vgJzSeigjFx8xx0BdhhRqATnYTw==
+X-Received: by 2002:adf:ce90:: with SMTP id r16mr9913638wrn.237.1585485077208;
+        Sun, 29 Mar 2020 05:31:17 -0700 (PDT)
+Received: from localhost.localdomain (p5B3F6BD9.dip0.t-ipconnect.de. [91.63.107.217])
+        by smtp.gmail.com with ESMTPSA id f9sm17259108wrc.71.2020.03.29.05.31.15
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 29 Mar 2020 05:25:08 -0700 (PDT)
-Date:   Sun, 29 Mar 2020 08:25:05 -0400
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     Eugenio Perez Martin <eperezma@redhat.com>
-Cc:     "virtualization@lists.linux-foundation.org" 
-        <virtualization@lists.linux-foundation.org>,
-        Halil Pasic <pasic@linux.ibm.com>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        kvm list <kvm@vger.kernel.org>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 0/6] vhost: Reset batched descriptors on SET_VRING_BASE
- call
-Message-ID: <20200329082055-mutt-send-email-mst@kernel.org>
-References: <20200329113359.30960-1-eperezma@redhat.com>
- <20200329074023-mutt-send-email-mst@kernel.org>
- <CAJaqyWdO8CHuWFJv+TRgYJ7a3Cb06Ln3prnQZs69L1PPw4Rj1Q@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAJaqyWdO8CHuWFJv+TRgYJ7a3Cb06Ln3prnQZs69L1PPw4Rj1Q@mail.gmail.com>
+        Sun, 29 Mar 2020 05:31:16 -0700 (PDT)
+From:   Saravanan Sekar <sravanhome@gmail.com>
+To:     lee.jones@linaro.org, andy.shevchenko@gmail.com,
+        robh+dt@kernel.org, jic23@kernel.org, knaack.h@gmx.de,
+        lars@metafoo.de, pmeerw@pmeerw.net, sre@kernel.org
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-iio@vger.kernel.org, linux-pm@vger.kernel.org,
+        Saravanan Sekar <sravanhome@gmail.com>
+Subject: [PATCH v6 0/5] Add battery charger driver support for MP2629
+Date:   Sun, 29 Mar 2020 14:31:05 +0200
+Message-Id: <20200329123110.26482-1-sravanhome@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Mar 29, 2020 at 02:19:55PM +0200, Eugenio Perez Martin wrote:
-> On Sun, Mar 29, 2020 at 1:49 PM Michael S. Tsirkin <mst@redhat.com> wrote:
-> >
-> > On Sun, Mar 29, 2020 at 01:33:53PM +0200, Eugenio Pérez wrote:
-> > > Vhost did not reset properly the batched descriptors on SET_VRING_BASE event. Because of that, is possible to return an invalid descriptor to the guest.
-> > > This series ammend this, and creates a test to assert correct behavior. To do that, they need to expose a new function in virtio_ring, virtqueue_reset_free_head. Not sure if this can be avoided.
-> >
-> > Question: why not reset the batch when private_data changes?
-> > At the moment both net and scsi poke at private data directly,
-> > if they do this through a wrapper we can use that to
-> > 1. check that vq mutex is taken properly
-> > 2. reset batching
-> >
-> > This seems like a slightly better API
-> >
-> 
-> I didn't do that way because qemu could just SET_BACKEND to -1 and
-> SET_BACKEND to the same one, with no call to SET_VRING. In this case,
-> I think that qemu should not change the descriptors already pushed.
+changes in v6:
+ - removed includes types.h in mfd, of_device.h in adc.
+ - fixed review comments parentheses, err check, kstrtouint
 
-Well dropping the batch is always safe, batch is an optimization.
+changes in v5:
+ - removed platfrom data stored in mfd and directly accessed mfd struct in child
+ - fixed spell check and capitalization in mfd and documentation
 
+changes in v4:
+ - fixed capitalization in mfg Kconfig and documentation
 
-> I
-> do agree with the interface to modify private_data properly (regarding
-> the mutex).
-> 
-> However, I can see how your proposal is safer, so we don't even need
-> to check if private_data is != NULL when we have descriptors in the
-> batch_descs array. Also, this ioctls should not be in the hot path, so
-> we can change to that mode anyway.
-> 
-> > >
-> > > Also, change from https://lkml.org/lkml/2020/3/27/108 is not included, that avoids to update a variable in a loop where it can be updated once.
-> > >
-> > > This is meant to be applied on top of eccb852f1fe6bede630e2e4f1a121a81e34354ab in git.kernel.org/pub/scm/linux/kernel/git/mst/vhost.git, and some commits should be squashed with that series.
-> >
-> > Thanks a lot! I'll apply this for now so Christian can start testing,
-> > but I'd like the comment above addressed before I push this to Linus.
-> >
-> > > Eugenio Pérez (6):
-> > >   tools/virtio: Add --batch option
-> > >   tools/virtio: Add --batch=random option
-> > >   tools/virtio: Add --reset=random
-> > >   tools/virtio: Make --reset reset ring idx
-> > >   vhost: Delete virtqueue batch_descs member
-> > >   fixup! vhost: batching fetches
-> > >
-> > >  drivers/vhost/test.c         |  57 ++++++++++++++++
-> > >  drivers/vhost/test.h         |   1 +
-> > >  drivers/vhost/vhost.c        |  12 +++-
-> > >  drivers/vhost/vhost.h        |   1 -
-> > >  drivers/virtio/virtio_ring.c |  18 +++++
-> > >  include/linux/virtio.h       |   2 +
-> > >  tools/virtio/linux/virtio.h  |   2 +
-> > >  tools/virtio/virtio_test.c   | 123 +++++++++++++++++++++++++++++++----
-> > >  8 files changed, 201 insertions(+), 15 deletions(-)
-> > >
-> > > --
-> > > 2.18.1
-> >
+changes in v3:
+ - regmap for children passed using platform data and remove mfd driver info
+   access directly from children
+
+changes in v2:
+ - removed EXPORT_SYMBOL of register set/get helper
+ - regmap bit filed used, fixed other review comments
+
+This patch series add support for Battery charger control driver for Monolithic
+Power System's MP2629 chipset, includes MFD driver for ADC battery & input
+power supply measurement and battery charger control driver.
+
+Thanks,
+Saravanan
+
+Saravanan Sekar (5):
+  dt-bindings: mfd: add document bindings for mp2629
+  mfd: mp2629: Add support for mps battery charger
+  iio: adc: mp2629: Add support for mp2629 ADC driver
+  power: supply: Add support for mps mp2629 battery charger
+  MAINTAINERS: Add entry for mp2629 Battery Charger driver
+
+ .../devicetree/bindings/mfd/mps,mp2629.yaml   |  60 ++
+ MAINTAINERS                                   |   5 +
+ drivers/iio/adc/Kconfig                       |  10 +
+ drivers/iio/adc/Makefile                      |   1 +
+ drivers/iio/adc/mp2629_adc.c                  | 207 ++++++
+ drivers/mfd/Kconfig                           |   9 +
+ drivers/mfd/Makefile                          |   2 +
+ drivers/mfd/mp2629.c                          |  86 +++
+ drivers/power/supply/Kconfig                  |  10 +
+ drivers/power/supply/Makefile                 |   1 +
+ drivers/power/supply/mp2629_charger.c         | 687 ++++++++++++++++++
+ include/linux/mfd/mp2629.h                    |  28 +
+ 12 files changed, 1106 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mfd/mps,mp2629.yaml
+ create mode 100644 drivers/iio/adc/mp2629_adc.c
+ create mode 100644 drivers/mfd/mp2629.c
+ create mode 100644 drivers/power/supply/mp2629_charger.c
+ create mode 100644 include/linux/mfd/mp2629.h
+
+-- 
+2.17.1
 
