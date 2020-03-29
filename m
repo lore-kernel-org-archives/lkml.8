@@ -2,271 +2,176 @@ Return-Path: <SRS0=I467=5O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AD29C43331
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 11:52:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4C60C43331
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 12:02:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5448420675
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 11:52:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B051420733
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 12:02:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mlQ62uxT"
+	dkim=pass (1024-bit key) header.d=cumulusnetworks.com header.i=@cumulusnetworks.com header.b="C5SDUba+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728260AbgC2Lwq (ORCPT
+        id S1728095AbgC2MCU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Mar 2020 07:52:46 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:42988 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728160AbgC2LwW (ORCPT
+        Sun, 29 Mar 2020 08:02:20 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:47067 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727965AbgC2MCU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Mar 2020 07:52:22 -0400
-Received: by mail-wr1-f68.google.com with SMTP id h15so17476775wrx.9;
-        Sun, 29 Mar 2020 04:52:21 -0700 (PDT)
+        Sun, 29 Mar 2020 08:02:20 -0400
+Received: by mail-lj1-f196.google.com with SMTP id r7so7179015ljg.13
+        for <linux-kernel@vger.kernel.org>; Sun, 29 Mar 2020 05:02:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=2XJQ3tgHhWD6ivUtosaqB5/lO5MxYh8VnUo0/RYkqJg=;
-        b=mlQ62uxT9F1ckMjw/2Ns9Q4WN9FaPjxHXDieI4oFLKWS5CxxG1iv/ao3zzTGZ33p1a
-         vA1sw70U36UVLJsQl/4wcDg695Wi5v/0mlDhYLCkD5K0gno0K3ehF47VI7A60PAw5Nz2
-         3H+3feaBkryw5/8i8aBh7X1IsOi4MyeYiFvW0rQhHy3egLg2WK+IRzg2WSP9jiV/fn83
-         XZlbsmAhvQ15VbfngmLx39JPb7Bw9vd4bPIQU+1iGM9MGcJeOsQ1D8RcOCSj0S8apy4P
-         oYh1eLDeVeVZtVc25Kbc0uxcYZVUxvRgeUgzA76VmLiF6/z6AmAzt6ogKnynzzG95HTy
-         wdxw==
+        d=cumulusnetworks.com; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=Cq8VIxSwvwCSuQt3WNmGkXzcdrs0outzKbdn+QVFL8s=;
+        b=C5SDUba+Fkoy2P8Hc0dS+/pcVzsmUR1V/3qsUjGDQcKAG56T6DUtDJZu9YY9ZF0ezZ
+         jwyEZ/VxLc7emmpUOm9NmpFXL1VUTcgnX2CFb5pdV/GhJ6XlGtOMa+NsBF5KLRkbu/NQ
+         X5O9GNW0nyM/erPBbBpkQYzj11e9iTQZG83xs=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=2XJQ3tgHhWD6ivUtosaqB5/lO5MxYh8VnUo0/RYkqJg=;
-        b=D42QBGq9sbA4lmKQ64LzehpoIJ1BJKHglPmVFJdwNmkgrsop2aIpniaCO7NqfciRS9
-         zuV2bXC3aiMAsEW0uZu57cJqIWkmGki9XuSbQhS7SiRK0659A7hlQigFe8dUQ9aXfSAf
-         sOfo9wM/gdKGSW5YKWgA1hvbh911xHkL1ncOjQkVPE8AtDE3lVDXYRKQTAdNvxRm1XpF
-         8JA80IC4FBzPifF4lWOVDETz1DPROcBhPP6mZUTjCg8oK44QyYbZ8ieHaJ8pCoABXuWo
-         nq+tMUiFuL1pq6sPS1JlM3uN5gFn3oil9Hz3rYW9RsGBuUfvOSyOoO6K/6efsh9L5NR8
-         wRxQ==
-X-Gm-Message-State: ANhLgQ06j1lYsrE3cXQ96eOJpMAdaPT1B1wRcjWxxMwdraxBfSAQvX3L
-        2P67bj6aNxLidTrtu2Fb9lA=
-X-Google-Smtp-Source: ADFU+vvdd3RYlP4hgCRjRV+pY89v0AVvzARAkTT2ovUW2xjwt3RzEEzkicl40takmRDg32AHX63M3w==
-X-Received: by 2002:adf:dc4f:: with SMTP id m15mr10209603wrj.219.1585482740947;
-        Sun, 29 Mar 2020 04:52:20 -0700 (PDT)
-Received: from localhost.localdomain (5-12-96-237.residential.rdsnet.ro. [5.12.96.237])
-        by smtp.gmail.com with ESMTPSA id 5sm14424108wrs.20.2020.03.29.04.52.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 29 Mar 2020 04:52:20 -0700 (PDT)
-From:   Vladimir Oltean <olteanv@gmail.com>
-To:     andrew@lunn.ch, f.fainelli@gmail.com, vivien.didelot@gmail.com,
-        davem@davemloft.net
-Cc:     jiri@resnulli.us, idosch@idosch.org, kuba@kernel.org,
-        netdev@vger.kernel.org, xiaoliang.yang_1@nxp.com,
-        linux-kernel@vger.kernel.org, horatiu.vultur@microchip.com,
-        alexandre.belloni@bootlin.com, allan.nielsen@microchip.com,
-        joergen.andreasen@microchip.com, UNGLinuxDriver@microchip.com,
-        yangbo.lu@nxp.com, alexandru.marginean@nxp.com, po.liu@nxp.com,
-        claudiu.manoil@nxp.com, leoyang.li@nxp.com,
-        nikolay@cumulusnetworks.com, roopa@cumulusnetworks.com
-Subject: [PATCH v2 net-next 3/6] net: dsa: add port policers
-Date:   Sun, 29 Mar 2020 14:51:59 +0300
-Message-Id: <20200329115202.16348-4-olteanv@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200329115202.16348-1-olteanv@gmail.com>
-References: <20200329115202.16348-1-olteanv@gmail.com>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=Cq8VIxSwvwCSuQt3WNmGkXzcdrs0outzKbdn+QVFL8s=;
+        b=hXh88xjcEtkAvLSe67K3JgnNsbDyVJK4WNBvSgSO7t9d9lOyBuxBlbY78Eu8TBuoRU
+         198W49CWbyln1i5IDYxpLOMfT38Stcyim4LdVtwWE7WNH5nEmqfqLlPEki08vfXKQ/5m
+         Og+bfuM3zCJlB5/nTXyYp6xXPK8y5xjkZ3cWwRZopzhHK0wkqj94xZKMA4RyEeOt/QAD
+         dAJQJpEZ/EKvtRKfIz1jtKxw4FE79HTLTV2ewuVWPys8jtf/9fJ6ND2H9D82OCFDX9Kq
+         O8RFGZ8BXTeZG+wINLQvyaLPZMGLTclFb6jA66Qtp5EGG714rECXjXy1srb8KbmyuB5x
+         jhbA==
+X-Gm-Message-State: AGi0PubpSeVbKal7L4/eKsPdoDtka//fvT+hlh+MWgiHp6fw29dJ5yJC
+        mn+Jwq0Isrm4EhNQnexEfjZF8g==
+X-Google-Smtp-Source: APiQypI89yqc93TSmOnJWJRnO43OWKFd7LoI5Egh4hYQIX5SifepNeFGxejqT6E5UbsuaJHsMVdoRA==
+X-Received: by 2002:a2e:9586:: with SMTP id w6mr4514883ljh.133.1585483337920;
+        Sun, 29 Mar 2020 05:02:17 -0700 (PDT)
+Received: from [192.168.0.109] (84-238-136-197.ip.btc-net.bg. [84.238.136.197])
+        by smtp.gmail.com with ESMTPSA id c13sm5328557ljj.37.2020.03.29.05.02.15
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 29 Mar 2020 05:02:17 -0700 (PDT)
+Subject: Re: [PATCH net-next 6/6] net: dsa: sja1105: add broadcast and
+ per-traffic class policers
+To:     Vladimir Oltean <olteanv@gmail.com>,
+        Ido Schimmel <idosch@idosch.org>
+Cc:     Roopa Prabhu <roopa@cumulusnetworks.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jiri Pirko <jiri@resnulli.us>,
+        Jakub Kicinski <kuba@kernel.org>,
+        netdev <netdev@vger.kernel.org>,
+        Xiaoliang Yang <xiaoliang.yang_1@nxp.com>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Horatiu Vultur <horatiu.vultur@microchip.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        "Allan W. Nielsen" <allan.nielsen@microchip.com>,
+        Joergen Andreasen <joergen.andreasen@microchip.com>,
+        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
+        "Y.b. Lu" <yangbo.lu@nxp.com>,
+        Alexandru Marginean <alexandru.marginean@nxp.com>,
+        Po Liu <po.liu@nxp.com>,
+        Claudiu Manoil <claudiu.manoil@nxp.com>,
+        Li Yang <leoyang.li@nxp.com>
+References: <20200329005202.17926-1-olteanv@gmail.com>
+ <20200329005202.17926-7-olteanv@gmail.com>
+ <20200329095712.GA2188467@splinter>
+ <CA+h21hoybhxhR3KgfRkAaKyPPJPesbGLWDaDp5O_2yTz05y5jQ@mail.gmail.com>
+ <CA+h21hoBp6=Zyc3mX3BVguVs0f8Un6-A3pk9YaZKPgs0efTi3g@mail.gmail.com>
+From:   Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
+Message-ID: <cd6f4e55-ff5b-5f64-8211-61b4d87b1f0f@cumulusnetworks.com>
+Date:   Sun, 29 Mar 2020 15:02:14 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
+MIME-Version: 1.0
+In-Reply-To: <CA+h21hoBp6=Zyc3mX3BVguVs0f8Un6-A3pk9YaZKPgs0efTi3g@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vladimir Oltean <vladimir.oltean@nxp.com>
+On 29/03/2020 14:46, Vladimir Oltean wrote:
+> On Sun, 29 Mar 2020 at 14:37, Vladimir Oltean <olteanv@gmail.com> wrote:
+>>
+>> On Sun, 29 Mar 2020 at 12:57, Ido Schimmel <idosch@idosch.org> wrote:
+>>>
+>>> + Nik, Roopa
+>>>
+>>> On Sun, Mar 29, 2020 at 02:52:02AM +0200, Vladimir Oltean wrote:
+>>>> From: Vladimir Oltean <vladimir.oltean@nxp.com>
+[snip]
+>>> In the past I was thinking about ways to implement this in Linux. The
+>>> only place in the pipeline where packets are actually classified to
+>>> broadcast / unknown unicast / multicast is at bridge ingress. Therefore,
+>>
+>> Actually I think only 'unknown unicast' is tricky here, and indeed the
+>> bridge driver is the only place in the software datapath that would
+>> know that.
 
-The approach taken to pass the port policer methods on to drivers is
-pragmatic. It is similar to the port mirroring implementation (in that
-the DSA core does all of the filter block interaction and only passes
-simple operations for the driver to implement) and dissimilar to how
-flow-based policers are going to be implemented (where the driver has
-full control over the flow_cls_offload data structure).
+Yep, unknown unicast is hard to pass outside of the bridge, especially at ingress
+where the bridge hasn't been hit yet. One possible solution is to expose a function
+from the bridge which can make such a decision at the cost of 1 more fdb hash lookup,
+but if the packet is going to hit the bridge anyway that cost won't be that high
+since it will have to do the same. We already have some internal bridge functionality
+exposed for netfilter, tc and some drivers so it would be in line with that.
+I haven't looked into how feasible the above is, so I'm open to other ideas (the
+bridge_slave functions for example, we've discussed such extensions before in other
+contexts). But I think this can be much simpler if we just expose the unknown unicast
+information, the mcast/bcast can be decided by the classifier already or with very
+little change. I think such exposed function can be useful to netfilter as well.
 
-Signed-off-by: Vladimir Oltean <vladimir.oltean@nxp.com>
----
-Changes in v2:
-None.
-
- include/net/dsa.h | 13 +++++++-
- net/dsa/slave.c   | 79 +++++++++++++++++++++++++++++++++++++++++++----
- 2 files changed, 85 insertions(+), 7 deletions(-)
-
-diff --git a/include/net/dsa.h b/include/net/dsa.h
-index aeb411e77b9a..fb3f9222f2a1 100644
---- a/include/net/dsa.h
-+++ b/include/net/dsa.h
-@@ -130,9 +130,10 @@ struct dsa_switch_tree {
- 	struct list_head rtable;
- };
- 
--/* TC matchall action types, only mirroring for now */
-+/* TC matchall action types */
- enum dsa_port_mall_action_type {
- 	DSA_PORT_MALL_MIRROR,
-+	DSA_PORT_MALL_POLICER,
- };
- 
- /* TC mirroring entry */
-@@ -141,6 +142,12 @@ struct dsa_mall_mirror_tc_entry {
- 	bool ingress;
- };
- 
-+/* TC port policer entry */
-+struct dsa_mall_policer_tc_entry {
-+	s64 burst;
-+	u64 rate_bytes_per_sec;
-+};
-+
- /* TC matchall entry */
- struct dsa_mall_tc_entry {
- 	struct list_head list;
-@@ -148,6 +155,7 @@ struct dsa_mall_tc_entry {
- 	enum dsa_port_mall_action_type type;
- 	union {
- 		struct dsa_mall_mirror_tc_entry mirror;
-+		struct dsa_mall_policer_tc_entry policer;
- 	};
- };
- 
-@@ -557,6 +565,9 @@ struct dsa_switch_ops {
- 				   bool ingress);
- 	void	(*port_mirror_del)(struct dsa_switch *ds, int port,
- 				   struct dsa_mall_mirror_tc_entry *mirror);
-+	int	(*port_policer_add)(struct dsa_switch *ds, int port,
-+				    struct dsa_mall_policer_tc_entry *policer);
-+	void	(*port_policer_del)(struct dsa_switch *ds, int port);
- 	int	(*port_setup_tc)(struct dsa_switch *ds, int port,
- 				 enum tc_setup_type type, void *type_data);
- 
-diff --git a/net/dsa/slave.c b/net/dsa/slave.c
-index e6040a11bd83..9692a726f2ed 100644
---- a/net/dsa/slave.c
-+++ b/net/dsa/slave.c
-@@ -859,14 +859,14 @@ dsa_slave_add_cls_matchall_mirred(struct net_device *dev,
- 	act = &cls->rule->action.entries[0];
- 
- 	if (!ds->ops->port_mirror_add)
--		return err;
-+		return -EOPNOTSUPP;
- 
- 	if (!act->dev)
- 		return -EINVAL;
- 
- 	if (!flow_action_basic_hw_stats_check(&cls->rule->action,
- 					      cls->common.extack))
--		return err;
-+		return -EOPNOTSUPP;
- 
- 	act = &cls->rule->action.entries[0];
- 
-@@ -897,6 +897,67 @@ dsa_slave_add_cls_matchall_mirred(struct net_device *dev,
- 	return err;
- }
- 
-+static int
-+dsa_slave_add_cls_matchall_police(struct net_device *dev,
-+				  struct tc_cls_matchall_offload *cls,
-+				  bool ingress)
-+{
-+	struct netlink_ext_ack *extack = cls->common.extack;
-+	struct dsa_port *dp = dsa_slave_to_port(dev);
-+	struct dsa_slave_priv *p = netdev_priv(dev);
-+	struct dsa_mall_policer_tc_entry *policer;
-+	struct dsa_mall_tc_entry *mall_tc_entry;
-+	struct dsa_switch *ds = dp->ds;
-+	struct flow_action_entry *act;
-+	int err;
-+
-+	if (!ds->ops->port_policer_add) {
-+		NL_SET_ERR_MSG_MOD(extack,
-+				   "Policing offload not implemented\n");
-+		return -EOPNOTSUPP;
-+	}
-+
-+	if (!ingress) {
-+		NL_SET_ERR_MSG_MOD(extack,
-+				   "Only supported on ingress qdisc\n");
-+		return -EOPNOTSUPP;
-+	}
-+
-+	if (!flow_action_basic_hw_stats_check(&cls->rule->action,
-+					      cls->common.extack))
-+		return -EOPNOTSUPP;
-+
-+	list_for_each_entry(mall_tc_entry, &p->mall_tc_list, list) {
-+		if (mall_tc_entry->type == DSA_PORT_MALL_POLICER) {
-+			NL_SET_ERR_MSG_MOD(extack,
-+					   "Only one port policer allowed\n");
-+			return -EEXIST;
-+		}
-+	}
-+
-+	act = &cls->rule->action.entries[0];
-+
-+	mall_tc_entry = kzalloc(sizeof(*mall_tc_entry), GFP_KERNEL);
-+	if (!mall_tc_entry)
-+		return -ENOMEM;
-+
-+	mall_tc_entry->cookie = cls->cookie;
-+	mall_tc_entry->type = DSA_PORT_MALL_POLICER;
-+	policer = &mall_tc_entry->policer;
-+	policer->rate_bytes_per_sec = act->police.rate_bytes_ps;
-+	policer->burst = act->police.burst;
-+
-+	err = ds->ops->port_policer_add(ds, dp->index, policer);
-+	if (err) {
-+		kfree(mall_tc_entry);
-+		return err;
-+	}
-+
-+	list_add_tail(&mall_tc_entry->list, &p->mall_tc_list);
-+
-+	return err;
-+}
-+
- static int dsa_slave_add_cls_matchall(struct net_device *dev,
- 				      struct tc_cls_matchall_offload *cls,
- 				      bool ingress)
-@@ -907,6 +968,9 @@ static int dsa_slave_add_cls_matchall(struct net_device *dev,
- 	    flow_offload_has_one_action(&cls->rule->action) &&
- 	    cls->rule->action.entries[0].id == FLOW_ACTION_MIRRED)
- 		err = dsa_slave_add_cls_matchall_mirred(dev, cls, ingress);
-+	else if (flow_offload_has_one_action(&cls->rule->action) &&
-+		 cls->rule->action.entries[0].id == FLOW_ACTION_POLICE)
-+		err = dsa_slave_add_cls_matchall_police(dev, cls, ingress);
- 
- 	return err;
- }
-@@ -918,9 +982,6 @@ static void dsa_slave_del_cls_matchall(struct net_device *dev,
- 	struct dsa_mall_tc_entry *mall_tc_entry;
- 	struct dsa_switch *ds = dp->ds;
- 
--	if (!ds->ops->port_mirror_del)
--		return;
--
- 	mall_tc_entry = dsa_slave_mall_tc_entry_find(dev, cls->cookie);
- 	if (!mall_tc_entry)
- 		return;
-@@ -929,7 +990,13 @@ static void dsa_slave_del_cls_matchall(struct net_device *dev,
- 
- 	switch (mall_tc_entry->type) {
- 	case DSA_PORT_MALL_MIRROR:
--		ds->ops->port_mirror_del(ds, dp->index, &mall_tc_entry->mirror);
-+		if (ds->ops->port_mirror_del)
-+			ds->ops->port_mirror_del(ds, dp->index,
-+						 &mall_tc_entry->mirror);
-+		break;
-+	case DSA_PORT_MALL_POLICER:
-+		if (ds->ops->port_policer_del)
-+			ds->ops->port_policer_del(ds, dp->index);
- 		break;
- 	default:
- 		WARN_ON(1);
--- 
-2.17.1
+>> I know very little about frame classification in the Linux network
+>> stack, but would it be possible to introduce a match key in tc-flower
+>> for whether packets have a known destination or not?
+>>
+>>> my thinking was to implement these storm control policers as a
+>>> "bridge_slave" operation. It can then be offloaded to capable drivers
+>>> via the switchdev framework.
+>>>
+>>
+>> I think it would be a bit odd to duplicate tc functionality in the
+>> bridge sysfs. I don't have a better suggestion though.
+>>
+> 
+> Not to mention that for hardware like this, to have the same level of
+> flexibility via a switchdev control would mean to duplicate quite a
+> lot of tc functionality. On this 5-port switch I can put a shared
+> broadcast policer on 2 ports (via the ingress_block functionality),
+> and individual policers on the other 3, and the bandwidth budgeting is
+> separate. I can only assume that there are more switches out there
+> that allow this.
+> 
+>>> I think that if we have this implemented in the Linux bridge, then your
+>>> patch can be used to support the policing of broadcast packets while
+>>> returning an error if user tries to police unknown unicast or multicast
+>>> packets.
+>>
+>> So even if the Linux bridge gains these knobs for flood policers,
+>> still have the dst_mac ff:ff:ff:ff:ff:ff as a valid way to configure
+>> one of those knobs?
+>>
+>>> Or maybe the hardware you are working with supports these types
+>>> as well?
+>>
+>> Nope, on this hardware it's just broadcast, I just checked that. Which
+>> simplifies things quite a bit.
+>>
+>>>
+>>> WDYT?
+>>>
+>>
+>> I don't know.
+>>
+>> Thanks,
+>> -Vladimir
+> 
+> -Vladimir
+> 
 
