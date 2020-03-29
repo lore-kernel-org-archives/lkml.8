@@ -2,96 +2,88 @@ Return-Path: <SRS0=I467=5O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C719C2D0E9
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 14:36:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BCC0C43331
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 14:37:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0E5FB2073B
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 14:36:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="E4V7eq1o"
+	by mail.kernel.org (Postfix) with ESMTP id 2B4B92073B
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 14:37:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728293AbgC2OgX (ORCPT
+        id S1728284AbgC2Ohw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Mar 2020 10:36:23 -0400
-Received: from mail-qv1-f68.google.com ([209.85.219.68]:41332 "EHLO
-        mail-qv1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728265AbgC2OgX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Mar 2020 10:36:23 -0400
-Received: by mail-qv1-f68.google.com with SMTP id t4so3359914qvz.8
-        for <linux-kernel@vger.kernel.org>; Sun, 29 Mar 2020 07:36:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=cKOBNOm+rZ4d9bR4WUxBUh48pKmpl3L3aadgBjJl+N8=;
-        b=E4V7eq1ostoW8XvR/+TcPp3WLl+0AsNGFLPZolKW+6UAzuHq0nIwhJofnwf75MXvhx
-         V5VFktaQ/RFJ7WLlRaYuosKbFpb/u2/+ftvTUeVT3WSUs5JMLFeMMdKcK5aGP/8wEnBX
-         jrie7KaCbvO5vv+N4ampsWV62mSaqJ50zqUdRO09QM2UrGY3vmqlWjd44YHJxQJvMoyE
-         vRkzwGHrkwt5hEqlQjsNOQOj99n7gHAe2pLxY5AaUnodVokOYtZ5N/wJR7Cj2tvNOiIJ
-         3pbAB4p6UaIRd1qyu79XwptQkSA0kF5kBJFTqp3dfyBvY+fmmiVh24u6jUgQcWJVIsx/
-         g1Sw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=cKOBNOm+rZ4d9bR4WUxBUh48pKmpl3L3aadgBjJl+N8=;
-        b=mn0qiSYmrPWsVLEtkFxsoToRUAuXqZ0pr9QubszriaPjTI2bFjWj1RTuLFVcQnRp4W
-         dUKUWu8huT94HScQAhRPI/NoDY/AFEA49c8mbXxqZScSH4B1Aqt1fvLUKigoUUpM5Mcm
-         faFw2/fArnegpApjkEvmnqXWpChHRHmOWRJEgjkdeKG45TzLumgu56uNMDjmxAagrmwW
-         qqBVi8UNYOh2WvYc3HQxwEI5zb8T0aCS5fkYw/EehxvHf5LimY61+H0Kgvop7pT00wkx
-         r1UlN/JGpYNnuCXo8mUXFSQVNY8jzrTpwTzWS2nuWNjAKfzhCgdhjWVhALwC+tKKSWSM
-         nm4w==
-X-Gm-Message-State: ANhLgQ2HolR0gLlRi3kFR2GJ33Fy4lP3LZehFx6QGWCXTIzasVabw4HH
-        lK51ZlQHheOM58yK7x93L2s+tA==
-X-Google-Smtp-Source: ADFU+vv1Y8n2FMzImT66FeDLKS+HztLgbMDaezhyrCdeeCVde2jHORL6B8fuxvpM6NiRUgVO2VgkXg==
-X-Received: by 2002:ad4:4847:: with SMTP id t7mr7798301qvy.237.1585492582171;
-        Sun, 29 Mar 2020 07:36:22 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-142-68-57-212.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.57.212])
-        by smtp.gmail.com with ESMTPSA id l7sm7982342qkb.47.2020.03.29.07.36.21
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Sun, 29 Mar 2020 07:36:21 -0700 (PDT)
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1jIZ2z-0000k2-2n; Sun, 29 Mar 2020 11:36:21 -0300
-Date:   Sun, 29 Mar 2020 11:36:21 -0300
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     George Spelvin <lkml@sdf.org>
-Cc:     linux-kernel@vger.kernel.org, Doug Ledford <dledford@redhat.com>,
-        linux-rdma@vger.kernel.org, Faisal Latif <faisal.latif@intel.com>,
-        Shiraz Saleem <shiraz.saleem@intel.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        Bernard Metzler <bmt@zurich.ibm.com>
-Subject: Re: [RFC PATCH v1 42/50] drivers/ininiband: Use get_random_u32()
-Message-ID: <20200329143621.GF20941@ziepe.ca>
-References: <202003281643.02SGhN9T020186@sdf.org>
+        Sun, 29 Mar 2020 10:37:52 -0400
+Received: from foss.arm.com ([217.140.110.172]:59190 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727488AbgC2Ohv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Mar 2020 10:37:51 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E3FAC31B;
+        Sun, 29 Mar 2020 07:37:50 -0700 (PDT)
+Received: from [10.163.1.70] (unknown [10.163.1.70])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6C1943F68F;
+        Sun, 29 Mar 2020 07:37:44 -0700 (PDT)
+Subject: Re: [mm/debug] f8bf55f05f: BUG:non-zero_pgtables_bytes_on_freeing_mm
+To:     kernel test robot <lkp@intel.com>
+Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Qian Cai <cai@lca.pw>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Vineet Gupta <vgupta@synopsys.com>,
+        Will Deacon <will@kernel.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "Kirill A. Shutemov" <kirill@shutemov.name>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>, lkp@lists.01.org
+References: <20200328130737.GA11705@shao2-debian>
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+Message-ID: <fb14237e-f973-bc34-4981-280ba5e1eb92@arm.com>
+Date:   Sun, 29 Mar 2020 20:07:38 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <202003281643.02SGhN9T020186@sdf.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200328130737.GA11705@shao2-debian>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 21, 2019 at 08:21:45PM -0400, George Spelvin wrote:
-> There's no need to get_random_bytes() into a temporary buffer.
-> 
-> This is not a no-brainer change; get_random_u32() has slightly weaker
-> security guarantees, but code like this is the classic example of when
-> it's appropriate: the random value is stored in the kernel for as long
-> as it's valuable.
 
-The mechanical transformation looks OK, but can someone who knows the
-RNG confirm this statement?
+On 03/28/2020 06:37 PM, kernel test robot wrote:
+> [    9.304270] debug_vm_pgtable: debug_vm_pgtable: Validating architecture page table helpers
+> [    9.306147] random: get_random_u32 called from debug_vm_pgtable+0x2c/0x6a5 with crng_init=1
+> [    9.306206] BUG: non-zero pgtables_bytes on freeing mm: -4096
 
-Many of these places are being used in network related contexts, I
-suspect the value here is often less about secrecy, more about
-unguessability.
+This problem is on i386 platform via CONFIG_EXPERT with CONFIG_X86_PAE
+still enabled. This particular configuration is not supported (even if
+it could be tested via CONFIG_EXPERT) with ARCH_HAS_DEBUG_VM_PGTABLE.
 
-Jason
+diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+index beea77046f9b..df8a19e52e82 100644
+--- a/arch/x86/Kconfig
++++ b/arch/x86/Kconfig
+@@ -61,6 +61,7 @@  config X86
+ 	select ARCH_CLOCKSOURCE_INIT
+ 	select ARCH_HAS_ACPI_TABLE_UPGRADE	if ACPI
+ 	select ARCH_HAS_DEBUG_VIRTUAL
++	select ARCH_HAS_DEBUG_VM_PGTABLE	if !X86_PAE
+ 	select ARCH_HAS_DEVMEM_IS_ALLOWED
+ 	select ARCH_HAS_ELF_RANDOMIZE
+ 	select ARCH_HAS_FAST_MULTIPLIER
