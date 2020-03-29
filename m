@@ -7,41 +7,39 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F903C43331
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 20:28:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39660C43331
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 20:28:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E2DB8207FF
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 20:28:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0BEA920784
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 20:28:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729179AbgC2U20 (ORCPT
+        id S1729186AbgC2U2c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Mar 2020 16:28:26 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:56929 "EHLO
+        Sun, 29 Mar 2020 16:28:32 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:56918 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728754AbgC2U0O (ORCPT
+        with ESMTP id S1728709AbgC2U0O (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sun, 29 Mar 2020 16:26:14 -0400
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1jIeVY-0001ML-FS; Sun, 29 Mar 2020 22:26:12 +0200
+        id 1jIeVV-0001L0-A2; Sun, 29 Mar 2020 22:26:09 +0200
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 119711C0451;
-        Sun, 29 Mar 2020 22:26:12 +0200 (CEST)
-Date:   Sun, 29 Mar 2020 20:26:11 -0000
-From:   "tip-bot2 for Mubin Sayyed" <tip-bot2@linutronix.de>
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id D88631C0334;
+        Sun, 29 Mar 2020 22:26:08 +0200 (CEST)
+Date:   Sun, 29 Mar 2020 20:26:08 -0000
+From:   "tip-bot2 for Marc Zyngier" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: irq/core] irqchip/xilinx: Add support for multiple instances
-Cc:     Mubin Sayyed <mubin.usman.sayyed@xilinx.com>,
-        Anirudha Sarangi <anirudha.sarangi@xilinx.com>,
-        Marc Zyngier <maz@kernel.org>, x86 <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200317125600.15913-2-mubin.usman.sayyed@xilinx.com>
-References: <20200317125600.15913-2-mubin.usman.sayyed@xilinx.com>
+Subject: [tip: irq/core] irqchip/gic-v4.1: Add initial SGI configuration
+Cc:     Marc Zyngier <maz@kernel.org>, Zenghui Yu <yuzenghui@huawei.com>,
+        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <20200304203330.4967-10-maz@kernel.org>
+References: <20200304203330.4967-10-maz@kernel.org>
 MIME-Version: 1.0
-Message-ID: <158551357166.28353.18244839318341076271.tip-bot2@tip-bot2>
+Message-ID: <158551356846.28353.13339005587852171447.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -57,285 +55,177 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the irq/core branch of tip:
 
-Commit-ID:     67862a3c47fcfc9330d153436c7a6604ae3daec9
-Gitweb:        https://git.kernel.org/tip/67862a3c47fcfc9330d153436c7a6604ae3daec9
-Author:        Mubin Sayyed <mubin.usman.sayyed@xilinx.com>
-AuthorDate:    Tue, 17 Mar 2020 18:25:57 +05:30
+Commit-ID:     e252cf8a34d92adf41124cb59b19b49d25395548
+Gitweb:        https://git.kernel.org/tip/e252cf8a34d92adf41124cb59b19b49d25395548
+Author:        Marc Zyngier <maz@kernel.org>
+AuthorDate:    Wed, 04 Mar 2020 20:33:16 
 Committer:     Marc Zyngier <maz@kernel.org>
-CommitterDate: Sun, 22 Mar 2020 11:52:52 
+CommitterDate: Tue, 24 Mar 2020 12:05:08 
 
-irqchip/xilinx: Add support for multiple instances
+irqchip/gic-v4.1: Add initial SGI configuration
 
-Added support for cascaded interrupt controllers.
+The GICv4.1 ITS has yet another new command (VSGI) which allows
+a VPE-targeted SGI to be configured (or have its pending state
+cleared). Add support for this command and plumb it into the
+activate irqdomain callback so that it is ready to be used.
 
-Following cascaded configurations have been tested,
-
-- peripheral->xilinx-intc->xilinx-intc->gic->Cortexa53 processor
-  on zcu102 board
-- peripheral->xilinx-intc->xilinx-intc->microblaze processor
-  on kcu105 board
-
-Signed-off-by: Mubin Sayyed <mubin.usman.sayyed@xilinx.com>
-Signed-off-by: Anirudha Sarangi <anirudha.sarangi@xilinx.com>
 Signed-off-by: Marc Zyngier <maz@kernel.org>
-Link: https://lore.kernel.org/r/20200317125600.15913-2-mubin.usman.sayyed@xilinx.com
+Reviewed-by: Zenghui Yu <yuzenghui@huawei.com>
+Link: https://lore.kernel.org/r/20200304203330.4967-10-maz@kernel.org
 ---
- drivers/irqchip/irq-xilinx-intc.c | 115 ++++++++++++++++-------------
- 1 file changed, 67 insertions(+), 48 deletions(-)
+ drivers/irqchip/irq-gic-v3-its.c   | 92 ++++++++++++++++++++++++++++-
+ include/linux/irqchip/arm-gic-v3.h |  3 +-
+ 2 files changed, 93 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/irqchip/irq-xilinx-intc.c b/drivers/irqchip/irq-xilinx-intc.c
-index e3043de..34593fa 100644
---- a/drivers/irqchip/irq-xilinx-intc.c
-+++ b/drivers/irqchip/irq-xilinx-intc.c
-@@ -38,29 +38,31 @@ struct xintc_irq_chip {
- 	void		__iomem *base;
- 	struct		irq_domain *root_domain;
- 	u32		intr_mask;
-+	u32		nr_irq;
+diff --git a/drivers/irqchip/irq-gic-v3-its.c b/drivers/irqchip/irq-gic-v3-its.c
+index c9c8121..28c856a 100644
+--- a/drivers/irqchip/irq-gic-v3-its.c
++++ b/drivers/irqchip/irq-gic-v3-its.c
+@@ -380,6 +380,15 @@ struct its_cmd_desc {
+ 		struct {
+ 			struct its_vpe *vpe;
+ 		} its_invdb_cmd;
++
++		struct {
++			struct its_vpe *vpe;
++			u8 sgi;
++			u8 priority;
++			bool enable;
++			bool group;
++			bool clear;
++		} its_vsgi_cmd;
+ 	};
  };
  
--static struct xintc_irq_chip *xintc_irqc;
-+static struct xintc_irq_chip *primary_intc;
- 
--static void xintc_write(int reg, u32 data)
-+static void xintc_write(struct xintc_irq_chip *irqc, int reg, u32 data)
- {
- 	if (static_branch_unlikely(&xintc_is_be))
--		iowrite32be(data, xintc_irqc->base + reg);
-+		iowrite32be(data, irqc->base + reg);
- 	else
--		iowrite32(data, xintc_irqc->base + reg);
-+		iowrite32(data, irqc->base + reg);
+@@ -528,6 +537,31 @@ static void its_encode_db(struct its_cmd_block *cmd, bool db)
+ 	its_mask_encode(&cmd->raw_cmd[2], db, 63, 63);
  }
  
--static unsigned int xintc_read(int reg)
-+static u32 xintc_read(struct xintc_irq_chip *irqc, int reg)
- {
- 	if (static_branch_unlikely(&xintc_is_be))
--		return ioread32be(xintc_irqc->base + reg);
-+		return ioread32be(irqc->base + reg);
- 	else
--		return ioread32(xintc_irqc->base + reg);
-+		return ioread32(irqc->base + reg);
- }
- 
- static void intc_enable_or_unmask(struct irq_data *d)
- {
--	unsigned long mask = 1 << d->hwirq;
-+	struct xintc_irq_chip *irqc = irq_data_get_irq_chip_data(d);
-+	unsigned long mask = BIT(d->hwirq);
- 
- 	pr_debug("irq-xilinx: enable_or_unmask: %ld\n", d->hwirq);
- 
-@@ -69,30 +71,35 @@ static void intc_enable_or_unmask(struct irq_data *d)
- 	 * acks the irq before calling the interrupt handler
- 	 */
- 	if (irqd_is_level_type(d))
--		xintc_write(IAR, mask);
-+		xintc_write(irqc, IAR, mask);
- 
--	xintc_write(SIE, mask);
-+	xintc_write(irqc, SIE, mask);
- }
- 
- static void intc_disable_or_mask(struct irq_data *d)
- {
-+	struct xintc_irq_chip *irqc = irq_data_get_irq_chip_data(d);
-+
- 	pr_debug("irq-xilinx: disable: %ld\n", d->hwirq);
--	xintc_write(CIE, 1 << d->hwirq);
-+	xintc_write(irqc, CIE, BIT(d->hwirq));
- }
- 
- static void intc_ack(struct irq_data *d)
- {
-+	struct xintc_irq_chip *irqc = irq_data_get_irq_chip_data(d);
-+
- 	pr_debug("irq-xilinx: ack: %ld\n", d->hwirq);
--	xintc_write(IAR, 1 << d->hwirq);
-+	xintc_write(irqc, IAR, BIT(d->hwirq));
- }
- 
- static void intc_mask_ack(struct irq_data *d)
- {
--	unsigned long mask = 1 << d->hwirq;
-+	struct xintc_irq_chip *irqc = irq_data_get_irq_chip_data(d);
-+	unsigned long mask = BIT(d->hwirq);
- 
- 	pr_debug("irq-xilinx: disable_and_ack: %ld\n", d->hwirq);
--	xintc_write(CIE, mask);
--	xintc_write(IAR, mask);
-+	xintc_write(irqc, CIE, mask);
-+	xintc_write(irqc, IAR, mask);
- }
- 
- static struct irq_chip intc_dev = {
-@@ -103,13 +110,28 @@ static struct irq_chip intc_dev = {
- 	.irq_mask_ack = intc_mask_ack,
- };
- 
-+static unsigned int xintc_get_irq_local(struct xintc_irq_chip *irqc)
++static void its_encode_sgi_intid(struct its_cmd_block *cmd, u8 sgi)
 +{
-+	unsigned int irq = 0;
-+	u32 hwirq;
-+
-+	hwirq = xintc_read(irqc, IVR);
-+	if (hwirq != -1U)
-+		irq = irq_find_mapping(irqc->root_domain, hwirq);
-+
-+	pr_debug("irq-xilinx: hwirq=%d, irq=%d\n", hwirq, irq);
-+
-+	return irq;
++	its_mask_encode(&cmd->raw_cmd[0], sgi, 35, 32);
 +}
 +
- unsigned int xintc_get_irq(void)
- {
--	unsigned int hwirq, irq = -1;
-+	unsigned int irq = -1;
-+	u32 hwirq;
- 
--	hwirq = xintc_read(IVR);
-+	hwirq = xintc_read(primary_intc, IVR);
- 	if (hwirq != -1U)
--		irq = irq_find_mapping(xintc_irqc->root_domain, hwirq);
-+		irq = irq_find_mapping(primary_intc->root_domain, hwirq);
- 
- 	pr_debug("irq-xilinx: hwirq=%d, irq=%d\n", hwirq, irq);
- 
-@@ -118,15 +140,18 @@ unsigned int xintc_get_irq(void)
- 
- static int xintc_map(struct irq_domain *d, unsigned int irq, irq_hw_number_t hw)
- {
--	if (xintc_irqc->intr_mask & (1 << hw)) {
-+	struct xintc_irq_chip *irqc = d->host_data;
++static void its_encode_sgi_priority(struct its_cmd_block *cmd, u8 prio)
++{
++	its_mask_encode(&cmd->raw_cmd[0], prio >> 4, 23, 20);
++}
 +
-+	if (irqc->intr_mask & BIT(hw)) {
- 		irq_set_chip_and_handler_name(irq, &intc_dev,
--						handle_edge_irq, "edge");
-+					      handle_edge_irq, "edge");
- 		irq_clear_status_flags(irq, IRQ_LEVEL);
- 	} else {
- 		irq_set_chip_and_handler_name(irq, &intc_dev,
--						handle_level_irq, "level");
-+					      handle_level_irq, "level");
- 		irq_set_status_flags(irq, IRQ_LEVEL);
- 	}
-+	irq_set_chip_data(irq, irqc);
++static void its_encode_sgi_group(struct its_cmd_block *cmd, bool grp)
++{
++	its_mask_encode(&cmd->raw_cmd[0], grp, 10, 10);
++}
++
++static void its_encode_sgi_clear(struct its_cmd_block *cmd, bool clr)
++{
++	its_mask_encode(&cmd->raw_cmd[0], clr, 9, 9);
++}
++
++static void its_encode_sgi_enable(struct its_cmd_block *cmd, bool en)
++{
++	its_mask_encode(&cmd->raw_cmd[0], en, 8, 8);
++}
++
+ static inline void its_fixup_cmd(struct its_cmd_block *cmd)
+ {
+ 	/* Let's fixup BE commands */
+@@ -893,6 +927,26 @@ static struct its_vpe *its_build_invdb_cmd(struct its_node *its,
+ 	return valid_vpe(its, desc->its_invdb_cmd.vpe);
+ }
+ 
++static struct its_vpe *its_build_vsgi_cmd(struct its_node *its,
++					  struct its_cmd_block *cmd,
++					  struct its_cmd_desc *desc)
++{
++	if (WARN_ON(!is_v4_1(its)))
++		return NULL;
++
++	its_encode_cmd(cmd, GITS_CMD_VSGI);
++	its_encode_vpeid(cmd, desc->its_vsgi_cmd.vpe->vpe_id);
++	its_encode_sgi_intid(cmd, desc->its_vsgi_cmd.sgi);
++	its_encode_sgi_priority(cmd, desc->its_vsgi_cmd.priority);
++	its_encode_sgi_group(cmd, desc->its_vsgi_cmd.group);
++	its_encode_sgi_clear(cmd, desc->its_vsgi_cmd.clear);
++	its_encode_sgi_enable(cmd, desc->its_vsgi_cmd.enable);
++
++	its_fixup_cmd(cmd);
++
++	return valid_vpe(its, desc->its_vsgi_cmd.vpe);
++}
++
+ static u64 its_cmd_ptr_to_offset(struct its_node *its,
+ 				 struct its_cmd_block *ptr)
+ {
+@@ -3870,6 +3924,26 @@ static struct irq_chip its_vpe_4_1_irq_chip = {
+ 	.irq_set_vcpu_affinity	= its_vpe_4_1_set_vcpu_affinity,
+ };
+ 
++static void its_configure_sgi(struct irq_data *d, bool clear)
++{
++	struct its_vpe *vpe = irq_data_get_irq_chip_data(d);
++	struct its_cmd_desc desc;
++
++	desc.its_vsgi_cmd.vpe = vpe;
++	desc.its_vsgi_cmd.sgi = d->hwirq;
++	desc.its_vsgi_cmd.priority = vpe->sgi_config[d->hwirq].priority;
++	desc.its_vsgi_cmd.enable = vpe->sgi_config[d->hwirq].enabled;
++	desc.its_vsgi_cmd.group = vpe->sgi_config[d->hwirq].group;
++	desc.its_vsgi_cmd.clear = clear;
++
++	/*
++	 * GICv4.1 allows us to send VSGI commands to any ITS as long as the
++	 * destination VPE is mapped there. Since we map them eagerly at
++	 * activation time, we're pretty sure the first GICv4.1 ITS will do.
++	 */
++	its_send_single_vcommand(find_4_1_its(), its_build_vsgi_cmd, &desc);
++}
++
+ static int its_sgi_set_affinity(struct irq_data *d,
+ 				const struct cpumask *mask_val,
+ 				bool force)
+@@ -3920,13 +3994,29 @@ static void its_sgi_irq_domain_free(struct irq_domain *domain,
+ static int its_sgi_irq_domain_activate(struct irq_domain *domain,
+ 				       struct irq_data *d, bool reserve)
+ {
++	/* Write out the initial SGI configuration */
++	its_configure_sgi(d, false);
  	return 0;
  }
  
-@@ -138,12 +163,14 @@ static const struct irq_domain_ops xintc_irq_domain_ops = {
- static void xil_intc_irq_handler(struct irq_desc *desc)
+ static void its_sgi_irq_domain_deactivate(struct irq_domain *domain,
+ 					  struct irq_data *d)
  {
- 	struct irq_chip *chip = irq_desc_get_chip(desc);
-+	struct xintc_irq_chip *irqc;
- 	u32 pending;
+-	/* Nothing to do */
++	struct its_vpe *vpe = irq_data_get_irq_chip_data(d);
++
++	/*
++	 * The VSGI command is awkward:
++	 *
++	 * - To change the configuration, CLEAR must be set to false,
++	 *   leaving the pending bit unchanged.
++	 * - To clear the pending bit, CLEAR must be set to true, leaving
++	 *   the configuration unchanged.
++	 *
++	 * You just can't do both at once, hence the two commands below.
++	 */
++	vpe->sgi_config[d->hwirq].enabled = false;
++	its_configure_sgi(d, false);
++	its_configure_sgi(d, true);
+ }
  
-+	irqc = irq_data_get_irq_handler_data(&desc->irq_data);
- 	chained_irq_enter(chip, desc);
- 	do {
--		pending = xintc_get_irq();
--		if (pending == -1U)
-+		pending = xintc_get_irq_local(irqc);
-+		if (pending == 0)
- 			break;
- 		generic_handle_irq(pending);
- 	} while (true);
-@@ -153,28 +180,19 @@ static void xil_intc_irq_handler(struct irq_desc *desc)
- static int __init xilinx_intc_of_init(struct device_node *intc,
- 					     struct device_node *parent)
- {
--	u32 nr_irq;
--	int ret, irq;
- 	struct xintc_irq_chip *irqc;
--
--	if (xintc_irqc) {
--		pr_err("irq-xilinx: Multiple instances aren't supported\n");
--		return -EINVAL;
--	}
-+	int ret, irq;
+ static const struct irq_domain_ops its_sgi_domain_ops = {
+diff --git a/include/linux/irqchip/arm-gic-v3.h b/include/linux/irqchip/arm-gic-v3.h
+index b28acfa..fd3be49 100644
+--- a/include/linux/irqchip/arm-gic-v3.h
++++ b/include/linux/irqchip/arm-gic-v3.h
+@@ -502,8 +502,9 @@
+ #define GITS_CMD_VMAPTI			GITS_CMD_GICv4(GITS_CMD_MAPTI)
+ #define GITS_CMD_VMOVI			GITS_CMD_GICv4(GITS_CMD_MOVI)
+ #define GITS_CMD_VSYNC			GITS_CMD_GICv4(GITS_CMD_SYNC)
+-/* VMOVP and INVDB are the odd ones, as they dont have a physical counterpart */
++/* VMOVP, VSGI and INVDB are the odd ones, as they dont have a physical counterpart */
+ #define GITS_CMD_VMOVP			GITS_CMD_GICv4(2)
++#define GITS_CMD_VSGI			GITS_CMD_GICv4(3)
+ #define GITS_CMD_INVDB			GITS_CMD_GICv4(0xe)
  
- 	irqc = kzalloc(sizeof(*irqc), GFP_KERNEL);
- 	if (!irqc)
- 		return -ENOMEM;
--
--	xintc_irqc = irqc;
--
- 	irqc->base = of_iomap(intc, 0);
- 	BUG_ON(!irqc->base);
- 
--	ret = of_property_read_u32(intc, "xlnx,num-intr-inputs", &nr_irq);
-+	ret = of_property_read_u32(intc, "xlnx,num-intr-inputs", &irqc->nr_irq);
- 	if (ret < 0) {
- 		pr_err("irq-xilinx: unable to read xlnx,num-intr-inputs\n");
--		goto err_alloc;
-+		goto error;
- 	}
- 
- 	ret = of_property_read_u32(intc, "xlnx,kind-of-intr", &irqc->intr_mask);
-@@ -183,34 +201,34 @@ static int __init xilinx_intc_of_init(struct device_node *intc,
- 		irqc->intr_mask = 0;
- 	}
- 
--	if (irqc->intr_mask >> nr_irq)
-+	if (irqc->intr_mask >> irqc->nr_irq)
- 		pr_warn("irq-xilinx: mismatch in kind-of-intr param\n");
- 
- 	pr_info("irq-xilinx: %pOF: num_irq=%d, edge=0x%x\n",
--		intc, nr_irq, irqc->intr_mask);
-+		intc, irqc->nr_irq, irqc->intr_mask);
- 
- 
- 	/*
- 	 * Disable all external interrupts until they are
- 	 * explicity requested.
- 	 */
--	xintc_write(IER, 0);
-+	xintc_write(irqc, IER, 0);
- 
- 	/* Acknowledge any pending interrupts just in case. */
--	xintc_write(IAR, 0xffffffff);
-+	xintc_write(irqc, IAR, 0xffffffff);
- 
- 	/* Turn on the Master Enable. */
--	xintc_write(MER, MER_HIE | MER_ME);
--	if (!(xintc_read(MER) & (MER_HIE | MER_ME))) {
-+	xintc_write(irqc, MER, MER_HIE | MER_ME);
-+	if (xintc_read(irqc, MER) != (MER_HIE | MER_ME)) {
- 		static_branch_enable(&xintc_is_be);
--		xintc_write(MER, MER_HIE | MER_ME);
-+		xintc_write(irqc, MER, MER_HIE | MER_ME);
- 	}
- 
--	irqc->root_domain = irq_domain_add_linear(intc, nr_irq,
-+	irqc->root_domain = irq_domain_add_linear(intc, irqc->nr_irq,
- 						  &xintc_irq_domain_ops, irqc);
- 	if (!irqc->root_domain) {
- 		pr_err("irq-xilinx: Unable to create IRQ domain\n");
--		goto err_alloc;
-+		goto error;
- 	}
- 
- 	if (parent) {
-@@ -222,16 +240,17 @@ static int __init xilinx_intc_of_init(struct device_node *intc,
- 		} else {
- 			pr_err("irq-xilinx: interrupts property not in DT\n");
- 			ret = -EINVAL;
--			goto err_alloc;
-+			goto error;
- 		}
- 	} else {
--		irq_set_default_host(irqc->root_domain);
-+		primary_intc = irqc;
-+		irq_set_default_host(primary_intc->root_domain);
- 	}
- 
- 	return 0;
- 
--err_alloc:
--	xintc_irqc = NULL;
-+error:
-+	iounmap(irqc->base);
- 	kfree(irqc);
- 	return ret;
- 
+ /*
