@@ -2,126 +2,183 @@ Return-Path: <SRS0=I467=5O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 145E6C43331
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 07:21:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C4AEC2D0E7
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 07:23:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E5F1E20748
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 07:21:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD6602076A
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 07:23:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585466590;
+	bh=pYRVbuBb5qkU8mIDMvM9P+PnyRnhYJ9Ioj9Q4SdIUHU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=RQoLTkQBnaujRS/0bXW4VMdO4HRtzW3oG2pJFYOzVC77PUcpJEHVSO1eHQUYHwDT9
+	 Lg6nEkeInJq7O/VDPWpGjfKYVn90nKNKPKgUuYSfFJOLl1f/PKGxwyisUxGdmprjDe
+	 gquve02gQdopnMxFZ5jq25UsI8jxtGETRtaDHR4A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727780AbgC2HVE (ORCPT
+        id S1727791AbgC2HXK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Mar 2020 03:21:04 -0400
-Received: from mga12.intel.com ([192.55.52.136]:53457 "EHLO mga12.intel.com"
+        Sun, 29 Mar 2020 03:23:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49918 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726342AbgC2HVD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Mar 2020 03:21:03 -0400
-IronPort-SDR: cAF5qW/AKIxEUCm93tMX1Euw3w5cnkJkv6ja77TfCl/Auatxzs2PXN7aMIsYMM9+Jgcf9Pc8qS
- YGVxindXoAbg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Mar 2020 00:21:03 -0700
-IronPort-SDR: fI3FpOsSUfHzysvV2GBzOrfDHcQOb/YpAAA/E6IWpi0ONKLiVq0oNBf4P1u6/2IfvMGwJc5YRf
- dniQjCgFZNrw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,319,1580803200"; 
-   d="scan'208";a="358882903"
-Received: from blu2-mobl3.ccr.corp.intel.com (HELO [10.254.210.24]) ([10.254.210.24])
-  by fmsmga001.fm.intel.com with ESMTP; 29 Mar 2020 00:20:56 -0700
-Cc:     baolu.lu@linux.intel.com, "Liu, Yi L" <yi.l.liu@intel.com>,
-        "Raj, Ashok" <ashok.raj@intel.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Eric Auger <eric.auger@redhat.com>
-Subject: Re: [PATCH V10 03/11] iommu/vt-d: Add a helper function to skip agaw
-To:     "Tian, Kevin" <kevin.tian@intel.com>,
-        Jacob Pan <jacob.jun.pan@linux.intel.com>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Jean-Philippe Brucker <jean-philippe@linaro.com>
-References: <1584746861-76386-1-git-send-email-jacob.jun.pan@linux.intel.com>
- <1584746861-76386-4-git-send-email-jacob.jun.pan@linux.intel.com>
- <AADFC41AFE54684AB9EE6CBC0274A5D19D7ED8FF@SHSMSX104.ccr.corp.intel.com>
-From:   Lu Baolu <baolu.lu@linux.intel.com>
-Message-ID: <d17053c3-9a40-837a-dffa-57492cded028@linux.intel.com>
-Date:   Sun, 29 Mar 2020 15:20:55 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        id S1727286AbgC2HXJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Mar 2020 03:23:09 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9057320748;
+        Sun, 29 Mar 2020 07:23:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1585466588;
+        bh=pYRVbuBb5qkU8mIDMvM9P+PnyRnhYJ9Ioj9Q4SdIUHU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Hhw84d8vq304G7LOdUQ6QR19pDWmynfURj4cOG9t45qWXx4SOoGzVzxayBlFOCnlh
+         YH3NtgjpA8FmgQkMtVpKHdT7ji3D5tjWqm8bqJtENK90x44zSDo0BncPyghfsFXJcG
+         8F3zGY3mZBTBlCHqp/Hy/u0s28idN2z10A6t0LY0=
+Date:   Sun, 29 Mar 2020 09:23:04 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Leon Romanovsky <leon@kernel.org>
+Cc:     Jaewon Kim <jaewon31.kim@samsung.com>, vbabka@suse.cz,
+        adobriyan@gmail.com, akpm@linux-foundation.org, labbott@redhat.com,
+        sumit.semwal@linaro.org, minchan@kernel.org, ngupta@vflare.org,
+        sergey.senozhatsky.work@gmail.com, kasong@redhat.com,
+        bhe@redhat.com, linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        jaewon31.kim@gmail.com, linux-api@vger.kernel.org,
+        kexec@lists.infradead.org
+Subject: Re: [RFC PATCH v2 1/3] meminfo_extra: introduce meminfo extra
+Message-ID: <20200329072304.GA3909421@kroah.com>
+References: <20200323080503.6224-1-jaewon31.kim@samsung.com>
+ <CGME20200323080508epcas1p387c9c19b480da53be40fe5d51e76a477@epcas1p3.samsung.com>
+ <20200323080503.6224-2-jaewon31.kim@samsung.com>
+ <20200323095344.GB425358@kroah.com>
+ <5E79CEB5.8070308@samsung.com>
+ <20200324101110.GA2218981@kroah.com>
+ <5E79F102.9080405@samsung.com>
+ <20200324114645.GA2330984@kroah.com>
+ <5E7A02BC.7020803@samsung.com>
+ <20200329071907.GB2454444@unreal>
 MIME-Version: 1.0
-In-Reply-To: <AADFC41AFE54684AB9EE6CBC0274A5D19D7ED8FF@SHSMSX104.ccr.corp.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200329071907.GB2454444@unreal>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/3/27 19:53, Tian, Kevin wrote:
->> From: Jacob Pan <jacob.jun.pan@linux.intel.com>
->> Sent: Saturday, March 21, 2020 7:28 AM
->>
->> Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
+On Sun, Mar 29, 2020 at 10:19:07AM +0300, Leon Romanovsky wrote:
+> On Tue, Mar 24, 2020 at 09:53:16PM +0900, Jaewon Kim wrote:
+> >
+> >
+> > On 2020년 03월 24일 20:46, Greg KH wrote:
+> > > On Tue, Mar 24, 2020 at 08:37:38PM +0900, Jaewon Kim wrote:
+> > >>
+> > >> On 2020년 03월 24일 19:11, Greg KH wrote:
+> > >>> On Tue, Mar 24, 2020 at 06:11:17PM +0900, Jaewon Kim wrote:
+> > >>>> On 2020년 03월 23일 18:53, Greg KH wrote:
+> > >>>>>> +int register_meminfo_extra(atomic_long_t *val, int shift, const char *name)
+> > >>>>>> +{
+> > >>>>>> +	struct meminfo_extra *meminfo, *memtemp;
+> > >>>>>> +	int len;
+> > >>>>>> +	int error = 0;
+> > >>>>>> +
+> > >>>>>> +	meminfo = kzalloc(sizeof(*meminfo), GFP_KERNEL);
+> > >>>>>> +	if (!meminfo) {
+> > >>>>>> +		error = -ENOMEM;
+> > >>>>>> +		goto out;
+> > >>>>>> +	}
+> > >>>>>> +
+> > >>>>>> +	meminfo->val = val;
+> > >>>>>> +	meminfo->shift_for_page = shift;
+> > >>>>>> +	strncpy(meminfo->name, name, NAME_SIZE);
+> > >>>>>> +	len = strlen(meminfo->name);
+> > >>>>>> +	meminfo->name[len] = ':';
+> > >>>>>> +	strncpy(meminfo->name_pad, meminfo->name, NAME_BUF_SIZE);
+> > >>>>>> +	while (++len < NAME_BUF_SIZE - 1)
+> > >>>>>> +		meminfo->name_pad[len] = ' ';
+> > >>>>>> +
+> > >>>>>> +	spin_lock(&meminfo_lock);
+> > >>>>>> +	list_for_each_entry_rcu(memtemp, &meminfo_head, list) {
+> > >>>>>> +		if (memtemp->val == val) {
+> > >>>>>> +			error = -EINVAL;
+> > >>>>>> +			break;
+> > >>>>>> +		}
+> > >>>>>> +	}
+> > >>>>>> +	if (!error)
+> > >>>>>> +		list_add_tail_rcu(&meminfo->list, &meminfo_head);
+> > >>>>>> +	spin_unlock(&meminfo_lock);
+> > >>>>> If you have a lock, why are you needing rcu?
+> > >>>> I think _rcu should be removed out of list_for_each_entry_rcu.
+> > >>>> But I'm confused about what you meant.
+> > >>>> I used rcu_read_lock on __meminfo_extra,
+> > >>>> and I think spin_lock is also needed for addition and deletion to handle multiple modifiers.
+> > >>> If that's the case, then that's fine, it just didn't seem like that was
+> > >>> needed.  Or I might have been reading your rcu logic incorrectly...
+> > >>>
+> > >>>>>> +	if (error)
+> > >>>>>> +		kfree(meminfo);
+> > >>>>>> +out:
+> > >>>>>> +
+> > >>>>>> +	return error;
+> > >>>>>> +}
+> > >>>>>> +EXPORT_SYMBOL(register_meminfo_extra);
+> > >>>>> EXPORT_SYMBOL_GPL()?  I have to ask :)
+> > >>>> I can use EXPORT_SYMBOL_GPL.
+> > >>>>> thanks,
+> > >>>>>
+> > >>>>> greg k-h
+> > >>>>>
+> > >>>>>
+> > >>>> Hello
+> > >>>> Thank you for your comment.
+> > >>>>
+> > >>>> By the way there was not resolved discussion on v1 patch as I mentioned on cover page.
+> > >>>> I'd like to hear your opinion on this /proc/meminfo_extra node.
+> > >>> I think it is the propagation of an old and obsolete interface that you
+> > >>> will have to support for the next 20+ years and yet not actually be
+> > >>> useful :)
+> > >>>
+> > >>>> Do you think this is meaningful or cannot co-exist with other future
+> > >>>> sysfs based API.
+> > >>> What sysfs-based API?
+> > >> Please refer to mail thread on v1 patch set - https://protect2.fireeye.com/url?k=16e3accc-4b2f6548-16e22783-0cc47aa8f5ba-935fe828ac2f6656&u=https://lkml.org/lkml/fancy/2020/3/10/2102
+> > >> especially discussion with Leon Romanovsky on https://protect2.fireeye.com/url?k=74208ed9-29ec475d-74210596-0cc47aa8f5ba-0bd4ef48931fec95&u=https://lkml.org/lkml/fancy/2020/3/16/140
+> > > I really do not understand what you are referring to here, sorry.   I do
+> > > not see any sysfs-based code in that thread.
+> > Sorry. I also did not see actual code.
+> > Hello Leon Romanovsky, could you elaborate your plan regarding sysfs stuff?
 > 
-> could you elaborate in which scenario this helper function is required?
-
-I added below commit message:
-
-     An Intel iommu domain uses 5-level page table by default. If the
-     iommu that the domain tries to attach supports less page levels,
-     the top level page tables should be skipped. Add a helper to do
-     this so that it could be used in other places.
-
-Best regards,
-baolu
-
->   
->> ---
->>   drivers/iommu/intel-pasid.c | 22 ++++++++++++++++++++++
->>   1 file changed, 22 insertions(+)
->>
->> diff --git a/drivers/iommu/intel-pasid.c b/drivers/iommu/intel-pasid.c
->> index 22b30f10b396..191508c7c03e 100644
->> --- a/drivers/iommu/intel-pasid.c
->> +++ b/drivers/iommu/intel-pasid.c
->> @@ -500,6 +500,28 @@ int intel_pasid_setup_first_level(struct intel_iommu
->> *iommu,
->>   }
->>
->>   /*
->> + * Skip top levels of page tables for iommu which has less agaw
->> + * than default. Unnecessary for PT mode.
->> + */
->> +static inline int iommu_skip_agaw(struct dmar_domain *domain,
->> +				  struct intel_iommu *iommu,
->> +				  struct dma_pte **pgd)
->> +{
->> +	int agaw;
->> +
->> +	for (agaw = domain->agaw; agaw > iommu->agaw; agaw--) {
->> +		*pgd = phys_to_virt(dma_pte_addr(*pgd));
->> +		if (!dma_pte_present(*pgd)) {
->> +			return -EINVAL;
->> +		}
->> +	}
->> +	pr_debug_ratelimited("%s: pgd: %llx, agaw %d d_agaw %d\n",
->> __func__, (u64)*pgd,
->> +		iommu->agaw, domain->agaw);
->> +
->> +	return agaw;
->> +}
->> +
->> +/*
->>    * Set up the scalable mode pasid entry for second only translation type.
->>    */
->>   int intel_pasid_setup_second_level(struct intel_iommu *iommu,
->> --
->> 2.7.4
+> Sorry for being late, I wasn't in "TO:", so missed the whole discussion.
 > 
+> Greg,
+> 
+> We need the exposed information for the memory optimizations (debug, not
+> production) of our high speed NICs. Our devices (mlx5) allocates a lot of
+> memory, so optimization there can help us to scale in SRIOV mode easier and
+> be less constraint by the memory.
+
+Great, then use debugfs and expose what ever you want in what ever way
+you want, no restrictions there, you do not need any type of kernel-wide
+/proc file for that today.
+
+> I want to emphasize that I don't like idea of extending /proc/* interface
+> because it is going to be painful to grep on large machines with many
+> devices. And I don't like the idea that every driver will need to register
+> into this interface, because it will be abused almost immediately.
+
+I agree.
+
+> My proposal was to create new sysfs file by driver/core and put all
+> information automatically there, for example, it can be
+> /sys/devices/pci0000:00/0000:00:0c.0/meminfo
+>                                      ^^^^^^^
+
+Nope, again, use debugfs, as sysfs is only one-value-per-file.
+
+thanks,
+
+greg k-h
