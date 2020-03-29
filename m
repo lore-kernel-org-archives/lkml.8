@@ -7,42 +7,41 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ABBE5C2D0ED
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 17:38:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB21DC43331
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 17:38:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E45D20732
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 17:38:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 600B22073E
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 17:38:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="POPb1cV4"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="Jb7yKyoW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728415AbgC2Rih (ORCPT
+        id S1728484AbgC2Ril (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Mar 2020 13:38:37 -0400
-Received: from mo4-p04-ob.smtp.rzone.de ([85.215.255.124]:15229 "EHLO
+        Sun, 29 Mar 2020 13:38:41 -0400
+Received: from mo4-p04-ob.smtp.rzone.de ([85.215.255.121]:19695 "EHLO
         mo4-p04-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728065AbgC2Rih (ORCPT
+        with ESMTP id S1728065AbgC2Rij (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Mar 2020 13:38:37 -0400
-X-Greylist: delayed 9448 seconds by postgrey-1.27 at vger.kernel.org; Sun, 29 Mar 2020 13:38:36 EDT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1585503515;
+        Sun, 29 Mar 2020 13:38:39 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1585503517;
         s=strato-dkim-0002; d=goldelico.com;
         h=References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
         X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=Yq6hgnjHR7Rm0pXOfRm3OsZIBIP2cqxLTjaSlwPQ/iI=;
-        b=POPb1cV4hHie+Wp6icQgK6xx70rLGEelAMnog00Jvd4Rgfu8wlqEohkQnQ1tSydbiT
-        Aadr2sZMG3AKLtu3rRy4IpV/28ZJMG0vfAo+ObWl/LvhbYa0m+agU8UrzfveBD4boHui
-        e/yAW+KGxCNuvcGZFPF/wAVOCoYbQ6pXdpxlCUkILhOUcyW/cSdXosXgkQ0BsxTIK7mC
-        0BBQMtSzXZ4w20ZRfTBxH0jqLdZLf361aq6llmuMuPe+FhUBImlWY06bou2pEqN5L+W1
-        bxbbm5xj8LXVwORBzDpq3M+B4BKc7mcuZMvPpoebv2BMj4VlY/S64+KdUSBr94cN2gAN
-        IZjg==
+        bh=b0jJGA39xmvMSBMWkb+iC5+Dn3MX1LxN2wPchhSznQM=;
+        b=Jb7yKyoWvFmOM7402R9XQmKQzOWi4PjEPCi+gBeJiMDAjHkSaOgXgqs4dtGkDruzCM
+        MUTIjJ2h9DsOmI41HqQ4tiZSu19vzXxZtTLboK/K5rAiaMkhcRpr4eHnxQoQLWSx0fh3
+        SiG/fEuNtHXOrXawMlZJ4az6jCRoAI9wIvFwttV1hqlN21lU5CSdEUECa0dnP5vhEfJf
+        h265A8cHW16lvQ3y5idnnjTnyUeSy56WUNpwtRwBgaJssw1fouOZlPiB4v7U4ZmC+uEW
+        Qke10WHajlVe408r4MJYA1luiOwmo7JxQ1sb6k8CkAkmtZ6i/l7etq000XF6B2VjDiBu
+        cj/w==
 X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMhflhwDubTJ9o12DNOsPj0pDz2rsNxxv"
 X-RZG-CLASS-ID: mo00
 Received: from iMac.fritz.box
         by smtp.strato.de (RZmta 46.2.1 DYNA|AUTH)
-        with ESMTPSA id m02241w2THcTBMm
+        with ESMTPSA id m02241w2THcSBMk
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
         (Client did not present a certificate);
-        Sun, 29 Mar 2020 19:38:29 +0200 (CEST)
+        Sun, 29 Mar 2020 19:38:28 +0200 (CEST)
 From:   "H. Nikolaus Schaller" <hns@goldelico.com>
 To:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
         Rob Herring <robh+dt@kernel.org>,
@@ -58,11 +57,10 @@ Cc:     Philipp Rossak <embed3d@gmail.com>,
         linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
         openpvrsgx-devgroup@letux.org, letux-kernel@openphoenux.org,
         kernel@pyra-handheld.com, linux-mips@vger.kernel.org,
-        "H. Nikolaus Schaller" <hns@goldelico.com>,
-        "Andrew F . Davis" <afd@ti.com>
-Subject: [PATCH v5 4/8] ARM: DTS: omap34xx: add sgx gpu child node
-Date:   Sun, 29 Mar 2020 19:38:22 +0200
-Message-Id: <126157dffb9761ce785a1892c25ff2306f26fc3a.1585503505.git.hns@goldelico.com>
+        "H. Nikolaus Schaller" <hns@goldelico.com>
+Subject: [PATCH v5 2/8] ARM: DTS: am33xx: add sgx gpu child node
+Date:   Sun, 29 Mar 2020 19:38:20 +0200
+Message-Id: <720967ec44f65973a2ba81a39fb55fb1bac7fa04.1585503505.git.hns@goldelico.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <cover.1585503505.git.hns@goldelico.com>
 References: <cover.1585503505.git.hns@goldelico.com>
@@ -75,39 +73,41 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 and add interrupt.
 
-According to omap3530 TRM the SGX register block is 64kB.
-See: 13.4  SGX Register Mapping, Table 13-2
-
-Reported-by: Andrew F. Davis <afd@ti.com>	# register size
-Tested-by: H. Nikolaus Schaller <hns@goldelico.com> # OpenPandora 600 MHz.
+Tested-by: H. Nikolaus Schaller <hns@goldelico.com> # BeagleBone Black
 Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
 ---
- arch/arm/boot/dts/omap34xx.dtsi | 11 ++++++-----
+ arch/arm/boot/dts/am33xx.dtsi | 11 ++++++-----
  1 file changed, 6 insertions(+), 5 deletions(-)
 
-diff --git a/arch/arm/boot/dts/omap34xx.dtsi b/arch/arm/boot/dts/omap34xx.dtsi
-index c4dd9801840d..51c60ee2b68d 100644
---- a/arch/arm/boot/dts/omap34xx.dtsi
-+++ b/arch/arm/boot/dts/omap34xx.dtsi
-@@ -167,12 +167,13 @@ sgx_module: target-module@50000000 {
- 			clock-names = "fck", "ick";
- 			#address-cells = <1>;
+diff --git a/arch/arm/boot/dts/am33xx.dtsi b/arch/arm/boot/dts/am33xx.dtsi
+index 41dcfb37155a..cbdd85a1e4b0 100644
+--- a/arch/arm/boot/dts/am33xx.dtsi
++++ b/arch/arm/boot/dts/am33xx.dtsi
+@@ -497,7 +497,7 @@ aes: aes@0 {
+ 			};
+ 		};
+ 
+-		target-module@56000000 {
++		sgx_module: target-module@56000000 {
+ 			compatible = "ti,sysc-omap4", "ti,sysc";
+ 			reg = <0x5600fe00 0x4>,
+ 			      <0x5600fe10 0x4>;
+@@ -516,10 +516,11 @@ target-module@56000000 {
  			#size-cells = <1>;
--			ranges = <0 0x50000000 0x4000>;
-+			ranges = <0 0x50000000 0x10000>;
+ 			ranges = <0 0x56000000 0x1000000>;
  
 -			/*
 -			 * Closed source PowerVR driver, no child device
 -			 * binding or driver in mainline
 -			 */
 +			gpu: gpu@0 {
-+				compatible = "ti,omap3-sgx530-121", "img,sgx530-121", "img,sgx530";
-+				reg = <0x0 0x10000>;	/* 64kB */
-+				interrupts = <21>;
++				compatible = "ti,am3352-sgx530-125", "img,sgx530-125", "img,sgx530";
++				reg = <0x00 0x1000000>;	/* 16 MB */
++				interrupts = <37>;
 +			};
  		};
  	};
- 
+ };
 -- 
 2.25.1
 
