@@ -2,167 +2,142 @@ Return-Path: <SRS0=I467=5O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	HK_RANDOM_FROM,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87693C2D0EE
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 09:02:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB026C43331
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 09:13:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E31E20716
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 09:02:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="07E0C60Q"
+	by mail.kernel.org (Postfix) with ESMTP id 8A96820675
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 09:13:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727879AbgC2JCC (ORCPT
+        id S1727872AbgC2JN2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Mar 2020 05:02:02 -0400
-Received: from pandora.armlinux.org.uk ([78.32.30.218]:34368 "EHLO
-        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727504AbgC2JCB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Mar 2020 05:02:01 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=H5gHcZt58ItxyBwqaqxZtntJGLmB68FixgDVNtg8rCs=; b=07E0C60Qj23SXfi8N3GXmOZby
-        1Hyu8JB6hjpqjVbF5nzJMATZNq7dhhOrute0Hyn00mXx80gRd3XdzNmtNIB7nMSCmCpqz/nl08AKK
-        k1ebxfRQ6/3jvcJ8JxSft+oWkYRLzN+rYGQSWCgltsgB5q00nYWgXMBVfU/01oeqtBL0/X2uY3nhQ
-        JnhwCkHDAK8MiExjdHJYTM3b6Axw22rJUXByf/MjgCz8FrU0I4zTKHPujP4vBVO717XpEHcoxQ0CS
-        1NQdgGPYuNbi/nYU5+y4A7xknuGQUU48hKfDeJcl5SMYOTxLyOHU1dWcoSIlUAF9W4fyPRR5IXt6x
-        rG5MBnaKA==;
-Received: from shell.armlinux.org.uk ([2002:4e20:1eda:1:5054:ff:fe00:4ec]:38708)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1jITpB-0003yK-JF; Sun, 29 Mar 2020 10:01:45 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1jITp6-000650-KD; Sun, 29 Mar 2020 10:01:40 +0100
-Date:   Sun, 29 Mar 2020 10:01:40 +0100
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Florinel Iordache <florinel.iordache@nxp.com>
-Cc:     Andrew Lunn <andrew@lunn.ch>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
-        "hkallweit1@gmail.com" <hkallweit1@gmail.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "kuba@kernel.org" <kuba@kernel.org>,
-        "corbet@lwn.net" <corbet@lwn.net>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        Leo Li <leoyang.li@nxp.com>,
-        "Madalin Bucur (OSS)" <madalin.bucur@oss.nxp.com>,
-        Ioana Ciornei <ioana.ciornei@nxp.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [EXT] Re: [PATCH net-next 3/9] net: phy: add kr phy connection
- type
-Message-ID: <20200329090140.GW25745@shell.armlinux.org.uk>
-References: <1585230682-24417-1-git-send-email-florinel.iordache@nxp.com>
- <1585230682-24417-4-git-send-email-florinel.iordache@nxp.com>
- <20200327001515.GL3819@lunn.ch>
- <AM0PR04MB54435F251B435789A435A0BBFBCA0@AM0PR04MB5443.eurprd04.prod.outlook.com>
+        Sun, 29 Mar 2020 05:13:28 -0400
+Received: from mga01.intel.com ([192.55.52.88]:16808 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727772AbgC2JN2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Mar 2020 05:13:28 -0400
+IronPort-SDR: x0C9mPzMu1gC4NAwHL3HwjUN8RnTZk8lvBP1432dVrKD7JbPabqFX09ufP0GuPKnJvFeFjAlZ0
+ TI/nv5iWw9Yg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Mar 2020 02:13:27 -0700
+IronPort-SDR: jH37F2LboNIJIKtOVgFW9v/vR4xm6nRh4WvBixPk7Wfi0B4GL+u5XabM83K6yT8DRzP3bTLlie
+ OHrdYS8Qk03w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,319,1580803200"; 
+   d="scan'208";a="272059284"
+Received: from xiaoyaol-mobl.ccr.corp.intel.com (HELO [10.255.31.41]) ([10.255.31.41])
+  by fmsmga004.fm.intel.com with ESMTP; 29 Mar 2020 02:13:23 -0700
+Subject: Re: [PATCH v7 2/2] x86/split_lock: Avoid runtime reads of the
+ TEST_CTRL MSR
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        hpa@zytor.com, x86@kernel.org, linux-kernel@vger.kernel.org,
+        Paolo Bonzini <pbonzini@redhat.com>, luto@kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Arvind Sankar <nivedita@alum.mit.edu>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Tony Luck <tony.luck@intel.com>
+References: <20200325030924.132881-1-xiaoyao.li@intel.com>
+ <20200325030924.132881-3-xiaoyao.li@intel.com>
+ <20200328163412.GJ8104@linux.intel.com>
+From:   Xiaoyao Li <xiaoyao.li@intel.com>
+Message-ID: <e641c746-0dde-cfb8-ea23-45c011174b08@intel.com>
+Date:   Sun, 29 Mar 2020 17:13:23 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <AM0PR04MB54435F251B435789A435A0BBFBCA0@AM0PR04MB5443.eurprd04.prod.outlook.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200328163412.GJ8104@linux.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Mar 29, 2020 at 08:22:10AM +0000, Florinel Iordache wrote:
-> > On Thu, Mar 26, 2020 at 03:51:16PM +0200, Florinel Iordache wrote:
-> > > Add support for backplane kr phy connection types currently available
-> > > (10gbase-kr, 40gbase-kr4) and the required phylink updates (cover all
-> > > the cases for KR modes which are clause 45 compatible to correctly
-> > > assign phy_interface and phylink#supported)
-> > >
-> > > Signed-off-by: Florinel Iordache <florinel.iordache@nxp.com>
-> > > ---
-> > >  drivers/net/phy/phylink.c | 15 ++++++++++++---
-> > >  include/linux/phy.h       |  6 +++++-
-> > >  2 files changed, 17 insertions(+), 4 deletions(-)
-> > >
-> > > diff --git a/drivers/net/phy/phylink.c b/drivers/net/phy/phylink.c
-> > > index fed0c59..db1bb87 100644
-> > > --- a/drivers/net/phy/phylink.c
-> > > +++ b/drivers/net/phy/phylink.c
-> > > @@ -4,6 +4,7 @@
-> > >   * technologies such as SFP cages where the PHY is hot-pluggable.
-> > >   *
-> > >   * Copyright (C) 2015 Russell King
-> > > + * Copyright 2020 NXP
-> > >   */
-> > >  #include <linux/ethtool.h>
-> > >  #include <linux/export.h>
-> > > @@ -303,7 +304,6 @@ static int phylink_parse_mode(struct phylink *pl, struct
-> > fwnode_handle *fwnode)
-> > >                       break;
-> > >
-> > >               case PHY_INTERFACE_MODE_USXGMII:
-> > > -             case PHY_INTERFACE_MODE_10GKR:
-> > 
-> > We might have a backwards compatibility issue here. If i remember correctly,
-> > there are some boards out in the wild using PHY_INTERFACE_MODE_10GKR not
-> > PHY_INTERFACE_MODE_10GBASER.
-> > 
-> > See e0f909bc3a242296da9ccff78277f26d4883a79d
-> > 
-> > Russell, what do you say about this?
-> > 
-> >          Andrew
+On 3/29/2020 12:34 AM, Sean Christopherson wrote:
+> On Wed, Mar 25, 2020 at 11:09:24AM +0800, Xiaoyao Li wrote:
+>> In a context switch from a task that is detecting split locks
+>> to one that is not (or vice versa) we need to update the TEST_CTRL
+>> MSR. Currently this is done with the common sequence:
+>> 	read the MSR
+>> 	flip the bit
+>> 	write the MSR
+>> in order to avoid changing the value of any reserved bits in the MSR.
+>>
+>> Cache unused and reserved bits of TEST_CTRL MSR with SPLIT_LOCK_DETECT
+>> bit cleared during initialization, so we can avoid an expensive RDMSR
+>> instruction during context switch.
+>>
+>> Suggested-by: Sean Christopherson <sean.j.christopherson@intel.com>
+>> Originally-by: Tony Luck <tony.luck@intel.com>
+>> Signed-off-by: Xiaoyao Li <xiaoyao.li@intel.com>
+>> ---
+>>   arch/x86/kernel/cpu/intel.c | 9 ++++-----
+>>   1 file changed, 4 insertions(+), 5 deletions(-)
+>>
+>> diff --git a/arch/x86/kernel/cpu/intel.c b/arch/x86/kernel/cpu/intel.c
+>> index deb5c42c2089..1f414578899c 100644
+>> --- a/arch/x86/kernel/cpu/intel.c
+>> +++ b/arch/x86/kernel/cpu/intel.c
+>> @@ -45,6 +45,7 @@ enum split_lock_detect_state {
+>>    * split lock detect, unless there is a command line override.
+>>    */
+>>   static enum split_lock_detect_state sld_state __ro_after_init = sld_off;
+>> +static u64 msr_test_ctrl_cache __ro_after_init;
 > 
-> Ethernet interface nomenclature is using the following terminology:
-> e.g. 10GBase-KR: data rate (10G),  modulation type (Base = Baseband),
-> medium type (K = BacKplane), physical layer encoding scheme
-> (R = scRambling/descRambling using 64b/66b encoding that allows for
-> Ethernet framing at a rate of 10.3125 Gbit/s)
-> So 10GBase-R name provide information only about the data rate and
-> the encoding scheme without specifying the interface medium.
-> 10GBase-R is a family of many different standards specified for
-> several different physical medium for copper and optical fiber like
-> for example:
-> 	10GBase-SR: Short range (over fiber)
-> 	10GBase-LR: Long reach (over fiber)
-> 	10GBase-LRM: Long reach multi-mode (over fiber)
-> 	10GBase-ER: Extended reach (over fiber)
-> 	10GBase-CR: 10G over copper
-> 	10GBase-KR: Backplane
+> What about using "msr_test_ctrl_base_value", or something along those lines?
+> "cache" doesn't make it clear that SPLIT_LOCK_DETECT is guaranteed to be
+> zero in this variable.
 > 
-> 10GBase-KR represents Ethernet operation over electrical backplanes on
-> single lane and uses the same physical layer encoding as 10GBase-LR/ER/SR
-> defined in IEEE802.3 Clause 49. 
+>>   
+>>   /*
+>>    * Processors which have self-snooping capability can handle conflicting
+>> @@ -1037,6 +1038,8 @@ static void __init split_lock_setup(void)
+>>   		break;
+>>   	}
+>>   
+>> +	rdmsrl(MSR_TEST_CTRL, msr_test_ctrl_cache);
+> 
+> If we're going to bother skipping the RDMSR if state=sld_off on the command
+> line then it also makes sense to skip it if enabling fails, i.e. move this
+> below split_lock_verify_msr(true).
 
-I'm not sure why NXP folk think that they have to keep explaining this
-to us.  You do not.
+OK.
 
-> So prior to my change, phy_interface_t provided both enumerators which is correct:
-> 	PHY_INTERFACE_MODE_10GBASER
-> 	PHY_INTERFACE_MODE_10GKR
-> Perhaps PHY_INTERFACE_MODE_10GKR was not used before because Backplane
-> support was not available and all 10GBase-R family of interfaces should
-> be using PHY_INTERFACE_MODE_10GBASER.
+Then, the sld bit is 1 for msr_test_ctrl_base_value. Do you think 
+"msr_test_ctrl_base_value" still make sense?
 
-What you are missing is that PHY_INTERFACE_MODE_10GKR was introduced
-first and used _incorrectly_.  We are currently mid-transition to
-correct that mistake.
+or we keep the "else" branch in sld_update_msr() to not rely on the sld 
+bit in the base_value?
 
-While we are in transition, PHY_INTERFACE_MODE_10GKR can _not_ be used
-correctly, and nothing NXP or anyone else says will change that fact
-until the transition has been completed.
+>> +
+>>   	if (!split_lock_verify_msr(true)) {
+>>   		pr_info("MSR access failed: Disabled\n");
+>>   		return;
+>> @@ -1053,14 +1056,10 @@ static void __init split_lock_setup(void)
+>>    */
+>>   static void sld_update_msr(bool on)
+>>   {
+>> -	u64 test_ctrl_val;
+>> -
+>> -	rdmsrl(MSR_TEST_CTRL, test_ctrl_val);
+>> +	u64 test_ctrl_val = msr_test_ctrl_cache;
+>>   
+>>   	if (on)
+>>   		test_ctrl_val |= MSR_TEST_CTRL_SPLIT_LOCK_DETECT;
+>> -	else
+>> -		test_ctrl_val &= ~MSR_TEST_CTRL_SPLIT_LOCK_DETECT;
+>>   
+>>   	wrmsrl(MSR_TEST_CTRL, test_ctrl_val);
+>>   }
+>> -- 
+>> 2.20.1
+>>
 
-In kernel land, we do not intentionally regress platforms, even if we
-have made a mistake.
-
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 10.2Mbps down 587kbps up
