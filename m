@@ -2,87 +2,81 @@ Return-Path: <SRS0=I467=5O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB4DEC43331
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 16:29:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79568C2D0ED
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 16:32:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B0D61206CC
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 16:29:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="U3h6GlAn"
+	by mail.kernel.org (Postfix) with ESMTP id 590D1206CC
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Mar 2020 16:32:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728384AbgC2Q3X (ORCPT
+        id S1728337AbgC2QcQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Mar 2020 12:29:23 -0400
-Received: from mail-pj1-f65.google.com ([209.85.216.65]:37470 "EHLO
-        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727903AbgC2Q3X (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Mar 2020 12:29:23 -0400
-Received: by mail-pj1-f65.google.com with SMTP id o12so6235548pjs.2
-        for <linux-kernel@vger.kernel.org>; Sun, 29 Mar 2020 09:29:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=iEkjz8u06vOISBGxB4lRlujekNouzi4buIL/sSK3jMc=;
-        b=U3h6GlAnA+l6ORPhAmf5F7XQ7rmz+KXE1FEUWO1iUU7njc+AvITzL4VIwgHi+0lMj+
-         Bdw4gy4DQ7IdQR2EjgdotSCLKCatVz7lKxlGtHxL41ffConNffLYHDaYHghJaV1Kx0w0
-         YBnuyBEEHynhCbNGQswACkB9QTfcB6uG0kS+zzMT82166kEyN0NohYvFon7Qo2nm2JCR
-         iEt6zBQn8ctkfvP4CxRzDsvtRFTpEHK03ljQXPxJ9bE3eBKNTg4uTEKUrRdGCQYZbKz5
-         TpG960OOfI/SsrAdWSPOGw3QbIeizgAKgOfbyBFCZmII1tP2OsoawL2Iq063wEfQSVgO
-         pfMQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=iEkjz8u06vOISBGxB4lRlujekNouzi4buIL/sSK3jMc=;
-        b=bArWEjkz5SP8JHzMK5JdD/J5Uu2QrUo2CKx4GUw0GjtkiiiUJSFaGHPjtd+jk1OIge
-         BHHjwhPtFBrIC+Szk4E25mGc5szcWX2bVH77quCfVMhAKJaes5j9bDLMRO6WUGGmvnfR
-         QKlAiS2WBPyjT2QcmHzbhqIEeFMtcqpI1Kz0bCkRjBXDdfzfxqygPh+cAzidSNsLN2L7
-         j7/r5poKS+eZ02WTFTPFmSwxS04JJ/4isT/75r8hZnoj2//6Tp7In+G5CfeEKI/zSijO
-         HAoikzNBdm5oqIvTDkg73FNhqfJkfqJEpWwKvm4NrgkaIlCBd2oBnWlwgJyGG38WKGvm
-         ebPw==
-X-Gm-Message-State: ANhLgQ2QWLzhjJAQKsx32OXXvDantHxICPlDWK8sIIfhg4ErjndToA7v
-        MRdJcyXxHN3ouu/4EsW+WAk=
-X-Google-Smtp-Source: ADFU+vtmXixHCYI01s16TxtXfm/doNwSg468HaNPi6DrW7beNCaWqAXceG6RcGOhSJTYMG30352s1Q==
-X-Received: by 2002:a17:90b:46d0:: with SMTP id jx16mr10997425pjb.155.1585499362031;
-        Sun, 29 Mar 2020 09:29:22 -0700 (PDT)
-Received: from localhost ([183.82.182.248])
-        by smtp.gmail.com with ESMTPSA id lj14sm6599807pjb.25.2020.03.29.09.29.21
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Sun, 29 Mar 2020 09:29:21 -0700 (PDT)
-Date:   Sun, 29 Mar 2020 21:59:19 +0530
-From:   afzal mohammed <afzal.mohd.ma@gmail.com>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     linux-kernel@vger.kernel.org
-Subject: Pending setup_irq() removal patches & core removal
-Message-ID: <20200329162919.GA5317@afzalpc>
+        Sun, 29 Mar 2020 12:32:16 -0400
+Received: from mx.sdf.org ([205.166.94.20]:63508 "EHLO mx.sdf.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727903AbgC2QcP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Mar 2020 12:32:15 -0400
+Received: from sdf.org (IDENT:lkml@sdf.lonestar.org [205.166.94.16])
+        by mx.sdf.org (8.15.2/8.14.5) with ESMTPS id 02TGVvPV009144
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits) verified NO);
+        Sun, 29 Mar 2020 16:31:57 GMT
+Received: (from lkml@localhost)
+        by sdf.org (8.15.2/8.12.8/Submit) id 02TGVuVO017489;
+        Sun, 29 Mar 2020 16:31:56 GMT
+Date:   Sun, 29 Mar 2020 16:31:56 +0000
+From:   George Spelvin <lkml@SDF.ORG>
+To:     Jason Gunthorpe <jgg@ziepe.ca>, tytso@mit.edu
+Cc:     linux-kernel@vger.kernel.org, Doug Ledford <dledford@redhat.com>,
+        linux-rdma@vger.kernel.org, Faisal Latif <faisal.latif@intel.com>,
+        Shiraz Saleem <shiraz.saleem@intel.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        Bernard Metzler <bmt@zurich.ibm.com>, lkml@sdf.org
+Subject: Re: [RFC PATCH v1 42/50] drivers/ininiband: Use get_random_u32()
+Message-ID: <20200329163156.GB4675@SDF.ORG>
+References: <202003281643.02SGhN9T020186@sdf.org>
+ <20200329143621.GF20941@ziepe.ca>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-User-Agent: Mutt/1.9.3 (2018-01-21)
+In-Reply-To: <20200329143621.GF20941@ziepe.ca>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Thomas,
+On Sun, Mar 29, 2020 at 11:36:21AM -0300, Jason Gunthorpe wrote:
+> On Wed, Aug 21, 2019 at 08:21:45PM -0400, George Spelvin wrote:
+>> There's no need to get_random_bytes() into a temporary buffer.
+>> 
+>> This is not a no-brainer change; get_random_u32() has slightly weaker
+>> security guarantees, but code like this is the classic example of when
+>> it's appropriate: the random value is stored in the kernel for as long
+>> as it's valuable.
+> 
+> The mechanical transformation looks OK, but can someone who knows the
+> RNG confirm this statement?
 
-i have sent the pending setup_irq() cleanup patches & the core removal
-patch,
+You might find commit 92e507d21613 ("random: document get_random_int() 
+family") informative.
 
-https://lkml.kernel.org/r/cover.1585320721.git.afzal.mohd.ma@gmail.com
+> Many of these places are being used in network related contexts, I
+> suspect the value here is often less about secrecy, more about
+> unguessability.
 
-sending this mail in case you missed noticing it as it was a bit deep in
-the v1 thread (wasn't sure whether to send it as a new thread or as a
-reply to v1, since you had replied on v1 though v2 was available at
-that time, the patches were sent as a reply to v1 thread)
+The significant difference is backtrackability.  Each get_random_bytes()
+call has a final anti-backtracking step, to ensure that the random number
+just generated cannot be recovered from the subsequent kernel state.
+This is appropriate for encryption keys or asymmetric keys.
 
-Regards
-afzal
+The get_random_{int,long,u32,u64} functions omit this step, which means
+they only need one ChaCha20 crypto operation per 64 bytes of output,
+not a minimum of one per call.
 
+One good way of distinguishing the cases is to look for calls to 
+memzero_explicit().  If you need to ensure the random bytes are securely 
+destroyed, you need antibacktracking.  If your application doesn't care if 
+anyone learns your session authentication keys after the session has been 
+closed, you don't need it.
