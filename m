@@ -2,86 +2,169 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC40BC2D0E5
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 13:29:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF4F8C2D0EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 13:31:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 81F5420716
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 13:29:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 912AB20757
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 13:31:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585575062;
+	bh=qSfFw4Xt6kcV5uLecfdNYj4mpU1Cl5FKqVHHOIVmkPY=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=JQRPefF3FtuG2d9Yn3KfoJEUju8FLsKVqPLAZvh33lCtks1YDA2oqgWz2cjhx+BpB
+	 R7DKtNjrZSIi8f3V4F1uK8WUX+cGfVfB2mtfyd6IAcUpv2jU/KSC421Dvt0ELa7g80
+	 DJralN+O3aVoWypINb4LABzIxkknVtMsCb2Q/3b8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727751AbgC3N3f (ORCPT
+        id S1727805AbgC3NbB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 09:29:35 -0400
-Received: from foss.arm.com ([217.140.110.172]:53712 "EHLO foss.arm.com"
+        Mon, 30 Mar 2020 09:31:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:32846 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726548AbgC3N3f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 09:29:35 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 66730101E;
-        Mon, 30 Mar 2020 06:29:34 -0700 (PDT)
-Received: from [10.57.60.204] (unknown [10.57.60.204])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2F53F3F71E;
-        Mon, 30 Mar 2020 06:29:32 -0700 (PDT)
-Subject: Re: [PATCH v2 3/3] driver core: Replace open-coded list_last_entry()
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Sudeep Holla <sudeep.holla@arm.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Naresh Kamboju <naresh.kamboju@linaro.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        id S1725268AbgC3NbB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Mar 2020 09:31:01 -0400
+Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 38D5E20716;
+        Mon, 30 Mar 2020 13:31:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1585575060;
+        bh=qSfFw4Xt6kcV5uLecfdNYj4mpU1Cl5FKqVHHOIVmkPY=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=Q9HcMfLecFcko618lmMeqPiJEzubwJ5u1Ip9reIi2mnZqgzVRMJaX2TNq65jD7Uzk
+         91bigtJdPi+s48g83dv16HPxcg/D++utxWRP6/E0kgB5tIa8zTJxcBxS3FvNJtbXRY
+         KI3iTHxlNifbgQ0WIqlzhPtdUzwwROHTBhEsprZY=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id 01D8835226F8; Mon, 30 Mar 2020 06:30:59 -0700 (PDT)
+Date:   Mon, 30 Mar 2020 06:30:59 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Daniel Vetter <daniel.vetter@ffwll.ch>
+Cc:     Josh Triplett <josh@joshtriplett.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>, rcu@vger.kernel.org,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Basil Eljuse <Basil.Eljuse@arm.com>,
-        lkft-triage@lists.linaro.org,
-        Linux-Next Mailing List <linux-next@vger.kernel.org>,
-        Ferry Toth <fntoth@gmail.com>, Arnd Bergmann <arnd@arndb.de>,
-        Anders Roxell <anders.roxell@linaro.org>
-References: <20200324122023.9649-1-andriy.shevchenko@linux.intel.com>
- <20200324122023.9649-3-andriy.shevchenko@linux.intel.com>
- <CAJZ5v0gg=V8uDd4afJ3MULsgKYvWajKJioANk4jj7xEhBzrRrQ@mail.gmail.com>
- <CA+G9fYvFnXqSnoQSJ-DkQvAFv87iWmhH6dT1N79qrq=Aeuv4rw@mail.gmail.com>
- <028b636f-6e0f-c36a-aa4e-6a16d936fc6a@arm.com> <20200330095707.GA10432@bogus>
- <0a374eaa-92b3-0201-f357-4181542c98b6@arm.com>
- <CAHp75VdBm8ZYOMWmQEA8LD6uGcJ0sZ=M6n3MSYxmO6UkXbu+-A@mail.gmail.com>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <f2706518-def8-1566-149f-00fc1d8cc19f@arm.com>
-Date:   Mon, 30 Mar 2020 14:29:30 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        intel-gfx <intel-gfx@lists.freedesktop.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>
+Subject: Re: rcu_barrier() no longer allowed within mmap_sem?
+Message-ID: <20200330133059.GH19865@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <CAKMK7uGQ49JGetk3-VmHxXR0HVEoQgVxSZvX9Z0b5so8y+13cA@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <CAHp75VdBm8ZYOMWmQEA8LD6uGcJ0sZ=M6n3MSYxmO6UkXbu+-A@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAKMK7uGQ49JGetk3-VmHxXR0HVEoQgVxSZvX9Z0b5so8y+13cA@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-03-30 2:11 pm, Andy Shevchenko wrote:
-> On Mon, Mar 30, 2020 at 3:49 PM Robin Murphy <robin.murphy@arm.com> wrote:
->> On 2020-03-30 11:13 am, Sudeep Holla wrote:
->>> On Fri, Mar 27, 2020 at 07:40:25PM +0000, Robin Murphy wrote:
+On Mon, Mar 30, 2020 at 03:00:35PM +0200, Daniel Vetter wrote:
+> Hi all, for all = rcu, cpuhotplug and perf maintainers
 > 
-> ...
+> We've hit an interesting new lockdep splat in our drm/i915 CI:
 > 
->> AFAICS the difference is down to whether deferred_probe_timeout has
->> expired or not - I'm not familiar enough with this code to know
->> *exactly* what the difference is supposed to represent, nor which change
->> has actually pushed the Juno case from one state to the other (other
->> than it almost certainly can't be $SUBJECT - if this series is to blame
->> at all I'd assume it would be down to patch #1/3, but there's a bunch of
->> other rework previously queued in -next that is probably also interacting)
+> https://intel-gfx-ci.01.org/tree/drm-tip/Patchwork_17096/shard-tglb7/igt@kms_frontbuffer_tracking@fbcpsr-rgb101010-draw-mmap-gtt.html#dmesg-warnings861
 > 
-> JFYI: patch #1/3 wasn't applied.
+> Summarizing away the driver parts we have
+> 
+> < gpu locks which are held within mm->mmap_sem in various gpu fault handlers >
+> 
+> -> #4 (&mm->mmap_sem#2){++++}:
+> <4> [604.892615] __might_fault+0x63/0x90
+> <4> [604.892617] _copy_to_user+0x1e/0x80
+> <4> [604.892619] perf_read+0x200/0x2b0
+> <4> [604.892621] vfs_read+0x96/0x160
+> <4> [604.892622] ksys_read+0x9f/0xe0
+> <4> [604.892623] do_syscall_64+0x4f/0x220
+> <4> [604.892624] entry_SYSCALL_64_after_hwframe+0x49/0xbe
+> <4> [604.892625]
+> -> #3 (&cpuctx_mutex){+.+.}:
+> <4> [604.892626] __mutex_lock+0x9a/0x9c0
+> <4> [604.892627] perf_event_init_cpu+0xa4/0x140
+> <4> [604.892629] perf_event_init+0x19d/0x1cd
+> <4> [604.892630] start_kernel+0x362/0x4e4
+> <4> [604.892631] secondary_startup_64+0xa4/0xb0
+> <4> [604.892631]
+> -> #2 (pmus_lock){+.+.}:
+> <4> [604.892633] __mutex_lock+0x9a/0x9c0
+> <4> [604.892633] perf_event_init_cpu+0x6b/0x140
+> <4> [604.892635] cpuhp_invoke_callback+0x9b/0x9d0
+> <4> [604.892636] _cpu_up+0xa2/0x140
+> <4> [604.892637] do_cpu_up+0x61/0xa0
+> <4> [604.892639] smp_init+0x57/0x96
+> <4> [604.892639] kernel_init_freeable+0x87/0x1dc
+> <4> [604.892640] kernel_init+0x5/0x100
+> <4> [604.892642] ret_from_fork+0x24/0x50
+> <4> [604.892642]
+> -> #1 (cpu_hotplug_lock.rw_sem){++++}:
+> <4> [604.892643] cpus_read_lock+0x34/0xd0
+> <4> [604.892644] rcu_barrier+0xaa/0x190
+> <4> [604.892645] kernel_init+0x21/0x100
+> <4> [604.892647] ret_from_fork+0x24/0x50
+> <4> [604.892647]
+> -> #0 (rcu_state.barrier_mutex){+.+.}:
+> <4> [604.892649] __lock_acquire+0x1328/0x15d0
+> <4> [604.892650] lock_acquire+0xa7/0x1c0
+> <4> [604.892651] __mutex_lock+0x9a/0x9c0
+> <4> [604.892652] rcu_barrier+0x23/0x190
+> <4> [604.892680] i915_gem_object_unbind+0x29d/0x3f0 [i915]
+> <4> [604.892707] i915_gem_object_pin_to_display_plane+0x141/0x270 [i915]
+> <4> [604.892737] intel_pin_and_fence_fb_obj+0xec/0x1f0 [i915]
+> <4> [604.892767] intel_plane_pin_fb+0x3f/0xd0 [i915]
+> <4> [604.892797] intel_prepare_plane_fb+0x13b/0x5c0 [i915]
+> <4> [604.892798] drm_atomic_helper_prepare_planes+0x85/0x110
+> <4> [604.892827] intel_atomic_commit+0xda/0x390 [i915]
+> <4> [604.892828] drm_atomic_helper_set_config+0x57/0xa0
+> <4> [604.892830] drm_mode_setcrtc+0x1c4/0x720
+> <4> [604.892830] drm_ioctl_kernel+0xb0/0xf0
+> <4> [604.892831] drm_ioctl+0x2e1/0x390
+> <4> [604.892833] ksys_ioctl+0x7b/0x90
+> <4> [604.892835] __x64_sys_ioctl+0x11/0x20
+> <4> [604.892835] do_syscall_64+0x4f/0x220
+> <4> [604.892836] entry_SYSCALL_64_after_hwframe+0x49/0xbe
+> 
+> The last backtrace boils down to i915 driver code which holds the same
+> locks we are holding within mm->mmap_sem, and then ends up calling
+> rcu_barrier(). From what I can see i915 is just the messenger here,
+> any driver with this pattern of a lock held within mmap_sem which also
+> has a path of calling rcu_barrier while holding that lock should be
+> hitting this splat.
+> 
+> Two questions:
+> - This suggests that calling rcu_barrier() isn't ok anymore while
+> holding mmap_sem, or anything that has a dependency upon mmap_sem. I
+> guess that's not the idea, please confirm.
+> - Assuming this depedency is indeed not intended, where should the
+> loop be broken? It goes through perf, cpuhotplug and rcu subsystems,
+> and I don't have a clue about any of those.
 
-OK, so if anyone's invested enough to want to investigate, it must be 
-something in John's earlier changes here:
+Indeed, rcu_barrier() excludes CPU hotplug in order to eliminate a number
+of interesting races.
 
-https://lore.kernel.org/lkml/20200225050828.56458-1-john.stultz@linaro.org/
+Am I interpreting the above trace correctly in thinking that the various
+calls to cpus_read_lock() are with mmap_sem held?  If so, can the calls
+to rcu_barrier() be moved out from under the regions of code protected
+by cpus_read_lock()?  Invoking rcu_barrier() with cpus_read_lock() held
+is an immediate self-deadlock.
 
-Thanks,
-Robin.
+Or is rcu_barrier() somehow indirectly sometimes acquiring mmap_sem
+or pmus_lock?  (Not seeing it myself, but...)
+
+							Thanx, Paul
