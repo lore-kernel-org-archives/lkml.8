@@ -2,130 +2,132 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3826C43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 14:07:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0751FC2D0E5
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 14:07:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 76C1120776
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 14:07:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA23120776
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 14:07:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="l09D8veP"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PbKDIEzB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728490AbgC3OHP (ORCPT
+        id S1728524AbgC3OHi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 10:07:15 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:38129 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725268AbgC3OHP (ORCPT
+        Mon, 30 Mar 2020 10:07:38 -0400
+Received: from us-smtp-delivery-74.mimecast.com ([216.205.24.74]:22494 "EHLO
+        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727797AbgC3OHi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 10:07:15 -0400
-Received: by mail-wm1-f66.google.com with SMTP id f6so15466477wmj.3;
-        Mon, 30 Mar 2020 07:07:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:reply-to:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=NkzDxDJV1bnIzEyyQHH60q1JMe3S2qaalEpyevgeDjU=;
-        b=l09D8vePmsTy6YJfx5OBWOTZXcDmZP5AqjJZZ2/1V3JxhHYaHl0Ng7dBXXkGqvkbNO
-         70Gny56xP33iDCFXLwqULkq+3yPJva9Ww7Zdd8Ud2P7Gl5mvKuT+WXIQW/eGwOW5uthm
-         zxw4Dm10afQz6D2RrJbiELMAeI1+bHF32zI8K9wEwL9dgvy452c/UeATCmoOeyG1QwTQ
-         wKasux9fjj7o0Ws3dHATmouJhcROWFRLaPwolcR5qYqd7RcLsmFGDsICAQHN2JIo/DMH
-         DFre0geNYld5cX4Kzxj8bSNs8iYyKDext4OttK9wmN5UQyxn1fDhEvLZxESD9C0fEcDZ
-         ANNg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:reply-to
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=NkzDxDJV1bnIzEyyQHH60q1JMe3S2qaalEpyevgeDjU=;
-        b=tJqlxP1PmW2LzdAyn77F0pQtuXE7yw66CbIKDB7rtHUFvhQ9ZOzf8agJ2wsULFyuwi
-         jTU2tvVglWEFgVGAvyVxCVcQ1pS171BhKwa1Eu1v93E4CtKCz+O5S9Z6/+TprcwBEvsM
-         /qhN56ciJL4SIN4AulpxlRtT1nbJqh1Du32UW0kBehsAtWCgDoXH9yazQjkozl2tnUPE
-         TXeB06KibDqXV02Xp11c+aDRgzXsWzF2ajLYyeEt/qgbpTTxlr/nytBmAIt6OjdAy8Sx
-         //Q2NqHvcfkWy1h7VhX7qv9cDSzyFnT8A2WAnyzL3Gh7MaWngw+dm8m2Ug46M0uULnQJ
-         Po2w==
-X-Gm-Message-State: ANhLgQ2e7nAEuxgeREKDxG5ZygFdAlzKvLqupZk09ds8Nm5bsdfA4L8w
-        kFpY8gja4Ue2plc2NPV0TeI=
-X-Google-Smtp-Source: ADFU+vvDgfqqnHf5IRDG0vNghnouBgCUY5+ARj5KVNJUOS4CEX51oW7b0ZiqGVsrAZGVOvfw235vGA==
-X-Received: by 2002:a1c:8108:: with SMTP id c8mr13124272wmd.50.1585577233309;
-        Mon, 30 Mar 2020 07:07:13 -0700 (PDT)
-Received: from localhost ([185.92.221.13])
-        by smtp.gmail.com with ESMTPSA id b203sm21270063wmc.45.2020.03.30.07.07.12
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 30 Mar 2020 07:07:12 -0700 (PDT)
-Date:   Mon, 30 Mar 2020 14:07:12 +0000
-From:   Wei Yang <richard.weiyang@gmail.com>
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     Wei Yang <richard.weiyang@gmail.com>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/9] XArray: simplify the calculation of shift
-Message-ID: <20200330140712.sloduuoqc5jid64m@master>
-Reply-To: Wei Yang <richard.weiyang@gmail.com>
-References: <20200330123643.17120-1-richard.weiyang@gmail.com>
- <20200330123643.17120-3-richard.weiyang@gmail.com>
- <20200330132028.GA22483@bombadil.infradead.org>
+        Mon, 30 Mar 2020 10:07:38 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1585577257;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=9LrxmkAvaSght2/9QdSVfP4wqkPdT52lYY1qjr1mVKY=;
+        b=PbKDIEzBD1jaRxQUrYwn9MXzfNbJuHtnasoiRH5AfseJ7aJXIDy1e+NA3q4BPbPiJ24n+C
+        eQAWj7hniPjTYL2CFKGinrQOaZNLmDDqF8X5mGkYESBV1DPy8bpOipVhS/qHJDswvZUNBf
+        KBw2KRSzKlBkrrCB1SZC/oQqqJKjlW0=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-55-5NXvyPVMOWiYxqgB3CFbtQ-1; Mon, 30 Mar 2020 10:07:35 -0400
+X-MC-Unique: 5NXvyPVMOWiYxqgB3CFbtQ-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E1E1C800D50;
+        Mon, 30 Mar 2020 14:07:33 +0000 (UTC)
+Received: from llong.remote.csb (ovpn-116-140.rdu2.redhat.com [10.10.116.140])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id C586A60C85;
+        Mon, 30 Mar 2020 14:07:32 +0000 (UTC)
+Subject: Re: [PATCH v2] docs: cgroup-v1: Document the cpuset_v2_mode mount
+ option
+To:     Tejun Heo <tj@kernel.org>, Li Zefan <lizefan@huawei.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Jonathan Corbet <corbet@lwn.net>
+Cc:     linux-kernel@vger.kernel.org, cgroups@vger.kernel.org,
+        linux-doc@vger.kernel.org, Joel Fernandes <joel@joelfernandes.org>,
+        Sonny Rao <sonnyrao@google.com>
+References: <20200330140615.25549-1-longman@redhat.com>
+From:   Waiman Long <longman@redhat.com>
+Organization: Red Hat
+Message-ID: <1b25bc58-b916-660f-090a-1a1f13a4656d@redhat.com>
+Date:   Mon, 30 Mar 2020 10:07:31 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200330132028.GA22483@bombadil.infradead.org>
-User-Agent: NeoMutt/20170113 (1.7.2)
+In-Reply-To: <20200330140615.25549-1-longman@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 30, 2020 at 06:20:28AM -0700, Matthew Wilcox wrote:
->On Mon, Mar 30, 2020 at 12:36:36PM +0000, Wei Yang wrote:
->> When head is NULL, shift is calculated from max. Currently we use a loop
->> to detect how many XA_CHUNK_SHIFT is need to cover max.
->> 
->> To achieve this, we can get number of bits max expands and round it up
->> to XA_CHUNK_SHIFT.
->> 
->> Signed-off-by: Wei Yang <richard.weiyang@gmail.com>
->> ---
->>  lib/xarray.c | 6 +-----
->>  1 file changed, 1 insertion(+), 5 deletions(-)
->> 
->> diff --git a/lib/xarray.c b/lib/xarray.c
->> index 1d9fab7db8da..6454cf3f5b4c 100644
->> --- a/lib/xarray.c
->> +++ b/lib/xarray.c
->> @@ -560,11 +560,7 @@ static int xas_expand(struct xa_state *xas, void *head)
->>  	unsigned long max = xas_max(xas);
->>  
->>  	if (!head) {
->> -		if (max == 0)
->> -			return 0;
->> -		while ((max >> shift) >= XA_CHUNK_SIZE)
->> -			shift += XA_CHUNK_SHIFT;
->> -		return shift + XA_CHUNK_SHIFT;
->> +		return roundup(fls_long(max), XA_CHUNK_SHIFT);
+On 3/30/20 10:06 AM, Waiman Long wrote:
+> The cpuset in cgroup v1 accepts a special "cpuset_v2_mode" mount
+> option that make cpuset.cpus and cpuset.mems behave more like those in
+> cgroup v2.  Document it to make other people more aware of this feature
+> that can be useful in some circumstances.
 >
->This doesn't give the same number.  Did you test this?
+> Signed-off-by: Waiman Long <longman@redhat.com>
+> ---
+>  Documentation/admin-guide/cgroup-v1/cpusets.rst | 11 +++++++++++
+>  kernel/cgroup/cpuset.c                          |  8 ++++++--
+>  2 files changed, 17 insertions(+), 2 deletions(-)
 >
->Consider max = 64.  The current code does:
->
->shift = 0;
->64 >> 0 >= 64 (true)
->shift += 6;
->64 >> 6 < 64
->return 12
->
->Your replacement does:
->
->fls_long(64) = 6
+> diff --git a/Documentation/admin-guide/cgroup-v1/cpusets.rst b/Documentation/admin-guide/cgroup-v1/cpusets.rst
+> index 86a6ae995d54..7ade3abd342a 100644
+> --- a/Documentation/admin-guide/cgroup-v1/cpusets.rst
+> +++ b/Documentation/admin-guide/cgroup-v1/cpusets.rst
+> @@ -223,6 +223,17 @@ cpu_online_mask using a CPU hotplug notifier, and the mems file
+>  automatically tracks the value of node_states[N_MEMORY]--i.e.,
+>  nodes with memory--using the cpuset_track_online_nodes() hook.
+>  
+> +The cpuset.effective_cpus and cpuset.effective_mems files are
+> +normally read-only copies of cpuset.cpus and cpuset.mems files
+> +respectively.  If the cpuset cgroup filesystem is mounted with the
+> +special "cpuset_v2_mode" option, the behavior of these files will become
+> +similar to the corresponding files in cpuset v2.  In other words, hotplug
+> +events will not change cpuset.cpus and cpuset.mems.  Those events will
+> +only affect cpuset.effective_cpus and cpuset.effective_mems which show
+> +the actual cpus and memory nodes that are currently used by this cpuset.
+> +See Documentation/admin-guide/cgroup-v2.rst for more information about
+> +cpuset v2 behavior.
+> +
+>  
+>  1.4 What are exclusive cpusets ?
+>  --------------------------------
+> diff --git a/kernel/cgroup/cpuset.c b/kernel/cgroup/cpuset.c
+> index 58f5073acff7..729d3a5c772e 100644
+> --- a/kernel/cgroup/cpuset.c
+> +++ b/kernel/cgroup/cpuset.c
+> @@ -358,8 +358,12 @@ static DECLARE_WORK(cpuset_hotplug_work, cpuset_hotplug_workfn);
+>  static DECLARE_WAIT_QUEUE_HEAD(cpuset_attach_wq);
+>  
+>  /*
+> - * Cgroup v2 behavior is used when on default hierarchy or the
+> - * cgroup_v2_mode flag is set.
+> + * Cgroup v2 behavior is used on the "cpus" and "mems" control files when
+> + * on default hierarchy or when the cpuset_v2_mode flag is set by mounting
+> + * the v1 cpuset cgroup filesystem with the "cpuset_v2_mode" mount option.
+> + * With v2 behavior, "cpus" and "mems" are always what the users have
+> + * requested and won't be changed by hotplug events. Only the effective
+> + * cpus or mems will be affected.
+>   */
+>  static inline bool is_in_v2_mode(void)
+>  {
 
-fls_long(64) = 7
+On second thought, I should have clarified the cpuset_v2_mode option in
+the cpuset.c file itself also.
 
->roundup(6, 6) is 6.
->
->Please be more careful.
+Cheers,
+Longman
 
--- 
-Wei Yang
-Help you, Help me
