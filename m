@@ -2,112 +2,117 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8997C43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 16:49:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3FA3C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 16:49:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B5F92072E
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 16:49:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 833C420780
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 16:49:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="VEdj1nnn"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AlBhFaJp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729387AbgC3QtP (ORCPT
+        id S1729870AbgC3Qt1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 12:49:15 -0400
-Received: from mail-qv1-f67.google.com ([209.85.219.67]:46340 "EHLO
-        mail-qv1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726000AbgC3QtP (ORCPT
+        Mon, 30 Mar 2020 12:49:27 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:44385 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727368AbgC3Qt1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 12:49:15 -0400
-Received: by mail-qv1-f67.google.com with SMTP id bu9so3271515qvb.13
-        for <linux-kernel@vger.kernel.org>; Mon, 30 Mar 2020 09:49:14 -0700 (PDT)
+        Mon, 30 Mar 2020 12:49:27 -0400
+Received: by mail-pg1-f195.google.com with SMTP id 142so8913805pgf.11
+        for <linux-kernel@vger.kernel.org>; Mon, 30 Mar 2020 09:49:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=a71i7JdkAqliwtmEviweeJJ9ZM+t+PVsWqn8Bh5mLGQ=;
-        b=VEdj1nnnmrtVSY3gvhdlHyPYfcYpOkoM11AlgfxCZqb4l1zjWjEQuyjNlUilrGPjAV
-         RnVNaZn4e/c7gOw72UJrCpT/qsyTozKTTeG0KgM5odqyR6UwbOz6+oBagsYSu99kr7PM
-         e/JLTetCGJFG0H756UPQ4yFeaKLB8jehZrfXeMPmlEMeukE40w8JqNUQDGNQvNZeifW/
-         PaAImIU31dzFzm1dMppfFYXqgNXyDZ6pU3ujlqDqxFs302Ee7GRLFSXUM4zMzmZAG8LS
-         6ght+tJ8DxDDZmepUdwP2BE4EqxceTztvIvpWflnNyTe2p05bzcAESRfsA6Rw2zHc5Kd
-         1sOw==
+        d=gmail.com; s=20161025;
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :user-agent:mime-version:content-transfer-encoding;
+        bh=gx8Kl8+EY+rcRBFr5LGlmy7WmWDFnO/S1WsycTlgciI=;
+        b=AlBhFaJpybQjT+Y/R1/ukeYB8p7OXgFWmlij6thTPNfDrjqf12rMx3IRH7bg5p6ql6
+         DPl8LDEIaW4+x6aiLqi2bR+6/RkniLZ3ajBUCzE65LOdEAtaN4IabsmyA7uJlQSb1cKq
+         eNoUcEN7AWtUXbkSKw5UnubTYhIJWS5NTXeLhQV6MU5LbEbB8B0BV/6T6yGSkrkdcUWY
+         m/3YW5cMULoqZLL0Ujkx+RnuZMAoZuSqlN9SXa/mo0PSrL4XrB+Oz9WF265Ei1ky8n6m
+         wkCy7YZbAWqtbEOXA7RMq9RAuJWnEmggxo/hrORxKeC7u36jH1s4h9cij+ufDWSmSF/A
+         yWoQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=a71i7JdkAqliwtmEviweeJJ9ZM+t+PVsWqn8Bh5mLGQ=;
-        b=lpGliqH3K/wyDEYAVpEXQ1os+CiH4f85XKnWLuxcFg24ncHBizC/dG4Q3nb74rBbD1
-         Dd0E1N8grMOWva3Y+uaqwM4zQhXjjUkmJBOWlMK2nDsyt/2Ge6IX2eqw9ls3Vj9s/F6W
-         FUCEmbd43O81T7Kntq6D78O34LMpFupji6S1hfxmw7/ZkwRo7M1rK/nSAHLPNi2BE7Z/
-         PQKn5CvudnoeGTJ3TUBylVB/izjZmenk3DS/kKAK+0+6NU8k3000RynQR1bjo9aWMrsq
-         i+L9ypZhkGP9aEdPhP/yLjLXC6e1x9rE0KZVfRTVZKQXQxpWIOaVPYysgs7k/MGlTljU
-         UWLw==
-X-Gm-Message-State: ANhLgQ3yYJQOG7cTytcesnEs7re6A/D4nFuvTIip8MOzdouv2izzIOGA
-        oa1gMzI/lKUkrKgrqDVTug0Tqg==
-X-Google-Smtp-Source: ADFU+vvPHjxytK86MxCeJ6R7R3lGmqQNNS4izpxzKyF+vrKQzVB9NqaoPpArMoQ8BTa7Bn1qpTr+AA==
-X-Received: by 2002:a0c:9104:: with SMTP id q4mr12856377qvq.61.1585586954002;
-        Mon, 30 Mar 2020 09:49:14 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-142-68-57-212.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.57.212])
-        by smtp.gmail.com with ESMTPSA id n142sm10803480qkn.11.2020.03.30.09.49.13
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 30 Mar 2020 09:49:13 -0700 (PDT)
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1jIxb6-0002W9-JI; Mon, 30 Mar 2020 13:49:12 -0300
-Date:   Mon, 30 Mar 2020 13:49:12 -0300
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     George Spelvin <lkml@SDF.ORG>
-Cc:     Mark Rutland <mark.rutland@arm.com>, linux-kernel@vger.kernel.org,
-        Dennis Dalessandro <dennis.dalessandro@intel.com>,
-        Mike Marciniszyn <mike.marciniszyn@intel.com>,
-        linux-rdma@vger.kernel.org
-Subject: Re: [RFC PATCH v1 01/50] IB/qib: Delete struct qib_ivdev.qp_rnd
-Message-ID: <20200330164912.GK20941@ziepe.ca>
-References: <202003281643.02SGh6eG002694@sdf.org>
- <20200329141710.GE20941@ziepe.ca>
- <20200329160825.GA4675@SDF.ORG>
- <20200330132808.GB20969@lakrids.cambridge.arm.com>
- <20200330164333.GB2459@SDF.ORG>
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:user-agent:mime-version:content-transfer-encoding;
+        bh=gx8Kl8+EY+rcRBFr5LGlmy7WmWDFnO/S1WsycTlgciI=;
+        b=uDhXhIhj+HsZA4s+0h6fEkK2ypT/zE1t7MympNM3Mq/3jU6lpQYMqHlx/LGt0b3lyh
+         owpaBTaavRV8xaj+kQ0NCorY8u4oDhkr31h3hR1I6KKVL9+5OKyhZwub/769q5G11aSy
+         wE8FObX4vjGsP3GZpm7jEVraAxWDnve0VFZfy/tu+SgCNW8EfHn1uz7MfB7ftNCzqn/E
+         QBMs7xgXHtbLTU+31DXeFpwlK32lzIFw79S1BuTOqLUoW9lklCFGMWbkpL4ggYreiBj4
+         CDyKu/QAG/p3SdigDq9uZ8JugUEZVbW8uBQENcvjhQTtoW2qgfY5nn+P2aWFulR6n9k1
+         Segw==
+X-Gm-Message-State: ANhLgQ1/o+ZdcOn6c/vvGlmMquvr0sJzDkOyimQA1SG4NHdxkTy0aBT3
+        QOKE2lQ4sOvHnTF66eRee5c=
+X-Google-Smtp-Source: ADFU+vtRJMNIDAiTCtZ39ZJm5gXb64KJVU5KLLDxAZWgYFxaOWcjSZFmmb2OUvWsIYpSUmik+0JT2w==
+X-Received: by 2002:a63:18b:: with SMTP id 133mr13911508pgb.422.1585586965663;
+        Mon, 30 Mar 2020 09:49:25 -0700 (PDT)
+Received: from ManjaroKDE ([47.144.161.84])
+        by smtp.gmail.com with ESMTPSA id h4sm10587870pfg.177.2020.03.30.09.49.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 30 Mar 2020 09:49:25 -0700 (PDT)
+Message-ID: <5bc717b81ae009b5a1e47607f23afd3b3c23b102.camel@gmail.com>
+Subject: Re: [PATCH v3] staging: vt6656: add error code handling to unused
+ variable
+From:   John Wyatt <jbwyatt4@gmail.com>
+To:     Quentin Deslandes <quentin.deslandes@itdev.co.uk>
+Cc:     outreachy-kernel@googlegroups.com,
+        Julia Lawall <julia.lawall@inria.fr>,
+        Stefano Brivio <sbrivio@redhat.com>,
+        Forest Bond <forest@alittletooquiet.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Colin Ian King <colin.king@canonical.com>,
+        Malcolm Priestley <tvboxspy@gmail.com>,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
+Date:   Mon, 30 Mar 2020 09:49:19 -0700
+In-Reply-To: <20200330154600.GA125210@jiffies>
+References: <20200329084320.619503-1-jbwyatt4@gmail.com>
+         <20200330154600.GA125210@jiffies>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.36.1 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200330164333.GB2459@SDF.ORG>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 30, 2020 at 04:43:33PM +0000, George Spelvin wrote:
-> On Mon, Mar 30, 2020 at 02:28:08PM +0100, Mark Rutland wrote:
-> > Also, if you do send a series, *please* add a cover-letter explaining
-> > what the overall purpose of the series is, and have all patches chained
-> > in-reply-to that rather than patch 1. Otherwise reviewers have to
-> > reverse-engineer the intent of the author.
+On Mon, 2020-03-30 at 16:46 +0100, Quentin Deslandes wrote:
+> On 03/29/20 01:43:20, John B. Wyatt IV wrote:
+> > Add error code handling to unused 'ret' variable that was never
+> > used.
+> > Return an error code from functions called within
+> > vnt_radio_power_on.
 > > 
-> > You can generate the cover letter with:
+> > Issue reported by coccinelle (coccicheck).
 > > 
-> > $ git format-patch --cover $FROM..$TO
+> > Suggested-by: Quentin Deslandes <quentin.deslandes@itdev.co.uk>
+> > Suggested-by: Stefano Brivio <sbrivio@redhat.com>
+> > Signed-off-by: John B. Wyatt IV <jbwyatt4@gmail.com>
+> > ---
+> > v3: Forgot to add v2 code changes to commit.
 > > 
-> > ... and IIRC git send-email does the right thing by default if you hand
-> > it all of the patches at once.
+> > v2: Replace goto statements with return.
+> >     Remove last if check because it was unneeded.
+> >     Suggested-by: Julia Lawall <julia.lawall@inria.fr>
 > 
-> Er, I *did* send a cover letter.  Cc:ed to the union of everyone
-> Cc:ed on any of the individual patches.  It's appended.  (I left in
-> the full Cc: list so you can see you're on it.)
+> Because it's after the comment line (---), this Suggested-by tag will
+> be
+> stripped-off when applying the patch.
+
+Understood.
+
+> If you could fix it, then add my review tag.
 > 
-> My problem is I don't have git on my e-mail machine, so I fed them to 
-> sendmail manually, and that does some strange things.
+> Reviewed-by: Quentin Deslandes <quentin.deslandes@itdev.co.uk>
+> 
+> Thanks,
+> Quentin
 
-The problem is that none of the patches had a in-reply-to header to
-the cover letter so it is very difficult to find it.
+Done. Please see v4.
 
-Things work best if you can use git send-email :) I've never tried it,
-bu I wonder if you can tell git that the sendmail is 'ssh foo-server
-/usr/bin/sendmail' ?
-
-Jason
