@@ -2,436 +2,347 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49B84C2D0ED
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 19:48:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 066EBC43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 19:49:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1219920748
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 19:48:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B5E4F20771
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 19:49:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=z3ntu.xyz header.i=@z3ntu.xyz header.b="SYqiUScn"
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="Zk30libq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728365AbgC3TsS (ORCPT
+        id S1728496AbgC3TtQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 15:48:18 -0400
-Received: from mail.z3ntu.xyz ([128.199.32.197]:38716 "EHLO mail.z3ntu.xyz"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727749AbgC3TsN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 15:48:13 -0400
-Received: from localhost.localdomain (80-110-124-168.cgn.dynamic.surfer.at [80.110.124.168])
-        by mail.z3ntu.xyz (Postfix) with ESMTPSA id 081E8C44D3;
-        Mon, 30 Mar 2020 19:48:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=z3ntu.xyz; s=z3ntu;
-        t=1585597691; bh=Ruipd1bzAKmwlDFx+YmmhE3RYOyP2v6rGobEDeBAkf8=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References;
-        b=SYqiUScnSxQr781OD/EjndMWjPyPlZB1aVHLweqgbKgFADtPXTRxMW6Mjz4dlI+Rm
-         H5CtGPtl09sLY28mSq0oBHKH6zv/CdnaR+8ds0JshawFF2VHl2SdsDDmyFzaVVTuOQ
-         fXDHmqD1uUVRunUsWQNWT2NVw6cheAShQX5ySf5k=
-From:   Luca Weiss <luca@z3ntu.xyz>
-To:     linux-leds@vger.kernel.org
-Cc:     Dan Murphy <dmurphy@ti.com>, Heiko Stuebner <heiko@sntech.de>,
-        Icenowy Zheng <icenowy@aosc.io>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Pavel Machek <pavel@ucw.cz>, Rob Herring <robh+dt@kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        ~postmarketos/upstreaming@lists.sr.ht, Luca Weiss <luca@z3ntu.xyz>
-Subject: [PATCH v2 2/2] leds: add sgm3140 driver
-Date:   Mon, 30 Mar 2020 21:47:57 +0200
-Message-Id: <20200330194757.2645388-3-luca@z3ntu.xyz>
-X-Mailer: git-send-email 2.26.0
-In-Reply-To: <20200330194757.2645388-1-luca@z3ntu.xyz>
-References: <20200330194757.2645388-1-luca@z3ntu.xyz>
+        Mon, 30 Mar 2020 15:49:16 -0400
+Received: from mail-eopbgr700117.outbound.protection.outlook.com ([40.107.70.117]:5824
+        "EHLO NAM04-SN1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727936AbgC3TtQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Mar 2020 15:49:16 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=SWZhy/gYIaeUB/qUAetbroaCQCQneSrVNkJISTzTdbpwBkYCh/S2g/ZLL3Kgih9ooTYITcB+uLkrlu+ZpGyf4G57o6mh5GQzalE6GChvlMo0SZtiIDVbGQemI3wNvWzmFCOfx/zkrGXfbRAFxarn5+pJkvh+VO6Mp/AjDMUNbq/uOY8OY4sJAI7o0LgvTD4eE9YYrbMQTkgVfDSEhp+8Om0GrTO3e5Qcgi3Nr62Cyxjd8nvaQNACD58scGqrzit77UDfsHo70rebYGErROUlE23kMJODCCiEEM/ri1i1yC/onZGRul5lkj/EcymcRAOSjwfBJqxdo+I8gATOSYd3pw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=o8Dcv59WIY5HXb6hGYXGtQq+TKNLC+W4p8/cAWzQIXo=;
+ b=bKjP+X5uPn+7dF850Mft9zBUceu7xNl5Cr5qm0xe1F+G9N6wtdzEV0gKjnk726SJ4S5XA9gNLWO7z/w4UdSZPsm6EB+Jf6xbhTJsXUQ9DoiLRndPVUWZttAtOFTn/QiF2BOxn0mn/PFqPkhZprACSAjzFsHXF9QaRvZaTKDsxUPPujRzm/lAyEgOrOijVBQkaq9P/Z3eFNgaN/Gi+J6rUBb/aHFSG5qLxwYdCcND1yhrWs1b7d7NQSL6dMGVLHVdjmDnCcgDam2QrxnmCqviDrv+7v6lgwohGrJ3k13xiQrELCeFJaZcsMxMUC430Cx9N/97yMjEYOG1bYKCD0spkg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=o8Dcv59WIY5HXb6hGYXGtQq+TKNLC+W4p8/cAWzQIXo=;
+ b=Zk30libqYra9K3Vg5B2aKjdWMpp1Ptho5nRk6oOlNlIgy3Drc/s3MtIIqI+/Ih3qusCHcDOLMhVu6S903KGcQNl/OUjhm1zUGWSQgkMYgzb+YU6SrOplvYhqfxh4ExQQdVlqopyDnaUKZ1VEbRX2wDo1lg+8xHpJX8gv+R37t1s=
+Received: from DM5PR2101MB1047.namprd21.prod.outlook.com (2603:10b6:4:9e::16)
+ by DM5PR2101MB0966.namprd21.prod.outlook.com (2603:10b6:4:a8::24) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2878.2; Mon, 30 Mar
+ 2020 19:49:00 +0000
+Received: from DM5PR2101MB1047.namprd21.prod.outlook.com
+ ([fe80::1cf9:aae4:18cc:8b3d]) by DM5PR2101MB1047.namprd21.prod.outlook.com
+ ([fe80::1cf9:aae4:18cc:8b3d%7]) with mapi id 15.20.2900.002; Mon, 30 Mar 2020
+ 19:49:00 +0000
+From:   Michael Kelley <mikelley@microsoft.com>
+To:     Andrea Parri <parri.andrea@gmail.com>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        Dexuan Cui <decui@microsoft.com>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        vkuznets <vkuznets@redhat.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>
+Subject: RE: [RFC PATCH 11/11] scsi: storvsc: Re-init stor_chns when a channel
+ interrupt is re-assigned
+Thread-Topic: [RFC PATCH 11/11] scsi: storvsc: Re-init stor_chns when a
+ channel interrupt is re-assigned
+Thread-Index: AQHWAvitlhvZNTexf0e3+nkuOWs8g6hhVRzggAAub4CAAA4jYA==
+Date:   Mon, 30 Mar 2020 19:49:00 +0000
+Message-ID: <DM5PR2101MB104720061795F26D892D5373D7CB0@DM5PR2101MB1047.namprd21.prod.outlook.com>
+References: <20200325225505.23998-1-parri.andrea@gmail.com>
+ <20200325225505.23998-12-parri.andrea@gmail.com>
+ <MW2PR2101MB105208138683A6DE0564745AD7CB0@MW2PR2101MB1052.namprd21.prod.outlook.com>
+ <20200330185513.GA26823@andrea>
+In-Reply-To: <20200330185513.GA26823@andrea>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=mikelley@ntdev.microsoft.com;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2020-03-30T19:48:58.2820027Z;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
+ Information Protection;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=3acbabca-9a73-466e-8da4-7c38c474fcaf;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=mikelley@microsoft.com; 
+x-originating-ip: [24.22.167.197]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 09f52f82-ee3b-4cd1-b21e-08d7d4e364ad
+x-ms-traffictypediagnostic: DM5PR2101MB0966:|DM5PR2101MB0966:|DM5PR2101MB0966:
+x-ms-exchange-transport-forked: True
+x-ld-processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
+x-microsoft-antispam-prvs: <DM5PR2101MB0966F876F759FB4F187269A6D7CB0@DM5PR2101MB0966.namprd21.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-forefront-prvs: 0358535363
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM5PR2101MB1047.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10019020)(4636009)(396003)(346002)(376002)(136003)(366004)(39860400002)(81166006)(81156014)(8676002)(10290500003)(33656002)(54906003)(76116006)(8990500004)(4326008)(478600001)(82950400001)(52536014)(71200400001)(82960400001)(55016002)(86362001)(66946007)(8936002)(26005)(5660300002)(66556008)(66476007)(2906002)(66446008)(6916009)(64756008)(6506007)(9686003)(7696005)(186003)(316002);DIR:OUT;SFP:1102;
+received-spf: None (protection.outlook.com: microsoft.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: Rj3yDST/GorujSa2gJBIeMzlDzGsXCVm5h4vXx07gbhe23aWbKYYmGb9RmHP8vaWDdvGFWKRo6ydQ8Ow3HOT6Br21dyKquFa0WGvEMk4i1004DXO1zWjGP+aGjKQeJqw9dpac+xtB11YxHjxWehCtMHGG1DLEEurt6Kj2fCbGticbRHKRz/cFE4ZPfO98SnF8enkut3+nr5Cs0HsgMzwv9sVKDaquJiyHXNFn5zZnGWUihACyIyXshlW2mOZR7/+WBWYTONFfSW8nFqnHasQyg1sEX+frVdgjoAR7//LNXlq9PsSBLc1i72EFdiFxfv71FVRzhIy9B8WJlBClu2tUf0EwPKRKanlN8mfpyu8+70f8KayrmpdJzslBFmTn4ZpmqeqQxlWQTAMbHFuUvsJ34veQ/IExgkxcYPucPUR1KD1cMxSvbcw270YBwRb8szf
+x-ms-exchange-antispam-messagedata: F2taVw0TSTtqxb8YeC0AupBX5N+824jHS5HYblo2c2OFd9vlZAmw70n4WcD0rNyJnpW7JY1uXEFlGYTUoEPV1jK1kDfbM9rIP8GcbUYZLKs1ecJ5TOp0y6ibQSj809CI/bK35OBmIxOm2Ll47MkxVQ==
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 09f52f82-ee3b-4cd1-b21e-08d7d4e364ad
+X-MS-Exchange-CrossTenant-originalarrivaltime: 30 Mar 2020 19:49:00.6574
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: ooGdGbb3DxrhvmTR4xH7hamqJsyWFSO6MbEEOlMI3ysZ/O2WROivnxnn7v682oIcLg6FFn1EhSAHKwT8LGKRNTpIUpGErmVTUpDwygHLsTc=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR2101MB0966
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a driver for the SGMICRO SGM3140 Buck/Boost Charge Pump LED driver.
+From: Andrea Parri <parri.andrea@gmail.com> Sent: Monday, March 30, 2020 11=
+:55 AM
+>=20
+> > > @@ -1721,6 +1721,10 @@ static ssize_t target_cpu_store(struct vmbus_c=
+hannel
+> *channel,
+> > >  	 * in on a CPU that is different from the channel target_cpu value.
+> > >  	 */
+> > >
+> > > +	if (channel->change_target_cpu_callback)
+> > > +		(*channel->change_target_cpu_callback)(channel,
+> > > +				channel->target_cpu, target_cpu);
+> > > +
+> > >  	channel->target_cpu =3D target_cpu;
+> > >  	channel->target_vp =3D hv_cpu_number_to_vp_number(target_cpu);
+> > >  	channel->numa_node =3D cpu_to_node(target_cpu);
+> >
+> > I think there's an ordering problem here.  The change_target_cpu_callba=
+ck
+> > will allow storvsc to flush the cache that it is keeping, but there's a=
+ window
+> > after the storvsc callback releases the spin lock and before this funct=
+ion
+> > changes channel->target_cpu to the new value.  In that window, the cach=
+e
+> > could get refilled based on the old value of channel->target_cpu, which=
+ is
+> > exactly what we don't want.  Generally with caches, you have to set the=
+ new
+> > value first, then flush the cache, and I think that works in this case.=
+  The
+> > callback function doesn't depend on the value of channel->target_cpu,
+> > and any cache filling that might happen after channel->target_cpu is se=
+t
+> > to the new value but before the callback function runs is OK.   But ple=
+ase
+> > double-check my thinking. :-)
+>=20
+> Sorry, I don't see the problem.  AFAICT, the "cache" gets refilled based
+> on the values of alloced_cpus and on the current state of the cache but
+> not based on the value of channel->target_cpu.  The callback invocation
+> uses the value of the "old" target_cpu; I think I ended up placing the
+> callback call where it is for not having to introduce a local variable
+> "old_cpu".  ;-)
+>
 
-This device is controlled by two GPIO pins, one for enabling and the
-second one for switching between torch and flash mode.
+You are right.   My comment is bogus.
 
-Signed-off-by: Luca Weiss <luca@z3ntu.xyz>
----
-Changes since v1:
-- Add vin-supply (keep track of 'enabled' state for that)
-- Wrap lines
-- static const -ify some structs and methods
-- use strscpy instead of strlcpy
-- remove u32 cast by adding 'U' suffix to constants
-- rebase on linux-next
+>=20
+> > > @@ -621,6 +621,63 @@ static inline struct storvsc_device *get_in_stor=
+_device(
+> > >
+> > >  }
+> > >
+> > > +void storvsc_change_target_cpu(struct vmbus_channel *channel, u32 ol=
+d, u32 new)
+> > > +{
+> > > +	struct storvsc_device *stor_device;
+> > > +	struct vmbus_channel *cur_chn;
+> > > +	bool old_is_alloced =3D false;
+> > > +	struct hv_device *device;
+> > > +	unsigned long flags;
+> > > +	int cpu;
+> > > +
+> > > +	device =3D channel->primary_channel ?
+> > > +			channel->primary_channel->device_obj
+> > > +				: channel->device_obj;
+> > > +	stor_device =3D get_out_stor_device(device);
+> > > +	if (!stor_device)
+> > > +		return;
+> > > +
+> > > +	/* See storvsc_do_io() -> get_og_chn(). */
+> > > +	spin_lock_irqsave(&device->channel->lock, flags);
+> > > +
+> > > +	/*
+> > > +	 * Determines if the storvsc device has other channels assigned to
+> > > +	 * the "old" CPU to update the alloced_cpus mask and the stor_chns
+> > > +	 * array.
+> > > +	 */
+> > > +	if (device->channel !=3D channel && device->channel->target_cpu =3D=
+=3D old) {
+> > > +		cur_chn =3D device->channel;
+> > > +		old_is_alloced =3D true;
+> > > +		goto old_is_alloced;
+> > > +	}
+> > > +	list_for_each_entry(cur_chn, &device->channel->sc_list, sc_list) {
+> > > +		if (cur_chn =3D=3D channel)
+> > > +			continue;
+> > > +		if (cur_chn->target_cpu =3D=3D old) {
+> > > +			old_is_alloced =3D true;
+> > > +			goto old_is_alloced;
+> > > +		}
+> > > +	}
+> > > +
+> > > +old_is_alloced:
+> > > +	if (old_is_alloced)
+> > > +		WRITE_ONCE(stor_device->stor_chns[old], cur_chn);
+> > > +	else
+> > > +		cpumask_clear_cpu(old, &stor_device->alloced_cpus);
+> >
+> > I think target_cpu_store() can get called in parallel on multiple CPUs =
+for different
+> > channels on the same storvsc device, but multiple changes to a single c=
+hannel are
+> > serialized by higher levels of sysfs.  So this function could run after=
+ multiple
+> > channels have been changed, in which case there's not just a single "ol=
+d" value,
+> > and the above algorithm might not work, especially if channel->target_c=
+pu is
+> > updated before calling this function per my earlier comment.   I can se=
+e a
+> > couple of possible ways to deal with this.  One is to put the update of
+> > channel->target_cpu in this function, within the spin lock boundaries s=
+o
+> > that the cache flush and target_cpu update are atomic.  Another idea is=
+ to
+> > process multiple changes in this function, by building a temp copy of
+> > alloced_cpus by walking the channel list, use XOR to create a cpumask
+> > with changes, and then process all the changes in a loop instead of
+> > just handling a single change as with the current code at the old_is_al=
+loced
+> > label.  But I haven't completely thought through this idea.
+>=20
+> Same here: the invocations of target_cpu_store() are serialized on the
+> per-connection channel_mutex...
 
- drivers/leds/Kconfig        |   9 +
- drivers/leds/Makefile       |   1 +
- drivers/leds/leds-sgm3140.c | 317 ++++++++++++++++++++++++++++++++++++
- 3 files changed, 327 insertions(+)
- create mode 100644 drivers/leds/leds-sgm3140.c
+Agreed.  My comment is not valid.
 
-diff --git a/drivers/leds/Kconfig b/drivers/leds/Kconfig
-index 7599dbee8de1..f5beeff16bdd 100644
---- a/drivers/leds/Kconfig
-+++ b/drivers/leds/Kconfig
-@@ -871,6 +871,15 @@ config LEDS_IP30
- 	  To compile this driver as a module, choose M here: the module
- 	  will be called leds-ip30.
- 
-+config LEDS_SGM3140
-+	tristate "LED support for the SGM3140"
-+	depends on LEDS_CLASS_FLASH
-+	depends on V4L2_FLASH_LED_CLASS || !V4L2_FLASH_LED_CLASS
-+	depends on OF
-+	help
-+	  This option enables support for the SGM3140 500mA Buck/Boost Charge
-+	  Pump LED Driver.
-+
- comment "LED Triggers"
- source "drivers/leds/trigger/Kconfig"
- 
-diff --git a/drivers/leds/Makefile b/drivers/leds/Makefile
-index fd61421f7d40..f60ed0c09d4c 100644
---- a/drivers/leds/Makefile
-+++ b/drivers/leds/Makefile
-@@ -77,6 +77,7 @@ obj-$(CONFIG_LEDS_PWM)			+= leds-pwm.o
- obj-$(CONFIG_LEDS_REGULATOR)		+= leds-regulator.o
- obj-$(CONFIG_LEDS_S3C24XX)		+= leds-s3c24xx.o
- obj-$(CONFIG_LEDS_SC27XX_BLTC)		+= leds-sc27xx-bltc.o
-+obj-$(CONFIG_LEDS_SGM3140)		+= leds-sgm3140.o
- obj-$(CONFIG_LEDS_SUNFIRE)		+= leds-sunfire.o
- obj-$(CONFIG_LEDS_SYSCON)		+= leds-syscon.o
- obj-$(CONFIG_LEDS_TCA6507)		+= leds-tca6507.o
-diff --git a/drivers/leds/leds-sgm3140.c b/drivers/leds/leds-sgm3140.c
-new file mode 100644
-index 000000000000..28fe5e34f931
---- /dev/null
-+++ b/drivers/leds/leds-sgm3140.c
-@@ -0,0 +1,317 @@
-+// SPDX-License-Identifier: GPL-2.0
-+// Copyright (C) 2020 Luca Weiss <luca@z3ntu.xyz>
-+
-+#include <linux/gpio/consumer.h>
-+#include <linux/led-class-flash.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/regulator/consumer.h>
-+#include <linux/platform_device.h>
-+
-+#include <media/v4l2-flash-led-class.h>
-+
-+#define FLASH_TIMEOUT_DEFAULT		250000U /* 250ms */
-+#define FLASH_MAX_TIMEOUT_DEFAULT	300000U /* 300ms */
-+
-+struct sgm3140 {
-+	bool enabled;
-+	struct gpio_desc *flash_gpio;
-+	struct gpio_desc *enable_gpio;
-+	struct regulator *vin_regulator;
-+
-+	/* current timeout in us */
-+	u32 timeout;
-+	/* maximum timeout in us */
-+	u32 max_timeout;
-+
-+	struct led_classdev_flash fled_cdev;
-+	struct v4l2_flash *v4l2_flash;
-+
-+	struct timer_list powerdown_timer;
-+};
-+
-+static struct sgm3140 *flcdev_to_sgm3140(struct led_classdev_flash *flcdev)
-+{
-+	return container_of(flcdev, struct sgm3140, fled_cdev);
-+}
-+
-+static int sgm3140_strobe_set(struct led_classdev_flash *fled_cdev, bool state)
-+{
-+	struct sgm3140 *priv = flcdev_to_sgm3140(fled_cdev);
-+	int ret;
-+
-+	if (priv->enabled == state)
-+		return 0;
-+
-+	if (state) {
-+		ret = regulator_enable(priv->vin_regulator);
-+		if (ret) {
-+			dev_err(fled_cdev->led_cdev.dev,
-+				"failed to enable regulator: %d\n", ret);
-+			return ret;
-+		}
-+		gpiod_set_value_cansleep(priv->flash_gpio, 1);
-+		gpiod_set_value_cansleep(priv->enable_gpio, 1);
-+		mod_timer(&priv->powerdown_timer,
-+			  jiffies + usecs_to_jiffies(priv->timeout));
-+	} else {
-+		del_timer_sync(&priv->powerdown_timer);
-+		gpiod_set_value_cansleep(priv->enable_gpio, 0);
-+		gpiod_set_value_cansleep(priv->flash_gpio, 0);
-+		ret = regulator_disable(priv->vin_regulator);
-+		if (ret) {
-+			dev_err(fled_cdev->led_cdev.dev,
-+				"failed to disable regulator: %d\n", ret);
-+			return ret;
-+		}
-+	}
-+
-+	priv->enabled = state;
-+
-+	return 0;
-+}
-+
-+static int sgm3140_strobe_get(struct led_classdev_flash *fled_cdev, bool *state)
-+{
-+	struct sgm3140 *priv = flcdev_to_sgm3140(fled_cdev);
-+
-+	*state = timer_pending(&priv->powerdown_timer);
-+
-+	return 0;
-+}
-+
-+static int sgm3140_timeout_set(struct led_classdev_flash *fled_cdev,
-+			       u32 timeout)
-+{
-+	struct sgm3140 *priv = flcdev_to_sgm3140(fled_cdev);
-+
-+	priv->timeout = timeout;
-+
-+	return 0;
-+}
-+
-+static const struct led_flash_ops sgm3140_flash_ops = {
-+	.strobe_set = sgm3140_strobe_set,
-+	.strobe_get = sgm3140_strobe_get,
-+	.timeout_set = sgm3140_timeout_set,
-+};
-+
-+static int sgm3140_brightness_set(struct led_classdev *led_cdev,
-+				  enum led_brightness brightness)
-+{
-+	struct led_classdev_flash *fled_cdev = lcdev_to_flcdev(led_cdev);
-+	struct sgm3140 *priv = flcdev_to_sgm3140(fled_cdev);
-+	bool enable = brightness == LED_ON;
-+	int ret;
-+
-+	if (priv->enabled == enable)
-+		return 0;
-+
-+	if (enable) {
-+		ret = regulator_enable(priv->vin_regulator);
-+		if (ret) {
-+			dev_err(led_cdev->dev,
-+				"failed to enable regulator: %d\n", ret);
-+			return ret;
-+		}
-+		gpiod_set_value_cansleep(priv->enable_gpio, 1);
-+	} else {
-+		gpiod_set_value_cansleep(priv->enable_gpio, 0);
-+		ret = regulator_disable(priv->vin_regulator);
-+		if (ret) {
-+			dev_err(led_cdev->dev,
-+				"failed to disable regulator: %d\n", ret);
-+			return ret;
-+		}
-+	}
-+
-+	priv->enabled = enable;
-+
-+	return 0;
-+}
-+
-+static void sgm3140_powerdown_timer(struct timer_list *t)
-+{
-+	struct sgm3140 *priv = from_timer(priv, t, powerdown_timer);
-+
-+	gpiod_set_value(priv->enable_gpio, 0);
-+	gpiod_set_value(priv->flash_gpio, 0);
-+	regulator_disable(priv->vin_regulator);
-+
-+	priv->enabled = false;
-+}
-+
-+static void sgm3140_init_flash_timeout(struct sgm3140 *priv)
-+{
-+	struct led_classdev_flash *fled_cdev = &priv->fled_cdev;
-+	struct led_flash_setting *s;
-+
-+	/* Init flash timeout setting */
-+	s = &fled_cdev->timeout;
-+	s->min = 1;
-+	s->max = priv->max_timeout;
-+	s->step = 1;
-+	s->val = FLASH_TIMEOUT_DEFAULT;
-+}
-+
-+#if IS_ENABLED(CONFIG_V4L2_FLASH_LED_CLASS)
-+static void sgm3140_init_v4l2_flash_config(struct sgm3140 *priv,
-+					struct v4l2_flash_config *v4l2_sd_cfg)
-+{
-+	struct led_classdev *led_cdev = &priv->fled_cdev.led_cdev;
-+	struct led_flash_setting *s;
-+
-+	strscpy(v4l2_sd_cfg->dev_name, led_cdev->dev->kobj.name,
-+		sizeof(v4l2_sd_cfg->dev_name));
-+
-+	/* Init flash intensity setting */
-+	s = &v4l2_sd_cfg->intensity;
-+	s->min = 0;
-+	s->max = 1;
-+	s->step = 1;
-+	s->val = 1;
-+}
-+
-+#else
-+static void sgm3140_init_v4l2_flash_config(struct sgm3140 *priv,
-+					struct v4l2_flash_config *v4l2_sd_cfg)
-+{
-+}
-+#endif
-+
-+static int sgm3140_probe(struct platform_device *pdev)
-+{
-+	struct sgm3140 *priv;
-+	struct led_classdev *led_cdev;
-+	struct led_classdev_flash *fled_cdev;
-+	struct led_init_data init_data = {};
-+	struct device_node *child_node;
-+	struct v4l2_flash_config v4l2_sd_cfg = {};
-+	int ret;
-+
-+	priv = devm_kzalloc(&pdev->dev, sizeof(*priv), GFP_KERNEL);
-+	if (!priv)
-+		return -ENOMEM;
-+
-+	priv->flash_gpio = devm_gpiod_get(&pdev->dev, "flash", GPIOD_OUT_LOW);
-+	ret = PTR_ERR_OR_ZERO(priv->flash_gpio);
-+	if (ret) {
-+		if (ret != -EPROBE_DEFER)
-+			dev_err(&pdev->dev,
-+				"Failed to request flash gpio: %d\n", ret);
-+		return ret;
-+	}
-+
-+	priv->enable_gpio = devm_gpiod_get(&pdev->dev, "enable", GPIOD_OUT_LOW);
-+	ret = PTR_ERR_OR_ZERO(priv->enable_gpio);
-+	if (ret) {
-+		if (ret != -EPROBE_DEFER)
-+			dev_err(&pdev->dev,
-+				"Failed to request enable gpio: %d\n", ret);
-+		return ret;
-+	}
-+
-+	priv->vin_regulator = devm_regulator_get(&pdev->dev, "vin");
-+	ret = PTR_ERR_OR_ZERO(priv->vin_regulator);
-+	if (ret) {
-+		if (ret != -EPROBE_DEFER)
-+			dev_err(&pdev->dev,
-+				"Failed to request regulator: %d\n", ret);
-+		return ret;
-+	}
-+
-+	child_node = of_get_next_available_child(pdev->dev.of_node, NULL);
-+	if (!child_node) {
-+		dev_err(&pdev->dev,
-+			"No DT child node found for connected LED.\n");
-+		return -EINVAL;
-+	}
-+
-+	ret = of_property_read_u32(child_node, "flash-max-timeout-us",
-+				   &priv->max_timeout);
-+	if (ret) {
-+		priv->max_timeout = FLASH_MAX_TIMEOUT_DEFAULT;
-+		dev_warn(&pdev->dev,
-+			 "flash-max-timeout-us DT property missing\n");
-+	}
-+
-+	/*
-+	 * Set default timeout to FLASH_DEFAULT_TIMEOUT except if max_timeout
-+	 * from DT is lower.
-+	 */
-+	priv->timeout = min(priv->max_timeout, FLASH_TIMEOUT_DEFAULT);
-+
-+	timer_setup(&priv->powerdown_timer, sgm3140_powerdown_timer, 0);
-+
-+	fled_cdev = &priv->fled_cdev;
-+	led_cdev = &fled_cdev->led_cdev;
-+
-+	fled_cdev->ops = &sgm3140_flash_ops;
-+
-+	led_cdev->brightness_set_blocking = sgm3140_brightness_set;
-+	led_cdev->max_brightness = LED_ON;
-+	led_cdev->flags |= LED_DEV_CAP_FLASH;
-+
-+	sgm3140_init_flash_timeout(priv);
-+
-+	init_data.fwnode = of_fwnode_handle(child_node);
-+
-+	platform_set_drvdata(pdev, priv);
-+
-+	/* Register in the LED subsystem */
-+	ret = devm_led_classdev_flash_register_ext(&pdev->dev,
-+						   fled_cdev, &init_data);
-+	if (ret) {
-+		dev_err(&pdev->dev, "Failed to register flash device: %d\n",
-+			ret);
-+		goto err;
-+	}
-+
-+	sgm3140_init_v4l2_flash_config(priv, &v4l2_sd_cfg);
-+
-+	/* Create V4L2 Flash subdev */
-+	priv->v4l2_flash = v4l2_flash_init(&pdev->dev,
-+					   of_fwnode_handle(child_node),
-+					   fled_cdev, NULL,
-+					   &v4l2_sd_cfg);
-+	if (IS_ERR(priv->v4l2_flash)) {
-+		ret = PTR_ERR(priv->v4l2_flash);
-+		goto err;
-+	}
-+
-+err:
-+	of_node_put(child_node);
-+	return ret;
-+}
-+
-+static int sgm3140_remove(struct platform_device *pdev)
-+{
-+	struct sgm3140 *priv = platform_get_drvdata(pdev);
-+
-+	del_timer_sync(&priv->powerdown_timer);
-+
-+	v4l2_flash_release(priv->v4l2_flash);
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id sgm3140_dt_match[] = {
-+	{ .compatible = "sgmicro,sgm3140" },
-+	{ /* sentinel */ }
-+};
-+MODULE_DEVICE_TABLE(of, sgm3140_dt_match);
-+
-+static struct platform_driver sgm3140_driver = {
-+	.probe	= sgm3140_probe,
-+	.remove	= sgm3140_remove,
-+	.driver	= {
-+		.name	= "sgm3140",
-+		.of_match_table = sgm3140_dt_match,
-+	},
-+};
-+
-+module_platform_driver(sgm3140_driver);
-+
-+MODULE_AUTHOR("Luca Weiss <luca@z3ntu.xyz>");
-+MODULE_DESCRIPTION("SG Micro SGM3140 charge pump led driver");
-+MODULE_LICENSE("GPL v2");
--- 
-2.26.0
+>=20
+>=20
+> > > @@ -1268,8 +1330,10 @@ static struct vmbus_channel *get_og_chn(struct
+> storvsc_device
+> > > *stor_device,
+> > >  		if (cpumask_test_cpu(tgt_cpu, node_mask))
+> > >  			num_channels++;
+> > >  	}
+> > > -	if (num_channels =3D=3D 0)
+> > > +	if (num_channels =3D=3D 0) {
+> > > +		stor_device->stor_chns[q_num] =3D stor_device->device->channel;
+> >
+> > Is the above added line just fixing a bug in the existing code?  I'm no=
+t seeing how
+> > it would derive from the other changes in this patch.
+>=20
+> It was rather intended as an optimization:  Each time I/O for a device
+> is initiated on a CPU that have "num_channels =3D=3D 0" channel, the curr=
+ent
+> code ends up calling get_og_chn() (in the attempt to fill the cache) and
+> returns the device's primary channel.  In the current code, the cost of
+> this operations is basically the cost of parsing alloced_cpus, but with
+> the changes introduced here this also involves acquiring (and releasing)
+> the primary channel's lock.  I should probably put my hands forward and
+> say that I haven't observed any measurable effects due this addition in
+> my experiments; OTOH, caching the returned/"found" value made sense...
 
+OK.  That's what I thought.  The existing code does not produce an incorrec=
+t
+result, but the cache isn't working as intended.  This fixes it.
+
+>=20
+>=20
+> > > @@ -1324,7 +1390,10 @@ static int storvsc_do_io(struct hv_device *dev=
+ice,
+> > >  					continue;
+> > >  				if (tgt_cpu =3D=3D q_num)
+> > >  					continue;
+> > > -				channel =3D stor_device->stor_chns[tgt_cpu];
+> > > +				channel =3D READ_ONCE(
+> > > +					stor_device->stor_chns[tgt_cpu]);
+> > > +				if (channel =3D=3D NULL)
+> > > +					continue;
+> >
+> > The channel =3D=3D NULL case is new because a cache flush could be happ=
+ening
+> > in parallel on another CPU.  I'm wondering about the tradeoffs of
+> > continuing in the loop (as you have coded in this patch) vs. a "goto" b=
+ack to
+> > the top level "if" statement.   With the "continue" you might finish th=
+e
+> > loop without finding any matches, and fall through to the next approach=
+.
+> > But it's only a single I/O operation, and if it comes up with a less th=
+an
+> > optimal channel choice, it's no big deal.  So I guess it's really a was=
+h.
+>=20
+> Yes, I considered both approaches; they both "worked" here.  I was a
+> bit concerned about the number of "possible" gotos (again, mainly a
+> theoretical issue, since I can imagine that the cash flushes will be
+> relatively "rare" events in most cases and, in any case, they happen
+> to be serialized); the "continue" looked like a suitable and simpler
+> approach/compromise, at least for the time being.
+
+Yes, I'm OK with your patch "as is".  I was just thinking about the
+alternative, and evidently you did too.
+
+>=20
+>=20
+> >
+> > >  				if (hv_get_avail_to_write_percent(
+> > >  							&channel->outbound)
+> > >  						> ring_avail_percent_lowater) {
+> > > @@ -1350,7 +1419,10 @@ static int storvsc_do_io(struct hv_device *dev=
+ice,
+> > >  			for_each_cpu(tgt_cpu, &stor_device->alloced_cpus) {
+> > >  				if (cpumask_test_cpu(tgt_cpu, node_mask))
+> > >  					continue;
+> > > -				channel =3D stor_device->stor_chns[tgt_cpu];
+> > > +				channel =3D READ_ONCE(
+> > > +					stor_device->stor_chns[tgt_cpu]);
+> > > +				if (channel =3D=3D NULL)
+> > > +					continue;
+> >
+> > Same comment here.
+>=20
+> Similarly here.
+
+Agreed.
+
+>=20
+> Thoughts?
+>=20
+> Thanks,
+>   Andrea
