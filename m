@@ -2,136 +2,96 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41B7EC43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 11:22:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC732C2D0E9
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 11:22:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 168A120716
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 11:22:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B13C12072E
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 11:22:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="Lo81bSLQ"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="0AxAHpo/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729786AbgC3LWE (ORCPT
+        id S1729805AbgC3LWG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 07:22:04 -0400
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:43712 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729737AbgC3LWD (ORCPT
+        Mon, 30 Mar 2020 07:22:06 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:51942 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729771AbgC3LWD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 30 Mar 2020 07:22:03 -0400
-Received: by mail-qk1-f194.google.com with SMTP id o10so18376290qki.10
-        for <linux-kernel@vger.kernel.org>; Mon, 30 Mar 2020 04:22:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=CzM9Ul/dphXe/6k6V017VGqcrogFXRUNidC2oEsJyA4=;
-        b=Lo81bSLQWPVgU/i6sxlrCIBODUnjRkBTUhlltdOET1Dmks4BFPSVpOUpndvcX76UyB
-         hkWTYKD7omKCo2QzXiH1W+Q/eSWGYesRpzjunThYHGs7hjuSdF+XD+aVckt8qcSQLHLf
-         2dGg3fYi4+AUTb5J78URConeOPfe4tGuRHbb2F1LS3sMbaCujqQsCxjWXbGbH5HyzGhD
-         p/Ux96ci6T31CRwG9rUx5pXRxGzCZ84npmpm7CJGxisaBEPrDQEfeik1T+tSs3DS8SSR
-         xRT/u5P760PPOifEwBJ2NscES25L2rM7gIEkuzVGazBBxQdHCpd66DpKgluiH+hEAOZj
-         1OzQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=CzM9Ul/dphXe/6k6V017VGqcrogFXRUNidC2oEsJyA4=;
-        b=ZrVkCNJ+UGCVbeUb19Vs02hoRb+GwbFoanAMj08Dk+OGSqyLMZl0N8L4WVE9r9ZkqO
-         1Tb1S4zlCS4ROM5SeAw3lok3zK4zPqN7DGnnSqrpKN7D7FUEw4Sqfgf7ww8ISy4wDAPq
-         zDP+LKzZ8ERc1MPXE51aC5YB4BjUpUwtu0j4rmY2XULIxH38J5UJJNNvpVE0iXGDz9Kd
-         RX7SNOn455IZy05qP3t7RaaMdHKqCPVXL9DP6TmIrDUrA87pFQ2D1dAqIxmwzD+bbYZ9
-         uW7j0rBGCBur0K620WCdc0XsHX5IEAeEfyoRvrLyifqf+r42FTREBbBNzo9Ehvk4LBpa
-         ka3w==
-X-Gm-Message-State: ANhLgQ2GfDxE11mqpnXcHTTfTeKskynqaZ6WWDOkC5RKp382HTGxZAzQ
-        Z1W1wcc/LJ7DZVxRrD5RynMzopj9H/SFbe7YW4rRjA==
-X-Google-Smtp-Source: ADFU+vstVtsw7JWrmBNop5+zhRNU4WPamx9SIUzCEtNOrBy3Hzu3AZDNweBkY+DVn4Q0wOYnEWX26BByXVYtpX6VxmE=
-X-Received: by 2002:a37:a2c8:: with SMTP id l191mr11373979qke.120.1585567321647;
- Mon, 30 Mar 2020 04:22:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=q2n6qPenASCrW6zwwJ/Y7lU7/RnxxUx8uc2DpJ5ezec=; b=0AxAHpo/v9r0VGXe9IeSFWlD6e
+        MoHYuPfXujsR6+qJX2jNjyR/T+i+q5INt7FR4VkPs5PcwUb2FtIqO5ILprsqGm0dBvJWE+ewN2vLM
+        XDUPmnxeNWPBsf9cZo5o0tLZsOJ7t0IEvPPw+1aI393oazlc5zBZLWhlUn67BNRmSaGs0YFRMty0G
+        FzndWtBFkFZ3AWQ0X/NT0KrIw0DxgGpA7Ezfld+kpY2ScH0U5qjyablAZ1CGGiPHKVa4AQHtxqLYM
+        vftidEaFGhFGiKJhjkcTL5AMZOUEWRgzffto4GbLKVU13XcNp7x3eIxskmO14YvNrJRITjyZ5jpbV
+        BD00nMbQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jIsUQ-00027j-Hp; Mon, 30 Mar 2020 11:21:58 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 5881D3010C1;
+        Mon, 30 Mar 2020 13:21:57 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 3BE1229D04D66; Mon, 30 Mar 2020 13:21:57 +0200 (CEST)
+Date:   Mon, 30 Mar 2020 13:21:57 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Jules Irenge <jbi.octave@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, julia.lawall@lip6.fr,
+        boqun.feng@gmail.com, Ingo Molnar <mingo@redhat.com>,
+        Will Deacon <will@kernel.org>
+Subject: Re: [PATCH v2 4/4] locking/rtmutex: Remove Comparison to bool
+Message-ID: <20200330112157.GI20696@hirez.programming.kicks-ass.net>
+References: <0/4>
+ <20200330012450.312155-1-jbi.octave@gmail.com>
+ <20200330012450.312155-5-jbi.octave@gmail.com>
 MIME-Version: 1.0
-References: <20200317205017.28280-1-michael@walle.cc> <20200317205017.28280-13-michael@walle.cc>
- <CAMpxmJW770v6JLdveEe1hkgNEJByVyArhorSyUZBYOyFiVyOeg@mail.gmail.com>
- <9c310f2a11913d4d089ef1b07671be00@walle.cc> <CAMpxmJXmD-M+Wbj6=wgFgP2aDxbqDN=ceHi1XDun4iwdLm55Zg@mail.gmail.com>
- <22944c9b62aa69da418de7766b7741bd@walle.cc> <CACRpkdbJ3DBO+W4P0n-CfZ1T3L8d_L0Nizra8frkv92XPXR4WA@mail.gmail.com>
- <4d8d3bc26bdf73eb5c0e5851589fe085@walle.cc>
-In-Reply-To: <4d8d3bc26bdf73eb5c0e5851589fe085@walle.cc>
-From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Mon, 30 Mar 2020 13:21:50 +0200
-Message-ID: <CAMpxmJUj7wBvO=Y-u5CXazHhjsPHXcq=5iST4KuLrfakW_a9Mg@mail.gmail.com>
-Subject: Re: [PATCH 12/18] gpio: add support for the sl28cpld GPIO controller
-To:     Michael Walle <michael@walle.cc>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio <linux-gpio@vger.kernel.org>,
-        linux-devicetree <devicetree@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, linux-hwmon@vger.kernel.org,
-        linux-pwm@vger.kernel.org,
-        LINUXWATCHDOG <linux-watchdog@vger.kernel.org>,
-        arm-soc <linux-arm-kernel@lists.infradead.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Lee Jones <lee.jones@linaro.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200330012450.312155-5-jbi.octave@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-pt., 27 mar 2020 o 16:28 Michael Walle <michael@walle.cc> napisa=C5=82(a):
->
-> Am 2020-03-27 11:20, schrieb Linus Walleij:
-> > On Thu, Mar 26, 2020 at 9:06 PM Michael Walle <michael@walle.cc> wrote:
-> >> Am 2020-03-25 12:50, schrieb Bartosz Golaszewski:
-> >
-> >> > In that case maybe you should use the disable_locking option in
-> >> > regmap_config and provide your own callbacks that you can use in the
-> >> > irqchip code too?
-> >>
-> >> But how would that solve problem (1). And keep in mind, that the
-> >> reqmap_irqchip is actually used for the interrupt controller, which
-> >> is not this gpio controller.
-> >>
-> >> Ie. the interrupt controller of the sl28cpld uses the regmap_irqchip
-> >> and all interrupt phandles pointing to the interrupt controller will
-> >> reference the toplevel node. Any phandles pointing to the gpio
-> >> controller will reference the GPIO subnode.
-> >
-> > Ideally we would create something generic that has been on my
-> > mind for some time, like a generic GPIO regmap irqchip now that
-> > there are a few controllers like that.
-> >
-> > I don't know how feasible it is or how much work it would be. But
-> > as with GPIO_GENERIC (for MMIO) it would be helpful since we
-> > can then implement things like .set_multiple() and .get_multiple()
-> > for everyone.
->
-> For starters, would that be a drivers/gpio/gpio-regmap.c or a
-> drivers/base/regmap/regmap-gpio.c? I would assume the first,
-> because the stuff in drivers/base/regmap operates on a given
-> regmap and we'd just be using one, correct? On the other hand
-> there is also the reqmap-irq.c. But as pointed out before, it
-> will add an interrupt controller to the regmap, not a device
-> so to speak.
->
-> -michael
+On Mon, Mar 30, 2020 at 02:24:50AM +0100, Jules Irenge wrote:
+> Coccinelle reports a warning inside __sched rt_mutex_slowunlock()
+> 
+> WARNING: Comparison to bool
 
-This has been on my TODO list for so long, but I've never been able to
-find the time... I'd really appreciate any effort in that direction as
-I believe it would allow us to slowly port a big part of the GPIO
-expander drivers over to it and make large portions of our codebase
-generic.
+I don't mind the patch; but WTH is that a WARNING ?!? Superfluous, but
+definitely not wrong or even dangerous AFAICT.
 
-Best regards,
-Bartosz Golaszewski
+> To fix this,
+> a comparison (==) of a bool type function result to value true
+> together with the value are removed.
+> 
+> Signed-off-by: Jules Irenge <jbi.octave@gmail.com>
+> ---
+>  kernel/locking/rtmutex.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/kernel/locking/rtmutex.c b/kernel/locking/rtmutex.c
+> index 851bbb10819d..7289e7b26be4 100644
+> --- a/kernel/locking/rtmutex.c
+> +++ b/kernel/locking/rtmutex.c
+> @@ -1378,7 +1378,7 @@ static bool __sched rt_mutex_slowunlock(struct rt_mutex *lock,
+>  	 */
+>  	while (!rt_mutex_has_waiters(lock)) {
+>  		/* Drops lock->wait_lock ! */
+> -		if (unlock_rt_mutex_safe(lock, flags) == true)
+> +		if (unlock_rt_mutex_safe(lock, flags))
+>  			return false;
+>  		/* Relock the rtmutex and try again */
+>  		raw_spin_lock_irqsave(&lock->wait_lock, flags);
+> -- 
+> 2.25.1
+> 
