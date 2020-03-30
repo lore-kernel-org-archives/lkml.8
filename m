@@ -2,181 +2,178 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97740C2D0F0
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 18:55:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EBFE0C2D0EB
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 18:57:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5AF7D20771
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 18:55:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BAB9620714
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 18:57:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="PF9JCctE"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="kB2HLnpA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727982AbgC3Szl (ORCPT
+        id S1727769AbgC3S5z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 14:55:41 -0400
-Received: from mail-vs1-f67.google.com ([209.85.217.67]:43888 "EHLO
-        mail-vs1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727728AbgC3Szk (ORCPT
+        Mon, 30 Mar 2020 14:57:55 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:42183 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726923AbgC3S5z (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 14:55:40 -0400
-Received: by mail-vs1-f67.google.com with SMTP id w185so11773534vsw.10
-        for <linux-kernel@vger.kernel.org>; Mon, 30 Mar 2020 11:55:40 -0700 (PDT)
+        Mon, 30 Mar 2020 14:57:55 -0400
+Received: by mail-wr1-f67.google.com with SMTP id h15so22986786wrx.9
+        for <linux-kernel@vger.kernel.org>; Mon, 30 Mar 2020 11:57:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
+        d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=g1gheYJXxxb4j05ZqgCh1WDjANy6+6oZN8fr+WGCLZA=;
-        b=PF9JCctEmZbycQHUREYCFpB93WZDn96lnP3Obqh6+qo2li0m+PomDclPw436h+k5nE
-         HPlEJnAMbHLsbEzWSUiQzAE/czvmUKvzYnBU/0y75CHLnzbcOLHIgDqMclZpnP93bXel
-         +PqZr9hZkasdPSR3g/8xLCfssCG0GE51W/VMI=
+         :cc:content-transfer-encoding;
+        bh=jpXPPGv1foHbi5ckVrxl/EHcxYcDyUhafMePdQC+Tic=;
+        b=kB2HLnpAucvE8xw5ImIiYWWKYFZDLBKTM//fEC6JV/vEELi+r7oc2lktXWhrfOQMhE
+         dYc8fqZxINyMm3U2GbYG2koGLlT0+nYJ9PUgA1xBNo7GGmdhrjw3Mr19/JatzB3IOGls
+         nQ1ty5hR0LS15TLRcD2Z6xGy7bzSqCKol4eqyx2CbdX0bdd/FhN+hWVjo/runM70cRLV
+         U0QTB0B1uPxPvVFDNMvz2cViMDnrLgAhsEY6ZMTzPYzFIEBB+/O4O6VdzrXcKTVSyxxB
+         5QAIs/ev7zgiS0ns6bgu5PsSkfrUlNpNsThnIKwtsf8R7A//hkZV7/hBYRHgJc8DgJ63
+         vZLQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=g1gheYJXxxb4j05ZqgCh1WDjANy6+6oZN8fr+WGCLZA=;
-        b=t7hZK5MJ9UytHAbaogT+xZCFYtM9WRRaiwO9VnYEz4WQRZvzErVsxLKDirFMfOQUj8
-         naonIPJG9ijqvEifOSRO8CaPYsDXzUFEiK+JLwCq7Cnh0CHpy3yqTHvbRixTHhO10TKm
-         ixHK5vH5uBkurU1w/YBCIshNs4RmIlFzrzcBZQit5/4wJwlvFNuNBUhQmZeR8vAKfHkU
-         d/NRk4FfpefN8yBgja39zzQiTQlgwv7PeETPWxaUPEQeRghBF0qpljpgnkLN9df8aCnB
-         0sxdZwo2vBFE+YQAWwv4dRMGrO4xR12PSn0I8IYVrWLKg451RrLNOUcuGcFsFonSJLz1
-         pwmw==
-X-Gm-Message-State: AGi0PuZPgOOMALfbUNXd0e2UtzR6buNVV/oY+gs4SCcyRVbQw9FA1q+q
-        r3aiaorhAiyO27CN5sqNTkk7n/diVMI=
-X-Google-Smtp-Source: APiQypKAEJBqVMOuT6bqX9b2hlIIq05uWAsqJ+5hUmPGBbcTvWpvQJpm0OllcGw1L7ka9as5Cy31+Q==
-X-Received: by 2002:a67:e18c:: with SMTP id e12mr10066398vsl.16.1585594539213;
-        Mon, 30 Mar 2020 11:55:39 -0700 (PDT)
-Received: from mail-vs1-f47.google.com (mail-vs1-f47.google.com. [209.85.217.47])
-        by smtp.gmail.com with ESMTPSA id g25sm439448vsq.21.2020.03.30.11.55.37
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 30 Mar 2020 11:55:37 -0700 (PDT)
-Received: by mail-vs1-f47.google.com with SMTP id j128so11769384vsd.6
-        for <linux-kernel@vger.kernel.org>; Mon, 30 Mar 2020 11:55:37 -0700 (PDT)
-X-Received: by 2002:a67:2c81:: with SMTP id s123mr9594577vss.198.1585594536858;
- Mon, 30 Mar 2020 11:55:36 -0700 (PDT)
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=jpXPPGv1foHbi5ckVrxl/EHcxYcDyUhafMePdQC+Tic=;
+        b=T/MyWM0piuqxxNyLI1HcF4E54oEKHNVrPaPCIXDhW/BWudBK/rbZ/QH99DCBP41TcC
+         bvgnJovB9lWOG4VoHSEtQCITXtYcPqmv0QApsXQoZLWOOqVstgnYXA9arn6oUOtRdlJh
+         /F5xwhypv5QBPH7yzaRJkHRHbqjnBPQQBQlZF2OxcSAr3Awvyi2+W8HQGlIv/PGFWRSR
+         610I7PMNuvk7XRVRU124bAdshTvhH7PfixMGR7Vt4e7criUtwDKNDXHpgKJ2Xfo6UZJU
+         rSq/6KCU5+N21DrJSQoNGVcx94HqKccPrnZ1uWEl/V8GjHymmPWOiX3nrxWrblSKz1gv
+         maQw==
+X-Gm-Message-State: ANhLgQ3zi1XM7elWGrnlsx7M0HzS2NmNn/xK39aJpnRCxhbpvcnEEGhJ
+        g1OQWxw2Lrr6msyqop0J0NTQVrWJBVq1gALf5jpJ0A==
+X-Google-Smtp-Source: ADFU+vuqKa+1dB5LwOkOFlUD1HfVLJbddY8m0xV1AYkY/R0nNZNF4n9+sXL4owZqbuvt4CBfqK98wb2x3Wb19Q2XChM=
+X-Received: by 2002:a5d:46ca:: with SMTP id g10mr15797736wrs.290.1585594672130;
+ Mon, 30 Mar 2020 11:57:52 -0700 (PDT)
 MIME-Version: 1.0
-References: <1585559008-12705-1-git-send-email-kalyan_t@codeaurora.org>
-In-Reply-To: <1585559008-12705-1-git-send-email-kalyan_t@codeaurora.org>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Mon, 30 Mar 2020 11:55:25 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=WcFahUm8jK+QTwx7BkCb3GTgKqFLP_pdqWBqN-zawrbw@mail.gmail.com>
-Message-ID: <CAD=FV=WcFahUm8jK+QTwx7BkCb3GTgKqFLP_pdqWBqN-zawrbw@mail.gmail.com>
-Subject: Re: [PATCH] drm/msm/dpu: ensure device suspend happens during PM sleep
-To:     Kalyan Thota <kalyan_t@codeaurora.org>
-Cc:     dri-devel <dri-devel@lists.freedesktop.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        freedreno <freedreno@lists.freedesktop.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        Rob Clark <robdclark@gmail.com>,
-        Sean Paul <seanpaul@chromium.org>,
-        "Kristian H. Kristensen" <hoegsberg@chromium.org>,
-        Jeykumar Sankaran <jsanka@codeaurora.org>,
-        mkrishn@codeaurora.org, travitej@codeaurora.org,
-        nganji@codeaurora.org
+References: <20200319164227.87419-1-trishalfonso@google.com>
+ <20200319164227.87419-4-trishalfonso@google.com> <CACT4Y+YHPfP3LP04=Zc4NgyhH8FMJ9m-eU_VPjmk5SmGWo_fTg@mail.gmail.com>
+ <CAKFsvU+N=8=VmKVdNdf6os26z+vVD=vR=TL5GJtLQhR9FxOJUQ@mail.gmail.com>
+ <CACT4Y+ZGcZhbkcAVVfKP1gUs7mg=LrSwBqhqpUozSX8Fof6ANA@mail.gmail.com>
+ <CAKFsvUK-9QU7SfKLoL0w75VgSOneO8DWciHTDYMfU8aD98Unbw@mail.gmail.com> <CACT4Y+ZhraraMNC+uvD9O7h3wMQntiEu5zSmVd_UYEaqvdxTaA@mail.gmail.com>
+In-Reply-To: <CACT4Y+ZhraraMNC+uvD9O7h3wMQntiEu5zSmVd_UYEaqvdxTaA@mail.gmail.com>
+From:   Patricia Alfonso <trishalfonso@google.com>
+Date:   Mon, 30 Mar 2020 11:57:39 -0700
+Message-ID: <CAKFsvUKaeHnHp0Y9BUiB=RRHLd0TNoEA99VaUZVyfrQy8ptTqA@mail.gmail.com>
+Subject: Re: [RFC PATCH v2 3/3] KASAN: Port KASAN Tests to KUnit
+To:     Dmitry Vyukov <dvyukov@google.com>
+Cc:     David Gow <davidgow@google.com>,
+        Brendan Higgins <brendanhiggins@google.com>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        kasan-dev <kasan-dev@googlegroups.com>,
+        kunit-dev@googlegroups.com,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-On Mon, Mar 30, 2020 at 2:04 AM Kalyan Thota <kalyan_t@codeaurora.org> wrote:
+On Thu, Mar 26, 2020 at 10:31 PM Dmitry Vyukov <dvyukov@google.com> wrote:
 >
-> "The PM core always increments the runtime usage counter
-> before calling the ->suspend() callback and decrements it
-> after calling the ->resume() callback"
+> On Thu, Mar 26, 2020 at 4:15 PM Patricia Alfonso
+> <trishalfonso@google.com> wrote:
+> > > > > <kasan-dev@googlegroups.com> wrote:
+> > > > > >
+> > > > > > Transfer all previous tests for KASAN to KUnit so they can be r=
+un
+> > > > > > more easily. Using kunit_tool, developers can run these tests w=
+ith their
+> > > > > > other KUnit tests and see "pass" or "fail" with the appropriate=
+ KASAN
+> > > > > > report instead of needing to parse each KASAN report to test KA=
+SAN
+> > > > > > functionalities. All KASAN reports are still printed to dmesg.
+> > > > > >
+> > > > > > Stack tests do not work in UML so those tests are protected ins=
+ide an
+> > > > > > "#if IS_ENABLED(CONFIG_KASAN_STACK)" so this only runs if stack
+> > > > > > instrumentation is enabled.
+> > > > > >
+> > > > > > copy_user_test cannot be run in KUnit so there is a separate te=
+st file
+> > > > > > for those tests, which can be run as before as a module.
+> > > > >
+> > > > > Hi Patricia,
+> > > > >
+> > > > > FWIW I've got some conflicts applying this patch on latest linux-=
+next
+> > > > > next-20200324. There are some changes to the tests in mm tree I t=
+hink.
+> > > > >
+> > > > > Which tree will this go through? I would be nice to resolve these
+> > > > > conflicts somehow, but I am not sure how. Maybe the kasan tests
+> > > > > changes are merged upstream next windows, and then rebase this?
+> > > > >
+> > > > > Also, how can I apply this for testing? I assume this is based on=
+ some
+> > > > > kunit branch? which one?
+> > > > >
+> > > > Hmm... okay, that sounds like a problem. I will have to look into t=
+he
+> > > > conflicts. I'm not sure which tree this will go through upstream; I
+> > > > expect someone will tell me which is best when the time comes. This=
+ is
+> > > > based on the kunit branch in the kunit documentation here:
+> > > > https://git.kernel.org/pub/scm/linux/kernel/git/shuah/linux-kselfte=
+st.git/log/?h=3Dkunit
+> > >
+> > > I've checked out:
+> > >
+> > > commit 0476e69f39377192d638c459d11400c6e9a6ffb0 (HEAD, kselftest/kuni=
+t)
+> > > Date:   Mon Mar 23 12:04:59 2020 -0700
+> > >
+> > > But the build still fails for me:
+> > >
+> > > mm/kasan/report.c: In function =E2=80=98kasan_update_kunit_status=E2=
+=80=99:
+> > > mm/kasan/report.c:466:6: error: implicit declaration of function
+> > > =E2=80=98kunit_find_named_resource=E2=80=99 [-Werror=3Dimplicit-funct=
+ion-declar]
+> > >   466 |  if (kunit_find_named_resource(cur_test, "kasan_data")) {
+> > >       |      ^~~~~~~~~~~~~~~~~~~~~~~~~
+> > > mm/kasan/report.c:467:12: warning: assignment to =E2=80=98struct
+> > > kunit_resource *=E2=80=99 from =E2=80=98int=E2=80=99 makes pointer fr=
+om integer without a cas]
+> > >   467 |   resource =3D kunit_find_named_resource(cur_test, "kasan_dat=
+a");
+> > >       |            ^
+> > > mm/kasan/report.c:468:24: error: =E2=80=98struct kunit_resource=E2=80=
+=99 has no member
+> > > named =E2=80=98data=E2=80=99
+> > >   468 |   kasan_data =3D resource->data;
+> > >       |                        ^~
+> > >
+> > > What am I doing wrong?
+> >
+> > This patchset relies on another RFC patchset from Alan:
+> > https://lore.kernel.org/linux-kselftest/1583251361-12748-1-git-send-ema=
+il-alan.maguire@oracle.com/T/#t
+> >
+> > I thought I linked it in the commit message but it may only be in the
+> > commit message for part 2/3. It should work with Alan's patchset, but
+> > let me know if you have any trouble.
 >
-> DPU and DSI are managed as runtime devices. When
-> suspend is triggered, PM core adds a refcount on all the
-> devices and calls device suspend, since usage count is
-> already incremented, runtime suspend was not getting called
-> and it kept the clocks on which resulted in target not
-> entering into XO shutdown.
->
-> Add changes to manage runtime devices during pm sleep.
->
-> Changes in v1:
->  - Remove unnecessary checks in the function
->    _dpu_kms_disable_dpu (Rob Clark).
->
-> Changes in v2:
->  - Avoid using suspend_late to reset the usagecount
->    as suspend_late might not be called during suspend
->    call failures (Doug).
->
-> Signed-off-by: Kalyan Thota <kalyan_t@codeaurora.org>
-> ---
->  drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c | 33 +++++++++++++++++++++++++++++++++
->  drivers/gpu/drm/msm/msm_drv.c           |  4 ++++
->  drivers/gpu/drm/msm/msm_kms.h           |  2 ++
->  3 files changed, 39 insertions(+)
+> Please push your state of code to some git repository, so that I can
+> pull it. Github or gerrit or whatever.
 
-I am still 100% baffled by your patch and I never did quite understand
-your response to my previous comments [1].  I think you're saying that
-the problem you were facing is that if you call "suspend" but never
-called "runtime_suspend" that the device stays active.  Is that right?
- If that's true, did you try something like this suggestion I made?
+Here's a Gerrit link: https://kunit-review.googlesource.com/c/linux/+/3513
 
-SET_SYSTEM_SLEEP_PM_OPS(pm_runtime_force_suspend, pm_runtime_force_resume)
-
-
-> diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c
-> index ce19f1d..2343cbd 100644
-> --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c
-> +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c
-> @@ -26,6 +26,7 @@
->  #include "dpu_encoder.h"
->  #include "dpu_plane.h"
->  #include "dpu_crtc.h"
-> +#include "dsi.h"
->
->  #define CREATE_TRACE_POINTS
->  #include "dpu_trace.h"
-> @@ -325,6 +326,37 @@ static void dpu_kms_disable_commit(struct msm_kms *kms)
->         pm_runtime_put_sync(&dpu_kms->pdev->dev);
->  }
->
-> +static void _dpu_kms_disable_dpu(struct msm_kms *kms)
-> +{
-> +       struct dpu_kms *dpu_kms = to_dpu_kms(kms);
-> +       struct drm_device *dev = dpu_kms->dev;
-> +       struct msm_drm_private *priv = dev->dev_private;
-> +       struct msm_dsi *dsi;
-> +       int i;
-> +
-> +       dpu_kms_disable_commit(kms);
-> +
-> +       for (i = 0; i < ARRAY_SIZE(priv->dsi); i++) {
-> +               if (!priv->dsi[i])
-> +                       continue;
-> +               dsi = priv->dsi[i];
-> +               pm_runtime_put_sync(&dsi->pdev->dev);
-> +       }
-> +       pm_runtime_put_sync(dev->dev);
-> +
-> +       /* Increment the usagecount without triggering a resume */
-> +       pm_runtime_get_noresume(dev->dev);
-> +
-> +       pm_runtime_get_noresume(&dpu_kms->pdev->dev);
-> +
-> +       for (i = 0; i < ARRAY_SIZE(priv->dsi); i++) {
-> +               if (!priv->dsi[i])
-> +                       continue;
-> +               dsi = priv->dsi[i];
-> +               pm_runtime_get_noresume(&dsi->pdev->dev);
-> +       }
-> +}
-
-My pm_runtime knowledge is pretty weak sometimes, but the above
-function looks crazy.  Maybe it's just me not understanding, but can
-you please summarize what you're trying to accomplish?
-
--Doug
-
-[1] https://lore.kernel.org/r/114130f68c494f83303c51157e2c5bfa@codeaurora.org
+--=20
+Best,
+Patricia Alfonso
