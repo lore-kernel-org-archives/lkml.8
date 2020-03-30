@@ -2,165 +2,233 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EFBBC2D0EF
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 08:38:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86981C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 08:38:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3293420774
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 08:38:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585557494;
-	bh=BkHx8NFiQ75YGJGHV3YLzUBEEQCGCQ6ZgXds5RE21G4=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=tvPdq0IAwyRAqgrdzgoGsV0DUlDH71TVsfsjhvBkkX1kLqgsAY2x7eQRu/agBQ2xR
-	 EmoCBoL48e61hdeqVLfRJ/txFi0H4+uzogGNLW0tboBUOLctooOuD9eGkzKqgTJbot
-	 ybWsKWUjgd7e1uNGMJZ3k6Os0GIoZaZawze4Pz70=
+	by mail.kernel.org (Postfix) with ESMTP id 606932073B
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 08:38:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729687AbgC3IiM (ORCPT
+        id S1729701AbgC3IiV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 04:38:12 -0400
-Received: from conssluserg-01.nifty.com ([210.131.2.80]:56073 "EHLO
-        conssluserg-01.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726017AbgC3IiM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 04:38:12 -0400
-X-Greylist: delayed 5280 seconds by postgrey-1.27 at vger.kernel.org; Mon, 30 Mar 2020 04:38:09 EDT
-Received: from mail-ua1-f47.google.com (mail-ua1-f47.google.com [209.85.222.47]) (authenticated)
-        by conssluserg-01.nifty.com with ESMTP id 02U8bmN8026273;
-        Mon, 30 Mar 2020 17:37:49 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-01.nifty.com 02U8bmN8026273
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1585557470;
-        bh=PxRmu3HuDIYTqEJxiJ5PqE2LXmQuo3D9zlavzY5jVI4=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=brVEPKJScKZunXMPy14SQD8gmdtXfD/Z7CL8ZRWvjqvg8UYOEXDjY45m6LQp+Upry
-         SgIqRIt+Vbfvxsnbg1Sa4ESbah6Ht4e+ygLsb2zMtFxzxi6m+CL+3akLM9W4IRUtrC
-         8IrkWOugyFCF6k+q9DWaJ/RylMYkLVAXmcO1Y053y79in1DJ1SYDKl6QryZcJvymZW
-         zhUI92s1QDExgPzlgqMqS+2VzRW+Hf/0CueUJkv89pUXdRGkEy/yT1U57PQSLpZHL5
-         dpuemg5XzFyFNtnhwxT9TEaThfuk/wESfJfRmQy4YDPJPK/eWz1pRIvn+23Xa8wREx
-         iiOBT5PkS+9Hg==
-X-Nifty-SrcIP: [209.85.222.47]
-Received: by mail-ua1-f47.google.com with SMTP id r47so5951861uad.11;
-        Mon, 30 Mar 2020 01:37:49 -0700 (PDT)
-X-Gm-Message-State: AGi0PuYfI1t4jOABvMJbBeheO5K31RVjKrp+v3PMdlyhGrfyx/pJ5lj8
-        56rX/6bnMc6mi60tJtnMdm1005lbsmAaPgRPoO8=
-X-Google-Smtp-Source: APiQypJeTOypTow5s/orWLiqA+luxDBNhpwR1xE86uZ7tA8NnJnWdBsJgIswlbl89EaZoapGrF/J2WDHqcRU1fH6V1M=
-X-Received: by 2002:a9f:28c5:: with SMTP id d63mr6911883uad.25.1585557468135;
- Mon, 30 Mar 2020 01:37:48 -0700 (PDT)
+        Mon, 30 Mar 2020 04:38:21 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:44048 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726017AbgC3IiU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Mar 2020 04:38:20 -0400
+Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 98C441D36927062BC959;
+        Mon, 30 Mar 2020 16:38:15 +0800 (CST)
+Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
+ (10.3.19.201) with Microsoft SMTP Server (TLS) id 14.3.487.0; Mon, 30 Mar
+ 2020 16:38:11 +0800
+Subject: Re: [PATCH] f2fs: fix long latency due to discard during umount
+To:     Sahitya Tummala <stummala@codeaurora.org>
+CC:     Jaegeuk Kim <jaegeuk@kernel.org>,
+        <linux-f2fs-devel@lists.sourceforge.net>,
+        <linux-kernel@vger.kernel.org>
+References: <1584506689-5041-1-git-send-email-stummala@codeaurora.org>
+ <29d4adc4-482d-3d92-1470-3405989ea231@huawei.com>
+ <20200326133700.GR20234@codeaurora.org>
+ <2b0d8d4c-a981-4edc-d8ca-fe199a63ea79@huawei.com>
+ <20200327030542.GS20234@codeaurora.org>
+ <20200330065335.GT20234@codeaurora.org>
+From:   Chao Yu <yuchao0@huawei.com>
+Message-ID: <9adc5c7e-7936-bac7-58b1-50631f8ac5eb@huawei.com>
+Date:   Mon, 30 Mar 2020 16:38:11 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-References: <20200325220542.19189-1-robh@kernel.org> <20200325220542.19189-5-robh@kernel.org>
- <CAK7LNARJn4uugHxcjK+WOWBs0gPVZQsCu4y6M8hkNK1U5FehRA@mail.gmail.com>
-In-Reply-To: <CAK7LNARJn4uugHxcjK+WOWBs0gPVZQsCu4y6M8hkNK1U5FehRA@mail.gmail.com>
-From:   Masahiro Yamada <masahiroy@kernel.org>
-Date:   Mon, 30 Mar 2020 17:37:11 +0900
-X-Gmail-Original-Message-ID: <CAK7LNARXj3=1VPWL4kFmGkZuvV=yKb7gVaX2nbeiO54f-zWeHQ@mail.gmail.com>
-Message-ID: <CAK7LNARXj3=1VPWL4kFmGkZuvV=yKb7gVaX2nbeiO54f-zWeHQ@mail.gmail.com>
-Subject: Re: [PATCH 4/4] dt-bindings: Add missing 'additionalProperties: false'
-To:     Rob Herring <robh@kernel.org>
-Cc:     DTML <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Brian Masney <masneyb@onstation.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Guillaume La Roque <glaroque@baylibre.com>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Lee Jones <lee.jones@linaro.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Mark Brown <broonie@kernel.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Michael Hennerich <michael.hennerich@analog.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Zhang Rui <rui.zhang@intel.com>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        linux-amlogic@lists.infradead.org,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        linux-iio@vger.kernel.org,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        Linux PM mailing list <linux-pm@vger.kernel.org>,
-        Networking <netdev@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200330065335.GT20234@codeaurora.org>
+Content-Type: text/plain; charset="windows-1252"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.134.22.195]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Rob,
+Hi Sahitya,
 
-On Mon, Mar 30, 2020 at 4:09 PM Masahiro Yamada <masahiroy@kernel.org> wrote:
->
-> On Thu, Mar 26, 2020 at 7:06 AM Rob Herring <robh@kernel.org> wrote:
-> >
-> > Setting 'additionalProperties: false' is frequently omitted, but is
-> > important in order to check that there aren't extra undocumented
-> > properties in a binding.
-> >
-> > Ideally, we'd just add this automatically and make this the default, but
-> > there's some cases where it doesn't work. For example, if a common
-> > schema is referenced, then properties in the common schema aren't part
-> > of what's considered for 'additionalProperties'. Also, sometimes there
-> > are bus specific properties such as 'spi-max-frequency' that go into
-> > bus child nodes, but aren't defined in the child node's schema.
-> >
-> > So let's stick with the json-schema defined default and add
-> > 'additionalProperties: false' where needed. This will be a continual
-> > review comment and game of wack-a-mole.
-> >
-> > Signed-off-by: Rob Herring <robh@kernel.org>
-> > ---
->
->
-> >  .../devicetree/bindings/gpio/socionext,uniphier-gpio.yaml      | 2 ++
->
->
-> You may have already queue this up, but just in case.
->
-> Acked-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+Bad news, :( I guess we didn't catch the root cause, as after applying v3,
+I still can reproduce this issue:
 
+generic/003 10s ...  30s
 
+Thanks,
 
-I take back Ack for socionext,uniphier-gpio.yaml
-
-
-
-Now "make dt_binding_check" produces a new warning.
-
-gpio@55000000: 'interrupt-parent' does not match any of the regexes:
-'pinctrl-[0-9]+'
-
-
-This binding uses 'interrupt-parent'
-without 'interrupts'.
-
-Instead, the mapping of the interrupt numbers
-is specified by the vendor-specific property
-socionext,interrupt-ranges
-
-
-
-I cannot add   "interrupt-parent: true" because
-dt-schema/meta-schemas/interrupts.yaml
-has "interrupt-parent: false".
-
-
-Is there any solution?
-
-
-
--- 
-Best Regards
-Masahiro Yamada
+On 2020/3/30 14:53, Sahitya Tummala wrote:
+> Hi Chao,
+> 
+> On Fri, Mar 27, 2020 at 08:35:42AM +0530, Sahitya Tummala wrote:
+>> On Fri, Mar 27, 2020 at 09:51:43AM +0800, Chao Yu wrote:
+>>>
+>>> With this patch, most of xfstest cases cost 5 * n second longer than before.
+>>>
+>>> E.g. generic/003, during umount(), we looped into retrying one bio
+>>> submission.
+>>>
+>>> [61279.829724] F2FS-fs (zram1): Found nat_bits in checkpoint
+>>> [61279.885337] F2FS-fs (zram1): Mounted with checkpoint version = 5cf3cb8e
+>>> [61281.912832] submit discard bio start [23555,1]
+>>> [61281.912835] f2fs_submit_discard_endio [23555,1] err:-11
+>>> [61281.912836] submit discard bio end [23555,1]
+>>> [61281.912836] move dc to retry list [23555,1]
+>>>
+>>> ...
+>>>
+>>> [61286.881212] submit discard bio start [23555,1]
+>>> [61286.881217] f2fs_submit_discard_endio [23555,1] err:-11
+>>> [61286.881223] submit discard bio end [23555,1]
+>>> [61286.881224] move dc to retry list [23555,1]
+>>> [61286.905198] submit discard bio start [23555,1]
+>>> [61286.905203] f2fs_submit_discard_endio [23555,1] err:-11
+>>> [61286.905205] submit discard bio end [23555,1]
+>>> [61286.905206] move dc to retry list [23555,1]
+>>> [61286.929157] F2FS-fs (zram1): Issue discard(23555, 23555, 1) failed, ret: -11
+>>>
+>>> Could you take a look at this issue?
+>>
+>> Let me check and get back on this.
+> 
+> I found the issue. The dc with multiple bios is getting requeued again and
+> again in case if one of its bio gets -EAGAIN error. Even the successfully
+> completed bios are getting requeued again resulting into long latency.
+> I have fixed it by splitting the dc in such case so that we can requeue only
+> the leftover bios into a new dc and retry that later within the 5 sec timeout.
+> 
+> Please help to review v3 posted and if it looks good, I would like to request
+> you to test the earlier regression scenario with it to check the result again?
+> 
+> thanks,
+> 
+>>
+>> Thanks,
+>>
+>>>
+>>> Thanks,
+>>>
+>>>>
+>>>> Thanks,
+>>>>
+>>>>> Thanks,
+>>>>>
+>>>>>> +				break;
+>>>>>> +			}
+>>>>>> +		}
+>>>>>>  
+>>>>>>  		atomic_inc(&dcc->issued_discard);
+>>>>>>  
+>>>>>> @@ -1463,6 +1477,40 @@ static unsigned int __issue_discard_cmd_orderly(struct f2fs_sb_info *sbi,
+>>>>>>  	return issued;
+>>>>>>  }
+>>>>>>  
+>>>>>> +static bool __should_discard_retry(struct f2fs_sb_info *sbi,
+>>>> s> > +		struct discard_policy *dpolicy)
+>>>>>> +{
+>>>>>> +	struct discard_cmd_control *dcc = SM_I(sbi)->dcc_info;
+>>>>>> +	struct discard_cmd *dc, *tmp;
+>>>>>> +	bool retry = false;
+>>>>>> +	unsigned long flags;
+>>>>>> +
+>>>>>> +	if (dpolicy->type != DPOLICY_UMOUNT)
+>>>>>> +		f2fs_bug_on(sbi, 1);
+>>>>>> +
+>>>>>> +	mutex_lock(&dcc->cmd_lock);
+>>>>>> +	list_for_each_entry_safe(dc, tmp, &(dcc->retry_list), list) {
+>>>>>> +		if (dpolicy->timeout != 0 &&
+>>>>>> +			f2fs_time_over(sbi, dpolicy->timeout)) {
+>>>>>> +			retry = false;
+>>>>>> +			break;
+>>>>>> +		}
+>>>>>> +
+>>>>>> +		spin_lock_irqsave(&dc->lock, flags);
+>>>>>> +		if (!dc->bio_ref) {
+>>>>>> +			dc->state = D_PREP;
+>>>>>> +			dc->error = 0;
+>>>>>> +			reinit_completion(&dc->wait);
+>>>>>> +			__relocate_discard_cmd(dcc, dc);
+>>>>>> +			retry = true;
+>>>>>> +		}
+>>>>>> +		spin_unlock_irqrestore(&dc->lock, flags);
+>>>>>> +	}
+>>>>>> +	mutex_unlock(&dcc->cmd_lock);
+>>>>>> +
+>>>>>> +	return retry;
+>>>>>> +}
+>>>>>> +
+>>>>>>  static int __issue_discard_cmd(struct f2fs_sb_info *sbi,
+>>>>>>  					struct discard_policy *dpolicy)
+>>>>>>  {
+>>>>>> @@ -1470,12 +1518,13 @@ static int __issue_discard_cmd(struct f2fs_sb_info *sbi,
+>>>>>>  	struct list_head *pend_list;
+>>>>>>  	struct discard_cmd *dc, *tmp;
+>>>>>>  	struct blk_plug plug;
+>>>>>> -	int i, issued = 0;
+>>>>>> +	int i, err, issued = 0;
+>>>>>>  	bool io_interrupted = false;
+>>>>>>  
+>>>>>>  	if (dpolicy->timeout != 0)
+>>>>>>  		f2fs_update_time(sbi, dpolicy->timeout);
+>>>>>>  
+>>>>>> +retry:
+>>>>>>  	for (i = MAX_PLIST_NUM - 1; i >= 0; i--) {
+>>>>>>  		if (dpolicy->timeout != 0 &&
+>>>>>>  				f2fs_time_over(sbi, dpolicy->timeout))
+>>>>>> @@ -1509,7 +1558,10 @@ static int __issue_discard_cmd(struct f2fs_sb_info *sbi,
+>>>>>>  				break;
+>>>>>>  			}
+>>>>>>  
+>>>>>> -			__submit_discard_cmd(sbi, dpolicy, dc, &issued);
+>>>>>> +			err = __submit_discard_cmd(sbi, dpolicy, dc, &issued);
+>>>>>> +			if (err == -EAGAIN)
+>>>>>> +				congestion_wait(BLK_RW_ASYNC,
+>>>>>> +						DEFAULT_IO_TIMEOUT);
+>>>>>>  
+>>>>>>  			if (issued >= dpolicy->max_requests)
+>>>>>>  				break;
+>>>>>> @@ -1522,6 +1574,10 @@ static int __issue_discard_cmd(struct f2fs_sb_info *sbi,
+>>>>>>  			break;
+>>>>>>  	}
+>>>>>>  
+>>>>>> +	if (!list_empty(&dcc->retry_list) &&
+>>>>>> +		__should_discard_retry(sbi, dpolicy))
+>>>>>> +		goto retry;
+>>>>>> +
+>>>>>>  	if (!issued && io_interrupted)
+>>>>>>  		issued = -1;
+>>>>>>  
+>>>>>> @@ -1613,6 +1669,12 @@ static unsigned int __wait_discard_cmd_range(struct f2fs_sb_info *sbi,
+>>>>>>  		goto next;
+>>>>>>  	}
+>>>>>>  
+>>>>>> +	if (dpolicy->type == DPOLICY_UMOUNT &&
+>>>>>> +		!list_empty(&dcc->retry_list)) {
+>>>>>> +		wait_list = &dcc->retry_list;
+>>>>>> +		goto next;
+>>>>>> +	}
+>>>>>> +
+>>>>>>  	return trimmed;
+>>>>>>  }
+>>>>>>  
+>>>>>> @@ -2051,6 +2113,7 @@ static int create_discard_cmd_control(struct f2fs_sb_info *sbi)
+>>>>>>  	for (i = 0; i < MAX_PLIST_NUM; i++)
+>>>>>>  		INIT_LIST_HEAD(&dcc->pend_list[i]);
+>>>>>>  	INIT_LIST_HEAD(&dcc->wait_list);
+>>>>>> +	INIT_LIST_HEAD(&dcc->retry_list);
+>>>>>>  	INIT_LIST_HEAD(&dcc->fstrim_list);
+>>>>>>  	mutex_init(&dcc->cmd_lock);
+>>>>>>  	atomic_set(&dcc->issued_discard, 0);
+>>>>>>
+>>>>
+>>
+>> -- 
+>> --
+>> Sent by a consultant of the Qualcomm Innovation Center, Inc.
+>> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum.
+> 
