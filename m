@@ -2,87 +2,102 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C6BEC43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 04:58:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8ED92C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 05:13:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 59FC720658
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 04:58:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 590A7206F6
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 05:13:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585545187;
+	bh=Btjv1410ExjRcVLrGJqlVpkFfkWqRdsDnaLD/xLpE38=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=mRwAHQz1rxEp74O8m6dHoxRPdpc/nJCgLz7H4ipJO2qmXVNbMSGizl8fM2sMGup7I
+	 BS6aSC9vk+YhNqZPVP7Dyd743KQdMlmxfTJCmm/zS/pWRdTKpW76plRu6izHTP0j9b
+	 HJ0VbP1Uik4LtgzWSYy7dyTJWgnmqvBluZL6WvNY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728470AbgC3E6W (ORCPT
+        id S1728478AbgC3FNG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 00:58:22 -0400
-Received: from shards.monkeyblade.net ([23.128.96.9]:33178 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727892AbgC3E6W (ORCPT
+        Mon, 30 Mar 2020 01:13:06 -0400
+Received: from conssluserg-06.nifty.com ([210.131.2.91]:19780 "EHLO
+        conssluserg-06.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728120AbgC3FNG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 00:58:22 -0400
-Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 52D3E15C5742A;
-        Sun, 29 Mar 2020 21:58:21 -0700 (PDT)
-Date:   Sun, 29 Mar 2020 21:58:20 -0700 (PDT)
-Message-Id: <20200329.215820.1352705339130655350.davem@davemloft.net>
-To:     hqjagain@gmail.com
-Cc:     marcelo.leitner@gmail.com, vyasevich@gmail.com,
-        nhorman@tuxdriver.com, kuba@kernel.org, linux-sctp@vger.kernel.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        anenbupt@gmail.com
-Subject: Re: [PATCH v6] sctp: fix refcount bug in sctp_wfree
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20200327030751.19404-1-hqjagain@gmail.com>
-References: <20200327030751.19404-1-hqjagain@gmail.com>
-X-Mailer: Mew version 6.8 on Emacs 26.1
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Sun, 29 Mar 2020 21:58:21 -0700 (PDT)
+        Mon, 30 Mar 2020 01:13:06 -0400
+Received: from mail-vk1-f172.google.com (mail-vk1-f172.google.com [209.85.221.172]) (authenticated)
+        by conssluserg-06.nifty.com with ESMTP id 02U5D1l9029463;
+        Mon, 30 Mar 2020 14:13:01 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-06.nifty.com 02U5D1l9029463
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1585545182;
+        bh=2O1PRZcRzehItdBq+SOYt2I5sthUecO3gWWhCXTRP/c=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=P3H751RiC/8MgQANyeKWkHebxbvWFi8Dllsj27ZKgSLKD1roZKGVMMoMPTUJibyJb
+         dcN+JfAdF6U1FKsiYUMS98OBOiBzl6DAVK5N+ZtkUe3+pZPZi8jYfSCMZe1sGnwLpc
+         bccvt1Qc5zCIo7GWBcVL1fedqxZwEkwxli3/rONlTOVITLPqyZDWyX5t3Kx+fWcL1w
+         o9Or8jwD/HqqH/epHzfRssqLoDbH3DJ3y6knSAJNhbLRK68aCC6UBp4EHQ0xFjCkws
+         iLxkVYhfXTdUS7t56C6DGWl8mHvIgbksgxhy3KMijtDxB9nP21Gl/2P6yIv1aBqstb
+         7anxFwACtKU/A==
+X-Nifty-SrcIP: [209.85.221.172]
+Received: by mail-vk1-f172.google.com with SMTP id o124so4340806vkc.4;
+        Sun, 29 Mar 2020 22:13:01 -0700 (PDT)
+X-Gm-Message-State: AGi0PuYrhTi6IoB3r0ZuFaciyCIykcM0vWnfprh0Y+ot1Pf9jcakH+og
+        p1hqjtR9U2IYZizvqPpMbk/Um6PCgrZGwwPe2Mk=
+X-Google-Smtp-Source: APiQypJcTTfLrz6NE2CFD6TIOP+rr7KaoSnH4ArjXjaCsrK70EkFivm3Wt+pUVnSxQGtA3GXt+L3qFSo3zRkcifs0nU=
+X-Received: by 2002:a1f:32cf:: with SMTP id y198mr6252148vky.96.1585545180610;
+ Sun, 29 Mar 2020 22:13:00 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200329110832.19961-1-masahiroy@kernel.org> <202003292126.5105600A@keescook>
+In-Reply-To: <202003292126.5105600A@keescook>
+From:   Masahiro Yamada <masahiroy@kernel.org>
+Date:   Mon, 30 Mar 2020 14:12:24 +0900
+X-Gmail-Original-Message-ID: <CAK7LNARhnzxhMMD7b36s8u_DJ+XdU0p4RQpsjYpPxwjTU9P5ew@mail.gmail.com>
+Message-ID: <CAK7LNARhnzxhMMD7b36s8u_DJ+XdU0p4RQpsjYpPxwjTU9P5ew@mail.gmail.com>
+Subject: Re: [PATCH] gcc-plugins: drop support for GCC <= 4.7
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Emese Revfy <re.emese@gmail.com>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qiujun Huang <hqjagain@gmail.com>
-Date: Fri, 27 Mar 2020 11:07:51 +0800
+Hi Kees,
 
-> We should iterate over the datamsgs to move
-> all chunks(skbs) to newsk.
-> 
-> The following case cause the bug:
-> for the trouble SKB, it was in outq->transmitted list
-> 
-> sctp_outq_sack
->         sctp_check_transmitted
->                 SKB was moved to outq->sacked list
->         then throw away the sack queue
->                 SKB was deleted from outq->sacked
-> (but it was held by datamsg at sctp_datamsg_to_asoc
-> So, sctp_wfree was not called here)
-> 
-> then migrate happened
-> 
->         sctp_for_each_tx_datachunk(
->         sctp_clear_owner_w);
->         sctp_assoc_migrate();
->         sctp_for_each_tx_datachunk(
->         sctp_set_owner_w);
-> SKB was not in the outq, and was not changed to newsk
-> 
-> finally
-> 
-> __sctp_outq_teardown
->         sctp_chunk_put (for another skb)
->                 sctp_datamsg_put
->                         __kfree_skb(msg->frag_list)
->                                 sctp_wfree (for SKB)
-> 	SKB->sk was still oldsk (skb->sk != asoc->base.sk).
-> 
-> Reported-and-tested-by: syzbot+cea71eec5d6de256d54d@syzkaller.appspotmail.com
-> Signed-off-by: Qiujun Huang <hqjagain@gmail.com>
+On Mon, Mar 30, 2020 at 1:27 PM Kees Cook <keescook@chromium.org> wrote:
+>
+> On Sun, Mar 29, 2020 at 08:08:32PM +0900, Masahiro Yamada wrote:
+> > Nobody was opposed to raising minimum GCC version to 4.8 [1]
+> > So, we will drop GCC <= 4.7 support sooner or later.
+> >
+> > We always use C++ compiler for building plugins for GCC >= 4.8.
+> >
+> > This commit drops the plugin support for GCC <= 4.7 a bit earlier,
+> > which allows us to dump lots of code.
+> >
+> > [1] https://lkml.org/lkml/2020/1/23/545
+> >
+> > Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+>
+> Thanks for getting this cleaned up! I look forward to the 4.8 version
+> bump. :)
+>
+> Acked-by: Kees Cook <keescook@chromium.org>
 
-Applied and queued up for -stable, thanks.
+
+Thanks for your Ack.
+I will queue this up to kbuild tree,
+and it will ease more kbuild cleanups.
+
+Thanks.
+
+-- 
+Best Regards
+Masahiro Yamada
