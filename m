@@ -2,112 +2,82 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D054AC43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 14:13:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D451EC43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 14:14:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9790020780
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 14:13:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AOw82Tde"
+	by mail.kernel.org (Postfix) with ESMTP id A56A8206F6
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 14:14:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728793AbgC3ONx (ORCPT
+        id S1728807AbgC3OOg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 10:13:53 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:38071 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725268AbgC3ONx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 10:13:53 -0400
-Received: by mail-wm1-f66.google.com with SMTP id f6so15494753wmj.3;
-        Mon, 30 Mar 2020 07:13:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:reply-to:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=5Hbf8AcBWNvIVZvkXi6B/8j12b7TidXxp6n59nlnGdM=;
-        b=AOw82TdefsS+gSClhWq2M6hN8dIO1s76IOgfnv17X+Juwb/TnBmJVuz+L7ooKIW0Cr
-         Lg1m2LL5mPV8zLaw6Ld7wSGaCCA8H9wCS8iFxj6eyvrkQpN87an78utIEH8OdKGSynxL
-         cRZ+or3lXVBUqs8qVkSJzP4bP+fbt19xorOaDx+04l1tGfDe84mE2edahjR5/JQJZeLg
-         /20GkraiWL5EN66Y29+zxCzXmAeZABDbWEZOO+4q/x359fQ6Prt+va3KCrokmfY7zKFw
-         IX6nyBQdit/K9PRQBGYJT8ASsYK+U8OdKKQ+jULhbgTWFQWlN8GDQDQjNb2BTkQkWWDy
-         yahA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:reply-to
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=5Hbf8AcBWNvIVZvkXi6B/8j12b7TidXxp6n59nlnGdM=;
-        b=Qtf1zdmpjp3R2sjmjIbdaBdjM+iitf8vkGHNbKdB7Bx/Tr4HGF1VKIsyvKSyyRTZFC
-         DNrSvj7qiDPR1hleX0Y6JtHCjRc4aTOJ2W/vjE7pKJ1Tb2icvbBmHkUYF+gXLx2HGyWb
-         81px0M24fU5u2GmYuvCVmOsK/gmZ09m9ywc64D9rG5UT4oNmrNfjvI3qLMyS8Rit+vKR
-         SzglzcI0hEFFJ8nqgb6GiNGtgCSRzSmdkKZvNm/jDtK/t6mgzN6qFJPbJlnNHeTCM+Qd
-         t3zHIsGPw1qNMeASPtplfcwVWcrTuhLRJyI8EM8jbv/GLmtDtxnmW4NvXC54qp4OHmsp
-         A7jg==
-X-Gm-Message-State: ANhLgQ1ANZauw6Z9T5NDHNaYgFq5nk46euaWTsVv2RVu6Qq1biQhtjia
-        7V8IBeOylAsECx1I1IB66L0=
-X-Google-Smtp-Source: ADFU+vvbTr6f3hrlk0HhRaWr+E9iQ3xeSvlJwLgjKi0OF2Ag8DZTl+wPokNIXvp3UyeNYmIvn1HiUg==
-X-Received: by 2002:a1c:c257:: with SMTP id s84mr13119722wmf.0.1585577631355;
-        Mon, 30 Mar 2020 07:13:51 -0700 (PDT)
-Received: from localhost ([185.92.221.13])
-        by smtp.gmail.com with ESMTPSA id s131sm21432819wmf.35.2020.03.30.07.13.50
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 30 Mar 2020 07:13:50 -0700 (PDT)
-Date:   Mon, 30 Mar 2020 14:13:50 +0000
-From:   Wei Yang <richard.weiyang@gmail.com>
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     Wei Yang <richard.weiyang@gmail.com>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 6/9] XArray: internal node is a xa_node when it is bigger
- than XA_ZERO_ENTRY
-Message-ID: <20200330141350.ey77odenrbvixotb@master>
-Reply-To: Wei Yang <richard.weiyang@gmail.com>
-References: <20200330123643.17120-1-richard.weiyang@gmail.com>
- <20200330123643.17120-7-richard.weiyang@gmail.com>
- <20200330125006.GZ22483@bombadil.infradead.org>
- <20200330134519.ykdtqwqxjazqy3jm@master>
- <20200330134903.GB22483@bombadil.infradead.org>
+        Mon, 30 Mar 2020 10:14:36 -0400
+Received: from foss.arm.com ([217.140.110.172]:54722 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727874AbgC3OOg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Mar 2020 10:14:36 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 964661042;
+        Mon, 30 Mar 2020 07:14:33 -0700 (PDT)
+Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B10F33F71E;
+        Mon, 30 Mar 2020 07:14:32 -0700 (PDT)
+Date:   Mon, 30 Mar 2020 15:14:30 +0100
+From:   Mark Rutland <mark.rutland@arm.com>
+To:     "Theodore Y. Ts'o" <tytso@mit.edu>
+Cc:     Alexander Sverdlin <alexander.sverdlin@gmail.com>,
+        linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>
+Subject: Re: [PATCH] random: Drop ARCH limitations for CONFIG_RANDOM_TRUST_CPU
+Message-ID: <20200330141430.GC20969@lakrids.cambridge.arm.com>
+References: <20200329082909.193910-1-alexander.sverdlin@gmail.com>
+ <20200329165624.GO53396@mit.edu>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200330134903.GB22483@bombadil.infradead.org>
-User-Agent: NeoMutt/20170113 (1.7.2)
+In-Reply-To: <20200329165624.GO53396@mit.edu>
+User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 30, 2020 at 06:49:03AM -0700, Matthew Wilcox wrote:
->On Mon, Mar 30, 2020 at 01:45:19PM +0000, Wei Yang wrote:
->> On Mon, Mar 30, 2020 at 05:50:06AM -0700, Matthew Wilcox wrote:
->> >On Mon, Mar 30, 2020 at 12:36:40PM +0000, Wei Yang wrote:
->> >> As the comment mentioned, we reserved several ranges of internal node
->> >> for tree maintenance, 0-62, 256, 257. This means a node bigger than
->> >> XA_ZERO_ENTRY is a normal node.
->> >> 
->> >> The checked on XA_ZERO_ENTRY seems to be more meaningful.
->> >
->> >257-1023 are also reserved, they just aren't used yet.  XA_ZERO_ENTRY
->> >is not guaranteed to be the largest reserved entry.
->> 
->> Then why we choose 4096?
->
->Because 4096 is the smallest page size supported by Linux, so we're
->guaranteed that anything less than 4096 is not a valid pointer.
+On Sun, Mar 29, 2020 at 12:56:24PM -0400, Theodore Y. Ts'o wrote:
+> On Sun, Mar 29, 2020 at 10:29:09AM +0200, Alexander Sverdlin wrote:
+> > The option itself looks attractive for the embedded devices which often
+> > have HWRNG but less entropy from user-input. And these devices are often
+> > ARM/ARM64 or MIPS. The reason to limit it to X86/S390/PPC is not obvious.
+> > 
+> > Signed-off-by: Alexander Sverdlin <alexander.sverdlin@gmail.com>
+> 
+> This feature is *only* applicable if the CPU supports a
+> arch_get_random_seed_long() or arch_get_random_long().  I believe
+> there are some server-class ARM64 CPU's that support such an
+> instruction, but I don't believe any of the embedded arm64 --- and
+> certainly non of the embedded arm --- SOC's support
+> arch_get_random_long().
+> 
+> The reason why we limited it to X86/S390/PPC is because those were the
+> platforms which supported an RDRAND-like instruction at the time.
+> Richard Henderson added support for ARM64 in commit 1a50ec0b3b2e
+> ("arm64: Implement archrandom.h for ARMv8.5-RNG") in late January 2020.
+> 
+> So we should either add ARM64 to the dependency list, or we could, as
+> you suggest, simply remove the dependency altogether.  The tradeoff is
+> that it will cause an extra CONFIG prompt on a number of platforms
+> (mips, arm, sparc, etc.) where it will be utterly pointless since
+> those architectures have no chance of support a RDRAND-like
+> instruction.
 
-I found this in xarray.rst:
+Just for anyone watching, the dependency rework is already handled in
+linux-next by commit:
 
-  Normal pointers may be stored in the XArray directly.  They must be 4-byte
-  aligned, which is true for any pointer returned from kmalloc() and
-  alloc_page().  It isn't true for arbitrary user-space pointers,
-  nor for function pointers.  You can store pointers to statically allocated
-  objects, as long as those objects have an alignment of at least 4.
+  23ae0c17b89cfeb5 ("random: Make RANDOM_TRUST_CPU depend on ARCH_RANDOM")
+  
+... where x86, s390, ppc, and arm64 all select ARCH_RANDOM.
 
-So the document here is not correct?
-
--- 
-Wei Yang
-Help you, Help me
+Mark.
