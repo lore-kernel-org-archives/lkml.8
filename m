@@ -2,153 +2,176 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A4CCC2D0F1
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 23:30:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A68BFC43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 23:32:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F23DF20774
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 23:30:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 77C4E20771
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 23:32:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="q3CWQRj7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729391AbgC3Xaa (ORCPT
+        id S1729146AbgC3XcZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 19:30:30 -0400
-Received: from smtp.uniroma2.it ([160.80.6.16]:43126 "EHLO smtp.uniroma2.it"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728537AbgC3Xa3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 19:30:29 -0400
-X-Greylist: delayed 334 seconds by postgrey-1.27 at vger.kernel.org; Mon, 30 Mar 2020 19:30:27 EDT
-Received: from lubuntu-18.04 ([160.80.103.126])
-        by smtp-2015.uniroma2.it (8.14.4/8.14.4/Debian-8) with SMTP id 02UNNqSq015827;
-        Tue, 31 Mar 2020 01:23:58 +0200
-Date:   Tue, 31 Mar 2020 01:23:48 +0200
-From:   Stefano Salsano <stefano.salsano@uniroma2.it>
-To:     David Miller <davem@davemloft.net>
-Cc:     kuznet@ms2.inr.ac.ru, yoshfuji@linux-ipv6.org,
-        dav.lebrun@gmail.com, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, leon@kernel.org, ast@kernel.org,
-        daniel@iogearbox.net, kafai@fb.com, songliubraving@fb.com,
-        yhs@fb.com, andriin@fb.com, bpf@vger.kernel.org,
-        paolo.lungaroni@cnit.it, ahmed.abdelsalam@gssi.it,
-        stefano.salsano@uniroma2.it
-Subject: Re: [net-next] seg6: add support for optional attributes during
- behavior construction
-Message-Id: <20200331012348.e0b2373bd4a96fecc77686b6@uniroma2.it>
-In-Reply-To: <20200325.193016.1654692564933635575.davem@davemloft.net>
-References: <20200319183641.29608-1-andrea.mayer@uniroma2.it>
-        <20200325.193016.1654692564933635575.davem@davemloft.net>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+        Mon, 30 Mar 2020 19:32:25 -0400
+Received: from mail-pj1-f65.google.com ([209.85.216.65]:33393 "EHLO
+        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728537AbgC3XcY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Mar 2020 19:32:24 -0400
+Received: by mail-pj1-f65.google.com with SMTP id jz1so362255pjb.0
+        for <linux-kernel@vger.kernel.org>; Mon, 30 Mar 2020 16:32:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :user-agent:mime-version:content-transfer-encoding;
+        bh=YmXm/3/ySoSCBdXTqKuN6yVAH5JMGZyG+4nCFBPekZ4=;
+        b=q3CWQRj70zrECqtoVIaTOe9sA36DTH/LGFpudFW5IX+5PnRdFac9wnVrcA7JGuE7nP
+         8weINSeAB/jP5eihsW7Qv19Fkr/Eh0iR56JjkJ6SGKLFpUv6VKYu45d2fiuZ9jt3FV1s
+         OS8cdNPbJzOOu4KQpg/vuVUI3Z+ehIazsEnmzw6FknP45MBj0E7XBCUTimH7NVk6WmBV
+         22gkhmg/GWoo0CYb9fRu2vf6j2+kuuZtL+abU2dNCapI2hkoCNC47SZ+IfRhKS5xBeS2
+         W5NrfzK0KWKis7g/69eSkhqKjqcxjnjuD+V0vjTlPAC69lnwK32Kgbx4kXlJdarHMMYS
+         RQLA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:user-agent:mime-version:content-transfer-encoding;
+        bh=YmXm/3/ySoSCBdXTqKuN6yVAH5JMGZyG+4nCFBPekZ4=;
+        b=uIxwZ1u8D1fddx4GgvFXIglXZar4d2eIReRMZhnMf6w6MGxk8F2/Ne0gEzzXyvlJaA
+         Jup/FwdYoPbi5m9nCjXcrVt7OnKmHU6IcDfw1xD6n7/aTpdGW6AwN/oOPVp6nHpcyapP
+         czJRmdXLk5TbgxS3ieOfxoVJwTRcWamtS6iesoYNlvWq7Q8Vhw4FptKkpnFOMPGP5/cM
+         3EtPHk7phdOKm9wyc5bSbtEVVNzEZk7A7IbFZoUdk/OVv0nYI2Ld1mieHb2SDiVNAkg4
+         PcgzPay7senpGYBtMc2020Oqew+uidTXLw+sLkGLoJxdkZcKUTyulw4eTw2Tso2I+jOS
+         JtWg==
+X-Gm-Message-State: AGi0PuaO6/Sv9pava72O6JtmN205QD+dOcmFBWP5pHzAOb7ywFkp9hcJ
+        DDwt6L/Gf4D+e8Gg84c2Wu8=
+X-Google-Smtp-Source: APiQypK/B5K8y7JgEhKcVDEOrPNxlJJc4byxTjtw7DCeF2DtEgjE3cKrFMweNgL+nbTbz2mWMkfPrQ==
+X-Received: by 2002:a17:90a:a414:: with SMTP id y20mr600264pjp.124.1585611143430;
+        Mon, 30 Mar 2020 16:32:23 -0700 (PDT)
+Received: from OptiPlexFedora ([47.144.161.84])
+        by smtp.gmail.com with ESMTPSA id v42sm10510446pgn.6.2020.03.30.16.32.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 30 Mar 2020 16:32:22 -0700 (PDT)
+Message-ID: <098d00e455dbc4ad5500d797b62d472160d065a5.camel@gmail.com>
+Subject: Re: [PATCH v7] staging: vt6656: add error code handling to unused
+ variable
+From:   "John B. Wyatt IV" <jbwyatt4@gmail.com>
+To:     Stefano Brivio <sbrivio@redhat.com>
+Cc:     outreachy-kernel@googlegroups.com,
+        Julia Lawall <julia.lawall@inria.fr>,
+        Forest Bond <forest@alittletooquiet.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Quentin Deslandes <quentin.deslandes@itdev.co.uk>,
+        Colin Ian King <colin.king@canonical.com>,
+        Malcolm Priestley <tvboxspy@gmail.com>,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
+Date:   Mon, 30 Mar 2020 16:32:21 -0700
+In-Reply-To: <20200331004213.1c319d94@elisabeth>
+References: <20200330223718.33885-1-jbwyatt4@gmail.com>
+         <20200331004213.1c319d94@elisabeth>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
+MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
-X-Virus-Scanned: clamav-milter 0.100.0 at smtp-2015
-X-Virus-Status: Clean
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 25 Mar 2020 19:30:16 -0700 (PDT)
-David Miller <davem@davemloft.net> wrote:
-
-> From: Andrea Mayer <andrea.mayer@uniroma2.it>
-> Date: Thu, 19 Mar 2020 19:36:41 +0100
+On Tue, 2020-03-31 at 00:42 +0200, Stefano Brivio wrote:
+> On Mon, 30 Mar 2020 15:37:18 -0700
+> "John B. Wyatt IV" <jbwyatt4@gmail.com> wrote:
 > 
-> > Messy code and complicated tricks may arise from this approach.
+> > Add error code handling to unused 'ret' variable that was never
+> > used.
+> > Return an error code from functions called within
+> > vnt_radio_power_on.
+> > 
+> > Issue reported by coccinelle (coccicheck).
+> > 
+> > Suggested-by: Quentin Deslandes <quentin.deslandes@itdev.co.uk>
+> > Suggested-by: Stefano Brivio <sbrivio@redhat.com>
+> > Reviewed-by: Quentin Deslandes <quentin.deslandes@itdev.co.uk>
+> > Signed-off-by: John B. Wyatt IV <jbwyatt4@gmail.com>
+> > ---
+> > v7: Move an if check.
+> >     Suggested by Stefano Brivio <sbrivio@redhat.com>
+> > 
+> > v6: Forgot to add all the v5 code to commit.
+> > 
+> > v5: Remove Suggested-by: Julia Lawall above seperator line.
+> >     Remove break; statement in switch block.
+> >     break; removal checked by both gcc compile and checkpatch.
+> >     Suggested by Stefano Brivio <sbrivio@redhat.com>
+> > 
+> > v4: Move Suggested-by: Julia Lawall above seperator line.
+> >     Add Reviewed-by tag as requested by Quentin Deslandes.
+> > 
+> > v3: Forgot to add v2 code changes to commit.
+> > 
+> > v2: Replace goto statements with return.
+> >     Remove last if check because it was unneeded.
+> >     Suggested-by: Julia Lawall <julia.lawall@inria.fr>
+> > 
+> >  drivers/staging/vt6656/card.c | 20 ++++++++++++--------
+> >  1 file changed, 12 insertions(+), 8 deletions(-)
+> > 
+> > diff --git a/drivers/staging/vt6656/card.c
+> > b/drivers/staging/vt6656/card.c
+> > index dc3ab10eb630..df12c73097e0 100644
+> > --- a/drivers/staging/vt6656/card.c
+> > +++ b/drivers/staging/vt6656/card.c
+> > @@ -723,9 +723,13 @@ int vnt_radio_power_on(struct vnt_private
+> > *priv)
+> >  {
+> >  	int ret = 0;
+> >  
+> > -	vnt_exit_deep_sleep(priv);
+> > +	ret = vnt_exit_deep_sleep(priv);
+> > +	if (ret)
+> > +		return ret;
+> >  
+> > -	vnt_mac_reg_bits_on(priv, MAC_REG_HOSTCR, HOSTCR_RXON);
+> > +	ret = vnt_mac_reg_bits_on(priv, MAC_REG_HOSTCR, HOSTCR_RXON);
+> > +	if (ret)
+> > +		return ret;
+> >  
+> >  	switch (priv->rf_type) {
+> >  	case RF_AL2230:
+> > @@ -734,14 +738,14 @@ int vnt_radio_power_on(struct vnt_private
+> > *priv)
+> >  	case RF_VT3226:
+> >  	case RF_VT3226D0:
+> >  	case RF_VT3342A0:
+> > -		vnt_mac_reg_bits_on(priv, MAC_REG_SOFTPWRCTL,
+> > -				    (SOFTPWRCTL_SWPE2 |
+> > SOFTPWRCTL_SWPE3));
+> > -		break;
+> > +		ret = vnt_mac_reg_bits_on(priv, MAC_REG_SOFTPWRCTL,
+> > +					  (SOFTPWRCTL_SWPE2 | 
+> > +					  SOFTPWRCTL_SWPE3));
 > 
-> People taking advantage of this new flexibility will write
-> applications that DO NOT WORK on older kernels.
+> Grrr, sorry, almost there, I didn't notice this: SOFTPWRCTL_SWPE3
+> needs
+> to be aligned *after* the open (useless) parenthesis:
 > 
-> I think we are therefore stuck with the current optional attribute
-> semantics, sorry.
+> 					  (SOFTPWRCTL_SWPE2 | 
+> 					   SOFTPWRCTL_SWPE3));
+> 
+> because it's another operand of the | operation surrounded by ().
+> Doesn't checkpatch warn?
+> 
+> The rest looks good to me.
+> 
 
-Dear David,
+I had to switch from a VM to native and forget to put the git hook in
+this repo clone.
 
-sorry we have provided this patch without giving enough context. 
+Still, after I did, checkpatch complained about trailing white space
+after SOFTPWRCTL_SWPE2 |, but not the alignment issue. Fixing the
+alignment issue produced no warnings either. :(
 
-We are planning several enhancements to the SRv6 kernel implementation to keep
-it aligned with the IETF standardization evolution and to add important
-features like monitoring (some examples below). So far, the implemented SRv6
-behaviors require few mandatory attributes and the code has been implemented in
-a naive way following this requirement. We believe it is important to overcome
-the limitations of this implementation considering the requirements coming from
-new SRv6 behaviors and features shown in the examples below.
-
-To provide 100% backward compatibility, we are not going to use the proposed
-optional attribute semantic on any of the currently defined attributes, so
-there is no risk to write applications using the existing attributes that will
-not work on older kernels, which is (wisely) your main concern. 
-
-Of course a new application (e.g. iproute2, pyroute) using a new optional
-parameter will not work on older kernels, but simply because the new parameter
-is not supported. It will not work even without our proposed patch.
-
-On the other hand, we think that the solution in the patch is more backward
-compatible. Without the patch, if we define new attributes, old applications
-(e.g. iproute2 scripts) will not work on newer kernels, while with the optional
-attributes approach proposed in the patch they will work with no issues !
-
-In the light of the above clarification, what is your opinion?
-
-Hereafter we list the SRv6 use cases that benefit from the proposed patch. We
-have patches that implement these use cases, do you think that we should submit
-one or two of them to show how we use the optional parameters?
-
-Thank you for your attention!
-Stefano
-
-4 examples of enhancements to SRv6 that require optional parameters
-
-1) Enhancement to End.DX4 behavior to support explicit indication of outgoing
-device: "oif" parameter used as optional in the context of End.DX4 behavior
-
- ip -6 route add 2001:db8::1 encap seg6local action End.DX4 nh4 1.2.3.4 dev eth0
- ip -6 route add 2001:db8::1 encap seg6local action End.DX4 nh4 1.2.3.4 oif eth1 dev eth0
-
-2) Statistics (per behavior counting of packets/bytes/errors) : new "stats"
-parameter used as optional in the context of any behavior
-
- ip -6 route add 2001:db8::1 encap seg6local action End.DT6 table 100 dev eth0
- ip -6 route add 2001:db8::1 encap seg6local action End.DT6 table 100 stats dev eth0
- 
- ip -6 route add 2001:db8::1 encap seg6local action End.DX4 nh4 1.2.3.4 dev eth0
- ip -6 route add 2001:db8::1 encap seg6local action End.DX4 nh4 1.2.3.4 stats dev eth0
- 
- ip -6 route add 2001:db8::1 encap seg6local action End.DX4 nh4 1.2.3.4 oif eth1 dev eth0
- ip -6 route add 2001:db8::1 encap seg6local action End.DX4 nh4 1.2.3.4 oif eth1 stats dev eth0
-
-3) Flavors (as per sec. 4.16 of draft-ietf-spring-srv6-network-programming-14):
-new "flavors" parameter used as optional in the context of End, End.X, End.T
-
- ip -6 route add 2001:db8::1 encap seg6local action End dev eth0
- ip -6 route add 2001:db8::1 encap seg6local action End flavors PSP dev eth0
- ip -6 route add 2001:db8::1 encap seg6local action End flavors USP dev eth0
- ip -6 route add 2001:db8::1 encap seg6local action End flavors USD dev eth0
- ip -6 route add 2001:db8::1 encap seg6local action End flavors PSP,USP,USD dev eth0
- 
- ip -6 route add 2001:db8::1 encap seg6local action End.T table 100 dev eth0
- ip -6 route add 2001:db8::1 encap seg6local action End.T table 100 flavors USP dev eth0
-
-4) micro SID (draft-filsfils-spring-net-pgm-extension-srv6-usid-04): in the
-context of the new behavior uN, new optional parameters "ubl" and "ul"
-
- ip -6 route add 2001:db8::1 encap seg6local action uN dev eth0
- ip -6 route add 2001:db8::1 encap seg6local action uN ubl 32 ul 16 dev eth0
-
-
--- 
-*******************************************************************
-Stefano Salsano
-Professore Associato
-Dipartimento Ingegneria Elettronica
-Universita' di Roma Tor Vergata
-Viale Politecnico, 1 - 00133 Roma - ITALY
-
-http://netgroup.uniroma2.it/Stefano_Salsano/
-
-E-mail  : stefano.salsano@uniroma2.it
-Cell.   : +39 320 4307310
-Office  : (Tel.) +39 06 72597770 (Fax.) +39 06 72597435
-*******************************************************************
