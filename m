@@ -2,84 +2,106 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA0A5C43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 07:25:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9522BC43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 07:29:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A0C6320774
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 07:25:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E7142073B
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 07:29:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729456AbgC3HZE (ORCPT
+        id S1729450AbgC3H3X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 03:25:04 -0400
-Received: from mail-io1-f72.google.com ([209.85.166.72]:46812 "EHLO
-        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729413AbgC3HZE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 03:25:04 -0400
-Received: by mail-io1-f72.google.com with SMTP id c7so15344725iog.13
-        for <linux-kernel@vger.kernel.org>; Mon, 30 Mar 2020 00:25:03 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=TZJbpgebPbX3Q4FeLfNCFQJD77ggPTwgpCJg6I/5kLk=;
-        b=t4k4pimgAWUHp4xZXMKCq5gztD4HKGhHRg7KdQ+3nPT0+veAwdu6T6UBEP++V1+pQ4
-         hr4daZSaiHfbJQR8Jl1hFiN6heTSIn/H8K+u7J1dT7UOW0SxD69Re4COqFYfuUn2MutZ
-         w5jkUIYm7NRgQbirCcAL9WOd9gDwP2/c+2jYF8nroo4En3/EWMekL+5bP4cCb5H8s7uj
-         C7PI2Ijdron+QpP5qyfmxD4z+7wGZ+ESNKLG8jeRgiZdbCe0K0ViPYFFOBRrl9NAMpk1
-         an1c8Na8ZU3nGa7htm/r1QOS3xI5hqfzZ5gKgL03tGkhmPPR0NJBQimJIC/vFPqeecSq
-         Ghxw==
-X-Gm-Message-State: ANhLgQ2fPM55kDyTnxdk6lw4KPbT1ZDO6UwRC7NogJSzMBIkK85gjKSC
-        Wp0wB15XcOPX1DXBMlZZLiamgpr7JnjXTDBRjmtVVVABVkcq
-X-Google-Smtp-Source: ADFU+vtBbBt6BuinPFFJY8ewnoDn/U9q2ryhLsaXg+psdNxruEaMqWJqvCEaD1smqkJhUjifXxvNwbU5if/xCAxan2Tj9cQry9q1
-MIME-Version: 1.0
-X-Received: by 2002:a6b:e316:: with SMTP id u22mr9378632ioc.1.1585553103320;
- Mon, 30 Mar 2020 00:25:03 -0700 (PDT)
-Date:   Mon, 30 Mar 2020 00:25:03 -0700
-In-Reply-To: <000000000000aa9a23059f62246a@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000007effb905a20d5904@google.com>
-Subject: Re: WARNING in sk_stream_kill_queues (4)
-From:   syzbot <syzbot+fbe81b56f7df4c0fb21b@syzkaller.appspotmail.com>
-To:     andriin@fb.com, ast@kernel.org, aviadye@mellanox.com,
-        borisp@mellanox.com, bpf@vger.kernel.org, daniel@iogearbox.net,
-        davejwatson@fb.com, davem@davemloft.net, edumazet@google.com,
-        jbaron@akamai.com, john.fastabend@gmail.com, kafai@fb.com,
-        kuba@kernel.org, kuznet@ms2.inr.ac.ru,
-        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        ncardwell@google.com, netdev@vger.kernel.org, shuah@kernel.org,
-        soheil@google.com, songliubraving@fb.com,
-        syzkaller-bugs@googlegroups.com, yhs@fb.com,
-        yoshfuji@linux-ipv6.org
-Content-Type: text/plain; charset="UTF-8"
+        Mon, 30 Mar 2020 03:29:23 -0400
+Received: from mx2.suse.de ([195.135.220.15]:35874 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729197AbgC3H3X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Mar 2020 03:29:23 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 0124DAF48;
+        Mon, 30 Mar 2020 07:29:20 +0000 (UTC)
+Date:   Mon, 30 Mar 2020 09:29:20 +0200
+Message-ID: <s5hv9mmb8rz.wl-tiwai@suse.de>
+From:   Takashi Iwai <tiwai@suse.de>
+To:     George Spelvin <lkml@SDF.ORG>
+Cc:     James Bottomley <James.Bottomley@HansenPartnership.com>,
+        linux-kernel@vger.kernel.org, Hannes Reinecke <hare@suse.de>,
+        linux-scsi@vger.kernel.org,
+        Marek Lindner <mareklindner@neomailbox.ch>,
+        Simon Wunderlich <sw@simonwunderlich.de>,
+        Antonio Quartulli <a@unstable.cc>,
+        Sven Eckelmann <sven@narfation.org>,
+        b.a.t.m.a.n@diktynna.open-mesh.org,
+        Johannes Berg <johannes@sipsolutions.net>,
+        linux-wireless@vger.kernel.org, Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org,
+        lkml@sdf.org
+Subject: Re: [RFC PATCH v1 13/50] Avoid some useless msecs/jiffies conversions
+In-Reply-To: <20200330065105.GB9333@SDF.ORG>
+References: <202003281643.02SGhBrh000992@sdf.org>
+        <s5ho8sfd2dk.wl-tiwai@suse.de>
+        <20200329121129.GC11951@SDF.ORG>
+        <s5h7dz3ccea.wl-tiwai@suse.de>
+        <20200329175032.GE4675@SDF.ORG>
+        <1585505807.4510.1.camel@HansenPartnership.com>
+        <s5hzhbybbnu.wl-tiwai@suse.de>
+        <20200330065105.GB9333@SDF.ORG>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI/1.14.6 (Maruoka)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 Emacs/25.3
+ (x86_64-suse-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI 1.14.6 - "Maruoka")
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzbot suspects this bug was fixed by commit:
+On Mon, 30 Mar 2020 08:51:05 +0200,
+George Spelvin wrote:
+> 
+> On Mon, Mar 30, 2020 at 08:27:01AM +0200, Takashi Iwai wrote:
+> > On Sun, 29 Mar 2020 20:16:47 +0200, James Bottomley wrote:
+> >> We all assume that msecs_to_jiffies is properly optimized so there
+> >> should be no need to open code it like you're proposing.
+> > 
+> > Yes, it'd be best if the compiler can handle it properly.
+> 
+> I've tried, and can't figure out how to get the compiler to detect this 
+> special case and not invoke the general code.  In particular, for a 
+> variable x, __builtin_constant_p(x * 1000 % 1000) is false.  Even if x is 
+> signed and ANSI lets the compiler assume that overflow doesn't happen.
+> 
+> If you can do it, I'm most curious how!
 
-commit b6f6118901d1e867ac9177bbff3b00b185bd4fdc
-Author: Eric Dumazet <edumazet@google.com>
-Date:   Tue Feb 25 19:52:29 2020 +0000
+Actually in the very early version of msecs_to_jiffies() was all
+inlined, so the compiler could optimize such a case, I guess.  Now it
+was factored out to an external function in commit ca42aaf0c861, so it
+became difficult.
 
-    ipv6: restrict IPV6_ADDRFORM operation
+> > But also I meant to keep using the macro for consistency reason.
+> > IIRC, we wanted to eliminate the explicit use of HZ in the past, and
+> > it's how many lines have been converted with *_to_jiffies() calls.
+> > I don't know whether the eliminate of HZ is still wished, but
+> > reverting to the open code is a step backward for that.
+> 
+> Well, you could always add a secs_to_jiffies(x) wrapper.  But given
+> that it expands to basically x * HZ, some people might wonder why
+> you're bothering.
 
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=1177dc25e00000
-start commit:   f8788d86 Linux 5.6-rc3
-git tree:       upstream
-kernel config:  https://syzkaller.appspot.com/x/.config?x=9833e26bab355358
-dashboard link: https://syzkaller.appspot.com/bug?extid=fbe81b56f7df4c0fb21b
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=14fd92c3e00000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=11679a81e00000
+Well, comparing with the expanded result doesn't make always sense.
+With such a logic, you can argue why BIT(x) macro is needed, too.
+After all, it's a matter of semantics.
 
-If the result looks correct, please mark the bug fixed by replying with:
+> I assumed that open-coding x * HZ was the preferred style, so that's
+> what I did.
 
-#syz fix: ipv6: restrict IPV6_ADDRFORM operation
+That's my question, too -- whether the open code is preferred for this
+particular purpose.
 
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+
+thanks,
+
+Takashi
