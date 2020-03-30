@@ -2,144 +2,222 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02D93C43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 19:40:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B551C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 19:44:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D7E222072E
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 19:40:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 461DD20714
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 19:44:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728679AbgC3TkT (ORCPT
+        id S1728266AbgC3ToC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 15:40:19 -0400
-Received: from foss.arm.com ([217.140.110.172]:34028 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728165AbgC3TkT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 15:40:19 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9DCB81FB;
-        Mon, 30 Mar 2020 12:40:18 -0700 (PDT)
-Received: from e107158-lin.cambridge.arm.com (e107158-lin.cambridge.arm.com [10.1.195.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BE1F53F68F;
-        Mon, 30 Mar 2020 12:40:16 -0700 (PDT)
-Date:   Mon, 30 Mar 2020 20:40:14 +0100
-From:   Qais Yousef <qais.yousef@arm.com>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Boqun Feng <boqun.feng@gmail.com>, peterz@infradead.org,
-        linux-kernel@vger.kernel.org, len.brown@intel.com,
-        pkondeti@codeaurora.org, jpoimboe@redhat.com, pavel@ucw.cz,
-        konrad.wilk@oracle.com, mojha@codeaurora.org, jkosina@suse.cz,
-        mingo@kernel.org, hpa@zytor.com, rjw@rjwysocki.net,
-        linux-tip-commits@vger.kernel.org
-Subject: Re: [tip:smp/hotplug] cpu/hotplug: Abort disabling secondary CPUs if
- wakeup is pending
-Message-ID: <20200330194014.lwpmbv2zekfk6ywx@e107158-lin.cambridge.arm.com>
-References: <1559536263-16472-1-git-send-email-pkondeti@codeaurora.org>
- <tip-a66d955e910ab0e598d7a7450cbe6139f52befe7@git.kernel.org>
- <20200327025311.GA58760@debian-boqun.qqnc3lrjykvubdpftowmye0fmh.lx.internal.cloudapp.net>
- <874kuaxdiz.fsf@nanos.tec.linutronix.de>
+        Mon, 30 Mar 2020 15:44:02 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:35936 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726781AbgC3ToB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Mar 2020 15:44:01 -0400
+Received: from [IPv6:2804:431:e7cc:11ff:4f80:3de:e2b2:5c1d] (unknown [IPv6:2804:431:e7cc:11ff:4f80:3de:e2b2:5c1d])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: koike)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 8CCC628ADB8;
+        Mon, 30 Mar 2020 20:43:57 +0100 (BST)
+Subject: Re: [PATCH v2 3/3] media: vimc: deb: Add support for {RGB,BGR,GBR}888
+ bus formats on source pad
+To:     Shuah Khan <skhan@linuxfoundation.org>,
+        =?UTF-8?B?TsOtY29sYXMgRi4gUi4gQS4gUHJhZG8=?= 
+        <nfraprado@protonmail.com>, linux-media@vger.kernel.org
+Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Hans Verkuil <hverkuil@xs4all.nl>,
+        linux-kernel@vger.kernel.org, lkcamp@lists.libreplanetbr.org
+References: <20200326214730.2449707-1-nfraprado@protonmail.com>
+ <20200326214730.2449707-4-nfraprado@protonmail.com>
+ <b5bc6ab8-274a-adc7-9d86-a91a1efb8805@linuxfoundation.org>
+From:   Helen Koike <helen.koike@collabora.com>
+Message-ID: <ae9fdf85-7129-e1ad-a377-bda0808545c1@collabora.com>
+Date:   Mon, 30 Mar 2020 16:43:53 -0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.2
 MIME-Version: 1.0
+In-Reply-To: <b5bc6ab8-274a-adc7-9d86-a91a1efb8805@linuxfoundation.org>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <874kuaxdiz.fsf@nanos.tec.linutronix.de>
-User-Agent: NeoMutt/20171215
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 03/27/20 12:06, Thomas Gleixner wrote:
-> Boqun Feng <boqun.feng@gmail.com> writes:
-> > From the commit message, it makes sense to add the pm_wakeup_pending()
-> > check if freeze_secondary_cpus() is used for system suspend. However,
-> > freeze_secondary_cpus() is also used in kexec path on arm64:
+Hello,
+
+On 3/26/20 7:06 PM, Shuah Khan wrote:
+> On 3/26/20 3:47 PM, Nícolas F. R. A. Prado wrote:
+>> Add support for RGB888_*, BGR888_* and GBR888_* media bus formats on
+>> the source pad of debayer subdevices.
+>>
+>> Co-developed-by: Vitor Massaru Iha <vitor@massaru.org>
+>> Signed-off-by: Vitor Massaru Iha <vitor@massaru.org>
+>> Signed-off-by: Nícolas F. R. A. Prado <nfraprado@protonmail.com>
+>> ---
+>>
+>> Changes in v2:
+>> - Change commit message to reflect v2 changes
+>> - Rename variables
+>> - Fix array formatting
+>> - Add vimc_deb_is_src_code_valid function
+>> - Add other BGR888 and RGB888 formats to debayer source pad supported
+>>    formats
+>>
+>>   drivers/media/platform/vimc/vimc-debayer.c | 61 +++++++++++++++++-----
+>>   1 file changed, 49 insertions(+), 12 deletions(-)
+>>
+>> diff --git a/drivers/media/platform/vimc/vimc-debayer.c b/drivers/media/platform/vimc/vimc-debayer.c
+>> index baf6bf9f65b5..33a9bea770bc 100644
+>> --- a/drivers/media/platform/vimc/vimc-debayer.c
+>> +++ b/drivers/media/platform/vimc/vimc-debayer.c
+>> @@ -51,6 +51,19 @@ static const struct v4l2_mbus_framefmt sink_fmt_default = {
+>>       .colorspace = V4L2_COLORSPACE_DEFAULT,
+>>   };
+>>   +static const u32 vimc_deb_src_mbus_codes[] = {
+>> +    MEDIA_BUS_FMT_GBR888_1X24,
+>> +    MEDIA_BUS_FMT_BGR888_1X24,
+>> +    MEDIA_BUS_FMT_BGR888_3X8,
+>> +    MEDIA_BUS_FMT_RGB888_1X24,
+>> +    MEDIA_BUS_FMT_RGB888_2X12_BE,
+>> +    MEDIA_BUS_FMT_RGB888_2X12_LE,
+>> +    MEDIA_BUS_FMT_RGB888_3X8,
+>> +    MEDIA_BUS_FMT_RGB888_1X7X4_SPWG,
+>> +    MEDIA_BUS_FMT_RGB888_1X7X4_JEIDA,
+>> +    MEDIA_BUS_FMT_RGB888_1X32_PADHI,
+>> +};
+>> +
+>>   static const struct vimc_deb_pix_map vimc_deb_pix_map_list[] = {
+>>       {
+>>           .code = MEDIA_BUS_FMT_SBGGR8_1X8,
+>> @@ -125,6 +138,17 @@ static const struct vimc_deb_pix_map *vimc_deb_pix_map_by_code(u32 code)
+>>       return NULL;
+>>   }
+>>   +static int vimc_deb_is_src_code_invalid(u32 code)
+>> +{
+>> +    unsigned int i;
+>> +
+>> +    for (i = 0; i < ARRAY_SIZE(vimc_deb_src_mbus_codes); i++)
+>> +        if (vimc_deb_src_mbus_codes[i] == code)
+>> +            return 0;
+>> +
+>> +    return -EINVAL;
+>> +}
+
+The naming is a bit confusing, since it checks if it is invalid, but returns a negative number if so.
+
+How about renaming to vimc_deb_src_code_is_valid ?
+
+>> +
+>>   static int vimc_deb_init_cfg(struct v4l2_subdev *sd,
+>>                    struct v4l2_subdev_pad_config *cfg)
+>>   {
+>> @@ -148,14 +172,11 @@ static int vimc_deb_enum_mbus_code(struct v4l2_subdev *sd,
+>>                      struct v4l2_subdev_pad_config *cfg,
+>>                      struct v4l2_subdev_mbus_code_enum *code)
+>>   {
+>> -    /* We only support one format for source pads */
+>>       if (VIMC_IS_SRC(code->pad)) {
+>> -        struct vimc_deb_device *vdeb = v4l2_get_subdevdata(sd);
+>> -
+>> -        if (code->index)
+>> +        if (code->index >= ARRAY_SIZE(vimc_deb_src_mbus_codes))
+>>               return -EINVAL;
+>>   -        code->code = vdeb->src_code;
+>> +        code->code = vimc_deb_src_mbus_codes[code->index];
+>>       } else {
+>>           if (code->index >= ARRAY_SIZE(vimc_deb_pix_map_list))
+>>               return -EINVAL;
+>> @@ -170,8 +191,6 @@ static int vimc_deb_enum_frame_size(struct v4l2_subdev *sd,
+>>                       struct v4l2_subdev_pad_config *cfg,
+>>                       struct v4l2_subdev_frame_size_enum *fse)
+>>   {
+>> -    struct vimc_deb_device *vdeb = v4l2_get_subdevdata(sd);
+>> -
+>>       if (fse->index)
+>>           return -EINVAL;
+>>   @@ -181,7 +200,7 @@ static int vimc_deb_enum_frame_size(struct v4l2_subdev *sd,
+>>             if (!vpix)
+>>               return -EINVAL;
+>> -    } else if (fse->code != vdeb->src_code) {
+>> +    } else if (vimc_deb_is_src_code_invalid(fse->code)) {
+>>           return -EINVAL;
+>>       }
+>>   @@ -237,6 +256,7 @@ static int vimc_deb_set_fmt(struct v4l2_subdev *sd,
+>>   {
+>>       struct vimc_deb_device *vdeb = v4l2_get_subdevdata(sd);
+>>       struct v4l2_mbus_framefmt *sink_fmt;
+>> +    u32 *src_code;
+>>         if (fmt->which == V4L2_SUBDEV_FORMAT_ACTIVE) {
+>>           /* Do not change the format while stream is on */
+>> @@ -244,8 +264,10 @@ static int vimc_deb_set_fmt(struct v4l2_subdev *sd,
+>>               return -EBUSY;
+>>             sink_fmt = &vdeb->sink_fmt;
+>> +        src_code = &vdeb->src_code;
+>>       } else {
+>>           sink_fmt = v4l2_subdev_get_try_format(sd, cfg, 0);
+>> +        src_code = &v4l2_subdev_get_try_format(sd, cfg, 1)->code;
+>>       }
+>>         /*
+>> @@ -253,9 +275,14 @@ static int vimc_deb_set_fmt(struct v4l2_subdev *sd,
+>>        * it is propagated from the sink
+>>        */
+>>       if (VIMC_IS_SRC(fmt->pad)) {
+>> +        u32 code = fmt->format.code;
+>> +
+>>           fmt->format = *sink_fmt;
+>> -        /* TODO: Add support for other formats */
+>> -        fmt->format.code = vdeb->src_code;
+>> +
+>> +        if (!vimc_deb_is_src_code_invalid(code))
+>> +            *src_code = code;
+>> +
+>> +        fmt->format.code = *src_code;
+>>       } else {
+>>           /* Set the new format in the sink pad */
+>>           vimc_deb_adjust_sink_fmt(&fmt->format);
+>> @@ -291,11 +318,21 @@ static void vimc_deb_set_rgb_mbus_fmt_rgb888_1x24(struct vimc_deb_device *vdeb,
+>>                             unsigned int col,
+>>                             unsigned int rgb[3])
 > 
-> Bah!
+> Change this to pass a pointer and size.
+
+Hi Shuah,
+
+Modifying vimc_deb_set_rgb_mbus_fmt_rgb888_1x24() is not part of this patch, or do you mean another part of the code?
+
+Thanks for reviewing
+Helen
+
 > 
-> > 	kernel_kexec():
-> > 	  machine_shutdown():
-> > 	    disable_nonboot_cpus():
-> > 	      freeze_secondary_cpus()
-> >
-> > , so I wonder whether the pm_wakeup_pending() makes sense in this
-> > situation? Because IIUC, in this case we want to reboot the system
-> > regardlessly, the pm_wakeup_pending() checking seems to be inappropriate
-> > then.
+>>   {
+>> +    const struct vimc_pix_map *vpix;
+>>       unsigned int i, index;
+>>   +    vpix = vimc_pix_map_by_code(vdeb->src_code);
+>>       index = VIMC_FRAME_INDEX(lin, col, vdeb->sink_fmt.width, 3);
+>> -    for (i = 0; i < 3; i++)
+>> -        vdeb->src_frame[index + i] = rgb[i];
+>> +    for (i = 0; i < 3; i++) {
+>> +        switch (vpix->pixelformat) {
+>> +        case V4L2_PIX_FMT_RGB24:
+>> +            vdeb->src_frame[index + i] = rgb[i];
+>> +            break;
+>> +        case V4L2_PIX_FMT_BGR24:
+>> +            vdeb->src_frame[index + i] = rgb[2-i];
+>> +            break;
+>> +        }
+>> +    }
+>>   }
+>>     static int vimc_deb_s_stream(struct v4l2_subdev *sd, int enable)
+>>
 > 
-> Fix below.
-> 
-> Thanks,
-> 
->         tglx
-> 
-> 8<------------
-> 
-> --- a/include/linux/cpu.h
-> +++ b/include/linux/cpu.h
-> @@ -133,12 +133,18 @@ static inline void get_online_cpus(void)
->  static inline void put_online_cpus(void) { cpus_read_unlock(); }
->  
->  #ifdef CONFIG_PM_SLEEP_SMP
-> -extern int freeze_secondary_cpus(int primary);
-> +int __freeze_secondary_cpus(int primary, bool suspend);
-> +static inline int freeze_secondary_cpus(int primary)
-> +{
-> +	return __freeze_secondary_cpus(primary, true);
-> +}
-> +
->  static inline int disable_nonboot_cpus(void)
->  {
-> -	return freeze_secondary_cpus(0);
-> +	return __freeze_secondary_cpus(0, false);
->  }
-
-If I read the code correctly, arch/x86/power/cpu.c is calling
-disable_nonboot_cpus() from suspend resume, which is the only user in
-tip/smp/core after my series.
-
-This means you won't abort a suspend/hibernate if a late wakeup source happens?
-Or it might just mean that we'll wakeup slightly later than we would have done.
-
-Anyways. I think it would be better to kill off disable_nonboot_cpus() and
-directly call freeze_nonboot_cpus() in x86/power/cpu.c.
-
-I'd be happy to send a patch for this.
-
-Assuming that x86 is okay with the late(r) abort, this patch could stay as-is
-for stable trees. Otherwise, maybe we need to revert this and look for another
-option for stable trees?
-
-Thanks
-
---
-Qais Yousef
-
-> -extern void enable_nonboot_cpus(void);
-> +
-> +void enable_nonboot_cpus(void);
->  
->  static inline int suspend_disable_secondary_cpus(void)
->  {
-> --- a/kernel/cpu.c
-> +++ b/kernel/cpu.c
-> @@ -1200,7 +1200,7 @@ EXPORT_SYMBOL_GPL(cpu_up);
->  #ifdef CONFIG_PM_SLEEP_SMP
->  static cpumask_var_t frozen_cpus;
->  
-> -int freeze_secondary_cpus(int primary)
-> +int __freeze_secondary_cpus(int primary, bool suspend)
->  {
->  	int cpu, error = 0;
->  
-> @@ -1225,7 +1225,7 @@ int freeze_secondary_cpus(int primary)
->  		if (cpu == primary)
->  			continue;
->  
-> -		if (pm_wakeup_pending()) {
-> +		if (suspend && pm_wakeup_pending()) {
->  			pr_info("Wakeup pending. Abort CPU freeze\n");
->  			error = -EBUSY;
->  			break;
+> thanks,
+> -- Shuah
