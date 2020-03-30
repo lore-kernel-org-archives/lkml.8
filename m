@@ -2,153 +2,220 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FA12C43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 21:09:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5EABC2D0F0
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 21:09:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3097620658
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 21:09:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C0AE20714
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 21:09:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kudzu-us.20150623.gappssmtp.com header.i=@kudzu-us.20150623.gappssmtp.com header.b="n/qvynkE"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hgl1nb9V"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728517AbgC3VJV (ORCPT
+        id S1728763AbgC3VJ3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 17:09:21 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:43544 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728317AbgC3VJU (ORCPT
+        Mon, 30 Mar 2020 17:09:29 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:35317 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728317AbgC3VJ3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 17:09:20 -0400
-Received: by mail-io1-f65.google.com with SMTP id x9so12977011iom.10
-        for <linux-kernel@vger.kernel.org>; Mon, 30 Mar 2020 14:09:19 -0700 (PDT)
+        Mon, 30 Mar 2020 17:09:29 -0400
+Received: by mail-wm1-f66.google.com with SMTP id i19so400047wmb.0;
+        Mon, 30 Mar 2020 14:09:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kudzu-us.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=LQMmWKFXXDNKTWX4CIpxQrEHPSRiPfMjq8jxaS3pzgU=;
-        b=n/qvynkEWyNEa3pa13rLSf65JlYY1/YvcGeTiYdIJCkUnXt2SN8RSqQEyF7ow4Qkez
-         zVKg8d6SSd63M/GP/5HxXc9zcwpHLIMlbML0bzAXUvwaqsX8hlR9sNQmAwsp0S9BvrDl
-         e1/PmGDOOZJ0za/9tOliaroZqFdTYHy3QBmOQVAYEtAY0PvlL84DVjj3OrhZRI2sJIEF
-         fQH3stLrEBImpI2kg7TWcDmyn+UiLZwQ4POfqIusIJATlVf4NPEJONpe1RC9vbK4nnUm
-         /C1xpFqEPdr0pwTBt7gFG+vYxcTbjMHb67FiJnME4fn2FLD/nAPPmnS7Z3Zqe8oF+DaE
-         9gHg==
+        d=gmail.com; s=20161025;
+        h=cc:subject:to:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=ACdIJ3YCitAVdhQ/MSxutWsv/modcuO99U0TDBWSkuU=;
+        b=hgl1nb9VtuGDiLHNZwwIk/oztamJ18atAbKqHRgA6jhAurysdklOpiiTd17Vj7tj2w
+         cD6YostrUEX6ImQYMtmMEsGXwTk4VbgmUonJXN8RYoD7BbpSHIbr3hh+x1p6q1S4usUx
+         6NNovfpVfsiLhGCvJhyVJGEon9F0wl4dnDcxvFOqPd2vb9wwu4xJJUv8X1Cx/TuoC5I2
+         zAA+1+h2SN25N/uVNxOah59byRXO8OQ9S2BJ0bBqdEG9zIEoslhoBIUsR/d0Aopa+/X7
+         rhQkXC4XAJElc+oNZJ+/zip8YO55WNGkrzhV7j6p0qxzKSa/409Viz3G1Pzjfa1uEZ3f
+         LW0w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=LQMmWKFXXDNKTWX4CIpxQrEHPSRiPfMjq8jxaS3pzgU=;
-        b=B4JOSLAjcYcEYvLHTlbYZ7inEFpFuhCivoLEj/5uaCVzDynmuMXzZQOIlN/ajLRYGu
-         81/n54Z6r/4cEGQuCQhh1lFSSYKE8e2pGMtMEt8xsSKGrKYzuUclhYdqeR5S+VfH63yE
-         dQk4yKOvI8stwlvW3gXHl9bDiXq/JZ4dyRHvBygSBECKBc3lKdSkvZ/MYyHnVcWNhQxY
-         vN/eD8RDOJLipclAg7hXfvE4ILJ94Tg06vXcpPoaKmMPisACcFKSrCNIIB0AJWsBAjwO
-         1sUZUxl3Es3ylyhxGiUnwvqGB+uCXPaznonvu5nd6w/F20hD6QzWvYMz9jUpMFtMekfi
-         SnKQ==
-X-Gm-Message-State: ANhLgQ1OL0eARdCYihE9VWYAtw4tOAGFIGlqu1MzDTd4ufpxF2iSCPBn
-        9VoexgP7w8fEn/c/QLDh+DBEPsFE5cjmeHAN1pWewQ==
-X-Google-Smtp-Source: ADFU+vugoIOLey6rUkU+MxImCq8tmI71KonfG/L7TeNK0h35Bd5XYB9KXHamkASGevU1KAxASzG2ttrUKQF+6lK2f9Q=
-X-Received: by 2002:a05:6602:164b:: with SMTP id y11mr12569834iow.3.1585602559415;
- Mon, 30 Mar 2020 14:09:19 -0700 (PDT)
+        h=x-gm-message-state:cc:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=ACdIJ3YCitAVdhQ/MSxutWsv/modcuO99U0TDBWSkuU=;
+        b=PLusY9Zk0U0GwpLr2JiyewIXhoh+jlb6uqCwshLBdTtjVGkUZVE8fB9Tmxu/CWJm2l
+         wbPzOtWpgA35sTo58wUpAunQXZxCn7tREN30WNUFxYciuKFpB1QJEXedQKB2vlKeuHc8
+         SUE18VwuCX8MgLSqfY0xEeMOn1ctdS4gwx21B8aOA5JE4qpfgKt7mvkQ2YAKmpVLvONP
+         yT2c8is3tVZ4ZokL/91jSHt82JhChjgfS/ycGolQamhis+kBVZj6OActDsHbDaoi9DCL
+         9kjNDKa5kJYvUAk9YdsBvyp+DGohZK/Czdhh/obOVzi09RgnN1hhmOfCkwdlpvD8TQB4
+         Z0FQ==
+X-Gm-Message-State: ANhLgQ35ZKhUFb89Dbgpil/E1WG0FqLtt5ooq3dMmxXQua/ji6IxCzZg
+        gMsVfu8FUq/wnwcS+/kwTnk=
+X-Google-Smtp-Source: ADFU+vsl21hI3DlgaX+m4iBu27eT2rDX2FdW5UeZ3igxTvPlYnUAIZjG8yZWBXJPz1LxaFbXXkbAZg==
+X-Received: by 2002:a05:600c:292:: with SMTP id 18mr21685wmk.3.1585602566559;
+        Mon, 30 Mar 2020 14:09:26 -0700 (PDT)
+Received: from ?IPv6:2001:a61:2482:101:3351:6160:8173:cc31? ([2001:a61:2482:101:3351:6160:8173:cc31])
+        by smtp.gmail.com with ESMTPSA id b15sm23330294wru.70.2020.03.30.14.09.25
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 30 Mar 2020 14:09:25 -0700 (PDT)
+Cc:     mtk.manpages@gmail.com, linux-man@vger.kernel.org,
+        lkml <linux-kernel@vger.kernel.org>, arul.jeniston@gmail.com
+Subject: Re: [PATCH] timerfd_create.2: Included return value 0
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        "devi R.K" <devi.feb27@gmail.com>
+References: <CAJymdbxJNag1W0vR9Ysm7_y91HwLAu4QaSMKZbed4emT1DYvww@mail.gmail.com>
+ <55aa30be-5894-ae52-ffd4-5f2a82aa5ad5@gmail.com>
+ <CAJymdbwfm7EypQfXRqWZHbfj2SKk7PCP7SMccz6bmJWSauDqPQ@mail.gmail.com>
+ <CAJymdby8pDASq5Xv7DeTJ5cq1NXPe1jUWwApxZ5o-huaEXUrjw@mail.gmail.com>
+ <3cbd0919-c82a-cb21-c10f-0498433ba5d1@gmail.com>
+ <87a73ywzbv.fsf@nanos.tec.linutronix.de>
+From:   "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com>
+Message-ID: <d79b3520-77ac-199e-6576-ab9f235ac297@gmail.com>
+Date:   Mon, 30 Mar 2020 23:09:24 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-References: <cover.1580914232.git.arindam.nath@amd.com> <a8e98fe8-25da-3ea7-a204-2fee07c6061a@amd.com>
- <20200313002524.GB13046@kudzu.us> <MN2PR12MB3232D38E30341A7D7408BED79CCB0@MN2PR12MB3232.namprd12.prod.outlook.com>
-In-Reply-To: <MN2PR12MB3232D38E30341A7D7408BED79CCB0@MN2PR12MB3232.namprd12.prod.outlook.com>
-From:   Jon Mason <jdmason@kudzu.us>
-Date:   Mon, 30 Mar 2020 17:09:08 -0400
-Message-ID: <CAPoiz9zBxB28nfCudr0xXYi4Lg7XRJXshTLvTM5W5uMcvw=2FQ@mail.gmail.com>
-Subject: Re: [PATCH 00/15] AMD ntb driver fixes and improvements
-To:     "Nath, Arindam" <Arindam.Nath@amd.com>
-Cc:     "Mehta, Sanju" <Sanju.Mehta@amd.com>,
-        "S-k, Shyam-sundar" <Shyam-sundar.S-k@amd.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Allen Hubbe <allenbh@gmail.com>,
-        Jiasen Lin <linjiasen@hygon.cn>,
-        "linux-ntb@googlegroups.com" <linux-ntb@googlegroups.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <87a73ywzbv.fsf@nanos.tec.linutronix.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 30, 2020 at 2:43 PM Nath, Arindam <Arindam.Nath@amd.com> wrote:
->
-> > -----Original Message-----
-> > From: Jon Mason <jdmason@kudzu.us>
-> > Sent: Friday, March 13, 2020 05:55
-> > To: Mehta, Sanju <Sanju.Mehta@amd.com>
-> > Cc: Nath, Arindam <Arindam.Nath@amd.com>; S-k, Shyam-sundar <Shyam-
-> > sundar.S-k@amd.com>; Dave Jiang <dave.jiang@intel.com>; Allen Hubbe
-> > <allenbh@gmail.com>; Jiasen Lin <linjiasen@hygon.cn>; Mehta, Sanju
-> > <Sanju.Mehta@amd.com>; linux-ntb@googlegroups.com; linux-
-> > kernel@vger.kernel.org
-> > Subject: Re: [PATCH 00/15] AMD ntb driver fixes and improvements
-> >
-> > On Fri, Feb 07, 2020 at 04:28:53PM +0530, Sanjay R Mehta wrote:
-> > >
-> > >
-> > > On 2/5/2020 9:24 PM, Arindam Nath wrote:
-> > > > [CAUTION: External Email]
-> > > >
-> > > > This patch series fixes some bugs in the existing
-> > > > AMD NTB driver, cleans-up code, and modifies the
-> > > > code to handle NTB link-up/down events. The series
-> > > > is based on Linus' tree,
-> > > >
-> > > > git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
-> > > >
-> > > > Arindam Nath (15):
-> > > >   NTB: Fix access to link status and control register
-> > > >   NTB: clear interrupt status register
-> > > >   NTB: Enable link up and down event notification
-> > > >   NTB: define a new function to get link status
-> > > >   NTB: return the side info status from amd_poll_link
-> > > >   NTB: set peer_sta within event handler itself
-> > > >   NTB: remove handling of peer_sta from amd_link_is_up
-> > > >   NTB: handle link down event correctly
-> > > >   NTB: handle link up, D0 and D3 events correctly
-> > > >   NTB: move ntb_ctrl handling to init and deinit
-> > > >   NTB: add helper functions to set and clear sideinfo
-> > > >   NTB: return link up status correctly for PRI and SEC
-> > > >   NTB: remove redundant setting of DB valid mask
-> > > >   NTB: send DB event when driver is loaded or un-loaded
-> > > >   NTB: add pci shutdown handler for AMD NTB
-> > >
-> > > The patch series looks good to me. Thanks for the changes.
-> > >
-> > > For all the ntb_hw_amd changes:
-> > >
-> > > Reviewed-by: Sanjay R Mehta <sanju.mehta@amd.com>
-> >
-> > I had to rework the first patch, since Jiasen's patch was already in
-> > my tree for a couple months.  The rest applied fine and will be in my
-> > git trees on github in a couple of hours (sanity build pending).
-> >
->
-> Hi Jon,
->
-> Just wanted to know whether the changes are in your tree now?
+Hello Thomas,
 
-You should see them in my ntb branch and I'll be sending out a pull req
+On 3/30/20 12:50 AM, Thomas Gleixner wrote:
+> Micheal,
+> 
+> "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com> writes:
+>> [Greetings, Thomas; now I recall a conversation we had in Lyon :-) ]
+> 
+> Hehe.
+> 
+>> I think this patch does not really capture the details
+>> properly. The immediately preceding paragraph says:
+>>
+>>          If  the  associated  clock  is  either  CLOCK_REALTIME   or
+>>          CLOCK_REALTIME_ALARM,     the     timer     is     absolute
+>>          (TFD_TIMER_ABSTIME), and the  flag  TFD_TIMER_CANCEL_ON_SET
+>>          was  specified when calling timerfd_settime(), then read(2)
+>>          fails with the  error  ECANCELED  if  the  real-time  clock
+>>          undergoes a discontinuous change.  (This allows the reading
+>>          application to discover such discontinuous changes  to  the
+>>          clock.)
+>>
+>> Following on from that, I think we should have a pargraph that says
+>> something like:
+>>
+>>          If  the  associated  clock  is  either  CLOCK_REALTIME   or
+>>          CLOCK_REALTIME_ALARM,     the     timer     is     absolute
+>>          (TFD_TIMER_ABSTIME), and the  flag  TFD_TIMER_CANCEL_ON_SET
+>>          was not specified when calling timerfd_settime(), then a
+>>          discontinuous negative change to the clock 
+>>          (e.g., clock_settime(2)) may cause read(2) to unblock, but
+>>          return a value of 0 (i.e., no bytes read), if the clock
+>>          change occurs after the time expired, but before the
+>>          read(2) on the timerfd file descriptor.
+> 
+> Yes, that's correct. Accurate as always!
+
+Thanks. (It took me a while to nut it out, actually.)
+
+> This is pretty much in line with clock_nanosleep(CLOCK_REALTIME,
+> TIMER_ABSTIME) which has a similar problem vs. observability in user
+> space.
+> 
+> clock_nanosleep(2) mutters:
+> 
+>   "POSIX.1 specifies that after changing the value of the CLOCK_REALTIME
+>    clock via clock_settime(2), the new clock value shall be used to
+>    determine the time at which a thread blocked on an absolute
+>    clock_nanosleep() will wake up; if the new clock value falls past the
+>    end of the sleep interval, then the clock_nanosleep() call will return
+>    immediately."
+> 
+> which can be interpreted as guarantee that clock_nanosleep() never
+> returns prematurely, 
+
+<nod>
+
+> i.e. the assert() in the below code would indicate
+> a kernel failure:
+> 
+>    ret = clock_nanosleep(CLOCK_REALTIME, TIMER_ABSTIME, &expiry, NULL);
+>    if (!ret) {
+>          clock_gettime(CLOCK_REALTIME, &now);
+>          assert(now >= expiry);
+>    }
+> 
+> But that assert can trigger when CLOCK_REALTIME was modified after the
+> timer fired and the kernel decided to wake up the task and let it return
+> to user space.
+> 
+>    clock_nanosleep(..., &expiry)
+>      arm_timer(expires);
+>      schedule();
+> 
+>    -> timer interrupt
+>       now = ktime_get_real();
+>       if (expires <= now)
+>               -------------------------------- After this point
+>          wakeup();                             clock_settime(2) or
+>                                                adjtimex(2) which
+>                                                makes CLOCK_REALTIME
+>                                                jump back far enough will
+>                                                cause the above assert
+>                                                to trigger.
+> 
+>    ...
+>    return from syscall (retval == 0)
+> 
+> There is no guarantee against clock_settime() coming after the
+> wakeup. Even if we put another check into the return to user path then
+> we won't catch a clock_settime() which comes right after that and before
+> user space invokes clock_gettime().
+
+<nod>
+
+> POSIX spec Issue 7 (2018 edition) says:
+> 
+>  The suspension for the absolute clock_nanosleep() function (that is,
+>  with the TIMER_ABSTIME flag set) shall be in effect at least until the
+>  value of the corresponding clock reaches the absolute time specified by
+>  rqtp.
+> 
+> And that's what the kernel implements for clock_nanosleep() and timerfd
+> behaves exactly the same way.
+> 
+> The wakeup of the waiter, i.e. task blocked in clock_nanosleep(2),
+> read(2), poll(2), is not happening _before_ the absolute time specified
+> is reached.
+> 
+> If clock_settime() happens right before the expiry check, then it does
+> the right thing, but any modification to the clock after the wakeup
+> cannot be mitigated. At least not in a way which would make the assert()
+> in the example code above a reliable indicator for a kernel fail.
+> 
+> That's the reason why I rejected the attempt to mitigate that particular
+> 0 tick issue in timerfd as it would just scratch a particular itch but
+> still not provide any guarantee. So having the '0' return documented is
+> the right way to go.
+
+Thanks for the incredibly detailed follow-up Thomas (which all 
+landed in my commit message). I've applied a patch almost exactly
+the same as the text I showed above (and it's pushed to Git).
+
+All of 2020 is a bust, I expect. Perhaps we see us at a conference
+in 2021 ;-).
+
+Cheers,
+
+Michael
 
 
->
-> Thanks,
-> Arindam
->
-> > Thanks,
-> > Jon
-> >
-> > >
-> > >
-> > > >
-> > > >  drivers/ntb/hw/amd/ntb_hw_amd.c | 290
-> > ++++++++++++++++++++++++++------
-> > > >  drivers/ntb/hw/amd/ntb_hw_amd.h |   8 +-
-> > > >  2 files changed, 247 insertions(+), 51 deletions(-)
-> > > >
-> > > > --
-> > > > 2.17.1
-> > > >
+
+-- 
+Michael Kerrisk
+Linux man-pages maintainer; http://www.kernel.org/doc/man-pages/
+Linux/UNIX System Programming Training: http://man7.org/training/
