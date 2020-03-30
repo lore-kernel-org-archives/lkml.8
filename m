@@ -2,99 +2,96 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BE64C2D0EB
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 07:58:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3154CC2D0E9
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 08:02:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7227F20757
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 07:58:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="GC8AiKNJ"
+	by mail.kernel.org (Postfix) with ESMTP id 070FA206E6
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 08:02:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729578AbgC3H6J (ORCPT
+        id S1729574AbgC3IC1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 03:58:09 -0400
-Received: from ozlabs.org ([203.11.71.1]:54815 "EHLO ozlabs.org"
+        Mon, 30 Mar 2020 04:02:27 -0400
+Received: from mx2.suse.de ([195.135.220.15]:56676 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729474AbgC3H6J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 03:58:09 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 48rPvy6T7Rz9sPk;
-        Mon, 30 Mar 2020 18:58:06 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1585555087;
-        bh=WK2Lo5q5SzX90q1XNYNKJfzQpY7i3VZOmKQrQOCy/Mc=;
-        h=Date:From:To:Cc:Subject:From;
-        b=GC8AiKNJbuxk78o70EURz25ifXr8xw7d41U6eki3d8t2tYiew42BDmSnYUXEQEaHE
-         R+f/pIii7LDpJ+v+kWYnDm7WPta2QgceE8LzFIms7DQuUR1aeAytD19hcIbWPh3d4F
-         D+EbWR7DPniU1NEjQgjOsjRWFrgkclvdz0bEdktbfWppqoJWT9jPWys4MxJooVNGR/
-         nYsXO0GBgF/me8iVsqGEdVd1yDiedXuTzUiYKPzlOkWofVTMdfQbAYU0ysZVFxk7Ge
-         Ce2RJ4I1k9vaBTxyhERh8yvHVYRftYWmKjb5Y90EJXDLT7UoyDoL/Tav+0fQQRFlbb
-         t7fnd0ou9iynA==
-Date:   Mon, 30 Mar 2020 18:58:03 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Thierry Reding <treding@nvidia.com>,
-        Vidya Sagar <vidyas@nvidia.com>
-Subject: linux-next: build failure after merge of the gpio tree
-Message-ID: <20200330185803.55ef3a93@canb.auug.org.au>
-MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/Qy6VoS_7vfub1YVCaflB5I+";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+        id S1729474AbgC3IC0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Mar 2020 04:02:26 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 772A1AF2C;
+        Mon, 30 Mar 2020 08:02:24 +0000 (UTC)
+Date:   Mon, 30 Mar 2020 10:02:23 +0200
+Message-ID: <s5hlfnib78w.wl-tiwai@suse.de>
+From:   Takashi Iwai <tiwai@suse.de>
+To:     Thomas Hebb <tommyhebb@gmail.com>
+Cc:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
+        Kailang Yang <kailang@realtek.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Hui Wang <hui.wang@canonical.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Jian-Hong Pan <jian-hong@endlessm.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>,
+        Sergey Bostandzhyan <jin@mediatomb.cc>,
+        Takashi Iwai <tiwai@suse.com>,
+        Tomas Espeleta <tomas.espeleta@gmail.com>,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/3] Properly fix headphone noise on the XPS 13 and other ALC256 devices
+In-Reply-To: <cover.1585553414.git.tommyhebb@gmail.com>
+References: <cover.1585553414.git.tommyhebb@gmail.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI/1.14.6 (Maruoka)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 Emacs/25.3
+ (x86_64-suse-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI 1.14.6 - "Maruoka")
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/Qy6VoS_7vfub1YVCaflB5I+
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Mon, 30 Mar 2020 09:30:29 +0200,
+Thomas Hebb wrote:
+> 
+> 
+> The root cause of various pervasive audio problems on the XPS 13
+> 9350/9360, mostly relating to the headphone jack, turns out to be an
+> undocumented feature of the ALC256 and similar codecs that routes audio
+> along paths not exposed in the HDA node graph. The best we've had so far
+> to configure this feature is magic numbers provided by Realtek, none of
+> which have fully fixed all issues.
+> 
+> This series documents the "PC Beep Hidden Register", which controls the
+> feature and which I've reverse engineered using black box techniques,
+> and uses my findings to hopefully fix the headphone issues on my XPS 13
+> once and for all.
 
-Hi all,
+Thanks for the patches, all those look interesting and good to apply.
+But I'd like to get it reviewed by Kailang at first -- in case we
+might be playing with something untouchable.
 
-After merging the gpio tree, today's linux-next build (powerpc
-ppc44x_defconfig) failed like this:
+Kailang, could you review this quickly?
 
-drivers/gpio/gpiolib.c: In function 'gpiochip_generic_request':
-drivers/gpio/gpiolib.c:2756:32: error: 'struct gpio_device' has no member n=
-amed 'pin_ranges'
- 2756 |  if (!list_empty(&chip->gpiodev->pin_ranges))
-      |                                ^~
 
-Caused by commit
+Takashi
 
-  2ab73c6d8323 ("gpio: Support GPIO controllers without pin-ranges")
-
-# CONFIG_PINCTRL is not set
-
-I have reverted that commit for today.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/Qy6VoS_7vfub1YVCaflB5I+
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl6BposACgkQAVBC80lX
-0GwN1Af/Tslx2Fg1eA2XFitq9fCbx4heaEWYFACExItPJ8DNpC1ugCvzMl9BWp+g
-1Xam8YFOrkDPUuq3m7z6wzU2nhSAHl9xhsyTIldksylteNQw0N4f6yuC9E6VPiwe
-Mz/BgdlRB+Ob21arq34U4eDF5W3YntmaJJDd/Aq5OGjWuJvIw0RW9s8B9s9nx+Kv
-rXzBW8HpnYlxi2AXwdUBlBC9lS/Mxyk+R8YtLjV0egxmnVq2nkrJpVHH6jj9VCij
-drWzgJKPdAkBIeWV9CWW3FMVrf3w7LPizMXcJ3V033YRHnI4qDcv7XzY4zdvuNNN
-NQgYyKNjtWwVc25h1EjJ+GDTeo13hw==
-=4juB
------END PGP SIGNATURE-----
-
---Sig_/Qy6VoS_7vfub1YVCaflB5I+--
+> 
+> Thomas Hebb (3):
+>   ALSA: doc: Document PC Beep Hidden Register on Realtek ALC256
+>   ALSA: hda/realtek - Set principled PC Beep configuration for ALC256
+>   ALSA: hda/realtek - Remove now-unnecessary XPS 13 headphone noise
+>     fixups
+> 
+>  Documentation/sound/hd-audio/index.rst        |   1 +
+>  Documentation/sound/hd-audio/models.rst       |   2 -
+>  .../sound/hd-audio/realtek-pc-beep.rst        | 129 ++++++++++++++++++
+>  sound/pci/hda/patch_realtek.c                 |  49 ++-----
+>  4 files changed, 139 insertions(+), 42 deletions(-)
+>  create mode 100644 Documentation/sound/hd-audio/realtek-pc-beep.rst
+> 
+> -- 
+> 2.25.2
+> 
