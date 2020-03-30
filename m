@@ -2,422 +2,338 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8511C2D0F1
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 22:08:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4700CC2D0F2
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 22:08:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 77A2720771
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 22:08:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585606127;
-	bh=ZOErm6lEmZvP+ovsodL45iQmjYZzPPNLN+eo5hQkzSo=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=GAd/Qu4oHGoZNsK3wxxa2+I6guObWT4iEzgtm/tlMC7sjvSjyF65iRCtOdM/1sCYK
-	 oqVsVMdsbvxbypyx4wMuJLurHgpIYh9JXAXu0fGncH2CGUZatjwjxf5PbUyZuZp1v8
-	 3cGI/kKlyL26QkYyFcn/qQ4kg+Au1ZaqiMDPwAK8=
+	by mail.kernel.org (Postfix) with ESMTP id 16151206CC
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 22:08:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730955AbgC3WIq (ORCPT
+        id S1730976AbgC3WIv convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 18:08:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43464 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730065AbgC3WIp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Mar 2020 18:08:51 -0400
+Received: from coyote.holtmann.net ([212.227.132.17]:36355 "EHLO
+        mail.holtmann.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730809AbgC3WIp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 30 Mar 2020 18:08:45 -0400
-Received: from mail-qt1-f170.google.com (mail-qt1-f170.google.com [209.85.160.170])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 92C172082F;
-        Mon, 30 Mar 2020 22:08:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585606124;
-        bh=ZOErm6lEmZvP+ovsodL45iQmjYZzPPNLN+eo5hQkzSo=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=SHHRwzG61NxtUja7gaNlX7ZyR762n8IuRYa6oyD9qp4IHyRHIFpNAa4gMUbYl/APW
-         ay2NqSC9ACRHJETCz/uOACtzUiboQLS4hBqo7sglrSeDKUHBgLavo7UdKRaB8Ex7wJ
-         zsPh57TTO8/aLSpS9Xgj0njvvcRz8HnqiKzdMsf8=
-Received: by mail-qt1-f170.google.com with SMTP id g7so16598031qtj.13;
-        Mon, 30 Mar 2020 15:08:44 -0700 (PDT)
-X-Gm-Message-State: ANhLgQ00B1T9njlpifKk/TjVT84qLjofQhtLD9XlUkcznxhEsRG1+T7x
-        TqN8ok5mNV9QqLzrbMg//HvQyW7INO7MQ395Ig==
-X-Google-Smtp-Source: ADFU+vsxy/WcQxSvxiDJHczEz5Nnj3IOpeWpw7TJdl2/M3fVUm11rKYD/dQTJfqeYCYaprHkckA/dcd+YCXXppiG9aw=
-X-Received: by 2002:aed:3461:: with SMTP id w88mr2245257qtd.143.1585606123550;
- Mon, 30 Mar 2020 15:08:43 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200330114239.1112759-1-jiaxun.yang@flygoat.com> <20200330114239.1112759-3-jiaxun.yang@flygoat.com>
-In-Reply-To: <20200330114239.1112759-3-jiaxun.yang@flygoat.com>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Mon, 30 Mar 2020 16:08:31 -0600
-X-Gmail-Original-Message-ID: <CAL_Jsq+Wwx1A9_cPLwrGwmciR2h5q0ij-SBiORrCL5rDA-EGZg@mail.gmail.com>
-Message-ID: <CAL_Jsq+Wwx1A9_cPLwrGwmciR2h5q0ij-SBiORrCL5rDA-EGZg@mail.gmail.com>
-Subject: Re: [PATCH 2/5] PCI: Add Loongson PCI Controller support
-To:     Jiaxun Yang <jiaxun.yang@flygoat.com>
-Cc:     "open list:MIPS" <linux-mips@vger.kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Huacai Chen <chenhc@lemote.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <amurray@thegoodpenguin.co.uk>,
-        Paul Burton <paulburton@kernel.org>,
-        PCI <linux-pci@vger.kernel.org>, devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Received: from marcel-macbook.fritz.box (p4FEFC5A7.dip0.t-ipconnect.de [79.239.197.167])
+        by mail.holtmann.org (Postfix) with ESMTPSA id BA211CECB0;
+        Tue, 31 Mar 2020 00:18:16 +0200 (CEST)
+Content-Type: text/plain;
+        charset=utf-8
+Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
+Subject: Re: [PATCH v4 2/2] Bluetooth: btusb: Read the supported features of
+ Microsoft vendor extension
+From:   Marcel Holtmann <marcel@holtmann.org>
+In-Reply-To: <20200328004507.v4.2.Ic59b637deef8e646f6599a80c9a2aa554f919e55@changeid>
+Date:   Tue, 31 Mar 2020 00:08:43 +0200
+Cc:     Bluetooth Kernel Mailing List <linux-bluetooth@vger.kernel.org>,
+        Alain Michaud <alainm@chromium.org>,
+        Luiz Augusto von Dentz <luiz.von.dentz@intel.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Johan Hedberg <johan.hedberg@gmail.com>,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org
+Content-Transfer-Encoding: 8BIT
+Message-Id: <1FA9284F-C8DD-40A3-81A7-65AC6DE1E3C5@holtmann.org>
+References: <20200328074632.21907-1-mcchou@chromium.org>
+ <20200328004507.v4.2.Ic59b637deef8e646f6599a80c9a2aa554f919e55@changeid>
+To:     Miao-chen Chou <mcchou@chromium.org>
+X-Mailer: Apple Mail (2.3608.80.23.2.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 30, 2020 at 5:44 AM Jiaxun Yang <jiaxun.yang@flygoat.com> wrote:
->
-> This controller can be found on Loongson-2K SoC, Loongson-3
-> systems with RS780E/LS7A PCH.
->
-> The RS780E part of code was previously located at
-> arch/mips/pci/ops-loongson3.c and now it can use generic PCI
-> driver implementation.
->
-> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+Hi Miao-chen,
+
+> This defines opcode and packet structures of Microsoft vendor extension.
+> For now, we add only the HCI_VS_MSFT_Read_Supported_Features command. See
+> https://docs.microsoft.com/en-us/windows-hardware/drivers/bluetooth/
+> microsoft-defined-bluetooth-hci-commands-and-events#microsoft-defined-
+> bluetooth-hci-events for more details.
+> Upon initialization of a hci_dev, we issue a
+> HCI_VS_MSFT_Read_Supported_Features command to read the supported features
+> of Microsoft vendor extension if the opcode of Microsoft vendor extension
+> is valid. See https://docs.microsoft.com/en-us/windows-hardware/drivers/
+> bluetooth/microsoft-defined-bluetooth-hci-commands-and-events#
+> hci_vs_msft_read_supported_features for more details.
+> This was verified on a device with Intel ThunderPeak BT controller where
+> the Microsoft vendor extension features are 0x000000000000003f.
+> 
+> Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
+> 
+> Signed-off-by: Miao-chen Chou <mcchou@chromium.org>
 > ---
->  drivers/pci/controller/Kconfig        |  10 +
->  drivers/pci/controller/Makefile       |   1 +
->  drivers/pci/controller/pci-loongson.c | 263 ++++++++++++++++++++++++++
->  3 files changed, 274 insertions(+)
->  create mode 100644 drivers/pci/controller/pci-loongson.c
->
-> diff --git a/drivers/pci/controller/Kconfig b/drivers/pci/controller/Kconfig
-> index 91bfdb784829..f6c3058ec4b8 100644
-> --- a/drivers/pci/controller/Kconfig
-> +++ b/drivers/pci/controller/Kconfig
-> @@ -258,6 +258,16 @@ config PCI_HYPERV_INTERFACE
->           The Hyper-V PCI Interface is a helper driver allows other drivers to
->           have a common interface with the Hyper-V PCI frontend driver.
->
-> +config PCI_LOONGSON
-> +       tristate "LOONGSON PCI Controller"
-> +       depends on MACH_LOONGSON64
-
-Add: || COMPILE_TEST
-
-(assuming that builds on x86, arm, etc.)
-
-> +       depends on OF
-> +       depends on PCI_QUIRKS
-> +       default y
-
-New drivers should not default to yes.
-
-> +       help
-> +         Say Y here if you want to enable PCI controller support on
-> +         Loongson systems.
+> 
+> Changes in v4:
+> - Move MSFT's do_open() and do_close() from net/bluetooth/hci_core.c to
+> net/bluetooth/msft.c.
+> - Other than msft opcode, define struct msft_data to host the rest of
+> information of Microsoft extension and leave a void* pointing to a
+> msft_data in struct hci_dev.
+> 
+> Changes in v3:
+> - Introduce msft_vnd_ext_do_open() and msft_vnd_ext_do_close().
+> 
+> Changes in v2:
+> - Issue a HCI_VS_MSFT_Read_Supported_Features command with
+> __hci_cmd_sync() instead of constructing a request.
+> 
+> include/net/bluetooth/hci_core.h |   1 +
+> net/bluetooth/hci_core.c         |   5 ++
+> net/bluetooth/hci_event.c        |   5 ++
+> net/bluetooth/msft.c             | 126 +++++++++++++++++++++++++++++++
+> net/bluetooth/msft.h             |  10 +++
+> 5 files changed, 147 insertions(+)
+> 
+> diff --git a/include/net/bluetooth/hci_core.h b/include/net/bluetooth/hci_core.h
+> index 239cae2d9998..59ddcd3a52cc 100644
+> --- a/include/net/bluetooth/hci_core.h
+> +++ b/include/net/bluetooth/hci_core.h
+> @@ -486,6 +486,7 @@ struct hci_dev {
+> 
+> #if IS_ENABLED(CONFIG_BT_MSFTEXT)
+> 	__u16			msft_opcode;
+> +	void			*msft_data;
+> #endif
+> 
+> 	int (*open)(struct hci_dev *hdev);
+> diff --git a/net/bluetooth/hci_core.c b/net/bluetooth/hci_core.c
+> index dbd2ad3a26ed..c38707de767a 100644
+> --- a/net/bluetooth/hci_core.c
+> +++ b/net/bluetooth/hci_core.c
+> @@ -44,6 +44,7 @@
+> #include "hci_debugfs.h"
+> #include "smp.h"
+> #include "leds.h"
+> +#include "msft.h"
+> 
+> static void hci_rx_work(struct work_struct *work);
+> static void hci_cmd_work(struct work_struct *work);
+> @@ -1563,6 +1564,8 @@ static int hci_dev_do_open(struct hci_dev *hdev)
+> 	    hci_dev_test_flag(hdev, HCI_VENDOR_DIAG) && hdev->set_diag)
+> 		ret = hdev->set_diag(hdev, true);
+> 
+> +	msft_do_open(hdev);
 > +
->  source "drivers/pci/controller/dwc/Kconfig"
->  source "drivers/pci/controller/mobiveil/Kconfig"
->  source "drivers/pci/controller/cadence/Kconfig"
-> diff --git a/drivers/pci/controller/Makefile b/drivers/pci/controller/Makefile
-> index 158c59771824..fbac4b0190a0 100644
-> --- a/drivers/pci/controller/Makefile
-> +++ b/drivers/pci/controller/Makefile
-> @@ -28,6 +28,7 @@ obj-$(CONFIG_PCIE_MEDIATEK) += pcie-mediatek.o
->  obj-$(CONFIG_PCIE_TANGO_SMP8759) += pcie-tango.o
->  obj-$(CONFIG_VMD) += vmd.o
->  obj-$(CONFIG_PCIE_BRCMSTB) += pcie-brcmstb.o
-> +obj-$(CONFIG_PCI_LOONGSON) += pci-loongson.o
->  # pcie-hisi.o quirks are needed even without CONFIG_PCIE_DW
->  obj-y                          += dwc/
->  obj-y                          += mobiveil/
-> diff --git a/drivers/pci/controller/pci-loongson.c b/drivers/pci/controller/pci-loongson.c
-> new file mode 100644
-> index 000000000000..b9abb27793ab
-> --- /dev/null
-> +++ b/drivers/pci/controller/pci-loongson.c
-> @@ -0,0 +1,263 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Loongson PCI Host Controller Driver
-> + *
-> + * Copyright (C) 2020 Jiaxun Yang <jiaxun.yang@flygoat.com>
-> + */
+> 	clear_bit(HCI_INIT, &hdev->flags);
+> 
+> 	if (!ret) {
+> @@ -1758,6 +1761,8 @@ int hci_dev_do_close(struct hci_dev *hdev)
+> 
+> 	hci_sock_dev_event(hdev, HCI_DEV_DOWN);
+> 
+> +	msft_do_close(hdev);
 > +
-> +#include <linux/of_address.h>
-> +#include <linux/of_pci.h>
-> +#include <linux/of_platform.h>
-> +#include <linux/pci.h>
-> +#include <linux/pci_ids.h>
+> 	if (hdev->flush)
+> 		hdev->flush(hdev);
+> 
+> diff --git a/net/bluetooth/hci_event.c b/net/bluetooth/hci_event.c
+> index 20408d386268..42b5871151a6 100644
+> --- a/net/bluetooth/hci_event.c
+> +++ b/net/bluetooth/hci_event.c
+> @@ -35,6 +35,7 @@
+> #include "a2mp.h"
+> #include "amp.h"
+> #include "smp.h"
+> +#include "msft.h"
+> 
+> #define ZERO_KEY "\x00\x00\x00\x00\x00\x00\x00\x00" \
+> 		 "\x00\x00\x00\x00\x00\x00\x00\x00"
+> @@ -6144,6 +6145,10 @@ void hci_event_packet(struct hci_dev *hdev, struct sk_buff *skb)
+> 		hci_num_comp_blocks_evt(hdev, skb);
+> 		break;
+> 
+> +	case HCI_EV_VENDOR:
+> +		msft_vendor_evt(hdev, skb);
+> +		break;
 > +
-> +#include "../pci.h"
+> 	default:
+> 		BT_DBG("%s event 0x%2.2x", hdev->name, event);
+> 		break;
+> diff --git a/net/bluetooth/msft.c b/net/bluetooth/msft.c
+> index 7609932c48ca..f76e4c79556e 100644
+> --- a/net/bluetooth/msft.c
+> +++ b/net/bluetooth/msft.c
+> @@ -6,6 +6,24 @@
+> 
+> #include "msft.h"
+> 
+> +#define MSFT_OP_READ_SUPPORTED_FEATURES		0x00
+> +struct msft_cp_read_supported_features {
+> +	__u8   sub_opcode;
+> +} __packed;
+> +struct msft_rp_read_supported_features {
+> +	__u8   status;
+> +	__u8   sub_opcode;
+> +	__le64 features;
+> +	__u8   evt_prefix_len;
+> +	__u8   evt_prefix[0];
+> +} __packed;
 > +
-> +/* Device IDs */
-> +#define DEV_PCIE_PORT_0        0x7a09
-> +#define DEV_PCIE_PORT_1        0x7a19
-> +#define DEV_PCIE_PORT_2        0x7a29
-> +
-> +#define DEV_LS2K_APB   0x7a02
-> +#define DEV_LS7A_CONF  0x7a10
-> +#define DEV_LS7A_LPC   0x7a0c
-> +
-> +#define FLAG_CFG0      BIT(0)
-> +#define FLAG_CFG1      BIT(1)
-> +#define FLAG_DEV_FIX   BIT(2)
-> +
-> +struct loongson_pci {
-> +       void __iomem *cfg0_base;
-> +       void __iomem *cfg1_base;
-> +       struct platform_device *pdev;
-> +       u32 flags;
+> +struct msft_data {
+> +	__u64 features;
+> +	__u8  evt_prefix_len;
+> +	__u8  *evt_prefix;
 > +};
 > +
-> +/* Fixup wrong class code in PCIe bridges */
-> +static void bridge_class_quirk(struct pci_dev *dev)
+> void msft_set_opcode(struct hci_dev *hdev, __u16 opcode)
+> {
+> 	hdev->msft_opcode = opcode;
+> @@ -14,3 +32,111 @@ void msft_set_opcode(struct hci_dev *hdev, __u16 opcode)
+> 		    hdev->msft_opcode);
+> }
+> EXPORT_SYMBOL(msft_set_opcode);
+> +
+> +static struct msft_data *read_supported_features(struct hci_dev *hdev)
 > +{
-> +       dev->class = PCI_CLASS_BRIDGE_PCI << 8;
-> +}
-> +DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_LOONGSON,
-> +                       DEV_PCIE_PORT_0, bridge_class_quirk);
-> +DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_LOONGSON,
-> +                       DEV_PCIE_PORT_1, bridge_class_quirk);
-> +DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_LOONGSON,
-> +                       DEV_PCIE_PORT_2, bridge_class_quirk);
+> +	struct msft_data *msft;
+
+I used a second parameter, but yes, my initial code was totally flawed with the msft_data access.
+
+> +	struct msft_cp_read_supported_features cp;
+> +	struct msft_rp_read_supported_features *rp;
+> +	struct sk_buff *skb;
 > +
-> +static void system_bus_quirk(struct pci_dev *pdev)
-> +{
-> +       u16 tmp;
+> +	cp.sub_opcode = MSFT_OP_READ_SUPPORTED_FEATURES;
 > +
-> +       pdev->mmio_always_on = 1;
-> +       pdev->non_compliant_bars = 1;
-> +       /* Enable MEM & IO Decoding */
-> +       pci_read_config_word(pdev, PCI_STATUS, &tmp);
-> +       tmp |= PCI_COMMAND_IO | PCI_COMMAND_MEMORY;
-> +       pci_write_config_word(pdev, PCI_STATUS, tmp);
-> +}
+> +	skb = __hci_cmd_sync(hdev, hdev->msft_opcode, sizeof(cp), &cp,
+> +			     HCI_CMD_TIMEOUT);
+> +	if (IS_ERR(skb)) {
+> +		bt_dev_err(hdev, "Failed to read MSFT supported features (%ld)",
+> +			   PTR_ERR(skb));
+> +		return NULL;
+> +	}
 > +
-> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
-> +                       DEV_LS2K_APB, system_bus_quirk);
-> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
-> +                       DEV_LS7A_CONF, system_bus_quirk);
-> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
-> +                       DEV_LS7A_LPC, system_bus_quirk);
+> +	if (skb->len < sizeof(*rp)) {
+> +		bt_dev_err(hdev, "MSFT supported features length mismatch");
+> +		goto failed;
+> +	}
 > +
-> +static void loongson_mrrs_quirk(struct pci_dev *dev)
-> +{
-> +       struct pci_bus *bus = dev->bus;
-> +       struct pci_dev *bridge;
-> +       static const struct pci_device_id bridge_devids[] = {
-> +               { PCI_VDEVICE(LOONGSON, DEV_PCIE_PORT_0) },
-> +               { PCI_VDEVICE(LOONGSON, DEV_PCIE_PORT_1) },
-> +               { PCI_VDEVICE(LOONGSON, DEV_PCIE_PORT_0) },
-> +               { 0, },
-> +       };
+> +	rp = (struct msft_rp_read_supported_features *)skb->data;
 > +
+> +	if (rp->sub_opcode != MSFT_OP_READ_SUPPORTED_FEATURES)
+> +		goto failed;
 > +
-> +       /* look for the matching bridge */
-> +       while (!pci_is_root_bus(bus)) {
-> +               bridge = bus->self;
-> +               bus = bus->parent;
-> +               /*
-> +                * Some Loongson PCIE ports has a h/w limitation of
-> +                * 256 bytes maximum read request size. It can't handle
-> +                * anything higher than this. So force this limit on
-> +                * any devices attached under these ports.
-> +                */
-> +               if (pci_match_id(bridge_devids, bridge)) {
-> +                       if (pcie_get_readrq(dev) > 256) {
-> +                               dev_info(&dev->dev, "limiting MRRS to 256\n");
-> +                               pcie_set_readrq(dev, 256);
-> +                       }
-> +                       break;
-> +               }
-> +       }
-> +}
-> +DECLARE_PCI_FIXUP_ENABLE(PCI_ANY_ID, PCI_ANY_ID, loongson_mrrs_quirk);
+> +	msft = kzalloc(sizeof(*msft), GFP_KERNEL);
+> +	if (!msft)
+> +		goto failed;
 > +
-> +static void __iomem *cfg1_map(struct loongson_pci *priv, int bus, int dev,
-> +                               int func, int where)
-> +{
-> +       unsigned long addroff = 0x0;
+> +	if (rp->evt_prefix_len > 0) {
+> +		msft->evt_prefix = kmemdup(rp->evt_prefix, rp->evt_prefix_len,
+> +					   GFP_KERNEL);
+> +		if (!msft->evt_prefix)
+> +			goto failed;
+> +	}
 > +
-> +       if (bus != 0)
-> +               addroff |= BIT(28); /* Type 1 Access */
-> +       addroff |= (where & 0xff) | ((where & 0xf00) << 16);
-> +       addroff |= (bus << 16) | (dev << 11) | (func << 8);
-> +       return priv->cfg1_base + addroff;
+> +	msft->evt_prefix_len = rp->evt_prefix_len;
+> +	msft->features = __le64_to_cpu(rp->features);
+> +	kfree_skb(skb);
+> +
+> +	bt_dev_info(hdev, "MSFT supported features %llx", msft->features);
+> +	return msft;
+> +
+> +failed:
+> +	kfree_skb(skb);
+> +	return NULL;
 > +}
 > +
-> +static void __iomem *cfg0_map(struct loongson_pci *priv, int bus, int dev,
-> +                               int func, int where)
+> +void msft_do_open(struct hci_dev *hdev)
 > +{
-> +       unsigned long addroff = 0x0;
+> +	if (hdev->msft_opcode == HCI_OP_NOP)
+> +		return;
 > +
-> +       if (bus != 0)
-> +               addroff |= BIT(24); /* Type 1 Access */
-> +       addroff |= (bus << 16) | (dev << 11) | (func << 8) | where;
-> +       return priv->cfg0_base + addroff;
+> +	bt_dev_dbg(hdev, "Initialize MSFT extension");
+> +	hdev->msft_data = read_supported_features(hdev);
 > +}
 > +
-> +void __iomem *pci_loongson_map_bus(struct pci_bus *bus, unsigned int devfn,
-> +                              int where)
+> +void msft_do_close(struct hci_dev *hdev)
 > +{
-> +       unsigned char busnum = bus->number;
-> +       int device = PCI_SLOT(devfn);
-> +       int function = PCI_FUNC(devfn);
-> +       struct pci_host_bridge *bridge = pci_find_host_bridge(bus);
-> +       struct loongson_pci *priv =  pci_host_bridge_priv(bridge);
+> +	struct msft_data *msft = hdev->msft_data;
 > +
-> +       /*
-> +        * Do not read more than one device on the bus other than
-> +        * the host bridge.
-> +        */
-> +       if (bus->primary != 0 && device > 0 &&
-> +               priv->flags & FLAG_DEV_FIX)
-> +               return NULL;
+> +	if (!msft)
+> +		return;
 > +
-> +       /* CFG0 can only access standard space */
-> +       if (where < PCI_CFG_SPACE_SIZE && priv->flags & FLAG_CFG0 &&
-> +               priv->cfg0_base)
-> +               return cfg0_map(priv, busnum, device, function, where);
+> +	bt_dev_dbg(hdev, "Cleanup of MSFT extension");
 > +
-> +       /* CFG1 can access exp space */
-> +       if (where < PCI_CFG_SPACE_EXP_SIZE && priv->flags & FLAG_CFG1 &&
-> +               priv->cfg1_base)
-> +               return cfg1_map(priv, busnum, device, function, where);
+> +	hdev->msft_data = NULL;
 > +
-> +
-
-Single blank line.
-
-> +       return NULL;
+> +	kfree(msft->evt_prefix);
+> +	kfree(msft);
 > +}
 > +
-> +static int loongson_map_irq(const struct pci_dev *dev, u8 slot, u8 pin)
+> +int msft_vendor_evt(struct hci_dev *hdev, struct sk_buff *skb)
 > +{
-> +       int irq;
-> +       u8 val;
+
+So this was on purpose void. There is no point in returning any feedback from this function. It either handles the event or it doesn’t. The caller function doesn’t care.
+
+> +	struct msft_data *msft = hdev->msft_data;
+> +	u8 event;
 > +
-> +       irq = of_irq_parse_and_map_pci(dev, slot, pin);
-> +       if (irq > 0)
-> +               return irq;
+> +	if (!msft)
+> +		return -ENOSYS;
 > +
-> +       /* Care legacy systems */
-> +       pci_read_config_byte(dev, PCI_INTERRUPT_LINE, &val);
-> +       /* 0xff is also invalid */
-> +       if (val == 0xff)
-> +               return 0;
+> +	/* When the extension has defined an event prefix, check that it
+> +	 * matches, and otherwise just return.
+> +	 */
+> +	if (msft->evt_prefix_len > 0) {
+> +		if (skb->len < msft->evt_prefix_len)
+> +			return -ENOSYS;
 > +
-> +       return val;
+> +		if (memcmp(skb->data, msft->evt_prefix, msft->evt_prefix_len))
+> +			return -ENOSYS;
+> +
+> +		skb_pull(skb, msft->evt_prefix_len);
+> +	}
+> +
+> +	/* Every event starts at least with an event code and the rest of
+> +	 * the data is variable and depends on the event code. Returns true
+> +	 */
+> +	if (skb->len < 1)
+> +		return -EBADMSG;
+> +
+> +	event = *skb->data;
+> +	skb_pull(skb, 1);
+> +
+> +	bt_dev_dbg(hdev, "MSFT vendor event %u", event);
+> +	return 0;
 > +}
-> +
-> +/* PCI operations */
-> +static struct pci_ops loongson_pci_ops = {
-> +       .map_bus = pci_loongson_map_bus,
-> +       .read   = pci_generic_config_read32,
-> +       .write  = pci_generic_config_write32,
-
-Do you really require 32-bit writes? That isn't safe. See comments for
-the function.
-
-> +};
-> +
-> +static const struct of_device_id loongson_pci_of_match[] = {
-> +       { .compatible = "loongson,rs780e-pci",
-> +               .data = (void *)(FLAG_CFG0), },
-> +       { .compatible = "loongson,ls2k-pci",
-> +               .data = (void *)(FLAG_CFG0 | FLAG_CFG1 | FLAG_DEV_FIX), },
-> +       { .compatible = "loongson,ls7a-pci",
-> +               .data = (void *)(FLAG_CFG0 | FLAG_CFG1 | FLAG_DEV_FIX), },
-> +       {}
-> +};
-> +
-> +static int loongson_pci_probe(struct platform_device *pdev)
+> diff --git a/net/bluetooth/msft.h b/net/bluetooth/msft.h
+> index 7218ea759dde..6a7d0ac6c66c 100644
+> --- a/net/bluetooth/msft.h
+> +++ b/net/bluetooth/msft.h
+> @@ -4,15 +4,25 @@
+> #ifndef __MSFT_H
+> #define __MSFT_H
+> 
+> +#include <linux/errno.h>
+> #include <net/bluetooth/hci_core.h>
+> 
+> #if IS_ENABLED(CONFIG_BT_MSFTEXT)
+> 
+> void msft_set_opcode(struct hci_dev *hdev, __u16 opcode);
+> +void msft_do_open(struct hci_dev *hdev);
+> +void msft_do_close(struct hci_dev *hdev);
+> +int msft_vendor_evt(struct hci_dev *hdev, struct sk_buff *skb);
+> 
+> #else
+> 
+> static inline void msft_set_opcode(struct hci_dev *hdev, __u16 opcode) {}
+> +static inline void msft_do_open(struct hci_dev *hdev) {}
+> +static inline void msft_do_close(struct hci_dev *hdev) {}
+> +static inline int msft_vendor_evt(struct hci_dev *hdev, struct sk_buff *skb)
 > +{
-> +       struct loongson_pci *priv;
-> +       struct device *dev = &pdev->dev;
-> +       struct device_node *node = dev->of_node;
-> +       struct pci_host_bridge *bridge;
-> +       const struct of_device_id *match;
-> +       struct resource regs;
-> +       int err;
-> +       LIST_HEAD(res);
-> +
-> +       if (!node)
-> +               return -ENODEV;
-> +
-> +       bridge = devm_pci_alloc_host_bridge(dev, sizeof(*priv));
-> +       if (!bridge)
-> +               return -ENODEV;
-> +
-> +       priv = pci_host_bridge_priv(bridge);
-> +       priv->pdev = pdev;
-> +
-> +       match = of_match_device(loongson_pci_of_match, &pdev->dev);
-> +       priv->flags = (unsigned long)match->data;
-
-Use of_device_get_match_data() instead.
-
-> +
-> +       err = of_address_to_resource(node, 0, &regs);
-
-Use platform_get_resource() instead.
-
-You should be able to drop of_address.h
-
-> +       if (err) {
-> +               dev_err(dev, "missing \"reg\" property for cfg0\n");
-> +               return err;
-> +       }
-> +
-> +       priv->cfg0_base = devm_pci_remap_cfg_resource(dev, &regs);
-> +       if (IS_ERR(priv->cfg0_base))
-> +               return PTR_ERR(priv->cfg0_base);
-> +
-> +       /* CFG1 is optional */
-> +       if (priv->flags & FLAG_CFG1) {
-> +               if (of_address_to_resource(node, 1, &regs))
-> +                       dev_info(dev, "missing \"reg\" property for cfg1\n");
-> +               else {
-> +                       priv->cfg1_base = devm_pci_remap_cfg_resource(dev, &regs);
-> +                       if (IS_ERR(priv->cfg1_base))
-> +                               priv->cfg1_base = NULL;
-> +               }
-> +       }
-> +
-> +
-> +       err = pci_parse_request_of_pci_ranges(dev, &res,
-
-Just pass &bridge->windows and remove res.
-
-> +                                               &bridge->dma_ranges, NULL);
-> +       if (err) {
-> +               dev_err(dev, "Failed to get bridge resources\n");
-> +               return err;
-> +       }
-> +
-> +       list_splice_init(&res, &bridge->windows);
-> +       bridge->dev.parent = dev;
-> +       bridge->sysdata = priv;
-> +       bridge->busnr = 0;
-
-Already 0.
-
-> +       bridge->ops = &loongson_pci_ops;
-> +       bridge->map_irq = loongson_map_irq;
-> +
-> +       err = pci_host_probe(bridge);
-> +       if (err)
-> +               return err;
-> +
-> +       return 0;
+> +	return -ENOSYS;
 > +}
-> +
-> +static struct platform_driver loongson_pci_driver = {
-> +       .driver = {
-> +               .name = "loongson-pci",
-> +               .of_match_table = loongson_pci_of_match,
-> +       },
-> +       .probe = loongson_pci_probe,
-> +};
-> +builtin_platform_driver(loongson_pci_driver);
+> 
+> #endif
 
-Can't work as a module?
+Regards
 
-Rob
+Marcel
+
