@@ -5,58 +5,58 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BB2DC2D0E7
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 01:10:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84DAEC43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 01:10:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 051B220780
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 01:10:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4FFFA20748
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 01:10:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VcKHNHoj"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="F7nQYiIa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728625AbgC3BKB (ORCPT
+        id S1728704AbgC3BKH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Mar 2020 21:10:01 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:37318 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728376AbgC3BJw (ORCPT
+        Sun, 29 Mar 2020 21:10:07 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:45491 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728414AbgC3BJy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Mar 2020 21:09:52 -0400
-Received: by mail-lj1-f196.google.com with SMTP id r24so16329200ljd.4;
-        Sun, 29 Mar 2020 18:09:49 -0700 (PDT)
+        Sun, 29 Mar 2020 21:09:54 -0400
+Received: by mail-lj1-f195.google.com with SMTP id t17so16314658ljc.12;
+        Sun, 29 Mar 2020 18:09:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=MHYPefJWQ2jYMV5ChKdxbB+4Vp/yJ7NANKqMVNH2lrQ=;
-        b=VcKHNHojJQkkNIkk4s/pQWLeajPjlCG7JcOfFQs6wCbDvRCsIBmXS5CSe5NCIGTRNk
-         pY0ivIqW1Y04EEaV/fDSpWI56dOXHaxgkuRwJS4EHWqi6JGfcYLcPM5BNroghts3g4cX
-         l7k3jK1uJPfKIxezSlnLiIANzt6zus1pX2XIDuqGZnpMGNJ597FhKD8WGBWgu464H/a2
-         8qbLhv/Mrw26/7iPqXluUFfQvqCbiDAdf6wRhfLuWrCMKE//Z9ZXlvpzAMLTUIvHZ0ZT
-         ryiw8s1rIFdRcjA+fvFo+XciWrz9NEDnViu7zoOkoklgXMswwsepOFnrR2sFjR1fj1um
-         qp6A==
+        bh=UVJ9yyE9K29bjnDrPjNdExCXsCR6dQskyYaw3z4hZMU=;
+        b=F7nQYiIaHaST/H7lR7YpTTa4yZjR1j5Co4uSUtl0sgMnIvNo+M+8NFbhKOUavfmm/K
+         L8+5mcmop875YhcV806hvT5NeLKYsURWzYro4YNtmtxxThG3DBQSRBJ//NBhVa/Okk96
+         blIweno/JmI2vIHcs2M+M4ocr7ITywTV95X+8QFqxcqUksEe66nTgUuojF5u3kqHxspg
+         1NjfQIp6xQcVYJng1r5m8wGrvQ5T6aaEVHyUeWn/zN01OXK9w0VoPkj6PF9Aa6GCc3Ip
+         jy5pmksmf3z4WB4zU7CpLFG/vX4jxXtz8+Luys44rcz0vmCYu5W2IWhL6O6ANdqxBHPh
+         KN4Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=MHYPefJWQ2jYMV5ChKdxbB+4Vp/yJ7NANKqMVNH2lrQ=;
-        b=gUK85GHX1oktnYwOiYCOJqt9/rFzVxZD37YTwjOydvQpREsOFr925W8TfhChxVNFHa
-         rOTCLIVkXbnzeEimWmrsMf+jyKvGdSlAV1U3S/huVAPkSTivDf+dA3+lazBIWvRdlpOt
-         8CEgD+pDhzWhiM8EOthhO16EkPb0PyKw+kKPGxhmudqpTs5tCx72Rpp00KL5NrhtN6Dz
-         jqWdSaoL0dZG/wqA1xGgGrLa9w80Qh56uI4f6izCNWpoNvvLVfLE5wU7YTyJ2ITBHmOm
-         VIT1yN0xl5y1pVstDOni25lzjIU7a5BVcmOPJCf8Y+JIbUfN1aTTD3Sx0brqzRS4w8uC
-         NJCA==
-X-Gm-Message-State: AGi0PubB8V7SAYgUfOQovxIGEnEH0Drh9JipIuXYZsrZsnkADzC6TwKX
-        0JNgxVZgkyouLcto2siVgIg=
-X-Google-Smtp-Source: APiQypJJ+SH3w4iibw9wY4Fz8oSyX+m81GA7f/6kS7n/iDhCOBJ5FH8lCHkmaWU9g38a35GHNtheYg==
-X-Received: by 2002:a2e:b005:: with SMTP id y5mr1424029ljk.25.1585530588778;
-        Sun, 29 Mar 2020 18:09:48 -0700 (PDT)
+        bh=UVJ9yyE9K29bjnDrPjNdExCXsCR6dQskyYaw3z4hZMU=;
+        b=jh8QoreotbNhDq380wY0xiDEH3/1qJ5o5q+mo85zlYEOl47QUe6CfzcaIuB49YntDW
+         v7vuczRCikjU4imnlCAErGdc4RuqNYUQElc8YYueUkUUv+FlFmKrXQYQJeTrZkIYoJS+
+         R5Z1gJZB1ddPNu28bzFfIU+woGTpix130LG/sZFU31Sh2fY8yzrLBJscw01hLlG0HUTY
+         e9w0lUvVU1j4AfzJoAZuQ4VnjO4Bx1351pw7k+Od+vXbMv/Ibwka3+1xJbJYYdEc0UfZ
+         J14rnEVNHVjgROrFQTs2aCvuWVL+qSkxl9RrVwoVYuS20IL8/UF5Mx4p+n/yustbV99P
+         3Taw==
+X-Gm-Message-State: AGi0PuYCLpk6i7m8pSxy64fx2q7n3Z8yA9ogINfeniyY2cgkNB50H0i1
+        XZnWFMLTLPK8jYdz00TISL8=
+X-Google-Smtp-Source: APiQypIW79Ltthny3GKQ7ecV2+YYx75UJ9/u2MNZafMabV+CzVs4wTMFMrkD4t5ow3wMmWRR3u68tQ==
+X-Received: by 2002:a2e:88cb:: with SMTP id a11mr5830944ljk.245.1585530592036;
+        Sun, 29 Mar 2020 18:09:52 -0700 (PDT)
 Received: from localhost.localdomain (ppp91-78-208-152.pppoe.mtu-net.ru. [91.78.208.152])
-        by smtp.gmail.com with ESMTPSA id f23sm2449005lja.60.2020.03.29.18.09.47
+        by smtp.gmail.com with ESMTPSA id f23sm2449005lja.60.2020.03.29.18.09.51
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 29 Mar 2020 18:09:48 -0700 (PDT)
+        Sun, 29 Mar 2020 18:09:51 -0700 (PDT)
 From:   Dmitry Osipenko <digetx@gmail.com>
 To:     Thierry Reding <thierry.reding@gmail.com>,
         Jonathan Hunter <jonathanh@nvidia.com>,
@@ -66,9 +66,9 @@ To:     Thierry Reding <thierry.reding@gmail.com>,
 Cc:     linux-tegra@vger.kernel.org, linux-pm@vger.kernel.org,
         linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
         devicetree@vger.kernel.org
-Subject: [PATCH v2 14/22] memory: tegra20-emc: Register as interconnect provider
-Date:   Mon, 30 Mar 2020 04:08:56 +0300
-Message-Id: <20200330010904.27643-15-digetx@gmail.com>
+Subject: [PATCH v2 17/22] memory: tegra30-emc: Register as interconnect provider
+Date:   Mon, 30 Mar 2020 04:08:59 +0300
+Message-Id: <20200330010904.27643-18-digetx@gmail.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200330010904.27643-1-digetx@gmail.com>
 References: <20200330010904.27643-1-digetx@gmail.com>
@@ -79,44 +79,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Now memory controller is a memory interconnection provider. This allows us
-to use interconnect API in order to change memory configuration.
+Now external memory controller is a memory interconnection provider.
+This allows us to use interconnect API to change memory configuration.
 
 Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
 ---
- drivers/memory/tegra/tegra20-emc.c | 117 +++++++++++++++++++++++++++++
- 1 file changed, 117 insertions(+)
+ drivers/memory/tegra/tegra30-emc.c | 115 +++++++++++++++++++++++++++++
+ 1 file changed, 115 insertions(+)
 
-diff --git a/drivers/memory/tegra/tegra20-emc.c b/drivers/memory/tegra/tegra20-emc.c
-index 3a6eb5cc5c29..a2fcff221659 100644
---- a/drivers/memory/tegra/tegra20-emc.c
-+++ b/drivers/memory/tegra/tegra20-emc.c
-@@ -9,6 +9,7 @@
- #include <linux/clk/tegra.h>
+diff --git a/drivers/memory/tegra/tegra30-emc.c b/drivers/memory/tegra/tegra30-emc.c
+index 69698665d431..5a4106173a75 100644
+--- a/drivers/memory/tegra/tegra30-emc.c
++++ b/drivers/memory/tegra/tegra30-emc.c
+@@ -14,6 +14,7 @@
  #include <linux/debugfs.h>
+ #include <linux/delay.h>
  #include <linux/err.h>
 +#include <linux/interconnect-provider.h>
  #include <linux/interrupt.h>
  #include <linux/io.h>
  #include <linux/iopoll.h>
-@@ -21,6 +22,8 @@
- 
- #include <soc/tegra/fuse.h>
- 
-+#include "mc.h"
-+
- #define EMC_INTSTATUS				0x000
- #define EMC_INTMASK				0x004
- #define EMC_DBG					0x008
-@@ -145,6 +148,7 @@ struct emc_timing {
- struct tegra_emc {
+@@ -327,6 +328,7 @@ struct tegra_emc {
  	struct device *dev;
+ 	struct tegra_mc *mc;
  	struct notifier_block clk_nb;
 +	struct icc_provider provider;
  	struct clk *clk;
  	void __iomem *regs;
- 
-@@ -658,6 +662,112 @@ static void tegra_emc_debugfs_init(struct tegra_emc *emc)
+ 	unsigned int irq;
+@@ -1264,6 +1266,112 @@ static void tegra_emc_debugfs_init(struct tegra_emc *emc)
  			    emc, &tegra_emc_debug_max_rate_fops);
  }
  
@@ -228,8 +219,8 @@ index 3a6eb5cc5c29..a2fcff221659 100644
 +
  static int tegra_emc_probe(struct platform_device *pdev)
  {
- 	struct device_node *np;
-@@ -721,6 +831,13 @@ static int tegra_emc_probe(struct platform_device *pdev)
+ 	struct platform_device *mc;
+@@ -1344,6 +1452,13 @@ static int tegra_emc_probe(struct platform_device *pdev)
  	platform_set_drvdata(pdev, emc);
  	tegra_emc_debugfs_init(emc);
  
