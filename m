@@ -2,94 +2,105 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DBDDEC2D0ED
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 12:33:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 831FBC43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 12:34:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A366C20716
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 12:33:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mGc+kPeR"
+	by mail.kernel.org (Postfix) with ESMTP id 5880820716
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 12:34:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585571649;
+	bh=HoaerF6H0bxc282DUNaU5Ua0lVW73ouI/Ch6kYgKfLg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=imONa0otkk+04ogEg/rCeLg7VhEC+uUCTfkftxxNb2y9LafSfrj2oMeyJw0n8eGh4
+	 jFcyNa4QJOsp3Xf5EkLX4zxRzhJE05yVBoe3YzdrSdjx2udfYlm457whvXphoNNbH3
+	 TzZhq3FKNjR1fo6NnJAzn2mLyON78WqjYtgpn048=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730148AbgC3MdR (ORCPT
+        id S1730160AbgC3MeI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 08:33:17 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:41833 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730060AbgC3MdR (ORCPT
+        Mon, 30 Mar 2020 08:34:08 -0400
+Received: from mail-wm1-f48.google.com ([209.85.128.48]:51792 "EHLO
+        mail-wm1-f48.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729972AbgC3MeH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 08:33:17 -0400
-Received: by mail-wr1-f66.google.com with SMTP id h9so21368230wrc.8
-        for <linux-kernel@vger.kernel.org>; Mon, 30 Mar 2020 05:33:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:reply-to:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=naK7Q0/Fj9JRWG5bzM0lGNaJ2RNq2aqyFfta/zUArY0=;
-        b=mGc+kPeR9rP7o3EpC6QtblfNaBAs1bU0ckOCx86tphhu1C5yCUgfknsw46j6hoWyOx
-         iiaiEM5gxkmcw6aM0g/SXbcHcSfHbb7nT+ZSoT49I9C7tCRZ/m+9kzxe1SEAix3ZHQp1
-         KmFEJs2RUlCCtwYgnSpNW88RtygdHXgWm5g54EvRdztr+Jc4slgn8GMU6a4PLcY9Lbwm
-         4jKALsQbGgFIIAJinXhuDRORPIjXS27oERca+zuRiSJnnvtcfn/NGZ9ATphEj5OyxEZ2
-         2jUHvE08vM9zjzMgT3YOcO1XbcuIiCYm0G4gqkVDf+2S2RtmIO83+SGtoOjw+nielik5
-         qTLw==
+        Mon, 30 Mar 2020 08:34:07 -0400
+Received: by mail-wm1-f48.google.com with SMTP id c187so19797895wme.1
+        for <linux-kernel@vger.kernel.org>; Mon, 30 Mar 2020 05:34:04 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:reply-to
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=naK7Q0/Fj9JRWG5bzM0lGNaJ2RNq2aqyFfta/zUArY0=;
-        b=fOEby4pclgCh3ja+r5mZIVRSpU94j8AcUA/X8PKZUYwxquChFA7GSyJJ6EsEpsYjNI
-         OLvL3nRZJR54Ekj2yWRJKsGNE4qMC5UfCsZm2Ar7FLnP7BIa6ju/B/DvC14f3sd/hXd9
-         TU52QrLlTcWnlQr2+QmJi4OkfRUuSBDD0l5yG6QI/PUlyfd7ru35hNq20Lp6KFLH+0Rm
-         nhuY12yU4t0NOt7kaxwuSe/YAnwbKe66qJM07niBVFhYrFh2RIIYdGKr8brXFeKZkeis
-         WAvz3GVqaAWfzEQ2mutwfG0xYnpji4u6ZLbkvC6Sljo6Md5hOKs8Q+ewEz3tVNHjbsZY
-         6t4Q==
-X-Gm-Message-State: ANhLgQ12gTGa3Lc/GNa7GOIy6Bgf8VwsndYnSuzh/xNKLfTMex5EDzSZ
-        J2ejTOWL8ZhRSKWtvDQcSIg=
-X-Google-Smtp-Source: ADFU+vuSgosME8py3mwebhMMcVQU3V0N/GycHAc6Uq8hJGrTFF7IASYQ5DaKaPl+cfNHePJNmsG1UA==
-X-Received: by 2002:adf:b35e:: with SMTP id k30mr14376997wrd.362.1585571595573;
-        Mon, 30 Mar 2020 05:33:15 -0700 (PDT)
-Received: from localhost ([185.92.221.13])
-        by smtp.gmail.com with ESMTPSA id u22sm10257011wmu.43.2020.03.30.05.33.14
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 30 Mar 2020 05:33:14 -0700 (PDT)
-Date:   Mon, 30 Mar 2020 12:33:14 +0000
-From:   Wei Yang <richard.weiyang@gmail.com>
-To:     Pankaj Gupta <pankaj.gupta.linux@gmail.com>
-Cc:     Wei Yang <richard.weiyang@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=Em2aQuXf0JSg6irJFEUCAhD/JvrnovGDSXnE0eBhJyg=;
+        b=Nxj2M3HCyyXYbO3nkFsm76279hm5/AE0hDqe5oUMNAdnItpb4RVce9fdxME1k2QxZK
+         o67XvHScFbPPXm+lvKMHXokQM659Jl3vg0c6FEsRTZDBl/In2/bbRUCDCdETHL6p7fha
+         Ux6LD3lf5jmEqSRdho/jws/7cTvI/xhD0gwbrzneOTSFc5WKccETu3gfR2lkNsj8LxFC
+         t7DFeuEwbnHyC/F3VJ/IaK9aYz1dKVj39gNVHvb4hqWJo5jcvzJWJ3KiV22hDgy7C77h
+         jSWSSMZhiYD22BCyszW8NwbYUgL8vJxb9HflZYRpcSnWqDQEI9+si2vDjlObEvMnYEDN
+         ynPw==
+X-Gm-Message-State: ANhLgQ17t4zPcZBuPhqfyxKO7abF8Zw9w7MMTpeoZpe92dUQ//HNUcX1
+        e37ub9jrMemBfySW6/cAhPs=
+X-Google-Smtp-Source: ADFU+vu41LA/m+g3AiN1pF7fnyL47hSltXVxaY1ddpeSVpuljI2zOSF9C7d78tJTM+jEETaTkTT08w==
+X-Received: by 2002:a1c:4b19:: with SMTP id y25mr7612860wma.70.1585571644125;
+        Mon, 30 Mar 2020 05:34:04 -0700 (PDT)
+Received: from localhost (ip-37-188-180-223.eurotel.cz. [37.188.180.223])
+        by smtp.gmail.com with ESMTPSA id n186sm20346573wme.25.2020.03.30.05.34.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 30 Mar 2020 05:34:03 -0700 (PDT)
+Date:   Mon, 30 Mar 2020 14:34:02 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Anshuman Khandual <anshuman.khandual@arm.com>
+Cc:     linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
+        David Hildenbrand <david@redhat.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] mm: rename gfpflags_to_migratetype to gfp_migratetype
- for same convention
-Message-ID: <20200330123314.pakqwr2plh6lnj27@master>
-Reply-To: Wei Yang <richard.weiyang@gmail.com>
-References: <20200329080823.7735-1-richard.weiyang@gmail.com>
- <CAM9Jb+j3tC0ogmmy8HOkNmPEiTzJsDPpGXRVPP3_2YNkhf1BRg@mail.gmail.com>
+Subject: Re: [RFC] mm/page_alloc: Enumerate bad page reasons
+Message-ID: <20200330123402.GI14243@dhcp22.suse.cz>
+References: <1585551097-27283-1-git-send-email-anshuman.khandual@arm.com>
+ <20200330084300.GC14243@dhcp22.suse.cz>
+ <689b594f-c18a-4131-8049-ac917345099b@arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAM9Jb+j3tC0ogmmy8HOkNmPEiTzJsDPpGXRVPP3_2YNkhf1BRg@mail.gmail.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+In-Reply-To: <689b594f-c18a-4131-8049-ac917345099b@arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 30, 2020 at 09:31:59AM +0200, Pankaj Gupta wrote:
-...
->
->I think it makes sense for naming consistency, at-least to me.
->
+On Mon 30-03-20 17:55:14, Anshuman Khandual wrote:
+> 
+> 
+> On 03/30/2020 02:13 PM, Michal Hocko wrote:
+> > On Mon 30-03-20 12:21:37, Anshuman Khandual wrote:
+> >> Enumerate all existing bad page reasons which can be used in bad_page() for
+> >> reporting via __dump_page(). Unfortunately __dump_page() cannot be changed.
+> >> __dump_page() is called from dump_page() that accepts a raw string and is
+> >> also an exported symbol that is currently being used from various generic
+> >> memory functions and other drivers. This reduces code duplication while
+> >> reporting bad pages.
+> > 
+> > I dunno. It sounds like over engineering something that is an internal
+> > stuff. Besides that I consider string reasons kinda obvious and I am
+> > pretty sure I would have to check them for each numeric alias when want
+> > to read the code. Yeah, yeah, nothing really hard but still...
+> 
+> Right these are very much self explanatory. Would moving these aliases into
+> mm/page_alloc.c itself, make it any better for quicker access ?
 
-Thanks
+Not really. Cscopes doesn't really care where it is. It is the fact that
+the constant makes to have a look is what makes this not an improvement
+from my POV.
+ 
+> > So I am not really sure this is all worth the code churn. Besides
+> 
+> I understand but is not just repeating the same strings in similar functions
+> bit suboptimal as well.
 
->Reviewed-by: Pankaj Gupta <pankaj.gupta.linux@gmail.com>
->>
->>
-
+I do not really see why that would be suboptimal.
 -- 
-Wei Yang
-Help you, Help me
+Michal Hocko
+SUSE Labs
