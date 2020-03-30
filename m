@@ -2,136 +2,82 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AAAC4C2D0EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 15:09:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4BB6C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 15:12:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 81ACB2082D
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 15:09:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA592206F5
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 15:12:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AEsPeebD"
+	dkim=pass (1024-bit key) header.d=pqgruber.com header.i=@pqgruber.com header.b="i2BdfEdZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728451AbgC3PJM (ORCPT
+        id S1728355AbgC3PMe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 11:09:12 -0400
-Received: from us-smtp-delivery-74.mimecast.com ([216.205.24.74]:40138 "EHLO
-        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726114AbgC3PJL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 11:09:11 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1585580950;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=+kYWet4bixbZbPNRdWuq5DEiauOXhGbRO6V2Oqjfd2E=;
-        b=AEsPeebDzZaXGbX6KOmegelNtl3ZCANUg9FoUJDsBSKPN0Gl3/kN2E6FGdkaqVPiPQeife
-        rHfYwtOK9xd9qE8UiuJTcnyvGFMXNd0E787N74ZA2ksdtv88lswBqZRS4D5DrskH2xlzAa
-        NYqjUn7sABZUt2mLbNUpim16y+kszB0=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-419-siq7RG0lM86jkZ9ApFcDlA-1; Mon, 30 Mar 2020 11:09:09 -0400
-X-MC-Unique: siq7RG0lM86jkZ9ApFcDlA-1
-Received: by mail-wm1-f70.google.com with SMTP id f8so8886264wmh.4
-        for <linux-kernel@vger.kernel.org>; Mon, 30 Mar 2020 08:09:08 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=+kYWet4bixbZbPNRdWuq5DEiauOXhGbRO6V2Oqjfd2E=;
-        b=rNMoGdXrYswkgqYdzho6R+sn6B410agLUm+sbkx18cV1tAthOD0SLGhbrHgDJfJ5Yj
-         U+hL1nBCjn5xnSudQanymakhB0ui45ysW7bSyXIXt/CrBZDBEbVIhptxAi/ZoOOnYO7z
-         Bw2ZwvHQYXbDaKW23r36IsbvIlbSxViZKVDBScB5qZiP0PC51FRIUFgAaSTyele2Ffsb
-         xf0WjW5/FrBCbWIXkwLslq3YqLQpiC0rzPuMHdCE78NVVhxyDuTKrSI66jnVLV7D1yEh
-         zqd0T6ln2ezjLqNTfD0XiVKv/IswoBAvH6tMA7rfLxT/sJRYVqFzwf/sHx8PFJx7jbb8
-         HXJg==
-X-Gm-Message-State: ANhLgQ2DEY9sesWiau3caG3SLkFIqVaTDojpLjZy0vGtw6eKuB/q+Pa6
-        9Nm1W8rGDPI9fz65yyihOzS7XS+1DYMYvQssqAYnqSOBfQzasF8yk1r+QBta13pmRDVkWIx+Q+T
-        IbJCAmicYJ7E9xc9krYGivYHh
-X-Received: by 2002:a5d:6a82:: with SMTP id s2mr15825821wru.205.1585580944003;
-        Mon, 30 Mar 2020 08:09:04 -0700 (PDT)
-X-Google-Smtp-Source: ADFU+vuK8fcHl6Eny3iPtQKj+itNFU3owKwmKMTZmJFabvEZvt/zBN1Zam2KGqhvau5vjZNoeoFTjg==
-X-Received: by 2002:a5d:6a82:: with SMTP id s2mr15825786wru.205.1585580943712;
-        Mon, 30 Mar 2020 08:09:03 -0700 (PDT)
-Received: from vitty.brq.redhat.com (g-server-2.ign.cz. [91.219.240.2])
-        by smtp.gmail.com with ESMTPSA id o145sm10142606wme.42.2020.03.30.08.09.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Mar 2020 08:09:03 -0700 (PDT)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     ltykernel@gmail.com
-Cc:     Tianyu Lan <Tianyu.Lan@microsoft.com>,
-        devel@linuxdriverproject.org, linux-kernel@vger.kernel.org,
-        kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
-        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
-        x86@kernel.org, michael.h.kelley@microsoft.com, wei.liu@kernel.org
-Subject: Re: [Update PATCH] x86/Hyper-V: Initialize Syn timer clock when it's
-In-Reply-To: <20200330141708.12822-1-Tianyu.Lan@microsoft.com>
-References: <20200330141708.12822-1-Tianyu.Lan@microsoft.com>
-Date:   Mon, 30 Mar 2020 17:09:00 +0200
-Message-ID: <87d08t3mnn.fsf@vitty.brq.redhat.com>
+        Mon, 30 Mar 2020 11:12:34 -0400
+Received: from mail.pqgruber.com ([52.59.78.55]:57178 "EHLO mail.pqgruber.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727067AbgC3PMe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Mar 2020 11:12:34 -0400
+Received: from workstation.tuxnet (213-47-165-233.cable.dynamic.surfer.at [213.47.165.233])
+        by mail.pqgruber.com (Postfix) with ESMTPSA id 81AF1C028FA;
+        Mon, 30 Mar 2020 17:12:32 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pqgruber.com;
+        s=mail; t=1585581152;
+        bh=owWsc4oE1uz/vgJXIvKbvjOwxqJ8BtE9s6a1tLJFCQc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=i2BdfEdZXZazeotMsRW0DdmPwflxF8eSoHPIHQ0tHMUbYig+LXhUrNodmO5g1ZAm2
+         7XAVjuS392ZPa7bboNXxL0/kkYpjbxjFnobbyCYYnHXRQ6pNMPZDUyFsdT79E3A29W
+         TX0QhZ1KTNG/rdio4m41YvZ3bSlt69/xPeW+CSyo=
+Date:   Mon, 30 Mar 2020 17:12:31 +0200
+From:   Clemens Gruber <clemens.gruber@pqgruber.com>
+To:     Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
+Cc:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>, thierry.reding@gmail.com,
+        linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        andy.shevchenko@gmail.com
+Subject: Re: (EXT) Re: [PATCH 1/4] pwm: pca9685: remove unused duty_cycle
+ struct element
+Message-ID: <20200330151231.GA1650@workstation.tuxnet>
+References: <20200226135229.24929-1-matthias.schiffer@ew.tq-group.com>
+ <20200226151034.7i3h5blmrwre2yzg@pengutronix.de>
+ <32ec35c2b3da119dd2c7bc09742796a0d8a9607e.camel@ew.tq-group.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <32ec35c2b3da119dd2c7bc09742796a0d8a9607e.camel@ew.tq-group.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-ltykernel@gmail.com writes:
+Hi,
 
-> From: Tianyu Lan <Tianyu.Lan@microsoft.com>
->
-> Current code initializes clock event data structure for syn timer
-> even when it's not available. Fix it.
->
-> Signed-off-by: Tianyu Lan <Tianyu.Lan@microsoft.com>
-> ---
-> - Fix the wrong title.
+On Wed, Feb 26, 2020 at 06:03:02PM +0100, Matthias Schiffer wrote:
+> As it turns out, this driver is broken in yet another way I didn't find
+> before: For changing the global prescaler the chip needs to be put into
+> sleep mode, but the driver doesn't follow the restart sequence
+> described in the datasheet when waking it back up. In consequence,
+> changing the period of one PWM does not only modify the period of all
+> PWMs (which is bad enough, but can't be avoided with this hardware),
+> but it also leaves all PWMs disabled...
 
-The new one is ... weird too :-)
+I am unable to reproduce this: If I set a specific duty cycle on a
+channel and then change the period, the channel stays active.
+I can see the brightness of an LED decrease if I increase the period.
 
-I think it was supposed to be something like "x86/Hyper-V: don't
-allocate clockevent device when synthetic timer is unavailable"
+This is expected, because after the SLEEP bit is set, we wait for
+500usecs and then write to the LED ON/OFF registers.
+This leaves the channel enabled with the new period (but with old
+duty_ns value => different ratio)
 
->  
->  drivers/hv/hv.c | 15 +++++++++------
+A few years ago, I played around with the idea of remembering the
+duty_ns to period_ns ratio and setting it accordingly after a period
+change, possibly also with a shortcut of setting the RESTART bit if the
+ratio did not change. Maybe after the switch to the atomic API, this
+would be a nice improvement.
 
-Which tree is this patch for? Upstream clockevent allocation has moved
-to drivers/clocksource/hyperv_timer.c 
-
->  1 file changed, 9 insertions(+), 6 deletions(-)
->
-> diff --git a/drivers/hv/hv.c b/drivers/hv/hv.c
-> index 632d25674e7f..2e893768fc76 100644
-> --- a/drivers/hv/hv.c
-> +++ b/drivers/hv/hv.c
-> @@ -212,13 +212,16 @@ int hv_synic_alloc(void)
->  		tasklet_init(&hv_cpu->msg_dpc,
->  			     vmbus_on_msg_dpc, (unsigned long) hv_cpu);
->  
-> -		hv_cpu->clk_evt = kzalloc(sizeof(struct clock_event_device),
-> -					  GFP_KERNEL);
-> -		if (hv_cpu->clk_evt == NULL) {
-> -			pr_err("Unable to allocate clock event device\n");
-> -			goto err;
-> +		if (ms_hyperv.features & HV_MSR_SYNTIMER_AVAILABLE) {
-> +			hv_cpu->clk_evt =
-> +				kzalloc(sizeof(struct clock_event_device),
-> +						  GFP_KERNEL);
-> +			if (hv_cpu->clk_evt == NULL) {
-> +				pr_err("Unable to allocate clock event device\n");
-> +				goto err;
-> +			}
-> +			hv_init_clockevent_device(hv_cpu->clk_evt, cpu);
->  		}
-> -		hv_init_clockevent_device(hv_cpu->clk_evt, cpu);
->  
->  		hv_cpu->synic_message_page =
->  			(void *)get_zeroed_page(GFP_ATOMIC);
-
--- 
-Vitaly
-
+Best regards,
+Clemens
