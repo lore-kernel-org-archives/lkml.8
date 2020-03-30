@@ -2,172 +2,222 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 969A1C43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 15:24:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97718C2D0EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 15:25:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F18E20732
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 15:24:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bvJPEj2g"
+	by mail.kernel.org (Postfix) with ESMTP id 64BB120776
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 15:25:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585581955;
+	bh=OkI9Y6lbPItEw8k2U/geJHS/GoU4ZcYumELtaEhN0F8=;
+	h=From:Date:Subject:To:Cc:List-ID:From;
+	b=FztaNf3ZuhAEkbRjUIl1Om2rIvP7+UVmXS0HwqhW/y6TyUh1sKyOBthTHkrP3QPh0
+	 h9pK3kW9YQRlcf295P8ZPqf3ki5BZ/bayw7VQH7UhQQ87i70zfcC+ed3NJj+vbcGM9
+	 /Vo1WWF9xGBif+eVGEMowDNEgq65biePgKV4B+gI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729057AbgC3PYJ (ORCPT
+        id S1729077AbgC3PZy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 11:24:09 -0400
-Received: from us-smtp-delivery-74.mimecast.com ([63.128.21.74]:57977 "EHLO
-        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728955AbgC3PYI (ORCPT
+        Mon, 30 Mar 2020 11:25:54 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:33306 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728124AbgC3PZy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 11:24:08 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1585581847;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=D5uFspd3/cIWYU7H3JtoXL8Mlj5rBTwKwCCQJPO8iZg=;
-        b=bvJPEj2g2dIkdhNV+J6wWwtyLCAbTcEXIkPz0gvswjjSPfQKAHIzrujVbcSGHWsdtFq5mu
-        EQj0RabGUvpTIlaxux7Hxq6vMTzJpkdhdyORip5PcmrX0F5owpVZ9e4yIsGRDexL35LqjK
-        mExqJ5pLR4rcX3G1+gncUkcU15NDI/I=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-92-43WTi89VPVK6XSkd5tw5ow-1; Mon, 30 Mar 2020 11:24:03 -0400
-X-MC-Unique: 43WTi89VPVK6XSkd5tw5ow-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 32077DB6E;
-        Mon, 30 Mar 2020 15:24:01 +0000 (UTC)
-Received: from madcap2.tricolour.ca (unknown [10.10.110.46])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 19F5399DEC;
-        Mon, 30 Mar 2020 15:23:49 +0000 (UTC)
-Date:   Mon, 30 Mar 2020 11:23:47 -0400
-From:   Richard Guy Briggs <rgb@redhat.com>
-To:     Paul Moore <paul@paul-moore.com>
-Cc:     Steve Grubb <sgrubb@redhat.com>, linux-audit@redhat.com,
-        nhorman@tuxdriver.com, linux-api@vger.kernel.org,
-        containers@lists.linux-foundation.org,
-        LKML <linux-kernel@vger.kernel.org>, dhowells@redhat.com,
-        netfilter-devel@vger.kernel.org, ebiederm@xmission.com,
-        simo@redhat.com, netdev@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, Eric Paris <eparis@parisplace.org>,
-        mpatel@redhat.com, Serge Hallyn <serge@hallyn.com>
-Subject: Re: [PATCH ghak90 V8 07/16] audit: add contid support for signalling
- the audit daemon
-Message-ID: <20200330152347.zjrcd6uuolfnq3fy@madcap2.tricolour.ca>
-References: <20200312202733.7kli64zsnqc4mrd2@madcap2.tricolour.ca>
- <CAHC9VhS9DtxJ4gvOfMRnzoo6ccGJVKL+uZYe6qqH+SPqD8r01Q@mail.gmail.com>
- <20200313192306.wxey3wn2h4htpccm@madcap2.tricolour.ca>
- <CAHC9VhQKOpVWxDg-tWuCWV22QRu8P_NpFKme==0Ot1RQKa_DWA@mail.gmail.com>
- <20200318214154.ycxy5dl4pxno6fvi@madcap2.tricolour.ca>
- <CAHC9VhSuMnd3-ci2Bx-xJ0yscQ=X8ZqFAcNPKpbh_ZWN3FJcuQ@mail.gmail.com>
- <20200319214759.qgxt2sfkmd6srdol@madcap2.tricolour.ca>
- <CAHC9VhTp25OAaTO5UMft0OzUZ=oQpZFjebkjjQP0-NrPp0bNAg@mail.gmail.com>
- <20200325122903.obkpyog7fjabzrpf@madcap2.tricolour.ca>
- <CAHC9VhTuYYqAtoNAKLX3qja6DnqEbFuHchi9ESwbcb5WC_Mvtw@mail.gmail.com>
+        Mon, 30 Mar 2020 11:25:54 -0400
+Received: by mail-oi1-f195.google.com with SMTP id m14so16043178oic.0;
+        Mon, 30 Mar 2020 08:25:53 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=kyCcTnDl3sCR2YamC47wuHL3QQ9WaTAgZrp8oHlCizY=;
+        b=NvIhXSETJMANyHUDhQi/Htujji7/VvxN2tBWR7Fvg5bWwFXzjvXGS5q75wvHhhANRE
+         mcyf2cfWZqtqRSOVotMuM5s9QljMlBzjHOn3Ul2Ko2IfrDbU/tJEtqCzI1n1aB1/dw1W
+         wfao1VYn090aOgX8f1n1QdAIqcy/JRIYgojzhdbFnvuCESLV2SDi25mKSGAItjmpFlWu
+         eqzzH8n7C7dIExp8ZrkuXUSoJpOEVAIfKzFBMwCF86KlG2vCwiMVf9igh300JTlCEdM5
+         SOrwy77xqa5edcO0e8DnNUk7i8S/WUDXFC2+kRfHmeB2wmhKb0q+zQ2UCdTQ5WaG1Fvo
+         Jsyw==
+X-Gm-Message-State: ANhLgQ3GH50EfCm2pXRCZGuDValkaVL7tvd/9ZKeWJhC4uP3IActCgVq
+        n8tqH7/WbOkayJtE32FF4QLIlwgeDKNWMoMZnhdRlKYr
+X-Google-Smtp-Source: ADFU+vsS11wLNhl4djuB8zgKBwnZ9aIm2kF2XsfE1jsoudvMLkT4xs7rEAqYulPqdkt+mZPnoVVoDhDvTg+p+TsD5k8=
+X-Received: by 2002:aca:f07:: with SMTP id 7mr7678700oip.68.1585581952782;
+ Mon, 30 Mar 2020 08:25:52 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHC9VhTuYYqAtoNAKLX3qja6DnqEbFuHchi9ESwbcb5WC_Mvtw@mail.gmail.com>
-User-Agent: NeoMutt/20180716
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Mon, 30 Mar 2020 17:25:41 +0200
+Message-ID: <CAJZ5v0ja_cmfL2Rwj-k-__B2QjH8kY-t2pM1Tg+yP0A=6kMYSg@mail.gmail.com>
+Subject: [GIT PULL] ACPI updates for v5.7-rc1
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        Linux PCI <linux-pci@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-03-28 23:17, Paul Moore wrote:
-> On Wed, Mar 25, 2020 at 8:29 AM Richard Guy Briggs <rgb@redhat.com> wrote:
-> > On 2020-03-20 17:56, Paul Moore wrote:
-> > > On Thu, Mar 19, 2020 at 5:48 PM Richard Guy Briggs <rgb@redhat.com> wrote:
-> > > > On 2020-03-18 17:47, Paul Moore wrote:
-> > > > > On Wed, Mar 18, 2020 at 5:42 PM Richard Guy Briggs <rgb@redhat.com> wrote:
-> > > > > > On 2020-03-18 17:01, Paul Moore wrote:
-> > > > > > > On Fri, Mar 13, 2020 at 3:23 PM Richard Guy Briggs <rgb@redhat.com> wrote:
-> > > > > > > > On 2020-03-13 12:42, Paul Moore wrote:
-> > > > > > >
-> > > > > > > ...
-> > > > > > >
-> > > > > > > > > The thread has had a lot of starts/stops, so I may be repeating a
-> > > > > > > > > previous suggestion, but one idea would be to still emit a "death
-> > > > > > > > > record" when the final task in the audit container ID does die, but
-> > > > > > > > > block the particular audit container ID from reuse until it the
-> > > > > > > > > SIGNAL2 info has been reported.  This gives us the timely ACID death
-> > > > > > > > > notification while still preventing confusion and ambiguity caused by
-> > > > > > > > > potentially reusing the ACID before the SIGNAL2 record has been sent;
-> > > > > > > > > there is a small nit about the ACID being present in the SIGNAL2
-> > > > > > > > > *after* its death, but I think that can be easily explained and
-> > > > > > > > > understood by admins.
-> > > > > > > >
-> > > > > > > > Thinking quickly about possible technical solutions to this, maybe it
-> > > > > > > > makes sense to have two counters on a contobj so that we know when the
-> > > > > > > > last process in that container exits and can issue the death
-> > > > > > > > certificate, but we still block reuse of it until all further references
-> > > > > > > > to it have been resolved.  This will likely also make it possible to
-> > > > > > > > report the full contid chain in SIGNAL2 records.  This will eliminate
-> > > > > > > > some of the issues we are discussing with regards to passing a contobj
-> > > > > > > > vs a contid to the audit_log_contid function, but won't eliminate them
-> > > > > > > > all because there are still some contids that won't have an object
-> > > > > > > > associated with them to make it impossible to look them up in the
-> > > > > > > > contobj lists.
-> > > > > > >
-> > > > > > > I'm not sure you need a full second counter, I imagine a simple flag
-> > > > > > > would be okay.  I think you just something to indicate that this ACID
-> > > > > > > object is marked as "dead" but it still being held for sanity reasons
-> > > > > > > and should not be reused.
-> > > > > >
-> > > > > > Ok, I see your point.  This refcount can be changed to a flag easily
-> > > > > > enough without change to the api if we can be sure that more than one
-> > > > > > signal can't be delivered to the audit daemon *and* collected by sig2.
-> > > > > > I'll have a more careful look at the audit daemon code to see if I can
-> > > > > > determine this.
-> > > > >
-> > > > > Maybe I'm not understanding your concern, but this isn't really
-> > > > > different than any of the other things we track for the auditd signal
-> > > > > sender, right?  If we are worried about multiple signals being sent
-> > > > > then it applies to everything, not just the audit container ID.
-> > > >
-> > > > Yes, you are right.  In all other cases the information is simply
-> > > > overwritten.  In the case of the audit container identifier any
-> > > > previous value is put before a new one is referenced, so only the last
-> > > > signal is kept.  So, we only need a flag.  Does a flag implemented with
-> > > > a rcu-protected refcount sound reasonable to you?
-> > >
-> > > Well, if I recall correctly you still need to fix the locking in this
-> > > patchset so until we see what that looks like it is hard to say for
-> > > certain.  Just make sure that the flag is somehow protected from
-> > > races; it is probably a lot like the "valid" flags you sometimes see
-> > > with RCU protected lists.
-> >
-> > This is like looking for a needle in a haystack.  Can you point me to
-> > some code that does "valid" flags with RCU protected lists.
-> 
-> Sigh.  Come on Richard, you've been playing in the kernel for some
-> time now.  I can't think of one off the top of my head as I write
-> this, but there are several resources that deal with RCU protected
-> lists in the kernel, Google is your friend and Documentation/RCU is
-> your friend.
+[Resending because of the messed-up subject, sorry.]
 
-Ok, I thought you were talking about a specific piece of code...
+Hi Linus,
 
-> Spending time to learn how RCU works and how to use it properly is not
-> time wasted.  It's a tricky thing to get right (I have to refresh my
-> memory on some of the more subtle details each time I write/review RCU
-> code), but it's very cool when done correctly.
+Please pull from the tag
 
-I review Documentation/RCU almost every time I work on RCU...
+ git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git \
+ acpi-5.7-rc1
 
-> paul moore
+with top-most commit 1da28f032305383a664e5711ba07b7957901a72e
 
-- RGB
+ Merge branches 'acpi-ec', 'acpi-fan' and 'acpi-pci'
 
---
-Richard Guy Briggs <rgb@redhat.com>
-Sr. S/W Engineer, Kernel Security, Base Operating Systems
-Remote, Ottawa, Red Hat Canada
-IRC: rgb, SunRaycer
-Voice: +1.647.777.2635, Internal: (81) 32635
+on top of commit 2c523b344dfa65a3738e7039832044aa133c75fb
 
+ Linux 5.6-rc5
+
+to receive ACPI updates for 5.7-rc1.
+
+These update the ACPICA code in the kernel to the 20200214 upstream
+release, clean up the initialization of the EC driver, clean up the
+quirk tables in the AC and battery drivers, fix the global lock
+handling on x86, add a new "tiny" driver for ACPI button devices
+exposed by VMs to guest kernels, modify the ACPI PCI host bridge and
+fan drivers use scnprintf(), add add a kernel parameter to disable
+ACPI BGRT on x86 and do some assorted cleanups.
+
+Specifics:
+
+ - Update the ACPICA code in the kernel to the 20200214 upstream
+   release including:
+
+   * Fix to re-enable the sleep button after wakeup (Anchal Agarwal).
+   * Fixes for mistakes in comments and typos (Bob Moore).
+   * ASL-ASL+ converter updates (Erik Kaneda).
+   * Type casting cleanups (Sven Barth).
+
+ - Clean up the intialization of the EC driver and eliminate some
+   dead code from it (Rafael Wysocki).
+
+ - Clean up the quirk tables in the AC and battery drivers (Hans de
+   Goede).
+
+ - Fix the global lock handling on x86 to ignore unspecified bit
+   positions in the global lock field (Jan Engelhardt).
+
+ - Add a new "tiny" driver for ACPI button devices exposed by VMs to
+   guest kernels to send signals directly to init (Josh Triplett).
+
+ - Add a kernel parameter to disable ACPI BGRT on x86 (Alex Hung).
+
+ - Make the ACPI PCI host bridge and fan drivers use scnprintf() to
+   avoid potential buffer overflows (Takashi Iwai).
+
+ - Clean up assorted pieces of code:
+
+   * Reorder "asmlinkage" to make g++ happy (Alexey Dobriyan).
+   * Drop unneeded variable initialization (Colin Ian King).
+   * Add missing __acquires/__releases annotations (Jules Irenge).
+   * Replace list_for_each_safe() with list_for_each_entry_safe()
+     (chenqiwu).
+
+Thanks!
+
+
+---------------
+
+Alex Hung (1):
+      acpi/x86: add a kernel parameter to disable ACPI BGRT
+
+Alexey Dobriyan (1):
+      x86/acpi: make "asmlinkage" part first thing in the function definition
+
+Anchal Agarwal (1):
+      ACPICA: Enable sleep button on ACPI legacy wake
+
+Bob Moore (4):
+      ACPICA: Fix a comment "enable" fixed events -> "disable" all fixed events.
+      ACPICA: Table Manager: Update comments in a function header
+      ACPICA: Fix a couple of typos
+      ACPICA: Update version to 20200214
+
+Colin Ian King (1):
+      ACPI: video: remove redundant assignments to variable result
+
+Erik Kaneda (2):
+      ACPICA: ASL-ASL+ converter: remove function parameters from
+cv_init_file_tree()
+      ACPICA: ASL-ASL+ converter: make root file a parameter for
+cv_init_file_tree
+
+Hans de Goede (2):
+      ACPI / AC: Cleanup DMI quirk table
+      ACPI / battery: Cleanup Lenovo Ideapad Miix 320 DMI table entry
+
+Jan Engelhardt (1):
+      acpi/x86: ignore unspecified bit positions in the ACPI global lock field
+
+Josh Triplett (2):
+      ACPI: button: move HIDs to acpi/button.h
+      ACPI: Add new tiny-power-button driver to directly signal init
+
+Jules Irenge (1):
+      ACPI: OSL: Add missing __acquires/__releases annotations
+
+Rafael J. Wysocki (9):
+      ACPI: EC: Avoid printing confusing messages in acpi_ec_setup()
+      ACPI: EC: Avoid passing redundant argument to functions
+      ACPI: EC: Drop AE_NOT_FOUND special case from ec_install_handlers()
+      ACPI: EC: Simplify acpi_ec_add()
+      ACPI: EC: Use fast path in acpi_ec_add() for DSDT boot EC
+      ACPI: EC: Consolidate event handler installation code
+      ACPI: EC: Simplify acpi_ec_ecdt_start() and acpi_ec_init()
+      ACPI: EC: Do not clear boot_ec_is_ecdt in acpi_ec_add()
+      ACPI: EC: Eliminate EC_FLAGS_QUERY_HANDSHAKE
+
+Sven Barth (3):
+      ACPICA: cast the result of the pointer difference to u32
+      ACPICA: cast length arguement to acpi_ns_build_normalized_path() as u32
+      ACPICA: use acpi_size instead of u32 for prefix_path_length
+
+Takashi Iwai (2):
+      ACPI: fan: Use scnprintf() for avoiding potential buffer overflow
+      ACPI: PCI: Use scnprintf() for avoiding potential buffer overflow
+
+chenqiwu (1):
+      ACPI: list_for_each_safe() -> list_for_each_entry_safe()
+
+---------------
+
+ Documentation/admin-guide/kernel-parameters.txt |   3 +
+ arch/x86/kernel/acpi/boot.c                     |  12 +-
+ arch/x86/kernel/acpi/sleep.c                    |   2 +-
+ arch/x86/kernel/acpi/sleep.h                    |   2 +-
+ drivers/acpi/Kconfig                            |  24 ++
+ drivers/acpi/Makefile                           |   1 +
+ drivers/acpi/ac.c                               |  25 +-
+ drivers/acpi/acpi_video.c                       |   2 +-
+ drivers/acpi/acpica/acconvert.h                 |   4 +-
+ drivers/acpi/acpica/acmacros.h                  |   4 +-
+ drivers/acpi/acpica/evevent.c                   |   2 +-
+ drivers/acpi/acpica/hwsleep.c                   |  12 +
+ drivers/acpi/acpica/nsnames.c                   |   6 +-
+ drivers/acpi/acpica/nsxfname.c                  |   2 +-
+ drivers/acpi/acpica/tbxface.c                   |  12 +-
+ drivers/acpi/acpica/utobject.c                  |   2 +-
+ drivers/acpi/battery.c                          |  10 +-
+ drivers/acpi/button.c                           |   3 -
+ drivers/acpi/ec.c                               | 312 ++++++++++--------------
+ drivers/acpi/fan.c                              |  20 +-
+ drivers/acpi/internal.h                         |   2 +-
+ drivers/acpi/osl.c                              |   2 +
+ drivers/acpi/pci_root.c                         |   2 +-
+ drivers/acpi/proc.c                             |  14 +-
+ drivers/acpi/tiny-power-button.c                |  46 ++++
+ drivers/acpi/wakeup.c                           |  24 +-
+ include/acpi/acpixf.h                           |   2 +-
+ include/acpi/actbl1.h                           |   2 +-
+ include/acpi/button.h                           |   4 +
+ 29 files changed, 298 insertions(+), 260 deletions(-)
