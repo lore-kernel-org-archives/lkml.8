@@ -2,119 +2,113 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-10.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6749C2D0EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 04:10:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27DECC43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 04:16:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B66A320732
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 04:10:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D511320780
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 04:16:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="C/thCUS8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726641AbgC3EKs (ORCPT
+        id S1726469AbgC3EQL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 00:10:48 -0400
-Received: from esa2.mentor.iphmx.com ([68.232.141.98]:38367 "EHLO
-        esa2.mentor.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725268AbgC3EKs (ORCPT
+        Mon, 30 Mar 2020 00:16:11 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:37342 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725268AbgC3EQL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 00:10:48 -0400
-IronPort-SDR: hWexN6+CD3P93rbld9iS91esFRZsstagQIivQJJUtUlOzm1vN1AV8yxSi/98UhGuO3PWWrirYT
- HZCgxDKiQtZf7u0DC9+FknuLTUIqFMPN/39cMSh2KzK9LmxCpy0FRm5tFG2sHgY3xGTl7gsJPc
- bcubU/sVn9RrelBYPP3Bg6NQv9/NfUKaiHrc2Qv2bXBLo44D6SzlAQya61HW/NJ/hEnwZXl2b9
- Wy6iF0YQLnzqMgdbzi/WAl794bKAmmVZi3QEK5mCMJ3cV1UOJcx/HWKXRKEI06u0GfC5vokZxg
- psE=
-X-IronPort-AV: E=Sophos;i="5.72,322,1580803200"; 
-   d="scan'208";a="47140911"
-Received: from orw-gwy-01-in.mentorg.com ([192.94.38.165])
-  by esa2.mentor.iphmx.com with ESMTP; 29 Mar 2020 20:10:47 -0800
-IronPort-SDR: peAIlDJjt+UVVhpQE3wuqb3MhOpL53QKLBCZjxBZb01BkoS6XeZ5/eOm/I/yT1Qj29RbwzkeEg
- 1jT2tMKD5EMEj8ykKvWt0Bb7408RH1YoelcEHPN0dZ5DyAUHVkNEojUjTcVEJHUg7J1MTMqGng
- jDi59bof4jsWrtklYjFTbI35LViRaSy/rw/3FbF3Iv8f4SJRK8To2c/u2BfRexp5XSZiG0sOWJ
- duv4hOcyG3OWYwuydtJWMDXI8LN4ZO+s9CpCeP46O86ZQvmXvRhdh2OiRcJXCMSHl0KcZY/Mo3
- JQ8=
-Subject: Re: [PATCH v9 13/55] Input: atmel_mxt_ts - add regulator control
- support
-To:     Dmitry Osipenko <digetx@gmail.com>, <nick@shmanahar.org>,
-        <dmitry.torokhov@gmail.com>, <jikos@kernel.org>,
-        <benjamin.tissoires@redhat.com>, <bsz@semihalf.com>,
-        <rydberg@bitmath.org>
-CC:     <linux-input@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <erosca@de.adit-jv.com>, <Andrew_Gabbasov@mentor.com>
-References: <20200325133334.19346-1-jiada_wang@mentor.com>
- <20200325133334.19346-14-jiada_wang@mentor.com>
- <672615bc-adce-213f-9e44-864163c0a770@gmail.com>
- <85a74259-6f52-34a0-af34-0217a088cc5b@mentor.com>
- <20d8dbc3-ee0e-95e4-6d33-2ed10c0268c6@gmail.com>
-From:   "Wang, Jiada" <jiada_wang@mentor.com>
-Message-ID: <278eb2ef-dc55-99dc-5525-f0eccea508f6@mentor.com>
-Date:   Mon, 30 Mar 2020 13:10:41 +0900
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Mon, 30 Mar 2020 00:16:11 -0400
+Received: by mail-pl1-f193.google.com with SMTP id x1so6229417plm.4
+        for <linux-kernel@vger.kernel.org>; Sun, 29 Mar 2020 21:16:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition;
+        bh=XMXWPpzZEtK+F1U4JzVoOBbs1eIUjiNeM4Rwa2h/6a0=;
+        b=C/thCUS8EqotHHh3LKyezd37NuhPVGX4T59/xJA9RXpNnqPk7HV9cIl5HxeHMmj4s4
+         oyEOBxw1VEOJVQOmZcwxAPYEV0w8pnblQNF9CphWOYElAH/p1M2Clup6FN9ZWc/FWPGm
+         G3EwcnnNGp1Ql3fVJCZub/zx3wwBHhASuXgAA=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition;
+        bh=XMXWPpzZEtK+F1U4JzVoOBbs1eIUjiNeM4Rwa2h/6a0=;
+        b=na+2YfEnA1xjQH8YfJhOmDFU/dcbLUBkkrFPB53EsZj8rDmwk9xaZ5EQ0FWgm2fb+4
+         8SE3cNitUWroNeuz6/X/gGow/BfllvJVDhU2rLRZDC9nvzpdu9MIMPNinpm73Ur+caUr
+         kglpzap68yBwn+dyIFou8pMKFZDdlLaDrN7SOudq9WuBLkW2SYI7WxhHcOidlosPjqvq
+         2jBWY3DWHw+e+G+Xeihl3C/4jKyivkUYdl8BlOdHq2khTVJSOJzlE8WTQ9vSNBKkB+kf
+         LXXsl0KTWpBJdYE9JVuy7gfaHfM1W6AxtbmPTvcNL1l7g2ygrqKRLXHymjdR9p17U4pX
+         OU2A==
+X-Gm-Message-State: ANhLgQ2YCRL9HfDFLfCBNKOYZ34p7ea3SV02+GnIFj/qlD5now3fp/KL
+        hTYl8A+PLo35qmy6JFS6KajzVg==
+X-Google-Smtp-Source: ADFU+vuf3zc8w1+cSGu7EMmfo3lY9rnX0p8kn34Ufw93E8FI3L14osLNccTIauB3kPQdrv6LF0fDuA==
+X-Received: by 2002:a17:90b:3556:: with SMTP id lt22mr13643656pjb.138.1585541769888;
+        Sun, 29 Mar 2020 21:16:09 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id x15sm9051229pfq.107.2020.03.29.21.16.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 29 Mar 2020 21:16:08 -0700 (PDT)
+Date:   Sun, 29 Mar 2020 21:16:07 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-kernel@vger.kernel.org, Kees Cook <keescook@chromium.org>,
+        Matthew Denton <mpdenton@google.com>,
+        Sven Schnelle <svens@linux.ibm.com>,
+        Tycho Andersen <tycho@tycho.ws>
+Subject: [GIT PULL] seccomp updates for v5.7-rc1
+Message-ID: <202003292114.2252CAEF7@keescook>
 MIME-Version: 1.0
-In-Reply-To: <20d8dbc3-ee0e-95e4-6d33-2ed10c0268c6@gmail.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: svr-orw-mbx-02.mgc.mentorg.com (147.34.90.202) To
- svr-orw-mbx-01.mgc.mentorg.com (147.34.90.201)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Dmitry
+Hi Linus,
 
-On 2020/03/30 3:54, Dmitry Osipenko wrote:
-> 27.03.2020 14:09, Wang, Jiada пишет:
->> Hi Dmitry
->>
->> On 2020/03/26 4:05, Dmitry Osipenko wrote:
->>> 25.03.2020 16:32, Jiada Wang пишет:
->>>> From: Nick Dyer <nick.dyer@itdev.co.uk>
->>>>
->>>> Allow the driver to optionally manage enabling/disable power to the
->>>> touch
->>>> controller itself. If the regulators are not present then use the deep
->>>> sleep power mode instead.
->>>>
->>>> For a correct power on sequence, it is required that we have control
->>>> over
->>>> the RESET line.
->>>
->>> ...
->>>> +    data->reg_vdd = devm_regulator_get(dev, "vdd");
->>>> +    if (IS_ERR(data->reg_vdd)) {
->>>> +        error = PTR_ERR(data->reg_vdd);
->>>> +        dev_err(dev, "Error %d getting vdd regulator\n", error);
->>>> +        goto fail;
->>>> +    }
->>>> +
->>>> +    data->reg_avdd = devm_regulator_get(dev, "avdd");
->>>> +    if (IS_ERR(data->reg_avdd)) {
->>>> +        error = PTR_ERR(data->reg_avdd);
->>>> +        dev_err(dev, "Error %d getting avdd regulator\n", error);
->>>> +        goto fail_release;
->>>> +    }
->>>
->>> Hello Jiada,
->>>
->>> The new regulator properties should be documented in the device-tree
->>> binding.
->>>
->> I will document new regulator properties in a separate commit in
->> v10 patch-set
-> 
-> Please make sure that all patches are added in a correct order and that
-> they at least compile. This patch doesn't compile:
-> 
-Sure, I will take care of this issue in next version
+Please pull these couple of seccomp updates for v5.7-rc1. They're both
+mostly bug fixes that I wanted to have sit in linux-next for a while.
+That's done now, so here they are for v5.7.
 
-Thanks,
-Jiada
->    CC      drivers/input/touchscreen/atmel_mxt_ts.o
-> drivers/input/touchscreen/atmel_mxt_ts.c:34:10: fatal error:
-> dt-bindings/input/atmel_mxt_ts.h: No such file or directory
->     34 | #include <dt-bindings/input/atmel_mxt_ts.h>
-> 
+Thanks!
+
+-Kees
+
+The following changes since commit 11a48a5a18c63fd7621bb050228cebf13566e4d8:
+
+  Linux 5.6-rc2 (2020-02-16 13:16:59 -0800)
+
+are available in the Git repository at:
+
+  https://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git tags/seccomp-v5.7-rc1
+
+for you to fetch changes up to 3db81afd99494a33f1c3839103f0429c8f30cb9d:
+
+  seccomp: Add missing compat_ioctl for notify (2020-03-29 21:10:51 -0700)
+
+----------------------------------------------------------------
+updates for seccomp
+
+- allow TSYNC and USER_NOTIF together (Tycho Andersen)
+- Add missing compat_ioctl for notify (Sven Schnelle)
+
+----------------------------------------------------------------
+Sven Schnelle (1):
+      seccomp: Add missing compat_ioctl for notify
+
+Tycho Andersen (1):
+      seccomp: allow TSYNC and USER_NOTIF together
+
+ include/linux/seccomp.h                       |  3 +-
+ include/uapi/linux/seccomp.h                  |  1 +
+ kernel/seccomp.c                              | 15 ++++--
+ tools/testing/selftests/seccomp/seccomp_bpf.c | 74 ++++++++++++++++++++++++++-
+ 4 files changed, 87 insertions(+), 6 deletions(-)
+
+-- 
+Kees Cook
