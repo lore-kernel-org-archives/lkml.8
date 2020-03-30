@@ -7,52 +7,52 @@ X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 263DDC2D0EB
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 18:11:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A782C2D0EB
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 18:11:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED32C20771
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 18:11:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D5DE2072E
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 18:11:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585591863;
-	bh=JKyf3qrgp5Ul/stlMnClPeHBizrc5t+t7HtDOdlo/Qg=;
+	s=default; t=1585591871;
+	bh=3w2Vwe2cdc5d7numw0YKnAhWC+PVOnU6I0Crj5VZ3jA=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ai6SzBDNmWoIIhQjJKNhjGcUWFWGDEDF+Kh+ohXvAQvWA4B+fhsmfZ+CNzh8TpBHh
-	 mj55pkGtbC/fjBuWxyb600c+hq1J73ywVrDSlYBkPQy4AY1WaeFcIDIpX7OzgBitzM
-	 mt7mx6JGw3mmlRhJ/l5jLa/GvkwUGjbhazQKiQbE=
+	b=cr00sA7GG65z5d4qJZcvmXiQkV28fkGL3T28k258juLspaFcI1vFxT3Ml34cdvcJM
+	 iXNdIYsn+uW5zYnLZHiksdtKgBXFW8TSlv3kWTlO4aI9WjpkoQALgLVr6TN4YEElL0
+	 nD2cOTkZ+WGl7H8ITLLFxoV3c23i7RDZJ72+GEn4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727826AbgC3SLC (ORCPT
+        id S1727935AbgC3SLK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 14:11:02 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:46943 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726567AbgC3SLB (ORCPT
+        Mon, 30 Mar 2020 14:11:10 -0400
+Received: from mail-il1-f194.google.com ([209.85.166.194]:45717 "EHLO
+        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726567AbgC3SLJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 14:11:01 -0400
-Received: by mail-io1-f67.google.com with SMTP id i3so9652440ioo.13;
-        Mon, 30 Mar 2020 11:11:00 -0700 (PDT)
+        Mon, 30 Mar 2020 14:11:09 -0400
+Received: by mail-il1-f194.google.com with SMTP id x16so16774750ilp.12;
+        Mon, 30 Mar 2020 11:11:09 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=GOO15GTd6VMJnM7Vi9uKnAyHVwmUw9igV5K6wV5i/qM=;
-        b=gunoO2FC5zQexEocus1HHnmhGuiDv0E3nl5x6SxJDKGqTA+Mm9O837OdtJz6WfLdbd
-         AuUbosBoE9NRrLdsJXa5OiwnjVp7Ak35BB2ncAE5hLsjl75ptQpnrOO4wTmr9QJiiwWM
-         +5N2eDbSdLWeeSvRvPwsxaPXGechiwU6gH+j24UFRdUidz/ZZ8PLVt4gspJrLylaC3It
-         r+IsEYSgzmr6ZCa50jsZA7u/ngevFvL8ti/QHmMdUdGTLkjXCmekCS+5jkC7M3HBax00
-         y7/0lIqJnNM8xE9PKaxTbI28BP4gHRgchWTMGm8h7ulZi2b9H9Z0v9xiV1JQzD+M8jlw
-         NIUg==
-X-Gm-Message-State: ANhLgQ060MMaPUXgIT7j1mTqLhEajZqF19nsYR6k3H/ZssYAzlSKJ9Uu
-        7L0K9xKwgkUOlNoXPOS1+A==
-X-Google-Smtp-Source: ADFU+vszv7QlWuGRxLn/4cSSGQjs9iWOqFzPmappatpYrI4PCTkw+D3ItLDJOwk+AgCrktkz1XvRNQ==
-X-Received: by 2002:a6b:8f11:: with SMTP id r17mr11057330iod.92.1585591860508;
-        Mon, 30 Mar 2020 11:11:00 -0700 (PDT)
+        bh=s037sC2z9ESNjlnmzZ5RPd9h1faVevqStuCn9N98VOk=;
+        b=hHSA4bdSUWu80EWc74x1j7IzJ/nIBJP7ZLwcbJ1G4kpzD6ONfztSUep6CsNXY85KIV
+         GBV5vLkWwGeA7VGxORE634PvP644lrRQsQiOen+V4ZRXOCGChhJMGbr04OKMm8VfJiNE
+         PY7hjRGg/A0EapvbDftOabiC0X1qKDtSccJweiPy2e6hqWLDJgrHdssALcEZivWUDKm/
+         85h56Ict75N5wAXDMA+ZV6GynxvqHtpQMr4MHT52defgKGhkZSw6iVDruJ8+qvG0058A
+         O3dugWu2McDD5n0HZ6CmrJqX0SE/+jspr74ojfA9jPKzAMB9lYTR4RH4XI/UcuvIWlFs
+         z+iw==
+X-Gm-Message-State: ANhLgQ16+I5XQqXEXVg/wLm1mo9z0NB/z9Gwyjt+3ZEZpZ5+b6cFCI5T
+        87xPoTj4DXSv9tn4KW3eqw==
+X-Google-Smtp-Source: ADFU+vvnW1E4loPKsXsXHGuRBP7ua4bfNufn3sVJlvuMFqQEmjNGX7i3bU6vAWNXSWc11oAu5L3yCA==
+X-Received: by 2002:a92:88d0:: with SMTP id m77mr11696908ilh.282.1585591868568;
+        Mon, 30 Mar 2020 11:11:08 -0700 (PDT)
 Received: from rob-hp-laptop ([64.188.179.250])
-        by smtp.gmail.com with ESMTPSA id d19sm4316256iob.30.2020.03.30.11.10.59
+        by smtp.gmail.com with ESMTPSA id l70sm5158843ili.81.2020.03.30.11.11.07
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Mar 2020 11:10:59 -0700 (PDT)
-Received: (nullmailer pid 7866 invoked by uid 1000);
-        Mon, 30 Mar 2020 18:10:58 -0000
-Date:   Mon, 30 Mar 2020 12:10:58 -0600
+        Mon, 30 Mar 2020 11:11:07 -0700 (PDT)
+Received: (nullmailer pid 8155 invoked by uid 1000);
+        Mon, 30 Mar 2020 18:11:06 -0000
+Date:   Mon, 30 Mar 2020 12:11:06 -0600
 From:   Rob Herring <robh@kernel.org>
 To:     Johan Jonker <jbx6244@gmail.com>
 Cc:     jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de,
@@ -60,26 +60,26 @@ Cc:     jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de,
         linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org,
         linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 2/3] dt-bindings: iio: adc: rockchip-saradc: add
- description for rk3308
-Message-ID: <20200330181058.GA7814@bogus>
+Subject: Re: [PATCH v1 3/3] dt-bindings: iio: adc: rockchip-saradc: add
+ description for px30
+Message-ID: <20200330181106.GA8102@bogus>
 References: <20200313132926.10543-1-jbx6244@gmail.com>
- <20200313132926.10543-2-jbx6244@gmail.com>
+ <20200313132926.10543-3-jbx6244@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200313132926.10543-2-jbx6244@gmail.com>
+In-Reply-To: <20200313132926.10543-3-jbx6244@gmail.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 13 Mar 2020 14:29:25 +0100, Johan Jonker wrote:
-> The description below is already in use for rk3308.dtsi,
+On Fri, 13 Mar 2020 14:29:26 +0100, Johan Jonker wrote:
+> The description below is already in use for px30.dtsi,
 > but was somehow never added to a document, so add
-> "rockchip,rk3308-saradc", "rockchip,rk3399-saradc"
-> for saradc nodes on a rk3308 platform to rockchip-saradc.yaml.
+> "rockchip,px30-saradc", "rockchip,rk3399-saradc"
+> for saradc nodes on a px30 platform to rockchip-saradc.yaml.
 > 
 > Signed-off-by: Johan Jonker <jbx6244@gmail.com>
 > ---
