@@ -2,134 +2,165 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B6E0C2D0F0
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 21:26:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01D99C2D0F0
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 21:26:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4E72E20774
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 21:26:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD93720774
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 21:26:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728954AbgC3V0b (ORCPT
+        id S1729012AbgC3V0u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 17:26:31 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:39008 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728407AbgC3V0a (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 17:26:30 -0400
-Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02UL5k2D020038;
-        Mon, 30 Mar 2020 17:26:29 -0400
-Received: from ppma01dal.us.ibm.com (83.d6.3fa9.ip4.static.sl-reverse.com [169.63.214.131])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 3020wd1cs0-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 30 Mar 2020 17:26:29 -0400
-Received: from pps.filterd (ppma01dal.us.ibm.com [127.0.0.1])
-        by ppma01dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 02ULPUBN021597;
-        Mon, 30 Mar 2020 21:26:28 GMT
-Received: from b03cxnp07028.gho.boulder.ibm.com (b03cxnp07028.gho.boulder.ibm.com [9.17.130.15])
-        by ppma01dal.us.ibm.com with ESMTP id 301x770p19-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 30 Mar 2020 21:26:28 +0000
-Received: from b03ledav003.gho.boulder.ibm.com (b03ledav003.gho.boulder.ibm.com [9.17.130.234])
-        by b03cxnp07028.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 02ULQQou47382936
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 30 Mar 2020 21:26:26 GMT
-Received: from b03ledav003.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id B94906A04D;
-        Mon, 30 Mar 2020 21:26:26 +0000 (GMT)
-Received: from b03ledav003.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 0C7EF6A047;
-        Mon, 30 Mar 2020 21:26:25 +0000 (GMT)
-Received: from sbct-3.pok.ibm.com (unknown [9.47.158.153])
-        by b03ledav003.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Mon, 30 Mar 2020 21:26:25 +0000 (GMT)
-Subject: Re: [PATCH v2 1/3] acpi: Extend TPM2 ACPI table with missing log
- fields
-To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Stefan Berger <stefanb@linux.vnet.ibm.com>
-Cc:     linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-acpi@vger.kernel.org, linux-security-module@vger.kernel.org
-References: <20200330151536.871700-1-stefanb@linux.vnet.ibm.com>
- <20200330151536.871700-2-stefanb@linux.vnet.ibm.com>
- <20200330192830.GC1384380@linux.intel.com>
-From:   Stefan Berger <stefanb@linux.ibm.com>
-Message-ID: <fa195dea-205b-fd0e-fb58-8d185a4a13c6@linux.ibm.com>
-Date:   Mon, 30 Mar 2020 17:26:25 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Mon, 30 Mar 2020 17:26:50 -0400
+Received: from mga02.intel.com ([134.134.136.20]:41438 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728407AbgC3V0u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Mar 2020 17:26:50 -0400
+IronPort-SDR: dpo5ufSHwsMQXSGBtsZvtd37b9JT4QYhf3/Au0Olmy6Ym2DOfshmcakjDEhWrAUN5kbLCoT49X
+ aVlpH8ALMEWA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Mar 2020 14:26:49 -0700
+IronPort-SDR: 7OseBlbYnckWzzWxFUuPK5S1UVxpiaR16v9WTpXluCfZ/N6FX4iRn4zmNTuwO56cl1TQnmZ3E/
+ 05dztNm0fOGA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,325,1580803200"; 
+   d="scan'208";a="267064542"
+Received: from djiang5-desk3.ch.intel.com ([143.182.136.137])
+  by orsmga002.jf.intel.com with ESMTP; 30 Mar 2020 14:26:48 -0700
+Subject: [PATCH 0/6] Add shared workqueue support for idxd driver
+From:   Dave Jiang <dave.jiang@intel.com>
+To:     vkoul@kernel.org, tglx@linutronix.de, mingo@redhat.com,
+        bp@alien8.de, hpa@zytor.com, bhelgaas@google.com,
+        gregkh@linuxfoundation.org, arnd@arndb.de
+Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
+        dmaengine@vger.kernel.org, dan.j.williams@intel.com,
+        ashok.raj@intel.com, fenghua.yu@intel.com,
+        linux-pci@vger.kernel.org, tony.luck@intel.com, jing.lin@intel.com,
+        sanjay.k.kumar@intel.com
+Date:   Mon, 30 Mar 2020 14:26:48 -0700
+Message-ID: <158560290392.6059.16921214463585182874.stgit@djiang5-desk3.ch.intel.com>
+User-Agent: StGit/unknown-version
 MIME-Version: 1.0
-In-Reply-To: <20200330192830.GC1384380@linux.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-03-30_07:2020-03-30,2020-03-30 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 impostorscore=0
- priorityscore=1501 malwarescore=0 phishscore=0 mlxlogscore=999
- adultscore=0 suspectscore=0 bulkscore=0 mlxscore=0 lowpriorityscore=0
- clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2003300175
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/30/20 3:28 PM, Jarkko Sakkinen wrote:
-> On Mon, Mar 30, 2020 at 11:15:34AM -0400, Stefan Berger wrote:
->> From: Stefan Berger <stefanb@linux.ibm.com>
->>
->> Recent extensions of the TPM2 ACPI table added 3 more fields
->> including 12 bytes of start method specific parameters and Log Area
->> Minimum Length (u32) and Log Area Start Address (u64). So, we extend
->> the existing structure with these fields to allow non-UEFI systems
->> to access the TPM2's log.
->>
->> The specification that has the new fields is the following:
->>    TCG ACPI Specification
->>    Family "1.2" and "2.0"
->>    Version 1.2, Revision 8
->>
->> Adapt all existing table size calculations to use
->> offsetof(struct acpi_table_tpm2, start_method_specific)
->> [where start_method_specific is a newly added field]
->> rather than sizeof(struct acpi_table_tpm2) so that the addition
->> of the new fields does not affect current systems that may not
->> have them.
->>
-> Cc: linux-acpi@vger.kernel.org
->
->> Signed-off-by: Stefan Berger <stefanb@linux.ibm.com>
-> You have this comment:
->
-> /* Platform-specific data follows */
+The patch series breaks down into following parts:
+Patch 1: x86 arch, add a new I/O accessor based on ENQCMDS
+Patches 2,3: PCI
+Patch 4: device
+Patches 5,6: idxd driver shared WQ support
 
-You mean there 'was this comment'? I actually removed this comment 
-because I didn't know what it meant or what it has to do with 'platform':
+Driver stage 1 postings for context: [1]
 
--
--       /* Platform-specific data follows */
-+       u8  start_method_specific[12];
-+       u32 log_area_minimum_length;
-+       u64 log_area_start_address;
+This patch series is dependent on Fenghua's "Tag application address space
+for devices" patch series for the ENQCMD CPU command enumeration and the
+PASID MSR support. [2]
 
-Specs: 
-https://trustedcomputinggroup.org/wp-content/uploads/TCG_ACPIGeneralSpecification_v1.20_r8.pdf
+This patch series introduces support for shared workqueue (swq) for the
+idxd driver that is supported by the Intel Data Streaming Accelerator (DSA). In
+the stage 1 patch series posting, only dedicated workqueues (dwq) are
+supported. Another major feature being introduced is Shared Virtual Memory (SVM)
+support.
 
-PDF Page 16 / Doc page 10 bottom.
+In this patch series, we introduce the iosubmit_cmds512_sync() command.
+This function enables the calling of the new ENQCMDS CPU instruction on the
+Intel CPU. ENQCMDS is a ring0 CPU instruction that performs similar function as
+the ENQCMD. The CPUID capability bit will enumerate ENQCMD is supported,
+which implies that ENQCMDS is supported as well. The instruction creates a
+non-posted write command on the PCIe bus and atomically writes all 64 bytes of a
+command descriptor to the accelerator device's special BAR address. The device can
+reject the command by using the zero flag. See Intel SDM [2] for additional
+details. The ENQCMDS instruction is used for submitting command descriptors
+to the swq. With this instruction, multiple "users" in the kernel can submit
+to the swq with the synchronization done by the hardware. When the swq is
+full, a 1 will be returned indicate the wq being busy. This is different than a
+dwq where the command will be silently dropped without response. The dwq
+requires the software to track the queue depth of a dwq.
 
-start_method_specific is obviously related to the start_method field. 
-The subsequent two fields are optional and show those 2 filelds we know 
-from the TCPA ACPI table.
+The attribute of cmdmem device capability is being introduced to the PCI
+device with ongoing discussion of adding the ability to enumerate PCIe capability
+that provides the support of such device MMIO regions. A
+device_supports_cmdmem(struct device *) helper function is introduced to
+initially support devices that has this capability. Since the standardized
+way to detect such capability is not available yet, a PCI quirk is defined
+for the DSA device.
 
->
-> Can you elaborate a bit which platform you are speaking of? It is now
-> enabled for everything.
->
-> /Jarkko
+ENQCMDS moves a command descriptor (64 bytes) from memory to specific MMIO
+regions on a device that supports this capability. Like MMIO, the "handle"
+for these queues is just a pointer to the address of the queue in MMIO memory.
+These specific MMIO regions on the device are called portals. To support
+these portals, wrappers functions are introduced for ioremap() to make it clear
+that the special MMIO regions that expects a response from a non-posted PCI
+write are being ioremaped.
+
+The support of SVM is done through Process Address Space ID (PASID). With
+SVM support, the DMA descriptors can be programmed with virtual address for
+source and destination addresses. When a page fault is encountered, the device can
+fault in the memory page needed to complete the operation through the
+IOMMU.  This makes calling the dma_(un)map_* API calls unnecessary which reduces
+some software latencies. Both swq and dwq can support SVM.
+
+Swq enabling has been added to the idxd char device driver to allow
+exposure of the swq to the user space. User apps can call ENQCMD to submit
+descriptors directly to a swq after calling mmap() on the portal. ENQCMD is
+similar to the ENQCMDS instruction, but is only available to ring3
+(application) code. The primary difference is that ENQCMD obtains the PASID for the
+request from the IA32_PASID MSR to ensure that all virtual addresses specified by
+the user are interpreted in the address space of the process that executed
+ENQCMD. With the SVM enabling, the user no longer has to pin the memory and program
+IO Virtual Address (IOVA) as source and address. Virtual addresses can be
+programmed in the command descriptor and be submitted to the device. The
+SVM handling is done through the usage of PASID. For more detailed explanation
+on how ENQCMD and PASID interaction works please refer to Fenghua's submission
+cover letter [6]. Multiple user apps can easily share a swq with the ENQCMD
+instruction without needing software sychronization.
+
+[1]: https://lore.kernel.org/lkml/157965011794.73301.15960052071729101309.stgit@djiang5-desk3.ch.intel.com/
+[2]: https://lore.kernel.org/lkml/1585596788-193989-1-git-send-email-fenghua.yu@intel.com/
+[3]: https://software.intel.com/en-us/articles/intel-sdm
+[4]: https://software.intel.com/en-us/download/intel-scalable-io-virtualization-technical-specification
+[5]: https://software.intel.com/en-us/download/intel-data-streaming-accelerator-preliminary-architecture-specification
+[6]: https://01.org/blogs/2019/introducing-intel-data-streaming-accelerator
+[7]: https://intel.github.io/idxd/
+[8]: https://github.com/intel/idxd-driver idxd-stage2
+
+---
+
+Dave Jiang (6):
+      x86/asm: add iosubmit_cmds512_sync() based on enqcmds
+      device/pci: add cmdmem cap to pci_dev
+      pci: add PCI quirk cmdmem fixup for Intel DSA device
+      device: add cmdmem support for MMIO address
+      dmaengine: idxd: add shared workqueue support
+      dmaengine: idxd: add ABI documentation for shared wq
 
 
+ Documentation/ABI/stable/sysfs-driver-dma-idxd |   14 ++
+ arch/x86/include/asm/io.h                      |   37 ++++++
+ drivers/base/core.c                            |   13 ++
+ drivers/dma/Kconfig                            |    4 +
+ drivers/dma/idxd/cdev.c                        |   46 +++++++-
+ drivers/dma/idxd/device.c                      |  122 ++++++++++++++++++--
+ drivers/dma/idxd/dma.c                         |    2 
+ drivers/dma/idxd/idxd.h                        |   13 ++
+ drivers/dma/idxd/init.c                        |   92 ++++++++++++---
+ drivers/dma/idxd/irq.c                         |  147 ++++++++++++++++++++++--
+ drivers/dma/idxd/submit.c                      |  119 ++++++++++++++-----
+ drivers/dma/idxd/sysfs.c                       |  133 ++++++++++++++++++++++
+ drivers/pci/quirks.c                           |   11 ++
+ include/linux/device.h                         |    2 
+ include/linux/io.h                             |    4 +
+ include/linux/pci.h                            |    1 
+ lib/devres.c                                   |   36 ++++++
+ 17 files changed, 721 insertions(+), 75 deletions(-)
+
+--
