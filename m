@@ -2,209 +2,214 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F86FC43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 13:37:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D766DC2D0EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 13:39:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DD85B20776
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 13:37:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585575450;
-	bh=bhkR5cAEROzrV2P74aJy/I2LsxpjbSCJMF1VCVAqNLQ=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=oRVjm5WqqJXQy2FO8CGlLCT3jqaTqci67UlvbdagfS8KbeVwPAdjPh7iX+bYUhH9e
-	 zFtz5ryWYpQTU1owuG5jW0jJlK7I2giqA+gIKcV2Z+NXeRrR4gd5MailuksEUlmquB
-	 lmUQa2ojIyDDgl8LUHAUMcKvPNwkyoWMUiKPAjeQ=
+	by mail.kernel.org (Postfix) with ESMTP id B3C7D20716
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 13:39:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728114AbgC3Nh2 (ORCPT
+        id S1728122AbgC3Nj1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 09:37:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35474 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726497AbgC3Nh2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 09:37:28 -0400
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2E08520771;
-        Mon, 30 Mar 2020 13:37:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585575447;
-        bh=bhkR5cAEROzrV2P74aJy/I2LsxpjbSCJMF1VCVAqNLQ=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=Kn0Z1utO0Nzt8fXQ/oXQZY+Dwo+tktpKu1Ev4OYUfaISNzj7l1SPwCAEKczZ+5dFo
-         4ceOaMHo+e48zfnp/FUNpTEwfmhvVFfALffOav+1yf8yFaSC2dDZNVO1t3REe/4Tzl
-         KQh9eZvugPx7fB4pSDsUW3rn3HkX5b2waFiC2zZk=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id 02E4835226F8; Mon, 30 Mar 2020 06:37:27 -0700 (PDT)
-Date:   Mon, 30 Mar 2020 06:37:26 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Cong Wang <xiyou.wangcong@gmail.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        syzbot <syzbot+46f513c3033d592409d2@syzkaller.appspotmail.com>,
-        David Miller <davem@davemloft.net>,
-        Jamal Hadi Salim <jhs@mojatatu.com>,
-        Jiri Pirko <jiri@resnulli.us>,
-        Jakub Kicinski <kuba@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux Kernel Network Developers <netdev@vger.kernel.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
-Subject: Re: WARNING: ODEBUG bug in tcindex_destroy_work (3)
-Message-ID: <20200330133726.GJ19865@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <000000000000742e9e05a10170bc@google.com>
- <87a74arown.fsf@nanos.tec.linutronix.de>
- <CAM_iQpV3S0xv5xzSrA5COYa3uyy_TBGpDA9Wcj9Qt_vn1n3jBQ@mail.gmail.com>
- <87ftdypyec.fsf@nanos.tec.linutronix.de>
- <CAM_iQpVR8Ve3Jy8bb9VB6RcQ=p22ZTyTqjxJxL11RZmO7rkWeg@mail.gmail.com>
- <875zeuftwm.fsf@nanos.tec.linutronix.de>
- <CAM_iQpWkNJ+yQ1g+pdkhJBCZ-CJfUGGpvJqOz1JH7LPVtqbRxg@mail.gmail.com>
- <20200325185815.GW19865@paulmck-ThinkPad-P72>
- <CAM_iQpU+1as_RAE64wfq+rWcCb16_amFP3V4rZVFRr29SfwD4Q@mail.gmail.com>
+        Mon, 30 Mar 2020 09:39:27 -0400
+Received: from saturn.retrosnub.co.uk ([46.235.226.198]:34286 "EHLO
+        saturn.retrosnub.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725268AbgC3Nj1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Mar 2020 09:39:27 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        by saturn.retrosnub.co.uk (Postfix; Retrosnub mail submission) with ESMTPSA id C5D9F9E7A1D;
+        Mon, 30 Mar 2020 14:39:24 +0100 (BST)
+Date:   Mon, 30 Mar 2020 14:39:21 +0100
+From:   Jonathan Cameron <jic23@jic23.retrosnub.co.uk>
+To:     Rohit Sarkar <rohitsarkar5398@gmail.com>
+Cc:     linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        dragos.bogdan@analog.com
+Subject: Re: [PATCH v7] iio: adc: max1363: replace uses of mlock
+Message-ID: <20200330143921.6ecf8800@archlinux>
+In-Reply-To: <20200322175358.51e6c586@archlinux>
+References: <5e6e522d.1c69fb81.10f54.f95c@mx.google.com>
+        <20200322175358.51e6c586@archlinux>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAM_iQpU+1as_RAE64wfq+rWcCb16_amFP3V4rZVFRr29SfwD4Q@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Mar 28, 2020 at 12:53:43PM -0700, Cong Wang wrote:
-> On Wed, Mar 25, 2020 at 11:58 AM Paul E. McKenney <paulmck@kernel.org> wrote:
-> >
-> > On Wed, Mar 25, 2020 at 11:36:16AM -0700, Cong Wang wrote:
-> > > On Mon, Mar 23, 2020 at 6:01 PM Thomas Gleixner <tglx@linutronix.de> wrote:
-> > > >
-> > > > Cong Wang <xiyou.wangcong@gmail.com> writes:
-> > > > > On Mon, Mar 23, 2020 at 2:14 PM Thomas Gleixner <tglx@linutronix.de> wrote:
-> > > > >> > We use an ordered workqueue for tc filters, so these two
-> > > > >> > works are executed in the same order as they are queued.
-> > > > >>
-> > > > >> The workqueue is ordered, but look how the work is queued on the work
-> > > > >> queue:
-> > > > >>
-> > > > >> tcf_queue_work()
-> > > > >>   queue_rcu_work()
-> > > > >>     call_rcu(&rwork->rcu, rcu_work_rcufn);
-> > > > >>
-> > > > >> So after the grace period elapses rcu_work_rcufn() queues it in the
-> > > > >> actual work queue.
-> > > > >>
-> > > > >> Now tcindex_destroy() is invoked via tcf_proto_destroy() which can be
-> > > > >> invoked from preemtible context. Now assume the following:
-> > > > >>
-> > > > >> CPU0
-> > > > >>   tcf_queue_work()
-> > > > >>     tcf_queue_work(&r->rwork, tcindex_destroy_rexts_work);
-> > > > >>
-> > > > >> -> Migration
-> > > > >>
-> > > > >> CPU1
-> > > > >>    tcf_queue_work(&p->rwork, tcindex_destroy_work);
-> > > > >>
-> > > > >> So your RCU callbacks can be placed on different CPUs which obviously
-> > > > >> has no ordering guarantee at all. See also:
-> > > > >
-> > > > > Good catch!
-> > > > >
-> > > > > I thought about this when I added this ordered workqueue, but it
-> > > > > seems I misinterpret max_active, so despite we have max_active==1,
-> > > > > more than 1 work could still be queued on different CPU's here.
-> > > >
-> > > > The workqueue is not the problem. it works perfectly fine. The way how
-> > > > the work gets queued is the issue.
-> > >
-> > > Well, a RCU work is also a work, so the ordered workqueue should
-> > > apply to RCU works too, from users' perspective. Users should not
-> > > need to learn queue_rcu_work() is actually a call_rcu() which does
-> > > not guarantee the ordering for an ordered workqueue.
-> >
-> > And the workqueues might well guarantee the ordering in cases where the
-> > pair of RCU callbacks are invoked in a known order.  But that workqueues
-> > ordering guarantee does not extend upstream to RCU, nor do I know of a
-> > reasonable way to make this happen within the confines of RCU.
-> >
-> > If you have ideas, please do not keep them a secret, but please also
-> > understand that call_rcu() must meet some pretty severe performance and
-> > scalability constraints.
-> >
-> > I suppose that queue_rcu_work() could track outstanding call_rcu()
-> > invocations, and (one way or another) defer the second queue_rcu_work()
-> > if a first one is still pending from the current task, but that might not
-> > make the common-case user of queue_rcu_work() all that happy.  But perhaps
-> > there is a way to restrict these semantics to ordered workqueues.  In that
-> > case, one could imagine the second and subsequent too-quick call to
-> > queue_rcu_work() using the rcu_head structure's ->next field to queue these
-> > too-quick callbacks, and then having rcu_work_rcufn() check for queued
-> > too-quick callbacks, queuing the first one.
-> >
-> > But I must defer to Tejun on this one.
-> >
-> > And one additional caution...  This would meter out ordered
-> > queue_rcu_work() requests at a rate of no faster than one per RCU
-> > grace period.  The queue might build up, resulting in long delays.
-> > Are you sure that your use case can live with this?
+On Sun, 22 Mar 2020 17:53:58 +0000
+Jonathan Cameron <jic23@kernel.org> wrote:
+
+> On Sun, 15 Mar 2020 21:34:58 +0530
+> Rohit Sarkar <rohitsarkar5398@gmail.com> wrote:
 > 
-> I don't know, I guess we might be able to add a call_rcu() takes a cpu
-> as a parameter so that all of these call_rcu() callbacks will be queued
-> on a same CPU thusly guarantees the ordering. But of course we
-> need to figure out which cpu to use. :)
+> > Replace usage indio_dev's mlock with either local lock or
+> > iio_device_claim_direct_mode.
+> > 
+> > Signed-off-by: Rohit Sarkar <rohitsarkar5398@gmail.com>  
+> Applied to the togreg branch of iio.git and pushed out as testing.
+
+Not my best review and strangely missed any warnings in my
+local build tests.  0-day came back pointing this out earlier
+(see inline).  I've fixed up.
+
 > 
-> Just my two cents.
-
-CPUs can go offline.  Plus if current trends continue, I will eventually
-be forced to concurrently execute callbacks originating from a single CPU.
-
-Another approach would be to have an additional step of workqueue
-in the ordered case, so that a workqueue handler does rcu_barrier(),
-invokes call_rcu(), which finally spawns the eventual workqueue handler.
-But I do not believe that this will work well in your case because
-you only need the last workqueue handler to be ordered against all the
-previous callbacks.  I suppose that a separate queue_rcu_work_ordered()
-API (or similar) could be added that did this, but I suspect that Tejun
-might want to see a few more use cases before adding something like this.
-Especially if the rcu_barrier() is introducing too much delay for your
-use case.
-
-> > > > > I don't know how to fix this properly, I think essentially RCU work
-> > > > > should be guaranteed the same ordering with regular work. But this
-> > > > > seems impossible unless RCU offers some API to achieve that.
-> > > >
-> > > > I don't think that's possible w/o putting constraints on the flexibility
-> > > > of RCU (Paul of course might disagree).
-> > > >
-> > > > I assume that the filters which hang of tcindex_data::perfect and
-> > > > tcindex_data:p must be freed before tcindex_data, right?
-> > > >
-> > > > Refcounting of tcindex_data should do the trick. I.e. any element which
-> > > > you add to a tcindex_data instance takes a refcount and when that is
-> > > > destroyed then the rcu/work callback drops a reference which once it
-> > > > reaches 0 triggers tcindex_data to be freed.
-> > >
-> > > Yeah, but the problem is more than just tcindex filter, we have many
-> > > places make the same assumption of ordering.
-> >
-> > But don't you also have a situation where there might be a large group
-> > of queue_rcu_work() invocations whose order doesn't matter, followed by a
-> > single queue_rcu_work() invocation that must be ordered after the earlier
-> > group?  If so, ordering -all- of these invocations might be overkill.
-> >
-> > Or did I misread your code?
+> Thanks,
 > 
-> You are right. Previously I thought all non-trivial tc filters would need
-> to address this ordering bug, but it turns out probably only tcindex
-> needs it, because most of them actually use linked lists. As long as
-> we remove the entry from the list before tcf_queue_work(), it is fine
-> to free the list head before each entry in the list.
+> Jonathan
 > 
-> I just sent out a minimal fix using the refcnt.
+> > ---
+> > Changelog v6 -> v7
+> > * Fix failure handling logic
+> > 
+> > Changelog v5 -> v6
+> > * Minor failure handling fixes
+> > 
+> > Changelog v4 -> v5
+> > * Use local lock too at places where driver state needs to be protected.
+> > 
+> > Changelog v3 -> v4
+> > * Fix indentation
+> > 
+> > Changelog v2 -> v3
+> > * use iio_device_claim_direct when switching modes
+> > * replace mlock usage in max1363_write_event_config
+> > 
+> > Changelog v1 -> v2
+> > * Fix indentation
+> > 
+> >  drivers/iio/adc/max1363.c | 37 ++++++++++++++++++++++++++++---------
+> >  1 file changed, 28 insertions(+), 9 deletions(-)
+> > 
+> > diff --git a/drivers/iio/adc/max1363.c b/drivers/iio/adc/max1363.c
+> > index 5c2cc61b666e..12d72bf3f12a 100644
+> > --- a/drivers/iio/adc/max1363.c
+> > +++ b/drivers/iio/adc/max1363.c
+> > @@ -150,6 +150,7 @@ struct max1363_chip_info {
+> >   * @current_mode:	the scan mode of this chip
+> >   * @requestedmask:	a valid requested set of channels
+> >   * @reg:		supply regulator
+> > + * @lock		lock to ensure state is consistent
+> >   * @monitor_on:		whether monitor mode is enabled
+> >   * @monitor_speed:	parameter corresponding to device monitor speed setting
+> >   * @mask_high:		bitmask for enabled high thresholds
+> > @@ -169,6 +170,7 @@ struct max1363_state {
+> >  	const struct max1363_mode	*current_mode;
+> >  	u32				requestedmask;
+> >  	struct regulator		*reg;
+> > +	struct mutex			lock;
+> >  
+> >  	/* Using monitor modes and buffer at the same time is
+> >  	   currently not supported */
+> > @@ -364,7 +366,13 @@ static int max1363_read_single_chan(struct iio_dev *indio_dev,
+> >  	struct max1363_state *st = iio_priv(indio_dev);
+> >  	struct i2c_client *client = st->client;
+> >  
+> > -	mutex_lock(&indio_dev->mlock);
+> > +	ret = iio_device_claim_direct_mode(indio_dev);
+> > +	if (ret)
+> > +		return ret;
+> > +	mutex_lock(&st->lock);
+> > +
+> > +	if (ret < 0)
+> > +		goto error_ret;
+> >  	/*
+> >  	 * If monitor mode is enabled, the method for reading a single
+> >  	 * channel will have to be rather different and has not yet
+> > @@ -372,7 +380,7 @@ static int max1363_read_single_chan(struct iio_dev *indio_dev,
+> >  	 *
+> >  	 * Also, cannot read directly if buffered capture enabled.
+> >  	 */
+> > -	if (st->monitor_on || iio_buffer_enabled(indio_dev)) {
+> > +	if (st->monitor_on) {
+> >  		ret = -EBUSY;
+> >  		goto error_ret;
+> >  	}
+> > @@ -404,8 +412,10 @@ static int max1363_read_single_chan(struct iio_dev *indio_dev,
+> >  		data = rxbuf[0];
+> >  	}
+> >  	*val = data;
+> > +
+> >  error_ret:
+> > -	mutex_unlock(&indio_dev->mlock);
+> > +	mutex_unlock(&st->lock);
+> > +	iio_device_release_direct_mode(indio_dev);
+> >  	return ret;
+> >  
+> >  }
+> > @@ -705,9 +715,9 @@ static ssize_t max1363_monitor_store_freq(struct device *dev,
+> >  	if (!found)
+> >  		return -EINVAL;
+> >  
+> > -	mutex_lock(&indio_dev->mlock);
+> > +	mutex_lock(&st->lock);
+> >  	st->monitor_speed = i;
+> > -	mutex_unlock(&indio_dev->mlock);
+> > +	mutex_unlock(&st->lock);
+> >  
+> >  	return 0;
+> >  }
+> > @@ -810,12 +820,12 @@ static int max1363_read_event_config(struct iio_dev *indio_dev,
+> >  	int val;
+> >  	int number = chan->channel;
+> >  
+> > -	mutex_lock(&indio_dev->mlock);
+> > +	mutex_lock(&st->lock);
+> >  	if (dir == IIO_EV_DIR_FALLING)
+> >  		val = (1 << number) & st->mask_low;
+> >  	else
+> >  		val = (1 << number) & st->mask_high;
+> > -	mutex_unlock(&indio_dev->mlock);
+> > +	mutex_unlock(&st->lock);
+> >  
+> >  	return val;
+> >  }
+> > @@ -962,7 +972,14 @@ static int max1363_write_event_config(struct iio_dev *indio_dev,
+> >  	u16 unifiedmask;
+> >  	int number = chan->channel;
+> >  
+> > -	mutex_lock(&indio_dev->mlock);
+> > +	ret = iio_device_claim_direct_mode(indio_dev);
+> > +	if (ret)
+> > +		return ret;
+> > +	mutex_lock(&st->lock);
+> > +
 
-Sounds good.
+We just checked ret. No need to do it again :)
 
-							Thanx, Paul
+I've dropped this second test.
+
+Jonathan
+
+
+> > +	if (ret < 0)
+> > +		goto error_ret;
+> > +
+> >  	unifiedmask = st->mask_low | st->mask_high;
+> >  	if (dir == IIO_EV_DIR_FALLING) {
+> >  
+> > @@ -989,7 +1006,8 @@ static int max1363_write_event_config(struct iio_dev *indio_dev,
+> >  
+> >  	max1363_monitor_mode_update(st, !!(st->mask_high | st->mask_low));
+> >  error_ret:
+> > -	mutex_unlock(&indio_dev->mlock);
+> > +	mutex_unlock(&st->lock);
+> > +	iio_device_release_direct_mode(indio_dev);
+> >  
+> >  	return ret;
+> >  }
+> > @@ -1587,6 +1605,7 @@ static int max1363_probe(struct i2c_client *client,
+> >  
+> >  	st = iio_priv(indio_dev);
+> >  
+> > +	mutex_init(&st->lock);
+> >  	st->reg = devm_regulator_get(&client->dev, "vcc");
+> >  	if (IS_ERR(st->reg)) {
+> >  		ret = PTR_ERR(st->reg);  
+> 
+
