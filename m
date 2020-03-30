@@ -2,150 +2,163 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64E15C43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 05:25:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF57AC2D0EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 05:26:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 17DE4206F5
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 05:25:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="ABHbM2Gv"
+	by mail.kernel.org (Postfix) with ESMTP id 97E49206F5
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 05:26:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728557AbgC3FZf (ORCPT
+        id S1728614AbgC3F0Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 01:25:35 -0400
-Received: from mailout2.samsung.com ([203.254.224.25]:30594 "EHLO
-        mailout2.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728445AbgC3FZf (ORCPT
+        Mon, 30 Mar 2020 01:26:16 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:44285 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728522AbgC3F0P (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 01:25:35 -0400
-Received: from epcas1p1.samsung.com (unknown [182.195.41.45])
-        by mailout2.samsung.com (KnoxPortal) with ESMTP id 20200330052532epoutp024fc6604bf77e5dc0bd0eb7fee3887c88~A-Z-2lwI11861418614epoutp02N
-        for <linux-kernel@vger.kernel.org>; Mon, 30 Mar 2020 05:25:32 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20200330052532epoutp024fc6604bf77e5dc0bd0eb7fee3887c88~A-Z-2lwI11861418614epoutp02N
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1585545932;
-        bh=g7ucxEv2KLCs/+6yXO7PIROft+/NEWLtfTbNPQuUzck=;
-        h=From:To:Cc:Subject:Date:References:From;
-        b=ABHbM2GvjN4OzE6l1hg1ESxthI64cQ2u6LOFXQLhX7JRbPz31xNc1cdse3XBtq2H8
-         odtunOcCW9fgrI1JFhQ57rsMMaQJZj4r5AEMez8PrZnijAZmD7NvCL6NA4s3WPj4Va
-         AJWGsrMpHzZYR8f6tYBQaGF1lHNPKbr0boe9Jh3E=
-Received: from epsnrtp1.localdomain (unknown [182.195.42.162]) by
-        epcas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20200330052531epcas1p12d3fbddab49e500a7c8caf575e71e19d~A-Z-bLBly2591925919epcas1p1I;
-        Mon, 30 Mar 2020 05:25:31 +0000 (GMT)
-Received: from epsmges1p2.samsung.com (unknown [182.195.40.154]) by
-        epsnrtp1.localdomain (Postfix) with ESMTP id 48rLWq0l8YzMqYmD; Mon, 30 Mar
-        2020 05:25:27 +0000 (GMT)
-Received: from epcas1p1.samsung.com ( [182.195.41.45]) by
-        epsmges1p2.samsung.com (Symantec Messaging Gateway) with SMTP id
-        8A.B3.04140.1C2818E5; Mon, 30 Mar 2020 14:25:21 +0900 (KST)
-Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-        epcas1p1.samsung.com (KnoxPortal) with ESMTPA id
-        20200330052521epcas1p1eedc926d4b11513f8502cf0c90ecf433~A-Z1oNNAC2591925919epcas1p1z;
-        Mon, 30 Mar 2020 05:25:21 +0000 (GMT)
-Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
-        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20200330052521epsmtrp28c3574ee5ce1964a730e08d68350efca~A-Z1nUhT10519805198epsmtrp2d;
-        Mon, 30 Mar 2020 05:25:21 +0000 (GMT)
-X-AuditID: b6c32a36-fa3ff7000000102c-ee-5e8182c1c348
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-        epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        10.43.04158.1C2818E5; Mon, 30 Mar 2020 14:25:21 +0900 (KST)
-Received: from jaehoon-DeskTop.10.32.193.11 (unknown [10.113.113.235]) by
-        epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20200330052521epsmtip24df48ed902f0085a57a61982e9fa3eba~A-Z1aAslN1473814738epsmtip2N;
-        Mon, 30 Mar 2020 05:25:21 +0000 (GMT)
-From:   Jaehoon Chung <jh80.chung@samsung.com>
-To:     linux-wireless@vger.kernel.org
-Cc:     brcm80211-dev-list.pdl@broadcom.com,
-        brcm80211-dev-list@cypress.com, linux-kernel@vger.kernel.org,
-        kvalo@codeaurora.org, arend.vanspriel@broadcom.com,
-        franky.lin@broadcom.com, hante.meuleman@broadcom.com,
-        chi-hsien.lin@cypress.com, wright.feng@cypress.com,
-        Jaehoon Chung <jh80.chung@samsung.com>
-Subject: [PATCH] brcmfmac: fix wrong location to get firmware feature
-Date:   Mon, 30 Mar 2020 14:25:28 +0900
-Message-Id: <20200330052528.10503-1-jh80.chung@samsung.com>
-X-Mailer: git-send-email 2.26.0
+        Mon, 30 Mar 2020 01:26:15 -0400
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ore@pengutronix.de>)
+        id 1jImw9-0008CY-FM; Mon, 30 Mar 2020 07:26:13 +0200
+Received: from ore by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ore@pengutronix.de>)
+        id 1jImw7-0002A4-F1; Mon, 30 Mar 2020 07:26:11 +0200
+Date:   Mon, 30 Mar 2020 07:26:11 +0200
+From:   Oleksij Rempel <o.rempel@pengutronix.de>
+To:     Andrew Lunn <andrew@lunn.ch>
+Cc:     Florian Fainelli <f.fainelli@gmail.com>, netdev@vger.kernel.org,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        linux-kernel@vger.kernel.org, Fabio Estevam <festevam@gmail.com>,
+        linux-imx@nxp.com, kernel@pengutronix.de,
+        David Jander <david@protonic.nl>,
+        Russell King <linux@armlinux.org.uk>,
+        Shawn Guo <shawnguo@kernel.org>,
+        linux-arm-kernel@lists.infradead.org,
+        Heiner Kallweit <hkallweit1@gmail.com>
+Subject: Re: [PATCH v2] ARM: imx: allow to disable board specific PHY fixups
+Message-ID: <20200330052611.2bgu7x4nmimf7pru@pengutronix.de>
+References: <20200329110457.4113-1-o.rempel@pengutronix.de>
+ <20200329150854.GA31812@lunn.ch>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA01Se0hTYRT3u3e7XleL2zL7GJTrktDLteucXfMVPYcVSQZBke6iF5U92Z2R
-        VmAaassie1itIpWMMihL02X0cFJiWmkmLdECM1HTEk2xNOxuV8n/fud3zu/7nXO+g6OyEkyO
-        p5lsrNXEGEhMIqquXxUcXJd9PEH1+RVN15QNiujRE7kIPVQ4jNFDeUUIPVHah9ET3W4R7f6T
-        K6ZL75RgdFvtNYwevN3pS1+aeIJsnKd1fHmDadvOnEa0udlp2jNV5UA7+nBZnHi/PjKVZZJZ
-        q4I1JZmT00wpUeSO+MTNiZowFRVMhdPrSYWJMbJR5JadccHb0gx8Z6TiEGNI56k4huPIddGR
-        VnO6jVWkmjlbFMlakg2WcIuSY4xcuilFmWQ2bqBUqhANX6jTp9affIBa7kgO992awrLAFG4H
-        fjgkQmHN5LivHUhwGeEEsHfALRaCEQDtBS4gBOMA9hc0+s5KTrnfYELiKYBue53Yk5ARkwDW
-        j+zxYIxYC2vGGxAP9idIeLqlHPUIUKISgRfqf3oFi4itsOm1y1skIoJgyeURkQdLiQjYWlcm
-        EtwCYWnWJCLwC2HjlR4vj/J8zqOr3kch8QKDfS8rZtrbAk+dfYkKeBEcaKia4eVw9MdTTMBH
-        YG1O84w4H8CO6mxESKjh87LzPMZ5h1Xwfu06gV4OH09eB4LxAvhjrEDsKYGEFObnyoSSFfD9
-        935k1qqrZ1osYC0c6nJiwoIOwun2FnAWBDrmjOOYM47jv3ExQMtBAGvhjCksR1lC5n7rQ+A9
-        z9VhTlD6dqcLEDgg50uHa7ISZGLmEJdhdAGIo6S/FNvNU9JkJiOTtZoTrekGlnMBDb/tQlS+
-        OMnMH7vJlkhpQtRqNR1KhWkoilwivfjRkCAjUhgbq2dZC2ud1SG4nzwLrMFvvqv06706SOl6
-        11T44M6pzgVBkr3FzyK+xbbGVDmVN+THjIGMJCZAcS5M1/Fbhyqp/vi2lpjqpXWOlvDouMxN
-        yqKJocK327d/GAz/OjbuU1Rt79J98sm5qD/Q9Cs/JJKrjT3cdFSfh8Q27Ss7t1JdebfHofrb
-        vKu9+xZ+b4oUcakMtRq1csw/rnT+DrQDAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrPLMWRmVeSWpSXmKPExsWy7bCSvO7BpsY4gzM3BSy2L33DYvG5pY3J
-        4u3ED2wWb9unMVn8WPSCzeLHoxssFjd+tbFaLFq5kM3i8q45bBZvVtxht5j+YzeTA7fHrPtn
-        2Twu9/UyebQ1ZXr0bVnF6PF5k1wAaxSXTUpqTmZZapG+XQJXxuHOjcwFK7kqXiz7w9bA+Iej
-        i5GTQ0LARKL7xlm2LkYuDiGB3YwSf1vamSESUhKfn04FSnAA2cIShw8XQ9T8ZJRY+nI1E0gN
-        m4COxPZvx8FsEQElid4Lq5hBipgF9jJJXG2+zA6SEBZwlTh96hBYEYuAqsTCGZ9YQGxeAWuJ
-        iweXskAsk5dY1PCbCSIuKHFy5hOwODNQvHnrbOYJjHyzkKRmIUktYGRaxSiZWlCcm55bbFhg
-        lJdarlecmFtcmpeul5yfu4kRHMxaWjsYT5yIP8QowMGoxMP7YXtDnBBrYllxZe4hRgkOZiUR
-        XjZ/oBBvSmJlVWpRfnxRaU5q8SFGaQ4WJXFe+fxjkUIC6YklqdmpqQWpRTBZJg5OqQbGyHXH
-        Q5ddnWEdLxl+4dtztyeBDN1tu7mPn7jKdZBDWPVRUXlzYcilBbM0DTs9J+dvSDNbIGQx01da
-        M+SQY9u7syaph4V3FRc18Xx/b8L15plFx/7ZDCdFl2s7HgyYeddYuyxShvOcoN9nIfcFrGyv
-        2Ot5j/eY5TLzPPPY7+J7iivXIHpRxzUlluKMREMt5qLiRABFpW3lYgIAAA==
-X-CMS-MailID: 20200330052521epcas1p1eedc926d4b11513f8502cf0c90ecf433
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: SVC_REQ_APPROVE
-CMS-TYPE: 101P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20200330052521epcas1p1eedc926d4b11513f8502cf0c90ecf433
-References: <CGME20200330052521epcas1p1eedc926d4b11513f8502cf0c90ecf433@epcas1p1.samsung.com>
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200329150854.GA31812@lunn.ch>
+X-Sent-From: Pengutronix Hildesheim
+X-URL:  http://www.pengutronix.de/
+X-IRC:  #ptxdist @freenode
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-Uptime: 07:03:38 up 135 days, 20:22, 141 users,  load average: 0.02, 0.06,
+ 0.02
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ore@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-sup_wpa feature is getting after setting feature_disable flag.
-If firmware is supported sup_wpa feature,  it's always enabled
-regardless of feature_disable flag.
+Hi Andrew,
 
-Fixes: b8a64f0e96c2 ("brcmfmac: support 4-way handshake offloading for WPA/WPA2-PSK")
+On Sun, Mar 29, 2020 at 05:08:54PM +0200, Andrew Lunn wrote:
+> On Sun, Mar 29, 2020 at 01:04:57PM +0200, Oleksij Rempel wrote:
+> 
+> Hi Oleksij
+> 
+> > +config DEPRECATED_PHY_FIXUPS
+> > +	bool "Enable deprecated PHY fixups"
+> > +	default y
+> > +	---help---
+> > +	  In the early days it was common practice to configure PHYs by adding a
+> > +	  phy_register_fixup*() in the machine code. This practice turned out to
+> > +	  be potentially dangerous, because:
+> > +	  - it affects all PHYs in the system
+> > +	  - these register changes are usually not preserved during PHY reset
+> > +	    or suspend/resume cycle.
+> > +	  - it complicates debugging, since these configuration changes were not
+> > +	    done by the actual PHY driver.
+> > +	  This option allows to disable all fixups which are identified as
+> > +	  potentially harmful and give the developers a chance to implement the
+> > +	  proper configuration via the device tree (e.g.: phy-mode) and/or the
+> > +	  related PHY drivers.
+> 
+> This appears to be an IMX only problem. Everybody else seems to of got
+> this right. There is no need to bother everybody with this new
+> option. Please put this in arch/arm/mach-mxs/Kconfig and have IMX in
+> the name.
 
-Signed-off-by: Jaehoon Chung <jh80.chung@samsung.com>
----
- drivers/net/wireless/broadcom/brcm80211/brcmfmac/feature.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+Actually, all fixups seems to do wring thing:
+arch/arm/mach-davinci/board-dm644x-evm.c:915:		phy_register_fixup_for_uid(LXT971_PHY_ID, LXT971_PHY_MASK,
 
-diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/feature.c b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/feature.c
-index 5da0dda0d899..0dcefbd0c000 100644
---- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/feature.c
-+++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/feature.c
-@@ -285,13 +285,14 @@ void brcmf_feat_attach(struct brcmf_pub *drvr)
- 	if (!err)
- 		ifp->drvr->feat_flags |= BIT(BRCMF_FEAT_SCAN_RANDOM_MAC);
- 
-+	brcmf_feat_iovar_int_get(ifp, BRCMF_FEAT_FWSUP, "sup_wpa");
-+
- 	if (drvr->settings->feature_disable) {
- 		brcmf_dbg(INFO, "Features: 0x%02x, disable: 0x%02x\n",
- 			  ifp->drvr->feat_flags,
- 			  drvr->settings->feature_disable);
- 		ifp->drvr->feat_flags &= ~drvr->settings->feature_disable;
- 	}
--	brcmf_feat_iovar_int_get(ifp, BRCMF_FEAT_FWSUP, "sup_wpa");
- 
- 	brcmf_feat_firmware_overrides(drvr);
- 
+Increased MII drive strength. Should be probably enabled by the PHY
+driver.
+
+arch/arm/mach-imx/mach-imx6q.c:167:		phy_register_fixup_for_uid(PHY_ID_KSZ9021, MICREL_PHY_ID_MASK,
+arch/arm/mach-imx/mach-imx6q.c:169:		phy_register_fixup_for_uid(PHY_ID_KSZ9031, MICREL_PHY_ID_MASK,
+arch/arm/mach-imx/mach-imx6q.c:171:		phy_register_fixup_for_uid(PHY_ID_AR8031, 0xffffffef,
+arch/arm/mach-imx/mach-imx6q.c:173:		phy_register_fixup_for_uid(PHY_ID_AR8035, 0xffffffef,
+arch/arm/mach-imx/mach-imx6sx.c:40:		phy_register_fixup_for_uid(PHY_ID_AR8031, 0xffffffff,
+arch/arm/mach-imx/mach-imx6ul.c:47:		phy_register_fixup_for_uid(PHY_ID_KSZ8081, MICREL_PHY_ID_MASK,
+arch/arm/mach-imx/mach-imx7d.c:54:		phy_register_fixup_for_uid(PHY_ID_AR8031, 0xffffffff,
+arch/arm/mach-imx/mach-imx7d.c:56:		phy_register_fixup_for_uid(PHY_ID_BCM54220, 0xffffffff,
+arch/arm/mach-mxs/mach-mxs.c:262:		phy_register_fixup_for_uid(PHY_ID_KSZ8051, MICREL_PHY_ID_MASK,
+
+Fix in some random manner PHY specific errata, enable clock output and
+configure the clock skew.
+
+arch/arm/mach-orion5x/dns323-setup.c:645:		phy_register_fixup_for_uid(MARVELL_PHY_ID_88E1118,
+
+Enable LED. Should be done in DT if supported.
+
+arch/powerpc/platforms/85xx/mpc85xx_mds.c:305:		phy_register_fixup_for_id(phy_id, mpc8568_fixup_125_clock);
+arch/powerpc/platforms/85xx/mpc85xx_mds.c:306:		phy_register_fixup_for_id(phy_id, mpc8568_mds_phy_fixups);
+arch/powerpc/platforms/85xx/mpc85xx_mds.c:311:		phy_register_fixup_for_id(phy_id, mpc8568_mds_phy_fixups);
+
+Fix in some random manner PHY specific errata, enable clock output and
+configure the clock skew.
+
+drivers/net/ethernet/dnet.c:818:	err = phy_register_fixup_for_uid(0x01410cc0, 0xfffffff0,
+
+Enable LED. Should be done in DT if supported.
+
+drivers/net/usb/lan78xx.c:2071:		ret = phy_register_fixup_for_uid(PHY_KSZ9031RNX, 0xfffffff0,
+drivers/net/usb/lan78xx.c:2078:		ret = phy_register_fixup_for_uid(PHY_LAN8835, 0xfffffff0,
+
+enable clock output and configure the clock skew.
+
+As we can see, all of used fixups seem to be wrong. For example micrel
+PHY errata should be fixed in one place for all devices. Not only for
+some iMX6 SoC. I used this option for iMX, because i can test it.
+
+> There is no need to bother everybody with this new
+> option. Please put this in arch/arm/mach-mxs/Kconfig and have IMX in
+> the name.
+
+A lot of work is needed to fix all of them. I just do not have enough
+time to do it.
+
+> Having said that, i'm not sure this is the best solution. You cannot
+> build one kernel which runs on all machines.  Did you consider some
+> sort of DT property to disable these fixup? What other ideas did you
+> have before deciding on this solution?
+
+As soon as all PHY driver support all needed bits used in this fixups,
+we can use drivers on top of fixups. Since changes made by fixups will
+be overwritten by PHY drivers any way. The Kconfig option is needed only for
+developers who has enough resource to investigate this issues and
+mainline needed changes.
+
+Regards,
+Oleksij
 -- 
-2.26.0
-
+Pengutronix e.K.                           |                             |
+Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
+31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
