@@ -4,55 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 021AFC2D0EF
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 02:34:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71719C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 02:34:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CDD0820780
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 02:34:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E65E20780
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 02:34:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="EZj/LdDI"
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="x1VGsvdO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729014AbgC3Cdg (ORCPT
+        id S1729369AbgC3Cek (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Mar 2020 22:33:36 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:45504 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728908AbgC3Cdf (ORCPT
+        Sun, 29 Mar 2020 22:34:40 -0400
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:45506 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728901AbgC3Cdf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sun, 29 Mar 2020 22:33:35 -0400
-Received: by mail-qt1-f194.google.com with SMTP id t17so13887384qtn.12
+Received: by mail-qt1-f196.google.com with SMTP id t17so13887408qtn.12
         for <linux-kernel@vger.kernel.org>; Sun, 29 Mar 2020 19:33:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=joelfernandes.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=SHLAtJMh4QvoU/qfwuEaXXVei4ZAh6L5O9IfzaCS1DM=;
-        b=EZj/LdDIb8HO3LYMjwICXSEVb7Ug5CB6y+9yeeADTqwVWhn/iu4pUuRlJQp8IWjNRv
-         ZHhEK+CiED++Nq7ZmpKIIk9AzYqhwZhx4OfWzy5quBd5oc00JjePZcq6xqYMOn+tAGOG
-         pzdgsMtvd6/BeARibxZlYR4poF6nx+XzQnoHc=
+        bh=Wx0JY2YKiW3y6xXQtIfMDOCqiN7fPBTCk6pvf651C60=;
+        b=x1VGsvdOgbW/pXh3K2fqEFIrtX7CGT8Kj9GkfUuhJ8X66LsZN584UWKXUs/dyaR6Uy
+         rskvRF/ZZBYw63xgUm1Ivc2mBaaKNEoUxVmZK6nYp83mdBOhL3z+bR5+bMB7SLBVqF2H
+         5bdDD8rjYW1c5sAQfJh2fVXftxZB5W0S4KVZM=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=SHLAtJMh4QvoU/qfwuEaXXVei4ZAh6L5O9IfzaCS1DM=;
-        b=tJ1q2TLMw3Jg0N2goI4FwZgPUpP8a3SxdfdCgOiORp93UKMsL1vI5CRF0Zkyi79a/S
-         ozpfOhrqawJhnHH10+5bK4sLa0Aetea0llINL5jnQAZL99XrCwepeIW7S5A6BMSXuq0t
-         DUCM/FDhua+2AES6m7pgZG9ZDvOpR99tFS2kw+PyZhHFCIlco+80BdiOD/RJtqHOjMGG
-         PkXeARAipPezYPtXnemTf5kIfUPZwplHXul9XdXoI/xfvcMlwBdl53v8Fi+exkvDc3hQ
-         CcdhcxgFgZ4LhoctkHCAp+LiuLFuSYjA0pnTZmmtlj9wMvXTMjJ9hgujpuMy39WEyTl3
-         D1ww==
-X-Gm-Message-State: ANhLgQ20lNUaHDBLZZlva3v2yGimL2MEyYNd7IEtdmud1xhc75368D6Q
-        Qzn34uaMJE5Gc4kFqtGmTrAxUbaWlk0=
-X-Google-Smtp-Source: ADFU+vt25iE1CsRcLCeax/iZQAcxxqmJ1TSX0Yl3KB0TJZ2nCudJEfCk4XFJ5v786E3wtic9LAXdDA==
-X-Received: by 2002:aed:2535:: with SMTP id v50mr10066898qtc.354.1585535613043;
-        Sun, 29 Mar 2020 19:33:33 -0700 (PDT)
+        bh=Wx0JY2YKiW3y6xXQtIfMDOCqiN7fPBTCk6pvf651C60=;
+        b=auWk8U3aWk7D5J7n1Q6Vqxz4HqSpDjgbm0DVyKb8xlUg4O/6PkzXIhzIdjmdczbHcO
+         dDtJPVTNp9t3vAG0ZisdyiYHUh8BK1Dy9MRdwEnES+TneXh+VD8v8nmAcbGgZc4mdgv3
+         rCzZE3SrT2sUxXsnluO+nFfYrzx5JZkTgpKdQGNLHVIxtCVx742TY6Ua7go/hEGpWzXe
+         UJsMzS4xuQ4T/vvULKO1YI/MVLDi9lAWBN+k9wj1QHYbgpvgXQlgExCAlUvn0m0VG6gf
+         Ns6yivQUbQ2kDk13VUYF8trVzieG0Hb59SBQQF62ToLPAQUev93vTw6yi5NSSXs936Fr
+         alNw==
+X-Gm-Message-State: ANhLgQ3QHC6cn7QA9cR0b6HEIozlIUvkBGTxg/HqDjEkuIj6MbInr2/0
+        wjMwafyKxaqJY8rxLa4huUw0VTzTfyY=
+X-Google-Smtp-Source: ADFU+vtq1MY/K8kiAE34+qHLDxZNEQyC7+n4jsYMeFFHn7w7o9ddSCQKGt3nomzKdenQfVtzBbc36g==
+X-Received: by 2002:ac8:6f46:: with SMTP id n6mr9692172qtv.119.1585535614134;
+        Sun, 29 Mar 2020 19:33:34 -0700 (PDT)
 Received: from joelaf.cam.corp.google.com ([2620:15c:6:12:9c46:e0da:efbf:69cc])
-        by smtp.gmail.com with ESMTPSA id q15sm10030625qtj.83.2020.03.29.19.33.32
+        by smtp.gmail.com with ESMTPSA id q15sm10030625qtj.83.2020.03.29.19.33.33
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 29 Mar 2020 19:33:32 -0700 (PDT)
+        Sun, 29 Mar 2020 19:33:33 -0700 (PDT)
 From:   "Joel Fernandes (Google)" <joel@joelfernandes.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     "Uladzislau Rezki (Sony)" <urezki@gmail.com>,
@@ -65,9 +65,9 @@ Cc:     "Uladzislau Rezki (Sony)" <urezki@gmail.com>,
         "Paul E. McKenney" <paulmck@kernel.org>,
         "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
         rcu@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>
-Subject: [PATCH 02/18] rcu: Introduce kvfree_rcu() interface
-Date:   Sun, 29 Mar 2020 22:32:32 -0400
-Message-Id: <20200330023248.164994-3-joel@joelfernandes.org>
+Subject: [PATCH 03/18] rcu: Rename rcu_invoke_kfree_callback/rcu_kfree_callback
+Date:   Sun, 29 Mar 2020 22:32:33 -0400
+Message-Id: <20200330023248.164994-4-joel@joelfernandes.org>
 X-Mailer: git-send-email 2.26.0.rc2.310.g2932bb562d-goog
 In-Reply-To: <20200330023248.164994-1-joel@joelfernandes.org>
 References: <20200330023248.164994-1-joel@joelfernandes.org>
@@ -80,119 +80,90 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: "Uladzislau Rezki (Sony)" <urezki@gmail.com>
 
-kvfree_rcu() can deal with an allocated memory that is obtained
-via kvmalloc(). It can return two types of allocated memory or
-"pointers", one can belong to regular SLAB allocator and another
-one can be vmalloc one. It depends on requested size and memory
-pressure.
-
-Based on that, two streams are split, thus if a pointer belongs
-to vmalloc allocator it is queued to the list, otherwise SLAB
-one is queued into "bulk array" for further processing.
-
-The main reason of such splitting is:
-    a) to distinguish kmalloc()/vmalloc() ptrs;
-    b) there is no vmalloc_bulk() interface.
-
-As of now we have list_lru.c user that needs such interface,
-also there will be new comers. Apart of that it is preparation
-to have a head-less variant later.
+Rename rcu_invoke_kfree_callback to rcu_invoke_kvfree_callback.
+Do the same with second trace event, that is rcu_kfree_callback,
+it becomes rcu_kvfree_callback. The reason is to be aligned with
+kvfree notation.
 
 Signed-off-by: Uladzislau Rezki (Sony) <urezki@gmail.com>
 Reviewed-by: Joel Fernandes (Google) <joel@joelfernandes.org>
 Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
 ---
- include/linux/rcupdate.h |  9 +++++++++
- kernel/rcu/tiny.c        |  3 ++-
- kernel/rcu/tree.c        | 17 ++++++++++++-----
- 3 files changed, 23 insertions(+), 6 deletions(-)
+ include/trace/events/rcu.h | 8 ++++----
+ kernel/rcu/tiny.c          | 2 +-
+ kernel/rcu/tree.c          | 4 ++--
+ 3 files changed, 7 insertions(+), 7 deletions(-)
 
-diff --git a/include/linux/rcupdate.h b/include/linux/rcupdate.h
-index 3598bbb5ff407..8b7128d0860e2 100644
---- a/include/linux/rcupdate.h
-+++ b/include/linux/rcupdate.h
-@@ -870,6 +870,15 @@ do {									\
- 		__kfree_rcu(&((___p)->rhf), offsetof(typeof(*(ptr)), rhf)); \
- } while (0)
+diff --git a/include/trace/events/rcu.h b/include/trace/events/rcu.h
+index f9a7811148e2a..0ee93d0b1daa8 100644
+--- a/include/trace/events/rcu.h
++++ b/include/trace/events/rcu.h
+@@ -506,13 +506,13 @@ TRACE_EVENT_RCU(rcu_callback,
  
-+/**
-+ * kvfree_rcu() - kvfree an object after a grace period.
-+ * @ptr:	pointer to kvfree
-+ * @rhf:	the name of the struct rcu_head within the type of @ptr.
-+ *
-+ * Same as kfree_rcu(), just simple alias.
-+ */
-+#define kvfree_rcu(ptr, rhf) kfree_rcu(ptr, rhf)
-+
  /*
-  * Place this after a lock-acquisition primitive to guarantee that
-  * an UNLOCK+LOCK pair acts as a full barrier.  This guarantee applies
+  * Tracepoint for the registration of a single RCU callback of the special
+- * kfree() form.  The first argument is the RCU type, the second argument
++ * kvfree() form.  The first argument is the RCU type, the second argument
+  * is a pointer to the RCU callback, the third argument is the offset
+  * of the callback within the enclosing RCU-protected data structure,
+  * the fourth argument is the number of lazy callbacks queued, and the
+  * fifth argument is the total number of callbacks queued.
+  */
+-TRACE_EVENT_RCU(rcu_kfree_callback,
++TRACE_EVENT_RCU(rcu_kvfree_callback,
+ 
+ 	TP_PROTO(const char *rcuname, struct rcu_head *rhp, unsigned long offset,
+ 		 long qlen),
+@@ -596,12 +596,12 @@ TRACE_EVENT_RCU(rcu_invoke_callback,
+ 
+ /*
+  * Tracepoint for the invocation of a single RCU callback of the special
+- * kfree() form.  The first argument is the RCU flavor, the second
++ * kvfree() form.  The first argument is the RCU flavor, the second
+  * argument is a pointer to the RCU callback, and the third argument
+  * is the offset of the callback within the enclosing RCU-protected
+  * data structure.
+  */
+-TRACE_EVENT_RCU(rcu_invoke_kfree_callback,
++TRACE_EVENT_RCU(rcu_invoke_kvfree_callback,
+ 
+ 	TP_PROTO(const char *rcuname, struct rcu_head *rhp, unsigned long offset),
+ 
 diff --git a/kernel/rcu/tiny.c b/kernel/rcu/tiny.c
-index dd572ce7c7479..4b99f7b88beec 100644
+index 4b99f7b88beec..3dd8e6e207b09 100644
 --- a/kernel/rcu/tiny.c
 +++ b/kernel/rcu/tiny.c
-@@ -23,6 +23,7 @@
- #include <linux/cpu.h>
- #include <linux/prefetch.h>
- #include <linux/slab.h>
-+#include <linux/mm.h>
+@@ -86,7 +86,7 @@ static inline bool rcu_reclaim_tiny(struct rcu_head *head)
  
- #include "rcu.h"
- 
-@@ -86,7 +87,7 @@ static inline bool rcu_reclaim_tiny(struct rcu_head *head)
  	rcu_lock_acquire(&rcu_callback_map);
  	if (__is_kfree_rcu_offset(offset)) {
- 		trace_rcu_invoke_kfree_callback("", head, offset);
--		kfree((void *)head - offset);
-+		kvfree((void *)head - offset);
+-		trace_rcu_invoke_kfree_callback("", head, offset);
++		trace_rcu_invoke_kvfree_callback("", head, offset);
+ 		kvfree((void *)head - offset);
  		rcu_lock_release(&rcu_callback_map);
  		return true;
- 	}
 diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
-index 4eb424eb44acb..2d10c50621c38 100644
+index 2d10c50621c38..88b744ce896c0 100644
 --- a/kernel/rcu/tree.c
 +++ b/kernel/rcu/tree.c
-@@ -2925,9 +2925,9 @@ static void kfree_rcu_work(struct work_struct *work)
- 	}
- 
- 	/*
--	 * Emergency case only. It can happen under low memory
--	 * condition when an allocation gets failed, so the "bulk"
--	 * path can not be temporary maintained.
-+	 * vmalloc() pointers end up here also emergency case. It can
-+	 * happen under low memory condition when an allocation gets
-+	 * failed, so the "bulk" path can not be temporary maintained.
- 	 */
- 	for (; head; head = next) {
- 		unsigned long offset = (unsigned long)head->func;
-@@ -2938,7 +2938,7 @@ static void kfree_rcu_work(struct work_struct *work)
- 		trace_rcu_invoke_kfree_callback(rcu_state.name, head, offset);
+@@ -2744,7 +2744,7 @@ __call_rcu(struct rcu_head *head, rcu_callback_t func)
+ 	// If no-CBs CPU gets here, rcu_nocb_try_bypass() acquired ->nocb_lock.
+ 	rcu_segcblist_enqueue(&rdp->cblist, head);
+ 	if (__is_kfree_rcu_offset((unsigned long)func))
+-		trace_rcu_kfree_callback(rcu_state.name, head,
++		trace_rcu_kvfree_callback(rcu_state.name, head,
+ 					 (unsigned long)func,
+ 					 rcu_segcblist_n_cbs(&rdp->cblist));
+ 	else
+@@ -2935,7 +2935,7 @@ static void kfree_rcu_work(struct work_struct *work)
+ 		next = head->next;
+ 		debug_rcu_head_unqueue(head);
+ 		rcu_lock_acquire(&rcu_callback_map);
+-		trace_rcu_invoke_kfree_callback(rcu_state.name, head, offset);
++		trace_rcu_invoke_kvfree_callback(rcu_state.name, head, offset);
  
  		if (!WARN_ON_ONCE(!__is_kfree_rcu_offset(offset)))
--			kfree((void *)head - offset);
-+			kvfree((void *)head - offset);
- 
- 		rcu_lock_release(&rcu_callback_map);
- 		cond_resched_tasks_rcu_qs();
-@@ -3112,10 +3112,17 @@ void kfree_call_rcu(struct rcu_head *head, rcu_callback_t func)
- 	}
- 
- 	/*
-+	 * We do not queue vmalloc pointers into array,
-+	 * instead they are just queued to the list. We
-+	 * do it because of:
-+	 *    a) to distinguish kmalloc()/vmalloc() ptrs;
-+	 *    b) there is no vmalloc_bulk() interface.
-+	 *
- 	 * Under high memory pressure GFP_NOWAIT can fail,
- 	 * in that case the emergency path is maintained.
- 	 */
--	if (unlikely(!kfree_call_rcu_add_ptr_to_bulk(krcp, head, func))) {
-+	if (is_vmalloc_addr((void *) head - (unsigned long) func) ||
-+			!kfree_call_rcu_add_ptr_to_bulk(krcp, head, func)) {
- 		head->func = func;
- 		head->next = krcp->head;
- 		krcp->head = head;
+ 			kvfree((void *)head - offset);
 -- 
 2.26.0.rc2.310.g2932bb562d-goog
 
