@@ -8,55 +8,55 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D00C0C2D0ED
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 01:09:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A271DC43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 01:10:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E31120757
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 01:09:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6AD8220757
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 01:10:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="a1imk7xg"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="b5rOMWO+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728507AbgC3BJ4 (ORCPT
+        id S1728591AbgC3BKA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Mar 2020 21:09:56 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:33685 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728280AbgC3BJr (ORCPT
+        Sun, 29 Mar 2020 21:10:00 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:43322 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728309AbgC3BJs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Mar 2020 21:09:47 -0400
-Received: by mail-lf1-f66.google.com with SMTP id x200so5559007lff.0;
-        Sun, 29 Mar 2020 18:09:44 -0700 (PDT)
+        Sun, 29 Mar 2020 21:09:48 -0400
+Received: by mail-lj1-f195.google.com with SMTP id g27so16239083ljn.10;
+        Sun, 29 Mar 2020 18:09:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=4FuqLVA2Ch1ge473EwwpJtLsZnteKNfYMkl72ih8U+c=;
-        b=a1imk7xg6DJO18zhcZxKy5O1NJyW/KUhelh4pAugtSE8hQfVKLgMtRH877wdq/fWgk
-         h7lIoG+UfMqesjXLOwCRcodeuhmCpiIjUNFKyaKqzARwS4HyQGNiSS83b6prJu7BCFTc
-         S+h5vOv5N0Ny8mOLu8PPEqggvSHLD6m9LRQ544CdouBZkqSEsqUC27ZYWS86kpCWFIVS
-         1J9xqFkDRSseaL5bvPt3fsr0x6bbOaaSnqdysNQv50AHhIwklrKWaZWKGTrTelBT7Ah0
-         qZfuJdVs4Vl7U0EUjDkzylRd44bC4WgaqACYw/jN9627/gWPcuBEqu9iSF99YALsgVoO
-         b82Q==
+        bh=X5VcCh6eWMr9J37Xsf4tsyddBbuWfmiDNSVOMhCKemo=;
+        b=b5rOMWO+3GLaJSJN3NaO51/e76l80sUm8FMWOvxcEKGmHEDls6ROUnIqCrEKrzlJcO
+         N3PpRx/tVJZfG5xi/5b5ATmYpg57lHcfXtTWLU2pgwb5yXTMjOkrvCZ9Nl1gS1mFKzX3
+         kD9TdbPWtKhhH2vQhwAzD+EOvJTYYqf0u/Bk2V0Ic6UCo//nNh3ZvUwh9HoHo5t4Ercp
+         NLfExVyx2nUkXADa1KDkSPQ90e+ZHK9nfVDyUUwJP+WDwkhDTS7Dk12fFIxsk3f4Y4SU
+         /YvXCgp/d5fV2d45rT0Al30tw44Y5tfC+m34Yhtp7+JIUB6Rz11CxmIDyZpPI1mRJ4NC
+         0iag==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=4FuqLVA2Ch1ge473EwwpJtLsZnteKNfYMkl72ih8U+c=;
-        b=twvzv8xT5gJUJLZMOyGpjS7t0OZlfh7/9gL1PnoZYZYdRZ+B1SPDeKjQ/RusQv7Pue
-         g9ObTL+xTE+7evliTN9883VMbGVepm1bm97+pkujDB/vXhVAX8N7/p8LaVgnEzKZlDG8
-         9cyBfyig+Eo6CX8LjKP8i+9+WvSvygGkd4Qo3noUHZt8Djd5PjPagb23x2S9Z78ATiE3
-         kMFxuA7WX7+9MMTWCsWu9szPQVrhUJopJu1w9KsEcMjOZwZlAEXpGP97B1qK3IJgqvpz
-         BzUoK61GQ+JgWxxjSEuRT2YklvJ1aZlGkR6q3VI0X++BCglRaMln9uDEGWQkLjJ8NiO0
-         yRCA==
-X-Gm-Message-State: AGi0PuYhzB7WnQX9jraLP24cBtNIcAaYQ4EdDhpnfk0aFhw4LnBxMyhP
-        QtdicEpwliroisN6eR2KaxQ=
-X-Google-Smtp-Source: APiQypJ4ftA1ZlPdYQYD3PBQIBDGgxEHZTdSa7Dhm9yq5g30pRKLnMIFfBPHXLOVdy0wOQnSfxJX9A==
-X-Received: by 2002:ac2:41d3:: with SMTP id d19mr6601388lfi.57.1585530583834;
-        Sun, 29 Mar 2020 18:09:43 -0700 (PDT)
+        bh=X5VcCh6eWMr9J37Xsf4tsyddBbuWfmiDNSVOMhCKemo=;
+        b=t33klstrevJ5eyGOT9LBoUSKml9Ep8El51yk5moXrcwZP+0mhYXzpuCSltf/crxVLK
+         VrtjnYVsmP2IBfieVuIL8BOiNdhzRQOG6Kyw4wi7RX4Nt84cKJshkvwDCY98CBHFySPq
+         SZq8xze/FNbuFyEcppnuSLQbfYmJ+QzmpOIla6B6fuyOb6fBwpn4ujpZ/oY6afGfLqpN
+         OjcaDVLXlRRd8ZlXWXr4/vh2e1CRXi8fUTr908hd+kBMeADEX88OBTqOT837oYFgqOI0
+         YAGO0pe6gGv0BWYrKp5g/2qy3gmRyOy0iKOwdfSzXJ2X3C1p451j76MLhZX3B3XJ9M3u
+         agsQ==
+X-Gm-Message-State: AGi0PubkCScq3nk/kc9XBFIGQ0SDoshl1EYtTlH7UKLzZJODuWW3rFiK
+        +V+7oGosU2iedvEJxMFZrSU=
+X-Google-Smtp-Source: APiQypKhd7xEcrpcg3+qT1NGCf3mvbNjU1UXyNo0WHIQkeyyHkHVYwc+qMtCRcL9+xBspJXRW6opGQ==
+X-Received: by 2002:a2e:b4f1:: with SMTP id s17mr3231463ljm.283.1585530585762;
+        Sun, 29 Mar 2020 18:09:45 -0700 (PDT)
 Received: from localhost.localdomain (ppp91-78-208-152.pppoe.mtu-net.ru. [91.78.208.152])
-        by smtp.gmail.com with ESMTPSA id f23sm2449005lja.60.2020.03.29.18.09.42
+        by smtp.gmail.com with ESMTPSA id f23sm2449005lja.60.2020.03.29.18.09.44
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 29 Mar 2020 18:09:43 -0700 (PDT)
+        Sun, 29 Mar 2020 18:09:45 -0700 (PDT)
 From:   Dmitry Osipenko <digetx@gmail.com>
 To:     Thierry Reding <thierry.reding@gmail.com>,
         Jonathan Hunter <jonathanh@nvidia.com>,
@@ -66,9 +66,9 @@ To:     Thierry Reding <thierry.reding@gmail.com>,
 Cc:     linux-tegra@vger.kernel.org, linux-pm@vger.kernel.org,
         linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
         devicetree@vger.kernel.org
-Subject: [PATCH v2 09/22] ARM: tegra: Add interconnect properties to Tegra30 device-tree
-Date:   Mon, 30 Mar 2020 04:08:51 +0300
-Message-Id: <20200330010904.27643-10-digetx@gmail.com>
+Subject: [PATCH v2 11/22] memory: tegra: Register as interconnect provider
+Date:   Mon, 30 Mar 2020 04:08:53 +0300
+Message-Id: <20200330010904.27643-12-digetx@gmail.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200330010904.27643-1-digetx@gmail.com>
 References: <20200330010904.27643-1-digetx@gmail.com>
@@ -79,71 +79,190 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add interconnect properties to the memory controller, external memory
-controller and the display controller nodes in order to describe hardware
-interconnection.
+Now memory controller is a memory interconnection provider. This allows us
+to use interconnect API in order to change memory configuration.
 
 Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
 ---
- arch/arm/boot/dts/tegra30.dtsi | 23 ++++++++++++++++++++++-
- 1 file changed, 22 insertions(+), 1 deletion(-)
+ drivers/memory/tegra/mc.c | 118 ++++++++++++++++++++++++++++++++++++++
+ drivers/memory/tegra/mc.h |   8 +++
+ include/soc/tegra/mc.h    |   3 +
+ 3 files changed, 129 insertions(+)
 
-diff --git a/arch/arm/boot/dts/tegra30.dtsi b/arch/arm/boot/dts/tegra30.dtsi
-index d2d05f1da274..2b183025629f 100644
---- a/arch/arm/boot/dts/tegra30.dtsi
-+++ b/arch/arm/boot/dts/tegra30.dtsi
-@@ -208,6 +208,15 @@ dc@54200000 {
+diff --git a/drivers/memory/tegra/mc.c b/drivers/memory/tegra/mc.c
+index ec8403557ed4..bcf0478c5f5a 100644
+--- a/drivers/memory/tegra/mc.c
++++ b/drivers/memory/tegra/mc.c
+@@ -591,6 +591,117 @@ static __maybe_unused irqreturn_t tegra20_mc_irq(int irq, void *data)
+ 	return IRQ_HANDLED;
+ }
  
- 			nvidia,head = <0>;
- 
-+			interconnects = <&mc TEGRA30_MC_DISPLAY0A &emc>,
-+					<&mc TEGRA30_MC_DISPLAY0B &emc>,
-+					<&mc TEGRA30_MC_DISPLAY0C &emc>,
-+					<&mc TEGRA30_MC_DISPLAY1B &emc>;
-+			interconnect-names = "display0a",
-+					     "display0b",
-+					     "display0c",
-+					     "display1b";
++static int tegra_mc_icc_set(struct icc_node *src, struct icc_node *dst)
++{
++	return 0;
++}
 +
- 			rgb {
- 				status = "disabled";
- 			};
-@@ -227,6 +236,15 @@ dc@54240000 {
- 
- 			nvidia,head = <1>;
- 
-+			interconnects = <&mc TEGRA30_MC_DISPLAY0AB &emc>,
-+					<&mc TEGRA30_MC_DISPLAY0BB &emc>,
-+					<&mc TEGRA30_MC_DISPLAY0CB &emc>,
-+					<&mc TEGRA30_MC_DISPLAY1BB &emc>;
-+			interconnect-names = "display0a",
-+					     "display0b",
-+					     "display0c",
-+					     "display1b";
++static int tegra_mc_icc_aggregate(struct icc_node *node,
++				  u32 tag, u32 avg_bw, u32 peak_bw,
++				  u32 *agg_avg, u32 *agg_peak)
++{
++	*agg_avg = min((u64)avg_bw + (*agg_avg), (u64)U32_MAX);
++	*agg_peak = max(*agg_peak, peak_bw);
 +
- 			rgb {
- 				status = "disabled";
- 			};
-@@ -733,15 +751,18 @@ mc: memory-controller@7000f000 {
- 
- 		#iommu-cells = <1>;
- 		#reset-cells = <1>;
-+		#interconnect-cells = <1>;
- 	};
- 
--	memory-controller@7000f400 {
-+	emc: memory-controller@7000f400 {
- 		compatible = "nvidia,tegra30-emc";
- 		reg = <0x7000f400 0x400>;
- 		interrupts = <GIC_SPI 78 IRQ_TYPE_LEVEL_HIGH>;
- 		clocks = <&tegra_car TEGRA30_CLK_EMC>;
- 
- 		nvidia,memory-controller = <&mc>;
++	return 0;
++}
 +
-+		#interconnect-cells = <0>;
- 	};
++/*
++ * Memory Controller (MC) has few Memory Clients that are issuing memory
++ * bandwidth allocation requests to the MC interconnect provider. The MC
++ * provider aggregates the requests and then sends the aggregated request
++ * up to the External Memory Controller (EMC) interconnect provider which
++ * re-configures hardware interface to External Memory (EMEM) in accordance
++ * to the required bandwidth. Each MC interconnect node represents an
++ * individual Memory Client.
++ *
++ * Memory interconnect topology:
++ *
++ *               +----+
++ * +--------+    |    |
++ * | TEXSRD +--->+    |
++ * +--------+    |    |
++ *               |    |    +-----+    +------+
++ *    ...        | MC +--->+ EMC +--->+ EMEM |
++ *               |    |    +-----+    +------+
++ * +--------+    |    |
++ * | DISP.. +--->+    |
++ * +--------+    |    |
++ *               +----+
++ */
++static int tegra_mc_interconnect_setup(struct tegra_mc *mc)
++{
++	struct icc_onecell_data *data;
++	struct icc_node *node;
++	unsigned int num_nodes;
++	unsigned int i;
++	int err;
++
++	/* older device-trees don't have interconnect properties */
++	if (!of_find_property(mc->dev->of_node, "#interconnect-cells", NULL))
++		return 0;
++
++	num_nodes = mc->soc->num_clients;
++
++	data = devm_kzalloc(mc->dev, struct_size(data, nodes, num_nodes),
++			    GFP_KERNEL);
++	if (!data)
++		return -ENOMEM;
++
++	mc->provider.dev = mc->dev;
++	mc->provider.set = tegra_mc_icc_set;
++	mc->provider.data = data;
++	mc->provider.xlate = of_icc_xlate_onecell;
++	mc->provider.aggregate = tegra_mc_icc_aggregate;
++
++	err = icc_provider_add(&mc->provider);
++	if (err)
++		return err;
++
++	/* create Memory Controller node */
++	node = icc_node_create(TEGRA_ICC_MC);
++	err = PTR_ERR_OR_ZERO(node);
++	if (err)
++		goto del_provider;
++
++	node->name = "Memory Controller";
++	icc_node_add(node, &mc->provider);
++
++	/* link Memory Controller to External Memory Controller */
++	err = icc_link_create(node, TEGRA_ICC_EMC);
++	if (err)
++		goto remove_nodes;
++
++	for (i = 0; i < num_nodes; i++) {
++		/* create MC client node */
++		node = icc_node_create(mc->soc->clients[i].id);
++		err = PTR_ERR_OR_ZERO(node);
++		if (err)
++			goto remove_nodes;
++
++		node->name = mc->soc->clients[i].name;
++		icc_node_add(node, &mc->provider);
++
++		/* link Memory Client to Memory Controller */
++		err = icc_link_create(node, TEGRA_ICC_MC);
++		if (err)
++			goto remove_nodes;
++
++		data->nodes[i] = node;
++	}
++	data->num_nodes = num_nodes;
++
++	return 0;
++
++remove_nodes:
++	icc_nodes_remove(&mc->provider);
++
++del_provider:
++	icc_provider_del(&mc->provider);
++
++	return err;
++}
++
+ static int tegra_mc_probe(struct platform_device *pdev)
+ {
+ 	struct resource *res;
+@@ -699,6 +810,13 @@ static int tegra_mc_probe(struct platform_device *pdev)
+ 		}
+ 	}
  
- 	fuse@7000f800 {
++	if (IS_ENABLED(CONFIG_INTERCONNECT)) {
++		err = tegra_mc_interconnect_setup(mc);
++		if (err)
++			dev_err(&pdev->dev, "failed to initialize ICC: %d\n",
++				err);
++	}
++
+ 	return 0;
+ }
+ 
+diff --git a/drivers/memory/tegra/mc.h b/drivers/memory/tegra/mc.h
+index 957c6eb74ff9..bb13747cd96c 100644
+--- a/drivers/memory/tegra/mc.h
++++ b/drivers/memory/tegra/mc.h
+@@ -114,4 +114,12 @@ extern const struct tegra_mc_soc tegra132_mc_soc;
+ extern const struct tegra_mc_soc tegra210_mc_soc;
+ #endif
+ 
++/*
++ * These IDs are for internal use of Tegra's ICC, the values are chosen
++ * such that they don't conflict with the device-tree ICC node IDs.
++ */
++#define TEGRA_ICC_EMC		1000
++#define TEGRA_ICC_EMEM		2000
++#define TEGRA_ICC_MC		3000
++
+ #endif /* MEMORY_TEGRA_MC_H */
+diff --git a/include/soc/tegra/mc.h b/include/soc/tegra/mc.h
+index 1238e35653d1..71de023f9f47 100644
+--- a/include/soc/tegra/mc.h
++++ b/include/soc/tegra/mc.h
+@@ -7,6 +7,7 @@
+ #define __SOC_TEGRA_MC_H__
+ 
+ #include <linux/err.h>
++#include <linux/interconnect-provider.h>
+ #include <linux/reset-controller.h>
+ #include <linux/types.h>
+ 
+@@ -178,6 +179,8 @@ struct tegra_mc {
+ 
+ 	struct reset_controller_dev reset;
+ 
++	struct icc_provider provider;
++
+ 	spinlock_t lock;
+ };
+ 
 -- 
 2.25.1
 
