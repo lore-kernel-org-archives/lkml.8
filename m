@@ -2,108 +2,103 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14A10C2D0E9
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 08:31:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49EB0C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 08:32:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA6FF2073B
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 08:31:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="SzSmeEVL"
+	by mail.kernel.org (Postfix) with ESMTP id 27E0620774
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 08:32:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729659AbgC3Ibn (ORCPT
+        id S1729667AbgC3IcB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 04:31:43 -0400
-Received: from ozlabs.org ([203.11.71.1]:48929 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729626AbgC3Ibn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 04:31:43 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 48rQfh3672z9sPk;
-        Mon, 30 Mar 2020 19:31:40 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1585557101;
-        bh=fbyUzA6k/iyA8xkI6Q4mzU0pOvTrxH+PkLD3DPXI62w=;
-        h=Date:From:To:Cc:Subject:From;
-        b=SzSmeEVLSRTxjv0gYODyjywi2vRhHmhyre+YyeaB1LeX9wbWSd7INz9DOiMy/cYbS
-         8XD5JGk1Oz4tfmuWxlhRYphWZ5oFajGnUMEGkTocK/ycxavKZrSOtpJZFz7Rw41lRp
-         Zfeg/VsG0joPt9qmlCVSl6MpgzX+dE2078LzCUfV8XUrf4HcRi/INC/C8hmTw/XejY
-         GSxcyGmUGlQ0uD/DWDL0te3FpVev4YflpeAUFZVjp0Bid/84CC9CjkixA2yo0YoQ+C
-         1gcjtxPr0lSp8t7egZgdwLB+wn144jK9XNeDG6G/jw8ztKbH5Ye/zEcAfFfGEpio3H
-         XdCDHG0fgG10Q==
-Date:   Mon, 30 Mar 2020 19:31:37 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Andrew Morton <akpm@linux-foundation.org>,
-        "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        David Hildenbrand <david@redhat.com>,
-        Alexander Duyck <alexander.h.duyck@linux.intel.com>
-Subject: linux-next: manual merge of the akpm-current tree with the vhost
- tree
-Message-ID: <20200330193137.44fd70c9@canb.auug.org.au>
+        Mon, 30 Mar 2020 04:32:01 -0400
+Received: from relay12.mail.gandi.net ([217.70.178.232]:60517 "EHLO
+        relay12.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729576AbgC3IcB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Mar 2020 04:32:01 -0400
+Received: from clip-os.org (unknown [78.194.159.98])
+        (Authenticated sender: thibaut.sautereau@clip-os.org)
+        by relay12.mail.gandi.net (Postfix) with ESMTPSA id 3D35D20000D;
+        Mon, 30 Mar 2020 08:31:58 +0000 (UTC)
+Date:   Mon, 30 Mar 2020 10:31:58 +0200
+From:   Thibaut Sautereau <thibaut.sautereau@clip-os.org>
+To:     Alexander Viro <viro@zeniv.linux.org.uk>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: NULL pointer dereference in coredump code
+Message-ID: <20200330083158.GA21845@clip-os.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/QNEToN4H55D=v4f2nByCx0m";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: multipart/mixed; boundary="FL5UXtIhxfXey3p5"
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/QNEToN4H55D=v4f2nByCx0m
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
 
-Hi all,
+--FL5UXtIhxfXey3p5
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 
-Today's linux-next merge of the akpm-current tree got a conflict in:
+I hit a kernel NULL pointer dereference caused by the following call chain:
 
-  drivers/virtio/virtio_balloon.c
+do_coredump()
+  file_start_write(cprm.file) # cprm.file is NULL
+    file_inode(file) # NULL ptr deref
 
-between commit:
+The `ispipe` path is followed in do_coredump(), and:
+    # cat /proc/sys/kernel/core_pattern
+    |/usr/lib/systemd/systemd-coredump %P %u %g %s %t %c %h
 
-  5a6b4cc5b7a1 ("virtio-balloon: Switch back to OOM handler for VIRTIO_BALL=
-OON_F_DEFLATE_ON_OOM")
+It seems that cprm.file can be NULL after the call to the usermode
+helper, especially when setting CONFIG_STATIC_USERMODEHELPER=y and
+CONFIG_STATIC_USERMODEHELPER_PATH="", which is the case for me.
 
-from the vhost tree and commits:
+One may say it's a strange combination of configuration options but I
+think it should not crash the kernel anyway. As I don't know much about
+coredumps in general and this code, I don't know what's the best way to
+fix this issue in a clean and comprehensive way.
 
-  5193acb63eef ("virtio-balloon: pull page poisoning config out of free pag=
-e hinting")o
-  226d0484a676 ("virtio-balloon: add support for providing free page report=
-s to host")
-  49006aae9e94 ("virtio-balloon: switch back to OOM handler for VIRTIO_BALL=
-OON_F_DEFLATE_ON_OOM")
+I attached the patch I used to temporarily work around this issue, if
+that can clarify anything.
 
-from the akpm-current tree.
+Thanks,
 
-OK, this is such a mess that all I could do was to revert commit
-5a6b4cc5b7a1 from the vhost tree and keep all the akpm-current tree
-patches. Please sort this out before Linus gets to see it.
+-- 
+Thibaut Sautereau
+CLIP OS developer
 
---=20
-Cheers,
-Stephen Rothwell
+--FL5UXtIhxfXey3p5
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: attachment; filename="0001-coredump-FIXUP.patch"
 
---Sig_/QNEToN4H55D=v4f2nByCx0m
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+From 613dfc60429c1fc5fc19e1c8662648620dc103af Mon Sep 17 00:00:00 2001
+From: Thibaut Sautereau <thibaut.sautereau@ssi.gouv.fr>
+Date: Fri, 27 Mar 2020 16:34:59 +0100
+Subject: [PATCH] coredump: FIXUP
 
------BEGIN PGP SIGNATURE-----
+---
+ fs/coredump.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl6BrmoACgkQAVBC80lX
-0GyJdAgAjRKVv196kRPG89HoTU52QU7cAczx5LSTCdlveuCt2yP6VPRySJ3mqDgb
-nCj3+Wm5WIIMDuwIJp9z8RHM8bDCv9HN1Cum8JKx5LX8tYpc4wFid86+WFz1ycPM
-8ZxFP0ORpRc96ijr1fb1Ohm3Y3CvRLaA/hyWzSspcwV5sQVvvH0pO1royQ3QFBuH
-TSNEnVmAqMz90++uJ8iJKOAB6ZA46ekJBA4XZt70j4YVxD6WHS3p3TI0qxs6HmNR
-ZPdzmootgpKJj9KIppatq9I9ChX+yYHzXoxnh9peUW9Xi/zJ456zvKaDnhRoigro
-CzgB5/KYHu/fdfqUVvr22kCbdW46gg==
-=Ormc
------END PGP SIGNATURE-----
+diff --git a/fs/coredump.c b/fs/coredump.c
+index b1ea7dfbd149..d0177b81345f 100644
+--- a/fs/coredump.c
++++ b/fs/coredump.c
+@@ -686,7 +686,7 @@ void do_coredump(const kernel_siginfo_t *siginfo)
+ 							  UMH_WAIT_EXEC);
+ 
+ 		kfree(helper_argv);
+-		if (retval) {
++		if (retval || !cprm.file) {
+ 			printk(KERN_INFO "Core dump to |%s pipe failed\n",
+ 			       cn.corename);
+ 			goto close_fail;
+-- 
+2.26.0
 
---Sig_/QNEToN4H55D=v4f2nByCx0m--
+
+--FL5UXtIhxfXey3p5--
