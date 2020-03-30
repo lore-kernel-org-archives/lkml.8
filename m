@@ -2,98 +2,114 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A46ACC2D0E5
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 15:26:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFB4FC2D0E5
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 15:27:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 71D1720732
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 15:26:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585582019;
-	bh=KDutxrCeg+nFUzTeklifIi/Tlahr0a3q0NboX4cevRs=;
-	h=From:Date:Subject:To:Cc:List-ID:From;
-	b=P5EStrQqeVfayn3yNkMJ0Z0B0pIVi8Rf814DR8WKgpyi4i4V4JXrR2OVkQHEg62+S
-	 KNB0EwIVxSsOW0UAgybWeQaBUefDzbNxMVZNMxGn+zyKOCJFqV5Hy+F4V1BYPHenAD
-	 quwPGdBRw6dqK95gC3KvQlZ4JivAvuBLhqTCkxqE=
+	by mail.kernel.org (Postfix) with ESMTP id 858F5208E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 15:27:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=yadro.com header.i=@yadro.com header.b="l1yQglxI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729157AbgC3P06 (ORCPT
+        id S1729187AbgC3P1M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 11:26:58 -0400
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:38218 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725978AbgC3P06 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 11:26:58 -0400
-Received: by mail-oi1-f196.google.com with SMTP id w2so16029208oic.5;
-        Mon, 30 Mar 2020 08:26:57 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=3ERbyzjjb9C/BS6z56ljJWImJZXslvyQibnwigyRCXM=;
-        b=L+egwsr6JtmdfAKAHD4HdPk7gYHpVGpCoJdUYYyr154ZLwBYzG1lhiSDOKsDpL/gtO
-         DF/jD2NXXmTu7OAzLZ3XHuImkwspMcybY1rGWis6Z8BJliL2rz0EKKAIZdoaEfmduEH7
-         vxtCj0s0KTOjjE0h9F0yECCGbjq4UBHy4S6vh8WWZE3qki7p2EGTSCEOPoILfVvIoGP7
-         K70iO7t6krTLPxdGGkI7p5US+uUsSVJ7867XoZ8akrG/Gpf3NhU4a2RFyZaUOWGf3gAx
-         vguUhNjCQbEBXwiVj0ajpaO7coCHY5PS/Txzd3mZz6M1xRhcgXFH9SZ0XkxuHTtwZ7iC
-         GbsQ==
-X-Gm-Message-State: ANhLgQ1CYSWIFzqXux/hUun0tfosWGkRBYZpfoP8nO0dJ612IwTpP8ot
-        +J/izDK8JJ6ovYhs+bUccEOfCg5seKclo2z5KLERednk
-X-Google-Smtp-Source: ADFU+vssJKJGqzZ3Y9ujDijHuJGhRhWn2k+pl4QzbD5HVN3WZ7Uk9QkF0OXs5WFpxC9rsRL0qfBCfoJW1H+cGQYALhM=
-X-Received: by 2002:aca:f07:: with SMTP id 7mr7681801oip.68.1585582017437;
- Mon, 30 Mar 2020 08:26:57 -0700 (PDT)
+        Mon, 30 Mar 2020 11:27:12 -0400
+Received: from mta-02.yadro.com ([89.207.88.252]:52330 "EHLO mta-01.yadro.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725978AbgC3P1M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Mar 2020 11:27:12 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mta-01.yadro.com (Postfix) with ESMTP id DBF704126E;
+        Mon, 30 Mar 2020 15:27:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=yadro.com; h=
+        content-type:content-type:content-transfer-encoding:mime-version
+        :x-mailer:message-id:date:date:subject:subject:from:from
+        :received:received:received; s=mta-01; t=1585582028; x=
+        1587396429; bh=j4/XjXFKkk1FU9ylD8nIv+Ofp3lPFgY922qjOBiGNiM=; b=l
+        1yQglxI49XhmiTFJ+UZPs1qITWjpXQaN5EglrfCZHjBrFubr0+OgvfmmpzwLLQwy
+        8rdNKEbcZqc6Ivfj/s+3MZGs3dlu7sh74QinVQhuauONi06ZSikwyZfVZSZ36qZi
+        wtU/14uh9IueInNKl2dT2Q8MR/5mA8/bWFg7KQFCCc=
+X-Virus-Scanned: amavisd-new at yadro.com
+Received: from mta-01.yadro.com ([127.0.0.1])
+        by localhost (mta-01.yadro.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id F6_OzbTblhik; Mon, 30 Mar 2020 18:27:08 +0300 (MSK)
+Received: from T-EXCH-02.corp.yadro.com (t-exch-02.corp.yadro.com [172.17.10.102])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mta-01.yadro.com (Postfix) with ESMTPS id 8F4AC41209;
+        Mon, 30 Mar 2020 18:27:08 +0300 (MSK)
+Received: from localhost.yadro.com (10.199.0.226) by T-EXCH-02.corp.yadro.com
+ (172.17.10.102) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384_P384) id 15.1.669.32; Mon, 30
+ Mar 2020 18:27:08 +0300
+From:   Ivan Mikhaylov <i.mikhaylov@yadro.com>
+CC:     Ivan Mikhaylov <i.mikhaylov@yadro.com>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: [PATCH v5 0/2] iio: proximity: driver for vcnl3020
+Date:   Mon, 30 Mar 2020 18:27:09 +0300
+Message-ID: <20200330152711.8769-1-i.mikhaylov@yadro.com>
+X-Mailer: git-send-email 2.21.1
 MIME-Version: 1.0
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Mon, 30 Mar 2020 17:26:45 +0200
-Message-ID: <CAJZ5v0jLoTcE5WhFiJ_z6tUcuPrJs2SBe5id-7OWAd8AYw3n9Q@mail.gmail.com>
-Subject: [GIT PULL] PNP subsystems updates for v5.7-rc1
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.199.0.226]
+X-ClientProxiedBy: T-EXCH-01.corp.yadro.com (172.17.10.101) To
+ T-EXCH-02.corp.yadro.com (172.17.10.102)
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+Add proximity sensor driver for Vishay vcnl3020. Only on-demand
+measurement is supported for now.
 
-Please pull from the tag
+Changes from v4:
+   1. add vdd-supply,vddio-supply,interrupts properties into yaml.
+   2. led-current -> vishay,led-current-milliamp.
+   3. add possible values enum list.
+   4. add bulk_read for result hi/lo registers.
+   5. add description of vcnl3020_data structure.
+   6. vcnl3020 id table is removed.
+   7. make "vishay,led-current-milliamp" optional in yaml and code.
 
- git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git \
- pnp-5.7-rc1
+Changes from v3:
+   1. minor changes.
+   2. add i2c block to fix dts section in yaml.
 
-with top-most commit eaec20c7362c68176369f11e26dc0f6f994ae2d3
+Changes from v2:
+   1. using regmap_read_poll_timeout instead of do-while in measurement
+      function.
+   2. change struct i2client* in vcnl3020_data to struct dev*
+   3. enable REGMAP_I2C in Kconfig
 
- MAINTAINERS: Add linux-acpi list to PNP
+Changes from v1:
+   1. using regmap interface instead of i2c_smbus_* calls.
+   2. switch from probe to probe_new.
+   3. s32/int32_t -> int
 
-on top of commit 98d54f81e36ba3bf92172791eba5ca5bd813989b
+Ivan Mikhaylov (2):
+  iio: proximity: provide device tree binding document
+  iio: proximity: Add driver support for vcnl3020 proximity sensor
 
- Linux 5.6-rc4
+ .../bindings/iio/proximity/vcnl3020.yaml      |  65 +++++
+ drivers/iio/proximity/Kconfig                 |  11 +
+ drivers/iio/proximity/Makefile                |   1 +
+ drivers/iio/proximity/vcnl3020.c              | 225 ++++++++++++++++++
+ 4 files changed, 302 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/iio/proximity/vcnl3020.yaml
+ create mode 100644 drivers/iio/proximity/vcnl3020.c
 
-to receive PNP subsystem updates for 5.7-rc1.
+-- 
+2.21.1
 
-Update MAINTAINERS to cover include/linux/pnp.h and add the linux-acpi
-list to the PNP entry in it, add the const modifier to the name field
-definition in struct pnp_driver and drop a pointer case in the RTC
-CMOS driver that has become redundant (Corentin Labbe).
-
-Thanks!
-
-
----------------
-
-Corentin Labbe (4):
-      PNP: add missing include/linux/pnp.h to MAINTAINERS
-      PNP: constify driver name
-      rtc: cmos: remove useless cast for driver_name
-      MAINTAINERS: Add linux-acpi list to PNP
-
----------------
-
- MAINTAINERS            | 2 ++
- drivers/rtc/rtc-cmos.c | 2 +-
- include/linux/pnp.h    | 2 +-
- 3 files changed, 4 insertions(+), 2 deletions(-)
