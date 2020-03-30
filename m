@@ -2,188 +2,234 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFE17C43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 20:41:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C535C2D0F1
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 20:42:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 86AFE20733
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 20:41:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6CC3920733
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 20:42:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="AGTm306R"
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="SoqkNnxD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728685AbgC3Ulz (ORCPT
+        id S1728733AbgC3UmW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 16:41:55 -0400
-Received: from mail-pj1-f65.google.com ([209.85.216.65]:40169 "EHLO
-        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728267AbgC3Ulz (ORCPT
+        Mon, 30 Mar 2020 16:42:22 -0400
+Received: from smtp-fw-9101.amazon.com ([207.171.184.25]:64132 "EHLO
+        smtp-fw-9101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727437AbgC3UmW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 16:41:55 -0400
-Received: by mail-pj1-f65.google.com with SMTP id kx8so106617pjb.5
-        for <linux-kernel@vger.kernel.org>; Mon, 30 Mar 2020 13:41:52 -0700 (PDT)
+        Mon, 30 Mar 2020 16:42:22 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=gXEgQyqWtKi/deTewfCdJW+6ZT9gmXPBY4cz60z4Xy8=;
-        b=AGTm306RJBiq5wiPFYYs+svTnvzhqu8DEigXSeSwdj1zoVBse4dqbtUOYKdltzDXqz
-         p4vvvr7IShB+YHYr5KXFPGYkym6x9qpuivr42F00SQVzjCMVRcfOonGa7MWLjNy8U3/q
-         vbMvPM5LyFPT5fWdps4R3EBDBordMJKu7f/8xsWgCjyJtAQB5rc1yhvneDrAmbozsAXT
-         u6DRqPdRNCCK/yT5/3dsHdVLRPvEMKu4IU1SXoaXAW6fjXatvZSL0SQnCcVXMMfqDtno
-         mxvssvsxOKx2ESRz9yN1fyUa/JbWWj8QzEeZ0EsTYDNlmRVIifKslkKIUpalekX02QT7
-         4vkg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=gXEgQyqWtKi/deTewfCdJW+6ZT9gmXPBY4cz60z4Xy8=;
-        b=oQFOfxjEpX/YyjcY4X2junh/qigzqezTJIvDJd1+M1WpJo3QaTPTmR7Y9iRUEPAKFX
-         XEcU/2gew/dvXcD64du2go7BDc7MXeMLLVZFHs2X8q1vQ3+Jj95KCkMq+2fX6jtYzPKO
-         9Mz7n4bVlJOV+qyipim+x74PPBG9/K1Fz5xPqmv6jb9zy404fbiyJVUzSKBxAhe6C/oL
-         D1U1LNMdh6Tqx/D3unxslo3PSZW+AsUMxWfzlNQuhOzefeznWlr7Pf2GWE+J53s0nQUT
-         Ouanfuh6kU9dbyZRX7gJ8uJknB2ODRpmFn1dakqFQRUPqC9jpzuyZldxt+1NDEuc6x7V
-         1Nxg==
-X-Gm-Message-State: ANhLgQ1OjBS5k5Zpfema0mTVlmScqRFDmMLSViU77VMPDjlu1Y5LJj12
-        lxIDRy18BDGUqskUUR2b620EHA==
-X-Google-Smtp-Source: ADFU+vtRCLcMPMcubA8fte342DE9ReO2pbWBwxx+giULxWdYaHRK2nOzSEa0w9mTNXIoG6UmIXTTFg==
-X-Received: by 2002:a17:902:ec03:: with SMTP id l3mr12435349pld.73.1585600912095;
-        Mon, 30 Mar 2020 13:41:52 -0700 (PDT)
-Received: from minitux (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id h198sm10837425pfe.76.2020.03.30.13.41.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Mar 2020 13:41:51 -0700 (PDT)
-Date:   Mon, 30 Mar 2020 13:41:49 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-Cc:     linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Georgi Djakov <georgi.djakov@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH] clk: qcom: msm8916: Fix the address location of
- pll->config_reg
-Message-ID: <20200330204149.GA215915@minitux>
-References: <20200329124116.4185447-1-bryan.odonoghue@linaro.org>
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1585600940; x=1617136940;
+  h=subject:to:cc:references:from:message-id:date:
+   mime-version:in-reply-to:content-transfer-encoding;
+  bh=pzei7EPNdSl0vQstWZdYvFBARJOekVDWFMh3y2n4Zzg=;
+  b=SoqkNnxDDNpLJEjSehgHaebK+wGoVdRSn1EUjoFNeiLFwvu+XsbQ52Wb
+   WFIYkGy9huKpC9aYl7CpIqR0zH/6qnFmDeLNj2BoAJ1/HSoJbiPbbCK7b
+   6FktbahnxEU1cznScP+FEEL1r5VaNTna9q+cTStoIFd+OZJ76CGnHqytR
+   g=;
+IronPort-SDR: ZQ+rhy1V3tG9tO8gx4zMdwYV99PRd2MSqkQa6tUb6O30D5v+rRPtyfdHoJg1n+6rvekwp2wRW2
+ RRTQjGuwOMAQ==
+X-IronPort-AV: E=Sophos;i="5.72,325,1580774400"; 
+   d="scan'208";a="25953907"
+Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-1a-16acd5e0.us-east-1.amazon.com) ([10.47.23.38])
+  by smtp-border-fw-out-9101.sea19.amazon.com with ESMTP; 30 Mar 2020 20:42:17 +0000
+Received: from EX13MTAUWC001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan2.iad.amazon.com [10.40.159.162])
+        by email-inbound-relay-1a-16acd5e0.us-east-1.amazon.com (Postfix) with ESMTPS id C9F3AA2992;
+        Mon, 30 Mar 2020 20:42:09 +0000 (UTC)
+Received: from EX13D20UWC001.ant.amazon.com (10.43.162.244) by
+ EX13MTAUWC001.ant.amazon.com (10.43.162.135) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Mon, 30 Mar 2020 20:42:09 +0000
+Received: from 38f9d3867b82.ant.amazon.com (10.43.162.134) by
+ EX13D20UWC001.ant.amazon.com (10.43.162.244) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Mon, 30 Mar 2020 20:42:02 +0000
+Subject: Re: [PATCH] swiotlb: Allow swiotlb to live at pre-defined address
+To:     Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        Kairui Song <kasong@redhat.com>, <anthony.yznaga@oracle.com>,
+        Jan Setje-Eilers <jan.setjeeilers@oracle.com>
+CC:     Dave Young <dyoung@redhat.com>, <iommu@lists.linux-foundation.org>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        Christoph Hellwig <hch@lst.de>,
+        "Marek Szyprowski" <m.szyprowski@samsung.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        <linux-doc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>, <dwmw@amazon.com>,
+        <benh@amazon.com>, Jan Kiszka <jan.kiszka@siemens.com>,
+        <alcioa@amazon.com>, <aggh@amazon.com>, <aagch@amazon.com>,
+        <dhr@amazon.com>, Laszlo Ersek <lersek@redhat.com>,
+        Baoquan He <bhe@redhat.com>, Lianbo Jiang <lijiang@redhat.com>,
+        <brijesh.singh@amd.com>,
+        "Lendacky, Thomas" <thomas.lendacky@amd.com>,
+        <kexec@lists.infradead.org>,
+        "Schoenherr, Jan H." <jschoenh@amazon.de>
+References: <20200326162922.27085-1-graf@amazon.com>
+ <20200328115733.GA67084@dhcp-128-65.nay.redhat.com>
+ <CACPcB9d_Pz9SRhSsRzqygRR6waV7r8MnGcCP952svnZtpFaxnQ@mail.gmail.com>
+ <20200330134004.GA31026@char.us.oracle.com>
+From:   Alexander Graf <graf@amazon.com>
+Message-ID: <51432837-8804-0600-c7a3-8849506f999e@amazon.com>
+Date:   Mon, 30 Mar 2020 22:42:00 +0200
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0)
+ Gecko/20100101 Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200329124116.4185447-1-bryan.odonoghue@linaro.org>
+In-Reply-To: <20200330134004.GA31026@char.us.oracle.com>
+Content-Language: en-US
+X-Originating-IP: [10.43.162.134]
+X-ClientProxiedBy: EX13D10UWB002.ant.amazon.com (10.43.161.130) To
+ EX13D20UWC001.ant.amazon.com (10.43.162.244)
+Content-Type: text/plain; charset="windows-1252"; format="flowed"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun 29 Mar 05:41 PDT 2020, Bryan O'Donoghue wrote:
-
-> During the process of debugging a processor derived from the msm8916 which
-> we found the new processor was not starting one of its PLLs.
-> 
-> After tracing the addresses and writes that downstream was doing and
-> comparing to upstream it became obvious that we were writing to a different
-> register location than downstream when trying to configure the PLL.
-> 
-
-Good catch.
-
-> This error is also present in upstream msm8916.
-> 
-> As an example clk-pll.c::clk_pll_recalc_rate wants to write to
-> pll->config_reg updating the bit-field POST_DIV_RATIO. That bit-field is
-> defined in PLL_USER_CTL not in PLL_CONFIG_CTL. Taking the BIMC PLL as an
-> example
-> 
-
-For some reason we don't specify pll->post_div_width for anything but
-ipq806x, so the post_div is not considered for other platforms. This
-might be a bug, but in addition to updating the config_reg address
-post_div_width would have to be specified for the change to affect
-clk_pll_recalc_rate().
-
-More disturbing though is the clk_pll_set_rate() implementation, which
-just writes ibits to the entire config_reg. But given that we don't have
-a freq_tbl for any of these plls the function will return -EINVAL
-earlier.
-
-Lastly is clk_pll_configure() which would need this, but we don't call
-it from msm8916 at this point.
 
 
-So while your change is correct, afaict it's a nop unless you fill out
-the other fields as well.
+On 30.03.20 15:40, Konrad Rzeszutek Wilk wrote:
+> =
 
-Regards,
-Bjorn
+> =
 
-> lm80-p0436-13_c_qc_snapdragon_410_processor_hrd.pdf
-> 
-> 0x01823010 GCC_BIMC_PLL_USER_CTL
-> 0x01823014 GCC_BIMC_PLL_CONFIG_CTL
-> 
-> This pattern is repeated for gpll0, gpll1, gpll2 and bimc_pll.
-> 
-> This error is likely not apparent since the bootloader will already have
-> initialized these PLLs.
-> 
-> This patch corrects the location of config_reg from PLL_CONFIG_CTL to
-> PLL_USER_CTL for all relevant PLLs on msm8916.
-> 
-> Fixes commit 3966fab8b6ab ("clk: qcom: Add MSM8916 Global Clock Controller support")
-> 
-> Cc: Georgi Djakov <georgi.djakov@linaro.org>
-> Cc: Andy Gross <agross@kernel.org>
-> Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
-> Cc: Michael Turquette <mturquette@baylibre.com>
-> Cc: Stephen Boyd <sboyd@kernel.org>
-> Signed-off-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-> ---
->  drivers/clk/qcom/gcc-msm8916.c | 8 ++++----
->  1 file changed, 4 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/clk/qcom/gcc-msm8916.c b/drivers/clk/qcom/gcc-msm8916.c
-> index 4e329a7baf2b..17e4a5a2a9fd 100644
-> --- a/drivers/clk/qcom/gcc-msm8916.c
-> +++ b/drivers/clk/qcom/gcc-msm8916.c
-> @@ -260,7 +260,7 @@ static struct clk_pll gpll0 = {
->  	.l_reg = 0x21004,
->  	.m_reg = 0x21008,
->  	.n_reg = 0x2100c,
-> -	.config_reg = 0x21014,
-> +	.config_reg = 0x21010,
->  	.mode_reg = 0x21000,
->  	.status_reg = 0x2101c,
->  	.status_bit = 17,
-> @@ -287,7 +287,7 @@ static struct clk_pll gpll1 = {
->  	.l_reg = 0x20004,
->  	.m_reg = 0x20008,
->  	.n_reg = 0x2000c,
-> -	.config_reg = 0x20014,
-> +	.config_reg = 0x20010,
->  	.mode_reg = 0x20000,
->  	.status_reg = 0x2001c,
->  	.status_bit = 17,
-> @@ -314,7 +314,7 @@ static struct clk_pll gpll2 = {
->  	.l_reg = 0x4a004,
->  	.m_reg = 0x4a008,
->  	.n_reg = 0x4a00c,
-> -	.config_reg = 0x4a014,
-> +	.config_reg = 0x4a010,
->  	.mode_reg = 0x4a000,
->  	.status_reg = 0x4a01c,
->  	.status_bit = 17,
-> @@ -341,7 +341,7 @@ static struct clk_pll bimc_pll = {
->  	.l_reg = 0x23004,
->  	.m_reg = 0x23008,
->  	.n_reg = 0x2300c,
-> -	.config_reg = 0x23014,
-> +	.config_reg = 0x23010,
->  	.mode_reg = 0x23000,
->  	.status_reg = 0x2301c,
->  	.status_bit = 17,
-> -- 
-> 2.25.1
-> 
+> =
+
+> On Mon, Mar 30, 2020 at 02:06:01PM +0800, Kairui Song wrote:
+>> On Sat, Mar 28, 2020 at 7:57 PM Dave Young <dyoung@redhat.com> wrote:
+>>>
+>>> On 03/26/20 at 05:29pm, Alexander Graf wrote:
+>>>> The swiotlb is a very convenient fallback mechanism for bounce bufferi=
+ng of
+>>>> DMAable data. It is usually used for the compatibility case where devi=
+ces
+>>>> can only DMA to a "low region".
+>>>>
+>>>> However, in some scenarios this "low region" may be bound even more
+>>>> heavily. For example, there are embedded system where only an SRAM reg=
+ion
+>>>> is shared between device and CPU. There are also heterogeneous computi=
+ng
+>>>> scenarios where only a subset of RAM is cache coherent between the
+>>>> components of the system. There are partitioning hypervisors, where
+>>>> a "control VM" that implements device emulation has limited view into a
+>>>> partition's memory for DMA capabilities due to safety concerns.
+>>>>
+>>>> This patch adds a command line driven mechanism to move all DMA memory=
+ into
+>>>> a predefined shared memory region which may or may not be part of the
+>>>> physical address layout of the Operating System.
+>>>>
+>>>> Ideally, the typical path to set this configuration would be through D=
+evice
+>>>> Tree or ACPI, but neither of the two mechanisms is standardized yet. A=
+lso,
+>>>> in the x86 MicroVM use case, we have neither ACPI nor Device Tree, but
+>>>> instead configure the system purely through kernel command line option=
+s.
+>>>>
+>>>> I'm sure other people will find the functionality useful going forward
+>>>> though and extend it to be triggered by DT/ACPI in the future.
+>>>
+>>> Hmm, we have a use case for kdump, this maybe useful.  For example
+>>> swiotlb is enabled by default if AMD SME/SEV is active, and in kdump
+>>> kernel we have to increase the crashkernel reserved size for the extra
+>>> swiotlb requirement.  I wonder if we can just reuse the old kernel's
+>>> swiotlb region and pass the addr to kdump kernel.
+>>>
+>>
+>> Yes, definitely helpful for kdump kernel. This can help reduce the
+>> crashkernel value.
+>>
+>> Previously I was thinking about something similar, play around the
+>> e820 entry passed to kdump and let it place swiotlb in wanted region.
+>> Simply remap it like in this patch looks much cleaner.
+>>
+>> If this patch is acceptable, one more patch is needed to expose the
+>> swiotlb in iomem, so kexec-tools can pass the right kernel cmdline to
+>> second kernel.
+> =
+
+> We seem to be passsing a lot of data to kexec.. Perhaps something
+> of a unified way since we seem to have a lot of things to pass - disabling
+> IOMMU, ACPI RSDT address, and then this.
+> =
+
+> CC-ing Anthony who is working on something - would you by any chance
+> have a doc on this?
+
+
+I see in general 2 use cases here:
+
+
+1) Allow for a generic mechanism to have the fully system, individual =
+
+buses, devices or functions of a device go through a particular, =
+
+self-contained bounce buffer.
+
+This sounds like the holy grail to a lot of problems. It would solve =
+
+typical embedded scenarios where you only have a shared SRAM. It solves =
+
+the safety case (to some extent) where you need to ensure that one =
+
+device interaction doesn't conflict with another device interaction. It =
+
+also solves the problem I've tried to solve with the patch here.
+
+It's unfortunately a lot harder than the patch I sent, so it will take =
+
+me some time to come up with a working patch set.. I suppose starting =
+
+with a DT binding only is sensible. Worst case, x86 does also support DT ...
+
+(And yes, I'm always happy to review patches if someone else beats me to it)
+
+
+2) Reuse the SWIOTLB from the previous boot on kexec/kdump
+
+I see little direct relation to SEV here. The only reason SEV makes it =
+
+more relevant, is that you need to have an SWIOTLB region available with =
+
+SEV while without you could live with a disabled IOMMU.
+
+However, I can definitely understand how you would want to have a way to =
+
+tell the new kexec'ed kernel where the old SWIOTLB was, so it can reuse =
+
+its memory for its own SWIOTLB. That way, you don't have to reserve =
+
+another 64MB of RAM for kdump.
+
+What I'm curious on is whether we need to be as elaborate. Can't we just =
+
+pass the old SWIOTLB as free memory to the new kexec'ed kernel and =
+
+everything else will fall into place? All that would take is a bit of =
+
+shuffling on the e820 table pass-through to the kexec'ed kernel, no?
+
+
+Thanks,
+
+Alex
+
+
+
+
+Amazon Development Center Germany GmbH
+Krausenstr. 38
+10117 Berlin
+Geschaeftsfuehrung: Christian Schlaeger, Jonathan Weiss
+Eingetragen am Amtsgericht Charlottenburg unter HRB 149173 B
+Sitz: Berlin
+Ust-ID: DE 289 237 879
+
+
+
