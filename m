@@ -2,97 +2,95 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60B9FC2D0E5
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 13:43:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99E8FC43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 13:45:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 375F520716
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 13:43:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 68EEF20757
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 13:45:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="c5Xv+V7f"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728343AbgC3NnF (ORCPT
+        id S1728349AbgC3NpW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 09:43:05 -0400
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2617 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728301AbgC3NnE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 09:43:04 -0400
-Received: from lhreml724-chm.china.huawei.com (unknown [172.18.7.108])
-        by Forcepoint Email with ESMTP id 4BE4F118960F3A97A5F9;
-        Mon, 30 Mar 2020 14:43:03 +0100 (IST)
-Received: from [127.0.0.1] (10.47.8.155) by lhreml724-chm.china.huawei.com
- (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Mon, 30 Mar
- 2020 14:43:01 +0100
-Subject: Re: [PATCH RFC v2 12/24] hpsa: use reserved commands
-To:     Hannes Reinecke <hare@suse.de>, Ming Lei <ming.lei@redhat.com>
-CC:     <axboe@kernel.dk>, <jejb@linux.ibm.com>,
-        <martin.petersen@oracle.com>, <bvanassche@acm.org>,
-        <hch@infradead.org>, <linux-block@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-scsi@vger.kernel.org>,
-        <virtualization@lists.linux-foundation.org>,
-        <esc.storagedev@microsemi.com>, <chenxiang66@hisilicon.com>,
-        Hannes Reinecke <hare@suse.com>
-References: <1583857550-12049-1-git-send-email-john.garry@huawei.com>
- <1583857550-12049-13-git-send-email-john.garry@huawei.com>
- <20200311081059.GC31504@ming.t460p>
- <a76ab13a-85a3-0d88-595f-af13ef1b3fe3@huawei.com>
- <881b6a9b-2137-946f-a900-5c4e6cf1fe37@suse.de>
-From:   John Garry <john.garry@huawei.com>
-Message-ID: <c3f5c030-d735-c730-6ff9-19cb1cb50fe8@huawei.com>
-Date:   Mon, 30 Mar 2020 14:42:45 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.2
+        Mon, 30 Mar 2020 09:45:22 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:38063 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728065AbgC3NpW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Mar 2020 09:45:22 -0400
+Received: by mail-wm1-f68.google.com with SMTP id f6so15369763wmj.3;
+        Mon, 30 Mar 2020 06:45:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:reply-to:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Xw3Aeu1v5BI29K5eso3Lkg3AloauIh2uWmXpI+AmhiY=;
+        b=c5Xv+V7f4qLn1n9Bq/YdH7JHHjyZMNJ4UExOpMjDBnUH2JEUkcQKaXsUJL1YX2iNFA
+         vuFrxH2WBmy9eaD/xd2Ie8k/+mg9jY1VnjGVBnMBLMZuPTTUP+1wd/Wd49n0YmIzBju2
+         11vhKs/MXreMIfK12gtAojNGR7B5Y/JjA4nnS/HfNmYeMFjaFvjULXazXFtemU8MJ/AC
+         aOBx0GOQ569L5eNKdBu7NfPiX4QkhmnpXhKD1gpQZY3X7re0gRK+u3glHXyMwwZph57J
+         VzMMMLg9RNJNZFTbz547kaY+9/tW2jVX8vbP6uMCKH1Gq9wxkdJ5DkVyGTZkLQ4p6rls
+         EVMQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:reply-to
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Xw3Aeu1v5BI29K5eso3Lkg3AloauIh2uWmXpI+AmhiY=;
+        b=rMAZMv9SqndA0PjPWv0/SLpB16UxhITJ5wfMbThaVS1rprDY0MZj/e0zqQOzi7lHc4
+         C6/kKRvhhGE9u2QxAfZOBSFubbM4ClNXzo7tSNXz3bUzrWIOjHZCBWb9VMAj8TLlunfz
+         IaaX6PwbJyUAv5gnToAJu4aE7698V/j/RU5gJIV8jsLDax83Zk5i9mZFCZlD1HQu+yCE
+         H4VeAAYfRgmbBEanLtifKT9qcFik4cDPG0cu2OjNicIk8gnyusoE+LfZpzhveoJZr3H0
+         ZWvBf8wO1oaTy8Fb5pqaaT3OKBLFnBhkVRUF4foCvmv0kN0HRFVFvqwWjBDDakFisen0
+         HA9g==
+X-Gm-Message-State: ANhLgQ32Nt9OHbtWHlqevyuUfOf6bwSafNZdC2Jzc411jNyOCwfiVTm/
+        BaT2p1aTO4vofgSe2AnZEMNDyobc
+X-Google-Smtp-Source: ADFU+vv8SvRbzMNTYwA8kUYDxBYyIcxNFxjoyBcIW9A6RuX8UUP0DLieZPqM9liKJKUtx8/eHfIFkw==
+X-Received: by 2002:a1c:bd0b:: with SMTP id n11mr464190wmf.178.1585575920714;
+        Mon, 30 Mar 2020 06:45:20 -0700 (PDT)
+Received: from localhost ([185.92.221.13])
+        by smtp.gmail.com with ESMTPSA id q8sm23440249wrc.8.2020.03.30.06.45.19
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 30 Mar 2020 06:45:20 -0700 (PDT)
+Date:   Mon, 30 Mar 2020 13:45:19 +0000
+From:   Wei Yang <richard.weiyang@gmail.com>
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     Wei Yang <richard.weiyang@gmail.com>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 6/9] XArray: internal node is a xa_node when it is bigger
+ than XA_ZERO_ENTRY
+Message-ID: <20200330134519.ykdtqwqxjazqy3jm@master>
+Reply-To: Wei Yang <richard.weiyang@gmail.com>
+References: <20200330123643.17120-1-richard.weiyang@gmail.com>
+ <20200330123643.17120-7-richard.weiyang@gmail.com>
+ <20200330125006.GZ22483@bombadil.infradead.org>
 MIME-Version: 1.0
-In-Reply-To: <881b6a9b-2137-946f-a900-5c4e6cf1fe37@suse.de>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.47.8.155]
-X-ClientProxiedBy: lhreml727-chm.china.huawei.com (10.201.108.78) To
- lhreml724-chm.china.huawei.com (10.201.108.75)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200330125006.GZ22483@bombadil.infradead.org>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 17/03/2020 09:48, Hannes Reinecke wrote:
-> On 3/17/20 10:38 AM, John Garry wrote:
->> On 11/03/2020 08:10, Ming Lei wrote:
->>>> ands(struct ctlr_info *h)
->>>> @@ -5803,6 +5803,7 @@ static int hpsa_scsi_host_alloc(struct 
->>>> ctlr_info *h)
->>>>       sh->max_lun = HPSA_MAX_LUN;
->>>>       sh->max_id = HPSA_MAX_LUN;
->>>>       sh->can_queue = h->nr_cmds - HPSA_NRESERVED_CMDS;
->>>> +    sh->nr_reserved_cmds = HPSA_NRESERVED_CMDS;
->>> Now .nr_reserved_cmds has been passed to blk-mq, you need to increase
->>> sh->can_queue to h->nr_cmds, because .can_queue is the whole queue depth
->>> (include the part of reserved tags), otherwise, IO tags will be
->>> decreased.
->>>
->>
->> Sounds correct.
->>
-> I will have having a look at the patchset; I thought I did a patch to 
-> modify .can_queue so that it would cover only the usable tags, not the 
-> reserved ones.
-> 
+On Mon, Mar 30, 2020 at 05:50:06AM -0700, Matthew Wilcox wrote:
+>On Mon, Mar 30, 2020 at 12:36:40PM +0000, Wei Yang wrote:
+>> As the comment mentioned, we reserved several ranges of internal node
+>> for tree maintenance, 0-62, 256, 257. This means a node bigger than
+>> XA_ZERO_ENTRY is a normal node.
+>> 
+>> The checked on XA_ZERO_ENTRY seems to be more meaningful.
+>
+>257-1023 are also reserved, they just aren't used yet.  XA_ZERO_ENTRY
+>is not guaranteed to be the largest reserved entry.
 
-To me, it makes sense to leave .can_queue unmodified, carry it down to 
-blk-mq and allow blk_mq_init_bitmap_tags() find the queue depth:
+Then why we choose 4096?
 
-static struct blk_mq_tags *blk_mq_init_bitmap_tags(struct blk_mq_tags *tags,
-   int node, int alloc_policy)
-{
-	unsigned int depth = tags->nr_tags - tags->nr_reserved_tags; *
-	bool round_robin = alloc_policy == BLK_TAG_ALLOC_RR;
-
-	if (bt_alloc(&tags->bitmap_tags, depth, round_robin, node))
-		goto free_tags;
-
-Cheers,
-John
+-- 
+Wei Yang
+Help you, Help me
