@@ -2,121 +2,102 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1E9EC2D0E5
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 11:55:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92B55C2D0E5
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 11:55:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D37FA206F6
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 11:55:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7353720774
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 11:55:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730050AbgC3Lzi (ORCPT
+        id S1730072AbgC3Lzz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 07:55:38 -0400
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2616 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729941AbgC3Lzi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 07:55:38 -0400
-Received: from lhreml712-chm.china.huawei.com (unknown [172.18.7.108])
-        by Forcepoint Email with ESMTP id 884F3AD7BE6865FE7E10;
-        Mon, 30 Mar 2020 12:55:36 +0100 (IST)
-Received: from lhreml715-chm.china.huawei.com (10.201.108.66) by
- lhreml712-chm.china.huawei.com (10.201.108.63) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Mon, 30 Mar 2020 12:55:36 +0100
-Received: from lhreml715-chm.china.huawei.com ([10.201.108.66]) by
- lhreml715-chm.china.huawei.com ([10.201.108.66]) with mapi id 15.01.1713.004;
- Mon, 30 Mar 2020 12:55:36 +0100
-From:   Shiju Jose <shiju.jose@huawei.com>
-To:     Borislav Petkov <bp@alien8.de>
-CC:     "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "rjw@rjwysocki.net" <rjw@rjwysocki.net>,
-        "helgaas@kernel.org" <helgaas@kernel.org>,
-        "lenb@kernel.org" <lenb@kernel.org>,
-        "james.morse@arm.com" <james.morse@arm.com>,
-        "tony.luck@intel.com" <tony.luck@intel.com>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "zhangliguang@linux.alibaba.com" <zhangliguang@linux.alibaba.com>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        Linuxarm <linuxarm@huawei.com>,
-        Jonathan Cameron <jonathan.cameron@huawei.com>,
-        tanxiaofei <tanxiaofei@huawei.com>,
-        yangyicong <yangyicong@huawei.com>
-Subject: RE: [PATCH v6 1/2] ACPI / APEI: Add support to notify the vendor
- specific HW errors
-Thread-Topic: [PATCH v6 1/2] ACPI / APEI: Add support to notify the vendor
- specific HW errors
-Thread-Index: AQHWAsR+4nldebv71E6VKNN8PAfzw6hcw70AgAQRUuCAABIOgIAAEy5w
-Date:   Mon, 30 Mar 2020 11:55:35 +0000
-Message-ID: <ee79588ee82445dcb76f1fe6c1082fb8@huawei.com>
-References: <ShijuJose> <20200325164223.650-1-shiju.jose@huawei.com>
- <20200325164223.650-2-shiju.jose@huawei.com> <20200327182214.GD8015@zn.tnic>
- <b180618fb6cb477ea7185979c11c5868@huawei.com>
- <20200330103353.GC16242@zn.tnic>
-In-Reply-To: <20200330103353.GC16242@zn.tnic>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.47.25.189]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Mon, 30 Mar 2020 07:55:55 -0400
+Received: from mx2.suse.de ([195.135.220.15]:51586 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730052AbgC3Lzz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Mar 2020 07:55:55 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id A8C2DAD11;
+        Mon, 30 Mar 2020 11:55:52 +0000 (UTC)
+From:   Vlastimil Babka <vbabka@suse.cz>
+To:     Luis Chamberlain <mcgrof@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Iurii Zaikin <yzaikin@google.com>
+Cc:     linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
+        linux-mm@kvack.org, Ivan Teterevkov <ivan.teterevkov@nutanix.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        "Eric W . Biederman" <ebiederm@xmission.com>,
+        "Guilherme G . Piccoli" <gpiccoli@canonical.com>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Vlastimil Babka <vbabka@suse.cz>
+Subject: [PATCH 0/3] support setting sysctl parameters from kernel command line
+Date:   Mon, 30 Mar 2020 13:55:32 +0200
+Message-Id: <20200330115535.3215-1-vbabka@suse.cz>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgQm9yaXMsDQoNCj4tLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPkZyb206IEJvcmlzbGF2
-IFBldGtvdiBbbWFpbHRvOmJwQGFsaWVuOC5kZV0NCj5TZW50OiAzMCBNYXJjaCAyMDIwIDExOjM0
-DQo+VG86IFNoaWp1IEpvc2UgPHNoaWp1Lmpvc2VAaHVhd2VpLmNvbT4NCj5DYzogbGludXgtYWNw
-aUB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LXBjaUB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LQ0KPmtl
-cm5lbEB2Z2VyLmtlcm5lbC5vcmc7IHJqd0Byand5c29ja2kubmV0OyBoZWxnYWFzQGtlcm5lbC5v
-cmc7DQo+bGVuYkBrZXJuZWwub3JnOyBqYW1lcy5tb3JzZUBhcm0uY29tOyB0b255Lmx1Y2tAaW50
-ZWwuY29tOw0KPmdyZWdraEBsaW51eGZvdW5kYXRpb24ub3JnOyB6aGFuZ2xpZ3VhbmdAbGludXgu
-YWxpYmFiYS5jb207DQo+dGdseEBsaW51dHJvbml4LmRlOyBMaW51eGFybSA8bGludXhhcm1AaHVh
-d2VpLmNvbT47IEpvbmF0aGFuIENhbWVyb24NCj48am9uYXRoYW4uY2FtZXJvbkBodWF3ZWkuY29t
-PjsgdGFueGlhb2ZlaSA8dGFueGlhb2ZlaUBodWF3ZWkuY29tPjsNCj55YW5neWljb25nIDx5YW5n
-eWljb25nQGh1YXdlaS5jb20+DQo+U3ViamVjdDogUmU6IFtQQVRDSCB2NiAxLzJdIEFDUEkgLyBB
-UEVJOiBBZGQgc3VwcG9ydCB0byBub3RpZnkgdGhlIHZlbmRvcg0KPnNwZWNpZmljIEhXIGVycm9y
-cw0KPg0KPk9uIE1vbiwgTWFyIDMwLCAyMDIwIGF0IDEwOjE0OjIwQU0gKzAwMDAsIFNoaWp1IEpv
-c2Ugd3JvdGU6DQo+PiBUaGlzIGZpZWxkIGFkZGVkIGJhc2VkIG9uIHRoZSBpbnB1dCBmcm9tIEph
-bWVzIE1vcnNlIG9uIHY0IHBhdGNoIHRvDQo+PiBlbmFibGUgdGhlIHVzZXIgc3BhY2UgYXBwbGlj
-YXRpb24ocmFzZGFlbW9uKSBkbyB0aGUgZGVjb2RpbmcgYW5kDQo+PiBsb2dnaW5nIG9mIHRoZSBh
-bnkgZXh0cmEgZXJyb3IgaW5mb3JtYXRpb24gc2hhcmVkIGJ5IHRoZSBjb3JyZXNwb25kaW5nDQo+
-PiBrZXJuZWwgZHJpdmVyIHRvIHRoZSB1c2VyIHNwYWNlLg0KPg0KPkhvdyBpcyB5b3VyIGVycm9y
-IHJlcG9ydGluZyBzdXBwb3NlZCB0byB3b3JrPw0KPg0KPllvdXIgZHJpdmVyIGlzIHByaW50aW5n
-IGVycm9yIGluZm9ybWF0aW9uIGluIGRtZXNnIGFuZCwgYXQgdGhlIHNhbWUgdGltZSwgeW91DQo+
-d2FudCB0byByZXBvcnQgZXJyb3JzIHdpdGggdGhlIHJhc2RhZW1vbi4NCj4NCj5DdXJyZW50bHks
-IHRoZSBrZXJuZWwgZG9lcyBub3QgcmVwb3J0IGFueSBlcnJvciBpbmZvIGlmIHRoZXJlJ3MgYSB1
-c2VyIGFnZW50IGxpa2UNCj5yYXNkYWVtb24gcmVnaXN0ZXJlZCBzbyB5b3UgbmVlZCB0byB0aGlu
-ayBhYm91dCB3aGF0IGV4YWN0bHkgeW91J3JlIHRyeWluZw0KPnRvIGFjaGlldmUgaGVyZSB3cnQg
-dG8gZXJyb3IgaGFuZGxpbmcuIFBvcnQgcmVzZXR0aW5nLCBwcmludGluZyBlcnJvciBpbmZvLCBl
-dGMuDQo+QWx3YXlzIGFzayB5b3Vyc2VsZiwgd2hhdCBjYW4gdGhlIHVzZXIgZG8gd2l0aCB0aGUg
-aW5mb3JtYXRpb24geW91J3JlDQo+cHJpbnRpbmcuIEFuZCBzbyBvbi4uLg0KVGhlIGVycm9yX2hh
-bmRsZWQgZmllbGQgYWRkZWQgb24gdGhlIGdlbmVyaWMgYmFzaXMgZm9yIHRoZSBub24tc3RhbmRh
-cmQgZXJyb3JzLg0KcmFzZGFlbW9uIHN1cHBvcnRzIGFkZGluZyBkZWNvZGluZyBvZiB0aGUgdmVu
-ZG9yLXNwZWNpZmljIGVycm9yIGRhdGEsIHByaW50aW5nIGFuZCANCnN0b3JpbmcgdGhlIGRlY29k
-ZWQgdmVuZG9yIGVycm9yIGluZm9ybWF0aW9uIHRvIHRoZSBzcWwgZGF0YWJhc2UuIA0KVGhlIGlk
-ZWEgd2FzIHRoZSAgZXJyb3IgaGFuZGxlZCBmaWVsZCAgd2lsbCBoZWxwIHRoZSBkZWNvZGluZyBw
-YXJ0IG9mIHRoZSByYXNkYWVtb24gdG8gZG8gdGhlDQphcHByb3ByaWF0ZSBzdGVwcyBmb3IgbG9n
-Z2luZyB0aGUgdmVuZG9yIGVycm9yIGluZm9ybWF0aW9uIGRlcGVuZGluZyBvbiB3aGV0aGVyIGEg
-Y29ycmVzcG9uZGluZyBrZXJuZWwgZHJpdmVyDQpoYXMgaGFuZGxlZCB0aGUgZXJyb3Igb3Igbm90
-LiAgDQpIb3dldmVyIEkgdGhpbmsgdGhlIHNhbWUgY2FuIGJlIGFjaGlldmVkIGJ5IGFkZGluZyBh
-biBlcnJvciBoYW5kbGluZyBzdGF0dXMgZmllbGQgdG8gdGhlIHZlbmRvci1zcGVjaWZpYyBkYXRh
-LCB3aGljaA0KdGhlIGtlcm5lbCAgZHJpdmVyIHdpbGwgc2V0IGFmdGVyIGhhbmRsaW5nIHRoZSBl
-cnJvciBhbmQgY29ycmVzcG9uZGluZyB2ZW5kb3Itc3BlY2lmaWMgY29kZSBpbiB0aGUgcmFzZGFl
-bW9uIHdpbGwgdXNlIGl0IA0Kd2hpbGUgbG9nZ2luZyB0aGUgdmVuZG9yIGVycm9yIGRhdGEuDQo+
-DQo+PiBDYW4geW91IHBsZWFzZSBjb25maXJtIHlvdSB3YW50IGFsbCB0aGUgZXhpc3Rpbmcgc3Rh
-bmRhcmQNCj4+IGVycm9ycyhtZW1vcnksIEFSTSwgUENJRSkgaW4gdGhlIGdoZXNfZG9fcHJvYyAo
-KSB0byBiZSByZXBvcnRlZA0KPj4gdGhyb3VnaCB0aGUgYmxvY2tpbmcgbm90aWZpZXI/DQo+DQo+
-WWVzLCBJIHdvdWxkIHZlcnkgbXVjaCBwcmVmZXIgdG8gaGF2ZSBhIGdlbmVyaWMgc29sdXRpb24g
-aW5zdGVhZCBvZiB2ZW5kb3ItDQo+c3BlY2lmaWMgc3R1ZmYgbGVmdCBhbmQgcmlnaHQuDQpTdXJl
-Lg0KDQo+DQo+VGh4Lg0KPg0KPi0tDQo+UmVnYXJkcy9HcnVzcywNCj4gICAgQm9yaXMuDQo+DQo+
-aHR0cHM6Ly9wZW9wbGUua2VybmVsLm9yZy90Z2x4L25vdGVzLWFib3V0LW5ldGlxdWV0dGUNCg0K
-VGhhbmtzLA0KU2hpanUNCg==
+This series adds support for something that seems like many people always
+wanted but nobody added it yet, so here's the ability to set sysctl parameters
+via kernel command line options in the form of sysctl.vm.something=1
+
+The important part is Patch 1. The second, not so important part is an attempt
+to clean up legacy one-off parameters that do the same thing as a sysctl.
+I don't want to remove them completely for compatibility reasons, but with
+generic sysctl support the idea is to remove the one-off param handlers and
+treat the parameters as aliases for the sysctl variants.
+
+I have identified several parameters that mention sysctl counterparts in
+Documentation/admin-guide/kernel-parameters.txt but there might be more. The
+conversion also has varying level of success:
+
+- numa_zonelist_order is converted in Patch 2 together with adding the
+  necessary infrastructure. It's easy as it doesn't really do anything but warn
+  on deprecated value these days.
+- hung_task_panic is converted in Patch 3, but there's a downside that now it
+  only accepts 0 and 1, while previously it was any integer value
+- nmi_watchdog maps to two sysctls nmi_watchdog and hardlockup_panic, so
+  there's no straighforward conversion possible
+- traceoff_on_warning is a flag without value and it would be required to
+  handle that somehow in the conversion infractructure, which seems pointless
+  for a single flag
+
+Anyway I hope that Patch 1 is mature enough to go regardless of the fate of the
+less important second part.
+
+Changes since RFCv2
+- make proc_mnt internal to functions (Kees)
+- use kasprintf when building path (Kees)
+- improve error reporting - common errnos are translated to more obvious
+  messages and the rest uses %pe
+
+Vlastimil Babka (3):
+  kernel/sysctl: support setting sysctl parameters from kernel command
+    line
+  kernel/sysctl: support handling command line aliases
+  kernel/hung_task convert hung_task_panic boot parameter to sysctl
+
+ .../admin-guide/kernel-parameters.txt         |  11 +-
+ fs/proc/proc_sysctl.c                         | 135 ++++++++++++++++++
+ include/linux/sysctl.h                        |   4 +
+ init/main.c                                   |   2 +
+ kernel/hung_task.c                            |  10 --
+ mm/page_alloc.c                               |   9 --
+ 6 files changed, 151 insertions(+), 20 deletions(-)
+
+-- 
+2.25.1
+
