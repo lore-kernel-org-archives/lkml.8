@@ -2,254 +2,154 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-7.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EC4AC43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 12:30:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C93E4C2D0ED
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 12:31:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0A318206E6
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 12:30:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="u50o6qtF"
+	by mail.kernel.org (Postfix) with ESMTP id 9F410206E6
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 12:31:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585571504;
+	bh=Oolrve6KUjp8JtWjcuS+gE/QlRSl5sSSz5E1f+buIIM=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=GSQR/lzlhQHww0A5Y2bUUPUEvgvmZwgT9GHLWgkqus2G4FKJL3fCwiVK+9NHfSGdc
+	 I/Qk0WGmjN0R7CP3ViSvoI8hZlfSxAAykepHDej9A6WZRgopI0oS2PrMd1oSpM/fHX
+	 74UdR7VwyneGob+/trwKF2S4fdPVkqtHMB7Y0lyo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730142AbgC3M36 (ORCPT
+        id S1730075AbgC3Mbn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 08:29:58 -0400
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:27182 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729785AbgC3M36 (ORCPT
+        Mon, 30 Mar 2020 08:31:43 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:39904 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729785AbgC3Mbn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 08:29:58 -0400
-Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02UCR4Qu019865;
-        Mon, 30 Mar 2020 14:29:53 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=STMicroelectronics;
- bh=mbFSM761yAaavJun1kNF0tT5J2giZpivhFkj0sa/ry8=;
- b=u50o6qtF82aO70k16lugOqa7xLwNQ5woGKpvcyQRP4eenbwXDjpPr7cZpx0JdSSTiNYS
- d/G9+Q7WSq4f1khTAefKM397W1WEd7zQSxO6R0DVwlwms3F9TR6cxUOAPMMvu1CM13gq
- gFz2PyYrLQvSMuLVKACgzB9T0eh0Ae0VcW+tVkE0vEonICCBdWDpQeEvFPFDc0UFbVJl
- jGIAqye3OfnAmqRkYMfh9C0M73wl8dF8v3zp+KV4lyEJsdm1s5ftzo8CbRRCIh5Z8L9S
- Y6gI03sUBY6nGbJaOYjpZiqXql6u+OqVu5d5caFTm1eBzxJQI2zJNhlyB3lSKZ/wklsL 1w== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 301vkdhr94-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 30 Mar 2020 14:29:53 +0200
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 339DA10002A;
-        Mon, 30 Mar 2020 14:29:52 +0200 (CEST)
-Received: from Webmail-eu.st.com (sfhdag3node1.st.com [10.75.127.7])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 1EBB92B1866;
-        Mon, 30 Mar 2020 14:29:52 +0200 (CEST)
-Received: from lmecxl0889.tpe.st.com (10.75.127.45) by SFHDAG3NODE1.st.com
- (10.75.127.7) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 30 Mar
- 2020 14:29:50 +0200
-Subject: Re: [PATCH v2 1/2] remoteproc: fall back to using parent memory pool
- if no dedicated available
-To:     Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Suman Anna <s-anna@ti.com>
-CC:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Loic Pallardy <loic.pallardy@st.com>,
-        Tero Kristo <t-kristo@ti.com>,
-        linux-remoteproc <linux-remoteproc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <20200319162321.20632-1-s-anna@ti.com>
- <20200319162321.20632-2-s-anna@ti.com> <20200325203812.GA9384@xps15>
- <207036a8-b34e-6311-5ad6-3289eb9f7a06@ti.com>
- <CANLsYkzU79LDVWO=wtoOY-=iW0a4EUf5sruwWicyj+2EAFZ4rg@mail.gmail.com>
-From:   Arnaud POULIQUEN <arnaud.pouliquen@st.com>
-Message-ID: <592f2ed1-7833-d4f1-2894-d2300b9cc9dc@st.com>
-Date:   Mon, 30 Mar 2020 14:29:50 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Mon, 30 Mar 2020 08:31:43 -0400
+Received: by mail-wm1-f67.google.com with SMTP id e9so9758881wme.4
+        for <linux-kernel@vger.kernel.org>; Mon, 30 Mar 2020 05:31:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=6D1CONpxSBKbzO1QemsXadQ3h0HbBv4V05qXdKPSA2c=;
+        b=VRaZ+PwyFH11ZL2vUQmMIrV6ZhVoH1LzhV9kF2+OpaSqUO/r8b4JW8maN96Jof3Rk6
+         tZyWFWUKhBPyBSPcE9FfSKvn8LRAMLKMxzqXGyeIoWkWVwcP6OkvykJluR25BJgWchEs
+         v9L5XxljzDMvpaDU2YBsjPH9z+7r9m6yqsxxeUlIf1wbgba5qkXaUEAoaFIg98gbdOts
+         SouC95NP6mnlHfm2aa1Yr3elplv5VhkeSY8z+hLpSsVJ5mRXjfWZ+Wqos5QAU/ewx4L6
+         MZXqCKiGi6zrTQIfA35PWq70PS5B4dsOOau4XKg7TLTzsteu0gXUzurLUk8eLukvXL0G
+         Nivw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :mime-version:content-disposition:user-agent;
+        bh=6D1CONpxSBKbzO1QemsXadQ3h0HbBv4V05qXdKPSA2c=;
+        b=eGXKIZdiCgW5gRsO9Io4Be7AeyFT7nB+9t0j9xWWhpBFN9gvTfVuXfAH0vbi2LHT/t
+         5kc8+h1rbstUDecBFLL9OLZCxIp3n5uArJuN0E7svwE8VfRodwosbeO7au/TeYYypyQ2
+         CqNIQyPiUuhdJEIb0gmfrYqQASqZuuW/7BIZnakG/Ll5NHy+vUqY5CFQOSn/qcfiEAzC
+         6riZVdDOQ4hqcqBPWSnXE+jpDMGcaMlVS0at+2rA9G75dhXIXOm720dUMP4HLtKA33Rs
+         x/e5PmASC5GLA5hObDPzDefjM7+nS03oIFscd8rOSj+03EkHvPi7RdBUqdA0+xc8ALAp
+         FJAw==
+X-Gm-Message-State: ANhLgQ1l9mW275fDElHQGdsuY6U3Ys2MvC/6RjTjF5WAK2lG7JoswXgF
+        BQC0Y5toPoOiQPzGFsifJb8=
+X-Google-Smtp-Source: ADFU+vu3f3t8TT9K+EF52uMxeI94XrICKD14M+w5lZjw9wB57iTGIKJccAeEggT1NDIdhpNN81t6Lw==
+X-Received: by 2002:a1c:8108:: with SMTP id c8mr12761629wmd.50.1585571499575;
+        Mon, 30 Mar 2020 05:31:39 -0700 (PDT)
+Received: from gmail.com (54033286.catv.pool.telekom.hu. [84.3.50.134])
+        by smtp.gmail.com with ESMTPSA id b203sm20940964wmc.45.2020.03.30.05.31.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 30 Mar 2020 05:31:38 -0700 (PDT)
+Date:   Mon, 30 Mar 2020 14:31:36 +0200
+From:   Ingo Molnar <mingo@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-kernel@vger.kernel.org,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>,
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: [GIT PULL] core/objtool changes for v5.7
+Message-ID: <20200330123136.GA3021@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <CANLsYkzU79LDVWO=wtoOY-=iW0a4EUf5sruwWicyj+2EAFZ4rg@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.75.127.45]
-X-ClientProxiedBy: SFHDAG1NODE3.st.com (10.75.127.3) To SFHDAG3NODE1.st.com
- (10.75.127.7)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.645
- definitions=2020-03-30_01:2020-03-27,2020-03-30 signatures=0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Linus,
+
+Please pull the latest core-objtool-for-linus git tree from:
+
+   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git core-objtool-for-linus
+
+   # HEAD: 350994bf95414d6da67a72f27d7ac3832ce3725d objtool: Re-arrange validate_functions()
+
+The biggest changes in this cycle were the vmlinux.o optimizations by 
+Peter Zijlstra, which are preparatory and optimization work to run 
+objtool against the much richer vmlinux.o object file, to perform new, 
+whole-program section based logic. That work exposed a handful of 
+problems with the existing code, which fixes and optimizations are merged 
+here. The complete 'vmlinux.o and noinstr' work is still work in 
+progress, targeted for v5.8.
+
+There's also assorted fixes and enhancements from Josh Poimboeuf.
+
+In particular I'd like to draw attention to commit 644592d328370, which 
+turns fatal objtool errors into failed kernel builds. This behavior is 
+IMO now justified on multiple grounds (it's easy currently to not notice 
+an essentially corrupted kernel build), and the commit has been in -next 
+testing for several weeks, but there could still be build failures with 
+old or weird toolchains. Should that be widespread or high profile enough 
+then I'd suggest a quick revert, to not hold up the merge window.
+
+ Thanks,
+
+	Ingo
+
+------------------>
+Josh Poimboeuf (5):
+      objtool: Fail the kernel build on fatal errors
+      objtool: Add is_static_jump() helper
+      objtool: Add relocation check for alternative sections
+      objtool: Fix clang switch table edge case
+      objtool: Improve call destination function detection
+
+Peter Zijlstra (17):
+      objtool: Introduce validate_return()
+      objtool: Rename func_for_each_insn()
+      objtool: Rename func_for_each_insn_all()
+      x86/kexec: Use RIP relative addressing
+      x86/kexec: Make relocate_kernel_64.S objtool clean
+      objtool: Optimize find_symbol_by_index()
+      objtool: Add a statistics mode
+      objtool: Optimize find_section_by_index()
+      objtool: Optimize find_section_by_name()
+      objtool: Optimize find_symbol_*() and read_symbols()
+      objtool: Rename find_containing_func()
+      objtool: Resize insn_hash
+      objtool: Optimize find_symbol_by_name()
+      objtool: Optimize read_sections()
+      objtool: Delete cleanup()
+      objtool: Optimize find_rela_by_dest_range()
+      objtool: Re-arrange validate_functions()
 
 
-On 3/27/20 10:09 PM, Mathieu Poirier wrote:
-> On Wed, 25 Mar 2020 at 17:39, Suman Anna <s-anna@ti.com> wrote:
->>
->> Hi Mathieu,
->>
->> On 3/25/20 3:38 PM, Mathieu Poirier wrote:
->>> On Thu, Mar 19, 2020 at 11:23:20AM -0500, Suman Anna wrote:
->>>> From: Tero Kristo <t-kristo@ti.com>
->>>>
->>>> In some cases, like with OMAP remoteproc, we are not creating dedicated
->>>> memory pool for the virtio device. Instead, we use the same memory pool
->>>> for all shared memories. The current virtio memory pool handling forces
->>>> a split between these two, as a separate device is created for it,
->>>> causing memory to be allocated from bad location if the dedicated pool
->>>> is not available. Fix this by falling back to using the parent device
->>>> memory pool if dedicated is not available.
->>>>
->>>> Fixes: 086d08725d34 ("remoteproc: create vdev subdevice with specific dma memory pool")
->>>> Signed-off-by: Tero Kristo <t-kristo@ti.com>
->>>> Signed-off-by: Suman Anna <s-anna@ti.com>
->>>> ---
->>>> v2:
->>>>  - Address Arnaud's concerns about hard-coded memory-region index 0
->>>>  - Update the comment around the new code addition
->>>> v1: https://patchwork.kernel.org/patch/11422721/
->>>>
->>>>  drivers/remoteproc/remoteproc_virtio.c | 15 +++++++++++++++
->>>>  include/linux/remoteproc.h             |  2 ++
->>>>  2 files changed, 17 insertions(+)
->>>>
->>>> diff --git a/drivers/remoteproc/remoteproc_virtio.c b/drivers/remoteproc/remoteproc_virtio.c
->>>> index eb817132bc5f..b687715cdf4b 100644
->>>> --- a/drivers/remoteproc/remoteproc_virtio.c
->>>> +++ b/drivers/remoteproc/remoteproc_virtio.c
->>>> @@ -369,6 +369,21 @@ int rproc_add_virtio_dev(struct rproc_vdev *rvdev, int id)
->>>>                              goto out;
->>>>                      }
->>>>              }
->>>> +    } else {
->>>> +            struct device_node *np = rproc->dev.parent->of_node;
->>>> +
->>>> +            /*
->>>> +             * If we don't have dedicated buffer, just attempt to re-assign
->>>> +             * the reserved memory from our parent. A default memory-region
->>>> +             * at index 0 from the parent's memory-regions is assigned for
->>>> +             * the rvdev dev to allocate from, and this can be customized
->>>> +             * by updating the vdevbuf_mem_id in platform drivers if
->>>> +             * desired. Failure is non-critical and the allocations will
->>>> +             * fall back to global pools, so don't check return value
->>>> +             * either.
->>>
->>> I'm perplex...  In the changelog it is indicated that if a memory pool is
->>> not dedicated allocation happens from a bad location but here failure of
->>> getting a hold of a dedicated memory pool is not critical.
->>
->> So, the comment here is a generic one while the bad location part in the
->> commit description is actually from OMAP remoteproc usage perspective
->> (if you remember the dev_warn messages we added to the memory-region
->> parse logic in the driver).
-> 
-> I can't tell... Are you referring to the comment lines after
-> of_reserved_mem_device_init() in omap_rproc_probe()?
-> 
->>
->> Before the fixed-memory carveout support, all the DMA allocations in
->> remoteproc core were made from the rproc platform device's DMA pool (
->> which can be NULL). That is lost after the fixed-memory support, and
->> they were always allocated from global DMA pools if no dedicated pools
->> are used. After this patch, that continues to be case for drivers that
->> still do not use any dedicated pools, while it does restore the usage of
->> the platform device's DMA pool if a driver uses one (OMAP remoteproc
->> falls into the latter).
->>
->>>
->>>> +             */
->>>> +            of_reserved_mem_device_init_by_idx(dev, np,
->>>> +                                               rproc->vdevbuf_mem_id);
->>>
->>> I wonder if using an index setup by platform code is really the best way
->>> forward when we already have the carveout mechanic available to us.  I see the
->>> platform code adding a carveout that would have the same name as rproc->name.
->>> From there in rproc_add_virtio_dev() we could have something like:
->>>
->>>         mem = rproc_find_carveout_by_name(rproc, "%s", rproc->name);
->>>
->>>
->>> That would be very flexible, the location of the reserved memory withing the
->>> memory-region could change without fear of breaking things and no need to add to
->>> struct rproc.
->>>
->>> Let me know what you think.
->>
->> I think that can work as well but I feel it is lot more cumbersome. It
->> does require every platform driver to add code adding/registering that
->> carveout, and parse the reserved memory region etc. End of the day, we
->> rely on DMA API and we just have to assign the region to the newly
->> created device. The DMA pool assignment for devices using
->> reserved-memory nodes has simply been the of_reserved_mem_device_init()
->> function.
-> 
-> Given all the things happening in the platform drivers adding and
-> registering a single carveout doesn't seem that onerous to me.   I
-> also expect setting rproc->vdevbuf_mem_id would involve some form of
-> parsing.  Lastly if a couple of platforms end up doing the same thing
-> might as well bring the code in the core, hence choosing a generic
-> name such as rproc->name for the memory region.
-> 
-> At the very least I would use of_reserved_mem_device_init_by_idx(dev,
-> np, 0).  I agree it is not flexible but I'll take that over adding a
-> new field to structure rproc.
+ arch/x86/kernel/Makefile             |   1 -
+ arch/x86/kernel/relocate_kernel_64.S |  12 +-
+ tools/objtool/Build                  |   5 +
+ tools/objtool/builtin-check.c        |   3 +-
+ tools/objtool/builtin.h              |   2 +-
+ tools/objtool/check.c                | 268 +++++++++++++++++++--------------
+ tools/objtool/check.h                |   2 +-
+ tools/objtool/elf.c                  | 281 +++++++++++++++++++++++++----------
+ tools/objtool/elf.h                  |  51 ++++++-
+ tools/objtool/orc_gen.c              |   9 +-
+ tools/objtool/special.c              |   4 +-
+ tools/objtool/warn.h                 |   2 +-
+ 12 files changed, 429 insertions(+), 211 deletions(-)
 
-I wonder whether this would not introduce side effect for some legacy
-drivers. Some rproc platforms can have a memory region defined but not
-used for the virtio buffers which is allocated in the Linux default
-memory pool.
-
-If the aim is to minimize impact in the core part, the solution i proposed
-in V1 using rproc_of_resm_mem_entry_init seems a good default candidate too.
-The constraint would be that the platform driver has to pre-register
-vdev<X>buffer reserved memory associated for a max number of vdev.
-This max would limit the number of vdev that a remote firmware can request.
-Also not very flexible more that the index 0, as managed at platform level.
-
-Having a default name or a default index seems to me a good compromise...
-One advantage of the default name (in this case not rproc->name) is the 
-ability to define the memory region in a resource table carveout, instead
-of a static definition in DT.
-
-Regards,
-Arnaud
-
-> 
-> Thanks,
-> Mathieu
-> 
->>
->> regards
->> Suman
->>
->>>
->>> Thanks,
->>> Mathieu
->>>
->>>>      }
->>>>
->>>>      /* Allocate virtio device */
->>>> diff --git a/include/linux/remoteproc.h b/include/linux/remoteproc.h
->>>> index ed127b2d35ca..07bd73a6d72a 100644
->>>> --- a/include/linux/remoteproc.h
->>>> +++ b/include/linux/remoteproc.h
->>>> @@ -481,6 +481,7 @@ struct rproc_dump_segment {
->>>>   * @auto_boot: flag to indicate if remote processor should be auto-started
->>>>   * @dump_segments: list of segments in the firmware
->>>>   * @nb_vdev: number of vdev currently handled by rproc
->>>> + * @vdevbuf_mem_id: default memory-region index for allocating vdev buffers
->>>>   */
->>>>  struct rproc {
->>>>      struct list_head node;
->>>> @@ -514,6 +515,7 @@ struct rproc {
->>>>      bool auto_boot;
->>>>      struct list_head dump_segments;
->>>>      int nb_vdev;
->>>> +    u8 vdevbuf_mem_id;
->>>>      u8 elf_class;
->>>>  };
->>>>
->>>> --
->>>> 2.23.0
->>>>
->>
