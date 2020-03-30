@@ -2,130 +2,160 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF2DEC2D0E5
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 17:41:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE1F4C2D0E5
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 17:43:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C57112073B
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 17:41:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6DF042082D
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 17:43:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="jdiwFJp8"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="dF49PPbE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730001AbgC3Rl0 (ORCPT
+        id S1729664AbgC3Rn3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 13:41:26 -0400
-Received: from pandora.armlinux.org.uk ([78.32.30.218]:55916 "EHLO
-        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729654AbgC3Rl0 (ORCPT
+        Mon, 30 Mar 2020 13:43:29 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:40018 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727779AbgC3Rn2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 13:41:26 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=MPknVRVqf3cjXzMTU1R+fhO3GbG3Mj56RWcr6uAPo/4=; b=jdiwFJp8wSM94WHqaxAAUF/oZ
-        qWAMC2vbKFTHvrZmSdq85MME8kz7V/8dpy/aDPNxTvz5HXiQgIpvk41xnvXCTmZCN3PcFhYGM8vU/
-        IqTDSEEiXvfioQpJCyV204YvHXjAc0uA0VjtJdtKhmSm0mTQnEgqBUXH0ojw60BQjTEvt3l/3eAK/
-        YbCb2kDlbTrBqlDtjAMq55yHXAQq6XhRTRXQ0etN5pomK50D+Jo7QYuOdnA69TP3dLIrcu5rix3zS
-        LGMvSTnW5pBJKqNrtGKpJ1p74gP22Vwf4fwhGwT/942zSuiSQf+31ZsfzmVck+3Vs9eKD50f5edew
-        9T/GlLzIw==;
-Received: from shell.armlinux.org.uk ([2002:4e20:1eda:1:5054:ff:fe00:4ec]:39286)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1jIyPW-0003Uo-Cv; Mon, 30 Mar 2020 18:41:18 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1jIyPS-0007JO-C8; Mon, 30 Mar 2020 18:41:14 +0100
-Date:   Mon, 30 Mar 2020 18:41:14 +0100
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Florian Fainelli <f.fainelli@gmail.com>
-Cc:     Oleksij Rempel <o.rempel@pengutronix.de>,
-        Andrew Lunn <andrew@lunn.ch>, netdev@vger.kernel.org,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        linux-kernel@vger.kernel.org, Fabio Estevam <festevam@gmail.com>,
-        linux-imx@nxp.com, kernel@pengutronix.de,
-        David Jander <david@protonic.nl>,
-        Shawn Guo <shawnguo@kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        Heiner Kallweit <hkallweit1@gmail.com>
-Subject: Re: [PATCH v2] ARM: imx: allow to disable board specific PHY fixups
-Message-ID: <20200330174114.GG25745@shell.armlinux.org.uk>
-References: <20200329110457.4113-1-o.rempel@pengutronix.de>
- <20200329150854.GA31812@lunn.ch>
- <20200330052611.2bgu7x4nmimf7pru@pengutronix.de>
- <40209d08-4acb-75c5-1766-6d39bb826ff9@gmail.com>
+        Mon, 30 Mar 2020 13:43:28 -0400
+Received: by mail-pg1-f196.google.com with SMTP id t24so8998852pgj.7
+        for <linux-kernel@vger.kernel.org>; Mon, 30 Mar 2020 10:43:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=JAZJzRt7fuqaSj+7HicEUO63r6qcWUEADIAna3qwLDs=;
+        b=dF49PPbEaBBAIakmxJGfH4zdz1EarD3UK9HHLVKkyMv3TfMpe6uEid/u1o00U8uISw
+         +jMjg1dnPsE/lkzCZBlV3+UsnmQv7/ya8oEP7SuUFOX6Mqkgfo9AR7gsx4Inp4EDmhT/
+         Qzhi67TS9ZFS/EziBdF1M/V1cW2IN5FCwMU8c=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=JAZJzRt7fuqaSj+7HicEUO63r6qcWUEADIAna3qwLDs=;
+        b=OTmVJH+gD5UDFPws+vnZOFcyb+Hza1ujbcyA2uzokXKKt8uV/fXHUUZib2Q0V9z5M1
+         2ToJ0IT1+fdQfgOkRlPbmJS1kfYCLTzSkPH20whfQ9Fn4f1ohnY8DaBZgTXhnzdoz6Yb
+         rOEy2J6OMimwSXdunfqax4uG+HfQP6YaMYYXWUMOMB+JbsyYZ86HKmAV3wYm9iNBr9n3
+         Use2Gz+jh9DlQZf4sOFDG2bfK9KuKPymWl4FgptItFX/X+sS9JCXRG1d5I6OtLwj1qhs
+         voNQTMELqIXvlWrCvFdHUIfxTSU9M2pNRC38RF87v8fEgBgJJFEuyGpZCKPkdS7T1TfC
+         ZxoA==
+X-Gm-Message-State: ANhLgQ3y3kg/LH3RecbS7BtNjV4T4hDBTGXK5CUJGW7jefEsx6NWSxYn
+        2LKOAssNc510d8Nr01hjmwl1BOC2WPA=
+X-Google-Smtp-Source: ADFU+vsi0e3UarNlqpbTS7I7SsjeqBAthl6X9Kptox1ndXG/A6U3/rU8cIh4ts0jiI17uPGOP22EBQ==
+X-Received: by 2002:a63:1862:: with SMTP id 34mr14099661pgy.191.1585590207804;
+        Mon, 30 Mar 2020 10:43:27 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id k3sm10598303pfp.142.2020.03.30.10.43.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 30 Mar 2020 10:43:27 -0700 (PDT)
+Date:   Mon, 30 Mar 2020 10:43:26 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Vlastimil Babka <vbabka@suse.cz>
+Cc:     Luis Chamberlain <mcgrof@kernel.org>,
+        Iurii Zaikin <yzaikin@google.com>,
+        linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
+        linux-mm@kvack.org, Ivan Teterevkov <ivan.teterevkov@nutanix.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        "Eric W . Biederman" <ebiederm@xmission.com>,
+        "Guilherme G . Piccoli" <gpiccoli@canonical.com>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Christian Brauner <christian.brauner@ubuntu.com>
+Subject: Re: [PATCH 3/3] kernel/hung_task convert hung_task_panic boot
+ parameter to sysctl
+Message-ID: <202003301042.97F3B00@keescook>
+References: <20200330115535.3215-1-vbabka@suse.cz>
+ <20200330115535.3215-4-vbabka@suse.cz>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <40209d08-4acb-75c5-1766-6d39bb826ff9@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200330115535.3215-4-vbabka@suse.cz>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 30, 2020 at 10:33:03AM -0700, Florian Fainelli wrote:
+On Mon, Mar 30, 2020 at 01:55:35PM +0200, Vlastimil Babka wrote:
+> We can now handle sysctl parameters on kernel command line and have
+> infrastructure to convert legacy command line options that duplicate sysctl
+> to become a sysctl alias.
 > 
+> This patch converts the hung_task_panic parameter. Note that the sysctl handler
+> is more strict and allows only 0 and 1, while the legacy parameter allowed
+> any non-zero value. But there is little reason anyone would not be using 1.
 > 
-> On 3/29/2020 10:26 PM, Oleksij Rempel wrote:
-> > Hi Andrew,
-> > 
-> > On Sun, Mar 29, 2020 at 05:08:54PM +0200, Andrew Lunn wrote:
-> >> On Sun, Mar 29, 2020 at 01:04:57PM +0200, Oleksij Rempel wrote:
-> >>
-> >> Hi Oleksij
-> >>
-> >>> +config DEPRECATED_PHY_FIXUPS
-> >>> +	bool "Enable deprecated PHY fixups"
-> >>> +	default y
-> >>> +	---help---
-> >>> +	  In the early days it was common practice to configure PHYs by adding a
-> >>> +	  phy_register_fixup*() in the machine code. This practice turned out to
-> >>> +	  be potentially dangerous, because:
-> >>> +	  - it affects all PHYs in the system
-> >>> +	  - these register changes are usually not preserved during PHY reset
-> >>> +	    or suspend/resume cycle.
-> >>> +	  - it complicates debugging, since these configuration changes were not
-> >>> +	    done by the actual PHY driver.
-> >>> +	  This option allows to disable all fixups which are identified as
-> >>> +	  potentially harmful and give the developers a chance to implement the
-> >>> +	  proper configuration via the device tree (e.g.: phy-mode) and/or the
-> >>> +	  related PHY drivers.
-> >>
-> >> This appears to be an IMX only problem. Everybody else seems to of got
-> >> this right. There is no need to bother everybody with this new
-> >> option. Please put this in arch/arm/mach-mxs/Kconfig and have IMX in
-> >> the name.
-> > 
-> > Actually, all fixups seems to do wring thing:
-> > arch/arm/mach-davinci/board-dm644x-evm.c:915:		phy_register_fixup_for_uid(LXT971_PHY_ID, LXT971_PHY_MASK,
-> > 
-> > Increased MII drive strength. Should be probably enabled by the PHY
-> > driver.
-> > 
-> > arch/arm/mach-imx/mach-imx6q.c:167:		phy_register_fixup_for_uid(PHY_ID_KSZ9021, MICREL_PHY_ID_MASK,
-> > arch/arm/mach-imx/mach-imx6q.c:169:		phy_register_fixup_for_uid(PHY_ID_KSZ9031, MICREL_PHY_ID_MASK,
-> > arch/arm/mach-imx/mach-imx6q.c:171:		phy_register_fixup_for_uid(PHY_ID_AR8031, 0xffffffef,
-> > arch/arm/mach-imx/mach-imx6q.c:173:		phy_register_fixup_for_uid(PHY_ID_AR8035, 0xffffffef,
+> Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
 
-As far as I'm concerned, the AR8035 fixup is there with good reason.
-It's not just "random" but is required to make the AR8035 usable with
-the iMX6 SoCs.  Not because of a board level thing, but because it's
-required for the AR8035 to be usable with an iMX6 SoC.
+I'll let others double-check, but I think this change should be okay. If
+not, we can adjust the sysctl handler to accept an arbitrary int.
 
-So, having it registered by the iMX6 SoC code is entirely logical and
-correct.
+Reviewed-by: Kees Cook <keescook@chromium.org>
 
-That's likely true of the AR8031 situation as well.
+-Kees
 
-I can't speak for any of the others.
+> ---
+>  Documentation/admin-guide/kernel-parameters.txt |  2 +-
+>  fs/proc/proc_sysctl.c                           |  1 +
+>  kernel/hung_task.c                              | 10 ----------
+>  3 files changed, 2 insertions(+), 11 deletions(-)
+> 
+> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+> index 81ff626fc700..e0b8840404a1 100644
+> --- a/Documentation/admin-guide/kernel-parameters.txt
+> +++ b/Documentation/admin-guide/kernel-parameters.txt
+> @@ -1457,7 +1457,7 @@
+>  			[KNL] Should the hung task detector generate panics.
+>  			Format: <integer>
+>  
+> -			A nonzero value instructs the kernel to panic when a
+> +			A value of 1 instructs the kernel to panic when a
+>  			hung task is detected. The default value is controlled
+>  			by the CONFIG_BOOTPARAM_HUNG_TASK_PANIC build-time
+>  			option. The value selected by this boot parameter can
+> diff --git a/fs/proc/proc_sysctl.c b/fs/proc/proc_sysctl.c
+> index 97eb0b552bf8..77b1b844b02b 100644
+> --- a/fs/proc/proc_sysctl.c
+> +++ b/fs/proc/proc_sysctl.c
+> @@ -1743,6 +1743,7 @@ struct sysctl_alias {
+>   */
+>  static const struct sysctl_alias sysctl_aliases[] = {
+>  	{"numa_zonelist_order",		"vm.numa_zonelist_order" },
+> +	{"hung_task_panic",		"kernel.hung_task_panic" },
+>  	{ }
+>  };
+>  
+> diff --git a/kernel/hung_task.c b/kernel/hung_task.c
+> index 14a625c16cb3..b22b5eeab3cb 100644
+> --- a/kernel/hung_task.c
+> +++ b/kernel/hung_task.c
+> @@ -63,16 +63,6 @@ static struct task_struct *watchdog_task;
+>  unsigned int __read_mostly sysctl_hung_task_panic =
+>  				CONFIG_BOOTPARAM_HUNG_TASK_PANIC_VALUE;
+>  
+> -static int __init hung_task_panic_setup(char *str)
+> -{
+> -	int rc = kstrtouint(str, 0, &sysctl_hung_task_panic);
+> -
+> -	if (rc)
+> -		return rc;
+> -	return 1;
+> -}
+> -__setup("hung_task_panic=", hung_task_panic_setup);
+> -
+>  static int
+>  hung_task_panic(struct notifier_block *this, unsigned long event, void *ptr)
+>  {
+> -- 
+> 2.25.1
+> 
 
 -- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 10.2Mbps down 587kbps up
+Kees Cook
