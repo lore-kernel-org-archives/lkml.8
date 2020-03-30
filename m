@@ -2,133 +2,109 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DBBEC43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 23:35:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5362C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 23:35:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF43620771
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 23:35:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F96B20771
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 23:35:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="FJw4WCPT"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="p87pYBLC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729167AbgC3Xfk (ORCPT
+        id S1729408AbgC3Xft (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 19:35:40 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:43058 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728880AbgC3Xfj (ORCPT
+        Mon, 30 Mar 2020 19:35:49 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:33979 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729196AbgC3Xft (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 19:35:39 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02UNOZnD070815;
-        Mon, 30 Mar 2020 23:35:24 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=hTNGH357V8fDPt3Sg7am+l1PufVb0mgR3cQhPNudEw8=;
- b=FJw4WCPTrBUvzllsCSSnJB8Ii5JuTEcbqKg1Lh9LBg+PlRA8npteRInLh1v0rqky23Mk
- LSjcqJfuRuCeIc1ethtyJSevwo4zm68mdA1sOff3ilTpL2/bIA21fXYw44ybMowAeVLZ
- zjQqqjIitGvO9w6MlOaQoWbjn+klEMbyPV9V+n8xuiQ1Tyo2T3wmnpPkiSyXxU6iSLC5
- ojR6rgLTjlw48w5VE2VW4THA2n25gQFCDhxLE4m1xvjYXy2tKUWgyXFdU6QoAdVeO2yp
- ClB6ZT8ehBlkiCs7D7aQgbS9icHhgeEJ7nLnfvZZ0NUDyXzhxPKwRg+MeJD8RNpLCjgu jQ== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2120.oracle.com with ESMTP id 303aqhd2kb-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 30 Mar 2020 23:35:24 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02UNMwwO033138;
-        Mon, 30 Mar 2020 23:35:23 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by aserp3020.oracle.com with ESMTP id 302gcar1un-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 30 Mar 2020 23:35:23 +0000
-Received: from abhmp0006.oracle.com (abhmp0006.oracle.com [141.146.116.12])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 02UNZKkp013067;
-        Mon, 30 Mar 2020 23:35:20 GMT
-Received: from [192.168.1.206] (/71.63.128.209)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 30 Mar 2020 16:35:20 -0700
-Subject: Re: [PATCH v2 1/2] hugetlbfs: use i_mmap_rwsem for more pmd sharing
- synchronization
-To:     Naresh Kamboju <naresh.kamboju@linaro.org>
-Cc:     linux-mm <linux-mm@kvack.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Hugh Dickins <hughd@google.com>,
-        Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.vnet.ibm.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        "Kirill A.Shutemov" <kirill.shutemov@linux.intel.com>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Prakash Sangappa <prakash.sangappa@oracle.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        lkft-triage@lists.linaro.org
-References: <20200316205756.146666-1-mike.kravetz@oracle.com>
- <20200316205756.146666-2-mike.kravetz@oracle.com>
- <CA+G9fYvopJ7v2w3+8Qb+ov_Ji30=mW-DJceZfUOtHFKFMWod8Q@mail.gmail.com>
- <CA+G9fYsJgZhhWLMzUxu_ZQ+THdCcJmFbHQ2ETA_YPP8M6yxOYA@mail.gmail.com>
-From:   Mike Kravetz <mike.kravetz@oracle.com>
-Message-ID: <74d61fb3-6750-e9c4-0b42-8d811d418091@oracle.com>
-Date:   Mon, 30 Mar 2020 16:35:18 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+        Mon, 30 Mar 2020 19:35:49 -0400
+Received: by mail-pg1-f196.google.com with SMTP id l14so2322941pgb.1;
+        Mon, 30 Mar 2020 16:35:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=Ihsd+LIKK09BkgBU5lK2nHCqw9TRvnbaMLRrOxk0h2k=;
+        b=p87pYBLC3MmWCxVZxPixFPk6zecH/3RVA/V+yOI0oeJczOLk1ARxjJOILz3yRWLgh9
+         dpo1UMPXP/oOHEay3q8cjdIUnznd/37ul1yDXPofgGVctfE8neuhZsP+WzjN+aCDj9iS
+         OOVobG4/HmQYZ3jG3i5O2CY7/cD7iiCetln5QPTQzyZNe6LCaSzMOGp8oNBwoOJZmZUi
+         1mk4RYiUQmiklpe5P+EkU8LTxHdr3j9OES2HMhberyOXNwUdxAD09N+2uIXtlAuopr+a
+         6rXTfjJ5hdjpi+0PTRpBFFl3mlzNJdwLw97inGC1pSO6SmPHu9yfL7IyaaPp/OebOubK
+         whxg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=Ihsd+LIKK09BkgBU5lK2nHCqw9TRvnbaMLRrOxk0h2k=;
+        b=Av06UhtnAYjYYBnrdqKiUk/3VzsD9LCzAsEjr7cVLnPEaBJ+J2CEFOFHpc/WCIR6DR
+         phOSLtsLG0z+1lVg4tnUAMbD0gf/U1/hEgK5R0G6pUo9w5izOkdVCT0mqeyZcJ7EnF8B
+         Wx6yebGY0ymV8Cp5tsMyfdJUU1Cp3+STgMt65KZ3idLNuQbyGzQBC9YjbuIlJOS5WCGg
+         4PAc0puzhFsp3Pg4l+dSx+K9BN1DB1i21cOIIOuZtnheFJEPVAX//o+P0J9rM88A6Ibj
+         RzPtpwME/C555NcYLW2V/hHjmqe5xQPNkaJFPM58Oogep9QNfWQo1s9UuNILsf4r23iL
+         Sh8A==
+X-Gm-Message-State: ANhLgQ3vHlN1xIpbK/DBcEz+KaBp/RioVsp3mPzgsro636/qSjWxTNHo
+        Y6J0HEVX0OuZX2A1sW+9UPfdrKqG
+X-Google-Smtp-Source: ADFU+vu3oMl5981LfcveEQsB0jz8wUh2Fvws/6FzXOCgNF7QgTXM4QbqbUJrfuD3cK8bW+/d58RzFw==
+X-Received: by 2002:a63:1003:: with SMTP id f3mr15181161pgl.450.1585611345613;
+        Mon, 30 Mar 2020 16:35:45 -0700 (PDT)
+Received: from [192.168.1.18] (i223-218-245-204.s42.a013.ap.plala.or.jp. [223.218.245.204])
+        by smtp.googlemail.com with ESMTPSA id gi2sm521816pjb.30.2020.03.30.16.35.41
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 30 Mar 2020 16:35:44 -0700 (PDT)
+Subject: Re: [PATCH net] veth: xdp: use head instead of hard_start
+To:     Jesper Dangaard Brouer <jbrouer@redhat.com>,
+        Mao Wenan <maowenan@huawei.com>
+Cc:     davem@davemloft.net, ast@kernel.org, daniel@iogearbox.net,
+        kuba@kernel.org, hawk@kernel.org, john.fastabend@gmail.com,
+        kafai@fb.com, songliubraving@fb.com, yhs@fb.com, andriin@fb.com,
+        jwi@linux.ibm.com, jianglidong3@jd.com, edumazet@google.com,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        bpf@vger.kernel.org, kernel-janitors@vger.kernel.org
+References: <20200330102631.31286-1-maowenan@huawei.com>
+ <20200330133442.132bde0c@carbon>
+From:   Toshiaki Makita <toshiaki.makita1@gmail.com>
+Message-ID: <3053de4c-cee6-f6fc-efc2-09c6250f3ef2@gmail.com>
+Date:   Tue, 31 Mar 2020 08:35:39 +0900
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
  Thunderbird/68.6.0
 MIME-Version: 1.0
-In-Reply-To: <CA+G9fYsJgZhhWLMzUxu_ZQ+THdCcJmFbHQ2ETA_YPP8M6yxOYA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20200330133442.132bde0c@carbon>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9576 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 spamscore=0 malwarescore=0
- mlxlogscore=983 adultscore=0 suspectscore=0 phishscore=0 mlxscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2003300192
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9576 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 phishscore=0 clxscore=1011
- malwarescore=0 impostorscore=0 mlxlogscore=999 spamscore=0 mlxscore=0
- priorityscore=1501 lowpriorityscore=0 adultscore=0 suspectscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2003300192
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/30/20 7:01 AM, Naresh Kamboju wrote:
-> FYI,
+Hi Mao & Jesper
+(Resending with plain text...)
+
+On 2020/03/30 20:34, Jesper Dangaard Brouer wrote:
+> On Mon, 30 Mar 2020 18:26:31 +0800
+> Mao Wenan <maowenan@huawei.com> wrote:
 > 
-> The device is x86_64 device running i386 kernel image.
+>> xdp.data_hard_start is mapped to the first
+>> address of xdp_frame, but the pointer hard_start
+>> is the offset(sizeof(struct xdp_frame)) of xdp_frame,
+>> it should use head instead of hard_start to
+>> set xdp.data_hard_start. Otherwise, if BPF program
+>> calls helper_function such as bpf_xdp_adjust_head, it
+>> will be confused for xdp_frame_end.
 > 
-> - Naresh
+> I have noticed this[1] and have a patch in my current patchset for
+> fixing this.  IMHO is is not so important fix right now, as the effect
+> is that you currently only lose 32 bytes of headroom.
 > 
-> On Mon, 30 Mar 2020 at 19:00, Naresh Kamboju <naresh.kamboju@linaro.org> wrote:
->>
->> On i386 running LTP hugetlb tests found kernel BUG at fs/hugetlbfs/inode.c:458
->> Running Linux version 5.6.0-rc7-next-20200330
->> And hugemmap test failed due to ENOMEM.
->>
->> steps to reproduce:
->>         # cd /opt/ltp
->>         # ./runltp -f hugetlb
+> [1] https://lore.kernel.org/netdev/158446621887.702578.17234304084556809684.stgit@firesoul/
 
-It took me a while to set up an environment to reproduce.  I was finally
-able to reproduce on an x86_64 VM running a 32 bit OS/5.6.0-rc7-next-20200330
-kernel.
+You are right, the subtraction is not necessary here.
+Thank you for working on this.
 
-My first attempt with PAE enabled and 8GB of memory did not reproduce.  When
-I disabled PAE and dropped memory to 4GB, the problem reproduced.
-
-After reverting this patch, and the followup in the series I was still able
-to recreate the issue.  So, the patches are not the root cause.
-
-One 'interesting' thing are the messages,
-mm/pgtable-generic.c:50: bad pgd ...
-These show up before the hugetlbfs BUG.
-
-I will continue to investigate.  However, if the 'bad pgd ..' message provides
-a hint to someone please let us know.
--- 
-Mike Kravetz
+Toshiaki Makita
