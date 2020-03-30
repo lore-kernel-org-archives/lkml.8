@@ -2,76 +2,71 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3970FC2D0E9
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 08:07:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12210C2D0E9
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 08:17:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B36920748
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 08:07:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E434C206CC
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 08:17:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729619AbgC3IHd (ORCPT
+        id S1729608AbgC3IRF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 04:07:33 -0400
-Received: from cmccmta3.chinamobile.com ([221.176.66.81]:10545 "EHLO
-        cmccmta3.chinamobile.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729546AbgC3IHc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 04:07:32 -0400
-X-Greylist: delayed 546 seconds by postgrey-1.27 at vger.kernel.org; Mon, 30 Mar 2020 04:07:31 EDT
-Received: from spf.mail.chinamobile.com (unknown[172.16.121.17]) by rmmx-syy-dmz-app12-12012 (RichMail) with SMTP id 2eec5e81a66c798-0a7d3; Mon, 30 Mar 2020 15:57:32 +0800 (CST)
-X-RM-TRANSID: 2eec5e81a66c798-0a7d3
-X-RM-TagInfo: emlType=0                                       
-X-RM-SPAM-FLAG: 00000000
-Received: from localhost.localdomain (unknown[223.105.0.243])
-        by rmsmtp-syy-appsvr09-12009 (RichMail) with SMTP id 2ee95e81a66be31-380c6;
-        Mon, 30 Mar 2020 15:57:32 +0800 (CST)
-X-RM-TRANSID: 2ee95e81a66be31-380c6
-From:   Ding Xiang <dingxiang@cmss.chinamobile.com>
-To:     linus.walleij@linaro.org
-Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] pinctrl: nomadik:remove unneeded variable
-Date:   Mon, 30 Mar 2020 15:56:26 +0800
-Message-Id: <1585554986-26521-1-git-send-email-dingxiang@cmss.chinamobile.com>
-X-Mailer: git-send-email 1.9.1
+        Mon, 30 Mar 2020 04:17:05 -0400
+Received: from mx2.suse.de ([195.135.220.15]:39218 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729575AbgC3IRF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Mar 2020 04:17:05 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id C576DAEA1;
+        Mon, 30 Mar 2020 08:17:00 +0000 (UTC)
+Date:   Mon, 30 Mar 2020 10:16:52 +0200
+From:   Borislav Petkov <bp@suse.de>
+To:     Michael Ellerman <mpe@ellerman.id.au>
+Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        "H.J. Lu" <hjl.tools@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@elte.hu>, "H. Peter Anvin" <hpa@zytor.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        PowerPC <linuxppc-dev@lists.ozlabs.org>
+Subject: Re: linux-next: build failure after merge of the tip tree
+Message-ID: <20200330081652.GB14624@zn.tnic>
+References: <20200330143529.4dafeb34@canb.auug.org.au>
+ <CAMe9rOqnRCEdHhSHOT=Ut11D3O2WhjiFYhvPnaU5dANZNPE-=A@mail.gmail.com>
+ <20200330150819.7f0199a2@canb.auug.org.au>
+ <20200330074823.GA14624@zn.tnic>
+ <87wo72uv3z.fsf@mpe.ellerman.id.au>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <87wo72uv3z.fsf@mpe.ellerman.id.au>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-ret is unneeded, just return 0.
+On Mon, Mar 30, 2020 at 07:04:16PM +1100, Michael Ellerman wrote:
+> Or just squash the hunk Stephen posted into the commit, which is what I
+> thought would happen to begin with.
+> 
+> You can have my ack for it:
+> 
+> Acked-by: Michael Ellerman <mpe@ellerman.id.au> (powerpc)
 
-Signed-off-by: Ding Xiang <dingxiang@cmss.chinamobile.com>
----
- drivers/pinctrl/nomadik/pinctrl-nomadik.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+Thanks but considering how this is not really urgent stuff and it can
+take its time and get some wider testing before getting upstream, I'd
+prefer to delay it.
 
-diff --git a/drivers/pinctrl/nomadik/pinctrl-nomadik.c b/drivers/pinctrl/nomadik/pinctrl-nomadik.c
-index 95f864d..4c56483 100644
---- a/drivers/pinctrl/nomadik/pinctrl-nomadik.c
-+++ b/drivers/pinctrl/nomadik/pinctrl-nomadik.c
-@@ -1340,8 +1340,6 @@ struct nmk_cfg_param {
- 
- static int nmk_dt_pin_config(int index, int val, unsigned long *config)
- {
--	int ret = 0;
--
- 	if (nmk_cfg_params[index].choice == NULL)
- 		*config = nmk_cfg_params[index].config;
- 	else {
-@@ -1351,7 +1349,7 @@ static int nmk_dt_pin_config(int index, int val, unsigned long *config)
- 				nmk_cfg_params[index].choice[val];
- 		}
- 	}
--	return ret;
-+	return 0;
- }
- 
- static const char *nmk_find_pin_name(struct pinctrl_dev *pctldev, const char *pin_name)
 -- 
-1.9.1
+Regards/Gruss,
+    Boris.
 
-
-
+SUSE Software Solutions Germany GmbH, GF: Felix Imendörffer, HRB 36809, AG Nürnberg
