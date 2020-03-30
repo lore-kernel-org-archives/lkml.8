@@ -2,103 +2,85 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17C70C2D0EB
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 08:33:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67EB6C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 08:34:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EDACF2073B
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 08:33:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F39A2073B
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 08:34:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="iTKn3CoZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729708AbgC3Idy (ORCPT
+        id S1729673AbgC3Ie6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 04:33:54 -0400
-Received: from mout.kundenserver.de ([212.227.126.135]:53923 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729661AbgC3Idx (ORCPT
+        Mon, 30 Mar 2020 04:34:58 -0400
+Received: from us-smtp-delivery-74.mimecast.com ([216.205.24.74]:34520 "EHLO
+        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729594AbgC3Ie5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 04:33:53 -0400
-Received: from envy ([87.123.107.212]) by mrelayeu.kundenserver.de (mreue011
- [212.227.15.167]) with ESMTPSA (Nemesis) id 1MHoAg-1jXf2D0Va2-00ErkA; Mon, 30
- Mar 2020 10:33:39 +0200
-Message-ID: <048ceb3ded2c8a4b7063b6ac1ad1605f569e9057.camel@richard-neumann.de>
-Subject: Re: [PATCH v4 2/4] SFH: PCI driver to add support of AMD sensor
- fusion Hub using HID framework
-From:   Richard Neumann <mail@richard-neumann.de>
-To:     Sandeep Singh <Sandeep.Singh@amd.com>
-Cc:     Shyam-sundar.S-k@amd.com, jikos@kernel.org,
-        benjamin.tissoires@redhat.com, linux-kernel@vger.kernel.org,
-        linux-input@vger.kernel.org, srinivas.pandruvada@linux.intel.com,
-        jic23@kernel.org, linux-iio@vger.kernel.org, hdegoede@redhat.com,
-        Nehal-bakulchandra.Shah@amd.com
-Date:   Mon, 30 Mar 2020 10:33:36 +0200
-In-Reply-To: <1582779537-25662-3-git-send-email-Sandeep.Singh@amd.com>
-References: <1582779537-25662-1-git-send-email-Sandeep.Singh@amd.com>
-         <1582779537-25662-3-git-send-email-Sandeep.Singh@amd.com>
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-xu5K+B2HpkD7ANo/1hwE"
-User-Agent: Evolution 3.36.1 
+        Mon, 30 Mar 2020 04:34:57 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1585557296;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=VI4VJLvwA2Wnz1xcO7Y+Io0RjGUfdGgCzJ2iSp2r2DU=;
+        b=iTKn3CoZXapbq49bu6BdujZ63BNuVMTASDQi53Sb/KRfXsKAnlLtu0w2LLe86R8Fuk4o8m
+        SDO4NDDL7a8iWmTT5RBKLafolQ/s6rBNxbXw/o4bR79jYkGnJDhlZXu9dBIzheT16N74Rc
+        2sS3JH3vNhwWdVYpCRhJwHMsRC/CMXo=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-191-VzhFc2_pNWWc7DodrKjNHA-1; Mon, 30 Mar 2020 04:34:52 -0400
+X-MC-Unique: VzhFc2_pNWWc7DodrKjNHA-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 6191E8010C8;
+        Mon, 30 Mar 2020 08:34:50 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.40.195.36])
+        by smtp.corp.redhat.com (Postfix) with SMTP id ACE89100EBAF;
+        Mon, 30 Mar 2020 08:34:47 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+        oleg@redhat.com; Mon, 30 Mar 2020 10:34:50 +0200 (CEST)
+Date:   Mon, 30 Mar 2020 10:34:46 +0200
+From:   Oleg Nesterov <oleg@redhat.com>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Adam Zabrocki <pi3@pi3.com.pl>, linux-kernel@vger.kernel.org,
+        kernel-hardening@lists.openwall.com, Jann Horn <jannh@google.com>,
+        Andy Lutomirski <luto@amacapital.net>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Bernd Edlinger <bernd.edlinger@hotmail.de>
+Subject: Re: Curiosity around 'exec_id' and some problems associated with it
+Message-ID: <20200330083446.GA13522@redhat.com>
+References: <20200324215049.GA3710@pi3.com.pl>
+ <202003291528.730A329@keescook>
 MIME-Version: 1.0
-X-Provags-ID: V03:K1:52KXuA9Wvi9SCX4EGMAd8VUk0U6to71d4Rv1xC3zOrH/eUBgM6d
- rubt419lNrvV64sQ8ADhqX8lLgUhLG5+reVBNdwqpXoiBmBhJy+VLlLzI3s7SA00A7a1G4g
- XRJP00bc1JFP1IzLvr9j2/AIaeRhJyAtx1QbPfbVDWKpg6iRSHOe2zhEl4LsiQo9pVKP3WJ
- Jl0E86KjVkfWtdgR08Rnw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:UdRSUDvqg+E=:a4udqGZ7gYdKz1amxMLmrI
- In8dWEa5RVpMKM0Xqd/5SQqLUKZBVKjc4A5Zl9JxCUd26s0OMG65qUBhvKqjnB8ka8B9clKEt
- yJO/+RKkKEZL5emq2Qxu0XWJQIsXjrr6FM010e2nj/1oqi6HQgkD7EvywBecUf4h9oY6Pj1BG
- 34QNdbNTS263V220Lc/zBEKPw/Q3USrOSxyW335ONgID61xIc/W0GNHcHkwarpqzIpWH3F+jW
- dTSFBHYwu/w2eT3XzgcCUvm9D0Sp6c14h3N/BM9aP0BLSuATKMRSeRh6A9VUBlVto3uTtfEa2
- 8ITsLLSomYNO5z1vMYNf+16Ehg2U6K29cF3yXKIRbY0FqDMnIMt+fpIoG89sOHW5YCvSvjFvd
- yXInm4/6Xh49j6GmiKnLJXpKl1OcpmzK+JsSBFGhm1cAzocnVpSW8mTQihi04fZ5YNa8JM2tm
- GHRm93DwSQ5HQjS+Gb6j783luRs7oUbDEk1jrz8CP/hM/Zo+heNfb3kDAsHjrPV/8p/Pdu1nO
- cKXxT69KKhfnuxEcBhNcg8w3OjToHaJdFv5OWsjNUSv4/rgpQSMCtN4lR8Fjq3/IhACpb5kUU
- cyCQL2cJPjgqRZ7AKLupFy8whojN0dmq3hLigS6IuDJOQyc5csd8pw3z+ITAYO8Ras9kEdWKa
- TWhG33aue4juxx2HrjQ9bUX2gLMpbhyl1/Rp+KK9wQUikySwI6ICh84p8ll/dxoZYyyedg5wW
- THO29loPZZga3fm0/i8W2bwy5oCT193lvXX2hcnLyj5QFAJb55Y2i8rvIjGHbeiRi5Ft1nnVz
- o3EcBcjmnTjIt+A+uEhCn6nAmvV4rbpL4JIF04U4lE0cztzpltiCyrEx31MW0vsWRRw8Mds
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <202003291528.730A329@keescook>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 03/29, Kees Cook wrote:
+>
+> On Tue, Mar 24, 2020 at 10:50:49PM +0100, Adam Zabrocki wrote:
+> >
+> > In short, if you hold the file descriptor open over an execve() (e.g. share it
+> > with child) the old VM is preserved (refcounted) and might be never released.
+> > Essentially, mother process' VM will be still in memory (and pointer to it is
+> > valid) even if the mother process passed an execve().
 
---=-xu5K+B2HpkD7ANo/1hwE
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+This was true after e268337dfe26dfc7efd422a804dbb27977a3cccc, but please see
+6d08f2c7139790c ("proc: make sure mem_open() doesn't pin the target's memory"),
+iir it was merged soon after the 1st commit.
 
-I took some time testing the patch series on my HP ENVY x360 13-
-ag0005ng with a Ryzen 5 2500U.
-On my machine the readout of register AMD_P2C_MSG3 (0x1068C) always
-comes back as zero (0x0) and thusly activestatus will be zero as well.
-Consequently the bistmask (0x0) will not match any sensor types.
-I came up with a patch [1] on top of this patch series to add module
-parameters to be able to statically enable the different sensors.
-If I load the module with "force_accel=3D1" I get a working accelerometer
-HID device and working screen rotation through iio-sensor-proxy. This
-only works so far, if I boot the kernel with "amd_iommu=3Doff", which
-seems to be a general issue with this driver [2],[3].
-
-[1] https://gist.githubusercontent.com/conqp/e8a0793406fbe7c9714f01f3078ea3=
-3a/raw/ac2de743e68d1dd90430e57cb28df8c1dc5d1098/amd-sfh.patch
-[2] https://bbs.archlinux.org/viewtopic.php?id=3D253058
-[3] https://bbs.archlinux.org/viewtopic.php?id=3D252815
-
-
-
---=-xu5K+B2HpkD7ANo/1hwE
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQT62wKwhMqSt8WaustMqNUjvThq9wUCXoGu4AAKCRBMqNUjvThq
-90CcAP42tzB5p8epHWyLk2ibq8kfLGKbQECKP4upjJ7Y0q0llAEAvBpxLho8wZLp
-c57ghnyWscdAxbchldW7RQ4GVjX+DAs=
-=l8Eg
------END PGP SIGNATURE-----
-
---=-xu5K+B2HpkD7ANo/1hwE--
+Oleg.
 
