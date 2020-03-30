@@ -2,231 +2,296 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B0FBC2D0E5
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 15:30:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CE9DC2D0EE
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 15:30:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 419182073B
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 15:30:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 519402072E
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 15:30:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="us2gR1fE"
+	dkim=pass (1024-bit key) header.d=cumulusnetworks.com header.i=@cumulusnetworks.com header.b="WFPm18P+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729174AbgC3PaE (ORCPT
+        id S1729260AbgC3Pay (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 11:30:04 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:33977 "EHLO
+        Mon, 30 Mar 2020 11:30:54 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:40222 "EHLO
         mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729140AbgC3PaD (ORCPT
+        with ESMTP id S1726497AbgC3Pax (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 11:30:03 -0400
-Received: by mail-lj1-f196.google.com with SMTP id p10so18314915ljn.1;
-        Mon, 30 Mar 2020 08:30:01 -0700 (PDT)
+        Mon, 30 Mar 2020 11:30:53 -0400
+Received: by mail-lj1-f196.google.com with SMTP id 19so18520516ljj.7
+        for <linux-kernel@vger.kernel.org>; Mon, 30 Mar 2020 08:30:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Cq26ZWZgsMRlQvotSIdZaVx4Pdp3fvhPVBSTmjGmY1o=;
-        b=us2gR1fEwH/wJobb6qxke9Tm73Hq2On8K7uBBO3dc1zpx8Hhbe+SD8JGHqg0dc8Ih+
-         fC24nCRxwiv///kX9y4AtLjrQgsyDs5/nDLucuSrZjRZCpteU1H6vvKIqORoDLupu8Ma
-         QDIhviKZBDiCp4i1plnA1P+9hDBVPkG32nYpDHIcJsrG4EsrMH47FQSKYKCepGl16nFL
-         8zLqh15VyjwcoQGZZXr6InB/fvFE7Abr20gF3Psn6qvyzjWlqR8ht9nQwhQCTEGIuuqm
-         A7shdtqWeQ7YrI8+WTWgRDkdy+JIK1MPH097vckCWJQuV51LwFXe3Ir3WDAIivjkxRmE
-         4NMg==
+        d=cumulusnetworks.com; s=google;
+        h=subject:to:references:from:message-id:date:user-agent:mime-version
+         :in-reply-to:content-language:content-transfer-encoding;
+        bh=MfvOmIspdiTZx+YN5qTVFVKcge2K4qjWfcK20gYqoiw=;
+        b=WFPm18P+hehJbtGqWYENKe7ddU+TNRoiGFEHzzgaHjvlyIAOfWUndukoDy5czuymXp
+         cpXBbX/Max/+ijBO3/972mh5Np4N5bLdmbRb23ETsvotZta6d1CXNBS5Qt5gzOetZ/00
+         zWi5rHehHULUBYcw54npWZ0Crm7CI3ZbquKdc=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Cq26ZWZgsMRlQvotSIdZaVx4Pdp3fvhPVBSTmjGmY1o=;
-        b=A9Ygw1URvu9GT/mjYe8yu/N659Ko8Ehss+QR3+8z6/Bp5PM0/tyc4SOwZf4R2WPkjO
-         yk7nLrJ1OvGFf9jW6CmTipUiVAQFIwmo3kDd6vk7O8hNqoyK17nZ9Lz+HJHxHa1N3I5j
-         YWw36k1RbIG4vL2KlSUqMyzxPsV97TA4JcxWz3+JeK66rFuR7IyWNR/D4K0CZdg9ycO6
-         e2lfMwFSpxMW0G0nsnQ7QcbyfbpaAcOTyfveHl+NFRANNsT8IZUYxlV5CYhizVa25H9/
-         HRQdsZJjCoIMJUx8/quKUsLwxu8Y54/lveNf7emFIysop4WIgTblrGoJjowfmmB/tFOe
-         xhow==
-X-Gm-Message-State: AGi0PuaLiUTu5e+VYz85bNOEikqNkRQD1DR7nGyoPsn1hAeJSX1o3bHz
-        98XDGRd7WtZqKJEPicswVG4=
-X-Google-Smtp-Source: APiQypJbSW4LONyeiim8HyIOCs0IlQRLUHPsXnht8+KfKoRCETSGy8qf60cDhOSsnuAv9xHJNUH3YQ==
-X-Received: by 2002:a05:651c:2c7:: with SMTP id f7mr7532189ljo.152.1585582200798;
-        Mon, 30 Mar 2020 08:30:00 -0700 (PDT)
-Received: from pc636 (h5ef52e31.seluork.dyn.perspektivbredband.net. [94.245.46.49])
-        by smtp.gmail.com with ESMTPSA id v19sm9117066lfg.9.2020.03.30.08.29.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Mar 2020 08:30:00 -0700 (PDT)
-From:   Uladzislau Rezki <urezki@gmail.com>
-X-Google-Original-From: Uladzislau Rezki <urezki@pc636>
-Date:   Mon, 30 Mar 2020 17:29:51 +0200
-To:     "Joel Fernandes (Google)" <joel@joelfernandes.org>
-Cc:     "Joel Fernandes (Google)" <joel@joelfernandes.org>,
-        kbuild-all@lists.01.org, linux-kernel@vger.kernel.org,
-        "Uladzislau Rezki (Sony)" <urezki@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Lai Jiangshan <jiangshanlai@gmail.com>, linux-mm@kvack.org,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        rcu@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>
-Subject: Re: [PATCH 10/18] rcu/tree: Maintain separate array for vmalloc ptrs
-Message-ID: <20200330152951.GA2553@pc636>
-References: <20200330023248.164994-11-joel@joelfernandes.org>
- <202003301715.9gMSa9Ca%lkp@intel.com>
+        h=x-gm-message-state:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=MfvOmIspdiTZx+YN5qTVFVKcge2K4qjWfcK20gYqoiw=;
+        b=k+Umdu9sJHUix9Vqx2aSn2GYHtakxIJ2X4urAXc08zf7R7R3l9mO4B5msWW3yJY5e+
+         3MJmxi2swgCY5Fohu5nHVR8mMv2q1efEFJBi/CzSuSE/Yj8zOzxmj6I8l+l0N35W4oDr
+         ms0PY8cdn1LDdSKjyAp0LcqX9Q4zJzaXHPcfP2JrEDY6kW9BmarpvRacQZrfm684uQpo
+         GT8rKRlikr0MKdZGTgtyAYDLSX5pcpqgcUxC1HV77Adeo1woN9TwkBkHL6BzoJa+UO+C
+         3/fvYNseCQQybqJ7l/FbfTYl2AqZGZmA9rj2G398eP3CVNFmUXFiaiX/0YxvgUe4y8I8
+         sMYg==
+X-Gm-Message-State: AGi0PuYHqTy+N4Y0ASH2hUE5CYLHjG4Ht5Vh9eLnF8kL2dE3ddvKm7X1
+        GgopKgIRDZmGP5IcJiE4jerbFQ==
+X-Google-Smtp-Source: APiQypJVMkEwXyZdFdVxNim1GI03DpNiFA7mBosSFqvQa+y/+K4ycMmI8fUT16G9PLy3Jofz5CDU2w==
+X-Received: by 2002:a2e:b88b:: with SMTP id r11mr7333845ljp.116.1585582248717;
+        Mon, 30 Mar 2020 08:30:48 -0700 (PDT)
+Received: from [192.168.0.109] (84-238-136-197.ip.btc-net.bg. [84.238.136.197])
+        by smtp.gmail.com with ESMTPSA id n26sm6882205ljg.93.2020.03.30.08.30.46
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 30 Mar 2020 08:30:47 -0700 (PDT)
+Subject: Re: [RFC net-next v4 4/9] bridge: mrp: Implement netlink interface to
+ configure MRP
+To:     Horatiu Vultur <horatiu.vultur@microchip.com>, davem@davemloft.net,
+        jiri@resnulli.us, ivecera@redhat.com, kuba@kernel.org,
+        roopa@cumulusnetworks.com, olteanv@gmail.com, andrew@lunn.ch,
+        UNGLinuxDriver@microchip.com, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, bridge@lists.linux-foundation.org
+References: <20200327092126.15407-1-horatiu.vultur@microchip.com>
+ <20200327092126.15407-5-horatiu.vultur@microchip.com>
+From:   Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
+Message-ID: <c64a8e3c-e86a-641d-3cdd-0cec645dd3d1@cumulusnetworks.com>
+Date:   Mon, 30 Mar 2020 18:30:45 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <202003301715.9gMSa9Ca%lkp@intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200327092126.15407-5-horatiu.vultur@microchip.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello, Joel.
-
-Sent out the patch fixing build error.
-
---
-Vlad Rezki
-
-> Hi "Joel,
+On 27/03/2020 11:21, Horatiu Vultur wrote:
+> Implement netlink interface to configure MRP. The implementation
+> will do sanity checks over the attributes and then eventually call the MRP
+> interface.
 > 
-> Thank you for the patch! Yet something to improve:
-> 
-> [auto build test ERROR on rcu/dev]
-> [also build test ERROR on rcu/rcu/next next-20200327]
-> [cannot apply to linus/master linux/master v5.6]
-> [if your patch is applied to the wrong git tree, please drop us a note to help
-> improve the system. BTW, we also suggest to use '--base' option to specify the
-> base tree in git format-patch, please see https://stackoverflow.com/a/37406982]
-> 
-> url:    https://github.com/0day-ci/linux/commits/Joel-Fernandes-Google/kfree_rcu-improvements-for-rcu-dev/20200330-113719
-> base:   https://git.kernel.org/pub/scm/linux/kernel/git/paulmck/linux-rcu.git dev
-> config: mips-randconfig-a001-20200330 (attached as .config)
-> compiler: mips64el-linux-gcc (GCC) 5.5.0
-> reproduce:
->         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
->         chmod +x ~/bin/make.cross
->         # save the attached .config to linux build tree
->         GCC_VERSION=5.5.0 make.cross ARCH=mips 
-> 
-> If you fix the issue, kindly add following tag
-> Reported-by: kbuild test robot <lkp@intel.com>
-> 
-> All errors (new ones prefixed by >>):
-> 
->    kernel/rcu/tree.c: In function 'kfree_rcu_work':
-> >> kernel/rcu/tree.c:2946:4: error: implicit declaration of function 'vfree' [-Werror=implicit-function-declaration]
->        vfree(bvhead->records[i]);
->        ^
->    cc1: some warnings being treated as errors
-> 
-> vim +/vfree +2946 kernel/rcu/tree.c
-> 
->   2884	
->   2885	/*
->   2886	 * This function is invoked in workqueue context after a grace period.
->   2887	 * It frees all the objects queued on ->bhead_free or ->head_free.
->   2888	 */
->   2889	static void kfree_rcu_work(struct work_struct *work)
->   2890	{
->   2891		unsigned long flags;
->   2892		struct kvfree_rcu_bulk_data *bkhead, *bknext;
->   2893		struct kvfree_rcu_bulk_data *bvhead, *bvnext;
->   2894		struct rcu_head *head, *next;
->   2895		struct kfree_rcu_cpu *krcp;
->   2896		struct kfree_rcu_cpu_work *krwp;
->   2897		int i;
->   2898	
->   2899		krwp = container_of(to_rcu_work(work),
->   2900					struct kfree_rcu_cpu_work, rcu_work);
->   2901	
->   2902		krcp = krwp->krcp;
->   2903		spin_lock_irqsave(&krcp->lock, flags);
->   2904		/* Channel 1. */
->   2905		bkhead = krwp->bkvhead_free[0];
->   2906		krwp->bkvhead_free[0] = NULL;
->   2907	
->   2908		/* Channel 2. */
->   2909		bvhead = krwp->bkvhead_free[1];
->   2910		krwp->bkvhead_free[1] = NULL;
->   2911	
->   2912		/* Channel 3. */
->   2913		head = krwp->head_free;
->   2914		krwp->head_free = NULL;
->   2915		spin_unlock_irqrestore(&krcp->lock, flags);
->   2916	
->   2917		/* kmalloc()/kfree() channel. */
->   2918		for (; bkhead; bkhead = bknext) {
->   2919			bknext = bkhead->next;
->   2920	
->   2921			debug_rcu_bhead_unqueue(bkhead);
->   2922	
->   2923			rcu_lock_acquire(&rcu_callback_map);
->   2924			trace_rcu_invoke_kfree_bulk_callback(rcu_state.name,
->   2925				bkhead->nr_records, bkhead->records);
->   2926	
->   2927			kfree_bulk(bkhead->nr_records, bkhead->records);
->   2928			rcu_lock_release(&rcu_callback_map);
->   2929	
->   2930			if (cmpxchg(&krcp->bkvcache[0], NULL, bkhead))
->   2931				free_page((unsigned long) bkhead);
->   2932	
->   2933			cond_resched_tasks_rcu_qs();
->   2934		}
->   2935	
->   2936		/* vmalloc()/vfree() channel. */
->   2937		for (; bvhead; bvhead = bvnext) {
->   2938			bvnext = bvhead->next;
->   2939	
->   2940			debug_rcu_bhead_unqueue(bvhead);
->   2941	
->   2942			rcu_lock_acquire(&rcu_callback_map);
->   2943			for (i = 0; i < bvhead->nr_records; i++) {
->   2944				trace_rcu_invoke_kvfree_callback(rcu_state.name,
->   2945					(struct rcu_head *) bvhead->records[i], 0);
-> > 2946				vfree(bvhead->records[i]);
->   2947			}
->   2948			rcu_lock_release(&rcu_callback_map);
->   2949	
->   2950			if (cmpxchg(&krcp->bkvcache[1], NULL, bvhead))
->   2951				free_page((unsigned long) bvhead);
->   2952	
->   2953			cond_resched_tasks_rcu_qs();
->   2954		}
->   2955	
->   2956		/*
->   2957		 * This path covers emergency case only due to high
->   2958		 * memory pressure also means low memory condition,
->   2959		 * when we could not allocate a bulk array.
->   2960		 *
->   2961		 * Under that condition an object is queued to the
->   2962		 * list instead.
->   2963		 */
->   2964		for (; head; head = next) {
->   2965			unsigned long offset = (unsigned long)head->func;
->   2966			void *ptr = (void *)head - offset;
->   2967	
->   2968			next = head->next;
->   2969			debug_rcu_head_unqueue((struct rcu_head *)ptr);
->   2970			rcu_lock_acquire(&rcu_callback_map);
->   2971			trace_rcu_invoke_kvfree_callback(rcu_state.name, head, offset);
->   2972	
->   2973			if (!WARN_ON_ONCE(!__is_kvfree_rcu_offset(offset)))
->   2974				kvfree(ptr);
->   2975	
->   2976			rcu_lock_release(&rcu_callback_map);
->   2977			cond_resched_tasks_rcu_qs();
->   2978		}
->   2979	}
->   2980	
-> 
+> Signed-off-by: Horatiu Vultur <horatiu.vultur@microchip.com>
 > ---
-> 0-DAY CI Kernel Test Service, Intel Corporation
-> https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+>  net/bridge/br_mrp_netlink.c | 176 ++++++++++++++++++++++++++++++++++++
+>  1 file changed, 176 insertions(+)
+>  create mode 100644 net/bridge/br_mrp_netlink.c
+> 
 
+Hi Horatiu,
+
+> diff --git a/net/bridge/br_mrp_netlink.c b/net/bridge/br_mrp_netlink.c
+> new file mode 100644
+> index 000000000000..043b7f6cddbe
+> --- /dev/null
+> +++ b/net/bridge/br_mrp_netlink.c
+> @@ -0,0 +1,176 @@
+> +// SPDX-License-Identifier: GPL-2.0-or-later
+> +
+> +#include <net/genetlink.h>
+> +
+> +#include <uapi/linux/mrp_bridge.h>
+> +#include "br_private.h"
+> +#include "br_private_mrp.h"
+> +
+> +static int br_mrp_parse_instance(struct net_bridge *br, struct nlattr *attr,
+> +				 int cmd)
+> +{
+> +	struct br_mrp_instance *instance;
+> +
+> +	if (nla_len(attr) != sizeof(*instance))
+> +		return -EINVAL;
+> +
+> +	instance = nla_data(attr);
+> +
+> +	if (cmd == RTM_SETLINK)
+> +		return br_mrp_add(br, instance);
+> +	else
+> +		return br_mrp_del(br, instance);
+> +}
+> +
+> +static int br_mrp_parse_port_state(struct net_bridge *br,
+> +				   struct net_bridge_port *p,
+> +				   struct nlattr *attr)
+> +{
+> +	enum br_mrp_port_state_type state;
+> +
+> +	if (nla_len(attr) != sizeof(u32) || !p)
+> +		return -EINVAL;
+> +
+> +	state = nla_get_u32(attr);
+> +
+> +	return br_mrp_set_port_state(p, state);
+> +}
+> +
+> +static int br_mrp_parse_port_role(struct net_bridge *br,
+> +				  struct net_bridge_port *p,
+> +				  struct nlattr *attr)
+> +{
+> +	struct br_mrp_port_role *role;
+> +
+> +	if (nla_len(attr) != sizeof(*role) || !p)
+> +		return -EINVAL;
+> +
+> +	role = nla_data(attr);
+> +
+> +	return br_mrp_set_port_role(p, role->ring_id, role->role);
+> +}
+> +
+> +static int br_mrp_parse_ring_state(struct net_bridge *br, struct nlattr *attr)
+> +{
+> +	struct br_mrp_ring_state *state;
+> +
+> +	if (nla_len(attr) != sizeof(*state))
+> +		return -EINVAL;
+> +
+> +	state = nla_data(attr);
+> +
+> +	return br_mrp_set_ring_state(br, state->ring_id, state->ring_state);
+> +}
+> +
+> +static int br_mrp_parse_ring_role(struct net_bridge *br, struct nlattr *attr)
+> +{
+> +	struct br_mrp_ring_role *role;
+> +
+> +	if (nla_len(attr) != sizeof(*role))
+> +		return -EINVAL;
+> +
+> +	role = nla_data(attr);
+> +
+> +	return br_mrp_set_ring_role(br, role->ring_id, role->ring_role);
+> +}
+> +
+> +static int br_mrp_parse_start_test(struct net_bridge *br, struct nlattr *attr)
+> +{
+> +	struct br_mrp_start_test *test;
+> +
+> +	if (nla_len(attr) != sizeof(*test))
+> +		return -EINVAL;
+> +
+> +	test = nla_data(attr);
+> +
+> +	return br_mrp_start_test(br, test->ring_id, test->interval,
+> +				 test->max_miss, test->period);
+> +}
+> +
+> +int br_mrp_parse(struct net_bridge *br, struct net_bridge_port *p,
+> +		 struct nlattr *attr, int cmd)
+> +{
+> +	struct nlattr *mrp;
+> +	int rem, err;
+> +
+> +	nla_for_each_nested(mrp, attr, rem) {
+> +		err = 0;
+> +		switch (nla_type(mrp)) {
+> +		case IFLA_BRIDGE_MRP_INSTANCE:
+> +			err = br_mrp_parse_instance(br, mrp, cmd);
+> +			if (err)
+> +				return err;
+> +			break;
+> +		case IFLA_BRIDGE_MRP_PORT_STATE:
+> +			err = br_mrp_parse_port_state(br, p, mrp);
+> +			if (err)
+> +				return err;
+> +			break;
+> +		case IFLA_BRIDGE_MRP_PORT_ROLE:
+> +			err = br_mrp_parse_port_role(br, p, mrp);
+> +			if (err)
+> +				return err;
+> +			break;
+> +		case IFLA_BRIDGE_MRP_RING_STATE:
+> +			err = br_mrp_parse_ring_state(br, mrp);
+> +			if (err)
+> +				return err;
+> +			break;
+> +		case IFLA_BRIDGE_MRP_RING_ROLE:
+> +			err = br_mrp_parse_ring_role(br, mrp);
+> +			if (err)
+> +				return err;
+> +			break;
+> +		case IFLA_BRIDGE_MRP_START_TEST:
+> +			err = br_mrp_parse_start_test(br, mrp);
+> +			if (err)
+> +				return err;
+> +			break;
+> +		}
+> +	}
+> +
+> +	return 0;
+> +}
+
+All of the above can be implemented via nla_parse_nested() with a proper policy.
+You don't have to manually check for the attribute size. Then your code follows
+the netlink normal (e.g. check the bridge netlink handling) of:
+ nla_parse_nested(tb)
+ if (tb[attr])
+    do_something_with(tb[attr])
+ ...
+
+
+> +
+> +void br_mrp_port_open(struct net_device *dev, u8 loc)
+> +{
+> +	struct nlattr *af, *mrp;
+> +	struct ifinfomsg *hdr;
+> +	struct nlmsghdr *nlh;
+> +	struct sk_buff *skb;
+> +	int err = -ENOBUFS;
+> +	struct net *net;
+> +
+> +	net = dev_net(dev);
+> +
+> +	skb = nlmsg_new(1024, GFP_ATOMIC);
+
+Please add a function which calculates the size based on the attribute sizes.
+
+> +	if (!skb)
+> +		goto errout;
+> +
+> +	nlh = nlmsg_put(skb, 0, 0, RTM_NEWLINK, sizeof(*hdr), 0);
+> +	if (!nlh)
+> +		goto errout;
+> +
+> +	hdr = nlmsg_data(nlh);
+> +	hdr->ifi_family = AF_BRIDGE;
+> +	hdr->__ifi_pad = 0;
+> +	hdr->ifi_type = dev->type;
+> +	hdr->ifi_index = dev->ifindex;
+> +	hdr->ifi_flags = dev_get_flags(dev);
+> +	hdr->ifi_change = 0;
+> +
+> +	af = nla_nest_start_noflag(skb, IFLA_AF_SPEC);
+> +	mrp = nla_nest_start_noflag(skb, IFLA_BRIDGE_MRP);
+> +
+
+These can return an error which has to be handled.
+
+> +	nla_put_u32(skb, IFLA_BRIDGE_MRP_RING_OPEN, loc);
+> +
+
+Same for this.
+
+> +	nla_nest_end(skb, mrp);
+> +	nla_nest_end(skb, af);
+> +	nlmsg_end(skb, nlh);
+> +
+> +	rtnl_notify(skb, net, 0, RTNLGRP_LINK, NULL, GFP_ATOMIC);
+> +	return;
+> +errout:
+> +	rtnl_set_sk_err(net, RTNLGRP_LINK, err);
+> +}
+> +EXPORT_SYMBOL(br_mrp_port_open);
+> 
 
