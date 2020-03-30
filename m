@@ -2,104 +2,190 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6672C43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 17:49:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94B48C2D0EB
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 17:50:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 81B0120776
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 17:49:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 640402073B
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 17:50:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bOkPWGwR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729842AbgC3Rtx convert rfc822-to-8bit (ORCPT
+        id S1729474AbgC3RuB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 13:49:53 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:58158 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728124AbgC3Rtx (ORCPT
+        Mon, 30 Mar 2020 13:50:01 -0400
+Received: from us-smtp-delivery-74.mimecast.com ([63.128.21.74]:50796 "EHLO
+        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730206AbgC3Rt7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 13:49:53 -0400
-Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02UHXZET098875
-        for <linux-kernel@vger.kernel.org>; Mon, 30 Mar 2020 13:49:52 -0400
-Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 3022nmj739-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Mon, 30 Mar 2020 13:49:51 -0400
-Received: from localhost
-        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <naveen.n.rao@linux.vnet.ibm.com>;
-        Mon, 30 Mar 2020 18:49:37 +0100
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
-        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Mon, 30 Mar 2020 18:49:34 +0100
-Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 02UHnifJ52690966
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 30 Mar 2020 17:49:44 GMT
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id BB8F8A404D;
-        Mon, 30 Mar 2020 17:49:44 +0000 (GMT)
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 252E0A4055;
-        Mon, 30 Mar 2020 17:49:44 +0000 (GMT)
-Received: from localhost (unknown [9.85.126.25])
-        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Mon, 30 Mar 2020 17:49:43 +0000 (GMT)
-Date:   Mon, 30 Mar 2020 23:19:41 +0530
-From:   "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>
-Subject: Re: [PATCH 06/12] powerpc/32s: Make local symbols non visible in
- hash_low.
-To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Paul Mackerras <paulus@samba.org>
-Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-References: <dff05b59a161434a546010507000816750073f28.1585474724.git.christophe.leroy@c-s.fr>
-        <a19105b21c08020c2af9bf4a37daff8642066ef1.1585474724.git.christophe.leroy@c-s.fr>
-        <1585587984.mmaeo0dvju.naveen@linux.ibm.com>
-        <6bb184ed-b42f-f334-9445-e4fde107e8c9@c-s.fr>
-In-Reply-To: <6bb184ed-b42f-f334-9445-e4fde107e8c9@c-s.fr>
+        Mon, 30 Mar 2020 13:49:59 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1585590598;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=VXITz6a4t0dcGhoFiL5Naxzq4cQ+raar83CvULBdiIM=;
+        b=bOkPWGwRFZ2Y+Lx4JbSFU1XKq4x/Zn/YIUyu/5VAjx5qT0/Ielrms7kRGD/mWo5KBZL+Wu
+        TKmhdxrFRwqzmUYnTbabz5BNGhLfcc51HahSf/i+qHo/FhRQLXi+O5OQVExft4nXc5jU7+
+        w9IU5Ja8sBnOwXvWTDTtqAzbKi8t6Yc=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-88-apH4BbMWM2eldESph-N2Pw-1; Mon, 30 Mar 2020 13:49:54 -0400
+X-MC-Unique: apH4BbMWM2eldESph-N2Pw-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E72128017CC;
+        Mon, 30 Mar 2020 17:49:51 +0000 (UTC)
+Received: from madcap2.tricolour.ca (unknown [10.10.110.46])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 4C8319128F;
+        Mon, 30 Mar 2020 17:49:40 +0000 (UTC)
+Date:   Mon, 30 Mar 2020 13:49:37 -0400
+From:   Richard Guy Briggs <rgb@redhat.com>
+To:     Paul Moore <paul@paul-moore.com>
+Cc:     nhorman@tuxdriver.com, linux-api@vger.kernel.org,
+        containers@lists.linux-foundation.org,
+        LKML <linux-kernel@vger.kernel.org>, dhowells@redhat.com,
+        linux-audit@redhat.com, netfilter-devel@vger.kernel.org,
+        ebiederm@xmission.com, simo@redhat.com, netdev@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, Eric Paris <eparis@parisplace.org>,
+        mpatel@redhat.com, Serge Hallyn <serge@hallyn.com>
+Subject: Re: [PATCH ghak90 V8 07/16] audit: add contid support for signalling
+ the audit daemon
+Message-ID: <20200330174937.xalrsiev7q3yxsx2@madcap2.tricolour.ca>
+References: <20200318215550.es4stkjwnefrfen2@madcap2.tricolour.ca>
+ <CAHC9VhSdDDP7Ec-w61NhGxZG5ZiekmrBCAg=Y=VJvEZcgQh46g@mail.gmail.com>
+ <20200319220249.jyr6xmwvflya5mks@madcap2.tricolour.ca>
+ <CAHC9VhR84aN72yNB_j61zZgrQV1y6yvrBLNY7jp7BqQiEDL+cw@mail.gmail.com>
+ <20200324210152.5uydf3zqi3dwshfu@madcap2.tricolour.ca>
+ <CAHC9VhTQUnVhoN3JXTAQ7ti+nNLfGNVXhT6D-GYJRSpJHCwDRg@mail.gmail.com>
+ <20200330134705.jlrkoiqpgjh3rvoh@madcap2.tricolour.ca>
+ <CAHC9VhQTsEMcYAF1CSHrrVn07DR450W9j6sFVfKAQZ0VpheOfw@mail.gmail.com>
+ <20200330162156.mzh2tsnovngudlx2@madcap2.tricolour.ca>
+ <CAHC9VhTRzZXJ6yUFL+xZWHNWZFTyiizBK12ntrcSwmgmySbkWw@mail.gmail.com>
 MIME-Version: 1.0
-User-Agent: astroid/v0.15-13-gb675b421
- (https://github.com/astroidmail/astroid)
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8BIT
-X-TM-AS-GCONF: 00
-x-cbid: 20033017-0016-0000-0000-000002FB1E1A
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20033017-0017-0000-0000-0000335ED924
-Message-Id: <1585590551.xcqq0ccw21.naveen@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-03-30_07:2020-03-30,2020-03-30 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015
- lowpriorityscore=0 malwarescore=0 mlxscore=0 spamscore=0 mlxlogscore=833
- bulkscore=0 impostorscore=0 phishscore=0 priorityscore=1501 suspectscore=0
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2003300154
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHC9VhTRzZXJ6yUFL+xZWHNWZFTyiizBK12ntrcSwmgmySbkWw@mail.gmail.com>
+User-Agent: NeoMutt/20180716
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Christophe Leroy wrote:
+On 2020-03-30 13:34, Paul Moore wrote:
+> On Mon, Mar 30, 2020 at 12:22 PM Richard Guy Briggs <rgb@redhat.com> wrote:
+> > On 2020-03-30 10:26, Paul Moore wrote:
+> > > On Mon, Mar 30, 2020 at 9:47 AM Richard Guy Briggs <rgb@redhat.com> wrote:
+> > > > On 2020-03-28 23:11, Paul Moore wrote:
+> > > > > On Tue, Mar 24, 2020 at 5:02 PM Richard Guy Briggs <rgb@redhat.com> wrote:
+> > > > > > On 2020-03-23 20:16, Paul Moore wrote:
+> > > > > > > On Thu, Mar 19, 2020 at 6:03 PM Richard Guy Briggs <rgb@redhat.com> wrote:
+> > > > > > > > On 2020-03-18 18:06, Paul Moore wrote:
+> > > > > > >
+> > > > > > > ...
+> > > > > > >
+> > > > > > > > > I hope we can do better than string manipulations in the kernel.  I'd
+> > > > > > > > > much rather defer generating the ACID list (if possible), than
+> > > > > > > > > generating a list only to keep copying and editing it as the record is
+> > > > > > > > > sent.
+> > > > > > > >
+> > > > > > > > At the moment we are stuck with a string-only format.
+> > > > > > >
+> > > > > > > Yes, we are.  That is another topic, and another set of changes I've
+> > > > > > > been deferring so as to not disrupt the audit container ID work.
+> > > > > > >
+> > > > > > > I was thinking of what we do inside the kernel between when the record
+> > > > > > > triggering event happens and when we actually emit the record to
+> > > > > > > userspace.  Perhaps we collect the ACID information while the event is
+> > > > > > > occurring, but we defer generating the record until later when we have
+> > > > > > > a better understanding of what should be included in the ACID list.
+> > > > > > > It is somewhat similar (but obviously different) to what we do for
+> > > > > > > PATH records (we collect the pathname info when the path is being
+> > > > > > > resolved).
+> > > > > >
+> > > > > > Ok, now I understand your concern.
+> > > > > >
+> > > > > > In the case of NETFILTER_PKT records, the CONTAINER_ID record is the
+> > > > > > only other possible record and they are generated at the same time with
+> > > > > > a local context.
+> > > > > >
+> > > > > > In the case of any event involving a syscall, that CONTAINER_ID record
+> > > > > > is generated at the time of the rest of the event record generation at
+> > > > > > syscall exit.
+> > > > > >
+> > > > > > The others are only generated when needed, such as the sig2 reply.
+> > > > > >
+> > > > > > We generally just store the contobj pointer until we actually generate
+> > > > > > the CONTAINER_ID (or CONTAINER_OP) record.
+> > > > >
+> > > > > Perhaps I'm remembering your latest spin of these patches incorrectly,
+> > > > > but there is still a big gap between when the record is generated and
+> > > > > when it is sent up to the audit daemon.  Most importantly in that gap
+> > > > > is the whole big queue/multicast/unicast mess.
+> > > >
+> > > > So you suggest generating that record on the fly once it reaches the end
+> > > > of the audit_queue just before being sent?  That sounds...  disruptive.
+> > > > Each audit daemon is going to have its own queues, so by the time it
+> > > > ends up in a particular queue, we'll already know its scope and would
+> > > > have the right list of contids to print in that record.
+> > >
+> > > I'm not suggesting any particular solution, I'm just pointing out a
+> > > potential problem.  It isn't clear to me that you've thought about how
+> > > we generate a multiple records, each with the correct ACID list
+> > > intended for a specific audit daemon, based on a single audit event.
+> > > Explain to me how you intend that to work and we are good.  Be
+> > > specific because I'm not convinced we are talking on the same plane
+> > > here.
+> >
+> > Well, every time a record gets generated, *any* record gets generated,
+> > we'll need to check for which audit daemons this record is in scope and
+> > generate a different one for each depending on the content and whether
+> > or not the content is influenced by the scope.
 > 
-> 
-> Le 30/03/2020 à 19:06, Naveen N. Rao a écrit :
->> Christophe Leroy wrote:
->>> In hash_low.S, a lot of named local symbols are used instead of
->>> numbers to ease code lisibility. However, they don't need to be
->>                 ^^^^^^^^^^
->> Nit..                  visibility
-> 
-> 
-> Lol, no.
-> 
-> I mean't "lisibilité" in French, which means "readability"
+> That's the problem right there - we don't want to have to generate a
+> unique record for *each* auditd on *every* record.  That is a recipe
+> for disaster.
 
-Touche :D
+I don't see how we can get around this.
 
-- Naveen
+We will already have that problem for PIDs in different PID namespaces.
+
+We already need to use a different serial number in each auditd/queue,
+or else we serialize *all* audit events on the machine and either leak
+information to the nested daemons that there are other events happenning
+on the machine, or confuse the host daemon because it now thinks that we
+are losing events due to serial numbers missing because some nested
+daemon issued an event that was not relevant to the host daemon,
+consuming a globally serial audit message sequence number.
+
+> Solving this for all of the known audit records is not something we
+> need to worry about in depth at the moment (although giving it some
+> casual thought is not a bad thing), but solving this for the audit
+> container ID information *is* something we need to worry about right
+> now.
+
+If you think that a different nested contid value string per daemon is
+not acceptable, then we are back to issuing a record that has only *one*
+contid listed without any nesting information.  This brings us back to
+the original problem of keeping *all* audit log history since the boot
+of the machine to be able to track the nesting of any particular contid.
+
+What am I missing?  What do you suggest?
+
+> paul moore
+
+- RGB
+
+--
+Richard Guy Briggs <rgb@redhat.com>
+Sr. S/W Engineer, Kernel Security, Base Operating Systems
+Remote, Ottawa, Red Hat Canada
+IRC: rgb, SunRaycer
+Voice: +1.647.777.2635, Internal: (81) 32635
 
