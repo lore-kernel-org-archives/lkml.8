@@ -2,219 +2,109 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3450CC2D0EB
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 19:15:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99CA7C2D0EB
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 19:16:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0FCF92072E
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 19:15:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 801E620771
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 19:16:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728167AbgC3TPs (ORCPT
+        id S1728255AbgC3TQ2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 15:15:48 -0400
-Received: from mga02.intel.com ([134.134.136.20]:20322 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727148AbgC3TPq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 15:15:46 -0400
-IronPort-SDR: 8KtbCPY5Lu0PUTdqJko/6tQknPqvNCFE/bRNhK/CI0p06/H4PCskDr4DCfkzQT33v72cjmAA4E
- 15ibhIiF8Zmg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Mar 2020 12:15:46 -0700
-IronPort-SDR: CuW0s6d3C6jgWjYELttw3b5i5K55kw8y+4J/cnN/qfAEc3mTNh0s5PXcls2KX4g0TdnDzaK1iB
- vZlfkoWaN1KQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,325,1580803200"; 
-   d="scan'208";a="283739683"
-Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
-  by fmsmga002.fm.intel.com with ESMTP; 30 Mar 2020 12:15:44 -0700
-Received: from kbuild by lkp-server01 with local (Exim 4.89)
-        (envelope-from <lkp@intel.com>)
-        id 1jIzsu-0001Nm-2x; Tue, 31 Mar 2020 03:15:44 +0800
-Date:   Tue, 31 Mar 2020 03:15:19 +0800
-From:   kbuild test robot <lkp@intel.com>
-To:     "x86-ml" <x86@kernel.org>
-Cc:     linux-kernel@vger.kernel.org
-Subject: [tip:master] BUILD SUCCESS
- 5dde265e04ea5f714d1e8c059fab5051b41f645a
-Message-ID: <5e824547.+lrTL7zrJxv87+qR%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        Mon, 30 Mar 2020 15:16:28 -0400
+Received: from asavdk3.altibox.net ([109.247.116.14]:47348 "EHLO
+        asavdk3.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726672AbgC3TQ2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Mar 2020 15:16:28 -0400
+Received: from ravnborg.org (unknown [158.248.194.18])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by asavdk3.altibox.net (Postfix) with ESMTPS id 7155D20024;
+        Mon, 30 Mar 2020 21:16:20 +0200 (CEST)
+Date:   Mon, 30 Mar 2020 21:16:19 +0200
+From:   Sam Ravnborg <sam@ravnborg.org>
+To:     Qiujun Huang <hqjagain@gmail.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Cc:     b.zolnierkie@samsung.com, daniel.vetter@ffwll.ch,
+        maarten.lankhorst@linux.intel.com, daniel.thompson@linaro.org,
+        ghalat@redhat.com, dri-devel@lists.freedesktop.org,
+        linux-fbdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] fbcon: fix null-ptr-deref in fbcon_switch
+Message-ID: <20200330191619.GF7594@ravnborg.org>
+References: <20200329085647.25133-1-hqjagain@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+In-Reply-To: <20200329085647.25133-1-hqjagain@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-CMAE-Score: 0
+X-CMAE-Analysis: v=2.3 cv=eMA9ckh1 c=1 sm=1 tr=0
+        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=D19gQVrFAAAA:8
+        a=hSkVLCK3AAAA:8 a=pGLkceISAAAA:8 a=7gkXJVJtAAAA:8 a=NVFoAeSCgwShZuBWzHEA:9
+        a=ViYWLu_RVrLAkblt:21 a=QLy0bD8Az-XStLsx:21 a=CjuIK1q_8ugA:10
+        a=W4TVW4IDbPiebHqcZpNg:22 a=cQPPKAXgyycSBL8etih5:22
+        a=E9Po1WZjFZOl8hwRPBS3:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git  master
-branch HEAD: 5dde265e04ea5f714d1e8c059fab5051b41f645a  Merge branch 'sched/core'
+Hi Qiujun
 
-elapsed time: 483m
+On Sun, Mar 29, 2020 at 04:56:47PM +0800, Qiujun Huang wrote:
+> Set logo_shown to FBCON_LOGO_CANSHOW when the vc was deallocated.
+> 
+> syzkaller report: https://lkml.org/lkml/2020/3/27/403
+> general protection fault, probably for non-canonical address
+> 0xdffffc000000006c: 0000 [#1] SMP KASAN
+> KASAN: null-ptr-deref in range [0x0000000000000360-0x0000000000000367]
+> RIP: 0010:fbcon_switch+0x28f/0x1740
+> drivers/video/fbdev/core/fbcon.c:2260
+> 
+> Call Trace:
+> redraw_screen+0x2a8/0x770 drivers/tty/vt/vt.c:1008
+> vc_do_resize+0xfe7/0x1360 drivers/tty/vt/vt.c:1295
+> fbcon_init+0x1221/0x1ab0 drivers/video/fbdev/core/fbcon.c:1219
+> visual_init+0x305/0x5c0 drivers/tty/vt/vt.c:1062
+> do_bind_con_driver+0x536/0x890 drivers/tty/vt/vt.c:3542
+> do_take_over_console+0x453/0x5b0 drivers/tty/vt/vt.c:4122
+> do_fbcon_takeover+0x10b/0x210 drivers/video/fbdev/core/fbcon.c:588
+> fbcon_fb_registered+0x26b/0x340 drivers/video/fbdev/core/fbcon.c:3259
+> do_register_framebuffer drivers/video/fbdev/core/fbmem.c:1664 [inline]
+> register_framebuffer+0x56e/0x980 drivers/video/fbdev/core/fbmem.c:1832
+> dlfb_usb_probe.cold+0x1743/0x1ba3 drivers/video/fbdev/udlfb.c:1735
+> usb_probe_interface+0x310/0x800 drivers/usb/core/driver.c:374
+> 
+> accessing vc_cons[logo_shown].d->vc_top causes the bug.
+> 
+> Reported-by: syzbot+732528bae351682f1f27@syzkaller.appspotmail.com
+> Signed-off-by: Qiujun Huang <hqjagain@gmail.com>
+> ---
+>  drivers/video/fbdev/core/fbcon.c | 3 +++
+>  1 file changed, 3 insertions(+)
+> 
+> diff --git a/drivers/video/fbdev/core/fbcon.c b/drivers/video/fbdev/core/fbcon.c
+> index bb6ae995c2e5..5eb3fc90f9f6 100644
+> --- a/drivers/video/fbdev/core/fbcon.c
+> +++ b/drivers/video/fbdev/core/fbcon.c
+> @@ -1283,6 +1283,9 @@ static void fbcon_deinit(struct vc_data *vc)
+>  	if (!con_is_bound(&fb_con))
+>  		fbcon_exit();
+>  
+> +	if (vc->vc_num == logo_shown)
+> +		logo_shown = FBCON_LOGO_CANSHOW;
+> +
+>  	return;
+>  }
 
-configs tested: 152
-configs skipped: 0
+Looks much better than the previous version.
+Acked-by: Sam Ravnborg <sam@ravnborg.org>
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+I expect Bartlomiej to review/apply.
 
-arm64                            allyesconfig
-arm                              allyesconfig
-arm64                            allmodconfig
-arm64                             allnoconfig
-arm                               allnoconfig
-arm                           efm32_defconfig
-arm                         at91_dt_defconfig
-arm                        shmobile_defconfig
-arm64                               defconfig
-arm                          exynos_defconfig
-arm                        multi_v5_defconfig
-arm                           sunxi_defconfig
-arm                        multi_v7_defconfig
-sparc                            allyesconfig
-i386                              allnoconfig
-i386                             allyesconfig
-i386                             alldefconfig
-i386                                defconfig
-ia64                             allmodconfig
-ia64                                defconfig
-ia64                              allnoconfig
-ia64                             allyesconfig
-ia64                             alldefconfig
-arm                              allmodconfig
-c6x                              allyesconfig
-c6x                        evmc6678_defconfig
-nios2                         10m50_defconfig
-nios2                         3c120_defconfig
-openrisc                    or1ksim_defconfig
-openrisc                 simple_smp_defconfig
-xtensa                       common_defconfig
-xtensa                          iss_defconfig
-nds32                               defconfig
-nds32                             allnoconfig
-csky                                defconfig
-alpha                               defconfig
-h8300                       h8s-sim_defconfig
-h8300                     edosk2674_defconfig
-m68k                       m5475evb_defconfig
-m68k                             allmodconfig
-h8300                    h8300h-sim_defconfig
-m68k                           sun3_defconfig
-m68k                          multi_defconfig
-arc                              allyesconfig
-arc                                 defconfig
-microblaze                      mmu_defconfig
-microblaze                    nommu_defconfig
-powerpc                           allnoconfig
-powerpc                             defconfig
-powerpc                       ppc64_defconfig
-powerpc                          rhel-kconfig
-mips                      fuloong2e_defconfig
-mips                      malta_kvm_defconfig
-mips                             allyesconfig
-mips                         64r6el_defconfig
-mips                              allnoconfig
-mips                           32r2_defconfig
-mips                             allmodconfig
-parisc                            allnoconfig
-parisc                           allyesconfig
-parisc                generic-32bit_defconfig
-parisc                generic-64bit_defconfig
-x86_64               randconfig-a003-20200330
-x86_64               randconfig-a002-20200330
-i386                 randconfig-a001-20200330
-i386                 randconfig-a002-20200330
-i386                 randconfig-a003-20200330
-x86_64               randconfig-a001-20200330
-riscv                randconfig-a001-20200330
-mips                 randconfig-a001-20200330
-m68k                 randconfig-a001-20200330
-parisc               randconfig-a001-20200330
-alpha                randconfig-a001-20200330
-nds32                randconfig-a001-20200330
-microblaze           randconfig-a001-20200330
-h8300                randconfig-a001-20200330
-nios2                randconfig-a001-20200330
-c6x                  randconfig-a001-20200330
-sparc64              randconfig-a001-20200330
-csky                 randconfig-a001-20200330
-openrisc             randconfig-a001-20200330
-s390                 randconfig-a001-20200330
-sh                   randconfig-a001-20200330
-xtensa               randconfig-a001-20200330
-x86_64               randconfig-c001-20200330
-x86_64               randconfig-c002-20200330
-x86_64               randconfig-c003-20200330
-i386                 randconfig-c001-20200330
-i386                 randconfig-c002-20200330
-i386                 randconfig-c003-20200330
-i386                 randconfig-d003-20200330
-i386                 randconfig-d001-20200330
-i386                 randconfig-d002-20200330
-x86_64               randconfig-d001-20200330
-x86_64               randconfig-d003-20200330
-x86_64               randconfig-d002-20200330
-x86_64               randconfig-e001-20200330
-x86_64               randconfig-e002-20200330
-x86_64               randconfig-e003-20200330
-i386                 randconfig-e001-20200330
-i386                 randconfig-e002-20200330
-i386                 randconfig-e003-20200330
-i386                 randconfig-f001-20200330
-i386                 randconfig-f003-20200330
-i386                 randconfig-f002-20200330
-x86_64               randconfig-f002-20200330
-x86_64               randconfig-f001-20200330
-x86_64               randconfig-g002-20200330
-i386                 randconfig-g001-20200330
-x86_64               randconfig-h001-20200330
-x86_64               randconfig-h002-20200330
-x86_64               randconfig-h003-20200330
-i386                 randconfig-h001-20200330
-i386                 randconfig-h002-20200330
-i386                 randconfig-h003-20200330
-sparc                randconfig-a001-20200330
-arm64                randconfig-a001-20200330
-ia64                 randconfig-a001-20200330
-arc                  randconfig-a001-20200330
-arm                  randconfig-a001-20200330
-riscv                            allyesconfig
-riscv                    nommu_virt_defconfig
-riscv                             allnoconfig
-riscv                               defconfig
-riscv                          rv32_defconfig
-riscv                            allmodconfig
-s390                       zfcpdump_defconfig
-s390                          debug_defconfig
-s390                             allyesconfig
-s390                              allnoconfig
-s390                             allmodconfig
-s390                             alldefconfig
-s390                                defconfig
-sh                          rsk7269_defconfig
-sh                               allmodconfig
-sh                            titan_defconfig
-sh                  sh7785lcr_32bit_defconfig
-sh                                allnoconfig
-sparc                               defconfig
-sparc64                          allmodconfig
-sparc64                           allnoconfig
-sparc64                          allyesconfig
-sparc64                             defconfig
-um                           x86_64_defconfig
-um                             i386_defconfig
-um                                  defconfig
-x86_64                                   rhel
-x86_64                               rhel-7.6
-x86_64                         rhel-7.2-clear
-x86_64                                    lkp
-x86_64                              fedora-25
-x86_64                                  kexec
-
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+	Sam
