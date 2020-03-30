@@ -2,153 +2,76 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78747C2D0E5
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 16:43:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54726C2D0EE
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 16:44:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4510A20578
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 16:43:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585586631;
-	bh=lYx8dQ57y0d5MN/3ampKR+ycZilkAFs7v03ESlCPYLw=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=ULiI2MVS2Swxyw5QsBLD05nmBoKi+TiR4aj2gF+kLbcV9sb3JA17RHZsUu1V3lN8o
-	 ITEzJ3g0D7klfEDViHrDOmModUHcel9FfL/luzEvF21MAnLQO101otY/q3hkwh6LP8
-	 zQq2PAjnRwTVdvjFbJldpaE6zJj+SOpONNWLfNm0=
+	by mail.kernel.org (Postfix) with ESMTP id 35E1420578
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 16:44:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729791AbgC3Qnt (ORCPT
+        id S1729823AbgC3QoD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 12:43:49 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:40263 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727728AbgC3Qnr (ORCPT
+        Mon, 30 Mar 2020 12:44:03 -0400
+Received: from relay10.mail.gandi.net ([217.70.178.230]:48833 "EHLO
+        relay10.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727728AbgC3QoD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 12:43:47 -0400
-Received: by mail-oi1-f193.google.com with SMTP id y71so16231582oia.7;
-        Mon, 30 Mar 2020 09:43:46 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=MS5McrXGm+Pe+d4UtF2bcuDD71uOb63Bd3udfUatanQ=;
-        b=oIN6Y97sfl4A2JxxOcJco0qeoVLKlGHA+1ysQbpAQmsYwavNQ3bMSDDRViGwXR4ozD
-         pZP6NYj3QnFTm3cz/nSaJwyx2Q6UTiRbBD5j/5OyO1JhlVJmShKixxsO4KaIQkB5C3P3
-         7teqCaK0rgdoBFdwBjfeBLIHxmWUOEF4lOKnYP/XRsg4UBhGGK5G6aFnjI5WvFhMUeBP
-         XAY0H1oJtUrWRGx9G8Udyf2rr25/05r764OI98bXqJHhns+QUiszYJzGJEFVC3C4VCPV
-         qX36cJCqjCVVNrFDVipLc+QjDb5FiELdlJEjJwNNzSyTsEdP7ZaTC6tC/uv6Euzq/DoR
-         1Dcw==
-X-Gm-Message-State: ANhLgQ3LD4tEf60nTwOJIIUWwheYQ2Hr2V2YrBWBZiaSOxRM9SNpRiTc
-        9YK3pVilwrsPBcT+AgFuhSkEb/cIZvA0L0nKxpM=
-X-Google-Smtp-Source: ADFU+vv6dTWbFFfplOy7A9gS+VA/HDhHhkXGm09HWyUxIGqiERq6nNeYm6JujuZdGLgs+KRghBp98zlIG61fY901FVI=
-X-Received: by 2002:a05:6808:8f:: with SMTP id s15mr171623oic.110.1585586626471;
- Mon, 30 Mar 2020 09:43:46 -0700 (PDT)
+        Mon, 30 Mar 2020 12:44:03 -0400
+Received: from localhost (lfbn-lyo-1-9-35.w86-202.abo.wanadoo.fr [86.202.105.35])
+        (Authenticated sender: alexandre.belloni@bootlin.com)
+        by relay10.mail.gandi.net (Postfix) with ESMTPSA id 1DC86240008;
+        Mon, 30 Mar 2020 16:44:00 +0000 (UTC)
+Date:   Mon, 30 Mar 2020 18:44:00 +0200
+From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
+To:     Biwen Li <biwen.li@oss.nxp.com>
+Cc:     leoyang.li@nxp.com, linux-rtc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, jiafei.pan@nxp.com,
+        Biwen Li <biwen.li@nxp.com>
+Subject: Re: rtc: fsl-ftm-alarm: add shutdown interface
+Message-ID: <20200330164400.GE846876@piout.net>
+References: <20200330122616.24044-1-biwen.li@oss.nxp.com>
 MIME-Version: 1.0
-References: <cover.1585343507.git.gayatri.kammela@intel.com> <9359b8e261d69983b1eed2b8e53ef9eabfdfdd51.1585343507.git.gayatri.kammela@intel.com>
-In-Reply-To: <9359b8e261d69983b1eed2b8e53ef9eabfdfdd51.1585343507.git.gayatri.kammela@intel.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Mon, 30 Mar 2020 18:43:35 +0200
-Message-ID: <CAJZ5v0j8OaqM6k52Ar9sYn0Ea_u9+MBB0rcMWv6vGBt5jXCQBQ@mail.gmail.com>
-Subject: Re: [PATCH v2 1/3] ACPI: fix: Update Tiger Lake ACPI device IDs
-To:     Gayatri Kammela <gayatri.kammela@intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        "Zhang, Rui" <rui.zhang@intel.com>
-Cc:     Linux PM <linux-pm@vger.kernel.org>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Len Brown <lenb@kernel.org>,
-        Darren Hart <dvhart@infradead.org>,
-        Alex Hung <alex.hung@canonical.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Amit Kucheria <amit.kucheria@verdurent.com>,
-        Mika Westerberg <mika.westerberg@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "Prestopine, Charles D" <charles.d.prestopine@intel.com>,
-        "5 . 6+" <stable@vger.kernel.org>,
-        Srinivas Pandruvada <srinivas.pandruvada@intel.com>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200330122616.24044-1-biwen.li@oss.nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 27, 2020 at 10:34 PM Gayatri Kammela
-<gayatri.kammela@intel.com> wrote:
->
-> Tiger Lake's new unique ACPI device IDs for DPTF and fan drivers are not
-> valid as the IDs are missing 'C'. Fix the IDs by updating them.
->
-> After the update, the new IDs should now look like
-> INT1047 --> INTC1047
-> INT1040 --> INTC1040
-> INT1043 --> INTC1043
-> INT1044 --> INTC1044
->
-> Fixes: 55cfe6a5c582 ("ACPI: DPTF: Add Tiger Lake ACPI device IDs")
-> Fixes: c248dfe7e0ca ("ACPI: fan: Add Tiger Lake ACPI device ID")
-> Cc: 5.6+ <stable@vger.kernel.org> # 5.6+
-> Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> Cc: Srinivas Pandruvada <srinivas.pandruvada@intel.com>
-> Cc: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> Suggested-by: Srinivas Pandruvada <srinivas.pandruvada@intel.com>
-> Signed-off-by: Gayatri Kammela <gayatri.kammela@intel.com>
+On 30/03/2020 20:26:16+0800, Biwen Li wrote:
+> From: Biwen Li <biwen.li@nxp.com>
+> 
+> Add shutdown interface
+> 
+> Signed-off-by: Biwen Li <biwen.li@nxp.com>
 > ---
->  drivers/acpi/device_pm.c            | 2 +-
->  drivers/acpi/dptf/dptf_power.c      | 2 +-
->  drivers/acpi/dptf/int340x_thermal.c | 8 ++++----
->  3 files changed, 6 insertions(+), 6 deletions(-)
->
-> diff --git a/drivers/acpi/device_pm.c b/drivers/acpi/device_pm.c
-> index b64c62bfcea5..80dae3b3c36a 100644
-> --- a/drivers/acpi/device_pm.c
-> +++ b/drivers/acpi/device_pm.c
-> @@ -1321,7 +1321,7 @@ int acpi_dev_pm_attach(struct device *dev, bool power_on)
->          */
->         static const struct acpi_device_id special_pm_ids[] = {
->                 {"PNP0C0B", }, /* Generic ACPI fan */
-> -               {"INT1044", }, /* Fan for Tiger Lake generation */
-> +               {"INTC1044", }, /* Fan for Tiger Lake generation */
->                 {"INT3404", }, /* Fan */
->                 {}
->         };
-> diff --git a/drivers/acpi/dptf/dptf_power.c b/drivers/acpi/dptf/dptf_power.c
-> index 387f27ef3368..e5fb34bfa52c 100644
-> --- a/drivers/acpi/dptf/dptf_power.c
-> +++ b/drivers/acpi/dptf/dptf_power.c
-> @@ -97,7 +97,7 @@ static int dptf_power_remove(struct platform_device *pdev)
+>  drivers/rtc/rtc-fsl-ftm-alarm.c | 10 ++++++++++
+>  1 file changed, 10 insertions(+)
+> 
+> diff --git a/drivers/rtc/rtc-fsl-ftm-alarm.c b/drivers/rtc/rtc-fsl-ftm-alarm.c
+> index d7fa6c16f47b..118a775e8316 100644
+> --- a/drivers/rtc/rtc-fsl-ftm-alarm.c
+> +++ b/drivers/rtc/rtc-fsl-ftm-alarm.c
+> @@ -307,6 +307,15 @@ static int ftm_rtc_probe(struct platform_device *pdev)
+>  	return 0;
 >  }
->
->  static const struct acpi_device_id int3407_device_ids[] = {
-> -       {"INT1047", 0},
-> +       {"INTC1047", 0},
->         {"INT3407", 0},
->         {"", 0},
->  };
-> diff --git a/drivers/acpi/dptf/int340x_thermal.c b/drivers/acpi/dptf/int340x_thermal.c
-> index 1ec7b6900662..29b5c77256dd 100644
-> --- a/drivers/acpi/dptf/int340x_thermal.c
-> +++ b/drivers/acpi/dptf/int340x_thermal.c
-> @@ -13,10 +13,10 @@
->
->  #define INT3401_DEVICE 0X01
->  static const struct acpi_device_id int340x_thermal_device_ids[] = {
-> -       {"INT1040"},
-> -       {"INT1043"},
-> -       {"INT1044"},
-> -       {"INT1047"},
-> +       {"INTC1040"},
-> +       {"INTC1043"},
-> +       {"INTC1044"},
-> +       {"INTC1047"},
->         {"INT3400"},
->         {"INT3401", INT3401_DEVICE},
->         {"INT3402"},
-> --
+>  
+> +static void ftm_rtc_shutdown(struct platform_device *pdev)
+> +{
+> +	struct ftm_rtc *rtc = platform_get_drvdata(pdev);
+> +
+> +	ftm_irq_acknowledge(rtc);
+> +	ftm_irq_disable(rtc);
+> +	ftm_clean_alarm(rtc);
 
-I can take this along with the other two patches in the series if that
-is fine by Andy and Rui.
+If the alarm is able to start the platform, then you probably don't want
+to disable the alarm on shutdown.
 
-Thanks!
+-- 
+Alexandre Belloni, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
