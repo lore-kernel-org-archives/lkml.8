@@ -2,184 +2,147 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F28EC43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 13:15:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03F25C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 13:16:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C8A4520757
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 13:15:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C3FA820733
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 13:16:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=cloudflare.com header.i=@cloudflare.com header.b="B4aNZ73V"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WcPY6bXG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730299AbgC3NPg (ORCPT
+        id S1730309AbgC3NQB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 09:15:36 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:56088 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730288AbgC3NPg (ORCPT
+        Mon, 30 Mar 2020 09:16:01 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:40942 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730192AbgC3NQB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 09:15:36 -0400
-Received: by mail-wm1-f68.google.com with SMTP id r16so2055020wmg.5
-        for <linux-kernel@vger.kernel.org>; Mon, 30 Mar 2020 06:15:34 -0700 (PDT)
+        Mon, 30 Mar 2020 09:16:01 -0400
+Received: by mail-wr1-f67.google.com with SMTP id u10so21559464wro.7;
+        Mon, 30 Mar 2020 06:16:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cloudflare.com; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=LfIlxScnHZVuwjqrv90OqAsj+bqUS/oDr+dehBCUUOE=;
-        b=B4aNZ73V9a79klahCoUBEKpxTe/HnntTbwiZqmpuAo4qgAHAUzTCFZ4D6yHiPwSNKV
-         jPBfQm07NAzxWJbLkqdCN3/wxHjspIn3NqLgCPaMTbAromtv4JcAHh8gNtFR3yUu5svT
-         /oX/k2OtIo4ilqDa5C3hr39bVL2yMEMkD/lJc=
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=VGcf5Y3br1ZN5VCsPF1qnkiLgAjNrdQuMuRN5l4Pvao=;
+        b=WcPY6bXGUtrqK29GdrJLzVQKsEUNxf6CZtZNDnVxzJWOjk48gxdrUrBmiiBU9KZoKu
+         iU+GjFa/4Dt8hTJOzc4f9T7PoxTBEQs37M+4LA74vM7pjtTLg25Vqe7+HdfKYyCWuYRc
+         scvbS7King5krfP/ccSLX5xuzv2u3o0InqqHlYCsGConLttzaDpgzvD5PDTtSjYHXuj9
+         TDjPjUirfIM9VTfRKF4b6nPBPnzQ8bN6RES+wo2r0UD+dGl3yCx19kTXkCp7wEeK1+Dm
+         Ei9gjtzYaL9HSx/Z61BcYbu+AszTzJXhLCyMLUi3DjsHVwop3otBbpJHcujJr6hfykCA
+         WwAQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=LfIlxScnHZVuwjqrv90OqAsj+bqUS/oDr+dehBCUUOE=;
-        b=MwBNFsMKGsakzdqFCTmudtLoMk9qfQo6sLhDU6tag12Ee1GVAI7cVPHedfX1QumZMG
-         MQ9n3utOApbt0Wzzy2BofM2jX2HBR/s0q3QyBBjQAH1/aPdx3TzaObb0RBKHRzhelmA+
-         n/rpE5LTr362iDkJLFbBe2ll8o45gUfQHkkwYB3UAIEVNVvhhnKqwQvo7VJ7XmPTak8W
-         Ge4dkLxGa51MWXHAOMkneQoimAz8fWU4wRdM7jvRveI9QneSbDbc+bi/7/qXdFJgOTJv
-         y9oWHY21e83keECrzbrXY3ImPyBIVgROcFwMPNnHpGVcwsuzKP76gJ4SuDuY5psgdPYB
-         DNYg==
-X-Gm-Message-State: ANhLgQ2gaGk3I+5Qpxl4pL0dxQYRwBJp5Qzli0HjO+JhHSoDZx0j+Ur+
-        jrbff6WaBwENjJT7KxpEikqFHw==
-X-Google-Smtp-Source: ADFU+vumPgVA6fYAO89ld7mY2LICwGYoTdIgxIq7yRImL486GrHWvdr4NKBcCMXpVevsCknNpP5F+g==
-X-Received: by 2002:a7b:c842:: with SMTP id c2mr13931018wml.154.1585574133896;
-        Mon, 30 Mar 2020 06:15:33 -0700 (PDT)
-Received: from localhost.localdomain ([88.144.89.159])
-        by smtp.gmail.com with ESMTPSA id f14sm21135398wmb.3.2020.03.30.06.15.33
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=VGcf5Y3br1ZN5VCsPF1qnkiLgAjNrdQuMuRN5l4Pvao=;
+        b=Y+cWxnQbk+H8fdfFhLF6aeY27IsgAF5V+/fcMXlgV0YPhtp8EkjCD2BqmwN5wCbz0Q
+         iQfTFShjdvCG+AwqibT68Cz+kiqkuNKMlUY0VkKnAhBm5/jbtYinsT+MjXI5rMmQuscz
+         fbKPp7tpwylJUUzIp7Hwa+FtqcHO6qQfELmvrwk4cmMdISBECKuxavpA4iWj/Dneg75j
+         TJaEwJxTjeESGXQDqmx9Q8udMamufe2QK2wGKg4vomZ5TtlrR7872gx81mxDHejKz5Oi
+         9jvv7XmtCHzf8BiKQFhdfGGDW2ogNFvy6Bhk0YMGpBFFzOsYGBxZVyamkFEaeGLyjmu0
+         u8WQ==
+X-Gm-Message-State: ANhLgQ3tY6D4sFIwhLu9whs8jsIAOiPVeTbuThyMqY7g38NdEJ6rl7Gl
+        /DIJMOjHigKbF5yYV3zqZVs=
+X-Google-Smtp-Source: ADFU+vuV/u/6R7hgkEgfNn1VytAziH03E4V1sQiurVNeuIkDHwm2gNEwT2lrhwXEhGVXL8EqQ+vaag==
+X-Received: by 2002:adf:ef51:: with SMTP id c17mr14779556wrp.130.1585574159436;
+        Mon, 30 Mar 2020 06:15:59 -0700 (PDT)
+Received: from localhost (pD9E51CDC.dip0.t-ipconnect.de. [217.229.28.220])
+        by smtp.gmail.com with ESMTPSA id r9sm21735228wma.47.2020.03.30.06.15.58
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Mar 2020 06:15:33 -0700 (PDT)
-From:   Ignat Korchagin <ignat@cloudflare.com>
-To:     viro@zeniv.linux.org.uk, linux-fsdevel@vger.kernel.org,
+        Mon, 30 Mar 2020 06:15:58 -0700 (PDT)
+Date:   Mon, 30 Mar 2020 15:15:57 +0200
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
+Cc:     u.kleine-koenig@pengutronix.de, linux-pwm@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Cc:     Ignat Korchagin <ignat@cloudflare.com>, kernel-team@cloudflare.com
-Subject: [PATCH 1/1] mnt: add support for non-rootfs initramfs
-Date:   Mon, 30 Mar 2020 14:14:39 +0100
-Message-Id: <20200330131439.2405-2-ignat@cloudflare.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200330131439.2405-1-ignat@cloudflare.com>
-References: <20200330131439.2405-1-ignat@cloudflare.com>
+Subject: Re: [PATCH 2/4] pwm: pca9685: remove ALL_LED PWM channel
+Message-ID: <20200330131557.GD2431644@ulmo>
+References: <20200226135229.24929-1-matthias.schiffer@ew.tq-group.com>
+ <20200226135229.24929-2-matthias.schiffer@ew.tq-group.com>
+ <20200330130757.GC2431644@ulmo>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="6Nae48J/T25AfBN4"
+Content-Disposition: inline
+In-Reply-To: <20200330130757.GC2431644@ulmo>
+User-Agent: Mutt/1.13.1 (2019-12-14)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The main need for this is to support container runtimes on stateless Linux
-system (pivot_root system call from initramfs).
 
-Normally, the task of initramfs is to mount and switch to a "real" root
-filesystem. However, on stateless systems (booting over the network) it is just
-convenient to have your "real" filesystem as initramfs from the start.
+--6Nae48J/T25AfBN4
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-This, however, breaks different container runtimes, because they usually use
-pivot_root system call after creating their mount namespace. But pivot_root does
-not work from initramfs, because initramfs runs form rootfs, which is the root
-of the mount tree and can't be unmounted.
+On Mon, Mar 30, 2020 at 03:07:57PM +0200, Thierry Reding wrote:
+> On Wed, Feb 26, 2020 at 02:52:27PM +0100, Matthias Schiffer wrote:
+> > The interaction of the ALL_LED PWM channel with the other channels was
+> > not well-defined. As the ALL_LED feature does not seem very useful and
+> > it was making the code significantly more complex, simply remove it.
+> >=20
+> > Signed-off-by: Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
+> > ---
+> >  drivers/pwm/pwm-pca9685.c | 115 ++++++--------------------------------
+> >  1 file changed, 17 insertions(+), 98 deletions(-)
+>=20
+> Applied, thanks.
 
-One workaround is to do:
+By the way, shouldn't we add something like this:
 
-  mount --bind / /
+--- >8 ---
+diff --git a/Documentation/devicetree/bindings/pwm/nxp,pca9685-pwm.txt b/Do=
+cumentation/devicetree/bindings/pwm/nxp,pca9685-pwm.txt
+index f21b55c95738..49fff008af09 100644
+--- a/Documentation/devicetree/bindings/pwm/nxp,pca9685-pwm.txt
++++ b/Documentation/devicetree/bindings/pwm/nxp,pca9685-pwm.txt
+@@ -5,8 +5,6 @@ Required properties:
+   - compatible: "nxp,pca9685-pwm"
+   - #pwm-cells: Should be 2. See pwm.yaml in this directory for a descript=
+ion of
+     the cells format.
+-    The index 16 is the ALLCALL channel, that sets all PWM channels at the=
+ same
+-    time.
 
-However, that defeats one of the purposes of using pivot_root in the cloned
-containers: get rid of host root filesystem, should the code somehow escapes the
-chroot.
+ Optional properties:
+   - invert (bool): boolean to enable inverted logic
+--- >8 ---
 
-There is a way to solve this problem from userspace, but it is much more
-cumbersome:
-  * either have to create a multilayered archive for initramfs, where the outer
-    layer creates a tmpfs filesystem and unpacks the inner layer, switches root
-    and does not forget to properly cleanup the old rootfs
-  * or we need to use keepinitrd kernel cmdline option, unpack initramfs to
-    rootfs, run a script to create our target tmpfs root, unpack the same
-    initramfs there, switch root to it and again properly cleanup the old root,
-    thus unpacking the same archive twice and also wasting memory, because
-    the kernel stores compressed initramfs image indefinitely.
+To make sure we reflect this in the device tree bindings? It doesn't
+seem like anyone uses that channel (in fact, it doesn't seem like any
+device trees actually exist in-tree that use one of these chips), so it
+should be fine to drop that.
 
-With this change we can ask the kernel (by specifying nonroot_initramfs kernel
-cmdline option) to create a "leaf" tmpfs mount for us and switch root to it
-before the initramfs handling code, so initramfs gets unpacked directly into
-the "leaf" tmpfs with rootfs being empty and no need to clean up anything.
+Thierry
 
-This also bring the behaviour in line with the older style initrd, where the
-initrd is located on some leaf filesystem in the mount tree and rootfs remaining
-empty.
+--6Nae48J/T25AfBN4
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Signed-off-by: Ignat Korchagin <ignat@cloudflare.com>
----
- fs/namespace.c | 47 +++++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 47 insertions(+)
+-----BEGIN PGP SIGNATURE-----
 
-diff --git a/fs/namespace.c b/fs/namespace.c
-index 85b5f7bea82e..a1ec862e8146 100644
---- a/fs/namespace.c
-+++ b/fs/namespace.c
-@@ -3701,6 +3701,49 @@ static void __init init_mount_tree(void)
- 	set_fs_root(current->fs, &root);
- }
- 
-+#if IS_ENABLED(CONFIG_TMPFS)
-+static int __initdata nonroot_initramfs;
-+
-+static int __init nonroot_initramfs_param(char *str)
-+{
-+	if (*str)
-+		return 0;
-+	nonroot_initramfs = 1;
-+	return 1;
-+}
-+__setup("nonroot_initramfs", nonroot_initramfs_param);
-+
-+static void __init init_nonroot_initramfs(void)
-+{
-+	int err;
-+
-+	if (!nonroot_initramfs)
-+		return;
-+
-+	err = ksys_mkdir("/root", 0700);
-+	if (err < 0)
-+		goto out;
-+
-+	err = do_mount("tmpfs", "/root", "tmpfs", 0, NULL);
-+	if (err)
-+		goto out;
-+
-+	err = ksys_chdir("/root");
-+	if (err)
-+		goto out;
-+
-+	err = do_mount(".", "/", NULL, MS_MOVE, NULL);
-+	if (err)
-+		goto out;
-+
-+	err = ksys_chroot(".");
-+	if (!err)
-+		return;
-+out:
-+	printk(KERN_WARNING "Failed to create a non-root filesystem for initramfs\n");
-+}
-+#endif /* IS_ENABLED(CONFIG_TMPFS) */
-+
- void __init mnt_init(void)
- {
- 	int err;
-@@ -3734,6 +3777,10 @@ void __init mnt_init(void)
- 	shmem_init();
- 	init_rootfs();
- 	init_mount_tree();
-+
-+#if IS_ENABLED(CONFIG_TMPFS)
-+	init_nonroot_initramfs();
-+#endif
- }
- 
- void put_mnt_ns(struct mnt_namespace *ns)
--- 
-2.20.1
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl6B8Q0ACgkQ3SOs138+
+s6Ea9g//RVwRAmIFdSd4kUfxq4mGgzkkP/iR374s8cs3YnXan9xX+Ft2PAvTEgt2
+liI+GQ+TSDIqPcq8wmKr/AZZE8SGoCMTwIdPRMiSoiHchQStGJKcqojBekvYA3+q
+VfughzQqqWT1xCgYVdRax8ZJXEhX66DHnHbIc+T8FZy8AA1zwYh7HHcrTJYvmHeC
+BbC2UyayeTP6IydIjwLt5M0bWmtDGMz4l80wXkcx4EQLdtkMPBcZ3aIXLFxys+5n
+Tr9uDiPx1o1WqWwgasK1nHRRnCYxyh9NHB3Q3q62HoGiSSkgCK8lB+Isttkex++R
+dmW8zD/yqEEcaecxaCMh/TxVTYM448ylldMSrlEt6mUY9ApE/OoFI3STqhNzRFCz
+0R5y5oNqyYAF0Wln9yMVCbiD9gFuBiSa7jhngWsF+UiWSWH0XjhIhKJCkXDec+WO
+yUCqFcczz7ybt4WHU0pckdHO12vxApdE8qjRxkLj3kwTTziUpUtu8to6ll+cyh9Z
+//hoh4+NGn8cvZDt1uakZb1zd5++AuG/btQ85EF52wG1JZI1SK9J5Mh/ftj4tIPS
+6jLknxNzLhDN1oowvzBVBDTGlTl2CHjKWvQ1de4LEiqLwc6RTrdSb+OwlLhpRxen
+449o5YfUaY9mAjjL5URkhuFzD0+/yD0uPTYXkTqfjULR/0N42Mc=
+=weCG
+-----END PGP SIGNATURE-----
 
+--6Nae48J/T25AfBN4--
