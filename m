@@ -2,165 +2,162 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.2 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A416BC43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 18:32:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0DB2C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 18:33:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8203F20714
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 18:32:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A560D20714
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 18:33:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="RdG5v0/s"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727891AbgC3ScQ (ORCPT
+        id S1727300AbgC3Sd2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 14:32:16 -0400
-Received: from foss.arm.com ([217.140.110.172]:32852 "EHLO foss.arm.com"
+        Mon, 30 Mar 2020 14:33:28 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:36016 "EHLO pegase1.c-s.fr"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726017AbgC3ScQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 14:32:16 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3C7C81FB;
-        Mon, 30 Mar 2020 11:32:15 -0700 (PDT)
-Received: from e107158-lin.cambridge.arm.com (e107158-lin.cambridge.arm.com [10.1.195.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5B4C73F68F;
-        Mon, 30 Mar 2020 11:32:08 -0700 (PDT)
-Date:   Mon, 30 Mar 2020 19:32:06 +0100
-From:   Qais Yousef <qais.yousef@arm.com>
-To:     Boqun Feng <boqun.feng@gmail.com>
-Cc:     tglx@linutronix.de, peterz@infradead.org,
-        linux-kernel@vger.kernel.org, len.brown@intel.com,
-        pkondeti@codeaurora.org, jpoimboe@redhat.com, pavel@ucw.cz,
-        konrad.wilk@oracle.com, mojha@codeaurora.org, jkosina@suse.cz,
-        mingo@kernel.org, hpa@zytor.com, rjw@rjwysocki.net,
-        linux-tip-commits@vger.kernel.org
-Subject: Re: [tip:smp/hotplug] cpu/hotplug: Abort disabling secondary CPUs if
- wakeup is pending
-Message-ID: <20200330183205.gn6c7ffpdujlrxxe@e107158-lin.cambridge.arm.com>
-References: <1559536263-16472-1-git-send-email-pkondeti@codeaurora.org>
- <tip-a66d955e910ab0e598d7a7450cbe6139f52befe7@git.kernel.org>
- <20200327025311.GA58760@debian-boqun.qqnc3lrjykvubdpftowmye0fmh.lx.internal.cloudapp.net>
+        id S1726017AbgC3Sd2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Mar 2020 14:33:28 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 48rh1230Vbz9txdm;
+        Mon, 30 Mar 2020 20:33:26 +0200 (CEST)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=RdG5v0/s; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id dA0SUK2JebX6; Mon, 30 Mar 2020 20:33:26 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 48rh121rcmz9txdd;
+        Mon, 30 Mar 2020 20:33:26 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1585593206; bh=p/fsCCqG7iIhErLf5xM3keyQ9j6k/RnOLFOsR/4oxiA=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=RdG5v0/szcbRZ7zTK6iqF67otAOH4rWaxZahhvfVhQrbNNQK5JgV14pI/wVw7+9S5
+         8ZwxqQSC1SAJqX7xViS3s8uG3uyk5tvWV+AmeXmjWBUFsSTPGBPHwhcU5JMoLzx/hG
+         kbyrH/QFzh7F3U5TA7/YOvqQ37eedFebvj80AgyE=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id B54A58B784;
+        Mon, 30 Mar 2020 20:33:24 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id dlPdieNjt6RN; Mon, 30 Mar 2020 20:33:24 +0200 (CEST)
+Received: from [192.168.4.90] (unknown [192.168.4.90])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 495AE8B752;
+        Mon, 30 Mar 2020 20:33:22 +0200 (CEST)
+Subject: Re: [PATCH 10/12] powerpc/entry32: Blacklist exception entry points
+ for kprobe.
+To:     "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Paul Mackerras <paulus@samba.org>
+Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+References: <dff05b59a161434a546010507000816750073f28.1585474724.git.christophe.leroy@c-s.fr>
+ <aea027844b12fcbc29ea78d26c5848a6794d1688.1585474724.git.christophe.leroy@c-s.fr>
+ <1585588031.jvow7mwq4x.naveen@linux.ibm.com>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Message-ID: <7f367f35-1bb8-bbb6-f399-8e911f76e043@c-s.fr>
+Date:   Mon, 30 Mar 2020 20:33:23 +0200
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200327025311.GA58760@debian-boqun.qqnc3lrjykvubdpftowmye0fmh.lx.internal.cloudapp.net>
-User-Agent: NeoMutt/20171215
+In-Reply-To: <1585588031.jvow7mwq4x.naveen@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: fr
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 03/27/20 10:53, Boqun Feng wrote:
-> Hi Thomas and Pavankumar,
+
+
+Le 30/03/2020 à 19:08, Naveen N. Rao a écrit :
+> Christophe Leroy wrote:
+>> kprobe does not handle events happening in real mode.
+>>
+>> As exception entry points are running with MMU disabled,
+>> blacklist them.
+>>
+>> Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+>> ---
+>>  arch/powerpc/kernel/entry_32.S | 7 +++++++
+>>  1 file changed, 7 insertions(+)
+>>
+>> diff --git a/arch/powerpc/kernel/entry_32.S 
+>> b/arch/powerpc/kernel/entry_32.S
+>> index 94f78c03cb79..9a1a45d6038a 100644
+>> --- a/arch/powerpc/kernel/entry_32.S
+>> +++ b/arch/powerpc/kernel/entry_32.S
+>> @@ -51,6 +51,7 @@ mcheck_transfer_to_handler:
+>>      mfspr    r0,SPRN_DSRR1
+>>      stw    r0,_DSRR1(r11)
+>>      /* fall through */
+>> +_ASM_NOKPROBE_SYMBOL(mcheck_transfer_to_handler)
+>>
+>>      .globl    debug_transfer_to_handler
+>>  debug_transfer_to_handler:
+>> @@ -59,6 +60,7 @@ debug_transfer_to_handler:
+>>      mfspr    r0,SPRN_CSRR1
+>>      stw    r0,_CSRR1(r11)
+>>      /* fall through */
+>> +_ASM_NOKPROBE_SYMBOL(debug_transfer_to_handler)
+>>
+>>      .globl    crit_transfer_to_handler
+>>  crit_transfer_to_handler:
+>> @@ -94,6 +96,7 @@ crit_transfer_to_handler:
+>>      rlwinm    r0,r1,0,0,(31 - THREAD_SHIFT)
+>>      stw    r0,KSP_LIMIT(r8)
+>>      /* fall through */
+>> +_ASM_NOKPROBE_SYMBOL(crit_transfer_to_handler)
+>>  #endif
+>>
+>>  #ifdef CONFIG_40x
+>> @@ -115,6 +118,7 @@ crit_transfer_to_handler:
+>>      rlwinm    r0,r1,0,0,(31 - THREAD_SHIFT)
+>>      stw    r0,KSP_LIMIT(r8)
+>>      /* fall through */
+>> +_ASM_NOKPROBE_SYMBOL(crit_transfer_to_handler)
+>>  #endif
+>>
+>>  /*
+>> @@ -127,6 +131,7 @@ crit_transfer_to_handler:
+>>      .globl    transfer_to_handler_full
+>>  transfer_to_handler_full:
+>>      SAVE_NVGPRS(r11)
+>> +_ASM_NOKPROBE_SYMBOL(transfer_to_handler_full)
+>>      /* fall through */
+>>
+>>      .globl    transfer_to_handler
+>> @@ -286,6 +291,8 @@ reenable_mmu:
+>>      lwz    r2, GPR2(r11)
+>>      b    fast_exception_return
+>>  #endif
+>> +_ASM_NOKPROBE_SYMBOL(transfer_to_handler)
+>> +_ASM_NOKPROBE_SYMBOL(transfer_to_handler_cont)
 > 
-> I have a question about this patch, please see below:
-> 
-> On Wed, Jun 12, 2019 at 05:34:08AM -0700, tip-bot for Pavankumar Kondeti wrote:
-> > Commit-ID:  a66d955e910ab0e598d7a7450cbe6139f52befe7
-> > Gitweb:     https://git.kernel.org/tip/a66d955e910ab0e598d7a7450cbe6139f52befe7
-> > Author:     Pavankumar Kondeti <pkondeti@codeaurora.org>
-> > AuthorDate: Mon, 3 Jun 2019 10:01:03 +0530
-> > Committer:  Thomas Gleixner <tglx@linutronix.de>
-> > CommitDate: Wed, 12 Jun 2019 11:03:05 +0200
-> > 
-> > cpu/hotplug: Abort disabling secondary CPUs if wakeup is pending
-> > 
-> > When "deep" suspend is enabled, all CPUs except the primary CPU are frozen
-> > via CPU hotplug one by one. After all secondary CPUs are unplugged the
-> > wakeup pending condition is evaluated and if pending the suspend operation
-> > is aborted and the secondary CPUs are brought up again.
-> > 
-> > CPU hotplug is a slow operation, so it makes sense to check for wakeup
-> > pending in the freezer loop before bringing down the next CPU. This
-> > improves the system suspend abort latency significantly.
-> > 
-> 
-> From the commit message, it makes sense to add the pm_wakeup_pending()
-> check if freeze_secondary_cpus() is used for system suspend. However,
-> freeze_secondary_cpus() is also used in kexec path on arm64:
-> 
-> 	kernel_kexec():
-> 	  machine_shutdown():
-> 	    disable_nonboot_cpus():
-> 	      freeze_secondary_cpus()
+> These are added after 'reenable_mmu', which is itself not blacklisted. 
+> Is that intentional?
 
-FWIW, I fixed this already and the change was picked up:
+Yes I put it as the complete end of the entry part, ie just before 
+stack_ovf which is a function by itself.
 
-	https://lore.kernel.org/lkml/20200323135110.30522-7-qais.yousef@arm.com/
+Note that reenable_mmu is inside an #ifdef CONFIG_TRACE_IRQFLAGS.
 
-Only x86 now uses disable_nonboot_cpus().
+I'm not completely sure where to put the _ASM_NOKPROBE_SYMBOL()s, that's 
+the reason why I put it close to the symbol itself in my first series.
 
-# tip/smp/core
+Could you have a look at the code and tell me what looks the most 
+appropriate as a location to you ?
 
-$ git grep disable_nonboot_cpus
-Documentation/power/suspend-and-cpuhotplug.rst:                              disable_nonboot_cpus()
-Documentation/power/suspend-and-cpuhotplug.rst:                       /* disable_nonboot_cpus() complete */
-arch/x86/power/cpu.c:   ret = disable_nonboot_cpus();
-include/linux/cpu.h:static inline int disable_nonboot_cpus(void)
-include/linux/cpu.h:static inline int disable_nonboot_cpus(void) { return 0; }
-kernel/cpu.c:    * this even in case of failure as all disable_nonboot_cpus() users are
+https://elixir.bootlin.com/linux/v5.6/source/arch/powerpc/kernel/entry_32.S#L230
 
 Thanks
-
---
-Qais Yousef
-
-> 
-> , so I wonder whether the pm_wakeup_pending() makes sense in this
-> situation? Because IIUC, in this case we want to reboot the system
-> regardlessly, the pm_wakeup_pending() checking seems to be inappropriate
-> then.
-> 
-> I'm asking this because I'm debugging a kexec failure on ARM64 guest on
-> Hyper-V, and I got the BUG_ON() triggered:
-> 
-> [  108.378016] kexec_core: Starting new kernel
-> [  108.378018] Disabling non-boot CPUs ...
-> [  108.378019] Wakeup pending. Abort CPU freeze
-> [  108.378020] Non-boot CPUs are not disabled
-> [  108.378049] ------------[ cut here ]------------
-> [  108.378050] kernel BUG at arch/arm64/kernel/machine_kexec.c:154!
-> 
-> Thanks!
-> 
-> Regards,
-> Boqun
-> 
-> > [ tglx: Massaged changelog and improved printk message ]
-> > 
-> > Signed-off-by: Pavankumar Kondeti <pkondeti@codeaurora.org>
-> > Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-> > Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-> > Cc: Len Brown <len.brown@intel.com>
-> > Cc: Pavel Machek <pavel@ucw.cz>
-> > Cc: Josh Poimboeuf <jpoimboe@redhat.com>
-> > Cc: Peter Zijlstra <peterz@infradead.org>
-> > Cc: Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
-> > Cc: iri Kosina <jkosina@suse.cz>
-> > Cc: Mukesh Ojha <mojha@codeaurora.org>
-> > Cc: linux-pm@vger.kernel.org
-> > Link: https://lkml.kernel.org/r/1559536263-16472-1-git-send-email-pkondeti@codeaurora.org
-> > 
-> > ---
-> >  kernel/cpu.c | 7 +++++++
-> >  1 file changed, 7 insertions(+)
-> > 
-> > diff --git a/kernel/cpu.c b/kernel/cpu.c
-> > index be82cbc11a8a..0778249cd49d 100644
-> > --- a/kernel/cpu.c
-> > +++ b/kernel/cpu.c
-> > @@ -1221,6 +1221,13 @@ int freeze_secondary_cpus(int primary)
-> >  	for_each_online_cpu(cpu) {
-> >  		if (cpu == primary)
-> >  			continue;
-> > +
-> > +		if (pm_wakeup_pending()) {
-> > +			pr_info("Wakeup pending. Abort CPU freeze\n");
-> > +			error = -EBUSY;
-> > +			break;
-> > +		}
-> > +
-> >  		trace_suspend_resume(TPS("CPU_OFF"), cpu, true);
-> >  		error = _cpu_down(cpu, 1, CPUHP_OFFLINE);
-> >  		trace_suspend_resume(TPS("CPU_OFF"), cpu, false);
+Christophe
