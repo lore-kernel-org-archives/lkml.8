@@ -2,198 +2,115 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 508AFC2D0EB
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 11:02:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B17E9C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 11:02:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D995205ED
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 11:02:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 84A11205ED
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 11:02:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="VZB6LqjR"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="OZGUqwQe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729752AbgC3LCH (ORCPT
+        id S1729718AbgC3LCt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 07:02:07 -0400
-Received: from lb3-smtp-cloud8.xs4all.net ([194.109.24.29]:50117 "EHLO
-        lb3-smtp-cloud8.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729254AbgC3LCG (ORCPT
+        Mon, 30 Mar 2020 07:02:49 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:50288 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729640AbgC3LCt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 07:02:06 -0400
-Received: from [192.168.2.10] ([46.9.234.233])
-        by smtp-cloud8.xs4all.net with ESMTPA
-        id IsB6jGMqIBr2bIsB9jcAOi; Mon, 30 Mar 2020 13:02:03 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
-        t=1585566124; bh=EJbg6Ztd1dBdHlhw61R9P5II8XyAIpbmV/eJjtNCSF0=;
-        h=Subject:From:To:Message-ID:Date:MIME-Version:Content-Type:From:
-         Subject;
-        b=VZB6LqjRQ2smZEwfdABBx/qdgc22ZMRYUUps8G9Hp/2x0fPOH6tym7h388HRJUTuw
-         hpnYbH1RmRst+eEPEky18htgB24hiJL28vNR/WhRXO2m+eW3ubo3ZDUH5NZoPza8n7
-         329tcdjLeb7oNQX+VPUDMuoKPAhQEtSYpDrlnOwJr40lXxPiiylEOjdx7VNGDsYBMB
-         vm0uW61OXkw8TC2CuGUdAqNEzhrVTeUv9t/s6DhzxS91uS1WJuFGuqYcltYMAPJjAm
-         4pDNiNY6rtrviwfHoN2LyMyZLpzdjkvheHTPenjplVDIt6uXskbNwBkxTzitAysibX
-         fjauwNLyQ4Pww==
-Subject: Re: [RFC PATCH v5 0/9] Add Tegra driver for video capture
-From:   Hans Verkuil <hverkuil@xs4all.nl>
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
-        thierry.reding@gmail.com, jonathanh@nvidia.com, frankc@nvidia.com,
-        helen.koike@collabora.com
-Cc:     digetx@gmail.com, sboyd@kernel.org, linux-media@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <1584985955-19101-1-git-send-email-skomatineni@nvidia.com>
- <4bb6a3b8-3332-014b-e763-bce9076179dd@xs4all.nl>
-Message-ID: <5ca1583a-889e-abd0-f823-eab93f09a365@xs4all.nl>
-Date:   Mon, 30 Mar 2020 13:02:00 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Mon, 30 Mar 2020 07:02:49 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Transfer-Encoding
+        :Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
+        Sender:Reply-To:Content-ID:Content-Description;
+        bh=OcosEihYBe+spE3GuKJaV12KeTRSak0CdVFTw4AqKfk=; b=OZGUqwQeHml5PPhx4r8PXY6gI0
+        LirKSPJC9jI8tfla+5PAqPW141BlQiz4lDzHRtoF8rpGUF0f9W41P8ov5iWO9oNdsrLSKQa5Muk0b
+        8i6mpo9afrmglqwsJqq4V4wHM4p7KPs8KrdsKnBrFUH/A4a7O3aV6z9beaC6NISngGm4eKQ5pYyFY
+        bHm3Rt9RfWYPXemZJnkJGoWa9g1yLhmI7ZXrjbMvSlj8cuZxcC0dZbgj8ynULFSWfBBvfGV3ZGbTf
+        XQHScF0orkNktNFPDwQrwJYUew+SN7vVlaORxLNjgbTkMy5hf8pdCLqXKg5yfLktUqvP/1O/Curu6
+        3I7aEBWQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jIsBe-0000m8-9P; Mon, 30 Mar 2020 11:02:34 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id C2572303C41;
+        Mon, 30 Mar 2020 13:02:31 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 8EEDA203C0A2F; Mon, 30 Mar 2020 13:02:31 +0200 (CEST)
+Date:   Mon, 30 Mar 2020 13:02:31 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Christophe Leroy <christophe.leroy@c-s.fr>
+Cc:     Leonardo Bras <leonardo@linux.ibm.com>,
+        Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Enrico Weigelt <info@metux.net>,
+        Allison Randal <allison@lohutok.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Subject: Re: [PATCH 1/1] ppc/crash: Skip spinlocks during crash
+Message-ID: <20200330110231.GG20696@hirez.programming.kicks-ass.net>
+References: <20200326222836.501404-1-leonardo@linux.ibm.com>
+ <af505ef0-e0df-e0aa-bb83-3ed99841f151@c-s.fr>
 MIME-Version: 1.0
-In-Reply-To: <4bb6a3b8-3332-014b-e763-bce9076179dd@xs4all.nl>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfGUkMuVlTSeEOEnZPXVlqKnzWyWGO+AuGZHKEXBJCliSVvxMwK+MsX7IYt4bGVYhdS+5Z1ul/F+I8TIrgPabWihPsUg23wCJ7IQ6Vk+7NIQLl6ZVIHbu
- YfphoJo2XhTBq01420Ey5Wq/qndFtH8/NaukIcrydgfQc2RXXKhnsuzbW6wXpcUfk65iKDEOuQiPQHKUwZHL0w9lTw0rQ6Rr6hyOCfMIGFkLbSv/czhM9RoC
- ZbtOSDL5I0WYVruqiw8YIBALWz5vQqTeUb+NOKD57jBKOoS/h70nl57rUbwzVWvyA74u94ZTx7hid0Yum5ca8Jx5ZujNhp94tHdbkcxt8tDlAIqVYkHQIHAZ
- 6hF5nduMWW8eF+jDOC46Qc/IID2mZPeQ3H3KYHNhMbdhRBYzHmuO7edZrtmTIa5wQICP7kFBYOIQv0hDkZIrYmT+1wPET/g8NyH6qwzwuABt/RqlnVtjP71b
- a8fJBfXUW34sXIPyKg4utZhoqI8J5v5h2SgKaWnm0EHDL9FIPvFDN7pY1eYRTSndcut6RvdyFFFLT77jWQgYKBAuVdTD7zEZXwcU4A==
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <af505ef0-e0df-e0aa-bb83-3ed99841f151@c-s.fr>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/30/20 12:04 PM, Hans Verkuil wrote:
-> Hi Sowjanya,
+On Fri, Mar 27, 2020 at 07:50:20AM +0100, Christophe Leroy wrote:
 > 
-> On 3/23/20 6:52 PM, Sowjanya Komatineni wrote:
->> This series adds Tegra210 VI and CSI driver for built-in test pattern
->> generator (TPG) capture.
->>
->> Tegra210 supports max 6 channels on VI and 6 ports on CSI where each
->> CSI port is one-to-one mapped to VI channel for video capture.
->>
->> This series has TPG support only where it creates hard media links
->> between CSI subdevice and VI video device without device graphs.
->>
->> v4l2-compliance results are available below the patch diff.
->>
->> [v5]:	Includes,
->> 	- v4 feedback
->> 	- fix for venc powergate mc reset order.
->> 	- fix to have unbind and bind work during v4l2-ctl sleep and streaming.
 > 
-> Unfortunately, I still crash on this.
+> Le 26/03/2020 à 23:28, Leonardo Bras a écrit :
+> > During a crash, there is chance that the cpus that handle the NMI IPI
+> > are holding a spin_lock. If this spin_lock is needed by crashing_cpu it
+> > will cause a deadlock. (rtas_lock and printk logbuf_log as of today)
+> > 
+> > This is a problem if the system has kdump set up, given if it crashes
+> > for any reason kdump may not be saved for crash analysis.
+> > 
+> > Skip spinlocks after NMI IPI is sent to all other cpus.
+> > 
+> > Signed-off-by: Leonardo Bras <leonardo@linux.ibm.com>
+> > ---
+> >   arch/powerpc/include/asm/spinlock.h | 6 ++++++
+> >   arch/powerpc/kexec/crash.c          | 3 +++
+> >   2 files changed, 9 insertions(+)
+> > 
+> > diff --git a/arch/powerpc/include/asm/spinlock.h b/arch/powerpc/include/asm/spinlock.h
+> > index 860228e917dc..a6381d110795 100644
+> > --- a/arch/powerpc/include/asm/spinlock.h
+> > +++ b/arch/powerpc/include/asm/spinlock.h
+> > @@ -111,6 +111,8 @@ static inline void splpar_spin_yield(arch_spinlock_t *lock) {};
+> >   static inline void splpar_rw_yield(arch_rwlock_t *lock) {};
+> >   #endif
+> > +extern bool crash_skip_spinlock __read_mostly;
+> > +
+> >   static inline bool is_shared_processor(void)
+> >   {
+> >   #ifdef CONFIG_PPC_SPLPAR
+> > @@ -142,6 +144,8 @@ static inline void arch_spin_lock(arch_spinlock_t *lock)
+> >   		if (likely(__arch_spin_trylock(lock) == 0))
+> >   			break;
+> >   		do {
+> > +			if (unlikely(crash_skip_spinlock))
+> > +				return;
 > 
-> I do the following:
-> 
-> Run: v4l2-ctl --stream-mmap
-> 
-> Then, from another shell as root:
-> 
-> cd /sys/devices/platform/50000000.host1x/tegra-video/driver
-> echo -n tegra-video > unbind
-> 
-> I get this crash:
-> 
-> [  315.691971] Unable to handle kernel NULL pointer dereference at virtual address 00000000000000b0
-> [  315.700749] Mem abort info:
-> [  315.703536]   ESR = 0x96000004
-> [  315.706587]   EC = 0x25: DABT (current EL), IL = 32 bits
-> [  315.711886]   SET = 0, FnV = 0
-> [  315.714933]   EA = 0, S1PTW = 0
-> [  315.718064] Data abort info:
-> [  315.720936]   ISV = 0, ISS = 0x00000004
-> [  315.724763]   CM = 0, WnR = 0
-> [  315.727726] user pgtable: 4k pages, 48-bit VAs, pgdp=0000000178ee8000
-> [  315.734152] [00000000000000b0] pgd=0000000000000000
-> [  315.739024] Internal error: Oops: 96000004 [#1] PREEMPT SMP
-> [  315.744584] Modules linked in: r8152 nouveau lp855x_bl tegra_drm ttm
-> [  315.750942] CPU: 3 PID: 2206 Comm: bash Tainted: G        W         5.6.0-rc1-arm64 #118
-> [  315.759017] Hardware name: NVIDIA Jetson TX1 Developer Kit (DT)
-> [  315.764927] pstate: 20000085 (nzCv daIf -PAN -UAO)
-> [  315.769718] pc : _raw_write_lock_irqsave+0xb0/0x2b8
-> [  315.774590] lr : ida_free+0x48/0x158
-> [  315.778155] sp : ffff800011d8bba0
-> [  315.781462] x29: ffff800011d8bba0 x28: ffff0000f4095400
-> [  315.786766] x27: 0000000000000000 x26: 0000000000000000
-> [  315.792070] x25: 0000000000000000 x24: 0000000000000000
-> [  315.797372] x23: ffff0000f21ad400 x22: ffff0000f5c93000
-> [  315.802674] x21: ffff0000f4095400 x20: ffff0000f86b5540
-> [  315.807975] x19: 0000000000000000 x18: 0000000000000000
-> [  315.813276] x17: 0000000000000001 x16: 0000000000000019
-> [  315.818578] x15: 000000148ccdabe2 x14: 0000000000000136
-> [  315.823879] x13: 0000000000000001 x12: 00000000000003f8
-> [  315.829180] x11: 0000000000000000 x10: 0000000000000000
-> [  315.834482] x9 : ffff0000ff899990 x8 : ffff0000ff899000
-> [  315.839784] x7 : 0000000040000000 x6 : 0000000000210d00
-> [  315.845085] x5 : 0000000000000001 x4 : 0000000000000000
-> [  315.850386] x3 : 00000000000000b0 x2 : 0000000000000001
-> [  315.855687] x1 : 0000000000000000 x0 : 0000000000000001
-> [  315.860988] Call trace:
-> [  315.863432]  _raw_write_lock_irqsave+0xb0/0x2b8
-> [  315.867956]  ida_free+0x48/0x158
-> [  315.871184]  __media_device_unregister_entity+0x28/0xf0
-> [  315.876402]  media_device_unregister+0x6c/0x148
-> [  315.880927]  host1x_video_remove+0x20/0x48
-> [  315.885021]  host1x_device_remove+0x1c/0x30
-> [  315.889198]  device_release_driver_internal+0xf4/0x1c0
-> [  315.894325]  device_driver_detach+0x14/0x20
-> [  315.898503]  unbind_store+0xd4/0xf8
-> [  315.901986]  drv_attr_store+0x20/0x30
-> [  315.905645]  sysfs_kf_write+0x40/0x50
-> [  315.909301]  kernfs_fop_write+0xf8/0x210
-> [  315.913219]  __vfs_write+0x18/0x40
-> [  315.916616]  vfs_write+0xdc/0x1c8
-> [  315.919926]  ksys_write+0x68/0xf0
-> [  315.923235]  __arm64_sys_write+0x18/0x20
-> [  315.927154]  el0_svc_common.constprop.0+0x68/0x160
-> [  315.931936]  do_el0_svc+0x20/0x80
-> [  315.935246]  el0_sync_handler+0x10c/0x180
-> [  315.939246]  el0_sync+0x140/0x180
-> [  315.942560] Code: 8803fc02 35ffffa3 17fffda6 f9800071 (885ffc60)
-> [  315.948644] ---[ end trace e42b943f3c1af06c ]---
-> 
-> The following diff fixes this:
-> 
-> ------------------ cut here ------------------
-> diff --git a/drivers/staging/media/tegra/tegra-vi.c b/drivers/staging/media/tegra/tegra-vi.c
-> index 9714152aa6a7..53cf37af9602 100644
-> --- a/drivers/staging/media/tegra/tegra-vi.c
-> +++ b/drivers/staging/media/tegra/tegra-vi.c
-> @@ -583,7 +583,7 @@ static int tegra_channel_init(struct tegra_vi_channel *chan)
->  	/* initialize the video_device */
->  	chan->video->fops = &tegra_channel_fops;
->  	chan->video->v4l2_dev = &vid->v4l2_dev;
-> -	chan->video->release = video_device_release_empty;
-> +	chan->video->release = video_device_release;
->  	chan->video->queue = &chan->queue;
->  	snprintf(chan->video->name, sizeof(chan->video->name), "%s-%s-%u",
->  		 dev_name(vi->dev), "output", chan->portno);
-> @@ -647,6 +647,7 @@ static int tegra_channel_init(struct tegra_vi_channel *chan)
->  	media_entity_cleanup(&chan->video->entity);
->  release_vdev:
->  	video_device_release(chan->video);
-> +	chan->video = NULL;
->  	return ret;
->  }
-> 
-> @@ -707,7 +708,6 @@ static void tegra_vi_channels_cleanup(struct tegra_vi *vi)
->  			mutex_lock(&chan->video_lock);
->  			vb2_queue_release(&chan->queue);
->  			mutex_unlock(&chan->video_lock);
-> -			video_device_release(chan->video);
->  		}
-> 
->  		if (chan->frame_start_sp)
-> ------------------ cut here ------------------
+> You are adding a test that reads a global var in the middle of a so hot path
+> ? That must kill performance. Can we do different ?
 
-Note: Sakari suggested to embed struct video_device into struct tegra_vi_channel.
-In that case chan->video->release should remain video_device_release_empty and
-all video_device_alloc()/release() calls would have to be dropped.
+This; adding code to a super hot patch like this for an exceptional case
+like the crash handling seems like a very very bad trade to me.
 
-Regards,
-
-	Hans
+One possible solution is to simply write 0 to the affected spinlocks
+after sending the NMI IPI thing, no?
