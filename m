@@ -2,124 +2,182 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF69AC2D0EE
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 09:21:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88A3CC43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 09:21:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C0983206E6
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 09:21:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B631206E6
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 09:21:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728652AbgC3JVL (ORCPT
+        id S1727896AbgC3JVr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 05:21:11 -0400
-Received: from mout-p-202.mailbox.org ([80.241.56.172]:24390 "EHLO
-        mout-p-202.mailbox.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728071AbgC3JVL (ORCPT
+        Mon, 30 Mar 2020 05:21:47 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:52648 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728031AbgC3JVq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 05:21:11 -0400
-Received: from smtp2.mailbox.org (smtp2.mailbox.org [IPv6:2001:67c:2050:105:465:1:2:0])
-        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
-        (No client certificate requested)
-        by mout-p-202.mailbox.org (Postfix) with ESMTPS id 48rRlm5Yk9zQlFX;
-        Mon, 30 Mar 2020 11:21:08 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at heinlein-support.de
-Received: from smtp2.mailbox.org ([80.241.60.241])
-        by hefe.heinlein-support.de (hefe.heinlein-support.de [91.198.250.172]) (amavisd-new, port 10030)
-        with ESMTP id Hq1kmaX4fCTi; Mon, 30 Mar 2020 11:21:00 +0200 (CEST)
-Date:   Mon, 30 Mar 2020 20:20:51 +1100
-From:   Aleksa Sarai <cyphar@cyphar.com>
-To:     "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com>
-Cc:     Al Viro <viro@zeniv.linux.org.uk>,
-        Christian Brauner <christian@brauner.io>,
-        Aleksa Sarai <asarai@suse.de>, linux-man@vger.kernel.org,
-        linux-api@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH man-pages v2 2/2] openat2.2: document new openat2(2)
- syscall
-Message-ID: <20200330092051.umcu2mjnwqazml7a@yavin.dot.cyphar.com>
-References: <20200202151907.23587-1-cyphar@cyphar.com>
- <20200202151907.23587-3-cyphar@cyphar.com>
- <4dcea613-60b8-a8af-9688-be93858ab652@gmail.com>
+        Mon, 30 Mar 2020 05:21:46 -0400
+Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02U93esd068930
+        for <linux-kernel@vger.kernel.org>; Mon, 30 Mar 2020 05:21:46 -0400
+Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 3022nm3s1v-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Mon, 30 Mar 2020 05:21:45 -0400
+Received: from localhost
+        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <rppt@linux.ibm.com>;
+        Mon, 30 Mar 2020 10:21:36 +0100
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
+        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Mon, 30 Mar 2020 10:21:28 +0100
+Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 02U9LWUN30998770
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 30 Mar 2020 09:21:32 GMT
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 9F31E42041;
+        Mon, 30 Mar 2020 09:21:32 +0000 (GMT)
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id C9B7942042;
+        Mon, 30 Mar 2020 09:21:29 +0000 (GMT)
+Received: from linux.ibm.com (unknown [9.148.206.230])
+        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Mon, 30 Mar 2020 09:21:29 +0000 (GMT)
+Date:   Mon, 30 Mar 2020 12:21:27 +0300
+From:   Mike Rapoport <rppt@linux.ibm.com>
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     Hoan Tran <Hoan@os.amperecomputing.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Oscar Salvador <osalvador@suse.de>,
+        Pavel Tatashin <pavel.tatashin@microsoft.com>,
+        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        "open list:MEMORY MANAGEMENT" <linux-mm@kvack.org>,
+        linux-arm-kernel@lists.infradead.org, linux-s390@vger.kernel.org,
+        sparclinux@vger.kernel.org, x86@kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        lho@amperecomputing.com, mmorana@amperecomputing.com
+Subject: Re: [PATCH v3 0/5] mm: Enable CONFIG_NODES_SPAN_OTHER_NODES by
+ default for NUMA
+References: <1585420282-25630-1-git-send-email-Hoan@os.amperecomputing.com>
+ <20200330074246.GA14243@dhcp22.suse.cz>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="jub6wegi3tyrl3an"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <4dcea613-60b8-a8af-9688-be93858ab652@gmail.com>
+In-Reply-To: <20200330074246.GA14243@dhcp22.suse.cz>
+X-TM-AS-GCONF: 00
+x-cbid: 20033009-0012-0000-0000-0000039AD42F
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20033009-0013-0000-0000-000021D7DB3F
+Message-Id: <20200330092127.GB30942@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.645
+ definitions=2020-03-30_01:2020-03-27,2020-03-30 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015
+ lowpriorityscore=0 malwarescore=0 mlxscore=0 spamscore=0 mlxlogscore=622
+ bulkscore=0 impostorscore=0 phishscore=0 priorityscore=1501 suspectscore=1
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2003300086
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Mar 30, 2020 at 09:42:46AM +0200, Michal Hocko wrote:
+> On Sat 28-03-20 11:31:17, Hoan Tran wrote:
+> > In NUMA layout which nodes have memory ranges that span across other nodes,
+> > the mm driver can detect the memory node id incorrectly.
+> > 
+> > For example, with layout below
+> > Node 0 address: 0000 xxxx 0000 xxxx
+> > Node 1 address: xxxx 1111 xxxx 1111
+> > 
+> > Note:
+> >  - Memory from low to high
+> >  - 0/1: Node id
+> >  - x: Invalid memory of a node
+> > 
+> > When mm probes the memory map, without CONFIG_NODES_SPAN_OTHER_NODES
+> > config, mm only checks the memory validity but not the node id.
+> > Because of that, Node 1 also detects the memory from node 0 as below
+> > when it scans from the start address to the end address of node 1.
+> > 
+> > Node 0 address: 0000 xxxx xxxx xxxx
+> > Node 1 address: xxxx 1111 1111 1111
+> > 
+> > This layout could occur on any architecture. Most of them enables
+> > this config by default with CONFIG_NUMA. This patch, by default, enables
+> > CONFIG_NODES_SPAN_OTHER_NODES or uses early_pfn_in_nid() for NUMA.
+> 
+> I am not opposed to this at all. It reduces the config space and that is
+> a good thing on its own. The history has shown that meory layout might
+> be really wild wrt NUMA. The config is only used for early_pfn_in_nid
+> which is clearly an overkill.
+> 
+> Your description doesn't really explain why this is safe though. The
+> history of this config is somehow messy, though. Mike has tried
+> to remove it a94b3ab7eab4 ("[PATCH] mm: remove arch independent
+> NODES_SPAN_OTHER_NODES") just to be reintroduced by 7516795739bd
+> ("[PATCH] Reintroduce NODES_SPAN_OTHER_NODES for powerpc") without any
+> reasoning what so ever. This doesn't make it really easy see whether
+> reasons for reintroduction are still there. Maybe there are some subtle
+> dependencies. I do not see any TBH but that might be burried deep in an
+> arch specific code.
 
---jub6wegi3tyrl3an
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Well, back then early_pfn_in_nid() was arch-dependant, today everyone
+except ia64 rely on HAVE_MEMBLOCK_NODE_MAP. So, if the memblock node map
+is correct, that using CONFIG_NUMA instead of CONFIG_NODES_SPAN_OTHER_NODES
+would only mean that early_pfn_in_nid() will cost several cycles more on
+architectures that didn't select CONFIG_NODES_SPAN_OTHER_NODES (i.e. arm64
+and sh).
+Agian, ia64 is an exception here.
 
-On 2020-03-30, Michael Kerrisk (man-pages) <mtk.manpages@gmail.com> wrote:
-> Hello Aleksa,
->=20
-> On 2/2/20 4:19 PM, Aleksa Sarai wrote:
-> > Rather than trying to merge the new syscall documentation into open.2
-> > (which would probably result in the man-page being incomprehensible),
-> > instead the new syscall gets its own dedicated page with links between
-> > open(2) and openat2(2) to avoid duplicating information such as the list
-> > of O_* flags or common errors.
-> >=20
-> > In addition to describing all of the key flags, information about the
-> > extensibility design is provided so that users can better understand why
-> > they need to pass sizeof(struct open_how) and how their programs will
-> > work across kernels. After some discussions with David Laight, I also
-> > included explicit instructions to zero the structure to avoid issues
-> > when recompiling with new headers.>
-> > Signed-off-by: Aleksa Sarai <cyphar@cyphar.com>
->=20
-> I'm just editing this page, and have a question on one piece.
->=20
-> > +Unlike
-> > +.BR openat (2),
-> > +it is an error to provide
-> > +.BR openat2 ()
-> > +with a
-> > +.I mode
-> > +which contains bits other than
-> > +.IR 0777 ,
->=20
-> This piece appears not to be true, both from my reading of the
-> source code, and from testing (i.e., I wrote a a small program that
-> successfully called openat2() and created a file that had the
-> set-UID, set-GID, and sticky bits set).
->=20
-> Is this a bug in the implementation or a bug in the manual page text?
 
-My bad -- it's a bug in the manual. The actual check (which does work,
-there are selftests for this) is:
+> > v3:
+> >  * Revise the patch description
+> > 
+> > V2:
+> >  * Revise the patch description
+> > 
+> > Hoan Tran (5):
+> >   mm: Enable CONFIG_NODES_SPAN_OTHER_NODES by default for NUMA
+> >   powerpc: Kconfig: Remove CONFIG_NODES_SPAN_OTHER_NODES
+> >   x86: Kconfig: Remove CONFIG_NODES_SPAN_OTHER_NODES
+> >   sparc: Kconfig: Remove CONFIG_NODES_SPAN_OTHER_NODES
+> >   s390: Kconfig: Remove CONFIG_NODES_SPAN_OTHER_NODES
+> > 
+> >  arch/powerpc/Kconfig | 9 ---------
+> >  arch/s390/Kconfig    | 8 --------
+> >  arch/sparc/Kconfig   | 9 ---------
+> >  arch/x86/Kconfig     | 9 ---------
+> >  mm/page_alloc.c      | 2 +-
+> >  5 files changed, 1 insertion(+), 36 deletions(-)
+> > 
+> > -- 
+> > 1.8.3.1
+> > 
+> 
+> -- 
+> Michal Hocko
+> SUSE Labs
 
-	if (how->mode & ~S_IALLUGO)
-		return -EINVAL;
+-- 
+Sincerely yours,
+Mike.
 
-But when writing the man page I forgot that S_IALLUGO also includes
-those bits. Do you want me to send an updated version or would you
-prefer to clean it up?
-
---=20
-Aleksa Sarai
-Senior Software Engineer (Containers)
-SUSE Linux GmbH
-<https://www.cyphar.com/>
-
---jub6wegi3tyrl3an
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQSxZm6dtfE8gxLLfYqdlLljIbnQEgUCXoG58AAKCRCdlLljIbnQ
-EmpUAP9lwsQSs79E0RPrYRETRyse93uEihw73O5jS2uGNB0ywwD/XrFtGUgmimuA
-x7DnKf0T9qk7cmUJpiCSwgMpNayU3wE=
-=S6iK
------END PGP SIGNATURE-----
-
---jub6wegi3tyrl3an--
