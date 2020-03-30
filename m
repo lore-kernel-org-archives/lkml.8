@@ -5,265 +5,114 @@ X-Spam-Level:
 X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C2B7C2D0EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 14:41:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65B28C2D0EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 14:42:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C38B6206DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 14:41:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C80D206DB
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 14:42:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Tr4b75/5"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="h3Kc8KDH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728761AbgC3OlR (ORCPT
+        id S1728180AbgC3Omi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 10:41:17 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:45185 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727820AbgC3OlR (ORCPT
+        Mon, 30 Mar 2020 10:42:38 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:41847 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726769AbgC3Omh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 10:41:17 -0400
-Received: by mail-lj1-f193.google.com with SMTP id t17so18361075ljc.12
-        for <linux-kernel@vger.kernel.org>; Mon, 30 Mar 2020 07:41:14 -0700 (PDT)
+        Mon, 30 Mar 2020 10:42:37 -0400
+Received: by mail-lj1-f195.google.com with SMTP id n17so18360915lji.8;
+        Mon, 30 Mar 2020 07:42:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:in-reply-to:references
-         :mime-version;
-        bh=epGP9PMNlJZHcB9SQeovMPld4EXmyON6fdMXbQw6ctk=;
-        b=Tr4b75/53N7F3lQKDm58ZgR+5CQ3k0XrSfsIMtvAWDVV6wllqmffHDckG7Qk7wBKkX
-         dBNwb5XODKTDyKMpjQ2Cpe2aEmn511P5hhH5R3hMrnJItHhetRGirn4i5LwA/Br+N6iS
-         MtFqGPztQxlXTi6/I6WNowVLZ4YAwsePq4PUVda6gjJsCXgi3klBW3aFvY0bna7SxOcG
-         EJfhSt0c1dUgzu0kr9lajPsAxOFntDlPD9Nslh0rKC2Idobe2tQ4mqn+nTpAtglKM5vy
-         DsehBJacXDi1PcOJf6AVs/2IUyFzeuWoR8IhHgnr6BHwlHJQcnCpvTpbe1zW7lzPHAJ1
-         FAVA==
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=zZl8DGHxKfW9Vu36ePmFE8gP/ULjjF5tAO2pNWgNfJ8=;
+        b=h3Kc8KDHcLiXfTCe9KLFRZw8NC3uNi76b2bvj8c5PfQqsPu3mTsnwZHSVXXMF+M57R
+         aCZ1Yfa80MsCs0jly+WB/q5zh0bMdinYZ8efN7zr2VXsvNNhAdVLcGycLNRvwA+ITI5w
+         Iu9nWHpV4YhgBBcAofo+4dW7YzLWCNCnblGhYo/cMra3um6S+d8ic31+9ibO/v8RhCez
+         bGR6LAi0zzGWgXstRGtTSRCX3AgWBPN9iNVlYAritB1dFd93zUGps8o+Cb6ClXLEqZbw
+         P1CCbhLNL8U9f45/x88HVfqQILzHaE1WvOBUW38y6VgTjKEk3/yTNassbR7dW4XyiLxE
+         65RQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
-         :references:mime-version;
-        bh=epGP9PMNlJZHcB9SQeovMPld4EXmyON6fdMXbQw6ctk=;
-        b=JXpb5DU8RzBBLbCx6oYellIC16fuprtbqRFwuZbfA8LIsb3eGmWyf78dDnoRTzAKhi
-         fAHJOQKU/QfiCmm1TbpOTVTdaQsfz2EkD/7goV4iQMn/EjQBXSifbT+2Ix6Q1O/PXmHo
-         dgf4Lyqa25yy8jorFpMNlYgOp3hZGuWy35I8FbqHeGX2IeXy9Kz1fLWHBYzzCAx7zgAv
-         9bKPtuCy65pzehW1pr4qgFB7lLy+1r3hwYCF5gL9dbExNz0IxqYD1Ln86X1zsnZz9lTF
-         Xl1ADnqFwYcAmzu8B2UtoeNDZQhGnzaWrnm0Lx0tepQ36+/vv9kg9Y4fzuFSJkoaImTi
-         YCcw==
-X-Gm-Message-State: AGi0PuaxamGtmrDao2D24USwowU5OlcMtK0rf4gxF2lPWPSlyRyeHDLF
-        Yq/7MD2hXZFRMN0WRK7O4BM=
-X-Google-Smtp-Source: APiQypLij2junLsRYlGcxvO72I0+NagELD7M2Fum/IVNxmdF+fFujP753SxY5sHW00RrGQbR982wYw==
-X-Received: by 2002:a2e:9798:: with SMTP id y24mr3364372lji.267.1585579273383;
-        Mon, 30 Mar 2020 07:41:13 -0700 (PDT)
-Received: from eldfell.localdomain ([194.136.85.206])
-        by smtp.gmail.com with ESMTPSA id d27sm4486557lfq.73.2020.03.30.07.41.12
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=zZl8DGHxKfW9Vu36ePmFE8gP/ULjjF5tAO2pNWgNfJ8=;
+        b=iaqL3mhNDyXQzfhwruWQuJt4vbIP/o7T0bSBGsS2pjus7alLo9uMsn3V277CcwjmdH
+         WKHjtsHqJHLeEbaO383LmJTTuoNwC5gu+uLHSO18WSlzCbfwiQBS04NsWTW0M/1nFigl
+         +7ZrEwVJuFq0cQXANJ8ket8C9cu0sAtNM555HFsx8daLtJl3o4z1EMiZQuTKgmKxu1nz
+         c6Rs0qlWfM5rXvVldA9W1ZAF5PHcwbjOJK4gAd5XhsSaMk2MUYUgwlT+eiBYTboVcqRL
+         lm95G2lV9xxAjD+5nKv86a8mzLjPY6vm0TUdiDTxuKma+AWg9kEOmcBhgggAwyJIo9RM
+         oCJQ==
+X-Gm-Message-State: AGi0PuYd7A8XT06xdEBQr32TxFrw8T16FuTaLk/VlKisghrIYQXXBE8U
+        3p3YPpBGOOYcqQ+dPQuHcoM=
+X-Google-Smtp-Source: APiQypJDLgeyGA4Jl3+7HtQKeMzM/OnpeTMviE/XQdDGRdcozdPKungXUDu36lYdIPZMiuEU7g5uTA==
+X-Received: by 2002:a2e:854e:: with SMTP id u14mr7198364ljj.95.1585579354883;
+        Mon, 30 Mar 2020 07:42:34 -0700 (PDT)
+Received: from pc636 (h5ef52e31.seluork.dyn.perspektivbredband.net. [94.245.46.49])
+        by smtp.gmail.com with ESMTPSA id r141sm7832506lff.58.2020.03.30.07.42.33
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Mar 2020 07:41:12 -0700 (PDT)
-Date:   Mon, 30 Mar 2020 17:41:03 +0300
-From:   Pekka Paalanen <ppaalanen@gmail.com>
-To:     Neil Armstrong <narmstrong@baylibre.com>, code@mstoeckl.com
-Cc:     Simon Ser <contact@emersion.fr>,
-        "mjourdan@baylibre.com" <mjourdan@baylibre.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "linux-amlogic@lists.infradead.org" 
-        <linux-amlogic@lists.infradead.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Daniel Vetter <daniel@ffwll.ch>
-Subject: Re: [PATCH v4 7/8] drm/fourcc: amlogic: Add modifier definitions
- for the Scatter layout
-Message-ID: <20200330174103.10cf2f37@eldfell.localdomain>
-In-Reply-To: <7acc751d-161f-af9c-d896-b4e43fb9b0ac@baylibre.com>
-References: <20200325085025.30631-1-narmstrong@baylibre.com>
-        <20200325085025.30631-8-narmstrong@baylibre.com>
-        <JgBZ7eZYMgXRNu_-E4ItS1bud9mEe15xptZEX_XhsM_h8_iIZTOmPokEVxPJYwX0wP0pmb5p-ymubyyZP3kVbcfuDNdmM0__L8wBR5IykfE=@emersion.fr>
-        <b1386ef5-c3e3-c07b-5982-e3f02441b431@baylibre.com>
-        <20200325154921.2a87930c@eldfell.localdomain>
-        <a385e2f6-52fa-e195-15e0-2132befc9f35@baylibre.com>
-        <20200326113632.6585cf7b@eldfell.localdomain>
-        <7acc751d-161f-af9c-d896-b4e43fb9b0ac@baylibre.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Mon, 30 Mar 2020 07:42:34 -0700 (PDT)
+From:   Uladzislau Rezki <urezki@gmail.com>
+X-Google-Original-From: Uladzislau Rezki <urezki@pc636>
+Date:   Mon, 30 Mar 2020 16:42:27 +0200
+To:     Joel Fernandes <joel@joelfernandes.org>
+Cc:     "Uladzislau Rezki (Sony)" <urezki@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "Paul E . McKenney" <paulmck@kernel.org>,
+        RCU <rcu@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Oleksiy Avramchenko <oleksiy.avramchenko@sonymobile.com>
+Subject: Re: [PATCH 6/7] rcu/tiny: support reclaim for head-less object
+Message-ID: <20200330144227.GA16651@pc636>
+References: <20200323113621.12048-1-urezki@gmail.com>
+ <20200323113621.12048-7-urezki@gmail.com>
+ <20200330005637.GA138004@google.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/dvN3iCsthpEZCSKTeqjvfgH"; protocol="application/pgp-signature"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200330005637.GA138004@google.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/dvN3iCsthpEZCSKTeqjvfgH
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+> 
+> Hmm, Ok. So on -tiny, if there's any allocation failure ever, we immediately
+> revert to call_rcu(). I guess we could also create a regular (non-array)
+> queue for objects with an rcu_head and queue it on that (since it does not
+> need allocation) in case of array allocation failure, however that may not be
+> worth it. So this LGTM. Thanks!
+> 
+> For entire series:
+> Reviewed-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+> (I will submit a follow-up to fix the tagging, please let me submit Vlad's
+> entire series with some patches on top -- I also did a bit of wordsmithing in
+> the commit messages of this series).
+>
+Thank you, Joel, for your review and help!
 
-On Fri, 27 Mar 2020 15:14:46 +0100
-Neil Armstrong <narmstrong@baylibre.com> wrote:
+> 
+> Loved the might_sleep() idea btw, I suppose if atomic context wants to do
+> kvfree_rcu(), then we could also have kfree_rcu() defer the kvfree_rcu() to
+> execute from a workqueue. Thoughts? We can then allow poor insomniacs from
+> calling this API :)
+> 
+Not sure if i understand you correctly. Could you please <snip> some code
+for illustration?
 
-> Hi,
->=20
-> On 26/03/2020 10:36, Pekka Paalanen wrote:
-> > On Wed, 25 Mar 2020 17:18:15 +0100
-> > Neil Armstrong <narmstrong@baylibre.com> wrote:
-> >  =20
-> >> Hi,
-> >>
-> >> On 25/03/2020 14:49, Pekka Paalanen wrote: =20
-> >>> On Wed, 25 Mar 2020 11:24:15 +0100
-> >>> Neil Armstrong <narmstrong@baylibre.com> wrote:
-> >>>    =20
-> >>>> Hi,
-> >>>>
-> >>>> On 25/03/2020 10:04, Simon Ser wrote:   =20
-> >>>>> On Wednesday, March 25, 2020 9:50 AM, Neil Armstrong <narmstrong@ba=
-ylibre.com> wrote:
-> >>>>>      =20
-> >>>>>> Amlogic uses a proprietary lossless image compression protocol and=
- format
-> >>>>>> for their hardware video codec accelerators, either video decoders=
- or
-> >>>>>> video input encoders.
-> >>>>>>
-> >>>>>> This introduces the Scatter Memory layout, means the header contai=
-ns IOMMU
-> >>>>>> references to the compressed frames content to optimize memory acc=
-ess
-> >>>>>> and layout.
-> >>>>>>
-> >>>>>> In this mode, only the header memory address is needed, thus the c=
-ontent
-> >>>>>> memory organization is tied to the current producer execution and =
-cannot
-> >>>>>> be saved/dumped neither transferrable between Amlogic SoCs support=
-ing this
-> >>>>>> modifier.     =20
-> >>>>>
-> >>>>> I don't think this is suitable for modifiers. User-space relies on
-> >>>>> being able to copy a buffer from one machine to another over the
-> >>>>> network. It would be pretty annoying for user-space to have a black=
-list
-> >>>>> of modifiers that don't work this way.
-> >>>>>
-> >>>>> Example of such user-space:
-> >>>>> https://gitlab.freedesktop.org/mstoeckl/waypipe/
-> >>>>>      =20
-> >>>>
-> >>>> I really understand your point, but this is one of the use-cases we =
-need solve.
-> >>>> This is why I split the fourcc patch and added an explicit comment.
-> >>>>
-> >>>> Please point me a way to display such buffer, the HW exists, works l=
-ike that and
-> >>>> it's a fact and can't change.
-> >>>>
-> >>>> It will be the same for secure zero-copy buffers we can't map from u=
-serspace, but
-> >>>> only the HW decoder can read/write and HW display can read.   =20
-> >>>
-> >>> The comparison to secure buffers is a good one.
-> >>>
-> >>> Are buffers with the DRM_FORMAT_MOD_AMLOGIC_FBC_LAYOUT_SCATTER modifi=
-er
-> >>> meaningfully mmappable to CPU always / sometimes / never /
-> >>> varies-and-cannot-know?   =20
-> >>
-> >> mmappable, yes in our WIP V4L2 driver in non-secure path, meaningful, =
-absolutely never.
-> >>
-> >> So yeah, these should not be mmappable since not meaningful. =20
-> >=20
-> > Ok. So we have a modifier that means there is no point in even trying to
-> > mmap the buffer.
-> >=20
-> > Not being able to mmap automatically makes things like waypipe not be
-> > able to work on the buffer, so the buffer cannot be replicated over a
-> > network, hence there is no compatibility issue. However, it still
-> > leaves the problem that, since waypipe is "just" a message relay that
-> > does not participate in the protocol really, the two end points might
-> > still negotiate to use a modifier that waypipe cannot handle. =20
->=20
-> Not mmapable won't be limited to this kind of buffer, or secure, any DMA-=
-BUF
-> provider can decide to disable mmaping, so waypipe should work with this
-> whatever this discussion goes to.
->=20
-> >=20
-> > Secure buffers have the same problem: by definition, one must not be
-> > able to replicate the buffer elsewhere.
-> >=20
-> > To me it seems there needs to be a way to identify buffers that cannot
-> > be mmapped. mmap() failing is obvious, but in waypipe's case it is too
-> > late - the end points have already negotiated the formats and modifiers
-> > and they cannot handle failures afterwards. =20
->=20
-> The AFAIK last open question was on this thread:
-> https://lore.kernel.org/dri-devel/d6f8092d-9f90-d5ff-2ab3-b1867f8f5700@ti=
-.com/
-> But it was more like, how the consumer driver knows the buffer is secure.
->=20
-> Daniel, is there something new ?
->=20
-> >  =20
-> >>>
-> >>> Maybe this type should be handled similar to secure buffers, with the
-> >>> exception that they are not actually secured but only mostly
-> >>> inaccessible. Then again, I haven't looked at any of the secure buffer
-> >>> proposals.   =20
-> >>
-> >> Actually, the Amlogic platforms offers secure video path using these e=
-xact
-> >> modifiers, AFAIK it doesn't support the NV12 dual-write output in secu=
-re.
-> >>
-> >> AFAIK last submission is from AMD, and it doesn't talk at all about mm=
-apability
-> >> of the secure BOs. =20
-> >=20
-> > To me, a secure buffer concept automatically implies that there cannot
-> > be CPU access to it. The CPU is not trusted, right? Not even the kernel.
-> > I would assume secure implies no mmap. So I wonder, how does the secure
-> > buffers proposal manage userspace like waypipe? =20
->=20
-> None, as I said, waypipe whould handle non mmapable buffers, by asking
-> for a different modifier set, or sending a gray buffer with a llama
-> instead.
+As far as i understand, it should be done then synchronously. We can defer  
+and queue some work to do it in worqueue context. But i am not sure how
+to proccess next coming request, i.e. busy waiting until we manage to push
+a new ptr. to free? But in that case it would not work if there is only
+one CPU available.
 
-Hi,
+Thanks!
 
-the only thing waypipe can do, is not forward some of the modifiers
-during negotiation, before any buffers are created. That is, assuming
-Waypipe actually understands the protocol it shovels through
-(libwayland does not understand Wayland, in comparison).
-
-Or disconnect when mmap() fails.
-
-I'm having second thoughts here on the feasibility of the waypipe use
-case. It seems to be simply mutually exclusive with secure buffers and
-this modifier here.
-
-Manuel, could you check through this thread and let us know what you
-think? Maybe I have misassumed something.
-
-
-Thanks,
-pq
-
---Sig_/dvN3iCsthpEZCSKTeqjvfgH
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEEJQjwWQChkWOYOIONI1/ltBGqqqcFAl6CBP8ACgkQI1/ltBGq
-qqf5Ng//YdfYRUp3D7YF759IzfAmSRCoRKEnGOqTdIOdQCYj7OA7y0WpRepfhto8
-DuJmANCTL2HVKjWNOiTaPbFkwnvuLT99VWH+4iSKRH4k76UqqwHYxF0aILT0jfX+
-9EE+iokzNQNui9kSrXPOxnT1ZWF1v8ivaA9fwWFTMXFsPLyapUPfJjojMZR+chme
-fQrt/XhMlDhS+9dCZEW8eQcPsZ1uSMQsz4wvJ7hGSSH8/FkRotyVhcC3wHEajNkr
-AIlQXRe+jXWVnXrhYdHL8ozigTpU0NOO1IhafnTWKIj99r9vV04GMJKIo1wWtsZ7
-o3s6P2nUPEK4FhiLEYPJAQYLrNRbV5yPQTw9voIurs/Cz7fhjQ1QMpHS114s/KAW
-KsY8lr7aUTjk/legfKN/HNG05KPf0Qm0vak+XA4TceinTHm4tbgnEIzXvHLvTp/q
-9iYrE/jm2fEfFy4x6PukNMB0KlgfQOQfB12E4nqkAACoA3vjuv62qrcbW/OBvCeY
-gRLxw9Fi20S1cWLFrZraf7eYIxne4LPK7b8cgiE6v9hY81KR5gMu9M3PUkWHFQKC
-hQfRXPhc669DBXrxJvHx+9z1ZI8TmGLWo6AnmxgKCxOx4pblbMieL5q//wDdvWJ/
-Tu8K/TIEZYxYq5aJciAfJ2cr7DXkBLBsZ9rUFI8gm1En9h53o3o=
-=FYDj
------END PGP SIGNATURE-----
-
---Sig_/dvN3iCsthpEZCSKTeqjvfgH--
+--
+Vlad Rezki
