@@ -2,122 +2,119 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E56CC2D0ED
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 04:08:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6749C2D0EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 04:10:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 73D4620732
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 04:08:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="Zocas/Vn"
+	by mail.kernel.org (Postfix) with ESMTP id B66A320732
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 04:10:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726608AbgC3EIZ (ORCPT
+        id S1726641AbgC3EKs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 00:08:25 -0400
-Received: from ozlabs.org ([203.11.71.1]:53201 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725268AbgC3EIZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 00:08:25 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 48rJps2kKcz9sPF;
-        Mon, 30 Mar 2020 15:08:21 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1585541302;
-        bh=4LklNUeeFMyLVbYa8fYmKcp69TR6b5eexoc9ScGOfyY=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=Zocas/VnMI0Yq2+h0P+WXb7j8aCKussJrXDGL8/yLGvWifovRCrIlgJXhGBIN2SZK
-         58q5nACvf00otQivjMDczJl1/qS3j3g0bhPF0sJr0YC7/p08Dvw3QqnJWh0oqLwNDp
-         ndMPIEk+5QhCB9SoFPK7oQDcTAnrzAQbH70H0EQjOiA4+7wfWJvtHYYNWypWbQglBj
-         ibenXkOktNMKUmo518Soj9GvXnCjI7HzFbgvRu9uadwpCPcNZ5ZKL6IcouKe3HJfCp
-         +ELL7ljcepI0833Aeqp9MYo7GXR/OkZmfBZ0dCOeWJ03SLDMopFP/i0RQ8GNaFWVjF
-         GeisJZAO3hfaA==
-Date:   Mon, 30 Mar 2020 15:08:19 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     "H.J. Lu" <hjl.tools@gmail.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@elte.hu>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Borislav Petkov <bp@suse.de>,
-        Kees Cook <keescook@chromium.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        PowerPC <linuxppc-dev@lists.ozlabs.org>
-Subject: Re: linux-next: build failure after merge of the tip tree
-Message-ID: <20200330150819.7f0199a2@canb.auug.org.au>
-In-Reply-To: <CAMe9rOqnRCEdHhSHOT=Ut11D3O2WhjiFYhvPnaU5dANZNPE-=A@mail.gmail.com>
-References: <20200330143529.4dafeb34@canb.auug.org.au>
-        <CAMe9rOqnRCEdHhSHOT=Ut11D3O2WhjiFYhvPnaU5dANZNPE-=A@mail.gmail.com>
+        Mon, 30 Mar 2020 00:10:48 -0400
+Received: from esa2.mentor.iphmx.com ([68.232.141.98]:38367 "EHLO
+        esa2.mentor.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725268AbgC3EKs (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Mar 2020 00:10:48 -0400
+IronPort-SDR: hWexN6+CD3P93rbld9iS91esFRZsstagQIivQJJUtUlOzm1vN1AV8yxSi/98UhGuO3PWWrirYT
+ HZCgxDKiQtZf7u0DC9+FknuLTUIqFMPN/39cMSh2KzK9LmxCpy0FRm5tFG2sHgY3xGTl7gsJPc
+ bcubU/sVn9RrelBYPP3Bg6NQv9/NfUKaiHrc2Qv2bXBLo44D6SzlAQya61HW/NJ/hEnwZXl2b9
+ Wy6iF0YQLnzqMgdbzi/WAl794bKAmmVZi3QEK5mCMJ3cV1UOJcx/HWKXRKEI06u0GfC5vokZxg
+ psE=
+X-IronPort-AV: E=Sophos;i="5.72,322,1580803200"; 
+   d="scan'208";a="47140911"
+Received: from orw-gwy-01-in.mentorg.com ([192.94.38.165])
+  by esa2.mentor.iphmx.com with ESMTP; 29 Mar 2020 20:10:47 -0800
+IronPort-SDR: peAIlDJjt+UVVhpQE3wuqb3MhOpL53QKLBCZjxBZb01BkoS6XeZ5/eOm/I/yT1Qj29RbwzkeEg
+ 1jT2tMKD5EMEj8ykKvWt0Bb7408RH1YoelcEHPN0dZ5DyAUHVkNEojUjTcVEJHUg7J1MTMqGng
+ jDi59bof4jsWrtklYjFTbI35LViRaSy/rw/3FbF3Iv8f4SJRK8To2c/u2BfRexp5XSZiG0sOWJ
+ duv4hOcyG3OWYwuydtJWMDXI8LN4ZO+s9CpCeP46O86ZQvmXvRhdh2OiRcJXCMSHl0KcZY/Mo3
+ JQ8=
+Subject: Re: [PATCH v9 13/55] Input: atmel_mxt_ts - add regulator control
+ support
+To:     Dmitry Osipenko <digetx@gmail.com>, <nick@shmanahar.org>,
+        <dmitry.torokhov@gmail.com>, <jikos@kernel.org>,
+        <benjamin.tissoires@redhat.com>, <bsz@semihalf.com>,
+        <rydberg@bitmath.org>
+CC:     <linux-input@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <erosca@de.adit-jv.com>, <Andrew_Gabbasov@mentor.com>
+References: <20200325133334.19346-1-jiada_wang@mentor.com>
+ <20200325133334.19346-14-jiada_wang@mentor.com>
+ <672615bc-adce-213f-9e44-864163c0a770@gmail.com>
+ <85a74259-6f52-34a0-af34-0217a088cc5b@mentor.com>
+ <20d8dbc3-ee0e-95e4-6d33-2ed10c0268c6@gmail.com>
+From:   "Wang, Jiada" <jiada_wang@mentor.com>
+Message-ID: <278eb2ef-dc55-99dc-5525-f0eccea508f6@mentor.com>
+Date:   Mon, 30 Mar 2020 13:10:41 +0900
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/Ryc+xrSw9=HsrUjt4DZSlHK";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+In-Reply-To: <20d8dbc3-ee0e-95e4-6d33-2ed10c0268c6@gmail.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: svr-orw-mbx-02.mgc.mentorg.com (147.34.90.202) To
+ svr-orw-mbx-01.mgc.mentorg.com (147.34.90.201)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/Ryc+xrSw9=HsrUjt4DZSlHK
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Hi Dmitry
 
-Hi H.J.,
+On 2020/03/30 3:54, Dmitry Osipenko wrote:
+> 27.03.2020 14:09, Wang, Jiada пишет:
+>> Hi Dmitry
+>>
+>> On 2020/03/26 4:05, Dmitry Osipenko wrote:
+>>> 25.03.2020 16:32, Jiada Wang пишет:
+>>>> From: Nick Dyer <nick.dyer@itdev.co.uk>
+>>>>
+>>>> Allow the driver to optionally manage enabling/disable power to the
+>>>> touch
+>>>> controller itself. If the regulators are not present then use the deep
+>>>> sleep power mode instead.
+>>>>
+>>>> For a correct power on sequence, it is required that we have control
+>>>> over
+>>>> the RESET line.
+>>>
+>>> ...
+>>>> +    data->reg_vdd = devm_regulator_get(dev, "vdd");
+>>>> +    if (IS_ERR(data->reg_vdd)) {
+>>>> +        error = PTR_ERR(data->reg_vdd);
+>>>> +        dev_err(dev, "Error %d getting vdd regulator\n", error);
+>>>> +        goto fail;
+>>>> +    }
+>>>> +
+>>>> +    data->reg_avdd = devm_regulator_get(dev, "avdd");
+>>>> +    if (IS_ERR(data->reg_avdd)) {
+>>>> +        error = PTR_ERR(data->reg_avdd);
+>>>> +        dev_err(dev, "Error %d getting avdd regulator\n", error);
+>>>> +        goto fail_release;
+>>>> +    }
+>>>
+>>> Hello Jiada,
+>>>
+>>> The new regulator properties should be documented in the device-tree
+>>> binding.
+>>>
+>> I will document new regulator properties in a separate commit in
+>> v10 patch-set
+> 
+> Please make sure that all patches are added in a correct order and that
+> they at least compile. This patch doesn't compile:
+> 
+Sure, I will take care of this issue in next version
 
-On Sun, 29 Mar 2020 20:53:42 -0700 "H.J. Lu" <hjl.tools@gmail.com> wrote:
->
-> Please see my enclosing email.   Is anyone from PPC community reading ema=
-ils?
-
-What you really need is an Ack from the PowerPC people for the fix you
-suggested and then tha fix should go in the same series that is now
-causing the failure (preferably before the problematic (for PowerPC)
-patch.
-
-For reference, the change is (white space damaged):
-
-diff --git a/arch/powerpc/kernel/vmlinux.lds.S b/arch/powerpc/kernel/vmlinu=
-x.lds.S
-index b4c89a1acebb..076b3e8a849d 100644
---- a/arch/powerpc/kernel/vmlinux.lds.S
-+++ b/arch/powerpc/kernel/vmlinux.lds.S
-@@ -365,9 +365,12 @@ SECTIONS
-        DISCARDS
-        /DISCARD/ : {
-                *(*.EMB.apuinfo)
--               *(.glink .iplt .plt .rela* .comment)
-+               *(.glink .iplt .plt .comment)
-                *(.gnu.version*)
-                *(.gnu.attributes)
-                *(.eh_frame)
-+#ifndef CONFIG_RELOCATABLE
-+               *(.rela*)
-+#endif
-        }
- }
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/Ryc+xrSw9=HsrUjt4DZSlHK
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl6BcLMACgkQAVBC80lX
-0GwQPgf/UAJzJSpkJX3HeN7EVC2E7DRsnYnVlaR5TqipTOkpmflinpAU+ZvzCh+4
-IID5+wHGLt30AwY/f9G4aq0TcvwyF5KD9YGpLOE5exgwXnDJYF3dNHuo1XlNOkYv
-hdn+V84g1Ntoz+YdciL+RlvGdpQhJAiDTZK1PgUoQR8frt3VP/agZLwfJzLC8U9j
-yCQj7scps5qauXHx9epiqb3pRmZIguHAWVsqY67KYN2+3nQT6T1APr4Uy6hqjkBK
-p+PPomrOmFdnvbGsuxbEWIFgNqP2RXM4xOfm8wvEiTXcaIbXRI9PnfwaeWUxgDBE
-T1l/9KoYxVURaM0mQOXLXR9P7CEMfw==
-=uV8y
------END PGP SIGNATURE-----
-
---Sig_/Ryc+xrSw9=HsrUjt4DZSlHK--
+Thanks,
+Jiada
+>    CC      drivers/input/touchscreen/atmel_mxt_ts.o
+> drivers/input/touchscreen/atmel_mxt_ts.c:34:10: fatal error:
+> dt-bindings/input/atmel_mxt_ts.h: No such file or directory
+>     34 | #include <dt-bindings/input/atmel_mxt_ts.h>
+> 
