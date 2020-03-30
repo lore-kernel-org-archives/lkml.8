@@ -2,106 +2,199 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BBE3C43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 11:43:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CB4CC43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 11:44:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 44EB5206DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 11:43:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0EAEE2073B
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 11:44:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729801AbgC3Lnv (ORCPT
+        id S1729868AbgC3LoO convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 07:43:51 -0400
-Received: from foss.arm.com ([217.140.110.172]:51394 "EHLO foss.arm.com"
+        Mon, 30 Mar 2020 07:44:14 -0400
+Received: from mga11.intel.com ([192.55.52.93]:45279 "EHLO mga11.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729669AbgC3Lnu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 07:43:50 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E58C931B;
-        Mon, 30 Mar 2020 04:43:49 -0700 (PDT)
-Received: from [10.57.27.249] (unknown [10.57.27.249])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4CC943F52E;
-        Mon, 30 Mar 2020 04:43:48 -0700 (PDT)
-Subject: Re: [PATCH 2/2] arm64: Kconfig: ptrauth: Add binutils version check
- to fix mismatch
-To:     Catalin Marinas <catalin.marinas@arm.com>
-Cc:     linux-arm-kernel@lists.infradead.org,
-        Will Deacon <will@kernel.org>,
-        Vincenzo Frascino <Vincenzo.Frascino@arm.com>,
-        linux-kernel@vger.kernel.org
-References: <1585236720-21819-1-git-send-email-amit.kachhap@arm.com>
- <1585236720-21819-2-git-send-email-amit.kachhap@arm.com>
- <20200327125522.GB18117@mbp>
-From:   Amit Kachhap <amit.kachhap@arm.com>
-Message-ID: <497d96a1-0532-ca18-8eaa-79fbcfd0b87d@arm.com>
-Date:   Mon, 30 Mar 2020 17:13:44 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-MIME-Version: 1.0
-In-Reply-To: <20200327125522.GB18117@mbp>
-Content-Type: text/plain; charset=utf-8; format=flowed
+        id S1729669AbgC3LoN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Mar 2020 07:44:13 -0400
+IronPort-SDR: fGrK7Kx3S7D9LmqV3mu5mJgnsFxR2Kw/gA0lXMESdzBNzxaVctWArifmVfg36mzV2KXHP8KJMC
+ OnmKjdTaebFA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Mar 2020 04:44:13 -0700
+IronPort-SDR: pap6UxZaH8kyXeJT1F0+Vr+6mRxFVAyDMde9bFQMLJzIDazoAMWUPvunXXv3N8tciS0IQ9lqVh
+ t2Cc7iV78mHw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,324,1580803200"; 
+   d="scan'208";a="421900900"
+Received: from fmsmsx108.amr.corp.intel.com ([10.18.124.206])
+  by orsmga005.jf.intel.com with ESMTP; 30 Mar 2020 04:44:12 -0700
+Received: from fmsmsx113.amr.corp.intel.com (10.18.116.7) by
+ FMSMSX108.amr.corp.intel.com (10.18.124.206) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Mon, 30 Mar 2020 04:44:12 -0700
+Received: from shsmsx153.ccr.corp.intel.com (10.239.6.53) by
+ FMSMSX113.amr.corp.intel.com (10.18.116.7) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Mon, 30 Mar 2020 04:44:12 -0700
+Received: from shsmsx104.ccr.corp.intel.com ([169.254.5.225]) by
+ SHSMSX153.ccr.corp.intel.com ([169.254.12.89]) with mapi id 14.03.0439.000;
+ Mon, 30 Mar 2020 19:44:08 +0800
+From:   "Tian, Kevin" <kevin.tian@intel.com>
+To:     "Liu, Yi L" <yi.l.liu@intel.com>,
+        "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
+        "eric.auger@redhat.com" <eric.auger@redhat.com>
+CC:     "jacob.jun.pan@linux.intel.com" <jacob.jun.pan@linux.intel.com>,
+        "joro@8bytes.org" <joro@8bytes.org>,
+        "Raj, Ashok" <ashok.raj@intel.com>,
+        "Tian, Jun J" <jun.j.tian@intel.com>,
+        "Sun, Yi Y" <yi.y.sun@intel.com>,
+        "jean-philippe@linaro.org" <jean-philippe@linaro.org>,
+        "peterx@redhat.com" <peterx@redhat.com>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Wu, Hao" <hao.wu@intel.com>
+Subject: RE: [PATCH v1 2/8] vfio/type1: Add vfio_iommu_type1 parameter for
+ quota tuning
+Thread-Topic: [PATCH v1 2/8] vfio/type1: Add vfio_iommu_type1 parameter for
+ quota tuning
+Thread-Index: AQHWAEUbX2o9koiJmUSoQpAjbhigyahg28IA//9+x4CAAI0HsP//fHmAgACn7gA=
+Date:   Mon, 30 Mar 2020 11:44:08 +0000
+Message-ID: <AADFC41AFE54684AB9EE6CBC0274A5D19D7FF888@SHSMSX104.ccr.corp.intel.com>
+References: <1584880325-10561-1-git-send-email-yi.l.liu@intel.com>
+ <1584880325-10561-3-git-send-email-yi.l.liu@intel.com>
+ <AADFC41AFE54684AB9EE6CBC0274A5D19D7FF3C5@SHSMSX104.ccr.corp.intel.com>
+ <A2975661238FB949B60364EF0F2C25743A217C68@SHSMSX104.ccr.corp.intel.com>
+ <AADFC41AFE54684AB9EE6CBC0274A5D19D7FF46F@SHSMSX104.ccr.corp.intel.com>
+ <A2975661238FB949B60364EF0F2C25743A217D97@SHSMSX104.ccr.corp.intel.com>
+In-Reply-To: <A2975661238FB949B60364EF0F2C25743A217D97@SHSMSX104.ccr.corp.intel.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-product: dlpe-windows
+dlp-version: 11.2.0.6
+dlp-reaction: no-action
+x-originating-ip: [10.239.127.40]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+MIME-Version: 1.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+> From: Liu, Yi L <yi.l.liu@intel.com>
+> Sent: Monday, March 30, 2020 5:27 PM
+> 
+> > From: Tian, Kevin <kevin.tian@intel.com>
+> > Sent: Monday, March 30, 2020 5:20 PM
+> > To: Liu, Yi L <yi.l.liu@intel.com>; alex.williamson@redhat.com;
+> > Subject: RE: [PATCH v1 2/8] vfio/type1: Add vfio_iommu_type1 parameter
+> for quota
+> > tuning
+> >
+> > > From: Liu, Yi L <yi.l.liu@intel.com>
+> > > Sent: Monday, March 30, 2020 4:53 PM
+> > >
+> > > > From: Tian, Kevin <kevin.tian@intel.com>
+> > > > Sent: Monday, March 30, 2020 4:41 PM
+> > > > To: Liu, Yi L <yi.l.liu@intel.com>; alex.williamson@redhat.com;
+> > > > Subject: RE: [PATCH v1 2/8] vfio/type1: Add vfio_iommu_type1
+> > > > parameter
+> > > for quota
+> > > > tuning
+> > > >
+> > > > > From: Liu, Yi L <yi.l.liu@intel.com>
+> > > > > Sent: Sunday, March 22, 2020 8:32 PM
+> > > > >
+> > > > > From: Liu Yi L <yi.l.liu@intel.com>
+> > > > >
+> > > > > This patch adds a module option to make the PASID quota tunable by
+> > > > > administrator.
+> > > > >
+> > > > > TODO: needs to think more on how to  make the tuning to be per-
+> process.
+> > > > >
+> > > > > Previous discussions:
+> > > > > https://patchwork.kernel.org/patch/11209429/
+> > > > >
+> > > > > Cc: Kevin Tian <kevin.tian@intel.com>
+> > > > > CC: Jacob Pan <jacob.jun.pan@linux.intel.com>
+> > > > > Cc: Alex Williamson <alex.williamson@redhat.com>
+> > > > > Cc: Eric Auger <eric.auger@redhat.com>
+> > > > > Cc: Jean-Philippe Brucker <jean-philippe@linaro.org>
+> > > > > Signed-off-by: Liu Yi L <yi.l.liu@intel.com>
+> > > > > ---
+> > > > >  drivers/vfio/vfio.c             | 8 +++++++-
+> > > > >  drivers/vfio/vfio_iommu_type1.c | 7 ++++++-
+> > > > >  include/linux/vfio.h            | 3 ++-
+> > > > >  3 files changed, 15 insertions(+), 3 deletions(-)
+> > > > >
+> > > > > diff --git a/drivers/vfio/vfio.c b/drivers/vfio/vfio.c index
+> > > > > d13b483..020a792 100644
+> > > > > --- a/drivers/vfio/vfio.c
+> > > > > +++ b/drivers/vfio/vfio.c
+> > > > > @@ -2217,13 +2217,19 @@ struct vfio_mm
+> > > *vfio_mm_get_from_task(struct
+> > > > > task_struct *task)
+> > > > >  }
+> > > > >  EXPORT_SYMBOL_GPL(vfio_mm_get_from_task);
+> > > > >
+> > > > > -int vfio_mm_pasid_alloc(struct vfio_mm *vmm, int min, int max)
+> > > > > +int vfio_mm_pasid_alloc(struct vfio_mm *vmm, int quota, int min,
+> > > > > +int
+> > > max)
+> > > > >  {
+> > > > >  	ioasid_t pasid;
+> > > > >  	int ret = -ENOSPC;
+> > > > >
+> > > > >  	mutex_lock(&vmm->pasid_lock);
+> > > > >
+> > > > > +	/* update quota as it is tunable by admin */
+> > > > > +	if (vmm->pasid_quota != quota) {
+> > > > > +		vmm->pasid_quota = quota;
+> > > > > +		ioasid_adjust_set(vmm->ioasid_sid, quota);
+> > > > > +	}
+> > > > > +
+> > > >
+> > > > It's a bit weird to have quota adjusted in the alloc path, since the
+> > > > latter
+> > > might
+> > > > be initiated by non-privileged users. Why not doing the simple math
+> > > > in
+> > > vfio_
+> > > > create_mm to set the quota when the ioasid set is created? even in
+> > > > the
+> > > future
+> > > > you may allow per-process quota setting, that should come from
+> > > > separate privileged path instead of thru alloc..
+> > >
+> > > The reason is the kernel parameter modification has no event which can
+> > > be used to adjust the quota. So I chose to adjust it in pasid_alloc
+> > > path. If it's not good, how about adding one more IOCTL to let user-
+> > > space trigger a quota adjustment event? Then even non-privileged user
+> > > could trigger quota adjustment, the quota is actually controlled by
+> > > privileged user. How about your opinion?
+> > >
+> >
+> > why do you need an event to adjust? As I said, you can set the quota when
+> the set is
+> > created in vfio_create_mm...
+> 
+> oh, it's to support runtime adjustments. I guess it may be helpful to let
+> per-VM quota tunable even the VM is running. If just set the quota in
+> vfio_create_mm(), it is not able to adjust at runtime.
+> 
 
+ok, I didn't note the module parameter was granted with a write permission.
+However there is a further problem. We cannot support PASID reclaim now.
+What about the admin sets a quota smaller than previous value while some
+IOASID sets already exceed the new quota? I'm not sure how to fail a runtime
+module parameter change due to that situation. possibly a normal sysfs 
+node better suites the runtime change requirement...
 
-On 3/27/20 6:25 PM, Catalin Marinas wrote:
-> On Thu, Mar 26, 2020 at 09:02:00PM +0530, Amit Daniel Kachhap wrote:
->> Recent addition of ARM64_PTR_AUTH exposed a mismatch issue with binutils.
->> 9.1+ versions of gcc inserts a section note .note.gnu.property but this
->> can be used properly by binutils version greater than 2.33.1. If older
->> binutils are used then the following warnings are generated,
->>
->> aarch64-linux-ld: warning: arch/arm64/kernel/vdso/vgettimeofday.o: unsupported GNU_PROPERTY_TYPE (5) type: 0xc0000000
->> aarch64-linux-objdump: warning: arch/arm64/lib/csum.o: unsupported GNU_PROPERTY_TYPE (5) type: 0xc0000000
->> aarch64-linux-nm: warning: .tmp_vmlinux1: unsupported GNU_PROPERTY_TYPE (5) type: 0xc0000000
->>
->> This patch enables ARM64_PTR_AUTH when gcc and binutils versions are
->> compatible with each other. Older gcc which do not insert such section
->> continue to work as before.
->>
->> This scenario may not occur with clang as a recent commit 3b446c7d27ddd06
->> ("arm64: Kconfig: verify binutils support for ARM64_PTR_AUTH") masks
->> binutils version lesser then 2.34.
->>
->> Reported-by: kbuild test robot <lkp@intel.com>
->> Suggested-by: Vincenzo Frascino <Vincenzo.Frascino@arm.com>
->> Signed-off-by: Amit Daniel Kachhap <amit.kachhap@arm.com>
->> ---
->>   arch/arm64/Kconfig | 2 +-
->>   1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
->> index e6712b6..73135da 100644
->> --- a/arch/arm64/Kconfig
->> +++ b/arch/arm64/Kconfig
->> @@ -1503,7 +1503,7 @@ config ARM64_PTR_AUTH
->>   	default y
->>   	depends on !KVM || ARM64_VHE
->>   	depends on (CC_HAS_SIGN_RETURN_ADDRESS || CC_HAS_BRANCH_PROT_PAC_RET) && AS_HAS_PAC
->> -	depends on CC_IS_GCC || (CC_IS_CLANG && AS_HAS_CFI_NEGATE_RA_STATE)
->> +	depends on (CC_IS_GCC && (GCC_VERSION < 90100 || LD_VERSION >= 233010000)) || (CC_IS_CLANG && AS_HAS_CFI_NEGATE_RA_STATE)
-> 
-> We should add some of the comments in the commit log to the Kconfig
-> entry. I would also split this in two (equivalent to CC_IS_ implies):
-> 
-> 	depends on !CC_IS_GCC || GCC_VERSION < 90100 || LD_VERSION >= 233010000
-> 	depends on !CC_IS_CLANG || AS_HAS_CFI_NEGATE_RA_STATE
-> 
-> and add a comment above the gcc/ld version checking.
-> 
-> (not entirely identical to the original if CC is neither of them but I
-> don't think we have this problem)
-
-Re-posted v2 as per the suggestions.
-
-Thanks,
-Amit
-> 
+Thanks
+Kevin
