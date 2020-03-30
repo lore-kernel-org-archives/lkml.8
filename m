@@ -2,222 +2,198 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 180FCC43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 14:49:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D801C2D0EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 14:49:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D595F2073B
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 14:49:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="bZQT8U7y"
+	by mail.kernel.org (Postfix) with ESMTP id C8FA32073B
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 14:49:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728748AbgC3Otx (ORCPT
+        id S1728799AbgC3Ot5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 10:49:53 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:45837 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728658AbgC3Otv (ORCPT
+        Mon, 30 Mar 2020 10:49:57 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:59005 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728721AbgC3Otz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 10:49:51 -0400
-Received: by mail-pl1-f195.google.com with SMTP id t4so854155plq.12
-        for <linux-kernel@vger.kernel.org>; Mon, 30 Mar 2020 07:49:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=dM88C1QGqBI6GelWDoTaSxU6lxBt7GdfPhOw1+SN7L4=;
-        b=bZQT8U7yeFC0d8TYNbHn5nxihcCGYzsucQuteR7S/owSBM74VPEGKfvp1QygPlLklu
-         7A8Cf+UJ2EJnU6xm+0oGKWQydb4lR8JoJNOjkbL9XKP7aFLsL40p+BMaSrDFU1lQNio9
-         7f/kbrNNjQ/MHbdaUvWE0x8rRGWFOqb6aL9sA=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=dM88C1QGqBI6GelWDoTaSxU6lxBt7GdfPhOw1+SN7L4=;
-        b=k6aDJinYhB/BQVutwlaujams64JncitePG6rPU5t63OwyxXoK/53lExgS4FdOS45Ma
-         RP7FjlJgD/WKpCRnDPtpSdcFeUy7zTUCSbMzsMgTI3we+gv2jtHjkwbAPGQXVrWed+lS
-         1InnaIwBqFrfQnNoExPkuzyoLd8IOgyTk7Q6YhJPnduZ7nK55FSrdKDE7eWbha159iLd
-         l/xMgKpKXq4Ayopq1kUqYdcpS9/IKh4KSwOQwH1GUi6At2DaHU3cXnkaSnAsYuk6e5+E
-         py1Zqrk90X9g/Pab1xedroC9uxzxn4sqvAP2w3MPlTrcgCG1YoJXMf4YZQLLPX5a+dMk
-         yQhg==
-X-Gm-Message-State: ANhLgQ23fLRxKvidueh7dHdQ35NzA1HNTs72mT9ZDWV9sha80DEPoirz
-        qIPKcTIChQ1qD8mHipLZpq3TmQ==
-X-Google-Smtp-Source: ADFU+vs7rQVtixqgI9wBPaqXU1+aDYgI08FylS7YrS5dAycbwFZ775FR+CDJE1eOdLSXZ5NRtFq8wA==
-X-Received: by 2002:a17:90a:7f03:: with SMTP id k3mr16139676pjl.42.1585579788982;
-        Mon, 30 Mar 2020 07:49:48 -0700 (PDT)
-Received: from tictac2.mtv.corp.google.com ([2620:15c:202:1:24fa:e766:52c9:e3b2])
-        by smtp.gmail.com with ESMTPSA id y198sm1460972pfg.123.2020.03.30.07.49.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Mar 2020 07:49:48 -0700 (PDT)
-From:   Douglas Anderson <dianders@chromium.org>
-To:     axboe@kernel.dk, jejb@linux.ibm.com, martin.petersen@oracle.com
-Cc:     linux-block@vger.kernel.org, groeck@chromium.org,
-        paolo.valente@linaro.org, linux-scsi@vger.kernel.org,
-        sqazi@google.com, Douglas Anderson <dianders@chromium.org>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 2/2] scsi: core: Fix stall if two threads request budget at the same time
-Date:   Mon, 30 Mar 2020 07:49:06 -0700
-Message-Id: <20200330074856.2.I28278ef8ea27afc0ec7e597752a6d4e58c16176f@changeid>
-X-Mailer: git-send-email 2.26.0.rc2.310.g2932bb562d-goog
-In-Reply-To: <20200330144907.13011-1-dianders@chromium.org>
-References: <20200330144907.13011-1-dianders@chromium.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Mon, 30 Mar 2020 10:49:55 -0400
+Received: from [5.158.153.52] (helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1jIvjb-0006sn-PO; Mon, 30 Mar 2020 16:49:51 +0200
+Received: from nanos.tec.linutronix.de (localhost [IPv6:::1])
+        by nanos.tec.linutronix.de (Postfix) with ESMTP id 61A561040EC;
+        Mon, 30 Mar 2020 16:49:51 +0200 (CEST)
+Date:   Mon, 30 Mar 2020 14:47:09 -0000
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-kernel@vger.kernel.org, x86@kernel.org
+Subject: [GIT pull] irq/core for v5.7
+Message-ID: <158557962955.22376.9136086165862170511.tglx@nanos.tec.linutronix.de>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It is possible for two threads to be running
-blk_mq_do_dispatch_sched() at the same time with the same "hctx".
-This is because there can be more than one caller to
-__blk_mq_run_hw_queue() with the same "hctx" and hctx_lock() doesn't
-prevent more than one thread from entering.
-
-If more than one thread is running blk_mq_do_dispatch_sched() at the
-same time with the same "hctx", they may have contention acquiring
-budget.  The blk_mq_get_dispatch_budget() can eventually translate
-into scsi_mq_get_budget().  If the device's "queue_depth" is 1 (not
-uncommon) then only one of the two threads will be the one to
-increment "device_busy" to 1 and get the budget.
-
-The losing thread will break out of blk_mq_do_dispatch_sched() and
-will stop dispatching requests.  The assumption is that when more
-budget is available later (when existing transactions finish) the
-queue will be kicked again, perhaps in scsi_end_request().
-
-The winning thread now has budget and can go on to call
-dispatch_request().  If dispatch_request() returns NULL here then we
-have a potential problem.  Specifically we'll now call
-blk_mq_put_dispatch_budget() which translates into
-scsi_mq_put_budget().  That will mark the device as no longer busy but
-doesn't do anything to kick the queue.  This violates the assumption
-that the queue would be kicked when more budget was available.
-
-Pictorially:
-
-Thread A                          Thread B
-================================= ==================================
-blk_mq_get_dispatch_budget() => 1
-dispatch_request() => NULL
-                                  blk_mq_get_dispatch_budget() => 0
-                                  // because Thread A marked
-                                  // "device_busy" in scsi_device
-blk_mq_put_dispatch_budget()
-
-The above case was observed in reboot tests and caused a task to hang
-forever waiting for IO to complete.  Traces showed that in fact two
-tasks were running blk_mq_do_dispatch_sched() at the same time with
-the same "hctx".  The task that got the budget did in fact see
-dispatch_request() return NULL.  Both tasks returned and the system
-went on for several minutes (until the hung task delay kicked in)
-without the given "hctx" showing up again in traces.
-
-Let's attempt to fix this problem by detecting budget contention.  If
-we're in the SCSI code's put_budget() function and we saw that someone
-else might have wanted the budget we got then we'll kick the queue.
-
-The mechanism of kicking due to budget contention has the potential to
-overcompensate and kick the queue more than strictly necessary, but it
-shouldn't hurt.
-
-Signed-off-by: Douglas Anderson <dianders@chromium.org>
----
-
- drivers/scsi/scsi_lib.c    | 27 ++++++++++++++++++++++++---
- drivers/scsi/scsi_scan.c   |  1 +
- include/scsi/scsi_device.h |  2 ++
- 3 files changed, 27 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/scsi/scsi_lib.c b/drivers/scsi/scsi_lib.c
-index 610ee41fa54c..0530da909995 100644
---- a/drivers/scsi/scsi_lib.c
-+++ b/drivers/scsi/scsi_lib.c
-@@ -344,6 +344,21 @@ static void scsi_dec_host_busy(struct Scsi_Host *shost, struct scsi_cmnd *cmd)
- 	rcu_read_unlock();
- }
- 
-+static void scsi_device_dec_busy(struct scsi_device *sdev)
-+{
-+	bool was_contention;
-+	unsigned long flags;
-+
-+	spin_lock_irqsave(&sdev->budget_lock, flags);
-+	atomic_dec(&sdev->device_busy);
-+	was_contention = sdev->budget_contention;
-+	sdev->budget_contention = false;
-+	spin_unlock_irqrestore(&sdev->budget_lock, flags);
-+
-+	if (was_contention)
-+		blk_mq_run_hw_queues(sdev->request_queue, true);
-+}
-+
- void scsi_device_unbusy(struct scsi_device *sdev, struct scsi_cmnd *cmd)
- {
- 	struct Scsi_Host *shost = sdev->host;
-@@ -354,7 +369,7 @@ void scsi_device_unbusy(struct scsi_device *sdev, struct scsi_cmnd *cmd)
- 	if (starget->can_queue > 0)
- 		atomic_dec(&starget->target_busy);
- 
--	atomic_dec(&sdev->device_busy);
-+	scsi_device_dec_busy(sdev);
- }
- 
- static void scsi_kick_queue(struct request_queue *q)
-@@ -1624,16 +1639,22 @@ static void scsi_mq_put_budget(struct blk_mq_hw_ctx *hctx)
- 	struct request_queue *q = hctx->queue;
- 	struct scsi_device *sdev = q->queuedata;
- 
--	atomic_dec(&sdev->device_busy);
-+	scsi_device_dec_busy(sdev);
- }
- 
- static bool scsi_mq_get_budget(struct blk_mq_hw_ctx *hctx)
- {
- 	struct request_queue *q = hctx->queue;
- 	struct scsi_device *sdev = q->queuedata;
-+	unsigned long flags;
- 
--	if (scsi_dev_queue_ready(q, sdev))
-+	spin_lock_irqsave(&sdev->budget_lock, flags);
-+	if (scsi_dev_queue_ready(q, sdev)) {
-+		spin_unlock_irqrestore(&sdev->budget_lock, flags);
- 		return true;
-+	}
-+	sdev->budget_contention = true;
-+	spin_unlock_irqrestore(&sdev->budget_lock, flags);
- 
- 	if (atomic_read(&sdev->device_busy) == 0 && !scsi_device_blocked(sdev))
- 		blk_mq_delay_run_hw_queue(hctx, SCSI_QUEUE_DELAY);
-diff --git a/drivers/scsi/scsi_scan.c b/drivers/scsi/scsi_scan.c
-index 058079f915f1..72f7b6faed9b 100644
---- a/drivers/scsi/scsi_scan.c
-+++ b/drivers/scsi/scsi_scan.c
-@@ -240,6 +240,7 @@ static struct scsi_device *scsi_alloc_sdev(struct scsi_target *starget,
- 	INIT_LIST_HEAD(&sdev->starved_entry);
- 	INIT_LIST_HEAD(&sdev->event_list);
- 	spin_lock_init(&sdev->list_lock);
-+	spin_lock_init(&sdev->budget_lock);
- 	mutex_init(&sdev->inquiry_mutex);
- 	INIT_WORK(&sdev->event_work, scsi_evt_thread);
- 	INIT_WORK(&sdev->requeue_work, scsi_requeue_run_queue);
-diff --git a/include/scsi/scsi_device.h b/include/scsi/scsi_device.h
-index f8312a3e5b42..3c5e0f0c8a91 100644
---- a/include/scsi/scsi_device.h
-+++ b/include/scsi/scsi_device.h
-@@ -106,6 +106,8 @@ struct scsi_device {
- 	struct list_head    siblings;   /* list of all devices on this host */
- 	struct list_head    same_target_siblings; /* just the devices sharing same target id */
- 
-+	spinlock_t budget_lock;		/* For device_busy and budget_contention */
-+	bool budget_contention;		/* Someone couldn't get budget */
- 	atomic_t device_busy;		/* commands actually active on LLDD */
- 	atomic_t device_blocked;	/* Device returned QUEUE_FULL. */
- 
--- 
-2.26.0.rc2.310.g2932bb562d-goog
-
+TGludXMsCgpwbGVhc2UgcHVsbCB0aGUgbGF0ZXN0IGlycS9jb3JlIGJyYW5jaCBmcm9tOgoKICAg
+Z2l0Oi8vZ2l0Lmtlcm5lbC5vcmcvcHViL3NjbS9saW51eC9rZXJuZWwvZ2l0L3RpcC90aXAuZ2l0
+IGlycS1jb3JlLTIwMjAtMDMtMzAKCnVwIHRvOiAgOGExM2IwMmEwMTBhOiBNZXJnZSB0YWcgJ2ly
+cWNoaXAtNS43JyBvZiBnaXQ6Ly9naXQua2VybmVsLm9yZy9wdWIvc2NtL2xpbnV4L2tlcm5lbC9n
+aXQvbWF6L2FybS1wbGF0Zm9ybXMgaW50byBpcnEvY29yZQoKVXBkYXRlcyBmb3IgdGhlIGludGVy
+cnVwdCBzdWJzeXN0ZW06CgogIFRyZWV3aWRlOgogIAogICAgLSBDbGVhbnVwIG9mIHNldHVwX2ly
+cSgpIHdoaWNoIGlzIG5vdCBsb25nZXIgcmVxdWlyZWQgYmVjYXVzZSB0aGUKICAgICAgbWVtb3J5
+IGFsbG9jYXRvciBpcyBhdmFpbGFibGUgZWFybHkuIE1vc3QgY2xlYW51cCBjaGFuZ2VzIGNvbWUK
+ICAgICAgdGhyb3VnaCB0aGUgdmFyaW91cyBtYWludGFpbmVyIHRyZWVzLCBzbyB0aGUgZmluYWwg
+cmVtb3ZhbCBvZgogICAgICBzZXR1cF9pcnEoKSBpcyBwb3N0cG9uZWQgdG93YXJkcyB0aGUgZW5k
+IG9mIHRoZSBtZXJnZSB3aW5kb3cuCgogIENvcmU6CgogICAgLSBQcm90ZWN0aW9uIGFnYWluc3Qg
+dW5zYWZlIGludm9jYXRpb24gb2YgaW50ZXJydXB0IGhhbmRsZXJzIGFuZCB1bnNhZmUKICAgICAg
+aW50ZXJydXB0IGluamVjdGlvbiBpbmNsdWRpbmcgYSBmaXh1cCBvZiB0aGUgb2ZmZW5kaW5nIFBD
+SS9BRVIgZXJyb3IKICAgICAgaW5qZWN0aW9uIG1lY2hhbmlzbS4KCiAgICAgIEludm9raW5nIGlu
+dGVycnVwdCBoYW5kbGVycyBmcm9tIGFyYml0cmFyeSBjb250ZXh0cywgaS5lLiBvdXRzaWRlIG9m
+CiAgICAgIGFuIGFjdHVhbCBpbnRlcnJ1cHQsIGNhbiBjYXVzZSBpbmNvbnNpc3RlbnQgc3RhdGUg
+b24gdGhlIGZyYWdpbGUKICAgICAgeDg2IGludGVycnVwdCBhZmZpbml0eSBjaGFuZ2luZyBoYXJk
+d2FyZSB0cmFpbndyZWNrLgoKICBEcml2ZXJzOgoKICAgIC0gU2Vjb25kIHdhdmUgb2Ygc3VwcG9y
+dCBmb3IgdGhlIG5ldyBBUk0gR0lDdjQuMQogICAgLSBNdWx0aS1pbnN0YW5jZSBzdXBwb3J0IGZv
+ciBYaWxpbnggYW5kIFBMSUMgaW50ZXJydXB0IGNvbnRyb2xsZXJzCiAgICAtIENQVS1Ib3RwbHVn
+IHN1cHBvcnQgZm9yIFBMSUMKICAgIC0gVGhlIG9ibGlnYXRvcnkgbmV3IGRyaXZlciBmb3IgWDEw
+MDAgVENVCiAgICAtIEVuaGFuY2VtZW50cywgY2xlYW51cHMgYW5kIGZpeGVzIGFsbCBvdmVyIHRo
+ZSBwbGFjZQoKVGhhbmtzLAoKCXRnbHgKCi0tLS0tLS0tLS0tLS0tLS0tLT4KQWxleGFuZGVyIFN2
+ZXJkbGluICgxKToKICAgICAgZ2VuaXJxL2lycWRvbWFpbjogQ2hlY2sgcG9pbnRlciBpbiBpcnFf
+ZG9tYWluX2FsbG9jX2lycXNfaGllcmFyY2h5KCkKCkFsZXhhbmRyZSBUb3JndWUgKDIpOgogICAg
+ICBpcnFjaGlwL3N0bTMyOiBBZGQgaXJxIHJldHJpZ2dlciBzdXBwb3J0CiAgICAgIHBpbmN0cmw6
+IHN0bTMyOiBBZGQgbGV2ZWwgaW50ZXJydXB0IHN1cHBvcnQgdG8gZ3BpbyBpcnEgY2hpcAoKQW5z
+b24gSHVhbmcgKDEpOgogICAgICBpcnFjaGlwOiBBZGQgQ09NUElMRV9URVNUIHN1cHBvcnQgZm9y
+IElNWF9JTlRNVVgKCkF0aXNoIFBhdHJhICgyKToKICAgICAgaXJxY2hpcC9zaWZpdmUtcGxpYzog
+RW5hYmxlL0Rpc2FibGUgZXh0ZXJuYWwgaW50ZXJydXB0cyB1cG9uIGNwdSBvbmxpbmUvb2ZmbGlu
+ZQogICAgICBpcnFjaGlwL3NpZml2ZS1wbGljOiBBZGQgc3VwcG9ydCBmb3IgbXVsdGlwbGUgUExJ
+Q3MKCkdlZXJ0IFV5dHRlcmhvZXZlbiAoMSk6CiAgICAgIGlycWNoaXAvcmVuZXNhcy1pbnRjLWly
+cXBpbjogUmVzdG9yZSBkZXZtX2lvcmVtYXAoKSBhbGlnbm1lbnQKCkd1c3Rhdm8gQS4gUi4gU2ls
+dmEgKDIpOgogICAgICBpcnFjaGlwL2lycS1iY203MDM4LWwxOiBSZXBsYWNlIHplcm8tbGVuZ3Ro
+IGFycmF5IHdpdGggZmxleGlibGUtYXJyYXkgbWVtYmVyCiAgICAgIGlycWNoaXAvcWNvbS1pcnEt
+Y29tYmluZXI6IFJlcGxhY2UgemVyby1sZW5ndGggYXJyYXkgd2l0aCBmbGV4aWJsZS1hcnJheSBt
+ZW1iZXIKCkhhbnMgZGUgR29lZGUgKDEpOgogICAgICB4ODY6IFNlbGVjdCBIQVJESVJRU19TV19S
+RVNFTkQgb24geDg2CgpIZXlpIEd1byAoMik6CiAgICAgIGlycWNoaXAvZ2ljLXYzLWl0czogRml4
+IGFjY2VzcyB3aWR0aCBmb3IgZ2ljcl9zeW5jcgogICAgICBpcnFjaGlwL2dpYy12NDogVXNlIElu
+bmVyLVNoYXJlYWJsZSBhdHRyaWJ1dGVzIGZvciB2aXJ0dWFsIHBlbmRpbmcgdGFibGVzCgpMaW51
+cyBXYWxsZWlqICgxKToKICAgICAgaXJxY2hpcDogdmljOiBTdXBwb3J0IGNhc2NhZGVkIFZJQyBp
+biBkZXZpY2UgdHJlZQoKTHVrYXMgV3VubmVyICgxKToKICAgICAgaXJxY2hpcC9iY20yODM1OiBR
+dWllc2NlIElSUXMgbGVmdCBlbmFibGVkIGJ5IGJvb3Rsb2FkZXIKCk1hcmMgWnluZ2llciAoMjAp
+OgogICAgICBpcnFjaGlwL2dpYy12My1pdHM6IFByb2JlIElUUyBwYWdlIHNpemUgZm9yIGFsbCBH
+SVRTX0JBU0VSbiByZWdpc3RlcnMKICAgICAgaXJxY2hpcC9hdG1lbC1haWM6IEZpeCBpcnFfcmV0
+cmlnZ2VyIGNhbGxiYWNrIHJldHVybiB2YWx1ZQogICAgICBpcnFjaGlwL2F0bWVsLWFpYzU6IEZp
+eCBpcnFfcmV0cmlnZ2VyIGNhbGxiYWNrIHJldHVybiB2YWx1ZQogICAgICBBUk06IHNhMTExMTog
+Rml4IGlycV9yZXRyaWdnZXIgY2FsbGJhY2sgcmV0dXJuIHZhbHVlCiAgICAgIGlycWNoaXAvZ2lj
+LXY0OiBQcm92aWRlIGlycV9yZXRyaWdnZXIgdG8gYXZvaWQgY2lyY3VsYXIgbG9ja2luZyBkZXBl
+bmRlbmN5CiAgICAgIGlycWNoaXAvZ2ljLXYzOiBVc2UgU0dJcyB3aXRob3V0IGFjdGl2ZSBzdGF0
+ZSBpZiBvZmZlcmVkCiAgICAgIGlycWNoaXAvZ2ljLXY0LjE6IFNraXAgYWJzZW50IENQVXMgd2hp
+bGUgaXRlcmF0aW5nIG92ZXIgcmVkaXN0cmlidXRvcnMKICAgICAgaXJxY2hpcC9naWMtdjQuMTog
+RW5zdXJlIG11dHVhbCBleGNsdXNpb24gYmV0d2VlbiB2UEUgYWZmaW5pdHkgY2hhbmdlIGFuZCBS
+RCBhY2Nlc3MKICAgICAgaXJxY2hpcC9naWMtdjQuMTogRW5zdXJlIG11dHVhbCBleGNsdXNpb24g
+YmV0d2VuIGludmFsaWRhdGlvbnMgb24gdGhlIHNhbWUgUkQKICAgICAgaXJxY2hpcC9naWMtdjQu
+MTogQWR2ZXJ0aXNlIHN1cHBvcnQgdjQuMSB0byBLVk0KICAgICAgaXJxY2hpcC9naWMtdjQuMTog
+TWFwIHRoZSBJVFMgU0dJUiByZWdpc3RlciBwYWdlCiAgICAgIGlycWNoaXAvZ2ljLXY0LjE6IFBs
+dW1iIHNrZWxldGFsIFZTR0kgaXJxY2hpcAogICAgICBpcnFjaGlwL2dpYy12NC4xOiBBZGQgaW5p
+dGlhbCBTR0kgY29uZmlndXJhdGlvbgogICAgICBpcnFjaGlwL2dpYy12NC4xOiBQbHVtYiBtYXNr
+L3VubWFzayBTR0kgY2FsbGJhY2tzCiAgICAgIGlycWNoaXAvZ2ljLXY0LjE6IFBsdW1iIGdldC9z
+ZXRfaXJxY2hpcF9zdGF0ZSBTR0kgY2FsbGJhY2tzCiAgICAgIGlycWNoaXAvZ2ljLXY0LjE6IFBs
+dW1iIHNldF92Y3B1X2FmZmluaXR5IFNHSSBjYWxsYmFja3MKICAgICAgaXJxY2hpcC9naWMtdjQu
+MTogTW92ZSBkb29yYmVsbCBtYW5hZ2VtZW50IHRvIHRoZSBHSUN2NCBhYnN0cmFjdGlvbiBsYXll
+cgogICAgICBpcnFjaGlwL2dpYy12NC4xOiBBZGQgVlNHSSBhbGxvY2F0aW9uL3RlYXJkb3duCiAg
+ICAgIGlycWNoaXAvZ2ljLXY0LjE6IEFkZCBWU0dJIHByb3BlcnR5IHNldHVwCiAgICAgIGlycWNo
+aXAvZ2ljLXY0LjE6IEVhZ2VybHkgdm1hcCB2UEVzCgpNYXJlayBWYXN1dCAoMSk6CiAgICAgIGly
+cWNoaXAvc3RtMzI6IFJldHJpZ2dlciBib3RoIGluIGVvaSBhbmQgdW5tYXNrIGNhbGxiYWNrcwoK
+TWljaGFsIFNpbWVrICgyKToKICAgICAgaXJxY2hpcC94aWxpbng6IEZpbGwgZXJyb3IgY29kZSB3
+aGVuIGlycSBkb21haW4gcmVnaXN0cmF0aW9uIGZhaWxzCiAgICAgIGlycWNoaXAveGlsaW54OiBF
+bmFibGUgZ2VuZXJpYyBpcnEgbXVsdGkgaGFuZGxlcgoKTXViaW4gU2F5eWVkICgyKToKICAgICAg
+aXJxY2hpcC94aWxpbng6IEFkZCBzdXBwb3J0IGZvciBtdWx0aXBsZSBpbnN0YW5jZXMKICAgICAg
+aXJxY2hpcC94aWxpbng6IERvIG5vdCBjYWxsIGlycV9zZXRfZGVmYXVsdF9ob3N0KCkKClN1bmdi
+byBFbyAoMik6CiAgICAgIGlycWNoaXAvdmVyc2F0aWxlLWZwZ2E6IEhhbmRsZSBjaGFpbmVkIElS
+UXMgcHJvcGVybHkKICAgICAgaXJxY2hpcC92ZXJzYXRpbGUtZnBnYTogQXBwbHkgY2xlYXItbWFz
+ayBlYXJsaWVyCgpUaG9tYXMgR2xlaXhuZXIgKDcpOgogICAgICBnZW5pcnEvZGVidWdmczogQWRk
+IG1pc3Npbmcgc2FuaXR5IGNoZWNrcyB0byBpbnRlcnJ1cHQgaW5qZWN0aW9uCiAgICAgIGdlbmly
+cTogQWRkIHByb3RlY3Rpb24gYWdhaW5zdCB1bnNhZmUgdXNhZ2Ugb2YgZ2VuZXJpY19oYW5kbGVf
+aXJxKCkKICAgICAgeDg2L2FwaWMvdmVjdG9yOiBGb3JjZSBpbnRlcnVwdCBoYW5kbGVyIGludm9j
+YXRpb24gdG8gaXJxIGNvbnRleHQKICAgICAgZ2VuaXJxOiBBZGQgcmV0dXJuIHZhbHVlIHRvIGNo
+ZWNrX2lycV9yZXNlbmQoKQogICAgICBnZW5pcnE6IFNhbml0aXplIHN0YXRlIGhhbmRsaW5nIGlu
+IGNoZWNrX2lycV9yZXNlbmQoKQogICAgICBnZW5pcnE6IFByb3ZpZGUgaW50ZXJydXB0IGluamVj
+dGlvbiBtZWNoYW5pc20KICAgICAgUENJL0FFUjogRml4IHRoZSBicm9rZW4gaW50ZXJydXB0IGlu
+amVjdGlvbgoKWmVuZ2h1aSBZdSAoMSk6CiAgICAgIGlycWNoaXAvZ2ljLXY0LjE6IFdhaXQgZm9y
+IGNvbXBsZXRpb24gb2YgcmVkaXN0cmlidXRvcidzIElOVkFMTCBvcGVyYXRpb24KCmFmemFsIG1v
+aGFtbWVkICg2KToKICAgICAgaXJxY2hpcDogUmVwbGFjZSBzZXR1cF9pcnEoKSBieSByZXF1ZXN0
+X2lycSgpCiAgICAgIGFscGhhOiBSZXBsYWNlIHNldHVwX2lycSgpIGJ5IHJlcXVlc3RfaXJxKCkK
+ICAgICAgYzZ4OiBSZXBsYWNlIHNldHVwX2lycSgpIGJ5IHJlcXVlc3RfaXJxKCkKICAgICAgaGV4
+YWdvbjogUmVwbGFjZSBzZXR1cF9pcnEoKSBieSByZXF1ZXN0X2lycSgpCiAgICAgIHNoOiBSZXBs
+YWNlIHNldHVwX2lycSgpIGJ5IHJlcXVlc3RfaXJxKCkKICAgICAgdW5pY29yZTMyOiBSZXBsYWNl
+IHNldHVwX2lycSgpIGJ5IHJlcXVlc3RfaXJxKCkKCmx1YW5zaGkgKDIpOgogICAgICBpcnFkb21h
+aW46IEZpeCBmdW5jdGlvbiBkb2N1bWVudGF0aW9uIG9mIF9faXJxX2RvbWFpbl9hbGxvY19md25v
+ZGUoKQogICAgICBpcnFjaGlwL2dpYy12MzogTW92ZSBpcnFfZG9tYWluX3VwZGF0ZV9idXNfdG9r
+ZW4gdG8gYWZ0ZXIgY2hlY2tpbmcgZm9yIE5VTEwgZG9tYWluCgrlkajnkLDmnbAgKFpob3UgWWFu
+amllKSAoMSk6CiAgICAgIGlycWNoaXAvaW5nZW5pYzogQWRkIHN1cHBvcnQgZm9yIFRDVSBvZiBY
+MTAwMC4KCgogYXJjaC9hbHBoYS9rZXJuZWwvaXJxX2FscGhhLmMgICAgICAgICAgICAgfCAgMjkg
+Ky0KIGFyY2gvYWxwaGEva2VybmVsL2lycV9pODI1OS5jICAgICAgICAgICAgIHwgICA4ICstCiBh
+cmNoL2FscGhhL2tlcm5lbC9pcnFfaW1wbC5oICAgICAgICAgICAgICB8ICAgNyArLQogYXJjaC9h
+bHBoYS9rZXJuZWwvaXJxX3B5eGlzLmMgICAgICAgICAgICAgfCAgIDMgKy0KIGFyY2gvYWxwaGEv
+a2VybmVsL3N5c19hbGNvci5jICAgICAgICAgICAgIHwgICAzICstCiBhcmNoL2FscGhhL2tlcm5l
+bC9zeXNfY2FicmlvbGV0LmMgICAgICAgICB8ICAgMyArLQogYXJjaC9hbHBoYS9rZXJuZWwvc3lz
+X2ViNjRwLmMgICAgICAgICAgICAgfCAgIDMgKy0KIGFyY2gvYWxwaGEva2VybmVsL3N5c19tYXJ2
+ZWwuYyAgICAgICAgICAgIHwgICAyICstCiBhcmNoL2FscGhhL2tlcm5lbC9zeXNfbWlhdGEuYyAg
+ICAgICAgICAgICB8ICAgNiArLQogYXJjaC9hbHBoYS9rZXJuZWwvc3lzX3J1ZmZpYW4uYyAgICAg
+ICAgICAgfCAgIDMgKy0KIGFyY2gvYWxwaGEva2VybmVsL3N5c19yeDE2NC5jICAgICAgICAgICAg
+IHwgICAzICstCiBhcmNoL2FscGhhL2tlcm5lbC9zeXNfc3gxNjQuYyAgICAgICAgICAgICB8ICAg
+MyArLQogYXJjaC9hbHBoYS9rZXJuZWwvc3lzX3dpbGRmaXJlLmMgICAgICAgICAgfCAgIDcgKy0K
+IGFyY2gvYWxwaGEva2VybmVsL3RpbWUuYyAgICAgICAgICAgICAgICAgIHwgICA2ICstCiBhcmNo
+L2FybS9jb21tb24vc2ExMTExLmMgICAgICAgICAgICAgICAgICB8ICAgNyArLQogYXJjaC9jNngv
+cGxhdGZvcm1zL3RpbWVyNjQuYyAgICAgICAgICAgICAgfCAgMTEgKy0KIGFyY2gvaGV4YWdvbi9r
+ZXJuZWwvc21wLmMgICAgICAgICAgICAgICAgIHwgIDIyICstCiBhcmNoL2hleGFnb24va2VybmVs
+L3RpbWUuYyAgICAgICAgICAgICAgICB8ICAxMSArLQogYXJjaC9taWNyb2JsYXplL0tjb25maWcg
+ICAgICAgICAgICAgICAgICAgfCAgIDIgKwogYXJjaC9taWNyb2JsYXplL2luY2x1ZGUvYXNtL2ly
+cS5oICAgICAgICAgfCAgIDMgLQogYXJjaC9taWNyb2JsYXplL2tlcm5lbC9pcnEuYyAgICAgICAg
+ICAgICAgfCAgMjEgKy0KIGFyY2gvcmlzY3Yva2VybmVsL3RyYXBzLmMgICAgICAgICAgICAgICAg
+IHwgICAyICstCiBhcmNoL3NoL2JvYXJkcy9tYWNoLWNheW1hbi9pcnEuYyAgICAgICAgICB8ICAx
+OCArLQogYXJjaC9zaC9kcml2ZXJzL2RtYS9kbWEtcHZyMi5jICAgICAgICAgICAgfCAgIDkgKy0K
+IGFyY2gvdW5pY29yZTMyL2tlcm5lbC90aW1lLmMgICAgICAgICAgICAgIHwgIDExICstCiBhcmNo
+L3g4Ni9LY29uZmlnICAgICAgICAgICAgICAgICAgICAgICAgICB8ICAgMSArCiBhcmNoL3g4Ni9r
+ZXJuZWwvYXBpYy92ZWN0b3IuYyAgICAgICAgICAgICB8ICAgNiArCiBkcml2ZXJzL2lycWNoaXAv
+S2NvbmZpZyAgICAgICAgICAgICAgICAgICB8ICAgMiArLQogZHJpdmVycy9pcnFjaGlwL2lycS1h
+dG1lbC1haWMuYyAgICAgICAgICAgfCAgIDIgKy0KIGRyaXZlcnMvaXJxY2hpcC9pcnEtYXRtZWwt
+YWljNS5jICAgICAgICAgIHwgICAyICstCiBkcml2ZXJzL2lycWNoaXAvaXJxLWJjbTI4MzUuYyAg
+ICAgICAgICAgICB8ICAxNSArCiBkcml2ZXJzL2lycWNoaXAvaXJxLWJjbTcwMzgtbDEuYyAgICAg
+ICAgICB8ICAgMiArLQogZHJpdmVycy9pcnFjaGlwL2lycS1naWMtdjMtaXRzLmMgICAgICAgICAg
+fCA1MzIgKysrKysrKysrKysrKysrKysrKysrKysrKystLS0tCiBkcml2ZXJzL2lycWNoaXAvaXJx
+LWdpYy12My5jICAgICAgICAgICAgICB8ICAxNiArLQogZHJpdmVycy9pcnFjaGlwL2lycS1naWMt
+djQuYyAgICAgICAgICAgICAgfCAxMzQgKysrKysrKy0KIGRyaXZlcnMvaXJxY2hpcC9pcnEtaTgy
+NTkuYyAgICAgICAgICAgICAgIHwgIDE2ICstCiBkcml2ZXJzL2lycWNoaXAvaXJxLWluZ2VuaWMt
+dGN1LmMgICAgICAgICB8ICAgMSArCiBkcml2ZXJzL2lycWNoaXAvaXJxLWluZ2VuaWMuYyAgICAg
+ICAgICAgICB8ICAgOSArLQogZHJpdmVycy9pcnFjaGlwL2lycS1yZW5lc2FzLWludGMtaXJxcGlu
+LmMgfCAgIDIgKy0KIGRyaXZlcnMvaXJxY2hpcC9pcnEtc2lmaXZlLXBsaWMuYyAgICAgICAgIHwg
+MTE5ICsrKysrLS0KIGRyaXZlcnMvaXJxY2hpcC9pcnEtc3RtMzItZXh0aS5jICAgICAgICAgIHwg
+IDE0ICstCiBkcml2ZXJzL2lycWNoaXAvaXJxLXZlcnNhdGlsZS1mcGdhLmMgICAgICB8ICAxOCAr
+LQogZHJpdmVycy9pcnFjaGlwL2lycS12aWMuYyAgICAgICAgICAgICAgICAgfCAgIDkgKy0KIGRy
+aXZlcnMvaXJxY2hpcC9pcnEteGlsaW54LWludGMuYyAgICAgICAgIHwgMTIzICsrKystLS0KIGRy
+aXZlcnMvaXJxY2hpcC9xY29tLWlycS1jb21iaW5lci5jICAgICAgIHwgICAyICstCiBkcml2ZXJz
+L3BjaS9wY2llL0tjb25maWcgICAgICAgICAgICAgICAgICB8ICAgMSArCiBkcml2ZXJzL3BjaS9w
+Y2llL2Flcl9pbmplY3QuYyAgICAgICAgICAgICB8ICAgNiArLQogZHJpdmVycy9waW5jdHJsL3N0
+bTMyL3BpbmN0cmwtc3RtMzIuYyAgICAgfCAgNTcgKysrLQogaW5jbHVkZS9rdm0vYXJtX3ZnaWMu
+aCAgICAgICAgICAgICAgICAgICAgfCAgIDEgKwogaW5jbHVkZS9saW51eC9jcHVob3RwbHVnLmgg
+ICAgICAgICAgICAgICAgfCAgIDEgKwogaW5jbHVkZS9saW51eC9pbnRlcnJ1cHQuaCAgICAgICAg
+ICAgICAgICAgfCAgIDIgKwogaW5jbHVkZS9saW51eC9pcnEuaCAgICAgICAgICAgICAgICAgICAg
+ICAgfCAgMTMgKwogaW5jbHVkZS9saW51eC9pcnFjaGlwL2FybS1naWMtY29tbW9uLmggICAgfCAg
+IDIgKwogaW5jbHVkZS9saW51eC9pcnFjaGlwL2FybS1naWMtdjMuaCAgICAgICAgfCAgMjMgKy0K
+IGluY2x1ZGUvbGludXgvaXJxY2hpcC9hcm0tZ2ljLXY0LmggICAgICAgIHwgIDI1ICstCiBrZXJu
+ZWwvaXJxL0tjb25maWcgICAgICAgICAgICAgICAgICAgICAgICB8ICAgNSArCiBrZXJuZWwvaXJx
+L2NoaXAuYyAgICAgICAgICAgICAgICAgICAgICAgICB8ICAgMiArLQoga2VybmVsL2lycS9kZWJ1
+Z2ZzLmMgICAgICAgICAgICAgICAgICAgICAgfCAgMjggKy0KIGtlcm5lbC9pcnEvaW50ZXJuYWxz
+LmggICAgICAgICAgICAgICAgICAgIHwgIDEwICstCiBrZXJuZWwvaXJxL2lycWRlc2MuYyAgICAg
+ICAgICAgICAgICAgICAgICB8ICAgNiArCiBrZXJuZWwvaXJxL2lycWRvbWFpbi5jICAgICAgICAg
+ICAgICAgICAgICB8ICAxNCArLQoga2VybmVsL2lycS9yZXNlbmQuYyAgICAgICAgICAgICAgICAg
+ICAgICAgfCAxNDMgKysrKysrLS0KIHZpcnQva3ZtL2FybS92Z2ljL3ZnaWMtdjMuYyAgICAgICAg
+ICAgICAgIHwgICA0ICstCiB2aXJ0L2t2bS9hcm0vdmdpYy92Z2ljLXY0LmMgICAgICAgICAgICAg
+ICB8ICAzNCArLQogNjQgZmlsZXMgY2hhbmdlZCwgMTE4NSBpbnNlcnRpb25zKCspLCA0MjAgZGVs
+ZXRpb25zKC0pCgo=
