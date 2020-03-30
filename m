@@ -2,76 +2,286 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54726C2D0EE
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 16:44:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFEB7C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 16:44:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 35E1420578
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 16:44:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B1F12072E
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 16:44:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=sartura-hr.20150623.gappssmtp.com header.i=@sartura-hr.20150623.gappssmtp.com header.b="A7hYCG+D"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729823AbgC3QoD (ORCPT
+        id S1729412AbgC3Qoe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 12:44:03 -0400
-Received: from relay10.mail.gandi.net ([217.70.178.230]:48833 "EHLO
-        relay10.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727728AbgC3QoD (ORCPT
+        Mon, 30 Mar 2020 12:44:34 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:43504 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727899AbgC3Qoe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 12:44:03 -0400
-Received: from localhost (lfbn-lyo-1-9-35.w86-202.abo.wanadoo.fr [86.202.105.35])
-        (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay10.mail.gandi.net (Postfix) with ESMTPSA id 1DC86240008;
-        Mon, 30 Mar 2020 16:44:00 +0000 (UTC)
-Date:   Mon, 30 Mar 2020 18:44:00 +0200
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     Biwen Li <biwen.li@oss.nxp.com>
-Cc:     leoyang.li@nxp.com, linux-rtc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, jiafei.pan@nxp.com,
-        Biwen Li <biwen.li@nxp.com>
-Subject: Re: rtc: fsl-ftm-alarm: add shutdown interface
-Message-ID: <20200330164400.GE846876@piout.net>
-References: <20200330122616.24044-1-biwen.li@oss.nxp.com>
+        Mon, 30 Mar 2020 12:44:34 -0400
+Received: by mail-wr1-f68.google.com with SMTP id m11so16645900wrx.10
+        for <linux-kernel@vger.kernel.org>; Mon, 30 Mar 2020 09:44:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sartura-hr.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=NMjjibIIWKkjS3mT8K/LaAOt0umug6ECpFrUMrbf80Q=;
+        b=A7hYCG+DMxsfs+p4dOlPbELVLSBYbonh32fiASwC66wGxegjqq0yAZwOa89o1z2aAb
+         0zy3AUO0M/juJRdqxZ2K1K8NRmXb2AnWYaLpK4URzN5fPUNjMU5cv6jV8NSMHBwB4a7I
+         AcW3NnqcHqnKM2IEBRxqaL+HRGt6xlt2R1b6UMqhRB2NI5bzRtyy9udI6ukbMxn1xlZY
+         iVxABTawQw2LLvT7vFMGC+alPQwH6aEpSWGmCOf2rUJL3lCYAF+VNEKVtwkhtDl5HN/J
+         tJkzYvKvyPqC0ZFqcdCrc4G5dRtxWYHGM0CdC5sriV9tHa9y1/sk02ReiJ5ozFxIbPoe
+         PlFg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=NMjjibIIWKkjS3mT8K/LaAOt0umug6ECpFrUMrbf80Q=;
+        b=NXYdDG35vKtowqNrFMXwVWc+wkYrDS1am0iEtg4hi4qWKth1B16dv6eWOGFUszYbsj
+         vf2L28sLYg/ANAfAQz0rsCztrdwYhsGLv/oW1zW4aiGtFB2TKio0IIuSJQDbbkBeCGhn
+         g+lhAUjpQaXlXr60IS2oQM/q1NYyxIMvBJ6evZdWjxhHGF+lor3rXVYw5s/G+ZAfLwvg
+         xl283/B2l53mKtH9enk4rFAFZUkG/Q9fVSrr0gN5oPk0r4nH342qyb5cEwZD9ebgBeO0
+         iKR0TG+59VJMzWAjp8d5ev1YS0DeWHylsN7M+NCRI+gQgj2p3yz2KzYIgKxL3Td6LMt5
+         VP9g==
+X-Gm-Message-State: ANhLgQ1VI/1+RD+ycgGR2UWTuL3fS9yS537pfVYUbn+Qkn9finZvKcco
+        oMhsgsaDq3KOfwnX6nh6cB6uew==
+X-Google-Smtp-Source: ADFU+vs+gLwL7qsbyHwdmX1dM4orp+OrvvzUsH84kvoP5OmJhnkr1ogr21XVfZ/BNVSp588do3EZ8A==
+X-Received: by 2002:adf:9321:: with SMTP id 30mr15110799wro.330.1585586671677;
+        Mon, 30 Mar 2020 09:44:31 -0700 (PDT)
+Received: from localhost.localdomain (dh207-96-177.xnet.hr. [88.207.96.177])
+        by smtp.googlemail.com with ESMTPSA id h2sm146711wmb.16.2020.03.30.09.44.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 30 Mar 2020 09:44:31 -0700 (PDT)
+From:   Robert Marko <robert.marko@sartura.hr>
+To:     agross@kernel.org, bjorn.andersson@linaro.org, kishon@ti.com,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        robh+dt@kernel.org, mark.rutland@arm.com,
+        devicetree@vger.kernel.org
+Cc:     John Crispin <john@phrozen.org>,
+        Robert Marko <robert.marko@sartura.hr>,
+        Luka Perkov <luka.perkov@sartura.hr>
+Subject: [PATCH v5 1/3] phy: add driver for Qualcomm IPQ40xx USB PHY
+Date:   Mon, 30 Mar 2020 18:43:27 +0200
+Message-Id: <20200330164328.2944505-1-robert.marko@sartura.hr>
+X-Mailer: git-send-email 2.26.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200330122616.24044-1-biwen.li@oss.nxp.com>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 30/03/2020 20:26:16+0800, Biwen Li wrote:
-> From: Biwen Li <biwen.li@nxp.com>
-> 
-> Add shutdown interface
-> 
-> Signed-off-by: Biwen Li <biwen.li@nxp.com>
-> ---
->  drivers/rtc/rtc-fsl-ftm-alarm.c | 10 ++++++++++
->  1 file changed, 10 insertions(+)
-> 
-> diff --git a/drivers/rtc/rtc-fsl-ftm-alarm.c b/drivers/rtc/rtc-fsl-ftm-alarm.c
-> index d7fa6c16f47b..118a775e8316 100644
-> --- a/drivers/rtc/rtc-fsl-ftm-alarm.c
-> +++ b/drivers/rtc/rtc-fsl-ftm-alarm.c
-> @@ -307,6 +307,15 @@ static int ftm_rtc_probe(struct platform_device *pdev)
->  	return 0;
->  }
->  
-> +static void ftm_rtc_shutdown(struct platform_device *pdev)
-> +{
-> +	struct ftm_rtc *rtc = platform_get_drvdata(pdev);
-> +
-> +	ftm_irq_acknowledge(rtc);
-> +	ftm_irq_disable(rtc);
-> +	ftm_clean_alarm(rtc);
+From: John Crispin <john@phrozen.org>
 
-If the alarm is able to start the platform, then you probably don't want
-to disable the alarm on shutdown.
+Add a driver to setup the USB phy on Qualcom Dakota SoCs.
+The driver sets up HS and SS phys.
 
+Signed-off-by: John Crispin <john@phrozen.org>
+Signed-off-by: Robert Marko <robert.marko@sartura.hr>
+Cc: Luka Perkov <luka.perkov@sartura.hr>
+---
+Changes from v2 to v3:
+* Remove magic writes as they are not needed
+* Correct commit message
+
+ drivers/phy/qualcomm/Kconfig                |   7 +
+ drivers/phy/qualcomm/Makefile               |   1 +
+ drivers/phy/qualcomm/phy-qcom-ipq4019-usb.c | 152 ++++++++++++++++++++
+ 3 files changed, 160 insertions(+)
+ create mode 100644 drivers/phy/qualcomm/phy-qcom-ipq4019-usb.c
+
+diff --git a/drivers/phy/qualcomm/Kconfig b/drivers/phy/qualcomm/Kconfig
+index e46824da29f6..964bd5d784d2 100644
+--- a/drivers/phy/qualcomm/Kconfig
++++ b/drivers/phy/qualcomm/Kconfig
+@@ -18,6 +18,13 @@ config PHY_QCOM_APQ8064_SATA
+ 	depends on OF
+ 	select GENERIC_PHY
+ 
++config PHY_QCOM_IPQ4019_USB
++	tristate "Qualcomm IPQ4019 USB PHY module"
++	depends on OF && ARCH_QCOM
++	select GENERIC_PHY
++	help
++	  Support for the USB PHY on QCOM IPQ4019/Dakota chipsets.
++
+ config PHY_QCOM_IPQ806X_SATA
+ 	tristate "Qualcomm IPQ806x SATA SerDes/PHY driver"
+ 	depends on ARCH_QCOM
+diff --git a/drivers/phy/qualcomm/Makefile b/drivers/phy/qualcomm/Makefile
+index 283251d6a5d9..8afe6c4f5178 100644
+--- a/drivers/phy/qualcomm/Makefile
++++ b/drivers/phy/qualcomm/Makefile
+@@ -1,6 +1,7 @@
+ # SPDX-License-Identifier: GPL-2.0
+ obj-$(CONFIG_PHY_ATH79_USB)		+= phy-ath79-usb.o
+ obj-$(CONFIG_PHY_QCOM_APQ8064_SATA)	+= phy-qcom-apq8064-sata.o
++obj-$(CONFIG_PHY_QCOM_IPQ4019_USB)	+= phy-qcom-ipq4019-usb.o
+ obj-$(CONFIG_PHY_QCOM_IPQ806X_SATA)	+= phy-qcom-ipq806x-sata.o
+ obj-$(CONFIG_PHY_QCOM_PCIE2)		+= phy-qcom-pcie2.o
+ obj-$(CONFIG_PHY_QCOM_QMP)		+= phy-qcom-qmp.o
+diff --git a/drivers/phy/qualcomm/phy-qcom-ipq4019-usb.c b/drivers/phy/qualcomm/phy-qcom-ipq4019-usb.c
+new file mode 100644
+index 000000000000..7efebae6b6fd
+--- /dev/null
++++ b/drivers/phy/qualcomm/phy-qcom-ipq4019-usb.c
+@@ -0,0 +1,152 @@
++// SPDX-License-Identifier: GPL-2.0-or-later
++/*
++ * Copyright (C) 2018 John Crispin <john@phrozen.org>
++ *
++ * Based on code from
++ * Allwinner Technology Co., Ltd. <www.allwinnertech.com>
++ *
++ */
++
++#include <linux/delay.h>
++#include <linux/err.h>
++#include <linux/io.h>
++#include <linux/kernel.h>
++#include <linux/module.h>
++#include <linux/mutex.h>
++#include <linux/of_platform.h>
++#include <linux/phy/phy.h>
++#include <linux/platform_device.h>
++#include <linux/reset.h>
++
++struct ipq4019_usb_phy {
++	struct device		*dev;
++	struct phy		*phy;
++	void __iomem		*base;
++	struct reset_control	*por_rst;
++	struct reset_control	*srif_rst;
++};
++
++static int ipq4019_ss_phy_power_off(struct phy *_phy)
++{
++	struct ipq4019_usb_phy *phy = phy_get_drvdata(_phy);
++
++	reset_control_assert(phy->por_rst);
++	msleep(10);
++
++	return 0;
++}
++
++static int ipq4019_ss_phy_power_on(struct phy *_phy)
++{
++	struct ipq4019_usb_phy *phy = phy_get_drvdata(_phy);
++
++	ipq4019_ss_phy_power_off(_phy);
++
++	reset_control_deassert(phy->por_rst);
++
++	return 0;
++}
++
++static struct phy_ops ipq4019_usb_ss_phy_ops = {
++	.power_on	= ipq4019_ss_phy_power_on,
++	.power_off	= ipq4019_ss_phy_power_off,
++};
++
++static int ipq4019_hs_phy_power_off(struct phy *_phy)
++{
++	struct ipq4019_usb_phy *phy = phy_get_drvdata(_phy);
++
++	reset_control_assert(phy->por_rst);
++	msleep(10);
++
++	reset_control_assert(phy->srif_rst);
++	msleep(10);
++
++	return 0;
++}
++
++static int ipq4019_hs_phy_power_on(struct phy *_phy)
++{
++	struct ipq4019_usb_phy *phy = phy_get_drvdata(_phy);
++
++	ipq4019_hs_phy_power_off(_phy);
++
++	reset_control_deassert(phy->srif_rst);
++	msleep(10);
++
++	reset_control_deassert(phy->por_rst);
++
++	return 0;
++}
++
++static struct phy_ops ipq4019_usb_hs_phy_ops = {
++	.power_on	= ipq4019_hs_phy_power_on,
++	.power_off	= ipq4019_hs_phy_power_off,
++};
++
++static const struct of_device_id ipq4019_usb_phy_of_match[] = {
++	{ .compatible = "qcom,usb-hs-ipq4019-phy", .data = &ipq4019_usb_hs_phy_ops},
++	{ .compatible = "qcom,usb-ss-ipq4019-phy", .data = &ipq4019_usb_ss_phy_ops},
++	{ },
++};
++MODULE_DEVICE_TABLE(of, ipq4019_usb_phy_of_match);
++
++static int ipq4019_usb_phy_probe(struct platform_device *pdev)
++{
++	struct device *dev = &pdev->dev;
++	struct resource *res;
++	struct phy_provider *phy_provider;
++	struct ipq4019_usb_phy *phy;
++	const struct of_device_id *match;
++
++	match = of_match_device(ipq4019_usb_phy_of_match, &pdev->dev);
++	if (!match)
++		return -ENODEV;
++
++	phy = devm_kzalloc(dev, sizeof(*phy), GFP_KERNEL);
++	if (!phy)
++		return -ENOMEM;
++
++	phy->dev = &pdev->dev;
++	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
++	phy->base = devm_ioremap_resource(&pdev->dev, res);
++	if (IS_ERR(phy->base)) {
++		dev_err(dev, "failed to remap register memory\n");
++		return PTR_ERR(phy->base);
++	}
++
++	phy->por_rst = devm_reset_control_get(phy->dev, "por_rst");
++	if (IS_ERR(phy->por_rst)) {
++		if (PTR_ERR(phy->por_rst) != -EPROBE_DEFER)
++			dev_err(dev, "POR reset is missing\n");
++		return PTR_ERR(phy->por_rst);
++	}
++
++	phy->srif_rst = devm_reset_control_get_optional(phy->dev, "srif_rst");
++	if (IS_ERR(phy->srif_rst))
++		return PTR_ERR(phy->srif_rst);
++
++	phy->phy = devm_phy_create(dev, NULL, match->data);
++	if (IS_ERR(phy->phy)) {
++		dev_err(dev, "failed to create PHY\n");
++		return PTR_ERR(phy->phy);
++	}
++	phy_set_drvdata(phy->phy, phy);
++
++	phy_provider = devm_of_phy_provider_register(dev, of_phy_simple_xlate);
++
++	return PTR_ERR_OR_ZERO(phy_provider);
++}
++
++static struct platform_driver ipq4019_usb_phy_driver = {
++	.probe	= ipq4019_usb_phy_probe,
++	.driver = {
++		.of_match_table	= ipq4019_usb_phy_of_match,
++		.name  = "ipq4019-usb-phy",
++	}
++};
++module_platform_driver(ipq4019_usb_phy_driver);
++
++MODULE_DESCRIPTION("QCOM/IPQ4019 USB phy driver");
++MODULE_AUTHOR("John Crispin <john@phrozen.org>");
++MODULE_LICENSE("GPL v2");
 -- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+2.26.0
+
