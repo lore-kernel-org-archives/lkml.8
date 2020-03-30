@@ -2,165 +2,171 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDCF4C2D0F0
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 22:53:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07499C2D0F1
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 22:58:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A1BEA20733
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 22:53:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=who-t.net header.i=@who-t.net header.b="cqx9Hxbs";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="QpTaz5p2"
+	by mail.kernel.org (Postfix) with ESMTP id CA54B20774
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 22:58:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585609127;
+	bh=CYB6zWgrdUFAb8s1pn+wLWaCoZxIaBSbJyLO3eyUG+U=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=sSMFv1xmqmQbYJVLHdRxTJHDwSJNmRXtZpdoDFeI6NN0I4HH+JfKhm3owcfrwo56D
+	 0+t2LOdG6lPru75anRIA7QhRz5vefNHabO20BXTLkZiw9rx5Wkafoqc70NmIVo75fx
+	 cRi4GZOAKW1VD5vt7li0PdhMDeuYmT89kjr93iTo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729284AbgC3Wxa (ORCPT
+        id S1729263AbgC3W6q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 18:53:30 -0400
-Received: from new1-smtp.messagingengine.com ([66.111.4.221]:52673 "EHLO
-        new1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728876AbgC3Wx3 (ORCPT
+        Mon, 30 Mar 2020 18:58:46 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:41065 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728876AbgC3W6q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 18:53:29 -0400
-Received: from compute7.internal (compute7.nyi.internal [10.202.2.47])
-        by mailnew.nyi.internal (Postfix) with ESMTP id 0F7635803DB;
-        Mon, 30 Mar 2020 18:53:28 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute7.internal (MEProxy); Mon, 30 Mar 2020 18:53:28 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=who-t.net; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm2; bh=HGd294u5H5KRbHXSdx/5SoSLy5j
-        ZH78irSdihADxUxY=; b=cqx9Hxbs0iHJkNpHFbp53kVBHrAjNMkCNcCzSbFVQqi
-        dVgVBMTlolA4Bhs2+X6nXTk/GxRNraNaIf6y3HKji/tikdbvcxVjDm6BcyGzDzFK
-        7e2v+VzbjU+ovJh2G93wh+KYz7aa6pbYEKzTXFFI9adjbMPW7V4TaYl7VRhQyZrr
-        ZBPRC4OgDKABOtua6PamFJP6FyoFCkjefxE8rb5dOSvzje5DbpwjWbuNhlz6zRCC
-        Cv5qURhpaHvM3GcdqDEstRFslUDL05Y42+3YCuRCgf9lgnoIDr+xptCkUtSY3Kby
-        662NCSy4H8LVpeSkwsCPwqWfo2xEpQm124voJf4r+fQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=HGd294
-        u5H5KRbHXSdx/5SoSLy5jZH78irSdihADxUxY=; b=QpTaz5p2XPetDa0qFpFkmu
-        glNuBWqoduY5rAUtV10DQt96mPfEdieL081JquZKDh3HOedNvZ5at+AppZgQNusW
-        JFsVTt0YNuM7Jt3PhFJZKU/apPU8nJAekofbEGtxlopAIi8/y4pxVvEq0pbkEAYb
-        SwL1mn09I1H1YZDWLtStzGMgD6n04KkmWFIZjw1MDuKRWOQtLimNasMrrEKZgZCk
-        gO6afIGsQxVmqKi5zrJ2OuEovJmIygEqUme7VzI0s7WrSh6XcnxemzIddWAzp8kE
-        KMnN7gwyXc5EBPSATzuoWkSLqX4akNSkbPW+JCFyhRff3xH0XSJ+8s9NfLAGJtCg
-        ==
-X-ME-Sender: <xms:ZXiCXqoLFO3HArQfKINUrUBawku7OmhNwOAKqKdmAgWHiT1RDmoNhA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrudeiiedgudegucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhvffukfhfgggtuggjsehttdertddttddvnecuhfhrohhmpefrvghtvghr
-    ucfjuhhtthgvrhgvrhcuoehpvghtvghrrdhhuhhtthgvrhgvrhesfihhohdqthdrnhgvth
-    eqnecukfhppeduudejrddvtddrjedurddutdelnecuvehluhhsthgvrhfuihiivgeptden
-    ucfrrghrrghmpehmrghilhhfrhhomhepphgvthgvrhdrhhhuthhtvghrvghrseifhhhoqd
-    htrdhnvght
-X-ME-Proxy: <xmx:ZniCXgGrjdJbzc7E0nxHT7RHYr7GSw7ATVjggNGcDurrOQtdaVZX3g>
-    <xmx:ZniCXsm9XqUuqBkAot77GsP-TgW8T83ypS-o5iiNg3JtJ4AhMDaCbg>
-    <xmx:ZniCXjno77OSlbzFIPWdLrxmLmoHXZpjdtF-TJRGmEF7rf_BO8LdsQ>
-    <xmx:aHiCXigPqvzjrlT2y4ulKJg-1FfBZmfLsTJG1kXUuFgHSnpx8Iq22A>
-Received: from jelly (117-20-71-109.751447.bne.nbn.aussiebb.net [117.20.71.109])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 5EDE0306CA79;
-        Mon, 30 Mar 2020 18:53:22 -0400 (EDT)
-Date:   Tue, 31 Mar 2020 08:53:17 +1000
-From:   Peter Hutterer <peter.hutterer@who-t.net>
-To:     Johnny Chuang <johnny.chuang.emc@gmail.com>
-Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        linux-kernel@vger.kernel.org, linux-input@vger.kernel.org,
-        Rob Schonberger <robsc@google.com>,
-        Johnny Chuang <johnny.chuang@emc.com.tw>,
-        James Chen <james.chen@emc.com.tw>,
-        Jennifer Tsai <jennifer.tsai@emc.com.tw>,
-        Paul Liang <paul.liang@emc.com.tw>,
-        Jeff Chuang <jeff.chuang@emc.com.tw>
-Subject: Re: [PATCH v2] Input: elants_i2c - support palm detection
-Message-ID: <20200330225317.GB169282@jelly>
-References: <1585551756-29066-1-git-send-email-johnny.chuang.emc@gmail.com>
+        Mon, 30 Mar 2020 18:58:46 -0400
+Received: by mail-io1-f67.google.com with SMTP id b12so3490190ion.8;
+        Mon, 30 Mar 2020 15:58:46 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=92i4loZNXHhYEU8hXrppE8fgGprdtopi0kvgw/iL638=;
+        b=o4weAw/Mpt4Lo1xrYX7fNlkLWEo91FQop+wE33eUVDLSOfbArPIB2MUpKTUWVw2rMy
+         90oHURhwXND6fwAleAoJTNFmpM4lJNkB6YH/+tG3YzoiEcRfRm82yIgAGfsg+QGvKGcV
+         NaaJ47OmpzIDvapFTR373bgu0mN653efArwk5Veab983ayqD7HOO4tNhiP6pYTEBcVKY
+         S77yhgOutkCyEGDT7mktWXUDLc5tYTWnWudO+FvOCsxASckRuN1kjkS/ukeVif/5Ayc1
+         WzOlXE5bKTvPV3wGx/Wyh2xhaMW0VkWcSP8aWSkqubFK2x2f6ET6UNKiWJnLUKpXOWz7
+         w/Mw==
+X-Gm-Message-State: ANhLgQ3dOJaCK9dTu2aJcOiRNedwkSMl2wzzWJ1rfUOQ2DMKgZMVvYvs
+        s+M556vHkEsK9iT4Js7IbQ==
+X-Google-Smtp-Source: ADFU+vsh9Zr/TkKt+mVFjHBeV5shLVBhbEiElGMFmZMuWENWDbpznSuwoFmMEmCkNWxrb61k5Wh9qw==
+X-Received: by 2002:a02:a1c2:: with SMTP id o2mr12802030jah.98.1585609125595;
+        Mon, 30 Mar 2020 15:58:45 -0700 (PDT)
+Received: from rob-hp-laptop ([64.188.179.250])
+        by smtp.gmail.com with ESMTPSA id z2sm5283211ilp.21.2020.03.30.15.58.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 30 Mar 2020 15:58:45 -0700 (PDT)
+Received: (nullmailer pid 18009 invoked by uid 1000);
+        Mon, 30 Mar 2020 22:58:42 -0000
+Date:   Mon, 30 Mar 2020 16:58:42 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Collabora Kernel ML <kernel@collabora.com>,
+        Andrzej Hajda <a.hajda@samsung.com>, icenowy@aosc.io,
+        anarsoul@gmail.com, Neil Armstrong <narmstrong@baylibre.com>,
+        matthias.bgg@gmail.com, drinkcat@chromium.org, hsinyi@chromium.org,
+        megous@megous.com, Lee Jones <lee.jones@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
+Subject: Re: [PATCH v4 1/4] dt-bindings: Add binding for the Analogix ANX7688
+ chip
+Message-ID: <20200330225842.GA20868@bogus>
+References: <20200318070730.4012371-1-enric.balletbo@collabora.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1585551756-29066-1-git-send-email-johnny.chuang.emc@gmail.com>
+In-Reply-To: <20200318070730.4012371-1-enric.balletbo@collabora.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 30, 2020 at 03:02:36PM +0800, Johnny Chuang wrote:
-> From: Johnny Chuang <johnny.chuang@emc.com.tw>
+On Wed, Mar 18, 2020 at 08:07:27AM +0100, Enric Balletbo i Serra wrote:
+> The ANX7688 chip is a Type-C Port Controller, HDMI to DP converter and
+> USB-C mux between USB 3.0 lanes and the DP output.
 > 
-> Elan define finger/palm detection on the least significant bit of byte 33.
-> The default value is 1 for all firmwares, which report as MT_TOOL_FINGER.
-> If firmware support palm detection, the bit will change to 0 and
-> report as MT_TOOL_PALM when firmware detecting palm.
-> 
-> Signed-off-by: Johnny Chuang <johnny.chuang@emc.com.tw>
+> For our use case a big part of the chip, like power supplies, control
+> gpios and the usb-c part is managed by an Embedded Controller, hence,
+> this is its simplest form of the binding. We'd prefer introduce these
+> properties for someone with a different use case so they can test
+> on their hardware.
 
-Reviewed-by: Peter Hutterer <peter.hutterer@who-t.net>
+I'm not sure this is a move in the right direction from the prior 
+version. Just because you have multiple functions that doesn't mean 
+the DT has multiple child nodes. What's a 'function' exactly may vary 
+by OS (or in time). Are the USB-C functions separate h/w? Are there 
+separate resources for each sub-function that need to be defined in DT?
 
-Cheers,
-   Peter
-   
+We do need to be able to construct a graph with this device, HDMI 
+output, USB host, and USB connector. That may dictate what does or 
+doesn't work here.
+
+> Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
 > ---
-> Changes in v2:
-> 	- Modify MT_TOOL_MAX to MT_TOOL_PALM
 > 
->  drivers/input/touchscreen/elants_i2c.c | 11 ++++++++++-
->  1 file changed, 10 insertions(+), 1 deletion(-)
+> Changes in v4: None
+> Changes in v3:
+> - Add binding for ANX7688 multi-function device.
 > 
-> diff --git a/drivers/input/touchscreen/elants_i2c.c b/drivers/input/touchscreen/elants_i2c.c
-> index 14c577c..93211fe 100644
-> --- a/drivers/input/touchscreen/elants_i2c.c
-> +++ b/drivers/input/touchscreen/elants_i2c.c
-> @@ -73,6 +73,7 @@
->  #define FW_POS_STATE		1
->  #define FW_POS_TOTAL		2
->  #define FW_POS_XY		3
-> +#define FW_POS_TOOL_TYPE	33
->  #define FW_POS_CHECKSUM		34
->  #define FW_POS_WIDTH		35
->  #define FW_POS_PRESSURE		45
-> @@ -842,6 +843,7 @@ static void elants_i2c_mt_event(struct elants_data *ts, u8 *buf)
->  {
->  	struct input_dev *input = ts->input;
->  	unsigned int n_fingers;
-> +	unsigned int tool_type;
->  	u16 finger_state;
->  	int i;
->  
-> @@ -852,6 +854,12 @@ static void elants_i2c_mt_event(struct elants_data *ts, u8 *buf)
->  	dev_dbg(&ts->client->dev,
->  		"n_fingers: %u, state: %04x\n",  n_fingers, finger_state);
->  
-> +	/* Note: all fingers have the same tool type */
-> +	if (buf[FW_POS_TOOL_TYPE] & 0x01)
-> +		tool_type = MT_TOOL_FINGER;
-> +	else
-> +		tool_type = MT_TOOL_PALM;
+> Changes in v2: None
+> 
+>  .../bindings/mfd/analogix,anx7688.yaml        | 48 +++++++++++++++++++
+>  1 file changed, 48 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mfd/analogix,anx7688.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/mfd/analogix,anx7688.yaml b/Documentation/devicetree/bindings/mfd/analogix,anx7688.yaml
+> new file mode 100644
+> index 000000000000..bb95a4e87188
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mfd/analogix,anx7688.yaml
+> @@ -0,0 +1,48 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/mfd/analogix,anx7688.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
 > +
->  	for (i = 0; i < MAX_CONTACT_NUM && n_fingers; i++) {
->  		if (finger_state & 1) {
->  			unsigned int x, y, p, w;
-> @@ -867,7 +875,7 @@ static void elants_i2c_mt_event(struct elants_data *ts, u8 *buf)
->  				i, x, y, p, w);
->  
->  			input_mt_slot(input, i);
-> -			input_mt_report_slot_state(input, MT_TOOL_FINGER, true);
-> +			input_mt_report_slot_state(input, tool_type, true);
->  			input_event(input, EV_ABS, ABS_MT_POSITION_X, x);
->  			input_event(input, EV_ABS, ABS_MT_POSITION_Y, y);
->  			input_event(input, EV_ABS, ABS_MT_PRESSURE, p);
-> @@ -1307,6 +1315,7 @@ static int elants_i2c_probe(struct i2c_client *client,
->  	input_set_abs_params(ts->input, ABS_MT_POSITION_Y, 0, ts->y_max, 0, 0);
->  	input_set_abs_params(ts->input, ABS_MT_TOUCH_MAJOR, 0, 255, 0, 0);
->  	input_set_abs_params(ts->input, ABS_MT_PRESSURE, 0, 255, 0, 0);
-> +	input_set_abs_params(ts->input, ABS_MT_TOOL_TYPE, 0, MT_TOOL_PALM, 0, 0);
->  	input_abs_set_res(ts->input, ABS_MT_POSITION_X, ts->x_res);
->  	input_abs_set_res(ts->input, ABS_MT_POSITION_Y, ts->y_res);
->  	input_abs_set_res(ts->input, ABS_MT_TOUCH_MAJOR, 1);
+> +title: Analogix ANX7688 HDMI to USB Type-C Bridge (Port Controller with MUX)
+> +
+> +maintainers:
+> +  - Nicolas Boichat <drinkcat@chromium.org>
+> +  - Enric Balletbo i Serra <enric.balletbo@collabora.com>
+> +
+> +description: |
+> +  ANX7688 converts HDMI 2.0 to DisplayPort 1.3 Ultra-HDi (4096x2160p60)
+> +  including an intelligent crosspoint switch to support USB Type-C (USB-C).
+> +  The integrated crosspoint switch supports USB 3.1 data transfer along with
+> +  the DisplayPort Alternate Mode signaling over USB Type-C. Additionally,
+> +  an on-chip microcontroller (OCM) is available to manage the signal switching,
+> +  Channel Configuration (CC) detection, USB Power Delivery (USB-PD), Vendor
+> +  Defined Message (VDM) protocol support and other functions as defined in the
+> +  USB TypeC and USB Power Delivery specifications.
+> +
+> +  As a result, a multi-function device is exposed as parent of the video
+> +  bridge, TCPC and MUX blocks.
+> +
+> +properties:
+> +  compatible:
+> +    const: analogix,anx7688
+> +
+> +  reg:
+> +    maxItems: 1
+> +    description: I2C address of the device
+> +
+> +required:
+> +  - compatible
+> +  - reg
+
+If this does stay like this, then you need to define the child node(s) 
+here and reference their bindings.
+
+> +
+> +examples:
+> +  - |
+> +    i2c0 {
+> +        #address-cells = <1>;
+> +        #size-cells = <0>;
+> +
+> +        anx7688: anx7688@2c {
+> +            compatible = "analogix,anx7688";
+> +            reg = <0x2c>;
+> +        };
+> +    };
 > -- 
-> 2.7.4
+> 2.25.1
 > 
