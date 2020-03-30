@@ -2,80 +2,99 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 535F1C43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 17:54:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD234C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 17:54:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 37A0920A8B
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 17:54:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F2032073B
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 17:54:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="FUM/Log5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730356AbgC3RyJ (ORCPT
+        id S1730364AbgC3Ryi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 13:54:09 -0400
-Received: from smtprelay0250.hostedemail.com ([216.40.44.250]:47660 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726403AbgC3RyH (ORCPT
+        Mon, 30 Mar 2020 13:54:38 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:47004 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726403AbgC3Ryi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 13:54:07 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay05.hostedemail.com (Postfix) with ESMTP id A38C018034F5F;
-        Mon, 30 Mar 2020 17:54:05 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: snail18_7ae2b0153554f
-X-Filterd-Recvd-Size: 1863
-Received: from XPS-9350.home (unknown [47.151.136.130])
-        (Authenticated sender: joe@perches.com)
-        by omf15.hostedemail.com (Postfix) with ESMTPA;
-        Mon, 30 Mar 2020 17:54:04 +0000 (UTC)
-Message-ID: <bfc2cff78325ad2845ef0c7ec2d7ba719fd4f1a1.camel@perches.com>
-Subject: Re: [PATCH][next] net: ethernet: ti: fix spelling mistake "rundom"
- -> "random"
-From:   Joe Perches <joe@perches.com>
-To:     Colin King <colin.king@canonical.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Grygorii Strashko <grygorii.strashko@ti.com>,
-        netdev@vger.kernel.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Mon, 30 Mar 2020 10:52:09 -0700
-In-Reply-To: <20200330101639.161268-1-colin.king@canonical.com>
-References: <20200330101639.161268-1-colin.king@canonical.com>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.34.1-2 
+        Mon, 30 Mar 2020 13:54:38 -0400
+Received: by mail-wr1-f67.google.com with SMTP id j17so22715206wru.13
+        for <linux-kernel@vger.kernel.org>; Mon, 30 Mar 2020 10:54:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=utW+7YJkRuGqH8XK7nqVWH149nVP6e/z3NiTESoZJ6I=;
+        b=FUM/Log5Gw5uixyZLFfSJCSdgQdC9uA76xrChs16wy5iNS75Rmzu4dn06dHbbaqEit
+         ghRrrro2jkjKhoIsDZgxiwceZIGwOOz9ZhOJQ8t7wUcny1DlafqxQZ7bfiYypLtBEBZj
+         9WolA73ts7cOv3ZaPB3DCzcc25CpUytxEw5pA=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=utW+7YJkRuGqH8XK7nqVWH149nVP6e/z3NiTESoZJ6I=;
+        b=ZSg51xRXjhqAoAL2GiNTbKHn8M+HnEalnUym44zjatpvPA5ZpGEO03g7Gp+LssBxzv
+         plQFpdzR9Mfb52XFaxWS6QzkFmEc5TOr2iLeILc+2IEFoViVYuTaLs8ofrEFMbdRVgRl
+         zH2k7hasFOUJiL/0XAd5F6OLijSsCOYku4wV5FiiJLAkIErMBuxZegJXjTbAQxfagBTG
+         SLgOXCt1b4getvJ8q4NQ5IRx/DQoIvT2J2Q4ZvKKGC36OMYDSCAa4RKdSL4RbWaYNqXf
+         eHl78xw718iWlaHaB/E0GK4z16aEkO1fiPEP6b/t8oHp4x7ljECI9L96pygY2bt2Po0M
+         cRCg==
+X-Gm-Message-State: ANhLgQ1Ak3yLy4UqaYJT3bgYYjwwjslFWtGsJFRYlJCqBU3S7or7j32C
+        Iuy6bHvN2t3fxh0KgZClrgfqPwAHrgZrmO8pCbM9Fw==
+X-Google-Smtp-Source: ADFU+vsUn9IsKe0gSvckJlw0u4Px0D/tzS/kNZ/jnXIKvDX6ef/ApzKlvKspnJvAglkMak8cC2//FXu1A1VOWCpgq60=
+X-Received: by 2002:a5d:4847:: with SMTP id n7mr16829913wrs.182.1585590876589;
+ Mon, 30 Mar 2020 10:54:36 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+References: <20200330204307.669bbb4d@canb.auug.org.au> <86f7031a-57c6-5d50-2788-ae0e06a7c138@infradead.org>
+ <d5b4bd95-7ef9-58cb-1955-900e6edb2467@iogearbox.net>
+In-Reply-To: <d5b4bd95-7ef9-58cb-1955-900e6edb2467@iogearbox.net>
+From:   KP Singh <kpsingh@chromium.org>
+Date:   Mon, 30 Mar 2020 19:54:25 +0200
+Message-ID: <CACYkzJ72Uy9mnenO04OJaKH=Bk4ZENKJb9yw6i+EhJUa+ygngQ@mail.gmail.com>
+Subject: Re: linux-next: Tree for Mar 30 (bpf)
+To:     Daniel Borkmann <daniel@iogearbox.net>
+Cc:     Randy Dunlap <rdunlap@infradead.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        bpf <bpf@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2020-03-30 at 11:16 +0100, Colin King wrote:
-> From: Colin Ian King <colin.king@canonical.com>
-> 
-> There is a spelling mistake in a dev_err error message. Fix it.
-[]
-> diff --git a/drivers/net/ethernet/ti/am65-cpsw-nuss.c b/drivers/net/ethernet/ti/am65-cpsw-nuss.c
-[]
-> @@ -1627,7 +1627,7 @@ static int am65_cpsw_nuss_init_slave_ports(struct am65_cpsw_common *common)
->  							   port->slave.mac_addr) ||
->  			   !is_valid_ether_addr(port->slave.mac_addr)) {
->  			random_ether_addr(port->slave.mac_addr);
-> -			dev_err(dev, "Use rundom MAC address\n");
-> +			dev_err(dev, "Use random MAC address\n");
+Thanks for adding me Daniel, taking a look.
 
-This continues without returning an error value.
-Is this actually an error?
+- KP
 
-It might be useful to describe the slave and
-random ethernet address too.
-
-Perhaps:
-
-			dev_notice(dev, "%pOF slave[%d] using random MAC address %pM\n",
-				   port_np, port_id, port->slave.mac_addr);
-
-or maybe dev_info
-
-
+On Mon, Mar 30, 2020 at 7:25 PM Daniel Borkmann <daniel@iogearbox.net> wrote:
+>
+> [Cc KP, ptal]
+>
+> On 3/30/20 7:15 PM, Randy Dunlap wrote:
+> > On 3/30/20 2:43 AM, Stephen Rothwell wrote:
+> >> Hi all,
+> >>
+> >> The merge window has opened, so please do not add any material for the
+> >> next release into your linux-next included trees/branches until after
+> >> the merge window closes.
+> >>
+> >> Changes since 20200327:
+> >
+> > (note: linux-next is based on linux 5.6-rc7)
+> >
+> >
+> > on i386:
+> >
+> > ld: kernel/bpf/bpf_lsm.o:(.rodata+0x0): undefined reference to `bpf_tracing_func_proto'
+> >
+> >
+> > Full randconfig file is attached.
+> >
+>
