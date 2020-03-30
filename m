@@ -2,132 +2,118 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84824C43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 12:16:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58DFAC43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 12:17:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 53FC320714
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 12:16:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D34A206F6
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 12:17:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TXtyIy2W"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="jug3rhOD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730121AbgC3MQt (ORCPT
+        id S1730135AbgC3MRN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 08:16:49 -0400
-Received: from us-smtp-delivery-74.mimecast.com ([63.128.21.74]:51086 "EHLO
-        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729848AbgC3MQr (ORCPT
+        Mon, 30 Mar 2020 08:17:13 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:51342 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729705AbgC3MRM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 08:16:47 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1585570606;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=MYQJfg4bEedYd4dU8QQfrS68QqFoT2gft/lQom/VKLY=;
-        b=TXtyIy2WxCpZpO1hE2HZdie/HEW1/5SM3lEOz/RoeGdj00dRsSAWUWUTE2RJHQ/nSuP/KP
-        o1+6O8u5HatUjPpANe6wcUthKF1sV6fhdBM6P6JVYus7eCKKU7Y+gE7GIZBweQ+LlaDMsT
-        s2HzWq95Vn1CVSKZm6qGES8nTitsvI0=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-134-TLrIXIIFMxS2aU19Htzoog-1; Mon, 30 Mar 2020 08:16:44 -0400
-X-MC-Unique: TLrIXIIFMxS2aU19Htzoog-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 97F21801E74;
-        Mon, 30 Mar 2020 12:16:43 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-112-66.rdu2.redhat.com [10.10.112.66])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id B092596F88;
-        Mon, 30 Mar 2020 12:16:39 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-To:     torvalds@linux-foundation.org
-cc:     dhowells@redhat.com, jarkko.sakkinen@linux.intel.com,
-        longman@redhat.com, keyrings@vger.kernel.org,
-        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [GIT PULL] keys: Fix key->sem vs mmap_sem issue when reading key
+        Mon, 30 Mar 2020 08:17:12 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=1TmVSV9PEicpV15saljgYzRTqRrIyUodG1iYOZDlCEw=; b=jug3rhODTJBTFOCabmEpKv3Ciy
+        OQM9n6+JLCgJaVH13pLjAddV5iCyN6VkzJewzO5/zEWXS0jthSH5yZe4C+fBjXhYKc8qcHxnPjBJ2
+        3k0FhnMmnjUl6Z8PZwD0cHVa8+QzePq02+E7Qr1bv4keJir+bSI1/esyOwt5AYFDjDetGBu2r2CHQ
+        8ZDHvI7evDFQxiGZK2RtBJ6wCGAZsIN5cGaqdjOtB85vmkkhbKSeK2gMBqRRNxfr1+aFDoj104nQq
+        QuwEtQdU3Cqt+u9I7HuSEBBq2KVdHmPuVh1ef2y2D7+8la/4B4ZcASgg37TwV3AIfzXRHcYGJfC6B
+        abEyRCXA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jItLd-0004XC-Ka; Mon, 30 Mar 2020 12:16:57 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id EAFAE303C41;
+        Mon, 30 Mar 2020 14:16:54 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id CDA5F29D04D6E; Mon, 30 Mar 2020 14:16:54 +0200 (CEST)
+Date:   Mon, 30 Mar 2020 14:16:54 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Zhenyu Ye <yezhenyu2@huawei.com>
+Cc:     npiggin@gmail.com, will.deacon@arm.com, mingo@kernel.org,
+        torvalds@linux-foundation.org, schwidefsky@de.ibm.com,
+        akpm@linux-foundation.org, luto@kernel.org, bp@alien8.de,
+        Marc Zyngier <maz@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-arch@vger.kernel.org, arm@kernel.org, xiexiangyou@huawei.com
+Subject: Re: [RFC][Qusetion] the value of cleared_(ptes|pmds|puds|p4ds) in
+ struct mmu_gather
+Message-ID: <20200330121654.GL20696@hirez.programming.kicks-ass.net>
+References: <fbb00ac0-9104-8d25-f225-7b3d1b17a01f@huawei.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <1437196.1585570598.1@warthog.procyon.org.uk>
-Content-Transfer-Encoding: quoted-printable
-Date:   Mon, 30 Mar 2020 13:16:38 +0100
-Message-ID: <1437197.1585570598@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <fbb00ac0-9104-8d25-f225-7b3d1b17a01f@huawei.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+On Sat, Mar 28, 2020 at 12:30:50PM +0800, Zhenyu Ye wrote:
+> Hi all,
+> 
+> commit a6d60245 "Track which levels of the page tables have been cleared"
+> added cleared_(ptes|pmds|puds|p4ds) in struct mmu_gather, and the values
+> of them are set in some places. For example:
+> 
+> In include/asm-generic/tlb.h, pte_free_tlb() set the tlb->cleared_pmds:
+> ---8<---
+> #ifndef pte_free_tlb
+> #define pte_free_tlb(tlb, ptep, address)			\
+> 	do {							\
+> 		__tlb_adjust_range(tlb, address, PAGE_SIZE);	\
+> 		tlb->freed_tables = 1;				\
+> 		tlb->cleared_pmds = 1;				\
+> 		__pte_free_tlb(tlb, ptep, address);		\
+> 	} while (0)
+> #endif
+> ---8<---
+> 
+> 
+> However, in arch/s390/include/asm/tlb.h, pte_free_tlb() set the tlb->cleared_ptes:
+> ---8<---
+> static inline void pte_free_tlb(struct mmu_gather *tlb, pgtable_t pte,
+>                                 unsigned long address)
+> {
+> 	__tlb_adjust_range(tlb, address, PAGE_SIZE);
+> 	tlb->mm->context.flush_mm = 1;
+> 	tlb->freed_tables = 1;
+> 	tlb->cleared_ptes = 1;
+> 	/*
+> 	 * page_table_free_rcu takes care of the allocation bit masks
+> 	 * of the 2K table fragments in the 4K page table page,
+> 	 * then calls tlb_remove_table.
+> 	 */
+> 	page_table_free_rcu(tlb, (unsigned long *) pte, address);
+> }
+> ---8<---
+> 
+> 
+> In my view, the cleared_(ptes|pmds|puds) and (pte|pmd|pud)_free_tlb
+> correspond one-to-one.  So we should set cleared_ptes in pte_free_tlb(),
+> then use it when needed.
 
-Here's a couple of patches that fix a circular dependency between holding
-key->sem and mm->mmap_sem when reading data from a key.  One potential
-issue is that a filesystem looking to use a key inside, say, ->readpages()
-could deadlock if the key being read is the key that's required and the
-buffer the key is being read into is on a page that needs to be fetched.
+So pte_free_tlb() clears a table of PTE entries, or a PMD level entity,
+also see free_pte_range(). So the generic code makes sense to me. The
+PTE level invalidations will have happened on tlb_remove_tlb_entry().
 
-The case actually detected is a bit more involved - with a filesystem
-calling request_key() and locking the target keyring for write - which
-could be being read.
+> I'm very confused about this. Which is wrong? Or is there something
+> I understand wrong?
 
-[Note: kbuild spotted a compiler(?) warning that I've not seen before,
- complaining "The scope of the variable 'oldxdr' can be reduced.
- [variableScope]".  It's unhappy that a variable that's declared at the to=
-p
- of the function hasn't been moved into an interior for-loop.  Is this
- something we're now requiring?  Anyway, I'd prefer to fix that with a
- follow up patch through the net tree rather than go for a 9th iteration o=
-n
- these patches.]
-
-Thanks,
-David
----
-The following changes since commit 1b649e0bcae71c118c1333e02249a7510ba7f70=
-a:
-
-  Merge git://git.kernel.org/pub/scm/linux/kernel/git/netdev/net (2020-03-=
-25 13:58:05 -0700)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/dhowells/linux-fs.git tags=
-/keys-fixes-20200329
-
-for you to fetch changes up to 4f0882491a148059a52480e753b7f07fc550e188:
-
-  KEYS: Avoid false positive ENOMEM error on key read (2020-03-29 12:40:41=
- +0100)
-
-----------------------------------------------------------------
-Keyrings fixes
-
-----------------------------------------------------------------
-Waiman Long (2):
-      KEYS: Don't write out to userspace while holding key semaphore
-      KEYS: Avoid false positive ENOMEM error on key read
-
- include/keys/big_key-type.h               |   2 +-
- include/keys/user-type.h                  |   3 +-
- include/linux/key-type.h                  |   2 +-
- net/dns_resolver/dns_key.c                |   2 +-
- net/rxrpc/key.c                           |  27 +++-----
- security/keys/big_key.c                   |  11 ++--
- security/keys/encrypted-keys/encrypted.c  |   7 +-
- security/keys/internal.h                  |  12 ++++
- security/keys/keyctl.c                    | 103 +++++++++++++++++++++++++=
------
- security/keys/keyring.c                   |   6 +-
- security/keys/request_key_auth.c          |   7 +-
- security/keys/trusted-keys/trusted_tpm1.c |  14 +---
- security/keys/user_defined.c              |   5 +-
- 13 files changed, 126 insertions(+), 75 deletions(-)
-
+I agree the s390 case is puzzling, Martin does s390 need a PTE level
+invalidate for removing a PTE table or was this a mistake?
