@@ -2,85 +2,102 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C6C5C43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 02:18:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FEA6C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 02:19:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1E25D2073E
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 02:18:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 27F9E20733
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 02:19:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="b8U+e1jb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728668AbgC3CSs (ORCPT
+        id S1728714AbgC3CT3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Mar 2020 22:18:48 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:56520 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727801AbgC3CSr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Mar 2020 22:18:47 -0400
-Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 31DAE3ED48BD469060FE;
-        Mon, 30 Mar 2020 10:18:44 +0800 (CST)
-Received: from [127.0.0.1] (10.173.220.183) by DGGEMS410-HUB.china.huawei.com
- (10.3.19.210) with Microsoft SMTP Server id 14.3.487.0; Mon, 30 Mar 2020
- 10:18:34 +0800
-To:     <ebiederm@xmission.com>, <christian.brauner@ubuntu.com>,
-        <oleg@redhat.com>, <tj@kernel.org>, <guro@fb.com>,
-        <joel@joelfernandes.org>, <jannh@google.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     Mingfangsen <mingfangsen@huawei.com>,
-        Yanxiaodan <yanxiaodan@huawei.com>,
-        linfeilong <linfeilong@huawei.com>
-From:   Zhiqiang Liu <liuzhiqiang26@huawei.com>
-Subject: [PATCH] signal: check sig before setting info in kill_pid_usb_asyncio
-Message-ID: <f525fd08-1cf7-fb09-d20c-4359145eb940@huawei.com>
-Date:   Mon, 30 Mar 2020 10:18:33 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Sun, 29 Mar 2020 22:19:29 -0400
+Received: from m12-12.163.com ([220.181.12.12]:39856 "EHLO m12-12.163.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728124AbgC3CT3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Mar 2020 22:19:29 -0400
+X-Greylist: delayed 923 seconds by postgrey-1.27 at vger.kernel.org; Sun, 29 Mar 2020 22:19:10 EDT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+        s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=YLkRY
+        spmaUn4AjagqkUkZTcLSwz0UO59vIe9hnXKdrw=; b=b8U+e1jb8DLxrjmg3TMWK
+        KVON0oEb+0L5GQRr5SmTe6rnowWqyi4p+2wu/NamIHCjLdNK9Uj+p++LTJGRNxWH
+        2MImBKoENyT14BPVTybqnp41KWgDCk+dZVnXNErP+CfSNaWFGJMc5xGDSf6yGRLv
+        BEwyPxBunCu9JtiHr+4ogs=
+Received: from localhost.localdomain (unknown [125.82.11.174])
+        by smtp8 (Coremail) with SMTP id DMCowAB3e2fEUoFe5nNMBQ--.2270S4;
+        Mon, 30 Mar 2020 10:00:48 +0800 (CST)
+From:   Hu Haowen <xianfengting221@163.com>
+To:     linux@dominikbrodowski.net
+Cc:     jeyu@kernel.org, maennich@google.com, axboe@kernel.dk,
+        nborisov@suse.com, josef@toxicpanda.com, stfrench@microsoft.com,
+        chris@chris-wilson.co.uk, wqu@suse.com, xiubli@redhat.com,
+        airlied@redhat.com, xianfengting221@163.com,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] pcmcia: remove some unused space characters
+Date:   Mon, 30 Mar 2020 10:00:24 +0800
+Message-Id: <20200330020024.8174-1-xianfengting221@163.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.173.220.183]
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID: DMCowAB3e2fEUoFe5nNMBQ--.2270S4
+X-Coremail-Antispam: 1Uf129KBjvJXoW7Zw15Zr1fuw1DtFyrCr48JFb_yoW8JFykpF
+        43Cw18AFs3ZFWUXa15Ar48ur1Sqw1ktayUtryak3y8JFyjk3srKay8u3W5ZFZ8CFZFyF1U
+        Kr45A34UuF4DXF7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07UDb15UUUUU=
+X-Originating-IP: [125.82.11.174]
+X-CM-SenderInfo: h0ld0wxhqj3xtqjsjii6rwjhhfrp/1tbiWwb2AFSImCKWagAAsx
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+There are a few space characters I found by chance. I think they are
+redundant, so I removed them.
 
-In kill_pid_usb_asyncio, if signal is not valid, we do not need to
-set info struct.
-
-Signed-off-by: Zhiqiang Liu <liuzhiqiang26@huawei.com>
+Signed-off-by: Hu Haowen <xianfengting221@163.com>
 ---
- kernel/signal.c | 6 +++---
+ drivers/pcmcia/sa1100_simpad.c | 6 +++---
  1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/kernel/signal.c b/kernel/signal.c
-index 9ad8dea93dbb..9cdc9e388a19 100644
---- a/kernel/signal.c
-+++ b/kernel/signal.c
-@@ -1505,15 +1505,15 @@ int kill_pid_usb_asyncio(int sig, int errno, sigval_t addr,
- 	unsigned long flags;
- 	int ret = -EINVAL;
-
-+	if (!valid_signal(sig))
-+		return ret;
+diff --git a/drivers/pcmcia/sa1100_simpad.c b/drivers/pcmcia/sa1100_simpad.c
+index e2e8729afd9d..784ada5b8c4f 100644
+--- a/drivers/pcmcia/sa1100_simpad.c
++++ b/drivers/pcmcia/sa1100_simpad.c
+@@ -14,7 +14,7 @@
+ #include <asm/mach-types.h>
+ #include <mach/simpad.h>
+ #include "sa1100_generic.h"
+- 
 +
- 	clear_siginfo(&info);
- 	info.si_signo = sig;
- 	info.si_errno = errno;
- 	info.si_code = SI_ASYNCIO;
- 	*((sigval_t *)&info.si_pid) = addr;
-
--	if (!valid_signal(sig))
--		return ret;
--
- 	rcu_read_lock();
- 	p = pid_task(pid, PIDTYPE_PID);
- 	if (!p) {
+ static int simpad_pcmcia_hw_init(struct soc_pcmcia_socket *skt)
+ {
+ 
+@@ -66,7 +66,7 @@ simpad_pcmcia_configure_socket(struct soc_pcmcia_socket *skt,
+ 		simpad_clear_cs3_bit(VCC_3V_EN|VCC_5V_EN|EN0|EN1);
+ 		break;
+ 
+-	case 33:  
++	case 33:
+ 		simpad_clear_cs3_bit(VCC_3V_EN|EN1);
+ 		simpad_set_cs3_bit(VCC_5V_EN|EN0);
+ 		break;
+@@ -95,7 +95,7 @@ static void simpad_pcmcia_socket_suspend(struct soc_pcmcia_socket *skt)
+ 	simpad_set_cs3_bit(PCMCIA_RESET);
+ }
+ 
+-static struct pcmcia_low_level simpad_pcmcia_ops = { 
++static struct pcmcia_low_level simpad_pcmcia_ops = {
+ 	.owner			= THIS_MODULE,
+ 	.hw_init		= simpad_pcmcia_hw_init,
+ 	.hw_shutdown		= simpad_pcmcia_hw_shutdown,
 -- 
-2.19.1
+2.20.1
+
 
