@@ -6,25 +6,25 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DEFA7C43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 02:22:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C139C2D0ED
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 02:22:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF6DC2076A
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 02:22:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 628F32078B
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 02:22:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728815AbgC3CWd (ORCPT
+        id S1729002AbgC3CWk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Mar 2020 22:22:33 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:37806 "EHLO huawei.com"
+        Sun, 29 Mar 2020 22:22:40 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:12214 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728124AbgC3CWc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Mar 2020 22:22:32 -0400
-Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 6DF5590366F32478EDB1;
-        Mon, 30 Mar 2020 10:22:28 +0800 (CST)
+        id S1728972AbgC3CWh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Mar 2020 22:22:37 -0400
+Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 7EF28356851A8F446328;
+        Mon, 30 Mar 2020 10:22:33 +0800 (CST)
 Received: from huawei.com (10.175.124.28) by DGGEMS411-HUB.china.huawei.com
  (10.3.19.211) with Microsoft SMTP Server id 14.3.487.0; Mon, 30 Mar 2020
- 10:22:20 +0800
+ 10:22:24 +0800
 From:   Jason Yan <yanaijie@huawei.com>
 To:     <mpe@ellerman.id.au>, <linuxppc-dev@lists.ozlabs.org>,
         <diana.craciun@nxp.com>, <christophe.leroy@c-s.fr>,
@@ -33,9 +33,9 @@ To:     <mpe@ellerman.id.au>, <linuxppc-dev@lists.ozlabs.org>,
         <kernel-hardening@lists.openwall.com>, <oss@buserror.net>
 CC:     <linux-kernel@vger.kernel.org>, <zhaohongjiang@huawei.com>,
         <dja@axtens.net>, Jason Yan <yanaijie@huawei.com>
-Subject: [PATCH v5 1/6] powerpc/fsl_booke/kaslr: refactor kaslr_legal_offset() and kaslr_early_init()
-Date:   Mon, 30 Mar 2020 10:20:18 +0800
-Message-ID: <20200330022023.3691-2-yanaijie@huawei.com>
+Subject: [PATCH v5 6/6] powerpc/fsl_booke/kaslr: rename kaslr-booke32.rst to kaslr-booke.rst and add 64bit part
+Date:   Mon, 30 Mar 2020 10:20:23 +0800
+Message-ID: <20200330022023.3691-7-yanaijie@huawei.com>
 X-Mailer: git-send-email 2.17.2
 In-Reply-To: <20200330022023.3691-1-yanaijie@huawei.com>
 References: <20200330022023.3691-1-yanaijie@huawei.com>
@@ -48,8 +48,8 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Some code refactor in kaslr_legal_offset() and kaslr_early_init(). No
-functional change. This is a preparation for KASLR fsl_booke64.
+Now we support both 32 and 64 bit KASLR for fsl booke. Add document for
+64 bit part and rename kaslr-booke32.rst to kaslr-booke.rst.
 
 Signed-off-by: Jason Yan <yanaijie@huawei.com>
 Cc: Scott Wood <oss@buserror.net>
@@ -61,84 +61,84 @@ Cc: Paul Mackerras <paulus@samba.org>
 Cc: Nicholas Piggin <npiggin@gmail.com>
 Cc: Kees Cook <keescook@chromium.org>
 ---
- arch/powerpc/mm/nohash/kaslr_booke.c | 34 +++++++++++++++-------------
- 1 file changed, 18 insertions(+), 16 deletions(-)
+ Documentation/powerpc/index.rst               |  2 +-
+ .../{kaslr-booke32.rst => kaslr-booke.rst}    | 35 ++++++++++++++++---
+ 2 files changed, 32 insertions(+), 5 deletions(-)
+ rename Documentation/powerpc/{kaslr-booke32.rst => kaslr-booke.rst} (59%)
 
-diff --git a/arch/powerpc/mm/nohash/kaslr_booke.c b/arch/powerpc/mm/nohash/kaslr_booke.c
-index 4a75f2d9bf0e..6ebff31fefcc 100644
---- a/arch/powerpc/mm/nohash/kaslr_booke.c
-+++ b/arch/powerpc/mm/nohash/kaslr_booke.c
-@@ -25,6 +25,7 @@ struct regions {
- 	unsigned long pa_start;
- 	unsigned long pa_end;
- 	unsigned long kernel_size;
-+	unsigned long linear_sz;
- 	unsigned long dtb_start;
- 	unsigned long dtb_end;
- 	unsigned long initrd_start;
-@@ -260,11 +261,23 @@ static __init void get_cell_sizes(const void *fdt, int node, int *addr_cells,
- 		*size_cells = fdt32_to_cpu(*prop);
- }
+diff --git a/Documentation/powerpc/index.rst b/Documentation/powerpc/index.rst
+index 0d45f0fc8e57..3bad36943b22 100644
+--- a/Documentation/powerpc/index.rst
++++ b/Documentation/powerpc/index.rst
+@@ -20,7 +20,7 @@ powerpc
+     hvcs
+     imc
+     isa-versions
+-    kaslr-booke32
++    kaslr-booke
+     mpc52xx
+     papr_hcalls
+     pci_iov_resource_on_powernv
+diff --git a/Documentation/powerpc/kaslr-booke32.rst b/Documentation/powerpc/kaslr-booke.rst
+similarity index 59%
+rename from Documentation/powerpc/kaslr-booke32.rst
+rename to Documentation/powerpc/kaslr-booke.rst
+index 8b259fdfdf03..27a862963242 100644
+--- a/Documentation/powerpc/kaslr-booke32.rst
++++ b/Documentation/powerpc/kaslr-booke.rst
+@@ -1,15 +1,18 @@
+ .. SPDX-License-Identifier: GPL-2.0
  
--static unsigned long __init kaslr_legal_offset(void *dt_ptr, unsigned long index,
--					       unsigned long offset)
-+static unsigned long __init kaslr_legal_offset(void *dt_ptr, unsigned long random)
- {
- 	unsigned long koffset = 0;
- 	unsigned long start;
-+	unsigned long index;
-+	unsigned long offset;
+-===========================
+-KASLR for Freescale BookE32
+-===========================
++=========================
++KASLR for Freescale BookE
++=========================
+ 
+ The word KASLR stands for Kernel Address Space Layout Randomization.
+ 
+ This document tries to explain the implementation of the KASLR for
+-Freescale BookE32. KASLR is a security feature that deters exploit
++Freescale BookE. KASLR is a security feature that deters exploit
+ attempts relying on knowledge of the location of kernel internals.
+ 
++KASLR for Freescale BookE32
++-------------------------
 +
-+	/*
-+	 * Decide which 64M we want to start
-+	 * Only use the low 8 bits of the random seed
-+	 */
-+	index = random & 0xFF;
-+	index %= regions.linear_sz / SZ_64M;
+ Since CONFIG_RELOCATABLE has already supported, what we need to do is
+ map or copy kernel to a proper place and relocate. Freescale Book-E
+ parts expect lowmem to be mapped by fixed TLB entries(TLB1). The TLB1
+@@ -38,5 +41,29 @@ bit of the entropy to decide the index of the 64M zone. Then we chose a
+ 
+                               kernstart_virt_addr
+ 
 +
-+	/* Decide offset inside 64M */
-+	offset = random % (SZ_64M - regions.kernel_size);
-+	offset = round_down(offset, SZ_16K);
- 
- 	while ((long)index >= 0) {
- 		offset = memstart_addr + index * SZ_64M + offset;
-@@ -289,10 +302,9 @@ static inline __init bool kaslr_disabled(void)
- static unsigned long __init kaslr_choose_location(void *dt_ptr, phys_addr_t size,
- 						  unsigned long kernel_sz)
- {
--	unsigned long offset, random;
-+	unsigned long random;
- 	unsigned long ram, linear_sz;
- 	u64 seed;
--	unsigned long index;
- 
- 	kaslr_get_cmdline(dt_ptr);
- 	if (kaslr_disabled())
-@@ -333,22 +345,12 @@ static unsigned long __init kaslr_choose_location(void *dt_ptr, phys_addr_t size
- 	regions.dtb_start = __pa(dt_ptr);
- 	regions.dtb_end = __pa(dt_ptr) + fdt_totalsize(dt_ptr);
- 	regions.kernel_size = kernel_sz;
-+	regions.linear_sz = linear_sz;
- 
- 	get_initrd_range(dt_ptr);
- 	get_crash_kernel(dt_ptr, ram);
- 
--	/*
--	 * Decide which 64M we want to start
--	 * Only use the low 8 bits of the random seed
--	 */
--	index = random & 0xFF;
--	index %= linear_sz / SZ_64M;
--
--	/* Decide offset inside 64M */
--	offset = random % (SZ_64M - kernel_sz);
--	offset = round_down(offset, SZ_16K);
--
--	return kaslr_legal_offset(dt_ptr, index, offset);
-+	return kaslr_legal_offset(dt_ptr, random);
- }
- 
- /*
++KASLR for Freescale BookE64
++---------------------------
++
++The implementation for Freescale BookE64 is similar to BookE32. One
++difference is that Freescale BookE64 set up a TLB mapping of 1G during
++booting. Another difference is that ppc64 needs the kernel to be
++64K-aligned. So we can randomize the kernel in this 1G mapping and make
++it 64K-aligned. This can save some code to creat another TLB map at early
++boot. The disadvantage is that we only have about 1G/64K = 16384 slots to
++put the kernel in::
++
++    KERNELBASE
++
++          64K                     |--> kernel <--|
++           |                      |              |
++        +--+--+--+    +--+--+--+--+--+--+--+--+--+    +--+--+
++        |  |  |  |....|  |  |  |  |  |  |  |  |  |....|  |  |
++        +--+--+--+    +--+--+--+--+--+--+--+--+--+    +--+--+
++        |                         |                        1G
++        |----->   offset    <-----|
++
++                              kernstart_virt_addr
++
+ To enable KASLR, set CONFIG_RANDOMIZE_BASE = y. If KASLR is enable and you
+ want to disable it at runtime, add "nokaslr" to the kernel cmdline.
 -- 
 2.17.2
 
