@@ -2,188 +2,166 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81E3CC43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 08:41:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70FECC2D0E9
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 08:41:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5BBCB2073B
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 08:41:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F3AF2082D
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 08:41:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="bPCMV1KO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729677AbgC3IlM convert rfc822-to-8bit (ORCPT
+        id S1729722AbgC3IlO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 04:41:12 -0400
-Received: from mga07.intel.com ([134.134.136.100]:25475 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728994AbgC3IlM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 04:41:12 -0400
-IronPort-SDR: N4Ah5x9e8fGgy48tKitjM6i1kpQBZ8+OA9aHZxa36L6+vmVzjD6CrnD+ldSXulj9XtoyoFvWx4
- Hpe9yAnhsmSw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Mar 2020 01:41:11 -0700
-IronPort-SDR: wGVeRflbVpIH9JGxfzE+chG8cDJEH2vJJukJndIH4VToaUYWtUGnyBgb5ToVkdYz99P+KrnrCz
- RqZPZB/2TjIA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,323,1580803200"; 
-   d="scan'208";a="237283947"
-Received: from fmsmsx103.amr.corp.intel.com ([10.18.124.201])
-  by orsmga007.jf.intel.com with ESMTP; 30 Mar 2020 01:41:10 -0700
-Received: from fmsmsx161.amr.corp.intel.com (10.18.125.9) by
- FMSMSX103.amr.corp.intel.com (10.18.124.201) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Mon, 30 Mar 2020 01:40:59 -0700
-Received: from shsmsx101.ccr.corp.intel.com (10.239.4.153) by
- FMSMSX161.amr.corp.intel.com (10.18.125.9) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Mon, 30 Mar 2020 01:40:59 -0700
-Received: from shsmsx104.ccr.corp.intel.com ([169.254.5.225]) by
- SHSMSX101.ccr.corp.intel.com ([169.254.1.129]) with mapi id 14.03.0439.000;
- Mon, 30 Mar 2020 16:40:55 +0800
-From:   "Tian, Kevin" <kevin.tian@intel.com>
-To:     "Liu, Yi L" <yi.l.liu@intel.com>,
-        "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
-        "eric.auger@redhat.com" <eric.auger@redhat.com>
-CC:     "jacob.jun.pan@linux.intel.com" <jacob.jun.pan@linux.intel.com>,
-        "joro@8bytes.org" <joro@8bytes.org>,
-        "Raj, Ashok" <ashok.raj@intel.com>,
-        "Tian, Jun J" <jun.j.tian@intel.com>,
-        "Sun, Yi Y" <yi.y.sun@intel.com>,
-        "jean-philippe@linaro.org" <jean-philippe@linaro.org>,
-        "peterx@redhat.com" <peterx@redhat.com>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Wu, Hao" <hao.wu@intel.com>
-Subject: RE: [PATCH v1 2/8] vfio/type1: Add vfio_iommu_type1 parameter for
- quota tuning
-Thread-Topic: [PATCH v1 2/8] vfio/type1: Add vfio_iommu_type1 parameter for
- quota tuning
-Thread-Index: AQHWAEUbX2o9koiJmUSoQpAjbhigyahg28IA
-Date:   Mon, 30 Mar 2020 08:40:55 +0000
-Message-ID: <AADFC41AFE54684AB9EE6CBC0274A5D19D7FF3C5@SHSMSX104.ccr.corp.intel.com>
-References: <1584880325-10561-1-git-send-email-yi.l.liu@intel.com>
- <1584880325-10561-3-git-send-email-yi.l.liu@intel.com>
-In-Reply-To: <1584880325-10561-3-git-send-email-yi.l.liu@intel.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-dlp-product: dlpe-windows
-dlp-version: 11.2.0.6
-dlp-reaction: no-action
-x-originating-ip: [10.239.127.40]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        Mon, 30 Mar 2020 04:41:14 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:15742 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729390AbgC3IlN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Mar 2020 04:41:13 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1585557672; h=In-Reply-To: Content-Type: MIME-Version:
+ References: Message-ID: Subject: Cc: To: From: Date: Sender;
+ bh=GGGEL/LuAMxI6PsctPscsFZoLhU3QNYhVoPX6IYX7nQ=; b=bPCMV1KOZg6QZm4NxIj2+wQjh+rCAqR4zx7zx7qJ0bDgB70iIQORO6A83duOLIdFlXW6lGsn
+ nK9jZTWuBjxCXlJDVQmRGVltoR6JDVjtkN7EDrXx/11SCgzGDtN+VAbziZ3Xvo8eL75Sj8lM
+ 13f8gcvYg4gSTJfxHdPfFMxa4Uw=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e81b089.7f8cbd7ffdf8-smtp-out-n01;
+ Mon, 30 Mar 2020 08:40:41 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id EFFA1C43636; Mon, 30 Mar 2020 08:40:40 +0000 (UTC)
+Received: from codeaurora.org (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: stummala)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 9BD12C433D2;
+        Mon, 30 Mar 2020 08:40:37 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 9BD12C433D2
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=stummala@codeaurora.org
+Date:   Mon, 30 Mar 2020 14:10:33 +0530
+From:   Sahitya Tummala <stummala@codeaurora.org>
+To:     Chao Yu <yuchao0@huawei.com>
+Cc:     Jaegeuk Kim <jaegeuk@kernel.org>,
+        linux-f2fs-devel@lists.sourceforge.net,
+        linux-kernel@vger.kernel.org, stummala@codeaurora.org
+Subject: Re: [PATCH] f2fs: prevent meta updates while checkpoint is in
+ progress
+Message-ID: <20200330084033.GU20234@codeaurora.org>
+References: <1585219019-24831-1-git-send-email-stummala@codeaurora.org>
+ <20200327192412.GA186975@google.com>
+ <397da8a6-fdb4-9637-c6ea-803492c408a2@huawei.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <397da8a6-fdb4-9637-c6ea-803492c408a2@huawei.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> From: Liu, Yi L <yi.l.liu@intel.com>
-> Sent: Sunday, March 22, 2020 8:32 PM
+On Sat, Mar 28, 2020 at 04:38:00PM +0800, Chao Yu wrote:
+> Hi all,
 > 
-> From: Liu Yi L <yi.l.liu@intel.com>
+> On 2020/3/28 3:24, Jaegeuk Kim wrote:
+> > Hi Sahitya,
+> > 
+> > On 03/26, Sahitya Tummala wrote:
+> >> allocate_segment_for_resize() can cause metapage updates if
+> >> it requires to change the current node/data segments for resizing.
+> >> Stop these meta updates when there is a checkpoint already
+> >> in progress to prevent inconsistent CP data.
+> > 
+> > Doesn't freeze|thaw_bdev(sbi->sb->s_bdev); work for you?
 > 
-> This patch adds a module option to make the PASID quota tunable by
-> administrator.
+> That can avoid foreground ops racing? rather than background ops like
+> balance_fs() from kworker?
 > 
-> TODO: needs to think more on how to  make the tuning to be per-process.
+
+Yes, that can only prevent foreground ops but not the background ops
+invoked in the context of kworker thread.
+
+> BTW, I found that {freeze,thaw}_bdev is not enough to freeze all
+> foreground fs ops, it needs to use {freeze,thaw}_super instead.
 > 
-> Previous discussions:
-> https://patchwork.kernel.org/patch/11209429/
-> 
-> Cc: Kevin Tian <kevin.tian@intel.com>
-> CC: Jacob Pan <jacob.jun.pan@linux.intel.com>
-> Cc: Alex Williamson <alex.williamson@redhat.com>
-> Cc: Eric Auger <eric.auger@redhat.com>
-> Cc: Jean-Philippe Brucker <jean-philippe@linaro.org>
-> Signed-off-by: Liu Yi L <yi.l.liu@intel.com>
+
+Yes, I agree.
+
+Thanks,
+
 > ---
->  drivers/vfio/vfio.c             | 8 +++++++-
->  drivers/vfio/vfio_iommu_type1.c | 7 ++++++-
->  include/linux/vfio.h            | 3 ++-
->  3 files changed, 15 insertions(+), 3 deletions(-)
+>  fs/f2fs/gc.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
 > 
-> diff --git a/drivers/vfio/vfio.c b/drivers/vfio/vfio.c
-> index d13b483..020a792 100644
-> --- a/drivers/vfio/vfio.c
-> +++ b/drivers/vfio/vfio.c
-> @@ -2217,13 +2217,19 @@ struct vfio_mm *vfio_mm_get_from_task(struct
-> task_struct *task)
->  }
->  EXPORT_SYMBOL_GPL(vfio_mm_get_from_task);
-> 
-> -int vfio_mm_pasid_alloc(struct vfio_mm *vmm, int min, int max)
-> +int vfio_mm_pasid_alloc(struct vfio_mm *vmm, int quota, int min, int max)
->  {
->  	ioasid_t pasid;
->  	int ret = -ENOSPC;
-> 
->  	mutex_lock(&vmm->pasid_lock);
-> 
-> +	/* update quota as it is tunable by admin */
-> +	if (vmm->pasid_quota != quota) {
-> +		vmm->pasid_quota = quota;
-> +		ioasid_adjust_set(vmm->ioasid_sid, quota);
-> +	}
-> +
-
-It's a bit weird to have quota adjusted in the alloc path, since the latter might
-be initiated by non-privileged users. Why not doing the simple math in vfio_
-create_mm to set the quota when the ioasid set is created? even in the future
-you may allow per-process quota setting, that should come from separate 
-privileged path instead of thru alloc...
-
->  	pasid = ioasid_alloc(vmm->ioasid_sid, min, max, NULL);
->  	if (pasid == INVALID_IOASID) {
->  		ret = -ENOSPC;
-> diff --git a/drivers/vfio/vfio_iommu_type1.c
-> b/drivers/vfio/vfio_iommu_type1.c
-> index 331ceee..e40afc0 100644
-> --- a/drivers/vfio/vfio_iommu_type1.c
-> +++ b/drivers/vfio/vfio_iommu_type1.c
-> @@ -60,6 +60,11 @@ module_param_named(dma_entry_limit,
-> dma_entry_limit, uint, 0644);
->  MODULE_PARM_DESC(dma_entry_limit,
->  		 "Maximum number of user DMA mappings per container
-> (65535).");
-> 
-> +static int pasid_quota = VFIO_DEFAULT_PASID_QUOTA;
-> +module_param_named(pasid_quota, pasid_quota, uint, 0644);
-> +MODULE_PARM_DESC(pasid_quota,
-> +		 "Quota of user owned PASIDs per vfio-based application
-> (1000).");
-> +
->  struct vfio_iommu {
->  	struct list_head	domain_list;
->  	struct list_head	iova_list;
-> @@ -2200,7 +2205,7 @@ static int vfio_iommu_type1_pasid_alloc(struct
-> vfio_iommu *iommu,
->  		goto out_unlock;
+> diff --git a/fs/f2fs/gc.c b/fs/f2fs/gc.c
+> index 26248c8936db..acdc8b99b543 100644
+> --- a/fs/f2fs/gc.c
+> +++ b/fs/f2fs/gc.c
+> @@ -1538,7 +1538,7 @@ int f2fs_resize_fs(struct f2fs_sb_info *sbi, __u64 block_count)
+>  		return -EINVAL;
 >  	}
->  	if (vmm)
-> -		ret = vfio_mm_pasid_alloc(vmm, min, max);
-> +		ret = vfio_mm_pasid_alloc(vmm, pasid_quota, min, max);
->  	else
->  		ret = -EINVAL;
->  out_unlock:
-> diff --git a/include/linux/vfio.h b/include/linux/vfio.h
-> index 75f9f7f1..af2ef78 100644
-> --- a/include/linux/vfio.h
-> +++ b/include/linux/vfio.h
-> @@ -106,7 +106,8 @@ struct vfio_mm {
 > 
->  extern struct vfio_mm *vfio_mm_get_from_task(struct task_struct *task);
->  extern void vfio_mm_put(struct vfio_mm *vmm);
-> -extern int vfio_mm_pasid_alloc(struct vfio_mm *vmm, int min, int max);
-> +extern int vfio_mm_pasid_alloc(struct vfio_mm *vmm,
-> +				int quota, int min, int max);
->  extern int vfio_mm_pasid_free(struct vfio_mm *vmm, ioasid_t pasid);
+> -	freeze_bdev(sbi->sb->s_bdev);
+> +	freeze_super(sbi->sb);
 > 
->  /*
-> --
-> 2.7.4
+>  	shrunk_blocks = old_block_count - block_count;
+>  	secs = div_u64(shrunk_blocks, BLKS_PER_SEC(sbi));
+> @@ -1551,7 +1551,7 @@ int f2fs_resize_fs(struct f2fs_sb_info *sbi, __u64 block_count)
+>  		sbi->user_block_count -= shrunk_blocks;
+>  	spin_unlock(&sbi->stat_lock);
+>  	if (err) {
+> -		thaw_bdev(sbi->sb->s_bdev, sbi->sb);
+> +		thaw_super(sbi->sb);
+>  		return err;
+>  	}
+> 
+> @@ -1613,6 +1613,6 @@ int f2fs_resize_fs(struct f2fs_sb_info *sbi, __u64 block_count)
+>  	}
+>  	clear_sbi_flag(sbi, SBI_IS_RESIZEFS);
+>  	mutex_unlock(&sbi->resize_mutex);
+> -	thaw_bdev(sbi->sb->s_bdev, sbi->sb);
+> +	thaw_super(sbi->sb);
+>  	return err;
+>  }
+> -- 
+> 2.18.0.rc1
+> 
+> > 
+> >>
+> >> Signed-off-by: Sahitya Tummala <stummala@codeaurora.org>
+> >> ---
+> >>  fs/f2fs/gc.c | 2 ++
+> >>  1 file changed, 2 insertions(+)
+> >>
+> >> diff --git a/fs/f2fs/gc.c b/fs/f2fs/gc.c
+> >> index 5bca560..6122bad 100644
+> >> --- a/fs/f2fs/gc.c
+> >> +++ b/fs/f2fs/gc.c
+> >> @@ -1399,8 +1399,10 @@ static int free_segment_range(struct f2fs_sb_info *sbi, unsigned int start,
+> >>  	int err = 0;
+> >>  
+> >>  	/* Move out cursegs from the target range */
+> >> +	f2fs_lock_op(sbi);
+> >>  	for (type = CURSEG_HOT_DATA; type < NR_CURSEG_TYPE; type++)
+> >>  		allocate_segment_for_resize(sbi, type, start, end);
+> >> +	f2fs_unlock_op(sbi);
+> >>  
+> >>  	/* do GC to move out valid blocks in the range */
+> >>  	for (segno = start; segno <= end; segno += sbi->segs_per_sec) {
+> >> -- 
+> >> Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center, Inc.
+> >> Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, a Linux Foundation Collaborative Project.
+> > .
+> > 
 
+-- 
+--
+Sent by a consultant of the Qualcomm Innovation Center, Inc.
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum.
