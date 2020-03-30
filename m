@@ -2,515 +2,175 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F79EC43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 14:45:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28340C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 14:47:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA2CC2072E
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 14:45:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="uPH6/pB4"
+	by mail.kernel.org (Postfix) with ESMTP id 03A932072E
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 14:47:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727848AbgC3Opz (ORCPT
+        id S1728220AbgC3OrQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 10:45:55 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:39305 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726518AbgC3Opz (ORCPT
+        Mon, 30 Mar 2020 10:47:16 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:58993 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727522AbgC3OrP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 10:45:55 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1585579554; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=DndG4fEC7ONuOnbVgDPUzhh2TjL1g+kbAoAdln7s4VQ=;
- b=uPH6/pB4AO3mpLHH2c6YIf0sjFLEKcitO/4Z2FDCMre4Q71t+N8ZmmaLGuNwRoMC3mxAJesQ
- v6m2n3jpOLPtPphqjM3EKal3GdAZoBx+BVJI6g9/2Q1Xc0V0/khNG0ldsHEtDf5d4usJDBD8
- 5ug4YOOBqFcc7Ng6pjQ5k4XPHo8=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e82060a.7fa61087eca8-smtp-out-n03;
- Mon, 30 Mar 2020 14:45:30 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id B06E5C44788; Mon, 30 Mar 2020 14:45:29 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: kgunda)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id BAD32C433F2;
-        Mon, 30 Mar 2020 14:45:27 +0000 (UTC)
+        Mon, 30 Mar 2020 10:47:15 -0400
+Received: from bigeasy by Galois.linutronix.de with local (Exim 4.80)
+        (envelope-from <bigeasy@linutronix.de>)
+        id 1jIvh2-0006lt-I5; Mon, 30 Mar 2020 16:47:12 +0200
+Date:   Mon, 30 Mar 2020 16:47:12 +0200
+From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        linux-rt-users <linux-rt-users@vger.kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>
+Subject: [ANNOUNCE] v5.4.28-rt19
+Message-ID: <20200330144712.cwcz5ejal4ankeoi@linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Mon, 30 Mar 2020 20:15:27 +0530
-From:   kgunda@codeaurora.org
-To:     Daniel Thompson <daniel.thompson@linaro.org>
-Cc:     bjorn.andersson@linaro.org, jingoohan1@gmail.com,
-        lee.jones@linaro.org, b.zolnierkie@samsung.com,
-        dri-devel@lists.freedesktop.org, jacek.anaszewski@gmail.com,
-        pavel@ucw.cz, robh+dt@kernel.org, mark.rutland@arm.com,
-        linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Andy Gross <agross@kernel.org>,
-        linux-arm-msm@vger.kernel.org, linux-fbdev@vger.kernel.org
-Subject: Re: [PATCH V4 2/4] backlight: qcom-wled: Add callback functions
-In-Reply-To: <20200325153036.zyor2srbkdhmr2zj@holly.lan>
-References: <1584985618-25689-1-git-send-email-kgunda@codeaurora.org>
- <1584985618-25689-3-git-send-email-kgunda@codeaurora.org>
- <20200325153036.zyor2srbkdhmr2zj@holly.lan>
-Message-ID: <0fc7c05e411267ac921adce070dcfd80@codeaurora.org>
-X-Sender: kgunda@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-03-25 21:00, Daniel Thompson wrote:
-> On Mon, Mar 23, 2020 at 11:16:56PM +0530, Kiran Gunda wrote:
->> Add wled_cabc_config, wled_sync_toggle, wled_ovp_fault_status
->> and wled_ovp_delay callback functions to prepare the driver for
->> adding WLED5 support.
->> 
->> wled_cabc_config() ===> Used to configure the cabc register.
->>                          It is applicable for wled4 and wled5.
->> 
->> wled_sync_toggle() ===> used to toggle the Sync register bit for the
->>                         brightness update to take place.
->>                         It is applicable for WLED3, WLED4 and WLED5.
->> 
->> wled_ovp_fault_status() ===> Used to determine if the OVP fault is 
->> triggered.
->>                              It is applicable for WLED4 and WLED5.
->> 
->> wled_ovp_delay() ===> Provides the time to wait before checking the 
->> OVP status
->>                         after wled module enable.
->>                         It is applicable for WLED4 and WLED5.
-> 
-> These look like comments to me. Move them out of the patch header and
-> make them into real comments!
-> 
-Sure. Will do it in next post.
-> 
->> Signed-off-by: Kiran Gunda <kgunda@codeaurora.org>
-> 
-> This patch does not compile. Please fix this.
-> 
-> 
-Sorry for that. Some how it didn't show up in my compilation.
-Will fix it in next post.
->> ---
->>  drivers/video/backlight/qcom-wled.c | 188 
->> ++++++++++++++++++++++--------------
->>  1 file changed, 118 insertions(+), 70 deletions(-)
->> 
->> diff --git a/drivers/video/backlight/qcom-wled.c 
->> b/drivers/video/backlight/qcom-wled.c
->> index 3d276b3..a3daf9e 100644
->> --- a/drivers/video/backlight/qcom-wled.c
->> +++ b/drivers/video/backlight/qcom-wled.c
->> @@ -147,6 +147,7 @@ struct wled {
->>  	u32 max_brightness;
->>  	u32 short_count;
->>  	u32 auto_detect_count;
->> +	u32 version;
-> 
-> Why does some of the changes here use function pointers and other parts
-> use if/else networks (wled->version == X) ?
-> 
-There is one place (in auto_string_detection) where we have to add the
-if (version == 4) because the per string modulator_enable is present 
-only
-for WLED4 and there is no equivalent functionality available for WLED5.
+Dear RT folks!
 
-There is another place, that i can convert it to the function pointer 
-(auto_detection_required).
+I'm pleased to announce the v5.4.28-rt19 patch set. 
 
-> Overall I almost wonder if the reduced clarify that comes from function
-> pointers is actually adding much value?
-> 
-I believe adding the function pointer makes it cleaner and the same 
-approach is used for
-WLED4/WLED3 also.
+Changes since v5.4.28-rt18:
 
-> 
->>  	bool disabled_by_short;
->>  	bool has_short_detect;
->>  	int short_irq;
->> @@ -155,6 +156,10 @@ struct wled {
->>  	struct wled_config cfg;
->>  	struct delayed_work ovp_work;
->>  	int (*wled_set_brightness)(struct wled *wled, u16 brightness);
->> +	int (*wled_cabc_config)(struct wled *wled, bool enable);
->> +	int (*wled_sync_toggle)(struct wled *wled);
->> +	int (*wled_ovp_fault_status)(struct wled *wled, bool *fault_set);
->> +	int (*wled_ovp_delay)(struct wled *wled);
->>  };
->> 
->>  static int wled3_set_brightness(struct wled *wled, u16 brightness)
->> @@ -237,7 +242,7 @@ static int wled_module_enable(struct wled *wled, 
->> int val)
->>  	return 0;
->>  }
->> 
->> -static int wled_sync_toggle(struct wled *wled)
->> +static int wled3_sync_toggle(struct wled *wled)
->>  {
->>  	int rc;
->>  	unsigned int mask = GENMASK(wled->max_string_count - 1, 0);
->> @@ -255,6 +260,46 @@ static int wled_sync_toggle(struct wled *wled)
->>  	return rc;
->>  }
->> 
->> +static int wled4_ovp_fault_status(struct wled *wled, bool *fault_set)
->> +{
->> +	int rc;
->> +	u32 int_rt_sts, fault_sts;
->> +
->> +	*fault_set = false;
->> +	rc = regmap_read(wled->regmap,
->> +			wled->ctrl_addr + WLED3_CTRL_REG_INT_RT_STS,
->> +			&int_rt_sts);
->> +	if (rc < 0) {
->> +		dev_err(wled->dev, "Failed to read INT_RT_STS rc=%d\n", rc);
->> +		return rc;
->> +	}
->> +
->> +	rc = regmap_read(wled->regmap,
->> +			wled->ctrl_addr + WLED3_CTRL_REG_FAULT_STATUS,
->> +			&fault_sts);
->> +	if (rc < 0) {
->> +		dev_err(wled->dev, "Failed to read FAULT_STATUS rc=%d\n", rc);
->> +		return rc;
->> +	}
->> +
->> +	if (int_rt_sts & WLED3_CTRL_REG_OVP_FAULT_STATUS)
->> +		*fault_set = true;
->> +
->> +	if (fault_sts & WLED3_CTRL_REG_OVP_FAULT_BIT)
->> +		*fault_set = true;
->> +
->> +	if (*fault_set)
->> +		dev_dbg(wled->dev, "WLED OVP fault detected, int_rt_sts=0x%x 
->> fault_sts=0x%x\n",
->> +			int_rt_sts, fault_sts);
->> +
->> +	return rc;
->> +}
->> +
->> +static int wled4_ovp_delay(struct wled *wled)
->> +{
->> +	return WLED_SOFT_START_DLY_US;
->> +}
->> +
->>  static int wled_update_status(struct backlight_device *bl)
->>  {
->>  	struct wled *wled = bl_get_data(bl);
->> @@ -275,7 +320,7 @@ static int wled_update_status(struct 
->> backlight_device *bl)
->>  			goto unlock_mutex;
->>  		}
->> 
->> -		rc = wled_sync_toggle(wled);
->> +		rc = wled->wled_sync_toggle(wled);
->>  		if (rc < 0) {
->>  			dev_err(wled->dev, "wled sync failed rc:%d\n", rc);
->>  			goto unlock_mutex;
->> @@ -298,6 +343,25 @@ static int wled_update_status(struct 
->> backlight_device *bl)
->>  	return rc;
->>  }
->> 
->> +static int wled4_cabc_config(struct wled *wled, bool enable)
->> +{
->> +	int i, j, rc;
->> +	u8 val;
->> +
->> +	for (i = 0; i < wled->cfg.num_strings; i++) {
->> +		j = wled->cfg.enabled_strings[i];
->> +
->> +		val = enable ? WLED4_SINK_REG_STR_CABC_MASK : 0;
->> +		rc = regmap_update_bits(wled->regmap, wled->sink_addr +
->> +					WLED4_SINK_REG_STR_CABC(j),
->> +					WLED4_SINK_REG_STR_CABC_MASK, val);
->> +		if (rc < 0)
->> +			return rc;
->> +	}
->> +
->> +	return 0;
->> +}
->> +
->>  #define WLED_SHORT_DLY_MS			20
->>  #define WLED_SHORT_CNT_MAX			5
->>  #define WLED_SHORT_RESET_CNT_DLY_US		USEC_PER_SEC
->> @@ -345,9 +409,10 @@ static irqreturn_t wled_short_irq_handler(int 
->> irq, void *_wled)
->> 
->>  static void wled_auto_string_detection(struct wled *wled)
->>  {
->> -	int rc = 0, i;
->> -	u32 sink_config = 0, int_sts;
->> +	int rc = 0, i, delay_time_us;
->> +	u32 sink_config = 0;
->>  	u8 sink_test = 0, sink_valid = 0, val;
->> +	bool fault_set;
->> 
->>  	/* Read configured sink configuration */
->>  	rc = regmap_read(wled->regmap, wled->sink_addr +
->> @@ -376,14 +441,9 @@ static void wled_auto_string_detection(struct 
->> wled *wled)
->>  	}
->> 
->>  	if (wled->cfg.cabc) {
->> -		for (i = 0; i < wled->cfg.num_strings; i++) {
->> -			rc = regmap_update_bits(wled->regmap, wled->sink_addr +
->> -						WLED4_SINK_REG_STR_CABC(i),
->> -						WLED4_SINK_REG_STR_CABC_MASK,
->> -						0);
->> -			if (rc < 0)
->> -				goto failed_detect;
->> -		}
->> +		rc = wled->wled_cabc_config(wled, 0);
-> 
-> Be consistent with the argument (elsewhere it is true/false).
-> 
-Will address in the next post.
-> 
->> +		if (rc < 0)
->> +			goto failed_detect;
->>  	}
->> 
->>  	/* Disable all sinks */
->> @@ -427,18 +487,17 @@ static void wled_auto_string_detection(struct 
->> wled *wled)
->>  			goto failed_detect;
->>  		}
->> 
->> -		usleep_range(WLED_SOFT_START_DLY_US,
->> -			     WLED_SOFT_START_DLY_US + 1000);
->> +		delay_time_us = wled->wled_ovp_delay(wled);
->> +		usleep_range(delay_time_us, delay_time_us + 1000);
->> 
->> -		rc = regmap_read(wled->regmap, wled->ctrl_addr +
->> -				 WLED3_CTRL_REG_INT_RT_STS, &int_sts);
->> +		rc = wled->wled_ovp_fault_status(wled, &fault_set);
->>  		if (rc < 0) {
->> -			dev_err(wled->dev, "Error in reading WLED3_CTRL_INT_RT_STS 
->> rc=%d\n",
->> +			dev_err(wled->dev, "Error in getting OVP fault_sts, rc=%d\n",
->>  				rc);
->>  			goto failed_detect;
->>  		}
->> 
-> 
-> 
->> -		if (int_sts & WLED3_CTRL_REG_OVP_FAULT_STATUS)
->> +		if (fault_set)
->>  			dev_dbg(wled->dev, "WLED OVP fault detected with SINK %d\n",
->>  				i + 1);
->>  		else
->> @@ -478,30 +537,30 @@ static void wled_auto_string_detection(struct 
->> wled *wled)
->>  	}
->> 
->>  	/* Enable valid sinks */
->> -	for (i = 0; i < wled->cfg.num_strings; i++) {
->> -		if (wled->cfg.cabc) {
->> -			rc = regmap_update_bits(wled->regmap, wled->sink_addr +
->> -						WLED4_SINK_REG_STR_CABC(i),
->> -						WLED4_SINK_REG_STR_CABC_MASK,
->> -						WLED4_SINK_REG_STR_CABC_MASK);
->> -			if (rc < 0)
->> +	if (wled->version == 4) {
->> +		for (i = 0; i < wled->cfg.num_strings; i++) {
->> +			if (sink_config &
->> +			    BIT(WLED4_SINK_REG_CURR_SINK_SHFT + i))
->> +				val = WLED4_SINK_REG_STR_MOD_MASK;
->> +			else
->> +				/* Disable modulator_en for unused sink */
->> +				val = 0x0;
->> +
->> +			rc = regmap_write(wled->regmap, wled->sink_addr +
->> +					  WLED4_SINK_REG_STR_MOD_EN(i), val);
->> +			if (rc < 0) {
->> +				dev_err(wled->dev, "Failed to configure MODULATOR_EN rc=%d\n",
->> +					rc);
->>  				goto failed_detect;
->> -		}
->> -
->> -		if (sink_config & BIT(WLED4_SINK_REG_CURR_SINK_SHFT + i))
->> -			val = WLED4_SINK_REG_STR_MOD_MASK;
->> -		else
->> -			val = 0x0; /* Disable modulator_en for unused sink */
->> -
->> -		rc = regmap_write(wled->regmap, wled->sink_addr +
->> -				  WLED4_SINK_REG_STR_MOD_EN(i), val);
->> -		if (rc < 0) {
->> -			dev_err(wled->dev, "Failed to configure MODULATOR_EN rc=%d\n",
->> -				rc);
->> -			goto failed_detect;
->> +			}
->>  		}
->>  	}
->> 
->> +	/* Enable CABC if it needs to be enabled */
-> 
-> If it needs to be enabled?
-> 
-Ok. Actually Enable CABC should be enough. I will remove the latter part
-in the next post.
-> 
->> +	rc = wled->wled_cabc_config(wled, true);
->> +	if (rc < 0)
->> +		goto failed_detect;
->> +
->>  	/* Restore the feedback setting */
->>  	rc = regmap_write(wled->regmap,
->>  			  wled->ctrl_addr + WLED3_CTRL_REG_FEEDBACK_CONTROL, 0);
->> @@ -570,29 +629,19 @@ static bool wled_auto_detection_required(struct 
->> wled *wled)
->>  static int wled_auto_detection_at_init(struct wled *wled)
->>  {
->>  	int rc;
->> -	u32 fault_status, rt_status;
->> +	bool fault_set;
->> 
->>  	if (!wled->cfg.auto_detection_enabled)
->>  		return 0;
->> 
->> -	rc = regmap_read(wled->regmap,
->> -			 wled->ctrl_addr + WLED3_CTRL_REG_INT_RT_STS,
->> -			 &rt_status);
->> +	rc = wled->wled_ovp_fault_status(wled, &fault_set);
->>  	if (rc < 0) {
->> -		dev_err(wled->dev, "Failed to read RT status rc=%d\n", rc);
->> -		return rc;
->> -	}
->> -
->> -	rc = regmap_read(wled->regmap,
->> -			 wled->ctrl_addr + WLED3_CTRL_REG_FAULT_STATUS,
->> -			 &fault_status);
->> -	if (rc < 0) {
->> -		dev_err(wled->dev, "Failed to read fault status rc=%d\n", rc);
->> +		dev_err(wled->dev, "Error in getting OVP fault_sts, rc=%d\n",
->> +			rc);
->>  		return rc;
->>  	}
->> 
->> -	if ((rt_status & WLED3_CTRL_REG_OVP_FAULT_STATUS) ||
->> -	    (fault_status & WLED3_CTRL_REG_OVP_FAULT_BIT)) {
->> +	if (fault_set) {
->>  		mutex_lock(&wled->lock);
->>  		wled_auto_string_detection(wled);
->>  		mutex_unlock(&wled->lock);
->> @@ -811,17 +860,12 @@ static int wled4_setup(struct wled *wled)
->>  					wled->cfg.string_i_limit);
->>  		if (rc < 0)
->>  			return rc;
->> -
->> -		addr = wled->sink_addr +
->> -				WLED4_SINK_REG_STR_CABC(j);
->> -		rc = regmap_update_bits(wled->regmap, addr,
->> -					WLED4_SINK_REG_STR_CABC_MASK,
->> -					wled->cfg.cabc ?
->> -					WLED4_SINK_REG_STR_CABC_MASK : 0);
->> -		if (rc < 0)
->> -			return rc;
->>  	}
->> 
->> +	rc = wled4_cabc_config(wled, wled->cfg.en_cabc);
->> +	if (rc < 0)
->> +		return rc;
->> +
->>  	rc = regmap_update_bits(wled->regmap, wled->ctrl_addr +
->>  				WLED3_CTRL_REG_MOD_EN,
->>  				WLED3_CTRL_REG_MOD_EN_MASK,
->> @@ -835,7 +879,7 @@ static int wled4_setup(struct wled *wled)
->>  	if (rc < 0)
->>  		return rc;
->> 
->> -	rc = wled_sync_toggle(wled);
->> +	rc = wled->wled_sync_toggle(wled);
->>  	if (rc < 0) {
->>  		dev_err(wled->dev, "Failed to toggle sync reg rc:%d\n", rc);
->>  		return rc;
->> @@ -951,7 +995,7 @@ static u32 wled_values(const struct wled_var_cfg 
->> *cfg, u32 idx)
->>  	return idx;
->>  }
->> 
->> -static int wled_configure(struct wled *wled, int version)
->> +static int wled_configure(struct wled *wled)
->>  {
->>  	struct wled_config *cfg = &wled->cfg;
->>  	struct device *dev = wled->dev;
->> @@ -1035,12 +1079,13 @@ static int wled_configure(struct wled *wled, 
->> int version)
->>  	if (rc)
->>  		wled->name = devm_kasprintf(dev, GFP_KERNEL, "%pOFn", 
->> dev->of_node);
->> 
->> -	switch (version) {
->> +	switch (wled->version) {
->>  	case 3:
->>  		u32_opts = wled3_opts;
->>  		size = ARRAY_SIZE(wled3_opts);
->>  		*cfg = wled3_config_defaults;
->>  		wled->wled_set_brightness = wled3_set_brightness;
->> +		wled->wled_sync_toggle = wled3_sync_toggle;
->>  		wled->max_string_count = 3;
->>  		wled->sink_addr = wled->ctrl_addr;
->>  		break;
->> @@ -1050,6 +1095,10 @@ static int wled_configure(struct wled *wled, 
->> int version)
->>  		size = ARRAY_SIZE(wled4_opts);
->>  		*cfg = wled4_config_defaults;
->>  		wled->wled_set_brightness = wled4_set_brightness;
->> +		wled->wled_sync_toggle = wled3_sync_toggle;
->> +		wled->wled_cabc_config = wled4_cabc_config;
->> +		wled->wled_ovp_fault_status = wled4_ovp_fault_status;
->> +		wled->wled_ovp_delay = wled4_ovp_delay;
->>  		wled->max_string_count = 4;
->> 
->>  		prop_addr = of_get_address(dev->of_node, 1, NULL, NULL);
->> @@ -1186,7 +1235,6 @@ static int wled_probe(struct platform_device 
->> *pdev)
->>  	struct backlight_device *bl;
->>  	struct wled *wled;
->>  	struct regmap *regmap;
->> -	int version;
->>  	u32 val;
->>  	int rc;
->> 
->> @@ -1203,18 +1251,18 @@ static int wled_probe(struct platform_device 
->> *pdev)
->>  	wled->regmap = regmap;
->>  	wled->dev = &pdev->dev;
->> 
->> -	version = (uintptr_t)of_device_get_match_data(&pdev->dev);
->> -	if (!version) {
->> +	wled->version = (uintptr_t)of_device_get_match_data(&pdev->dev);
->> +	if (!wled->version) {
->>  		dev_err(&pdev->dev, "Unknown device version\n");
->>  		return -ENODEV;
->>  	}
->> 
->>  	mutex_init(&wled->lock);
->> -	rc = wled_configure(wled, version);
->> +	rc = wled_configure(wled);
->>  	if (rc)
->>  		return rc;
->> 
->> -	switch (version) {
->> +	switch (wled->version) {
->>  	case 3:
->>  		wled->cfg.auto_detection_enabled = false;
->>  		rc = wled3_setup(wled);
->> --
->> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora 
->> Forum,
->>  a Linux Foundation Collaborative Project
+  - Memory compaction of unevictable pages has been disabled in the v5.4
+    release. This aligns the change with what has been prepared for
+    upstream: Disable is by default on PREEMPT_RT
+    (/proc/sys/vm/compact_unevictable_allowed reads 0) but allow
+    enabling it which will trigger a warning.
+
+Known issues
+     - It has been pointed out that due to changes to the printk code the
+       internal buffer representation changed. This is only an issue if tools
+       like `crash' are used to extract the printk buffer from a kernel memory
+       image.
+
+The delta patch against v5.4.28-rt18 is appended below and can be found here:
+ 
+     https://cdn.kernel.org/pub/linux/kernel/projects/rt/5.4/incr/patch-5.4.28-rt18-rt19.patch.xz
+
+You can get this release via the git tree at:
+
+    git://git.kernel.org/pub/scm/linux/kernel/git/rt/linux-rt-devel.git v5.4.28-rt19
+
+The RT patch against v5.4.28 can be found here:
+
+    https://cdn.kernel.org/pub/linux/kernel/projects/rt/5.4/older/patch-5.4.28-rt19.patch.xz
+
+The split quilt queue is available at:
+
+    https://cdn.kernel.org/pub/linux/kernel/projects/rt/5.4/older/patches-5.4.28-rt19.tar.xz
+
+Sebastian
+
+diff --git a/Documentation/admin-guide/sysctl/vm.rst b/Documentation/admin-guide/sysctl/vm.rst
+index 64aeee1009cab..0329a4d3fa9ec 100644
+--- a/Documentation/admin-guide/sysctl/vm.rst
++++ b/Documentation/admin-guide/sysctl/vm.rst
+@@ -128,6 +128,9 @@ allowed to examine the unevictable lru (mlocked pages) for pages to compact.
+ This should be used on systems where stalls for minor page faults are an
+ acceptable trade for large contiguous free memory.  Set to 0 to prevent
+ compaction from moving pages that are unevictable.  Default value is 1.
++On CONFIG_PREEMPT_RT the default value is 0 in order to avoid a page fault, due
++to compaction, which would block the task from becomming active until the fault
++is resolved.
+ 
+ 
+ dirty_background_bytes
+diff --git a/kernel/sysctl.c b/kernel/sysctl.c
+index d08bd51a0fbc3..8221219d65c35 100644
+--- a/kernel/sysctl.c
++++ b/kernel/sysctl.c
+@@ -212,6 +212,11 @@ static int proc_do_cad_pid(struct ctl_table *table, int write,
+ 		  void __user *buffer, size_t *lenp, loff_t *ppos);
+ static int proc_taint(struct ctl_table *table, int write,
+ 			       void __user *buffer, size_t *lenp, loff_t *ppos);
++#ifdef CONFIG_COMPACTION
++static int proc_dointvec_minmax_warn_RT_change(struct ctl_table *table,
++					       int write, void __user *buffer,
++					       size_t *lenp, loff_t *ppos);
++#endif
+ #endif
+ 
+ #ifdef CONFIG_PRINTK
+@@ -1488,17 +1493,16 @@ static struct ctl_table vm_table[] = {
+ 		.extra1		= &min_extfrag_threshold,
+ 		.extra2		= &max_extfrag_threshold,
+ 	},
+-#ifndef CONFIG_PREEMPT_RT
+ 	{
+ 		.procname	= "compact_unevictable_allowed",
+ 		.data		= &sysctl_compact_unevictable_allowed,
+ 		.maxlen		= sizeof(int),
+ 		.mode		= 0644,
+-		.proc_handler	= proc_dointvec,
++		.proc_handler	= proc_dointvec_minmax_warn_RT_change,
+ 		.extra1		= SYSCTL_ZERO,
+ 		.extra2		= SYSCTL_ONE,
+ 	},
+-#endif
++
+ #endif /* CONFIG_COMPACTION */
+ 	{
+ 		.procname	= "min_free_kbytes",
+@@ -2582,6 +2586,28 @@ int proc_dointvec(struct ctl_table *table, int write,
+ 	return do_proc_dointvec(table, write, buffer, lenp, ppos, NULL, NULL);
+ }
+ 
++#ifdef CONFIG_COMPACTION
++static int proc_dointvec_minmax_warn_RT_change(struct ctl_table *table,
++					       int write, void __user *buffer,
++					       size_t *lenp, loff_t *ppos)
++{
++	int ret, old;
++
++	if (!IS_ENABLED(CONFIG_PREEMPT_RT) || !write)
++		return proc_dointvec_minmax(table, write, buffer, lenp, ppos);
++
++	old = *(int *)table->data;
++	ret = proc_dointvec_minmax(table, write, buffer, lenp, ppos);
++	if (ret)
++		return ret;
++	if (old != *(int *)table->data)
++		pr_warn_once("sysctl attribute %s changed by %s[%d]\n",
++			     table->procname, current->comm,
++			     task_pid_nr(current));
++	return ret;
++}
++#endif
++
+ /**
+  * proc_douintvec - read a vector of unsigned integers
+  * @table: the sysctl table
+diff --git a/localversion-rt b/localversion-rt
+index 9e7cd66d9f44f..483ad771f201a 100644
+--- a/localversion-rt
++++ b/localversion-rt
+@@ -1 +1 @@
+--rt18
++-rt19
+diff --git a/mm/compaction.c b/mm/compaction.c
+index 83cc3d1e5df7b..31e6e103f38b4 100644
+--- a/mm/compaction.c
++++ b/mm/compaction.c
+@@ -1591,7 +1591,7 @@ typedef enum {
+  * compactable pages.
+  */
+ #ifdef CONFIG_PREEMPT_RT
+-#define sysctl_compact_unevictable_allowed 0
++int sysctl_compact_unevictable_allowed __read_mostly = 0;
+ #else
+ int sysctl_compact_unevictable_allowed __read_mostly = 1;
+ #endif
