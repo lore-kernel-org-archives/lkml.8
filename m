@@ -2,370 +2,95 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52263C2D0ED
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 11:52:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EA1CC43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 11:52:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1485A2072E
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 11:52:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5683A2072E
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 11:52:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="m7tyLIAG"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bx72mUxy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729990AbgC3Lwu (ORCPT
+        id S1730004AbgC3Lwx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 07:52:50 -0400
-Received: from smtp-fw-33001.amazon.com ([207.171.190.10]:63169 "EHLO
-        smtp-fw-33001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728764AbgC3Lwt (ORCPT
+        Mon, 30 Mar 2020 07:52:53 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:45638 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728764AbgC3Lwv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 07:52:49 -0400
+        Mon, 30 Mar 2020 07:52:51 -0400
+Received: by mail-pl1-f195.google.com with SMTP id t4so668263plq.12;
+        Mon, 30 Mar 2020 04:52:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1585569169; x=1617105169;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version;
-  bh=bsEygpsLJ+xYleYJIXLhFHg3WBwvujWLMrmLRt/gfgo=;
-  b=m7tyLIAGSD630dQ08PRe2PUzXPI+GKmPdibbukqxi16+ttn0Jinjxg8T
-   tEtsYk2uChEqGxAvwCrJqQHJaP5mIa/+JWCUJeXoAm2z7zsKTR9vlMJ40
-   CcrAosw5B18bpvhseCIHtPehBUhl9dVIXTIOUkbcAR9MhspxirARhfKKk
-   w=;
-IronPort-SDR: x3dHZpACPBEmf6Rm1i6Ae2sia/+w9qBfpGzPFUtUwXdXi4DpeRK7y60EmtuNeUnbB8kHst9FkE
- BQVKBcOurlVA==
-X-IronPort-AV: E=Sophos;i="5.72,324,1580774400"; 
-   d="scan'208";a="35591167"
-Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-1a-67b371d8.us-east-1.amazon.com) ([10.47.23.38])
-  by smtp-border-fw-out-33001.sea14.amazon.com with ESMTP; 30 Mar 2020 11:52:46 +0000
-Received: from EX13MTAUEA002.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan3.iad.amazon.com [10.40.159.166])
-        by email-inbound-relay-1a-67b371d8.us-east-1.amazon.com (Postfix) with ESMTPS id 167B0A224E;
-        Mon, 30 Mar 2020 11:52:34 +0000 (UTC)
-Received: from EX13D31EUA001.ant.amazon.com (10.43.165.15) by
- EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
- id 15.0.1236.3; Mon, 30 Mar 2020 11:52:34 +0000
-Received: from u886c93fd17d25d.ant.amazon.com (10.43.162.134) by
- EX13D31EUA001.ant.amazon.com (10.43.165.15) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Mon, 30 Mar 2020 11:52:20 +0000
-From:   SeongJae Park <sjpark@amazon.com>
-To:     <akpm@linux-foundation.org>
-CC:     SeongJae Park <sjpark@amazon.de>, <Jonathan.Cameron@Huawei.com>,
-        <aarcange@redhat.com>, <acme@kernel.org>,
-        <alexander.shishkin@linux.intel.com>, <amit@kernel.org>,
-        <brendan.d.gregg@gmail.com>, <brendanhiggins@google.com>,
-        <cai@lca.pw>, <colin.king@canonical.com>, <corbet@lwn.net>,
-        <dwmw@amazon.com>, <jolsa@redhat.com>, <kirill@shutemov.name>,
-        <mark.rutland@arm.com>, <mgorman@suse.de>, <minchan@kernel.org>,
-        <mingo@redhat.com>, <namhyung@kernel.org>, <peterz@infradead.org>,
-        <rdunlap@infradead.org>, <riel@surriel.com>, <rientjes@google.com>,
-        <rostedt@goodmis.org>, <shakeelb@google.com>, <shuah@kernel.org>,
-        <sj38.park@gmail.com>, <vbabka@suse.cz>, <vdavydov.dev@gmail.com>,
-        <yang.shi@linux.alibaba.com>, <ying.huang@intel.com>,
-        <linux-mm@kvack.org>, <linux-doc@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [RFC v5 3/7] mm/damon: Implement data access monitoring-based operation schemes
-Date:   Mon, 30 Mar 2020 13:50:38 +0200
-Message-ID: <20200330115042.17431-4-sjpark@amazon.com>
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Eg5ugs9X241d0CyEHmbcuFz60tm64fkmmQDdwTBJmwo=;
+        b=bx72mUxy7UhUrj/cFQtM3eS3lb41tkad+HkCfGl7ALAjXH3z2dhSxVA9srYRsjMG7g
+         EXx2GambzNP9ODeY640qVmq5Gu4R+JHDXZq+yyWf3+TIQe4xcdu6zMsJhn9aA3JRtUDQ
+         q6KxjpPJ3QoZVvkp4UJMcyNB8IsesWuOwLdHNVJxlVKwPudGdTqgVglMfsKR0EQ6bBRt
+         zID7u4h3SB9c43fysjMa2VL+L9FLQABlAXx05yJIbDxIT3cwm/ko4qIzTWXOR3w2o9/r
+         UbghdxeYQU2RR/afULeC3pRkuZ4w3C+3jQVSIOunRm2DsOA1N+J4886HS4V/iNDRtlOq
+         4bcg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Eg5ugs9X241d0CyEHmbcuFz60tm64fkmmQDdwTBJmwo=;
+        b=cmqvy2z4mkoy/+BWqsfmp3o4yVHbAgidUIsvzsY0l0coIAAp65Ot/APyCvkudzASIz
+         sGmi23EwcHNkoJvvDGUIQ0N6pxEysvhNB6Elxeg6Ui+myWHcptANlvyF0RLPhLzYTo+g
+         F35nUTdn7EcB1QA4hLguJLDSaOBQ4egGIaEJOj3G/i6+SOLyfH5eEPrI6f4yJaI0bLyb
+         WWfUN0WyPWqP+ICPH1cLewfRG2gSay+HwBKoQ4gXwR2y6UmphihmP7jxmibXzmCL7wcV
+         BQfUtWc2ziQ8W9twdcBdrdZYrF+I7VDpNa3/4tyfDwpch49VS6iqX6ZfEgegdO4X2s2v
+         8BrA==
+X-Gm-Message-State: ANhLgQ3vTOpzu4e05LK+3OlkMkQNmeVKZDsiwgcumAGfgYlK1br7qjP4
+        t0/dllbX445s65Fzv2ExSg==
+X-Google-Smtp-Source: ADFU+vvHPxPL9x5Yn46J0zk4QFbJpW4YEMsI5pazZEOmCFYJZehaxlAEidJsvORcHfq26MYyODPWZw==
+X-Received: by 2002:a17:902:788e:: with SMTP id q14mr12138962pll.72.1585569169503;
+        Mon, 30 Mar 2020 04:52:49 -0700 (PDT)
+Received: from localhost.localdomain ([2402:3a80:d3b:3d6b:7942:93fd:fd15:96f0])
+        by smtp.gmail.com with ESMTPSA id i4sm10012756pfq.82.2020.03.30.04.52.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 30 Mar 2020 04:52:48 -0700 (PDT)
+From:   madhuparnabhowmik10@gmail.com
+To:     gregkh@linuxfoundation.org, hariprasad.kelam@gmail.com,
+        colin.king@canonical.com, tony.olech@elandigitalsystems.com
+Cc:     linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+        andrianov@ispras.ru
+Subject: Possible data-race related bug in u132_hcd module.
+Date:   Mon, 30 Mar 2020 17:22:43 +0530
+Message-Id: <20200330115243.11107-1-madhuparnabhowmik10@gmail.com>
 X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200330115042.17431-1-sjpark@amazon.com>
-References: <20200330115042.17431-1-sjpark@amazon.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.43.162.134]
-X-ClientProxiedBy: EX13D37UWC003.ant.amazon.com (10.43.162.183) To
- EX13D31EUA001.ant.amazon.com (10.43.165.15)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: SeongJae Park <sjpark@amazon.de>
+Hi,
 
-In many cases, users might use DAMON for simple data access awared
-memory management optimizations such as applying an operation scheme to
-a memory region of a specific size having a specific access frequency
-for a specific time.  For example, "page out a memory region larger than
-100 MiB but having a low access frequency more than 10 minutes", or "Use
-THP for a memory region larger than 2 MiB having a high access frequency
-for more than 2 seconds".
+This bug is found by  Linux Driver Verification project (linuxtesting.org).
 
-To minimize users from spending their time for implementation of such
-simple data access monitoring-based operation schemes, this commit makes
-DAMON to handle such schemes directly.  With this commit, users can
-simply specify their desired schemes to DAMON.
+The bug is related to the parallel execution of u132_probe() function and u132_hcd_exit() function in u132_hcd.c. In case the module is unloaded when the probe function is executing there can be data race as the mutex lock u132_module_lock is not used properly. 
 
-Each of the schemes is composed with conditions for filtering of the
-target memory regions and desired memory management action for the
-target.  In specific, the format is::
+i) Usage of mutex lock only when writing into the u132_exiting variable in u132_hcd_exit(). The lock is not used when this variable is read in u132_probe().
 
-    <min/max size> <min/max access frequency> <min/max age> <action>
+Moreover, this variable does not serve its purpose, as even if locking is used while the u132_exiting variable is read in probe(), the function may still miss that exit function is executing if it acquires the mutex before exit() function does.
 
-The filtering conditions are size of memory region, number of accesses
-to the region monitored by DAMON, and the age of the region.  The age of
-region is incremented periodically but reset when its addresses or
-access frequency has significanly changed or the action of a scheme has
-applied.  For the action, current implementation supports only a few of
-madvise() hints, ``MADV_WILLNEED``, ``MADV_COLD``, ``MADV_PAGEOUT``,
-``MADV_HUGEPAGE``, and ``MADV_NOHUGEPAGE``.
+How to fix this?
 
-Signed-off-by: SeongJae Park <sjpark@amazon.de>
----
- include/linux/damon.h |  24 +++++++
- mm/damon.c            | 149 ++++++++++++++++++++++++++++++++++++++++++
- 2 files changed, 173 insertions(+)
+ii) Usage of mutex while adding entries in u132_static_list in probe function but not in exit function while unregistering.
+This should be easy to fix by holding the mutex in the exit function as well.
 
-diff --git a/include/linux/damon.h b/include/linux/damon.h
-index 49205c71c63d..b0fa898ed6d8 100644
---- a/include/linux/damon.h
-+++ b/include/linux/damon.h
-@@ -36,6 +36,27 @@ struct damon_task {
- 	struct list_head list;
- };
- 
-+/* Data Access Monitoring-based Operation Scheme */
-+enum damos_action {
-+	DAMOS_WILLNEED,
-+	DAMOS_COLD,
-+	DAMOS_PAGEOUT,
-+	DAMOS_HUGEPAGE,
-+	DAMOS_NOHUGEPAGE,
-+	DAMOS_ACTION_LEN,
-+};
-+
-+struct damos {
-+	unsigned int min_sz_region;
-+	unsigned int max_sz_region;
-+	unsigned int min_nr_accesses;
-+	unsigned int max_nr_accesses;
-+	unsigned int min_age_region;
-+	unsigned int max_age_region;
-+	enum damos_action action;
-+	struct list_head list;
-+};
-+
- /*
-  * For each 'sample_interval', DAMON checks whether each region is accessed or
-  * not.  It aggregates and keeps the access information (number of accesses to
-@@ -66,6 +87,7 @@ struct damon_ctx {
- 	struct rnd_state rndseed;
- 
- 	struct list_head tasks_list;	/* 'damon_task' objects */
-+	struct list_head schemes_list;	/* 'damos' objects */
- 
- 	/* callbacks */
- 	void (*sample_cb)(struct damon_ctx *context);
-@@ -76,6 +98,8 @@ int damon_set_pids(struct damon_ctx *ctx, unsigned long *pids, ssize_t nr_pids);
- int damon_set_attrs(struct damon_ctx *ctx, unsigned long sample_int,
- 		unsigned long aggr_int, unsigned long regions_update_int,
- 		unsigned long min_nr_reg, unsigned long max_nr_reg);
-+int damon_set_schemes(struct damon_ctx *ctx,
-+			struct damos **schemes, ssize_t nr_schemes);
- int damon_set_recording(struct damon_ctx *ctx,
- 				unsigned int rbuf_len, char *rfile_path);
- int damon_start(struct damon_ctx *ctx);
-diff --git a/mm/damon.c b/mm/damon.c
-index 3eeb729f3947..933d484451d1 100644
---- a/mm/damon.c
-+++ b/mm/damon.c
-@@ -11,6 +11,7 @@
- 
- #define CREATE_TRACE_POINTS
- 
-+#include <asm-generic/mman-common.h>
- #include <linux/damon.h>
- #include <linux/debugfs.h>
- #include <linux/delay.h>
-@@ -45,6 +46,12 @@
- #define damon_for_each_task_safe(ctx, t, next) \
- 	list_for_each_entry_safe(t, next, &(ctx)->tasks_list, list)
- 
-+#define damon_for_each_schemes(ctx, r) \
-+	list_for_each_entry(r, &(ctx)->schemes_list, list)
-+
-+#define damon_for_each_schemes_safe(ctx, s, next) \
-+	list_for_each_entry_safe(s, next, &(ctx)->schemes_list, list)
-+
- #define MAX_RFILE_PATH_LEN	256
- 
- /* Get a random number in [l, r) */
-@@ -174,6 +181,27 @@ static void damon_destroy_task(struct damon_task *t)
- 	damon_free_task(t);
- }
- 
-+static void damon_add_scheme(struct damon_ctx *ctx, struct damos *s)
-+{
-+	list_add_tail(&s->list, &ctx->schemes_list);
-+}
-+
-+static void damon_del_scheme(struct damos *s)
-+{
-+	list_del(&s->list);
-+}
-+
-+static void damon_free_scheme(struct damos *s)
-+{
-+	kfree(s);
-+}
-+
-+static void damon_destroy_scheme(struct damos *s)
-+{
-+	damon_del_scheme(s);
-+	damon_free_scheme(s);
-+}
-+
- static unsigned int nr_damon_tasks(struct damon_ctx *ctx)
- {
- 	struct damon_task *t;
-@@ -655,6 +683,101 @@ static void kdamond_count_age(struct damon_ctx *c, unsigned int threshold)
- 	}
- }
- 
-+#ifndef CONFIG_ADVISE_SYSCALLS
-+static int damos_madvise(struct damon_task *task, struct damon_region *r,
-+			int behavior)
-+{
-+	return -EINVAL;
-+}
-+#else
-+static int damos_madvise(struct damon_task *task, struct damon_region *r,
-+			int behavior)
-+{
-+	struct task_struct *t;
-+	struct mm_struct *mm;
-+	int ret = -ENOMEM;
-+
-+	t = damon_get_task_struct(task);
-+	if (!t)
-+		goto out;
-+	mm = damon_get_mm(task);
-+	if (!mm)
-+		goto put_task_out;
-+
-+	ret = do_madvise(t, mm, PAGE_ALIGN(r->vm_start),
-+			PAGE_ALIGN(r->vm_end - r->vm_start), behavior);
-+	mmput(mm);
-+put_task_out:
-+	put_task_struct(t);
-+out:
-+	return ret;
-+}
-+#endif	/* CONFIG_ADVISE_SYSCALLS */
-+
-+static int damos_do_action(struct damon_task *task, struct damon_region *r,
-+			enum damos_action action)
-+{
-+	int madv_action;
-+
-+	switch (action) {
-+	case DAMOS_WILLNEED:
-+		madv_action = MADV_WILLNEED;
-+		break;
-+	case DAMOS_COLD:
-+		madv_action = MADV_COLD;
-+		break;
-+	case DAMOS_PAGEOUT:
-+		madv_action = MADV_PAGEOUT;
-+		break;
-+	case DAMOS_HUGEPAGE:
-+		madv_action = MADV_HUGEPAGE;
-+		break;
-+	case DAMOS_NOHUGEPAGE:
-+		madv_action = MADV_NOHUGEPAGE;
-+		break;
-+	default:
-+		pr_warn("Wrong action %d\n", action);
-+		return -EINVAL;
-+	}
-+
-+	return damos_madvise(task, r, madv_action);
-+}
-+
-+static void damon_do_apply_schemes(struct damon_ctx *c, struct damon_task *t,
-+				struct damon_region *r)
-+{
-+	struct damos *s;
-+	unsigned long sz;
-+
-+	damon_for_each_schemes(c, s) {
-+		sz = r->vm_end - r->vm_start;
-+		if ((s->min_sz_region && sz < s->min_sz_region) ||
-+				(s->max_sz_region && s->max_sz_region < sz))
-+			continue;
-+		if ((s->min_nr_accesses && r->nr_accesses < s->min_nr_accesses)
-+				|| (s->max_nr_accesses &&
-+					s->max_nr_accesses < r->nr_accesses))
-+			continue;
-+		if ((s->min_age_region && r->age < s->min_age_region) ||
-+				(s->max_age_region &&
-+				 s->max_age_region < r->age))
-+			continue;
-+		damos_do_action(t, r, s->action);
-+		r->age = 0;
-+	}
-+}
-+
-+static void kdamond_apply_schemes(struct damon_ctx *c)
-+{
-+	struct damon_task *t;
-+	struct damon_region *r;
-+
-+	damon_for_each_task(c, t) {
-+		damon_for_each_region(r, t)
-+			damon_do_apply_schemes(c, t, r);
-+	}
-+}
-+
- #define sz_damon_region(r) (r->vm_end - r->vm_start)
- 
- /*
-@@ -973,6 +1096,7 @@ static int kdamond_fn(void *data)
- 			kdamond_count_age(ctx, max_nr_accesses / 10);
- 			if (ctx->aggregate_cb)
- 				ctx->aggregate_cb(ctx);
-+			kdamond_apply_schemes(ctx);
- 			kdamond_reset_aggregated(ctx);
- 			kdamond_split_regions(ctx);
- 		}
-@@ -1060,6 +1184,30 @@ int damon_stop(struct damon_ctx *ctx)
- 	return damon_turn_kdamond(ctx, false);
- }
- 
-+/*
-+ * damon_set_schemes() - Set data access monitoring based operation schemes.
-+ * @ctx:	monitoring context
-+ * @schemes:	array of the schemes
-+ * @nr_schemes:	number of entries in @schemes
-+ *
-+ * This function should not be called while the kdamond of the context is
-+ * running.
-+ *
-+ * Return: 0 if success, or negative error code otherwise.
-+ */
-+int damon_set_schemes(struct damon_ctx *ctx, struct damos **schemes,
-+			ssize_t nr_schemes)
-+{
-+	struct damos *s, *next;
-+	ssize_t i;
-+
-+	damon_for_each_schemes_safe(ctx, s, next)
-+		damon_destroy_scheme(s);
-+	for (i = 0; i < nr_schemes; i++)
-+		damon_add_scheme(ctx, schemes[i]);
-+	return 0;
-+}
-+
- /*
-  * damon_set_pids() - Set monitoring target processes.
-  * @ctx:	monitoring context
-@@ -1496,6 +1644,7 @@ static int __init damon_init_user_ctx(void)
- 
- 	prandom_seed_state(&ctx->rndseed, 42);
- 	INIT_LIST_HEAD(&ctx->tasks_list);
-+	INIT_LIST_HEAD(&ctx->schemes_list);
- 
- 	return 0;
- }
--- 
-2.17.1
+There can be other synchronization problems related to the usage of u132_module_lock in this module, I have only spotted these so far.
 
+Please let me know if this bug report is helpful and I can send a patch fixing it.
+
+Thank you,
+Madhuparna
