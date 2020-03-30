@@ -2,158 +2,131 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4AFAC43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 15:44:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED97EC2D0EF
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 15:44:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6CBA82073B
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 15:44:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qEpXPr9E"
+	by mail.kernel.org (Postfix) with ESMTP id C3C1F2073B
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 15:44:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585583049;
+	bh=LvNjwC7RztwBb+yi8oI2Bwz5LXahk4iEX7nsDONhykY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=tcMe3G1hiRXHF9DWORbD66OVzUsEmm4GJ9bsiCFR2k1q4Z2BsgKNr6ZXIa0two1yQ
+	 zwkqOofFdw7A6+E1bE968MCF7jFXbJHlZQG946uKmDh3XGKCGoRnwhrQEO6e3JEExH
+	 CfgHo+jlJD9JIRf18sbXNrnhyhTzq2XLTaCcur+A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729493AbgC3PoE (ORCPT
+        id S1729606AbgC3PoJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 11:44:04 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:36999 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727973AbgC3PoD (ORCPT
+        Mon, 30 Mar 2020 11:44:09 -0400
+Received: from mail-il1-f195.google.com ([209.85.166.195]:40202 "EHLO
+        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727973AbgC3PoI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 11:44:03 -0400
-Received: by mail-wm1-f68.google.com with SMTP id j19so3707645wmi.2;
-        Mon, 30 Mar 2020 08:44:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=v8sl7YQXZ97aa3FXzORrF9cItWmGMOHAonTPdY7AfNI=;
-        b=qEpXPr9E5d46arhUnkyc7Gtx5SnqxbVikfx+HG7viglrS2cvYAR+q85EwjSCyt8RoO
-         RZBa0hEzjBVYSOM4i7EnLf0bFVU26IdzitvjlEG4Hzw7YZCL9OR5bRsEO8LAFyhLYnXU
-         6GzW8HEk20J20kdnU53tlOnVo14im/YudhC/CcQ4gx3bNPxbqD7ot9aYUShMWoFCCYAg
-         HDg6TzAtel4H50EW4USSWM/7EdtJdyUuA3LbbdoZqhBNXcqxeG9tDn1/UELU0lkgiC9i
-         4XOj/vQ6d5dVrtzseUW/BGsiidugF/Ec/MMf+OJxSky3cSBW5SX6ftYTZ1sm2WbIO95v
-         h9CQ==
+        Mon, 30 Mar 2020 11:44:08 -0400
+Received: by mail-il1-f195.google.com with SMTP id j9so16278574ilr.7;
+        Mon, 30 Mar 2020 08:44:06 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=v8sl7YQXZ97aa3FXzORrF9cItWmGMOHAonTPdY7AfNI=;
-        b=fKRIGSSgUj9Eh7qcOBzN0Mp1E0qwQxrcSPNIn4QIplHwwHxe6saadSSXrbFa0kizqF
-         3fMLVu/h/YrAagATTdHL8B7h2mQU2tI8oGM5ML9nn6MKv8nbHJ5htx145SvBbgQgWxE/
-         Dxxf/HYOwL9rc4M3XIi0IANtSpkSsFfakY8JV4p0xL/qJu8W7n83gpw4q0Zxvs0Q0Fpa
-         V92xfm9ugSBm2hn1ZyCBHDmroAVUVCt2e6amBj1TPD2MiPm+DQ+Al3Q607rahREp7reY
-         a1sxgmjpRz3yzMTFLJlx6+znGL9YjjaxJiRRwjfd7Wayp+OEuqtDJPnzRB8YtGFBDRuL
-         1GHA==
-X-Gm-Message-State: ANhLgQ3br84ELv9ywimDoHtRkNzkli6pTZvpLvW/Lqe5M7n3EApkfSSi
-        vTIYlXBfYI9vHrFHbEaP+QmN+Vo+
-X-Google-Smtp-Source: ADFU+vs/OVvqzSToBwPx9bcjtGZ21kUhP16e1B/v3HvpbbtTwkUGC6aci1JNv7r7WQlcGtaPuxrv5w==
-X-Received: by 2002:a1c:1d4d:: with SMTP id d74mr13608568wmd.123.1585583041672;
-        Mon, 30 Mar 2020 08:44:01 -0700 (PDT)
-Received: from localhost (pD9E51CDC.dip0.t-ipconnect.de. [217.229.28.220])
-        by smtp.gmail.com with ESMTPSA id f12sm21379034wmh.4.2020.03.30.08.44.00
+        bh=6L0zwcu6TJpBy8ROIw82e95a8IhAis774QnwFUUDei4=;
+        b=LQrYUZZVixxLxkn9OUkCOuUoayju9+MeC+otgSACp/Vis/tbS9LzSDW9QpblqngMdN
+         rd3CMMOGNsZII8jauFAeD+ZfD0drRogCLcKt8PtdeHSwB4oFlJ78eRH4lNnAnjJeUCyz
+         zRSQqajD2J4yQfTP/vGqsolc9gT8A6Cvpfg7b5Ok+Hgq30ZtvANFBZUA8L54WAPYnukN
+         JTtlRmz5qbdOP6r7zfotwnRT8Dy4nayma6DCrwhFGFhInCU3Td+Op9EzLcq3e8eFBhyB
+         Jjn39LBlRabSs7uVbRH9d0ClOJMb385mzKL5BCC3XOvTZo9vfrU1ykt5b0VKUPq0cRDD
+         nllw==
+X-Gm-Message-State: ANhLgQ2y0dwvkumeguerueqhHG52HniJnBKvulUEoPmWWBUHlsm90Nnf
+        KtNcI3LYIEhvstJShjb0kg==
+X-Google-Smtp-Source: ADFU+vtLzoK7bLF3KNLPQffJzUbWf20WdfYgGwLo68WhEGLJBcEYEu+x/FRUoIOGhBcqWrVUOHXMcg==
+X-Received: by 2002:a92:8d0e:: with SMTP id s14mr11505607ild.117.1585583046446;
+        Mon, 30 Mar 2020 08:44:06 -0700 (PDT)
+Received: from rob-hp-laptop ([64.188.179.250])
+        by smtp.gmail.com with ESMTPSA id c88sm4970096ill.15.2020.03.30.08.44.05
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Mar 2020 08:44:00 -0700 (PDT)
-Date:   Mon, 30 Mar 2020 17:43:59 +0200
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Clemens Gruber <clemens.gruber@pqgruber.com>
-Cc:     Matthias Schiffer <matthias.schiffer@ew.tq-group.com>,
-        u.kleine-koenig@pengutronix.de, linux-pwm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, andy.shevchenko@gmail.com
-Subject: Re: [PATCH 2/4] pwm: pca9685: remove ALL_LED PWM channel
-Message-ID: <20200330154359.GC2817345@ulmo>
-References: <20200226135229.24929-1-matthias.schiffer@ew.tq-group.com>
- <20200226135229.24929-2-matthias.schiffer@ew.tq-group.com>
- <20200330130757.GC2431644@ulmo>
- <20200330133450.GA1530@workstation.tuxnet>
- <20200330154036.GB2817345@ulmo>
+        Mon, 30 Mar 2020 08:44:05 -0700 (PDT)
+Received: (nullmailer pid 27458 invoked by uid 1000);
+        Mon, 30 Mar 2020 15:44:04 -0000
+Date:   Mon, 30 Mar 2020 09:44:04 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Adrian Ratiu <adrian.ratiu@collabora.com>
+Cc:     linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-rockchip@lists.infradead.org,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        linux-imx@nxp.com, kernel@collabora.com,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Sjoerd Simons <sjoerd.simons@collabora.com>,
+        Martyn Welch <martyn.welch@collabora.com>
+Subject: Re: [PATCH v5 5/5] dt-bindings: display: add i.MX6 MIPI DSI host
+ controller doc
+Message-ID: <20200330154404.GA26389@bogus>
+References: <20200330113542.181752-1-adrian.ratiu@collabora.com>
+ <20200330113542.181752-6-adrian.ratiu@collabora.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="ALfTUftag+2gvp1h"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200330154036.GB2817345@ulmo>
-User-Agent: Mutt/1.13.1 (2019-12-14)
+In-Reply-To: <20200330113542.181752-6-adrian.ratiu@collabora.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, 30 Mar 2020 14:35:42 +0300, Adrian Ratiu wrote:
+> This provides an example DT binding for the MIPI DSI host controller
+> present on the i.MX6 SoC based on Synopsis DesignWare v1.01 IP.
+> 
+> Cc: Rob Herring <robh@kernel.org>
+> Cc: Neil Armstrong <narmstrong@baylibre.com>
+> Cc: devicetree@vger.kernel.org
+> Signed-off-by: Sjoerd Simons <sjoerd.simons@collabora.com>
+> Signed-off-by: Martyn Welch <martyn.welch@collabora.com>
+> Signed-off-by: Adrian Ratiu <adrian.ratiu@collabora.com>
+> ---
+> Changes since v4:
+>   - Fixed yaml binding to pass `make dt_binding_check dtbs_check`
+>   and addressed received binding feedback (Rob)
+> 
+> Changes since v3:
+>   - Added commit message (Neil)
+>   - Converted to yaml format (Neil)
+>   - Minor dt node + driver fixes (Rob)
+>   - Added small panel example to the host controller binding
+> 
+> Changes since v2:
+>   - Fixed commit tags (Emil)
+> ---
+>  .../display/imx/fsl,mipi-dsi-imx6.yaml        | 134 ++++++++++++++++++
+>  1 file changed, 134 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/display/imx/fsl,mipi-dsi-imx6.yaml
+> 
 
---ALfTUftag+2gvp1h
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+My bot found errors running 'make dt_binding_check' on your patch:
 
-On Mon, Mar 30, 2020 at 05:40:36PM +0200, Thierry Reding wrote:
-> On Mon, Mar 30, 2020 at 03:34:50PM +0200, Clemens Gruber wrote:
-> > Hi,
-> >=20
-> > On Mon, Mar 30, 2020 at 03:07:57PM +0200, Thierry Reding wrote:
-> > > On Wed, Feb 26, 2020 at 02:52:27PM +0100, Matthias Schiffer wrote:
-> > > > The interaction of the ALL_LED PWM channel with the other channels =
-was
-> > > > not well-defined. As the ALL_LED feature does not seem very useful =
-and
-> > > > it was making the code significantly more complex, simply remove it.
-> > > >=20
-> > > > Signed-off-by: Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
-> > > > ---
-> > > >  drivers/pwm/pwm-pca9685.c | 115 ++++++----------------------------=
-----
-> > > >  1 file changed, 17 insertions(+), 98 deletions(-)
-> > >=20
-> > > Applied, thanks.
-> > >=20
-> > > Thierry
-> >=20
-> > I was not reading the mailing list in the last weeks, so I only saw the
-> > patch today.
-> >=20
-> > We are using the ALL_LED channel in production to reduce the delay when
-> > all 16 PWM outputs need to be set to the same duty cycle.
-> >=20
-> > I am not sure it is a good idea to remove this feature.
->=20
-> Can you specify what platform this is and where the code is that does
-> this. I can't really find any device tree users of this and I don't know
-> if there's a good way to find out what other users there are, but this
-> isn't the first time this driver has created confusion, so please help
-> collect some more information about it's use so we can avoid this in the
-> future.
->=20
-> I'll back out this particular patch since you're using it. Can you give
-> the other three patches a try to see if they work for you?
+Documentation/devicetree/bindings/display/imx/fsl,mipi-dsi-imx6.example.dts:34.21-31: Warning (reg_format): /example-0/dsi@21e0000/ports/port@1:reg: property has invalid length (4 bytes) (#address-cells == 2, #size-cells == 1)
+Documentation/devicetree/bindings/display/imx/fsl,mipi-dsi-imx6.example.dt.yaml: Warning (pci_device_bus_num): Failed prerequisite 'reg_format'
+Documentation/devicetree/bindings/display/imx/fsl,mipi-dsi-imx6.example.dt.yaml: Warning (i2c_bus_reg): Failed prerequisite 'reg_format'
+Documentation/devicetree/bindings/display/imx/fsl,mipi-dsi-imx6.example.dt.yaml: Warning (spi_bus_reg): Failed prerequisite 'reg_format'
+Documentation/devicetree/bindings/display/imx/fsl,mipi-dsi-imx6.example.dts:33.24-38.19: Warning (avoid_default_addr_size): /example-0/dsi@21e0000/ports/port@1: Relying on default #address-cells value
+Documentation/devicetree/bindings/display/imx/fsl,mipi-dsi-imx6.example.dts:33.24-38.19: Warning (avoid_default_addr_size): /example-0/dsi@21e0000/ports/port@1: Relying on default #size-cells value
+Documentation/devicetree/bindings/display/imx/fsl,mipi-dsi-imx6.example.dts:33.24-38.19: Warning (graph_port): /example-0/dsi@21e0000/ports/port@1: graph node '#address-cells' is -1, must be 1
+Documentation/devicetree/bindings/display/imx/fsl,mipi-dsi-imx6.example.dts:33.24-38.19: Warning (graph_port): /example-0/dsi@21e0000/ports/port@1: graph node '#size-cells' is -1, must be 0
 
-Nevermind, mixed up the series. I ended up applying only patches 1 and 2
-=66rom this because Uwe had some concerns about patches 3 and 4. So no
-need to test those until Matthias has fixed them up.
+See https://patchwork.ozlabs.org/patch/1263893
 
-Matthias, I'll keep patch 1 of this applied, but as you noticed, this
-ALL_LED features is indeed used, so you can drop then when you resend
-the series.
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure dt-schema is up to date:
 
-Thierry
+pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
 
---ALfTUftag+2gvp1h
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl6CE78ACgkQ3SOs138+
-s6GlkRAAiNq3PY2visPdWkNSAhUbBF0q009ao0QOM1HGuNHiTxrA5lKIQ/9usaHo
-5MRJWV9/Lx1Ye3G6RRad9jfSiJ09+JZbQdiLxpX/8aHMrz7KXRURoYFbNFQBaaJu
-yZh2lBn8g4SBUJhfQlR0h0kXEltDHEqlP0Twu4wo++CnWvOqMxZPqQh5Nqn8Bprd
-gBV7dtYHQDw5YZVvXgvgM3AqIlQicBJHhAaeCfSc5/wdDK9Iv1/1KQaviemjLpVp
-xcPDBTX0Bcu81QWdfRpU6VcMOOj+PUKAYkZh3mdHE8Evc7VfgWw7wcOEjIYgPS6S
-5g/346g6A9WJ2EWNvLOxMgp26z8hrIOjKCbWfW7RJGpUN6GMQxSAw3CaOPmnAeM3
-SST3qTtNMCr/cZvh7BhcqmVjUC9FJwvUj1EauaNvE7g38Ai9yNV2BXWG+5zRlZeB
-N/49D2SOhK7qtxUif7VHxhBonPjx7SDs/KroyRRcAewxaRbHYiK8yNruvTfezhzB
-ze23DUB6HtKAEurZ/JghqgkQnoWReswOyt4nUHzqy8YkMee4Jq4lMwY05Fnn+xft
-unzZKyb2oBQxQJbi/PvjiummXLtUOCQMn3PABEKh0d3WQ5/I3YFGohaBOcapV00w
-KOFLqsSeXMSCSt2f9P6L5eKbWfEc8qGgNVNLh7mlXvHWE4ZvxRo=
-=vDVt
------END PGP SIGNATURE-----
-
---ALfTUftag+2gvp1h--
+Please check and re-submit.
