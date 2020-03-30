@@ -2,360 +2,144 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE82FC2D0ED
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 19:40:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02D93C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 19:40:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 79F8020714
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 19:40:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585597200;
-	bh=RKSM/K6qKTbNRXtkVhC4q4/tipZmWkOQEDJ0CHGO8MI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=2X7QCb7BcTMu2OBhTA4fCKm2P4wEYqRJqzkEJOySual0/cV628+tx3axh8Qln664v
-	 jcRTr4hNye2D0M3XjrHw1C/6YyFfyasXa96fd6GTwgC8XSsY4vua6+SYuCl5bKdvx1
-	 OFTDz1jcsZnDu8X7IvrKr2vFaxamOXruS3scgfP0=
+	by mail.kernel.org (Postfix) with ESMTP id D7E222072E
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 19:40:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729037AbgC3Tj7 (ORCPT
+        id S1728679AbgC3TkT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 15:39:59 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:41068 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728445AbgC3Tj7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 15:39:59 -0400
-Received: by mail-io1-f67.google.com with SMTP id b12so2920482ion.8;
-        Mon, 30 Mar 2020 12:39:58 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=clmsQJK4BMI8m2Z/sWQrrUlWM9WX3L6ITcoHrmc1DJw=;
-        b=DezW00cMQvF7/esf4lzX5Vg+OPyy18TJkFa/i6KxW0RVcOBs8eUpkMgFksL4OtaWJW
-         i4AL7Pz/am/rgfcwz+ZGLYQ5NRFdcrVTp/rEgOvNBYxwOt5YorRrA6aTpcccOxXC6Fzu
-         Dkd845BCk/kXrP7V0B6js9I0ElQl0URaVq76ec1MRMdh6zuNcJCtYaUL+p98gzAqmGXM
-         CPB6lkOIYidwqgAdhAw1bWTqg+1gaZQOKFbnKCGFg2c41nKvkO5Ini8HFtO6bjupOm30
-         K6yH1/lGEr51EHB6n+DIrgysen1UsIOfJv9pVByB7IoXiLxbdJb97iavwrT2mZhVQCy0
-         eatA==
-X-Gm-Message-State: ANhLgQ1KZ4O0QoSdcOoHU0cXU03NRwoNQrX5GGuv3o53Ev/6cIU6q1RM
-        MnvzNSgmuILzCgZJXI+nbg==
-X-Google-Smtp-Source: ADFU+vuJvWcNlXMQdJNMUkyw9q7uDOBjMSajkXwEQcU+iQ0lcBY6IAptPDeVBvzuz6t96cWWyprB8g==
-X-Received: by 2002:a6b:d609:: with SMTP id w9mr12027791ioa.41.1585597196788;
-        Mon, 30 Mar 2020 12:39:56 -0700 (PDT)
-Received: from rob-hp-laptop ([64.188.179.250])
-        by smtp.gmail.com with ESMTPSA id l70sm5226774ili.81.2020.03.30.12.39.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Mar 2020 12:39:55 -0700 (PDT)
-Received: (nullmailer pid 12120 invoked by uid 1000);
-        Mon, 30 Mar 2020 19:39:53 -0000
-Date:   Mon, 30 Mar 2020 13:39:53 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-Cc:     Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        alsa-devel@alsa-project.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3] ASoC: dt-bindings: simple-card: switch to yaml base
- Documentation
-Message-ID: <20200330193953.GA22908@bogus>
-References: <871rpsq3bx.wl-kuninori.morimoto.gx@renesas.com>
+        Mon, 30 Mar 2020 15:40:19 -0400
+Received: from foss.arm.com ([217.140.110.172]:34028 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728165AbgC3TkT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Mar 2020 15:40:19 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9DCB81FB;
+        Mon, 30 Mar 2020 12:40:18 -0700 (PDT)
+Received: from e107158-lin.cambridge.arm.com (e107158-lin.cambridge.arm.com [10.1.195.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BE1F53F68F;
+        Mon, 30 Mar 2020 12:40:16 -0700 (PDT)
+Date:   Mon, 30 Mar 2020 20:40:14 +0100
+From:   Qais Yousef <qais.yousef@arm.com>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Boqun Feng <boqun.feng@gmail.com>, peterz@infradead.org,
+        linux-kernel@vger.kernel.org, len.brown@intel.com,
+        pkondeti@codeaurora.org, jpoimboe@redhat.com, pavel@ucw.cz,
+        konrad.wilk@oracle.com, mojha@codeaurora.org, jkosina@suse.cz,
+        mingo@kernel.org, hpa@zytor.com, rjw@rjwysocki.net,
+        linux-tip-commits@vger.kernel.org
+Subject: Re: [tip:smp/hotplug] cpu/hotplug: Abort disabling secondary CPUs if
+ wakeup is pending
+Message-ID: <20200330194014.lwpmbv2zekfk6ywx@e107158-lin.cambridge.arm.com>
+References: <1559536263-16472-1-git-send-email-pkondeti@codeaurora.org>
+ <tip-a66d955e910ab0e598d7a7450cbe6139f52befe7@git.kernel.org>
+ <20200327025311.GA58760@debian-boqun.qqnc3lrjykvubdpftowmye0fmh.lx.internal.cloudapp.net>
+ <874kuaxdiz.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <871rpsq3bx.wl-kuninori.morimoto.gx@renesas.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <874kuaxdiz.fsf@nanos.tec.linutronix.de>
+User-Agent: NeoMutt/20171215
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 16, 2020 at 02:24:50PM +0900, Kuninori Morimoto wrote:
-> From: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+On 03/27/20 12:06, Thomas Gleixner wrote:
+> Boqun Feng <boqun.feng@gmail.com> writes:
+> > From the commit message, it makes sense to add the pm_wakeup_pending()
+> > check if freeze_secondary_cpus() is used for system suspend. However,
+> > freeze_secondary_cpus() is also used in kexec path on arm64:
 > 
-> This patch switches from .txt base to .yaml base Document.
-> This patch is assuming that "sound-dai" is already defined.
+> Bah!
 > 
-> Signed-off-by: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-> ---
-> v2 -> v3
+> > 	kernel_kexec():
+> > 	  machine_shutdown():
+> > 	    disable_nonboot_cpus():
+> > 	      freeze_secondary_cpus()
+> >
+> > , so I wonder whether the pm_wakeup_pending() makes sense in this
+> > situation? Because IIUC, in this case we want to reboot the system
+> > regardlessly, the pm_wakeup_pending() checking seems to be inappropriate
+> > then.
 > 
-> 	- uses maxItems for many place which were already defined.
-> 	- assuming that "sound-dai" is already defined
-> 	- (@.*) -> (@[0-9a-f]+)
+> Fix below.
 > 
->  .../devicetree/bindings/sound/simple-card.txt | 351 -------------
->  .../bindings/sound/simple-card.yaml           | 487 ++++++++++++++++++
->  2 files changed, 487 insertions(+), 351 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/sound/simple-card.txt
->  create mode 100644 Documentation/devicetree/bindings/sound/simple-card.yaml
+> Thanks,
+> 
+>         tglx
+> 
+> 8<------------
+> 
+> --- a/include/linux/cpu.h
+> +++ b/include/linux/cpu.h
+> @@ -133,12 +133,18 @@ static inline void get_online_cpus(void)
+>  static inline void put_online_cpus(void) { cpus_read_unlock(); }
+>  
+>  #ifdef CONFIG_PM_SLEEP_SMP
+> -extern int freeze_secondary_cpus(int primary);
+> +int __freeze_secondary_cpus(int primary, bool suspend);
+> +static inline int freeze_secondary_cpus(int primary)
+> +{
+> +	return __freeze_secondary_cpus(primary, true);
+> +}
+> +
+>  static inline int disable_nonboot_cpus(void)
+>  {
+> -	return freeze_secondary_cpus(0);
+> +	return __freeze_secondary_cpus(0, false);
+>  }
 
-> diff --git a/Documentation/devicetree/bindings/sound/simple-card.yaml b/Documentation/devicetree/bindings/sound/simple-card.yaml
-> new file mode 100644
-> index 000000000000..cd5ea50daa22
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/sound/simple-card.yaml
-> @@ -0,0 +1,487 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/sound/simple-card.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Simple Audio Card Driver Device Tree Bindings
-> +
-> +maintainers:
-> +  - Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-> +
-> +definitions:
-> +
-> +  frame-master:
-> +    description: Indicates dai-link frame master.
-> +    allOf:
-> +      - $ref: /schemas/types.yaml#/definitions/phandle-array
-> +      - maxItems: 1
-> +
-> +  bitclock-master:
-> +    description: Indicates dai-link bit clock master
-> +    allOf:
-> +      - $ref: /schemas/types.yaml#/definitions/phandle-array
-> +      - maxItems: 1
-> +
-> +  frame-inversion:
-> +    description: dai-link uses frame clock inversion
-> +    $ref: /schemas/types.yaml#/definitions/flag
-> +
-> +  bitclock-inversion:
-> +    description: dai-link uses bit clock inversion
-> +    $ref: /schemas/types.yaml#/definitions/flag
-> +
-> +  dai-tdm-slot-num:
-> +    description: see tdm-slot.txt.
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +
-> +  dai-tdm-slot-width:
-> +    description: see tdm-slot.txt.
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +
-> +  clocks:
-> +    maxItems: 1
+If I read the code correctly, arch/x86/power/cpu.c is calling
+disable_nonboot_cpus() from suspend resume, which is the only user in
+tip/smp/core after my series.
 
-Only used in one place, just move there.
+This means you won't abort a suspend/hibernate if a late wakeup source happens?
+Or it might just mean that we'll wakeup slightly later than we would have done.
 
-> +
-> +  system-clock-frequency:
-> +    description: |
-> +      If a clock is specified and a multiplication factor is given with
-> +      mclk-fs, the clock will be set to the calculated mclk frequency
-> +      when the stream starts.
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +
-> +  system-clock-direction-out:
-> +    description: |
-> +      specifies clock direction as 'out' on initialization.
-> +      It is useful for some aCPUs with fixed clocks.
-> +    $ref: /schemas/types.yaml#/definitions/flag
-> +
-> +  mclk-fs:
-> +    description: |
-> +      Multiplication factor between stream rate and codec mclk.
-> +      When defined, mclk-fs property defined in dai-link sub nodes are ignored.
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +
-> +  aux-devs:
-> +    description: |
-> +      List of phandles pointing to auxiliary devices, such
-> +      as amplifiers, to be added to the sound card.
-> +    $ref: /schemas/types.yaml#/definitions/phandle-array
-> +
-> +  convert-rate:
-> +    description: CPU to Codec rate convert.
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +
-> +  convert-channels:
-> +    description: CPU to Codec rate channels.
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +
-> +  prefix:
-> +    description: "device name prefix"
-> +    $ref: /schemas/types.yaml#/definitions/string
-> +
-> +  label:
-> +    maxItems: 1
-> +
-> +  routing:
-> +    description: |
-> +      A list of the connections between audio components.
-> +      Each entry is a pair of strings, the first being the
-> +      connection's sink, the second being the connection's source.
-> +    $ref: /schemas/types.yaml#/definitions/non-unique-string-array
-> +
-> +  widgets:
-> +    description: User specified audio sound widgets.
-> +    $ref: /schemas/types.yaml#/definitions/non-unique-string-array
-> +
-> +  pin-switches:
-> +    description: the widget names for which pin switches must be created.
-> +    $ref: /schemas/types.yaml#/definitions/string-array
-> +
-> +  format:
-> +    description: audio format.
-> +    items:
-> +      enum:
-> +        - i2s
-> +        - right_j
-> +        - left_j
-> +        - dsp_a
-> +        - dsp_b
-> +        - ac97
-> +        - pdm
-> +        - msb
-> +        - lsb
-> +
-> +  dai:
-> +    type: object
-> +    properties:
-> +      sound-dai:
-> +        maxItems: 1
-> +
-> +      # common properties
-> +      mclk-fs:
-> +        $ref: "#/definitions/mclk-fs"
-> +      prefix:
-> +        $ref: "#/definitions/prefix"
-> +      frame-inversion:
-> +        $ref: "#/definitions/frame-inversion"
-> +      bitclock-inversion:
-> +        $ref: "#/definitions/bitclock-inversion"
-> +      frame-master:
-> +        $ref: /schemas/types.yaml#/definitions/flag
-> +      bitclock-master:
-> +        $ref: /schemas/types.yaml#/definitions/flag
-> +
-> +      dai-tdm-slot-num:
-> +        $ref: "#/definitions/dai-tdm-slot-num"
-> +      dai-tdm-slot-width:
-> +        $ref: "#/definitions/dai-tdm-slot-width"
-> +      clocks:
-> +        $ref: "#/definitions/clocks"
-> +      system-clock-frequency:
-> +        $ref: "#/definitions/system-clock-frequency"
-> +      system-clock-direction-out:
-> +        $ref: "#/definitions/system-clock-direction-out"
-> +    required:
-> +      - sound-dai
-> +
-> +properties:
-> +  compatible:
-> +    contains:
-> +      enum:
-> +        - simple-audio-card
-> +        - simple-scu-audio-card
-> +
-> +  "#address-cells":
-> +    const: 1
-> +  "#size-cells":
-> +    const: 0
-> +
-> +  label:
-> +    $ref: "#/definitions/label"
-> +
-> +  simple-audio-card,name:
-> +    description: User specified audio sound card name.
-> +    $ref: /schemas/types.yaml#/definitions/string
-> +
-> +# use patternProperties to use "#definitions/xxx"
+Anyways. I think it would be better to kill off disable_nonboot_cpus() and
+directly call freeze_nonboot_cpus() in x86/power/cpu.c.
 
-Huh? The meta-schema gives you an error? We should fix that, not 
-work-around it.
+I'd be happy to send a patch for this.
 
-> +patternProperties:
-> +  "^simple-audio-card,widgets$":
-> +    $ref: "#/definitions/widgets"
-> +  "^simple-audio-card,routing$":
-> +    $ref: "#/definitions/routing"
-> +  "^simple-audio-card,cpu(@[0-9a-f]+)?":
-> +    $ref: "#/definitions/dai"
-> +  "^simple-audio-card,codec(@[0-9a-f]+)?":
-> +    $ref: "#/definitions/dai"
+Assuming that x86 is okay with the late(r) abort, this patch could stay as-is
+for stable trees. Otherwise, maybe we need to revert this and look for another
+option for stable trees?
+
+Thanks
+
+--
+Qais Yousef
+
+> -extern void enable_nonboot_cpus(void);
 > +
-> +  # common properties
-> +  "^simple-audio-card,frame-master$":
-> +    $ref: "#/definitions/frame-master"
-> +  "^simple-audio-card,bitclock-master$":
-> +    $ref: "#/definitions/bitclock-master"
-> +  "^simple-audio-card,frame-inversion$":
-> +    $ref: "#/definitions/frame-inversion"
-> +  "^simple-audio-card,bitclock-inversion$":
-> +    $ref: "#/definitions/bitclock-inversion"
-> +  "^simple-audio-card,format$":
-> +    $ref: "#/definitions/format"
-> +  "^simple-audio-card,mclk-fs$":
-> +    $ref: "#/definitions/mclk-fs"
-> +  "^simple-audio-card,aux-devs$":
-> +    $ref: "#/definitions/aux-devs"
-> +  "^simple-audio-card,convert-rate$":
-> +    $ref: "#/definitions/convert-rate"
-> +  "^simple-audio-card,convert-channels$":
-> +    $ref: "#/definitions/convert-channels"
-> +  "^simple-audio-card,prefix$":
-> +    $ref: "#/definitions/prefix"
-> +  "^simple-audio-card,pin-switches$":
-> +    $ref: "#/definitions/pin-switches"
-> +  "^simple-audio-card,hp-det-gpio$":
-> +    maxItems: 1
-> +  "^simple-audio-card,mic-det-gpio$":
-> +    maxItems: 1
-> +
-> +  "^simple-audio-card,dai-link(@[0-9a-f]+)?$":
-> +    description: |
-> +      Container for dai-link level properties and the CPU and CODEC sub-nodes.
-> +      This container may be omitted when the card has only one DAI link.
-> +    type: object
-> +    properties:
-> +      reg:
-> +        maxItems: 1
-> +
-> +      # common properties
-> +      frame-master:
-> +        $ref: "#/definitions/frame-master"
-> +      bitclock-master:
-> +        $ref: "#/definitions/bitclock-master"
-> +      frame-inversion:
-> +        $ref: "#/definitions/frame-inversion"
-> +      bitclock-inversion:
-> +        $ref: "#/definitions/bitclock-inversion"
-> +      format:
-> +        $ref: "#/definitions/format"
-> +      mclk-fs:
-> +        $ref: "#/definitions/mclk-fs"
-> +      aux-devs:
-> +        $ref: "#/definitions/aux-devs"
-> +      convert-rate:
-> +        $ref: "#/definitions/convert-rate"
-> +      convert-channels:
-> +        $ref: "#/definitions/convert-channels"
-> +      prefix:
-> +        $ref: "#/definitions/prefix"
-> +      pin-switches:
-> +        $ref: "#/definitions/pin-switches"
-> +      hp-det-gpio:
-> +        maxItems: 1
-> +      mic-det-gpio:
-> +        maxItems: 1
-> +
-> +    patternProperties:
-> +      "^cpu(@[0-9a-f]+)?":
-> +        $ref: "#/definitions/dai"
-> +      "^codec(@[0-9a-f]+)?":
-> +        $ref: "#/definitions/dai"
-> +    additionalProperties: false
-> +
-> +required:
-> +  - compatible
-> +
-> +additionalProperties: false
+> +void enable_nonboot_cpus(void);
+>  
+>  static inline int suspend_disable_secondary_cpus(void)
+>  {
+> --- a/kernel/cpu.c
+> +++ b/kernel/cpu.c
+> @@ -1200,7 +1200,7 @@ EXPORT_SYMBOL_GPL(cpu_up);
+>  #ifdef CONFIG_PM_SLEEP_SMP
+>  static cpumask_var_t frozen_cpus;
+>  
+> -int freeze_secondary_cpus(int primary)
+> +int __freeze_secondary_cpus(int primary, bool suspend)
+>  {
+>  	int cpu, error = 0;
+>  
+> @@ -1225,7 +1225,7 @@ int freeze_secondary_cpus(int primary)
+>  		if (cpu == primary)
+>  			continue;
+>  
+> -		if (pm_wakeup_pending()) {
+> +		if (suspend && pm_wakeup_pending()) {
+>  			pr_info("Wakeup pending. Abort CPU freeze\n");
+>  			error = -EBUSY;
+>  			break;
