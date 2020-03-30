@@ -2,124 +2,110 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83A77C43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 12:39:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6738C2D0ED
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 12:45:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D8FE20675
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 12:39:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 87F10206F6
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 12:45:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730231AbgC3Mjv (ORCPT
+        id S1730157AbgC3Mph (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 08:39:51 -0400
-Received: from foss.arm.com ([217.140.110.172]:52634 "EHLO foss.arm.com"
+        Mon, 30 Mar 2020 08:45:37 -0400
+Received: from foss.arm.com ([217.140.110.172]:52734 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730064AbgC3Mjv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 08:39:51 -0400
+        id S1729705AbgC3Mpg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Mar 2020 08:45:36 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5D43B30E;
-        Mon, 30 Mar 2020 05:39:50 -0700 (PDT)
-Received: from C02TD0UTHF1T.local (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E6E203F68F;
-        Mon, 30 Mar 2020 05:39:48 -0700 (PDT)
-Date:   Mon, 30 Mar 2020 13:39:46 +0100
-From:   Mark Rutland <mark.rutland@arm.com>
-To:     Tingwei Zhang <tingwei@codeaurora.org>
-Cc:     Will Deacon <will@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] arm64: hw_breakpoint: don't clear debug registers in
- halt mode
-Message-ID: <20200330123946.GH1309@C02TD0UTHF1T.local>
-References: <20200328083209.21793-1-tingwei@codeaurora.org>
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DD46330E;
+        Mon, 30 Mar 2020 05:45:35 -0700 (PDT)
+Received: from [10.57.60.204] (unknown [10.57.60.204])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D01383F71E;
+        Mon, 30 Mar 2020 05:45:33 -0700 (PDT)
+Subject: Re: [PATCH v2 3/3] driver core: Replace open-coded list_last_entry()
+To:     Sudeep Holla <sudeep.holla@arm.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Naresh Kamboju <naresh.kamboju@linaro.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Basil Eljuse <Basil.Eljuse@arm.com>,
+        lkft-triage@lists.linaro.org,
+        Linux-Next Mailing List <linux-next@vger.kernel.org>,
+        fntoth@gmail.com, Arnd Bergmann <arnd@arndb.de>,
+        Anders Roxell <anders.roxell@linaro.org>
+References: <20200324122023.9649-1-andriy.shevchenko@linux.intel.com>
+ <20200324122023.9649-3-andriy.shevchenko@linux.intel.com>
+ <CAJZ5v0gg=V8uDd4afJ3MULsgKYvWajKJioANk4jj7xEhBzrRrQ@mail.gmail.com>
+ <CA+G9fYvFnXqSnoQSJ-DkQvAFv87iWmhH6dT1N79qrq=Aeuv4rw@mail.gmail.com>
+ <028b636f-6e0f-c36a-aa4e-6a16d936fc6a@arm.com> <20200330095707.GA10432@bogus>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <0a374eaa-92b3-0201-f357-4181542c98b6@arm.com>
+Date:   Mon, 30 Mar 2020 13:45:32 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200328083209.21793-1-tingwei@codeaurora.org>
+In-Reply-To: <20200330095707.GA10432@bogus>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Mar 28, 2020 at 04:32:09PM +0800, Tingwei Zhang wrote:
-> If external debugger sets a breakpoint for one Kernel function
-> when device is in bootloader mode and loads Kernel, this breakpoint
-> will be wiped out in hw_breakpoint_reset(). To fix this, check
-> MDSCR_EL1.HDE in hw_breakpoint_reset(). When MDSCR_EL1.HDE is
-> 0b1, halting debug is enabled. Don't reset debug registers in this case.
-
-I don't think this is sufficient, because the kernel can still
-subsequently mess with breakpoints, and the HW debugger might not be
-attached at this point in time anyhow.
-
-I reckon this should hang off the existing "nodebumon" command line
-option, and we shouldn't use HW breakpoints at all when that is passed.
-Then you can pass that to prevent the kernel stomping on the external
-debugger.
-
-Will, thoughts?
-
-Mark.
-
+On 2020-03-30 11:13 am, Sudeep Holla wrote:
+> On Fri, Mar 27, 2020 at 07:40:25PM +0000, Robin Murphy wrote:
+>> On 2020-03-27 5:56 pm, Naresh Kamboju wrote:
+>>> The kernel warning noticed on arm64 juno-r2 device running linux
+>>> next-20200326 and next-20200327
+>>
+>> I suspect this is the correct expected behaviour manifesting. If you're
+>> using the upstream juno-r2.dts, the power domain being waited for here is
+>> provided by SCPI, however unless you're using an SCP firmware from at least
+>> 3 years ago you won't actually have SCPI since they switched it to the newer
+>> SCMI protocol, which is not yet supported upstream for Juno. See what
+>> happened earlier in the log:
+>>
+>> [    2.741206] scpi_protocol scpi: incorrect or no SCP firmware found
+>> [    2.747586] scpi_protocol: probe of scpi failed with error -110
+>>
+>> Thus this is the "waiting for a dependency which will never appear" case,
+>> for which I assume the warning is intentional,
 > 
-> Signed-off-by: Tingwei Zhang <tingwei@codeaurora.org>
-> ---
->  arch/arm64/include/asm/debug-monitors.h |  1 +
->  arch/arm64/kernel/hw_breakpoint.c       | 19 +++++++++++++++++++
->  2 files changed, 20 insertions(+)
+> Is that the case ?
 > 
-> diff --git a/arch/arm64/include/asm/debug-monitors.h b/arch/arm64/include/asm/debug-monitors.h
-> index 7619f473155f..8dc2c28791a0 100644
-> --- a/arch/arm64/include/asm/debug-monitors.h
-> +++ b/arch/arm64/include/asm/debug-monitors.h
-> @@ -18,6 +18,7 @@
->  
->  /* MDSCR_EL1 enabling bits */
->  #define DBG_MDSCR_KDE		(1 << 13)
-> +#define DBG_MDSCR_HDE		(1 << 14)
->  #define DBG_MDSCR_MDE		(1 << 15)
->  #define DBG_MDSCR_MASK		~(DBG_MDSCR_KDE | DBG_MDSCR_MDE)
->  
-> diff --git a/arch/arm64/kernel/hw_breakpoint.c b/arch/arm64/kernel/hw_breakpoint.c
-> index 0b727edf4104..0180306f74d7 100644
-> --- a/arch/arm64/kernel/hw_breakpoint.c
-> +++ b/arch/arm64/kernel/hw_breakpoint.c
-> @@ -927,6 +927,17 @@ void hw_breakpoint_thread_switch(struct task_struct *next)
->  				    !next_debug_info->wps_disabled);
->  }
->  
-> +/*
-> + * Check if halted debug mode is enabled.
-> + */
-> +static u32 hde_enabled(void)
-> +{
-> +	u32 mdscr;
-> +
-> +	asm volatile("mrs %0, mdscr_el1" : "=r" (mdscr));
-> +	return (mdscr & DBG_MDSCR_HDE);
-> +}
-> +
->  /*
->   * CPU initialisation.
->   */
-> @@ -934,6 +945,14 @@ static int hw_breakpoint_reset(unsigned int cpu)
->  {
->  	int i;
->  	struct perf_event **slots;
-> +
-> +	/*
-> +	 * When halting debug mode is enabled, break point could be already
-> +	 * set be external debugger. Don't reset debug registers here to
-> +	 * reserve break point from external debugger.
-> +	 */
-> +	if (hde_enabled())
-> +		return 0;
->  	/*
->  	 * When a CPU goes through cold-boot, it does not have any installed
->  	 * slot, so it is safe to share the same function for restoring and
-> -- 
-> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-> a Linux Foundation Collaborative Project
+> Previously we used to get the warning:
+> "amba xx: ignoring dependency for device, assuming no driver"
+> 
+> Now we have the kernel warning in addition to the above.
+
+AFAICS the difference is down to whether deferred_probe_timeout has 
+expired or not - I'm not familiar enough with this code to know 
+*exactly* what the difference is supposed to represent, nor which change 
+has actually pushed the Juno case from one state to the other (other 
+than it almost certainly can't be $SUBJECT - if this series is to blame 
+at all I'd assume it would be down to patch #1/3, but there's a bunch of 
+other rework previously queued in -next that is probably also interacting)
+
+>> since the system is essentially broken (i.e. the hardware/firmware doesn't
+>> actually match what the DT describes).
+>>
+> 
+> Not sure if we can term it as "essentially broken". Definitely not 100%
+> functional but not broken if the situation like on Juno where SCP firmware
+> is fundamental for all OSPM but not essential for boot and other minimum
+> set of functionality.
+
+It's "broken" in the sense that the underlying system is *not* the 
+system described in the DT. Yes, all the parts that still happen to line 
+up will mostly still function OK, but those that don't will 
+fundamentally not work as the kernel has been told to expect. I'm not 
+sure what you prefer to call "not working as the kernel expects", but I 
+call it "broken" ;)
+
+Robin.
