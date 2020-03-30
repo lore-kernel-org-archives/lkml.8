@@ -2,111 +2,227 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE58EC2D0E7
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 02:16:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2774C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 02:18:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C5F6B2073E
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 02:16:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DntqLisv"
+	by mail.kernel.org (Postfix) with ESMTP id B532820733
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 02:18:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728442AbgC3CQv (ORCPT
+        id S1728567AbgC3CRw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Mar 2020 22:16:51 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:34391 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728056AbgC3CQu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Mar 2020 22:16:50 -0400
-Received: by mail-pf1-f193.google.com with SMTP id 23so7875709pfj.1;
-        Sun, 29 Mar 2020 19:16:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=myS2Ak0YzAiZAYZxlOLXD6g0s5EoiK6XIgAdluTP7WM=;
-        b=DntqLisvfbXCnqjCecKzGWwXKYRS8QYf+7oVLcoDvACb7KlUTL9F8ovnpbx+CbzhKb
-         kJ0PwGqphN2dx/hgjjSKOxBaSPyxG5HfSlOMLuurJz/1ltmp/lqtYK/dp8gkVfdYsbbo
-         yDqKSn1c5zfZtUhej6XTu2i+uPKBxKKlJ8lDR+tZ6KErtYpHQyGcdDPtZF66JpkLwboS
-         BwhVf7hK2mLYw0RDjcZhcAy8qrsbHYbhvE6ZaooZso/Bzs54kokEACdIt+D1xOD3aBBR
-         FQbSlTQzHL2Nyee4SxaqEvVs8411/j7vW+Vd9keveGNo1g75ZrWajgjyy+2UCtjhnzMq
-         ks+Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=myS2Ak0YzAiZAYZxlOLXD6g0s5EoiK6XIgAdluTP7WM=;
-        b=p7VUTxkyr1bavzN1Z1YT06KmLmU8gQEs9hYAMK4ckS90V9NOvH5EFpGj3RGt3H+29k
-         F7C4N8UGPJiZThU+61SzkqM+YeiU3iPqBCMimWPqXsfz78M0HVLE/kBoS9FSUnjQeSW9
-         1QeHXf6HihzBJM/ZenyOulQd4QJztd4G4UuRhDiGSFVkLpPEFTHW46Eg7fvOZPVObuxn
-         q36Zmv5jvMFxSdRDOCpggxmlwmPRd8YsDFAjDdteoTiQglUeDI3/C1R/sj0uZb/Ici18
-         E45sXFjeS2Ro8nkwLWnv+ih463s/EgVBfdpmRbCJqGE1I3VSoS8NJ78pmKO0P7BIb5oO
-         aM9Q==
-X-Gm-Message-State: ANhLgQ3rezJ9Q/iT6WFRadV54OuePq0kldQpdZ0y3K365yMVa5FumIoo
-        j/JNxc2u3d/x2PehOFCBgpc=
-X-Google-Smtp-Source: ADFU+vsgwoJcfvEmC5kefiQJ5tmaLvyErZ2hpuh3RtC59p6o1BVBvJIu3lVyPGC7QIh8kMz9LYq8gA==
-X-Received: by 2002:a63:a052:: with SMTP id u18mr11071296pgn.210.1585534609627;
-        Sun, 29 Mar 2020 19:16:49 -0700 (PDT)
-Received: from ubt.spreadtrum.com ([117.18.48.82])
-        by smtp.gmail.com with ESMTPSA id u13sm3674296pgp.49.2020.03.29.19.16.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 29 Mar 2020 19:16:48 -0700 (PDT)
-From:   Chunyan Zhang <zhang.lyra@gmail.com>
-To:     Stephen Boyd <sboyd@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>
-Cc:     linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Orson Zhai <orsonzhai@gmail.com>,
-        Baolin Wang <baolin.wang7@gmail.com>,
-        Chunyan Zhang <zhang.lyra@gmail.com>,
-        Chunyan Zhang <chunyan.zhang@unisoc.com>
-Subject: [PATCH] clk: sprd: fix to get a correct ibias of pll
-Date:   Mon, 30 Mar 2020 10:16:40 +0800
-Message-Id: <20200330021640.14133-1-zhang.lyra@gmail.com>
-X-Mailer: git-send-email 2.20.1
+        Sun, 29 Mar 2020 22:17:52 -0400
+Received: from mga17.intel.com ([192.55.52.151]:22414 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728056AbgC3CRv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Mar 2020 22:17:51 -0400
+IronPort-SDR: BWzALdVhBXqv7jJHomDwWC8lTgNcbEX+TSPpYV+VpW8UsEZ6rgOVozAweadK7H6BhkYbF8QZkx
+ eVJLiG/Esb6g==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Mar 2020 19:17:49 -0700
+IronPort-SDR: A4zifC7sMlJO40/KzKQLa7+MHGhEN99krW0FoQjYpeGFRVQ3CX3SzSzUwnHfONXaWkdQNgGbxE
+ L5Wo7hopjAIw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,322,1580803200"; 
+   d="scan'208";a="241496401"
+Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
+  by fmsmga008.fm.intel.com with ESMTP; 29 Mar 2020 19:17:48 -0700
+Received: from kbuild by lkp-server01 with local (Exim 4.89)
+        (envelope-from <lkp@intel.com>)
+        id 1jIjzn-0000QE-QP; Mon, 30 Mar 2020 10:17:47 +0800
+Date:   Mon, 30 Mar 2020 10:17:20 +0800
+From:   kbuild test robot <lkp@intel.com>
+To:     "Paul E. McKenney" <paulmck@kernel.org>
+Cc:     linux-kernel@vger.kernel.org
+Subject: [rcu:rcu/next] BUILD SUCCESS
+ 1503af98f54de48952cd5b0fb65c0eaeef66e82a
+Message-ID: <5e8156b0.4OQ98GG+A+fztsfp%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chunyan Zhang <chunyan.zhang@unisoc.com>
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/paulmck/linux-rcu.git  rcu/next
+branch HEAD: 1503af98f54de48952cd5b0fb65c0eaeef66e82a  rcutorture: Add test of holding scheduler locks across rcu_read_unlock()
 
-The current driver is getting a wrong ibias index of pll clocks from
-number 1. This patch fix that issue, then getting ibias index from 0.
+elapsed time: 480m
 
-Fixes: 3e37b005580b ("clk: sprd: add adjustable pll support")
-Signed-off-by: Chunyan Zhang <chunyan.zhang@unisoc.com>
+configs tested: 160
+configs skipped: 0
+
+The following configs have been built successfully.
+More configs may be tested in the coming days.
+
+arm                              allmodconfig
+arm                               allnoconfig
+arm                              allyesconfig
+arm64                            allmodconfig
+arm64                             allnoconfig
+arm64                            allyesconfig
+arm                         at91_dt_defconfig
+arm                           efm32_defconfig
+arm                          exynos_defconfig
+arm                        multi_v5_defconfig
+arm                        multi_v7_defconfig
+arm                        shmobile_defconfig
+arm                           sunxi_defconfig
+arm64                               defconfig
+sparc                            allyesconfig
+sparc64                           allnoconfig
+sparc64                          allyesconfig
+nios2                         3c120_defconfig
+openrisc                    or1ksim_defconfig
+arc                                 defconfig
+riscv                               defconfig
+sparc64                          allmodconfig
+microblaze                      mmu_defconfig
+um                             i386_defconfig
+i386                              allnoconfig
+i386                             alldefconfig
+i386                             allyesconfig
+i386                                defconfig
+ia64                             allmodconfig
+ia64                                defconfig
+ia64                              allnoconfig
+ia64                             allyesconfig
+ia64                             alldefconfig
+nios2                         10m50_defconfig
+c6x                        evmc6678_defconfig
+xtensa                          iss_defconfig
+c6x                              allyesconfig
+xtensa                       common_defconfig
+openrisc                 simple_smp_defconfig
+nds32                               defconfig
+nds32                             allnoconfig
+csky                                defconfig
+alpha                               defconfig
+h8300                       h8s-sim_defconfig
+h8300                     edosk2674_defconfig
+m68k                       m5475evb_defconfig
+m68k                             allmodconfig
+h8300                    h8300h-sim_defconfig
+m68k                           sun3_defconfig
+m68k                          multi_defconfig
+arc                              allyesconfig
+microblaze                    nommu_defconfig
+powerpc                           allnoconfig
+powerpc                             defconfig
+powerpc                       ppc64_defconfig
+powerpc                          rhel-kconfig
+mips                           32r2_defconfig
+mips                         64r6el_defconfig
+mips                             allmodconfig
+mips                              allnoconfig
+mips                             allyesconfig
+mips                      fuloong2e_defconfig
+mips                      malta_kvm_defconfig
+parisc                            allnoconfig
+parisc                           allyesconfig
+parisc                generic-32bit_defconfig
+parisc                generic-64bit_defconfig
+i386                 randconfig-a002-20200329
+x86_64               randconfig-a001-20200329
+i386                 randconfig-a001-20200329
+i386                 randconfig-a003-20200329
+alpha                randconfig-a001-20200329
+m68k                 randconfig-a001-20200329
+mips                 randconfig-a001-20200329
+nds32                randconfig-a001-20200329
+parisc               randconfig-a001-20200329
+riscv                randconfig-a001-20200329
+c6x                  randconfig-a001-20200329
+h8300                randconfig-a001-20200329
+microblaze           randconfig-a001-20200329
+nios2                randconfig-a001-20200329
+sparc64              randconfig-a001-20200329
+csky                 randconfig-a001-20200329
+openrisc             randconfig-a001-20200329
+s390                 randconfig-a001-20200329
+sh                   randconfig-a001-20200329
+xtensa               randconfig-a001-20200329
+i386                 randconfig-b003-20200329
+x86_64               randconfig-b003-20200329
+i386                 randconfig-b001-20200329
+i386                 randconfig-b002-20200329
+x86_64               randconfig-b002-20200329
+x86_64               randconfig-b001-20200329
+x86_64               randconfig-c003-20200329
+i386                 randconfig-c002-20200329
+x86_64               randconfig-c001-20200329
+x86_64               randconfig-c002-20200329
+i386                 randconfig-c003-20200329
+i386                 randconfig-c001-20200329
+x86_64               randconfig-d001-20200329
+x86_64               randconfig-d002-20200329
+x86_64               randconfig-d003-20200329
+i386                 randconfig-d001-20200329
+i386                 randconfig-d002-20200329
+i386                 randconfig-d003-20200329
+x86_64               randconfig-e001-20200329
+i386                 randconfig-e002-20200329
+x86_64               randconfig-e003-20200329
+i386                 randconfig-e003-20200329
+x86_64               randconfig-e002-20200329
+i386                 randconfig-e001-20200329
+i386                 randconfig-f001-20200329
+i386                 randconfig-f003-20200329
+i386                 randconfig-f002-20200329
+x86_64               randconfig-f002-20200329
+x86_64               randconfig-f001-20200329
+i386                 randconfig-g003-20200329
+x86_64               randconfig-g002-20200329
+i386                 randconfig-g002-20200329
+i386                 randconfig-g001-20200329
+x86_64               randconfig-g001-20200329
+x86_64               randconfig-h001-20200329
+x86_64               randconfig-h002-20200329
+x86_64               randconfig-h003-20200329
+i386                 randconfig-h001-20200329
+i386                 randconfig-h002-20200329
+i386                 randconfig-h003-20200329
+arm                  randconfig-a001-20200329
+arm64                randconfig-a001-20200329
+powerpc              randconfig-a001-20200329
+ia64                 randconfig-a001-20200329
+sparc                randconfig-a001-20200329
+arc                  randconfig-a001-20200329
+riscv                            allyesconfig
+riscv                    nommu_virt_defconfig
+riscv                             allnoconfig
+riscv                          rv32_defconfig
+riscv                            allmodconfig
+s390                             alldefconfig
+s390                             allmodconfig
+s390                              allnoconfig
+s390                             allyesconfig
+s390                          debug_defconfig
+s390                                defconfig
+s390                       zfcpdump_defconfig
+sh                               allmodconfig
+sh                                allnoconfig
+sh                          rsk7269_defconfig
+sh                  sh7785lcr_32bit_defconfig
+sh                            titan_defconfig
+sparc                               defconfig
+sparc64                             defconfig
+um                           x86_64_defconfig
+um                                  defconfig
+x86_64                                   rhel
+x86_64                               rhel-7.6
+x86_64                         rhel-7.2-clear
+x86_64                                    lkp
+x86_64                              fedora-25
+x86_64                                  kexec
+
 ---
- drivers/clk/sprd/pll.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/clk/sprd/pll.c b/drivers/clk/sprd/pll.c
-index 640270f51aa5..15791484388f 100644
---- a/drivers/clk/sprd/pll.c
-+++ b/drivers/clk/sprd/pll.c
-@@ -87,11 +87,12 @@ static u32 pll_get_ibias(u64 rate, const u64 *table)
- {
- 	u32 i, num = table[0];
- 
--	for (i = 1; i < num + 1; i++)
--		if (rate <= table[i])
-+	/* table[0] indicates the number of items in this table */
-+	for (i = 0; i < num; i++)
-+		if (rate <= table[i + 1])
- 			break;
- 
--	return (i == num + 1) ? num : i;
-+	return i == num ? num - 1 : i;
- }
- 
- static unsigned long _sprd_pll_recalc_rate(const struct sprd_pll *pll,
--- 
-2.20.1
-
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
