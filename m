@@ -2,174 +2,129 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38E27C2D0E5
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 15:46:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78021C2D0EE
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 15:49:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 002DC2073B
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 15:46:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D3EE205ED
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 15:49:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=itdevltd.onmicrosoft.com header.i=@itdevltd.onmicrosoft.com header.b="hMQ4XEXA"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=flygoat.com header.i=jiaxun.yang@flygoat.com header.b="Ft6YaDQk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729686AbgC3PqI (ORCPT
+        id S1729473AbgC3Ptb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 11:46:08 -0400
-Received: from mail-eopbgr20085.outbound.protection.outlook.com ([40.107.2.85]:14340
-        "EHLO EUR02-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728594AbgC3PqI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 11:46:08 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=U4fqGwNw0kNZ8gyGDdtAgNJeVs6BqfnOVriX+iKalf/BRbYrz2ReRgm9bQfS8NoJg9vuafvMvMRA86jE3mDNKKY0GA8TY821mcRQ50618H7SJmvaaTPLBIwewKxpitj6+1KPmr8T/471SW9yxq8dRR86EdO9j1jb8+yJaLEcgSErMwHlM+Gzekx/wh8zKT2pnMKIeSSbgZmIBaQUWbHmmxWwfn2d75fqBlbf9RYIgiHbRc/vVO8mcTffTXVmarVxxQw51dkRPHaRDuNpHIcu9BRT7Njej33YC0Vv10B0PKbaAxHxJakwTzfj9+S9Pb/2IUnfeKqv7ckLBmqVBUL17w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=bZaDyUBF9HrkNICJPDpXfdL78ouggZb/8xjz5xgj8bo=;
- b=aOaUhCfo+jrDlr8Dc9P6+VZiFqVl1PI8ix0tTW5NzdY8rQs3AYRr6YXE3PnpXW/XYyWCJZ/bpnbzj1DnnK+52DbsSdHfppo/yv9Yy9S7SBQ1JS29Eibm6/0PR+IceZ1Y5fzR8qOxpUdSdYTOBbfX612k7fOz1w7+zvzLYOjpkn1/kvK/OCs8dirdX66xTH/2mImb98zrRgrVDg37hSRtET9zNBhAO7TI9vgUKgzAyuL1YO2+jHU0Hjd2dXhko44+JtE33QKoqK2ffVTBzfUR/c55Q6Vwz5JDy91Etkha341eU/LMis4GdE/4VV0jWlu1Hubfha6WauoJ9uaIjQSxMg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=itdev.co.uk; dmarc=pass action=none header.from=itdev.co.uk;
- dkim=pass header.d=itdev.co.uk; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=itdevltd.onmicrosoft.com; s=selector2-itdevltd-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=bZaDyUBF9HrkNICJPDpXfdL78ouggZb/8xjz5xgj8bo=;
- b=hMQ4XEXAArxZ0Hn6kGcWHsXeOni4sH+98Psd3To3xtCpNcZm5lOXGoKSdNz8bL2CARCcLNmgZWKBlz0huBHxmcfhlnTLSEfK2WI9DwQsfXH8qDJM7TzMrlyUzmfHtLz2e7fx49KowiQF+pTn8cDfInZMq+heLGDlNqXHRypeJs0=
-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=quentin.deslandes@itdev.co.uk; 
-Received: from DBBPR08MB4491.eurprd08.prod.outlook.com (20.179.44.144) by
- DBBPR08MB4538.eurprd08.prod.outlook.com (20.179.44.143) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2856.20; Mon, 30 Mar 2020 15:46:02 +0000
-Received: from DBBPR08MB4491.eurprd08.prod.outlook.com
- ([fe80::cce9:f055:f034:3659]) by DBBPR08MB4491.eurprd08.prod.outlook.com
- ([fe80::cce9:f055:f034:3659%4]) with mapi id 15.20.2856.019; Mon, 30 Mar 2020
- 15:46:02 +0000
-Date:   Mon, 30 Mar 2020 16:46:00 +0100
-From:   Quentin Deslandes <quentin.deslandes@itdev.co.uk>
-To:     "John B. Wyatt IV" <jbwyatt4@gmail.com>
-Cc:     outreachy-kernel@googlegroups.com,
-        Julia Lawall <julia.lawall@inria.fr>,
-        Stefano Brivio <sbrivio@redhat.com>,
-        Forest Bond <forest@alittletooquiet.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Colin Ian King <colin.king@canonical.com>,
-        Malcolm Priestley <tvboxspy@gmail.com>,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3] staging: vt6656: add error code handling to unused
- variable
-Message-ID: <20200330154600.GA125210@jiffies>
-References: <20200329084320.619503-1-jbwyatt4@gmail.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200329084320.619503-1-jbwyatt4@gmail.com>
-X-ClientProxiedBy: LO2P265CA0169.GBRP265.PROD.OUTLOOK.COM
- (2603:10a6:600:a::13) To DBBPR08MB4491.eurprd08.prod.outlook.com
- (2603:10a6:10:d2::16)
+        Mon, 30 Mar 2020 11:49:31 -0400
+Received: from sender3-op-o12.zoho.com.cn ([124.251.121.243]:17840 "EHLO
+        sender3-op-o12.zoho.com.cn" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728594AbgC3Ptb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Mar 2020 11:49:31 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1585583265;
+        s=mail; d=flygoat.com; i=jiaxun.yang@flygoat.com;
+        h=Date:In-Reply-To:References:MIME-Version:Content-Type:Content-Transfer-Encoding:Subject:To:CC:From:Message-ID;
+        bh=fKY1wcYZ+Cm3/0t0E+sucQoBEZCO55f18FQxrRV8tbU=;
+        b=Ft6YaDQksZwXu9aWisZaNWPg1STNzyBBqVK6U82BAG/PpOniQXG1fupGENDI66jg
+        9KPkxqwfRHK/qcPngRUpyAVy0uN4KW+ftQ848pOkFSee3p2GORUtcXvdVrRjG3ATG2C
+        kGMde+FJBhfqMB9TxLu9yhO0y9txS8/uSecWr5pY=
+Received: from [10.233.233.252] (183.156.33.130 [183.156.33.130]) by mx.zoho.com.cn
+        with SMTPS id 1585583262424928.8644851457047; Mon, 30 Mar 2020 23:47:42 +0800 (CST)
+Date:   Mon, 30 Mar 2020 23:47:32 +0800
+User-Agent: K-9 Mail for Android
+In-Reply-To: <68446094-263d-d0d9-df00-bc1e81c1dffe@cogentembedded.com>
+References: <20200330114239.1112759-1-jiaxun.yang@flygoat.com> <20200330114239.1112759-5-jiaxun.yang@flygoat.com> <68446094-263d-d0d9-df00-bc1e81c1dffe@cogentembedded.com>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from jiffies (5.151.93.48) by LO2P265CA0169.GBRP265.PROD.OUTLOOK.COM (2603:10a6:600:a::13) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2856.20 via Frontend Transport; Mon, 30 Mar 2020 15:46:01 +0000
-X-Originating-IP: [5.151.93.48]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: b62de620-3a39-4dab-30bf-08d7d4c17304
-X-MS-TrafficTypeDiagnostic: DBBPR08MB4538:
-X-Microsoft-Antispam-PRVS: <DBBPR08MB45380A13D11558A36DDC2127B3CB0@DBBPR08MB4538.eurprd08.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:635;
-X-Forefront-PRVS: 0358535363
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DBBPR08MB4491.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10009020)(366004)(346002)(376002)(39830400003)(396003)(136003)(8936002)(54906003)(7416002)(186003)(5660300002)(26005)(44832011)(16526019)(1076003)(6916009)(81166006)(81156014)(8676002)(9576002)(2906002)(33716001)(86362001)(9686003)(33656002)(55016002)(4326008)(53546011)(6496006)(52116002)(956004)(508600001)(316002)(66556008)(66946007)(66476007);DIR:OUT;SFP:1101;
-Received-SPF: None (protection.outlook.com: itdev.co.uk does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: Zc8roQMny7lEroB5EWxip3TxWGPhlG/IjSXZltU60ZNa/54o21sTOvN178+ATx2L/a6qpuMgDsgl5Xc4NYQr2VGVXAXqa2s6xPwuJsPICl1dxKotXk/kiktNGvdCU+16kFayAvAl3VaGWu1h8yrdBIkSQxZ+Mjgu+GXOdx6FIRfFJhwnP1gV+J1Q3VESEnPX0I5H2sSkyxs1txQrOR3BJM92kIAhu3gHOP9ZseL3xRNoirYPf5DE3ZPi2+6KJjzAKnUmhs7YenhNanRDmbGaLpZAfkQS5zf8SlUnyshLxhnWnvviZvSC0oR+XH3TDfUtGdfrKC5M+Ma8OtV2H56YXb2BmUi95tIDphPkCodYNmXqefZSp1NICZzusoGwLlUILfxZ7I0gg/LMDsPpfXQvUlr9k1ibako1C0c9VPaNaiqYe3xh8u88Ce+xBmk/ZQzl
-X-MS-Exchange-AntiSpam-MessageData: GwmWchUX2xaxZh8V0nuke0yR5lBHdeHKIrnSmlAH/bHMATJNgeAFMJ52vAeTL+y6l4P0CWYfjRpoTz51R8V5LxoCy6z21qn7Or1atWd8ecj0kNcx4MsLbfFhri4Y8QF9zgHd6ELUyAUafm78BVQ5IA==
-X-OriginatorOrg: itdev.co.uk
-X-MS-Exchange-CrossTenant-Network-Message-Id: b62de620-3a39-4dab-30bf-08d7d4c17304
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Mar 2020 15:46:02.0705
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 2d2930c4-2251-45b4-ad79-3582c5f41740
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: G4LT4iK/OIgRo4hEC030dZUOQU3TpzZlCkknLjhGcaxkK5AA0wG3OTyivVTj7yOgsBIJqFe/JH6DrEzrHYxalOqsCm0O2dwna3WCi67kmg4=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DBBPR08MB4538
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH 4/5] MIPS: DTS: Loongson64: Add PCI Controller Node
+To:     Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
+        linux-mips@vger.kernel.org
+CC:     Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Huacai Chen <chenhc@lemote.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <amurray@thegoodpenguin.co.uk>,
+        Paul Burton <paulburton@kernel.org>, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
+Message-ID: <90CFB680-D6DA-45E5-9E19-08F577672BA8@flygoat.com>
+X-ZohoCNMailClient: External
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 03/29/20 01:43:20, John B. Wyatt IV wrote:
-> Add error code handling to unused 'ret' variable that was never used.
-> Return an error code from functions called within vnt_radio_power_on.
-> 
-> Issue reported by coccinelle (coccicheck).
-> 
-> Suggested-by: Quentin Deslandes <quentin.deslandes@itdev.co.uk>
-> Suggested-by: Stefano Brivio <sbrivio@redhat.com>
-> Signed-off-by: John B. Wyatt IV <jbwyatt4@gmail.com>
-> ---
-> v3: Forgot to add v2 code changes to commit.
-> 
-> v2: Replace goto statements with return.
->     Remove last if check because it was unneeded.
->     Suggested-by: Julia Lawall <julia.lawall@inria.fr>
 
-Because it's after the comment line (---), this Suggested-by tag will be
-stripped-off when applying the patch.
 
-> 
->  drivers/staging/vt6656/card.c | 18 +++++++++++-------
->  1 file changed, 11 insertions(+), 7 deletions(-)
-> 
-> diff --git a/drivers/staging/vt6656/card.c b/drivers/staging/vt6656/card.c
-> index dc3ab10eb630..239012539e73 100644
-> --- a/drivers/staging/vt6656/card.c
-> +++ b/drivers/staging/vt6656/card.c
-> @@ -723,9 +723,13 @@ int vnt_radio_power_on(struct vnt_private *priv)
->  {
->  	int ret = 0;
->  
-> -	vnt_exit_deep_sleep(priv);
-> +	ret = vnt_exit_deep_sleep(priv);
-> +	if (ret)
-> +		return ret;
->  
-> -	vnt_mac_reg_bits_on(priv, MAC_REG_HOSTCR, HOSTCR_RXON);
-> +	ret = vnt_mac_reg_bits_on(priv, MAC_REG_HOSTCR, HOSTCR_RXON);
-> +	if (ret)
-> +		return ret;
->  
->  	switch (priv->rf_type) {
->  	case RF_AL2230:
-> @@ -734,14 +738,14 @@ int vnt_radio_power_on(struct vnt_private *priv)
->  	case RF_VT3226:
->  	case RF_VT3226D0:
->  	case RF_VT3342A0:
-> -		vnt_mac_reg_bits_on(priv, MAC_REG_SOFTPWRCTL,
-> -				    (SOFTPWRCTL_SWPE2 | SOFTPWRCTL_SWPE3));
-> +		ret = vnt_mac_reg_bits_on(priv, MAC_REG_SOFTPWRCTL,
-> +					 (SOFTPWRCTL_SWPE2 | SOFTPWRCTL_SWPE3));
->  		break;
->  	}
-> +	if (ret)
-> +		return ret;
->  
-> -	vnt_mac_reg_bits_off(priv, MAC_REG_GPIOCTL1, GPIO3_INTMD);
-> -
-> -	return ret;
-> +	return vnt_mac_reg_bits_off(priv, MAC_REG_GPIOCTL1, GPIO3_INTMD);
->  }
->  
->  void vnt_set_bss_mode(struct vnt_private *priv)
-> -- 
-> 2.25.1
-> 
+=E4=BA=8E 2020=E5=B9=B43=E6=9C=8830=E6=97=A5 GMT+08:00 =E4=B8=8B=E5=8D=881=
+1:37:21, Sergei Shtylyov <sergei=2Eshtylyov@cogentembedded=2Ecom> =E5=86=99=
+=E5=88=B0:
+>Hello!
+>
+>On 03/30/2020 02:42 PM, Jiaxun Yang wrote:
+>
+>> Add PCI Host controller node for Loongson64 with RS780E PCH dts=2E
+>> Note that PCI interrupts are probed via legacy way, as different
+>> machine have different interrupt arrangement, we can't cover all
+>> of them in dt=2E
+>>=20
+>> Signed-off-by: Jiaxun Yang <jiaxun=2Eyang@flygoat=2Ecom>
+>> ---
+>>  arch/mips/boot/dts/loongson/rs780e-pch=2Edtsi | 17 ++++++++++++++++-
+>>  1 file changed, 16 insertions(+), 1 deletion(-)
+>>=20
+>> diff --git a/arch/mips/boot/dts/loongson/rs780e-pch=2Edtsi
+>b/arch/mips/boot/dts/loongson/rs780e-pch=2Edtsi
+>> index 45c54d555fa4=2E=2Ef09599a4b9d7 100644
+>> --- a/arch/mips/boot/dts/loongson/rs780e-pch=2Edtsi
+>> +++ b/arch/mips/boot/dts/loongson/rs780e-pch=2Edtsi
+>> @@ -5,10 +5,25 @@ bus@10000000 {
+>>  		compatible =3D "simple-bus";
+>>  		#address-cells =3D <2>;
+>>  		#size-cells =3D <2>;
+>> -		ranges =3D <0 0x10000000 0 0x10000000 0 0x10000000
+>> +		ranges =3D <0 0x00000000 0 0x00000000 0 0x00010000 /* ioports */
+>> +				0 0x10000000 0 0x10000000 0 0x10000000
+>>  				0 0x40000000 0 0x40000000 0 0x40000000
+>>  				0xfd 0xfe000000 0xfd 0xfe000000  0 0x2000000 /* PCI Config Space
+>*/>;
+>> =20
+>> +		pci@1a000000 {
+>> +			compatible =3D "loongson,rs780e-pci";
+>> +			device_type =3D "pci";
+>> +			#address-cells =3D <3>;
+>> +			#size-cells =3D <2>;
+>> +			#interrupt-cells =3D <0x1>;
+>
+>   No need for 0x=2E
+>
+>> +
+>> +			reg =3D <0 0x1a000000 0 0x02000000>;
+>> +
+>> +			ranges =3D <0x01000000 0x0 0x00004000 0x0 0x00004000  0x0
+>0x00004000>,
+>> +				<0x02000000 0x0 0x40000000 0x0 0x40000000  0x0 0x40000000>;
+>
+>   No need for 0x before 0 here either=2E And why double spaces?
+=20
+Thanks=2E Will fix in next version=2E
 
-If you could fix it, then add my review tag.
+The space was intent to split address and size but it seems unnecessary=2E
 
-Reviewed-by: Quentin Deslandes <quentin.deslandes@itdev.co.uk>
+>
+>> +
+>> +		};
+>> +
+>>  		isa {
+>>  			compatible =3D "isa";
+>>  			#address-cells =3D <2>;
+>>=20
+>
+>MBR, Sergei
 
-Thanks,
-Quentin
+--=20
+Jiaxun Yang
