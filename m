@@ -2,85 +2,169 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56E7BC43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 01:05:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DE89C2D0ED
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 01:09:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B40D206F6
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 01:05:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B336206F6
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 01:09:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OFTc6ukA"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="D3O0fT0Z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728074AbgC3BFh (ORCPT
+        id S1728097AbgC3BJi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Mar 2020 21:05:37 -0400
-Received: from us-smtp-delivery-74.mimecast.com ([63.128.21.74]:38388 "EHLO
-        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727549AbgC3BFh (ORCPT
+        Sun, 29 Mar 2020 21:09:38 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:43310 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727549AbgC3BJh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Mar 2020 21:05:37 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1585530337;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=RuVMi+yzQuqrWt1PfGiMDTX9P2hZ817ws+8wqAp5qk0=;
-        b=OFTc6ukA9Eu7/YROBinqV8JEddEk1WV2Oz9uDpKOL0yj+KcrLuMnp6Ztxyt8ANy4QmN59z
-        7CdVlf1taT9k7BG31u8hIh3Dy3g23Cg8bv1wZyfGgzW3JsRwVVWbVND6FFM8BlYfL4CEsZ
-        g6tjNA9PKTSNl0ACLavVPW/vdNqMJYw=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-38-w4fOFj-WPMetl7R3dG9Hmw-1; Sun, 29 Mar 2020 21:05:35 -0400
-X-MC-Unique: w4fOFj-WPMetl7R3dG9Hmw-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 211B1189F77A;
-        Mon, 30 Mar 2020 01:05:34 +0000 (UTC)
-Received: from elisabeth (unknown [10.40.208.4])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 0EED35C1BB;
-        Mon, 30 Mar 2020 01:05:31 +0000 (UTC)
-Date:   Mon, 30 Mar 2020 03:05:26 +0200
-From:   Stefano Brivio <sbrivio@redhat.com>
-To:     Simran Singhal <singhalsimran0@gmail.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
-        outreachy-kernel@googlegroups.com
-Subject: Re: [Outreachy kernel] [PATCH] staging: rtl8723bs: Add line after
- variable declarations
-Message-ID: <20200330030526.7a1a3b9d@elisabeth>
-In-Reply-To: <20200325164451.GA17569@simran-Inspiron-5558>
-References: <20200325164451.GA17569@simran-Inspiron-5558>
-Organization: Red Hat
+        Sun, 29 Mar 2020 21:09:37 -0400
+Received: by mail-lj1-f196.google.com with SMTP id g27so16238725ljn.10;
+        Sun, 29 Mar 2020 18:09:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Udu7OKRG+/CbZ2nQefBdE74UpfG/AooeTF97o8fdi2s=;
+        b=D3O0fT0ZWBVmquYl71TWwdVjHQ7cP8VMkn59W72GwzYWFpkXgmLhldngem2Q7G5LpL
+         cOQWy3LBZ5tp1YCHoFaVGwdZUwA6cgq0+kVLIHlT1zbhR729s+VwR9PSvzONITqzM2dK
+         YnPKkVFHzDDns8BYeJwFpJFFTQyPXuFzJIfu6skP092aTHfMhRCmN0OHYozPmTtJUNG1
+         Mcy2RuSsuWWHa3DB9jpG0h58EEz5/uBh4YViAEUGTl2B6ClktNH6YsPPyUWncMdLSPsa
+         Mr5W/PUrO/Nk3ICrA7QxbyayrSYswOy1pjU9rKgORmN1V99uplJ07Jd+hUs3MdOTVb6+
+         4rIQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Udu7OKRG+/CbZ2nQefBdE74UpfG/AooeTF97o8fdi2s=;
+        b=cAahNmn1Y9tE1alMX22lceEIeJJjGB3C08rEvyjFCJxK1kXiDpU4xEQr67sp7t0xv3
+         NMWfDh4V8mD505INg+QD+/+EPgVcLEoP+9MFp7d/p6vNpZ1Xa1bLlDOg90I5ZVbBbtgH
+         G3WlG5eJR3sYjx4NiBhRHGTEzGzqSDR5KmMuFHmbnnwwnQLT5mz+ZY6MCQCpfoeCvnaf
+         zzJUXX9Vwt0yY2csd/trHpQJLwsvHen48r7SHLp646cNQH+87iFawL6TaH6l0opcUPYF
+         akw+QZsI426gCbxKZDsbK7s/vWE3VTxtB19wTcQ5+Fetf1wqhZjTKiTeLVIOkL1ARNiT
+         p4LQ==
+X-Gm-Message-State: AGi0PubWok03P8kUy14fkzkhtNas3IrTbYe1kn0c9JHYMYrnxYEbokKA
+        Kxj9h3LWf7jbrYCf2S5lGlM=
+X-Google-Smtp-Source: APiQypKO9tO+QHLLk4JgIJ/tZL0Ry6Gmfgs/koA0hVjTlWYp+VFlA7h+920qGDYBL3bwmOdrhVGlEA==
+X-Received: by 2002:a2e:a173:: with SMTP id u19mr5855125ljl.67.1585530574240;
+        Sun, 29 Mar 2020 18:09:34 -0700 (PDT)
+Received: from localhost.localdomain (ppp91-78-208-152.pppoe.mtu-net.ru. [91.78.208.152])
+        by smtp.gmail.com with ESMTPSA id f23sm2449005lja.60.2020.03.29.18.09.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 29 Mar 2020 18:09:33 -0700 (PDT)
+From:   Dmitry Osipenko <digetx@gmail.com>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        =?UTF-8?q?Artur=20=C5=9Awigo=C5=84?= <a.swigon@samsung.com>,
+        Georgi Djakov <georgi.djakov@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>
+Cc:     linux-tegra@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        devicetree@vger.kernel.org
+Subject: [PATCH v2 00/22] Introduce memory interconnect for NVIDIA Tegra SoCs
+Date:   Mon, 30 Mar 2020 04:08:42 +0300
+Message-Id: <20200330010904.27643-1-digetx@gmail.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Simran,
+Hello,
 
-On Wed, 25 Mar 2020 22:14:52 +0530
-Simran Singhal <singhalsimran0@gmail.com> wrote:
+This series brings initial support for memory interconnect to Tegra20 and
+Tegra30 SoCs. The interconnect provides are quite generic and should be
+suitable for all Tegra SoCs, but currently support is added only for these
+two generations of Tegra SoCs.
 
-> Add whiteline after variable declarations to remove the checkpatch.pl
-> warning:
-> WARNING: Missing a blank line after declarations
-> 
-> Signed-off-by: Simran Singhal <singhalsimran0@gmail.com>
+For the starter only display controllers are getting interconnect API
+support, others could be supported later on. The display controllers
+have the biggest demand for interconnect API right now because dynamic
+memory frequency scaling can't be done safely without taking into account
+bandwidth requirement from the displays.
 
-Sorry for the late review. This patch introduces similar changes to the
-other patches you posted to fix checkpatch warnings for rtl8723bs, so I
-think they should be posted as a patchset instead.
+(!) Please note that the EMC patches are made on top of the other EMC
+    patches [1][2] that I was sending out recently.
+
+[1] https://patchwork.ozlabs.org/project/linux-tegra/list/?series=164165
+[2] https://patchwork.ozlabs.org/project/linux-tegra/list/?series=165451
+
+Changelog:
+
+v2: - Instead of a single dma-mem interconnect path, the paths are now
+      defined per memory client.
+
+    - The EMC provider now uses #interconnect-cells=<0>.
+
+    - Dropped Tegra124 because there is no enough information about how to
+      properly calculate required EMC clock rate for it and I don't have
+      hardware for testing. Somebody else will have to work on it.
+
+    - Moved interconnect providers code into drivers/memory/tegra/*.
+
+    - Added "Create tegra20-devfreq device" patch because interconnect
+      is not very usable without the devfreq memory auto-scaling since
+      memory freq will be fixed to the display's requirement.
+
+Artur Świgoń (1):
+  interconnect: Relax requirement in of_icc_get_from_provider()
+
+Dmitry Osipenko (21):
+  dt-bindings: memory: tegra20: mc: Document new interconnect property
+  dt-bindings: memory: tegra20: emc: Document new interconnect property
+  dt-bindings: memory: tegra30: mc: Document new interconnect property
+  dt-bindings: memory: tegra30: emc: Document new interconnect property
+  dt-bindings: host1x: Document new interconnect properties
+  dt-bindings: memory: tegra20: Add memory client IDs
+  dt-bindings: memory: tegra30: Add memory client IDs
+  ARM: tegra: Add interconnect properties to Tegra20 device-tree
+  ARM: tegra: Add interconnect properties to Tegra30 device-tree
+  memory: tegra: Register as interconnect provider
+  memory: tegra20-emc: Use devm_platform_ioremap_resource
+  memory: tegra20-emc: Continue probing if timings are missing in
+    device-tree
+  memory: tegra20-emc: Register as interconnect provider
+  memory: tegra20-emc: Create tegra20-devfreq device
+  memory: tegra30-emc: Continue probing if timings are missing in
+    device-tree
+  memory: tegra30-emc: Register as interconnect provider
+  drm/tegra: dc: Support memory bandwidth management
+  drm/tegra: dc: Tune up high priority request controls for Tegra20
+  drm/tegra: dc: Extend debug stats with total number of events
+  ARM: tegra: Enable interconnect API in tegra_defconfig
+  ARM: multi_v7_defconfig: Enable interconnect API
+
+ .../display/tegra/nvidia,tegra20-host1x.txt   |  68 +++++
+ .../memory-controllers/nvidia,tegra20-emc.txt |   2 +
+ .../memory-controllers/nvidia,tegra20-mc.txt  |   3 +
+ .../nvidia,tegra30-emc.yaml                   |   6 +
+ .../memory-controllers/nvidia,tegra30-mc.yaml |   5 +
+ arch/arm/boot/dts/tegra20.dtsi                |  22 +-
+ arch/arm/boot/dts/tegra30.dtsi                |  23 +-
+ arch/arm/configs/multi_v7_defconfig           |   1 +
+ arch/arm/configs/tegra_defconfig              |   1 +
+ drivers/gpu/drm/tegra/dc.c                    | 289 +++++++++++++++++-
+ drivers/gpu/drm/tegra/dc.h                    |  13 +
+ drivers/gpu/drm/tegra/drm.c                   |  19 ++
+ drivers/gpu/drm/tegra/plane.c                 |   1 +
+ drivers/gpu/drm/tegra/plane.h                 |   4 +-
+ drivers/interconnect/core.c                   |  11 +-
+ drivers/memory/tegra/mc.c                     | 118 +++++++
+ drivers/memory/tegra/mc.h                     |   8 +
+ drivers/memory/tegra/tegra20-emc.c            | 161 ++++++++--
+ drivers/memory/tegra/tegra30-emc.c            | 144 ++++++++-
+ include/dt-bindings/memory/tegra20-mc.h       |  53 ++++
+ include/dt-bindings/memory/tegra30-mc.h       |  67 ++++
+ include/soc/tegra/mc.h                        |   3 +
+ 22 files changed, 975 insertions(+), 47 deletions(-)
 
 -- 
-Stefano
+2.25.1
 
