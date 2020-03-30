@@ -2,86 +2,147 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6ABDBC43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 15:38:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8159C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 15:38:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3D1C22072E
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 15:38:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 748272072E
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 15:38:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LG142GVI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729475AbgC3Pia (ORCPT
+        id S1729494AbgC3Piq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 11:38:30 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:33828 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725978AbgC3Pi3 (ORCPT
+        Mon, 30 Mar 2020 11:38:46 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:55247 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725978AbgC3Piq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 11:38:29 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: eballetbo)
-        with ESMTPSA id 05B37296770
-Subject: Re: [PATCH v3] platform: x86: Add ACPI driver for ChromeOS
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, groeck@chromium.org,
-        bleung@chromium.org, dtor@chromium.org, gwendal@chromium.org,
-        Collabora Kernel ML <kernel@collabora.com>,
-        vbendeb@chromium.org, andy@infradead.org,
-        Ayman Bagabas <ayman.bagabas@gmail.com>,
-        Darren Hart <dvhart@infradead.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Jeremy Soller <jeremy@system76.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Mattias Jacobsson <2pi@mok.nu>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Rajat Jain <rajatja@google.com>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        Yauhen Kharuzhy <jekhor@gmail.com>,
-        platform-driver-x86@vger.kernel.org
-References: <20200330150617.1132570-1-enric.balletbo@collabora.com>
- <20200330153430.GA750889@kroah.com>
-From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Message-ID: <2ea54a95-213e-41cb-1bf8-bc72475d1f73@collabora.com>
-Date:   Mon, 30 Mar 2020 17:38:23 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Mon, 30 Mar 2020 11:38:46 -0400
+Received: by mail-wm1-f66.google.com with SMTP id c81so20424022wmd.4;
+        Mon, 30 Mar 2020 08:38:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=ThNT7IHhp+pCopvLLrahm7n3sIF14irK3wGMpiEHrXI=;
+        b=LG142GVIFW5FWP913j1ZKD+IsVm/JtBkU4c+t36mYkKeOQQsOywadum+poXch3xfSR
+         JG0wDunx7ymtS5/sUL8yaqiAQ38RATvMF8dSXikAOad67IpZ9S79EsyTuOUABAWilxu2
+         5ossnleJs4FyGSP38pWEGS88Vsomsq56k8qPpYpjERXle4P0sZZe2TawNdd2W7bo6L7I
+         5lIZhQc1PqodlxeHxiQyEPstjzjn5jaMBIc/VwX2a/56uzoc7seOrLgVoO3bNXWroHMN
+         4riuDVgu+jD782kQQ4Ho9YqefxvVvCnUT9FYWAPYqxpRGq7x4H3xUpYbQEAfjw/rQysR
+         Q95w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=ThNT7IHhp+pCopvLLrahm7n3sIF14irK3wGMpiEHrXI=;
+        b=FoNlZnFuFxPXbDrXJEyud0JMur1YW5my9w6juvkkG0qXLMx/Ev++l99xAZIOrmrM9p
+         jF6j9EHtin7LtXiT/euPebYIFRaAkAo8IVsIWCFePwzeerdl19ZY3FK0Ls1EKDN1AMnD
+         +/K4Bi6teS174uVnlCRtcKlGKI4Y298NqQ4fBr0zNMMjiwJ9uhxpyP+NU61/9VYv5dMd
+         cNwoWpwUE5ozI/e1fJN4kJP5tU5zwTFAiEIcsnNocLEg6tIwemb50Qqs+ab0FMnCc9j9
+         laNF9AqqpE2Yhbbv/PcSdvoHk5LB11XKpc8ck87L1RLWVhjI6Q5jG4PApjweQ2AJNHPF
+         hj2w==
+X-Gm-Message-State: ANhLgQ3f90cG3S0BLMVANWfG8f4NZc6aNOPJvkY1fVYVUEEMf/68TDo/
+        fXsS5O1DlHiq+ubBkcU2Dic=
+X-Google-Smtp-Source: ADFU+vt5NwV/jX5Pu6ff53Ee7mR0nw7o48wuNFnB56PozW1Bcz4w24PY/HAVtve6tp5EA0V6PXK8Sw==
+X-Received: by 2002:a7b:cde8:: with SMTP id p8mr5195649wmj.87.1585582693742;
+        Mon, 30 Mar 2020 08:38:13 -0700 (PDT)
+Received: from localhost (pD9E51CDC.dip0.t-ipconnect.de. [217.229.28.220])
+        by smtp.gmail.com with ESMTPSA id d6sm22322671wrw.10.2020.03.30.08.38.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 30 Mar 2020 08:38:12 -0700 (PDT)
+Date:   Mon, 30 Mar 2020 17:38:10 +0200
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Matthias Schiffer <matthias.schiffer@ew.tq-group.com>,
+        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>, linux-pwm@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 2/4] pwm: pca9685: remove ALL_LED PWM channel
+Message-ID: <20200330153810.GA2817345@ulmo>
+References: <20200226135229.24929-1-matthias.schiffer@ew.tq-group.com>
+ <20200226135229.24929-2-matthias.schiffer@ew.tq-group.com>
+ <20200330130757.GC2431644@ulmo>
+ <CAHp75VeY9ZGUD_=N=R2vsJFY-4P5-L1+ZzjKHU2cygcbML0zOw@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200330153430.GA750889@kroah.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="yrj/dFKFPuw6o+aM"
+Content-Disposition: inline
+In-Reply-To: <CAHp75VeY9ZGUD_=N=R2vsJFY-4P5-L1+ZzjKHU2cygcbML0zOw@mail.gmail.com>
+User-Agent: Mutt/1.13.1 (2019-12-14)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Greg,
 
-On 30/3/20 17:34, Greg Kroah-Hartman wrote:
-> On Mon, Mar 30, 2020 at 05:06:17PM +0200, Enric Balletbo i Serra wrote:
->> This driver attaches to the ChromeOS ACPI device and then exports the values
->> reported by the ACPI in a sysfs directory. These values are not exported
->> via the standard ACPI tables, hence a specific driver is needed to do
->> it. The ACPI values are presented in the string form (numbers as decimal
->> values) or binary blobs, and can be accessed as the contents of the
->> appropriate read only files in the standard ACPI devices sysfs directory tree.
-> 
-> Any reason why you didn't send this to the ACPI maintainers and
-> developer mailing list?
-> 
+--yrj/dFKFPuw6o+aM
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Right, one should never only trust on what get_maintainers returns you. My bad,
-I'll cc them. Thanks for pointing it.
+On Mon, Mar 30, 2020 at 04:19:55PM +0300, Andy Shevchenko wrote:
+> On Mon, Mar 30, 2020 at 4:10 PM Thierry Reding <thierry.reding@gmail.com>=
+ wrote:
+> >
+> > On Wed, Feb 26, 2020 at 02:52:27PM +0100, Matthias Schiffer wrote:
+> > > The interaction of the ALL_LED PWM channel with the other channels was
+> > > not well-defined. As the ALL_LED feature does not seem very useful and
+> > > it was making the code significantly more complex, simply remove it.
+> > >
+> > > Signed-off-by: Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
+> > > ---
+> > >  drivers/pwm/pwm-pca9685.c | 115 ++++++------------------------------=
+--
+> > >  1 file changed, 17 insertions(+), 98 deletions(-)
+> >
+> > Applied, thanks.
+>=20
+> This seems to be ABI breakage.
 
-Thanks,
- Enric
+Nothing seemed to be using that feature. As a matter of fact, I don't
+really see anyone using this chip in an upstream kernel, so it's
+difficult to understand what the dependencies are.
 
-> They would be the best ones to review this...
-> 
-> thanks,
-> 
-> greg k-h
-> 
+> Thierry, do you have hardware to test?
+
+No, I don't. Do you?
+
+Does anybody have a good understanding of where the users of this are
+and where the code is? There seems to be a lot of confusion around this
+driver/chip and how it's being used and it keeps causing a lot of this
+back and forth, so can we please gather some basic information and then
+I'll add that to the driver along with perhaps a list of contacts that
+want to be involved.
+
+As it is, it seems like applying patches as I see fit is the only way to
+get people to object, which is a suboptimal way to do things. =3D)
+
+Thierry
+
+--yrj/dFKFPuw6o+aM
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl6CEmAACgkQ3SOs138+
+s6GhMA//QXptmnJALfUYiX+M0Q8w8ZlqrU3s3Zth8HvqhMnhoYTCsuwQ6Keqpb7s
+ZlMGD21yL8fcL8spiI/cGA3SqrNKdVV9/Ejy4sUteXB5JPDi4n/fU1Ed1+bLMuJF
+7yTY8FL58Z3C/Z0FIWfxjJ+wBGbsO9cSNYuswdKBhzSeVxGR3sDDEmFZSXQ2EKr5
+MgFq/Icb4tR5JykUlojHenbYd6ocfZqfUKKpRG4VUd4hHR5oG5zH8VjNBgkhNYRl
+62ojPYdJ3/WhW6YOcYObFJrH4eQ0fC99FovDc0JfqsSuF4kaM/EAqdqOXs01v5xM
+K5ELLsS0oXlUz/N+u7JCfGgFKg7eiSnT6DJm8SKzoOq+H/Qzc/C31oAG3e1C9yHt
+hjZw8rhTz4EuqhBtctFAQG5ZrLyNV4w8dMBhRclOFVCfLBWYrzc2U5Faqsp2HsNX
+9TVPu9PBvBTi0teUOtmXTCWCB9SbwRemoEwQRSh1UbEUXQeTThUjCnz76j/wR6D3
+4mz2A0RRvtGFiS4DtAF9v108AcfAiGkFyoKEFKNj4xchttpaII9blX47OPaH79C5
+zk7/X5ULp3dUKMnavSSkSW6A7y4Oa641UZoc6LdFhIc1a+KFhwVUsgVG6VBbTwsP
+RJ/0I7RWzfHHnpLmEgBW/NnfGUM+7FvbGI4FjEnmsVMrsK+7PMs=
+=m4iH
+-----END PGP SIGNATURE-----
+
+--yrj/dFKFPuw6o+aM--
