@@ -2,276 +2,177 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73130C2D0ED
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 03:54:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCA26C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 04:06:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4704720786
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 03:54:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DVRSVWWw"
+	by mail.kernel.org (Postfix) with ESMTP id AAAF220732
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 04:06:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729320AbgC3DyU (ORCPT
+        id S1726246AbgC3EGK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Mar 2020 23:54:20 -0400
-Received: from mail-il1-f196.google.com ([209.85.166.196]:39334 "EHLO
-        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728490AbgC3DyU (ORCPT
+        Mon, 30 Mar 2020 00:06:10 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:3234 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725268AbgC3EGK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Mar 2020 23:54:20 -0400
-Received: by mail-il1-f196.google.com with SMTP id r5so14456991ilq.6;
-        Sun, 29 Mar 2020 20:54:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=nJO3nl3i604E+tnowawUh4awNHYK5FpBQBw5ESaGYAI=;
-        b=DVRSVWWwZz07tJQe5qpnuR4/qmpVkxdwi20OAgjTp4H7VCU8lAhsRQycLblcCw53/o
-         nlSDxpyH41addUtXRfdFDEkDN7KM6TJdLhpWDGuFzn0DlE4QJjavT3Ob88vEF2110TDb
-         Jtx047IbtphxZawceekT56fpUW3UpM1Fxl7SlbPaefa5YnwRlgAJL+BV3jaPE7+1dpBU
-         5b6UdR4MsEQ116LL6uoNh+q/YyLsg4W/jO04l+un6RQYmT82rvXUiKv2SW+M/zKY9Ahe
-         19PmZ8P3SvBbcVsOqgZlXXUkUeQiKYS9GpPhq0dmcnJBP5vWQ0l6HV/EfLQ9Tv+Q+jOF
-         u8wA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=nJO3nl3i604E+tnowawUh4awNHYK5FpBQBw5ESaGYAI=;
-        b=oJK8lLL13DFGHwQS/h8FFi7iuUU6eDVyIKNA5PDLVkB+p4Ir4y21hX4gfwGFVeTKV5
-         BtptOx3fVC+ZaHcoTcs8gsR8x1QcSCwZ3RS6mYmDQNIuGchug4JalkhqQGXKdIVcxhhH
-         gJ7OB7P1r7UQtwk7EgXgUWkmt4JAUgs2R2lrYrR2xiD9t8EnbVc74yaZpYCMoiqfrSHw
-         9sj6NHpxJk817VXQpNe1d/h+vqusfuLYlh8kNyRA7s4pq0WxmzynH3Nn6FEJxkC8Yu5Q
-         Z/3rSB7rARtoMcqJ9ETY0n0vi6ipYBa+0uqXadN8mki1y2/7pTsfzlnghi+vz9AziBFm
-         /E2Q==
-X-Gm-Message-State: ANhLgQ0TGYY3u1x6YaWbsIPS3r+UOeRMFxh3KQ+D9bIGJJGfrcbKoE43
-        oYDVK7T51uj27xJqbEjPUc5N6CLy77SEl8FtYXn6sw==
-X-Google-Smtp-Source: ADFU+vsVS9j1Qrg4KVLw/iYbdQYFqVoUONgAz2+qPEnRsBGDuuBDagEfRiuuUQ661xpQNWsUsjd39NmNnyzhZNMV6DE=
-X-Received: by 2002:a92:8bc2:: with SMTP id i185mr9650563ild.273.1585540458401;
- Sun, 29 Mar 2020 20:54:18 -0700 (PDT)
+        Mon, 30 Mar 2020 00:06:10 -0400
+Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02U42YhR005885
+        for <linux-kernel@vger.kernel.org>; Mon, 30 Mar 2020 00:06:09 -0400
+Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 3022jtcqp5-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Mon, 30 Mar 2020 00:06:09 -0400
+Received: from localhost
+        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <sourabhjain@linux.ibm.com>;
+        Mon, 30 Mar 2020 05:06:02 +0100
+Received: from b06avi18626390.portsmouth.uk.ibm.com (9.149.26.192)
+        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Mon, 30 Mar 2020 05:05:58 +0100
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 02U44xlB42598674
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 30 Mar 2020 04:04:59 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 97000AE057;
+        Mon, 30 Mar 2020 04:06:02 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id C8740AE045;
+        Mon, 30 Mar 2020 04:05:59 +0000 (GMT)
+Received: from localhost.localdomain.com (unknown [9.85.80.7])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Mon, 30 Mar 2020 04:05:59 +0000 (GMT)
+From:   Sourabh Jain <sourabhjain@linux.ibm.com>
+To:     mpe@ellerman.id.au
+Cc:     hbathini@linux.ibm.com, mahesh@linux.vnet.ibm.com,
+        linux-kernel@vger.kernel.org, linuxppc-dev@ozlabs.org,
+        Sourabh Jain <sourabhjain@linux.ibm.com>
+Subject: [PATCH] powerpc/fadump: fix race between pstore write and fadump crash trigger
+Date:   Mon, 30 Mar 2020 09:35:49 +0530
+X-Mailer: git-send-email 2.21.1
 MIME-Version: 1.0
-References: <20200330143529.4dafeb34@canb.auug.org.au>
-In-Reply-To: <20200330143529.4dafeb34@canb.auug.org.au>
-From:   "H.J. Lu" <hjl.tools@gmail.com>
-Date:   Sun, 29 Mar 2020 20:53:42 -0700
-Message-ID: <CAMe9rOqnRCEdHhSHOT=Ut11D3O2WhjiFYhvPnaU5dANZNPE-=A@mail.gmail.com>
-Subject: Re: linux-next: build failure after merge of the tip tree
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@elte.hu>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Borislav Petkov <bp@suse.de>, Kees Cook <keescook@chromium.org>
-Content-Type: multipart/mixed; boundary="000000000000cd418a05a20a6782"
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 20033004-0012-0000-0000-0000039AAD75
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20033004-0013-0000-0000-000021D7B3A8
+Message-Id: <20200330040549.27276-1-sourabhjain@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.645
+ definitions=2020-03-29_10:2020-03-27,2020-03-29 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_spam_definite policy=outbound score=100 mlxscore=0
+ adultscore=0 bulkscore=0 phishscore=0 malwarescore=0 priorityscore=1501
+ suspectscore=0 clxscore=1011 mlxlogscore=623 impostorscore=0
+ lowpriorityscore=0 spamscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2003020000 definitions=main-2003300032
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---000000000000cd418a05a20a6782
-Content-Type: text/plain; charset="UTF-8"
+When we enter into fadump crash path via system reset we fail to update
+the pstore.
 
-On Sun, Mar 29, 2020 at 8:35 PM Stephen Rothwell <sfr@canb.auug.org.au> wrote:
->
-> Hi all,
->
-> After merging the tip tree, today's linux-next build (powerpc
-> ppc64_defconfig) failed like this:
->
-> ld: warning: discarding dynamic section .rela.data.rel.ro
->
-> lots of similar warnings, followed by
->
-> `.exit.text' referenced in section `__bug_table' of crypto/algboss.o: defined in discarded section `.exit.text' of crypto/algboss.o
-> `.exit.text' referenced in section `__bug_table' of drivers/macintosh/windfarm_core.o: defined in discarded section `.exit.text' of drivers/macintosh/windfarm_core.o
-> `.exit.text' referenced in section `__bug_table' of drivers/i2c/i2c-core-base.o: defined in discarded section `.exit.text' of drivers/i2c/i2c-core-base.o
->
-> Caused by commit
->
->   72cb2113c1bb ("vmlinux.lds: Discard .note.gnu.property sections in generic NOTES")
->
-> I don't see why, but reverting that commit fixes the build warnings
-> and failure.
+On the system reset path we first update the pstore then we go for fadump
+crash. But the problem here is when all the CPUs try to get the pstore
+lock to initiate the pstore write, only one CPUs will acquire the lock
+and proceed with the pstore write. Meanwhile, other CPUs who did not get
+the lock, do not wait for their turn to write to the pstore and simply
+proceed with the next operation which is fadump crash. One of the CPU who
+proceeded with fadump crash path, triggers the crash and do not wait for
+the CPU who gets the pstore lock to complete the pstore update.
 
-Please see my enclosing email.   Is anyone from PPC community reading emails?
+Timeline diagram to depicts the sequence of events that leads to an
+unsuccessful pstore update when we hit fadump crash path via system reset.
 
-> I have reverted that commit for today.
-> --
-> Cheers,
-> Stephen Rothwell
+                 1    2     3    ...      n   CPU Threads
+                 |    |     |             |
+                 |    |     |             |
+ Reached to   -->|--->|---->| ----------->|
+ system reset    |    |     |             |
+ path            |    |     |             |
+                 |    |     |             |
+ Try to       -->|--->|---->|------------>|
+ acquire the     |    |     |             |
+ pstore lock     |    |     |             |
+                 |    |     |             |
+                 |    |     |             |
+ Got the      -->| +->|     |             |<-+
+ pstore lock     | |  |     |             |  |-->  Didn't get the
+                 | --------------------------+     lock and moving
+                 |    |     |             |        ahead on fadump
+                 |    |     |             |        crash path
+                 |    |     |             |
+  Begins the  -->|    |     |             |
+  process to     |    |     |             |<-- Got the chance to
+  update the     |    |     |             |    trigger the crash
+  pstore         | -> |     |    ... <-   |
+                 | |  |     |         |   |
+                 | |  |     |         |   |<-- Triggers the
+                 | |  |     |         |   |    crash
+                 | |  |     |         |   |      ^
+                 | |  |     |         |   |      |
+  Writing to  -->| |  |     |         |   |      |
+  pstore         | |  |     |         |   |      |
+                   |                  |          |
+       ^           |__________________|          |
+       |               CPU Relax                 |
+       |                                         |
+       +-----------------------------------------+
+                          |
+                          v
+            Race: crash triggered before pstore
+                  update completes
 
+In order to avoid the race between the CPU who proceeds with the pstore
+and the CPU who triggers the crash, a delay of 100 milliseconds is added
+on fadump crash path to allow pstore update to complete before we trigger
+the crash.
 
+Signed-off-by: Sourabh Jain <sourabhjain@linux.ibm.com>
+---
+ arch/powerpc/kernel/fadump.c | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
 
+diff --git a/arch/powerpc/kernel/fadump.c b/arch/powerpc/kernel/fadump.c
+index ff0114aeba9b..9872bb528389 100644
+--- a/arch/powerpc/kernel/fadump.c
++++ b/arch/powerpc/kernel/fadump.c
+@@ -32,6 +32,15 @@
+ #include <asm/fadump-internal.h>
+ #include <asm/setup.h>
+ 
++
++/* The CPU who acquired the lock to trigger the fadump crash should
++ * wait for other CPUs to complete their tasks (for example updating
++ * pstore) before triggering the crash.
++ *
++ * The timeout is in milliseconds.
++ */
++#define CRASH_TIMEOUT		100
++
+ static struct fw_dump fw_dump;
+ 
+ static void __init fadump_reserve_crash_area(u64 base);
+@@ -634,6 +643,13 @@ void crash_fadump(struct pt_regs *regs, const char *str)
+ 
+ 	fdh->online_mask = *cpu_online_mask;
+ 
++
++	/* If we reached here via system reset path then let's
++	 * wait for other CPU to complete the pstore update.
++	 */
++	if (TRAP(regs) == 0x100)
++		mdelay(CRASH_TIMEOUT);
++
+ 	fw_dump.ops->fadump_trigger(fdh, str);
+ }
+ 
 -- 
-H.J.
+2.21.1
 
---000000000000cd418a05a20a6782
-Content-Type: message/rfc822; 
-	name="RFA [PPC kernel] Avoid upcoming PPC kernel build failure.eml"
-Content-Disposition: attachment; 
-	filename="RFA [PPC kernel] Avoid upcoming PPC kernel build failure.eml"
-Content-ID: <f_k8dxryvo0>
-X-Attachment-Id: f_k8dxryvo0
-
-MIME-Version: 1.0
-Date: Fri, 27 Mar 2020 10:36:36 -0700
-References: <202002050743.dc2PtIsm%lkp@intel.com>
-	<CAMe9rOrJEVL8Qw3fgm9FeDjwGZNxGoZ-OO6bfmV=gtK=g68cvQ@mail.gmail.com>
-	<87wo901jm0.fsf@mpe.ellerman.id.au>
-	<CAMe9rOrFV0E9N8f-NZeOP+=SSERK-ptUoZrJiS3wgxqjpLhP3Q@mail.gmail.com>
-	<d10b81d0c4f97140bf3e2a96967ebc2711042d3b.camel@intel.com>
-In-Reply-To: <d10b81d0c4f97140bf3e2a96967ebc2711042d3b.camel@intel.com>
-Message-ID: <CAMe9rOpKPYe55=9c1smGwBZBhRbk8PjpdJZ-xQ7RDXjN81gKug@mail.gmail.com>
-Subject: RFA [PPC kernel] Avoid upcoming PPC kernel build failure
-From: "H.J. Lu" <hjl.tools@gmail.com>
-To: Yu-cheng Yu <yu-cheng.yu@intel.com>
-Cc: Michael Ellerman <mpe@ellerman.id.au>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, 
-	Paul Mackerras <paulus@samba.org>, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, 
-	Kees Cook <keescook@chromium.org>
-Content-Type: text/plain; charset="UTF-8"
-
-On Fri, Mar 27, 2020 at 7:54 AM Yu-cheng Yu <yu-cheng.yu@intel.com> wrote:
->
-> On Thu, 2020-02-06 at 04:55 -0800, H.J. Lu wrote:
-> > On Wed, Feb 5, 2020 at 7:26 PM Michael Ellerman <mpe@ellerman.id.au> wrote:
-> > > "H.J. Lu" <hjl.tools@gmail.com> writes:
-> > > > On Tue, Feb 4, 2020 at 3:37 PM kbuild test robot <lkp@intel.com> wrote:
-> > > > > tree:   https://github.com/yyu168/linux_cet.git cet
-> > > > > head:   bba707cc4715c1036b6561ab38b16747f9c49cfa
-> > > > > commit: 71bb971dd76eeacd351690f28864ad5c5bec3691 [55/58] Discard .note.gnu.property sections in generic NOTES
-> > > > > config: powerpc-rhel-kconfig (attached as .config)
-> > > > > compiler: powerpc64le-linux-gcc (GCC) 7.5.0
-> > > > > reproduce:
-> > > > >         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
-> > > > >         chmod +x ~/bin/make.cross
-> > > > >         git checkout 71bb971dd76eeacd351690f28864ad5c5bec3691
-> > > > >         # save the attached .config to linux build tree
-> > > > >         GCC_VERSION=7.5.0 make.cross ARCH=powerpc
-> > > > >
-> > > > > If you fix the issue, kindly add following tag
-> > > > > Reported-by: kbuild test robot <lkp@intel.com>
-> > > > >
-> > > > > All warnings (new ones prefixed by >>):
-> > > > >
-> > > > >    powerpc64le-linux-ld: warning: discarding dynamic section .rela___ksymtab_gpl+__wait_rcu_gp
-> > > >
-> > > > arch/powerpc/kernel/vmlinux.lds.S has
-> > > >
-> > > >  .rela.dyn : AT(ADDR(.rela.dyn) - (0xc000000000000000 -0x00000000))
-> > > >  {
-> > > >   __rela_dyn_start = .;
-> > > >   *(.rela*) <<<<<<<< Keep .rela* sections
-> > > >  }
-> > >
-> > > The above is inside #ifdef CONFIG_RELOCATABLE
-> > >
-> > > > ...
-> > > >  /DISCARD/ : {
-> > > >   *(*.EMB.apuinfo)
-> > > >   *(.glink .iplt .plt .rela* .comment)
-> > > >                            ^^^^ Discard  .rela* sections.  But it is ignored.
-> > > >   *(.gnu.version*)
-> > > >   *(.gnu.attributes)
-> > > >   *(.eh_frame)
-> > > >  }
-> > >
-> > > But that is not #ifdef'ed at all.
-> > >
-> > > > With my
-> > > >
-> > > > ommit 71bb971dd76eeacd351690f28864ad5c5bec3691
-> > > > Author: H.J. Lu <hjl.tools@gmail.com>
-> > > > Date:   Thu Jan 30 12:39:09 2020 -0800
-> > > >
-> > > >     Discard .note.gnu.property sections in generic NOTES
-> > > >
-> > > >     With the command-line option, -mx86-used-note=yes, the x86 assembler
-> > > >     in binutils 2.32 and above generates a program property note in a note
-> > > >     section, .note.gnu.property, to encode used x86 ISAs and features.  But
-> > > >     kernel linker script only contains a single NOTE segment:
-> > > >
-> > > > /DISCARD/ : { *(.note.gnu.property) }
-> > > >
-> > > > is placed before
-> > > >
-> > > > .rela.dyn : AT(ADDR(.rela.dyn) - (0xc000000000000000 -0x00000000))
-> > > >  {
-> > > >   __rela_dyn_start = .;
-> > > >   *(.rela*) <<<<<<<< Keep .rela* sections
-> > > >  }
-> > > >
-> > > > Then .rela* in
-> > > >
-> > > >  /DISCARD/ : {
-> > > >   *(*.EMB.apuinfo)
-> > > >   *(.glink .iplt .plt .rela* .comment)
-> > > >   *(.gnu.version*)
-> > > >   *(.gnu.attributes)
-> > > >   *(.eh_frame)
-> > > >  }
-> > > >
-> > > > is honored.  Can someone from POWERPC comment on it?
-> > >
-> > > Hmm OK. I'm not really a toolchain person.
-> > >
-> > > The comment on DISCARDS says:
-> > >
-> > >    * Some archs want to discard exit text/data at runtime rather than
-> > >    * link time due to cross-section references such as alt instructions,
-> > >    * bug table, eh_frame, etc.  DISCARDS must be the last of output
-> > >    * section definitions so that such archs put those in earlier section
-> > >    * definitions.
-> > >    */
-> > >
-> > > But I guess you're changing those semantics in your series.
-> > >
-> > > This seems to fix the warning for me?
-> > >
-> > > diff --git a/arch/powerpc/kernel/vmlinux.lds.S b/arch/powerpc/kernel/vmlinux.lds.S
-> > > index b4c89a1acebb..076b3e8a849d 100644
-> > > --- a/arch/powerpc/kernel/vmlinux.lds.S
-> > > +++ b/arch/powerpc/kernel/vmlinux.lds.S
-> > > @@ -365,9 +365,12 @@ SECTIONS
-> > >         DISCARDS
-> > >         /DISCARD/ : {
-> > >                 *(*.EMB.apuinfo)
-> > > -               *(.glink .iplt .plt .rela* .comment)
-> > > +               *(.glink .iplt .plt .comment)
-> > >                 *(.gnu.version*)
-> > >                 *(.gnu.attributes)
-> > >                 *(.eh_frame)
-> > > +#ifndef CONFIG_RELOCATABLE
-> > > +               *(.rela*)
-> > > +#endif
-> > >         }
-> > >  }
-> > >
-> > >
-> > > cheers
-> >
-> > This looks correct me.
-> >
-> > Reviewed-by: H.J. Lu <hjl.tools@gmail.com>
-> >
-> > Thanks.
-> >
->
-> Has this been merged into any branch yet?  I just checked the tip tree and did
-> not see it.
->
-
-FYI, my patches have been queued on x86/build branch.   Could someone
-from PPC community add this patch to PPC kernel to avoid upcoming PPC
-kernel build failure?
-
-Thanks.
-
--- 
-H.J.
-
---000000000000cd418a05a20a6782--
