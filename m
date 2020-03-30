@@ -2,119 +2,314 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CCB8C2D0EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 13:54:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E298CC2D0EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 13:58:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F288D206CC
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 13:54:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ACC0B206CC
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 13:58:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b="ddbV1GfR"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="JIk0r7M5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728678AbgC3Nyh (ORCPT
+        id S1728503AbgC3N6a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 09:54:37 -0400
-Received: from mx1.tq-group.com ([62.157.118.193]:50882 "EHLO mx1.tq-group.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725268AbgC3Nyd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 09:54:33 -0400
-IronPort-SDR: oGXIKI9EGh+fVJpyD9YJqx6xqBN/HkJd+f7H8MGqr/yMg66J4RJlUaWzREy5ukW2jHssjHSOH5
- KN/87vYXunlmHP9YSKOc+LafTYwLheRfAF+VfXx+gkRO975yZ9MO4sEhQ8llW5K3bB4R2am7TM
- pQp1spHPlzl985T9kSsCQnvLpV1+A8y1oUFA1gi4+9txd/dIQ9KJlezlUVSah0xbiVb6Q3Umkb
- dgTQQnq5hinHLJwucWR7NB9SoI4zGSt46vDr+mwYyE+ErqJaLDG0W4DqWNHzHHIpl6e2VU205I
- 4kg=
-X-IronPort-AV: E=Sophos;i="5.72,324,1580770800"; 
-   d="scan'208";a="11606920"
-Received: from unknown (HELO tq-pgp-pr1.tq-net.de) ([192.168.6.15])
-  by mx1-pgp.tq-group.com with ESMTP; 30 Mar 2020 15:54:28 +0200
-Received: from mx1.tq-group.com ([192.168.6.7])
-  by tq-pgp-pr1.tq-net.de (PGP Universal service);
-  Mon, 30 Mar 2020 15:54:28 +0200
-X-PGP-Universal: processed;
-        by tq-pgp-pr1.tq-net.de on Mon, 30 Mar 2020 15:54:28 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
-  t=1585576468; x=1617112468;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references;
-  bh=RTtPPxYYq8t3b00GlV/IZO1O9+uF2d8Ca1m7XVY2DW8=;
-  b=ddbV1GfRNFhkyoePnNIkP+HO9J9SPiPr7qDzp0GIL7e1I/VvDKRS0krh
-   ExHbo3c7+lDhmrA5lyreeo4ZgBSRKFB7zPEcYBy+WqKdNc5o2qMfwMgXW
-   ZpdfXTUxVjlxGvbrc18NQUU41TWqFVJ5Bn0Wbd4cfQIGyRh90eR6c30UQ
-   +uC8gZ74kELRI43lxyGJJnex84fv2Pc99sa6LHUz6IMt1xHQej+f2r2PG
-   YrUAgkApjVn3JTIMfGDTgWE56tX/v7RljAqDhG0IlZkczLN5xI0nrYmOW
-   y0tkR35dN4YQH8PUk0GwlluAG3InlD4+9Q/S7gljawvNOqCjwdOW6Fapw
-   Q==;
-IronPort-SDR: flzfqq2x4NGX/BErTh3OgyX0pn0uX7s4Q9Hda0z7nZUTPqUV5qa7agyhmFK4aRPEIsMxM5J+tM
- QqEuetvKOjw8NG2Y1VDDxwQWMu/FRfM7xHRGpqFq1xM4d3YiiWH88VVUAAL/9dUmzBe42XiGDf
- b0ZTFwW0V/I6eVwFgd4vbgLoPjhY/4111MVRa77oBV/FYO94fy330moDmmzcsyGHjkcmaquCjx
- 5PmPyR+nm/GTy8yRiEZcpebnR7mQisrhvw6k+a+Svo8qvbWzDPQje4Y714l8lWBXkNmGxmzrkY
- TwA=
-X-IronPort-AV: E=Sophos;i="5.72,324,1580770800"; 
-   d="scan'208";a="11606919"
-Received: from vtuxmail01.tq-net.de ([10.115.0.20])
-  by mx1.tq-group.com with ESMTP; 30 Mar 2020 15:54:28 +0200
-Received: from schifferm-ubuntu4.tq-net.de (schifferm-ubuntu4.tq-net.de [10.117.49.26])
-        by vtuxmail01.tq-net.de (Postfix) with ESMTPA id 1FCFE280065;
-        Mon, 30 Mar 2020 15:54:33 +0200 (CEST)
-From:   Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
-To:     andrew@lunn.ch, vivien.didelot@gmail.com, f.fainelli@gmail.com,
-        davem@davemloft.net, kuba@kernel.org
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
-Subject: [PATCH net-next 3/4] net: dsa: mv88e6xxx: implement get_phy_address
-Date:   Mon, 30 Mar 2020 15:53:44 +0200
-Message-Id: <20200330135345.4361-3-matthias.schiffer@ew.tq-group.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200330135345.4361-1-matthias.schiffer@ew.tq-group.com>
-References: <20200330135345.4361-1-matthias.schiffer@ew.tq-group.com>
+        Mon, 30 Mar 2020 09:58:30 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:54390 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725268AbgC3N63 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Mar 2020 09:58:29 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02UDdY7V026505;
+        Mon, 30 Mar 2020 13:40:06 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2020-01-29;
+ bh=ydgsqhArEdAPBPPymxIJ1axqtgIEVoHgn8s/XOMQLYI=;
+ b=JIk0r7M5s9Uq99WtXRS46PnzFnilicuzjGFxo7Wa0XZSJ0x/c3rHtO/pjGsOBUC1vNZp
+ 8ZPhECpjPZUXulqaWvnZOBVdq8pVEMFcnenOL9fhdG4SbDVnJeztACxMvWLCUm/cdJBx
+ LIbcDxNuv4yQquxZKwwqkFaBbLqciRdz1DAt1rIWtDbO8ZwpSfRQRaGD6YkiTWno6Bph
+ Nme82sUXLu7/vqJ22se8dHScQzAf/e1UYNUwcR0/odqg2wNMUFKy0x7g+oNtc3O4C67v
+ ftXBmYr4dBya+d5fGBTzwXh07pcY7xK6WZc2fYTh3Z6BRzsHJnkXp6nOL+kVF+jvK22S wg== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2130.oracle.com with ESMTP id 303ceusq76-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 30 Mar 2020 13:40:06 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02UDauMf050806;
+        Mon, 30 Mar 2020 13:40:05 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by aserp3020.oracle.com with ESMTP id 302gc9bhcm-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 30 Mar 2020 13:40:05 +0000
+Received: from abhmp0017.oracle.com (abhmp0017.oracle.com [141.146.116.23])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 02UDe0El004741;
+        Mon, 30 Mar 2020 13:40:00 GMT
+Received: from char.us.oracle.com (/10.152.32.25)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 30 Mar 2020 06:39:59 -0700
+Received: by char.us.oracle.com (Postfix, from userid 1000)
+        id D84776A00D7; Mon, 30 Mar 2020 09:40:04 -0400 (EDT)
+Date:   Mon, 30 Mar 2020 09:40:04 -0400
+From:   Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
+To:     Kairui Song <kasong@redhat.com>, anthony.yznaga@oracle.com,
+        Jan Setje-Eilers <jan.setjeeilers@oracle.com>
+Cc:     Dave Young <dyoung@redhat.com>, Alexander Graf <graf@amazon.com>,
+        iommu@lists.linux-foundation.org,
+        the arch/x86 maintainers <x86@kernel.org>,
+        Christoph Hellwig <hch@lst.de>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Robin Murphy <robin.murphy@arm.com>, linux-doc@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>, dwmw@amazon.com,
+        benh@amazon.com, Jan Kiszka <jan.kiszka@siemens.com>,
+        alcioa@amazon.com, aggh@amazon.com, aagch@amazon.com,
+        dhr@amazon.com, Laszlo Ersek <lersek@redhat.com>,
+        Baoquan He <bhe@redhat.com>, Lianbo Jiang <lijiang@redhat.com>,
+        brijesh.singh@amd.com,
+        "Lendacky, Thomas" <thomas.lendacky@amd.com>,
+        kexec@lists.infradead.org
+Subject: Re: [PATCH] swiotlb: Allow swiotlb to live at pre-defined address
+Message-ID: <20200330134004.GA31026@char.us.oracle.com>
+References: <20200326162922.27085-1-graf@amazon.com>
+ <20200328115733.GA67084@dhcp-128-65.nay.redhat.com>
+ <CACPcB9d_Pz9SRhSsRzqygRR6waV7r8MnGcCP952svnZtpFaxnQ@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CACPcB9d_Pz9SRhSsRzqygRR6waV7r8MnGcCP952svnZtpFaxnQ@mail.gmail.com>
+User-Agent: Mutt/1.9.1 (2017-09-22)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9575 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 spamscore=0 malwarescore=0
+ mlxlogscore=999 adultscore=0 suspectscore=0 phishscore=0 mlxscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2003300130
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9575 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 adultscore=0
+ clxscore=1011 phishscore=0 lowpriorityscore=0 spamscore=0 malwarescore=0
+ suspectscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 bulkscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2003300130
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Avoid the need to specify a PHY for each physical port in the device tree
-when phy_base_addr is not 0 (6250 and 6341 families).
+On Mon, Mar 30, 2020 at 02:06:01PM +0800, Kairui Song wrote:
+> On Sat, Mar 28, 2020 at 7:57 PM Dave Young <dyoung@redhat.com> wrote:
+> >
+> > On 03/26/20 at 05:29pm, Alexander Graf wrote:
+> > > The swiotlb is a very convenient fallback mechanism for bounce buffering of
+> > > DMAable data. It is usually used for the compatibility case where devices
+> > > can only DMA to a "low region".
+> > >
+> > > However, in some scenarios this "low region" may be bound even more
+> > > heavily. For example, there are embedded system where only an SRAM region
+> > > is shared between device and CPU. There are also heterogeneous computing
+> > > scenarios where only a subset of RAM is cache coherent between the
+> > > components of the system. There are partitioning hypervisors, where
+> > > a "control VM" that implements device emulation has limited view into a
+> > > partition's memory for DMA capabilities due to safety concerns.
+> > >
+> > > This patch adds a command line driven mechanism to move all DMA memory into
+> > > a predefined shared memory region which may or may not be part of the
+> > > physical address layout of the Operating System.
+> > >
+> > > Ideally, the typical path to set this configuration would be through Device
+> > > Tree or ACPI, but neither of the two mechanisms is standardized yet. Also,
+> > > in the x86 MicroVM use case, we have neither ACPI nor Device Tree, but
+> > > instead configure the system purely through kernel command line options.
+> > >
+> > > I'm sure other people will find the functionality useful going forward
+> > > though and extend it to be triggered by DT/ACPI in the future.
+> >
+> > Hmm, we have a use case for kdump, this maybe useful.  For example
+> > swiotlb is enabled by default if AMD SME/SEV is active, and in kdump
+> > kernel we have to increase the crashkernel reserved size for the extra
+> > swiotlb requirement.  I wonder if we can just reuse the old kernel's
+> > swiotlb region and pass the addr to kdump kernel.
+> >
+> 
+> Yes, definitely helpful for kdump kernel. This can help reduce the
+> crashkernel value.
+> 
+> Previously I was thinking about something similar, play around the
+> e820 entry passed to kdump and let it place swiotlb in wanted region.
+> Simply remap it like in this patch looks much cleaner.
+> 
+> If this patch is acceptable, one more patch is needed to expose the
+> swiotlb in iomem, so kexec-tools can pass the right kernel cmdline to
+> second kernel.
 
-This change should be backwards-compatible with existing device trees,
-as it only adds sensible defaults where explicit definitions were
-required before.
+We seem to be passsing a lot of data to kexec.. Perhaps something
+of a unified way since we seem to have a lot of things to pass - disabling
+IOMMU, ACPI RSDT address, and then this.
 
-Signed-off-by: Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
----
- drivers/net/dsa/mv88e6xxx/chip.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+CC-ing Anthony who is working on something - would you by any chance
+have a doc on this?
 
-diff --git a/drivers/net/dsa/mv88e6xxx/chip.c b/drivers/net/dsa/mv88e6xxx/chip.c
-index 221593261e8f..228c1b085b66 100644
---- a/drivers/net/dsa/mv88e6xxx/chip.c
-+++ b/drivers/net/dsa/mv88e6xxx/chip.c
-@@ -5379,6 +5379,13 @@ static enum dsa_tag_protocol mv88e6xxx_get_tag_protocol(struct dsa_switch *ds,
- 	return chip->info->tag_protocol;
- }
- 
-+static int mv88e6xxx_get_phy_address(struct dsa_switch *ds, int port)
-+{
-+	struct mv88e6xxx_chip *chip = ds->priv;
-+
-+	return chip->phy_base_addr + port;
-+}
-+
- static int mv88e6xxx_port_mdb_prepare(struct dsa_switch *ds, int port,
- 				      const struct switchdev_obj_port_mdb *mdb)
- {
-@@ -5509,6 +5516,7 @@ static const struct dsa_switch_ops mv88e6xxx_switch_ops = {
- 	.get_tag_protocol	= mv88e6xxx_get_tag_protocol,
- 	.setup			= mv88e6xxx_setup,
- 	.teardown		= mv88e6xxx_teardown,
-+	.get_phy_address	= mv88e6xxx_get_phy_address,
- 	.phylink_validate	= mv88e6xxx_validate,
- 	.phylink_mac_link_state	= mv88e6xxx_serdes_pcs_get_state,
- 	.phylink_mac_config	= mv88e6xxx_mac_config,
--- 
-2.17.1
-
+Thanks!
+> 
+> > >
+> > > Signed-off-by: Alexander Graf <graf@amazon.com>
+> > > ---
+> > >  Documentation/admin-guide/kernel-parameters.txt |  3 +-
+> > >  Documentation/x86/x86_64/boot-options.rst       |  4 ++-
+> > >  kernel/dma/swiotlb.c                            | 46 +++++++++++++++++++++++--
+> > >  3 files changed, 49 insertions(+), 4 deletions(-)
+> > >
+> > > diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+> > > index c07815d230bc..d085d55c3cbe 100644
+> > > --- a/Documentation/admin-guide/kernel-parameters.txt
+> > > +++ b/Documentation/admin-guide/kernel-parameters.txt
+> > > @@ -4785,11 +4785,12 @@
+> > >                       it if 0 is given (See Documentation/admin-guide/cgroup-v1/memory.rst)
+> > >
+> > >       swiotlb=        [ARM,IA-64,PPC,MIPS,X86]
+> > > -                     Format: { <int> | force | noforce }
+> > > +                     Format: { <int> | force | noforce | addr=<phys addr> }
+> > >                       <int> -- Number of I/O TLB slabs
+> > >                       force -- force using of bounce buffers even if they
+> > >                                wouldn't be automatically used by the kernel
+> > >                       noforce -- Never use bounce buffers (for debugging)
+> > > +                     addr=<phys addr> -- Try to allocate SWIOTLB at defined address
+> > >
+> > >       switches=       [HW,M68k]
+> > >
+> > > diff --git a/Documentation/x86/x86_64/boot-options.rst b/Documentation/x86/x86_64/boot-options.rst
+> > > index 2b98efb5ba7f..ca46c57b68c9 100644
+> > > --- a/Documentation/x86/x86_64/boot-options.rst
+> > > +++ b/Documentation/x86/x86_64/boot-options.rst
+> > > @@ -297,11 +297,13 @@ iommu options only relevant to the AMD GART hardware IOMMU:
+> > >  iommu options only relevant to the software bounce buffering (SWIOTLB) IOMMU
+> > >  implementation:
+> > >
+> > > -    swiotlb=<pages>[,force]
+> > > +    swiotlb=<pages>[,force][,addr=<phys addr>]
+> > >        <pages>
+> > >          Prereserve that many 128K pages for the software IO bounce buffering.
+> > >        force
+> > >          Force all IO through the software TLB.
+> > > +      addr=<phys addr>
+> > > +        Try to allocate SWIOTLB at defined address
+> > >
+> > >  Settings for the IBM Calgary hardware IOMMU currently found in IBM
+> > >  pSeries and xSeries machines
+> > > diff --git a/kernel/dma/swiotlb.c b/kernel/dma/swiotlb.c
+> > > index c19379fabd20..83da0caa2f93 100644
+> > > --- a/kernel/dma/swiotlb.c
+> > > +++ b/kernel/dma/swiotlb.c
+> > > @@ -46,6 +46,7 @@
+> > >  #include <linux/init.h>
+> > >  #include <linux/memblock.h>
+> > >  #include <linux/iommu-helper.h>
+> > > +#include <linux/io.h>
+> > >
+> > >  #define CREATE_TRACE_POINTS
+> > >  #include <trace/events/swiotlb.h>
+> > > @@ -102,6 +103,12 @@ unsigned int max_segment;
+> > >  #define INVALID_PHYS_ADDR (~(phys_addr_t)0)
+> > >  static phys_addr_t *io_tlb_orig_addr;
+> > >
+> > > +/*
+> > > + * The TLB phys addr may be defined on the command line. Store it here if it is.
+> > > + */
+> > > +static phys_addr_t io_tlb_addr = INVALID_PHYS_ADDR;
+> > > +
+> > > +
+> > >  /*
+> > >   * Protect the above data structures in the map and unmap calls
+> > >   */
+> > > @@ -119,11 +126,23 @@ setup_io_tlb_npages(char *str)
+> > >       }
+> > >       if (*str == ',')
+> > >               ++str;
+> > > -     if (!strcmp(str, "force")) {
+> > > +     if (!strncmp(str, "force", 5)) {
+> > >               swiotlb_force = SWIOTLB_FORCE;
+> > > -     } else if (!strcmp(str, "noforce")) {
+> > > +             str += 5;
+> > > +     } else if (!strncmp(str, "noforce", 7)) {
+> > >               swiotlb_force = SWIOTLB_NO_FORCE;
+> > >               io_tlb_nslabs = 1;
+> > > +             str += 7;
+> > > +     }
+> > > +
+> > > +     if (*str == ',')
+> > > +             ++str;
+> > > +     if (!strncmp(str, "addr=", 5)) {
+> > > +             char *addrstr = str + 5;
+> > > +
+> > > +             io_tlb_addr = kstrtoul(addrstr, 0, &str);
+> > > +             if (addrstr == str)
+> > > +                     io_tlb_addr = INVALID_PHYS_ADDR;
+> > >       }
+> > >
+> > >       return 0;
+> > > @@ -239,6 +258,25 @@ int __init swiotlb_init_with_tbl(char *tlb, unsigned long nslabs, int verbose)
+> > >       return 0;
+> > >  }
+> > >
+> > > +static int __init swiotlb_init_io(int verbose, unsigned long bytes)
+> > > +{
+> > > +     unsigned __iomem char *vstart;
+> > > +
+> > > +     if (io_tlb_addr == INVALID_PHYS_ADDR)
+> > > +             return -EINVAL;
+> > > +
+> > > +     vstart = memremap(io_tlb_addr, bytes, MEMREMAP_WB);
+> > > +     if (!vstart)
+> > > +             return -EINVAL;
+> > > +
+> > > +     if (swiotlb_init_with_tbl(vstart, io_tlb_nslabs, verbose)) {
+> > > +             memunmap(vstart);
+> > > +             return -EINVAL;
+> > > +     }
+> > > +
+> > > +     return 0;
+> > > +}
+> > > +
+> > >  /*
+> > >   * Statically reserve bounce buffer space and initialize bounce buffer data
+> > >   * structures for the software IO TLB used to implement the DMA API.
+> > > @@ -257,6 +295,10 @@ swiotlb_init(int verbose)
+> > >
+> > >       bytes = io_tlb_nslabs << IO_TLB_SHIFT;
+> > >
+> > > +     /* Map IO TLB from device memory */
+> > > +     if (!swiotlb_init_io(verbose, bytes))
+> > > +             return;
+> > > +
+> > >       /* Get IO TLB memory from the low pages */
+> > >       vstart = memblock_alloc_low(PAGE_ALIGN(bytes), PAGE_SIZE);
+> > >       if (vstart && !swiotlb_init_with_tbl(vstart, io_tlb_nslabs, verbose))
+> > > --
+> > > 2.16.4
+> > >
+> > >
+> > >
+> > >
+> > > Amazon Development Center Germany GmbH
+> > > Krausenstr. 38
+> > > 10117 Berlin
+> > > Geschaeftsfuehrung: Christian Schlaeger, Jonathan Weiss
+> > > Eingetragen am Amtsgericht Charlottenburg unter HRB 149173 B
+> > > Sitz: Berlin
+> > > Ust-ID: DE 289 237 879
+> > >
+> > >
+> > >
+> >
+> > Thanks
+> > Dave
+> >
+> 
+> 
+> -- 
+> Best Regards,
+> Kairui Song
+> 
