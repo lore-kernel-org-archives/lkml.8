@@ -2,170 +2,139 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87199C43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 07:51:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3937C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 07:53:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 507BD2073B
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 07:51:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="W2Ny2ePV"
+	by mail.kernel.org (Postfix) with ESMTP id CD8872073B
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 07:53:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729554AbgC3HvK (ORCPT
+        id S1729565AbgC3Hxq convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 03:51:10 -0400
-Received: from mail-wm1-f47.google.com ([209.85.128.47]:36108 "EHLO
-        mail-wm1-f47.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728766AbgC3HvJ (ORCPT
+        Mon, 30 Mar 2020 03:53:46 -0400
+Received: from relay12.mail.gandi.net ([217.70.178.232]:43793 "EHLO
+        relay12.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729413AbgC3Hxq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 03:51:09 -0400
-Received: by mail-wm1-f47.google.com with SMTP id g62so20771756wme.1;
-        Mon, 30 Mar 2020 00:51:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to;
-        bh=D28hmkivPrtN/O6CqDfORJ7ebgvb0TsqZVcNv4tRkIs=;
-        b=W2Ny2ePV9Ja2QJ6GQK6MC7elQP/kdG50R/KXXykuMXMC6oBEUJXKfUPdbw+FKNmsK2
-         gmlDW0rcS3c7deM74ehER9TI/fsTbZsK9a5a1eKxiY3kOgWFsV3MiMcpeDGCDLI8b0Ev
-         LHyuy8OKv9wO98Qea+8X62eeBUze02z/Tealt1d7BwjIAnoP7/fF8lQConZXFVPLqEtT
-         ivydsvTVEAXqFBfhMuJzK8FsMfrEf55cqp9lAAQd3oWZvW7amINbqZyYiILfqDy1zXaY
-         eI7Vp+g4Tc+nXCdQ8THKTKqXjBfWol4OHVKy1Xgf58EOK92iL02gdJaygnGcxAxX8gae
-         dySg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to;
-        bh=D28hmkivPrtN/O6CqDfORJ7ebgvb0TsqZVcNv4tRkIs=;
-        b=IHGrIDU8KDY5TN352QQwajsX99QIeHzlwnF+cilUvmo33Fp814tzfEFEq8erpO7PvY
-         Y/DQYYxS3UyX6j49riohstXFkwJ/kH3WmeW7mzrCtvfJfs22gnJB3VJSTkklvPw8V9Cr
-         kZagwG9sY6dbx3pMrJ9lJPTMl3qh9Ar640qS4IUdNfXZTokh7MBZkDd9dIbjAT45QNno
-         9zKTB1jTtyQpXEF51ScJ0xV5WIJQZJZIbHfFjClhhqLqE0lFmRz+scr3eR09RqfzlMoo
-         ioYOdGL3kkxH6fs/2vuLbousHbBZUHQWfaMzt98LVYpCAqfCqJYyXCXCek4iiqTErkuD
-         LkBA==
-X-Gm-Message-State: ANhLgQ0ITYDzvi0Ei28Rd0YNg1pGDUuIIH05QqN+HzDSqWOCET/nX/SO
-        kfk4X17D9AVYvQ8yQyCBQ/fxWcFn05ztdGSLI0BVJ2y0
-X-Google-Smtp-Source: ADFU+vu4YJXTYMM5co0HTqxQQgtJr05IoSoBeW7LatDa0J/GFsOarG1f1culHijFFh6+A4AtT5AENM/NmlQzfaE6t8w=
-X-Received: by 2002:a1c:1bd2:: with SMTP id b201mr12376200wmb.181.1585554667212;
- Mon, 30 Mar 2020 00:51:07 -0700 (PDT)
+        Mon, 30 Mar 2020 03:53:46 -0400
+Received: from xps13 (unknown [91.224.148.103])
+        (Authenticated sender: miquel.raynal@bootlin.com)
+        by relay12.mail.gandi.net (Postfix) with ESMTPSA id E473F200009;
+        Mon, 30 Mar 2020 07:53:42 +0000 (UTC)
+Date:   Mon, 30 Mar 2020 09:53:41 +0200
+From:   Miquel Raynal <miquel.raynal@bootlin.com>
+To:     Xiaoming Ni <nixiaoming@huawei.com>
+Cc:     <richard@nod.at>, <vigneshr@ti.com>,
+        <linux-mtd@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+        <wangle6@huawei.com>, <zhangweimin12@huawei.com>,
+        <yebin10@huawei.com>, <houtao1@huawei.com>
+Subject: Re: [PATCH] mtd:clear cache_state to avoid writing to bad clocks
+ repeatedly
+Message-ID: <20200330095341.284048c3@xps13>
+In-Reply-To: <1585400477-65705-1-git-send-email-nixiaoming@huawei.com>
+References: <1585400477-65705-1-git-send-email-nixiaoming@huawei.com>
+Organization: Bootlin
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-References: <CAM7-yPTUgdbEeVvpWgGfB_eb==m0HPj8FpM0P+P-E0aBr35mgw@mail.gmail.com>
-In-Reply-To: <CAM7-yPTUgdbEeVvpWgGfB_eb==m0HPj8FpM0P+P-E0aBr35mgw@mail.gmail.com>
-From:   Yun Levi <ppbuk5246@gmail.com>
-Date:   Mon, 30 Mar 2020 16:50:56 +0900
-Message-ID: <CAM7-yPSjawc1EhG--dOEJgEQ--qBuk6THGW1Qp4oHYTtDrjhSQ@mail.gmail.com>
-Subject: Fwd: Some happening when using BIND mount with network namespace.
-To:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org
-Content-Type: multipart/mixed; boundary="000000000000b6750905a20db61a"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---000000000000b6750905a20db61a
-Content-Type: text/plain; charset="UTF-8"
+Hi Xiaoming,
 
----------- Forwarded message ---------
-From: Yun Levi <ppbuk5246@gmail.com>
-Date: Mon, Mar 30, 2020 at 3:01 PM
-Subject: Some happening when using BIND mount with network namespace.
-To: Alexander Viro <viro@zeniv.linux.org.uk>, David S. Miller
-<davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>, Guillaume
-Nault <gnault@redhat.com>, Nicolas Dichtel
-<nicolas.dichtel@6wind.com>, Eric Dumazet <edumazet@google.com>, David
-Howells <dhowells@redhat.com>, Thomas Gleixner <tglx@linutronix.de>,
-Li RongQing <lirongqing@baidu.com>, Johannes Berg
-<johannes.berg@intel.com>, <linux-fsdevel@vger.kernel.org>,
-<linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>
+Xiaoming Ni <nixiaoming@huawei.com> wrote on Sat, 28 Mar 2020 21:01:17
++0800:
+
+> The function call process is as follows:
+> 	mtd_blktrans_work()
+> 	  while (1)
+> 	    do_blktrans_request()
+> 	      mtdblock_writesect()
+> 	        do_cached_write()
+> 	          write_cached_data() /*if cache_state is STATE_DIRTY*/
+> 	            erase_write()
+> 
+> write_cached_data() returns failure without modifying cache_state
+> and cache_offset. so when do_cached_write() is called again,
+> write_cached_data() will be called again to perform erase_write()
+> on the same cache_offset.
+> 
+> but if this cache_offset points to a bad block, erase_write() will
+> always return -EIO. Writing to this mtdblk is equivalent to losing
+> the current data, and repeatedly writing to the bad block.
+> 
+> Repeatedly writing a bad block has no real benefits,
+> but brings some negative effects:
+> 1 Lost subsequent data
+> 2 Loss of flash device life
+> 3 erase_write() bad blocks are very time-consuming. for example:
+> 	the function do_erase_oneblock() in chips/cfi_cmdset_0020.c or
+> 	chips/cfi_cmdset_0002.c may take more than 20 seconds to return
+> 
+> Therefore, when erase_write() returns -EIO in write_cached_data(),
+> clear cache_state to avoid writing to bad clocks repeatedly.
+
+                                            blocks
+
+> 
+> Signed-off-by: Xiaoming Ni <nixiaoming@huawei.com>
+> ---
+>  drivers/mtd/mtdblock.c | 11 +++++++----
+>  1 file changed, 7 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/mtd/mtdblock.c b/drivers/mtd/mtdblock.c
+> index 078e0f6..98c25d6 100644
+> --- a/drivers/mtd/mtdblock.c
+> +++ b/drivers/mtd/mtdblock.c
+> @@ -89,8 +89,6 @@ static int write_cached_data (struct mtdblk_dev *mtdblk)
+>  
+>  	ret = erase_write (mtd, mtdblk->cache_offset,
+>  			   mtdblk->cache_size, mtdblk->cache_data);
+> -	if (ret)
+> -		return ret;
+>  
+>  	/*
+>  	 * Here we could arguably set the cache state to STATE_CLEAN.
+> @@ -98,9 +96,14 @@ static int write_cached_data (struct mtdblk_dev *mtdblk)
+>  	 * be notified if this content is altered on the flash by other
+>  	 * means.  Let's declare it empty and leave buffering tasks to
+>  	 * the buffer cache instead.
+> +	 *
+> +	 * if this cache_offset points to a bad block
+
+Can you start your sentences with a capital letter please?
+
+	 * If
+
+> +	 * data cannot be written to the device.
+> +	 * clear cache_state to avoid writing to bad clocks repeatedly
+
+	 * Clear
+
+And also please break your lines à 80, not 70.
+
+>  	 */
+> -	mtdblk->cache_state = STATE_EMPTY;
+> -	return 0;
+> +	if (ret == 0 || ret == -EIO)
+> +		mtdblk->cache_state = STATE_EMPTY;
+> +	return ret;
+>  }
+>  
+>  
+
+Otherwise looks good to me.
+
+With the above addressed:
+
+Reviewed-by: Miquel Raynal <miquel.raynal@bootlin.com>
 
 
-Hello. I'm Levi who is the beginner of Linux kernel.
-
-When I use system calls related to network namespace, I got a some
-problem in below scenario.
-That's why I want to distinguish it's prohibit case for using unshare
-and setns system call.
-
-    1. Forking the process.
-    2. [PARENT] Waiting the Child till the end.
-    3. [CHILD] unshare for creating new network namespace
-    4. [CHILD] Bind mount /proc/self/ns/net to some mount point.
-    5. [CHILD] Exit child.
-    6. [PARENT] Try to setns with binded mount point
-
-In my analysis I confirm step 4 to 6 makes problem.
-When we try to bind network namespace, it doesn't increase reference
-count of related network namespace which saved on inode->i_private.
-That's why network namespace made by unshare system call will be free on Step 5.
-
-But on bind mountpoint, it still has network namespace pointer that was freed.
-This makes some memory corruption on kernel when someone require to
-allocate memory and give the pointer which allocated to the network
-namespace made by Step 3.
-That's why I can see the some Kernel Panic when I kill the some process...
-
-So I attach some patch file to fix this problem.
-But I want to distinguish it abnormal usage or not and this patch
-should be applied.
-
-Thank you for reading.
-
-HTH.
-Levi.
-
---000000000000b6750905a20db61a
-Content-Type: application/octet-stream; 
-	name="fix_netns_dangling_inode2.patch"
-Content-Disposition: attachment; filename="fix_netns_dangling_inode2.patch"
-Content-Transfer-Encoding: base64
-Content-ID: <f_k8e691tu0>
-X-Attachment-Id: f_k8e691tu0
-
-ZGlmZiAtLWdpdCBhL2ZzL25hbWVzcGFjZS5jIGIvZnMvbmFtZXNwYWNlLmMKaW5kZXggODViNWY3
-YmVhODJlLi44OGViZGUzOTk1OWYgMTAwNjQ0Ci0tLSBhL2ZzL25hbWVzcGFjZS5jCisrKyBiL2Zz
-L25hbWVzcGFjZS5jCkBAIC0zMSw2ICszMSwxMCBAQAogI2luY2x1ZGUgPGxpbnV4L2ZzX2NvbnRl
-eHQuaD4KICNpbmNsdWRlIDxsaW51eC9zaG1lbV9mcy5oPgoKKyNpZmRlZiBDT05GSUdfTkVUX05T
-CisjaW5jbHVkZSA8bmV0L25ldF9uYW1lc3BhY2UuaD4KKyNlbmRpZgorCiAjaW5jbHVkZSAicG5v
-ZGUuaCIKICNpbmNsdWRlICJpbnRlcm5hbC5oIgoKQEAgLTEwMTMsMTIgKzEwMTcsMjUgQEAgdmZz
-X3N1Ym1vdW50KGNvbnN0IHN0cnVjdCBkZW50cnkgKm1vdW50cG9pbnQsIHN0cnVjdCBmaWxlX3N5
-c3RlbV90eXBlICp0eXBlLAogfQogRVhQT1JUX1NZTUJPTF9HUEwodmZzX3N1Ym1vdW50KTsKCisj
-aWZkZWYgQ09ORklHX05FVF9OUworc3RhdGljIGJvb2wgaXNfbmV0X25zX2ZpbGUoc3RydWN0IGRl
-bnRyeSAqZGVudHJ5KQoreworCS8qIElzIHRoaXMgYSBwcm94eSBmb3IgYSBtb3VudCBuYW1lc3Bh
-Y2U/ICovCisJcmV0dXJuIGRlbnRyeS0+ZF9vcCA9PSAmbnNfZGVudHJ5X29wZXJhdGlvbnMgJiYK
-KwkgICAgICAgZGVudHJ5LT5kX2ZzZGF0YSA9PSAmbmV0bnNfb3BlcmF0aW9uczsKK30KKyNlbmRp
-ZgorCiBzdGF0aWMgc3RydWN0IG1vdW50ICpjbG9uZV9tbnQoc3RydWN0IG1vdW50ICpvbGQsIHN0
-cnVjdCBkZW50cnkgKnJvb3QsCiAJCQkJCWludCBmbGFnKQogewogCXN0cnVjdCBzdXBlcl9ibG9j
-ayAqc2IgPSBvbGQtPm1udC5tbnRfc2I7CiAJc3RydWN0IG1vdW50ICptbnQ7CiAJaW50IGVycjsK
-KyNpZmRlZiBDT05GSUdfTkVUX05TCisJc3RydWN0IG5zX2NvbW1vbiAqbnMgPSBOVUxMOworCXN0
-cnVjdCBuZXQgKm5ldCA9IE5VTEw7CisjZW5kaWYKCiAJbW50ID0gYWxsb2NfdmZzbW50KG9sZC0+
-bW50X2Rldm5hbWUpOwogCWlmICghbW50KQpAQCAtMTAzNSw2ICsxMDUyLDIwIEBAIHN0YXRpYyBz
-dHJ1Y3QgbW91bnQgKmNsb25lX21udChzdHJ1Y3QgbW91bnQgKm9sZCwgc3RydWN0IGRlbnRyeSAq
-cm9vdCwKIAkJCWdvdG8gb3V0X2ZyZWU7CiAJfQoKKyNpZmRlZiBDT05GSUdfTkVUX05TCisJaWYg
-KCEoZmxhZyAmIENMX0NPUFlfTU5UX05TX0ZJTEUpICYmIGlzX25ldF9uc19maWxlKHJvb3QpKSB7
-CisJCW5zID0gZ2V0X3Byb2NfbnMoZF9pbm9kZShyb290KSk7CisJCWlmIChucyA9PSBOVUxMIHx8
-IG5zLT5vcHMtPnR5cGUgIT0gQ0xPTkVfTkVXTkVUKSB7CisJCQllcnIgPSAtRUlOVkFMOworCisJ
-CQlnb3RvIG91dF9mcmVlOworCQl9CisKKwkJbmV0ID0gdG9fbmV0X25zKG5zKTsKKwkJbmV0ID0g
-Z2V0X25ldChuZXQpOworCX0KKyNlbmRpZgorCiAJbW50LT5tbnQubW50X2ZsYWdzID0gb2xkLT5t
-bnQubW50X2ZsYWdzOwogCW1udC0+bW50Lm1udF9mbGFncyAmPSB+KE1OVF9XUklURV9IT0xEfE1O
-VF9NQVJLRUR8TU5UX0lOVEVSTkFMKTsKCmRpZmYgLS1naXQgYS9pbmNsdWRlL25ldC9uZXRfbmFt
-ZXNwYWNlLmggYi9pbmNsdWRlL25ldC9uZXRfbmFtZXNwYWNlLmgKaW5kZXggODU0ZDM5ZWYxY2Ez
-Li5kZjNmYjA2NmEwMDIgMTAwNjQ0Ci0tLSBhL2luY2x1ZGUvbmV0L25ldF9uYW1lc3BhY2UuaAor
-KysgYi9pbmNsdWRlL25ldC9uZXRfbmFtZXNwYWNlLmgKQEAgLTQ2OSw0ICs0NjksMTEgQEAgc3Rh
-dGljIGlubGluZSB2b2lkIGZuaGVfZ2VuaWRfYnVtcChzdHJ1Y3QgbmV0ICpuZXQpCiAJYXRvbWlj
-X2luYygmbmV0LT5mbmhlX2dlbmlkKTsKIH0KCisjaWZkZWYgQ09ORklHX05FVF9OUworc3RhdGlj
-IGlubGluZSBzdHJ1Y3QgbmV0ICp0b19uZXRfbnMoc3RydWN0IG5zX2NvbW1vbiAqbnMpCit7CisJ
-cmV0dXJuIGNvbnRhaW5lcl9vZihucywgc3RydWN0IG5ldCwgbnMpOworfQorI2VuZGlmCisKICNl
-bmRpZiAvKiBfX05FVF9ORVRfTkFNRVNQQUNFX0ggKi8KZGlmZiAtLWdpdCBhL25ldC9jb3JlL25l
-dF9uYW1lc3BhY2UuYyBiL25ldC9jb3JlL25ldF9uYW1lc3BhY2UuYwppbmRleCA3NTdjYzFkMDg0
-ZTcuLmI2NzcxYzIwMTgwNSAxMDA2NDQKLS0tIGEvbmV0L2NvcmUvbmV0X25hbWVzcGFjZS5jCisr
-KyBiL25ldC9jb3JlL25ldF9uYW1lc3BhY2UuYwpAQCAtMTMyOCwxMSArMTMyOCw2IEBAIHN0YXRp
-YyBzdHJ1Y3QgbnNfY29tbW9uICpuZXRuc19nZXQoc3RydWN0IHRhc2tfc3RydWN0ICp0YXNrKQog
-CXJldHVybiBuZXQgPyAmbmV0LT5ucyA6IE5VTEw7CiB9Cgotc3RhdGljIGlubGluZSBzdHJ1Y3Qg
-bmV0ICp0b19uZXRfbnMoc3RydWN0IG5zX2NvbW1vbiAqbnMpCi17Ci0JcmV0dXJuIGNvbnRhaW5l
-cl9vZihucywgc3RydWN0IG5ldCwgbnMpOwotfQotCiBzdGF0aWMgdm9pZCBuZXRuc19wdXQoc3Ry
-dWN0IG5zX2NvbW1vbiAqbnMpCiB7CiAJcHV0X25ldCh0b19uZXRfbnMobnMpKTsK
---000000000000b6750905a20db61a--
+Thanks,
+Miquèl
