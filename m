@@ -2,175 +2,191 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28340C43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 14:47:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D835FC43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 14:49:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 03A932072E
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 14:47:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 93DAA2072E
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 14:49:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="BI2bXz9J"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728220AbgC3OrQ (ORCPT
+        id S1728356AbgC3Ots (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 10:47:16 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:58993 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727522AbgC3OrP (ORCPT
+        Mon, 30 Mar 2020 10:49:48 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:34037 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726099AbgC3Ots (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 10:47:15 -0400
-Received: from bigeasy by Galois.linutronix.de with local (Exim 4.80)
-        (envelope-from <bigeasy@linutronix.de>)
-        id 1jIvh2-0006lt-I5; Mon, 30 Mar 2020 16:47:12 +0200
-Date:   Mon, 30 Mar 2020 16:47:12 +0200
-From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        linux-rt-users <linux-rt-users@vger.kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>
-Subject: [ANNOUNCE] v5.4.28-rt19
-Message-ID: <20200330144712.cwcz5ejal4ankeoi@linutronix.de>
+        Mon, 30 Mar 2020 10:49:48 -0400
+Received: by mail-pl1-f193.google.com with SMTP id a23so6821794plm.1
+        for <linux-kernel@vger.kernel.org>; Mon, 30 Mar 2020 07:49:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=wxokKJDNKMFQP8TduvPKlZRyw/xvX4p8PZKE/poLUcs=;
+        b=BI2bXz9JW0Ja3fmTC65vw+5yLxMHKax69XlM02QwBhthxk9ja8mnYC9qep7ffRQon5
+         9GpkYJeJDkAUXFRUfBvrqYVeqpKygk9VElxZDgpdD3oEtfeMhJHZqqyL3gvel4R3CR9E
+         C2n+feDGjeSD9ogfLWGTZZCf7TuF1UcFkTzGQ=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=wxokKJDNKMFQP8TduvPKlZRyw/xvX4p8PZKE/poLUcs=;
+        b=rUw5fxottQuzfWvf99XTDp245aCF2d7xlPRsyVZd72Q4CLaNdb1pP0mWceqHMonggy
+         XYK4P9yEGYsuTAkR6VFn8y6CY/70MOnxe56kPaJ2A3CkDgg4njOe7CG6hb9oqW8vteNc
+         4p+X1fv+pVFbqWpWM843s35BEeYd/EXMEWl6CDDfDxLuq9hOnOpdS3QIoBjRUI9iLBU2
+         2KshlbFpOWjl7JlQT7y7chFW9JyGlOA/EAzF9bEjYh1GAeHbKPlEXoKa7shOOdUsx0w6
+         E175drtlenuHbPbGtTNCkkjS93NIPRqP92XJgoPxyHR+yqUWdM5waCztS8xl/XWoUKsl
+         xQww==
+X-Gm-Message-State: ANhLgQ0Sz+CpSCWOcyt/c1p5zkCYW43KacoLZA048SAZ4txN5WukwDLe
+        XUzEcEMK+H46/Xe9sm5mKzujJA==
+X-Google-Smtp-Source: ADFU+vtXgURST9UkxUGS9nBDGF1TSE53YJGFU75fkGqIG44/V0AceUy6aiiUTYuxOtuZm2nXC/glsg==
+X-Received: by 2002:a17:90b:d91:: with SMTP id bg17mr16307893pjb.70.1585579786967;
+        Mon, 30 Mar 2020 07:49:46 -0700 (PDT)
+Received: from tictac2.mtv.corp.google.com ([2620:15c:202:1:24fa:e766:52c9:e3b2])
+        by smtp.gmail.com with ESMTPSA id y198sm1460972pfg.123.2020.03.30.07.49.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 30 Mar 2020 07:49:46 -0700 (PDT)
+From:   Douglas Anderson <dianders@chromium.org>
+To:     axboe@kernel.dk, jejb@linux.ibm.com, martin.petersen@oracle.com
+Cc:     linux-block@vger.kernel.org, groeck@chromium.org,
+        paolo.valente@linaro.org, linux-scsi@vger.kernel.org,
+        sqazi@google.com, Douglas Anderson <dianders@chromium.org>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 0/2] blk-mq: Fix two causes of IO stalls found in reboot testing
+Date:   Mon, 30 Mar 2020 07:49:04 -0700
+Message-Id: <20200330144907.13011-1-dianders@chromium.org>
+X-Mailer: git-send-email 2.26.0.rc2.310.g2932bb562d-goog
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Dear RT folks!
+While doing reboot testing, I found that occasionally my device would
+trigger the hung task detector.  Many tasks were stuck waiting for the
+a blkdev mutex, but at least one task in the system was always sitting
+waiting for IO to complete (and holding the blkdev mutex).  One
+example of a task that was just waiting for its IO to complete on one
+reboot:
 
-I'm pleased to announce the v5.4.28-rt19 patch set. 
+ udevd           D    0  2177    306 0x00400209
+ Call trace:
+  __switch_to+0x15c/0x17c
+  __schedule+0x6e0/0x928
+  schedule+0x8c/0xbc
+  schedule_timeout+0x9c/0xfc
+  io_schedule_timeout+0x24/0x48
+  do_wait_for_common+0xd0/0x160
+  wait_for_completion_io_timeout+0x54/0x74
+  blk_execute_rq+0x9c/0xd8
+  __scsi_execute+0x104/0x198
+  scsi_test_unit_ready+0xa0/0x154
+  sd_check_events+0xb4/0x164
+  disk_check_events+0x58/0x154
+  disk_clear_events+0x74/0x110
+  check_disk_change+0x28/0x6c
+  sd_open+0x5c/0x130
+  __blkdev_get+0x20c/0x3d4
+  blkdev_get+0x74/0x170
+  blkdev_open+0x94/0xa8
+  do_dentry_open+0x268/0x3a0
+  vfs_open+0x34/0x40
+  path_openat+0x39c/0xdf4
+  do_filp_open+0x90/0x10c
+  do_sys_open+0x150/0x3c8
+  ...
 
-Changes since v5.4.28-rt18:
+I've reproduced this on two systems: one boots from an internal UFS
+disk and one from eMMC.  Each has a card reader attached via USB with
+an SD card plugged in.  On the USB-attached SD card is a disk with 12
+partitions (a Chrome OS test image), if it matters.  The system
+doesn't do much with the USB disk other than probe it (it's plugged in
+my system to help me recover).
 
-  - Memory compaction of unevictable pages has been disabled in the v5.4
-    release. This aligns the change with what has been prepared for
-    upstream: Disable is by default on PREEMPT_RT
-    (/proc/sys/vm/compact_unevictable_allowed reads 0) but allow
-    enabling it which will trigger a warning.
+From digging, I believe that there are two separate but related
+issues.  Both issues relate to the SCSI code saying that there is no
+budget.  In one case it seems clear that the blk-mq code should have
+restarted itself.  In another case it seems that we have to make the
+SCSI code kick the queues.
 
-Known issues
-     - It has been pointed out that due to changes to the printk code the
-       internal buffer representation changed. This is only an issue if tools
-       like `crash' are used to extract the printk buffer from a kernel memory
-       image.
+I have done testing with only one or the other of the two patches in
+this series and found that I could still encounter hung tasks if only
+one of the two patches was applied.  This deserves a bit of
+explanation.  To me, it's fairly obvious that the blk-mq wouldn't fix
+the problems talked about in the scsi patch.  However, it's less
+obvious why the scsi patch doesn't fix the problems in
+blk_mq_dispatch_rq_list().  It turns out that it _almost_ does
+(problems become much more rare), but I did manage to get a single
+trace where the "kick" scheduled by the scsi fix happened really
+quickly.  The scheduled kick then ran and found nothing to do.  This
+happened in parallel to a task running in blk_mq_dispatch_rq_list()
+which hadn't gotten around to splicing the list back into
+hctx->dispatch.  This is why we need both fixes or a heavier hammer
+where we always kick whenever two threads request budget at the same
+time.
 
-The delta patch against v5.4.28-rt18 is appended below and can be found here:
- 
-     https://cdn.kernel.org/pub/linux/kernel/projects/rt/5.4/incr/patch-5.4.28-rt18-rt19.patch.xz
+Most of my testing has been atop Chrome OS 5.4's kernel tree which
+currently has v5.4.27 merged in.  The Chrome OS 5.4 tree also has a
+patch by Salman Qazi, namely ("block: Limit number of items taken from
+the I/O scheduler in one go").  Reverting that patch didn't make the
+hung tasks go away, so I kept it in for most of my testing.
 
-You can get this release via the git tree at:
+I have also done some testing on mainline Linux (git describe says I'm
+on v5.6-rc7-227-gf3e69428b5e2) even without Salman's patch.  I found
+that I could reproduce the problems there and that traces looked about
+the same as I saw on the downstream branch.  These patches were also
+confirmed to fix the problems on mainline.
 
-    git://git.kernel.org/pub/scm/linux/kernel/git/rt/linux-rt-devel.git v5.4.28-rt19
+Chrome OS is currently setup to use the BFQ scheduler and I found that
+I couldn't reproduce the problems without BFQ.  It's possible that
+other schedulers simply never trip the code sequences I ran into or
+it's possible that the timing was simply different.  One important
+note is that to reproduce the problems the I/O scheduler must have
+returned "true" for has_work() but then dispatch_request() returns
+NULL.  In any case the problems I found do seem to be real problems
+and theoretically should be possible with other schedulers.
 
-The RT patch against v5.4.28 can be found here:
+I'll insert my usual caveat that I'm sending patches to code that I
+know very little about.  If I'm making a total bozo patch here, please
+help me figure out how I should fix the problems I found in a better
+way.
 
-    https://cdn.kernel.org/pub/linux/kernel/projects/rt/5.4/older/patch-5.4.28-rt19.patch.xz
+If you want to see a total ridiculous amount of chatter where I
+stumbled around a whole bunch trying to figure out what was wrong and
+how to fix it, feel free to read <https://crbug.com/1061950>.  I
+promise it will make your eyes glaze over right away if this cover
+letter didn't already do that.
 
-The split quilt queue is available at:
+I don't know if these fixes represent a regression of some sort or are
+new.  As per above I could only reproduce with BFQ enabled which makes
+it nearly impossible to go too far back with this.  I haven't listed
+any "Fixes" tags here, but if someone felt it was appropriate to
+backport this to some stable trees that seems like it'd be nice.
+Presumably at least 5.4 stable would make sense.
 
-    https://cdn.kernel.org/pub/linux/kernel/projects/rt/5.4/older/patches-5.4.28-rt19.tar.xz
+Thanks to Salman Qazi, Paolo Valente, and Guenter Roeck who spent a
+bunch of time helping me trawl through some of this code and reviewing
+early versions of this patch.
 
-Sebastian
 
-diff --git a/Documentation/admin-guide/sysctl/vm.rst b/Documentation/admin-guide/sysctl/vm.rst
-index 64aeee1009cab..0329a4d3fa9ec 100644
---- a/Documentation/admin-guide/sysctl/vm.rst
-+++ b/Documentation/admin-guide/sysctl/vm.rst
-@@ -128,6 +128,9 @@ allowed to examine the unevictable lru (mlocked pages) for pages to compact.
- This should be used on systems where stalls for minor page faults are an
- acceptable trade for large contiguous free memory.  Set to 0 to prevent
- compaction from moving pages that are unevictable.  Default value is 1.
-+On CONFIG_PREEMPT_RT the default value is 0 in order to avoid a page fault, due
-+to compaction, which would block the task from becomming active until the fault
-+is resolved.
- 
- 
- dirty_background_bytes
-diff --git a/kernel/sysctl.c b/kernel/sysctl.c
-index d08bd51a0fbc3..8221219d65c35 100644
---- a/kernel/sysctl.c
-+++ b/kernel/sysctl.c
-@@ -212,6 +212,11 @@ static int proc_do_cad_pid(struct ctl_table *table, int write,
- 		  void __user *buffer, size_t *lenp, loff_t *ppos);
- static int proc_taint(struct ctl_table *table, int write,
- 			       void __user *buffer, size_t *lenp, loff_t *ppos);
-+#ifdef CONFIG_COMPACTION
-+static int proc_dointvec_minmax_warn_RT_change(struct ctl_table *table,
-+					       int write, void __user *buffer,
-+					       size_t *lenp, loff_t *ppos);
-+#endif
- #endif
- 
- #ifdef CONFIG_PRINTK
-@@ -1488,17 +1493,16 @@ static struct ctl_table vm_table[] = {
- 		.extra1		= &min_extfrag_threshold,
- 		.extra2		= &max_extfrag_threshold,
- 	},
--#ifndef CONFIG_PREEMPT_RT
- 	{
- 		.procname	= "compact_unevictable_allowed",
- 		.data		= &sysctl_compact_unevictable_allowed,
- 		.maxlen		= sizeof(int),
- 		.mode		= 0644,
--		.proc_handler	= proc_dointvec,
-+		.proc_handler	= proc_dointvec_minmax_warn_RT_change,
- 		.extra1		= SYSCTL_ZERO,
- 		.extra2		= SYSCTL_ONE,
- 	},
--#endif
-+
- #endif /* CONFIG_COMPACTION */
- 	{
- 		.procname	= "min_free_kbytes",
-@@ -2582,6 +2586,28 @@ int proc_dointvec(struct ctl_table *table, int write,
- 	return do_proc_dointvec(table, write, buffer, lenp, ppos, NULL, NULL);
- }
- 
-+#ifdef CONFIG_COMPACTION
-+static int proc_dointvec_minmax_warn_RT_change(struct ctl_table *table,
-+					       int write, void __user *buffer,
-+					       size_t *lenp, loff_t *ppos)
-+{
-+	int ret, old;
-+
-+	if (!IS_ENABLED(CONFIG_PREEMPT_RT) || !write)
-+		return proc_dointvec_minmax(table, write, buffer, lenp, ppos);
-+
-+	old = *(int *)table->data;
-+	ret = proc_dointvec_minmax(table, write, buffer, lenp, ppos);
-+	if (ret)
-+		return ret;
-+	if (old != *(int *)table->data)
-+		pr_warn_once("sysctl attribute %s changed by %s[%d]\n",
-+			     table->procname, current->comm,
-+			     task_pid_nr(current));
-+	return ret;
-+}
-+#endif
-+
- /**
-  * proc_douintvec - read a vector of unsigned integers
-  * @table: the sysctl table
-diff --git a/localversion-rt b/localversion-rt
-index 9e7cd66d9f44f..483ad771f201a 100644
---- a/localversion-rt
-+++ b/localversion-rt
-@@ -1 +1 @@
---rt18
-+-rt19
-diff --git a/mm/compaction.c b/mm/compaction.c
-index 83cc3d1e5df7b..31e6e103f38b4 100644
---- a/mm/compaction.c
-+++ b/mm/compaction.c
-@@ -1591,7 +1591,7 @@ typedef enum {
-  * compactable pages.
-  */
- #ifdef CONFIG_PREEMPT_RT
--#define sysctl_compact_unevictable_allowed 0
-+int sysctl_compact_unevictable_allowed __read_mostly = 0;
- #else
- int sysctl_compact_unevictable_allowed __read_mostly = 1;
- #endif
+Douglas Anderson (2):
+  blk-mq: In blk_mq_dispatch_rq_list() "no budget" is a reason to kick
+  scsi: core: Fix stall if two threads request budget at the same time
+
+ block/blk-mq.c             | 11 ++++++++---
+ drivers/scsi/scsi_lib.c    | 27 ++++++++++++++++++++++++---
+ drivers/scsi/scsi_scan.c   |  1 +
+ include/scsi/scsi_device.h |  2 ++
+ 4 files changed, 35 insertions(+), 6 deletions(-)
+
+-- 
+2.26.0.rc2.310.g2932bb562d-goog
+
