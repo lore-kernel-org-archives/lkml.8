@@ -2,291 +2,104 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BA92C2D0EB
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 06:06:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1794AC43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 06:07:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 45A9420786
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 06:06:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE3062073B
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 06:07:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="arJ+2m5X"
+	dkim=pass (1024-bit key) header.d=habanalabs.onmicrosoft.com header.i=@habanalabs.onmicrosoft.com header.b="kEaBJJ2e"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728773AbgC3GGS (ORCPT
+        id S1728910AbgC3GHY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 02:06:18 -0400
-Received: from us-smtp-delivery-74.mimecast.com ([63.128.21.74]:54251 "EHLO
-        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728642AbgC3GGS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 02:06:18 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1585548375;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=3Z8MUb22p7ZiJoFtWbH8w9GnxOVCEYWuXorysUeb7ac=;
-        b=arJ+2m5XmphN3zfVUnEZdbbG9rWLUk+WROsNbozeX/chWmq4p3bodCmXrDy8CfLeGf2heh
-        CSTH4TCf76mbBU3Sw+6aD3tEPeOTKZkXKW2dYTC2YCxJqgxwA9LefDm2MwMqD/U9eXuUiL
-        Qsh0bOpETvDgD9pGwkirqWwB3sFvvlM=
-Received: from mail-il1-f200.google.com (mail-il1-f200.google.com
- [209.85.166.200]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-280-t1OW0_brOvWEnumgD1wIMQ-1; Mon, 30 Mar 2020 02:06:13 -0400
-X-MC-Unique: t1OW0_brOvWEnumgD1wIMQ-1
-Received: by mail-il1-f200.google.com with SMTP id g79so15698450ild.7
-        for <linux-kernel@vger.kernel.org>; Sun, 29 Mar 2020 23:06:13 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=3Z8MUb22p7ZiJoFtWbH8w9GnxOVCEYWuXorysUeb7ac=;
-        b=W8bdLtLAq9NXTLBcfMapt3J3coPDNnUNeL1RywVg4pmHF8r8nxY9oiY/0KHBZikaJi
-         KOHUwBtiGD9mUnZINIRSfxXa57q5eQap0MC1Nwx3Rtt9li6hFChfjr4hOxJ65/2DQa88
-         xIXkck6LXmcY2U8vFxCjQvvk3T5PpGcokKLwN68/OUgG9K389IyZDJvW6iC/rhIqX6DK
-         d/tEJ3qmoZxEeLK+BDvWeIdVOhfPz3Mk/fFpRDoFTrClpD3BfTh0SMXzAFuE7pKjAPFQ
-         D7AnAnwXRk7FbOkeouP47NwR1Ofdmj5gm2+ZC66lqHGx8dQdxWp0tnjZjj6akyPObn1y
-         qb/g==
-X-Gm-Message-State: ANhLgQ0+kMfFoILg9GcMg2mbpt8q4zlOIvPeY5pyYBeCcJ+fIt+ot+9c
-        o66Fd2iaxajZRK4P21y4TwA+dd9C1iXddBlTNx8pwhua7NMcyeAymwU7toJO+XJrHR1KDIhcWAF
-        9NEfHDpBidlxT9BWW/vo0vlCHNxKR5kgnyPVFCaiO
-X-Received: by 2002:a02:5886:: with SMTP id f128mr9562948jab.90.1585548372560;
-        Sun, 29 Mar 2020 23:06:12 -0700 (PDT)
-X-Google-Smtp-Source: ADFU+vtQT+OkauKtqxjcWqTugG3mPUS6iL3wOenAWEe+VQEhGQWTDfa7ppRS6Xx7Lin8b0dyX9tsWAk//LPtcMD1AbA=
-X-Received: by 2002:a02:5886:: with SMTP id f128mr9562920jab.90.1585548372218;
- Sun, 29 Mar 2020 23:06:12 -0700 (PDT)
+        Mon, 30 Mar 2020 02:07:24 -0400
+Received: from mail-eopbgr80131.outbound.protection.outlook.com ([40.107.8.131]:17531
+        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728857AbgC3GHY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Mar 2020 02:07:24 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=PLRjUANr+N6SiF3DGe2MGNbU+Fsc83FkBTC61jg0P2UVI6C/ZGYNLQM52BT73cMk8InGy11pQYFen7wP36/+a8hGkZL6PovbN8LYyG2avgMqJ9EcovrqNfGVsEZSYXWEfPth1BjBNFvItgpEgXIuYXMRrdX2k45WOxuDmlbvt2zhk7HtMZ7lXZnpvnbTuH53PqD6pOyaYzQ/v46oPiPUIf37x7942vrWDbhwHQ30Vvg/U+nrAg+3f/Tr6WiXjKFnrPYUlwMQ9GQugfXR/DgBhoDLLWKKW1cxIqj3yITlr1PmIKAHIRv/4iX4mJQCJ7cJVBPCo186kmK57mZ8qFfyPg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=RCgCTGFQvwW8ufcqjdSi8/PsDVhf3IDabLVnEatyHGQ=;
+ b=hVDSdDoBWWi9j84xosP2iyVh0koxfVK05BvprYBXS0NsP9j01Cyq5u70UiFtnKc+5anDKAKYVEVw8+DhILEirVdHforQbEY0G1/DXElqFydqzLlohvPM5ifgp3+PJ8xxwVTHZRRSYpjDI/a8AkIJX8DP/iweKAqdegCJxqK7TO/rPNujA0Acz7vF4MTgUYua2IY3K5vsApdsNBNkQO6eAHmpB5pXU7kGIvCFKWv76ZJvprPE1ntM6DjE3TGy9pdt9hjmBhoNnvCxcXbLAqfKr+CJfbTbAm4MguLbVKoVgr1Cx8CxXPDwkgmAgdJ5OBJfHpLX/Ejj7HtZ2VnQvIpPzg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=habana.ai; dmarc=pass action=none header.from=habana.ai;
+ dkim=pass header.d=habana.ai; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=habanalabs.onmicrosoft.com; s=selector2-habanalabs-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=RCgCTGFQvwW8ufcqjdSi8/PsDVhf3IDabLVnEatyHGQ=;
+ b=kEaBJJ2ewelKQ4vrMXbJu18EisScSdystHgJIyxDDpoL5oUIbO3exKH4s8iPuZ8U0rV5Dn7LAH61poyxMAjjWNPaSjlq+5dvu/FLBVdNroO6D031IL6nruAMtbx3fmKkdY1lgmKwXSsbdxfUGiJs1f4BunzdoefFlFYqFAu/AfA=
+Received: from AM0PR02MB5523.eurprd02.prod.outlook.com (10.255.29.216) by
+ AM0PR02MB4546.eurprd02.prod.outlook.com (20.178.17.159) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2856.19; Mon, 30 Mar 2020 06:07:19 +0000
+Received: from AM0PR02MB5523.eurprd02.prod.outlook.com
+ ([fe80::4448:48ca:9345:37b5]) by AM0PR02MB5523.eurprd02.prod.outlook.com
+ ([fe80::4448:48ca:9345:37b5%3]) with mapi id 15.20.2856.019; Mon, 30 Mar 2020
+ 06:07:19 +0000
+From:   Omer Shpigelman <oshpigelman@habana.ai>
+To:     Oded Gabbay <oded.gabbay@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Tomer Tayar <ttayar@habana.ai>
+CC:     "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
+Subject: RE: [PATCH 4/6] habanalabs: unify and improve device cpu init
+Thread-Topic: [PATCH 4/6] habanalabs: unify and improve device cpu init
+Thread-Index: AQHWBN5CqzsZCl9110GPHQZo4w9J9ahgqCuA
+Date:   Mon, 30 Mar 2020 06:07:19 +0000
+Message-ID: <AM0PR02MB55239AAADD7EB8084B4CABEAB8CB0@AM0PR02MB5523.eurprd02.prod.outlook.com>
+References: <20200328085238.3428-1-oded.gabbay@gmail.com>
+ <20200328085238.3428-4-oded.gabbay@gmail.com>
+In-Reply-To: <20200328085238.3428-4-oded.gabbay@gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=oshpigelman@habana.ai; 
+x-originating-ip: [141.226.15.151]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: bcf47e6c-225b-4ff2-8f2f-08d7d4709aa8
+x-ms-traffictypediagnostic: AM0PR02MB4546:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <AM0PR02MB4546198595491265561B3807B8CB0@AM0PR02MB4546.eurprd02.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:3383;
+x-forefront-prvs: 0358535363
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM0PR02MB5523.eurprd02.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10019020)(346002)(39840400004)(366004)(396003)(136003)(376002)(558084003)(478600001)(26005)(5660300002)(52536014)(8676002)(53546011)(6506007)(4326008)(71200400001)(8936002)(86362001)(2906002)(9686003)(110136005)(55016002)(316002)(66946007)(76116006)(66446008)(64756008)(66556008)(66476007)(33656002)(186003)(81156014)(81166006)(7696005)(6636002);DIR:OUT;SFP:1102;
+received-spf: None (protection.outlook.com: habana.ai does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 1lpr66YbBBgyBpSNl7yVhzyIwQbbUO+S4+8upp8of94FwwAm3bGRzhtwwUjTtbbWtRkBJepcqP9xa/w+bXLgUFBxDmLrFgXsTI9hhmr8po55IbnSwgvX/WEXkolTtWow1a4KMin+l4PDAWj2RmLwOV6NaFxZHVnOriDiJoZ8j1q+iGjucfxZtc9lMQMu/s3TfVA52mdSkc1fD576Yo/l4WHbVEgY2/tnpzUPK3HPv97RuPqVlC9Mdae0rCWSaasri73Veh6hfNLwO5wQ/sh6b/SFoHT9gByzUgWm5IUn1BiiFO8eF3ayc+u8uoP6xEwBAU7YYGkYLKq4idxB7PoiDqvNFdCS5zZSWPAkXbMXkkqG438Ulj8Mctbl1d0S1Xx/8M6pD8W3T63kKE6nN+4yyVky3IzR5cc430Sg2zd72LKxw3Ny5BAXe2m0h6Hrg9/n
+x-ms-exchange-antispam-messagedata: 9g8drszJzFtQ259zexADRSHkmoldmK1wQMS92RTc+6Rdvg0jsM7gKw9qBRFSaY+VCA55FK2teqn7x28syLavuy/hM/gohnNPa24ziZk0azucnkj38A3I0J2zNCnDXA3UIQtPd69+++ov+lndOTuiuw==
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-References: <20200326162922.27085-1-graf@amazon.com> <20200328115733.GA67084@dhcp-128-65.nay.redhat.com>
-In-Reply-To: <20200328115733.GA67084@dhcp-128-65.nay.redhat.com>
-From:   Kairui Song <kasong@redhat.com>
-Date:   Mon, 30 Mar 2020 14:06:01 +0800
-Message-ID: <CACPcB9d_Pz9SRhSsRzqygRR6waV7r8MnGcCP952svnZtpFaxnQ@mail.gmail.com>
-Subject: Re: [PATCH] swiotlb: Allow swiotlb to live at pre-defined address
-To:     Dave Young <dyoung@redhat.com>
-Cc:     Alexander Graf <graf@amazon.com>, iommu@lists.linux-foundation.org,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        Christoph Hellwig <hch@lst.de>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Robin Murphy <robin.murphy@arm.com>, linux-doc@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>, dwmw@amazon.com,
-        benh@amazon.com, Jan Kiszka <jan.kiszka@siemens.com>,
-        alcioa@amazon.com, aggh@amazon.com, aagch@amazon.com,
-        dhr@amazon.com, Laszlo Ersek <lersek@redhat.com>,
-        Baoquan He <bhe@redhat.com>, Lianbo Jiang <lijiang@redhat.com>,
-        brijesh.singh@amd.com,
-        "Lendacky, Thomas" <thomas.lendacky@amd.com>,
-        kexec@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: habana.ai
+X-MS-Exchange-CrossTenant-Network-Message-Id: bcf47e6c-225b-4ff2-8f2f-08d7d4709aa8
+X-MS-Exchange-CrossTenant-originalarrivaltime: 30 Mar 2020 06:07:19.1578
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 0d4d4539-213c-4ed8-a251-dc9766ba127a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: kJaCCyYSsV6BXXod6tAVIzpSY7ncd3Ickd5UXdiv5J7JqFmLcAGwzANNJtqlekrs20dp+CH9U/01KdRwfMMsGQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR02MB4546
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Mar 28, 2020 at 7:57 PM Dave Young <dyoung@redhat.com> wrote:
->
-> On 03/26/20 at 05:29pm, Alexander Graf wrote:
-> > The swiotlb is a very convenient fallback mechanism for bounce buffering of
-> > DMAable data. It is usually used for the compatibility case where devices
-> > can only DMA to a "low region".
-> >
-> > However, in some scenarios this "low region" may be bound even more
-> > heavily. For example, there are embedded system where only an SRAM region
-> > is shared between device and CPU. There are also heterogeneous computing
-> > scenarios where only a subset of RAM is cache coherent between the
-> > components of the system. There are partitioning hypervisors, where
-> > a "control VM" that implements device emulation has limited view into a
-> > partition's memory for DMA capabilities due to safety concerns.
-> >
-> > This patch adds a command line driven mechanism to move all DMA memory into
-> > a predefined shared memory region which may or may not be part of the
-> > physical address layout of the Operating System.
-> >
-> > Ideally, the typical path to set this configuration would be through Device
-> > Tree or ACPI, but neither of the two mechanisms is standardized yet. Also,
-> > in the x86 MicroVM use case, we have neither ACPI nor Device Tree, but
-> > instead configure the system purely through kernel command line options.
-> >
-> > I'm sure other people will find the functionality useful going forward
-> > though and extend it to be triggered by DT/ACPI in the future.
->
-> Hmm, we have a use case for kdump, this maybe useful.  For example
-> swiotlb is enabled by default if AMD SME/SEV is active, and in kdump
-> kernel we have to increase the crashkernel reserved size for the extra
-> swiotlb requirement.  I wonder if we can just reuse the old kernel's
-> swiotlb region and pass the addr to kdump kernel.
->
-
-Yes, definitely helpful for kdump kernel. This can help reduce the
-crashkernel value.
-
-Previously I was thinking about something similar, play around the
-e820 entry passed to kdump and let it place swiotlb in wanted region.
-Simply remap it like in this patch looks much cleaner.
-
-If this patch is acceptable, one more patch is needed to expose the
-swiotlb in iomem, so kexec-tools can pass the right kernel cmdline to
-second kernel.
-
-> >
-> > Signed-off-by: Alexander Graf <graf@amazon.com>
-> > ---
-> >  Documentation/admin-guide/kernel-parameters.txt |  3 +-
-> >  Documentation/x86/x86_64/boot-options.rst       |  4 ++-
-> >  kernel/dma/swiotlb.c                            | 46 +++++++++++++++++++++++--
-> >  3 files changed, 49 insertions(+), 4 deletions(-)
-> >
-> > diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-> > index c07815d230bc..d085d55c3cbe 100644
-> > --- a/Documentation/admin-guide/kernel-parameters.txt
-> > +++ b/Documentation/admin-guide/kernel-parameters.txt
-> > @@ -4785,11 +4785,12 @@
-> >                       it if 0 is given (See Documentation/admin-guide/cgroup-v1/memory.rst)
-> >
-> >       swiotlb=        [ARM,IA-64,PPC,MIPS,X86]
-> > -                     Format: { <int> | force | noforce }
-> > +                     Format: { <int> | force | noforce | addr=<phys addr> }
-> >                       <int> -- Number of I/O TLB slabs
-> >                       force -- force using of bounce buffers even if they
-> >                                wouldn't be automatically used by the kernel
-> >                       noforce -- Never use bounce buffers (for debugging)
-> > +                     addr=<phys addr> -- Try to allocate SWIOTLB at defined address
-> >
-> >       switches=       [HW,M68k]
-> >
-> > diff --git a/Documentation/x86/x86_64/boot-options.rst b/Documentation/x86/x86_64/boot-options.rst
-> > index 2b98efb5ba7f..ca46c57b68c9 100644
-> > --- a/Documentation/x86/x86_64/boot-options.rst
-> > +++ b/Documentation/x86/x86_64/boot-options.rst
-> > @@ -297,11 +297,13 @@ iommu options only relevant to the AMD GART hardware IOMMU:
-> >  iommu options only relevant to the software bounce buffering (SWIOTLB) IOMMU
-> >  implementation:
-> >
-> > -    swiotlb=<pages>[,force]
-> > +    swiotlb=<pages>[,force][,addr=<phys addr>]
-> >        <pages>
-> >          Prereserve that many 128K pages for the software IO bounce buffering.
-> >        force
-> >          Force all IO through the software TLB.
-> > +      addr=<phys addr>
-> > +        Try to allocate SWIOTLB at defined address
-> >
-> >  Settings for the IBM Calgary hardware IOMMU currently found in IBM
-> >  pSeries and xSeries machines
-> > diff --git a/kernel/dma/swiotlb.c b/kernel/dma/swiotlb.c
-> > index c19379fabd20..83da0caa2f93 100644
-> > --- a/kernel/dma/swiotlb.c
-> > +++ b/kernel/dma/swiotlb.c
-> > @@ -46,6 +46,7 @@
-> >  #include <linux/init.h>
-> >  #include <linux/memblock.h>
-> >  #include <linux/iommu-helper.h>
-> > +#include <linux/io.h>
-> >
-> >  #define CREATE_TRACE_POINTS
-> >  #include <trace/events/swiotlb.h>
-> > @@ -102,6 +103,12 @@ unsigned int max_segment;
-> >  #define INVALID_PHYS_ADDR (~(phys_addr_t)0)
-> >  static phys_addr_t *io_tlb_orig_addr;
-> >
-> > +/*
-> > + * The TLB phys addr may be defined on the command line. Store it here if it is.
-> > + */
-> > +static phys_addr_t io_tlb_addr = INVALID_PHYS_ADDR;
-> > +
-> > +
-> >  /*
-> >   * Protect the above data structures in the map and unmap calls
-> >   */
-> > @@ -119,11 +126,23 @@ setup_io_tlb_npages(char *str)
-> >       }
-> >       if (*str == ',')
-> >               ++str;
-> > -     if (!strcmp(str, "force")) {
-> > +     if (!strncmp(str, "force", 5)) {
-> >               swiotlb_force = SWIOTLB_FORCE;
-> > -     } else if (!strcmp(str, "noforce")) {
-> > +             str += 5;
-> > +     } else if (!strncmp(str, "noforce", 7)) {
-> >               swiotlb_force = SWIOTLB_NO_FORCE;
-> >               io_tlb_nslabs = 1;
-> > +             str += 7;
-> > +     }
-> > +
-> > +     if (*str == ',')
-> > +             ++str;
-> > +     if (!strncmp(str, "addr=", 5)) {
-> > +             char *addrstr = str + 5;
-> > +
-> > +             io_tlb_addr = kstrtoul(addrstr, 0, &str);
-> > +             if (addrstr == str)
-> > +                     io_tlb_addr = INVALID_PHYS_ADDR;
-> >       }
-> >
-> >       return 0;
-> > @@ -239,6 +258,25 @@ int __init swiotlb_init_with_tbl(char *tlb, unsigned long nslabs, int verbose)
-> >       return 0;
-> >  }
-> >
-> > +static int __init swiotlb_init_io(int verbose, unsigned long bytes)
-> > +{
-> > +     unsigned __iomem char *vstart;
-> > +
-> > +     if (io_tlb_addr == INVALID_PHYS_ADDR)
-> > +             return -EINVAL;
-> > +
-> > +     vstart = memremap(io_tlb_addr, bytes, MEMREMAP_WB);
-> > +     if (!vstart)
-> > +             return -EINVAL;
-> > +
-> > +     if (swiotlb_init_with_tbl(vstart, io_tlb_nslabs, verbose)) {
-> > +             memunmap(vstart);
-> > +             return -EINVAL;
-> > +     }
-> > +
-> > +     return 0;
-> > +}
-> > +
-> >  /*
-> >   * Statically reserve bounce buffer space and initialize bounce buffer data
-> >   * structures for the software IO TLB used to implement the DMA API.
-> > @@ -257,6 +295,10 @@ swiotlb_init(int verbose)
-> >
-> >       bytes = io_tlb_nslabs << IO_TLB_SHIFT;
-> >
-> > +     /* Map IO TLB from device memory */
-> > +     if (!swiotlb_init_io(verbose, bytes))
-> > +             return;
-> > +
-> >       /* Get IO TLB memory from the low pages */
-> >       vstart = memblock_alloc_low(PAGE_ALIGN(bytes), PAGE_SIZE);
-> >       if (vstart && !swiotlb_init_with_tbl(vstart, io_tlb_nslabs, verbose))
-> > --
-> > 2.16.4
-> >
-> >
-> >
-> >
-> > Amazon Development Center Germany GmbH
-> > Krausenstr. 38
-> > 10117 Berlin
-> > Geschaeftsfuehrung: Christian Schlaeger, Jonathan Weiss
-> > Eingetragen am Amtsgericht Charlottenburg unter HRB 149173 B
-> > Sitz: Berlin
-> > Ust-ID: DE 289 237 879
-> >
-> >
-> >
->
-> Thanks
-> Dave
->
-
-
--- 
-Best Regards,
-Kairui Song
-
+T24gU2F0LCBNYXIgMjgsIDIwMjAgYXQgMTE6NTMgQU0sIE9kZWQgR2FiYmF5IDxvZGVkLmdhYmJh
+eUBnbWFpbC5jb20+IHdyb3RlOg0KPiBNb3ZlIHRoZSBjb2RlIG9mIGRldmljZSBDUFUgaW5pdGlh
+bGl6YXRpb24gZnJvbSBiZWluZyBBU0lDLURlcGVuZGVudCB0byBjb21tb24NCj4gY29kZS4gSW4g
+YWRkaXRpb24sIGFkZCBzdXBwb3J0IGZvciB0aGUgbmV3IGVycm9yIHJlcG9ydGluZyBmZWF0dXJl
+IG9mIHRoZSBmaXJtd2FyZQ0KPiBib290IGNvZGUuDQo+DQo+IFNpZ25lZC1vZmYtYnk6IE9kZWQg
+R2FiYmF5IDxvZGVkLmdhYmJheUBnbWFpbC5jb20+DQoNClJldmlld2VkLWJ5OiBPbWVyIFNocGln
+ZWxtYW4gPG9zaHBpZ2VsbWFuQGhhYmFuYS5haT4NCg==
