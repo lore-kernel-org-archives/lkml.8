@@ -2,69 +2,88 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D95AAC2D0EB
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 19:50:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AA5BC2D0ED
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 19:53:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B3F9C20784
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 19:50:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585597829;
-	bh=R6wDk2m111rH4CuDXMFzHcS4xBTUim+MIi8E7Eq/Jrc=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=eH7XsIuLIdjTSWE2zhLwABamHZE1ngNOq71A8Mz8zE7GV3PlqgMc73vPUc0K7QEk3
-	 jGQKuaPCffgyDQ2Qik4NKkqiUXIk/BoFl9WkJaYwQp9/JUExL0iZQ0eSEZJHTh4K8S
-	 VN7xw1XQI7YJ/6gxDutC0U5ziI92evKB9cLs9trs=
+	by mail.kernel.org (Postfix) with ESMTP id 167F320771
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 19:53:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729029AbgC3Tu2 (ORCPT
+        id S1728908AbgC3TxB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 15:50:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41372 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728407AbgC3TuJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 15:50:09 -0400
-Subject: Re: [GIT PULL] io_uring updates for 5.7-rc
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585597809;
-        bh=R6wDk2m111rH4CuDXMFzHcS4xBTUim+MIi8E7Eq/Jrc=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=LbOquw/KmQAHUf4jtyPszTNxZTouNnWdpG8C2Rqb1oEiv342Y/UTkAT+wCmdc6Day
-         mZKlw6OmxXB4fBifKr1jkIHp5lfO0t5Ok4UB3Aqmh2xGdBL5QW8F2rXCpaxBCxnCIY
-         RH5NDKKz9bzGN+gHyNg5+W7leTrC/Bo7otLgI0Es=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <90978552-6746-1902-888b-4b6150e02b7a@kernel.dk>
-References: <90978552-6746-1902-888b-4b6150e02b7a@kernel.dk>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <90978552-6746-1902-888b-4b6150e02b7a@kernel.dk>
-X-PR-Tracked-Remote: git://git.kernel.dk/linux-block.git
- tags/for-5.7/io_uring-2020-03-29
-X-PR-Tracked-Commit-Id: 3d9932a8b240c9019f48358e8a6928c53c2c7f6b
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: e59cd88028dbd41472453e5883f78330aa73c56e
-Message-Id: <158559780935.12131.16884371446285327934.pr-tracker-bot@kernel.org>
-Date:   Mon, 30 Mar 2020 19:50:09 +0000
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        io-uring <io-uring@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+        Mon, 30 Mar 2020 15:53:01 -0400
+Received: from mail.computer-surgery.co.uk ([82.69.253.61]:44021 "EHLO
+        nicole.computer-surgery.co.uk" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728393AbgC3TxA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Mar 2020 15:53:00 -0400
+X-Greylist: delayed 2686 seconds by postgrey-1.27 at vger.kernel.org; Mon, 30 Mar 2020 15:53:00 EDT
+Received: from [10.94.89.11] (helo=kilburn)
+        by nicole.computer-surgery.co.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.84_2)
+        (envelope-from <rgammans@gammascience.co.uk>)
+        id 1jIzlc-000433-3Z; Mon, 30 Mar 2020 20:08:12 +0100
+Message-ID: <fb289e488d777bd4e56befa6e8791de84a830557.camel@gammascience.co.uk>
+Subject: Re: [PATCH v4 4/4] SFH: Create HID report to Enable support of AMD
+ sensor fusion Hub (SFH)
+From:   Roger Gammans <rgammans@gammascience.co.uk>
+To:     "Singh, Sandeep" <ssingh1@amd.com>,
+        Sandeep Singh <Sandeep.Singh@amd.com>
+Cc:     linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-input@vger.kernel.org
+Date:   Mon, 30 Mar 2020 20:07:51 +0100
+In-Reply-To: <b96bb88c-dd1a-97d3-21fa-2cc60a4d6a60@amd.com>
+References: <20200329184006.GA8199@kilburn.gammascience.co.uk>
+         <b96bb88c-dd1a-97d3-21fa-2cc60a4d6a60@amd.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.30.5-1.1 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Sun, 29 Mar 2020 17:04:39 -0600:
+On Mon, 2020-03-30 at 09:53 +0530, Singh, Sandeep wrote:
+> Hi Roger,
+> 
+> On 3/30/2020 12:10 AM, Roger Gammans wrote:
+> > [CAUTION: External Email]
+> > 
+> > Also I don't seem to be getting any data through
+> > to monitor-sensor in user space when I do install it, but I am
+> > gettting logs of log messages similar to this:
+> > 
+> >   pcie_mp2_amd 0000:04:00.7: AMD-Vi: Event logged [IO_PAGE_FAULT
+> > domain=0x000c address=0x5267f000 flags=0x0020]
+> >   pcie_mp2_amd 0000:04:00.7: AMD-Vi: Event logged [IO_PAGE_FAULT
+> > domain=0x000c address=0x5267f000 flags=0x0020]
+> > 
+> > This is compiled against the debian 5.4.0 kernel, on a
+> >       HP ENVY x360 Convertible 15-ds0xxx, SKU 6TD07EA#ABU
+> > 
+> > I can run other tests or try other kernels if you think it might
+> > help,
+> > let me know what you need.
+> Can you disable IOMMU from bios and give a try or if your laptop
+> does 
+> not have iommu option you can pass boot parameter "iommu=soft"
 
-> git://git.kernel.dk/linux-block.git tags/for-5.7/io_uring-2020-03-29
+I couldn't find anything useful in the BIOS, so tried iommu=soft on the
+kernel command line. And that seems to have done the trick, we get
+rotation info all the way through to the userspace, and the desktop 
+does it auto-rotate magic. Thanks for all your hard work.
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/e59cd88028dbd41472453e5883f78330aa73c56e
+On module inserion I have these messages if it is of any concern:-
 
-Thank you!
+pcie_mp2_amd 0000:04:00.7: MP2 device found [1022:15e4] (rev 0)
+hid-generic 0020:03FE:0001.0003: hidraw2: <UNKNOWN> HID v0.01 Device [hid-amdtp 03FE:0001] on 
+hid-generic 0020:03FE:0001.0004: hidraw3: <UNKNOWN> HID v0.01 Device [hid-amdtp 03FE:0001] on 
+hid-generic 0020:03FE:0001.0005: hidraw4: <UNKNOWN> HID v0.01 Device [hid-amdtp 03FE:0001] on 
 
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.wiki.kernel.org/userdoc/prtracker
+Roger Gammans <rgammans@gammascience.co.uk>
+
