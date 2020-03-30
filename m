@@ -2,122 +2,90 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E57DFC43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 23:21:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E566C2D0F0
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 23:21:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B3BD620774
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 23:21:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD97720733
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 23:21:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585610476;
-	bh=3yuZSaQ36wyLBlKdpsQHW3thBDOr3nwmhonGyIIq6BQ=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=X3l638gXXwLpqNMqgLgetpMvuZpeMO1OVwGaHBEDiEQQ+9tqsaztZqaZuI/IZ7325
-	 0aJROf4Aumv9n9IJpX+4RkMt2zoOx6YvfQoWJwg6fr6IX03Oq8edqNGK14XLkBTxr+
-	 XKBMC4sQAzYaawAx79QCGOgeibSolrwx1YtlpCwM=
+	s=default; t=1585610479;
+	bh=zILe5TYBD6EPX4rdyC32BjLoxtx3ksb3icQbmKk/pkg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=XDwVYZfpsYecjQUg23Ae+m8ThBF+H0uyq7osUSTUTGbJpa0yG9JtJbqEwJpGuXu0N
+	 OPKsuhl592BEcjmVh5dSpoCYhxsrA+iKd8J4HerE6+Z/PthMt66CU3ePzKk2cogjdq
+	 FAqD3X70eIKdSvYTSuHrkJ9z3T5+eSn67DTcvzkI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729878AbgC3XVP (ORCPT
+        id S1730042AbgC3XVT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 19:21:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35582 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728991AbgC3XVP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 19:21:15 -0400
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F032020675;
-        Mon, 30 Mar 2020 23:21:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585610475;
-        bh=3yuZSaQ36wyLBlKdpsQHW3thBDOr3nwmhonGyIIq6BQ=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=GwtNJliugD8mSTia+pLAwHnYuw88NISnmBDSifRCYu8M8RxiQb73Rzdx2oXlg0lzF
-         UsUIushsMgvd5Z83F9KrAsb4kNex+24c7eBETE39ZiNuNB78geEQ6t31td7mmgg5oC
-         tuAlci+SA49SUzt802ziva3EY7/q2NZZaR6bgx3o=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id CAF893523140; Mon, 30 Mar 2020 16:21:14 -0700 (PDT)
-Date:   Mon, 30 Mar 2020 16:21:14 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Will Deacon <will@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
-        Jann Horn <jannh@google.com>,
-        Kees Cook <keescook@chromium.org>,
-        Maddie Stone <maddiestone@google.com>,
-        Marco Elver <elver@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>, kernel-team@android.com,
-        kernel-hardening@lists.openwall.com
-Subject: Re: [RFC PATCH 06/21] list: Remove superfluous WRITE_ONCE() from
- hlist_nulls implementation
-Message-ID: <20200330232114.GC19865@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20200324153643.15527-1-will@kernel.org>
- <20200324153643.15527-7-will@kernel.org>
+        Mon, 30 Mar 2020 19:21:19 -0400
+Received: from mail-il1-f193.google.com ([209.85.166.193]:43690 "EHLO
+        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728991AbgC3XVS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Mar 2020 19:21:18 -0400
+Received: by mail-il1-f193.google.com with SMTP id g15so17625011ilj.10;
+        Mon, 30 Mar 2020 16:21:17 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=J6CtYXa3sClSqnbvBiuHvvlUuxEGfNZdWolqywsT7lk=;
+        b=F1kjGAdgCYgRzZnfNXO0634hDe2IOFAVhnf/XVqU6U6lcQZhxr4DDONwZj9D71qd2w
+         ELvimVuy4QBSsxBp6TbKVGbB/uP7bHZEWXM5eWPIeSMlntXPQLqpG0UhaQfwNowwMHFH
+         GfaqYgEXxdQkaWWDkYAjNi+1HggS49DGy80O5wEqPxTypILiLIIx7usNdKhqQisqpC8S
+         BM57Jpk01XktEF8eiqmw1NOVJ01C6F9YSCZK+b4gIHvVgn/77mPEuynOAgdHm/EGgYii
+         ka+0RPMpVHMB24YMCh7C5S0AQ0nq5ENH+kB/sOTx8f/HR3SphdWdOJ2F+ht+/AAm1Jpx
+         L8Gg==
+X-Gm-Message-State: ANhLgQ0Kd5+vS06rwazyhhIDoAUOlglxbZReuRWmPQ8d+2XrZZBE7Zn3
+        cuGR9S9Aw1/QOB+yCTklzw==
+X-Google-Smtp-Source: ADFU+vuaKs6BtYALVaqgUXUnIFTShETJESYag2YrRrycS+2I8mzQdSm2bGh9kir55sPT0pkBtVUhBA==
+X-Received: by 2002:a05:6e02:be7:: with SMTP id d7mr14208948ilu.238.1585610477255;
+        Mon, 30 Mar 2020 16:21:17 -0700 (PDT)
+Received: from rob-hp-laptop ([64.188.179.250])
+        by smtp.gmail.com with ESMTPSA id t5sm3578511iom.3.2020.03.30.16.21.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 30 Mar 2020 16:21:16 -0700 (PDT)
+Received: (nullmailer pid 17537 invoked by uid 1000);
+        Mon, 30 Mar 2020 23:21:15 -0000
+Date:   Mon, 30 Mar 2020 17:21:15 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Fabrice Gasnier <fabrice.gasnier@st.com>
+Cc:     robh+dt@kernel.org, jic23@kernel.org, alexandre.torgue@st.com,
+        mark.rutland@arm.com, mcoquelin.stm32@gmail.com, lars@metafoo.de,
+        knaack.h@gmx.de, pmeerw@pmeerw.net, fabrice.gasnier@st.com,
+        olivier.moysan@st.com, linux-iio@vger.kernel.org,
+        devicetree@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] dt-bindings: iio: adc: stm32-adc: fix id relative path
+Message-ID: <20200330232115.GA17380@bogus>
+References: <1584641907-8228-1-git-send-email-fabrice.gasnier@st.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200324153643.15527-7-will@kernel.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <1584641907-8228-1-git-send-email-fabrice.gasnier@st.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 24, 2020 at 03:36:28PM +0000, Will Deacon wrote:
-> Commit 860c8802ace1 ("rcu: Use WRITE_ONCE() for assignments to ->pprev
-> for hlist_nulls") added WRITE_ONCE() invocations to hlist_nulls_add_head()
-> and hlist_nulls_del().
+On Thu, 19 Mar 2020 19:18:27 +0100, Fabrice Gasnier wrote:
+> Fix id relative path that shouldn't contain 'bindings', as pointed out
+> when submitting st,stm32-dac bindings conversion to json-schema [1].
+> [1] https://patchwork.ozlabs.org/patch/1257568/
 > 
-> Since these functions should not ordinarily run concurrently with other
-> list accessors, restore the plain C assignments so that KCSAN can yell
-> if a data race occurs.
+> Fixes: a8cf1723c4b7 ("dt-bindings: iio: adc: stm32-adc: convert bindings to json-schema")
 > 
-> Cc: Eric Dumazet <edumazet@google.com>
-> Cc: Paul E. McKenney <paulmck@kernel.org>
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Signed-off-by: Will Deacon <will@kernel.org>
-
-And this means that the lockless uses of hlist_nulls_empty() need
-attention, correct?
-
-							Thanx, Paul
-
+> Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
 > ---
->  include/linux/list_nulls.h | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
+>  Documentation/devicetree/bindings/iio/adc/st,stm32-adc.yaml | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> diff --git a/include/linux/list_nulls.h b/include/linux/list_nulls.h
-> index fa51a801bf32..fd154ceb5b0d 100644
-> --- a/include/linux/list_nulls.h
-> +++ b/include/linux/list_nulls.h
-> @@ -80,10 +80,10 @@ static inline void hlist_nulls_add_head(struct hlist_nulls_node *n,
->  	struct hlist_nulls_node *first = h->first;
->  
->  	n->next = first;
-> -	WRITE_ONCE(n->pprev, &h->first);
-> +	n->pprev = &h->first;
->  	h->first = n;
->  	if (!is_a_nulls(first))
-> -		WRITE_ONCE(first->pprev, &n->next);
-> +		first->pprev = &n->next;
->  }
->  
->  static inline void __hlist_nulls_del(struct hlist_nulls_node *n)
-> @@ -99,7 +99,7 @@ static inline void __hlist_nulls_del(struct hlist_nulls_node *n)
->  static inline void hlist_nulls_del(struct hlist_nulls_node *n)
->  {
->  	__hlist_nulls_del(n);
-> -	WRITE_ONCE(n->pprev, LIST_POISON2);
-> +	n->pprev = LIST_POISON2;
->  }
->  
->  /**
-> -- 
-> 2.20.1
-> 
+
+Reviewed-by: Rob Herring <robh@kernel.org>
