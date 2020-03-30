@@ -5,72 +5,74 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4ABBC2D0E9
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 07:30:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53FD0C2D0E9
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 07:31:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AFDE42073B
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 07:30:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B6CE20748
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 07:31:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hvzKxesc"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ulhlK3QD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729502AbgC3Ham (ORCPT
+        id S1729531AbgC3HbR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 03:30:42 -0400
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:43284 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729431AbgC3Hal (ORCPT
+        Mon, 30 Mar 2020 03:31:17 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:41107 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729344AbgC3HbR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 03:30:41 -0400
-Received: by mail-qk1-f196.google.com with SMTP id o10so17898125qki.10;
-        Mon, 30 Mar 2020 00:30:40 -0700 (PDT)
+        Mon, 30 Mar 2020 03:31:17 -0400
+Received: by mail-pf1-f193.google.com with SMTP id a24so1337561pfc.8;
+        Mon, 30 Mar 2020 00:31:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=J0mF9YuJjdBJn2ibrPXteakvuUEew7gBpgHO80gKios=;
-        b=hvzKxesc6T9Xr7/+N5hnlAWriKe2jdgQEGrG6lKHD2Ur5i9WbpwXQKJBUxlzWk4Gfo
-         5XsHcMb1vv4xi3J7BY5dC9SRJV+1VPMW5HkUaJU5LbVzhVYtUQIw2eAUEZHTPxr0fFW6
-         FGcKTuHqs8z9C7e1YVZLUGDCt4JzmoVXvLnTjd+YYIQcq7x1v2JWIoce2YdK7bnh/kk+
-         pRDCGTMW3AAjDXQDFRoNVEqA8+pu1mFKgZP6Pa7TydTYlvbsIuCs09MsI+m+WHV0z66L
-         oYF7MJ3IwkD/hhRzl7IXv9ueclrrM2pwLoUFKsd7d4vXgutuqTM+IAj+Cr3+6KhWWRl4
-         WP7g==
+        bh=SEwlVyEv36eeIRNWATF1aFQ5BBswo3YJxEpbUEmPHfo=;
+        b=ulhlK3QDhORQq7j8zyNINp8aFMjGg4QklBE2Ocb/P/cRQVp98/JNMkMYa8ZPASSR5a
+         p2OKwOT8slo+Zm5wpjFiDY+RJJTjsbIiHMUPY7WxxI0mQwzeIYrw8G+Qcg3S2qQAKuvs
+         yi5X2sFwEJnuwxP09ETYhRcKkTZj0Ykk1wgjaQ/hRAymHRlljvO89nf5KMlC9s0kxh0s
+         pQF9gT2oJOs6JmMofg3z+9MAshfvsM2O7VGn9QZfVUvY3iW8aT5/mc1zkuVcZrQnY1px
+         x4TuNTEvtDzR1s1MiEOR6ojUcpOjNtpppW+BPLIUNf38+yiqCm0b6aAD+6VQ570LBR7c
+         iPww==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=J0mF9YuJjdBJn2ibrPXteakvuUEew7gBpgHO80gKios=;
-        b=YtwQdgYmwMloj6weZ0C2KQnJZjMhmgNh/U8Fm0j4fsrZv2mmQSyVinhbnJr6FJKuKH
-         sCKdvItcZXOKcfkLxOq9I+nPXFNmfGqM/mlZAqflqsd8X7/A+bOl0W+5dvFVAlZaLrp9
-         9qet8uUo5RS5mge/YySHXktIZRtteImBMKjlwBzfY0TPEi85dnBeK+XZNq5CYGmF+9OP
-         1wYqSPuY4r6sobMXBVSmR9IsW/rPvSOzuev/xgvubXzxfouOqHRPhAy2M3cH5lWTtVeF
-         WDf5ZeTziahl+NdrmL6JZsUL7JP4R4IQgCt4jgsVfHWVsYw92Yyx15bONsVzCQ4wRXaY
-         7Czg==
-X-Gm-Message-State: ANhLgQ22qtHFhxKKTp6E98lvS0A9hHE9PPEGfZX3pbSYso09+KUtfGAD
-        pj+XLAEZnRD+m8uk+A47+Lk=
-X-Google-Smtp-Source: ADFU+vs6NUiM8C4jsWZ+vAHnLW2Y842aF6c7pNjPZoSWGT35QxH1qwA4b2SFMyyNZ1+dOPROnLh+SQ==
-X-Received: by 2002:ae9:ed56:: with SMTP id c83mr3965463qkg.200.1585553439424;
-        Mon, 30 Mar 2020 00:30:39 -0700 (PDT)
-Received: from stingray.lan (pool-173-76-255-234.bstnma.fios.verizon.net. [173.76.255.234])
-        by smtp.gmail.com with ESMTPSA id n63sm10078499qka.80.2020.03.30.00.30.38
+        bh=SEwlVyEv36eeIRNWATF1aFQ5BBswo3YJxEpbUEmPHfo=;
+        b=syBFb/rpb3m6cfxedrd2fsjbCpKWfSAzwbRiJ+RHB5s4MLlDw+1Y3mE5ejv0c6BaiI
+         /mceGhoyxpKTjIj3b47Txrt5tiWyT4TQKET7s7rIgOiond/p81i+N6vENt9zlC0wVlvz
+         DPlEMsvKzFv+mMd0T+lK2zzCOIIcI6KV2JLSd5DveX6xO0bxn2CfcmtxEUFgvQH6MOeG
+         /aWZA2rruYjnTvT9IJjZ2iPXUKp4BzExgWFWkLzMorBLJ691s6fH1XYw8MoxHzl55pjw
+         PDmm9Ix8tBULGN3wxaxq+FG0Tlf4T/66VKd+lrdmCZVYdhyHvDgC06MAPWRxWS0gAIKG
+         qCPA==
+X-Gm-Message-State: ANhLgQ1g3rh6XuJFK6HtSL3rceeQNRDsq0umZGFjqjg9/CTfS++6Oeaq
+        yqPODmDEmvf0ADyNnBVad8g=
+X-Google-Smtp-Source: ADFU+vvZhDfj+ZP7g9wtM/Cs/lguG9sQbIRc/a/b3v4CzDuWHLhq26abeNCo5nQjVkZd/YaXdbA/5w==
+X-Received: by 2002:a65:6855:: with SMTP id q21mr10003864pgt.188.1585553475645;
+        Mon, 30 Mar 2020 00:31:15 -0700 (PDT)
+Received: from ubt.spreadtrum.com ([117.18.48.82])
+        by smtp.gmail.com with ESMTPSA id r186sm9648935pfc.181.2020.03.30.00.31.11
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Mar 2020 00:30:39 -0700 (PDT)
-From:   Thomas Hebb <tommyhebb@gmail.com>
-To:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.or
-Cc:     Kailang Yang <kailang@realtek.com>,
-        Thomas Hebb <tommyhebb@gmail.com>, stable@vger.kernel.org,
-        Jaroslav Kysela <perex@perex.cz>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Takashi Iwai <tiwai@suse.com>, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 1/3] ALSA: doc: Document PC Beep Hidden Register on Realtek ALC256
-Date:   Mon, 30 Mar 2020 03:30:30 -0400
-Message-Id: <bd69dfdeaf40ff31c4b7b797c829bb320031739c.1585553414.git.tommyhebb@gmail.com>
-X-Mailer: git-send-email 2.25.2
-In-Reply-To: <cover.1585553414.git.tommyhebb@gmail.com>
-References: <cover.1585553414.git.tommyhebb@gmail.com>
+        Mon, 30 Mar 2020 00:31:15 -0700 (PDT)
+From:   Chunyan Zhang <zhang.lyra@gmail.com>
+To:     Stephen Boyd <sboyd@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Cc:     linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Orson Zhai <orsonzhai@gmail.com>,
+        Baolin Wang <baolin.wang7@gmail.com>,
+        Chunyan Zhang <zhang.lyra@gmail.com>,
+        Chunyan Zhang <chunyan.zhang@unisoc.com>
+Subject: [PATCH 1/4] clk: sprd: check its parent status before reading gate clock
+Date:   Mon, 30 Mar 2020 15:31:07 +0800
+Message-Id: <20200330073107.14180-1-zhang.lyra@gmail.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200330071451.7899-2-zhang.lyra@gmail.com>
+References: <20200330071451.7899-2-zhang.lyra@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -78,174 +80,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This codec (among others) has a hidden set of audio routes, apparently
-designed to allow PC Beep output without a mixer widget on the output
-path, which are controlled by an undocumented Realtek vendor register.
-The default configuration of these routes means that certain inputs
-aren't accessible, necessitating driver control of the register.
-However, Realtek has provided no documentation of the register, instead
-opting to fix issues by providing magic numbers, most of which have been
-at least somewhat erroneous. These magic numbers then get copied by
-others into model-specific fixups, leading to a fragmented and buggy set
-of configurations.
+From: Chunyan Zhang <chunyan.zhang@unisoc.com>
 
-To get out of this situation, I've reverse engineered the register by
-flipping bits and observing how the codec's behavior changes. This
-commit documents my findings. It does not change any code.
+Some clocks only can be accessed if their parent is enabled. mipi_csi_xx
+clocks on SC9863A are examples. We have to ensure the parent clock is
+enabled when reading those clocks.
 
-Cc: stable@vger.kernel.org
-Signed-off-by: Thomas Hebb <tommyhebb@gmail.com>
+Signed-off-by: Chunyan Zhang <chunyan.zhang@unisoc.com>
 ---
+ drivers/clk/sprd/gate.c | 7 +++++++
+ drivers/clk/sprd/gate.h | 9 +++++++++
+ 2 files changed, 16 insertions(+)
 
- Documentation/sound/hd-audio/index.rst        |   1 +
- .../sound/hd-audio/realtek-pc-beep.rst        | 129 ++++++++++++++++++
- 2 files changed, 130 insertions(+)
- create mode 100644 Documentation/sound/hd-audio/realtek-pc-beep.rst
-
-diff --git a/Documentation/sound/hd-audio/index.rst b/Documentation/sound/hd-audio/index.rst
-index f8a72ffffe66..6e12de9fc34e 100644
---- a/Documentation/sound/hd-audio/index.rst
-+++ b/Documentation/sound/hd-audio/index.rst
-@@ -8,3 +8,4 @@ HD-Audio
-    models
-    controls
-    dp-mst
-+   realtek-pc-beep
-diff --git a/Documentation/sound/hd-audio/realtek-pc-beep.rst b/Documentation/sound/hd-audio/realtek-pc-beep.rst
-new file mode 100644
-index 000000000000..be47c6f76a6e
---- /dev/null
-+++ b/Documentation/sound/hd-audio/realtek-pc-beep.rst
-@@ -0,0 +1,129 @@
-+===============================
-+Realtek PC Beep Hidden Register
-+===============================
+diff --git a/drivers/clk/sprd/gate.c b/drivers/clk/sprd/gate.c
+index 574cfc116bbc..56e1714b541e 100644
+--- a/drivers/clk/sprd/gate.c
++++ b/drivers/clk/sprd/gate.c
+@@ -94,8 +94,15 @@ static int sprd_gate_is_enabled(struct clk_hw *hw)
+ {
+ 	struct sprd_gate *sg = hw_to_sprd_gate(hw);
+ 	struct sprd_clk_common *common = &sg->common;
++	struct clk_hw *parent;
+ 	unsigned int reg;
+ 
++	if (sg->flags & SPRD_GATE_NON_AON) {
++		parent = clk_hw_get_parent(hw);
++		if (!parent || !clk_hw_is_enabled(parent))
++			return 0;
++	}
 +
-+This file documents the "PC Beep Hidden Register", which is present in certain
-+Realtek HDA codecs and controls a muxer and pair of passthrough mixers that can
-+route audio between pins but aren't themselves exposed as HDA widgets. As far
-+as I can tell, these hidden routes are designed to allow flexible PC Beep output
-+for codecs that don't have mixer widgets in their output paths. Why it's easier
-+to hide a mixer behind an undocumented vendor register than to just expose it
-+as a widget, I have no idea.
+ 	regmap_read(common->regmap, common->reg, &reg);
+ 
+ 	if (sg->flags & CLK_GATE_SET_TO_DISABLE)
+diff --git a/drivers/clk/sprd/gate.h b/drivers/clk/sprd/gate.h
+index b55817869367..aa4d72381788 100644
+--- a/drivers/clk/sprd/gate.h
++++ b/drivers/clk/sprd/gate.h
+@@ -19,6 +19,15 @@ struct sprd_gate {
+ 	struct sprd_clk_common	common;
+ };
+ 
++/*
++ * sprd_gate->flags is used for:
++ * CLK_GATE_SET_TO_DISABLE	BIT(0)
++ * CLK_GATE_HIWORD_MASK		BIT(1)
++ * CLK_GATE_BIG_ENDIAN		BIT(2)
++ * so we define new flags from	BIT(3)
++ */
++#define SPRD_GATE_NON_AON BIT(3) /* not alway on, need to check before read */
 +
-+Register Description
-+====================
-+
-+The register is accessed via processing coefficient 0x36 on NID 20h. Bits not
-+identified below have no discernible effect on my machine, a Dell XPS 13 9350::
-+
-+  MSB                           LSB
-+  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-+  | |h|S|L|         | B |R|       | Known bits
-+  +=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+
-+  |0|0|1|1|  0x7  |0|0x0|1|  0x7  | Reset value
-+  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-+
-+1Ah input select (B): 2 bits
-+  When zero, expose the PC Beep line (from the internal beep generator, when
-+  enabled with the Set Beep Generation verb on NID 01h, or else from the
-+  external PCBEEP pin) on the 1Ah pin node. When nonzero, expose the headphone
-+  jack (or possibly Line In on some machines) input instead. If PC Beep is
-+  selected, the 1Ah boost control has no effect.
-+
-+Amplify 1Ah loopback, left (L): 1 bit
-+  Amplify the left channel of 1Ah before mixing it into outputs as specified
-+  by h and S bits. Does not affect the level of 1Ah exposed to other widgets.
-+
-+Amplify 1Ah loopback, right (R): 1 bit
-+  Amplify the right channel of 1Ah before mixing it into outputs as specified
-+  by h and S bits. Does not affect the level of 1Ah exposed to other widgets.
-+
-+Loopback 1Ah to 21h [active low] (h): 1 bit
-+  When zero, mix 1Ah (possibly with amplification, depending on L and R bits)
-+  into 21h (headphone jack on my machine). Mixed signal respects the mute
-+  setting on 21h.
-+
-+Loopback 1Ah to 14h (S): 1 bit
-+  When one, mix 1Ah (possibly with amplification, depending on L and R bits)
-+  into 14h (internal speaker on my machine). Mixed signal **ignores** the mute
-+  setting on 14h and is present whenever 14h is configured as an output.
-+
-+Path diagrams
-+=============
-+
-+1Ah input selection (DIV is the PC Beep divider set on NID 01h)::
-+
-+  <Beep generator>   <PCBEEP pin>    <Headphone jack>
-+          |                |                |
-+          +--DIV--+--!DIV--+       {1Ah boost control}
-+                  |                         |
-+                  +--(b == 0)--+--(b != 0)--+
-+                               |
-+               >1Ah (Beep/Headphone Mic/Line In)<
-+
-+Loopback of 1Ah to 21h/14h::
-+
-+               <1Ah (Beep/Headphone Mic/Line In)>
-+                               |
-+                        {amplify if L/R}
-+                               |
-+                  +-----!h-----+-----S-----+
-+                  |                        |
-+          {21h mute control}               |
-+                  |                        |
-+          >21h (Headphone)<     >14h (Internal Speaker)<
-+
-+Background
-+==========
-+
-+All Realtek HDA codecs have a vendor-defined widget with node ID 20h which
-+provides access to a bank of registers that control various codec functions.
-+Registers are read and written via the standard HDA processing coefficient
-+verbs (Set/Get Coefficient Index, Set/Get Processing Coefficient). The node is
-+named "Realtek Vendor Registers" in public datasheets' verb listings and,
-+apart from that, is entirely undocumented.
-+
-+This particular register, exposed at coefficient 0x36 and named in commits from
-+Realtek, is of note: unlike most registers, which seem to control detailed
-+amplifier parameters not in scope of the HDA specification, it controls audio
-+routing which could just as easily have been defined using standard HDA mixer
-+and selector widgets.
-+
-+Specifically, it selects between two sources for the input pin widget with Node
-+ID (NID) 1Ah: the widget's signal can come either from an audio jack (on my
-+laptop, a Dell XPS 13 9350, it's the headphone jack, but comments in Realtek
-+commits indicate that it might be a Line In on some machines) or from the PC
-+Beep line (which is itself multiplexed between the codec's internal beep
-+generator and external PCBEEP pin, depending on if the beep generator is
-+enabled via verbs on NID 01h). Additionally, it can mix (with optional
-+amplification) that signal onto the 21h and/or 14h output pins.
-+
-+The register's reset value is 0x3717, corresponding to PC Beep on 1Ah that is
-+then amplified and mixed into both the headphones and the speakers. Not only
-+does this violate the HDA specification, which says that "[a vendor defined
-+beep input pin] connection may be maintained *only* while the Link reset
-+(**RST#**) is asserted", it means that we cannot ignore the register if we care
-+about the input that 1Ah would otherwise expose or if the PCBEEP trace is
-+poorly shielded and picks up chassis noise (both of which are the case on my
-+machine).
-+
-+Unfortunately, there are lots of ways to get this register configuration wrong.
-+Linux, it seems, has gone through most of them. For one, the register resets
-+after S3 suspend: judging by existing code, this isn't the case for all vendor
-+registers, and it's led to some fixes that improve behavior on cold boot but
-+don't last after suspend. Other fixes have successfully switched the 1Ah input
-+away from PC Beep but have failed to disable both loopback paths. On my
-+machine, this means that the headphone input is amplified and looped back to
-+the headphone output, which uses the exact same pins! As you might expect, this
-+causes terrible headphone noise, the character of which is controlled by the
-+1Ah boost control. (If you've seen instructions online to fix XPS 13 headphone
-+noise by changing "Headphone Mic Boost" in ALSA, now you know why.)
-+
-+The information here has been obtained through black-box reverse engineering of
-+the ALC256 codec's behavior and is not guaranteed to be correct. It likely
-+also applies for the ALC255, ALC257, ALC235, and ALC236, since those codecs
-+seem to be close relatives of the ALC256. (They all share one initialization
-+function.) Additionally, other codecs like the ALC225 and ALC285 also have this
-+register, judging by existing fixups in ``patch_realtek.c``, but specific
-+data (e.g. node IDs, bit positions, pin mappings) for those codecs may differ
-+from what I've described here.
+ #define SPRD_SC_GATE_CLK_HW_INIT_FN(_struct, _name, _parent, _reg,	\
+ 				    _sc_offset, _enable_mask, _flags,	\
+ 				    _gate_flags, _udelay, _ops, _fn)	\
 -- 
-2.25.2
+2.20.1
 
