@@ -2,132 +2,93 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B26E4C43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 01:24:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1D98C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 01:25:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8AE74206F6
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 01:24:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 936D9206F6
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 01:25:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="g20xzvu1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728113AbgC3BY5 (ORCPT
+        id S1728194AbgC3BZG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Mar 2020 21:24:57 -0400
-Received: from mail-out.m-online.net ([212.18.0.9]:57282 "EHLO
-        mail-out.m-online.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727830AbgC3BY5 (ORCPT
+        Sun, 29 Mar 2020 21:25:06 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:39874 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727830AbgC3BZF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Mar 2020 21:24:57 -0400
-Received: from frontend01.mail.m-online.net (unknown [192.168.8.182])
-        by mail-out.m-online.net (Postfix) with ESMTP id 48rFBD6LBGz1qrFS;
-        Mon, 30 Mar 2020 03:24:52 +0200 (CEST)
-Received: from localhost (dynscan1.mnet-online.de [192.168.6.70])
-        by mail.m-online.net (Postfix) with ESMTP id 48rFBD42WBz1r0bl;
-        Mon, 30 Mar 2020 03:24:52 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at mnet-online.de
-Received: from mail.mnet-online.de ([192.168.8.182])
-        by localhost (dynscan1.mail.m-online.net [192.168.6.70]) (amavisd-new, port 10024)
-        with ESMTP id Fvub03wl5HIX; Mon, 30 Mar 2020 03:24:51 +0200 (CEST)
-X-Auth-Info: od+I4xl5ut2Q/YmRdmMDkY5JVWT6qwkF+EZ0I+fyrGA=
-Received: from [IPv6:::1] (unknown [195.140.253.167])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.mnet-online.de (Postfix) with ESMTPSA;
-        Mon, 30 Mar 2020 03:24:51 +0200 (CEST)
-Subject: Re: [03/12] bus: stm32-fmc2-ebi: add STM32 FMC2 EBI controller driver
-To:     Christophe Kerello <christophe.kerello@st.com>,
-        miquel.raynal@bootlin.com, richard@nod.at, vigneshr@ti.com,
-        lee.jones@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com,
-        tony@atomide.com
-Cc:     linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com
-References: <1584975532-8038-1-git-send-email-christophe.kerello@st.com>
- <1584975532-8038-4-git-send-email-christophe.kerello@st.com>
-From:   Marek Vasut <marex@denx.de>
-Message-ID: <f6a2c766-8ae5-fab7-e2f6-db23f39b5d91@denx.de>
-Date:   Mon, 30 Mar 2020 03:24:50 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Sun, 29 Mar 2020 21:25:05 -0400
+Received: by mail-wr1-f68.google.com with SMTP id p10so19416492wrt.6
+        for <linux-kernel@vger.kernel.org>; Sun, 29 Mar 2020 18:25:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=uL92qf5dJQGlNO9IGHOn2G/wiICxkj1gwIxnuiCxh00=;
+        b=g20xzvu1vSov7nOOikv/A8/WkrAQ8aWVTw+0yxbu/E0e09rfRn5zb1RZooVE769Ezn
+         t+pJ64W5x1/QpNgS1NNPXKpDazEkIMEJYZ7w9mEUEQ7Vin1yKKAF5hEjlWTaSwH7VVu0
+         J0qFF9oUi9rnCjhiHy2/Hi6W+5YTOixYiqpHk9cwL/r3kjoTRZFWw2u4mcOHMv/WMWYk
+         V9yDAUOIXQRHSH029so5UMcrhV1LpFCvkZZ6ItSfau2OZUB4taYrXl3MsjAqLomyire5
+         mmRGkQWFFC9SyvPqDSuaQF4iFbRf3NvT8Yvzici3W6xG+j6obZ4yjdl9woZQy0oiavUA
+         3R8Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=uL92qf5dJQGlNO9IGHOn2G/wiICxkj1gwIxnuiCxh00=;
+        b=eGyCV8HneZiOIctVJE0RROtgRlcdcS9cSgLiIf0/EJrcc9uHoyBL5jGiEaF6XLhkjB
+         0N8WyGBelu4sMYCefOepfCoRMcOLvbo54rHh/Po8Y0EZaLPHiJ1X8aSeCtv9O5oVRPwC
+         0NNTAGhd3KtRJiwcC2BasdirgZGiresW2YMZYYJo+iPJk5DHjngwLMiQoGTobjaXKdyS
+         G/FCi2kjkhIlRj2/Vd8/ZGrAY0qcndlaxXHcm8ej9yh4O33nvCgZMfcJbcpbQ+CiKUjy
+         G1oOKx9j9mc5KO1j34dbEZ29nKCVORA/AmH/grsLN26pSrt+Tdkc8ljX26opNh6neB1Q
+         QxCQ==
+X-Gm-Message-State: ANhLgQ10ur2AKN4RTXha6+SqeHM9fYcbWGyEW3gGbjrQjgcxZs+UYwgk
+        iQd6QC0BkOqKXJRz3VaoKd/3khP56A==
+X-Google-Smtp-Source: ADFU+vv5mG85EeIpoA5NQA3U5Pkh4vQ2pWuNASkAaNz36AL6nJ1YQjP7r7NzVa5nBH/lY5aVME2ziQ==
+X-Received: by 2002:adf:c511:: with SMTP id q17mr12349634wrf.275.1585531503360;
+        Sun, 29 Mar 2020 18:25:03 -0700 (PDT)
+Received: from earth.lan (host-92-23-85-227.as13285.net. [92.23.85.227])
+        by smtp.gmail.com with ESMTPSA id f12sm18679545wmh.4.2020.03.29.18.25.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 29 Mar 2020 18:25:02 -0700 (PDT)
+From:   Jules Irenge <jbi.octave@gmail.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     julia.lawall@lip6.fr, boqun.feng@gmail.com
+Subject: [PATCH v2 0/4] Coccinelle cleanups
+Date:   Mon, 30 Mar 2020 02:24:46 +0100
+Message-Id: <20200330012450.312155-1-jbi.octave@gmail.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <0/4>
+References: <0/4>
 MIME-Version: 1.0
-In-Reply-To: <1584975532-8038-4-git-send-email-christophe.kerello@st.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/23/20 3:58 PM, Christophe Kerello wrote:
-> The driver adds the support for the STMicroelectronics FMC2 EBI controller
-> found on STM32MP SOCs.
-> 
+This patch series clean up some warnings by the Coccinelle tool.
 
-On DH STM32MP1 SoM in PDK2 carrier board,
-Tested-by: Marek Vasut <marex@denx.de>
+Jules Irenge (4):
+  cpu: Remove Comparison to bool
+  rcu: Replace 1 by true
+  genirq: Replace 1 by true
+  locking/rtmutex: Remove Comparison to bool
 
-btw. it seems this sets BTRx DATLAT and CLKDIV to 0xf , it's "Don't
-care" in the datasheet for Muxed mode, but then it should probably be
-set to 0.
+ kernel/cpu.c             | 2 +-
+ kernel/irq/spurious.c    | 2 +-
+ kernel/locking/rtmutex.c | 2 +-
+ kernel/rcu/tree.c        | 2 +-
+ 4 files changed, 4 insertions(+), 4 deletions(-)
 
-The bindings I used are below:
+-- 
+Changes since v2:
+- Improve on commit log 
+- Correct mistake of mixing two different subsystems patches into one.
+2.25.1
 
-&fmc {
-        pinctrl-names = "default", "sleep";
-        pinctrl-0 = <&fmc_pins_b>;
-        pinctrl-1 = <&fmc_sleep_pins_b>;
-        status = "okay";
-        #address-cells = <1>;
-        #size-cells = <1>;
-        /delete-property/interrupts;
-        /delete-property/dmas;
-        /delete-property/dma-names;
-        reg = <0x58002000 0x1000>;
-        ranges;
-
-        ebi {
-                #address-cells = <2>;
-                #size-cells = <1>;
-                compatible = "st,stm32mp1-fmc2-ebi";
-                ranges = <0 0 0x60000000 0x4000000>,
-                         <1 0 0x64000000 0x4000000>,
-                         <2 0 0x68000000 0x4000000>,
-                         <3 0 0x6c000000 0x4000000>;
-
-                ksz8851: ks8851mll@0,0 {
-                        compatible = "micrel,ks8851-mll";
-                        reg = <1 0x0 0x2 1 0x2 0x20000>;
-                        interrupt-parent = <&gpioc>;
-                        interrupts = <3 IRQ_TYPE_LEVEL_LOW>;
-                        bank-width = <2>;
-
-                        /* Timing values are in nS */
-                        st,fmc2_ebi_cs_mux_enable;
-                        st,fmc2_ebi_cs_transaction_type = <4>;
-                        st,fmc2_ebi_cs_buswidth = <16>;
-                        st,fmc2_ebi_cs_address_setup = <6>;
-                        st,fmc2_ebi_cs_address_hold = <6>;
-                        st,fmc2_ebi_cs_data_setup = <127>;
-                        st,fmc2_ebi_cs_bus_turnaround = <9>;
-                        st,fmc2_ebi_cs_data_hold = <9>;
-                };
-
-                sram@3,0 {
-                        compatible = "mtd-ram";
-                        reg = <3 0x0 0x80000>;
-                        bank-width = <2>;
-
-                        /* Timing values are in nS */
-                        st,fmc2_ebi_cs_mux_enable;
-                        st,fmc2_ebi_cs_transaction_type = <4>;
-                        st,fmc2_ebi_cs_buswidth = <16>;
-                        st,fmc2_ebi_cs_address_setup = <6>;
-                        st,fmc2_ebi_cs_address_hold = <6>;
-                        st,fmc2_ebi_cs_data_setup = <127>;
-                        st,fmc2_ebi_cs_bus_turnaround = <9>;
-                        st,fmc2_ebi_cs_data_hold = <9>;
-                };
-        };
-};
