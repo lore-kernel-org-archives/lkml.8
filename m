@@ -2,183 +2,124 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.2 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F52AC2D0EB
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 08:19:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D81EDC2D0E9
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 08:19:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 26C6520714
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 08:19:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585556361;
-	bh=6Gpay+Gl1gOj/ZbhJyNeR2KVwU/OiAF3kGRILxilEGw=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:List-ID:From;
-	b=C+DED0+ZF/v4lmhC/4CtNAIgY5EzgdnWOODjfiek095GtLhS2fygkXXqAp8kogqEV
-	 a6AfcSZbF/mVcJ0tJXYXMbpL1CuarCQ1mJ9m7F9+U1YNU360HKZra/hKEdpGcTIQhZ
-	 EBSQkZqJcwX0t8CXGa0ENwLG4aL6aEnjrpIOF1IY=
+	by mail.kernel.org (Postfix) with ESMTP id B8FD7206CC
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 08:19:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729646AbgC3ITU (ORCPT
+        id S1729652AbgC3ITv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 04:19:20 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:37673 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729576AbgC3ITT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 04:19:19 -0400
-Received: by mail-lj1-f196.google.com with SMTP id r24so17100488ljd.4;
-        Mon, 30 Mar 2020 01:19:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:in-reply-to:references:date:message-id
-         :mime-version;
-        bh=7n6GKoIcVfWJLp8foyknsOYnUKfjIInXxnS+tducqOE=;
-        b=HhDC5Dg6KPSi7DJz7mZelWU9zeuSfMPhxUXFE05xnHykmAZ674UTIgvEE+NGUBpfbF
-         vZAy5u7zgn6W7/qyLmPqqAGzqa5O92Jkax3jcCM06hygUe3yjnLUCUKRhu2eDE8gMLLC
-         coJ4IWNkKzXHLXAHKfCMOjRDkl0Ruf2+D6CsMZJS8n/ZaKtqSCAx4J4Uyc7hg4Lov2s/
-         bW/ibDGIWlsNI4NQWhwmFlF4Cq+XKwjpF0sX68Hq2UIFdeVOPMYiBknyXYhcMTlUoYYP
-         8F2Gvu9epY/QMjjrrru/ZSfWyaSJBi2YOhFzfI4QJp8osuOtkSXYj5SFcHEBXExViSPg
-         U0Ig==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:in-reply-to:references
-         :date:message-id:mime-version;
-        bh=7n6GKoIcVfWJLp8foyknsOYnUKfjIInXxnS+tducqOE=;
-        b=uPBG5uA3A2PRj/J8Ig2cOqwRcfiQ5iWAyw+9vCSEmPBt0rHuyt707RQELPd/uP5WqT
-         VGW6AGGF7ayFg9B+NDjvb8HSwQJrC4E1T+/9JQpm9k416YzvCpOMdv+aQ065tRtr3cA9
-         3EqXLglSRDvjJ1M6N8MlIlHDi2ffZabI9jfqOvpfk6+Skwh9zgwtW50kZ9iYWXLUK8Le
-         AJi/zGFT6X2eVdZXyBN1q6jGe37f79vxM89cSzVqJY1562ICS7kjDSIrx3MUHW9H5P2R
-         PDLvYU9OcJ/CplnVt9UVCwBYy/ZSrSvyAJTiLgpRVW/RrCOxGB1S1haGqCtt1gaGhwIm
-         IkKw==
-X-Gm-Message-State: AGi0PuaI/e0hgdURDlw2023zAR++xpuO5TT+xMfEDwxXsI1Rwn0zywil
-        twJu8Vh6/88YZnydtGhRBNQ=
-X-Google-Smtp-Source: APiQypL5gFfQjKxdK0m1NUzUNdcTeHnsHwajmRP3HoujZtbQC+x6XUBiCnKtZlfVN0l9gZNQXEpPXg==
-X-Received: by 2002:a2e:9acd:: with SMTP id p13mr6121558ljj.131.1585556356654;
-        Mon, 30 Mar 2020 01:19:16 -0700 (PDT)
-Received: from saruman (91-155-214-58.elisa-laajakaista.fi. [91.155.214.58])
-        by smtp.gmail.com with ESMTPSA id t1sm6445168ljo.94.2020.03.30.01.19.15
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 30 Mar 2020 01:19:15 -0700 (PDT)
-From:   Felipe Balbi <balbi@kernel.org>
-To:     Matthias Kaehlcke <mka@chromium.org>,
-        Sandeep Maheswaram <sanm@codeaurora.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Doug Anderson <dianders@chromium.org>,
-        linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Manu Gautam <mgautam@codeaurora.org>,
-        Chandana Kishori Chiluveru <cchiluve@codeaurora.org>
-Subject: Re: [PATCH v6 2/4] usb: dwc3: qcom: Add interconnect support in dwc3 driver
-In-Reply-To: <20200329171756.GA199755@google.com>
-References: <1585302203-11008-1-git-send-email-sanm@codeaurora.org> <1585302203-11008-3-git-send-email-sanm@codeaurora.org> <20200329171756.GA199755@google.com>
-Date:   Mon, 30 Mar 2020 11:19:11 +0300
-Message-ID: <87h7y62r28.fsf@kernel.org>
+        Mon, 30 Mar 2020 04:19:51 -0400
+Received: from mx2.suse.de ([195.135.220.15]:41536 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729576AbgC3ITv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Mar 2020 04:19:51 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 9703DAAFD;
+        Mon, 30 Mar 2020 08:19:48 +0000 (UTC)
+Date:   Mon, 30 Mar 2020 10:19:48 +0200
+From:   Borislav Petkov <bp@suse.de>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-edac <linux-edac@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>
+Subject: [GIT PULL] EDAC updates for 5.7
+Message-ID: <20200330081948.GC14624@zn.tnic>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha256; protocol="application/pgp-signature"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
+Hi Linus,
 
+please pull the pile we've managed to collect this time around.
 
-Hi,
+Thx.
 
-Matthias Kaehlcke <mka@chromium.org> writes:
->> Add interconnect support in dwc3-qcom driver to vote for bus
->> bandwidth.
->>=20
->> This requires for two different paths - from USB master to
->> DDR slave. The other is from APPS master to USB slave.
->>=20
->> Signed-off-by: Sandeep Maheswaram <sanm@codeaurora.org>
->> Signed-off-by: Chandana Kishori Chiluveru <cchiluve@codeaurora.org>
->> Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
->> ---
->>  drivers/usb/dwc3/dwc3-qcom.c | 128 ++++++++++++++++++++++++++++++++++++=
-++++++-
->>  1 file changed, 126 insertions(+), 2 deletions(-)
->>=20
->> diff --git a/drivers/usb/dwc3/dwc3-qcom.c b/drivers/usb/dwc3/dwc3-qcom.c
->> index 1dfd024..7e85fe6 100644
->> --- a/drivers/usb/dwc3/dwc3-qcom.c
->> +++ b/drivers/usb/dwc3/dwc3-qcom.c
->>
->> ...
->>
->> +/* To disable an interconnect, we just set its bandwidth to 0 */
->> +static int dwc3_qcom_interconnect_disable(struct dwc3_qcom *qcom)
->> +{
->> +	int ret;
->> +
->> +	ret =3D icc_set_bw(qcom->usb_ddr_icc_path, 0, 0);
->> +	if (ret)
->> +		return ret;
->> +
->> +	ret =3D icc_set_bw(qcom->apps_usb_icc_path, 0, 0);
->> +	if (ret)
->> +		goto err_reenable_memory_path;
->> +
->> +	return 0;
->> +
->> +	/* Re-enable things in the event of an error */
->> +err_reenable_memory_path:
->> +	ret =3D dwc3_qcom_interconnect_enable(qcom);
->
-> This overwrites the error that led to the execution of this code path.
-> The function should return original error, not the result of the
-> _interconnect_enable() call.
->
-> I saw Felipe queued the patch for v5.8. I think the main options to fix t=
-his
-> are:
->
-> - a v6 of this patch to replace v5 in Felipe's tree (which IIUC will be r=
-ebased
->   anyway once there is a v5.7-rc)
-> - send the fix as a separate patch
-> - Felipe amends the patch in his tree
->
-> Felipe, what would work best for you?
+---
+The following changes since commit 7111951b8d4973bda27ff663f2cf18b663d15b48:
 
-Let's go for a v6, which commits should I drop? I can't find anything
-related to $subject in my queue:
+  Linux 5.6 (2020-03-29 15:25:41 -0700)
 
-$ git --no-pager log --oneline HEAD ^linus/master -- drivers/usb/dwc3/dwc3-=
-qcom.c
-201c26c08db4 usb: dwc3: qcom: Replace <linux/clk-provider.h> by <linux/of_c=
-lk.h>
+are available in the Git repository at:
 
-=2D-=20
-balbi
+  git://git.kernel.org/pub/scm/linux/kernel/git/ras/ras.git tags/edac_updates_for_5.7
 
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
+for you to fetch changes up to 41dac9a2ad4a3d5c96394a23dd53b7e6edcb80ba:
 
------BEGIN PGP SIGNATURE-----
+  Merge branches 'edac-mc-cleanup', 'edac-misc', 'edac-drivers' and 'edac-urgent' into edac-updates-for-5.7 (2020-03-30 10:07:58 +0200)
 
-iQIzBAEBCAAdFiEElLzh7wn96CXwjh2IzL64meEamQYFAl6Bq38ACgkQzL64meEa
-mQbEeRAAvPDxpFbHJrTEdnNciIvj9jlgCFNwT07cC4jdy6SDizMAf5ktl3burtvp
-jMXU4DTnrNW5hMcU/Rp24gdyT0VhbYJs+L7sUQh1nE+h1wC41p0eUP51Kkj6O7nu
-yaEhbkp/LtUlwn3YX8yfkhVfeuvA2slpMD2yStj4cH/g+8J+RnyF6s27fgGJk9TX
-j6i/2nyuRI4F2BVdmjwz3OPwzoBKCWqw+iHSuYsWOS/L2Rr8wTRwpZSn7azcIu+X
-jmk4KlzOkywcep7taCnM/EL4oIRCwkUDL+MNgNpiipAki61J4tVqP/dapmzVvEZ1
-Ns45sqKG89rif1g9zQA2/XZOc0HvW/rE/A/Frz+R3OTQ1Y5cSvawU1hs6QiwDBcK
-Ep4hnVn4U4LoBKSUU8pnybljgDNfD5D8nVNRWtRidUc0r/xok2iTJvQIYqv5IVop
-GPpxjb2bh5Vv4E9vdDW4iDlOUZ95kvqxNKTICfez7xGWzeLXMOfBoqEImEBJgCCn
-JXvDpM4sDzA41vXMPv0fz6b75QujVvo8nqhJlsMS6P1/bZ/166M0dWu3RW77mrJj
-lNo+J1fL8O19kxm67is6U0jKx2fnVLvQoqk5Oekd7k+nG5Fcj8H0Lr3KUZeDlomy
-ZujbTfC7Qr49Frtm8VVYyucavB3r1gO3gg/S685T6DuPl0iRZ4M=
-=Wl6K
------END PGP SIGNATURE-----
---=-=-=--
+----------------------------------------------------------------
+* A substantial edac_mc cleanup, sanitizing object freeing, streamlining
+and simplifying code flow, and getting rid of a lot of needless complexity in
+memory controller representation code, by Robert Richter.
+
+* A new EDAC driver for the ARM DMC-520 memory controller, by Lei Wang, Shiping
+Ji and others.
+
+* The usual sprinkling of misc cleanups and fixes all over the subsystem.
+
+----------------------------------------------------------------
+Borislav Petkov (1):
+      Merge branches 'edac-mc-cleanup', 'edac-misc', 'edac-drivers' and 'edac-urgent' into edac-updates-for-5.7
+
+Lei Wang (2):
+      dt-bindings: edac: Dmc-520.yaml
+      EDAC: Add EDAC driver for DMC520
+
+Prarit Bhargava (1):
+      EDAC/mce_amd: Print !SMCA processor warning only once
+
+Robert Richter (11):
+      EDAC/mc: Change mci device removal to use put_device()
+      EDAC/mc: Split edac_mc_alloc() into smaller functions
+      EDAC/mc: Reorder functions edac_mc_alloc*()
+      EDAC: Store error type in struct edac_raw_error_desc
+      EDAC/mc: Determine mci pointer from the error descriptor
+      EDAC/mc: Carve out error increment into a separate function
+      EDAC/mc: Report "unknown memory" on too many DIMM labels found
+      EDAC/mc: Remove enable_per_layer_report function argument
+      EDAC/mc: Pass the error descriptor to error reporting functions
+      EDAC/mc: Remove detail[] string and cleanup error string generation
+      EDAC/mc: Remove per layer counters
+
+Sherry Sun (1):
+      EDAC/synopsys: Do not dump uninitialized pinf->col
+
+Takashi Iwai (1):
+      EDAC/armada_xp: Use scnprintf() for avoiding potential buffer overflow
+
+ .../devicetree/bindings/edac/dmc-520.yaml          |  59 ++
+ MAINTAINERS                                        |   6 +
+ drivers/edac/Kconfig                               |   7 +
+ drivers/edac/Makefile                              |   1 +
+ drivers/edac/armada_xp_edac.c                      |  26 +-
+ drivers/edac/dmc520_edac.c                         | 656 +++++++++++++++++++++
+ drivers/edac/edac_mc.c                             | 511 ++++++++--------
+ drivers/edac/edac_mc.h                             |   6 +-
+ drivers/edac/edac_mc_sysfs.c                       | 110 ++--
+ drivers/edac/edac_module.h                         |   1 -
+ drivers/edac/ghes_edac.c                           |  16 +-
+ drivers/edac/mce_amd.c                             |   2 +-
+ drivers/edac/synopsys_edac.c                       |  22 +-
+ include/linux/edac.h                               |   9 +-
+ 14 files changed, 1054 insertions(+), 378 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/edac/dmc-520.yaml
+ create mode 100644 drivers/edac/dmc520_edac.c
+
+-- 
+Regards/Gruss,
+    Boris.
+
+SUSE Software Solutions Germany GmbH, GF: Felix Imendörffer, HRB 36809, AG Nürnberg
