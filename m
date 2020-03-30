@@ -2,134 +2,129 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_SANE_1
+X-Spam-Status: No, score=-7.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4554DC2D0F2
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 20:46:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F37AC2D0F0
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 20:51:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2057B20774
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 20:46:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585601170;
-	bh=lOgFT3LsqVV1YDo8f2DUvvy7lhJ9V4ORW7vn1hCfoMk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=NeYXnvodS4di70pRKgEUny8ZTbthrxedP3mujPt/RJCTksxc0VHuTr4gURhHbrewn
-	 W8L+sr40q2RRJ4k6ozTMQO9H1It0kCLYSSR0CkIIblOHU8VE0IGR2qdh92OaXTXp8+
-	 o5P0fTXhmZKs4NxMBNhcl+tfej72UOhuqN6ifjUo=
+	by mail.kernel.org (Postfix) with ESMTP id ED5B8206CC
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 20:51:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RA3/bv5T"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728739AbgC3UqJ (ORCPT
+        id S1728530AbgC3UvN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 16:46:09 -0400
-Received: from mail-il1-f196.google.com ([209.85.166.196]:37152 "EHLO
-        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727328AbgC3UqJ (ORCPT
+        Mon, 30 Mar 2020 16:51:13 -0400
+Received: from us-smtp-delivery-74.mimecast.com ([63.128.21.74]:56631 "EHLO
+        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728385AbgC3UvN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 16:46:09 -0400
-Received: by mail-il1-f196.google.com with SMTP id a6so17273900ilr.4;
-        Mon, 30 Mar 2020 13:46:06 -0700 (PDT)
+        Mon, 30 Mar 2020 16:51:13 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1585601472;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=odm2BtAQUnUT8zj+digzS3rtXLQBUeiDF1C1EBhIhHQ=;
+        b=RA3/bv5TQr8HDE7WyyarHnuCUM4koFDpCep1i4vDRDdt9buYx/m8zjjFpMoxpEIsBFJq9O
+        +i+fhstPGhiBW2xPo2yzvYRNOX9Uv3EqnOH5Tkt31weNwJHL2rnt6/DHEMSpGNYZf9gpGb
+        BZGLBA9nDAQxqJFZ3BJAtMsaC2oYvLA=
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
+ [209.85.221.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-174-ALQCKq1iOoWd3jt9UrvFgw-1; Mon, 30 Mar 2020 16:51:04 -0400
+X-MC-Unique: ALQCKq1iOoWd3jt9UrvFgw-1
+Received: by mail-wr1-f71.google.com with SMTP id c8so10015046wru.20
+        for <linux-kernel@vger.kernel.org>; Mon, 30 Mar 2020 13:51:04 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=BAHD/YUBzhydWwE/iCZpMojP/quu8HcEwcDTrZ8h834=;
-        b=qTyt2h9F/NWE5rQW6SF1OVQHhW1uAFq11I8mrVWwOzJ/HMM7PdtJLBWHNuZqOVmXQ8
-         QEtQCC2eVP4fRuzjOV0Fs1UmERC1Gjwf3k228aGdfFvle3aBEwVBcWwvOL6Xx2r6cpIe
-         cbXtprRvjjYPvSJCt214wXsToei/v3uQEj2RAnpPGjveSekNtOQkGTqe5t35q2y+NJT4
-         8U9G4ZJxytCQBY+KFc+tdwH9SX64Lav39H/rjSFmUSWUud4BfyETAkt9b3jZfDS7wKi5
-         HThfaaqwEqYi2UbHVuePmgukjA0ckX1yGqK/H/k+yFqnQm1Rm7d9ydPTJJAcjb1nR6MB
-         uAjg==
-X-Gm-Message-State: ANhLgQ0S1UtTAaVmo7dmwLo+xtYkPoy5dYwz5ZPuhRKsLTFDQSYJLNMR
-        l5ucpHzYglgPErS8m15B2w==
-X-Google-Smtp-Source: ADFU+vvlE38IaEgB1E1VNG9brIWJQdKajCluZzFENMztoPQXJvNW6huFEyZfTsPzQyXIopjuR2Ju+g==
-X-Received: by 2002:a92:6501:: with SMTP id z1mr13264790ilb.235.1585601166355;
-        Mon, 30 Mar 2020 13:46:06 -0700 (PDT)
-Received: from rob-hp-laptop ([64.188.179.250])
-        by smtp.gmail.com with ESMTPSA id k8sm5160637ilk.85.2020.03.30.13.46.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Mar 2020 13:46:05 -0700 (PDT)
-Received: (nullmailer pid 13031 invoked by uid 1000);
-        Mon, 30 Mar 2020 20:46:04 -0000
-Date:   Mon, 30 Mar 2020 14:46:04 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Igor Opaniuk <igor.opaniuk@gmail.com>
-Cc:     linux-arm-kernel@lists.infradead.org,
-        Max Krummenacher <max.krummenacher@toradex.com>,
-        Philippe Schenker <philippe.schenker@toradex.com>,
-        Stefan Agner <stefan@agner.ch>,
-        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Oleksandr Suvorov <oleksandr.suvorov@toradex.com>,
-        Igor Opaniuk <igor.opaniuk@toradex.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH v1 1/5] ARM: dts: imx6: Dual license adding MIT
-Message-ID: <20200330204604.GA11575@bogus>
-References: <20200317101947.27250-1-igor.opaniuk@gmail.com>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=odm2BtAQUnUT8zj+digzS3rtXLQBUeiDF1C1EBhIhHQ=;
+        b=Y0NkqtnQUA3NUvCV/S5xxKQCpDfBE2gKy/W3XN68SZd4BQ8hsl0phWNgd2m3Qnu9rU
+         fX7OTNMHMZoskYAEbpJe2/jxPu4BHUVmFkXwRmQ6hDZyGv+kZEva1S6mY7Vq1ZFavi/G
+         Lka+l2xRlKROunM6JjYd8S/xVwC7B86N9kWnIRXvAXGWXnOcT89ZaBuJJkPOkmxTyvF/
+         9ib290LWuTKvgVbuqVS1zMjiCoOHaJIqxeH3u6YmNPdZ0fqeinZo76WVXyYFak+Uvy8E
+         oZniYaxm0HVUA16VsmkVpPjacpQ65I/m7ygTSZ+0QzASyZvWRM6G6A33BF9OaVObu4yj
+         CUCQ==
+X-Gm-Message-State: ANhLgQ1CZchJoXtPeqlqkyeMxCzge+F8wWC7fVghqEpmrbo44KMvJFPe
+        nTlNyGdJ8Mea3/kroCOTKTDRWre0xAwlZOOen+F/qvLmXZRg1sXMPdR+iUGg0L8kNB5fLkYKNO/
+        ncvPc/54V08v3OUZxrZTf/qAP
+X-Received: by 2002:adf:bb4c:: with SMTP id x12mr16140812wrg.137.1585601462961;
+        Mon, 30 Mar 2020 13:51:02 -0700 (PDT)
+X-Google-Smtp-Source: ADFU+vsivJs4jCKEDqtzyiapgH6FhTN+YcSjT2DE+4y/sRoMwbXGG618EuuJZHiMOPUt0GsirQs3Yw==
+X-Received: by 2002:adf:bb4c:: with SMTP id x12mr16140799wrg.137.1585601462755;
+        Mon, 30 Mar 2020 13:51:02 -0700 (PDT)
+Received: from x1.localdomain (2001-1c00-0c0c-fe00-fc7e-fd47-85c1-1ab3.cable.dynamic.v6.ziggo.nl. [2001:1c00:c0c:fe00:fc7e:fd47:85c1:1ab3])
+        by smtp.gmail.com with ESMTPSA id g128sm916407wmf.27.2020.03.30.13.51.01
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 30 Mar 2020 13:51:02 -0700 (PDT)
+Subject: Re: ACPI Video Driver creates backlight on desktop board
+To:     Paul Menzel <pmenzel@molgen.mpg.de>,
+        Zhang Rui <rui.zhang@intel.com>
+Cc:     linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <75866748-f574-ae50-6183-ef6892c935c5@molgen.mpg.de>
+From:   Hans de Goede <hdegoede@redhat.com>
+Message-ID: <63956e11-46f2-72f4-c722-8fee2cbfbfa1@redhat.com>
+Date:   Mon, 30 Mar 2020 22:51:01 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200317101947.27250-1-igor.opaniuk@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <75866748-f574-ae50-6183-ef6892c935c5@molgen.mpg.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 17, 2020 at 12:19:43PM +0200, Igor Opaniuk wrote:
-> From: Igor Opaniuk <igor.opaniuk@toradex.com>
-> 
-> Dual license files adding MIT license, which will permit to re-use
-> device trees in other non-GPL OSS projects.
+Hi,
 
-Are you the only author on these files? If not, you don't have rights to 
-do this.
+On 3/29/20 11:36 AM, Paul Menzel wrote:
+> Dear Linux folks,
+> 
+> 
+> On the MSI desktop board [1]
+> 
+>      [    0.000000] DMI: Micro-Star International Co., Ltd. MS-7A37/B350M MORTAR (MS-7A37), BIOS 1.MR 12/02/2019
+> 
+> with an AMD Ryzen 3 2200G with Radeon Vega Graphics, the ACPI Video Driver `video` is loaded and creates a backlight device.
+> 
+>      $ readlink -f /sys/class/backlight/acpi_video0
+>      /sys/devices/pci0000:00/0000:00:08.1/0000:26:00.0/backlight/acpi_video0
+> 
+> I wonder what the driver is used for as the AMDGPU driver exists for the graphics device.
 
-> 
-> Signed-off-by: Igor Opaniuk <igor.opaniuk@toradex.com>
-> ---
-> 
->  arch/arm/boot/dts/imx6dl-pinfunc.h | 2 +-
->  arch/arm/boot/dts/imx6dl.dtsi      | 2 +-
->  arch/arm/boot/dts/imx6qdl.dtsi     | 2 +-
->  3 files changed, 3 insertions(+), 3 deletions(-)
-> 
-> diff --git a/arch/arm/boot/dts/imx6dl-pinfunc.h b/arch/arm/boot/dts/imx6dl-pinfunc.h
-> index 9d88d09f9bf6..960d300ea9ba 100644
-> --- a/arch/arm/boot/dts/imx6dl-pinfunc.h
-> +++ b/arch/arm/boot/dts/imx6dl-pinfunc.h
-> @@ -1,4 +1,4 @@
-> -/* SPDX-License-Identifier: GPL-2.0-only */
-> +/* SPDX-License-Identifier: GPL-2.0-only OR MIT */
->  /*
->   * Copyright 2013 Freescale Semiconductor, Inc.
->   */
-> diff --git a/arch/arm/boot/dts/imx6dl.dtsi b/arch/arm/boot/dts/imx6dl.dtsi
-> index 008312ee0c31..77e946b3d012 100644
-> --- a/arch/arm/boot/dts/imx6dl.dtsi
-> +++ b/arch/arm/boot/dts/imx6dl.dtsi
-> @@ -1,4 +1,4 @@
-> -// SPDX-License-Identifier: GPL-2.0
-> +// SPDX-License-Identifier: GPL-2.0 OR MIT
->  //
->  // Copyright 2013 Freescale Semiconductor, Inc.
->  
-> diff --git a/arch/arm/boot/dts/imx6qdl.dtsi b/arch/arm/boot/dts/imx6qdl.dtsi
-> index e6b4b8525f98..75d746952932 100644
-> --- a/arch/arm/boot/dts/imx6qdl.dtsi
-> +++ b/arch/arm/boot/dts/imx6qdl.dtsi
-> @@ -1,4 +1,4 @@
-> -// SPDX-License-Identifier: GPL-2.0+
-> +// SPDX-License-Identifier: GPL-2.0+ OR MIT
->  //
->  // Copyright 2011 Freescale Semiconductor, Inc.
->  // Copyright 2011 Linaro Ltd.
-> -- 
-> 2.17.1
-> 
+Backlight on x86 hw is a bit of a mess, there is an ACPI standard for accessing it
+and with older (Windows XP era) laptops that is the interface which usually works,
+then there are a bunch of vendor specific SMBIOS or WMI backlight interfaces and
+then there is the option of directly accessing the hardware as the amdgpu driver
+is doing.
+
+We have a bunch of heuristics to avoid the acpi_video driver registering a
+backlight interface when it should not, either because the direct hw access
+should be used instead; or because there simply is no builtin LCD panel and thus
+no backlight to control.
+
+These heuristics are failing on your board.
+
+> If it’s useful, is there a way to prevent the backlight interface from getting created?
+
+You can pass "acpi_backlight=ignore" on the kernel commandline to disable the
+interface, this will stop e.g. gnome from showing a non working brightness
+slider in its top right system menu.
+
+If this works you can make this permanent and avoid other users from having to
+do the same thing by writing a patch adding a quirk for this like this one:
+
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=d21a91629f4b8e794fc4c0e0c17c85cedf1d806c
+
+Regards,
+
+Hans
+
