@@ -2,95 +2,115 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59ED6C43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 18:04:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0EADC43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 18:04:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E9ED20781
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 18:04:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A7B820771
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 18:04:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="E/UcXSV4"
+	dkim=pass (1024-bit key) header.d=linuxonhyperv.com header.i=@linuxonhyperv.com header.b="OJ2fuHRD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727821AbgC3SER (ORCPT
+        id S1727951AbgC3SEU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 14:04:17 -0400
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:43775 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726385AbgC3SEQ (ORCPT
+        Mon, 30 Mar 2020 14:04:20 -0400
+Received: from linux.microsoft.com ([13.77.154.182]:42362 "EHLO
+        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727815AbgC3SES (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 14:04:16 -0400
-Received: by mail-qk1-f193.google.com with SMTP id o10so19999531qki.10
-        for <linux-kernel@vger.kernel.org>; Mon, 30 Mar 2020 11:04:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=c4hYfBPPMsnQLhbHNboJva/pkduGULtadEHE/+GQT34=;
-        b=E/UcXSV4s5eVQyTMQKe79QSsPgXJ2wOIzcOHLZBLea8gQPgvLHAwErJWFPozUT1Jth
-         n2Q1DAywnmP0TFdLlksu3SFxl8e4OK2aFcLS/COesMHooSjeDG7xtKfei8O7z6WebEdV
-         vp7U/5gpSwwY1iEJQGGlDVg+RqFlZkAPPBrVdUJ25KKjnlX1p18DMuwNIAz6jkqcGTb1
-         Dny1qA7/lawXuLuJflZdl42jd5LbTwbJpAzcq/PrCNn6ifHbsM8nSDjeGKUzWN9dvWo6
-         HiReh2wLZJcTVSw5WeDdn1FzuEm/ZMbqJfdoimsJRLi7YoDr0KRh6ZtKkPiceqTkVB7F
-         vVBQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=c4hYfBPPMsnQLhbHNboJva/pkduGULtadEHE/+GQT34=;
-        b=bPY4dD+DFdKXWk6SUX+RTNtVfkQvY92z5xp9gdQfcjVLn5LW+DbI5R+EYG+4qCssUu
-         DWBvUS/xexrHcyFGwpMyc3QQpEIX0JjvoTZF1Erf4Y24zm3Rub+m8JhNAGjKYlak7FMK
-         ChUNxaMaBIfER1XZCnqNIapQTjCR/SmkhXmIeMXxwD0QWrqOLOhv5zkkDTegMqlmq+7T
-         Vn3zjdb4UCNGoecKMyk+7G5SSZSq450hQQ5dqpNFlO4HLDYKDEcXzZzSClGdpRLV/hu3
-         3j9+uQKUi3z/IPTVB91h7DTosM+1HflS3gdDGhYtgEDF/7RxBhTMobSaM39hLqrgJSqU
-         krMw==
-X-Gm-Message-State: ANhLgQ0snlDij7r/chtNfhbIHhTaGlD98Mo4a67uoDEea643LedCxHLE
-        Z8599rV9YqpwfS67KgF0CkGteg==
-X-Google-Smtp-Source: ADFU+vslFdZMufUpGUjNF685OiAvFuwqrraXFVX1mi5EP3rlxYGLgJNHBKGy/SGMgS5a0DiGDu/+lg==
-X-Received: by 2002:a05:620a:2101:: with SMTP id l1mr1194780qkl.375.1585591455594;
-        Mon, 30 Mar 2020 11:04:15 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-142-68-57-212.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.57.212])
-        by smtp.gmail.com with ESMTPSA id r192sm10992825qke.95.2020.03.30.11.04.14
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 30 Mar 2020 11:04:14 -0700 (PDT)
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1jIylh-000302-Ui; Mon, 30 Mar 2020 15:04:13 -0300
-Date:   Mon, 30 Mar 2020 15:04:13 -0300
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     YueHaibing <yuehaibing@huawei.com>
-Cc:     selvin.xavier@broadcom.com, devesh.sharma@broadcom.com,
-        somnath.kotur@broadcom.com, sriharsha.basavapatna@broadcom.com,
-        dledford@redhat.com, linux-rdma@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH -next] RDMA/bnxt_re: make bnxt_re_ib_init static
-Message-ID: <20200330180413.GA11459@ziepe.ca>
-References: <20200330110219.24448-1-yuehaibing@huawei.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200330110219.24448-1-yuehaibing@huawei.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        Mon, 30 Mar 2020 14:04:18 -0400
+Received: by linux.microsoft.com (Postfix, from userid 1004)
+        id 6B38020B46F0; Mon, 30 Mar 2020 11:04:17 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 6B38020B46F0
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linuxonhyperv.com;
+        s=default; t=1585591457;
+        bh=f6uuZ8AQmEmQPNxvCDcaE9ajAQMzpT8US7URBUmbX+0=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:Reply-To:From;
+        b=OJ2fuHRDWI1KPvCxE2Rjw286mDUXEhZI+eImjVbM2bUtOENhxgueC+bFCcAF3CaVC
+         5HjEOZo7M5UdrYfaxfntwnfeeQTekV4fLCxlMFWxKLaqx1JSB2d6pLS1udk5QncUSi
+         QBNr6NXbXfer42QDESpKDpRZgx4CXIfiJ0mxn6fc=
+From:   longli@linuxonhyperv.com
+To:     Steve French <sfrench@samba.org>, linux-cifs@vger.kernel.org,
+        samba-technical@lists.samba.org, linux-kernel@vger.kernel.org
+Cc:     Long Li <longli@microsoft.com>
+Subject: [PATCH 2/2] cifs: smbd: Check send queue size before posting a send
+Date:   Mon, 30 Mar 2020 11:04:07 -0700
+Message-Id: <1585591447-11741-2-git-send-email-longli@linuxonhyperv.com>
+X-Mailer: git-send-email 1.8.3.1
+In-Reply-To: <1585591447-11741-1-git-send-email-longli@linuxonhyperv.com>
+References: <1585591447-11741-1-git-send-email-longli@linuxonhyperv.com>
+Reply-To: longli@microsoft.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 30, 2020 at 07:02:19PM +0800, YueHaibing wrote:
-> Fix sparse warning:
-> 
-> drivers/infiniband/hw/bnxt_re/main.c:1313:5:
->  warning: symbol 'bnxt_re_ib_init' was not declared. Should it be static?
-> 
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-> Acked-by: Selvin Xavier <selvin.xavier@broadcom.com>
-> ---
->  drivers/infiniband/hw/bnxt_re/main.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+From: Long Li <longli@microsoft.com>
 
-Applied to for-next, thanks
+Sometimes the remote peer may return more send credits than the send queue
+depth. If all the send credits are used to post senasd, we may overflow the
+send queue.
 
-Jason
+Fix this by checking the send queue size before posting a send.
+
+Signed-off-by: Long Li <longli@microsoft.com>
+---
+ fs/cifs/smbdirect.c | 11 ++++++++++-
+ fs/cifs/smbdirect.h |  1 +
+ 2 files changed, 11 insertions(+), 1 deletion(-)
+
+diff --git a/fs/cifs/smbdirect.c b/fs/cifs/smbdirect.c
+index 79d8dcbd0034..c7ef2d7ce0ef 100644
+--- a/fs/cifs/smbdirect.c
++++ b/fs/cifs/smbdirect.c
+@@ -287,6 +287,7 @@ static void send_done(struct ib_cq *cq, struct ib_wc *wc)
+ 	if (atomic_dec_and_test(&request->info->send_pending))
+ 		wake_up(&request->info->wait_send_pending);
+ 
++	wake_up(&request->info->wait_post_send);
+ 
+ 	mempool_free(request, request->info->request_mempool);
+ }
+@@ -939,7 +940,14 @@ static int smbd_post_send(struct smbd_connection *info,
+ 	send_wr.opcode = IB_WR_SEND;
+ 	send_wr.send_flags = IB_SEND_SIGNALED;
+ 
+-	atomic_inc(&info->send_pending);
++wait_sq:
++	wait_event(info->wait_post_send,
++		atomic_read(&info->send_pending) < info->send_credit_target);
++	if (unlikely(atomic_inc_return(&info->send_pending) >
++				info->send_credit_target)) {
++		atomic_dec(&info->send_pending);
++		goto wait_sq;
++	}
+ 
+ 	rc = ib_post_send(info->id->qp, &send_wr, NULL);
+ 	if (rc) {
+@@ -1733,6 +1741,7 @@ static struct smbd_connection *_smbd_get_connection(
+ 	init_waitqueue_head(&info->wait_send_pending);
+ 	atomic_set(&info->send_pending, 0);
+ 
++	init_waitqueue_head(&info->wait_post_send);
+ 
+ 	INIT_WORK(&info->disconnect_work, smbd_disconnect_rdma_work);
+ 	INIT_WORK(&info->post_send_credits_work, smbd_post_send_credits);
+diff --git a/fs/cifs/smbdirect.h b/fs/cifs/smbdirect.h
+index f70c7119a456..07c8f5638c39 100644
+--- a/fs/cifs/smbdirect.h
++++ b/fs/cifs/smbdirect.h
+@@ -114,6 +114,7 @@ struct smbd_connection {
+ 	/* Activity accoutning */
+ 	atomic_t send_pending;
+ 	wait_queue_head_t wait_send_pending;
++	wait_queue_head_t wait_post_send;
+ 
+ 	/* Receive queue */
+ 	struct list_head receive_queue;
+-- 
+2.17.1
+
