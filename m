@@ -2,75 +2,98 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 114D7C2D0EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 15:14:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A46ACC2D0E5
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 15:26:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB5F9205ED
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 15:14:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 71D1720732
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 15:26:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585582019;
+	bh=KDutxrCeg+nFUzTeklifIi/Tlahr0a3q0NboX4cevRs=;
+	h=From:Date:Subject:To:Cc:List-ID:From;
+	b=P5EStrQqeVfayn3yNkMJ0Z0B0pIVi8Rf814DR8WKgpyi4i4V4JXrR2OVkQHEg62+S
+	 KNB0EwIVxSsOW0UAgybWeQaBUefDzbNxMVZNMxGn+zyKOCJFqV5Hy+F4V1BYPHenAD
+	 quwPGdBRw6dqK95gC3KvQlZ4JivAvuBLhqTCkxqE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728599AbgC3POP (ORCPT
+        id S1729157AbgC3P06 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 11:14:15 -0400
-Received: from www262.sakura.ne.jp ([202.181.97.72]:54783 "EHLO
-        www262.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727696AbgC3POO (ORCPT
+        Mon, 30 Mar 2020 11:26:58 -0400
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:38218 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725978AbgC3P06 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 11:14:14 -0400
-Received: from fsav305.sakura.ne.jp (fsav305.sakura.ne.jp [153.120.85.136])
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id 02UFD7Hq079755;
-        Tue, 31 Mar 2020 00:13:07 +0900 (JST)
-        (envelope-from penguin-kernel@I-love.SAKURA.ne.jp)
-Received: from www262.sakura.ne.jp (202.181.97.72)
- by fsav305.sakura.ne.jp (F-Secure/fsigk_smtp/550/fsav305.sakura.ne.jp);
- Tue, 31 Mar 2020 00:13:07 +0900 (JST)
-X-Virus-Status: clean(F-Secure/fsigk_smtp/550/fsav305.sakura.ne.jp)
-Received: from [192.168.1.9] (M106072142033.v4.enabler.ne.jp [106.72.142.33])
-        (authenticated bits=0)
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id 02UFD7n5079751
-        (version=TLSv1.2 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO);
-        Tue, 31 Mar 2020 00:13:07 +0900 (JST)
-        (envelope-from penguin-kernel@I-love.SAKURA.ne.jp)
-Subject: Re: kernel panic: smack: Failed to initialize cipso DOI.
-To:     syzbot <syzbot+89731ccb6fec15ce1c22@syzkaller.appspotmail.com>,
-        casey@schaufler-ca.com
-References: <000000000000db448f05a212beea@google.com>
-Cc:     jmorris@namei.org, linux-security-module@vger.kernel.org,
-        serge@hallyn.com, syzkaller-bugs@googlegroups.com
-From:   Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
-Message-ID: <a293a766-4329-f6de-c8a9-1a5051217c45@I-love.SAKURA.ne.jp>
-Date:   Tue, 31 Mar 2020 00:13:05 +0900
-User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Mon, 30 Mar 2020 11:26:58 -0400
+Received: by mail-oi1-f196.google.com with SMTP id w2so16029208oic.5;
+        Mon, 30 Mar 2020 08:26:57 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=3ERbyzjjb9C/BS6z56ljJWImJZXslvyQibnwigyRCXM=;
+        b=L+egwsr6JtmdfAKAHD4HdPk7gYHpVGpCoJdUYYyr154ZLwBYzG1lhiSDOKsDpL/gtO
+         DF/jD2NXXmTu7OAzLZ3XHuImkwspMcybY1rGWis6Z8BJliL2rz0EKKAIZdoaEfmduEH7
+         vxtCj0s0KTOjjE0h9F0yECCGbjq4UBHy4S6vh8WWZE3qki7p2EGTSCEOPoILfVvIoGP7
+         K70iO7t6krTLPxdGGkI7p5US+uUsSVJ7867XoZ8akrG/Gpf3NhU4a2RFyZaUOWGf3gAx
+         vguUhNjCQbEBXwiVj0ajpaO7coCHY5PS/Txzd3mZz6M1xRhcgXFH9SZ0XkxuHTtwZ7iC
+         GbsQ==
+X-Gm-Message-State: ANhLgQ1CYSWIFzqXux/hUun0tfosWGkRBYZpfoP8nO0dJ612IwTpP8ot
+        +J/izDK8JJ6ovYhs+bUccEOfCg5seKclo2z5KLERednk
+X-Google-Smtp-Source: ADFU+vssJKJGqzZ3Y9ujDijHuJGhRhWn2k+pl4QzbD5HVN3WZ7Uk9QkF0OXs5WFpxC9rsRL0qfBCfoJW1H+cGQYALhM=
+X-Received: by 2002:aca:f07:: with SMTP id 7mr7681801oip.68.1585582017437;
+ Mon, 30 Mar 2020 08:26:57 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <000000000000db448f05a212beea@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Mon, 30 Mar 2020 17:26:45 +0200
+Message-ID: <CAJZ5v0jLoTcE5WhFiJ_z6tUcuPrJs2SBe5id-7OWAd8AYw3n9Q@mail.gmail.com>
+Subject: [GIT PULL] PNP subsystems updates for v5.7-rc1
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/03/30 22:51, syzbot wrote:
-> Hello,
-> 
-> syzbot found the following crash on:
-> 
-> HEAD commit:    1b649e0b Merge git://git.kernel.org/pub/scm/linux/kernel/g..
-> git tree:       upstream
-> console output: https://syzkaller.appspot.com/x/log.txt?x=14957099e00000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=4ac76c43beddbd9
-> dashboard link: https://syzkaller.appspot.com/bug?extid=89731ccb6fec15ce1c22
-> compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1202c375e00000
-> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1390bb03e00000
+Hi Linus,
 
-Wrong bisection. This is not a network / driver problem.
-There is a memory allocation fault injection prior to this panic.
+Please pull from the tag
 
-  [ T1576] FAULT_INJECTION: forcing a failure.
-  [ T1576] Kernel panic - not syncing: smack:  Failed to initialize cipso DOI.
+ git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git \
+ pnp-5.7-rc1
+
+with top-most commit eaec20c7362c68176369f11e26dc0f6f994ae2d3
+
+ MAINTAINERS: Add linux-acpi list to PNP
+
+on top of commit 98d54f81e36ba3bf92172791eba5ca5bd813989b
+
+ Linux 5.6-rc4
+
+to receive PNP subsystem updates for 5.7-rc1.
+
+Update MAINTAINERS to cover include/linux/pnp.h and add the linux-acpi
+list to the PNP entry in it, add the const modifier to the name field
+definition in struct pnp_driver and drop a pointer case in the RTC
+CMOS driver that has become redundant (Corentin Labbe).
+
+Thanks!
+
+
+---------------
+
+Corentin Labbe (4):
+      PNP: add missing include/linux/pnp.h to MAINTAINERS
+      PNP: constify driver name
+      rtc: cmos: remove useless cast for driver_name
+      MAINTAINERS: Add linux-acpi list to PNP
+
+---------------
+
+ MAINTAINERS            | 2 ++
+ drivers/rtc/rtc-cmos.c | 2 +-
+ include/linux/pnp.h    | 2 +-
+ 3 files changed, 4 insertions(+), 2 deletions(-)
