@@ -2,137 +2,167 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 543CCC2D0ED
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 20:02:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3D02C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 20:03:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F56F2072E
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 20:02:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 84B762072E
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 20:03:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fF3lDVd0"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="jEduQCv1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728539AbgC3UC5 (ORCPT
+        id S1728726AbgC3UDG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 16:02:57 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:39754 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727745AbgC3UC4 (ORCPT
+        Mon, 30 Mar 2020 16:03:06 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:44020 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727745AbgC3UDG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 16:02:56 -0400
-Received: by mail-wr1-f68.google.com with SMTP id p10so23231920wrt.6;
-        Mon, 30 Mar 2020 13:02:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=lUoPyqpOq6RP3wBIxyXoInQVTdgsWS5bkgCqjwXu9nU=;
-        b=fF3lDVd0+nOdf+SmI3pdq4CKWRPLEbKg+Iddc3FCIGFItLiFnhUd9ww8ytaaQzoVWm
-         isPZdjckh/nSC1WxgrhgigRTHzwEOPtTRnjBlYsbAEQTTi+NEA31IxAKVM32weUbryu7
-         Fsl/jare2y6apJbP5hmgKtocnok1+DZCqU0qb5dT/jo/FlsvvXBiY9pRyTx3HE4LCiBv
-         SupTvFWu7Jn5rcGOLaaUgrIaspQXX2WK3mAmQ9HHiQwHZVZ3Yx3gkDzfaZ7AXhWxLbm4
-         q7gWsytDf8liDhZ+vCwAgw7ioTuol++Gj+8BOWBSLTm36A32ULVHpPm2J9BUSVlLRVvv
-         o7mw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=lUoPyqpOq6RP3wBIxyXoInQVTdgsWS5bkgCqjwXu9nU=;
-        b=jlF9TbFUUlew41f0yQ+mVRXEot8zFj4r4UjqJmwiolF3KwXrRWWIf9Gt7WK0rWyKpP
-         l3S8Z9+KIOP9hG+COWoLP4Exdnovo/vjGgvh/LQCEzSRBJ6HifLqjRzre3tHNnX8bkWJ
-         QUBJfw7qpSXOhDPmubAEf+1/ncUZ5/V1nxL1X5Coe6D0jWjcu2OfY1yYHB9j2mcbGzg8
-         rGzV8Kd8e2MZfXO93E0p4rFbGPU1Nm3q87QnyoY7DE3T5dzbnDxyt4VGkep88S+1iDAN
-         r9TuUmL6AKVLAl/JaOAkqYbJC7oiZFmIZnEXc0ThPqtBiYpwthjutaKqoDyCWZcNBUo8
-         ueqQ==
-X-Gm-Message-State: ANhLgQ3oJgKGm2MeqSgh8Bp90ah/IrcHo7jeF+F0loIJnrvGsQL064lM
-        VMsMU0m5Dio42cUp72VOaYmRi6Qj3bgKzXuAhWg=
-X-Google-Smtp-Source: ADFU+vtQlK+r3Yrpq43PZR2UUtb2/43lw4wmabJo+l6BQcrfH3L3MQhoDPa7agHgdNMp3nuYxd0qACHoAz+25H8MyNg=
-X-Received: by 2002:adf:ecc3:: with SMTP id s3mr16006565wro.32.1585598573917;
- Mon, 30 Mar 2020 13:02:53 -0700 (PDT)
+        Mon, 30 Mar 2020 16:03:06 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=06Xa8ukH5SjQfzHVNdtGhnjdZb7hVhXaCewR363SUwQ=; b=jEduQCv19cJV/HSspQfxd1REcr
+        AGf+IzQdBd6ddYbxOkJeFMXlkPv5kCXJ9E8HT2bvX7NlCQWl7j4bwiNn17v1oOQFqG7ipTQgHVP4H
+        jy14UaQtWYGwMnoODyg5C+mHoc/S6XaYqOVO25R6s+X1RRieVggsXVJ6lFUIoWbfqFbG9xzHk5sO7
+        B1VH+YD7HBszQIUKcAzVaWXVbSJqm6uSMx+wCkbwjgoyZgxmGwtAE3x13UvSKJssUzit5eRbUDr5a
+        ZdB+fPOhlxVLUR62J8/mj7Gkk5L2ww3s5hHD60pK/CdP1ksTrT+KI43C8vbBoSj0l8SxxwBWl7iyb
+        1ylQeQEQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jJ0cb-00054Y-5G; Mon, 30 Mar 2020 20:02:57 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id C3A3F3012D8;
+        Mon, 30 Mar 2020 22:02:54 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 7AC6C203B878A; Mon, 30 Mar 2020 22:02:54 +0200 (CEST)
+Date:   Mon, 30 Mar 2020 22:02:54 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Josh Poimboeuf <jpoimboe@redhat.com>
+Cc:     tglx@linutronix.de, linux-kernel@vger.kernel.org, x86@kernel.org,
+        mhiramat@kernel.org, mbenes@suse.cz,
+        Steven Rostedt <rostedt@goodmis.org>
+Subject: Re: [PATCH v4 01/13] objtool: Remove CFI save/restore special case
+Message-ID: <20200330200254.GV20713@hirez.programming.kicks-ass.net>
+References: <20200325174525.772641599@infradead.org>
+ <20200325174605.369570202@infradead.org>
+ <20200326113049.GD20696@hirez.programming.kicks-ass.net>
+ <20200326135620.tlmof5fa7p5wct62@treble>
+ <20200326154938.GO20713@hirez.programming.kicks-ass.net>
+ <20200326195718.GD2452@worktop.programming.kicks-ass.net>
+ <20200327010001.i3kebxb4um422ycb@treble>
+ <20200330170200.GU20713@hirez.programming.kicks-ass.net>
+ <20200330190205.k5ssixd5hpshpjjq@treble>
 MIME-Version: 1.0
-References: <20200324122023.9649-1-andriy.shevchenko@linux.intel.com>
- <20200324122023.9649-3-andriy.shevchenko@linux.intel.com> <CAJZ5v0gg=V8uDd4afJ3MULsgKYvWajKJioANk4jj7xEhBzrRrQ@mail.gmail.com>
- <CA+G9fYvFnXqSnoQSJ-DkQvAFv87iWmhH6dT1N79qrq=Aeuv4rw@mail.gmail.com>
- <028b636f-6e0f-c36a-aa4e-6a16d936fc6a@arm.com> <20200330095707.GA10432@bogus>
- <0a374eaa-92b3-0201-f357-4181542c98b6@arm.com> <CAHp75VdBm8ZYOMWmQEA8LD6uGcJ0sZ=M6n3MSYxmO6UkXbu+-A@mail.gmail.com>
- <f2706518-def8-1566-149f-00fc1d8cc19f@arm.com>
-In-Reply-To: <f2706518-def8-1566-149f-00fc1d8cc19f@arm.com>
-From:   John Stultz <john.stultz@linaro.org>
-Date:   Mon, 30 Mar 2020 13:02:43 -0700
-Message-ID: <CANcMJZBEiXaw5=VW1tjShkULa0YdcKxAgudaBKhrgyRFe7HacQ@mail.gmail.com>
-Subject: Re: [PATCH v2 3/3] driver core: Replace open-coded list_last_entry()
-To:     Robin Murphy <robin.murphy@arm.com>
-Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Naresh Kamboju <naresh.kamboju@linaro.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Basil Eljuse <Basil.Eljuse@arm.com>,
-        lkft-triage@lists.linaro.org,
-        Linux-Next Mailing List <linux-next@vger.kernel.org>,
-        Ferry Toth <fntoth@gmail.com>, Arnd Bergmann <arnd@arndb.de>,
-        Anders Roxell <anders.roxell@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200330190205.k5ssixd5hpshpjjq@treble>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 30, 2020 at 6:30 AM Robin Murphy <robin.murphy@arm.com> wrote:
->
-> On 2020-03-30 2:11 pm, Andy Shevchenko wrote:
-> > On Mon, Mar 30, 2020 at 3:49 PM Robin Murphy <robin.murphy@arm.com> wrote:
-> >> On 2020-03-30 11:13 am, Sudeep Holla wrote:
-> >>> On Fri, Mar 27, 2020 at 07:40:25PM +0000, Robin Murphy wrote:
-> >
-> > ...
-> >
-> >> AFAICS the difference is down to whether deferred_probe_timeout has
-> >> expired or not - I'm not familiar enough with this code to know
-> >> *exactly* what the difference is supposed to represent, nor which change
-> >> has actually pushed the Juno case from one state to the other (other
-> >> than it almost certainly can't be $SUBJECT - if this series is to blame
-> >> at all I'd assume it would be down to patch #1/3, but there's a bunch of
-> >> other rework previously queued in -next that is probably also interacting)
-> >
-> > JFYI: patch #1/3 wasn't applied.
->
-> OK, so if anyone's invested enough to want to investigate, it must be
-> something in John's earlier changes here:
->
-> https://lore.kernel.org/lkml/20200225050828.56458-1-john.stultz@linaro.org/
+On Mon, Mar 30, 2020 at 02:02:05PM -0500, Josh Poimboeuf wrote:
+> On Mon, Mar 30, 2020 at 07:02:00PM +0200, Peter Zijlstra wrote:
+> > Subject: objtool: Implement RET_TAIL hint
+> > 
+> > This replaces the SAVE/RESTORE hints with a RET_TAIL hint that applies to:
+> > 
+> >  - regular RETURN and sibling calls (which are also function exists)
+> >    it allows the stack-frame to be off by one word, ie. it allows a
+> >    return-tail-call.
+> > 
+> >  - EXCEPTION_RETURN (a new INSN_type that splits IRET out of
+> >    CONTEXT_SWITCH) and here it denotes a return to self by having it
+> >    consume arch_exception_frame_size bytes off the stack and continuing.
+> > 
+> > Apply this hint to ftrace_64.S and sync_core(), the two existing users
+> > of the SAVE/RESTORE hints.
+> > 
+> > For ftrace_64.S we split the return path and make sure the
+> > ftrace_epilogue call is seen as a sibling/tail-call turning it into it's
+> > own function.
+> > 
+> > By splitting the return path every instruction has a unique stack setup
+> > and ORC can generate correct unwinds (XXX check if/how the ftrace
+> > trampolines map into the ORC). Then employ the RET_TAIL hint to the
+> > tail-call exit that has the direct-call (orig_eax) return-tail-call on.
+> > 
+> > For sync_core() annotate the IRET with RET_TAIL to mark it as a
+> > control-flow NOP that consumes the exception frame.
+> 
+> I do like the idea to get rid of SAVE/RESTORE altogether.  And it's nice
+> to make that ftrace code unwinder-deterministic.
+> 
+> However sync_core() and ftrace_regs_caller() are very different from
+> each other and I find the RET_TAIL hint usage to be extremely confusing.
 
-Hey all,
-  Sorry, I just got a heads up about this thread.
+I was going with the pattern:
 
-So yea, it looks like the change is due likely to the first patch in
-my series. Previously, after initcall_done, (since
-deferred_probe_timeout was -1 unless manually specified) if the driver
-wasn't already loaded we'd print "ignoring dependency for device,
-assuming no driver" and return ENODEV.
+	push target
+	ret
 
-Now, if modules are enabled (as without modules enabled, I believe
-you'd see the same behavior as previous), we wait 30 seconds  (for
-userspace to load any posssible modules that meet that dependency) and
-then the driver_deferred_probe_timeout fires and we print "deferred
-probe timeout, ignoring dependency".
+which is an indirect tail-call that doesn't need a register. We use it
+in various places. We use it here exactly because it preserves all
+registers, but we use it in function-graph tracer and retprobes to
+insert the return handler. But also in retpoline, because it uses the
+return stack predictor, which by happy accident isn't the indirect
+branch predictor.
 
-It seems the issue here is the first message was printed with
-dev_warn() and the second with dev_WARN() which provides the scary
-backtrace.
+> For example, IRETQ isn't even a tail cail.
 
-I think functionally as mentioned above, there's no real behavioral
-change here. But please correct me if that's wrong.
+It's the same indirect call, except with a bigger frame ;-)
 
-Since we are more likely to see the second message now, maybe we
-should make both print via dev_warn()?
+	push # ss
+	push # rsp
+	push # flags
+	push # cs
+	push # ip
+	iret
 
-I'll spin up a patch.
+> And the need for the hint to come *before* the insn which changes the
+> state is different from the other hints.
 
-thanks
--john
+makes sense to me... but yah.
+
+> And now objtool has to know the arch exception stack size because of a
+> single code site.
+
+Agreed.
+
+> And for a proper tail call, the stack should be empty. 
+
+All depends what you call proper :-)
+
+> I don't
+> understand the +8 thing in has_modified_stack_frame().
+
+	push target
+	ret
+
+means we hit ret with one extra word on the stack.
+
+> It seems
+> hard-coded for the weird ftrace case, rather than for tail calls in
+> general (which should already work as designed).
+
+Like I said, we have it all over the place, but I suspect they're all
+mostly hidden from objtool.
+
+> How about a more general hint like UNWIND_HINT_ADJUST?
+> 
+> For sync_core(), after the IRETQ:
+> 
+>   UNWIND_HINT_ADJUST sp_add=40
+> 
+> And ftrace_regs_caller_ret could have:
+> 
+>   UNWIND_HINT_ADJUST sp_add=8
+
+I like, I'll make it happen in the morning.
