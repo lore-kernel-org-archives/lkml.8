@@ -2,136 +2,125 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C447C43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 21:22:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20C21C2D0F1
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 21:25:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 07C8620733
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 21:22:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC9AA20774
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 21:25:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ARWUMeOz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728825AbgC3VWv convert rfc822-to-8bit (ORCPT
+        id S1728874AbgC3VZW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 17:22:51 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:37833 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728407AbgC3VWu (ORCPT
+        Mon, 30 Mar 2020 17:25:22 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:46438 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728393AbgC3VZV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 17:22:50 -0400
-Received: by mail-ot1-f67.google.com with SMTP id g23so19791690otq.4
-        for <linux-kernel@vger.kernel.org>; Mon, 30 Mar 2020 14:22:48 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=Vyl+JushNUhxQR9kB/ILsOGZBSYFhnFHl07ojWx3Yr0=;
-        b=efW108/gNjOWQIoe8/cRLDJjOa1jGyXH7uomSmhBbrLNsRWb5tHYYBOKeUYg1LnlyL
-         dRAhFHVXcfLrmcz2H7u/9HyAnhkQ87RCKSC+UyPP60lMf9hDSFo9LdJegnwc4mmCQgPI
-         LQj24Czd+bg9HLipgQiFCOLC4k6zF4c6gPLQLipfrbZA1ECN4e/FaipMuPYTj1Q1DFg5
-         r6X7LsRjDy0EconQ6xDJLholTN020wEIXClHq+KELZT+iHRGXzsZqnBCqL1azNs6HEBX
-         0iD2URcVF/o6K5wU5Vk5JdQn8vwNq269UmShk+n6cA0uDLbzohWYCpANc3ikkP/xp+uM
-         ivnw==
-X-Gm-Message-State: ANhLgQ1PD2evoRJvVlHiFAPuq++3+5gAiA9f5qbc2ne33+sjI0xkJKb2
-        ehAl/O9IFKlly00vlbClG8nUOrDdhV20t9TGzCM=
-X-Google-Smtp-Source: ADFU+vuatsYFQyzw7KGCdnpaDr1LX96t9W2MKuazQT8eQzMhRM3meDvFmKUJz35yCx0cVZmZIt0zxUQD3IpYwuMtlZQ=
-X-Received: by 2002:a9d:5c0c:: with SMTP id o12mr10645908otk.145.1585603368284;
- Mon, 30 Mar 2020 14:22:48 -0700 (PDT)
+        Mon, 30 Mar 2020 17:25:21 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
+        Subject:Sender:Reply-To:Content-ID:Content-Description;
+        bh=UE2wAGGu8ya9NawySRvYrWAaplmOOYGqNRobWUtfUl8=; b=ARWUMeOzzQMeW+6dlpJz8CB+R0
+        qMaxaGtKmlD0D4TDU1U0A68N88krwQgHmeqZDlj9KPQvz9BwaLuVzgvJvlAczb8E/iHQ2hcmnLS+Q
+        O/Te1QsKFzrNYwoyaYeL2WZz33NqKwtpTrxjGGXeOLxs1Uivhi4En7WP+l1tDklwQEb4Rftlfqv5k
+        NmuO9+ytokJGC+HidZNbbQKPE+WaZx1NbNlKHp5heGyOxohNrr/KRmFeld+jyEFSvzOyyOZEToTnA
+        bVX6Pw/xF+AWG07KQ+iiyPOU2coNVDcxifvhCwdVdYCMgTyFn9WWH3064gwlkfXCcZTjz7YjwEjYL
+        Z4TcL9vw==;
+Received: from [2601:1c0:6280:3f0:897c:6038:c71d:ecac]
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jJ1uJ-0007ub-6z; Mon, 30 Mar 2020 21:25:19 +0000
+Subject: Re: ACPI Video Driver creates backlight on desktop board
+To:     Hans de Goede <hdegoede@redhat.com>,
+        Paul Menzel <pmenzel@molgen.mpg.de>,
+        Zhang Rui <rui.zhang@intel.com>
+Cc:     linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <75866748-f574-ae50-6183-ef6892c935c5@molgen.mpg.de>
+ <63956e11-46f2-72f4-c722-8fee2cbfbfa1@redhat.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <9a934fe8-9279-094c-e589-9e439c000b04@infradead.org>
+Date:   Mon, 30 Mar 2020 14:25:18 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-References: <20200330085854.19774-1-geert@linux-m68k.org> <CAHp75Vc1gW2FnRpTNm6uu4gY3bSmccSkCFkAKqYraLincK29yA@mail.gmail.com>
- <CAMuHMdXDBtOo_deXsmX=zA9_va0O5j8XydxoigmS35+Tj7xDDA@mail.gmail.com>
- <CAHp75VfsfBD7djyB=S8QtQPdKTkpU5gFzyRYr8FshavoWgT0CA@mail.gmail.com>
- <CY4PR1201MB01204FB968A6661FB8B295ACA1CB0@CY4PR1201MB0120.namprd12.prod.outlook.com>
- <c8447243-98c6-d545-9766-e6b3f33f4d13@synopsys.com>
-In-Reply-To: <c8447243-98c6-d545-9766-e6b3f33f4d13@synopsys.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Mon, 30 Mar 2020 23:22:36 +0200
-Message-ID: <CAMuHMdWJ22zUkvMXBPBLoNhUkf0bnFBxa_WZAhiUWzA3r4eDkA@mail.gmail.com>
-Subject: Re: Build regressions/improvements in v5.6
-To:     Vineet Gupta <Vineet.Gupta1@synopsys.com>
-Cc:     Alexey Brodkin <Alexey.Brodkin@synopsys.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        arcml <linux-snps-arc@lists.infradead.org>,
-        Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+In-Reply-To: <63956e11-46f2-72f4-c722-8fee2cbfbfa1@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Vineet,
+On 3/30/20 1:51 PM, Hans de Goede wrote:
+> Hi,
+> 
+> On 3/29/20 11:36 AM, Paul Menzel wrote:
+>> Dear Linux folks,
+>>
+>>
+>> On the MSI desktop board [1]
+>>
+>>      [    0.000000] DMI: Micro-Star International Co., Ltd. MS-7A37/B350M MORTAR (MS-7A37), BIOS 1.MR 12/02/2019
+>>
+>> with an AMD Ryzen 3 2200G with Radeon Vega Graphics, the ACPI Video Driver `video` is loaded and creates a backlight device.
+>>
+>>      $ readlink -f /sys/class/backlight/acpi_video0
+>>      /sys/devices/pci0000:00/0000:00:08.1/0000:26:00.0/backlight/acpi_video0
+>>
+>> I wonder what the driver is used for as the AMDGPU driver exists for the graphics device.
+> 
+> Backlight on x86 hw is a bit of a mess, there is an ACPI standard for accessing it
+> and with older (Windows XP era) laptops that is the interface which usually works,
+> then there are a bunch of vendor specific SMBIOS or WMI backlight interfaces and
+> then there is the option of directly accessing the hardware as the amdgpu driver
+> is doing.
+> 
+> We have a bunch of heuristics to avoid the acpi_video driver registering a
+> backlight interface when it should not, either because the direct hw access
+> should be used instead; or because there simply is no builtin LCD panel and thus
+> no backlight to control.
+> 
+> These heuristics are failing on your board.
+> 
+>> If it’s useful, is there a way to prevent the backlight interface from getting created?
+> 
+> You can pass "acpi_backlight=ignore" on the kernel commandline to disable the
 
-On Mon, Mar 30, 2020 at 11:18 PM Vineet Gupta
-<Vineet.Gupta1@synopsys.com> wrote:
-> On 3/30/20 1:40 PM, Alexey Brodkin wrote:
-> >> -----Original Message-----
-> >> From: Andy Shevchenko <andy.shevchenko@gmail.com>
-> >> Sent: Monday, March 30, 2020 4:28 PM
-> >> To: Geert Uytterhoeven <geert@linux-m68k.org>; Alexey Brodkin <abrodkin@synopsys.com>
-> >> Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-> >> Subject: Re: Build regressions/improvements in v5.6
-> >>
-> >> On Mon, Mar 30, 2020 at 4:26 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
-> >>>
-> >>> Hi Andy,
-> >>>
-> >>> On Mon, Mar 30, 2020 at 3:08 PM Andy Shevchenko
-> >>> <andy.shevchenko@gmail.com> wrote:
-> >>>> On Mon, Mar 30, 2020 at 12:00 PM Geert Uytterhoeven
-> >>>> <geert@linux-m68k.org> wrote:
-> >>>>> Below is the list of build error/warning regressions/improvements in
-> >>>>> v5.6[1] compared to v5.5[2].
-> >>>>
-> >>>>>   + /kisskb/src/include/linux/dev_printk.h: warning: format '%zu' expects argument of type
-> >> 'size_t', but argument 8 has type 'unsigned int' [-Wformat=]:  => 232:23
-> >>>>
-> >>>> This is interesting... I checked all dev_WARN_ONCE() and didn't find an issue.
-> >>>
-> >>> arcv2/axs103_smp_defconfig
-> >>>
-> >>> It's probably due to a broken configuration for the arc toolchain.
-> >>
-> >> Alexey, do have any insight?
-> >
-> > I think I do have some but first I'd like to get it reproduced myself.
-> > I just built v5.6 with help of both GCC 8.3.1- & 9.3.1-based toolchains
-> > and didn't see a single warning. So I guess I was doing something wrong.
-> >
-> > FWIW
-> >
-> > 1. My GCC 8.3.1 toolchain was exactly this:
-> > https://github.com/foss-for-synopsys-dwc-arc-processors/toolchain/releases/download/arc-2019.09-release/arc_gnu_2019.09_prebuilt_uclibc_le_archs_linux_install.tar.gz
-> >
-> > 2. Linux kernel is vanilla v5.6.0
-> >
-> > 3. Configured and built as simple as:
-> >    make axs103_smp_defconfig && make
->
-> It seems the build service is using a arc toolchain built in 2016 :-)
->
-> # < /opt/cross/kisskb/br-arcle-hs38-full-2016.08-613-ge98b4dd/bin/arc-linux-gcc
->
-> Call it Murphy's law, same year a little later I'd fixed the same issue in gcc [1]
->
-> [1] http://lists.infradead.org/pipermail/linux-snps-arc/2016-October/001661.html
->
-> @Guenter could you please consider updating the ARC tools. FWIW you can build
-> stuff off upstream gcc/binutils using build system of your choice.
+Hi Hans,
+Should that be "acpi_backlight=none"?  I don't see 'ignore' allowed here:
 
-This is not Günter's toolchain, but Michael's.
+static void acpi_video_parse_cmdline(void)
+{
+	if (!strcmp("vendor", acpi_video_backlight_string))
+		acpi_backlight_cmdline = acpi_backlight_vendor;
+	if (!strcmp("video", acpi_video_backlight_string))
+		acpi_backlight_cmdline = acpi_backlight_video;
+	if (!strcmp("native", acpi_video_backlight_string))
+		acpi_backlight_cmdline = acpi_backlight_native;
+	if (!strcmp("none", acpi_video_backlight_string))
+		acpi_backlight_cmdline = acpi_backlight_none;
+}
 
-Gr{oetje,eeting}s,
+and Documentation/admin-guide/kernel-parameters.txt could stand to be updated
+with a few of those options.
 
-                        Geert
+
+> interface, this will stop e.g. gnome from showing a non working brightness
+> slider in its top right system menu.
+> 
+> If this works you can make this permanent and avoid other users from having to
+> do the same thing by writing a patch adding a quirk for this like this one:
+> 
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=d21a91629f4b8e794fc4c0e0c17c85cedf1d806c
+
 
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+~Randy
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
