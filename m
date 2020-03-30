@@ -2,105 +2,89 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 831FBC43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 12:34:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB8E9C2D0ED
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 12:34:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5880820716
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 12:34:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585571649;
-	bh=HoaerF6H0bxc282DUNaU5Ua0lVW73ouI/Ch6kYgKfLg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=imONa0otkk+04ogEg/rCeLg7VhEC+uUCTfkftxxNb2y9LafSfrj2oMeyJw0n8eGh4
-	 jFcyNa4QJOsp3Xf5EkLX4zxRzhJE05yVBoe3YzdrSdjx2udfYlm457whvXphoNNbH3
-	 TzZhq3FKNjR1fo6NnJAzn2mLyON78WqjYtgpn048=
+	by mail.kernel.org (Postfix) with ESMTP id A2C61206E6
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 12:34:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AulWHQzI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730160AbgC3MeI (ORCPT
+        id S1730169AbgC3MeR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 08:34:08 -0400
-Received: from mail-wm1-f48.google.com ([209.85.128.48]:51792 "EHLO
-        mail-wm1-f48.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729972AbgC3MeH (ORCPT
+        Mon, 30 Mar 2020 08:34:17 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:32815 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729972AbgC3MeR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 08:34:07 -0400
-Received: by mail-wm1-f48.google.com with SMTP id c187so19797895wme.1
-        for <linux-kernel@vger.kernel.org>; Mon, 30 Mar 2020 05:34:04 -0700 (PDT)
+        Mon, 30 Mar 2020 08:34:17 -0400
+Received: by mail-io1-f67.google.com with SMTP id o127so17518721iof.0
+        for <linux-kernel@vger.kernel.org>; Mon, 30 Mar 2020 05:34:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ugYRzz9x1UjGNKjwYYI17qia2N9XHsI1pN2vBIoW4mc=;
+        b=AulWHQzIHdpUZnA2sbkDfxfUjyOfSvu6RazWKeyE6oqreSfALk5Y2vXA2kQ2/ZtBmW
+         XL9QQtIGnuzHC3n2SVWQQ4RbUEYFYCWmwSiWln3Z+xTe7CRgmxmQXivx1qb5ocRvAa8c
+         eqcZ25hP0Vx3sd+pgloyAKEUJ8v8t9HOVHD/jZ0z9ibyNourLGJ7/hP6QIwR02B4qWu6
+         +PyGHV1rYNU2zT7NHv5h9oe2NtTF0K4zUQQYwM3zNOIfvB+2fZl4G65UhvhKBaBJPtfR
+         nEjqdo7Oogn0QNgP9AJ/xa5G/SXIeOUY6ZA8pFzRy0ShUwfBK/vFlEKBOm5KKAnOyJbj
+         X24A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=Em2aQuXf0JSg6irJFEUCAhD/JvrnovGDSXnE0eBhJyg=;
-        b=Nxj2M3HCyyXYbO3nkFsm76279hm5/AE0hDqe5oUMNAdnItpb4RVce9fdxME1k2QxZK
-         o67XvHScFbPPXm+lvKMHXokQM659Jl3vg0c6FEsRTZDBl/In2/bbRUCDCdETHL6p7fha
-         Ux6LD3lf5jmEqSRdho/jws/7cTvI/xhD0gwbrzneOTSFc5WKccETu3gfR2lkNsj8LxFC
-         t7DFeuEwbnHyC/F3VJ/IaK9aYz1dKVj39gNVHvb4hqWJo5jcvzJWJ3KiV22hDgy7C77h
-         jSWSSMZhiYD22BCyszW8NwbYUgL8vJxb9HflZYRpcSnWqDQEI9+si2vDjlObEvMnYEDN
-         ynPw==
-X-Gm-Message-State: ANhLgQ17t4zPcZBuPhqfyxKO7abF8Zw9w7MMTpeoZpe92dUQ//HNUcX1
-        e37ub9jrMemBfySW6/cAhPs=
-X-Google-Smtp-Source: ADFU+vu41LA/m+g3AiN1pF7fnyL47hSltXVxaY1ddpeSVpuljI2zOSF9C7d78tJTM+jEETaTkTT08w==
-X-Received: by 2002:a1c:4b19:: with SMTP id y25mr7612860wma.70.1585571644125;
-        Mon, 30 Mar 2020 05:34:04 -0700 (PDT)
-Received: from localhost (ip-37-188-180-223.eurotel.cz. [37.188.180.223])
-        by smtp.gmail.com with ESMTPSA id n186sm20346573wme.25.2020.03.30.05.34.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Mar 2020 05:34:03 -0700 (PDT)
-Date:   Mon, 30 Mar 2020 14:34:02 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Anshuman Khandual <anshuman.khandual@arm.com>
-Cc:     linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
-        David Hildenbrand <david@redhat.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [RFC] mm/page_alloc: Enumerate bad page reasons
-Message-ID: <20200330123402.GI14243@dhcp22.suse.cz>
-References: <1585551097-27283-1-git-send-email-anshuman.khandual@arm.com>
- <20200330084300.GC14243@dhcp22.suse.cz>
- <689b594f-c18a-4131-8049-ac917345099b@arm.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ugYRzz9x1UjGNKjwYYI17qia2N9XHsI1pN2vBIoW4mc=;
+        b=uDNn+rRA9lsBosor+tvqT4yNLOFSJDjPwtEXTcOUzfGSuOT31vSrsMPPZhw1XoW2ng
+         HYvrha9po+4kMjEA+I2BzXIi5zJGlCPlCnS6xdC3N6pHNXGzNLCLAnt04bDXNyLmaDCk
+         OK1mf/IYfPSD/YNoqYmf+kjdMBZCX90Y6m8mWomrQSU63JhwPoQY+mEin6VuUXh8RKJS
+         NHYb+ufqN4EY244VKgcGNY0vBBire+7yaeK+zLihcphYDsNwGWJ6FY9rx4zvs7xazKzJ
+         gw6ne8jg1KegjrwOTyJmJ8KecJzaa4y4suGcUaVQ6ybCQ1lXhUH6MrxZ0nigCMi0FIBJ
+         y/yg==
+X-Gm-Message-State: ANhLgQ1uAVMgd5u2sAGJ1LUhivgBIvq9sepylQsa0rSlQ/LGem+dwa2I
+        fXqqbtW8QUmqVJhmFXY5Nay8F077qiPZEp36UbY=
+X-Google-Smtp-Source: ADFU+vuJ2Fim0LqX//6fvtgqy0RzQBRtW5mAL/toKxx/E1bUAIyfGNfzuWQoO0GVaXic4F3UMLxIDDTCSuxXedtjGTo=
+X-Received: by 2002:a02:455:: with SMTP id 82mr10525540jab.112.1585571655651;
+ Mon, 30 Mar 2020 05:34:15 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <689b594f-c18a-4131-8049-ac917345099b@arm.com>
+References: <20200325090741.21957-2-bigbeeshane@gmail.com> <CGME20200327075458eucas1p2f1011560c5d2d2a754d2394f56367ebb@eucas1p2.samsung.com>
+ <4aef60ff-d9e4-d3d0-1a28-8c2dc3b94271@samsung.com> <82df6735-1cf0-e31f-29cc-f7d07bdaf346@amd.com>
+ <cd773011-969b-28df-7488-9fddae420d81@samsung.com> <bba81019-d585-d950-ecd0-c0bf36a2f58d@samsung.com>
+In-Reply-To: <bba81019-d585-d950-ecd0-c0bf36a2f58d@samsung.com>
+From:   Shane Francis <bigbeeshane@gmail.com>
+Date:   Mon, 30 Mar 2020 13:34:05 +0100
+Message-ID: <CABnpCuBGW9VeDxE9-SnS=hA=k18uPv4c=Ym8JtKUvZ-Tsd8s8g@mail.gmail.com>
+Subject: Re: [v4,1/3] drm/prime: use dma length macro when mapping sg
+To:     Marek Szyprowski <m.szyprowski@samsung.com>
+Cc:     =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
+        Maling list - DRI developers 
+        <dri-devel@lists.freedesktop.org>, David Airlie <airlied@linux.ie>,
+        linux-kernel@vger.kernel.org,
+        Alex Deucher <alexander.deucher@amd.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon 30-03-20 17:55:14, Anshuman Khandual wrote:
-> 
-> 
-> On 03/30/2020 02:13 PM, Michal Hocko wrote:
-> > On Mon 30-03-20 12:21:37, Anshuman Khandual wrote:
-> >> Enumerate all existing bad page reasons which can be used in bad_page() for
-> >> reporting via __dump_page(). Unfortunately __dump_page() cannot be changed.
-> >> __dump_page() is called from dump_page() that accepts a raw string and is
-> >> also an exported symbol that is currently being used from various generic
-> >> memory functions and other drivers. This reduces code duplication while
-> >> reporting bad pages.
-> > 
-> > I dunno. It sounds like over engineering something that is an internal
-> > stuff. Besides that I consider string reasons kinda obvious and I am
-> > pretty sure I would have to check them for each numeric alias when want
-> > to read the code. Yeah, yeah, nothing really hard but still...
-> 
-> Right these are very much self explanatory. Would moving these aliases into
-> mm/page_alloc.c itself, make it any better for quicker access ?
+On Mon, Mar 30, 2020 at 9:18 AM Marek Szyprowski
+<m.szyprowski@samsung.com> wrote:
 
-Not really. Cscopes doesn't really care where it is. It is the fact that
-the constant makes to have a look is what makes this not an improvement
-from my POV.
- 
-> > So I am not really sure this is all worth the code churn. Besides
-> 
-> I understand but is not just repeating the same strings in similar functions
-> bit suboptimal as well.
+> Today I've noticed that this patch went to final v5.6 without even a day
+> of testing in linux-next, so v5.6 is broken on Exynos and probably a few
+> other ARM archs, which rely on the drm_prime_sg_to_page_addr_arrays
+> function.
+>
+> Best regards
+> --
+> Marek Szyprowski, PhD
+> Samsung R&D Institute Poland
+>
 
-I do not really see why that would be suboptimal.
--- 
-Michal Hocko
-SUSE Labs
+FYI These changes are now in the 5.5-stable queue.
