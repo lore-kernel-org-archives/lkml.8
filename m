@@ -2,133 +2,207 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 118BFC43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 22:20:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD159C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 22:26:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D8BF620658
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 22:20:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AFABA2072D
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 22:26:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XelqlNCB"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ycc1KEIO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729730AbgC3WUQ (ORCPT
+        id S1729523AbgC3W0J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 18:20:16 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:37143 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728857AbgC3WUQ (ORCPT
+        Mon, 30 Mar 2020 18:26:09 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:38339 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729461AbgC3W0J (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 18:20:16 -0400
-Received: by mail-wm1-f65.google.com with SMTP id j19so547717wmi.2;
-        Mon, 30 Mar 2020 15:20:14 -0700 (PDT)
+        Mon, 30 Mar 2020 18:26:09 -0400
+Received: by mail-pl1-f195.google.com with SMTP id w3so7321240plz.5
+        for <linux-kernel@vger.kernel.org>; Mon, 30 Mar 2020 15:26:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:reply-to:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=zxTDf8+MnFHubZYH4xBNOl2XtpGfjXLmP1euby1NHHI=;
-        b=XelqlNCBNrqAvwAR/h7n/I+jsAusk4uQ3gc4RmSAdCSE1MeAtafoM+J0UO6ALvWAzx
-         JU4wtAVr8yQQ6VFVag0SgNR75GoxuKhUbtgMadsd/pC+AubNJOf3fbqp1evcbKIJJv24
-         9VwvrazqeLn/qiHPpBPWvCUSfpp4J32kXw02xYPTNhWgct4wyzosiBarbdp5iootZX5g
-         jm0SblnIqO1zrrfJp0mRsWqA+Fm3DcZcZsZmx1JX7ehD8Z5/sDiMJu7ajNIdHAoOKKBP
-         rL0rrv6BQ4jc1tBY1PgFjc7NECsMVVOqFxUwkdR/12KKiKgE7pOwtb7hyThatEzQZfF1
-         k0+g==
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :user-agent:mime-version:content-transfer-encoding;
+        bh=s+MoJHMSmcTUpq3uJxnfw8RVUGWalt2lStS+Ah7bIw8=;
+        b=Ycc1KEIOagcHVpqjoqTdfsL8SXZV1i++qn05Rgy8VdmDp72xVkhS8K1vnLdiF6MQc0
+         LovPWxqrUa8uOtPkhubC5G1/vHnyQgfh1cBs6LjDI96nKCBeQFfiBefGa8f7U2rvOmLp
+         ZIwmTYa3aPwoL47kaUKGGZg+NyJqNd38Fn0GTuWgY1G5XevW7LmlR7EuUCI9Szc91BzI
+         VS7XbAMruSlBt5pELkjNUuSF6lRdHCsM8oRvhlOUysXOf1FdwrXeJA/6wtvo5LUVNRM0
+         2swl6ETvnTFp0mSnOPaXBFG9pN2iewLiDZutUQn/Uuang/YFqkEpUA47goeAmwJTnqR7
+         oopw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:reply-to
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=zxTDf8+MnFHubZYH4xBNOl2XtpGfjXLmP1euby1NHHI=;
-        b=hJ5WDCvJz2o3N9av/M2COargggFLCIxk6Z1kBvEGW1WQhIuiIw2geQHU2ymCbltQdP
-         POyR9BJN2TK755Ly/ovfd7a5+ritqwI8RbfsmnGAS4vVN5n5aPb5l2urz9hbiXQsYQM8
-         XhUDbrwNthtcxmQGfjIo7oFfoYxQqZ6IkMldpZj6844D4FAq9P2DVQsCtIlH1S/V4z4G
-         JSHVoB63AiD25ctsQh2p7TL4YjEqmTleylYxqwlVpfKPs/l4abG1pRkDcKwQHnTsqq5L
-         i3hhCLz2kchzzw8oTKejYHy+px5gHgR7R/TGmGV+oX1mE1wUlsBjn6opUtydO1sE/jFt
-         QGIw==
-X-Gm-Message-State: ANhLgQ0QjpsiCxZGCqnxbrddzh8tkwUbAehM4F3Igky6U8gl81VR/kLF
-        jNEYmespjv6LpMZXemSV4gM=
-X-Google-Smtp-Source: ADFU+vvQIj+MUR+EYO8VdoIOGwvNsipNI0VJFCtEu0BqPBf0GZUmNJ8l9EP7fyP1NI8U+TEOwovI5Q==
-X-Received: by 2002:a7b:c24a:: with SMTP id b10mr227358wmj.61.1585606814046;
-        Mon, 30 Mar 2020 15:20:14 -0700 (PDT)
-Received: from localhost ([185.92.221.13])
-        by smtp.gmail.com with ESMTPSA id a10sm15432401wrm.87.2020.03.30.15.20.13
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 30 Mar 2020 15:20:13 -0700 (PDT)
-Date:   Mon, 30 Mar 2020 22:20:13 +0000
-From:   Wei Yang <richard.weiyang@gmail.com>
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     Wei Yang <richard.weiyang@gmail.com>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 6/9] XArray: internal node is a xa_node when it is bigger
- than XA_ZERO_ENTRY
-Message-ID: <20200330222013.34nkqen2agujhd6j@master>
-Reply-To: Wei Yang <richard.weiyang@gmail.com>
-References: <20200330123643.17120-1-richard.weiyang@gmail.com>
- <20200330123643.17120-7-richard.weiyang@gmail.com>
- <20200330125006.GZ22483@bombadil.infradead.org>
- <20200330134519.ykdtqwqxjazqy3jm@master>
- <20200330134903.GB22483@bombadil.infradead.org>
- <20200330141350.ey77odenrbvixotb@master>
- <20200330142708.GC22483@bombadil.infradead.org>
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:user-agent:mime-version:content-transfer-encoding;
+        bh=s+MoJHMSmcTUpq3uJxnfw8RVUGWalt2lStS+Ah7bIw8=;
+        b=NRpa1X+msjuTl7cULaItt0QLXvf6GMOuLU3KDj8E+/glCyK0/d35UFY5Tbe1ISH9XL
+         QlzjFOAE/7W2sAJlHEDO77Swv8bCmd/eBeCAGRAWSDO1McXbW3idLpSMzp05jNOGNDFj
+         23UJBFuvkd1mxxlkm8Xc9INbzTqL6VJzqvnmmMf3DYEnz1KG0S8y24rX+Don4tYh1kAo
+         G8tKhuTWqT6AHWMmtafA3yaLe8ovrrTLw7zOUHvXSOijT3SUu5Teu6tWmnRRZKGk+NGj
+         r3vh/M/WMdCIn6Gm3ZRDkP+w8q7OB1gIFwvfwCagxAnUec3gh4su5DJkkNzQR++V3zTA
+         9u+g==
+X-Gm-Message-State: ANhLgQ38cPQPUfqN4mZNznC0M7ke5pKJMk8KTiloowdpjsS+A3+KdivS
+        zLiLueA9pdXC3y2AKMd6AmQJZyhNIKYnaw==
+X-Google-Smtp-Source: ADFU+vuDe09EskbUbkoynvPaMH4Zoi2aALAdNwdjmmf214C52u2ClsXF+RhYKQAE8Lc6BEXqVVnCkQ==
+X-Received: by 2002:a17:902:aa97:: with SMTP id d23mr14477810plr.244.1585607166274;
+        Mon, 30 Mar 2020 15:26:06 -0700 (PDT)
+Received: from OptiPlexFedora ([47.144.161.84])
+        by smtp.gmail.com with ESMTPSA id c201sm11015633pfc.73.2020.03.30.15.26.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 30 Mar 2020 15:26:05 -0700 (PDT)
+Message-ID: <61bb6678d48557895671488357a62680d0ae655f.camel@gmail.com>
+Subject: Re: [PATCH v6] staging: vt6656: add error code handling to unused
+ variable
+From:   "John B. Wyatt IV" <jbwyatt4@gmail.com>
+To:     Stefano Brivio <sbrivio@redhat.com>
+Cc:     outreachy-kernel@googlegroups.com,
+        Julia Lawall <julia.lawall@inria.fr>,
+        Forest Bond <forest@alittletooquiet.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Quentin Deslandes <quentin.deslandes@itdev.co.uk>,
+        Colin Ian King <colin.king@canonical.com>,
+        Malcolm Priestley <tvboxspy@gmail.com>,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
+Date:   Mon, 30 Mar 2020 15:26:04 -0700
+In-Reply-To: <20200331000143.7c8f98c0@elisabeth>
+References: <20200330214613.31078-1-jbwyatt4@gmail.com>
+         <20200331000143.7c8f98c0@elisabeth>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200330142708.GC22483@bombadil.infradead.org>
-User-Agent: NeoMutt/20170113 (1.7.2)
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 30, 2020 at 07:27:08AM -0700, Matthew Wilcox wrote:
->On Mon, Mar 30, 2020 at 02:13:50PM +0000, Wei Yang wrote:
->> On Mon, Mar 30, 2020 at 06:49:03AM -0700, Matthew Wilcox wrote:
->> >On Mon, Mar 30, 2020 at 01:45:19PM +0000, Wei Yang wrote:
->> >> On Mon, Mar 30, 2020 at 05:50:06AM -0700, Matthew Wilcox wrote:
->> >> >On Mon, Mar 30, 2020 at 12:36:40PM +0000, Wei Yang wrote:
->> >> >> As the comment mentioned, we reserved several ranges of internal node
->> >> >> for tree maintenance, 0-62, 256, 257. This means a node bigger than
->> >> >> XA_ZERO_ENTRY is a normal node.
->> >> >> 
->> >> >> The checked on XA_ZERO_ENTRY seems to be more meaningful.
->> >> >
->> >> >257-1023 are also reserved, they just aren't used yet.  XA_ZERO_ENTRY
->> >> >is not guaranteed to be the largest reserved entry.
->> >> 
->> >> Then why we choose 4096?
->> >
->> >Because 4096 is the smallest page size supported by Linux, so we're
->> >guaranteed that anything less than 4096 is not a valid pointer.
->> 
+On Tue, 2020-03-31 at 00:01 +0200, Stefano Brivio wrote:
+> On Mon, 30 Mar 2020 14:46:13 -0700
+> "John B. Wyatt IV" <jbwyatt4@gmail.com> wrote:
+> 
+> > Add error code handling to unused 'ret' variable that was never
+> > used.
+> > Return an error code from functions called within
+> > vnt_radio_power_on.
+> > 
+> > Issue reported by coccinelle (coccicheck).
+> > 
+> > Suggested-by: Quentin Deslandes <quentin.deslandes@itdev.co.uk>
+> > Suggested-by: Stefano Brivio <sbrivio@redhat.com>
+> > Reviewed-by: Quentin Deslandes <quentin.deslandes@itdev.co.uk>
+> > Signed-off-by: John B. Wyatt IV <jbwyatt4@gmail.com>
+> > ---
+> > v6: Forgot to add all the v5 code to commit.
+> > 
+> > v5: Remove Suggested-by: Julia Lawall above seperator line.
+> > 	Remove break; statement in switch block.
+> > 	break; removal checked by both gcc compile and checkpatch.
+> > 	Suggested by Stefano Brivio <sbrivio@redhat.com>
+> > 
+> > v4: Move Suggested-by: Julia Lawall above seperator line.
+> >     Add Reviewed-by tag as requested by Quentin Deslandes.
+> > 
+> > v3: Forgot to add v2 code changes to commit.
+> > 
+> > v2: Replace goto statements with return.
+> >     Remove last if check because it was unneeded.
+> >     Suggested-by: Julia Lawall <julia.lawall@inria.fr>
+> > 
+> >  drivers/staging/vt6656/card.c | 20 ++++++++++++--------
+> >  1 file changed, 12 insertions(+), 8 deletions(-)
+> > 
+> > diff --git a/drivers/staging/vt6656/card.c
+> > b/drivers/staging/vt6656/card.c
+> > index dc3ab10eb630..c947e8188384 100644
+> > --- a/drivers/staging/vt6656/card.c
+> > +++ b/drivers/staging/vt6656/card.c
+> > @@ -723,9 +723,13 @@ int vnt_radio_power_on(struct vnt_private
+> > *priv)
+> >  {
+> >  	int ret = 0;
+> >  
+> > -	vnt_exit_deep_sleep(priv);
+> > +	ret = vnt_exit_deep_sleep(priv);
+> > +	if (ret)
+> > +		return ret;
+> >  
+> > -	vnt_mac_reg_bits_on(priv, MAC_REG_HOSTCR, HOSTCR_RXON);
+> > +	ret = vnt_mac_reg_bits_on(priv, MAC_REG_HOSTCR, HOSTCR_RXON);
+> > +	if (ret)
+> > +		return ret;
+> >  
+> >  	switch (priv->rf_type) {
+> >  	case RF_AL2230:
+> > @@ -734,14 +738,14 @@ int vnt_radio_power_on(struct vnt_private
+> > *priv)
+> >  	case RF_VT3226:
+> >  	case RF_VT3226D0:
+> >  	case RF_VT3342A0:
+> > -		vnt_mac_reg_bits_on(priv, MAC_REG_SOFTPWRCTL,
+> > -				    (SOFTPWRCTL_SWPE2 |
+> > SOFTPWRCTL_SWPE3));
+> > -		break;
+> > +		ret = vnt_mac_reg_bits_on(priv, MAC_REG_SOFTPWRCTL,
+> > +					  (SOFTPWRCTL_SWPE2 | 
+> > +					  SOFTPWRCTL_SWPE3));
+> >  	}
+> > +	if (ret)
+> > +		return ret;
+> 
+> Hmm, sorry, I haven't been clear enough I guess.
+> 
+> This is what you're doing:
+> 
+> if rf_type is not in that list:
+> - set some bits in a register
+> - did it fail? return
+> - did it fail? return
+> ...
+> 
+> if rf_type is in that list:
+> - set some bits in a register
+> - did it fail? return
+> - set some other bits
+> - did it fail? return
+> ...
+> 
+> Now, the "set some other bits" part is already selected depending on
+> rf_type. There's no need to check 'ret' otherwise, so you can move
+> the
+> return just after setting 'ret', in the switch case.
+> 
 
-So you want to say, the 4096 makes sure XArray will not store an address in
-first page? If this is the case, I have two suggestions:
+Thank you for pointing that out Stefano. That would be a serious issue
+with logic.
 
-  * use PAGE_SIZE would be more verbose?
-  * a node is an internal entry, do we need to compare with xa_mk_internal()
-    instead?
+Just to be sure. Are you looking for this?
 
-And also suggest to add a comment on this, otherwise it seems a little magic.
+switch (priv->rf_type) {
+case RF_AL2230:
+case RF_AL2230S:
+case RF_AIROHA7230:
+case RF_VT3226:
+case RF_VT3226D0:
+case RF_VT3342A0:
+	ret = vnt_mac_reg_bits_on(priv, MAC_REG_SOFTPWRCTL,
+				  (SOFTPWRCTL_SWPE2 | 
+				  SOFTPWRCTL_SWPE3));
+	if (ret)
+		return ret;
+}
 
->> I found this in xarray.rst:
->> 
->>   Normal pointers may be stored in the XArray directly.  They must be 4-byte
->>   aligned, which is true for any pointer returned from kmalloc() and
->>   alloc_page().  It isn't true for arbitrary user-space pointers,
->>   nor for function pointers.  You can store pointers to statically allocated
->>   objects, as long as those objects have an alignment of at least 4.
->> 
->> So the document here is not correct?
->
->Why do you say that?
->
->(it is slightly out of date; the XArray actually supports storing unaligned
->pointers now, but that's not relevant to this discussion)
+> With a check, because you don't want to return if ret == 0.
+> 
 
-Ok, maybe this document need to update.
+What do you mean exactly by this?
 
--- 
-Wei Yang
-Help you, Help me
+The new code should only return a 0 at the end of the function with the
+vnt_mac_reg_bits_off call.
+
+
