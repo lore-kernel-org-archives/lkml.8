@@ -2,258 +2,97 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08E81C43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 02:55:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CB4AC43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 02:55:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7AB54206CC
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 02:55:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E4B4C206CC
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 02:55:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="VqZFo52q"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="l1lvLll8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729295AbgC3CzI (ORCPT
+        id S1729316AbgC3Czl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Mar 2020 22:55:08 -0400
-Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:57395 "EHLO
-        gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729257AbgC3CzI (ORCPT
+        Sun, 29 Mar 2020 22:55:41 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:42308 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728965AbgC3Czl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Mar 2020 22:55:08 -0400
-Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id AE3E28066C;
-        Mon, 30 Mar 2020 15:55:05 +1300 (NZDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
-        s=mail181024; t=1585536905;
-        bh=zGZx7ixRgffAVX78YePwGzh+4RQA61TjGUCaBeBSMrQ=;
-        h=From:To:Cc:Subject:Date;
-        b=VqZFo52q/P2AcP0PLr3PUQCD26EcYB0ppMI8MLdboLvYZwSKo8StpH4ci0zHQai4L
-         QvnjMNQmFgcVIscnD/6SP7HqcdTBSmFKbG25UUSUhXcCh2MBc+EhasqjtXk4fnIHNE
-         IJGWRXybN8AiOgmhuJIxcbvrfsEpxq80TEW677POEtvOSnSUCjYnzbl5US5osxeP4W
-         CDi6zbNEE058RB0+UUVcL2E5kyr70ozAnENhlyq2rwB0+ftIqhIjk5ziOi2wWCELsv
-         2KzyAocrYryQcgX5mo44o0dPozewMdvMJ0vIcr0guGqVZ9/fGUNSwFDToV2ugSp5Jn
-         2IGXzMPs17Vrg==
-Received: from smtp (Not Verified[10.32.16.33]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
-        id <B5e815f870000>; Mon, 30 Mar 2020 15:55:03 +1300
-Received: from chrisp-dl.ws.atlnz.lc (chrisp-dl.ws.atlnz.lc [10.33.22.20])
-        by smtp (Postfix) with ESMTP id 4AEB213ED7D;
-        Mon, 30 Mar 2020 15:55:05 +1300 (NZDT)
-Received: by chrisp-dl.ws.atlnz.lc (Postfix, from userid 1030)
-        id 7A43028006C; Mon, 30 Mar 2020 15:55:05 +1300 (NZDT)
-From:   Chris Packham <chris.packham@alliedtelesis.co.nz>
-To:     a.zummo@towertech.it, alexandre.belloni@bootlin.com,
-        wim@linux-watchdog.org, linux@roeck-us.net
-Cc:     linux-rtc@vger.kernel.org, linux-watchdog@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Chris Packham <chris.packham@alliedtelesis.co.nz>
-Subject: [PATCH v3] rtc: ds1307: add support for watchdog timer on ds1388
-Date:   Mon, 30 Mar 2020 15:55:00 +1300
-Message-Id: <20200330025500.6991-1-chris.packham@alliedtelesis.co.nz>
-X-Mailer: git-send-email 2.25.1
+        Sun, 29 Mar 2020 22:55:41 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:To:
+        Subject:Sender:Reply-To:Cc:Content-ID:Content-Description;
+        bh=NhjPp0hAekGuC1qMQCQiEBENS7NjExpXR6hbG7ha91E=; b=l1lvLll8MgZ41EmxSijmHg5b/N
+        /F8icc0CCuHzvqbo+GyvQyfk+7lqelwE7fv5PGDungOmB0e/JKJ5kF6k97WGjYs95T6YeWR0cbD8m
+        bVTDvStxXLR/TSgVGIbOPJwGPD2G/BhoROH6vu0FBp5mCWbrrYWjAswhTyfjcGCq2x8ptN80UEL7o
+        qy+idSxaDYmgZkTyyvyTWgszI8SqvJCP15bBU4R4JsJeeEjaclm3U+rveJjCEkppRR/fxhw4Jdu0g
+        mVN1298GVPRBmbmaS+kBxErnhAKlyvbCEhfBj1jDc356vVFDZxZJ7N7UeS1BX6fLISh4X1u7N8Os5
+        qbkP4hyQ==;
+Received: from [2601:1c0:6280:3f0:897c:6038:c71d:ecac]
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jIkaS-00066h-On; Mon, 30 Mar 2020 02:55:40 +0000
+Subject: Re: why does "mem auto-init: clearing system memory may take some
+ time..." takes about 14 sec under 5.4.17 but only few msec under 5.5.1?
+To:     =?UTF-8?Q?Toralf_F=c3=b6rster?= <toralf.foerster@gmx.de>,
+        Linux Kernel <linux-kernel@vger.kernel.org>
+References: <c7a23250-6b23-2a9e-88c8-924c34fb9139@gmx.de>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <a8e02d42-a16a-c665-6a55-1c43818fa48c@infradead.org>
+Date:   Sun, 29 Mar 2020 19:55:38 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-x-atlnz-ls: pat
+In-Reply-To: <c7a23250-6b23-2a9e-88c8-924c34fb9139@gmx.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The DS1388 variant has watchdog timer capabilities. When using a DS1388
-and having enabled CONFIG_WATCHDOG_CORE register a watchdog device for
-the DS1388.
+On 2/1/20 9:52 AM, Toralf Förster wrote:
+> I do wonder (and I'm surprised) about increased boot speed according to dmesg for thi9s hardend Gentoo Linux system:
+> Linux mr-fox 5.5.1 #1 SMP Sat Feb 1 18:25:21 CET 2020 x86_64 Intel(R) Xeon(R) CPU E5-1650 v3 @ 3.50GHz GenuineIntel GNU/Linux
+> 
+> Under 5.4.17 I do have usually 14 sec to wait:
+> 
+> [    0.497171] mem auto-init: stack:byref_all, heap alloc:on, heap free:on
+> [    0.497171] mem auto-init: clearing system memory may take some time...
+> [    0.501549] Calgary: detecting Calgary via BIOS EBDA area
+> [    0.501550] Calgary: Unable to locate Rio Grande table in EBDA - bailing!
+> [   14.083235] Memory: 131812972K/134101088K available (12291K kernel code, 1400K rwdata, 1912K rodata, 1272K init, 2040K bss, 2288116K reserved, 0K cma-reserved)
+> [   14.083342] SLUB: HWalign=64, Order=0-3, MinObjects=0, CPUs=12, Nodes=1
+> [   14.083350] Kernel/User page tables isolation: enabled
+> [   14.083403] rcu: Hierarchical RCU implementation.
+> [   14.083404] rcu: RCU calculated value of scheduler-enlistment delay is 25 jiffies.
+> [   14.083414] NR_IRQS: 4352, nr_irqs: 928, preallocated irqs: 16
+> 
+> but with 5.5.1 there's no wait?:
+> 
+> [    0.000000] mem auto-init: stack:byref_all, heap alloc:on, heap free:on
+> [    0.000000] mem auto-init: clearing system memory may take some time...
+> [    0.000000] Memory: 131812876K/134101088K available (12291K kernel code, 1412K rwdata, 1936K rodata, 1260K init, 2012K bss, 2288212K reserved, 0K cma-reserved)
+> [    0.000000] SLUB: HWalign=64, Order=0-3, MinObjects=0, CPUs=12, Nodes=1
+> [    0.000000] Kernel/User page tables isolation: enabled
+> [    0.000000] rcu: Hierarchical RCU implementation.
+> [    0.000000] rcu: RCU calculated value of scheduler-enlistment delay is 25 jiffies.
+> [    0.000000] NR_IRQS: 4352, nr_irqs: 928, preallocated irqs: 16
+> [    0.000000] random: get_random_bytes called from start_kernel+0x4a8/0x659 with crng_init=0
+> 
+> Do I miss something? (The kernel config was derived via "make oldconfig").
 
-Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
----
-Changes in v3:
-- Address review comments from Guenter. Add select WATCHDOG_CORE, remove
-  unnecessary wdt member, add set_timeout op, use devm_watchdog_register
-Changes in v2:
-- Address review comments from Alexandre, the only functional change is s=
-etting
-  the hundredths of seconds to 0 instead of 99.
+Hi > Toralf,
 
- drivers/rtc/Kconfig      |   1 +
- drivers/rtc/rtc-ds1307.c | 115 +++++++++++++++++++++++++++++++++++++++
- 2 files changed, 116 insertions(+)
+Curious/odd.
 
-diff --git a/drivers/rtc/Kconfig b/drivers/rtc/Kconfig
-index 34c8b6c7e095..729851a38511 100644
---- a/drivers/rtc/Kconfig
-+++ b/drivers/rtc/Kconfig
-@@ -241,6 +241,7 @@ config RTC_DRV_AS3722
- config RTC_DRV_DS1307
- 	tristate "Dallas/Maxim DS1307/37/38/39/40/41, ST M41T00, EPSON RX-8025,=
- ISL12057"
- 	select REGMAP_I2C
-+	select WATCHDOG_CORE if WATCHDOG
- 	help
- 	  If you say yes here you get support for various compatible RTC
- 	  chips (often with battery backup) connected with I2C. This driver
-diff --git a/drivers/rtc/rtc-ds1307.c b/drivers/rtc/rtc-ds1307.c
-index 31a38d468378..fad042118862 100644
---- a/drivers/rtc/rtc-ds1307.c
-+++ b/drivers/rtc/rtc-ds1307.c
-@@ -22,6 +22,7 @@
- #include <linux/hwmon-sysfs.h>
- #include <linux/clk-provider.h>
- #include <linux/regmap.h>
-+#include <linux/watchdog.h>
-=20
- /*
-  * We can't determine type by probing, but if we expect pre-Linux code
-@@ -144,8 +145,15 @@ enum ds_type {
- #	define M41TXX_BIT_CALIB_SIGN	BIT(5)
- #	define M41TXX_M_CALIBRATION	GENMASK(4, 0)
-=20
-+#define DS1388_REG_WDOG_HUN_SECS	0x08
-+#define DS1388_REG_WDOG_SECS		0x09
- #define DS1388_REG_FLAG			0x0b
-+#	define DS1388_BIT_WF		BIT(6)
- #	define DS1388_BIT_OSF		BIT(7)
-+#define DS1388_REG_CONTROL		0x0c
-+#	define DS1388_BIT_RST		BIT(0)
-+#	define DS1388_BIT_WDE		BIT(1)
-+
- /* negative offset step is -2.034ppm */
- #define M41TXX_NEG_OFFSET_STEP_PPB	2034
- /* positive offset step is +4.068ppm */
-@@ -854,6 +862,72 @@ static int m41txx_rtc_set_offset(struct device *dev,=
- long offset)
- 				  ctrl_reg);
- }
-=20
-+#ifdef CONFIG_WATCHDOG_CORE
-+static int ds1388_wdt_start(struct watchdog_device *wdt_dev)
-+{
-+	struct ds1307 *ds1307 =3D watchdog_get_drvdata(wdt_dev);
-+	u8 regs[2];
-+	int ret;
-+
-+	ret =3D regmap_update_bits(ds1307->regmap, DS1388_REG_FLAG,
-+				 DS1388_BIT_WF, 0);
-+	if (ret)
-+		return ret;
-+
-+	ret =3D regmap_update_bits(ds1307->regmap, DS1388_REG_CONTROL,
-+				 DS1388_BIT_WDE | DS1388_BIT_RST, 0);
-+	if (ret)
-+		return ret;
-+
-+	/*
-+	 * watchdog timeouts are measured in seconds. So ignore hundredths of
-+	 * seconds field.
-+	 */
-+	regs[0] =3D 0;
-+	regs[1] =3D bin2bcd(wdt_dev->timeout);
-+
-+	ret =3D regmap_bulk_write(ds1307->regmap, DS1388_REG_WDOG_HUN_SECS, reg=
-s,
-+				sizeof(regs));
-+	if (ret)
-+		return ret;
-+
-+	return regmap_update_bits(ds1307->regmap, DS1388_REG_CONTROL,
-+				  DS1388_BIT_WDE | DS1388_BIT_RST,
-+				  DS1388_BIT_WDE | DS1388_BIT_RST);
-+}
-+
-+static int ds1388_wdt_stop(struct watchdog_device *wdt_dev)
-+{
-+	struct ds1307 *ds1307 =3D watchdog_get_drvdata(wdt_dev);
-+
-+	return regmap_update_bits(ds1307->regmap, DS1388_REG_CONTROL,
-+				  DS1388_BIT_WDE | DS1388_BIT_RST, 0);
-+}
-+
-+static int ds1388_wdt_ping(struct watchdog_device *wdt_dev)
-+{
-+	struct ds1307 *ds1307 =3D watchdog_get_drvdata(wdt_dev);
-+	u8 regs[2];
-+
-+	return regmap_bulk_read(ds1307->regmap, DS1388_REG_WDOG_HUN_SECS, regs,
-+				sizeof(regs));
-+}
-+
-+static int ds1388_wdt_set_timeout(struct watchdog_device *wdt_dev,
-+				  unsigned int val)
-+{
-+	struct ds1307 *ds1307 =3D watchdog_get_drvdata(wdt_dev);
-+	u8 regs[2];
-+
-+	wdt_dev->timeout =3D val;
-+	regs[0] =3D 0;
-+	regs[1] =3D bin2bcd(wdt_dev->timeout);
-+
-+	return regmap_bulk_write(ds1307->regmap, DS1388_REG_WDOG_HUN_SECS, regs=
-,
-+				 sizeof(regs));
-+}
-+#endif
-+
- static const struct rtc_class_ops rx8130_rtc_ops =3D {
- 	.read_time      =3D ds1307_get_time,
- 	.set_time       =3D ds1307_set_time,
-@@ -1576,6 +1650,46 @@ static void ds1307_clks_register(struct ds1307 *ds=
-1307)
-=20
- #endif /* CONFIG_COMMON_CLK */
-=20
-+#ifdef CONFIG_WATCHDOG_CORE
-+static const struct watchdog_info ds1388_wdt_info =3D {
-+	.options =3D WDIOF_SETTIMEOUT | WDIOF_KEEPALIVEPING | WDIOF_MAGICCLOSE,
-+	.identity =3D "DS1388 watchdog",
-+};
-+
-+static const struct watchdog_ops ds1388_wdt_ops =3D {
-+	.owner =3D THIS_MODULE,
-+	.start =3D ds1388_wdt_start,
-+	.stop =3D ds1388_wdt_stop,
-+	.ping =3D ds1388_wdt_ping,
-+	.set_timeout =3D ds1388_wdt_set_timeout,
-+
-+};
-+
-+static void ds1307_wdt_register(struct ds1307 *ds1307)
-+{
-+	struct watchdog_device	*wdt;
-+
-+	if (ds1307->type !=3D ds_1388)
-+		return;
-+
-+	wdt =3D devm_kzalloc(ds1307->dev, sizeof(*wdt), GFP_KERNEL);
-+
-+	wdt->info =3D &ds1388_wdt_info;
-+	wdt->ops =3D &ds1388_wdt_ops;
-+	wdt->timeout =3D 99;
-+	wdt->max_timeout =3D 99;
-+	wdt->min_timeout =3D 1;
-+
-+	watchdog_init_timeout(wdt, 0, ds1307->dev);
-+	watchdog_set_drvdata(wdt, ds1307);
-+	devm_watchdog_register_device(ds1307->dev, wdt);
-+}
-+#else
-+static void ds1307_wdt_register(struct ds1307 *ds1307)
-+{
-+}
-+#endif /* CONFIG_WATCHDOG_CORE */
-+
- static const struct regmap_config regmap_config =3D {
- 	.reg_bits =3D 8,
- 	.val_bits =3D 8,
-@@ -1865,6 +1979,7 @@ static int ds1307_probe(struct i2c_client *client,
-=20
- 	ds1307_hwmon_register(ds1307);
- 	ds1307_clks_register(ds1307);
-+	ds1307_wdt_register(ds1307);
-=20
- 	return 0;
-=20
---=20
-2.25.1
+Do you have the kernel .config files for 5.4.17 and 5.5.1?
+Looks like it would have to be a config difference AFAICT.
+
+-- 
+~Randy
 
