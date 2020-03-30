@@ -2,233 +2,117 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86981C43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 08:38:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8C44C2D0EB
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 08:38:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 606932073B
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 08:38:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BDFFE20774
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 08:38:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QwBMkhl+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729701AbgC3IiV (ORCPT
+        id S1729714AbgC3Ii2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 04:38:21 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:44048 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726017AbgC3IiU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 04:38:20 -0400
-Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 98C441D36927062BC959;
-        Mon, 30 Mar 2020 16:38:15 +0800 (CST)
-Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
- (10.3.19.201) with Microsoft SMTP Server (TLS) id 14.3.487.0; Mon, 30 Mar
- 2020 16:38:11 +0800
-Subject: Re: [PATCH] f2fs: fix long latency due to discard during umount
-To:     Sahitya Tummala <stummala@codeaurora.org>
-CC:     Jaegeuk Kim <jaegeuk@kernel.org>,
-        <linux-f2fs-devel@lists.sourceforge.net>,
-        <linux-kernel@vger.kernel.org>
-References: <1584506689-5041-1-git-send-email-stummala@codeaurora.org>
- <29d4adc4-482d-3d92-1470-3405989ea231@huawei.com>
- <20200326133700.GR20234@codeaurora.org>
- <2b0d8d4c-a981-4edc-d8ca-fe199a63ea79@huawei.com>
- <20200327030542.GS20234@codeaurora.org>
- <20200330065335.GT20234@codeaurora.org>
-From:   Chao Yu <yuchao0@huawei.com>
-Message-ID: <9adc5c7e-7936-bac7-58b1-50631f8ac5eb@huawei.com>
-Date:   Mon, 30 Mar 2020 16:38:11 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        Mon, 30 Mar 2020 04:38:28 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:33057 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726017AbgC3Ii1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Mar 2020 04:38:27 -0400
+Received: by mail-wm1-f67.google.com with SMTP id z14so2567789wmf.0;
+        Mon, 30 Mar 2020 01:38:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=d7dT77Mj8SFfgoSadzsoTpTpaeQ7c6h2QTZMTMg5w18=;
+        b=QwBMkhl+nqKTSY1XSOzTHAjPupV6mq5wO4yaX4cblyxkTiak2UrTY+Z7Su93Z7aQf0
+         x3Vs6FIhR4Y2a6mR0PQUel5wUIrNAGOGHMPBVvpIft7fn61c+cGNrebVDjZdsHrc1wgx
+         GDZ3lbzKaGaLqxwbdefO2ZN3TxgY8ZGDyDJn5sC+XWMBiHTIKlHN8SBdK9m23wo8v3rQ
+         CiN81B4HqXHILMC0uUOw1z53jHcIiiB8FvxTpkrgl+yBBBcQk7FB2WIhGLZxfpZfHi2q
+         qgYgAuRENu31KypW6q27ab/jZzv/JCNRnvHX6jfi4kYHHI4cRQC86qI/jifE3Ia2YEl0
+         c7Ig==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=d7dT77Mj8SFfgoSadzsoTpTpaeQ7c6h2QTZMTMg5w18=;
+        b=j+Zfx2PcSNq3rAZEAV2bkc9IdU1qFSTRtPbrjpVx36pMy2wCh23/jYfE0h96IuxAeW
+         nGdICblpeRHKFP0RxzAA4M8bdWBTs96hE5LTRI84rCj1h9tyhDcURzxCLvCSxlfaeERd
+         x+9r7lu0KvGhlaPry0ZceKcmvDrxOUty3i0d29/dmoR0nVhHjXhrWAXf2xp/uyWjpAqi
+         BHO9CyCl84Fy4YtmV7RYJsqFWA5euVBIfIrE76glg4tO2cwGDtniqtcou7MpXhmKJwNp
+         tmB8kyPvjZeF5a0LJFgYiAIHQbry8auVDpIb1YZZneGLNJevxIcBpF4kVlUsKVe+32QI
+         OkMA==
+X-Gm-Message-State: ANhLgQ3hZRmH3jWdagvq1CPgU1J6gbNtoy039JJ6k2NtCmosflncua9f
+        4FMpVuf/PQUNlCFuOHvvMAuCQtaDZYrapHDcW10=
+X-Google-Smtp-Source: ADFU+vuF1lMbuqMXNh6El+A/BD+TdA9UFO6/f3q1PrZ1gEs2kWmu/sTZ17ZP9QJo3REUe7XlcvpwTMeY7D1ca8YEN7A=
+X-Received: by 2002:a1c:c3c3:: with SMTP id t186mr12576715wmf.118.1585557505217;
+ Mon, 30 Mar 2020 01:38:25 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200330065335.GT20234@codeaurora.org>
-Content-Type: text/plain; charset="windows-1252"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.134.22.195]
-X-CFilter-Loop: Reflected
+References: <20200304121943.28989-1-daniel.baluta@oss.nxp.com>
+In-Reply-To: <20200304121943.28989-1-daniel.baluta@oss.nxp.com>
+From:   Daniel Baluta <daniel.baluta@gmail.com>
+Date:   Mon, 30 Mar 2020 11:38:13 +0300
+Message-ID: <CAEnQRZDsfSohbkbLd73AjN=2C3C6MTBdKqt84DHXkscjpq9rKQ@mail.gmail.com>
+Subject: Re: [RFC PATCH v2 0/2] Introduce multi PM domains helpers
+To:     Daniel Baluta <daniel.baluta@oss.nxp.com>,
+        Aisheng Dong <aisheng.dong@nxp.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        rafael.j.wysocki@intel.com
+Cc:     rjw@rjwysocki.net, "Brown, Len" <len.brown@intel.com>,
+        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Linux-ALSA <alsa-devel@alsa-project.org>,
+        linux-pm@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>, khilman@kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Daniel Baluta <daniel.baluta@nxp.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Paul Olaru <paul.olaru@nxp.com>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Shawn Guo <shawnguo@kernel.org>,
+        "S.j. Wang" <shengjiu.wang@nxp.com>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Sahitya,
+Rafael / Ulf / Aisheng,
 
-Bad news, :( I guess we didn't catch the root cause, as after applying v3,
-I still can reproduce this issue:
+Any comments?
 
-generic/003 10s ...  30s
-
-Thanks,
-
-On 2020/3/30 14:53, Sahitya Tummala wrote:
-> Hi Chao,
-> 
-> On Fri, Mar 27, 2020 at 08:35:42AM +0530, Sahitya Tummala wrote:
->> On Fri, Mar 27, 2020 at 09:51:43AM +0800, Chao Yu wrote:
->>>
->>> With this patch, most of xfstest cases cost 5 * n second longer than before.
->>>
->>> E.g. generic/003, during umount(), we looped into retrying one bio
->>> submission.
->>>
->>> [61279.829724] F2FS-fs (zram1): Found nat_bits in checkpoint
->>> [61279.885337] F2FS-fs (zram1): Mounted with checkpoint version = 5cf3cb8e
->>> [61281.912832] submit discard bio start [23555,1]
->>> [61281.912835] f2fs_submit_discard_endio [23555,1] err:-11
->>> [61281.912836] submit discard bio end [23555,1]
->>> [61281.912836] move dc to retry list [23555,1]
->>>
->>> ...
->>>
->>> [61286.881212] submit discard bio start [23555,1]
->>> [61286.881217] f2fs_submit_discard_endio [23555,1] err:-11
->>> [61286.881223] submit discard bio end [23555,1]
->>> [61286.881224] move dc to retry list [23555,1]
->>> [61286.905198] submit discard bio start [23555,1]
->>> [61286.905203] f2fs_submit_discard_endio [23555,1] err:-11
->>> [61286.905205] submit discard bio end [23555,1]
->>> [61286.905206] move dc to retry list [23555,1]
->>> [61286.929157] F2FS-fs (zram1): Issue discard(23555, 23555, 1) failed, ret: -11
->>>
->>> Could you take a look at this issue?
->>
->> Let me check and get back on this.
-> 
-> I found the issue. The dc with multiple bios is getting requeued again and
-> again in case if one of its bio gets -EAGAIN error. Even the successfully
-> completed bios are getting requeued again resulting into long latency.
-> I have fixed it by splitting the dc in such case so that we can requeue only
-> the leftover bios into a new dc and retry that later within the 5 sec timeout.
-> 
-> Please help to review v3 posted and if it looks good, I would like to request
-> you to test the earlier regression scenario with it to check the result again?
-> 
-> thanks,
-> 
->>
->> Thanks,
->>
->>>
->>> Thanks,
->>>
->>>>
->>>> Thanks,
->>>>
->>>>> Thanks,
->>>>>
->>>>>> +				break;
->>>>>> +			}
->>>>>> +		}
->>>>>>  
->>>>>>  		atomic_inc(&dcc->issued_discard);
->>>>>>  
->>>>>> @@ -1463,6 +1477,40 @@ static unsigned int __issue_discard_cmd_orderly(struct f2fs_sb_info *sbi,
->>>>>>  	return issued;
->>>>>>  }
->>>>>>  
->>>>>> +static bool __should_discard_retry(struct f2fs_sb_info *sbi,
->>>> s> > +		struct discard_policy *dpolicy)
->>>>>> +{
->>>>>> +	struct discard_cmd_control *dcc = SM_I(sbi)->dcc_info;
->>>>>> +	struct discard_cmd *dc, *tmp;
->>>>>> +	bool retry = false;
->>>>>> +	unsigned long flags;
->>>>>> +
->>>>>> +	if (dpolicy->type != DPOLICY_UMOUNT)
->>>>>> +		f2fs_bug_on(sbi, 1);
->>>>>> +
->>>>>> +	mutex_lock(&dcc->cmd_lock);
->>>>>> +	list_for_each_entry_safe(dc, tmp, &(dcc->retry_list), list) {
->>>>>> +		if (dpolicy->timeout != 0 &&
->>>>>> +			f2fs_time_over(sbi, dpolicy->timeout)) {
->>>>>> +			retry = false;
->>>>>> +			break;
->>>>>> +		}
->>>>>> +
->>>>>> +		spin_lock_irqsave(&dc->lock, flags);
->>>>>> +		if (!dc->bio_ref) {
->>>>>> +			dc->state = D_PREP;
->>>>>> +			dc->error = 0;
->>>>>> +			reinit_completion(&dc->wait);
->>>>>> +			__relocate_discard_cmd(dcc, dc);
->>>>>> +			retry = true;
->>>>>> +		}
->>>>>> +		spin_unlock_irqrestore(&dc->lock, flags);
->>>>>> +	}
->>>>>> +	mutex_unlock(&dcc->cmd_lock);
->>>>>> +
->>>>>> +	return retry;
->>>>>> +}
->>>>>> +
->>>>>>  static int __issue_discard_cmd(struct f2fs_sb_info *sbi,
->>>>>>  					struct discard_policy *dpolicy)
->>>>>>  {
->>>>>> @@ -1470,12 +1518,13 @@ static int __issue_discard_cmd(struct f2fs_sb_info *sbi,
->>>>>>  	struct list_head *pend_list;
->>>>>>  	struct discard_cmd *dc, *tmp;
->>>>>>  	struct blk_plug plug;
->>>>>> -	int i, issued = 0;
->>>>>> +	int i, err, issued = 0;
->>>>>>  	bool io_interrupted = false;
->>>>>>  
->>>>>>  	if (dpolicy->timeout != 0)
->>>>>>  		f2fs_update_time(sbi, dpolicy->timeout);
->>>>>>  
->>>>>> +retry:
->>>>>>  	for (i = MAX_PLIST_NUM - 1; i >= 0; i--) {
->>>>>>  		if (dpolicy->timeout != 0 &&
->>>>>>  				f2fs_time_over(sbi, dpolicy->timeout))
->>>>>> @@ -1509,7 +1558,10 @@ static int __issue_discard_cmd(struct f2fs_sb_info *sbi,
->>>>>>  				break;
->>>>>>  			}
->>>>>>  
->>>>>> -			__submit_discard_cmd(sbi, dpolicy, dc, &issued);
->>>>>> +			err = __submit_discard_cmd(sbi, dpolicy, dc, &issued);
->>>>>> +			if (err == -EAGAIN)
->>>>>> +				congestion_wait(BLK_RW_ASYNC,
->>>>>> +						DEFAULT_IO_TIMEOUT);
->>>>>>  
->>>>>>  			if (issued >= dpolicy->max_requests)
->>>>>>  				break;
->>>>>> @@ -1522,6 +1574,10 @@ static int __issue_discard_cmd(struct f2fs_sb_info *sbi,
->>>>>>  			break;
->>>>>>  	}
->>>>>>  
->>>>>> +	if (!list_empty(&dcc->retry_list) &&
->>>>>> +		__should_discard_retry(sbi, dpolicy))
->>>>>> +		goto retry;
->>>>>> +
->>>>>>  	if (!issued && io_interrupted)
->>>>>>  		issued = -1;
->>>>>>  
->>>>>> @@ -1613,6 +1669,12 @@ static unsigned int __wait_discard_cmd_range(struct f2fs_sb_info *sbi,
->>>>>>  		goto next;
->>>>>>  	}
->>>>>>  
->>>>>> +	if (dpolicy->type == DPOLICY_UMOUNT &&
->>>>>> +		!list_empty(&dcc->retry_list)) {
->>>>>> +		wait_list = &dcc->retry_list;
->>>>>> +		goto next;
->>>>>> +	}
->>>>>> +
->>>>>>  	return trimmed;
->>>>>>  }
->>>>>>  
->>>>>> @@ -2051,6 +2113,7 @@ static int create_discard_cmd_control(struct f2fs_sb_info *sbi)
->>>>>>  	for (i = 0; i < MAX_PLIST_NUM; i++)
->>>>>>  		INIT_LIST_HEAD(&dcc->pend_list[i]);
->>>>>>  	INIT_LIST_HEAD(&dcc->wait_list);
->>>>>> +	INIT_LIST_HEAD(&dcc->retry_list);
->>>>>>  	INIT_LIST_HEAD(&dcc->fstrim_list);
->>>>>>  	mutex_init(&dcc->cmd_lock);
->>>>>>  	atomic_set(&dcc->issued_discard, 0);
->>>>>>
->>>>
->>
->> -- 
->> --
->> Sent by a consultant of the Qualcomm Innovation Center, Inc.
->> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum.
-> 
+On Wed, Mar 4, 2020 at 2:20 PM Daniel Baluta <daniel.baluta@oss.nxp.com> wrote:
+>
+> From: Daniel Baluta <daniel.baluta@nxp.com>
+>
+> i.MX8QXP/i.MX8QM has IPs that need multiple power domains to be up
+> in order to work. In order to help drivers, we introduce multi PM
+> domains helpers that are able to activate/deactivate multi PM domains.
+>
+> First patch introduces the helpers and second patch demonstrates how
+> a driver can use them instead of hardcoding the PM domains handling.
+>
+> Changes since v1: (addressed Ranjani's comments)
+>         - enhanced description for dev_multi_pm_attach return value
+>         - renamed exit_unroll_pm label to exit_detach_pm
+>
+> Daniel Baluta (2):
+>   PM / domains: Introduce multi PM domains helpers
+>   ASoC: SOF: Use multi PM domains helpers
+>
+>  drivers/base/power/common.c | 93 +++++++++++++++++++++++++++++++++++++
+>  include/linux/pm_domain.h   | 19 ++++++++
+>  sound/soc/sof/imx/imx8.c    | 60 ++++--------------------
+>  3 files changed, 121 insertions(+), 51 deletions(-)
+>
+> --
+> 2.17.1
+>
