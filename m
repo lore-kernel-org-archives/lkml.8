@@ -2,147 +2,268 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D3EAC43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 14:41:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C2B7C2D0EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 14:41:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 643CA206DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 14:41:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C38B6206DB
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 14:41:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xqLnGdoH"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Tr4b75/5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728650AbgC3OlK (ORCPT
+        id S1728761AbgC3OlR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 10:41:10 -0400
-Received: from mail-qv1-f68.google.com ([209.85.219.68]:32863 "EHLO
-        mail-qv1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727820AbgC3OlK (ORCPT
+        Mon, 30 Mar 2020 10:41:17 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:45185 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727820AbgC3OlR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 10:41:10 -0400
-Received: by mail-qv1-f68.google.com with SMTP id p19so9022358qve.0
-        for <linux-kernel@vger.kernel.org>; Mon, 30 Mar 2020 07:41:07 -0700 (PDT)
+        Mon, 30 Mar 2020 10:41:17 -0400
+Received: by mail-lj1-f193.google.com with SMTP id t17so18361075ljc.12
+        for <linux-kernel@vger.kernel.org>; Mon, 30 Mar 2020 07:41:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=rDcplkrNOR8fTQWpkrvvkQU2hQvD6/9jr9hYg71oITo=;
-        b=xqLnGdoHaTXp/62rSjJP1YmIXik/97SKipfrMDfHH9wmc/lpdcRAmuiljz5i/kuu3u
-         +xsoTKciWKFf3M0E8nuc3mQVdW7nQiIx2m4+Kx9aWQZNUJz8WoLvdD104COjmECOjZi2
-         DRCdByeHmIFviu13F/M/dGMh5XsY2WTkxNPlvHN7X42DIE1gXbQY6qDWY7yZ3rNNTIRG
-         tn+I27ueDtEKBd54V6MCSuJQmL/8FNHWFSjFlKOvpWq53TcdeeK2Jtl+voFb1C/Mk29j
-         x1xceu3u4jb9bhqbNw7ROPmLjHMF1CFTY5MZ8e8kXFCmbLtYEALZAv/G2Wh8Xd64w0Gp
-         WDng==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:in-reply-to:references
+         :mime-version;
+        bh=epGP9PMNlJZHcB9SQeovMPld4EXmyON6fdMXbQw6ctk=;
+        b=Tr4b75/53N7F3lQKDm58ZgR+5CQ3k0XrSfsIMtvAWDVV6wllqmffHDckG7Qk7wBKkX
+         dBNwb5XODKTDyKMpjQ2Cpe2aEmn511P5hhH5R3hMrnJItHhetRGirn4i5LwA/Br+N6iS
+         MtFqGPztQxlXTi6/I6WNowVLZ4YAwsePq4PUVda6gjJsCXgi3klBW3aFvY0bna7SxOcG
+         EJfhSt0c1dUgzu0kr9lajPsAxOFntDlPD9Nslh0rKC2Idobe2tQ4mqn+nTpAtglKM5vy
+         DsehBJacXDi1PcOJf6AVs/2IUyFzeuWoR8IhHgnr6BHwlHJQcnCpvTpbe1zW7lzPHAJ1
+         FAVA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=rDcplkrNOR8fTQWpkrvvkQU2hQvD6/9jr9hYg71oITo=;
-        b=qMtorMNl7vHeDKSMSCwOs4Mjv3b+90KoCZf0cLZEqxO6eM0WtzqJVlbU4iufuD+hO9
-         KjNlRlqCiU374fDXraSsCTzAMnPKgk0YtkXfsvwJnSDvWv8joXskgQx+031HPavR9Wad
-         fhjc2Mwvr8D5pM/ucoF0yLD5L+5uo1GQVNSF+JHHbLWmebj94dNFmuP0beutDSNDj5mH
-         SQCN+xXnqCHF00wrtblVt9acHu0kNS5mWlvVExP11CKmApNSEFU0IaTK60ZqS0RytdZY
-         tnWQNxhzuvhqSoI2QQo081sEXijpq42HeW/ZqqToowhsck5gQTM9V0z6TOMUnNYv3N7U
-         wAjQ==
-X-Gm-Message-State: ANhLgQ1X3nP6Y3SeAZa5nAhIxfcAWK6sEPHN1vIZu4YMG6NAffMoCz1J
-        ZmOwi+3Enbz9baJ5c7pcpry2rJmmVJw=
-X-Google-Smtp-Source: ADFU+vu3RH0WRUmQbpyjKeSWfs7vBOo3n+yCX9ak4+Gl6Tjcz4DthxSw0tHEkMnHiAp4GrdHCJsJ+A==
-X-Received: by 2002:a05:6214:a8f:: with SMTP id ev15mr12216022qvb.81.1585579266839;
-        Mon, 30 Mar 2020 07:41:06 -0700 (PDT)
-Received: from [192.168.1.92] (pool-71-255-246-27.washdc.fios.verizon.net. [71.255.246.27])
-        by smtp.gmail.com with ESMTPSA id v1sm11280407qtc.30.2020.03.30.07.41.05
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 30 Mar 2020 07:41:05 -0700 (PDT)
-Subject: Re: [Patch v5 2/6] soc: qcom: rpmhpd: Introduce function to retrieve
- power domain performance state count
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     rui.zhang@intel.com, ulf.hansson@linaro.org,
-        daniel.lezcano@linaro.org, agross@kernel.org, robh@kernel.org,
-        amit.kucheria@verdurent.com, mark.rutland@arm.com,
-        rjw@rjwysocki.net, linux-pm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200320014107.26087-1-thara.gopinath@linaro.org>
- <20200320014107.26087-3-thara.gopinath@linaro.org>
- <20200327221545.GF5063@builder>
-From:   Thara Gopinath <thara.gopinath@linaro.org>
-Message-ID: <1714f51c-1566-2756-ff43-5ee9b427e89c@linaro.org>
-Date:   Mon, 30 Mar 2020 10:41:04 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
+         :references:mime-version;
+        bh=epGP9PMNlJZHcB9SQeovMPld4EXmyON6fdMXbQw6ctk=;
+        b=JXpb5DU8RzBBLbCx6oYellIC16fuprtbqRFwuZbfA8LIsb3eGmWyf78dDnoRTzAKhi
+         fAHJOQKU/QfiCmm1TbpOTVTdaQsfz2EkD/7goV4iQMn/EjQBXSifbT+2Ix6Q1O/PXmHo
+         dgf4Lyqa25yy8jorFpMNlYgOp3hZGuWy35I8FbqHeGX2IeXy9Kz1fLWHBYzzCAx7zgAv
+         9bKPtuCy65pzehW1pr4qgFB7lLy+1r3hwYCF5gL9dbExNz0IxqYD1Ln86X1zsnZz9lTF
+         Xl1ADnqFwYcAmzu8B2UtoeNDZQhGnzaWrnm0Lx0tepQ36+/vv9kg9Y4fzuFSJkoaImTi
+         YCcw==
+X-Gm-Message-State: AGi0PuaxamGtmrDao2D24USwowU5OlcMtK0rf4gxF2lPWPSlyRyeHDLF
+        Yq/7MD2hXZFRMN0WRK7O4BM=
+X-Google-Smtp-Source: APiQypLij2junLsRYlGcxvO72I0+NagELD7M2Fum/IVNxmdF+fFujP753SxY5sHW00RrGQbR982wYw==
+X-Received: by 2002:a2e:9798:: with SMTP id y24mr3364372lji.267.1585579273383;
+        Mon, 30 Mar 2020 07:41:13 -0700 (PDT)
+Received: from eldfell.localdomain ([194.136.85.206])
+        by smtp.gmail.com with ESMTPSA id d27sm4486557lfq.73.2020.03.30.07.41.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 30 Mar 2020 07:41:12 -0700 (PDT)
+Date:   Mon, 30 Mar 2020 17:41:03 +0300
+From:   Pekka Paalanen <ppaalanen@gmail.com>
+To:     Neil Armstrong <narmstrong@baylibre.com>, code@mstoeckl.com
+Cc:     Simon Ser <contact@emersion.fr>,
+        "mjourdan@baylibre.com" <mjourdan@baylibre.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "linux-amlogic@lists.infradead.org" 
+        <linux-amlogic@lists.infradead.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Daniel Vetter <daniel@ffwll.ch>
+Subject: Re: [PATCH v4 7/8] drm/fourcc: amlogic: Add modifier definitions
+ for the Scatter layout
+Message-ID: <20200330174103.10cf2f37@eldfell.localdomain>
+In-Reply-To: <7acc751d-161f-af9c-d896-b4e43fb9b0ac@baylibre.com>
+References: <20200325085025.30631-1-narmstrong@baylibre.com>
+        <20200325085025.30631-8-narmstrong@baylibre.com>
+        <JgBZ7eZYMgXRNu_-E4ItS1bud9mEe15xptZEX_XhsM_h8_iIZTOmPokEVxPJYwX0wP0pmb5p-ymubyyZP3kVbcfuDNdmM0__L8wBR5IykfE=@emersion.fr>
+        <b1386ef5-c3e3-c07b-5982-e3f02441b431@baylibre.com>
+        <20200325154921.2a87930c@eldfell.localdomain>
+        <a385e2f6-52fa-e195-15e0-2132befc9f35@baylibre.com>
+        <20200326113632.6585cf7b@eldfell.localdomain>
+        <7acc751d-161f-af9c-d896-b4e43fb9b0ac@baylibre.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <20200327221545.GF5063@builder>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/dvN3iCsthpEZCSKTeqjvfgH"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+--Sig_/dvN3iCsthpEZCSKTeqjvfgH
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
+
+On Fri, 27 Mar 2020 15:14:46 +0100
+Neil Armstrong <narmstrong@baylibre.com> wrote:
+
+> Hi,
+>=20
+> On 26/03/2020 10:36, Pekka Paalanen wrote:
+> > On Wed, 25 Mar 2020 17:18:15 +0100
+> > Neil Armstrong <narmstrong@baylibre.com> wrote:
+> >  =20
+> >> Hi,
+> >>
+> >> On 25/03/2020 14:49, Pekka Paalanen wrote: =20
+> >>> On Wed, 25 Mar 2020 11:24:15 +0100
+> >>> Neil Armstrong <narmstrong@baylibre.com> wrote:
+> >>>    =20
+> >>>> Hi,
+> >>>>
+> >>>> On 25/03/2020 10:04, Simon Ser wrote:   =20
+> >>>>> On Wednesday, March 25, 2020 9:50 AM, Neil Armstrong <narmstrong@ba=
+ylibre.com> wrote:
+> >>>>>      =20
+> >>>>>> Amlogic uses a proprietary lossless image compression protocol and=
+ format
+> >>>>>> for their hardware video codec accelerators, either video decoders=
+ or
+> >>>>>> video input encoders.
+> >>>>>>
+> >>>>>> This introduces the Scatter Memory layout, means the header contai=
+ns IOMMU
+> >>>>>> references to the compressed frames content to optimize memory acc=
+ess
+> >>>>>> and layout.
+> >>>>>>
+> >>>>>> In this mode, only the header memory address is needed, thus the c=
+ontent
+> >>>>>> memory organization is tied to the current producer execution and =
+cannot
+> >>>>>> be saved/dumped neither transferrable between Amlogic SoCs support=
+ing this
+> >>>>>> modifier.     =20
+> >>>>>
+> >>>>> I don't think this is suitable for modifiers. User-space relies on
+> >>>>> being able to copy a buffer from one machine to another over the
+> >>>>> network. It would be pretty annoying for user-space to have a black=
+list
+> >>>>> of modifiers that don't work this way.
+> >>>>>
+> >>>>> Example of such user-space:
+> >>>>> https://gitlab.freedesktop.org/mstoeckl/waypipe/
+> >>>>>      =20
+> >>>>
+> >>>> I really understand your point, but this is one of the use-cases we =
+need solve.
+> >>>> This is why I split the fourcc patch and added an explicit comment.
+> >>>>
+> >>>> Please point me a way to display such buffer, the HW exists, works l=
+ike that and
+> >>>> it's a fact and can't change.
+> >>>>
+> >>>> It will be the same for secure zero-copy buffers we can't map from u=
+serspace, but
+> >>>> only the HW decoder can read/write and HW display can read.   =20
+> >>>
+> >>> The comparison to secure buffers is a good one.
+> >>>
+> >>> Are buffers with the DRM_FORMAT_MOD_AMLOGIC_FBC_LAYOUT_SCATTER modifi=
+er
+> >>> meaningfully mmappable to CPU always / sometimes / never /
+> >>> varies-and-cannot-know?   =20
+> >>
+> >> mmappable, yes in our WIP V4L2 driver in non-secure path, meaningful, =
+absolutely never.
+> >>
+> >> So yeah, these should not be mmappable since not meaningful. =20
+> >=20
+> > Ok. So we have a modifier that means there is no point in even trying to
+> > mmap the buffer.
+> >=20
+> > Not being able to mmap automatically makes things like waypipe not be
+> > able to work on the buffer, so the buffer cannot be replicated over a
+> > network, hence there is no compatibility issue. However, it still
+> > leaves the problem that, since waypipe is "just" a message relay that
+> > does not participate in the protocol really, the two end points might
+> > still negotiate to use a modifier that waypipe cannot handle. =20
+>=20
+> Not mmapable won't be limited to this kind of buffer, or secure, any DMA-=
+BUF
+> provider can decide to disable mmaping, so waypipe should work with this
+> whatever this discussion goes to.
+>=20
+> >=20
+> > Secure buffers have the same problem: by definition, one must not be
+> > able to replicate the buffer elsewhere.
+> >=20
+> > To me it seems there needs to be a way to identify buffers that cannot
+> > be mmapped. mmap() failing is obvious, but in waypipe's case it is too
+> > late - the end points have already negotiated the formats and modifiers
+> > and they cannot handle failures afterwards. =20
+>=20
+> The AFAIK last open question was on this thread:
+> https://lore.kernel.org/dri-devel/d6f8092d-9f90-d5ff-2ab3-b1867f8f5700@ti=
+.com/
+> But it was more like, how the consumer driver knows the buffer is secure.
+>=20
+> Daniel, is there something new ?
+>=20
+> >  =20
+> >>>
+> >>> Maybe this type should be handled similar to secure buffers, with the
+> >>> exception that they are not actually secured but only mostly
+> >>> inaccessible. Then again, I haven't looked at any of the secure buffer
+> >>> proposals.   =20
+> >>
+> >> Actually, the Amlogic platforms offers secure video path using these e=
+xact
+> >> modifiers, AFAIK it doesn't support the NV12 dual-write output in secu=
+re.
+> >>
+> >> AFAIK last submission is from AMD, and it doesn't talk at all about mm=
+apability
+> >> of the secure BOs. =20
+> >=20
+> > To me, a secure buffer concept automatically implies that there cannot
+> > be CPU access to it. The CPU is not trusted, right? Not even the kernel.
+> > I would assume secure implies no mmap. So I wonder, how does the secure
+> > buffers proposal manage userspace like waypipe? =20
+>=20
+> None, as I said, waypipe whould handle non mmapable buffers, by asking
+> for a different modifier set, or sending a gray buffer with a llama
+> instead.
+
+Hi,
+
+the only thing waypipe can do, is not forward some of the modifiers
+during negotiation, before any buffers are created. That is, assuming
+Waypipe actually understands the protocol it shovels through
+(libwayland does not understand Wayland, in comparison).
+
+Or disconnect when mmap() fails.
+
+I'm having second thoughts here on the feasibility of the waypipe use
+case. It seems to be simply mutually exclusive with secure buffers and
+this modifier here.
+
+Manuel, could you check through this thread and let us know what you
+think? Maybe I have misassumed something.
 
 
-On 3/27/20 6:15 PM, Bjorn Andersson wrote:
-> On Thu 19 Mar 18:41 PDT 2020, Thara Gopinath wrote:
-> 
->> Populate .get_performace_state_count in genpd ops to retrieve the count of
->> performance states supported by a rpmh power domain.
->>
->> Reviewed-by: Ulf Hansson <ulf.hansson@linaro.org>
->> Signed-off-by: Thara Gopinath <thara.gopinath@linaro.org>
->> ---
->>   drivers/soc/qcom/rpmhpd.c | 9 +++++++++
->>   1 file changed, 9 insertions(+)
->>
->> diff --git a/drivers/soc/qcom/rpmhpd.c b/drivers/soc/qcom/rpmhpd.c
->> index 4d264d0672c4..7142409a3b77 100644
->> --- a/drivers/soc/qcom/rpmhpd.c
->> +++ b/drivers/soc/qcom/rpmhpd.c
->> @@ -341,6 +341,13 @@ static unsigned int rpmhpd_get_performance_state(struct generic_pm_domain *genpd
->>   	return dev_pm_opp_get_level(opp);
->>   }
->>   
->> +static int rpmhpd_performance_states_count(struct generic_pm_domain *domain)
->> +{
->> +	struct rpmhpd *pd = domain_to_rpmhpd(domain);
->> +
->> +	return pd->level_count;
->> +}
->> +
->>   static int rpmhpd_update_level_mapping(struct rpmhpd *rpmhpd)
->>   {
->>   	int i;
->> @@ -429,6 +436,8 @@ static int rpmhpd_probe(struct platform_device *pdev)
->>   		rpmhpds[i]->pd.power_on = rpmhpd_power_on;
->>   		rpmhpds[i]->pd.set_performance_state = rpmhpd_set_performance_state;
->>   		rpmhpds[i]->pd.opp_to_performance_state = rpmhpd_get_performance_state;
->> +		rpmhpds[i]->pd.get_performance_state_count =
->> +					rpmhpd_performance_states_count;
-> 
-> I would prefer if you ignore the 80-char limit here and leave the line
-> unwrapped.
+Thanks,
+pq
 
-Hi Bjorn,
+--Sig_/dvN3iCsthpEZCSKTeqjvfgH
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
-Thanks for the reviews. I will fix this  in the next version.
+-----BEGIN PGP SIGNATURE-----
 
-> 
-> Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-> 
-> Regards,
-> Bjorn
-> 
->>   		pm_genpd_init(&rpmhpds[i]->pd, NULL, true);
->>   
->>   		data->domains[i] = &rpmhpds[i]->pd;
->> -- 
->> 2.20.1
->>
+iQIzBAEBCAAdFiEEJQjwWQChkWOYOIONI1/ltBGqqqcFAl6CBP8ACgkQI1/ltBGq
+qqf5Ng//YdfYRUp3D7YF759IzfAmSRCoRKEnGOqTdIOdQCYj7OA7y0WpRepfhto8
+DuJmANCTL2HVKjWNOiTaPbFkwnvuLT99VWH+4iSKRH4k76UqqwHYxF0aILT0jfX+
+9EE+iokzNQNui9kSrXPOxnT1ZWF1v8ivaA9fwWFTMXFsPLyapUPfJjojMZR+chme
+fQrt/XhMlDhS+9dCZEW8eQcPsZ1uSMQsz4wvJ7hGSSH8/FkRotyVhcC3wHEajNkr
+AIlQXRe+jXWVnXrhYdHL8ozigTpU0NOO1IhafnTWKIj99r9vV04GMJKIo1wWtsZ7
+o3s6P2nUPEK4FhiLEYPJAQYLrNRbV5yPQTw9voIurs/Cz7fhjQ1QMpHS114s/KAW
+KsY8lr7aUTjk/legfKN/HNG05KPf0Qm0vak+XA4TceinTHm4tbgnEIzXvHLvTp/q
+9iYrE/jm2fEfFy4x6PukNMB0KlgfQOQfB12E4nqkAACoA3vjuv62qrcbW/OBvCeY
+gRLxw9Fi20S1cWLFrZraf7eYIxne4LPK7b8cgiE6v9hY81KR5gMu9M3PUkWHFQKC
+hQfRXPhc669DBXrxJvHx+9z1ZI8TmGLWo6AnmxgKCxOx4pblbMieL5q//wDdvWJ/
+Tu8K/TIEZYxYq5aJciAfJ2cr7DXkBLBsZ9rUFI8gm1En9h53o3o=
+=FYDj
+-----END PGP SIGNATURE-----
 
--- 
-Warm Regards
-Thara
+--Sig_/dvN3iCsthpEZCSKTeqjvfgH--
