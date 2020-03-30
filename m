@@ -2,120 +2,78 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6825BC2D0ED
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 11:26:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3065EC43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 11:28:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A50420748
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 11:26:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE8E020716
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 11:28:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="0pGJ266V"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729771AbgC3L01 (ORCPT
+        id S1729727AbgC3L23 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 07:26:27 -0400
-Received: from foss.arm.com ([217.140.110.172]:50810 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728764AbgC3L00 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 07:26:26 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E980531B;
-        Mon, 30 Mar 2020 04:26:25 -0700 (PDT)
-Received: from C02TD0UTHF1T.local (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9111A3F52E;
-        Mon, 30 Mar 2020 04:26:22 -0700 (PDT)
-Date:   Mon, 30 Mar 2020 12:26:19 +0100
-From:   Mark Rutland <mark.rutland@arm.com>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Elena Reshetova <elena.reshetova@intel.com>, x86@kernel.org,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Alexander Potapenko <glider@google.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Jann Horn <jannh@google.com>,
-        "Perla, Enrico" <enrico.perla@intel.com>,
-        kernel-hardening@lists.openwall.com,
-        linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 5/5] arm64: entry: Enable random_kstack_offset support
-Message-ID: <20200330112619.GE1309@C02TD0UTHF1T.local>
-References: <20200324203231.64324-1-keescook@chromium.org>
- <20200324203231.64324-6-keescook@chromium.org>
- <20200325132127.GB12236@lakrids.cambridge.arm.com>
- <202003251319.AECA788D63@keescook>
- <20200326111521.GA72909@C02TD0UTHF1T.local>
- <202003260926.83BC44B@keescook>
+        Mon, 30 Mar 2020 07:28:29 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:52698 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729237AbgC3L23 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Mar 2020 07:28:29 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=6HSKuiUK92cwLefCahGkgWj1LgTRxgjNuT2ADazqsek=; b=0pGJ266VLnq8q9CG2dCeXKvW4s
+        zG14zn5P7ZAJMM/U4wtxqxU6/OkwkcJYK0PFLUTdKcLp7xKJV3wU8gjA+FHIh2xGqmAxY76d6AZRt
+        V1Mn/xpGwyvr1vBn+aypfyMxXJ3RYq1YeRODjm4sjgRe3ln7DxVI7vERSLqnQ5YuNnD3dOXWn6Qfn
+        fIyXFLf+/aOBx4wuzSg+PF6rYbb6OiU+zuv7tjeG2DoizD+OxSMiuSN8Izki5OFdOep/bOED0imps
+        j7VQIztSRJgNF5PYu+YFoH60ndZXkPsg60XWk/q1mfdxZgRlY+UykBwDGHmTSkENPqm8jvs83Iz1R
+        p4Oig+1g==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jIsaA-0002Ed-Jq; Mon, 30 Mar 2020 11:27:54 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id C4DE1300F28;
+        Mon, 30 Mar 2020 13:27:52 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id AE03329D04D69; Mon, 30 Mar 2020 13:27:52 +0200 (CEST)
+Date:   Mon, 30 Mar 2020 13:27:52 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Jules Irenge <jbi.octave@gmail.com>
+Cc:     julia.lawall@lip6.fr, boqun.feng@gmail.com,
+        Jules Irenge <jbi.octave@example.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+        "open list:SCHEDULER" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 02/10] sched/topology: Replace 1 and 0 by boolean value
+Message-ID: <20200330112752.GJ20696@hirez.programming.kicks-ass.net>
+References: <0/10>
+ <20200327212358.5752-1-jbi.octave@gmail.com>
+ <20200327212358.5752-3-jbi.octave@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <202003260926.83BC44B@keescook>
+In-Reply-To: <20200327212358.5752-3-jbi.octave@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 26, 2020 at 09:31:32AM -0700, Kees Cook wrote:
-> On Thu, Mar 26, 2020 at 11:15:21AM +0000, Mark Rutland wrote:
-> > On Wed, Mar 25, 2020 at 01:22:07PM -0700, Kees Cook wrote:
-> > > On Wed, Mar 25, 2020 at 01:21:27PM +0000, Mark Rutland wrote:
-> > > > On Tue, Mar 24, 2020 at 01:32:31PM -0700, Kees Cook wrote:
-> > > > > Allow for a randomized stack offset on a per-syscall basis, with roughly
-> > > > > 5 bits of entropy.
-> > > > > 
-> > > > > Signed-off-by: Kees Cook <keescook@chromium.org>
-> > > > 
-> > > > Just to check, do you have an idea of the impact on arm64? Patch 3 had
-> > > > figures for x86 where it reads the TSC, and it's unclear to me how
-> > > > get_random_int() compares to that.
-> > > 
-> > > I didn't do a measurement on arm64 since I don't have a good bare-metal
-> > > test environment. I know Andy Lutomirki has plans for making
-> > > get_random_get() as fast as possible, so that's why I used it here.
-> > 
-> > Ok. I suspect I also won't get the chance to test that in the next few
-> > days, but if I do I'll try to share the results.
+On Fri, Mar 27, 2020 at 09:23:49PM +0000, Jules Irenge wrote:
+> From: Jules Irenge <jbi.octave@example.com>
 > 
-> Okay, thanks! I can try a rough estimate under emulation, but I assume
-> that'll be mostly useless. :)
+> Coccinelle reports a warning inside sched_energy_aware_handler()
 > 
-> > My concern here was that, get_random_int() has to grab a spinlock and
-> > mess with IRQ masking, so has the potential to block for much longer,
-> > but that might not be an issue in practice, and I don't think that
-> > should block these patches.
-> 
-> Gotcha. I was already surprised by how "heavy" the per-cpu access was
-> when I looked at the resulting assembly (there looked to be preempt
-> stuff, etc). But my hope was that this is configurable so people can
-> measure for themselves if they want it, and most people who want this
-> feature have a high tolerance for performance trade-offs. ;)
-> 
-> > > I couldn't figure out if there was a comparable instruction like rdtsc
-> > > in aarch64 (it seems there's a cycle counter, but I found nothing in
-> > > the kernel that seemed to actually use it)?
-> > 
-> > AArch64 doesn't have a direct equivalent. The generic counter
-> > (CNTxCT_EL0) is the closest thing, but its nominal frequency is
-> > typically much lower than the nominal CPU clock frequency (unlike TSC
-> > where they're the same). The cycle counter (PMCCNTR_EL0) is part of the
-> > PMU, and can't be relied on in the same way (e.g. as perf reprograms it
-> > to generate overflow events, and it can stop for things like WFI/WFE).
-> 
-> Okay, cool; thanks for the details! It's always nice to confirm I didn't
-> miss some glaringly obvious solution. ;)
-> 
-> For a potential v2, should I add your reviewed-by or wait for your
-> timing analysis, etc?
+> WARNING: Assignment of 0/1 to bool variable
 
-I'd rather not give an R-b until I've seen numbers, but please don't
-block waiting for that. For the moment, feel free to add:
-
-Acked-by: Mark Rutland <mark.rutland@arm.com>
-
-... and it's down to Will and Catalin to make the call for arm64.
-
-Thanks,
-Mark.
+That's definitely not a warning and quite sensible in any case. Please
+learn C.
