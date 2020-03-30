@@ -2,129 +2,91 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFCB3C2D0EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 13:25:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8520C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 13:25:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 900522073B
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 13:25:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A41220733
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 13:25:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728657AbgC3NZM (ORCPT
+        id S1728741AbgC3NZq convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 09:25:12 -0400
-Received: from foss.arm.com ([217.140.110.172]:53604 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727728AbgC3NZM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 09:25:12 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9FBF8101E;
-        Mon, 30 Mar 2020 06:25:11 -0700 (PDT)
-Received: from bogus (unknown [10.37.12.97])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E88A93F71E;
-        Mon, 30 Mar 2020 06:25:08 -0700 (PDT)
-Date:   Mon, 30 Mar 2020 14:25:06 +0100
-From:   Sudeep Holla <sudeep.holla@arm.com>
-To:     Robin Murphy <robin.murphy@arm.com>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Naresh Kamboju <naresh.kamboju@linaro.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Basil Eljuse <Basil.Eljuse@arm.com>,
-        lkft-triage@lists.linaro.org,
-        Linux-Next Mailing List <linux-next@vger.kernel.org>,
-        fntoth@gmail.com, Arnd Bergmann <arnd@arndb.de>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Anders Roxell <anders.roxell@linaro.org>
-Subject: Re: [PATCH v2 3/3] driver core: Replace open-coded list_last_entry()
-Message-ID: <20200330132506.GD20031@bogus>
-References: <20200324122023.9649-1-andriy.shevchenko@linux.intel.com>
- <20200324122023.9649-3-andriy.shevchenko@linux.intel.com>
- <CAJZ5v0gg=V8uDd4afJ3MULsgKYvWajKJioANk4jj7xEhBzrRrQ@mail.gmail.com>
- <CA+G9fYvFnXqSnoQSJ-DkQvAFv87iWmhH6dT1N79qrq=Aeuv4rw@mail.gmail.com>
- <028b636f-6e0f-c36a-aa4e-6a16d936fc6a@arm.com>
- <20200330095707.GA10432@bogus>
- <0a374eaa-92b3-0201-f357-4181542c98b6@arm.com>
+        Mon, 30 Mar 2020 09:25:46 -0400
+Received: from relay9-d.mail.gandi.net ([217.70.183.199]:58765 "EHLO
+        relay9-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727370AbgC3NZq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Mar 2020 09:25:46 -0400
+X-Originating-IP: 91.224.148.103
+Received: from xps13 (unknown [91.224.148.103])
+        (Authenticated sender: miquel.raynal@bootlin.com)
+        by relay9-d.mail.gandi.net (Postfix) with ESMTPSA id 4A829FF806;
+        Mon, 30 Mar 2020 13:25:41 +0000 (UTC)
+Date:   Mon, 30 Mar 2020 15:25:39 +0200
+From:   Miquel Raynal <miquel.raynal@bootlin.com>
+To:     Xiaoming Ni <nixiaoming@huawei.com>
+Cc:     <richard@nod.at>, <vigneshr@ti.com>,
+        <linux-mtd@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+        <wangle6@huawei.com>, <zhangweimin12@huawei.com>,
+        <yebin10@huawei.com>, <houtao1@huawei.com>
+Subject: Re: [PATCH v2] mtd:clear cache_state to avoid writing to bad blocks
+ repeatedly
+Message-ID: <20200330152539.1395e456@xps13>
+In-Reply-To: <1585573869-81863-1-git-send-email-nixiaoming@huawei.com>
+References: <1585573869-81863-1-git-send-email-nixiaoming@huawei.com>
+Organization: Bootlin
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <0a374eaa-92b3-0201-f357-4181542c98b6@arm.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 30, 2020 at 01:45:32PM +0100, Robin Murphy wrote:
-> On 2020-03-30 11:13 am, Sudeep Holla wrote:
-> > On Fri, Mar 27, 2020 at 07:40:25PM +0000, Robin Murphy wrote:
-> > > On 2020-03-27 5:56 pm, Naresh Kamboju wrote:
-> > > > The kernel warning noticed on arm64 juno-r2 device running linux
-> > > > next-20200326 and next-20200327
-> > >
-> > > I suspect this is the correct expected behaviour manifesting. If you're
-> > > using the upstream juno-r2.dts, the power domain being waited for here is
-> > > provided by SCPI, however unless you're using an SCP firmware from at least
-> > > 3 years ago you won't actually have SCPI since they switched it to the newer
-> > > SCMI protocol, which is not yet supported upstream for Juno. See what
-> > > happened earlier in the log:
-> > >
-> > > [    2.741206] scpi_protocol scpi: incorrect or no SCP firmware found
-> > > [    2.747586] scpi_protocol: probe of scpi failed with error -110
-> > >
-> > > Thus this is the "waiting for a dependency which will never appear" case,
-> > > for which I assume the warning is intentional,
-> >
-> > Is that the case ?
-> >
-> > Previously we used to get the warning:
-> > "amba xx: ignoring dependency for device, assuming no driver"
-> >
-> > Now we have the kernel warning in addition to the above.
->
-> AFAICS the difference is down to whether deferred_probe_timeout has expired
-> or not - I'm not familiar enough with this code to know *exactly* what the
-> difference is supposed to represent, nor which change has actually pushed
-> the Juno case from one state to the other
+Hi Xiaoming,
 
-Me either
+Xiaoming Ni <nixiaoming@huawei.com> wrote on Mon, 30 Mar 2020 21:11:09
++0800:
 
-> (other than it almost certainly
-> can't be $SUBJECT - if this series is to blame at all I'd assume it would be
-> down to patch #1/3, but there's a bunch of other rework previously queued in
-> -next that is probably also interacting)
->
+> The function call process is as follows:
+> 	mtd_blktrans_work()
+> 	  while (1)
+> 	    do_blktrans_request()
+> 	      mtdblock_writesect()
+> 	        do_cached_write()
+> 	          write_cached_data() /*if cache_state is STATE_DIRTY*/
+> 	            erase_write()
+> 
+> write_cached_data() returns failure without modifying cache_state
+> and cache_offset. So when do_cached_write() is called again,
+> write_cached_data() will be called again to perform erase_write()
+> on the same cache_offset.
+> 
+> But if this cache_offset points to a bad block, erase_write() will
+> always return -EIO. Writing to this mtdblk is equivalent to losing
+> the current data, and repeatedly writing to the bad block.
+> 
+> Repeatedly writing a bad block has no real benefits,
+> but brings some negative effects:
+> 1 Lost subsequent data
+> 2 Loss of flash device life
+> 3 erase_write() bad blocks are very time-consuming. For example:
+> 	the function do_erase_oneblock() in chips/cfi_cmdset_0020.c or
+> 	chips/cfi_cmdset_0002.c may take more than 20 seconds to return
+> 
+> Therefore, when erase_write() returns -EIO in write_cached_data(),
+> clear cache_state to avoid writing to bad blocks repeatedly.
+> 
+> Signed-off-by: Xiaoming Ni <nixiaoming@huawei.com>
+> Reviewed-by: Miquel Raynal <miquel.raynal@bootlin.com>
 
-I agree, I was assuming one of the patch in series but again I may be wrong.
+The title is still wrong.
 
-> > > since the system is essentially broken (i.e. the hardware/firmware doesn't
-> > > actually match what the DT describes).
-> > >
-> >
-> > Not sure if we can term it as "essentially broken". Definitely not 100%
-> > functional but not broken if the situation like on Juno where SCP firmware
-> > is fundamental for all OSPM but not essential for boot and other minimum
-> > set of functionality.
->
-> It's "broken" in the sense that the underlying system is *not* the system
-> described in the DT. Yes, all the parts that still happen to line up will
-> mostly still function OK, but those that don't will fundamentally not work
-> as the kernel has been told to expect. I'm not sure what you prefer to call
-> "not working as the kernel expects", but I call it "broken" ;)
->
+And you'll need a Fixes tag as well. Cc: stable is also a good idea.
 
-I agree with you in context of Juno and it's firmware story.
-
-But I also have another development use-case. Unless the DT becomes the
-integral part of firmware from start, we can end up having DT with full
-DT components(e.g. all SCMI users) while the firmware can add the
-features incremental way. I agree this is not common for most of the
-kernel developer but practical for few.
-
---
-Regards,
-Sudeep
+Thanks,
+Miquèl
