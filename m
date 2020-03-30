@@ -2,85 +2,152 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0964DC43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 12:19:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4313AC2D0E5
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 12:24:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB7F1206F6
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 12:19:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 102A720714
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 12:24:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IkzJhIHR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729977AbgC3MTZ (ORCPT
+        id S1730069AbgC3MYX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 08:19:25 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:58472 "EHLO inva021.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729705AbgC3MTZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 08:19:25 -0400
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id EE1722004B4;
-        Mon, 30 Mar 2020 14:19:23 +0200 (CEST)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 8FEF82004AE;
-        Mon, 30 Mar 2020 14:19:19 +0200 (CEST)
-Received: from localhost.localdomain (mega.ap.freescale.net [10.192.208.232])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id D58E140297;
-        Mon, 30 Mar 2020 20:19:13 +0800 (SGT)
-From:   Biwen Li <biwen.li@oss.nxp.com>
-To:     leoyang.li@nxp.com, linux@rempel-privat.de, kernel@pengutronix.de,
-        wsa@the-dreams.de
-Cc:     linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
-        jiafei.pan@nxp.com, Biwen Li <biwen.li@nxp.com>
-Subject: [PATCH] i2c: imx: add shutdown interface
-Date:   Mon, 30 Mar 2020 20:15:46 +0800
-Message-Id: <20200330121546.23872-1-biwen.li@oss.nxp.com>
-X-Mailer: git-send-email 2.17.1
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Mon, 30 Mar 2020 08:24:23 -0400
+Received: from us-smtp-delivery-74.mimecast.com ([216.205.24.74]:40558 "EHLO
+        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729966AbgC3MYX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Mar 2020 08:24:23 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1585571061;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=/ygALAJVOjqUJKfasvnnjImKIeALHsYUPdnk+AuUynM=;
+        b=IkzJhIHRIyM6gElBVfZ8Tj5lSWRZsj1W6NdsiOxVKl1GQq6esEarejIORyEFGdWd7XDrQZ
+        REeH52zPRJMpaTiw2FMiKHJVWCC+l4u4lV/VBFfIiQnxbVUBAXbEOVaX6jSGODk3zXUKiD
+        yfoG+pDPHbLzSPQ/H6/87hpz+K6gfO8=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-295--IW9Of8MMzerEcPZ0O7SpQ-1; Mon, 30 Mar 2020 08:24:20 -0400
+X-MC-Unique: -IW9Of8MMzerEcPZ0O7SpQ-1
+Received: by mail-wr1-f69.google.com with SMTP id d1so11158344wru.15
+        for <linux-kernel@vger.kernel.org>; Mon, 30 Mar 2020 05:24:19 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=/ygALAJVOjqUJKfasvnnjImKIeALHsYUPdnk+AuUynM=;
+        b=XQ+JKMVRHFCIdDD4hpC93c7Krv7wcj+e4IURA6fJLrE71xt5A5QMSZe3SlW79UW1Ox
+         /AX5//9sDL9bHA38CXKb+mn5odPcwXhpwlEGUoOtkRy+XRqEehlnr54mkJs2xHP6pLsb
+         6muqk/T+ghH8AuKKn8lT/35qrB8OynRKe1t3tNdtvmK0WSHkIHkzDcaG153oQe2GIf6a
+         7CkssjPLUIKFhpqAWe6oL2gexwH6HWCtGKhk0gyrYN00iuXk8BKyjAPwqJizMMoyNkN3
+         eRR5IZqceTWOlz4Pcsx+dbNg+tm9W3MBng86ZSezLuZ8pqzwjg5jOSTxdDRsFut8LDb5
+         voiw==
+X-Gm-Message-State: ANhLgQ2fVnQZbaM/8o+itFTvxKLm4UPae3iYRHczo8sUw7GgzkGKijJU
+        BuE0HDY7itltMo8/sDbOccNHYk7ntaIlQXJmPEB7+B8jEZp5dLpXpqDD/oM2UvOZz70Ii7DXCTa
+        hNG/qj0dg8EfvuEd4WvpgOmRV
+X-Received: by 2002:adf:ec02:: with SMTP id x2mr14564034wrn.365.1585571058691;
+        Mon, 30 Mar 2020 05:24:18 -0700 (PDT)
+X-Google-Smtp-Source: ADFU+vs4+0mKL6LvY3oLktG34cbkfsvaDlgrbw2AYD/ENCNEbfbZ1AiL6eM0zhcnkf9XQGgVEbaibw==
+X-Received: by 2002:adf:ec02:: with SMTP id x2mr14564012wrn.365.1585571058374;
+        Mon, 30 Mar 2020 05:24:18 -0700 (PDT)
+Received: from vitty.brq.redhat.com (g-server-2.ign.cz. [91.219.240.2])
+        by smtp.gmail.com with ESMTPSA id 9sm20168122wmm.6.2020.03.30.05.24.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 30 Mar 2020 05:24:17 -0700 (PDT)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     Michael Kelley <mikelley@microsoft.com>,
+        Andrea Parri <parri.andrea@gmail.com>
+Cc:     Dexuan Cui <decui@microsoft.com>,
+        KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>,
+        "linux-hyperv\@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [RFC PATCH 02/11] Drivers: hv: vmbus: Don't bind the offer&rescind works to a specific CPU
+In-Reply-To: <MW2PR2101MB1052A2E44557B29C191F557DD7CA0@MW2PR2101MB1052.namprd21.prod.outlook.com>
+References: <20200325225505.23998-1-parri.andrea@gmail.com> <20200325225505.23998-3-parri.andrea@gmail.com> <871rpf5hhm.fsf@vitty.brq.redhat.com> <20200326154710.GA13711@andrea> <87sghv3u4a.fsf@vitty.brq.redhat.com> <20200328170833.GA10153@andrea> <MW2PR2101MB1052A2E44557B29C191F557DD7CA0@MW2PR2101MB1052.namprd21.prod.outlook.com>
+Date:   Mon, 30 Mar 2020 14:24:16 +0200
+Message-ID: <87o8se2fpr.fsf@vitty.brq.redhat.com>
+MIME-Version: 1.0
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Biwen Li <biwen.li@nxp.com>
+Michael Kelley <mikelley@microsoft.com> writes:
 
-Add shutdown interface
+> From: Andrea Parri <parri.andrea@gmail.com> Sent: Saturday, March 28, 2020 10:09 AM
+>> 
+>> > In case we believe that OFFER -> RESCINF sequence is always ordered
+>> > by the host AND we don't care about other offers in the queue the
+>> > suggested locking is OK: we're guaranteed to process RESCIND after we
+>> > finished processing OFFER for the same channel. However, waiting for
+>> > 'offer_in_progress == 0' looks fishy so I'd suggest we at least add a
+>> > comment explaining that the wait is only needed to serialize us with
+>> > possible OFFER for the same channel - and nothing else. I'd personally
+>> > still slightly prefer the algorythm I suggested as it guarantees we take
+>> > channel_mutex with offer_in_progress == 0 -- even if there are no issues
+>> > we can think of today (not strongly though).
+>> 
+>> Does it?  offer_in_progress is incremented without channel_mutex...
+>> 
 
-Signed-off-by: Biwen Li <biwen.li@nxp.com>
----
- drivers/i2c/busses/i2c-imx.c | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+No, it does not, you're right, by itself the change is insufficient.
 
-diff --git a/drivers/i2c/busses/i2c-imx.c b/drivers/i2c/busses/i2c-imx.c
-index 0ab5381aa012..07da42cb0be4 100644
---- a/drivers/i2c/busses/i2c-imx.c
-+++ b/drivers/i2c/busses/i2c-imx.c
-@@ -1281,6 +1281,16 @@ static int i2c_imx_remove(struct platform_device *pdev)
- 	return 0;
- }
- 
-+static void i2c_imx_shutdown(struct platform_device *pdev)
-+{
-+	struct imx_i2c_struct *i2c_imx = platform_get_drvdata(pdev);
-+
-+	imx_i2c_write_reg(0, i2c_imx, IMX_I2C_IADR);
-+	imx_i2c_write_reg(i2c_imx->hwdata->i2cr_ien_opcode ^ I2CR_IEN,
-+			i2c_imx, IMX_I2C_I2CR);
-+	imx_i2c_write_reg(i2c_imx->hwdata->i2sr_clr_opcode, i2c_imx, IMX_I2C_I2SR);
-+}
-+
- static int __maybe_unused i2c_imx_runtime_suspend(struct device *dev)
- {
- 	struct imx_i2c_struct *i2c_imx = dev_get_drvdata(dev);
-@@ -1310,6 +1320,7 @@ static const struct dev_pm_ops i2c_imx_pm_ops = {
- static struct platform_driver i2c_imx_driver = {
- 	.probe = i2c_imx_probe,
- 	.remove = i2c_imx_remove,
-+	.shutdown = i2c_imx_shutdown,
- 	.driver = {
- 		.name = DRIVER_NAME,
- 		.pm = &i2c_imx_pm_ops,
+>> IAC, I have no objections to apply the changes you suggested.  To avoid
+>> misunderstandings: vmbus_bus_suspend() presents a similar usage...  Are
+>> you suggesting that I apply similar changes there?
+>> 
+>> Alternatively:  FWIW, the comment in vmbus_onoffer_rescind() does refer
+>> to "The offer msg and the corresponding rescind msg...".  I am all ears
+>> if you have any concrete suggestions to improve these comments.
+>> 
+>
+> Given that waiting for 'offer_in_progress == 0' is the current code, I think
+> there's an argument to made for not changing it if the change isn't strictly
+> necessary.  This patch set introduces enough change that *is* necessary. :-)
+>
+
+Sure. I was thinking a bit more about this and it seems that over years
+we've made the synchronization of channels code too complex (every time
+for a good reason but still). Now (before this series) we have at least:
+
+vmbus_connection.channel_mutex
+vmbus_connection.offer_in_progress
+channel.probe_done
+channel.rescind
+Workqueues (vmbus_connection.work_queue,
+ queue_work_on(vmbus_connection.connect_cpu),...)
+channel.lock spinlock (the least of the problems)
+
+Maybe there's room for improvement? Out of top of my head I'd suggest a
+state machine for each channel (e.g something like
+OFFERED->OPENING->OPEN->RESCIND_REQ->RESCINDED->CLOSED) + refcounting
+(subchannels, open/rescind/... requests in progress, ...) + non-blocking
+request handling like "Can we handle this rescind offer now? No,
+refcount is too big. OK, rescheduling the work". Maybe not the best
+design ever and I'd gladly support any other which improves the
+readability of the code and makes all state changes and synchronization
+between them more obvious.
+
+Note, VMBus channel handling driven my messages (unlike events for ring
+buffer) is not performance critical, we just need to ensure completeness
+(all requests are handled correctly) with forward progress guarantees
+(no deadlocks).
+
+I understand the absence of 'hot' issues in the current code is what can
+make the virtue of redesign questionable and sorry for hijacking the
+series which doesn't seem to make things worse :-)
+
 -- 
-2.17.1
+Vitaly
 
