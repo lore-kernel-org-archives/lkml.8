@@ -2,133 +2,78 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95B10C43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 10:22:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2E6EC2D0EB
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 10:24:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6CA30206DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 10:22:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585563730;
-	bh=v6pPXSjzqIIEs+ChOcx+5rXKr4QgygVQMBweaNM2Pac=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ShTmQr6MzlD3c8vq3jHqxT2EP5tQoUOlErnzkGaihit7XhJ+If7hnoa9wCu1jj8oy
-	 u5JJXWjwP7i2qMZoW84yBGJhV4GshaglDbf45kD6Ry9fRK96SqKaps5mesCAsSRxNs
-	 M/YCfdIRN2bsrhaC+XEumgId/TH2I5wXs5ilXx50=
+	by mail.kernel.org (Postfix) with ESMTP id D21BA20748
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 10:24:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729932AbgC3KWJ (ORCPT
+        id S1729347AbgC3KYA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 06:22:09 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:40074 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729249AbgC3KWG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 06:22:06 -0400
-Received: by mail-wm1-f68.google.com with SMTP id a81so21253753wmf.5;
-        Mon, 30 Mar 2020 03:22:05 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=4vIQEBciMld0vCiDFU9TfH/0TDdbnuRcouDz7FT+Dao=;
-        b=fsu+c4P/6tAyRUitocVZp9kKKEf6AMJhKGDMC8AcCM0SLJnHTp6Vkuo+CbciFHwI6O
-         8b5YYjEVg1p7uesi3fBhQiD9EFV0RMTZD+XbK98vRqVhJME6U8250HKlzukT6EWfIPSP
-         aMq0QnRba9AtGeI7sleKPcXgqzOGkqwQO8LWgRj01yCEArGHZaHDAwmDNAjxheigoqoq
-         6IepDnkxmRIosvbJWX9TD20zwOaaA7t7Gl0Tot+CPN3KNS+QknxKlhkyfsHk+Nc0l1qq
-         AfsVvqbzy5kF1C2vUHLJSz7r42OD8ZqJXN4tWa47lb3X4xQVC1EZJEBBc+/CBCLP2lRT
-         B4Qw==
-X-Gm-Message-State: ANhLgQ3GQcYidWHrL5Qd6IoPT8ozmnkh8RuW03dDPCAVUudzdQg2Lbbk
-        nehW2G9zBpaAm2uEfFqbTJo=
-X-Google-Smtp-Source: ADFU+vuFweYk6OhehoyQZbg793z94p/aKZfJExcaGXCIEngab5qdWnPGnlE59M917AKIDjvsSPRFTQ==
-X-Received: by 2002:a05:600c:4410:: with SMTP id u16mr12292810wmn.161.1585563724488;
-        Mon, 30 Mar 2020 03:22:04 -0700 (PDT)
-Received: from debian (44.142.6.51.dyn.plus.net. [51.6.142.44])
-        by smtp.gmail.com with ESMTPSA id x11sm14972395wru.62.2020.03.30.03.22.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Mar 2020 03:22:03 -0700 (PDT)
-Date:   Mon, 30 Mar 2020 11:22:01 +0100
-From:   Wei Liu <wei.liu@kernel.org>
-To:     Vitaly Kuznetsov <vkuznets@redhat.com>
-Cc:     Tianyu Lan <ltykernel@gmail.com>,
-        Tianyu Lan <Tianyu.Lan@microsoft.com>,
-        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org, Yubo Xie <yuboxie@microsoft.com>,
-        kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
-        liuwe@microsoft.com, daniel.lezcano@linaro.org, tglx@linutronix.de,
-        michael.h.kelley@microsoft.com, Wei Liu <wei.liu@kernel.org>
-Subject: Re: [PATCH V2] x86/Hyper-V: Fix hv sched clock function return wrong
- time unit
-Message-ID: <20200330102201.qs2ty22zxx2n53h3@debian>
-References: <20200327021159.31429-1-Tianyu.Lan@microsoft.com>
- <87k13641rg.fsf@vitty.brq.redhat.com>
- <20200330100502.hh2yygyxctsmwd6o@debian>
+        Mon, 30 Mar 2020 06:24:00 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:12650 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729125AbgC3KYA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Mar 2020 06:24:00 -0400
+Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id C4000249121698C47994;
+        Mon, 30 Mar 2020 18:23:48 +0800 (CST)
+Received: from localhost.localdomain.localdomain (10.175.113.25) by
+ DGGEMS411-HUB.china.huawei.com (10.3.19.211) with Microsoft SMTP Server id
+ 14.3.487.0; Mon, 30 Mar 2020 18:23:46 +0800
+From:   Mao Wenan <maowenan@huawei.com>
+To:     <davem@davemloft.net>, <ast@kernel.org>, <daniel@iogearbox.net>,
+        <kuba@kernel.org>, <hawk@kernel.org>, <john.fastabend@gmail.com>,
+        <kafai@fb.com>, <songliubraving@fb.com>, <yhs@fb.com>,
+        <andriin@fb.com>, <jwi@linux.ibm.com>,
+        <toshiaki.makita1@gmail.com>, <jianglidong3@jd.com>,
+        <edumazet@google.com>
+CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <bpf@vger.kernel.org>, <kernel-janitors@vger.kernel.org>
+Subject: [PATCH net] veth: xdp: use head instead of hard_start
+Date:   Mon, 30 Mar 2020 18:26:31 +0800
+Message-ID: <20200330102631.31286-1-maowenan@huawei.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200330100502.hh2yygyxctsmwd6o@debian>
-User-Agent: NeoMutt/20180716
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.175.113.25]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 30, 2020 at 11:05:02AM +0100, Wei Liu wrote:
-> On Fri, Mar 27, 2020 at 09:53:39AM +0100, Vitaly Kuznetsov wrote:
-> > Tianyu Lan <ltykernel@gmail.com> writes:
-> > 
-> > > From: Yubo Xie <yuboxie@microsoft.com>
-> > >
-> > > sched clock callback should return time with nano second as unit
-> > > but current hv callback returns time with 100ns. Fix it.
-> > >
-> > > Cc: stable@vger.kernel.org
-> > > Signed-off-by: Yubo Xie <yuboxie@microsoft.com>
-> > > Signed-off-by: Tianyu Lan <Tianyu.Lan@microsoft.com>
-> > > Fixes: bd00cd52d5be ("clocksource/drivers/hyperv: Add Hyper-V specific sched clock function")
-> > > ---
-> > > Change since v1:
-> > > 	Update fix commit number in change log. 
-> > > ---
-> > >  drivers/clocksource/hyperv_timer.c | 6 ++++--
-> > >  1 file changed, 4 insertions(+), 2 deletions(-)
-> > >
-> > > diff --git a/drivers/clocksource/hyperv_timer.c b/drivers/clocksource/hyperv_timer.c
-> > > index 9d808d595ca8..662ed978fa24 100644
-> > > --- a/drivers/clocksource/hyperv_timer.c
-> > > +++ b/drivers/clocksource/hyperv_timer.c
-> > > @@ -343,7 +343,8 @@ static u64 notrace read_hv_clock_tsc_cs(struct clocksource *arg)
-> > >  
-> > >  static u64 read_hv_sched_clock_tsc(void)
-> > >  {
-> > > -	return read_hv_clock_tsc() - hv_sched_clock_offset;
-> > > +	return (read_hv_clock_tsc() - hv_sched_clock_offset)
-> > > +		* (NSEC_PER_SEC / HV_CLOCK_HZ);
-> > >  }
-> > >  
-> > >  static void suspend_hv_clock_tsc(struct clocksource *arg)
-> > > @@ -398,7 +399,8 @@ static u64 notrace read_hv_clock_msr_cs(struct clocksource *arg)
-> > >  
-> > >  static u64 read_hv_sched_clock_msr(void)
-> > >  {
-> > > -	return read_hv_clock_msr() - hv_sched_clock_offset;
-> > > +	return (read_hv_clock_msr() - hv_sched_clock_offset)
-> > > +		* (NSEC_PER_SEC / HV_CLOCK_HZ);
-> > >  }
-> > >  
-> > >  static struct clocksource hyperv_cs_msr = {
-> > 
-> > Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
-> 
-> Queued for hyperv-fixes. Thank you both.
+xdp.data_hard_start is mapped to the first
+address of xdp_frame, but the pointer hard_start
+is the offset(sizeof(struct xdp_frame)) of xdp_frame,
+it should use head instead of hard_start to
+set xdp.data_hard_start. Otherwise, if BPF program
+calls helper_function such as bpf_xdp_adjust_head, it
+will be confused for xdp_frame_end.
 
-It appears Thomas already sent this to Linus, so I will drop this from
-my branch.
+Signed-off-by: Mao Wenan <maowenan@huawei.com>
+---
+ drivers/net/veth.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Wei.
+diff --git a/drivers/net/veth.c b/drivers/net/veth.c
+index d4cbb9e8c63f..5ea550884bf8 100644
+--- a/drivers/net/veth.c
++++ b/drivers/net/veth.c
+@@ -506,7 +506,7 @@ static struct sk_buff *veth_xdp_rcv_one(struct veth_rq *rq,
+ 		struct xdp_buff xdp;
+ 		u32 act;
+ 
+-		xdp.data_hard_start = hard_start;
++		xdp.data_hard_start = head;
+ 		xdp.data = frame->data;
+ 		xdp.data_end = frame->data + frame->len;
+ 		xdp.data_meta = frame->data - frame->metasize;
+-- 
+2.20.1
 
-> 
-> Wei.
