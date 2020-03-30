@@ -2,107 +2,98 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8D3DC43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 18:21:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F418C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 18:21:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8764D206F6
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 18:21:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 35D0920781
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 18:21:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585592500;
+	bh=ZTAGOIQwksFTh1Yuz3cAFvv/AlGII90X1jBROlkFK+4=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=e1bBDHuaPMr9jQEq7iNUNF7ne+rxzSXJ8pV0lJQL0SFMWDMnlrjrEQG1n2M5eyHbj
+	 dcDwvDIynKfXiBVzJGV6whTD1+Aznjj5I5EK4MlGU5ZIw75pr/gfQJXZ13/I6vnVUt
+	 Z7XKjTPXGNvUuYC5kUc2o5PHY6RF6CTNOyW7tTBM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727874AbgC3SVQ (ORCPT
+        id S1727980AbgC3SVj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 14:21:16 -0400
-Received: from mail-io1-f70.google.com ([209.85.166.70]:55602 "EHLO
-        mail-io1-f70.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726672AbgC3SVQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 14:21:16 -0400
-Received: by mail-io1-f70.google.com with SMTP id k5so16865165ioa.22
-        for <linux-kernel@vger.kernel.org>; Mon, 30 Mar 2020 11:21:15 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=mxdVwodbRk0ry9cYchDSp6TDUK7eyG3uOBp8XYyeWXQ=;
-        b=hVmsNNbiiCTIGhWh0P65BLz3pVc3jG0X87WO4dQv13GFTD3MZWdPwrYX4BKnoVXWO6
-         6ZlTA85JAH9G7oQNleCuOIetNzolisMMItWxCdZUF+Is/hlltIwUIwSCyNHU229399Ju
-         03lYlamGICIzQLT9Q9mzGG0JegXcT6xuwt+bcr1cjC9judvEY6bcxlfwvmcA+M6znLGs
-         n7xdoL9LX56rtFfiSNsK2cOC43zhmTfh0jBzrBUoJZC+eauNYYcKWKRTbDxkyRtuj5T8
-         Kjd5Ut0NTf4oO8eO1rEWhzdXg0Z2DAViRilmlIGe8idtUEckEgn2W6A9AqlFQwPMOL8e
-         R2KQ==
-X-Gm-Message-State: ANhLgQ0QO+gGFSP1/ol0a1B8TgybmXiUh/o07Zc+VSMKRiRXDmPEJTTp
-        Nhgrd31L46xz/kRLvA35wmfCQwVXabV+FvAalm6e/6rhP4Nz
-X-Google-Smtp-Source: ADFU+vsIuf/CRCbVNmWwvv47oJ3aX+xLSoAbjEEvYN1cOGPVqg4ocu5AJueeTvpVtrNksrrMv07+chcb+0xTt8sflyPG/O6cBYve
+        Mon, 30 Mar 2020 14:21:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37186 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726672AbgC3SVi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Mar 2020 14:21:38 -0400
+Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A8C132072E;
+        Mon, 30 Mar 2020 18:21:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1585592497;
+        bh=ZTAGOIQwksFTh1Yuz3cAFvv/AlGII90X1jBROlkFK+4=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=BFiOkZ4IExrXwrQhQpBmT+X/eh4+hc3mAFFcLDbfscJ9Ut340tRd1gNXfepZ0F19x
+         Jm4BMcrkL3eo6P9v73z0WN4ay1YZzTVqlAXJscEXx0Enp3x0ApIDidsZ9ycfXUI6K0
+         1KDnVEgq5LOBxdR743PaiutpnQKHuR1rlbnGNbaA=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id 7783B35226F8; Mon, 30 Mar 2020 11:21:37 -0700 (PDT)
+Date:   Mon, 30 Mar 2020 11:21:37 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Uladzislau Rezki <urezki@gmail.com>
+Cc:     Joel Fernandes <joel@joelfernandes.org>,
+        Matthew Wilcox <willy@infradead.org>, kbuild-all@lists.01.org,
+        linux-kernel@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Lai Jiangshan <jiangshanlai@gmail.com>, linux-mm@kvack.org,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        rcu@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>
+Subject: Re: [PATCH 10/18] rcu/tree: Maintain separate array for vmalloc ptrs
+Message-ID: <20200330182137.GM19865@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20200330023248.164994-11-joel@joelfernandes.org>
+ <202003301715.9gMSa9Ca%lkp@intel.com>
+ <20200330152951.GA2553@pc636>
+ <20200330153149.GE22483@bombadil.infradead.org>
+ <20200330153702.GK19865@paulmck-ThinkPad-P72>
+ <20200330171606.GA166021@google.com>
+ <20200330174338.GA3690@pc636>
 MIME-Version: 1.0
-X-Received: by 2002:a92:9f13:: with SMTP id u19mr12634271ili.111.1585592475153;
- Mon, 30 Mar 2020 11:21:15 -0700 (PDT)
-Date:   Mon, 30 Mar 2020 11:21:15 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000003d7c1505a2168418@google.com>
-Subject: KASAN: stack-out-of-bounds Write in ath9k_hif_usb_rx_cb
-From:   syzbot <syzbot+d403396d4df67ad0bd5f@syzkaller.appspotmail.com>
-To:     andreyknvl@google.com, ath9k-devel@qca.qualcomm.com,
-        davem@davemloft.net, kvalo@codeaurora.org,
-        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200330174338.GA3690@pc636>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On Mon, Mar 30, 2020 at 07:43:38PM +0200, Uladzislau Rezki wrote:
+> On Mon, Mar 30, 2020 at 01:16:06PM -0400, Joel Fernandes wrote:
+> > On Mon, Mar 30, 2020 at 08:37:02AM -0700, Paul E. McKenney wrote:
+> > > On Mon, Mar 30, 2020 at 08:31:49AM -0700, Matthew Wilcox wrote:
+> > > > On Mon, Mar 30, 2020 at 05:29:51PM +0200, Uladzislau Rezki wrote:
+> > > > > Hello, Joel.
+> > > > > 
+> > > > > Sent out the patch fixing build error.
+> > > > 
+> > > > ... where?  It didn't get cc'd to linux-mm?
+> > > 
+> > > The kbuild test robot complained.  Prior than the build error, the
+> > > patch didn't seem all that relevant to linux-mm.  ;-)
+> > 
+> > I asked the preprocessor to tell me why I didn't hit this in my tree. Seems
+> > it because vmalloc.h is included in my tree through the following includes. 
+> > 
+> Same to me, i did not manage to hit that build error.
 
-syzbot found the following crash on:
+This is a common occurrence for me.  The kbuild test robot can be very
+helpful for this sort of thing.  ;-)
 
-HEAD commit:    0fa84af8 Merge tag 'usb-serial-5.7-rc1' of https://git.ker..
-git tree:       https://github.com/google/kasan.git usb-fuzzer
-console output: https://syzkaller.appspot.com/x/log.txt?x=159a0583e00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=a782c087b1f425c6
-dashboard link: https://syzkaller.appspot.com/bug?extid=d403396d4df67ad0bd5f
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=177a266de00000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1579f947e00000
-
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+d403396d4df67ad0bd5f@syzkaller.appspotmail.com
-
-==================================================================
-BUG: KASAN: stack-out-of-bounds in ath9k_hif_usb_rx_stream drivers/net/wireless/ath/ath9k/hif_usb.c:626 [inline]
-BUG: KASAN: stack-out-of-bounds in ath9k_hif_usb_rx_cb+0xdf6/0xf70 drivers/net/wireless/ath/ath9k/hif_usb.c:666
-Write of size 8 at addr ffff8881db309a28 by task swapper/1/0
-
-CPU: 1 PID: 0 Comm: swapper/1 Not tainted 5.6.0-rc7-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- <IRQ>
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0xef/0x16e lib/dump_stack.c:118
- print_address_description.constprop.0.cold+0xd3/0x314 mm/kasan/report.c:374
- __kasan_report.cold+0x37/0x77 mm/kasan/report.c:506
- kasan_report+0xe/0x20 mm/kasan/common.c:641
- ath9k_hif_usb_rx_stream drivers/net/wireless/ath/ath9k/hif_usb.c:626 [inline]
- ath9k_hif_usb_rx_cb+0xdf6/0xf70 drivers/net/wireless/ath/ath9k/hif_usb.c:666
- __usb_hcd_giveback_urb+0x1f2/0x470 drivers/usb/core/hcd.c:1648
- usb_hcd_giveback_urb+0x368/0x420 drivers/usb/core/hcd.c:1713
- dummy_timer+0x1258/0x32ae drivers/usb/gadget/udc/dummy_hcd.c:1966
- call_timer_fn+0x195/0x6f0 kernel/time/timer.c:1404
- expire_timers kernel/time/timer.c:1449 [inline]
- __run_timers kernel/time/timer.c:1773 [inline]
- __run_timers kernel/time/timer.c:1740 [inline]
- run_timer_softirq+0x5f9/0x1500 kernel/time/timer.c:1786
-
-
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
+							Thanx, Paul
