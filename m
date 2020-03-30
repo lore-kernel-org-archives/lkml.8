@@ -2,91 +2,84 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FROM_LOCAL_NOVOWEL,
+	HEADER_FROM_DIFFERENT_DOMAINS,HK_RANDOM_FROM,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35FC0C2D0F0
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 20:32:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61499C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 20:33:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 095FA206CC
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 20:32:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D75A20757
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 20:33:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="R/+F+pyL"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OAYuBRzt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728209AbgC3Ucc (ORCPT
+        id S1728383AbgC3Udx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 16:32:32 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:41827 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727714AbgC3Ucb (ORCPT
+        Mon, 30 Mar 2020 16:33:53 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:42623 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727714AbgC3Udw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 16:32:31 -0400
-Received: by mail-lj1-f196.google.com with SMTP id n17so19619235lji.8;
-        Mon, 30 Mar 2020 13:32:28 -0700 (PDT)
+        Mon, 30 Mar 2020 16:33:52 -0400
+Received: by mail-pg1-f194.google.com with SMTP id h8so9216694pgs.9
+        for <linux-kernel@vger.kernel.org>; Mon, 30 Mar 2020 13:33:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=HIsaCCDIEW9SmQsiBvg7E1N2IqSmk3N6+OhmYGlRiSo=;
-        b=R/+F+pyLp04OS/1vR4VrVxJkboIyi9bN3FNQweyDfAAMRGRgdlnmtZLmYh73kKy3qF
-         zCzNnHHlDGJzK3SzOndSoAM9bWhkxGKVkVb+Dygl9pOY8vloOZI/g1lM0adQaPg934/4
-         k90o1zA3aBMXB7qxCqHtUpMf5Hr+Q58HPiMsALvccqlkLAWDQGuaeTtHNIpaQ7OWGoyS
-         xOcP+2ZyDb3cBF6NmB9+rA9cEj/hNNXl/ZAl/WMQtkXmT3k9aBkQ5TbCnQq36nX4z76Q
-         DeY9WimafkFTng+qOyo51xAydq6Q72+dCmASBl0yg70duDstyPUhzptFkFBNOKyOVCMl
-         FN9w==
+        bh=SAka+afRnaX/ZKYZXYNGXTAgpgy0/w8V+P2H1maC28M=;
+        b=OAYuBRztVNI6QkMYDgfMScWINgazrjd7nqaQt1VP4/JIezme1Azu4u6KQCd8q2ooBC
+         evqIq1WXLUGY104DtbqXII7QGPctmwATPb7ajGGATjHT5PjASxYbzoKcrih4RIVqGTbc
+         lEN4wKNu0C1GxCxdBMYMvucJuPYZualHOTRes/emNr05WtUV03zRGdUVRTbF9GCFGpX8
+         iFuoyxH4Sw68EYD0DqXNzVSpOzYAXiHGmGJltHrVL4xHELR5XA6lgdr65/X/25VBHpxo
+         WCKx4j0nrmzr3kG8nlTGfOOEBVbbtproDCJMLtdYFE7zVaj9IxhNR0kbRe9DINxnbotU
+         KxCQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=HIsaCCDIEW9SmQsiBvg7E1N2IqSmk3N6+OhmYGlRiSo=;
-        b=RaPfF0gUGPSjfph/pwokmqCY7SjNpWxSnqZR8K30bPE1QzF4P6mSZ7+TSVwq7c5qfQ
-         npmHXyrE4v0Zb9i/+Z4Ki/XFiqtacr42496uiPn8PtWG6vdO58AEcqKY4qrrFw7AbXaJ
-         8Gqvot9E8UgVFLdzpQzazpGBaybXtvk+8lfbMwUinyfkVpMlR6gzOy6rzWlmC3rVdF1T
-         4tLxAkrGmscwWbC8l39MX9l2mZYaddzEHHqaq9rXOfQoax9/av4yxm8xUAO7dG9X/jWC
-         dbpevx4JVlZAXLKnF7S8a8e0Sb/QVnF6miAqswkFhWV33HsqLYbv9qNOGFSJJuxRj3XN
-         bFZA==
-X-Gm-Message-State: AGi0PuaUocoSpzXWkAr7QvCAKLEpCC5nxwzFx1F3YOaugjDnHW2ErJVj
-        lPgsWDWc5BGG/6P/Y09kpL01ETE0fRZb5Gk/4S0=
-X-Google-Smtp-Source: APiQypLmrt5zNnHEcRdVznJCZ4Snr8l39IAksnSm4vOK/JzHf8Hs6mSZ0Hg6svTLRXQuVX4kN1J0nzAX/Ey/5JDTza0=
-X-Received: by 2002:a2e:7805:: with SMTP id t5mr8447085ljc.144.1585600347641;
- Mon, 30 Mar 2020 13:32:27 -0700 (PDT)
+        bh=SAka+afRnaX/ZKYZXYNGXTAgpgy0/w8V+P2H1maC28M=;
+        b=bAwz958nDw9YDWJ02pTEHUTH8B5T3zQyt7u5SpPoSnQimtVVKJoEWPgW/Brw07kJ+A
+         5PTrMTcRFxgfpI/0KjU2XzcgjaH9C3BkHgNV0m5XJ4VC2i48mAvP94pNCo4DwsjIVVOM
+         Xyte3ayFaCW5cwYK/ejUcSzuE/q3uhLJmqTpzXZtaC7kMKvoPvZmOwsRFVK/hELR425x
+         vJFKd6kAVzUkY4O9ygkBYTmpTrpXghs0twMbqe0q7ufK8I4mcEZ2v7SwBH7S7kc9Id6S
+         ZJh0u/l1TnQhtT8r9cKXiikglYRZjwLCPC5g/ZNsZSygMfWInbxINBGrmDdiJmMznitX
+         LJSg==
+X-Gm-Message-State: ANhLgQ1gv306LI4Ly+am7nHyq+hW3QhR3Q6giWWOzQhvFJyBph4wlrI/
+        pA4bwwVmWWjCHI0Ic0d2N5o3cGewehS1aFFo7F3/sw==
+X-Google-Smtp-Source: ADFU+vu2tg8gJ7kLYAl7nWMJb48d7OIqT5mNfZrMCzL0YQvOscWqjzviXMI3DhHC75s9EINUwjGWrIXeu6A6naCSwFY=
+X-Received: by 2002:a63:9d0c:: with SMTP id i12mr14358603pgd.378.1585600431631;
+ Mon, 30 Mar 2020 13:33:51 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200330144246.338-1-kpsingh@chromium.org>
-In-Reply-To: <20200330144246.338-1-kpsingh@chromium.org>
-From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Date:   Mon, 30 Mar 2020 13:32:16 -0700
-Message-ID: <CAADnVQLr7osE-fbvCS3Gizt1vC5x21F2iBK=n_O1v9YrKZae9A@mail.gmail.com>
-Subject: Re: [PATCH bpf-next] bpf: btf: Fix arg verification in btf_ctx_access()
-To:     KP Singh <kpsingh@chromium.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
-        Jann Horn <jannh@google.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>
+References: <20200330045436.12645-1-xianfengting221@163.com>
+In-Reply-To: <20200330045436.12645-1-xianfengting221@163.com>
+From:   Max Filippov <jcmvbkbc@gmail.com>
+Date:   Mon, 30 Mar 2020 13:33:40 -0700
+Message-ID: <CAMo8BfLQuKHsqM5yb0N6cfquCoXR17rnkt+TXG01Fkz-Po1pqw@mail.gmail.com>
+Subject: Re: [PATCH] arch/xtensa: correct an ungrammatical word
+To:     Hu Haowen <xianfengting221@163.com>
+Cc:     Chris Zankel <chris@zankel.net>,
+        "open list:TENSILICA XTENSA PORT (xtensa)" 
+        <linux-xtensa@linux-xtensa.org>,
+        LKML <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 30, 2020 at 7:43 AM KP Singh <kpsingh@chromium.org> wrote:
+On Sun, Mar 29, 2020 at 9:55 PM Hu Haowen <xianfengting221@163.com> wrote:
 >
-> From: KP Singh <kpsingh@google.com>
+> The word "Dont" is not grammatical. Maybe it means "Don't".
 >
-> The bounds checking for the arguments accessed in the BPF program breaks
-> when the expected_attach_type is not BPF_TRACE_FEXIT, BPF_LSM_MAC or
-> BPF_MODIFY_RETURN resulting in no check being done for the default case
-> (the programs which do not receive the return value of the attached
-> function in its arguments) when the index of the argument being accessed
-> is equal to the number of arguments (nr_args).
->
-> This was a result of a misplaced "else if" block  introduced by the
-> Commit 6ba43b761c41 ("bpf: Attachment verification for
-> BPF_MODIFY_RETURN")
->
-> Signed-off-by: KP Singh <kpsingh@google.com>
-> Fixes: 6ba43b761c41 ("bpf: Attachment verification for BPF_MODIFY_RETURN")
-> Reported-by: Jann Horn <jannh@google.com>
+> Signed-off-by: Hu Haowen <xianfengting221@163.com>
+> ---
+>  arch/xtensa/Kconfig | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 
-Applied. Thanks
+Thanks, applied to my xtensa tree with a slightly modified subject
+line/description.
+
+-- Max
