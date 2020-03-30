@@ -2,465 +2,181 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16B2AC2D0EB
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 05:42:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 235C5C2D0EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 05:45:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C570620786
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 05:42:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E36F8206F6
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 05:45:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="GphrfgoX"
+	dkim=pass (1024-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="JB9Rg7+J"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728796AbgC3Fmg (ORCPT
+        id S1728653AbgC3FpA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 01:42:36 -0400
-Received: from mail-bn8nam12on2048.outbound.protection.outlook.com ([40.107.237.48]:6218
-        "EHLO NAM12-BN8-obe.outbound.protection.outlook.com"
+        Mon, 30 Mar 2020 01:45:00 -0400
+Received: from mail-eopbgr130043.outbound.protection.outlook.com ([40.107.13.43]:43470
+        "EHLO EUR01-HE1-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728471AbgC3Fmg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 01:42:36 -0400
+        id S1728489AbgC3FoQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Mar 2020 01:44:16 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=kMwel7OBCRuG1RoQqOZVFoyMfhIAel4dQEwht3c+sGtyodiNC5Hc1xT1N+FMWkd8BwSAaljBvl39Vll4yXvvaB5yvZ7AVNnX115NCoTOM6v9YQgy4Hkb+LdaT0c8kA9GXRVdEZMSsKZODTMw68hNUHLy511Od7CCMYEn5gQoTLpLXtX/9ENSsNy3Kp+TOxFOi+jKhfTp97ILYexXrs1lyXvwmWffV7kwOF08CixZT+K21ox+97o2lbkAm6EhmNzwv8r4rHwYRA8eKDVdcNRPrYiMZM0/lJa6Sa4mmmDqUrEO5pxwv0621oOITD5DXnqU0s77/LvKlXgXJWpwEkY5vA==
+ b=PO/zxxA9h+OUlxowcctCaCpe9ImMk7orpgFdAZYLTaXJqPxb2lUFflINSl6zLTE/gk8k4LvRcAr1vVYkpoxuOzI1XB5kEgEm9g5whNDm86GN22Nq9Nex76JWMQunOI8L6OtqYJjsnG+eqKFH+NVsRsFYrXg/k0O6z7dXJAaWZJt2nhwcrGD0w2JGJ4fEAHleXLgip7TsTMBDaFmtMNJtS0ygY+KtQOLgGORoJvdig3bI4eo67WeMKEv7v+ppk1jci2yn5o5AmSP9XJNkfQ3s3B3J2Jq/fAszpyJlxDmZ1H5J1uMB8kAlKSeFe85BDRCVxxsAIOLpdIZHqkObsv0Dug==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=0gNBqh3HtnAGmPPKJEbBzltwRdHdZed8PGBV0USGeoo=;
- b=NxygUb4Ir2R//uOos79h1283aHMu+r8svgFE6Zt7WfxWVnwqAGWfb2IeU33WdKUpXDYLbmwT1BdW6+S+BaxeukqhAPNLOnsxEpsJA+6+lLnE+4xAqN2TMqpEMYaqg/fOvtNnJnMUo2w+1BltOsWdV9L8r9ah7yDFe7mJgZFksc2xccIphldUmeb9V99GqQDKfZwEBa7Hs9b3nr0ZVKN4V0cZ8NuBvhUf+2saeUj8UHItyzwii1N+mBI1+kC6JluVKLBciMmjp2CKY0ngdsPYJcNm5843thNrwO7utNbLmzzRPutXd/DvPUw6+hqSPkrtEd2IxHh5oZKJFYDxZNeBdQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 149.199.60.83) smtp.rcpttodomain=arm.com smtp.mailfrom=xilinx.com;
- dmarc=bestguesspass action=none header.from=xilinx.com; dkim=none (message
- not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
+ bh=xC1yDsg2znOkTFzr3iiN5qQA8e+KkwwlS8W/yers4X8=;
+ b=EqjzmhqDj/C7Uns2GfxwEviEkrXUrNpMRxMR7YH3HpZYhRlPkcefkFM9aMpPI+iPzPK2wBwan0adbi9XSdQ2q0Pite/ckYPquPcJ3tIqa+le2BdRk4WRKGjSWqBuHib2K9T8OISp0pLf2bKVDh/sZywnL7Bhmd35RYvJS84znLxo1joLjRxTNctcKTLcW6ug7L83B0+OrKPvZRegkRbwe0by7uE8SOQWm47aX8Nf/pNysQXzWv21+Ju9UXKLx4FZXKnLBmLEmzVlqRt0YSv6vMgagUWcZoRPtLMMiCWvNwGHasLa/qFLYpT8I82jmGkviGN2GJRFd4OBSTQ7wgo5sw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
+ dkim=pass header.d=oss.nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
+ s=selector2-NXP1-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=0gNBqh3HtnAGmPPKJEbBzltwRdHdZed8PGBV0USGeoo=;
- b=GphrfgoXSDQkwz4DekCVFTa9WNktOgqEjrAV0I5YnbrVYbjxrWieyHzJirgFikG95/gBU+H4E3NwW2x/ZAMmYh8I3l1j5Io3lystVgWo5pcjO2TA+XSwVlE9j/g9P0Oq8vA717TA3A6bviwRLwZ23pPUPOxpHm6IbGlsbNC2EcM=
-Received: from MN2PR22CA0029.namprd22.prod.outlook.com (2603:10b6:208:238::34)
- by DM6PR02MB4428.namprd02.prod.outlook.com (2603:10b6:5:1f::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2856.20; Mon, 30 Mar
- 2020 05:42:30 +0000
-Received: from BL2NAM02FT013.eop-nam02.prod.protection.outlook.com
- (2603:10b6:208:238:cafe::78) by MN2PR22CA0029.outlook.office365.com
- (2603:10b6:208:238::34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2856.20 via Frontend
- Transport; Mon, 30 Mar 2020 05:42:30 +0000
-Authentication-Results: spf=pass (sender IP is 149.199.60.83)
- smtp.mailfrom=xilinx.com; arm.com; dkim=none (message not signed)
- header.d=none;arm.com; dmarc=bestguesspass action=none
- header.from=xilinx.com;
-Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
- 149.199.60.83 as permitted sender) receiver=protection.outlook.com;
- client-ip=149.199.60.83; helo=xsj-pvapsmtpgw01;
-Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
- BL2NAM02FT013.mail.protection.outlook.com (10.152.77.19) with Microsoft SMTP
- Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.2856.17
- via Frontend Transport; Mon, 30 Mar 2020 05:42:29 +0000
-Received: from unknown-38-66.xilinx.com ([149.199.38.66] helo=xsj-pvapsmtp01)
-        by xsj-pvapsmtpgw01 with esmtp (Exim 4.63)
-        (envelope-from <manish.narani@xilinx.com>)
-        id 1jInBt-0005hZ-5e; Sun, 29 Mar 2020 22:42:29 -0700
-Received: from [127.0.0.1] (helo=localhost)
-        by xsj-pvapsmtp01 with smtp (Exim 4.63)
-        (envelope-from <manish.narani@xilinx.com>)
-        id 1jInBo-0003Qa-2H; Sun, 29 Mar 2020 22:42:24 -0700
-Received: from [172.23.64.106] (helo=xhdvnc125.xilinx.com)
-        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
-        (envelope-from <mnarani@xilinx.com>)
-        id 1jInBf-0003Oa-SS; Sun, 29 Mar 2020 22:42:16 -0700
-Received: by xhdvnc125.xilinx.com (Postfix, from userid 16987)
-        id 71AC2121373; Mon, 30 Mar 2020 11:11:26 +0530 (IST)
-From:   Manish Narani <manish.narani@xilinx.com>
-To:     ulf.hansson@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com,
-        adrian.hunter@intel.com, michal.simek@xilinx.com
-Cc:     linux-mmc@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        git@xilinx.com, Manish Narani <manish.narani@xilinx.com>
-Subject: [PATCH v2 4/4] mmc: sdhci-of-arasan: Fix kernel-doc warnings
-Date:   Mon, 30 Mar 2020 11:11:19 +0530
-Message-Id: <1585546879-91037-5-git-send-email-manish.narani@xilinx.com>
-X-Mailer: git-send-email 2.1.1
-In-Reply-To: <1585546879-91037-1-git-send-email-manish.narani@xilinx.com>
-References: <1585546879-91037-1-git-send-email-manish.narani@xilinx.com>
-X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
-X-TM-AS-User-Approved-Sender: Yes;Yes
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-HT: Tenant
-X-Forefront-Antispam-Report: CIP:149.199.60.83;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:xsj-pvapsmtpgw01;PTR:unknown-60-83.xilinx.com;CAT:NONE;SFTY:;SFS:(10009020)(4636009)(396003)(376002)(39850400004)(346002)(136003)(46966005)(6666004)(356004)(2906002)(6636002)(478600001)(316002)(42186006)(36756003)(47076004)(186003)(8936002)(6266002)(426003)(82740400003)(44832011)(5660300002)(2616005)(26005)(30864003)(70206006)(4326008)(8676002)(336012)(107886003)(81156014)(70586007)(81166006);DIR:OUT;SFP:1101;
+ bh=xC1yDsg2znOkTFzr3iiN5qQA8e+KkwwlS8W/yers4X8=;
+ b=JB9Rg7+JBfXLmG0QPnxG4SNeiKwrG3TriStdAxRZATgpT+tOaeQRVWGtzLpouf9PT8v09XIZOFxAbVQ1OOZKlRJ362gt3krC5yZDy963UoZTCQnBM505FA7bLRF9rKzt33AfqCE0WzViF5EpkWAAKlo4hPW2UvGmSIZC+xuJwTE=
+Received: from DB8PR04MB6985.eurprd04.prod.outlook.com (52.133.243.85) by
+ DB8PR04MB6508.eurprd04.prod.outlook.com (20.179.248.140) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2856.20; Mon, 30 Mar 2020 05:43:35 +0000
+Received: from DB8PR04MB6985.eurprd04.prod.outlook.com
+ ([fe80::a523:58cc:b584:2c2]) by DB8PR04MB6985.eurprd04.prod.outlook.com
+ ([fe80::a523:58cc:b584:2c2%6]) with mapi id 15.20.2856.019; Mon, 30 Mar 2020
+ 05:43:35 +0000
+From:   "Madalin Bucur (OSS)" <madalin.bucur@oss.nxp.com>
+To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>,
+        Andrew Lunn <andrew@lunn.ch>
+CC:     Florinel Iordache <florinel.iordache@nxp.com>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
+        "hkallweit1@gmail.com" <hkallweit1@gmail.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "kuba@kernel.org" <kuba@kernel.org>,
+        "corbet@lwn.net" <corbet@lwn.net>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        Leo Li <leoyang.li@nxp.com>,
+        "Madalin Bucur (OSS)" <madalin.bucur@oss.nxp.com>,
+        Ioana Ciornei <ioana.ciornei@nxp.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [EXT] Re: [PATCH net-next 2/9] dt-bindings: net: add backplane dt
+ bindings
+Thread-Topic: [EXT] Re: [PATCH net-next 2/9] dt-bindings: net: add backplane
+ dt bindings
+Thread-Index: AQHWA3W3jF7aogLlGUecGp366aweTahboFSAgADpoACAAAfzgIAABHgAgAAe0oCAA+xYoA==
+Date:   Mon, 30 Mar 2020 05:43:35 +0000
+Message-ID: <DB8PR04MB6985BA5D411AD5F9456F833BECCB0@DB8PR04MB6985.eurprd04.prod.outlook.com>
+References: <1585230682-24417-1-git-send-email-florinel.iordache@nxp.com>
+ <1585230682-24417-3-git-send-email-florinel.iordache@nxp.com>
+ <20200327010411.GM3819@lunn.ch>
+ <AM0PR04MB5443185A1236F621B9EC9873FBCC0@AM0PR04MB5443.eurprd04.prod.outlook.com>
+ <20200327152849.GP25745@shell.armlinux.org.uk>
+ <20200327154448.GK11004@lunn.ch>
+ <20200327173507.GQ25745@shell.armlinux.org.uk>
+In-Reply-To: <20200327173507.GQ25745@shell.armlinux.org.uk>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=madalin.bucur@oss.nxp.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [79.115.171.113]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 63239714-41f0-4ba4-80d5-08d7d46d49ed
+x-ms-traffictypediagnostic: DB8PR04MB6508:|DB8PR04MB6508:
+x-ms-exchange-sharedmailbox-routingagent-processed: True
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DB8PR04MB6508BC21DD478A6A67B46F95ADCB0@DB8PR04MB6508.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 0358535363
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB8PR04MB6985.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10009020)(4636009)(376002)(346002)(396003)(136003)(39860400002)(366004)(316002)(54906003)(5660300002)(110136005)(478600001)(86362001)(52536014)(186003)(66946007)(66476007)(64756008)(76116006)(26005)(66556008)(66446008)(71200400001)(2906002)(33656002)(7416002)(8676002)(7696005)(55016002)(9686003)(81166006)(81156014)(8936002)(53546011)(6506007)(4326008);DIR:OUT;SFP:1101;
+received-spf: None (protection.outlook.com: oss.nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: gj13wxUyLTS08Pk1bARBAltkbgMmkaEFUxrW2vxvEXts3ZWkvhQFx4deHxJNB5UWn+Yp7byRA2FvXury35ZUZCbf/Q3Y98e9O/3+qHkkLP+HvriCZh9L5M1E96sw5k0m9+1RjYUTyfjkfQODlgR+mhozuEhEoHDxRBZSbwAzuM4MpAhgA4RnX2q+3gWSyGPt7tf4MGRbIxBWsn8nGsEkR2c+zNsIMNLcNqC1NnCPAF/nNWaPKyD/xJQ7L3cRLQp0N2Z54XLMv9yAEQ6rk2g3U3ZDACJIesJDDqoTcToAG1JPC4bVqyBzJE2EOqv3qDTTjvNEr1jtLhMOakgi+BnuApJ1Wf8vPFAKU/vhtIMAljp9hzsXpAHnHz+69LMYH+IpMYwRGRPZojRfjk6rdkFlyHYwdEF/JWeS0B7tEsmLlKCfHTJy/7ZTEIqCYO1/TYY2
+x-ms-exchange-antispam-messagedata: E54TVxGGpW6ksi6DG4UAohG2OCvXrk6T2OCNYrUSBZ+9Oefngtbbm7N9d8F/NlDn6qTKn1pVUkqZec90IEABvxm+eI4i51RKeFd2KnsbptWh9b7opCEHrmR+eARwT750+d+E3Qu5TaX700tGdjwBKw==
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 39042dc4-d2b3-4055-b7b7-08d7d46d2310
-X-MS-TrafficTypeDiagnostic: DM6PR02MB4428:
-X-Microsoft-Antispam-PRVS: <DM6PR02MB4428BC0411A99074E46B390AC1CB0@DM6PR02MB4428.namprd02.prod.outlook.com>
-X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
-X-MS-Oob-TLC-OOBClassifiers: OLM:9508;
-X-Forefront-PRVS: 0358535363
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: HAFj1tsPV0NYSicEV9/wXTj1VB9sp14LJ4pQguenFeXHBkA1m6fKy4z/Shiz4fbFouedsTwIHoLhmhFfr6yZWpoLg0Ji/J5rFNEqek+NBFj9ra7ReDyCH/ZCHjh0lc99EXTUnQVEzKrBah4B/bEElOJ+ldUJiuQcnUkAT0ZjSr9X9Pd/1ZqmhmOubY/gMyE2miYruXRjuI9LWqYmgLy3DNUwopZRe6cOgSVLbO7gybr6sB+aAGS3ZYr527rcDYOSGE4DN0dFeveFdZEhBW4s5E0xurntHjsplUcva2mpJEwLCBlTySL/Nx2H0x7APiy1ac1M5luti73J6C5Xa7+2Mx5uMp4a2CjItWrxdG+fcy2k4HFzaDZ7Uy5/4OZRcVuJipONljumP83pRIY+sgNy11Vzrimaq/YsHDx5Exa9NF+ARC47f8MzJT4ZQrQ9hicIsdLQ+CZiVcZZKaBa2iyQ6XzqoW4fNAfR7A1nm4eEeOJm0ET34PN9IfZ/zIX+a2Zv2CvGMRJrGtZMhPMz4rcWaw==
-X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Mar 2020 05:42:29.7986
+X-OriginatorOrg: oss.nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 63239714-41f0-4ba4-80d5-08d7d46d49ed
+X-MS-Exchange-CrossTenant-originalarrivaltime: 30 Mar 2020 05:43:35.1198
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 39042dc4-d2b3-4055-b7b7-08d7d46d2310
-X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR02MB4428
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: F7x/544+boVcrNKAIImd+B4q0WVS2HKKhGS41a8sBxtiodlJSBaItfocs+5Rw14mJVQFkHEcc8rnijwxyUAtLg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB8PR04MB6508
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Modify code to fix the warnings reported by kernel-doc for better
-documentation.
+> -----Original Message-----
+> From: netdev-owner@vger.kernel.org <netdev-owner@vger.kernel.org> On
+> Behalf Of Russell King - ARM Linux admin
+> Sent: Friday, March 27, 2020 7:35 PM
+> To: Andrew Lunn <andrew@lunn.ch>
+> Cc: Florinel Iordache <florinel.iordache@nxp.com>; davem@davemloft.net;
+> netdev@vger.kernel.org; f.fainelli@gmail.com; hkallweit1@gmail.com;
+> devicetree@vger.kernel.org; linux-doc@vger.kernel.org; robh+dt@kernel.org=
+;
+> mark.rutland@arm.com; kuba@kernel.org; corbet@lwn.net;
+> shawnguo@kernel.org; Leo Li <leoyang.li@nxp.com>; Madalin Bucur (OSS)
+> <madalin.bucur@oss.nxp.com>; Ioana Ciornei <ioana.ciornei@nxp.com>; linux=
+-
+> kernel@vger.kernel.org
+> Subject: Re: [EXT] Re: [PATCH net-next 2/9] dt-bindings: net: add
+> backplane dt bindings
+>=20
+> On Fri, Mar 27, 2020 at 04:44:48PM +0100, Andrew Lunn wrote:
+> > > What worries me is the situation which I've been working on, where
+> > > we want access to the PCS PHYs, and we can't have the PCS PHYs
+> > > represented as a phylib PHY because we may have a copper PHY behind
+> > > the PCS PHY, and we want to be talking to the copper PHY in the
+> > > first instance (the PCS PHY effectivel ybecomes a slave to the
+> > > copper PHY.)
+> >
+> > I guess we need to clarify what KR actually means. If we have a
+> > backplane with a MAC on each end, i think modelling it as a PHY could
+> > work.
+> >
+> > If however, we have a MAC connected to a backplane, and on the end of
+> > the backplane is a traditional PHY, or an SFP cage, we have problems.
+> > As your point out, we cannot have two PHYs in a chain for one MAC.
+> >
+> > But i agree with Russell. We need a general solution of how we deal
+> > with PCSs.
+>=20
+> What really worries me is that we may be driving the same hardware
+> with two different approaches/drivers for two different applications
+> which isn't going to work out very well in the long run.
 
-Signed-off-by: Manish Narani <manish.narani@xilinx.com>
----
- drivers/mmc/host/sdhci-of-arasan.c | 114 ++++++++++++++++-------------
- 1 file changed, 64 insertions(+), 50 deletions(-)
+The same HW can be used in multiple ways here so having different drivers
+for these modes is not really an issue, you won't be able to use it both
+in backplane and non-backplane mode at the same time.
 
-diff --git a/drivers/mmc/host/sdhci-of-arasan.c b/drivers/mmc/host/sdhci-of-arasan.c
-index 89dbd1e9a830..0396d6b5396a 100644
---- a/drivers/mmc/host/sdhci-of-arasan.c
-+++ b/drivers/mmc/host/sdhci-of-arasan.c
-@@ -73,13 +73,13 @@ struct sdhci_arasan_soc_ctl_field {
- /**
-  * struct sdhci_arasan_soc_ctl_map - Map in syscon to corecfg registers
-  *
-- * It's up to the licensee of the Arsan IP block to make these available
-- * somewhere if needed.  Presumably these will be scattered somewhere that's
-- * accessible via the syscon API.
-- *
-  * @baseclkfreq:	Where to find corecfg_baseclkfreq
-  * @clockmultiplier:	Where to find corecfg_clockmultiplier
-  * @hiword_update:	If true, use HIWORD_UPDATE to access the syscon
-+ *
-+ * It's up to the licensee of the Arsan IP block to make these available
-+ * somewhere if needed.  Presumably these will be scattered somewhere that's
-+ * accessible via the syscon API.
-  */
- struct sdhci_arasan_soc_ctl_map {
- 	struct sdhci_arasan_soc_ctl_field	baseclkfreq;
-@@ -99,7 +99,8 @@ struct sdhci_arasan_clk_ops {
- };
- 
- /**
-- * struct sdhci_arasan_clk_data
-+ * struct sdhci_arasan_clk_data - Arasan Controller Clock Data.
-+ *
-  * @sdcardclk_hw:	Struct for the clock we might provide to a PHY.
-  * @sdcardclk:		Pointer to normal 'struct clock' for sdcardclk_hw.
-  * @sampleclk_hw:	Struct for the clock we might provide to a PHY.
-@@ -125,15 +126,18 @@ struct sdhci_arasan_zynqmp_clk_data {
- };
- 
- /**
-- * struct sdhci_arasan_data
-+ * struct sdhci_arasan_data - Arasan Controller Data
-+ *
-  * @host:		Pointer to the main SDHCI host structure.
-  * @clk_ahb:		Pointer to the AHB clock
-  * @phy:		Pointer to the generic phy
-  * @is_phy_on:		True if the PHY is on; false if not.
-+ * @has_cqe:		True if controller has command queuing engine.
-  * @clk_data:		Struct for the Arasan Controller Clock Data.
-  * @clk_ops:		Struct for the Arasan Controller Clock Operations.
-  * @soc_ctl_base:	Pointer to regmap for syscon for soc_ctl registers.
-  * @soc_ctl_map:	Map to get offsets into soc_ctl registers.
-+ * @quirks:		Arasan deviations from spec.
-  */
- struct sdhci_arasan_data {
- 	struct sdhci_host *host;
-@@ -147,7 +151,7 @@ struct sdhci_arasan_data {
- 
- 	struct regmap	*soc_ctl_base;
- 	const struct sdhci_arasan_soc_ctl_map *soc_ctl_map;
--	unsigned int	quirks; /* Arasan deviations from spec */
-+	unsigned int	quirks;
- 
- /* Controller does not have CD wired and will not function normally without */
- #define SDHCI_ARASAN_QUIRK_FORCE_CDTEST	BIT(0)
-@@ -183,14 +187,16 @@ static const struct sdhci_arasan_soc_ctl_map intel_lgm_sdxc_soc_ctl_map = {
- /**
-  * sdhci_arasan_syscon_write - Write to a field in soc_ctl registers
-  *
-+ * @host:	The sdhci_host
-+ * @fld:	The field to write to
-+ * @val:	The value to write
-+ *
-  * This function allows writing to fields in sdhci_arasan_soc_ctl_map.
-  * Note that if a field is specified as not available (shift < 0) then
-  * this function will silently return an error code.  It will be noisy
-  * and print errors for any other (unexpected) errors.
-  *
-- * @host:	The sdhci_host
-- * @fld:	The field to write to
-- * @val:	The value to write
-+ * Return: 0 on success and error value on error
-  */
- static int sdhci_arasan_syscon_write(struct sdhci_host *host,
- 				   const struct sdhci_arasan_soc_ctl_field *fld,
-@@ -431,9 +437,10 @@ static const struct sdhci_pltfm_data sdhci_arasan_cqe_pdata = {
- /**
-  * sdhci_arasan_suspend - Suspend method for the driver
-  * @dev:	Address of the device structure
-- * Returns 0 on success and error value on error
-  *
-  * Put the device in a low power state.
-+ *
-+ * Return: 0 on success and error value on error
-  */
- static int sdhci_arasan_suspend(struct device *dev)
- {
-@@ -474,9 +481,10 @@ static int sdhci_arasan_suspend(struct device *dev)
- /**
-  * sdhci_arasan_resume - Resume method for the driver
-  * @dev:	Address of the device structure
-- * Returns 0 on success and error value on error
-  *
-  * Resume operation after suspend
-+ *
-+ * Return: 0 on success and error value on error
-  */
- static int sdhci_arasan_resume(struct device *dev)
- {
-@@ -525,16 +533,16 @@ static SIMPLE_DEV_PM_OPS(sdhci_arasan_dev_pm_ops, sdhci_arasan_suspend,
- /**
-  * sdhci_arasan_sdcardclk_recalc_rate - Return the card clock rate
-  *
-+ * @hw:			Pointer to the hardware clock structure.
-+ * @parent_rate:		The parent rate (should be rate of clk_xin).
-+ *
-  * Return the current actual rate of the SD card clock.  This can be used
-  * to communicate with out PHY.
-  *
-- * @hw:			Pointer to the hardware clock structure.
-- * @parent_rate		The parent rate (should be rate of clk_xin).
-- * Returns the card clock rate.
-+ * Return: The card clock rate.
-  */
- static unsigned long sdhci_arasan_sdcardclk_recalc_rate(struct clk_hw *hw,
- 						      unsigned long parent_rate)
--
- {
- 	struct sdhci_arasan_clk_data *clk_data =
- 		container_of(hw, struct sdhci_arasan_clk_data, sdcardclk_hw);
-@@ -552,16 +560,16 @@ static const struct clk_ops arasan_sdcardclk_ops = {
- /**
-  * sdhci_arasan_sampleclk_recalc_rate - Return the sampling clock rate
-  *
-+ * @hw:			Pointer to the hardware clock structure.
-+ * @parent_rate:		The parent rate (should be rate of clk_xin).
-+ *
-  * Return the current actual rate of the sampling clock.  This can be used
-  * to communicate with out PHY.
-  *
-- * @hw:			Pointer to the hardware clock structure.
-- * @parent_rate		The parent rate (should be rate of clk_xin).
-- * Returns the sample clock rate.
-+ * Return: The sample clock rate.
-  */
- static unsigned long sdhci_arasan_sampleclk_recalc_rate(struct clk_hw *hw,
- 						      unsigned long parent_rate)
--
- {
- 	struct sdhci_arasan_clk_data *clk_data =
- 		container_of(hw, struct sdhci_arasan_clk_data, sampleclk_hw);
-@@ -579,14 +587,14 @@ static const struct clk_ops arasan_sampleclk_ops = {
- /**
-  * sdhci_zynqmp_sdcardclk_set_phase - Set the SD Output Clock Tap Delays
-  *
-+ * @hw:			Pointer to the hardware clock structure.
-+ * @degrees:		The clock phase shift between 0 - 359.
-+ *
-  * Set the SD Output Clock Tap Delays for Output path
-  *
-- * @hw:			Pointer to the hardware clock structure.
-- * @degrees		The clock phase shift between 0 - 359.
-  * Return: 0 on success and error value on error
-  */
- static int sdhci_zynqmp_sdcardclk_set_phase(struct clk_hw *hw, int degrees)
--
- {
- 	struct sdhci_arasan_clk_data *clk_data =
- 		container_of(hw, struct sdhci_arasan_clk_data, sdcardclk_hw);
-@@ -651,14 +659,14 @@ static const struct clk_ops zynqmp_sdcardclk_ops = {
- /**
-  * sdhci_zynqmp_sampleclk_set_phase - Set the SD Input Clock Tap Delays
-  *
-+ * @hw:			Pointer to the hardware clock structure.
-+ * @degrees:		The clock phase shift between 0 - 359.
-+ *
-  * Set the SD Input Clock Tap Delays for Input path
-  *
-- * @hw:			Pointer to the hardware clock structure.
-- * @degrees		The clock phase shift between 0 - 359.
-  * Return: 0 on success and error value on error
-  */
- static int sdhci_zynqmp_sampleclk_set_phase(struct clk_hw *hw, int degrees)
--
- {
- 	struct sdhci_arasan_clk_data *clk_data =
- 		container_of(hw, struct sdhci_arasan_clk_data, sampleclk_hw);
-@@ -723,10 +731,11 @@ static const struct clk_ops zynqmp_sampleclk_ops = {
- /**
-  * sdhci_versal_sdcardclk_set_phase - Set the SD Output Clock Tap Delays
-  *
-+ * @hw:			Pointer to the hardware clock structure.
-+ * @degrees:		The clock phase shift between 0 - 359.
-+ *
-  * Set the SD Output Clock Tap Delays for Output path
-  *
-- * @hw:			Pointer to the hardware clock structure.
-- * @degrees		The clock phase shift between 0 - 359.
-  * Return: 0 on success and error value on error
-  */
- static int sdhci_versal_sdcardclk_set_phase(struct clk_hw *hw, int degrees)
-@@ -794,10 +803,11 @@ static const struct clk_ops versal_sdcardclk_ops = {
- /**
-  * sdhci_versal_sampleclk_set_phase - Set the SD Input Clock Tap Delays
-  *
-+ * @hw:			Pointer to the hardware clock structure.
-+ * @degrees:		The clock phase shift between 0 - 359.
-+ *
-  * Set the SD Input Clock Tap Delays for Input path
-  *
-- * @hw:			Pointer to the hardware clock structure.
-- * @degrees		The clock phase shift between 0 - 359.
-  * Return: 0 on success and error value on error
-  */
- static int sdhci_versal_sampleclk_set_phase(struct clk_hw *hw, int degrees)
-@@ -913,6 +923,9 @@ static int arasan_zynqmp_execute_tuning(struct mmc_host *mmc, u32 opcode)
- /**
-  * sdhci_arasan_update_clockmultiplier - Set corecfg_clockmultiplier
-  *
-+ * @host:		The sdhci_host
-+ * @value:		The value to write
-+ *
-  * The corecfg_clockmultiplier is supposed to contain clock multiplier
-  * value of programmable clock generator.
-  *
-@@ -924,8 +937,6 @@ static int arasan_zynqmp_execute_tuning(struct mmc_host *mmc, u32 opcode)
-  * - The value of corecfg_clockmultiplier should sync with that of corresponding
-  *   value reading from sdhci_capability_register. So this function is called
-  *   once at probe time and never called again.
-- *
-- * @host:		The sdhci_host
-  */
- static void sdhci_arasan_update_clockmultiplier(struct sdhci_host *host,
- 						u32 value)
-@@ -952,6 +963,8 @@ static void sdhci_arasan_update_clockmultiplier(struct sdhci_host *host,
- /**
-  * sdhci_arasan_update_baseclkfreq - Set corecfg_baseclkfreq
-  *
-+ * @host:		The sdhci_host
-+ *
-  * The corecfg_baseclkfreq is supposed to contain the MHz of clk_xin.  This
-  * function can be used to make that happen.
-  *
-@@ -963,8 +976,6 @@ static void sdhci_arasan_update_clockmultiplier(struct sdhci_host *host,
-  * - It's assumed that clk_xin is not dynamic and that we use the SDHCI divider
-  *   to achieve lower clock rates.  That means that this function is called once
-  *   at probe time and never called again.
-- *
-- * @host:		The sdhci_host
-  */
- static void sdhci_arasan_update_baseclkfreq(struct sdhci_host *host)
- {
-@@ -1028,10 +1039,10 @@ static void arasan_dt_read_clk_phase(struct device *dev,
- /**
-  * arasan_dt_parse_clk_phases - Read Clock Delay values from DT
-  *
-- * Called at initialization to parse the values of Clock Delays.
-- *
-  * @dev:		Pointer to our struct device.
-  * @clk_data:		Pointer to the Clock Data structure
-+ *
-+ * Called at initialization to parse the values of Clock Delays.
-  */
- static void arasan_dt_parse_clk_phases(struct device *dev,
- 				       struct sdhci_arasan_clk_data *clk_data)
-@@ -1202,14 +1213,15 @@ MODULE_DEVICE_TABLE(of, sdhci_arasan_of_match);
- /**
-  * sdhci_arasan_register_sdcardclk - Register the sdcardclk for a PHY to use
-  *
-+ * @sdhci_arasan:	Our private data structure.
-+ * @clk_xin:		Pointer to the functional clock
-+ * @dev:		Pointer to our struct device.
-+ *
-  * Some PHY devices need to know what the actual card clock is.  In order for
-  * them to find out, we'll provide a clock through the common clock framework
-  * for them to query.
-  *
-- * @sdhci_arasan:	Our private data structure.
-- * @clk_xin:		Pointer to the functional clock
-- * @dev:		Pointer to our struct device.
-- * Returns 0 on success and error value on error
-+ * Return: 0 on success and error value on error
-  */
- static int
- sdhci_arasan_register_sdcardclk(struct sdhci_arasan_data *sdhci_arasan,
-@@ -1251,14 +1263,15 @@ sdhci_arasan_register_sdcardclk(struct sdhci_arasan_data *sdhci_arasan,
- /**
-  * sdhci_arasan_register_sampleclk - Register the sampleclk for a PHY to use
-  *
-+ * @sdhci_arasan:	Our private data structure.
-+ * @clk_xin:		Pointer to the functional clock
-+ * @dev:		Pointer to our struct device.
-+ *
-  * Some PHY devices need to know what the actual card clock is.  In order for
-  * them to find out, we'll provide a clock through the common clock framework
-  * for them to query.
-  *
-- * @sdhci_arasan:	Our private data structure.
-- * @clk_xin:		Pointer to the functional clock
-- * @dev:		Pointer to our struct device.
-- * Returns 0 on success and error value on error
-+ * Return: 0 on success and error value on error
-  */
- static int
- sdhci_arasan_register_sampleclk(struct sdhci_arasan_data *sdhci_arasan,
-@@ -1300,10 +1313,10 @@ sdhci_arasan_register_sampleclk(struct sdhci_arasan_data *sdhci_arasan,
- /**
-  * sdhci_arasan_unregister_sdclk - Undoes sdhci_arasan_register_sdclk()
-  *
-+ * @dev:		Pointer to our struct device.
-+ *
-  * Should be called any time we're exiting and sdhci_arasan_register_sdclk()
-  * returned success.
-- *
-- * @dev:		Pointer to our struct device.
-  */
- static void sdhci_arasan_unregister_sdclk(struct device *dev)
- {
-@@ -1318,6 +1331,10 @@ static void sdhci_arasan_unregister_sdclk(struct device *dev)
- /**
-  * sdhci_arasan_register_sdclk - Register the sdcardclk for a PHY to use
-  *
-+ * @sdhci_arasan:	Our private data structure.
-+ * @clk_xin:		Pointer to the functional clock
-+ * @dev:		Pointer to our struct device.
-+ *
-  * Some PHY devices need to know what the actual card clock is.  In order for
-  * them to find out, we'll provide a clock through the common clock framework
-  * for them to query.
-@@ -1330,10 +1347,7 @@ static void sdhci_arasan_unregister_sdclk(struct device *dev)
-  * to create nice clean device tree bindings and later (if needed) we can try
-  * re-architecting SDHCI if we see some benefit to it.
-  *
-- * @sdhci_arasan:	Our private data structure.
-- * @clk_xin:		Pointer to the functional clock
-- * @dev:		Pointer to our struct device.
-- * Returns 0 on success and error value on error
-+ * Return: 0 on success and error value on error
-  */
- static int sdhci_arasan_register_sdclk(struct sdhci_arasan_data *sdhci_arasan,
- 				       struct clk *clk_xin,
--- 
-2.17.1
+Besides the (oversimplifying) model used in SW, there is no constraint
+to have just one independently manageable entity belonging to the PHY
+layer. Nowadays there are complex configurable PCS/PMA units, retimers,
+single chip PHYs that can function also in backplane mode, and so on.
+All these require a rethinking of the one PHY per interface, tied to a
+MDIO bus model we use today. The DPAA 1 already make use of the MDIO bus
+infrastructure to manage the PCS devices in the SoC, without an issue
+related to the PHYlib one PHY assumption.
 
+One risk I see here is that we may abandon PHYlib before we give it a
+chance to adapt to the new complexity of the HW and roll something new
+just to do away with the required work in understanding its inner workings.
+This could even be fine but it creates a no return point for drivers that
+will use a new infrastructure we put in place (i.e. no backporting).
+
+Madalin
