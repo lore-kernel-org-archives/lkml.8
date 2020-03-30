@@ -2,98 +2,86 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6814C43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 23:07:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A32C3C2D0F1
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 23:07:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C1FA120771
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 23:07:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D74D20771
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 23:07:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585609670;
+	bh=2JuV+QlN4qaM1t2t/5N1TNzx4epMaO+2lnkY7RJaZ6o=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=wpsJAlEe5rydPNnEW9AmM8LuXqLhVsd5NcIjgXyzP2x5F9I69h8HlcU95unmasFGD
+	 Z0R8HSGxrhFB3fyG0CYVf9Iy6/DJHC7pZln9kne5ttshIZGbWLN3+q9V4oXzcm3G7P
+	 nwfXhmUOeRt8cjuoGOrGiK3iKfG8PKUcTO802ECM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729732AbgC3XHc (ORCPT
+        id S1729998AbgC3XHt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 19:07:32 -0400
-Received: from icp-osb-irony-out6.external.iinet.net.au ([203.59.1.106]:28035
-        "EHLO icp-osb-irony-out6.external.iinet.net.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729024AbgC3XH1 (ORCPT
+        Mon, 30 Mar 2020 19:07:49 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:46122 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729024AbgC3XHt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 19:07:27 -0400
-X-SMTP-MATCH: 0
-X-IronPort-Anti-Spam-Filtered: true
-X-IronPort-Anti-Spam-Result: =?us-ascii?q?A2COHgD7eoJe/+im0XZgBh4BCxyBcAs?=
- =?us-ascii?q?CgieBYRIqg1JIj08BAQEBAQEGgRI4iWiFFIUVhSkUgWcKAQEBAQEBAQEBGxk?=
- =?us-ascii?q?BAgQBAYREAoIyJDYHDgIQAQEBBQEBAQEBBQMBbYUKWEIBDAGFIQYjBFIQGA0?=
- =?us-ascii?q?CGA4CAkcQBhOFfiSuGH8zGgKKL4EOKgGMMBp5gQeBRAOBNoFmhDQKgyKCXgS?=
- =?us-ascii?q?Nc4MDhw9FgQCXG4JGlxUdj0IDjCctpnGFfwQugVhNLgqDJ1AYnH83MIEGAQG?=
- =?us-ascii?q?ENYkrXwEB?=
-X-IPAS-Result: =?us-ascii?q?A2COHgD7eoJe/+im0XZgBh4BCxyBcAsCgieBYRIqg1JIj?=
- =?us-ascii?q?08BAQEBAQEGgRI4iWiFFIUVhSkUgWcKAQEBAQEBAQEBGxkBAgQBAYREAoIyJ?=
- =?us-ascii?q?DYHDgIQAQEBBQEBAQEBBQMBbYUKWEIBDAGFIQYjBFIQGA0CGA4CAkcQBhOFf?=
- =?us-ascii?q?iSuGH8zGgKKL4EOKgGMMBp5gQeBRAOBNoFmhDQKgyKCXgSNc4MDhw9FgQCXG?=
- =?us-ascii?q?4JGlxUdj0IDjCctpnGFfwQugVhNLgqDJ1AYnH83MIEGAQGENYkrXwEB?=
-X-IronPort-AV: E=Sophos;i="5.72,326,1580745600"; 
-   d="scan'208";a="233609863"
-Received: from unknown (HELO mickey.themaw.net) ([118.209.166.232])
-  by icp-osb-irony-out6.iinet.net.au with ESMTP; 31 Mar 2020 07:07:10 +0800
-Subject: [PATCH 4/4] autofs: add comment about autofs_mountpoint_changed()
-From:   Ian Kent <raven@themaw.net>
-To:     Al Viro <viro@ZenIV.linux.org.uk>
-Cc:     autofs mailing list <autofs@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Kernel Mailing List <linux-kernel@vger.kernel.org>
-Date:   Tue, 31 Mar 2020 07:07:07 +0800
-Message-ID: <158560962791.14841.11556262088621555043.stgit@mickey.themaw.net>
-In-Reply-To: <158560961146.14841.14430383874338917674.stgit@mickey.themaw.net>
-References: <158560961146.14841.14430383874338917674.stgit@mickey.themaw.net>
-User-Agent: StGit/unknown-version
+        Mon, 30 Mar 2020 19:07:49 -0400
+Received: by mail-io1-f65.google.com with SMTP id i3so10566574ioo.13;
+        Mon, 30 Mar 2020 16:07:48 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=chGQTsw5zTRQp9yO7WbnNWqcvQOzsJXAgi/QX2be7+4=;
+        b=AjIls7hakKZtT1XDfOIxfTQbMWRX9c2Mcaaw/2H8Qj/aH1VNka4Bj6Rc1C305WBxlv
+         YbMqASse3tftp7fAvTfJ9yeRqWgXjJpl8fWIFe7mWgggVs2ynUjrSXOII+A352bCHR//
+         hVFnTLfGukoMK0ddLOsa29odrWCrzopT1wK9u5rjpJQ8dG80uibgCIvjXnNAZtPZ/SC1
+         LzKUXDwcWhujcgXf9XbKp+r7FuJ0t3w0X4+ykiMHrjXr7zjMqpZU8hhofazkXrz35EIr
+         O5QEBL/UDNII37vlTXonFrNqfU3ee0hrVf4TmmA+7GV22FyW1IGVc7Z+dnD3eoFyBmI9
+         z7fg==
+X-Gm-Message-State: ANhLgQ2i265/omkjLhGCs+yGKUtvUoIrrYOtjrzz55avHgS+eITPnzVv
+        FvVWZDzn0/2Vtk7DRLk8CQ==
+X-Google-Smtp-Source: ADFU+vvbgnzRmbGJ7skGR+whQLGxWd+3EUVi7PCGAwW680fWQDZcpYbcAe9KY5cRtfcgjILNQ+FEAQ==
+X-Received: by 2002:a02:aa8a:: with SMTP id u10mr12752032jai.88.1585609668383;
+        Mon, 30 Mar 2020 16:07:48 -0700 (PDT)
+Received: from rob-hp-laptop ([64.188.179.250])
+        by smtp.gmail.com with ESMTPSA id e3sm4364026iob.36.2020.03.30.16.07.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 30 Mar 2020 16:07:47 -0700 (PDT)
+Received: (nullmailer pid 30747 invoked by uid 1000);
+        Mon, 30 Mar 2020 23:07:46 -0000
+Date:   Mon, 30 Mar 2020 17:07:46 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Lubomir Rintel <lkundrak@v3.sk>
+Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-input@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Lubomir Rintel <lkundrak@v3.sk>
+Subject: Re: [PATCH 1/2] dt-bindings: input: Add Dell Wyse 3020 Power Button
+ binding
+Message-ID: <20200330230746.GA30690@bogus>
+References: <20200318114556.2064-1-lkundrak@v3.sk>
+ <20200318114556.2064-2-lkundrak@v3.sk>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200318114556.2064-2-lkundrak@v3.sk>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The function autofs_mountpoint_changed() is unusual, add a comment
-about two cases for which it is used.
+On Wed, 18 Mar 2020 12:45:55 +0100, Lubomir Rintel wrote:
+> Add binding document for the Dell Wyse 3020 a.k.a. "Ariel" Power Button.
+> 
+> Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
+> ---
+>  .../bindings/input/ariel-pwrbutton.yaml       | 53 +++++++++++++++++++
+>  1 file changed, 53 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/input/ariel-pwrbutton.yaml
+> 
 
-Signed-off-by: Ian Kent <raven@themaw.net>
----
- fs/autofs/root.c |   21 ++++++++++++++++++---
- 1 file changed, 18 insertions(+), 3 deletions(-)
-
-diff --git a/fs/autofs/root.c b/fs/autofs/root.c
-index b3f748e4df08..5efb7fa1ce2b 100644
---- a/fs/autofs/root.c
-+++ b/fs/autofs/root.c
-@@ -280,9 +280,24 @@ static struct dentry *autofs_mountpoint_changed(struct path *path)
- 	struct dentry *dentry = path->dentry;
- 	struct autofs_sb_info *sbi = autofs_sbi(dentry->d_sb);
- 
--	/*
--	 * If this is an indirect mount the dentry could have gone away
--	 * as a result of an expire and a new one created.
-+	/* If this is an indirect mount the dentry could have gone away
-+	 * and a new one created.
-+	 *
-+	 * This is unusual and I can't remember the case for which it
-+	 * was originally added now. But an example of how this can
-+	 * happen is an autofs indirect mount that has the "browse"
-+	 * option set and also has the "symlink" option in the autofs
-+	 * map entry. In this case the daemon will remove the browse
-+	 * directory and create a symlink as the mount (pointing to a
-+	 * local path) leaving the struct path stale.
-+	 *
-+	 * Another not so obvious case is when a mount in an autofs
-+	 * indirect mount that uses the "nobrowse" option is being
-+	 * expired and the mount has been umounted but the mount point
-+	 * directory remains when a stat family system call is made.
-+	 * In this case the mount point is removed (by the daemon) and
-+	 * a new mount triggered leading to a stale dentry in the struct
-+	 * path of the waiting process.
- 	 */
- 	if (autofs_type_indirect(sbi->type) && d_unhashed(dentry)) {
- 		struct dentry *parent = dentry->d_parent;
-
+Reviewed-by: Rob Herring <robh@kernel.org>
