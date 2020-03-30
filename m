@@ -2,87 +2,316 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.2 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03FD9C43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 12:02:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 369D4C2D0E5
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 12:03:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C940C20776
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 12:02:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585569731;
-	bh=47YsEWohAAs8MnT+k+kCYLDngMt9bFmeSZqLlVeipBE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=j1JTZZ64/BCpul7DEQmv7J7ItCKnibNC2KopMTvRBWpjFieqfAkz47ifr8xfeLZ1f
-	 1/ev/SeV9qF/5KQhq5s5WVcWEjHQBZgkf9xWt0kTyl/ijnmvdTURuEajru8nobIFnj
-	 JoD8nai+KWFBln1Tha7RRQUxdlHqWN+rnhLJ/XTw=
+	by mail.kernel.org (Postfix) with ESMTP id 0450420776
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 12:03:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730104AbgC3MCK (ORCPT
+        id S1730114AbgC3MDZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 08:02:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48350 "EHLO mail.kernel.org"
+        Mon, 30 Mar 2020 08:03:25 -0400
+Received: from elvis.franken.de ([193.175.24.41]:44979 "EHLO elvis.franken.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729669AbgC3MCK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 08:02:10 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0866020716;
-        Mon, 30 Mar 2020 12:02:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585569729;
-        bh=47YsEWohAAs8MnT+k+kCYLDngMt9bFmeSZqLlVeipBE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=s+OkQu9Gxp3v9mVaZy+WheTLpcDUNSzWO04A1k4JJdtMtmhosdksnERIsGCBI3HGR
-         z4R9rqs5dIVOjhdqzHZMCbQitophlX/XAvaL3+9ercT7sNKyLwn0um85JWEqylyg48
-         RYYcN/z48VYK1n+rlBHKSFHvFKbQKd/gms59EfCA=
-Date:   Mon, 30 Mar 2020 14:02:07 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     madhuparnabhowmik10@gmail.com
-Cc:     hariprasad.kelam@gmail.com, colin.king@canonical.com,
-        tony.olech@elandigitalsystems.com, linux-usb@vger.kernel.org,
-        linux-kernel@vger.kernel.org, andrianov@ispras.ru
-Subject: Re: Possible data-race related bug in u132_hcd module.
-Message-ID: <20200330120207.GA2807@kroah.com>
-References: <20200330115243.11107-1-madhuparnabhowmik10@gmail.com>
+        id S1729669AbgC3MDZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Mar 2020 08:03:25 -0400
+Received: from uucp (helo=alpha)
+        by elvis.franken.de with local-bsmtp (Exim 3.36 #1)
+        id 1jIt8V-0005y5-00; Mon, 30 Mar 2020 14:03:23 +0200
+Received: by alpha.franken.de (Postfix, from userid 1000)
+        id A5C33C0D4E; Mon, 30 Mar 2020 14:03:15 +0200 (CEST)
+Date:   Mon, 30 Mar 2020 14:03:15 +0200
+From:   Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+To:     torvalds@linux-foundation.org
+Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [GIT PULL] MIPS changes for v5.7-rc1
+Message-ID: <20200330120315.GA10196@alpha.franken.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200330115243.11107-1-madhuparnabhowmik10@gmail.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 30, 2020 at 05:22:43PM +0530, madhuparnabhowmik10@gmail.com wrote:
-> Hi,
-> 
-> This bug is found by  Linux Driver Verification project (linuxtesting.org).
-> 
-> The bug is related to the parallel execution of u132_probe() function and u132_hcd_exit() function in u132_hcd.c. In case the module is unloaded when the probe function is executing there can be data race as the mutex lock u132_module_lock is not used properly. 
+Hi Linus,
 
-Please note that module unloading, while a nice thing to have, is never
-something that happens automatically :)
+I probably messed up my tree, when merging mips_fixes_5_6_1. My way
+to solve this was to merge v5.6 into mips-next to get a pull request with
+just the changes from mips-next. I hope this is still ok for you.
 
-> i) Usage of mutex lock only when writing into the u132_exiting variable in u132_hcd_exit(). The lock is not used when this variable is read in u132_probe().
-> 
-> Moreover, this variable does not serve its purpose, as even if locking is used while the u132_exiting variable is read in probe(), the function may still miss that exit function is executing if it acquires the mutex before exit() function does.
-> 
-> How to fix this?
-> 
-> ii) Usage of mutex while adding entries in u132_static_list in probe function but not in exit function while unregistering.
-> This should be easy to fix by holding the mutex in the exit function as well.
-> 
-> There can be other synchronization problems related to the usage of u132_module_lock in this module, I have only spotted these so far.
-> 
-> Please let me know if this bug report is helpful and I can send a patch fixing it.
+Thomas.
 
-Please just send a patch, no need to ever ask if you should, that's the
-best way to report and fix anything.
 
-thanks,
+The following changes since commit 7111951b8d4973bda27ff663f2cf18b663d15b48:
 
-greg k-h
+  Linux 5.6 (2020-03-29 15:25:41 -0700)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/mips/linux tags/mips_5.7
+
+for you to fetch changes up to ba15533275dd70238b523417d222d43fb40dac9d:
+
+  Merge tag 'v5.6' into mips-next (2020-03-30 13:31:37 +0200)
+
+----------------------------------------------------------------
+MIPS updates for v5.7:
+
+- loongson64 irq rework
+- dmi support for loongson
+- replace setup_irq() by request_irq()
+- jazz cleanups
+- minor cleanups and fixes
+
+----------------------------------------------------------------
+Alex Smith (1):
+      MIPS: DTS: CI20: add DT node for IR sensor
+
+Bartlomiej Zolnierkiewicz (3):
+      ide: remove no longer used au1xxx-ide driver
+      MIPS: Alchemy: remove no longer used au1xxx_ide.h header
+      docs: mips: remove no longer needed au1xxx_ide.rst documentation
+
+Finn Thain (3):
+      fbdev/g364fb: Fix build failure
+      mips/jazz: Remove redundant settings and shrink jazz_defconfig
+      mips/jazz: Update jazz_defconfig for MIPS Magnum
+
+Geert Uytterhoeven (7):
+      MIPS: ath79: Replace <linux/clk-provider.h> by <linux/of_clk.h>
+      MIPS: BMIPS: Replace <linux/clk-provider.h> by <linux/of_clk.h>
+      MIPS: generic: Replace <linux/clk-provider.h> by <linux/of_clk.h>
+      MIPS: jz4740: Replace <linux/clk-provider.h> by <linux/of_clk.h>
+      MIPS: pic32mzda: Replace <linux/clk-provider.h> by <linux/of_clk.h>
+      MIPS: Pistachio: Replace <linux/clk-provider.h> by <linux/of_clk.h>
+      MIPS: ralink: Replace <linux/clk-provider.h> by <linux/of_clk.h>
+
+Gustavo A. R. Silva (1):
+      MIPS: OCTEON: irq: Fix potential NULL pointer dereference
+
+H. Nikolaus Schaller (2):
+      MIPS: DTS: CI20: multiple DTS improvements
+      MIPS: CI20: defconfig: multiple improvements
+
+Huacai Chen (1):
+      MIPS/tlbex: Fix LDDIR usage in setup_pw() for Loongson-3
+
+Jiaxun Yang (10):
+      irqchip: Add driver for Loongson I/O Local Interrupt Controller
+      irqchip: loongson-liointc: Workaround LPC IRQ Errata
+      dt-bindings: interrupt-controller: Add Loongson LIOINTC
+      irqchip: Add driver for Loongson-3 HyperTransport PIC controller
+      dt-bindings: interrupt-controller: Add Loongson-3 HTPIC
+      MIPS: Loongson64: Drop legacy IRQ code
+      dt-bindings: mips: Add loongson boards
+      MIPS: Loongson64: Add generic dts
+      MIPS: Loongson64: Load built-in dtbs
+      MAINTAINERS: Update Loongson64 entry
+
+Kamal Dasu (1):
+      MIPS: c-r4k: Invalidate BMIPS5000 ZSCM prefetch lines
+
+Krzysztof Kozlowski (1):
+      MIPS: configs: Cleanup old Kconfig options
+
+Masahiro Yamada (1):
+      MIPS: do not compile generic functions for CONFIG_CAVIUM_OCTEON_SOC
+
+Oleksij Rempel (1):
+      MIPS: reduce print level for cache information
+
+Randy Dunlap (1):
+      arch/mips: change duplicated word in NUMA help text
+
+Sergio Paracuellos (1):
+      MIPS: ralink: mt7621: introduce 'soc_device' initialization
+
+Thomas Bogendoerfer (3):
+      Merge tag 'mips_fixes_5.6.1' into mips-next
+      MIPS: ralink: mt7621: Fix soc_device introduction
+      Merge tag 'v5.6' into mips-next
+
+Tiezhu Yang (3):
+      MIPS: Loongson: Do not initialise statics to 0
+      firmware: dmi: Add macro SMBIOS_ENTRY_POINT_SCAN_START
+      MIPS: Add support for Desktop Management Interface (DMI)
+
+Yousong Zhou (1):
+      MIPS: Exclude more dsemul code when CONFIG_MIPS_FP_SUPPORT=n
+
+YueHaibing (1):
+      MIPS: pic32mzda: Drop pointless static qualifier
+
+YunQiang Su (1):
+      Use ELF_BASE_PLATFORM to pass ISA level
+
+afzal mohammed (2):
+      MIPS: Replace setup_irq() by request_irq()
+      MIPS: pass non-NULL dev_id on shared request_irq()
+
+bibo mao (1):
+      MIPS: Add header files reference with path prefix
+
+ .../interrupt-controller/loongson,htpic.yaml       |  59 ++
+ .../interrupt-controller/loongson,liointc.yaml     |  93 ++++
+ .../devicetree/bindings/mips/loongson/devices.yaml |  27 +
+ Documentation/mips/au1xxx_ide.rst                  | 130 -----
+ Documentation/mips/index.rst                       |   2 -
+ MAINTAINERS                                        |   1 +
+ arch/mips/Kconfig                                  |  31 +-
+ arch/mips/alchemy/common/time.c                    |  11 +-
+ arch/mips/ar7/irq.c                                |  16 +-
+ arch/mips/ath25/ar2315.c                           |   9 +-
+ arch/mips/ath25/ar5312.c                           |   9 +-
+ arch/mips/ath79/setup.c                            |   2 +-
+ arch/mips/bcm63xx/irq.c                            |  41 +-
+ arch/mips/bmips/setup.c                            |   2 +-
+ arch/mips/boot/dts/Makefile                        |   1 +
+ arch/mips/boot/dts/ingenic/ci20.dts                |  19 +
+ arch/mips/boot/dts/loongson/Makefile               |   4 +
+ arch/mips/boot/dts/loongson/loongson3-package.dtsi |  64 +++
+ .../boot/dts/loongson/loongson3_4core_rs780e.dts   |  25 +
+ .../boot/dts/loongson/loongson3_8core_rs780e.dts   |  25 +
+ arch/mips/boot/dts/loongson/rs780e-pch.dtsi        |  26 +
+ arch/mips/cavium-octeon/octeon-irq.c               |   3 +
+ arch/mips/cobalt/irq.c                             |  18 +-
+ arch/mips/configs/ar7_defconfig                    |   1 -
+ arch/mips/configs/ath25_defconfig                  |   1 -
+ arch/mips/configs/ath79_defconfig                  |   1 -
+ arch/mips/configs/bcm63xx_defconfig                |   2 -
+ arch/mips/configs/bmips_be_defconfig               |   2 -
+ arch/mips/configs/bmips_stb_defconfig              |   2 -
+ arch/mips/configs/ci20_defconfig                   |  21 +
+ arch/mips/configs/db1xxx_defconfig                 |   1 -
+ arch/mips/configs/generic/board-ni169445.config    |   1 -
+ arch/mips/configs/jazz_defconfig                   | 267 +--------
+ arch/mips/configs/lasat_defconfig                  |   2 -
+ arch/mips/configs/lemote2f_defconfig               |   2 +-
+ arch/mips/configs/loongson3_defconfig              |   5 +-
+ arch/mips/configs/msp71xx_defconfig                |   2 -
+ arch/mips/configs/pnx8335_stb225_defconfig         |   2 -
+ arch/mips/configs/rb532_defconfig                  |   1 -
+ arch/mips/configs/rt305x_defconfig                 |   1 -
+ arch/mips/configs/xway_defconfig                   |   1 -
+ arch/mips/dec/setup.c                              |  59 +-
+ arch/mips/emma/markeins/irq.c                      |  21 +-
+ arch/mips/fw/lib/cmdline.c                         |   2 +
+ arch/mips/generic/init.c                           |   2 +-
+ arch/mips/include/asm/dmi.h                        |  20 +
+ arch/mips/include/asm/elf.h                        |   3 +
+ arch/mips/include/asm/i8259.h                      |   1 +
+ arch/mips/include/asm/mach-ar7/irq.h               |   2 +-
+ arch/mips/include/asm/mach-ath79/irq.h             |   2 +-
+ arch/mips/include/asm/mach-au1x00/au1xxx_ide.h     | 178 ------
+ arch/mips/include/asm/mach-emma2rh/irq.h           |   2 +-
+ arch/mips/include/asm/mach-ip27/irq.h              |   2 +-
+ arch/mips/include/asm/mach-ip30/irq.h              |   2 +-
+ arch/mips/include/asm/mach-lantiq/falcon/irq.h     |   2 +-
+ arch/mips/include/asm/mach-lantiq/xway/irq.h       |   2 +-
+ arch/mips/include/asm/mach-lasat/irq.h             |   2 +-
+ arch/mips/include/asm/mach-loongson64/boot_param.h |   2 +
+ .../include/asm/mach-loongson64/builtin_dtbs.h     |  13 +
+ arch/mips/include/asm/mach-loongson64/irq.h        |  30 +-
+ arch/mips/include/asm/mach-loongson64/loongson.h   |   1 +
+ arch/mips/include/asm/mach-malta/irq.h             |   2 +-
+ arch/mips/include/asm/mach-pic32/irq.h             |   2 +-
+ arch/mips/include/asm/mach-pistachio/irq.h         |   2 +-
+ arch/mips/include/asm/mach-ralink/irq.h            |   2 +-
+ arch/mips/include/asm/mach-rm/mc146818rtc.h        |   2 +-
+ arch/mips/include/asm/mach-vr41xx/irq.h            |   2 +-
+ arch/mips/include/asm/mach-xilfpga/irq.h           |   2 +-
+ arch/mips/include/asm/processor.h                  |  12 +-
+ arch/mips/include/asm/sni.h                        |   4 +-
+ arch/mips/jazz/irq.c                               |  12 +-
+ arch/mips/jz4740/time.c                            |   2 +-
+ arch/mips/kernel/cevt-bcm1480.c                    |  11 +-
+ arch/mips/kernel/cevt-ds1287.c                     |   9 +-
+ arch/mips/kernel/cevt-gt641xx.c                    |   9 +-
+ arch/mips/kernel/cevt-r4k.c                        |   5 +-
+ arch/mips/kernel/cevt-sb1250.c                     |  11 +-
+ arch/mips/kernel/cevt-txx9.c                       |  11 +-
+ arch/mips/kernel/cpu-probe.c                       |  18 +
+ arch/mips/kernel/i8253.c                           |  11 +-
+ arch/mips/kernel/process.c                         |  10 +-
+ arch/mips/kernel/rtlx-mt.c                         |   8 +-
+ arch/mips/kernel/setup.c                           |   2 +
+ arch/mips/kernel/smp.c                             |  33 +-
+ arch/mips/kernel/vdso.c                            |  26 +-
+ arch/mips/lasat/interrupt.c                        |  10 +-
+ arch/mips/lib/delay.c                              |   4 +
+ arch/mips/lib/memcpy.S                             |   3 +
+ arch/mips/loongson2ef/common/bonito-irq.c          |   9 +-
+ arch/mips/loongson2ef/common/cs5536/cs5536_mfgpt.c |  10 +-
+ arch/mips/loongson2ef/fuloong-2e/irq.c             |  16 +-
+ arch/mips/loongson2ef/lemote-2f/irq.c              |  20 +-
+ arch/mips/loongson32/common/irq.c                  |  21 +-
+ arch/mips/loongson32/common/time.c                 |  12 +-
+ arch/mips/loongson64/Makefile                      |   2 +-
+ arch/mips/loongson64/env.c                         |  23 +
+ arch/mips/loongson64/hpet.c                        |  10 +-
+ arch/mips/loongson64/init.c                        |   6 +
+ arch/mips/loongson64/irq.c                         | 162 ------
+ arch/mips/loongson64/numa.c                        |   2 +-
+ arch/mips/loongson64/setup.c                       |  16 +
+ arch/mips/loongson64/smp.c                         |  28 +-
+ arch/mips/mm/c-octeon.c                            |  18 +-
+ arch/mips/mm/c-r3k.c                               |   4 +-
+ arch/mips/mm/c-r4k.c                               |  47 +-
+ arch/mips/mm/c-tx39.c                              |   4 +-
+ arch/mips/mm/tlbex.c                               |   5 +-
+ arch/mips/mti-malta/malta-int.c                    |  10 +-
+ arch/mips/netlogic/xlr/fmn.c                       |  11 +-
+ arch/mips/pic32/pic32mzda/time.c                   |   4 +-
+ arch/mips/pistachio/time.c                         |   2 +-
+ arch/mips/pmcs-msp71xx/msp_irq.c                   |  28 +-
+ arch/mips/pmcs-msp71xx/msp_smp.c                   |  22 +-
+ arch/mips/pmcs-msp71xx/msp_time.c                  |   8 +-
+ arch/mips/ralink/Kconfig                           |   1 +
+ arch/mips/ralink/cevt-rt3352.c                     |  18 +-
+ arch/mips/ralink/mt7621.c                          |  30 ++
+ arch/mips/ralink/timer-gic.c                       |   2 +-
+ arch/mips/sgi-ip22/ip22-eisa.c                     |  10 +-
+ arch/mips/sgi-ip22/ip22-int.c                      |  49 +-
+ arch/mips/sgi-ip32/ip32-irq.c                      |  18 +-
+ arch/mips/sni/a20r.c                               |   4 +-
+ arch/mips/sni/irq.c                                |   8 +-
+ arch/mips/sni/pcit.c                               |   8 +-
+ arch/mips/sni/rm200.c                              |  23 +-
+ arch/mips/sni/time.c                               |  12 +-
+ arch/mips/vr41xx/common/irq.c                      |   9 +-
+ drivers/firmware/dmi_scan.c                        |   6 +-
+ drivers/ide/Kconfig                                |  20 +-
+ drivers/ide/Makefile                               |   2 -
+ drivers/ide/au1xxx-ide.c                           | 597 ---------------------
+ drivers/irqchip/Kconfig                            |  19 +
+ drivers/irqchip/Makefile                           |   2 +
+ drivers/irqchip/irq-loongson-htpic.c               | 149 +++++
+ drivers/irqchip/irq-loongson-liointc.c             | 271 ++++++++++
+ drivers/video/fbdev/g364fb.c                       |  29 +-
+ 136 files changed, 1369 insertions(+), 1924 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/interrupt-controller/loongson,htpic.yaml
+ create mode 100644 Documentation/devicetree/bindings/interrupt-controller/loongson,liointc.yaml
+ create mode 100644 Documentation/devicetree/bindings/mips/loongson/devices.yaml
+ delete mode 100644 Documentation/mips/au1xxx_ide.rst
+ create mode 100644 arch/mips/boot/dts/loongson/Makefile
+ create mode 100644 arch/mips/boot/dts/loongson/loongson3-package.dtsi
+ create mode 100644 arch/mips/boot/dts/loongson/loongson3_4core_rs780e.dts
+ create mode 100644 arch/mips/boot/dts/loongson/loongson3_8core_rs780e.dts
+ create mode 100644 arch/mips/boot/dts/loongson/rs780e-pch.dtsi
+ create mode 100644 arch/mips/include/asm/dmi.h
+ delete mode 100644 arch/mips/include/asm/mach-au1x00/au1xxx_ide.h
+ create mode 100644 arch/mips/include/asm/mach-loongson64/builtin_dtbs.h
+ delete mode 100644 arch/mips/loongson64/irq.c
+ delete mode 100644 drivers/ide/au1xxx-ide.c
+ create mode 100644 drivers/irqchip/irq-loongson-htpic.c
+ create mode 100644 drivers/irqchip/irq-loongson-liointc.c
+-- 
+Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
+good idea.                                                [ RFC1925, 2.3 ]
