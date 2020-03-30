@@ -2,113 +2,105 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BD92C2D0F1
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 22:09:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33D77C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 22:10:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1144B206CC
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 22:09:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585606185;
-	bh=q2phzh9yFsQx50dV3hbRu31sKC6mnvd0GciRPxzIXns=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=cCX0TrdDhVLaRtdqwklUBTdnclGV37vJq7s1qcygvDDS8Iu/gGgENQYk4wwORz9W6
-	 9CQ31UxdYoQ66q7mMe4Ewtg+Smr4Jpy4kFsEg9PtkXb8uriRGS2qgCfpAnREwGLdNG
-	 ymT+6bcV6qFvrSFkrwaTpzWYp4sqSJxHxuu6igPk=
+	by mail.kernel.org (Postfix) with ESMTP id 0419920771
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 22:10:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="G35reuvY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730978AbgC3WJo (ORCPT
+        id S1730945AbgC3WKS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 18:09:44 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:40945 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729142AbgC3WJn (ORCPT
+        Mon, 30 Mar 2020 18:10:18 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:41405 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729142AbgC3WKS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 18:09:43 -0400
-Received: by mail-pg1-f193.google.com with SMTP id t24so9342617pgj.7;
-        Mon, 30 Mar 2020 15:09:41 -0700 (PDT)
+        Mon, 30 Mar 2020 18:10:18 -0400
+Received: by mail-wr1-f66.google.com with SMTP id h9so23548674wrc.8;
+        Mon, 30 Mar 2020 15:10:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:reply-to:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=znoWPrzZPPeMBlwYAXU/ZXkwjJfA37xc5jbQZ/l+0OQ=;
+        b=G35reuvYKP/V2qYll9ynDb8qbZEFe0G7rvXJopY8cVCQgH8zHGhQXD3EWMq+YQNIVQ
+         fV3heedl2t9PMktRv2XIBxkVfZFNr6h08UaS+DFbGInp3FZuYSkgyA7U6UsFruaCSL4E
+         a61YJd3oc8EX308yNACgKiQKQaopWkTHMES8GzQSN0oSXLgW0wLXNvheTxGcKkprsuvX
+         ze8Q1IPrhUz4acS69pzyx6FG7JjcjmS0aNnRpipaeF3BoDH3Z9/cQKs7IS+Rr5dEAboJ
+         UmbShFnnPJ6l+B4tkur0PhxJ4DYFiqPOPbThqpcUOo3RQDPH/jJ6e9LLLfQOhh8vgJr0
+         KJLA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=j7FmspK21WqfyDNNhuaL3ZlTlaa7O+RnMjIkIEqFuiw=;
-        b=su818cT3WfQlUr0ieQYTl5TpuDrJ7aGCv8uzHlTBm5DZjQy/laMDyPgqzuKvEpMBz8
-         +ZsQdxJpoCIabRbCtmxtoilJ9VJ0sqHWoQXsLzlV34eSMZaOkGUtMt3as4L+eIUME5up
-         mNBgl4UaB7v0pyVBN8Qxii7+AaVwlFNt0+BHjM8H4txepliJxi7X0Dxrx95zjVDRxYSc
-         aMfo43HCQ6tdMKsi+lChfsXfwqKxicPe/2K4tYaNmyTTpLdrhSy+x7oBnVkIBxWTxGmA
-         QejmHSWUpsH0FSjXxpaZblB/20fIpLqHpXz/4JnxGAtwZXLv0VYz7B/1TxpaSO5UfMrb
-         XeEg==
-X-Gm-Message-State: ANhLgQ0fdMgRtzQ1Fc2qcoDjKN01AJA8EUncnaHZpnt4Rj5lud2b8Key
-        UA1U5lxEyRn3DQLTunCua8c=
-X-Google-Smtp-Source: ADFU+vvPzerl8j1+L7xAnyd4gLFIsKX6lP6TPO/c76Xt2g0Nx6dQq/wpEsf4qIQGjiT4CSIoeAaL8g==
-X-Received: by 2002:a62:1745:: with SMTP id 66mr15223339pfx.291.1585606181235;
-        Mon, 30 Mar 2020 15:09:41 -0700 (PDT)
-Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
-        by smtp.gmail.com with ESMTPSA id b133sm9608378pfb.180.2020.03.30.15.09.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Mar 2020 15:09:40 -0700 (PDT)
-Received: by 42.do-not-panic.com (Postfix, from userid 1000)
-        id 61A9F404B0; Mon, 30 Mar 2020 22:09:39 +0000 (UTC)
-Date:   Mon, 30 Mar 2020 22:09:39 +0000
-From:   Luis Chamberlain <mcgrof@kernel.org>
-To:     "Eric W. Biederman" <ebiederm@xmission.com>
-Cc:     Michal Hocko <mhocko@kernel.org>, Vlastimil Babka <vbabka@suse.cz>,
-        Kees Cook <keescook@chromium.org>,
-        Iurii Zaikin <yzaikin@google.com>,
-        linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
-        linux-mm@kvack.org, Ivan Teterevkov <ivan.teterevkov@nutanix.com>,
-        David Rientjes <rientjes@google.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        "Guilherme G . Piccoli" <gpiccoli@canonical.com>
-Subject: Re: [RFC v2 1/2] kernel/sysctl: support setting sysctl parameters
- from kernel command line
-Message-ID: <20200330220939.GW11244@42.do-not-panic.com>
-References: <20200325120345.12946-1-vbabka@suse.cz>
- <874kuc5b5z.fsf@x220.int.ebiederm.org>
- <20200326065829.GC27965@dhcp22.suse.cz>
- <87bloj2skm.fsf@x220.int.ebiederm.org>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:reply-to
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=znoWPrzZPPeMBlwYAXU/ZXkwjJfA37xc5jbQZ/l+0OQ=;
+        b=harmS0AX27Nlfp4Ka6Y71g03Vn614I6Dq/TAZQJzp2mF0pxU7s5UIs1DSitGXEGPQy
+         9dDnB61MNb3hxNkLx6C2UdV9ok6T+UprIAt/lMX6YDW7jUgi8+k2ucVCx3sKIlgRsaev
+         V5IP3XaFhZh/g7+H6Umw/dal9sTUqfKhVmt5/r9vzByhkUAqSP+0Cyize1c1lACHCkcp
+         chYyCK5b/xVtwYlE8Efji7dBqxVWOmUhxw4Qc95rgC8pZJgTi32iY5FXfi0grDblgwqY
+         FXQJv0A3p/NUIOnaRkuVegJDK9lLvfOI5iE+luYzO9Pg3JiHQl8LJERO16V9ytnaLo5o
+         lImg==
+X-Gm-Message-State: ANhLgQ09QMvIO73OPcf38HvxrsMslkrr6I16eYoyhYGglEI24eyKnrgA
+        pohTje1Yrfj3M+s0CAG20rI=
+X-Google-Smtp-Source: ADFU+vvKGoP43xQtMj0sdWabkOaAX7yuRVcdGH7v+cJ0IPdXVxI3A2u8aB/f6NypUH5xb/xIN78U4A==
+X-Received: by 2002:adf:f791:: with SMTP id q17mr8654344wrp.166.1585606216219;
+        Mon, 30 Mar 2020 15:10:16 -0700 (PDT)
+Received: from localhost ([185.92.221.13])
+        by smtp.gmail.com with ESMTPSA id h81sm1195302wme.42.2020.03.30.15.10.15
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 30 Mar 2020 15:10:15 -0700 (PDT)
+Date:   Mon, 30 Mar 2020 22:10:14 +0000
+From:   Wei Yang <richard.weiyang@gmail.com>
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     Wei Yang <richard.weiyang@gmail.com>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 5/9] XArray: entry in last level is not expected to be a
+ node
+Message-ID: <20200330221014.ppabot7qef2jhwx3@master>
+Reply-To: Wei Yang <richard.weiyang@gmail.com>
+References: <20200330123643.17120-1-richard.weiyang@gmail.com>
+ <20200330123643.17120-6-richard.weiyang@gmail.com>
+ <20200330124842.GY22483@bombadil.infradead.org>
+ <20200330141558.soeqhstone2liqud@master>
+ <20200330142821.GD22483@bombadil.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <87bloj2skm.fsf@x220.int.ebiederm.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200330142821.GD22483@bombadil.infradead.org>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 26, 2020 at 07:45:13AM -0500, Eric W. Biederman wrote:
-> > On Wed 25-03-20 17:20:40, Eric W. Biederman wrote:
-> plus I want to get very far away from the incorrect idea that you
-> can have sysctls without compiling in proc support.  That is not how
-> the code works, that is not how the code is tested.
+On Mon, Mar 30, 2020 at 07:28:21AM -0700, Matthew Wilcox wrote:
+>On Mon, Mar 30, 2020 at 02:15:58PM +0000, Wei Yang wrote:
+>> On Mon, Mar 30, 2020 at 05:48:42AM -0700, Matthew Wilcox wrote:
+>> >On Mon, Mar 30, 2020 at 12:36:39PM +0000, Wei Yang wrote:
+>> >> If an entry is at the last level, whose parent's shift is 0, it is not
+>> >> expected to be a node. We can just leverage the xa_is_node() check to
+>> >> break the loop instead of check shift additionally.
+>> >
+>> >I know you didn't run the test suite after making this change.
+>> 
+>> I did kernel build test, but not the test suite as you mentioned.
+>> 
+>> Would you mind sharing some steps on using the test suite? And which case you
+>> think would trigger the problem?
+>
+>cd tools/testing/radix-tree/; make; ./main
+>
+>The IDR tests are the ones which are going to trigger on this.
 
-Agreed.
+Thanks, I will give it a shot.
 
-> It is also worth pointing out that:
-> 
-> 	proc_mnt = kern_mount(proc_fs_type);
->         for_each_sysctl_cmdline() {
->         	...
-> 		file = file_open_root(proc_mnt->mnt_root, proc_mnt, sysctl_path, O_WRONLY, 0);
-> 		kernel_write(file, value, value_len);
->         }
->         kern_umount(proc_mnt);
-> 
-> Is not an unreasonable implementation.
-
-This:
-
-> There are problems with a persistent mount of proc in that it forces
-> userspace not to use any proc mount options.  But a temporary mount of
-> proc to deal with command line options is not at all unreasonable.
-> Plus it looks like we can have kern_write do all of the kernel/user
-> buffer silliness.
-
-Is a bit of tribal knowledge worth documenting for the approach taken
-forward. Vlastimil can you add a little comment mentioning some of this
-logic?
-
-  Luis
+-- 
+Wei Yang
+Help you, Help me
