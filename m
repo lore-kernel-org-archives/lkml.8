@@ -2,148 +2,107 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 886DBC43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 18:18:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8D3DC43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 18:21:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 62C60206F6
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 18:18:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8764D206F6
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 18:21:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727489AbgC3SST (ORCPT
+        id S1727874AbgC3SVQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 14:18:19 -0400
-Received: from mga17.intel.com ([192.55.52.151]:34687 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726017AbgC3SSS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 14:18:18 -0400
-IronPort-SDR: joF6WDlCLRRK9NNzG1tYDp8qMrSmjpLGCUu5W5KoD1INXh4inMqNZMBFcNe04hkUFBDPabmAQ+
- dsY6dtM4Yucg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Mar 2020 11:18:18 -0700
-IronPort-SDR: WmN/SopwCkB+jXOVQA/B2L9XXeMO6v9/7PwXugU1SMzx48q8SClGyKBFZH3pFWjHwYN3onQ0z5
- cr7q3nWvJP4w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,325,1580803200"; 
-   d="scan'208";a="267005886"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
-  by orsmga002.jf.intel.com with ESMTP; 30 Mar 2020 11:18:18 -0700
-Date:   Mon, 30 Mar 2020 11:18:17 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Xiaoyao Li <xiaoyao.li@intel.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        hpa@zytor.com, x86@kernel.org, linux-kernel@vger.kernel.org,
-        Paolo Bonzini <pbonzini@redhat.com>, luto@kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Tony Luck <tony.luck@intel.com>
-Subject: Re: [PATCH v7 2/2] x86/split_lock: Avoid runtime reads of the
- TEST_CTRL MSR
-Message-ID: <20200330181817.GH24988@linux.intel.com>
-References: <20200325030924.132881-1-xiaoyao.li@intel.com>
- <20200325030924.132881-3-xiaoyao.li@intel.com>
- <20200328163412.GJ8104@linux.intel.com>
- <e641c746-0dde-cfb8-ea23-45c011174b08@intel.com>
+        Mon, 30 Mar 2020 14:21:16 -0400
+Received: from mail-io1-f70.google.com ([209.85.166.70]:55602 "EHLO
+        mail-io1-f70.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726672AbgC3SVQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Mar 2020 14:21:16 -0400
+Received: by mail-io1-f70.google.com with SMTP id k5so16865165ioa.22
+        for <linux-kernel@vger.kernel.org>; Mon, 30 Mar 2020 11:21:15 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=mxdVwodbRk0ry9cYchDSp6TDUK7eyG3uOBp8XYyeWXQ=;
+        b=hVmsNNbiiCTIGhWh0P65BLz3pVc3jG0X87WO4dQv13GFTD3MZWdPwrYX4BKnoVXWO6
+         6ZlTA85JAH9G7oQNleCuOIetNzolisMMItWxCdZUF+Is/hlltIwUIwSCyNHU229399Ju
+         03lYlamGICIzQLT9Q9mzGG0JegXcT6xuwt+bcr1cjC9judvEY6bcxlfwvmcA+M6znLGs
+         n7xdoL9LX56rtFfiSNsK2cOC43zhmTfh0jBzrBUoJZC+eauNYYcKWKRTbDxkyRtuj5T8
+         Kjd5Ut0NTf4oO8eO1rEWhzdXg0Z2DAViRilmlIGe8idtUEckEgn2W6A9AqlFQwPMOL8e
+         R2KQ==
+X-Gm-Message-State: ANhLgQ0QO+gGFSP1/ol0a1B8TgybmXiUh/o07Zc+VSMKRiRXDmPEJTTp
+        Nhgrd31L46xz/kRLvA35wmfCQwVXabV+FvAalm6e/6rhP4Nz
+X-Google-Smtp-Source: ADFU+vsIuf/CRCbVNmWwvv47oJ3aX+xLSoAbjEEvYN1cOGPVqg4ocu5AJueeTvpVtrNksrrMv07+chcb+0xTt8sflyPG/O6cBYve
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <e641c746-0dde-cfb8-ea23-45c011174b08@intel.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Received: by 2002:a92:9f13:: with SMTP id u19mr12634271ili.111.1585592475153;
+ Mon, 30 Mar 2020 11:21:15 -0700 (PDT)
+Date:   Mon, 30 Mar 2020 11:21:15 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000003d7c1505a2168418@google.com>
+Subject: KASAN: stack-out-of-bounds Write in ath9k_hif_usb_rx_cb
+From:   syzbot <syzbot+d403396d4df67ad0bd5f@syzkaller.appspotmail.com>
+To:     andreyknvl@google.com, ath9k-devel@qca.qualcomm.com,
+        davem@davemloft.net, kvalo@codeaurora.org,
+        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Mar 29, 2020 at 05:13:23PM +0800, Xiaoyao Li wrote:
-> On 3/29/2020 12:34 AM, Sean Christopherson wrote:
-> >On Wed, Mar 25, 2020 at 11:09:24AM +0800, Xiaoyao Li wrote:
-> >>In a context switch from a task that is detecting split locks
-> >>to one that is not (or vice versa) we need to update the TEST_CTRL
-> >>MSR. Currently this is done with the common sequence:
-> >>	read the MSR
-> >>	flip the bit
-> >>	write the MSR
-> >>in order to avoid changing the value of any reserved bits in the MSR.
-> >>
-> >>Cache unused and reserved bits of TEST_CTRL MSR with SPLIT_LOCK_DETECT
-> >>bit cleared during initialization, so we can avoid an expensive RDMSR
-> >>instruction during context switch.
-> >>
-> >>Suggested-by: Sean Christopherson <sean.j.christopherson@intel.com>
-> >>Originally-by: Tony Luck <tony.luck@intel.com>
-> >>Signed-off-by: Xiaoyao Li <xiaoyao.li@intel.com>
-> >>---
-> >>  arch/x86/kernel/cpu/intel.c | 9 ++++-----
-> >>  1 file changed, 4 insertions(+), 5 deletions(-)
-> >>
-> >>diff --git a/arch/x86/kernel/cpu/intel.c b/arch/x86/kernel/cpu/intel.c
-> >>index deb5c42c2089..1f414578899c 100644
-> >>--- a/arch/x86/kernel/cpu/intel.c
-> >>+++ b/arch/x86/kernel/cpu/intel.c
-> >>@@ -45,6 +45,7 @@ enum split_lock_detect_state {
-> >>   * split lock detect, unless there is a command line override.
-> >>   */
-> >>  static enum split_lock_detect_state sld_state __ro_after_init = sld_off;
-> >>+static u64 msr_test_ctrl_cache __ro_after_init;
-> >
-> >What about using "msr_test_ctrl_base_value", or something along those lines?
-> >"cache" doesn't make it clear that SPLIT_LOCK_DETECT is guaranteed to be
-> >zero in this variable.
-> >
-> >>  /*
-> >>   * Processors which have self-snooping capability can handle conflicting
-> >>@@ -1037,6 +1038,8 @@ static void __init split_lock_setup(void)
-> >>  		break;
-> >>  	}
-> >>+	rdmsrl(MSR_TEST_CTRL, msr_test_ctrl_cache);
-> >
-> >If we're going to bother skipping the RDMSR if state=sld_off on the command
-> >line then it also makes sense to skip it if enabling fails, i.e. move this
-> >below split_lock_verify_msr(true).
-> 
-> OK.
-> 
-> Then, the sld bit is 1 for msr_test_ctrl_base_value. Do you think
-> "msr_test_ctrl_base_value" still make sense?
+Hello,
 
-Ah, I missed that (obviously).  An alternative (to keeping the rdmsr() where
-it is) would be to explicitly clear SLD in the base value after the rdmsr().
-That'd double as documentation of what is stored in msr_test_ctrl_base_value.
+syzbot found the following crash on:
 
-But, the location of rdmsr() is a nit, it can certainly stay where it is if
-someone else has a strong preference.
+HEAD commit:    0fa84af8 Merge tag 'usb-serial-5.7-rc1' of https://git.ker..
+git tree:       https://github.com/google/kasan.git usb-fuzzer
+console output: https://syzkaller.appspot.com/x/log.txt?x=159a0583e00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=a782c087b1f425c6
+dashboard link: https://syzkaller.appspot.com/bug?extid=d403396d4df67ad0bd5f
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=177a266de00000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1579f947e00000
 
-> or we keep the "else" branch in sld_update_msr() to not rely on the sld bit
-> in the base_value?
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+d403396d4df67ad0bd5f@syzkaller.appspotmail.com
 
-IMO it's better to have SLD=0 in the base value, regardless of how we make
-that happen.
+==================================================================
+BUG: KASAN: stack-out-of-bounds in ath9k_hif_usb_rx_stream drivers/net/wireless/ath/ath9k/hif_usb.c:626 [inline]
+BUG: KASAN: stack-out-of-bounds in ath9k_hif_usb_rx_cb+0xdf6/0xf70 drivers/net/wireless/ath/ath9k/hif_usb.c:666
+Write of size 8 at addr ffff8881db309a28 by task swapper/1/0
 
-> >>+
-> >>  	if (!split_lock_verify_msr(true)) {
-> >>  		pr_info("MSR access failed: Disabled\n");
-> >>  		return;
-> >>@@ -1053,14 +1056,10 @@ static void __init split_lock_setup(void)
-> >>   */
-> >>  static void sld_update_msr(bool on)
-> >>  {
-> >>-	u64 test_ctrl_val;
-> >>-
-> >>-	rdmsrl(MSR_TEST_CTRL, test_ctrl_val);
-> >>+	u64 test_ctrl_val = msr_test_ctrl_cache;
-> >>  	if (on)
-> >>  		test_ctrl_val |= MSR_TEST_CTRL_SPLIT_LOCK_DETECT;
-> >>-	else
-> >>-		test_ctrl_val &= ~MSR_TEST_CTRL_SPLIT_LOCK_DETECT;
-> >>  	wrmsrl(MSR_TEST_CTRL, test_ctrl_val);
-> >>  }
-> >>-- 
-> >>2.20.1
-> >>
-> 
+CPU: 1 PID: 0 Comm: swapper/1 Not tainted 5.6.0-rc7-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ <IRQ>
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0xef/0x16e lib/dump_stack.c:118
+ print_address_description.constprop.0.cold+0xd3/0x314 mm/kasan/report.c:374
+ __kasan_report.cold+0x37/0x77 mm/kasan/report.c:506
+ kasan_report+0xe/0x20 mm/kasan/common.c:641
+ ath9k_hif_usb_rx_stream drivers/net/wireless/ath/ath9k/hif_usb.c:626 [inline]
+ ath9k_hif_usb_rx_cb+0xdf6/0xf70 drivers/net/wireless/ath/ath9k/hif_usb.c:666
+ __usb_hcd_giveback_urb+0x1f2/0x470 drivers/usb/core/hcd.c:1648
+ usb_hcd_giveback_urb+0x368/0x420 drivers/usb/core/hcd.c:1713
+ dummy_timer+0x1258/0x32ae drivers/usb/gadget/udc/dummy_hcd.c:1966
+ call_timer_fn+0x195/0x6f0 kernel/time/timer.c:1404
+ expire_timers kernel/time/timer.c:1449 [inline]
+ __run_timers kernel/time/timer.c:1773 [inline]
+ __run_timers kernel/time/timer.c:1740 [inline]
+ run_timer_softirq+0x5f9/0x1500 kernel/time/timer.c:1786
+
+
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
