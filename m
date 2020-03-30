@@ -2,252 +2,156 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14FD3C2D0F0
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 22:35:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8FD8C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 22:37:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D594A20771
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 22:35:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585607740;
-	bh=PEdMdgM5NyNsov7qHA19DK0RlueRdGYngB2ksynv00E=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=vNVqgKqrGbQPWktTosTk6BQtrfqs/ndkQRalufxELjumX02ooPJg5m4qXl4yEWUNS
-	 PHb6ssSNvTOh7BTOIL+fh2fdi6o5SdhQjXzJv93SZtqA+rfZ6us5ocOB2FIHbazhqV
-	 Kb2vr4tfhvCc96Ix9vhwBPmuk4FS+j4gzGVh5qBQ=
+	by mail.kernel.org (Postfix) with ESMTP id A2E0420784
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 22:37:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SYt0aT//"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729973AbgC3Wfk (ORCPT
+        id S1729279AbgC3Wha (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 18:35:40 -0400
-Received: from mail-il1-f196.google.com ([209.85.166.196]:44289 "EHLO
-        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728876AbgC3Wfj (ORCPT
+        Mon, 30 Mar 2020 18:37:30 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:42867 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728876AbgC3Wha (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 18:35:39 -0400
-Received: by mail-il1-f196.google.com with SMTP id j69so17508805ila.11;
-        Mon, 30 Mar 2020 15:35:38 -0700 (PDT)
+        Mon, 30 Mar 2020 18:37:30 -0400
+Received: by mail-pl1-f195.google.com with SMTP id e1so7325643plt.9
+        for <linux-kernel@vger.kernel.org>; Mon, 30 Mar 2020 15:37:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=YkvMuoIYK/X5jlUXAbGp136wP0Q9T5tr7KcVd6q5dxI=;
+        b=SYt0aT//aArSMQ/UNzfekQzd0uvKBRqacpgJcWiAUN7HREbwlIsEVwcinfFwcBTEFA
+         /fI0lPz5LZkn8m9qzEqPVK4DtytYMrndVNcN37GQV3SnDVElPUpPs5kwj99gYr8rE9Uv
+         wK3jp5lDTiEip7wtN1BvRmYG6Q73TkRYHgW+nB3JW6Q2kiPaq6JlK8yucO6wsGc7weFr
+         5MWJgKScJEl7yYRkpxIJobghTWzpJXGHqf48Lz99CpLNLM+KXZXl71l3XgoCuW2JY6LR
+         NIvvbyxcFjKhs+ByXJnTOna1I58jRULZ9ldefpACM0lclCci8ybYTqNKiSoWA1od7QIz
+         Yt6g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=I5WWfs5YS24hDXKa/XtUGtXEdA3TZ6qAt3nvgnrU3Mg=;
-        b=S42bGyddtT81fV3FRyMo2TSfC5Y78Ypj604lGERU61HstFdouh0f5/buY2E59GD6DY
-         e48XK2+8t1Be/m3rwdt6vF1OajIYRSMH3NOYib/MXOJVc1JS4NzwyIYANbNmt9K/Mx7G
-         dZRHCPLJzZw+uL6R5/FhIjofze+JlN9ebDgdzNXEfKQVTHkK8WmAzg9iSI/o8cQRcko3
-         wwbL2/FttfTl0Dj+G3wCj9i6W7NsCdOdl2PfTrLfLtBO/NXo7oUoIBTrX5kePWoDf1cR
-         9rhX/nFMmSoBya3YuZ86HDCrJY1FCgd2Vr1lT8GlyoOvPUCxK7irPHtdjB4O2/AoqlN/
-         jUrw==
-X-Gm-Message-State: ANhLgQ2k0sN1IrrwpSMwOBgTxTDRLS0qYjAKjZ6jQMY2dxIy0m6duuAS
-        4z7iBxJyiDuxX6ek2jdsLA==
-X-Google-Smtp-Source: ADFU+vssbUqtDjk9LmSKnh6QyMy6yhoEjw71OJha0yhLNQZ1KYIfV2iGgJtR8LtRx2C40kLrzGDj9w==
-X-Received: by 2002:a92:5e55:: with SMTP id s82mr12453797ilb.62.1585607737767;
-        Mon, 30 Mar 2020 15:35:37 -0700 (PDT)
-Received: from rob-hp-laptop ([64.188.179.250])
-        by smtp.gmail.com with ESMTPSA id x15sm5321840ilg.29.2020.03.30.15.35.35
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=YkvMuoIYK/X5jlUXAbGp136wP0Q9T5tr7KcVd6q5dxI=;
+        b=lLy9yPO8Ni8SAdSX+Yx1WxsKmYCkA/KekUxHBI+GO8J1Vvc0CyuUPEPIq5gb28cV6D
+         25wmo7jH2kDQTU1gmh9K6llLwCKeqkbcilsQeZ8qXyO+FLCVg+fmWX3NVhrZM9MU4qAR
+         eSafEsKzOw+yzuWJQL838gisNfYvi8eOSIjFJn4ytgBewtroJ7cjpfUaKu1i01PJ4nVk
+         v6Ln4B+zxjlODpTD1ic/LYBRVF1oXIotz/W8I1m1+auIk1ccXQKRyq1gt4D8EwKNCZgg
+         IVZIXwQfENGK5MnYeeUmJd6FI8GVC8k5fbD8m5pRZISypwqw8+J2ux4VlhQ3J4y079+b
+         TRcg==
+X-Gm-Message-State: AGi0PuYfBgHwJpe88gJzaG+6Aq9nBL47+AJ8gm4VdS4Rh4Y045NSPskm
+        aY3d9t7aC6oE+bozYmP2u58=
+X-Google-Smtp-Source: APiQypLTlPYdWDWjEIMfZYMepqLmhFkJU0jHbxBovrLGm8To7rOQU5pfUL3kI8E6NbE7pHdgLaTOjQ==
+X-Received: by 2002:a17:90a:240f:: with SMTP id h15mr385069pje.176.1585607848766;
+        Mon, 30 Mar 2020 15:37:28 -0700 (PDT)
+Received: from OptiPlexFedora.fios-router.home ([47.144.161.84])
+        by smtp.gmail.com with ESMTPSA id m14sm474522pje.19.2020.03.30.15.37.27
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Mar 2020 15:35:37 -0700 (PDT)
-Received: (nullmailer pid 18867 invoked by uid 1000);
-        Mon, 30 Mar 2020 22:35:35 -0000
-Date:   Mon, 30 Mar 2020 16:35:35 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Michael Walle <michael@walle.cc>
-Cc:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
-        linux-pwm@vger.kernel.org, linux-watchdog@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Lee Jones <lee.jones@linaro.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>
-Subject: Re: [PATCH 04/18] dt-bindings: mfd: Add bindings for sl28cpld
-Message-ID: <20200330223535.GA31402@bogus>
-References: <20200317205017.28280-1-michael@walle.cc>
- <20200317205017.28280-5-michael@walle.cc>
+        Mon, 30 Mar 2020 15:37:28 -0700 (PDT)
+From:   "John B. Wyatt IV" <jbwyatt4@gmail.com>
+To:     outreachy-kernel@googlegroups.com,
+        Julia Lawall <julia.lawall@inria.fr>,
+        Stefano Brivio <sbrivio@redhat.com>,
+        Forest Bond <forest@alittletooquiet.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Quentin Deslandes <quentin.deslandes@itdev.co.uk>,
+        Colin Ian King <colin.king@canonical.com>,
+        Malcolm Priestley <tvboxspy@gmail.com>,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
+Cc:     "John B. Wyatt IV" <jbwyatt4@gmail.com>
+Subject: [PATCH v7] staging: vt6656: add error code handling to unused variable
+Date:   Mon, 30 Mar 2020 15:37:18 -0700
+Message-Id: <20200330223718.33885-1-jbwyatt4@gmail.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200317205017.28280-5-michael@walle.cc>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 17, 2020 at 09:50:03PM +0100, Michael Walle wrote:
-> This adds device tree bindings for the board management controller found
-> on the Kontron SMARC-sAL28 board.
-> 
-> Signed-off-by: Michael Walle <michael@walle.cc>
-> ---
->  .../bindings/mfd/kontron,sl28cpld.yaml        | 143 ++++++++++++++++++
->  1 file changed, 143 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mfd/kontron,sl28cpld.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/mfd/kontron,sl28cpld.yaml b/Documentation/devicetree/bindings/mfd/kontron,sl28cpld.yaml
-> new file mode 100644
-> index 000000000000..3b9cca49d2d6
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mfd/kontron,sl28cpld.yaml
-> @@ -0,0 +1,143 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/mfd/kontron,sl28cpld.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Kontron's sl28cpld board management controller
-> +
-> +maintainers:
-> +  - Michael Walle <michael@walle.cc>
-> +
-> +description: |
-> +  The board management controller may contain different IP blocks like
-> +  watchdog, fan monitoring, PWM controller, interrupt controller and a
-> +  GPIO controller.
-> +
-> +properties:
-> +  compatible:
-> +    const: kontron,sl28cpld
-> +
-> +  reg:
-> +    description:
-> +      I2C device address.
-> +    maxItems: 1
-> +
-> +  "#address-cells":
-> +    const: 1
-> +
-> +  "#size-cells":
-> +    const: 0
-> +
-> +  "#interrupt-cells":
-> +    const: 2
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +  interrupt-controller: true
-> +
-> +patternProperties:
-> +  "^gp(io|i|o)(@[0-9]+)?$":
+Add error code handling to unused 'ret' variable that was never used.
+Return an error code from functions called within vnt_radio_power_on.
 
-Just 'gpio'. We don't need that level of distinguishing in node names.
+Issue reported by coccinelle (coccicheck).
 
-> +    $ref: ../gpio/kontron,sl28cpld-gpio.yaml
-> +
-> +  "^hwmon(@[0-9]+)?$":
-> +    $ref: ../hwmon/kontron,sl28cpld-hwmon.yaml
-> +
-> +  "^pwm(@[0-9]+)?$":
-> +    $ref: ../pwm/kontron,sl28cpld-pwm.yaml
-> +
-> +  "^watchdog(@[0-9]+)?$":
-> +    $ref: ../watchdog/kontron,sl28cpld-wdt.yaml
+Suggested-by: Quentin Deslandes <quentin.deslandes@itdev.co.uk>
+Suggested-by: Stefano Brivio <sbrivio@redhat.com>
+Reviewed-by: Quentin Deslandes <quentin.deslandes@itdev.co.uk>
+Signed-off-by: John B. Wyatt IV <jbwyatt4@gmail.com>
+---
+v7: Move an if check.
+    Suggested by Stefano Brivio <sbrivio@redhat.com>
 
-The patches for these files need to come first or validating this file 
-fails. Really, you can just make all five files 1 patch.
+v6: Forgot to add all the v5 code to commit.
 
-> +
-> +required:
-> +  - "#address-cells"
-> +  - "#size-cells"
-> +  - compatible
-> +  - reg
-> +  - "#interrupt-cells"
-> +  - interrupt-controller
-> +
-> +oneOf:
-> +  - required:
-> +    - interrupts
-> +  - required:
-> +    - interrupts-extended
+v5: Remove Suggested-by: Julia Lawall above seperator line.
+    Remove break; statement in switch block.
+    break; removal checked by both gcc compile and checkpatch.
+    Suggested by Stefano Brivio <sbrivio@redhat.com>
 
-Don't need to do this. Just make 'interrupts' required and you'll get 
-interrupts-extended for free.
+v4: Move Suggested-by: Julia Lawall above seperator line.
+    Add Reviewed-by tag as requested by Quentin Deslandes.
 
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/interrupt-controller/irq.h>
-> +    i2c {
-> +        #address-cells = <1>;
-> +        #size-cells = <0>;
-> +
-> +        sl28cpld@4a {
-> +            #address-cells = <1>;
-> +            #size-cells = <0>;
-> +            compatible = "kontron,sl28cpld";
-> +            reg = <0x4a>;
-> +            interrupts-extended = <&gpio2 6 IRQ_TYPE_EDGE_FALLING>;
-> +
-> +            #interrupt-cells = <2>;
-> +            interrupt-controller;
-> +
-> +            gpio@0 {
-> +                compatible = "kontron,sl28cpld-gpio";
-> +                reg = <0>;
-> +
-> +                gpio-controller;
-> +                #gpio-cells = <2>;
-> +
-> +                interrupt-controller;
-> +                #interrupt-cells = <2>;
-> +            };
-> +
-> +            gpio@1 {
-> +                compatible = "kontron,sl28cpld-gpio";
-> +                reg = <1>;
-> +
-> +                gpio-controller;
-> +                #gpio-cells = <2>;
-> +
-> +                interrupt-controller;
-> +                #interrupt-cells = <2>;
-> +            };
-> +
-> +            gpo {
-> +                compatible = "kontron,sl28cpld-gpo";
-> +
-> +                gpio-controller;
-> +                #gpio-cells = <2>;
-> +                gpio-line-names = "a", "b", "c";
-> +            };
-> +
-> +            gpi {
-> +                compatible = "kontron,sl28cpld-gpi";
-> +
-> +                gpio-controller;
-> +                #gpio-cells = <2>;
-> +            };
-> +
-> +            hwmon {
-> +                compatible = "kontron,sl28cpld-fan";
-> +            };
-> +
-> +            pwm@0 {
+v3: Forgot to add v2 code changes to commit.
 
-You already used the '0' address. You can't have 2 things at the 
-same address. There's only one number space at a given level. 
+v2: Replace goto statements with return.
+    Remove last if check because it was unneeded.
+    Suggested-by: Julia Lawall <julia.lawall@inria.fr>
 
-All these child devices don't have any DT resources, so you don't really 
-need them. The parent node could be a gpio and pwm provider and that's 
-all you need in DT. Aside from DT resources, the only other reason 
-to have all these child nodes are if the child blocks are going to get 
-assembled in different combinations across a variety of h/w.
+ drivers/staging/vt6656/card.c | 20 ++++++++++++--------
+ 1 file changed, 12 insertions(+), 8 deletions(-)
 
-Rob
+diff --git a/drivers/staging/vt6656/card.c b/drivers/staging/vt6656/card.c
+index dc3ab10eb630..df12c73097e0 100644
+--- a/drivers/staging/vt6656/card.c
++++ b/drivers/staging/vt6656/card.c
+@@ -723,9 +723,13 @@ int vnt_radio_power_on(struct vnt_private *priv)
+ {
+ 	int ret = 0;
+ 
+-	vnt_exit_deep_sleep(priv);
++	ret = vnt_exit_deep_sleep(priv);
++	if (ret)
++		return ret;
+ 
+-	vnt_mac_reg_bits_on(priv, MAC_REG_HOSTCR, HOSTCR_RXON);
++	ret = vnt_mac_reg_bits_on(priv, MAC_REG_HOSTCR, HOSTCR_RXON);
++	if (ret)
++		return ret;
+ 
+ 	switch (priv->rf_type) {
+ 	case RF_AL2230:
+@@ -734,14 +738,14 @@ int vnt_radio_power_on(struct vnt_private *priv)
+ 	case RF_VT3226:
+ 	case RF_VT3226D0:
+ 	case RF_VT3342A0:
+-		vnt_mac_reg_bits_on(priv, MAC_REG_SOFTPWRCTL,
+-				    (SOFTPWRCTL_SWPE2 | SOFTPWRCTL_SWPE3));
+-		break;
++		ret = vnt_mac_reg_bits_on(priv, MAC_REG_SOFTPWRCTL,
++					  (SOFTPWRCTL_SWPE2 | 
++					  SOFTPWRCTL_SWPE3));
++		if (ret)
++			return ret;
+ 	}
+ 
+-	vnt_mac_reg_bits_off(priv, MAC_REG_GPIOCTL1, GPIO3_INTMD);
+-
+-	return ret;
++	return vnt_mac_reg_bits_off(priv, MAC_REG_GPIOCTL1, GPIO3_INTMD);
+ }
+ 
+ void vnt_set_bss_mode(struct vnt_private *priv)
+-- 
+2.25.1
+
