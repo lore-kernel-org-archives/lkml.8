@@ -2,159 +2,121 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66B20C43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 16:02:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27372C2D0EE
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 16:03:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 40D142072E
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 16:02:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F2DEC20732
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 16:03:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585584189;
+	bh=lj6lk2Y9Wilw3U7preSl4MIXWR616TrbL/l1zLZqeRU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=gq09lz0KVg3CJ9krvY5/H1fKZPzLURy7k8LFAewXC+dTIqvHKoKXJ0YA5pSOnkYiM
+	 BRWz6LXckzHzFs9yBB1rRDGf/LYhRCuz+wpI9wZYRE8pSCoreV6WjvJKbgkU7xWz9U
+	 FzvysWwrJQ7vCfeH36QUOHbrej4bMHCvXmHvCU5w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729888AbgC3QCw convert rfc822-to-8bit (ORCPT
+        id S1729913AbgC3QDI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 12:02:52 -0400
-Received: from mga09.intel.com ([134.134.136.24]:49726 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727048AbgC3QCv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 12:02:51 -0400
-IronPort-SDR: FLdgugvh9pbk+z2JQbAPOHApnKn6vta7p/Fm3O/QZGkiE1Vyzp7RguyqN3uH5RTSw3ydEwq3oR
- GeskY5hYifHQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Mar 2020 09:01:59 -0700
-IronPort-SDR: Iau7ZpXWb62eiptV3lla/8YfmL6EwRsjJ7yHpysCOjjkyrTCUc9IOrfo9HZTMmp3d1y2TuDMx6
- d3a3GBNT+pUA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,324,1580803200"; 
-   d="scan'208";a="421972149"
-Received: from jacob-builder.jf.intel.com (HELO jacob-builder) ([10.7.199.155])
-  by orsmga005.jf.intel.com with ESMTP; 30 Mar 2020 09:01:59 -0700
-Date:   Mon, 30 Mar 2020 09:07:46 -0700
-From:   Jacob Pan <jacob.jun.pan@linux.intel.com>
-To:     "Tian, Kevin" <kevin.tian@intel.com>
-Cc:     Christoph Hellwig <hch@infradead.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Jean-Philippe Brucker <jean-philippe@linaro.com>,
-        "Raj, Ashok" <ashok.raj@intel.com>, jacob.jun.pan@linux.intel.com
-Subject: Re: [PATCH v2 1/3] iommu/uapi: Define uapi version and capabilities
-Message-ID: <20200330090746.23c5599c@jacob-builder>
-In-Reply-To: <AADFC41AFE54684AB9EE6CBC0274A5D19D7FE150@SHSMSX104.ccr.corp.intel.com>
-References: <1585178227-17061-1-git-send-email-jacob.jun.pan@linux.intel.com>
-        <1585178227-17061-2-git-send-email-jacob.jun.pan@linux.intel.com>
-        <20200326092316.GA31648@infradead.org>
-        <20200326094442.5be042ce@jacob-builder>
-        <AADFC41AFE54684AB9EE6CBC0274A5D19D7ECB45@SHSMSX104.ccr.corp.intel.com>
-        <20200327074702.GA27959@infradead.org>
-        <20200327165335.397f24a3@jacob-builder>
-        <AADFC41AFE54684AB9EE6CBC0274A5D19D7FE150@SHSMSX104.ccr.corp.intel.com>
-Organization: OTC
-X-Mailer: Claws Mail 3.13.2 (GTK+ 2.24.30; x86_64-pc-linux-gnu)
+        Mon, 30 Mar 2020 12:03:08 -0400
+Received: from mail-il1-f193.google.com ([209.85.166.193]:33530 "EHLO
+        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727048AbgC3QDH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Mar 2020 12:03:07 -0400
+Received: by mail-il1-f193.google.com with SMTP id k29so16303272ilg.0;
+        Mon, 30 Mar 2020 09:03:06 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=kZgYXQbJLj89O4ta8azIBTnlwIyHbrjAjhucjQsGXzg=;
+        b=CW4VJ0idMCYzjf62SQDyAQS/eEAnjC1kEdGz2YQkxxPfox9v+F35zixPk9l2BjFI+L
+         +FF2772DsRLk1h9LAf63bldXL7m9BjvKXFpJjc3qLXQy5hWuQF49EgBUH2iEfO1LuLyb
+         53UjY3RK9hjPx6pv6aedhvm5rZuVuEASC1imsEWD/r/RWVQODA/Xv4DptgSljyIYYh6n
+         aBhz8cvJp23to/ymEAyyZL3Zg67Nf3sqKmF7kgvA0pAIXyzC69RGlX/r0savKaMGDaDf
+         AcxVqov3wJlQKbJwyYk2BbvaMQV2VfOsi2wzve4DzPCkb/vjGcspghNQLhfKFTwrWNih
+         DWfg==
+X-Gm-Message-State: ANhLgQ2esMaUEA2MOIalWhk+U4Mf43sLBUYjgPpBNFnM/RqIDlB6UDfc
+        v3y6JYP5ruvUJqgO6eDcHA==
+X-Google-Smtp-Source: ADFU+vtt+io7ja0ZorBm8+7HKHTZRk2B4475TcYlAmG8/96ZwgpGsVKBksJefrlilE/q9BHX71F3wA==
+X-Received: by 2002:a92:3ac4:: with SMTP id i65mr11307095ilf.247.1585584186563;
+        Mon, 30 Mar 2020 09:03:06 -0700 (PDT)
+Received: from rob-hp-laptop ([64.188.179.250])
+        by smtp.gmail.com with ESMTPSA id h29sm4989538ili.19.2020.03.30.09.03.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 30 Mar 2020 09:03:05 -0700 (PDT)
+Received: (nullmailer pid 26424 invoked by uid 1000);
+        Mon, 30 Mar 2020 16:03:04 -0000
+Date:   Mon, 30 Mar 2020 10:03:04 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Tim Harvey <tharvey@gateworks.com>
+Cc:     Lee Jones <lee.jones@linaro.org>, Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        linux-hwmon@vger.kernel.org, Frank Rowand <frowand.list@gmail.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Robert Jones <rjones@gateworks.com>
+Subject: Re: [PATCH v8 1/3] dt-bindings: mfd: Add Gateworks System Controller
+ bindings
+Message-ID: <20200330160304.GA24832@bogus>
+References: <1585341214-25285-1-git-send-email-tharvey@gateworks.com>
+ <1585341214-25285-2-git-send-email-tharvey@gateworks.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1585341214-25285-2-git-send-email-tharvey@gateworks.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 30 Mar 2020 05:40:40 +0000
-"Tian, Kevin" <kevin.tian@intel.com> wrote:
-
-> > From: Jacob Pan <jacob.jun.pan@linux.intel.com>
-> > Sent: Saturday, March 28, 2020 7:54 AM
-> > 
-> > On Fri, 27 Mar 2020 00:47:02 -0700
-> > Christoph Hellwig <hch@infradead.org> wrote:
-> >   
-> > > On Fri, Mar 27, 2020 at 02:49:55AM +0000, Tian, Kevin wrote:  
-> > > > If those API calls are inter-dependent for composing a feature
-> > > > (e.g. SVA), shouldn't we need a way to check them together
-> > > > before exposing the feature to the guest, e.g. through a
-> > > > iommu_get_uapi_capabilities interface?  
-> > >
-> > > Yes, that makes sense.  The important bit is to have a capability
-> > > flags and not version numbers.  
-> > 
-> > The challenge is that there are two consumers in the kernel for
-> > this. 1. VFIO only look for compatibility, and size of each data
-> > struct such that it can copy_from_user.
-> > 
-> > 2. IOMMU driver, the "real consumer" of the content.
-> > 
-> > For 2, I agree and we do plan to use the capability flags to check
-> > content and maintain backward compatibility etc.
-> > 
-> > For VFIO, it is difficult to do size look up based on capability
-> > flags. 
+On Fri, Mar 27, 2020 at 01:33:32PM -0700, Tim Harvey wrote:
+> This patch adds documentation of device-tree bindings for the
+> Gateworks System Controller (GSC).
 > 
-> Can you elaborate the difficulty in VFIO? if, as Christoph Hellwig
-> pointed out, version number is already avoided everywhere, it is 
-> interesting to know whether this work becomes a real exception
-> or just requires a different mindset.
+> Signed-off-by: Tim Harvey <tharvey@gateworks.com>
+> ---
+> v8:
+>  - add register to fan-controller node name
 > 
-From VFIO p.o.v. the IOMMU UAPI data is opaque, it only needs to do two
-things:
-1. is the UAPI compatible?
-2. what is the size to copy?
-
-If you look at the version number, this is really a "version as size"
-lookup, as provided by the helper function in this patch. An example
-can be the newly introduced clone3 syscall.
-https://lwn.net/Articles/792628/
-In clone3, new version must have new size. The slight difference here
-is that, unlike clone3, we have multiple data structures instead of a
-single struct clone_args {}. And each struct has flags to enumerate its
-contents besides size.
-
-Besides breaching data abstraction, if VFIO has to check IOMMU flags to
-determine the sizes, it has many combinations.
-
-We also separate the responsibilities into two parts
-1. compatibility - version, size by VFIO
-2. sanity check - capability flags - by IOMMU
-
-I think the latter matches what Christoph's comments. So we are in
-agreement at the IOMMU level :)
-
-For example:
-During guest PASID bind, IOMMU driver operates on the data passed from
-VFIO and check format & flags to take different code path.
-
-#define IOMMU_PASID_FORMAT_INTEL_VTD	1
-	__u32 format;
-#define IOMMU_SVA_GPASID_VAL	(1 << 0) /* guest PASID valid */
-	__u64 flags;
-
-Jacob
-
-> btw the most relevant discussion which I can find out now is here:
-> 	https://lkml.org/lkml/2020/2/3/1126
+> v7:
+>  - change divider from mili-ohms to ohms
+>  - add constraints for voltage divider and offset
+>  - remove unnecessary ref for offset
+>  - renamed fan to fan-controller and changed base prop to reg
 > 
-> It mentioned 3 options for handling extension:
-> --
-> 1. Disallow adding new members to each structure other than reuse
-> padding bits or adding union members at the end.
-> 2. Allow extension of the structures beyond union, but union size has
-> to be fixed with reserved spaces
-> 3. Adopt VFIO argsz scheme, I don't think we need version for each
-> struct anymore. argsz implies the version that user is using assuming
-> UAPI data is extension only.
-> --
+> v6:
+>  - fix typo
+>  - drop invalid description from #interrupt-cells property
+>  - fix adc pattern property
+>  - add unit suffix
+>  - replace hwmon/adc with adc/channel
+>  - changed adc type to mode and enum int
+>  - add unit suffix and drop ref for voltage-divider
+>  - moved fan to its own subnode with base register
 > 
-> the first two are both version-based. Looks most guys agreed with 
-> option-1 (in this v2), but Alex didn't give his opinion at the
-> moment. The last response from him was the raise of option-3 using
-> argsz to avoid version. So, we also need hear from him. Alex?
+> v5:
+>  - resolve dt_binding_check issues
 > 
-> Thanks
-> Kevin
+> v4:
+>  - move to using pwm<n>_auto_point<m>_{pwm,temp} for FAN PWM
+>  - remove unncessary resolution/scaling properties for ADCs
+>  - update to yaml
+>  - remove watchdog
+> 
+> v3:
+>  - replaced _ with -
+>  - remove input bindings
+>  - added full description of hwmon
+>  - fix unit address of hwmon child nodes
+> ---
+>  .../devicetree/bindings/mfd/gateworks-gsc.yaml     | 194 +++++++++++++++++++++
+>  1 file changed, 194 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mfd/gateworks-gsc.yaml
 
-[Jacob Pan]
+Reviewed-by: Rob Herring <robh@kernel.org>
