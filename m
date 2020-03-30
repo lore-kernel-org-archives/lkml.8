@@ -2,142 +2,112 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F0ABC43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 14:13:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D054AC43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 14:13:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A88220936
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 14:13:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9790020780
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 14:13:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AOw82Tde"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728696AbgC3ONi (ORCPT
+        id S1728793AbgC3ONx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 10:13:38 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:16614 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727067AbgC3ONh (ORCPT
+        Mon, 30 Mar 2020 10:13:53 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:38071 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725268AbgC3ONx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 10:13:37 -0400
-Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02UE4IwJ079953;
-        Mon, 30 Mar 2020 10:12:55 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 30206x6s9y-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 30 Mar 2020 10:12:55 -0400
-Received: from m0098416.ppops.net (m0098416.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 02UE4Ydj081736;
-        Mon, 30 Mar 2020 10:12:55 -0400
-Received: from ppma03dal.us.ibm.com (b.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.11])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 30206x6s9f-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 30 Mar 2020 10:12:54 -0400
-Received: from pps.filterd (ppma03dal.us.ibm.com [127.0.0.1])
-        by ppma03dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 02UEAJcc024595;
-        Mon, 30 Mar 2020 14:12:54 GMT
-Received: from b01cxnp22035.gho.pok.ibm.com (b01cxnp22035.gho.pok.ibm.com [9.57.198.25])
-        by ppma03dal.us.ibm.com with ESMTP id 301x775jdt-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 30 Mar 2020 14:12:54 +0000
-Received: from b01ledav004.gho.pok.ibm.com (b01ledav004.gho.pok.ibm.com [9.57.199.109])
-        by b01cxnp22035.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 02UECr3v10355162
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 30 Mar 2020 14:12:53 GMT
-Received: from b01ledav004.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id F208311206D;
-        Mon, 30 Mar 2020 14:12:52 +0000 (GMT)
-Received: from b01ledav004.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 230E7112065;
-        Mon, 30 Mar 2020 14:12:50 +0000 (GMT)
-Received: from LeoBras (unknown [9.85.228.254])
-        by b01ledav004.gho.pok.ibm.com (Postfix) with ESMTP;
-        Mon, 30 Mar 2020 14:12:49 +0000 (GMT)
-Message-ID: <d52b7462dfa5189a9e7590d6db88bc22b8c2ac5d.camel@linux.ibm.com>
-Subject: Re: [PATCH 1/1] ppc/crash: Skip spinlocks during crash
-From:   Leonardo Bras <leonardo@linux.ibm.com>
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Christophe Leroy <christophe.leroy@c-s.fr>
-Cc:     Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Enrico Weigelt <info@metux.net>,
-        Allison Randal <allison@lohutok.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Date:   Mon, 30 Mar 2020 11:12:45 -0300
-In-Reply-To: <20200330110231.GG20696@hirez.programming.kicks-ass.net>
-References: <20200326222836.501404-1-leonardo@linux.ibm.com>
-         <af505ef0-e0df-e0aa-bb83-3ed99841f151@c-s.fr>
-         <20200330110231.GG20696@hirez.programming.kicks-ass.net>
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-gVsIBY7sA3uStdFMltv4"
-User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
+        Mon, 30 Mar 2020 10:13:53 -0400
+Received: by mail-wm1-f66.google.com with SMTP id f6so15494753wmj.3;
+        Mon, 30 Mar 2020 07:13:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:reply-to:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=5Hbf8AcBWNvIVZvkXi6B/8j12b7TidXxp6n59nlnGdM=;
+        b=AOw82TdefsS+gSClhWq2M6hN8dIO1s76IOgfnv17X+Juwb/TnBmJVuz+L7ooKIW0Cr
+         Lg1m2LL5mPV8zLaw6Ld7wSGaCCA8H9wCS8iFxj6eyvrkQpN87an78utIEH8OdKGSynxL
+         cRZ+or3lXVBUqs8qVkSJzP4bP+fbt19xorOaDx+04l1tGfDe84mE2edahjR5/JQJZeLg
+         /20GkraiWL5EN66Y29+zxCzXmAeZABDbWEZOO+4q/x359fQ6Prt+va3KCrokmfY7zKFw
+         IX6nyBQdit/K9PRQBGYJT8ASsYK+U8OdKKQ+jULhbgTWFQWlN8GDQDQjNb2BTkQkWWDy
+         yahA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:reply-to
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=5Hbf8AcBWNvIVZvkXi6B/8j12b7TidXxp6n59nlnGdM=;
+        b=Qtf1zdmpjp3R2sjmjIbdaBdjM+iitf8vkGHNbKdB7Bx/Tr4HGF1VKIsyvKSyyRTZFC
+         DNrSvj7qiDPR1hleX0Y6JtHCjRc4aTOJ2W/vjE7pKJ1Tb2icvbBmHkUYF+gXLx2HGyWb
+         81px0M24fU5u2GmYuvCVmOsK/gmZ09m9ywc64D9rG5UT4oNmrNfjvI3qLMyS8Rit+vKR
+         SzglzcI0hEFFJ8nqgb6GiNGtgCSRzSmdkKZvNm/jDtK/t6mgzN6qFJPbJlnNHeTCM+Qd
+         t3zHIsGPw1qNMeASPtplfcwVWcrTuhLRJyI8EM8jbv/GLmtDtxnmW4NvXC54qp4OHmsp
+         A7jg==
+X-Gm-Message-State: ANhLgQ1ANZauw6Z9T5NDHNaYgFq5nk46euaWTsVv2RVu6Qq1biQhtjia
+        7V8IBeOylAsECx1I1IB66L0=
+X-Google-Smtp-Source: ADFU+vvbTr6f3hrlk0HhRaWr+E9iQ3xeSvlJwLgjKi0OF2Ag8DZTl+wPokNIXvp3UyeNYmIvn1HiUg==
+X-Received: by 2002:a1c:c257:: with SMTP id s84mr13119722wmf.0.1585577631355;
+        Mon, 30 Mar 2020 07:13:51 -0700 (PDT)
+Received: from localhost ([185.92.221.13])
+        by smtp.gmail.com with ESMTPSA id s131sm21432819wmf.35.2020.03.30.07.13.50
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 30 Mar 2020 07:13:50 -0700 (PDT)
+Date:   Mon, 30 Mar 2020 14:13:50 +0000
+From:   Wei Yang <richard.weiyang@gmail.com>
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     Wei Yang <richard.weiyang@gmail.com>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 6/9] XArray: internal node is a xa_node when it is bigger
+ than XA_ZERO_ENTRY
+Message-ID: <20200330141350.ey77odenrbvixotb@master>
+Reply-To: Wei Yang <richard.weiyang@gmail.com>
+References: <20200330123643.17120-1-richard.weiyang@gmail.com>
+ <20200330123643.17120-7-richard.weiyang@gmail.com>
+ <20200330125006.GZ22483@bombadil.infradead.org>
+ <20200330134519.ykdtqwqxjazqy3jm@master>
+ <20200330134903.GB22483@bombadil.infradead.org>
 MIME-Version: 1.0
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.645
- definitions=2020-03-30_01:2020-03-27,2020-03-30 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 malwarescore=0
- spamscore=0 lowpriorityscore=0 adultscore=0 mlxlogscore=919 suspectscore=0
- bulkscore=0 phishscore=0 priorityscore=1501 mlxscore=0 impostorscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2003300129
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200330134903.GB22483@bombadil.infradead.org>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Mar 30, 2020 at 06:49:03AM -0700, Matthew Wilcox wrote:
+>On Mon, Mar 30, 2020 at 01:45:19PM +0000, Wei Yang wrote:
+>> On Mon, Mar 30, 2020 at 05:50:06AM -0700, Matthew Wilcox wrote:
+>> >On Mon, Mar 30, 2020 at 12:36:40PM +0000, Wei Yang wrote:
+>> >> As the comment mentioned, we reserved several ranges of internal node
+>> >> for tree maintenance, 0-62, 256, 257. This means a node bigger than
+>> >> XA_ZERO_ENTRY is a normal node.
+>> >> 
+>> >> The checked on XA_ZERO_ENTRY seems to be more meaningful.
+>> >
+>> >257-1023 are also reserved, they just aren't used yet.  XA_ZERO_ENTRY
+>> >is not guaranteed to be the largest reserved entry.
+>> 
+>> Then why we choose 4096?
+>
+>Because 4096 is the smallest page size supported by Linux, so we're
+>guaranteed that anything less than 4096 is not a valid pointer.
 
---=-gVsIBY7sA3uStdFMltv4
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+I found this in xarray.rst:
 
-Hello Peter,=20
+  Normal pointers may be stored in the XArray directly.  They must be 4-byte
+  aligned, which is true for any pointer returned from kmalloc() and
+  alloc_page().  It isn't true for arbitrary user-space pointers,
+  nor for function pointers.  You can store pointers to statically allocated
+  objects, as long as those objects have an alignment of at least 4.
 
-On Mon, 2020-03-30 at 13:02 +0200, Peter Zijlstra wrote:
->  		do {
-> > > +			if (unlikely(crash_skip_spinlock))
-> > > +				return;
-> >=20
-> > You are adding a test that reads a global var in the middle of a so hot=
- path
-> > ? That must kill performance. Can we do different ?
->=20
-> This; adding code to a super hot patch like this for an exceptional case
-> like the crash handling seems like a very very bad trade to me.
->=20
-> One possible solution is to simply write 0 to the affected spinlocks
-> after sending the NMI IPI thing, no?
+So the document here is not correct?
 
-Yes, I agree.
-I suggested this on a comment in v2 of this patch:
-http://patchwork.ozlabs.org/patch/1262468/
-
-
-
---=-gVsIBY7sA3uStdFMltv4
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEMdeUgIzgjf6YmUyOlQYWtz9SttQFAl6B/l0ACgkQlQYWtz9S
-ttQs2BAAuPr6rhedYYK9wDBKiEL6Z8aiIdSNv5Mi9FlB5LweF6mXP7Qls401eJZh
-urSWei6iSGS590yGTdBlSYbhp1jF/oDwW3DR/RRkqGoMFAGNg1FOW8NeXBWUMcp3
-GNpP4CJC6ZSd3L/rfo6mVDxO/k27I1XpbHOtfcvY+VnDpkWRAcDSsyUvyWSHg1kA
-TH8vjxKg4hW48qsffbui6+UIkekPuOyrwU/TjCLl9WRZf7i26tQnVoiBh66NvdQQ
-njq+NFvRe35sgcNvzAQUW+Aaz26GUElUuHSe49TCapUc4YDPsei3PXr6kIYlihEl
-tI6pTEenQmzdj9vKlLnv5s8Mxq14xJL/qbB+r2z6KRJ0t7GR4+xNAU1paFBFtwun
-WNHr0M8rOjZNr1RBKWfZWy3PYO7E3K4oyB8HG0KoTGPVeCoN+tjrAWmenrNnsVDG
-awvK+3DRnXsds/bspm26YgxMxYfhLnl44lfWSYA5UfW6RqpiyotwbHURG+xug6yQ
-A7YV+2ZPCyMwdLH4ZVSrFekJ5G7iyYcihscW1fSvUVi9U7nVvtFNxkD8tkAuDWuH
-Tva7JR98/rTsg5fT78eq3JUKxwDHVqj11nYrkOHK815nTeVaAxGUWFd0IWcJ7X3x
-sEM1aiLEB4jOoEZRPMYNjAZhZlDCJQRPbNn4gIcOZDP1SFA4kWw=
-=6xHm
------END PGP SIGNATURE-----
-
---=-gVsIBY7sA3uStdFMltv4--
-
+-- 
+Wei Yang
+Help you, Help me
