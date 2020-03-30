@@ -6,35 +6,35 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D4CBC2D0E9
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 09:00:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 344E0C2D0EB
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 09:00:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 27729206CC
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 09:00:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B33D20658
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 09:00:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729926AbgC3JAH (ORCPT
+        id S1729818AbgC3JA0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 05:00:07 -0400
-Received: from mail.loongson.cn ([114.242.206.163]:33632 "EHLO loongson.cn"
+        Mon, 30 Mar 2020 05:00:26 -0400
+Received: from mail.loongson.cn ([114.242.206.163]:33744 "EHLO loongson.cn"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729543AbgC3JAG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 05:00:06 -0400
+        id S1729768AbgC3JAZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Mar 2020 05:00:25 -0400
 Received: from kvm-dev1.localdomain (unknown [10.2.5.134])
-        by mail.loongson.cn (Coremail) with SMTP id AQAAf9Dxv2sRtYFegZkhAA--.13S2;
-        Mon, 30 Mar 2020 17:00:01 +0800 (CST)
+        by mail.loongson.cn (Coremail) with SMTP id AQAAf9DxL94etYFe_JkhAA--.20S2;
+        Mon, 30 Mar 2020 17:00:14 +0800 (CST)
 From:   bibo mao <maobibo@loongson.cn>
 To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
         Jiaxun Yang <jiaxun.yang@flygoat.com>,
         Huacai Chen <chenhc@lemote.com>
 Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 26/39] MIPS: pistachio: Add header file path prefix
-Date:   Mon, 30 Mar 2020 05:00:01 -0400
-Message-Id: <1585558801-16498-1-git-send-email-maobibo@loongson.cn>
+Subject: [PATCH 28/39] MIPS: pnx833x: Add header file path prefix
+Date:   Mon, 30 Mar 2020 05:00:14 -0400
+Message-Id: <1585558814-31302-1-git-send-email-maobibo@loongson.cn>
 X-Mailer: git-send-email 1.8.3.1
-X-CM-TRANSID: AQAAf9Dxv2sRtYFegZkhAA--.13S2
-X-Coremail-Antispam: 1UD129KBjvJXoWxKFyfAFyrWF4fuw1ruFykZrb_yoWxWryfpa
-        1kAwn7GF40934jya1fZ3W7Zr43tws5GrWj9ry5Ww1UZ3ZIgF1UXrs5trZ8Z34xJFW2ya1r
-        ur9xWr1Utr4kZw7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+X-CM-TRANSID: AQAAf9DxL94etYFe_JkhAA--.20S2
+X-Coremail-Antispam: 1UD129KBjvJXoW3Cw15GF15KF4DuFyUtw4Utwb_yoWkXF47pa
+        1DC3Wvkr4j9w1Uur1fZFy2vwsxJan8GrZ0yryF9340v3Waq3W5JFs5Jrs8Ar97XFWqg3W8
+        uFW3Xr1UJrsYvw7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
         9KBjDU0xBIdaVrnRJUUUkab7Iv0xC_Kw4lb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I2
         0VC2zVCF04k26cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rw
         A2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xII
@@ -53,150 +53,272 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Remove header files from arch/mips/include/asm/mach-pistachio
-to arch/mips/pistachio/include/mach
+Remove header files from arch/mips/include/asm/mach-pnx833x
+to arch/mips/pnx833x/include/mach
 
 Signed-off-by: bibo mao <maobibo@loongson.cn>
 ---
- arch/mips/Kconfig                                                      | 1 +
- arch/mips/include/asm/eva.h                                            | 2 +-
- arch/mips/pistachio/Platform                                           | 2 +-
- arch/mips/pistachio/include/mach/cpu-feature-overrides.h               | 2 ++
- arch/mips/pistachio/include/mach/ioremap.h                             | 2 ++
- arch/mips/{include/asm/mach-pistachio => pistachio/include/mach}/irq.h | 0
- arch/mips/pistachio/include/mach/kernel-entry-init.h                   | 2 ++
- arch/mips/pistachio/include/mach/kmalloc.h                             | 2 ++
- arch/mips/pistachio/include/mach/mangle-port.h                         | 2 ++
- arch/mips/pistachio/include/mach/mc146818rtc.h                         | 2 ++
- arch/mips/pistachio/include/mach/spaces.h                              | 2 ++
- arch/mips/pistachio/include/mach/topology.h                            | 2 ++
- arch/mips/pistachio/include/mach/war.h                                 | 2 ++
- 13 files changed, 21 insertions(+), 2 deletions(-)
- create mode 100644 arch/mips/pistachio/include/mach/cpu-feature-overrides.h
- create mode 100644 arch/mips/pistachio/include/mach/ioremap.h
- rename arch/mips/{include/asm/mach-pistachio => pistachio/include/mach}/irq.h (100%)
- create mode 100644 arch/mips/pistachio/include/mach/kernel-entry-init.h
- create mode 100644 arch/mips/pistachio/include/mach/kmalloc.h
- create mode 100644 arch/mips/pistachio/include/mach/mangle-port.h
- create mode 100644 arch/mips/pistachio/include/mach/mc146818rtc.h
- create mode 100644 arch/mips/pistachio/include/mach/spaces.h
- create mode 100644 arch/mips/pistachio/include/mach/topology.h
- create mode 100644 arch/mips/pistachio/include/mach/war.h
+ arch/mips/Kconfig                                                   | 1 +
+ arch/mips/pnx833x/Platform                                          | 2 +-
+ arch/mips/pnx833x/common/interrupts.c                               | 6 +++---
+ arch/mips/pnx833x/common/platform.c                                 | 6 +++---
+ arch/mips/pnx833x/common/reset.c                                    | 2 +-
+ arch/mips/pnx833x/common/setup.c                                    | 4 ++--
+ arch/mips/pnx833x/include/mach/cpu-feature-overrides.h              | 2 ++
+ arch/mips/{include/asm/mach-pnx833x => pnx833x/include/mach}/gpio.h | 2 +-
+ arch/mips/pnx833x/include/mach/ioremap.h                            | 2 ++
+ .../asm/mach-pnx833x => pnx833x/include/mach}/irq-mapping.h         | 2 +-
+ arch/mips/{include/asm/mach-pnx833x => pnx833x/include/mach}/irq.h  | 0
+ arch/mips/pnx833x/include/mach/kernel-entry-init.h                  | 2 ++
+ arch/mips/pnx833x/include/mach/kmalloc.h                            | 2 ++
+ arch/mips/pnx833x/include/mach/mangle-port.h                        | 2 ++
+ arch/mips/pnx833x/include/mach/mc146818rtc.h                        | 2 ++
+ .../{include/asm/mach-pnx833x => pnx833x/include/mach}/pnx833x.h    | 0
+ arch/mips/pnx833x/include/mach/spaces.h                             | 2 ++
+ arch/mips/pnx833x/include/mach/topology.h                           | 2 ++
+ arch/mips/pnx833x/include/mach/war.h                                | 2 ++
+ arch/mips/pnx833x/stb22x/board.c                                    | 4 ++--
+ drivers/watchdog/pnx833x_wdt.c                                      | 2 +-
+ 21 files changed, 34 insertions(+), 15 deletions(-)
+ create mode 100644 arch/mips/pnx833x/include/mach/cpu-feature-overrides.h
+ rename arch/mips/{include/asm/mach-pnx833x => pnx833x/include/mach}/gpio.h (99%)
+ create mode 100644 arch/mips/pnx833x/include/mach/ioremap.h
+ rename arch/mips/{include/asm/mach-pnx833x => pnx833x/include/mach}/irq-mapping.h (99%)
+ rename arch/mips/{include/asm/mach-pnx833x => pnx833x/include/mach}/irq.h (100%)
+ create mode 100644 arch/mips/pnx833x/include/mach/kernel-entry-init.h
+ create mode 100644 arch/mips/pnx833x/include/mach/kmalloc.h
+ create mode 100644 arch/mips/pnx833x/include/mach/mangle-port.h
+ create mode 100644 arch/mips/pnx833x/include/mach/mc146818rtc.h
+ rename arch/mips/{include/asm/mach-pnx833x => pnx833x/include/mach}/pnx833x.h (100%)
+ create mode 100644 arch/mips/pnx833x/include/mach/spaces.h
+ create mode 100644 arch/mips/pnx833x/include/mach/topology.h
+ create mode 100644 arch/mips/pnx833x/include/mach/war.h
 
 diff --git a/arch/mips/Kconfig b/arch/mips/Kconfig
-index ce1b5e3..f5f144f 100644
+index 56d6519..9a149e7 100644
 --- a/arch/mips/Kconfig
 +++ b/arch/mips/Kconfig
-@@ -541,6 +541,7 @@ config MACH_PISTACHIO
- 	select SYS_HAS_EARLY_PRINTK
- 	select USE_GENERIC_EARLY_PRINTK_8250
- 	select USE_OF
+@@ -1386,6 +1386,7 @@ config SOC_PNX833X
+ 	select SYS_SUPPORTS_BIG_ENDIAN
+ 	select SYS_SUPPORTS_MIPS16
+ 	select CPU_MIPSR2_IRQ_VI
 +	select HAVE_MACH_HEAD_FILES
- 	help
- 	  This enables support for the IMG Pistachio SoC platform.
  
-diff --git a/arch/mips/include/asm/eva.h b/arch/mips/include/asm/eva.h
-index a3d1807..45034a5 100644
---- a/arch/mips/include/asm/eva.h
-+++ b/arch/mips/include/asm/eva.h
-@@ -11,7 +11,7 @@
- #ifndef _ASM_EVA_H
- #define _ASM_EVA_H
+ config SOC_PNX8335
+ 	bool
+diff --git a/arch/mips/pnx833x/Platform b/arch/mips/pnx833x/Platform
+index 2872606..47b905e 100644
+--- a/arch/mips/pnx833x/Platform
++++ b/arch/mips/pnx833x/Platform
+@@ -1,5 +1,5 @@
+ # NXP STB225
+ platform-$(CONFIG_SOC_PNX833X)	+= pnx833x/
+-cflags-$(CONFIG_SOC_PNX833X)	+= -I$(srctree)/arch/mips/include/asm/mach-pnx833x
++cflags-$(CONFIG_SOC_PNX833X)	+= -I$(srctree)/arch/mips/pnx833x/include
+ load-$(CONFIG_NXP_STB220)	+= 0xffffffff80001000
+ load-$(CONFIG_NXP_STB225)	+= 0xffffffff80001000
+diff --git a/arch/mips/pnx833x/common/interrupts.c b/arch/mips/pnx833x/common/interrupts.c
+index 2fbbabc..66f3a03 100644
+--- a/arch/mips/pnx833x/common/interrupts.c
++++ b/arch/mips/pnx833x/common/interrupts.c
+@@ -13,9 +13,9 @@
+ #include <asm/mipsregs.h>
+ #include <asm/irq_cpu.h>
+ #include <asm/setup.h>
+-#include <irq.h>
+-#include <irq-mapping.h>
+-#include <gpio.h>
++#include <mach/irq.h>
++#include <mach/irq-mapping.h>
++#include <mach/gpio.h>
  
--#include <kernel-entry-init.h>
-+#include <mach/kernel-entry-init.h>
+ static int mips_cpu_timer_irq;
  
- #ifdef __ASSEMBLY__
+diff --git a/arch/mips/pnx833x/common/platform.c b/arch/mips/pnx833x/common/platform.c
+index 5fa0373..fbaf109 100644
+--- a/arch/mips/pnx833x/common/platform.c
++++ b/arch/mips/pnx833x/common/platform.c
+@@ -19,9 +19,9 @@
+ #include <linux/serial_pnx8xxx.h>
+ #include <linux/mtd/platnand.h>
  
-diff --git a/arch/mips/pistachio/Platform b/arch/mips/pistachio/Platform
-index c3592b37..22580e9 100644
---- a/arch/mips/pistachio/Platform
-+++ b/arch/mips/pistachio/Platform
-@@ -3,7 +3,7 @@
- #
- platform-$(CONFIG_MACH_PISTACHIO)	+= pistachio/
- cflags-$(CONFIG_MACH_PISTACHIO)		+=				\
--		-I$(srctree)/arch/mips/include/asm/mach-pistachio
-+		-I$(srctree)/arch/mips/pistachio/include
- load-$(CONFIG_MACH_PISTACHIO)		+= 0xffffffff80400000
- zload-$(CONFIG_MACH_PISTACHIO)		+= 0xffffffff81000000
- all-$(CONFIG_MACH_PISTACHIO)		:= uImage.gz
-diff --git a/arch/mips/pistachio/include/mach/cpu-feature-overrides.h b/arch/mips/pistachio/include/mach/cpu-feature-overrides.h
+-#include <irq.h>
+-#include <irq-mapping.h>
+-#include <pnx833x.h>
++#include <mach/irq.h>
++#include <mach/irq-mapping.h>
++#include <mach/pnx833x.h>
+ 
+ static u64 uart_dmamask	    = DMA_BIT_MASK(32);
+ 
+diff --git a/arch/mips/pnx833x/common/reset.c b/arch/mips/pnx833x/common/reset.c
+index b48e83b..9bd5b2a 100644
+--- a/arch/mips/pnx833x/common/reset.c
++++ b/arch/mips/pnx833x/common/reset.c
+@@ -10,7 +10,7 @@
+  *	Nikita Youshchenko <yoush@debian.org>, based on PNX8550 code.
+  */
+ #include <linux/reboot.h>
+-#include <pnx833x.h>
++#include <mach/pnx833x.h>
+ 
+ void pnx833x_machine_restart(char *command)
+ {
+diff --git a/arch/mips/pnx833x/common/setup.c b/arch/mips/pnx833x/common/setup.c
+index abf68d9..b188c66 100644
+--- a/arch/mips/pnx833x/common/setup.c
++++ b/arch/mips/pnx833x/common/setup.c
+@@ -15,8 +15,8 @@
+ #include <linux/io.h>
+ #include <linux/pci.h>
+ #include <asm/reboot.h>
+-#include <pnx833x.h>
+-#include <gpio.h>
++#include <mach/pnx833x.h>
++#include <mach/gpio.h>
+ 
+ extern void pnx833x_board_setup(void);
+ extern void pnx833x_machine_restart(char *);
+diff --git a/arch/mips/pnx833x/include/mach/cpu-feature-overrides.h b/arch/mips/pnx833x/include/mach/cpu-feature-overrides.h
 new file mode 100644
 index 0000000..f3e0e12
 --- /dev/null
-+++ b/arch/mips/pistachio/include/mach/cpu-feature-overrides.h
++++ b/arch/mips/pnx833x/include/mach/cpu-feature-overrides.h
 @@ -0,0 +1,2 @@
 +/* SPDX-License-Identifier: GPL-2.0 */
 +#include <asm/mach-generic/cpu-feature-overrides.h>
-diff --git a/arch/mips/pistachio/include/mach/ioremap.h b/arch/mips/pistachio/include/mach/ioremap.h
+diff --git a/arch/mips/include/asm/mach-pnx833x/gpio.h b/arch/mips/pnx833x/include/mach/gpio.h
+similarity index 99%
+rename from arch/mips/include/asm/mach-pnx833x/gpio.h
+rename to arch/mips/pnx833x/include/mach/gpio.h
+index 85b5b8e..c60decb0 100644
+--- a/arch/mips/include/asm/mach-pnx833x/gpio.h
++++ b/arch/mips/pnx833x/include/mach/gpio.h
+@@ -17,7 +17,7 @@
+    - including locking between different uses
+ */
+ 
+-#include <asm/mach-pnx833x/pnx833x.h>
++#include <mach/pnx833x.h>
+ 
+ #define SET_REG_BIT(reg, bit)		do { (reg |= (1 << (bit))); } while (0)
+ #define CLEAR_REG_BIT(reg, bit)		do { (reg &= ~(1 << (bit))); } while (0)
+diff --git a/arch/mips/pnx833x/include/mach/ioremap.h b/arch/mips/pnx833x/include/mach/ioremap.h
 new file mode 100644
 index 0000000..2369393
 --- /dev/null
-+++ b/arch/mips/pistachio/include/mach/ioremap.h
++++ b/arch/mips/pnx833x/include/mach/ioremap.h
 @@ -0,0 +1,2 @@
 +/* SPDX-License-Identifier: GPL-2.0 */
 +#include <asm/mach-generic/ioremap.h>
-diff --git a/arch/mips/include/asm/mach-pistachio/irq.h b/arch/mips/pistachio/include/mach/irq.h
+diff --git a/arch/mips/include/asm/mach-pnx833x/irq-mapping.h b/arch/mips/pnx833x/include/mach/irq-mapping.h
+similarity index 99%
+rename from arch/mips/include/asm/mach-pnx833x/irq-mapping.h
+rename to arch/mips/pnx833x/include/mach/irq-mapping.h
+index 32d8063..ebb2d66 100644
+--- a/arch/mips/include/asm/mach-pnx833x/irq-mapping.h
++++ b/arch/mips/pnx833x/include/mach/irq-mapping.h
+@@ -24,7 +24,7 @@
+  * numbers 65..80 for (virtual) GPIO interrupts.
+  *
+  */
+-#include <irq.h>
++#include <mach/irq.h>
+ 
+ #define PNX833X_TIMER_IRQ				(MIPS_CPU_IRQ_BASE + 7)
+ 
+diff --git a/arch/mips/include/asm/mach-pnx833x/irq.h b/arch/mips/pnx833x/include/mach/irq.h
 similarity index 100%
-rename from arch/mips/include/asm/mach-pistachio/irq.h
-rename to arch/mips/pistachio/include/mach/irq.h
-diff --git a/arch/mips/pistachio/include/mach/kernel-entry-init.h b/arch/mips/pistachio/include/mach/kernel-entry-init.h
+rename from arch/mips/include/asm/mach-pnx833x/irq.h
+rename to arch/mips/pnx833x/include/mach/irq.h
+diff --git a/arch/mips/pnx833x/include/mach/kernel-entry-init.h b/arch/mips/pnx833x/include/mach/kernel-entry-init.h
 new file mode 100644
 index 0000000..19b872be
 --- /dev/null
-+++ b/arch/mips/pistachio/include/mach/kernel-entry-init.h
++++ b/arch/mips/pnx833x/include/mach/kernel-entry-init.h
 @@ -0,0 +1,2 @@
 +/* SPDX-License-Identifier: GPL-2.0 */
 +#include <asm/mach-generic/kernel-entry-init.h>
-diff --git a/arch/mips/pistachio/include/mach/kmalloc.h b/arch/mips/pistachio/include/mach/kmalloc.h
+diff --git a/arch/mips/pnx833x/include/mach/kmalloc.h b/arch/mips/pnx833x/include/mach/kmalloc.h
 new file mode 100644
 index 0000000..4f056db
 --- /dev/null
-+++ b/arch/mips/pistachio/include/mach/kmalloc.h
++++ b/arch/mips/pnx833x/include/mach/kmalloc.h
 @@ -0,0 +1,2 @@
 +/* SPDX-License-Identifier: GPL-2.0 */
 +#include <asm/mach-generic/kmalloc.h>
-diff --git a/arch/mips/pistachio/include/mach/mangle-port.h b/arch/mips/pistachio/include/mach/mangle-port.h
+diff --git a/arch/mips/pnx833x/include/mach/mangle-port.h b/arch/mips/pnx833x/include/mach/mangle-port.h
 new file mode 100644
 index 0000000..b9736e3
 --- /dev/null
-+++ b/arch/mips/pistachio/include/mach/mangle-port.h
++++ b/arch/mips/pnx833x/include/mach/mangle-port.h
 @@ -0,0 +1,2 @@
 +/* SPDX-License-Identifier: GPL-2.0 */
 +#include <asm/mach-generic/mangle-port.h>
-diff --git a/arch/mips/pistachio/include/mach/mc146818rtc.h b/arch/mips/pistachio/include/mach/mc146818rtc.h
+diff --git a/arch/mips/pnx833x/include/mach/mc146818rtc.h b/arch/mips/pnx833x/include/mach/mc146818rtc.h
 new file mode 100644
 index 0000000..7284af8
 --- /dev/null
-+++ b/arch/mips/pistachio/include/mach/mc146818rtc.h
++++ b/arch/mips/pnx833x/include/mach/mc146818rtc.h
 @@ -0,0 +1,2 @@
 +/* SPDX-License-Identifier: GPL-2.0 */
 +#include <asm/mach-generic/mc146818rtc.h>
-diff --git a/arch/mips/pistachio/include/mach/spaces.h b/arch/mips/pistachio/include/mach/spaces.h
+diff --git a/arch/mips/include/asm/mach-pnx833x/pnx833x.h b/arch/mips/pnx833x/include/mach/pnx833x.h
+similarity index 100%
+rename from arch/mips/include/asm/mach-pnx833x/pnx833x.h
+rename to arch/mips/pnx833x/include/mach/pnx833x.h
+diff --git a/arch/mips/pnx833x/include/mach/spaces.h b/arch/mips/pnx833x/include/mach/spaces.h
 new file mode 100644
 index 0000000..39a4d72
 --- /dev/null
-+++ b/arch/mips/pistachio/include/mach/spaces.h
++++ b/arch/mips/pnx833x/include/mach/spaces.h
 @@ -0,0 +1,2 @@
 +/* SPDX-License-Identifier: GPL-2.0 */
 +#include <asm/mach-generic/spaces.h>
-diff --git a/arch/mips/pistachio/include/mach/topology.h b/arch/mips/pistachio/include/mach/topology.h
+diff --git a/arch/mips/pnx833x/include/mach/topology.h b/arch/mips/pnx833x/include/mach/topology.h
 new file mode 100644
 index 0000000..86e585b
 --- /dev/null
-+++ b/arch/mips/pistachio/include/mach/topology.h
++++ b/arch/mips/pnx833x/include/mach/topology.h
 @@ -0,0 +1,2 @@
 +/* SPDX-License-Identifier: GPL-2.0 */
 +#include <asm/mach-generic/topology.h>
-diff --git a/arch/mips/pistachio/include/mach/war.h b/arch/mips/pistachio/include/mach/war.h
+diff --git a/arch/mips/pnx833x/include/mach/war.h b/arch/mips/pnx833x/include/mach/war.h
 new file mode 100644
 index 0000000..5b0422a
 --- /dev/null
-+++ b/arch/mips/pistachio/include/mach/war.h
++++ b/arch/mips/pnx833x/include/mach/war.h
 @@ -0,0 +1,2 @@
 +/* SPDX-License-Identifier: GPL-2.0 */
 +#include <asm/mach-generic/war.h>
+diff --git a/arch/mips/pnx833x/stb22x/board.c b/arch/mips/pnx833x/stb22x/board.c
+index 93d8e7b..14c333c 100644
+--- a/arch/mips/pnx833x/stb22x/board.c
++++ b/arch/mips/pnx833x/stb22x/board.c
+@@ -12,8 +12,8 @@
+ #include <linux/init.h>
+ #include <asm/bootinfo.h>
+ #include <linux/mm.h>
+-#include <pnx833x.h>
+-#include <gpio.h>
++#include <mach/pnx833x.h>
++#include <mach/gpio.h>
+ 
+ /* endianess twiddlers */
+ #define PNX8335_DEBUG0 0x4400
+diff --git a/drivers/watchdog/pnx833x_wdt.c b/drivers/watchdog/pnx833x_wdt.c
+index 4097d07..18bb8a5 100644
+--- a/drivers/watchdog/pnx833x_wdt.c
++++ b/drivers/watchdog/pnx833x_wdt.c
+@@ -26,7 +26,7 @@
+ #include <linux/notifier.h>
+ #include <linux/reboot.h>
+ #include <linux/init.h>
+-#include <asm/mach-pnx833x/pnx833x.h>
++#include <mach/pnx833x.h>
+ 
+ #define WATCHDOG_TIMEOUT 30		/* 30 sec Maximum timeout */
+ #define WATCHDOG_COUNT_FREQUENCY 68000000U /* Watchdog counts at 68MHZ. */
 -- 
 1.8.3.1
 
