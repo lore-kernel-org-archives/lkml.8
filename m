@@ -2,130 +2,103 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10E0EC43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 16:30:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76C9EC2D0E5
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 16:30:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DBDD820578
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 16:30:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A1D42073B
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 16:30:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JdZ85hCh"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="mcvg7vKu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730152AbgC3QaQ (ORCPT
+        id S1730191AbgC3Qab (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 12:30:16 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:42828 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729444AbgC3QaP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 12:30:15 -0400
-Received: by mail-pl1-f196.google.com with SMTP id e1so6919195plt.9;
-        Mon, 30 Mar 2020 09:30:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=YsFnz05oWNhz5mB25S0tg2/lHQPk1r/Q+IZIha4yD4g=;
-        b=JdZ85hCh2IWweTJsm7TzpgIDVDkqZMFiJ+soe2dtRVw6YicrOBkvlKPkhTq29ZW2q3
-         LGHD/qq7NoF4kxJIVDnch7KkDxZpWVdl4u7BlMUezqA2PUD4QC4DxtoC4k0MyTfLYdQo
-         onZ8VKcp/N0FWGcg+j2eO48HWbCCZtbQ7hWMqueYERIGBOAqJAHTclXc6wb6zYDXtTpt
-         2lyoJFmLWR9XElkF19sxjdnD94c2wm1WJRIXjTwNKK6WgnIg2DxPYVF3WNucsOh5tDsV
-         DgtiF7nF/El97+EG7aVc5CO8fvSQ/YisP6ysf4xN5rm6CoynBRFFue8jCWiRsE13Lp/W
-         kutw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
-         :in-reply-to:references:mime-version:content-transfer-encoding;
-        bh=YsFnz05oWNhz5mB25S0tg2/lHQPk1r/Q+IZIha4yD4g=;
-        b=VHi7ur2inAEyeaTFeYJGFvGtrYPyWSb+feNxmlrEVcorGxGt2WZgwQjS1eHKVElngq
-         wxqLEunZdJRjq6tNpK0MErgXHh7ZLUoXVvVSNNdOlxT4QguZuEdgFF6KkS4fMqQgEhl7
-         HUTdyc6ToDPqa2/rnqDoBpjkD36Krl6KyZyDv6TjAgE04JVHvefZoHMTItfp41cyyyd3
-         PJswcvPxb4/tKO4OEXAM5cA5TED1vgShb/P654oFZJJTdNzIplK8tYeb2qelf5qCTko6
-         lX3hT3VzUxLTRilJZa3PTBF5N9lyldewjRdvntQBM1kWfNHc4EJQL4KuN49GlsRDf6NQ
-         EgfQ==
-X-Gm-Message-State: AGi0Pub153AU5asy+VILnrkksWyQsl9SXLMdZANLbJgfxm1ED20HlTiF
-        ba/rARQY9ViATxumZkLMTdtAIlWY
-X-Google-Smtp-Source: APiQypLKwTWLKPEXmnURAH+r7lBTLubzxQ5KTakvKvOjLME40mOemJSUjBpb3ALb+AXhqu6rB+Ycpg==
-X-Received: by 2002:a17:90a:d0c3:: with SMTP id y3mr50155pjw.128.1585585813996;
-        Mon, 30 Mar 2020 09:30:13 -0700 (PDT)
-Received: from sultan-box.localdomain (static-198-54-129-52.cust.tzulo.com. [198.54.129.52])
-        by smtp.gmail.com with ESMTPSA id mu15sm14398pjb.30.2020.03.30.09.30.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Mar 2020 09:30:13 -0700 (PDT)
-From:   Sultan Alsawaf <sultan@kerneltoast.com>
-X-Google-Original-From: Sultan Alsawaf
-To:     linux-kernel@vger.kernel.org
-Cc:     Jani Nikula <jani.nikula@linux.intel.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        Sultan Alsawaf <sultan@kerneltoast.com>, stable@vger.kernel.org
-Subject: [PATCH 1/1] drm/i915: Disable Panel Self Refresh (PSR) by default
-Date:   Mon, 30 Mar 2020 09:30:06 -0700
-Message-Id: <20200330163006.4064-2-sultan@kerneltoast.com>
-X-Mailer: git-send-email 2.26.0
-In-Reply-To: <20200330163006.4064-1-sultan@kerneltoast.com>
-References: <20200330163006.4064-1-sultan@kerneltoast.com>
+        Mon, 30 Mar 2020 12:30:31 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:38964 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727067AbgC3Qaa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Mar 2020 12:30:30 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=rzh9ueR7rZV8bhCQEK6RCcxjt9ukPqxxiqOJSvaCw8I=; b=mcvg7vKuOo7yU+LPEx+F+bszdM
+        g6XBJUJ6+WHAyGzXz+cPUuz06fumRjhrJuUR1yx6WCLiqDh17Cw899KfHjuHDXRy8fPJFlV/sDerU
+        bifb2uLLvscED+USvLy+KDCkDIhAZOKmyG10/v+Ypb9i8SQ7lUVFNsr5P6+E5yqvtUxE=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
+        (envelope-from <andrew@lunn.ch>)
+        id 1jIxIy-00066S-VM; Mon, 30 Mar 2020 18:30:28 +0200
+Date:   Mon, 30 Mar 2020 18:30:28 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
+Cc:     netdev@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, f.fainelli@gmail.com,
+        hkallweit1@gmail.com, linux@armlinux.org.uk, davem@davemloft.net
+Subject: Re: [PATCH] net: mdio: of: Do not treat fixed-link as PHY
+Message-ID: <20200330163028.GE23477@lunn.ch>
+References: <20200330160136.23018-1-codrin.ciubotariu@microchip.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200330160136.23018-1-codrin.ciubotariu@microchip.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sultan Alsawaf <sultan@kerneltoast.com>
+On Mon, Mar 30, 2020 at 07:01:36PM +0300, Codrin Ciubotariu wrote:
+> Some ethernet controllers, such as cadence's macb, have an embedded MDIO.
+> For this reason, the ethernet PHY nodes are not under an MDIO bus, but
+> directly under the ethernet node. Since these drivers might use
+> of_mdiobus_child_is_phy(), we should fix this function by returning false
+> if a fixed-link is found.
 
-On all Dell laptops with panels and chipsets that support PSR (an
-esoteric power-saving mechanism), both PSR1 and PSR2 cause flickering
-and graphical glitches, sometimes to the point of making the laptop
-unusable. Many laptops don't support PSR so it isn't known if PSR works
-correctly on any consumer hardware right now. PSR was enabled by default
-in 5.0 for capable hardware, so this patch just restores the previous
-functionality of PSR being disabled by default.
+So i assume the problem occurs here:
 
-More info is available on the freedesktop bug:
-https://gitlab.freedesktop.org/drm/intel/issues/425
+static int macb_mdiobus_register(struct macb *bp)
+{
+        struct device_node *child, *np = bp->pdev->dev.of_node;
 
-Cc: <stable@vger.kernel.org> # 5.4.x, 5.5.x
-Signed-off-by: Sultan Alsawaf <sultan@kerneltoast.com>
----
- drivers/gpu/drm/i915/i915_params.c | 3 +--
- drivers/gpu/drm/i915/i915_params.h | 2 +-
- 2 files changed, 2 insertions(+), 3 deletions(-)
+        /* Only create the PHY from the device tree if at least one PHY is
+         * described. Otherwise scan the entire MDIO bus. We do this to support
+         * old device tree that did not follow the best practices and did not
+         * describe their network PHYs.
+         */
+        for_each_available_child_of_node(np, child)
+                if (of_mdiobus_child_is_phy(child)) {
+                        /* The loop increments the child refcount,
+                         * decrement it before returning.
+                         */
+                        of_node_put(child);
 
-diff --git a/drivers/gpu/drm/i915/i915_params.c b/drivers/gpu/drm/i915/i915_params.c
-index 1dd1f3652795..0c4661fcf011 100644
---- a/drivers/gpu/drm/i915/i915_params.c
-+++ b/drivers/gpu/drm/i915/i915_params.c
-@@ -85,8 +85,7 @@ i915_param_named_unsafe(enable_hangcheck, bool, 0600,
- 
- i915_param_named_unsafe(enable_psr, int, 0600,
- 	"Enable PSR "
--	"(0=disabled, 1=enabled) "
--	"Default: -1 (use per-chip default)");
-+	"(-1=use per-chip default, 0=disabled [default], 1=enabled) ");
- 
- i915_param_named_unsafe(force_probe, charp, 0400,
- 	"Force probe the driver for specified devices. "
-diff --git a/drivers/gpu/drm/i915/i915_params.h b/drivers/gpu/drm/i915/i915_params.h
-index 31b88f297fbc..4a9a3df7d292 100644
---- a/drivers/gpu/drm/i915/i915_params.h
-+++ b/drivers/gpu/drm/i915/i915_params.h
-@@ -50,7 +50,7 @@ struct drm_printer;
- 	param(int, vbt_sdvo_panel_type, -1) \
- 	param(int, enable_dc, -1) \
- 	param(int, enable_fbc, -1) \
--	param(int, enable_psr, -1) \
-+	param(int, enable_psr, 0) \
- 	param(int, disable_power_well, -1) \
- 	param(int, enable_ips, 1) \
- 	param(int, invert_brightness, 0) \
--- 
-2.26.0
+                        return of_mdiobus_register(bp->mii_bus, np);
+                }
 
+        return mdiobus_register(bp->mii_bus);
+}
+
+I think a better solution is
+
+        for_each_available_child_of_node(np, child)
++		if (of_phy_is_fixed_link(child)
++		   continue;
+                if (of_mdiobus_child_is_phy(child)) {
+                        /* The loop increments the child refcount,
+                         * decrement it before returning.
+                         */
+                        of_node_put(child);
+
+                        return of_mdiobus_register(bp->mii_bus, np);
+                }
+
+        return mdiobus_register(bp->mii_bus);
+}
+
+This problem is only an issue for macb, so keep the fix local to macb.
+
+	Andrew
