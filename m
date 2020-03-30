@@ -2,99 +2,170 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43F16C43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 10:13:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B676C2D0EB
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 10:14:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 062E520732
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 10:13:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585563221;
-	bh=wgotIvt/OHLn0qUe32qgfQco3wwFOA3iTeQ2Qthu4PQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=qdnBZw4QMTuLp2g6HBFVNrRvtp8DNKHL/cHH1Wv/xnqT1rtmHO8EgoByK94qw4ccT
-	 v3OnQ2oRRbSF5u+6A+aDj1iiaqTh5Rznx7IHn3yUabiqcWK28/+H/GBLBWtfctEnz8
-	 t619cIcxGrUmFG5fYCySyOq2iiPcfKg38Nbd0gLA=
+	by mail.kernel.org (Postfix) with ESMTP id 42B1920733
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 10:14:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728976AbgC3KNk (ORCPT
+        id S1728928AbgC3KOs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 06:13:40 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:54631 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728257AbgC3KNg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 06:13:36 -0400
-Received: by mail-wm1-f65.google.com with SMTP id c81so19295330wmd.4;
-        Mon, 30 Mar 2020 03:13:35 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=etNRfQXSTquo6SrTToC0ZDG3tsM3oRH7bak2nuOj9kc=;
-        b=XoELc/LLXnZ8xFCflQqxeKvMu7ldJfcZYDKsztN1rvaAGMaM6IhRzHZ7wUWHHGNYN6
-         nYoPqtwrtDl49yWz0zth/4YNKAJtiGoJxo6aortb/vqfIlBIci7l5AduGnAI7ue+kjJ7
-         8FwptMBAXbPxIEIPIJC8HrRpJmxbvEYqfbHX+NbnWtWdP76vll6q8qdC4Yk6by9LcY2r
-         o9YcwrGuajB7ic/wKAZI7PSVbPKzglwfaZKOnqKSM5Jc0aKPwGGew55SHhTsekNswUpN
-         s2kZceJSE716YrDUHZFY9s/xBd0FSUUMDW4KyY5c163O8wu0OvSZbXjuMsJdBrXqzm8X
-         M5Gg==
-X-Gm-Message-State: ANhLgQ3HGf0ORLkUkKGwK3oOWEfL2zlE/zPliPsKLOB4U744M6/yuP3K
-        HizZXNYq0aRLGeUsSHojmyk=
-X-Google-Smtp-Source: ADFU+vt2FVxAIyS5YUdgBwUhS6YMoWQIE/YsEKA0AOhmRG0GEtKmB0X0UOqqN4OC7wZ/vUSbYtCHiQ==
-X-Received: by 2002:a1c:9e16:: with SMTP id h22mr4682635wme.27.1585563214463;
-        Mon, 30 Mar 2020 03:13:34 -0700 (PDT)
-Received: from debian (44.142.6.51.dyn.plus.net. [51.6.142.44])
-        by smtp.gmail.com with ESMTPSA id o67sm21140400wmo.5.2020.03.30.03.13.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Mar 2020 03:13:33 -0700 (PDT)
-Date:   Mon, 30 Mar 2020 11:13:31 +0100
-From:   Wei Liu <wei.liu@kernel.org>
-To:     ltykernel@gmail.com
-Cc:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
-        liuwe@microsoft.com, tglx@linutronix.de, mingo@redhat.com,
-        bp@alien8.de, hpa@zytor.com, x86@kernel.org,
-        michael.h.kelley@microsoft.com,
-        Tianyu Lan <Tianyu.Lan@microsoft.com>,
-        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
-        vkuznets@redhat.com, Wei Liu <wei.liu@kernel.org>
-Subject: Re: [PATCH V3 0/6] x86/Hyper-V: Panic code path fixes
-Message-ID: <20200330101331.v4yahaqszgbo27km@debian>
-References: <20200324075720.9462-1-Tianyu.Lan@microsoft.com>
+        Mon, 30 Mar 2020 06:14:48 -0400
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2614 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728609AbgC3KOr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Mar 2020 06:14:47 -0400
+Received: from lhreml719-chm.china.huawei.com (unknown [172.18.7.106])
+        by Forcepoint Email with ESMTP id 28A9B339EBD1807085E7;
+        Mon, 30 Mar 2020 11:14:45 +0100 (IST)
+Received: from lhreml715-chm.china.huawei.com (10.201.108.66) by
+ lhreml719-chm.china.huawei.com (10.201.108.70) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Mon, 30 Mar 2020 11:14:20 +0100
+Received: from lhreml715-chm.china.huawei.com ([10.201.108.66]) by
+ lhreml715-chm.china.huawei.com ([10.201.108.66]) with mapi id 15.01.1713.004;
+ Mon, 30 Mar 2020 11:14:20 +0100
+From:   Shiju Jose <shiju.jose@huawei.com>
+To:     Borislav Petkov <bp@alien8.de>
+CC:     "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "rjw@rjwysocki.net" <rjw@rjwysocki.net>,
+        "helgaas@kernel.org" <helgaas@kernel.org>,
+        "lenb@kernel.org" <lenb@kernel.org>,
+        "james.morse@arm.com" <james.morse@arm.com>,
+        "tony.luck@intel.com" <tony.luck@intel.com>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "zhangliguang@linux.alibaba.com" <zhangliguang@linux.alibaba.com>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        Linuxarm <linuxarm@huawei.com>,
+        Jonathan Cameron <jonathan.cameron@huawei.com>,
+        tanxiaofei <tanxiaofei@huawei.com>,
+        yangyicong <yangyicong@huawei.com>
+Subject: RE: [PATCH v6 1/2] ACPI / APEI: Add support to notify the vendor
+ specific HW errors
+Thread-Topic: [PATCH v6 1/2] ACPI / APEI: Add support to notify the vendor
+ specific HW errors
+Thread-Index: AQHWAsR+4nldebv71E6VKNN8PAfzw6hcw70AgAQRUuA=
+Date:   Mon, 30 Mar 2020 10:14:20 +0000
+Message-ID: <b180618fb6cb477ea7185979c11c5868@huawei.com>
+References: <ShijuJose> <20200325164223.650-1-shiju.jose@huawei.com>
+ <20200325164223.650-2-shiju.jose@huawei.com> <20200327182214.GD8015@zn.tnic>
+In-Reply-To: <20200327182214.GD8015@zn.tnic>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.47.25.189]
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200324075720.9462-1-Tianyu.Lan@microsoft.com>
-User-Agent: NeoMutt/20180716
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 24, 2020 at 12:57:14AM -0700, ltykernel@gmail.com wrote:
-> From: Tianyu Lan <Tianyu.Lan@microsoft.com>
-> 
-> This patchset fixes some issues in the Hyper-V panic code path.
-> Patch 1 resolves issue that panic system still responses network
-> packets.
-> Patch 2-3,5-6 resolves crash enlightenment issues.
-> Patch 4 is to set crash_kexec_post_notifiers to true for Hyper-V
-> VM in order to report crash data or kmsg to host before running
-> kdump kernel.
-> 
-> Tianyu Lan (6):
->   x86/Hyper-V: Unload vmbus channel in hv panic callback
->   x86/Hyper-V: Free hv_panic_page when fail to register kmsg dump
->   x86/Hyper-V: Trigger crash enlightenment only once during  system
->     crash.
->   x86/Hyper-V: Report crash register data or ksmg before  running crash
->     kernel
->   x86/Hyper-V: Report crash register data when sysctl_record_panic_msg
->     is not set
->   x86/Hyper-V: Report crash data in die() when panic_on_oops is set
-> 
-
-Queued to hyperv-next. Thanks.
-
-Wei.
+SGkgQm9yaXNsYXYsDQoNClRoYW5rcyBmb3IgcmV2aWV3aW5nIHRoZSBwYXRjaGVzLg0KDQo+LS0t
+LS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj5Gcm9tOiBsaW51eC1hY3BpLW93bmVyQHZnZXIua2Vy
+bmVsLm9yZyBbbWFpbHRvOmxpbnV4LWFjcGktDQo+b3duZXJAdmdlci5rZXJuZWwub3JnXSBPbiBC
+ZWhhbGYgT2YgQm9yaXNsYXYgUGV0a292DQo+U2VudDogMjcgTWFyY2ggMjAyMCAxODoyMg0KPlRv
+OiBTaGlqdSBKb3NlIDxzaGlqdS5qb3NlQGh1YXdlaS5jb20+DQo+Q2M6IGxpbnV4LWFjcGlAdmdl
+ci5rZXJuZWwub3JnOyBsaW51eC1wY2lAdmdlci5rZXJuZWwub3JnOyBsaW51eC0NCj5rZXJuZWxA
+dmdlci5rZXJuZWwub3JnOyByandAcmp3eXNvY2tpLm5ldDsgaGVsZ2Fhc0BrZXJuZWwub3JnOw0K
+PmxlbmJAa2VybmVsLm9yZzsgamFtZXMubW9yc2VAYXJtLmNvbTsgdG9ueS5sdWNrQGludGVsLmNv
+bTsNCj5ncmVna2hAbGludXhmb3VuZGF0aW9uLm9yZzsgemhhbmdsaWd1YW5nQGxpbnV4LmFsaWJh
+YmEuY29tOw0KPnRnbHhAbGludXRyb25peC5kZTsgTGludXhhcm0gPGxpbnV4YXJtQGh1YXdlaS5j
+b20+OyBKb25hdGhhbiBDYW1lcm9uDQo+PGpvbmF0aGFuLmNhbWVyb25AaHVhd2VpLmNvbT47IHRh
+bnhpYW9mZWkgPHRhbnhpYW9mZWlAaHVhd2VpLmNvbT47DQo+eWFuZ3lpY29uZyA8eWFuZ3lpY29u
+Z0BodWF3ZWkuY29tPg0KPlN1YmplY3Q6IFJlOiBbUEFUQ0ggdjYgMS8yXSBBQ1BJIC8gQVBFSTog
+QWRkIHN1cHBvcnQgdG8gbm90aWZ5IHRoZSB2ZW5kb3INCj5zcGVjaWZpYyBIVyBlcnJvcnMNCj4N
+Cj5PbiBXZWQsIE1hciAyNSwgMjAyMCBhdCAwNDo0MjoyMlBNICswMDAwLCBTaGlqdSBKb3NlIHdy
+b3RlOg0KPj4gUHJlc2VudGx5IEFQRUkgZG9lcyBub3Qgc3VwcG9ydCByZXBvcnRpbmcgdGhlIHZl
+bmRvciBzcGVjaWZpYyBIVw0KPj4gZXJyb3JzLCByZWNlaXZlZCBpbiB0aGUgdmVuZG9yIGRlZmlu
+ZWQgdGFibGUgZW50cmllcywgdG8gdGhlIHZlbmRvcg0KPj4gZHJpdmVycyBmb3IgYW55IHJlY292
+ZXJ5Lg0KPj4NCj4+IFRoaXMgcGF0Y2ggYWRkcyB0aGUgc3VwcG9ydCB0byByZWdpc3RlciBhbmQg
+dW5yZWdpc3RlciB0aGUNCj4NCj5Bdm9pZCBoYXZpbmcgIlRoaXMgcGF0Y2giIG9yICJUaGlzIGNv
+bW1pdCIgaW4gdGhlIGNvbW1pdCBtZXNzYWdlLiBJdCBpcw0KPnRhdXRvbG9naWNhbGx5IHVzZWxl
+c3MuDQo+DQpTdXJlLg0KDQo+QWxzbywgZG8NCj4NCj4kIGdpdCBncmVwICdUaGlzIHBhdGNoJyBE
+b2N1bWVudGF0aW9uL3Byb2Nlc3MNCj4NCj5mb3IgbW9yZSBkZXRhaWxzLg0KU3VyZS4NCg0KPg0K
+Pj4gZXJyb3IgaGFuZGxpbmcgZnVuY3Rpb24gZm9yIHRoZSB2ZW5kb3Igc3BlY2lmaWMgSFcgZXJy
+b3JzIGFuZCBub3RpZnkNCj4+IHRoZSByZWdpc3RlcmVkIGtlcm5lbCBkcml2ZXIuDQo+Pg0KPj4g
+U2lnbmVkLW9mZi1ieTogU2hpanUgSm9zZSA8c2hpanUuam9zZUBodWF3ZWkuY29tPg0KPj4gLS0t
+DQo+PiAgZHJpdmVycy9hY3BpL2FwZWkvZ2hlcy5jIHwgMzUgKysrKysrKysrKysrKysrKysrKysr
+KysrKysrKysrKysrKy0NCj4+ICBkcml2ZXJzL3Jhcy9yYXMuYyAgICAgICAgfCAgNSArKystLQ0K
+Pj4gIGluY2x1ZGUvYWNwaS9naGVzLmggICAgICB8IDI4ICsrKysrKysrKysrKysrKysrKysrKysr
+KysrKysNCj4+ICBpbmNsdWRlL2xpbnV4L3Jhcy5oICAgICAgfCAgNiArKysrLS0NCj4+ICBpbmNs
+dWRlL3Jhcy9yYXNfZXZlbnQuaCAgfCAgNyArKysrKy0tDQo+PiAgNSBmaWxlcyBjaGFuZ2VkLCA3
+NCBpbnNlcnRpb25zKCspLCA3IGRlbGV0aW9ucygtKQ0KPj4NCj4+IGRpZmYgLS1naXQgYS9kcml2
+ZXJzL2FjcGkvYXBlaS9naGVzLmMgYi9kcml2ZXJzL2FjcGkvYXBlaS9naGVzLmMgaW5kZXgNCj4+
+IDI0Yzk2NDJlOGZjNy4uZDgzZjBiMWFhZDBkIDEwMDY0NA0KPj4gLS0tIGEvZHJpdmVycy9hY3Bp
+L2FwZWkvZ2hlcy5jDQo+PiArKysgYi9kcml2ZXJzL2FjcGkvYXBlaS9naGVzLmMNCj4+IEBAIC00
+OTAsNiArNDkwLDMyIEBAIHN0YXRpYyB2b2lkIGdoZXNfaGFuZGxlX2FlcihzdHJ1Y3QNCj4+IGFj
+cGlfaGVzdF9nZW5lcmljX2RhdGEgKmdkYXRhKSAgI2VuZGlmICB9DQo+Pg0KPj4gK3N0YXRpYyBB
+VE9NSUNfTk9USUZJRVJfSEVBRChnaGVzX2V2ZW50X25vdGlmeV9saXN0KTsNCj4+ICsNCj4+ICsv
+KioNCj4+ICsgKiBnaGVzX3JlZ2lzdGVyX2V2ZW50X25vdGlmaWVyIC0gcmVnaXN0ZXIgYW4gZXZl
+bnQgbm90aWZpZXINCj4+ICsgKiBmb3IgdGhlIG5vbi1mYXRhbCBIVyBlcnJvcnMuDQo+PiArICog
+QG5iOiBwb2ludGVyIHRvIHRoZSBub3RpZmllcl9ibG9jayBzdHJ1Y3R1cmUgb2YgdGhlIGV2ZW50
+IGhhbmRsZXIuDQo+PiArICoNCj4+ICsgKiByZXR1cm4gMCA6IFNVQ0NFU1MsIG5vbi16ZXJvIDog
+RkFJTCAgKi8gaW50DQo+PiArZ2hlc19yZWdpc3Rlcl9ldmVudF9ub3RpZmllcihzdHJ1Y3Qgbm90
+aWZpZXJfYmxvY2sgKm5iKSB7DQo+PiArCXJldHVybiBhdG9taWNfbm90aWZpZXJfY2hhaW5fcmVn
+aXN0ZXIoJmdoZXNfZXZlbnRfbm90aWZ5X2xpc3QsIG5iKTsNCj4+ICt9IEVYUE9SVF9TWU1CT0xf
+R1BMKGdoZXNfcmVnaXN0ZXJfZXZlbnRfbm90aWZpZXIpOw0KPj4gKw0KPj4gKy8qKg0KPj4gKyAq
+IGdoZXNfdW5yZWdpc3Rlcl9ldmVudF9ub3RpZmllciAtIHVucmVnaXN0ZXIgdGhlIHByZXZpb3Vz
+bHkNCj4+ICsgKiByZWdpc3RlcmVkIGV2ZW50IG5vdGlmaWVyLg0KPj4gKyAqIEBuYjogcG9pbnRl
+ciB0byB0aGUgbm90aWZpZXJfYmxvY2sgc3RydWN0dXJlIG9mIHRoZSBldmVudCBoYW5kbGVyLg0K
+Pj4gKyAqLw0KPj4gK3ZvaWQgZ2hlc191bnJlZ2lzdGVyX2V2ZW50X25vdGlmaWVyKHN0cnVjdCBu
+b3RpZmllcl9ibG9jayAqbmIpDQo+PiArew0KPj4gKwlhdG9taWNfbm90aWZpZXJfY2hhaW5fdW5y
+ZWdpc3RlcigmZ2hlc19ldmVudF9ub3RpZnlfbGlzdCwgbmIpOw0KPj4gK30NCj4+ICtFWFBPUlRf
+U1lNQk9MX0dQTChnaGVzX3VucmVnaXN0ZXJfZXZlbnRfbm90aWZpZXIpOw0KPj4gKw0KPj4gIHN0
+YXRpYyB2b2lkIGdoZXNfZG9fcHJvYyhzdHJ1Y3QgZ2hlcyAqZ2hlcywNCj4+ICAJCQkgY29uc3Qg
+c3RydWN0IGFjcGlfaGVzdF9nZW5lcmljX3N0YXR1cyAqZXN0YXR1cykNCj4+ICB7DQo+PiBAQCAt
+NTI2LDEwICs1NTIsMTcgQEAgc3RhdGljIHZvaWQgZ2hlc19kb19wcm9jKHN0cnVjdCBnaGVzICpn
+aGVzLA0KPj4gIAkJCWxvZ19hcm1faHdfZXJyb3IoZXJyKTsNCj4+ICAJCX0gZWxzZSB7DQo+PiAg
+CQkJdm9pZCAqZXJyID0gYWNwaV9oZXN0X2dldF9wYXlsb2FkKGdkYXRhKTsNCj4+ICsJCQl1OCBl
+cnJvcl9oYW5kbGVkID0gZmFsc2U7DQo+PiArCQkJaW50IHJldDsNCj4+ICsNCj4+ICsJCQlyZXQg
+PQ0KPmF0b21pY19ub3RpZmllcl9jYWxsX2NoYWluKCZnaGVzX2V2ZW50X25vdGlmeV9saXN0LCAw
+LCBnZGF0YSk7DQo+DQo+V2VsbCwgdGhpcyBpcyBhIG5vdGlmaWVyIHdpdGggc3RhbmRhcmQgbmFt
+ZSBmb3IgYSBub24tc3RhbmRhcmQgZXZlbnQuDQo+Tm90IG9wdGltYWwuDQpPay4NCg0KPg0KPldo
+eSBkb2VzIG9ubHkgdGhpcyBldmVudCBuZWVkIGEgbm90aWZpZXI/IEJlY2F1c2UgeW91ciBkcml2
+ZXIgaXMNCj5pbnRlcmVzdGVkIGluIG9ubHkgdGhvc2UgZXZlbnRzPw0KVGhlIGVycm9yIGV2ZW50
+cyBmb3IgdGhlIFBDSWUgY29udHJvbGxlciBjYW4gYmUgcmVwb3J0ZWQgdG8gdGhlIGtlcm5lbCBp
+biB0aGUgdmVuZG9yIGRlZmluZWQgZm9ybWF0DQpbYXMgcGVyIHRoZSJOLjIuMyBOb24tc3RhbmRh
+cmQgU2VjdGlvbiBCb2R5IiBvZiB0aGUgVUVGSSBzcGVjXS4gDQpUaHVzIHRoZXNlIGV2ZW50cyBy
+ZXF1aXJlIGEgbm90aWZpZXIgZnJvbSBBUEVJIHRvIHRoZSBjb3JyZXNwb25kaW5nIGtlcm5lbCBk
+cml2ZXIuIA0KDQo+DQo+PiArCQkJaWYgKHJldCAmIE5PVElGWV9PSykNCj4+ICsJCQkJZXJyb3Jf
+aGFuZGxlZCA9IHRydWU7DQo+Pg0KPj4gIAkJCWxvZ19ub25fc3RhbmRhcmRfZXZlbnQoc2VjX3R5
+cGUsIGZydV9pZCwgZnJ1X3RleHQsDQo+PiAgCQkJCQkgICAgICAgc2VjX3NldiwgZXJyLA0KPj4g
+LQkJCQkJICAgICAgIGdkYXRhLT5lcnJvcl9kYXRhX2xlbmd0aCk7DQo+PiArCQkJCQkgICAgICAg
+Z2RhdGEtPmVycm9yX2RhdGFfbGVuZ3RoLA0KPj4gKwkJCQkJICAgICAgIGVycm9yX2hhbmRsZWQp
+Ow0KPg0KPldoYXQncyB0aGF0IGVycm9yX2hhbmRsZWQgdGhpbmcgZm9yPyBUaGF0J3MganVzdCBz
+aWxseS4NClRoaXMgZmllbGQgYWRkZWQgYmFzZWQgb24gdGhlIGlucHV0IGZyb20gSmFtZXMgTW9y
+c2Ugb24gdjQgcGF0Y2ggdG8gZW5hYmxlIHRoZSB1c2VyIHNwYWNlIGFwcGxpY2F0aW9uKHJhc2Rh
+ZW1vbikNCmRvIHRoZSBkZWNvZGluZyBhbmQgbG9nZ2luZyBvZiB0aGUgYW55IGV4dHJhIGVycm9y
+IGluZm9ybWF0aW9uIHNoYXJlZCBieSB0aGUgY29ycmVzcG9uZGluZyAga2VybmVsIGRyaXZlciB0
+byB0aGUgdXNlciBzcGFjZS4NCg0KPg0KPllvdXIgbm90aWZpZXIgcmV0dXJucyBOT1RJRllfU1RP
+UCB3aGVuIGl0IGhhcyBxdWV1ZWQgdGhlIGVycm9yLiBJZiB5b3UNCj5kb24ndCB3YW50IHRvIGxv
+ZyBpdCwganVzdCB0ZXN0ID09IE5PVElGWV9TVE9QIGFuZCBkbyBub3QgbG9nIGl0IHRoZW4uDQpz
+dXJlLg0KICAgDQo+DQo+VGhlbiB5b3VyIG5vdGlmaWVyIGNhbGxiYWNrIGlzIHF1ZXVpbmcgdGhl
+IGVycm9yIGludG8gYSBrZmlmbyBmb3INCj53aGF0ZXZlciByZWFzb24gYW5kIHRoZW4gc2NoZWR1
+bGluZyBhIHdvcmtxdWV1ZSB0byBoYW5kbGUgaXQgaW4gdXNlcg0KPmNvbnRleHQuLi4NCj4NCj5T
+byBJJ20gdGhpbmtpbmcgdGhhdCBpdCB3b3VsZCBiZSBiZXR0ZXIgaWYgeW91Og0KPg0KPiogbWFr
+ZSB0aGF0IGtmaWZvIGdlbmVyaWMgYW5kIHBhcnQgb2YgZ2hlcy5jIGFuZCBxdWV1ZSBhbGwgdHlw
+ZXMgb2YNCj5lcnJvciByZWNvcmRzIGludG8gaXQgaW4gZ2hlc19kb19wcm9jKCkgLSBub3QganVz
+dCB0aGUgbm9uLXN0YW5kYXJkDQo+b25lcy4NCj4NCj4qIHRoZW4sIHdoZW4geW91J3JlIGRvbmUg
+cXVldWluZywgeW91IGtpY2sgYSB3b3JrcXVldWUuDQo+DQo+KiB0aGF0IHdvcmtxdWV1ZSBydW5z
+IGEgbm9ybWFsLCBibG9ja2luZyBub3RpZmllciB0byB3aGljaCBkcml2ZXJzDQo+cmVnaXN0ZXIu
+DQpTdXJlLiBJIHdpbGwgdGVzdCB0aGlzIG1ldGhvZCBhbmQgdXBkYXRlLg0KQ2FuIHlvdSBwbGVh
+c2UgY29uZmlybSB5b3Ugd2FudCBhbGwgdGhlIGV4aXN0aW5nIHN0YW5kYXJkIGVycm9ycyhtZW1v
+cnksIEFSTSwgUENJRSkgaW4gdGhlIGdoZXNfZG9fcHJvYyAoKQ0KdG8gYmUgcmVwb3J0ZWQgdGhy
+b3VnaCB0aGUgYmxvY2tpbmcgbm90aWZpZXI/DQoNCj4NCj5Zb3VyIGRyaXZlciBjYW4gcmVnaXN0
+ZXIgdG8gdGhhdCBub3RpZmllciB0b28gYW5kIGRvIHRoZSBub3JtYWwgaGFuZGxpbmcNCj50aGVu
+IGFuZCBub3QgaGF2ZSB0aGlzIGFkLWhvYywgc2VtaS1nZW5lcmljLCBzZW1pLXZlbmRvci1zcGVj
+aWZpYyB0aGluZy4NCj4NCj5UaHguDQo+DQo+LS0NCj5SZWdhcmRzL0dydXNzLA0KPiAgICBCb3Jp
+cy4NCj4NCj5odHRwczovL3Blb3BsZS5rZXJuZWwub3JnL3RnbHgvbm90ZXMtYWJvdXQtbmV0aXF1
+ZXR0ZQ0KDQpUaGFua3MsDQpTaGlqdQ0K
