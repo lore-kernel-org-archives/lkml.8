@@ -2,126 +2,136 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0822C43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 21:47:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F8ECC2D0F1
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 21:47:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9428620771
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 21:47:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QYDZvqgy"
+	by mail.kernel.org (Postfix) with ESMTP id 221B92078B
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 21:47:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585604854;
+	bh=6/8IMtsBYVs/ZL7NiDKLX3paM96z8lTPX2wEv7zaKfU=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=Oh+0X8LQ8OJ4SMJxhZPmFOLvAhtvJ4+D0YPK4KkxKQ9YoVXY8jKHIHSeh2698ef6I
+	 D1NTpo5wT9uy9ngCScYp3xVxEIiiAUKqXA+bXMBfPnn3T+5Xaq6vu3D6Fh57Kv5NZY
+	 ZJbO6ZopCcyKB3GeKnRRNCeImQwndNvuKEJUS2es=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729088AbgC3VrV (ORCPT
+        id S1729148AbgC3Vr1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 17:47:21 -0400
-Received: from mail-pj1-f66.google.com ([209.85.216.66]:50198 "EHLO
-        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728626AbgC3VrV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 17:47:21 -0400
-Received: by mail-pj1-f66.google.com with SMTP id v13so192029pjb.0
-        for <linux-kernel@vger.kernel.org>; Mon, 30 Mar 2020 14:47:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=message-id:subject:from:to:cc:date:in-reply-to:references
-         :user-agent:mime-version:content-transfer-encoding;
-        bh=en1IQMIc1TSs5b2IKh+4WaDfSDdVceKaSf3PzbyQVGk=;
-        b=QYDZvqgySdojAuttsMOyUaM59cNDeHhD6pD5L2vS9lo2vYP742n43Ujw1Tg+IkNjSW
-         pRH+VgRK6qCCyDXUQZfye0Snj/Eno6WQWXm8dbkZY9LhTvj02sxEljw63gM0iXhtxi+l
-         C8Shy3SisPiKds6rbsVtHoEV87N7zXc6nWlmIW7Snyj2FpD1wLdSxn0mmi2ljNGj67ZX
-         MloEciRVc7nOmgCrZMBlXk4uHqIi4qf3GUCKDCOSdxHWDUsM71CBa8XKycF+QN7mwCS8
-         KiZaxuR4dT10NUHZD1KeUELRQdKmStLqECScfOAkEu6mXbBWY5Ad+IEmJdSP81M7RrW5
-         xspw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:user-agent:mime-version:content-transfer-encoding;
-        bh=en1IQMIc1TSs5b2IKh+4WaDfSDdVceKaSf3PzbyQVGk=;
-        b=ipqO49F4HFkyCXy6HjSdSx9kywnLPPWP7WNqlgI6/qXgCx6rKfFCq+Zjz+7uInvraA
-         rM1XhE+ZpFKzsDPXfmVN7jbe0d6q13EW/iDMyw/Q72pKwlTPFFPV+Mqh7uJhpHffUO8o
-         nMIbeiglNHBhIoIh5Fg5wVqCb/3G2t2VgMunFq+J/DLxcjYeCVYV1tevg4mWVO8bW9Rj
-         t1vv1awbTGWl8mYouS2KcShseYalnL8HKJ983bNvJJcmj3+IPlwefmhAVcTFiITt3Dzq
-         0a1+ztfl9BtuaCS0hBVVi7q4cHa4pWW76jV4w733lK3BPR7ErDnfrRA+B+T3ERHY3yCK
-         Wmmg==
-X-Gm-Message-State: AGi0PubLh3vIyWGgvWezwDEKhvnASj6PlGOnPZJw3ehkClgh3CYaLcMo
-        b75XQINx4Fd0g4kRwMlhGAY=
-X-Google-Smtp-Source: APiQypKO9FNhqZtpIqoCfW/g91iF4UaQSHBTM3F8V9VJxyYM7VjGkDR2yG+cZqDTO++HN2wJHdfClQ==
-X-Received: by 2002:a17:90b:8c4:: with SMTP id ds4mr212979pjb.44.1585604840076;
-        Mon, 30 Mar 2020 14:47:20 -0700 (PDT)
-Received: from OptiPlexFedora ([47.144.161.84])
-        by smtp.gmail.com with ESMTPSA id z12sm11387743pfj.144.2020.03.30.14.47.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Mar 2020 14:47:19 -0700 (PDT)
-Message-ID: <5d2cda14795500ae6cc862b98907a7210688269f.camel@gmail.com>
-Subject: Re: [Outreachy kernel] [PATCH v5] staging: vt6656: add error code
- handling to unused variable
-From:   "John B. Wyatt IV" <jbwyatt4@gmail.com>
-To:     Stefano Brivio <sbrivio@redhat.com>
-Cc:     outreachy-kernel@googlegroups.com,
-        Julia Lawall <julia.lawall@inria.fr>,
-        Forest Bond <forest@alittletooquiet.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Quentin Deslandes <quentin.deslandes@itdev.co.uk>,
-        Colin Ian King <colin.king@canonical.com>,
-        Malcolm Priestley <tvboxspy@gmail.com>,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Date:   Mon, 30 Mar 2020 14:47:18 -0700
-In-Reply-To: <20200330230634.3b905158@elisabeth>
-References: <20200330184517.33074-1-jbwyatt4@gmail.com>
-         <20200330230634.3b905158@elisabeth>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
+        Mon, 30 Mar 2020 17:47:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38554 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728626AbgC3Vr0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Mar 2020 17:47:26 -0400
+Received: from localhost (mobile-166-175-186-165.mycingular.net [166.175.186.165])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3F53720733;
+        Mon, 30 Mar 2020 21:47:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1585604845;
+        bh=6/8IMtsBYVs/ZL7NiDKLX3paM96z8lTPX2wEv7zaKfU=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=t8W4J+XQjr3z6eAglVlitJGmOmiJZMSlDej7zIE58C/b82pmZeKp+W3rh1wAFg5vA
+         LlMSCCG7EKzxQFuYai0lVPqaCSMbissPGkxXDtelwI0osColYKtQr0s3yMK5Yuc8XN
+         OgW3SItZrsnVux2srolpCsfeCzPR876KzCDRS4qI=
+Date:   Mon, 30 Mar 2020 16:47:21 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Vidya Sagar <vidyas@nvidia.com>
+Cc:     lorenzo.pieralisi@arm.com, robh+dt@kernel.org,
+        thierry.reding@gmail.com, jonathanh@nvidia.com,
+        andrew.murray@arm.com, kishon@ti.com,
+        gustavo.pimentel@synopsys.com, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        kthota@nvidia.com, mmaddireddy@nvidia.com, sagar.tv@gmail.com
+Subject: Re: [PATCH V5 5/5] PCI: tegra: Add support for PCIe endpoint mode in
+ Tegra194
+Message-ID: <20200330214721.GA128269@google.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200303181052.16134-6-vidyas@nvidia.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2020-03-30 at 23:06 +0200, Stefano Brivio wrote:
-> On Mon, 30 Mar 2020 11:45:17 -0700
-> "John B. Wyatt IV" <jbwyatt4@gmail.com> wrote:
+On Tue, Mar 03, 2020 at 11:40:52PM +0530, Vidya Sagar wrote:
+> Add support for the endpoint mode of Synopsys DesignWare core based
+> dual mode PCIe controllers present in Tegra194 SoC.
 > 
-> > Add error code handling to unused 'ret' variable that was never
-> > used.
-> > Return an error code from functions called within
-> > vnt_radio_power_on.
-> > 
-> > Issue reported by coccinelle (coccicheck).
-> > 
-> > Suggested-by: Quentin Deslandes <quentin.deslandes@itdev.co.uk>
-> > Suggested-by: Stefano Brivio <sbrivio@redhat.com>
-> > Reviewed-by: Quentin Deslandes <quentin.deslandes@itdev.co.uk>
-> > Signed-off-by: John B. Wyatt IV <jbwyatt4@gmail.com>
-> > ---
-> > v5: Remove Suggested-by: Julia Lawall above seperator line.
-> >     Remove break; statement in switch block.
-> >     break; removal checked by both gcc compile and checkpatch.
-> > 
-> > [...]
-> > 
-> > @@ -734,14 +738,15 @@ int vnt_radio_power_on(struct vnt_private
-> > *priv)
-> >  	case RF_VT3226:
-> >  	case RF_VT3226D0:
-> >  	case RF_VT3342A0:
-> > -		vnt_mac_reg_bits_on(priv, MAC_REG_SOFTPWRCTL,
-> > -				    (SOFTPWRCTL_SWPE2 |
-> > SOFTPWRCTL_SWPE3));
-> > +		ret = vnt_mac_reg_bits_on(priv, MAC_REG_SOFTPWRCTL,
-> > +					  (SOFTPWRCTL_SWPE2 | 
-> > +					  SOFTPWRCTL_SWPE3));
-> >  		break;
-> >  	}
-> > +	if (ret)
-> > +		return ret;
+> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+> Acked-by: Thierry Reding <treding@nvidia.com>
+> ---
+> V5:
+> * Added Acked-by: Thierry Reding <treding@nvidia.com>
+> * Removed unwanted header file inclusion
 > 
-> Did you send the wrong version perhaps?
+> V4:
+> * Addressed Lorenzo's review comments
+> * Started using threaded irqs instead of kthreads
 > 
+> V3:
+> * Addressed Thierry's review comments
+> 
+> V2:
+> * Addressed Bjorn's review comments
+> * Made changes as part of addressing review comments for other patches
+> 
+>  drivers/pci/controller/dwc/Kconfig         |  30 +-
+>  drivers/pci/controller/dwc/pcie-tegra194.c | 679 ++++++++++++++++++++-
+>  2 files changed, 691 insertions(+), 18 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/dwc/Kconfig b/drivers/pci/controller/dwc/Kconfig
+> index 0830dfcfa43a..169cde58dd92 100644
+> --- a/drivers/pci/controller/dwc/Kconfig
+> +++ b/drivers/pci/controller/dwc/Kconfig
+> @@ -248,14 +248,38 @@ config PCI_MESON
+>  	  implement the driver.
+>  
+>  config PCIE_TEGRA194
+> -	tristate "NVIDIA Tegra194 (and later) PCIe controller"
+> +	tristate
+> +
+> +config PCIE_TEGRA194_HOST
+> +	tristate "NVIDIA Tegra194 (and later) PCIe controller - Host Mode"
+>  	depends on ARCH_TEGRA_194_SOC || COMPILE_TEST
+>  	depends on PCI_MSI_IRQ_DOMAIN
+>  	select PCIE_DW_HOST
+>  	select PHY_TEGRA194_P2U
+> +	select PCIE_TEGRA194
+> +	default y
 
-Yes. My apologies. Please see v6.
+Sorry I missed this before, but why is this "default y"?  From
+Documentation/kbuild/kconfig-language.rst:
 
+  The default value deliberately defaults to 'n' in order to avoid
+  bloating the build. With few exceptions, new config options should
+  not change this. The intent is for "make oldconfig" to add as little
+  as possible to the config from release to release.
+
+I do see that several other things in other drivers/pci/ Kconfig files
+are also "default y", and we should probably change some of them.  But
+I don't want to add even more unless there's a good reason.
+
+I'm not looking for more reactions like these:
+
+https://lore.kernel.org/r/CAHk-=wiZ24JuVehJ5sEC0UG1Gk2nvB363wO02RRsR1oEht6R9Q@mail.gmail.com
+https://lore.kernel.org/r/CA+55aFzPpuHU1Nqd595SEQS=F+kXMzPs0Rba9FUgTodGxmXsgg@mail.gmail.com
+
+Can you please update this patch to either remove the "default y" or
+add the rationale for keeping it?
+
+> +	help
+> +	  Enables support for the PCIe controller in the NVIDIA Tegra194 SoC to
+> +	  work in host mode. There are two instances of PCIe controllers in
+> +	  Tegra194. This controller can work either as EP or RC. In order to
+> +	  enable host-specific features PCIE_TEGRA194_HOST must be selected and
+> +	  in order to enable device-specific features PCIE_TEGRA194_EP must be
+> +	  selected. This uses the DesignWare core.
