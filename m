@@ -2,84 +2,197 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B366C43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 02:34:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 021AFC2D0EF
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 02:34:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C70E206DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 02:34:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CDD0820780
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 02:34:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="EZj/LdDI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729365AbgC3Cee (ORCPT
+        id S1729014AbgC3Cdg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Mar 2020 22:34:34 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:12144 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729055AbgC3Ced (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Mar 2020 22:34:33 -0400
-Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 56FE985823BD02648F9E;
-        Mon, 30 Mar 2020 10:34:31 +0800 (CST)
-Received: from localhost (10.173.223.234) by DGGEMS409-HUB.china.huawei.com
- (10.3.19.209) with Microsoft SMTP Server id 14.3.487.0; Mon, 30 Mar 2020
- 10:34:21 +0800
-From:   YueHaibing <yuehaibing@huawei.com>
-To:     <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
-        <allison@lohutok.net>, <gregkh@linuxfoundation.org>,
-        <kstewart@linuxfoundation.org>, <info@metux.net>,
-        <tglx@linutronix.de>, <yuehaibing@huawei.com>
-CC:     <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH -next] memory: tegra: mark PM functions as __maybe_unuse
-Date:   Mon, 30 Mar 2020 10:33:58 +0800
-Message-ID: <20200330023358.30100-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.10.2.windows.1
+        Sun, 29 Mar 2020 22:33:36 -0400
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:45504 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728908AbgC3Cdf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Mar 2020 22:33:35 -0400
+Received: by mail-qt1-f194.google.com with SMTP id t17so13887384qtn.12
+        for <linux-kernel@vger.kernel.org>; Sun, 29 Mar 2020 19:33:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=joelfernandes.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=SHLAtJMh4QvoU/qfwuEaXXVei4ZAh6L5O9IfzaCS1DM=;
+        b=EZj/LdDIb8HO3LYMjwICXSEVb7Ug5CB6y+9yeeADTqwVWhn/iu4pUuRlJQp8IWjNRv
+         ZHhEK+CiED++Nq7ZmpKIIk9AzYqhwZhx4OfWzy5quBd5oc00JjePZcq6xqYMOn+tAGOG
+         pzdgsMtvd6/BeARibxZlYR4poF6nx+XzQnoHc=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=SHLAtJMh4QvoU/qfwuEaXXVei4ZAh6L5O9IfzaCS1DM=;
+        b=tJ1q2TLMw3Jg0N2goI4FwZgPUpP8a3SxdfdCgOiORp93UKMsL1vI5CRF0Zkyi79a/S
+         ozpfOhrqawJhnHH10+5bK4sLa0Aetea0llINL5jnQAZL99XrCwepeIW7S5A6BMSXuq0t
+         DUCM/FDhua+2AES6m7pgZG9ZDvOpR99tFS2kw+PyZhHFCIlco+80BdiOD/RJtqHOjMGG
+         PkXeARAipPezYPtXnemTf5kIfUPZwplHXul9XdXoI/xfvcMlwBdl53v8Fi+exkvDc3hQ
+         CcdhcxgFgZ4LhoctkHCAp+LiuLFuSYjA0pnTZmmtlj9wMvXTMjJ9hgujpuMy39WEyTl3
+         D1ww==
+X-Gm-Message-State: ANhLgQ20lNUaHDBLZZlva3v2yGimL2MEyYNd7IEtdmud1xhc75368D6Q
+        Qzn34uaMJE5Gc4kFqtGmTrAxUbaWlk0=
+X-Google-Smtp-Source: ADFU+vt25iE1CsRcLCeax/iZQAcxxqmJ1TSX0Yl3KB0TJZ2nCudJEfCk4XFJ5v786E3wtic9LAXdDA==
+X-Received: by 2002:aed:2535:: with SMTP id v50mr10066898qtc.354.1585535613043;
+        Sun, 29 Mar 2020 19:33:33 -0700 (PDT)
+Received: from joelaf.cam.corp.google.com ([2620:15c:6:12:9c46:e0da:efbf:69cc])
+        by smtp.gmail.com with ESMTPSA id q15sm10030625qtj.83.2020.03.29.19.33.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 29 Mar 2020 19:33:32 -0700 (PDT)
+From:   "Joel Fernandes (Google)" <joel@joelfernandes.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     "Uladzislau Rezki (Sony)" <urezki@gmail.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Lai Jiangshan <jiangshanlai@gmail.com>, linux-mm@kvack.org,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        rcu@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>
+Subject: [PATCH 02/18] rcu: Introduce kvfree_rcu() interface
+Date:   Sun, 29 Mar 2020 22:32:32 -0400
+Message-Id: <20200330023248.164994-3-joel@joelfernandes.org>
+X-Mailer: git-send-email 2.26.0.rc2.310.g2932bb562d-goog
+In-Reply-To: <20200330023248.164994-1-joel@joelfernandes.org>
+References: <20200330023248.164994-1-joel@joelfernandes.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.173.223.234]
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Without this, we get a couple of warnings when CONFIG_PM
-is disabled:
+From: "Uladzislau Rezki (Sony)" <urezki@gmail.com>
 
-drivers/memory/tegra/tegra186.c:1578:12: warning: 'tegra186_mc_resume' defined but not used [-Wunused-function]
- static int tegra186_mc_resume(struct device *dev)
-            ^~~~~~~~~~~~~~~~~~
-drivers/memory/tegra/tegra186.c:1573:12: warning: 'tegra186_mc_suspend' defined but not used [-Wunused-function]
- static int tegra186_mc_suspend(struct device *dev)
-            ^~~~~~~~~~~~~~~~~~~
+kvfree_rcu() can deal with an allocated memory that is obtained
+via kvmalloc(). It can return two types of allocated memory or
+"pointers", one can belong to regular SLAB allocator and another
+one can be vmalloc one. It depends on requested size and memory
+pressure.
 
-Fixes: 177602b00641 ("memory: tegra: Add system sleep support")
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Based on that, two streams are split, thus if a pointer belongs
+to vmalloc allocator it is queued to the list, otherwise SLAB
+one is queued into "bulk array" for further processing.
+
+The main reason of such splitting is:
+    a) to distinguish kmalloc()/vmalloc() ptrs;
+    b) there is no vmalloc_bulk() interface.
+
+As of now we have list_lru.c user that needs such interface,
+also there will be new comers. Apart of that it is preparation
+to have a head-less variant later.
+
+Signed-off-by: Uladzislau Rezki (Sony) <urezki@gmail.com>
+Reviewed-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
 ---
- drivers/memory/tegra/tegra186.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ include/linux/rcupdate.h |  9 +++++++++
+ kernel/rcu/tiny.c        |  3 ++-
+ kernel/rcu/tree.c        | 17 ++++++++++++-----
+ 3 files changed, 23 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/memory/tegra/tegra186.c b/drivers/memory/tegra/tegra186.c
-index 5d53f11ca7b6..e25c954dde2e 100644
---- a/drivers/memory/tegra/tegra186.c
-+++ b/drivers/memory/tegra/tegra186.c
-@@ -1570,12 +1570,12 @@ static const struct of_device_id tegra186_mc_of_match[] = {
- };
- MODULE_DEVICE_TABLE(of, tegra186_mc_of_match);
+diff --git a/include/linux/rcupdate.h b/include/linux/rcupdate.h
+index 3598bbb5ff407..8b7128d0860e2 100644
+--- a/include/linux/rcupdate.h
++++ b/include/linux/rcupdate.h
+@@ -870,6 +870,15 @@ do {									\
+ 		__kfree_rcu(&((___p)->rhf), offsetof(typeof(*(ptr)), rhf)); \
+ } while (0)
  
--static int tegra186_mc_suspend(struct device *dev)
-+static int __maybe_unused tegra186_mc_suspend(struct device *dev)
- {
- 	return 0;
- }
++/**
++ * kvfree_rcu() - kvfree an object after a grace period.
++ * @ptr:	pointer to kvfree
++ * @rhf:	the name of the struct rcu_head within the type of @ptr.
++ *
++ * Same as kfree_rcu(), just simple alias.
++ */
++#define kvfree_rcu(ptr, rhf) kfree_rcu(ptr, rhf)
++
+ /*
+  * Place this after a lock-acquisition primitive to guarantee that
+  * an UNLOCK+LOCK pair acts as a full barrier.  This guarantee applies
+diff --git a/kernel/rcu/tiny.c b/kernel/rcu/tiny.c
+index dd572ce7c7479..4b99f7b88beec 100644
+--- a/kernel/rcu/tiny.c
++++ b/kernel/rcu/tiny.c
+@@ -23,6 +23,7 @@
+ #include <linux/cpu.h>
+ #include <linux/prefetch.h>
+ #include <linux/slab.h>
++#include <linux/mm.h>
  
--static int tegra186_mc_resume(struct device *dev)
-+static int __maybe_unused tegra186_mc_resume(struct device *dev)
- {
- 	struct tegra186_mc *mc = dev_get_drvdata(dev);
+ #include "rcu.h"
  
+@@ -86,7 +87,7 @@ static inline bool rcu_reclaim_tiny(struct rcu_head *head)
+ 	rcu_lock_acquire(&rcu_callback_map);
+ 	if (__is_kfree_rcu_offset(offset)) {
+ 		trace_rcu_invoke_kfree_callback("", head, offset);
+-		kfree((void *)head - offset);
++		kvfree((void *)head - offset);
+ 		rcu_lock_release(&rcu_callback_map);
+ 		return true;
+ 	}
+diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
+index 4eb424eb44acb..2d10c50621c38 100644
+--- a/kernel/rcu/tree.c
++++ b/kernel/rcu/tree.c
+@@ -2925,9 +2925,9 @@ static void kfree_rcu_work(struct work_struct *work)
+ 	}
+ 
+ 	/*
+-	 * Emergency case only. It can happen under low memory
+-	 * condition when an allocation gets failed, so the "bulk"
+-	 * path can not be temporary maintained.
++	 * vmalloc() pointers end up here also emergency case. It can
++	 * happen under low memory condition when an allocation gets
++	 * failed, so the "bulk" path can not be temporary maintained.
+ 	 */
+ 	for (; head; head = next) {
+ 		unsigned long offset = (unsigned long)head->func;
+@@ -2938,7 +2938,7 @@ static void kfree_rcu_work(struct work_struct *work)
+ 		trace_rcu_invoke_kfree_callback(rcu_state.name, head, offset);
+ 
+ 		if (!WARN_ON_ONCE(!__is_kfree_rcu_offset(offset)))
+-			kfree((void *)head - offset);
++			kvfree((void *)head - offset);
+ 
+ 		rcu_lock_release(&rcu_callback_map);
+ 		cond_resched_tasks_rcu_qs();
+@@ -3112,10 +3112,17 @@ void kfree_call_rcu(struct rcu_head *head, rcu_callback_t func)
+ 	}
+ 
+ 	/*
++	 * We do not queue vmalloc pointers into array,
++	 * instead they are just queued to the list. We
++	 * do it because of:
++	 *    a) to distinguish kmalloc()/vmalloc() ptrs;
++	 *    b) there is no vmalloc_bulk() interface.
++	 *
+ 	 * Under high memory pressure GFP_NOWAIT can fail,
+ 	 * in that case the emergency path is maintained.
+ 	 */
+-	if (unlikely(!kfree_call_rcu_add_ptr_to_bulk(krcp, head, func))) {
++	if (is_vmalloc_addr((void *) head - (unsigned long) func) ||
++			!kfree_call_rcu_add_ptr_to_bulk(krcp, head, func)) {
+ 		head->func = func;
+ 		head->next = krcp->head;
+ 		krcp->head = head;
 -- 
-2.17.1
-
+2.26.0.rc2.310.g2932bb562d-goog
 
