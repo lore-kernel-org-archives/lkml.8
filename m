@@ -2,232 +2,81 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55693C2D0EB
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 09:11:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47F1FC43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 09:11:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 233CF20716
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 09:11:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oqSDgBmM"
+	by mail.kernel.org (Postfix) with ESMTP id 1906D20774
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 09:11:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585559515;
+	bh=M/zY77eHLeTEmIMgAYpOzNcqbjydR60IJtquEkYCTMs=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=dx3uVPCwgX2qtu16i/YFKompOHXJV3RmX0lV7InXedTiza4mKPgc9ba9JGnnLnpnp
+	 vFb3HiDzm8SWfxLvJysz9AqEZRBo1w/E1Pd0qzD2Us1VZNmITFVJoezw0o9AO8Kkyi
+	 z9MlouHiqu7LeACiYsG3PkxKdGefm/wAsjFgTsc0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727883AbgC3JLl (ORCPT
+        id S1728002AbgC3JLy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 05:11:41 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:40474 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726127AbgC3JLl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 05:11:41 -0400
-Received: by mail-wr1-f68.google.com with SMTP id u10so20616012wro.7;
-        Mon, 30 Mar 2020 02:11:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:references:in-reply-to:subject:date:message-id
-         :mime-version:content-transfer-encoding:content-language
-         :thread-index;
-        bh=0LeJgAAnqX5pXOrfef4xQXrRSfLT4+sg2yao8l8UpUo=;
-        b=oqSDgBmM5x17cFwzxmQ4aKtBKKTo3bCW+JdPMF4cGEbuLpL36HpfPPnhS+5EVme0lu
-         fDDoy3D0J2JgONLIoJV/zdCGmEliuTMPtSV4RDbi+YgixFtXbWz0NMA5CdbTh+XjHNKM
-         JN7dgbYWfyXFTS1v+/83Ecp7x5g8uhtq8Nv5BRUHhQSiwOUcQGe/KPK6pWb4wqCGTsGR
-         4lDNIA+N9dEo5/zu4GtDSwVmonvMFCfZnJ9XUmrzoECm8ZH/Hm+MmHNjfcczFkMFZ7XA
-         Nkn6DS2wmFhrRuadEsjIMbv9LGt3p3Wfz4R33XVzDnFf8Aa4GZZEOpQxTOZMaqeBJmAK
-         uodA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:references:in-reply-to:subject:date
-         :message-id:mime-version:content-transfer-encoding:content-language
-         :thread-index;
-        bh=0LeJgAAnqX5pXOrfef4xQXrRSfLT4+sg2yao8l8UpUo=;
-        b=QpR93H0G0Xodh8euyQj1MDbTPDeG9tBGLrDAhRHucjB5JruX+L3IPBkW6eXK/vIafj
-         l2LihzgtLxVzSYDQadyp/QfbsbZhKSMtDCd1LvAUA1m9vgdkRgkWnNVAgzmKHca3mFkb
-         3wmuwCGWm8lHWwByvYM/y4EhmsSFuBoobLCcSi2FEfbBuo67nqt3IEvnklbyhRrxdhU9
-         5SOoWSFGnWatatoxz0z2oFuq4vnA2gxS0i+Ur9245ve6gtpdoAvnyFbEaxCB9LQ9ZKqK
-         T8Zxkh7mjF/LpuMKWILV5ZAN7DqT8Qly7fg/rx4nwwL1m+AH9AhzmtOlGX2ubqYz+xTi
-         79fA==
-X-Gm-Message-State: ANhLgQ1O8E3zuPjpBDxOv8XS3BOGtS3W/NYj5pSpea73vHqWRp98wMoU
-        /0sMCl0wRFJC4MGZsZc5NkGI3AZTeE8diQ==
-X-Google-Smtp-Source: ADFU+vt80BhEaT/0s1wFJRln1sRKF1TzwFGfKfiumPqP9pMb6+RbT2Vuuc3pqtdCItqkKlovRaxp/Q==
-X-Received: by 2002:a5d:460e:: with SMTP id t14mr13819799wrq.421.1585559498062;
-        Mon, 30 Mar 2020 02:11:38 -0700 (PDT)
-Received: from AnsuelXPS ([2001:470:b467:1:d1ad:50bb:f012:e16])
-        by smtp.gmail.com with ESMTPSA id l185sm10880289wml.44.2020.03.30.02.11.35
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 30 Mar 2020 02:11:36 -0700 (PDT)
-From:   <ansuelsmth@gmail.com>
-To:     "'Stephen Rothwell'" <sfr@canb.auug.org.au>,
-        "'Linus Walleij'" <linus.walleij@linaro.org>
-Cc:     "'Linux Next Mailing List'" <linux-next@vger.kernel.org>,
-        "'Linux Kernel Mailing List'" <linux-kernel@vger.kernel.org>,
-        "'Ajay Kishore'" <akisho@codeaurora.org>,
-        "'Bjorn Andersson'" <bjorn.andersson@linaro.org>
-References: <20200330171946.4e48fbd9@canb.auug.org.au>
-In-Reply-To: <20200330171946.4e48fbd9@canb.auug.org.au>
-Subject: R: linux-next: build failure after merge of the pinctrl tree
-Date:   Mon, 30 Mar 2020 11:11:34 +0200
-Message-ID: <00ff01d60673$37177c20$a5467460$@gmail.com>
+        Mon, 30 Mar 2020 05:11:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58418 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726127AbgC3JLx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Mar 2020 05:11:53 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 009FE206CC;
+        Mon, 30 Mar 2020 09:11:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1585559513;
+        bh=M/zY77eHLeTEmIMgAYpOzNcqbjydR60IJtquEkYCTMs=;
+        h=Date:From:To:Cc:Subject:From;
+        b=a9RC4nX+uqOnIFgWvL9HeiSHMG07zPLYOFnv5bL8Rkm39HEeN4RM0J5Z16v4wC6p/
+         feRM70DK3htR+QIRWu+tndoj+dKutbJSFNh/phFYIhs2S57qdnioL7KTEJBBKi/0ck
+         G2Bos2AfoL4cxkdug9g9SNcRK9hEezwowv95MGiA=
+Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=why)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1jIqSV-00GpBZ-84; Mon, 30 Mar 2020 10:11:51 +0100
+Date:   Mon, 30 Mar 2020 10:11:49 +0100
+From:   Marc Zyngier <maz@kernel.org>
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>
+Subject: Email address update
+Message-ID: <20200330101149.0e3263c7@why>
+Organization: Approximate
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain;
-        charset="us-ascii"
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Mailer: Microsoft Outlook 16.0
-Content-Language: it
-Thread-Index: AQHOQtNMcV7el3iWp8zcu7kRQ8Bdo6hwYFzQ
+X-SA-Exim-Connect-IP: 62.31.163.78
+X-SA-Exim-Rcpt-To: sfr@canb.auug.org.au, linux-kernel@vger.kernel.org, tglx@linutronix.de
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> Hi all,
-> 
-> After merging the pinctrl tree, today's linux-next build (arm
-> multi_v7_defconfig) failed like this:
-> 
-> drivers/pinctrl/qcom/pinctrl-msm.c:909:4: error: expected identifier or
-'('
-> before 'else'
->   909 |  } else {
->       |    ^~~~
-> drivers/pinctrl/qcom/pinctrl-msm.c:921:2: warning: data definition has no
-> type or storage class
->   921 |  val = msm_readl_intr_cfg(pctrl, g);
->       |  ^~~
-> drivers/pinctrl/qcom/pinctrl-msm.c:921:2: error: type defaults to 'int' in
-> declaration of 'val' [-Werror=implicit-int]
-> drivers/pinctrl/qcom/pinctrl-msm.c:921:27: error: 'pctrl' undeclared here
-> (not in a function); did you mean 'pinctrl'?
->   921 |  val = msm_readl_intr_cfg(pctrl, g);
->       |                           ^~~~~
->       |                           pinctrl
-> drivers/pinctrl/qcom/pinctrl-msm.c:921:34: error: 'g' undeclared here (not
-> in a function)
->   921 |  val = msm_readl_intr_cfg(pctrl, g);
->       |                                  ^
-> drivers/pinctrl/qcom/pinctrl-msm.c:922:6: error: expected '=', ',', ';',
-'asm'
-> or '__attribute__' before '|=' token
->   922 |  val |= BIT(g->intr_raw_status_bit);
->       |      ^~
-> drivers/pinctrl/qcom/pinctrl-msm.c:923:2: error: expected identifier or
-'('
-> before 'if'
->   923 |  if (g->intr_detection_width == 2) {
->       |  ^~
-> drivers/pinctrl/qcom/pinctrl-msm.c:945:4: error: expected identifier or
-'('
-> before 'else'
->   945 |  } else if (g->intr_detection_width == 1) {
->       |    ^~~~
-> drivers/pinctrl/qcom/pinctrl-msm.c:966:4: error: expected identifier or
-'('
-> before 'else'
->   966 |  } else {
->       |    ^~~~
-> drivers/pinctrl/qcom/pinctrl-msm.c:969:2: warning: data definition has no
-> type or storage class
->   969 |  msm_writel_intr_cfg(val, pctrl, g);
->       |  ^~~~~~~~~~~~~~~~~~~
-> drivers/pinctrl/qcom/pinctrl-msm.c:969:2: error: type defaults to 'int' in
-> declaration of 'msm_writel_intr_cfg' [-Werror=implicit-int]
-> drivers/pinctrl/qcom/pinctrl-msm.c:969:2: warning: parameter names
-> (without types) in function declaration
-> drivers/pinctrl/qcom/pinctrl-msm.c:969:2: error: conflicting types for
-> 'msm_writel_intr_cfg'
-> drivers/pinctrl/qcom/pinctrl-msm.c:84:13: note: previous definition of
-> 'msm_writel_intr_cfg' was here
->    84 | static void msm_writel_##name(u32 val, struct msm_pinctrl *pctrl,
-> \
->       |             ^~~~~~~~~~~
-> drivers/pinctrl/qcom/pinctrl-msm.c:92:1: note: in expansion of macro
-> 'MSM_ACCESSOR'
->    92 | MSM_ACCESSOR(intr_cfg)
->       | ^~~~~~~~~~~~
-> drivers/pinctrl/qcom/pinctrl-msm.c:971:2: error: expected identifier or
-'('
-> before 'if'
->   971 |  if (test_bit(d->hwirq, pctrl->dual_edge_irqs))
->       |  ^~
-> In file included from include/linux/vmalloc.h:5,
->                  from include/asm-generic/io.h:887,
->                  from arch/arm/include/asm/io.h:438,
->                  from include/linux/io.h:13,
->                  from drivers/pinctrl/qcom/pinctrl-msm.c:9:
-> include/linux/spinlock.h:287:2: error: expected identifier or '(' before
-'do'
->   287 |  do {       \
->       |  ^~
-> drivers/pinctrl/qcom/pinctrl-msm.c:974:2: note: in expansion of macro
-> 'raw_spin_unlock_irqrestore'
->   974 |  raw_spin_unlock_irqrestore(&pctrl->lock, flags);
->       |  ^~~~~~~~~~~~~~~~~~~~~~~~~~
-> include/linux/spinlock.h:290:4: error: expected identifier or '(' before
-'while'
->   290 |  } while (0)
->       |    ^~~~~
-> drivers/pinctrl/qcom/pinctrl-msm.c:974:2: note: in expansion of macro
-> 'raw_spin_unlock_irqrestore'
->   974 |  raw_spin_unlock_irqrestore(&pctrl->lock, flags);
->       |  ^~~~~~~~~~~~~~~~~~~~~~~~~~
-> drivers/pinctrl/qcom/pinctrl-msm.c:976:2: error: expected identifier or
-'('
-> before 'if'
->   976 |  if (type & (IRQ_TYPE_LEVEL_LOW | IRQ_TYPE_LEVEL_HIGH))
->       |  ^~
-> drivers/pinctrl/qcom/pinctrl-msm.c:978:2: error: expected identifier or
-'('
-> before 'else'
->   978 |  else if (type & (IRQ_TYPE_EDGE_FALLING |
-> IRQ_TYPE_EDGE_RISING))
->       |  ^~~~
-> drivers/pinctrl/qcom/pinctrl-msm.c:981:2: error: expected identifier or
-'('
-> before 'return'
->   981 |  return 0;
->       |  ^~~~~~
-> drivers/pinctrl/qcom/pinctrl-msm.c:982:1: error: expected identifier or
-'('
-> before '}' token
->   982 | }
->       | ^
-> drivers/pinctrl/qcom/pinctrl-msm.c: In function 'msm_gpio_irq_set_type':
-> drivers/pinctrl/qcom/pinctrl-msm.c:909:2: warning: control reaches end of
-> non-void function [-Wreturn-type]
->   909 |  } else {
->       |  ^
-> At top level:
-> drivers/pinctrl/qcom/pinctrl-msm.c:84:13: warning:
-> 'msm_writel_intr_target' defined but not used [-Wunused-function]
->    84 | static void msm_writel_##name(u32 val, struct msm_pinctrl *pctrl,
-> \
->       |             ^~~~~~~~~~~
-> drivers/pinctrl/qcom/pinctrl-msm.c:94:1: note: in expansion of macro
-> 'MSM_ACCESSOR'
->    94 | MSM_ACCESSOR(intr_target)
->       | ^~~~~~~~~~~~
-> drivers/pinctrl/qcom/pinctrl-msm.c:79:12: warning:
-> 'msm_readl_intr_target' defined but not used [-Wunused-function]
->    79 | static u32 msm_readl_##name(struct msm_pinctrl *pctrl, \
->       |            ^~~~~~~~~~
-> drivers/pinctrl/qcom/pinctrl-msm.c:94:1: note: in expansion of macro
-> 'MSM_ACCESSOR'
->    94 | MSM_ACCESSOR(intr_target)
->       | ^~~~~~~~~~~~
-> 
-> Caused by commit
-> 
->   13bec8d49bdf ("pinctrl: qcom: use scm_call to route GPIO irq to Apps")
-> 
-> I have reverted that commit for today.
-> 
-> --
-> Cheers,
-> Stephen Rothwell
+Hi Stephen,
 
-Hello I sent a v4 of the broken patch. I'm really sorry for the mess... If I
-should fix 
-this in a different way pls tell me how and I will do ASAP.
+It seems that I failed to update you on my email address change a few
+months ago, and that you've been sending notices of issues with
+linux/next [1] to my old address, which I don't have access to anymore.
 
+Could you please replace all instances of marc.zyngier@arm.com with
+maz@kernel.org as the point of contact for both the irqchip and kvm/arm
+trees?
+
+Thanks,
+
+	M.
+
+[1] https://lore.kernel.org/linux-next/20200326173656.691628e8@canb.auug.org.au/
+-- 
+Jazz is not dead. It just smells funny...
