@@ -2,116 +2,117 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B94EC2D0EE
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 15:41:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FE29C2D0F0
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 15:42:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D3E6A2073B
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 15:41:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=concurrentrt.onmicrosoft.com header.i=@concurrentrt.onmicrosoft.com header.b="KcOK2XgG"
+	by mail.kernel.org (Postfix) with ESMTP id 1678C2073B
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 15:42:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585582929;
+	bh=BAEX+yj2dVRYDWN3efKmGslHtehJLflllKYRDdr4nVs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ux2aePxRpqZRAK8e/jJtiH+WVW/bRIFOosQ84/tuRsCHdn9lqG39RXf2n7jnDeVfs
+	 e6nggsdGHisxT2Su2ACj5d9imQwgTzRqkSJZZnqtIIXDblSrxwEi1YqfS4+g/RJk5r
+	 svpTKk74HGkK9sWKPXuBclNW2Iykg0GM5Fnztatk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729638AbgC3PlT (ORCPT
+        id S1729642AbgC3PmI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 11:41:19 -0400
-Received: from mail-mw2nam12on2123.outbound.protection.outlook.com ([40.107.244.123]:21057
-        "EHLO NAM12-MW2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729564AbgC3PlS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 11:41:18 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=nDxwwApqQTGCzpZYNZi0wpyEXKr2e5F4mqFZPeiekIj+ZjhFx3dPyLZqFOuRJCwnPutUitZGwdjQyJNasVP35KmffDoTDKxNPK6b4bAMKVWSc3s9hb/D97SoF+17RrdexgXKYx7wSXIdiJIKW+Y04iO/y2pN21LGGpVoQFbZBgtDlyOENBqcujrTuaoiUIEjr5ay60S9jMavUl4d4muRyIb99PkK3y1SjUB/HiuOIPyvCPfZX0DrpHxjRCqTjk6G7Q4DGtl1BWMVmJ/kESZTCJyvImFpjjkeFSLouqc1nHMFW2/sl7okfZS97h6BV5IMyGLlqh6ws9Q9jZzxgLYmjg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=cwSUmV0Gbk1J2UiGlCd1g2FiO2HGqL1krEKsyo3x/zk=;
- b=J+JKbnziY6si4DSUunt1zczNG3/qQnThqEmMv5grIzmHItyoV/mikvTCQmTl1v3tZT+zEzNy5I78boLvbTHXu3grtfC4MoQpwwYGy2mxvANyVN837G5hGL7yhd2ZbmFwXGkkQBuITENnUDC7y98dqnW4XU8IjGo4n35dviP39qsXVxkqkLoPI4oU2ubwpQ6ggT63VOUHtNWDZhpQCgHNyerKvMj9Xb4V7oIin+zNsWSH7OqHElJenW43QwysD0Y2yi2YHDVd9fiavR0IdQO+ZdVAaM9XpaBk9N18d6jO/3pEZDDcb9E/o99VYqdxWkztG/2guaWVk6zwlQptZaGoJQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=concurrent-rt.com; dmarc=pass action=none
- header.from=concurrent-rt.com; dkim=pass header.d=concurrent-rt.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=concurrentrt.onmicrosoft.com; s=selector2-concurrentrt-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=cwSUmV0Gbk1J2UiGlCd1g2FiO2HGqL1krEKsyo3x/zk=;
- b=KcOK2XgGefNTl1bGJq6Wbzo7SeOAilzbN0kBvWxZrx9LkNjJN8VORmyYp4CqOiI9iGQI14dJwJCEoCd8wg0DoO1m+Tv0w1siKm9cSd3EIEi5LyimjWz8qV3PDtEn3sPOpJG2xx3KFpHfAn8tx6UkHlm4atrRDChRTtIDJV0yW8Q=
-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=Joe.Korty@concurrent-rt.com; 
-Received: from CH2PR11MB4341.namprd11.prod.outlook.com (2603:10b6:610:3c::19)
- by CH2PR11MB4456.namprd11.prod.outlook.com (2603:10b6:610:48::22) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2856.20; Mon, 30 Mar
- 2020 15:41:13 +0000
-Received: from CH2PR11MB4341.namprd11.prod.outlook.com
- ([fe80::bd65:23a4:2f16:a20]) by CH2PR11MB4341.namprd11.prod.outlook.com
- ([fe80::bd65:23a4:2f16:a20%5]) with mapi id 15.20.2856.019; Mon, 30 Mar 2020
- 15:41:13 +0000
-Date:   Mon, 30 Mar 2020 11:41:10 -0400
-From:   Joe Korty <joe.korty@concurrent-rt.com>
-To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-rt-users <linux-rt-users@vger.kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>
-Subject: Re: [ANNOUNCE] v5.4.26-rt17
-Message-ID: <20200330154110.GA2975@zipoli.concurrent-rt.com>
-Reply-To: Joe Korty <joe.korty@concurrent-rt.com>
-References: <20200320192830.zeci3rhh5bgbareg@linutronix.de>
+        Mon, 30 Mar 2020 11:42:08 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:46313 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726497AbgC3PmH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Mar 2020 11:42:07 -0400
+Received: by mail-io1-f66.google.com with SMTP id i3so9065464ioo.13;
+        Mon, 30 Mar 2020 08:42:06 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=XToUOXTBi4v+G+zH1meistMeAK6/7kaJVHzaJ0IgHkE=;
+        b=f1ZsDbxR2FfpJdEdxwNjwq4aR3pKPSmVhTUSSHaC4GpZIBCxoN/ZQ0hw9614oIHJE3
+         UvLupyUmWwnN6esvWfGLH20978tGG4JyFS3qpvZ3bzD38y97Gh66nhcR7AdDCeJXQhzB
+         UegY+rWIq9S5GjZmssrAes2eOKGZ88UaQzCPvYBj6XGXkSpl0xdi+i1dvuffeT+6tib2
+         ZzHwpzGqIUVPdeEFsvJzqhg65Wef0JQ1NEggEIlo07EvAgbC4LxIOqJdxADUfpN7LO+Y
+         NNf8Ete1eSGEi75IekkSGmUA5A88RpiMY5nppTR3M3JebOwL1WJ04l3sCKJE3aFVJHiC
+         vnlA==
+X-Gm-Message-State: ANhLgQ33dmQEwg/DK2mN+1ybTVp9KXt+gxwjRTc7M0OXoBtDZOdjDi6c
+        Vz9me9OMBCuNs3c77HDeLw==
+X-Google-Smtp-Source: ADFU+vuo2GMSlIScfz8VpFQrF31IFo0FS6MvSyPlgMZwQJUJOQOv+ANaUZdUOCWSeh/xQWl4VpTXlQ==
+X-Received: by 2002:a02:641:: with SMTP id 62mr11747164jav.79.1585582926290;
+        Mon, 30 Mar 2020 08:42:06 -0700 (PDT)
+Received: from rob-hp-laptop ([64.188.179.250])
+        by smtp.gmail.com with ESMTPSA id c12sm5004502ila.31.2020.03.30.08.42.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 30 Mar 2020 08:42:05 -0700 (PDT)
+Received: (nullmailer pid 24611 invoked by uid 1000);
+        Mon, 30 Mar 2020 15:42:02 -0000
+Date:   Mon, 30 Mar 2020 09:42:02 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     "H. Nikolaus Schaller" <hns@goldelico.com>
+Cc:     Paul Cercueil <paul@crapouillou.net>,
+        Paul Boddie <paul@boddie.org.uk>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        "H. Nikolaus Schaller" <hns@goldelico.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Kees Cook <keescook@chromium.org>,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
+        linux-gpio@vger.kernel.org, letux-kernel@openphoenux.org,
+        mips-creator-ci20-dev@googlegroups.com
+Subject: Re: [RFC v3 1/8] dt-bindings: display: convert ingenic,lcd.txt to
+ ingenic,lcd.yaml
+Message-ID: <20200330154202.GA23233@bogus>
+References: <cover.1585503354.git.hns@goldelico.com>
+ <a75c77fa8528f44832993f9780ae4ea409125a90.1585503354.git.hns@goldelico.com>
+MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200320192830.zeci3rhh5bgbareg@linutronix.de>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-ClientProxiedBy: BN6PR1101CA0004.namprd11.prod.outlook.com
- (2603:10b6:405:4a::14) To CH2PR11MB4341.namprd11.prod.outlook.com
- (2603:10b6:610:3c::19)
-MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from zipoli.concurrent-rt.com (12.220.59.2) by BN6PR1101CA0004.namprd11.prod.outlook.com (2603:10b6:405:4a::14) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2856.20 via Frontend Transport; Mon, 30 Mar 2020 15:41:12 +0000
-X-Originating-IP: [12.220.59.2]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 85b5ea04-db6a-401e-1d6e-08d7d4c0c6de
-X-MS-TrafficTypeDiagnostic: CH2PR11MB4456:
-X-Microsoft-Antispam-PRVS: <CH2PR11MB4456ADA77D5828E6B36505F5A0CB0@CH2PR11MB4456.namprd11.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:8273;
-X-Forefront-PRVS: 0358535363
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH2PR11MB4341.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10019020)(136003)(376002)(346002)(366004)(39830400003)(396003)(316002)(16526019)(66556008)(6916009)(4326008)(54906003)(66476007)(66946007)(508600001)(956004)(33656002)(26005)(81156014)(8936002)(55016002)(44832011)(2906002)(7696005)(186003)(8676002)(1076003)(5660300002)(4744005)(3450700001)(86362001)(81166006)(52116002);DIR:OUT;SFP:1102;
-Received-SPF: None (protection.outlook.com: concurrent-rt.com does not
- designate permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: bAwDfbNpX28Ssr0a9nZegFhWm9rPpi9+zEjgwCoc5CAM7uZ6pFMz8wjvdxgSciL9WKrssQQyLtVwmXePLyJ4mHqc1XC51FeO4V/Sp24DOj8U0zhhhwKOM/lo7w12RXDqOFvwHtCpKbJRUgb9J+RZ4WU+o0ZKYTSH7Z2yqBCBQGrRm0idB3zvKamPEBp0UyNqtkvVMFEK5c40V2nZC9aGptJB9EG9EAC9WhrkMjGQ0yII6RAeGe0OrNvWuSEUO0V8Osm2bER2sf5OvoLBACc0BGlW89esrlP90cxCcmSQoyN6D00KiJieFd/xkjhNsTzFqiQX7mROxYhyQU3Agi3ZFQrnschsp5X9LvwR4QFUKDc6ykLW4QEOuwXELCks9IFA0jX/L//71o+VuY7N0ipT7wD+tApG9CvwuPEF2EwXAg503QVYqQBapQ2dn/7QVwJG
-X-MS-Exchange-AntiSpam-MessageData: KL0keY/EBpLQEgn2x9FOdvPwaM1KPHgXWG7f7lRhTSAPUDWFkZo0XYjux+RlM5uy7J61p2Jq0OlM8bBO6rBHMccxOWRVTx/x5j1Ck/EBbtwsyueSfc5NOQPHXHryTKkpGpyZTqAr0cmxg9AyiPNjpQ==
-X-OriginatorOrg: concurrent-rt.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 85b5ea04-db6a-401e-1d6e-08d7d4c0c6de
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Mar 2020 15:41:13.4547
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 38747689-e6b0-4933-86c0-1116ee3ef93e
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 2ar/Tm2CNhmDZ4av4Gkpennc5vtnkiieZu/ba40sHsaVeah3h6NlZekE9s08x1uWOCzSh/Q5Ht/MnShQLk/fz56YF6HurpdJ+PCYe2RdwI4=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR11MB4456
+In-Reply-To: <a75c77fa8528f44832993f9780ae4ea409125a90.1585503354.git.hns@goldelico.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 20, 2020 at 08:28:30PM +0100, Sebastian Andrzej Siewior wrote:
-> Dear RT folks!
+On Sun, 29 Mar 2020 19:35:47 +0200, "H. Nikolaus Schaller" wrote:
+> and add compatible: jz4780-lcd, including an example how to
+> configure both lcd controllers.
 > 
-> I'm pleased to announce the v5.4.26-rt17 patch set. 
+> Also fix the clock names and examples.
 > 
-> Changes since v5.4.26-rt16:
+> Based on work by Paul Cercueil <paul@crapouillou.net> and
+> Sam Ravnborg <sam@ravnborg.org>
 > 
->   - Revert the "cross CPU pagevec" access with a static key switch. The
->     old behaviour has been almost fully restored: There is no cross CPU
->     access of the local_lock. Instead the workqueue is scheduled on
->     remote CPU like in the !RT case.
+> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
+> Cc: Rob Herring <robh@kernel.org>
+> Cc: devicetree@vger.kernel.org
+> ---
+>  .../bindings/display/ingenic,lcd.txt          |  45 ------
+>  .../bindings/display/ingenic,lcd.yaml         | 128 ++++++++++++++++++
+>  2 files changed, 128 insertions(+), 45 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/display/ingenic,lcd.txt
+>  create mode 100644 Documentation/devicetree/bindings/display/ingenic,lcd.yaml
+> 
 
-[try #2]
-This reversion fixes the oops I was getting when CONFIG_PREEMPT_RT=n,
-CONFIG_PREEMPT=y, with nohz_full operational, when the system is under
-heavy memory pressure (mem=4G on the kernel command line, 8 cpu setup,
-make -j11 kernel build).
+My bot found errors running 'make dt_binding_check' on your patch:
+
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/display/ingenic,lcd.example.dt.yaml: lcd-controller@13050000: clocks: [[4294967295, 9]] is too short
+
+See https://patchwork.ozlabs.org/patch/1263508
+
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure dt-schema is up to date:
+
+pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
+
+Please check and re-submit.
