@@ -7,62 +7,62 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0F9CC2D0E9
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 10:06:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97BB9C2D0EE
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 10:06:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A7FF0206E6
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 10:06:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5975A20732
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 10:06:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="bLgzHdYx"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xdQT2eUb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729080AbgC3KGk (ORCPT
+        id S1729133AbgC3KGp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 06:06:40 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:43744 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729026AbgC3KGi (ORCPT
+        Mon, 30 Mar 2020 06:06:45 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:42608 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729095AbgC3KGn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 06:06:38 -0400
-Received: by mail-pl1-f195.google.com with SMTP id v23so6522097ply.10
-        for <linux-kernel@vger.kernel.org>; Mon, 30 Mar 2020 03:06:38 -0700 (PDT)
+        Mon, 30 Mar 2020 06:06:43 -0400
+Received: by mail-pg1-f193.google.com with SMTP id h8so8429621pgs.9
+        for <linux-kernel@vger.kernel.org>; Mon, 30 Mar 2020 03:06:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=+enCzaxBEoDGVMdSKKjKI8lbbLVCEuMCoYY+RCjRZzc=;
-        b=bLgzHdYxFq/jOwfj7twqp9c1thiyjjQyWpOHgnamernKDOMWDnH8K0VS+Yq1886xcS
-         QmlnNSGMZcd2f8PfE3m0ejVIqV7rBClhIBZaCYAb1mW9RuS5o0nf40Il+CFZvRxK3k1t
-         lqIVte9SSgcZxfA+zigak1Mu24W3xtxGbWazSn8aD5cL7WBCNHIHMNsFY0lIb6/Xgnxq
-         2OFaRYAxITf/p+ZpPVXAjbcRfNUmL1lKFQte4TcFeqsi+A1GnaDANfPX6PBDneWZkvuF
-         JNzhGVnK0CuLczdqJ2SGTQ9K39kT5g3gPpe5RnkIoLiIH4dTcUjPCkSD2SHRZpgHEnW2
-         bJ7w==
+        bh=q6dK8u3Ci4GAi3GN9bbTpnkd43AAe8+AUsOiMI6bvC0=;
+        b=xdQT2eUbhp8nx1J7AjCvv22o4zM0gzvLaFXDBW4y0IbTy+Lnae6LoOtlOZqf57NLif
+         edtn21Z4YAjWs/sa0hBXOUL7tFKZ6dlUGQiMmIPCpLCAMV74mH4roFX6aQ3OF1GTtl/W
+         FSU35yP816QjL+riZKwRlGVYRIzdpT7rYSyBjFvkW+pTwOUJZhoSh6nRB2veEBodUrpC
+         XsPshkgaTq4RLKRMLRH9f/eYYKaSfIt5O8PgoUJ0IrLj9CCXchuFyRt1WBkShjK/ROtF
+         5Y/IRyDSjWD6HkLhvlghKbnYfu1Ob4LoNh8o6tHp5ZrUwWCZPUqASywzbcVP3OCm3FOx
+         kqwQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=+enCzaxBEoDGVMdSKKjKI8lbbLVCEuMCoYY+RCjRZzc=;
-        b=d0Neiw1hHbPS/zymJBXo8t8EGIqPJL7GgUyPGAtHKJN46d6cVlImZJhtuRfZgLJHrD
-         X3IlU4F/KJ3DlK39pRe/5kuKQfLIofuHA7+igILi9YWB+eeXx++tTv9TKhxk7pyd3KUb
-         0jfMAQB/yurHh9esEtWuHV0taOfZZtPPv5qCoNV/WTrUbUdMdgV+u2oBt3BvEnyvgZCq
-         YvTUjBcuiYni0LpuZoYRS0zcI4NOLfXNzR36YCAf+wSXVQpY6Kwg9VoYQsSHexvCRC1c
-         T6kgFFU0s9UZI1ozpbRo9pCR72m7MPk7L/t4KVs8+0yAf4GRQ+uzGrN0/cgReI43VoDm
-         YAUA==
-X-Gm-Message-State: ANhLgQ2A9IkrOYDTFuLQObv/MG15w6eLKpvglvGZC45PxccmbaWflYOi
-        0uSxS3P7KuFzFkBI12oVC+q+uyzLrFc=
-X-Google-Smtp-Source: ADFU+vtj7nbwgn7byKmRyzD6PpGh35VtxkBIIlSflSxZRU7P+TmE4XwXRJ1sZhXCp7Dx5Q2LTN5Jjg==
-X-Received: by 2002:a17:90a:e289:: with SMTP id d9mr14508896pjz.172.1585562797091;
-        Mon, 30 Mar 2020 03:06:37 -0700 (PDT)
+        bh=q6dK8u3Ci4GAi3GN9bbTpnkd43AAe8+AUsOiMI6bvC0=;
+        b=hRUPmuuO3vs3QmTl3T2J2TMFJ+NKKOAuueUbWveA22FV4KsDJ5WTQ4ITEy75/oc6Iw
+         CnRSlk6hbK0f1OhgfIW47B1/20JHucRarCu+71iXef8S9eJ6bwplUlmXJSuUcPzxcaxn
+         UNz2rkCcQoZKISrkwphQqcUyCZIU5TcTsI47mGIcu8U4ixzLsOV54c1QIha3R8qmHpdT
+         92ZtrcW5d+5NlHTDIsHhpmMwYDBs8bDAivrm2NyFCx5LHPyE09dASYTYDPWvcsOngcKs
+         PMTPanxFMlqO0/G08Z0vc4nAv+t61SL5IT6pvkRmRjx2lYNxRvY1R6NDnSVBTgR9OlFF
+         3lrg==
+X-Gm-Message-State: ANhLgQ2PvqIfXN68ZXgppvmGqY4Y2ZfJl8c1MvGfnab22GBS80OWO0Vd
+        v+agM45eN5oldPLrltLM/Dl10dGmzc4=
+X-Google-Smtp-Source: ADFU+vuMoHlC0K6zlDDwzmFApzIt9SLuUtIszxnCcvUCq73POzavk4G9bGjvH1/otBDwF8tWpkk2zA==
+X-Received: by 2002:a62:1648:: with SMTP id 69mr12626213pfw.14.1585562801335;
+        Mon, 30 Mar 2020 03:06:41 -0700 (PDT)
 Received: from localhost ([103.195.202.48])
-        by smtp.gmail.com with ESMTPSA id s4sm9736233pgm.18.2020.03.30.03.06.35
+        by smtp.gmail.com with ESMTPSA id f15sm9931948pfq.100.2020.03.30.03.06.39
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Mar 2020 03:06:36 -0700 (PDT)
+        Mon, 30 Mar 2020 03:06:40 -0700 (PDT)
 From:   Amit Kucheria <amit.kucheria@linaro.org>
 To:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
         bjorn.andersson@linaro.org, Andy Gross <agross@kernel.org>
 Cc:     devicetree@vger.kernel.org
-Subject: [PATCH 1/3] arm64: dts: qcom: msm8916: remove unit name for thermal trip points
-Date:   Mon, 30 Mar 2020 15:36:26 +0530
-Message-Id: <2d3d045c18a2fb85b28cf304aa11ae6e6538d75e.1585562459.git.amit.kucheria@linaro.org>
+Subject: [PATCH 2/3] arm64: dts: qcom: msm8996: remove unit name for thermal trip points
+Date:   Mon, 30 Mar 2020 15:36:27 +0530
+Message-Id: <2c0aa5357c96c3caff8554f9ef3ab9c5a2b8d2f8.1585562459.git.amit.kucheria@linaro.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <cover.1585562459.git.amit.kucheria@linaro.org>
 References: <cover.1585562459.git.amit.kucheria@linaro.org>
@@ -77,69 +77,213 @@ The thermal trip points have unit name but no reg property, so we can
 remove them. It also fixes the following warnings from 'make dtbs_check'
 after adding the thermal yaml bindings.
 
-arch/arm64/boot/dts/qcom/apq8016-sbc.dt.yaml: thermal-zones:
-gpu-thermal:trips: 'trip-point@0' does not match any of the regexes:
+arch/arm64/boot/dts/qcom/apq8096-ifc6640.dt.yaml: thermal-zones:
+cpu0-thermal:trips: 'trip-point@0' does not match any of the regexes:
 '^[a-zA-Z][a-zA-Z0-9\\-_]{0,63}$', 'pinctrl-[0-9]+'
-arch/arm64/boot/dts/qcom/apq8016-sbc.dt.yaml: thermal-zones:
+arch/arm64/boot/dts/qcom/apq8096-ifc6640.dt.yaml: thermal-zones:
+cpu1-thermal:trips: 'trip-point@0' does not match any of the regexes:
+'^[a-zA-Z][a-zA-Z0-9\\-_]{0,63}$', 'pinctrl-[0-9]+'
+arch/arm64/boot/dts/qcom/apq8096-ifc6640.dt.yaml: thermal-zones:
+cpu2-thermal:trips: 'trip-point@0' does not match any of the regexes:
+'^[a-zA-Z][a-zA-Z0-9\\-_]{0,63}$', 'pinctrl-[0-9]+'
+arch/arm64/boot/dts/qcom/apq8096-ifc6640.dt.yaml: thermal-zones:
+cpu3-thermal:trips: 'trip-point@0' does not match any of the regexes:
+'^[a-zA-Z][a-zA-Z0-9\\-_]{0,63}$', 'pinctrl-[0-9]+'
+arch/arm64/boot/dts/qcom/apq8096-ifc6640.dt.yaml: thermal-zones:
+m4m-thermal:trips: 'trip-point@0' does not match any of the regexes:
+'^[a-zA-Z][a-zA-Z0-9\\-_]{0,63}$', 'pinctrl-[0-9]+'
+arch/arm64/boot/dts/qcom/apq8096-ifc6640.dt.yaml: thermal-zones:
+l3-or-venus-thermal:trips: 'trip-point@0' does not match any of the
+regexes: '^[a-zA-Z][a-zA-Z0-9\\-_]{0,63}$', 'pinctrl-[0-9]+'
+arch/arm64/boot/dts/qcom/apq8096-ifc6640.dt.yaml: thermal-zones:
+cluster0-l2-thermal:trips: 'trip-point@0' does not match any of the
+regexes: '^[a-zA-Z][a-zA-Z0-9\\-_]{0,63}$', 'pinctrl-[0-9]+'
+arch/arm64/boot/dts/qcom/apq8096-ifc6640.dt.yaml: thermal-zones:
+cluster1-l2-thermal:trips: 'trip-point@0' does not match any of the
+regexes: '^[a-zA-Z][a-zA-Z0-9\\-_]{0,63}$', 'pinctrl-[0-9]+'
+arch/arm64/boot/dts/qcom/apq8096-ifc6640.dt.yaml: thermal-zones:
 camera-thermal:trips: 'trip-point@0' does not match any of the regexes:
 '^[a-zA-Z][a-zA-Z0-9\\-_]{0,63}$', 'pinctrl-[0-9]+'
-arch/arm64/boot/dts/qcom/apq8016-sbc.dt.yaml: thermal-zones:
-modem-thermal:trips: 'trip-point@0' does not match any of the regexes:
+arch/arm64/boot/dts/qcom/apq8096-ifc6640.dt.yaml: thermal-zones:
+q6-dsp-thermal:trips: 'trip-point@0' does not match any of the regexes:
+'^[a-zA-Z][a-zA-Z0-9\\-_]{0,63}$', 'pinctrl-[0-9]+'
+arch/arm64/boot/dts/qcom/apq8096-ifc6640.dt.yaml: thermal-zones:
+mem-thermal:trips: 'trip-point@0' does not match any of the regexes:
+'^[a-zA-Z][a-zA-Z0-9\\-_]{0,63}$', 'pinctrl-[0-9]+'
+arch/arm64/boot/dts/qcom/apq8096-ifc6640.dt.yaml: thermal-zones:
+modemtx-thermal:trips: 'trip-point@0' does not match any of the regexes:
 '^[a-zA-Z][a-zA-Z0-9\\-_]{0,63}$', 'pinctrl-[0-9]+'
 
-arch/arm64/boot/dts/qcom/msm8916-mtp.dt.yaml: thermal-zones:
-gpu-thermal:trips: 'trip-point@0' does not match any of the regexes:
+arch/arm64/boot/dts/qcom/apq8096-db820c.dt.yaml: thermal-zones:
+cpu0-thermal:trips: 'trip-point@0' does not match any of the regexes:
 '^[a-zA-Z][a-zA-Z0-9\\-_]{0,63}$', 'pinctrl-[0-9]+'
-arch/arm64/boot/dts/qcom/msm8916-mtp.dt.yaml: thermal-zones:
+arch/arm64/boot/dts/qcom/apq8096-db820c.dt.yaml: thermal-zones:
+cpu1-thermal:trips: 'trip-point@0' does not match any of the regexes:
+'^[a-zA-Z][a-zA-Z0-9\\-_]{0,63}$', 'pinctrl-[0-9]+'
+arch/arm64/boot/dts/qcom/apq8096-db820c.dt.yaml: thermal-zones:
+cpu2-thermal:trips: 'trip-point@0' does not match any of the regexes:
+'^[a-zA-Z][a-zA-Z0-9\\-_]{0,63}$', 'pinctrl-[0-9]+'
+arch/arm64/boot/dts/qcom/apq8096-db820c.dt.yaml: thermal-zones:
+cpu3-thermal:trips: 'trip-point@0' does not match any of the regexes:
+'^[a-zA-Z][a-zA-Z0-9\\-_]{0,63}$', 'pinctrl-[0-9]+'
+arch/arm64/boot/dts/qcom/apq8096-db820c.dt.yaml: thermal-zones:
+m4m-thermal:trips: 'trip-point@0' does not match any of the regexes:
+'^[a-zA-Z][a-zA-Z0-9\\-_]{0,63}$', 'pinctrl-[0-9]+'
+arch/arm64/boot/dts/qcom/apq8096-db820c.dt.yaml: thermal-zones:
+l3-or-venus-thermal:trips: 'trip-point@0' does not match any of the
+regexes: '^[a-zA-Z][a-zA-Z0-9\\-_]{0,63}$', 'pinctrl-[0-9]+'
+arch/arm64/boot/dts/qcom/apq8096-db820c.dt.yaml: thermal-zones:
+cluster0-l2-thermal:trips: 'trip-point@0' does not match any of the
+regexes: '^[a-zA-Z][a-zA-Z0-9\\-_]{0,63}$', 'pinctrl-[0-9]+'
+arch/arm64/boot/dts/qcom/apq8096-db820c.dt.yaml: thermal-zones:
+cluster1-l2-thermal:trips: 'trip-point@0' does not match any of the
+regexes: '^[a-zA-Z][a-zA-Z0-9\\-_]{0,63}$', 'pinctrl-[0-9]+'
+arch/arm64/boot/dts/qcom/apq8096-db820c.dt.yaml: thermal-zones:
 camera-thermal:trips: 'trip-point@0' does not match any of the regexes:
 '^[a-zA-Z][a-zA-Z0-9\\-_]{0,63}$', 'pinctrl-[0-9]+'
-arch/arm64/boot/dts/qcom/msm8916-mtp.dt.yaml: thermal-zones:
-modem-thermal:trips: 'trip-point@0' does not match any of the regexes:
+arch/arm64/boot/dts/qcom/apq8096-db820c.dt.yaml: thermal-zones:
+q6-dsp-thermal:trips: 'trip-point@0' does not match any of the regexes:
+'^[a-zA-Z][a-zA-Z0-9\\-_]{0,63}$', 'pinctrl-[0-9]+'
+arch/arm64/boot/dts/qcom/apq8096-db820c.dt.yaml: thermal-zones:
+mem-thermal:trips: 'trip-point@0' does not match any of the regexes:
+'^[a-zA-Z][a-zA-Z0-9\\-_]{0,63}$', 'pinctrl-[0-9]+'
+arch/arm64/boot/dts/qcom/apq8096-db820c.dt.yaml: thermal-zones:
+modemtx-thermal:trips: 'trip-point@0' does not match any of the regexes:
 '^[a-zA-Z][a-zA-Z0-9\\-_]{0,63}$', 'pinctrl-[0-9]+'
 
 Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
 ---
- arch/arm64/boot/dts/qcom/msm8916.dtsi | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ arch/arm64/boot/dts/qcom/msm8996.dtsi | 28 +++++++++++++--------------
+ 1 file changed, 14 insertions(+), 14 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/qcom/msm8916.dtsi b/arch/arm64/boot/dts/qcom/msm8916.dtsi
-index 9f31064f2374e..1a6e28923a45d 100644
---- a/arch/arm64/boot/dts/qcom/msm8916.dtsi
-+++ b/arch/arm64/boot/dts/qcom/msm8916.dtsi
-@@ -261,7 +261,7 @@
- 			thermal-sensors = <&tsens 4>;
+diff --git a/arch/arm64/boot/dts/qcom/msm8996.dtsi b/arch/arm64/boot/dts/qcom/msm8996.dtsi
+index 7ae082ea14ea8..76a2ef2e01933 100644
+--- a/arch/arm64/boot/dts/qcom/msm8996.dtsi
++++ b/arch/arm64/boot/dts/qcom/msm8996.dtsi
+@@ -2165,7 +2165,7 @@
+ 			thermal-sensors = <&tsens0 3>;
  
  			trips {
--				cpu2_3_alert0: trip-point@0 {
-+				cpu2_3_alert0: trip-point0 {
+-				cpu0_alert0: trip-point@0 {
++				cpu0_alert0: trip-point0 {
  					temperature = <75000>;
  					hysteresis = <2000>;
  					type = "passive";
-@@ -291,7 +291,7 @@
- 			thermal-sensors = <&tsens 2>;
+@@ -2186,7 +2186,7 @@
+ 			thermal-sensors = <&tsens0 5>;
  
  			trips {
--				gpu_alert0: trip-point@0 {
-+				gpu_alert0: trip-point0 {
+-				cpu1_alert0: trip-point@0 {
++				cpu1_alert0: trip-point0 {
  					temperature = <75000>;
  					hysteresis = <2000>;
  					type = "passive";
-@@ -311,7 +311,7 @@
- 			thermal-sensors = <&tsens 1>;
+@@ -2207,7 +2207,7 @@
+ 			thermal-sensors = <&tsens0 8>;
  
  			trips {
--				cam_alert0: trip-point@0 {
-+				cam_alert0: trip-point0 {
+-				cpu2_alert0: trip-point@0 {
++				cpu2_alert0: trip-point0 {
  					temperature = <75000>;
+ 					hysteresis = <2000>;
+ 					type = "passive";
+@@ -2228,7 +2228,7 @@
+ 			thermal-sensors = <&tsens0 10>;
+ 
+ 			trips {
+-				cpu3_alert0: trip-point@0 {
++				cpu3_alert0: trip-point0 {
+ 					temperature = <75000>;
+ 					hysteresis = <2000>;
+ 					type = "passive";
+@@ -2249,7 +2249,7 @@
+ 			thermal-sensors = <&tsens1 6>;
+ 
+ 			trips {
+-				gpu1_alert0: trip-point@0 {
++				gpu1_alert0: trip-point0 {
+ 					temperature = <90000>;
  					hysteresis = <2000>;
  					type = "hot";
-@@ -326,7 +326,7 @@
- 			thermal-sensors = <&tsens 0>;
+@@ -2264,7 +2264,7 @@
+ 			thermal-sensors = <&tsens1 7>;
  
  			trips {
--				modem_alert0: trip-point@0 {
-+				modem_alert0: trip-point0 {
- 					temperature = <85000>;
+-				gpu2_alert0: trip-point@0 {
++				gpu2_alert0: trip-point0 {
+ 					temperature = <90000>;
+ 					hysteresis = <2000>;
+ 					type = "hot";
+@@ -2279,7 +2279,7 @@
+ 			thermal-sensors = <&tsens0 1>;
+ 
+ 			trips {
+-				m4m_alert0: trip-point@0 {
++				m4m_alert0: trip-point0 {
+ 					temperature = <90000>;
+ 					hysteresis = <2000>;
+ 					type = "hot";
+@@ -2294,7 +2294,7 @@
+ 			thermal-sensors = <&tsens0 2>;
+ 
+ 			trips {
+-				l3_or_venus_alert0: trip-point@0 {
++				l3_or_venus_alert0: trip-point0 {
+ 					temperature = <90000>;
+ 					hysteresis = <2000>;
+ 					type = "hot";
+@@ -2309,7 +2309,7 @@
+ 			thermal-sensors = <&tsens0 7>;
+ 
+ 			trips {
+-				cluster0_l2_alert0: trip-point@0 {
++				cluster0_l2_alert0: trip-point0 {
+ 					temperature = <90000>;
+ 					hysteresis = <2000>;
+ 					type = "hot";
+@@ -2324,7 +2324,7 @@
+ 			thermal-sensors = <&tsens0 12>;
+ 
+ 			trips {
+-				cluster1_l2_alert0: trip-point@0 {
++				cluster1_l2_alert0: trip-point0 {
+ 					temperature = <90000>;
+ 					hysteresis = <2000>;
+ 					type = "hot";
+@@ -2339,7 +2339,7 @@
+ 			thermal-sensors = <&tsens1 1>;
+ 
+ 			trips {
+-				camera_alert0: trip-point@0 {
++				camera_alert0: trip-point0 {
+ 					temperature = <90000>;
+ 					hysteresis = <2000>;
+ 					type = "hot";
+@@ -2354,7 +2354,7 @@
+ 			thermal-sensors = <&tsens1 2>;
+ 
+ 			trips {
+-				q6_dsp_alert0: trip-point@0 {
++				q6_dsp_alert0: trip-point0 {
+ 					temperature = <90000>;
+ 					hysteresis = <2000>;
+ 					type = "hot";
+@@ -2369,7 +2369,7 @@
+ 			thermal-sensors = <&tsens1 3>;
+ 
+ 			trips {
+-				mem_alert0: trip-point@0 {
++				mem_alert0: trip-point0 {
+ 					temperature = <90000>;
+ 					hysteresis = <2000>;
+ 					type = "hot";
+@@ -2384,7 +2384,7 @@
+ 			thermal-sensors = <&tsens1 4>;
+ 
+ 			trips {
+-				modemtx_alert0: trip-point@0 {
++				modemtx_alert0: trip-point0 {
+ 					temperature = <90000>;
  					hysteresis = <2000>;
  					type = "hot";
 -- 
