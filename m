@@ -2,137 +2,83 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 844A1C2D0E9
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 09:48:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 568F7C2D0EB
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 09:49:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6355120714
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 09:48:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E8B5920714
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 09:49:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="pOBEKVJ1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728698AbgC3Jsz (ORCPT
+        id S1728752AbgC3JtR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 05:48:55 -0400
-Received: from mout-p-201.mailbox.org ([80.241.56.171]:21070 "EHLO
-        mout-p-201.mailbox.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726127AbgC3Jsz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 05:48:55 -0400
-Received: from smtp2.mailbox.org (smtp2.mailbox.org [IPv6:2001:67c:2050:105:465:1:2:0])
-        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
-        (No client certificate requested)
-        by mout-p-201.mailbox.org (Postfix) with ESMTPS id 48rSMl5DjbzQlJg;
-        Mon, 30 Mar 2020 11:48:51 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at heinlein-support.de
-Received: from smtp2.mailbox.org ([80.241.60.241])
-        by spamfilter05.heinlein-hosting.de (spamfilter05.heinlein-hosting.de [80.241.56.123]) (amavisd-new, port 10030)
-        with ESMTP id JK5Ffe5fM8nK; Mon, 30 Mar 2020 11:48:45 +0200 (CEST)
-Date:   Mon, 30 Mar 2020 20:48:36 +1100
-From:   Aleksa Sarai <cyphar@cyphar.com>
-To:     "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com>
-Cc:     Al Viro <viro@zeniv.linux.org.uk>,
-        Christian Brauner <christian@brauner.io>,
-        Aleksa Sarai <asarai@suse.de>, linux-man@vger.kernel.org,
-        linux-api@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH man-pages v2 2/2] openat2.2: document new openat2(2)
- syscall
-Message-ID: <20200330094836.lhcipdujroahiu4y@yavin.dot.cyphar.com>
-References: <20200202151907.23587-1-cyphar@cyphar.com>
- <20200202151907.23587-3-cyphar@cyphar.com>
- <4dcea613-60b8-a8af-9688-be93858ab652@gmail.com>
- <20200330092051.umcu2mjnwqazml7a@yavin.dot.cyphar.com>
- <ae275f67-9277-547c-e78c-bca4f388f694@gmail.com>
+        Mon, 30 Mar 2020 05:49:17 -0400
+Received: from m12-16.163.com ([220.181.12.16]:34974 "EHLO m12-16.163.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726127AbgC3JtR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Mar 2020 05:49:17 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+        s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=SeQld
+        okjjHJIvAaKZfMt5XF+uZtumxTB+zmHBvirpZM=; b=pOBEKVJ1ZuJNrpDb1zAKA
+        +B1Uyu4iFaebAt/GLkMyo6SPKi246FcHTIctoVXobLLwXIY3sgeUDB34Ky/2E61t
+        GWTEXw19UBfrI/kf+PkH55dwQpIWbgZpPQ8GCnNz/zNUjfk0crzMUy6iYJ3jQ1C7
+        Cwz6N6bfSUEBz45UlZpRGY=
+Received: from localhost.localdomain (unknown [125.82.11.174])
+        by smtp12 (Coremail) with SMTP id EMCowABHZ7e0v4FeUMNJAg--.29599S4;
+        Mon, 30 Mar 2020 17:45:27 +0800 (CST)
+From:   Hu Haowen <xianfengting221@163.com>
+To:     sudeep.dutt@intel.com, ashutosh.dixit@intel.com, arnd@arndb.de,
+        gregkh@linuxfoundation.org
+Cc:     josef@toxicpanda.com, tglx@linutronix.de, maennich@google.com,
+        xiubli@redhat.com, jeyu@kernel.org, kw@linux.com,
+        chris@chris-wilson.co.uk, xianfengting221@163.com, wqu@suse.com,
+        yamada.masahiro@socionext.com, stfrench@microsoft.com,
+        airlied@redhat.com, linux-kernel@vger.kernel.org
+Subject: [PATCH] misc: mic: correct a typo
+Date:   Mon, 30 Mar 2020 17:45:19 +0800
+Message-Id: <20200330094519.17299-1-xianfengting221@163.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="zcsmuu77p43qapkn"
-Content-Disposition: inline
-In-Reply-To: <ae275f67-9277-547c-e78c-bca4f388f694@gmail.com>
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID: EMCowABHZ7e0v4FeUMNJAg--.29599S4
+X-Coremail-Antispam: 1Uf129KBjvdXoWruF4rCw1UXFW7tw47JF48tFb_yoW3trc_C3
+        ykXF4Iqr4jkF1xK39rJr4fur9xKa1UuF95uF13tF4fG3y7uw1DXrWqyr17A345Za4vvFWk
+        GrykZ340yw15tjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+        9fnUUvcSsGvfC2KfnxnUUI43ZEXa7xRRtxhJUUUUU==
+X-Originating-IP: [125.82.11.174]
+X-CM-SenderInfo: h0ld0wxhqj3xtqjsjii6rwjhhfrp/1tbiWwz2AFSImCfQcwAAsh
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+The word "Dont" is incorrect and should be replaced with "Don't".
 
---zcsmuu77p43qapkn
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Hu Haowen <xianfengting221@163.com>
+---
+ drivers/misc/mic/scif/scif_nodeqp.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-On 2020-03-30, Michael Kerrisk (man-pages) <mtk.manpages@gmail.com> wrote:
-> On 3/30/20 11:20 AM, Aleksa Sarai wrote:
-> > On 2020-03-30, Michael Kerrisk (man-pages) <mtk.manpages@gmail.com> wro=
-te:
-> >> Hello Aleksa,
-> >>
-> >> On 2/2/20 4:19 PM, Aleksa Sarai wrote:
-> >>> Rather than trying to merge the new syscall documentation into open.2
-> >>> (which would probably result in the man-page being incomprehensible),
-> >>> instead the new syscall gets its own dedicated page with links between
-> >>> open(2) and openat2(2) to avoid duplicating information such as the l=
-ist
-> >>> of O_* flags or common errors.
-> >>>
-> >>> In addition to describing all of the key flags, information about the
-> >>> extensibility design is provided so that users can better understand =
-why
-> >>> they need to pass sizeof(struct open_how) and how their programs will
-> >>> work across kernels. After some discussions with David Laight, I also
-> >>> included explicit instructions to zero the structure to avoid issues
-> >>> when recompiling with new headers.>
-> >>> Signed-off-by: Aleksa Sarai <cyphar@cyphar.com>
-> >>
-> >> I'm just editing this page, and have a question on one piece.
-> >>
-> >>> +Unlike
-> >>> +.BR openat (2),
-> >>> +it is an error to provide
-> >>> +.BR openat2 ()
-> >>> +with a
-> >>> +.I mode
-> >>> +which contains bits other than
-> >>> +.IR 0777 ,
-> >>
-> >> This piece appears not to be true, both from my reading of the
-> >> source code, and from testing (i.e., I wrote a a small program that
-> >> successfully called openat2() and created a file that had the
-> >> set-UID, set-GID, and sticky bits set).
-> >>
-> >> Is this a bug in the implementation or a bug in the manual page text?
-> >=20
-> > My bad -- it's a bug in the manual. The actual check (which does work,
-> > there are selftests for this) is:
-> >=20
-> > 	if (how->mode & ~S_IALLUGO)
-> > 		return -EINVAL;
-> >=20
-> > But when writing the man page I forgot that S_IALLUGO also includes
-> > those bits. Do you want me to send an updated version or would you
-> > prefer to clean it up?
->=20
-> I'll clean it up.
->=20
-> So, it should say, "bits other than 07777", right?
+diff --git a/drivers/misc/mic/scif/scif_nodeqp.c b/drivers/misc/mic/scif/scif_nodeqp.c
+index fcd999f50d14..ea084626fe11 100644
+--- a/drivers/misc/mic/scif/scif_nodeqp.c
++++ b/drivers/misc/mic/scif/scif_nodeqp.c
+@@ -660,7 +660,7 @@ int scif_nodeqp_send(struct scif_dev *scifdev, struct scifmsg *msg)
+ 	struct device *spdev = NULL;
+ 
+ 	if (msg->uop > SCIF_EXIT_ACK) {
+-		/* Dont send messages once the exit flow has begun */
++		/* Don't send messages once the exit flow has begun */
+ 		if (OP_IDLE != scifdev->exit)
+ 			return -ENODEV;
+ 		spdev = scif_get_peer_dev(scifdev);
+-- 
+2.20.1
 
-Yes, that would be correct.
 
---=20
-Aleksa Sarai
-Senior Software Engineer (Containers)
-SUSE Linux GmbH
-<https://www.cyphar.com/>
-
---zcsmuu77p43qapkn
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQSxZm6dtfE8gxLLfYqdlLljIbnQEgUCXoHAcQAKCRCdlLljIbnQ
-EvucAP9GXcbNItNpaRbdUdGWIFNP8w+Mq+hSgnLQuuxq/Zo+kQEAqlkhi7iQyli9
-3DsFmRfEOOZM9ZV1HezhJaFSfwUEpgo=
-=AQVl
------END PGP SIGNATURE-----
-
---zcsmuu77p43qapkn--
