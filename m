@@ -2,158 +2,228 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D2FFC2D0EF
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 11:48:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10672C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 11:48:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 19D672072E
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 11:48:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="OwrdblbD"
+	by mail.kernel.org (Postfix) with ESMTP id CFF532073B
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 11:48:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729882AbgC3Ls0 (ORCPT
+        id S1729922AbgC3Lsy convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 07:48:26 -0400
-Received: from ssl.serverraum.org ([176.9.125.105]:35107 "EHLO
-        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728764AbgC3Ls0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 07:48:26 -0400
-Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ssl.serverraum.org (Postfix) with ESMTPSA id C5D9423D22;
-        Mon, 30 Mar 2020 13:48:21 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
-        t=1585568902;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=/WNHnqJr48B9UGKgZOiUmrkZCrV3XIE1znDFAU2j6Tg=;
-        b=OwrdblbDl1rXIFYSbMyycWAJ/UOrU4LJoT06Nn1G+IM+/E1naMieKRwBijsqcFco+PCiRB
-        Y9hqzgjb4FFo1rpJ109DNWxxkRidjc/7K4mc0+Jc+KapaponxbXASGImRVwIqw8PeZnq27
-        cB865PGVvlh96zdgrv44Q1RrplOc2Tc=
+        Mon, 30 Mar 2020 07:48:54 -0400
+Received: from mga09.intel.com ([134.134.136.24]:30291 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728764AbgC3Lsy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Mar 2020 07:48:54 -0400
+IronPort-SDR: lKWFHWNZYnlqaBmkSxOp+ICIPdzooc5adi49GeZB83dBcTb4g7dqgLCwdj5WMn3WuQ7JlH7Yq8
+ f6ISoez1kUMw==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Mar 2020 04:48:53 -0700
+IronPort-SDR: 3n7ZaBt1QAtL8ckMyOn0+HIcWqDND4WEFimtAJUDCEPAMqYddkyHPVEF5IQ4bJL28vudceK//d
+ 7+ieRaMumCaA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,324,1580803200"; 
+   d="scan'208";a="248674831"
+Received: from fmsmsx105.amr.corp.intel.com ([10.18.124.203])
+  by orsmga003.jf.intel.com with ESMTP; 30 Mar 2020 04:48:50 -0700
+Received: from fmsmsx119.amr.corp.intel.com (10.18.124.207) by
+ FMSMSX105.amr.corp.intel.com (10.18.124.203) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Mon, 30 Mar 2020 04:48:50 -0700
+Received: from shsmsx106.ccr.corp.intel.com (10.239.4.159) by
+ FMSMSX119.amr.corp.intel.com (10.18.124.207) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Mon, 30 Mar 2020 04:48:49 -0700
+Received: from shsmsx104.ccr.corp.intel.com ([169.254.5.225]) by
+ SHSMSX106.ccr.corp.intel.com ([169.254.10.89]) with mapi id 14.03.0439.000;
+ Mon, 30 Mar 2020 19:48:46 +0800
+From:   "Tian, Kevin" <kevin.tian@intel.com>
+To:     "Liu, Yi L" <yi.l.liu@intel.com>,
+        "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
+        "eric.auger@redhat.com" <eric.auger@redhat.com>
+CC:     "jacob.jun.pan@linux.intel.com" <jacob.jun.pan@linux.intel.com>,
+        "joro@8bytes.org" <joro@8bytes.org>,
+        "Raj, Ashok" <ashok.raj@intel.com>,
+        "Tian, Jun J" <jun.j.tian@intel.com>,
+        "Sun, Yi Y" <yi.y.sun@intel.com>,
+        "jean-philippe@linaro.org" <jean-philippe@linaro.org>,
+        "peterx@redhat.com" <peterx@redhat.com>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Wu, Hao" <hao.wu@intel.com>
+Subject: RE: [PATCH v1 5/8] vfio/type1: Report 1st-level/stage-1 format to
+ userspace
+Thread-Topic: [PATCH v1 5/8] vfio/type1: Report 1st-level/stage-1 format to
+ userspace
+Thread-Index: AQHWAEUcrRt83jyTNECgMYM7VBywiqhg9Y6g
+Date:   Mon, 30 Mar 2020 11:48:45 +0000
+Message-ID: <AADFC41AFE54684AB9EE6CBC0274A5D19D7FF8BC@SHSMSX104.ccr.corp.intel.com>
+References: <1584880325-10561-1-git-send-email-yi.l.liu@intel.com>
+ <1584880325-10561-6-git-send-email-yi.l.liu@intel.com>
+In-Reply-To: <1584880325-10561-6-git-send-email-yi.l.liu@intel.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-product: dlpe-windows
+dlp-version: 11.2.0.6
+dlp-reaction: no-action
+x-originating-ip: [10.239.127.40]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 8bit
-Date:   Mon, 30 Mar 2020 13:48:21 +0200
-From:   Michael Walle <michael@walle.cc>
-To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio <linux-gpio@vger.kernel.org>,
-        linux-devicetree <devicetree@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, linux-hwmon@vger.kernel.org,
-        linux-pwm@vger.kernel.org,
-        LINUXWATCHDOG <linux-watchdog@vger.kernel.org>,
-        arm-soc <linux-arm-kernel@lists.infradead.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Lee Jones <lee.jones@linaro.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>
-Subject: Re: [PATCH 12/18] gpio: add support for the sl28cpld GPIO controller
-In-Reply-To: <CAMpxmJUj7wBvO=Y-u5CXazHhjsPHXcq=5iST4KuLrfakW_a9Mg@mail.gmail.com>
-References: <20200317205017.28280-1-michael@walle.cc>
- <20200317205017.28280-13-michael@walle.cc>
- <CAMpxmJW770v6JLdveEe1hkgNEJByVyArhorSyUZBYOyFiVyOeg@mail.gmail.com>
- <9c310f2a11913d4d089ef1b07671be00@walle.cc>
- <CAMpxmJXmD-M+Wbj6=wgFgP2aDxbqDN=ceHi1XDun4iwdLm55Zg@mail.gmail.com>
- <22944c9b62aa69da418de7766b7741bd@walle.cc>
- <CACRpkdbJ3DBO+W4P0n-CfZ1T3L8d_L0Nizra8frkv92XPXR4WA@mail.gmail.com>
- <4d8d3bc26bdf73eb5c0e5851589fe085@walle.cc>
- <CAMpxmJUj7wBvO=Y-u5CXazHhjsPHXcq=5iST4KuLrfakW_a9Mg@mail.gmail.com>
-Message-ID: <021f3add4b03b7a682832921a96ef85f@walle.cc>
-X-Sender: michael@walle.cc
-User-Agent: Roundcube Webmail/1.3.10
-X-Spamd-Bar: +
-X-Rspamd-Server: web
-X-Rspamd-Queue-Id: C5D9423D22
-X-Spamd-Result: default: False [1.40 / 15.00];
-         FROM_HAS_DN(0.00)[];
-         TO_DN_SOME(0.00)[];
-         FREEMAIL_ENVRCPT(0.00)[gmail.com];
-         TO_MATCH_ENVRCPT_ALL(0.00)[];
-         TAGGED_RCPT(0.00)[dt];
-         MIME_GOOD(-0.10)[text/plain];
-         DKIM_SIGNED(0.00)[];
-         RCPT_COUNT_TWELVE(0.00)[21];
-         NEURAL_HAM(-0.00)[-0.772];
-         RCVD_COUNT_ZERO(0.00)[0];
-         FROM_EQ_ENVFROM(0.00)[];
-         MIME_TRACE(0.00)[0:+];
-         FREEMAIL_CC(0.00)[linaro.org,vger.kernel.org,lists.infradead.org,kernel.org,suse.com,roeck-us.net,gmail.com,pengutronix.de,linux-watchdog.org,nxp.com,linutronix.de,lakedaemon.net];
-         MID_RHS_MATCH_FROM(0.00)[];
-         SUSPICIOUS_RECIPS(1.50)[]
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-
-Am 2020-03-30 13:21, schrieb Bartosz Golaszewski:
-> pt., 27 mar 2020 o 16:28 Michael Walle <michael@walle.cc> napisał(a):
->> 
->> Am 2020-03-27 11:20, schrieb Linus Walleij:
->> > On Thu, Mar 26, 2020 at 9:06 PM Michael Walle <michael@walle.cc> wrote:
->> >> Am 2020-03-25 12:50, schrieb Bartosz Golaszewski:
->> >
->> >> > In that case maybe you should use the disable_locking option in
->> >> > regmap_config and provide your own callbacks that you can use in the
->> >> > irqchip code too?
->> >>
->> >> But how would that solve problem (1). And keep in mind, that the
->> >> reqmap_irqchip is actually used for the interrupt controller, which
->> >> is not this gpio controller.
->> >>
->> >> Ie. the interrupt controller of the sl28cpld uses the regmap_irqchip
->> >> and all interrupt phandles pointing to the interrupt controller will
->> >> reference the toplevel node. Any phandles pointing to the gpio
->> >> controller will reference the GPIO subnode.
->> >
->> > Ideally we would create something generic that has been on my
->> > mind for some time, like a generic GPIO regmap irqchip now that
->> > there are a few controllers like that.
->> >
->> > I don't know how feasible it is or how much work it would be. But
->> > as with GPIO_GENERIC (for MMIO) it would be helpful since we
->> > can then implement things like .set_multiple() and .get_multiple()
->> > for everyone.
->> 
->> For starters, would that be a drivers/gpio/gpio-regmap.c or a
->> drivers/base/regmap/regmap-gpio.c? I would assume the first,
->> because the stuff in drivers/base/regmap operates on a given
->> regmap and we'd just be using one, correct? On the other hand
->> there is also the reqmap-irq.c. But as pointed out before, it
->> will add an interrupt controller to the regmap, not a device
->> so to speak.
->> 
->> -michael
+> From: Liu, Yi L <yi.l.liu@intel.com>
+> Sent: Sunday, March 22, 2020 8:32 PM
 > 
-> This has been on my TODO list for so long, but I've never been able to
-> find the time... I'd really appreciate any effort in that direction as
-> I believe it would allow us to slowly port a big part of the GPIO
-> expander drivers over to it and make large portions of our codebase
-> generic.
-
-I might have at least a first patch this week. So if you and Linus
-Walleij might have some time to help review and comment on that, it
-would be greatly appreciated.
-
--michael
-
+> From: Liu Yi L <yi.l.liu@intel.com>
 > 
-> Best regards,
-> Bartosz Golaszewski
+> VFIO exposes IOMMU nesting translation (a.k.a dual stage translation)
+> capability to userspace. Thus applications like QEMU could support
+> vIOMMU with hardware's nesting translation capability for pass-through
+> devices. Before setting up nesting translation for pass-through devices,
+> QEMU and other applications need to learn the supported 1st-lvl/stage-1
+> translation structure format like page table format.
+> 
+> Take vSVA (virtual Shared Virtual Addressing) as an example, to support
+> vSVA for pass-through devices, QEMU setup nesting translation for pass-
+> through devices. The guest page table are configured to host as 1st-lvl/
+> stage-1 page table. Therefore, guest format should be compatible with
+> host side.
+> 
+> This patch reports the supported 1st-lvl/stage-1 page table format on the
+> current platform to userspace. QEMU and other alike applications should
+> use this format info when trying to setup IOMMU nesting translation on
+> host IOMMU.
+> 
+> Cc: Kevin Tian <kevin.tian@intel.com>
+> CC: Jacob Pan <jacob.jun.pan@linux.intel.com>
+> Cc: Alex Williamson <alex.williamson@redhat.com>
+> Cc: Eric Auger <eric.auger@redhat.com>
+> Cc: Jean-Philippe Brucker <jean-philippe@linaro.org>
+> Signed-off-by: Liu Yi L <yi.l.liu@intel.com>
+> ---
+>  drivers/vfio/vfio_iommu_type1.c | 56
+> +++++++++++++++++++++++++++++++++++++++++
+>  include/uapi/linux/vfio.h       |  1 +
+>  2 files changed, 57 insertions(+)
+> 
+> diff --git a/drivers/vfio/vfio_iommu_type1.c
+> b/drivers/vfio/vfio_iommu_type1.c
+> index 9aa2a67..82a9e0b 100644
+> --- a/drivers/vfio/vfio_iommu_type1.c
+> +++ b/drivers/vfio/vfio_iommu_type1.c
+> @@ -2234,11 +2234,66 @@ static int vfio_iommu_type1_pasid_free(struct
+> vfio_iommu *iommu,
+>  	return ret;
+>  }
+> 
+> +static int vfio_iommu_get_stage1_format(struct vfio_iommu *iommu,
+> +					 u32 *stage1_format)
+> +{
+> +	struct vfio_domain *domain;
+> +	u32 format = 0, tmp_format = 0;
+> +	int ret;
+> +
+> +	mutex_lock(&iommu->lock);
+> +	if (list_empty(&iommu->domain_list)) {
+> +		mutex_unlock(&iommu->lock);
+> +		return -EINVAL;
+> +	}
+> +
+> +	list_for_each_entry(domain, &iommu->domain_list, next) {
+> +		if (iommu_domain_get_attr(domain->domain,
+> +			DOMAIN_ATTR_PASID_FORMAT, &format)) {
+> +			ret = -EINVAL;
+> +			format = 0;
+> +			goto out_unlock;
+> +		}
+> +		/*
+> +		 * format is always non-zero (the first format is
+> +		 * IOMMU_PASID_FORMAT_INTEL_VTD which is 1). For
+> +		 * the reason of potential different backed IOMMU
+> +		 * formats, here we expect to have identical formats
+> +		 * in the domain list, no mixed formats support.
+> +		 * return -EINVAL to fail the attempt of setup
+> +		 * VFIO_TYPE1_NESTING_IOMMU if non-identical formats
+> +		 * are detected.
+> +		 */
+> +		if (tmp_format && tmp_format != format) {
+> +			ret = -EINVAL;
+> +			format = 0;
+> +			goto out_unlock;
+> +		}
+> +
+> +		tmp_format = format;
+> +	}
+
+this path is invoked only in VFIO_IOMMU_GET_INFO path. If we don't
+want to assume the status quo that one container holds only one
+device w/ vIOMMU (the prerequisite for vSVA), looks we also need
+check the format compatibility when attaching a new group to this
+container?
+
+> +	ret = 0;
+> +
+> +out_unlock:
+> +	if (format)
+> +		*stage1_format = format;
+> +	mutex_unlock(&iommu->lock);
+> +	return ret;
+> +}
+> +
+>  static int vfio_iommu_info_add_nesting_cap(struct vfio_iommu *iommu,
+>  					 struct vfio_info_cap *caps)
+>  {
+>  	struct vfio_info_cap_header *header;
+>  	struct vfio_iommu_type1_info_cap_nesting *nesting_cap;
+> +	u32 formats = 0;
+> +	int ret;
+> +
+> +	ret = vfio_iommu_get_stage1_format(iommu, &formats);
+> +	if (ret) {
+> +		pr_warn("Failed to get stage-1 format\n");
+> +		return ret;
+> +	}
+> 
+>  	header = vfio_info_cap_add(caps, sizeof(*nesting_cap),
+>  				   VFIO_IOMMU_TYPE1_INFO_CAP_NESTING,
+> 1);
+> @@ -2254,6 +2309,7 @@ static int vfio_iommu_info_add_nesting_cap(struct
+> vfio_iommu *iommu,
+>  		/* nesting iommu type supports PASID requests (alloc/free)
+> */
+>  		nesting_cap->nesting_capabilities |=
+> VFIO_IOMMU_PASID_REQS;
+>  	}
+> +	nesting_cap->stage1_formats = formats;
+> 
+>  	return 0;
+>  }
+> diff --git a/include/uapi/linux/vfio.h b/include/uapi/linux/vfio.h
+> index ed9881d..ebeaf3e 100644
+> --- a/include/uapi/linux/vfio.h
+> +++ b/include/uapi/linux/vfio.h
+> @@ -763,6 +763,7 @@ struct vfio_iommu_type1_info_cap_nesting {
+>  	struct	vfio_info_cap_header header;
+>  #define VFIO_IOMMU_PASID_REQS	(1 << 0)
+>  	__u32	nesting_capabilities;
+> +	__u32	stage1_formats;
+
+do you plan to support multiple formats? If not, use singular name.
+
+>  };
+> 
+>  #define VFIO_IOMMU_GET_INFO _IO(VFIO_TYPE, VFIO_BASE + 12)
+> --
+> 2.7.4
+
