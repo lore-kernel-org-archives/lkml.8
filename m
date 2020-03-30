@@ -2,86 +2,99 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D9FEC43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 06:56:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51070C2D0EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 06:59:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E45A920774
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 06:56:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 26AE420732
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 06:59:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729359AbgC3G4j (ORCPT
+        id S1729342AbgC3G7f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 02:56:39 -0400
-Received: from mx.sdf.org ([205.166.94.20]:65413 "EHLO mx.sdf.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729099AbgC3G4j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 02:56:39 -0400
-Received: from sdf.org (IDENT:lkml@sdf.lonestar.org [205.166.94.16])
-        by mx.sdf.org (8.15.2/8.14.5) with ESMTPS id 02U6p8D4025450
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits) verified NO);
-        Mon, 30 Mar 2020 06:51:08 GMT
-Received: (from lkml@localhost)
-        by sdf.org (8.15.2/8.12.8/Submit) id 02U6p5rX014028;
-        Mon, 30 Mar 2020 06:51:05 GMT
-Date:   Mon, 30 Mar 2020 06:51:05 +0000
-From:   George Spelvin <lkml@SDF.ORG>
-To:     Takashi Iwai <tiwai@suse.de>
-Cc:     James Bottomley <James.Bottomley@HansenPartnership.com>,
-        linux-kernel@vger.kernel.org, Hannes Reinecke <hare@suse.de>,
-        linux-scsi@vger.kernel.org,
-        Marek Lindner <mareklindner@neomailbox.ch>,
-        Simon Wunderlich <sw@simonwunderlich.de>,
-        Antonio Quartulli <a@unstable.cc>,
-        Sven Eckelmann <sven@narfation.org>,
-        b.a.t.m.a.n@diktynna.open-mesh.org,
-        Johannes Berg <johannes@sipsolutions.net>,
-        linux-wireless@vger.kernel.org, Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org,
-        lkml@sdf.org
-Subject: Re: [RFC PATCH v1 13/50] Avoid some useless msecs/jiffies conversions
-Message-ID: <20200330065105.GB9333@SDF.ORG>
-References: <202003281643.02SGhBrh000992@sdf.org>
- <s5ho8sfd2dk.wl-tiwai@suse.de>
- <20200329121129.GC11951@SDF.ORG>
- <s5h7dz3ccea.wl-tiwai@suse.de>
- <20200329175032.GE4675@SDF.ORG>
- <1585505807.4510.1.camel@HansenPartnership.com>
- <s5hzhbybbnu.wl-tiwai@suse.de>
+        Mon, 30 Mar 2020 02:59:35 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:37560 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728489AbgC3G7e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Mar 2020 02:59:34 -0400
+Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id A0189230DE2128303A08;
+        Mon, 30 Mar 2020 14:59:15 +0800 (CST)
+Received: from [127.0.0.1] (10.173.223.234) by DGGEMS402-HUB.china.huawei.com
+ (10.3.19.202) with Microsoft SMTP Server id 14.3.487.0; Mon, 30 Mar 2020
+ 14:59:09 +0800
+Subject: Re: [PATCH -next] dmaengine: hisilicon: Fix build error without
+ PCI_MSI
+To:     Zhou Wang <wangzhou1@hisilicon.com>, <dan.j.williams@intel.com>,
+        <vkoul@kernel.org>, <qiuzhenfa@hisilicon.com>
+References: <20200328114133.17560-1-yuehaibing@huawei.com>
+ <5E815BDD.8050908@hisilicon.com>
+CC:     <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+From:   Yuehaibing <yuehaibing@huawei.com>
+Message-ID: <16ccc33f-d394-b59a-b3ee-65488595580f@huawei.com>
+Date:   Mon, 30 Mar 2020 14:59:09 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101
+ Thunderbird/45.2.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <s5hzhbybbnu.wl-tiwai@suse.de>
+In-Reply-To: <5E815BDD.8050908@hisilicon.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.173.223.234]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 30, 2020 at 08:27:01AM +0200, Takashi Iwai wrote:
-> On Sun, 29 Mar 2020 20:16:47 +0200, James Bottomley wrote:
->> We all assume that msecs_to_jiffies is properly optimized so there
->> should be no need to open code it like you're proposing.
+On 2020/3/30 10:39, Zhou Wang wrote:
+> On 2020/3/28 19:41, YueHaibing wrote:
+>> If PCI_MSI is not set, building fais:
+>>
+>> drivers/dma/hisi_dma.c: In function ‘hisi_dma_free_irq_vectors’:
+>> drivers/dma/hisi_dma.c:138:2: error: implicit declaration of function ‘pci_free_irq_vectors’;
+>>  did you mean ‘pci_alloc_irq_vectors’? [-Werror=implicit-function-declaration]
+>>   pci_free_irq_vectors(data);
+>>   ^~~~~~~~~~~~~~~~~~~~
+>>
+>> Make HISI_DMA depends on PCI_MSI to fix this.
 > 
-> Yes, it'd be best if the compiler can handle it properly.
+> In ARM64, it will appear this compile error if PCI disables.
+> How about adding depends on PCI && PCI_MSI here?
 
-I've tried, and can't figure out how to get the compiler to detect this 
-special case and not invoke the general code.  In particular, for a 
-variable x, __builtin_constant_p(x * 1000 % 1000) is false.  Even if x is 
-signed and ANSI lets the compiler assume that overflow doesn't happen.
+PCI_MSI depends on PCI， while PCI is not set, PCI_MSI will never be set
 
-If you can do it, I'm most curious how!
+so depends on PCI_MSI is enough.
 
-> But also I meant to keep using the macro for consistency reason.
-> IIRC, we wanted to eliminate the explicit use of HZ in the past, and
-> it's how many lines have been converted with *_to_jiffies() calls.
-> I don't know whether the eliminate of HZ is still wished, but
-> reverting to the open code is a step backward for that.
+> 
+> Best,
+> Zhou
+> 
+>>
+>> Fixes: e9f08b65250d ("dmaengine: hisilicon: Add Kunpeng DMA engine support")
+>> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+>> ---
+>>  drivers/dma/Kconfig | 3 ++-
+>>  1 file changed, 2 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/dma/Kconfig b/drivers/dma/Kconfig
+>> index 092483644315..023db6883d05 100644
+>> --- a/drivers/dma/Kconfig
+>> +++ b/drivers/dma/Kconfig
+>> @@ -241,7 +241,8 @@ config FSL_RAID
+>>  
+>>  config HISI_DMA
+>>  	tristate "HiSilicon DMA Engine support"
+>> -	depends on ARM64 || (COMPILE_TEST && PCI_MSI)
+>> +	depends on ARM64 || COMPILE_TEST
+>> +	depends on PCI_MSI
+>>  	select DMA_ENGINE
+>>  	select DMA_VIRTUAL_CHANNELS
+>>  	help
+>>
+> 
+> 
+> .
+> 
 
-Well, you could always add a secs_to_jiffies(x) wrapper.  But given
-that it expands to basically x * HZ, some people might wonder why
-you're bothering.
-
-I assumed that open-coding x * HZ was the preferred style, so that's
-what I did.
