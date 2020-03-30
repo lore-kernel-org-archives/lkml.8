@@ -5,58 +5,58 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DEE2C43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 01:10:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86F4AC43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 01:10:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E7F6520748
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 01:10:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5AC4D206F6
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 01:10:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dAAbaMon"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="b0LrrTZV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728813AbgC3BKP (ORCPT
+        id S1728676AbgC3BKG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Mar 2020 21:10:15 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:33182 "EHLO
+        Sun, 29 Mar 2020 21:10:06 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:35038 "EHLO
         mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728280AbgC3BJ7 (ORCPT
+        with ESMTP id S1728412AbgC3BJy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Mar 2020 21:09:59 -0400
-Received: by mail-lj1-f195.google.com with SMTP id f20so16336312ljm.0;
-        Sun, 29 Mar 2020 18:09:57 -0700 (PDT)
+        Sun, 29 Mar 2020 21:09:54 -0400
+Received: by mail-lj1-f195.google.com with SMTP id k21so16333154ljh.2;
+        Sun, 29 Mar 2020 18:09:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=PzPcH2Zw8s/lvusSJ+NeMT9K6QE3NO3BQ3OrhGxd84A=;
-        b=dAAbaMon+3/bSqoIuYfuwHx2KG8hghvSLrRSU22QfeV59mfGE+K6Fbxqmy75QxyRCz
-         vzG5MdQuMDqHNheti6KOwuAC/+GF7vBVf/jEwWYS0JpHBODi64d+2WUXzJ80dVgPaNbe
-         E2DmsKwTAP1jGTMw1ptNsZIEqJS4WhOcV9lNCgeUkDl9yc9Qhfifpe56l1OBc8mmkQVV
-         /NvfFxStOa1MuTM+BiVP1h8E8A+35d/0zkbSj9rlEX3Q2stjrqJdoJTxDE5PJap/Nf7q
-         zK7VvXq/44tRZFis67kdqpwYT1THGvNz40nr1jawM5e5NgNtwBdl8KhlaQDO66t+wvDQ
-         tlww==
+        bh=1McuIoe+/gchddRsq87TQMJQf8Rp7Vve2u5t5nrquN0=;
+        b=b0LrrTZVzfHMBFktbu8bi6guGoeKKYPyscr7FgSWXG8u5NEJwgkgd6Oyd11o9AFkoa
+         TJNRZTaOFIj+wksmETf023Gl95/UvNxOrZPZCgJo+CCS13hlTwQqZGgnR2p+FOX++w2G
+         dlPcja6KqQNs3by9CFOpE6X3lZkbRcnKld/P5a6ZWBBWV3OSG+oLLBPDh+RmZTrhog6K
+         JtlmkEgi4AluGfvdPtX1nbyxza05ITPOLChyv56T6E57hQxG8I6s/vVAcSIczOUFs3t2
+         ds7aaFehKmS0wFvsksjfmvjKUKyr15eDGViJUhI2IqTH9tjYelqKLRspXLkgj6WD4qen
+         XmiA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=PzPcH2Zw8s/lvusSJ+NeMT9K6QE3NO3BQ3OrhGxd84A=;
-        b=qDnu+kPWV/9ND+LKejEZmAqor6MfzIhuWpFppmsiCp3RGCOW9TsKaHsV4+VjMjYdYd
-         cCAZZ/Ay3YM21d9A1dL/Vmxd+5uykj5XmnVzK8A7IHMYnSk2Rj+kJMKCkEuMeQE8iWVb
-         0IZ0R6VJNUd3Dv+xluudgsxI68nABjhjj9SvAtWqHDue8O+eJ7UVHczpv7BmHt6wF0qK
-         Q+yXIITQDlUEWCmRwYs/0PxUOgKzmFwmdQre0UlgTtrhUAWiVk8looe9S9sT17ELQdjY
-         44ruHFIvrIrNGeT86Fqvmq33Ccka1MWcdEsOKwB3r3SS87mQWpiqTYZ06K8/DK9skHzR
-         ny/Q==
-X-Gm-Message-State: AGi0PubxDCJkYL5oYiRk7eCnVCo8DKFJttw5pyfuSfY+8thAhEYjg6af
-        fCIX+G1uhFxy0wNqQSEvonM=
-X-Google-Smtp-Source: APiQypIYV+VJ2BotiGVJkdVXlprPFDGmyLuF/8w8UIlmHETYi4iZ9H/wP0ZGxE/ac47Mtz3QpiVAvg==
-X-Received: by 2002:a2e:9b41:: with SMTP id o1mr5726081ljj.145.1585530596562;
-        Sun, 29 Mar 2020 18:09:56 -0700 (PDT)
+        bh=1McuIoe+/gchddRsq87TQMJQf8Rp7Vve2u5t5nrquN0=;
+        b=pWHg+RXzoyzyTwPyPLRC5bP6xsZxuaLWJy7znzEzJig4zOl1yBa2tLv3SKH0BlQehG
+         DShywsLWIZ3XXreOokK7CgVIj7mD9OPnEtwY7jfjbZIrNyhW39zESWuS+AkGT8m1kzSq
+         CSYCiQul/k8F41lmOCHMejQQ1T+KRLzdrzyAkwFjKcNV23YVBfCsorseeiPSkgjm5NwA
+         eilT/vKwneCNu3/jdNiTSdx4dUjCn3cJfBN/O3GqVe9cwx62syzBf9jQV1FAwTEXxKm/
+         hJNDsQvb3wA5SHvlmAOfAbOVcIHId11oEyoaEQ/O/K2qTa3hBNa+dt5PcYvcekcm8OuB
+         yj9Q==
+X-Gm-Message-State: AGi0PubziOBjNAP7iyeQbMTL6Hks9lwUyEP4GQJ6XndODIaJ9a5HZvjP
+        BL54cCQwaR9Ae938wi9rYes=
+X-Google-Smtp-Source: APiQypIdK6kO0xOLWty28oV/L6mJHCpdn490Kvca3eAPIUp5XW8mOja7127egPyznp9kVIoEwMooqQ==
+X-Received: by 2002:a2e:b04d:: with SMTP id d13mr5775623ljl.278.1585530589939;
+        Sun, 29 Mar 2020 18:09:49 -0700 (PDT)
 Received: from localhost.localdomain (ppp91-78-208-152.pppoe.mtu-net.ru. [91.78.208.152])
-        by smtp.gmail.com with ESMTPSA id f23sm2449005lja.60.2020.03.29.18.09.55
+        by smtp.gmail.com with ESMTPSA id f23sm2449005lja.60.2020.03.29.18.09.48
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 29 Mar 2020 18:09:55 -0700 (PDT)
+        Sun, 29 Mar 2020 18:09:49 -0700 (PDT)
 From:   Dmitry Osipenko <digetx@gmail.com>
 To:     Thierry Reding <thierry.reding@gmail.com>,
         Jonathan Hunter <jonathanh@nvidia.com>,
@@ -66,9 +66,9 @@ To:     Thierry Reding <thierry.reding@gmail.com>,
 Cc:     linux-tegra@vger.kernel.org, linux-pm@vger.kernel.org,
         linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
         devicetree@vger.kernel.org
-Subject: [PATCH v2 21/22] ARM: tegra: Enable interconnect API in tegra_defconfig
-Date:   Mon, 30 Mar 2020 04:09:03 +0300
-Message-Id: <20200330010904.27643-22-digetx@gmail.com>
+Subject: [PATCH v2 15/22] memory: tegra20-emc: Create tegra20-devfreq device
+Date:   Mon, 30 Mar 2020 04:08:57 +0300
+Message-Id: <20200330010904.27643-16-digetx@gmail.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200330010904.27643-1-digetx@gmail.com>
 References: <20200330010904.27643-1-digetx@gmail.com>
@@ -79,26 +79,30 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Tegra now has interconnect providers that are used for memory bandwidth
-allocation.
+The tegra20-devfreq driver provides memory frequency scaling functionality
+and it uses EMC clock for the scaling. Since tegra20-devfreq is a software
+driver, the device for the driver needs to be created manually. Let's do
+it from EMC driver since it provides the clk rate-change functionality.
 
 Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
 ---
- arch/arm/configs/tegra_defconfig | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/memory/tegra/tegra20-emc.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/arch/arm/configs/tegra_defconfig b/arch/arm/configs/tegra_defconfig
-index aa94369bdd0f..0029259a6bf5 100644
---- a/arch/arm/configs/tegra_defconfig
-+++ b/arch/arm/configs/tegra_defconfig
-@@ -268,6 +268,7 @@ CONFIG_AK8975=y
- CONFIG_PWM=y
- CONFIG_PWM_TEGRA=y
- CONFIG_PHY_TEGRA_XUSB=y
-+CONFIG_INTERCONNECT=y
- CONFIG_EXT2_FS=y
- CONFIG_EXT2_FS_XATTR=y
- CONFIG_EXT2_FS_POSIX_ACL=y
+diff --git a/drivers/memory/tegra/tegra20-emc.c b/drivers/memory/tegra/tegra20-emc.c
+index a2fcff221659..867cd518b32e 100644
+--- a/drivers/memory/tegra/tegra20-emc.c
++++ b/drivers/memory/tegra/tegra20-emc.c
+@@ -838,6 +838,9 @@ static int tegra_emc_probe(struct platform_device *pdev)
+ 				err);
+ 	}
+ 
++	if (IS_ENABLED(CONFIG_ARM_TEGRA20_DEVFREQ))
++		platform_device_register_simple("tegra20-devfreq", -1, NULL, 0);
++
+ 	return 0;
+ 
+ unset_cb:
 -- 
 2.25.1
 
