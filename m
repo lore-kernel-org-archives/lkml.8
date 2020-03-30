@@ -2,133 +2,165 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.2 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C708C2D0E5
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 18:30:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A416BC43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 18:32:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 087DD2072E
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 18:30:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WJa5CITi"
+	by mail.kernel.org (Postfix) with ESMTP id 8203F20714
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 18:32:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727899AbgC3Sa2 (ORCPT
+        id S1727891AbgC3ScQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 14:30:28 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:46200 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726518AbgC3Sa2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 14:30:28 -0400
-Received: by mail-ed1-f65.google.com with SMTP id cf14so21947127edb.13
-        for <linux-kernel@vger.kernel.org>; Mon, 30 Mar 2020 11:30:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=zSbITaAyAzmhAT6gpCYOeXzgKkCsXrLUD6omquEuTqY=;
-        b=WJa5CITi4iYXQT1Z7o4OzTgnLf9uIecH9M0QpLD3CUdOq7e664RYV+SuoFfPVnNH3o
-         KiKmmmBeZNXR+i4pwta9kGEry09HnXz+ABQ6KJk0t/REVFppsHl27jPJSpg0sWDoRcW6
-         CXpQRfWPIGJuf3Y8VzLa8/MrBYSe/VkaONHzl3trkyhkyFxkzpbDEAHVB1PxcnGyf78Z
-         GgjDy9diqWeW/QAOyksDi0LUSQ6Ksne7EhwnKhF/6hCmqNWg4v6aDnMOZXz4qCtjC2a1
-         4UCj+xFpG1F9Rk+QYsnBJgE672PIOTGV+WQSbnr1fYytOk2aEaPEnFjqi7l1W4HklniK
-         I/kA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=zSbITaAyAzmhAT6gpCYOeXzgKkCsXrLUD6omquEuTqY=;
-        b=Pg0suV6RxFtu+u9JXrtChEGogCBhfG3lzqEjCepUN2i57raK1wsTlt6pinm2tHpSun
-         ALqeQ3GfOX7Wl07jWTaUWa5WfUI2XWfg35En+Bp9MqCLaXKE9I/Gy4WEnI4BZd04nQ4d
-         Yccq28xaGfe5QRS4fnN+Q9JopMdhZRU9amRzN8lAkQhdcc8EFemqXuGTCSIeBy5yQVp2
-         ORgZqHpYspageLRM8sfvKG5MhGpGLlfW5uT1AmkwlPj68pwTWT2jTZYfnULoiFF4Cmer
-         AcIKaDoOeXvAJxjJIyfkBBEvrF9Jm1N9yoUY3BaAr10+0us3FaXZLM8k1fgoFnFI+y2C
-         eQ/A==
-X-Gm-Message-State: ANhLgQ0ZBYuRxQsvu/pxgWNrSUtwS/ZGo9EMHHEsiSl/SES45IgxSs75
-        aMqRymcvX6dE6zJz9hzEYw2s6GC0zNvfWlmgmpXoK5s6
-X-Google-Smtp-Source: ADFU+vuhTUFdM1bVr6g91y2tJylCPswBKWptZak/mV7zcR39OOhbOtoX54vMXfqsQpfKbQ8kdyxTUj3UC0HiM6Tg5YM=
-X-Received: by 2002:a17:906:d7a6:: with SMTP id pk6mr6255024ejb.309.1585593026220;
- Mon, 30 Mar 2020 11:30:26 -0700 (PDT)
+        Mon, 30 Mar 2020 14:32:16 -0400
+Received: from foss.arm.com ([217.140.110.172]:32852 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726017AbgC3ScQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Mar 2020 14:32:16 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3C7C81FB;
+        Mon, 30 Mar 2020 11:32:15 -0700 (PDT)
+Received: from e107158-lin.cambridge.arm.com (e107158-lin.cambridge.arm.com [10.1.195.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5B4C73F68F;
+        Mon, 30 Mar 2020 11:32:08 -0700 (PDT)
+Date:   Mon, 30 Mar 2020 19:32:06 +0100
+From:   Qais Yousef <qais.yousef@arm.com>
+To:     Boqun Feng <boqun.feng@gmail.com>
+Cc:     tglx@linutronix.de, peterz@infradead.org,
+        linux-kernel@vger.kernel.org, len.brown@intel.com,
+        pkondeti@codeaurora.org, jpoimboe@redhat.com, pavel@ucw.cz,
+        konrad.wilk@oracle.com, mojha@codeaurora.org, jkosina@suse.cz,
+        mingo@kernel.org, hpa@zytor.com, rjw@rjwysocki.net,
+        linux-tip-commits@vger.kernel.org
+Subject: Re: [tip:smp/hotplug] cpu/hotplug: Abort disabling secondary CPUs if
+ wakeup is pending
+Message-ID: <20200330183205.gn6c7ffpdujlrxxe@e107158-lin.cambridge.arm.com>
+References: <1559536263-16472-1-git-send-email-pkondeti@codeaurora.org>
+ <tip-a66d955e910ab0e598d7a7450cbe6139f52befe7@git.kernel.org>
+ <20200327025311.GA58760@debian-boqun.qqnc3lrjykvubdpftowmye0fmh.lx.internal.cloudapp.net>
 MIME-Version: 1.0
-References: <20200327170601.18563-1-kirill.shutemov@linux.intel.com>
- <20200327170601.18563-4-kirill.shutemov@linux.intel.com> <CAHbLzkoe-07mxAuA18QUi=H21_Ts0JcbP2SUT=02ZTPhaQB6ug@mail.gmail.com>
- <20200328121829.kzmcmcshbwynjmqc@box>
-In-Reply-To: <20200328121829.kzmcmcshbwynjmqc@box>
-From:   Yang Shi <shy828301@gmail.com>
-Date:   Mon, 30 Mar 2020 11:30:14 -0700
-Message-ID: <CAHbLzkr8YQAG0GbdJn9=Ey7B2M11dxnGCc2nfN-G1fmFiv+BOw@mail.gmail.com>
-Subject: Re: [PATCH 3/7] khugepaged: Drain LRU add pagevec to get rid of extra pins
-To:     "Kirill A. Shutemov" <kirill@shutemov.name>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Linux MM <linux-mm@kvack.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200327025311.GA58760@debian-boqun.qqnc3lrjykvubdpftowmye0fmh.lx.internal.cloudapp.net>
+User-Agent: NeoMutt/20171215
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Mar 28, 2020 at 5:18 AM Kirill A. Shutemov <kirill@shutemov.name> wrote:
->
-> On Fri, Mar 27, 2020 at 11:10:40AM -0700, Yang Shi wrote:
-> > On Fri, Mar 27, 2020 at 10:06 AM Kirill A. Shutemov
-> > <kirill@shutemov.name> wrote:
-> > >
-> > > __collapse_huge_page_isolate() may fail due to extra pin in the LRU add
-> > > pagevec. It's petty common for swapin case: we swap in pages just to
-> > > fail due to the extra pin.
-> > >
-> > > Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-> > > ---
-> > >  mm/khugepaged.c | 8 ++++++++
-> > >  1 file changed, 8 insertions(+)
-> > >
-> > > diff --git a/mm/khugepaged.c b/mm/khugepaged.c
-> > > index 14d7afc90786..39e0994abeb8 100644
-> > > --- a/mm/khugepaged.c
-> > > +++ b/mm/khugepaged.c
-> > > @@ -585,11 +585,19 @@ static int __collapse_huge_page_isolate(struct vm_area_struct *vma,
-> > >                  * The page must only be referenced by the scanned process
-> > >                  * and page swap cache.
-> > >                  */
-> > > +               if (page_count(page) != 1 + PageSwapCache(page)) {
-> > > +                       /*
-> > > +                        * Drain pagevec and retry just in case we can get rid
-> > > +                        * of the extra pin, like in swapin case.
-> > > +                        */
-> > > +                       lru_add_drain();
-> >
-> > This is definitely correct.
-> >
-> > I'm wondering if we need one more lru_add_drain() before PageLRU check
-> > in khugepaged_scan_pmd() or not? The page might be in lru cache then
-> > get skipped. This would improve the success rate.
->
-> Could you elaborate on the scenario, I don't follow.
+On 03/27/20 10:53, Boqun Feng wrote:
+> Hi Thomas and Pavankumar,
+> 
+> I have a question about this patch, please see below:
+> 
+> On Wed, Jun 12, 2019 at 05:34:08AM -0700, tip-bot for Pavankumar Kondeti wrote:
+> > Commit-ID:  a66d955e910ab0e598d7a7450cbe6139f52befe7
+> > Gitweb:     https://git.kernel.org/tip/a66d955e910ab0e598d7a7450cbe6139f52befe7
+> > Author:     Pavankumar Kondeti <pkondeti@codeaurora.org>
+> > AuthorDate: Mon, 3 Jun 2019 10:01:03 +0530
+> > Committer:  Thomas Gleixner <tglx@linutronix.de>
+> > CommitDate: Wed, 12 Jun 2019 11:03:05 +0200
+> > 
+> > cpu/hotplug: Abort disabling secondary CPUs if wakeup is pending
+> > 
+> > When "deep" suspend is enabled, all CPUs except the primary CPU are frozen
+> > via CPU hotplug one by one. After all secondary CPUs are unplugged the
+> > wakeup pending condition is evaluated and if pending the suspend operation
+> > is aborted and the secondary CPUs are brought up again.
+> > 
+> > CPU hotplug is a slow operation, so it makes sense to check for wakeup
+> > pending in the freezer loop before bringing down the next CPU. This
+> > improves the system suspend abort latency significantly.
+> > 
+> 
+> From the commit message, it makes sense to add the pm_wakeup_pending()
+> check if freeze_secondary_cpus() is used for system suspend. However,
+> freeze_secondary_cpus() is also used in kexec path on arm64:
+> 
+> 	kernel_kexec():
+> 	  machine_shutdown():
+> 	    disable_nonboot_cpus():
+> 	      freeze_secondary_cpus()
 
-I mean the below change:
+FWIW, I fixed this already and the change was picked up:
 
---- a/mm/khugepaged.c
-+++ b/mm/khugepaged.c
-@@ -1195,6 +1195,9 @@ static int khugepaged_scan_pmd(struct mm_struct *mm,
-                        goto out_unmap;
-                }
-                khugepaged_node_load[node]++;
-+               if (!PageLRU(page))
-+                       /* Flush the page out of lru cache */
-+                       lru_add_drain();
-                if (!PageLRU(page)) {
-                        result = SCAN_PAGE_LRU;
-                        goto out_unmap;
+	https://lore.kernel.org/lkml/20200323135110.30522-7-qais.yousef@arm.com/
 
-If the page is not on LRU we even can't reach collapse_huge_page(), right?
+Only x86 now uses disable_nonboot_cpus().
 
->
->
-> --
->  Kirill A. Shutemov
+# tip/smp/core
+
+$ git grep disable_nonboot_cpus
+Documentation/power/suspend-and-cpuhotplug.rst:                              disable_nonboot_cpus()
+Documentation/power/suspend-and-cpuhotplug.rst:                       /* disable_nonboot_cpus() complete */
+arch/x86/power/cpu.c:   ret = disable_nonboot_cpus();
+include/linux/cpu.h:static inline int disable_nonboot_cpus(void)
+include/linux/cpu.h:static inline int disable_nonboot_cpus(void) { return 0; }
+kernel/cpu.c:    * this even in case of failure as all disable_nonboot_cpus() users are
+
+Thanks
+
+--
+Qais Yousef
+
+> 
+> , so I wonder whether the pm_wakeup_pending() makes sense in this
+> situation? Because IIUC, in this case we want to reboot the system
+> regardlessly, the pm_wakeup_pending() checking seems to be inappropriate
+> then.
+> 
+> I'm asking this because I'm debugging a kexec failure on ARM64 guest on
+> Hyper-V, and I got the BUG_ON() triggered:
+> 
+> [  108.378016] kexec_core: Starting new kernel
+> [  108.378018] Disabling non-boot CPUs ...
+> [  108.378019] Wakeup pending. Abort CPU freeze
+> [  108.378020] Non-boot CPUs are not disabled
+> [  108.378049] ------------[ cut here ]------------
+> [  108.378050] kernel BUG at arch/arm64/kernel/machine_kexec.c:154!
+> 
+> Thanks!
+> 
+> Regards,
+> Boqun
+> 
+> > [ tglx: Massaged changelog and improved printk message ]
+> > 
+> > Signed-off-by: Pavankumar Kondeti <pkondeti@codeaurora.org>
+> > Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+> > Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+> > Cc: Len Brown <len.brown@intel.com>
+> > Cc: Pavel Machek <pavel@ucw.cz>
+> > Cc: Josh Poimboeuf <jpoimboe@redhat.com>
+> > Cc: Peter Zijlstra <peterz@infradead.org>
+> > Cc: Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
+> > Cc: iri Kosina <jkosina@suse.cz>
+> > Cc: Mukesh Ojha <mojha@codeaurora.org>
+> > Cc: linux-pm@vger.kernel.org
+> > Link: https://lkml.kernel.org/r/1559536263-16472-1-git-send-email-pkondeti@codeaurora.org
+> > 
+> > ---
+> >  kernel/cpu.c | 7 +++++++
+> >  1 file changed, 7 insertions(+)
+> > 
+> > diff --git a/kernel/cpu.c b/kernel/cpu.c
+> > index be82cbc11a8a..0778249cd49d 100644
+> > --- a/kernel/cpu.c
+> > +++ b/kernel/cpu.c
+> > @@ -1221,6 +1221,13 @@ int freeze_secondary_cpus(int primary)
+> >  	for_each_online_cpu(cpu) {
+> >  		if (cpu == primary)
+> >  			continue;
+> > +
+> > +		if (pm_wakeup_pending()) {
+> > +			pr_info("Wakeup pending. Abort CPU freeze\n");
+> > +			error = -EBUSY;
+> > +			break;
+> > +		}
+> > +
+> >  		trace_suspend_resume(TPS("CPU_OFF"), cpu, true);
+> >  		error = _cpu_down(cpu, 1, CPUHP_OFFLINE);
+> >  		trace_suspend_resume(TPS("CPU_OFF"), cpu, false);
