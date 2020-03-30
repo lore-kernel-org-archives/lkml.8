@@ -2,102 +2,438 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8ED92C43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 05:13:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6AFBC43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 05:13:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 590A7206F6
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 05:13:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585545187;
-	bh=Btjv1410ExjRcVLrGJqlVpkFfkWqRdsDnaLD/xLpE38=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=mRwAHQz1rxEp74O8m6dHoxRPdpc/nJCgLz7H4ipJO2qmXVNbMSGizl8fM2sMGup7I
-	 BS6aSC9vk+YhNqZPVP7Dyd743KQdMlmxfTJCmm/zS/pWRdTKpW76plRu6izHTP0j9b
-	 HJ0VbP1Uik4LtgzWSYy7dyTJWgnmqvBluZL6WvNY=
+	by mail.kernel.org (Postfix) with ESMTP id A98D4206F6
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 05:13:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="LIK2hUOB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728478AbgC3FNG (ORCPT
+        id S1728528AbgC3FNJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 01:13:06 -0400
-Received: from conssluserg-06.nifty.com ([210.131.2.91]:19780 "EHLO
-        conssluserg-06.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728120AbgC3FNG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 01:13:06 -0400
-Received: from mail-vk1-f172.google.com (mail-vk1-f172.google.com [209.85.221.172]) (authenticated)
-        by conssluserg-06.nifty.com with ESMTP id 02U5D1l9029463;
-        Mon, 30 Mar 2020 14:13:01 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-06.nifty.com 02U5D1l9029463
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1585545182;
-        bh=2O1PRZcRzehItdBq+SOYt2I5sthUecO3gWWhCXTRP/c=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=P3H751RiC/8MgQANyeKWkHebxbvWFi8Dllsj27ZKgSLKD1roZKGVMMoMPTUJibyJb
-         dcN+JfAdF6U1FKsiYUMS98OBOiBzl6DAVK5N+ZtkUe3+pZPZi8jYfSCMZe1sGnwLpc
-         bccvt1Qc5zCIo7GWBcVL1fedqxZwEkwxli3/rONlTOVITLPqyZDWyX5t3Kx+fWcL1w
-         o9Or8jwD/HqqH/epHzfRssqLoDbH3DJ3y6knSAJNhbLRK68aCC6UBp4EHQ0xFjCkws
-         iLxkVYhfXTdUS7t56C6DGWl8mHvIgbksgxhy3KMijtDxB9nP21Gl/2P6yIv1aBqstb
-         7anxFwACtKU/A==
-X-Nifty-SrcIP: [209.85.221.172]
-Received: by mail-vk1-f172.google.com with SMTP id o124so4340806vkc.4;
-        Sun, 29 Mar 2020 22:13:01 -0700 (PDT)
-X-Gm-Message-State: AGi0PuYrhTi6IoB3r0ZuFaciyCIykcM0vWnfprh0Y+ot1Pf9jcakH+og
-        p1hqjtR9U2IYZizvqPpMbk/Um6PCgrZGwwPe2Mk=
-X-Google-Smtp-Source: APiQypJcTTfLrz6NE2CFD6TIOP+rr7KaoSnH4ArjXjaCsrK70EkFivm3Wt+pUVnSxQGtA3GXt+L3qFSo3zRkcifs0nU=
-X-Received: by 2002:a1f:32cf:: with SMTP id y198mr6252148vky.96.1585545180610;
- Sun, 29 Mar 2020 22:13:00 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200329110832.19961-1-masahiroy@kernel.org> <202003292126.5105600A@keescook>
-In-Reply-To: <202003292126.5105600A@keescook>
-From:   Masahiro Yamada <masahiroy@kernel.org>
-Date:   Mon, 30 Mar 2020 14:12:24 +0900
-X-Gmail-Original-Message-ID: <CAK7LNARhnzxhMMD7b36s8u_DJ+XdU0p4RQpsjYpPxwjTU9P5ew@mail.gmail.com>
-Message-ID: <CAK7LNARhnzxhMMD7b36s8u_DJ+XdU0p4RQpsjYpPxwjTU9P5ew@mail.gmail.com>
-Subject: Re: [PATCH] gcc-plugins: drop support for GCC <= 4.7
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Mon, 30 Mar 2020 01:13:09 -0400
+Received: from mail-bn7nam10on2077.outbound.protection.outlook.com ([40.107.92.77]:6125
+        "EHLO NAM10-BN7-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728120AbgC3FNI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Mar 2020 01:13:08 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Ndt/h8iT1zGsqfB3wBnfn9RHhpkmJWW437op6PNJbP65TyiLYhHY03VcISQoOQZW5N2VUxmnPoka/bNlz4ww91RulqJ7L2zOeaCfuoQGL9ZSUOXk3WpZcnDZnZtGziliV1GGRASpbwt7izVXboFsBUmx4g430F5iO7Klp0VaCgU7gJ/6noMaMvdJ7/nbknivyj/C5hOLMMqEEdvQH/g6mozBHOzp93SloIsLVQtS/RntP/oMQzmbk2caJhu8FCtMOpb9HazeeVfvgKosG3h853rKGxeu7dFctV57Kk8nuGGc0PqNRh9iklPzRbTxFxOYnbpIQaTY55DsZkiNRytUKw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=GO3bJC6AYrjR1B7XL8YSVmznQLoHNmz5Ykbxf7ZHSRo=;
+ b=hr9lWNGkwLfL/IDYR+1KK2Aa8j910HgzkSWr0VPGDIzDxVYupXnrIc7B34laP88BxkVf6KVxFR3b9ze+o6uv2p7vgjYMPrgzYnmg98ROeCKwPNtBztCcq0UAG8+v7yaUo+L0eD0sEACztUVUMOFxe5OIh10lpwK9PrmACcNq1aqwHIeasbOInhMWNXlxJsqOKLcRI4Y6QdWmTenxX9LAkPntumwMPfvHj9KwOqU7+tSGPnGeAqssJFJOc3O0DpiCtwvS5nvoJ6ojOjXSoAz5FR/Nx11BfuglbegrZVlYHlC4b2n3qUfWHdXL4PtMij4qdOJEOquwLO8/+7NUls09sw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=GO3bJC6AYrjR1B7XL8YSVmznQLoHNmz5Ykbxf7ZHSRo=;
+ b=LIK2hUOBBh/LKGSEGyZpDibflb6gTndA3vDZENqiH1wI7fVQKCW+OQ8nZhyI8e2mphp+ST80sKOh5wYD4tfEvGPJIn4V5/AxzQ4NqfXuVK/pRh4GuuiZRQ8yF4iEZ1w6JAFPRuTlgWZ+uKGE9bvHqOoK9hUAuZV8nhOKNFdUZWE=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=Sandeep.Singh@amd.com; 
+Received: from BYAPR12MB2726.namprd12.prod.outlook.com (2603:10b6:a03:66::17)
+ by BYAPR12MB3640.namprd12.prod.outlook.com (2603:10b6:a03:aa::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2856.19; Mon, 30 Mar
+ 2020 05:13:03 +0000
+Received: from BYAPR12MB2726.namprd12.prod.outlook.com
+ ([fe80::61e1:6a43:d8b:f7a4]) by BYAPR12MB2726.namprd12.prod.outlook.com
+ ([fe80::61e1:6a43:d8b:f7a4%6]) with mapi id 15.20.2856.019; Mon, 30 Mar 2020
+ 05:13:03 +0000
+Subject: Re: [PATCH v4 2/4] SFH: PCI driver to add support of AMD sensor
+ fusion Hub using HID framework
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Sandeep Singh <Sandeep.Singh@amd.com>
+Cc:     Jiri Kosina <jikos@kernel.org>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Emese Revfy <re.emese@gmail.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>
-Content-Type: text/plain; charset="UTF-8"
+        linux-input <linux-input@vger.kernel.org>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        Jonathan Cameron <jic23@kernel.org>,
+        linux-iio <linux-iio@vger.kernel.org>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Nehal-bakulchandra.Shah@amd.com, Shyam-sundar.S-k@amd.com
+References: <1582779537-25662-1-git-send-email-Sandeep.Singh@amd.com>
+ <1582779537-25662-3-git-send-email-Sandeep.Singh@amd.com>
+ <CAHp75VcTnZzf9_=ftO=+LbSx3v5FWqVq5RJ=FW32z2FPCnYbsw@mail.gmail.com>
+From:   "Singh, Sandeep" <ssingh1@amd.com>
+Message-ID: <f5311f8f-e843-002d-5e2f-2b23e6f82707@amd.com>
+Date:   Mon, 30 Mar 2020 10:42:50 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
+In-Reply-To: <CAHp75VcTnZzf9_=ftO=+LbSx3v5FWqVq5RJ=FW32z2FPCnYbsw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-ClientProxiedBy: PN1PR0101CA0023.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:c00:e::33) To BYAPR12MB2726.namprd12.prod.outlook.com
+ (2603:10b6:a03:66::17)
+MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from [10.252.81.218] (165.204.159.242) by PN1PR0101CA0023.INDPRD01.PROD.OUTLOOK.COM (2603:1096:c00:e::33) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2856.20 via Frontend Transport; Mon, 30 Mar 2020 05:12:58 +0000
+X-Originating-IP: [165.204.159.242]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: ce9364c9-76e8-4321-6780-08d7d46905f2
+X-MS-TrafficTypeDiagnostic: BYAPR12MB3640:|BYAPR12MB3640:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <BYAPR12MB364034E2DEAC29475AFEF83BE0CB0@BYAPR12MB3640.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:5797;
+X-Forefront-PRVS: 0358535363
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR12MB2726.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10009020)(4636009)(136003)(396003)(376002)(346002)(366004)(39860400002)(956004)(478600001)(54906003)(2616005)(2906002)(31686004)(110136005)(4326008)(53546011)(66476007)(26005)(66556008)(16576012)(6666004)(8936002)(66946007)(5660300002)(8676002)(36756003)(16526019)(81166006)(81156014)(186003)(6636002)(316002)(52116002)(6486002)(31696002);DIR:OUT;SFP:1101;
+Received-SPF: None (protection.outlook.com: amd.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: CcGXMRw2ApGnzVKSnaI4sAYy0wSaiCxBJX6xcDyCLpT/0beJp9gjDQfn52Le0veGM34BdYIaCknwyxxSz0qUum7kN5VLa/0jPkRl1X+/pHK0SFmlA1dbYcXrjJN9QTQwpP0Px+kBVCA9rkRf+e6p3rEa9i/qB3hnV3pG+o6ehvCMRj5J/pSt0/9ONp1Pb0FhH1JAoecesysqLcJHE2V/H0y3hK+Irf9JrAh4db/qBjZSfpEAm3FDPnfNUlqN7G3GeQOPH0F3qP38rXYqjHd+BsdVxfJOPdg58B7Lx7w42f4PUi3ZxKJyxLf+8ZkCKaTfsZe1dB9xpUwVWI1c+1xGC3VeKEZW4tsipdgi7XgRq51YDxL5SyoFeyGy84q9da8W5WvsyIcZEdabwksTyATcZzU8n5japD/+jhUN+6ydMYEy9a8u2WaUwIyERFdhy+wO
+X-MS-Exchange-AntiSpam-MessageData: bmsNoJTKlb30CL6PzS2DyUIuEkxG64fLDC5QmAZ6D/q/dFAEWT5aeoWdnutuuvDeBRlsZrzE4MgWL43yv99J7Aq0yplQxGnvPK7kzxK6fESRmIkqbrked93Y7RxHeS+4fPOajXX0D65Rck9EUGwf8g==
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: ce9364c9-76e8-4321-6780-08d7d46905f2
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Mar 2020 05:13:03.8108
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: nECdmkHuYo+mRc2uHP4azr3IIn+H6qQWxEScbCW0w55CTDOBuX53YF6A6KZOeKgH
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR12MB3640
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Kees,
+Thanks Andy for review comments i will look into it.
 
-On Mon, Mar 30, 2020 at 1:27 PM Kees Cook <keescook@chromium.org> wrote:
+On 3/27/2020 8:25 PM, Andy Shevchenko wrote:
+> [CAUTION: External Email]
 >
-> On Sun, Mar 29, 2020 at 08:08:32PM +0900, Masahiro Yamada wrote:
-> > Nobody was opposed to raising minimum GCC version to 4.8 [1]
-> > So, we will drop GCC <= 4.7 support sooner or later.
-> >
-> > We always use C++ compiler for building plugins for GCC >= 4.8.
-> >
-> > This commit drops the plugin support for GCC <= 4.7 a bit earlier,
-> > which allows us to dump lots of code.
-> >
-> > [1] https://lkml.org/lkml/2020/1/23/545
-> >
-> > Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+> On Thu, Feb 27, 2020 at 7:01 AM Sandeep Singh <Sandeep.Singh@amd.com> wrote:
+>> From: Sandeep Singh <sandeep.singh@amd.com>
+>>
+>> AMD SFH uses HID over PCIe bus.SFH fw is part of MP2
+>> processor (MP2 which is an ARM® Cortex-M4 core based
+>> co-processor to x86) and it runs on MP2 where in driver resides
+>> on X86. This part of module will communicate with MP2 FW and
+>> provide that data into DRAM
+> You asked for review, here you are.
+> TL,DR; it requires a bit of work.
 >
-> Thanks for getting this cleaned up! I look forward to the 4.8 version
-> bump. :)
+> ...
 >
-> Acked-by: Kees Cook <keescook@chromium.org>
+>> +       depends on (X86_64 || COMPILE_TEST) && PCI
+> For better maintenance
+>         depends on X86_64 || COMPILE_TEST
+>         depends on PCI
+>
+> ...
+>
+>> +# SPDX-License-Identifier: GPL-2.0
+>> +#
+>> +# Makefile - AMD SFH HID drivers
+>> +# Copyright (c) 2020-2021, Advanced Micro Devices, Inc.
+>> +#
+>> +#
+> Perhaps simple blank line instead?
+>
+>> +ccflags-y += -I$(srctree)/$(src)/
+> Why?
+>
+> ...
+>
+>> +#include <linux/interrupt.h>
+>> +#include <linux/module.h>
+>> +#include <linux/pci.h>
+>> +#include <linux/slab.h>
+>> +#include <linux/delay.h>
+> Keep in order?
+>
+> + blank line?
+>
+> Missed bits.h, types.h.
+>
+>> +#include "amd_mp2_pcie.h"
+> ...
+>
+>> +       write64((u64)info.phy_address, privdata->mmio + AMD_C2P_MSG2);
+> Why explicit cast?
+>
+> ...
+>
+>> +       /*fill up command register */
+> Space is missed.
+>
+> ...
+>
+>> +       if (!sensor_id)
+>> +               return -ENOMEM;
+> I can say -EINVAL as per its definition, but why do you need this at all?
+>
+> ...
+>
+>> +static int amd_mp2_pci_init(struct amd_mp2_dev *privdata, struct pci_dev *pdev)
+>> +{
+>> +       int rc;
+>> +       int bar_index = 2;
+>> +       resource_size_t size, base;
+>> +       pci_set_drvdata(pdev, privdata);
+> Better to assign when you are sure (to some extend in both of them):
+> a) it's needed
+> b) driver is going to be probed correctly
+>
+> ...
+>
+>> +       rc = pcim_iomap_regions(pdev, 1 >> 2, DRIVER_NAME);
+> What 1 >> 2 means? Shouldn't be simple BIT(2)?
+> How was this been tested?
+>
+>> +       if (rc)
+>> +               goto err_pci_regions;
+> ...
+>
+>> +       base = pci_resource_start(pdev, bar_index);
+>> +       size = pci_resource_len(pdev, bar_index);
+>> +       dev_dbg(ndev_dev(privdata), "Base addr:%llx size:%llx\n",
+>> +               (unsigned long long)base, (unsigned long long)size);
+> Read printk-formats.rst.
+> Now, when you get familiar with it, find proper specifier and drop
+> these ugly castings.
+> But wait, why do you need this? `dmesg` will show it anyway during
+> boot / hotplug event time.
+>
+> ...
+>
+>> +       privdata->mmio = ioremap(base, size);
+>> +       if (!privdata->mmio) {
+>> +               rc = -EIO;
+>> +               goto err_dma_mask;
+>> +       }
+> Why?!
+>
+> ...
+>
+>> +err_dma_mask:
+>> +       pci_clear_master(pdev);
+>> +err_pci_regions:
+>> +       pci_disable_device(pdev);
+> Are you using devres or not? Please, be consistent.
+>
+>> +err_pci_enable:
+>> +       pci_set_drvdata(pdev, NULL);
+> I think it's some like 5 to 10 years that we don't need this.
+>
+>> +       return rc;
+>> +}
+> ...
+>
+>> +       pci_iounmap(pdev, privdata->mmio);
+>> +
+>> +       pci_clear_master(pdev);
+>> +       pci_disable_device(pdev);
+>> +       pci_set_drvdata(pdev, NULL);
+> Ditto as above two comments.
+>
+> ...
+>
+>> +       dev_info(&pdev->dev, "MP2 device found [%04x:%04x] (rev %x)\n",
+>> +                (int)pdev->vendor, (int)pdev->device, (int)pdev->revision);
+> Oh, if you use explicit casting for printf(), 99.9% you are doing
+> something wrong (in kernel space).
+> On top of that, why this noise is here?
+>
+> ...
+>
+>> +       privdata = devm_kzalloc(&pdev->dev, sizeof(*privdata), GFP_KERNEL);
+>> +
+> No need for this blank line.
+>
+>> +       if (!privdata) {
+>> +       }
+> ...
+>
+>
+>> +       rc = amd_mp2_pci_init(privdata, pdev);
+>> +       if (rc)
+>> +               goto err_pci_init;
+>> +       return 0;
+> Why its content can't be simple here? I.o.w. why this function is needed?
+>
+> ...
+>
+>> +err_pci_init:
+>> +       return rc;
+>> +err_dev:
+>> +       return rc;
+> Completely useless code.
+>
+>> +}
+> ...
+>
+>> +static const struct pci_device_id amd_mp2_pci_tbl[] = {
+>> +       {PCI_VDEVICE(AMD, PCI_DEVICE_ID_AMD_MP2)},
+>> +       {0}
+> 0 is not needed, but it's up to you.
+>
+>> +};
+> ...
+>
+>> +static int __init amd_mp2_pci_driver_init(void)
+>> +{
+>> +       return pci_register_driver(&amd_mp2_pci_driver);
+>> +}
+>> +module_init(amd_mp2_pci_driver_init);
+>> +
+>> +static void __exit amd_mp2_pci_driver_exit(void)
+>> +{
+>> +       pci_unregister_driver(&amd_mp2_pci_driver);
+>> +}
+>> +module_exit(amd_mp2_pci_driver_exit);
+> module_pci_driver()
+> We have it for years.
+>
+> ...
+>
+>> +#include <linux/pci.h>
+> I don't see users of it, but missed headers
+> types.h
+>
+> ...
+>
+>> +#define PCI_DEVICE_ID_AMD_MP2  0x15E4
+> Why it's not in C file?
+>
+> ...
+>
+>> +#define AMD_P2C_MSG0   0x10680 /*Do not use*/
+>> +#define AMD_P2C_MSG1   0x10684
+>> +#define AMD_P2C_MSG2   0x10688
+>> +#define AMD_P2C_MSG3   0x1068C /*MP2 debug info*/
+>> +#define AMD_P2C_MSG_INTEN      0x10690 /*MP2 int gen register*/
+>> +#define AMD_P2C_MSG_INTSTS     0x10694 /*Interrupt sts*/
+> Missed spaces.
+>
+> ...
+>
+>> +#define write64 amdsfh_write64
+>> +static inline void amdsfh_write64(u64 val, void __iomem *mmio)
+>> +{
+>> +       writel(val, mmio);
+>> +       writel(val >> 32, mmio + sizeof(u32));
+>> +}
+> NIH of lo_hi_writeq().
+>
+>> +#define read64 amdsfh_read64
+>> +static inline u64 amdsfh_read64(void __iomem *mmio)
+>> +{
+>> +       u64 low, high;
+>> +
+>> +       low = readl(mmio);
+>> +       high = readl(mmio + sizeof(u32));
+>> +       return low | (high << 32);
+>> +}
+> NIH of lo_hi_readq().
+>
+> ...
+>
+>> +struct sfh_command_register {
+>> +       union sfh_cmd_base cmd_base;
+>> +       union sfh_command_parameter cmd_param;
+>> +       phys_addr_t phy_addr;
+> Are you sure? This type is flexible. And by name of the struct I think
+> it operates with hardware, so, fix it accordingly.
+>
+>> +};
+> ...
+>
+>> +enum response_type {
+>> +       non_operationevent,
+>> +       command_success,
+>> +       command_failed,
+>> +       sfi_dataready_event,
+>> +       invalid_response = 0xff,
+> GENMASK()
+>
+>> +};
+> UPPER CASE?
+>
+>> +enum status_type {
+>> +       cmd_success,
+>> +       invalid_data_payload,
+>> +       invalid_data_length,
+>> +       invalid_sensor_id,
+>> +       invalid_dram_addr,
+>> +       invalid_command,
+>> +       sensor_enabled,
+>> +       sensor_disabled,
+>> +       status_end,
+>> +};
+>> +
+>> +enum command_id {
+>> +       non_operation = 0,
+>> +       enable_sensor = 1,
+>> +       disable_sensor = 2,
+>> +       dump_sensorinfo = 3,
+>> +       numberof_sensordiscovered = 4,
+>> +       who_am_i_regchipid = 5,
+>> +       set_dcd_data = 6,
+>> +       get_dcd_data = 7,
+>> +       stop_all_sensors = 8,
+>> +       invalid_cmd = 0xf,
+>> +};
+> Ditto.
+>
+> ...
+>
+>> +enum sensor_idx {
+> Do you need names for enums like this?
+>
+>> +       ACCEL_IDX               = 0,
+>> +       GYRO_IDX                = 1,
+>> +       MAG_IDX                 = 2,
+>> +       AMBIENT_LIGHT_IDX       = 19,
+>> +       NUM_ALL_SENSOR_CONSUMERS
+>> +};
+> ...
+>
+>> +struct amd_mp2_dev {
+>> +       struct pci_dev *pdev;
+>> +       void __iomem *mmio;
+> Header for __iomem?
+>
+>> +       struct delayed_work work;
+> Header for this?
+>
+>> +       void *ctx;
+>> +       void *cl_data;
+>> +};
+> ...
+>
+>> +struct amd_mp2_sensor_info {
+>> +       u8 sensor_idx;
+>> +       u32 period;
+>> +       phys_addr_t phy_address;
+> Same comment as per above use of phys_addr_t type.
+>
+>> +};
+> ...
+>
+>> +#define ndev_pdev(ndev) ((ndev)->pdev)
+>> +#define ndev_name(ndev) pci_name(ndev_pdev(ndev))
+>> +#define ndev_dev(ndev) (&ndev_pdev(ndev)->dev)
+> Why? What's the benefit?
+>
+> --
+> With Best Regards,
+> Andy Shevchenko
 
+Regards
 
-Thanks for your Ack.
-I will queue this up to kbuild tree,
-and it will ease more kbuild cleanups.
+Sandeep
 
-Thanks.
-
--- 
-Best Regards
-Masahiro Yamada
