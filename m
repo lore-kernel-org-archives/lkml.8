@@ -2,99 +2,98 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9172DC2D0EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 14:52:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06E36C2D0F0
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 14:54:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 67D332073B
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 14:52:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D2F732072E
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 14:54:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728667AbgC3Owk (ORCPT
+        id S1728779AbgC3OyC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 10:52:40 -0400
-Received: from mga12.intel.com ([192.55.52.136]:64494 "EHLO mga12.intel.com"
+        Mon, 30 Mar 2020 10:54:02 -0400
+Received: from mga05.intel.com ([192.55.52.43]:48804 "EHLO mga05.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728091AbgC3Owk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 10:52:40 -0400
-IronPort-SDR: MIRYyY5gaX862ksA0nrrp5J+dbtAUPZ5FOu0NRb0HzlBhHKMFR4129YBmmSgejwQTN9XlCFq4R
- JZ3fHnAkgupw==
+        id S1728080AbgC3OyC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Mar 2020 10:54:02 -0400
+IronPort-SDR: bVE95S9nAHI880y/LpLOMlmtoIklyC4wJHD1AIj49tGULlfaOccTyU54+PK5QS92KXY78Avsnz
+ N+qx/7JF+Bfg==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Mar 2020 07:52:39 -0700
-IronPort-SDR: rfW88gAjoLcRuxEMkeDyZmauk0DBi3xQ4Q1GXDFDjkXTWZvhWkbDmfca24k9dnZz35+i/xkTp/
- EroFjNmfikxg==
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Mar 2020 07:54:01 -0700
+IronPort-SDR: 6AZb4YxdwxccLW4pzPd13dyt/rHXVVgzptn6Vdg54LA9vG/5fJTzc+V8sE6REJPm3QXDHa1ck3
+ 3hn2SE3ALAzg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.72,324,1580803200"; 
-   d="scan'208";a="237374537"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga007.jf.intel.com with ESMTP; 30 Mar 2020 07:52:37 -0700
-Received: from andy by smile with local (Exim 4.93)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1jIvmJ-00EEWj-7l; Mon, 30 Mar 2020 17:52:39 +0300
-Date:   Mon, 30 Mar 2020 17:52:39 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Heiko Stuebner <heiko@sntech.de>
-Cc:     gregkh@linuxfoundation.org, jslaby@suse.com,
-        matwey.kornilov@gmail.com, linux-serial@vger.kernel.org,
-        linux-kernel@vger.kernel.org, lukas@wunner.de,
-        christoph.muellner@theobroma-systems.com,
-        giulio.benetti@micronovasrl.com,
-        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
-Subject: Re: [PATCH v2 4/7] serial: 8250: Handle implementations not having
- TEMT interrupt using em485
-Message-ID: <20200330145239.GV1922688@smile.fi.intel.com>
-References: <20200325231422.1502366-1-heiko@sntech.de>
- <20200325231422.1502366-5-heiko@sntech.de>
+   d="scan'208";a="395146086"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga004.jf.intel.com with ESMTP; 30 Mar 2020 07:54:01 -0700
+Received: from [10.252.136.240] (kliang2-mobl.ccr.corp.intel.com [10.252.136.240])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by linux.intel.com (Postfix) with ESMTPS id 0BAF25805A1;
+        Mon, 30 Mar 2020 07:54:00 -0700 (PDT)
+Subject: Re: [PATCH] perf/x86/intel: Add more available bits for
+ OFFCORE_RESPONSE of Intel Tremont
+To:     peterz@infradead.org, mingo@redhat.com,
+        linux-kernel@vger.kernel.org
+Cc:     ak@linux.intel.com, eranian@google.com, stable@vger.kernel.org
+References: <20200308125507.18670-1-kan.liang@linux.intel.com>
+From:   "Liang, Kan" <kan.liang@linux.intel.com>
+Message-ID: <0a06d798-c90f-1824-50dc-acbeae6ee18a@linux.intel.com>
+Date:   Mon, 30 Mar 2020 10:53:59 -0400
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200325231422.1502366-5-heiko@sntech.de>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <20200308125507.18670-1-kan.liang@linux.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 26, 2020 at 12:14:19AM +0100, Heiko Stuebner wrote:
-> From: Giulio Benetti <giulio.benetti@micronovasrl.com>
+Hi Peter,
+
+Could you please take a look and apply the patch?
+
+Thanks,
+Kan
+
+On 3/8/2020 8:55 AM, kan.liang@linux.intel.com wrote:
+> From: Kan Liang <kan.liang@linux.intel.com>
 > 
-> Some 8250 ports have a TEMT interrupt but it's not a part of the 8250
-> standard, instead only available on some implementations.
+> The mask in the extra_regs for Intel Tremont need to be extended to
+> allow more defined bits.
 > 
-> The current em485 implementation does not work on ports without it.
-> The only chance to make it work is to loop-read on LSR register.
+> "Outstanding Requests" (bit 63) is only available on MSR_OFFCORE_RSP0;
 > 
-> So add UART_CAP_TEMT to mark 8250 uarts having this interrupt,
-> update all current em485 users with that capability and make
-> the stop_tx function loop-read on uarts not having it.
-
-> +		if (p->capabilities & UART_CAP_TEMT) {
-> +			if ((lsr & BOTH_EMPTY) != BOTH_EMPTY)
-> +				return;
-> +		} else {
-> +			int lsr;
-> +
-
-> +			if (readx_poll_timeout(__get_lsr, p, lsr,
-> +					(lsr & BOTH_EMPTY) == BOTH_EMPTY,
-> +					0, 10000) < 0)
-
-			ret = readx_poll_timeout(...);
-			if (ret)
-				...
-
-will look better.
-
-> +				pr_warn("%s: timeout waiting for fifos to empty\n",
-> +					p->port.name);
-> +		}
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+> Fixes: 6daeb8737f8a ("perf/x86/intel: Add Tremont core PMU support")
+> Reported-by: Stephane Eranian <eranian@google.com>
+> Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
+> Cc: stable@vger.kernel.org
+> ---
+>   arch/x86/events/intel/core.c | 4 ++--
+>   1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
+> index 3be51aa06e67..ba08ad1f560b 100644
+> --- a/arch/x86/events/intel/core.c
+> +++ b/arch/x86/events/intel/core.c
+> @@ -1892,8 +1892,8 @@ static __initconst const u64 tnt_hw_cache_extra_regs
+>   
+>   static struct extra_reg intel_tnt_extra_regs[] __read_mostly = {
+>   	/* must define OFFCORE_RSP_X first, see intel_fixup_er() */
+> -	INTEL_UEVENT_EXTRA_REG(0x01b7, MSR_OFFCORE_RSP_0, 0xffffff9fffull, RSP_0),
+> -	INTEL_UEVENT_EXTRA_REG(0x02b7, MSR_OFFCORE_RSP_1, 0xffffff9fffull, RSP_1),
+> +	INTEL_UEVENT_EXTRA_REG(0x01b7, MSR_OFFCORE_RSP_0, 0x800ff0ffffff9fffull, RSP_0),
+> +	INTEL_UEVENT_EXTRA_REG(0x02b7, MSR_OFFCORE_RSP_1, 0xff0ffffff9fffull, RSP_1),
+>   	EVENT_EXTRA_END
+>   };
+>   
+> 
