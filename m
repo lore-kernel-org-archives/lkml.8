@@ -2,216 +2,94 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URI_WP_DIRINDEX autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EBB13C43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 13:19:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1F11C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 13:20:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C91DD2073B
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 13:19:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6DEC720757
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 13:20:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DQY5YBav"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730368AbgC3NTD convert rfc822-to-8bit (ORCPT
+        id S1730370AbgC3NUE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 09:19:03 -0400
-Received: from mga18.intel.com ([134.134.136.126]:45903 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730166AbgC3NTC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 09:19:02 -0400
-IronPort-SDR: iP6QIpyw9plJgyyPnOr9++p+DDeKyX3jV8aa48kXzoHyCRHWlIS9SfOib3BCtYCTW1VzgkX/Xl
- 7EPPrHFHN6wA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Mar 2020 06:18:58 -0700
-IronPort-SDR: 8zvPcR0zGQgPmpOR6KG1knCLH24SObnbiA0e3+IOHMEH6j5tnEn9kgbTVzRejVSDev6Z4LwT9+
- 1QMwRvbh40wA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,324,1580803200"; 
-   d="scan'208";a="251881097"
-Received: from fmsmsx108.amr.corp.intel.com ([10.18.124.206])
-  by orsmga006.jf.intel.com with ESMTP; 30 Mar 2020 06:18:56 -0700
-Received: from shsmsx152.ccr.corp.intel.com (10.239.6.52) by
- FMSMSX108.amr.corp.intel.com (10.18.124.206) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Mon, 30 Mar 2020 06:18:56 -0700
-Received: from shsmsx104.ccr.corp.intel.com ([169.254.5.225]) by
- SHSMSX152.ccr.corp.intel.com ([169.254.6.209]) with mapi id 14.03.0439.000;
- Mon, 30 Mar 2020 21:18:53 +0800
-From:   "Tian, Kevin" <kevin.tian@intel.com>
-To:     "Liu, Yi L" <yi.l.liu@intel.com>,
-        "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
-        "eric.auger@redhat.com" <eric.auger@redhat.com>
-CC:     "jacob.jun.pan@linux.intel.com" <jacob.jun.pan@linux.intel.com>,
-        "joro@8bytes.org" <joro@8bytes.org>,
-        "Raj, Ashok" <ashok.raj@intel.com>,
-        "Tian, Jun J" <jun.j.tian@intel.com>,
-        "Sun, Yi Y" <yi.y.sun@intel.com>,
-        "jean-philippe@linaro.org" <jean-philippe@linaro.org>,
-        "peterx@redhat.com" <peterx@redhat.com>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Wu, Hao" <hao.wu@intel.com>
-Subject: RE: [PATCH v1 8/8] vfio/type1: Add vSVA support for IOMMU-backed
- mdevs
-Thread-Topic: [PATCH v1 8/8] vfio/type1: Add vSVA support for IOMMU-backed
- mdevs
-Thread-Index: AQHWAEUdPG4ZbiseEk+Utih92ryiRqhhJVeg
-Date:   Mon, 30 Mar 2020 13:18:52 +0000
-Message-ID: <AADFC41AFE54684AB9EE6CBC0274A5D19D7FFA90@SHSMSX104.ccr.corp.intel.com>
-References: <1584880325-10561-1-git-send-email-yi.l.liu@intel.com>
- <1584880325-10561-9-git-send-email-yi.l.liu@intel.com>
-In-Reply-To: <1584880325-10561-9-git-send-email-yi.l.liu@intel.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-dlp-product: dlpe-windows
-dlp-version: 11.2.0.6
-dlp-reaction: no-action
-x-originating-ip: [10.239.127.40]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        Mon, 30 Mar 2020 09:20:04 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:39857 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729976AbgC3NUE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Mar 2020 09:20:04 -0400
+Received: by mail-pg1-f194.google.com with SMTP id g32so2595410pgb.6;
+        Mon, 30 Mar 2020 06:20:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=FjBjRtYcnrBIqzei4XmB/t8N/yfRCd7HSzl79/SnBXE=;
+        b=DQY5YBav8MkWgKOYG5yRcFnBokPYvyDlZJQAqPniKVMUyCOJ1wQcIOingrJuhkT74V
+         kHG6s4+2qZIJQQbi1LzmLDh1ksx2eRDUdh/MOIRPUKSGw5hgqoVaATzEEhn6PzE1ARmJ
+         dFLg0kTnhhokVAnrNYLL1P8BYhmeZ6/2Zdh/w+N79PskjO1YbwZz/9W932/pEEi92YXw
+         6GctpEb3xOIrQSTYohX5FqtEYxg+fKjwHVlD5EbCKtpPzt4TwRh1jc13azec9gCwzoJq
+         9es6ctmrGZNKgROAVICY5yHEA9XF+591mZny0Gi9lV3BqupX2BgMi9B2cgv7E2azzmUK
+         8xMw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=FjBjRtYcnrBIqzei4XmB/t8N/yfRCd7HSzl79/SnBXE=;
+        b=Sw1uiysEXQDwDEk3FIP198KxTnkWdLj7z62mFEFq7ATkW3HXNZgpYdvflyldrzCfSC
+         F4EaYLBzmCRr+lMYDC7oPfh8KKfdiQp4ucZyO0rC8xQXzNLI1OLFiDt4drLPJiuObPWz
+         l5oi/c5TcfCuQxbEIJVGjomA7PtzWjM7S4GaAhK6Al2bfdH/l1sEz/0zPGa/5hXoMv8x
+         dBM/4elSIuKVLzIzlJYzjbLayp0HwKGWABTybcLiPPZm+ebeeQKwF86xutl8c8jyiStK
+         is6U3w1ayRz1n4/sjl9j6vREE3CB5QA78mMN8eYnRlvxcVzmLAJNNp3SaFMsf+wji2+g
+         pEKg==
+X-Gm-Message-State: AGi0PuYHGJGr2ClZ4KrhPf6EV+qdyQxI2t+zYzO/3Sn2qj/6zdWeHj3/
+        Fjvv5UpKdMWaUf/73YHAaekV+LrykKU70v7WtHg=
+X-Google-Smtp-Source: APiQypJYsuZydso5MeFZNsFwPFi5SQK5vTMnzAC7TjjBhLvOZpsLmkzPfg0LABGUktmF0G/f8LF7koKGckQJVzWOp0Q=
+X-Received: by 2002:a63:7b1d:: with SMTP id w29mr386269pgc.4.1585574402975;
+ Mon, 30 Mar 2020 06:20:02 -0700 (PDT)
 MIME-Version: 1.0
+References: <20200226135229.24929-1-matthias.schiffer@ew.tq-group.com>
+ <20200226135229.24929-2-matthias.schiffer@ew.tq-group.com> <20200330130757.GC2431644@ulmo>
+In-Reply-To: <20200330130757.GC2431644@ulmo>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Mon, 30 Mar 2020 16:19:55 +0300
+Message-ID: <CAHp75VeY9ZGUD_=N=R2vsJFY-4P5-L1+ZzjKHU2cygcbML0zOw@mail.gmail.com>
+Subject: Re: [PATCH 2/4] pwm: pca9685: remove ALL_LED PWM channel
+To:     Thierry Reding <thierry.reding@gmail.com>
+Cc:     Matthias Schiffer <matthias.schiffer@ew.tq-group.com>,
+        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>, linux-pwm@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> From: Liu, Yi L <yi.l.liu@intel.com>
-> Sent: Sunday, March 22, 2020 8:32 PM
-> 
-> From: Liu Yi L <yi.l.liu@intel.com>
-> 
-> Recent years, mediated device pass-through framework (e.g. vfio-mdev)
-> are used to achieve flexible device sharing across domains (e.g. VMs).
+On Mon, Mar 30, 2020 at 4:10 PM Thierry Reding <thierry.reding@gmail.com> wrote:
+>
+> On Wed, Feb 26, 2020 at 02:52:27PM +0100, Matthias Schiffer wrote:
+> > The interaction of the ALL_LED PWM channel with the other channels was
+> > not well-defined. As the ALL_LED feature does not seem very useful and
+> > it was making the code significantly more complex, simply remove it.
+> >
+> > Signed-off-by: Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
+> > ---
+> >  drivers/pwm/pwm-pca9685.c | 115 ++++++--------------------------------
+> >  1 file changed, 17 insertions(+), 98 deletions(-)
+>
+> Applied, thanks.
 
-are->is
+This seems to be ABI breakage.
 
-> Also there are hardware assisted mediated pass-through solutions from
-> platform vendors. e.g. Intel VT-d scalable mode which supports Intel
-> Scalable I/O Virtualization technology. Such mdevs are called IOMMU-
-> backed mdevs as there are IOMMU enforced DMA isolation for such mdevs.
-> In kernel, IOMMU-backed mdevs are exposed to IOMMU layer by aux-
-> domain
-> concept, which means mdevs are protected by an iommu domain which is
-> aux-domain of its physical device. Details can be found in the KVM
+Thierry, do you have hardware to test?
 
-"by an iommu domain which is auxiliary to the domain that the kernel
-driver primarily uses for DMA API"
 
-> presentation from Kevin Tian. IOMMU-backed equals to IOMMU-capable.
-> 
-> https://events19.linuxfoundation.org/wp-content/uploads/2017/12/\
-> Hardware-Assisted-Mediated-Pass-Through-with-VFIO-Kevin-Tian-Intel.pdf
-> 
-> This patch supports NESTING IOMMU for IOMMU-backed mdevs by figuring
-> out the physical device of an IOMMU-backed mdev and then invoking
-> IOMMU
-> requests to IOMMU layer with the physical device and the mdev's aux
-> domain info.
-
-"and then calling into the IOMMU layer to complete the vSVA operations
-on the aux domain associated with that mdev"
-
-> 
-> With this patch, vSVA (Virtual Shared Virtual Addressing) can be used
-> on IOMMU-backed mdevs.
-> 
-> Cc: Kevin Tian <kevin.tian@intel.com>
-> CC: Jacob Pan <jacob.jun.pan@linux.intel.com>
-> CC: Jun Tian <jun.j.tian@intel.com>
-> Cc: Alex Williamson <alex.williamson@redhat.com>
-> Cc: Eric Auger <eric.auger@redhat.com>
-> Cc: Jean-Philippe Brucker <jean-philippe@linaro.org>
-> Signed-off-by: Liu Yi L <yi.l.liu@intel.com>
-> ---
->  drivers/vfio/vfio_iommu_type1.c | 23 ++++++++++++++++++++---
->  1 file changed, 20 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/vfio/vfio_iommu_type1.c
-> b/drivers/vfio/vfio_iommu_type1.c
-> index 937ec3f..d473665 100644
-> --- a/drivers/vfio/vfio_iommu_type1.c
-> +++ b/drivers/vfio/vfio_iommu_type1.c
-> @@ -132,6 +132,7 @@ struct vfio_regions {
-> 
->  struct domain_capsule {
->  	struct iommu_domain *domain;
-> +	struct vfio_group *group;
->  	void *data;
->  };
-> 
-> @@ -148,6 +149,7 @@ static int vfio_iommu_for_each_dev(struct
-> vfio_iommu *iommu,
->  	list_for_each_entry(d, &iommu->domain_list, next) {
->  		dc.domain = d->domain;
->  		list_for_each_entry(g, &d->group_list, next) {
-> +			dc.group = g;
->  			ret = iommu_group_for_each_dev(g->iommu_group,
->  						       &dc, fn);
->  			if (ret)
-> @@ -2347,7 +2349,12 @@ static int vfio_bind_gpasid_fn(struct device *dev,
-> void *data)
->  	struct iommu_gpasid_bind_data *gbind_data =
->  		(struct iommu_gpasid_bind_data *) dc->data;
-> 
-> -	return iommu_sva_bind_gpasid(dc->domain, dev, gbind_data);
-> +	if (dc->group->mdev_group)
-> +		return iommu_sva_bind_gpasid(dc->domain,
-> +			vfio_mdev_get_iommu_device(dev), gbind_data);
-> +	else
-> +		return iommu_sva_bind_gpasid(dc->domain,
-> +						dev, gbind_data);
->  }
-> 
->  static int vfio_unbind_gpasid_fn(struct device *dev, void *data)
-> @@ -2356,8 +2363,13 @@ static int vfio_unbind_gpasid_fn(struct device
-> *dev, void *data)
->  	struct iommu_gpasid_bind_data *gbind_data =
->  		(struct iommu_gpasid_bind_data *) dc->data;
-> 
-> -	return iommu_sva_unbind_gpasid(dc->domain, dev,
-> +	if (dc->group->mdev_group)
-> +		return iommu_sva_unbind_gpasid(dc->domain,
-> +					vfio_mdev_get_iommu_device(dev),
->  					gbind_data->hpasid);
-> +	else
-> +		return iommu_sva_unbind_gpasid(dc->domain, dev,
-> +						gbind_data->hpasid);
->  }
-> 
->  /**
-> @@ -2429,7 +2441,12 @@ static int vfio_cache_inv_fn(struct device *dev,
-> void *data)
->  	struct iommu_cache_invalidate_info *cache_inv_info =
->  		(struct iommu_cache_invalidate_info *) dc->data;
-> 
-> -	return iommu_cache_invalidate(dc->domain, dev, cache_inv_info);
-> +	if (dc->group->mdev_group)
-> +		return iommu_cache_invalidate(dc->domain,
-> +			vfio_mdev_get_iommu_device(dev), cache_inv_info);
-> +	else
-> +		return iommu_cache_invalidate(dc->domain,
-> +						dev, cache_inv_info);
->  }
-
-possibly above could be simplified, e.g. 
-
-static struct device *vfio_get_iommu_device(struct vfio_group *group, 
-	struct device *dev)
-{
-	if  (group->mdev_group)
-		return vfio_mdev_get_iommu_device(dev);
-	else
-		return dev;
-}
-
-Then use it to replace plain 'dev' in all three places.
-
-> 
->  static long vfio_iommu_type1_ioctl(void *iommu_data,
-> --
-> 2.7.4
-
+-- 
+With Best Regards,
+Andy Shevchenko
