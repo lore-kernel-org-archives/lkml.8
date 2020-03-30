@@ -2,475 +2,150 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EB09C43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 05:23:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64E15C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 05:25:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C52620786
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 05:23:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 17DE4206F5
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 05:25:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (4096-bit key) header.d=d-silva.org header.i=@d-silva.org header.b="haqzFNC1"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="ABHbM2Gv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728595AbgC3FXC (ORCPT
+        id S1728557AbgC3FZf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 01:23:02 -0400
-Received: from ushosting.nmnhosting.com ([66.55.73.32]:39384 "EHLO
-        ushosting.nmnhosting.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727706AbgC3FXC (ORCPT
+        Mon, 30 Mar 2020 01:25:35 -0400
+Received: from mailout2.samsung.com ([203.254.224.25]:30594 "EHLO
+        mailout2.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728445AbgC3FZf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 01:23:02 -0400
-Received: from mail2.nmnhosting.com (unknown [202.169.106.97])
-        by ushosting.nmnhosting.com (Postfix) with ESMTPS id 308892DC6830;
-        Fri, 27 Mar 2020 18:12:21 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=d-silva.org;
-        s=201810a; t=1585293141;
-        bh=2ddCHH2P/L90a2vCtlV2AzxdbZFdXmepYfCwpHedjjE=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=haqzFNC13xamkbQf9t3YMfUf0hZ5HTJ8Gm3EYFajsSrUCxPpevss37X7MSXLoFfSA
-         e5jqimITlwRpfYmnZ+HTZonYEY/G+ksa5amlQB6XPT//9bhSazgWRo7LjoNLBw8U/P
-         hyBBGgg645E5eHOEOIdABgXNYtr7v1A4S0TmKEYSn6kHfSSNR9rU7d/9m3BUhx7+4W
-         uvl3i3Sq14QD2ZzQHC7Zv9isFhR/cSg+0pEvJN+aM2mtfxbhT2aluxn113WyFZhhnY
-         WmY9T1Wh+t/Oydhzb78zzW71g8yE6dpCSqCjol8lc4+WgXGfZeCp+LZVFC451r6EBs
-         m8yTywyzG0ghfUuSGGp0Zy5M8mYu1SSnkPtXcBcqD4P/BqV3f8HTGMxBDBYTTc5JMy
-         gOw3Vt6tjimak+wxSpdvNcTrQZ4gkXmoXSzWRCKvrMWz03rfk8nyAja6EcRg4M4rlY
-         XsiLBGRrDyrKmnVYGs4612pIbhQ6eI3Ksjqmn33y9VAvqE2sTsUWjh9LqZKI5mxccJ
-         0DV5CWAoOS6JyoYsMw9D6uWj2ICW6nbgA/iCpGoFPe3Tq9Z3Wt2rL6TR8Af5S19Gg3
-         Czv74NZNJZ7eJQ7EuRVN2V3YXpYVNGxuasa8pXk59Isua/t3pOYvNZ9uguGwDJxdTw
-         /+XUMzPabxFP/ARjBigR/uzE=
-Received: from localhost.lan ([10.0.1.179])
-        by mail2.nmnhosting.com (8.15.2/8.15.2) with ESMTP id 02R7C4Ae045934;
-        Fri, 27 Mar 2020 18:12:15 +1100 (AEDT)
-        (envelope-from alastair@d-silva.org)
-From:   "Alastair D'Silva" <alastair@d-silva.org>
-To:     alastair@d-silva.org
-Cc:     "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
-        "Oliver O'Halloran" <oohall@gmail.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Frederic Barrat <fbarrat@linux.ibm.com>,
-        Andrew Donnellan <ajd@linux.ibm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Rob Herring <robh@kernel.org>,
-        Anton Blanchard <anton@ozlabs.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>,
-        Madhavan Srinivasan <maddy@linux.vnet.ibm.com>,
-        =?UTF-8?q?C=C3=A9dric=20Le=20Goater?= <clg@kaod.org>,
-        Anju T Sudhakar <anju@linux.vnet.ibm.com>,
-        Hari Bathini <hbathini@linux.ibm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Greg Kurz <groug@kaod.org>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Alexey Kardashevskiy <aik@ozlabs.ru>,
-        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-nvdimm@lists.01.org, linux-mm@kvack.org
-Subject: [PATCH v4 05/25] ocxl: Address kernel doc errors & warnings
-Date:   Fri, 27 Mar 2020 18:11:42 +1100
-Message-Id: <20200327071202.2159885-6-alastair@d-silva.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200327071202.2159885-1-alastair@d-silva.org>
-References: <20200327071202.2159885-1-alastair@d-silva.org>
+        Mon, 30 Mar 2020 01:25:35 -0400
+Received: from epcas1p1.samsung.com (unknown [182.195.41.45])
+        by mailout2.samsung.com (KnoxPortal) with ESMTP id 20200330052532epoutp024fc6604bf77e5dc0bd0eb7fee3887c88~A-Z-2lwI11861418614epoutp02N
+        for <linux-kernel@vger.kernel.org>; Mon, 30 Mar 2020 05:25:32 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20200330052532epoutp024fc6604bf77e5dc0bd0eb7fee3887c88~A-Z-2lwI11861418614epoutp02N
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1585545932;
+        bh=g7ucxEv2KLCs/+6yXO7PIROft+/NEWLtfTbNPQuUzck=;
+        h=From:To:Cc:Subject:Date:References:From;
+        b=ABHbM2GvjN4OzE6l1hg1ESxthI64cQ2u6LOFXQLhX7JRbPz31xNc1cdse3XBtq2H8
+         odtunOcCW9fgrI1JFhQ57rsMMaQJZj4r5AEMez8PrZnijAZmD7NvCL6NA4s3WPj4Va
+         AJWGsrMpHzZYR8f6tYBQaGF1lHNPKbr0boe9Jh3E=
+Received: from epsnrtp1.localdomain (unknown [182.195.42.162]) by
+        epcas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20200330052531epcas1p12d3fbddab49e500a7c8caf575e71e19d~A-Z-bLBly2591925919epcas1p1I;
+        Mon, 30 Mar 2020 05:25:31 +0000 (GMT)
+Received: from epsmges1p2.samsung.com (unknown [182.195.40.154]) by
+        epsnrtp1.localdomain (Postfix) with ESMTP id 48rLWq0l8YzMqYmD; Mon, 30 Mar
+        2020 05:25:27 +0000 (GMT)
+Received: from epcas1p1.samsung.com ( [182.195.41.45]) by
+        epsmges1p2.samsung.com (Symantec Messaging Gateway) with SMTP id
+        8A.B3.04140.1C2818E5; Mon, 30 Mar 2020 14:25:21 +0900 (KST)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+        epcas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20200330052521epcas1p1eedc926d4b11513f8502cf0c90ecf433~A-Z1oNNAC2591925919epcas1p1z;
+        Mon, 30 Mar 2020 05:25:21 +0000 (GMT)
+Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
+        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20200330052521epsmtrp28c3574ee5ce1964a730e08d68350efca~A-Z1nUhT10519805198epsmtrp2d;
+        Mon, 30 Mar 2020 05:25:21 +0000 (GMT)
+X-AuditID: b6c32a36-fa3ff7000000102c-ee-5e8182c1c348
+Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
+        epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        10.43.04158.1C2818E5; Mon, 30 Mar 2020 14:25:21 +0900 (KST)
+Received: from jaehoon-DeskTop.10.32.193.11 (unknown [10.113.113.235]) by
+        epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20200330052521epsmtip24df48ed902f0085a57a61982e9fa3eba~A-Z1aAslN1473814738epsmtip2N;
+        Mon, 30 Mar 2020 05:25:21 +0000 (GMT)
+From:   Jaehoon Chung <jh80.chung@samsung.com>
+To:     linux-wireless@vger.kernel.org
+Cc:     brcm80211-dev-list.pdl@broadcom.com,
+        brcm80211-dev-list@cypress.com, linux-kernel@vger.kernel.org,
+        kvalo@codeaurora.org, arend.vanspriel@broadcom.com,
+        franky.lin@broadcom.com, hante.meuleman@broadcom.com,
+        chi-hsien.lin@cypress.com, wright.feng@cypress.com,
+        Jaehoon Chung <jh80.chung@samsung.com>
+Subject: [PATCH] brcmfmac: fix wrong location to get firmware feature
+Date:   Mon, 30 Mar 2020 14:25:28 +0900
+Message-Id: <20200330052528.10503-1-jh80.chung@samsung.com>
+X-Mailer: git-send-email 2.26.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mail2.nmnhosting.com [10.0.1.20]); Fri, 27 Mar 2020 18:12:15 +1100 (AEDT)
+X-Brightmail-Tracker: H4sIAAAAAAAAA01Se0hTYRT3u3e7XleL2zL7GJTrktDLteucXfMVPYcVSQZBke6iF5U92Z2R
+        VmAaassie1itIpWMMihL02X0cFJiWmkmLdECM1HTEk2xNOxuV8n/fud3zu/7nXO+g6OyEkyO
+        p5lsrNXEGEhMIqquXxUcXJd9PEH1+RVN15QNiujRE7kIPVQ4jNFDeUUIPVHah9ET3W4R7f6T
+        K6ZL75RgdFvtNYwevN3pS1+aeIJsnKd1fHmDadvOnEa0udlp2jNV5UA7+nBZnHi/PjKVZZJZ
+        q4I1JZmT00wpUeSO+MTNiZowFRVMhdPrSYWJMbJR5JadccHb0gx8Z6TiEGNI56k4huPIddGR
+        VnO6jVWkmjlbFMlakg2WcIuSY4xcuilFmWQ2bqBUqhANX6jTp9affIBa7kgO992awrLAFG4H
+        fjgkQmHN5LivHUhwGeEEsHfALRaCEQDtBS4gBOMA9hc0+s5KTrnfYELiKYBue53Yk5ARkwDW
+        j+zxYIxYC2vGGxAP9idIeLqlHPUIUKISgRfqf3oFi4itsOm1y1skIoJgyeURkQdLiQjYWlcm
+        EtwCYWnWJCLwC2HjlR4vj/J8zqOr3kch8QKDfS8rZtrbAk+dfYkKeBEcaKia4eVw9MdTTMBH
+        YG1O84w4H8CO6mxESKjh87LzPMZ5h1Xwfu06gV4OH09eB4LxAvhjrEDsKYGEFObnyoSSFfD9
+        935k1qqrZ1osYC0c6nJiwoIOwun2FnAWBDrmjOOYM47jv3ExQMtBAGvhjCksR1lC5n7rQ+A9
+        z9VhTlD6dqcLEDgg50uHa7ISZGLmEJdhdAGIo6S/FNvNU9JkJiOTtZoTrekGlnMBDb/tQlS+
+        OMnMH7vJlkhpQtRqNR1KhWkoilwivfjRkCAjUhgbq2dZC2ud1SG4nzwLrMFvvqv06706SOl6
+        11T44M6pzgVBkr3FzyK+xbbGVDmVN+THjIGMJCZAcS5M1/Fbhyqp/vi2lpjqpXWOlvDouMxN
+        yqKJocK327d/GAz/OjbuU1Rt79J98sm5qD/Q9Cs/JJKrjT3cdFSfh8Q27Ss7t1JdebfHofrb
+        vKu9+xZ+b4oUcakMtRq1csw/rnT+DrQDAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrPLMWRmVeSWpSXmKPExsWy7bCSvO7BpsY4gzM3BSy2L33DYvG5pY3J
+        4u3ED2wWb9unMVn8WPSCzeLHoxssFjd+tbFaLFq5kM3i8q45bBZvVtxht5j+YzeTA7fHrPtn
+        2Twu9/UyebQ1ZXr0bVnF6PF5k1wAaxSXTUpqTmZZapG+XQJXxuHOjcwFK7kqXiz7w9bA+Iej
+        i5GTQ0LARKL7xlm2LkYuDiGB3YwSf1vamSESUhKfn04FSnAA2cIShw8XQ9T8ZJRY+nI1E0gN
+        m4COxPZvx8FsEQElid4Lq5hBipgF9jJJXG2+zA6SEBZwlTh96hBYEYuAqsTCGZ9YQGxeAWuJ
+        iweXskAsk5dY1PCbCSIuKHFy5hOwODNQvHnrbOYJjHyzkKRmIUktYGRaxSiZWlCcm55bbFhg
+        lJdarlecmFtcmpeul5yfu4kRHMxaWjsYT5yIP8QowMGoxMP7YXtDnBBrYllxZe4hRgkOZiUR
+        XjZ/oBBvSmJlVWpRfnxRaU5q8SFGaQ4WJXFe+fxjkUIC6YklqdmpqQWpRTBZJg5OqQbGyHXH
+        Q5ddnWEdLxl+4dtztyeBDN1tu7mPn7jKdZBDWPVRUXlzYcilBbM0DTs9J+dvSDNbIGQx01da
+        M+SQY9u7syaph4V3FRc18Xx/b8L15plFx/7ZDCdFl2s7HgyYeddYuyxShvOcoN9nIfcFrGyv
+        2Ot5j/eY5TLzPPPY7+J7iivXIHpRxzUlluKMREMt5qLiRABFpW3lYgIAAA==
+X-CMS-MailID: 20200330052521epcas1p1eedc926d4b11513f8502cf0c90ecf433
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: SVC_REQ_APPROVE
+CMS-TYPE: 101P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20200330052521epcas1p1eedc926d4b11513f8502cf0c90ecf433
+References: <CGME20200330052521epcas1p1eedc926d4b11513f8502cf0c90ecf433@epcas1p1.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch addresses warnings and errors from the kernel doc scripts for
-the OpenCAPI driver.
+sup_wpa feature is getting after setting feature_disable flag.
+If firmware is supported sup_wpa feature,  it's always enabled
+regardless of feature_disable flag.
 
-It also makes minor tweaks to make the docs more consistent.
+Fixes: b8a64f0e96c2 ("brcmfmac: support 4-way handshake offloading for WPA/WPA2-PSK")
 
-Signed-off-by: Alastair D'Silva <alastair@d-silva.org>
-Acked-by: Andrew Donnellan <ajd@linux.ibm.com>
+Signed-off-by: Jaehoon Chung <jh80.chung@samsung.com>
 ---
- drivers/misc/ocxl/config.c        | 24 ++++----
- drivers/misc/ocxl/ocxl_internal.h |  9 +--
- include/misc/ocxl.h               | 96 ++++++++++++-------------------
- 3 files changed, 55 insertions(+), 74 deletions(-)
+ drivers/net/wireless/broadcom/brcm80211/brcmfmac/feature.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/misc/ocxl/config.c b/drivers/misc/ocxl/config.c
-index c8e19bfb5ef9..a62e3d7db2bf 100644
---- a/drivers/misc/ocxl/config.c
-+++ b/drivers/misc/ocxl/config.c
-@@ -273,16 +273,16 @@ static int read_afu_info(struct pci_dev *dev, struct ocxl_fn_config *fn,
- }
+diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/feature.c b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/feature.c
+index 5da0dda0d899..0dcefbd0c000 100644
+--- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/feature.c
++++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/feature.c
+@@ -285,13 +285,14 @@ void brcmf_feat_attach(struct brcmf_pub *drvr)
+ 	if (!err)
+ 		ifp->drvr->feat_flags |= BIT(BRCMF_FEAT_SCAN_RANDOM_MAC);
  
- /**
-- * Read the template version from the AFU
-- * dev: the device for the AFU
-- * fn: the AFU offsets
-- * len: outputs the template length
-- * version: outputs the major<<8,minor version
-+ * read_template_version() - Read the template version from the AFU
-+ * @dev: the device for the AFU
-+ * @fn: the AFU offsets
-+ * @len: outputs the template length
-+ * @version: outputs the major<<8,minor version
-  *
-  * Returns 0 on success, negative on failure
-  */
- static int read_template_version(struct pci_dev *dev, struct ocxl_fn_config *fn,
--		u16 *len, u16 *version)
-+				 u16 *len, u16 *version)
- {
- 	u32 val32;
- 	u8 major, minor;
-@@ -476,16 +476,16 @@ static int validate_afu(struct pci_dev *dev, struct ocxl_afu_config *afu)
- }
++	brcmf_feat_iovar_int_get(ifp, BRCMF_FEAT_FWSUP, "sup_wpa");
++
+ 	if (drvr->settings->feature_disable) {
+ 		brcmf_dbg(INFO, "Features: 0x%02x, disable: 0x%02x\n",
+ 			  ifp->drvr->feat_flags,
+ 			  drvr->settings->feature_disable);
+ 		ifp->drvr->feat_flags &= ~drvr->settings->feature_disable;
+ 	}
+-	brcmf_feat_iovar_int_get(ifp, BRCMF_FEAT_FWSUP, "sup_wpa");
  
- /**
-- * Populate AFU metadata regarding LPC memory
-- * dev: the device for the AFU
-- * fn: the AFU offsets
-- * afu: the AFU struct to populate the LPC metadata into
-+ * read_afu_lpc_memory_info() - Populate AFU metadata regarding LPC memory
-+ * @dev: the device for the AFU
-+ * @fn: the AFU offsets
-+ * @afu: the AFU struct to populate the LPC metadata into
-  *
-  * Returns 0 on success, negative on failure
-  */
- static int read_afu_lpc_memory_info(struct pci_dev *dev,
--				struct ocxl_fn_config *fn,
--				struct ocxl_afu_config *afu)
-+				    struct ocxl_fn_config *fn,
-+				    struct ocxl_afu_config *afu)
- {
- 	int rc;
- 	u32 val32;
-diff --git a/drivers/misc/ocxl/ocxl_internal.h b/drivers/misc/ocxl/ocxl_internal.h
-index 345bf843a38e..198e4e4bc51d 100644
---- a/drivers/misc/ocxl/ocxl_internal.h
-+++ b/drivers/misc/ocxl/ocxl_internal.h
-@@ -122,11 +122,12 @@ int ocxl_config_check_afu_index(struct pci_dev *dev,
- 				struct ocxl_fn_config *fn, int afu_idx);
- 
- /**
-- * Update values within a Process Element
-+ * ocxl_link_update_pe() - Update values within a Process Element
-+ * @link_handle: the link handle associated with the process element
-+ * @pasid: the PASID for the AFU context
-+ * @tid: the new thread id for the process element
-  *
-- * link_handle: the link handle associated with the process element
-- * pasid: the PASID for the AFU context
-- * tid: the new thread id for the process element
-+ * Returns 0 on success
-  */
- int ocxl_link_update_pe(void *link_handle, int pasid, __u16 tid);
- 
-diff --git a/include/misc/ocxl.h b/include/misc/ocxl.h
-index 0a762e387418..357ef1aadbc0 100644
---- a/include/misc/ocxl.h
-+++ b/include/misc/ocxl.h
-@@ -62,8 +62,7 @@ struct ocxl_context;
- // Device detection & initialisation
- 
- /**
-- * Open an OpenCAPI function on an OpenCAPI device
-- *
-+ * ocxl_function_open() - Open an OpenCAPI function on an OpenCAPI device
-  * @dev: The PCI device that contains the function
-  *
-  * Returns an opaque pointer to the function, or an error pointer (check with IS_ERR)
-@@ -71,8 +70,7 @@ struct ocxl_context;
- struct ocxl_fn *ocxl_function_open(struct pci_dev *dev);
- 
- /**
-- * Get the list of AFUs associated with a PCI function device
-- *
-+ * ocxl_function_afu_list() - Get the list of AFUs associated with a PCI function device
-  * Returns a list of struct ocxl_afu *
-  *
-  * @fn: The OpenCAPI function containing the AFUs
-@@ -80,8 +78,7 @@ struct ocxl_fn *ocxl_function_open(struct pci_dev *dev);
- struct list_head *ocxl_function_afu_list(struct ocxl_fn *fn);
- 
- /**
-- * Fetch an AFU instance from an OpenCAPI function
-- *
-+ * ocxl_function_fetch_afu() - Fetch an AFU instance from an OpenCAPI function
-  * @fn: The OpenCAPI function to get the AFU from
-  * @afu_idx: The index of the AFU to get
-  *
-@@ -92,23 +89,20 @@ struct list_head *ocxl_function_afu_list(struct ocxl_fn *fn);
- struct ocxl_afu *ocxl_function_fetch_afu(struct ocxl_fn *fn, u8 afu_idx);
- 
- /**
-- * Take a reference to an AFU
-- *
-+ * ocxl_afu_get() - Take a reference to an AFU
-  * @afu: The AFU to increment the reference count on
-  */
- void ocxl_afu_get(struct ocxl_afu *afu);
- 
- /**
-- * Release a reference to an AFU
-- *
-+ * ocxl_afu_put() - Release a reference to an AFU
-  * @afu: The AFU to decrement the reference count on
-  */
- void ocxl_afu_put(struct ocxl_afu *afu);
- 
- 
- /**
-- * Get the configuration information for an OpenCAPI function
-- *
-+ * ocxl_function_config() - Get the configuration information for an OpenCAPI function
-  * @fn: The OpenCAPI function to get the config for
-  *
-  * Returns the function config, or NULL on error
-@@ -116,8 +110,7 @@ void ocxl_afu_put(struct ocxl_afu *afu);
- const struct ocxl_fn_config *ocxl_function_config(struct ocxl_fn *fn);
- 
- /**
-- * Close an OpenCAPI function
-- *
-+ * ocxl_function_close() - Close an OpenCAPI function
-  * This will free any AFUs previously retrieved from the function, and
-  * detach and associated contexts. The contexts must by freed by the caller.
-  *
-@@ -129,8 +122,7 @@ void ocxl_function_close(struct ocxl_fn *fn);
- // Context allocation
- 
- /**
-- * Allocate an OpenCAPI context
-- *
-+ * ocxl_context_alloc() - Allocate an OpenCAPI context
-  * @context: The OpenCAPI context to allocate, must be freed with ocxl_context_free
-  * @afu: The AFU the context belongs to
-  * @mapping: The mapping to unmap when the context is closed (may be NULL)
-@@ -139,14 +131,13 @@ int ocxl_context_alloc(struct ocxl_context **context, struct ocxl_afu *afu,
- 			struct address_space *mapping);
- 
- /**
-- * Free an OpenCAPI context
-- *
-+ * ocxl_context_free() - Free an OpenCAPI context
-  * @ctx: The OpenCAPI context to free
-  */
- void ocxl_context_free(struct ocxl_context *ctx);
- 
- /**
-- * Grant access to an MM to an OpenCAPI context
-+ * ocxl_context_attach() - Grant access to an MM to an OpenCAPI context
-  * @ctx: The OpenCAPI context to attach
-  * @amr: The value of the AMR register to restrict access
-  * @mm: The mm to attach to the context
-@@ -157,7 +148,7 @@ int ocxl_context_attach(struct ocxl_context *ctx, u64 amr,
- 				struct mm_struct *mm);
- 
- /**
-- * Detach an MM from an OpenCAPI context
-+ * ocxl_context_detach() - Detach an MM from an OpenCAPI context
-  * @ctx: The OpenCAPI context to attach
-  *
-  * Returns 0 on success, negative on failure
-@@ -167,7 +158,7 @@ int ocxl_context_detach(struct ocxl_context *ctx);
- // AFU IRQs
- 
- /**
-- * Allocate an IRQ associated with an AFU context
-+ * ocxl_afu_irq_alloc() - Allocate an IRQ associated with an AFU context
-  * @ctx: the AFU context
-  * @irq_id: out, the IRQ ID
-  *
-@@ -176,7 +167,7 @@ int ocxl_context_detach(struct ocxl_context *ctx);
- int ocxl_afu_irq_alloc(struct ocxl_context *ctx, int *irq_id);
- 
- /**
-- * Frees an IRQ associated with an AFU context
-+ * ocxl_afu_irq_free() - Frees an IRQ associated with an AFU context
-  * @ctx: the AFU context
-  * @irq_id: the IRQ ID
-  *
-@@ -185,7 +176,7 @@ int ocxl_afu_irq_alloc(struct ocxl_context *ctx, int *irq_id);
- int ocxl_afu_irq_free(struct ocxl_context *ctx, int irq_id);
- 
- /**
-- * Gets the address of the trigger page for an IRQ
-+ * ocxl_afu_irq_get_addr() - Gets the address of the trigger page for an IRQ
-  * This can then be provided to an AFU which will write to that
-  * page to trigger the IRQ.
-  * @ctx: The AFU context that the IRQ is associated with
-@@ -196,7 +187,7 @@ int ocxl_afu_irq_free(struct ocxl_context *ctx, int irq_id);
- u64 ocxl_afu_irq_get_addr(struct ocxl_context *ctx, int irq_id);
- 
- /**
-- * Provide a callback to be called when an IRQ is triggered
-+ * ocxl_irq_set_handler() - Provide a callback to be called when an IRQ is triggered
-  * @ctx: The AFU context that the IRQ is associated with
-  * @irq_id: The IRQ ID
-  * @handler: the callback to be called when the IRQ is triggered
-@@ -213,8 +204,7 @@ int ocxl_irq_set_handler(struct ocxl_context *ctx, int irq_id,
- // AFU Metadata
- 
- /**
-- * Get a pointer to the config for an AFU
-- *
-+ * ocxl_afu_config() - Get a pointer to the config for an AFU
-  * @afu: a pointer to the AFU to get the config for
-  *
-  * Returns a pointer to the AFU config
-@@ -222,27 +212,24 @@ int ocxl_irq_set_handler(struct ocxl_context *ctx, int irq_id,
- struct ocxl_afu_config *ocxl_afu_config(struct ocxl_afu *afu);
- 
- /**
-- * Assign opaque hardware specific information to an OpenCAPI AFU.
-- *
-- * @dev: The PCI device associated with the OpenCAPI device
-+ * ocxl_afu_set_private() - Assign opaque hardware specific information to an OpenCAPI AFU.
-+ * @afu: The OpenCAPI AFU
-  * @private: the opaque hardware specific information to assign to the driver
-  */
- void ocxl_afu_set_private(struct ocxl_afu *afu, void *private);
- 
- /**
-- * Fetch the hardware specific information associated with an external OpenCAPI
-- * AFU. This may be consumed by an external OpenCAPI driver.
-- *
-- * @afu: The AFU
-+ * ocxl_afu_get_private() - Fetch the hardware specific information associated with
-+ * an external OpenCAPI AFU. This may be consumed by an external OpenCAPI driver.
-+ * @afu: The OpenCAPI AFU
-  *
-  * Returns the opaque pointer associated with the device, or NULL if not set
-  */
--void *ocxl_afu_get_private(struct ocxl_afu *dev);
-+void *ocxl_afu_get_private(struct ocxl_afu *afu);
- 
- // Global MMIO
- /**
-- * Read a 32 bit value from global MMIO
-- *
-+ * ocxl_global_mmio_read32() - Read a 32 bit value from global MMIO
-  * @afu: The AFU
-  * @offset: The Offset from the start of MMIO
-  * @endian: the endianness that the MMIO data is in
-@@ -251,11 +238,10 @@ void *ocxl_afu_get_private(struct ocxl_afu *dev);
-  * Returns 0 for success, negative on error
-  */
- int ocxl_global_mmio_read32(struct ocxl_afu *afu, size_t offset,
--				enum ocxl_endian endian, u32 *val);
-+			    enum ocxl_endian endian, u32 *val);
- 
- /**
-- * Read a 64 bit value from global MMIO
-- *
-+ * ocxl_global_mmio_read64() - Read a 64 bit value from global MMIO
-  * @afu: The AFU
-  * @offset: The Offset from the start of MMIO
-  * @endian: the endianness that the MMIO data is in
-@@ -264,11 +250,10 @@ int ocxl_global_mmio_read32(struct ocxl_afu *afu, size_t offset,
-  * Returns 0 for success, negative on error
-  */
- int ocxl_global_mmio_read64(struct ocxl_afu *afu, size_t offset,
--				enum ocxl_endian endian, u64 *val);
-+			    enum ocxl_endian endian, u64 *val);
- 
- /**
-- * Write a 32 bit value to global MMIO
-- *
-+ * ocxl_global_mmio_write32() - Write a 32 bit value to global MMIO
-  * @afu: The AFU
-  * @offset: The Offset from the start of MMIO
-  * @endian: the endianness that the MMIO data is in
-@@ -277,11 +262,10 @@ int ocxl_global_mmio_read64(struct ocxl_afu *afu, size_t offset,
-  * Returns 0 for success, negative on error
-  */
- int ocxl_global_mmio_write32(struct ocxl_afu *afu, size_t offset,
--				enum ocxl_endian endian, u32 val);
-+			     enum ocxl_endian endian, u32 val);
- 
- /**
-- * Write a 64 bit value to global MMIO
-- *
-+ * ocxl_global_mmio_write64() - Write a 64 bit value to global MMIO
-  * @afu: The AFU
-  * @offset: The Offset from the start of MMIO
-  * @endian: the endianness that the MMIO data is in
-@@ -290,11 +274,10 @@ int ocxl_global_mmio_write32(struct ocxl_afu *afu, size_t offset,
-  * Returns 0 for success, negative on error
-  */
- int ocxl_global_mmio_write64(struct ocxl_afu *afu, size_t offset,
--				enum ocxl_endian endian, u64 val);
-+			     enum ocxl_endian endian, u64 val);
- 
- /**
-- * Set bits in a 32 bit global MMIO register
-- *
-+ * ocxl_global_mmio_set32() - Set bits in a 32 bit global MMIO register
-  * @afu: The AFU
-  * @offset: The Offset from the start of MMIO
-  * @endian: the endianness that the MMIO data is in
-@@ -303,11 +286,10 @@ int ocxl_global_mmio_write64(struct ocxl_afu *afu, size_t offset,
-  * Returns 0 for success, negative on error
-  */
- int ocxl_global_mmio_set32(struct ocxl_afu *afu, size_t offset,
--				enum ocxl_endian endian, u32 mask);
-+			   enum ocxl_endian endian, u32 mask);
- 
- /**
-- * Set bits in a 64 bit global MMIO register
-- *
-+ * ocxl_global_mmio_set64() - Set bits in a 64 bit global MMIO register
-  * @afu: The AFU
-  * @offset: The Offset from the start of MMIO
-  * @endian: the endianness that the MMIO data is in
-@@ -316,11 +298,10 @@ int ocxl_global_mmio_set32(struct ocxl_afu *afu, size_t offset,
-  * Returns 0 for success, negative on error
-  */
- int ocxl_global_mmio_set64(struct ocxl_afu *afu, size_t offset,
--				enum ocxl_endian endian, u64 mask);
-+			   enum ocxl_endian endian, u64 mask);
- 
- /**
-- * Set bits in a 32 bit global MMIO register
-- *
-+ * ocxl_global_mmio_clear32() - Set bits in a 32 bit global MMIO register
-  * @afu: The AFU
-  * @offset: The Offset from the start of MMIO
-  * @endian: the endianness that the MMIO data is in
-@@ -329,11 +310,10 @@ int ocxl_global_mmio_set64(struct ocxl_afu *afu, size_t offset,
-  * Returns 0 for success, negative on error
-  */
- int ocxl_global_mmio_clear32(struct ocxl_afu *afu, size_t offset,
--				enum ocxl_endian endian, u32 mask);
-+			     enum ocxl_endian endian, u32 mask);
- 
- /**
-- * Set bits in a 64 bit global MMIO register
-- *
-+ * ocxl_global_mmio_clear64() - Set bits in a 64 bit global MMIO register
-  * @afu: The AFU
-  * @offset: The Offset from the start of MMIO
-  * @endian: the endianness that the MMIO data is in
-@@ -342,7 +322,7 @@ int ocxl_global_mmio_clear32(struct ocxl_afu *afu, size_t offset,
-  * Returns 0 for success, negative on error
-  */
- int ocxl_global_mmio_clear64(struct ocxl_afu *afu, size_t offset,
--				enum ocxl_endian endian, u64 mask);
-+			     enum ocxl_endian endian, u64 mask);
- 
- // Functions left here are for compatibility with the cxlflash driver
+ 	brcmf_feat_firmware_overrides(drvr);
  
 -- 
-2.24.1
+2.26.0
 
