@@ -2,134 +2,176 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51922C43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 18:42:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D52DC43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 18:42:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 280DB2072E
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 18:42:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TisMD6pc"
+	by mail.kernel.org (Postfix) with ESMTP id D890720714
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 18:42:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585593753;
+	bh=ky8oqS2D9aucEdrvPjghrup/o5e1FPaMSb4LcB9kc/s=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=eh17lchyh/+/LKQoGg42asNj1MVt3DLtO6cMRVnP3wfm7VzMN1jFib1viOFKKnXxL
+	 SCIJIQx3rp0qMIirvxO8G0VwVlHqVpxfZRyShd3y/mltDlXHU3XyHXOGEA16eIady/
+	 qvH9e397CD5eugg6i9OjciBvuFiraA672bxvd/mU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727967AbgC3SmQ (ORCPT
+        id S1728031AbgC3Smc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 14:42:16 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:42181 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726781AbgC3SmP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 14:42:15 -0400
-Received: by mail-wr1-f68.google.com with SMTP id h15so22937331wrx.9
-        for <linux-kernel@vger.kernel.org>; Mon, 30 Mar 2020 11:42:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=8XRhKogyecKsSV4qW1x8hTrVeQGUH4iCc/CcjgU9mck=;
-        b=TisMD6pc6Nd4x3AkXj4VNDomK/Xtj35nFvmaVY4nv5rIDfxx33N2APlyiTAHrAV+VP
-         zs3VrrOhOHSW+aVcm+6AvKmp98Pt+z0Y8y5UmKhv4JeMiSxNUTUO5Ix8BJb+XZJyzhGB
-         oTMdBAs918AYZFoFmsY4UszXjdtDqyW5zEtiBETWyWNgj4TMCM+QPTIZU4rLIfzexAGa
-         BY5Ma5FjSYgeqDmOcliXyrw/KopFnuxwxjlhy3tD3YYxS6PHFG3OiL0Uyn3gJhNNc/k1
-         ljVqKTfWz0UZ7WX1nu+jqrMgspXlghGq2KicbbSiNAaNwix6NK5IiT33+wtJOyIhAV5Y
-         LYBQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=8XRhKogyecKsSV4qW1x8hTrVeQGUH4iCc/CcjgU9mck=;
-        b=aCA+gSQlH5KuvA3TCfRVAIlhlCqZUFcx4H+aiipELZkJI5Ek01+w0Civ2Vudhed3/I
-         JnuhKPqHuYF7XSu+g6iG4GPiSsmQbGy8a5LUFRTNyDgNg1TGmHmexrHT98OxsNafPEHN
-         FjlTF5oIhlEP3m8WR5SmLfqhW11pOHtfIlm5KqGoQT9Lj0ML6D7wgmXtnPL+7fbl2IMW
-         kUdKcl+ieOX3GNE555Dowfl0ytaZz2dI3ro99ofG1JMBOex59uDXDmZMG05nA6NR+p62
-         fXNdhqEY17gMQv8kWkn2/wLdlG/WWBmaE9hq2ZO0JCcfp/TzXRCpA3TUEv8nihLd7Ngs
-         cneQ==
-X-Gm-Message-State: ANhLgQ275N7W2QCpSYjNHWm/j3Qjy7d+qs1xkebXPOjTXukmeNLWk6Zi
-        9bcddxocZ90tVdvttLMYmXumwibY
-X-Google-Smtp-Source: ADFU+vvyblRcuB/8qGRcZ3vhqfycuOq1xwgm01TAbEu5m3oAn9STi5PDPJAm79E//bCc1ncE13UYNw==
-X-Received: by 2002:adf:fb0a:: with SMTP id c10mr16054757wrr.272.1585593731920;
-        Mon, 30 Mar 2020 11:42:11 -0700 (PDT)
-Received: from [192.168.43.227] (188.29.165.144.threembb.co.uk. [188.29.165.144])
-        by smtp.gmail.com with ESMTPSA id z12sm24608045wrt.27.2020.03.30.11.42.10
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 30 Mar 2020 11:42:11 -0700 (PDT)
-Subject: Re: [Outreachy kernel] [PATCH v4] staging: vt6656: add error code
- handling to unused variable
-To:     Stefano Brivio <sbrivio@redhat.com>,
-        "John B. Wyatt IV" <jbwyatt4@gmail.com>
-Cc:     outreachy-kernel@googlegroups.com,
-        Julia Lawall <julia.lawall@inria.fr>,
-        Forest Bond <forest@alittletooquiet.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Quentin Deslandes <quentin.deslandes@itdev.co.uk>,
-        Colin Ian King <colin.king@canonical.com>,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-References: <20200330164530.2919-1-jbwyatt4@gmail.com>
- <20200330191439.3bfcb658@elisabeth>
-From:   Malcolm Priestley <tvboxspy@gmail.com>
-Message-ID: <c2e96efe-64d7-61d7-0c4f-58b318b47a68@gmail.com>
-Date:   Mon, 30 Mar 2020 19:42:08 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Mon, 30 Mar 2020 14:42:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41884 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726385AbgC3Smc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Mar 2020 14:42:32 -0400
+Received: from localhost (unknown [104.132.1.66])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3871B20774;
+        Mon, 30 Mar 2020 18:42:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1585593751;
+        bh=ky8oqS2D9aucEdrvPjghrup/o5e1FPaMSb4LcB9kc/s=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Ihm1Aj7OHwbH5KzDf6gFBAhyj+dgMF1mi0F6DzS/JWav3xpLMgocwbpU1Fhtbn3N2
+         QNOeaf4wr3qdAm5VGxWxyS67ocsPjtijSy12sqUu/aJ63t4U+enDA1k/gElbm824ul
+         E1UE4Xb+TUtTRTLPYa27WeP6GXGREf3wpa54Ei5c=
+Date:   Mon, 30 Mar 2020 11:42:30 -0700
+From:   Jaegeuk Kim <jaegeuk@kernel.org>
+To:     Chao Yu <yuchao0@huawei.com>
+Cc:     linux-f2fs-devel@lists.sourceforge.net,
+        linux-kernel@vger.kernel.org, chao@kernel.org
+Subject: Re: [PATCH] f2fs: use round_up()/DIV_ROUND_UP()
+Message-ID: <20200330184230.GB34947@google.com>
+References: <20200330100349.56127-1-yuchao0@huawei.com>
 MIME-Version: 1.0
-In-Reply-To: <20200330191439.3bfcb658@elisabeth>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200330100349.56127-1-yuchao0@huawei.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 30/03/2020 18:14, Stefano Brivio wrote:
-> On Mon, 30 Mar 2020 09:45:30 -0700
-> "John B. Wyatt IV" <jbwyatt4@gmail.com> wrote:
+On 03/30, Chao Yu wrote:
+> .i_cluster_size should be power of 2, so we can use round_up() instead
+> of roundup() to enhance the calculation.
 > 
->> Add error code handling to unused 'ret' variable that was never used.
->> Return an error code from functions called within vnt_radio_power_on.
->>
->> Issue reported by coccinelle (coccicheck).
->>
->> Suggested-by: Quentin Deslandes <quentin.deslandes@itdev.co.uk>
->> Suggested-by: Stefano Brivio <sbrivio@redhat.com>
->> Suggested-by: Julia Lawall <julia.lawall@inria.fr>
->> Reviewed-by: Quentin Deslandes <quentin.deslandes@itdev.co.uk>
->> Signed-off-by: John B. Wyatt IV <jbwyatt4@gmail.com>
->> ---
->> v4: Move Suggested-by: Julia Lawall above seperator line.
+> In addition, use DIV_ROUND_UP to clean up codes.
 > 
-> Actually, as Julia didn't suggest this patch, the place where you had
-> this in v3 was the right one.
----snip
->>   
->>   	switch (priv->rf_type) {
->>   	case RF_AL2230:
->> @@ -734,14 +738,14 @@ int vnt_radio_power_on(struct vnt_private *priv)
->>   	case RF_VT3226:
->>   	case RF_VT3226D0:
->>   	case RF_VT3342A0:
->> -		vnt_mac_reg_bits_on(priv, MAC_REG_SOFTPWRCTL,
->> -				    (SOFTPWRCTL_SWPE2 | SOFTPWRCTL_SWPE3));
->> +		ret = vnt_mac_reg_bits_on(priv, MAC_REG_SOFTPWRCTL,
->> +					 (SOFTPWRCTL_SWPE2 | SOFTPWRCTL_SWPE3));
+> Signed-off-by: Chao Yu <yuchao0@huawei.com>
+> ---
+>  fs/f2fs/data.c | 16 ++++++----------
+>  fs/f2fs/file.c | 17 +++++------------
+>  2 files changed, 11 insertions(+), 22 deletions(-)
 > 
-> 
-> Another thing that should be considered in this function is to restore
-> the previous hardware state on failures, but I think the way you're
-> handling this is possibly the safest, without hardware to test on.
-> 
-This section of hardware is controlled by mac80211 as is most of the driver.
+> diff --git a/fs/f2fs/data.c b/fs/f2fs/data.c
+> index 0a829a89f596..8257d5e7aa3b 100644
+> --- a/fs/f2fs/data.c
+> +++ b/fs/f2fs/data.c
+> @@ -1969,8 +1969,6 @@ static int f2fs_read_single_page(struct inode *inode, struct page *page,
+>  					bool is_readahead)
+>  {
+>  	struct bio *bio = *bio_ret;
+> -	const unsigned blkbits = inode->i_blkbits;
+> -	const unsigned blocksize = 1 << blkbits;
+>  	sector_t block_in_file;
+>  	sector_t last_block;
+>  	sector_t last_block_in_file;
+> @@ -1979,8 +1977,8 @@ static int f2fs_read_single_page(struct inode *inode, struct page *page,
+>  
+>  	block_in_file = (sector_t)page_index(page);
+>  	last_block = block_in_file + nr_pages;
+> -	last_block_in_file = (f2fs_readpage_limit(inode) + blocksize - 1) >>
+> -							blkbits;
+> +	last_block_in_file = DIV_ROUND_UP(f2fs_readpage_limit(inode),
+> +								PAGE_SIZE);
 
-Users can turn the wireless off then on again to try again but to date 
-this is not known to fail with the hardware I have used.
+What if PAGE_SIZE is bigger than 4KB?
 
-No problems with hardware with this patch.
-
-Tested-by: Malcolm Priestley <tvboxspy@gmail.com>
-
-
-
+>  	if (last_block > last_block_in_file)
+>  		last_block = last_block_in_file;
+>  
+> @@ -2062,7 +2060,7 @@ static int f2fs_read_single_page(struct inode *inode, struct page *page,
+>  	 */
+>  	f2fs_wait_on_block_writeback(inode, block_nr);
+>  
+> -	if (bio_add_page(bio, page, blocksize, 0) < blocksize)
+> +	if (bio_add_page(bio, page, PAGE_SIZE, 0) < PAGE_SIZE)
+>  		goto submit_and_realloc;
+>  
+>  	inc_page_count(F2FS_I_SB(inode), F2FS_RD_DATA);
+> @@ -2091,16 +2089,14 @@ int f2fs_read_multi_pages(struct compress_ctx *cc, struct bio **bio_ret,
+>  	struct bio *bio = *bio_ret;
+>  	unsigned int start_idx = cc->cluster_idx << cc->log_cluster_size;
+>  	sector_t last_block_in_file;
+> -	const unsigned blkbits = inode->i_blkbits;
+> -	const unsigned blocksize = 1 << blkbits;
+>  	struct decompress_io_ctx *dic = NULL;
+>  	int i;
+>  	int ret = 0;
+>  
+>  	f2fs_bug_on(sbi, f2fs_cluster_is_empty(cc));
+>  
+> -	last_block_in_file = (f2fs_readpage_limit(inode) +
+> -					blocksize - 1) >> blkbits;
+> +	last_block_in_file = DIV_ROUND_UP(f2fs_readpage_limit(inode),
+> +								PAGE_SIZE);
+>  
+>  	/* get rid of pages beyond EOF */
+>  	for (i = 0; i < cc->cluster_size; i++) {
+> @@ -2197,7 +2193,7 @@ int f2fs_read_multi_pages(struct compress_ctx *cc, struct bio **bio_ret,
+>  
+>  		f2fs_wait_on_block_writeback(inode, blkaddr);
+>  
+> -		if (bio_add_page(bio, page, blocksize, 0) < blocksize)
+> +		if (bio_add_page(bio, page, PAGE_SIZE, 0) < PAGE_SIZE)
+>  			goto submit_and_realloc;
+>  
+>  		inc_page_count(sbi, F2FS_RD_DATA);
+> diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
+> index c2d38a1c4972..0f8be076620c 100644
+> --- a/fs/f2fs/file.c
+> +++ b/fs/f2fs/file.c
+> @@ -736,16 +736,9 @@ int f2fs_truncate_blocks(struct inode *inode, u64 from, bool lock)
+>  	 * for compressed file, only support cluster size
+>  	 * aligned truncation.
+>  	 */
+> -	if (f2fs_compressed_file(inode)) {
+> -		size_t cluster_shift = PAGE_SHIFT +
+> -					F2FS_I(inode)->i_log_cluster_size;
+> -		size_t cluster_mask = (1 << cluster_shift) - 1;
+> -
+> -		free_from = from >> cluster_shift;
+> -		if (from & cluster_mask)
+> -			free_from++;
+> -		free_from <<= cluster_shift;
+> -	}
+> +	if (f2fs_compressed_file(inode))
+> +		free_from = round_up(from,
+> +				F2FS_I(inode)->i_cluster_size << PAGE_SHIFT);
+>  #endif
+>  
+>  	err = f2fs_do_truncate_blocks(inode, free_from, lock);
+> @@ -3537,7 +3530,7 @@ static int f2fs_release_compress_blocks(struct file *filp, unsigned long arg)
+>  
+>  		end_offset = ADDRS_PER_PAGE(dn.node_page, inode);
+>  		count = min(end_offset - dn.ofs_in_node, last_idx - page_idx);
+> -		count = roundup(count, F2FS_I(inode)->i_cluster_size);
+> +		count = round_up(count, F2FS_I(inode)->i_cluster_size);
+>  
+>  		ret = release_compress_blocks(&dn, count);
+>  
+> @@ -3689,7 +3682,7 @@ static int f2fs_reserve_compress_blocks(struct file *filp, unsigned long arg)
+>  
+>  		end_offset = ADDRS_PER_PAGE(dn.node_page, inode);
+>  		count = min(end_offset - dn.ofs_in_node, last_idx - page_idx);
+> -		count = roundup(count, F2FS_I(inode)->i_cluster_size);
+> +		count = round_up(count, F2FS_I(inode)->i_cluster_size);
+>  
+>  		ret = reserve_compress_blocks(&dn, count);
+>  
+> -- 
+> 2.18.0.rc1
