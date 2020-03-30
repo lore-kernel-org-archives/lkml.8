@@ -2,115 +2,132 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0EADC43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 18:04:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29759C2D0EF
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 18:05:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A7B820771
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 18:04:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 03AA22072E
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 18:05:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxonhyperv.com header.i=@linuxonhyperv.com header.b="OJ2fuHRD"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="WQE+QWOm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727951AbgC3SEU (ORCPT
+        id S1728061AbgC3SFo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 14:04:20 -0400
-Received: from linux.microsoft.com ([13.77.154.182]:42362 "EHLO
-        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727815AbgC3SES (ORCPT
+        Mon, 30 Mar 2020 14:05:44 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:39463 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727975AbgC3SFn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 14:04:18 -0400
-Received: by linux.microsoft.com (Postfix, from userid 1004)
-        id 6B38020B46F0; Mon, 30 Mar 2020 11:04:17 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 6B38020B46F0
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linuxonhyperv.com;
-        s=default; t=1585591457;
-        bh=f6uuZ8AQmEmQPNxvCDcaE9ajAQMzpT8US7URBUmbX+0=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:Reply-To:From;
-        b=OJ2fuHRDWI1KPvCxE2Rjw286mDUXEhZI+eImjVbM2bUtOENhxgueC+bFCcAF3CaVC
-         5HjEOZo7M5UdrYfaxfntwnfeeQTekV4fLCxlMFWxKLaqx1JSB2d6pLS1udk5QncUSi
-         QBNr6NXbXfer42QDESpKDpRZgx4CXIfiJ0mxn6fc=
-From:   longli@linuxonhyperv.com
-To:     Steve French <sfrench@samba.org>, linux-cifs@vger.kernel.org,
-        samba-technical@lists.samba.org, linux-kernel@vger.kernel.org
-Cc:     Long Li <longli@microsoft.com>
-Subject: [PATCH 2/2] cifs: smbd: Check send queue size before posting a send
-Date:   Mon, 30 Mar 2020 11:04:07 -0700
-Message-Id: <1585591447-11741-2-git-send-email-longli@linuxonhyperv.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1585591447-11741-1-git-send-email-longli@linuxonhyperv.com>
-References: <1585591447-11741-1-git-send-email-longli@linuxonhyperv.com>
-Reply-To: longli@microsoft.com
+        Mon, 30 Mar 2020 14:05:43 -0400
+Received: by mail-wr1-f68.google.com with SMTP id p10so22840914wrt.6
+        for <linux-kernel@vger.kernel.org>; Mon, 30 Mar 2020 11:05:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=eK8x7gAXMov1inBTyCa9T4MtcTyNUJQUaxWPoEq8WPM=;
+        b=WQE+QWOmy+rAqfpi/9XWYmLS7jKwH6IbEwVcxVE/K6tVdNy/4xbN85nlusDSzm757a
+         N8Esq9fl5Qh8a89xDGWWUQzzWddG3vupEw//z1mNposwwR3yEPcMIPJRq7YVVtoKQP+p
+         SKQfYVxP6q6j+vCw/suwHBGl91DNojYqK1BMQ=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=eK8x7gAXMov1inBTyCa9T4MtcTyNUJQUaxWPoEq8WPM=;
+        b=TAiR+4rfROuFDFSH//HmJqarYSbbYy1eCMr9FTupFpeVxAycgC2qQdqPVp/hk4Etga
+         8G9/az7TOrDvt5KqGOAA+vg5Z1pBoKH5UxQZzMpS/Dm8KBbUXQQCr8y8qONPQZKEOE2j
+         tmf8WhrRbYYUzzI2FU+9WwqAGSarsaoEfRFC83snMV964BXmTqyXnAkc7Rvx1e78DJ1t
+         2GhHylm1QjqCZHZNTpSTSrhA/KkZ9EmiB5DGcas1Orea4YkuQBmDnWyeKP3K0XxlzHMq
+         dt1ST3ZPVKfPxzT23Z60FAAkxPQV3nyvTZfiCexBPv2OwR6hzzZHNQpuW6jN4JOakcCS
+         qOTA==
+X-Gm-Message-State: ANhLgQ0yWFKCeOjzjqqkj89CJwWdN5NLNolTNxhcsIjewKh3J4Yer3W/
+        YWpMgteYu+WPMY1iaKaIBtANmA==
+X-Google-Smtp-Source: ADFU+vsG5+POHNwCtn212r3+bWb5NCSQtxsMW+v/nEnnXabDTUyOReQMMj7YdyJUl9iPEcp/c2B64w==
+X-Received: by 2002:adf:e946:: with SMTP id m6mr16493103wrn.187.1585591540289;
+        Mon, 30 Mar 2020 11:05:40 -0700 (PDT)
+Received: from google.com ([2a00:79e0:42:204:8a21:ba0c:bb42:75ec])
+        by smtp.gmail.com with ESMTPSA id l4sm21826103wru.1.2020.03.30.11.05.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 30 Mar 2020 11:05:39 -0700 (PDT)
+From:   KP Singh <kpsingh@chromium.org>
+X-Google-Original-From: KP Singh <kpsingh>
+Date:   Mon, 30 Mar 2020 20:05:38 +0200
+To:     KP Singh <kpsingh@chromium.org>
+Cc:     Daniel Borkmann <daniel@iogearbox.net>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        bpf <bpf@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
+Subject: Re: linux-next: Tree for Mar 30 (bpf)
+Message-ID: <20200330180538.GA180081@google.com>
+References: <20200330204307.669bbb4d@canb.auug.org.au>
+ <86f7031a-57c6-5d50-2788-ae0e06a7c138@infradead.org>
+ <d5b4bd95-7ef9-58cb-1955-900e6edb2467@iogearbox.net>
+ <CACYkzJ72Uy9mnenO04OJaKH=Bk4ZENKJb9yw6i+EhJUa+ygngQ@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CACYkzJ72Uy9mnenO04OJaKH=Bk4ZENKJb9yw6i+EhJUa+ygngQ@mail.gmail.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Long Li <longli@microsoft.com>
+On 30-Mar 19:54, KP Singh wrote:
 
-Sometimes the remote peer may return more send credits than the send queue
-depth. If all the send credits are used to post senasd, we may overflow the
-send queue.
+So, it looks like bpf_tracing_func_proto is only defined when
+CONFIG_BPF_EVENTS is set:
 
-Fix this by checking the send queue size before posting a send.
+        obj-$(CONFIG_BPF_EVENTS) += bpf_trace.o
 
-Signed-off-by: Long Li <longli@microsoft.com>
----
- fs/cifs/smbdirect.c | 11 ++++++++++-
- fs/cifs/smbdirect.h |  1 +
- 2 files changed, 11 insertions(+), 1 deletion(-)
+We have a few options:
 
-diff --git a/fs/cifs/smbdirect.c b/fs/cifs/smbdirect.c
-index 79d8dcbd0034..c7ef2d7ce0ef 100644
---- a/fs/cifs/smbdirect.c
-+++ b/fs/cifs/smbdirect.c
-@@ -287,6 +287,7 @@ static void send_done(struct ib_cq *cq, struct ib_wc *wc)
- 	if (atomic_dec_and_test(&request->info->send_pending))
- 		wake_up(&request->info->wait_send_pending);
- 
-+	wake_up(&request->info->wait_post_send);
- 
- 	mempool_free(request, request->info->request_mempool);
- }
-@@ -939,7 +940,14 @@ static int smbd_post_send(struct smbd_connection *info,
- 	send_wr.opcode = IB_WR_SEND;
- 	send_wr.send_flags = IB_SEND_SIGNALED;
- 
--	atomic_inc(&info->send_pending);
-+wait_sq:
-+	wait_event(info->wait_post_send,
-+		atomic_read(&info->send_pending) < info->send_credit_target);
-+	if (unlikely(atomic_inc_return(&info->send_pending) >
-+				info->send_credit_target)) {
-+		atomic_dec(&info->send_pending);
-+		goto wait_sq;
-+	}
- 
- 	rc = ib_post_send(info->id->qp, &send_wr, NULL);
- 	if (rc) {
-@@ -1733,6 +1741,7 @@ static struct smbd_connection *_smbd_get_connection(
- 	init_waitqueue_head(&info->wait_send_pending);
- 	atomic_set(&info->send_pending, 0);
- 
-+	init_waitqueue_head(&info->wait_post_send);
- 
- 	INIT_WORK(&info->disconnect_work, smbd_disconnect_rdma_work);
- 	INIT_WORK(&info->post_send_credits_work, smbd_post_send_credits);
-diff --git a/fs/cifs/smbdirect.h b/fs/cifs/smbdirect.h
-index f70c7119a456..07c8f5638c39 100644
---- a/fs/cifs/smbdirect.h
-+++ b/fs/cifs/smbdirect.h
-@@ -114,6 +114,7 @@ struct smbd_connection {
- 	/* Activity accoutning */
- 	atomic_t send_pending;
- 	wait_queue_head_t wait_send_pending;
-+	wait_queue_head_t wait_post_send;
- 
- 	/* Receive queue */
- 	struct list_head receive_queue;
--- 
-2.17.1
+* Add a __weak symbol for bpf_tracing_func_proto which we have done in
+  the past for similar issues. This however, does not make much sense,
+  as CONFIG_BPF_LSM cannot really do much without its helpers.
+* Make CONFIG_BPF_LSM depend on CONFIG_BPF_EVENTS, this should solve
+  it, but not for this particular Kconfig that was generated. Randy,
+  I am assuming if we add the dependency, this particular Kconfig
+  won't be generated.
 
+I am assuming this patch now needs to be sent for "bpf" and not
+"bpf-next" as the merge window has opened?
+
+- KP
+
+> Thanks for adding me Daniel, taking a look.
+> 
+> - KP
+> 
+> On Mon, Mar 30, 2020 at 7:25 PM Daniel Borkmann <daniel@iogearbox.net> wrote:
+> >
+> > [Cc KP, ptal]
+> >
+> > On 3/30/20 7:15 PM, Randy Dunlap wrote:
+> > > On 3/30/20 2:43 AM, Stephen Rothwell wrote:
+> > >> Hi all,
+> > >>
+> > >> The merge window has opened, so please do not add any material for the
+> > >> next release into your linux-next included trees/branches until after
+> > >> the merge window closes.
+> > >>
+> > >> Changes since 20200327:
+> > >
+> > > (note: linux-next is based on linux 5.6-rc7)
+> > >
+> > >
+> > > on i386:
+> > >
+> > > ld: kernel/bpf/bpf_lsm.o:(.rodata+0x0): undefined reference to `bpf_tracing_func_proto'
+> > >
+> > >
+> > > Full randconfig file is attached.
+> > >
+> >
