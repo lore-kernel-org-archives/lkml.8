@@ -2,124 +2,115 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D79FC43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 14:17:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22814C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 14:17:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F2DB20780
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 14:17:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E33402073B
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 14:17:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lujtqJdP"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hEQTy+L5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728820AbgC3ORD (ORCPT
+        id S1728902AbgC3ORR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 10:17:03 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:33689 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728009AbgC3ORC (ORCPT
+        Mon, 30 Mar 2020 10:17:17 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:40841 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728009AbgC3ORQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 10:17:02 -0400
-Received: by mail-wr1-f65.google.com with SMTP id a25so21889354wrd.0;
-        Mon, 30 Mar 2020 07:17:01 -0700 (PDT)
+        Mon, 30 Mar 2020 10:17:16 -0400
+Received: by mail-pf1-f193.google.com with SMTP id c20so6094883pfi.7
+        for <linux-kernel@vger.kernel.org>; Mon, 30 Mar 2020 07:17:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=pBQqZVEq9iQY3TkOskST4uSFuna+gg54Ys7RpapkQWM=;
-        b=lujtqJdPJb/psrSlD2NuWhPp2R7EnCRb96e3qZY71byvANMzufsCgACW8htq/HTCNw
-         q0qQGFneoyuYvJ17HsXw/bBpOcHGlCHJok2zU+eoZo509R++/5sqTQ58Sd2L9eODY1bF
-         4g6b5WYlbADl5u6U7OsvEXy4AtNSNH4vOifUzBZYTsWPJtL0XlFMcXJYMDFlwixmkdy5
-         TStl8BrOSoXRHfXSWLTAg1MEVzRWEb/21Gi826VIVxddtDh8kQ/3ccceI2zRYNQ+Si1r
-         EWzyox7gf1XVfJVlJJlToMXN06+cDec+KhNbqgpH4KzBKRVrGjtkABoTVx4XhF80ICL5
-         d0nQ==
+        h=from:to:cc:subject:date:message-id;
+        bh=1BA/+EzZUprzyKG2z2k8xv+DKN8kyB5d20DyklGct+U=;
+        b=hEQTy+L5QUjHFFy9HvIuA862khwr+dcNTcnqGoX9MYD23rZtSH2WE1dFMUAJomBuEX
+         9NoRKlLDQ9qBTZy43S4zEJGy7oCyQDNYVe5HHTcqjLPZv8+qPog5vCpY59V69NxT/pa0
+         QdssDNJ3PiOKf0ydCgslpMlDgxDa3mBAYqpKfMsR/Bpc94HdF21MVPoS4L+xd8vLmcHq
+         lVpbwqorBl6WMuPsyIe9kA2Fq/4rgy8JSYVtTGE9x4HvkSwempVi06XtJK9M1KxJM1P6
+         f22VN0PFOjlhaU5GVr4PIdbinuHfmXmQGAQuOUfbkYpuwv1TKvSXABFZKSVoUN2scUJB
+         +ywQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=pBQqZVEq9iQY3TkOskST4uSFuna+gg54Ys7RpapkQWM=;
-        b=Onhb5981oZqjrrssveMe2G/vpTFYARqAQoidQxSGpaTfzMKmC5+66fnlJ3iUMDR6iH
-         EhJK68hJHC8Oq/GYQp0MKqKhDDI84d6BSvviz6zX42hm2feWU1UlrqP4BzNKfghoxCXb
-         579LHqR0o3whJPTTdQlTq0GFuEUEXFBewHwE0YBtrhC29ARkUwQ3RD+lhcUkO840Ge+1
-         oBRF4UZ/hPekv7M4g5SVETU7hDuD5X6Tod4YeuymqLGs7waCEB1HxLnAkjOAHdN7W+Ui
-         VWLEUb8WGP6vDs845QTDGSZalSEgcZaWkrg9kl8mhbNH5kzLmNrKAs0DjpPgnUhCjex7
-         5l6A==
-X-Gm-Message-State: ANhLgQ3G4HFixb8BNq2f2aaUuSUz2AoOljPmkixs+sBdx6hhXOJmL4IJ
-        kuOamV/gKaccvAIRsfjxoxo=
-X-Google-Smtp-Source: ADFU+vtKQ6aYSmXN4bQziwMlCpsmcaXBaCgjvE5/V9oWoSrehpWwu/MsMEXXPUfNybIGUJX+7pY0Zg==
-X-Received: by 2002:adf:f8cd:: with SMTP id f13mr14712693wrq.119.1585577820845;
-        Mon, 30 Mar 2020 07:17:00 -0700 (PDT)
-Received: from localhost (pD9E51CDC.dip0.t-ipconnect.de. [217.229.28.220])
-        by smtp.gmail.com with ESMTPSA id v26sm23272574wra.7.2020.03.30.07.16.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Mar 2020 07:16:59 -0700 (PDT)
-Date:   Mon, 30 Mar 2020 16:16:57 +0200
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Pascal Roeleven <dev@pascalroeleven.nl>
-Cc:     Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        linux-pwm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com
-Subject: Re: [RFC PATCH 1/4] pwm: sun4i: Remove redundant needs_delay
-Message-ID: <20200330141657.GH2431644@ulmo>
-References: <20200317155906.31288-1-dev@pascalroeleven.nl>
- <20200317155906.31288-2-dev@pascalroeleven.nl>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="v2Uk6McLiE8OV1El"
-Content-Disposition: inline
-In-Reply-To: <20200317155906.31288-2-dev@pascalroeleven.nl>
-User-Agent: Mutt/1.13.1 (2019-12-14)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=1BA/+EzZUprzyKG2z2k8xv+DKN8kyB5d20DyklGct+U=;
+        b=CGY6mdERLDgzHCyD5PRWDkD8UReNf0uv2penvY9illJ4KGIm/A2XiCVtPHXY9PdOOM
+         vPspMKU82AR3AwWLC3eUBdMErxcQwyX8BN6uTCrKi0l6TaIzJR6dx0TAL+XIWjFd+0mC
+         Z7xTU5zd1roj/l0RxvuMELSZVWP7aXwB88Bfepf3q+HCgkb8rXI/1z4j0bxgaPpNSdpA
+         ic4vue0H2I9khGA47u3hAyiXIIxZxD0UD6XEb/X5TcvlhluclEIFeijquARHgmZ4QXNC
+         rxNfYFcpx0fDb4N4aaKFahT/HFlk3xr/wZwRR1cmUBM+/5Nd1jnW7/onerfClCffks2G
+         qFJw==
+X-Gm-Message-State: ANhLgQ2JaFbw1Op5CAeWVC8QjtlHvD9sWzvXuP5HGA6Z4CBqpTKK7eZo
+        YUcF6Jn4l9icW5NoEV8ScFY=
+X-Google-Smtp-Source: ADFU+vtCjTYKqekOM0YDuD1qdXteoTtLiDzhYoTFy6qUg9m6sh/BwIAh7OT6nOcgScsMrNlivQrPSQ==
+X-Received: by 2002:a63:790e:: with SMTP id u14mr12317600pgc.361.1585577835411;
+        Mon, 30 Mar 2020 07:17:15 -0700 (PDT)
+Received: from localhost.net ([131.107.159.147])
+        by smtp.googlemail.com with ESMTPSA id o3sm848855pgk.21.2020.03.30.07.17.14
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 30 Mar 2020 07:17:14 -0700 (PDT)
+From:   ltykernel@gmail.com
+X-Google-Original-From: Tianyu.Lan@microsoft.com
+To:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
+        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
+        x86@kernel.org, michael.h.kelley@microsoft.com, wei.liu@kernel.org
+Cc:     Tianyu Lan <Tianyu.Lan@microsoft.com>,
+        devel@linuxdriverproject.org, linux-kernel@vger.kernel.org,
+        vkuznets@redhat.com
+Subject: [Update PATCH] x86/Hyper-V: Initialize Syn timer clock when it's
+Date:   Mon, 30 Mar 2020 07:17:08 -0700
+Message-Id: <20200330141708.12822-1-Tianyu.Lan@microsoft.com>
+X-Mailer: git-send-email 2.14.5
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Tianyu Lan <Tianyu.Lan@microsoft.com>
 
---v2Uk6McLiE8OV1El
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Current code initializes clock event data structure for syn timer
+even when it's not available. Fix it.
 
-On Tue, Mar 17, 2020 at 04:59:03PM +0100, Pascal Roeleven wrote:
-> 'needs_delay' does now always evaluate to true, so remove all
-> occurrences.
->=20
-> Signed-off-by: Pascal Roeleven <dev@pascalroeleven.nl>
-> ---
->  drivers/pwm/pwm-sun4i.c | 13 ++-----------
->  1 file changed, 2 insertions(+), 11 deletions(-)
+Signed-off-by: Tianyu Lan <Tianyu.Lan@microsoft.com>
+---
+- Fix the wrong title.
+ 
+ drivers/hv/hv.c | 15 +++++++++------
+ 1 file changed, 9 insertions(+), 6 deletions(-)
 
-I've applied this one since it's obviously correct. I'll hold off on the
-others until it can be more broadly tested. Hopefully Maxime or Chen-Yu
-can help review the remainder of this series as well.
+diff --git a/drivers/hv/hv.c b/drivers/hv/hv.c
+index 632d25674e7f..2e893768fc76 100644
+--- a/drivers/hv/hv.c
++++ b/drivers/hv/hv.c
+@@ -212,13 +212,16 @@ int hv_synic_alloc(void)
+ 		tasklet_init(&hv_cpu->msg_dpc,
+ 			     vmbus_on_msg_dpc, (unsigned long) hv_cpu);
+ 
+-		hv_cpu->clk_evt = kzalloc(sizeof(struct clock_event_device),
+-					  GFP_KERNEL);
+-		if (hv_cpu->clk_evt == NULL) {
+-			pr_err("Unable to allocate clock event device\n");
+-			goto err;
++		if (ms_hyperv.features & HV_MSR_SYNTIMER_AVAILABLE) {
++			hv_cpu->clk_evt =
++				kzalloc(sizeof(struct clock_event_device),
++						  GFP_KERNEL);
++			if (hv_cpu->clk_evt == NULL) {
++				pr_err("Unable to allocate clock event device\n");
++				goto err;
++			}
++			hv_init_clockevent_device(hv_cpu->clk_evt, cpu);
+ 		}
+-		hv_init_clockevent_device(hv_cpu->clk_evt, cpu);
+ 
+ 		hv_cpu->synic_message_page =
+ 			(void *)get_zeroed_page(GFP_ATOMIC);
+-- 
+2.14.5
 
-Thierry
-
---v2Uk6McLiE8OV1El
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl6B/1kACgkQ3SOs138+
-s6FuiA//cx1ke/G8okfRZ3jdGF2EHHZNYra6C9bHQDNUFuqoqfLNoWCZ2vGlYDpm
-gpE9BAX7AWFq5BkD41Im+NeWH5Z63iQaR3H/+aMW/yiyaR0+bt8wlbmQzFLzUltZ
-HP/nEIeM3weYrlNLMJx2t9UGXH7m+jjR9/d/rmfweJPNMfxgWl2b4bbq4nnQFUDN
-KQMds94x3Hrzn04CzB+00E7TYIUh75bxBYQnTAnRfASN+F/Tg1tSrCgCamz3WjF8
-ry8LFyg3WT/pbZaI+Yv3dq6C5NT04VuJC3qyhQaqH+vHbOK5iIUBUWCsJbkBybXY
-+ZguKG2/07rMx6wC/e/NzL/7ChmPVym/O5di3TTtf6T5f8ZkuVwTqacf0V6etOxJ
-tYWFG6Yxf97olwc4MhdUqK1SgT3D+0HsKaEZ2R9FCQvSMNByWesHjan7ZpldHjU7
-I/xJqQlP6jahCEQYR2sWDw1bcpY4X251V6Mp/07jvks4JWvU2fHDy/CqJKIOWynO
-tv2tr0GssCK3ZHt5Olv3mI3wHfkvHIKfI2LWF4kYkkpVcEkVRL2joQuUL0x70Miv
-KcickysSrgI9DW24l1NGJe5ZUq6EE/18QETvurlORS7S087RHcwUwXu2Vg7G4s7V
-CFTY/EHKeRL638QPV+MvSMudI9DhDRBiCwmGdOVYy7B6rVImsdM=
-=LA4s
------END PGP SIGNATURE-----
-
---v2Uk6McLiE8OV1El--
