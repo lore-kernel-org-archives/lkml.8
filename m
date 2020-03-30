@@ -2,214 +2,447 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0CC8C2D0E5
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 15:51:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72BAEC43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 15:51:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D22B205ED
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 15:51:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dpI1okSX"
+	by mail.kernel.org (Postfix) with ESMTP id 3CBCC206CC
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 15:51:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729733AbgC3Pv1 (ORCPT
+        id S1729769AbgC3Pvo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 11:51:27 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:42268 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727952AbgC3Pv1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 11:51:27 -0400
-Received: by mail-pl1-f196.google.com with SMTP id e1so6877028plt.9;
-        Mon, 30 Mar 2020 08:51:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=L9o4KRn00mDjtqt+akJWlI8f2RLZQl/VvTUHSutIqZc=;
-        b=dpI1okSXow4OOYbunaZ8VE/spoxDkrFnRnKrS/Q3aMCM4/g1GiuVrKnwrYY0r+C2iw
-         7YmAGvblhoiq0Cfm+10H2kSVAhrbudXQlQAMO/ciRQysZlfsgYM86/T1X8F9MSqMExa6
-         n/46GkZKJPLHBgs7A3TkBM3HOrCzWLiQg0ymqnUzj25rc6HEJM4HdfFATBSDlZQ3tfh2
-         Y9AA2pvVIS2dxxuevFGQktuU9UK+JdvWs/2gS6CZB/jYO5sYTdXXWjgscV5382HiLOvA
-         CZwrIwTY78IET02aKVRqznPkzQv7nTZ3x4xOSu6ac55CNrgNYVvgCqM1I3bha8knJ8Et
-         7Etg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
-         :mime-version:content-transfer-encoding;
-        bh=L9o4KRn00mDjtqt+akJWlI8f2RLZQl/VvTUHSutIqZc=;
-        b=aao03QFcHlztH3f0jmYHaNDmvxFIS7G8xpd3MTREUyU7vugT44wvlqM1C93LWgRv47
-         zDVLQw4vv6uSMH9BShY1+OybP59LBJBeP/MhQ/LGcsdFMIyBp2jkapM26C4sBssvenUS
-         +h0iD+q/0/AuPWQNAXqb5eBDb2h3oxiP2shrdglQYkAtyxY2PZKdj0D4yvQW2R3xyGxh
-         nMG/Veky6z5hGuD8c13mdBocy8VGXUuSTAqSVGA2HgCFHVsiW9VGcZoaFLciRZTWFC3W
-         3SJ/BP5Wu3xxt5ifxmLCA3BWf6yOZ9TGzY4+fV+iWYJ1vc3WxRNxZZrYjBhNlx2AoKcT
-         35IA==
-X-Gm-Message-State: ANhLgQ1XC+UPCT/7kNoAQQEl/gkskkqn2lQQQScYBIPnTo4I17aloFJW
-        cawIwob4Z/kKU06jhS2VeBxyWBMI
-X-Google-Smtp-Source: ADFU+vv9C+B1Xv0VipPjnnA/WMWiN43YowIhNsDS4hWW6fmhwtfmcDA2QmTJbFMvWFsC0gf5esa79w==
-X-Received: by 2002:a17:90a:1784:: with SMTP id q4mr16358734pja.111.1585583485967;
-        Mon, 30 Mar 2020 08:51:25 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id 21sm9963781pgf.41.2020.03.30.08.51.25
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 30 Mar 2020 08:51:25 -0700 (PDT)
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [GIT PULL] hwmon updates for v5.7
-Date:   Mon, 30 Mar 2020 08:51:24 -0700
-Message-Id: <20200330155124.243034-1-linux@roeck-us.net>
-X-Mailer: git-send-email 2.17.1
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+        Mon, 30 Mar 2020 11:51:44 -0400
+Received: from mga03.intel.com ([134.134.136.65]:17168 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728798AbgC3Pvn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Mar 2020 11:51:43 -0400
+IronPort-SDR: 39IrxwBDXKd4xVgg5e4goJ+tmOPWkUfuiSc0jx6cvCYVSb7TqLA+0H5hEIj4rnXQJzLvGRs9fx
+ Zu7tUH/IZl7g==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Mar 2020 08:51:42 -0700
+IronPort-SDR: UVQlzVYmDmYaJXaXKKmWePMvxHpkBTmir33xTUQDuCRFX5F0PFiGpd+p2aGsF2SpHz561ML+UD
+ o5dB8ieono9g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,324,1580803200"; 
+   d="scan'208";a="241656689"
+Received: from glass.png.intel.com ([172.30.181.92])
+  by fmsmga008.fm.intel.com with ESMTP; 30 Mar 2020 08:51:39 -0700
+From:   Wong Vee Khee <vee.khee.wong@intel.com>
+To:     Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Jose Abreu <joabreu@synopsys.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>
+Cc:     netdev@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Ong Boon Leong <boon.leong.ong@intel.com>,
+        Voon Wei Feng <weifeng.voon@intel.com>,
+        Wong Vee Khee <vee.khee.wong@intel.com>
+Subject: [PATCH net-next 1/1] net: stmmac: Add support for VLAN Rx filtering
+Date:   Mon, 30 Mar 2020 23:53:57 +0800
+Message-Id: <20200330155357.732-1-vee.khee.wong@intel.com>
+X-Mailer: git-send-email 2.17.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+Add support for VLAN ID-based filtering by the MAC controller for MAC
+drivers that support it. Only the 12-bit VID field is used.
 
-Please pull hwmon updates for Linux v5.7 from signed tag:
+Signed-off-by: Chuah Kim Tatt <kim.tatt.chuah@intel.com>
+Signed-off-by: Ong Boon Leong <boon.leong.ong@intel.com>
+Signed-off-by: Wong Vee Khee <vee.khee.wong@intel.com>
+---
+ drivers/net/ethernet/stmicro/stmmac/common.h  |   2 +
+ drivers/net/ethernet/stmicro/stmmac/dwmac4.h  |  25 +++
+ .../net/ethernet/stmicro/stmmac/dwmac4_core.c | 195 ++++++++++++++++++
+ drivers/net/ethernet/stmicro/stmmac/hwif.h    |  14 ++
+ .../net/ethernet/stmicro/stmmac/stmmac_main.c |   9 +
+ 5 files changed, 245 insertions(+)
 
-    git://git.kernel.org/pub/scm/linux/kernel/git/groeck/linux-staging.git hwmon-for-v5.7
+diff --git a/drivers/net/ethernet/stmicro/stmmac/common.h b/drivers/net/ethernet/stmicro/stmmac/common.h
+index 386663208c23..6208a68a331d 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/common.h
++++ b/drivers/net/ethernet/stmicro/stmmac/common.h
+@@ -471,6 +471,8 @@ struct mac_device_info {
+ 	unsigned int pmt;
+ 	unsigned int ps;
+ 	unsigned int xlgmac;
++	unsigned int num_vlan;
++	u32 vlan_filter[32];
+ };
+ 
+ struct stmmac_rx_routing {
+diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac4.h b/drivers/net/ethernet/stmicro/stmmac/dwmac4.h
+index af50af27550b..28cac28253b8 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/dwmac4.h
++++ b/drivers/net/ethernet/stmicro/stmmac/dwmac4.h
+@@ -18,6 +18,7 @@
+ #define GMAC_PACKET_FILTER		0x00000008
+ #define GMAC_HASH_TAB(x)		(0x10 + (x) * 4)
+ #define GMAC_VLAN_TAG			0x00000050
++#define GMAC_VLAN_TAG_DATA		0x00000054
+ #define GMAC_VLAN_HASH_TABLE		0x00000058
+ #define GMAC_RX_FLOW_CTRL		0x00000090
+ #define GMAC_VLAN_INCL			0x00000060
+@@ -90,6 +91,29 @@
+ #define GMAC_VLAN_VLC			GENMASK(17, 16)
+ #define GMAC_VLAN_VLC_SHIFT		16
+ 
++/* MAC VLAN Tag */
++#define GMAC_VLAN_TAG_VID		GENMASK(15, 0)
++#define GMAC_VLAN_TAG_ETV		BIT(16)
++
++/* MAC VLAN Tag Control */
++#define GMAC_VLAN_TAG_CTRL_OB		BIT(0)
++#define GMAC_VLAN_TAG_CTRL_CT		BIT(1)
++#define GMAC_VLAN_TAG_CTRL_OFS_MASK	GENMASK(6, 2)
++#define GMAC_VLAN_TAG_CTRL_OFS_SHIFT	2
++#define GMAC_VLAN_TAG_CTRL_EVLS_MASK	GENMASK(22, 21)
++#define GMAC_VLAN_TAG_CTRL_EVLS_SHIFT	21
++#define GMAC_VLAN_TAG_CTRL_EVLRXS	BIT(24)
++
++#define GMAC_VLAN_TAG_STRIP_NONE	(0x0 << GMAC_VLAN_TAG_CTRL_EVLS_SHIFT)
++#define GMAC_VLAN_TAG_STRIP_PASS	(0x1 << GMAC_VLAN_TAG_CTRL_EVLS_SHIFT)
++#define GMAC_VLAN_TAG_STRIP_FAIL	(0x2 << GMAC_VLAN_TAG_CTRL_EVLS_SHIFT)
++#define GMAC_VLAN_TAG_STRIP_ALL		(0x3 << GMAC_VLAN_TAG_CTRL_EVLS_SHIFT)
++
++/* MAC VLAN Tag Data/Filter */
++#define GMAC_VLAN_TAG_DATA_VID		GENMASK(15, 0)
++#define GMAC_VLAN_TAG_DATA_VEN		BIT(16)
++#define GMAC_VLAN_TAG_DATA_ETV		BIT(17)
++
+ /* MAC RX Queue Enable */
+ #define GMAC_RX_QUEUE_CLEAR(queue)	~(GENMASK(1, 0) << ((queue) * 2))
+ #define GMAC_RX_AV_QUEUE_ENABLE(queue)	BIT((queue) * 2)
+@@ -248,6 +272,7 @@ enum power_event {
+ #define GMAC_HW_FEAT_FRPBS		GENMASK(12, 11)
+ #define GMAC_HW_FEAT_FRPSEL		BIT(10)
+ #define GMAC_HW_FEAT_DVLAN		BIT(5)
++#define GMAC_HW_FEAT_NRVF		GENMASK(2, 0)
+ 
+ /* MAC HW ADDR regs */
+ #define GMAC_HI_DCS			GENMASK(18, 16)
+diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c b/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c
+index dc09d2131e40..39692d15d80c 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c
++++ b/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c
+@@ -394,6 +394,156 @@ static void dwmac4_set_eee_timer(struct mac_device_info *hw, int ls, int tw)
+ 	writel(value, ioaddr + GMAC4_LPI_TIMER_CTRL);
+ }
+ 
++static void dwmac4_write_single_vlan(struct net_device *dev, u16 vid)
++{
++	void __iomem *ioaddr = (void __iomem *)dev->base_addr;
++	u32 val;
++
++	val = readl(ioaddr + GMAC_VLAN_TAG);
++	val &= ~GMAC_VLAN_TAG_VID;
++	val |= GMAC_VLAN_TAG_ETV | vid;
++
++	writel(val, ioaddr + GMAC_VLAN_TAG);
++}
++
++static int dwmac4_write_vlan_filter(struct net_device *dev,
++				    struct mac_device_info *hw,
++				    u8 index, u32 data)
++{
++	void __iomem *ioaddr = (void __iomem *)dev->base_addr;
++	int i, timeout = 10;
++	u32 val;
++
++	if (index >= hw->num_vlan)
++		return -EINVAL;
++
++	writel(data, ioaddr + GMAC_VLAN_TAG_DATA);
++
++	val = readl(ioaddr + GMAC_VLAN_TAG);
++	val &= ~(GMAC_VLAN_TAG_CTRL_OFS_MASK |
++		GMAC_VLAN_TAG_CTRL_CT |
++		GMAC_VLAN_TAG_CTRL_OB);
++	val |= (index << GMAC_VLAN_TAG_CTRL_OFS_SHIFT) | GMAC_VLAN_TAG_CTRL_OB;
++
++	writel(val, ioaddr + GMAC_VLAN_TAG);
++
++	for (i = 0; i < timeout; i++) {
++		val = readl(ioaddr + GMAC_VLAN_TAG);
++		if (!(val & GMAC_VLAN_TAG_CTRL_OB))
++			return 0;
++		udelay(1);
++	}
++
++	netdev_err(dev, "Timeout accessing MAC_VLAN_Tag_Filter\n");
++
++	return -EBUSY;
++}
++
++static int dwmac4_add_hw_vlan_rx_fltr(struct net_device *dev,
++				      struct mac_device_info *hw,
++				      __be16 proto, u16 vid)
++{
++	int index = -1;
++	u32 val = 0;
++	int i, ret;
++
++	if (vid > 4095)
++		return -EINVAL;
++
++	/* Single Rx VLAN Filter */
++	if (hw->num_vlan == 1) {
++		/* For single VLAN filter, VID 0 means VLAN promiscuous */
++		if (vid == 0) {
++			netdev_warn(dev, "Adding VLAN ID 0 is not supported\n");
++			return -EPERM;
++		}
++
++		if (hw->vlan_filter[0] & GMAC_VLAN_TAG_VID) {
++			netdev_err(dev, "Only single VLAN ID supported\n");
++			return -EPERM;
++		}
++
++		hw->vlan_filter[0] = vid;
++		dwmac4_write_single_vlan(dev, vid);
++
++		return 0;
++	}
++
++	/* Extended Rx VLAN Filter Enable */
++	val |= GMAC_VLAN_TAG_DATA_ETV | GMAC_VLAN_TAG_DATA_VEN | vid;
++
++	for (i = 0; i < hw->num_vlan; i++) {
++		if (hw->vlan_filter[i] == val)
++			return 0;
++		else if (!(hw->vlan_filter[i] & GMAC_VLAN_TAG_DATA_VEN))
++			index = i;
++	}
++
++	if (index == -1) {
++		netdev_err(dev, "MAC_VLAN_Tag_Filter full (size: %0u)\n",
++			   hw->num_vlan);
++		return -EPERM;
++	}
++
++	ret = dwmac4_write_vlan_filter(dev, hw, index, val);
++
++	if (!ret)
++		hw->vlan_filter[index] = val;
++
++	return ret;
++}
++
++static int dwmac4_del_hw_vlan_rx_fltr(struct net_device *dev,
++				      struct mac_device_info *hw,
++				      __be16 proto, u16 vid)
++{
++	int i, ret = 0;
++
++	/* Single Rx VLAN Filter */
++	if (hw->num_vlan == 1) {
++		if ((hw->vlan_filter[0] & GMAC_VLAN_TAG_VID) == vid) {
++			hw->vlan_filter[0] = 0;
++			dwmac4_write_single_vlan(dev, 0);
++		}
++		return 0;
++	}
++
++	/* Extended Rx VLAN Filter Enable */
++	for (i = 0; i < hw->num_vlan; i++) {
++		if ((hw->vlan_filter[i] & GMAC_VLAN_TAG_DATA_VID) == vid) {
++			ret = dwmac4_write_vlan_filter(dev, hw, i, 0);
++
++			if (!ret)
++				hw->vlan_filter[i] = 0;
++			else
++				return ret;
++		}
++	}
++
++	return ret;
++}
++
++static void dwmac4_restore_hw_vlan_rx_fltr(struct net_device *dev,
++					   struct mac_device_info *hw)
++{
++	u32 val;
++	int i;
++
++	/* Single Rx VLAN Filter */
++	if (hw->num_vlan == 1) {
++		dwmac4_write_single_vlan(dev, hw->vlan_filter[0]);
++		return;
++	}
++
++	/* Extended Rx VLAN Filter Enable */
++	for (i = 0; i < hw->num_vlan; i++) {
++		if (hw->vlan_filter[i] & GMAC_VLAN_TAG_DATA_VEN) {
++			val = hw->vlan_filter[i];
++			dwmac4_write_vlan_filter(dev, hw, i, val);
++		}
++	}
++}
++
+ static void dwmac4_set_filter(struct mac_device_info *hw,
+ 			      struct net_device *dev)
+ {
+@@ -469,6 +619,10 @@ static void dwmac4_set_filter(struct mac_device_info *hw,
+ 		}
+ 	}
+ 
++	/* VLAN filtering */
++	if (dev->features & NETIF_F_HW_VLAN_CTAG_FILTER)
++		value |= GMAC_PACKET_FILTER_VTFE;
++
+ 	writel(value, ioaddr + GMAC_PACKET_FILTER);
+ }
+ 
+@@ -947,6 +1101,9 @@ const struct stmmac_ops dwmac4_ops = {
+ 	.set_arp_offload = dwmac4_set_arp_offload,
+ 	.config_l3_filter = dwmac4_config_l3_filter,
+ 	.config_l4_filter = dwmac4_config_l4_filter,
++	.add_hw_vlan_rx_fltr = dwmac4_add_hw_vlan_rx_fltr,
++	.del_hw_vlan_rx_fltr = dwmac4_del_hw_vlan_rx_fltr,
++	.restore_hw_vlan_rx_fltr = dwmac4_restore_hw_vlan_rx_fltr,
+ };
+ 
+ const struct stmmac_ops dwmac410_ops = {
+@@ -987,6 +1144,9 @@ const struct stmmac_ops dwmac410_ops = {
+ 	.config_l4_filter = dwmac4_config_l4_filter,
+ 	.est_configure = dwmac5_est_configure,
+ 	.fpe_configure = dwmac5_fpe_configure,
++	.add_hw_vlan_rx_fltr = dwmac4_add_hw_vlan_rx_fltr,
++	.del_hw_vlan_rx_fltr = dwmac4_del_hw_vlan_rx_fltr,
++	.restore_hw_vlan_rx_fltr = dwmac4_restore_hw_vlan_rx_fltr,
+ };
+ 
+ const struct stmmac_ops dwmac510_ops = {
+@@ -1032,8 +1192,42 @@ const struct stmmac_ops dwmac510_ops = {
+ 	.config_l4_filter = dwmac4_config_l4_filter,
+ 	.est_configure = dwmac5_est_configure,
+ 	.fpe_configure = dwmac5_fpe_configure,
++	.add_hw_vlan_rx_fltr = dwmac4_add_hw_vlan_rx_fltr,
++	.del_hw_vlan_rx_fltr = dwmac4_del_hw_vlan_rx_fltr,
++	.restore_hw_vlan_rx_fltr = dwmac4_restore_hw_vlan_rx_fltr,
+ };
+ 
++static u32 dwmac4_get_num_vlan(void __iomem *ioaddr)
++{
++	u32 val, num_vlan;
++
++	val = readl(ioaddr + GMAC_HW_FEATURE3);
++	switch (val & GMAC_HW_FEAT_NRVF) {
++	case 0:
++		num_vlan = 1;
++		break;
++	case 1:
++		num_vlan = 4;
++		break;
++	case 2:
++		num_vlan = 8;
++		break;
++	case 3:
++		num_vlan = 16;
++		break;
++	case 4:
++		num_vlan = 24;
++		break;
++	case 5:
++		num_vlan = 32;
++		break;
++	default:
++		num_vlan = 1;
++	}
++
++	return num_vlan;
++}
++
+ int dwmac4_setup(struct stmmac_priv *priv)
+ {
+ 	struct mac_device_info *mac = priv->hw;
+@@ -1062,6 +1256,7 @@ int dwmac4_setup(struct stmmac_priv *priv)
+ 	mac->mii.reg_mask = GENMASK(20, 16);
+ 	mac->mii.clk_csr_shift = 8;
+ 	mac->mii.clk_csr_mask = GENMASK(11, 8);
++	mac->num_vlan = dwmac4_get_num_vlan(priv->ioaddr);
+ 
+ 	return 0;
+ }
+diff --git a/drivers/net/ethernet/stmicro/stmmac/hwif.h b/drivers/net/ethernet/stmicro/stmmac/hwif.h
+index fc350149ba34..ffe2d63389b8 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/hwif.h
++++ b/drivers/net/ethernet/stmicro/stmmac/hwif.h
+@@ -369,6 +369,14 @@ struct stmmac_ops {
+ 	void (*update_vlan_hash)(struct mac_device_info *hw, u32 hash,
+ 				 __le16 perfect_match, bool is_double);
+ 	void (*enable_vlan)(struct mac_device_info *hw, u32 type);
++	int (*add_hw_vlan_rx_fltr)(struct net_device *dev,
++				   struct mac_device_info *hw,
++				   __be16 proto, u16 vid);
++	int (*del_hw_vlan_rx_fltr)(struct net_device *dev,
++				   struct mac_device_info *hw,
++				   __be16 proto, u16 vid);
++	void (*restore_hw_vlan_rx_fltr)(struct net_device *dev,
++					struct mac_device_info *hw);
+ 	/* TX Timestamp */
+ 	int (*get_mac_tx_timestamp)(struct mac_device_info *hw, u64 *ts);
+ 	/* Source Address Insertion / Replacement */
+@@ -461,6 +469,12 @@ struct stmmac_ops {
+ 	stmmac_do_void_callback(__priv, mac, update_vlan_hash, __args)
+ #define stmmac_enable_vlan(__priv, __args...) \
+ 	stmmac_do_void_callback(__priv, mac, enable_vlan, __args)
++#define stmmac_add_hw_vlan_rx_fltr(__priv, __args...) \
++	stmmac_do_callback(__priv, mac, add_hw_vlan_rx_fltr, __args)
++#define stmmac_del_hw_vlan_rx_fltr(__priv, __args...) \
++	stmmac_do_callback(__priv, mac, del_hw_vlan_rx_fltr, __args)
++#define stmmac_restore_hw_vlan_rx_fltr(__priv, __args...) \
++	stmmac_do_void_callback(__priv, mac, restore_hw_vlan_rx_fltr, __args)
+ #define stmmac_get_mac_tx_timestamp(__priv, __args...) \
+ 	stmmac_do_callback(__priv, mac, get_mac_tx_timestamp, __args)
+ #define stmmac_sarc_configure(__priv, __args...) \
+diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+index 0e8c80f23557..2fb671e61ee8 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
++++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+@@ -4566,6 +4566,8 @@ static int stmmac_vlan_rx_add_vid(struct net_device *ndev, __be16 proto, u16 vid
+ 		return ret;
+ 	}
+ 
++	ret = stmmac_add_hw_vlan_rx_fltr(priv, ndev, priv->hw, proto, vid);
++
+ 	return ret;
+ }
+ 
+@@ -4573,11 +4575,16 @@ static int stmmac_vlan_rx_kill_vid(struct net_device *ndev, __be16 proto, u16 vi
+ {
+ 	struct stmmac_priv *priv = netdev_priv(ndev);
+ 	bool is_double = false;
++	int ret;
+ 
+ 	if (be16_to_cpu(proto) == ETH_P_8021AD)
+ 		is_double = true;
+ 
+ 	clear_bit(vid, priv->active_vlans);
++	ret = stmmac_del_hw_vlan_rx_fltr(priv, ndev, priv->hw, proto, vid);
++	if (ret)
++		return ret;
++
+ 	return stmmac_vlan_update(priv, is_double);
+ }
+ 
+@@ -5168,6 +5175,8 @@ int stmmac_resume(struct device *dev)
+ 	stmmac_init_coalesce(priv);
+ 	stmmac_set_rx_mode(ndev);
+ 
++	stmmac_restore_hw_vlan_rx_fltr(priv, ndev, priv->hw);
++
+ 	stmmac_enable_all_queues(priv);
+ 
+ 	stmmac_start_all_queues(priv);
+-- 
+2.17.0
 
-Depending on merge order, there may be a context conflict against devicetree
-in Documentation/devicetree/bindings/trivial-devices.yaml.
-
-Thanks,
-Guenter
-------
-
-The following changes since commit 2c523b344dfa65a3738e7039832044aa133c75fb:
-
-  Linux 5.6-rc5 (2020-03-08 17:44:44 -0700)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/groeck/linux-staging.git tags/hwmon-for-v5.7
-
-for you to fetch changes up to 5b10a8194664a0d3b025f9b53de4476754ce8e41:
-
-  docs: hwmon: Update documentation for isl68137 pmbus driver (2020-03-22 16:42:54 -0700)
-
-----------------------------------------------------------------
-hwmon patches for v5.7
-
-New driver for AXI fan control.
-Attenuator bypass support and support for inverting pwm output
-in adt7475 driver.
-Support for new power supply version in ibm-cffps driver.
-PMBus drivers:
-  Support for multi-phase chips.
-  Support for LTC2972, LTC2979, LTC3884, LTC3889, LTC7880, LTM4664,
-  LTM4677, LTM4678, LTM4680, and LTM4700 added to ltc2978 driver.
-  Support for TPS53681, TPS53647, and TPS53667 added to tps53679
-  driver.
-  Support for various 2nd Gen Renesas digital multiphase chips
-  added to isl68137 driver.
-
-Minor improvements and fixes in nct7904, ibmpowernv, lm73, ibmaem,
-and k10temp drivers.
-
-----------------------------------------------------------------
-Amy Shih (1):
-      hwmon: (nct7904) Fix the incorrect quantity for fan & temp attributes
-
-Chris Packham (2):
-      dt-bindings: hwmon: Document adt7475 pwm-active-state property
-      hwmon: (adt7475) Add support for inverting pwm output
-
-Eddie James (1):
-      hwmon: (pmbus/ibm-cffps) Add another PSU CCIN to version detection
-
-Grant Peltier (2):
-      hwmon: (pmbus) add support for 2nd Gen Renesas digital multiphase
-      docs: hwmon: Update documentation for isl68137 pmbus driver
-
-Guenter Roeck (11):
-      hwmon: (k10temp) Swap Tdie and Tctl on Family 17h CPUs
-      hwmon: (k10temp) Reorganize and simplify temperature support detection
-      hwmon: (k10temp) Update driver documentation
-      hwmon: (pmbus) Add IC_DEVICE_ID and IC_DEVICE_REV command definitions
-      hwmon: (pmbus) Add 'phase' parameter where needed for multi-phase support
-      hwmon: (pmbus) Implement multi-phase support
-      hwmon: (pmbus/tps53679) Add support for multiple chips IDs
-      hwmon: (pmbus/tps53679) Add support for IIN and PIN to TPS53679 and TPS53688
-      hwmon: (pmbus/tps53679) Add support for TPS53681
-      hwmon: (pmbus/tps53679) Add support for TPS53647 and TPS53667
-      hwmon: (pmbus/tps53679) Add documentation
-
-Gustavo A. R. Silva (1):
-      hwmon: (ibmaem) Replace zero-length array with flexible-array member
-
-Henry Shen (2):
-      dt-bindings: Add TI LM73 as a trivial device
-      hwmon: (lm73) Add support for of_match_table
-
-Logan Shaw (3):
-      dt-bindings: hwmon: Document adt7475 binding
-      dt-bindings: hwmon: Document adt7475 bypass-attenuator property
-      hwmon: (adt7475) Add attenuator bypass support
-
-Mike Jones (3):
-      docs: hwmon: (pmbus/ltc2978) Update datasheet URLs to analog.com.
-      hwmon: (pmbus/ltc2978) add support for more parts.
-      bindings: (hwmon/ltc2978.txt) add support for more parts (bindings)
-
-Nuno Sá (2):
-      hwmon: Support ADI Fan Control IP
-      dt-bindings: hwmon: Add AXI FAN Control documentation
-
-Takashi Iwai (1):
-      hwmon: (ibmpowernv) Use scnprintf() for avoiding potential buffer overflow
-
- .../bindings/hwmon/adi,axi-fan-control.yaml        |  62 +++
- .../devicetree/bindings/hwmon/adt7475.yaml         |  84 ++++
- .../devicetree/bindings/hwmon/ltc2978.txt          |  22 +-
- .../devicetree/bindings/trivial-devices.yaml       |  10 +-
- Documentation/hwmon/index.rst                      |   1 +
- Documentation/hwmon/isl68137.rst                   | 541 ++++++++++++++++++++-
- Documentation/hwmon/k10temp.rst                    |  29 +-
- Documentation/hwmon/ltc2978.rst                    | 198 ++++++--
- Documentation/hwmon/pmbus-core.rst                 |  22 +-
- Documentation/hwmon/pmbus.rst                      |   8 +-
- Documentation/hwmon/tps53679.rst                   | 178 +++++++
- MAINTAINERS                                        |   8 +
- drivers/hwmon/Kconfig                              |   9 +
- drivers/hwmon/Makefile                             |   1 +
- drivers/hwmon/adt7475.c                            |  95 +++-
- drivers/hwmon/axi-fan-control.c                    | 469 ++++++++++++++++++
- drivers/hwmon/ibmaem.c                             |   2 +-
- drivers/hwmon/ibmpowernv.c                         |   8 +-
- drivers/hwmon/k10temp.c                            |  60 +--
- drivers/hwmon/lm73.c                               |  10 +
- drivers/hwmon/nct7904.c                            |  21 +
- drivers/hwmon/pmbus/Kconfig                        |  21 +-
- drivers/hwmon/pmbus/adm1275.c                      |  37 +-
- drivers/hwmon/pmbus/ibm-cffps.c                    |  29 +-
- drivers/hwmon/pmbus/ir35221.c                      |  23 +-
- drivers/hwmon/pmbus/isl68137.c                     | 114 ++++-
- drivers/hwmon/pmbus/lm25066.c                      |  39 +-
- drivers/hwmon/pmbus/ltc2978.c                      | 130 ++++-
- drivers/hwmon/pmbus/ltc3815.c                      |  20 +-
- drivers/hwmon/pmbus/max16064.c                     |   7 +-
- drivers/hwmon/pmbus/max20730.c                     |   3 +-
- drivers/hwmon/pmbus/max31785.c                     |   6 +-
- drivers/hwmon/pmbus/max34440.c                     |  25 +-
- drivers/hwmon/pmbus/max8688.c                      |  17 +-
- drivers/hwmon/pmbus/pmbus.c                        |   4 +-
- drivers/hwmon/pmbus/pmbus.h                        |  20 +-
- drivers/hwmon/pmbus/pmbus_core.c                   | 119 +++--
- drivers/hwmon/pmbus/tps53679.c                     | 172 ++++++-
- drivers/hwmon/pmbus/ucd9000.c                      |   2 +-
- drivers/hwmon/pmbus/xdpe12284.c                    |   5 +-
- drivers/hwmon/pmbus/zl6100.c                       |   5 +-
- 41 files changed, 2325 insertions(+), 311 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/hwmon/adi,axi-fan-control.yaml
- create mode 100644 Documentation/devicetree/bindings/hwmon/adt7475.yaml
- create mode 100644 Documentation/hwmon/tps53679.rst
- create mode 100644 drivers/hwmon/axi-fan-control.c
