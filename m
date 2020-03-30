@@ -2,356 +2,185 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AB6DC2D0EB
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 06:20:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52E40C2D0EB
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 06:20:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 381E82078B
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 06:20:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 202BE2078B
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 06:20:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="nFV/Mz1j"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="Ec+UG6k3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729050AbgC3GUT (ORCPT
+        id S1729083AbgC3GU3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 02:20:19 -0400
-Received: from mail-bn8nam12on2071.outbound.protection.outlook.com ([40.107.237.71]:6183
-        "EHLO NAM12-BN8-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728065AbgC3GUS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 02:20:18 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=JEX4WXO/KzVDIAYWfXgqJGXxR7OKI5LGpVg9p1duYe9FxehfzuNWmsdfMJp3hW4nbNL3P2Sv4Nw2Zvgu/u6jymiLSLBDg4DNajiF4es+si0ETI1r9guyv71gs6OcxdlVg718lgT9gLsmq2ypCdNNUY4GI2eA5qKsnJITFAiPK7KQ0DEIn7lAVsjVyzIWiKXjPz3ak3p5zQwy6+t2q2xlrSNR7e8IrVHzv7iIYUwj+ZZMlzrZEUgkiWuYjIDUIlLe4SuJ5CERTfYoOAr27ptfBifQrJOT120SKMwHwg2RykoGtAZ+X9emn/eGdeH99fs8WEP20oiw+qiNSUNWPhtgow==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=mXs6oCGGb69ZQb4o3/N3Tk0FaE/hDI9ZPuNqhiXt2NE=;
- b=PwFLGzMdx+4vGJe0JhZMS5SezljjkPQo35pmNVNErTDdzxRnJ0pqu+xqT+LPet5aO0muu8x8k4cD8n3pS3ZylFqEmyesPsPzXaqxdWA4oMX70cjTvqLavZXR0Ye92GZENgYwND9NoEwPOerFZIU4yZv3xr0ANRAp4Sf6ydbFgFOwWSDoDgOEb8B89nNGbhCb/+hGhcQ21srsNj4/Bp6naHNShRFmLmyaaVy3w2Q6Es+fFGcAmDW+uLuqG63NoOEhLALlK8E+dM7wU9GuhMnWGcvxW/IMT9ABGebqCFfVD2lh+EuYQdsfn6Ppp+1cos7Sh1RBeAazJd6umrT0Y0kVYg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=mXs6oCGGb69ZQb4o3/N3Tk0FaE/hDI9ZPuNqhiXt2NE=;
- b=nFV/Mz1jt6XbdY8Oe5FspWe+TvuP+sY/3JK63QcvSnTuGvxh06K5aHbyZBsLiTQ6mv7tUFxpC81OhcUpKO1k0Jk2u50kP3iYIixzjlRMVD8+EAiCU8vkmXDYVd9t2NfTHsoDBG2B6y7OMiB3jswvKMrunyHSQ3zfBbsp8U1cuLw=
-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=Ashish.Kalra@amd.com; 
-Received: from DM5PR12MB1386.namprd12.prod.outlook.com (2603:10b6:3:77::9) by
- DM5PR12MB1692.namprd12.prod.outlook.com (2603:10b6:4:5::14) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2856.18; Mon, 30 Mar 2020 06:20:14 +0000
-Received: from DM5PR12MB1386.namprd12.prod.outlook.com
- ([fe80::969:3d4e:6f37:c33c]) by DM5PR12MB1386.namprd12.prod.outlook.com
- ([fe80::969:3d4e:6f37:c33c%12]) with mapi id 15.20.2856.019; Mon, 30 Mar 2020
- 06:20:14 +0000
-From:   Ashish Kalra <Ashish.Kalra@amd.com>
-To:     pbonzini@redhat.com
-Cc:     tglx@linutronix.de, mingo@redhat.com, hpa@zytor.com,
-        joro@8bytes.org, bp@suse.de, thomas.lendacky@amd.com,
-        x86@kernel.org, kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        rientjes@google.com, srutherford@google.com, luto@kernel.org,
-        brijesh.singh@amd.com
-Subject: [PATCH v6 01/14] KVM: SVM: Add KVM_SEV SEND_START command
-Date:   Mon, 30 Mar 2020 06:19:59 +0000
-Message-Id: <3f90333959fd49bed184d45a761cc338424bf614.1585548051.git.ashish.kalra@amd.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <cover.1585548051.git.ashish.kalra@amd.com>
-References: <cover.1585548051.git.ashish.kalra@amd.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: SN4PR0501CA0034.namprd05.prod.outlook.com
- (2603:10b6:803:40::47) To DM5PR12MB1386.namprd12.prod.outlook.com
- (2603:10b6:3:77::9)
+        Mon, 30 Mar 2020 02:20:29 -0400
+Received: from mailout1.w1.samsung.com ([210.118.77.11]:46373 "EHLO
+        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729056AbgC3GU2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Mar 2020 02:20:28 -0400
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20200330062026euoutp01cdbb8c79f56ee209d3b23cd433c0064a~BAJ7ag-Jd1010110101euoutp014
+        for <linux-kernel@vger.kernel.org>; Mon, 30 Mar 2020 06:20:26 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20200330062026euoutp01cdbb8c79f56ee209d3b23cd433c0064a~BAJ7ag-Jd1010110101euoutp014
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1585549226;
+        bh=nsIfS6BnmjJA8Lt919nWtF036B/rzvBikihgl7w5WIk=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=Ec+UG6k3+xA2J4v4AcJNd84aJDUOQBl2AO+FBu8KvUtlqKnV1KJ8sEi2YlVcpWcM9
+         rIvAqTjIhURan9uODCxO1iXofnAyWTLDw9h//I3VapKv8qhT452UrYengzQd3Rm186
+         yG2qd1/ckgx9Sju4V2JLePIfffAvYv91gJVGz3Ho=
+Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20200330062025eucas1p1aa51b3df54c37aae5f1cbec85b941d2d~BAJ7FBuGL3253432534eucas1p17;
+        Mon, 30 Mar 2020 06:20:25 +0000 (GMT)
+Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
+        eusmges1new.samsung.com (EUCPMTA) with SMTP id B9.3A.61286.9AF818E5; Mon, 30
+        Mar 2020 07:20:25 +0100 (BST)
+Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20200330062025eucas1p143ff4a865cb9ed37a28507033a601276~BAJ6oLSz23252332523eucas1p19;
+        Mon, 30 Mar 2020 06:20:25 +0000 (GMT)
+Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
+        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20200330062025eusmtrp2e73997cc62fee5718b621d5a64b1c933~BAJ6nEgvx2090220902eusmtrp2r;
+        Mon, 30 Mar 2020 06:20:25 +0000 (GMT)
+X-AuditID: cbfec7f2-ef1ff7000001ef66-74-5e818fa92ed8
+Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
+        eusmgms1.samsung.com (EUCPMTA) with SMTP id 03.30.08375.9AF818E5; Mon, 30
+        Mar 2020 07:20:25 +0100 (BST)
+Received: from [106.210.88.143] (unknown [106.210.88.143]) by
+        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20200330062024eusmtip13be868ceaa19317d913e9c15ffde358f~BAJ6FZsRQ0535305353eusmtip1G;
+        Mon, 30 Mar 2020 06:20:24 +0000 (GMT)
+Subject: Re: [RFC PATCH v1] driver core: Set fw_devlink to "permissive"
+ behavior by default
+To:     Saravana Kannan <saravanak@google.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Android Kernel Team <kernel-team@android.com>,
+        LKML <linux-kernel@vger.kernel.org>
+From:   Marek Szyprowski <m.szyprowski@samsung.com>
+Message-ID: <4f3326c2-186d-2853-fcb6-1210d67a836f@samsung.com>
+Date:   Mon, 30 Mar 2020 08:20:22 +0200
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
+        Thunderbird/68.6.0
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from ashkalra_ubuntu_server.amd.com (165.204.77.1) by SN4PR0501CA0034.namprd05.prod.outlook.com (2603:10b6:803:40::47) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2878.9 via Frontend Transport; Mon, 30 Mar 2020 06:20:13 +0000
-X-Mailer: git-send-email 2.17.1
-X-Originating-IP: [165.204.77.1]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 819302f8-e71a-4da0-47ed-08d7d47268c9
-X-MS-TrafficTypeDiagnostic: DM5PR12MB1692:|DM5PR12MB1692:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <DM5PR12MB16920EEA84B6E7D1CF2504F58ECB0@DM5PR12MB1692.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:6108;
-X-Forefront-PRVS: 0358535363
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM5PR12MB1386.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10009020)(4636009)(396003)(376002)(39860400002)(366004)(136003)(346002)(16526019)(186003)(26005)(5660300002)(6666004)(8936002)(6486002)(4326008)(2906002)(36756003)(7416002)(316002)(66946007)(66476007)(86362001)(66556008)(66574012)(8676002)(7696005)(81156014)(6916009)(2616005)(956004)(81166006)(52116002)(478600001)(136400200001);DIR:OUT;SFP:1101;
-Received-SPF: None (protection.outlook.com: amd.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 6MXw0583YEaPcQQOGPElV6aJ/hORD1Mzy/ENI1Awv7txbvhrXQ8RuZmOuxZ72HExG0S0H2Z3Lhc9NKvpCkqYzyg2kTZhSojGoxyHvO5H2iTpyjvWP+MKRwS+palOb6mTMJQPZAigFayXhF//79Sq+N0OzFpn3hMsti0BHoS5pIcGAt6b729akQh4kov3P9l3H+4QC3OM/LuTlLBmTUT2cEYpBHF8SAKDJtBRkpKSoNxKBipdISxdcTpNzu3p/WS+UQ1juEtNHyKv/barTvsrsEMEDG+BN3MQwFYh/7349rCAEkcmIeB08N2J14cUh9j0nzWnViNkvIrvR8WOSd4neT1T5ZZ2t5xHIV9NmgEu5PB/ELgTaGfsURbJgkv4ifXWztjxUHVP+Vfq5cl8iG7m1eimDkuIUjfiQmbZnBadaQEH17eAwqXN7xqg3fnSmFjFPRsWXA7Hno4geVPMNgxGjBHhsCR0XYP1ahFJwNlmzCoUj8aSUgLL7ZMFhnjvwQK+
-X-MS-Exchange-AntiSpam-MessageData: Va6fMAh+M9HEXmrgJpHo4a2AG8p09lxunMkq0W0VoXf81XOgO9DSkgaNX3+QbWGK9xRbMJ3tZ3vyo9wRFGUTlq6EJxcYV+ctsh9r1sZ9HJU9Yu1vBAIVMhmeUdTyC64neMXaNZjt8C6mf/OflxOfAQ==
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 819302f8-e71a-4da0-47ed-08d7d47268c9
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Mar 2020 06:20:14.7145
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: H0030qnK5iXN5P3kJ7v46bpt3KOxTQyf1d/s5pUKbhCQoQYVCzr156dT07DmMwmCg0OzOkizTYERQ8fHD5LZjg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR12MB1692
+In-Reply-To: <CAGETcx-J+TP+0NsOe75Uu3Q8K6=qYja6eDbjNH2764QV53=nMA@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrPKsWRmVeSWpSXmKPExsWy7djPc7or+xvjDHomaVrMP3KO1WLmm/9s
+        Fs2L17NZ7NguYnF51xw2i7lfpjJbtO49wm7RdegvmwOHx7bd21g9ds66y+6xYFOpx6ZVnWwe
+        ++euYff4vEkugC2KyyYlNSezLLVI3y6BK2Nu7yH2ggbRiieL+BsYDwh2MXJySAiYSDy5fJyx
+        i5GLQ0hgBaNE59rtzBDOF0aJY5M62CGcz4wS044/Z4Np+XdzLRNEYjmjxMIn7UAtHEDOe0aJ
+        ry4gNcICsRKb9h1lBwmLANmf34HNYRZYzSRxrfMEO0gNm4ChRNfbLrCZvAJ2Em/eTgSzWQRU
+        JeZO2sEKYosKxEhcPNzPClEjKHFy5hMWEJtTIFDi/9TnYHFmAXmJ5q2zmSFscYlbT+YzQdy5
+        i11i90xXCNtFYt/PlawQtrDEq+Nb2CFsGYn/O+eD/SIh0Mwo8fDcWnYIp4dR4nLTDEaIKmuJ
+        O+d+sYF8wyygKbF+lz6IKSHgKPF1vzaEySdx460gxAl8EpO2TWeGCPNKdLQJQcxQk5h1fB3c
+        1oMXLjFPYFSaheSxWUiemYXkmVkIaxcwsqxiFE8tLc5NTy02zEst1ytOzC0uzUvXS87P3cQI
+        TEan/x3/tIPx66WkQ4wCHIxKPLwztjbECbEmlhVX5h5ilOBgVhLhZfMHCvGmJFZWpRblxxeV
+        5qQWH2KU5mBREuc1XvQyVkggPbEkNTs1tSC1CCbLxMEp1cDoLRw6wWdWyKYrTdltV/svsSQq
+        3SuKkfk/Rcf+Tok5H+fZKDv29gjDee0uc//FWuzcOzH7w4cE/b2L7mu+uKhcWDfr6Idf+nMT
+        Nl4NurPp8a0a/5e+oYmvf3ycJMvLlV3LPNFksqOSwZGe7BcM8U2tbl/brjr8r7/cLMWwpFB4
+        7iuN80+bpbiVWIozEg21mIuKEwFZMScSQgMAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrGIsWRmVeSWpSXmKPExsVy+t/xu7or+xvjDBofcVnMP3KO1WLmm/9s
+        Fs2L17NZ7NguYnF51xw2i7lfpjJbtO49wm7RdegvmwOHx7bd21g9ds66y+6xYFOpx6ZVnWwe
+        ++euYff4vEkugC1Kz6Yov7QkVSEjv7jEVina0MJIz9DSQs/IxFLP0Ng81srIVEnfziYlNSez
+        LLVI3y5BL2Nu7yH2ggbRiieL+BsYDwh2MXJySAiYSPy7uZapi5GLQ0hgKaPEiXNz2CESMhIn
+        pzWwQtjCEn+udbFBFL1llLjZcJEFJCEsECuxad9RsAYRILtn1RR2kCJmgdVMElM2vmCB6NjA
+        JPHodgszSBWbgKFE11uQUZwcvAJ2Em/eTgSzWQRUJeZO2gG2TlQgRuLnni4WiBpBiZMzn4DZ
+        nAKBEv+nPgerYRYwk5i3+SEzhC0v0bx1NpQtLnHryXymCYxCs5C0z0LSMgtJyywkLQsYWVYx
+        iqSWFuem5xYb6hUn5haX5qXrJefnbmIExuG2Yz8372C8tDH4EKMAB6MSD++MrQ1xQqyJZcWV
+        uYcYJTiYlUR42fyBQrwpiZVVqUX58UWlOanFhxhNgZ6byCwlmpwPTBF5JfGGpobmFpaG5sbm
+        xmYWSuK8HQIHY4QE0hNLUrNTUwtSi2D6mDg4pRoYy1uUNh/ZVzZD9M0Etd0K3n8XCXytZpWZ
+        st4vzzRbQuEw6605fjKMVZZ1/D9zbvPZXJ6kuDJisfukd98OCRVe1VWze1Hfm7r19+bfX4pF
+        Ba6//9x2aMYLGcOrzqGiyY33Tk3UF2bw2x/o80bqQWL7waSgFfOfrt10f0G8wu7/DM92H/0V
+        tz3IWImlOCPRUIu5qDgRAO8ScBrZAgAA
+X-CMS-MailID: 20200330062025eucas1p143ff4a865cb9ed37a28507033a601276
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20200327102554eucas1p1f848633a39f8e158472506b84877f98c
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20200327102554eucas1p1f848633a39f8e158472506b84877f98c
+References: <20200321210305.28937-1-saravanak@google.com>
+        <CGME20200327102554eucas1p1f848633a39f8e158472506b84877f98c@eucas1p1.samsung.com>
+        <bd8b42d3-a35a-cc8e-0d06-2899416c2996@samsung.com>
+        <20200327152144.GA2996253@kroah.com>
+        <CAGETcx-J+TP+0NsOe75Uu3Q8K6=qYja6eDbjNH2764QV53=nMA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Brijesh Singh <Brijesh.Singh@amd.com>
+Hi
 
-The command is used to create an outgoing SEV guest encryption context.
+On 2020-03-27 19:30, Saravana Kannan wrote:
+> On Fri, Mar 27, 2020 at 8:21 AM Greg Kroah-Hartman
+> <gregkh@linuxfoundation.org> wrote:
+>> On Fri, Mar 27, 2020 at 11:25:48AM +0100, Marek Szyprowski wrote:
+>>> On 2020-03-21 22:03, Saravana Kannan wrote:
+>>>> Set fw_devlink to "permissive" behavior by default so that device links
+>>>> are automatically created (with DL_FLAG_SYNC_STATE_ONLY) by scanning the
+>>>> firmware.
+>>>>
+>>>> This ensures suppliers get their sync_state() calls only after all their
+>>>> consumers have probed successfully. Without this, suppliers will get
+>>>> their sync_state() calls at late_initcall_sync() even if their consuer
+>>>>
+>>>> Ideally, we'd want to set fw_devlink to "on" or "rpm" by default. But
+>>>> that needs more testing as it's known to break some corner case
+>>>> drivers/platforms.
+>>>>
+>>>> Cc: Rob Herring <robh+dt@kernel.org>
+>>>> Cc: Frank Rowand <frowand.list@gmail.com>
+>>>> Cc: devicetree@vger.kernel.org
+>>>> Signed-off-by: Saravana Kannan <saravanak@google.com>
+>>> This patch has just landed in linux-next 20200326. Sadly it breaks
+>>> booting of the Raspberry Pi3b and Pi4 boards, either in 32bit or 64bit
+>>> mode. There is no warning nor panic message, just a silent freeze. The
+>>> last message shown on the earlycon is:
+>>>
+>>> [    0.893217] Serial: 8250/16550 driver, 1 ports, IRQ sharing enabled
+> Marek,
+>
+> Any chance you could get me a stack trace for when it's stuck? That'd
+> be super helpful and I'd really appreciate it. Is it working fine on
+> other variants of Raspberry?
 
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Paolo Bonzini <pbonzini@redhat.com>
-Cc: "Radim Krčmář" <rkrcmar@redhat.com>
-Cc: Joerg Roedel <joro@8bytes.org>
-Cc: Borislav Petkov <bp@suse.de>
-Cc: Tom Lendacky <thomas.lendacky@amd.com>
-Cc: x86@kernel.org
-Cc: kvm@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Reviewed-by: Steve Rutherford <srutherford@google.com>
-Signed-off-by: Brijesh Singh <brijesh.singh@amd.com>
-Signed-off-by: Ashish Kalra <ashish.kalra@amd.com>
----
- .../virt/kvm/amd-memory-encryption.rst        |  27 ++++
- arch/x86/kvm/svm.c                            | 128 ++++++++++++++++++
- include/linux/psp-sev.h                       |   8 +-
- include/uapi/linux/kvm.h                      |  12 ++
- 4 files changed, 171 insertions(+), 4 deletions(-)
+I have no access to other variants of Raspberry board.
 
-diff --git a/Documentation/virt/kvm/amd-memory-encryption.rst b/Documentation/virt/kvm/amd-memory-encryption.rst
-index c3129b9ba5cb..4fd34fc5c7a7 100644
---- a/Documentation/virt/kvm/amd-memory-encryption.rst
-+++ b/Documentation/virt/kvm/amd-memory-encryption.rst
-@@ -263,6 +263,33 @@ Returns: 0 on success, -negative on error
-                 __u32 trans_len;
-         };
- 
-+10. KVM_SEV_SEND_START
-+----------------------
-+
-+The KVM_SEV_SEND_START command can be used by the hypervisor to create an
-+outgoing guest encryption context.
-+
-+Parameters (in): struct kvm_sev_send_start
-+
-+Returns: 0 on success, -negative on error
-+
-+::
-+        struct kvm_sev_send_start {
-+                __u32 policy;                 /* guest policy */
-+
-+                __u64 pdh_cert_uaddr;         /* platform Diffie-Hellman certificate */
-+                __u32 pdh_cert_len;
-+
-+                __u64 plat_certs_uadr;        /* platform certificate chain */
-+                __u32 plat_certs_len;
-+
-+                __u64 amd_certs_uaddr;        /* AMD certificate */
-+                __u32 amd_cert_len;
-+
-+                __u64 session_uaddr;          /* Guest session information */
-+                __u32 session_len;
-+        };
-+
- References
- ==========
- 
-diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
-index 50d1ebafe0b3..63d172e974ad 100644
---- a/arch/x86/kvm/svm.c
-+++ b/arch/x86/kvm/svm.c
-@@ -7149,6 +7149,131 @@ static int sev_launch_secret(struct kvm *kvm, struct kvm_sev_cmd *argp)
- 	return ret;
- }
- 
-+/* Userspace wants to query session length. */
-+static int
-+__sev_send_start_query_session_length(struct kvm *kvm, struct kvm_sev_cmd *argp,
-+				      struct kvm_sev_send_start *params)
-+{
-+	struct kvm_sev_info *sev = &to_kvm_svm(kvm)->sev_info;
-+	struct sev_data_send_start *data;
-+	int ret;
-+
-+	data = kzalloc(sizeof(*data), GFP_KERNEL_ACCOUNT);
-+	if (data == NULL)
-+		return -ENOMEM;
-+
-+	data->handle = sev->handle;
-+	ret = sev_issue_cmd(kvm, SEV_CMD_SEND_START, data, &argp->error);
-+
-+	params->session_len = data->session_len;
-+	if (copy_to_user((void __user *)(uintptr_t)argp->data, params,
-+				sizeof(struct kvm_sev_send_start)))
-+		ret = -EFAULT;
-+
-+	kfree(data);
-+	return ret;
-+}
-+
-+static int sev_send_start(struct kvm *kvm, struct kvm_sev_cmd *argp)
-+{
-+	struct kvm_sev_info *sev = &to_kvm_svm(kvm)->sev_info;
-+	struct sev_data_send_start *data;
-+	struct kvm_sev_send_start params;
-+	void *amd_certs, *session_data;
-+	void *pdh_cert, *plat_certs;
-+	int ret;
-+
-+	if (!sev_guest(kvm))
-+		return -ENOTTY;
-+
-+	if (copy_from_user(&params, (void __user *)(uintptr_t)argp->data,
-+				sizeof(struct kvm_sev_send_start)))
-+		return -EFAULT;
-+
-+	/* if session_len is zero, userspace wants to query the session length */
-+	if (!params.session_len)
-+		return __sev_send_start_query_session_length(kvm, argp,
-+				&params);
-+
-+	/* some sanity checks */
-+	if (!params.pdh_cert_uaddr || !params.pdh_cert_len ||
-+	    !params.session_uaddr || params.session_len > SEV_FW_BLOB_MAX_SIZE)
-+		return -EINVAL;
-+
-+	/* allocate the memory to hold the session data blob */
-+	session_data = kmalloc(params.session_len, GFP_KERNEL_ACCOUNT);
-+	if (!session_data)
-+		return -ENOMEM;
-+
-+	/* copy the certificate blobs from userspace */
-+	pdh_cert = psp_copy_user_blob(params.pdh_cert_uaddr,
-+				params.pdh_cert_len);
-+	if (IS_ERR(pdh_cert)) {
-+		ret = PTR_ERR(pdh_cert);
-+		goto e_free_session;
-+	}
-+
-+	plat_certs = psp_copy_user_blob(params.plat_certs_uaddr,
-+				params.plat_certs_len);
-+	if (IS_ERR(plat_certs)) {
-+		ret = PTR_ERR(plat_certs);
-+		goto e_free_pdh;
-+	}
-+
-+	amd_certs = psp_copy_user_blob(params.amd_certs_uaddr,
-+				params.amd_certs_len);
-+	if (IS_ERR(amd_certs)) {
-+		ret = PTR_ERR(amd_certs);
-+		goto e_free_plat_cert;
-+	}
-+
-+	data = kzalloc(sizeof(*data), GFP_KERNEL_ACCOUNT);
-+	if (data == NULL) {
-+		ret = -ENOMEM;
-+		goto e_free_amd_cert;
-+	}
-+
-+	/* populate the FW SEND_START field with system physical address */
-+	data->pdh_cert_address = __psp_pa(pdh_cert);
-+	data->pdh_cert_len = params.pdh_cert_len;
-+	data->plat_certs_address = __psp_pa(plat_certs);
-+	data->plat_certs_len = params.plat_certs_len;
-+	data->amd_certs_address = __psp_pa(amd_certs);
-+	data->amd_certs_len = params.amd_certs_len;
-+	data->session_address = __psp_pa(session_data);
-+	data->session_len = params.session_len;
-+	data->handle = sev->handle;
-+
-+	ret = sev_issue_cmd(kvm, SEV_CMD_SEND_START, data, &argp->error);
-+
-+	if (ret)
-+		goto e_free;
-+
-+	if (copy_to_user((void __user *)(uintptr_t) params.session_uaddr,
-+			session_data, params.session_len)) {
-+		ret = -EFAULT;
-+		goto e_free;
-+	}
-+
-+	params.policy = data->policy;
-+	params.session_len = data->session_len;
-+	if (copy_to_user((void __user *)(uintptr_t)argp->data, &params,
-+				sizeof(struct kvm_sev_send_start)))
-+		ret = -EFAULT;
-+
-+e_free:
-+	kfree(data);
-+e_free_amd_cert:
-+	kfree(amd_certs);
-+e_free_plat_cert:
-+	kfree(plat_certs);
-+e_free_pdh:
-+	kfree(pdh_cert);
-+e_free_session:
-+	kfree(session_data);
-+	return ret;
-+}
-+
- static int svm_mem_enc_op(struct kvm *kvm, void __user *argp)
- {
- 	struct kvm_sev_cmd sev_cmd;
-@@ -7193,6 +7318,9 @@ static int svm_mem_enc_op(struct kvm *kvm, void __user *argp)
- 	case KVM_SEV_LAUNCH_SECRET:
- 		r = sev_launch_secret(kvm, &sev_cmd);
- 		break;
-+	case KVM_SEV_SEND_START:
-+		r = sev_send_start(kvm, &sev_cmd);
-+		break;
- 	default:
- 		r = -EINVAL;
- 		goto out;
-diff --git a/include/linux/psp-sev.h b/include/linux/psp-sev.h
-index 5167bf2bfc75..9f63b9d48b63 100644
---- a/include/linux/psp-sev.h
-+++ b/include/linux/psp-sev.h
-@@ -323,11 +323,11 @@ struct sev_data_send_start {
- 	u64 pdh_cert_address;			/* In */
- 	u32 pdh_cert_len;			/* In */
- 	u32 reserved1;
--	u64 plat_cert_address;			/* In */
--	u32 plat_cert_len;			/* In */
-+	u64 plat_certs_address;			/* In */
-+	u32 plat_certs_len;			/* In */
- 	u32 reserved2;
--	u64 amd_cert_address;			/* In */
--	u32 amd_cert_len;			/* In */
-+	u64 amd_certs_address;			/* In */
-+	u32 amd_certs_len;			/* In */
- 	u32 reserved3;
- 	u64 session_address;			/* In */
- 	u32 session_len;			/* In/Out */
-diff --git a/include/uapi/linux/kvm.h b/include/uapi/linux/kvm.h
-index 4b95f9a31a2f..17bef4c245e1 100644
---- a/include/uapi/linux/kvm.h
-+++ b/include/uapi/linux/kvm.h
-@@ -1558,6 +1558,18 @@ struct kvm_sev_dbg {
- 	__u32 len;
- };
- 
-+struct kvm_sev_send_start {
-+	__u32 policy;
-+	__u64 pdh_cert_uaddr;
-+	__u32 pdh_cert_len;
-+	__u64 plat_certs_uaddr;
-+	__u32 plat_certs_len;
-+	__u64 amd_certs_uaddr;
-+	__u32 amd_certs_len;
-+	__u64 session_uaddr;
-+	__u32 session_len;
-+};
-+
- #define KVM_DEV_ASSIGN_ENABLE_IOMMU	(1 << 0)
- #define KVM_DEV_ASSIGN_PCI_2_3		(1 << 1)
- #define KVM_DEV_ASSIGN_MASK_INTX	(1 << 2)
+The issue seems to be related to bcm2835aux_serial_driver. I've added 
+"initcall_debug" and "ignore_loglevel" to kernel cmdline and I got the 
+following log:
+
+[    4.595353] calling  exar_pci_driver_init+0x0/0x30 @ 1
+[    4.600597] initcall exar_pci_driver_init+0x0/0x30 returned 0 after 
+44 usecs
+[    4.607747] calling  bcm2835aux_serial_driver_init+0x0/0x28 @ 1
+
+The with some debug printk calls I've found that the clock lookup fails 
+with -517 (-EPROBE_DEFER) in bcm2835aux_serial_driver: 
+https://elixir.bootlin.com/linux/v5.6/source/drivers/tty/serial/8250/8250_bcm2835aux.c#L52
+
+Without this patch, the lookup works fine.
+
+Please let me know if you need more information. The kernel cmdline I've 
+use is: "8250.nr_uarts=1 console=ttyS0,115200n8 
+earlycon=uart8250,mmio32,0x3f215040 root=/dev/mmcblk0p2 rootwait rw", 
+kernel is compiled with bcm2835_defconfig, booted on Raspberry Pi3b+ 
+with arch/arm/boot/dts/bcm2837-rpi-3-b.dtb
+
+Best regards
 -- 
-2.17.1
+Marek Szyprowski, PhD
+Samsung R&D Institute Poland
 
