@@ -2,233 +2,161 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34F45C43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 23:27:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 449FCC2D0F1
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 23:28:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE9F620675
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 23:27:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=csiro.au header.i=@csiro.au header.b="M/s/ZonZ";
-	dkim=pass (1024-bit key) header.d=CSIROAU.onmicrosoft.com header.i=@CSIROAU.onmicrosoft.com header.b="IMETsLvn"
+	by mail.kernel.org (Postfix) with ESMTP id 1816020675
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 23:28:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585610927;
+	bh=0SgYMAZMeeGsL+feFlycrOrySDUo9QKrxQjouG7rXxU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ubU+qh/TGl0zgxH+69Hk+K0pYb0CG8Z/NQajdcKV/C2UI1BciDY7SqufY5Ws8SX/7
+	 km0whcmP7O5OqJSIi0ZxhV33NpOo8mYFhb+vizAlk6K+IucTG4TokjrBDb/AGYAxWg
+	 8bxHbHRe+hEg23cD3wrXEWtV8Ex2nHadDrMKIWHA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729863AbgC3X1w (ORCPT
+        id S1729867AbgC3X2q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 19:27:52 -0400
-Received: from act-mtaout4.csiro.au ([150.229.7.41]:33159 "EHLO
-        act-MTAout4.csiro.au" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729060AbgC3X1w (ORCPT
+        Mon, 30 Mar 2020 19:28:46 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:33060 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729024AbgC3X2q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 19:27:52 -0400
-X-Greylist: delayed 433 seconds by postgrey-1.27 at vger.kernel.org; Mon, 30 Mar 2020 19:27:50 EDT
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=csiro.au; i=@csiro.au; q=dns/txt; s=dkim;
-  t=1585610871; x=1617146871;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-id:content-transfer-encoding:
-   mime-version;
-  bh=HjQeJM3In1u/kI3GKZJDhbcAwcHi1MytLhtx6vlSoDI=;
-  b=M/s/ZonZnroaqKCoWvzoh9RYRGbUUAzz0nm3+JbZC8HEYNtqL9MqDuoe
-   xDi104xHT5CULBEd3lknK0hmOAxO8PSsBVWTKEm9KZHP9ksV3XMNcwGQv
-   XCal3ujMHAc1M4P3mevbHzPABxZRogTaDu7lJEJVAUY2nzC+Ihujr0wzX
-   U=;
-IronPort-SDR: 3dP0kmQLVZzTnWAopodIrq9BjNwyVxf0IV9WgwQGubkAusL2ct0JptZJpaOls+RSsck3EM7RFY
- XsDlSKzR72wg==
-X-SBRS: 4.0
-IronPort-PHdr: =?us-ascii?q?9a23=3AAcx9ERCF/YG7CS21fNxjUyQJPHJ1sqjoPgMT9p?=
- =?us-ascii?q?ssgq5PdaLm5Zn5IUjD/qs93kTRU9Dd7PRJw6rNvqbsVHZIwK7JsWtKMfkuHw?=
- =?us-ascii?q?QAld1QmgUhBMCfDkiuEv/sZCE8AIJnX15j42ChPGBeA8fkYBvbvy764A=3D?=
- =?us-ascii?q?=3D?=
-X-IronPort-Anti-Spam-Filtered: true
-X-IronPort-Anti-Spam-Result: =?us-ascii?q?A+EeAABAfoJejACwBSSYiIBxAISUgiJ?=
- =?us-ascii?q?mHAEBAQEBBwEBEQEEBAEBgWcHAQELAYFTUF6BCwQ1CodVA4RahhCCX5QkhSm?=
- =?us-ascii?q?BJANUCgEBAQ0BLQIEAQEChEICgjMkNAkOAgMBAQsBAQYBAQEBAQUEAgIQAQE?=
- =?us-ascii?q?BJoYGDINTfgEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQU?=
- =?us-ascii?q?CgQw+AQEBAxIVEwYBATcBDwIBCA4KCRUQDyMlAgQOBSKDBIJMAy0BAQICon4?=
- =?us-ascii?q?CgTmIYQEBgXMzgn8BAQWFFRiCDAkJAYEuAYwwgVw+g3A1PoEEAYNJhXCNd4t?=
- =?us-ascii?q?XlxsHAx6CHo07iU4MHZtsLaZxg34CBAIEBQIOAQEFgVI4gVpsg0BQGA2OHRg?=
- =?us-ascii?q?Cg1mKVXSBKY0OATBfAQE?=
-X-IPAS-Result: =?us-ascii?q?A+EeAABAfoJejACwBSSYiIBxAISUgiJmHAEBAQEBBwEBE?=
- =?us-ascii?q?QEEBAEBgWcHAQELAYFTUF6BCwQ1CodVA4RahhCCX5QkhSmBJANUCgEBAQ0BL?=
- =?us-ascii?q?QIEAQEChEICgjMkNAkOAgMBAQsBAQYBAQEBAQUEAgIQAQEBJoYGDINTfgEBA?=
- =?us-ascii?q?QEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQUCgQw+AQEBAxIVE?=
- =?us-ascii?q?wYBATcBDwIBCA4KCRUQDyMlAgQOBSKDBIJMAy0BAQICon4CgTmIYQEBgXMzg?=
- =?us-ascii?q?n8BAQWFFRiCDAkJAYEuAYwwgVw+g3A1PoEEAYNJhXCNd4tXlxsHAx6CHo07i?=
- =?us-ascii?q?U4MHZtsLaZxg34CBAIEBQIOAQEFgVI4gVpsg0BQGA2OHRgCg1mKVXSBKY0OA?=
- =?us-ascii?q?TBfAQE?=
-Received: from exch2-mel.nexus.csiro.au ([IPv6:2405:b000:302:71::85:122])
-  by act-ironport-int.csiro.au with ESMTP/TLS/ECDHE-RSA-AES256-SHA384; 31 Mar 2020 10:20:35 +1100
-Received: from exch1-mel.nexus.csiro.au (2405:b000:302:71::85:121) by
- exch2-mel.nexus.csiro.au (2405:b000:302:71::85:122) with Microsoft SMTP
- Server (TLS) id 15.0.1497.2; Tue, 31 Mar 2020 10:20:35 +1100
-Received: from exedge2.csiro.au (150.229.64.34) by exch1-mel.nexus.csiro.au
- (138.194.85.121) with Microsoft SMTP Server (TLS) id 15.0.1497.2 via Frontend
- Transport; Tue, 31 Mar 2020 10:20:35 +1100
-Received: from AUS01-SY3-obe.outbound.protection.outlook.com (104.47.117.55)
- by exedge2.csiro.au (150.229.64.34) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Tue, 31 Mar 2020 10:21:32 +1100
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=jaChy73r2QuoKRV559DS3Qmq/UOZKVZ8pXorUr6a839vTtLiqEYf5bfroXYGmFt5jdq6qlQzyCTU8j/pcwftqPmNC86fbo/YYCDBw/aOIw6q5ulA7nSPB0F4Mwy7JxzMocQV4IMVRXWBWSqYE4e/qwyb3ZYs2hzODNBIusdEYfR7Rve+XaZqNj7Gq8BRAQx4odex9BXeMTRV7z62kzLlVbyB7rlScXJzz4kP606aNvlk4rwi9oqTS1tap6enrVax5euXG6NoO00wjTQGbDRPW5f+1WRS0O0l0on4YabMUiEKt/59XsSQxbIZJGokoYX/f7MArSLPSkTSNTL0nP0qAA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=qih3NYdOuzsvqCc0txHTaehRyRn3UfrJH7hj7a4Sniw=;
- b=KOck++KSA76GdSI/dBaYLoiJaY9CmpPUER9aOs3uk5GPOuIqjKBrlRZJiTG/hIfe2QHxovoIGsny0QkWrNoZMiGvepYaeUuw1j+WZd+U2gg9zGqPEbfd15HK3E8o3c/faSAD/bPgOISZQvBkb6YmTrjbbrLiUIPIS2GjCMWFgIr1CacJTxljEjDEKWcD+hFvSd6yZ6/A2guS5Qn5AqHUZJDBLFhLwDOD7WZpER7IRIS/QYbNmgI5lE/+pjt8UtAVn1kXx4JgSLA6bjD2lbVJ0SUHQgUAILeCld8/+Z/i+zqwhGgthcWMth5VnyqLB/5QvjkIENO314jda5cl2tgQpg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=csiro.au; dmarc=pass action=none header.from=csiro.au;
- dkim=pass header.d=csiro.au; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=CSIROAU.onmicrosoft.com; s=selector1-CSIROAU-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=qih3NYdOuzsvqCc0txHTaehRyRn3UfrJH7hj7a4Sniw=;
- b=IMETsLvnW+Z2J6h6eS5G/VohFdPZGGJQQod9hnlW91AG3bLa6ub0xloNdaqu3xDP8KFNM6fclAkl6r3OpRjXMqDSme8KBXf5hMjvC59cw67avx87QdJwy1aaXgCFNRkNzJkZ0NaPKXrg0oYKefrITBIF3b4txsptA+hgqaI0TOo=
-Received: from MEAPR01MB4517.ausprd01.prod.outlook.com (20.178.177.210) by
- MEAPR01MB5063.ausprd01.prod.outlook.com (20.178.179.210) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2856.19; Mon, 30 Mar 2020 23:20:33 +0000
-Received: from MEAPR01MB4517.ausprd01.prod.outlook.com
- ([fe80::c0cb:c6dc:af29:fd72]) by MEAPR01MB4517.ausprd01.prod.outlook.com
- ([fe80::c0cb:c6dc:af29:fd72%5]) with mapi id 15.20.2856.019; Mon, 30 Mar 2020
- 23:20:33 +0000
-From:   "McIntyre, Vincent (CASS, Marsfield)" <Vincent.Mcintyre@csiro.au>
-To:     Ian Kent <raven@themaw.net>
-CC:     Al Viro <viro@ZenIV.linux.org.uk>,
-        autofs mailing list <autofs@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 3/4] vfs: check for autofs expiring dentry in
- follow_automount()
-Thread-Topic: [PATCH 3/4] vfs: check for autofs expiring dentry in
- follow_automount()
-Thread-Index: AQHWBugindBjDiueJEiqG8X5HjAIi6hhxc6A
-Date:   Mon, 30 Mar 2020 23:20:33 +0000
-Message-ID: <20200330232032.vmlt3glzqdkgijhy@mayhem.atnf.CSIRO.AU>
-References: <158560961146.14841.14430383874338917674.stgit@mickey.themaw.net>
- <158560962258.14841.1166162348928695084.stgit@mickey.themaw.net>
-In-Reply-To: <158560962258.14841.1166162348928695084.stgit@mickey.themaw.net>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: NeoMutt/20170113 (1.7.2)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Vincent.Mcintyre@csiro.au; 
-x-originating-ip: [130.155.194.144]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: e9102112-b8a5-4294-461a-08d7d500f244
-x-ms-traffictypediagnostic: MEAPR01MB5063:
-x-microsoft-antispam-prvs: <MEAPR01MB5063912300A6EB5DF60108CBF4CB0@MEAPR01MB5063.ausprd01.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-forefront-prvs: 0358535363
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MEAPR01MB4517.ausprd01.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10009020)(4636009)(396003)(136003)(366004)(346002)(376002)(39860400002)(2906002)(6512007)(1076003)(4326008)(71200400001)(54906003)(6506007)(81156014)(86362001)(81166006)(8676002)(6916009)(66946007)(66446008)(8936002)(478600001)(66476007)(5660300002)(66556008)(64756008)(26005)(316002)(6486002)(91956017)(186003)(76116006);DIR:OUT;SFP:1101;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: SxA8rHfOZSgXPn5gVSOKxf5+h6Y2gX9CWPw1L5IDGc3/y1ECn3Q4mE/S+QtvL7DOJa5mUdPQEV0lF+LGu9j56X+2gfIeXRXtU8r4ps+Oco4Bx5k259TfXJx0Uzabi7SI6aRwu+BFUmuwdfcrCtOkPOlxKrDVLS4kXaO3mYXlNM+3gaED6li476A3oKRHTg6TC1foohvoV+N2YyZDTH+D6o+LxLhbuMzKdvXJDVUJ/qqT1soEAIymXw/0vokeW3HQCxXwtaXGIz745TnqS589x4LlTdVFFTtc2cmU3BlZwydDF3O7IudN8H8MSunZ46R4A7YKjxqJ32TqZcAtz9aqfjq3MBhIaEx2iF6BNOy7jrKf6RrZ9pNIWZsS9ISgusJ5TeH72w+wHnpOvGWErKf/f38n+q2WZSfXyufepTn40ulY/oLrZPyY2eLjTSOnczB4
-x-ms-exchange-antispam-messagedata: PiE+FhKt0HrJ2s2CsqCc7/HQc9y/34lcaerkCtKx5P5QAe7PYvvhYY5t29ICuQrgUPnZ4LTjT/D9IjYPs7sBRXgHXFYy1cCoQD6hN6Mg/IA+yJu6RKCsDtcTJe9hQQ92P4eQn/eRJyG04oxiI4opuw==
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <CDC3BA921DD37444B97C17F4AC9B2590@ausprd01.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Mon, 30 Mar 2020 19:28:46 -0400
+Received: by mail-io1-f65.google.com with SMTP id o127so19777481iof.0;
+        Mon, 30 Mar 2020 16:28:45 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=T3SelQy49aACUXmKXVT4NOVYKNHT6s8n6dCJkbIM0m4=;
+        b=c8sFf7NIYPDsrKY+b85hj9rMyKzZTS9wzK36tDmxVgfVVOyl5gOaclLI8jWkY+C6nl
+         HJi1saglGRRwSzIvHZDRU0g3CAhzObyiMG3brssrWEyq3miP6Jmzya2oR4Wv/+ZvOPgA
+         x/b9J9XMA6qAr4ynRyl7MvzVmj635n/qk6dxGu5IpxFpmr/4WHsPFmFRScyyX6xRWQYo
+         VUCjz96mCyPG2wZ0EWGOpf4Lm8iFTD9xcAhBVv6A0OixILDMLpNrhPrYOdzb/LDvlJWM
+         XcGZ9uk1qGgBraRe0IgWKzbb3xaih/txaQ8VVHRUM3tVYrdeeooukvasD37lzTYlPkDq
+         PKLA==
+X-Gm-Message-State: ANhLgQ2FobBBvi8BmNdI/NOzG6b0XJM9pIMA81hQdtxBopdVf2x49LWz
+        xfDKwNjnTHNcC7arPxrcntiACvA=
+X-Google-Smtp-Source: ADFU+vspZXZ8V4GDKPfcghhhUe9/kcgSRNVcKdRoepeYAVHsPP4lMq1koJNZYBxxqEnNiHv91dAEaw==
+X-Received: by 2002:a05:6602:14c6:: with SMTP id b6mr12742265iow.133.1585610924975;
+        Mon, 30 Mar 2020 16:28:44 -0700 (PDT)
+Received: from rob-hp-laptop ([64.188.179.250])
+        by smtp.gmail.com with ESMTPSA id m14sm5432374ilr.16.2020.03.30.16.28.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 30 Mar 2020 16:28:44 -0700 (PDT)
+Received: (nullmailer pid 28523 invoked by uid 1000);
+        Mon, 30 Mar 2020 23:28:42 -0000
+Date:   Mon, 30 Mar 2020 17:28:42 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Thierry Reding <thierry.reding@gmail.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Jon Hunter <jonathanh@nvidia.com>, linux-tegra@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/7] dt-bindings: timer: Add bindings for NVIDIA Tegra186
+ timers
+Message-ID: <20200330232842.GA25358@bogus>
+References: <20200320133452.3705040-1-thierry.reding@gmail.com>
+ <20200320133452.3705040-2-thierry.reding@gmail.com>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: e9102112-b8a5-4294-461a-08d7d500f244
-X-MS-Exchange-CrossTenant-originalarrivaltime: 30 Mar 2020 23:20:33.6342
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 0fe05593-19ac-4f98-adbf-0375fce7f160
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: NHNJV6vQhcBhSQdZ9/x0GxL7163Owrf43qWeHLm4hTz97dlxSaO04P8OwoDHE+mM
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MEAPR01MB5063
-X-OriginatorOrg: csiro.au
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200320133452.3705040-2-thierry.reding@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 31, 2020 at 07:07:02AM +0800, Ian Kent wrote:
->follow_automount() checks if a stat family system call path walk is
->being done on a positive dentry and and returns -EISDIR to indicate
->the dentry should be used as is without attempting an automount.
->
->But if autofs is expiring the dentry at the time it should be
->remounted following the expire.
->
->There are two cases, in the case of a "nobrowse" indirect autofs
->mount it would have been mounted on lookup anyway. In the case of
->a "browse" indirect or direct autofs mount re-mounting it will
->maintain the mount which is what user space would be expected.
->
->This will defer expiration of the mount which might lead to mounts
->unexpectedly remaining mounted under heavy stat activity but there's
->no other choice in order to maintain consistency for user space.
->
->Signed-off-by: Ian Kent <raven@themaw.net>
->---
-> fs/autofs/root.c |   10 +++++++++-
-> fs/namei.c       |   13 +++++++++++--
-> 2 files changed, 20 insertions(+), 3 deletions(-)
->
->diff --git a/fs/autofs/root.c b/fs/autofs/root.c
->index a1c9c32e104f..b3f748e4df08 100644
->--- a/fs/autofs/root.c
->+++ b/fs/autofs/root.c
->@@ -406,9 +406,17 @@ static int autofs_d_manage(const struct path *path, b=
-ool rcu_walk)
->
-> 	/* Check for (possible) pending expire */
-> 	if (ino->flags & AUTOFS_INF_WANT_EXPIRE) {
->+		/* dentry possibly going to be picked for expire,
->+		 * proceed to ref-walk mode.
->+		 */
-> 		if (rcu_walk)
-> 			return -ECHILD;
->-		return 0;
->+
->+		/* ref-walk mode, return 1 so follow_automount()
->+		 * can wait on the expire outcome and possibly
->+		 * attempt a re-mount.
->+		 */
->+		return 1;
-> 	}
->
-> 	/*
->diff --git a/fs/namei.c b/fs/namei.c
->index db6565c99825..869e0d4bb4d9 100644
->--- a/fs/namei.c
->+++ b/fs/namei.c
->@@ -1227,11 +1227,20 @@ static int follow_automount(struct path *path, str=
-uct nameidata *nd,
-> 	 * mounted directory.  Also, autofs may mark negative dentries
-> 	 * as being automount points.  These will need the attentions
-> 	 * of the daemon to instantiate them before they can be used.
->+	 *
->+	 * Also if ->d_manage() returns 1 the dentry transit needs
->+	 * to be managing. For autofs, a return of 1 it tells us the
+On Fri, Mar 20, 2020 at 02:34:46PM +0100, Thierry Reding wrote:
+> From: Thierry Reding <treding@nvidia.com>
+> 
+> The NVIDIA Tegra186 SoC contains an IP block that provides a register
+> interface for ten timers with a 29-bit counter that can generate one-
+> shot, periodic or watchdog interrupts.
+> 
+> Signed-off-by: Thierry Reding <treding@nvidia.com>
+> ---
+>  .../bindings/timer/nvidia,tegra186-timer.yaml | 55 +++++++++++++++++++
+>  1 file changed, 55 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/timer/nvidia,tegra186-timer.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/timer/nvidia,tegra186-timer.yaml b/Documentation/devicetree/bindings/timer/nvidia,tegra186-timer.yaml
+> new file mode 100644
+> index 000000000000..f9b55041a5ca
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/timer/nvidia,tegra186-timer.yaml
+> @@ -0,0 +1,55 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/timer/nvidia,tegra186-timer.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: NVIDIA Tegra186 timers
+> +
+> +maintainers:
+> +  - Thierry Reding <thierry.reding@gmail.com>
+> +  - Jonathan Hunter <jonathanh@nvidia.com>
+> +
+> +description: |
+> +  The Tegra186 timer provides ten 29-bit timer counters and one 32-bit TSC
+> +  (timestamp counter). The timers run at either a fixed 1 MHz clock rate
+> +  derived from the oscillator clock. Each timer can be programmed to raise
+> +  one-shot, periodic, or watchdog interrupts.
+> +
+> +properties:
+> +  compatible:
+> +    oneOf:
+> +      - description: NVIDIA Tegra186
+> +        items:
+> +          - const: nvidia,tegra186-timer
+> +
+> +      - description: NVIDIA Tegra194
+> +        items:
+> +          - const: nvidia,tegra194-timer
+> +          - const: nvidia,tegra186-timer
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  interrupts:
+> +    maxItems: 10
 
-Unclear. Do you mean "to be managed." ? Or "managing." ?
+required props?
 
-Cheers
-Vince
+Also, add:
 
->+	 * dentry might be expired, so proceed to ->d_automount().
-> 	 */
-> 	if (!(nd->flags & (LOOKUP_PARENT | LOOKUP_DIRECTORY |
-> 			   LOOKUP_OPEN | LOOKUP_CREATE | LOOKUP_AUTOMOUNT)) &&
->-	    path->dentry->d_inode)
->-		return -EISDIR;
->+	    path->dentry->d_inode) {
->+		if (path->dentry->d_flags & DCACHE_MANAGE_TRANSIT) {
->+			if (!path->dentry->d_op->d_manage(path, false))
->+				return -EISDIR;
->+		} else
->+			return -EISDIR;
->+	}
->
-> 	nd->total_link_count++;
-> 	if (nd->total_link_count >=3D 40)
->
+additionalProperties: false
 
--- =
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+> +
+> +    timer@3010000 {
+> +        compatible = "nvidia,tegra186-timer";
+> +        reg = <0x03010000 0x000e0000>;
+> +        interrupts = <GIC_SPI 0 IRQ_TYPE_LEVEL_HIGH>,
+> +                     <GIC_SPI 1 IRQ_TYPE_LEVEL_HIGH>,
+> +                     <GIC_SPI 2 IRQ_TYPE_LEVEL_HIGH>,
+> +                     <GIC_SPI 3 IRQ_TYPE_LEVEL_HIGH>,
+> +                     <GIC_SPI 4 IRQ_TYPE_LEVEL_HIGH>,
+> +                     <GIC_SPI 5 IRQ_TYPE_LEVEL_HIGH>,
+> +                     <GIC_SPI 6 IRQ_TYPE_LEVEL_HIGH>,
+> +                     <GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>,
+> +                     <GIC_SPI 8 IRQ_TYPE_LEVEL_HIGH>,
+> +                     <GIC_SPI 9 IRQ_TYPE_LEVEL_HIGH>;
+> +        status = "disabled";
+
+Don't show status in examples.
+
+> +    };
+> -- 
+> 2.24.1
+> 
