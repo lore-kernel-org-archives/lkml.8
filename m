@@ -2,154 +2,155 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7388C2D0E9
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 08:52:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8C4CC2D0EB
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 08:53:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 88D0C20732
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 08:52:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B98EC20732
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 08:53:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729820AbgC3Iw6 convert rfc822-to-8bit (ORCPT
+        id S1729831AbgC3IxB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 04:52:58 -0400
-Received: from mga17.intel.com ([192.55.52.151]:46065 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728759AbgC3Iw5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 04:52:57 -0400
-IronPort-SDR: QXpLRpUuvJqngAE/VFxwELgECsj4nQJSO3YmLU15Yd21t2hzULRSeqDvl1hyIJfya7kL8+No7h
- lYCHPuX/uWaQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Mar 2020 01:52:56 -0700
-IronPort-SDR: MBiyOOxUJF6fJNTvBj5/ir061eij3yZmO1MS3Xx9sjuiUH0gDp0qknfteIzyOpCabXDvhCf68F
- t54dPNvW9uUw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,323,1580803200"; 
-   d="scan'208";a="283528198"
-Received: from fmsmsx106.amr.corp.intel.com ([10.18.124.204])
-  by fmsmga002.fm.intel.com with ESMTP; 30 Mar 2020 01:52:56 -0700
-Received: from fmsmsx114.amr.corp.intel.com (10.18.116.8) by
- FMSMSX106.amr.corp.intel.com (10.18.124.204) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Mon, 30 Mar 2020 01:52:56 -0700
-Received: from shsmsx103.ccr.corp.intel.com (10.239.4.69) by
- FMSMSX114.amr.corp.intel.com (10.18.116.8) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Mon, 30 Mar 2020 01:52:55 -0700
-Received: from shsmsx104.ccr.corp.intel.com ([169.254.5.225]) by
- SHSMSX103.ccr.corp.intel.com ([169.254.4.146]) with mapi id 14.03.0439.000;
- Mon, 30 Mar 2020 16:52:52 +0800
-From:   "Liu, Yi L" <yi.l.liu@intel.com>
-To:     "Tian, Kevin" <kevin.tian@intel.com>,
-        "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
-        "eric.auger@redhat.com" <eric.auger@redhat.com>
-CC:     "jacob.jun.pan@linux.intel.com" <jacob.jun.pan@linux.intel.com>,
-        "joro@8bytes.org" <joro@8bytes.org>,
-        "Raj, Ashok" <ashok.raj@intel.com>,
-        "Tian, Jun J" <jun.j.tian@intel.com>,
-        "Sun, Yi Y" <yi.y.sun@intel.com>,
-        "jean-philippe@linaro.org" <jean-philippe@linaro.org>,
-        "peterx@redhat.com" <peterx@redhat.com>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Wu, Hao" <hao.wu@intel.com>
-Subject: RE: [PATCH v1 2/8] vfio/type1: Add vfio_iommu_type1 parameter for
- quota tuning
-Thread-Topic: [PATCH v1 2/8] vfio/type1: Add vfio_iommu_type1 parameter for
- quota tuning
-Thread-Index: AQHWAEUbHl/tnnhWl0eaKvrwJMb1AqhgVzOAgACGb+A=
-Date:   Mon, 30 Mar 2020 08:52:51 +0000
-Message-ID: <A2975661238FB949B60364EF0F2C25743A217C68@SHSMSX104.ccr.corp.intel.com>
-References: <1584880325-10561-1-git-send-email-yi.l.liu@intel.com>
- <1584880325-10561-3-git-send-email-yi.l.liu@intel.com>
- <AADFC41AFE54684AB9EE6CBC0274A5D19D7FF3C5@SHSMSX104.ccr.corp.intel.com>
-In-Reply-To: <AADFC41AFE54684AB9EE6CBC0274A5D19D7FF3C5@SHSMSX104.ccr.corp.intel.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-dlp-product: dlpe-windows
-dlp-version: 11.2.0.6
-dlp-reaction: no-action
-x-originating-ip: [10.239.127.40]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-MIME-Version: 1.0
+        Mon, 30 Mar 2020 04:53:01 -0400
+Received: from mail.loongson.cn ([114.242.206.163]:60156 "EHLO loongson.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729812AbgC3Iw7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Mar 2020 04:52:59 -0400
+Received: from kvm-dev1.localdomain (unknown [10.2.5.134])
+        by mail.loongson.cn (Coremail) with SMTP id AQAAf9Ax1ulls4FemZghAA--.17S2;
+        Mon, 30 Mar 2020 16:52:53 +0800 (CST)
+From:   bibo mao <maobibo@loongson.cn>
+To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        Huacai Chen <chenhc@lemote.com>
+Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 12/39] MIPS: cavium-octeon: Add header file path prefix
+Date:   Mon, 30 Mar 2020 04:52:53 -0400
+Message-Id: <1585558373-1897-1-git-send-email-maobibo@loongson.cn>
+X-Mailer: git-send-email 1.8.3.1
+X-CM-TRANSID: AQAAf9Ax1ulls4FemZghAA--.17S2
+X-Coremail-Antispam: 1UD129KBjvJXoW3WFW7tr4xCw1kAFy8Ww13XFb_yoW7urWrpa
+        ykAan5CrWxuryrAF12vr4Ik3yDtan8Gr4jka45W3WUu3W3WF1jvFs5KrnYyry8GF4qyF1S
+        grZaqr48Gws2vaDanT9S1TB71UUUUUDqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUUkab7Iv0xC_KF4lb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I2
+        0VC2zVCF04k26cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rw
+        A2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xII
+        jxv20xvEc7CjxVAFwI0_Cr0_Gr1UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4
+        vEx4A2jsIEc7CjxVAFwI0_Cr1j6rxdM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVAC
+        Y4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26rWY6Fy7McIj6I8E87Iv67AKxVWxJV
+        W8Jr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JMxkIecxEwVCm-wCF04k2
+        0xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI
+        8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41l
+        IxAIcVC0I7IYx2IY67AKxVW8JVW5JwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Cr0_Gr1UMI
+        IF0xvE42xK8VAvwI8IcIk0rVW8JVW3JwCI42IY6I8E87Iv67AKxVWxJVW8Jr1lIxAIcVC2
+        z280aVCY1x0267AKxVW8Jr0_Cr1UYxBIdaVFxhVjvjDU0xZFpf9x07jIsjbUUUUU=
+X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> From: Tian, Kevin <kevin.tian@intel.com>
-> Sent: Monday, March 30, 2020 4:41 PM
-> To: Liu, Yi L <yi.l.liu@intel.com>; alex.williamson@redhat.com;
-> Subject: RE: [PATCH v1 2/8] vfio/type1: Add vfio_iommu_type1 parameter for quota
-> tuning
-> 
-> > From: Liu, Yi L <yi.l.liu@intel.com>
-> > Sent: Sunday, March 22, 2020 8:32 PM
-> >
-> > From: Liu Yi L <yi.l.liu@intel.com>
-> >
-> > This patch adds a module option to make the PASID quota tunable by
-> > administrator.
-> >
-> > TODO: needs to think more on how to  make the tuning to be per-process.
-> >
-> > Previous discussions:
-> > https://patchwork.kernel.org/patch/11209429/
-> >
-> > Cc: Kevin Tian <kevin.tian@intel.com>
-> > CC: Jacob Pan <jacob.jun.pan@linux.intel.com>
-> > Cc: Alex Williamson <alex.williamson@redhat.com>
-> > Cc: Eric Auger <eric.auger@redhat.com>
-> > Cc: Jean-Philippe Brucker <jean-philippe@linaro.org>
-> > Signed-off-by: Liu Yi L <yi.l.liu@intel.com>
-> > ---
-> >  drivers/vfio/vfio.c             | 8 +++++++-
-> >  drivers/vfio/vfio_iommu_type1.c | 7 ++++++-
-> >  include/linux/vfio.h            | 3 ++-
-> >  3 files changed, 15 insertions(+), 3 deletions(-)
-> >
-> > diff --git a/drivers/vfio/vfio.c b/drivers/vfio/vfio.c
-> > index d13b483..020a792 100644
-> > --- a/drivers/vfio/vfio.c
-> > +++ b/drivers/vfio/vfio.c
-> > @@ -2217,13 +2217,19 @@ struct vfio_mm *vfio_mm_get_from_task(struct
-> > task_struct *task)
-> >  }
-> >  EXPORT_SYMBOL_GPL(vfio_mm_get_from_task);
-> >
-> > -int vfio_mm_pasid_alloc(struct vfio_mm *vmm, int min, int max)
-> > +int vfio_mm_pasid_alloc(struct vfio_mm *vmm, int quota, int min, int max)
-> >  {
-> >  	ioasid_t pasid;
-> >  	int ret = -ENOSPC;
-> >
-> >  	mutex_lock(&vmm->pasid_lock);
-> >
-> > +	/* update quota as it is tunable by admin */
-> > +	if (vmm->pasid_quota != quota) {
-> > +		vmm->pasid_quota = quota;
-> > +		ioasid_adjust_set(vmm->ioasid_sid, quota);
-> > +	}
-> > +
-> 
-> It's a bit weird to have quota adjusted in the alloc path, since the latter might
-> be initiated by non-privileged users. Why not doing the simple math in vfio_
-> create_mm to set the quota when the ioasid set is created? even in the future
-> you may allow per-process quota setting, that should come from separate
-> privileged path instead of thru alloc..
+Remove header files from arch/mips/include/asm/mach-cavium-octeon
+to arch/mips/cavium-octeon/include/mach
 
-The reason is the kernel parameter modification has no event which
-can be used to adjust the quota. So I chose to adjust it in pasid_alloc
-path. If it's not good, how about adding one more IOCTL to let user-
-space trigger a quota adjustment event? Then even non-privileged
-user could trigger quota adjustment, the quota is actually controlled
-by privileged user. How about your opinion?
+Signed-off-by: bibo mao <maobibo@loongson.cn>
+---
+ arch/mips/Kconfig                                                       | 1 +
+ arch/mips/cavium-octeon/Platform                                        | 2 +-
+ .../include/mach}/cpu-feature-overrides.h                               | 0
+ arch/mips/cavium-octeon/include/mach/ioremap.h                          | 2 ++
+ .../asm/mach-cavium-octeon => cavium-octeon/include/mach}/irq.h         | 0
+ .../include/mach}/kernel-entry-init.h                                   | 0
+ arch/mips/cavium-octeon/include/mach/kmalloc.h                          | 2 ++
+ .../asm/mach-cavium-octeon => cavium-octeon/include/mach}/mangle-port.h | 0
+ .../asm/mach-cavium-octeon => cavium-octeon/include/mach}/spaces.h      | 0
+ arch/mips/cavium-octeon/include/mach/topology.h                         | 2 ++
+ .../asm/mach-cavium-octeon => cavium-octeon/include/mach}/war.h         | 0
+ 11 files changed, 8 insertions(+), 1 deletion(-)
+ rename arch/mips/{include/asm/mach-cavium-octeon => cavium-octeon/include/mach}/cpu-feature-overrides.h (100%)
+ create mode 100644 arch/mips/cavium-octeon/include/mach/ioremap.h
+ rename arch/mips/{include/asm/mach-cavium-octeon => cavium-octeon/include/mach}/irq.h (100%)
+ rename arch/mips/{include/asm/mach-cavium-octeon => cavium-octeon/include/mach}/kernel-entry-init.h (100%)
+ create mode 100644 arch/mips/cavium-octeon/include/mach/kmalloc.h
+ rename arch/mips/{include/asm/mach-cavium-octeon => cavium-octeon/include/mach}/mangle-port.h (100%)
+ rename arch/mips/{include/asm/mach-cavium-octeon => cavium-octeon/include/mach}/spaces.h (100%)
+ create mode 100644 arch/mips/cavium-octeon/include/mach/topology.h
+ rename arch/mips/{include/asm/mach-cavium-octeon => cavium-octeon/include/mach}/war.h (100%)
 
-Regards,
-Yi Liu
+diff --git a/arch/mips/Kconfig b/arch/mips/Kconfig
+index 1ee88a2..f31ff10 100644
+--- a/arch/mips/Kconfig
++++ b/arch/mips/Kconfig
+@@ -1782,6 +1782,7 @@ config CPU_CAVIUM_OCTEON
+ 	select USB_OHCI_BIG_ENDIAN_MMIO if CPU_BIG_ENDIAN
+ 	select MIPS_L1_CACHE_SHIFT_7
+ 	select HAVE_KVM
++	select HAVE_MACH_HEAD_FILES
+ 	help
+ 	  The Cavium Octeon processor is a highly integrated chip containing
+ 	  many ethernet hardware widgets for networking tasks. The processor
+diff --git a/arch/mips/cavium-octeon/Platform b/arch/mips/cavium-octeon/Platform
+index 45be853..cb9ae89 100644
+--- a/arch/mips/cavium-octeon/Platform
++++ b/arch/mips/cavium-octeon/Platform
+@@ -3,5 +3,5 @@
+ #
+ platform-$(CONFIG_CAVIUM_OCTEON_SOC)	+= cavium-octeon/
+ cflags-$(CONFIG_CAVIUM_OCTEON_SOC)	+=				\
+-		-I$(srctree)/arch/mips/include/asm/mach-cavium-octeon
++		-I$(srctree)/arch/mips/cavium-octeon/include
+ load-$(CONFIG_CAVIUM_OCTEON_SOC)	+= 0xffffffff81100000
+diff --git a/arch/mips/include/asm/mach-cavium-octeon/cpu-feature-overrides.h b/arch/mips/cavium-octeon/include/mach/cpu-feature-overrides.h
+similarity index 100%
+rename from arch/mips/include/asm/mach-cavium-octeon/cpu-feature-overrides.h
+rename to arch/mips/cavium-octeon/include/mach/cpu-feature-overrides.h
+diff --git a/arch/mips/cavium-octeon/include/mach/ioremap.h b/arch/mips/cavium-octeon/include/mach/ioremap.h
+new file mode 100644
+index 0000000..2369393
+--- /dev/null
++++ b/arch/mips/cavium-octeon/include/mach/ioremap.h
+@@ -0,0 +1,2 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#include <asm/mach-generic/ioremap.h>
+diff --git a/arch/mips/include/asm/mach-cavium-octeon/irq.h b/arch/mips/cavium-octeon/include/mach/irq.h
+similarity index 100%
+rename from arch/mips/include/asm/mach-cavium-octeon/irq.h
+rename to arch/mips/cavium-octeon/include/mach/irq.h
+diff --git a/arch/mips/include/asm/mach-cavium-octeon/kernel-entry-init.h b/arch/mips/cavium-octeon/include/mach/kernel-entry-init.h
+similarity index 100%
+rename from arch/mips/include/asm/mach-cavium-octeon/kernel-entry-init.h
+rename to arch/mips/cavium-octeon/include/mach/kernel-entry-init.h
+diff --git a/arch/mips/cavium-octeon/include/mach/kmalloc.h b/arch/mips/cavium-octeon/include/mach/kmalloc.h
+new file mode 100644
+index 0000000..4f056db
+--- /dev/null
++++ b/arch/mips/cavium-octeon/include/mach/kmalloc.h
+@@ -0,0 +1,2 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#include <asm/mach-generic/kmalloc.h>
+diff --git a/arch/mips/include/asm/mach-cavium-octeon/mangle-port.h b/arch/mips/cavium-octeon/include/mach/mangle-port.h
+similarity index 100%
+rename from arch/mips/include/asm/mach-cavium-octeon/mangle-port.h
+rename to arch/mips/cavium-octeon/include/mach/mangle-port.h
+diff --git a/arch/mips/include/asm/mach-cavium-octeon/spaces.h b/arch/mips/cavium-octeon/include/mach/spaces.h
+similarity index 100%
+rename from arch/mips/include/asm/mach-cavium-octeon/spaces.h
+rename to arch/mips/cavium-octeon/include/mach/spaces.h
+diff --git a/arch/mips/cavium-octeon/include/mach/topology.h b/arch/mips/cavium-octeon/include/mach/topology.h
+new file mode 100644
+index 0000000..86e585b
+--- /dev/null
++++ b/arch/mips/cavium-octeon/include/mach/topology.h
+@@ -0,0 +1,2 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#include <asm/mach-generic/topology.h>
+diff --git a/arch/mips/include/asm/mach-cavium-octeon/war.h b/arch/mips/cavium-octeon/include/mach/war.h
+similarity index 100%
+rename from arch/mips/include/asm/mach-cavium-octeon/war.h
+rename to arch/mips/cavium-octeon/include/mach/war.h
+-- 
+1.8.3.1
+
