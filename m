@@ -2,129 +2,216 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URI_WP_DIRINDEX autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79010C2D0EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 13:18:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EBB13C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 13:19:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4DD6720776
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 13:18:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XV2xFw16"
+	by mail.kernel.org (Postfix) with ESMTP id C91DD2073B
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 13:19:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730352AbgC3NSy (ORCPT
+        id S1730368AbgC3NTD convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 09:18:54 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:37711 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730209AbgC3NSx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 09:18:53 -0400
-Received: by mail-wr1-f66.google.com with SMTP id w10so21644394wrm.4;
-        Mon, 30 Mar 2020 06:18:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=r2hvwNsxGGoO0pzi/Em3O5cdPmuRnC0D6RSkiPvs25I=;
-        b=XV2xFw16MXBfAvDlm+SvR8+FdBkaovVlErtwaEroTgAuQGkcRWK4fKRDqNTh7Nrw/f
-         FarwhZwc4SS5z4hzGzLzlVuPL1poYylWGJAjeEXA+h/Ym0XRTR+xSYgix4fBj+guIuB3
-         P3voPWCjsaBjb3zTRfcUq2wwCBvQIqhIx9yYiyzfyp+cqnNgbE8vscpqOR2ogJ731HE8
-         D6jD7c3tIejLXkX0mqElZBruWaYwAjPu7MtMuq6cx/SGa+R3NC6w6+/Bbsfb18hvhlIs
-         1P0FY0CYuTOMfnX0/pkLOqPCt352T4b1bDI6BlQuLVhEBr2LzaPhYtfKpVq7DNp4zu+m
-         y05Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=r2hvwNsxGGoO0pzi/Em3O5cdPmuRnC0D6RSkiPvs25I=;
-        b=YfPiNDQ72v5WWxZHtwuKnbyBepyLOdt27rE1UG9wQu4OCOXmjCxfaG1phizxYKzuFv
-         EDV3nVZ9sVDP8tfUK4RlnzrUb+Z1ky32G6Kpi+DkCJQX2lC/N9arnMcutdjPa9BShp0S
-         i0Lhs2PaRpsl+UDw+VRtW66S8URNEuE8Ve2hekHt0O+2RobXrm+bPYMhv6fx2/GV2gay
-         0Sx4M7Cc0XGuD9J/WufDK5gFyusXYqlLAlbGDuqkashAE3RMWast4auAilPvHeKzzHLc
-         Q7r+0ldml5r6vaWvz6x5eDDH847+zoJevm1BG1aIJUUcDrgzcwvlfyITz+/ClobAfcQf
-         hKmQ==
-X-Gm-Message-State: ANhLgQ3xZOlhnhdhvBaqMkogEDJtxwSu3FIVnlTW6/1zkcxgASdwJTJ9
-        3pdDm9jTqS76dDyIX/4bPy0=
-X-Google-Smtp-Source: ADFU+vvsS34AfATt3QTrDIwC9rfKDsE8vKKkJvC6sLGLRYk0AVlaELjEw7OjUo46eOpZZuMaRCnXIw==
-X-Received: by 2002:adf:dd01:: with SMTP id a1mr16235993wrm.153.1585574330594;
-        Mon, 30 Mar 2020 06:18:50 -0700 (PDT)
-Received: from localhost (pD9E51CDC.dip0.t-ipconnect.de. [217.229.28.220])
-        by smtp.gmail.com with ESMTPSA id t12sm24275864wrm.0.2020.03.30.06.18.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Mar 2020 06:18:48 -0700 (PDT)
-Date:   Mon, 30 Mar 2020 15:18:47 +0200
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Lokesh Vutla <lokeshvutla@ti.com>
-Cc:     Tony Lindgren <tony@atomide.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Linux OMAP Mailing List <linux-omap@vger.kernel.org>,
-        linux-kernel@vger.kernel.org,
-        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>, linux-pwm@vger.kernel.org,
-        Sekhar Nori <nsekhar@ti.com>, Tero Kristo <t-kristo@ti.com>
-Subject: Re: [PATCH v3 6/6] clocksource: timer-ti-dm: Enable autoreload in
- set_pwm
-Message-ID: <20200330131847.GE2431644@ulmo>
-References: <20200305082715.15861-1-lokeshvutla@ti.com>
- <20200305082715.15861-7-lokeshvutla@ti.com>
+        Mon, 30 Mar 2020 09:19:03 -0400
+Received: from mga18.intel.com ([134.134.136.126]:45903 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730166AbgC3NTC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Mar 2020 09:19:02 -0400
+IronPort-SDR: iP6QIpyw9plJgyyPnOr9++p+DDeKyX3jV8aa48kXzoHyCRHWlIS9SfOib3BCtYCTW1VzgkX/Xl
+ 7EPPrHFHN6wA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Mar 2020 06:18:58 -0700
+IronPort-SDR: 8zvPcR0zGQgPmpOR6KG1knCLH24SObnbiA0e3+IOHMEH6j5tnEn9kgbTVzRejVSDev6Z4LwT9+
+ 1QMwRvbh40wA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,324,1580803200"; 
+   d="scan'208";a="251881097"
+Received: from fmsmsx108.amr.corp.intel.com ([10.18.124.206])
+  by orsmga006.jf.intel.com with ESMTP; 30 Mar 2020 06:18:56 -0700
+Received: from shsmsx152.ccr.corp.intel.com (10.239.6.52) by
+ FMSMSX108.amr.corp.intel.com (10.18.124.206) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Mon, 30 Mar 2020 06:18:56 -0700
+Received: from shsmsx104.ccr.corp.intel.com ([169.254.5.225]) by
+ SHSMSX152.ccr.corp.intel.com ([169.254.6.209]) with mapi id 14.03.0439.000;
+ Mon, 30 Mar 2020 21:18:53 +0800
+From:   "Tian, Kevin" <kevin.tian@intel.com>
+To:     "Liu, Yi L" <yi.l.liu@intel.com>,
+        "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
+        "eric.auger@redhat.com" <eric.auger@redhat.com>
+CC:     "jacob.jun.pan@linux.intel.com" <jacob.jun.pan@linux.intel.com>,
+        "joro@8bytes.org" <joro@8bytes.org>,
+        "Raj, Ashok" <ashok.raj@intel.com>,
+        "Tian, Jun J" <jun.j.tian@intel.com>,
+        "Sun, Yi Y" <yi.y.sun@intel.com>,
+        "jean-philippe@linaro.org" <jean-philippe@linaro.org>,
+        "peterx@redhat.com" <peterx@redhat.com>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Wu, Hao" <hao.wu@intel.com>
+Subject: RE: [PATCH v1 8/8] vfio/type1: Add vSVA support for IOMMU-backed
+ mdevs
+Thread-Topic: [PATCH v1 8/8] vfio/type1: Add vSVA support for IOMMU-backed
+ mdevs
+Thread-Index: AQHWAEUdPG4ZbiseEk+Utih92ryiRqhhJVeg
+Date:   Mon, 30 Mar 2020 13:18:52 +0000
+Message-ID: <AADFC41AFE54684AB9EE6CBC0274A5D19D7FFA90@SHSMSX104.ccr.corp.intel.com>
+References: <1584880325-10561-1-git-send-email-yi.l.liu@intel.com>
+ <1584880325-10561-9-git-send-email-yi.l.liu@intel.com>
+In-Reply-To: <1584880325-10561-9-git-send-email-yi.l.liu@intel.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-product: dlpe-windows
+dlp-version: 11.2.0.6
+dlp-reaction: no-action
+x-originating-ip: [10.239.127.40]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="J4XPiPrVK1ev6Sgr"
-Content-Disposition: inline
-In-Reply-To: <20200305082715.15861-7-lokeshvutla@ti.com>
-User-Agent: Mutt/1.13.1 (2019-12-14)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+> From: Liu, Yi L <yi.l.liu@intel.com>
+> Sent: Sunday, March 22, 2020 8:32 PM
+> 
+> From: Liu Yi L <yi.l.liu@intel.com>
+> 
+> Recent years, mediated device pass-through framework (e.g. vfio-mdev)
+> are used to achieve flexible device sharing across domains (e.g. VMs).
 
---J4XPiPrVK1ev6Sgr
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+are->is
 
-On Thu, Mar 05, 2020 at 01:57:15PM +0530, Lokesh Vutla wrote:
-> dm timer ops set_load() api allows to configure the load value and to
-> set the auto reload feature. But auto reload feature is independent of
-> load value and should be part of configuring pwm. This way pwm can be
-> disabled by disabling auto reload feature using set_pwm() so that the
-> current pwm cycle will be completed. Else pwm disabling causes the
-> cycle to be stopped abruptly.
->=20
-> Signed-off-by: Lokesh Vutla <lokeshvutla@ti.com>
+> Also there are hardware assisted mediated pass-through solutions from
+> platform vendors. e.g. Intel VT-d scalable mode which supports Intel
+> Scalable I/O Virtualization technology. Such mdevs are called IOMMU-
+> backed mdevs as there are IOMMU enforced DMA isolation for such mdevs.
+> In kernel, IOMMU-backed mdevs are exposed to IOMMU layer by aux-
+> domain
+> concept, which means mdevs are protected by an iommu domain which is
+> aux-domain of its physical device. Details can be found in the KVM
+
+"by an iommu domain which is auxiliary to the domain that the kernel
+driver primarily uses for DMA API"
+
+> presentation from Kevin Tian. IOMMU-backed equals to IOMMU-capable.
+> 
+> https://events19.linuxfoundation.org/wp-content/uploads/2017/12/\
+> Hardware-Assisted-Mediated-Pass-Through-with-VFIO-Kevin-Tian-Intel.pdf
+> 
+> This patch supports NESTING IOMMU for IOMMU-backed mdevs by figuring
+> out the physical device of an IOMMU-backed mdev and then invoking
+> IOMMU
+> requests to IOMMU layer with the physical device and the mdev's aux
+> domain info.
+
+"and then calling into the IOMMU layer to complete the vSVA operations
+on the aux domain associated with that mdev"
+
+> 
+> With this patch, vSVA (Virtual Shared Virtual Addressing) can be used
+> on IOMMU-backed mdevs.
+> 
+> Cc: Kevin Tian <kevin.tian@intel.com>
+> CC: Jacob Pan <jacob.jun.pan@linux.intel.com>
+> CC: Jun Tian <jun.j.tian@intel.com>
+> Cc: Alex Williamson <alex.williamson@redhat.com>
+> Cc: Eric Auger <eric.auger@redhat.com>
+> Cc: Jean-Philippe Brucker <jean-philippe@linaro.org>
+> Signed-off-by: Liu Yi L <yi.l.liu@intel.com>
 > ---
->  drivers/clocksource/timer-ti-dm.c          | 16 +++++-----------
->  drivers/pwm/pwm-omap-dmtimer.c             |  8 +++++---
->  include/linux/platform_data/dmtimer-omap.h |  5 ++---
->  3 files changed, 12 insertions(+), 17 deletions(-)
+>  drivers/vfio/vfio_iommu_type1.c | 23 ++++++++++++++++++++---
+>  1 file changed, 20 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/vfio/vfio_iommu_type1.c
+> b/drivers/vfio/vfio_iommu_type1.c
+> index 937ec3f..d473665 100644
+> --- a/drivers/vfio/vfio_iommu_type1.c
+> +++ b/drivers/vfio/vfio_iommu_type1.c
+> @@ -132,6 +132,7 @@ struct vfio_regions {
+> 
+>  struct domain_capsule {
+>  	struct iommu_domain *domain;
+> +	struct vfio_group *group;
+>  	void *data;
+>  };
+> 
+> @@ -148,6 +149,7 @@ static int vfio_iommu_for_each_dev(struct
+> vfio_iommu *iommu,
+>  	list_for_each_entry(d, &iommu->domain_list, next) {
+>  		dc.domain = d->domain;
+>  		list_for_each_entry(g, &d->group_list, next) {
+> +			dc.group = g;
+>  			ret = iommu_group_for_each_dev(g->iommu_group,
+>  						       &dc, fn);
+>  			if (ret)
+> @@ -2347,7 +2349,12 @@ static int vfio_bind_gpasid_fn(struct device *dev,
+> void *data)
+>  	struct iommu_gpasid_bind_data *gbind_data =
+>  		(struct iommu_gpasid_bind_data *) dc->data;
+> 
+> -	return iommu_sva_bind_gpasid(dc->domain, dev, gbind_data);
+> +	if (dc->group->mdev_group)
+> +		return iommu_sva_bind_gpasid(dc->domain,
+> +			vfio_mdev_get_iommu_device(dev), gbind_data);
+> +	else
+> +		return iommu_sva_bind_gpasid(dc->domain,
+> +						dev, gbind_data);
+>  }
+> 
+>  static int vfio_unbind_gpasid_fn(struct device *dev, void *data)
+> @@ -2356,8 +2363,13 @@ static int vfio_unbind_gpasid_fn(struct device
+> *dev, void *data)
+>  	struct iommu_gpasid_bind_data *gbind_data =
+>  		(struct iommu_gpasid_bind_data *) dc->data;
+> 
+> -	return iommu_sva_unbind_gpasid(dc->domain, dev,
+> +	if (dc->group->mdev_group)
+> +		return iommu_sva_unbind_gpasid(dc->domain,
+> +					vfio_mdev_get_iommu_device(dev),
+>  					gbind_data->hpasid);
+> +	else
+> +		return iommu_sva_unbind_gpasid(dc->domain, dev,
+> +						gbind_data->hpasid);
+>  }
+> 
+>  /**
+> @@ -2429,7 +2441,12 @@ static int vfio_cache_inv_fn(struct device *dev,
+> void *data)
+>  	struct iommu_cache_invalidate_info *cache_inv_info =
+>  		(struct iommu_cache_invalidate_info *) dc->data;
+> 
+> -	return iommu_cache_invalidate(dc->domain, dev, cache_inv_info);
+> +	if (dc->group->mdev_group)
+> +		return iommu_cache_invalidate(dc->domain,
+> +			vfio_mdev_get_iommu_device(dev), cache_inv_info);
+> +	else
+> +		return iommu_cache_invalidate(dc->domain,
+> +						dev, cache_inv_info);
+>  }
 
-Acked-by: Thierry Reding <thierry.reding@gmail.com>
+possibly above could be simplified, e.g. 
 
---J4XPiPrVK1ev6Sgr
-Content-Type: application/pgp-signature; name="signature.asc"
+static struct device *vfio_get_iommu_device(struct vfio_group *group, 
+	struct device *dev)
+{
+	if  (group->mdev_group)
+		return vfio_mdev_get_iommu_device(dev);
+	else
+		return dev;
+}
 
------BEGIN PGP SIGNATURE-----
+Then use it to replace plain 'dev' in all three places.
 
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl6B8bcACgkQ3SOs138+
-s6GHXRAAsrVQlvWFy21hBIzF6GkkySuSLfUoa99TThDUvtL3Kiy2x/ZGXSRnA4GD
-DpdJWpka1MkXPruK3aLfH9vAXNGX2HhtUjNY2tlQmw3JwrNTB4UnpSIYj7tJ0WWU
-CXOL6UPMoT6OSKGXrm2gYe/f0otVAKjJWDsT0CsJRgUeTpA0gZwX6BRTTtxbebRe
-urFAuAvQhBbpK8tEvPLRyiiO/utpYUPxBU/NpCgtyG6ZyKPg6WbWAgHGO5jRoGB9
-A/0GHJvCX50yz/3b3sVrZN5KCaOoR57tB1yTOaDsFCCnMLtipFZQ9xehGoDies32
-EHtb+8D3Lp283gWXkoU/RgfF2CNCArYxtdNprx6J7yQg7yKViYLHMNNNr69BN+aY
-yx9Y03lIx6LBHRok+zjB5wPxFA53DJzUhqztNOfZGEEM9PD3GfppgnjX1L+IjyiP
-vV34rKNS7VX05xUc9A4IinMlJrpGqWebxaC9ADLNUdGOGMUb/tVY8iii7E3joIq7
-EY9VA4GH58Z9ndjNv+ou3ySB+3fNyVpjBiVHcJPrTc4iElj5A07huaTnStwlvs1W
-TmeVKqgdjNGFuMUtjP6N74EsTgIGpWp0KWDfHGnHPOeCegWX2h/xFY3VqhMfyi9v
-cRr5NoAipz0LwaNtQPiROUMI4N1AjY+hm+4Xp7HRYrk+3EDPezY=
-=CayU
------END PGP SIGNATURE-----
+> 
+>  static long vfio_iommu_type1_ioctl(void *iommu_data,
+> --
+> 2.7.4
 
---J4XPiPrVK1ev6Sgr--
