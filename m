@@ -2,121 +2,60 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D85EC43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 10:00:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5000C2D0E9
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 10:00:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1E15320714
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 10:00:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="WIhLPAMq"
+	by mail.kernel.org (Postfix) with ESMTP id B2177206E6
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 10:00:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728736AbgC3KAA (ORCPT
+        id S1728842AbgC3KA3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 06:00:00 -0400
-Received: from mailout1.samsung.com ([203.254.224.24]:11651 "EHLO
-        mailout1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727376AbgC3KAA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 06:00:00 -0400
-Received: from epcas1p2.samsung.com (unknown [182.195.41.46])
-        by mailout1.samsung.com (KnoxPortal) with ESMTP id 20200330095957epoutp0174c8e56b15a1ab17efc8aa2f897fccb7~BDJmE8_u61272812728epoutp01M
-        for <linux-kernel@vger.kernel.org>; Mon, 30 Mar 2020 09:59:57 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20200330095957epoutp0174c8e56b15a1ab17efc8aa2f897fccb7~BDJmE8_u61272812728epoutp01M
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1585562397;
-        bh=auVWg6nVu/gwx9lFp54ApevoIaYZeZZq96L32jMRfRg=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=WIhLPAMqGUlsMUY9ChPz+Sjp5eEr7ms2mUJJI9tWG4XsuMhusVNFT4Bk10SglL8Mq
-         CVg5uGLwrGPilE89A9my1kn2qwYCqrjW+tAT1futC1q4gxCq1xS5zU10HtaoS5oYR1
-         +//TE3nKQmdO3DM0McXbUqEj1zYNBwmYiaIFbDo8=
-Received: from epsnrtp2.localdomain (unknown [182.195.42.163]) by
-        epcas1p3.samsung.com (KnoxPortal) with ESMTP id
-        20200330095956epcas1p380ace43586df2199d5b2ef442c1c7402~BDJlttRPN1825318253epcas1p3t;
-        Mon, 30 Mar 2020 09:59:56 +0000 (GMT)
-Received: from epsmges1p4.samsung.com (unknown [182.195.40.161]) by
-        epsnrtp2.localdomain (Postfix) with ESMTP id 48rScX03BmzMqYkV; Mon, 30 Mar
-        2020 09:59:56 +0000 (GMT)
-Received: from epcas1p1.samsung.com ( [182.195.41.45]) by
-        epsmges1p4.samsung.com (Symantec Messaging Gateway) with SMTP id
-        9E.07.04160.B13C18E5; Mon, 30 Mar 2020 18:59:55 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-        epcas1p1.samsung.com (KnoxPortal) with ESMTPA id
-        20200330095955epcas1p1829e254b88000bf79864aefb2ee02093~BDJkRvu2Z1262012620epcas1p1J;
-        Mon, 30 Mar 2020 09:59:55 +0000 (GMT)
-Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
-        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20200330095955epsmtrp1dab9287d8cde136affe02fd8a426f69d~BDJkRGY6S2991829918epsmtrp1F;
-        Mon, 30 Mar 2020 09:59:55 +0000 (GMT)
-X-AuditID: b6c32a38-2afff70000001040-31-5e81c31bf847
-Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        E3.79.04024.B13C18E5; Mon, 30 Mar 2020 18:59:55 +0900 (KST)
-Received: from [10.253.104.82] (unknown [10.253.104.82]) by
-        epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20200330095954epsmtip188a668e9578540f76c43df362bcff187~BDJjG3W6T1006710067epsmtip1u;
-        Mon, 30 Mar 2020 09:59:53 +0000 (GMT)
-Subject: Re: [PATCH v3 2/2] mm: mmap: add trace point of vm_unmapped_area
-To:     Vlastimil Babka <vbabka@suse.cz>,
-        Matthew Wilcox <willy@infradead.org>
-Cc:     walken@google.com, bp@suse.de, akpm@linux-foundation.org,
-        srostedt@vmware.com, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, jaewon31.kim@gmail.com,
-        Steven Rostedt <rostedt@goodmis.org>
-From:   Jaewon Kim <jaewon31.kim@samsung.com>
-Message-ID: <5E81C319.7080508@samsung.com>
-Date:   Mon, 30 Mar 2020 18:59:53 +0900
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:38.0) Gecko/20100101
-        Thunderbird/38.7.2
+        Mon, 30 Mar 2020 06:00:29 -0400
+Received: from mail.loongson.cn ([114.242.206.163]:46470 "EHLO loongson.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727376AbgC3KA3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Mar 2020 06:00:29 -0400
+Received: from [10.20.42.25] (unknown [10.20.42.25])
+        by mail.loongson.cn (Coremail) with SMTP id AQAAf9DxL9wzw4Felp8hAA--.13S3;
+        Mon, 30 Mar 2020 18:00:19 +0800 (CST)
+Subject: Re: [PATCH 02/39] MIPS: loongson64: Add header files path prefix
+To:     Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Huacai Chen <chenhc@lemote.com>
+References: <1585557531-18849-1-git-send-email-maobibo@loongson.cn>
+ <53CC90A0-3926-4642-91D4-F4F265F6AE90@flygoat.com>
+Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org
+From:   maobibo <maobibo@loongson.cn>
+Message-ID: <778df899-4dc4-c2be-5b7b-79c16223b0fb@loongson.cn>
+Date:   Mon, 30 Mar 2020 18:00:19 +0800
+User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
+ Thunderbird/45.4.0
 MIME-Version: 1.0
-In-Reply-To: <1ccdcd2e-2a56-af61-5b37-26ad64da0e7d@suse.cz>
+In-Reply-To: <53CC90A0-3926-4642-91D4-F4F265F6AE90@flygoat.com>
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrHJsWRmVeSWpSXmKPExsWy7bCmrq704cY4g1v9NhZz1q9hs5jYr2nR
-        vXkmo8XlXXPYLO6t+c9qsa/jAZPF0V8vWSxmN/YxWvybVGvx+8ccNgcuj52z7rJ7tOy7xe6x
-        YFOpx+YVWh6bPk1i9zgx4zeLx5kFR9g9Np+u9vi8Sc7j3fy3bAFcUTk2GamJKalFCql5yfkp
-        mXnptkrewfHO8aZmBoa6hpYW5koKeYm5qbZKLj4Bum6ZOUCXKimUJeaUAoUCEouLlfTtbIry
-        S0tSFTLyi0tslVILUnIKDA0K9IoTc4tL89L1kvNzrQwNDIxMgSoTcjIu7OtmL7jMWfF+Vxdr
-        A2MDRxcjJ4eEgInEpAkvmbsYuTiEBHYwSuw+/xXK+cQosf/jVyYI5xujxNzZB1hhWhbP2whV
-        tZdR4kjbA3aQhJDAW0aJsz8cuxg5OIQFPCVWPqgBCYsIeElsP7+DBaSeWeAoo8Td9olsIAk2
-        AW2J9wsmgQ3lFdCSWHgHZCgnB4uAqkTzrLssILaoQITEjrkfGSFqBCVOznwCFucUsJZ43jgN
-        LM4sIC/RvHU22EESAu3sEkdefWWBuNRF4sn5a8wQtrDEq+Nb2CFsKYmX/W3sEA3NjBJvZ25m
-        hHBagM7b1MsIUWUs0dtzgRnkHWYBTYn1u/QhwooSO3/PhdrMJ/Huaw8rSImEAK9ER5sQRIma
-        RMuzr9DQkpH4++8ZlO0h8XfiNBZIYK1gkpjWpjeBUWEWkt9mIflnFsLiBYzMqxjFUguKc9NT
-        iw0LTJCjeBMjOO1qWexg3HPO5xCjAAejEg/vh+0NcUKsiWXFlbmHGCU4mJVEeNn8gUK8KYmV
-        ValF+fFFpTmpxYcYTYHBPZFZSjQ5H5gT8kriDU2NjI2NLUzMzM1MjZXEeadez4kTEkhPLEnN
-        Tk0tSC2C6WPi4JRqYFw0V9Jcb8uJCUIm8hanema1WvEvVlmTPSVkSVfEJx6RCfbas6fPjas6
-        cJNP7QJjheUEvut/NH+9aElbpZt3zbuU+daeHeVx00ViOY7H3woUOrWPx/IFu/ykwhOZHXZx
-        HnLshk7Pu9epvq3fdO/1puWuMsZODN+u26U7HVw0f0GBZu38gFuyXkosxRmJhlrMRcWJAGC8
-        uWXRAwAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFupnkeLIzCtJLcpLzFFi42LZdlhJTlf6cGOcwecuYYs569ewWUzs17To
-        3jyT0eLyrjlsFvfW/Ge12NfxgMni6K+XLBazG/sYLf5NqrX4/WMOmwOXx85Zd9k9WvbdYvdY
-        sKnUY/MKLY9Nnyaxe5yY8ZvF48yCI+wem09Xe3zeJOfxbv5btgCuKC6blNSczLLUIn27BK6M
-        C/u62Qsuc1a839XF2sDYwNHFyMkhIWAisXjeRuYuRi4OIYHdjBIPp11ih0jISLw5/5Sli5ED
-        yBaWOHy4GKLmNaPEsqbVrCBxYQFPiZUPakDKRQS8JLaf38ECUbOCSaJl018wh1ngKKPEnLW3
-        2ECq2AS0Jd4vmMQKYvMKaEksvAOymZODRUBVonnWXRYQW1QgQmL1umvMEDWCEidnPgGLcwpY
-        SzxvnMYIYjMLqEv8mXeJGcKWl2jeOpt5AqPgLCQts5CUzUJStoCReRWjZGpBcW56brFhgWFe
-        arlecWJucWleul5yfu4mRnA0aWnuYLy8JP4QowAHoxIP74ftDXFCrIllxZW5hxglOJiVRHjZ
-        /IFCvCmJlVWpRfnxRaU5qcWHGKU5WJTEeZ/mHYsUEkhPLEnNTk0tSC2CyTJxcEo1MCpedlk2
-        tU5uJ/tvQa/IU85XUxybZkW8M26UkePl/Okxeem5B1fsNVmDDwkcvzNv92UL0QqOyyo/7q+O
-        NRT/+FbFalNBgJOTkffszbe3Sx0++C391qK/UkE/Ncy9bae7la00sjqccWrtH/GMLKdghpj+
-        gpSzu22iwoJmngjv+LNnSUdmciTDDiWW4oxEQy3mouJEAOCdML+iAgAA
-X-CMS-MailID: 20200330095955epcas1p1829e254b88000bf79864aefb2ee02093
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: SVC_REQ_APPROVE
-CMS-TYPE: 101P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20200320055839epcas1p189100549687530619d8a19919e8b5de0
-References: <20200320055823.27089-1-jaewon31.kim@samsung.com>
-        <CGME20200320055839epcas1p189100549687530619d8a19919e8b5de0@epcas1p1.samsung.com>
-        <20200320055823.27089-3-jaewon31.kim@samsung.com>
-        <20200329161410.GW22483@bombadil.infradead.org>
-        <1ccdcd2e-2a56-af61-5b37-26ad64da0e7d@suse.cz>
+X-CM-TRANSID: AQAAf9DxL9wzw4Felp8hAA--.13S3
+X-Coremail-Antispam: 1UD129KBjvAXoWfAFWfXFy3tF47tF4fCFW3KFg_yoW8tr4DZo
+        Z29Fn7Kr48WFWUJF4UWFy5AF1xGFnYqr4Fy34fJ3yDJFZIy3srZ3409r12gF18C3Wxtwnx
+        G3y5urW8Xr4Iyaykn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73VFW2AGmfu7bjvjm3
+        AaLaJ3UjIYCTnIWjp_UUUYs7k0a2IF6w4kM7kC6x804xWl14x267AKxVWUJVW8JwAFc2x0
+        x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj4
+        1l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xIIjxv20xvE14v26ryj6F1UM28EF7xvwVC0
+        I7IYx2IY6xkF7I0E14v26F4j6r4UJwA2z4x0Y4vEx4A2jsIE14v26F4UJVW0owA2z4x0Y4
+        vEx4A2jsIEc7CjxVAFwI0_GcCE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xv
+        F2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r
+        4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCYjI0SjxkI62AI1cAE67vIY487
+        MxkIecxEwVCm-wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c
+        02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_
+        Jw1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7
+        CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6rWUJVWrZr1UMIIF0xvEx4A2jsIE
+        14v26F4j6r4UJwCI42IY6I8E87Iv6xkF7I0E14v26r4UJVWxJrUvcSsGvfC2KfnxnUUI43
+        ZEXa7IU5PpnJUUUUU==
+X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -124,36 +63,581 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 
 
-On 2020년 03월 30일 18:56, Vlastimil Babka wrote:
-> On 3/29/20 6:14 PM, Matthew Wilcox wrote:
->> On Fri, Mar 20, 2020 at 02:58:23PM +0900, Jaewon Kim wrote:
->>> +	TP_printk("addr=%lx err=%ld total_vm=0x%lx flags=0x%lx len=0x%lx lo=0x%lx hi=0x%lx mask=0x%lx ofs=0x%lx\n",
->>> +		IS_ERR_VALUE(__entry->addr) ? 0 : __entry->addr,
->>> +		IS_ERR_VALUE(__entry->addr) ? __entry->addr : 0,
->> I didn't see the IS_ERR_VALUE problem that Vlastimil mentioned get resolved?
-> Steven is fixing it in trace-cmd:
-> https://lore.kernel.org/r/20200324200956.821799393@goodmis.org
-Good news for me.
-Thank you
->
->> I might suggest ...
+On 03/30/2020 04:55 PM, Jiaxun Yang wrote:
+> 
+> 
+> 于 2020年3月30日 GMT+08:00 下午4:38:51, bibo mao <maobibo@loongson.cn> 写到:
+>> Remove header files from arch/mips/include/asm/mach-loongson64
+>> to arch/mips/loongson64/include/mach
 >>
->> +++ b/include/linux/err.h
->> @@ -19,7 +19,8 @@
->>  
->>  #ifndef __ASSEMBLY__
->>  
->> -#define IS_ERR_VALUE(x) unlikely((unsigned long)(void *)(x) >= (unsigned long)-MAX_ERRNO)
->> +#define __IS_ERR_VALUE(x) ((unsigned long)(void *)(x) >= (unsigned long)-MAX_ERRNO)
->> +#define IS_ERR_VALUE(x) unlikely(__IS_ERR_VALUE(x))
-> So this shouldn't be needed, as we are adding a new tracepoint, not "breaking"
-> an existing one?
->
->>  static inline void * __must_check ERR_PTR(long error)
->>  {
+>> Signed-off-by: bibo mao <maobibo@loongson.cn>
+> 
+> Hi Bibo,
+> 
+> Thanks for your patch.
+> 
+> What's your intention?
+> Did you meet any problem about headers?
+> 
+
+Hi Jiaxun,
+
+When I add irqchip support for mips kvm, file virt/kvm/irqchip.c
+requires local header file arch/mips/kvm/irq.h, it fails to compile.
+Since there is file with the same name located at:
+  arch/mips/include/asm/mach-generic/irq.h
+  arch/mips/include/asm/mach-loongson64/irq.h
+
+The compiler fails to choose the correct header file irq.h,
+
+regards
+bibo,mao
+
+>> ---
+>> arch/mips/Kconfig                                                 | 1 +
+>> arch/mips/loongson64/Platform                                     | 2
+>> +-
+>> arch/mips/loongson64/env.c                                        | 8
+>> ++++----
+>> .../asm/mach-loongson64 => loongson64/include/mach}/boot_param.h  | 0
+>> .../mach-loongson64 => loongson64/include/mach}/builtin_dtbs.h    | 0
+>> .../include/mach}/cpu-feature-overrides.h                         | 0
+>> arch/mips/loongson64/include/mach/floppy.h                        | 2
+>> ++
+>> arch/mips/loongson64/include/mach/ide.h                           | 2
+>> ++
+>> arch/mips/loongson64/include/mach/ioremap.h                       | 2
+>> ++
+>> .../asm/mach-loongson64 => loongson64/include/mach}/irq.h         | 2
+>> +-
+>> .../include/mach}/kernel-entry-init.h                             | 0
+>> arch/mips/loongson64/include/mach/kmalloc.h                       | 2
+>> ++
+>> .../asm/mach-loongson64 => loongson64/include/mach}/loongson.h    | 2
+>> +-
+>> .../mach-loongson64 => loongson64/include/mach}/loongson_hwmon.h  | 0
+>> .../mach-loongson64 => loongson64/include/mach}/loongson_regs.h   | 0
+>> arch/mips/loongson64/include/mach/mangle-port.h                   | 2
+>> ++
+>> .../asm/mach-loongson64 => loongson64/include/mach}/mc146818rtc.h | 0
+>> .../asm/mach-loongson64 => loongson64/include/mach}/mmzone.h      | 2
+>> +-
+>> .../asm/mach-loongson64 => loongson64/include/mach}/pci.h         | 0
+>> .../asm/mach-loongson64 => loongson64/include/mach}/spaces.h      | 0
+>> .../asm/mach-loongson64 => loongson64/include/mach}/topology.h    | 0
+>> arch/mips/loongson64/include/mach/war.h                           | 2
+>> ++
+>> .../asm/mach-loongson64 => loongson64/include/mach}/workarounds.h | 0
+>> arch/mips/loongson64/init.c                                       | 2
+>> +-
+>> arch/mips/loongson64/numa.c                                       | 2
+>> +-
+>> arch/mips/loongson64/pci.c                                        | 6
+>> +++---
+>> arch/mips/loongson64/platform.c                                   | 6
+>> +++---
+>> arch/mips/loongson64/pm.c                                         | 2
+>> +-
+>> arch/mips/loongson64/reset.c                                      | 4
+>> ++--
+>> arch/mips/loongson64/setup.c                                      | 2
+>> +-
+>> arch/mips/loongson64/smp.c                                        | 8
+>> ++++----
+>> arch/mips/loongson64/time.c                                       | 2
+>> +-
+>> arch/mips/oprofile/op_model_loongson3.c                           | 4
+>> ++--
+>> arch/mips/pci/fixup-loongson3.c                                   | 2
+>> +-
+>> arch/mips/pci/ops-loongson3.c                                     | 2
+>> +-
+>> drivers/gpio/gpio-loongson.c                                      | 4
+>> ++++
+>> drivers/irqchip/irq-loongson-liointc.c                            | 2
+>> +-
+>> drivers/platform/mips/cpu_hwmon.c                                 | 8
+>> ++++----
+>> 38 files changed, 51 insertions(+), 34 deletions(-)
+>> rename arch/mips/{include/asm/mach-loongson64 =>
+>> loongson64/include/mach}/boot_param.h (100%)
+>> rename arch/mips/{include/asm/mach-loongson64 =>
+>> loongson64/include/mach}/builtin_dtbs.h (100%)
+>> rename arch/mips/{include/asm/mach-loongson64 =>
+>> loongson64/include/mach}/cpu-feature-overrides.h (100%)
+>> create mode 100644 arch/mips/loongson64/include/mach/floppy.h
+>> create mode 100644 arch/mips/loongson64/include/mach/ide.h
+>> create mode 100644 arch/mips/loongson64/include/mach/ioremap.h
+>> rename arch/mips/{include/asm/mach-loongson64 =>
+>> loongson64/include/mach}/irq.h (89%)
+>> rename arch/mips/{include/asm/mach-loongson64 =>
+>> loongson64/include/mach}/kernel-entry-init.h (100%)
+>> create mode 100644 arch/mips/loongson64/include/mach/kmalloc.h
+>> rename arch/mips/{include/asm/mach-loongson64 =>
+>> loongson64/include/mach}/loongson.h (99%)
+>> rename arch/mips/{include/asm/mach-loongson64 =>
+>> loongson64/include/mach}/loongson_hwmon.h (100%)
+>> rename arch/mips/{include/asm/mach-loongson64 =>
+>> loongson64/include/mach}/loongson_regs.h (100%)
+>> create mode 100644 arch/mips/loongson64/include/mach/mangle-port.h
+>> rename arch/mips/{include/asm/mach-loongson64 =>
+>> loongson64/include/mach}/mc146818rtc.h (100%)
+>> rename arch/mips/{include/asm/mach-loongson64 =>
+>> loongson64/include/mach}/mmzone.h (96%)
+>> rename arch/mips/{include/asm/mach-loongson64 =>
+>> loongson64/include/mach}/pci.h (100%)
+>> rename arch/mips/{include/asm/mach-loongson64 =>
+>> loongson64/include/mach}/spaces.h (100%)
+>> rename arch/mips/{include/asm/mach-loongson64 =>
+>> loongson64/include/mach}/topology.h (100%)
+>> create mode 100644 arch/mips/loongson64/include/mach/war.h
+>> rename arch/mips/{include/asm/mach-loongson64 =>
+>> loongson64/include/mach}/workarounds.h (100%)
 >>
->> and then you can use __IS_ERR_VALUE() which removes the unlikely() problem.
+>> diff --git a/arch/mips/Kconfig b/arch/mips/Kconfig
+>> index 12f05bb..a7f821d 100644
+>> --- a/arch/mips/Kconfig
+>> +++ b/arch/mips/Kconfig
+>> @@ -491,6 +491,7 @@ config MACH_LOONGSON64
+>> 	select COMMON_CLK
+>> 	select USE_OF
+>> 	select BUILTIN_DTB
+>> +	select HAVE_MACH_HEAD_FILES
+>> 	help
+>> 	  This enables the support of Loongson-2/3 family of machines.
 >>
->
->
+>> diff --git a/arch/mips/loongson64/Platform
+>> b/arch/mips/loongson64/Platform
+>> index d5eb94c..aa0e112 100644
+>> --- a/arch/mips/loongson64/Platform
+>> +++ b/arch/mips/loongson64/Platform
+>> @@ -56,5 +56,5 @@ cflags-y += $(call cc-option,-mno-loongson-mmi)
+>> #
+>>
+>> platform-$(CONFIG_MACH_LOONGSON64) += loongson64/
+>> -cflags-$(CONFIG_MACH_LOONGSON64) +=
+>> -I$(srctree)/arch/mips/include/asm/mach-loongson64 -mno-branch-likely
+>> +cflags-$(CONFIG_MACH_LOONGSON64) +=
+>> -I$(srctree)/arch/mips/loongson64/include -mno-branch-likely
+>> load-$(CONFIG_CPU_LOONGSON64) += 0xffffffff80200000
+>> diff --git a/arch/mips/loongson64/env.c b/arch/mips/loongson64/env.c
+>> index 2554ef1..6c73614 100644
+>> --- a/arch/mips/loongson64/env.c
+>> +++ b/arch/mips/loongson64/env.c
+>> @@ -15,10 +15,10 @@
+>>  */
+>> #include <linux/export.h>
+>> #include <asm/bootinfo.h>
+>> -#include <loongson.h>
+>> -#include <boot_param.h>
+>> -#include <builtin_dtbs.h>
+>> -#include <workarounds.h>
+>> +#include <mach/loongson.h>
+>> +#include <mach/boot_param.h>
+>> +#include <mach/builtin_dtbs.h>
+>> +#include <mach/workarounds.h>
+>>
+>> u32 cpu_clock_freq;
+>> EXPORT_SYMBOL(cpu_clock_freq);
+>> diff --git a/arch/mips/include/asm/mach-loongson64/boot_param.h
+>> b/arch/mips/loongson64/include/mach/boot_param.h
+>> similarity index 100%
+>> rename from arch/mips/include/asm/mach-loongson64/boot_param.h
+>> rename to arch/mips/loongson64/include/mach/boot_param.h
+>> diff --git a/arch/mips/include/asm/mach-loongson64/builtin_dtbs.h
+>> b/arch/mips/loongson64/include/mach/builtin_dtbs.h
+>> similarity index 100%
+>> rename from arch/mips/include/asm/mach-loongson64/builtin_dtbs.h
+>> rename to arch/mips/loongson64/include/mach/builtin_dtbs.h
+>> diff --git
+>> a/arch/mips/include/asm/mach-loongson64/cpu-feature-overrides.h
+>> b/arch/mips/loongson64/include/mach/cpu-feature-overrides.h
+>> similarity index 100%
+>> rename from
+>> arch/mips/include/asm/mach-loongson64/cpu-feature-overrides.h
+>> rename to arch/mips/loongson64/include/mach/cpu-feature-overrides.h
+>> diff --git a/arch/mips/loongson64/include/mach/floppy.h
+>> b/arch/mips/loongson64/include/mach/floppy.h
+>> new file mode 100644
+>> index 0000000..8e17183
+>> --- /dev/null
+>> +++ b/arch/mips/loongson64/include/mach/floppy.h
+>> @@ -0,0 +1,2 @@
+>> +/* SPDX-License-Identifier: GPL-2.0 */
+>> +#include <asm/mach-generic/floppy.h>
+>> diff --git a/arch/mips/loongson64/include/mach/ide.h
+>> b/arch/mips/loongson64/include/mach/ide.h
+>> new file mode 100644
+>> index 0000000..1251c0c
+>> --- /dev/null
+>> +++ b/arch/mips/loongson64/include/mach/ide.h
+>> @@ -0,0 +1,2 @@
+>> +/* SPDX-License-Identifier: GPL-2.0 */
+>> +#include <asm/mach-generic/ide.h>
+>> diff --git a/arch/mips/loongson64/include/mach/ioremap.h
+>> b/arch/mips/loongson64/include/mach/ioremap.h
+>> new file mode 100644
+>> index 0000000..2369393
+>> --- /dev/null
+>> +++ b/arch/mips/loongson64/include/mach/ioremap.h
+>> @@ -0,0 +1,2 @@
+>> +/* SPDX-License-Identifier: GPL-2.0 */
+>> +#include <asm/mach-generic/ioremap.h>
+>> diff --git a/arch/mips/include/asm/mach-loongson64/irq.h
+>> b/arch/mips/loongson64/include/mach/irq.h
+>> similarity index 89%
+>> rename from arch/mips/include/asm/mach-loongson64/irq.h
+>> rename to arch/mips/loongson64/include/mach/irq.h
+>> index d41dc4a..55bafce 100644
+>> --- a/arch/mips/include/asm/mach-loongson64/irq.h
+>> +++ b/arch/mips/loongson64/include/mach/irq.h
+>> @@ -2,7 +2,7 @@
+>> #ifndef __ASM_MACH_LOONGSON64_IRQ_H_
+>> #define __ASM_MACH_LOONGSON64_IRQ_H_
+>>
+>> -#include <boot_param.h>
+>> +#include <mach/boot_param.h>
+>>
+>> /* cpu core interrupt numbers */
+>> #define MIPS_CPU_IRQ_BASE 56
+>> diff --git a/arch/mips/include/asm/mach-loongson64/kernel-entry-init.h
+>> b/arch/mips/loongson64/include/mach/kernel-entry-init.h
+>> similarity index 100%
+>> rename from arch/mips/include/asm/mach-loongson64/kernel-entry-init.h
+>> rename to arch/mips/loongson64/include/mach/kernel-entry-init.h
+>> diff --git a/arch/mips/loongson64/include/mach/kmalloc.h
+>> b/arch/mips/loongson64/include/mach/kmalloc.h
+>> new file mode 100644
+>> index 0000000..4f056db
+>> --- /dev/null
+>> +++ b/arch/mips/loongson64/include/mach/kmalloc.h
+>> @@ -0,0 +1,2 @@
+>> +/* SPDX-License-Identifier: GPL-2.0 */
+>> +#include <asm/mach-generic/kmalloc.h>
+>> diff --git a/arch/mips/include/asm/mach-loongson64/loongson.h
+>> b/arch/mips/loongson64/include/mach/loongson.h
+>> similarity index 99%
+>> rename from arch/mips/include/asm/mach-loongson64/loongson.h
+>> rename to arch/mips/loongson64/include/mach/loongson.h
+>> index fde1b75..9d719b9 100644
+>> --- a/arch/mips/include/asm/mach-loongson64/loongson.h
+>> +++ b/arch/mips/loongson64/include/mach/loongson.h
+>> @@ -10,7 +10,7 @@
+>> #include <linux/io.h>
+>> #include <linux/init.h>
+>> #include <linux/irq.h>
+>> -#include <boot_param.h>
+>> +#include <mach/boot_param.h>
+>>
+>>
+>> /* machine-specific reboot/halt operation */
+>> diff --git a/arch/mips/include/asm/mach-loongson64/loongson_hwmon.h
+>> b/arch/mips/loongson64/include/mach/loongson_hwmon.h
+>> similarity index 100%
+>> rename from arch/mips/include/asm/mach-loongson64/loongson_hwmon.h
+>> rename to arch/mips/loongson64/include/mach/loongson_hwmon.h
+>> diff --git a/arch/mips/include/asm/mach-loongson64/loongson_regs.h
+>> b/arch/mips/loongson64/include/mach/loongson_regs.h
+>> similarity index 100%
+>> rename from arch/mips/include/asm/mach-loongson64/loongson_regs.h
+>> rename to arch/mips/loongson64/include/mach/loongson_regs.h
+>> diff --git a/arch/mips/loongson64/include/mach/mangle-port.h
+>> b/arch/mips/loongson64/include/mach/mangle-port.h
+>> new file mode 100644
+>> index 0000000..b9736e3
+>> --- /dev/null
+>> +++ b/arch/mips/loongson64/include/mach/mangle-port.h
+>> @@ -0,0 +1,2 @@
+>> +/* SPDX-License-Identifier: GPL-2.0 */
+>> +#include <asm/mach-generic/mangle-port.h>
+>> diff --git a/arch/mips/include/asm/mach-loongson64/mc146818rtc.h
+>> b/arch/mips/loongson64/include/mach/mc146818rtc.h
+>> similarity index 100%
+>> rename from arch/mips/include/asm/mach-loongson64/mc146818rtc.h
+>> rename to arch/mips/loongson64/include/mach/mc146818rtc.h
+>> diff --git a/arch/mips/include/asm/mach-loongson64/mmzone.h
+>> b/arch/mips/loongson64/include/mach/mmzone.h
+>> similarity index 96%
+>> rename from arch/mips/include/asm/mach-loongson64/mmzone.h
+>> rename to arch/mips/loongson64/include/mach/mmzone.h
+>> index 3a25dbd..57f7375 100644
+>> --- a/arch/mips/include/asm/mach-loongson64/mmzone.h
+>> +++ b/arch/mips/loongson64/include/mach/mmzone.h
+>> @@ -9,7 +9,7 @@
+>> #ifndef _ASM_MACH_LOONGSON64_MMZONE_H
+>> #define _ASM_MACH_LOONGSON64_MMZONE_H
+>>
+>> -#include <boot_param.h>
+>> +#include <mach/boot_param.h>
+>> #define NODE_ADDRSPACE_SHIFT 44
+>> #define NODE0_ADDRSPACE_OFFSET 0x000000000000UL
+>> #define NODE1_ADDRSPACE_OFFSET 0x100000000000UL
+>> diff --git a/arch/mips/include/asm/mach-loongson64/pci.h
+>> b/arch/mips/loongson64/include/mach/pci.h
+>> similarity index 100%
+>> rename from arch/mips/include/asm/mach-loongson64/pci.h
+>> rename to arch/mips/loongson64/include/mach/pci.h
+>> diff --git a/arch/mips/include/asm/mach-loongson64/spaces.h
+>> b/arch/mips/loongson64/include/mach/spaces.h
+>> similarity index 100%
+>> rename from arch/mips/include/asm/mach-loongson64/spaces.h
+>> rename to arch/mips/loongson64/include/mach/spaces.h
+>> diff --git a/arch/mips/include/asm/mach-loongson64/topology.h
+>> b/arch/mips/loongson64/include/mach/topology.h
+>> similarity index 100%
+>> rename from arch/mips/include/asm/mach-loongson64/topology.h
+>> rename to arch/mips/loongson64/include/mach/topology.h
+>> diff --git a/arch/mips/loongson64/include/mach/war.h
+>> b/arch/mips/loongson64/include/mach/war.h
+>> new file mode 100644
+>> index 0000000..5b0422a
+>> --- /dev/null
+>> +++ b/arch/mips/loongson64/include/mach/war.h
+>> @@ -0,0 +1,2 @@
+>> +/* SPDX-License-Identifier: GPL-2.0 */
+>> +#include <asm/mach-generic/war.h>
+>> diff --git a/arch/mips/include/asm/mach-loongson64/workarounds.h
+>> b/arch/mips/loongson64/include/mach/workarounds.h
+>> similarity index 100%
+>> rename from arch/mips/include/asm/mach-loongson64/workarounds.h
+>> rename to arch/mips/loongson64/include/mach/workarounds.h
+>> diff --git a/arch/mips/loongson64/init.c b/arch/mips/loongson64/init.c
+>> index da38944..debbb75 100644
+>> --- a/arch/mips/loongson64/init.c
+>> +++ b/arch/mips/loongson64/init.c
+>> @@ -12,7 +12,7 @@
+>> #include <asm/cacheflush.h>
+>> #include <asm/fw/fw.h>
+>>
+>> -#include <loongson.h>
+>> +#include <mach/loongson.h>
+>>
+>> static void __init mips_nmi_setup(void)
+>> {
+>> diff --git a/arch/mips/loongson64/numa.c b/arch/mips/loongson64/numa.c
+>> index 1ae072d..e852535 100644
+>> --- a/arch/mips/loongson64/numa.c
+>> +++ b/arch/mips/loongson64/numa.c
+>> @@ -24,7 +24,7 @@
+>> #include <asm/mc146818-time.h>
+>> #include <asm/time.h>
+>> #include <asm/wbflush.h>
+>> -#include <boot_param.h>
+>> +#include <mach/boot_param.h>
+>>
+>> static struct pglist_data prealloc__node_data[MAX_NUMNODES];
+>> unsigned char __node_distances[MAX_NUMNODES][MAX_NUMNODES];
+>> diff --git a/arch/mips/loongson64/pci.c b/arch/mips/loongson64/pci.c
+>> index e84ae20..7011d88 100644
+>> --- a/arch/mips/loongson64/pci.c
+>> +++ b/arch/mips/loongson64/pci.c
+>> @@ -5,9 +5,9 @@
+>>  */
+>> #include <linux/pci.h>
+>>
+>> -#include <pci.h>
+>> -#include <loongson.h>
+>> -#include <boot_param.h>
+>> +#include <mach/pci.h>
+>> +#include <mach/loongson.h>
+>> +#include <mach/boot_param.h>
+>>
+>> static struct resource loongson_pci_mem_resource = {
+>> 	.name	= "pci memory space",
+>> diff --git a/arch/mips/loongson64/platform.c
+>> b/arch/mips/loongson64/platform.c
+>> index 9674ae1..2cd8b9b 100644
+>> --- a/arch/mips/loongson64/platform.c
+>> +++ b/arch/mips/loongson64/platform.c
+>> @@ -10,9 +10,9 @@
+>> #include <linux/slab.h>
+>> #include <linux/platform_device.h>
+>> #include <asm/bootinfo.h>
+>> -#include <boot_param.h>
+>> -#include <loongson_hwmon.h>
+>> -#include <workarounds.h>
+>> +#include <mach/boot_param.h>
+>> +#include <mach/loongson_hwmon.h>
+>> +#include <mach/workarounds.h>
+>>
+>> static int __init loongson3_platform_init(void)
+>> {
+>> diff --git a/arch/mips/loongson64/pm.c b/arch/mips/loongson64/pm.c
+>> index 7c8556f..b05c6dd 100644
+>> --- a/arch/mips/loongson64/pm.c
+>> +++ b/arch/mips/loongson64/pm.c
+>> @@ -12,7 +12,7 @@
+>> #include <asm/i8259.h>
+>> #include <asm/mipsregs.h>
+>>
+>> -#include <loongson.h>
+>> +#include <mach/loongson.h>
+>>
+>> static unsigned int __maybe_unused cached_master_mask;	/* i8259A */
+>> static unsigned int __maybe_unused cached_slave_mask;
+>> diff --git a/arch/mips/loongson64/reset.c
+>> b/arch/mips/loongson64/reset.c
+>> index bc76710..0fd1d50 100644
+>> --- a/arch/mips/loongson64/reset.c
+>> +++ b/arch/mips/loongson64/reset.c
+>> @@ -12,8 +12,8 @@
+>> #include <asm/idle.h>
+>> #include <asm/reboot.h>
+>>
+>> -#include <loongson.h>
+>> -#include <boot_param.h>
+>> +#include <mach/loongson.h>
+>> +#include <mach/boot_param.h>
+>>
+>> static inline void loongson_reboot(void)
+>> {
+>> diff --git a/arch/mips/loongson64/setup.c
+>> b/arch/mips/loongson64/setup.c
+>> index 6fe3fff..4e7e3a4 100644
+>> --- a/arch/mips/loongson64/setup.c
+>> +++ b/arch/mips/loongson64/setup.c
+>> @@ -13,7 +13,7 @@
+>>
+>> #include <asm/prom.h>
+>>
+>> -#include <loongson.h>
+>> +#include <mach/loongson.h>
+>>
+>> void *loongson_fdt_blob;
+>>
+>> diff --git a/arch/mips/loongson64/smp.c b/arch/mips/loongson64/smp.c
+>> index e1fe8bb..d0fc0fc 100644
+>> --- a/arch/mips/loongson64/smp.c
+>> +++ b/arch/mips/loongson64/smp.c
+>> @@ -4,7 +4,7 @@
+>>  * Author: Chen Huacai, chenhc@lemote.com
+>>  */
+>>
+>> -#include <irq.h>
+>> +#include <mach/irq.h>
+>> #include <linux/init.h>
+>> #include <linux/cpu.h>
+>> #include <linux/sched.h>
+>> @@ -18,9 +18,9 @@
+>> #include <asm/clock.h>
+>> #include <asm/tlbflush.h>
+>> #include <asm/cacheflush.h>
+>> -#include <loongson.h>
+>> -#include <loongson_regs.h>
+>> -#include <workarounds.h>
+>> +#include <mach/loongson.h>
+>> +#include <mach/loongson_regs.h>
+>> +#include <mach/workarounds.h>
+>>
+>> #include "smp.h"
+>>
+>> diff --git a/arch/mips/loongson64/time.c b/arch/mips/loongson64/time.c
+>> index 1245f22..4f8fdf8 100644
+>> --- a/arch/mips/loongson64/time.c
+>> +++ b/arch/mips/loongson64/time.c
+>> @@ -10,7 +10,7 @@
+>> #include <asm/time.h>
+>> #include <asm/hpet.h>
+>>
+>> -#include <loongson.h>
+>> +#include <mach/loongson.h>
+>>
+>> void __init plat_time_init(void)
+>> {
+>> diff --git a/arch/mips/oprofile/op_model_loongson3.c
+>> b/arch/mips/oprofile/op_model_loongson3.c
+>> index 436b1fc..9ca6432 100644
+>> --- a/arch/mips/oprofile/op_model_loongson3.c
+>> +++ b/arch/mips/oprofile/op_model_loongson3.c
+>> @@ -12,8 +12,8 @@
+>> #include <linux/spinlock.h>
+>> #include <linux/interrupt.h>
+>> #include <linux/uaccess.h>
+>> -#include <irq.h>
+>> -#include <loongson.h>
+>> +#include <mach/irq.h>
+>> +#include <mach/loongson.h>
+>> #include "op_impl.h"
+>>
+>> #define LOONGSON3_PERFCNT_OVERFLOW	(1ULL << 63)
+>> diff --git a/arch/mips/pci/fixup-loongson3.c
+>> b/arch/mips/pci/fixup-loongson3.c
+>> index 8a741c2..6c63c30 100644
+>> --- a/arch/mips/pci/fixup-loongson3.c
+>> +++ b/arch/mips/pci/fixup-loongson3.c
+>> @@ -24,7 +24,7 @@
+>>  */
+>>
+>> #include <linux/pci.h>
+>> -#include <boot_param.h>
+>> +#include <mach/boot_param.h>
+>>
+>> static void print_fixup_info(const struct pci_dev *pdev)
+>> {
+>> diff --git a/arch/mips/pci/ops-loongson3.c
+>> b/arch/mips/pci/ops-loongson3.c
+>> index 2f6ad36..f40b805 100644
+>> --- a/arch/mips/pci/ops-loongson3.c
+>> +++ b/arch/mips/pci/ops-loongson3.c
+>> @@ -5,7 +5,7 @@
+>>
+>> #include <asm/mips-boards/bonito64.h>
+>>
+>> -#include <loongson.h>
+>> +#include <mach/loongson.h>
+>>
+>> #define PCI_ACCESS_READ  0
+>> #define PCI_ACCESS_WRITE 1
+>> diff --git a/drivers/gpio/gpio-loongson.c
+>> b/drivers/gpio/gpio-loongson.c
+>> index a421458..ebcd75a 100644
+>> --- a/drivers/gpio/gpio-loongson.c
+>> +++ b/drivers/gpio/gpio-loongson.c
+>> @@ -17,7 +17,11 @@
+>> #include <linux/platform_device.h>
+>> #include <linux/bitops.h>
+>> #include <asm/types.h>
+>> +#ifdef CONFIG_HAVE_MACH_HEAD_FILES
+>> +#include <mach/loongson.h>
+>> +#else
+>> #include <loongson.h>
+>> +#endif
+>>
+>> #define STLS2F_N_GPIO		4
+>> #define STLS3A_N_GPIO		16
+>> diff --git a/drivers/irqchip/irq-loongson-liointc.c
+>> b/drivers/irqchip/irq-loongson-liointc.c
+>> index 63b6147..fb23eb1 100644
+>> --- a/drivers/irqchip/irq-loongson-liointc.c
+>> +++ b/drivers/irqchip/irq-loongson-liointc.c
+>> @@ -16,7 +16,7 @@
+>> #include <linux/smp.h>
+>> #include <linux/irqchip/chained_irq.h>
+>>
+>> -#include <boot_param.h>
+>> +#include <mach/boot_param.h>
+>>
+>> #define LIOINTC_CHIP_IRQ	32
+>> #define LIOINTC_NUM_PARENT 4
+>> diff --git a/drivers/platform/mips/cpu_hwmon.c
+>> b/drivers/platform/mips/cpu_hwmon.c
+>> index 0d27cb7..4bb71af 100644
+>> --- a/drivers/platform/mips/cpu_hwmon.c
+>> +++ b/drivers/platform/mips/cpu_hwmon.c
+>> @@ -6,10 +6,10 @@
+>> #include <linux/hwmon.h>
+>> #include <linux/hwmon-sysfs.h>
+>>
+>> -#include <loongson.h>
+>> -#include <boot_param.h>
+>> -#include <loongson_hwmon.h>
+>> -#include <loongson_regs.h>
+>> +#include <mach/loongson.h>
+>> +#include <mach/boot_param.h>
+>> +#include <mach/loongson_hwmon.h>
+>> +#include <mach/loongson_regs.h>
+>>
+>> static int csr_temp_enable = 0;
+>>
+> 
 
