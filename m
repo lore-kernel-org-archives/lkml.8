@@ -2,89 +2,94 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B634BC2D0E5
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 14:50:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 689F8C2D0E5
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 14:51:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C3EB2073B
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 14:50:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F4B62072E
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 14:51:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728969AbgC3OuQ (ORCPT
+        id S1728818AbgC3OvE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 10:50:16 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:59023 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728376AbgC3OuB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 10:50:01 -0400
-Received: from [5.158.153.52] (helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1jIvjj-0006uq-5Z; Mon, 30 Mar 2020 16:49:59 +0200
-Received: from nanos.tec.linutronix.de (localhost [IPv6:::1])
-        by nanos.tec.linutronix.de (Postfix) with ESMTP id BC3CA1040EC;
-        Mon, 30 Mar 2020 16:49:58 +0200 (CEST)
-Date:   Mon, 30 Mar 2020 14:47:16 -0000
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-kernel@vger.kernel.org, x86@kernel.org
-Subject: [GIT pull] x86/timers for v5.7
-References: <158557962955.22376.9136086165862170511.tglx@nanos.tec.linutronix.de>
-Message-ID: <158557963678.22376.17697748296819329736.tglx@nanos.tec.linutronix.de>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+        Mon, 30 Mar 2020 10:51:04 -0400
+Received: from mga18.intel.com ([134.134.136.126]:52891 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726099AbgC3OvE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Mar 2020 10:51:04 -0400
+IronPort-SDR: l3JrtsUXSnzSRdg6MF1Bp1wGgCNNFVTet9jSc5fNfuvUmGYe5ZYKZciS83QDQlMFK6wCazi4x0
+ kYU15aR2wtZw==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Mar 2020 07:51:02 -0700
+IronPort-SDR: 8x6LKW1BZpgkOpaBsEsSTOpNcDwxG0kfXVvoTJrEUwHjmjGfJnE2D4EZ4Y5/3vq5ZmX6L4A6mV
+ +zYipkg/sfOw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,324,1580803200"; 
+   d="scan'208";a="294602545"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by FMSMGA003.fm.intel.com with ESMTP; 30 Mar 2020 07:51:00 -0700
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1jIvkk-00EEVe-Lc; Mon, 30 Mar 2020 17:51:02 +0300
+Date:   Mon, 30 Mar 2020 17:51:02 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Heiko Stuebner <heiko@sntech.de>
+Cc:     gregkh@linuxfoundation.org, jslaby@suse.com,
+        matwey.kornilov@gmail.com, linux-serial@vger.kernel.org,
+        linux-kernel@vger.kernel.org, lukas@wunner.de,
+        christoph.muellner@theobroma-systems.com,
+        giulio.benetti@micronovasrl.com
+Subject: Re: [PATCH DON'T APPLY v2 3/7] serial: 8250: Support rs485 bus
+ termination GPIO
+Message-ID: <20200330145102.GU1922688@smile.fi.intel.com>
+References: <20200325231422.1502366-1-heiko@sntech.de>
+ <20200325231422.1502366-4-heiko@sntech.de>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <20200325231422.1502366-4-heiko@sntech.de>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Linus,
+On Thu, Mar 26, 2020 at 12:14:18AM +0100, Heiko Stuebner wrote:
+> From: Lukas Wunner <lukas@wunner.de>
+> 
+> Amend the serial core to retrieve the rs485 bus termination GPIO from
+> the device tree (or ACPI table) and amend the default ->rs485_config()
+> callback for 8250 drivers to change the GPIO on request from user space.
 
-please pull the latest x86/timers branch from:
+> +	port->rs485_term_gpio = devm_gpiod_get(dev, "rs485-term",
+> +					       GPIOD_FLAGS_BIT_DIR_OUT);
+> +	if (IS_ERR(port->rs485_term_gpio)) {
+> +		ret = PTR_ERR(port->rs485_term_gpio);
+> +		port->rs485_term_gpio = NULL;
+> +		if (ret != -ENOENT) {
+> +			if (ret != -EPROBE_DEFER)
+> +				dev_err(dev, "Cannot get rs485-term-gpios\n");
+> +			return ret;
+> +		}
 
-   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86-timers-2020-03-30
+NIH of gpiod_get_optional().
 
-up to:  fac01d11722c: x86/tsc_msr: Make MSR derived TSC frequency more accurate
+> +	} else {
+> +		ret = gpiod_get_value(port->rs485_term_gpio);
+> +		if (ret < 0) {
+> +			dev_err(dev, "Cannot get rs485-term-gpios value\n");
+> +			return ret;
+> +		}
+> +		if (ret)
+> +			rs485conf->flags |= SER_RS485_TERMINATE_BUS;
+> +	}
 
-
-x86 timer updates:
-
-  - A series of commits to make the MSR derived CPU and TSC frequency more
-    accurate.
-
-    It turned out that the frequency tables which have been taken from the
-    SDM are inaccurate because the SDM provides truncated and rounded
-    values, e.g. 83.3Mhz (83.3333...) or 116.7Mhz (116.6666...).
-
-    This causes time drift in the range of ~1 second per hour
-    (20-30 seconds per day). On some of these SoCs it's not possible to
-    recalibrate the TSC because there is no reference (PIT, HPET) available.
-
-    With some reverse engineering it was established that the possible
-    frequencies are derived from the base clock with fixed multiplier /
-    divider pairs.
-
-    For the CPU models which have a known crystal frequency the kernel now
-    uses multiplier / divider pairs which bring the frequencies closer to
-    reality and fix the observed time drift issues.
-
-Thanks,
-
-	tglx
-
------------------->
-Hans de Goede (3):
-      x86/tsc_msr: Use named struct initializers
-      x86/tsc_msr: Fix MSR_FSB_FREQ mask for Cherry Trail devices
-      x86/tsc_msr: Make MSR derived TSC frequency more accurate
-
-
- arch/x86/kernel/tsc_msr.c | 128 ++++++++++++++++++++++++++++++++++++++++------
- 1 file changed, 112 insertions(+), 16 deletions(-)
+-- 
+With Best Regards,
+Andy Shevchenko
 
 
