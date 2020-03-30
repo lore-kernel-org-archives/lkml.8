@@ -2,146 +2,228 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B59DC2D0E9
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 09:36:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3819FC2D0EB
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 09:37:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 132EC20714
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 09:36:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 01B0420714
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 09:37:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RtVLmQ62"
+	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="SSFg7jtA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728401AbgC3Jgq (ORCPT
+        id S1728616AbgC3Jht (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 05:36:46 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:43855 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726127AbgC3Jgq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 05:36:46 -0400
-Received: by mail-wr1-f65.google.com with SMTP id m11so14838322wrx.10;
-        Mon, 30 Mar 2020 02:36:44 -0700 (PDT)
+        Mon, 30 Mar 2020 05:37:49 -0400
+Received: from mail-co1nam11on2080.outbound.protection.outlook.com ([40.107.220.80]:18734
+        "EHLO NAM11-CO1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727714AbgC3Jhs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Mar 2020 05:37:48 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Tucrpqa7j6sIM2i7mzQHGJbYEBNugYxoPbW+7qiyIKKAIIFPWfISiqrVNAkMHofX8BXt6QN/NAtKCRgNzPOqAsOvYkmu3Pc/3zsR14UkNE2Sh+5I1OzWqVy2dIyaduXsq2Yfw1rVYfUuaOFz0dkMwMwuJzhKgtwbEZEM1b6PFSJFLutG2iRFPj5xPpTwbd0piWrtu592pS/GBUzG1X56v3YonUOYrfZ5vU013Z2vOw+6N0LrtRWeRjVAKzNADWBoTPYtb1PZaewvzQN+zdPu/QSyXuMAECsUZrKoHXdUGmyhxhTUKufo8WqZlRu2FCGoB2jvZxzRUnVtK5i80cNYHA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=rEh+/9VG1M4fv3WVs0zaCmiNeBDywC5hVysuQWuuJhY=;
+ b=nFu/nowHQoFRCZUU2YfoFsZFWf6KJzCilFXXTyxXCzlbNh2SsybkVySIz/+1pqM7VonXQjU5kZF+wiMn6b8NT4nE2uHAHEDUD1HL+c9Ijh3s7fh7OAg6SQyA3bFZIuJNkeoFXApQdcjo42Sc8GdhgVjHAPnBMOkGSBRFozoCh4LOWHskw3zE7EafhJz6syDWiQVacx0J4htNJoF6BSkeEW8GrJsL0fvxUdXDOQcItK8mMf1OFC7f6j/4G3FSCh7b5fkJRIv+HVAquP5cNjDxIo59BTY61GskOmJzQcFCFOPDesdAwUHIcIECyOYG5ye3aZN2nYdIa0Rgf8u4kbqx5w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=xilinx.com; dmarc=pass action=none header.from=xilinx.com;
+ dkim=pass header.d=xilinx.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=cc:subject:to:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=dMOMguEdlIuN75EQIiDQDpZW482UQX8EDI3gaRnFB1I=;
-        b=RtVLmQ62zN+mfcKFr3smxzWvHfS1g/EnH1qPSkUpslKgzT3RA4Fr/+C2GSVGxiik+X
-         P42T4NoS97zWfhZwDNPCfI7y8ghQ1KduifFn03sqQTkqqKybtFmUdEzH9SH5z/CtKu7t
-         i6kWeba5nmUvUaqHRqqWD/6IAeEWLj09Augt6c/6bg1o7jXcOrIyARTkE7hpA4+Lq2hu
-         8Zm71Qaer+r5xzJmVxtUE3qyfdXFDeSQ5GpQcG74ki+9QNJnwVJjYnZ+Sw4yAwwNMPS1
-         2S8KEoGdFAbuKl09M47nIdlCB6pnNGetCa4Fmwz6oclaTY/kXRl51eMV/Of3qwqb2QCQ
-         2Dhw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:cc:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=dMOMguEdlIuN75EQIiDQDpZW482UQX8EDI3gaRnFB1I=;
-        b=dIFRzhs5q2COil1ReNsvtGg7qDYWxYMVxYjLYpsVznKMoVa3AeBR52QDNVBcMebfmI
-         0PWglm1eLuO+z1TC/ZjfwdnkKSZo9YcYOEyjV+5ko6TaJiS47TJt5x7qMxlkYTrueaEK
-         g+G/266sQ5Cl8RnqzcSbR2uu97rpM++c1CJj2Bjj8W+mFdv2+WKeclW5skQtMGRfO5Fq
-         EVt8fT1OcWHj0suegzBCYm3Qjk+V2fRVvsRFzFt6/MeugwGrleoR2jTIdYNsBBIDbMcB
-         f0lNzamr+6fY8gLkTQ6hX6f+4DTZMf/edrtlEXGcoLPD2cwgc0BUo5EgNfuycsQ8xKpn
-         iBoQ==
-X-Gm-Message-State: ANhLgQ0bKPVyr4oc4W1HTW3pWHYCU22h676z/GWyUFKqAVVUSeWeb+V7
-        d2To+JR0g4pkOxV7HEdfwrHxd+xa
-X-Google-Smtp-Source: ADFU+vupMQ8V2Z4tt1xvq5UVmxORz5LVakrDOtxhLtznVUhByukAKKQNTI3UOov2TyUTQ9c5kYkV0Q==
-X-Received: by 2002:a5d:6a10:: with SMTP id m16mr14939339wru.371.1585561003902;
-        Mon, 30 Mar 2020 02:36:43 -0700 (PDT)
-Received: from ?IPv6:2001:a61:2482:101:3351:6160:8173:cc31? ([2001:a61:2482:101:3351:6160:8173:cc31])
-        by smtp.gmail.com with ESMTPSA id h2sm12940346wmb.16.2020.03.30.02.36.42
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 30 Mar 2020 02:36:43 -0700 (PDT)
-Cc:     mtk.manpages@gmail.com, Al Viro <viro@zeniv.linux.org.uk>,
-        Christian Brauner <christian@brauner.io>,
-        Aleksa Sarai <asarai@suse.de>, linux-man@vger.kernel.org,
-        linux-api@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH man-pages v2 2/2] openat2.2: document new openat2(2)
- syscall
-To:     Aleksa Sarai <cyphar@cyphar.com>
-References: <20200202151907.23587-1-cyphar@cyphar.com>
- <20200202151907.23587-3-cyphar@cyphar.com>
- <4dcea613-60b8-a8af-9688-be93858ab652@gmail.com>
- <20200330092051.umcu2mjnwqazml7a@yavin.dot.cyphar.com>
-From:   "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com>
-Message-ID: <ae275f67-9277-547c-e78c-bca4f388f694@gmail.com>
-Date:   Mon, 30 Mar 2020 11:36:42 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
-MIME-Version: 1.0
-In-Reply-To: <20200330092051.umcu2mjnwqazml7a@yavin.dot.cyphar.com>
-Content-Type: text/plain; charset=windows-1252
+ d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=rEh+/9VG1M4fv3WVs0zaCmiNeBDywC5hVysuQWuuJhY=;
+ b=SSFg7jtAgJ2Pr85Q6E/tWoPOsRSMuEYxyOO9ZMScNInBuMcJsNXPOUj/DowrMYjXXoGuU9PivjS7AWLNNWRG0wcCeiNUokD5eg9nExl7Dx6bPnMy1OXfS1HJZJ+3Hy6Z/Le+yhjzmUsJRCzN4cyKbFLwgZD/ScrIAsWxwq4gy6Y=
+Received: from BYAPR02MB5559.namprd02.prod.outlook.com (2603:10b6:a03:a1::18)
+ by BYAPR02MB5045.namprd02.prod.outlook.com (2603:10b6:a03:6f::27) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2856.18; Mon, 30 Mar
+ 2020 09:37:42 +0000
+Received: from BYAPR02MB5559.namprd02.prod.outlook.com
+ ([fe80::45a0:6b24:a9ce:1a63]) by BYAPR02MB5559.namprd02.prod.outlook.com
+ ([fe80::45a0:6b24:a9ce:1a63%4]) with mapi id 15.20.2856.019; Mon, 30 Mar 2020
+ 09:37:42 +0000
+From:   Bharat Kumar Gogada <bharatku@xilinx.com>
+To:     "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
+        "maz@kernel.org" <maz@kernel.org>
+CC:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        Ravikiran Gummaluri <rgummal@xilinx.com>
+Subject: RE: [PATCH v5 2/2] PCI: xilinx-cpm: Add Versal CPM Root Port driver
+Thread-Topic: [PATCH v5 2/2] PCI: xilinx-cpm: Add Versal CPM Root Port driver
+Thread-Index: AQHV14gyqXPkldKNt0SLTelX37u03Kgr8Z6AgAAlV5CABIIlAIAaXfLggBZHSCA=
+Date:   Mon, 30 Mar 2020 09:37:42 +0000
+Message-ID: <BYAPR02MB5559D6EBD0393D820276B883A5CB0@BYAPR02MB5559.namprd02.prod.outlook.com>
+References: <1580400771-12382-1-git-send-email-bharat.kumar.gogada@xilinx.com>
+ <1580400771-12382-3-git-send-email-bharat.kumar.gogada@xilinx.com>
+ <20200225114013.GB6913@e121166-lin.cambridge.arm.com>
+ <MN2PR02MB63365B50058B35AA37341BC9A5ED0@MN2PR02MB6336.namprd02.prod.outlook.com>
+ <20200228104442.GA2874@e121166-lin.cambridge.arm.com>
+ <MN2PR02MB633672DD246A5351DA2D0CEAA5F90@MN2PR02MB6336.namprd02.prod.outlook.com>
+In-Reply-To: <MN2PR02MB633672DD246A5351DA2D0CEAA5F90@MN2PR02MB6336.namprd02.prod.outlook.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=bharatku@xilinx.com; 
+x-originating-ip: [149.199.50.129]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: adeb3adf-fa9c-4cba-f946-08d7d48dfecb
+x-ms-traffictypediagnostic: BYAPR02MB5045:|BYAPR02MB5045:
+x-ld-processed: 657af505-d5df-48d0-8300-c31994686c5c,ExtAddr
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <BYAPR02MB504569029EEA0ED169074773A5CB0@BYAPR02MB5045.namprd02.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 0358535363
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR02MB5559.namprd02.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10009020)(4636009)(396003)(136003)(376002)(39860400002)(346002)(366004)(110136005)(76116006)(8936002)(6506007)(54906003)(66476007)(66946007)(66446008)(316002)(7696005)(64756008)(66556008)(4326008)(478600001)(86362001)(81166006)(8676002)(5660300002)(2906002)(9686003)(186003)(107886003)(33656002)(55016002)(52536014)(26005)(71200400001)(81156014);DIR:OUT;SFP:1101;
+received-spf: None (protection.outlook.com: xilinx.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: BVqCzvDqxqs+CVt/10vifvDwysaNhmpqXl/zmWog58jwdx7PVTQS8h6Uz8jbaqb/Lr2lnuCq/9xRJGGnpARFXQsWDvIfG/jjJHq7DeOAoGvWZ+bPgtKU1iBjNilX/xhrNwLXADFXRqfWW7mk3qn94bijVpK3++8wBNptr3QithDb0J20HlJL8YSo+y2eYEjccSQSWcnCQ7khvyu9qd/2Wj1E/oMVlZe0iSmfChnZqRxvWbtNfD3o6JyMXIg/Q6j/mKk/pT0qPicIGjVK/CRaABYxehXT6viJ06GFa8HcAeJdyp9ePPB1IDpV/udr3BYN8RcETdFEu/nlyK+sHgVj8lIqhhxAPe++6iANcymNfssU3Wv4w7aEy6hEHeIzsMUAbyT4mIO50+vw3Nan4mG+afif8B4egnOyqdibbLxyhlG47b0DOGSF8tCFRHn3yTpU
+x-ms-exchange-antispam-messagedata: LxrTKiL+Sy/Abfx/ZIAfzOJjIi9p2xWFZdcrRSFLucrCqEptUm1czZOQ4ri1jY46j0hei0VavF1SjCWHUGygsZhNd6MdTWgYK1hq9rN19OlwvhYSPjOKocuwrR8yQjS1s2aX1sqPe98ixtaVmdrbhg==
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: xilinx.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: adeb3adf-fa9c-4cba-f946-08d7d48dfecb
+X-MS-Exchange-CrossTenant-originalarrivaltime: 30 Mar 2020 09:37:42.4700
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 657af505-d5df-48d0-8300-c31994686c5c
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: ytrt4Xu+VG3vkSoXbx5VZQ5YZsPOIwzS0LiEfJIepCfgfiU9SfBFJue+Pl9ohLVJ90zOq4KyUMVKUyp8s3ZhZw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR02MB5045
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/30/20 11:20 AM, Aleksa Sarai wrote:
-> On 2020-03-30, Michael Kerrisk (man-pages) <mtk.manpages@gmail.com> wrote:
->> Hello Aleksa,
->>
->> On 2/2/20 4:19 PM, Aleksa Sarai wrote:
->>> Rather than trying to merge the new syscall documentation into open.2
->>> (which would probably result in the man-page being incomprehensible),
->>> instead the new syscall gets its own dedicated page with links between
->>> open(2) and openat2(2) to avoid duplicating information such as the list
->>> of O_* flags or common errors.
->>>
->>> In addition to describing all of the key flags, information about the
->>> extensibility design is provided so that users can better understand why
->>> they need to pass sizeof(struct open_how) and how their programs will
->>> work across kernels. After some discussions with David Laight, I also
->>> included explicit instructions to zero the structure to avoid issues
->>> when recompiling with new headers.>
->>> Signed-off-by: Aleksa Sarai <cyphar@cyphar.com>
->>
->> I'm just editing this page, and have a question on one piece.
->>
->>> +Unlike
->>> +.BR openat (2),
->>> +it is an error to provide
->>> +.BR openat2 ()
->>> +with a
->>> +.I mode
->>> +which contains bits other than
->>> +.IR 0777 ,
->>
->> This piece appears not to be true, both from my reading of the
->> source code, and from testing (i.e., I wrote a a small program that
->> successfully called openat2() and created a file that had the
->> set-UID, set-GID, and sticky bits set).
->>
->> Is this a bug in the implementation or a bug in the manual page text?
-> 
-> My bad -- it's a bug in the manual. The actual check (which does work,
-> there are selftests for this) is:
-> 
-> 	if (how->mode & ~S_IALLUGO)
-> 		return -EINVAL;
-> 
-> But when writing the man page I forgot that S_IALLUGO also includes
-> those bits. Do you want me to send an updated version or would you
-> prefer to clean it up?
+> Subject: RE: [PATCH v5 2/2] PCI: xilinx-cpm: Add Versal CPM Root Port dri=
+ver
+>=20
+> > Subject: Re: [PATCH v5 2/2] PCI: xilinx-cpm: Add Versal CPM Root Port
+> > driver
+> >
+> > [+MarcZ, FHI]
+> >
+> > On Tue, Feb 25, 2020 at 02:39:56PM +0000, Bharat Kumar Gogada wrote:
+> >
+> > [...]
+> >
+> > > > > +/* ECAM definitions */
+> > > > > +#define ECAM_BUS_NUM_SHIFT		20
+> > > > > +#define ECAM_DEV_NUM_SHIFT		12
+> > > >
+> > > > You don't need these ECAM_* defines, you can use pci_generic_ecam_o=
+ps.
+> > > Does this need separate ranges region for ECAM space ?
+> > > We have ECAM and controller space in same region.
+> >
+> > You can create an ECAM window with pci_ecam_create where *cfgres
+> > represent the ECAM area, I don't get what you mean by "same region".
+> >
+> > Do you mean "contiguous" ? Or something else ?
+> >
+> > > > > +
+> > > > > +/**
+> > > > > + * struct xilinx_cpm_pcie_port - PCIe port information
+> > > > > + * @reg_base: Bridge Register Base
+> > > > > + * @cpm_base: CPM System Level Control and Status
+> > > > > +Register(SLCR) Base
+> > > > > + * @irq: Interrupt number
+> > > > > + * @root_busno: Root Bus number
+> > > > > + * @dev: Device pointer
+> > > > > + * @leg_domain: Legacy IRQ domain pointer
+> > > > > + * @irq_misc: Legacy and error interrupt number  */ struct
+> > > > > +xilinx_cpm_pcie_port {
+> > > > > +	void __iomem *reg_base;
+> > > > > +	void __iomem *cpm_base;
+> > > > > +	u32 irq;
+> > > > > +	u8 root_busno;
+> > > > > +	struct device *dev;
+> > > > > +	struct irq_domain *leg_domain;
+> > > > > +	int irq_misc;
+> > > > > +};
+> > > > > +
+> > > > > +static inline u32 pcie_read(struct xilinx_cpm_pcie_port *port,
+> > > > > +u32
+> > > > > +reg) {
+> > > > > +	return readl(port->reg_base + reg); }
+> > > > > +
+> > > > > +static inline void pcie_write(struct xilinx_cpm_pcie_port *port,
+> > > > > +			      u32 val, u32 reg)
+> > > > > +{
+> > > > > +	writel(val, port->reg_base + reg); }
+> > > > > +
+> > > > > +static inline bool cpm_pcie_link_up(struct xilinx_cpm_pcie_port
+> > > > > +*port) {
+> > > > > +	return (pcie_read(port, XILINX_CPM_PCIE_REG_PSCR) &
+> > > > > +		XILINX_CPM_PCIE_REG_PSCR_LNKUP) ? 1 : 0;
+> > > >
+> > > > 	u32 val =3D pcie_read(port, XILINX_CPM_PCIE_REG_PSCR);
+> > > >
+> > > > 	return val & XILINX_CPM_PCIE_REG_PSCR_LNKUP;
+> > > >
+> > > > And this function call is not that informative anyway - it is used
+> > > > just to print a log whose usefulness is questionable.
+> > > We need this logging information customers are using this info in
+> > > case of link down failure.
+> >
+> > Out of curiosity, to do what ?
+> >
+> > [...]
+> >
+> > > > > +/**
+> > > > > + * xilinx_cpm_pcie_intx_map - Set the handler for the INTx and
+> > > > > +mark IRQ as valid
+> > > > > + * @domain: IRQ domain
+> > > > > + * @irq: Virtual IRQ number
+> > > > > + * @hwirq: HW interrupt number
+> > > > > + *
+> > > > > + * Return: Always returns 0.
+> > > > > + */
+> > > > > +static int xilinx_cpm_pcie_intx_map(struct irq_domain *domain,
+> > > > > +				    unsigned int irq, irq_hw_number_t
+> hwirq) {
+> > > > > +	irq_set_chip_and_handler(irq, &dummy_irq_chip,
+> > > > > +handle_simple_irq);
+> > > >
+> > > > INTX are level IRQs, the flow handler must be handle_level_irq.
+> > > Accepted will change.
+> > > >
+> > > > > +	irq_set_chip_data(irq, domain->host_data);
+> > > > > +	irq_set_status_flags(irq, IRQ_LEVEL);
+> > > >
+> > > > The way INTX are handled in this patch is wrong. You must set-up a
+> > > > chained IRQ with the appropriate flow handler, current code uses
+> > > > an IRQ action and that's an IRQ layer violation and it goes
+> > > > without saying that it
+> > is almost certainly broken.
+> > > In our controller we use same irq line for controller errors and
+> > > legacy errors.  we have two cases here where error interrupts are
+> > > self-consumed by controller, and legacy interrupts are flow handled.
+> > > Its not INTX handling alone for this IRQ line .  So chained IRQ can
+> > > be used for self consumed interrupts too ?
+> >
+> > No. In this specific case both solutions are not satisfying, we need
+> > to give it some thought, I will talk to Marc (CC'ed) to find the best
+> > option here going forward.
+> >
+> Hi Marc,
+>=20
+> Can you please provide yours inputs for this case.
+>=20
+Hi Marc,
 
-I'll clean it up.
+Can you please provide required inputs on this.
 
-So, it should say, "bits other than 07777", right?
-
-Thanks,
-
-Michael
-
-
--- 
-Michael Kerrisk
-Linux man-pages maintainer; http://www.kernel.org/doc/man-pages/
-Linux/UNIX System Programming Training: http://man7.org/training/
+Regards,
+Bharat
