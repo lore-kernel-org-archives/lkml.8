@@ -7,28 +7,28 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C758C2D0EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 13:54:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95293C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 13:54:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E6D902073B
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 13:54:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 67455206CC
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 13:54:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b="Dcko6Av7"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b="G1UesuzY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728571AbgC3Nyc (ORCPT
+        id S1728629AbgC3Nyf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 09:54:32 -0400
+        Mon, 30 Mar 2020 09:54:35 -0400
 Received: from mx1.tq-group.com ([62.157.118.193]:50877 "EHLO mx1.tq-group.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728317AbgC3Nya (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 09:54:30 -0400
-IronPort-SDR: l6c8d4ufmHTFlol9w4egC0tFWAAggT8Ue4+UFH01FKJta4iAKUZm6LIeBJnE01aierZW+Fuia1
- HBktNyVeNULwudAqq9EktOfEiEeR9Ib8BwsUzvrLdERymVtAw/adzZZILiR9r5TIrf6/s3x0yh
- rGRxc6cp2Da0XMdOFP1kQigOH2NLCEv2sgYpoR2XKN4CmZLwDgPPayQSOyHY1Xu0nDU/KINIlo
- NwnJ0GBEnJTSIlIRYybDMKdK2YZqOEbO2XzCU9wORWE8lXOB5gBs8k+0n8ymwy1i04+Z5vbDti
- A6Q=
+        id S1728490AbgC3Nyc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Mar 2020 09:54:32 -0400
+IronPort-SDR: Y5EghjizNobDW5xbSwhBzX+5CWOcME1/s2KpTsQsDoGFcPB5YT/0ZqnwZqQTErkCztD8JYB5xy
+ fRizms3uxT+wsADNAj+g9iw0zL8+raRRrot6e7xq00M29VI39Vm4LV2BQNOeQCBLYwBqXf/Cth
+ E74Au7rwLZx24CyT1Pr1CJGu+5DpDcOyLhhPe/OcHYCkksj3tZRo4QZ7sgdVTOPxEaXBJmG8aX
+ 03+Ml90lX81k9kuGiKKxK67vWSEdolIVoG/p5j/ZVCV8OHt3QtdzxHzXl41lU1GpKRofb4QAI6
+ YCA=
 X-IronPort-AV: E=Sophos;i="5.72,324,1580770800"; 
-   d="scan'208";a="11606918"
+   d="scan'208";a="11606922"
 Received: from unknown (HELO tq-pgp-pr1.tq-net.de) ([192.168.6.15])
   by mx1-pgp.tq-group.com with ESMTP; 30 Mar 2020 15:54:28 +0200
 Received: from mx1.tq-group.com ([192.168.6.7])
@@ -41,34 +41,34 @@ DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
   t=1585576468; x=1617112468;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references;
-  bh=po89PzaA6MKZBpJ/RTQTIsqag9iwZ1Wmc6kMxkfYtkk=;
-  b=Dcko6Av78DGjCMu57BZG+4QC2ukRKqTff/Vn/tp0KtBTDPBIhG+8GDNE
-   0SWFqRg0RMhKf1Z6EIw/z/pzZBR8HfpdxxoFc8dTnLYFo/q0/LHc+TjJq
-   kM+NCMYxTMOQE5cdfjRiz2v9VzjgyzRIhyyfzuoQ48OlWcYBtE6vs3gIg
-   a+nxgAl+E/Ecz6/C/hOV3oCBWC3/lh/ZtmJDx7Sp/03Yd38pr+l/+cmF8
-   +H6abv1YF76yKXtD3SjV6moeUCY0JFw+xJTgvFZOYRJB/zkmTlsaFPMRB
-   Ryl7en6XiDa+8HW7uYd1W5bCyh+J/GziV78Ol3wOZsIb9xJL0awrKGsn8
-   Q==;
-IronPort-SDR: EeKZZ6vDx2l67ZyrQH8h+LQ2Q63oXjRZ56gxaDTE5ijPrUOkTM7NMFRToneC/heXFFK/zggDOG
- Iw8eH890PZ2sOSTdZ5nfHlG0G8gEklp+zXgnFFfuS6FOEul7zsebucN/N2Z6zfs1qTFRL3jlpB
- kCjwo4cgakkQ5XcrzhoLLSAiSWD7cRywGTC3uX87/VVAu9R1p51F2DP4ltsUAox+TN+O7MjdaA
- BXNjhbDZeGrcBl1AX2b760M6DTZQvPBkdKL8ss4SsQLrayWtKOWvxa+na8+qVL23PU34boG4xD
- Wa4=
+  bh=90m37/5zJs3kt2iYIY/hmc7I7JDo4kDC1Cx3Gz+g2qY=;
+  b=G1UesuzYvaukYDLSe5vcnWHkPKQtMgjzXjA4wcAki5bVWSdVInn8b4fV
+   VTJp/0+l3483sekMQh8WaJZFCmFmFRs+jOBSNQ9sRy/CNUB+uCH+tSV2B
+   OfJsy+jGBiL088u0UmREHEHvbrrId+xp5yd0ksqtv/r3gVCLYtJWz/UDp
+   yG1KaG7n3XCgDx/vxqDouIUUMpU6Si+GmvG1Lmdcm4zeUdB14hhUrl/9T
+   hZhZKs5w0letlh/czyM96I87tLub4wTcCRR8+BxzHiC+ucVui5uPNAEqI
+   WrYjlgPsbmopzT+RmhSfD9QPk81ngtdO/xN6aknVzTh/sj/fYvoujIsnX
+   A==;
+IronPort-SDR: jucPNaituKfnfV9Mm6EffvDpCbzsHg/c+1FXcvBGAbz9dcCWxKT9KJOs1k1H3FOaonrAQ6jB0P
+ Rv0KbZw9B+NWsA1LxHrw9Tbse7ke9w3jINJ6p1ZXMhewChBEEFHGdLeA9embpCuq7VzZYBKKDn
+ Jsut9Dcjmtk9kCbkO8xWgdLj3HlhJSHxoHaBLAptnW/GfBczm4Hs7jaeKBD31+8htRjU1pQNsB
+ 2NiYx2rLSCqpgKx4AdI/2H5D/Au34F1M0nmjOsdj8DITPmM9HapnY0DZD93h+nRXUDq2WF0OK9
+ 92I=
 X-IronPort-AV: E=Sophos;i="5.72,324,1580770800"; 
-   d="scan'208";a="11606917"
+   d="scan'208";a="11606921"
 Received: from vtuxmail01.tq-net.de ([10.115.0.20])
   by mx1.tq-group.com with ESMTP; 30 Mar 2020 15:54:28 +0200
 Received: from schifferm-ubuntu4.tq-net.de (schifferm-ubuntu4.tq-net.de [10.117.49.26])
-        by vtuxmail01.tq-net.de (Postfix) with ESMTPA id EF068280070;
-        Mon, 30 Mar 2020 15:54:32 +0200 (CEST)
+        by vtuxmail01.tq-net.de (Postfix) with ESMTPA id 44169280070;
+        Mon, 30 Mar 2020 15:54:33 +0200 (CEST)
 From:   Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
 To:     andrew@lunn.ch, vivien.didelot@gmail.com, f.fainelli@gmail.com,
         davem@davemloft.net, kuba@kernel.org
 Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
         Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
-Subject: [PATCH net-next 2/4] net: dsa: mv88e6xxx: account for PHY base address offset in dual chip mode
-Date:   Mon, 30 Mar 2020 15:53:43 +0200
-Message-Id: <20200330135345.4361-2-matthias.schiffer@ew.tq-group.com>
+Subject: [PATCH net-next 4/4] net: dsa: mv88e6xxx: add support for MV88E6020 switch
+Date:   Mon, 30 Mar 2020 15:53:45 +0200
+Message-Id: <20200330135345.4361-4-matthias.schiffer@ew.tq-group.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200330135345.4361-1-matthias.schiffer@ew.tq-group.com>
 References: <20200330135345.4361-1-matthias.schiffer@ew.tq-group.com>
@@ -77,56 +77,71 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In dual chip mode (6250 family), not only global and port registers are
-shifted by sw_addr, but also the PHY addresses. Account for this in the
-IRQ mapping.
+A 6250 family switch with 5 internal PHYs and no PTP support.
 
 Signed-off-by: Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
 ---
- drivers/net/dsa/mv88e6xxx/chip.h    | 1 +
- drivers/net/dsa/mv88e6xxx/global2.c | 2 +-
- drivers/net/dsa/mv88e6xxx/smi.c     | 4 ++++
- 3 files changed, 6 insertions(+), 1 deletion(-)
+ drivers/net/dsa/mv88e6xxx/chip.c | 21 +++++++++++++++++++++
+ drivers/net/dsa/mv88e6xxx/chip.h |  1 +
+ drivers/net/dsa/mv88e6xxx/port.h |  1 +
+ 3 files changed, 23 insertions(+)
 
+diff --git a/drivers/net/dsa/mv88e6xxx/chip.c b/drivers/net/dsa/mv88e6xxx/chip.c
+index 228c1b085b66..a72b81c9d417 100644
+--- a/drivers/net/dsa/mv88e6xxx/chip.c
++++ b/drivers/net/dsa/mv88e6xxx/chip.c
+@@ -4647,6 +4647,27 @@ static const struct mv88e6xxx_ops mv88e6390x_ops = {
+ };
+ 
+ static const struct mv88e6xxx_info mv88e6xxx_table[] = {
++	[MV88E6020] = {
++		.prod_num = MV88E6XXX_PORT_SWITCH_ID_PROD_6020,
++		.family = MV88E6XXX_FAMILY_6250,
++		.name = "Marvell 88E6020",
++		.num_databases = 64,
++		.num_ports = 7,
++		.num_internal_phys = 5,
++		.max_vid = 4095,
++		.port_base_addr = 0x8,
++		.phy_base_addr = 0x0,
++		.global1_addr = 0xf,
++		.global2_addr = 0x7,
++		.age_time_coeff = 15000,
++		.g1_irqs = 9,
++		.g2_irqs = 5,
++		.atu_move_port_mask = 0xf,
++		.dual_chip = true,
++		.tag_protocol = DSA_TAG_PROTO_DSA,
++		.ops = &mv88e6250_ops,
++	},
++
+ 	[MV88E6085] = {
+ 		.prod_num = MV88E6XXX_PORT_SWITCH_ID_PROD_6085,
+ 		.family = MV88E6XXX_FAMILY_6097,
 diff --git a/drivers/net/dsa/mv88e6xxx/chip.h b/drivers/net/dsa/mv88e6xxx/chip.h
-index e5430cf2ad71..88c148a62366 100644
+index 88c148a62366..f75d48427c26 100644
 --- a/drivers/net/dsa/mv88e6xxx/chip.h
 +++ b/drivers/net/dsa/mv88e6xxx/chip.h
-@@ -257,6 +257,7 @@ struct mv88e6xxx_chip {
- 	const struct mv88e6xxx_bus_ops *smi_ops;
- 	struct mii_bus *bus;
- 	int sw_addr;
-+	unsigned int phy_base_addr;
+@@ -47,6 +47,7 @@ enum mv88e6xxx_frame_mode {
  
- 	/* Handles automatic disabling and re-enabling of the PHY
- 	 * polling unit.
-diff --git a/drivers/net/dsa/mv88e6xxx/global2.c b/drivers/net/dsa/mv88e6xxx/global2.c
-index 8fd483020c5b..3c3dfaf16882 100644
---- a/drivers/net/dsa/mv88e6xxx/global2.c
-+++ b/drivers/net/dsa/mv88e6xxx/global2.c
-@@ -1156,7 +1156,7 @@ int mv88e6xxx_g2_irq_mdio_setup(struct mv88e6xxx_chip *chip,
- 			err = irq;
- 			goto out;
- 		}
--		bus->irq[chip->info->phy_base_addr + phy] = irq;
-+		bus->irq[chip->phy_base_addr + phy] = irq;
- 	}
- 	return 0;
- out:
-diff --git a/drivers/net/dsa/mv88e6xxx/smi.c b/drivers/net/dsa/mv88e6xxx/smi.c
-index 282fe08db050..a62d7b8702d5 100644
---- a/drivers/net/dsa/mv88e6xxx/smi.c
-+++ b/drivers/net/dsa/mv88e6xxx/smi.c
-@@ -175,5 +175,9 @@ int mv88e6xxx_smi_init(struct mv88e6xxx_chip *chip,
- 	chip->bus = bus;
- 	chip->sw_addr = sw_addr;
- 
-+	chip->phy_base_addr = chip->info->phy_base_addr;
-+	if (chip->info->dual_chip)
-+		chip->phy_base_addr += sw_addr;
-+
- 	return 0;
- }
+ /* List of supported models */
+ enum mv88e6xxx_model {
++	MV88E6020,
+ 	MV88E6085,
+ 	MV88E6095,
+ 	MV88E6097,
+diff --git a/drivers/net/dsa/mv88e6xxx/port.h b/drivers/net/dsa/mv88e6xxx/port.h
+index 44d76ac973f6..190d7d5568e9 100644
+--- a/drivers/net/dsa/mv88e6xxx/port.h
++++ b/drivers/net/dsa/mv88e6xxx/port.h
+@@ -101,6 +101,7 @@
+ /* Offset 0x03: Switch Identifier Register */
+ #define MV88E6XXX_PORT_SWITCH_ID		0x03
+ #define MV88E6XXX_PORT_SWITCH_ID_PROD_MASK	0xfff0
++#define MV88E6XXX_PORT_SWITCH_ID_PROD_6020	0x0200
+ #define MV88E6XXX_PORT_SWITCH_ID_PROD_6085	0x04a0
+ #define MV88E6XXX_PORT_SWITCH_ID_PROD_6095	0x0950
+ #define MV88E6XXX_PORT_SWITCH_ID_PROD_6097	0x0990
 -- 
 2.17.1
 
