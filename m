@@ -2,149 +2,136 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.2 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADB5CC43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 20:15:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3481C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 20:16:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8BECB20786
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 20:15:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F29E2072E
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 20:16:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728889AbgC3UPk (ORCPT
+        id S1728559AbgC3UQ5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 16:15:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48194 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728780AbgC3UPi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 16:15:38 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1C2DE20714;
-        Mon, 30 Mar 2020 20:15:36 +0000 (UTC)
-Date:   Mon, 30 Mar 2020 16:15:34 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Pavel Machek <pavel@denx.de>
-Cc:     ben.hutchings@codethink.co.uk, Chris.Paterson2@renesas.com,
-        bigeasy@linutronix.de, LKML <linux-kernel@vger.kernel.org>,
-        linux-rt-users <linux-rt-users@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Carsten Emde <C.Emde@osadl.org>,
-        John Kacur <jkacur@redhat.com>,
-        Julia Cartwright <julia@ni.com>,
-        Daniel Wagner <wagi@monom.org>,
-        Tom Zanussi <zanussi@kernel.org>,
-        "Srivatsa S. Bhat" <srivatsa@csail.mit.edu>
-Subject: Re: 4.19.106-rt44 -- boot problems with irqwork: push most work
- into softirq context
-Message-ID: <20200330161534.5d4e7174@gandalf.local.home>
-In-Reply-To: <20200321230028.GA22058@duo.ucw.cz>
-References: <20200228170837.3fe8bb57@gandalf.local.home>
-        <20200319214835.GA29781@duo.ucw.cz>
-        <20200319232225.GA7878@duo.ucw.cz>
-        <20200319204859.5011a488@gandalf.local.home>
-        <20200320195432.GA12666@duo.ucw.cz>
-        <20200320160545.26a65de3@gandalf.local.home>
-        <20200321224339.GA20728@duo.ucw.cz>
-        <20200321230028.GA22058@duo.ucw.cz>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Mon, 30 Mar 2020 16:16:57 -0400
+Received: from out02.mta.xmission.com ([166.70.13.232]:39820 "EHLO
+        out02.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727936AbgC3UQ5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Mar 2020 16:16:57 -0400
+Received: from in02.mta.xmission.com ([166.70.13.52])
+        by out02.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.90_1)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1jJ0pz-0001xk-8G; Mon, 30 Mar 2020 14:16:47 -0600
+Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
+        by in02.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.87)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1jJ0py-0005pf-Ai; Mon, 30 Mar 2020 14:16:47 -0600
+From:   ebiederm@xmission.com (Eric W. Biederman)
+To:     Kairui Song <kasong@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Dave Young <dyoung@redhat.com>, kexec@lists.infradead.org
+References: <20200330181544.1595733-1-kasong@redhat.com>
+Date:   Mon, 30 Mar 2020 15:14:06 -0500
+In-Reply-To: <20200330181544.1595733-1-kasong@redhat.com> (Kairui Song's
+        message of "Tue, 31 Mar 2020 02:15:44 +0800")
+Message-ID: <87369py50x.fsf@x220.int.ebiederm.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-XM-SPF: eid=1jJ0py-0005pf-Ai;;;mid=<87369py50x.fsf@x220.int.ebiederm.org>;;;hst=in02.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
+X-XM-AID: U2FsdGVkX18POivBtpLy4qX5Ci7Y3ZVo2RKkhoDPLpY=
+X-SA-Exim-Connect-IP: 68.227.160.95
+X-SA-Exim-Mail-From: ebiederm@xmission.com
+Subject: Re: [PATCH] crash_dump: remove saved_max_pfn
+X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
+X-SA-Exim-Scanned: Yes (on in02.mta.xmission.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 22 Mar 2020 00:00:28 +0100
-Pavel Machek <pavel@denx.de> wrote:
+Kairui Song <kasong@redhat.com> writes:
 
-> Hi!
-> 
-> > > > > Does this patch help?    
-> > > > 
-> > > > I don't think so. It also failed, and the failure seems to be
-> > > > identical to me.
-> > > > 
-> > > > https://gitlab.com/cip-project/cip-kernel/linux-cip/tree/ci/pavel/linux-cip
-> > > > https://lava.ciplatform.org/scheduler/job/13110
-> > > >   
-> > > 
-> > > Can you send me a patch that shows the difference between the revert that
-> > > you say works, and the upstream v4.19-rt tree (let me know which version
-> > > of v4.19-rt you are basing it on).  
-> > 
-> > I was using -rt44, and yes, I can probably generate better diffs.
-> > 
-> > But I guess I found it with code review: how does this look to you? I
-> > applied it on top of your fix, and am testing. 2 successes so far.  
-> 
-> And I'd recommend some kind of cleanup on top. The code is really
-> "interesting" and we don't want to have two copies. Totally untested.
-> 
-> Looking at the code, it could be probably cleaned up further.
-> 
-> Signed-off-by: Pavel Machek <pavel@denx.de>
-> 
-> Best regards,
-> 								Pavel
+> This variable is no longer used.
+>
+> saved_max_pfn was originally introduce in commit 92aa63a5a1bf ("[PATCH]
+> kdump: Retrieve saved max pfn"), used to make sure that user does not
+> try to read the physical memory beyond saved_max_pfn. But since
+> commit 921d58c0e699 ("vmcore: remove saved_max_pfn check")
+> it's no longer used for the check.
+>
+> Only user left is Calary IOMMU, which start using it from
+> commit 95b68dec0d52 ("calgary iommu: use the first kernels TCE tables
+> in kdump"). But again, recently in commit 90dc392fc445 ("x86: Remove
+> the calgary IOMMU driver"), Calary IOMMU is removed and this variable
+> no longer have any user.
+>
+> So just remove it.
+>
+> Signed-off-by: Kairui Song <kasong@redhat.com>
 
-I applied this patch, does this work for you. It's slightly different than
-yours as I thought only the condition needed to be saved, not the lists
-themselves.
+Acked-by: "Eric W. Biederman" <ebiederm@xmission.com>
 
--- Steve
+Can we merge this through the tip tree?
 
-Index: stable-rt.git/kernel/irq_work.c
-===================================================================
---- stable-rt.git.orig/kernel/irq_work.c	2020-03-30 15:11:13.849875145 -0400
-+++ stable-rt.git/kernel/irq_work.c	2020-03-30 15:18:54.365242025 -0400
-@@ -70,6 +70,12 @@ static void __irq_work_queue_local(struc
- 		arch_irq_work_raise();
- }
- 
-+static inline bool use_lazy_list(struct irq_work *work)
-+{
-+	return (IS_ENABLED(CONFIG_PREEMPT_RT_FULL) && !(work->flags & IRQ_WORK_HARD_IRQ))
-+		|| (work->flags & IRQ_WORK_LAZY);
-+}
-+
- /* Enqueue the irq work @work on the current CPU */
- bool irq_work_queue(struct irq_work *work)
- {
-@@ -81,11 +87,10 @@ bool irq_work_queue(struct irq_work *wor
- 
- 	/* Queue the entry and raise the IPI if needed. */
- 	preempt_disable();
--	if (IS_ENABLED(CONFIG_PREEMPT_RT_FULL) && !(work->flags & IRQ_WORK_HARD_IRQ))
-+	if (use_lazy_list(work))
- 		list = this_cpu_ptr(&lazy_list);
- 	else
- 		list = this_cpu_ptr(&raised_list);
--
- 	__irq_work_queue_local(work, list);
- 	preempt_enable();
- 
-@@ -106,7 +111,6 @@ bool irq_work_queue_on(struct irq_work *
- 
- #else /* CONFIG_SMP: */
- 	struct llist_head *list;
--	bool lazy_work, realtime = IS_ENABLED(CONFIG_PREEMPT_RT_FULL);
- 
- 	/* All work should have been flushed before going offline */
- 	WARN_ON_ONCE(cpu_is_offline(cpu));
-@@ -116,10 +120,7 @@ bool irq_work_queue_on(struct irq_work *
- 		return false;
- 
- 	preempt_disable();
--
--	lazy_work = work->flags & IRQ_WORK_LAZY;
--
--	if (lazy_work || (realtime && !(work->flags & IRQ_WORK_HARD_IRQ)))
-+	if (use_lazy_list(work))
- 		list = &per_cpu(lazy_list, cpu);
- 	else
- 		list = &per_cpu(raised_list, cpu);
+
+> ---
+>  arch/x86/kernel/e820.c     | 8 --------
+>  include/linux/crash_dump.h | 2 --
+>  kernel/crash_dump.c        | 6 ------
+>  3 files changed, 16 deletions(-)
+>
+> diff --git a/arch/x86/kernel/e820.c b/arch/x86/kernel/e820.c
+> index c5399e80c59c..4d13c57f370a 100644
+> --- a/arch/x86/kernel/e820.c
+> +++ b/arch/x86/kernel/e820.c
+> @@ -910,14 +910,6 @@ static int __init parse_memmap_one(char *p)
+>  		return -EINVAL;
+>  
+>  	if (!strncmp(p, "exactmap", 8)) {
+> -#ifdef CONFIG_CRASH_DUMP
+> -		/*
+> -		 * If we are doing a crash dump, we still need to know
+> -		 * the real memory size before the original memory map is
+> -		 * reset.
+> -		 */
+> -		saved_max_pfn = e820__end_of_ram_pfn();
+> -#endif
+>  		e820_table->nr_entries = 0;
+>  		userdef = 1;
+>  		return 0;
+> diff --git a/include/linux/crash_dump.h b/include/linux/crash_dump.h
+> index 4664fc1871de..bc156285d097 100644
+> --- a/include/linux/crash_dump.h
+> +++ b/include/linux/crash_dump.h
+> @@ -97,8 +97,6 @@ extern void unregister_oldmem_pfn_is_ram(void);
+>  static inline bool is_kdump_kernel(void) { return 0; }
+>  #endif /* CONFIG_CRASH_DUMP */
+>  
+> -extern unsigned long saved_max_pfn;
+> -
+>  /* Device Dump information to be filled by drivers */
+>  struct vmcoredd_data {
+>  	char dump_name[VMCOREDD_MAX_NAME_BYTES]; /* Unique name of the dump */
+> diff --git a/kernel/crash_dump.c b/kernel/crash_dump.c
+> index 9c23ae074b40..92da32275af5 100644
+> --- a/kernel/crash_dump.c
+> +++ b/kernel/crash_dump.c
+> @@ -5,12 +5,6 @@
+>  #include <linux/errno.h>
+>  #include <linux/export.h>
+>  
+> -/*
+> - * If we have booted due to a crash, max_pfn will be a very low value. We need
+> - * to know the amount of memory that the previous kernel used.
+> - */
+> -unsigned long saved_max_pfn;
+> -
+>  /*
+>   * stores the physical address of elf header of crash image
+>   *
