@@ -2,152 +2,219 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0B5EC43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 15:22:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F276C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 15:22:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B83320732
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 15:22:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JAynNsaB"
+	by mail.kernel.org (Postfix) with ESMTP id 5807120732
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 15:22:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585581771;
+	bh=NU5TvCvYCJS/m6OiRLFmncBnZ2doaUZARTQrBVZ1nzM=;
+	h=From:Date:Subject:To:List-ID:From;
+	b=DePQv28AmEDIhllycBIkiv3Wb78VndKnp8iP6J0luR3UcxHhgHyU5qx96sfszUpfn
+	 Ce+aO5QZkO+pMP/1fxmk0Hc1e3PFEEE+PrwsabSUgCJRpYpde9bPapigvQl9l3dZ00
+	 6em2PrXNoy4nEE2YDTH994KKkdFgsc9Uip5B4T24=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728966AbgC3PWr (ORCPT
+        id S1729031AbgC3PWu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 11:22:47 -0400
-Received: from us-smtp-delivery-74.mimecast.com ([63.128.21.74]:46024 "EHLO
-        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726497AbgC3PWr (ORCPT
+        Mon, 30 Mar 2020 11:22:50 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:33908 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726497AbgC3PWs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 11:22:47 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1585581765;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=lRom6IvNpMgMUyWIXFy7ykYjVqfYVBjHnLgbEROmr7Y=;
-        b=JAynNsaBQVqR0mhChg1qM+I8Aj03UmGub3j8vieApbOTgYUW6XLIRuNsGmNTf7w94XLy07
-        tF2kEnrXAaAKZ63/hvcs55ZrQDL86Te+osgMOUHRNd08+GJlih1zp1Iq9bt85oCz2ifJtw
-        RG7vgWaqw8i3JYxPJaCdt1Iget2ACMA=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-76-AL9jF58FPxaF4ryRWIYmBw-1; Mon, 30 Mar 2020 11:22:42 -0400
-X-MC-Unique: AL9jF58FPxaF4ryRWIYmBw-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 076B0800D5E;
-        Mon, 30 Mar 2020 15:22:41 +0000 (UTC)
-Received: from hp-dl360pgen8-07.khw2.lab.eng.bos.redhat.com (hp-dl360pgen8-07.khw2.lab.eng.bos.redhat.com [10.16.210.135])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id A953019925;
-        Mon, 30 Mar 2020 15:22:37 +0000 (UTC)
-From:   Jarod Wilson <jarod@redhat.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Jarod Wilson <jarod@redhat.com>, Moshe Levi <moshele@mellanox.com>,
-        Stephen Hemminger <stephen@networkplumber.org>,
-        Marcelo Ricardo Leitner <mleitner@redhat.com>,
-        netdev@vger.kernel.org
-Subject: [PATCH net v2] ipv6: don't auto-add link-local address to lag ports
-Date:   Mon, 30 Mar 2020 11:22:19 -0400
-Message-Id: <20200330152219.58296-1-jarod@redhat.com>
-In-Reply-To: <CAKfmpSd_VQTwxy-gr-jNvQu_CMFf9F2enEjyQC3+W9+Y2WO1Dg@mail.gmail.com>
-References: <CAKfmpSd_VQTwxy-gr-jNvQu_CMFf9F2enEjyQC3+W9+Y2WO1Dg@mail.gmail.com>
+        Mon, 30 Mar 2020 11:22:48 -0400
+Received: by mail-ot1-f65.google.com with SMTP id m2so3701725otr.1;
+        Mon, 30 Mar 2020 08:22:47 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
+        bh=HqNd7gh17TwPP6RWtpEKZaR3/Ix4r1pH+KcjfgOweaw=;
+        b=CMfGIRC03vAjyVaO2WYuOqNPlV21V4ljsTkkDLH/kNx1X54YzKfLRBtvsrlu0ZygR+
+         mfSj1YmfjGXtfJZUW2kJzv59G3lhLhZK7qbmfWQuTmhmi8w1Ga2fQeliHxPhmkrGrsIM
+         eRaqj71ropzLdjlmj0Zd8LR0Qhj1+nDzlOZBArb7WoXndN6VuyosyfMg42wNCTQba8Zg
+         2ffE8t8VPMIv71DarebKlL2WY/HnB0MX8yrTW/np+1TPa6GcBE9nDdDQYgF8kEfPEK5F
+         ls1f0O/M4h4uwt/3udGAy5rllPmV9R3oG3N3WRLOplzYbncDH0EWU00S0owCLxblroZN
+         bbHw==
+X-Gm-Message-State: ANhLgQ2AUHFbim4nyr3R9hZX3K8GjIqVyp3jRIrRuEGN+8vTIrY4swwb
+        JAh3z3hCt8Jt8Ww4Nt4GzchnLUdAewNS0DrNV2EQnpJy
+X-Google-Smtp-Source: ADFU+vsY6JOgNzmhAn6lYvN4qADyMwex1zKXkfLicvmWRynFT0kQH5YlwbCEUU7Rb/k6oirVeWSbO9AA7zsvLMsHWhc=
+X-Received: by 2002:a9d:750a:: with SMTP id r10mr4602319otk.118.1585581766952;
+ Mon, 30 Mar 2020 08:22:46 -0700 (PDT)
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-Content-Transfer-Encoding: quoted-printable
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Mon, 30 Mar 2020 17:22:35 +0200
+Message-ID: <CAJZ5v0h3bK0kRz=LW5wwuYA-bH+JA0hJrkPiKvYaTrZZSP_zUg@mail.gmail.com>
+Subject: [GIT PULL] Power management updates for v5.7-rc1
+To:     ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        Linux PCI <linux-pci@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Bonding slave and team port devices should not have link-local addresses
-automatically added to them, as it can interfere with openvswitch being
-able to properly add tc ingress.
+Hi Linus,
 
-Basic reproducer, courtesy of Marcelo:
+Please pull from the tag
 
-$ ip link add name bond0 type bond
-$ ip link set dev ens2f0np0 master bond0
-$ ip link set dev ens2f1np2 master bond0
-$ ip link set dev bond0 up
-$ ip a s
-1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN
-group default qlen 1000
-    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
-    inet 127.0.0.1/8 scope host lo
-       valid_lft forever preferred_lft forever
-    inet6 ::1/128 scope host
-       valid_lft forever preferred_lft forever
-2: ens2f0np0: <BROADCAST,MULTICAST,SLAVE,UP,LOWER_UP> mtu 1500 qdisc
-mq master bond0 state UP group default qlen 1000
-    link/ether 00:0f:53:2f:ea:40 brd ff:ff:ff:ff:ff:ff
-5: ens2f1np2: <NO-CARRIER,BROADCAST,MULTICAST,SLAVE,UP> mtu 1500 qdisc
-mq master bond0 state DOWN group default qlen 1000
-    link/ether 00:0f:53:2f:ea:40 brd ff:ff:ff:ff:ff:ff
-11: bond0: <BROADCAST,MULTICAST,MASTER,UP,LOWER_UP> mtu 1500 qdisc
-noqueue state UP group default qlen 1000
-    link/ether 00:0f:53:2f:ea:40 brd ff:ff:ff:ff:ff:ff
-    inet6 fe80::20f:53ff:fe2f:ea40/64 scope link
-       valid_lft forever preferred_lft forever
+ git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git \
+ acpi-5.7-rc1
 
-(above trimmed to relevant entries, obviously)
+with top-most commit 1da28f032305383a664e5711ba07b7957901a72e
 
-$ sysctl net.ipv6.conf.ens2f0np0.addr_gen_mode=3D0
-net.ipv6.conf.ens2f0np0.addr_gen_mode =3D 0
-$ sysctl net.ipv6.conf.ens2f1np2.addr_gen_mode=3D0
-net.ipv6.conf.ens2f1np2.addr_gen_mode =3D 0
+ Merge branches 'acpi-ec', 'acpi-fan' and 'acpi-pci'
 
-$ ip a l ens2f0np0
-2: ens2f0np0: <BROADCAST,MULTICAST,SLAVE,UP,LOWER_UP> mtu 1500 qdisc
-mq master bond0 state UP group default qlen 1000
-    link/ether 00:0f:53:2f:ea:40 brd ff:ff:ff:ff:ff:ff
-    inet6 fe80::20f:53ff:fe2f:ea40/64 scope link tentative
-       valid_lft forever preferred_lft forever
-$ ip a l ens2f1np2
-5: ens2f1np2: <NO-CARRIER,BROADCAST,MULTICAST,SLAVE,UP> mtu 1500 qdisc
-mq master bond0 state DOWN group default qlen 1000
-    link/ether 00:0f:53:2f:ea:40 brd ff:ff:ff:ff:ff:ff
-    inet6 fe80::20f:53ff:fe2f:ea40/64 scope link tentative
-       valid_lft forever preferred_lft forever
+on top of commit 2c523b344dfa65a3738e7039832044aa133c75fb
 
-Looks like addrconf_sysctl_addr_gen_mode() bypasses the original "is
-this a slave interface?" check added by commit c2edacf80e15, and
-results in an address getting added, while w/the proposed patch added,
-no address gets added. This simply adds the same gating check to another
-code path, and thus should prevent the same devices from erroneously
-obtaining an ipv6 link-local address.
+ Linux 5.6-rc5
 
-Fixes: d35a00b8e33d ("net/ipv6: allow sysctl to change link-local address=
- generation mode")
-Reported-by: Moshe Levi <moshele@mellanox.com>
-CC: Stephen Hemminger <stephen@networkplumber.org>
-CC: Marcelo Ricardo Leitner <mleitner@redhat.com>
-CC: netdev@vger.kernel.org
-Signed-off-by: Jarod Wilson <jarod@redhat.com>
----
- net/ipv6/addrconf.c | 4 ++++
- 1 file changed, 4 insertions(+)
+to receive ACPI updates for 5.7-rc1.
 
-diff --git a/net/ipv6/addrconf.c b/net/ipv6/addrconf.c
-index 46d614b611db..2a8175de8578 100644
---- a/net/ipv6/addrconf.c
-+++ b/net/ipv6/addrconf.c
-@@ -3296,6 +3296,10 @@ static void addrconf_addr_gen(struct inet6_dev *id=
-ev, bool prefix_route)
- 	if (netif_is_l3_master(idev->dev))
- 		return;
-=20
-+	/* no link local addresses on devices flagged as slaves */
-+	if (idev->dev->flags & IFF_SLAVE)
-+		return;
-+
- 	ipv6_addr_set(&addr, htonl(0xFE800000), 0, 0, 0);
-=20
- 	switch (idev->cnf.addr_gen_mode) {
---=20
-2.20.1
+These update the ACPICA code in the kernel to the 20200214 upstream
+release, clean up the initialization of the EC driver, clean up the
+quirk tables in the AC and battery drivers, fix the global lock
+handling on x86, add a new "tiny" driver for ACPI button devices
+exposed by VMs to guest kernels, modify the ACPI PCI host bridge and
+fan drivers use scnprintf(), add add a kernel parameter to disable
+ACPI BGRT on x86 and do some assorted cleanups.
 
+Specifics:
+
+ - Update the ACPICA code in the kernel to the 20200214 upstream
+   release including:
+
+   * Fix to re-enable the sleep button after wakeup (Anchal Agarwal).
+   * Fixes for mistakes in comments and typos (Bob Moore).
+   * ASL-ASL+ converter updates (Erik Kaneda).
+   * Type casting cleanups (Sven Barth).
+
+ - Clean up the intialization of the EC driver and eliminate some
+   dead code from it (Rafael Wysocki).
+
+ - Clean up the quirk tables in the AC and battery drivers (Hans de
+   Goede).
+
+ - Fix the global lock handling on x86 to ignore unspecified bit
+   positions in the global lock field (Jan Engelhardt).
+
+ - Add a new "tiny" driver for ACPI button devices exposed by VMs to
+   guest kernels to send signals directly to init (Josh Triplett).
+
+ - Add a kernel parameter to disable ACPI BGRT on x86 (Alex Hung).
+
+ - Make the ACPI PCI host bridge and fan drivers use scnprintf() to
+   avoid potential buffer overflows (Takashi Iwai).
+
+ - Clean up assorted pieces of code:
+
+   * Reorder "asmlinkage" to make g++ happy (Alexey Dobriyan).
+   * Drop unneeded variable initialization (Colin Ian King).
+   * Add missing __acquires/__releases annotations (Jules Irenge).
+   * Replace list_for_each_safe() with list_for_each_entry_safe()
+     (chenqiwu).
+
+Thanks!
+
+
+---------------
+
+Alex Hung (1):
+      acpi/x86: add a kernel parameter to disable ACPI BGRT
+
+Alexey Dobriyan (1):
+      x86/acpi: make "asmlinkage" part first thing in the function definition
+
+Anchal Agarwal (1):
+      ACPICA: Enable sleep button on ACPI legacy wake
+
+Bob Moore (4):
+      ACPICA: Fix a comment "enable" fixed events -> "disable" all fixed events.
+      ACPICA: Table Manager: Update comments in a function header
+      ACPICA: Fix a couple of typos
+      ACPICA: Update version to 20200214
+
+Colin Ian King (1):
+      ACPI: video: remove redundant assignments to variable result
+
+Erik Kaneda (2):
+      ACPICA: ASL-ASL+ converter: remove function parameters from
+cv_init_file_tree()
+      ACPICA: ASL-ASL+ converter: make root file a parameter for
+cv_init_file_tree
+
+Hans de Goede (2):
+      ACPI / AC: Cleanup DMI quirk table
+      ACPI / battery: Cleanup Lenovo Ideapad Miix 320 DMI table entry
+
+Jan Engelhardt (1):
+      acpi/x86: ignore unspecified bit positions in the ACPI global lock field
+
+Josh Triplett (2):
+      ACPI: button: move HIDs to acpi/button.h
+      ACPI: Add new tiny-power-button driver to directly signal init
+
+Jules Irenge (1):
+      ACPI: OSL: Add missing __acquires/__releases annotations
+
+Rafael J. Wysocki (9):
+      ACPI: EC: Avoid printing confusing messages in acpi_ec_setup()
+      ACPI: EC: Avoid passing redundant argument to functions
+      ACPI: EC: Drop AE_NOT_FOUND special case from ec_install_handlers()
+      ACPI: EC: Simplify acpi_ec_add()
+      ACPI: EC: Use fast path in acpi_ec_add() for DSDT boot EC
+      ACPI: EC: Consolidate event handler installation code
+      ACPI: EC: Simplify acpi_ec_ecdt_start() and acpi_ec_init()
+      ACPI: EC: Do not clear boot_ec_is_ecdt in acpi_ec_add()
+      ACPI: EC: Eliminate EC_FLAGS_QUERY_HANDSHAKE
+
+Sven Barth (3):
+      ACPICA: cast the result of the pointer difference to u32
+      ACPICA: cast length arguement to acpi_ns_build_normalized_path() as u32
+      ACPICA: use acpi_size instead of u32 for prefix_path_length
+
+Takashi Iwai (2):
+      ACPI: fan: Use scnprintf() for avoiding potential buffer overflow
+      ACPI: PCI: Use scnprintf() for avoiding potential buffer overflow
+
+chenqiwu (1):
+      ACPI: list_for_each_safe() -> list_for_each_entry_safe()
+
+---------------
+
+ Documentation/admin-guide/kernel-parameters.txt |   3 +
+ arch/x86/kernel/acpi/boot.c                     |  12 +-
+ arch/x86/kernel/acpi/sleep.c                    |   2 +-
+ arch/x86/kernel/acpi/sleep.h                    |   2 +-
+ drivers/acpi/Kconfig                            |  24 ++
+ drivers/acpi/Makefile                           |   1 +
+ drivers/acpi/ac.c                               |  25 +-
+ drivers/acpi/acpi_video.c                       |   2 +-
+ drivers/acpi/acpica/acconvert.h                 |   4 +-
+ drivers/acpi/acpica/acmacros.h                  |   4 +-
+ drivers/acpi/acpica/evevent.c                   |   2 +-
+ drivers/acpi/acpica/hwsleep.c                   |  12 +
+ drivers/acpi/acpica/nsnames.c                   |   6 +-
+ drivers/acpi/acpica/nsxfname.c                  |   2 +-
+ drivers/acpi/acpica/tbxface.c                   |  12 +-
+ drivers/acpi/acpica/utobject.c                  |   2 +-
+ drivers/acpi/battery.c                          |  10 +-
+ drivers/acpi/button.c                           |   3 -
+ drivers/acpi/ec.c                               | 312 ++++++++++--------------
+ drivers/acpi/fan.c                              |  20 +-
+ drivers/acpi/internal.h                         |   2 +-
+ drivers/acpi/osl.c                              |   2 +
+ drivers/acpi/pci_root.c                         |   2 +-
+ drivers/acpi/proc.c                             |  14 +-
+ drivers/acpi/tiny-power-button.c                |  46 ++++
+ drivers/acpi/wakeup.c                           |  24 +-
+ include/acpi/acpixf.h                           |   2 +-
+ include/acpi/actbl1.h                           |   2 +-
+ include/acpi/button.h                           |   4 +
+ 29 files changed, 298 insertions(+), 260 deletions(-)
