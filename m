@@ -2,199 +2,276 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A379C2D0EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 03:47:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73130C2D0ED
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 03:54:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 40B0D20786
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 03:47:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4704720786
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 03:54:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=who-t.net header.i=@who-t.net header.b="dklptqjT";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="iC3wY/dN"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DVRSVWWw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729353AbgC3Dro (ORCPT
+        id S1729320AbgC3DyU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Mar 2020 23:47:44 -0400
-Received: from new1-smtp.messagingengine.com ([66.111.4.221]:53757 "EHLO
-        new1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728490AbgC3Dro (ORCPT
+        Sun, 29 Mar 2020 23:54:20 -0400
+Received: from mail-il1-f196.google.com ([209.85.166.196]:39334 "EHLO
+        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728490AbgC3DyU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Mar 2020 23:47:44 -0400
-Received: from compute7.internal (compute7.nyi.internal [10.202.2.47])
-        by mailnew.nyi.internal (Postfix) with ESMTP id A8315581112;
-        Sun, 29 Mar 2020 23:47:40 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute7.internal (MEProxy); Sun, 29 Mar 2020 23:47:40 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=who-t.net; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm2; bh=TdyVsaUG7tAypiXXkRxUKeQLba9
-        ZoyiJDTV67rlOD2I=; b=dklptqjTjWaFCCIHO+7pzpX/NBMtwO+TUwjWZlhr5so
-        kvzoWWkpmK4UWsm6ckcINY60BtLT6mKED+A9V7eSV70WyvOoYadDFaO/TpXkcRXN
-        +syr8oPw4ihilgrRfLuepBINIKhYsEVmRVka1+DLvn2vyNp576teYXpNIePKSSSo
-        DTDUcoVM6ywsuiYtkDUmENM4ps3hlhHzlBfLntGyVbgUZO2zMziwraIst5XS6GxU
-        DXKV+I2E+m1FHZARYkFuVYYopG7NsKuwDZFIrzvjEz0EAuxxGPb2Go4YCxlXcPR4
-        N9MwE0L+qa+U7RQMsGu5uRl4HYZgn1k/rYcyMxl5FhQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=TdyVsa
-        UG7tAypiXXkRxUKeQLba9ZoyiJDTV67rlOD2I=; b=iC3wY/dNd5vMOGlrpllxnB
-        CtsVHVM/USY+X2gtB8t8VrJUJ60MwlqHcyBLw6frxXqwJ9UGSTWJVYr7XpuYhsWT
-        k5b6rhUipfyDbaZwHJk8OYELzof9odj6lSgz93o5Z8JaTT5E9oCzBGqSMyyL8KZE
-        RPbsVg+bvy/DZOxk/PAbd59S0nxHgDxImBSvOj+wq0eGbVWFR8XzuVCmnh487l4t
-        WQajJGldHiSYMlLC81tPzVBR1pZyUTZu1F27svU87JQkEoi1cUhu5mEA02lQ2Y6s
-        x/lkOCmCpfW3LTkVYD3K1yqFYp6lXV9wsXPPcDIqbRJ02qEXdb2XlKqrfNgTZa2Q
-        ==
-X-ME-Sender: <xms:22uBXlYQucC95ssuOXN-txXF7L0iyq1KjICwvaTbkMLB4zuDB5Worw>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrudeigedgjeegucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhvffukfhfgggtuggjsehttdertddttddvnecuhfhrohhmpefrvghtvghr
-    ucfjuhhtthgvrhgvrhcuoehpvghtvghrrdhhuhhtthgvrhgvrhesfihhohdqthdrnhgvth
-    eqnecukfhppeduudejrddvtddrjedurddutdelnecuvehluhhsthgvrhfuihiivgeptden
-    ucfrrghrrghmpehmrghilhhfrhhomhepphgvthgvrhdrhhhuthhtvghrvghrseifhhhoqd
-    htrdhnvght
-X-ME-Proxy: <xmx:22uBXmZWqmvzCltA5H-aFJXT-GHX2dviOsOIEuS3oSCH4_yU6jpzrg>
-    <xmx:22uBXun7bCPdu8eU35Jnzhnf9hntpRbJYQjHohXmPkUkgGtA5nVoGQ>
-    <xmx:22uBXh2WPikSYdhs-p3VWbXM-VxKYjV8wy7T83-2yfWviwBRkHAiIg>
-    <xmx:3GuBXg3xXuL47BVRYGl-hA3-Zyu3W3qKm70DHLVidAX14rZNmLRrJg>
-Received: from jelly (117-20-71-109.751447.bne.nbn.aussiebb.net [117.20.71.109])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 6BDAE328005D;
-        Sun, 29 Mar 2020 23:47:36 -0400 (EDT)
-Date:   Mon, 30 Mar 2020 13:47:32 +1000
-From:   Peter Hutterer <peter.hutterer@who-t.net>
-To:     "Johnny.Chuang" <johnny.chuang@emc.com.tw>
-Cc:     'Johnny Chuang' <johnny.chuang.emc@gmail.com>,
-        'Dmitry Torokhov' <dmitry.torokhov@gmail.com>,
-        'Benjamin Tissoires' <benjamin.tissoires@redhat.com>,
-        linux-kernel@vger.kernel.org, linux-input@vger.kernel.org,
-        'Rob Schonberger' <robsc@google.com>,
-        'James Chen' <james.chen@emc.com.tw>,
-        'Jennifer Tsai' <jennifer.tsai@emc.com.tw>,
-        'Paul Liang' <paul.liang@emc.com.tw>,
-        'Jeff Chuang' <jeff.chuang@emc.com.tw>
-Subject: Re: [PATCH] Input: elants_i2c - support palm detection
-Message-ID: <20200330034732.GA156101@jelly>
-References: <1585209525-6047-1-git-send-email-johnny.chuang.emc@gmail.com>
- <20200329021436.GA68168@jelly>
- <001501d6062e$849afb60$8dd0f220$@emc.com.tw>
+        Sun, 29 Mar 2020 23:54:20 -0400
+Received: by mail-il1-f196.google.com with SMTP id r5so14456991ilq.6;
+        Sun, 29 Mar 2020 20:54:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=nJO3nl3i604E+tnowawUh4awNHYK5FpBQBw5ESaGYAI=;
+        b=DVRSVWWwZz07tJQe5qpnuR4/qmpVkxdwi20OAgjTp4H7VCU8lAhsRQycLblcCw53/o
+         nlSDxpyH41addUtXRfdFDEkDN7KM6TJdLhpWDGuFzn0DlE4QJjavT3Ob88vEF2110TDb
+         Jtx047IbtphxZawceekT56fpUW3UpM1Fxl7SlbPaefa5YnwRlgAJL+BV3jaPE7+1dpBU
+         5b6UdR4MsEQ116LL6uoNh+q/YyLsg4W/jO04l+un6RQYmT82rvXUiKv2SW+M/zKY9Ahe
+         19PmZ8P3SvBbcVsOqgZlXXUkUeQiKYS9GpPhq0dmcnJBP5vWQ0l6HV/EfLQ9Tv+Q+jOF
+         u8wA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=nJO3nl3i604E+tnowawUh4awNHYK5FpBQBw5ESaGYAI=;
+        b=oJK8lLL13DFGHwQS/h8FFi7iuUU6eDVyIKNA5PDLVkB+p4Ir4y21hX4gfwGFVeTKV5
+         BtptOx3fVC+ZaHcoTcs8gsR8x1QcSCwZ3RS6mYmDQNIuGchug4JalkhqQGXKdIVcxhhH
+         gJ7OB7P1r7UQtwk7EgXgUWkmt4JAUgs2R2lrYrR2xiD9t8EnbVc74yaZpYCMoiqfrSHw
+         9sj6NHpxJk817VXQpNe1d/h+vqusfuLYlh8kNyRA7s4pq0WxmzynH3Nn6FEJxkC8Yu5Q
+         Z/3rSB7rARtoMcqJ9ETY0n0vi6ipYBa+0uqXadN8mki1y2/7pTsfzlnghi+vz9AziBFm
+         /E2Q==
+X-Gm-Message-State: ANhLgQ0TGYY3u1x6YaWbsIPS3r+UOeRMFxh3KQ+D9bIGJJGfrcbKoE43
+        oYDVK7T51uj27xJqbEjPUc5N6CLy77SEl8FtYXn6sw==
+X-Google-Smtp-Source: ADFU+vsVS9j1Qrg4KVLw/iYbdQYFqVoUONgAz2+qPEnRsBGDuuBDagEfRiuuUQ661xpQNWsUsjd39NmNnyzhZNMV6DE=
+X-Received: by 2002:a92:8bc2:: with SMTP id i185mr9650563ild.273.1585540458401;
+ Sun, 29 Mar 2020 20:54:18 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <001501d6062e$849afb60$8dd0f220$@emc.com.tw>
+References: <20200330143529.4dafeb34@canb.auug.org.au>
+In-Reply-To: <20200330143529.4dafeb34@canb.auug.org.au>
+From:   "H.J. Lu" <hjl.tools@gmail.com>
+Date:   Sun, 29 Mar 2020 20:53:42 -0700
+Message-ID: <CAMe9rOqnRCEdHhSHOT=Ut11D3O2WhjiFYhvPnaU5dANZNPE-=A@mail.gmail.com>
+Subject: Re: linux-next: build failure after merge of the tip tree
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@elte.hu>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Borislav Petkov <bp@suse.de>, Kees Cook <keescook@chromium.org>
+Content-Type: multipart/mixed; boundary="000000000000cd418a05a20a6782"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 30, 2020 at 08:59:51AM +0800, Johnny.Chuang wrote:
-> > -----Original Message-----
-> > From: Peter Hutterer [mailto:peter.hutterer@who-t.net]
-> > Sent: Sunday, March 29, 2020 10:15 AM
-> > To: Johnny Chuang
-> > Cc: Dmitry Torokhov; Benjamin Tissoires; linux-kernel@vger.kernel.org;
-> > linux-input@vger.kernel.org; Rob Schonberger; Johnny Chuang; James Chen;
-> > Jennifer Tsai; Paul Liang; Jeff Chuang
-> > Subject: Re: [PATCH] Input: elants_i2c - support palm detection
-> > 
-> > On Thu, Mar 26, 2020 at 03:58:45PM +0800, Johnny Chuang wrote:
-> > > From: Johnny Chuang <johnny.chuang@emc.com.tw>
-> > >
-> > > Elan define finger/palm detection on the least significant bit of byte
-> 33.
-> > > The default value is 1 for all firmwares, which report as
-> MT_TOOL_FINGER.
-> > > If firmware support palm detection, the bit will change to 0 and
-> > > report as MT_TOOL_PALM when firmware detecting palm.
-> > >
-> > > Signed-off-by: Johnny Chuang <johnny.chuang@emc.com.tw>
-> > > ---
-> > >  drivers/input/touchscreen/elants_i2c.c | 11 ++++++++++-
-> > >  1 file changed, 10 insertions(+), 1 deletion(-)
-> > >
-> > > diff --git a/drivers/input/touchscreen/elants_i2c.c
-> > > b/drivers/input/touchscreen/elants_i2c.c
-> > > index 14c577c..3b4d9eb3 100644
-> > > --- a/drivers/input/touchscreen/elants_i2c.c
-> > > +++ b/drivers/input/touchscreen/elants_i2c.c
-> > > @@ -73,6 +73,7 @@
-> > >  #define FW_POS_STATE		1
-> > >  #define FW_POS_TOTAL		2
-> > >  #define FW_POS_XY		3
-> > > +#define FW_POS_TOOL_TYPE	33
-> > >  #define FW_POS_CHECKSUM		34
-> > >  #define FW_POS_WIDTH		35
-> > >  #define FW_POS_PRESSURE		45
-> > > @@ -842,6 +843,7 @@ static void elants_i2c_mt_event(struct elants_data
-> > > *ts, u8 *buf)  {
-> > >  	struct input_dev *input = ts->input;
-> > >  	unsigned int n_fingers;
-> > > +	unsigned int tool_type;
-> > >  	u16 finger_state;
-> > >  	int i;
-> > >
-> > > @@ -852,6 +854,12 @@ static void elants_i2c_mt_event(struct elants_data
-> > *ts, u8 *buf)
-> > >  	dev_dbg(&ts->client->dev,
-> > >  		"n_fingers: %u, state: %04x\n",  n_fingers, finger_state);
-> > >
-> > > +	/* Note: all fingers have the same tool type */
-> > > +	if (buf[FW_POS_TOOL_TYPE] & 0x01)
-> > > +		tool_type = MT_TOOL_FINGER;
-> > > +	else
-> > > +		tool_type = MT_TOOL_PALM;
-> > > +
-> > >  	for (i = 0; i < MAX_CONTACT_NUM && n_fingers; i++) {
-> > >  		if (finger_state & 1) {
-> > >  			unsigned int x, y, p, w;
-> > > @@ -867,7 +875,7 @@ static void elants_i2c_mt_event(struct elants_data
-> > *ts, u8 *buf)
-> > >  				i, x, y, p, w);
-> > >
-> > >  			input_mt_slot(input, i);
-> > > -			input_mt_report_slot_state(input, MT_TOOL_FINGER,
-> true);
-> > > +			input_mt_report_slot_state(input, tool_type, true);
-> > >  			input_event(input, EV_ABS, ABS_MT_POSITION_X, x);
-> > >  			input_event(input, EV_ABS, ABS_MT_POSITION_Y, y);
-> > >  			input_event(input, EV_ABS, ABS_MT_PRESSURE, p); @@
-> > -1307,6 +1315,7
-> > > @@ static int elants_i2c_probe(struct i2c_client *client,
-> > >  	input_set_abs_params(ts->input, ABS_MT_POSITION_Y, 0, ts->y_max, 0,
-> > 0);
-> > >  	input_set_abs_params(ts->input, ABS_MT_TOUCH_MAJOR, 0, 255, 0, 0);
-> > >  	input_set_abs_params(ts->input, ABS_MT_PRESSURE, 0, 255, 0, 0);
-> > > +	input_set_abs_params(ts->input, ABS_MT_TOOL_TYPE, 0,
-> > MT_TOOL_MAX, 0,
-> > > +0);
-> > 
-> > if you're only reporting pen and palm, can we set this to MT_TOOL_PALM
-> > instead? Otherwise you're indicating you may also send MT_TOOL_DIAL which
-> > is unlikely on this hardware :)
-> > 
-> 
-> Yes, we do not have MT_TOOL_DIAL on touch screen.
-> So I need to modify MT_TOOL_MAX to MT_TOOL_PALM, right?
+--000000000000cd418a05a20a6782
+Content-Type: text/plain; charset="UTF-8"
 
-yes please.
+On Sun, Mar 29, 2020 at 8:35 PM Stephen Rothwell <sfr@canb.auug.org.au> wrote:
+>
+> Hi all,
+>
+> After merging the tip tree, today's linux-next build (powerpc
+> ppc64_defconfig) failed like this:
+>
+> ld: warning: discarding dynamic section .rela.data.rel.ro
+>
+> lots of similar warnings, followed by
+>
+> `.exit.text' referenced in section `__bug_table' of crypto/algboss.o: defined in discarded section `.exit.text' of crypto/algboss.o
+> `.exit.text' referenced in section `__bug_table' of drivers/macintosh/windfarm_core.o: defined in discarded section `.exit.text' of drivers/macintosh/windfarm_core.o
+> `.exit.text' referenced in section `__bug_table' of drivers/i2c/i2c-core-base.o: defined in discarded section `.exit.text' of drivers/i2c/i2c-core-base.o
+>
+> Caused by commit
+>
+>   72cb2113c1bb ("vmlinux.lds: Discard .note.gnu.property sections in generic NOTES")
+>
+> I don't see why, but reverting that commit fixes the build warnings
+> and failure.
 
-Cheers,
-   Peter
+Please see my enclosing email.   Is anyone from PPC community reading emails?
 
-> 
-> > Reviewed-by: Peter Hutterer <peter.hutterer@who-t.net> otherwise
-> > 
-> > Cheers,
-> >    Peter
-> > 
-> > >  	input_abs_set_res(ts->input, ABS_MT_POSITION_X, ts->x_res);
-> > >  	input_abs_set_res(ts->input, ABS_MT_POSITION_Y, ts->y_res);
-> > >  	input_abs_set_res(ts->input, ABS_MT_TOUCH_MAJOR, 1);
-> > > --
-> > > 2.7.4
+> I have reverted that commit for today.
+> --
+> Cheers,
+> Stephen Rothwell
+
+
+
+-- 
+H.J.
+
+--000000000000cd418a05a20a6782
+Content-Type: message/rfc822; 
+	name="RFA [PPC kernel] Avoid upcoming PPC kernel build failure.eml"
+Content-Disposition: attachment; 
+	filename="RFA [PPC kernel] Avoid upcoming PPC kernel build failure.eml"
+Content-ID: <f_k8dxryvo0>
+X-Attachment-Id: f_k8dxryvo0
+
+MIME-Version: 1.0
+Date: Fri, 27 Mar 2020 10:36:36 -0700
+References: <202002050743.dc2PtIsm%lkp@intel.com>
+	<CAMe9rOrJEVL8Qw3fgm9FeDjwGZNxGoZ-OO6bfmV=gtK=g68cvQ@mail.gmail.com>
+	<87wo901jm0.fsf@mpe.ellerman.id.au>
+	<CAMe9rOrFV0E9N8f-NZeOP+=SSERK-ptUoZrJiS3wgxqjpLhP3Q@mail.gmail.com>
+	<d10b81d0c4f97140bf3e2a96967ebc2711042d3b.camel@intel.com>
+In-Reply-To: <d10b81d0c4f97140bf3e2a96967ebc2711042d3b.camel@intel.com>
+Message-ID: <CAMe9rOpKPYe55=9c1smGwBZBhRbk8PjpdJZ-xQ7RDXjN81gKug@mail.gmail.com>
+Subject: RFA [PPC kernel] Avoid upcoming PPC kernel build failure
+From: "H.J. Lu" <hjl.tools@gmail.com>
+To: Yu-cheng Yu <yu-cheng.yu@intel.com>
+Cc: Michael Ellerman <mpe@ellerman.id.au>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, 
+	Paul Mackerras <paulus@samba.org>, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, 
+	Kees Cook <keescook@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
+
+On Fri, Mar 27, 2020 at 7:54 AM Yu-cheng Yu <yu-cheng.yu@intel.com> wrote:
+>
+> On Thu, 2020-02-06 at 04:55 -0800, H.J. Lu wrote:
+> > On Wed, Feb 5, 2020 at 7:26 PM Michael Ellerman <mpe@ellerman.id.au> wrote:
+> > > "H.J. Lu" <hjl.tools@gmail.com> writes:
+> > > > On Tue, Feb 4, 2020 at 3:37 PM kbuild test robot <lkp@intel.com> wrote:
+> > > > > tree:   https://github.com/yyu168/linux_cet.git cet
+> > > > > head:   bba707cc4715c1036b6561ab38b16747f9c49cfa
+> > > > > commit: 71bb971dd76eeacd351690f28864ad5c5bec3691 [55/58] Discard .note.gnu.property sections in generic NOTES
+> > > > > config: powerpc-rhel-kconfig (attached as .config)
+> > > > > compiler: powerpc64le-linux-gcc (GCC) 7.5.0
+> > > > > reproduce:
+> > > > >         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+> > > > >         chmod +x ~/bin/make.cross
+> > > > >         git checkout 71bb971dd76eeacd351690f28864ad5c5bec3691
+> > > > >         # save the attached .config to linux build tree
+> > > > >         GCC_VERSION=7.5.0 make.cross ARCH=powerpc
+> > > > >
+> > > > > If you fix the issue, kindly add following tag
+> > > > > Reported-by: kbuild test robot <lkp@intel.com>
+> > > > >
+> > > > > All warnings (new ones prefixed by >>):
+> > > > >
+> > > > >    powerpc64le-linux-ld: warning: discarding dynamic section .rela___ksymtab_gpl+__wait_rcu_gp
+> > > >
+> > > > arch/powerpc/kernel/vmlinux.lds.S has
+> > > >
+> > > >  .rela.dyn : AT(ADDR(.rela.dyn) - (0xc000000000000000 -0x00000000))
+> > > >  {
+> > > >   __rela_dyn_start = .;
+> > > >   *(.rela*) <<<<<<<< Keep .rela* sections
+> > > >  }
 > > >
-> 
+> > > The above is inside #ifdef CONFIG_RELOCATABLE
+> > >
+> > > > ...
+> > > >  /DISCARD/ : {
+> > > >   *(*.EMB.apuinfo)
+> > > >   *(.glink .iplt .plt .rela* .comment)
+> > > >                            ^^^^ Discard  .rela* sections.  But it is ignored.
+> > > >   *(.gnu.version*)
+> > > >   *(.gnu.attributes)
+> > > >   *(.eh_frame)
+> > > >  }
+> > >
+> > > But that is not #ifdef'ed at all.
+> > >
+> > > > With my
+> > > >
+> > > > ommit 71bb971dd76eeacd351690f28864ad5c5bec3691
+> > > > Author: H.J. Lu <hjl.tools@gmail.com>
+> > > > Date:   Thu Jan 30 12:39:09 2020 -0800
+> > > >
+> > > >     Discard .note.gnu.property sections in generic NOTES
+> > > >
+> > > >     With the command-line option, -mx86-used-note=yes, the x86 assembler
+> > > >     in binutils 2.32 and above generates a program property note in a note
+> > > >     section, .note.gnu.property, to encode used x86 ISAs and features.  But
+> > > >     kernel linker script only contains a single NOTE segment:
+> > > >
+> > > > /DISCARD/ : { *(.note.gnu.property) }
+> > > >
+> > > > is placed before
+> > > >
+> > > > .rela.dyn : AT(ADDR(.rela.dyn) - (0xc000000000000000 -0x00000000))
+> > > >  {
+> > > >   __rela_dyn_start = .;
+> > > >   *(.rela*) <<<<<<<< Keep .rela* sections
+> > > >  }
+> > > >
+> > > > Then .rela* in
+> > > >
+> > > >  /DISCARD/ : {
+> > > >   *(*.EMB.apuinfo)
+> > > >   *(.glink .iplt .plt .rela* .comment)
+> > > >   *(.gnu.version*)
+> > > >   *(.gnu.attributes)
+> > > >   *(.eh_frame)
+> > > >  }
+> > > >
+> > > > is honored.  Can someone from POWERPC comment on it?
+> > >
+> > > Hmm OK. I'm not really a toolchain person.
+> > >
+> > > The comment on DISCARDS says:
+> > >
+> > >    * Some archs want to discard exit text/data at runtime rather than
+> > >    * link time due to cross-section references such as alt instructions,
+> > >    * bug table, eh_frame, etc.  DISCARDS must be the last of output
+> > >    * section definitions so that such archs put those in earlier section
+> > >    * definitions.
+> > >    */
+> > >
+> > > But I guess you're changing those semantics in your series.
+> > >
+> > > This seems to fix the warning for me?
+> > >
+> > > diff --git a/arch/powerpc/kernel/vmlinux.lds.S b/arch/powerpc/kernel/vmlinux.lds.S
+> > > index b4c89a1acebb..076b3e8a849d 100644
+> > > --- a/arch/powerpc/kernel/vmlinux.lds.S
+> > > +++ b/arch/powerpc/kernel/vmlinux.lds.S
+> > > @@ -365,9 +365,12 @@ SECTIONS
+> > >         DISCARDS
+> > >         /DISCARD/ : {
+> > >                 *(*.EMB.apuinfo)
+> > > -               *(.glink .iplt .plt .rela* .comment)
+> > > +               *(.glink .iplt .plt .comment)
+> > >                 *(.gnu.version*)
+> > >                 *(.gnu.attributes)
+> > >                 *(.eh_frame)
+> > > +#ifndef CONFIG_RELOCATABLE
+> > > +               *(.rela*)
+> > > +#endif
+> > >         }
+> > >  }
+> > >
+> > >
+> > > cheers
+> >
+> > This looks correct me.
+> >
+> > Reviewed-by: H.J. Lu <hjl.tools@gmail.com>
+> >
+> > Thanks.
+> >
+>
+> Has this been merged into any branch yet?  I just checked the tip tree and did
+> not see it.
+>
+
+FYI, my patches have been queued on x86/build branch.   Could someone
+from PPC community add this patch to PPC kernel to avoid upcoming PPC
+kernel build failure?
+
+Thanks.
+
+-- 
+H.J.
+
+--000000000000cd418a05a20a6782--
