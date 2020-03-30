@@ -2,115 +2,168 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85D2EC43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 13:45:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38B02C2D0E5
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 13:46:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 57B6D206CC
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 13:45:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A9892073B
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 13:46:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728414AbgC3Npm (ORCPT
+        id S1728473AbgC3NqN convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 09:45:42 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:12149 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728065AbgC3Npm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 09:45:42 -0400
-Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id E5D7B9A16427D494C05D;
-        Mon, 30 Mar 2020 21:45:36 +0800 (CST)
-Received: from use12-sp2.huawei.com (10.67.189.174) by
- DGGEMS406-HUB.china.huawei.com (10.3.19.206) with Microsoft SMTP Server id
- 14.3.487.0; Mon, 30 Mar 2020 21:45:28 +0800
-From:   Xiaoming Ni <nixiaoming@huawei.com>
-To:     <miquel.raynal@bootlin.com>, <richard@nod.at>, <vigneshr@ti.com>,
-        <gregkh@linuxfoundation.org>
-CC:     <nixiaoming@huawei.com>, <linux-mtd@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <wangle6@huawei.com>,
-        <zhangweimin12@huawei.com>, <yebin10@huawei.com>,
-        <houtao1@huawei.com>, <stable@kernel.org>
-Subject: [PATCH v3] mtd:fix cache_state to avoid writing to bad blocks repeatedly
-Date:   Mon, 30 Mar 2020 21:45:25 +0800
-Message-ID: <1585575925-84017-1-git-send-email-nixiaoming@huawei.com>
-X-Mailer: git-send-email 1.8.5.6
+        Mon, 30 Mar 2020 09:46:13 -0400
+Received: from mga02.intel.com ([134.134.136.20]:43753 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728065AbgC3NqN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Mar 2020 09:46:13 -0400
+IronPort-SDR: NSlZJLyDft1JvgpDj5EfvA4sTcRyFL7dUMjd00CgTPNrKxIJB7QW4bHAJX+pwME93GyNiLPKli
+ tAVV/EKY43eQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Mar 2020 06:46:11 -0700
+IronPort-SDR: c1V9JLhuvFlsnYYTIOb0W1i6yN2yoUTXzsVk+OcUNlMJBYhWG4stV7fnTWJ3U4CvNyCLXacXW7
+ a/E6qORb0d6g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,324,1580803200"; 
+   d="scan'208";a="241619267"
+Received: from fmsmsx105.amr.corp.intel.com ([10.18.124.203])
+  by fmsmga008.fm.intel.com with ESMTP; 30 Mar 2020 06:46:11 -0700
+Received: from fmsmsx115.amr.corp.intel.com (10.18.116.19) by
+ FMSMSX105.amr.corp.intel.com (10.18.124.203) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Mon, 30 Mar 2020 06:46:11 -0700
+Received: from fmsmsx107.amr.corp.intel.com ([169.254.6.38]) by
+ fmsmsx115.amr.corp.intel.com ([169.254.4.81]) with mapi id 14.03.0439.000;
+ Mon, 30 Mar 2020 06:46:11 -0700
+From:   "Ruhl, Michael J" <michael.j.ruhl@intel.com>
+To:     Marek Szyprowski <m.szyprowski@samsung.com>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "linux-samsung-soc@vger.kernel.org" 
+        <linux-samsung-soc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+CC:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        David Airlie <airlied@linux.ie>,
+        Shane Francis <bigbeeshane@gmail.com>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        Alex Deucher <alexander.deucher@amd.com>
+Subject: RE: [PATCH v2] drm/prime: fix extracting of the DMA addresses from
+ a scatterlist
+Thread-Topic: [PATCH v2] drm/prime: fix extracting of the DMA addresses from
+ a scatterlist
+Thread-Index: AQHWBFQRvRx+hOOiski5ycfWmHv7TahcuvpggAMSJICAAVxq4A==
+Date:   Mon, 30 Mar 2020 13:46:10 +0000
+Message-ID: <14063C7AD467DE4B82DEDB5C278E8663FFFC0C0E@fmsmsx107.amr.corp.intel.com>
+References: <CGME20200327162330eucas1p1b0413e0e9887aa76d3048f86d2166dcd@eucas1p1.samsung.com>
+ <20200327162126.29705-1-m.szyprowski@samsung.com>
+ <14063C7AD467DE4B82DEDB5C278E8663FFFBFCE1@fmsmsx107.amr.corp.intel.com>
+ <8a09916d-5413-f9a8-bafa-2d8f0b8f892f@samsung.com>
+In-Reply-To: <8a09916d-5413-f9a8-bafa-2d8f0b8f892f@samsung.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-product: dlpe-windows
+dlp-version: 11.2.0.6
+dlp-reaction: no-action
+x-originating-ip: [10.1.200.108]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.67.189.174]
-X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The function call process is as follows:
-	mtd_blktrans_work()
-	  while (1)
-	    do_blktrans_request()
-	      mtdblock_writesect()
-	        do_cached_write()
-	          write_cached_data() /*if cache_state is STATE_DIRTY*/
-	            erase_write()
+>-----Original Message-----
+>From: dri-devel <dri-devel-bounces@lists.freedesktop.org> On Behalf Of
+>Marek Szyprowski
+>Sent: Sunday, March 29, 2020 5:56 AM
+>To: Ruhl, Michael J <michael.j.ruhl@intel.com>; dri-
+>devel@lists.freedesktop.org; linux-samsung-soc@vger.kernel.org; linux-
+>kernel@vger.kernel.org
+>Cc: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>; David Airlie
+><airlied@linux.ie>; Shane Francis <bigbeeshane@gmail.com>;
+>stable@vger.kernel.org; Thomas Zimmermann <tzimmermann@suse.de>;
+>Alex Deucher <alexander.deucher@amd.com>
+>Subject: Re: [PATCH v2] drm/prime: fix extracting of the DMA addresses from
+>a scatterlist
+>
+>Hi Michael,
+>
 
-write_cached_data() returns failure without modifying cache_state
-and cache_offset. So when do_cached_write() is called again,
-write_cached_data() will be called again to perform erase_write()
-on the same cache_offset.
+<snip>
 
-But if this cache_offset points to a bad block, erase_write() will
-always return -EIO. Writing to this mtdblk is equivalent to losing
-the current data, and repeatedly writing to the bad block.
+>> Is there an example of what the scatterlist would look like in this case?
+>
+>DMA framework or IOMMU is allowed to join consecutive chunks while
+>mapping if such operation is supported by the hw. Here is the example:
+>
+>Lets assume that we have a scatterlist with 4 4KiB pages of the physical
+>addresses: 0x12000000, 0x13011000, 0x13012000, 0x11011000. The total
+>size of the buffer is 16KiB. After mapping this scatterlist to a device
+>behind an IOMMU it may end up as a contiguous buffer in the DMA (IOVA)
+>address space. at 0xf0010000. The scatterlist will look like this:
+>
+>sg[0].page = 0x12000000
+>sg[0].len = 4096
+>sg[0].dma_addr = 0xf0010000
+>sg[0].dma_len = 16384
+>sg[1].page = 0x13011000
+>sg[1].len = 4096
+>sg[1].dma_addr = 0
+>sg[1].dma_len = 0
+>sg[2].page = 0x13012000
+>sg[2].len = 4096
+>sg[2].dma_addr = 0
+>sg[2].dma_len = 0
+>sg[3].page = 0x11011000
+>sg[3].len = 4096
+>sg[3].dma_addr = 0
+>sg[3].dma_len = 0
+>
+>(I've intentionally wrote page as physical address to make it easier to
+>understand, in real SGs it is stored a struct page pointer).
+>
+>> Does each SG entry always have the page and dma info? or could you have
+>> entries that have page information only, and entries that have dma info
+>only?
+>When SG is not mapped yet it contains only the ->pages and ->len
+>entries. I'm not aware of the SGs with the DMA information only, but in
+>theory it might be possible to have such.
+>> If the same entry has different size info (page_len = PAGE_SIZE,
+>> dma_len = 4 * PAGE_SIZE?), are we guaranteed that the arrays (page and
+>addrs) have
+>> been sized correctly?
+>
+>There are always no more DMA related entries than the phys pages. If
+>there is 1:1 mapping between physical memory and DMA (IOVA) space, then
+>each SG entry will have len == dma_len, and dma_addr will be describing
+>the same as page entry. DMA mapping framework is allowed only to join
+>entries while mapping to DMA (IOVA).
+>
+>> Just trying to get my head wrapped around this.
+>
+>Sure, I hope my explanation helps a bit.
 
-Repeatedly writing a bad block has no real benefits,
-but brings some negative effects:
-1 Lost subsequent data
-2 Loss of flash device life
-3 erase_write() bad blocks are very time-consuming. For example:
-	the function do_erase_oneblock() in chips/cfi_cmdset_0020.c or
-	chips/cfi_cmdset_0002.c may take more than 20 seconds to return
+That is a great example!  Thank you very much for the explanation.
 
-Therefore, when erase_write() returns -EIO in write_cached_data(),
-clear cache_state to avoid writing to bad blocks repeatedly.
+I was somehow seeing it as the dma side getting split and extended (rather
+than consolidated) into more possible entries.  This clarifies the issue for me.
 
-Signed-off-by: Xiaoming Ni <nixiaoming@huawei.com>
-Reviewed-by: Miquel Raynal <miquel.raynal@bootlin.com>
-Cc: stable@vger.kernel.org
----
- drivers/mtd/mtdblock.c | 11 +++++++----
- 1 file changed, 7 insertions(+), 4 deletions(-)
+Thanks!
 
-diff --git a/drivers/mtd/mtdblock.c b/drivers/mtd/mtdblock.c
-index 078e0f6..32e52d8 100644
---- a/drivers/mtd/mtdblock.c
-+++ b/drivers/mtd/mtdblock.c
-@@ -89,8 +89,6 @@ static int write_cached_data (struct mtdblk_dev *mtdblk)
- 
- 	ret = erase_write (mtd, mtdblk->cache_offset,
- 			   mtdblk->cache_size, mtdblk->cache_data);
--	if (ret)
--		return ret;
- 
- 	/*
- 	 * Here we could arguably set the cache state to STATE_CLEAN.
-@@ -98,9 +96,14 @@ static int write_cached_data (struct mtdblk_dev *mtdblk)
- 	 * be notified if this content is altered on the flash by other
- 	 * means.  Let's declare it empty and leave buffering tasks to
- 	 * the buffer cache instead.
-+	 *
-+	 * If this cache_offset points to a bad block, data cannot be
-+	 * written to the device. Clear cache_state to avoid writing to
-+	 * bad blocks repeatedly.
- 	 */
--	mtdblk->cache_state = STATE_EMPTY;
--	return 0;
-+	if (ret == 0 || ret == -EIO)
-+		mtdblk->cache_state = STATE_EMPTY;
-+	return ret;
- }
- 
- 
--- 
-1.8.5.6
+Mike
 
+>Best regards
+>--
+>Marek Szyprowski, PhD
+>Samsung R&D Institute Poland
+>
+>_______________________________________________
+>dri-devel mailing list
+>dri-devel@lists.freedesktop.org
+>https://lists.freedesktop.org/mailman/listinfo/dri-devel
