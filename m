@@ -2,113 +2,102 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 160CEC2D0EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 13:11:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC199C2D0EE
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 13:11:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E087E20733
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 13:11:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C193220733
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 13:11:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LKWIYBDl"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="O0ZaJzjr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730250AbgC3NLe (ORCPT
+        id S1730281AbgC3NLo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 09:11:34 -0400
-Received: from mail-qv1-f65.google.com ([209.85.219.65]:42217 "EHLO
-        mail-qv1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730209AbgC3NLd (ORCPT
+        Mon, 30 Mar 2020 09:11:44 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:41058 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730209AbgC3NLo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 09:11:33 -0400
-Received: by mail-qv1-f65.google.com with SMTP id ca9so8820600qvb.9;
-        Mon, 30 Mar 2020 06:11:32 -0700 (PDT)
+        Mon, 30 Mar 2020 09:11:44 -0400
+Received: by mail-pf1-f195.google.com with SMTP id a24so1712441pfc.8;
+        Mon, 30 Mar 2020 06:11:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=CXXurTUII8VpB0EcDM75dl6fLEYv6VVhn5KbPydNUXc=;
-        b=LKWIYBDltwZUlJG6CutAT4jIkX3wXfKAakiTDQHE8Gycgme/ttLbZBrPdxVt1br5iW
-         BYOUb7zO9A6X/e2olDbr3LssTnVNrFarh1bKEhiTM+9bKZ1UOE2D8VFBHy0ypca2T/9m
-         apEGb1sDjTyXthtU46eEy2Z7si6xbk1wgs0uUjiTmAhQFOZyDf9sRAL5jfdYE0iBeL+t
-         YrQmyH112vCrp/G9bGyBGSlsfunLhFSIhP5SjT2jkVaNxdSAXAU15AyttacA40V8Ybb7
-         OyxX4K7PHO/dXWW/KmRira7TzZ6fWIVB5X0XSsHzY/lsSL31Hl1h9j1KqGeScGDVi/9P
-         yrzA==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=xJ3TyvoFApvA3YeewIwlAIGLD0UIZM7kn/bRRvcTrjw=;
+        b=O0ZaJzjrsqaH8T7T/ksePnAm/NlJO+6qoptcFKLvEEgtxL5EtsV3CEpPxql6m4tpM8
+         6yN9iaczQ72XGuSQ4pjvRedRyRr18nJDix84RYE7+DJoArG8KgOkSbOv5IUieg6EcQ5g
+         guV2pClmvSsZ+bRlVwvjlyTPEG0N+CLkTjepcuhRamuJ05N3vVn0kg59vjM1VssGt9ai
+         y0GLKKgKLFhgRCEWYPX1HOzeXcujs5m/qZ8AMV//Cc87NCWXJU7v5uY7ZScfZw/x+HTS
+         T1y7hjgVMs3ZCp59wqnZckfhASiUOJDua1WoButL2R1sWItDpSZGb3FVWvHt5qLtQtBz
+         g50w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=CXXurTUII8VpB0EcDM75dl6fLEYv6VVhn5KbPydNUXc=;
-        b=AS3VNEaENUqfsRAln8Ctw2o48Fea3+tmUZX6ThM2H0IzvW00s/zd/GAoUr4RpDlQAc
-         mrJAAzVWTjikemR4sraAsA8yjuFT0ioBG6ZlLpYfR8V+Q4HINwu5nVVz8AoQeRlMoznx
-         YjLYudqoBaaKvJHsRm3vfOgLMvQTq+tWqJCPp7xW5y5qi4JURCFPR91cxNWuDgYxEpRn
-         9MBU8lPERlh0eOGVTfhZbEpb75KjUMxqOPEZcvXX42XLmihWdwiSyOyT1kIXdw1o0vQB
-         WmftxGdL9y4pgbCipar7dpSu0T9oN3sLYaYbHSNFVgR3pKOCprQyJFgCiJBF+cJoE6NV
-         GOHQ==
-X-Gm-Message-State: ANhLgQ2AyPA6johfF+Q+Z6Qp1WKvVyez875suX0T19nIK4gZOGQ58qwv
-        Cw3qTEkO84DRimfsruy9YT4=
-X-Google-Smtp-Source: ADFU+vuyODo7GtN0g7PIPraF7IzDWDNCoduQtbSJwyrA275BZnVxNAS0W6EnmzFI4zkeE5XW6cHcUQ==
-X-Received: by 2002:ad4:4564:: with SMTP id o4mr11225914qvu.190.1585573892199;
-        Mon, 30 Mar 2020 06:11:32 -0700 (PDT)
-Received: from quaco.ghostprotocols.net ([179.97.37.151])
-        by smtp.gmail.com with ESMTPSA id k15sm11437005qta.74.2020.03.30.06.11.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Mar 2020 06:11:31 -0700 (PDT)
-From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 780CF409A3; Mon, 30 Mar 2020 10:11:29 -0300 (-03)
-Date:   Mon, 30 Mar 2020 10:11:29 -0300
-To:     Kemeng Shi <shikemeng@huawei.com>
-Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        peterz@infradead.org, mingo@redhat.com, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, jolsa@redhat.com,
-        namhyung@kernel.org, ndesaulniers@google.com, irogers@google.com,
-        tmricht@linux.ibm.com, hushiyuan@huawei.com, hewenliang4@huawei.com
-Subject: Re: [PATCH] perf report: Fix arm64 gap between kernel start and
- module end
-Message-ID: <20200330131129.GB31702@kernel.org>
-References: <33fd24c4-0d5a-9d93-9b62-dffa97c992ca@huawei.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=xJ3TyvoFApvA3YeewIwlAIGLD0UIZM7kn/bRRvcTrjw=;
+        b=eAlTa/rQXIlqfR15R0T9YpGMM74cMotERgZcprPptm2282hPCXavPvHBT0diOdQZNc
+         FMmu/D6hwi9E84a0ycNXl4w2Tr+jNReEG41Yv6vYDkKpPnDa0Y+ayXp8iOym2NNIMy1p
+         B3JO/7LbzremQouH99r+LtT9wP6jFLWIl/DqZf7fXuGldnPUfsNAJK/5/n4j6d9TPRw2
+         GjuEWd5Tp3IYwC2Jrh1MBkCWlxSmvsDxUzG9o5YrU3+FZZyBkOEZjemoFOoanWtbOZ6H
+         y7ax1xAwOszHT8llXwU0TuJHLBc8snbgr5JSbHK/xSI86k2HEN09vjbwQHJxxRhOe9m5
+         nO/A==
+X-Gm-Message-State: ANhLgQ1qolmArYLZQHvNuz70MxDo5BN1qKT7RK9BVCBgIKv1I3Qw4/fT
+        Ps2qILOuFxlUUp2m1A9Ca7ODBe7pxgAl5UG8tD8=
+X-Google-Smtp-Source: ADFU+vt/wdF9Yz9aLGwEDV0amBEh7A3BOassb43ggpF/dr6JnjHGteI2QUsfwGMQgIfZ+egzDho/tSB1cI+UUvt5Elk=
+X-Received: by 2002:aa7:958f:: with SMTP id z15mr12440065pfj.130.1585573902959;
+ Mon, 30 Mar 2020 06:11:42 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <33fd24c4-0d5a-9d93-9b62-dffa97c992ca@huawei.com>
-X-Url:  http://acmel.wordpress.com
+References: <20200324122023.9649-1-andriy.shevchenko@linux.intel.com>
+ <20200324122023.9649-3-andriy.shevchenko@linux.intel.com> <CAJZ5v0gg=V8uDd4afJ3MULsgKYvWajKJioANk4jj7xEhBzrRrQ@mail.gmail.com>
+ <CA+G9fYvFnXqSnoQSJ-DkQvAFv87iWmhH6dT1N79qrq=Aeuv4rw@mail.gmail.com>
+ <028b636f-6e0f-c36a-aa4e-6a16d936fc6a@arm.com> <20200330095707.GA10432@bogus> <0a374eaa-92b3-0201-f357-4181542c98b6@arm.com>
+In-Reply-To: <0a374eaa-92b3-0201-f357-4181542c98b6@arm.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Mon, 30 Mar 2020 16:11:35 +0300
+Message-ID: <CAHp75VdBm8ZYOMWmQEA8LD6uGcJ0sZ=M6n3MSYxmO6UkXbu+-A@mail.gmail.com>
+Subject: Re: [PATCH v2 3/3] driver core: Replace open-coded list_last_entry()
+To:     Robin Murphy <robin.murphy@arm.com>
+Cc:     Sudeep Holla <sudeep.holla@arm.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Naresh Kamboju <naresh.kamboju@linaro.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Basil Eljuse <Basil.Eljuse@arm.com>,
+        lkft-triage@lists.linaro.org,
+        Linux-Next Mailing List <linux-next@vger.kernel.org>,
+        Ferry Toth <fntoth@gmail.com>, Arnd Bergmann <arnd@arndb.de>,
+        Anders Roxell <anders.roxell@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Mon, Mar 30, 2020 at 03:41:11PM +0800, Kemeng Shi escreveu:
-> diff --git a/tools/perf/arch/arm64/util/Build b/tools/perf/arch/arm64/util/Build
-> index 393b9895c..37cbfa5e9 100644
-> --- a/tools/perf/arch/arm64/util/Build
-> +++ b/tools/perf/arch/arm64/util/Build
-> @@ -2,6 +2,7 @@ libperf-y += header.o
->  libperf-y += tsc.o
->  libperf-y += sym-handling.o
->  libperf-y += kvm-stat.o
-> +libperf-y += machine.o
+On Mon, Mar 30, 2020 at 3:49 PM Robin Murphy <robin.murphy@arm.com> wrote:
+> On 2020-03-30 11:13 am, Sudeep Holla wrote:
+> > On Fri, Mar 27, 2020 at 07:40:25PM +0000, Robin Murphy wrote:
 
-You made the patch against an old perf codebase, right? This libperf-y
-above was changed to perf-y here:
+...
 
-commit 5ff328836dfde0cef9f28c8b8791a90a36d7a183
-Author: Jiri Olsa <jolsa@kernel.org>
-Date:   Wed Feb 13 13:32:39 2019 +0100
+> AFAICS the difference is down to whether deferred_probe_timeout has
+> expired or not - I'm not familiar enough with this code to know
+> *exactly* what the difference is supposed to represent, nor which change
+> has actually pushed the Juno case from one state to the other (other
+> than it almost certainly can't be $SUBJECT - if this series is to blame
+> at all I'd assume it would be down to patch #1/3, but there's a bunch of
+> other rework previously queued in -next that is probably also interacting)
 
-    perf tools: Rename build libperf to perf
+JFYI: patch #1/3 wasn't applied.
 
-----
 
-I'm fixing this up, please check my perf/core branch later to see that
-all is working as intended.
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git perf/core
-
-Thanks,
-
-- Arnaldo
+-- 
+With Best Regards,
+Andy Shevchenko
