@@ -2,100 +2,144 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43880C2D0F1
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 20:53:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2E6EC2D0F1
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 20:57:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 144B9206CC
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 20:53:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD63F206CC
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 20:57:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MGUhDwIR"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="b2bXKFNi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728590AbgC3Uxo (ORCPT
+        id S1728594AbgC3U5B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 16:53:44 -0400
-Received: from mail-il1-f174.google.com ([209.85.166.174]:35651 "EHLO
-        mail-il1-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727750AbgC3Uxo (ORCPT
+        Mon, 30 Mar 2020 16:57:01 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:35774 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727750AbgC3U5B (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 16:53:44 -0400
-Received: by mail-il1-f174.google.com with SMTP id 7so17297219ill.2;
-        Mon, 30 Mar 2020 13:53:43 -0700 (PDT)
+        Mon, 30 Mar 2020 16:57:01 -0400
+Received: by mail-ed1-f67.google.com with SMTP id a20so22577912edj.2;
+        Mon, 30 Mar 2020 13:56:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
-         :subject:to:cc;
-        bh=YObKUxfYW0zylUpa1+9jHO1hB3bhJSUNMPTlouupWFI=;
-        b=MGUhDwIRFYRiH0IM+sBONn3B7kaD4w6MynsYnb2/DxeR4H1x1PQMemH2nrqsHqBc/n
-         0FDatwUJKV+f8eX4oCXGc99IPKf+8aigih9OTuCFZMUxV3IXGJdenbmshsvLt33CFnf4
-         6og9JqhIeU1p1rRpmWi+QdOjwg1evSVHNxoU4PBZsceF7zCzxjP3VyUH30iuIj+7ieby
-         hQcbCHkPMJl2vzLhFJQ7cfFBxW6oeQ45p2e2texd6G9owMmnChjDAoxeT09s2IbzOEdZ
-         ZXfdtg16VoZHMo5nB/2HYcEpBmZlEkAGV5XpeN7gP9qL88vdeTzsLV/VWNaQ0OY255T+
-         Fhig==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=xV24bY+9ZHrEg7r2qYUHnQ8d27A7ffpYwBJNYjkSVys=;
+        b=b2bXKFNiFz7uYVBZYuUFOsPh+KRsloBhmBsh55XB9RUHCsuUoTL56b0zhQxc7XlXE7
+         rxnEjGULGjg6n2E1rcof+8xU9YKcOZYHAA/rfvFAMHTmRfPUM+BhPujRpbcabTQOBbwb
+         yg6QqQMVVy+amHCdIhhPsPNEFh11eko0FdApqzApyQAUTjPven7iQwZS5UMilDIu7zAi
+         Rf/nXJJ7rdlqj03DEWhMlNtZY78T/p8cYrDwmpGZIN+O0S1UEVWh9n91cfU9rbsQqlIM
+         FksYuIfWBZ8I+g3tEF3wQBkAdQP4+W5z3ZYkqQZiUhyTziz+bXcXwZarSvsuWfhsYd9E
+         PXxw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
-         :from:date:message-id:subject:to:cc;
-        bh=YObKUxfYW0zylUpa1+9jHO1hB3bhJSUNMPTlouupWFI=;
-        b=sDUeXcyKdM+uzBz4MDltV7plx9a0VKz9WUorOL+YIGJVPy6HMleanCeJi+gweuo+9C
-         kmUUESFy3V+3NPnoe4d1h06GbGdvW9eAE8Ya+w96h2hXV1bw/XF6sgvyWTYpu1sdKNNV
-         Q5rGvCzZO2F2PFtX7eW06enPVGBWSoczB7IZSN9qfDBRVlRjopay4Tx3cLemfsAlH4G3
-         g0o36T9LPHNK9V0iJn3gwXn36nywB29DHpwmfV7iZGDpxFz9oaqpR1uh1sLsoE87r3nH
-         d4Fd2u08SjZpUMaSfhNDQCrjePtAy7PZKOATEWJ7u1iT9DU58KWnDQdGEcjPYRivyREb
-         9TOQ==
-X-Gm-Message-State: ANhLgQ1JtimhxdOY5bt8EhoOxQoMA2LZW54fbqsLhzSZB3IQkoZYXIuY
-        f3fTU9wtU25MQ8MYTDv/TFgDBkU/n6VoRL39NOww5B4v
-X-Google-Smtp-Source: ADFU+vtiCBj0YjO+xzy3BgIXZNpZQtB8oTRnzSIETu/cKAKHD7XqLMOcF7LdKdxP43fJ8s7Pe9P19ac+oqHuJboUVvE=
-X-Received: by 2002:a92:49da:: with SMTP id k87mr9920124ilg.149.1585601622891;
- Mon, 30 Mar 2020 13:53:42 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=xV24bY+9ZHrEg7r2qYUHnQ8d27A7ffpYwBJNYjkSVys=;
+        b=TwqUTOXAzOWRz5aC2KKaCLxPXtCFQzNLvjHpzwaJ18t8/Uua+ba1Aa2aA5Bwjj7eeg
+         5dvaZAqU4Vn1ph2po9ac5tB81gGARfCiJC07vtV12ase5xHxfif3373sFicfGEIifn4O
+         pz0ItMSto7qlEEpTZE0DFxy+mpZPwQ6JNXhqd6rm3a1L7gr1y03OadRRhmpWxeodnvk9
+         V57xCKTdwrkYkhqBqOzTfvFN6ZI4dnD6OF17Txu3iOmhq2p7NWBWMkpx5QMLh9nKWz84
+         G6RBXFcsVOUjmQdNwFPGAD6hHAVghSsMaKfTrCpi5+KHXKL5LHKD1Jo8lVNiEfLwBhQv
+         txbg==
+X-Gm-Message-State: ANhLgQ1jBzq2n9k0StY6ckYaO5JHjn7OORLIOPAAoC05506oBdtk8lcR
+        Npks6o0LS1sOENd9wncmiYo=
+X-Google-Smtp-Source: ADFU+vumP9c0QoPy1L/XVTrWfUB8yNiEmoCy+BYk7bNQi2c0EANdKJo32GXatd9yH3cBjgoyJwd8+g==
+X-Received: by 2002:a17:906:3607:: with SMTP id q7mr12498455ejb.65.1585601816946;
+        Mon, 30 Mar 2020 13:56:56 -0700 (PDT)
+Received: from Ansuel-XPS.localdomain (host203-232-dynamic.53-79-r.retail.telecomitalia.it. [79.53.232.203])
+        by smtp.googlemail.com with ESMTPSA id n10sm2006475edf.3.2020.03.30.13.56.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 30 Mar 2020 13:56:56 -0700 (PDT)
+From:   Ansuel Smith <ansuelsmth@gmail.com>
+To:     Andy Gross <agross@kernel.org>
+Cc:     Ansuel Smith <ansuelsmth@gmail.com>,
+        Mathieu Olivari <mathieu@codeaurora.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-clk@vger.kernel.org
+Subject: [PATCH v2] ARM: qcom: Disable i2c device on gsbi4 for ipq806x
+Date:   Mon, 30 Mar 2020 22:56:46 +0200
+Message-Id: <20200330205647.24806-1-ansuelsmth@gmail.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-References: <20200331073852.54e44b21@canb.auug.org.au>
-In-Reply-To: <20200331073852.54e44b21@canb.auug.org.au>
-Reply-To: bjorn@helgaas.com
-From:   Bjorn Helgaas <bjorn.helgaas@gmail.com>
-Date:   Mon, 30 Mar 2020 15:53:29 -0500
-Message-ID: <CABhMZUUuCRAgSd7ar90v4AC4q7u-vC04YTnX7j=a=vNaKvEY_g@mail.gmail.com>
-Subject: Re: linux-next: Fixes tag needs some work in the pci tree
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Lukas Wunner <lukas@wunner.de>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 30, 2020 at 3:39 PM Stephen Rothwell <sfr@canb.auug.org.au> wrote:
->
-> Hi all,
->
-> In commit
->
->   fb3ffadca55a ("PCI: pciehp: Fix indefinite wait on sysfs requests")
->
-> Fixes tag
->
->   Fixes: 54ecb8f7028c ("PCI: pciehp: Avoid returning prematurely from sysfs requests")
->
-> has these problem(s):
->
->   - Subject does not match target commit subject
->     Just use
->         git log -1 --format='Fixes: %h ("%s")'
->
-> Did you mean
->
-> (probably not :-))
-> Fixes: 54ecb8f7028c ("Linux 5.4-rc1")
->
-> or
->
-> Fixes: 157c1062fcd8 ("PCI: pciehp: Avoid returning prematurely from sysfs requests")
+Disable the i2c device on gsbi4, mark gsbi4_h as unused and gsbi4_qup
+and src clks as protected. gsbi4_h can't be set to protected as it's
+used by both gsbi and rpm and making it protected creates some problem
+with gsbi4 uart function.
+Without this fix, clock framework will turn them off at end
+of probe. On ipq806x by design gsbi4_qup, gsbi4_h clks and i2c on gsbi4
+are meant for RPM usage. So turning them off in kernel is incorrect.
 
-Fixed, thanks!
+Signed-off-by: Mathieu Olivari <mathieu@codeaurora.org>
+Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
+---
+ arch/arm/boot/dts/qcom-ipq8064-ap148.dts | 9 ---------
+ arch/arm/boot/dts/qcom-ipq8064.dtsi      | 3 +++
+ drivers/clk/qcom/gcc-ipq806x.c           | 1 +
+ 3 files changed, 4 insertions(+), 9 deletions(-)
+
+diff --git a/arch/arm/boot/dts/qcom-ipq8064-ap148.dts b/arch/arm/boot/dts/qcom-ipq8064-ap148.dts
+index 554c65e7aa0e..580aec63030d 100644
+--- a/arch/arm/boot/dts/qcom-ipq8064-ap148.dts
++++ b/arch/arm/boot/dts/qcom-ipq8064-ap148.dts
+@@ -21,14 +21,5 @@ mux {
+ 				};
+ 			};
+ 		};
+-
+-		gsbi@16300000 {
+-			i2c@16380000 {
+-				status = "ok";
+-				clock-frequency = <200000>;
+-				pinctrl-0 = <&i2c4_pins>;
+-				pinctrl-names = "default";
+-			};
+-		};
+ 	};
+ };
+diff --git a/arch/arm/boot/dts/qcom-ipq8064.dtsi b/arch/arm/boot/dts/qcom-ipq8064.dtsi
+index 16c0da97932c..d9a803c8a59b 100644
+--- a/arch/arm/boot/dts/qcom-ipq8064.dtsi
++++ b/arch/arm/boot/dts/qcom-ipq8064.dtsi
+@@ -421,6 +421,9 @@ qcom,ssbi@500000 {
+ 		gcc: clock-controller@900000 {
+ 			compatible = "qcom,gcc-ipq8064";
+ 			reg = <0x00900000 0x4000>;
++
++			protected-clocks = <GSBI4_QUP_SRC>, <GSBI4_QUP_CLK>;
++
+ 			#clock-cells = <1>;
+ 			#reset-cells = <1>;
+ 		};
+diff --git a/drivers/clk/qcom/gcc-ipq806x.c b/drivers/clk/qcom/gcc-ipq806x.c
+index b0eee0903807..f7d7a2bc84c1 100644
+--- a/drivers/clk/qcom/gcc-ipq806x.c
++++ b/drivers/clk/qcom/gcc-ipq806x.c
+@@ -991,6 +991,7 @@ static struct clk_branch gsbi4_h_clk = {
+ 		.hw.init = &(struct clk_init_data){
+ 			.name = "gsbi4_h_clk",
+ 			.ops = &clk_branch_ops,
++			.flags = CLK_IGNORE_UNUSED,
+ 		},
+ 	},
+ };
+-- 
+2.25.1
+
