@@ -2,114 +2,167 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0E85C2D0EE
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 08:52:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06EC8C2D0E9
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 08:52:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AFAAB20732
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 08:52:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DABB220732
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 08:52:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729729AbgC3Iwb (ORCPT
+        id S1729763AbgC3Iwl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 04:52:31 -0400
-Received: from mout.kundenserver.de ([212.227.126.133]:35019 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728759AbgC3Iwb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 04:52:31 -0400
-Received: from mail-qk1-f178.google.com ([209.85.222.178]) by
- mrelayeu.kundenserver.de (mreue010 [212.227.15.129]) with ESMTPSA (Nemesis)
- id 1MXGak-1jrW2l1u2g-00Yk2T; Mon, 30 Mar 2020 10:52:29 +0200
-Received: by mail-qk1-f178.google.com with SMTP id l25so18121678qki.7;
-        Mon, 30 Mar 2020 01:52:29 -0700 (PDT)
-X-Gm-Message-State: ANhLgQ1aG4irB7mHsiFMAYO9mSVM1umy0vLL3Wx4gID9JHXyw6abmB8a
-        MdGJ6M+WS7kL4go8gIIUF2S3uYmWFByVtWR7x48=
-X-Google-Smtp-Source: ADFU+vspLuSrK8vR03RwDBO/StenmRiwdE7jGV6xhNQgPE6lP5dk6ojwytg8GYIfZCdnyNJJEiEKM8ekH1yyAFQe8+w=
-X-Received: by 2002:a37:8707:: with SMTP id j7mr10668481qkd.394.1585558348217;
- Mon, 30 Mar 2020 01:52:28 -0700 (PDT)
-MIME-Version: 1.0
-References: <cover.1585311091.git.michal.simek@xilinx.com> <20200327141434.GA1922688@smile.fi.intel.com>
- <b5adcc7a-9d10-d75f-50e3-9c150a7b4989@c-s.fr> <2194609.nAEUQZTCmX@debian64>
-In-Reply-To: <2194609.nAEUQZTCmX@debian64>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Mon, 30 Mar 2020 10:52:11 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a0i7virtvTJHb2Ssx5zmJ4joKPEjK6timAXGK7BdymzKw@mail.gmail.com>
-Message-ID: <CAK8P3a0i7virtvTJHb2Ssx5zmJ4joKPEjK6timAXGK7BdymzKw@mail.gmail.com>
-Subject: Re: [PATCH 0/2] powerpc: Remove support for ppc405/440 Xilinx platforms
-To:     Christian Lamparter <chunkeey@gmail.com>
-Cc:     linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Enrico Weigelt <info@metux.net>,
-        Mark Brown <broonie@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Matt Porter <mporter@kernel.crashing.org>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Paul Mackerras <paulus@samba.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Sasha Levin <sashal@kernel.org>,
-        DTML <devicetree@vger.kernel.org>, ewald_comhaire@hotmail.com
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:3Rz54Rm8At7MaFg5/rSCXyewRkCHG1d53Rzwr0x4HSGrQvn1ACc
- A7ob3P9g+5IGKTGje+ha4aPMrNXbrKDTcKfT3/TtnHDFkySVevbzxNE7w1Tg2mEMZ7U9KZ+
- MJpSyrdDnG+/SfzdWRYCQ+jwcIdSu6xXhmESN5AHpi1wRYkhL8FAH9poX3qdzBlKOjxAts9
- FSA0K/BSW7EQ9KX23Z72Q==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:FBJhdOpu6oY=:3irgf6fBFb0tgeUW1w3YBK
- 6+6N8uxoBQN2r9UTk/9/vy5cvfHQDfWLqvUKXxZAu4KUcMvAQU0CodpLFKpGzWLNwf4Fa0KX8
- ZD7SECinCtbzMO4W9Xbt6OCsb9PEdVzfqnojYfKwf9ZRni4Tt0n0PwDahvJdQs7p9Hsc9XOg7
- vjrXG1UUThDwDEyflsAkXDq/lxFkrabcBjK1ceNcJzWYbJQ6AGXTgHUXdBd0oJyshsr+xYwXn
- r1zGYo/Xgv0KfJ8zIAgyxEcNBgT3kSwHj+xS16J4FBrEwT8QIEAgJT1mV0Iu950mMUrWAm8RT
- 9hjVtbHxmVjZOni0SdN5BKc8dX+DiNT2ozzUXcFz+20h1UBxV6iMCUAS1ov02mhQe90gPPk7l
- 9+Se9eXdG5kH1NwH7Sdc1zH47DmtPMeUvafiEiIiOhtcb9TSPT/+I+rhs0H5dSCOlgXh7t+sy
- IaLInMgnMd3cBRoRVvAz4GsE8eWqYgl9vrXW3B5VNxQqiBlVd73Cx69jZtUM9EyGkrF48rOkc
- PTPcV2m1RJ5EfkeKQbAQABv5JXbvzVMCCuIAMJm/XV9YJHX1xygL88veAcQ9yceT1yJz4PYZ7
- iG1FtTz+piXbFgR3KfzjjDL2nw5mh60BFmMbBtgLO1EFBXYRrsLHchpxBEskAzhFAzBOpIRHX
- tdyNVVAN673RFjjJnoQ1ymeCnO5GcOCbaaQQF9L3DVGJsJxvqw+/aorPRuAEdT5t8BcXLwZeY
- PTNjwvAKNRt/cPRT4iID8dstUiFvvo3LZssAEupPYXoE5eCobq7oXJNjBGATdM/DOsVuHAqpI
- Jec9yXnGhz5Ysq1ESnnzuYoqHx3ujqQh1AsAUoZ13F0aakmi8Q=
+        Mon, 30 Mar 2020 04:52:41 -0400
+Received: from mail.loongson.cn ([114.242.206.163]:60066 "EHLO loongson.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728759AbgC3Iwk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Mar 2020 04:52:40 -0400
+Received: from kvm-dev1.localdomain (unknown [10.2.5.134])
+        by mail.loongson.cn (Coremail) with SMTP id AQAAf9Dx72pSs4Fek5ghAA--.15S2;
+        Mon, 30 Mar 2020 16:52:34 +0800 (CST)
+From:   bibo mao <maobibo@loongson.cn>
+To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        Huacai Chen <chenhc@lemote.com>
+Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 11/39] MIPS: bmips: Add header file path prefix
+Date:   Mon, 30 Mar 2020 04:52:33 -0400
+Message-Id: <1585558353-13665-1-git-send-email-maobibo@loongson.cn>
+X-Mailer: git-send-email 1.8.3.1
+X-CM-TRANSID: AQAAf9Dx72pSs4Fek5ghAA--.15S2
+X-Coremail-Antispam: 1UD129KBjvJXoW3Aw17Xr1ruF1UJry8XFW3GFg_yoW7WrWfpa
+        1DA3Z5Kr4j9ryUAFy5ZFyxKr43Ja1DGrWqkFWYgw17Z3WaqF1UJrs3trs8AryxJF4qy3WF
+        grWfXr4Utrsavw7anT9S1TB71UUUUUDqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUUkvb7Iv0xC_Kw4lb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I2
+        0VC2zVCF04k26cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rw
+        A2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xII
+        jxv20xvEc7CjxVAFwI0_Cr0_Gr1UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4
+        vEx4A2jsIEc7CjxVAFwI0_Cr1j6rxdM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVAC
+        Y4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26rWY6Fy7McIj6I8E87Iv67AKxVWxJV
+        W8Jr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JMxkIecxEwVCm-wCF04k2
+        0xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI
+        8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41l
+        IxAIcVC0I7IYx2IY67AKxVW8JVW5JwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Cr0_Gr1UMI
+        IF0xvE42xK8VAvwI8IcIk0rVWrJr0_WFyUJwCI42IY6I8E87Iv67AKxVWxJVW8Jr1lIxAI
+        cVC2z280aVCY1x0267AKxVW8Jr0_Cr1UYxBIdaVFxhVjvjDU0xZFpf9x07bzCJdUUUUU=
+X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Mar 28, 2020 at 4:07 PM Christian Lamparter <chunkeey@gmail.com> wrote:
->
-> (Sorry for the bounces, yes my smarthost mail setup breaks from time to time
-> and I had to cut the CC since it complained about the length.)
->
-> I guess we should think about upstreaming the MyBook Live DTS. Problem here
-> is that we deviated a bit from the canyonlands.dts/bluestone.dts structure
-> by having a skeleton apm82181.dtsi with most of the SoC defintition and a
-> wd-mybooklive.dts for the device.
+Remove header files from arch/mips/include/asm/mach-bmips
+to arch/mips/bmips/include/mach
 
-I don't see much of a problem with that. If the chips are quite
-different, then this
-would be the right way to do it, and it matches how most dts files are
-structured
-on arm and others as well.
+Signed-off-by: bibo mao <maobibo@loongson.cn>
+---
+ arch/mips/Kconfig                                                       | 1 +
+ arch/mips/bmips/Platform                                                | 2 +-
+ .../asm/mach-bmips => bmips/include/mach}/cpu-feature-overrides.h       | 0
+ arch/mips/{include/asm/mach-bmips => bmips/include/mach}/ioremap.h      | 0
+ arch/mips/bmips/include/mach/irq.h                                      | 2 ++
+ arch/mips/bmips/include/mach/kernel-entry-init.h                        | 2 ++
+ arch/mips/bmips/include/mach/kmalloc.h                                  | 2 ++
+ arch/mips/bmips/include/mach/mangle-port.h                              | 2 ++
+ arch/mips/{include/asm/mach-bmips => bmips/include/mach}/spaces.h       | 0
+ arch/mips/bmips/include/mach/topology.h                                 | 2 ++
+ arch/mips/bmips/include/mach/war.h                                      | 2 ++
+ 11 files changed, 14 insertions(+), 1 deletion(-)
+ rename arch/mips/{include/asm/mach-bmips => bmips/include/mach}/cpu-feature-overrides.h (100%)
+ rename arch/mips/{include/asm/mach-bmips => bmips/include/mach}/ioremap.h (100%)
+ create mode 100644 arch/mips/bmips/include/mach/irq.h
+ create mode 100644 arch/mips/bmips/include/mach/kernel-entry-init.h
+ create mode 100644 arch/mips/bmips/include/mach/kmalloc.h
+ create mode 100644 arch/mips/bmips/include/mach/mangle-port.h
+ rename arch/mips/{include/asm/mach-bmips => bmips/include/mach}/spaces.h (100%)
+ create mode 100644 arch/mips/bmips/include/mach/topology.h
+ create mode 100644 arch/mips/bmips/include/mach/war.h
 
-It would be nice to move over the the bluestone .dts to the apm82181.dtsi file
-when that gets added, if only to ensure they use the same description for each
-node, but that shouldn't stop the addition of the new file if that is needed for
-distros to make use of a popular device.
-I see a couple of additional files in openwrt [1],
+diff --git a/arch/mips/Kconfig b/arch/mips/Kconfig
+index e8e6f2b..1ee88a2 100644
+--- a/arch/mips/Kconfig
++++ b/arch/mips/Kconfig
+@@ -259,6 +259,7 @@ config BMIPS_GENERIC
+ 	select USB_OHCI_BIG_ENDIAN_DESC if CPU_BIG_ENDIAN
+ 	select USB_OHCI_BIG_ENDIAN_MMIO if CPU_BIG_ENDIAN
+ 	select HARDIRQS_SW_RESEND
++	select HAVE_MACH_HEAD_FILES
+ 	help
+ 	  Build a generic DT-based kernel image that boots on select
+ 	  BCM33xx cable modem chips, BCM63xx DSL chips, and BCM7xxx set-top
+diff --git a/arch/mips/bmips/Platform b/arch/mips/bmips/Platform
+index 5f127fd..8b9574f 100644
+--- a/arch/mips/bmips/Platform
++++ b/arch/mips/bmips/Platform
+@@ -3,5 +3,5 @@
+ #
+ platform-$(CONFIG_BMIPS_GENERIC)	+= bmips/
+ cflags-$(CONFIG_BMIPS_GENERIC)		+=				\
+-		-I$(srctree)/arch/mips/include/asm/mach-bmips/
++		-I$(srctree)/arch/mips/bmips/include
+ load-$(CONFIG_BMIPS_GENERIC)		:= 0xffffffff80010000
+diff --git a/arch/mips/include/asm/mach-bmips/cpu-feature-overrides.h b/arch/mips/bmips/include/mach/cpu-feature-overrides.h
+similarity index 100%
+rename from arch/mips/include/asm/mach-bmips/cpu-feature-overrides.h
+rename to arch/mips/bmips/include/mach/cpu-feature-overrides.h
+diff --git a/arch/mips/include/asm/mach-bmips/ioremap.h b/arch/mips/bmips/include/mach/ioremap.h
+similarity index 100%
+rename from arch/mips/include/asm/mach-bmips/ioremap.h
+rename to arch/mips/bmips/include/mach/ioremap.h
+diff --git a/arch/mips/bmips/include/mach/irq.h b/arch/mips/bmips/include/mach/irq.h
+new file mode 100644
+index 0000000..bb5ccce
+--- /dev/null
++++ b/arch/mips/bmips/include/mach/irq.h
+@@ -0,0 +1,2 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#include <asm/mach-generic/irq.h>
+diff --git a/arch/mips/bmips/include/mach/kernel-entry-init.h b/arch/mips/bmips/include/mach/kernel-entry-init.h
+new file mode 100644
+index 0000000..19b872be
+--- /dev/null
++++ b/arch/mips/bmips/include/mach/kernel-entry-init.h
+@@ -0,0 +1,2 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#include <asm/mach-generic/kernel-entry-init.h>
+diff --git a/arch/mips/bmips/include/mach/kmalloc.h b/arch/mips/bmips/include/mach/kmalloc.h
+new file mode 100644
+index 0000000..4f056db
+--- /dev/null
++++ b/arch/mips/bmips/include/mach/kmalloc.h
+@@ -0,0 +1,2 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#include <asm/mach-generic/kmalloc.h>
+diff --git a/arch/mips/bmips/include/mach/mangle-port.h b/arch/mips/bmips/include/mach/mangle-port.h
+new file mode 100644
+index 0000000..b9736e3
+--- /dev/null
++++ b/arch/mips/bmips/include/mach/mangle-port.h
+@@ -0,0 +1,2 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#include <asm/mach-generic/mangle-port.h>
+diff --git a/arch/mips/include/asm/mach-bmips/spaces.h b/arch/mips/bmips/include/mach/spaces.h
+similarity index 100%
+rename from arch/mips/include/asm/mach-bmips/spaces.h
+rename to arch/mips/bmips/include/mach/spaces.h
+diff --git a/arch/mips/bmips/include/mach/topology.h b/arch/mips/bmips/include/mach/topology.h
+new file mode 100644
+index 0000000..86e585b
+--- /dev/null
++++ b/arch/mips/bmips/include/mach/topology.h
+@@ -0,0 +1,2 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#include <asm/mach-generic/topology.h>
+diff --git a/arch/mips/bmips/include/mach/war.h b/arch/mips/bmips/include/mach/war.h
+new file mode 100644
+index 0000000..5b0422a
+--- /dev/null
++++ b/arch/mips/bmips/include/mach/war.h
+@@ -0,0 +1,2 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#include <asm/mach-generic/war.h>
+-- 
+1.8.3.1
 
-[obviously, I'm not actually the one in charge here, the decision is with the
- powerpc maintainers].
-
-        Arnd
-
-[1] https://git.openwrt.org/?p=openwrt/openwrt.git;a=tree;f=target/linux/apm821xx/dts;h=d359ba4ed83547438581dd40105e5100d8240beb;hb=HEAD
