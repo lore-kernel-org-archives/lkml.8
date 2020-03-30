@@ -2,103 +2,141 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00946C43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 12:37:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DB14C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 12:38:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C7A6C206F6
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 12:37:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 70F87206F6
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 12:38:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TjkZfDHh"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cJWjUHCn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730337AbgC3Mhu (ORCPT
+        id S1730271AbgC3MiR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 08:37:50 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:38300 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730212AbgC3MhN (ORCPT
+        Mon, 30 Mar 2020 08:38:17 -0400
+Received: from us-smtp-delivery-74.mimecast.com ([216.205.24.74]:37197 "EHLO
+        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730064AbgC3MiR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 08:37:13 -0400
-Received: by mail-wr1-f65.google.com with SMTP id s1so21397544wrv.5;
-        Mon, 30 Mar 2020 05:37:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=+5h5Vnp00pGHAWFpA0rxHse7kQHumkG3UT/lUs7Gqbk=;
-        b=TjkZfDHhe89sx/aPLzWq0sDiRtZZyhlNFb25tEjcfJtlLxqgtLrNaMwhI31AaYe+Do
-         aIfkPxyO48Ms+L4rC89nYVLiqnsGU66cVVUJoilDRRAEF2v0F8/3gdUkTRXRbLYfp5oD
-         6k4K5JM+qtiajl40O2YHwHVUMFfoTjY2ECDiSc2zM4UNSboQmDSPlUJbFVNypMAkUSEg
-         Mz2p7v/x4dlsG2iOw0MPi/JcXR+ss9hQLmQJWEW/kQ6dhGaHO8Ae4YSsLZEd71SpNqA8
-         xKdFk6fnmIuFw4aUSJUwtwdX0UQBY5UylAWfub7MnN3ogmsez8VR3CcBG+HL+SJTbsI8
-         fOLA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=+5h5Vnp00pGHAWFpA0rxHse7kQHumkG3UT/lUs7Gqbk=;
-        b=moPziA25J8HCHOBxC3CBXHZX1mC6IgENrZ/9iRV4puOVlzCERXGpc/fVoi+EWO+1pM
-         6zBnWq4UQ1C0AgpDFI3/9Bz/uWh3RUn1F8DOPnOXNPnrvVC6iz3GbFYhoRh6a6i5txFQ
-         /kd2PPcOWLB5l0k9Hwj+iOjI1LGHMnNPrMyjWmx/MtJCIKP2leJAUz0HaXC6SvZI7461
-         J0NNNq/hokNRMzJ2Ke7facZpP04quUvP4ATMrdfzUroiTr1gxX5h7Qr2jqdYo8ChVwXU
-         xGPh40orGxhHVcZUM6Y7fs9oQXubvstEzRzb0kSTSHZ1+9ubqnUXK8AYEgB2jxOIw03Q
-         +ETA==
-X-Gm-Message-State: ANhLgQ0pmLp183RsaN33R53ThYy/owD2t4wWsyX5viU4iVceY55CSPtH
-        Ne6jL/cz6M10TNMt0msJ6XWyu32v
-X-Google-Smtp-Source: ADFU+vvLM4vRWPckeHGmsFeliBH3sfO9hRwleuvO4KwtgKyFi3cmgAx5JHgioT53pz+XP6AVkcAcmQ==
-X-Received: by 2002:a5d:53c8:: with SMTP id a8mr14345313wrw.242.1585571831552;
-        Mon, 30 Mar 2020 05:37:11 -0700 (PDT)
-Received: from localhost ([185.92.221.13])
-        by smtp.gmail.com with ESMTPSA id c18sm22239966wrx.5.2020.03.30.05.37.10
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 30 Mar 2020 05:37:11 -0700 (PDT)
-From:   Wei Yang <richard.weiyang@gmail.com>
-To:     willy@infradead.org
-Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Wei Yang <richard.weiyang@gmail.com>
-Subject: [PATCH 2/9] XArray: simplify the calculation of shift
-Date:   Mon, 30 Mar 2020 12:36:36 +0000
-Message-Id: <20200330123643.17120-3-richard.weiyang@gmail.com>
-X-Mailer: git-send-email 2.11.0
-In-Reply-To: <20200330123643.17120-1-richard.weiyang@gmail.com>
-References: <20200330123643.17120-1-richard.weiyang@gmail.com>
+        Mon, 30 Mar 2020 08:38:17 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1585571895;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+        bh=dmcJXgwUaZLU3jgrvEIIxnyhTtqx5SzI0kcbvqudnnY=;
+        b=cJWjUHCnnytdSuq59hY7ropBeAw7kVwuBTk9zJaqZCcXaByRLRB/HN/ks0OZFSKL8ziJ/J
+        SvpAhplPP52UkE1Ido7HxcfLzlAuBeYCb3QJiSCDD8+DXGFQ+ImSsXVaMgFVlbJMBx4jbR
+        Aq4Kb0tuYMmtjwsk2N6xRJrmL2xwLJo=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-405-DshPXzqoMZOAOj6hrU4Jdw-1; Mon, 30 Mar 2020 08:38:14 -0400
+X-MC-Unique: DshPXzqoMZOAOj6hrU4Jdw-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 7194E801A25;
+        Mon, 30 Mar 2020 12:38:12 +0000 (UTC)
+Received: from [10.36.113.227] (ovpn-113-227.ams2.redhat.com [10.36.113.227])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id A068619756;
+        Mon, 30 Mar 2020 12:38:10 +0000 (UTC)
+Subject: Re: [RFC] mm/page_alloc: Enumerate bad page reasons
+To:     Anshuman Khandual <anshuman.khandual@arm.com>, linux-mm@kvack.org
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@suse.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        linux-kernel@vger.kernel.org
+References: <1585551097-27283-1-git-send-email-anshuman.khandual@arm.com>
+ <d482aa0a-db1a-a4df-e2c5-1598e0fb28ad@redhat.com>
+ <8601ad7b-30dc-14db-48e3-2ceb1f52400f@arm.com>
+From:   David Hildenbrand <david@redhat.com>
+Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+Organization: Red Hat GmbH
+Message-ID: <fb01c215-54e1-9997-8fd4-db9c54ebc469@redhat.com>
+Date:   Mon, 30 Mar 2020 14:38:09 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
+MIME-Version: 1.0
+In-Reply-To: <8601ad7b-30dc-14db-48e3-2ceb1f52400f@arm.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When head is NULL, shift is calculated from max. Currently we use a loop
-to detect how many XA_CHUNK_SHIFT is need to cover max.
+On 30.03.20 14:28, Anshuman Khandual wrote:
+> 
+> 
+> On 03/30/2020 02:15 PM, David Hildenbrand wrote:
+>> On 30.03.20 08:51, Anshuman Khandual wrote:
+>>> Enumerate all existing bad page reasons which can be used in bad_page() for
+>>> reporting via __dump_page(). Unfortunately __dump_page() cannot be changed.
+>>> __dump_page() is called from dump_page() that accepts a raw string and is
+>>> also an exported symbol that is currently being used from various generic
+>>> memory functions and other drivers. This reduces code duplication while
+>>> reporting bad pages.
+>>
+>> Yeah sounds nice, but "56 insertions(+), 20 deletions(-)" does not sound
+>> so nice ... and the "code duplication" is actually "repeating strings".
+> 
+> But repeating strings in very similar functions dealing with bad page state
+> is not bit suboptimal ?
 
-To achieve this, we can get number of bits max expands and round it up
-to XA_CHUNK_SHIFT.
+Who cares? This is debug output.
 
-Signed-off-by: Wei Yang <richard.weiyang@gmail.com>
----
- lib/xarray.c | 6 +-----
- 1 file changed, 1 insertion(+), 5 deletions(-)
-
-diff --git a/lib/xarray.c b/lib/xarray.c
-index 1d9fab7db8da..6454cf3f5b4c 100644
---- a/lib/xarray.c
-+++ b/lib/xarray.c
-@@ -560,11 +560,7 @@ static int xas_expand(struct xa_state *xas, void *head)
- 	unsigned long max = xas_max(xas);
- 
- 	if (!head) {
--		if (max == 0)
--			return 0;
--		while ((max >> shift) >= XA_CHUNK_SIZE)
--			shift += XA_CHUNK_SHIFT;
--		return shift + XA_CHUNK_SHIFT;
-+		return roundup(fls_long(max), XA_CHUNK_SHIFT);
- 	} else if (xa_is_node(head)) {
- 		node = xa_to_node(head);
- 		shift = node->shift + XA_CHUNK_SHIFT;
 -- 
-2.23.0
+Thanks,
+
+David / dhildenb
 
