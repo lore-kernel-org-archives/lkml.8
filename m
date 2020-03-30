@@ -2,88 +2,88 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9ADDAC2D0ED
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 19:29:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75C16C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 19:30:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 80C7E2072E
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 19:29:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4237820714
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 19:30:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728152AbgC3T3H (ORCPT
+        id S1728345AbgC3TaK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 15:29:07 -0400
-Received: from mga02.intel.com ([134.134.136.20]:22494 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727148AbgC3T3H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 15:29:07 -0400
-IronPort-SDR: 3yCyZfIqM4dAoYzPZbhDDq4ByCi9kAeXnRq5cpl1w7H3bKNMkvKURhbyOQAUTTYgJLqt3f/hTR
- GHX+Weq9Smwg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Mar 2020 12:29:01 -0700
-IronPort-SDR: XD/mPKGOPiBS2NXFfFRIh4DdUx3daTI3za0y7HR2QMWFaRFqs4r+MZzAeUxb9RIXdW6XqLFohE
- lfct1hrPGX0A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,325,1580803200"; 
-   d="scan'208";a="294705053"
-Received: from plachner-mobl.ger.corp.intel.com (HELO localhost) ([10.252.35.129])
-  by FMSMGA003.fm.intel.com with ESMTP; 30 Mar 2020 12:28:58 -0700
-Date:   Mon, 30 Mar 2020 22:28:57 +0300
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     Stefan Berger <stefanb@linux.vnet.ibm.com>
-Cc:     linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-acpi@vger.kernel.org, linux-security-module@vger.kernel.org,
-        Stefan Berger <stefanb@linux.ibm.com>
-Subject: Re: [PATCH v2 1/3] acpi: Extend TPM2 ACPI table with missing log
- fields
-Message-ID: <20200330192830.GC1384380@linux.intel.com>
-References: <20200330151536.871700-1-stefanb@linux.vnet.ibm.com>
- <20200330151536.871700-2-stefanb@linux.vnet.ibm.com>
+        Mon, 30 Mar 2020 15:30:10 -0400
+Received: from alexa-out-sd-01.qualcomm.com ([199.106.114.38]:56673 "EHLO
+        alexa-out-sd-01.qualcomm.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727437AbgC3TaJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Mar 2020 15:30:09 -0400
+Received: from unknown (HELO ironmsg05-sd.qualcomm.com) ([10.53.140.145])
+  by alexa-out-sd-01.qualcomm.com with ESMTP; 30 Mar 2020 12:30:09 -0700
+Received: from gurus-linux.qualcomm.com ([10.46.162.81])
+  by ironmsg05-sd.qualcomm.com with ESMTP; 30 Mar 2020 12:30:08 -0700
+Received: by gurus-linux.qualcomm.com (Postfix, from userid 383780)
+        id A28B34BC4; Mon, 30 Mar 2020 12:30:08 -0700 (PDT)
+Date:   Mon, 30 Mar 2020 12:30:08 -0700
+From:   Guru Das Srinagesh <gurus@codeaurora.org>
+To:     Joe Perches <joe@perches.com>
+Cc:     linux-pwm@vger.kernel.org,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Subbaraman Narayanamurthy <subbaram@codeaurora.org>,
+        linux-kernel@vger.kernel.org,
+        Fabrice Gasnier <fabrice.gasnier@st.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>
+Subject: Re: [PATCH v11 08/12] pwm: stm32-lp: Use %llu format specifier for
+ period
+Message-ID: <20200330193008.GA5107@codeaurora.org>
+References: <cover.1584667964.git.gurus@codeaurora.org>
+ <5ea1fa27dd036ce732c1c7a1a5d84362752a911f.1584667964.git.gurus@codeaurora.org>
+ <f957b11abb70457e7bd8c2652d41e7f07024e301.camel@perches.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200330151536.871700-2-stefanb@linux.vnet.ibm.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <f957b11abb70457e7bd8c2652d41e7f07024e301.camel@perches.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 30, 2020 at 11:15:34AM -0400, Stefan Berger wrote:
-> From: Stefan Berger <stefanb@linux.ibm.com>
+On Fri, Mar 20, 2020 at 03:45:35AM -0700, Joe Perches wrote:
+> On Thu, 2020-03-19 at 18:41 -0700, Guru Das Srinagesh wrote:
+> > Since the PWM framework is switching struct pwm_args.period's
+> > datatype to u64, prepare for this transition by using the right
+> > specifier for printing a 64-bit value.
+> []
+> > diff --git a/drivers/pwm/pwm-stm32-lp.c b/drivers/pwm/pwm-stm32-lp.c
+> []
+> > @@ -61,7 +61,7 @@ static int stm32_pwm_lp_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+> >  	do_div(div, NSEC_PER_SEC);
+> >  	if (!div) {
+> >  		/* Clock is too slow to achieve requested period. */
+> > -		dev_dbg(priv->chip.dev, "Can't reach %u ns\n",	state->period);
+> > +		dev_dbg(priv->chip.dev, "Can't reach %llu ns\n", state->period);
+> >  		return -EINVAL;
+> >  	}
 > 
-> Recent extensions of the TPM2 ACPI table added 3 more fields
-> including 12 bytes of start method specific parameters and Log Area
-> Minimum Length (u32) and Log Area Start Address (u64). So, we extend
-> the existing structure with these fields to allow non-UEFI systems
-> to access the TPM2's log.
-> 
-> The specification that has the new fields is the following:
->   TCG ACPI Specification
->   Family "1.2" and "2.0"
->   Version 1.2, Revision 8
-> 
-> Adapt all existing table size calculations to use
-> offsetof(struct acpi_table_tpm2, start_method_specific)
-> [where start_method_specific is a newly added field]
-> rather than sizeof(struct acpi_table_tpm2) so that the addition
-> of the new fields does not affect current systems that may not
-> have them.
-> 
+> Doesn't this introduce a warning now without the
+> actual change to the type of state->period?
 
-Cc: linux-acpi@vger.kernel.org
+You're right, it does.
 
-> Signed-off-by: Stefan Berger <stefanb@linux.ibm.com>
+> Likely these patches should either not be separated
+> or this should also use a cast to avoid introducing
+> intermediate compilation warnings.
 
-You have this comment:
+Only this patch has this specific issue, so I'll squish it with the
+final patch in this series ("pwm: core: Convert period and duty cycle to
+u64") that modifies the framework structs. Thanks for pointing this out.
 
-/* Platform-specific data follows */
+Thank you.
 
-Can you elaborate a bit which platform you are speaking of? It is now
-enabled for everything.
-
-/Jarkko
+Guru Das.
