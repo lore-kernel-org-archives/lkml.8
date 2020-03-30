@@ -2,198 +2,142 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75983C43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 14:12:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F0ABC43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 14:13:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 42E5F20780
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 14:12:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585577565;
-	bh=LMgKTiMXsLLMrmXVZ091bFAZrp+yhoV6qstjfE/5HIg=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vESHA+aQg/GFZQ78rpJ+XOE6VvhlKCtuMCWdRaeakt+tOUoPUwQteudBeLki0rrei
-	 kLnMwYDdAmlM57BHuG7L53D+FIPuUWa3liNEUXjweh4ujGCPUIVhBqsO8sFX1Glrvs
-	 PZzDbLrumAZX6V7sqXXL+KvndnHMnmTZ1JPuvNEU=
+	by mail.kernel.org (Postfix) with ESMTP id 4A88220936
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 14:13:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728687AbgC3OMi (ORCPT
+        id S1728696AbgC3ONi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 10:12:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47770 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727067AbgC3OMh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 10:12:37 -0400
-Received: from DESKTOP-GFFITBK.localdomain (218-161-90-76.HINET-IP.hinet.net [218.161.90.76])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9682920842;
-        Mon, 30 Mar 2020 14:12:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585577556;
-        bh=LMgKTiMXsLLMrmXVZ091bFAZrp+yhoV6qstjfE/5HIg=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=f26nLpQO479xcjUWfODTZQ3pj/cgQhrly9qQ4S1lHBd+9lt54XO+5dhZ5VmzSwbF0
-         lNDIucwCPEeF4vOLehUS09Uc9dY4qzJZasiYZm62Jne/zdZycYVbguCxWyr3xI+pAY
-         VQ/RDzzOuM/NsVfog/PLZqZs9D7RPVLWwCBoFrQs=
-From:   Chun-Kuang Hu <chunkuang.hu@kernel.org>
-To:     Philipp Zabel <p.zabel@pengutronix.de>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Chunfeng Yun <chunfeng.yun@mediatek.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>
-Cc:     linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-mediatek@lists.infradead.org, CK Hu <ck.hu@mediatek.com>,
-        Chun-Kuang Hu <chunkuang.hu@kernel.org>
-Subject: [PATCH v2 3/4] drm/mediatek: Move mtk_hdmi_phy driver into drivers/phy/mediatek folder
-Date:   Mon, 30 Mar 2020 22:12:21 +0800
-Message-Id: <20200330141222.17529-4-chunkuang.hu@kernel.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200330141222.17529-1-chunkuang.hu@kernel.org>
-References: <20200330141222.17529-1-chunkuang.hu@kernel.org>
+        Mon, 30 Mar 2020 10:13:38 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:16614 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727067AbgC3ONh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Mar 2020 10:13:37 -0400
+Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02UE4IwJ079953;
+        Mon, 30 Mar 2020 10:12:55 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 30206x6s9y-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 30 Mar 2020 10:12:55 -0400
+Received: from m0098416.ppops.net (m0098416.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 02UE4Ydj081736;
+        Mon, 30 Mar 2020 10:12:55 -0400
+Received: from ppma03dal.us.ibm.com (b.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.11])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 30206x6s9f-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 30 Mar 2020 10:12:54 -0400
+Received: from pps.filterd (ppma03dal.us.ibm.com [127.0.0.1])
+        by ppma03dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 02UEAJcc024595;
+        Mon, 30 Mar 2020 14:12:54 GMT
+Received: from b01cxnp22035.gho.pok.ibm.com (b01cxnp22035.gho.pok.ibm.com [9.57.198.25])
+        by ppma03dal.us.ibm.com with ESMTP id 301x775jdt-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 30 Mar 2020 14:12:54 +0000
+Received: from b01ledav004.gho.pok.ibm.com (b01ledav004.gho.pok.ibm.com [9.57.199.109])
+        by b01cxnp22035.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 02UECr3v10355162
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 30 Mar 2020 14:12:53 GMT
+Received: from b01ledav004.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id F208311206D;
+        Mon, 30 Mar 2020 14:12:52 +0000 (GMT)
+Received: from b01ledav004.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 230E7112065;
+        Mon, 30 Mar 2020 14:12:50 +0000 (GMT)
+Received: from LeoBras (unknown [9.85.228.254])
+        by b01ledav004.gho.pok.ibm.com (Postfix) with ESMTP;
+        Mon, 30 Mar 2020 14:12:49 +0000 (GMT)
+Message-ID: <d52b7462dfa5189a9e7590d6db88bc22b8c2ac5d.camel@linux.ibm.com>
+Subject: Re: [PATCH 1/1] ppc/crash: Skip spinlocks during crash
+From:   Leonardo Bras <leonardo@linux.ibm.com>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Christophe Leroy <christophe.leroy@c-s.fr>
+Cc:     Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Enrico Weigelt <info@metux.net>,
+        Allison Randal <allison@lohutok.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Date:   Mon, 30 Mar 2020 11:12:45 -0300
+In-Reply-To: <20200330110231.GG20696@hirez.programming.kicks-ass.net>
+References: <20200326222836.501404-1-leonardo@linux.ibm.com>
+         <af505ef0-e0df-e0aa-bb83-3ed99841f151@c-s.fr>
+         <20200330110231.GG20696@hirez.programming.kicks-ass.net>
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-gVsIBY7sA3uStdFMltv4"
+User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
+MIME-Version: 1.0
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.645
+ definitions=2020-03-30_01:2020-03-27,2020-03-30 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 malwarescore=0
+ spamscore=0 lowpriorityscore=0 adultscore=0 mlxlogscore=919 suspectscore=0
+ bulkscore=0 phishscore=0 priorityscore=1501 mlxscore=0 impostorscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2003300129
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: CK Hu <ck.hu@mediatek.com>
 
-mtk_hdmi_phy is currently placed inside mediatek drm driver, but it's
-more suitable to place a phy driver into phy driver folder, so move
-mtk_hdmi_phy driver into phy driver folder.
+--=-gVsIBY7sA3uStdFMltv4
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: CK Hu <ck.hu@mediatek.com>
-Signed-off-by: Chun-Kuang Hu <chunkuang.hu@kernel.org>
----
- drivers/gpu/drm/mediatek/Kconfig                           | 7 -------
- drivers/gpu/drm/mediatek/Makefile                          | 6 ------
- drivers/phy/mediatek/Kconfig                               | 7 +++++++
- drivers/phy/mediatek/Makefile                              | 7 +++++++
- .../mediatek/phy-mtk-hdmi-mt2701.c}                        | 2 +-
- .../mediatek/phy-mtk-hdmi-mt8173.c}                        | 2 +-
- .../mtk_hdmi_phy.c => phy/mediatek/phy-mtk-hdmi.c}         | 2 +-
- .../mtk_hdmi_phy.h => phy/mediatek/phy-mtk-hdmi.h}         | 0
- 8 files changed, 17 insertions(+), 16 deletions(-)
- rename drivers/{gpu/drm/mediatek/mtk_mt2701_hdmi_phy.c => phy/mediatek/phy-mtk-hdmi-mt2701.c} (99%)
- rename drivers/{gpu/drm/mediatek/mtk_mt8173_hdmi_phy.c => phy/mediatek/phy-mtk-hdmi-mt8173.c} (99%)
- rename drivers/{gpu/drm/mediatek/mtk_hdmi_phy.c => phy/mediatek/phy-mtk-hdmi.c} (99%)
- rename drivers/{gpu/drm/mediatek/mtk_hdmi_phy.h => phy/mediatek/phy-mtk-hdmi.h} (100%)
+Hello Peter,=20
 
-diff --git a/drivers/gpu/drm/mediatek/Kconfig b/drivers/gpu/drm/mediatek/Kconfig
-index ff6a1eb4ae83..2427d5bf699d 100644
---- a/drivers/gpu/drm/mediatek/Kconfig
-+++ b/drivers/gpu/drm/mediatek/Kconfig
-@@ -26,10 +26,3 @@ config DRM_MEDIATEK_HDMI
- 	select PHY_MTK_HDMI
- 	help
- 	  DRM/KMS HDMI driver for Mediatek SoCs
--
--config PHY_MTK_HDMI
--    tristate "MediaTek HDMI-PHY Driver"
--    depends on ARCH_MEDIATEK && OF
--    select GENERIC_PHY
--    help
--          Enable this to support HDMI-PHY
-diff --git a/drivers/gpu/drm/mediatek/Makefile b/drivers/gpu/drm/mediatek/Makefile
-index fcbef23aa6ce..77b0fd86063d 100644
---- a/drivers/gpu/drm/mediatek/Makefile
-+++ b/drivers/gpu/drm/mediatek/Makefile
-@@ -22,9 +22,3 @@ mediatek-drm-hdmi-objs := mtk_cec.o \
- 			  mtk_hdmi_ddc.o
- 
- obj-$(CONFIG_DRM_MEDIATEK_HDMI) += mediatek-drm-hdmi.o
--
--phy-mtk-hdmi-drv-objs := mtk_hdmi_phy.o \
--			 mtk_mt2701_hdmi_phy.o \
--			 mtk_mt8173_hdmi_phy.o
--
--obj-$(CONFIG_PHY_MTK_HDMI) += phy-mtk-hdmi-drv.o
-diff --git a/drivers/phy/mediatek/Kconfig b/drivers/phy/mediatek/Kconfig
-index dee757c957f2..10f0ec2d5b54 100644
---- a/drivers/phy/mediatek/Kconfig
-+++ b/drivers/phy/mediatek/Kconfig
-@@ -35,3 +35,10 @@ config PHY_MTK_XSPHY
- 	  Enable this to support the SuperSpeedPlus XS-PHY transceiver for
- 	  USB3.1 GEN2 controllers on MediaTek chips. The driver supports
- 	  multiple USB2.0, USB3.1 GEN2 ports.
-+
-+config PHY_MTK_HDMI
-+    tristate "MediaTek HDMI-PHY Driver"
-+    depends on ARCH_MEDIATEK && OF
-+    select GENERIC_PHY
-+    help
-+          Enable this to support HDMI-PHY
-diff --git a/drivers/phy/mediatek/Makefile b/drivers/phy/mediatek/Makefile
-index 08a8e6a97b1e..cda074c53235 100644
---- a/drivers/phy/mediatek/Makefile
-+++ b/drivers/phy/mediatek/Makefile
-@@ -6,3 +6,10 @@
- obj-$(CONFIG_PHY_MTK_TPHY)		+= phy-mtk-tphy.o
- obj-$(CONFIG_PHY_MTK_UFS)		+= phy-mtk-ufs.o
- obj-$(CONFIG_PHY_MTK_XSPHY)		+= phy-mtk-xsphy.o
-+
-+phy-mtk-hdmi-drv-objs := phy-mtk-hdmi.o \
-+			 phy-mtk-hdmi-mt2701.o \
-+			 phy-mtk-hdmi-mt8173.o
-+
-+obj-$(CONFIG_PHY_MTK_HDMI) += phy-mtk-hdmi-drv.o
-+
-diff --git a/drivers/gpu/drm/mediatek/mtk_mt2701_hdmi_phy.c b/drivers/phy/mediatek/phy-mtk-hdmi-mt2701.c
-similarity index 99%
-rename from drivers/gpu/drm/mediatek/mtk_mt2701_hdmi_phy.c
-rename to drivers/phy/mediatek/phy-mtk-hdmi-mt2701.c
-index 99fe05cd3598..a6cb1dea3d0c 100644
---- a/drivers/gpu/drm/mediatek/mtk_mt2701_hdmi_phy.c
-+++ b/drivers/phy/mediatek/phy-mtk-hdmi-mt2701.c
-@@ -4,7 +4,7 @@
-  * Author: Chunhui Dai <chunhui.dai@mediatek.com>
-  */
- 
--#include "mtk_hdmi_phy.h"
-+#include "phy-mtk-hdmi.h"
- 
- #define HDMI_CON0	0x00
- #define RG_HDMITX_DRV_IBIAS		0
-diff --git a/drivers/gpu/drm/mediatek/mtk_mt8173_hdmi_phy.c b/drivers/phy/mediatek/phy-mtk-hdmi-mt8173.c
-similarity index 99%
-rename from drivers/gpu/drm/mediatek/mtk_mt8173_hdmi_phy.c
-rename to drivers/phy/mediatek/phy-mtk-hdmi-mt8173.c
-index b55f51675205..3521c4893c53 100644
---- a/drivers/gpu/drm/mediatek/mtk_mt8173_hdmi_phy.c
-+++ b/drivers/phy/mediatek/phy-mtk-hdmi-mt8173.c
-@@ -4,7 +4,7 @@
-  * Author: Jie Qiu <jie.qiu@mediatek.com>
-  */
- 
--#include "mtk_hdmi_phy.h"
-+#include "phy-mtk-hdmi.h"
- 
- #define HDMI_CON0		0x00
- #define RG_HDMITX_PLL_EN		BIT(31)
-diff --git a/drivers/gpu/drm/mediatek/mtk_hdmi_phy.c b/drivers/phy/mediatek/phy-mtk-hdmi.c
-similarity index 99%
-rename from drivers/gpu/drm/mediatek/mtk_hdmi_phy.c
-rename to drivers/phy/mediatek/phy-mtk-hdmi.c
-index fe022acddbef..8fc83f01a720 100644
---- a/drivers/gpu/drm/mediatek/mtk_hdmi_phy.c
-+++ b/drivers/phy/mediatek/phy-mtk-hdmi.c
-@@ -4,7 +4,7 @@
-  * Author: Jie Qiu <jie.qiu@mediatek.com>
-  */
- 
--#include "mtk_hdmi_phy.h"
-+#include "phy-mtk-hdmi.h"
- 
- static int mtk_hdmi_phy_power_on(struct phy *phy);
- static int mtk_hdmi_phy_power_off(struct phy *phy);
-diff --git a/drivers/gpu/drm/mediatek/mtk_hdmi_phy.h b/drivers/phy/mediatek/phy-mtk-hdmi.h
-similarity index 100%
-rename from drivers/gpu/drm/mediatek/mtk_hdmi_phy.h
-rename to drivers/phy/mediatek/phy-mtk-hdmi.h
--- 
-2.17.1
+On Mon, 2020-03-30 at 13:02 +0200, Peter Zijlstra wrote:
+>  		do {
+> > > +			if (unlikely(crash_skip_spinlock))
+> > > +				return;
+> >=20
+> > You are adding a test that reads a global var in the middle of a so hot=
+ path
+> > ? That must kill performance. Can we do different ?
+>=20
+> This; adding code to a super hot patch like this for an exceptional case
+> like the crash handling seems like a very very bad trade to me.
+>=20
+> One possible solution is to simply write 0 to the affected spinlocks
+> after sending the NMI IPI thing, no?
+
+Yes, I agree.
+I suggested this on a comment in v2 of this patch:
+http://patchwork.ozlabs.org/patch/1262468/
+
+
+
+--=-gVsIBY7sA3uStdFMltv4
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEMdeUgIzgjf6YmUyOlQYWtz9SttQFAl6B/l0ACgkQlQYWtz9S
+ttQs2BAAuPr6rhedYYK9wDBKiEL6Z8aiIdSNv5Mi9FlB5LweF6mXP7Qls401eJZh
+urSWei6iSGS590yGTdBlSYbhp1jF/oDwW3DR/RRkqGoMFAGNg1FOW8NeXBWUMcp3
+GNpP4CJC6ZSd3L/rfo6mVDxO/k27I1XpbHOtfcvY+VnDpkWRAcDSsyUvyWSHg1kA
+TH8vjxKg4hW48qsffbui6+UIkekPuOyrwU/TjCLl9WRZf7i26tQnVoiBh66NvdQQ
+njq+NFvRe35sgcNvzAQUW+Aaz26GUElUuHSe49TCapUc4YDPsei3PXr6kIYlihEl
+tI6pTEenQmzdj9vKlLnv5s8Mxq14xJL/qbB+r2z6KRJ0t7GR4+xNAU1paFBFtwun
+WNHr0M8rOjZNr1RBKWfZWy3PYO7E3K4oyB8HG0KoTGPVeCoN+tjrAWmenrNnsVDG
+awvK+3DRnXsds/bspm26YgxMxYfhLnl44lfWSYA5UfW6RqpiyotwbHURG+xug6yQ
+A7YV+2ZPCyMwdLH4ZVSrFekJ5G7iyYcihscW1fSvUVi9U7nVvtFNxkD8tkAuDWuH
+Tva7JR98/rTsg5fT78eq3JUKxwDHVqj11nYrkOHK815nTeVaAxGUWFd0IWcJ7X3x
+sEM1aiLEB4jOoEZRPMYNjAZhZlDCJQRPbNn4gIcOZDP1SFA4kWw=
+=6xHm
+-----END PGP SIGNATURE-----
+
+--=-gVsIBY7sA3uStdFMltv4--
 
