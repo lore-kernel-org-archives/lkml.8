@@ -2,95 +2,307 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EA1CC43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 11:52:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8E95C2D0E5
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 11:53:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5683A2072E
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 11:52:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B327D20748
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 11:53:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bx72mUxy"
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="oH4vGHZL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730004AbgC3Lwx (ORCPT
+        id S1730008AbgC3LxS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 07:52:53 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:45638 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728764AbgC3Lwv (ORCPT
+        Mon, 30 Mar 2020 07:53:18 -0400
+Received: from smtp-fw-9101.amazon.com ([207.171.184.25]:9859 "EHLO
+        smtp-fw-9101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728764AbgC3LxS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 07:52:51 -0400
-Received: by mail-pl1-f195.google.com with SMTP id t4so668263plq.12;
-        Mon, 30 Mar 2020 04:52:50 -0700 (PDT)
+        Mon, 30 Mar 2020 07:53:18 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Eg5ugs9X241d0CyEHmbcuFz60tm64fkmmQDdwTBJmwo=;
-        b=bx72mUxy7UhUrj/cFQtM3eS3lb41tkad+HkCfGl7ALAjXH3z2dhSxVA9srYRsjMG7g
-         EXx2GambzNP9ODeY640qVmq5Gu4R+JHDXZq+yyWf3+TIQe4xcdu6zMsJhn9aA3JRtUDQ
-         q6KxjpPJ3QoZVvkp4UJMcyNB8IsesWuOwLdHNVJxlVKwPudGdTqgVglMfsKR0EQ6bBRt
-         zID7u4h3SB9c43fysjMa2VL+L9FLQABlAXx05yJIbDxIT3cwm/ko4qIzTWXOR3w2o9/r
-         UbghdxeYQU2RR/afULeC3pRkuZ4w3C+3jQVSIOunRm2DsOA1N+J4886HS4V/iNDRtlOq
-         4bcg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Eg5ugs9X241d0CyEHmbcuFz60tm64fkmmQDdwTBJmwo=;
-        b=cmqvy2z4mkoy/+BWqsfmp3o4yVHbAgidUIsvzsY0l0coIAAp65Ot/APyCvkudzASIz
-         sGmi23EwcHNkoJvvDGUIQ0N6pxEysvhNB6Elxeg6Ui+myWHcptANlvyF0RLPhLzYTo+g
-         F35nUTdn7EcB1QA4hLguJLDSaOBQ4egGIaEJOj3G/i6+SOLyfH5eEPrI6f4yJaI0bLyb
-         WWfUN0WyPWqP+ICPH1cLewfRG2gSay+HwBKoQ4gXwR2y6UmphihmP7jxmibXzmCL7wcV
-         BQfUtWc2ziQ8W9twdcBdrdZYrF+I7VDpNa3/4tyfDwpch49VS6iqX6ZfEgegdO4X2s2v
-         8BrA==
-X-Gm-Message-State: ANhLgQ3vTOpzu4e05LK+3OlkMkQNmeVKZDsiwgcumAGfgYlK1br7qjP4
-        t0/dllbX445s65Fzv2ExSg==
-X-Google-Smtp-Source: ADFU+vvHPxPL9x5Yn46J0zk4QFbJpW4YEMsI5pazZEOmCFYJZehaxlAEidJsvORcHfq26MYyODPWZw==
-X-Received: by 2002:a17:902:788e:: with SMTP id q14mr12138962pll.72.1585569169503;
-        Mon, 30 Mar 2020 04:52:49 -0700 (PDT)
-Received: from localhost.localdomain ([2402:3a80:d3b:3d6b:7942:93fd:fd15:96f0])
-        by smtp.gmail.com with ESMTPSA id i4sm10012756pfq.82.2020.03.30.04.52.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Mar 2020 04:52:48 -0700 (PDT)
-From:   madhuparnabhowmik10@gmail.com
-To:     gregkh@linuxfoundation.org, hariprasad.kelam@gmail.com,
-        colin.king@canonical.com, tony.olech@elandigitalsystems.com
-Cc:     linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-        andrianov@ispras.ru
-Subject: Possible data-race related bug in u132_hcd module.
-Date:   Mon, 30 Mar 2020 17:22:43 +0530
-Message-Id: <20200330115243.11107-1-madhuparnabhowmik10@gmail.com>
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1585569198; x=1617105198;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version;
+  bh=tsdeA8JBYq03cXIHW3dIrgYjdCdto2VIoJkbBcORfYc=;
+  b=oH4vGHZLcIUyTp6RpntxKfiYRRfelIM5DHTTyIhIlaMbp13MjWfTo13G
+   bqYL+egnI/jYXJhDi6/fAIbQTL46otWQ77DDkjykw7aQCntpYyr2bTPjI
+   +4SOmnGHx+nfquo+823lLpZuq6V0krTV5dqPSgwwrLB85aM9B1vnNDkLY
+   g=;
+IronPort-SDR: TZdZKsPaztKdXSdsSGBHlsK6Wb7LN1pHmtJm7AsgYc8ICDv83iVdmFcRoAxzBQBwJTwcFxdujw
+ r04x/HLY+66g==
+X-IronPort-AV: E=Sophos;i="5.72,324,1580774400"; 
+   d="scan'208";a="25842589"
+Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-1e-c7c08562.us-east-1.amazon.com) ([10.47.23.38])
+  by smtp-border-fw-out-9101.sea19.amazon.com with ESMTP; 30 Mar 2020 11:53:13 +0000
+Received: from EX13MTAUEA002.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan2.iad.amazon.com [10.40.159.162])
+        by email-inbound-relay-1e-c7c08562.us-east-1.amazon.com (Postfix) with ESMTPS id F2B5F2412D8;
+        Mon, 30 Mar 2020 11:53:01 +0000 (UTC)
+Received: from EX13D31EUA001.ant.amazon.com (10.43.165.15) by
+ EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
+ id 15.0.1236.3; Mon, 30 Mar 2020 11:53:01 +0000
+Received: from u886c93fd17d25d.ant.amazon.com (10.43.162.134) by
+ EX13D31EUA001.ant.amazon.com (10.43.165.15) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Mon, 30 Mar 2020 11:52:47 +0000
+From:   SeongJae Park <sjpark@amazon.com>
+To:     <akpm@linux-foundation.org>
+CC:     SeongJae Park <sjpark@amazon.de>, <Jonathan.Cameron@Huawei.com>,
+        <aarcange@redhat.com>, <acme@kernel.org>,
+        <alexander.shishkin@linux.intel.com>, <amit@kernel.org>,
+        <brendan.d.gregg@gmail.com>, <brendanhiggins@google.com>,
+        <cai@lca.pw>, <colin.king@canonical.com>, <corbet@lwn.net>,
+        <dwmw@amazon.com>, <jolsa@redhat.com>, <kirill@shutemov.name>,
+        <mark.rutland@arm.com>, <mgorman@suse.de>, <minchan@kernel.org>,
+        <mingo@redhat.com>, <namhyung@kernel.org>, <peterz@infradead.org>,
+        <rdunlap@infradead.org>, <riel@surriel.com>, <rientjes@google.com>,
+        <rostedt@goodmis.org>, <shakeelb@google.com>, <shuah@kernel.org>,
+        <sj38.park@gmail.com>, <vbabka@suse.cz>, <vdavydov.dev@gmail.com>,
+        <yang.shi@linux.alibaba.com>, <ying.huang@intel.com>,
+        <linux-mm@kvack.org>, <linux-doc@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: [RFC v5 4/7] mm/damon/schemes: Implement a debugfs interface
+Date:   Mon, 30 Mar 2020 13:50:39 +0200
+Message-ID: <20200330115042.17431-5-sjpark@amazon.com>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200330115042.17431-1-sjpark@amazon.com>
+References: <20200330115042.17431-1-sjpark@amazon.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.43.162.134]
+X-ClientProxiedBy: EX13D37UWC003.ant.amazon.com (10.43.162.183) To
+ EX13D31EUA001.ant.amazon.com (10.43.165.15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+From: SeongJae Park <sjpark@amazon.de>
 
-This bug is found by  Linux Driver Verification project (linuxtesting.org).
+This commit implements a debugfs interface for the data access
+monitoring oriented memory management schemes.  It is supposed to be
+used by administrators and/or privileged user space programs.  Users can
+read and update the rules using ``<debugfs>/damon/schemes`` file.  The
+format is::
 
-The bug is related to the parallel execution of u132_probe() function and u132_hcd_exit() function in u132_hcd.c. In case the module is unloaded when the probe function is executing there can be data race as the mutex lock u132_module_lock is not used properly. 
+    <min/max size> <min/max access frequency> <min/max age> <action>
 
-i) Usage of mutex lock only when writing into the u132_exiting variable in u132_hcd_exit(). The lock is not used when this variable is read in u132_probe().
+Signed-off-by: SeongJae Park <sjpark@amazon.de>
+---
+ mm/damon.c | 174 ++++++++++++++++++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 172 insertions(+), 2 deletions(-)
 
-Moreover, this variable does not serve its purpose, as even if locking is used while the u132_exiting variable is read in probe(), the function may still miss that exit function is executing if it acquires the mutex before exit() function does.
+diff --git a/mm/damon.c b/mm/damon.c
+index 933d484451d1..1f4d7e345f4c 100644
+--- a/mm/damon.c
++++ b/mm/damon.c
+@@ -181,6 +181,29 @@ static void damon_destroy_task(struct damon_task *t)
+ 	damon_free_task(t);
+ }
+ 
++static struct damos *damon_new_scheme(
++		unsigned int min_sz_region, unsigned int max_sz_region,
++		unsigned int min_nr_accesses, unsigned int max_nr_accesses,
++		unsigned int min_age_region, unsigned int max_age_region,
++		enum damos_action action)
++{
++	struct damos *scheme;
++
++	scheme = kmalloc(sizeof(*scheme), GFP_KERNEL);
++	if (!scheme)
++		return NULL;
++	scheme->min_sz_region = min_sz_region;
++	scheme->max_sz_region = max_sz_region;
++	scheme->min_nr_accesses = min_nr_accesses;
++	scheme->max_nr_accesses = max_nr_accesses;
++	scheme->min_age_region = min_age_region;
++	scheme->max_age_region = max_age_region;
++	scheme->action = action;
++	INIT_LIST_HEAD(&scheme->list);
++
++	return scheme;
++}
++
+ static void damon_add_scheme(struct damon_ctx *ctx, struct damos *s)
+ {
+ 	list_add_tail(&s->list, &ctx->schemes_list);
+@@ -1362,6 +1385,147 @@ static ssize_t debugfs_monitor_on_write(struct file *file,
+ 	return ret;
+ }
+ 
++static ssize_t sprint_schemes(struct damon_ctx *c, char *buf, ssize_t len)
++{
++	struct damos *s;
++	int written = 0;
++	int rc;
++
++	damon_for_each_schemes(c, s) {
++		rc = snprintf(&buf[written], len - written,
++				"%u %u %u %u %u %u %d\n",
++				s->min_sz_region, s->max_sz_region,
++				s->min_nr_accesses, s->max_nr_accesses,
++				s->min_age_region, s->max_age_region,
++				s->action);
++		if (!rc)
++			return -ENOMEM;
++
++		written += rc;
++	}
++	return written;
++}
++
++static ssize_t debugfs_schemes_read(struct file *file, char __user *buf,
++		size_t count, loff_t *ppos)
++{
++	struct damon_ctx *ctx = &damon_user_ctx;
++	char *kbuf;
++	ssize_t len;
++
++	kbuf = kmalloc(count, GFP_KERNEL);
++	if (!kbuf)
++		return -ENOMEM;
++
++	len = sprint_schemes(ctx, kbuf, count);
++	if (len < 0)
++		goto out;
++	len = simple_read_from_buffer(buf, count, ppos, kbuf, len);
++
++out:
++	kfree(kbuf);
++	return len;
++}
++
++static void free_schemes_arr(struct damos **schemes, ssize_t nr_schemes)
++{
++	ssize_t i;
++
++	for (i = 0; i < nr_schemes; i++)
++		kfree(schemes[i]);
++	kfree(schemes);
++}
++
++/*
++ * Converts a string into an array of struct damos pointers
++ *
++ * Returns an array of struct damos pointers that converted if the conversion
++ * success, or NULL otherwise.
++ */
++static struct damos **str_to_schemes(const char *str, ssize_t len,
++				ssize_t *nr_schemes)
++{
++	struct damos *scheme, **schemes;
++	const int max_nr_schemes = 256;
++	int pos = 0, parsed, ret;
++	unsigned int min_sz, max_sz, min_nr_a, max_nr_a, min_age, max_age;
++	int action;
++
++	schemes = kmalloc_array(max_nr_schemes, sizeof(scheme),
++			GFP_KERNEL);
++	if (!schemes)
++		return NULL;
++
++	*nr_schemes = 0;
++	while (pos < len && *nr_schemes < max_nr_schemes) {
++		ret = sscanf(&str[pos], "%u %u %u %u %u %u %d%n",
++				&min_sz, &max_sz, &min_nr_a, &max_nr_a,
++				&min_age, &max_age, &action, &parsed);
++		if (ret != 7)
++			break;
++		if (action >= DAMOS_ACTION_LEN) {
++			pr_err("wrong action %d\n", action);
++			goto fail;
++		}
++
++		pos += parsed;
++		scheme = damon_new_scheme(min_sz, max_sz, min_nr_a, max_nr_a,
++				min_age, max_age, action);
++		if (!scheme)
++			goto fail;
++
++		schemes[*nr_schemes] = scheme;
++		*nr_schemes += 1;
++	}
++	if (!*nr_schemes)
++		goto fail;
++	return schemes;
++fail:
++	free_schemes_arr(schemes, *nr_schemes);
++	return NULL;
++}
++
++static ssize_t debugfs_schemes_write(struct file *file, const char __user *buf,
++		size_t count, loff_t *ppos)
++{
++	struct damon_ctx *ctx = &damon_user_ctx;
++	char *kbuf;
++	struct damos **schemes;
++	ssize_t nr_schemes = 0, ret;
++	int err;
++
++	if (*ppos)
++		return -EINVAL;
++
++	kbuf = kmalloc(count, GFP_KERNEL);
++	if (!kbuf)
++		return -ENOMEM;
++
++	ret = simple_write_to_buffer(kbuf, count, ppos, buf, count);
++	if (ret < 0)
++		goto out;
++
++	schemes = str_to_schemes(kbuf, ret, &nr_schemes);
++
++	mutex_lock(&ctx->kdamond_lock);
++	if (ctx->kdamond) {
++		ret = -EBUSY;
++		goto unlock_out;
++	}
++
++	err = damon_set_schemes(ctx, schemes, nr_schemes);
++	if (err)
++		ret = err;
++	else
++		nr_schemes = 0;
++unlock_out:
++	mutex_unlock(&ctx->kdamond_lock);
++	free_schemes_arr(schemes, nr_schemes);
++out:
++	kfree(kbuf);
++	return ret;
++}
++
+ static ssize_t damon_sprint_pids(struct damon_ctx *ctx, char *buf, ssize_t len)
+ {
+ 	struct damon_task *t;
+@@ -1588,6 +1752,12 @@ static const struct file_operations pids_fops = {
+ 	.write = debugfs_pids_write,
+ };
+ 
++static const struct file_operations schemes_fops = {
++	.owner = THIS_MODULE,
++	.read = debugfs_schemes_read,
++	.write = debugfs_schemes_write,
++};
++
+ static const struct file_operations record_fops = {
+ 	.owner = THIS_MODULE,
+ 	.read = debugfs_record_read,
+@@ -1604,10 +1774,10 @@ static struct dentry *debugfs_root;
+ 
+ static int __init damon_debugfs_init(void)
+ {
+-	const char * const file_names[] = {"attrs", "record",
++	const char * const file_names[] = {"attrs", "record", "schemes",
+ 		"pids", "monitor_on"};
+ 	const struct file_operations *fops[] = {&attrs_fops, &record_fops,
+-		&pids_fops, &monitor_on_fops};
++		&schemes_fops, &pids_fops, &monitor_on_fops};
+ 	int i;
+ 
+ 	debugfs_root = debugfs_create_dir("damon", NULL);
+-- 
+2.17.1
 
-How to fix this?
-
-ii) Usage of mutex while adding entries in u132_static_list in probe function but not in exit function while unregistering.
-This should be easy to fix by holding the mutex in the exit function as well.
-
-There can be other synchronization problems related to the usage of u132_module_lock in this module, I have only spotted these so far.
-
-Please let me know if this bug report is helpful and I can send a patch fixing it.
-
-Thank you,
-Madhuparna
