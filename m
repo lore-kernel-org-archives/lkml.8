@@ -2,259 +2,422 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37E7AC43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 22:06:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8511C2D0F1
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 22:08:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 05772206CC
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 22:06:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 77A2720771
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 22:08:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585606127;
+	bh=ZOErm6lEmZvP+ovsodL45iQmjYZzPPNLN+eo5hQkzSo=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=GAd/Qu4oHGoZNsK3wxxa2+I6guObWT4iEzgtm/tlMC7sjvSjyF65iRCtOdM/1sCYK
+	 oqVsVMdsbvxbypyx4wMuJLurHgpIYh9JXAXu0fGncH2CGUZatjwjxf5PbUyZuZp1v8
+	 3cGI/kKlyL26QkYyFcn/qQ4kg+Au1ZaqiMDPwAK8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730958AbgC3WG3 convert rfc822-to-8bit (ORCPT
+        id S1730955AbgC3WIq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 18:06:29 -0400
-Received: from coyote.holtmann.net ([212.227.132.17]:47326 "EHLO
-        mail.holtmann.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730808AbgC3WG2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 18:06:28 -0400
-Received: from marcel-macbook.fritz.box (p4FEFC5A7.dip0.t-ipconnect.de [79.239.197.167])
-        by mail.holtmann.org (Postfix) with ESMTPSA id 490F6CECA3;
-        Tue, 31 Mar 2020 00:15:59 +0200 (CEST)
-Content-Type: text/plain;
-        charset=utf-8
-Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
-Subject: Re: [PATCH v4 1/2] Bluetooth: btusb: Indicate Microsoft vendor
- extension for Intel 9460/9560 and 9160/9260
-From:   Marcel Holtmann <marcel@holtmann.org>
-In-Reply-To: <20200328004507.v4.1.I0e975833a6789e8acc74be7756cd54afde6ba98c@changeid>
-Date:   Tue, 31 Mar 2020 00:06:26 +0200
-Cc:     Bluetooth Kernel Mailing List <linux-bluetooth@vger.kernel.org>,
-        Alain Michaud <alainm@chromium.org>,
-        Luiz Augusto von Dentz <luiz.von.dentz@intel.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Johan Hedberg <johan.hedberg@gmail.com>,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org
-Content-Transfer-Encoding: 8BIT
-Message-Id: <9CC14296-9A0E-4257-A388-B2F7C155CCE5@holtmann.org>
-References: <20200328074632.21907-1-mcchou@chromium.org>
- <20200328004507.v4.1.I0e975833a6789e8acc74be7756cd54afde6ba98c@changeid>
-To:     Miao-chen Chou <mcchou@chromium.org>
-X-Mailer: Apple Mail (2.3608.80.23.2.2)
+        Mon, 30 Mar 2020 18:08:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43464 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730065AbgC3WIp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Mar 2020 18:08:45 -0400
+Received: from mail-qt1-f170.google.com (mail-qt1-f170.google.com [209.85.160.170])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 92C172082F;
+        Mon, 30 Mar 2020 22:08:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1585606124;
+        bh=ZOErm6lEmZvP+ovsodL45iQmjYZzPPNLN+eo5hQkzSo=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=SHHRwzG61NxtUja7gaNlX7ZyR762n8IuRYa6oyD9qp4IHyRHIFpNAa4gMUbYl/APW
+         ay2NqSC9ACRHJETCz/uOACtzUiboQLS4hBqo7sglrSeDKUHBgLavo7UdKRaB8Ex7wJ
+         zsPh57TTO8/aLSpS9Xgj0njvvcRz8HnqiKzdMsf8=
+Received: by mail-qt1-f170.google.com with SMTP id g7so16598031qtj.13;
+        Mon, 30 Mar 2020 15:08:44 -0700 (PDT)
+X-Gm-Message-State: ANhLgQ00B1T9njlpifKk/TjVT84qLjofQhtLD9XlUkcznxhEsRG1+T7x
+        TqN8ok5mNV9QqLzrbMg//HvQyW7INO7MQ395Ig==
+X-Google-Smtp-Source: ADFU+vsxy/WcQxSvxiDJHczEz5Nnj3IOpeWpw7TJdl2/M3fVUm11rKYD/dQTJfqeYCYaprHkckA/dcd+YCXXppiG9aw=
+X-Received: by 2002:aed:3461:: with SMTP id w88mr2245257qtd.143.1585606123550;
+ Mon, 30 Mar 2020 15:08:43 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200330114239.1112759-1-jiaxun.yang@flygoat.com> <20200330114239.1112759-3-jiaxun.yang@flygoat.com>
+In-Reply-To: <20200330114239.1112759-3-jiaxun.yang@flygoat.com>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Mon, 30 Mar 2020 16:08:31 -0600
+X-Gmail-Original-Message-ID: <CAL_Jsq+Wwx1A9_cPLwrGwmciR2h5q0ij-SBiORrCL5rDA-EGZg@mail.gmail.com>
+Message-ID: <CAL_Jsq+Wwx1A9_cPLwrGwmciR2h5q0ij-SBiORrCL5rDA-EGZg@mail.gmail.com>
+Subject: Re: [PATCH 2/5] PCI: Add Loongson PCI Controller support
+To:     Jiaxun Yang <jiaxun.yang@flygoat.com>
+Cc:     "open list:MIPS" <linux-mips@vger.kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Huacai Chen <chenhc@lemote.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <amurray@thegoodpenguin.co.uk>,
+        Paul Burton <paulburton@kernel.org>,
+        PCI <linux-pci@vger.kernel.org>, devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Miao-chen,
-
-> This adds a bit mask of driver_info for Microsoft vendor extension and
-> indicates the support for Intel 9460/9560 and 9160/9260. See
-> https://docs.microsoft.com/en-us/windows-hardware/drivers/bluetooth/
-> microsoft-defined-bluetooth-hci-commands-and-events for more information
-> about the extension. This also add a kernel config, BT_MSFTEXT, and a
-> source file to facilitate Microsoft vendor extension functions.
-> This was verified with Intel ThunderPeak BT controller
-> where msft_vnd_ext_opcode is 0xFC1E.
-> 
-> Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
-> 
-> Signed-off-by: Miao-chen Chou <mcchou@chromium.org>
+On Mon, Mar 30, 2020 at 5:44 AM Jiaxun Yang <jiaxun.yang@flygoat.com> wrote:
+>
+> This controller can be found on Loongson-2K SoC, Loongson-3
+> systems with RS780E/LS7A PCH.
+>
+> The RS780E part of code was previously located at
+> arch/mips/pci/ops-loongson3.c and now it can use generic PCI
+> driver implementation.
+>
+> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
 > ---
-> 
-> Changes in v4:
-> - Introduce CONFIG_BT_MSFTEXT as a starting point of providing a
-> framework to use Microsoft extension
-> - Create include/net/bluetooth/msft.h and net/bluetooth/msft.c to
-> facilitate functions of Microsoft extension.
-> 
-> Changes in v3:
-> - Create net/bluetooth/msft.c with struct msft_vnd_ext defined internally
-> and change the hdev->msft_ext field to void*.
-> - Define and expose msft_vnd_ext_set_opcode() for btusb use.
-> - Init hdev->msft_ext in hci_alloc_dev() and deinit it in hci_free_dev().
-> 
-> Changes in v2:
-> - Define struct msft_vnd_ext and add a field of this type to struct
-> hci_dev to facilitate the support of Microsoft vendor extension.
-> 
-> drivers/bluetooth/btusb.c        | 11 +++++++++--
-> include/net/bluetooth/hci_core.h |  4 ++++
+>  drivers/pci/controller/Kconfig        |  10 +
+>  drivers/pci/controller/Makefile       |   1 +
+>  drivers/pci/controller/pci-loongson.c | 263 ++++++++++++++++++++++++++
+>  3 files changed, 274 insertions(+)
+>  create mode 100644 drivers/pci/controller/pci-loongson.c
+>
+> diff --git a/drivers/pci/controller/Kconfig b/drivers/pci/controller/Kconfig
+> index 91bfdb784829..f6c3058ec4b8 100644
+> --- a/drivers/pci/controller/Kconfig
+> +++ b/drivers/pci/controller/Kconfig
+> @@ -258,6 +258,16 @@ config PCI_HYPERV_INTERFACE
+>           The Hyper-V PCI Interface is a helper driver allows other drivers to
+>           have a common interface with the Hyper-V PCI frontend driver.
+>
+> +config PCI_LOONGSON
+> +       tristate "LOONGSON PCI Controller"
+> +       depends on MACH_LOONGSON64
 
-so I don’t like the intermixing of core features and drivers unless it is needed. In this case it is not needed since we can first introduce the core support and then enable the driver to use it.
+Add: || COMPILE_TEST
 
-> net/bluetooth/Kconfig            |  9 ++++++++-
-> net/bluetooth/Makefile           |  1 +
-> net/bluetooth/msft.c             | 16 ++++++++++++++++
-> net/bluetooth/msft.h             | 19 +++++++++++++++++++
-> 6 files changed, 57 insertions(+), 3 deletions(-)
-> create mode 100644 net/bluetooth/msft.c
-> create mode 100644 net/bluetooth/msft.h
-> 
-> diff --git a/drivers/bluetooth/btusb.c b/drivers/bluetooth/btusb.c
-> index 3bdec42c9612..0fe47708d3c8 100644
-> --- a/drivers/bluetooth/btusb.c
-> +++ b/drivers/bluetooth/btusb.c
-> @@ -21,6 +21,7 @@
-> #include <net/bluetooth/bluetooth.h>
-> #include <net/bluetooth/hci_core.h>
-> 
-> +#include "../../net/bluetooth/msft.h"
+(assuming that builds on x86, arm, etc.)
 
-This was my bad. I didn’t realized that drivers need to the set the opcode and not the core. I updated the patches to fix this.
+> +       depends on OF
+> +       depends on PCI_QUIRKS
+> +       default y
 
-> #include "btintel.h"
-> #include "btbcm.h"
-> #include "btrtl.h"
-> @@ -58,6 +59,7 @@ static struct usb_driver btusb_driver;
-> #define BTUSB_CW6622		0x100000
-> #define BTUSB_MEDIATEK		0x200000
-> #define BTUSB_WIDEBAND_SPEECH	0x400000
-> +#define BTUSB_MSFT_VND_EXT	0x800000
-> 
-> static const struct usb_device_id btusb_table[] = {
-> 	/* Generic Bluetooth USB device */
-> @@ -335,7 +337,8 @@ static const struct usb_device_id blacklist_table[] = {
-> 
-> 	/* Intel Bluetooth devices */
-> 	{ USB_DEVICE(0x8087, 0x0025), .driver_info = BTUSB_INTEL_NEW |
-> -						     BTUSB_WIDEBAND_SPEECH },
-> +						     BTUSB_WIDEBAND_SPEECH |
-> +						     BTUSB_MSFT_VND_EXT },
-> 	{ USB_DEVICE(0x8087, 0x0026), .driver_info = BTUSB_INTEL_NEW |
-> 						     BTUSB_WIDEBAND_SPEECH },
-> 	{ USB_DEVICE(0x8087, 0x0029), .driver_info = BTUSB_INTEL_NEW |
-> @@ -348,7 +351,8 @@ static const struct usb_device_id blacklist_table[] = {
-> 	{ USB_DEVICE(0x8087, 0x0aa7), .driver_info = BTUSB_INTEL |
-> 						     BTUSB_WIDEBAND_SPEECH },
-> 	{ USB_DEVICE(0x8087, 0x0aaa), .driver_info = BTUSB_INTEL_NEW |
-> -						     BTUSB_WIDEBAND_SPEECH },
-> +						     BTUSB_WIDEBAND_SPEECH |
-> +						     BTUSB_MSFT_VND_EXT },
+New drivers should not default to yes.
 
-Lets start with ThunderPeak 0x0025 for now. We are looking into enabling this in a more generic fashion, but for now lets just enable one card.
-
-> 
-> 	/* Other Intel Bluetooth devices */
-> 	{ USB_VENDOR_AND_INTERFACE_INFO(0x8087, 0xe0, 0x01, 0x01),
-> @@ -3800,6 +3804,9 @@ static int btusb_probe(struct usb_interface *intf,
-> 		set_bit(HCI_QUIRK_STRICT_DUPLICATE_FILTER, &hdev->quirks);
-> 		set_bit(HCI_QUIRK_SIMULTANEOUS_DISCOVERY, &hdev->quirks);
-> 		set_bit(HCI_QUIRK_NON_PERSISTENT_DIAG, &hdev->quirks);
+> +       help
+> +         Say Y here if you want to enable PCI controller support on
+> +         Loongson systems.
 > +
-> +		if (id->driver_info & BTUSB_MSFT_VND_EXT)
-> +			msft_set_opcode(hdev, 0xFC1E);
-> 	}
-> 
-> 	if (id->driver_info & BTUSB_MARVELL)
-> diff --git a/include/net/bluetooth/hci_core.h b/include/net/bluetooth/hci_core.h
-> index d4e28773d378..239cae2d9998 100644
-> --- a/include/net/bluetooth/hci_core.h
-> +++ b/include/net/bluetooth/hci_core.h
-> @@ -484,6 +484,10 @@ struct hci_dev {
-> 	struct led_trigger	*power_led;
-> #endif
-> 
-> +#if IS_ENABLED(CONFIG_BT_MSFTEXT)
-> +	__u16			msft_opcode;
-> +#endif
-> +
-> 	int (*open)(struct hci_dev *hdev);
-> 	int (*close)(struct hci_dev *hdev);
-> 	int (*flush)(struct hci_dev *hdev);
-> diff --git a/net/bluetooth/Kconfig b/net/bluetooth/Kconfig
-> index 165148c7c4ce..5929ccb02b39 100644
-> --- a/net/bluetooth/Kconfig
-> +++ b/net/bluetooth/Kconfig
-> @@ -30,7 +30,7 @@ menuconfig BT
-> 		L2CAP (Logical Link Control and Adaptation Protocol)
-> 		SMP (Security Manager Protocol) on LE (Low Energy) links
-> 	     HCI Device drivers (Interface to the hardware)
-> -	     RFCOMM Module (RFCOMM Protocol)  
-> +	     RFCOMM Module (RFCOMM Protocol)
-
-Unrelated changes don’t belong here.
-
-> 	     BNEP Module (Bluetooth Network Encapsulation Protocol)
-> 	     CMTP Module (CAPI Message Transport Protocol)
-> 	     HIDP Module (Human Interface Device Protocol)
-> @@ -93,6 +93,13 @@ config BT_LEDS
-> 	  This option selects a few LED triggers for different
-> 	  Bluetooth events.
-> 
-> +config BT_MSFTEXT
-> +	bool "Enable Microsoft extensions"
-> +	depends on BT
-> +	help
-> +	  This options enables support for the Microsoft defined HCI
-> +	  vendor extensions.
-> +
-> config BT_SELFTEST
-> 	bool "Bluetooth self testing support"
-> 	depends on BT && DEBUG_KERNEL
-> diff --git a/net/bluetooth/Makefile b/net/bluetooth/Makefile
-> index fda41c0b4781..41dd541a44a5 100644
-> --- a/net/bluetooth/Makefile
-> +++ b/net/bluetooth/Makefile
-> @@ -19,5 +19,6 @@ bluetooth-y := af_bluetooth.o hci_core.o hci_conn.o hci_event.o mgmt.o \
-> bluetooth-$(CONFIG_BT_BREDR) += sco.o
-> bluetooth-$(CONFIG_BT_HS) += a2mp.o amp.o
-> bluetooth-$(CONFIG_BT_LEDS) += leds.o
-> +bluetooth-$(CONFIG_BT_MSFTEXT) += msft.o
-> bluetooth-$(CONFIG_BT_DEBUGFS) += hci_debugfs.o
-> bluetooth-$(CONFIG_BT_SELFTEST) += selftest.o
-> diff --git a/net/bluetooth/msft.c b/net/bluetooth/msft.c
+>  source "drivers/pci/controller/dwc/Kconfig"
+>  source "drivers/pci/controller/mobiveil/Kconfig"
+>  source "drivers/pci/controller/cadence/Kconfig"
+> diff --git a/drivers/pci/controller/Makefile b/drivers/pci/controller/Makefile
+> index 158c59771824..fbac4b0190a0 100644
+> --- a/drivers/pci/controller/Makefile
+> +++ b/drivers/pci/controller/Makefile
+> @@ -28,6 +28,7 @@ obj-$(CONFIG_PCIE_MEDIATEK) += pcie-mediatek.o
+>  obj-$(CONFIG_PCIE_TANGO_SMP8759) += pcie-tango.o
+>  obj-$(CONFIG_VMD) += vmd.o
+>  obj-$(CONFIG_PCIE_BRCMSTB) += pcie-brcmstb.o
+> +obj-$(CONFIG_PCI_LOONGSON) += pci-loongson.o
+>  # pcie-hisi.o quirks are needed even without CONFIG_PCIE_DW
+>  obj-y                          += dwc/
+>  obj-y                          += mobiveil/
+> diff --git a/drivers/pci/controller/pci-loongson.c b/drivers/pci/controller/pci-loongson.c
 > new file mode 100644
-> index 000000000000..7609932c48ca
+> index 000000000000..b9abb27793ab
 > --- /dev/null
-> +++ b/net/bluetooth/msft.c
-> @@ -0,0 +1,16 @@
-> +// SPDX-License-Identifier: GPL-2.0-or-later
-> +/* Copyright (C) 2020 Google Corporation */
+> +++ b/drivers/pci/controller/pci-loongson.c
+> @@ -0,0 +1,263 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Loongson PCI Host Controller Driver
+> + *
+> + * Copyright (C) 2020 Jiaxun Yang <jiaxun.yang@flygoat.com>
+> + */
 > +
-> +#include <net/bluetooth/bluetooth.h>
-> +#include <net/bluetooth/hci_core.h>
+> +#include <linux/of_address.h>
+> +#include <linux/of_pci.h>
+> +#include <linux/of_platform.h>
+> +#include <linux/pci.h>
+> +#include <linux/pci_ids.h>
 > +
-> +#include "msft.h"
+> +#include "../pci.h"
 > +
-> +void msft_set_opcode(struct hci_dev *hdev, __u16 opcode)
+> +/* Device IDs */
+> +#define DEV_PCIE_PORT_0        0x7a09
+> +#define DEV_PCIE_PORT_1        0x7a19
+> +#define DEV_PCIE_PORT_2        0x7a29
+> +
+> +#define DEV_LS2K_APB   0x7a02
+> +#define DEV_LS7A_CONF  0x7a10
+> +#define DEV_LS7A_LPC   0x7a0c
+> +
+> +#define FLAG_CFG0      BIT(0)
+> +#define FLAG_CFG1      BIT(1)
+> +#define FLAG_DEV_FIX   BIT(2)
+> +
+> +struct loongson_pci {
+> +       void __iomem *cfg0_base;
+> +       void __iomem *cfg1_base;
+> +       struct platform_device *pdev;
+> +       u32 flags;
+> +};
+> +
+> +/* Fixup wrong class code in PCIe bridges */
+> +static void bridge_class_quirk(struct pci_dev *dev)
 > +{
-> +	hdev->msft_opcode = opcode;
-> +
-> +	bt_dev_info(hdev, "Enabling MSFT extensions with opcode 0x%2.2x",
-> +		    hdev->msft_opcode);
+> +       dev->class = PCI_CLASS_BRIDGE_PCI << 8;
 > +}
-> +EXPORT_SYMBOL(msft_set_opcode);
-> diff --git a/net/bluetooth/msft.h b/net/bluetooth/msft.h
-> new file mode 100644
-> index 000000000000..7218ea759dde
-> --- /dev/null
-> +++ b/net/bluetooth/msft.h
-> @@ -0,0 +1,19 @@
-> +/* SPDX-License-Identifier: GPL-2.0-or-later */
-> +/* Copyright (C) 2020 Google Corporation */
+> +DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_LOONGSON,
+> +                       DEV_PCIE_PORT_0, bridge_class_quirk);
+> +DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_LOONGSON,
+> +                       DEV_PCIE_PORT_1, bridge_class_quirk);
+> +DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_LOONGSON,
+> +                       DEV_PCIE_PORT_2, bridge_class_quirk);
 > +
-> +#ifndef __MSFT_H
-> +#define __MSFT_H
+> +static void system_bus_quirk(struct pci_dev *pdev)
+> +{
+> +       u16 tmp;
 > +
-> +#include <net/bluetooth/hci_core.h>
+> +       pdev->mmio_always_on = 1;
+> +       pdev->non_compliant_bars = 1;
+> +       /* Enable MEM & IO Decoding */
+> +       pci_read_config_word(pdev, PCI_STATUS, &tmp);
+> +       tmp |= PCI_COMMAND_IO | PCI_COMMAND_MEMORY;
+> +       pci_write_config_word(pdev, PCI_STATUS, tmp);
+> +}
 > +
-> +#if IS_ENABLED(CONFIG_BT_MSFTEXT)
+> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
+> +                       DEV_LS2K_APB, system_bus_quirk);
+> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
+> +                       DEV_LS7A_CONF, system_bus_quirk);
+> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
+> +                       DEV_LS7A_LPC, system_bus_quirk);
 > +
-> +void msft_set_opcode(struct hci_dev *hdev, __u16 opcode);
+> +static void loongson_mrrs_quirk(struct pci_dev *dev)
+> +{
+> +       struct pci_bus *bus = dev->bus;
+> +       struct pci_dev *bridge;
+> +       static const struct pci_device_id bridge_devids[] = {
+> +               { PCI_VDEVICE(LOONGSON, DEV_PCIE_PORT_0) },
+> +               { PCI_VDEVICE(LOONGSON, DEV_PCIE_PORT_1) },
+> +               { PCI_VDEVICE(LOONGSON, DEV_PCIE_PORT_0) },
+> +               { 0, },
+> +       };
 > +
-> +#else
 > +
-> +static inline void msft_set_opcode(struct hci_dev *hdev, __u16 opcode) {}
+> +       /* look for the matching bridge */
+> +       while (!pci_is_root_bus(bus)) {
+> +               bridge = bus->self;
+> +               bus = bus->parent;
+> +               /*
+> +                * Some Loongson PCIE ports has a h/w limitation of
+> +                * 256 bytes maximum read request size. It can't handle
+> +                * anything higher than this. So force this limit on
+> +                * any devices attached under these ports.
+> +                */
+> +               if (pci_match_id(bridge_devids, bridge)) {
+> +                       if (pcie_get_readrq(dev) > 256) {
+> +                               dev_info(&dev->dev, "limiting MRRS to 256\n");
+> +                               pcie_set_readrq(dev, 256);
+> +                       }
+> +                       break;
+> +               }
+> +       }
+> +}
+> +DECLARE_PCI_FIXUP_ENABLE(PCI_ANY_ID, PCI_ANY_ID, loongson_mrrs_quirk);
 > +
-> +#endif
+> +static void __iomem *cfg1_map(struct loongson_pci *priv, int bus, int dev,
+> +                               int func, int where)
+> +{
+> +       unsigned long addroff = 0x0;
 > +
-> +#endif /* __MSFT_H*/
+> +       if (bus != 0)
+> +               addroff |= BIT(28); /* Type 1 Access */
+> +       addroff |= (where & 0xff) | ((where & 0xf00) << 16);
+> +       addroff |= (bus << 16) | (dev << 11) | (func << 8);
+> +       return priv->cfg1_base + addroff;
+> +}
+> +
+> +static void __iomem *cfg0_map(struct loongson_pci *priv, int bus, int dev,
+> +                               int func, int where)
+> +{
+> +       unsigned long addroff = 0x0;
+> +
+> +       if (bus != 0)
+> +               addroff |= BIT(24); /* Type 1 Access */
+> +       addroff |= (bus << 16) | (dev << 11) | (func << 8) | where;
+> +       return priv->cfg0_base + addroff;
+> +}
+> +
+> +void __iomem *pci_loongson_map_bus(struct pci_bus *bus, unsigned int devfn,
+> +                              int where)
+> +{
+> +       unsigned char busnum = bus->number;
+> +       int device = PCI_SLOT(devfn);
+> +       int function = PCI_FUNC(devfn);
+> +       struct pci_host_bridge *bridge = pci_find_host_bridge(bus);
+> +       struct loongson_pci *priv =  pci_host_bridge_priv(bridge);
+> +
+> +       /*
+> +        * Do not read more than one device on the bus other than
+> +        * the host bridge.
+> +        */
+> +       if (bus->primary != 0 && device > 0 &&
+> +               priv->flags & FLAG_DEV_FIX)
+> +               return NULL;
+> +
+> +       /* CFG0 can only access standard space */
+> +       if (where < PCI_CFG_SPACE_SIZE && priv->flags & FLAG_CFG0 &&
+> +               priv->cfg0_base)
+> +               return cfg0_map(priv, busnum, device, function, where);
+> +
+> +       /* CFG1 can access exp space */
+> +       if (where < PCI_CFG_SPACE_EXP_SIZE && priv->flags & FLAG_CFG1 &&
+> +               priv->cfg1_base)
+> +               return cfg1_map(priv, busnum, device, function, where);
+> +
+> +
 
-Regards
+Single blank line.
 
-Marcel
+> +       return NULL;
+> +}
+> +
+> +static int loongson_map_irq(const struct pci_dev *dev, u8 slot, u8 pin)
+> +{
+> +       int irq;
+> +       u8 val;
+> +
+> +       irq = of_irq_parse_and_map_pci(dev, slot, pin);
+> +       if (irq > 0)
+> +               return irq;
+> +
+> +       /* Care legacy systems */
+> +       pci_read_config_byte(dev, PCI_INTERRUPT_LINE, &val);
+> +       /* 0xff is also invalid */
+> +       if (val == 0xff)
+> +               return 0;
+> +
+> +       return val;
+> +}
+> +
+> +/* PCI operations */
+> +static struct pci_ops loongson_pci_ops = {
+> +       .map_bus = pci_loongson_map_bus,
+> +       .read   = pci_generic_config_read32,
+> +       .write  = pci_generic_config_write32,
 
+Do you really require 32-bit writes? That isn't safe. See comments for
+the function.
+
+> +};
+> +
+> +static const struct of_device_id loongson_pci_of_match[] = {
+> +       { .compatible = "loongson,rs780e-pci",
+> +               .data = (void *)(FLAG_CFG0), },
+> +       { .compatible = "loongson,ls2k-pci",
+> +               .data = (void *)(FLAG_CFG0 | FLAG_CFG1 | FLAG_DEV_FIX), },
+> +       { .compatible = "loongson,ls7a-pci",
+> +               .data = (void *)(FLAG_CFG0 | FLAG_CFG1 | FLAG_DEV_FIX), },
+> +       {}
+> +};
+> +
+> +static int loongson_pci_probe(struct platform_device *pdev)
+> +{
+> +       struct loongson_pci *priv;
+> +       struct device *dev = &pdev->dev;
+> +       struct device_node *node = dev->of_node;
+> +       struct pci_host_bridge *bridge;
+> +       const struct of_device_id *match;
+> +       struct resource regs;
+> +       int err;
+> +       LIST_HEAD(res);
+> +
+> +       if (!node)
+> +               return -ENODEV;
+> +
+> +       bridge = devm_pci_alloc_host_bridge(dev, sizeof(*priv));
+> +       if (!bridge)
+> +               return -ENODEV;
+> +
+> +       priv = pci_host_bridge_priv(bridge);
+> +       priv->pdev = pdev;
+> +
+> +       match = of_match_device(loongson_pci_of_match, &pdev->dev);
+> +       priv->flags = (unsigned long)match->data;
+
+Use of_device_get_match_data() instead.
+
+> +
+> +       err = of_address_to_resource(node, 0, &regs);
+
+Use platform_get_resource() instead.
+
+You should be able to drop of_address.h
+
+> +       if (err) {
+> +               dev_err(dev, "missing \"reg\" property for cfg0\n");
+> +               return err;
+> +       }
+> +
+> +       priv->cfg0_base = devm_pci_remap_cfg_resource(dev, &regs);
+> +       if (IS_ERR(priv->cfg0_base))
+> +               return PTR_ERR(priv->cfg0_base);
+> +
+> +       /* CFG1 is optional */
+> +       if (priv->flags & FLAG_CFG1) {
+> +               if (of_address_to_resource(node, 1, &regs))
+> +                       dev_info(dev, "missing \"reg\" property for cfg1\n");
+> +               else {
+> +                       priv->cfg1_base = devm_pci_remap_cfg_resource(dev, &regs);
+> +                       if (IS_ERR(priv->cfg1_base))
+> +                               priv->cfg1_base = NULL;
+> +               }
+> +       }
+> +
+> +
+> +       err = pci_parse_request_of_pci_ranges(dev, &res,
+
+Just pass &bridge->windows and remove res.
+
+> +                                               &bridge->dma_ranges, NULL);
+> +       if (err) {
+> +               dev_err(dev, "Failed to get bridge resources\n");
+> +               return err;
+> +       }
+> +
+> +       list_splice_init(&res, &bridge->windows);
+> +       bridge->dev.parent = dev;
+> +       bridge->sysdata = priv;
+> +       bridge->busnr = 0;
+
+Already 0.
+
+> +       bridge->ops = &loongson_pci_ops;
+> +       bridge->map_irq = loongson_map_irq;
+> +
+> +       err = pci_host_probe(bridge);
+> +       if (err)
+> +               return err;
+> +
+> +       return 0;
+> +}
+> +
+> +static struct platform_driver loongson_pci_driver = {
+> +       .driver = {
+> +               .name = "loongson-pci",
+> +               .of_match_table = loongson_pci_of_match,
+> +       },
+> +       .probe = loongson_pci_probe,
+> +};
+> +builtin_platform_driver(loongson_pci_driver);
+
+Can't work as a module?
+
+Rob
