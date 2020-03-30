@@ -3,98 +3,120 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 383BDC43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 16:41:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B880BC2D0EF
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 16:41:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F18EB20780
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 16:41:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8724220578
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 16:41:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="G/ImTS88"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="KEUz1Z2W"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729415AbgC3QlU (ORCPT
+        id S1729513AbgC3Qlb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 12:41:20 -0400
-Received: from outils.crapouillou.net ([89.234.176.41]:53590 "EHLO
-        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726497AbgC3QlU (ORCPT
+        Mon, 30 Mar 2020 12:41:31 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:41062 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726497AbgC3Qlb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 12:41:20 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1585586476; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=rQAjpeP0ttna+M7acg2Qd2oZ1ja9i8Cn7x068Tgta1w=;
-        b=G/ImTS8808q+pnxeBUdAY668zG/YSSC3Fbif0jFMowpr/KK3vToUvBogUe8tLsGR3OfNAd
-        7Vg7p2w5OQT44xLd0onL4f7NRr0Bs3jaqK6kqduYRCJ4kBsjZv2tqVL68JqxHMHfGUE713
-        GJ2wkAfqyIaxDFxztQQ5apUF0k1jQ7I=
-Date:   Mon, 30 Mar 2020 18:41:04 +0200
-From:   Paul Cercueil <paul@crapouillou.net>
-Subject: Re: [PATCH v4 3/4] pwm: jz4740: Obtain regmap from parent node
-To:     Thierry Reding <thierry.reding@gmail.com>
-Cc:     Uwe =?iso-8859-1?q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>, od@zcrc.me,
-        linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Mathieu Malaterre <malat@debian.org>,
-        Artur Rojek <contact@artur-rojek.eu>
-Message-Id: <GCM08Q.D2GF67F5O2R03@crapouillou.net>
-In-Reply-To: <20200330143716.GI2431644@ulmo>
-References: <20200323142421.42817-1-paul@crapouillou.net>
-        <20200323142421.42817-3-paul@crapouillou.net>
-        <20200330143716.GI2431644@ulmo>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1; format=flowed
-Content-Transfer-Encoding: quoted-printable
+        Mon, 30 Mar 2020 12:41:31 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1585586490; h=Message-Id: Date: Subject: Cc: To: From:
+ Sender; bh=SJTDBgvtt/m4QfLexp01DuyvOrbFHv+2tAxA8lI3SCQ=; b=KEUz1Z2WrUsqG8va4Ew+5pwtdvYRrv7moQ77ZuuY7F8BnmB0Qe2fXMUnTxC9uaunwNBjxk4S
+ qcgCEgXSBncnX1fGUKtj3L5zPP/qJH5lffeHZsCEGVtkq38xj770DJD38D1K5YbUEh+2c/g2
+ r85c+fmwYoPL89KK1bT8X/pidZs=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e822132.7f9da58dd458-smtp-out-n05;
+ Mon, 30 Mar 2020 16:41:22 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id AA135C433BA; Mon, 30 Mar 2020 16:41:21 +0000 (UTC)
+Received: from mkshah-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: mkshah)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 0213EC433F2;
+        Mon, 30 Mar 2020 16:41:15 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 0213EC433F2
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=mkshah@codeaurora.org
+From:   Maulik Shah <mkshah@codeaurora.org>
+To:     swboyd@chromium.org, bjorn.andersson@linaro.org,
+        evgreen@chromium.org, mka@chromium.org
+Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        agross@kernel.org, linus.walleij@linaro.org, tglx@linutronix.de,
+        maz@kernel.org, jason@lakedaemon.net, dianders@chromium.org,
+        rnayak@codeaurora.org, ilina@codeaurora.org, lsrao@codeaurora.org,
+        Maulik Shah <mkshah@codeaurora.org>
+Subject: [RFC v3] pdc: Introduce irq_set_wake call
+Date:   Mon, 30 Mar 2020 22:10:59 +0530
+Message-Id: <1585586460-3272-1-git-send-email-mkshah@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Thierry,
+Changes in v3:
+- Add pm events notification to check if suspend started
+- Add cpu pm notification to enable wake IRQs during deep/s2idle suspend
+- Add pdc_pm_data structure as domain->host_data and as irq's chip_data
+- Add changes to mark wakeup and enabled IRQs in respective domains
+- Address Stephen's comments from v2.
 
-Le lun. 30 mars 2020 =E0 16:37, Thierry Reding=20
-<thierry.reding@gmail.com> a =E9crit :
-> On Mon, Mar 23, 2020 at 03:24:20PM +0100, Paul Cercueil wrote:
-> [...]
->>  diff --git a/drivers/pwm/pwm-jz4740.c b/drivers/pwm/pwm-jz4740.c
-> [...]
->>  @@ -196,12 +208,19 @@ static const struct pwm_ops jz4740_pwm_ops =3D {
->>   static int jz4740_pwm_probe(struct platform_device *pdev)
->>   {
->>   	struct jz4740_pwm_chip *jz4740;
->>  +	struct device *dev =3D &pdev->dev;
->>=20
->>  -	jz4740 =3D devm_kzalloc(&pdev->dev, sizeof(*jz4740), GFP_KERNEL);
->>  +	jz4740 =3D devm_kzalloc(dev, sizeof(*jz4740), GFP_KERNEL);
->>   	if (!jz4740)
->>   		return -ENOMEM;
->>=20
->>  -	jz4740->chip.dev =3D &pdev->dev;
->>  +	jz4740->map =3D device_node_to_regmap(dev->parent->of_node);
->>  +	if (!jz4740->map) {
->=20
-> This seems wrong. According to the code, device_node_to_regmap()=20
-> returns
-> an ERR_PTR()-encoded error code on failure, so I think this should be:
->=20
-> 	if (IS_ERR(jz4740->map)) {
-> 		...
-> 		return PTR_ERR(jz4740->map);
-> 	}
->=20
-> No need to resend for that, I can take care of that when applying. Let
-> me know if that doesn't work.
+Changes in v2:
+- Drop pinctrl irqchip change and update in PDC irqchip change
+- Include more details for .irq_set_wake introduction
+- Address Stephen's comments for CPUidle need not call enable_irq_wake
+- Update cover letter inline to add more detail on problem and solution
 
-Yes, that works for me. Good catch.
+irqchip: qcom: pdc: Introduce irq_set_wake call
 
-Thanks,
--Paul
+Some drivers using gpio interrupts want to configure gpio for wakeup using
+enable_irq_wake() but during suspend entry disables irq and expects system
+to resume when interrupt occurs. In the driver resume call interrupt is
+re-enabled and removes wakeup capability using disable_irq_wake() one such
+example is cros ec driver.
 
->=20
-> Thierry
+With [1] in documentation saying "An irq can be disabled with disable_irq()
+and still wake the system as long as the irq has wake enabled".
 
+In such scenario the gpio irq stays disabled at gpio irqchip but needs to
+keep enabled in the hierarchy for wakeup capable parent PDC and GIC irqchip
+to be able to detect and forward wake capable interrupt to CPU when system
+is in sleep state like suspend.
 
+The final status at PDC irq_chip should be an "OR" of "enable" and "wake" calls.
+(i.e. same per below table)
+|--------------------------------------------------|
+| ENABLE in SW | WAKE in SW | PDC & GIC HW Status  |
+|      0       |     0      |     0	           |
+|      0       |     1      |     1	           |
+|      1       |     0      |     1		   |
+|      1       |     1      |     1	           |
+|--------------------------------------------------|
+
+Sending this as an RFC since this series attempts to add support for [1] by
+introducing irq_set_wake call for PDC irqchip from which interrupt can be
+enabled/disabled at PDC (and its parent GIC) hardware.
+
+Note that *ALL* drivers using wakeup capable interrupt with enable_irq_wake()
+and want to disable irq with disable_irq() need to call disable_irq_wake()
+also if they want to stop wakeup capability at parent PDC irqchip.
+Not doing so will lead to system getting woken up from sleep states if wakeup
+capable IRQ comes in.
+
+[1] https://www.spinics.net/lists/kernel/msg3398294.html
+
+Maulik Shah (1):
+  irqchip: qcom: pdc: Introduce irq_set_wake call
+
+ drivers/irqchip/qcom-pdc.c | 271 ++++++++++++++++++++++++++++++++++++++++++---
+ 1 file changed, 256 insertions(+), 15 deletions(-)
+
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
