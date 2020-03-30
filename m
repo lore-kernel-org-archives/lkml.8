@@ -2,194 +2,94 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B536C43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 15:54:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6297BC2D0E5
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 15:54:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 140EC205ED
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 15:54:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=itdevltd.onmicrosoft.com header.i=@itdevltd.onmicrosoft.com header.b="GxBWlOjC"
+	by mail.kernel.org (Postfix) with ESMTP id 37305205ED
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 15:54:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729641AbgC3PyZ (ORCPT
+        id S1729735AbgC3Py1 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 11:54:25 -0400
-Received: from mail-eopbgr150041.outbound.protection.outlook.com ([40.107.15.41]:8430
-        "EHLO EUR01-DB5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726497AbgC3PyY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 11:54:24 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=BsOaNFCzaWTKDGb2ivc9wIDZoNody5mieQ5Qu2UUJiSTpk74DhwlcFVL7mjfU1wz1v2yhdSK4pDgu6zeVI6Xghf8gdVRWeglXI/3dIGnJ67mN+PZxVkkp8Fm8R4+Yw7MMGjtRN3SJsXencM6MP/C2gWWfdHxanKCRcRS85m+TxTeVSupy2ozEucZnhaNBTg97AMK6dZnvVZZPIvHhuOaN9iBier98EuKAsOr+OHr30KH6iqQXBBhYhxfVdG56PCveSUHQ7WWC4CtsQgbhWThEWrKfBc2oD2wOVSbOLdkrhcnPjkym2n9IQOfmE6+WaOAFcbqDxM37czhQpkfvOsU2Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=vvWUjTVeO3djzzcn5x41qdWCQzxAPgnrPjdXWv4+Ldc=;
- b=a6R+OHZwLg7ZfqXhejn0h4vpVg2YhlD9j7FmF9PwROqIBxYYPJh3B0U4J5xd1I3RIKIZ4xuHbrBdM1UHgEfnRjpMQ3kRXSiT/6ELQp1cILCkBEYpql7jqKEgQM1QolGyRej6Uc90HskEwc7wUErnbxe1JhUwxEseSQOGF+67W7Cs92lE95QqhxLs3gcyEb5mq+I4uR+2MY1NsxajCtw6mfemvRYB/3XxlNHnEtK1dHsud4ew/aF1/iQy+Hd+Uqmv4Oo8QFzZZZDz0jU6zyGiHxypvFA8HHgnGLFUPxOK5dGR3um6LHkbm9BFvAMS/wY2E8L2vmoJM3/eDGf5YlKpwQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=itdev.co.uk; dmarc=pass action=none header.from=itdev.co.uk;
- dkim=pass header.d=itdev.co.uk; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=itdevltd.onmicrosoft.com; s=selector2-itdevltd-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=vvWUjTVeO3djzzcn5x41qdWCQzxAPgnrPjdXWv4+Ldc=;
- b=GxBWlOjC2o9Kvjlu0tfCBsUKdsEnFknikY/CMMheXOh2JEoNaXKjNOgGw3x/W+xXYg+U2KEeOiTuXi+wfVsHKg6yPZcasTRy+16RTgzmLKkimjrhkRaFC1cJIQNgi8DW3nNR+Jy8pkdzX59ZjZDC0+xSolIxwWrt46ESMaksjFA=
-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=quentin.deslandes@itdev.co.uk; 
-Received: from DBBPR08MB4491.eurprd08.prod.outlook.com (20.179.44.144) by
- DBBPR08MB4315.eurprd08.prod.outlook.com (20.179.43.85) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2856.20; Mon, 30 Mar 2020 15:54:21 +0000
-Received: from DBBPR08MB4491.eurprd08.prod.outlook.com
- ([fe80::cce9:f055:f034:3659]) by DBBPR08MB4491.eurprd08.prod.outlook.com
- ([fe80::cce9:f055:f034:3659%4]) with mapi id 15.20.2856.019; Mon, 30 Mar 2020
- 15:54:21 +0000
-Date:   Mon, 30 Mar 2020 16:54:19 +0100
-From:   Quentin Deslandes <quentin.deslandes@itdev.co.uk>
-To:     Oscar Carter <oscar.carter@gmx.com>
-Cc:     Forest Bond <forest@alittletooquiet.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Malcolm Priestley <tvboxspy@gmail.com>,
-        Amir Mahdi Ghorbanian <indigoomega021@gmail.com>,
-        Colin Ian King <colin.king@canonical.com>,
-        Gabriela Bittencourt <gabrielabittencourt00@gmail.com>,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] staging: vt6656: Use defines in preamble_type variables
-Message-ID: <20200330155419.GA133370@jiffies>
-References: <20200328140955.23615-1-oscar.carter@gmx.com>
- <20200330154902.GB125210@jiffies>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200330154902.GB125210@jiffies>
-X-ClientProxiedBy: LO2P265CA0432.GBRP265.PROD.OUTLOOK.COM
- (2603:10a6:600:a0::36) To DBBPR08MB4491.eurprd08.prod.outlook.com
- (2603:10a6:10:d2::16)
+        Mon, 30 Mar 2020 11:54:27 -0400
+Received: from eu-smtp-delivery-151.mimecast.com ([146.101.78.151]:47850 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726497AbgC3Py0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Mar 2020 11:54:26 -0400
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-87-ODMv5bv9P12XgKJf7O7OVA-1; Mon, 30 Mar 2020 16:54:23 +0100
+X-MC-Unique: ODMv5bv9P12XgKJf7O7OVA-1
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
+ Server (TLS) id 15.0.1347.2; Mon, 30 Mar 2020 16:54:22 +0100
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Mon, 30 Mar 2020 16:54:22 +0100
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Al Viro' <viro@zeniv.linux.org.uk>, Ingo Molnar <mingo@kernel.org>
+CC:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Borislav Petkov" <bp@alien8.de>
+Subject: RE: [RFC][PATCH 01/22] x86 user stack frame reads: switch to explicit
+ __get_user()
+Thread-Topic: [RFC][PATCH 01/22] x86 user stack frame reads: switch to
+ explicit __get_user()
+Thread-Index: AQHWBfOGBuGXOsXgxk+vqOM7n5IKaahhSkVQ
+Date:   Mon, 30 Mar 2020 15:54:22 +0000
+Message-ID: <0c08c4e00e4e4965969a16410e4e15d1@AcuMS.aculab.com>
+References: <20200323183620.GD23230@ZenIV.linux.org.uk>
+ <20200323183819.250124-1-viro@ZenIV.linux.org.uk>
+ <20200328104857.GA93574@gmail.com>
+ <20200328115936.GA23230@ZenIV.linux.org.uk>
+ <20200329092602.GB93574@gmail.com>
+ <20200329175735.GC23230@ZenIV.linux.org.uk>
+In-Reply-To: <20200329175735.GC23230@ZenIV.linux.org.uk>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from jiffies (5.151.93.48) by LO2P265CA0432.GBRP265.PROD.OUTLOOK.COM (2603:10a6:600:a0::36) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2856.19 via Frontend Transport; Mon, 30 Mar 2020 15:54:20 +0000
-X-Originating-IP: [5.151.93.48]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 5531c284-d347-4327-a478-08d7d4c29c8f
-X-MS-TrafficTypeDiagnostic: DBBPR08MB4315:
-X-Microsoft-Antispam-PRVS: <DBBPR08MB43153FE4C22C24D3E0952263B3CB0@DBBPR08MB4315.eurprd08.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:6430;
-X-Forefront-PRVS: 0358535363
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DBBPR08MB4491.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10009020)(376002)(136003)(346002)(396003)(39830400003)(366004)(26005)(4326008)(52116002)(6496006)(44832011)(1076003)(81166006)(66946007)(8676002)(81156014)(33716001)(66476007)(33656002)(55016002)(8936002)(9576002)(9686003)(86362001)(53546011)(6916009)(316002)(2906002)(186003)(16526019)(508600001)(956004)(66556008)(5660300002)(54906003)(518174003);DIR:OUT;SFP:1101;
-Received-SPF: None (protection.outlook.com: itdev.co.uk does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: x4ACSTS6YRaGGOot0kjCPwrU0XRdzATR6K5oEJa2uHqQQoesXZtsN6B/ZORdrqK5qjtuSvkxb5eSepUAYQu0BCN2l6Lnh/4r4Es5/bDsIriFQB2fublYJQ7TmNzV2Mk3Aoom0jwnV6HDPSHHQav1r9o9PQNGRJFHa9FIANuMmO3750C8pDq/7lcj93kNEryoayLg8cqFIoBQWXGgnkLVUTtdiv+I0sgDDHCvHUBXDwW4A+dyC9pqkAnlv8ZzfwOaInm8h+4xoAzc5sdeOOl2GFctW1Fg06RM+9f6axRV5IlXxlRMRqtzGEDHTTQstUI0Ucm4FnNQwBJbMcbdXw35gJhsgSEHXPMypt2HrIp8aFDgFXCytl3/N25iKv+SWXrcK03YJWaAxKH92EV9RTovVWHUkv3lW9y/RPpH2XsiTUqgHzRNYpIkJNK8+8A1h/4BlH3VVbXS0zC0tnQuo5z3Va4ByJf3UTYmyCJWPbpb+dqGeF80vSRdSNhi/l7KtiHe
-X-MS-Exchange-AntiSpam-MessageData: Ce4lad+lauqHVJV2QAWn6m10iBInbkwKAiBN6QXhoqe5PpR4ECEjT8w6Vj4Wi6S9y8FXvg+p3HhotPryPlYBN/lnJautXRf39JzVoDkuh4JJh8qOnf/oml1ytaElOyr2ysTv3+XEBvcZ4cC5VgIdyg==
-X-OriginatorOrg: itdev.co.uk
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5531c284-d347-4327-a478-08d7d4c29c8f
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Mar 2020 15:54:21.2437
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 2d2930c4-2251-45b4-ad79-3582c5f41740
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: ssB5AcV8JZYLi0Krqo/GJA6XFv50+zBJb9WQh1d/xEJcU1pnwYkiEQPapha9LJn0A/8tzjLVTWtksBTJmQLycCq+dC8Kun7yIshY5fhSTdg=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DBBPR08MB4315
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: aculab.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 03/30/20 16:49:04, Quentin Deslandes wrote:
-> On 03/28/20 15:09:55, Oscar Carter wrote:
-> > Use the PREAMBLE_SHORT and PREAMBLE_LONG defines present in the file
-> > "baseband.h" to assign values to preamble_type variables. Also, use the
-> > same defines to make comparisons against this variables.
-> > 
-> > In this way, avoid the use of numerical literals or boolean values and
-> > make the code more clear.
-> > 
-> > Signed-off-by: Oscar Carter <oscar.carter@gmx.com>
-> > ---
-> >  drivers/staging/vt6656/baseband.c | 8 ++++----
-> >  drivers/staging/vt6656/main_usb.c | 6 +++---
-> >  2 files changed, 7 insertions(+), 7 deletions(-)
-> > 
-> > diff --git a/drivers/staging/vt6656/baseband.c b/drivers/staging/vt6656/baseband.c
-> > index a19a563d8bcc..9bbafa7fff61 100644
-> > --- a/drivers/staging/vt6656/baseband.c
-> > +++ b/drivers/staging/vt6656/baseband.c
-> > @@ -142,7 +142,7 @@ unsigned int vnt_get_frame_time(u8 preamble_type, u8 pkt_type,
-> >  	rate = (unsigned int)vnt_frame_time[tx_rate];
-> > 
-> >  	if (tx_rate <= 3) {
-> > -		if (preamble_type == 1)
-> > +		if (preamble_type == PREAMBLE_SHORT)
-> >  			preamble = 96;
-> >  		else
-> >  			preamble = 192;
-> > @@ -198,7 +198,7 @@ void vnt_get_phy_field(struct vnt_private *priv, u32 frame_length,
-> >  	case RATE_2M:
-> >  		count = bit_count / 2;
-> > 
-> > -		if (preamble_type == 1)
-> > +		if (preamble_type == PREAMBLE_SHORT)
-> >  			phy->signal = 0x09;
-> >  		else
-> >  			phy->signal = 0x01;
-> > @@ -207,7 +207,7 @@ void vnt_get_phy_field(struct vnt_private *priv, u32 frame_length,
-> >  	case RATE_5M:
-> >  		count = DIV_ROUND_UP(bit_count * 10, 55);
-> > 
-> > -		if (preamble_type == 1)
-> > +		if (preamble_type == PREAMBLE_SHORT)
-> >  			phy->signal = 0x0a;
-> >  		else
-> >  			phy->signal = 0x02;
-> > @@ -224,7 +224,7 @@ void vnt_get_phy_field(struct vnt_private *priv, u32 frame_length,
-> >  				ext_bit = true;
-> >  		}
-> > 
-> > -		if (preamble_type == 1)
-> > +		if (preamble_type == PREAMBLE_SHORT)
-> >  			phy->signal = 0x0b;
-> >  		else
-> >  			phy->signal = 0x03;
-> > diff --git a/drivers/staging/vt6656/main_usb.c b/drivers/staging/vt6656/main_usb.c
-> > index 8e7269c87ea9..dd89f98cc18c 100644
-> > --- a/drivers/staging/vt6656/main_usb.c
-> > +++ b/drivers/staging/vt6656/main_usb.c
-> > @@ -99,7 +99,7 @@ static void vnt_set_options(struct vnt_private *priv)
-> >  	priv->op_mode = NL80211_IFTYPE_UNSPECIFIED;
-> >  	priv->bb_type = BBP_TYPE_DEF;
-> >  	priv->packet_type = priv->bb_type;
-> > -	priv->preamble_type = 0;
-> > +	priv->preamble_type = PREAMBLE_LONG;
-> >  	priv->exist_sw_net_addr = false;
-> >  }
-> > 
-> > @@ -721,10 +721,10 @@ static void vnt_bss_info_changed(struct ieee80211_hw *hw,
-> >  	if (changed & BSS_CHANGED_ERP_PREAMBLE) {
-> >  		if (conf->use_short_preamble) {
-> >  			vnt_mac_enable_barker_preamble_mode(priv);
-> > -			priv->preamble_type = true;
-> > +			priv->preamble_type = PREAMBLE_SHORT;
-> >  		} else {
-> >  			vnt_mac_disable_barker_preamble_mode(priv);
-> > -			priv->preamble_type = false;
-> > +			priv->preamble_type = PREAMBLE_LONG;
-> >  		}
-> >  	}
-> > 
-> > --
-> > 2.20.1
-> > 
-> 
-> Reviewed-by: Quentin Deslandes <quentin.deslandes@itdev.co.uk>
-> 
-> Thank,
-> Quentin
+From: Al Viro
+> Sent: 29 March 2020 18:58
+...
+> [*] IMO compat_alloc_user_space() should die; this "grab some space on
+> user stack, copy the 32bit data structure into 64bit equivalent there,
+> complete with pointer chasing and creating 64bit equivalents of everything
+> that's referenced from that struct, then call native ioctl, then do the
+> reverse conversion" is just plain wrong.  That native ioctl is going to
+> bring the structures we'd constructed back into the kernel space and
+> work with them there; we might as well separate the function that work
+> with the copied struct (usually we do have those anyway) and call those
+> instead the native ioctl.  And skip the damn "copy the structures we'd
+> built into temp allocation on user stack, then have it copied back"
+> part.  We have relatively few callers, thankfully.
 
-Disregard this review, a v2 has been sent.
+I helped rip the same 'stackgap' code out of netbsd many years ago.
+No only was it being used for system call compatibility, but
+also for security checks and rewriting filenames.
+Completely hopeless in a threaded program.
 
-Thanks,
-Quentin
+	David
+
+-
+Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
+Registration No: 1397386 (Wales)
+
