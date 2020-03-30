@@ -2,60 +2,61 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65B57C2D0ED
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 02:33:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48AB3C2D0E7
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 02:33:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3D2992078B
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 02:33:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 208A02082F
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 02:33:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="jbVb7rCD"
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="rxDfrhuk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728853AbgC3Cdd (ORCPT
+        id S1729045AbgC3Cdh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Mar 2020 22:33:33 -0400
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:35420 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728202AbgC3Cdc (ORCPT
+        Sun, 29 Mar 2020 22:33:37 -0400
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:41046 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728878AbgC3Cde (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Mar 2020 22:33:32 -0400
-Received: by mail-qk1-f194.google.com with SMTP id k13so17557199qki.2
-        for <linux-kernel@vger.kernel.org>; Sun, 29 Mar 2020 19:33:31 -0700 (PDT)
+        Sun, 29 Mar 2020 22:33:34 -0400
+Received: by mail-qt1-f196.google.com with SMTP id i3so13899105qtv.8
+        for <linux-kernel@vger.kernel.org>; Sun, 29 Mar 2020 19:33:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=joelfernandes.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=I4Nrsn6k3gNjz4BOh5fYXmBusY3PxyBtFMiw/JeGaFI=;
-        b=jbVb7rCDOQJz/kZvzoZg+nCBb4KUFEC+TOEHwI4K8l+pGSIYeCpBI96P01eV0zI9Xp
-         UNulmO6Khkf8qD/AV6xh9l+zZWLcHZ1inkxlOpcjtRZ6MlaiZ2Q7kqdApuFN8GuiCNpu
-         Wr49Ico00ahZmHYOYYNSeavwXVppbVFOAov0I=
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=j9u1d7Nq8RT0AOHNZvylOBJ81hqFkLhdoH0L2zGb794=;
+        b=rxDfrhuk8LqW6ZnmW+LnImOtpzM2Zw9S69J/P+yG2hd6Vw5mMl8yBevuQ6ntcQkpt1
+         6sS/aa7qsRAXfO8SA/uVHNRUM3XnlchLsYPPO6idkXfPZNHXzbwNfmaWP7vJXU7yG8GR
+         cAXpIptCUsYctVOx9/SD1kmPf6JJ5CIL5InT4=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=I4Nrsn6k3gNjz4BOh5fYXmBusY3PxyBtFMiw/JeGaFI=;
-        b=oNUdB0KOvHsbhivrcO8Jti0sWQiFzdCL8q9F5vUZPfsUQSO1XT3nhKnermeJl3xcLT
-         /DJv9kkEtYIXOJp2EDxVslRFNQLgO7BFJHqwSd3UR2IxbIRMiT2CbmWuSRYTSGCqXd2x
-         kizHsIZLk8xkNIYTHQ8aPpnTLqE1Q/m2A8Mfwg1l4XVBbYOL9PtqHAz3XZsrwgOY3kA1
-         GOFtgijIyLF9LT0q1GZNQgek4Med4J1Zlgo+Av4BcFEaQPhufLkaTFFqKDbFIPh6Fgtb
-         OjHJePuDzUO/nkZUb6P+HWpN472SOJp62MndVLo/0jh2kcGDV/kzL0RZqT9JJDw6L9Vl
-         Rysw==
-X-Gm-Message-State: ANhLgQ0gmDkkGGYBwwUdvivssD2WO1aGVIpHUdgoU8ozVQCRakkOzal0
-        47h8taqf/Jesy8zfxiSjWDqfAQCUIH4=
-X-Google-Smtp-Source: ADFU+vtXh936KTMI8VcRei3o2sQCtsNDgg/nJ1FXpiRXs/K5bI0kVr1o3ZMKLWaw3v458vKR4rRcmA==
-X-Received: by 2002:ae9:e00d:: with SMTP id m13mr9901951qkk.297.1585535610977;
-        Sun, 29 Mar 2020 19:33:30 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=j9u1d7Nq8RT0AOHNZvylOBJ81hqFkLhdoH0L2zGb794=;
+        b=TYdcxqH/rInnAM99iMlN/MNOmLIgM0VK49oajPQB7+5Anwo9V+Vz3OOg/EvNpuBZoY
+         pend074SMm+wlOz/LnfHV93EgnSJPDqvRJpCft6sY7+QJWheIFyl2AkwGFI9KPNdrKLY
+         qYPAPkJ9mGMaYTS6yMonkTaSH7IlLoo1fuM3mSRyXrOP3y1kRWqmO0BYocNx/8gzssj3
+         zIMpj6BRnRxYakkEK6eLMKBybYbjkSDFcTDCd7a+q5ocU286zRmae1DkYIV4HijCNKls
+         ZsqBUxgvuxBtW8NiMqmkZztWfbpUtMAoc91+1nSGzme7uLtlOshJl5KJNGsJCUh3tsne
+         Z7IA==
+X-Gm-Message-State: ANhLgQ1S6ke77a1w8RrMCNAhkcVcQ4KtPkhWbY/U0NibopEhJbC5eV7z
+        Z2EMi6QMYbPJKeYJwdxiAp01arH2Z34=
+X-Google-Smtp-Source: ADFU+vtJ/nFZMvAXPR8p2akuS9nHt322wcY7VnnK+V09LMOq6oHXy/eGbZOe0mEFY2W1AiDcgsCNJg==
+X-Received: by 2002:ac8:72ce:: with SMTP id o14mr10086333qtp.226.1585535612029;
+        Sun, 29 Mar 2020 19:33:32 -0700 (PDT)
 Received: from joelaf.cam.corp.google.com ([2620:15c:6:12:9c46:e0da:efbf:69cc])
-        by smtp.gmail.com with ESMTPSA id q15sm10030625qtj.83.2020.03.29.19.33.29
+        by smtp.gmail.com with ESMTPSA id q15sm10030625qtj.83.2020.03.29.19.33.31
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 29 Mar 2020 19:33:30 -0700 (PDT)
+        Sun, 29 Mar 2020 19:33:31 -0700 (PDT)
 From:   "Joel Fernandes (Google)" <joel@joelfernandes.org>
 To:     linux-kernel@vger.kernel.org
-Cc:     "Joel Fernandes (Google)" <joel@joelfernandes.org>,
+Cc:     "Uladzislau Rezki (Sony)" <urezki@gmail.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
         Andrew Morton <akpm@linux-foundation.org>,
         Ingo Molnar <mingo@redhat.com>,
         Josh Triplett <josh@joshtriplett.org>,
@@ -63,80 +64,63 @@ Cc:     "Joel Fernandes (Google)" <joel@joelfernandes.org>,
         Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
         "Paul E. McKenney" <paulmck@kernel.org>,
         "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        rcu@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
-        "Uladzislau Rezki (Sony)" <urezki@gmail.com>
-Subject: [PATCH 00/18] kfree_rcu() improvements for -rcu dev
-Date:   Sun, 29 Mar 2020 22:32:30 -0400
-Message-Id: <20200330023248.164994-1-joel@joelfernandes.org>
+        rcu@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>
+Subject: [PATCH 01/18] mm/list_lru.c: Rename kvfree_rcu() to local variant
+Date:   Sun, 29 Mar 2020 22:32:31 -0400
+Message-Id: <20200330023248.164994-2-joel@joelfernandes.org>
 X-Mailer: git-send-email 2.26.0.rc2.310.g2932bb562d-goog
+In-Reply-To: <20200330023248.164994-1-joel@joelfernandes.org>
+References: <20200330023248.164994-1-joel@joelfernandes.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
-These patches improve kfree_rcu() to support:
-- kfree_rcu() headless usage.
-- both vmalloc() and slab free'ing support using array of pointers.
-- simpler debugobjects handling.
+From: "Uladzislau Rezki (Sony)" <urezki@gmail.com>
 
-It applies on rcu/dev branch as of March 29th.
+Rename kvfree_rcu() function to the kvfree_rcu_local()
+one. The aim is to introduce the public API that would
+conflict with this one.
 
-Testing with rcuperf shows following changes. The memory footprint reduces and
-batches go slightly up. This is assumed an acceptable change.
+Signed-off-by: Uladzislau Rezki (Sony) <urezki@gmail.com>
+Reviewed-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+---
+ mm/list_lru.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-with all patches:
-Total time taken by all kfree'ers: 27312964461 ns, loops: 20000, batches: 3120, memory footprint: 211MB
-Total time taken by all kfree'ers: 26773272309 ns, loops: 20000, batches: 3084, memory footprint: 208M
-
-without:
-Total time taken by all kfree'ers: 25711621811 ns, loops: 20000, batches: 2814, memory footprint: 230MB          
- Total time taken by all kfree'ers: 25775800546 ns, loops: 20000, batches: 2755, memory footprint: 230MB
-
-These have been pushed to the git tree at:
-git://git.kernel.org/pub/scm/linux/kernel/git/jfern/linux.git (branch rcu/kfree)
-
-cgit view:
-https://git.kernel.org/pub/scm/linux/kernel/git/jfern/linux.git/log/?h=rcu/kfree
-
-thanks,
-
- - Joel
-
-Joel Fernandes (Google) (5):
-rcu/tree: Simplify debug_objects handling
-rcu/tree: Clarify emergency path comment better
-rcu/tree: Remove extra next variable in kfree worker function
-rcu/tree: Simplify is_vmalloc_addr expression
-rcu/tree: Make kvfree_rcu() tolerate any alignment
-
-Uladzislau Rezki (Sony) (13):
-mm/list_lru.c: Rename kvfree_rcu() to local variant
-rcu: Introduce kvfree_rcu() interface
-rcu: Rename rcu_invoke_kfree_callback/rcu_kfree_callback
-rcu: Rename __is_kfree_rcu_offset() macro
-rcu: Rename kfree_call_rcu() to the kvfree_call_rcu().
-mm/list_lru.c: Remove kvfree_rcu_local() function
-rcu/tree: Simplify KFREE_BULK_MAX_ENTR macro
-rcu/tree: Maintain separate array for vmalloc ptrs
-rcu/tree: Introduce expedited_drain flag
-rcu/tree: Support reclaim for head-less object
-rcu/tiny: Move kvfree_call_rcu() out of header
-rcu/tiny: Support reclaim for head-less object
-rcu: Support headless variant in the kvfree_rcu()
-
-include/linux/rcupdate.h   |  53 ++++++-
-include/linux/rcutiny.h    |   6 +-
-include/linux/rcutree.h    |   2 +-
-include/trace/events/rcu.h |   8 +-
-kernel/rcu/tiny.c          | 168 +++++++++++++++++++-
-kernel/rcu/tree.c          | 315 ++++++++++++++++++++++++++-----------
-mm/list_lru.c              |  11 +-
-7 files changed, 443 insertions(+), 120 deletions(-)
-
---
+diff --git a/mm/list_lru.c b/mm/list_lru.c
+index 0f1f6b06b7f36..386424688f805 100644
+--- a/mm/list_lru.c
++++ b/mm/list_lru.c
+@@ -383,14 +383,14 @@ static void memcg_destroy_list_lru_node(struct list_lru_node *nlru)
+ 	struct list_lru_memcg *memcg_lrus;
+ 	/*
+ 	 * This is called when shrinker has already been unregistered,
+-	 * and nobody can use it. So, there is no need to use kvfree_rcu().
++	 * and nobody can use it. So, there is no need to use kvfree_rcu_local().
+ 	 */
+ 	memcg_lrus = rcu_dereference_protected(nlru->memcg_lrus, true);
+ 	__memcg_destroy_list_lru_node(memcg_lrus, 0, memcg_nr_cache_ids);
+ 	kvfree(memcg_lrus);
+ }
+ 
+-static void kvfree_rcu(struct rcu_head *head)
++static void kvfree_rcu_local(struct rcu_head *head)
+ {
+ 	struct list_lru_memcg *mlru;
+ 
+@@ -429,7 +429,7 @@ static int memcg_update_list_lru_node(struct list_lru_node *nlru,
+ 	rcu_assign_pointer(nlru->memcg_lrus, new);
+ 	spin_unlock_irq(&nlru->lock);
+ 
+-	call_rcu(&old->rcu, kvfree_rcu);
++	call_rcu(&old->rcu, kvfree_rcu_local);
+ 	return 0;
+ }
+ 
+-- 
 2.26.0.rc2.310.g2932bb562d-goog
 
