@@ -2,178 +2,156 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA45DC43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 07:41:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC8A3C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 07:42:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B8431206CC
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 07:41:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 938EA206CC
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 07:42:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585554172;
+	bh=jrUwRKTYqT8oJok1FsnBLDh3Az8SwQ/UPd4d3cwORFo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=evbBbAZvrCOONO5p7VSPVvh+gmWWqMDqNg5GPr1mc6BD+MYn9tYLWV+zYX9Xc0K0O
+	 3rWQaTwfdmit52KkppstXejQZbDlHqZylFEkXOGjZZRT7epvtp5HZPaFi4XcW7SLzu
+	 /dqh7zycgpJEnY0VPTFoJjVprtCMz38y9CQqvvog=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729505AbgC3Hlb (ORCPT
+        id S1729534AbgC3Hmv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 03:41:31 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:56424 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728766AbgC3Hlb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 03:41:31 -0400
-Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 79CE774F8F34A2E3430B;
-        Mon, 30 Mar 2020 15:41:23 +0800 (CST)
-Received: from [127.0.0.1] (10.173.221.117) by DGGEMS406-HUB.china.huawei.com
- (10.3.19.206) with Microsoft SMTP Server id 14.3.487.0; Mon, 30 Mar 2020
- 15:41:13 +0800
-To:     <linux-kernel@vger.kernel.org>, <linux-perf-users@vger.kernel.org>
-CC:     <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
-        <mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
-        <jolsa@redhat.com>, <namhyung@kernel.org>,
-        <ndesaulniers@google.com>, <irogers@google.com>,
-        <tmricht@linux.ibm.com>, <hushiyuan@huawei.com>,
-        <hewenliang4@huawei.com>
-From:   Kemeng Shi <shikemeng@huawei.com>
-Subject: [PATCH] perf report: Fix arm64 gap between kernel start and module
- end
-Message-ID: <33fd24c4-0d5a-9d93-9b62-dffa97c992ca@huawei.com>
-Date:   Mon, 30 Mar 2020 15:41:11 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.0
+        Mon, 30 Mar 2020 03:42:51 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:52347 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728766AbgC3Hmv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Mar 2020 03:42:51 -0400
+Received: by mail-wm1-f68.google.com with SMTP id z18so18869777wmk.2;
+        Mon, 30 Mar 2020 00:42:49 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=G2GbSd8nfrGqlF2CTXpVag+1XrsMr3qO8HlwnrY50kI=;
+        b=DdQdvAXnD2BSZexg1ZRcxL87E/iMhdISSAyNTZomPN1CicE9V6a+IHTVz2LjnN5+4j
+         36K/+hJAljsLhNw9jcHROHDApJ6Ov1uwFyklR1LvSsN6l+/60o/bReQxIzq+5xzaQ5xO
+         MIQWw78915u0dJ12Gr3vb88SY3t/LPw3iZ+pgKM+Iy3nf9u3Zx3Z4kSxW0vGoTEqhnTS
+         ioNljitGjcJ4zCMV2uqovz9WE135tC9sEjPYOdaK1A3JnZMRW+AQzT2k1g7m6XqOhWAy
+         KY+k5Y85bHudQPyCbjPlv2pqKTsPV6Hd1/bws/jBKhO/XBNoZOjlmTAMz0rBozI0MFfA
+         yOAQ==
+X-Gm-Message-State: ANhLgQ2Ep8CFsI5trTetWmeB+TaPqv+L32uvBcjXu24vVQEmvf18khk/
+        bud+2/FV4Fpi8hnZ0G4/u/0=
+X-Google-Smtp-Source: ADFU+vtTO40ug73YLnNFJoExcCn1PsdhzxCpQLzjsmdgJmi+fsq6hPq9O7t9QjqmLmc+CwVgWIwn6A==
+X-Received: by 2002:a05:600c:4145:: with SMTP id h5mr11604265wmm.3.1585554168707;
+        Mon, 30 Mar 2020 00:42:48 -0700 (PDT)
+Received: from localhost (ip-37-188-180-223.eurotel.cz. [37.188.180.223])
+        by smtp.gmail.com with ESMTPSA id 98sm21456009wrk.52.2020.03.30.00.42.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 30 Mar 2020 00:42:47 -0700 (PDT)
+Date:   Mon, 30 Mar 2020 09:42:46 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Hoan Tran <Hoan@os.amperecomputing.com>
+Cc:     Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Oscar Salvador <osalvador@suse.de>,
+        Pavel Tatashin <pavel.tatashin@microsoft.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        "open list:MEMORY MANAGEMENT" <linux-mm@kvack.org>,
+        linux-arm-kernel@lists.infradead.org, linux-s390@vger.kernel.org,
+        sparclinux@vger.kernel.org, x86@kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        lho@amperecomputing.com, mmorana@amperecomputing.com
+Subject: Re: [PATCH v3 0/5] mm: Enable CONFIG_NODES_SPAN_OTHER_NODES by
+ default for NUMA
+Message-ID: <20200330074246.GA14243@dhcp22.suse.cz>
+References: <1585420282-25630-1-git-send-email-Hoan@os.amperecomputing.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="gbk"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.173.221.117]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1585420282-25630-1-git-send-email-Hoan@os.amperecomputing.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-During execution of command 'perf report' in my arm64 virtual machine,
-the error message is showed:
+On Sat 28-03-20 11:31:17, Hoan Tran wrote:
+> In NUMA layout which nodes have memory ranges that span across other nodes,
+> the mm driver can detect the memory node id incorrectly.
+> 
+> For example, with layout below
+> Node 0 address: 0000 xxxx 0000 xxxx
+> Node 1 address: xxxx 1111 xxxx 1111
+> 
+> Note:
+>  - Memory from low to high
+>  - 0/1: Node id
+>  - x: Invalid memory of a node
+> 
+> When mm probes the memory map, without CONFIG_NODES_SPAN_OTHER_NODES
+> config, mm only checks the memory validity but not the node id.
+> Because of that, Node 1 also detects the memory from node 0 as below
+> when it scans from the start address to the end address of node 1.
+> 
+> Node 0 address: 0000 xxxx xxxx xxxx
+> Node 1 address: xxxx 1111 1111 1111
+> 
+> This layout could occur on any architecture. Most of them enables
+> this config by default with CONFIG_NUMA. This patch, by default, enables
+> CONFIG_NODES_SPAN_OTHER_NODES or uses early_pfn_in_nid() for NUMA.
 
-failed to process sample
+I am not opposed to this at all. It reduces the config space and that is
+a good thing on its own. The history has shown that meory layout might
+be really wild wrt NUMA. The config is only used for early_pfn_in_nid
+which is clearly an overkill.
 
-__symbol__inc_addr_samples(860): ENOMEM! sym->name=__this_module,
-    start=0x1477100, addr=0x147dbd8, end=0x80002000, func: 0
+Your description doesn't really explain why this is safe though. The
+history of this config is somehow messy, though. Mike has tried
+to remove it a94b3ab7eab4 ("[PATCH] mm: remove arch independent
+NODES_SPAN_OTHER_NODES") just to be reintroduced by 7516795739bd
+("[PATCH] Reintroduce NODES_SPAN_OTHER_NODES for powerpc") without any
+reasoning what so ever. This doesn't make it really easy see whether
+reasons for reintroduction are still there. Maybe there are some subtle
+dependencies. I do not see any TBH but that might be burried deep in an
+arch specific code.
 
-The error is caused with path:
-cmd_report
- __cmd_report
-  perf_session__process_events
-   __perf_session__process_events
-    ordered_events__flush
-     __ordered_events__flush
-      oe->deliver (ordered_events__deliver_event)
-       perf_session__deliver_event
-        machines__deliver_event
-         perf_evlist__deliver_sample
-          tool->sample (process_sample_event)
-           hist_entry_iter__add
-            iter->add_entry_cb(hist_iter__report_callback)
-             hist_entry__inc_addr_samples
-              symbol__inc_addr_samples
-               __symbol__inc_addr_samples
-                h = annotated_source__histogram(src, evidx) (NULL)
+> v3:
+>  * Revise the patch description
+> 
+> V2:
+>  * Revise the patch description
+> 
+> Hoan Tran (5):
+>   mm: Enable CONFIG_NODES_SPAN_OTHER_NODES by default for NUMA
+>   powerpc: Kconfig: Remove CONFIG_NODES_SPAN_OTHER_NODES
+>   x86: Kconfig: Remove CONFIG_NODES_SPAN_OTHER_NODES
+>   sparc: Kconfig: Remove CONFIG_NODES_SPAN_OTHER_NODES
+>   s390: Kconfig: Remove CONFIG_NODES_SPAN_OTHER_NODES
+> 
+>  arch/powerpc/Kconfig | 9 ---------
+>  arch/s390/Kconfig    | 8 --------
+>  arch/sparc/Kconfig   | 9 ---------
+>  arch/x86/Kconfig     | 9 ---------
+>  mm/page_alloc.c      | 2 +-
+>  5 files changed, 1 insertion(+), 36 deletions(-)
+> 
+> -- 
+> 1.8.3.1
+> 
 
-annotated_source__histogram failed is caused with path:
-...
- hist_entry__inc_addr_samples
-  symbol__inc_addr_samples
-   symbol__hists
-    annotated_source__alloc_histograms
-     src->histograms = calloc(nr_hists, sizeof_sym_hist) (failed)
-
-Calloc failed as the symbol__size(sym) is too huge. As show in error
-message: start=0x1477100, end=0x80002000, size of symbol is about 2G.
-
-This is the same problem as 'perf annotate: Fix s390 gap between kernel
-end and module start (b9c0a64901d5bd)'. Perf gets symbol information from
-/proc/kallsyms in __dso__load_kallsyms. A part of symbol in /proc/kallsyms
-from my virtual machine is as follows:
- #cat /proc/kallsyms | sort
- ...
- ffff000001475080 d rpfilter_mt_reg      [ip6t_rpfilter]
- ffff000001475100 d $d   [ip6t_rpfilter]
- ffff000001475100 d __this_module        [ip6t_rpfilter]
- ffff000080080000 t _head
- ffff000080080000 T _text
- ffff000080080040 t pe_header
- ...
-
-Take line 'ffff000001475100 d __this_module [ip6t_rpfilter]' as example.
-The start and end of symbol are both set to ffff000001475100 in
-dso__load_all_kallsyms. Then symbols__fixup_end will set the end of symbol
-to next big address to ffff000001475100 in /proc/kallsyms, ffff000080080000
-in this example. Then sizeof of symbol will be about 2G and cause the
-problem.
-
-The start of module in my machine is
- ffff000000a62000 t $x   [dm_mod]
-
-The start of kernel in my machine is
- ffff000080080000 t _head
-
-There is a big gap between end of module and begin of kernel if a samll
-amount of memory is used by module. And the last symbol in module will
-have a large address range as caotaining the big gap.
-
-Give that the module and kernel text segment sequence may change in
-the future, fix this by limiting range of last symbol in module and kernel
-to 4K in arch arm64.
-
-Signed-off-by: Kemeng Shi <shikemeng@huawei.com>
----
- tools/perf/arch/arm64/util/Build     |  1 +
- tools/perf/arch/arm64/util/machine.c | 26 ++++++++++++++++++++++++++
- 2 files changed, 27 insertions(+)
- create mode 100644 tools/perf/arch/arm64/util/machine.c
-
-diff --git a/tools/perf/arch/arm64/util/Build b/tools/perf/arch/arm64/util/Build
-index 393b9895c..37cbfa5e9 100644
---- a/tools/perf/arch/arm64/util/Build
-+++ b/tools/perf/arch/arm64/util/Build
-@@ -2,6 +2,7 @@ libperf-y += header.o
- libperf-y += tsc.o
- libperf-y += sym-handling.o
- libperf-y += kvm-stat.o
-+libperf-y += machine.o
- libperf-$(CONFIG_DWARF)     += dwarf-regs.o
- libperf-$(CONFIG_LOCAL_LIBUNWIND) += unwind-libunwind.o
- libperf-$(CONFIG_LIBDW_DWARF_UNWIND) += unwind-libdw.o
-diff --git a/tools/perf/arch/arm64/util/machine.c b/tools/perf/arch/arm64/util/machine.c
-new file mode 100644
-index 000000000..a25be2431
---- /dev/null
-+++ b/tools/perf/arch/arm64/util/machine.c
-@@ -0,0 +1,26 @@
-+// SPDX-License-Identifier: GPL-2.0
-+
-+#include <stdio.h>
-+#include "debug.h"
-+#include "symbol.h"
-+
-+/* On arm64, kernel text segment start at high memory address,
-+ * for example 0xffff 0000 8xxx xxxx. Modules start at a low memory
-+ * address, like 0xffff 0000 00ax xxxx. When only samll amount of
-+ * memory is used by modules, gap between end of module's text segment
-+ * and start of kernel text segment may be reach 2G.
-+ * Therefore do not fill this gap and do not assign it to the kernel dso map.
-+ */
-+
-+#define SYMBOL_LIMIT (1 << 12) /* 4K */
-+
-+void arch__symbols__fixup_end(struct symbol *p, struct symbol *c)
-+{
-+	if ((strchr(p->name, '[') && strchr(c->name, '[') == NULL) ||
-+			(strchr(p->name, '[') == NULL && strchr(c->name, '[')))
-+		/* Limit range of last symbol in module and kernel */
-+		p->end += SYMBOL_LIMIT;
-+	else
-+		p->end = c->start;
-+	pr_debug4("%s sym:%s end:%#lx\n", __func__, p->name, p->end);
-+}
 -- 
-2.19.1
-
-
+Michal Hocko
+SUSE Labs
