@@ -2,135 +2,99 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE76DC2D0EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 05:14:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3AB4C2D0EB
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 05:19:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A4A9A20733
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 05:14:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A4F220733
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 05:19:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="CP1Jse+M"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="H51wOSB4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728560AbgC3FOm (ORCPT
+        id S1728497AbgC3FTZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 01:14:42 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:60375 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727706AbgC3FOm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 01:14:42 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 48rLHF3cWmz9sPk;
-        Mon, 30 Mar 2020 16:14:33 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1585545278;
-        bh=4EEf/PratAIAfdAIaqM7alme3AOiAhBmkDtUjgsO4co=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=CP1Jse+MjIlJ6kW2s16fFcqC9sGpVidN9OEUbqfSM04WWsQ778wBmbXaogWxxubh0
-         UllTMMGMi+68jyx7lRR/yg3cEHA/28YA1+cCXz6qoRMBlg6kqneL4rmdNOWCGwQ56o
-         7UVP8kJ/L+Pm5mUsAm2ldMtXZmjmW6lobBKWWUFBn5KKDozZ6kVWCgVIA3xM7RfHei
-         skV4FVyhyt8kaq5eKXO3GoLYRkxbph8ar0lIKsi65qbb5tZmSKQ0UwBENRJqmbz2p8
-         VaI9dlWnN3OSNsB3SZTOCenqfSC2RctljWUe3L0UyCndRtXuppKMQx9uN/COXA3Fty
-         grCwLo8a1lKzA==
-Date:   Mon, 30 Mar 2020 16:14:31 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     akpm@linux-foundation.org, broonie@kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, linux-next@vger.kernel.org, mhocko@suse.cz,
-        mm-commits@vger.kernel.org,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Aaro Koskinen <aaro.koskinen@iki.fi>,
-        "devel@driverdev.osuosl.org" <devel@driverdev.osuosl.org>
-Subject: Re: mmotm 2020-03-28-22-17 uploaded (staging/octeon/)
-Message-ID: <20200330161431.60a37031@canb.auug.org.au>
-In-Reply-To: <873495e9-d254-cb66-7a83-2517505a2b9b@infradead.org>
-References: <20200329051805.kfaUSHrn4%akpm@linux-foundation.org>
-        <873495e9-d254-cb66-7a83-2517505a2b9b@infradead.org>
+        Mon, 30 Mar 2020 01:19:25 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:12647 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727706AbgC3FTZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Mar 2020 01:19:25 -0400
+X-UUID: 0f20d00ab22441028f7c2718f3f30338-20200330
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=PiWLw0TeG7GcgBMd5OgryJCpKyO8lgrXQHDKaqgPG58=;
+        b=H51wOSB4E8IfmA8XEkPuCE4rb6zVrbPrgRG7NerAS16eswoZuZgmsBARj6W8ThUSXXAKCZSRNlHf77IQsb1QfsjsVqVy/q4wIKsHIie6dIkpwrxtcPhdUfv/zkse4bpy1kBhyRdQzj5lKUEL6gxH2Rw8LIgDyt6AsteDnWyAONc=;
+X-UUID: 0f20d00ab22441028f7c2718f3f30338-20200330
+Received: from mtkexhb01.mediatek.inc [(172.21.101.102)] by mailgw01.mediatek.com
+        (envelope-from <henryc.chen@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 5589251; Mon, 30 Mar 2020 13:19:15 +0800
+Received: from mtkcas09.mediatek.inc (172.21.101.178) by
+ mtkmbs07n2.mediatek.inc (172.21.101.141) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Mon, 30 Mar 2020 13:19:12 +0800
+Received: from [172.21.77.4] (172.21.77.4) by mtkcas09.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Mon, 30 Mar 2020 13:19:11 +0800
+Message-ID: <1585545553.32635.10.camel@mtksdaap41>
+Subject: Re: [PATCH V4 11/13] dt-bindings: regulator: add DVFSRC regulator
+ dt-bindings
+From:   Henry Chen <henryc.chen@mediatek.com>
+To:     Mark Brown <broonie@kernel.org>
+CC:     Georgi Djakov <georgi.djakov@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        "Viresh Kumar" <vireshk@kernel.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Ryan Case <ryandcase@chromium.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "Nicolas Boichat" <drinkcat@google.com>,
+        Fan Chen <fan.chen@mediatek.com>,
+        James Liao <jamesjj.liao@mediatek.com>,
+        Arvin Wang <arvin.wang@mediatek.com>,
+        "Mike Turquette" <mturquette@linaro.org>,
+        <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <linux-pm@vger.kernel.org>,
+        <srv_heupstream@mediatek.com>
+Date:   Mon, 30 Mar 2020 13:19:13 +0800
+In-Reply-To: <20200324203833.GL7039@sirena.org.uk>
+References: <1584092066-24425-1-git-send-email-henryc.chen@mediatek.com>
+         <1584092066-24425-12-git-send-email-henryc.chen@mediatek.com>
+         <20200324203833.GL7039@sirena.org.uk>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/i7ee/j5=LxPeGDwdPn/49OA";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/i7ee/j5=LxPeGDwdPn/49OA
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+SGkgTWFyaywNCk9uIFR1ZSwgMjAyMC0wMy0yNCBhdCAyMDozOCArMDAwMCwgTWFyayBCcm93biB3
+cm90ZToNCj4gT24gRnJpLCBNYXIgMTMsIDIwMjAgYXQgMDU6MzQ6MjRQTSArMDgwMCwgSGVucnkg
+Q2hlbiB3cm90ZToNCj4gDQo+ID4gKy0gcmVndWxhdG9yIDogVGhlIERWRlNSQyByZWd1bGF0b3Ig
+aXMgbW9kZWxsZWQgYXMgYSBzdWJkZXZpY2Ugb2YgdGhlIERWRlNSQy4NCj4gPiArCUJlY2F1c2Ug
+RFZGU1JDIGNhbiByZXF1ZXN0IHBvd2VyIGRpcmVjdGx5IHZpYSByZWdpc3RlciByZWFkL3dyaXRl
+LCBsaWtlcw0KPiA+ICsJdmNvcmUgd2hpY2ggaXMgYSBjb3JlIHBvd2VyIG9mIG10ODE4My4gQXMg
+c3VjaCwgdGhlIERWRlNSQyByZWd1bGF0b3INCj4gPiArCXJlcXVpcmVzIHRoYXQgRFZGU1JDIG5v
+ZGVzIGJlIHByZXNlbnQuIHNoYWxsIGNvbnRhaW4gb25seSBvbmUgb2YgdGhlDQo+ID4gKwlmb2xs
+b3dpbmc6ICJtZWRpYXRlayxtdDgxODMtZHZmc3JjLXJlZ3VsYXRvciINCj4gDQo+IFdoeSBkbyB3
+ZSBldmVuIG5lZWQgYSBjb21wYXRpYmxlIGhlcmUgLSBpdCdzIG5vdCBhZGRpbmcgYW55IG5ldw0K
+PiBpbmZvcm1hdGlvbiB0byB0aGUgcGFyZW50IG10ODE4MyBub2RlLCB0aGUgY29tcGF0aWJsZSBp
+cyBtYWlubHkgZm9yIHRoZQ0KPiB3YXkgTGludXggZGl2aWRlcyB0aGluZ3MgdXAgcmF0aGVyIHRo
+YW4gYSBkZXNjcmlwdGlvbiBvZiB0aGUgaGFyZHdhcmUuDQo+IFdlIGNvdWxkIGp1c3Qgc2F5IHRo
+YXQgdGhlIHJlZ3VsYXRvciBub2RlIGFsd2F5cyBoYXMgYSBwYXJ0aWN1bGFyIG5hbWUNCj4gaW5z
+dGVhZC4NClNvcnJ5LCBub3QgcXVpdGUgc3VyZSB3aGF0IHlvdSBtZWFuLCBiZWNhdXNlIEkgdGhp
+bmsgRFZGU1JDIGlzIGENCnJlZ3VsYXRvciBwcm92aWRlciB0aGF0IGNhbiBwcm92aWRlIHZjb3Jl
+IHZvbHRhZ2UgY29udHJvbCBvbiBtdDgxODMsIGFuZA0KaXQgY2FuIHByb3ZpZGUgbW9yZSBwb3dl
+ciBjb250cm9sIGluIHRoZSBuZXh0IGdlbmVyYXRpb24gTWVkaWF0ZWsgU09DLg0KSGVyZSBJIGFk
+ZCBhIHN1Yi1ub2RlIHRvIGRlc2NyaWJlIGl0LiBPciBzaG91bGQgSSBtb3ZlIHRoaXMgbm9kZSB0
+bw0KcmVndWxhdG9yIGZvbGRlcj8gDQoNCj4gDQo+IEl0J3MgYWxzbyBub3QgcXVpdGUgdHJ1ZSB0
+aGF0IGl0IGNvbnRhaW5zICJvbmx5IiB0aGUgY29tcGF0aWJsZSAtIGl0DQo+IGFsc28gYWxsb3dz
+IHRoZSByZWd1bGF0b3IgY29uc3RyYWludHMgdG8gYmUgZGVmaW5lZC4NCg0K
 
-Hi Randy,
-
-On Sun, 29 Mar 2020 09:12:31 -0700 Randy Dunlap <rdunlap@infradead.org> wro=
-te:
->
-> On 3/28/20 10:18 PM, akpm@linux-foundation.org wrote:
-> > The mm-of-the-moment snapshot 2020-03-28-22-17 has been uploaded to
-> >=20
-> >    http://www.ozlabs.org/~akpm/mmotm/
-> >=20
-> > mmotm-readme.txt says
-> >=20
-> > README for mm-of-the-moment:
-> >=20
-> > http://www.ozlabs.org/~akpm/mmotm/
-> >=20
-> > This is a snapshot of my -mm patch queue.  Uploaded at random hopefully
-> > more than once a week.
-> >=20
-> > You will need quilt to apply these patches to the latest Linus release =
-(5.x
-> > or 5.x-rcY).  The series file is in broken-out.tar.gz and is duplicated=
- in
-> > http://ozlabs.org/~akpm/mmotm/series =20
->=20
->=20
-> on i386 or x86_64:
->=20
-> ../drivers/staging/octeon/ethernet-tx.c: In function =E2=80=98cvm_oct_xmi=
-t=E2=80=99:
-> ../drivers/staging/octeon/ethernet-tx.c:358:2: error: implicit declaratio=
-n of function =E2=80=98skb_reset_tc=E2=80=99; did you mean =E2=80=98skb_res=
-erve=E2=80=99? [-Werror=3Dimplicit-function-declaration]
->   skb_reset_tc(skb);
->   ^~~~~~~~~~~~
->=20
-> It looks like this inline function has been removed from
-> <net/sch_generic.h>.
->=20
->=20
-> Looks like it should be this change:
->=20
-> -	skb_reset_tc(skb);
-> +	skb_reset_redirect(skb);
-
-I applied the above as a merge resolution patch for the staging tree
-merge today, as the inline removal was a late change to Linus' tree.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/i7ee/j5=LxPeGDwdPn/49OA
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl6BgDcACgkQAVBC80lX
-0GyDuwgAhoSNIFnw3fBCuchmr1Y0lz9RtRLsQHPXWRBjpJbAmISNeVn4z3PgahRw
-vdfhy0CWnykQStM1VTseZYIaU1g4+rWSSr++AMZMgOuXPk1W8a/TJtf7JsKL4694
-UmigTCUgalnT/VpfHbLDf4M0PNC268KIJ6qVwCmxJ8/NIZmpVmzZj36C4icWJXC6
-JrDh69whM4yqAoXBbNWh2u2vNNk5rUVk0OP6DiGpv0UTtzOH/lGr8lhTXyOATLZz
-+cLG7vrdNZvqgBO3NLAVDj5fBxnJXUtoeuhnQNWL9ksprctNHcGR+/7HPK3QjJyr
-KjR5AQiB+bZb51oYChE+4t9q0qPw7Q==
-=aiv9
------END PGP SIGNATURE-----
-
---Sig_/i7ee/j5=LxPeGDwdPn/49OA--
