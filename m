@@ -2,113 +2,147 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20DF5C43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 07:35:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 729DDC2D0E9
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 07:37:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E499B2073B
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 07:35:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 474652073B
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 07:37:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fx/ZK68h"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="EoXO05vQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729550AbgC3HfP (ORCPT
+        id S1729519AbgC3HhI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 03:35:15 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:45625 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729533AbgC3HfO (ORCPT
+        Mon, 30 Mar 2020 03:37:08 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:44562 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729420AbgC3HhH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 03:35:14 -0400
-Received: by mail-pl1-f193.google.com with SMTP id t4so435017plq.12
-        for <linux-kernel@vger.kernel.org>; Mon, 30 Mar 2020 00:35:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=wdQn7+4WjNITqnyMEnPuurluuA3035fLGCjTPx0cnYk=;
-        b=fx/ZK68h26OH+GmcexCn72v3EpUL3eA4hs5riAubSO+umgs3wLz+QvP1oTdth5ERT6
-         SmQpm2VW9qKNOdiAN+UBsBcS67w2MPlViI4L1QJqNkIkw7D8qWrJFogBXLlrrMKx7R0M
-         2LVpAZgLjvQspYRHdDZvj8O99hO7+6D0qyAXn/8Isd5AEtDGyDXlUTHeTgXzbPm/1tqV
-         ntvfy79mTCFVuKkeKQgi6OD5dhmXLpnVXlGiArUy1p92NXrsY4i/aZ1mzdyvWuSBlHak
-         6JFD/gOtUqlcwqixNC4D+nKZjL5wA0GGoPiJSg3Su/eNxoTazUL4ftrCfrLWZ/Dsi5Y6
-         2n2w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=wdQn7+4WjNITqnyMEnPuurluuA3035fLGCjTPx0cnYk=;
-        b=IiLYV95/pafyR52W8Mv94VKB6SJM+t0eDH7FbJZaiUiaF9XH+yf2U37nUZoaVBxFTv
-         iI/MYxgXfKByzuFB5Ot+5jcvFRNfiMyq9Q/0/vRdAIoCr1PVP8xlH2UTz91PSnHN4Iiu
-         waPYzVXBgSm73qcW9jQQR+UnUYn+rYzKIrCbLlIAA6G4S6C9HZUGKLrJodAuecnl1C6t
-         Phxxwcp8VIri3+P8NbXMhZeLIV/9cObNvWUW6cjjDeqpWUNXMBviwQWOz6Jj+QnvW/XB
-         uWXgGBWoOQOTOFeSPvdrKH3r3y3W5VfC4w7dWighsz+cTNhL0DNjYOYIVeC2RvE+sJPE
-         Kf/g==
-X-Gm-Message-State: AGi0PuZpq04jQWqlGYg/NLh2KVOKFIhf7c0JtpOJWHOEYgkesgl/xRAd
-        M/LVziKHnyMk5GRVyle2qxDLx3DkSxbqzAhD8qA=
-X-Google-Smtp-Source: APiQypJonPQ0NJJfEeeTy3uMh+gCqXFagcsebaKEe/nfYQ2K/YhJr5UACyAC2dLNPciq2iHQy4r7XYUSO2bJOr9z1Bo=
-X-Received: by 2002:a17:902:8215:: with SMTP id x21mr7757300pln.255.1585553713343;
- Mon, 30 Mar 2020 00:35:13 -0700 (PDT)
+        Mon, 30 Mar 2020 03:37:07 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 02U7avtO076750;
+        Mon, 30 Mar 2020 02:36:57 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1585553818;
+        bh=voYQW80EDvQkOlSfgnq9c/dTJexZ26VOrA18YkmsPTw=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=EoXO05vQBMtq0tom/g/Fbz6SZPBShTbVdsPJ4+iOQlEjDowyGWB1hDXOUzYbr4BE/
+         ua9Cn8M1pnrkq97+Jp0+ERZ16Lej0LWhkw80kgiPcM8lWJhrHTN+0Lgb2sCW9L5E2o
+         J5cfY5e4wbDZ1Fy2BTB7wPn+rs7beppbGEgVK+Ts=
+Received: from DLEE109.ent.ti.com (dlee109.ent.ti.com [157.170.170.41])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 02U7avrb068349
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 30 Mar 2020 02:36:57 -0500
+Received: from DLEE100.ent.ti.com (157.170.170.30) by DLEE109.ent.ti.com
+ (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Mon, 30
+ Mar 2020 02:36:57 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE100.ent.ti.com
+ (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Mon, 30 Mar 2020 02:36:57 -0500
+Received: from [10.24.69.198] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 02U7aq7w094270;
+        Mon, 30 Mar 2020 02:36:53 -0500
+Subject: Re: [PATCH net-next v6 00/11] net: ethernet: ti: add networking
+ support for k3 am65x/j721e soc
+To:     Tero Kristo <t-kristo@ti.com>, Vladimir Oltean <olteanv@gmail.com>,
+        David Miller <davem@davemloft.net>
+CC:     Grygorii Strashko <grygorii.strashko@ti.com>,
+        <peter.ujfalusi@ti.com>, Rob Herring <robh@kernel.org>,
+        netdev <netdev@vger.kernel.org>, <rogerq@ti.com>,
+        <devicetree@vger.kernel.org>, Jakub Kicinski <kuba@kernel.org>,
+        Murali Karicheri <m-karicheri2@ti.com>, <kishon@ti.com>,
+        lkml <linux-kernel@vger.kernel.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>
+References: <20200323225254.12759-1-grygorii.strashko@ti.com>
+ <20200326.200136.1601946994817303021.davem@davemloft.net>
+ <CA+h21hr8G24ddEgAbU_TfoNAe0fqUJ0_Uyp54Gxn5cvPrM6u9g@mail.gmail.com>
+ <8f5e981a-193c-0c1e-1e0a-b0380b2e6a9c@ti.com>
+From:   Sekhar Nori <nsekhar@ti.com>
+Message-ID: <2d305c89-601c-5dee-06be-30257a26a392@ti.com>
+Date:   Mon, 30 Mar 2020 13:06:52 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-References: <f53fdf2283e1c847a4c44ea7bea4cb6600c06991.camel@perches.com>
-In-Reply-To: <f53fdf2283e1c847a4c44ea7bea4cb6600c06991.camel@perches.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Mon, 30 Mar 2020 10:35:01 +0300
-Message-ID: <CAHp75VfJS4hAxdq67NwAXs8U+6UzL8=bqnCEpSy45R0Gj1L8NA@mail.gmail.com>
-Subject: Re: commit 23cb8490c0d3 ("MAINTAINERS: fix bad file pattern")
-To:     Joe Perches <joe@perches.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Lukas Bulwahn <lukas.bulwahn@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <8f5e981a-193c-0c1e-1e0a-b0380b2e6a9c@ti.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 30, 2020 at 5:38 AM Joe Perches <joe@perches.com> wrote:
->
->    MAINTAINERS: fix bad file pattern
->
->     Testing 'parse-maintainers' due to the previous commit shows a bad file
->     pattern for the "TI VPE/CAL DRIVERS" entry in the MAINTAINERS file.
->
->     There's also a lot of mis-ordered entries, but I'm still a bit nervous
->     about the inevitable and annoying merge problems it would probably cause
->     to fix them up.
+On 30/03/20 12:45 PM, Tero Kristo wrote:
+> On 28/03/2020 03:53, Vladimir Oltean wrote:
+>> Hi David,
+>>
+>> On Fri, 27 Mar 2020 at 05:02, David Miller <davem@davemloft.net> wrote:
+>>>
+>>> From: Grygorii Strashko <grygorii.strashko@ti.com>
+>>> Date: Tue, 24 Mar 2020 00:52:43 +0200
+>>>
+>>>> This v6 series adds basic networking support support TI K3
+>>>> AM654x/J721E SoC which
+>>>> have integrated Gigabit Ethernet MAC (Media Access Controller) into
+>>>> device MCU
+>>>> domain and named MCU_CPSW0 (CPSW2G NUSS).
+>>>   ...
+>>>
+>>> Series applied, thank you.
+>>
+>> The build is now broken on net-next:
+>>
+>> arch/arm64/boot/dts/ti/k3-j721e-mcu-wakeup.dtsi:303.23-309.6: ERROR
+>> (phandle_references):
+>> /interconnect@100000/interconnect@28380000/ethernet@46000000/ethernet-ports/port@1:
+>>
+>> Reference to non-existent node
+>> or label "mcu_conf"
+>>
+>>    also defined at
+>> arch/arm64/boot/dts/ti/k3-j721e-common-proc-board.dts:471.13-474.3
+>> arch/arm64/boot/dts/ti/k3-j721e-mcu-wakeup.dtsi:303.23-309.6: ERROR
+>> (phandle_references):
+>> /interconnect@100000/interconnect@28380000/ethernet@46000000/ethernet-ports/port@1:
+>>
+>> Reference to non-existent node
+>> or label "phy_gmii_sel"
+>>
+>>    also defined at
+>> arch/arm64/boot/dts/ti/k3-j721e-common-proc-board.dts:471.13-474.3
+>>
+>> As Grygorii said:
+>>
+>> Patches 1-6 are intended for netdev, Patches 7-11 are intended for K3
+>> Platform
+>> tree and provided here for testing purposes.
+> 
+> Yeah, I think you are missing a dependency that was applied via the K3
+> branch earlier. They are in linux-next now, but I am not so sure how
+> much that is going to help you.
+> 
+> You could just drop the DT patches from this merge and let me apply them
+> via the platform branch.
 
-I'm wondering if order depends to current locale. If so, the script
-should override locale as well.
+One other option would be that Dave merges your K3 tag which was sent to
+ARM SoC to net-next. Its based on v5.6-rc1, has no other dependencies,
+is already in linux-next, should be immutable and safe to merge. This
+has the advantage that no rebase is necessary on net-next.
 
->
->     The MAINTAINERS file is one of my least favorite files due to being huge
->     and centralized, but fixing it is also horribly painful for that reason.
->
-> The identical commit was sent at least twice.
-> Once directly to you.
->
-> https://patchwork.kernel.org/patch/11361131/
-> https://lore.kernel.org/linux-media/20200128145828.74161-1-andriy.shevchenko@linux.intel.com/
->
->
-> About the pain associated to fixing the file:
-> I think it would be minimally painful to run
->
-> $ ./scripts/parse-maintainers.pl --input=MAINTAINERS --output=MAINTAINERS --order
->
-> Immediately before an -rc1 is released.
->
-> Relatively few of any pending patches to MAINTAINERS
-> in -next would be impacted and there would be better
-> consistency in the silly file.
->
->
+git://git.kernel.org/pub/scm/linux/kernel/git/kristo/linux
+tags/ti-k3-soc-for-v5.7
 
++ ARM SoC maintainers for their information and any advise.
 
--- 
-With Best Regards,
-Andy Shevchenko
+Thanks,
+Sekhar
+
